@@ -148,11 +148,9 @@ wipf_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
       classifyOut->rights &= ~FWPS_RIGHT_ACTION_WRITE;
     }
     classifyOut->actionType = FWP_ACTION_BLOCK;
-
-    return STATUS_SUCCESS;
+  } else {
+    classifyOut->actionType = FWP_ACTION_CONTINUE;
   }
-
-  classifyOut->actionType = FWP_ACTION_CONTINUE;
 
   return STATUS_SUCCESS;
 }
