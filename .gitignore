@@ -1,0 +1,3 @@
+bin/*.pdb
+bin/*.sys
+src/drv/Win*/
