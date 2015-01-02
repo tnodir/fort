@@ -67,7 +67,7 @@
     <DebuggerFlavor>DbgengKernelDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup>
-    <OutDir>..\..\bin\</OutDir>
+    <OutDir>..\..\bin\driver\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
