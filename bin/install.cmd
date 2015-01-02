@@ -4,9 +4,6 @@
 
 @set T=wipf
 @set F=wipfdrv%1.sys
-@set W=%WINDIR%\System32\Drivers
+@set P=%~dp0%F%
 
-copy /Y "%~dp0%F%" %W%
-
-sc create %T% binPath="%W%\%F%" type=kernel start=boot DisplayName="Windows IP Filter"
-sc start %T%
+sc create %T% binPath="%P%" type=kernel start=demand DisplayName="Windows IP Filter"
