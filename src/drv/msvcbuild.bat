@@ -3,3 +3,5 @@
 @setlocal
 
 MSBuild wipfdrv.vcxproj
+
+@rd /S /Q ..\..\build\out\

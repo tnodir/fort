@@ -11,31 +11,26 @@
 #include "../common.h"
 #include "wipfdrv.h"
 
+#include "../wipfconfr.c"
+#include "wipfbuf.c"
+
 typedef struct wipf_conf_ref {
   UINT32 volatile refcount;
 
   WIPF_CONF conf;
 } WIPF_CONF_REF, *PWIPF_CONF_REF;
 
-typedef struct wipf_driver {
+typedef struct wipf_device {
   UINT32 connect4_id;
   UINT32 accept4_id;
 
+  WIPF_BUFFER buffer;
+
   PWIPF_CONF_REF volatile conf_ref;
+  KSPIN_LOCK conf_lock;
+} WIPF_DEVICE, *PWIPF_DEVICE;
 
-  KSPIN_LOCK lock;
-} WIPF_DRIVER, *PWIPF_DRIVER;
-
-static PWIPF_DRIVER g_driver;
-
-#define WIPF_POOL_TAG	'WIPF'
-
-#define wipf_request_complete(irp, status) \
-  do { \
-    (irp)->IoStatus.Status = (status); \
-    (irp)->IoStatus.Information = 0; \
-    IoCompleteRequest((irp), IO_NO_INCREMENT); \
-  } while(0)
+static PWIPF_DEVICE g_device = NULL;
 
 
 static PWIPF_CONF_REF
@@ -58,15 +53,15 @@ wipf_conf_ref_put (PWIPF_CONF_REF conf_ref)
 {
   KIRQL irq;
 
-  KeAcquireSpinLock(&g_driver->lock, &irq);
+  KeAcquireSpinLock(&g_device->conf_lock, &irq);
   {
     const UINT32 refcount = --conf_ref->refcount;
 
-    if (refcount == 0 && conf_ref != g_driver->conf_ref) {
+    if (refcount == 0 && conf_ref != g_device->conf_ref) {
       ExFreePoolWithTag(conf_ref, WIPF_POOL_TAG);
     }
   }
-  KeReleaseSpinLock(&g_driver->lock, irq);
+  KeReleaseSpinLock(&g_device->conf_lock, irq);
 }
 
 static PWIPF_CONF_REF
@@ -75,14 +70,14 @@ wipf_conf_ref_take (void)
   PWIPF_CONF_REF conf_ref;
   KIRQL irq;
 
-  KeAcquireSpinLock(&g_driver->lock, &irq);
+  KeAcquireSpinLock(&g_device->conf_lock, &irq);
   {
-    conf_ref = g_driver->conf_ref;
+    conf_ref = g_device->conf_ref;
     if (conf_ref) {
       ++conf_ref->refcount;
     }
   }
-  KeReleaseSpinLock(&g_driver->lock, irq);
+  KeReleaseSpinLock(&g_device->conf_lock, irq);
 
   return conf_ref;
 }
@@ -95,23 +90,13 @@ wipf_conf_ref_set (PWIPF_CONF_REF conf_ref)
 
   old_conf_ref = wipf_conf_ref_take();
 
-  KeAcquireSpinLock(&g_driver->lock, &irq);
+  KeAcquireSpinLock(&g_device->conf_lock, &irq);
   {
-    g_driver->conf_ref = conf_ref;
+    g_device->conf_ref = conf_ref;
   }
-  KeReleaseSpinLock(&g_driver->lock, irq);
+  KeReleaseSpinLock(&g_device->conf_lock, irq);
 
   wipf_conf_ref_put(old_conf_ref);
-}
-
-static BOOL
-wipf_conf_ipblocked (const PWIPF_CONF conf, UINT32 local_ip, UINT32 remote_ip)
-{
-  UNUSED(conf);
-  UNUSED(local_ip);
-  UNUSED(remote_ip);
-
-  return TRUE;
 }
 
 static NTSTATUS
@@ -122,34 +107,45 @@ wipf_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                           int localIpField, int remoteIpField)
 {
   PWIPF_CONF_REF conf_ref;
-  BOOL blocked;
+  UINT32 local_ip, remote_ip;
+  UINT64 pid;
+  UINT32 path_len;
+  PVOID path = NULL;
+  BOOL blocked, notify;
 
-  UNUSED(inMetaValues);
   UNUSED(packet);
-  UNUSED(filter);
   UNUSED(flowContext);
 
   conf_ref = wipf_conf_ref_take();
-  if (conf_ref == NULL)
+
+  if (conf_ref == NULL || !(filter->flags & FWPS_FILTER_FLAG_CLEAR_ACTION_RIGHT))
     return STATUS_SUCCESS;
 
-  /* Check IP */
-  {
-    const UINT32 local_ip = inFixedValues->incomingValue[localIpField].value.uint32;
-    const UINT32 remote_ip = inFixedValues->incomingValue[remoteIpField].value.uint32;
+  local_ip = inFixedValues->incomingValue[localIpField].value.uint32;
+  remote_ip = inFixedValues->incomingValue[remoteIpField].value.uint32;
 
-    blocked = wipf_conf_ipblocked(&conf_ref->conf, local_ip, remote_ip);
+  if (local_ip != remote_ip) {
+    pid = inMetaValues->processId;
+    path_len = inMetaValues->processPath->size;
+    path = inMetaValues->processPath->data;
+
+    blocked = wipf_conf_ipblocked(&conf_ref->conf, remote_ip,
+                                  path_len, path, &notify);
+  } else {
+    blocked = FALSE;
+    notify = FALSE;
   }
 
   wipf_conf_ref_put(conf_ref);
 
   if (blocked) {
-    if (filter->flags & FWPS_FILTER_FLAG_CLEAR_ACTION_RIGHT) {
-      classifyOut->rights &= ~FWPS_RIGHT_ACTION_WRITE;
-    }
     classifyOut->actionType = FWP_ACTION_BLOCK;
+    classifyOut->rights &= ~FWPS_RIGHT_ACTION_WRITE;
   } else {
     classifyOut->actionType = FWP_ACTION_CONTINUE;
+
+    if (notify)
+      wipf_buffer_write(&g_device->buffer, remote_ip, pid, path_len, path);
   }
 
   return STATUS_SUCCESS;
@@ -190,10 +186,10 @@ wipf_callout_notify (FWPS_CALLOUT_NOTIFY_TYPE notifyType, const GUID *filterKey,
 static NTSTATUS
 wipf_callout_install (PDEVICE_OBJECT device)
 {
-  FWPS_CALLOUT0 c = {0};
+  FWPS_CALLOUT0 c;
   NTSTATUS status;
 
-  DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_TRACE_LEVEL, "wipf: > wipf_callout_install()\n");
+  RtlZeroMemory(&c, sizeof(FWPS_CALLOUT0));
 
   c.notifyFn = wipf_callout_notify;
 
@@ -202,7 +198,7 @@ wipf_callout_install (PDEVICE_OBJECT device)
   c.calloutKey = WIPF_CONNECT_CALLOUT_V4;
   c.classifyFn = wipf_callout_connect_v4;
 
-  status = FwpsCalloutRegister0(device, &c, &g_driver->connect4_id);
+  status = FwpsCalloutRegister0(device, &c, &g_device->connect4_id);
   if (!NT_SUCCESS(status)) {
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_TRACE_LEVEL, "wipf: Register Connect V4: Error: %d\n", status);
     return status;
@@ -213,13 +209,12 @@ wipf_callout_install (PDEVICE_OBJECT device)
   c.calloutKey = WIPF_ACCEPT_CALLOUT_V4;
   c.classifyFn = wipf_callout_accept_v4;
 
-  status = FwpsCalloutRegister0(device, &c, &g_driver->accept4_id);
+  status = FwpsCalloutRegister0(device, &c, &g_device->accept4_id);
   if (!NT_SUCCESS(status)) {
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_TRACE_LEVEL, "wipf: Register Accept V4: Error: %d\n", status);
     return status;
   }
 
-  DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_TRACE_LEVEL, "wipf: < wipf_callout_install()\n");
   return STATUS_SUCCESS;
 }
 
@@ -228,26 +223,8 @@ wipf_driver_complete (PDEVICE_OBJECT device, PIRP irp)
 {
   UNUSED(device);
 
-  DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_TRACE_LEVEL, "wipf: > wipf_driver_complete()\n");
-
   wipf_request_complete(irp, STATUS_SUCCESS);
 
-  DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_TRACE_LEVEL, "wipf: < wipf_driver_complete()\n");
-  return STATUS_SUCCESS;
-}
-
-static NTSTATUS
-wipf_driver_cleanup (PDEVICE_OBJECT device, PIRP irp)
-{
-  UNUSED(device);
-
-  DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_TRACE_LEVEL, "wipf: > wipf_driver_cleanup()\n");
-
-  wipf_conf_ref_set(NULL);
-
-  wipf_request_complete(irp, STATUS_SUCCESS);
-
-  DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_TRACE_LEVEL, "wipf: < wipf_driver_cleanup()\n");
   return STATUS_SUCCESS;
 }
 
@@ -259,8 +236,6 @@ wipf_driver_control (PDEVICE_OBJECT device, PIRP irp)
 
   UNUSED(device);
 
-  DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_TRACE_LEVEL, "wipf: > wipf_driver_control()\n");
-
   irp_stack = IoGetCurrentIrpStackLocation(irp);
 
   switch (irp_stack->Parameters.DeviceIoControl.IoControlCode) {
@@ -268,7 +243,7 @@ wipf_driver_control (PDEVICE_OBJECT device, PIRP irp)
     const PWIPF_CONF conf = irp->AssociatedIrp.SystemBuffer;
     const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
 
-    if (len >= sizeof(WIPF_CONF)) {
+    if (len > sizeof(WIPF_CONF)) {
       PWIPF_CONF_REF conf_ref = wipf_conf_ref_new(conf, len);
 
       if (conf_ref == NULL) {
@@ -280,6 +255,15 @@ wipf_driver_control (PDEVICE_OBJECT device, PIRP irp)
     }
     break;
   }
+#if 0
+  case WIPF_IOCTL_GETLOG: {
+    PVOID data = irp->AssociatedIrp.SystemBuffer;
+    const ULONG len = irp_stack->Parameters.DeviceIoControl.OutputBufferLength;
+
+    status = wipf_buffer_read_result(&g_device->buffer, irp);
+    break;
+  }
+#endif
   default: break;
   }
 
@@ -289,7 +273,6 @@ wipf_driver_control (PDEVICE_OBJECT device, PIRP irp)
 
   wipf_request_complete(irp, status);
 
-  DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_TRACE_LEVEL, "wipf: < wipf_driver_control()\n");
   return status;
 }
 
@@ -297,26 +280,26 @@ static void
 wipf_driver_unload (PDRIVER_OBJECT driver)
 {
   UNICODE_STRING device_link;
-  NTSTATUS status;
 
-  DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_TRACE_LEVEL, "wipf: > wipf_driver_unload()\n");
+  if (g_device != NULL) {
+    if (g_device->connect4_id) {
+      FwpsCalloutUnregisterById0(g_device->connect4_id);
+    }
 
-  if (g_driver->connect4_id) {
-    status = FwpsCalloutUnregisterById0(g_driver->connect4_id);
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_TRACE_LEVEL, "wipf: Unregister Connect V4: %d\n", status);
-  }
+    if (g_device->accept4_id) {
+      FwpsCalloutUnregisterById0(g_device->accept4_id);
+    }
 
-  if (g_driver->accept4_id) {
-    status = FwpsCalloutUnregisterById0(g_driver->accept4_id);
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_TRACE_LEVEL, "wipf: Unregister Accept V4: %d\n", status);
+    wipf_buffer_close(&g_device->buffer);
+    wipf_conf_ref_set(NULL);
+
+    g_device = NULL;
   }
 
   RtlInitUnicodeString(&device_link, DOS_DEVICE_NAME);
   IoDeleteSymbolicLink(&device_link);
 
   IoDeleteDevice(driver->DeviceObject);
-
-  DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_TRACE_LEVEL, "wipf: < wipf_driver_unload()\n");
 }
 
 NTSTATUS
@@ -328,36 +311,32 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 
   UNUSED(reg_path);
 
-  DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_TRACE_LEVEL, "wipf: > DriverEntry()\n");
-
   RtlInitUnicodeString(&device_name, NT_DEVICE_NAME);
-  status = IoCreateDevice(driver, sizeof(WIPF_DRIVER), &device_name,
+  status = IoCreateDevice(driver, sizeof(WIPF_DEVICE), &device_name,
                           WIPF_DEVICE_TYPE, 0, FALSE, &device);
 
   if (NT_SUCCESS(status)) {
     UNICODE_STRING device_link;
 
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_TRACE_LEVEL, "wipf: Device created\n");
-
     RtlInitUnicodeString(&device_link, DOS_DEVICE_NAME);
     status = IoCreateSymbolicLink(&device_link, &device_name);
 
     if (NT_SUCCESS(status)) {
-      DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_TRACE_LEVEL, "wipf: Device link created\n");
-
       driver->MajorFunction[IRP_MJ_CREATE] =
-        driver->MajorFunction[IRP_MJ_CLOSE] = wipf_driver_complete;
-      driver->MajorFunction[IRP_MJ_CLEANUP] = wipf_driver_cleanup;
+        driver->MajorFunction[IRP_MJ_CLOSE] =
+        driver->MajorFunction[IRP_MJ_CLEANUP] = wipf_driver_complete;
       driver->MajorFunction[IRP_MJ_DEVICE_CONTROL] = wipf_driver_control;
       driver->DriverUnload = wipf_driver_unload;
 
       device->Flags |= DO_BUFFERED_IO;
 
-      g_driver = device->DeviceExtension;
+      g_device = device->DeviceExtension;
 
-      RtlZeroMemory(g_driver, sizeof(WIPF_DRIVER));
+      RtlZeroMemory(g_device, sizeof(WIPF_DEVICE));
 
-      KeInitializeSpinLock(&g_driver->lock);
+      wipf_buffer_init(&g_device->buffer);
+
+      KeInitializeSpinLock(&g_device->conf_lock);
 
       status = wipf_callout_install(device);
     }
@@ -368,6 +347,5 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
     wipf_driver_unload(driver);
   }
 
-  DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_TRACE_LEVEL, "wipf: < DriverEntry()\n");
   return status;
 }

@@ -2,5 +2,4 @@
 *.exe
 *.pdb
 *.sys
-bin/clibs/
-src/drv/Win*/
+build/out/
