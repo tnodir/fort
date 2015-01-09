@@ -6,11 +6,14 @@
 
 #define WIPF_POOL_TAG	'WIPF'
 
-#define wipf_request_complete(irp, status) \
+#define wipf_request_complete_info(irp, status, info) \
   do { \
     (irp)->IoStatus.Status = (status); \
-    (irp)->IoStatus.Information = 0; \
+    (irp)->IoStatus.Information = (info); \
     IoCompleteRequest((irp), IO_NO_INCREMENT); \
   } while(0)
+
+#define wipf_request_complete(irp, status) \
+  wipf_request_complete_info((irp), (status), 0)
 
 #endif WIPFDRV_H

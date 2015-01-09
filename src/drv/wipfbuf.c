@@ -1,8 +1,18 @@
 /* Windows IP Filter Log Buffer */
 
+#define WIPF_BUFFER_SIZE	4 * 1024
+#define WIPF_BUFFER_SIZE_MAX	32 * 1024
+
+#include "../wipflog.c"
+
 typedef struct wipf_buffer {
   UINT32 top, size;
   PVOID data;
+
+  PIRP irp;  /* pending */
+  PVOID out;
+  ULONG out_len;
+
   KSPIN_LOCK lock;
 } WIPF_BUFFER, *PWIPF_BUFFER;
 
@@ -21,9 +31,121 @@ wipf_buffer_close (PWIPF_BUFFER buf)
   }
 }
 
-static BOOL
+static NTSTATUS
 wipf_buffer_write (PWIPF_BUFFER buf, UINT32 remote_ip, UINT64 pid,
-                   UINT32 path_len, const PVOID path)
+                   UINT32 path_len, const PVOID path,
+                   PIRP *irp, NTSTATUS *irp_status, ULONG_PTR *info)
 {
-  return TRUE;
+  const UINT32 len = sizeof(UINT32) + sizeof(UINT64)
+      + sizeof(UINT32) + path_len;
+  UINT32 size;
+  KIRQL irq;
+  NTSTATUS status = STATUS_SUCCESS;
+
+  KeAcquireSpinLock(&buf->lock, &irq);
+
+  /* Try to directly write to pending client */
+  if (buf->irp) {
+    *irp = buf->irp;
+    buf->irp = NULL;
+
+    *info = len;
+
+    if (buf->out_len < len) {
+      *irp_status = STATUS_BUFFER_TOO_SMALL;
+      /* fallback to buffer */
+    } else {
+      wipf_log_write(buf->out, remote_ip, pid, path_len, path);
+
+      *irp_status = STATUS_SUCCESS;
+      goto end;
+    }
+  }
+
+  size = buf->size;
+
+  if (len > WIPF_BUFFER_SIZE) {
+    status = STATUS_INVALID_PARAMETER;
+    goto end;  /* drop too long path */
+  }
+  if (len > size - buf->top) {
+    size *= 2;
+  }
+  if (size > WIPF_BUFFER_SIZE_MAX) {
+    status = STATUS_BUFFER_TOO_SMALL;
+    goto end;  /* drop on overflow of buffer */
+  }
+
+  /* resize the buffer */
+  if (size != buf->size) {
+    PVOID data = ExAllocatePoolWithTag(NonPagedPool, size, WIPF_POOL_TAG);
+    if (data == NULL) {
+      status = STATUS_INSUFFICIENT_RESOURCES;
+      goto end;  /* drop on OOM */
+    }
+
+    RtlCopyMemory(data, buf->data, buf->top);
+    wipf_buffer_close(buf);
+
+    buf->data = data;
+    buf->size = size;
+  }
+
+  buf->top += len;
+
+  wipf_log_write(buf->data, remote_ip, pid, path_len, path);
+
+ end:
+  KeReleaseSpinLock(&buf->lock, irq);
+
+  return status;
+}
+
+static NTSTATUS
+wipf_buffer_xmove (PWIPF_BUFFER buf, PIRP irp, PVOID out, ULONG out_len,
+                   ULONG_PTR *info)
+{
+  KIRQL irq;
+  NTSTATUS status = STATUS_SUCCESS;
+
+  KeAcquireSpinLock(&buf->lock, &irq);
+
+  *info = buf->top;
+
+  if (!buf->top) {
+    if (buf->irp) {
+      status = STATUS_INSUFFICIENT_RESOURCES;
+    } else {
+      buf->irp = irp;
+      buf->out = out;
+      buf->out_len = out_len;
+      status = STATUS_PENDING;
+    }
+    goto end;
+  }
+
+  if (out_len < buf->top) {
+    status = STATUS_BUFFER_TOO_SMALL;
+    goto end;
+  }
+
+  RtlCopyMemory(out, buf->data, buf->top);
+  buf->top = 0;
+
+ end:
+  KeReleaseSpinLock(&buf->lock, irq);
+
+  return status;
+}
+
+static void
+wipf_buffer_cancel_pending (PWIPF_BUFFER buf, PIRP irp)
+{
+  KIRQL irq;
+
+  KeAcquireSpinLock(&buf->lock, &irq);
+  if (irp == buf->irp) {
+    buf->irp = NULL;
+  }
+  KeReleaseSpinLock(&buf->lock, irq);
 }

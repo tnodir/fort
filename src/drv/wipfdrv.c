@@ -108,9 +108,8 @@ wipf_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 {
   PWIPF_CONF_REF conf_ref;
   UINT32 local_ip, remote_ip;
-  UINT64 pid;
   UINT32 path_len;
-  PVOID path = NULL;
+  PVOID path;
   BOOL blocked, notify;
 
   UNUSED(packet);
@@ -123,12 +122,10 @@ wipf_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   local_ip = inFixedValues->incomingValue[localIpField].value.uint32;
   remote_ip = inFixedValues->incomingValue[remoteIpField].value.uint32;
+  path_len = inMetaValues->processPath->size;
+  path = inMetaValues->processPath->data;
 
   if (local_ip != remote_ip) {
-    pid = inMetaValues->processId;
-    path_len = inMetaValues->processPath->size;
-    path = inMetaValues->processPath->data;
-
     blocked = wipf_conf_ipblocked(&conf_ref->conf, remote_ip,
                                   path_len, path, &notify);
   } else {
@@ -144,8 +141,19 @@ wipf_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   } else {
     classifyOut->actionType = FWP_ACTION_CONTINUE;
 
-    if (notify)
-      wipf_buffer_write(&g_device->buffer, remote_ip, pid, path_len, path);
+    if (notify) {
+      PIRP irp = NULL;
+      NTSTATUS irp_status;
+      ULONG_PTR info;
+
+      wipf_buffer_write(&g_device->buffer, remote_ip,
+        inMetaValues->processId, path_len, path,
+        &irp, &irp_status, &info);
+
+      if (irp) {
+        wipf_request_complete_info(irp, irp_status, info);
+      }
+    }
   }
 
   return STATUS_SUCCESS;
@@ -228,10 +236,23 @@ wipf_driver_complete (PDEVICE_OBJECT device, PIRP irp)
   return STATUS_SUCCESS;
 }
 
+static void
+wipf_driver_cancel_pending (PDEVICE_OBJECT device, PIRP irp)
+{
+  UNUSED(device);
+
+  wipf_buffer_cancel_pending(&g_device->buffer, irp);
+
+  IoReleaseCancelSpinLock(irp->CancelIrql);  /* before IoCompleteRequest()! */
+
+  wipf_request_complete(irp, STATUS_CANCELLED);
+}
+
 static NTSTATUS
 wipf_driver_control (PDEVICE_OBJECT device, PIRP irp)
 {
   PIO_STACK_LOCATION irp_stack;
+  ULONG_PTR info = 0;
   NTSTATUS status = STATUS_INVALID_PARAMETER;
 
   UNUSED(device);
@@ -255,23 +276,27 @@ wipf_driver_control (PDEVICE_OBJECT device, PIRP irp)
     }
     break;
   }
-#if 0
   case WIPF_IOCTL_GETLOG: {
-    PVOID data = irp->AssociatedIrp.SystemBuffer;
-    const ULONG len = irp_stack->Parameters.DeviceIoControl.OutputBufferLength;
+    PVOID out = irp->AssociatedIrp.SystemBuffer;
+    const ULONG out_len = irp_stack->Parameters.DeviceIoControl.OutputBufferLength;
 
-    status = wipf_buffer_read_result(&g_device->buffer, irp);
+    status = wipf_buffer_xmove(&g_device->buffer, irp, out, out_len, &info);
+
+    if (status == STATUS_PENDING) {
+      KIRQL cirq;
+
+      IoMarkIrpPending(irp);
+
+      IoAcquireCancelSpinLock(&cirq);
+      IoSetCancelRoutine(irp, wipf_driver_cancel_pending);
+      IoReleaseCancelSpinLock(cirq);
+    }
     break;
   }
-#endif
   default: break;
   }
 
-  if (!NT_SUCCESS(status)) {
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "wipf: Control: Error: %d\n", status);
-  }
-
-  wipf_request_complete(irp, status);
+  wipf_request_complete_info(irp, status, info);
 
   return status;
 }
