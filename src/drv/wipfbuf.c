@@ -1,6 +1,6 @@
 /* Windows IP Filter Log Buffer */
 
-#define WIPF_BUFFER_SIZE	4 * 1024
+#define WIPF_BUFFER_SIZE	2 * 1024
 #define WIPF_BUFFER_SIZE_MAX	32 * 1024
 
 #include "../wipflog.c"
@@ -36,11 +36,15 @@ wipf_buffer_write (PWIPF_BUFFER buf, UINT32 remote_ip, UINT64 pid,
                    UINT32 path_len, const PVOID path,
                    PIRP *irp, NTSTATUS *irp_status, ULONG_PTR *info)
 {
-  const UINT32 len = sizeof(UINT32) + sizeof(UINT64)
-      + sizeof(UINT32) + path_len;
+  UINT32 len = WIPF_LOG_SIZE(path_len);
   UINT32 size;
   KIRQL irq;
   NTSTATUS status = STATUS_SUCCESS;
+
+  if (len > WIPF_BUFFER_SIZE) {
+    path_len = 0;  /* drop too long path */
+    len = WIPF_LOG_SIZE(0);
+  }
 
   KeAcquireSpinLock(&buf->lock, &irq);
 
@@ -64,10 +68,6 @@ wipf_buffer_write (PWIPF_BUFFER buf, UINT32 remote_ip, UINT64 pid,
 
   size = buf->size;
 
-  if (len > WIPF_BUFFER_SIZE) {
-    status = STATUS_INVALID_PARAMETER;
-    goto end;  /* drop too long path */
-  }
   if (len > size - buf->top) {
     size *= 2;
   }

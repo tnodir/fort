@@ -1,5 +1,9 @@
 /* Windows IP Filter Log */
 
+#define WIPF_LOG_SIZE(path_len) \
+  (sizeof(UINT32) + sizeof(UINT64) + sizeof(UINT32) + (path_len))
+
+
 static void
 wipf_log_write (char *p, UINT32 remote_ip, UINT64 pid,
                 UINT32 path_len, const char *path)
