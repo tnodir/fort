@@ -1,5 +1,8 @@
 /* Windows IP Filter Log */
 
+#define WIPF_BUFFER_SIZE	2 * 1024
+#define WIPF_BUFFER_SIZE_MAX	32 * 1024
+
 #define WIPF_LOG_SIZE(path_len) \
   (sizeof(UINT32) + sizeof(UINT64) + sizeof(UINT32) + (path_len))
 

@@ -24,7 +24,7 @@ DEFINE_GUID(WIPF_CONNECT_FILTER_V4,
 DEFINE_GUID(WIPF_ACCEPT_FILTER_V4,
 	0x544a3e25, 0x7beb, 0x4970, 0x88, 0xef, 0xb4, 0xbc, 0xa2, 0xce, 0x24, 0x82);
 
-#define WIPF_DEVICE_NAME	_T("\\\\.\\wipf")
+#define WIPF_DEVICE_NAME	"\\\\.\\wipf"
 
 #define WIPF_DEVICE_TYPE	0xD000
 #define WIPF_IOCTL_BASE		0xD00
@@ -34,6 +34,6 @@ DEFINE_GUID(WIPF_ACCEPT_FILTER_V4,
 #define WIPF_IOCTL_SETCONF	WIPF_CTL_CODE(0, FILE_WRITE_DATA)
 #define WIPF_IOCTL_GETLOG	WIPF_CTL_CODE(1, FILE_READ_DATA)
 
-#define UNUSED(p)	((void) (p))
+#define UNUSED(p)		((void) (p))
 
 #endif COMMON_H

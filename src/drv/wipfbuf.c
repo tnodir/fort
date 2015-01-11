@@ -1,8 +1,5 @@
 /* Windows IP Filter Log Buffer */
 
-#define WIPF_BUFFER_SIZE	2 * 1024
-#define WIPF_BUFFER_SIZE_MAX	32 * 1024
-
 #include "../wipflog.c"
 
 typedef struct wipf_buffer {

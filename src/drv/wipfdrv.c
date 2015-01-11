@@ -236,6 +236,15 @@ wipf_driver_complete (PDEVICE_OBJECT device, PIRP irp)
   return STATUS_SUCCESS;
 }
 
+static NTSTATUS
+wipf_driver_cleanup (PDEVICE_OBJECT device, PIRP irp)
+{
+  wipf_buffer_close(&g_device->buffer);
+  wipf_conf_ref_set(NULL);
+
+  return wipf_driver_complete(device, irp);
+}
+
 static void
 wipf_driver_cancel_pending (PDEVICE_OBJECT device, PIRP irp)
 {
@@ -315,9 +324,6 @@ wipf_driver_unload (PDRIVER_OBJECT driver)
       FwpsCalloutUnregisterById0(g_device->accept4_id);
     }
 
-    wipf_buffer_close(&g_device->buffer);
-    wipf_conf_ref_set(NULL);
-
     g_device = NULL;
   }
 
@@ -348,8 +354,8 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 
     if (NT_SUCCESS(status)) {
       driver->MajorFunction[IRP_MJ_CREATE] =
-        driver->MajorFunction[IRP_MJ_CLOSE] =
-        driver->MajorFunction[IRP_MJ_CLEANUP] = wipf_driver_complete;
+        driver->MajorFunction[IRP_MJ_CLOSE] = wipf_driver_complete;
+      driver->MajorFunction[IRP_MJ_CLEANUP] = wipf_driver_cleanup;
       driver->MajorFunction[IRP_MJ_DEVICE_CONTROL] = wipf_driver_control;
       driver->DriverUnload = wipf_driver_unload;
 
