@@ -108,36 +108,40 @@ wipf_conf_ref_set (PWIPF_CONF_REF conf_ref)
     wipf_conf_ref_put(old_conf_ref);
 }
 
-static NTSTATUS
+static void
 wipf_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                           const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
-                          VOID *packet, const FWPS_FILTER0 *filter, UINT64 flowContext,
+                          void *layerData,
+                          const FWPS_FILTER0 *filter,
+                          UINT64 flowContext,
                           FWPS_CLASSIFY_OUT0 *classifyOut,
-                          int localIpField, int remoteIpField)
+                          int flagsField, int localIpField, int remoteIpField)
 {
   PWIPF_CONF_REF conf_ref;
+  UINT32 flags;
   UINT32 local_ip, remote_ip;
   UINT32 path_len;
   PVOID path;
   BOOL blocked, notify;
 
-  UNUSED(packet);
+  UNUSED(layerData);
   UNUSED(flowContext);
 
   if (!(filter->flags & FWPS_FILTER_FLAG_CLEAR_ACTION_RIGHT))
-    return STATUS_SUCCESS;
+    return;
 
   conf_ref = wipf_conf_ref_take();
 
   if (conf_ref == NULL)
-    return STATUS_SUCCESS;
+    return;
 
+  flags = inFixedValues->incomingValue[flagsField].value.uint32;
   local_ip = inFixedValues->incomingValue[localIpField].value.uint32;
   remote_ip = inFixedValues->incomingValue[remoteIpField].value.uint32;
   path_len = inMetaValues->processPath->size;
   path = inMetaValues->processPath->data;
 
-  if (local_ip != remote_ip) {
+  if (!(flags & FWP_CONDITION_FLAG_IS_LOOPBACK) && local_ip != remote_ip) {
     blocked = wipf_conf_ipblocked(&conf_ref->conf, remote_ip,
                                   path_len, path, &notify);
   } else {
@@ -167,28 +171,34 @@ wipf_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
       }
     }
   }
-
-  return STATUS_SUCCESS;
 }
 
-static NTSTATUS
+static void
 wipf_callout_connect_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                          const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
-                         VOID *packet, const FWPS_FILTER0 *filter, UINT64 flowContext,
+                         void *layerData,
+                         const FWPS_FILTER0 *filter,
+                         UINT64 flowContext,
                          FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-  return wipf_callout_classify_v4(inFixedValues, inMetaValues, packet, filter, flowContext, classifyOut,
+  wipf_callout_classify_v4(inFixedValues, inMetaValues, layerData,
+      filter, flowContext, classifyOut,
+      FWPS_FIELD_ALE_AUTH_CONNECT_V4_FLAGS,
       FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_LOCAL_ADDRESS,
       FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_REMOTE_ADDRESS);
 }
 
-static NTSTATUS
+static void
 wipf_callout_accept_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
-                        VOID *packet, const FWPS_FILTER0 *filter, UINT64 flowContext,
+                        void *layerData,
+                        const FWPS_FILTER0 *filter,
+                        UINT64 flowContext,
                         FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-  return wipf_callout_classify_v4(inFixedValues, inMetaValues, packet, filter, flowContext, classifyOut,
+  wipf_callout_classify_v4(inFixedValues, inMetaValues, layerData,
+      filter, flowContext, classifyOut,
+      FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_FLAGS,
       FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_LOCAL_ADDRESS,
       FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_REMOTE_ADDRESS);
 }
@@ -246,17 +256,15 @@ wipf_callout_install (PDEVICE_OBJECT device)
 static void
 wipf_callout_remove (void)
 {
-  if (g_device->active) {
-    if (g_device->connect4_id) {
-      FwpsCalloutUnregisterById0(g_device->connect4_id);
-    }
-
-    if (g_device->accept4_id) {
-      FwpsCalloutUnregisterById0(g_device->accept4_id);
-    }
-
-    g_device->active = FALSE;
+  if (g_device->connect4_id) {
+    FwpsCalloutUnregisterById0(g_device->connect4_id);
   }
+
+  if (g_device->accept4_id) {
+    FwpsCalloutUnregisterById0(g_device->accept4_id);
+  }
+
+  g_device->active = FALSE;
 }
 
 static BOOL
