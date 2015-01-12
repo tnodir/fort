@@ -441,6 +441,8 @@ wipf_device_control (PDEVICE_OBJECT device, PIRP irp)
       IoAcquireCancelSpinLock(&cirq);
       IoSetCancelRoutine(irp, wipf_device_cancel_pending);
       IoReleaseCancelSpinLock(cirq);
+
+      return STATUS_PENDING;
     }
     break;
   }

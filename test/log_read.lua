@@ -11,6 +11,6 @@ local buf = assert(sys.mem.pointer(BUFSIZ))
 
 while true do
   assert(device:ioctl(wipf.ioctl_getlog(), nil, buf))
-  print(buf:seek())
+  print("size:", buf:seek())
   buf:seek(0)
 end
