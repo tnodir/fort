@@ -27,8 +27,6 @@ typedef struct wipf_device {
   UINT32 connect4_id;
   UINT32 accept4_id;
 
-  BOOL active;
-
   WIPF_BUFFER buffer;
 
   PWIPF_CONF_REF volatile conf_ref;
@@ -219,9 +217,6 @@ wipf_callout_install (PDEVICE_OBJECT device)
   FWPS_CALLOUT0 c;
   NTSTATUS status;
 
-  if (g_device->active)
-    return STATUS_SUCCESS;
-
   RtlZeroMemory(&c, sizeof(FWPS_CALLOUT0));
 
   c.notifyFn = wipf_callout_notify;
@@ -248,8 +243,6 @@ wipf_callout_install (PDEVICE_OBJECT device)
     return status;
   }
 
-  g_device->active = TRUE;
-
   return STATUS_SUCCESS;
 }
 
@@ -263,8 +256,6 @@ wipf_callout_remove (void)
   if (g_device->accept4_id) {
     FwpsCalloutUnregisterById0(g_device->accept4_id);
   }
-
-  g_device->active = FALSE;
 }
 
 static BOOL
@@ -275,7 +266,7 @@ wipf_provider_install (void)
   FWPM_SUBLAYER0 sublayer;
   FWPM_FILTER0 ofilter4, ifilter4;
   HANDLE engine;
-  DWORD err;
+  NTSTATUS status;
 
   memset(&provider, 0, sizeof(FWPM_PROVIDER0));
   provider.providerKey = WIPF_GUID_PROVIDER;
@@ -320,25 +311,27 @@ wipf_provider_install (void)
   ifilter4.action.type = FWP_ACTION_CALLOUT_UNKNOWN;
   ifilter4.action.calloutKey = WIPF_GUID_CALLOUT_ACCEPT_V4;
 
-  if (!(err = FwpmEngineOpen0(NULL, RPC_C_AUTHN_WINNT, NULL, NULL, &engine))) {
-    if ((err = FwpmTransactionBegin0(engine, 0))
-     || (err = FwpmProviderAdd0(engine, &provider, NULL))
-     || (err = FwpmCalloutAdd0(engine, &ocallout4, NULL, NULL))
-     || (err = FwpmCalloutAdd0(engine, &icallout4, NULL, NULL))
-     || (err = FwpmSubLayerAdd0(engine, &sublayer, NULL))
-     || (err = FwpmFilterAdd0(engine, &ofilter4, NULL, NULL))
-     || (err = FwpmFilterAdd0(engine, &ifilter4, NULL, NULL))
-     || (err = FwpmTransactionCommit0(engine))
+  if (NT_SUCCESS(status = FwpmEngineOpen0(
+   NULL, RPC_C_AUTHN_WINNT, NULL, NULL, &engine))) {
+
+    if (!NT_SUCCESS(status = FwpmTransactionBegin0(engine, 0))
+     || !NT_SUCCESS(status = FwpmProviderAdd0(engine, &provider, NULL))
+     || !NT_SUCCESS(status = FwpmCalloutAdd0(engine, &ocallout4, NULL, NULL))
+     || !NT_SUCCESS(status = FwpmCalloutAdd0(engine, &icallout4, NULL, NULL))
+     || !NT_SUCCESS(status = FwpmSubLayerAdd0(engine, &sublayer, NULL))
+     || !NT_SUCCESS(status = FwpmFilterAdd0(engine, &ofilter4, NULL, NULL))
+     || !NT_SUCCESS(status = FwpmFilterAdd0(engine, &ifilter4, NULL, NULL))
+     || !NT_SUCCESS(status = FwpmTransactionCommit0(engine))
     ) {
       FwpmTransactionAbort0(engine);
 
-      DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "wipf: Provider Install: Error: %d\n", err);
+      DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "wipf: Provider Install: Error: %d\n", status);
     }
 
     FwpmEngineClose0(engine);
   }
 
-  return !err;
+  return status;
 }
 
 static void
@@ -362,7 +355,7 @@ wipf_device_create (PDEVICE_OBJECT device, PIRP irp)
 {
   NTSTATUS status;
 
-  status = wipf_callout_install(device);
+  status = wipf_provider_install();
 
   wipf_request_complete(irp, status);
 
@@ -384,7 +377,7 @@ wipf_device_cleanup (PDEVICE_OBJECT device, PIRP irp)
 {
   UNUSED(device);
 
-  wipf_callout_remove();
+  wipf_provider_remove();
 
   wipf_buffer_close(&g_device->buffer);
   wipf_conf_ref_set(NULL);
@@ -464,7 +457,7 @@ wipf_driver_unload (PDRIVER_OBJECT driver)
 {
   UNICODE_STRING device_link;
 
-  wipf_provider_remove();
+  wipf_callout_remove();
 
   RtlInitUnicodeString(&device_link, DOS_DEVICE_NAME);
   IoDeleteSymbolicLink(&device_link);
@@ -480,11 +473,6 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
   NTSTATUS status;
 
   UNUSED(reg_path);
-
-  wipf_provider_remove();
-
-  if (!wipf_provider_install())
-    return STATUS_INSUFFICIENT_RESOURCES;
 
   RtlInitUnicodeString(&device_name, NT_DEVICE_NAME);
   status = IoCreateDevice(driver, sizeof(WIPF_DEVICE), &device_name,
@@ -512,6 +500,8 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
       wipf_buffer_init(&g_device->buffer);
 
       KeInitializeSpinLock(&g_device->conf_lock);
+
+      status = wipf_callout_install(device);
     }
   }
 

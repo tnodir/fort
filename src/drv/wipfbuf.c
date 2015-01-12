@@ -27,6 +27,10 @@ wipf_buffer_close (PWIPF_BUFFER buf)
 {
   if (buf->data != NULL) {
     ExFreePoolWithTag(buf->data, WIPF_BUFFER_POOL_TAG);
+
+    buf->data = NULL;
+    buf->size = 0;
+    buf->top = 0;
   }
 }
 
@@ -83,11 +87,17 @@ wipf_buffer_write (PWIPF_BUFFER buf, UINT32 remote_ip, UINT64 pid,
       goto end;  /* drop on OOM */
     }
 
-    RtlCopyMemory(data, buf->data, buf->top);
-    wipf_buffer_close(buf);
+    /* move old data to the new place */
+    {
+      const UINT32 top = buf->top;
 
-    buf->data = data;
-    buf->size = size;
+      RtlCopyMemory(data, buf->data, top);
+      wipf_buffer_close(buf);
+
+      buf->data = data;
+      buf->size = size;
+      buf->top = top;
+    }
   }
 
   buf->top += len;
