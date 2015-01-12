@@ -1,4 +1,10 @@
 Windows IP Filter is a simple firewall.
 
+Depends on:
+
+- LuaJIT: http://luajit.org/
+- LuaSys: https://github.com/tnodir/luasys/
+- IUP: http://sourceforge.net/projects/iup/
+
 --
 Nodir Temirkhodjaev, <nodir.temir@gmail.com>

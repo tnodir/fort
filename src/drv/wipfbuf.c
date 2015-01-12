@@ -1,5 +1,7 @@
 /* Windows IP Filter Log Buffer */
 
+#define WIPF_BUFFER_POOL_TAG	'IPFB'
+
 #include "../wipflog.c"
 
 typedef struct wipf_buffer {
@@ -24,7 +26,7 @@ static void
 wipf_buffer_close (PWIPF_BUFFER buf)
 {
   if (buf->data != NULL) {
-    ExFreePoolWithTag(buf->data, WIPF_POOL_TAG);
+    ExFreePoolWithTag(buf->data, WIPF_BUFFER_POOL_TAG);
   }
 }
 
@@ -75,7 +77,7 @@ wipf_buffer_write (PWIPF_BUFFER buf, UINT32 remote_ip, UINT64 pid,
 
   /* resize the buffer */
   if (size != buf->size) {
-    PVOID data = ExAllocatePoolWithTag(NonPagedPool, size, WIPF_POOL_TAG);
+    PVOID data = ExAllocatePoolWithTag(NonPagedPool, size, WIPF_BUFFER_POOL_TAG);
     if (data == NULL) {
       status = STATUS_INSUFFICIENT_RESOURCES;
       goto end;  /* drop on OOM */
