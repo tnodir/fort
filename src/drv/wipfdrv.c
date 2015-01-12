@@ -139,7 +139,8 @@ wipf_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   path_len = inMetaValues->processPath->size;
   path = inMetaValues->processPath->data;
 
-  if (!(flags & FWP_CONDITION_FLAG_IS_LOOPBACK) && local_ip != remote_ip) {
+  if (!(flags & FWP_CONDITION_FLAG_IS_LOOPBACK)
+      && local_ip != remote_ip) {
     blocked = wipf_conf_ipblocked(&conf_ref->conf, remote_ip,
                                   path_len, path, &notify);
   } else {
