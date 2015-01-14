@@ -27,6 +27,8 @@ typedef struct wipf_device {
   UINT32 connect4_id;
   UINT32 accept4_id;
 
+  BOOL active;
+
   WIPF_BUFFER buffer;
 
   PWIPF_CONF_REF volatile conf_ref;
@@ -125,9 +127,6 @@ wipf_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   UNUSED(layerData);
   UNUSED(flowContext);
 
-  if (!(filter->flags & FWPS_FILTER_FLAG_CLEAR_ACTION_RIGHT))
-    return;
-
   conf_ref = wipf_conf_ref_take();
 
   if (conf_ref == NULL)
@@ -139,8 +138,7 @@ wipf_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   path_len = inMetaValues->processPath->size;
   path = inMetaValues->processPath->data;
 
-  if (!(flags & FWP_CONDITION_FLAG_IS_LOOPBACK)
-      && local_ip != remote_ip) {
+  if (!(flags & FWP_CONDITION_FLAG_IS_LOOPBACK)) {
     blocked = wipf_conf_ipblocked(&conf_ref->conf, remote_ip,
                                   path_len, path, &notify);
   } else {
@@ -155,6 +153,9 @@ wipf_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
     classifyOut->rights &= ~FWPS_RIGHT_ACTION_WRITE;
   } else {
     classifyOut->actionType = FWP_ACTION_CONTINUE;
+    if ((filter->flags & FWPS_FILTER_FLAG_CLEAR_ACTION_RIGHT)) {
+      classifyOut->rights &= ~FWPS_RIGHT_ACTION_WRITE;
+    }
 
     if (notify) {
       PIRP irp = NULL;
@@ -162,10 +163,10 @@ wipf_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
       ULONG_PTR info;
 
       wipf_buffer_write(&g_device->buffer, remote_ip,
-        inMetaValues->processId, path_len, path,
+        (UINT32) inMetaValues->processId, path_len, path,
         &irp, &irp_status, &info);
 
-      if (irp) {
+      if (irp != NULL) {
         wipf_request_complete_info(irp, irp_status, info);
       }
     }
@@ -218,6 +219,9 @@ wipf_callout_install (PDEVICE_OBJECT device)
   FWPS_CALLOUT0 c;
   NTSTATUS status;
 
+  if (g_device->active)
+    return STATUS_SUCCESS;
+
   RtlZeroMemory(&c, sizeof(FWPS_CALLOUT0));
 
   c.notifyFn = wipf_callout_notify;
@@ -229,7 +233,7 @@ wipf_callout_install (PDEVICE_OBJECT device)
 
   status = FwpsCalloutRegister0(device, &c, &g_device->connect4_id);
   if (!NT_SUCCESS(status)) {
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_TRACE_LEVEL, "wipf: Register Connect V4: Error: %d\n", status);
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "WIPF: Register Connect V4: Error: %d\n", status);
     return status;
   }
 
@@ -240,9 +244,11 @@ wipf_callout_install (PDEVICE_OBJECT device)
 
   status = FwpsCalloutRegister0(device, &c, &g_device->accept4_id);
   if (!NT_SUCCESS(status)) {
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_TRACE_LEVEL, "wipf: Register Accept V4: Error: %d\n", status);
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "WIPF: Register Accept V4: Error: %d\n", status);
     return status;
   }
+
+  g_device->active = TRUE;
 
   return STATUS_SUCCESS;
 }
@@ -257,9 +263,11 @@ wipf_callout_remove (void)
   if (g_device->accept4_id) {
     FwpsCalloutUnregisterById0(g_device->accept4_id);
   }
+
+  g_device->active = FALSE;
 }
 
-static BOOL
+static NTSTATUS
 wipf_provider_install (void)
 {
   FWPM_PROVIDER0 provider;
@@ -269,32 +277,33 @@ wipf_provider_install (void)
   HANDLE engine;
   NTSTATUS status;
 
-  memset(&provider, 0, sizeof(FWPM_PROVIDER0));
+  RtlZeroMemory(&provider, sizeof(FWPM_PROVIDER0));
   provider.providerKey = WIPF_GUID_PROVIDER;
   provider.displayData.name = L"WipfProvider";
   provider.displayData.description  = L"Windows IP Filter Provider";
 
-  memset(&ocallout4, 0, sizeof(FWPM_CALLOUT0));
+  RtlZeroMemory(&ocallout4, sizeof(FWPM_CALLOUT0));
   ocallout4.calloutKey = WIPF_GUID_CALLOUT_CONNECT_V4;
   ocallout4.displayData.name = L"WipfCalloutConnect4";
   ocallout4.displayData.description  = L"Windows IP Filter Callout Connect V4";
   ocallout4.providerKey = (GUID *) &WIPF_GUID_PROVIDER;
   ocallout4.applicableLayer = FWPM_LAYER_ALE_AUTH_CONNECT_V4;
 
-  memset(&icallout4, 0, sizeof(FWPM_CALLOUT0));
+  RtlZeroMemory(&icallout4, sizeof(FWPM_CALLOUT0));
   icallout4.calloutKey = WIPF_GUID_CALLOUT_ACCEPT_V4;
   icallout4.displayData.name = L"WipfCalloutAccept4";
   icallout4.displayData.description  = L"Windows IP Filter Callout Accept V4";
   icallout4.providerKey = (GUID *) &WIPF_GUID_PROVIDER;
   icallout4.applicableLayer = FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4;
 
-  memset(&sublayer, 0, sizeof(FWPM_SUBLAYER0));
+  RtlZeroMemory(&sublayer, sizeof(FWPM_SUBLAYER0));
   sublayer.subLayerKey = WIPF_GUID_SUBLAYER;
   sublayer.displayData.name = L"WipfSublayer";
   sublayer.displayData.description  = L"Windows IP Filter Sublayer";
   sublayer.providerKey = (GUID *) &WIPF_GUID_PROVIDER;
 
-  memset(&ofilter4, 0, sizeof(FWPM_FILTER0));
+  RtlZeroMemory(&ofilter4, sizeof(FWPM_FILTER0));
+  ofilter4.flags = FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED;
   ofilter4.filterKey = WIPF_GUID_FILTER_CONNECT_V4;
   ofilter4.layerKey = FWPM_LAYER_ALE_AUTH_CONNECT_V4;
   ofilter4.subLayerKey = WIPF_GUID_SUBLAYER;
@@ -303,7 +312,8 @@ wipf_provider_install (void)
   ofilter4.action.type = FWP_ACTION_CALLOUT_UNKNOWN;
   ofilter4.action.calloutKey = WIPF_GUID_CALLOUT_CONNECT_V4;
 
-  memset(&ifilter4, 0, sizeof(FWPM_FILTER0));
+  RtlZeroMemory(&ifilter4, sizeof(FWPM_FILTER0));
+  ifilter4.flags = FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED;
   ifilter4.filterKey = WIPF_GUID_FILTER_ACCEPT_V4;
   ifilter4.layerKey = FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4;
   ifilter4.subLayerKey = WIPF_GUID_SUBLAYER;
@@ -323,13 +333,14 @@ wipf_provider_install (void)
      || !NT_SUCCESS(status = FwpmFilterAdd0(engine, &ofilter4, NULL, NULL))
      || !NT_SUCCESS(status = FwpmFilterAdd0(engine, &ifilter4, NULL, NULL))
      || !NT_SUCCESS(status = FwpmTransactionCommit0(engine))
-    ) {
+    )
       FwpmTransactionAbort0(engine);
 
-      DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "wipf: Provider Install: Error: %d\n", status);
-    }
-
     FwpmEngineClose0(engine);
+  }
+
+  if (!NT_SUCCESS(status)) {
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "WIPF: Provider Install: Error: %d\n", status);
   }
 
   return status;
@@ -340,7 +351,7 @@ wipf_provider_remove (void)
 {
   HANDLE engine;
 
-  if (!FwpmEngineOpen0(NULL, RPC_C_AUTHN_WINNT, NULL, NULL, &engine)) {
+  if (NT_SUCCESS(FwpmEngineOpen0(NULL, RPC_C_AUTHN_WINNT, NULL, NULL, &engine))) {
     FwpmFilterDeleteByKey0(engine, (GUID *) &WIPF_GUID_FILTER_CONNECT_V4);
     FwpmFilterDeleteByKey0(engine, (GUID *) &WIPF_GUID_FILTER_ACCEPT_V4);
     FwpmSubLayerDeleteByKey0(engine, (GUID *) &WIPF_GUID_SUBLAYER);
@@ -356,7 +367,7 @@ wipf_device_create (PDEVICE_OBJECT device, PIRP irp)
 {
   NTSTATUS status;
 
-  status = wipf_provider_install();
+  status = wipf_callout_install(device);
 
   wipf_request_complete(irp, status);
 
@@ -378,7 +389,7 @@ wipf_device_cleanup (PDEVICE_OBJECT device, PIRP irp)
 {
   UNUSED(device);
 
-  wipf_provider_remove();
+  wipf_callout_remove();
 
   wipf_buffer_close(&g_device->buffer);
   wipf_conf_ref_set(NULL);
@@ -450,6 +461,10 @@ wipf_device_control (PDEVICE_OBJECT device, PIRP irp)
   default: break;
   }
 
+  if (!NT_SUCCESS(status)) {
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "WIPF: Device Control: Error: %d\n", status);
+  }
+
   wipf_request_complete_info(irp, status, info);
 
   return status;
@@ -460,7 +475,7 @@ wipf_driver_unload (PDRIVER_OBJECT driver)
 {
   UNICODE_STRING device_link;
 
-  wipf_callout_remove();
+  wipf_provider_remove();
 
   RtlInitUnicodeString(&device_link, DOS_DEVICE_NAME);
   IoDeleteSymbolicLink(&device_link);
@@ -504,12 +519,13 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 
       KeInitializeSpinLock(&g_device->conf_lock);
 
-      status = wipf_callout_install(device);
+      wipf_provider_remove();
+      status = wipf_provider_install();
     }
   }
 
   if (!NT_SUCCESS(status)) {
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "wipf: Entry: Error: %d\n", status);
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "WIPF: Entry: Error: %d\n", status);
     wipf_driver_unload(driver);
   }
 

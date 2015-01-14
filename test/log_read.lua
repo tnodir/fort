@@ -6,7 +6,7 @@ local wipf = require"wipflua"
 
 local device = assert(sys.handle():open(wipf.device_name(), "rw"))
 
-local BUFSIZ = wipf.buffer_size_max()
+local BUFSIZ = wipf.buffer_size()
 local buf = assert(sys.mem.pointer(BUFSIZ))
 
 assert(buf:write("test config"))

@@ -5,11 +5,11 @@
 #include "../wipflog.c"
 
 typedef struct wipf_buffer {
-  UINT32 top, size;
-  PVOID data;
+  UINT32 top;
+  PCHAR data;
 
   PIRP irp;  /* pending */
-  PVOID out;
+  PCHAR out;
   ULONG out_len;
 
   KSPIN_LOCK lock;
@@ -19,6 +19,9 @@ typedef struct wipf_buffer {
 static void
 wipf_buffer_init (PWIPF_BUFFER buf)
 {
+  buf->data = ExAllocatePoolWithTag(NonPagedPool, WIPF_BUFFER_SIZE,
+                                    WIPF_BUFFER_POOL_TAG);
+
   KeInitializeSpinLock(&buf->lock);
 }
 
@@ -29,25 +32,24 @@ wipf_buffer_close (PWIPF_BUFFER buf)
     ExFreePoolWithTag(buf->data, WIPF_BUFFER_POOL_TAG);
 
     buf->data = NULL;
-    buf->size = 0;
     buf->top = 0;
   }
 }
 
 static NTSTATUS
-wipf_buffer_write (PWIPF_BUFFER buf, UINT32 remote_ip, UINT64 pid,
+wipf_buffer_write (PWIPF_BUFFER buf, UINT32 remote_ip, UINT32 pid,
                    UINT32 path_len, const PVOID path,
                    PIRP *irp, NTSTATUS *irp_status, ULONG_PTR *info)
 {
-  UINT32 len = WIPF_LOG_SIZE(path_len);
-  UINT32 size;
+  UINT32 len;
   KIRQL irq;
   NTSTATUS status = STATUS_SUCCESS;
 
-  if (len > WIPF_BUFFER_SIZE) {
+  if (path_len > WIPF_LOG_PATH_MAX) {
     path_len = 0;  /* drop too long path */
-    len = WIPF_LOG_SIZE(0);
   }
+
+  len = WIPF_LOG_SIZE(path_len);
 
   KeAcquireSpinLock(&buf->lock, &irq);
 
@@ -69,40 +71,13 @@ wipf_buffer_write (PWIPF_BUFFER buf, UINT32 remote_ip, UINT64 pid,
     }
   }
 
-  size = buf->size;
-
-  if (len > size - buf->top) {
-    size *= 2;
-  }
-  if (size > WIPF_BUFFER_SIZE_MAX) {
+  if (len > WIPF_BUFFER_SIZE - buf->top) {
     status = STATUS_BUFFER_TOO_SMALL;
-    goto end;  /* drop on overflow of buffer */
+    goto end;  /* drop on buffer overflow */
   }
 
-  /* resize the buffer */
-  if (size != buf->size) {
-    PVOID data = ExAllocatePoolWithTag(NonPagedPool, size, WIPF_BUFFER_POOL_TAG);
-    if (data == NULL) {
-      status = STATUS_INSUFFICIENT_RESOURCES;
-      goto end;  /* drop on OOM */
-    }
-
-    /* move old data to the new place */
-    {
-      const UINT32 top = buf->top;
-
-      RtlCopyMemory(data, buf->data, top);
-      wipf_buffer_close(buf);
-
-      buf->data = data;
-      buf->size = size;
-      buf->top = top;
-    }
-  }
-
+  wipf_log_write(buf->data + buf->top, remote_ip, pid, path_len, path);
   buf->top += len;
-
-  wipf_log_write(buf->data, remote_ip, pid, path_len, path);
 
  end:
   KeReleaseSpinLock(&buf->lock, irq);
