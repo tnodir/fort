@@ -391,7 +391,6 @@ wipf_device_cleanup (PDEVICE_OBJECT device, PIRP irp)
 
   wipf_callout_remove();
 
-  wipf_buffer_close(&g_device->buffer);
   wipf_conf_ref_set(NULL);
 
   wipf_request_complete(irp, STATUS_SUCCESS);
@@ -474,6 +473,8 @@ static void
 wipf_driver_unload (PDRIVER_OBJECT driver)
 {
   UNICODE_STRING device_link;
+
+  wipf_buffer_close(&g_device->buffer);
 
   wipf_provider_remove();
 

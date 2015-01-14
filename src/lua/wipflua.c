@@ -72,13 +72,45 @@ wipf_lua_log_write (lua_State *L)
   size_t path_len;
   const char *path = lua_tolstring(L, 4, &path_len);
 
-  if (out) {
-    wipf_log_write(out, remote_ip, pid, path_len, path);
+  if (!out) return 0;
 
-    lua_pushinteger(L, WIPF_LOG_SIZE(path_len));
-    return 1;
+  wipf_log_write(out, remote_ip, pid, path_len, path);
+
+  lua_pushinteger(L, WIPF_LOG_SIZE(path_len));
+  return 1;
+}
+
+/*
+ * Arguments: input (ludata), [offset (number)]
+ * Returns: length (number), remote_ip (number),
+ *	pid (number), [path (string)]
+ */
+static int
+wipf_lua_log_read (lua_State *L)
+{
+  char *in = lua_touserdata(L, 1);
+  const int off = lua_tointeger(L, 2);
+  int remote_ip, pid;
+  size_t path_len;
+  const char *path;
+
+  if (!in) return 0;
+
+  wipf_log_read(in + off, &remote_ip, &pid, &path_len, &path);
+
+  lua_pushinteger(L, WIPF_LOG_SIZE(path_len));
+  lua_pushinteger(L, remote_ip);
+  lua_pushinteger(L, pid);
+
+  if (path_len) {
+    char buf[WIPF_LOG_PATH_MAX];
+    const int n = WideCharToMultiByte(CP_UTF8, 0, (LPCWCH) path, path_len/2,
+                                      buf, WIPF_LOG_PATH_MAX, NULL, 0);
+
+    lua_pushlstring(L, buf, n);
+    return 4;
   }
-  return 0;
+  return 3;
 }
 
 
@@ -88,6 +120,7 @@ static luaL_Reg wipf_lib[] = {
   {"ioctl_setconf",	wipf_lua_ioctl_setconf},
   {"buffer_size",	wipf_lua_buffer_size},
   {"log_write",		wipf_lua_log_write},
+  {"log_read",		wipf_lua_log_read},
   {NULL, NULL}
 };
 

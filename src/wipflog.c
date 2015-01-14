@@ -1,7 +1,7 @@
 /* Windows IP Filter Log */
 
-#define WIPF_BUFFER_SIZE	8 * 1024
-#define WIPF_LOG_PATH_MAX	256
+#define WIPF_BUFFER_SIZE	16 * 1024
+#define WIPF_LOG_PATH_MAX	512
 
 #define WIPF_LOG_SIZE(path_len) \
   (sizeof(UINT32) + sizeof(UINT32) + sizeof(UINT32) + (path_len))
@@ -21,16 +21,12 @@ wipf_log_write (char *p, UINT32 remote_ip, UINT32 pid,
 }
 
 static void
-wipf_log_read (const char **p, UINT32 *remote_ip, UINT32 *pid,
+wipf_log_read (const char *p, UINT32 *remote_ip, UINT32 *pid,
                UINT32 *path_len, const char **path)
 {
-  *remote_ip = *((UINT32 *) *p)++;
-  *pid = *((UINT32 *) *p)++;
-  *path_len = *((UINT32 *) *p)++;
-
-  if (*path_len) {
-    *path = *p;
-    *p += *path_len;
-  }
+  *remote_ip = *((UINT32 *) p)++;
+  *pid = *((UINT32 *) p)++;
+  *path_len = *((UINT32 *) p)++;
+  *path = *path_len ? p : NULL;
 }
 
