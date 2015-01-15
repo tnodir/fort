@@ -25,10 +25,7 @@ local BUFSIZ = wipf.buffer_size()
 local buf = assert(sys.mem.pointer(BUFSIZ))
 
 assert(buf:write("test config"))
-
 assert(device:ioctl(wipf.ioctl_setconf(), buf))
-
-print("buffer size:", buf:length())
 
 while true do
   assert(device:ioctl(wipf.ioctl_getlog(), nil, buf))
