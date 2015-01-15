@@ -67,8 +67,8 @@ static int
 wipf_lua_log_write (lua_State *L)
 {
   char *out = lua_touserdata(L, 1);
-  const int remote_ip = lua_tointeger(L, 2);
-  const int pid = lua_tointeger(L, 3);
+  const unsigned long remote_ip = lua_tointeger(L, 2);
+  const unsigned long pid = lua_tointeger(L, 3);
   size_t path_len;
   const char *path = lua_tolstring(L, 4, &path_len);
 
@@ -90,7 +90,7 @@ wipf_lua_log_read (lua_State *L)
 {
   char *in = lua_touserdata(L, 1);
   const int off = lua_tointeger(L, 2);
-  int remote_ip, pid;
+  unsigned long remote_ip, pid;
   size_t path_len;
   const char *path;
 

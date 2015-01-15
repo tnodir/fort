@@ -1,6 +1,7 @@
 -- WIPF Log Reader
 
 local sys = require"sys"
+local sock = require"sys.sock"
 local wipf = require"wipflua"
 
 
@@ -11,8 +12,9 @@ function print_logs(buf)
 
   while off < size do
     local len, ip, pid, path = wipf.log_read(ptr, off)
+    local ip_str = sock.inet_ntop(ip)
     off = off + len
-    print(ip, pid, path)
+    print(ip_str, pid, path)
   end
 
   buf:seek(0)
