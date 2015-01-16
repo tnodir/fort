@@ -2,9 +2,11 @@
 
 #define WIPF_BUFFER_SIZE	16 * 1024
 #define WIPF_LOG_PATH_MAX	512
+#define WIPF_LOG_ALIGN		4
 
 #define WIPF_LOG_SIZE(path_len) \
-  (sizeof(UINT32) + sizeof(UINT32) + sizeof(UINT32) + (path_len))
+  ((sizeof(UINT32) + sizeof(UINT32) + sizeof(UINT32) + (path_len)) \
+     + (WIPF_LOG_ALIGN-1)) & ~(WIPF_LOG_ALIGN-1)
 
 
 static void
