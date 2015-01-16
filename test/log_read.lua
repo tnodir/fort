@@ -7,7 +7,9 @@ local wipf = require"wipflua"
 
 function get_procpath(id)
   local pid = sys.pid(id, true)
-  return (pid and pid:path()) or ""
+  local path = (pid and pid:path()) or ""
+  pid:close()
+  return path
 end
 
 function print_logs(buf)
