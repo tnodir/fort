@@ -5,6 +5,11 @@ local sock = require"sys.sock"
 local wipf = require"wipflua"
 
 
+function get_procpath(id)
+  local pid = sys.pid(id, true)
+  return (pid and pid:path()) or ""
+end
+
 function print_logs(buf)
   local size = buf:seek()
   local ptr = buf:getptr()
@@ -13,8 +18,14 @@ function print_logs(buf)
   while off < size do
     local len, ip, pid, path = wipf.log_read(ptr, off)
     local ip_str = sock.inet_ntop(ip)
-    off = off + len
+
+    if not path then
+      path = get_procpath(pid)
+    end
+
     print(ip_str, pid, path)
+
+    off = off + len
   end
 
   buf:seek(0)

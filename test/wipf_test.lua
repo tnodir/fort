@@ -6,9 +6,11 @@ local wipf = require"wipflua"
 local mem, win32 = sys.mem, sys.win32
 
 
-print"-- Log Write"
+print"-- Log Read/Write"
 do
   local path = "/test"
+  assert(#path == 5)
+
   local outlen = 12 + #path + 3
   local bufsize = outlen + 4
   local buf = assert(mem.pointer(bufsize))
