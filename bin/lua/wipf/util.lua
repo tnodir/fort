@@ -27,11 +27,13 @@ do
   end
 
   dosname_to_drive = function (dos_name)
-    if not drives then
+    local name = dos_name:lower()
+
+    if not drives or not drives[name] then
       fill_drives()
     end
 
-    return drives[dos_name:lower()] or "?:"
+    return drives[name] or "?:"
   end
 end
 
