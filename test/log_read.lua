@@ -2,15 +2,10 @@
 
 local sys = require"sys"
 local sock = require"sys.sock"
+
 local wipf = require"wipflua"
+local wipf_util = require"wipf/util"
 
-
-function get_procpath(id)
-  local pid = sys.pid(id, true)
-  local path = (pid and pid:path()) or ""
-  pid:close()
-  return path
-end
 
 function print_logs(buf)
   local size = buf:seek()
@@ -18,12 +13,14 @@ function print_logs(buf)
   local off = 0
 
   while off < size do
-    local len, ip, pid, path = wipf.log_read(ptr, off)
+    local len, ip, pid, dos_path = wipf.log_read(ptr, off)
     local ip_str = sock.inet_ntop(ip)
 
-    if not path then
-      path = get_procpath(pid)
+    if not dos_path then
+      dos_path = wipf_util.pid_dospath(pid)
     end
+
+    local path = wipf_util.dospath_to_path(dos_path)
 
     print(ip_str, pid, path)
 
