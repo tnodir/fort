@@ -59,7 +59,7 @@ end
 
 -- Convert Win32 path to Native path
 local function path_to_dospath(path)
-  local drive, sub_path = string.match(path, [[(%w:)(\.+)]])
+  local drive, sub_path = string.match(path, [[(%a:)(\.+)]])
   if not drive then
     return path
   end

@@ -61,8 +61,13 @@ do
     D:\Utils\Dev\Git\*
   ]]
 
-  local iprange_from, iprange_to = wipf_ip.ip4range_to_numbers(ip_include)
-  print(#iprange_from, #iprange_to)
+  local iprange_from_inc, iprange_to_inc =
+      wipf_ip.ip4range_to_numbers(ip_include)
+  assert(iprange_from_inc.n == iprange_to_inc.n)
+
+  local iprange_from_exc, iprange_to_exc =
+      wipf_ip.ip4range_to_numbers(ip_exclude)
+  assert(iprange_from_exc.n == iprange_to_exc.n)
 
   print("OK")
 end
