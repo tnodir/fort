@@ -4,7 +4,7 @@ local sys = require"sys"
 local sock = require"sys.sock"
 
 local wipf = require"wipflua"
-local wipf_util = require"wipf/util"
+local wipf_fs = require"wipf/util/fs"
 
 
 function print_logs(buf)
@@ -17,10 +17,10 @@ function print_logs(buf)
     local ip_str = sock.inet_ntop(ip)
 
     if not dos_path then
-      dos_path = wipf_util.pid_dospath(pid)
+      dos_path = wipf_fs.pid_dospath(pid)
     end
 
-    local path = wipf_util.dospath_to_path(dos_path)
+    local path = wipf_fs.dospath_to_path(dos_path)
 
     print(ip_str, pid, path)
 
