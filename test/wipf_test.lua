@@ -43,25 +43,35 @@ end
 
 print"-- IPv4 Conversions"
 do
-  local ip_range = [[
+  local from, to = wipf_ip.ip4range_to_numbers[[
     172.16.0.0/20
     192.168.0.0 - 192.168.255.255
   ]]
-
-  local from, to = wipf_ip.ip4range_to_numbers(ip_range)
   assert(from.n == 2 and to.n == 2)
   assert(from[1] == sock.inet_pton("172.16.0.0", true))
   assert(to[1] == sock.inet_pton("172.31.255.255", true))
   assert(from[2] == sock.inet_pton("192.168.0.0", true))
   assert(to[2] == sock.inet_pton("192.168.255.255", true))
+
+  local _, err_line
+  _, err_line = wipf_ip.ip4range_to_numbers[[172.16.0.0/33]]
+  assert(err_line == 1)
+  _, err_line = wipf_ip.ip4range_to_numbers[[172.16.0.255/-16]]
+  assert(err_line == 1)
   print("OK")
 end
 
 
 print"-- Conf Read/Write"
 do
-  local log_blocked = true
-  local ip_include = "*"
+  local ip_include_all = true
+  local ip_exclude_all = false
+
+  local app_log_blocked = true
+  local app_block_all = true
+  local app_allow_all = false
+
+  local ip_include = ""
   local ip_exclude = [[
     10.0.0.0/24
     127.0.0.0/24
@@ -69,15 +79,27 @@ do
     172.16.0.0/20
     192.168.0.0/16
   ]]
-  local app_block = [[
-    *
-    System
-  ]]
-  local app_permit = [[
-    D:\Programs\Skype\Phone\Skype.exe
-    D:\Utils\Firefox\Bin\firefox.exe
-    D:\Utils\Dev\Git\*
-  ]]
+
+  local app_groups = {
+    {
+      name = "Base",
+      enabled = true,
+      block = [[
+        System
+      ]],
+      allow = [[
+        D:\Programs\Skype\Phone\Skype.exe
+        D:\Utils\Dev\Git\*
+      ]]
+    },
+    {
+      name = "Browser",
+      enabled = false,
+      allow = [[
+        D:\Utils\Firefox\Bin\firefox.exe
+      ]]
+    }
+  }
 
   local iprange_from_inc, iprange_to_inc =
       wipf_ip.ip4range_to_numbers(ip_include)

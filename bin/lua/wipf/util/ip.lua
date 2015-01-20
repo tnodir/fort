@@ -28,7 +28,7 @@ do
       end
     elseif sep == '/' then  -- e.g. "127.0.0.0/24"
       local nbits = tonumber(mask)
-      if nbits > 32 then
+      if nbits > 32 or nbits < 0 then
         return
       elseif nbits == 32 then
         to_ip = 0xFFFFFFFF
@@ -42,14 +42,18 @@ do
 
   ip4range_to_numbers = function (text)
     local iprange_from, iprange_to = {}, {}
-    local index = 0
+    local line_no, index = 0, 0
 
     for line in string.gmatch(text, "%s*([^\n]+)") do
       local from, to = parse_address_mask(line)
 
+      line_no = line_no + 1
+
       if from then
         index = index + 1
         iprange_from[index], iprange_to[index] = from, to
+      elseif string.find(line, "%S") then
+        return nil, line_no
       end
     end
 
