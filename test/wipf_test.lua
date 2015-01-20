@@ -4,8 +4,9 @@ local sys = require"sys"
 local sock = require"sys.sock"
 
 local wipf = require"wipflua"
-local wipf_fs = require"wipf/util/fs"
-local wipf_ip = require"wipf/util/ip"
+local util_conf = require"wipf/util/conf"
+local util_fs = require"wipf/util/fs"
+local util_ip = require"wipf/util/ip"
 
 local mem, win32 = sys.mem, sys.win32
 
@@ -34,8 +35,8 @@ end
 print"-- Paths"
 do
   local path = [[C:\test]]
-  local dos_path = wipf_fs.path_to_dospath(path)
-  local win32_path = wipf_fs.dospath_to_path(dos_path)
+  local dos_path = util_fs.path_to_dospath(path)
+  local win32_path = util_fs.dospath_to_path(dos_path)
   assert(path == win32_path)
   print("OK")
 end
@@ -43,7 +44,7 @@ end
 
 print"-- IPv4 Conversions"
 do
-  local from, to = wipf_ip.ip4range_to_numbers[[
+  local from, to = util_ip.ip4range_to_numbers[[
     172.16.0.0/20
     192.168.0.0 - 192.168.255.255
   ]]
@@ -54,9 +55,9 @@ do
   assert(to[2] == sock.inet_pton("192.168.255.255", true))
 
   local _, err_line
-  _, err_line = wipf_ip.ip4range_to_numbers[[172.16.0.0/33]]
+  _, err_line = util_ip.ip4range_to_numbers[[172.16.0.0/33]]
   assert(err_line == 1)
-  _, err_line = wipf_ip.ip4range_to_numbers[[172.16.0.255/-16]]
+  _, err_line = util_ip.ip4range_to_numbers[[172.16.0.255/-16]]
   assert(err_line == 1)
   print("OK")
 end
@@ -102,10 +103,10 @@ do
   }
 
   local iprange_from_inc, iprange_to_inc =
-      wipf_ip.ip4range_to_numbers(ip_include)
+      util_ip.ip4range_to_numbers(ip_include)
 
   local iprange_from_exc, iprange_to_exc =
-      wipf_ip.ip4range_to_numbers(ip_exclude)
+      util_ip.ip4range_to_numbers(ip_exclude)
 
   print("OK")
 end

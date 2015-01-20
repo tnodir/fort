@@ -6,7 +6,7 @@ local win32 = sys.win32
 
 
 -- Get Process's Native path by identifier
-function pid_dospath(id)
+local function pid_dospath(id)
   local pid = sys.pid(id, true)
   local path = (pid and pid:path()) or ""
   pid:close()
@@ -68,8 +68,7 @@ end
 
 
 return {
-  dosname_to_drive	= dosname_to_drive,
-  drive_to_dosname	= drive_to_dosname,
+  pid_dospath		= pid_dospath,
   dospath_to_path	= dospath_to_path,
   path_to_dospath	= path_to_dospath,
 }
