@@ -1,6 +1,7 @@
 -- WIPF Log Tests
 
 local sys = require"sys"
+local sock = require"sys.sock"
 
 local wipf = require"wipflua"
 local wipf_fs = require"wipf/util/fs"
@@ -40,6 +41,23 @@ do
 end
 
 
+print"-- IPv4 Conversions"
+do
+  local ip_range = [[
+    172.16.0.0/20
+    192.168.0.0 - 192.168.255.255
+  ]]
+
+  local from, to = wipf_ip.ip4range_to_numbers(ip_range)
+  assert(from.n == 2 and to.n == 2)
+  assert(from[1] == sock.inet_pton("172.16.0.0", true))
+  assert(to[1] == sock.inet_pton("172.31.255.255", true))
+  assert(from[2] == sock.inet_pton("192.168.0.0", true))
+  assert(to[2] == sock.inet_pton("192.168.255.255", true))
+  print("OK")
+end
+
+
 print"-- Conf Read/Write"
 do
   local log_blocked = true
@@ -63,11 +81,9 @@ do
 
   local iprange_from_inc, iprange_to_inc =
       wipf_ip.ip4range_to_numbers(ip_include)
-  assert(iprange_from_inc.n == iprange_to_inc.n)
 
   local iprange_from_exc, iprange_to_exc =
       wipf_ip.ip4range_to_numbers(ip_exclude)
-  assert(iprange_from_exc.n == iprange_to_exc.n)
 
   print("OK")
 end

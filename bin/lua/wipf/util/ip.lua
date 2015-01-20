@@ -10,7 +10,10 @@ local sock = require"sys.sock"
 local ip4range_to_numbers
 do
   local function parse_address_mask(line)
-    local from, sep, mask = string.match(line, "([%d%.]+)%s*(%S)%s*(%S+)")
+    local from, sep, mask = string.match(line, "([%d%.]+)%s*([/%-])%s*(%S+)")
+    if not from then
+      return
+    end
 
     local from_ip = sock.inet_pton(from, true)
     if not from_ip then
@@ -41,14 +44,8 @@ do
     local iprange_from, iprange_to = {}, {}
     local index = 0
 
-    for line in string.gmatch(text, "%s*(%S+)%s*\n?") do
-      local from, to
-
-      if line == "*" then
-        from, to = 0, 0xFFFFFFFF
-      else
-        from, to = parse_address_mask(line)
-      end
+    for line in string.gmatch(text, "%s*([^\n]+)") do
+      local from, to = parse_address_mask(line)
 
       if from then
         index = index + 1
