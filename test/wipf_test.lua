@@ -65,15 +65,18 @@ end
 
 print"-- Conf Read/Write"
 do
-  local ip_include_all = true
-  local ip_exclude_all = false
+  local buf = assert(mem.pointer():alloc())
+  local conf = util_conf.new_conf()
 
-  local app_log_blocked = true
-  local app_block_all = true
-  local app_allow_all = false
+  conf:set_ip_include_all(true)
+  conf:set_ip_exclude_all(false)
 
-  local ip_include = ""
-  local ip_exclude = [[
+  conf:set_app_log_blocked(true)
+  conf:set_app_block_all(true)
+  conf:set_app_allow_all(false)
+
+  conf:set_ip_include""
+  conf:set_ip_exclude[[
     10.0.0.0/24
     127.0.0.0/24
     169.254.0.0/16
@@ -81,32 +84,28 @@ do
     192.168.0.0/16
   ]]
 
-  local app_groups = {
-    {
-      name = "Base",
-      enabled = true,
-      block = [[
-        System
-      ]],
-      allow = [[
-        D:\Programs\Skype\Phone\Skype.exe
-        D:\Utils\Dev\Git\*
-      ]]
-    },
-    {
-      name = "Browser",
-      enabled = false,
-      allow = [[
-        D:\Utils\Firefox\Bin\firefox.exe
-      ]]
-    }
-  }
+  local app_group1 = util_conf.new_app_group()
+  app_group1:set_name("Base")
+  app_group1:set_enabled(true)
+  app_group1:set_block[[
+    System
+  ]]
+  app_group1:set_allow[[
+    D:\Programs\Skype\Phone\Skype.exe
+    D:\Utils\Dev\Git\*
+  ]]
 
-  local iprange_from_inc, iprange_to_inc =
-      util_ip.ip4range_to_numbers(ip_include)
+  local app_group2 = util_conf.new_app_group()
+  app_group2:set_name("Browser")
+  app_group2:set_enabled(false)
+  app_group2:set_allow[[
+    D:\Utils\Firefox\Bin\firefox.exe
+  ]]
 
-  local iprange_from_exc, iprange_to_exc =
-      util_ip.ip4range_to_numbers(ip_exclude)
+  conf:add_app_group(app_group1)
+  conf:add_app_group(app_group2)
+
+  assert(conf:write(buf))
 
   print("OK")
 end
