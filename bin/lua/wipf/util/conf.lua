@@ -1,6 +1,7 @@
 -- WIPF Configuration Utilities
 
 local wipf = require"wipflua"
+local i18n = require"wipf/util/i18n"
 local util_ip = require"wipf/util/ip"
 
 
@@ -73,9 +74,18 @@ local conf_meta = {
 
     local iprange_from_inc, iprange_to_inc =
         util_ip.ip4range_to_numbers(self.ip_include)
+    if not iprange_from_inc then
+      return nil, i18n.tr_fmt('err_conf_iprange_inc', iprange_to_inc)
+    end
 
     local iprange_from_exc, iprange_to_exc =
         util_ip.ip4range_to_numbers(self.ip_exclude)
+    if not iprange_from_exc then
+      return nil, i18n.tr_fmt('err_conf_iprange_exc', iprange_to_exc)
+    end
+
+    --local group_names, app_dospaths =
+    --    util_ip.ip4range_to_numbers(self.ip_exclude)
 
     return true
   end,

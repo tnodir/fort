@@ -4,6 +4,7 @@ local sys = require"sys"
 local sock = require"sys.sock"
 
 local wipf = require"wipflua"
+local i18n = require"wipf/util/i18n"
 local util_conf = require"wipf/util/conf"
 local util_fs = require"wipf/util/fs"
 local util_ip = require"wipf/util/ip"
@@ -107,6 +108,15 @@ do
 
   assert(conf:write(buf))
 
+  print("OK")
+end
+
+
+print"-- I18n"
+do
+  local id = 'err_conf_iprange_inc'
+  local text = i18n.tr_fmt(id, 3)
+  assert(text ~= id)
   print("OK")
 end
 

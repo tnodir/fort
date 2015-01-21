@@ -66,9 +66,22 @@ local function path_to_dospath(path)
   return drive_to_dosname(drive) .. sub_path
 end
 
+-- Load file, run it in sandbox and return it's globals in a table
+function sandbox(path)
+  local chunk, err_msg = loadfile(path)
+  if not chunk then
+    return nil, err_msg
+  end
+  local env = setmetatable({}, nil)
+  setfenv(chunk, env)
+  chunk()
+  return env
+end
+
 
 return {
   pid_dospath		= pid_dospath,
   dospath_to_path	= dospath_to_path,
   path_to_dospath	= path_to_dospath,
+  sandbox		= sandbox,
 }
