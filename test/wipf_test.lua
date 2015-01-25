@@ -45,7 +45,16 @@ end
 
 print"-- IPv4 Conversions"
 do
-  local from, to = util_ip.ip4range_to_numbers[[
+  local _, err_line
+  _, err_line = util_ip.ip4range_to_numbers[[172.16.0.0/33]]
+  assert(err_line == 1)
+  _, err_line = util_ip.ip4range_to_numbers[[172.16.0.255/-16]]
+  assert(err_line == 1)
+  _, err_line = util_ip.ip4range_to_numbers[[10.0.0.32 - 10.0.0.24]]
+  assert(err_line == 1)
+
+  local from, to
+  from, to = util_ip.ip4range_to_numbers[[
     172.16.0.0/20
     192.168.0.0 - 192.168.255.255
   ]]
@@ -55,11 +64,16 @@ do
   assert(from[2] == sock.inet_pton("192.168.0.0", true))
   assert(to[2] == sock.inet_pton("192.168.255.255", true))
 
-  local _, err_line
-  _, err_line = util_ip.ip4range_to_numbers[[172.16.0.0/33]]
-  assert(err_line == 1)
-  _, err_line = util_ip.ip4range_to_numbers[[172.16.0.255/-16]]
-  assert(err_line == 1)
+  -- merge ranges
+  from, to = util_ip.ip4range_to_numbers[[
+    10.0.0.0 - 10.0.0.255
+    10.0.0.64 - 10.0.0.128
+    10.0.0.128 - 10.0.2.0
+  ]]
+  assert(from.n == 1 and to.n == 1)
+  assert(from[1] == sock.inet_pton("10.0.0.0", true))
+  assert(to[1] == sock.inet_pton("10.0.2.0", true))
+
   print("OK")
 end
 
