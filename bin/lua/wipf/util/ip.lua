@@ -9,37 +9,6 @@ local sock = require"sys.sock"
 -- Convert IPv4 ranges in text to 'from_ip4' & 'to_ip4' arrays with numbers
 local ip4range_to_numbers
 do
-  local function parse_address_mask(line)
-    local from, sep, mask = string.match(line, "([%d%.]+)%s*([/%-])%s*(%S+)")
-    if not from then
-      return
-    end
-
-    local from_ip = sock.inet_pton(from, true)
-    if not from_ip then
-      return
-    end
-
-    local to_ip
-    if sep == '-' then  -- e.g. "127.0.0.0-127.255.255.255"
-      to_ip = sock.inet_pton(mask, true)
-      if not to_ip or from_ip > to_ip then
-        return
-      end
-    elseif sep == '/' then  -- e.g. "127.0.0.0/24"
-      local nbits = tonumber(mask)
-      if nbits > 32 or nbits < 0 then
-        return
-      elseif nbits == 32 then
-        to_ip = 0xFFFFFFFF
-      else
-        to_ip = bit.bor(from_ip, bit.lshift(1, nbits) - 1)
-      end
-    end
-
-    return from_ip, to_ip
-  end
-
   -- sort and try to merge ranges
   local function iprange_map_merge(map)
     -- fill temporary "from" range
@@ -80,6 +49,37 @@ do
     iprange_from.n, iprange_to.n = count, count
 
     return iprange_from, iprange_to
+  end
+
+  local function parse_address_mask(line)
+    local from, sep, mask = string.match(line, "([%d%.]+)%s*([/%-])%s*(%S+)")
+    if not from then
+      return
+    end
+
+    local from_ip = sock.inet_pton(from, true)
+    if not from_ip then
+      return
+    end
+
+    local to_ip
+    if sep == '-' then  -- e.g. "127.0.0.0-127.255.255.255"
+      to_ip = sock.inet_pton(mask, true)
+      if not to_ip or from_ip > to_ip then
+        return
+      end
+    elseif sep == '/' then  -- e.g. "127.0.0.0/24"
+      local nbits = tonumber(mask)
+      if nbits > 32 or nbits < 0 then
+        return
+      elseif nbits == 32 then
+        to_ip = 0xFFFFFFFF
+      else
+        to_ip = bit.bor(from_ip, bit.lshift(1, nbits) - 1)
+      end
+    end
+
+    return from_ip, to_ip
   end
 
   ip4range_to_numbers = function (text)
