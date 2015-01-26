@@ -8,7 +8,9 @@ local util_fs = require"wipf.util.fs"
 local util_ip = require"wipf.util.ip"
 
 
-local APP_GROUP_MAX = 10
+local util_conf = {
+  APP_GROUP_MAX = 10
+}
 
 
 local function parse_app(line)
@@ -53,8 +55,8 @@ local function app_groups_to_plain(app_groups)
   local groups, groups_count = {}, app_groups.n
   local apps_map = {}
 
-  if groups_count > APP_GROUP_MAX then
-    return nil, i18n.tr_fmt('err_conf_app_group_max', APP_GROUP_MAX)
+  if groups_count > util_conf.APP_GROUP_MAX then
+    return nil, i18n.tr_fmt('err_conf_app_group_max', util_conf.APP_GROUP_MAX)
   end
 
   for i = 1, groups_count do
@@ -97,98 +99,97 @@ end
 
 
 -- Configuration objects meta-table
-local conf_meta = {
-
-  set_ip_include_all = function (self, bool)
-    self.ip_include_all = bool
-  end,
-  get_ip_include_all = function (self)
-    return self.ip_include_all
-  end,
-
-  set_ip_exclude_all = function (self, bool)
-    self.ip_exclude_all = bool
-  end,
-  get_ip_exclude_all = function (self)
-    return self.ip_exclude_all
-  end,
-
-  set_app_log_blocked = function (self, bool)
-    self.app_log_blocked = bool
-  end,
-  get_app_log_blocked = function (self)
-    return self.app_log_blocked
-  end,
-
-  set_app_block_all = function (self, bool)
-    self.app_block_all = bool
-  end,
-  get_app_block_all = function (self)
-    return self.app_block_all
-  end,
-
-  set_app_allow_all = function (self, bool)
-    self.app_allow_all = bool
-  end,
-  get_app_allow_all = function (self)
-    return self.app_allow_all
-  end,
-
-  set_ip_include = function (self, str)
-    self.ip_include = str
-  end,
-  get_ip_include = function (self)
-    return self.ip_include
-  end,
-
-  set_ip_exclude = function (self, str)
-    self.ip_exclude = str
-  end,
-  get_ip_exclude = function (self)
-    return self.ip_exclude
-  end,
-
-  add_app_group = function (self, app_group)
-    local app_groups = self.app_groups
-    table.insert(app_groups, app_group)
-    app_groups.n = app_groups.n + 1
-  end,
-
-  remove_app_group = function (self, index)
-    local app_groups = self.app_groups
-    table.remove(app_groups, index)
-    app_groups.n = app_groups.n - 1
-  end,
-
-  -- Write conf. object to buffer
-  write = function (self, buf)
-
-    local iprange_from_inc, iprange_to_inc =
-        util_ip.ip4range_to_numbers(self.ip_include)
-    if not iprange_from_inc then
-      return nil, i18n.tr_fmt('err_conf_iprange_inc', iprange_to_inc)
-    end
-
-    local iprange_from_exc, iprange_to_exc =
-        util_ip.ip4range_to_numbers(self.ip_exclude)
-    if not iprange_from_exc then
-      return nil, i18n.tr_fmt('err_conf_iprange_exc', iprange_to_exc)
-    end
-
-    local group_bits, groups, app_3bits, apps =
-        app_groups_to_plain(self.app_groups)
-    if not group_bits then
-      return nil, groups
-    end
-
-    return true
-  end,
-}
+local conf_meta = {}
 
 conf_meta.__index = conf_meta
 
+function conf_meta:set_ip_include_all(bool)
+  self.ip_include_all = bool
+end
+function conf_meta:get_ip_include_all()
+  return self.ip_include_all
+end
+
+function conf_meta:set_ip_exclude_all(bool)
+  self.ip_exclude_all = bool
+end
+function conf_meta:get_ip_exclude_all()
+  return self.ip_exclude_all
+end
+
+function conf_meta:set_app_log_blocked(bool)
+  self.app_log_blocked = bool
+end
+function conf_meta:get_app_log_blocked()
+  return self.app_log_blocked
+end
+
+function conf_meta:set_app_block_all(bool)
+  self.app_block_all = bool
+end
+function conf_meta:get_app_block_all()
+  return self.app_block_all
+end
+
+function conf_meta:set_app_allow_all(bool)
+  self.app_allow_all = bool
+end
+function conf_meta:get_app_allow_all()
+  return self.app_allow_all
+end
+
+function conf_meta:set_ip_include(str)
+  self.ip_include = str
+end
+function conf_meta:get_ip_include()
+  return self.ip_include
+end
+
+function conf_meta:set_ip_exclude(str)
+  self.ip_exclude = str
+end
+function conf_meta:get_ip_exclude()
+  return self.ip_exclude
+end
+
+function conf_meta:add_app_group(app_group)
+  local app_groups = self.app_groups
+  table.insert(app_groups, app_group)
+  app_groups.n = app_groups.n + 1
+end
+
+function conf_meta:remove_app_group(index)
+  local app_groups = self.app_groups
+  table.remove(app_groups, index)
+  app_groups.n = app_groups.n - 1
+end
+
+-- Write conf. object to buffer
+function conf_meta:write(buf)
+
+  local iprange_from_inc, iprange_to_inc =
+      util_ip.ip4range_to_numbers(self.ip_include)
+  if not iprange_from_inc then
+    return nil, i18n.tr_fmt('err_conf_iprange_inc', iprange_to_inc)
+  end
+
+  local iprange_from_exc, iprange_to_exc =
+      util_ip.ip4range_to_numbers(self.ip_exclude)
+  if not iprange_from_exc then
+    return nil, i18n.tr_fmt('err_conf_iprange_exc', iprange_to_exc)
+  end
+
+  local group_bits, groups, app_3bits, apps =
+      app_groups_to_plain(self.app_groups)
+  if not group_bits then
+    return nil, groups
+  end
+
+  return true
+end
+
 -- New conf. object
-local function new_conf()
+function util_conf.new_conf()
   return setmetatable({
     ip_include_all = false,
     ip_exclude_all = false,
@@ -206,41 +207,40 @@ end
 
 
 -- Application group's meta-table
-local app_group_meta = {
-
-  set_name = function (self, str)
-    self.name = str
-  end,
-  get_name = function (self)
-    return self.name
-  end,
-
-  set_enabled = function (self, bool)
-    self.enabled = bool
-  end,
-  get_enabled = function (self)
-    return self.enabled
-  end,
-
-  set_block = function (self, str)
-    self.block = str
-  end,
-  get_block = function (self)
-    return self.block
-  end,
-
-  set_allow = function (self, str)
-    self.allow = str
-  end,
-  get_allow = function (self)
-    return self.allow
-  end,
-}
+local app_group_meta = {}
 
 app_group_meta.__index = app_group_meta
 
+function app_group_meta:set_name(str)
+  self.name = str
+end
+function app_group_meta:get_name()
+  return self.name
+end
+
+function app_group_meta:set_enabled(bool)
+  self.enabled = bool
+end
+function app_group_meta:get_enabled()
+  return self.enabled
+end
+
+function app_group_meta:set_block(str)
+  self.block = str
+end
+function app_group_meta:get_block()
+  return self.block
+end
+
+function app_group_meta:set_allow(str)
+  self.allow = str
+end
+function app_group_meta:get_allow()
+  return self.allow
+end
+
 -- New app. group object
-local function new_app_group()
+function util_conf.new_app_group()
   return setmetatable({
     name = "",
     enabled = true,
@@ -250,8 +250,4 @@ local function new_app_group()
 end
 
 
-return {
-  APPGROUP_MAX	= APPGROUP_MAX,
-  new_conf	= new_conf,
-  new_app_group	= new_app_group,
-}
+return util_conf

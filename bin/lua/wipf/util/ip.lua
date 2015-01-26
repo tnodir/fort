@@ -6,8 +6,10 @@ local sys = require"sys"
 local sock = require"sys.sock"
 
 
--- Convert IPv4 ranges in text to 'from_ip4' & 'to_ip4' arrays with numbers
-local ip4range_to_numbers
+local util_ip = {}
+
+
+-- Convert IPv4 ranges
 do
   -- sort and try to merge ranges
   local function iprange_map_merge(map)
@@ -82,7 +84,8 @@ do
     return from_ip, to_ip
   end
 
-  ip4range_to_numbers = function (text)
+  -- Convert IPv4 ranges in text to 'from_ip4' & 'to_ip4' arrays with numbers
+  function util_ip.ip4range_to_numbers(text)
     local iprange_map = {}
     local line_no = 0
 
@@ -103,6 +106,4 @@ do
 end
 
 
-return {
-  ip4range_to_numbers	= ip4range_to_numbers,
-}
+return util_ip
