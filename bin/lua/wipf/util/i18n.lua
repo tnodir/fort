@@ -1,6 +1,6 @@
 -- WIPF Internationalization Utilities
 
-local util_fs = require"wipf/util/fs"
+local util_fs = require"wipf.util.fs"
 
 
 local current_lang, lang_strings

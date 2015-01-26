@@ -14,7 +14,7 @@
 
 #define WIPF_DEVICE_POOL_TAG	'IPFD'
 
-#include "../wipfconfr.c"
+#include "../wipfconf.c"
 #include "wipfbuf.c"
 
 typedef struct wipf_conf_ref {

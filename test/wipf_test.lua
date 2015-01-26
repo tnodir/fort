@@ -4,10 +4,10 @@ local sys = require"sys"
 local sock = require"sys.sock"
 
 local wipf = require"wipflua"
-local i18n = require"wipf/util/i18n"
-local util_conf = require"wipf/util/conf"
-local util_fs = require"wipf/util/fs"
-local util_ip = require"wipf/util/ip"
+local i18n = require"wipf.util.i18n"
+local util_conf = require"wipf.util.conf"
+local util_fs = require"wipf.util.fs"
+local util_ip = require"wipf.util.ip"
 
 local mem, win32 = sys.mem, sys.win32
 

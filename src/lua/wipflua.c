@@ -16,6 +16,7 @@
 #include "../common.h"
 
 #include "../wipflog.c"
+#include "../wipfconf.c"
 
 
 /*

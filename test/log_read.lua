@@ -4,7 +4,7 @@ local sys = require"sys"
 local sock = require"sys.sock"
 
 local wipf = require"wipflua"
-local util_fs = require"wipf/util/fs"
+local util_fs = require"wipf.util.fs"
 
 
 function print_logs(buf)

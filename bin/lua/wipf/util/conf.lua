@@ -3,9 +3,9 @@
 local bit = require"bit"
 
 local wipf = require"wipflua"
-local i18n = require"wipf/util/i18n"
-local util_fs = require"wipf/util/fs"
-local util_ip = require"wipf/util/ip"
+local i18n = require"wipf.util.i18n"
+local util_fs = require"wipf.util.fs"
+local util_ip = require"wipf.util.ip"
 
 
 local APP_GROUP_MAX = 10
