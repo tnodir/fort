@@ -80,7 +80,6 @@ end
 
 print"-- Conf Read/Write"
 do
-  local buf = assert(mem.pointer():alloc())
   local conf = util_conf.new_conf()
 
   conf:set_ip_include_all(true)
@@ -120,6 +119,7 @@ do
   conf:add_app_group(app_group1)
   conf:add_app_group(app_group2)
 
+  local buf = assert(mem.pointer():alloc())
   assert(conf:write(buf))
 
   print("OK")

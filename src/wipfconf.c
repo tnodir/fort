@@ -1,4 +1,4 @@
-/* Windows IP Filter Configuration Reader */
+/* Windows IP Filter Configuration */
 
 #include "wipfconf.h"
 
@@ -10,4 +10,3 @@ wipf_conf_ipblocked (const PWIPF_CONF conf, UINT32 remote_ip,
   *notify = TRUE;
   return FALSE;
 }
-

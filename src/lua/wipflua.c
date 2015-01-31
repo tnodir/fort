@@ -14,9 +14,9 @@
 #include <lauxlib.h>
 
 #include "../common.h"
+#include "../wipfconf.h"
 
 #include "../wipflog.c"
-#include "../wipfconf.c"
 
 
 /*
@@ -68,9 +68,9 @@ static int
 wipf_lua_log_write (lua_State *L)
 {
   char *out = lua_touserdata(L, 1);
-  const unsigned long remote_ip = lua_tointeger(L, 2);
-  const unsigned long pid = lua_tointeger(L, 3);
-  size_t path_len;
+  const UINT32 remote_ip = lua_tointeger(L, 2);
+  const UINT32 pid = lua_tointeger(L, 3);
+  UINT32 path_len;
   const char *path = lua_tolstring(L, 4, &path_len);
 
   if (!out) return 0;
@@ -91,8 +91,8 @@ wipf_lua_log_read (lua_State *L)
 {
   char *in = lua_touserdata(L, 1);
   const int off = lua_tointeger(L, 2);
-  unsigned long remote_ip, pid;
-  size_t path_len;
+  UINT32 remote_ip, pid;
+  UINT32 path_len;
   const char *path;
 
   if (!in) return 0;
@@ -114,6 +114,36 @@ wipf_lua_log_read (lua_State *L)
   return 3;
 }
 
+/*
+ * Arguments: ip_include_n (number), ip_exclude_n (number)
+ *	groups_n (number), groups_len (number),
+ *	apps_n (number), apps_len (number)
+ * Returns: length (number)
+ */
+static int
+wipf_lua_conf_buffer_size (lua_State *L)
+{
+  const int ip_include_n = lua_tointeger(L, 1);
+  const int ip_exclude_n = lua_tointeger(L, 2);
+  const int groups_n = lua_tointeger(L, 3);
+  const int groups_len = lua_tointeger(L, 4) * 2;
+  const int apps_n = lua_tointeger(L, 5);
+  const int apps_len = lua_tointeger(L, 6) * 2;
+
+  if (ip_include_n > WIPF_CONF_IP_MAX
+      || ip_exclude_n > WIPF_CONF_IP_MAX
+      || groups_len > WIPF_CONF_GROUPS_LEN_MAX
+      || apps_len > WIPF_CONF_APPS_LEN_MAX)
+    return 0;
+
+  lua_pushinteger(L, WIPF_CONF_SIZE_MIN
+      + (ip_include_n + ip_exclude_n) * 2 * sizeof(UINT32)
+      + (groups_n + apps_n) * sizeof(UINT16)
+      + groups_len + apps_len
+      + apps_n * sizeof(UINT32));
+  return 1;
+}
+
 
 static luaL_Reg wipf_lib[] = {
   {"device_name",	wipf_lua_device_name},
@@ -122,6 +152,7 @@ static luaL_Reg wipf_lib[] = {
   {"buffer_size",	wipf_lua_buffer_size},
   {"log_write",		wipf_lua_log_write},
   {"log_read",		wipf_lua_log_read},
+  {"conf_buffer_size",	wipf_lua_conf_buffer_size},
   {NULL, NULL}
 };
 

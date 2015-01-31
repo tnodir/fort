@@ -9,7 +9,8 @@ local util_ip = require"wipf.util.ip"
 
 
 local util_conf = {
-  APP_GROUP_MAX = 10
+  APP_GROUP_MAX = 10,
+  APP_GROUP_NAME_MAX = 128
 }
 
 
@@ -56,7 +57,7 @@ local function app_groups_to_plain(app_groups)
   local apps_map = {}
 
   if groups_count > util_conf.APP_GROUP_MAX then
-    return nil, i18n.tr_fmt('err_conf_app_group_max', util_conf.APP_GROUP_MAX)
+    return nil, i18n.tr_fmt('err_conf_group_max', util_conf.APP_GROUP_MAX)
   end
 
   for i = 1, groups_count do
@@ -68,8 +69,12 @@ local function app_groups_to_plain(app_groups)
       group_bits = bit.bor(group_bits, group_bit)
     end
 
-    groups_count = groups_count + 1
-    groups[groups_count] = app_group:get_name()
+    local name = app_group:get_name()
+    if #name > util_conf.APP_GROUP_NAME_MAX then
+      return nil, i18n.tr_fmt('err_conf_group_name_max', util_conf.APP_GROUP_NAME_MAX)
+    end
+
+    groups[i] = name
 
     parse_apps(app_group:get_block(), true, apps_map, group_index)
     parse_apps(app_group:get_allow(), false, apps_map, group_index)
@@ -95,6 +100,15 @@ local function app_groups_to_plain(app_groups)
   app_3bits.n, apps.n = apps_count, apps_count
 
   return group_bits, groups, app_3bits, apps
+end
+
+-- Calculate total length of strings in table
+local function get_strings_len(t, n)
+  local len = 0
+  for i = 1, n do
+    len = len + #t[i]
+  end
+  return len
 end
 
 
@@ -183,6 +197,15 @@ function conf_meta:write(buf)
       app_groups_to_plain(self.app_groups)
   if not group_bits then
     return nil, groups
+  end
+
+  -- calculate maximum required buffer size
+  local buf_size = wipf.conf_buffer_size(
+      iprange_from_inc.n, iprange_from_exc.n,
+      groups.n, get_strings_len(groups, groups.n),
+      apps.n, get_strings_len(apps, apps.n))
+  if not (buf_size and buf:reserve(buf_size)) then
+    return nil, i18n.tr('err_conf_size')
   end
 
   return true
