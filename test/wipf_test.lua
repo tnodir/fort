@@ -122,6 +122,32 @@ do
   local buf = assert(mem.pointer():alloc())
   assert(conf:write(buf))
 
+  -- Parse buffer
+  local conf2 = util_conf.new_conf()
+  conf2:read(buf)
+
+  assert(conf:get_ip_include_all() == conf2:get_ip_include_all())
+  assert(conf:get_ip_exclude_all() == conf2:get_ip_exclude_all())
+  assert(conf:get_app_log_blocked() == conf2:get_app_log_blocked())
+  assert(conf:get_app_block_all() == conf2:get_app_block_all())
+  assert(conf:get_app_allow_all() == conf2:get_app_allow_all())
+
+  assert(conf2:get_ip_include() == "")
+
+  local ip_exclude = conf2:get_ip_exclude()
+  assert(ip_exclude ~= "")
+
+  local from_exc, to_exc = util_ip.ip4range_to_numbers(ip_exclude)
+  assert(from_exc.n == 5)
+  assert(from_exc[3] == sock.inet_pton("169.254.0.0", true))
+  assert(to_exc[3] == sock.inet_pton("169.254.255.255", true))
+  
+  local conf2_app_group1 = conf2:get_app_groups()[1]
+  assert(app_group1:get_name() == conf2_app_group1:get_name())
+  assert(app_group1:get_enabled() == conf2_app_group1:get_enabled())
+  assert(conf2_app_group1:get_block() == "System\n")
+  assert(conf2_app_group1:get_allow():find("D:\\utils\\dev\\git\\*\n", 1, true))
+
   print("OK")
 end
 

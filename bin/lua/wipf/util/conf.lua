@@ -10,7 +10,8 @@ local util_ip = require"wipf.util.ip"
 
 local util_conf = {
   APP_GROUP_MAX = 10,
-  APP_GROUP_NAME_MAX = 128
+  APP_GROUP_NAME_MAX = 128,
+  APP_PATH_MAX = 1024
 }
 
 
@@ -37,20 +38,20 @@ local function parse_app(line)
   return path, partial
 end
 
-local function parse_apps(text, blocked, apps_map, group_index)
+local function parse_apps(text, blocked, apps_map, group_offset)
   for line in string.gmatch(text, "%s*\"?([^\n]+)") do
     local app, partial = parse_app(line)
 
     if app then
       local app_3bits = apps_map[app] or 0
       local val_3bit = bit.bor(blocked and 2 or 1, partial and 4 or 0)
-      local app_3bit = bit.lshift(val_3bit, group_index*3)
+      local app_3bit = bit.lshift(val_3bit, group_offset * 3)
       apps_map[app] = bit.bor(app_3bits, app_3bit)
     end
   end
 end
 
--- Convert app. group objects to plain table
+-- Convert app. group objects to plain tables
 local function app_groups_to_plain(app_groups)
   local group_bits = 0
   local groups, groups_count = {}, app_groups.n
@@ -62,12 +63,7 @@ local function app_groups_to_plain(app_groups)
 
   for i = 1, groups_count do
     local app_group = app_groups[i]
-    local group_index = i - 1
-
-    if app_group:get_enabled() then
-      local group_bit = bit.lshift(1, group_index)
-      group_bits = bit.bor(group_bits, group_bit)
-    end
+    local group_offset = i - 1
 
     local name = app_group:get_name()
     if #name > util_conf.APP_GROUP_NAME_MAX then
@@ -76,13 +72,22 @@ local function app_groups_to_plain(app_groups)
 
     groups[i] = name
 
-    parse_apps(app_group:get_block(), true, apps_map, group_index)
-    parse_apps(app_group:get_allow(), false, apps_map, group_index)
+    if app_group:get_enabled() then
+      local group_bit = bit.lshift(1, group_offset)
+      group_bits = bit.bor(group_bits, group_bit)
+    end
+
+    parse_apps(app_group:get_block(), true, apps_map, group_offset)
+    parse_apps(app_group:get_allow(), false, apps_map, group_offset)
   end
 
   -- fill "apps" array
   local apps, apps_count = {}, 0
   for app in pairs(apps_map) do
+    if #app > util_conf.APP_PATH_MAX then
+      return nil, i18n.tr_fmt('err_conf_app_path_max', util_conf.APP_PATH_MAX)
+    end
+
     apps_count = apps_count + 1
     apps[apps_count] = app
   end
@@ -90,16 +95,68 @@ local function app_groups_to_plain(app_groups)
   table.sort(apps)
 
   -- fill "apps_3bit" array
-  local app_3bits = {}
+  local apps_3bits = {}
   for i = 1, apps_count do
     local app = apps[i]
-    app_3bits[i] = apps_map[app]
+    apps_3bits[i] = apps_map[app]
   end
 
   groups.n = groups_count
-  app_3bits.n, apps.n = apps_count, apps_count
+  apps_3bits.n, apps.n = apps_count, apps_count
 
-  return group_bits, groups, app_3bits, apps
+  return group_bits, groups, apps_3bits, apps
+end
+
+-- Create app. group objects from plain tables
+local function app_groups_from_plain(group_bits, groups, apps_3bits, apps)
+  local app_groups = {}
+  local groups_count, apps_count = groups.n, apps.n
+
+  for i = 1, groups_count do
+    local app_group = util_conf.new_app_group()
+    local group_offset = i - 1
+
+    app_group:set_name(groups[i])
+
+    do
+      local group_bit = bit.lshift(1, group_offset)
+      local val = bit.band(group_bits, group_bit)
+      app_group:set_enabled(val ~= 0)
+    end
+
+    -- fill 'block' & 'allow' apps
+    local block, allow = "", ""
+
+    for app_index = 1, apps_count do
+      local app_3bits = apps_3bits[app_index]
+      local val_3bit = bit.rshift(app_3bits, group_offset * 3)
+      local allowed = bit.band(val_3bit, 1) ~= 0
+      local blocked = bit.band(val_3bit, 2) ~= 0
+
+      if allowed or blocked then
+        local partial = bit.band(val_3bit, 4) ~= 0
+        local app = apps[app_index] .. (partial and "*" or "")
+
+        app = util_fs.dospath_to_path(app)
+
+        if blocked then
+          block = block .. app .. "\n"
+        end
+        if allowed then
+          allow = allow .. app .. "\n"
+        end
+      end
+    end
+
+    app_group:set_block(block)
+    app_group:set_allow(allow)
+
+    app_groups[i] = app_group
+  end
+
+  app_groups.n = groups_count
+
+  return app_groups
 end
 
 -- Calculate total length of strings in table
@@ -166,6 +223,10 @@ function conf_meta:get_ip_exclude()
   return self.ip_exclude
 end
 
+function conf_meta:get_app_groups()
+  return self.app_groups
+end
+
 function conf_meta:add_app_group(app_group)
   local app_groups = self.app_groups
   table.insert(app_groups, app_group)
@@ -193,7 +254,7 @@ function conf_meta:write(buf)
     return nil, i18n.tr_fmt('err_conf_iprange_exc', iprange_to_exc)
   end
 
-  local group_bits, groups, app_3bits, apps =
+  local group_bits, groups, apps_3bits, apps =
       app_groups_to_plain(self.app_groups)
   if not group_bits then
     return nil, groups
@@ -208,7 +269,43 @@ function conf_meta:write(buf)
     return nil, i18n.tr('err_conf_size')
   end
 
-  return true
+  local conf_size = wipf.conf_write(buf:getptr(),
+      self.ip_include_all, self.ip_exclude_all,
+      self.app_log_blocked,
+      self.app_block_all, self.app_allow_all,
+      iprange_from_inc.n, iprange_from_inc, iprange_to_inc,
+      iprange_from_exc.n, iprange_from_exc, iprange_to_exc,
+      apps.n, apps_3bits, apps,
+      group_bits, groups.n, groups)
+
+  buf:seek(conf_size)
+
+  return conf_size
+end
+
+-- Read conf. object from buffer
+function conf_meta:read(buf)
+
+  local ip_include_all, ip_exclude_all,
+      app_log_blocked, app_block_all, app_allow_all,
+      iprange_from_inc, iprange_to_inc,
+      iprange_from_exc, iprange_to_exc,
+      apps_3bits, apps, group_bits, groups = wipf.conf_read(buf:getptr())
+
+  self.ip_include_all = ip_include_all
+  self.ip_exclude_all = ip_exclude_all
+  self.app_log_blocked = app_log_blocked
+  self.app_block_all = app_block_all
+  self.app_allow_all = app_allow_all
+
+  self.ip_include = util_ip.ip4range_from_numbers(
+      iprange_from_inc, iprange_to_inc)
+
+  self.ip_exclude = util_ip.ip4range_from_numbers(
+      iprange_from_exc, iprange_to_exc)
+
+  self.app_groups = app_groups_from_plain(
+      group_bits, groups, apps_3bits, apps)
 end
 
 -- New conf. object

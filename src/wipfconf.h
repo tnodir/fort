@@ -12,16 +12,18 @@ typedef struct wipf_conf {
   UINT16 ip_include_n;
   UINT16 ip_exclude_n;
 
-  UINT16 groups_n;
-  UINT16 groups_len;
-
   UINT16 apps_n;
-  UINT16 apps_len;
+  UINT16 groups_n;
 
-  UINT32 ip_include_off;
-  UINT32 ip_exclude_off;
-  UINT32 groups_off;
+  UINT32 ip_from_include_off;
+  UINT32 ip_to_include_off;
+
+  UINT32 ip_from_exclude_off;
+  UINT32 ip_to_exclude_off;
+
+  UINT32 apps_3bits_off;
   UINT32 apps_off;
+  UINT32 groups_off;
 
   UCHAR data[4];
 } WIPF_CONF, *PWIPF_CONF;
@@ -31,6 +33,7 @@ typedef struct wipf_conf {
 #define WIPF_CONF_GROUP_MAX		10
 #define WIPF_CONF_GROUP_NAME_MAX	256
 #define WIPF_CONF_GROUPS_LEN_MAX	(WIPF_CONF_GROUP_MAX * WIPF_CONF_GROUP_NAME_MAX)
-#define WIPF_CONF_APPS_LEN_MAX		(64 * 1024)
+#define WIPF_CONF_APPS_LEN_MAX		(64 * 1024 * 1024)
+#define WIPF_CONF_APP_PATH_MAX		(2 * 1024)
 
 #endif WIPFCONF_H

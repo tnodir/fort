@@ -1,5 +1,6 @@
 -- WIPF IP Utilities
 
+local ffi = require "ffi"
 local bit = require"bit"
 
 local sys = require"sys"
@@ -11,6 +12,10 @@ local util_ip = {}
 
 -- Convert IPv4 ranges
 do
+  local function to_uint32(num)
+    return tonumber(ffi.cast("uint32_t", num))
+  end
+
   -- sort and try to merge ranges
   local function iprange_map_merge(map)
     -- fill temporary "from" range
@@ -27,7 +32,7 @@ do
     for i = 1, tmp_count do
       local from = tmp_from[i]
       local to = map[from]
-      if prev_from and from <= prev_to then -- collides with previous?
+      if prev_from and from <= prev_to then  -- collides with previous?
         if to > prev_to then
           map[prev_from], prev_to = to, to
         end
@@ -78,6 +83,7 @@ do
         to_ip = 0xFFFFFFFF
       else
         to_ip = bit.bor(from_ip, bit.lshift(1, nbits) - 1)
+        to_ip = to_uint32(to_ip)
       end
     end
 
@@ -103,6 +109,22 @@ do
 
     return iprange_map_merge(iprange_map)
   end
+end
+
+-- Convert IPv4 ranges to text from 'from_ip4' & 'to_ip4' arrays with numbers
+function util_ip.ip4range_from_numbers(iprange_from, iprange_to)
+  local text = ""
+  local n = iprange_from.n
+
+  for i = 1, n do
+    local from_ip, to_ip = iprange_from[i], iprange_to[i]
+    local from = sock.inet_ntop(from_ip)
+    local to = sock.inet_ntop(to_ip)
+
+    text = text .. from .. "-" .. to .. "\n"
+  end
+
+  return text
 end
 
 
