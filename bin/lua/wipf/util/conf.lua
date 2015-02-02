@@ -9,7 +9,7 @@ local util_ip = require"wipf.util.ip"
 
 
 local util_conf = {
-  APP_GROUP_MAX = 10,
+  APP_GROUP_MAX = 16,
   APP_GROUP_NAME_MAX = 128,
   APP_PATH_MAX = 1024
 }
@@ -23,30 +23,24 @@ local function parse_app(line)
 
   path = path:lower()
 
-  local partial
-
   if path == "system" then
-    path, partial = "System", false
+    path = "System"
   else
-    partial = (path:sub(-1) == '*')
-    if partial then
-      path = path:sub(1, #path - 1)
-    end
     path = util_fs.path_to_dospath(path)
   end
 
-  return path, partial
+  return path
 end
 
 local function parse_apps(text, blocked, apps_map, group_offset)
   for line in string.gmatch(text, "%s*\"?([^\n]+)") do
-    local app, partial = parse_app(line)
+    local app = parse_app(line)
 
     if app then
-      local app_3bits = apps_map[app] or 0
-      local val_3bit = bit.bor(blocked and 2 or 1, partial and 4 or 0)
-      local app_3bit = bit.lshift(val_3bit, group_offset * 3)
-      apps_map[app] = bit.bor(app_3bits, app_3bit)
+      local app_perms = apps_map[app] or 0
+      local val_perm = blocked and 2 or 1
+      local app_perm = bit.lshift(val_perm, group_offset * 2)
+      apps_map[app] = bit.bor(app_perms, app_perm)
     end
   end
 end
@@ -94,21 +88,21 @@ local function app_groups_to_plain(app_groups)
 
   table.sort(apps)
 
-  -- fill "apps_3bit" array
-  local apps_3bits = {}
+  -- fill "apps_perms" array
+  local apps_perms = {}
   for i = 1, apps_count do
     local app = apps[i]
-    apps_3bits[i] = apps_map[app]
+    apps_perms[i] = apps_map[app]
   end
 
   groups.n = groups_count
-  apps_3bits.n, apps.n = apps_count, apps_count
+  apps_perms.n, apps.n = apps_count, apps_count
 
-  return group_bits, groups, apps_3bits, apps
+  return group_bits, groups, apps_perms, apps
 end
 
 -- Create app. group objects from plain tables
-local function app_groups_from_plain(group_bits, groups, apps_3bits, apps)
+local function app_groups_from_plain(group_bits, groups, apps_perms, apps)
   local app_groups = {}
   local groups_count, apps_count = groups.n, apps.n
 
@@ -128,14 +122,13 @@ local function app_groups_from_plain(group_bits, groups, apps_3bits, apps)
     local block, allow = "", ""
 
     for app_index = 1, apps_count do
-      local app_3bits = apps_3bits[app_index]
-      local val_3bit = bit.rshift(app_3bits, group_offset * 3)
-      local allowed = bit.band(val_3bit, 1) ~= 0
-      local blocked = bit.band(val_3bit, 2) ~= 0
+      local app_perms = apps_perms[app_index]
+      local val_perm = bit.rshift(app_perms, group_offset * 2)
+      local allowed = bit.band(val_perm, 1) ~= 0
+      local blocked = bit.band(val_perm, 2) ~= 0
 
       if allowed or blocked then
-        local partial = bit.band(val_3bit, 4) ~= 0
-        local app = apps[app_index] .. (partial and "*" or "")
+        local app = apps[app_index]
 
         app = util_fs.dospath_to_path(app)
 
@@ -254,7 +247,7 @@ function conf_meta:write(buf)
     return nil, i18n.tr_fmt('err_conf_iprange_exc', iprange_to_exc)
   end
 
-  local group_bits, groups, apps_3bits, apps =
+  local group_bits, groups, apps_perms, apps =
       app_groups_to_plain(self.app_groups)
   if not group_bits then
     return nil, groups
@@ -269,13 +262,17 @@ function conf_meta:write(buf)
     return nil, i18n.tr('err_conf_size')
   end
 
+  if self.app_block_all and self.app_allow_all then
+    return nil, i18n.tr('err_conf_app_block_allow')
+  end
+
   local conf_size = wipf.conf_write(buf:getptr(),
       self.ip_include_all, self.ip_exclude_all,
       self.app_log_blocked,
       self.app_block_all, self.app_allow_all,
       iprange_from_inc.n, iprange_from_inc, iprange_to_inc,
       iprange_from_exc.n, iprange_from_exc, iprange_to_exc,
-      apps.n, apps_3bits, apps,
+      apps.n, apps_perms, apps,
       group_bits, groups.n, groups)
 
   buf:seek(conf_size)
@@ -290,7 +287,7 @@ function conf_meta:read(buf)
       app_log_blocked, app_block_all, app_allow_all,
       iprange_from_inc, iprange_to_inc,
       iprange_from_exc, iprange_to_exc,
-      apps_3bits, apps, group_bits, groups = wipf.conf_read(buf:getptr())
+      apps_perms, apps, group_bits, groups = wipf.conf_read(buf:getptr())
 
   self.ip_include_all = ip_include_all
   self.ip_exclude_all = ip_exclude_all
@@ -305,7 +302,7 @@ function conf_meta:read(buf)
       iprange_from_exc, iprange_to_exc)
 
   self.app_groups = app_groups_from_plain(
-      group_bits, groups, apps_3bits, apps)
+      group_bits, groups, apps_perms, apps)
 end
 
 -- New conf. object

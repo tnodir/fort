@@ -122,7 +122,8 @@ static void
 wipf_lua_conf_write_strtable (lua_State *L, int index, int count, char **data)
 {
   UINT32 *offp = (UINT32 *) *data;
-  char *p = *data + (count + 1) * sizeof(UINT32);
+  const UINT32 head_size = (count + 1) * sizeof(UINT32);
+  char *p = *data + head_size;
   UINT32 off;
   int i;
 
@@ -149,7 +150,7 @@ wipf_lua_conf_write_strtable (lua_State *L, int index, int count, char **data)
     p += len;
   }
 
-  *data = p;
+  *data += head_size + (off + (WIPF_CONF_STR_ALIGN-1)) & ~(WIPF_CONF_STR_ALIGN-1);
 }
 
 static void
@@ -213,7 +214,7 @@ wipf_lua_conf_buffer_size (lua_State *L)
  *	ip_from_exclude (table: 1..n => number),
  *	ip_to_exclude (table: 1..n => number),
  *	apps_n (number),
- *	apps_3bits (table: 1..n => number),
+ *	apps_perms (table: 1..n => number),
  *	apps (table: 1..n => string),
  *	group_bits (number),
  *	groups_n (number),
@@ -236,7 +237,7 @@ wipf_lua_conf_write (lua_State *L)
   const UINT32 groups_n = lua_tointeger(L, 17);
   UINT32 ip_from_include_off, ip_to_include_off;
   UINT32 ip_from_exclude_off, ip_to_exclude_off;
-  UINT32 groups_off, apps_off, apps_3bits_off;
+  UINT32 groups_off, apps_off, apps_perms_off;
   UINT32 conf_size;
   char *data;
 
@@ -257,8 +258,8 @@ wipf_lua_conf_write (lua_State *L)
   ip_to_exclude_off = data_offset;
   wipf_lua_conf_write_numtable(L, 12, ip_exclude_n, &data);  /* ip_to_exclude */
 
-  apps_3bits_off = data_offset;
-  wipf_lua_conf_write_numtable(L, 14, apps_n, &data);  /* apps_3bits */
+  apps_perms_off = data_offset;
+  wipf_lua_conf_write_numtable(L, 14, apps_n, &data);  /* apps_perms */
 
   apps_off = data_offset;
   wipf_lua_conf_write_strtable(L, 15, apps_n, &data);  /* apps */
@@ -288,7 +289,7 @@ wipf_lua_conf_write (lua_State *L)
   conf->ip_from_exclude_off = ip_from_exclude_off;
   conf->ip_to_exclude_off = ip_to_exclude_off;
 
-  conf->apps_3bits_off = apps_3bits_off;
+  conf->apps_perms_off = apps_perms_off;
   conf->apps_off = apps_off;
   conf->groups_off = groups_off;
 
@@ -352,7 +353,7 @@ wipf_lua_conf_read_numtable (lua_State *L, int count, const char *data)
  *	ip_to_include (table: 1..n => number),
  *	ip_from_exclude (table: 1..n => number),
  *	ip_to_exclude (table: 1..n => number),
- *	apps_3bits (table: 1..n => number),
+ *	apps_perms (table: 1..n => number),
  *	apps (table: 1..n => string),
  *	group_bits (number),
  *	groups (table: 1..n => string)
@@ -384,7 +385,7 @@ wipf_lua_conf_read (lua_State *L)
       data + conf->ip_to_exclude_off);  /* ip_to_exclude */
 
   wipf_lua_conf_read_numtable(L, conf->apps_n,
-      data + conf->apps_3bits_off);  /* apps_3bits */
+      data + conf->apps_perms_off);  /* apps_perms */
 
   wipf_lua_conf_read_strtable(L, conf->apps_n,
       data + conf->apps_off);  /* apps */
