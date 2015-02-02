@@ -17,6 +17,7 @@
 #include "../wipfconf.h"
 
 #include "../wipflog.c"
+#include "../wipfprov.c"
 
 
 /*
@@ -395,6 +396,36 @@ wipf_lua_conf_read (lua_State *L)
   return 13;
 }
 
+/*
+ * Arguments: persist (boolean), boot (boolean)
+ * Returns: boolean | nil, err_code
+ */
+static int
+wipf_lua_prov_register (lua_State *L)
+{
+  const BOOL persist = lua_toboolean(L, 1);
+  const BOOL boot = lua_toboolean(L, 2);
+  const DWORD status = wipf_prov_register(persist, boot);
+
+  if (!status) {
+    lua_pushboolean(L, 1);
+    return 1;
+  }
+
+  lua_pushnil(L);
+  lua_pushinteger(L, status);
+  return 2;
+}
+
+static int
+wipf_lua_prov_unregister (lua_State *L)
+{
+  (void) L;
+
+  wipf_prov_unregister();
+  return 0;
+}
+
 
 static luaL_Reg wipf_lib[] = {
   {"device_name",	wipf_lua_device_name},
@@ -406,6 +437,8 @@ static luaL_Reg wipf_lib[] = {
   {"conf_buffer_size",	wipf_lua_conf_buffer_size},
   {"conf_write",	wipf_lua_conf_write},
   {"conf_read",		wipf_lua_conf_read},
+  {"prov_register",	wipf_lua_prov_register},
+  {"prov_unregister",	wipf_lua_prov_unregister},
   {NULL, NULL}
 };
 
