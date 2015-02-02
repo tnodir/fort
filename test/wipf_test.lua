@@ -148,6 +148,15 @@ do
   assert(conf2_app_group1:get_block() == "System\n")
   assert(conf2_app_group1:get_allow():find("D:\\utils\\dev\\git\\*\n", 1, true))
 
+  local conf_bin = buf:getptr()
+  assert(not wipf.conf_ip_inrange(conf_bin, 0, true))
+  assert(not wipf.conf_ip_inrange(conf_bin, sock.inet_pton("9.255.255.255", true)))
+  assert(not wipf.conf_ip_inrange(conf_bin, sock.inet_pton("11.0.0.0", true)))
+  assert(wipf.conf_ip_inrange(conf_bin, sock.inet_pton("10.0.0.0", true)))
+  assert(wipf.conf_ip_inrange(conf_bin, sock.inet_pton("169.254.100.100", true)))
+  assert(wipf.conf_ip_inrange(conf_bin, sock.inet_pton("192.168.255.255", true)))
+  assert(not wipf.conf_ip_inrange(conf_bin, sock.inet_pton("193.0.0.0", true)))
+
   print("OK")
 end
 

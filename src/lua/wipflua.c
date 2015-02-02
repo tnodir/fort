@@ -16,6 +16,7 @@
 #include "../common.h"
 #include "../wipfconf.h"
 
+#include "../wipfconf.c"
 #include "../wipflog.c"
 #include "../wipfprov.c"
 
@@ -397,6 +398,29 @@ wipf_lua_conf_read (lua_State *L)
 }
 
 /*
+ * Arguments: input (ludata), ip (number), included/excluded (boolean)
+ * Returns: boolean
+ */
+static int
+wipf_lua_conf_ip_inrange (lua_State *L)
+{
+  const PWIPF_CONF conf = lua_touserdata(L, 1);
+  const UINT32 ip = (UINT32) lua_tonumber(L, 2);
+  const BOOL included = lua_toboolean(L, 3);
+
+  const UINT32 count = included ? conf->ip_include_n : conf->ip_exclude_n;
+  const UINT32 from_off = included ? conf->ip_from_include_off : conf->ip_from_exclude_off;
+  const UINT32 to_off = included ? conf->ip_to_include_off : conf->ip_to_exclude_off;
+
+  const BOOL res = wipf_conf_ip_inrange(ip, count,
+                                        (const UINT32 *) ((UINT8 *) conf + from_off),
+                                        (const UINT32 *) ((UINT8 *) conf + to_off));
+
+  lua_pushboolean(L, res);
+  return 1;
+}
+
+/*
  * Arguments: persist (boolean), boot (boolean)
  * Returns: boolean | nil, err_code
  */
@@ -437,6 +461,7 @@ static luaL_Reg wipf_lib[] = {
   {"conf_buffer_size",	wipf_lua_conf_buffer_size},
   {"conf_write",	wipf_lua_conf_write},
   {"conf_read",		wipf_lua_conf_read},
+  {"conf_ip_inrange",	wipf_lua_conf_ip_inrange},
   {"prov_register",	wipf_lua_prov_register},
   {"prov_unregister",	wipf_lua_prov_unregister},
   {NULL, NULL}
