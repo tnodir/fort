@@ -153,11 +153,6 @@ wipf_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   if (blocked) {
     classifyOut->actionType = FWP_ACTION_BLOCK;
     classifyOut->rights &= ~FWPS_RIGHT_ACTION_WRITE;
-  } else {
-    classifyOut->actionType = FWP_ACTION_CONTINUE;
-    if ((filter->flags & FWPS_FILTER_FLAG_CLEAR_ACTION_RIGHT)) {
-      classifyOut->rights &= ~FWPS_RIGHT_ACTION_WRITE;
-    }
 
     if (notify) {
       PIRP irp = NULL;
@@ -171,6 +166,11 @@ wipf_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
       if (irp != NULL) {
         wipf_request_complete_info(irp, irp_status, info);
       }
+    }
+  } else {
+    classifyOut->actionType = FWP_ACTION_CONTINUE;
+    if ((filter->flags & FWPS_FILTER_FLAG_CLEAR_ACTION_RIGHT)) {
+      classifyOut->rights &= ~FWPS_RIGHT_ACTION_WRITE;
     }
   }
 }

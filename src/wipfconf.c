@@ -119,7 +119,7 @@ wipf_conf_app_blocked (const PWIPF_CONF conf,
   const int app_index = wipf_conf_app_index(path_len, path, conf->apps_n,
       (const UINT32 *) (data + conf->apps_off));
   const UINT32 *apps_perms = (const UINT32 *) (data + conf->apps_perms_off);
-  const UINT32 app_perms = apps_perms[app_index];
+  const UINT32 app_perms = (app_index != -1) ? apps_perms[app_index] : 0;
 
   const BOOL app_perm_blocked = (app_perms & conf->app_perms_block_mask);
   const BOOL app_blocked = conf->app_block_all ? TRUE : app_perm_blocked;
