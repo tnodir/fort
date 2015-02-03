@@ -6,5 +6,5 @@
 @set F=wipfdrv%1.sys
 @set P=%~dp0%F%
 
-sc create %T% binPath="%P%" type=kernel start=auto DisplayName="Windows IP Filter"
+sc create %T% binPath= "%P%" type= kernel start= auto DisplayName= "Windows IP Filter"
 sc start %T%
