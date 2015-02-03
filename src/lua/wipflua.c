@@ -267,7 +267,7 @@ wipf_lua_conf_write (lua_State *L)
   groups_off = data_offset;
   wipf_lua_conf_write_strtable(L, 18, groups_n, &data);  /* groups */
 
-  conf_size = data_offset;
+  conf_size = WIPF_CONF_SIZE_MIN + data_offset;
 #undef data_offset
 
   conf->ip_include_all = ip_include_all;
