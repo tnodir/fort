@@ -448,15 +448,14 @@ wipf_lua_conf_app_blocked (lua_State *L)
 }
 
 /*
- * Arguments: persist (boolean), boot (boolean)
+ * Arguments: boot (boolean)
  * Returns: boolean | nil, err_code
  */
 static int
 wipf_lua_prov_register (lua_State *L)
 {
-  const BOOL persist = lua_toboolean(L, 1);
-  const BOOL boot = lua_toboolean(L, 2);
-  const DWORD status = wipf_prov_register(persist, boot);
+  const BOOL boot = lua_toboolean(L, 1);
+  const DWORD status = wipf_prov_register(TRUE, boot, NULL);
 
   if (!status) {
     lua_pushboolean(L, 1);

@@ -6,8 +6,6 @@ typedef struct wipf_prov_data {
   UINT32 boot		: 1;
 } WIPF_PROV_DATA, *PWIPF_PROV_DATA;
 
-static BOOL g_providerPersist = FALSE;
-
 
 static void
 wipf_prov_delete (HANDLE engine)
@@ -25,8 +23,7 @@ wipf_prov_unregister (void)
 {
   HANDLE engine;
 
-  if (g_providerPersist
-      || FwpmEngineOpen0(NULL, RPC_C_AUTHN_WINNT, NULL, NULL, &engine))
+  if (FwpmEngineOpen0(NULL, RPC_C_AUTHN_WINNT, NULL, NULL, &engine))
     return;
 
   wipf_prov_delete(engine);
@@ -35,7 +32,7 @@ wipf_prov_unregister (void)
 }
 
 static DWORD
-wipf_prov_register (BOOL persist, BOOL boot)
+wipf_prov_register (BOOL persist, BOOL boot, BOOL *is_tempp)
 {
   FWPM_PROVIDER0 *old_provider, provider;
   FWPM_CALLOUT0 ocallout4, icallout4;
@@ -62,8 +59,6 @@ wipf_prov_register (BOOL persist, BOOL boot)
 
     if (old_provider_data) {
       if (provider_data.persist) {
-        g_providerPersist = TRUE;
-
         if (provider_data.version == WIPF_VERSION)
           goto end_close;
 
@@ -136,8 +131,11 @@ wipf_prov_register (BOOL persist, BOOL boot)
       || (status = FwpmSubLayerAdd0(engine, &sublayer, NULL))
       || (status = FwpmFilterAdd0(engine, &ofilter4, NULL, NULL))
       || (status = FwpmFilterAdd0(engine, &ifilter4, NULL, NULL))
-      || (status = FwpmTransactionCommit0(engine)))
+      || (status = FwpmTransactionCommit0(engine))) {
     FwpmTransactionAbort0(engine);
+  } else if (is_tempp) {
+    *is_tempp = !persist;
+  }
 
  end_close:
   FwpmEngineClose0(engine);

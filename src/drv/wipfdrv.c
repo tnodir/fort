@@ -25,10 +25,11 @@ typedef struct wipf_conf_ref {
 } WIPF_CONF_REF, *PWIPF_CONF_REF;
 
 typedef struct wipf_device {
+  BOOL active		: 1;
+  BOOL prov_temporary	: 1;
+
   UINT32 connect4_id;
   UINT32 accept4_id;
-
-  BOOL active;
 
   WIPF_BUFFER buffer;
 
@@ -382,7 +383,8 @@ wipf_driver_unload (PDRIVER_OBJECT driver)
 
   wipf_buffer_close(&g_device->buffer);
 
-  wipf_prov_unregister();
+  if (g_device->prov_temporary)
+    wipf_prov_unregister();
 
   RtlInitUnicodeString(&device_link, DOS_DEVICE_NAME);
   IoDeleteSymbolicLink(&device_link);
@@ -426,7 +428,12 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 
       KeInitializeSpinLock(&g_device->conf_lock);
 
-      status = wipf_prov_register(FALSE, FALSE);
+      // Register filters provider
+      {
+        BOOL is_temp = FALSE;
+        status = wipf_prov_register(FALSE, FALSE, &is_temp);
+        g_device->prov_temporary = is_temp;
+      }
     }
   }
 

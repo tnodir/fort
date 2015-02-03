@@ -18,7 +18,7 @@ end
 wipf.prov_unregister()
 
 if persist then
-  local _, err = wipf.prov_register(persist, boot)
+  local _, err = wipf.prov_register(boot)
   if err then
     sys.stderr:write("Error: ", sys.strerror(err))
     sys.exit(false)
