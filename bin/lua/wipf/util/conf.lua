@@ -262,10 +262,6 @@ function conf_meta:write(buf)
     return nil, i18n.tr('err_conf_size')
   end
 
-  if self.app_block_all and self.app_allow_all then
-    return nil, i18n.tr('err_conf_app_block_allow')
-  end
-
   local conf_size = wipf.conf_write(buf:getptr(),
       self.ip_include_all, self.ip_exclude_all,
       self.app_log_blocked,

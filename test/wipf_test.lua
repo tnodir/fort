@@ -105,15 +105,15 @@ do
     System
   ]]
   app_group1:set_allow[[
-    D:\Programs\Skype\Phone\Skype.exe
-    D:\Utils\Dev\Git\*
+    C:\Programs\Skype\Phone\Skype.exe
+    C:\Utils\Dev\Git\*
   ]]
 
   local app_group2 = util_conf.new_app_group()
   app_group2:set_name("Browser")
   app_group2:set_enabled(false)
   app_group2:set_allow[[
-    D:\Utils\Firefox\Bin\firefox.exe
+    C:\Utils\Firefox\Bin\firefox.exe
   ]]
 
   conf:add_app_group(app_group1)
@@ -146,7 +146,7 @@ do
   assert(app_group1:get_name() == conf2_app_group1:get_name())
   assert(app_group1:get_enabled() == conf2_app_group1:get_enabled())
   assert(conf2_app_group1:get_block() == "System\n")
-  assert(conf2_app_group1:get_allow():find("D:\\utils\\dev\\git\\*\n", 1, true))
+  assert(conf2_app_group1:get_allow():find("C:\\utils\\dev\\git\\*\n", 1, true))
 
   local conf_bin = buf:getptr()
   assert(not wipf.conf_ip_inrange(conf_bin, 0, true))
@@ -156,6 +156,10 @@ do
   assert(wipf.conf_ip_inrange(conf_bin, sock.inet_pton("169.254.100.100", true)))
   assert(wipf.conf_ip_inrange(conf_bin, sock.inet_pton("192.168.255.255", true)))
   assert(not wipf.conf_ip_inrange(conf_bin, sock.inet_pton("193.0.0.0", true)))
+
+  assert(wipf.conf_app_blocked(conf_bin, util_fs.path_to_dospath[[System]]))
+  assert(not wipf.conf_app_blocked(conf_bin, util_fs.path_to_dospath[[C:\Programs\Skype\Phone\Skype.exe]]))
+  assert(not wipf.conf_app_blocked(conf_bin, util_fs.path_to_dospath[[C:\Utils\Dev\Git\bin\git.exe]]))
 
   print("OK")
 end

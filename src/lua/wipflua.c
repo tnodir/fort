@@ -245,7 +245,7 @@ wipf_lua_conf_write (lua_State *L)
 
   data = (char *) &conf->data;
 
-#define data_offset	(data - (char *) conf)
+#define data_offset	(data - (char *) &conf->data)
   ip_from_include_off = data_offset;
   wipf_lua_conf_write_numtable(L, 8, ip_include_n, &data);  /* ip_from_include */
 
@@ -275,13 +275,14 @@ wipf_lua_conf_write (lua_State *L)
   conf->app_log_blocked = app_log_blocked;
   conf->app_block_all = app_block_all;
   conf->app_allow_all = app_allow_all;
-  conf->group_bits = group_bits;
 
   conf->ip_include_n = ip_include_n;
   conf->ip_exclude_n = ip_exclude_n;
 
   conf->apps_n = apps_n;
   conf->groups_n = groups_n;
+
+  wipf_conf_group_bits_set(conf, group_bits);
 
   conf->ip_from_include_off = ip_from_include_off;
   conf->ip_to_include_off = ip_to_include_off;
@@ -362,7 +363,7 @@ static int
 wipf_lua_conf_read (lua_State *L)
 {
   const PWIPF_CONF conf = lua_touserdata(L, 1);
-  const char *data = (const char *) conf;
+  const char *data = (const char *) &conf->data;
 
   if (!conf) return 0;
 
@@ -408,17 +409,42 @@ wipf_lua_conf_ip_inrange (lua_State *L)
   const PWIPF_CONF conf = lua_touserdata(L, 1);
   const UINT32 ip = (UINT32) lua_tonumber(L, 2);
   const BOOL included = lua_toboolean(L, 3);
+  const char *data = (const char *) &conf->data;
 
   const UINT32 count = included ? conf->ip_include_n : conf->ip_exclude_n;
   const UINT32 from_off = included ? conf->ip_from_include_off : conf->ip_from_exclude_off;
   const UINT32 to_off = included ? conf->ip_to_include_off : conf->ip_to_exclude_off;
 
   const BOOL res = wipf_conf_ip_inrange(ip, count,
-                                        (const UINT32 *) ((UINT8 *) conf + from_off),
-                                        (const UINT32 *) ((UINT8 *) conf + to_off));
+      (const UINT32 *) (data + from_off),
+      (const UINT32 *) (data + to_off));
 
   lua_pushboolean(L, res);
   return 1;
+}
+
+/*
+ * Arguments: input (ludata), dos_path (string)
+ * Returns: blocked (boolean), notify (boolean)
+ */
+static int
+wipf_lua_conf_app_blocked (lua_State *L)
+{
+  const PWIPF_CONF conf = lua_touserdata(L, 1);
+  size_t len;
+  const char *path = luaL_checklstring(L, 2, &len);
+  WCHAR buf[WIPF_CONF_APP_PATH_MAX];
+  BOOL blocked, notify;
+
+  len = MultiByteToWideChar(CP_UTF8, 0, path, len,
+                            buf, WIPF_CONF_APP_PATH_MAX);
+  len *= sizeof(WCHAR);
+
+  blocked = wipf_conf_app_blocked(conf, len, (const char *) buf, &notify);
+
+  lua_pushboolean(L, blocked);
+  lua_pushboolean(L, notify);
+  return 2;
 }
 
 /*
@@ -463,6 +489,7 @@ static luaL_Reg wipf_lib[] = {
   {"conf_write",	wipf_lua_conf_write},
   {"conf_read",		wipf_lua_conf_read},
   {"conf_ip_inrange",	wipf_lua_conf_ip_inrange},
+  {"conf_app_blocked",	wipf_lua_conf_app_blocked},
   {"prov_register",	wipf_lua_prov_register},
   {"prov_unregister",	wipf_lua_prov_unregister},
   {NULL, NULL}

@@ -15,6 +15,9 @@ typedef struct wipf_conf {
   UINT16 apps_n;
   UINT16 groups_n;
 
+  UINT32 app_perms_block_mask;
+  UINT32 app_perms_allow_mask;
+
   UINT32 ip_from_include_off;
   UINT32 ip_to_include_off;
 
