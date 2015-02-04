@@ -6,6 +6,15 @@ local sys = require"sys"
 
 local persist, boot
 
+if #arg == 0 then
+  print[[
+Usage: luajit.exe scripts/provider.lua <arguments>
+Argumets:
+	persist ... Register provider, otherwise unregister
+	boot ...... Block access to network when WIPF is not running
+]]
+end
+
 -- Process arguments
 for _, v in ipairs(arg) do
   if v == "persist" then

@@ -158,8 +158,8 @@ do
   assert(not wipf.conf_ip_inrange(conf_bin, sock.inet_pton("193.0.0.0", true)))
 
   assert(wipf.conf_app_blocked(conf_bin, util_fs.path_to_dospath[[System]]))
-  assert(not wipf.conf_app_blocked(conf_bin, util_fs.path_to_dospath[[C:\Programs\Skype\Phone\Skype.exe]]))
-  assert(not wipf.conf_app_blocked(conf_bin, util_fs.path_to_dospath[[C:\Utils\Dev\Git\bin\git.exe]]))
+  assert(not wipf.conf_app_blocked(conf_bin, util_fs.path_to_dospath[[C:\programs\skype\phone\skype.exe]]))
+  assert(not wipf.conf_app_blocked(conf_bin, util_fs.path_to_dospath[[C:\utils\dev\git\bin\git.exe]]))
 
   print("OK")
 end

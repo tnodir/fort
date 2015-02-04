@@ -333,7 +333,7 @@ wipf_device_control (PDEVICE_OBJECT device, PIRP irp)
     const PWIPF_CONF conf = irp->AssociatedIrp.SystemBuffer;
     const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
 
-    if (len > WIPF_CONF_SIZE_MIN) {
+    if (len > WIPF_CONF_DATA_OFF) {
       PWIPF_CONF_REF conf_ref = wipf_conf_ref_new(conf, len);
 
       if (conf_ref == NULL) {

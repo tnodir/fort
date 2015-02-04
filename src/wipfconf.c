@@ -36,7 +36,7 @@ wipf_conf_ip_inrange (UINT32 ip, UINT32 count,
 static BOOL
 wipf_conf_ip_included (const PWIPF_CONF conf, UINT32 remote_ip)
 {
-  const char *data = (const char *) &conf->data;
+  const char *data = (const char *) conf + conf->data_off;
 
   const BOOL ip_included = conf->ip_include_all ? TRUE
       : wipf_conf_ip_inrange(remote_ip, conf->ip_include_n,
@@ -115,7 +115,7 @@ static BOOL
 wipf_conf_app_blocked (const PWIPF_CONF conf,
                        UINT32 path_len, const char *path, BOOL *notify)
 {
-  const char *data = (const char *) &conf->data;
+  const char *data = (const char *) conf + conf->data_off;
   const int app_index = wipf_conf_app_index(path_len, path, conf->apps_n,
       (const UINT32 *) (data + conf->apps_off));
   const UINT32 *apps_perms = (const UINT32 *) (data + conf->apps_perms_off);

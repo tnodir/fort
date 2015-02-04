@@ -7,7 +7,10 @@ typedef struct wipf_conf {
   UINT32 app_log_blocked	: 1;
   UINT32 app_block_all		: 1;
   UINT32 app_allow_all		: 1;
-  UINT32 group_bits		: 10;
+  UINT32 group_bits		: 16;
+
+  UINT16 conf_version;
+  UINT16 data_off;
 
   UINT16 ip_include_n;
   UINT16 ip_exclude_n;
@@ -31,7 +34,8 @@ typedef struct wipf_conf {
   UCHAR data[4];
 } WIPF_CONF, *PWIPF_CONF;
 
-#define WIPF_CONF_SIZE_MIN		offsetof(WIPF_CONF, data)
+#define WIPF_CONF_VERSION		1
+#define WIPF_CONF_DATA_OFF		offsetof(WIPF_CONF, data)
 #define WIPF_CONF_IP_MAX		(1 * 1024 * 1024)
 #define WIPF_CONF_GROUP_MAX		16
 #define WIPF_CONF_GROUP_NAME_MAX	256

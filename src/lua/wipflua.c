@@ -192,7 +192,7 @@ wipf_lua_conf_buffer_size (lua_State *L)
       || apps_len > WIPF_CONF_APPS_LEN_MAX)
     return 0;
 
-  lua_pushinteger(L, WIPF_CONF_SIZE_MIN
+  lua_pushinteger(L, WIPF_CONF_DATA_OFF
       + (ip_include_n + ip_exclude_n) * 2 * sizeof(UINT32)
       + (groups_n + apps_n) * sizeof(UINT32)
       + groups_len + apps_len
@@ -267,7 +267,7 @@ wipf_lua_conf_write (lua_State *L)
   groups_off = data_offset;
   wipf_lua_conf_write_strtable(L, 18, groups_n, &data);  /* groups */
 
-  conf_size = WIPF_CONF_SIZE_MIN + data_offset;
+  conf_size = WIPF_CONF_DATA_OFF + data_offset;
 #undef data_offset
 
   conf->ip_include_all = ip_include_all;
@@ -275,6 +275,9 @@ wipf_lua_conf_write (lua_State *L)
   conf->app_log_blocked = app_log_blocked;
   conf->app_block_all = app_block_all;
   conf->app_allow_all = app_allow_all;
+
+  conf->conf_version = WIPF_CONF_VERSION;
+  conf->data_off = WIPF_CONF_DATA_OFF;
 
   conf->ip_include_n = ip_include_n;
   conf->ip_exclude_n = ip_exclude_n;
@@ -363,7 +366,7 @@ static int
 wipf_lua_conf_read (lua_State *L)
 {
   const PWIPF_CONF conf = lua_touserdata(L, 1);
-  const char *data = (const char *) &conf->data;
+  const char *data = (const char *) conf + conf->data_off;
 
   if (!conf) return 0;
 
@@ -409,7 +412,7 @@ wipf_lua_conf_ip_inrange (lua_State *L)
   const PWIPF_CONF conf = lua_touserdata(L, 1);
   const UINT32 ip = (UINT32) lua_tonumber(L, 2);
   const BOOL included = lua_toboolean(L, 3);
-  const char *data = (const char *) &conf->data;
+  const char *data = (const char *) conf + conf->data_off;
 
   const UINT32 count = included ? conf->ip_include_n : conf->ip_exclude_n;
   const UINT32 from_off = included ? conf->ip_from_include_off : conf->ip_from_exclude_off;
