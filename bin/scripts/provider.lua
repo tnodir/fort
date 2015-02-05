@@ -6,27 +6,38 @@ local sys = require"sys"
 
 local register, boot
 
-if #arg == 0 then
+
+local function usage()
   print[[
-Usage: luajit.exe scripts/provider.lua <arguments>
+Usage: luajit.exe scripts\provider.lua <arguments>
 Argumets:
 	register .... Register provider
 	boot ........ Block access to network when WIPF is not running
 	unregister .. Unregister provider
 ]]
+  sys.exit(false)
 end
 
+
 -- Process arguments
-for _, v in ipairs(arg) do
-  if v == "register" then
+if #arg == 0 then
+  usage()
+end
+
+for _, a in ipairs(arg) do
+  if a == "register" then
     register = true
-  elseif v == "boot" then
+  elseif a == "boot" then
     boot = true
+  elseif a == "help" then
+    usage()
   end
 end
 
+-- Unregister
 wipf.prov_unregister()
 
+-- Register optionally
 if register then
   local _, err = wipf.prov_register(boot)
   if err then

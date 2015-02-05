@@ -9,6 +9,8 @@ local current_lang, lang_strings
 
 
 function i18n.set_current_lang(lang)
+  if current_lang == lang then return end
+
   current_lang = lang
   lang_strings = assert(util_fs.sandbox("lua/wipf/lang/" .. lang .. ".lua"))
 end
