@@ -4,6 +4,8 @@
 #define NT_DEVICE_NAME		L"\\Device\\wipf"
 #define DOS_DEVICE_NAME		L"\\DosDevices\\wipf"
 
+#define WIPF_DRIVER
+
 #define wipf_request_complete_info(irp, status, info) \
   do { \
     (irp)->IoStatus.Status = (status); \

@@ -3,6 +3,17 @@
 #include "wipfconf.h"
 
 
+#ifndef WIPF_DRIVER
+#define wipf_memcmp	memcmp
+#else
+static int
+wipf_memcmp (const char *p1, const char *p2, size_t len)
+{
+  const size_t n = RtlCompareMemory(p1, p2, len);
+  return (n == len) ? 0 : (p1[n] - p2[n]);
+}
+#endif
+
 static BOOL
 wipf_conf_ip_inrange (UINT32 ip, UINT32 count,
                       const UINT32 *iprange_from, const UINT32 *iprange_to)
@@ -75,7 +86,7 @@ wipf_conf_app_cmp (UINT32 path_len, const char *path, const char *apps,
       return 1;
     }
   }
-  return memcmp(path, app, path_len);
+  return wipf_memcmp(path, app, path_len);
 }
 
 static int
