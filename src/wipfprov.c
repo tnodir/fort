@@ -32,7 +32,7 @@ wipf_prov_unregister (void)
 }
 
 static DWORD
-wipf_prov_register (BOOL persist, BOOL boot, BOOL *is_tempp)
+wipf_prov_register (BOOL persist, BOOL boot, BOOL *is_tempp, BOOL *is_bootp)
 {
   FWPM_PROVIDER0 *old_provider, provider;
   FWPM_CALLOUT0 ocallout4, icallout4;
@@ -59,11 +59,11 @@ wipf_prov_register (BOOL persist, BOOL boot, BOOL *is_tempp)
 
     if (old_provider_data) {
       if (provider_data.persist) {
-        if (provider_data.version == WIPF_VERSION)
-          goto end_close;
-
         persist = provider_data.persist;
         boot = provider_data.boot;
+
+        if (provider_data.version == WIPF_VERSION)
+          goto end_close;
       }
       wipf_prov_delete(engine);
     }
@@ -139,6 +139,10 @@ wipf_prov_register (BOOL persist, BOOL boot, BOOL *is_tempp)
 
  end_close:
   FwpmEngineClose0(engine);
+
+ if (is_bootp) {
+   *is_bootp = boot;
+ }
 
  end:
   return status;

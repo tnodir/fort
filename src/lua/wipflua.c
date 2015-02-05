@@ -458,7 +458,7 @@ static int
 wipf_lua_prov_register (lua_State *L)
 {
   const BOOL boot = lua_toboolean(L, 1);
-  const DWORD status = wipf_prov_register(TRUE, boot, NULL);
+  const DWORD status = wipf_prov_register(TRUE, boot, NULL, NULL);
 
   if (!status) {
     lua_pushboolean(L, 1);

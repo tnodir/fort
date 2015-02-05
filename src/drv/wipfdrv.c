@@ -27,6 +27,7 @@ typedef struct wipf_conf_ref {
 typedef struct wipf_device {
   BOOL active		: 1;
   BOOL prov_temporary	: 1;
+  BOOL prov_boot	: 1;
 
   UINT32 connect4_id;
   UINT32 accept4_id;
@@ -121,7 +122,7 @@ wipf_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 {
   PWIPF_CONF_REF conf_ref;
   UINT32 flags;
-  UINT32 local_ip, remote_ip;
+  UINT32 remote_ip;
   UINT32 path_len;
   PVOID path;
   BOOL blocked, notify;
@@ -131,11 +132,13 @@ wipf_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   conf_ref = wipf_conf_ref_take();
 
-  if (conf_ref == NULL)
+  if (conf_ref == NULL) {
+    if (g_device->prov_boot)
+      goto block;
     return;
+  }
 
   flags = inFixedValues->incomingValue[flagsField].value.uint32;
-  local_ip = inFixedValues->incomingValue[localIpField].value.uint32;
   remote_ip = inFixedValues->incomingValue[remoteIpField].value.uint32;
   path_len = inMetaValues->processPath->size;
   path = inMetaValues->processPath->data;
@@ -150,29 +153,31 @@ wipf_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   wipf_conf_ref_put(conf_ref);
 
-  if (blocked) {
-    classifyOut->actionType = FWP_ACTION_BLOCK;
-    classifyOut->rights &= ~FWPS_RIGHT_ACTION_WRITE;
-
-    if (notify) {
-      PIRP irp = NULL;
-      NTSTATUS irp_status;
-      ULONG_PTR info;
-
-      wipf_buffer_write(&g_device->buffer, remote_ip,
-        (UINT32) inMetaValues->processId, path_len, path,
-        &irp, &irp_status, &info);
-
-      if (irp != NULL) {
-        wipf_request_complete_info(irp, irp_status, info);
-      }
-    }
-  } else {
+  if (!blocked) {
     classifyOut->actionType = FWP_ACTION_CONTINUE;
     if ((filter->flags & FWPS_FILTER_FLAG_CLEAR_ACTION_RIGHT)) {
       classifyOut->rights &= ~FWPS_RIGHT_ACTION_WRITE;
     }
+    return;
   }
+
+  if (notify) {
+    PIRP irp = NULL;
+    NTSTATUS irp_status;
+    ULONG_PTR info;
+
+    wipf_buffer_write(&g_device->buffer, remote_ip,
+      (UINT32) inMetaValues->processId, path_len, path,
+      &irp, &irp_status, &info);
+
+    if (irp != NULL) {
+      wipf_request_complete_info(irp, irp_status, info);
+    }
+  }
+
+ block:
+  classifyOut->actionType = FWP_ACTION_BLOCK;
+  classifyOut->rights &= ~FWPS_RIGHT_ACTION_WRITE;
 }
 
 static void
@@ -430,9 +435,12 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 
       // Register filters provider
       {
-        BOOL is_temp = FALSE;
-        status = wipf_prov_register(FALSE, FALSE, &is_temp);
+        BOOL is_temp = FALSE, is_boot = FALSE;
+
+        status = wipf_prov_register(FALSE, FALSE, &is_temp, &is_boot);
+
         g_device->prov_temporary = is_temp;
+        g_device->prov_boot = is_boot;
       }
     }
   }
