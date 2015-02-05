@@ -11,8 +11,8 @@ local function usage()
   print[[
 Usage: luajit.exe lua\main.lua <arguments>
 Argumets:
-	lang ..... Language code (see "lua\wipf\lang\" folder)
-	profile .. Path to folder with configuration files
+	lang=<code> ..... Language code (see "lua\wipf\lang\" folder)
+	profile=<path> .. Path to folder with configuration files
 
 Example: luajit.exe lua\main.lua lang=en profile="%LOCALAPPDATA%\wipf"
 ]]
