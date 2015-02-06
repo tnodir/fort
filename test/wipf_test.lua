@@ -106,7 +106,7 @@ do
   ]]
   app_group1:set_allow[[
     C:\Programs\Skype\Phone\Skype.exe
-    C:\Utils\Dev\Git\*
+    C:\Utils\Dev\Git\
   ]]
 
   local app_group2 = util_conf.new_app_group()
@@ -146,7 +146,7 @@ do
   assert(app_group1:get_name() == conf2_app_group1:get_name())
   assert(app_group1:get_enabled() == conf2_app_group1:get_enabled())
   assert(conf2_app_group1:get_block() == "System\n")
-  assert(conf2_app_group1:get_allow():find("C:\\utils\\dev\\git\\*\n", 1, true))
+  assert(conf2_app_group1:get_allow():find("C:\\utils\\dev\\git\\\n", 1, true))
 
   local conf_bin = buf:getptr()
   assert(not wipf.conf_ip_inrange(conf_bin, 0, true))

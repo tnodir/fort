@@ -27,11 +27,11 @@ wipf_conf_ip_inrange (UINT32 ip, UINT32 count,
 
   do {
     const int mid = (low + high) / 2;
-    const int res = ip - iprange_from[mid];
+    const UINT32 mid_ip = iprange_from[mid];
 
-    if (res < 0)
+    if (ip < mid_ip)
       high = mid - 1;
-    else if (res > 0)
+    else if (ip > mid_ip)
       low = mid + 1;
     else
       return TRUE;
@@ -59,29 +59,16 @@ wipf_conf_ip_included (const PWIPF_CONF conf, UINT32 remote_ip)
 }
 
 static int
-wipf_conf_app_cmp (UINT32 path_len, const char *path, const char *apps,
-                   const UINT32 *app_offp, BOOL is_less)
+wipf_conf_app_cmp (UINT32 path_len, const char *path,
+                   const char *apps, const UINT32 *app_offp)
 {
   const UINT32 app_off = *app_offp;
   const UINT32 app_len = *(app_offp + 1) - app_off;
   const char *app = apps + app_off;
 
-  if (is_less) {
-    if (path_len > app_len)
-      path_len = app_len;
-  } else {
-    if (path_len >= app_len) {
-      const WCHAR app_last = *((LPWCH) (app + app_len) - 1);
+  if (path_len > app_len)
+    path_len = app_len;
 
-      if (app_last == L'*') {
-        path_len = app_len - sizeof(WCHAR);  // partial comparison
-      } else if (path_len != app_len) {
-        return -1;
-      }
-    } else {
-      return 1;
-    }
-  }
   return wipf_memcmp(path, app, path_len);
 }
 
@@ -101,7 +88,7 @@ wipf_conf_app_index (UINT32 path_len, const char *path, UINT32 count,
   do {
     const int mid = (low + high) / 2;
     const int res = wipf_conf_app_cmp(path_len, path,
-                                      apps, app_offsets + mid, TRUE);
+                                      apps, app_offsets + mid);
 
     if (res < 0)
       high = mid - 1;
@@ -111,9 +98,7 @@ wipf_conf_app_index (UINT32 path_len, const char *path, UINT32 count,
       return mid;
   } while (low <= high);
 
-  return high >= 0 && !wipf_conf_app_cmp(path_len, path,
-                                         apps, app_offsets + high, FALSE)
-      ? high : -1;
+  return -1;
 }
 
 static BOOL
