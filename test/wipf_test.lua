@@ -86,7 +86,7 @@ do
   conf:set_ip_exclude_all(false)
 
   conf:set_app_log_blocked(true)
-  conf:set_app_block_all(true)
+  conf:set_app_block_all(false)
   conf:set_app_allow_all(false)
 
   conf:set_ip_include""
@@ -157,7 +157,7 @@ do
   assert(wipf.conf_ip_inrange(conf_bin, sock.inet_pton("192.168.255.255", true)))
   assert(not wipf.conf_ip_inrange(conf_bin, sock.inet_pton("193.0.0.0", true)))
 
-  assert(wipf.conf_app_blocked(conf_bin, util_fs.path_to_dospath[[System]]))
+  assert(wipf.conf_app_blocked(conf_bin, "System"))
   assert(not wipf.conf_app_blocked(conf_bin, util_fs.path_to_dospath[[C:\programs\skype\phone\skype.exe]]))
   assert(not wipf.conf_app_blocked(conf_bin, util_fs.path_to_dospath[[C:\utils\dev\git\bin\git.exe]]))
 

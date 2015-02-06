@@ -18,30 +18,26 @@ static BOOL
 wipf_conf_ip_inrange (UINT32 ip, UINT32 count,
                       const UINT32 *iprange_from, const UINT32 *iprange_to)
 {
-  int beg, end;
+  int low, high;
 
   if (count == 0)
     return FALSE;
 
-  beg = 0, end = count - 1;
+  low = 0, high = count - 1;
 
   do {
-    const int mid = (beg + end) / 2;
+    const int mid = (low + high) / 2;
+    const int res = ip - iprange_from[mid];
 
-    if (ip < iprange_from[mid]) {
-      end = mid - 1;
-    } else {
-      if (beg == mid) {
-        if (ip >= iprange_from[end]) {
-          beg = end;
-        }
-        break;
-      }
-      beg = mid;
-    }
-  } while (beg < end);
+    if (res < 0)
+      high = mid - 1;
+    else if (res > 0)
+      low = mid + 1;
+    else
+      return TRUE;
+  } while (low <= high);
 
-  return ip >= iprange_from[beg] && ip <= iprange_to[beg];
+  return high >= 0 && ip >= iprange_from[high] && ip <= iprange_to[high];
 }
 
 static BOOL
@@ -94,32 +90,30 @@ wipf_conf_app_index (UINT32 path_len, const char *path, UINT32 count,
                      const UINT32 *app_offsets)
 {
   const char *apps;
-  int beg, end;
+  int low, high;
 
   if (count == 0)
     return -1;
 
   apps = (const char *) (app_offsets + count + 1);
-  beg = 0, end = count - 1;
+  low = 0, high = count - 1;
 
   do {
-    const int mid = (beg + end) / 2;
+    const int mid = (low + high) / 2;
+    const int res = wipf_conf_app_cmp(path_len, path,
+                                      apps, app_offsets + mid, TRUE);
 
-    if (wipf_conf_app_cmp(path_len, path, apps, app_offsets + mid, TRUE) < 0) {
-      end = mid - 1;
-    } else {
-      if (beg == mid) {
-        if (wipf_conf_app_cmp(path_len, path, apps, app_offsets + end, TRUE) >= 0) {
-          beg = end;
-        }
-        break;
-      }
-      beg = mid;
-    }
-  } while (beg < end);
+    if (res < 0)
+      high = mid - 1;
+    else if (res > 0)
+      low = mid + 1;
+    else
+      return mid;
+  } while (low <= high);
 
-  return wipf_conf_app_cmp(path_len, path, apps, app_offsets + beg, FALSE)
-      ? -1 : beg;
+  return high >= 0 && !wipf_conf_app_cmp(path_len, path,
+                                         apps, app_offsets + high, FALSE)
+      ? high : -1;
 }
 
 static BOOL
