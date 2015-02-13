@@ -35,9 +35,9 @@ wipf_lua_device_name (lua_State *L)
  * Returns: number
  */
 static int
-wipf_lua_ioctl_getlog (lua_State *L)
+wipf_lua_ioctl_setconf (lua_State *L)
 {
-  lua_pushinteger(L, WIPF_IOCTL_GETLOG);
+  lua_pushinteger(L, WIPF_IOCTL_SETCONF);
   return 1;
 }
 
@@ -45,9 +45,19 @@ wipf_lua_ioctl_getlog (lua_State *L)
  * Returns: number
  */
 static int
-wipf_lua_ioctl_setconf (lua_State *L)
+wipf_lua_ioctl_setflags (lua_State *L)
 {
-  lua_pushinteger(L, WIPF_IOCTL_SETCONF);
+  lua_pushinteger(L, WIPF_IOCTL_SETFLAGS);
+  return 1;
+}
+
+/*
+ * Returns: number
+ */
+static int
+wipf_lua_ioctl_getlog (lua_State *L)
+{
+  lua_pushinteger(L, WIPF_IOCTL_GETLOG);
   return 1;
 }
 
@@ -216,7 +226,6 @@ wipf_lua_conf_buffer_size (lua_State *L)
  *	apps_n (number),
  *	apps_perms (table: 1..n => number),
  *	apps (table: 1..n => string),
- *	group_bits (number),
  *	groups_n (number),
  *	groups (table: 1..n => string)
  * Returns: length (number)
@@ -233,8 +242,7 @@ wipf_lua_conf_write (lua_State *L)
   const UINT32 ip_include_n = lua_tointeger(L, 7);
   const UINT32 ip_exclude_n = lua_tointeger(L, 10);
   const UINT32 apps_n = lua_tointeger(L, 13);
-  const UINT32 group_bits = lua_tointeger(L, 16);
-  const UINT32 groups_n = lua_tointeger(L, 17);
+  const UINT32 groups_n = lua_tointeger(L, 16);
   UINT32 ip_from_include_off, ip_to_include_off;
   UINT32 ip_from_exclude_off, ip_to_exclude_off;
   UINT32 groups_off, apps_off, apps_perms_off;
@@ -265,7 +273,7 @@ wipf_lua_conf_write (lua_State *L)
   wipf_lua_conf_write_strtable(L, 15, apps_n, &data);  /* apps */
 
   groups_off = data_offset;
-  wipf_lua_conf_write_strtable(L, 18, groups_n, &data);  /* groups */
+  wipf_lua_conf_write_strtable(L, 17, groups_n, &data);  /* groups */
 
   conf_size = WIPF_CONF_DATA_OFF + data_offset;
 #undef data_offset
@@ -285,8 +293,6 @@ wipf_lua_conf_write (lua_State *L)
   conf->apps_n = apps_n;
   conf->groups_n = groups_n;
 
-  wipf_conf_group_bits_set(conf, group_bits);
-
   conf->ip_from_include_off = ip_from_include_off;
   conf->ip_to_include_off = ip_to_include_off;
 
@@ -299,6 +305,23 @@ wipf_lua_conf_write (lua_State *L)
 
   lua_pushinteger(L, conf_size);
   return 1;
+}
+
+/*
+ * Arguments: output (ludata),
+ *	filter_disabled (boolean), group_bits (number)
+ */
+static int
+wipf_lua_conf_flags_set (lua_State *L)
+{
+  PWIPF_CONF conf = lua_touserdata(L, 1);
+  const BOOL filter_disabled = lua_toboolean(L, 2);
+  const UINT32 group_bits = (UINT32) lua_tonumber(L, 3);
+
+  conf->filter_disabled = filter_disabled;
+
+  wipf_conf_group_bits_set(conf, group_bits);
+  return 0;
 }
 
 
@@ -359,7 +382,6 @@ wipf_lua_conf_read_numtable (lua_State *L, int count, const char *data)
  *	ip_to_exclude (table: 1..n => number),
  *	apps_perms (table: 1..n => number),
  *	apps (table: 1..n => string),
- *	group_bits (number),
  *	groups (table: 1..n => string)
  */
 static int
@@ -394,12 +416,24 @@ wipf_lua_conf_read (lua_State *L)
   wipf_lua_conf_read_strtable(L, conf->apps_n,
       data + conf->apps_off);  /* apps */
 
-  lua_pushinteger(L, conf->group_bits);
-
   wipf_lua_conf_read_strtable(L, conf->groups_n,
       data + conf->groups_off);  /* groups */
 
-  return 13;
+  return 12;
+}
+
+/*
+ * Arguments: input (ludata)
+ * Returns: filter_disabled (boolean), group_bits (number)
+ */
+static int
+wipf_lua_conf_flags_get (lua_State *L)
+{
+  PWIPF_CONF conf = lua_touserdata(L, 1);
+
+  lua_pushboolean(L, conf->filter_disabled);
+  lua_pushnumber(L, conf->group_bits);
+  return 2;
 }
 
 /*
@@ -482,14 +516,17 @@ wipf_lua_prov_unregister (lua_State *L)
 
 static luaL_Reg wipf_lib[] = {
   {"device_name",	wipf_lua_device_name},
-  {"ioctl_getlog",	wipf_lua_ioctl_getlog},
   {"ioctl_setconf",	wipf_lua_ioctl_setconf},
+  {"ioctl_setflags",	wipf_lua_ioctl_setflags},
+  {"ioctl_getlog",	wipf_lua_ioctl_getlog},
   {"buffer_size",	wipf_lua_buffer_size},
   {"log_write",		wipf_lua_log_write},
   {"log_read",		wipf_lua_log_read},
   {"conf_buffer_size",	wipf_lua_conf_buffer_size},
   {"conf_write",	wipf_lua_conf_write},
+  {"conf_flags_set",	wipf_lua_conf_flags_set},
   {"conf_read",		wipf_lua_conf_read},
+  {"conf_flags_get",	wipf_lua_conf_flags_get},
   {"conf_ip_inrange",	wipf_lua_conf_ip_inrange},
   {"conf_app_blocked",	wipf_lua_conf_app_blocked},
   {"prov_register",	wipf_lua_prov_register},

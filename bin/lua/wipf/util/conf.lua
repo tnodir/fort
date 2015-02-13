@@ -167,6 +167,13 @@ local conf_meta = {}
 
 conf_meta.__index = conf_meta
 
+function conf_meta:set_filter_disabled(bool)
+  self.filter_disabled = bool
+end
+function conf_meta:get_filter_disabled()
+  return self.filter_disabled
+end
+
 function conf_meta:set_ip_include_all(bool)
   self.ip_include_all = bool
 end
@@ -262,14 +269,18 @@ function conf_meta:write(buf)
     return nil, i18n.tr('err_conf_size')
   end
 
-  local conf_size = wipf.conf_write(buf:getptr(),
+  local conf_ptr = buf:getptr()
+
+  local conf_size = wipf.conf_write(conf_ptr,
       self.ip_include_all, self.ip_exclude_all,
       self.app_log_blocked,
       self.app_block_all, self.app_allow_all,
       iprange_from_inc.n, iprange_from_inc, iprange_to_inc,
       iprange_from_exc.n, iprange_from_exc, iprange_to_exc,
       apps.n, apps_perms, apps,
-      group_bits, groups.n, groups)
+      groups.n, groups)
+
+  wipf.conf_flags_set(conf_ptr, self.filter_disabled, group_bits)
 
   buf:seek(conf_size)
 
@@ -278,13 +289,17 @@ end
 
 -- Read conf. object from buffer
 function conf_meta:read(buf)
+  local conf_ptr = buf:getptr()
 
   local ip_include_all, ip_exclude_all,
       app_log_blocked, app_block_all, app_allow_all,
       iprange_from_inc, iprange_to_inc,
       iprange_from_exc, iprange_to_exc,
-      apps_perms, apps, group_bits, groups = wipf.conf_read(buf:getptr())
+      apps_perms, apps, groups = wipf.conf_read(conf_ptr)
 
+  local filter_disabled, group_bits = wipf.conf_flags_get(conf_ptr)
+
+  self.filter_disabled = filter_disabled
   self.ip_include_all = ip_include_all
   self.ip_exclude_all = ip_exclude_all
   self.app_log_blocked = app_log_blocked
@@ -304,6 +319,8 @@ end
 -- New conf. object
 function util_conf.new_conf()
   return setmetatable({
+    filter_disabled = false,
+
     ip_include_all = false,
     ip_exclude_all = false,
 

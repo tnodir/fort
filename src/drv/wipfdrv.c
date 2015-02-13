@@ -26,6 +26,7 @@ typedef struct wipf_conf_ref {
 
 typedef struct wipf_device {
   BOOL active		: 1;
+  BOOL filter_disabled	: 1;
   BOOL prov_temporary	: 1;
   BOOL prov_boot	: 1;
 
@@ -104,6 +105,9 @@ wipf_conf_ref_set (PWIPF_CONF_REF conf_ref)
   KeAcquireSpinLock(&g_device->conf_lock, &irq);
   {
     g_device->conf_ref = conf_ref;
+
+    g_device->filter_disabled = (conf_ref != NULL
+        && conf_ref->conf.filter_disabled);
   }
   KeReleaseSpinLock(&g_device->conf_lock, irq);
 
@@ -129,6 +133,10 @@ wipf_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   UNUSED(layerData);
   UNUSED(flowContext);
+
+  if (g_device->filter_disabled) {
+    return;
+  }
 
   conf_ref = wipf_conf_ref_take();
 
@@ -345,6 +353,27 @@ wipf_device_control (PDEVICE_OBJECT device, PIRP irp)
         status = STATUS_INSUFFICIENT_RESOURCES;
       } else {
         wipf_conf_ref_set(conf_ref);
+        status = STATUS_SUCCESS;
+      }
+    }
+    break;
+  }
+  case WIPF_IOCTL_SETFLAGS: {
+    const PWIPF_CONF conf = irp->AssociatedIrp.SystemBuffer;
+    const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
+
+    if (len > WIPF_CONF_DATA_OFF) {
+      PWIPF_CONF_REF conf_ref = wipf_conf_ref_take();
+
+      if (conf_ref != NULL) {
+        PWIPF_CONF old_conf = &conf_ref->conf;
+
+        g_device->filter_disabled =
+          old_conf->filter_disabled = conf->filter_disabled;
+
+        wipf_conf_group_bits_set(old_conf, conf->group_bits);
+
+        wipf_conf_ref_put(conf_ref);
         status = STATUS_SUCCESS;
       }
     }

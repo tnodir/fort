@@ -2,6 +2,7 @@
 #define WIPFCONF_H
 
 typedef struct wipf_conf {
+  UINT32 filter_disabled	: 1;
   UINT32 ip_include_all		: 1;
   UINT32 ip_exclude_all		: 1;
   UINT32 app_log_blocked	: 1;
