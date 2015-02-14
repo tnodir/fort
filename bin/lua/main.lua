@@ -5,7 +5,15 @@ local sys = require"sys"
 
 local i18n = require"wipf.util.i18n"
 local model_conf = require"wipf.model.conf"
+local ui_window = require"wipf.ui.window"
 
+
+local window_title = "Windows IP Filter"
+
+
+local function exit()
+  os.exit(false)
+end
 
 local function usage()
   print[[
@@ -16,7 +24,21 @@ Argumets:
 
 Example: luajit.exe lua\main.lua lang=en profile="%LOCALAPPDATA%\wipf"
 ]]
-  sys.exit(false)
+  exit()
+end
+
+
+-- Initialize IUP
+iup.SetGlobal("UTF8MODE", "YES")
+iup.SetGlobal("UTF8MODE_FILE", "YES")
+
+
+-- Check running instance
+iup.SetGlobal("SINGLEINSTANCE", window_title)
+
+if not iup.GetGlobal("SINGLEINSTANCE") then
+  print"Error: Already running."
+  exit()
 end
 
 
@@ -33,4 +55,21 @@ for _, a in ipairs(arg) do
 end
 
 
---iup.MainLoop()
+-- Initialize UI
+ui_window.init(window_title)
+
+
+-- Event Loop
+do
+  local function on_winmsg(evq)
+    if iup.LoopStep() == iup.CLOSE then
+      evq:stop()
+    end
+  end
+
+  local evq = sys.event_queue()
+  evq:add_winmsg(nil, on_winmsg)
+
+  evq:loop()
+end
+
