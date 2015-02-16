@@ -116,6 +116,27 @@ wipf_conf_ref_set (PWIPF_CONF_REF conf_ref)
 }
 
 static void
+wipf_conf_ref_flags_set (BOOL filter_disabled, UINT32 group_bits)
+{
+  KIRQL irq;
+
+  KeAcquireSpinLock(&g_device->conf_lock, &irq);
+  {
+    PWIPF_CONF_REF conf_ref = g_device->conf_ref;
+
+    if (conf_ref) {
+      PWIPF_CONF conf = &conf_ref->conf;
+
+      g_device->filter_disabled =
+        conf->filter_disabled = filter_disabled;
+
+      wipf_conf_group_bits_set(conf, group_bits);
+    }
+  }
+  KeReleaseSpinLock(&g_device->conf_lock, irq);
+}
+
+static void
 wipf_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                           const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
                           void *layerData,
@@ -363,19 +384,8 @@ wipf_device_control (PDEVICE_OBJECT device, PIRP irp)
     const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
 
     if (len > WIPF_CONF_DATA_OFF) {
-      PWIPF_CONF_REF conf_ref = wipf_conf_ref_take();
-
-      if (conf_ref != NULL) {
-        PWIPF_CONF old_conf = &conf_ref->conf;
-
-        g_device->filter_disabled =
-          old_conf->filter_disabled = conf->filter_disabled;
-
-        wipf_conf_group_bits_set(old_conf, conf->group_bits);
-
-        wipf_conf_ref_put(conf_ref);
-        status = STATUS_SUCCESS;
-      }
+      wipf_conf_ref_flags_set(conf->filter_disabled, conf->group_bits);
+      status = STATUS_SUCCESS;
     }
     break;
   }

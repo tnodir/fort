@@ -16,7 +16,7 @@ end
 
 local function window_quit()
   window:destroy()
-  iup.ExitLoop()
+  return iup.CLOSE
 end
 
 local function menu_show()
