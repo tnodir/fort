@@ -31,6 +31,7 @@ end
 -- Initialize IUP
 iup.SetGlobal("UTF8MODE", "YES")
 iup.SetGlobal("UTF8MODE_FILE", "YES")
+iup.SetGlobal("DEFAULTFONTSIZE", 11)
 
 
 -- Check running instance
@@ -65,6 +66,7 @@ do
     if iup.LoopStep() == iup.CLOSE then
       evq:stop()
     end
+    iup.Flush()
   end
 
   local evq = sys.event_queue()

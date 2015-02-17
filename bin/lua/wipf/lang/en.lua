@@ -9,3 +9,13 @@ err_conf_size = "Size of configuration is too big"
 
 ui_tray_show = "Show"
 ui_tray_quit = "Quit"
+
+ui_tab_options = "Options"
+ui_tab_addresses = "IPv4 Addresses"
+ui_tab_apps = "Applications"
+
+ui_opt_autostart = "Start with Windows"
+ui_opt_filter_disabled = "Filtering disabled"
+
+ui_win_ok = "OK"
+ui_win_cancel = "Cancel"
