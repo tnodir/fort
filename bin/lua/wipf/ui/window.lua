@@ -3,11 +3,16 @@
 local iup = require"iuplua"
 
 local i18n = require"wipf.util.i18n"
+local observer = require"wipf.util.observer"
 
 
 local ui_window = {}
 
 local window, menu
+
+
+-- Signals
+ui_window.apply_conf = observer.signal(conf)
 
 
 local function window_show()
@@ -45,6 +50,8 @@ end
 
 local function on_window_apply()
   window_hide()
+
+  observer.emit(ui_window.apply_conf, window, conf)
 end
 
 local function on_window_cancel()

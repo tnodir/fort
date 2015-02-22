@@ -5,6 +5,7 @@ local sys = require"sys"
 
 local i18n = require"wipf.util.i18n"
 local model_conf = require"wipf.model.conf"
+local model_ui = require"wipf.model.ui"
 local ui_window = require"wipf.ui.window"
 
 
