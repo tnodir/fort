@@ -7,7 +7,7 @@ local ui_window = require"wipf.ui.window"
 local model_ui = {}
 
 
-function model_ui:handle_apply_conf(window, conf)
+function model_ui:handle_apply_conf(conf)
 end
 
 

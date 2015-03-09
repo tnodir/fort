@@ -31,7 +31,7 @@ function observer.emit(signal_index, sender, ...)
   local slots = signals[signal_index]
 
   for receiver, slot_function in pairs(slots) do
-    slot_function(receiver, sender, ...)
+    slot_function(receiver, ...)
   end
 end
 
