@@ -68,7 +68,7 @@ end
 
 local function create_button(title, action_cb)
   return iup.button{
-    title = title, padding = 8,
+    title = title, padding = 8, minsize = 100,
     action = action_cb
   }
 end
@@ -106,17 +106,20 @@ function ui_window.init(window_title)
         iup.vbox{
           create_toggle(i18n.tr("ui_opt_autostart"), on_opt_autostart),
           create_toggle(i18n.tr("ui_opt_filter_disabled"), on_opt_filter_disabled);
-          tabtitle = i18n.tr("ui_tab_options")
+          tabtitle = i18n.tr("ui_tab_options"),
+          tabimage = "images/cog.bmpx"
         },
         -- IPv4 Addresses
         iup.hbox{
           iup.multiline{expand = "YES"},
           iup.multiline{expand = "YES"};
-          tabtitle = i18n.tr("ui_tab_addresses")
+          tabtitle = i18n.tr("ui_tab_addresses"),
+          tabimage = "images/connect.bmpx"
         },
         -- Applications
         iup.vbox{
-          tabtitle = i18n.tr("ui_tab_apps")
+          tabtitle = i18n.tr("ui_tab_apps"),
+          tabimage = "images/application_cascade.bmpx"
         }
       },
       iup.hbox{
