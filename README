@@ -1,10 +1,4 @@
-Windows IP Filter is a simple firewall for Windows 7+.
-
-Depends on:
-
-- LuaJIT: http://luajit.org/
-- LuaSys: https://github.com/tnodir/luasys/
-- IUP: http://sourceforge.net/projects/iup/
+Fort is a simple firewall for Windows 7+.
 
 --
 Nodir Temirkhodjaev, <nodir.temir@gmail.com>
