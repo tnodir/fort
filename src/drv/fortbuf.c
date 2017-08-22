@@ -1,10 +1,10 @@
 /* Windows IP Filter Log Buffer */
 
-#define WIPF_BUFFER_POOL_TAG	'IPFB'
+#define FORT_BUFFER_POOL_TAG	'IPFB'
 
-#include "../wipflog.c"
+#include "../common/fortlog.c"
 
-typedef struct wipf_buffer {
+typedef struct fort_buffer {
   UINT32 top;
   PCHAR data;
 
@@ -13,23 +13,23 @@ typedef struct wipf_buffer {
   ULONG out_len;
 
   KSPIN_LOCK lock;
-} WIPF_BUFFER, *PWIPF_BUFFER;
+} FORT_BUFFER, *PFORT_BUFFER;
 
 
 static void
-wipf_buffer_init (PWIPF_BUFFER buf)
+fort_buffer_init (PFORT_BUFFER buf)
 {
-  buf->data = ExAllocatePoolWithTag(NonPagedPool, WIPF_BUFFER_SIZE,
-                                    WIPF_BUFFER_POOL_TAG);
+  buf->data = ExAllocatePoolWithTag(NonPagedPool, FORT_BUFFER_SIZE,
+                                    FORT_BUFFER_POOL_TAG);
 
   KeInitializeSpinLock(&buf->lock);
 }
 
 static void
-wipf_buffer_close (PWIPF_BUFFER buf)
+fort_buffer_close (PFORT_BUFFER buf)
 {
   if (buf->data != NULL) {
-    ExFreePoolWithTag(buf->data, WIPF_BUFFER_POOL_TAG);
+    ExFreePoolWithTag(buf->data, FORT_BUFFER_POOL_TAG);
 
     buf->data = NULL;
     buf->top = 0;
@@ -37,7 +37,7 @@ wipf_buffer_close (PWIPF_BUFFER buf)
 }
 
 static NTSTATUS
-wipf_buffer_write (PWIPF_BUFFER buf, UINT32 remote_ip, UINT32 pid,
+fort_buffer_write (PFORT_BUFFER buf, UINT32 remote_ip, UINT32 pid,
                    UINT32 path_len, const PVOID path,
                    PIRP *irp, NTSTATUS *irp_status, ULONG_PTR *info)
 {
@@ -45,11 +45,11 @@ wipf_buffer_write (PWIPF_BUFFER buf, UINT32 remote_ip, UINT32 pid,
   KIRQL irq;
   NTSTATUS status = STATUS_SUCCESS;
 
-  if (path_len > WIPF_LOG_PATH_MAX) {
+  if (path_len > FORT_LOG_PATH_MAX) {
     path_len = 0;  /* drop too long path */
   }
 
-  len = WIPF_LOG_SIZE(path_len);
+  len = FORT_LOG_SIZE(path_len);
 
   KeAcquireSpinLock(&buf->lock, &irq);
 
@@ -64,19 +64,19 @@ wipf_buffer_write (PWIPF_BUFFER buf, UINT32 remote_ip, UINT32 pid,
       *irp_status = STATUS_BUFFER_TOO_SMALL;
       /* fallback to buffer */
     } else {
-      wipf_log_write(buf->out, remote_ip, pid, path_len, path);
+      fort_log_write(buf->out, remote_ip, pid, path_len, path);
 
       *irp_status = STATUS_SUCCESS;
       goto end;
     }
   }
 
-  if (len > WIPF_BUFFER_SIZE - buf->top) {
+  if (len > FORT_BUFFER_SIZE - buf->top) {
     status = STATUS_BUFFER_TOO_SMALL;
     goto end;  /* drop on buffer overflow */
   }
 
-  wipf_log_write(buf->data + buf->top, remote_ip, pid, path_len, path);
+  fort_log_write(buf->data + buf->top, remote_ip, pid, path_len, path);
   buf->top += len;
 
  end:
@@ -86,7 +86,7 @@ wipf_buffer_write (PWIPF_BUFFER buf, UINT32 remote_ip, UINT32 pid,
 }
 
 static NTSTATUS
-wipf_buffer_xmove (PWIPF_BUFFER buf, PIRP irp, PVOID out, ULONG out_len,
+fort_buffer_xmove (PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len,
                    ULONG_PTR *info)
 {
   KIRQL irq;
@@ -123,7 +123,7 @@ wipf_buffer_xmove (PWIPF_BUFFER buf, PIRP irp, PVOID out, ULONG out_len,
 }
 
 static void
-wipf_buffer_cancel_pending (PWIPF_BUFFER buf, PIRP irp)
+fort_buffer_cancel_pending (PFORT_BUFFER buf, PIRP irp)
 {
   KIRQL irq;
 

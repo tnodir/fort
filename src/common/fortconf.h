@@ -1,7 +1,7 @@
-#ifndef WIPFCONF_H
-#define WIPFCONF_H
+#ifndef FORTCONF_H
+#define FORTCONF_H
 
-typedef struct wipf_conf {
+typedef struct fort_conf {
   UINT32 filter_disabled	: 1;
   UINT32 ip_include_all		: 1;
   UINT32 ip_exclude_all		: 1;
@@ -33,16 +33,16 @@ typedef struct wipf_conf {
   UINT32 groups_off;
 
   UCHAR data[4];
-} WIPF_CONF, *PWIPF_CONF;
+} FORT_CONF, *PFORT_CONF;
 
-#define WIPF_CONF_VERSION		1
-#define WIPF_CONF_DATA_OFF		offsetof(WIPF_CONF, data)
-#define WIPF_CONF_IP_MAX		(1 * 1024 * 1024)
-#define WIPF_CONF_GROUP_MAX		16
-#define WIPF_CONF_GROUP_NAME_MAX	256
-#define WIPF_CONF_GROUPS_LEN_MAX	(WIPF_CONF_GROUP_MAX * WIPF_CONF_GROUP_NAME_MAX)
-#define WIPF_CONF_APPS_LEN_MAX		(64 * 1024 * 1024)
-#define WIPF_CONF_APP_PATH_MAX		(2 * 1024)
-#define WIPF_CONF_STR_ALIGN		4
+#define FORT_CONF_VERSION		1
+#define FORT_CONF_DATA_OFF		offsetof(FORT_CONF, data)
+#define FORT_CONF_IP_MAX		(1 * 1024 * 1024)
+#define FORT_CONF_GROUP_MAX		16
+#define FORT_CONF_GROUP_NAME_MAX	256
+#define FORT_CONF_GROUPS_LEN_MAX	(FORT_CONF_GROUP_MAX * FORT_CONF_GROUP_NAME_MAX)
+#define FORT_CONF_APPS_LEN_MAX		(64 * 1024 * 1024)
+#define FORT_CONF_APP_PATH_MAX		(2 * 1024)
+#define FORT_CONF_STR_ALIGN		4
 
-#endif WIPFCONF_H
+#endif FORTCONF_H

@@ -2,6 +2,6 @@
 
 @setlocal
 
-MSBuild wipfdrv.vcxproj
+MSBuild fortdrv.vcxproj
 
 @rd /S /Q ..\..\build\out\

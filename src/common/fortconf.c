@@ -1,13 +1,13 @@
 /* Windows IP Filter Configuration */
 
-#include "wipfconf.h"
+#include "fortconf.h"
 
 
-#ifndef WIPF_DRIVER
-#define wipf_memcmp	memcmp
+#ifndef FORT_DRIVER
+#define fort_memcmp	memcmp
 #else
 static int
-wipf_memcmp (const char *p1, const char *p2, size_t len)
+fort_memcmp (const char *p1, const char *p2, size_t len)
 {
   const size_t n = RtlCompareMemory(p1, p2, len);
   return (n == len) ? 0 : (p1[n] - p2[n]);
@@ -15,7 +15,7 @@ wipf_memcmp (const char *p1, const char *p2, size_t len)
 #endif
 
 static BOOL
-wipf_conf_ip_inrange (UINT32 ip, UINT32 count,
+fort_conf_ip_inrange (UINT32 ip, UINT32 count,
                       const UINT32 *iprange_from, const UINT32 *iprange_to)
 {
   int low, high;
@@ -41,17 +41,17 @@ wipf_conf_ip_inrange (UINT32 ip, UINT32 count,
 }
 
 static BOOL
-wipf_conf_ip_included (const PWIPF_CONF conf, UINT32 remote_ip)
+fort_conf_ip_included (const PFORT_CONF conf, UINT32 remote_ip)
 {
   const char *data = (const char *) conf + conf->data_off;
 
   const BOOL ip_included = conf->ip_include_all ? TRUE
-      : wipf_conf_ip_inrange(remote_ip, conf->ip_include_n,
+      : fort_conf_ip_inrange(remote_ip, conf->ip_include_n,
                              (const UINT32 *) (data + conf->ip_from_include_off),
                              (const UINT32 *) (data + conf->ip_to_include_off));
 
   const BOOL ip_excluded = conf->ip_exclude_all ? TRUE
-      : wipf_conf_ip_inrange(remote_ip, conf->ip_exclude_n,
+      : fort_conf_ip_inrange(remote_ip, conf->ip_exclude_n,
                              (const UINT32 *) (data + conf->ip_from_exclude_off),
                              (const UINT32 *) (data + conf->ip_to_exclude_off));
 
@@ -59,7 +59,7 @@ wipf_conf_ip_included (const PWIPF_CONF conf, UINT32 remote_ip)
 }
 
 static int
-wipf_conf_app_cmp (UINT32 path_len, const char *path,
+fort_conf_app_cmp (UINT32 path_len, const char *path,
                    const char *apps, const UINT32 *app_offp)
 {
   const UINT32 app_off = *app_offp;
@@ -69,11 +69,11 @@ wipf_conf_app_cmp (UINT32 path_len, const char *path,
   if (path_len > app_len)
     path_len = app_len;
 
-  return wipf_memcmp(path, app, path_len);
+  return fort_memcmp(path, app, path_len);
 }
 
 static int
-wipf_conf_app_index (UINT32 path_len, const char *path, UINT32 count,
+fort_conf_app_index (UINT32 path_len, const char *path, UINT32 count,
                      const UINT32 *app_offsets)
 {
   const char *apps;
@@ -87,7 +87,7 @@ wipf_conf_app_index (UINT32 path_len, const char *path, UINT32 count,
 
   do {
     const int mid = (low + high) / 2;
-    const int res = wipf_conf_app_cmp(path_len, path,
+    const int res = fort_conf_app_cmp(path_len, path,
                                       apps, app_offsets + mid);
 
     if (res < 0)
@@ -102,11 +102,11 @@ wipf_conf_app_index (UINT32 path_len, const char *path, UINT32 count,
 }
 
 static BOOL
-wipf_conf_app_blocked (const PWIPF_CONF conf,
+fort_conf_app_blocked (const PFORT_CONF conf,
                        UINT32 path_len, const char *path, BOOL *notify)
 {
   const char *data = (const char *) conf + conf->data_off;
-  const int app_index = wipf_conf_app_index(path_len, path, conf->apps_n,
+  const int app_index = fort_conf_app_index(path_len, path, conf->apps_n,
       (const UINT32 *) (data + conf->apps_off));
   const UINT32 *apps_perms = (const UINT32 *) (data + conf->apps_perms_off);
   const UINT32 app_perms = (app_index != -1) ? apps_perms[app_index] : 0;
@@ -123,7 +123,7 @@ wipf_conf_app_blocked (const PWIPF_CONF conf,
 }
 
 static void
-wipf_conf_group_bits_set (const PWIPF_CONF conf, UINT32 group_bits)
+fort_conf_group_bits_set (const PFORT_CONF conf, UINT32 group_bits)
 {
   UINT32 perms_mask =
        (group_bits & 0x0001)        | ((group_bits & 0x0002) << 1)

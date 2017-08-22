@@ -1,45 +1,45 @@
-/* Windows IP Filter Provider (Un)Registration */
+/* Fort Firewall Provider (Un)Registration */
 
-typedef struct wipf_prov_data {
+typedef struct fort_prov_data {
   UINT32 version	: 24;
   UINT32 persist	: 1;
   UINT32 boot		: 1;
-} WIPF_PROV_DATA, *PWIPF_PROV_DATA;
+} FORT_PROV_DATA, *PFORT_PROV_DATA;
 
 
 static void
-wipf_prov_delete (HANDLE engine)
+fort_prov_delete (HANDLE engine)
 {
-  FwpmFilterDeleteByKey0(engine, (GUID *) &WIPF_GUID_FILTER_CONNECT_V4);
-  FwpmFilterDeleteByKey0(engine, (GUID *) &WIPF_GUID_FILTER_ACCEPT_V4);
-  FwpmSubLayerDeleteByKey0(engine, (GUID *) &WIPF_GUID_SUBLAYER);
-  FwpmCalloutDeleteByKey0(engine, (GUID *) &WIPF_GUID_CALLOUT_CONNECT_V4);
-  FwpmCalloutDeleteByKey0(engine, (GUID *) &WIPF_GUID_CALLOUT_ACCEPT_V4);
-  FwpmProviderDeleteByKey0(engine, (GUID *) &WIPF_GUID_PROVIDER);
+  FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_CONNECT_V4);
+  FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_ACCEPT_V4);
+  FwpmSubLayerDeleteByKey0(engine, (GUID *) &FORT_GUID_SUBLAYER);
+  FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_CONNECT_V4);
+  FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_ACCEPT_V4);
+  FwpmProviderDeleteByKey0(engine, (GUID *) &FORT_GUID_PROVIDER);
 }
 
 static void
-wipf_prov_unregister (void)
+fort_prov_unregister (void)
 {
   HANDLE engine;
 
   if (FwpmEngineOpen0(NULL, RPC_C_AUTHN_WINNT, NULL, NULL, &engine))
     return;
 
-  wipf_prov_delete(engine);
+  fort_prov_delete(engine);
 
   FwpmEngineClose0(engine);
 }
 
 static DWORD
-wipf_prov_register (BOOL persist, BOOL boot, BOOL *is_tempp, BOOL *is_bootp)
+fort_prov_register (BOOL persist, BOOL boot, BOOL *is_tempp, BOOL *is_bootp)
 {
   FWPM_PROVIDER0 *old_provider, provider;
   FWPM_CALLOUT0 ocallout4, icallout4;
   FWPM_SUBLAYER0 sublayer;
   FWPM_FILTER0 ofilter4, ifilter4;
   HANDLE engine;
-  WIPF_PROV_DATA provider_data;
+  FORT_PROV_DATA provider_data;
   UINT32 filter_flags;
   DWORD status;
 
@@ -48,9 +48,9 @@ wipf_prov_register (BOOL persist, BOOL boot, BOOL *is_tempp, BOOL *is_bootp)
     goto end;
 
   if (!(status = FwpmProviderGetByKey0(
-      engine, (GUID *) &WIPF_GUID_PROVIDER, &old_provider))) {
-    PWIPF_PROV_DATA old_provider_data =
-        (PWIPF_PROV_DATA) old_provider->providerData.data;
+      engine, (GUID *) &FORT_GUID_PROVIDER, &old_provider))) {
+    PFORT_PROV_DATA old_provider_data =
+        (PFORT_PROV_DATA) old_provider->providerData.data;
 
     if (old_provider_data) {
       provider_data = *old_provider_data;
@@ -62,14 +62,14 @@ wipf_prov_register (BOOL persist, BOOL boot, BOOL *is_tempp, BOOL *is_bootp)
         persist = provider_data.persist;
         boot = provider_data.boot;
 
-        if (provider_data.version == WIPF_VERSION)
+        if (provider_data.version == FORT_VERSION)
           goto end_close;
       }
-      wipf_prov_delete(engine);
+      fort_prov_delete(engine);
     }
   }
 
-  provider_data.version = WIPF_VERSION;
+  provider_data.version = FORT_VERSION;
   provider_data.persist = persist;
   provider_data.boot = boot;
 
@@ -77,52 +77,52 @@ wipf_prov_register (BOOL persist, BOOL boot, BOOL *is_tempp, BOOL *is_bootp)
 
   RtlZeroMemory(&provider, sizeof(FWPM_PROVIDER0));
   provider.flags = persist ? FWPM_PROVIDER_FLAG_PERSISTENT : 0;
-  provider.providerKey = WIPF_GUID_PROVIDER;
-  provider.displayData.name = L"WipfProvider";
+  provider.providerKey = FORT_GUID_PROVIDER;
+  provider.displayData.name = L"FortProvider";
   provider.displayData.description = L"Windows IP Filter Provider";
-  provider.serviceName = L"wipf";
-  provider.providerData.size = sizeof(WIPF_PROV_DATA);
+  provider.serviceName = L"fortfw";
+  provider.providerData.size = sizeof(FORT_PROV_DATA);
   provider.providerData.data = (UINT8 *) &provider_data;
 
   RtlZeroMemory(&ocallout4, sizeof(FWPM_CALLOUT0));
-  ocallout4.calloutKey = WIPF_GUID_CALLOUT_CONNECT_V4;
-  ocallout4.displayData.name = L"WipfCalloutConnect4";
+  ocallout4.calloutKey = FORT_GUID_CALLOUT_CONNECT_V4;
+  ocallout4.displayData.name = L"FortCalloutConnect4";
   ocallout4.displayData.description = L"Windows IP Filter Callout Connect V4";
-  ocallout4.providerKey = (GUID *) &WIPF_GUID_PROVIDER;
+  ocallout4.providerKey = (GUID *) &FORT_GUID_PROVIDER;
   ocallout4.applicableLayer = FWPM_LAYER_ALE_AUTH_CONNECT_V4;
 
   RtlZeroMemory(&icallout4, sizeof(FWPM_CALLOUT0));
-  icallout4.calloutKey = WIPF_GUID_CALLOUT_ACCEPT_V4;
-  icallout4.displayData.name = L"WipfCalloutAccept4";
+  icallout4.calloutKey = FORT_GUID_CALLOUT_ACCEPT_V4;
+  icallout4.displayData.name = L"FortCalloutAccept4";
   icallout4.displayData.description = L"Windows IP Filter Callout Accept V4";
-  icallout4.providerKey = (GUID *) &WIPF_GUID_PROVIDER;
+  icallout4.providerKey = (GUID *) &FORT_GUID_PROVIDER;
   icallout4.applicableLayer = FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4;
 
   RtlZeroMemory(&sublayer, sizeof(FWPM_SUBLAYER0));
-  sublayer.subLayerKey = WIPF_GUID_SUBLAYER;
-  sublayer.displayData.name = L"WipfSublayer";
+  sublayer.subLayerKey = FORT_GUID_SUBLAYER;
+  sublayer.displayData.name = L"FortSublayer";
   sublayer.displayData.description = L"Windows IP Filter Sublayer";
-  sublayer.providerKey = (GUID *) &WIPF_GUID_PROVIDER;
+  sublayer.providerKey = (GUID *) &FORT_GUID_PROVIDER;
 
   RtlZeroMemory(&ofilter4, sizeof(FWPM_FILTER0));
   ofilter4.flags = filter_flags;
-  ofilter4.filterKey = WIPF_GUID_FILTER_CONNECT_V4;
+  ofilter4.filterKey = FORT_GUID_FILTER_CONNECT_V4;
   ofilter4.layerKey = FWPM_LAYER_ALE_AUTH_CONNECT_V4;
-  ofilter4.subLayerKey = WIPF_GUID_SUBLAYER;
-  ofilter4.displayData.name = L"WipfFilterConnect4";
+  ofilter4.subLayerKey = FORT_GUID_SUBLAYER;
+  ofilter4.displayData.name = L"FortFilterConnect4";
   ofilter4.displayData.description = L"Windows IP Filter Connect V4";
   ofilter4.action.type = FWP_ACTION_CALLOUT_UNKNOWN;
-  ofilter4.action.calloutKey = WIPF_GUID_CALLOUT_CONNECT_V4;
+  ofilter4.action.calloutKey = FORT_GUID_CALLOUT_CONNECT_V4;
 
   RtlZeroMemory(&ifilter4, sizeof(FWPM_FILTER0));
   ifilter4.flags = filter_flags;
-  ifilter4.filterKey = WIPF_GUID_FILTER_ACCEPT_V4;
+  ifilter4.filterKey = FORT_GUID_FILTER_ACCEPT_V4;
   ifilter4.layerKey = FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4;
-  ifilter4.subLayerKey = WIPF_GUID_SUBLAYER;
-  ifilter4.displayData.name = L"WipfFilterAccept4";
+  ifilter4.subLayerKey = FORT_GUID_SUBLAYER;
+  ifilter4.displayData.name = L"FortFilterAccept4";
   ifilter4.displayData.description = L"Windows IP Filter Accept V4";
   ifilter4.action.type = FWP_ACTION_CALLOUT_UNKNOWN;
-  ifilter4.action.calloutKey = WIPF_GUID_CALLOUT_ACCEPT_V4;
+  ifilter4.action.calloutKey = FORT_GUID_CALLOUT_ACCEPT_V4;
 
   if ((status = FwpmTransactionBegin0(engine, 0))
       || (status = FwpmProviderAdd0(engine, &provider, NULL))
@@ -140,9 +140,9 @@ wipf_prov_register (BOOL persist, BOOL boot, BOOL *is_tempp, BOOL *is_bootp)
  end_close:
   FwpmEngineClose0(engine);
 
- if (is_bootp) {
-   *is_bootp = boot;
- }
+  if (is_bootp) {
+    *is_bootp = boot;
+  }
 
  end:
   return status;
