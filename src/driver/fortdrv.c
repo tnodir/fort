@@ -1,4 +1,4 @@
-/* Windows IP Filter Driver */
+/* Fort Firewall Driver */
 
 #define NDIS_WDM	1
 #define NDIS630		1

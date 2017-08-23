@@ -1,4 +1,4 @@
-/* Windows IP Filter Log Buffer */
+/* Fort Firewall Log Buffer */
 
 #define FORT_BUFFER_POOL_TAG	'IPFB'
 

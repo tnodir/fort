@@ -1,4 +1,4 @@
-/* Windows IP Filter Configuration */
+/* Fort Firewall Configuration */
 
 #include "fortconf.h"
 
