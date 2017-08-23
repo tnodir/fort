@@ -1,4 +1,4 @@
-include(../Test.pri)
+include(../common/Test.pri)
 
 SOURCES += \
     $$UIPATH/fortmanager.cpp

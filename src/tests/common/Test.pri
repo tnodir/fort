@@ -10,7 +10,7 @@ UIPATH = ../../ui
 INCLUDEPATH += $$UIPATH
 
 SOURCES += \
-    ../main.cpp \
+    ../common/main.cpp \
     test.cpp
 
 HEADERS += \
