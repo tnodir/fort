@@ -79,7 +79,7 @@ fort_prov_register (BOOL persist, BOOL boot, BOOL *is_tempp, BOOL *is_bootp)
   provider.flags = persist ? FWPM_PROVIDER_FLAG_PERSISTENT : 0;
   provider.providerKey = FORT_GUID_PROVIDER;
   provider.displayData.name = L"FortProvider";
-  provider.displayData.description = L"Windows IP Filter Provider";
+  provider.displayData.description = L"Fort Firewall Provider";
   provider.serviceName = L"fortfw";
   provider.providerData.size = sizeof(FORT_PROV_DATA);
   provider.providerData.data = (UINT8 *) &provider_data;
@@ -87,21 +87,21 @@ fort_prov_register (BOOL persist, BOOL boot, BOOL *is_tempp, BOOL *is_bootp)
   RtlZeroMemory(&ocallout4, sizeof(FWPM_CALLOUT0));
   ocallout4.calloutKey = FORT_GUID_CALLOUT_CONNECT_V4;
   ocallout4.displayData.name = L"FortCalloutConnect4";
-  ocallout4.displayData.description = L"Windows IP Filter Callout Connect V4";
+  ocallout4.displayData.description = L"Fort Firewall Callout Connect V4";
   ocallout4.providerKey = (GUID *) &FORT_GUID_PROVIDER;
   ocallout4.applicableLayer = FWPM_LAYER_ALE_AUTH_CONNECT_V4;
 
   RtlZeroMemory(&icallout4, sizeof(FWPM_CALLOUT0));
   icallout4.calloutKey = FORT_GUID_CALLOUT_ACCEPT_V4;
   icallout4.displayData.name = L"FortCalloutAccept4";
-  icallout4.displayData.description = L"Windows IP Filter Callout Accept V4";
+  icallout4.displayData.description = L"Fort Firewall Callout Accept V4";
   icallout4.providerKey = (GUID *) &FORT_GUID_PROVIDER;
   icallout4.applicableLayer = FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4;
 
   RtlZeroMemory(&sublayer, sizeof(FWPM_SUBLAYER0));
   sublayer.subLayerKey = FORT_GUID_SUBLAYER;
   sublayer.displayData.name = L"FortSublayer";
-  sublayer.displayData.description = L"Windows IP Filter Sublayer";
+  sublayer.displayData.description = L"Fort Firewall Sublayer";
   sublayer.providerKey = (GUID *) &FORT_GUID_PROVIDER;
 
   RtlZeroMemory(&ofilter4, sizeof(FWPM_FILTER0));
@@ -110,7 +110,7 @@ fort_prov_register (BOOL persist, BOOL boot, BOOL *is_tempp, BOOL *is_bootp)
   ofilter4.layerKey = FWPM_LAYER_ALE_AUTH_CONNECT_V4;
   ofilter4.subLayerKey = FORT_GUID_SUBLAYER;
   ofilter4.displayData.name = L"FortFilterConnect4";
-  ofilter4.displayData.description = L"Windows IP Filter Connect V4";
+  ofilter4.displayData.description = L"Fort Firewall Connect V4";
   ofilter4.action.type = FWP_ACTION_CALLOUT_UNKNOWN;
   ofilter4.action.calloutKey = FORT_GUID_CALLOUT_CONNECT_V4;
 
@@ -120,7 +120,7 @@ fort_prov_register (BOOL persist, BOOL boot, BOOL *is_tempp, BOOL *is_bootp)
   ifilter4.layerKey = FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4;
   ifilter4.subLayerKey = FORT_GUID_SUBLAYER;
   ifilter4.displayData.name = L"FortFilterAccept4";
-  ifilter4.displayData.description = L"Windows IP Filter Accept V4";
+  ifilter4.displayData.description = L"Fort Firewall Accept V4";
   ifilter4.action.type = FWP_ACTION_CALLOUT_UNKNOWN;
   ifilter4.action.calloutKey = FORT_GUID_CALLOUT_ACCEPT_V4;
 
