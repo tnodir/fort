@@ -3,3 +3,10 @@
 *.pdb
 *.sys
 build/out/
+
+*.pro.u*
+*Makefile*
+
+.qmake.stash
+uic_wrapper.bat
+
