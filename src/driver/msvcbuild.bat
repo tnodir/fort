@@ -2,6 +2,11 @@
 
 @setlocal
 
-MSBuild fortdrv.vcxproj
+@set PLAT=%1
 
-@rd /S /Q ..\..\build\out\
+@set OutDir=.\
+@set IntDir=.\build\
+
+MSBuild fortdrv.vcxproj /p:OutDir=%OutDir%;IntDir=%IntDir%;Platform=%PLAT%
+
+@rd /S /Q %IntDir%
