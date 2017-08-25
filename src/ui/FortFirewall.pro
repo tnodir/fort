@@ -9,10 +9,14 @@ TEMPLATE = app
 
 SOURCES += \
     main.cpp \
-    fortmanager.cpp
+    fortcommon.cpp \
+    firewallLog/logbuffer.cpp \
+    firewallLog/logentry.cpp
 
 HEADERS += \
-    fortmanager.h
+    fortcommon.h \
+    firewallLog/logbuffer.h \
+    firewallLog/logentry.h
 
 QML_FILES += \
     qml/*.qml
