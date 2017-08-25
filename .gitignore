@@ -2,7 +2,8 @@
 *.exe
 *.pdb
 *.sys
-build/out/
+
+build*/
 
 *.pro.u*
 *Makefile*
