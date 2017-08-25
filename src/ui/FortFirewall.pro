@@ -30,7 +30,8 @@ RESOURCES += fort_i18n.qrc
 # Default FortFirewall.ini
 RESOURCES += fort_ini.qrc
 
-# Windows RC
+# Windows
+LIBS += -lfwpuclnt -lkernel32 -luser32 -luuid
 RC_FILE = fort.rc
 
 # Kernel Driver
