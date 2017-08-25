@@ -8,7 +8,7 @@ class Test : public QObject
     Q_OBJECT
 
 private slots:
-    void dummy();
+    void logWriteRead();
 };
 
 #endif // TEST_H

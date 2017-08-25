@@ -11,13 +11,14 @@ class LogBuffer : public QObject
     Q_OBJECT
 
 public:
-    explicit LogBuffer(QObject *parent = nullptr);
+    explicit LogBuffer(int bufferSize = 0,
+                       QObject *parent = nullptr);
 
 signals:
 
 public slots:
-    void write(const LogEntry &logEntry);
-    bool read(LogEntry &logEntry);
+    int write(const LogEntry &logEntry);
+    int read(LogEntry &logEntry);
 
 private:
     void prepareFor(int len);

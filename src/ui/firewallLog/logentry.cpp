@@ -1,7 +1,12 @@
 #include "logentry.h"
 
-LogEntry::LogEntry(QObject *parent) :
-    QObject(parent)
+LogEntry::LogEntry(quint32 ip, quint32 pid,
+                   const QString &path,
+                   QObject *parent) :
+    QObject(parent),
+    m_ip(ip),
+    m_pid(pid),
+    m_path(path)
 {
 }
 

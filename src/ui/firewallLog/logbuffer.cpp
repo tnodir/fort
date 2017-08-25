@@ -3,11 +3,11 @@
 #include "fortcommon.h"
 #include "logentry.h"
 
-LogBuffer::LogBuffer(QObject *parent) :
+LogBuffer::LogBuffer(int bufferSize, QObject *parent) :
     QObject(parent),
     m_top(0),
     m_offset(0),
-    m_array(0, Qt::Uninitialized)
+    m_array(bufferSize, Qt::Uninitialized)
 {
 }
 
@@ -20,7 +20,7 @@ void LogBuffer::prepareFor(int len)
     }
 }
 
-void LogBuffer::write(const LogEntry &logEntry)
+int LogBuffer::write(const LogEntry &logEntry)
 {
     const QString path = logEntry.path();
     const int pathLen = path.size() * sizeof(wchar_t);
@@ -38,12 +38,14 @@ void LogBuffer::write(const LogEntry &logEntry)
     }
 
     m_top += entrySize;
+
+    return entrySize;
 }
 
-bool LogBuffer::read(LogEntry &logEntry)
+int LogBuffer::read(LogEntry &logEntry)
 {
     if (m_offset >= m_top)
-        return false;
+        return 0;
 
     const char *input = m_array.constData() + m_offset;
 
@@ -64,5 +66,5 @@ bool LogBuffer::read(LogEntry &logEntry)
     const int entrySize = FortCommon::logSize(pathLen);
     m_offset += entrySize;
 
-    return true;
+    return entrySize;
 }

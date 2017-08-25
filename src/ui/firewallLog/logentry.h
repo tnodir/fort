@@ -11,7 +11,9 @@ class LogEntry : public QObject
     Q_PROPERTY(QString path READ path WRITE setPath NOTIFY pathChanged)
 
 public:
-    explicit LogEntry(QObject *parent = nullptr);
+    explicit LogEntry(quint32 ip = 0, quint32 pid = 0,
+                      const QString &path = QString(),
+                      QObject *parent = nullptr);
 
     quint32 ip() const { return m_ip; }
     void setIp(quint32 ip);
