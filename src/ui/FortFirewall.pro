@@ -37,10 +37,10 @@ RC_FILE = fort.rc
 {
     BUILDCMD = MSBuild $$PWD/../driver/fortdrv.vcxproj /p:OutDir=./;IntDir=$$OUT_PWD/driver/
 
-    fortdrv32.target = $$PWD/../driver/fortdrv32.sys
+    fortdrv32.target = $$PWD/../driver/fortfw32.sys
     fortdrv32.commands = $$BUILDCMD /p:Platform=Win32
 
-    fortdrv64.target = $$PWD/../driver/fortdrv64.sys
+    fortdrv64.target = $$PWD/../driver/fortfw64.sys
     fortdrv64.commands = $$BUILDCMD /p:Platform=x64
 
     QMAKE_EXTRA_TARGETS += fortdrv32 fortdrv64
