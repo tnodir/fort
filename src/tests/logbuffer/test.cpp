@@ -16,24 +16,22 @@ void Test::logWriteRead()
     const int entrySize = FortCommon::logHeaderSize()
             + pathSize * sizeof(wchar_t);
 
-    LogBuffer buf(entrySize);
+    const int testCount = 3;
+
+    LogBuffer buf(entrySize * testCount);
 
     const quint32 ip = 1, pid = 2;
     LogEntry entry(ip, pid, path);
 
-    const int testCount = 3;
-
     // Write
-    for (int n = testCount; --n >= 0; ) {
+    for (int i = 0; i < testCount; ++i) {
         QCOMPARE(buf.write(entry), entrySize);
     }
 
     // Read
-    for (int n = testCount; --n >= 0; ) {
-        QCOMPARE(buf.read(entry), entrySize);
+    while (buf.read(entry)) {
         QCOMPARE(entry.ip(), ip);
         QCOMPARE(entry.pid(), pid);
         QCOMPARE(entry.path(), path);
     }
-    QCOMPARE(buf.read(entry), 0);
 }
