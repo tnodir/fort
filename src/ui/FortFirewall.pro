@@ -11,12 +11,16 @@ SOURCES += \
     main.cpp \
     firewallLog/logbuffer.cpp \
     firewallLog/logentry.cpp \
-    fortcommon.cpp
+    fortcommon.cpp \
+    util/fileutil.cpp \
+    util/processinfo.cpp
 
 HEADERS += \
     firewallLog/logbuffer.h \
     firewallLog/logentry.h \
-    fortcommon.h
+    fortcommon.h \
+    util/fileutil.h \
+    util/processinfo.h
 
 QML_FILES += \
     qml/*.qml
@@ -35,7 +39,7 @@ RESOURCES += fort_i18n.qrc
 RESOURCES += fort_ini.qrc
 
 # Windows
-LIBS += -lfwpuclnt -lkernel32 -luser32 -luuid
+LIBS += -lfwpuclnt -lkernel32 -lpsapi -luser32 -luuid
 RC_FILE = fort.rc
 
 # Kernel Driver
