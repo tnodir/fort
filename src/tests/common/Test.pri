@@ -15,3 +15,6 @@ SOURCES += \
 
 HEADERS += \
     test.h
+
+# Windows
+LIBS += -lfwpuclnt -lkernel32 -lpsapi -luser32 -luuid -lws2_32

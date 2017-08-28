@@ -2,4 +2,5 @@ TEMPLATE = subdirs
 
 SUBDIRS = \
     fileutil \
-    logbuffer
+    logbuffer \
+    netutil

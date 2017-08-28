@@ -13,6 +13,8 @@ SOURCES += \
     firewallLog/logentry.cpp \
     fortcommon.cpp \
     util/fileutil.cpp \
+    util/ip4range.cpp \
+    util/netutil.cpp \
     util/processinfo.cpp
 
 HEADERS += \
@@ -20,6 +22,8 @@ HEADERS += \
     firewallLog/logentry.h \
     fortcommon.h \
     util/fileutil.h \
+    util/ip4range.h \
+    util/netutil.h \
     util/processinfo.h
 
 QML_FILES += \
@@ -39,7 +43,7 @@ RESOURCES += fort_i18n.qrc
 RESOURCES += fort_ini.qrc
 
 # Windows
-LIBS += -lfwpuclnt -lkernel32 -lpsapi -luser32 -luuid
+LIBS += -lfwpuclnt -lkernel32 -lpsapi -luser32 -luuid -lws2_32
 RC_FILE = fort.rc
 
 # Kernel Driver

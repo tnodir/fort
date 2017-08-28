@@ -22,8 +22,6 @@ public:
 
     // Convert Win32 path to Native path
     static QString pathToDosPath(const QString &path);
-
-private:
 };
 
 #endif // FILEUTIL_H
