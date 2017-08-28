@@ -9,6 +9,8 @@ TEMPLATE = app
 
 SOURCES += \
     main.cpp \
+    conf/appgroup.cpp \
+    conf/firewallconf.cpp \
     firewallLog/logbuffer.cpp \
     firewallLog/logentry.cpp \
     fortcommon.cpp \
@@ -18,6 +20,8 @@ SOURCES += \
     util/processinfo.cpp
 
 HEADERS += \
+    conf/appgroup.h \
+    conf/firewallconf.h \
     firewallLog/logbuffer.h \
     firewallLog/logentry.h \
     fortcommon.h \
