@@ -26,6 +26,12 @@ public:
     static void logHeaderRead(const char *input,
                               quint32 *remoteIp, quint32 *pid,
                               quint32 *pathLen);
+
+    static void confGroupBitsSet(void *drvConf, quint32 groupBits);
+    static bool confIpInRange(const void *drvConf, quint32 ip,
+                              bool included = false);
+    static bool confAppBlocked(const void *drvConf,
+                               const QString &dosPath, bool *notify = 0);
 };
 
 #endif // FORTCOMMON_H

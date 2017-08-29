@@ -68,3 +68,40 @@ void FortCommon::logHeaderRead(const char *input,
     fort_log_header_read(input, remoteIp, pid, pathLen);
 }
 
+void FortCommon::confGroupBitsSet(void *drvConf, quint32 groupBits)
+{
+    fort_conf_group_bits_set((PFORT_CONF) drvConf, groupBits);
+}
+
+bool FortCommon::confIpInRange(const void *drvConf, quint32 ip,
+                               bool included)
+{
+    const PFORT_CONF conf = (const PFORT_CONF) drvConf;
+    const char *data = (const char *) conf + conf->data_off;
+
+    const quint32 count = included ? conf->ip_include_n : conf->ip_exclude_n;
+    const quint32 fromOff = included ? conf->ip_from_include_off : conf->ip_from_exclude_off;
+    const quint32 toOff = included ? conf->ip_to_include_off : conf->ip_to_exclude_off;
+
+    return fort_conf_ip_inrange(ip, count,
+                                (const quint32 *) (data + fromOff),
+                                (const quint32 *) (data + toOff));
+}
+
+bool FortCommon::confAppBlocked(const void *drvConf,
+                                const QString &dosPath, bool *notify)
+{
+    const PFORT_CONF conf = (const PFORT_CONF) drvConf;
+    const QString dosPathLower = dosPath.toLower();
+    const int len = dosPathLower.size() * sizeof(wchar_t);
+    const wchar_t *p = (const wchar_t *) dosPathLower.utf16();
+    BOOL blocked, notifyUser;
+
+    blocked = fort_conf_app_blocked(conf, len, (const char *) p, &notifyUser);
+
+    if (notify) {
+        *notify = notifyUser;
+    }
+
+    return blocked;
+}

@@ -28,7 +28,7 @@ typedef struct fort_conf {
   UINT32 ip_from_exclude_off;
   UINT32 ip_to_exclude_off;
 
-  UINT32 apps_perms_off;
+  UINT32 app_perms_off;
   UINT32 apps_off;
   UINT32 groups_off;
 
@@ -44,5 +44,7 @@ typedef struct fort_conf {
 #define FORT_CONF_APPS_LEN_MAX		(64 * 1024 * 1024)
 #define FORT_CONF_APP_PATH_MAX		(2 * 1024)
 #define FORT_CONF_STR_ALIGN		4
+#define FORT_CONF_STR_HEADER_SIZE(n)	(((n) + 1) * sizeof(UINT32))
+#define FORT_CONF_STR_DATA_SIZE(size)	((((size) + (FORT_CONF_STR_ALIGN - 1)) & ~(FORT_CONF_STR_ALIGN - 1)))
 
 #endif FORTCONF_H

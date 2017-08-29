@@ -1,4 +1,4 @@
-/* Fort Firewall Log */
+/* Fort Firewall Driver Log */
 
 #define FORT_BUFFER_SIZE	16 * 1024
 #define FORT_LOG_PATH_MAX	512

@@ -27,13 +27,20 @@ void Ip4Range::setErrorMessage(const QString &errorMessage)
     }
 }
 
+QString Ip4Range::errorLineAndMessage() const
+{
+    return tr("Error at line %1: %2")
+            .arg(QString::number(m_errorLineNo),
+                 m_errorMessage);
+}
+
 QString Ip4Range::toText()
 {
     QString text;
 
-    const int n = m_range.size();
+    const int n = size();
     for (int i = 0; i < n; ++i) {
-        const Ip4Pair &ip = m_range.at(i);
+        const Ip4Pair ip = at(i);
 
         text += QString("%1-%2\n")
                 .arg(NetUtil::ip4ToText(ip.from),
@@ -45,14 +52,18 @@ QString Ip4Range::toText()
 
 bool Ip4Range::fromText(const QString &text)
 {
-    m_range.clear();
+    m_fromArray.clear();
+    m_toArray.clear();
 
     ip4range_map_t ipRangeMap;
 
     int lineNo = 0;
-    foreach (const QStringRef &line, text.splitRef(
-                 QLatin1Char('\n'), QString::SkipEmptyParts)) {
+    foreach (const QStringRef &line,
+             text.splitRef(QLatin1Char('\n'))) {
         ++lineNo;
+
+        if (line.isEmpty())
+            continue;
 
         quint32 from, to;
         if (!parseAddressMask(line, from, to)) {
@@ -90,14 +101,14 @@ bool Ip4Range::parseAddressMask(const QStringRef &line,
 
     from = NetUtil::textToIp4(ip, &ok);
     if (!ok) {
-        setErrorMessage(tr("Bad IPv4"));
+        setErrorMessage(tr("Bad IP address"));
         return false;
     }
 
     if (sep == QLatin1Char('-')) {  // e.g. "127.0.0.0-127.255.255.255"
         to = NetUtil::textToIp4(mask, &ok);
         if (!ok) {
-            setErrorMessage(tr("Bad second IPv4"));
+            setErrorMessage(tr("Bad second IP address"));
             return false;
         }
         if (from > to) {
@@ -125,22 +136,30 @@ void Ip4Range::fillRange(const ip4range_map_t &ipRangeMap)
     ip4range_map_t::const_iterator it = ipRangeMap.constBegin();
     ip4range_map_t::const_iterator end = ipRangeMap.constEnd();
 
-    Ip4Pair *prevIp = 0;
+    const int mapSize = ipRangeMap.size();
+    m_fromArray.reserve(mapSize);
+    m_toArray.reserve(mapSize);
 
-    m_range.reserve(ipRangeMap.size());
+    Ip4Pair prevIp;
+    int prevIndex = -1;
 
     for (; it != end; ++it) {
         Ip4Pair ip{it.key(), it.value()};
 
         // try to merge colliding adresses
-        if (prevIp && ip.from <= prevIp->to) {
-            if (ip.to > prevIp->to) {
-                prevIp->to = ip.to;
+        if (prevIndex >= 0 && ip.from <= prevIp.to) {
+            if (ip.to > prevIp.to) {
+                m_toArray.replace(prevIndex, ip.to);
+
+                prevIp.to = ip.to;
             }
             // else skip it
         } else {
-            m_range.append(ip);
-            prevIp = &m_range.last();
+            m_fromArray.append(ip.from);
+            m_toArray.append(ip.to);
+
+            prevIp = ip;
+            ++prevIndex;
         }
     }
 }

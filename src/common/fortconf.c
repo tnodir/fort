@@ -1,4 +1,4 @@
-/* Fort Firewall Configuration */
+/* Fort Firewall Driver Configuration */
 
 #include "fortconf.h"
 
@@ -108,13 +108,13 @@ fort_conf_app_blocked (const PFORT_CONF conf,
   const char *data = (const char *) conf + conf->data_off;
   const int app_index = fort_conf_app_index(path_len, path, conf->apps_n,
       (const UINT32 *) (data + conf->apps_off));
-  const UINT32 *apps_perms = (const UINT32 *) (data + conf->apps_perms_off);
-  const UINT32 app_perms = (app_index != -1) ? apps_perms[app_index] : 0;
+  const UINT32 *app_perms = (const UINT32 *) (data + conf->app_perms_off);
+  const UINT32 app_perm = (app_index != -1) ? app_perms[app_index] : 0;
 
-  const BOOL app_perm_blocked = (app_perms & conf->app_perms_block_mask);
+  const BOOL app_perm_blocked = (app_perm & conf->app_perms_block_mask);
   const BOOL app_blocked = conf->app_block_all ? TRUE : app_perm_blocked;
 
-  const BOOL app_perm_allowed = (app_perms & conf->app_perms_allow_mask);
+  const BOOL app_perm_allowed = (app_perm & conf->app_perms_allow_mask);
   const BOOL app_allowed = conf->app_allow_all ? TRUE : app_perm_allowed;
 
   *notify = app_blocked && !app_perm_blocked;
@@ -123,7 +123,7 @@ fort_conf_app_blocked (const PFORT_CONF conf,
 }
 
 static void
-fort_conf_group_bits_set (const PFORT_CONF conf, UINT32 group_bits)
+fort_conf_group_bits_set (PFORT_CONF conf, UINT32 group_bits)
 {
   UINT32 perms_mask =
        (group_bits & 0x0001)        | ((group_bits & 0x0002) << 1)

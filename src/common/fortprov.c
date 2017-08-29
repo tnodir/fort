@@ -1,4 +1,4 @@
-/* Fort Firewall Provider (Un)Registration */
+/* Fort Firewall Driver Provider (Un)Registration */
 
 typedef struct fort_prov_data {
   UINT32 version	: 24;

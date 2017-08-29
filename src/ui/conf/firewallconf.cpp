@@ -1,5 +1,7 @@
 #include "firewallconf.h"
 
+#include "appgroup.h"
+
 FirewallConf::FirewallConf(QObject *parent) :
     QObject(parent),
     m_filterDisabled(false),

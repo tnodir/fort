@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QQmlListProperty>
 
-#include "appgroup.h"
+class AppGroup;
 
 class FirewallConf : public QObject
 {
@@ -47,7 +47,7 @@ public:
     QString ipExcludeText() const { return m_ipExcludeText; }
     void setIpExcludeText(const QString &ipExcludeText);
 
-    QList<AppGroup *> &appGroupsList() { return m_appGroups; }
+    const QList<AppGroup *> &appGroupsList() const { return m_appGroups; }
     QQmlListProperty<AppGroup> appGroups();
 
     void addAppGroup(AppGroup *appGroup, int to = -1);

@@ -1,4 +1,4 @@
-QT = core testlib
+QT = core qml testlib
 
 CONFIG += c++11 console testcase
 CONFIG -= app_bundle
