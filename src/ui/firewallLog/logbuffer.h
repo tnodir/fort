@@ -14,9 +14,16 @@ public:
     explicit LogBuffer(int bufferSize = 0,
                        QObject *parent = nullptr);
 
+    QByteArray &array() { return m_array; }
+
 signals:
 
 public slots:
+    void reset(int top = 0) {
+        m_top = top;
+        m_offset = 0;
+    }
+
     int write(const LogEntry &logEntry);
     int read(LogEntry &logEntry);
 

@@ -169,7 +169,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   flags = inFixedValues->incomingValue[flagsField].value.uint32;
   remote_ip = inFixedValues->incomingValue[remoteIpField].value.uint32;
-  path_len = inMetaValues->processPath->size;
+  path_len = inMetaValues->processPath->size - sizeof(WCHAR);
   path = inMetaValues->processPath->data;
 
   if (!(flags & FWP_CONDITION_FLAG_IS_LOOPBACK)

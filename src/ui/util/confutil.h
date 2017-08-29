@@ -28,7 +28,6 @@ signals:
 
 public slots:
     bool write(const FirewallConf &conf, QByteArray &buf);
-    void read(FirewallConf &conf, const QByteArray &buf) const;
 
 private:
     void setErrorMessage(const QString &errorMessage);

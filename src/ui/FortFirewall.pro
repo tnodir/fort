@@ -15,6 +15,7 @@ SOURCES += \
     firewallLog/logentry.cpp \
     fortcommon.cpp \
     util/confutil.cpp \
+    util/device.cpp \
     util/fileutil.cpp \
     util/ip4range.cpp \
     util/netutil.cpp \
@@ -27,6 +28,7 @@ HEADERS += \
     firewallLog/logentry.h \
     fortcommon.h \
     util/confutil.h \
+    util/device.h \
     util/fileutil.h \
     util/ip4range.h \
     util/netutil.h \

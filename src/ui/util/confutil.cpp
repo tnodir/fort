@@ -86,35 +86,6 @@ bool ConfUtil::write(const FirewallConf &conf, QByteArray &buf)
     return true;
 }
 
-void ConfUtil::read(FirewallConf &conf, const QByteArray &buf) const
-{
-//    local conf_ptr = buf:getptr()
-
-//    local ip_include_all, ip_exclude_all,
-//        app_log_blocked, app_block_all, app_allow_all,
-//        iprange_from_inc, iprange_to_inc,
-//        iprange_from_exc, iprange_to_exc,
-//        apps_perms, apps, groups = wipf.conf_read(conf_ptr)
-
-//    local filter_disabled, group_bits = wipf.conf_flags_get(conf_ptr)
-
-//    self.filter_disabled = filter_disabled
-//    self.ip_include_all = ip_include_all
-//    self.ip_exclude_all = ip_exclude_all
-//    self.app_log_blocked = app_log_blocked
-//    self.app_block_all = app_block_all
-//    self.app_allow_all = app_allow_all
-
-//    self.ip_include = util_ip.ip4range_from_numbers(
-//        iprange_from_inc, iprange_to_inc)
-
-//    self.ip_exclude = util_ip.ip4range_from_numbers(
-//        iprange_from_exc, iprange_to_exc)
-
-//    self.app_groups = app_groups_from_plain(
-//        group_bits, groups, apps_perms, apps)
-}
-
 bool ConfUtil::parseAppGroups(const QList<AppGroup *> &appGroups,
                               quint32 &groupBits,
                               QStringList &groupNames,
