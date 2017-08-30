@@ -9,12 +9,25 @@ class FirewallConf;
 class FortSettings : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool debug READ debug WRITE setDebug NOTIFY iniChanged)
+    Q_PROPERTY(QString language READ language WRITE setLanguage NOTIFY iniChanged)
+    Q_PROPERTY(QString updatesUrl READ updatesUrl WRITE setUpdatesUrl NOTIFY iniChanged)
 
 public:
     explicit FortSettings(const QStringList &args,
                           QObject *parent = nullptr);
 
+    bool debug() const { return iniBool("base/debug"); }
+    void setDebug(bool on) { setIniValue("base/debug", on); }
+
+    QString language() const { return iniText("base/language", "en"); }
+    void setLanguage(const QString &v) { setIniValue("base/language", v, "en"); }
+
+    QString updatesUrl() const { return iniText("base/updatesUrl"); }
+    void setUpdatesUrl(const QString &v) { setIniValue("base/updatesUrl", v); }
+
 signals:
+    void iniChanged();
 
 public slots:
     QString confFilePath() const;
@@ -42,7 +55,8 @@ private:
 
     QVariant iniValue(const QString &key,
                       const QVariant &defaultValue = QVariant()) const;
-    void setIniValue(const QString &key, const QVariant &value);
+    void setIniValue(const QString &key, const QVariant &value,
+                     const QVariant &defaultValue = QVariant());
 
 private:
     QString m_profilePath;

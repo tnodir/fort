@@ -116,6 +116,7 @@ bool FortSettings::tryToWriteConf(const FirewallConf &conf, const QString &fileP
 
 bool FortSettings::readConfFlags(FirewallConf &conf) const
 {
+    m_ini->beginGroup("confFlags");
     conf.setFilterDisabled(iniBool("filterDisabled"));
     conf.setIpIncludeAll(iniBool("ipIncludeAll"));
     conf.setIpExcludeAll(iniBool("ipExcludeAll"));
@@ -123,12 +124,14 @@ bool FortSettings::readConfFlags(FirewallConf &conf) const
     conf.setAppBlockAll(iniBool("appBlockAll", true));
     conf.setAppAllowAll(iniBool("appAllowAll"));
     conf.setAppGroupBits(iniUInt("appGroupBits", 0xFFFF));
+    m_ini->endGroup();
 
     return true;
 }
 
 bool FortSettings::writeConfFlags(const FirewallConf &conf)
 {
+    m_ini->beginGroup("confFlags");
     setIniValue("filterDisabled", conf.filterDisabled());
     setIniValue("ipIncludeAll", conf.ipIncludeAll());
     setIniValue("ipExcludeAll", conf.ipExcludeAll());
@@ -136,6 +139,7 @@ bool FortSettings::writeConfFlags(const FirewallConf &conf)
     setIniValue("appBlockAll", conf.appBlockAll());
     setIniValue("appAllowAll", conf.appAllowAll());
     setIniValue("appGroupBits", conf.appGroupBits());
+    m_ini->endGroup();
 
     m_ini->sync();
 
@@ -181,7 +185,12 @@ QVariant FortSettings::iniValue(const QString &key,
     return m_ini->value(key, defaultValue);
 }
 
-void FortSettings::setIniValue(const QString &key, const QVariant &value)
+void FortSettings::setIniValue(const QString &key, const QVariant &value,
+                               const QVariant &defaultValue)
 {
+    if (m_ini->value(key, defaultValue) == value)
+        return;
+
     m_ini->setValue(key, value);
+    emit iniChanged();
 }
