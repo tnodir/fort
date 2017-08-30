@@ -1,6 +1,8 @@
 #include "fileutil.h"
 
 #include <QDir>
+#include <QFileInfo>
+#include <QTextStream>
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -67,4 +69,62 @@ QString FileUtil::pathToDosPath(const QString &path)
         return driveToDosName(drive) + path.mid(2);
     }
     return path;
+}
+
+QString FileUtil::absolutePath(const QString &path)
+{
+    return QDir(path).absolutePath();
+}
+
+bool FileUtil::makePath(const QString &path)
+{
+    return QDir().mkpath(path);
+}
+
+bool FileUtil::fileExists(const QString &filePath)
+{
+    return QFileInfo::exists(filePath);
+}
+
+bool FileUtil::removeFile(const QString &filePath)
+{
+    return QFile::remove(filePath);
+}
+
+bool FileUtil::renameFile(const QString &oldFilePath, const QString &newFilePath)
+{
+    removeFile(newFilePath);
+
+    return QFile::rename(oldFilePath, newFilePath);
+}
+
+bool FileUtil::copyFile(const QString &filePath, const QString &newFilePath)
+{
+    return QFile::copy(filePath, newFilePath);
+}
+
+QString FileUtil::readFile(const QString &filePath)
+{
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly))
+        return QString();
+
+    QTextStream in(&file);
+    const QString data = in.readAll();
+    return data;
+}
+
+bool FileUtil::writeFile(const QString &filePath, const QString &text)
+{
+    return writeFileData(filePath, text.toUtf8());
+}
+
+bool FileUtil::writeFileData(const QString &filePath, const QByteArray &data)
+{
+    QFile file(filePath);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate))
+        return false;
+
+    return file.write(data) == data.size()
+            && file.flush();
 }

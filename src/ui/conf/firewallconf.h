@@ -42,6 +42,9 @@ public:
     bool appAllowAll() const { return m_appAllowAll; }
     void setAppAllowAll(bool appAllowAll);
 
+    quint32 appGroupBits() const;
+    void setAppGroupBits(quint32 groupBits);
+
     QString ipIncludeText() const { return m_ipIncludeText; }
     void setIpIncludeText(const QString &ipIncludeText);
 

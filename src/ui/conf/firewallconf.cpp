@@ -61,6 +61,28 @@ void FirewallConf::setAppAllowAll(bool appAllowAll)
     }
 }
 
+quint32 FirewallConf::appGroupBits() const
+{
+    quint32 groupBits = 0;
+    int i = 0;
+    foreach (const AppGroup *appGroup, appGroupsList()) {
+        if (appGroup->enabled()) {
+            groupBits |= (1 << i);
+        }
+        ++i;
+    }
+    return groupBits;
+}
+
+void FirewallConf::setAppGroupBits(quint32 groupBits)
+{
+    int i = 0;
+    foreach (AppGroup *appGroup, appGroupsList()) {
+        appGroup->setEnabled(groupBits & (1 << i));
+        ++i;
+    }
+}
+
 void FirewallConf::setIpIncludeText(const QString &ipIncludeText)
 {
     if (m_ipIncludeText != ipIncludeText) {
@@ -113,11 +135,6 @@ QVariant FirewallConf::toVariant() const
 {
     QVariantMap map;
 
-    //map["filterDisabled"] = filterDisabled();
-    map["ipIncludeAll"] = ipIncludeAll();
-    map["ipExcludeAll"] = ipExcludeAll();
-    map["appLogBlocked"] = appLogBlocked();
-    map["appBlockAll"] = appBlockAll();
     map["ipIncludeText"] = ipIncludeText();
     map["ipExcludeText"] = ipExcludeText();
 
@@ -134,11 +151,6 @@ void FirewallConf::fromVariant(const QVariant &v)
 {
     QVariantMap map = v.toMap();
 
-    //m_filterDisabled = map["filterDisabled"].toBool();
-    m_ipIncludeAll = map["ipIncludeAll"].toBool();
-    m_ipExcludeAll = map["ipExcludeAll"].toBool();
-    m_appLogBlocked = map["appLogBlocked"].toBool();
-    m_appBlockAll = map["appBlockAll"].toBool();
     m_ipIncludeText = map["ipIncludeText"].toString();
     m_ipExcludeText = map["ipExcludeText"].toString();
 

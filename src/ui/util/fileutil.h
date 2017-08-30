@@ -2,7 +2,6 @@
 #define FILEUTIL_H
 
 #include <QObject>
-#include <QHash>
 
 class FileUtil : public QObject
 {
@@ -22,6 +21,19 @@ public:
 
     // Convert Win32 path to Native path
     static QString pathToDosPath(const QString &path);
+
+    static QString absolutePath(const QString &path);
+
+    static bool makePath(const QString &path);
+    static bool fileExists(const QString &filePath);
+    static bool removeFile(const QString &filePath);
+    static bool renameFile(const QString &oldFilePath, const QString &newFilePath);
+    static bool copyFile(const QString &filePath, const QString &newFilePath);
+
+    static QString readFile(const QString &filePath);
+
+    static bool writeFile(const QString &filePath, const QString &text);
+    static bool writeFileData(const QString &filePath, const QByteArray &data);
 };
 
 #endif // FILEUTIL_H

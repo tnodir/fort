@@ -231,7 +231,7 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     drvConf->flags.app_block_all = conf.appBlockAll();
     drvConf->flags.app_allow_all = conf.appAllowAll();
 
-    drvConf->flags.group_bits = appGroupBits(conf);
+    drvConf->flags.group_bits = conf.appGroupBits();
 
     FortCommon::confAppPermsMaskInit(drvConf);
 
@@ -283,17 +283,4 @@ void ConfUtil::writeStrings(char **data, const QStringList &list)
     }
 
     *data += offTableSize + FORT_CONF_STR_DATA_SIZE(off);
-}
-
-quint32 ConfUtil::appGroupBits(const FirewallConf &conf)
-{
-    quint32 groupBits = 0;
-    int i = 0;
-    foreach (const AppGroup *appGroup, conf.appGroupsList()) {
-        if (appGroup->enabled()) {
-            groupBits |= (1 << i);
-        }
-        ++i;
-    }
-    return groupBits;
 }

@@ -53,8 +53,6 @@ private:
     static void writeNumbers(char **data, const QVector<quint32> &array);
     static void writeStrings(char **data, const QStringList &list);
 
-    static quint32 appGroupBits(const FirewallConf &conf);
-
 private:
     QString m_errorMessage;
 };
