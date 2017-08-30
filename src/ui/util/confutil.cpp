@@ -46,7 +46,6 @@ bool ConfUtil::write(const FirewallConf &conf, QByteArray &buf)
         return false;
     }
 
-    quint32 groupBits = 0;
     int groupNamesLen = 0;
     int appPathsLen = 0;
     QStringList groupNames;
@@ -54,7 +53,7 @@ bool ConfUtil::write(const FirewallConf &conf, QByteArray &buf)
     appperms_arr_t appPerms;
 
     if (!parseAppGroups(conf.appGroupsList(),
-                        groupBits, groupNames, groupNamesLen,
+                        groupNames, groupNamesLen,
                         appPaths, appPathsLen, appPerms))
         return false;
 
@@ -81,13 +80,12 @@ bool ConfUtil::write(const FirewallConf &conf, QByteArray &buf)
     writeData(buf.data(), conf,
               incRange, excRange,
               groupNames, appPaths,
-              appPerms, groupBits);
+              appPerms);
 
     return true;
 }
 
 bool ConfUtil::parseAppGroups(const QList<AppGroup *> &appGroups,
-                              quint32 &groupBits,
                               QStringList &groupNames,
                               int &groupNamesLen,
                               QStringList &appPaths,
@@ -115,10 +113,6 @@ bool ConfUtil::parseAppGroups(const QList<AppGroup *> &appGroups,
 
         groupNames.append(name);
         groupNamesLen += name.size() * sizeof(wchar_t);
-
-        if (appGroup->enabled()) {
-            groupBits |= (1 << i);
-        }
 
         if (!parseApps(appGroup->blockText(), true, appPermsMap, i)
                 || !parseApps(appGroup->allowText(), false, appPermsMap, i))
@@ -193,7 +187,7 @@ QString ConfUtil::parseAppPath(const QStringRef &line)
 void ConfUtil::writeData(char *output, const FirewallConf &conf,
                          const Ip4Range &incRange, const Ip4Range &excRange,
                          const QStringList &groupNames, const QStringList &appPaths,
-                         const appperms_arr_t &appPerms, quint32 groupBits)
+                         const appperms_arr_t &appPerms)
 {
     PFORT_CONF drvConf = (PFORT_CONF) output;
     char *data = (char *) &drvConf->data;
@@ -228,12 +222,18 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     writeStrings(&data, groupNames);
 #undef CONF_DATA_OFFSET
 
-    drvConf->filter_disabled = conf.filterDisabled();
-    drvConf->ip_include_all = conf.ipIncludeAll();
-    drvConf->ip_exclude_all = conf.ipExcludeAll();
-    drvConf->app_log_blocked = conf.appLogBlocked();
-    drvConf->app_block_all = conf.appBlockAll();
-    drvConf->app_allow_all = conf.appAllowAll();
+    drvConf->flags.filter_disabled = conf.filterDisabled();
+
+    drvConf->flags.ip_include_all = conf.ipIncludeAll();
+    drvConf->flags.ip_exclude_all = conf.ipExcludeAll();
+
+    drvConf->flags.app_log_blocked = conf.appLogBlocked();
+    drvConf->flags.app_block_all = conf.appBlockAll();
+    drvConf->flags.app_allow_all = conf.appAllowAll();
+
+    drvConf->flags.group_bits = appGroupBits(conf);
+
+    FortCommon::confAppPermsMaskInit(drvConf);
 
     drvConf->conf_version = FORT_CONF_VERSION;
     drvConf->data_off = FORT_CONF_DATA_OFF;
@@ -253,8 +253,6 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     drvConf->app_perms_off = appPermsOff;
     drvConf->apps_off = appPathsOff;
     drvConf->groups_off = groupNamesOff;
-
-    FortCommon::confGroupBitsSet(drvConf, groupBits);
 }
 
 void ConfUtil::writeNumbers(char **data, const QVector<quint32> &array)
@@ -285,4 +283,17 @@ void ConfUtil::writeStrings(char **data, const QStringList &list)
     }
 
     *data += offTableSize + FORT_CONF_STR_DATA_SIZE(off);
+}
+
+quint32 ConfUtil::appGroupBits(const FirewallConf &conf)
+{
+    quint32 groupBits = 0;
+    int i = 0;
+    foreach (const AppGroup *appGroup, conf.appGroupsList()) {
+        if (appGroup->enabled()) {
+            groupBits |= (1 << i);
+        }
+        ++i;
+    }
+    return groupBits;
 }

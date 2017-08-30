@@ -68,9 +68,9 @@ void FortCommon::logHeaderRead(const char *input,
     fort_log_header_read(input, remoteIp, pid, pathLen);
 }
 
-void FortCommon::confGroupBitsSet(void *drvConf, quint32 groupBits)
+void FortCommon::confAppPermsMaskInit(void *drvConf)
 {
-    fort_conf_group_bits_set((PFORT_CONF) drvConf, groupBits);
+    fort_conf_app_perms_mask_init((PFORT_CONF) drvConf);
 }
 
 bool FortCommon::confIpInRange(const void *drvConf, quint32 ip,

@@ -34,7 +34,6 @@ private:
 
     // Convert app. groups to plain lists
     bool parseAppGroups(const QList<AppGroup *> &appGroups,
-                        quint32 &groupBits,
                         QStringList &groupNames,
                         int &groupNamesLen,
                         QStringList &appPaths,
@@ -49,10 +48,12 @@ private:
     static void writeData(char *output, const FirewallConf &conf,
                           const Ip4Range &incRange, const Ip4Range &excRange,
                           const QStringList &groupNames, const QStringList &appPaths,
-                          const appperms_arr_t &appPerms, quint32 groupBits);
+                          const appperms_arr_t &appPerms);
 
     static void writeNumbers(char **data, const QVector<quint32> &array);
     static void writeStrings(char **data, const QStringList &list);
+
+    static quint32 appGroupBits(const FirewallConf &conf);
 
 private:
     QString m_errorMessage;

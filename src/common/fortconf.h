@@ -1,7 +1,7 @@
 #ifndef FORTCONF_H
 #define FORTCONF_H
 
-typedef struct fort_conf {
+typedef struct fort_conf_flags {
   UINT32 filter_disabled	: 1;
   UINT32 ip_include_all		: 1;
   UINT32 ip_exclude_all		: 1;
@@ -9,6 +9,10 @@ typedef struct fort_conf {
   UINT32 app_block_all		: 1;
   UINT32 app_allow_all		: 1;
   UINT32 group_bits		: 16;
+} FORT_CONF_FLAGS, *PFORT_CONF_FLAGS;
+
+typedef struct fort_conf {
+  FORT_CONF_FLAGS flags;
 
   UINT16 conf_version;
   UINT16 data_off;

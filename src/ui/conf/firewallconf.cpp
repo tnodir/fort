@@ -113,7 +113,7 @@ QVariant FirewallConf::toVariant() const
 {
     QVariantMap map;
 
-    map["filterDisabled"] = filterDisabled();
+    //map["filterDisabled"] = filterDisabled();
     map["ipIncludeAll"] = ipIncludeAll();
     map["ipExcludeAll"] = ipExcludeAll();
     map["appLogBlocked"] = appLogBlocked();
@@ -134,7 +134,7 @@ void FirewallConf::fromVariant(const QVariant &v)
 {
     QVariantMap map = v.toMap();
 
-    m_filterDisabled = map["filterDisabled"].toBool();
+    //m_filterDisabled = map["filterDisabled"].toBool();
     m_ipIncludeAll = map["ipIncludeAll"].toBool();
     m_ipExcludeAll = map["ipExcludeAll"].toBool();
     m_appLogBlocked = map["appLogBlocked"].toBool();

@@ -45,12 +45,12 @@ fort_conf_ip_included (const PFORT_CONF conf, UINT32 remote_ip)
 {
   const char *data = (const char *) conf + conf->data_off;
 
-  const BOOL ip_included = conf->ip_include_all ? TRUE
+  const BOOL ip_included = conf->flags.ip_include_all ? TRUE
       : fort_conf_ip_inrange(remote_ip, conf->ip_include_n,
                              (const UINT32 *) (data + conf->ip_from_include_off),
                              (const UINT32 *) (data + conf->ip_to_include_off));
 
-  const BOOL ip_excluded = conf->ip_exclude_all ? TRUE
+  const BOOL ip_excluded = conf->flags.ip_exclude_all ? TRUE
       : fort_conf_ip_inrange(remote_ip, conf->ip_exclude_n,
                              (const UINT32 *) (data + conf->ip_from_exclude_off),
                              (const UINT32 *) (data + conf->ip_to_exclude_off));
@@ -112,10 +112,10 @@ fort_conf_app_blocked (const PFORT_CONF conf,
   const UINT32 app_perm = (app_index != -1) ? app_perms[app_index] : 0;
 
   const BOOL app_perm_blocked = (app_perm & conf->app_perms_block_mask);
-  const BOOL app_blocked = conf->app_block_all ? TRUE : app_perm_blocked;
+  const BOOL app_blocked = conf->flags.app_block_all ? TRUE : app_perm_blocked;
 
   const BOOL app_perm_allowed = (app_perm & conf->app_perms_allow_mask);
-  const BOOL app_allowed = conf->app_allow_all ? TRUE : app_perm_allowed;
+  const BOOL app_allowed = conf->flags.app_allow_all ? TRUE : app_perm_allowed;
 
   *notify = app_blocked && !app_perm_blocked;
 
@@ -123,8 +123,9 @@ fort_conf_app_blocked (const PFORT_CONF conf,
 }
 
 static void
-fort_conf_group_bits_set (PFORT_CONF conf, UINT32 group_bits)
+fort_conf_app_perms_mask_init (PFORT_CONF conf)
 {
+  const UINT32 group_bits = conf->flags.group_bits;
   UINT32 perms_mask =
        (group_bits & 0x0001)        | ((group_bits & 0x0002) << 1)
     | ((group_bits & 0x0004) << 2)  | ((group_bits & 0x0008) << 3)
@@ -136,8 +137,6 @@ fort_conf_group_bits_set (PFORT_CONF conf, UINT32 group_bits)
     | ((group_bits & 0x4000) << 14) | ((group_bits & 0x8000) << 15);
 
   perms_mask |= perms_mask << 1;
-
-  conf->group_bits = group_bits;
 
   conf->app_perms_block_mask = (perms_mask & 0xAAAAAAAA);
   conf->app_perms_allow_mask = (perms_mask & 0x55555555);

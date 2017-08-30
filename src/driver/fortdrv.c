@@ -107,7 +107,7 @@ fort_conf_ref_set (PFORT_CONF_REF conf_ref)
     g_device->conf_ref = conf_ref;
 
     g_device->filter_disabled = (conf_ref != NULL
-        && conf_ref->conf.filter_disabled);
+        && conf_ref->conf.flags.filter_disabled);
   }
   KeReleaseSpinLock(&g_device->conf_lock, irq);
 
@@ -116,7 +116,7 @@ fort_conf_ref_set (PFORT_CONF_REF conf_ref)
 }
 
 static void
-fort_conf_ref_flags_set (BOOL filter_disabled, UINT32 group_bits)
+fort_conf_ref_flags_set (const PFORT_CONF_FLAGS conf_flags)
 {
   KIRQL irq;
 
@@ -127,10 +127,11 @@ fort_conf_ref_flags_set (BOOL filter_disabled, UINT32 group_bits)
     if (conf_ref) {
       PFORT_CONF conf = &conf_ref->conf;
 
-      g_device->filter_disabled =
-        conf->filter_disabled = filter_disabled;
+      g_device->filter_disabled = conf_flags->filter_disabled;
 
-      fort_conf_group_bits_set(conf, group_bits);
+      conf->flags = *conf_flags;
+
+      fort_conf_app_perms_mask_init(conf);
     }
   }
   KeReleaseSpinLock(&g_device->conf_lock, irq);
@@ -380,11 +381,11 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
     break;
   }
   case FORT_IOCTL_SETFLAGS: {
-    const PFORT_CONF conf = irp->AssociatedIrp.SystemBuffer;
+    const PFORT_CONF_FLAGS conf_flags = irp->AssociatedIrp.SystemBuffer;
     const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
 
-    if (len > FORT_CONF_DATA_OFF) {
-      fort_conf_ref_flags_set(conf->filter_disabled, conf->group_bits);
+    if (len == sizeof(FORT_CONF_FLAGS)) {
+      fort_conf_ref_flags_set(conf_flags);
       status = STATUS_SUCCESS;
     }
     break;

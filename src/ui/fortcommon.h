@@ -27,7 +27,7 @@ public:
                               quint32 *remoteIp, quint32 *pid,
                               quint32 *pathLen);
 
-    static void confGroupBitsSet(void *drvConf, quint32 groupBits);
+    static void confAppPermsMaskInit(void *drvConf);
     static bool confIpInRange(const void *drvConf, quint32 ip,
                               bool included = false);
     static bool confAppBlocked(const void *drvConf,
