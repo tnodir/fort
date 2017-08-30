@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QQmlListProperty>
+#include <QVariant>
 
 class AppGroup;
 
@@ -53,6 +54,9 @@ public:
     void addAppGroup(AppGroup *appGroup, int to = -1);
     void moveAppGroup(int from, int to);
     void removeAppGroup(int from, int to);
+
+    QVariant toVariant() const;
+    void fromVariant(const QVariant &v);
 
 signals:
     void filterDisabledChanged();

@@ -37,3 +37,25 @@ void AppGroup::setAllowText(const QString &allowText)
         emit allowTextChanged();
     }
 }
+
+QVariant AppGroup::toVariant() const
+{
+    QVariantMap map;
+
+    map["enabled"] = enabled();
+    map["name"] = name();
+    map["blockText"] = blockText();
+    map["allowText"] = allowText();
+
+    return map;
+}
+
+void AppGroup::fromVariant(const QVariant &v)
+{
+    QVariantMap map = v.toMap();
+
+    m_enabled = map["enabled"].toBool();
+    m_name = map["name"].toString();
+    m_blockText = map["blockText"].toString();
+    m_allowText = map["allowText"].toString();
+}

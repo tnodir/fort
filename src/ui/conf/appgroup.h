@@ -2,6 +2,7 @@
 #define APPGROUP_H
 
 #include <QObject>
+#include <QVariant>
 
 class AppGroup : public QObject
 {
@@ -21,6 +22,9 @@ public:
 
     QString allowText() const { return m_allowText; }
     void setAllowText(const QString &allowText);
+
+    QVariant toVariant() const;
+    void fromVariant(const QVariant &v);
 
 signals:
     void enabledChanged();

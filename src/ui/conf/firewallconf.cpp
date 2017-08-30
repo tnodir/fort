@@ -108,3 +108,44 @@ void FirewallConf::removeAppGroup(int from, int to)
     }
     emit appGroupsChanged();
 }
+
+QVariant FirewallConf::toVariant() const
+{
+    QVariantMap map;
+
+    map["filterDisabled"] = filterDisabled();
+    map["ipIncludeAll"] = ipIncludeAll();
+    map["ipExcludeAll"] = ipExcludeAll();
+    map["appLogBlocked"] = appLogBlocked();
+    map["appBlockAll"] = appBlockAll();
+    map["ipIncludeText"] = ipIncludeText();
+    map["ipExcludeText"] = ipExcludeText();
+
+    QVariantList groups;
+    foreach (const AppGroup *appGroup, appGroupsList()) {
+        groups.append(appGroup->toVariant());
+    }
+    map["appGroups"] = groups;
+
+    return map;
+}
+
+void FirewallConf::fromVariant(const QVariant &v)
+{
+    QVariantMap map = v.toMap();
+
+    m_filterDisabled = map["filterDisabled"].toBool();
+    m_ipIncludeAll = map["ipIncludeAll"].toBool();
+    m_ipExcludeAll = map["ipExcludeAll"].toBool();
+    m_appLogBlocked = map["appLogBlocked"].toBool();
+    m_appBlockAll = map["appBlockAll"].toBool();
+    m_ipIncludeText = map["ipIncludeText"].toString();
+    m_ipExcludeText = map["ipExcludeText"].toString();
+
+    const QVariantList groups = map["appGroups"].toList();
+    foreach (const QVariant &gv, groups) {
+        AppGroup *appGroup = new AppGroup();
+        appGroup->fromVariant(gv);
+        addAppGroup(appGroup);
+    }
+}
