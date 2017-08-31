@@ -85,6 +85,26 @@ int ConfUtil::write(const FirewallConf &conf, QByteArray &buf)
     return confSize;
 }
 
+int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
+{
+    const int flagsSize = sizeof(FORT_CONF_FLAGS);
+
+    buf.reserve(flagsSize);
+
+    // Fill the buffer
+    PFORT_CONF_FLAGS confFlags = (PFORT_CONF_FLAGS) buf.data();
+
+    confFlags->filter_disabled = conf.filterDisabled();
+    confFlags->ip_include_all = conf.ipIncludeAll();
+    confFlags->ip_exclude_all = conf.ipExcludeAll();
+    confFlags->app_log_blocked = conf.appLogBlocked();
+    confFlags->app_block_all = conf.appBlockAll();
+    confFlags->app_allow_all = conf.appAllowAll();
+    confFlags->group_bits = conf.appGroupBits();
+
+    return flagsSize;
+}
+
 bool ConfUtil::parseAppGroups(const QList<AppGroup *> &appGroups,
                               QStringList &groupNames,
                               int &groupNamesLen,
