@@ -17,8 +17,8 @@ public slots:
     bool open(const QString &filePath);
     bool close();
 
-    bool ioctl(int code, QByteArray *in = nullptr, int inSize = 0,
-               QByteArray *out = nullptr, int outSize = 0,
+    bool ioctl(int code, char *in = nullptr, int inSize = 0,
+               char *out = nullptr, int outSize = 0,
                int *retSize = nullptr);
 
 private:

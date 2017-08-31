@@ -29,7 +29,7 @@ void Test::logRead()
         int nr;
         QByteArray &array = buf.array();
         QVERIFY(device.ioctl(FortCommon::ioctlGetLog(), nullptr, 0,
-                             &array, array.size(), &nr));
+                             array.data(), array.size(), &nr));
         buf.reset(nr);
         printLogs(buf);
     }
@@ -60,7 +60,8 @@ void Test::setConf(Device &device)
     const int confSize = confUtil.write(conf, buf);
     QVERIFY(confSize != 0);
 
-    QVERIFY(device.ioctl(FortCommon::ioctlSetConf(), &buf, confSize));
+    QVERIFY(device.ioctl(FortCommon::ioctlSetConf(),
+                         buf.data(), confSize));
 }
 
 void Test::printLogs(LogBuffer &buf)
