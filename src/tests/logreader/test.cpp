@@ -27,8 +27,9 @@ void Test::logRead()
 
     forever {
         int nr;
-        QVERIFY(device.ioctl(FortCommon::ioctlGetLog(), nullptr,
-                             &buf.array(), &nr));
+        QByteArray &array = buf.array();
+        QVERIFY(device.ioctl(FortCommon::ioctlGetLog(), nullptr, 0,
+                             &array, array.size(), &nr));
         buf.reset(nr);
         printLogs(buf);
     }
@@ -56,9 +57,10 @@ void Test::setConf(Device &device)
     ConfUtil confUtil;
 
     QByteArray buf;
-    QVERIFY(confUtil.write(conf, buf));
+    const int confSize = confUtil.write(conf, buf);
+    QVERIFY(confSize != 0);
 
-    QVERIFY(device.ioctl(FortCommon::ioctlSetConf(), &buf));
+    QVERIFY(device.ioctl(FortCommon::ioctlSetConf(), &buf, confSize));
 }
 
 void Test::printLogs(LogBuffer &buf)
@@ -73,5 +75,7 @@ void Test::printLogs(LogBuffer &buf)
             ProcessInfo pi(pid);
             dosPath = pi.dosPath();
         }
+
+        qDebug() << pid << dosPath << NetUtil::ip4ToText(entry.ip());
     }
 }

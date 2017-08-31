@@ -54,7 +54,8 @@ void Test::confWriteRead()
     ConfUtil confUtil;
 
     QByteArray buf;
-    QVERIFY(confUtil.write(conf, buf));
+    const int confSize = confUtil.write(conf, buf);
+    QVERIFY(confSize != 0);
 
     // Check the buffer
     const char *data = buf.constData();

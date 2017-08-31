@@ -30,7 +30,7 @@ void ConfUtil::setErrorMessage(const QString &errorMessage)
     }
 }
 
-bool ConfUtil::write(const FirewallConf &conf, QByteArray &buf)
+int ConfUtil::write(const FirewallConf &conf, QByteArray &buf)
 {
     Ip4Range incRange;
     if (!incRange.fromText(conf.ipIncludeText())) {
@@ -67,7 +67,7 @@ bool ConfUtil::write(const FirewallConf &conf, QByteArray &buf)
     }
 
     // Fill the buffer
-    const int bufSize = FORT_CONF_DATA_OFF
+    const int confSize = FORT_CONF_DATA_OFF
             + (incRange.size() + excRange.size()) * 2 * sizeof(quint32)
             + appPaths.size() * sizeof(quint32)
             + FORT_CONF_STR_HEADER_SIZE(appPaths.size())
@@ -75,14 +75,14 @@ bool ConfUtil::write(const FirewallConf &conf, QByteArray &buf)
             + FORT_CONF_STR_HEADER_SIZE(groupNames.size())
             + FORT_CONF_STR_DATA_SIZE(groupNamesLen);
 
-    buf.resize(bufSize);
+    buf.reserve(confSize);
 
     writeData(buf.data(), conf,
               incRange, excRange,
               groupNames, appPaths,
               appPerms);
 
-    return true;
+    return confSize;
 }
 
 bool ConfUtil::parseAppGroups(const QList<AppGroup *> &appGroups,

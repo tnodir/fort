@@ -14,6 +14,9 @@ public:
     explicit LogBuffer(int bufferSize = 0,
                        QObject *parent = nullptr);
 
+    int top() const { return m_top; }
+    int offset() const { return m_offset; }
+
     QByteArray &array() { return m_array; }
 
 signals:

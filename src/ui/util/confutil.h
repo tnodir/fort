@@ -27,7 +27,7 @@ signals:
     void errorMessageChanged();
 
 public slots:
-    bool write(const FirewallConf &conf, QByteArray &buf);
+    int write(const FirewallConf &conf, QByteArray &buf);
 
 private:
     void setErrorMessage(const QString &errorMessage);

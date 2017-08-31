@@ -40,14 +40,15 @@ bool Device::close()
     return res;
 }
 
-bool Device::ioctl(int code, QByteArray *in, QByteArray *out,
+bool Device::ioctl(int code, QByteArray *in, int inSize,
+                   QByteArray *out, int outSize,
                    int *retSize)
 {
     DWORD size = 0;
     const bool res = DeviceIoControl(
                 m_handle, code,
-                (in ? in->data() : nullptr), (in ? in->size() : 0),
-                (out ? out->data() : nullptr), (out ? out->size() : 0),
+                (in ? in->data() : nullptr), inSize,
+                (out ? out->data() : nullptr), outSize,
                 &size, NULL);
 
     if (retSize) {
