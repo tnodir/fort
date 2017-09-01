@@ -1,5 +1,3 @@
-lessThan(QT_VERSION, 5.7.1): error(This project requires Qt 5.7.1 or later)
-
 QT += core gui qml widgets
 
 CONFIG += c++11
@@ -15,6 +13,7 @@ SOURCES += \
     firewallLog/logentry.cpp \
     fortcommon.cpp \
     fortsettings.cpp \
+    fortwindow.cpp \
     util/confutil.cpp \
     util/device.cpp \
     util/fileutil.cpp \
@@ -29,6 +28,7 @@ HEADERS += \
     firewallLog/logentry.h \
     fortcommon.h \
     fortsettings.h \
+    fortwindow.h \
     util/confutil.h \
     util/device.h \
     util/fileutil.h \
@@ -37,7 +37,8 @@ HEADERS += \
     util/processinfo.h
 
 QML_FILES += \
-    qml/*.qml
+    qml/*.qml \
+    qml/pages/*.qml
 
 OTHER_FILES += \
     $${QML_FILES} \
@@ -46,11 +47,17 @@ OTHER_FILES += \
 TRANSLATIONS += \
     i18n/i18n_ru.ts
 
+# QML files
+RESOURCES += fort_qml.qrc
+
 # Compiled translation files
-RESOURCES += fort_i18n.qrc
+#RESOURCES += fort_i18n.qrc
 
 # Default FortFirewall.ini
 RESOURCES += fort_ini.qrc
+
+# Images
+RESOURCES += fort_images.qrc
 
 # Windows
 LIBS += -lfwpuclnt -lkernel32 -lpsapi -luser32 -luuid -lws2_32
