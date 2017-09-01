@@ -10,8 +10,8 @@ ApplicationWindow {
     visible: true
     title: QT_TRANSLATE_NOOP("qml", "Fort Firewall")
 
-    width: 640
-    height: 480
+    width: 800
+    height: 600
     minimumWidth: 400
     minimumHeight: 300
 
@@ -50,12 +50,9 @@ ApplicationWindow {
             anchors.fill: parent
             currentIndex: tabBar.currentIndex
 
-            OptionsPage {
-            }
-            AddressesPage {
-            }
-            ApplicationsPage {
-            }
+            OptionsPage {}
+            AddressesPage {}
+            ApplicationsPage {}
         }
 
         footer: Pane {
@@ -65,7 +62,7 @@ ApplicationWindow {
                 Button {
                     text: QT_TRANSLATE_NOOP("qml", "OK")
                     onClicked: {
-                        if (fortWindow.save())
+                        if (fortManager.saveConf())
                             closeWindow();
                     }
                 }

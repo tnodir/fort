@@ -12,8 +12,8 @@ SOURCES += \
     firewallLog/logbuffer.cpp \
     firewallLog/logentry.cpp \
     fortcommon.cpp \
+    fortmanager.cpp \
     fortsettings.cpp \
-    fortwindow.cpp \
     util/confutil.cpp \
     util/device.cpp \
     util/fileutil.cpp \
@@ -27,8 +27,8 @@ HEADERS += \
     firewallLog/logbuffer.h \
     firewallLog/logentry.h \
     fortcommon.h \
+    fortmanager.h \
     fortsettings.h \
-    fortwindow.h \
     util/confutil.h \
     util/device.h \
     util/fileutil.h \

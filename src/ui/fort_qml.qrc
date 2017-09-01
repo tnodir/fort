@@ -1,8 +1,10 @@
-<!DOCTYPE RCC><RCC version="1.0">
-<qresource>
-    <file>qml/main.qml</file>
-    <file>qml/pages/AddressesPage.qml</file>
-    <file>qml/pages/ApplicationsPage.qml</file>
-    <file>qml/pages/OptionsPage.qml</file>
-</qresource>
+<RCC>
+    <qresource prefix="/">
+        <file>qml/main.qml</file>
+        <file>qml/pages/AddressesPage.qml</file>
+        <file>qml/pages/ApplicationsPage.qml</file>
+        <file>qml/pages/BasePage.qml</file>
+        <file>qml/pages/OptionsPage.qml</file>
+        <file>qml/pages/addresses/AddressesColumn.qml</file>
+    </qresource>
 </RCC>
