@@ -106,7 +106,7 @@ bool FileUtil::copyFile(const QString &filePath, const QString &newFilePath)
 QString FileUtil::readFile(const QString &filePath)
 {
     QFile file(filePath);
-    if (!file.open(QIODevice::ReadOnly))
+    if (!file.open(QFile::ReadOnly))
         return QString();
 
     QTextStream in(&file);
@@ -122,7 +122,7 @@ bool FileUtil::writeFile(const QString &filePath, const QString &text)
 bool FileUtil::writeFileData(const QString &filePath, const QByteArray &data)
 {
     QFile file(filePath);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate))
+    if (!file.open(QFile::WriteOnly | QFile::Truncate))
         return false;
 
     return file.write(data) == data.size()

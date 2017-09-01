@@ -108,7 +108,7 @@ bool FortSettings::tryToWriteConf(const FirewallConf &conf, const QString &fileP
 
     const QByteArray data = jsonDoc.toJson(QJsonDocument::Indented);
 
-    if (FileUtil::writeFileData(filePath, data))
+    if (!FileUtil::writeFileData(filePath, data))
         return false;
 
     return writeConfFlags(conf);
@@ -143,7 +143,7 @@ bool FortSettings::writeConfFlags(const FirewallConf &conf)
 
     m_ini->sync();
 
-    return m_ini->status() != QSettings::NoError;
+    return m_ini->status() == QSettings::NoError;
 }
 
 bool FortSettings::iniBool(const QString &key, bool defaultValue) const
