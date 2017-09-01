@@ -4,7 +4,7 @@
 
 FirewallConf::FirewallConf(QObject *parent) :
     QObject(parent),
-    m_filterDisabled(false),
+    m_filterEnabled(true),
     m_ipIncludeAll(false),
     m_ipExcludeAll(false),
     m_appLogBlocked(true),
@@ -13,11 +13,11 @@ FirewallConf::FirewallConf(QObject *parent) :
 {
 }
 
-void FirewallConf::setFilterDisabled(bool filterDisabled)
+void FirewallConf::setFilterEnabled(bool filterEnabled)
 {
-    if (m_filterDisabled != filterDisabled) {
-        m_filterDisabled = filterDisabled;
-        emit filterDisabledChanged();
+    if (m_filterEnabled != filterEnabled) {
+        m_filterEnabled = filterEnabled;
+        emit filterEnabledChanged();
     }
 }
 

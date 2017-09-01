@@ -10,7 +10,7 @@ class AppGroup;
 class FirewallConf : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool filterDisabled READ filterDisabled WRITE setFilterDisabled NOTIFY filterDisabledChanged)
+    Q_PROPERTY(bool filterEnabled READ filterEnabled WRITE setFilterEnabled NOTIFY filterEnabledChanged)
     Q_PROPERTY(bool ipIncludeAll READ ipIncludeAll WRITE setIpIncludeAll NOTIFY ipIncludeAllChanged)
     Q_PROPERTY(bool ipExcludeAll READ ipExcludeAll WRITE setIpExcludeAll NOTIFY ipExcludeAllChanged)
     Q_PROPERTY(bool appLogBlocked READ appLogBlocked WRITE setAppLogBlocked NOTIFY appLogBlockedChanged)
@@ -24,8 +24,8 @@ class FirewallConf : public QObject
 public:
     explicit FirewallConf(QObject *parent = nullptr);
 
-    bool filterDisabled() const { return m_filterDisabled; }
-    void setFilterDisabled(bool filterDisabled);
+    bool filterEnabled() const { return m_filterEnabled; }
+    void setFilterEnabled(bool filterEnabled);
 
     bool ipIncludeAll() const { return m_ipIncludeAll; }
     void setIpIncludeAll(bool ipIncludeAll);
@@ -62,7 +62,7 @@ public:
     void fromVariant(const QVariant &v);
 
 signals:
-    void filterDisabledChanged();
+    void filterEnabledChanged();
     void ipIncludeAllChanged();
     void ipExcludeAllChanged();
     void appLogBlockedChanged();
@@ -75,7 +75,7 @@ signals:
 public slots:
 
 private:
-    uint m_filterDisabled   : 1;
+    uint m_filterEnabled    : 1;
 
     uint m_ipIncludeAll     : 1;
     uint m_ipExcludeAll     : 1;

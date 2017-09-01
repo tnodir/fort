@@ -117,7 +117,7 @@ bool FortSettings::tryToWriteConf(const FirewallConf &conf, const QString &fileP
 bool FortSettings::readConfFlags(FirewallConf &conf) const
 {
     m_ini->beginGroup("confFlags");
-    conf.setFilterDisabled(iniBool("filterDisabled"));
+    conf.setFilterEnabled(iniBool("filterEnabled", true));
     conf.setIpIncludeAll(iniBool("ipIncludeAll"));
     conf.setIpExcludeAll(iniBool("ipExcludeAll"));
     conf.setAppLogBlocked(iniBool("appLogBlocked", true));
@@ -132,7 +132,7 @@ bool FortSettings::readConfFlags(FirewallConf &conf) const
 bool FortSettings::writeConfFlags(const FirewallConf &conf)
 {
     m_ini->beginGroup("confFlags");
-    setIniValue("filterDisabled", conf.filterDisabled());
+    setIniValue("filterEnabled", conf.filterEnabled());
     setIniValue("ipIncludeAll", conf.ipIncludeAll());
     setIniValue("ipExcludeAll", conf.ipExcludeAll());
     setIniValue("appLogBlocked", conf.appLogBlocked());

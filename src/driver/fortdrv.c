@@ -26,7 +26,7 @@ typedef struct fort_conf_ref {
 
 typedef struct fort_device {
   BOOL active		: 1;
-  BOOL filter_disabled	: 1;
+  BOOL filter_enabled	: 1;
   BOOL prov_temporary	: 1;
   BOOL prov_boot	: 1;
 
@@ -106,8 +106,8 @@ fort_conf_ref_set (PFORT_CONF_REF conf_ref)
   {
     g_device->conf_ref = conf_ref;
 
-    g_device->filter_disabled = (conf_ref != NULL
-        && conf_ref->conf.flags.filter_disabled);
+    g_device->filter_enabled = (conf_ref != NULL
+        && conf_ref->conf.flags.filter_enabled);
   }
   KeReleaseSpinLock(&g_device->conf_lock, irq);
 
@@ -127,7 +127,7 @@ fort_conf_ref_flags_set (const PFORT_CONF_FLAGS conf_flags)
     if (conf_ref) {
       PFORT_CONF conf = &conf_ref->conf;
 
-      g_device->filter_disabled = conf_flags->filter_disabled;
+      g_device->filter_enabled = conf_flags->filter_enabled;
 
       conf->flags = *conf_flags;
 
@@ -156,7 +156,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   UNUSED(layerData);
   UNUSED(flowContext);
 
-  if (g_device->filter_disabled) {
+  if (!g_device->filter_enabled) {
     return;
   }
 

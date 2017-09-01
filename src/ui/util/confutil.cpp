@@ -94,7 +94,7 @@ int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
     // Fill the buffer
     PFORT_CONF_FLAGS confFlags = (PFORT_CONF_FLAGS) buf.data();
 
-    confFlags->filter_disabled = conf.filterDisabled();
+    confFlags->filter_enabled = conf.filterEnabled();
     confFlags->ip_include_all = conf.ipIncludeAll();
     confFlags->ip_exclude_all = conf.ipExcludeAll();
     confFlags->app_log_blocked = conf.appLogBlocked();
@@ -242,7 +242,7 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     writeStrings(&data, groupNames);
 #undef CONF_DATA_OFFSET
 
-    drvConf->flags.filter_disabled = conf.filterDisabled();
+    drvConf->flags.filter_enabled = conf.filterEnabled();
 
     drvConf->flags.ip_include_all = conf.ipIncludeAll();
     drvConf->flags.ip_exclude_all = conf.ipExcludeAll();

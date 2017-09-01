@@ -2,7 +2,7 @@
 #define FORTCONF_H
 
 typedef struct fort_conf_flags {
-  UINT32 filter_disabled	: 1;
+  UINT32 filter_enabled		: 1;
   UINT32 ip_include_all		: 1;
   UINT32 ip_exclude_all		: 1;
   UINT32 app_log_blocked	: 1;
