@@ -6,12 +6,18 @@ import com.fortfirewall 1.0
 BasePage {
 
     ColumnLayout {
-        CheckBox {
-            text: QT_TRANSLATE_NOOP("qml", "Enabled")
-            checked: firewallConf.appLogBlocked
+        anchors.fill: parent
+
+        Switch {
+            anchors.right: parent.right
             onToggled: {
                 firewallConf.appLogBlocked = checked;
             }
+        }
+
+        GridView {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
         }
     }
 }
