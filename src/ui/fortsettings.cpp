@@ -121,7 +121,6 @@ bool FortSettings::readConfFlags(FirewallConf &conf) const
     conf.setFilterEnabled(iniBool("filterEnabled", true));
     conf.ipInclude()->setUseAll(iniBool("ipIncludeAll"));
     conf.ipExclude()->setUseAll(iniBool("ipExcludeAll"));
-    conf.setAppLogBlocked(iniBool("appLogBlocked", true));
     conf.setAppBlockAll(iniBool("appBlockAll", true));
     conf.setAppAllowAll(iniBool("appAllowAll"));
     conf.setAppGroupBits(iniUInt("appGroupBits", 0xFFFF));
@@ -136,7 +135,6 @@ bool FortSettings::writeConfFlags(const FirewallConf &conf)
     setIniValue("filterEnabled", conf.filterEnabled());
     setIniValue("ipIncludeAll", conf.ipInclude()->useAll());
     setIniValue("ipExcludeAll", conf.ipExclude()->useAll());
-    setIniValue("appLogBlocked", conf.appLogBlocked());
     setIniValue("appBlockAll", conf.appBlockAll());
     setIniValue("appAllowAll", conf.appAllowAll());
     setIniValue("appGroupBits", conf.appGroupBits());

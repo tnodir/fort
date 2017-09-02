@@ -5,4 +5,13 @@ import com.fortfirewall 1.0
 
 BasePage {
 
+    ColumnLayout {
+        CheckBox {
+            text: QT_TRANSLATE_NOOP("qml", "Enabled")
+            checked: firewallConf.appLogBlocked
+            onToggled: {
+                firewallConf.appLogBlocked = checked;
+            }
+        }
+    }
 }

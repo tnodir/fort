@@ -6,7 +6,7 @@
 FirewallConf::FirewallConf(QObject *parent) :
     QObject(parent),
     m_filterEnabled(true),
-    m_appLogBlocked(true),
+    m_appLogBlocked(false),
     m_appBlockAll(true),
     m_appAllowAll(false),
     m_ipInclude(new AddressGroup(this)),

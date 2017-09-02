@@ -63,7 +63,8 @@ public slots:
 private:
     uint m_filterEnabled    : 1;
 
-    uint m_appLogBlocked    : 1;
+    uint m_appLogBlocked    : 1;  // transient
+
     uint m_appBlockAll      : 1;
     uint m_appAllowAll      : 1;
 
