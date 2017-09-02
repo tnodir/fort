@@ -10,8 +10,8 @@ ApplicationWindow {
 
     width: 800
     height: 600
-    minimumWidth: 540
-    minimumHeight: 500
+    minimumWidth: 700
+    minimumHeight: 600
     visible: true
 
     font.pixelSize: 16
@@ -71,6 +71,10 @@ ApplicationWindow {
                         if (fortManager.saveConf())
                             closeWindow();
                     }
+                }
+                Button {
+                    text: QT_TRANSLATE_NOOP("qml", "Apply")
+                    onClicked: fortManager.applyConf()
                 }
                 Button {
                     text: QT_TRANSLATE_NOOP("qml", "Cancel")

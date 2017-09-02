@@ -80,6 +80,11 @@ BasePage {
             }
         }
 
+        Frame {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 1
+        }
+
         AppsColumn {
             id: appsColumn
             Layout.fillWidth: true

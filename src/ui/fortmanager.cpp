@@ -46,32 +46,33 @@ void FortManager::showWindow()
     connect(m_engine, &QQmlApplicationEngine::destroyed,
             this, &FortManager::handleClosedWindow);
 
-    createConfToEdit();
     setupContext();
+
+    // New conf to edit
+    Q_ASSERT(!m_firewallConfToEdit);
+    m_firewallConfToEdit = cloneConf(*m_firewallConf);
 
     m_engine->load(QUrl("qrc:/qml/main.qml"));
 }
 
-void FortManager::createConfToEdit()
-{
-    m_firewallConfToEdit = new FirewallConf(this);
-
-    // Clone from current one
-    {
-        const QVariant data = m_firewallConf->toVariant();
-        m_firewallConfToEdit->fromVariant(data);
-
-        m_fortSettings->readConfFlags(*m_firewallConfToEdit);
-    }
-}
-
 bool FortManager::saveConf()
 {
-    if (!m_fortSettings->writeConf(*m_firewallConfToEdit))
+    return saveSettings(m_firewallConfToEdit);
+}
+
+bool FortManager::applyConf()
+{
+    Q_ASSERT(m_firewallConfToEdit);
+    return saveSettings(cloneConf(*m_firewallConfToEdit));
+}
+
+bool FortManager::saveSettings(FirewallConf *newConf)
+{
+    if (!m_fortSettings->writeConf(*newConf))
         return false;
 
     m_firewallConf->deleteLater();
-    m_firewallConf = m_firewallConfToEdit;
+    m_firewallConf = newConf;
 
     return true;
 }
@@ -85,4 +86,22 @@ void FortManager::handleClosedWindow()
         m_firewallConfToEdit->deleteLater();
         m_firewallConfToEdit = nullptr;
     }
+}
+
+FirewallConf *FortManager::cloneConf(const FirewallConf &conf)
+{
+    FirewallConf *newConf = new FirewallConf(this);
+
+    const QVariant data = conf.toVariant();
+    newConf->fromVariant(data);
+
+    // Flags
+    newConf->setFilterEnabled(conf.filterEnabled());
+    newConf->ipInclude()->setUseAll(conf.ipInclude()->useAll());
+    newConf->ipExclude()->setUseAll(conf.ipExclude()->useAll());
+    newConf->setAppBlockAll(conf.appBlockAll());
+    newConf->setAppAllowAll(conf.appAllowAll());
+    newConf->setAppGroupBits(conf.appGroupBits());
+
+    return newConf;
 }

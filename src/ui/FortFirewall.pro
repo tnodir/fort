@@ -40,9 +40,9 @@ HEADERS += \
 
 QML_FILES += \
     qml/*.qml \
-    qml/controls/*.qml
-    qml/pages/*.qml
-    qml/pages/addresses/*.qml
+    qml/controls/*.qml \
+    qml/pages/*.qml \
+    qml/pages/addresses/*.qml \
     qml/pages/apps/*.qml
 
 OTHER_FILES += \

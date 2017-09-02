@@ -28,6 +28,7 @@ public slots:
     void showWindow();
 
     bool saveConf();
+    bool applyConf();
 
 private slots:
     void handleClosedWindow();
@@ -37,7 +38,9 @@ private:
 
     void setupContext();
 
-    void createConfToEdit();
+    bool saveSettings(FirewallConf *newConf);
+
+    FirewallConf *cloneConf(const FirewallConf &conf);
 
 private:
     QQmlApplicationEngine *m_engine;

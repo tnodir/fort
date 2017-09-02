@@ -6,7 +6,6 @@ import com.fortfirewall 1.0
 
 ColumnLayout {
     id: container
-    Layout.preferredWidth: 100
     Layout.fillWidth: true
     Layout.fillHeight: true
 
@@ -21,6 +20,7 @@ ColumnLayout {
 
     TextAreaFrame {
         id: textAreaFrame
+        Layout.preferredWidth: 100
         Layout.fillWidth: true
         Layout.fillHeight: true
 
