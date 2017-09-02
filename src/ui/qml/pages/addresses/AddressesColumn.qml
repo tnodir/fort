@@ -33,6 +33,13 @@ ColumnLayout {
             TextArea {
                 id: textArea
                 enabled: !checkBoxAll.checked
+                placeholderText: "
+10.0.0.0/24
+127.0.0.0/24
+169.254.0.0/16
+172.16.0.0/16
+192.168.0.0/16
+"
             }
         }
     }
