@@ -32,7 +32,6 @@ ColumnLayout {
 
             TextArea {
                 id: textArea
-                enabled: !checkBoxAll.checked
                 placeholderText: "
 10.0.0.0/24
 127.0.0.0/24
