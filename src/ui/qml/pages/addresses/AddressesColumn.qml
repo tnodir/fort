@@ -1,6 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.2
+import com.fortfirewall 1.0
 
 ColumnLayout {
     Layout.preferredWidth: 100
@@ -9,7 +10,8 @@ ColumnLayout {
 
     property alias title: title
     property alias checkBoxAll: checkBoxAll
-    property alias textArea: textArea
+
+    property AddressGroup addressGroup
 
     RowLayout {
         Label {
@@ -18,6 +20,10 @@ ColumnLayout {
         }
         CheckBox {
             id: checkBoxAll
+            checked: addressGroup.useAll
+            onToggled: {
+                addressGroup.useAll = checked;
+            }
         }
     }
 
@@ -31,7 +37,6 @@ ColumnLayout {
             anchors.fill: parent
 
             TextArea {
-                id: textArea
                 placeholderText: "
 10.0.0.0/24
 127.0.0.0/24
@@ -39,6 +44,10 @@ ColumnLayout {
 172.16.0.0/16
 192.168.0.0/16
 "
+                text: addressGroup.text
+                onEditingFinished: {
+                    addressGroup.text = text;
+                }
             }
         }
     }

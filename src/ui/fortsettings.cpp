@@ -5,6 +5,7 @@
 #include <QSettings>
 #include <QStandardPaths>
 
+#include "conf/addressgroup.h"
 #include "conf/firewallconf.h"
 #include "util/fileutil.h"
 
@@ -118,8 +119,8 @@ bool FortSettings::readConfFlags(FirewallConf &conf) const
 {
     m_ini->beginGroup("confFlags");
     conf.setFilterEnabled(iniBool("filterEnabled", true));
-    conf.setIpIncludeAll(iniBool("ipIncludeAll"));
-    conf.setIpExcludeAll(iniBool("ipExcludeAll"));
+    conf.ipInclude()->setUseAll(iniBool("ipIncludeAll"));
+    conf.ipExclude()->setUseAll(iniBool("ipExcludeAll"));
     conf.setAppLogBlocked(iniBool("appLogBlocked", true));
     conf.setAppBlockAll(iniBool("appBlockAll", true));
     conf.setAppAllowAll(iniBool("appAllowAll"));
@@ -133,8 +134,8 @@ bool FortSettings::writeConfFlags(const FirewallConf &conf)
 {
     m_ini->beginGroup("confFlags");
     setIniValue("filterEnabled", conf.filterEnabled());
-    setIniValue("ipIncludeAll", conf.ipIncludeAll());
-    setIniValue("ipExcludeAll", conf.ipExcludeAll());
+    setIniValue("ipIncludeAll", conf.ipInclude()->useAll());
+    setIniValue("ipExcludeAll", conf.ipExclude()->useAll());
     setIniValue("appLogBlocked", conf.appLogBlocked());
     setIniValue("appBlockAll", conf.appBlockAll());
     setIniValue("appAllowAll", conf.appAllowAll());

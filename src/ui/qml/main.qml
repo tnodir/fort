@@ -3,6 +3,7 @@ import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.2
 import QtQuick.Controls 2.2
 import "pages"
+import com.fortfirewall 1.0
 
 ApplicationWindow {
     id: mainWindow
@@ -16,6 +17,9 @@ ApplicationWindow {
     minimumHeight: 300
 
     font.pixelSize: 16
+
+    readonly property FortSettings fortSettings: fortManager.fortSettings
+    readonly property FirewallConf firewallConf: fortManager.firewallConfToEdit
 
     Component.onCompleted: {
         tabBar.currentItem.forceActiveFocus();

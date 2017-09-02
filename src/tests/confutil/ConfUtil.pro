@@ -1,6 +1,7 @@
 include(../common/Test.pri)
 
 SOURCES += \
+    $$UIPATH/conf/addressgroup.cpp \
     $$UIPATH/conf/appgroup.cpp \
     $$UIPATH/conf/firewallconf.cpp \
     $$UIPATH/fortcommon.cpp \
@@ -10,6 +11,7 @@ SOURCES += \
     $$UIPATH/util/netutil.cpp
 
 HEADERS += \
+    $$UIPATH/conf/addressgroup.h \
     $$UIPATH/conf/appgroup.h \
     $$UIPATH/conf/firewallconf.h \
     $$UIPATH/fortcommon.h \

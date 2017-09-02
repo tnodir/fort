@@ -2,7 +2,7 @@
 
 #include <QtTest>
 
-#include "conf/appgroup.h"
+#include "conf/addressgroup.h"
 #include "conf/appgroup.h"
 #include "conf/firewallconf.h"
 #include "fortcommon.h"
@@ -14,15 +14,15 @@ void Test::confWriteRead()
 {
     FirewallConf conf;
 
-    conf.setIpIncludeAll(true);
-    conf.setIpExcludeAll(false);
+    conf.ipInclude()->setUseAll(true);
+    conf.ipExclude()->setUseAll(false);
 
     conf.setAppLogBlocked(true);
     conf.setAppBlockAll(false);
     conf.setAppAllowAll(false);
 
-    conf.setIpIncludeText(QString());
-    conf.setIpExcludeText(
+    conf.ipInclude()->setText(QString());
+    conf.ipExclude()->setText(
                 "10.0.0.0/24\n"
                 "127.0.0.0/24\n"
                 "169.254.0.0/16\n"

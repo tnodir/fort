@@ -7,6 +7,7 @@
 #define UINT32  quint32
 
 #include "../common/fortconf.h"
+#include "../conf/addressgroup.h"
 #include "../conf/appgroup.h"
 #include "../conf/firewallconf.h"
 #include "../fortcommon.h"
@@ -33,14 +34,14 @@ void ConfUtil::setErrorMessage(const QString &errorMessage)
 int ConfUtil::write(const FirewallConf &conf, QByteArray &buf)
 {
     Ip4Range incRange;
-    if (!incRange.fromText(conf.ipIncludeText())) {
+    if (!incRange.fromText(conf.ipInclude()->text())) {
         setErrorMessage(tr("Bad Include IP address: %1")
                         .arg(incRange.errorLineAndMessage()));
         return false;
     }
 
     Ip4Range excRange;
-    if (!excRange.fromText(conf.ipExcludeText())) {
+    if (!excRange.fromText(conf.ipExclude()->text())) {
         setErrorMessage(tr("Bad Exclude IP address: %1")
                         .arg(excRange.errorLineAndMessage()));
         return false;
@@ -95,8 +96,8 @@ int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
     PFORT_CONF_FLAGS confFlags = (PFORT_CONF_FLAGS) buf.data();
 
     confFlags->filter_enabled = conf.filterEnabled();
-    confFlags->ip_include_all = conf.ipIncludeAll();
-    confFlags->ip_exclude_all = conf.ipExcludeAll();
+    confFlags->ip_include_all = conf.ipInclude()->useAll();
+    confFlags->ip_exclude_all = conf.ipExclude()->useAll();
     confFlags->app_log_blocked = conf.appLogBlocked();
     confFlags->app_block_all = conf.appBlockAll();
     confFlags->app_allow_all = conf.appAllowAll();
@@ -244,8 +245,8 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
 
     drvConf->flags.filter_enabled = conf.filterEnabled();
 
-    drvConf->flags.ip_include_all = conf.ipIncludeAll();
-    drvConf->flags.ip_exclude_all = conf.ipExcludeAll();
+    drvConf->flags.ip_include_all = conf.ipInclude()->useAll();
+    drvConf->flags.ip_exclude_all = conf.ipExclude()->useAll();
 
     drvConf->flags.app_log_blocked = conf.appLogBlocked();
     drvConf->flags.app_block_all = conf.appBlockAll();

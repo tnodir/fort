@@ -7,6 +7,7 @@ TEMPLATE = app
 
 SOURCES += \
     main.cpp \
+    conf/addressgroup.cpp \
     conf/appgroup.cpp \
     conf/firewallconf.cpp \
     activityLog/logbuffer.cpp \
@@ -22,6 +23,7 @@ SOURCES += \
     util/processinfo.cpp
 
 HEADERS += \
+    conf/addressgroup.h \
     conf/appgroup.h \
     conf/firewallconf.h \
     activityLog/logbuffer.h \
@@ -39,6 +41,7 @@ HEADERS += \
 QML_FILES += \
     qml/*.qml \
     qml/pages/*.qml
+    qml/pages/addresses/*.qml
 
 OTHER_FILES += \
     $${QML_FILES} \

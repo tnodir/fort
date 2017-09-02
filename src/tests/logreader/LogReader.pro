@@ -1,6 +1,7 @@
 include(../common/Test.pri)
 
 SOURCES += \
+    $$UIPATH/conf/addressgroup.cpp \
     $$UIPATH/conf/appgroup.cpp \
     $$UIPATH/conf/firewallconf.cpp \
     $$UIPATH/activityLog/logbuffer.cpp \
@@ -14,6 +15,7 @@ SOURCES += \
     $$UIPATH/util/processinfo.cpp
 
 HEADERS += \
+    $$UIPATH/conf/addressgroup.h \
     $$UIPATH/conf/appgroup.h \
     $$UIPATH/conf/firewallconf.h \
     $$UIPATH/activityLog/logbuffer.h \

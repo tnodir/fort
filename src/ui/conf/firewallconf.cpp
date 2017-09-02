@@ -1,15 +1,16 @@
 #include "firewallconf.h"
 
+#include "addressgroup.h"
 #include "appgroup.h"
 
 FirewallConf::FirewallConf(QObject *parent) :
     QObject(parent),
     m_filterEnabled(true),
-    m_ipIncludeAll(false),
-    m_ipExcludeAll(false),
     m_appLogBlocked(true),
     m_appBlockAll(true),
-    m_appAllowAll(false)
+    m_appAllowAll(false),
+    m_ipInclude(new AddressGroup(this)),
+    m_ipExclude(new AddressGroup(this))
 {
 }
 
@@ -18,22 +19,6 @@ void FirewallConf::setFilterEnabled(bool filterEnabled)
     if (m_filterEnabled != filterEnabled) {
         m_filterEnabled = filterEnabled;
         emit filterEnabledChanged();
-    }
-}
-
-void FirewallConf::setIpIncludeAll(bool ipIncludeAll)
-{
-    if (m_ipIncludeAll != ipIncludeAll) {
-        m_ipIncludeAll = ipIncludeAll;
-        emit ipIncludeAllChanged();
-    }
-}
-
-void FirewallConf::setIpExcludeAll(bool ipExcludeAll)
-{
-    if (m_ipExcludeAll != ipExcludeAll) {
-        m_ipExcludeAll = ipExcludeAll;
-        emit ipExcludeAllChanged();
     }
 }
 
@@ -83,22 +68,6 @@ void FirewallConf::setAppGroupBits(quint32 groupBits)
     }
 }
 
-void FirewallConf::setIpIncludeText(const QString &ipIncludeText)
-{
-    if (m_ipIncludeText != ipIncludeText) {
-        m_ipIncludeText = ipIncludeText;
-        emit ipIncludeTextChanged();
-    }
-}
-
-void FirewallConf::setIpExcludeText(const QString &ipExcludeText)
-{
-    if (m_ipExcludeText != ipExcludeText) {
-        m_ipExcludeText = ipExcludeText;
-        emit ipExcludeTextChanged();
-    }
-}
-
 QQmlListProperty<AppGroup> FirewallConf::appGroups()
 {
     return QQmlListProperty<AppGroup>(this, m_appGroups);
@@ -135,8 +104,8 @@ QVariant FirewallConf::toVariant() const
 {
     QVariantMap map;
 
-    map["ipIncludeText"] = ipIncludeText();
-    map["ipExcludeText"] = ipExcludeText();
+    map["ipInclude"] = ipInclude()->toVariant();
+    map["ipExclude"] = ipExclude()->toVariant();
 
     QVariantList groups;
     foreach (const AppGroup *appGroup, appGroupsList()) {
@@ -151,8 +120,8 @@ void FirewallConf::fromVariant(const QVariant &v)
 {
     QVariantMap map = v.toMap();
 
-    m_ipIncludeText = map["ipIncludeText"].toString();
-    m_ipExcludeText = map["ipExcludeText"].toString();
+    m_ipInclude->fromVariant(map["ipInclude"]);
+    m_ipExclude->fromVariant(map["ipExclude"]);
 
     const QVariantList groups = map["appGroups"].toList();
     foreach (const QVariant &gv, groups) {
