@@ -53,6 +53,7 @@ ApplicationWindow {
             OptionsPage {}
             AddressesPage {}
             ApplicationsPage {}
+            ActivityPage {}
         }
 
         footer: Pane {

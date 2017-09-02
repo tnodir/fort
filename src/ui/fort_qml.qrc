@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/main.qml</file>
+        <file>qml/pages/ActivityPage.qml</file>
         <file>qml/pages/AddressesPage.qml</file>
         <file>qml/pages/ApplicationsPage.qml</file>
         <file>qml/pages/BasePage.qml</file>
