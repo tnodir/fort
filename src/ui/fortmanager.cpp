@@ -79,10 +79,10 @@ bool FortManager::saveConf()
 void FortManager::handleClosedWindow()
 {
     m_engine->deleteLater();
-    m_engine = 0;
+    m_engine = nullptr;
 
     if (m_firewallConfToEdit && m_firewallConfToEdit != m_firewallConf) {
         m_firewallConfToEdit->deleteLater();
-        m_firewallConfToEdit = 0;
+        m_firewallConfToEdit = nullptr;
     }
 }

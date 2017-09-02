@@ -7,6 +7,10 @@
 class AppGroup : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
+    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(QString blockText READ blockText WRITE setBlockText NOTIFY blockTextChanged)
+    Q_PROPERTY(QString allowText READ allowText WRITE setAllowText NOTIFY allowTextChanged)
 
 public:
     explicit AppGroup(QObject *parent = nullptr);

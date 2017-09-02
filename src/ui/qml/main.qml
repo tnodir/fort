@@ -13,8 +13,8 @@ ApplicationWindow {
 
     width: 800
     height: 600
-    minimumWidth: 400
-    minimumHeight: 300
+    minimumWidth: 540
+    minimumHeight: 500
 
     font.pixelSize: 16
 

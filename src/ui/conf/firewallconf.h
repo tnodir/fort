@@ -44,10 +44,6 @@ public:
     const QList<AppGroup *> &appGroupsList() const { return m_appGroups; }
     QQmlListProperty<AppGroup> appGroups();
 
-    void addAppGroup(AppGroup *appGroup, int to = -1);
-    void moveAppGroup(int from, int to);
-    void removeAppGroup(int from, int to);
-
     QVariant toVariant() const;
     void fromVariant(const QVariant &v);
 
@@ -59,6 +55,10 @@ signals:
     void appGroupsChanged();
 
 public slots:
+    void addAppGroup(AppGroup *appGroup, int to = -1);
+    void addAppGroupByName(const QString &name);
+    void moveAppGroup(int from, int to);
+    void removeAppGroup(int from, int to);
 
 private:
     uint m_filterEnabled    : 1;

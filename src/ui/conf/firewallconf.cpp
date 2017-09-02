@@ -85,6 +85,13 @@ void FirewallConf::addAppGroup(AppGroup *appGroup, int to)
     emit appGroupsChanged();
 }
 
+void FirewallConf::addAppGroupByName(const QString &name)
+{
+    AppGroup *appGroup = new AppGroup();
+    appGroup->setName(name);
+    addAppGroup(appGroup);
+}
+
 void FirewallConf::moveAppGroup(int from, int to)
 {
     m_appGroups.move(from, to);
@@ -94,7 +101,9 @@ void FirewallConf::moveAppGroup(int from, int to)
 void FirewallConf::removeAppGroup(int from, int to)
 {
     for (int i = to; i >= from; --i) {
-        delete m_appGroups.at(i);
+        AppGroup *appGroup = m_appGroups.at(i);
+        appGroup->deleteLater();
+
         m_appGroups.removeAt(i);
     }
     emit appGroupsChanged();
