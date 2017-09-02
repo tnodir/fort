@@ -33,7 +33,7 @@ BasePage {
                 }
             }
             Button {
-                enabled: appsColumn.enabled
+                enabled: editGroupName.text && appsColumn.enabled
                 text: QT_TRANSLATE_NOOP("qml", "Rename Group")
                 onClicked: {
                     const appGroup = appsColumn.appGroup;
