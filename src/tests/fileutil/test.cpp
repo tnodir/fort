@@ -9,15 +9,18 @@ void Test::paths()
 {
     const QString driveC("C:");
     const QString dosNameC("\\Device\\HarddiskVolume1");
-    const QString subPath("\\test\\");
+    const QString subPathBack("\\test\\");
+    const QString subPath = QString(subPathBack)
+            .replace(QLatin1Char('\\'), QLatin1Char('/'));
 
+    const QString dosPath = dosNameC + subPathBack;
+    const QString pathBack = driveC + subPathBack;
     const QString path = driveC + subPath;
-    const QString dosPath = dosNameC + subPath;
 
     QCOMPARE(FileUtil::dosNameToDrive(dosNameC), driveC);
     QCOMPARE(FileUtil::driveToDosName(driveC), dosNameC);
 
-    QCOMPARE(FileUtil::dosPathToPath(dosPath), path);
+    QCOMPARE(FileUtil::dosPathToPath(dosPath), pathBack);
     QCOMPARE(FileUtil::pathToDosPath(path), dosPath);
 }
 

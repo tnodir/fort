@@ -66,7 +66,8 @@ QString FileUtil::pathToDosPath(const QString &path)
     const QString drive = path.left(2);
 
     if (drive.at(0).isLetter() && drive.at(1) == QLatin1Char(':')) {
-        return driveToDosName(drive) + path.mid(2);
+        return driveToDosName(drive)
+                + path.mid(2).replace(QLatin1Char('/'), QLatin1Char('\\'));
     }
     return path;
 }
