@@ -76,11 +76,11 @@ bool FortSettings::readConf(FirewallConf &conf) const
 
 bool FortSettings::tryToReadConf(FirewallConf &conf, const QString &filePath) const
 {
-    const QString text = FileUtil::readFile(filePath);
+    const QByteArray data = FileUtil::readFileData(filePath);
 
     QJsonParseError jsonParseError;
     const QJsonDocument jsonDoc = QJsonDocument::fromJson(
-                text.toUtf8(), &jsonParseError);
+                data, &jsonParseError);
     if (jsonParseError.error != QJsonParseError::NoError)
         return false;
 

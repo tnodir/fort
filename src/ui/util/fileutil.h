@@ -31,6 +31,7 @@ public:
     static bool copyFile(const QString &filePath, const QString &newFilePath);
 
     static QString readFile(const QString &filePath);
+    static QByteArray readFileData(const QString &filePath);
 
     static bool writeFile(const QString &filePath, const QString &text);
     static bool writeFileData(const QString &filePath, const QByteArray &data);

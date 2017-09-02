@@ -105,13 +105,16 @@ bool FileUtil::copyFile(const QString &filePath, const QString &newFilePath)
 
 QString FileUtil::readFile(const QString &filePath)
 {
+    return QString::fromUtf8(readFileData(filePath));
+}
+
+QByteArray FileUtil::readFileData(const QString &filePath)
+{
     QFile file(filePath);
     if (!file.open(QFile::ReadOnly))
-        return QString();
+        return QByteArray();
 
-    QTextStream in(&file);
-    const QString data = in.readAll();
-    return data;
+    return file.readAll();
 }
 
 bool FileUtil::writeFile(const QString &filePath, const QString &text)
