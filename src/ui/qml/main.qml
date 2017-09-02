@@ -43,6 +43,9 @@ ApplicationWindow {
             TabButton {
                 text: QT_TRANSLATE_NOOP("qml", "Applications")
             }
+            TabButton {
+                text: QT_TRANSLATE_NOOP("qml", "Activity")
+            }
         }
 
         SwipeView {
