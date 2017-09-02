@@ -8,13 +8,11 @@ import com.fortfirewall 1.0
 ApplicationWindow {
     id: mainWindow
 
-    visible: true
-    title: QT_TRANSLATE_NOOP("qml", "Fort Firewall")
-
     width: 800
     height: 600
     minimumWidth: 540
     minimumHeight: 500
+    visible: true
 
     font.pixelSize: 16
 

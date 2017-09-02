@@ -62,14 +62,14 @@ fort_prov_register (BOOL persist, BOOL boot, BOOL *is_tempp, BOOL *is_bootp)
         persist = provider_data.persist;
         boot = provider_data.boot;
 
-        if (provider_data.version == FORT_VERSION)
+        if (provider_data.version == APP_VERSION)
           goto end_close;
       }
       fort_prov_delete(engine);
     }
   }
 
-  provider_data.version = FORT_VERSION;
+  provider_data.version = APP_VERSION;
   provider_data.persist = persist;
   provider_data.boot = boot;
 

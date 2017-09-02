@@ -1,6 +1,8 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include "version.h"
+
 #define INITGUID
 #include <guiddef.h>
 
@@ -27,8 +29,6 @@ DEFINE_GUID(FORT_GUID_FILTER_CONNECT_V4,
 /* {544A3E25-7BEB-4970-88EF-B4BCA2CE2482} */
 DEFINE_GUID(FORT_GUID_FILTER_ACCEPT_V4,
 	0x544a3e25, 0x7beb, 0x4970, 0x88, 0xef, 0xb4, 0xbc, 0xa2, 0xce, 0x24, 0x82);
-
-#define FORT_VERSION		0x000100
 
 #define FORT_DEVICE_NAME	"\\\\.\\fortfw"
 
