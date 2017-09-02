@@ -9,8 +9,8 @@ SOURCES += \
     main.cpp \
     conf/appgroup.cpp \
     conf/firewallconf.cpp \
-    firewallLog/logbuffer.cpp \
-    firewallLog/logentry.cpp \
+    activityLog/logbuffer.cpp \
+    activityLog/logentry.cpp \
     fortcommon.cpp \
     fortmanager.cpp \
     fortsettings.cpp \
@@ -24,8 +24,8 @@ SOURCES += \
 HEADERS += \
     conf/appgroup.h \
     conf/firewallconf.h \
-    firewallLog/logbuffer.h \
-    firewallLog/logentry.h \
+    activityLog/logbuffer.h \
+    activityLog/logentry.h \
     fortcommon.h \
     fortmanager.h \
     fortsettings.h \

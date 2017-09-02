@@ -2,8 +2,8 @@
 
 #include <QtTest>
 
-#include "firewallLog/logbuffer.h"
-#include "firewallLog/logentry.h"
+#include "activityLog/logbuffer.h"
+#include "activityLog/logentry.h"
 #include "fortcommon.h"
 
 void Test::logWriteRead()

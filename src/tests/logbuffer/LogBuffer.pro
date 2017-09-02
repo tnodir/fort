@@ -1,11 +1,11 @@
 include(../common/Test.pri)
 
 SOURCES += \
-    $$UIPATH/firewallLog/logbuffer.cpp \
-    $$UIPATH/firewallLog/logentry.cpp \
+    $$UIPATH/activityLog/logbuffer.cpp \
+    $$UIPATH/activityLog/logentry.cpp \
     $$UIPATH/fortcommon.cpp
 
 HEADERS += \
-    $$UIPATH/firewallLog/logbuffer.h \
-    $$UIPATH/firewallLog/logentry.h \
+    $$UIPATH/activityLog/logbuffer.h \
+    $$UIPATH/activityLog/logentry.h \
     $$UIPATH/fortcommon.h
