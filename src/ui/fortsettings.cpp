@@ -35,11 +35,20 @@ void FortSettings::setStartWithWindows(bool start)
 
 void FortSettings::processArguments(const QStringList &args)
 {
-    const QCommandLineOption profileOption("profile", "Directory to store settings.");
-
     QCommandLineParser parser;
+
+    const QCommandLineOption bootOption(
+                "boot", "Block access to network when Fort Firewall is not running.");
+    parser.addOption(bootOption);
+
+    const QCommandLineOption profileOption(
+                QStringList() << "p" << "profile",
+                "Directory to store settings.", "profile");
     parser.addOption(profileOption);
+
     parser.process(args);
+
+    m_boot = parser.isSet(bootOption);
 
     m_profilePath = parser.value(profileOption);
     if (m_profilePath.isEmpty()) {
@@ -48,8 +57,9 @@ void FortSettings::processArguments(const QStringList &args)
     m_profilePath = FileUtil::absolutePath(m_profilePath);
 
     const QLatin1Char slash('/');
-    if (!m_profilePath.endsWith(slash))
+    if (!m_profilePath.endsWith(slash)) {
         m_profilePath += slash;
+    }
 }
 
 void FortSettings::setupIni()

@@ -18,6 +18,8 @@ public:
     explicit FortSettings(const QStringList &args,
                           QObject *parent = nullptr);
 
+    bool boot() const { return m_boot; }
+
     bool debug() const { return iniBool("base/debug"); }
     void setDebug(bool on) { setIniValue("base/debug", on); }
 
@@ -66,6 +68,8 @@ private:
     static QString startupShortcutPath();
 
 private:
+    uint m_boot     : 1;
+
     QString m_profilePath;
 
     QSettings *m_ini;

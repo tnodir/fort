@@ -165,6 +165,9 @@ void FortManager::updateTrayMenu()
 
     menu = new QMenu(&m_window);
 
+    addAction(menu, QIcon(), tr("Show"), this, SLOT(showWindow()));
+
+    menu->addSeparator();
     m_filterEnabledAction = addAction(
                 menu, QIcon(), tr("Filter Enabled"),
                 this, SLOT(saveTrayFlags()),
@@ -190,6 +193,7 @@ void FortManager::updateTrayMenu()
                 this, SLOT(saveTrayFlags()),
                 true, conf.appAllowAll());
 
+    menu->addSeparator();
     m_appGroupsMenu = new QMenu(tr("Application Groups"), menu);
     menu->addMenu(m_appGroupsMenu);
 
@@ -198,9 +202,6 @@ void FortManager::updateTrayMenu()
                   this, SLOT(saveTrayFlags()),
                   true, appGroup->enabled());
     }
-
-    menu->addSeparator();
-    addAction(menu, QIcon(), tr("Show"), this, SLOT(showWindow()));
 
     menu->addSeparator();
     addAction(menu, QIcon(), tr("Quit"), qApp, SLOT(quit()));
