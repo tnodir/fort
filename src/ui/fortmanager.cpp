@@ -123,6 +123,25 @@ bool FortManager::saveSettings(FirewallConf *newConf)
     return true;
 }
 
+void FortManager::saveTrayFlags()
+{
+    m_firewallConf->setFilterEnabled(m_filterEnabledAction->isChecked());
+    m_firewallConf->ipInclude()->setUseAll(m_ipIncludeAllAction->isChecked());
+    m_firewallConf->ipExclude()->setUseAll(m_ipExcludeAllAction->isChecked());
+    m_firewallConf->setAppBlockAll(m_appBlockAllAction->isChecked());
+    m_firewallConf->setAppAllowAll(m_appAllowAllAction->isChecked());
+
+    int i = 0;
+    const QList<QAction*> groupActions = m_appGroupsMenu->actions();
+    foreach (AppGroup *appGroup, m_firewallConf->appGroupsList()) {
+        const QAction *action = groupActions.at(i);
+        appGroup->setEnabled(action->isChecked());
+        ++i;
+    }
+
+    m_fortSettings->writeConfFlags(*m_firewallConf);
+}
+
 FirewallConf *FortManager::cloneConf(const FirewallConf &conf)
 {
     FirewallConf *newConf = new FirewallConf(this);
@@ -137,6 +156,8 @@ FirewallConf *FortManager::cloneConf(const FirewallConf &conf)
 
 void FortManager::updateTrayMenu()
 {
+    const FirewallConf &conf = *m_firewallConf;
+
     QMenu *menu = m_trayIcon->contextMenu();
     if (menu) {
         menu->deleteLater();
@@ -144,6 +165,41 @@ void FortManager::updateTrayMenu()
 
     menu = new QMenu(&m_window);
 
+    m_filterEnabledAction = addAction(
+                menu, QIcon(), tr("Filter Enabled"),
+                this, SLOT(saveTrayFlags()),
+                true, conf.filterEnabled());
+
+    menu->addSeparator();
+    m_ipIncludeAllAction = addAction(
+                menu, QIcon(), tr("Include All Addresses"),
+                this, SLOT(saveTrayFlags()),
+                true, conf.ipInclude()->useAll());
+    m_ipExcludeAllAction = addAction(
+                menu, QIcon(), tr("Exclude All Addresses"),
+                this, SLOT(saveTrayFlags()),
+                true, conf.ipExclude()->useAll());
+
+    menu->addSeparator();
+    m_appBlockAllAction = addAction(
+                menu, QIcon(), tr("Block All Applications"),
+                this, SLOT(saveTrayFlags()),
+                true, conf.appBlockAll());
+    m_appAllowAllAction = addAction(
+                menu, QIcon(), tr("Allow All Applications"),
+                this, SLOT(saveTrayFlags()),
+                true, conf.appAllowAll());
+
+    m_appGroupsMenu = new QMenu(tr("Application Groups"), menu);
+    menu->addMenu(m_appGroupsMenu);
+
+    foreach (const AppGroup *appGroup, conf.appGroupsList()) {
+        addAction(m_appGroupsMenu, QIcon(), appGroup->name(),
+                  this, SLOT(saveTrayFlags()),
+                  true, appGroup->enabled());
+    }
+
+    menu->addSeparator();
     addAction(menu, QIcon(), tr("Show"), this, SLOT(showWindow()));
 
     menu->addSeparator();

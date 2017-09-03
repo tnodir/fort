@@ -37,6 +37,9 @@ public slots:
     bool saveConf();
     bool applyConf();
 
+private slots:
+    void saveTrayFlags();
+
 private:
     FirewallConf *nullConf() const { return nullptr; }
 
@@ -70,6 +73,13 @@ private:
     FortSettings *m_fortSettings;
     FirewallConf *m_firewallConf;
     FirewallConf *m_firewallConfToEdit;
+
+    QAction *m_filterEnabledAction;
+    QAction *m_ipIncludeAllAction;
+    QAction *m_ipExcludeAllAction;
+    QAction *m_appBlockAllAction;
+    QAction *m_appAllowAllAction;
+    QMenu *m_appGroupsMenu;
 };
 
 #endif // FORTMANAGER_H
