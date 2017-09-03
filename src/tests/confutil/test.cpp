@@ -17,8 +17,7 @@ void Test::confWriteRead()
     conf.ipInclude()->setUseAll(true);
     conf.ipExclude()->setUseAll(false);
 
-    conf.setAppLogBlocked(true);
-    conf.setAppBlockAll(false);
+    conf.setAppBlockAll(true);
     conf.setAppAllowAll(false);
 
     conf.ipInclude()->setText(QString());
@@ -69,6 +68,7 @@ void Test::confWriteRead()
     QVERIFY(!FortCommon::confIpInRange(data, NetUtil::textToIp4("193.0.0.0")));
 
     QVERIFY(FortCommon::confAppBlocked(data, "System"));
-    QVERIFY(!FortCommon::confAppBlocked(data, FileUtil::pathToDosPath("C:\\programs\\skype\\phone\\skype.exe")));
-    QVERIFY(!FortCommon::confAppBlocked(data, FileUtil::pathToDosPath("C:\\utils\\dev\\git\\bin\\git.exe")));
+    QVERIFY(!FortCommon::confAppBlocked(data, FileUtil::pathToDosPath("C:\\Programs\\Skype\\Phone\\Skype.exe").toLower()));
+    QVERIFY(!FortCommon::confAppBlocked(data, FileUtil::pathToDosPath("C:\\Utils\\Dev\\Git\\").toLower()));
+    QVERIFY(FortCommon::confAppBlocked(data, FileUtil::pathToDosPath("C:\\Utils\\Firefox\\Bin\\firefox.exe").toLower()));
 }

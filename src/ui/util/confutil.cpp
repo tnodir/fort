@@ -198,7 +198,7 @@ QString ConfUtil::parseAppPath(const QStringRef &line)
     const QStringRef path = match.capturedRef(1);
 
     const QString systemPath("System");
-    if (QStringRef::compare(path, systemPath, Qt::CaseInsensitive))
+    if (!QStringRef::compare(path, systemPath, Qt::CaseInsensitive))
         return systemPath;
 
     const QString dosPath = FileUtil::pathToDosPath(path.toString());
