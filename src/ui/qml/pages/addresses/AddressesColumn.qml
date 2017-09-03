@@ -18,6 +18,7 @@ ColumnLayout {
         Label {
             Layout.fillWidth: true
             id: title
+            font.weight: Font.DemiBold
         }
         CheckBox {
             id: checkBoxAll

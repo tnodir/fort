@@ -73,6 +73,7 @@ BasePage {
 
                 TabButton {
                     width: Math.max(70, implicitWidth)
+                    font.bold: checked
                     text: appGroup.name
 
                     readonly property AppGroup appGroup: modelData

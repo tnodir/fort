@@ -16,6 +16,7 @@ ColumnLayout {
 
     Label {
         id: title
+        font.weight: Font.DemiBold
     }
 
     TextAreaFrame {
