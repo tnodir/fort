@@ -3,7 +3,6 @@
 #include <QCommandLineParser>
 #include <QJsonDocument>
 #include <QSettings>
-#include <QStandardPaths>
 
 #include "conf/addressgroup.h"
 #include "conf/firewallconf.h"
@@ -27,8 +26,7 @@ void FortSettings::processArguments(const QStringList &args)
 
     m_profilePath = parser.value(profileOption);
     if (m_profilePath.isEmpty()) {
-        m_profilePath = QStandardPaths::writableLocation(
-                    QStandardPaths::AppConfigLocation);
+        m_profilePath = FileUtil::appConfigLocation();
     }
     m_profilePath = FileUtil::absolutePath(m_profilePath);
 

@@ -29,12 +29,16 @@ public:
     static bool removeFile(const QString &filePath);
     static bool renameFile(const QString &oldFilePath, const QString &newFilePath);
     static bool copyFile(const QString &filePath, const QString &newFilePath);
+    static bool linkFile(const QString &filePath, const QString &linkPath);
 
     static QString readFile(const QString &filePath);
     static QByteArray readFileData(const QString &filePath);
 
     static bool writeFile(const QString &filePath, const QString &text);
     static bool writeFileData(const QString &filePath, const QByteArray &data);
+
+    static QString appConfigLocation();
+    static QString applicationsLocation();
 };
 
 #endif // FILEUTIL_H

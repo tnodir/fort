@@ -15,6 +15,7 @@ class FortManager : public QObject
     Q_OBJECT
     Q_PROPERTY(FortSettings *fortSettings READ fortSettings CONSTANT)
     Q_PROPERTY(FirewallConf *firewallConfToEdit READ firewallConfToEdit NOTIFY firewallConfToEditChanged)
+    Q_PROPERTY(bool startWithWindows READ startWithWindows WRITE setStartWithWindows NOTIFY startWithWindowsChanged)
 
 public:
     explicit FortManager(QObject *parent = nullptr);
@@ -25,8 +26,12 @@ public:
         return m_firewallConfToEdit ? m_firewallConfToEdit : m_firewallConf;
     }
 
+    bool startWithWindows() const;
+    void setStartWithWindows(bool start);
+
 signals:
     void firewallConfToEditChanged();
+    void startWithWindowsChanged();
 
 public slots:
     void showTrayIcon();
@@ -59,6 +64,8 @@ private:
                               bool checkable = false, bool checked = false);
     static void setActionCheckable(QAction *action, bool checked = false,
                                    const QObject *receiver = 0, const char *member = 0);
+
+    static QString startupShortcutPath();
 
 private:
     QMainWindow m_window;  // dummy window for tray icon

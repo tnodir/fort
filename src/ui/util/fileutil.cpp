@@ -2,7 +2,7 @@
 
 #include <QDir>
 #include <QFileInfo>
-#include <QTextStream>
+#include <QStandardPaths>
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -104,6 +104,11 @@ bool FileUtil::copyFile(const QString &filePath, const QString &newFilePath)
     return QFile::copy(filePath, newFilePath);
 }
 
+bool FileUtil::linkFile(const QString &filePath, const QString &linkPath)
+{
+    return QFile::link(filePath, linkPath);
+}
+
 QString FileUtil::readFile(const QString &filePath)
 {
     return QString::fromUtf8(readFileData(filePath));
@@ -131,4 +136,14 @@ bool FileUtil::writeFileData(const QString &filePath, const QByteArray &data)
 
     return file.write(data) == data.size()
             && file.flush();
+}
+
+QString FileUtil::appConfigLocation()
+{
+    return QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+}
+
+QString FileUtil::applicationsLocation()
+{
+    return QStandardPaths::writableLocation(QStandardPaths::ApplicationsLocation);
 }

@@ -4,7 +4,9 @@ import QtQuick.Controls 2.2
 import com.fortfirewall 1.0
 
 Page {
-    anchors.fill: parent
+    id: mainPage
+
+    signal saved()
 
     function initialize() {
         tabBar.currentItem.forceActiveFocus();
@@ -46,8 +48,10 @@ Page {
             Button {
                 text: QT_TRANSLATE_NOOP("qml", "OK")
                 onClicked: {
-                    if (fortManager.saveConf())
+                    if (fortManager.saveConf()) {
+                        mainPage.saved();
                         closeWindow();
+                    }
                 }
             }
             Button {
