@@ -7,11 +7,12 @@ TEMPLATE = app
 
 SOURCES += \
     main.cpp \
+    activityLog/logbuffer.cpp \
+    activityLog/logentry.cpp \
     conf/addressgroup.cpp \
     conf/appgroup.cpp \
     conf/firewallconf.cpp \
-    activityLog/logbuffer.cpp \
-    activityLog/logentry.cpp \
+    drivermanager.cpp \
     fortcommon.cpp \
     fortmanager.cpp \
     fortsettings.cpp \
@@ -23,11 +24,12 @@ SOURCES += \
     util/processinfo.cpp
 
 HEADERS += \
+    activityLog/logbuffer.h \
+    activityLog/logentry.h \
     conf/addressgroup.h \
     conf/appgroup.h \
     conf/firewallconf.h \
-    activityLog/logbuffer.h \
-    activityLog/logentry.h \
+    drivermanager.h \
     fortcommon.h \
     fortmanager.h \
     fortsettings.h \

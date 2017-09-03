@@ -83,6 +83,14 @@ void FortSettings::setupIni()
     m_ini = new QSettings(iniPath, QSettings::IniFormat, this);
 }
 
+void FortSettings::setErrorMessage(const QString &errorMessage)
+{
+    if (m_errorMessage != errorMessage) {
+        m_errorMessage = errorMessage;
+        emit errorMessageChanged();
+    }
+}
+
 QString FortSettings::confFilePath() const
 {
     return m_profilePath + QLatin1String("FortFirewall.conf");
@@ -93,7 +101,7 @@ QString FortSettings::confBackupFilePath() const
     return confFilePath() + QLatin1String(".backup");
 }
 
-bool FortSettings::readConf(FirewallConf &conf) const
+bool FortSettings::readConf(FirewallConf &conf)
 {
     const QString filePath = confFilePath();
     const QString backupFilePath = confBackupFilePath();
@@ -102,15 +110,17 @@ bool FortSettings::readConf(FirewallConf &conf) const
             || tryToReadConf(conf, backupFilePath);
 }
 
-bool FortSettings::tryToReadConf(FirewallConf &conf, const QString &filePath) const
+bool FortSettings::tryToReadConf(FirewallConf &conf, const QString &filePath)
 {
     const QByteArray data = FileUtil::readFileData(filePath);
 
     QJsonParseError jsonParseError;
     const QJsonDocument jsonDoc = QJsonDocument::fromJson(
                 data, &jsonParseError);
-    if (jsonParseError.error != QJsonParseError::NoError)
+    if (jsonParseError.error != QJsonParseError::NoError) {
+        setErrorMessage(jsonParseError.errorString());
         return false;
+    }
 
     conf.fromVariant(jsonDoc.toVariant());
 
@@ -123,11 +133,20 @@ bool FortSettings::writeConf(const FirewallConf &conf)
     const QString backupFilePath = confBackupFilePath();
 
     if (FileUtil::fileExists(backupFilePath)
-            && !FileUtil::renameFile(backupFilePath, filePath))
+            && !FileUtil::renameFile(backupFilePath, filePath)) {
+        setErrorMessage(tr("Can't rename old backup conf. file"));
+        return false;
+    }
+
+    if (!tryToWriteConf(conf, backupFilePath))
         return false;
 
-    return tryToWriteConf(conf, backupFilePath)
-            && FileUtil::renameFile(backupFilePath, filePath);
+    if (!FileUtil::renameFile(backupFilePath, filePath)) {
+        setErrorMessage(tr("Can't rename backup conf. file"));
+        return false;
+    }
+
+    return true;
 }
 
 bool FortSettings::tryToWriteConf(const FirewallConf &conf, const QString &filePath)
@@ -137,8 +156,10 @@ bool FortSettings::tryToWriteConf(const FirewallConf &conf, const QString &fileP
 
     const QByteArray data = jsonDoc.toJson(QJsonDocument::Indented);
 
-    if (!FileUtil::writeFileData(filePath, data))
+    if (!FileUtil::writeFileData(filePath, data)) {
+        setErrorMessage(tr("Can't write conf. file"));
         return false;
+    }
 
     return writeConfFlags(conf);
 }

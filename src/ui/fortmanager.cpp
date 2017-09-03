@@ -2,6 +2,7 @@
 
 #include <QApplication>
 #include <QMenu>
+#include <QMessageBox>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QSystemTrayIcon>
@@ -10,6 +11,7 @@
 #include "conf/addressgroup.h"
 #include "conf/appgroup.h"
 #include "conf/firewallconf.h"
+#include "drivermanager.h"
 #include "fortsettings.h"
 
 FortManager::FortManager(QObject *parent) :
@@ -18,7 +20,8 @@ FortManager::FortManager(QObject *parent) :
     m_engine(new QQmlApplicationEngine(this)),
     m_fortSettings(new FortSettings(qApp->arguments(), this)),
     m_firewallConf(new FirewallConf(this)),
-    m_firewallConfToEdit(nullConf())
+    m_firewallConfToEdit(nullConf()),
+    m_driverManager(new DriverManager(this))
 {
     m_fortSettings->readConf(*m_firewallConf);
 
@@ -65,6 +68,16 @@ void FortManager::setupEngine()
     Q_ASSERT(m_appWindow);
 }
 
+bool FortManager::setupDriver()
+{
+    if (!m_driverManager->openDevice()) {
+        showErrorBox(m_driverManager->errorMessage());
+        return false;
+    }
+
+    return true;
+}
+
 void FortManager::showTrayIcon()
 {
     m_trayIcon->show();
@@ -86,6 +99,11 @@ void FortManager::closeWindow()
     m_appWindow->hide();
 
     setFirewallConfToEdit(nullConf());
+}
+
+void FortManager::showErrorBox(const QString &text)
+{
+    QMessageBox::critical(&m_window, QString(), text);
 }
 
 bool FortManager::saveConf()
@@ -112,13 +130,21 @@ void FortManager::setFirewallConfToEdit(FirewallConf *conf)
 
 bool FortManager::saveSettings(FirewallConf *newConf)
 {
-    if (!m_fortSettings->writeConf(*newConf))
+    if (!m_fortSettings->writeConf(*newConf)) {
+        showErrorBox(m_fortSettings->errorMessage());
         return false;
+    }
 
     m_firewallConf->deleteLater();
     m_firewallConf = newConf;
 
     updateTrayMenu();
+
+    // Update driver
+    if (!m_driverManager->writeConf(*m_firewallConf)) {
+        showErrorBox(m_driverManager->errorMessage());
+        return false;
+    }
 
     return true;
 }
@@ -140,6 +166,11 @@ void FortManager::saveTrayFlags()
     }
 
     m_fortSettings->writeConfFlags(*m_firewallConf);
+
+    // Update driver
+    if (!m_driverManager->writeConfFlags(*m_firewallConf)) {
+        showErrorBox(m_driverManager->errorMessage());
+    }
 }
 
 FirewallConf *FortManager::cloneConf(const FirewallConf &conf)

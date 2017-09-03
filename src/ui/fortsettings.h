@@ -13,6 +13,7 @@ class FortSettings : public QObject
     Q_PROPERTY(QString language READ language WRITE setLanguage NOTIFY iniChanged)
     Q_PROPERTY(QString updatesUrl READ updatesUrl WRITE setUpdatesUrl NOTIFY iniChanged)
     Q_PROPERTY(bool startWithWindows READ startWithWindows WRITE setStartWithWindows NOTIFY startWithWindowsChanged)
+    Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
 
 public:
     explicit FortSettings(const QStringList &args,
@@ -32,15 +33,18 @@ public:
     bool startWithWindows() const;
     void setStartWithWindows(bool start);
 
+    QString errorMessage() const { return m_errorMessage; }
+
 signals:
     void iniChanged();
     void startWithWindowsChanged();
+    void errorMessageChanged();
 
 public slots:
     QString confFilePath() const;
     QString confBackupFilePath() const;
 
-    bool readConf(FirewallConf &conf) const;
+    bool readConf(FirewallConf &conf);
     bool writeConf(const FirewallConf &conf);
 
     bool readConfFlags(FirewallConf &conf) const;
@@ -50,7 +54,9 @@ private:
     void processArguments(const QStringList &args);
     void setupIni();
 
-    bool tryToReadConf(FirewallConf &conf, const QString &filePath) const;
+    void setErrorMessage(const QString &errorMessage);
+
+    bool tryToReadConf(FirewallConf &conf, const QString &filePath);
     bool tryToWriteConf(const FirewallConf &conf, const QString &filePath);
 
     bool iniBool(const QString &key, bool defaultValue = false) const;
@@ -71,6 +77,8 @@ private:
     uint m_boot     : 1;
 
     QString m_profilePath;
+
+    QString m_errorMessage;
 
     QSettings *m_ini;
 };

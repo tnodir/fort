@@ -7,6 +7,7 @@
 class QQmlApplicationEngine;
 class QSystemTrayIcon;
 
+class DriverManager;
 class FortSettings;
 class FirewallConf;
 
@@ -29,10 +30,14 @@ signals:
     void firewallConfToEditChanged();
 
 public slots:
+    bool setupDriver();
+
     void showTrayIcon();
 
     void showWindow();
     void closeWindow();
+
+    void showErrorBox(const QString &text);
 
     bool saveConf();
     bool applyConf();
@@ -80,6 +85,8 @@ private:
     QAction *m_appBlockAllAction;
     QAction *m_appAllowAllAction;
     QMenu *m_appGroupsMenu;
+
+    DriverManager *m_driverManager;
 };
 
 #endif // FORTMANAGER_H

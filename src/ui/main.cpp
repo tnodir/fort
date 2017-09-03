@@ -22,6 +22,11 @@ int main(int argc, char *argv[])
         return FortCommon::provRegister(true);
     }
 
+    // Open the driver device
+    if (!fortManager.setupDriver()) {
+        return 1;
+    }
+
     fortManager.showTrayIcon();
 
     return app.exec();
