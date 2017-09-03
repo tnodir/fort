@@ -46,6 +46,9 @@ void FortSettings::processArguments(const QStringList &args)
                 "Directory to store settings.", "profile");
     parser.addOption(profileOption);
 
+    parser.addVersionOption();
+    parser.addHelpOption();
+
     parser.process(args);
 
     m_boot = parser.isSet(bootOption);
