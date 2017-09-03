@@ -109,6 +109,16 @@ void FirewallConf::removeAppGroup(int from, int to)
     emit appGroupsChanged();
 }
 
+void FirewallConf::copyFlags(const FirewallConf &o)
+{
+    setFilterEnabled(o.filterEnabled());
+    ipInclude()->setUseAll(o.ipInclude()->useAll());
+    ipExclude()->setUseAll(o.ipExclude()->useAll());
+    setAppBlockAll(o.appBlockAll());
+    setAppAllowAll(o.appAllowAll());
+    setAppGroupBits(o.appGroupBits());
+}
+
 QVariant FirewallConf::toVariant() const
 {
     QVariantMap map;

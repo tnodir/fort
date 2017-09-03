@@ -95,13 +95,7 @@ FirewallConf *FortManager::cloneConf(const FirewallConf &conf)
     const QVariant data = conf.toVariant();
     newConf->fromVariant(data);
 
-    // Flags
-    newConf->setFilterEnabled(conf.filterEnabled());
-    newConf->ipInclude()->setUseAll(conf.ipInclude()->useAll());
-    newConf->ipExclude()->setUseAll(conf.ipExclude()->useAll());
-    newConf->setAppBlockAll(conf.appBlockAll());
-    newConf->setAppAllowAll(conf.appAllowAll());
-    newConf->setAppGroupBits(conf.appGroupBits());
+    newConf->copyFlags(conf);
 
     return newConf;
 }

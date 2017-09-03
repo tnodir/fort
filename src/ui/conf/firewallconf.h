@@ -44,6 +44,8 @@ public:
     const QList<AppGroup *> &appGroupsList() const { return m_appGroups; }
     QQmlListProperty<AppGroup> appGroups();
 
+    void copyFlags(const FirewallConf &o);
+
     QVariant toVariant() const;
     void fromVariant(const QVariant &v);
 
