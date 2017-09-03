@@ -11,6 +11,8 @@ public:
     explicit Device(QObject *parent = nullptr);
     virtual ~Device();
 
+    static QString getLastErrorMessage();
+
 signals:
 
 public slots:

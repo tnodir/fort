@@ -56,3 +56,22 @@ bool Device::ioctl(int code, char *in, int inSize,
 
     return res;
 }
+
+QString Device::getLastErrorMessage()
+{
+    const DWORD err = GetLastError();
+    LPWSTR buf = nullptr;
+
+    FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER
+                   | FORMAT_MESSAGE_FROM_SYSTEM
+                   | FORMAT_MESSAGE_IGNORE_INSERTS,
+                   NULL, err, 0, (LPWSTR) &buf, 0, NULL);
+
+    if (!buf) {
+        return QString("System Error %1").arg(err);
+    }
+
+    const QString text = QString::fromUtf16((const ushort *) buf).trimmed();
+    LocalFree(buf);
+    return text;
+}
