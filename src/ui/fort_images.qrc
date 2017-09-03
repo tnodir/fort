@@ -1,5 +1,6 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
     <file>images/cog.png</file>
+    <file>images/shield.png</file>
 </qresource>
 </RCC>
