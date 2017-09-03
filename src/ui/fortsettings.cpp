@@ -1,5 +1,6 @@
 #include "fortsettings.h"
 
+#include <QApplication>
 #include <QCommandLineParser>
 #include <QJsonDocument>
 #include <QSettings>
@@ -14,6 +15,22 @@ FortSettings::FortSettings(const QStringList &args,
 {
     processArguments(args);
     setupIni();
+}
+
+bool FortSettings::startWithWindows() const
+{
+    return FileUtil::fileExists(startupShortcutPath());
+}
+
+void FortSettings::setStartWithWindows(bool start)
+{
+    const QString linkPath = startupShortcutPath();
+    if (start) {
+        FileUtil::linkFile(qApp->applicationFilePath(), linkPath);
+    } else {
+        FileUtil::removeFile(linkPath);
+    }
+    emit startWithWindowsChanged();
 }
 
 void FortSettings::processArguments(const QStringList &args)
@@ -190,4 +207,11 @@ void FortSettings::setIniValue(const QString &key, const QVariant &value,
 
     m_ini->setValue(key, value);
     emit iniChanged();
+}
+
+QString FortSettings::startupShortcutPath()
+{
+    return FileUtil::applicationsLocation() + QLatin1Char('\\')
+            + "Startup" + QLatin1Char('\\')
+            + qApp->applicationName() + ".lnk";
 }

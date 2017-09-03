@@ -6,7 +6,7 @@ import com.fortfirewall 1.0
 BasePage {
 
     function onSaved() {  // overload
-        fortManager.startWithWindows = cbStart.checked;
+        fortSettings.startWithWindows = cbStart.checked;
     }
 
     Column {
@@ -15,7 +15,7 @@ BasePage {
         CheckBox {
             id: cbStart
             text: QT_TRANSLATE_NOOP("qml", "Start with Windows")
-            checked: fortManager.startWithWindows
+            checked: fortSettings.startWithWindows
         }
         CheckBox {
             id: cbFilter

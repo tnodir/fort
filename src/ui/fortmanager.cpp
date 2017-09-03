@@ -11,7 +11,6 @@
 #include "conf/appgroup.h"
 #include "conf/firewallconf.h"
 #include "fortsettings.h"
-#include "util/fileutil.h"
 
 FortManager::FortManager(QObject *parent) :
     QObject(parent),
@@ -27,22 +26,6 @@ FortManager::FortManager(QObject *parent) :
 
     setupTrayIcon();
     setupEngine();
-}
-
-bool FortManager::startWithWindows() const
-{
-    return FileUtil::fileExists(startupShortcutPath());
-}
-
-void FortManager::setStartWithWindows(bool start)
-{
-    const QString linkPath = startupShortcutPath();
-    if (start) {
-        FileUtil::linkFile(qApp->applicationFilePath(), linkPath);
-    } else {
-        FileUtil::removeFile(linkPath);
-    }
-    emit startWithWindowsChanged();
 }
 
 void FortManager::registerQmlTypes()
@@ -197,11 +180,4 @@ void FortManager::setActionCheckable(QAction *action, bool checked,
     if (receiver) {
         connect(action, SIGNAL(toggled(bool)), receiver, member);
     }
-}
-
-QString FortManager::startupShortcutPath()
-{
-    return FileUtil::applicationsLocation() + QLatin1Char('\\')
-            + "Startup" + QLatin1Char('\\')
-            + qApp->applicationName() + ".lnk";
 }

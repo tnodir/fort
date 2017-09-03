@@ -12,6 +12,7 @@ class FortSettings : public QObject
     Q_PROPERTY(bool debug READ debug WRITE setDebug NOTIFY iniChanged)
     Q_PROPERTY(QString language READ language WRITE setLanguage NOTIFY iniChanged)
     Q_PROPERTY(QString updatesUrl READ updatesUrl WRITE setUpdatesUrl NOTIFY iniChanged)
+    Q_PROPERTY(bool startWithWindows READ startWithWindows WRITE setStartWithWindows NOTIFY startWithWindowsChanged)
 
 public:
     explicit FortSettings(const QStringList &args,
@@ -26,8 +27,12 @@ public:
     QString updatesUrl() const { return iniText("base/updatesUrl"); }
     void setUpdatesUrl(const QString &v) { setIniValue("base/updatesUrl", v); }
 
+    bool startWithWindows() const;
+    void setStartWithWindows(bool start);
+
 signals:
     void iniChanged();
+    void startWithWindowsChanged();
 
 public slots:
     QString confFilePath() const;
@@ -57,6 +62,8 @@ private:
                       const QVariant &defaultValue = QVariant()) const;
     void setIniValue(const QString &key, const QVariant &value,
                      const QVariant &defaultValue = QVariant());
+
+    static QString startupShortcutPath();
 
 private:
     QString m_profilePath;
