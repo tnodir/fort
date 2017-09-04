@@ -7,7 +7,8 @@ LogBuffer::LogBuffer(int bufferSize, QObject *parent) :
     QObject(parent),
     m_top(0),
     m_offset(0),
-    m_array(bufferSize, Qt::Uninitialized)
+    m_array(bufferSize ? bufferSize : FortCommon::bufferSize(),
+            Qt::Uninitialized)
 {
 }
 
@@ -20,9 +21,9 @@ void LogBuffer::prepareFor(int len)
     }
 }
 
-int LogBuffer::write(const LogEntry &logEntry)
+int LogBuffer::write(const LogEntry *logEntry)
 {
-    const QString path = logEntry.path();
+    const QString path = logEntry->dosPath();
     const int pathLen = path.size() * sizeof(wchar_t);
 
     const int entrySize = FortCommon::logSize(pathLen);
@@ -30,7 +31,8 @@ int LogBuffer::write(const LogEntry &logEntry)
 
     char *output = m_array.data() + m_top;
 
-    FortCommon::logHeaderWrite(output, logEntry.ip(), logEntry.pid(), pathLen);
+    FortCommon::logHeaderWrite(output, logEntry->ip(),
+                               logEntry->pid(), pathLen);
     output += FortCommon::logHeaderSize();
 
     if (pathLen) {
@@ -42,7 +44,7 @@ int LogBuffer::write(const LogEntry &logEntry)
     return entrySize;
 }
 
-int LogBuffer::read(LogEntry &logEntry)
+int LogBuffer::read(LogEntry *logEntry)
 {
     if (m_offset >= m_top)
         return 0;
@@ -59,9 +61,9 @@ int LogBuffer::read(LogEntry &logEntry)
                                        pathLen / sizeof(wchar_t));
     }
 
-    logEntry.setIp(ip);
-    logEntry.setPid(pid);
-    logEntry.setPath(path);
+    logEntry->setIp(ip);
+    logEntry->setPid(pid);
+    logEntry->setDosPath(path);
 
     const int entrySize = FortCommon::logSize(pathLen);
     m_offset += entrySize;

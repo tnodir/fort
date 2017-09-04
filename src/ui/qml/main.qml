@@ -26,7 +26,9 @@ ApplicationWindow {
 
     onVisibleChanged: {
         if (visible) {
-            mainPage.initialize();
+            mainPage.opened();
+        } else {
+            mainPage.closed();
         }
     }
 

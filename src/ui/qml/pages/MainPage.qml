@@ -6,9 +6,11 @@ import com.fortfirewall 1.0
 Page {
     id: mainPage
 
+    signal opened()
+    signal closed()
     signal saved()
 
-    function initialize() {
+    onOpened: {
         tabBar.currentItem.forceActiveFocus();
     }
 

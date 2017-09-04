@@ -12,7 +12,8 @@ SOURCES += \
     conf/addressgroup.cpp \
     conf/appgroup.cpp \
     conf/firewallconf.cpp \
-    drivermanager.cpp \
+    driver/drivermanager.cpp \
+    driver/driverworker.cpp \
     fortcommon.cpp \
     fortmanager.cpp \
     fortsettings.cpp \
@@ -29,7 +30,8 @@ HEADERS += \
     conf/addressgroup.h \
     conf/appgroup.h \
     conf/firewallconf.h \
-    drivermanager.h \
+    driver/drivermanager.h \
+    driver/driverworker.h \
     fortcommon.h \
     fortmanager.h \
     fortsettings.h \

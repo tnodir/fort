@@ -68,9 +68,9 @@ void Test::printLogs(LogBuffer &buf)
 {
     LogEntry entry;
 
-    while (buf.read(entry)) {
+    while (buf.read(&entry)) {
         const quint32 pid = entry.pid();
-        QString dosPath = entry.path();
+        QString dosPath = entry.dosPath();
 
         if (dosPath.isEmpty()) {
             ProcessInfo pi(pid);

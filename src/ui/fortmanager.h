@@ -10,12 +10,14 @@ class QSystemTrayIcon;
 class DriverManager;
 class FortSettings;
 class FirewallConf;
+class LogBuffer;
 
 class FortManager : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(FortSettings *fortSettings READ fortSettings CONSTANT)
     Q_PROPERTY(FirewallConf *firewallConfToEdit READ firewallConfToEdit NOTIFY firewallConfToEditChanged)
+    Q_PROPERTY(DriverManager *driverManager READ driverManager CONSTANT)
 
 public:
     explicit FortManager(QObject *parent = nullptr);
@@ -25,6 +27,8 @@ public:
     FirewallConf *firewallConfToEdit() const {
         return m_firewallConfToEdit ? m_firewallConfToEdit : m_firewallConf;
     }
+
+    DriverManager *driverManager() const { return m_driverManager; }
 
 signals:
     void firewallConfToEditChanged();
@@ -42,6 +46,8 @@ public slots:
     bool saveConf();
     bool applyConf();
 
+    void setAppLogBlocked(bool enable);
+
 private slots:
     void saveTrayFlags();
 
@@ -56,6 +62,7 @@ private:
     void setupEngine();
 
     bool saveSettings(FirewallConf *newConf);
+    bool updateDriverFlags(FirewallConf *conf);
 
     FirewallConf *cloneConf(const FirewallConf &conf);
 

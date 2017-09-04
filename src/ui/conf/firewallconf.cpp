@@ -119,6 +119,11 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     setAppGroupBits(o.appGroupBits());
 }
 
+void FirewallConf::copyTempFlags(const FirewallConf &o)
+{
+    setAppLogBlocked(o.appLogBlocked());
+}
+
 QVariant FirewallConf::toVariant() const
 {
     QVariantMap map;

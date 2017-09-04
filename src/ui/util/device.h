@@ -11,13 +11,15 @@ public:
     explicit Device(QObject *parent = nullptr);
     virtual ~Device();
 
-    static QString getLastErrorMessage();
+    static QString lastErrorMessage();
 
 signals:
 
 public slots:
     bool open(const QString &filePath);
     bool close();
+
+    bool cancelIo();
 
     bool ioctl(int code, char *in = nullptr, int inSize = 0,
                char *out = nullptr, int outSize = 0,

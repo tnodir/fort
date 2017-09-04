@@ -40,6 +40,11 @@ bool Device::close()
     return res;
 }
 
+bool Device::cancelIo()
+{
+    return CancelIoEx(m_handle, NULL);
+}
+
 bool Device::ioctl(int code, char *in, int inSize,
                    char *out, int outSize,
                    int *retSize)
@@ -57,10 +62,10 @@ bool Device::ioctl(int code, char *in, int inSize,
     return res;
 }
 
-QString Device::getLastErrorMessage()
+QString Device::lastErrorMessage()
 {
     const DWORD err = GetLastError();
-    LPWSTR buf = nullptr;
+    LPWSTR buf = NULL;
 
     FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER
                    | FORMAT_MESSAGE_FROM_SYSTEM

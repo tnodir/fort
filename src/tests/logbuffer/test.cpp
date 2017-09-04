@@ -25,13 +25,13 @@ void Test::logWriteRead()
 
     // Write
     for (int i = 0; i < testCount; ++i) {
-        QCOMPARE(buf.write(entry), entrySize);
+        QCOMPARE(buf.write(&entry), entrySize);
     }
 
     // Read
-    while (buf.read(entry)) {
+    while (buf.read(&entry)) {
         QCOMPARE(entry.ip(), ip);
         QCOMPARE(entry.pid(), pid);
-        QCOMPARE(entry.path(), path);
+        QCOMPARE(entry.dosPath(), path);
     }
 }

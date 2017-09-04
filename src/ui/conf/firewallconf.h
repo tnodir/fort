@@ -45,6 +45,7 @@ public:
     QQmlListProperty<AppGroup> appGroups();
 
     void copyFlags(const FirewallConf &o);
+    void copyTempFlags(const FirewallConf &o);
 
     QVariant toVariant() const;
     void fromVariant(const QVariant &v);

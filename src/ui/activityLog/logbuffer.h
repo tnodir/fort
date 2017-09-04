@@ -27,8 +27,8 @@ public slots:
         m_offset = 0;
     }
 
-    int write(const LogEntry &logEntry);
-    int read(LogEntry &logEntry);
+    int write(const LogEntry *logEntry);
+    int read(LogEntry *logEntry);
 
 private:
     void prepareFor(int len);
