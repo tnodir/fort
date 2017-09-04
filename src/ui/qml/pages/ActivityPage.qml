@@ -7,7 +7,7 @@ BasePage {
 
     readonly property DriverManager driverManager: fortManager.driverManager
 
-    property bool enableLogReading: false
+    property alias enableLogReading: cbShowBlockedApps.checked
 
     property var appPaths: []
     property var appPathsMap: ({})
@@ -92,6 +92,7 @@ console.log(">", path, ipText);
             }
 
             Switch {
+                id: cbShowBlockedApps
                 text: QT_TRANSLATE_NOOP("qml", "Show Blocked Applications and Addresses")
                 onToggled: switchLogReading(checked)
             }
