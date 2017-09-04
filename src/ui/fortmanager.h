@@ -34,8 +34,6 @@ signals:
     void firewallConfToEditChanged();
 
 public slots:
-    bool setupDriver();
-
     void showTrayIcon();
 
     void showWindow();
@@ -58,11 +56,15 @@ private:
 
     static void registerQmlTypes();
 
+    bool setupDriver();
     void setupTrayIcon();
     void setupEngine();
 
+    bool loadSettings(FirewallConf *conf);
     bool saveSettings(FirewallConf *newConf);
-    bool updateDriverFlags(FirewallConf *conf);
+
+    bool updateDriverConf(FirewallConf *conf);
+    bool updateDriverConfFlags(FirewallConf *conf);
 
     FirewallConf *cloneConf(const FirewallConf &conf);
 

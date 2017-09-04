@@ -25,7 +25,9 @@ FortManager::FortManager(QObject *parent) :
     m_firewallConfToEdit(nullConf()),
     m_driverManager(new DriverManager(this))
 {
-    m_fortSettings->readConf(*m_firewallConf);
+    setupDriver();
+
+    loadSettings(m_firewallConf);
 
     registerQmlTypes();
 
@@ -48,6 +50,16 @@ void FortManager::registerQmlTypes()
 
     qmlRegisterType<LogBuffer>("com.fortfirewall", 1, 0, "LogBuffer");
     qmlRegisterType<LogEntry>("com.fortfirewall", 1, 0, "LogEntry");
+}
+
+bool FortManager::setupDriver()
+{
+    if (!m_driverManager->openDevice()) {
+        showErrorBox(m_driverManager->errorMessage());
+        return false;
+    }
+
+    return true;
 }
 
 void FortManager::setupTrayIcon()
@@ -73,16 +85,6 @@ void FortManager::setupEngine()
     m_appWindow = qobject_cast<QWindow *>(
                 m_engine->rootObjects().first());
     Q_ASSERT(m_appWindow);
-}
-
-bool FortManager::setupDriver()
-{
-    if (!m_driverManager->openDevice()) {
-        showErrorBox(m_driverManager->errorMessage());
-        return false;
-    }
-
-    return true;
 }
 
 void FortManager::showTrayIcon()
@@ -140,6 +142,16 @@ void FortManager::setFirewallConfToEdit(FirewallConf *conf)
     emit firewallConfToEditChanged();
 }
 
+bool FortManager::loadSettings(FirewallConf *conf)
+{
+    if (!m_fortSettings->readConf(*conf)) {
+        showErrorBox(m_fortSettings->errorMessage());
+        return false;
+    }
+
+    return updateDriverConf(conf);
+}
+
 bool FortManager::saveSettings(FirewallConf *newConf)
 {
     if (!m_fortSettings->writeConf(*newConf)) {
@@ -152,8 +164,13 @@ bool FortManager::saveSettings(FirewallConf *newConf)
 
     updateTrayMenu();
 
+    return updateDriverConf(m_firewallConf);
+}
+
+bool FortManager::updateDriverConf(FirewallConf *conf)
+{
     // Update driver
-    if (!m_driverManager->writeConf(*m_firewallConf)) {
+    if (!m_driverManager->writeConf(*conf)) {
         showErrorBox(m_driverManager->errorMessage());
         return false;
     }
@@ -161,7 +178,7 @@ bool FortManager::saveSettings(FirewallConf *newConf)
     return true;
 }
 
-bool FortManager::updateDriverFlags(FirewallConf *conf)
+bool FortManager::updateDriverConfFlags(FirewallConf *conf)
 {
     // Update driver
     if (!m_driverManager->writeConfFlags(*conf)) {
@@ -176,7 +193,7 @@ void FortManager::setAppLogBlocked(bool enable)
 {
     m_firewallConf->setAppLogBlocked(enable);
 
-    updateDriverFlags(m_firewallConf);
+    updateDriverConfFlags(m_firewallConf);
 }
 
 void FortManager::saveTrayFlags()
@@ -197,7 +214,7 @@ void FortManager::saveTrayFlags()
 
     m_fortSettings->writeConfFlags(*m_firewallConf);
 
-    updateDriverFlags(m_firewallConf);
+    updateDriverConfFlags(m_firewallConf);
 }
 
 FirewallConf *FortManager::cloneConf(const FirewallConf &conf)
