@@ -20,6 +20,7 @@ SOURCES += \
     util/confutil.cpp \
     util/device.cpp \
     util/fileutil.cpp \
+    util/hostinfo.cpp \
     util/ip4range.cpp \
     util/netutil.cpp \
     util/processinfo.cpp \
@@ -39,6 +40,7 @@ HEADERS += \
     util/confutil.h \
     util/device.h \
     util/fileutil.h \
+    util/hostinfo.h \
     util/ip4range.h \
     util/netutil.h \
     util/processinfo.h \

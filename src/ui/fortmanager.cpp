@@ -16,6 +16,7 @@
 #include "driver/drivermanager.h"
 #include "fortsettings.h"
 #include "util/fileutil.h"
+#include "util/hostinfo.h"
 #include "util/netutil.h"
 #include "util/osutil.h"
 
@@ -55,6 +56,7 @@ void FortManager::registerQmlTypes()
     qmlRegisterType<LogEntry>("com.fortfirewall", 1, 0, "LogEntry");
 
     qmlRegisterType<FileUtil>("com.fortfirewall", 1, 0, "FileUtil");
+    qmlRegisterType<HostInfo>("com.fortfirewall", 1, 0, "HostInfo");
     qmlRegisterType<NetUtil>("com.fortfirewall", 1, 0, "NetUtil");
     qmlRegisterType<OsUtil>("com.fortfirewall", 1, 0, "OsUtil");
 }

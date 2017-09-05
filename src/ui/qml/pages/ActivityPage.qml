@@ -10,7 +10,10 @@ BasePage {
     property alias enableLogReading: cbShowBlockedApps.checked
 
     property var appPaths: []
-    property var appPathsMap: ({})
+    property var appPathIpMap: ({})
+    property var appPathIpArray: ({})
+
+    property var hostNames: ({})
 
     function readLogAsync() {
         driverManager.readLogAsync(logBuffer);
@@ -33,34 +36,45 @@ BasePage {
     }
 
     function clearAppPaths() {
-        listView.model = undefined;
+        appPaths = [];
+        appPathIpMap = ({});
+        appPathIpArray = ({});
 
-        appPaths = ([]);
-        appPathsMap = ({});
+        hostNames = ({});
+        hostInfo.abortHostLookups();
+
+        refreshListViews();
     }
 
     function processLogBuffer() {
-        const curIndex = listView.currentIndex;
-        listView.model = undefined;
-
         while (logBuffer.read(logEntry)) {
             var path = getEntryPath(logEntry);
             var ipText = netUtil.ip4ToText(logEntry.ip);
 
-            var ipTextsMap = appPathsMap[path];
+            var ipTextsMap = appPathIpMap[path];
             if (!ipTextsMap) {
                 ipTextsMap = ({});
-                appPathsMap[path] = ipTextsMap;
-
-                curIndex = appPaths.length;
+                appPathIpMap[path] = ipTextsMap;
+                appPathIpArray[path] = [];
                 appPaths.push(path);
             }
 
-            ipTextsMap[ipText] = (ipTextsMap[ipText] || 0) + 1;
+            var ipCount = ipTextsMap[ipText];
+            ipTextsMap[ipText] = (ipCount || 0) + 1;
+
+            var ipTextsArray = appPathIpArray[path];
+            if (!ipCount) {
+                ipTextsArray.push(ipText);
+            }
+
+            // Host name
+            if (hostNames[ipText] === undefined) {
+                hostNames[ipText] = false;
+                hostInfo.lookupHost(ipText);
+            }
         }
 
-        listView.model = appPaths;
-        listView.currentIndex = curIndex;
+        refreshListViews();
     }
 
     function getEntryPath(logEntry) {
@@ -70,6 +84,14 @@ BasePage {
         }
 
         return fileUtil.dosPathToPath(dosPath);
+    }
+
+    function refreshListViews() {
+        const curIndex = appListView.currentIndex;
+        appListView.model = undefined;
+
+        appListView.model = appPaths;
+        appListView.currentIndex = curIndex;
     }
 
     Connections {
@@ -86,6 +108,16 @@ BasePage {
 
             if (enableLogReading) {
                 readLogAsync();
+            }
+        }
+    }
+
+    HostInfo {
+        id: hostInfo
+        onHostLookedup: {
+            if (success) {
+                hostNames[name] = hostName;
+                refreshListViews();
             }
         }
     }
@@ -110,8 +142,8 @@ BasePage {
             Button {
                 id: btCopy
                 enabled: currentItem
-                text: QT_TRANSLATE_NOOP("qml", "Copy")
-                readonly property Item currentItem: listView.currentItem
+                text: QT_TRANSLATE_NOOP("qml", "Copy Path")
+                readonly property Item currentItem: appListView.currentItem
                 onClicked: {
                     osUtil.setClipboardData(currentItem.text);
                 }
@@ -133,40 +165,69 @@ BasePage {
             Layout.fillHeight: true
             clip: true
 
-            ListView {
-                id: listView
+            RowLayout {
                 anchors.fill: parent
-                spacing: 10
+                spacing: 20
 
-                highlightRangeMode: ListView.ApplyRange
-                highlightResizeDuration: 150
-                highlightMoveDuration: 200
+                ListView {
+                    id: appListView
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    spacing: 10
 
-                highlight: Item {
-                    Rectangle {
+                    highlightRangeMode: ListView.ApplyRange
+                    highlightResizeDuration: 0
+                    highlightMoveDuration: 200
+
+                    highlight: Item {
+                        Rectangle {
+                            anchors.fill: parent
+                            anchors.margins: -7
+                            radius: 2
+                            border.width: 3
+                            border.color: "black"
+                            color: "transparent"
+                        }
+                    }
+
+                    delegate: Label {
+                        width: appListView.width
+                        font.pixelSize: 20
+                        elide: Text.ElideRight
+                        text: modelData
+                    }
+
+                    MouseArea {
                         anchors.fill: parent
-                        anchors.margins: -7
-                        radius: 2
-                        border.width: 3
-                        border.color: "black"
-                        color: "transparent"
+                        onClicked: {
+                            const index = appListView.indexAt(mouse.x, mouse.y);
+                            if (index >= 0) {
+                                appListView.currentIndex = index;
+                            }
+                        }
                     }
                 }
 
-                delegate: Label {
-                    width: listView.width
-                    font.pixelSize: 20
-                    elide: Text.ElideRight
-                    text: modelData
-                }
+                ListView {
+                    id: ipListView
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    spacing: 4
 
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        const index = listView.indexAt(mouse.x, mouse.y);
-                        if (index >= 0) {
-                            listView.currentIndex = index;
-                        }
+                    model: {
+                        const curIndex = appListView.currentIndex;
+                        if (curIndex < 0)
+                            return undefined;
+
+                        const path = appPaths[curIndex];
+                        return appPathIpArray[path];
+                    }
+
+                    delegate: Label {
+                        width: ipListView.width
+                        elide: Text.ElideRight
+                        text: hostNames[ipText] || ipText
+                        readonly property string ipText: modelData
                     }
                 }
             }
