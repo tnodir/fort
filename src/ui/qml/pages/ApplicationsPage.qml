@@ -14,6 +14,26 @@ BasePage {
         editGroupName.forceActiveFocus();
     }
 
+    function addAppGroup() {
+        const lastIndex = appGroups.length;
+        firewallConf.addAppGroupByName(editGroupName.text);
+        barGroups.currentIndex = lastIndex;
+        resetGroupName();
+    }
+
+    function removeAppGroup(index) {
+        firewallConf.removeAppGroup(index, index);
+        var lastIndex = appGroupsCount - 1;
+        barGroups.currentIndex = (index < appGroupsCount)
+                ? index : appGroupsCount - 1;
+    }
+
+    function renameAppGroup() {
+        const appGroup = appsColumn.appGroup;
+        appGroup.name = editGroupName.text;
+        resetGroupName();
+    }
+
     function moveAppGroup(index, step) {
         var toIndex = index + step;
         if (toIndex < 0)
@@ -37,21 +57,12 @@ BasePage {
             Button {
                 enabled: editGroupName.text
                 text: QT_TRANSLATE_NOOP("qml", "Add Group")
-                onClicked: {
-                    const lastIndex = appGroups.length;
-                    firewallConf.addAppGroupByName(editGroupName.text);
-                    barGroups.currentIndex = lastIndex;
-                    resetGroupName();
-                }
+                onClicked: addAppGroup()
             }
             Button {
                 enabled: editGroupName.text && appsColumn.enabled
                 text: QT_TRANSLATE_NOOP("qml", "Rename Group")
-                onClicked: {
-                    const appGroup = appsColumn.appGroup;
-                    appGroup.name = editGroupName.text;
-                    resetGroupName();
-                }
+                onClicked: removeAppGroup()
             }
 
             Item {

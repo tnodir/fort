@@ -11,9 +11,7 @@ ColumnLayout {
     RowLayout {
         Button {
             text: QT_TRANSLATE_NOOP("qml", "Remove Group")
-            onClicked: {
-                firewallConf.removeAppGroup(index, index);
-            }
+            onClicked: removeAppGroup(index)
         }
         Button {
             text: QT_TRANSLATE_NOOP("qml", "Move left")

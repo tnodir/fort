@@ -155,7 +155,7 @@ BasePage {
 
             Switch {
                 id: cbShowBlockedApps
-                text: QT_TRANSLATE_NOOP("qml", "Show Blocked Applications and Addresses")
+                text: QT_TRANSLATE_NOOP("qml", "Log Blocked Applications")
                 onToggled: switchLogReading(checked)
             }
         }
