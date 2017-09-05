@@ -65,6 +65,9 @@ BasePage {
             var ipTextsArray = appPathIpArray[path];
             if (!ipCount) {
                 ipTextsArray.push(ipText);
+            } else if (ipTextsArray.length > 64) {
+                var oldIp = ipTextsArray.shift();
+                delete ipTextsMap[oldIp];
             }
 
             // Host name
