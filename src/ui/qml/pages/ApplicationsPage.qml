@@ -7,10 +7,22 @@ import com.fortfirewall 1.0
 BasePage {
 
     readonly property var appGroups: firewallConf.appGroups
+    readonly property int appGroupsCount: appGroups.length
 
     function resetGroupName() {
         editGroupName.text = "";
         editGroupName.forceActiveFocus();
+    }
+
+    function moveAppGroup(index, step) {
+        var toIndex = index + step;
+        if (toIndex < 0)
+            toIndex = appGroupsCount - 1;
+        else if (toIndex >= appGroupsCount)
+            toIndex = 0;
+
+        firewallConf.moveAppGroup(index, toIndex);
+        barGroups.currentIndex = toIndex;
     }
 
     ColumnLayout {
@@ -18,7 +30,7 @@ BasePage {
 
         RowLayout {
             TextField {
-                enabled: rptAppGroups.count < 16
+                enabled: appGroupsCount < 16
                 id: editGroupName
                 placeholderText: QT_TRANSLATE_NOOP("qml", "Group Name")
             }

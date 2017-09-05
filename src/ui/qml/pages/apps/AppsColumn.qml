@@ -15,6 +15,14 @@ ColumnLayout {
                 firewallConf.removeAppGroup(index, index);
             }
         }
+        Button {
+            text: QT_TRANSLATE_NOOP("qml", "Move left")
+            onClicked: moveAppGroup(index, -1)
+        }
+        Button {
+            text: QT_TRANSLATE_NOOP("qml", "Move right")
+            onClicked: moveAppGroup(index, 1)
+        }
 
         Item {
             Layout.fillWidth: true
@@ -41,7 +49,6 @@ ColumnLayout {
 
             textArea {
                 placeholderText: "
-System
 C:\\Program Files\\Internet Explorer\\iexplore.exe
 "
                 text: appGroup.blockText
@@ -59,6 +66,7 @@ C:\\Program Files\\Internet Explorer\\iexplore.exe
 
             textArea {
                 placeholderText: "
+System
 C:\\Program Files\\Skype\\Phone\\Skype.exe
 "
                 text: appGroup.allowText
