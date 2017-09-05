@@ -33,24 +33,43 @@ BasePage {
     }
 
     function clearAppPaths() {
+        listView.model = undefined;
+
         appPaths = ([]);
         appPathsMap = ({});
     }
 
     function processLogBuffer() {
+        const curIndex = listView.currentIndex;
+        listView.model = undefined;
+
         while (logBuffer.read(logEntry)) {
-            var path = logEntry.path;
-            var ipText = logEntry.ipText;
-console.log(">", path, ipText);
+            var path = getEntryPath(logEntry);
+            var ipText = netUtil.ip4ToText(logEntry.ip);
 
             var ipTextsMap = appPathsMap[path];
             if (!ipTextsMap) {
                 ipTextsMap = ({});
                 appPathsMap[path] = ipTextsMap;
+
+                curIndex = appPaths.length;
+                appPaths.push(path);
             }
 
             ipTextsMap[ipText] = (ipTextsMap[ipText] || 0) + 1;
         }
+
+        listView.model = appPaths;
+        listView.currentIndex = curIndex;
+    }
+
+    function getEntryPath(logEntry) {
+        var dosPath = logEntry.dosPath;
+        if (!dosPath) {
+            dosPath = osUtil.pidToDosPath(logEntry.pid);
+        }
+
+        return fileUtil.dosPathToPath(dosPath);
     }
 
     Connections {
@@ -80,11 +99,22 @@ console.log(">", path, ipText);
 
     ColumnLayout {
         anchors.fill: parent
+        spacing: 10
 
         RowLayout {
             Button {
+                enabled: btCopy.enabled
                 text: QT_TRANSLATE_NOOP("qml", "Clear")
                 onClicked: clearAppPaths()
+            }
+            Button {
+                id: btCopy
+                enabled: currentItem
+                text: QT_TRANSLATE_NOOP("qml", "Copy")
+                readonly property Item currentItem: listView.currentItem
+                onClicked: {
+                    osUtil.setClipboardData(currentItem.text);
+                }
             }
 
             Item {
@@ -98,9 +128,48 @@ console.log(">", path, ipText);
             }
         }
 
-        ListView {
+        Frame {
             Layout.fillWidth: true
             Layout.fillHeight: true
+            clip: true
+
+            ListView {
+                id: listView
+                anchors.fill: parent
+                spacing: 10
+
+                highlightRangeMode: ListView.ApplyRange
+                highlightResizeDuration: 150
+                highlightMoveDuration: 200
+
+                highlight: Item {
+                    Rectangle {
+                        anchors.fill: parent
+                        anchors.margins: -7
+                        radius: 2
+                        border.width: 3
+                        border.color: "black"
+                        color: "transparent"
+                    }
+                }
+
+                delegate: Label {
+                    width: listView.width
+                    font.pixelSize: 20
+                    elide: Text.ElideRight
+                    text: modelData
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        const index = listView.indexAt(mouse.x, mouse.y);
+                        if (index >= 0) {
+                            listView.currentIndex = index;
+                        }
+                    }
+                }
+            }
         }
     }
 }

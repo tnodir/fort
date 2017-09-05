@@ -15,6 +15,9 @@
 #include "conf/firewallconf.h"
 #include "driver/drivermanager.h"
 #include "fortsettings.h"
+#include "util/fileutil.h"
+#include "util/netutil.h"
+#include "util/osutil.h"
 
 FortManager::FortManager(QObject *parent) :
     QObject(parent),
@@ -50,6 +53,10 @@ void FortManager::registerQmlTypes()
 
     qmlRegisterType<LogBuffer>("com.fortfirewall", 1, 0, "LogBuffer");
     qmlRegisterType<LogEntry>("com.fortfirewall", 1, 0, "LogEntry");
+
+    qmlRegisterType<FileUtil>("com.fortfirewall", 1, 0, "FileUtil");
+    qmlRegisterType<NetUtil>("com.fortfirewall", 1, 0, "NetUtil");
+    qmlRegisterType<OsUtil>("com.fortfirewall", 1, 0, "OsUtil");
 }
 
 bool FortManager::setupDriver()

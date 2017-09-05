@@ -22,7 +22,8 @@ SOURCES += \
     util/fileutil.cpp \
     util/ip4range.cpp \
     util/netutil.cpp \
-    util/processinfo.cpp
+    util/processinfo.cpp \
+    util/osutil.cpp
 
 HEADERS += \
     activityLog/logbuffer.h \
@@ -40,7 +41,8 @@ HEADERS += \
     util/fileutil.h \
     util/ip4range.h \
     util/netutil.h \
-    util/processinfo.h
+    util/processinfo.h \
+    util/osutil.h
 
 QML_FILES += \
     qml/*.qml \

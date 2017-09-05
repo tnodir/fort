@@ -36,6 +36,18 @@ ApplicationWindow {
         fortManager.closeWindow();
     }
 
+    FileUtil {
+        id: fileUtil
+    }
+
+    NetUtil {
+        id: netUtil
+    }
+
+    OsUtil {
+        id: osUtil
+    }
+
     MainPage {
         id: mainPage
         anchors.fill: parent

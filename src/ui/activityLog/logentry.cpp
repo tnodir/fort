@@ -1,9 +1,5 @@
 #include "logentry.h"
 
-#include "../util/fileutil.h"
-#include "../util/netutil.h"
-#include "../util/processinfo.h"
-
 LogEntry::LogEntry(quint32 ip, quint32 pid,
                    const QString &dosPath,
                    QObject *parent) :
@@ -36,20 +32,4 @@ void LogEntry::setDosPath(const QString &dosPath)
         m_dosPath = dosPath;
         emit dosPathChanged();
     }
-}
-
-QString LogEntry::ipText() const
-{
-    return NetUtil::ip4ToText(m_ip);
-}
-
-QString LogEntry::path() const
-{
-    QString dosPath = m_dosPath;
-    if (dosPath.isEmpty()) {
-        const ProcessInfo pi(m_pid);
-        dosPath = pi.dosPath();
-    }
-
-    return FileUtil::dosPathToPath(dosPath);
 }
