@@ -47,6 +47,8 @@ BasePage {
     }
 
     function processLogBuffer() {
+        var isNewEntry = false;
+
         while (logBuffer.read(logEntry)) {
             var path = getEntryPath(logEntry);
             var ipText = netUtil.ip4ToText(logEntry.ip);
@@ -57,6 +59,8 @@ BasePage {
                 appPathIpMap[path] = ipTextsMap;
                 appPathIpArray[path] = [];
                 appPaths.push(path);
+
+                isNewEntry = true;
             }
 
             var ipCount = ipTextsMap[ipText];
@@ -64,10 +68,13 @@ BasePage {
 
             var ipTextsArray = appPathIpArray[path];
             if (!ipCount) {
+                if (ipTextsArray.length > 64) {
+                    var oldIp = ipTextsArray.shift();
+                    delete ipTextsMap[oldIp];
+                }
                 ipTextsArray.push(ipText);
-            } else if (ipTextsArray.length > 64) {
-                var oldIp = ipTextsArray.shift();
-                delete ipTextsMap[oldIp];
+
+                isNewEntry = true;
             }
 
             // Host name
@@ -77,7 +84,9 @@ BasePage {
             }
         }
 
-        refreshListViews();
+        if (isNewEntry) {
+            refreshListViews();
+        }
     }
 
     function getEntryPath(logEntry) {

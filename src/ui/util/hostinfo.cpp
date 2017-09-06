@@ -27,11 +27,7 @@ void HostInfo::abortHostLookup(int lookupId)
 
 void HostInfo::abortHostLookups()
 {
-    lookupids_map_t::key_iterator it = m_lookupIds.keyBegin();
-    lookupids_map_t::key_iterator end = m_lookupIds.keyEnd();
-
-    for (; it != end; ++it) {
-        const int lookupId = *it;
+    foreach (const int lookupId, m_lookupIds.keys()) {
         abortHostLookup(lookupId);
     }
 }
