@@ -95,9 +95,10 @@ BasePage {
                 model: appGroups
 
                 TabButton {
-                    width: Math.max(70, implicitWidth)
+                    width: Math.max(100, implicitWidth)
                     font.bold: checked
                     text: appGroup.name
+                    icon.source: "qrc:/images/application_double.png"
 
                     readonly property AppGroup appGroup: modelData
                 }
