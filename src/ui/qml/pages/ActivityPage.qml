@@ -80,7 +80,7 @@ BasePage {
             // Host name
             if (hostNames[ipText] === undefined) {
                 hostNames[ipText] = false;
-                hostInfo.lookupHost(ipText);
+                //hostInfo.lookupHost(ipText);  // Crashes on exit with live lookup requests
             }
         }
 
