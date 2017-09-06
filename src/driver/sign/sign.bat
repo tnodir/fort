@@ -1,1 +1,1 @@
-signtool sign /a /v /s FortFirewall /n "FortFirewallTestCert" ../fortfw64.sys
+SignTool sign /a /v /s "Fort Firewall" /n FortFirewallTestCert ../fortfw64.sys
