@@ -234,9 +234,8 @@ void FortManager::saveTrayFlags()
     m_firewallConf->setAppAllowAll(m_appAllowAllAction->isChecked());
 
     int i = 0;
-    const QList<QAction*> groupActions = m_appGroupsMenu->actions();
     foreach (AppGroup *appGroup, m_firewallConf->appGroupsList()) {
-        const QAction *action = groupActions.at(i);
+        const QAction *action = m_appGroupActions.at(i);
         appGroup->setEnabled(action->isChecked());
         ++i;
     }
@@ -269,7 +268,8 @@ void FortManager::updateTrayMenu()
 
     menu = new QMenu(&m_window);
 
-    addAction(menu, QIcon(), tr("Show"), this, SLOT(showWindow()));
+    addAction(menu, QIcon(":/images/cog.png"), tr("Options"),
+              this, SLOT(showWindow()));
 
     menu->addSeparator();
     m_filterEnabledAction = addAction(
@@ -298,17 +298,17 @@ void FortManager::updateTrayMenu()
                 true, conf.appAllowAll());
 
     menu->addSeparator();
-    m_appGroupsMenu = new QMenu(tr("Application Groups"), menu);
-    menu->addMenu(m_appGroupsMenu);
-
     foreach (const AppGroup *appGroup, conf.appGroupsList()) {
-        addAction(m_appGroupsMenu, QIcon(), appGroup->name(),
-                  this, SLOT(saveTrayFlags()),
-                  true, appGroup->enabled());
+        QAction *a = addAction(
+                    menu, QIcon(":/images/application_double.png"),
+                    appGroup->name(), this, SLOT(saveTrayFlags()),
+                    true, appGroup->enabled());
+        m_appGroupActions.append(a);
     }
 
     menu->addSeparator();
-    addAction(menu, QIcon(), tr("Quit"), this, SLOT(exit()));
+    addAction(menu, QIcon(":/images/cancel.png"), tr("Quit"),
+              this, SLOT(exit()));
 
     m_trayIcon->setContextMenu(menu);
 }

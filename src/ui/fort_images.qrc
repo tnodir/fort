@@ -2,6 +2,7 @@
 <qresource>
     <file>images/application_cascade.png</file>
     <file>images/application_double.png</file>
+    <file>images/cancel.png</file>
     <file>images/cog.png</file>
     <file>images/link.png</file>
     <file>images/shield.png</file>

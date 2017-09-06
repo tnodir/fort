@@ -95,7 +95,7 @@ private:
     QAction *m_ipExcludeAllAction;
     QAction *m_appBlockAllAction;
     QAction *m_appAllowAllAction;
-    QMenu *m_appGroupsMenu;
+    QList<QAction *> m_appGroupActions;
 
     DriverManager *m_driverManager;
 };
