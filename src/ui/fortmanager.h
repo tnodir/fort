@@ -39,6 +39,8 @@ public slots:
     void showWindow();
     void closeWindow();
 
+    void exit(int retcode = 0);
+
     void showErrorBox(const QString &text);
 
     bool saveConf();

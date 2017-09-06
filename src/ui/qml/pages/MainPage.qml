@@ -66,7 +66,7 @@ Page {
             }
             Button {
                 text: QT_TRANSLATE_NOOP("qml", "Quit")
-                onClicked: Qt.quit()
+                onClicked: fortManager.exit()
             }
         }
     }

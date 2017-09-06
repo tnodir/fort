@@ -23,7 +23,8 @@
 FortManager::FortManager(QObject *parent) :
     QObject(parent),
     m_trayIcon(new QSystemTrayIcon(this)),
-    m_engine(new QQmlApplicationEngine(this)),
+    m_engine(nullptr),
+    m_appWindow(nullptr),
     m_fortSettings(new FortSettings(qApp->arguments(), this)),
     m_firewallConf(new FirewallConf(this)),
     m_firewallConfToEdit(nullConf()),
@@ -36,7 +37,6 @@ FortManager::FortManager(QObject *parent) :
     registerQmlTypes();
 
     setupTrayIcon();
-    setupEngine();
 }
 
 void FortManager::registerQmlTypes()
@@ -87,6 +87,8 @@ void FortManager::setupTrayIcon()
 
 void FortManager::setupEngine()
 {
+    m_engine = new QQmlApplicationEngine(this);
+
     m_engine->rootContext()->setContextProperty("fortManager", this);
 
     m_engine->load(QUrl("qrc:/qml/main.qml"));
@@ -103,6 +105,9 @@ void FortManager::showTrayIcon()
 
 void FortManager::showWindow()
 {
+    if (!m_engine)
+        setupEngine();
+
     if (m_firewallConfToEdit == nullConf()) {
         setFirewallConfToEdit(cloneConf(*m_firewallConf));
     }
@@ -114,9 +119,24 @@ void FortManager::showWindow()
 
 void FortManager::closeWindow()
 {
-    m_appWindow->hide();
+    if (m_appWindow) {
+        m_appWindow->hide();
+    }
 
     setFirewallConfToEdit(nullConf());
+}
+
+void FortManager::exit(int retcode)
+{
+    closeWindow();
+
+    if (m_engine) {
+        m_engine->deleteLater();
+        m_engine = nullptr;
+        m_appWindow = nullptr;
+    }
+
+    qApp->exit(retcode);
 }
 
 void FortManager::showErrorBox(const QString &text)
@@ -288,7 +308,7 @@ void FortManager::updateTrayMenu()
     }
 
     menu->addSeparator();
-    addAction(menu, QIcon(), tr("Quit"), qApp, SLOT(quit()));
+    addAction(menu, QIcon(), tr("Quit"), this, SLOT(exit()));
 
     m_trayIcon->setContextMenu(menu);
 }
