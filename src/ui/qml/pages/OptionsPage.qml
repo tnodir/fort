@@ -9,20 +9,25 @@ BasePage {
         fortSettings.startWithWindows = cbStart.checked;
     }
 
-    Column {
+    Frame {
         anchors.fill: parent
 
-        CheckBox {
-            id: cbStart
-            text: QT_TRANSLATE_NOOP("qml", "Start with Windows")
-            checked: fortSettings.startWithWindows
-        }
-        CheckBox {
-            id: cbFilter
-            text: QT_TRANSLATE_NOOP("qml", "Filter Enabled")
-            checked: firewallConf.filterEnabled
-            onToggled: {
-                firewallConf.filterEnabled = checked;
+        Column {
+            anchors.fill: parent
+            spacing: 10
+
+            CheckBox {
+                id: cbStart
+                text: QT_TRANSLATE_NOOP("qml", "Start with Windows")
+                checked: fortSettings.startWithWindows
+            }
+            CheckBox {
+                id: cbFilter
+                text: QT_TRANSLATE_NOOP("qml", "Filter Enabled")
+                checked: firewallConf.filterEnabled
+                onToggled: {
+                    firewallConf.filterEnabled = checked;
+                }
             }
         }
     }
