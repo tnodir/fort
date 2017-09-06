@@ -51,6 +51,7 @@ ApplicationWindow {
     MainPage {
         id: mainPage
         anchors.fill: parent
+        implicitWidth: 0  // XXX: Workaround for binding loop
 
         Keys.onEscapePressed: closeWindow()
     }

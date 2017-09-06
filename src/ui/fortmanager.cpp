@@ -105,8 +105,9 @@ void FortManager::showTrayIcon()
 
 void FortManager::showWindow()
 {
-    if (!m_engine)
+    if (!m_engine) {
         setupEngine();
+    }
 
     if (m_firewallConfToEdit == nullConf()) {
         setFirewallConfToEdit(cloneConf(*m_firewallConf));

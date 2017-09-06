@@ -19,20 +19,20 @@ Page {
         currentIndex: swipeView.currentIndex
 
         TabButton {
-            text: QT_TRANSLATE_NOOP("qml", "Options")
             icon.source: "qrc:/images/cog.png"
+            text: QT_TRANSLATE_NOOP("qml", "Options")
         }
         TabButton {
-            text: QT_TRANSLATE_NOOP("qml", "IPv4 Addresses")
             icon.source: "qrc:/images/link.png"
+            text: QT_TRANSLATE_NOOP("qml", "IPv4 Addresses")
         }
         TabButton {
-            text: QT_TRANSLATE_NOOP("qml", "Applications")
             icon.source: "qrc:/images/application_cascade.png"
+            text: QT_TRANSLATE_NOOP("qml", "Applications")
         }
         TabButton {
-            text: QT_TRANSLATE_NOOP("qml", "Activity")
             icon.source: "qrc:/images/zoom.png"
+            text: QT_TRANSLATE_NOOP("qml", "Activity")
         }
     }
 
