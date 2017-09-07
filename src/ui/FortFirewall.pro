@@ -64,7 +64,7 @@ TRANSLATIONS += \
 RESOURCES += fort_qml.qrc
 
 # Compiled translation files
-#RESOURCES += fort_i18n.qrc
+RESOURCES += fort_i18n.qrc
 
 # Default FortFirewall.ini
 RESOURCES += fort_ini.qrc

@@ -115,7 +115,7 @@ bool ConfUtil::parseAppGroups(const QList<AppGroup *> &appGroups,
 {
     const int groupsCount = appGroups.size();
     if (groupsCount > APP_GROUP_MAX) {
-        setErrorMessage(tr("Number of Application Groups must be < %d")
+        setErrorMessage(tr("Number of Application Groups must be < %1")
                         .arg(APP_GROUP_MAX));
         return false;
     }
@@ -127,7 +127,7 @@ bool ConfUtil::parseAppGroups(const QList<AppGroup *> &appGroups,
 
         const QString name = appGroup->name();
         if (name.size() > APP_GROUP_NAME_MAX) {
-            setErrorMessage(tr("Length of Application Group's Name must be < %d")
+            setErrorMessage(tr("Length of Application Group's Name must be < %1")
                             .arg(APP_GROUP_NAME_MAX));
             return false;
         }
@@ -172,7 +172,7 @@ bool ConfUtil::parseApps(const QString &text, bool blocked,
             continue;
 
         if (appPath.size() > APP_PATH_MAX) {
-            setErrorMessage(tr("Length of Application's Path must be < %d")
+            setErrorMessage(tr("Length of Application's Path must be < %1")
                             .arg(APP_PATH_MAX));
             return false;
         }
