@@ -70,7 +70,7 @@ BasePage {
             Button {
                 enabled: editGroupName.text && appsColumn.enabled
                 text: QT_TRANSLATE_NOOP("qml", "Rename Group")
-                onClicked: removeAppGroup()
+                onClicked: renameAppGroup()
             }
 
             Item {
