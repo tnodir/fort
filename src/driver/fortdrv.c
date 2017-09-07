@@ -305,6 +305,26 @@ fort_callout_remove (void)
 }
 
 static NTSTATUS
+fort_callout_force_reauth (PDEVICE_OBJECT device)
+{
+  NTSTATUS status;
+
+  // Unregister
+  fort_callout_remove();
+  fort_prov_unregister();
+
+  // Register
+  status = fort_prov_register(!g_device->prov_temporary,
+                              g_device->prov_boot, NULL, NULL);
+
+  if (status == STATUS_SUCCESS) {
+    status = fort_callout_install(device);
+  }
+
+  return status;
+}
+
+static NTSTATUS
 fort_device_create (PDEVICE_OBJECT device, PIRP irp)
 {
   NTSTATUS status;
@@ -375,7 +395,7 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
         status = STATUS_INSUFFICIENT_RESOURCES;
       } else {
         fort_conf_ref_set(conf_ref);
-        status = STATUS_SUCCESS;
+        status = fort_callout_force_reauth(device);
       }
     }
     break;
@@ -386,7 +406,7 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
 
     if (len == sizeof(FORT_CONF_FLAGS)) {
       fort_conf_ref_flags_set(conf_flags);
-      status = STATUS_SUCCESS;
+      status = fort_callout_force_reauth(device);
     }
     break;
   }
