@@ -15,6 +15,7 @@ Frame {
 
         TextArea {
             id: textArea
+            clip: true  // to clip placeholder text
             onEditingFinished: frame.editingFinished()
         }
     }
