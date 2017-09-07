@@ -10,7 +10,25 @@ Page {
     signal closed()
     signal saved()
 
+    property bool confFlagsEdited
+    property bool confEdited
+
+    function setConfFlagsEdited() {
+        confFlagsEdited = true;
+    }
+
+    function setConfEdited() {
+        confEdited = true;
+    }
+
+    function resetConfEdited() {
+        confFlagsEdited = false;
+        confEdited = false;
+    }
+
     onOpened: {
+        resetConfEdited();
+
         tabBar.currentItem.forceActiveFocus();
     }
 
@@ -52,17 +70,23 @@ Page {
             anchors.right: parent.right
 
             Button {
+                enabled: confFlagsEdited || confEdited
                 text: QT_TRANSLATE_NOOP("qml", "OK")
                 onClicked: {
-                    if (fortManager.saveConf()) {
+                    if (fortManager.saveConf(confFlagsEdited)) {
                         mainPage.saved();
                         closeWindow();
                     }
                 }
             }
             Button {
+                enabled: confFlagsEdited || confEdited
                 text: QT_TRANSLATE_NOOP("qml", "Apply")
-                onClicked: fortManager.applyConf()
+                onClicked: {
+                    if (fortManager.applyConf(confFlagsEdited)) {
+                        resetConfEdited();
+                    }
+                }
             }
             Button {
                 text: QT_TRANSLATE_NOOP("qml", "Cancel")

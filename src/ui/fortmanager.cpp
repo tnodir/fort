@@ -145,12 +145,12 @@ void FortManager::showErrorBox(const QString &text)
     QMessageBox::critical(&m_window, QString(), text);
 }
 
-bool FortManager::saveConf()
+bool FortManager::saveConf(bool onlyFlags)
 {
-    return saveSettings(m_firewallConfToEdit);
+    return saveSettings(m_firewallConfToEdit, onlyFlags);
 }
 
-bool FortManager::applyConf()
+bool FortManager::applyConf(bool onlyFlags)
 {
     Q_ASSERT(m_firewallConfToEdit != nullConf());
 
@@ -158,7 +158,7 @@ bool FortManager::applyConf()
 
     newConf->copyTempFlags(*m_firewallConf);
 
-    return saveSettings(newConf);
+    return saveSettings(newConf, onlyFlags);
 }
 
 void FortManager::setFirewallConfToEdit(FirewallConf *conf)
@@ -182,9 +182,10 @@ bool FortManager::loadSettings(FirewallConf *conf)
     return updateDriverConf(conf);
 }
 
-bool FortManager::saveSettings(FirewallConf *newConf)
+bool FortManager::saveSettings(FirewallConf *newConf, bool onlyFlags)
 {
-    if (!m_fortSettings->writeConf(*newConf)) {
+    if (!(onlyFlags ? m_fortSettings->writeConfFlags(*newConf)
+          : m_fortSettings->writeConf(*newConf))) {
         showErrorBox(m_fortSettings->errorMessage());
         return false;
     }
@@ -194,7 +195,8 @@ bool FortManager::saveSettings(FirewallConf *newConf)
 
     updateTrayMenu();
 
-    return updateDriverConf(m_firewallConf);
+    return onlyFlags ? updateDriverConfFlags(m_firewallConf)
+                     : updateDriverConf(m_firewallConf);
 }
 
 bool FortManager::updateDriverConf(FirewallConf *conf)

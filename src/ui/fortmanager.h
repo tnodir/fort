@@ -43,8 +43,8 @@ public slots:
 
     void showErrorBox(const QString &text);
 
-    bool saveConf();
-    bool applyConf();
+    bool saveConf(bool onlyFlags = false);
+    bool applyConf(bool onlyFlags = false);
 
     void setAppLogBlocked(bool enable);
 
@@ -63,7 +63,7 @@ private:
     void setupEngine();
 
     bool loadSettings(FirewallConf *conf);
-    bool saveSettings(FirewallConf *newConf);
+    bool saveSettings(FirewallConf *newConf, bool onlyFlags = false);
 
     bool updateDriverConf(FirewallConf *conf);
     bool updateDriverConfFlags(FirewallConf *conf);

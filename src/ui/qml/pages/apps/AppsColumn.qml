@@ -31,6 +31,8 @@ ColumnLayout {
             checked: appGroup.enabled
             onToggled: {
                 appGroup.enabled = checked;
+
+                setConfFlagsEdited();
             }
         }
     }
@@ -54,6 +56,8 @@ C:\\Program Files\\Internet Explorer\\iexplore.exe
 
             onEditingFinished: {
                 appGroup.blockText = textArea.text;
+
+                setConfEdited();
             }
         }
 
@@ -72,6 +76,8 @@ C:\\Program Files\\Skype\\Phone\\Skype.exe
 
             onEditingFinished: {
                 appGroup.allowText = textArea.text;
+
+                setConfEdited();
             }
         }
     }

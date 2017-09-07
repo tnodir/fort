@@ -20,6 +20,9 @@ BasePage {
                 id: cbStart
                 text: QT_TRANSLATE_NOOP("qml", "Start with Windows")
                 checked: fortSettings.startWithWindows
+                onToggled: {
+                    setConfFlagsEdited();
+                }
             }
             CheckBox {
                 id: cbFilter
@@ -27,6 +30,8 @@ BasePage {
                 checked: firewallConf.filterEnabled
                 onToggled: {
                     firewallConf.filterEnabled = checked;
+
+                    setConfFlagsEdited();
                 }
             }
         }

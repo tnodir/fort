@@ -25,6 +25,8 @@ ColumnLayout {
             checked: addressGroup.useAll
             onToggled: {
                 addressGroup.useAll = checked;
+
+                setConfFlagsEdited();
             }
         }
     }
@@ -46,6 +48,8 @@ ColumnLayout {
 
         onEditingFinished: {
             addressGroup.text = textArea.text;
+
+            setConfEdited();
         }
     }
 }

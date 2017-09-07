@@ -19,6 +19,8 @@ BasePage {
         firewallConf.addAppGroupByName(editGroupName.text);
         barGroups.currentIndex = lastIndex;
         resetGroupName();
+
+        setConfEdited();
     }
 
     function removeAppGroup(index) {
@@ -26,12 +28,16 @@ BasePage {
         var lastIndex = appGroupsCount - 1;
         barGroups.currentIndex = (index < appGroupsCount)
                 ? index : appGroupsCount - 1;
+
+        setConfEdited();
     }
 
     function renameAppGroup() {
         const appGroup = appsColumn.appGroup;
         appGroup.name = editGroupName.text;
         resetGroupName();
+
+        setConfEdited();
     }
 
     function moveAppGroup(index, step) {
@@ -43,6 +49,8 @@ BasePage {
 
         firewallConf.moveAppGroup(index, toIndex);
         barGroups.currentIndex = toIndex;
+
+        setConfEdited();
     }
 
     ColumnLayout {
@@ -74,6 +82,8 @@ BasePage {
                 checked: firewallConf.appBlockAll
                 onToggled: {
                     firewallConf.appBlockAll = checked;
+
+                    setConfFlagsEdited();
                 }
             }
             CheckBox {
@@ -81,6 +91,8 @@ BasePage {
                 checked: firewallConf.appAllowAll
                 onToggled: {
                     firewallConf.appAllowAll = checked;
+
+                    setConfFlagsEdited();
                 }
             }
         }
