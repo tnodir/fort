@@ -6,6 +6,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QSystemTrayIcon>
+#include <QTimer>
 #include <QWindow>
 
 #include "activityLog/logbuffer.h"
@@ -96,6 +97,11 @@ void FortManager::setupEngine()
     m_appWindow = qobject_cast<QWindow *>(
                 m_engine->rootObjects().first());
     Q_ASSERT(m_appWindow);
+
+    // XXX: Workaround to fix icons' incorrect position on main tab buttons
+    QTimer::singleShot(100, [this]() {
+        m_appWindow->resize(1024, 768);
+    });
 }
 
 void FortManager::showTrayIcon()

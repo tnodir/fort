@@ -7,8 +7,8 @@ import com.fortfirewall 1.0
 ApplicationWindow {
     id: appWindow
 
-    width: 800
-    height: 600
+    width: 1025
+    height: 768
     minimumWidth: 700
     minimumHeight: 600
 
