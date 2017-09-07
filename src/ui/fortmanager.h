@@ -2,7 +2,8 @@
 #define FORTMANAGER_H
 
 #include <QObject>
-#include <QMainWindow>
+
+#include "mainwindow.h"
 
 class QQmlApplicationEngine;
 class QSystemTrayIcon;
@@ -48,6 +49,8 @@ public slots:
 
     void setAppLogBlocked(bool enable);
 
+    void setLanguage(int languageIndex);
+
 private slots:
     void saveTrayFlags();
 
@@ -80,7 +83,7 @@ private:
                                    const QObject *receiver = 0, const char *member = 0);
 
 private:
-    QMainWindow m_window;  // dummy window for tray icon
+    MainWindow m_window;  // dummy window for tray icon
 
     QSystemTrayIcon *m_trayIcon;
     QQmlApplicationEngine *m_engine;

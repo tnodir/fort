@@ -10,15 +10,18 @@ ColumnLayout {
 
     RowLayout {
         Button {
-            text: QT_TRANSLATE_NOOP("qml", "Remove Group")
+            text: translationManager.dummyBool
+                  && qsTranslate("qml", "Remove Group")
             onClicked: removeAppGroup(index)
         }
         Button {
-            text: QT_TRANSLATE_NOOP("qml", "Move left")
+            text: translationManager.dummyBool
+                  && qsTranslate("qml", "Move left")
             onClicked: moveAppGroup(index, -1)
         }
         Button {
-            text: QT_TRANSLATE_NOOP("qml", "Move right")
+            text: translationManager.dummyBool
+                  && qsTranslate("qml", "Move right")
             onClicked: moveAppGroup(index, 1)
         }
 
@@ -27,7 +30,8 @@ ColumnLayout {
         }
 
         CheckBox {
-            text: QT_TRANSLATE_NOOP("qml", "Enabled")
+            text: translationManager.dummyBool
+                  && qsTranslate("qml", "Enabled")
             checked: appGroup.enabled
             onToggled: {
                 appGroup.enabled = checked;
@@ -44,7 +48,8 @@ ColumnLayout {
 
         AppsTextColumn {
             title {
-                text: QT_TRANSLATE_NOOP("qml", "Block")
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Block")
             }
 
             textArea {
@@ -63,7 +68,8 @@ C:\\Program Files\\Internet Explorer\\iexplore.exe
 
         AppsTextColumn {
             title {
-                text: QT_TRANSLATE_NOOP("qml", "Allow")
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Allow")
             }
 
             textArea {

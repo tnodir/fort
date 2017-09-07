@@ -38,19 +38,23 @@ Page {
 
         TabButton {
             icon.source: "qrc:/images/cog.png"
-            text: QT_TRANSLATE_NOOP("qml", "Options")
+            text: translationManager.dummyBool
+                  && qsTranslate("qml", "Options")
         }
         TabButton {
             icon.source: "qrc:/images/link.png"
-            text: QT_TRANSLATE_NOOP("qml", "IPv4 Addresses")
+            text: translationManager.dummyBool
+                  && qsTranslate("qml", "IPv4 Addresses")
         }
         TabButton {
             icon.source: "qrc:/images/application_cascade.png"
-            text: QT_TRANSLATE_NOOP("qml", "Applications")
+            text: translationManager.dummyBool
+                  && qsTranslate("qml", "Applications")
         }
         TabButton {
             icon.source: "qrc:/images/zoom.png"
-            text: QT_TRANSLATE_NOOP("qml", "Activity")
+            text: translationManager.dummyBool
+                  && qsTranslate("qml", "Activity")
         }
     }
 
@@ -71,7 +75,8 @@ Page {
 
             Button {
                 enabled: confFlagsEdited || confEdited
-                text: QT_TRANSLATE_NOOP("qml", "OK")
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "OK")
                 onClicked: {
                     if (fortManager.saveConf(confFlagsEdited)) {
                         mainPage.saved();
@@ -81,7 +86,8 @@ Page {
             }
             Button {
                 enabled: confFlagsEdited || confEdited
-                text: QT_TRANSLATE_NOOP("qml", "Apply")
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Apply")
                 onClicked: {
                     if (fortManager.applyConf(confFlagsEdited)) {
                         resetConfEdited();
@@ -89,11 +95,13 @@ Page {
                 }
             }
             Button {
-                text: QT_TRANSLATE_NOOP("qml", "Cancel")
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Cancel")
                 onClicked: closeWindow()
             }
             Button {
-                text: QT_TRANSLATE_NOOP("qml", "Quit")
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Quit")
                 onClicked: fortManager.exit()
             }
         }

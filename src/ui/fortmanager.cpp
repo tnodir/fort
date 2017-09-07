@@ -16,6 +16,7 @@
 #include "conf/firewallconf.h"
 #include "driver/drivermanager.h"
 #include "fortsettings.h"
+#include "translationmanager.h"
 #include "util/fileutil.h"
 #include "util/hostinfo.h"
 #include "util/netutil.h"
@@ -35,6 +36,9 @@ FortManager::FortManager(QObject *parent) :
 
     loadSettings(m_firewallConf);
 
+    TranslationManager::instance()->switchLanguageByName(
+                m_fortSettings->language());
+
     registerQmlTypes();
 
     setupTrayIcon();
@@ -46,8 +50,8 @@ void FortManager::registerQmlTypes()
                                              "Singleton");
     qmlRegisterUncreatableType<FortSettings>("com.fortfirewall", 1, 0, "FortSettings",
                                              "Singleton");
-    qmlRegisterUncreatableType<FortSettings>("com.fortfirewall", 1, 0, "FortSettings",
-                                             "Singleton");
+    qmlRegisterUncreatableType<TranslationManager>("com.fortfirewall", 1, 0, "TranslationManager",
+                                                   "Singleton");
 
     qmlRegisterType<AddressGroup>("com.fortfirewall", 1, 0, "AddressGroup");
     qmlRegisterType<AppGroup>("com.fortfirewall", 1, 0, "AppGroup");
@@ -79,8 +83,9 @@ void FortManager::setupTrayIcon()
 
     connect(m_trayIcon, &QSystemTrayIcon::activated,
             [this](QSystemTrayIcon::ActivationReason reason) {
-        if (reason == QSystemTrayIcon::Trigger)
+        if (reason == QSystemTrayIcon::Trigger) {
             showWindow();
+        }
     });
 
     updateTrayMenu();
@@ -90,7 +95,9 @@ void FortManager::setupEngine()
 {
     m_engine = new QQmlApplicationEngine(this);
 
-    m_engine->rootContext()->setContextProperty("fortManager", this);
+    QQmlContext *context = m_engine->rootContext();
+    context->setContextProperty("fortManager", this);
+    context->setContextProperty("translationManager", TranslationManager::instance());
 
     m_engine->load(QUrl("qrc:/qml/main.qml"));
 
@@ -232,6 +239,16 @@ void FortManager::setAppLogBlocked(bool enable)
     m_firewallConf->setAppLogBlocked(enable);
 
     updateDriverConfFlags(m_firewallConf);
+}
+
+void FortManager::setLanguage(int languageIndex)
+{
+    TranslationManager::instance()->switchLanguage(
+                static_cast<TranslationManager::Language>(languageIndex));
+
+    m_fortSettings->setLanguage(TranslationManager::instance()->langName());
+
+    updateTrayMenu();
 }
 
 void FortManager::saveTrayFlags()

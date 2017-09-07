@@ -18,7 +18,8 @@ BasePage {
 
             CheckBox {
                 id: cbStart
-                text: QT_TRANSLATE_NOOP("qml", "Start with Windows")
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Start with Windows")
                 checked: fortSettings.startWithWindows
                 onToggled: {
                     setConfFlagsEdited();
@@ -26,13 +27,21 @@ BasePage {
             }
             CheckBox {
                 id: cbFilter
-                text: QT_TRANSLATE_NOOP("qml", "Filter Enabled")
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Filter Enabled")
                 checked: firewallConf.filterEnabled
                 onToggled: {
                     firewallConf.filterEnabled = checked;
 
                     setConfFlagsEdited();
                 }
+            }
+            ComboBox {
+                width: Math.max(implicitWidth, 180)
+                flat: true
+                currentIndex: translationManager.language
+                model: translationManager.getNaturalLabels()
+                onActivated: fortManager.setLanguage(index)
             }
         }
     }

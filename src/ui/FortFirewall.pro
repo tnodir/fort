@@ -17,6 +17,8 @@ SOURCES += \
     fortcommon.cpp \
     fortmanager.cpp \
     fortsettings.cpp \
+    mainwindow.cpp \
+    translationmanager.cpp \
     util/confutil.cpp \
     util/device.cpp \
     util/fileutil.cpp \
@@ -37,6 +39,8 @@ HEADERS += \
     fortcommon.h \
     fortmanager.h \
     fortsettings.h \
+    mainwindow.h \
+    translationmanager.h \
     util/confutil.h \
     util/device.h \
     util/fileutil.h \

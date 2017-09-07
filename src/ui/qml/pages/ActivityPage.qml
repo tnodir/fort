@@ -148,13 +148,15 @@ BasePage {
         RowLayout {
             Button {
                 enabled: btCopy.enabled
-                text: QT_TRANSLATE_NOOP("qml", "Clear")
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Clear")
                 onClicked: clearAppPaths()
             }
             Button {
                 id: btCopy
                 enabled: currentItem
-                text: QT_TRANSLATE_NOOP("qml", "Copy Path")
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Copy Path")
                 readonly property Item currentItem: appListView.currentItem
                 onClicked: {
                     osUtil.setClipboardData(currentItem.text);
@@ -167,7 +169,8 @@ BasePage {
 
             Switch {
                 id: cbShowBlockedApps
-                text: QT_TRANSLATE_NOOP("qml", "Log Blocked Applications")
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Log Blocked Applications")
                 onToggled: switchLogReading(checked)
             }
         }

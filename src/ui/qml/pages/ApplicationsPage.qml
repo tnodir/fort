@@ -60,16 +60,19 @@ BasePage {
             TextField {
                 enabled: appGroupsCount < 16
                 id: editGroupName
-                placeholderText: QT_TRANSLATE_NOOP("qml", "Group Name")
+                placeholderText: translationManager.dummyBool
+                                 && qsTranslate("qml", "Group Name")
             }
             Button {
                 enabled: editGroupName.text
-                text: QT_TRANSLATE_NOOP("qml", "Add Group")
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Add Group")
                 onClicked: addAppGroup()
             }
             Button {
                 enabled: editGroupName.text && appsColumn.enabled
-                text: QT_TRANSLATE_NOOP("qml", "Rename Group")
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Rename Group")
                 onClicked: renameAppGroup()
             }
 
@@ -78,7 +81,8 @@ BasePage {
             }
 
             CheckBox {
-                text: QT_TRANSLATE_NOOP("qml", "Block All")
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Block All")
                 checked: firewallConf.appBlockAll
                 onToggled: {
                     firewallConf.appBlockAll = checked;
@@ -87,7 +91,8 @@ BasePage {
                 }
             }
             CheckBox {
-                text: QT_TRANSLATE_NOOP("qml", "Allow All")
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Allow All")
                 checked: firewallConf.appAllowAll
                 onToggled: {
                     firewallConf.appAllowAll = checked;

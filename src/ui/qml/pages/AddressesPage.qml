@@ -14,10 +14,12 @@ BasePage {
             addressGroup: firewallConf.ipInclude
 
             title {
-                text: QT_TRANSLATE_NOOP("qml", "Include")
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Include")
             }
             checkBoxAll {
-                text: QT_TRANSLATE_NOOP("qml", "Include All")
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Include All")
             }
         }
 
@@ -25,10 +27,12 @@ BasePage {
             addressGroup: firewallConf.ipExclude
 
             title {
-                text: QT_TRANSLATE_NOOP("qml", "Exclude")
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Exclude")
             }
             checkBoxAll {
-                text: QT_TRANSLATE_NOOP("qml", "Exclude All")
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Exclude All")
             }
         }
     }
