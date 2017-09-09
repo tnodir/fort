@@ -58,8 +58,7 @@ QML_FILES += \
     qml/pages/apps/*.qml
 
 OTHER_FILES += \
-    $${QML_FILES} \
-    *.ini
+    $${QML_FILES}
 
 TRANSLATIONS += \
     i18n/i18n_ru.ts
@@ -69,9 +68,6 @@ RESOURCES += fort_qml.qrc
 
 # Compiled translation files
 RESOURCES += fort_i18n.qrc
-
-# Default FortFirewall.ini
-RESOURCES += fort_ini.qrc
 
 # Images
 RESOURCES += fort_images.qrc

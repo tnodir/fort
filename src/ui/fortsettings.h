@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QSettings>
 
+#include "../common/version.h"
+
 class FirewallConf;
 
 class FortSettings : public QObject
@@ -11,7 +13,7 @@ class FortSettings : public QObject
     Q_OBJECT
     Q_PROPERTY(bool debug READ debug WRITE setDebug NOTIFY iniChanged)
     Q_PROPERTY(QString language READ language WRITE setLanguage NOTIFY iniChanged)
-    Q_PROPERTY(QString updatesUrl READ updatesUrl WRITE setUpdatesUrl NOTIFY iniChanged)
+    Q_PROPERTY(QString updatesUrl READ updatesUrl CONSTANT)
     Q_PROPERTY(bool startWithWindows READ startWithWindows WRITE setStartWithWindows NOTIFY startWithWindowsChanged)
     Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
 
@@ -25,10 +27,9 @@ public:
     void setDebug(bool on) { setIniValue("base/debug", on); }
 
     QString language() const { return iniText("base/language", "en"); }
-    void setLanguage(const QString &v) { setIniValue("base/language", v, "en"); }
+    void setLanguage(const QString &v) { setIniValue("base/language", v); }
 
-    QString updatesUrl() const { return iniText("base/updatesUrl"); }
-    void setUpdatesUrl(const QString &v) { setIniValue("base/updatesUrl", v); }
+    QString updatesUrl() const { return APP_UPDATES_URL; }
 
     bool startWithWindows() const;
     void setStartWithWindows(bool start);

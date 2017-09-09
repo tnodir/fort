@@ -67,18 +67,9 @@ void FortSettings::processArguments(const QStringList &args)
 
 void FortSettings::setupIni()
 {
-    const QString qrcIniPath(":/FortFirewall.ini");
     const QString iniPath(m_profilePath + "FortFirewall.ini");
 
     FileUtil::makePath(m_profilePath);
-
-    // Copy default .ini into writable location
-    if (!FileUtil::fileExists(iniPath)) {
-        const QString text = FileUtil::readFile(qrcIniPath);
-        if (!FileUtil::writeFile(iniPath, text)) {
-            FileUtil::removeFile(iniPath);
-        }
-    }
 
     m_ini = new QSettings(iniPath, QSettings::IniFormat, this);
 }
