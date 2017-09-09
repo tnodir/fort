@@ -142,7 +142,7 @@ QVariant FirewallConf::toVariant() const
 
 void FirewallConf::fromVariant(const QVariant &v)
 {
-    QVariantMap map = v.toMap();
+    const QVariantMap map = v.toMap();
 
     m_ipInclude->fromVariant(map["ipInclude"]);
     m_ipExclude->fromVariant(map["ipExclude"]);

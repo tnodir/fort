@@ -52,7 +52,7 @@ QVariant AppGroup::toVariant() const
 
 void AppGroup::fromVariant(const QVariant &v)
 {
-    QVariantMap map = v.toMap();
+    const QVariantMap map = v.toMap();
 
     //m_enabled = map["enabled"].toBool();
     m_name = map["name"].toString();

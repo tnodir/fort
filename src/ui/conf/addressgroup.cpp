@@ -33,7 +33,7 @@ QVariant AddressGroup::toVariant() const
 
 void AddressGroup::fromVariant(const QVariant &v)
 {
-    QVariantMap map = v.toMap();
+    const QVariantMap map = v.toMap();
 
     m_text = map["text"].toString();
 }
