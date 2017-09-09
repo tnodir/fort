@@ -40,7 +40,7 @@ BasePage {
                 width: Math.max(implicitWidth, 180)
                 flat: true
                 currentIndex: translationManager.language
-                model: translationManager.getNaturalLabels()
+                model: translationManager.naturalLabels
                 onActivated: fortManager.setLanguage(index)
             }
         }

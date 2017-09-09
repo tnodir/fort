@@ -241,12 +241,12 @@ void FortManager::setAppLogBlocked(bool enable)
     updateDriverConfFlags(m_firewallConf);
 }
 
-void FortManager::setLanguage(int languageIndex)
+void FortManager::setLanguage(int language)
 {
-    TranslationManager::instance()->switchLanguage(
-                static_cast<TranslationManager::Language>(languageIndex));
+    if (!TranslationManager::instance()->switchLanguage(language))
+        return;
 
-    m_fortSettings->setLanguage(TranslationManager::instance()->langName());
+    m_fortSettings->setLanguage(TranslationManager::instance()->localeName());
 
     updateTrayMenu();
 }

@@ -49,7 +49,7 @@ public slots:
 
     void setAppLogBlocked(bool enable);
 
-    void setLanguage(int languageIndex);
+    void setLanguage(int language);
 
 private slots:
     void saveTrayFlags();

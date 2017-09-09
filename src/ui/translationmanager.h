@@ -1,9 +1,10 @@
 #ifndef TRANSLATIONMANAGER_H
 #define TRANSLATIONMANAGER_H
 
+#include <QLocale>
 #include <QObject>
 #include <QStringList>
-#include <QHash>
+#include <QVector>
 
 class QTranslator;
 
@@ -11,68 +12,54 @@ class TranslationManager : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool dummyBool READ dummyBool NOTIFY dummyBoolChanged)
-    Q_PROPERTY(Language language READ language WRITE switchLanguage NOTIFY languageChanged)
-    Q_PROPERTY(QString langName READ langName WRITE setLangName NOTIFY languageChanged)
+    Q_PROPERTY(int language READ language WRITE switchLanguage NOTIFY languageChanged)
+    Q_PROPERTY(QStringList naturalLabels READ naturalLabels CONSTANT)
 
 protected:
     explicit TranslationManager(QObject *parent = 0);
     virtual ~TranslationManager();
 
 public:
-    enum Language {
-        NoneLanguage = -1,
-        English = 0,
-        Russian,
-        Uzbek,
-        LanguageCount
-    };
-    Q_ENUM(Language)
-
     static TranslationManager *instance();
 
     bool dummyBool() const { return true; }
 
-    TranslationManager::Language language() const { return m_language; }
+    int language() const { return m_language; }
+    QString localeName() const { return m_locale.name(); }
 
-    QString langName() const;
-    void setLangName(const QString &langName);
+    QStringList naturalLabels() const;
 
-    static TranslationManager::Language getLanguageByName(const QString &langName);
-
-    Q_INVOKABLE QString getLangName(TranslationManager::Language language = NoneLanguage) const;
-    Q_INVOKABLE QString getLabel(TranslationManager::Language language = NoneLanguage) const;
-    Q_INVOKABLE QString getNaturalLabel(TranslationManager::Language language = NoneLanguage) const;
-
-    Q_INVOKABLE static QStringList getLangNames();
-    Q_INVOKABLE static QStringList getLabels();
-    Q_INVOKABLE static QStringList getNaturalLabels();
-
-    static QString defaultLangName() { return QLatin1String("en"); }
+    int getLanguageByName(const QString &localeName) const;
 
 signals:
     void dummyBoolChanged();
-    void languageChanged(TranslationManager::Language language);
+    void languageChanged(int language);
 
 public slots:
-    void switchLanguage(TranslationManager::Language language = English);
-    void switchLanguageByName(const QString &langName);
+    bool switchLanguage(int language = 0);
+    bool switchLanguageByName(const QString &localeName);
 
     void refreshTranslations();
 
 private:
-    void installTranslator(Language language);
-    void uninstallTranslator(Language language);
+    void setupTranslation();
 
-    QTranslator *loadTranslator(Language language);
+    void uninstallAllTranslators();
+    void uninstallTranslator(int language);
 
-    static QLocale getLocale(Language language);
+    void installTranslator(int language, const QLocale &locale);
+
+    QTranslator *loadTranslator(int language, const QLocale &locale);
+
+    static QString i18nDir();
 
 private:
-    Language m_language;
+    int m_language;
 
-    QString m_i18nDir;
+    QLocale m_locale;
 
-    QHash<Language, QTranslator *> m_translators;
+    QList<QLocale> m_locales;
+    QVector<QTranslator *> m_translators;
 };
 
 #endif // TRANSLATIONMANAGER_H

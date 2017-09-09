@@ -26,7 +26,8 @@ SOURCES += \
     util/ip4range.cpp \
     util/netutil.cpp \
     util/processinfo.cpp \
-    util/osutil.cpp
+    util/osutil.cpp \
+    util/stringutil.cpp
 
 HEADERS += \
     activityLog/logbuffer.h \
@@ -48,7 +49,8 @@ HEADERS += \
     util/ip4range.h \
     util/netutil.h \
     util/processinfo.h \
-    util/osutil.h
+    util/osutil.h \
+    util/stringutil.h
 
 QML_FILES += \
     qml/*.qml \
@@ -60,17 +62,24 @@ QML_FILES += \
 OTHER_FILES += \
     $${QML_FILES}
 
-TRANSLATIONS += \
-    i18n/i18n_ru.ts
-
 # QML files
 RESOURCES += fort_qml.qrc
 
-# Compiled translation files
-RESOURCES += fort_i18n.qrc
-
 # Images
 RESOURCES += fort_images.qrc
+
+# Shadow Build: Copy i18n/ to build path
+!equals(PWD, $${OUT_PWD}) {
+    CONFIG(debug, debug|release) {
+        OUTDIR = debug
+    } else {
+        OUTDIR = release
+    }
+
+    i18n.files = i18n/*.qm
+    i18n.path = $${OUT_PWD}/$${OUTDIR}/i18n
+    COPIES += i18n
+}
 
 # Windows
 LIBS += -lfwpuclnt -lkernel32 -lpsapi -luser32 -luuid -lws2_32
