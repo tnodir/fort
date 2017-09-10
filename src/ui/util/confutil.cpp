@@ -47,21 +47,17 @@ int ConfUtil::write(const FirewallConf &conf, QByteArray &buf)
         return false;
     }
 
-    int groupNamesLen = 0;
     int appPathsLen = 0;
-    QStringList groupNames;
     QStringList appPaths;
     appperms_arr_t appPerms;
 
     if (!parseAppGroups(conf.appGroupsList(),
-                        groupNames, groupNamesLen,
                         appPaths, appPathsLen, appPerms))
         return false;
 
     // Calculate maximum required buffer size
     if (incRange.size() > FORT_CONF_IP_MAX
             || excRange.size() > FORT_CONF_IP_MAX
-            || groupNamesLen > FORT_CONF_GROUPS_LEN_MAX
             || appPathsLen > FORT_CONF_APPS_LEN_MAX) {
         setErrorMessage(tr("Size of configuration is too big"));
         return false;
@@ -72,16 +68,13 @@ int ConfUtil::write(const FirewallConf &conf, QByteArray &buf)
             + (incRange.size() + excRange.size()) * 2 * sizeof(quint32)
             + appPaths.size() * sizeof(quint32)
             + FORT_CONF_STR_HEADER_SIZE(appPaths.size())
-            + FORT_CONF_STR_DATA_SIZE(appPathsLen)
-            + FORT_CONF_STR_HEADER_SIZE(groupNames.size())
-            + FORT_CONF_STR_DATA_SIZE(groupNamesLen);
+            + FORT_CONF_STR_DATA_SIZE(appPathsLen);
 
     buf.reserve(confSize);
 
     writeData(buf.data(), conf,
               incRange, excRange,
-              groupNames, appPaths,
-              appPerms);
+              appPaths, appPerms);
 
     return confSize;
 }
@@ -107,8 +100,6 @@ int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
 }
 
 bool ConfUtil::parseAppGroups(const QList<AppGroup *> &appGroups,
-                              QStringList &groupNames,
-                              int &groupNamesLen,
                               QStringList &appPaths,
                               int &appPathsLen,
                               appperms_arr_t &appPerms)
@@ -131,9 +122,6 @@ bool ConfUtil::parseAppGroups(const QList<AppGroup *> &appGroups,
                             .arg(APP_GROUP_NAME_MAX));
             return false;
         }
-
-        groupNames.append(name);
-        groupNamesLen += name.size() * sizeof(wchar_t);
 
         if (!parseApps(appGroup->blockText(), true, appPermsMap, i)
                 || !parseApps(appGroup->allowText(), false, appPermsMap, i))
@@ -207,18 +195,17 @@ QString ConfUtil::parseAppPath(const QStringRef &line)
 
 void ConfUtil::writeData(char *output, const FirewallConf &conf,
                          const Ip4Range &incRange, const Ip4Range &excRange,
-                         const QStringList &groupNames, const QStringList &appPaths,
+                         const QStringList &appPaths,
                          const appperms_arr_t &appPerms)
 {
     PFORT_CONF drvConf = (PFORT_CONF) output;
     char *data = (char *) &drvConf->data;
     const quint32 incRangeSize = incRange.size();
     const quint32 excRangeSize = excRange.size();
-    const quint32 groupNamesSize = groupNames.size();
     const quint32 appPathsSize = appPaths.size();
     quint32 incRangeFromOff, incRangeToOff;
     quint32 excRangeFromOff, excRangeToOff;
-    quint32 groupNamesOff, appPathsOff, appPermsOff;
+    quint32 appPathsOff, appPermsOff;
 
 #define CONF_DATA_OFFSET (data - (char *) &drvConf->data)
     incRangeFromOff = CONF_DATA_OFFSET;
@@ -238,9 +225,6 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
 
     appPathsOff = CONF_DATA_OFFSET;
     writeStrings(&data, appPaths);
-
-    groupNamesOff = CONF_DATA_OFFSET;
-    writeStrings(&data, groupNames);
 #undef CONF_DATA_OFFSET
 
     drvConf->flags.filter_enabled = conf.filterEnabled();
@@ -263,7 +247,6 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     drvConf->ip_exclude_n = excRangeSize;
 
     drvConf->apps_n = appPathsSize;
-    drvConf->groups_n = groupNamesSize;
 
     drvConf->ip_from_include_off = incRangeFromOff;
     drvConf->ip_to_include_off = incRangeToOff;
@@ -273,7 +256,6 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
 
     drvConf->app_perms_off = appPermsOff;
     drvConf->apps_off = appPathsOff;
-    drvConf->groups_off = groupNamesOff;
 }
 
 void ConfUtil::writeNumbers(char **data, const QVector<quint32> &array)

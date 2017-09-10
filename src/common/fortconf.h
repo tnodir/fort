@@ -21,7 +21,6 @@ typedef struct fort_conf {
   UINT16 ip_exclude_n;
 
   UINT16 apps_n;
-  UINT16 groups_n;
 
   UINT32 app_perms_block_mask;
   UINT32 app_perms_allow_mask;
@@ -34,7 +33,6 @@ typedef struct fort_conf {
 
   UINT32 app_perms_off;
   UINT32 apps_off;
-  UINT32 groups_off;
 
   UCHAR data[4];
 } FORT_CONF, *PFORT_CONF;
