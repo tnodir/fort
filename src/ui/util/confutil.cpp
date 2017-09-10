@@ -94,6 +94,7 @@ int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
     confFlags->app_log_blocked = conf.appLogBlocked();
     confFlags->app_block_all = conf.appBlockAll();
     confFlags->app_allow_all = conf.appAllowAll();
+    confFlags->conf_version = FORT_CONF_VERSION;
     confFlags->group_bits = conf.appGroupBits();
 
     return flagsSize;
@@ -236,11 +237,12 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     drvConf->flags.app_block_all = conf.appBlockAll();
     drvConf->flags.app_allow_all = conf.appAllowAll();
 
+    drvConf->flags.conf_version = FORT_CONF_VERSION;
+
     drvConf->flags.group_bits = conf.appGroupBits();
 
     FortCommon::confAppPermsMaskInit(drvConf);
 
-    drvConf->conf_version = FORT_CONF_VERSION;
     drvConf->data_off = FORT_CONF_DATA_OFF;
 
     drvConf->ip_include_n = incRangeSize;

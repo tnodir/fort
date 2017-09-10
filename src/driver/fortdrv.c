@@ -388,7 +388,8 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
     const PFORT_CONF conf = irp->AssociatedIrp.SystemBuffer;
     const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
 
-    if (len > FORT_CONF_DATA_OFF) {
+    if (conf->flags.conf_version == FORT_CONF_VERSION
+        && len > FORT_CONF_DATA_OFF) {
       PFORT_CONF_REF conf_ref = fort_conf_ref_new(conf, len);
 
       if (conf_ref == NULL) {
@@ -404,7 +405,8 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
     const PFORT_CONF_FLAGS conf_flags = irp->AssociatedIrp.SystemBuffer;
     const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
 
-    if (len == sizeof(FORT_CONF_FLAGS)) {
+    if (conf_flags->conf_version == FORT_CONF_VERSION
+        && len == sizeof(FORT_CONF_FLAGS)) {
       fort_conf_ref_flags_set(conf_flags);
       status = fort_callout_force_reauth(device);
     }

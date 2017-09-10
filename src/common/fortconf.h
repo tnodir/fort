@@ -8,13 +8,14 @@ typedef struct fort_conf_flags {
   UINT32 app_log_blocked	: 1;
   UINT32 app_block_all		: 1;
   UINT32 app_allow_all		: 1;
+  UINT32 _reserved_		: 4;
+  UINT32 conf_version		: 6;
   UINT32 group_bits		: 16;
 } FORT_CONF_FLAGS, *PFORT_CONF_FLAGS;
 
 typedef struct fort_conf {
   FORT_CONF_FLAGS flags;
 
-  UINT16 conf_version;
   UINT16 data_off;
 
   UINT16 ip_include_n;
