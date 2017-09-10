@@ -1,5 +1,4 @@
 import QtQuick 2.9
-import QtQuick.Dialogs 1.2
 import QtQuick.Controls 2.2
 import "pages"
 import com.fortfirewall 1.0
