@@ -91,7 +91,7 @@ void FortManager::setupTrayIcon()
     updateTrayMenu();
 }
 
-void FortManager::setupEngine()
+bool FortManager::setupEngine()
 {
     m_engine = new QQmlApplicationEngine(this);
 
@@ -101,6 +101,11 @@ void FortManager::setupEngine()
 
     m_engine->load(QUrl("qrc:/qml/main.qml"));
 
+    if (m_engine->rootObjects().isEmpty()) {
+        showErrorBox("Cannot setup QML Engine");
+        return false;
+    }
+
     m_appWindow = qobject_cast<QWindow *>(
                 m_engine->rootObjects().first());
     Q_ASSERT(m_appWindow);
@@ -109,6 +114,8 @@ void FortManager::setupEngine()
     QTimer::singleShot(100, [this]() {
         m_appWindow->resize(1024, 768);
     });
+
+    return true;
 }
 
 void FortManager::showTrayIcon()
@@ -121,6 +128,8 @@ void FortManager::showWindow()
     if (!m_engine) {
         setupEngine();
     }
+
+    if (!m_appWindow) return;
 
     if (m_firewallConfToEdit == nullConf()) {
         setFirewallConfToEdit(cloneConf(*m_firewallConf));
@@ -155,7 +164,7 @@ void FortManager::exit(int retcode)
 
 void FortManager::showErrorBox(const QString &text)
 {
-    QMessageBox::critical(&m_window, QString(), text);
+    QMessageBox::warning(&m_window, QString(), text);
 }
 
 bool FortManager::saveConf(bool onlyFlags)

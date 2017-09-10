@@ -63,7 +63,7 @@ private:
 
     bool setupDriver();
     void setupTrayIcon();
-    void setupEngine();
+    bool setupEngine();
 
     bool loadSettings(FirewallConf *conf);
     bool saveSettings(FirewallConf *newConf, bool onlyFlags = false);
