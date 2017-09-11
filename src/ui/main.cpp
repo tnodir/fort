@@ -5,9 +5,12 @@
 #include "fortcommon.h"
 #include "fortmanager.h"
 #include "fortsettings.h"
+#include "util/osutil.h"
 
 int main(int argc, char *argv[])
 {
+    OsUtil::createGlobalMutex(APP_NAME);
+
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QApplication app(argc, argv);
