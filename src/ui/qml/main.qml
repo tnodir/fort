@@ -15,6 +15,7 @@ ApplicationWindow {
 
     readonly property FortSettings fortSettings: fortManager.fortSettings
     readonly property FirewallConf firewallConf: fortManager.firewallConfToEdit
+                                                 || fortManager.firewallConf
 
     onClosing: {
         if (visible) {

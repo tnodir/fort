@@ -17,6 +17,7 @@ class FortManager : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(FortSettings *fortSettings READ fortSettings CONSTANT)
+    Q_PROPERTY(FirewallConf *firewallConf READ firewallConf NOTIFY firewallConfToEditChanged)
     Q_PROPERTY(FirewallConf *firewallConfToEdit READ firewallConfToEdit NOTIFY firewallConfToEditChanged)
     Q_PROPERTY(DriverManager *driverManager READ driverManager CONSTANT)
 
@@ -25,10 +26,8 @@ public:
                          QObject *parent = nullptr);
 
     FortSettings *fortSettings() const { return m_fortSettings; }
-
-    FirewallConf *firewallConfToEdit() const {
-        return m_firewallConfToEdit ? m_firewallConfToEdit : m_firewallConf;
-    }
+    FirewallConf *firewallConf() const { return m_firewallConf; }
+    FirewallConf *firewallConfToEdit() const { return m_firewallConfToEdit; }
 
     DriverManager *driverManager() const { return m_driverManager; }
 
