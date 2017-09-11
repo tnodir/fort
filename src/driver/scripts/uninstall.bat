@@ -1,5 +1,6 @@
 @rem Uninstall driver
 
+@set DISPNAME=Fort Firewall
 @set CERTNAME=FortFirewallTestCert
 
 @set BASENAME=fortfw
@@ -22,6 +23,7 @@ Del "%DSTPATH%"
 
 @rem Remove driver from system storage
 CertMgr /del /c /n "%CERTNAME%" -s -r localMachine Root
+CertMgr /del /c /n "%CERTNAME%" -s "%DISPNAME%"
 
 
 @set RCODE=0
