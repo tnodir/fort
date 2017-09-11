@@ -4,7 +4,7 @@
 
 @set PLAT=%1
 
-@set OutDir=.\
+@set OutDir=..\..\deploy\build\driver\
 @set IntDir=.\build\
 
 MSBuild fortdrv.vcxproj /p:OutDir=%OutDir%;IntDir=%IntDir%;Platform=%PLAT%

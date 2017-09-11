@@ -86,7 +86,7 @@ LIBS += -lfwpuclnt -lkernel32 -lpsapi -luser32 -luuid -lws2_32
 RC_FILE = fort.rc
 
 # Kernel Driver
-{
+installer_build {
     BUILDCMD = MSBuild $$PWD/../driver/fortdrv.vcxproj /p:OutDir=./;IntDir=$$OUT_PWD/driver/
 
     fortdrv32.target = $$PWD/../driver/fortfw32.sys

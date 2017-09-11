@@ -9,24 +9,24 @@
 @rem Remove the service
 sc stop %BASENAME%
 sc delete %BASENAME%
-if ERRORLEVEL 1 (
-    echo Error: Cannot delete the service
-    set RCODE=%ERRORLEVEL%
-    goto EXIT
+@if ERRORLEVEL 1 (
+    @echo Error: Cannot delete the service
+    @set RCODE=%ERRORLEVEL%
+    @goto EXIT
 )
 
 
 @rem Remove driver from system storage
-Del %DSTPATH%
+Del "%DSTPATH%"
 
 
 @rem Remove driver from system storage
 CertMgr /del /c /n "%CERTNAME%" -s -r localMachine Root
 
 
-set RCODE=0
-goto EXIT
+@set RCODE=0
+@goto EXIT
 
 :EXIT
-echo End execution... Error Code = %RCODE%
-exit /b %RCODE%
+@echo End execution... Error Code = %RCODE%
+@exit /b %RCODE%
