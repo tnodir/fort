@@ -257,7 +257,7 @@ fort_callout_install (PDEVICE_OBJECT device)
   NTSTATUS status;
 
   if (g_device->active)
-    return STATUS_SUCCESS;
+    return STATUS_SHARING_VIOLATION;  // Only one client may connect
 
   RtlZeroMemory(&c, sizeof(FWPS_CALLOUT0));
 
