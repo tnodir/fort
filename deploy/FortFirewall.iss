@@ -48,5 +48,4 @@ Filename: "{app}\driver\scripts\install.bat"; Description: "Install driver"; Fla
 Filename: "{app}\driver\scripts\uninstall.bat"; Flags: runascurrentuser
 
 [UninstallDelete]
-Type: filesandordirs; Name: "{localappdata}\{#APP_NAME}"
 Type: filesandordirs; Name: "{app}"
