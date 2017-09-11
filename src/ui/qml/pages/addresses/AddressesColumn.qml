@@ -46,7 +46,7 @@ ColumnLayout {
             text: addressGroup.text
         }
 
-        onEditingFinished: {
+        onTextChanged: {
             addressGroup.text = textArea.text;
 
             setConfEdited();

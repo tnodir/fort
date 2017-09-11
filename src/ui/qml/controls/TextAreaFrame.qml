@@ -4,7 +4,7 @@ import QtQuick.Controls 2.2
 Frame {
     id: frame
 
-    signal editingFinished()  // Workaround for QTBUG-59908
+    signal textChanged()  // Workaround for QTBUG-59908
 
     readonly property alias textArea: textArea
 
@@ -16,7 +16,7 @@ Frame {
         TextArea {
             id: textArea
             clip: true  // to clip placeholder text
-            onEditingFinished: frame.editingFinished()
+            onTextChanged: frame.textChanged()
         }
     }
 }

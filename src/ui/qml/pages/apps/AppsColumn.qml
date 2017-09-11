@@ -59,7 +59,7 @@ C:\\Program Files\\Internet Explorer\\iexplore.exe
                 text: appGroup.blockText
             }
 
-            onEditingFinished: {
+            onTextChanged: {
                 appGroup.blockText = textArea.text;
 
                 setConfEdited();
@@ -80,7 +80,7 @@ C:\\Program Files\\Skype\\Phone\\Skype.exe
                 text: appGroup.allowText
             }
 
-            onEditingFinished: {
+            onTextChanged: {
                 appGroup.allowText = textArea.text;
 
                 setConfEdited();

@@ -9,7 +9,7 @@ ColumnLayout {
     Layout.fillWidth: true
     Layout.fillHeight: true
 
-    signal editingFinished()  // Workaround for QTBUG-59908
+    signal textChanged()  // Workaround for QTBUG-59908
 
     readonly property alias title: title
     readonly property alias textArea: textAreaFrame.textArea
@@ -25,6 +25,6 @@ ColumnLayout {
         Layout.fillWidth: true
         Layout.fillHeight: true
 
-        onEditingFinished: container.editingFinished()
+        onTextChanged: container.textChanged()
     }
 }
