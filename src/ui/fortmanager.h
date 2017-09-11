@@ -21,7 +21,8 @@ class FortManager : public QObject
     Q_PROPERTY(DriverManager *driverManager READ driverManager CONSTANT)
 
 public:
-    explicit FortManager(QObject *parent = nullptr);
+    explicit FortManager(FortSettings *fortSettings,
+                         QObject *parent = nullptr);
 
     FortSettings *fortSettings() const { return m_fortSettings; }
 

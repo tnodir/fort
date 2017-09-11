@@ -21,6 +21,8 @@ public:
 
     QString errorMessage() const { return m_errorMessage; }
 
+    bool isDeviceOpened() const;
+
 signals:
     void errorMessageChanged();
 

@@ -1,6 +1,7 @@
 #include <QApplication>
 
 #include "../common/version.h"
+#include "driver/drivermanager.h"
 #include "fortcommon.h"
 #include "fortmanager.h"
 #include "fortsettings.h"
@@ -14,13 +15,19 @@ int main(int argc, char *argv[])
     app.setApplicationVersion(APP_VERSION_STR);
     app.setApplicationDisplayName(APP_NAME " v" APP_VERSION_STR);
 
-    FortManager fortManager;
+    FortSettings fortSettings(qApp->arguments());
 
     // Register booted provider and exit
-    if (fortManager.fortSettings()->boot()) {
+    if (fortSettings.boot()) {
         FortCommon::provUnregister();
         return FortCommon::provRegister(true);
     }
+
+    FortManager fortManager(&fortSettings);
+
+    // Error: Cannot open the driver device
+    if (!fortManager.driverManager()->isDeviceOpened())
+        return 1;
 
     fortManager.showTrayIcon();
 

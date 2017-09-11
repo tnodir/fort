@@ -15,6 +15,11 @@ Device::~Device()
     close();
 }
 
+bool Device::isOpened() const
+{
+    return (m_handle != INVALID_HANDLE_VALUE);
+}
+
 bool Device::open(const QString &filePath)
 {
     const DWORD access = GENERIC_READ | GENERIC_WRITE;

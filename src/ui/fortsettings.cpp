@@ -97,6 +97,10 @@ bool FortSettings::readConf(FirewallConf &conf)
     const QString filePath = confFilePath();
     const QString backupFilePath = confBackupFilePath();
 
+    if (!(FileUtil::fileExists(filePath)
+          || FileUtil::fileExists(backupFilePath)))
+        return true;
+
     return tryToReadConf(conf, filePath)
             || tryToReadConf(conf, backupFilePath);
 }

@@ -11,6 +11,8 @@ public:
     explicit Device(QObject *parent = nullptr);
     virtual ~Device();
 
+    bool isOpened() const;
+
     static QString lastErrorMessage();
 
 signals:

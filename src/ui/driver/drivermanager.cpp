@@ -48,6 +48,11 @@ void DriverManager::setupWorker()
     m_workerThread->start();
 }
 
+bool DriverManager::isDeviceOpened() const
+{
+    return m_device->isOpened();
+}
+
 bool DriverManager::openDevice()
 {
     if (!m_device->open(FortCommon::deviceName())) {

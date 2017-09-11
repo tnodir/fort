@@ -22,12 +22,13 @@
 #include "util/netutil.h"
 #include "util/osutil.h"
 
-FortManager::FortManager(QObject *parent) :
+FortManager::FortManager(FortSettings *fortSettings,
+                         QObject *parent) :
     QObject(parent),
     m_trayIcon(new QSystemTrayIcon(this)),
     m_engine(nullptr),
     m_appWindow(nullptr),
-    m_fortSettings(new FortSettings(qApp->arguments(), this)),
+    m_fortSettings(fortSettings),
     m_firewallConf(new FirewallConf(this)),
     m_firewallConfToEdit(nullConf()),
     m_driverManager(new DriverManager(this))
@@ -69,7 +70,7 @@ void FortManager::registerQmlTypes()
 bool FortManager::setupDriver()
 {
     if (!m_driverManager->openDevice()) {
-        showErrorBox(m_driverManager->errorMessage());
+        showErrorBox("Setup Driver: " + m_driverManager->errorMessage());
         return false;
     }
 
@@ -197,7 +198,7 @@ void FortManager::setFirewallConfToEdit(FirewallConf *conf)
 bool FortManager::loadSettings(FirewallConf *conf)
 {
     if (!m_fortSettings->readConf(*conf)) {
-        showErrorBox(m_fortSettings->errorMessage());
+        showErrorBox("Load Settings: " + m_fortSettings->errorMessage());
         return false;
     }
 
@@ -208,7 +209,7 @@ bool FortManager::saveSettings(FirewallConf *newConf, bool onlyFlags)
 {
     if (!(onlyFlags ? m_fortSettings->writeConfFlags(*newConf)
           : m_fortSettings->writeConf(*newConf))) {
-        showErrorBox(m_fortSettings->errorMessage());
+        showErrorBox("Save Settings: " + m_fortSettings->errorMessage());
         return false;
     }
 
@@ -223,9 +224,12 @@ bool FortManager::saveSettings(FirewallConf *newConf, bool onlyFlags)
 
 bool FortManager::updateDriverConf(FirewallConf *conf)
 {
+    if (!m_driverManager->isDeviceOpened())
+        return false;
+
     // Update driver
     if (!m_driverManager->writeConf(*conf)) {
-        showErrorBox(m_driverManager->errorMessage());
+        showErrorBox("Update Driver Conf: " + m_driverManager->errorMessage());
         return false;
     }
 
@@ -236,7 +240,7 @@ bool FortManager::updateDriverConfFlags(FirewallConf *conf)
 {
     // Update driver
     if (!m_driverManager->writeConfFlags(*conf)) {
-        showErrorBox(m_driverManager->errorMessage());
+        showErrorBox("Update Driver Conf Flags: " + m_driverManager->errorMessage());
         return false;
     }
 
