@@ -337,6 +337,7 @@ void FortManager::updateTrayMenu()
                 true, conf.appAllowAll());
 
     menu->addSeparator();
+    m_appGroupActions.clear();
     foreach (const AppGroup *appGroup, conf.appGroupsList()) {
         QAction *a = addAction(
                     menu, QIcon(":/images/application_double.png"),
