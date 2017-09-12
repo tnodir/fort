@@ -69,10 +69,10 @@ BasePage {
             var ipTextsArray = appPathIpArray[path];
             if (!ipCount) {
                 if (ipTextsArray.length > 64) {
-                    var oldIp = ipTextsArray.shift();
+                    var oldIp = ipTextsArray.pop();
                     delete ipTextsMap[oldIp];
                 }
-                ipTextsArray.push(ipText);
+                ipTextsArray.unshift(ipText);
 
                 isNewEntry = true;
             }
