@@ -14,22 +14,22 @@
         <translation>Некорректный IP адрес для исключения: %1</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="66"/>
+        <location filename="../util/confutil.cpp" line="62"/>
         <source>Size of configuration is too big</source>
         <translation>Конфигурация слишком большая</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="118"/>
+        <location filename="../util/confutil.cpp" line="110"/>
         <source>Number of Application Groups must be &lt; %1</source>
         <translation>Количество групп приложений должно быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="130"/>
+        <location filename="../util/confutil.cpp" line="122"/>
         <source>Length of Application Group&apos;s Name must be &lt; %1</source>
         <translation>Длина наименования группы приложения должна быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="175"/>
+        <location filename="../util/confutil.cpp" line="164"/>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Длина пути приложения должна быть &lt; %1</translation>
     </message>
@@ -37,37 +37,37 @@
 <context>
     <name>FortManager</name>
     <message>
-        <location filename="../fortmanager.cpp" line="272"/>
+        <location filename="../fortmanager.cpp" line="310"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="277"/>
+        <location filename="../fortmanager.cpp" line="315"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="283"/>
+        <location filename="../fortmanager.cpp" line="321"/>
         <source>Include All Addresses</source>
         <translation>Включить все адреса</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="287"/>
+        <location filename="../fortmanager.cpp" line="325"/>
         <source>Exclude All Addresses</source>
         <translation>Исключить все адреса</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="293"/>
+        <location filename="../fortmanager.cpp" line="331"/>
         <source>Block All Applications</source>
         <translation>Блокировать все приложения</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="297"/>
+        <location filename="../fortmanager.cpp" line="335"/>
         <source>Allow All Applications</source>
         <translation>Разрешить все приложения</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="311"/>
+        <location filename="../fortmanager.cpp" line="350"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -75,19 +75,24 @@
 <context>
     <name>FortSettings</name>
     <message>
-        <location filename="../fortsettings.cpp" line="137"/>
+        <location filename="../fortsettings.cpp" line="132"/>
         <source>Can&apos;t rename old backup conf. file</source>
-        <translation>Не получилось переименовать старый бэкап конф. файла</translation>
+        <translation>Не удалось переименовать старый бэкап конф. файла</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="145"/>
+        <location filename="../fortsettings.cpp" line="137"/>
+        <source>Can&apos;t create backup conf. file</source>
+        <translation>Не удалось создать бэкап конф. файла</translation>
+    </message>
+    <message>
+        <location filename="../fortsettings.cpp" line="142"/>
         <source>Can&apos;t rename backup conf. file</source>
-        <translation>Не получилось переименовать бэкап конф. файла</translation>
+        <translation>Не удалось переименовать бэкап конф. файла</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="160"/>
+        <location filename="../fortsettings.cpp" line="157"/>
         <source>Can&apos;t write conf. file</source>
-        <translation>Не получилось записать конф. файл</translation>
+        <translation>Не удалось записать конф. файл</translation>
     </message>
 </context>
 <context>
@@ -126,142 +131,142 @@
 <context>
     <name>qml</name>
     <message>
-        <location filename="../qml/pages/ActivityPage.qml" line="151"/>
+        <location filename="../qml/pages/ActivityPage.qml" line="152"/>
         <source>Clear</source>
         <translation>Очистить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/ActivityPage.qml" line="157"/>
+        <location filename="../qml/pages/ActivityPage.qml" line="159"/>
         <source>Copy Path</source>
         <translation>Скопировать путь</translation>
     </message>
     <message>
-        <location filename="../qml/pages/ActivityPage.qml" line="170"/>
+        <location filename="../qml/pages/ActivityPage.qml" line="173"/>
         <source>Log Blocked Applications</source>
         <translation>Показ блокированных приложений</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AddressesPage.qml" line="17"/>
+        <location filename="../qml/pages/AddressesPage.qml" line="18"/>
         <source>Include</source>
         <translation>Включить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AddressesPage.qml" line="20"/>
+        <location filename="../qml/pages/AddressesPage.qml" line="22"/>
         <source>Include All</source>
         <translation>Включить все</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AddressesPage.qml" line="28"/>
+        <location filename="../qml/pages/AddressesPage.qml" line="31"/>
         <source>Exclude</source>
         <translation>Исключить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AddressesPage.qml" line="31"/>
+        <location filename="../qml/pages/AddressesPage.qml" line="35"/>
         <source>Exclude All</source>
         <translation>Исключить все</translation>
     </message>
     <message>
-        <location filename="../qml/pages/ApplicationsPage.qml" line="55"/>
+        <location filename="../qml/pages/ApplicationsPage.qml" line="64"/>
         <source>Group Name</source>
         <translation>Имя группы</translation>
     </message>
     <message>
-        <location filename="../qml/pages/ApplicationsPage.qml" line="59"/>
+        <location filename="../qml/pages/ApplicationsPage.qml" line="69"/>
         <source>Add Group</source>
         <translation>Добавить группу</translation>
     </message>
     <message>
-        <location filename="../qml/pages/ApplicationsPage.qml" line="64"/>
+        <location filename="../qml/pages/ApplicationsPage.qml" line="75"/>
         <source>Rename Group</source>
         <translation>Переименовать</translation>
     </message>
     <message>
-        <location filename="../qml/pages/ApplicationsPage.qml" line="73"/>
+        <location filename="../qml/pages/ApplicationsPage.qml" line="85"/>
         <source>Block All</source>
         <translation>Блокировать все</translation>
     </message>
     <message>
-        <location filename="../qml/pages/ApplicationsPage.qml" line="80"/>
+        <location filename="../qml/pages/ApplicationsPage.qml" line="95"/>
         <source>Allow All</source>
         <translation>Разрешить все</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="13"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="14"/>
         <source>Remove Group</source>
         <translation>Удалить группу</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="17"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="19"/>
         <source>Move left</source>
         <translation>Налево</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="21"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="24"/>
         <source>Move right</source>
         <translation>Направо</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="30"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="34"/>
         <source>Enabled</source>
         <translation>Включено</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="45"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="52"/>
         <source>Block</source>
         <translation>Блокировать</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="62"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="72"/>
         <source>Allow</source>
         <translation>Разрешить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="23"/>
+        <location filename="../qml/pages/MainPage.qml" line="42"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="27"/>
+        <location filename="../qml/pages/MainPage.qml" line="47"/>
         <source>IPv4 Addresses</source>
         <translation>Адреса IPv4</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="31"/>
+        <location filename="../qml/pages/MainPage.qml" line="52"/>
         <source>Applications</source>
         <translation>Приложения</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="35"/>
+        <location filename="../qml/pages/MainPage.qml" line="57"/>
         <source>Activity</source>
         <translation>Активность</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="55"/>
+        <location filename="../qml/pages/MainPage.qml" line="79"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="64"/>
+        <location filename="../qml/pages/MainPage.qml" line="90"/>
         <source>Apply</source>
         <translation>Применить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="68"/>
+        <location filename="../qml/pages/MainPage.qml" line="99"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="72"/>
+        <location filename="../qml/pages/MainPage.qml" line="104"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="21"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="22"/>
         <source>Start with Windows</source>
         <translation>Запускать вместе с Windows</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="26"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="31"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
