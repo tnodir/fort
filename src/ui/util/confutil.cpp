@@ -190,8 +190,8 @@ QString ConfUtil::parseAppPath(const QStringRef &line)
     if (!QStringRef::compare(path, systemPath, Qt::CaseInsensitive))
         return systemPath;
 
-    const QString dosPath = FileUtil::pathToDosPath(path.toString());
-    return dosPath.toLower();
+    const QString kernelPath = FileUtil::pathToKernelPath(path.toString());
+    return kernelPath.toLower();
 }
 
 void ConfUtil::writeData(char *output, const FirewallConf &conf,

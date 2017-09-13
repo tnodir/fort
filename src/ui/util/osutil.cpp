@@ -31,10 +31,10 @@ void OsUtil::setClipboardData(const QVariant &data)
     }
 }
 
-QString OsUtil::pidToDosPath(quint32 pid)
+QString OsUtil::pidToKernelPath(quint32 pid)
 {
     const ProcessInfo pi(pid);
-    return pi.dosPath();
+    return pi.kernelPath();
 }
 
 bool OsUtil::createGlobalMutex(const char *name)

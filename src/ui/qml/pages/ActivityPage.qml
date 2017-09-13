@@ -90,12 +90,12 @@ BasePage {
     }
 
     function getEntryPath(logEntry) {
-        var dosPath = logEntry.dosPath;
-        if (!dosPath) {
-            dosPath = osUtil.pidToDosPath(logEntry.pid);
+        var kernelPath = logEntry.kernelPath;
+        if (!kernelPath) {
+            kernelPath = osUtil.pidToKernelPath(logEntry.pid);
         }
 
-        return fileUtil.dosPathToPath(dosPath);
+        return fileUtil.kernelPathToPath(kernelPath);
     }
 
     function refreshListViews() {

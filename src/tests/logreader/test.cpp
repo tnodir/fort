@@ -70,13 +70,13 @@ void Test::printLogs(LogBuffer &buf)
 
     while (buf.read(&entry)) {
         const quint32 pid = entry.pid();
-        QString dosPath = entry.dosPath();
+        QString kernelPath = entry.kernelPath();
 
-        if (dosPath.isEmpty()) {
+        if (kernelPath.isEmpty()) {
             ProcessInfo pi(pid);
-            dosPath = pi.dosPath();
+            kernelPath = pi.kernelPath();
         }
 
-        qDebug() << pid << dosPath << NetUtil::ip4ToText(entry.ip());
+        qDebug() << pid << kernelPath << NetUtil::ip4ToText(entry.ip());
     }
 }

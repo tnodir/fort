@@ -23,7 +23,7 @@ void LogBuffer::prepareFor(int len)
 
 int LogBuffer::write(const LogEntry *logEntry)
 {
-    const QString path = logEntry->dosPath();
+    const QString path = logEntry->kernelPath();
     const int pathLen = path.size() * sizeof(wchar_t);
 
     const int entrySize = FortCommon::logSize(pathLen);
@@ -63,7 +63,7 @@ int LogBuffer::read(LogEntry *logEntry)
 
     logEntry->setIp(ip);
     logEntry->setPid(pid);
-    logEntry->setDosPath(path);
+    logEntry->setKernelPath(path);
 
     const int entrySize = FortCommon::logSize(pathLen);
     m_offset += entrySize;

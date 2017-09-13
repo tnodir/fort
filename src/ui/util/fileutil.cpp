@@ -43,25 +43,25 @@ QString FileUtil::driveToDosName(const QString &drive)
 }
 
 // Convert "\\Device\\HarddiskVolume1\\path" to "C:\\path"
-QString FileUtil::dosPathToPath(const QString &dosPath)
+QString FileUtil::kernelPathToPath(const QString &kernelPath)
 {
     const QLatin1Char sep('\\');
 
-    if (dosPath.startsWith(sep)) {
-        const int sepPos1 = dosPath.indexOf(sep, 1);
+    if (kernelPath.startsWith(sep)) {
+        const int sepPos1 = kernelPath.indexOf(sep, 1);
         if (sepPos1 > 0) {
-            const int sepPos2 = dosPath.indexOf(sep, sepPos1 + 1);
+            const int sepPos2 = kernelPath.indexOf(sep, sepPos1 + 1);
             if (sepPos2 > 0) {
-                const QString dosName = dosPath.left(sepPos2);
-                return dosNameToDrive(dosName) + dosPath.mid(sepPos2);
+                const QString dosName = kernelPath.left(sepPos2);
+                return dosNameToDrive(dosName) + kernelPath.mid(sepPos2);
             }
         }
     }
-    return dosPath;
+    return kernelPath;
 }
 
 // Convert "C:\\path" to "\\Device\\HarddiskVolume1\\path"
-QString FileUtil::pathToDosPath(const QString &path)
+QString FileUtil::pathToKernelPath(const QString &path)
 {
     const QString drive = path.left(2);
 

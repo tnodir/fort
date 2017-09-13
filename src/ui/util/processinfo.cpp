@@ -46,7 +46,7 @@ void ProcessInfo::closeProcess()
     }
 }
 
-QString ProcessInfo::dosPath() const
+QString ProcessInfo::kernelPath() const
 {
     if (isValid()) {
         QByteArray buf(PROC_PATH_MAX * sizeof(wchar_t), Qt::Uninitialized);

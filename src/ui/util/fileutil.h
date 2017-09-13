@@ -17,10 +17,10 @@ public:
     static QString driveToDosName(const QString &drive);
 
     // Convert Native path to Win32 path
-    Q_INVOKABLE static QString dosPathToPath(const QString &dosPath);
+    Q_INVOKABLE static QString kernelPathToPath(const QString &kernelPath);
 
     // Convert Win32 path to Native path
-    Q_INVOKABLE static QString pathToDosPath(const QString &path);
+    Q_INVOKABLE static QString pathToKernelPath(const QString &path);
 
     static QString absolutePath(const QString &path);
 

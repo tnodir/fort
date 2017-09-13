@@ -13,7 +13,7 @@ public:
 
     Q_INVOKABLE static void setClipboardData(const QVariant &data);
 
-    Q_INVOKABLE static QString pidToDosPath(quint32 pid);
+    Q_INVOKABLE static QString pidToKernelPath(quint32 pid);
 
     static bool createGlobalMutex(const char *name);
 };

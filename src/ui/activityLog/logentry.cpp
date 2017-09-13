@@ -1,12 +1,12 @@
 #include "logentry.h"
 
 LogEntry::LogEntry(quint32 ip, quint32 pid,
-                   const QString &dosPath,
+                   const QString &kernelPath,
                    QObject *parent) :
     QObject(parent),
     m_ip(ip),
     m_pid(pid),
-    m_dosPath(dosPath)
+    m_kernelPath(kernelPath)
 {
 }
 
@@ -26,10 +26,10 @@ void LogEntry::setPid(quint32 pid)
     }
 }
 
-void LogEntry::setDosPath(const QString &dosPath)
+void LogEntry::setKernelPath(const QString &kernelPath)
 {
-    if (m_dosPath != dosPath) {
-        m_dosPath = dosPath;
-        emit dosPathChanged();
+    if (m_kernelPath != kernelPath) {
+        m_kernelPath = kernelPath;
+        emit kernelPathChanged();
     }
 }

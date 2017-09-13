@@ -32,6 +32,6 @@ void Test::logWriteRead()
     while (buf.read(&entry)) {
         QCOMPARE(entry.ip(), ip);
         QCOMPARE(entry.pid(), pid);
-        QCOMPARE(entry.dosPath(), path);
+        QCOMPARE(entry.kernelPath(), path);
     }
 }
