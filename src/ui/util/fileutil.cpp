@@ -14,15 +14,15 @@ FileUtil::FileUtil(QObject *parent) :
 }
 
 // Convert "\\Device\\HarddiskVolume1" to "C:"
-QString FileUtil::dosNameToDrive(const QString &dosName)
+QString FileUtil::kernelNameToDrive(const QString &kernelName)
 {
-    const QString dosNameLower = dosName.toLower();
+    const QString kernelNameLower = kernelName.toLower();
 
     foreach (const QFileInfo &fi, QDir::drives()) {
         const QString driveName = fi.path().left(2);
-        const QString driveDosName = driveToDosName(driveName);
+        const QString driveKernelName = driveToKernelName(driveName);
 
-        if (dosNameLower == driveDosName.toLower()) {
+        if (kernelNameLower == driveKernelName.toLower()) {
             return driveName;
         }
     }
@@ -30,7 +30,7 @@ QString FileUtil::dosNameToDrive(const QString &dosName)
 }
 
 // Convert "C:" to "\\Device\\HarddiskVolume1"
-QString FileUtil::driveToDosName(const QString &drive)
+QString FileUtil::driveToKernelName(const QString &drive)
 {
     char driveName[3] = {drive.at(0).toLatin1(), ':', '\0'};
 
@@ -52,8 +52,8 @@ QString FileUtil::kernelPathToPath(const QString &kernelPath)
         if (sepPos1 > 0) {
             const int sepPos2 = kernelPath.indexOf(sep, sepPos1 + 1);
             if (sepPos2 > 0) {
-                const QString dosName = kernelPath.left(sepPos2);
-                return dosNameToDrive(dosName) + kernelPath.mid(sepPos2);
+                const QString kernelName = kernelPath.left(sepPos2);
+                return kernelNameToDrive(kernelName) + kernelPath.mid(sepPos2);
             }
         }
     }
@@ -66,7 +66,7 @@ QString FileUtil::pathToKernelPath(const QString &path)
     const QString drive = path.left(2);
 
     if (drive.at(0).isLetter() && drive.at(1) == QLatin1Char(':')) {
-        return driveToDosName(drive)
+        return driveToKernelName(drive)
                 + path.mid(2).replace(QLatin1Char('/'), QLatin1Char('\\'));
     }
     return path;

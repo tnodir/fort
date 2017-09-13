@@ -8,17 +8,17 @@
 void Test::paths()
 {
     const QString driveC("C:");
-    const QString dosNameC("\\Device\\HarddiskVolume1");
+    const QString kernelNameC("\\Device\\HarddiskVolume1");
     const QString subPathBack("\\test\\");
     const QString subPath = QString(subPathBack)
             .replace(QLatin1Char('\\'), QLatin1Char('/'));
 
-    const QString kernelPath = dosNameC + subPathBack;
+    const QString kernelPath = kernelNameC + subPathBack;
     const QString pathBack = driveC + subPathBack;
     const QString path = driveC + subPath;
 
-    QCOMPARE(FileUtil::dosNameToDrive(dosNameC), driveC);
-    QCOMPARE(FileUtil::driveToDosName(driveC), dosNameC);
+    QCOMPARE(FileUtil::kernelNameToDrive(kernelNameC), driveC);
+    QCOMPARE(FileUtil::driveToKernelName(driveC), kernelNameC);
 
     QCOMPARE(FileUtil::kernelPathToPath(kernelPath), pathBack);
     QCOMPARE(FileUtil::pathToKernelPath(path), kernelPath);

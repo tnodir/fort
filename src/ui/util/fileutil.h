@@ -11,10 +11,10 @@ public:
     explicit FileUtil(QObject *parent = nullptr);
 
     // Convert DOS device name to drive letter (A: .. Z:)
-    static QString dosNameToDrive(const QString &dosName);
+    static QString kernelNameToDrive(const QString &kernelName);
 
     // Convert drive letter (A: .. Z:) to DOS device name
-    static QString driveToDosName(const QString &drive);
+    static QString driveToKernelName(const QString &drive);
 
     // Convert Native path to Win32 path
     Q_INVOKABLE static QString kernelPathToPath(const QString &kernelPath);
