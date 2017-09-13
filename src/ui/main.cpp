@@ -9,8 +9,6 @@
 
 int main(int argc, char *argv[])
 {
-    OsUtil::createGlobalMutex(APP_NAME);
-
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QApplication app(argc, argv);
@@ -21,10 +19,14 @@ int main(int argc, char *argv[])
     FortSettings fortSettings(qApp->arguments());
 
     // Register booted provider and exit
-    if (fortSettings.boot()) {
+    if (fortSettings.hasProvBoot()) {
         FortCommon::provUnregister();
-        return FortCommon::provRegister(true);
+        return fortSettings.provBoot()
+                ? FortCommon::provRegister(true) : 0;
     }
+
+    // To check running instance
+    OsUtil::createGlobalMutex(APP_NAME);
 
     FortManager fortManager(&fortSettings);
 

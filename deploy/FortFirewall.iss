@@ -32,20 +32,25 @@ SolidCompression=yes
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
+[Tasks]
+Name: "provBoot"; Description: "Block access to network when Fort Firewall is not running"; Flags: unchecked
+
 [Files]
 Source: ".\build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 ; Start menu shortcut
 Name: "{group}\{#APP_NAME}"; Filename: "{app}\{#APP_EXE_NAME}"; IconFilename: "{app}\fort.ico"
-; Unistaller shortcut
+; Uninstaller shortcut
 Name: "{group}\{cm:UninstallProgram,{#APP_NAME}}"; Filename: "{uninstallexe}"; IconFilename: "{app}\fort.ico"
 
 [Run]
+Filename: "{app}\{#APP_EXE_NAME}"; Parameters: "-b=1"; Description: "Provider boot"; Flags: runascurrentuser; Tasks: provBoot
 Filename: "{app}\driver\scripts\install.bat"; Description: "Install driver"; Flags: runascurrentuser
 
 [UninstallRun]
 Filename: "{app}\driver\scripts\uninstall.bat"; Flags: runascurrentuser
+Filename: "{app}\{#APP_EXE_NAME}"; Parameters: "-b=0"; Flags: runascurrentuser
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}"
