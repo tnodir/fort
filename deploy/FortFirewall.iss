@@ -30,10 +30,15 @@ Compression=lzma2/ultra
 SolidCompression=yes
 
 [Languages]
-Name: "english"; MessagesFile: "compiler:Default.isl"
+Name: en; MessagesFile: "compiler:Default.isl"
+Name: ru; MessagesFile: "compiler:Languages\Russian.isl"
+
+[CustomMessages]
+en.provBoot=Block access to network when Fort Firewall is not running
+ru.provBoot=Блокировать доступ к сети, когда Fort Firewall не запущен
 
 [Tasks]
-Name: "provBoot"; Description: "Block access to network when Fort Firewall is not running"; Flags: unchecked
+Name: "provBoot"; Description: "{cm:provBoot}"; Flags: unchecked
 
 [Files]
 Source: ".\build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
