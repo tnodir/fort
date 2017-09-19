@@ -152,7 +152,7 @@ void Ip4Range::fillRange(const ip4range_map_t &ipRangeMap)
         Ip4Pair ip{it.key(), it.value()};
 
         // try to merge colliding adresses
-        if (prevIndex >= 0 && ip.from <= prevIp.to) {
+        if (prevIndex >= 0 && ip.from <= prevIp.to + 1) {
             if (ip.to > prevIp.to) {
                 m_toArray.replace(prevIndex, ip.to);
 
