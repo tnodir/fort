@@ -22,6 +22,9 @@ void Test::ip4Ranges()
     QVERIFY(!ip4Range.fromText("10.0.0.32 - 10.0.0.24"));
     QCOMPARE(ip4Range.errorLineNo(), 1);
 
+    QVERIFY(ip4Range.fromText("172.16.0.1/32"));
+    QCOMPARE(ip4Range.toText(), QString("172.16.0.1-172.16.0.1\n"));
+
     // Simple range
     {
         QVERIFY(ip4Range.fromText(
