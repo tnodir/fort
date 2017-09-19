@@ -47,3 +47,25 @@ QString NetUtil::ip4ToText(quint32 ip)
 
     return QString::fromWCharArray(buf);
 }
+
+int NetUtil::ip4Mask(quint32 ip)
+{
+    return 32 - first0Bit(ip);
+}
+
+int NetUtil::first0Bit(quint32 u)
+{
+    const qint32 i = ~u;
+    return bitCount((i & (-i)) - 1);
+}
+
+// From http://tekpool.wordpress.com/category/bit-count/
+int NetUtil::bitCount(quint32 u)
+{
+    const quint32 uCount = u
+            - ((u >> 1) & 033333333333)
+            - ((u >> 2) & 011111111111);
+
+    return ((uCount + (uCount >> 3))
+            & 030707070707) % 63;
+}

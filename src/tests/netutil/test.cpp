@@ -2,8 +2,13 @@
 
 #include <QtTest>
 
+#include "task/tasktasix.h"
 #include "util/ip4range.h"
+#include "util/fileutil.h"
 #include "util/netutil.h"
+
+#define _STR(x) #x
+#define STR(x)  _STR(x)
 
 void Test::ip4Text()
 {
@@ -56,4 +61,15 @@ void Test::ip4Ranges()
         QCOMPARE(ipPair1.from, NetUtil::textToIp4("10.0.0.0"));
         QCOMPARE(ipPair1.to, NetUtil::textToIp4("10.0.2.0"));
     }
+}
+
+void Test::taskTasix()
+{
+    const QByteArray buf = FileUtil::readFileData(STR(PWD) "/data/tasix-mrlg.html");
+    QVERIFY(!buf.isEmpty());
+
+    const QString text = TaskTasix::parseBufer(buf);
+    QVERIFY(!text.isEmpty());
+
+    //QVERIFY(FileUtil::writeFile(QString(STR(PWD) "/data/tasix-mrlg.out"), text));
 }

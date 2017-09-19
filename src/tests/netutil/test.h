@@ -10,6 +10,7 @@ class Test : public QObject
 private slots:
     void ip4Text();
     void ip4Ranges();
+    void taskTasix();
 };
 
 #endif // TEST_H
