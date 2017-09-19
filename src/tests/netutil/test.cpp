@@ -33,7 +33,7 @@ void Test::ip4Ranges()
 
         const Ip4Pair &ipPair1 = ip4Range.at(0);
         QCOMPARE(ipPair1.from, NetUtil::textToIp4("172.16.0.0"));
-        QCOMPARE(ipPair1.to, NetUtil::textToIp4("172.31.255.255"));
+        QCOMPARE(ipPair1.to, NetUtil::textToIp4("172.16.15.255"));
 
         const Ip4Pair &ipPair2 = ip4Range.at(1);
         QCOMPARE(ipPair2.from, NetUtil::textToIp4("192.168.0.0"));

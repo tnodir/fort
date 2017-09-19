@@ -125,7 +125,7 @@ bool Ip4Range::parseAddressMask(const QStringRef &line,
         }
 
         to = (nbits == 32) ? 0xFFFFFFFF
-                           : (from | ((1 << nbits) - 1));
+                           : (from | ((1 << (32 - nbits)) - 1));
     }
 
     return true;
