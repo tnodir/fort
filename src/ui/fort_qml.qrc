@@ -8,6 +8,7 @@
         <file>qml/pages/BasePage.qml</file>
         <file>qml/pages/MainPage.qml</file>
         <file>qml/pages/OptionsPage.qml</file>
+        <file>qml/pages/SchedulePage.qml</file>
         <file>qml/pages/addresses/AddressesColumn.qml</file>
         <file>qml/pages/apps/AppsColumn.qml</file>
         <file>qml/pages/apps/AppsTextColumn.qml</file>

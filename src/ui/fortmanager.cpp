@@ -16,6 +16,7 @@
 #include "conf/firewallconf.h"
 #include "driver/drivermanager.h"
 #include "fortsettings.h"
+#include "task/taskmanager.h"
 #include "translationmanager.h"
 #include "util/fileutil.h"
 #include "util/hostinfo.h"
@@ -31,7 +32,8 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_fortSettings(fortSettings),
     m_firewallConf(new FirewallConf(this)),
     m_firewallConfToEdit(nullConf()),
-    m_driverManager(new DriverManager(this))
+    m_driverManager(new DriverManager(this)),
+    m_taskManager(new TaskManager(this, this))
 {
     setupDriver();
 
@@ -53,6 +55,8 @@ void FortManager::registerQmlTypes()
                                              "Singleton");
     qmlRegisterUncreatableType<TranslationManager>("com.fortfirewall", 1, 0, "TranslationManager",
                                                    "Singleton");
+    qmlRegisterUncreatableType<TaskManager>("com.fortfirewall", 1, 0, "TaskManager",
+                                            "Singleton");
 
     qmlRegisterType<AddressGroup>("com.fortfirewall", 1, 0, "AddressGroup");
     qmlRegisterType<AppGroup>("com.fortfirewall", 1, 0, "AppGroup");

@@ -11,8 +11,9 @@
 #define TASIX_DOWNLOAD_TIMEOUT  30000  // 30 seconds timeout
 #define TASIX_DOWNLOAD_MAXSIZE  (32 * 1024)
 
-TaskTasix::TaskTasix(QObject *parent) :
-    QObject(parent),
+TaskTasix::TaskTasix(FortManager *fortManager,
+                     QObject *parent) :
+    Task(fortManager, parent),
     m_networkManager(new QNetworkAccessManager(this)),
     m_reply(nullptr)
 {
@@ -49,6 +50,8 @@ void TaskTasix::cancel()
     m_buffer.clear();
 
     m_timer.stop();
+
+    emit finished();
 }
 
 void TaskTasix::requestReadyRead()
@@ -66,16 +69,23 @@ void TaskTasix::requestReadyRead()
 
 void TaskTasix::requestFinished()
 {
-    const QString text = parseBufer(m_buffer);
+    const QString rangeText = parseBufer(m_buffer);
 
     cancel();
 
-    emit finished();
+    emit addressesReady(rangeText);
 }
 
 QString TaskTasix::parseBufer(const QByteArray &buffer)
 {
     QStringList list;
+
+    // Include local networks
+    list.append("10.0.0.0/24");
+    list.append("127.0.0.0/24");
+    list.append("169.254.0.0/16");
+    list.append("172.16.0.0/16");
+    list.append("192.168.0.0/16");
 
     // Parse lines
     const QString text(buffer);

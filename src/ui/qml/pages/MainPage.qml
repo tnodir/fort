@@ -52,6 +52,11 @@ Page {
                   && qsTranslate("qml", "Applications")
         }
         TabButton {
+            icon.source: "qrc:/images/clock.png"
+            text: translationManager.dummyBool
+                  && qsTranslate("qml", "Schedule")
+        }
+        TabButton {
             icon.source: "qrc:/images/zoom.png"
             text: translationManager.dummyBool
                   && qsTranslate("qml", "Activity")
@@ -66,6 +71,7 @@ Page {
         OptionsPage {}
         AddressesPage {}
         ApplicationsPage {}
+        SchedulePage {}
         ActivityPage {}
     }
 

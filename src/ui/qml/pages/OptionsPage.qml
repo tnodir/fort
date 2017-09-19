@@ -5,7 +5,7 @@ import com.fortfirewall 1.0
 
 BasePage {
 
-    function onSaved() {  // overload
+    function onSaved() {  // override
         fortSettings.startWithWindows = cbStart.checked;
     }
 

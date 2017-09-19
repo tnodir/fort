@@ -1,27 +1,29 @@
 #ifndef TASKTASIX_H
 #define TASKTASIX_H
 
-#include <QObject>
 #include <QTimer>
+
+#include "task.h"
 
 class QNetworkAccessManager;
 class QNetworkReply;
 
-class TaskTasix : public QObject
+class TaskTasix : public Task
 {
     Q_OBJECT
 
 public:
-    explicit TaskTasix(QObject *parent = nullptr);
+    explicit TaskTasix(FortManager *fortManager,
+                       QObject *parent = nullptr);
 
     static QString parseBufer(const QByteArray &buffer);
 
 signals:
-    void finished();
+    void addressesReady(const QString &rangeText);
 
 public slots:
-    void run();
-    void cancel();
+    void run() override;
+    void cancel() override;
 
 private slots:
     void requestReadyRead();

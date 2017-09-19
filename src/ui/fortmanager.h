@@ -12,6 +12,7 @@ class DriverManager;
 class FortSettings;
 class FirewallConf;
 class LogBuffer;
+class TaskManager;
 
 class FortManager : public QObject
 {
@@ -20,6 +21,7 @@ class FortManager : public QObject
     Q_PROPERTY(FirewallConf *firewallConf READ firewallConf NOTIFY firewallConfToEditChanged)
     Q_PROPERTY(FirewallConf *firewallConfToEdit READ firewallConfToEdit NOTIFY firewallConfToEditChanged)
     Q_PROPERTY(DriverManager *driverManager READ driverManager CONSTANT)
+    Q_PROPERTY(TaskManager *taskManager READ taskManager CONSTANT)
 
 public:
     explicit FortManager(FortSettings *fortSettings,
@@ -30,6 +32,7 @@ public:
     FirewallConf *firewallConfToEdit() const { return m_firewallConfToEdit; }
 
     DriverManager *driverManager() const { return m_driverManager; }
+    TaskManager *taskManager() const { return m_taskManager; }
 
 signals:
     void firewallConfToEditChanged();
@@ -101,6 +104,7 @@ private:
     QList<QAction *> m_appGroupActions;
 
     DriverManager *m_driverManager;
+    TaskManager *m_taskManager;
 };
 
 #endif // FORTMANAGER_H
