@@ -81,11 +81,11 @@ bool Ip4Range::fromText(const QString &text)
     return true;
 }
 
-// Parse "127.0.0.0-127.255.255.255" or "127.0.0.0/24"
+// Parse "127.0.0.0-127.255.255.255" or "127.0.0.0/24" or "127.0.0.0"
 bool Ip4Range::parseAddressMask(const QStringRef &line,
                                 quint32 &from, quint32 &to)
 {
-    const QRegularExpression re("([\\d.]+)\\s*([/-])\\s*(\\S+)");
+    const QRegularExpression re("([\\d.]+)\\s*([/-]?)\\s*(\\S*)");
     const QRegularExpressionMatch match = re.match(line);
 
     if (!match.hasMatch()) {
@@ -94,8 +94,14 @@ bool Ip4Range::parseAddressMask(const QStringRef &line,
     }
 
     const QString ip = match.captured(1);
-    const QChar sep = match.capturedRef(2).at(0);
+    const QString sepStr = match.captured(2);
+    const QChar sep = sepStr.isEmpty() ? QLatin1Char('/') : sepStr.at(0);
     const QString mask = match.captured(3);
+
+    if (sepStr.isEmpty() != mask.isEmpty()) {
+        setErrorMessage(tr("Bad mask"));
+        return false;
+    }
 
     bool ok;
 
@@ -115,9 +121,9 @@ bool Ip4Range::parseAddressMask(const QStringRef &line,
             setErrorMessage(tr("Bad range"));
             return false;
         }
-    } else if (sep == QLatin1Char('/')) {  // e.g. "127.0.0.0/24"
-        bool ok;
-        const int nbits = mask.toInt(&ok);
+    } else if (sep == QLatin1Char('/')) {  // e.g. "127.0.0.0/24", "127.0.0.0"
+        bool ok = true;
+        const int nbits = mask.isEmpty() ? 24 : mask.toInt(&ok);
 
         if (!ok || nbits < 0 || nbits > 32) {
             setErrorMessage(tr("Bad mask"));
