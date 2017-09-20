@@ -88,6 +88,32 @@ void FortSettings::setErrorMessage(const QString &errorMessage)
     }
 }
 
+TasksMap FortSettings::tasks() const
+{
+    TasksMap map;
+    const QString tasksPrefix("tasks");
+
+    foreach (const QString &taskName, iniChildKeys(tasksPrefix)) {
+        const QString taskKey(tasksPrefix + '/' + taskName);
+        map.insert(taskName, iniValue(taskKey).toByteArray());
+    }
+    return map;
+}
+
+bool FortSettings::setTasks(const TasksMap &map)
+{
+    const QString tasksPrefix("tasks");
+
+    removeIniKey(tasksPrefix);
+
+    foreach (const QString &taskName, map.keys()) {
+        const QString taskKey(tasksPrefix + '/' + taskName);
+        setIniValue(taskKey, map.value(taskName));
+    }
+
+    return iniSync();
+}
+
 QString FortSettings::confFilePath() const
 {
     return m_profilePath + QLatin1String("FortFirewall.conf");
@@ -192,9 +218,7 @@ bool FortSettings::writeConfFlags(const FirewallConf &conf)
     setIniValue("appGroupBits", conf.appGroupBits());
     m_ini->endGroup();
 
-    m_ini->sync();
-
-    return m_ini->status() == QSettings::NoError;
+    return iniSync();
 }
 
 bool FortSettings::iniBool(const QString &key, bool defaultValue) const
@@ -244,6 +268,26 @@ void FortSettings::setIniValue(const QString &key, const QVariant &value,
 
     m_ini->setValue(key, value);
     emit iniChanged();
+}
+
+void FortSettings::removeIniKey(const QString &key)
+{
+    m_ini->remove(key);
+}
+
+QStringList FortSettings::iniChildKeys(const QString &prefix) const
+{
+    m_ini->beginGroup(prefix);
+    const QStringList list = m_ini->childKeys();
+    m_ini->endGroup();
+    return list;
+}
+
+bool FortSettings::iniSync()
+{
+    m_ini->sync();
+
+    return m_ini->status() == QSettings::NoError;
 }
 
 QString FortSettings::startupShortcutPath()

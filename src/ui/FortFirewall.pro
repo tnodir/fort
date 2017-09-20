@@ -19,6 +19,7 @@ SOURCES += \
     fortsettings.cpp \
     mainwindow.cpp \
     task/task.cpp \
+    task/taskinfo.cpp \
     task/taskmanager.cpp \
     task/tasktasix.cpp \
     translationmanager.cpp \
@@ -45,6 +46,7 @@ HEADERS += \
     fortsettings.h \
     mainwindow.h \
     task/task.h \
+    task/taskinfo.h \
     task/taskmanager.h \
     task/tasktasix.h \
     translationmanager.h \

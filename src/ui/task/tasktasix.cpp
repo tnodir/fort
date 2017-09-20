@@ -27,7 +27,7 @@ void TaskTasix::run()
 {
     QNetworkRequest request(QUrl(TASIX_MRLG_URL));
 
-    m_reply = m_networkManager->get(request);
+    m_reply = m_networkManager->post(request, TASIX_MRLG_DATA);
 
     connect(m_reply, &QIODevice::readyRead,
             this, &TaskTasix::requestReadyRead);

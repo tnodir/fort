@@ -16,6 +16,7 @@
 #include "conf/firewallconf.h"
 #include "driver/drivermanager.h"
 #include "fortsettings.h"
+#include "task/taskinfo.h"
 #include "task/taskmanager.h"
 #include "translationmanager.h"
 #include "util/fileutil.h"
@@ -39,6 +40,8 @@ FortManager::FortManager(FortSettings *fortSettings,
 
     loadSettings(m_firewallConf);
 
+    m_taskManager->loadSettings(m_fortSettings);
+
     TranslationManager::instance()->switchLanguageByName(
                 m_fortSettings->language());
 
@@ -57,6 +60,8 @@ void FortManager::registerQmlTypes()
                                                    "Singleton");
     qmlRegisterUncreatableType<TaskManager>("com.fortfirewall", 1, 0, "TaskManager",
                                             "Singleton");
+    qmlRegisterUncreatableType<TaskInfo>("com.fortfirewall", 1, 0, "TaskInfo",
+                                         "Singleton");
 
     qmlRegisterType<AddressGroup>("com.fortfirewall", 1, 0, "AddressGroup");
     qmlRegisterType<AppGroup>("com.fortfirewall", 1, 0, "AppGroup");

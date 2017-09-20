@@ -2,11 +2,14 @@
 #define FORTSETTINGS_H
 
 #include <QObject>
+#include <QHash>
 #include <QSettings>
 
 #include "../common/version.h"
 
 class FirewallConf;
+
+typedef QHash<QString, QByteArray> TasksMap;
 
 class FortSettings : public QObject
 {
@@ -35,6 +38,9 @@ public:
     bool startWithWindows() const;
     void setStartWithWindows(bool start);
 
+    TasksMap tasks() const;
+    bool setTasks(const TasksMap &map);
+
     QString errorMessage() const { return m_errorMessage; }
 
 signals:
@@ -43,9 +49,6 @@ signals:
     void errorMessageChanged();
 
 public slots:
-    QString confFilePath() const;
-    QString confBackupFilePath() const;
-
     bool readConf(FirewallConf &conf);
     bool writeConf(const FirewallConf &conf);
 
@@ -57,6 +60,9 @@ private:
     void setupIni();
 
     void setErrorMessage(const QString &errorMessage);
+
+    QString confFilePath() const;
+    QString confBackupFilePath() const;
 
     bool tryToReadConf(FirewallConf &conf, const QString &filePath);
     bool tryToWriteConf(const FirewallConf &conf, const QString &filePath);
@@ -72,6 +78,12 @@ private:
                       const QVariant &defaultValue = QVariant()) const;
     void setIniValue(const QString &key, const QVariant &value,
                      const QVariant &defaultValue = QVariant());
+
+    void removeIniKey(const QString &key);
+
+    QStringList iniChildKeys(const QString &prefix) const;
+
+    bool iniSync();
 
     static QString startupShortcutPath();
 

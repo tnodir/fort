@@ -12,5 +12,6 @@
         <file>qml/pages/addresses/AddressesColumn.qml</file>
         <file>qml/pages/apps/AppsColumn.qml</file>
         <file>qml/pages/apps/AppsTextColumn.qml</file>
+        <file>qml/pages/schedule/TaskRow.qml</file>
     </qresource>
 </RCC>

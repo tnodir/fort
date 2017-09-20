@@ -37,37 +37,37 @@
 <context>
     <name>FortManager</name>
     <message>
-        <location filename="../fortmanager.cpp" line="310"/>
+        <location filename="../fortmanager.cpp" line="319"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="315"/>
+        <location filename="../fortmanager.cpp" line="324"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="321"/>
+        <location filename="../fortmanager.cpp" line="330"/>
         <source>Include All Addresses</source>
         <translation>Включить все адреса</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="325"/>
+        <location filename="../fortmanager.cpp" line="334"/>
         <source>Exclude All Addresses</source>
         <translation>Исключить все адреса</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="331"/>
+        <location filename="../fortmanager.cpp" line="340"/>
         <source>Block All Applications</source>
         <translation>Блокировать все приложения</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="335"/>
+        <location filename="../fortmanager.cpp" line="344"/>
         <source>Allow All Applications</source>
         <translation>Разрешить все приложения</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="350"/>
+        <location filename="../fortmanager.cpp" line="359"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -75,22 +75,22 @@
 <context>
     <name>FortSettings</name>
     <message>
-        <location filename="../fortsettings.cpp" line="132"/>
+        <location filename="../fortsettings.cpp" line="164"/>
         <source>Can&apos;t rename old backup conf. file</source>
         <translation>Не удалось переименовать старый бэкап конф. файла</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="137"/>
+        <location filename="../fortsettings.cpp" line="169"/>
         <source>Can&apos;t create backup conf. file</source>
         <translation>Не удалось создать бэкап конф. файла</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="142"/>
+        <location filename="../fortsettings.cpp" line="174"/>
         <source>Can&apos;t rename backup conf. file</source>
         <translation>Не удалось переименовать бэкап конф. файла</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="157"/>
+        <location filename="../fortsettings.cpp" line="189"/>
         <source>Can&apos;t write conf. file</source>
         <translation>Не удалось записать конф. файл</translation>
     </message>
@@ -108,40 +108,49 @@
         <translation>Некорректный формат</translation>
     </message>
     <message>
-        <location filename="../util/ip4range.cpp" line="104"/>
+        <location filename="../util/ip4range.cpp" line="110"/>
         <source>Bad IP address</source>
         <translation>Некорректный IP адрес</translation>
     </message>
     <message>
-        <location filename="../util/ip4range.cpp" line="111"/>
+        <location filename="../util/ip4range.cpp" line="117"/>
         <source>Bad second IP address</source>
         <translation>Некорректный второй IP адрес</translation>
     </message>
     <message>
-        <location filename="../util/ip4range.cpp" line="115"/>
+        <location filename="../util/ip4range.cpp" line="121"/>
         <source>Bad range</source>
         <translation>Некорректный диапазон</translation>
     </message>
     <message>
-        <location filename="../util/ip4range.cpp" line="123"/>
+        <location filename="../util/ip4range.cpp" line="102"/>
+        <location filename="../util/ip4range.cpp" line="129"/>
         <source>Bad mask</source>
         <translation>Некорректная маска</translation>
     </message>
 </context>
 <context>
+    <name>TaskInfo</name>
+    <message>
+        <location filename="../task/taskinfo.cpp" line="38"/>
+        <source>TAS-IX Addresses Downloader</source>
+        <translation>Загрузчик адресов TAS-IX</translation>
+    </message>
+</context>
+<context>
     <name>qml</name>
     <message>
-        <location filename="../qml/pages/ActivityPage.qml" line="152"/>
+        <location filename="../qml/pages/ActivityPage.qml" line="155"/>
         <source>Clear</source>
         <translation>Очистить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/ActivityPage.qml" line="159"/>
+        <location filename="../qml/pages/ActivityPage.qml" line="162"/>
         <source>Copy Path</source>
         <translation>Скопировать путь</translation>
     </message>
     <message>
-        <location filename="../qml/pages/ActivityPage.qml" line="173"/>
+        <location filename="../qml/pages/ActivityPage.qml" line="176"/>
         <source>Log Blocked Applications</source>
         <translation>Показ блокированных приложений</translation>
     </message>
@@ -237,26 +246,31 @@
     </message>
     <message>
         <location filename="../qml/pages/MainPage.qml" line="57"/>
+        <source>Schedule</source>
+        <translation>Расписание</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/MainPage.qml" line="62"/>
         <source>Activity</source>
         <translation>Активность</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="79"/>
+        <location filename="../qml/pages/MainPage.qml" line="85"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="90"/>
+        <location filename="../qml/pages/MainPage.qml" line="96"/>
         <source>Apply</source>
         <translation>Применить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="99"/>
+        <location filename="../qml/pages/MainPage.qml" line="105"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="104"/>
+        <location filename="../qml/pages/MainPage.qml" line="110"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -269,6 +283,61 @@
         <location filename="../qml/pages/OptionsPage.qml" line="31"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SchedulePage.qml" line="26"/>
+        <source>Custom</source>
+        <translation>Нестандартный</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SchedulePage.qml" line="27"/>
+        <source>Hourly</source>
+        <translation>Каждый час</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SchedulePage.qml" line="28"/>
+        <source>Each 6 hours</source>
+        <translation>Каждые 6 часов</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SchedulePage.qml" line="29"/>
+        <source>Each 12 hours</source>
+        <translation>Каждые 12 часов</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SchedulePage.qml" line="30"/>
+        <source>Daily</source>
+        <translation>Каждый день</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SchedulePage.qml" line="31"/>
+        <source>Weekly</source>
+        <translation>Каждую неделю</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SchedulePage.qml" line="32"/>
+        <source>Monthly</source>
+        <translation>Каждый месяц</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SchedulePage.qml" line="66"/>
+        <source>Name</source>
+        <translation>Наименование</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SchedulePage.qml" line="71"/>
+        <source>Interval, hours</source>
+        <translation>Интервал, часов</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SchedulePage.qml" line="77"/>
+        <source>Last Run</source>
+        <translation>Последний запуск</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SchedulePage.qml" line="83"/>
+        <source>Last Success</source>
+        <translation>Успешный запуск</translation>
     </message>
 </context>
 </TS>
