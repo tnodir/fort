@@ -24,6 +24,9 @@ BasePage {
     }
 
     function switchLogReading(enable) {
+        if (enableLogReading === enable)
+            return;
+
         enableLogReading = enable;
 
         fortManager.setAppLogBlocked(enable);
