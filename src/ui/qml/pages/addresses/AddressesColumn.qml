@@ -37,10 +37,10 @@ ColumnLayout {
 
         textArea {
             placeholderText: "
-10.0.0.0/24
-127.0.0.0/24
+10.0.0.0/8
+127.0.0.0/8
 169.254.0.0/16
-172.16.0.0/16
+172.16.0.0/12
 192.168.0.0/16
 "
             text: addressGroup.text

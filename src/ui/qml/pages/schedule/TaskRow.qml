@@ -37,7 +37,7 @@ Row {
 
             editable: true
             width: 180
-            from: 0
+            from: 1
             value: taskInfo.intervalHours
             to: 24 * 30 * 12  // ~Year
 
@@ -79,5 +79,34 @@ Row {
         wrapMode: Text.WordWrap
         fontSizeMode: Text.Fit
         text: formatDate(taskInfo.lastSuccess)
+    }
+
+    Item {
+        width: taskCellWidths[5]
+        height: parent.height
+
+        RoundButton {
+            id: btRun
+            anchors.centerIn: parent
+            width: 30
+            height: width
+            icon.source: taskInfo.running ? "qrc:/images/cross.png"
+                                          : "qrc:/images/run.png"
+            onClicked: taskInfo.running ? taskInfo.cancel()
+                                        : taskInfo.run()
+        }
+
+        RotationAnimator {
+            target: btRun
+            loops: Animation.Infinite
+            from: 0
+            to: 360
+            duration: 1500
+            easing.type: Easing.OutBack
+            running: taskInfo.running
+            onStopped: {
+                btRun.rotation = 0;
+            }
+        }
     }
 }

@@ -18,10 +18,10 @@ SOURCES += \
     fortmanager.cpp \
     fortsettings.cpp \
     mainwindow.cpp \
-    task/task.cpp \
     task/taskinfo.cpp \
     task/taskmanager.cpp \
     task/tasktasix.cpp \
+    task/taskworker.cpp \
     translationmanager.cpp \
     util/confutil.cpp \
     util/device.cpp \
@@ -45,10 +45,10 @@ HEADERS += \
     fortmanager.h \
     fortsettings.h \
     mainwindow.h \
-    task/task.h \
     task/taskinfo.h \
     task/taskmanager.h \
     task/tasktasix.h \
+    task/taskworker.h \
     translationmanager.h \
     util/confutil.h \
     util/device.h \
@@ -65,7 +65,8 @@ QML_FILES += \
     qml/controls/*.qml \
     qml/pages/*.qml \
     qml/pages/addresses/*.qml \
-    qml/pages/apps/*.qml
+    qml/pages/apps/*.qml \
+    qml/pages/schedule/*.qml
 
 OTHER_FILES += \
     $${QML_FILES}

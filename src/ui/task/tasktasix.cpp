@@ -4,21 +4,24 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 
-#include "util/ip4range.h"
+#include "../conf/addressgroup.h"
+#include "../conf/firewallconf.h"
+#ifndef TASK_TEST
+#include "../fortmanager.h"
+#endif
+#include "../util/ip4range.h"
 
 #define TASIX_MRLG_URL          "http://mrlg.tas-ix.uz/index.cgi"
 #define TASIX_MRLG_DATA         "router=cisco&pass1=&query=1&arg="
 #define TASIX_DOWNLOAD_TIMEOUT  30000  // 30 seconds timeout
 #define TASIX_DOWNLOAD_MAXSIZE  (32 * 1024)
 
-TaskTasix::TaskTasix(FortManager *fortManager,
-                     QObject *parent) :
-    Task(fortManager, parent),
+TaskTasix::TaskTasix(QObject *parent) :
+    TaskWorker(parent),
     m_networkManager(new QNetworkAccessManager(this)),
     m_reply(nullptr)
 {
-    connect(&m_timer, &QTimer::timeout,
-            this, &TaskTasix::cancel);
+    connect(&m_timer, &QTimer::timeout, [this]() { cancel(); });
 
     m_timer.setSingleShot(true);
 }
@@ -26,6 +29,8 @@ TaskTasix::TaskTasix(FortManager *fortManager,
 void TaskTasix::run()
 {
     QNetworkRequest request(QUrl(TASIX_MRLG_URL));
+    request.setHeader(QNetworkRequest::ContentTypeHeader,
+                      "application/x-www-form-urlencoded");
 
     m_reply = m_networkManager->post(request, TASIX_MRLG_DATA);
 
@@ -33,13 +38,14 @@ void TaskTasix::run()
             this, &TaskTasix::requestReadyRead);
     connect(m_reply, QOverload<QNetworkReply::NetworkError>::of(&QNetworkReply::error),
             this, &TaskTasix::cancel);
-    connect(m_reply, &QNetworkReply::finished,
-            this, &TaskTasix::requestFinished);
+    connect(m_reply, &QNetworkReply::finished, [this]() { cancel(true); });
+
+    m_buffer.clear();
 
     m_timer.start(TASIX_DOWNLOAD_TIMEOUT);
 }
 
-void TaskTasix::cancel()
+void TaskTasix::cancel(bool success)
 {
     if (!m_reply) return;
 
@@ -47,11 +53,9 @@ void TaskTasix::cancel()
     m_reply->deleteLater();
     m_reply = nullptr;
 
-    m_buffer.clear();
-
     m_timer.stop();
 
-    emit finished();
+    emit finished(success);
 }
 
 void TaskTasix::requestReadyRead()
@@ -67,13 +71,27 @@ void TaskTasix::requestReadyRead()
     }
 }
 
-void TaskTasix::requestFinished()
+bool TaskTasix::processResult(FortManager *fortManager)
 {
     const QString rangeText = parseBufer(m_buffer);
+    if (rangeText.isEmpty())
+        return false;
 
-    cancel();
+#ifndef TASK_TEST
+    FirewallConf *conf = fortManager->firewallConf();
+    AddressGroup *addressGroup = conf->ipExclude();
 
-    emit addressesReady(rangeText);
+    if (addressGroup->text() == rangeText)
+        return true;
+
+    addressGroup->setText(rangeText);
+
+    return fortManager->saveOriginConf(tr("TAS-IX addresses updated!"));
+#else
+    Q_UNUSED(fortManager)
+
+    return true;
+#endif
 }
 
 QString TaskTasix::parseBufer(const QByteArray &buffer)
@@ -81,10 +99,10 @@ QString TaskTasix::parseBufer(const QByteArray &buffer)
     QStringList list;
 
     // Include local networks
-    list.append("10.0.0.0/24");
-    list.append("127.0.0.0/24");
+    list.append("10.0.0.0/8");
+    list.append("127.0.0.0/8");
     list.append("169.254.0.0/16");
-    list.append("172.16.0.0/16");
+    list.append("172.16.0.0/12");
     list.append("192.168.0.0/16");
 
     // Parse lines

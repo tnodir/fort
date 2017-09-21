@@ -22,10 +22,10 @@ void Test::confWriteRead()
 
     conf.ipInclude()->setText(QString());
     conf.ipExclude()->setText(
-                "10.0.0.0/24\n"
-                "127.0.0.0/24\n"
+                "10.0.0.0/8\n"
+                "127.0.0.0/8\n"
                 "169.254.0.0/16\n"
-                "172.16.0.0/20\n"
+                "172.16.0.0/12\n"
                 "192.168.0.0/16\n"
                 );
 

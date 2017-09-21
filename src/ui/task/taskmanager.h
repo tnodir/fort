@@ -30,6 +30,14 @@ public slots:
     void loadSettings(const FortSettings *fortSettings);
     bool saveSettings(FortSettings *fortSettings) const;
 
+private slots:
+    void handleTaskFinished(bool success);
+
+private:
+    void setupTasks();
+
+    void appendTaskInfo(TaskInfo *taskInfo);
+
 private:
     FortManager *m_fortManager;
 

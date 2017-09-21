@@ -133,6 +133,11 @@ void FortManager::showTrayIcon()
     m_trayIcon->show();
 }
 
+void FortManager::showTrayMessage(const QString &message)
+{
+    m_trayIcon->showMessage(qApp->applicationDisplayName(), message);
+}
+
 void FortManager::showWindow()
 {
     if (!m_engine) {
@@ -175,6 +180,16 @@ void FortManager::exit(int retcode)
 void FortManager::showErrorBox(const QString &text)
 {
     QMessageBox::warning(&m_window, QString(), text);
+}
+
+bool FortManager::saveOriginConf(const QString &message)
+{
+    if (!saveSettings(m_firewallConf))
+        return false;
+
+    closeWindow();
+    showTrayMessage(message);
+    return true;
 }
 
 bool FortManager::saveConf(bool onlyFlags)
@@ -222,8 +237,10 @@ bool FortManager::saveSettings(FirewallConf *newConf, bool onlyFlags)
         return false;
     }
 
-    m_firewallConf->deleteLater();
-    m_firewallConf = newConf;
+    if (m_firewallConf != newConf) {
+        m_firewallConf->deleteLater();
+        m_firewallConf = newConf;
+    }
 
     updateTrayMenu();
 
@@ -234,7 +251,7 @@ bool FortManager::saveSettings(FirewallConf *newConf, bool onlyFlags)
 bool FortManager::updateDriverConf(FirewallConf *conf)
 {
     if (!m_driverManager->isDeviceOpened())
-        return false;
+        return true;
 
     // Update driver
     if (!m_driverManager->writeConf(*conf)) {
@@ -247,6 +264,9 @@ bool FortManager::updateDriverConf(FirewallConf *conf)
 
 bool FortManager::updateDriverConfFlags(FirewallConf *conf)
 {
+    if (!m_driverManager->isDeviceOpened())
+        return true;
+
     // Update driver
     if (!m_driverManager->writeConfFlags(*conf)) {
         showErrorBox("Update Driver Conf Flags: " + m_driverManager->errorMessage());

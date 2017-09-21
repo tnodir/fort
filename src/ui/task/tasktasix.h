@@ -3,31 +3,30 @@
 
 #include <QTimer>
 
-#include "task.h"
+#include "taskworker.h"
 
 class QNetworkAccessManager;
 class QNetworkReply;
 
-class TaskTasix : public Task
+class TaskTasix : public TaskWorker
 {
     Q_OBJECT
 
 public:
-    explicit TaskTasix(FortManager *fortManager,
-                       QObject *parent = nullptr);
+    explicit TaskTasix(QObject *parent = nullptr);
 
     static QString parseBufer(const QByteArray &buffer);
 
 signals:
-    void addressesReady(const QString &rangeText);
 
 public slots:
     void run() override;
-    void cancel() override;
+    void cancel(bool success = false) override;
+
+    bool processResult(FortManager *fortManager) override;
 
 private slots:
     void requestReadyRead();
-    void requestFinished();
 
 private:
     QNetworkAccessManager *m_networkManager;

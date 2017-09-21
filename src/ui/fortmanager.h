@@ -39,6 +39,7 @@ signals:
 
 public slots:
     void showTrayIcon();
+    void showTrayMessage(const QString &message);
 
     void showWindow();
     void closeWindow();
@@ -47,6 +48,7 @@ public slots:
 
     void showErrorBox(const QString &text);
 
+    bool saveOriginConf(const QString &message);
     bool saveConf(bool onlyFlags = false);
     bool applyConf(bool onlyFlags = false);
 

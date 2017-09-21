@@ -3,6 +3,8 @@
 #include <QDataStream>
 #include <QMetaEnum>
 
+#include "tasktasix.h"
+
 #define TASK_INFO_VERSION   1
 
 TaskInfo::TaskInfo(TaskType type, QObject *parent) :
@@ -10,9 +12,13 @@ TaskInfo::TaskInfo(TaskType type, QObject *parent) :
     m_enabled(false),
     m_intervalHours(24),
     m_type(type),
-    m_lastRun(QDateTime::currentDateTime()),
-    m_lastSuccess(QDateTime::currentDateTime())
+    m_taskWorker(nullptr)
 {
+}
+
+TaskInfo::~TaskInfo()
+{
+    cancel();
 }
 
 void TaskInfo::setEnabled(bool enabled)
@@ -63,6 +69,14 @@ void TaskInfo::setLastSuccess(const QDateTime &lastSuccess)
     if (m_lastSuccess != lastSuccess) {
         m_lastSuccess = lastSuccess;
         emit lastSuccessChanged();
+    }
+}
+
+void TaskInfo::setTaskWorker(TaskWorker *taskWorker)
+{
+    if (m_taskWorker != taskWorker) {
+        m_taskWorker = taskWorker;
+        emit taskWorkerChanged();
     }
 }
 
@@ -119,4 +133,53 @@ TaskInfo::TaskType TaskInfo::stringToType(const QString &name)
     const QMetaEnum typeEnum = QMetaEnum::fromType<TaskType>();
     return static_cast<TaskInfo::TaskType>(
                 typeEnum.keyToValue(name.toLatin1()));
+}
+
+void TaskInfo::run()
+{
+    cancel();
+
+    TaskWorker *taskWorker = createWorker();
+
+    connect(taskWorker, &TaskWorker::finished,
+            this, &TaskInfo::handleFinished);
+
+    setTaskWorker(taskWorker);
+
+    taskWorker->run();
+}
+
+void TaskInfo::cancel()
+{
+    if (!m_taskWorker) return;
+
+    m_taskWorker->cancel();
+    m_taskWorker->deleteLater();
+
+    setTaskWorker(nullptr);
+}
+
+void TaskInfo::handleFinished(bool success)
+{
+    if (!m_taskWorker) return;
+
+    setLastRun(QDateTime::currentDateTime());
+    if (success) {
+        setLastSuccess(QDateTime::currentDateTime());
+    }
+
+    emit workFinished(success);
+
+    cancel();
+}
+
+TaskWorker *TaskInfo::createWorker()
+{
+    switch (m_type) {
+    case Tasix:
+        return new TaskTasix(this);
+    default:
+        Q_UNREACHABLE();
+        return nullptr;
+    }
 }

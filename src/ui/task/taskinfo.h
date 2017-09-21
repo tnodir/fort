@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QDateTime>
 
+class TaskWorker;
+
 class TaskInfo : public QObject
 {
     Q_OBJECT
@@ -13,6 +15,7 @@ class TaskInfo : public QObject
     Q_PROPERTY(TaskInfo::TaskType type READ type WRITE setType NOTIFY typeChanged)
     Q_PROPERTY(QDateTime lastRun READ lastRun WRITE setLastRun NOTIFY lastRunChanged)
     Q_PROPERTY(QDateTime lastSuccess READ lastSuccess WRITE setLastSuccess NOTIFY lastSuccessChanged)
+    Q_PROPERTY(bool running READ running NOTIFY taskWorkerChanged)
 
 public:
     enum TaskType {
@@ -22,6 +25,7 @@ public:
     Q_ENUM(TaskType)
 
     explicit TaskInfo(TaskInfo::TaskType type, QObject *parent = nullptr);
+    virtual ~TaskInfo();
 
     bool enabled() const { return m_enabled; }
     void setEnabled(bool enabled);
@@ -40,6 +44,11 @@ public:
     QDateTime lastSuccess() const { return m_lastSuccess; }
     void setLastSuccess(const QDateTime &lastSuccess);
 
+    TaskWorker *taskWorker() const { return m_taskWorker; }
+    void setTaskWorker(TaskWorker *taskWorker);
+
+    bool running() const { return m_taskWorker != nullptr; }
+
     void rawData(QByteArray &data) const;
     void setRawData(const QByteArray &data);
 
@@ -52,8 +61,19 @@ signals:
     void typeChanged();
     void lastRunChanged();
     void lastSuccessChanged();
+    void taskWorkerChanged();
+
+    void workFinished(bool success);
 
 public slots:
+    void run();
+    void cancel();
+
+private slots:
+    void handleFinished(bool success);
+
+private:
+    TaskWorker *createWorker();
 
 private:
     uint m_enabled          : 1;
@@ -63,6 +83,8 @@ private:
 
     QDateTime m_lastRun;
     QDateTime m_lastSuccess;
+
+    TaskWorker *m_taskWorker;
 };
 
 #endif // TASKINFO_H

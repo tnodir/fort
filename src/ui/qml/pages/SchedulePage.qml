@@ -11,13 +11,14 @@ BasePage {
     readonly property var taskCellWidths: [
         tasksContainer.width * 0.05,
         tasksContainer.width * 0.2,
-        tasksContainer.width * 0.35,
+        tasksContainer.width * 0.3,
         tasksContainer.width * 0.2,
-        tasksContainer.width * 0.2
+        tasksContainer.width * 0.2,
+        tasksContainer.width * 0.05
     ]
 
     readonly property var taskIntervalHours: [
-        0, 1, 6, 12, 24, 24 * 7, 24 * 30
+        3, 1, 6, 12, 24, 24 * 7, 24 * 30
     ]
 
     readonly property var taskIntervalNames:
@@ -81,6 +82,10 @@ BasePage {
                     horizontalAlignment: Text.AlignHCenter
                     text: translationManager.dummyBool
                           && qsTranslate("qml", "Last Success")
+                }
+                Item {
+                    width: taskCellWidths[5]
+                    height: parent.height
                 }
             }
 

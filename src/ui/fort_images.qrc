@@ -5,7 +5,9 @@
     <file>images/cancel.png</file>
     <file>images/clock.png</file>
     <file>images/cog.png</file>
+    <file>images/cross.png</file>
     <file>images/link.png</file>
+    <file>images/run.png</file>
     <file>images/shield.png</file>
     <file>images/zoom.png</file>
 </qresource>
