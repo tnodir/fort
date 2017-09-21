@@ -11,6 +11,11 @@ TaskManager::TaskManager(FortManager *fortManager,
     m_fortManager(fortManager)
 {
     setupTasks();
+
+    connect(&m_timer, &QTimer::timeout,
+            this, &TaskManager::runExpiredTasks);
+
+    m_timer.setSingleShot(true);
 }
 
 QQmlListProperty<TaskInfo> TaskManager::taskInfos()
@@ -43,9 +48,11 @@ void TaskManager::loadSettings(const FortSettings *fortSettings)
             taskInfo->setRawData(taskData);
         }
     }
+
+    runExpiredTasks();
 }
 
-bool TaskManager::saveSettings(FortSettings *fortSettings) const
+bool TaskManager::saveSettings(FortSettings *fortSettings)
 {
     TasksMap tasksMap;
     QByteArray taskData;
@@ -58,6 +65,8 @@ bool TaskManager::saveSettings(FortSettings *fortSettings) const
 
         tasksMap.insert(taskName, taskData);
     }
+
+    runExpiredTasks();
 
     return fortSettings->setTasks(tasksMap);
 }
@@ -72,4 +81,26 @@ void TaskManager::handleTaskFinished(bool success)
     }
 
     saveSettings(m_fortManager->fortSettings());
+}
+
+void TaskManager::runExpiredTasks()
+{
+    const QDateTime now = TaskInfo::now();
+    bool anyTaskEnabled = false;
+
+    foreach (TaskInfo *taskInfo, m_taskInfos) {
+        if (taskInfo->enabled()) {
+            anyTaskEnabled = true;
+
+            if (now > taskInfo->plannedRun()) {
+                taskInfo->run();
+            }
+        }
+    }
+
+    if (anyTaskEnabled) {
+        m_timer.start(60 * 60 * 1000);  // hour
+    } else {
+        m_timer.stop();
+    }
 }

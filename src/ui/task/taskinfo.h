@@ -41,6 +41,8 @@ public:
     QDateTime lastRun() const { return m_lastRun; }
     void setLastRun(const QDateTime &lastRun);
 
+    QDateTime plannedRun() const;
+
     QDateTime lastSuccess() const { return m_lastSuccess; }
     void setLastSuccess(const QDateTime &lastSuccess);
 
@@ -54,6 +56,8 @@ public:
 
     static QString typeToString(TaskInfo::TaskType type);
     static TaskInfo::TaskType stringToType(const QString &name);
+
+    static QDateTime now();
 
 signals:
     void enabledChanged();

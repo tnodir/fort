@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QQmlListProperty>
+#include <QTimer>
 
 class FortManager;
 class FortSettings;
@@ -28,10 +29,11 @@ signals:
 
 public slots:
     void loadSettings(const FortSettings *fortSettings);
-    bool saveSettings(FortSettings *fortSettings) const;
+    bool saveSettings(FortSettings *fortSettings);
 
 private slots:
     void handleTaskFinished(bool success);
+    void runExpiredTasks();
 
 private:
     void setupTasks();
@@ -42,6 +44,8 @@ private:
     FortManager *m_fortManager;
 
     QList<TaskInfo *> m_taskInfos;
+
+    QTimer m_timer;
 };
 
 #endif // TASKMANAGER_H

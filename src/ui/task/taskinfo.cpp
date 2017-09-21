@@ -64,6 +64,11 @@ void TaskInfo::setLastRun(const QDateTime &lastRun)
     }
 }
 
+QDateTime TaskInfo::plannedRun() const
+{
+    return m_lastRun.addSecs(m_intervalHours * 60 * 60);
+}
+
 void TaskInfo::setLastSuccess(const QDateTime &lastSuccess)
 {
     if (m_lastSuccess != lastSuccess) {
@@ -135,6 +140,11 @@ TaskInfo::TaskType TaskInfo::stringToType(const QString &name)
                 typeEnum.keyToValue(name.toLatin1()));
 }
 
+QDateTime TaskInfo::now()
+{
+    return QDateTime::currentDateTime();
+}
+
 void TaskInfo::run()
 {
     cancel();
@@ -163,9 +173,9 @@ void TaskInfo::handleFinished(bool success)
 {
     if (!m_taskWorker) return;
 
-    setLastRun(QDateTime::currentDateTime());
+    setLastRun(now());
     if (success) {
-        setLastSuccess(QDateTime::currentDateTime());
+        setLastSuccess(lastRun());
     }
 
     emit workFinished(success);
