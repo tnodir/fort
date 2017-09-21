@@ -5,6 +5,9 @@ import "schedule"
 import com.fortfirewall 1.0
 
 BasePage {
+    id: schedulePage
+
+    signal saveTaskInfo()
 
     readonly property TaskManager taskManager: fortManager.taskManager
 
@@ -43,7 +46,10 @@ BasePage {
     }
 
     function onSaved() {  // override
-        //taskManager.saveSettings(fortSettings);
+        if (!scheduleEdited) return;
+
+        saveTaskInfo();
+        taskManager.saveSettings(fortSettings);
     }
 
     Frame {

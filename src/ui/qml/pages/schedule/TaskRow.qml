@@ -13,9 +13,21 @@ Row {
         return Qt.formatDateTime(date, "yyyy-MM-dd hh:mm:ss");
     }
 
+    function saveTaskInfo() {
+        taskInfo.enabled = cbEnabled.checked;
+        taskInfo.intervalHours = fieldInterval.value;
+    }
+
+    Connections {
+        target: schedulePage
+        onSaveTaskInfo: saveTaskInfo()
+    }
+
     CheckBox {
+        id: cbEnabled
         width: taskCellWidths[0]
         checked: taskInfo.enabled
+        onToggled: setScheduleEdited()
     }
 
     Label {

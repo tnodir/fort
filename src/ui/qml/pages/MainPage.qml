@@ -12,6 +12,7 @@ Page {
 
     property bool confFlagsEdited
     property bool confEdited
+    property bool scheduleEdited
 
     function setConfFlagsEdited() {
         confFlagsEdited = true;
@@ -21,13 +22,18 @@ Page {
         confEdited = true;
     }
 
-    function resetConfEdited() {
+    function setScheduleEdited() {
+        scheduleEdited = true;
+    }
+
+    function resetEdited() {
         confFlagsEdited = false;
         confEdited = false;
+        scheduleEdited = false;
     }
 
     onOpened: {
-        resetConfEdited();
+        resetEdited();
 
         tabBar.currentItem.forceActiveFocus();
     }
@@ -80,24 +86,31 @@ Page {
             anchors.right: parent.right
 
             Button {
-                enabled: confFlagsEdited || confEdited
+                enabled: confFlagsEdited || confEdited || scheduleEdited
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "OK")
                 onClicked: {
-                    if (fortManager.saveConf(confFlagsEdited)) {
-                        mainPage.saved();
-                        closeWindow();
+                    if (confFlagsEdited || confEdited) {
+                        if (!fortManager.saveConf(confFlagsEdited))
+                            return;
                     }
+
+                    mainPage.saved();
+                    closeWindow();
                 }
             }
             Button {
-                enabled: confFlagsEdited || confEdited
+                enabled: confFlagsEdited || confEdited || scheduleEdited
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Apply")
                 onClicked: {
-                    if (fortManager.applyConf(confFlagsEdited)) {
-                        resetConfEdited();
+                    if (confFlagsEdited || confEdited) {
+                        if (!fortManager.applyConf(confFlagsEdited))
+                            return;
                     }
+
+                    mainPage.saved();
+                    resetEdited();
                 }
             }
             Button {

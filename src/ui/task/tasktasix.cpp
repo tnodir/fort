@@ -82,7 +82,7 @@ bool TaskTasix::processResult(FortManager *fortManager)
     AddressGroup *addressGroup = conf->ipExclude();
 
     if (addressGroup->text() == rangeText)
-        return true;
+        return false;
 
     addressGroup->setText(rangeText);
 
