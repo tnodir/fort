@@ -24,14 +24,6 @@ ApplicationWindow {
         }
     }
 
-    onVisibleChanged: {
-        if (visible) {
-            mainPage.opened();
-        } else {
-            mainPage.closed();
-        }
-    }
-
     function closeWindow() {
         fortManager.closeWindow();
     }
@@ -48,11 +40,18 @@ ApplicationWindow {
         id: osUtil
     }
 
-    MainPage {
-        id: mainPage
+    Loader {
         anchors.fill: parent
-        implicitWidth: 0  // XXX: Workaround for binding loop
+        sourceComponent: appWindow.visible ? mainPageComponent : undefined
+    }
 
-        Keys.onEscapePressed: closeWindow()
+    Component {
+        id: mainPageComponent
+        MainPage {
+            Keys.onEscapePressed: closeWindow()
+
+            Component.onCompleted: opened()
+            Component.onDestruction: closed()
+        }
     }
 }
