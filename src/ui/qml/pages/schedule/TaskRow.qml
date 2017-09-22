@@ -55,6 +55,8 @@ Row {
 
             onValueChanged: {
                 comboInterval.currentIndex = getIntervalIndexByValue(value);
+
+                setScheduleEdited();
             }
         }
 
