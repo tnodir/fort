@@ -47,6 +47,9 @@ ColumnLayout {
         }
 
         onTextChanged: {
+            if (addressGroup.text == textArea.text)
+                return;
+
             addressGroup.text = textArea.text;
 
             setConfEdited();

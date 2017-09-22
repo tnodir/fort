@@ -60,6 +60,9 @@ C:\\Program Files\\Internet Explorer\\iexplore.exe
             }
 
             onTextChanged: {
+                if (appGroup.blockText == textArea.text)
+                    return;
+
                 appGroup.blockText = textArea.text;
 
                 setConfEdited();
@@ -81,6 +84,9 @@ C:\\Program Files\\Skype\\Phone\\Skype.exe
             }
 
             onTextChanged: {
+                if (appGroup.allowText == textArea.text)
+                    return;
+
                 appGroup.allowText = textArea.text;
 
                 setConfEdited();
