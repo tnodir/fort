@@ -147,7 +147,7 @@ QDateTime TaskInfo::now()
 
 void TaskInfo::run()
 {
-    cancel();
+    if (m_taskWorker) return;
 
     TaskWorker *taskWorker = createWorker();
 
