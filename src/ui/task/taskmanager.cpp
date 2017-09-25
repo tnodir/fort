@@ -89,7 +89,7 @@ void TaskManager::runExpiredTasks()
     bool anyTaskEnabled = false;
 
     foreach (TaskInfo *taskInfo, m_taskInfos) {
-        if (taskInfo->enabled()) {
+        if (taskInfo->enabled() && !taskInfo->running()) {
             anyTaskEnabled = true;
 
             if (now > taskInfo->plannedRun()) {
