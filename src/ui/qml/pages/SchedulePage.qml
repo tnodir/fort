@@ -13,10 +13,10 @@ BasePage {
 
     readonly property var taskCellWidths: [
         tasksContainer.width * 0.05,
-        tasksContainer.width * 0.2,
+        tasksContainer.width * 0.24,
         tasksContainer.width * 0.3,
-        tasksContainer.width * 0.2,
-        tasksContainer.width * 0.2,
+        tasksContainer.width * 0.18,
+        tasksContainer.width * 0.18,
         tasksContainer.width * 0.05
     ]
 
