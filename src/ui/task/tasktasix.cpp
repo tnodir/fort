@@ -38,7 +38,8 @@ void TaskTasix::run()
             this, &TaskTasix::requestReadyRead);
     connect(m_reply, QOverload<QNetworkReply::NetworkError>::of(&QNetworkReply::error),
             this, &TaskTasix::cancel);
-    connect(m_reply, &QNetworkReply::finished, [this]() { cancel(true); });
+    connect(m_reply, &QNetworkReply::finished,
+            this, &TaskTasix::requestFinished);
 
     m_buffer.clear();
 
@@ -48,6 +49,8 @@ void TaskTasix::run()
 void TaskTasix::cancel(bool success)
 {
     if (!m_reply) return;
+
+    m_reply->disconnect(this);  // to avoid recursive call on abort()
 
     m_reply->abort();
     m_reply->deleteLater();
@@ -69,6 +72,11 @@ void TaskTasix::requestReadyRead()
     } else {
         m_timer.start();
     }
+}
+
+void TaskTasix::requestFinished()
+{
+    cancel(true);
 }
 
 bool TaskTasix::processResult(FortManager *fortManager)

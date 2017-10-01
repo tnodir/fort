@@ -27,6 +27,7 @@ public slots:
 
 private slots:
     void requestReadyRead();
+    void requestFinished();
 
 private:
     QNetworkAccessManager *m_networkManager;
