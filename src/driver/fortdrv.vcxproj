@@ -27,7 +27,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <TargetVersion>WindowsV6.3</TargetVersion>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <KernelBufferOverflowLib>$(DDK_LIB_PATH)\BufferOverflowK.lib</KernelBufferOverflowLib>
     <PlatformToolset>WindowsKernelModeDriver8.1</PlatformToolset>
     <ConfigurationType>Driver</ConfigurationType>
     <DriverType>WDM</DriverType>
@@ -36,7 +35,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <TargetVersion>WindowsV6.3</TargetVersion>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <KernelBufferOverflowLib>$(DDK_LIB_PATH)\BufferOverflowK.lib</KernelBufferOverflowLib>
     <PlatformToolset>WindowsKernelModeDriver8.1</PlatformToolset>
     <ConfigurationType>Driver</ConfigurationType>
     <DriverType>WDM</DriverType>
@@ -45,7 +43,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <TargetVersion>WindowsV6.3</TargetVersion>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <KernelBufferOverflowLib>$(DDK_LIB_PATH)\BufferOverflowK.lib</KernelBufferOverflowLib>
     <PlatformToolset>WindowsKernelModeDriver8.1</PlatformToolset>
     <ConfigurationType>Driver</ConfigurationType>
     <DriverType>WDM</DriverType>
@@ -54,7 +51,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <TargetVersion>WindowsV6.3</TargetVersion>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <KernelBufferOverflowLib>$(DDK_LIB_PATH)\BufferOverflowK.lib</KernelBufferOverflowLib>
     <PlatformToolset>WindowsKernelModeDriver8.1</PlatformToolset>
     <ConfigurationType>Driver</ConfigurationType>
     <DriverType>WDM</DriverType>
@@ -75,7 +71,7 @@
       <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies);$(DDK_LIB_PATH)\fwpkclnt.lib;$(SDK_LIB_PATH)\uuid.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);$(DDK_LIB_PATH)\BufferOverflowK.lib;$(DDK_LIB_PATH)\fwpkclnt.lib;$(SDK_LIB_PATH)\uuid.lib</AdditionalDependencies>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>

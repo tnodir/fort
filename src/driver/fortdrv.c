@@ -3,6 +3,8 @@
 #define NDIS_WDM	1
 #define NDIS630		1
 
+#define WIN9X_COMPAT_SPINLOCK  // XXX: Support Windows 7: KeInitializeSpinLock()
+
 #include <wdm.h>
 #include <fwpmk.h>
 #include <fwpsk.h>
