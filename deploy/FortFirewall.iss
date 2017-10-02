@@ -51,6 +51,7 @@ Name: "{group}\{cm:UninstallProgram,{#APP_NAME}}"; Filename: "{uninstallexe}"; I
 
 [Run]
 Filename: "{app}\{#APP_EXE_NAME}"; Parameters: "-b=1"; Description: "Provider boot"; Flags: runascurrentuser; Tasks: provBoot
+Filename: "{app}\driver\scripts\uninstall.bat"; Description: "Uninstall driver"; Flags: runascurrentuser
 Filename: "{app}\driver\scripts\install.bat"; Description: "Install driver"; Flags: runascurrentuser
 
 [UninstallRun]
