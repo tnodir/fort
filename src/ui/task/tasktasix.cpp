@@ -106,13 +106,6 @@ QString TaskTasix::parseBufer(const QByteArray &buffer)
 {
     QStringList list;
 
-    // Include local networks
-    list.append("10.0.0.0/8");
-    list.append("127.0.0.0/8");
-    list.append("169.254.0.0/16");
-    list.append("172.16.0.0/12");
-    list.append("192.168.0.0/16");
-
     // Parse lines
     const QString text(buffer);
     foreach (const QStringRef &line, text.splitRef('\n')) {
@@ -131,6 +124,16 @@ QString TaskTasix::parseBufer(const QByteArray &buffer)
 
         list.append(addrStr.toString());
     }
+
+    if (list.isEmpty())
+        return QString();
+
+    // Include local networks
+    list.append("10.0.0.0/8");
+    list.append("127.0.0.0/8");
+    list.append("169.254.0.0/16");
+    list.append("172.16.0.0/12");
+    list.append("192.168.0.0/16");
 
     // Merge lines
     Ip4Range ip4Range;
