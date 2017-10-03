@@ -27,6 +27,7 @@ public slots:
 
 private slots:
     void requestReadyRead();
+    void requestError(int networkError);
     void requestFinished();
 
 private:
@@ -36,6 +37,7 @@ private:
     QTimer m_timer;
 
     QByteArray m_buffer;
+    QString m_rangeText;
 };
 
 #endif // TASKTASIX_H

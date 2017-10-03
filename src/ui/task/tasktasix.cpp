@@ -37,11 +37,11 @@ void TaskTasix::run()
     connect(m_reply, &QIODevice::readyRead,
             this, &TaskTasix::requestReadyRead);
     connect(m_reply, QOverload<QNetworkReply::NetworkError>::of(&QNetworkReply::error),
-            this, &TaskTasix::cancel);
+            this, &TaskTasix::requestError);
     connect(m_reply, &QNetworkReply::finished,
             this, &TaskTasix::requestFinished);
 
-    m_buffer.clear();
+    m_rangeText = QString();
 
     m_timer.start(TASIX_DOWNLOAD_TIMEOUT);
 }
@@ -57,6 +57,8 @@ void TaskTasix::cancel(bool success)
     m_reply = nullptr;
 
     m_timer.stop();
+
+    m_buffer.clear();
 
     emit finished(success);
 }
@@ -74,25 +76,30 @@ void TaskTasix::requestReadyRead()
     }
 }
 
+void TaskTasix::requestError(int networkError)
+{
+    Q_UNUSED(networkError)
+
+    cancel(false);
+}
+
 void TaskTasix::requestFinished()
 {
-    cancel(true);
+    m_rangeText = parseBufer(m_buffer);
+
+    cancel(!m_rangeText.isEmpty());
 }
 
 bool TaskTasix::processResult(FortManager *fortManager)
 {
-    const QString rangeText = parseBufer(m_buffer);
-    if (rangeText.isEmpty())
-        return false;
-
 #ifndef TASK_TEST
     FirewallConf *conf = fortManager->firewallConf();
     AddressGroup *addressGroup = conf->ipExclude();
 
-    if (addressGroup->text() == rangeText)
+    if (addressGroup->text() == m_rangeText)
         return false;
 
-    addressGroup->setText(rangeText);
+    addressGroup->setText(m_rangeText);
 
     return fortManager->saveOriginConf(tr("TAS-IX addresses updated!"));
 #else
@@ -107,7 +114,7 @@ QString TaskTasix::parseBufer(const QByteArray &buffer)
     QStringList list;
 
     // Parse lines
-    const QString text(buffer);
+    const QString text = QString::fromLatin1(buffer);
     foreach (const QStringRef &line, text.splitRef('\n')) {
         if (!line.startsWith('*'))
             continue;
