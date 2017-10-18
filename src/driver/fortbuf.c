@@ -1,6 +1,6 @@
 /* Fort Firewall Log Buffer */
 
-#define FORT_BUFFER_POOL_TAG	'IPFB'
+#define FORT_BUFFER_POOL_TAG	'BwfF'
 
 #include "../common/fortlog.c"
 

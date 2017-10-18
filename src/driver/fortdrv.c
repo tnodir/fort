@@ -14,7 +14,7 @@
 #include "../common/common.h"
 #include "fortdrv.h"
 
-#define FORT_DEVICE_POOL_TAG	'IPFD'
+#define FORT_DEVICE_POOL_TAG	'DwfF'
 
 #include "../common/fortconf.c"
 #include "../common/fortprov.c"
