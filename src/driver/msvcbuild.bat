@@ -2,6 +2,7 @@
 
 @setlocal
 
+@rem PLAT: x64, Win32
 @set PLAT=%1
 
 @set OutDir=..\..\deploy\build\driver\
