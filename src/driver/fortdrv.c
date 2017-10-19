@@ -172,7 +172,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   flags = inFixedValues->incomingValue[flagsField].value.uint32;
   remote_ip = inFixedValues->incomingValue[remoteIpField].value.uint32;
-  path_len = inMetaValues->processPath->size - sizeof(WCHAR);
+  path_len = inMetaValues->processPath->size - sizeof(WCHAR);  // chop terminating zero
   path = inMetaValues->processPath->data;
 
   if (!(flags & FWP_CONDITION_FLAG_IS_LOOPBACK)
@@ -186,7 +186,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   fort_conf_ref_put(conf_ref);
 
   if (!blocked) {
-    classifyOut->actionType = FWP_ACTION_CONTINUE;
+    classifyOut->actionType = FWP_ACTION_PERMIT;
     if ((filter->flags & FWPS_FILTER_FLAG_CLEAR_ACTION_RIGHT)) {
       classifyOut->rights &= ~FWPS_RIGHT_ACTION_WRITE;
     }
@@ -243,7 +243,8 @@ fort_callout_accept_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 }
 
 static NTSTATUS NTAPI
-fort_callout_notify (FWPS_CALLOUT_NOTIFY_TYPE notifyType, const GUID *filterKey, const FWPS_FILTER0 *filter)
+fort_callout_notify (FWPS_CALLOUT_NOTIFY_TYPE notifyType,
+                     const GUID *filterKey, const FWPS_FILTER0 *filter)
 {
   UNUSED(notifyType);
   UNUSED(filterKey);
