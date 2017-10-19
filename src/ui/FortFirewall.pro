@@ -92,7 +92,7 @@ RESOURCES += fort_images.qrc
 
 # Windows
 LIBS += -lfwpuclnt -lkernel32 -lpsapi -luser32 -luuid -lws2_32
-RC_FILE = fort.rc
+RC_FILE = FortFirewall.rc
 
 # Kernel Driver
 installer_build {

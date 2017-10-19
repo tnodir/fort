@@ -45,9 +45,9 @@ Source: ".\build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs creat
 
 [Icons]
 ; Start menu shortcut
-Name: "{group}\{#APP_NAME}"; Filename: "{app}\{#APP_EXE_NAME}"; IconFilename: "{app}\fort.ico"
+Name: "{group}\{#APP_NAME}"; Filename: "{app}\{#APP_EXE_NAME}"; IconFilename: "{app}\FortFirewall.ico"
 ; Uninstaller shortcut
-Name: "{group}\{cm:UninstallProgram,{#APP_NAME}}"; Filename: "{uninstallexe}"; IconFilename: "{app}\fort.ico"
+Name: "{group}\{cm:UninstallProgram,{#APP_NAME}}"; Filename: "{uninstallexe}"; IconFilename: "{app}\FortFirewall.ico"
 
 [Run]
 Filename: "{app}\{#APP_EXE_NAME}"; Parameters: "-b=1"; Description: "Provider boot"; Flags: runascurrentuser; Tasks: provBoot
