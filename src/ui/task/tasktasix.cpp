@@ -1,7 +1,6 @@
 #include "tasktasix.h"
 
 #include <QNetworkAccessManager>
-#include <QNetworkConfigurationManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
 
@@ -29,9 +28,6 @@ TaskTasix::TaskTasix(QObject *parent) :
 
 void TaskTasix::run()
 {
-    if (!QNetworkConfigurationManager().isOnline())
-        return;
-
     QNetworkRequest request(QUrl(TASIX_MRLG_URL));
     request.setHeader(QNetworkRequest::ContentTypeHeader,
                       "application/x-www-form-urlencoded");
