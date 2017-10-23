@@ -62,7 +62,7 @@ SignTool sign /a /v /s "%DISPNAME%" /n "%CERTNAME%" "%DSTPATH%"
 
 
 @rem Create service
-sc create %BASENAME% binPath= "%DSTPATH%" type= kernel start= auto DisplayName= "%DISPNAME%"
+sc create %BASENAME% binPath= "%DSTPATH%" type= kernel start= auto depend= BFE DisplayName= "%DISPNAME%"
 @if ERRORLEVEL 1 (
     @echo Error: Cannot create a service
     @set RCODE=%ERRORLEVEL%
