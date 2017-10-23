@@ -7,7 +7,7 @@ BasePage {
 
     readonly property DriverManager driverManager: fortManager.driverManager
 
-    property alias enableLogReading: cbShowBlockedApps.checked
+    property bool enableLogReading: false
 
     property var appPaths: []
     property var appPathIpMap: ({})
