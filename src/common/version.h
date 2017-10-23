@@ -6,4 +6,4 @@
 #define APP_VERSION		0x000900
 #define APP_UPDATES_URL		"https://github.com/tnodir/fort/releases"
 
-#endif VERSION_H
+#endif // VERSION_H
