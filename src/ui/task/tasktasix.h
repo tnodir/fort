@@ -3,7 +3,7 @@
 
 #include "taskworker.h"
 
-class HttpDownloader;
+class NetDownloader;
 
 class TaskTasix : public TaskWorker
 {
@@ -12,15 +12,21 @@ class TaskTasix : public TaskWorker
 public:
     explicit TaskTasix(QObject *parent = nullptr);
 
-    HttpDownloader *downloader() const { return m_downloader; }
+    NetDownloader *downloader() const { return m_downloader; }
 
-    static QString parseTasixBuffer(const QByteArray &buffer);
+    static QStringList parseTasixBuffer(const QByteArray &buffer);
 
 protected:
-    virtual void startDownloader() const;
+    virtual void setupDownloader() const;
 
-    virtual QString parseBuffer(const QByteArray &buffer) const {
+    QString parseBuffer(const QByteArray &buffer) const;
+
+    virtual QStringList parseCustomBuffer(const QByteArray &buffer) const {
         return parseTasixBuffer(buffer);
+    }
+
+    virtual QString successMessage() const {
+        return tr("TAS-IX addresses updated!");
     }
 
 signals:
@@ -35,7 +41,7 @@ private slots:
     void downloadFinished(bool success);
 
 private:
-    HttpDownloader *m_downloader;
+    NetDownloader *m_downloader;
 
     QString m_rangeText;
 };

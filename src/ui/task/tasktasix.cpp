@@ -9,8 +9,8 @@
 #ifndef TASK_TEST
 #include "../fortmanager.h"
 #endif
-#include "../util/httpdownloader.h"
 #include "../util/ip4range.h"
+#include "../util/netdownloader.h"
 
 TaskTasix::TaskTasix(QObject *parent) :
     TaskWorker(parent),
@@ -20,25 +20,29 @@ TaskTasix::TaskTasix(QObject *parent) :
 
 void TaskTasix::run()
 {
-    m_downloader = new HttpDownloader(this);
+    m_downloader = new NetDownloader(this);
 
-    connect(m_downloader, &HttpDownloader::finished,
+    connect(m_downloader, &NetDownloader::finished,
             this, &TaskTasix::downloadFinished);
 
     m_rangeText = QString();
 
-    startDownloader();
+    setupDownloader();
+
+    downloader()->start();
 }
 
-void TaskTasix::startDownloader() const
+void TaskTasix::setupDownloader() const
 {
-    downloader()->post(QUrl("http://mrlg.tas-ix.uz/index.cgi"),
-                       "router=cisco&pass1=&query=1&arg=");
+    downloader()->setUrl("http://mrlg.tas-ix.uz/index.cgi");
+    downloader()->setData("router=cisco&pass1=&query=1&arg=");
 }
 
 void TaskTasix::cancel(bool success)
 {
     if (!m_downloader) return;
+
+    m_downloader->disconnect(this);  // to avoid recursive call on cancel()
 
     m_downloader->cancel();
     m_downloader->deleteLater();
@@ -68,7 +72,7 @@ bool TaskTasix::processResult(FortManager *fortManager)
 
     ipExclude->setText(m_rangeText);
 
-    return fortManager->saveOriginConf(tr("TAS-IX addresses updated!"));
+    return fortManager->saveOriginConf(successMessage());
 #else
     Q_UNUSED(fortManager)
 
@@ -76,13 +80,30 @@ bool TaskTasix::processResult(FortManager *fortManager)
 #endif
 }
 
-QString TaskTasix::parseTasixBuffer(const QByteArray &buffer)
+QString TaskTasix::parseBuffer(const QByteArray &buffer) const
+{
+    const QStringList list = parseCustomBuffer(buffer);
+
+    if (list.isEmpty())
+        return QString();
+
+    // Merge lines
+    Ip4Range ip4Range;
+    if (!ip4Range.fromText(list.join('\n')))
+        return QString();
+
+    return ip4Range.toText();
+}
+
+QStringList TaskTasix::parseTasixBuffer(const QByteArray &buffer)
 {
     QStringList list;
 
     // Parse lines
     const QString text = QString::fromLatin1(buffer);
-    foreach (const QStringRef &line, text.splitRef('\n')) {
+
+    foreach (const QStringRef &line, text.splitRef(
+                 '\n', QString::SkipEmptyParts)) {
         if (!line.startsWith('*'))
             continue;
 
@@ -99,20 +120,14 @@ QString TaskTasix::parseTasixBuffer(const QByteArray &buffer)
         list.append(addrStr.toString());
     }
 
-    if (list.isEmpty())
-        return QString();
-
     // Include local networks
-    list.append("10.0.0.0/8");
-    list.append("127.0.0.0/8");
-    list.append("169.254.0.0/16");
-    list.append("172.16.0.0/12");
-    list.append("192.168.0.0/16");
+    if (!list.isEmpty()) {
+        list.append("10.0.0.0/8");
+        list.append("127.0.0.0/8");
+        list.append("169.254.0.0/16");
+        list.append("172.16.0.0/12");
+        list.append("192.168.0.0/16");
+    }
 
-    // Merge lines
-    Ip4Range ip4Range;
-    if (!ip4Range.fromText(list.join('\n')))
-        return QString();
-
-    return ip4Range.toText();
+    return list;
 }

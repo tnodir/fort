@@ -10,13 +10,17 @@ class TaskUzonline : public TaskTasix
 public:
     explicit TaskUzonline(QObject *parent = nullptr);
 
-    static QString parseUzonlineBuffer(const QByteArray &buffer);
+    static QStringList parseUzonlineBuffer(const QByteArray &buffer);
 
 protected:
-    void startDownloader() const override;
+    void setupDownloader() const override;
 
-    QString parseBuffer(const QByteArray &buffer) const override {
+    virtual QStringList parseCustomBuffer(const QByteArray &buffer) const override {
         return parseUzonlineBuffer(buffer);
+    }
+
+    QString successMessage() const override {
+        return tr("UzOnline addresses updated!");
     }
 };
 
