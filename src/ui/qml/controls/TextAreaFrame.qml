@@ -16,6 +16,7 @@ Frame {
         TextArea {
             id: textArea
             clip: true  // to clip placeholder text
+            selectByMouse: true
             onTextChanged: frame.textChanged()
         }
     }
