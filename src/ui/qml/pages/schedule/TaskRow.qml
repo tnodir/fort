@@ -115,7 +115,7 @@ Row {
             loops: Animation.Infinite
             from: 0
             to: 360
-            duration: 1500
+            duration: 4000
             easing.type: Easing.OutBack
             running: taskInfo.running
             onStopped: {
