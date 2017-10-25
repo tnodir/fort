@@ -8,7 +8,7 @@ TaskUzonline::TaskUzonline(QObject *parent) :
 }
 
 #include <QDebug>
-QString TaskUzonline::parseUzonlineBufer(const QByteArray &buffer)
+QString TaskUzonline::parseUzonlineBuffer(const QByteArray &buffer)
 {
     qDebug() << buffer.length() << buffer;
     return QString();

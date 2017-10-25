@@ -50,7 +50,7 @@ void TaskTasix::cancel(bool success)
 void TaskTasix::downloadFinished(bool success)
 {
     if (success) {
-        m_rangeText = parseBufer(m_downloader->buffer());
+        m_rangeText = parseBuffer(m_downloader->buffer());
         success = !m_rangeText.isEmpty();
     }
 
@@ -76,7 +76,7 @@ bool TaskTasix::processResult(FortManager *fortManager)
 #endif
 }
 
-QString TaskTasix::parseTasixBufer(const QByteArray &buffer)
+QString TaskTasix::parseTasixBuffer(const QByteArray &buffer)
 {
     QStringList list;
 

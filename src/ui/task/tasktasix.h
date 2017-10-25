@@ -14,13 +14,13 @@ public:
 
     HttpDownloader *downloader() const { return m_downloader; }
 
-    static QString parseTasixBufer(const QByteArray &buffer);
+    static QString parseTasixBuffer(const QByteArray &buffer);
 
 protected:
     virtual void startDownloader() const;
 
-    virtual QString parseBufer(const QByteArray &buffer) const {
-        return parseTasixBufer(buffer);
+    virtual QString parseBuffer(const QByteArray &buffer) const {
+        return parseTasixBuffer(buffer);
     }
 
 signals:
