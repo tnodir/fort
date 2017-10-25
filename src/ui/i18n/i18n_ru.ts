@@ -132,17 +132,30 @@
 <context>
     <name>TaskInfo</name>
     <message>
-        <location filename="../task/taskinfo.cpp" line="44"/>
+        <location filename="../task/taskinfo.cpp" line="46"/>
         <source>TAS-IX Addresses Downloader</source>
         <translation>Загрузчик TAS-IX адресов</translation>
+    </message>
+    <message>
+        <location filename="../task/taskinfo.cpp" line="48"/>
+        <source>UzOnline Addresses Downloader</source>
+        <translation>Загрузчик UzOnline адресов</translation>
     </message>
 </context>
 <context>
     <name>TaskTasix</name>
     <message>
-        <location filename="../task/tasktasix.cpp" line="89"/>
+        <location filename="../task/tasktasix.h" line="29"/>
         <source>TAS-IX addresses updated!</source>
         <translation>TAS-IX адреса обновлены!</translation>
+    </message>
+</context>
+<context>
+    <name>TaskUzonline</name>
+    <message>
+        <location filename="../task/taskuzonline.h" line="23"/>
+        <source>UzOnline addresses updated!</source>
+        <translation>UzOnline адреса обновлены!</translation>
     </message>
 </context>
 <context>
@@ -233,7 +246,7 @@
         <translation>Блокировать</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="72"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="75"/>
         <source>Allow</source>
         <translation>Разрешить</translation>
     </message>
