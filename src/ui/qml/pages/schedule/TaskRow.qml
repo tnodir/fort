@@ -54,9 +54,11 @@ Row {
             to: 24 * 30 * 12  // ~Year
 
             onValueChanged: {
-                comboInterval.currentIndex = getIntervalIndexByValue(value);
+                comboInterval.updateIndex(value);
 
-                setScheduleEdited();
+                if (value != taskInfo.intervalHours) {
+                    setScheduleEdited();
+                }
             }
         }
 
@@ -66,8 +68,12 @@ Row {
 
             model: taskIntervalNames
 
+            function updateIndex(value) {
+                currentIndex = getIntervalIndexByValue(value);
+            }
+
             onModelChanged: {
-                fieldInterval.onValueChanged();
+                updateIndex(fieldInterval.value);
             }
             onActivated: {
                 fieldInterval.value = taskIntervalHours[index];
