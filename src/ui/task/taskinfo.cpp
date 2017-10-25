@@ -4,6 +4,7 @@
 #include <QMetaEnum>
 
 #include "tasktasix.h"
+#include "taskuzonline.h"
 
 #define TASK_INFO_VERSION   1
 
@@ -43,6 +44,8 @@ QString TaskInfo::title() const
     switch (m_type) {
     case Tasix:
         return tr("TAS-IX Addresses Downloader");
+    case Uzonline:
+        return tr("UzOnline Addresses Downloader");
     default:
         Q_UNREACHABLE();
         return QString();
@@ -195,6 +198,8 @@ TaskWorker *TaskInfo::createWorker()
     switch (m_type) {
     case Tasix:
         return new TaskTasix(this);
+    case Uzonline:
+        return new TaskUzonline(this);
     default:
         Q_UNREACHABLE();
         return nullptr;

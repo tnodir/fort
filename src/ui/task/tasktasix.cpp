@@ -9,97 +9,64 @@
 #ifndef TASK_TEST
 #include "../fortmanager.h"
 #endif
+#include "../util/httpdownloader.h"
 #include "../util/ip4range.h"
-
-#define TASIX_MRLG_URL          "http://mrlg.tas-ix.uz/index.cgi"
-#define TASIX_MRLG_DATA         "router=cisco&pass1=&query=1&arg="
-#define TASIX_DOWNLOAD_TIMEOUT  30000  // 30 seconds timeout
-#define TASIX_DOWNLOAD_MAXSIZE  (32 * 1024)
 
 TaskTasix::TaskTasix(QObject *parent) :
     TaskWorker(parent),
-    m_networkManager(new QNetworkAccessManager(this)),
-    m_reply(nullptr)
+    m_downloader(nullptr)
 {
-    connect(&m_timer, &QTimer::timeout, [this]() { cancel(); });
-
-    m_timer.setSingleShot(true);
 }
 
 void TaskTasix::run()
 {
-    QNetworkRequest request(QUrl(TASIX_MRLG_URL));
-    request.setHeader(QNetworkRequest::ContentTypeHeader,
-                      "application/x-www-form-urlencoded");
+    m_downloader = new HttpDownloader(this);
 
-    m_reply = m_networkManager->post(request, TASIX_MRLG_DATA);
-
-    connect(m_reply, &QIODevice::readyRead,
-            this, &TaskTasix::requestReadyRead);
-    connect(m_reply, QOverload<QNetworkReply::NetworkError>::of(&QNetworkReply::error),
-            this, &TaskTasix::requestError);
-    connect(m_reply, &QNetworkReply::finished,
-            this, &TaskTasix::requestFinished);
+    connect(m_downloader, &HttpDownloader::finished,
+            this, &TaskTasix::downloadFinished);
 
     m_rangeText = QString();
 
-    m_timer.start(TASIX_DOWNLOAD_TIMEOUT);
+    startDownloader();
+}
+
+void TaskTasix::startDownloader() const
+{
+    downloader()->post(QUrl("http://mrlg.tas-ix.uz/index.cgi"),
+                       "router=cisco&pass1=&query=1&arg=");
 }
 
 void TaskTasix::cancel(bool success)
 {
-    if (!m_reply) return;
+    if (!m_downloader) return;
 
-    m_reply->disconnect(this);  // to avoid recursive call on abort()
-
-    m_reply->abort();
-    m_reply->deleteLater();
-    m_reply = nullptr;
-
-    m_timer.stop();
-
-    m_buffer.clear();
+    m_downloader->cancel();
+    m_downloader->deleteLater();
+    m_downloader = nullptr;
 
     emit finished(success);
 }
 
-void TaskTasix::requestReadyRead()
+void TaskTasix::downloadFinished(bool success)
 {
-    const QByteArray data = m_reply->read(
-                TASIX_DOWNLOAD_MAXSIZE - m_buffer.size());
-    m_buffer.append(data);
-
-    if (m_buffer.size() > TASIX_DOWNLOAD_MAXSIZE) {
-        cancel();
-    } else {
-        m_timer.start();
+    if (success) {
+        m_rangeText = parseBufer(m_downloader->buffer());
+        success = !m_rangeText.isEmpty();
     }
-}
 
-void TaskTasix::requestError(int networkError)
-{
-    Q_UNUSED(networkError)
-
-    cancel(false);
-}
-
-void TaskTasix::requestFinished()
-{
-    m_rangeText = parseBufer(m_buffer);
-
-    cancel(!m_rangeText.isEmpty());
+    cancel(success);
 }
 
 bool TaskTasix::processResult(FortManager *fortManager)
 {
 #ifndef TASK_TEST
     FirewallConf *conf = fortManager->firewallConf();
-    AddressGroup *addressGroup = conf->ipExclude();
+    AddressGroup *ipExclude = conf->ipExclude();
 
-    if (addressGroup->text() == m_rangeText)
+    if (ipExclude->text() == m_rangeText)
         return false;
 
-    addressGroup->setText(m_rangeText);
+    ipExclude->setText(m_rangeText);
 
     return fortManager->saveOriginConf(tr("TAS-IX addresses updated!"));
 #else
@@ -109,7 +76,7 @@ bool TaskTasix::processResult(FortManager *fortManager)
 #endif
 }
 
-QString TaskTasix::parseBufer(const QByteArray &buffer)
+QString TaskTasix::parseTasixBufer(const QByteArray &buffer)
 {
     QStringList list;
 

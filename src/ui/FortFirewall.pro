@@ -21,12 +21,14 @@ SOURCES += \
     task/taskinfo.cpp \
     task/taskmanager.cpp \
     task/tasktasix.cpp \
+    task/taskuzonline.cpp \
     task/taskworker.cpp \
     translationmanager.cpp \
     util/confutil.cpp \
     util/device.cpp \
     util/fileutil.cpp \
     util/hostinfo.cpp \
+    util/httpdownloader.cpp \
     util/ip4range.cpp \
     util/netutil.cpp \
     util/processinfo.cpp \
@@ -48,12 +50,14 @@ HEADERS += \
     task/taskinfo.h \
     task/taskmanager.h \
     task/tasktasix.h \
+    task/taskuzonline.h \
     task/taskworker.h \
     translationmanager.h \
     util/confutil.h \
     util/device.h \
     util/fileutil.h \
     util/hostinfo.h \
+    util/httpdownloader.h \
     util/ip4range.h \
     util/netutil.h \
     util/processinfo.h \

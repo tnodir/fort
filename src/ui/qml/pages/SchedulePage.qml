@@ -103,15 +103,13 @@ BasePage {
             ListView {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                spacing: 10
+                clip: true
 
-                interactive: false
+                model: taskManager.taskInfos
 
-                Repeater {
-                    model: taskManager.taskInfos
-
-                    TaskRow {
-                        taskInfo: modelData
-                    }
+                delegate: TaskRow {
+                    taskInfo: modelData
                 }
             }
         }

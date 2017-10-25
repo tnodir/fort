@@ -1,12 +1,9 @@
 #ifndef TASKTASIX_H
 #define TASKTASIX_H
 
-#include <QTimer>
-
 #include "taskworker.h"
 
-class QNetworkAccessManager;
-class QNetworkReply;
+class HttpDownloader;
 
 class TaskTasix : public TaskWorker
 {
@@ -15,7 +12,16 @@ class TaskTasix : public TaskWorker
 public:
     explicit TaskTasix(QObject *parent = nullptr);
 
-    static QString parseBufer(const QByteArray &buffer);
+    HttpDownloader *downloader() const { return m_downloader; }
+
+    static QString parseTasixBufer(const QByteArray &buffer);
+
+protected:
+    virtual void startDownloader() const;
+
+    virtual QString parseBufer(const QByteArray &buffer) const {
+        return parseTasixBufer(buffer);
+    }
 
 signals:
 
@@ -26,17 +32,11 @@ public slots:
     bool processResult(FortManager *fortManager) override;
 
 private slots:
-    void requestReadyRead();
-    void requestError(int networkError);
-    void requestFinished();
+    void downloadFinished(bool success);
 
 private:
-    QNetworkAccessManager *m_networkManager;
-    QNetworkReply *m_reply;
+    HttpDownloader *m_downloader;
 
-    QTimer m_timer;
-
-    QByteArray m_buffer;
     QString m_rangeText;
 };
 
