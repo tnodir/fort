@@ -17,8 +17,8 @@ void TaskUzonline::setupDownloader() const
 
 QStringList TaskUzonline::parseUzonlineBuffer(const QByteArray &buffer)
 {
-    const int startPos = buffer.indexOf("=START=");
-    const int endPos = buffer.indexOf("=END=", startPos + 1);
+    const int startPos = buffer.indexOf("=UZONLINE=START=");
+    const int endPos = buffer.indexOf("=UZONLINE=END=", startPos + 1);
     if (startPos < 0 || endPos < 0)
         return QStringList();
 
