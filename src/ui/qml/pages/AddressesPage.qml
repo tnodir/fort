@@ -11,6 +11,8 @@ BasePage {
         spacing: 10
 
         AddressesColumn {
+            id: includeAddresses
+
             addressGroup: firewallConf.ipInclude
 
             title {
@@ -18,12 +20,15 @@ BasePage {
                       && qsTranslate("qml", "Include")
             }
             checkBoxAll {
+                enabled: !excludeAddresses.checkBoxAll.checked
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Include All")
             }
         }
 
         AddressesColumn {
+            id: excludeAddresses
+
             addressGroup: firewallConf.ipExclude
 
             title {
@@ -31,6 +36,7 @@ BasePage {
                       && qsTranslate("qml", "Exclude")
             }
             checkBoxAll {
+                enabled: !includeAddresses.checkBoxAll.checked
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Exclude All")
             }
