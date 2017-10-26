@@ -9,13 +9,13 @@
 #include <QTimer>
 #include <QWindow>
 
-#include "activityLog/logbuffer.h"
-#include "activityLog/logentry.h"
 #include "conf/addressgroup.h"
 #include "conf/appgroup.h"
 #include "conf/firewallconf.h"
 #include "driver/drivermanager.h"
 #include "fortsettings.h"
+#include "log/logbuffer.h"
+#include "log/logentry.h"
 #include "task/taskinfo.h"
 #include "task/taskmanager.h"
 #include "translationmanager.h"

@@ -1,7 +1,7 @@
 #include "driverworker.h"
 
-#include "../activityLog/logbuffer.h"
 #include "../fortcommon.h"
+#include "../log/logbuffer.h"
 #include "../util/device.h"
 
 DriverWorker::DriverWorker(Device *device, QObject *parent) :

@@ -2,10 +2,10 @@
 
 #include <QThread>
 
-#include "../activityLog/logbuffer.h"
-#include "../activityLog/logentry.h"
 #include "../fortcommon.h"
 #include "../conf/firewallconf.h"
+#include "../log/logbuffer.h"
+#include "../log/logentry.h"
 #include "../util/confutil.h"
 #include "../util/device.h"
 #include "driverworker.h"

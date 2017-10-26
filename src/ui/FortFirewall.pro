@@ -7,8 +7,8 @@ TEMPLATE = app
 
 SOURCES += \
     main.cpp \
-    activityLog/logbuffer.cpp \
-    activityLog/logentry.cpp \
+    log/logbuffer.cpp \
+    log/logentry.cpp \
     conf/addressgroup.cpp \
     conf/appgroup.cpp \
     conf/firewallconf.cpp \
@@ -36,8 +36,8 @@ SOURCES += \
     util/stringutil.cpp
 
 HEADERS += \
-    activityLog/logbuffer.h \
-    activityLog/logentry.h \
+    log/logbuffer.h \
+    log/logentry.h \
     conf/addressgroup.h \
     conf/appgroup.h \
     conf/firewallconf.h \
