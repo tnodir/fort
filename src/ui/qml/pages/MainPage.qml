@@ -65,7 +65,7 @@ Page {
         TabButton {
             icon.source: "qrc:/images/zoom.png"
             text: translationManager.dummyBool
-                  && qsTranslate("qml", "Activity")
+                  && qsTranslate("qml", "Blocked")
         }
     }
 
@@ -78,7 +78,7 @@ Page {
         AddressesPage {}
         ApplicationsPage {}
         SchedulePage {}
-        ActivityPage {}
+        BlockedPage {}
     }
 
     footer: Pane {

@@ -4,10 +4,10 @@
         <file>qml/controls/TextContextMenu.qml</file>
         <file>qml/controls/TextFieldFrame.qml</file>
         <file>qml/main.qml</file>
-        <file>qml/pages/ActivityPage.qml</file>
         <file>qml/pages/AddressesPage.qml</file>
         <file>qml/pages/ApplicationsPage.qml</file>
         <file>qml/pages/BasePage.qml</file>
+        <file>qml/pages/BlockedPage.qml</file>
         <file>qml/pages/MainPage.qml</file>
         <file>qml/pages/OptionsPage.qml</file>
         <file>qml/pages/SchedulePage.qml</file>
