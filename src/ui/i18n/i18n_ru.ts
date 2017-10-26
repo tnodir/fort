@@ -161,17 +161,33 @@
 <context>
     <name>qml</name>
     <message>
-        <location filename="../qml/pages/ActivityPage.qml" line="155"/>
+        <location filename="../qml/controls/TextContextMenu.qml" line="29"/>
+        <source>Copy</source>
+        <translation>Копировать</translation>
+    </message>
+    <message>
+        <location filename="../qml/controls/TextContextMenu.qml" line="34"/>
+        <source>Cut</source>
+        <translation>Вырезать</translation>
+    </message>
+    <message>
+        <location filename="../qml/controls/TextContextMenu.qml" line="39"/>
+        <source>Paste</source>
+        <translation>Вставить</translation>
+    </message>
+    <message>
+        <location filename="../qml/controls/TextContextMenu.qml" line="47"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="155"/>
         <source>Clear</source>
         <translation>Очистить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/ActivityPage.qml" line="162"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="162"/>
         <source>Copy Path</source>
         <translation>Скопировать путь</translation>
     </message>
     <message>
-        <location filename="../qml/pages/ActivityPage.qml" line="176"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="176"/>
         <source>Log Blocked Applications</source>
         <translation>Показ блокированных приложений</translation>
     </message>
@@ -196,27 +212,27 @@
         <translation>Исключить все</translation>
     </message>
     <message>
-        <location filename="../qml/pages/ApplicationsPage.qml" line="64"/>
+        <location filename="../qml/pages/ApplicationsPage.qml" line="65"/>
         <source>Group Name</source>
         <translation>Имя группы</translation>
     </message>
     <message>
-        <location filename="../qml/pages/ApplicationsPage.qml" line="69"/>
+        <location filename="../qml/pages/ApplicationsPage.qml" line="70"/>
         <source>Add Group</source>
         <translation>Добавить группу</translation>
     </message>
     <message>
-        <location filename="../qml/pages/ApplicationsPage.qml" line="75"/>
+        <location filename="../qml/pages/ApplicationsPage.qml" line="76"/>
         <source>Rename Group</source>
         <translation>Переименовать</translation>
     </message>
     <message>
-        <location filename="../qml/pages/ApplicationsPage.qml" line="85"/>
+        <location filename="../qml/pages/ApplicationsPage.qml" line="86"/>
         <source>Block All</source>
         <translation>Блокировать все</translation>
     </message>
     <message>
-        <location filename="../qml/pages/ApplicationsPage.qml" line="95"/>
+        <location filename="../qml/pages/ApplicationsPage.qml" line="96"/>
         <source>Allow All</source>
         <translation>Разрешить все</translation>
     </message>
@@ -272,8 +288,8 @@
     </message>
     <message>
         <location filename="../qml/pages/MainPage.qml" line="68"/>
-        <source>Activity</source>
-        <translation>Активность</translation>
+        <source>Blocked</source>
+        <translation>Блокировано</translation>
     </message>
     <message>
         <location filename="../qml/pages/MainPage.qml" line="91"/>
