@@ -83,7 +83,7 @@ BasePage {
 
             CheckBox {
                 id: cbBlockAll
-                enabled: !cbAllowAll.checked
+                enabled: !cbAllowAll.checked || checked
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Block All")
                 checked: firewallConf.appBlockAll
@@ -95,7 +95,7 @@ BasePage {
             }
             CheckBox {
                 id: cbAllowAll
-                enabled: !cbBlockAll.checked
+                enabled: !cbBlockAll.checked || checked
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Allow All")
                 checked: firewallConf.appAllowAll

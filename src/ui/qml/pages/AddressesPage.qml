@@ -21,6 +21,7 @@ BasePage {
             }
             checkBoxAll {
                 enabled: !excludeAddresses.checkBoxAll.checked
+                         || checkBoxAll.checked
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Include All")
             }
@@ -37,6 +38,7 @@ BasePage {
             }
             checkBoxAll {
                 enabled: !includeAddresses.checkBoxAll.checked
+                         || checkBoxAll.checked
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Exclude All")
             }
