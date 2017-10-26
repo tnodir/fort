@@ -1,5 +1,6 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
+import "controls"
 import "pages"
 import com.fortfirewall 1.0
 
@@ -38,6 +39,10 @@ ApplicationWindow {
 
     OsUtil {
         id: osUtil
+    }
+
+    TextContextMenu {
+        id: textContextMenu
     }
 
     Loader {
