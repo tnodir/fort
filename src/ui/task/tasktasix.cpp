@@ -1,9 +1,5 @@
 #include "tasktasix.h"
 
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
-#include <QNetworkRequest>
-
 #include "../conf/addressgroup.h"
 #include "../conf/firewallconf.h"
 #ifndef TASK_TEST
