@@ -161,22 +161,22 @@
 <context>
     <name>qml</name>
     <message>
-        <location filename="../qml/controls/TextContextMenu.qml" line="29"/>
+        <location filename="../qml/controls/TextContextMenu.qml" line="30"/>
         <source>Copy</source>
         <translation>Копировать</translation>
     </message>
     <message>
-        <location filename="../qml/controls/TextContextMenu.qml" line="34"/>
+        <location filename="../qml/controls/TextContextMenu.qml" line="36"/>
         <source>Cut</source>
         <translation>Вырезать</translation>
     </message>
     <message>
-        <location filename="../qml/controls/TextContextMenu.qml" line="39"/>
+        <location filename="../qml/controls/TextContextMenu.qml" line="42"/>
         <source>Paste</source>
         <translation>Вставить</translation>
     </message>
     <message>
-        <location filename="../qml/controls/TextContextMenu.qml" line="47"/>
+        <location filename="../qml/controls/TextContextMenu.qml" line="51"/>
         <location filename="../qml/pages/BlockedPage.qml" line="155"/>
         <source>Clear</source>
         <translation>Очистить</translation>
@@ -192,22 +192,22 @@
         <translation>Показ блокированных приложений</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AddressesPage.qml" line="18"/>
+        <location filename="../qml/pages/AddressesPage.qml" line="20"/>
         <source>Include</source>
         <translation>Включить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AddressesPage.qml" line="22"/>
+        <location filename="../qml/pages/AddressesPage.qml" line="26"/>
         <source>Include All</source>
         <translation>Включить все</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AddressesPage.qml" line="31"/>
+        <location filename="../qml/pages/AddressesPage.qml" line="37"/>
         <source>Exclude</source>
         <translation>Исключить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AddressesPage.qml" line="35"/>
+        <location filename="../qml/pages/AddressesPage.qml" line="43"/>
         <source>Exclude All</source>
         <translation>Исключить все</translation>
     </message>
@@ -227,12 +227,12 @@
         <translation>Переименовать</translation>
     </message>
     <message>
-        <location filename="../qml/pages/ApplicationsPage.qml" line="86"/>
+        <location filename="../qml/pages/ApplicationsPage.qml" line="88"/>
         <source>Block All</source>
         <translation>Блокировать все</translation>
     </message>
     <message>
-        <location filename="../qml/pages/ApplicationsPage.qml" line="96"/>
+        <location filename="../qml/pages/ApplicationsPage.qml" line="100"/>
         <source>Allow All</source>
         <translation>Разрешить все</translation>
     </message>
@@ -318,6 +318,11 @@
     </message>
     <message>
         <location filename="../qml/pages/OptionsPage.qml" line="31"/>
+        <source>Block access to network when Fort Firewall is not running</source>
+        <translation>Блокировать доступ к сети, когда Fort Firewall не запущен</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/OptionsPage.qml" line="42"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>

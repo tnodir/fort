@@ -69,12 +69,12 @@ fort_prov_register (BOOL is_boot, BOOL *is_bootp)
     FwpmFreeMemory0((void **) &old_provider);
 
     if (old_provider_data) {
-      if (provider_data.is_boot) {
-        is_boot = is_bootp ? provider_data.is_boot : is_boot;
+      is_boot = is_bootp ? provider_data.is_boot : is_boot;
 
-        if (provider_data.version == APP_VERSION)
-          goto end_close;
-      }
+      if (is_boot == provider_data.is_boot
+          && provider_data.version == APP_VERSION)
+        goto end_close;
+
       fort_prov_delete(engine);
     }
   }

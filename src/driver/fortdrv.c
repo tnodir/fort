@@ -28,8 +28,8 @@ typedef struct fort_conf_ref {
 
 typedef struct fort_device {
   BOOL active		: 1;
-  BOOL filter_enabled	: 1;
   BOOL prov_boot	: 1;
+  BOOL filter_enabled	: 1;
 
   UINT32 connect4_id;
   UINT32 accept4_id;
@@ -107,8 +107,14 @@ fort_conf_ref_set (PFORT_CONF_REF conf_ref)
   {
     g_device->conf_ref = conf_ref;
 
-    g_device->filter_enabled = (conf_ref != NULL
-        && conf_ref->conf.flags.filter_enabled);
+    if (conf_ref != NULL) {
+      const FORT_CONF_FLAGS conf_flags = conf_ref->conf.flags;
+      
+      g_device->prov_boot = conf_flags.prov_boot;
+      g_device->filter_enabled = conf_flags.filter_enabled;
+    } else {
+      g_device->filter_enabled = FALSE;
+    }
   }
   KeReleaseSpinLock(&g_device->conf_lock, irq);
 
@@ -128,6 +134,7 @@ fort_conf_ref_flags_set (const PFORT_CONF_FLAGS conf_flags)
     if (conf_ref) {
       PFORT_CONF conf = &conf_ref->conf;
 
+      g_device->prov_boot = conf_flags->prov_boot;
       g_device->filter_enabled = conf_flags->filter_enabled;
 
       conf->flags = *conf_flags;

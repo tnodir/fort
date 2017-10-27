@@ -33,13 +33,6 @@ SolidCompression=yes
 Name: en; MessagesFile: "compiler:Default.isl"
 Name: ru; MessagesFile: "compiler:Languages\Russian.isl"
 
-[CustomMessages]
-en.provBoot=Block access to network when Fort Firewall is not running
-ru.provBoot=Блокировать доступ к сети, когда Fort Firewall не запущен
-
-[Tasks]
-Name: "provBoot"; Description: "{cm:provBoot}"; Flags: unchecked
-
 [Files]
 Source: ".\build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
@@ -50,7 +43,6 @@ Name: "{group}\{#APP_NAME}"; Filename: "{app}\{#APP_EXE_NAME}"; IconFilename: "{
 Name: "{group}\{cm:UninstallProgram,{#APP_NAME}}"; Filename: "{uninstallexe}"; IconFilename: "{app}\FortFirewall.ico"
 
 [Run]
-Filename: "{app}\{#APP_EXE_NAME}"; Parameters: "-b=1"; Description: "Provider boot"; Flags: runascurrentuser; Tasks: provBoot
 Filename: "{app}\driver\scripts\uninstall.bat"; Description: "Uninstall driver"; Flags: runascurrentuser
 Filename: "{app}\driver\scripts\install.bat"; Description: "Install driver"; Flags: runascurrentuser
 

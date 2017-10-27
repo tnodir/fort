@@ -5,6 +5,7 @@
 
 FirewallConf::FirewallConf(QObject *parent) :
     QObject(parent),
+    m_provBoot(false),
     m_filterEnabled(true),
     m_appLogBlocked(false),
     m_appBlockAll(true),
@@ -12,6 +13,14 @@ FirewallConf::FirewallConf(QObject *parent) :
     m_ipInclude(new AddressGroup(this)),
     m_ipExclude(new AddressGroup(this))
 {
+}
+
+void FirewallConf::setProvBoot(bool provBoot)
+{
+    if (m_provBoot != provBoot) {
+        m_provBoot = provBoot;
+        emit provBootChanged();
+    }
 }
 
 void FirewallConf::setFilterEnabled(bool filterEnabled)
@@ -111,6 +120,7 @@ void FirewallConf::removeAppGroup(int from, int to)
 
 void FirewallConf::copyFlags(const FirewallConf &o)
 {
+    setProvBoot(o.provBoot());
     setFilterEnabled(o.filterEnabled());
     ipInclude()->setUseAll(o.ipInclude()->useAll());
     ipExclude()->setUseAll(o.ipExclude()->useAll());

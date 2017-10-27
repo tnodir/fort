@@ -26,6 +26,17 @@ BasePage {
                 }
             }
             CheckBox {
+                id: cbBoot
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Block access to network when Fort Firewall is not running")
+                checked: fortSettings.provBoot
+                onToggled: {
+                    firewallConf.provBoot = checked;
+
+                    setConfFlagsEdited();
+                }
+            }
+            CheckBox {
                 id: cbFilter
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Filter Enabled")

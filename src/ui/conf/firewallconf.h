@@ -11,6 +11,7 @@ class AppGroup;
 class FirewallConf : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool provBoot READ provBoot WRITE setProvBoot NOTIFY provBootChanged)
     Q_PROPERTY(bool filterEnabled READ filterEnabled WRITE setFilterEnabled NOTIFY filterEnabledChanged)
     Q_PROPERTY(bool appLogBlocked READ appLogBlocked WRITE setAppLogBlocked NOTIFY appLogBlockedChanged)
     Q_PROPERTY(bool appBlockAll READ appBlockAll WRITE setAppBlockAll NOTIFY appBlockAllChanged)
@@ -22,6 +23,9 @@ class FirewallConf : public QObject
 
 public:
     explicit FirewallConf(QObject *parent = nullptr);
+
+    bool provBoot() const { return m_provBoot; }
+    void setProvBoot(bool provBoot);
 
     bool filterEnabled() const { return m_filterEnabled; }
     void setFilterEnabled(bool filterEnabled);
@@ -51,6 +55,7 @@ public:
     void fromVariant(const QVariant &v);
 
 signals:
+    void provBootChanged();
     void filterEnabledChanged();
     void appLogBlockedChanged();
     void appBlockAllChanged();
@@ -64,6 +69,7 @@ public slots:
     void removeAppGroup(int from, int to);
 
 private:
+    uint m_provBoot         : 1;
     uint m_filterEnabled    : 1;
 
     uint m_appLogBlocked    : 1;  // transient
