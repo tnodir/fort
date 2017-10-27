@@ -29,7 +29,6 @@ typedef struct fort_conf_ref {
 typedef struct fort_device {
   BOOL active		: 1;
   BOOL filter_enabled	: 1;
-  BOOL prov_temporary	: 1;
   BOOL prov_boot	: 1;
 
   UINT32 connect4_id;
@@ -317,8 +316,7 @@ fort_callout_force_reauth (PDEVICE_OBJECT device)
   fort_prov_unregister();
 
   // Register
-  status = fort_prov_register(!g_device->prov_temporary,
-                              g_device->prov_boot, NULL, NULL);
+  status = fort_prov_register(g_device->prov_boot, NULL);
 
   if (status == STATUS_SUCCESS) {
     status = fort_callout_install(device);
@@ -453,7 +451,7 @@ fort_driver_unload (PDRIVER_OBJECT driver)
 
   fort_buffer_close(&g_device->buffer);
 
-  if (g_device->prov_temporary)
+  if (!g_device->prov_boot)
     fort_prov_unregister();
 
   RtlInitUnicodeString(&device_link, DOS_DEVICE_NAME);
@@ -500,11 +498,10 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 
       // Register filters provider
       {
-        BOOL is_temp = FALSE, is_boot = FALSE;
+        BOOL is_boot = FALSE;
 
-        status = fort_prov_register(FALSE, FALSE, &is_temp, &is_boot);
+        status = fort_prov_register(FALSE, &is_boot);
 
-        g_device->prov_temporary = is_temp;
         g_device->prov_boot = is_boot;
       }
     }

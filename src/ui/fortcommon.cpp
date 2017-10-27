@@ -105,9 +105,9 @@ bool FortCommon::confAppBlocked(const void *drvConf,
     return blocked;
 }
 
-uint FortCommon::provRegister(bool boot)
+uint FortCommon::provRegister(bool isBoot)
 {
-    return fort_prov_register(TRUE, boot, NULL, NULL);
+    return fort_prov_register(isBoot, NULL);
 }
 
 void FortCommon::provUnregister()

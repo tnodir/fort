@@ -2,10 +2,21 @@
 
 typedef struct fort_prov_data {
   UINT32 version	: 24;
-  UINT32 persist	: 1;
-  UINT32 boot		: 1;
+  UINT32 is_boot	: 1;
 } FORT_PROV_DATA, *PFORT_PROV_DATA;
 
+
+static DWORD
+fort_prov_open (HANDLE *enginep)
+{
+  return FwpmEngineOpen0(NULL, RPC_C_AUTHN_WINNT, NULL, NULL, enginep);
+}
+
+static void
+fort_prov_close (HANDLE engine)
+{
+  FwpmEngineClose0(engine);
+}
 
 static void
 fort_prov_delete (HANDLE engine)
@@ -23,16 +34,16 @@ fort_prov_unregister (void)
 {
   HANDLE engine;
 
-  if (FwpmEngineOpen0(NULL, RPC_C_AUTHN_WINNT, NULL, NULL, &engine))
+  if (fort_prov_open(&engine))
     return;
 
   fort_prov_delete(engine);
 
-  FwpmEngineClose0(engine);
+  fort_prov_close(engine);
 }
 
 static DWORD
-fort_prov_register (BOOL persist, BOOL boot, BOOL *is_tempp, BOOL *is_bootp)
+fort_prov_register (BOOL is_boot, BOOL *is_bootp)
 {
   FWPM_PROVIDER0 *old_provider, provider;
   FWPM_CALLOUT0 ocallout4, icallout4;
@@ -43,8 +54,7 @@ fort_prov_register (BOOL persist, BOOL boot, BOOL *is_tempp, BOOL *is_bootp)
   UINT32 filter_flags;
   DWORD status;
 
-  if ((status = FwpmEngineOpen0(
-      NULL, RPC_C_AUTHN_WINNT, NULL, NULL, &engine)))
+  if ((status = fort_prov_open(&engine)))
     goto end;
 
   if (!(status = FwpmProviderGetByKey0(
@@ -55,12 +65,12 @@ fort_prov_register (BOOL persist, BOOL boot, BOOL *is_tempp, BOOL *is_bootp)
     if (old_provider_data) {
       provider_data = *old_provider_data;
     }
+
     FwpmFreeMemory0((void **) &old_provider);
 
     if (old_provider_data) {
-      if (provider_data.persist) {
-        persist = provider_data.persist;
-        boot = provider_data.boot;
+      if (provider_data.is_boot) {
+        is_boot = is_bootp ? provider_data.is_boot : is_boot;
 
         if (provider_data.version == APP_VERSION)
           goto end_close;
@@ -70,13 +80,12 @@ fort_prov_register (BOOL persist, BOOL boot, BOOL *is_tempp, BOOL *is_bootp)
   }
 
   provider_data.version = APP_VERSION;
-  provider_data.persist = persist;
-  provider_data.boot = boot;
+  provider_data.is_boot = is_boot;
 
-  filter_flags = boot ? 0 : FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED;
+  filter_flags = is_boot ? 0 : FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED;
 
   RtlZeroMemory(&provider, sizeof(FWPM_PROVIDER0));
-  provider.flags = persist ? FWPM_PROVIDER_FLAG_PERSISTENT : 0;
+  provider.flags = is_boot ? FWPM_PROVIDER_FLAG_PERSISTENT : 0;
   provider.providerKey = FORT_GUID_PROVIDER;
   provider.displayData.name = (wchar_t *) L"FortProvider";
   provider.displayData.description = (wchar_t *) L"Fort Firewall Provider";
@@ -133,15 +142,13 @@ fort_prov_register (BOOL persist, BOOL boot, BOOL *is_tempp, BOOL *is_bootp)
       || (status = FwpmFilterAdd0(engine, &ifilter4, NULL, NULL))
       || (status = FwpmTransactionCommit0(engine))) {
     FwpmTransactionAbort0(engine);
-  } else if (is_tempp) {
-    *is_tempp = !persist;
   }
 
  end_close:
-  FwpmEngineClose0(engine);
+  fort_prov_close(engine);
 
   if (is_bootp) {
-    *is_bootp = boot;
+    *is_bootp = is_boot;
   }
 
  end:

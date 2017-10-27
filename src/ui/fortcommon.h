@@ -33,7 +33,7 @@ public:
     static bool confAppBlocked(const void *drvConf,
                                const QString &kernelPath, bool *notify = 0);
 
-    static uint provRegister(bool boot);
+    static uint provRegister(bool isBoot);
     static void provUnregister();
 };
 
