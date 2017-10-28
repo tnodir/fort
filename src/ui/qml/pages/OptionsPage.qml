@@ -29,7 +29,7 @@ BasePage {
                 id: cbBoot
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Block access to network when Fort Firewall is not running")
-                checked: fortSettings.provBoot
+                checked: firewallConf.provBoot
                 onToggled: {
                     firewallConf.provBoot = checked;
 

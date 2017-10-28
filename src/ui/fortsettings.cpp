@@ -196,7 +196,7 @@ bool FortSettings::tryToWriteConf(const FirewallConf &conf, const QString &fileP
 bool FortSettings::readConfFlags(FirewallConf &conf) const
 {
     m_ini->beginGroup("confFlags");
-    conf.setFilterEnabled(iniBool("provBoot"));
+    conf.setProvBoot(iniBool("provBoot"));
     conf.setFilterEnabled(iniBool("filterEnabled", true));
     conf.ipInclude()->setUseAll(iniBool("ipIncludeAll"));
     conf.ipExclude()->setUseAll(iniBool("ipExcludeAll"));
