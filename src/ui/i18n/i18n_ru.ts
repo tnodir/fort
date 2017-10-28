@@ -19,17 +19,17 @@
         <translation>Конфигурация слишком большая</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="110"/>
+        <location filename="../util/confutil.cpp" line="111"/>
         <source>Number of Application Groups must be &lt; %1</source>
         <translation>Количество групп приложений должно быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="122"/>
+        <location filename="../util/confutil.cpp" line="123"/>
         <source>Length of Application Group&apos;s Name must be &lt; %1</source>
         <translation>Длина наименования группы приложения должна быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="164"/>
+        <location filename="../util/confutil.cpp" line="165"/>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Длина пути приложения должна быть &lt; %1</translation>
     </message>
@@ -37,37 +37,17 @@
 <context>
     <name>FortManager</name>
     <message>
-        <location filename="../fortmanager.cpp" line="339"/>
+        <location filename="../fortmanager.cpp" line="335"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="344"/>
+        <location filename="../fortmanager.cpp" line="340"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="350"/>
-        <source>Include All Addresses</source>
-        <translation>Включить все адреса</translation>
-    </message>
-    <message>
-        <location filename="../fortmanager.cpp" line="354"/>
-        <source>Exclude All Addresses</source>
-        <translation>Исключить все адреса</translation>
-    </message>
-    <message>
-        <location filename="../fortmanager.cpp" line="360"/>
-        <source>Block All Applications</source>
-        <translation>Блокировать все приложения</translation>
-    </message>
-    <message>
-        <location filename="../fortmanager.cpp" line="364"/>
-        <source>Allow All Applications</source>
-        <translation>Разрешить все приложения</translation>
-    </message>
-    <message>
-        <location filename="../fortmanager.cpp" line="379"/>
+        <location filename="../fortmanager.cpp" line="355"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
