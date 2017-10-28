@@ -46,6 +46,7 @@ Row {
         SpinBox {
             id: fieldInterval
             Layout.fillWidth: true
+            Layout.preferredWidth: 110
 
             editable: true
             width: 180
