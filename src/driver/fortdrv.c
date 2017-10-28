@@ -279,7 +279,8 @@ fort_callout_install (PDEVICE_OBJECT device)
 
   status = FwpsCalloutRegister0(device, &c, &g_device->connect4_id);
   if (!NT_SUCCESS(status)) {
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Register Connect V4: Error: %d\n", status);
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+               "FORT: Register Connect V4: Error: %d\n", status);
     return status;
   }
 
@@ -290,7 +291,8 @@ fort_callout_install (PDEVICE_OBJECT device)
 
   status = FwpsCalloutRegister0(device, &c, &g_device->accept4_id);
   if (!NT_SUCCESS(status)) {
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Register Accept V4: Error: %d\n", status);
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+               "FORT: Register Accept V4: Error: %d\n", status);
     return status;
   }
 
@@ -443,7 +445,8 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
   }
 
   if (!NT_SUCCESS(status)) {
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Device Control: Error: %d\n", status);
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+               "FORT: Device Control: Error: %d\n", status);
   }
 
   fort_request_complete_info(irp, status, info);
@@ -456,15 +459,34 @@ fort_driver_unload (PDRIVER_OBJECT driver)
 {
   UNICODE_STRING device_link;
 
-  fort_buffer_close(&g_device->buffer);
+  if (g_device != NULL) {
+    fort_buffer_close(&g_device->buffer);
 
-  if (!g_device->prov_boot)
-    fort_prov_unregister();
+    if (!g_device->prov_boot)
+      fort_prov_unregister();
+  }
 
   RtlInitUnicodeString(&device_link, DOS_DEVICE_NAME);
   IoDeleteSymbolicLink(&device_link);
 
   IoDeleteDevice(driver->DeviceObject);
+}
+
+static NTSTATUS
+fort_bfe_wait (void) {
+  LARGE_INTEGER delay;
+  delay.QuadPart = (-5000000);  // sleep 500000us (500ms)
+  int count = 600;  // wait for 5 minutes
+
+  do {
+    const FWPM_SERVICE_STATE state = FwpmBfeStateGet0();
+    if (state == FWPM_SERVICE_RUNNING)
+      return STATUS_SUCCESS;
+
+    KeDelayExecutionThread(KernelMode, FALSE, &delay);
+  } while (--count >= 0);
+
+  return STATUS_INSUFFICIENT_RESOURCES;
 }
 
 NTSTATUS
@@ -475,6 +497,14 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
   NTSTATUS status;
 
   UNUSED(reg_path);
+
+  // Wait for BFE to start
+  status = fort_bfe_wait();
+  if (!NT_SUCCESS(status)) {
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+               "FORT: Entry: Error: BFE is not running\n");
+    return status;
+  }
 
   RtlInitUnicodeString(&device_name, NT_DEVICE_NAME);
   status = IoCreateDevice(driver, sizeof(FORT_DEVICE), &device_name,
@@ -515,7 +545,8 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
   }
 
   if (!NT_SUCCESS(status)) {
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Entry: Error: %d\n", status);
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+               "FORT: Entry: Error: %d\n", status);
     fort_driver_unload(driver);
   }
 
