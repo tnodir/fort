@@ -296,10 +296,6 @@ void FortManager::setLanguage(int language)
 void FortManager::saveTrayFlags()
 {
     m_firewallConf->setFilterEnabled(m_filterEnabledAction->isChecked());
-    m_firewallConf->ipInclude()->setUseAll(m_ipIncludeAllAction->isChecked());
-    m_firewallConf->ipExclude()->setUseAll(m_ipExcludeAllAction->isChecked());
-    m_firewallConf->setAppBlockAll(m_appBlockAllAction->isChecked());
-    m_firewallConf->setAppAllowAll(m_appAllowAllAction->isChecked());
 
     int i = 0;
     foreach (AppGroup *appGroup, m_firewallConf->appGroupsList()) {
@@ -344,26 +340,6 @@ void FortManager::updateTrayMenu()
                 menu, QIcon(), tr("Filter Enabled"),
                 this, SLOT(saveTrayFlags()),
                 true, conf.filterEnabled());
-
-    menu->addSeparator();
-    m_ipIncludeAllAction = addAction(
-                menu, QIcon(), tr("Include All Addresses"),
-                this, SLOT(saveTrayFlags()),
-                true, conf.ipInclude()->useAll());
-    m_ipExcludeAllAction = addAction(
-                menu, QIcon(), tr("Exclude All Addresses"),
-                this, SLOT(saveTrayFlags()),
-                true, conf.ipExclude()->useAll());
-
-    menu->addSeparator();
-    m_appBlockAllAction = addAction(
-                menu, QIcon(), tr("Block All Applications"),
-                this, SLOT(saveTrayFlags()),
-                true, conf.appBlockAll());
-    m_appAllowAllAction = addAction(
-                menu, QIcon(), tr("Allow All Applications"),
-                this, SLOT(saveTrayFlags()),
-                true, conf.appAllowAll());
 
     menu->addSeparator();
     m_appGroupActions.clear();

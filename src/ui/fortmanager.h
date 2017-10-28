@@ -99,10 +99,6 @@ private:
     FirewallConf *m_firewallConfToEdit;
 
     QAction *m_filterEnabledAction;
-    QAction *m_ipIncludeAllAction;
-    QAction *m_ipExcludeAllAction;
-    QAction *m_appBlockAllAction;
-    QAction *m_appAllowAllAction;
     QList<QAction *> m_appGroupActions;
 
     DriverManager *m_driverManager;
