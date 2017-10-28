@@ -26,18 +26,21 @@ Menu {
     }
 
     MenuItem {
+        icon.source: "qrc:/images/page_copy.png"
         text: translationManager.dummyBool
               && qsTranslate("qml", "Copy")
         enabled: textField && textField.selectedText
         onTriggered: textField.copy()
     }
     MenuItem {
+        icon.source: "qrc:/images/cut.png"
         text: translationManager.dummyBool
               && qsTranslate("qml", "Cut")
         enabled: textField && textField.selectedText
         onTriggered: textField.cut()
     }
     MenuItem {
+        icon.source: "qrc:/images/page_paste.png"
         text: translationManager.dummyBool
               && qsTranslate("qml", "Paste")
         enabled: textField && textField.canPaste
@@ -47,6 +50,7 @@ Menu {
     MenuSeparator {}
 
     MenuItem {
+        icon.source: "qrc:/images/page_white.png"
         text: translationManager.dummyBool
               && qsTranslate("qml", "Clear")
         enabled: textField && textField.text
