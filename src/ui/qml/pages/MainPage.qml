@@ -53,7 +53,7 @@ Page {
                   && qsTranslate("qml", "IPv4 Addresses")
         }
         TabButton {
-            icon.source: "qrc:/images/application_cascade.png"
+            icon.source: "qrc:/images/application_double.png"
             text: translationManager.dummyBool
                   && qsTranslate("qml", "Applications")
         }

@@ -10,16 +10,19 @@ ColumnLayout {
 
     RowLayout {
         Button {
+            icon.source: "qrc:/images/application_delete.png"
             text: translationManager.dummyBool
                   && qsTranslate("qml", "Remove Group")
             onClicked: removeAppGroup(index)
         }
         Button {
+            icon.source: "qrc:/images/resultset_previous.png"
             text: translationManager.dummyBool
                   && qsTranslate("qml", "Move left")
             onClicked: moveAppGroup(index, -1)
         }
         Button {
+            icon.source: "qrc:/images/resultset_next.png"
             text: translationManager.dummyBool
                   && qsTranslate("qml", "Move right")
             onClicked: moveAppGroup(index, 1)

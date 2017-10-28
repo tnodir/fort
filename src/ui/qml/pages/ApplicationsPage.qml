@@ -66,12 +66,14 @@ BasePage {
             }
             Button {
                 enabled: editGroupName.text
+                icon.source: "qrc:/images/application_add.png"
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Add Group")
                 onClicked: addAppGroup()
             }
             Button {
                 enabled: editGroupName.text && appsColumn.enabled
+                icon.source: "qrc:/images/application_edit.png"
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Rename Group")
                 onClicked: renameAppGroup()
@@ -119,7 +121,7 @@ BasePage {
                 TabButton {
                     width: Math.max(100, implicitWidth)
                     font.bold: checked
-                    icon.source: "qrc:/images/application_double.png"
+                    icon.source: "qrc:/images/application.png"
                     text: appGroup.name
 
                     readonly property AppGroup appGroup: modelData
