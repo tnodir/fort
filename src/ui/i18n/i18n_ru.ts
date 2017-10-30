@@ -56,23 +56,28 @@
     <name>FortSettings</name>
     <message>
         <location filename="../fortsettings.cpp" line="164"/>
-        <source>Can&apos;t rename old backup conf. file</source>
-        <translation>Не удалось переименовать старый бэкап конф. файла</translation>
+        <source>Can&apos;t write .ini file</source>
+        <translation>Не удалось записать .ini файл</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="169"/>
-        <source>Can&apos;t create backup conf. file</source>
-        <translation>Не удалось создать бэкап конф. файла</translation>
+        <location filename="../fortsettings.cpp" line="170"/>
+        <source>Can&apos;t rename old backup .conf file</source>
+        <translation>Не удалось переименовать старый бэкап .conf файла</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="174"/>
-        <source>Can&apos;t rename backup conf. file</source>
-        <translation>Не удалось переименовать бэкап конф. файла</translation>
+        <location filename="../fortsettings.cpp" line="175"/>
+        <source>Can&apos;t create backup .conf file</source>
+        <translation>Не удалось создать бэкап .conf файла</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="189"/>
-        <source>Can&apos;t write conf. file</source>
-        <translation>Не удалось записать конф. файл</translation>
+        <location filename="../fortsettings.cpp" line="180"/>
+        <source>Can&apos;t rename backup .conf file</source>
+        <translation>Не удалось переименовать бэкап .conf файла</translation>
+    </message>
+    <message>
+        <location filename="../fortsettings.cpp" line="195"/>
+        <source>Can&apos;t write .conf file</source>
+        <translation>Не удалось записать .conf файл</translation>
     </message>
 </context>
 <context>
@@ -141,22 +146,22 @@
 <context>
     <name>qml</name>
     <message>
-        <location filename="../qml/controls/TextContextMenu.qml" line="30"/>
+        <location filename="../qml/controls/TextContextMenu.qml" line="31"/>
         <source>Copy</source>
         <translation>Копировать</translation>
     </message>
     <message>
-        <location filename="../qml/controls/TextContextMenu.qml" line="36"/>
+        <location filename="../qml/controls/TextContextMenu.qml" line="38"/>
         <source>Cut</source>
         <translation>Вырезать</translation>
     </message>
     <message>
-        <location filename="../qml/controls/TextContextMenu.qml" line="42"/>
+        <location filename="../qml/controls/TextContextMenu.qml" line="45"/>
         <source>Paste</source>
         <translation>Вставить</translation>
     </message>
     <message>
-        <location filename="../qml/controls/TextContextMenu.qml" line="51"/>
+        <location filename="../qml/controls/TextContextMenu.qml" line="55"/>
         <location filename="../qml/pages/BlockedPage.qml" line="155"/>
         <source>Clear</source>
         <translation>Очистить</translation>
@@ -197,52 +202,52 @@
         <translation>Имя группы</translation>
     </message>
     <message>
-        <location filename="../qml/pages/ApplicationsPage.qml" line="70"/>
+        <location filename="../qml/pages/ApplicationsPage.qml" line="71"/>
         <source>Add Group</source>
         <translation>Добавить группу</translation>
     </message>
     <message>
-        <location filename="../qml/pages/ApplicationsPage.qml" line="76"/>
+        <location filename="../qml/pages/ApplicationsPage.qml" line="78"/>
         <source>Rename Group</source>
         <translation>Переименовать</translation>
     </message>
     <message>
-        <location filename="../qml/pages/ApplicationsPage.qml" line="88"/>
+        <location filename="../qml/pages/ApplicationsPage.qml" line="90"/>
         <source>Block All</source>
         <translation>Блокировать все</translation>
     </message>
     <message>
-        <location filename="../qml/pages/ApplicationsPage.qml" line="100"/>
+        <location filename="../qml/pages/ApplicationsPage.qml" line="102"/>
         <source>Allow All</source>
         <translation>Разрешить все</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="14"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="15"/>
         <source>Remove Group</source>
         <translation>Удалить группу</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="19"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="21"/>
         <source>Move left</source>
         <translation>Налево</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="24"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="27"/>
         <source>Move right</source>
         <translation>Направо</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="34"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="37"/>
         <source>Enabled</source>
         <translation>Включено</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="52"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="55"/>
         <source>Block</source>
         <translation>Блокировать</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="75"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="78"/>
         <source>Allow</source>
         <translation>Разрешить</translation>
     </message>

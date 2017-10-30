@@ -129,12 +129,13 @@ bool FortSettings::readConf(FirewallConf &conf)
     const QString filePath = confFilePath();
     const QString backupFilePath = confBackupFilePath();
 
-    if (!(FileUtil::fileExists(filePath)
-          || FileUtil::fileExists(backupFilePath)))
-        return true;
+    const bool fileExists = FileUtil::fileExists(filePath);
+    const bool backupFileExists = FileUtil::fileExists(backupFilePath);
 
-    return tryToReadConf(conf, filePath)
-            || tryToReadConf(conf, backupFilePath);
+    return readConfFlags(conf)
+            && (!(fileExists || backupFileExists)
+                || (fileExists && tryToReadConf(conf, filePath))
+                || tryToReadConf(conf, backupFilePath));
 }
 
 bool FortSettings::tryToReadConf(FirewallConf &conf, const QString &filePath)
@@ -151,7 +152,7 @@ bool FortSettings::tryToReadConf(FirewallConf &conf, const QString &filePath)
 
     conf.fromVariant(jsonDoc.toVariant());
 
-    return readConfFlags(conf);
+    return true;
 }
 
 bool FortSettings::writeConf(const FirewallConf &conf)
@@ -159,19 +160,24 @@ bool FortSettings::writeConf(const FirewallConf &conf)
     const QString filePath = confFilePath();
     const QString backupFilePath = confBackupFilePath();
 
+    if (!writeConfFlags(conf)) {
+        setErrorMessage(tr("Can't write .ini file"));
+        return false;
+    }
+
     if (FileUtil::fileExists(backupFilePath)
             && !FileUtil::renameFile(backupFilePath, filePath)) {
-        setErrorMessage(tr("Can't rename old backup conf. file"));
+        setErrorMessage(tr("Can't rename old backup .conf file"));
         return false;
     }
 
     if (!tryToWriteConf(conf, backupFilePath)) {
-        setErrorMessage(tr("Can't create backup conf. file"));
+        setErrorMessage(tr("Can't create backup .conf file"));
         return false;
     }
 
     if (!FileUtil::renameFile(backupFilePath, filePath)) {
-        setErrorMessage(tr("Can't rename backup conf. file"));
+        setErrorMessage(tr("Can't rename backup .conf file"));
         return false;
     }
 
@@ -186,11 +192,11 @@ bool FortSettings::tryToWriteConf(const FirewallConf &conf, const QString &fileP
     const QByteArray data = jsonDoc.toJson(QJsonDocument::Indented);
 
     if (!FileUtil::writeFileData(filePath, data)) {
-        setErrorMessage(tr("Can't write conf. file"));
+        setErrorMessage(tr("Can't write .conf file"));
         return false;
     }
 
-    return writeConfFlags(conf);
+    return true;
 }
 
 bool FortSettings::readConfFlags(FirewallConf &conf) const
