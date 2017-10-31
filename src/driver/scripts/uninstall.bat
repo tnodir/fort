@@ -13,7 +13,7 @@ sc delete %BASENAME%
 @if ERRORLEVEL 1 (
     @echo Error: Cannot delete the service
     @set RCODE=%ERRORLEVEL%
-    @goto EXIT
+    @rem @goto EXIT
 )
 
 
