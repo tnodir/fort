@@ -33,7 +33,7 @@ public:
     static bool confIpInRange(const void *drvConf, quint32 ip,
                               bool included = false);
     static bool confAppBlocked(const void *drvConf,
-                               const QString &kernelPath, bool *notify = 0);
+                               const QString &kernelPath, bool *notify = nullptr);
 
     static uint provRegister(bool isBoot);
     static void provUnregister();

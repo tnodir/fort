@@ -82,10 +82,10 @@ private:
 
     static QAction *addAction(QWidget *widget,
                               const QIcon &icon, const QString &text,
-                              const QObject *receiver = 0, const char *member = 0,
+                              const QObject *receiver = nullptr, const char *member = nullptr,
                               bool checkable = false, bool checked = false);
     static void setActionCheckable(QAction *action, bool checked = false,
-                                   const QObject *receiver = 0, const char *member = 0);
+                                   const QObject *receiver = nullptr, const char *member = nullptr);
 
 private:
     MainWindow m_window;  // dummy window for tray icon

@@ -12,7 +12,7 @@ public:
     explicit NetUtil(QObject *parent = nullptr);
 
     // Convert IPv4 address from text to number
-    Q_INVOKABLE static quint32 textToIp4(const QString &text, bool *ok = 0);
+    Q_INVOKABLE static quint32 textToIp4(const QString &text, bool *ok = nullptr);
 
     // Convert IPv4 address from number to text
     Q_INVOKABLE static QString ip4ToText(quint32 ip);

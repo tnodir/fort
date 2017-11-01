@@ -16,7 +16,7 @@ class TranslationManager : public QObject
     Q_PROPERTY(QStringList naturalLabels READ naturalLabels CONSTANT)
 
 protected:
-    explicit TranslationManager(QObject *parent = 0);
+    explicit TranslationManager(QObject *parent = nullptr);
     virtual ~TranslationManager();
 
 public:
