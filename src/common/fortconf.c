@@ -117,8 +117,7 @@ fort_conf_app_blocked (const PFORT_CONF conf,
   const BOOL app_perm_allowed = (app_perm & conf->app_perms_allow_mask);
   const BOOL app_allowed = conf->flags.app_allow_all ? TRUE : app_perm_allowed;
 
-  *notify = app_blocked && !app_perm_blocked
-      && conf->flags.app_log_blocked;
+  *notify = app_blocked && conf->flags.app_log_blocked;
 
   return app_blocked && !app_allowed;
 }
