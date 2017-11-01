@@ -13,8 +13,6 @@ public:
 
     bool isOpened() const;
 
-    static QString lastErrorMessage();
-
 signals:
 
 public slots:

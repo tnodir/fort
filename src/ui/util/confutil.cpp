@@ -7,6 +7,7 @@
 #define UINT32  quint32
 
 #include "../common/fortconf.h"
+#include "../common/version.h"
 #include "../conf/addressgroup.h"
 #include "../conf/appgroup.h"
 #include "../conf/firewallconf.h"
@@ -95,7 +96,7 @@ int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
     confFlags->app_log_blocked = conf.appLogBlocked();
     confFlags->app_block_all = conf.appBlockAll();
     confFlags->app_allow_all = conf.appAllowAll();
-    confFlags->conf_version = FORT_CONF_VERSION;
+    confFlags->driver_version = FORT_DRIVER_VERSION;
     confFlags->group_bits = conf.appGroupBits();
 
     return flagsSize;
@@ -239,7 +240,7 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     drvConf->flags.app_block_all = conf.appBlockAll();
     drvConf->flags.app_allow_all = conf.appAllowAll();
 
-    drvConf->flags.conf_version = FORT_CONF_VERSION;
+    drvConf->flags.driver_version = FORT_DRIVER_VERSION;
 
     drvConf->flags.group_bits = conf.appGroupBits();
 

@@ -10,7 +10,7 @@ typedef struct fort_conf_flags {
   UINT32 app_block_all		: 1;
   UINT32 app_allow_all		: 1;
   UINT32 _reserved_		: 3;
-  UINT32 conf_version		: 6;
+  UINT32 driver_version		: 6;
   UINT32 group_bits		: 16;
 } FORT_CONF_FLAGS, *PFORT_CONF_FLAGS;
 
@@ -39,7 +39,6 @@ typedef struct fort_conf {
   UCHAR data[4];
 } FORT_CONF, *PFORT_CONF;
 
-#define FORT_CONF_VERSION		1
 #define FORT_CONF_DATA_OFF		offsetof(FORT_CONF, data)
 #define FORT_CONF_IP_MAX		(1 * 1024 * 1024)
 #define FORT_CONF_GROUP_MAX		16

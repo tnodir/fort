@@ -43,28 +43,28 @@ quint32 FortCommon::bufferSize()
     return FORT_BUFFER_SIZE;
 }
 
-quint32 FortCommon::logSize(quint32 pathLen)
+quint32 FortCommon::logBlockedHeaderSize()
 {
-    return FORT_LOG_SIZE(pathLen);
+    return FORT_LOG_BLOCKED_HEADER_SIZE;
 }
 
-quint32 FortCommon::logHeaderSize()
+quint32 FortCommon::logBlockedSize(quint32 pathLen)
 {
-    return FORT_LOG_HEADER_SIZE;
+    return FORT_LOG_BLOCKED_SIZE(pathLen);
 }
 
-void FortCommon::logHeaderWrite(char *output,
-                                quint32 remoteIp, quint32 pid,
-                                quint32 pathLen)
+void FortCommon::logBlockedHeaderWrite(char *output,
+                                       quint32 remoteIp, quint32 pid,
+                                       quint32 pathLen)
 {
-    fort_log_header_write(output, remoteIp, pid, pathLen);
+    fort_log_blocked_header_write(output, remoteIp, pid, pathLen);
 }
 
-void FortCommon::logHeaderRead(const char *input,
-                               quint32 *remoteIp, quint32 *pid,
-                               quint32 *pathLen)
+void FortCommon::logBlockedHeaderRead(const char *input,
+                                      quint32 *remoteIp, quint32 *pid,
+                                      quint32 *pathLen)
 {
-    fort_log_header_read(input, remoteIp, pid, pathLen);
+    fort_log_blocked_header_read(input, remoteIp, pid, pathLen);
 }
 
 void FortCommon::confAppPermsMaskInit(void *drvConf)

@@ -37,11 +37,12 @@ fort_buffer_close (PFORT_BUFFER buf)
 }
 
 static NTSTATUS
-fort_buffer_write (PFORT_BUFFER buf, UINT32 remote_ip, UINT32 pid,
-                   UINT32 path_len, const PVOID path,
-                   PIRP *irp, NTSTATUS *irp_status, ULONG_PTR *info)
+fort_buffer_blocked_write (PFORT_BUFFER buf, UINT32 remote_ip, UINT32 pid,
+                           UINT32 path_len, const PVOID path,
+                           PIRP *irp, NTSTATUS *irp_status, ULONG_PTR *info)
 {
   UINT32 len;
+  PCHAR out;
   KIRQL irq;
   NTSTATUS status = STATUS_SUCCESS;
 
@@ -49,7 +50,7 @@ fort_buffer_write (PFORT_BUFFER buf, UINT32 remote_ip, UINT32 pid,
     path_len = 0;  /* drop too long path */
   }
 
-  len = FORT_LOG_SIZE(path_len);
+  len = FORT_LOG_BLOCKED_SIZE(path_len);
 
   KeAcquireSpinLock(&buf->lock, &irq);
 
@@ -64,10 +65,9 @@ fort_buffer_write (PFORT_BUFFER buf, UINT32 remote_ip, UINT32 pid,
       *irp_status = STATUS_BUFFER_TOO_SMALL;
       /* fallback to buffer */
     } else {
-      fort_log_write(buf->out, remote_ip, pid, path_len, path);
-
+      out = buf->out;
       *irp_status = STATUS_SUCCESS;
-      goto end;
+      goto log_blocked;
     }
   }
 
@@ -76,8 +76,11 @@ fort_buffer_write (PFORT_BUFFER buf, UINT32 remote_ip, UINT32 pid,
     goto end;  /* drop on buffer overflow */
   }
 
-  fort_log_write(buf->data + buf->top, remote_ip, pid, path_len, path);
+  out = buf->data + buf->top;
   buf->top += len;
+
+ log_blocked:
+  fort_log_blocked_write(out, remote_ip, pid, path_len, path);
 
  end:
   KeReleaseSpinLock(&buf->lock, irq);

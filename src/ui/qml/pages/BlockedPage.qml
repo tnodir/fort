@@ -93,12 +93,12 @@ BasePage {
     }
 
     function getEntryPath(logEntry) {
-        var kernelPath = logEntry.kernelPath;
-        if (!kernelPath) {
-            kernelPath = osUtil.pidToKernelPath(logEntry.pid);
+        const kernelPath = logEntry.kernelPath;
+        if (kernelPath) {
+            return fileUtil.kernelPathToPath(kernelPath);
         }
 
-        return fileUtil.kernelPathToPath(kernelPath);
+        return osUtil.pidToPath(logEntry.pid);
     }
 
     function refreshListViews() {
@@ -162,7 +162,7 @@ BasePage {
                       && qsTranslate("qml", "Copy Path")
                 readonly property Item currentItem: appListView.currentItem
                 onClicked: {
-                    osUtil.setClipboardData(currentItem.text);
+                    guiUtil.setClipboardData(currentItem.text);
                 }
             }
 

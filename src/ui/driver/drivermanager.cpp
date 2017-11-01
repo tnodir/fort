@@ -8,6 +8,7 @@
 #include "../log/logentry.h"
 #include "../util/confutil.h"
 #include "../util/device.h"
+#include "../util/osutil.h"
 #include "driverworker.h"
 
 DriverManager::DriverManager(QObject *parent) :
@@ -56,7 +57,7 @@ bool DriverManager::isDeviceOpened() const
 bool DriverManager::openDevice()
 {
     if (!m_device->open(FortCommon::deviceName())) {
-        setErrorMessage(m_device->lastErrorMessage());
+        setErrorMessage(OsUtil::lastErrorMessage());
         return false;
     }
 
@@ -108,7 +109,7 @@ bool DriverManager::writeData(int code, QByteArray &buf, int size)
     cancelDeviceIo();
 
     if (!m_device->ioctl(code, buf.data(), size)) {
-        setErrorMessage(m_device->lastErrorMessage());
+        setErrorMessage(OsUtil::lastErrorMessage());
         return false;
     }
 

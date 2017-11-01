@@ -2,7 +2,6 @@
 #define OSUTIL_H
 
 #include <QObject>
-#include <QVariant>
 
 class OsUtil : public QObject
 {
@@ -11,11 +10,12 @@ class OsUtil : public QObject
 public:
     explicit OsUtil(QObject *parent = nullptr);
 
-    Q_INVOKABLE static void setClipboardData(const QVariant &data);
-
-    Q_INVOKABLE static QString pidToKernelPath(quint32 pid);
+    Q_INVOKABLE static QString pidToPath(quint32 pid, bool isKernelPath = false);
 
     static bool createGlobalMutex(const char *name);
+
+    static quint32 lastErrorCode();
+    static QString lastErrorMessage(quint32 errorCode = lastErrorCode());
 };
 
 #endif // OSUTIL_H

@@ -33,6 +33,10 @@ ApplicationWindow {
         id: fileUtil
     }
 
+    GuiUtil {
+        id: guiUtil
+    }
+
     NetUtil {
         id: netUtil
     }

@@ -2,9 +2,9 @@
 
 #include <QtTest>
 
-#include "activityLog/logbuffer.h"
-#include "activityLog/logentry.h"
 #include "fortcommon.h"
+#include "log/logbuffer.h"
+#include "log/logentry.h"
 
 void Test::logWriteRead()
 {
@@ -13,7 +13,7 @@ void Test::logWriteRead()
     const int pathSize = path.size();
     QCOMPARE(pathSize, 8);
 
-    const int entrySize = FortCommon::logHeaderSize()
+    const int entrySize = FortCommon::logBlockedHeaderSize()
             + pathSize * sizeof(wchar_t);
 
     const int testCount = 3;

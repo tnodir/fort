@@ -68,8 +68,8 @@ void Test::taskTasix()
     const QByteArray buf = FileUtil::readFileData(STR(PWD) "/data/tasix-mrlg.html");
     QVERIFY(!buf.isEmpty());
 
-    const QString text = TaskTasix::parseTasixBuffer(buf);
-    QVERIFY(!text.isEmpty());
+    const QStringList list = TaskTasix::parseTasixBuffer(buf);
+    QVERIFY(!list.isEmpty());
 
-    //QVERIFY(FileUtil::writeFile(QString(STR(PWD) "/data/tasix-mrlg.out"), text));
+    //QVERIFY(FileUtil::writeFile(QString(STR(PWD) "/data/tasix-mrlg.out"), list.join('\n')));
 }

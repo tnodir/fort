@@ -7,13 +7,14 @@
 #include "conf/addressgroup.h"
 #include "conf/appgroup.h"
 #include "conf/firewallconf.h"
-#include "activityLog/logbuffer.h"
-#include "activityLog/logentry.h"
 #include "fortcommon.h"
+#include "log/logbuffer.h"
+#include "log/logentry.h"
 #include "util/confutil.h"
 #include "util/device.h"
 #include "util/fileutil.h"
 #include "util/netutil.h"
+#include "util/osutil.h"
 #include "util/processinfo.h"
 
 void Test::logRead()
@@ -38,6 +39,8 @@ void Test::logRead()
 void Test::setConf(Device &device)
 {
     FirewallConf conf;
+
+    conf.setProvBoot(true);
 
     conf.ipInclude()->setUseAll(true);
     conf.ipExclude()->setUseAll(false);
@@ -74,7 +77,7 @@ void Test::printLogs(LogBuffer &buf)
 
         if (kernelPath.isEmpty()) {
             ProcessInfo pi(pid);
-            kernelPath = pi.kernelPath();
+            kernelPath = pi.path(true);
         }
 
         qDebug() << pid << kernelPath << NetUtil::ip4ToText(entry.ip());

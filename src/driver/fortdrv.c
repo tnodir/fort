@@ -204,7 +204,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
     NTSTATUS irp_status;
     ULONG_PTR info;
 
-    fort_buffer_write(&g_device->buffer, remote_ip,
+    fort_buffer_blocked_write(&g_device->buffer, remote_ip,
       (UINT32) inMetaValues->processId, path_len, path,
       &irp, &irp_status, &info);
 
@@ -398,7 +398,7 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
     const PFORT_CONF conf = irp->AssociatedIrp.SystemBuffer;
     const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
 
-    if (conf->flags.conf_version == FORT_CONF_VERSION
+    if (conf->flags.driver_version == FORT_DRIVER_VERSION
         && len > FORT_CONF_DATA_OFF) {
       PFORT_CONF_REF conf_ref = fort_conf_ref_new(conf, len);
 
@@ -415,7 +415,7 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
     const PFORT_CONF_FLAGS conf_flags = irp->AssociatedIrp.SystemBuffer;
     const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
 
-    if (conf_flags->conf_version == FORT_CONF_VERSION
+    if (conf_flags->driver_version == FORT_DRIVER_VERSION
         && len == sizeof(FORT_CONF_FLAGS)) {
       fort_conf_ref_flags_set(conf_flags);
       status = fort_callout_force_reauth(device);

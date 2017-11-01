@@ -3,6 +3,7 @@
 #include "../fortcommon.h"
 #include "../log/logbuffer.h"
 #include "../util/device.h"
+#include "../util/osutil.h"
 
 DriverWorker::DriverWorker(Device *device, QObject *parent) :
     QObject(parent),
@@ -43,6 +44,7 @@ void DriverWorker::readLog(LogBuffer *logBuffer)
 
     bool success;
     QString errorMessage;
+    quint32 errorCode;
 
     m_mutex.lock();
     if (!m_cancelled) {
@@ -52,8 +54,9 @@ void DriverWorker::readLog(LogBuffer *logBuffer)
                     array.data(), array.size(), &nr);
         m_isWorking = false;
 
-        errorMessage = m_cancelled
-                ? QString() : m_device->lastErrorMessage();
+        if (!success) {
+            errorCode = OsUtil::lastErrorCode();
+        }
 
         if (m_cancelled) {
             m_waitCondition.wakeOne();
@@ -63,6 +66,9 @@ void DriverWorker::readLog(LogBuffer *logBuffer)
 
     if (success) {
         logBuffer->reset(nr);
+    } else {
+        errorMessage = m_cancelled ? QString()
+                                   : OsUtil::lastErrorMessage(errorCode);
     }
 
     emit readLogResult(success, errorMessage);

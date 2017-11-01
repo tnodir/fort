@@ -30,7 +30,7 @@ public:
 signals:
 
 public slots:
-    QString kernelPath() const;
+    QString path(bool isKernelPath = false) const;
 
 private:
     void openProcess();

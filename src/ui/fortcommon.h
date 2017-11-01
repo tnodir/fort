@@ -2,6 +2,7 @@
 #define FORTCOMMON_H
 
 #include <QObject>
+#include <QString>
 
 class FortCommon : public QObject
 {
@@ -17,15 +18,16 @@ public:
     static quint32 ioctlGetLog();
 
     static quint32 bufferSize();
-    static quint32 logSize(quint32 pathLen);
-    static quint32 logHeaderSize();
 
-    static void logHeaderWrite(char *output,
-                               quint32 remoteIp, quint32 pid,
-                               quint32 pathLen);
-    static void logHeaderRead(const char *input,
-                              quint32 *remoteIp, quint32 *pid,
-                              quint32 *pathLen);
+    static quint32 logBlockedHeaderSize();
+    static quint32 logBlockedSize(quint32 pathLen);
+
+    static void logBlockedHeaderWrite(char *output,
+                                      quint32 remoteIp, quint32 pid,
+                                      quint32 pathLen);
+    static void logBlockedHeaderRead(const char *input,
+                                     quint32 *remoteIp, quint32 *pid,
+                                     quint32 *pathLen);
 
     static void confAppPermsMaskInit(void *drvConf);
     static bool confIpInRange(const void *drvConf, quint32 ip,

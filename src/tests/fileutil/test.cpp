@@ -29,5 +29,5 @@ void Test::process()
     const ProcessInfo pi(ProcessInfo::currentPid());
 
     QVERIFY(pi.isValid());
-    QVERIFY(!pi.kernelPath().isEmpty());
+    QVERIFY(!pi.path().isEmpty());
 }

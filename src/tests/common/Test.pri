@@ -17,4 +17,4 @@ HEADERS += \
     test.h
 
 # Windows
-LIBS += -lfwpuclnt -lkernel32 -lpsapi -luser32 -luuid -lws2_32
+LIBS += -lfwpuclnt -lkernel32 -luser32 -luuid -lws2_32

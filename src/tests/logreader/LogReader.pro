@@ -4,26 +4,28 @@ SOURCES += \
     $$UIPATH/conf/addressgroup.cpp \
     $$UIPATH/conf/appgroup.cpp \
     $$UIPATH/conf/firewallconf.cpp \
-    $$UIPATH/activityLog/logbuffer.cpp \
-    $$UIPATH/activityLog/logentry.cpp \
     $$UIPATH/fortcommon.cpp \
+    $$UIPATH/log/logbuffer.cpp \
+    $$UIPATH/log/logentry.cpp \
     $$UIPATH/util/confutil.cpp \
     $$UIPATH/util/device.cpp \
     $$UIPATH/util/fileutil.cpp \
     $$UIPATH/util/ip4range.cpp \
     $$UIPATH/util/netutil.cpp \
+    $$UIPATH/util/osutil.cpp \
     $$UIPATH/util/processinfo.cpp
 
 HEADERS += \
     $$UIPATH/conf/addressgroup.h \
     $$UIPATH/conf/appgroup.h \
     $$UIPATH/conf/firewallconf.h \
-    $$UIPATH/activityLog/logbuffer.h \
-    $$UIPATH/activityLog/logentry.h \
     $$UIPATH/fortcommon.h \
+    $$UIPATH/log/logbuffer.h \
+    $$UIPATH/log/logentry.h \
     $$UIPATH/util/confutil.h \
     $$UIPATH/util/device.h \
     $$UIPATH/util/fileutil.h \
     $$UIPATH/util/ip4range.h \
     $$UIPATH/util/netutil.h \
+    $$UIPATH/util/osutil.h \
     $$UIPATH/util/processinfo.h

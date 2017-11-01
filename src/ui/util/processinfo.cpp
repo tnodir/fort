@@ -2,7 +2,6 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#include <psapi.h>  /* GetProcessImageFileName */
 
 #define PROC_PATH_MAX    65536
 
@@ -32,7 +31,7 @@ void ProcessInfo::openProcess()
     if (m_pid == currentPid()) {
         m_handle = GetCurrentProcess();
     } else {
-        const DWORD access = (PROCESS_QUERY_INFORMATION | PROCESS_VM_READ);
+        const DWORD access = PROCESS_QUERY_LIMITED_INFORMATION;
 
         m_handle = OpenProcess(access, FALSE, m_pid);
     }
@@ -46,15 +45,15 @@ void ProcessInfo::closeProcess()
     }
 }
 
-QString ProcessInfo::kernelPath() const
+QString ProcessInfo::path(bool isKernelPath) const
 {
     if (isValid()) {
         QByteArray buf(PROC_PATH_MAX * sizeof(wchar_t), Qt::Uninitialized);
         wchar_t *p = (wchar_t *) buf.data();
+        const DWORD flags = (isKernelPath ? PROCESS_NAME_NATIVE : 0);
+        DWORD len = PROC_PATH_MAX;
 
-        const DWORD len = GetProcessImageFileNameW(
-                    m_handle, (LPWSTR) p, PROC_PATH_MAX);
-        if (len) {
+        if (QueryFullProcessImageNameW(m_handle, flags, (LPWSTR) p, &len)) {
             return QString::fromWCharArray(p, len);
         }
     }

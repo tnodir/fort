@@ -27,6 +27,7 @@ SOURCES += \
     util/confutil.cpp \
     util/device.cpp \
     util/fileutil.cpp \
+    util/guiutil.cpp \
     util/hostinfo.cpp \
     util/ip4range.cpp \
     util/netdownloader.cpp \
@@ -56,6 +57,7 @@ HEADERS += \
     util/confutil.h \
     util/device.h \
     util/fileutil.h \
+    util/guiutil.h \
     util/hostinfo.h \
     util/ip4range.h \
     util/netdownloader.h \
@@ -95,7 +97,7 @@ RESOURCES += fort_images.qrc
 }
 
 # Windows
-LIBS += -lfwpuclnt -lkernel32 -lpsapi -luser32 -luuid -lws2_32
+LIBS += -lfwpuclnt -lkernel32 -luser32 -luuid -lws2_32
 RC_FILE = FortFirewall.rc
 
 # Kernel Driver
