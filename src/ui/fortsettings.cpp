@@ -132,10 +132,10 @@ bool FortSettings::readConf(FirewallConf &conf)
     const bool fileExists = FileUtil::fileExists(filePath);
     const bool backupFileExists = FileUtil::fileExists(backupFilePath);
 
-    return readConfFlags(conf)
-            && (!(fileExists || backupFileExists)
-                || (fileExists && tryToReadConf(conf, filePath))
-                || tryToReadConf(conf, backupFilePath));
+    return (!(fileExists || backupFileExists)
+            || (fileExists && tryToReadConf(conf, filePath))
+            || tryToReadConf(conf, backupFilePath))
+            && readConfFlags(conf);  // read flags at the end to use correct app groups
 }
 
 bool FortSettings::tryToReadConf(FirewallConf &conf, const QString &filePath)
