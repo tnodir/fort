@@ -166,22 +166,17 @@
         <translation>Выделить всЁ</translation>
     </message>
     <message>
-        <location filename="../qml/pages/BlockedPage.qml" line="178"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="179"/>
         <source>Clear</source>
         <translation>Очистить</translation>
     </message>
     <message>
         <location filename="../qml/pages/BlockedPage.qml" line="185"/>
-        <source>Copy Path</source>
-        <translation>Скопировать путь</translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/BlockedPage.qml" line="194"/>
         <source>Resolve Addresses</source>
         <translation>Преобразовать адреса</translation>
     </message>
     <message>
-        <location filename="../qml/pages/BlockedPage.qml" line="205"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="197"/>
         <source>Log Blocked Applications</source>
         <translation>Показ блокированных приложений</translation>
     </message>
