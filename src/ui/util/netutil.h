@@ -20,6 +20,8 @@ public:
     // Get IPv4 address mask
     Q_INVOKABLE static int ip4Mask(quint32 ip);
 
+    static QString getHostName(const QString &address);
+
 private:
     static int first0Bit(quint32 u);
     static int bitCount(quint32 u);

@@ -7,7 +7,8 @@ BasePage {
 
     readonly property DriverManager driverManager: fortManager.driverManager
 
-    property bool enableLogReading: false
+    property bool logReadingEnabled: false
+    property bool addressResolvingEnabled: false
 
     property var appPaths: []
     property var appPathIpMap: ({})
@@ -24,10 +25,10 @@ BasePage {
     }
 
     function switchLogReading(enable) {
-        if (enableLogReading === enable)
+        if (logReadingEnabled === enable)
             return;
 
-        enableLogReading = enable;
+        logReadingEnabled = enable;
 
         fortManager.setAppLogBlocked(enable);
 
@@ -38,13 +39,24 @@ BasePage {
         }
     }
 
+    function switchResolveAddresses(enable) {
+        if (addressResolvingEnabled === enable)
+            return;
+
+        addressResolvingEnabled = enable;
+
+        if (!enable) {
+            hostInfo.cancel();
+        }
+    }
+
     function clearAppPaths() {
         appPaths = [];
         appPathIpMap = ({});
         appPathIpArray = ({});
 
         hostNames = ({});
-        hostInfo.abortHostLookups();
+        hostInfo.cancel();
 
         refreshListViews();
     }
@@ -83,7 +95,7 @@ BasePage {
             // Host name
             if (hostNames[ipText] === undefined) {
                 hostNames[ipText] = false;
-                //hostInfo.lookupHost(ipText);  // Crashes on exit with live lookup requests
+                hostInfo.lookupHost(ipText);
             }
         }
 
@@ -111,7 +123,10 @@ BasePage {
 
     Connections {
         target: mainPage
-        onClosed: switchLogReading(false)
+        onClosed: {
+            switchResolveAddresses(false);
+            switchLogReading(false);
+        }
     }
 
     Connections {
@@ -121,7 +136,7 @@ BasePage {
                 processLogBuffer();
             }
 
-            if (enableLogReading) {
+            if (logReadingEnabled) {
                 readLogAsync();
             }
         }
@@ -129,9 +144,9 @@ BasePage {
 
     HostInfo {
         id: hostInfo
-        onHostLookedup: {
-            if (success) {
-                hostNames[name] = hostName;
+        onLookupFinished: {
+            hostNames[address] = hostName;
+            if (hostName) {
                 refreshListViews();
             }
         }
@@ -150,13 +165,13 @@ BasePage {
 
         RowLayout {
             Button {
-                enabled: btCopy.enabled
+                enabled: appListView.count
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Clear")
                 onClicked: clearAppPaths()
             }
+
             Button {
-                id: btCopy
                 enabled: currentItem
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Copy Path")
@@ -164,6 +179,12 @@ BasePage {
                 onClicked: {
                     guiUtil.setClipboardData(currentItem.text);
                 }
+            }
+
+            CheckBox {
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Resolve Addresses")
+                onToggled: switchResolveAddresses(checked)
             }
 
             Item {

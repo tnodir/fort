@@ -1,47 +1,72 @@
 #include "hostinfo.h"
 
+#include "netutil.h"
+
 HostInfo::HostInfo(QObject *parent) :
-    QObject(parent)
+    QThread(parent),
+    m_cancelled(false)
 {
 }
 
 HostInfo::~HostInfo()
 {
-    abortHostLookups();
+    cancel();
+    wait();
 }
 
-void HostInfo::lookupHost(const QString &name)
+void HostInfo::lookupHost(const QString &address)
 {
-//    const int lookupId = QHostInfo::lookupHost(
-//                name, this, &HostInfo::handleLookedupHost);
-    const int lookupId = -1;
+    QMutexLocker locker(&m_mutex);
 
-    m_lookupIds.insert(lookupId, name);
-}
+    m_queue.enqueue(address);
 
-void HostInfo::abortHostLookup(int lookupId)
-{
-    m_lookupIds.remove(lookupId);
+    m_waitCondition.wakeOne();
 
-//    QHostInfo::abortHostLookup(lookupId);
-}
-
-void HostInfo::abortHostLookups()
-{
-    foreach (const int lookupId, m_lookupIds.keys()) {
-        abortHostLookup(lookupId);
+    if (!isRunning()) {
+        start();
     }
 }
 
-//void HostInfo::handleLookedupHost(const QHostInfo &info)
-//{
-//    const int lookupId = info.lookupId();
-//    const QString name = m_lookupIds.value(lookupId);
-//    const bool success = (info.error() == QHostInfo::NoError);
+void HostInfo::cancel()
+{
+    if (m_cancelled) return;
 
-//    m_info = info;
+    QMutexLocker locker(&m_mutex);
 
-//    m_lookupIds.remove(lookupId);
+    m_queue.clear();
 
-//    emit hostLookedup(name, success);
-//}
+    m_cancelled = true;
+
+    m_waitCondition.wakeOne();
+}
+
+void HostInfo::run()
+{
+    QSysInfo::machineHostName();  // initialize ws2_32.dll
+
+    do {
+        const QString address = dequeueAddress();
+
+        if (!address.isEmpty()) {
+            const QString hostName = NetUtil::getHostName(address);
+
+            if (m_cancelled) break;
+
+            emit lookupFinished(address, hostName);
+        }
+    } while (!m_cancelled);
+}
+
+QString HostInfo::dequeueAddress()
+{
+    QMutexLocker locker(&m_mutex);
+
+    while (m_queue.isEmpty()) {
+        if (m_cancelled)
+            return QString();
+
+        m_waitCondition.wait(&m_mutex);
+    }
+
+    return m_queue.dequeue();
+}

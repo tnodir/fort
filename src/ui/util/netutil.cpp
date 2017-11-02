@@ -69,3 +69,19 @@ int NetUtil::bitCount(quint32 u)
     return ((uCount + (uCount >> 3))
             & 030707070707) % 63;
 }
+
+QString NetUtil::getHostName(const QString &address)
+{
+    WCHAR hostName[NI_MAXHOST];
+
+    struct sockaddr_in sa;
+    memset(&sa, 0, sizeof(struct sockaddr_in));
+    sa.sin_family = AF_INET;
+    sa.sin_addr.s_addr = htonl(textToIp4(address));
+
+    if (GetNameInfoW((struct sockaddr *) &sa, sizeof(struct sockaddr),
+                     hostName, NI_MAXHOST, nullptr, 0, 0))
+        return QString();
+
+    return QString::fromWCharArray(hostName);
+}
