@@ -201,6 +201,7 @@ BasePage {
 
             Switch {
                 id: cbShowBlockedApps
+                font.weight: Font.DemiBold
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Log Blocked Applications")
                 onToggled: switchLogReading(checked)
@@ -283,7 +284,7 @@ BasePage {
         TextFieldFrame {
             Layout.fillWidth: true
             text: appPaths[appListView.currentIndex] || ""
-            onPressed: selectAll()
+            onReleased: selectAll()
         }
     }
 }
