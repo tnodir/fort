@@ -11,6 +11,7 @@ BasePage {
     property bool logReadingEnabled: false
     property bool addressResolvingEnabled: false
 
+    // TODO: Use SHGetFileInfo() to get app's display name and icon
     property var appNames: []
     property var appPaths: []
     property var appPathIpMap: ({})
@@ -179,16 +180,6 @@ BasePage {
                 onClicked: clearAppPaths()
             }
 
-            Button {
-                enabled: currentItem
-                text: translationManager.dummyBool
-                      && qsTranslate("qml", "Copy Path")
-                readonly property Item currentItem: appListView.currentItem
-                onClicked: {
-                    guiUtil.setClipboardData(currentItem.text);
-                }
-            }
-
             CheckBox {
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Resolve Addresses")
@@ -233,16 +224,25 @@ BasePage {
                             anchors.margins: -7
                             radius: 2
                             border.width: 3
-                            border.color: "black"
+                            border.color: "blue"
                             color: "transparent"
                         }
                     }
 
-                    delegate: Label {
+                    delegate: Row {
                         width: appListView.width
-                        font.pixelSize: 20
-                        elide: Text.ElideRight
-                        text: modelData
+                        spacing: 6
+
+                        Image {
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.verticalCenterOffset: 1
+                            source: "qrc:/images/application.png"
+                        }
+                        Label {
+                            font.pixelSize: 20
+                            elide: Text.ElideRight
+                            text: modelData
+                        }
                     }
 
                     MouseArea {
