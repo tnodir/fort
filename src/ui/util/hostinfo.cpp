@@ -27,13 +27,18 @@ void HostInfo::lookupHost(const QString &address)
     }
 }
 
+void HostInfo::clear()
+{
+    QMutexLocker locker(&m_mutex);
+
+    m_queue.clear();
+}
+
 void HostInfo::cancel()
 {
     if (m_cancelled) return;
 
     QMutexLocker locker(&m_mutex);
-
-    m_queue.clear();
 
     m_cancelled = true;
 

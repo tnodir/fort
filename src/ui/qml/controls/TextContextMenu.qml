@@ -50,10 +50,10 @@ Menu {
     MenuSeparator {}
 
     MenuItem {
-        icon.source: "qrc:/images/page_white.png"
+        icon.source: "qrc:/images/textfield_rename.png"
         text: translationManager.dummyBool
-              && qsTranslate("qml", "Clear")
+              && qsTranslate("qml", "Select All")
         enabled: textField && textField.text
-        onTriggered: textField.clear()
+        onTriggered: textField.selectAll()
     }
 }

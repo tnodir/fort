@@ -13,11 +13,11 @@
     <file>images/link.png</file>
     <file>images/page_copy.png</file>
     <file>images/page_paste.png</file>
-    <file>images/page_white.png</file>
     <file>images/resultset_next.png</file>
     <file>images/resultset_previous.png</file>
     <file>images/run.png</file>
     <file>images/shield.png</file>
+    <file>images/textfield_rename.png</file>
     <file>images/zoom.png</file>
 </qresource>
 </RCC>

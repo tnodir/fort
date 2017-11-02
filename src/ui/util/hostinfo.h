@@ -19,12 +19,14 @@ signals:
 
 public slots:
     void lookupHost(const QString &address);
-    void cancel();
+    void clear();
 
 protected:
     void run() override;
 
 private:
+    void cancel();
+
     QString dequeueAddress();
 
 private:

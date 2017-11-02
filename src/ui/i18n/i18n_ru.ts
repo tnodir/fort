@@ -4,32 +4,32 @@
 <context>
     <name>ConfUtil</name>
     <message>
-        <location filename="../util/confutil.cpp" line="38"/>
+        <location filename="../util/confutil.cpp" line="39"/>
         <source>Bad Include IP address: %1</source>
         <translation>Некорректный IP адрес для включения: %1</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="45"/>
+        <location filename="../util/confutil.cpp" line="46"/>
         <source>Bad Exclude IP address: %1</source>
         <translation>Некорректный IP адрес для исключения: %1</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="62"/>
+        <location filename="../util/confutil.cpp" line="63"/>
         <source>Size of configuration is too big</source>
         <translation>Конфигурация слишком большая</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="111"/>
+        <location filename="../util/confutil.cpp" line="112"/>
         <source>Number of Application Groups must be &lt; %1</source>
         <translation>Количество групп приложений должно быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="123"/>
+        <location filename="../util/confutil.cpp" line="124"/>
         <source>Length of Application Group&apos;s Name must be &lt; %1</source>
         <translation>Длина наименования группы приложения должна быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="165"/>
+        <location filename="../util/confutil.cpp" line="166"/>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Длина пути приложения должна быть &lt; %1</translation>
     </message>
@@ -37,17 +37,17 @@
 <context>
     <name>FortManager</name>
     <message>
-        <location filename="../fortmanager.cpp" line="335"/>
+        <location filename="../fortmanager.cpp" line="337"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="340"/>
+        <location filename="../fortmanager.cpp" line="342"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="355"/>
+        <location filename="../fortmanager.cpp" line="357"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -162,17 +162,26 @@
     </message>
     <message>
         <location filename="../qml/controls/TextContextMenu.qml" line="55"/>
-        <location filename="../qml/pages/BlockedPage.qml" line="155"/>
+        <source>Select All</source>
+        <translation>Выделить всЁ</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/BlockedPage.qml" line="178"/>
         <source>Clear</source>
         <translation>Очистить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/BlockedPage.qml" line="162"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="185"/>
         <source>Copy Path</source>
         <translation>Скопировать путь</translation>
     </message>
     <message>
-        <location filename="../qml/pages/BlockedPage.qml" line="176"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="194"/>
+        <source>Resolve Addresses</source>
+        <translation>Преобразовать адреса</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/BlockedPage.qml" line="205"/>
         <source>Log Blocked Applications</source>
         <translation>Показ блокированных приложений</translation>
     </message>

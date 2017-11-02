@@ -1,6 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.2
+import "../controls"
 import com.fortfirewall 1.0
 
 BasePage {
@@ -10,6 +11,7 @@ BasePage {
     property bool logReadingEnabled: false
     property bool addressResolvingEnabled: false
 
+    property var appNames: []
     property var appPaths: []
     property var appPathIpMap: ({})
     property var appPathIpArray: ({})
@@ -46,17 +48,18 @@ BasePage {
         addressResolvingEnabled = enable;
 
         if (!enable) {
-            hostInfo.cancel();
+            hostInfo.clear();
         }
     }
 
     function clearAppPaths() {
+        appNames = [];
         appPaths = [];
         appPathIpMap = ({});
         appPathIpArray = ({});
 
         hostNames = ({});
-        hostInfo.cancel();
+        hostInfo.clear();
 
         refreshListViews();
     }
@@ -73,6 +76,7 @@ BasePage {
                 ipTextsMap = ({});
                 appPathIpMap[path] = ipTextsMap;
                 appPathIpArray[path] = [];
+                appNames.push(fileUtil.fileName(path));
                 appPaths.push(path);
 
                 isNewEntry = true;
@@ -95,7 +99,9 @@ BasePage {
             // Host name
             if (hostNames[ipText] === undefined) {
                 hostNames[ipText] = false;
-                hostInfo.lookupHost(ipText);
+                if (addressResolvingEnabled) {
+                    hostInfo.lookupHost(ipText);
+                }
             }
         }
 
@@ -117,7 +123,7 @@ BasePage {
         const curIndex = appListView.currentIndex;
         appListView.model = undefined;
 
-        appListView.model = appPaths;
+        appListView.model = appNames;
         appListView.currentIndex = curIndex;
     }
 
@@ -145,9 +151,11 @@ BasePage {
     HostInfo {
         id: hostInfo
         onLookupFinished: {
-            hostNames[address] = hostName;
-            if (hostName) {
-                refreshListViews();
+            if (addressResolvingEnabled) {
+                hostNames[address] = hostName;
+                if (hostName) {
+                    refreshListViews();
+                }
             }
         }
     }
@@ -270,6 +278,12 @@ BasePage {
                     }
                 }
             }
+        }
+
+        TextFieldFrame {
+            Layout.fillWidth: true
+            text: appPaths[appListView.currentIndex] || ""
+            onPressed: selectAll()
         }
     }
 }

@@ -22,6 +22,8 @@ public:
     // Convert Win32 path to Native path
     Q_INVOKABLE static QString pathToKernelPath(const QString &path);
 
+    Q_INVOKABLE static QString fileName(const QString &path);
+
     static QString absolutePath(const QString &path);
 
     static bool makePath(const QString &path);

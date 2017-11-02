@@ -72,6 +72,11 @@ QString FileUtil::pathToKernelPath(const QString &path)
     return path;
 }
 
+QString FileUtil::fileName(const QString &path)
+{
+    return QFileInfo(path).fileName();
+}
+
 QString FileUtil::absolutePath(const QString &path)
 {
     return QDir(path).absolutePath();
