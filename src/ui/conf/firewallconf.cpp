@@ -7,7 +7,8 @@ FirewallConf::FirewallConf(QObject *parent) :
     QObject(parent),
     m_provBoot(false),
     m_filterEnabled(true),
-    m_appLogBlocked(false),
+    m_logBlocked(false),
+    m_logStat(false),
     m_appBlockAll(true),
     m_appAllowAll(false),
     m_ipInclude(new AddressGroup(this)),
@@ -31,11 +32,19 @@ void FirewallConf::setFilterEnabled(bool filterEnabled)
     }
 }
 
-void FirewallConf::setAppLogBlocked(bool appLogBlocked)
+void FirewallConf::setLogBlocked(bool logBlocked)
 {
-    if (m_appLogBlocked != appLogBlocked) {
-        m_appLogBlocked = appLogBlocked;
-        emit appLogBlockedChanged();
+    if (m_logBlocked != logBlocked) {
+        m_logBlocked = logBlocked;
+        emit logBlockedChanged();
+    }
+}
+
+void FirewallConf::setLogStat(bool logStat)
+{
+    if (m_logStat != logStat) {
+        m_logStat = logStat;
+        emit logStatChanged();
     }
 }
 
@@ -122,6 +131,7 @@ void FirewallConf::copyFlags(const FirewallConf &o)
 {
     setProvBoot(o.provBoot());
     setFilterEnabled(o.filterEnabled());
+    setLogStat(o.logStat());
     ipInclude()->setUseAll(o.ipInclude()->useAll());
     ipExclude()->setUseAll(o.ipExclude()->useAll());
     setAppBlockAll(o.appBlockAll());
@@ -131,7 +141,7 @@ void FirewallConf::copyFlags(const FirewallConf &o)
 
 void FirewallConf::copyTempFlags(const FirewallConf &o)
 {
-    setAppLogBlocked(o.appLogBlocked());
+    setLogBlocked(o.logBlocked());
 }
 
 QVariant FirewallConf::toVariant() const

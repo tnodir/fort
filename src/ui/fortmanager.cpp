@@ -278,9 +278,9 @@ bool FortManager::updateDriverConfFlags(FirewallConf *conf)
     return true;
 }
 
-void FortManager::setAppLogBlocked(bool enable)
+void FortManager::setLogBlocked(bool enable)
 {
-    m_firewallConf->setAppLogBlocked(enable);
+    m_firewallConf->setLogBlocked(enable);
 
     updateDriverConfFlags(m_firewallConf);
 }

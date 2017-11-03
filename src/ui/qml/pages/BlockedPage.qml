@@ -33,7 +33,7 @@ BasePage {
 
         logReadingEnabled = enable;
 
-        fortManager.setAppLogBlocked(enable);
+        fortManager.setLogBlocked(enable);
 
         if (enable) {
             readLogAsync();

@@ -45,9 +45,10 @@ void Test::setConf(Device &device)
     conf.ipInclude()->setUseAll(true);
     conf.ipExclude()->setUseAll(false);
 
-    conf.setAppLogBlocked(true);
     conf.setAppBlockAll(true);
     conf.setAppAllowAll(false);
+
+    conf.setLogBlocked(true);
 
     conf.ipExclude()->setText(
                 "10.0.0.0/8\n"

@@ -93,9 +93,10 @@ int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
     confFlags->filter_enabled = conf.filterEnabled();
     confFlags->ip_include_all = conf.ipInclude()->useAll();
     confFlags->ip_exclude_all = conf.ipExclude()->useAll();
-    confFlags->app_log_blocked = conf.appLogBlocked();
     confFlags->app_block_all = conf.appBlockAll();
     confFlags->app_allow_all = conf.appAllowAll();
+    confFlags->log_blocked = conf.logBlocked();
+    confFlags->log_stat = conf.logStat();
     confFlags->driver_version = FORT_DRIVER_VERSION;
     confFlags->group_bits = conf.appGroupBits();
 
@@ -236,9 +237,11 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     drvConf->flags.ip_include_all = conf.ipInclude()->useAll();
     drvConf->flags.ip_exclude_all = conf.ipExclude()->useAll();
 
-    drvConf->flags.app_log_blocked = conf.appLogBlocked();
     drvConf->flags.app_block_all = conf.appBlockAll();
     drvConf->flags.app_allow_all = conf.appAllowAll();
+
+    drvConf->flags.log_blocked = conf.logBlocked();
+    drvConf->flags.log_stat = conf.logStat();
 
     drvConf->flags.driver_version = FORT_DRIVER_VERSION;
 

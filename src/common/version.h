@@ -6,6 +6,6 @@
 #define APP_VERSION		0x010000
 #define APP_UPDATES_URL		"https://github.com/tnodir/fort/releases"
 
-#define FORT_DRIVER_VERSION	2
+#define FORT_DRIVER_VERSION	3
 
 #endif // VERSION_H

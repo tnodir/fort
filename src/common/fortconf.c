@@ -119,7 +119,7 @@ fort_conf_app_blocked (const PFORT_CONF conf,
 
   const BOOL blocked = app_blocked && !app_allowed;
 
-  *notify = blocked && conf->flags.app_log_blocked;
+  *notify = blocked && conf->flags.log_blocked;
 
   return blocked;
 }

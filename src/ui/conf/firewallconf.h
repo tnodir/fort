@@ -13,7 +13,8 @@ class FirewallConf : public QObject
     Q_OBJECT
     Q_PROPERTY(bool provBoot READ provBoot WRITE setProvBoot NOTIFY provBootChanged)
     Q_PROPERTY(bool filterEnabled READ filterEnabled WRITE setFilterEnabled NOTIFY filterEnabledChanged)
-    Q_PROPERTY(bool appLogBlocked READ appLogBlocked WRITE setAppLogBlocked NOTIFY appLogBlockedChanged)
+    Q_PROPERTY(bool logBlocked READ logBlocked WRITE setLogBlocked NOTIFY logBlockedChanged)
+    Q_PROPERTY(bool logStat READ logStat WRITE setLogStat NOTIFY logStatChanged)
     Q_PROPERTY(bool appBlockAll READ appBlockAll WRITE setAppBlockAll NOTIFY appBlockAllChanged)
     Q_PROPERTY(bool appAllowAll READ appAllowAll WRITE setAppAllowAll NOTIFY appAllowAllChanged)
     Q_PROPERTY(AddressGroup *ipInclude READ ipInclude CONSTANT)
@@ -30,8 +31,11 @@ public:
     bool filterEnabled() const { return m_filterEnabled; }
     void setFilterEnabled(bool filterEnabled);
 
-    bool appLogBlocked() const { return m_appLogBlocked; }
-    void setAppLogBlocked(bool appLogBlocked);
+    bool logBlocked() const { return m_logBlocked; }
+    void setLogBlocked(bool logBlocked);
+
+    bool logStat() const { return m_logStat; }
+    void setLogStat(bool logStat);
 
     bool appBlockAll() const { return m_appBlockAll; }
     void setAppBlockAll(bool appBlockAll);
@@ -57,7 +61,8 @@ public:
 signals:
     void provBootChanged();
     void filterEnabledChanged();
-    void appLogBlockedChanged();
+    void logBlockedChanged();
+    void logStatChanged();
     void appBlockAllChanged();
     void appAllowAllChanged();
     void appGroupsChanged();
@@ -72,7 +77,8 @@ private:
     uint m_provBoot         : 1;
     uint m_filterEnabled    : 1;
 
-    uint m_appLogBlocked    : 1;  // transient
+    uint m_logBlocked       : 1;  // transient
+    uint m_logStat          : 1;
 
     uint m_appBlockAll      : 1;
     uint m_appAllowAll      : 1;

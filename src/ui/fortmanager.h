@@ -52,7 +52,7 @@ public slots:
     bool saveConf(bool onlyFlags = false);
     bool applyConf(bool onlyFlags = false);
 
-    void setAppLogBlocked(bool enable);
+    void setLogBlocked(bool enable);
 
     void setLanguage(int language);
 
