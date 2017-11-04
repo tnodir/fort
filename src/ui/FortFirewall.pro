@@ -113,3 +113,5 @@ installer_build {
     QMAKE_EXTRA_TARGETS += fortdrv32 fortdrv64
     PRE_TARGETDEPS += $$fortdrv32.target $$fortdrv64.target
 }
+
+include(sqlite/sqlite.pri)
