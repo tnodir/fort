@@ -19,6 +19,7 @@
 #include "../common/fortconf.c"
 #include "../common/fortprov.c"
 #include "fortbuf.c"
+#include "fortstat.c"
 
 typedef struct fort_conf_ref {
   UINT32 volatile refcount;
@@ -27,12 +28,11 @@ typedef struct fort_conf_ref {
 } FORT_CONF_REF, *PFORT_CONF_REF;
 
 typedef struct fort_device {
-  BOOL active		: 1;
-  BOOL prov_boot	: 1;
-  BOOL filter_enabled	: 1;
+  FORT_CONF_FLAGS conf_flags;
 
   UINT32 connect4_id;
   UINT32 accept4_id;
+  UINT32 flow4_id;
 
   FORT_BUFFER buffer;
 
@@ -108,12 +108,7 @@ fort_conf_ref_set (PFORT_CONF_REF conf_ref)
     g_device->conf_ref = conf_ref;
 
     if (conf_ref != NULL) {
-      const FORT_CONF_FLAGS conf_flags = conf_ref->conf.flags;
-      
-      g_device->prov_boot = conf_flags.prov_boot;
-      g_device->filter_enabled = conf_flags.filter_enabled;
-    } else {
-      g_device->filter_enabled = FALSE;
+      g_device->conf_flags = conf_ref->conf.flags;
     }
   }
   KeReleaseSpinLock(&g_device->conf_lock, irq);
@@ -134,12 +129,11 @@ fort_conf_ref_flags_set (const PFORT_CONF_FLAGS conf_flags)
     if (conf_ref) {
       PFORT_CONF conf = &conf_ref->conf;
 
-      g_device->prov_boot = conf_flags->prov_boot;
-      g_device->filter_enabled = conf_flags->filter_enabled;
-
       conf->flags = *conf_flags;
 
       fort_conf_app_perms_mask_init(conf);
+
+      g_device->conf_flags = conf->flags;
     }
   }
   KeReleaseSpinLock(&g_device->conf_lock, irq);
@@ -154,24 +148,25 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                           FWPS_CLASSIFY_OUT0 *classifyOut,
                           int flagsField, int localIpField, int remoteIpField)
 {
+  const FORT_CONF_FLAGS conf_flags = g_device->conf_flags;
   PFORT_CONF_REF conf_ref;
   UINT32 flags;
   UINT32 remote_ip;
   UINT32 path_len;
   PVOID path;
-  BOOL blocked, notify;
+  BOOL blocked;
 
   UNUSED(layerData);
   UNUSED(flowContext);
 
-  if (!g_device->filter_enabled) {
+  if (!conf_flags.filter_enabled) {
     return;
   }
 
   conf_ref = fort_conf_ref_take();
 
   if (conf_ref == NULL) {
-    if (g_device->prov_boot)
+    if (conf_flags.prov_boot)
       goto block;
     return;
   }
@@ -181,13 +176,9 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   path_len = inMetaValues->processPath->size - sizeof(WCHAR);  // chop terminating zero
   path = inMetaValues->processPath->data;
 
-  if (!(flags & FWP_CONDITION_FLAG_IS_LOOPBACK)
-      && fort_conf_ip_included(&conf_ref->conf, remote_ip)) {
-    blocked = fort_conf_app_blocked(&conf_ref->conf, path_len, path, &notify);
-  } else {
-    blocked = FALSE;
-    notify = FALSE;
-  }
+  blocked = !(flags & FWP_CONDITION_FLAG_IS_LOOPBACK)
+    && fort_conf_ip_included(&conf_ref->conf, remote_ip)
+    && fort_conf_app_blocked(&conf_ref->conf, path_len, path);
 
   fort_conf_ref_put(conf_ref);
 
@@ -196,10 +187,14 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
     if ((filter->flags & FWPS_FILTER_FLAG_CLEAR_ACTION_RIGHT)) {
       classifyOut->rights &= ~FWPS_RIGHT_ACTION_WRITE;
     }
+
+    if (conf_flags.log_stat) {
+      fort_stat_flow_associate(inMetaValues->flowHandle);
+    }
     return;
   }
 
-  if (notify) {
+  if (conf_flags.log_blocked) {
     PIRP irp = NULL;
     NTSTATUS irp_status;
     ULONG_PTR info;
@@ -265,15 +260,15 @@ fort_callout_install (PDEVICE_OBJECT device)
   FWPS_CALLOUT0 c;
   NTSTATUS status;
 
-  if (g_device->active)
+  if (g_device->connect4_id) {
     return STATUS_SHARING_VIOLATION;  // Only one client may connect
+  }
 
   RtlZeroMemory(&c, sizeof(FWPS_CALLOUT0));
 
   c.notifyFn = fort_callout_notify;
 
-  /* IPv4 connect filter */
-
+  /* IPv4 connect callout */
   c.calloutKey = FORT_GUID_CALLOUT_CONNECT_V4;
   c.classifyFn = fort_callout_connect_v4;
 
@@ -284,8 +279,7 @@ fort_callout_install (PDEVICE_OBJECT device)
     return status;
   }
 
-  /* IPv4 accept filter */
-
+  /* IPv4 accept callout */
   c.calloutKey = FORT_GUID_CALLOUT_ACCEPT_V4;
   c.classifyFn = fort_callout_accept_v4;
 
@@ -296,7 +290,19 @@ fort_callout_install (PDEVICE_OBJECT device)
     return status;
   }
 
-  g_device->active = TRUE;
+  /* IPv4 flow callout */
+  c.calloutKey = FORT_GUID_CALLOUT_FLOW_V4;
+  c.classifyFn = fort_callout_flow_v4;
+
+  c.flowDeleteFn = fort_callout_flow_delete_v4;
+  c.flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW;
+
+  status = FwpsCalloutRegister0(device, &c, &g_device->flow4_id);
+  if (!NT_SUCCESS(status)) {
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+               "FORT: Register Flow V4: Error: %d\n", status);
+    return status;
+  }
 
   return STATUS_SUCCESS;
 }
@@ -306,13 +312,18 @@ fort_callout_remove (void)
 {
   if (g_device->connect4_id) {
     FwpsCalloutUnregisterById0(g_device->connect4_id);
+    g_device->connect4_id = 0;
   }
 
   if (g_device->accept4_id) {
     FwpsCalloutUnregisterById0(g_device->accept4_id);
+    g_device->accept4_id = 0;
   }
 
-  g_device->active = FALSE;
+  if (g_device->flow4_id) {
+    FwpsCalloutUnregisterById0(g_device->flow4_id);
+    g_device->flow4_id = 0;
+  }
 }
 
 static NTSTATUS
@@ -325,9 +336,9 @@ fort_callout_force_reauth (PDEVICE_OBJECT device)
   fort_prov_unregister();
 
   // Register
-  status = fort_prov_register(g_device->prov_boot, NULL);
+  status = fort_prov_register(g_device->conf_flags.prov_boot, NULL);
 
-  if (status == STATUS_SUCCESS) {
+  if (NT_SUCCESS(status)) {
     status = fort_callout_install(device);
   }
 
@@ -462,8 +473,9 @@ fort_driver_unload (PDRIVER_OBJECT driver)
   if (g_device != NULL) {
     fort_buffer_close(&g_device->buffer);
 
-    if (!g_device->prov_boot)
+    if (!g_device->conf_flags.prov_boot) {
       fort_prov_unregister();
+    }
   }
 
   RtlInitUnicodeString(&device_link, DOS_DEVICE_NAME);
@@ -539,7 +551,7 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 
         status = fort_prov_register(FALSE, &is_boot);
 
-        g_device->prov_boot = is_boot;
+        g_device->conf_flags.prov_boot = is_boot;
       }
     }
   }

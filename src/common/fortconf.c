@@ -103,7 +103,7 @@ fort_conf_app_index (UINT32 path_len, const char *path, UINT32 count,
 
 static BOOL
 fort_conf_app_blocked (const PFORT_CONF conf,
-                       UINT32 path_len, const char *path, BOOL *notify)
+                       UINT32 path_len, const char *path)
 {
   const char *data = (const char *) conf + conf->data_off;
   const int app_index = fort_conf_app_index(path_len, path, conf->apps_n,
@@ -117,11 +117,7 @@ fort_conf_app_blocked (const PFORT_CONF conf,
   const BOOL app_perm_allowed = (app_perm & conf->app_perms_allow_mask);
   const BOOL app_allowed = conf->flags.app_allow_all ? TRUE : app_perm_allowed;
 
-  const BOOL blocked = app_blocked && !app_allowed;
-
-  *notify = blocked && conf->flags.log_blocked;
-
-  return blocked;
+  return app_blocked && !app_allowed;
 }
 
 static void

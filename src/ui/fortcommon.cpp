@@ -88,21 +88,14 @@ bool FortCommon::confIpInRange(const void *drvConf, quint32 ip,
 }
 
 bool FortCommon::confAppBlocked(const void *drvConf,
-                                const QString &kernelPath, bool *notify)
+                                const QString &kernelPath)
 {
     const PFORT_CONF conf = (const PFORT_CONF) drvConf;
     const QString kernelPathLower = kernelPath.toLower();
     const int len = kernelPathLower.size() * sizeof(wchar_t);
     const wchar_t *p = (const wchar_t *) kernelPathLower.utf16();
-    BOOL blocked, notifyUser;
 
-    blocked = fort_conf_app_blocked(conf, len, (const char *) p, &notifyUser);
-
-    if (notify) {
-        *notify = notifyUser;
-    }
-
-    return blocked;
+    return fort_conf_app_blocked(conf, len, (const char *) p);
 }
 
 uint FortCommon::provRegister(bool isBoot)
