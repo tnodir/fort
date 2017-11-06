@@ -290,18 +290,20 @@ fort_callout_install (PDEVICE_OBJECT device)
     return status;
   }
 
-  /* IPv4 flow callout */
-  c.calloutKey = FORT_GUID_CALLOUT_FLOW_V4;
-  c.classifyFn = fort_callout_flow_v4;
+  if (g_device->conf_flags.log_stat) {
+    /* IPv4 flow callout */
+    c.calloutKey = FORT_GUID_CALLOUT_FLOW_V4;
+    c.classifyFn = fort_callout_flow_v4;
 
-  c.flowDeleteFn = fort_callout_flow_delete_v4;
-  c.flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW;
+    c.flowDeleteFn = fort_callout_flow_delete_v4;
+    c.flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW;
 
-  status = FwpsCalloutRegister0(device, &c, &g_device->flow4_id);
-  if (!NT_SUCCESS(status)) {
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-               "FORT: Register Flow V4: Error: %d\n", status);
-    return status;
+    status = FwpsCalloutRegister0(device, &c, &g_device->flow4_id);
+    if (!NT_SUCCESS(status)) {
+      DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                 "FORT: Register Flow V4: Error: %d\n", status);
+      return status;
+    }
   }
 
   return STATUS_SUCCESS;
@@ -324,25 +326,6 @@ fort_callout_remove (void)
     FwpsCalloutUnregisterById0(g_device->flow4_id);
     g_device->flow4_id = 0;
   }
-}
-
-static NTSTATUS
-fort_callout_force_reauth (PDEVICE_OBJECT device)
-{
-  NTSTATUS status;
-
-  // Unregister
-  fort_callout_remove();
-  fort_prov_unregister();
-
-  // Register
-  status = fort_prov_register(g_device->conf_flags.prov_boot, NULL);
-
-  if (NT_SUCCESS(status)) {
-    status = fort_callout_install(device);
-  }
-
-  return status;
 }
 
 static NTSTATUS
@@ -417,7 +400,7 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
         status = STATUS_INSUFFICIENT_RESOURCES;
       } else {
         fort_conf_ref_set(conf_ref);
-        status = fort_callout_force_reauth(device);
+        status = fort_prov_reauth();
       }
     }
     break;
@@ -429,7 +412,7 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
     if (conf_flags->driver_version == FORT_DRIVER_VERSION
         && len == sizeof(FORT_CONF_FLAGS)) {
       fort_conf_ref_flags_set(conf_flags);
-      status = fort_callout_force_reauth(device);
+      status = fort_prov_reauth();
     }
     break;
   }

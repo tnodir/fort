@@ -24,6 +24,7 @@ fort_prov_delete (HANDLE engine)
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_CONNECT_V4);
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_ACCEPT_V4);
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_FLOW_V4);
+  FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH);
   FwpmSubLayerDeleteByKey0(engine, (GUID *) &FORT_GUID_SUBLAYER);
   FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_CONNECT_V4);
   FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_ACCEPT_V4);
@@ -172,6 +173,37 @@ fort_prov_register (BOOL is_boot, BOOL *is_bootp)
   }
 
  end:
+  return status;
+}
+
+static DWORD
+fort_prov_reauth (void)
+{
+  FWPM_FILTER0 filter;
+  HANDLE engine;
+  DWORD status;
+
+  if ((status = fort_prov_open(&engine)))
+    return status;
+
+  RtlZeroMemory(&filter, sizeof(FWPM_FILTER0));
+  filter.filterKey = FORT_GUID_FILTER_REAUTH;
+  filter.layerKey = FWPM_LAYER_ALE_AUTH_CONNECT_V4;
+  filter.subLayerKey = FORT_GUID_SUBLAYER;
+  filter.displayData.name = (PWCHAR) L"FortFilterReauth";
+  filter.displayData.description = (PWCHAR) L"Fort Firewall Filter Reauth";
+  filter.action.type = FWP_ACTION_CONTINUE;
+
+  if (!FwpmTransactionBegin0(engine, 0)) {
+    status = FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH);
+    if (status) {
+      status = FwpmFilterAdd0(engine, &filter, NULL, NULL);
+    }
+    FwpmTransactionCommit0(engine);
+  }
+  
+  fort_prov_close(engine);
+
   return status;
 }
 
