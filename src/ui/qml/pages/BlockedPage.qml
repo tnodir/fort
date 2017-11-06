@@ -224,7 +224,7 @@ BasePage {
                             anchors.margins: -7
                             radius: 2
                             border.width: 3
-                            border.color: "blue"
+                            border.color: palette.highlight
                             color: "transparent"
                         }
                     }
