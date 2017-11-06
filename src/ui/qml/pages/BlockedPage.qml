@@ -284,7 +284,6 @@ BasePage {
         TextFieldFrame {
             Layout.fillWidth: true
             text: appPaths[appListView.currentIndex] || ""
-            onReleased: selectAll()
         }
     }
 }
