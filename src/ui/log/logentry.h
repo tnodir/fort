@@ -10,9 +10,10 @@ class LogEntry : public QObject
 
 public:
     enum LogType {
-        TypeNone = -1,
-        AppBlocked = 0,
-        UsageStat
+        TypeNone    = -1,
+        // synchronize with FORT_LOG_FLAG_*
+        AppBlocked  = 0x01000000,
+        UsageStat   = 0x02000000
     };
     Q_ENUM(LogType)
 

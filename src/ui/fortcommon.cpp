@@ -53,6 +53,11 @@ quint32 FortCommon::logBlockedSize(quint32 pathLen)
     return FORT_LOG_BLOCKED_SIZE(pathLen);
 }
 
+quint32 FortCommon::logType(const char *input)
+{
+    return fort_log_type(input);
+}
+
 void FortCommon::logBlockedHeaderWrite(char *output,
                                        quint32 remoteIp, quint32 pid,
                                        quint32 pathLen)

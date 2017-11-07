@@ -22,6 +22,8 @@ public:
     static quint32 logBlockedHeaderSize();
     static quint32 logBlockedSize(quint32 pathLen);
 
+    static quint32 logType(const char *input);
+
     static void logBlockedHeaderWrite(char *output,
                                       quint32 remoteIp, quint32 pid,
                                       quint32 pathLen);

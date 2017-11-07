@@ -30,6 +30,7 @@ void Test::logWriteRead()
 
     // Read
     while (buf.read(&entry)) {
+        QCOMPARE(entry.type(), LogEntry::AppBlocked);
         QCOMPARE(entry.ip(), ip);
         QCOMPARE(entry.pid(), pid);
         QCOMPARE(entry.kernelPath(), path);

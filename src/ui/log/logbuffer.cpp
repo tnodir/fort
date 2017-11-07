@@ -12,6 +12,16 @@ LogBuffer::LogBuffer(int bufferSize, QObject *parent) :
 {
 }
 
+char *LogBuffer::output()
+{
+    return m_array.data() + m_top;
+}
+
+const char *LogBuffer::input() const
+{
+    return m_array.constData() + m_offset;
+}
+
 void LogBuffer::prepareFor(int len)
 {
     const int newSize = m_top + len;
@@ -19,6 +29,18 @@ void LogBuffer::prepareFor(int len)
     if (newSize > m_array.size()) {
         m_array.resize(newSize);
     }
+}
+
+LogEntry::LogType LogBuffer::readType()
+{
+    if (m_offset >= m_top)
+        return LogEntry::TypeNone;
+
+    const char *input = this->input();
+
+    const quint32 type = FortCommon::logType(input);
+
+    return static_cast<LogEntry::LogType>(type);
 }
 
 int LogBuffer::write(const LogEntryBlocked *logEntry)
@@ -29,7 +51,7 @@ int LogBuffer::write(const LogEntryBlocked *logEntry)
     const int entrySize = FortCommon::logBlockedSize(pathLen);
     prepareFor(entrySize);
 
-    char *output = m_array.data() + m_top;
+    char *output = this->output();
 
     FortCommon::logBlockedHeaderWrite(output, logEntry->ip(),
                                       logEntry->pid(), pathLen);
@@ -49,7 +71,7 @@ int LogBuffer::read(LogEntryBlocked *logEntry)
     if (m_offset >= m_top)
         return 0;
 
-    const char *input = m_array.constData() + m_offset;
+    const char *input = this->input();
 
     quint32 ip, pid, pathLen;
     FortCommon::logBlockedHeaderRead(input, &ip, &pid, &pathLen);

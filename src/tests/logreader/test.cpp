@@ -70,9 +70,18 @@ void Test::setConf(Device &device)
 
 void Test::printLogs(LogBuffer &buf)
 {
-    LogBlocked entry;
+    forever {
+        const LogEntry::LogType logType = buf.readType();
+        if (logType == LogEntry::TypeNone)
+            break;
 
-    while (buf.read(&entry)) {
+        QCOMPARE(logType, LogEntry::AppBlocked);
+
+        LogEntryBlocked entry;
+
+        if (!buf.read(&entry))
+            break;
+
         const quint32 pid = entry.pid();
         QString kernelPath = entry.kernelPath();
 

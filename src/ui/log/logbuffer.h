@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QByteArray>
 
+#include "logentry.h"
+
 class LogEntryBlocked;
 
 class LogBuffer : public QObject
@@ -19,6 +21,8 @@ public:
 
     QByteArray &array() { return m_array; }
 
+    LogEntry::LogType readType();
+
 signals:
 
 public slots:
@@ -31,6 +35,9 @@ public slots:
     int read(LogEntryBlocked *logEntry);
 
 private:
+    char *output();
+    const char *input() const;
+
     void prepareFor(int len);
 
 private:
