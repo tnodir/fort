@@ -1,7 +1,7 @@
 #include "logbuffer.h"
 
 #include "fortcommon.h"
-#include "logentry.h"
+#include "logentryblocked.h"
 
 LogBuffer::LogBuffer(int bufferSize, QObject *parent) :
     QObject(parent),
@@ -21,7 +21,7 @@ void LogBuffer::prepareFor(int len)
     }
 }
 
-int LogBuffer::write(const LogEntry *logEntry)
+int LogBuffer::write(const LogEntryBlocked *logEntry)
 {
     const QString path = logEntry->kernelPath();
     const int pathLen = path.size() * sizeof(wchar_t);
@@ -44,7 +44,7 @@ int LogBuffer::write(const LogEntry *logEntry)
     return entrySize;
 }
 
-int LogBuffer::read(LogEntry *logEntry)
+int LogBuffer::read(LogEntryBlocked *logEntry)
 {
     if (m_offset >= m_top)
         return 0;

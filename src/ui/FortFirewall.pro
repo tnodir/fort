@@ -8,7 +8,7 @@ TEMPLATE = app
 SOURCES += \
     main.cpp \
     log/logbuffer.cpp \
-    log/logentry.cpp \
+    log/logentryblocked.cpp \
     conf/addressgroup.cpp \
     conf/appgroup.cpp \
     conf/firewallconf.cpp \
@@ -39,7 +39,7 @@ SOURCES += \
 
 HEADERS += \
     log/logbuffer.h \
-    log/logentry.h \
+    log/logentryblocked.h \
     conf/addressgroup.h \
     conf/appgroup.h \
     conf/firewallconf.h \

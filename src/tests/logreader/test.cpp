@@ -9,7 +9,7 @@
 #include "conf/firewallconf.h"
 #include "fortcommon.h"
 #include "log/logbuffer.h"
-#include "log/logentry.h"
+#include "log/logentryblocked.h"
 #include "util/confutil.h"
 #include "util/device.h"
 #include "util/fileutil.h"
@@ -70,7 +70,7 @@ void Test::setConf(Device &device)
 
 void Test::printLogs(LogBuffer &buf)
 {
-    LogEntry entry;
+    LogBlocked entry;
 
     while (buf.read(&entry)) {
         const quint32 pid = entry.pid();

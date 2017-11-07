@@ -1,8 +1,8 @@
-#include "logentry.h"
+#include "logentryblocked.h"
 
-LogEntry::LogEntry(quint32 ip, quint32 pid,
-                   const QString &kernelPath,
-                   QObject *parent) :
+LogEntryBlocked::LogEntryBlocked(quint32 ip, quint32 pid,
+                                 const QString &kernelPath,
+                                 QObject *parent) :
     QObject(parent),
     m_ip(ip),
     m_pid(pid),
@@ -10,7 +10,7 @@ LogEntry::LogEntry(quint32 ip, quint32 pid,
 {
 }
 
-void LogEntry::setIp(quint32 ip)
+void LogEntryBlocked::setIp(quint32 ip)
 {
     if (m_ip != ip) {
         m_ip = ip;
@@ -18,7 +18,7 @@ void LogEntry::setIp(quint32 ip)
     }
 }
 
-void LogEntry::setPid(quint32 pid)
+void LogEntryBlocked::setPid(quint32 pid)
 {
     if (m_pid != pid) {
         m_pid = pid;
@@ -26,7 +26,7 @@ void LogEntry::setPid(quint32 pid)
     }
 }
 
-void LogEntry::setKernelPath(const QString &kernelPath)
+void LogEntryBlocked::setKernelPath(const QString &kernelPath)
 {
     if (m_kernelPath != kernelPath) {
         m_kernelPath = kernelPath;

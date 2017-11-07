@@ -1,9 +1,9 @@
-#ifndef LOGENTRY_H
-#define LOGENTRY_H
+#ifndef LOGENTRYBLOCKED_H
+#define LOGENTRYBLOCKED_H
 
 #include <QObject>
 
-class LogEntry : public QObject
+class LogEntryBlocked : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(quint32 ip READ ip WRITE setIp NOTIFY ipChanged)
@@ -11,9 +11,9 @@ class LogEntry : public QObject
     Q_PROPERTY(QString kernelPath READ kernelPath WRITE setKernelPath NOTIFY kernelPathChanged)
 
 public:
-    explicit LogEntry(quint32 ip = 0, quint32 pid = 0,
-                      const QString &kernelPath = QString(),
-                      QObject *parent = nullptr);
+    explicit LogEntryBlocked(quint32 ip = 0, quint32 pid = 0,
+                             const QString &kernelPath = QString(),
+                             QObject *parent = nullptr);
 
     quint32 ip() const { return m_ip; }
     void setIp(quint32 ip);
@@ -37,4 +37,4 @@ private:
     QString m_kernelPath;
 };
 
-#endif // LOGENTRY_H
+#endif // LOGENTRYBLOCKED_H

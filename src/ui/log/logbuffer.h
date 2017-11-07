@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QByteArray>
 
-class LogEntry;
+class LogEntryBlocked;
 
 class LogBuffer : public QObject
 {
@@ -27,8 +27,8 @@ public slots:
         m_offset = 0;
     }
 
-    int write(const LogEntry *logEntry);
-    int read(LogEntry *logEntry);
+    int write(const LogEntryBlocked *logEntry);
+    int read(LogEntryBlocked *logEntry);
 
 private:
     void prepareFor(int len);

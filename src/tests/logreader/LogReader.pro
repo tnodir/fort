@@ -6,7 +6,7 @@ SOURCES += \
     $$UIPATH/conf/firewallconf.cpp \
     $$UIPATH/fortcommon.cpp \
     $$UIPATH/log/logbuffer.cpp \
-    $$UIPATH/log/logentry.cpp \
+    $$UIPATH/log/logentryblocked.cpp \
     $$UIPATH/util/confutil.cpp \
     $$UIPATH/util/device.cpp \
     $$UIPATH/util/fileutil.cpp \
@@ -21,7 +21,7 @@ HEADERS += \
     $$UIPATH/conf/firewallconf.h \
     $$UIPATH/fortcommon.h \
     $$UIPATH/log/logbuffer.h \
-    $$UIPATH/log/logentry.h \
+    $$UIPATH/log/logentryblocked.h \
     $$UIPATH/util/confutil.h \
     $$UIPATH/util/device.h \
     $$UIPATH/util/fileutil.h \

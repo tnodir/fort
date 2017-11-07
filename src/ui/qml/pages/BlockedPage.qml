@@ -164,7 +164,7 @@ BasePage {
     LogBuffer {
         id: logBuffer
     }
-    LogEntry {
+    LogEntryBlocked {
         id: logEntry
     }
 

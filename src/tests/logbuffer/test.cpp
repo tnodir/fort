@@ -4,7 +4,7 @@
 
 #include "fortcommon.h"
 #include "log/logbuffer.h"
-#include "log/logentry.h"
+#include "log/logentryblocked.h"
 
 void Test::logWriteRead()
 {
@@ -21,7 +21,7 @@ void Test::logWriteRead()
     LogBuffer buf(entrySize * testCount);
 
     const quint32 ip = 1, pid = 2;
-    LogEntry entry(ip, pid, path);
+    LogEntryBlocked entry(ip, pid, path);
 
     // Write
     for (int i = 0; i < testCount; ++i) {

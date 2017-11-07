@@ -15,7 +15,7 @@
 #include "driver/drivermanager.h"
 #include "fortsettings.h"
 #include "log/logbuffer.h"
-#include "log/logentry.h"
+#include "log/logentryblocked.h"
 #include "task/taskinfo.h"
 #include "task/taskmanager.h"
 #include "translationmanager.h"
@@ -69,7 +69,7 @@ void FortManager::registerQmlTypes()
     qmlRegisterType<FirewallConf>("com.fortfirewall", 1, 0, "FirewallConf");
 
     qmlRegisterType<LogBuffer>("com.fortfirewall", 1, 0, "LogBuffer");
-    qmlRegisterType<LogEntry>("com.fortfirewall", 1, 0, "LogEntry");
+    qmlRegisterType<LogEntryBlocked>("com.fortfirewall", 1, 0, "LogEntryBlocked");
 
     qmlRegisterType<FileUtil>("com.fortfirewall", 1, 0, "FileUtil");
     qmlRegisterType<GuiUtil>("com.fortfirewall", 1, 0, "GuiUtil");
