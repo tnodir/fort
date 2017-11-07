@@ -72,7 +72,7 @@ signals:
 
 public slots:
     void run();
-    void cancel();
+    void abort();
 
 private slots:
     void handleFinished(bool success);
@@ -82,7 +82,7 @@ private:
 
 private:
     uint m_enabled          : 1;
-    uint m_canceled         : 1;  // transient
+    uint m_aborted          : 1;  // transient
     uint m_intervalHours    : 16;
 
     TaskType m_type;

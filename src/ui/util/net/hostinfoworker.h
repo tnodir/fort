@@ -22,13 +22,13 @@ signals:
 public slots:
     void lookupHost(const QString &address);
     void clear();
-    void cancel();
+    void abort();
 
 private:
     QString dequeueAddress();
 
 private:
-    volatile bool m_cancelled;
+    volatile bool m_aborted;
 
     QQueue<QString> m_queue;
 

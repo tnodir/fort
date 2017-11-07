@@ -17,7 +17,7 @@ signals:
 
 public slots:
     virtual void run() = 0;
-    virtual void cancel(bool success = false) = 0;
+    virtual void abort(bool success = false) = 0;
 
     virtual bool processResult(FortManager *fortManager) = 0;
 };

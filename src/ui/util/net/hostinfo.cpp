@@ -12,7 +12,7 @@ HostInfo::HostInfo(QObject *parent) :
 
 HostInfo::~HostInfo()
 {
-    cancel();
+    abort();
 }
 
 void HostInfo::setupWorker()
@@ -41,12 +41,12 @@ void HostInfo::clear()
     }
 }
 
-void HostInfo::cancel()
+void HostInfo::abort()
 {
     if (!m_worker) return;
 
     m_worker->disconnect(this);
 
-    m_worker->cancel();
+    m_worker->abort();
     m_worker = nullptr;
 }

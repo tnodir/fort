@@ -34,13 +34,13 @@ void TaskTasix::setupDownloader() const
     downloader()->setData("router=cisco&pass1=&query=1&arg=");
 }
 
-void TaskTasix::cancel(bool success)
+void TaskTasix::abort(bool success)
 {
     if (!m_downloader) return;
 
-    m_downloader->disconnect(this);  // to avoid recursive call on cancel()
+    m_downloader->disconnect(this);  // to avoid recursive call on abort()
 
-    m_downloader->cancel();
+    m_downloader->abort();
     m_downloader->deleteLater();
     m_downloader = nullptr;
 
@@ -54,7 +54,7 @@ void TaskTasix::downloadFinished(bool success)
         success = !m_rangeText.isEmpty();
     }
 
-    cancel(success);
+    abort(success);
 }
 
 bool TaskTasix::processResult(FortManager *fortManager)

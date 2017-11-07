@@ -4,7 +4,7 @@
 
 HostInfoWorker::HostInfoWorker(QObject *parent) :
     QObject(parent),
-    m_cancelled(false)
+    m_aborted(false)
 {
 }
 
@@ -18,11 +18,11 @@ void HostInfoWorker::run()
         if (!address.isEmpty()) {
             const QString hostName = NetUtil::getHostName(address);
 
-            if (m_cancelled) break;
+            if (m_aborted) break;
 
             emit lookupFinished(address, hostName);
         }
-    } while (!m_cancelled);
+    } while (!m_aborted);
 }
 
 QString HostInfoWorker::dequeueAddress()
@@ -30,7 +30,7 @@ QString HostInfoWorker::dequeueAddress()
     QMutexLocker locker(&m_mutex);
 
     while (m_queue.isEmpty()) {
-        if (m_cancelled)
+        if (m_aborted)
             return QString();
 
         m_waitCondition.wait(&m_mutex);
@@ -55,11 +55,11 @@ void HostInfoWorker::clear()
     m_queue.clear();
 }
 
-void HostInfoWorker::cancel()
+void HostInfoWorker::abort()
 {
     QMutexLocker locker(&m_mutex);
 
-    m_cancelled = true;
+    m_aborted = true;
 
     m_waitCondition.wakeOne();
 }

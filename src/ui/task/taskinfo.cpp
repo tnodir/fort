@@ -11,7 +11,7 @@
 TaskInfo::TaskInfo(TaskType type, QObject *parent) :
     QObject(parent),
     m_enabled(false),
-    m_canceled(false),
+    m_aborted(false),
     m_intervalHours(24),
     m_type(type),
     m_taskWorker(nullptr)
@@ -20,7 +20,7 @@ TaskInfo::TaskInfo(TaskType type, QObject *parent) :
 
 TaskInfo::~TaskInfo()
 {
-    cancel();
+    abort();
 }
 
 void TaskInfo::setEnabled(bool enabled)
@@ -153,7 +153,7 @@ void TaskInfo::run()
 {
     if (m_taskWorker) return;
 
-    m_canceled = false;
+    m_aborted = false;
 
     TaskWorker *taskWorker = createWorker();
 
@@ -165,15 +165,15 @@ void TaskInfo::run()
     taskWorker->run();
 }
 
-void TaskInfo::cancel()
+void TaskInfo::abort()
 {
-    if (!m_taskWorker || m_canceled)
+    if (!m_taskWorker || m_aborted)
         return;
 
-    // to avoid recursive call on worker.cancel() -> handleFinished(false) -> cancel()
-    m_canceled = true;
+    // to avoid recursive call on worker.abort() -> handleFinished(false) -> abort()
+    m_aborted = true;
 
-    m_taskWorker->cancel();
+    m_taskWorker->abort();
     m_taskWorker->deleteLater();
 
     setTaskWorker(nullptr);
@@ -190,7 +190,7 @@ void TaskInfo::handleFinished(bool success)
 
     emit workFinished(success);
 
-    cancel();
+    abort();
 }
 
 TaskWorker *TaskInfo::createWorker()

@@ -113,7 +113,7 @@ Row {
             height: width
             icon.source: taskInfo.running ? "qrc:/images/cross.png"
                                           : "qrc:/images/run.png"
-            onClicked: taskInfo.running ? taskInfo.cancel()
+            onClicked: taskInfo.running ? taskInfo.abort()
                                         : taskInfo.run()
         }
 

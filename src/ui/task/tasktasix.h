@@ -33,7 +33,7 @@ signals:
 
 public slots:
     void run() override;
-    void cancel(bool success = false) override;
+    void abort(bool success = false) override;
 
     bool processResult(FortManager *fortManager) override;
 

@@ -20,7 +20,7 @@ signals:
 
 public slots:
     void start();
-    void cancel(bool success = false);
+    void abort(bool success = false);
 
 private slots:
     void processReadyRead();

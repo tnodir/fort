@@ -40,11 +40,11 @@ void NetDownloader::start()
     m_process.start("curl", args, QIODevice::ReadOnly);
 
     if (!m_process.waitForStarted()) {
-        cancel();
+        abort();
     }
 }
 
-void NetDownloader::cancel(bool success)
+void NetDownloader::abort(bool success)
 {
     if (!m_started) return;
 
@@ -62,7 +62,7 @@ void NetDownloader::processReadyRead()
     m_buffer.append(data);
 
     if (m_buffer.size() > DOWNLOAD_MAXSIZE) {
-        cancel(true);  // try to use the partial loaded data
+        abort(true);  // try to use the partial loaded data
     }
 }
 
@@ -70,11 +70,11 @@ void NetDownloader::processError(QProcess::ProcessError error)
 {
     Q_UNUSED(error)
 
-    cancel();
+    abort();
 }
 
 void NetDownloader::processFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
-    cancel(exitCode == 0 && exitStatus == QProcess::NormalExit
-           && !m_buffer.isEmpty());
+    abort(exitCode == 0 && exitStatus == QProcess::NormalExit
+          && !m_buffer.isEmpty());
 }

@@ -23,7 +23,7 @@ public slots:
 private:
     void setupWorker();
 
-    void cancel();
+    void abort();
 
 private:
     HostInfoWorker *m_worker;
