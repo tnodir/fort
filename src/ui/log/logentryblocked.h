@@ -1,9 +1,9 @@
 #ifndef LOGENTRYBLOCKED_H
 #define LOGENTRYBLOCKED_H
 
-#include <QObject>
+#include "logentry.h"
 
-class LogEntryBlocked : public QObject
+class LogEntryBlocked : public LogEntry
 {
     Q_OBJECT
     Q_PROPERTY(quint32 ip READ ip WRITE setIp NOTIFY ipChanged)
@@ -14,6 +14,8 @@ public:
     explicit LogEntryBlocked(quint32 ip = 0, quint32 pid = 0,
                              const QString &kernelPath = QString(),
                              QObject *parent = nullptr);
+
+    virtual LogEntry::LogType type() const { return AppBlocked; }
 
     quint32 ip() const { return m_ip; }
     void setIp(quint32 ip);
