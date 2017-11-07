@@ -23,8 +23,8 @@ BasePage {
         driverManager.readLogAsync(logBuffer);
     }
 
-    function cancelDeviceIo() {
-        driverManager.cancelDeviceIo();
+    function cancelAsyncIo() {
+        driverManager.cancelAsyncIo();
     }
 
     function switchLogReading(enable) {
@@ -38,7 +38,7 @@ BasePage {
         if (enable) {
             readLogAsync();
         } else {
-            cancelDeviceIo();
+            cancelAsyncIo();
         }
     }
 

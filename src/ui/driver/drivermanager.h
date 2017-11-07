@@ -3,8 +3,6 @@
 
 #include <QObject>
 
-class QThread;
-
 class Device;
 class DriverWorker;
 class FirewallConf;
@@ -31,8 +29,7 @@ signals:
 public slots:
     bool openDevice();
 
-    void enableDeviceIo();
-    bool cancelDeviceIo();
+    void cancelAsyncIo();
 
     bool writeConf(const FirewallConf &conf);
     bool writeConfFlags(const FirewallConf &conf);
@@ -43,13 +40,13 @@ private:
     void setErrorMessage(const QString &errorMessage);
 
     void setupWorker();
+    void abortWorker();
 
     bool writeData(int code, QByteArray &buf, int size);
 
 private:
     Device *m_device;
     DriverWorker *m_driverWorker;
-    QThread *m_workerThread;
 
     QString m_errorMessage;
 };
