@@ -290,20 +290,18 @@ fort_callout_install (PDEVICE_OBJECT device)
     return status;
   }
 
-  if (g_device->conf_flags.log_stat) {
-    /* IPv4 flow callout */
-    c.calloutKey = FORT_GUID_CALLOUT_FLOW_V4;
-    c.classifyFn = fort_callout_flow_v4;
+  /* IPv4 flow callout */
+  c.calloutKey = FORT_GUID_CALLOUT_FLOW_V4;
+  c.classifyFn = fort_callout_flow_v4;
 
-    c.flowDeleteFn = fort_callout_flow_delete_v4;
-    c.flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW;
+  c.flowDeleteFn = fort_callout_flow_delete_v4;
+  c.flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW;
 
-    status = FwpsCalloutRegister0(device, &c, &g_device->flow4_id);
-    if (!NT_SUCCESS(status)) {
-      DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                 "FORT: Register Flow V4: Error: %d\n", status);
-      return status;
-    }
+  status = FwpsCalloutRegister0(device, &c, &g_device->flow4_id);
+  if (!NT_SUCCESS(status)) {
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+               "FORT: Register Flow V4: Error: %d\n", status);
+    return status;
   }
 
   return STATUS_SUCCESS;
@@ -326,6 +324,61 @@ fort_callout_remove (void)
     FwpsCalloutUnregisterById0(g_device->flow4_id);
     g_device->flow4_id = 0;
   }
+}
+
+static NTSTATUS
+fort_callout_force_reauth (PDEVICE_OBJECT device,
+                           FORT_CONF_FLAGS old_conf_flags)
+{
+  const FORT_CONF_FLAGS conf_flags = g_device->conf_flags;
+  BOOL prov_changed = FALSE;
+  NTSTATUS status;
+
+  // Check provider filters
+  if (old_conf_flags.prov_boot != conf_flags.prov_boot) {
+    fort_prov_unregister();
+
+    old_conf_flags.log_stat = 0;  // flow filter unregistered
+
+    status = fort_prov_register(conf_flags.prov_boot);
+    if (!NT_SUCCESS(status)) {
+      DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                 "FORT: Prov. Register: Error: %d\n", status);
+      return status;
+    }
+    
+    prov_changed = TRUE;
+  }
+
+  // Check flow filter
+  if (old_conf_flags.log_stat != conf_flags.log_stat) {
+    if (old_conf_flags.log_stat) {
+      fort_prov_flow_unregister();
+    }
+
+    if (conf_flags.log_stat) {
+      status = fort_prov_flow_register();
+      if (!NT_SUCCESS(status)) {
+        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                   "FORT: Prov. Flow Register: Error: %d\n", status);
+        return status;
+      }
+    }
+    
+    prov_changed = TRUE;
+  }
+
+  // Check reauth filter
+  if (!prov_changed) {
+    status = fort_prov_reauth();
+    if (!NT_SUCCESS(status)) {
+      DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                 "FORT: Prov. Reauth: Error: %d\n", status);
+      return status;
+    }
+  }
+
+  return STATUS_SUCCESS;
 }
 
 static NTSTATUS
@@ -356,6 +409,7 @@ fort_device_cleanup (PDEVICE_OBJECT device, PIRP irp)
   UNUSED(device);
 
   fort_callout_remove();
+  fort_prov_reauth();
 
   fort_conf_ref_set(NULL);
 
@@ -399,8 +453,10 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
       if (conf_ref == NULL) {
         status = STATUS_INSUFFICIENT_RESOURCES;
       } else {
+        const FORT_CONF_FLAGS old_conf_flags = g_device->conf_flags;
+
         fort_conf_ref_set(conf_ref);
-        status = fort_prov_reauth();
+        status = fort_callout_force_reauth(device, old_conf_flags);
       }
     }
     break;
@@ -411,8 +467,10 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
 
     if (conf_flags->driver_version == FORT_DRIVER_VERSION
         && len == sizeof(FORT_CONF_FLAGS)) {
+      const FORT_CONF_FLAGS old_conf_flags = g_device->conf_flags;
+
       fort_conf_ref_flags_set(conf_flags);
-      status = fort_prov_reauth();
+      status = fort_callout_force_reauth(device, old_conf_flags);
     }
     break;
   }
@@ -530,11 +588,12 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 
       // Register filters provider
       {
-        BOOL is_boot = FALSE;
-
-        status = fort_prov_register(FALSE, &is_boot);
+        const BOOL is_boot = fort_prov_is_boot();
 
         g_device->conf_flags.prov_boot = is_boot;
+
+        fort_prov_unregister();  // to upgrade from old version
+        status = fort_prov_register(is_boot);
       }
     }
   }
