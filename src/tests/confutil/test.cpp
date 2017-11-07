@@ -8,7 +8,7 @@
 #include "fortcommon.h"
 #include "util/confutil.h"
 #include "util/fileutil.h"
-#include "util/netutil.h"
+#include "util/net/netutil.h"
 
 void Test::confWriteRead()
 {

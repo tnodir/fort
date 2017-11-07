@@ -5,8 +5,8 @@
 #ifndef TASK_TEST
 #include "../fortmanager.h"
 #endif
-#include "../util/ip4range.h"
-#include "../util/netdownloader.h"
+#include "../util/net/ip4range.h"
+#include "../util/net/netdownloader.h"
 
 TaskTasix::TaskTasix(QObject *parent) :
     TaskWorker(parent),

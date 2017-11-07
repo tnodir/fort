@@ -13,7 +13,7 @@
 #include "util/confutil.h"
 #include "util/device.h"
 #include "util/fileutil.h"
-#include "util/netutil.h"
+#include "util/net/netutil.h"
 #include "util/osutil.h"
 #include "util/processinfo.h"
 

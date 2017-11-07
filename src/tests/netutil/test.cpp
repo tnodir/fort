@@ -3,9 +3,9 @@
 #include <QtTest>
 
 #include "task/tasktasix.h"
-#include "util/ip4range.h"
 #include "util/fileutil.h"
-#include "util/netutil.h"
+#include "util/net/ip4range.h"
+#include "util/net/netutil.h"
 
 #define _STR(x) #x
 #define STR(x)  _STR(x)

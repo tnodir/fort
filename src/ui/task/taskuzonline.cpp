@@ -3,7 +3,7 @@
 #include <QRegularExpression>
 #include <QVector>
 
-#include "../util/netdownloader.h"
+#include "../util/net/netdownloader.h"
 
 TaskUzonline::TaskUzonline(QObject *parent) :
     TaskTasix(parent)

@@ -10,8 +10,8 @@ SOURCES += \
     $$UIPATH/util/confutil.cpp \
     $$UIPATH/util/device.cpp \
     $$UIPATH/util/fileutil.cpp \
-    $$UIPATH/util/ip4range.cpp \
-    $$UIPATH/util/netutil.cpp \
+    $$UIPATH/util/net/ip4range.cpp \
+    $$UIPATH/util/net/netutil.cpp \
     $$UIPATH/util/osutil.cpp \
     $$UIPATH/util/processinfo.cpp
 
@@ -25,7 +25,7 @@ HEADERS += \
     $$UIPATH/util/confutil.h \
     $$UIPATH/util/device.h \
     $$UIPATH/util/fileutil.h \
-    $$UIPATH/util/ip4range.h \
-    $$UIPATH/util/netutil.h \
+    $$UIPATH/util/net/ip4range.h \
+    $$UIPATH/util/net/netutil.h \
     $$UIPATH/util/osutil.h \
     $$UIPATH/util/processinfo.h

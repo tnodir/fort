@@ -7,8 +7,8 @@ SOURCES += \
     $$UIPATH/fortcommon.cpp \
     $$UIPATH/util/confutil.cpp \
     $$UIPATH/util/fileutil.cpp \
-    $$UIPATH/util/ip4range.cpp \
-    $$UIPATH/util/netutil.cpp
+    $$UIPATH/util/net/ip4range.cpp \
+    $$UIPATH/util/net/netutil.cpp
 
 HEADERS += \
     $$UIPATH/conf/addressgroup.h \
@@ -17,5 +17,5 @@ HEADERS += \
     $$UIPATH/fortcommon.h \
     $$UIPATH/util/confutil.h \
     $$UIPATH/util/fileutil.h \
-    $$UIPATH/util/ip4range.h \
-    $$UIPATH/util/netutil.h
+    $$UIPATH/util/net/ip4range.h \
+    $$UIPATH/util/net/netutil.h

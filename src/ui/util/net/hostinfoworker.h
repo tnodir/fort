@@ -1,18 +1,20 @@
-#ifndef HOSTINFO_H
-#define HOSTINFO_H
+#ifndef HOSTINFOWORKER_H
+#define HOSTINFOWORKER_H
 
 #include <QMutex>
+#include <QObject>
 #include <QQueue>
-#include <QThread>
+#include <QRunnable>
 #include <QWaitCondition>
 
-class HostInfo : public QThread
+class HostInfoWorker : public QObject, public QRunnable
 {
     Q_OBJECT
 
 public:
-    explicit HostInfo(QObject *parent = nullptr);
-    virtual ~HostInfo();
+    explicit HostInfoWorker(QObject *parent = nullptr);
+
+    void run() override;
 
 signals:
     void lookupFinished(const QString &address, const QString &hostName);
@@ -20,13 +22,9 @@ signals:
 public slots:
     void lookupHost(const QString &address);
     void clear();
-
-protected:
-    void run() override;
-
-private:
     void cancel();
 
+private:
     QString dequeueAddress();
 
 private:
@@ -38,4 +36,4 @@ private:
     QWaitCondition m_waitCondition;
 };
 
-#endif // HOSTINFO_H
+#endif // HOSTINFOWORKER_H

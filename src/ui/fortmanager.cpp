@@ -21,8 +21,8 @@
 #include "translationmanager.h"
 #include "util/fileutil.h"
 #include "util/guiutil.h"
-#include "util/hostinfo.h"
-#include "util/netutil.h"
+#include "util/net/hostinfo.h"
+#include "util/net/netutil.h"
 #include "util/osutil.h"
 
 FortManager::FortManager(FortSettings *fortSettings,

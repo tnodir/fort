@@ -13,7 +13,7 @@
 #include "../conf/firewallconf.h"
 #include "../fortcommon.h"
 #include "fileutil.h"
-#include "ip4range.h"
+#include "net/ip4range.h"
 
 #define APP_GROUP_MAX       16
 #define APP_GROUP_NAME_MAX  128

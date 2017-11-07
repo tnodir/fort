@@ -28,10 +28,11 @@ SOURCES += \
     util/device.cpp \
     util/fileutil.cpp \
     util/guiutil.cpp \
-    util/hostinfo.cpp \
-    util/ip4range.cpp \
-    util/netdownloader.cpp \
-    util/netutil.cpp \
+    util/net/hostinfo.cpp \
+    util/net/hostinfoworker.cpp \
+    util/net/ip4range.cpp \
+    util/net/netdownloader.cpp \
+    util/net/netutil.cpp \
     util/processinfo.cpp \
     util/osutil.cpp \
     util/stringutil.cpp
@@ -58,10 +59,11 @@ HEADERS += \
     util/device.h \
     util/fileutil.h \
     util/guiutil.h \
-    util/hostinfo.h \
-    util/ip4range.h \
-    util/netdownloader.h \
-    util/netutil.h \
+    util/net/hostinfo.h \
+    util/net/hostinfoworker.h \
+    util/net/ip4range.h \
+    util/net/netdownloader.h \
+    util/net/netutil.h \
     util/processinfo.h \
     util/osutil.h \
     util/stringutil.h
