@@ -199,9 +199,14 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
     NTSTATUS irp_status;
     ULONG_PTR info;
 
-    fort_buffer_blocked_write(&g_device->buffer, remote_ip,
-      (UINT32) inMetaValues->processId, path_len, path,
-      &irp, &irp_status, &info);
+    if (!NT_SUCCESS(fort_buffer_blocked_write(
+        &g_device->buffer, remote_ip,
+        (UINT32) inMetaValues->processId, path_len, path,
+        &irp, &irp_status, &info))) {
+      DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                 "FORT: Classify v4: Log buffer underflow: %d\n",
+                 FORT_LOG_BLOCKED_SIZE(path_len));
+    }
 
     if (irp != NULL) {
       fort_request_complete_info(irp, irp_status, info);
