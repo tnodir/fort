@@ -33,9 +33,6 @@ void DriverManager::setErrorMessage(const QString &errorMessage)
 
 void DriverManager::setupWorker()
 {
-    connect(m_driverWorker, &DriverWorker::readLogResult,
-            this, &DriverManager::readLogResult);
-
     QThreadPool::globalInstance()->start(m_driverWorker);
 }
 
@@ -61,9 +58,9 @@ bool DriverManager::openDevice()
     return true;
 }
 
-void DriverManager::cancelAsyncIo()
+bool DriverManager::closeDevice()
 {
-    m_driverWorker->cancelIo();
+    return m_device->close();
 }
 
 bool DriverManager::writeConf(const FirewallConf &conf)
@@ -98,7 +95,7 @@ bool DriverManager::writeConfFlags(const FirewallConf &conf)
 
 bool DriverManager::writeData(int code, QByteArray &buf, int size)
 {
-    cancelAsyncIo();
+    m_driverWorker->cancelAsyncIo();
 
     if (!m_device->ioctl(code, buf.data(), size)) {
         setErrorMessage(OsUtil::lastErrorMessage());
@@ -106,11 +103,4 @@ bool DriverManager::writeData(int code, QByteArray &buf, int size)
     }
 
     return true;
-}
-
-void DriverManager::readLogAsync(LogBuffer *logBuffer)
-{
-    cancelAsyncIo();
-
-    m_driverWorker->readLogAsync(logBuffer);
 }

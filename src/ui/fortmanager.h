@@ -11,7 +11,7 @@ class QSystemTrayIcon;
 class DriverManager;
 class FortSettings;
 class FirewallConf;
-class LogBuffer;
+class LogManager;
 class TaskManager;
 
 class FortManager : public QObject
@@ -20,18 +20,20 @@ class FortManager : public QObject
     Q_PROPERTY(FortSettings *fortSettings READ fortSettings CONSTANT)
     Q_PROPERTY(FirewallConf *firewallConf READ firewallConf NOTIFY firewallConfToEditChanged)
     Q_PROPERTY(FirewallConf *firewallConfToEdit READ firewallConfToEdit NOTIFY firewallConfToEditChanged)
-    Q_PROPERTY(DriverManager *driverManager READ driverManager CONSTANT)
+    Q_PROPERTY(LogManager *logManager READ logManager CONSTANT)
     Q_PROPERTY(TaskManager *taskManager READ taskManager CONSTANT)
 
 public:
     explicit FortManager(FortSettings *fortSettings,
                          QObject *parent = nullptr);
+    virtual ~FortManager();
 
     FortSettings *fortSettings() const { return m_fortSettings; }
     FirewallConf *firewallConf() const { return m_firewallConf; }
     FirewallConf *firewallConfToEdit() const { return m_firewallConfToEdit; }
 
     DriverManager *driverManager() const { return m_driverManager; }
+    LogManager *logManager() const { return m_logManager; }
     TaskManager *taskManager() const { return m_taskManager; }
 
 signals:
@@ -67,6 +69,8 @@ private:
     static void registerQmlTypes();
 
     bool setupDriver();
+    void closeDriver();
+
     void setupTrayIcon();
     bool setupEngine();
 
@@ -102,6 +106,7 @@ private:
     QList<QAction *> m_appGroupActions;
 
     DriverManager *m_driverManager;
+    LogManager *m_logManager;
     TaskManager *m_taskManager;
 };
 

@@ -7,7 +7,7 @@
 
 DriverWorker::DriverWorker(Device *device, QObject *parent) :
     QObject(parent),
-    m_isWorking(false),
+    m_isLogReading(false),
     m_cancelled(false),
     m_aborted(false),
     m_device(device),
@@ -18,9 +18,7 @@ DriverWorker::DriverWorker(Device *device, QObject *parent) :
 void DriverWorker::run()
 {
     do {
-        if (waitLogBuffer()) {
-            readLog();
-        }
+        readLog();
     } while (!m_aborted);
 }
 
@@ -32,23 +30,23 @@ void DriverWorker::readLogAsync(LogBuffer *logBuffer)
 
     m_logBuffer = logBuffer;
 
-    m_waitCondition.wakeOne();
+    if (m_logBuffer) {
+        m_waitCondition.wakeOne();
+    }
 }
 
-void DriverWorker::cancelIo()
+void DriverWorker::cancelAsyncIo()
 {
     QMutexLocker locker(&m_mutex);
 
     m_cancelled = true;
 
-    m_waitCondition.wakeOne();
-
-    if (m_isWorking) {
+    if (m_isLogReading) {
         m_device->cancelIo();
 
         do {
-            m_cancelledCondition.wait(&m_mutex);
-        } while (m_isWorking);
+            m_waitCondition.wait(&m_mutex);
+        } while (m_isLogReading);
     }
 }
 
@@ -56,33 +54,46 @@ void DriverWorker::abort()
 {
     m_aborted = true;
 
-    cancelIo();
+    cancelAsyncIo();
 }
 
 bool DriverWorker::waitLogBuffer()
 {
     QMutexLocker locker(&m_mutex);
 
-    while (!m_logBuffer) {
+    while (!m_logBuffer && !m_cancelled) {
         if (m_aborted)
             return false;
 
         m_waitCondition.wait(&m_mutex);
     }
 
+    m_isLogReading = true;
+
     return true;
+}
+
+void DriverWorker::emitReadLogResult(bool success,
+                                     const QString &errorMessage)
+{
+    QMutexLocker locker(&m_mutex);
+
+    m_isLogReading = false;
+
+    LogBuffer *logBuffer = m_logBuffer;
+    m_logBuffer = nullptr;
+
+    emit readLogResult(logBuffer, success, errorMessage);
+
+    if (m_cancelled) {
+        m_waitCondition.wakeOne();
+    }
 }
 
 void DriverWorker::readLog()
 {
-    // Lock logBuffer
-    {
-        QMutexLocker locker(&m_mutex);
-        if (m_cancelled) {
-            return;
-        }
-        m_isWorking = true;
-    }
+    if (!waitLogBuffer())
+        return;
 
     QByteArray &array = m_logBuffer->array();
     int nr;
@@ -99,17 +110,5 @@ void DriverWorker::readLog()
         errorMessage = OsUtil::lastErrorMessage();
     }
 
-    m_logBuffer = nullptr;
-
-    // Unlock logBuffer
-    {
-        QMutexLocker locker(&m_mutex);
-        m_isWorking = false;
-        if (m_cancelled) {
-            m_cancelledCondition.wakeOne();
-            return;
-        }
-    }
-
-    emit readLogResult(success, errorMessage);
+    emitReadLogResult(success, errorMessage);
 }

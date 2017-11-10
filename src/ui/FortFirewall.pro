@@ -10,6 +10,7 @@ SOURCES += \
     log/logbuffer.cpp \
     log/logentry.cpp \
     log/logentryblocked.cpp \
+    log/logmanager.cpp \
     conf/addressgroup.cpp \
     conf/appgroup.cpp \
     conf/firewallconf.cpp \
@@ -42,6 +43,7 @@ HEADERS += \
     log/logbuffer.h \
     log/logentry.h \
     log/logentryblocked.h \
+    log/logmanager.h \
     conf/addressgroup.h \
     conf/appgroup.h \
     conf/firewallconf.h \

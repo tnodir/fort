@@ -14,8 +14,7 @@
 #include "conf/firewallconf.h"
 #include "driver/drivermanager.h"
 #include "fortsettings.h"
-#include "log/logbuffer.h"
-#include "log/logentryblocked.h"
+#include "log/logmanager.h"
 #include "task/taskinfo.h"
 #include "task/taskmanager.h"
 #include "translationmanager.h"
@@ -35,6 +34,7 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_firewallConf(new FirewallConf(this)),
     m_firewallConfToEdit(nullConf()),
     m_driverManager(new DriverManager(this)),
+    m_logManager(new LogManager(m_driverManager->driverWorker(), m_driverManager)),
     m_taskManager(new TaskManager(this, this))
 {
     setupDriver();
@@ -51,12 +51,19 @@ FortManager::FortManager(FortSettings *fortSettings,
     setupTrayIcon();
 }
 
+FortManager::~FortManager()
+{
+    closeDriver();
+}
+
 void FortManager::registerQmlTypes()
 {
     qmlRegisterUncreatableType<DriverManager>("com.fortfirewall", 1, 0, "DriverManager",
                                              "Singleton");
     qmlRegisterUncreatableType<FortSettings>("com.fortfirewall", 1, 0, "FortSettings",
                                              "Singleton");
+    qmlRegisterUncreatableType<LogManager>("com.fortfirewall", 1, 0, "LogManager",
+                                           "Singleton");
     qmlRegisterUncreatableType<TranslationManager>("com.fortfirewall", 1, 0, "TranslationManager",
                                                    "Singleton");
     qmlRegisterUncreatableType<TaskManager>("com.fortfirewall", 1, 0, "TaskManager",
@@ -67,9 +74,6 @@ void FortManager::registerQmlTypes()
     qmlRegisterType<AddressGroup>("com.fortfirewall", 1, 0, "AddressGroup");
     qmlRegisterType<AppGroup>("com.fortfirewall", 1, 0, "AppGroup");
     qmlRegisterType<FirewallConf>("com.fortfirewall", 1, 0, "FirewallConf");
-
-    qmlRegisterType<LogBuffer>("com.fortfirewall", 1, 0, "LogBuffer");
-    qmlRegisterType<LogEntryBlocked>("com.fortfirewall", 1, 0, "LogEntryBlocked");
 
     qmlRegisterType<FileUtil>("com.fortfirewall", 1, 0, "FileUtil");
     qmlRegisterType<GuiUtil>("com.fortfirewall", 1, 0, "GuiUtil");
@@ -85,7 +89,16 @@ bool FortManager::setupDriver()
         return false;
     }
 
+    m_logManager->setLogReadingEnabled(true);
+
     return true;
+}
+
+void FortManager::closeDriver()
+{
+    m_logManager->setLogReadingEnabled(false);
+
+    m_driverManager->closeDevice();
 }
 
 void FortManager::setupTrayIcon()

@@ -19,20 +19,23 @@ public:
     void run() override;
 
 signals:
-    void readLogResult(bool success, const QString &errorMessage);
+    void readLogResult(LogBuffer *logBuffer, bool success,
+                       const QString &errorMessage);
 
 public slots:
     void readLogAsync(LogBuffer *logBuffer);
-    void cancelIo();
+    void cancelAsyncIo();
     void abort();
 
 private:
     bool waitLogBuffer();
+    void emitReadLogResult(bool success,
+                           const QString &errorMessage = QString());
 
     void readLog();
 
 private:
-    volatile bool m_isWorking;
+    volatile bool m_isLogReading;
     volatile bool m_cancelled;
     volatile bool m_aborted;
 
@@ -42,7 +45,6 @@ private:
 
     QMutex m_mutex;
     QWaitCondition m_waitCondition;
-    QWaitCondition m_cancelledCondition;
 };
 
 #endif // DRIVERWORKER_H

@@ -6,7 +6,6 @@
 class Device;
 class DriverWorker;
 class FirewallConf;
-class LogBuffer;
 
 class DriverManager : public QObject
 {
@@ -17,6 +16,8 @@ public:
     explicit DriverManager(QObject *parent = nullptr);
     virtual ~DriverManager();
 
+    DriverWorker *driverWorker() const { return m_driverWorker; }
+
     QString errorMessage() const { return m_errorMessage; }
 
     bool isDeviceOpened() const;
@@ -24,17 +25,12 @@ public:
 signals:
     void errorMessageChanged();
 
-    void readLogResult(bool success, const QString &errorMessage);
-
 public slots:
     bool openDevice();
-
-    void cancelAsyncIo();
+    bool closeDevice();
 
     bool writeConf(const FirewallConf &conf);
     bool writeConfFlags(const FirewallConf &conf);
-
-    void readLogAsync(LogBuffer *logBuffer);
 
 private:
     void setErrorMessage(const QString &errorMessage);
