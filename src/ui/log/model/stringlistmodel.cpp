@@ -20,6 +20,13 @@ QVariant StringListModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
+void StringListModel::setList(const QStringList &list)
+{
+    beginResetModel();
+    m_list = list;
+    endResetModel();
+}
+
 void StringListModel::insert(const QString &text, int row)
 {
     row = adjustRow(row);

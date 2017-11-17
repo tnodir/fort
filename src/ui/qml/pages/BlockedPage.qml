@@ -6,26 +6,14 @@ import com.fortfirewall 1.0
 
 BasePage {
 
-    readonly property DriverManager driverManager: fortManager.driverManager
+    readonly property LogManager logManager: fortManager.logManager
 
     property bool logReadingEnabled: false
     property bool addressResolvingEnabled: false
 
-    // TODO: Use SHGetFileInfo() to get app's display name and icon
-    property var appNames: []
-    property var appPaths: []
-    property var appPathIpMap: ({})
-    property var appPathIpArray: ({})
-
-    property var hostNames: ({})
-
-    function readLogAsync() {
-        driverManager.readLogAsync(logBuffer);
-    }
-
-    function cancelAsyncIo() {
-        driverManager.cancelAsyncIo();
-    }
+    readonly property string currentAppPath:
+        (appListView.currentIndex >= 0 && appListView.currentItem)
+        ? appListView.currentItem.appPath : ""
 
     function switchLogReading(enable) {
         if (logReadingEnabled === enable)
@@ -34,12 +22,6 @@ BasePage {
         logReadingEnabled = enable;
 
         fortManager.setLogBlocked(enable);
-
-        if (enable) {
-            readLogAsync();
-        } else {
-            cancelAsyncIo();
-        }
     }
 
     function switchResolveAddresses(enable) {
@@ -47,85 +29,10 @@ BasePage {
             return;
 
         addressResolvingEnabled = enable;
-
-        if (!enable) {
-            hostInfo.clear();
-        }
     }
 
     function clearAppPaths() {
-        appNames = [];
-        appPaths = [];
-        appPathIpMap = ({});
-        appPathIpArray = ({});
-
-        hostNames = ({});
-        hostInfo.clear();
-
-        refreshListViews();
-    }
-
-    function processLogBuffer() {
-        var isNewEntry = false;
-
-        while (logBuffer.read(logEntry)) {
-            var path = getEntryPath(logEntry);
-            var ipText = netUtil.ip4ToText(logEntry.ip);
-
-            var ipTextsMap = appPathIpMap[path];
-            if (!ipTextsMap) {
-                ipTextsMap = ({});
-                appPathIpMap[path] = ipTextsMap;
-                appPathIpArray[path] = [];
-                appNames.push(fileUtil.fileName(path));
-                appPaths.push(path);
-
-                isNewEntry = true;
-            }
-
-            var ipCount = ipTextsMap[ipText];
-            ipTextsMap[ipText] = (ipCount || 0) + 1;
-
-            var ipTextsArray = appPathIpArray[path];
-            if (!ipCount) {
-                if (ipTextsArray.length > 64) {
-                    var oldIp = ipTextsArray.pop();
-                    delete ipTextsMap[oldIp];
-                }
-                ipTextsArray.unshift(ipText);
-
-                isNewEntry = true;
-            }
-
-            // Host name
-            if (hostNames[ipText] === undefined) {
-                hostNames[ipText] = false;
-                if (addressResolvingEnabled) {
-                    hostInfo.lookupHost(ipText);
-                }
-            }
-        }
-
-        if (isNewEntry) {
-            refreshListViews();
-        }
-    }
-
-    function getEntryPath(logEntry) {
-        const kernelPath = logEntry.kernelPath;
-        if (kernelPath) {
-            return fileUtil.kernelPathToPath(kernelPath);
-        }
-
-        return osUtil.pidToPath(logEntry.pid);
-    }
-
-    function refreshListViews() {
-        const curIndex = appListView.currentIndex;
-        appListView.model = undefined;
-
-        appListView.model = appNames;
-        appListView.currentIndex = curIndex;
+        logManager.clearModels();
     }
 
     Connections {
@@ -136,36 +43,8 @@ BasePage {
         }
     }
 
-    Connections {
-        target: driverManager
-        onReadLogResult: {
-            if (success) {
-                processLogBuffer();
-            }
-
-            if (logReadingEnabled) {
-                readLogAsync();
-            }
-        }
-    }
-
-    HostInfo {
-        id: hostInfo
-        onLookupFinished: {
-            if (addressResolvingEnabled) {
-                hostNames[address] = hostName;
-                if (hostName) {
-                    refreshListViews();
-                }
-            }
-        }
-    }
-
-    LogBuffer {
-        id: logBuffer
-    }
-    LogEntryBlocked {
-        id: logEntry
+    HostInfoCache {
+        id: hostInfoCache
     }
 
     ColumnLayout {
@@ -214,6 +93,8 @@ BasePage {
                     Layout.fillHeight: true
                     spacing: 10
 
+                    model: logManager.appBlockedModel()
+
                     highlightRangeMode: ListView.ApplyRange
                     highlightResizeDuration: 0
                     highlightMoveDuration: 200
@@ -230,9 +111,13 @@ BasePage {
                     }
 
                     delegate: Row {
+                        id: appItem
                         width: appListView.width
                         spacing: 6
 
+                        readonly property string appPath: modelData
+
+                        // TODO: Use SHGetFileInfo() to get app's display name and icon
                         Image {
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.verticalCenterOffset: 1
@@ -241,7 +126,7 @@ BasePage {
                         Label {
                             font.pixelSize: 20
                             elide: Text.ElideRight
-                            text: modelData
+                            text: fileUtil.fileName(appItem.appPath)
                         }
                     }
 
@@ -262,19 +147,14 @@ BasePage {
                     Layout.fillHeight: true
                     spacing: 4
 
-                    model: {
-                        const curIndex = appListView.currentIndex;
-                        if (curIndex < 0)
-                            return undefined;
-
-                        const path = appPaths[curIndex];
-                        return appPathIpArray[path];
-                    }
+                    model: logManager.ipListModel(currentAppPath)
 
                     delegate: Label {
                         width: ipListView.width
                         elide: Text.ElideRight
-                        text: hostNames[ipText] || ipText
+                        text: (addressResolvingEnabled && hostInfoCache.dummyBool
+                               && hostInfoCache.hostName(ipText)) || ipText
+
                         readonly property string ipText: modelData
                     }
                 }
@@ -283,7 +163,7 @@ BasePage {
 
         TextFieldFrame {
             Layout.fillWidth: true
-            text: appPaths[appListView.currentIndex] || ""
+            text: currentAppPath || ""
         }
     }
 }

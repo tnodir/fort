@@ -4,12 +4,32 @@
 #include "../../util/net/netutil.h"
 #include "../../util/osutil.h"
 #include "../logentryblocked.h"
+#include "iplistmodel.h"
 
-#define IP_LIST_COUNT_MAX   64
+#define IP_LIST_SIZE_MAX    64
 
 AppBlockedModel::AppBlockedModel(QObject *parent) :
-    StringListModel(parent)
+    StringListModel(parent),
+    m_ipListModel(new IpListModel(this))
 {
+}
+
+QAbstractItemModel *AppBlockedModel::ipListModel(const QString &appPath) const
+{
+    if (appPath != m_ipListModel->appPath()) {
+        m_ipListModel->setAppPath(appPath);
+        m_ipListModel->setList(m_appIpList.value(appPath));
+    }
+
+    return m_ipListModel;
+}
+
+void AppBlockedModel::clear()
+{
+    m_appIpList.clear();
+    m_appIpSet.clear();
+
+    setList(QStringList());
 }
 
 void AppBlockedModel::addLogEntry(const LogEntryBlocked &logEntry)
@@ -34,10 +54,16 @@ void AppBlockedModel::addLogEntry(const LogEntryBlocked &logEntry)
     ipList.prepend(ipText);
 
     if (isNewApp) {
-        insert(appPath);
-    } else if (ipList.size() > IP_LIST_COUNT_MAX) {
-        const QString oldIpText = ipList.takeLast();
-        ipSet.remove(oldIpText);
+        insert(appPath);  // update at the end to refresh the view
+    } else {
+        if (ipList.size() > IP_LIST_SIZE_MAX) {
+            const QString oldIpText = ipList.takeLast();
+            ipSet.remove(oldIpText);
+        }
+
+        if (appPath == m_ipListModel->appPath()) {
+            m_ipListModel->setList(ipList);
+        }
     }
 }
 

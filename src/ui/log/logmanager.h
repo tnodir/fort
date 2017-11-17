@@ -25,6 +25,9 @@ signals:
 
 public slots:
     QAbstractItemModel *appBlockedModel() const;
+    QAbstractItemModel *ipListModel(const QString &appPath) const;
+
+    void clearModels() const;
 
     void setLogReadingEnabled(bool enabled);
 

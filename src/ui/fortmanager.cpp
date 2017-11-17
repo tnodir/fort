@@ -20,7 +20,7 @@
 #include "translationmanager.h"
 #include "util/fileutil.h"
 #include "util/guiutil.h"
-#include "util/net/hostinfo.h"
+#include "util/net/hostinfocache.h"
 #include "util/net/netutil.h"
 #include "util/osutil.h"
 
@@ -77,7 +77,7 @@ void FortManager::registerQmlTypes()
 
     qmlRegisterType<FileUtil>("com.fortfirewall", 1, 0, "FileUtil");
     qmlRegisterType<GuiUtil>("com.fortfirewall", 1, 0, "GuiUtil");
-    qmlRegisterType<HostInfo>("com.fortfirewall", 1, 0, "HostInfo");
+    qmlRegisterType<HostInfoCache>("com.fortfirewall", 1, 0, "HostInfoCache");
     qmlRegisterType<NetUtil>("com.fortfirewall", 1, 0, "NetUtil");
     qmlRegisterType<OsUtil>("com.fortfirewall", 1, 0, "OsUtil");
 }

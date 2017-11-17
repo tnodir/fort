@@ -1,0 +1,40 @@
+#ifndef HOSTINFOCACHE_H
+#define HOSTINFOCACHE_H
+
+#include <QObject>
+#include <QHash>
+
+class HostInfo;
+
+class HostInfoCache : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(bool dummyBool READ dummyBool NOTIFY cacheChanged)
+
+public:
+    explicit HostInfoCache(QObject *parent = nullptr);
+
+    bool dummyBool() const { return true; }
+
+signals:
+    void cacheChanged();
+
+public slots:
+    QString hostName(const QString &address);
+
+    void clear();
+
+private slots:
+    void handleFinishedLookup(const QString &address,
+                              const QString &hostName);
+
+private:
+    void emitCacheChanged();
+
+private:
+    HostInfo *m_hostInfo;
+
+    QHash<QString, QString> m_cache;
+};
+
+#endif // HOSTINFOCACHE_H

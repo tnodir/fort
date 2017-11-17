@@ -20,6 +20,7 @@ SOURCES += \
     log/logentryblocked.cpp \
     log/logmanager.cpp \
     log/model/appblockedmodel.cpp \
+    log/model/iplistmodel.cpp \
     log/model/stringlistmodel.cpp \
     mainwindow.cpp \
     task/taskinfo.cpp \
@@ -33,6 +34,7 @@ SOURCES += \
     util/fileutil.cpp \
     util/guiutil.cpp \
     util/net/hostinfo.cpp \
+    util/net/hostinfocache.cpp \
     util/net/hostinfoworker.cpp \
     util/net/ip4range.cpp \
     util/net/netdownloader.cpp \
@@ -55,6 +57,7 @@ HEADERS += \
     log/logentryblocked.h \
     log/logmanager.h \
     log/model/appblockedmodel.h \
+    log/model/iplistmodel.h \
     log/model/stringlistmodel.h \
     mainwindow.h \
     task/taskinfo.h \
@@ -68,6 +71,7 @@ HEADERS += \
     util/fileutil.h \
     util/guiutil.h \
     util/net/hostinfo.h \
+    util/net/hostinfocache.h \
     util/net/hostinfoworker.h \
     util/net/ip4range.h \
     util/net/netdownloader.h \

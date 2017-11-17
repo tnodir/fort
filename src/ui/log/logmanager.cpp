@@ -21,6 +21,16 @@ QAbstractItemModel *LogManager::appBlockedModel() const
     return m_appBlockedModel;
 }
 
+QAbstractItemModel *LogManager::ipListModel(const QString &appPath) const
+{
+    return m_appBlockedModel->ipListModel(appPath);
+}
+
+void LogManager::clearModels() const
+{
+    m_appBlockedModel->clear();
+}
+
 void LogManager::setErrorMessage(const QString &errorMessage)
 {
     if (m_errorMessage != errorMessage) {
