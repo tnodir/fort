@@ -15,6 +15,8 @@
 #include "driver/drivermanager.h"
 #include "fortsettings.h"
 #include "log/logmanager.h"
+#include "log/model/appblockedmodel.h"
+#include "log/model/iplistmodel.h"
 #include "task/taskinfo.h"
 #include "task/taskmanager.h"
 #include "translationmanager.h"
@@ -62,8 +64,14 @@ void FortManager::registerQmlTypes()
                                              "Singleton");
     qmlRegisterUncreatableType<FortSettings>("com.fortfirewall", 1, 0, "FortSettings",
                                              "Singleton");
+
     qmlRegisterUncreatableType<LogManager>("com.fortfirewall", 1, 0, "LogManager",
                                            "Singleton");
+    qmlRegisterUncreatableType<AppBlockedModel>("com.fortfirewall", 1, 0, "AppBlockedModel",
+                                                "Singleton");
+    qmlRegisterUncreatableType<IpListModel>("com.fortfirewall", 1, 0, "IpListModel",
+                                            "Singleton");
+
     qmlRegisterUncreatableType<TranslationManager>("com.fortfirewall", 1, 0, "TranslationManager",
                                                    "Singleton");
     qmlRegisterUncreatableType<TaskManager>("com.fortfirewall", 1, 0, "TaskManager",

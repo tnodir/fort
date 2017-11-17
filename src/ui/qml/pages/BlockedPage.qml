@@ -7,6 +7,7 @@ import com.fortfirewall 1.0
 BasePage {
 
     readonly property LogManager logManager: fortManager.logManager
+    readonly property AppBlockedModel appBlockedModel: logManager.appBlockedModel
 
     property bool logReadingEnabled: false
     property bool addressResolvingEnabled: false
@@ -93,7 +94,7 @@ BasePage {
                     Layout.fillHeight: true
                     spacing: 10
 
-                    model: logManager.appBlockedModel()
+                    model: appBlockedModel
 
                     highlightRangeMode: ListView.ApplyRange
                     highlightResizeDuration: 0
@@ -147,7 +148,7 @@ BasePage {
                     Layout.fillHeight: true
                     spacing: 4
 
-                    model: logManager.ipListModel(currentAppPath)
+                    model: appBlockedModel.ipListModel(currentAppPath)
 
                     delegate: Label {
                         width: ipListView.width

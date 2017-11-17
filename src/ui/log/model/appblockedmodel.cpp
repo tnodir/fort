@@ -14,7 +14,7 @@ AppBlockedModel::AppBlockedModel(QObject *parent) :
 {
 }
 
-QAbstractItemModel *AppBlockedModel::ipListModel(const QString &appPath) const
+IpListModel *AppBlockedModel::ipListModel(const QString &appPath) const
 {
     if (appPath != m_ipListModel->appPath()) {
         m_ipListModel->setAppPath(appPath);

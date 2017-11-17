@@ -1,7 +1,6 @@
 #ifndef LOGMANAGER_H
 #define LOGMANAGER_H
 
-#include <QAbstractItemModel>
 #include <QObject>
 
 class AppBlockedModel;
@@ -12,11 +11,14 @@ class LogEntry;
 class LogManager : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(AppBlockedModel *appBlockedModel READ appBlockedModel CONSTANT)
     Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
 
 public:
     explicit LogManager(DriverWorker *driverWorker,
                         QObject *parent = nullptr);
+
+    AppBlockedModel *appBlockedModel() const { return m_appBlockedModel; }
 
     QString errorMessage() const { return m_errorMessage; }
 
@@ -24,8 +26,6 @@ signals:
     void errorMessageChanged();
 
 public slots:
-    QAbstractItemModel *appBlockedModel() const;
-    QAbstractItemModel *ipListModel(const QString &appPath) const;
 
     void clearModels() const;
 

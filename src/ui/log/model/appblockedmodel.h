@@ -21,7 +21,7 @@ public:
 signals:
 
 public slots:
-    QAbstractItemModel *ipListModel(const QString &appPath) const;
+    IpListModel *ipListModel(const QString &appPath) const;
 
     void clear();
 
