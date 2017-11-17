@@ -56,6 +56,11 @@ void StringListModel::replace(const QString &text, int row)
     dataChanged(modelIndex, modelIndex);
 }
 
+void StringListModel::clear()
+{
+    setList(QStringList());
+}
+
 int StringListModel::adjustRow(int row) const
 {
     return (row < 0) ? (m_list.size() + 1 + row) : row;

@@ -33,6 +33,8 @@ BasePage {
     }
 
     function clearAppPaths() {
+        appListView.currentIndex = -1;
+
         logManager.clearModels();
     }
 
@@ -116,7 +118,7 @@ BasePage {
                         width: appListView.width
                         spacing: 6
 
-                        readonly property string appPath: modelData
+                        readonly property string appPath: display
 
                         // TODO: Use SHGetFileInfo() to get app's display name and icon
                         Image {
@@ -156,7 +158,7 @@ BasePage {
                         text: (addressResolvingEnabled && hostInfoCache.dummyBool
                                && hostInfoCache.hostName(ipText)) || ipText
 
-                        readonly property string ipText: modelData
+                        readonly property string ipText: display
                     }
                 }
             }

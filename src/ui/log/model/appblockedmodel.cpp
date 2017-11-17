@@ -29,7 +29,9 @@ void AppBlockedModel::clear()
     m_appIpList.clear();
     m_appIpSet.clear();
 
-    setList(QStringList());
+    m_ipListModel->clear();
+
+    StringListModel::clear();
 }
 
 void AppBlockedModel::addLogEntry(const LogEntryBlocked &logEntry)

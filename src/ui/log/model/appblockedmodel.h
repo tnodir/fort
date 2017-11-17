@@ -23,7 +23,7 @@ signals:
 public slots:
     IpListModel *ipListModel(const QString &appPath) const;
 
-    void clear();
+    void clear() override;
 
 private:
     static QString getEntryPath(const LogEntryBlocked &logEntry);

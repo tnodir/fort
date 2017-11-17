@@ -24,6 +24,7 @@ protected:
 signals:
 
 public slots:
+    virtual void clear();
 
 private:
     int adjustRow(int row) const;

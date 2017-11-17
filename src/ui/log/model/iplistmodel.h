@@ -16,6 +16,7 @@ public:
 signals:
 
 public slots:
+    void clear() override;
 
 private:
     QString m_appPath;
