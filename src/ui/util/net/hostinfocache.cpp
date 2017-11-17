@@ -6,6 +6,8 @@ HostInfoCache::HostInfoCache(QObject *parent) :
     QObject(parent),
     m_hostInfo(new HostInfo(this))
 {
+    connect(m_hostInfo, &HostInfo::lookupFinished,
+            this, &HostInfoCache::handleFinishedLookup);
 }
 
 QString HostInfoCache::hostName(const QString &address)
