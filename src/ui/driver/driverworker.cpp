@@ -30,9 +30,7 @@ void DriverWorker::readLogAsync(LogBuffer *logBuffer)
 
     m_logBuffer = logBuffer;
 
-    if (m_logBuffer) {
-        m_waitCondition.wakeOne();
-    }
+    m_waitCondition.wakeOne();
 }
 
 void DriverWorker::cancelAsyncIo()
@@ -55,13 +53,14 @@ void DriverWorker::abort()
     m_aborted = true;
 
     cancelAsyncIo();
+    readLogAsync(nullptr);
 }
 
 bool DriverWorker::waitLogBuffer()
 {
     QMutexLocker locker(&m_mutex);
 
-    while (!m_logBuffer && !m_cancelled) {
+    while (!m_logBuffer || m_cancelled) {
         if (m_aborted)
             return false;
 
