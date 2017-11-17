@@ -71,7 +71,7 @@ void Test::setConf(Device &device)
 void Test::printLogs(LogBuffer &buf)
 {
     forever {
-        const LogEntry::LogType logType = buf.readType();
+        const LogEntry::LogType logType = buf.peekEntryType();
         if (logType == LogEntry::TypeNone)
             break;
 
@@ -79,8 +79,7 @@ void Test::printLogs(LogBuffer &buf)
 
         LogEntryBlocked entry;
 
-        if (!buf.read(&entry))
-            break;
+        buf.readEntryBlocked(&entry);
 
         const quint32 pid = entry.pid();
         QString kernelPath = entry.kernelPath();

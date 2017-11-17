@@ -31,7 +31,7 @@ void LogBuffer::prepareFor(int len)
     }
 }
 
-LogEntry::LogType LogBuffer::readType()
+LogEntry::LogType LogBuffer::peekEntryType()
 {
     if (m_offset >= m_top)
         return LogEntry::TypeNone;
@@ -43,7 +43,7 @@ LogEntry::LogType LogBuffer::readType()
     return static_cast<LogEntry::LogType>(type);
 }
 
-int LogBuffer::write(const LogEntryBlocked *logEntry)
+void LogBuffer::writeEntryBlocked(const LogEntryBlocked *logEntry)
 {
     const QString path = logEntry->kernelPath();
     const int pathLen = path.size() * sizeof(wchar_t);
@@ -62,14 +62,11 @@ int LogBuffer::write(const LogEntryBlocked *logEntry)
     }
 
     m_top += entrySize;
-
-    return entrySize;
 }
 
-int LogBuffer::read(LogEntryBlocked *logEntry)
+void LogBuffer::readEntryBlocked(LogEntryBlocked *logEntry)
 {
-    if (m_offset >= m_top)
-        return 0;
+    Q_ASSERT(m_offset < m_top);
 
     const char *input = this->input();
 
@@ -89,6 +86,4 @@ int LogBuffer::read(LogEntryBlocked *logEntry)
 
     const int entrySize = FortCommon::logBlockedSize(pathLen);
     m_offset += entrySize;
-
-    return entrySize;
 }

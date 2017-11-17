@@ -1,6 +1,9 @@
 #include "logentry.h"
 
-LogEntry::LogEntry(QObject *parent) :
-    QObject(parent)
+LogEntry::LogEntry()
+{
+}
+
+LogEntry::~LogEntry()
 {
 }

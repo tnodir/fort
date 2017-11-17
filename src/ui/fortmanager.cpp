@@ -34,7 +34,7 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_firewallConf(new FirewallConf(this)),
     m_firewallConfToEdit(nullConf()),
     m_driverManager(new DriverManager(this)),
-    m_logManager(new LogManager(m_driverManager->driverWorker(), m_driverManager)),
+    m_logManager(new LogManager(m_driverManager->driverWorker(), this)),
     m_taskManager(new TaskManager(this, this))
 {
     setupDriver();

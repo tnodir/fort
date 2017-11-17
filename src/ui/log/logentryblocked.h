@@ -5,15 +5,9 @@
 
 class LogEntryBlocked : public LogEntry
 {
-    Q_OBJECT
-    Q_PROPERTY(quint32 ip READ ip WRITE setIp NOTIFY ipChanged)
-    Q_PROPERTY(quint32 pid READ pid WRITE setPid NOTIFY pidChanged)
-    Q_PROPERTY(QString kernelPath READ kernelPath WRITE setKernelPath NOTIFY kernelPathChanged)
-
 public:
     explicit LogEntryBlocked(quint32 ip = 0, quint32 pid = 0,
-                             const QString &kernelPath = QString(),
-                             QObject *parent = nullptr);
+                             const QString &kernelPath = QString());
 
     virtual LogEntry::LogType type() const { return AppBlocked; }
 
@@ -25,13 +19,6 @@ public:
 
     QString kernelPath() const { return m_kernelPath; }
     void setKernelPath(const QString &kernelPath);
-
-signals:
-    void ipChanged();
-    void pidChanged();
-    void kernelPathChanged();
-
-public slots:
 
 private:
     quint32 m_ip;

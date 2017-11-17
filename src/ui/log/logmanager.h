@@ -1,10 +1,13 @@
 #ifndef LOGMANAGER_H
 #define LOGMANAGER_H
 
+#include <QAbstractItemModel>
 #include <QObject>
 
+class AppBlockedModel;
 class DriverWorker;
 class LogBuffer;
+class LogEntry;
 
 class LogManager : public QObject
 {
@@ -21,6 +24,8 @@ signals:
     void errorMessageChanged();
 
 public slots:
+    QAbstractItemModel *appBlockedModel() const;
+
     void setLogReadingEnabled(bool enabled);
 
 private slots:
@@ -35,11 +40,17 @@ private:
     void readLogAsync(LogBuffer *logBuffer);
     void cancelAsyncIo();
 
+    LogBuffer *getFreeBuffer();
+
+    void readLogEntries(LogBuffer *logBuffer);
+
 private:
     bool m_logReadingEnabled;
 
     DriverWorker *m_driverWorker;
-    LogBuffer *m_logBuffer;
+    QList<LogBuffer *> m_freeBuffers;
+
+    AppBlockedModel *m_appBlockedModel;
 
     QString m_errorMessage;
 };

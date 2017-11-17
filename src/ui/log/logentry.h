@@ -3,11 +3,8 @@
 
 #include <QObject>
 
-class LogEntry : public QObject
+class LogEntry
 {
-    Q_OBJECT
-    Q_PROPERTY(LogType type READ type CONSTANT)
-
 public:
     enum LogType {
         TypeNone    = -1,
@@ -15,9 +12,9 @@ public:
         AppBlocked  = 0x01000000,
         UsageStat   = 0x02000000
     };
-    Q_ENUM(LogType)
 
-    explicit LogEntry(QObject *parent = nullptr);
+    explicit LogEntry();
+    virtual ~LogEntry();
 
     virtual LogEntry::LogType type() const = 0;
 };

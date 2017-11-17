@@ -7,10 +7,6 @@ TEMPLATE = app
 
 SOURCES += \
     main.cpp \
-    log/logbuffer.cpp \
-    log/logentry.cpp \
-    log/logentryblocked.cpp \
-    log/logmanager.cpp \
     conf/addressgroup.cpp \
     conf/appgroup.cpp \
     conf/firewallconf.cpp \
@@ -19,6 +15,12 @@ SOURCES += \
     fortcommon.cpp \
     fortmanager.cpp \
     fortsettings.cpp \
+    log/logbuffer.cpp \
+    log/logentry.cpp \
+    log/logentryblocked.cpp \
+    log/logmanager.cpp \
+    log/model/appblockedmodel.cpp \
+    log/model/stringlistmodel.cpp \
     mainwindow.cpp \
     task/taskinfo.cpp \
     task/taskmanager.cpp \
@@ -40,10 +42,6 @@ SOURCES += \
     util/stringutil.cpp
 
 HEADERS += \
-    log/logbuffer.h \
-    log/logentry.h \
-    log/logentryblocked.h \
-    log/logmanager.h \
     conf/addressgroup.h \
     conf/appgroup.h \
     conf/firewallconf.h \
@@ -52,6 +50,12 @@ HEADERS += \
     fortcommon.h \
     fortmanager.h \
     fortsettings.h \
+    log/logbuffer.h \
+    log/logentry.h \
+    log/logentryblocked.h \
+    log/logmanager.h \
+    log/model/appblockedmodel.h \
+    log/model/stringlistmodel.h \
     mainwindow.h \
     task/taskinfo.h \
     task/taskmanager.h \

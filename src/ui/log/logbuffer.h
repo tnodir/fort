@@ -21,7 +21,10 @@ public:
 
     QByteArray &array() { return m_array; }
 
-    LogEntry::LogType readType();
+    LogEntry::LogType peekEntryType();
+
+    void writeEntryBlocked(const LogEntryBlocked *logEntry);
+    void readEntryBlocked(LogEntryBlocked *logEntry);
 
 signals:
 
@@ -30,9 +33,6 @@ public slots:
         m_top = top;
         m_offset = 0;
     }
-
-    int write(const LogEntryBlocked *logEntry);
-    int read(LogEntryBlocked *logEntry);
 
 private:
     char *output();

@@ -25,14 +25,20 @@ void Test::logWriteRead()
 
     // Write
     for (int i = 0; i < testCount; ++i) {
-        QCOMPARE(buf.write(&entry), entrySize);
+        buf.writeEntryBlocked(&entry);
     }
 
     // Read
-    while (buf.read(&entry)) {
+    int readCount = 0;
+    while (buf.peekEntryType() == LogEntry::AppBlocked) {
+        buf.readEntryBlocked(&entry);
+
         QCOMPARE(entry.type(), LogEntry::AppBlocked);
         QCOMPARE(entry.ip(), ip);
         QCOMPARE(entry.pid(), pid);
         QCOMPARE(entry.kernelPath(), path);
+
+        ++readCount;
     }
+    QCOMPARE(readCount, testCount);
 }
