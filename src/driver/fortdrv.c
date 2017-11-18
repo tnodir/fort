@@ -170,7 +170,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   UINT32 remote_ip;
   UINT32 path_len;
   PVOID path;
-  BOOL blocked;
+  BOOL ip_included, blocked;
 
   UNUSED(layerData);
   UNUSED(flowContext);
@@ -197,13 +197,14 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   path_len = inMetaValues->processPath->size - sizeof(WCHAR);  // chop terminating zero
   path = inMetaValues->processPath->data;
 
-  blocked = fort_conf_ip_included(&conf_ref->conf, remote_ip)
+  ip_included = fort_conf_ip_included(&conf_ref->conf, remote_ip);
+  blocked = ip_included
     && fort_conf_app_blocked(&conf_ref->conf, path_len, path);
 
   fort_conf_ref_put(conf_ref);
 
   if (!blocked) {
-    if (conf_flags.log_stat) {
+    if (ip_included && conf_flags.log_stat) {
       fort_stat_flow_associate(inMetaValues->flowHandle);
     }
     goto permit;
