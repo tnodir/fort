@@ -28,8 +28,7 @@ typedef struct fort_conf_ref {
 } FORT_CONF_REF, *PFORT_CONF_REF;
 
 typedef struct fort_device {
-  FORT_CONF_FLAGS conf_flags;
-
+  UINT32 prov_boot	: 1;
   UINT32 is_opened	: 1;
 
   UINT32 connect4_id;
@@ -95,50 +94,65 @@ fort_conf_ref_take (void)
   return conf_ref;
 }
 
-static void
+static FORT_CONF_FLAGS
 fort_conf_ref_set (PFORT_CONF_REF conf_ref)
 {
   PFORT_CONF_REF old_conf_ref;
+  FORT_CONF_FLAGS old_conf_flags;
   KIRQL irq;
 
   old_conf_ref = fort_conf_ref_take();
-  if (old_conf_ref == NULL && conf_ref == NULL)
-    return;
 
   KeAcquireSpinLock(&g_device->conf_lock, &irq);
   {
     g_device->conf_ref = conf_ref;
 
+    if (old_conf_ref == NULL) {
+      RtlZeroMemory(&old_conf_flags, sizeof(FORT_CONF_FLAGS));
+      old_conf_flags.prov_boot = g_device->prov_boot;
+    }
+
     if (conf_ref != NULL) {
-      g_device->conf_flags = conf_ref->conf.flags;
+      g_device->prov_boot = conf_ref->conf.flags.prov_boot;
     }
   }
   KeReleaseSpinLock(&g_device->conf_lock, irq);
 
-  if (old_conf_ref != NULL)
+  if (old_conf_ref != NULL) {
+    old_conf_flags = old_conf_ref->conf.flags;
     fort_conf_ref_put(old_conf_ref);
+  }
+
+  return old_conf_flags;
 }
 
-static void
+static FORT_CONF_FLAGS
 fort_conf_ref_flags_set (const PFORT_CONF_FLAGS conf_flags)
 {
+  FORT_CONF_FLAGS old_conf_flags;
   KIRQL irq;
 
   KeAcquireSpinLock(&g_device->conf_lock, &irq);
   {
     PFORT_CONF_REF conf_ref = g_device->conf_ref;
 
-    if (conf_ref) {
+    if (conf_ref != NULL) {
       PFORT_CONF conf = &conf_ref->conf;
 
+      old_conf_flags = conf->flags;
       conf->flags = *conf_flags;
 
       fort_conf_app_perms_mask_init(conf);
 
-      g_device->conf_flags = conf->flags;
+      g_device->prov_boot = conf->flags.prov_boot;
+    } else {
+      RtlZeroMemory(&old_conf_flags, sizeof(FORT_CONF_FLAGS));
+      old_conf_flags.prov_boot = g_device->prov_boot;
     }
   }
   KeReleaseSpinLock(&g_device->conf_lock, irq);
+
+  return old_conf_flags;
 }
 
 static void
@@ -150,8 +164,8 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                           FWPS_CLASSIFY_OUT0 *classifyOut,
                           int flagsField, int localIpField, int remoteIpField)
 {
-  const FORT_CONF_FLAGS conf_flags = g_device->conf_flags;
   PFORT_CONF_REF conf_ref;
+  FORT_CONF_FLAGS conf_flags;
   UINT32 flags;
   UINT32 remote_ip;
   UINT32 path_len;
@@ -161,39 +175,38 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   UNUSED(layerData);
   UNUSED(flowContext);
 
-  if (!conf_flags.filter_enabled) {
-    return;
-  }
-
   conf_ref = fort_conf_ref_take();
 
   if (conf_ref == NULL) {
-    if (conf_flags.prov_boot)
+    if (g_device->prov_boot)
       goto block;
+
+    classifyOut->actionType = FWP_ACTION_CONTINUE;
     return;
   }
 
+  conf_flags = conf_ref->conf.flags;
+
   flags = inFixedValues->incomingValue[flagsField].value.uint32;
+
+  if (!conf_flags.filter_enabled
+      || (flags & FWP_CONDITION_FLAG_IS_LOOPBACK))
+    goto permit;
+
   remote_ip = inFixedValues->incomingValue[remoteIpField].value.uint32;
   path_len = inMetaValues->processPath->size - sizeof(WCHAR);  // chop terminating zero
   path = inMetaValues->processPath->data;
 
-  blocked = !(flags & FWP_CONDITION_FLAG_IS_LOOPBACK)
-    && fort_conf_ip_included(&conf_ref->conf, remote_ip)
+  blocked = fort_conf_ip_included(&conf_ref->conf, remote_ip)
     && fort_conf_app_blocked(&conf_ref->conf, path_len, path);
 
   fort_conf_ref_put(conf_ref);
 
   if (!blocked) {
-    classifyOut->actionType = FWP_ACTION_PERMIT;
-    if ((filter->flags & FWPS_FILTER_FLAG_CLEAR_ACTION_RIGHT)) {
-      classifyOut->rights &= ~FWPS_RIGHT_ACTION_WRITE;
-    }
-
     if (conf_flags.log_stat) {
       fort_stat_flow_associate(inMetaValues->flowHandle);
     }
-    return;
+    goto permit;
   }
 
   if (conf_flags.log_blocked) {
@@ -218,6 +231,14 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
  block:
   classifyOut->actionType = FWP_ACTION_BLOCK;
   classifyOut->rights &= ~FWPS_RIGHT_ACTION_WRITE;
+  return;
+
+ permit:
+  classifyOut->actionType = FWP_ACTION_PERMIT;
+  if ((filter->flags & FWPS_FILTER_FLAG_CLEAR_ACTION_RIGHT)) {
+    classifyOut->rights &= ~FWPS_RIGHT_ACTION_WRITE;
+  }
+  return;
 }
 
 static void
@@ -331,17 +352,15 @@ fort_callout_remove (void)
 
 static NTSTATUS
 fort_callout_force_reauth (PDEVICE_OBJECT device,
-                           FORT_CONF_FLAGS old_conf_flags)
+                           const FORT_CONF_FLAGS old_conf_flags,
+                           const FORT_CONF_FLAGS conf_flags)
 {
-  const FORT_CONF_FLAGS conf_flags = g_device->conf_flags;
   BOOL prov_changed = FALSE;
   NTSTATUS status;
 
   // Check provider filters
   if (old_conf_flags.prov_boot != conf_flags.prov_boot) {
     fort_prov_unregister();
-
-    old_conf_flags.log_stat = 0;  // flow filter unregistered
 
     status = fort_prov_register(conf_flags.prov_boot);
     if (!NT_SUCCESS(status)) {
@@ -367,7 +386,7 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
         return status;
       }
     }
-    
+
     prov_changed = TRUE;
   }
 
@@ -402,10 +421,6 @@ fort_device_create (PDEVICE_OBJECT device, PIRP irp)
     KeReleaseSpinLock(&g_device->conf_lock, irq);
   }
 
-  if (NT_SUCCESS(status)) {
-    status = fort_callout_install(device);
-  }
-
   fort_request_complete(irp, status);
 
   return status;
@@ -424,12 +439,16 @@ fort_device_close (PDEVICE_OBJECT device, PIRP irp)
 static NTSTATUS
 fort_device_cleanup (PDEVICE_OBJECT device, PIRP irp)
 {
-  UNUSED(device);
+  /* Clear conf */
+  {
+    const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(NULL);
+    FORT_CONF_FLAGS conf_flags;
 
-  fort_callout_remove();
-  fort_prov_reauth();
+    RtlZeroMemory(&conf_flags, sizeof(FORT_CONF_FLAGS));
+    conf_flags.prov_boot = g_device->prov_boot;
 
-  fort_conf_ref_set(NULL);
+    fort_callout_force_reauth(device, old_conf_flags, conf_flags);
+  }
 
   /* Device closed */
   {
@@ -480,10 +499,10 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
       if (conf_ref == NULL) {
         status = STATUS_INSUFFICIENT_RESOURCES;
       } else {
-        const FORT_CONF_FLAGS old_conf_flags = g_device->conf_flags;
+        const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(conf_ref);
+        const FORT_CONF_FLAGS conf_flags = conf_ref->conf.flags;
 
-        fort_conf_ref_set(conf_ref);
-        status = fort_callout_force_reauth(device, old_conf_flags);
+        status = fort_callout_force_reauth(device, old_conf_flags, conf_flags);
       }
     }
     break;
@@ -494,10 +513,9 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
 
     if (conf_flags->driver_version == FORT_DRIVER_VERSION
         && len == sizeof(FORT_CONF_FLAGS)) {
-      const FORT_CONF_FLAGS old_conf_flags = g_device->conf_flags;
+      const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_flags_set(conf_flags);
 
-      fort_conf_ref_flags_set(conf_flags);
-      status = fort_callout_force_reauth(device, old_conf_flags);
+      status = fort_callout_force_reauth(device, old_conf_flags, *conf_flags);
     }
     break;
   }
@@ -541,9 +559,11 @@ fort_driver_unload (PDRIVER_OBJECT driver)
   if (g_device != NULL) {
     fort_buffer_close(&g_device->buffer);
 
-    if (!g_device->conf_flags.prov_boot) {
+    if (!g_device->prov_boot) {
       fort_prov_unregister();
     }
+
+    fort_callout_remove();
   }
 
   RtlInitUnicodeString(&device_link, DOS_DEVICE_NAME);
@@ -613,14 +633,19 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 
       KeInitializeSpinLock(&g_device->conf_lock);
 
-      // Register filters provider
+      // Unegister old filters provider
       {
-        const BOOL is_boot = fort_prov_is_boot();
+        g_device->prov_boot = fort_prov_is_boot();
 
-        g_device->conf_flags.prov_boot = is_boot;
+        fort_prov_unregister();
+      }
 
-        fort_prov_unregister();  // to upgrade from old version
-        status = fort_prov_register(is_boot);
+      // Install callouts
+      status = fort_callout_install(device);
+
+      // Register filters provider
+      if (NT_SUCCESS(status)) {
+        status = fort_prov_register(g_device->prov_boot);
       }
     }
   }
