@@ -30,6 +30,8 @@ typedef struct fort_conf_ref {
 typedef struct fort_device {
   FORT_CONF_FLAGS conf_flags;
 
+  UINT32 is_opened	: 1;
+
   UINT32 connect4_id;
   UINT32 accept4_id;
   UINT32 flow4_id;
@@ -265,10 +267,6 @@ fort_callout_install (PDEVICE_OBJECT device)
   FWPS_CALLOUT0 c;
   NTSTATUS status;
 
-  if (g_device->connect4_id) {
-    return STATUS_SHARING_VIOLATION;  // Only one client may connect
-  }
-
   RtlZeroMemory(&c, sizeof(FWPS_CALLOUT0));
 
   c.notifyFn = fort_callout_notify;
@@ -389,9 +387,24 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
 static NTSTATUS
 fort_device_create (PDEVICE_OBJECT device, PIRP irp)
 {
-  NTSTATUS status;
+  NTSTATUS status = STATUS_SUCCESS;
 
-  status = fort_callout_install(device);
+  /* Device opened */
+  {
+    KIRQL irq;
+
+    KeAcquireSpinLock(&g_device->conf_lock, &irq);
+    if (g_device->is_opened) {
+      status = STATUS_SHARING_VIOLATION;  // Only one client may connect
+    } else {
+      g_device->is_opened = TRUE;
+    }
+    KeReleaseSpinLock(&g_device->conf_lock, irq);
+  }
+
+  if (NT_SUCCESS(status)) {
+    status = fort_callout_install(device);
+  }
 
   fort_request_complete(irp, status);
 
@@ -417,6 +430,15 @@ fort_device_cleanup (PDEVICE_OBJECT device, PIRP irp)
   fort_prov_reauth();
 
   fort_conf_ref_set(NULL);
+
+  /* Device closed */
+  {
+    KIRQL irq;
+
+    KeAcquireSpinLock(&g_device->conf_lock, &irq);
+    g_device->is_opened = FALSE;
+    KeReleaseSpinLock(&g_device->conf_lock, irq);
+  }
 
   fort_request_complete(irp, STATUS_SUCCESS);
 
