@@ -212,20 +212,22 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   if (conf_flags.log_blocked) {
     PIRP irp = NULL;
-    NTSTATUS irp_status;
     ULONG_PTR info;
+    NTSTATUS irp_status, status;
 
-    if (!NT_SUCCESS(fort_buffer_blocked_write(
+    status = fort_buffer_blocked_write(
         &g_device->buffer, remote_ip,
         (UINT32) inMetaValues->processId, path_len, path,
-        &irp, &irp_status, &info))) {
-      DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                 "FORT: Classify v4: Log buffer underflow: %d\n",
-                 FORT_LOG_BLOCKED_SIZE(path_len));
-    }
+        &irp, &irp_status, &info);
 
-    if (irp != NULL) {
-      fort_request_complete_info(irp, irp_status, info);
+    if (NT_SUCCESS(status)) {
+      if (irp != NULL) {
+        fort_request_complete_info(irp, irp_status, info);
+      }
+    } else {
+      DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                 "FORT: Classify v4: Log buffer error: %d (path len: %d)\n",
+                 status, path_len);
     }
   }
 
@@ -468,13 +470,16 @@ fort_device_cleanup (PDEVICE_OBJECT device, PIRP irp)
 static void
 fort_device_cancel_pending (PDEVICE_OBJECT device, PIRP irp)
 {
+  ULONG_PTR info;
+  NTSTATUS irp_status;
+
   UNUSED(device);
 
-  fort_buffer_cancel_pending(&g_device->buffer, irp);
+  irp_status = fort_buffer_cancel_pending(&g_device->buffer, irp, &info);
 
   IoReleaseCancelSpinLock(irp->CancelIrql);  /* before IoCompleteRequest()! */
 
-  fort_request_complete(irp, STATUS_CANCELLED);
+  fort_request_complete_info(irp, irp_status, info);
 }
 
 static NTSTATUS

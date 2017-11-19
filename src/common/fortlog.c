@@ -14,6 +14,8 @@
   ((FORT_LOG_BLOCKED_HEADER_SIZE + (path_len) \
     + (FORT_LOG_ALIGN - 1)) & ~(FORT_LOG_ALIGN - 1))
 
+#define FORT_LOG_BLOCKED_SIZE_MAX	FORT_LOG_BLOCKED_SIZE(FORT_LOG_PATH_MAX)
+
 #define fort_log_type(p)	(*((UINT32 *) (p)) & FORT_LOG_FLAG_TYPE_MASK)
 
 

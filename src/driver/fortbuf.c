@@ -41,7 +41,7 @@ fort_buffer_blocked_write (PFORT_BUFFER buf, UINT32 remote_ip, UINT32 pid,
                            UINT32 path_len, const PVOID path,
                            PIRP *irp, NTSTATUS *irp_status, ULONG_PTR *info)
 {
-  UINT32 len;
+  UINT32 len, new_top;
   PCHAR out;
   KIRQL irq;
   NTSTATUS status = STATUS_SUCCESS;
@@ -54,33 +54,35 @@ fort_buffer_blocked_write (PFORT_BUFFER buf, UINT32 remote_ip, UINT32 pid,
 
   KeAcquireSpinLock(&buf->lock, &irq);
 
+  new_top = buf->top + len;
+
   /* Try to directly write to pending client */
-  if (buf->irp) {
-    *irp = buf->irp;
-    buf->irp = NULL;
+  if (buf->irp != NULL) {
+    if (FORT_LOG_BLOCKED_SIZE_MAX > buf->out_len - new_top) {
+      *irp = buf->irp;
+      buf->irp = NULL;
 
-    *info = len;
-
-    if (buf->out_len < len) {
-      *irp_status = STATUS_BUFFER_TOO_SMALL;
-      /* fallback to buffer */
-    } else {
-      out = buf->out;
       *irp_status = STATUS_SUCCESS;
-      goto log_blocked;
+
+      *info = new_top;
+      new_top = 0;
     }
+
+    out = buf->out;
+  } else {
+    if (new_top > FORT_BUFFER_SIZE) {
+      status = STATUS_BUFFER_TOO_SMALL;
+      goto end;  /* drop on buffer overflow */
+    }
+
+    out = buf->data;
   }
 
-  if (len > FORT_BUFFER_SIZE - buf->top) {
-    status = STATUS_BUFFER_TOO_SMALL;
-    goto end;  /* drop on buffer overflow */
-  }
+  out += buf->top;
 
-  out = buf->data + buf->top;
-  buf->top += len;
-
- log_blocked:
   fort_log_blocked_write(out, remote_ip, pid, path_len, path);
+
+  buf->top = new_top;
 
  end:
   KeReleaseSpinLock(&buf->lock, irq);
@@ -100,8 +102,10 @@ fort_buffer_xmove (PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len,
   *info = buf->top;
 
   if (!buf->top) {
-    if (buf->irp) {
+    if (buf->irp != NULL) {
       status = STATUS_INSUFFICIENT_RESOURCES;
+    } else if (out_len < FORT_LOG_BLOCKED_SIZE_MAX) {
+      status = STATUS_BUFFER_TOO_SMALL;
     } else {
       buf->irp = irp;
       buf->out = out;
@@ -125,14 +129,26 @@ fort_buffer_xmove (PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len,
   return status;
 }
 
-static void
-fort_buffer_cancel_pending (PFORT_BUFFER buf, PIRP irp)
+static NTSTATUS
+fort_buffer_cancel_pending (PFORT_BUFFER buf, PIRP irp, ULONG_PTR *info)
 {
+  NTSTATUS status = STATUS_CANCELLED;
   KIRQL irq;
+
+  *info = 0;
 
   KeAcquireSpinLock(&buf->lock, &irq);
   if (irp == buf->irp) {
     buf->irp = NULL;
+
+    if (buf->top) {
+      *info = buf->top;
+      buf->top = 0;
+
+      status = STATUS_SUCCESS;
+    }
   }
   KeReleaseSpinLock(&buf->lock, irq);
+
+  return status;
 }
