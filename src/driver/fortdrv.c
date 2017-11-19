@@ -20,6 +20,7 @@
 #include "../common/fortprov.c"
 #include "fortbuf.c"
 #include "fortstat.c"
+#include "forttmr.c"
 
 typedef struct fort_conf_ref {
   UINT32 volatile refcount;
@@ -36,6 +37,7 @@ typedef struct fort_device {
   UINT32 flow4_id;
 
   FORT_BUFFER buffer;
+  FORT_TIMER timer;
 
   PFORT_CONF_REF volatile conf_ref;
   KSPIN_LOCK conf_lock;
@@ -358,7 +360,6 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
                            const FORT_CONF_FLAGS old_conf_flags,
                            const FORT_CONF_FLAGS conf_flags)
 {
-  BOOL prov_changed = FALSE;
   NTSTATUS status;
 
   // Check provider filters
@@ -369,10 +370,9 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
     if (!NT_SUCCESS(status)) {
       DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                  "FORT: Prov. Register: Error: %d\n", status);
-      return status;
     }
     
-    prov_changed = TRUE;
+    goto end;
   }
 
   // Check flow filter
@@ -386,24 +386,23 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
       if (!NT_SUCCESS(status)) {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                    "FORT: Prov. Flow Register: Error: %d\n", status);
-        return status;
       }
     }
 
-    prov_changed = TRUE;
+    goto end;
   }
 
-  // Check reauth filter
-  if (!prov_changed) {
-    status = fort_prov_reauth();
-    if (!NT_SUCCESS(status)) {
-      DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                 "FORT: Prov. Reauth: Error: %d\n", status);
-      return status;
-    }
+  // Force reauth filter
+  status = fort_prov_reauth();
+  if (!NT_SUCCESS(status)) {
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+               "FORT: Prov. Reauth: Error: %d\n", status);
   }
 
-  return STATUS_SUCCESS;
+ end:
+  fort_timer_update(&g_device->timer, conf_flags);
+
+  return status;
 }
 
 static NTSTATUS
@@ -563,6 +562,7 @@ fort_driver_unload (PDRIVER_OBJECT driver)
   UNICODE_STRING device_link;
 
   if (g_device != NULL) {
+    fort_timer_close(&g_device->timer);
     fort_buffer_close(&g_device->buffer);
 
     if (!g_device->prov_boot) {
@@ -581,7 +581,7 @@ fort_driver_unload (PDRIVER_OBJECT driver)
 static NTSTATUS
 fort_bfe_wait (void) {
   LARGE_INTEGER delay;
-  delay.QuadPart = (-5000000);  // sleep 500000us (500ms)
+  delay.QuadPart = -5000000;  // sleep 500000us (500ms)
   int count = 600;  // wait for 5 minutes
 
   do {
@@ -636,6 +636,7 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
       RtlZeroMemory(g_device, sizeof(FORT_DEVICE));
 
       fort_buffer_init(&g_device->buffer);
+      fort_timer_init(&g_device->timer, &g_device->buffer);
 
       KeInitializeSpinLock(&g_device->conf_lock);
 
