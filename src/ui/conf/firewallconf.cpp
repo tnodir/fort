@@ -142,6 +142,7 @@ void FirewallConf::copyFlags(const FirewallConf &o)
 void FirewallConf::copyTempFlags(const FirewallConf &o)
 {
     setLogBlocked(o.logBlocked());
+    setLogStat(o.logStat());
 }
 
 QVariant FirewallConf::toVariant() const

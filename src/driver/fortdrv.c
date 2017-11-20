@@ -207,7 +207,8 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   if (!blocked) {
     if (ip_included && conf_flags.log_stat) {
-      fort_stat_flow_associate(inMetaValues->flowHandle);
+      fort_stat_flow_associate(inMetaValues->flowHandle,
+        g_device->flow4_id, (UINT32) inMetaValues->processId);
     }
     goto permit;
   }
@@ -321,7 +322,7 @@ fort_callout_install (PDEVICE_OBJECT device)
 
   /* IPv4 flow callout */
   c.calloutKey = FORT_GUID_CALLOUT_FLOW_V4;
-  c.classifyFn = fort_callout_flow_v4;
+  c.classifyFn = fort_callout_flow_classify_v4;
 
   c.flowDeleteFn = fort_callout_flow_delete_v4;
   c.flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW;

@@ -55,6 +55,7 @@ public slots:
     bool applyConf(bool onlyFlags = false);
 
     void setLogBlocked(bool enable);
+    void setLogStat(bool enable);
 
     void setLanguage(int language);
 

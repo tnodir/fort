@@ -9,18 +9,18 @@ BasePage {
     readonly property LogManager logManager: fortManager.logManager
     readonly property AppBlockedModel appBlockedModel: logManager.appBlockedModel
 
-    property bool logReadingEnabled: false
+    property bool logBlockedEnabled: false
     property bool addressResolvingEnabled: false
 
     readonly property string currentAppPath:
         (appListView.currentIndex >= 0 && appListView.currentItem)
         ? appListView.currentItem.appPath : ""
 
-    function switchLogReading(enable) {
-        if (logReadingEnabled === enable)
+    function switchLogBlocked(enable) {
+        if (logBlockedEnabled === enable)
             return;
 
-        logReadingEnabled = enable;
+        logBlockedEnabled = enable;
 
         fortManager.setLogBlocked(enable);
     }
@@ -42,7 +42,7 @@ BasePage {
         target: mainPage
         onClosed: {
             switchResolveAddresses(false);
-            switchLogReading(false);
+            switchLogBlocked(false);
         }
     }
 
@@ -77,7 +77,7 @@ BasePage {
                 font.weight: Font.DemiBold
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Log Blocked Applications")
-                onToggled: switchLogReading(checked)
+                onToggled: switchLogBlocked(checked)
             }
         }
 

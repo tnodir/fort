@@ -1,15 +1,19 @@
 /* Fort Firewall Usage Statistics */
 
 static void
-fort_stat_flow_associate(UINT64 flowId)
+fort_stat_flow_associate (UINT64 flowId,
+                          UINT32 calloutId,
+                          UINT32 processId)
 {
-  //DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-  //           "FORT: Classify V4: %d %d %d\n", FWPS_IS_METADATA_FIELD_PRESENT(
-  //             inMetaValues, FWPS_METADATA_FIELD_FLOW_HANDLE),
-  //           inMetaValues->flowHandle, (UINT32) flowContext);
+  NTSTATUS status;
 
-  //const NTSTATUS status = FwpsFlowAssociateContext0(
-  //  flowId, FWPM_LAYER_STREAM_V4, FORT_GUID_CALLOUT_FLOW_V4, 1);
+  status = FwpsFlowAssociateContext0(
+    flowId, FWPS_LAYER_STREAM_V4, calloutId, processId);
+
+  DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+             "FORT: flow +: %d %d\n", flowId, processId);
+
+  //STATUS_OBJECT_NAME_EXISTS
 }
 
 static void
@@ -17,14 +21,25 @@ fort_callout_flow_delete_v4 (UINT16 layerId,
                              UINT32 calloutId,
                              UINT64 flowContext)
 {
+  UNUSED(layerId);
+  UNUSED(calloutId);
+
+  DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+             "FORT: flow -: %d\n", (UINT32) flowContext);
 }
 
 static void
-fort_callout_flow_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
-                      const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
-                      void *layerData,
-                      const FWPS_FILTER0 *filter,
-                      UINT64 flowContext,
-                      FWPS_CLASSIFY_OUT0 *classifyOut)
+fort_callout_flow_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
+                               const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
+                               FWPS_STREAM_CALLOUT_IO_PACKET0 *packet,
+                               const FWPS_FILTER0 *filter,
+                               UINT64 flowContext,
+                               FWPS_CLASSIFY_OUT0 *classifyOut)
 {
+  FWPS_STREAM_DATA0 *streamData = packet->streamData;
+
+  DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+             "FORT: flow >: %d %d %d\n", inMetaValues->flowHandle, flowContext, streamData->dataLength);
+
+  classifyOut->actionType = FWP_ACTION_CONTINUE;
 }

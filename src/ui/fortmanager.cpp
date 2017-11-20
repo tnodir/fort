@@ -306,6 +306,13 @@ void FortManager::setLogBlocked(bool enable)
     updateDriverConfFlags(m_firewallConf);
 }
 
+void FortManager::setLogStat(bool enable)
+{
+    m_firewallConf->setLogStat(enable);
+
+    updateDriverConfFlags(m_firewallConf);
+}
+
 void FortManager::setLanguage(int language)
 {
     if (!TranslationManager::instance()->switchLanguage(language))

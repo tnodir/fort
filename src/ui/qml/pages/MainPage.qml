@@ -67,6 +67,11 @@ Page {
             text: translationManager.dummyBool
                   && qsTranslate("qml", "Blocked")
         }
+        TabButton {
+            icon.source: "qrc:/images/chart_line.png"
+            text: translationManager.dummyBool
+                  && qsTranslate("qml", "Statistics")
+        }
     }
 
     SwipeView {
@@ -79,6 +84,7 @@ Page {
         ApplicationsPage {}
         SchedulePage {}
         BlockedPage {}
+        StatisticsPage {}
     }
 
     footer: Pane {
