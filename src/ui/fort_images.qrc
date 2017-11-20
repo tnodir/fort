@@ -1,10 +1,12 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
+    <file>images/accept.png</file>
     <file>images/application.png</file>
     <file>images/application_add.png</file>
     <file>images/application_delete.png</file>
     <file>images/application_double.png</file>
     <file>images/application_edit.png</file>
+    <file>images/application_error.png</file>
     <file>images/cancel.png</file>
     <file>images/chart_line.png</file>
     <file>images/clock.png</file>
@@ -19,6 +21,6 @@
     <file>images/run.png</file>
     <file>images/shield.png</file>
     <file>images/textfield_rename.png</file>
-    <file>images/zoom.png</file>
+    <file>images/tick.png</file>
 </qresource>
 </RCC>

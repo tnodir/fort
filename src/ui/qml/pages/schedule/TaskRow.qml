@@ -111,7 +111,7 @@ Row {
             anchors.centerIn: parent
             width: 30
             height: width
-            icon.source: taskInfo.running ? "qrc:/images/cross.png"
+            icon.source: taskInfo.running ? "qrc:/images/cancel.png"
                                           : "qrc:/images/run.png"
             onClicked: taskInfo.running ? taskInfo.abort()
                                         : taskInfo.run()

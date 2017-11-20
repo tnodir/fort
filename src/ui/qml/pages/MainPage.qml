@@ -63,7 +63,7 @@ Page {
                   && qsTranslate("qml", "Schedule")
         }
         TabButton {
-            icon.source: "qrc:/images/zoom.png"
+            icon.source: "qrc:/images/application_error.png"
             text: translationManager.dummyBool
                   && qsTranslate("qml", "Blocked")
         }
@@ -93,6 +93,7 @@ Page {
 
             Button {
                 enabled: confFlagsEdited || confEdited || scheduleEdited
+                icon.source: "qrc:/images/tick.png"
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "OK")
                 onClicked: {
@@ -107,6 +108,7 @@ Page {
             }
             Button {
                 enabled: confFlagsEdited || confEdited || scheduleEdited
+                icon.source: "qrc:/images/accept.png"
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Apply")
                 onClicked: {
@@ -120,11 +122,13 @@ Page {
                 }
             }
             Button {
+                icon.source: "qrc:/images/cancel.png"
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Cancel")
                 onClicked: closeWindow()
             }
             Button {
+                icon.source: "qrc:/images/cross.png"
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Quit")
                 onClicked: fortManager.exit()

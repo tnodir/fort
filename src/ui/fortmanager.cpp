@@ -378,7 +378,7 @@ void FortManager::updateTrayMenu()
     }
 
     menu->addSeparator();
-    addAction(menu, QIcon(":/images/cancel.png"), tr("Quit"),
+    addAction(menu, QIcon(":/images/cross.png"), tr("Quit"),
               this, SLOT(exit()));
 
     m_trayIcon->setContextMenu(menu);
