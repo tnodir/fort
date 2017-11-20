@@ -7,6 +7,7 @@ FirewallConf::FirewallConf(QObject *parent) :
     QObject(parent),
     m_provBoot(false),
     m_filterEnabled(true),
+    m_resolveAddress(false),
     m_logBlocked(false),
     m_logStat(false),
     m_appBlockAll(true),
@@ -29,6 +30,14 @@ void FirewallConf::setFilterEnabled(bool filterEnabled)
     if (m_filterEnabled != filterEnabled) {
         m_filterEnabled = filterEnabled;
         emit filterEnabledChanged();
+    }
+}
+
+void FirewallConf::setResolveAddress(bool resolveAddress)
+{
+    if (m_resolveAddress != resolveAddress) {
+        m_resolveAddress = resolveAddress;
+        emit resolveAddressChanged();
     }
 }
 
@@ -131,16 +140,18 @@ void FirewallConf::copyFlags(const FirewallConf &o)
 {
     setProvBoot(o.provBoot());
     setFilterEnabled(o.filterEnabled());
-    setLogStat(o.logStat());
     ipInclude()->setUseAll(o.ipInclude()->useAll());
     ipExclude()->setUseAll(o.ipExclude()->useAll());
     setAppBlockAll(o.appBlockAll());
     setAppAllowAll(o.appAllowAll());
     setAppGroupBits(o.appGroupBits());
+
+    copyImmediateFlags(o);
 }
 
-void FirewallConf::copyTempFlags(const FirewallConf &o)
+void FirewallConf::copyImmediateFlags(const FirewallConf &o)
 {
+    setResolveAddress(o.resolveAddress());
     setLogBlocked(o.logBlocked());
     setLogStat(o.logStat());
 }

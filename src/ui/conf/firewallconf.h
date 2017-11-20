@@ -13,6 +13,7 @@ class FirewallConf : public QObject
     Q_OBJECT
     Q_PROPERTY(bool provBoot READ provBoot WRITE setProvBoot NOTIFY provBootChanged)
     Q_PROPERTY(bool filterEnabled READ filterEnabled WRITE setFilterEnabled NOTIFY filterEnabledChanged)
+    Q_PROPERTY(bool resolveAddress READ resolveAddress WRITE setResolveAddress NOTIFY resolveAddressChanged)
     Q_PROPERTY(bool logBlocked READ logBlocked WRITE setLogBlocked NOTIFY logBlockedChanged)
     Q_PROPERTY(bool logStat READ logStat WRITE setLogStat NOTIFY logStatChanged)
     Q_PROPERTY(bool appBlockAll READ appBlockAll WRITE setAppBlockAll NOTIFY appBlockAllChanged)
@@ -30,6 +31,9 @@ public:
 
     bool filterEnabled() const { return m_filterEnabled; }
     void setFilterEnabled(bool filterEnabled);
+
+    bool resolveAddress() const { return m_resolveAddress; }
+    void setResolveAddress(bool resolveAddress);
 
     bool logBlocked() const { return m_logBlocked; }
     void setLogBlocked(bool logBlocked);
@@ -53,7 +57,7 @@ public:
     QQmlListProperty<AppGroup> appGroups();
 
     void copyFlags(const FirewallConf &o);
-    void copyTempFlags(const FirewallConf &o);
+    void copyImmediateFlags(const FirewallConf &o);
 
     QVariant toVariant() const;
     void fromVariant(const QVariant &v);
@@ -61,6 +65,7 @@ public:
 signals:
     void provBootChanged();
     void filterEnabledChanged();
+    void resolveAddressChanged();
     void logBlockedChanged();
     void logStatChanged();
     void appBlockAllChanged();
@@ -77,7 +82,9 @@ private:
     uint m_provBoot         : 1;
     uint m_filterEnabled    : 1;
 
-    uint m_logBlocked       : 1;  // transient
+    uint m_resolveAddress   : 1;
+
+    uint m_logBlocked       : 1;
     uint m_logStat          : 1;
 
     uint m_appBlockAll      : 1;

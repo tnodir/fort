@@ -19,17 +19,17 @@
         <translation>Конфигурация слишком большая</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="112"/>
+        <location filename="../util/confutil.cpp" line="113"/>
         <source>Number of Application Groups must be &lt; %1</source>
         <translation>Количество групп приложений должно быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="124"/>
+        <location filename="../util/confutil.cpp" line="125"/>
         <source>Length of Application Group&apos;s Name must be &lt; %1</source>
         <translation>Длина наименования группы приложения должна быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="166"/>
+        <location filename="../util/confutil.cpp" line="167"/>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Длина пути приложения должна быть &lt; %1</translation>
     </message>
@@ -37,17 +37,17 @@
 <context>
     <name>FortManager</name>
     <message>
-        <location filename="../fortmanager.cpp" line="337"/>
+        <location filename="../fortmanager.cpp" line="358"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="342"/>
+        <location filename="../fortmanager.cpp" line="363"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="357"/>
+        <location filename="../fortmanager.cpp" line="378"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -83,33 +83,33 @@
 <context>
     <name>Ip4Range</name>
     <message>
-        <location filename="../util/ip4range.cpp" line="32"/>
+        <location filename="../util/net/ip4range.cpp" line="32"/>
         <source>Error at line %1: %2</source>
         <translation>Ошибка в строке %1: %2</translation>
     </message>
     <message>
-        <location filename="../util/ip4range.cpp" line="92"/>
+        <location filename="../util/net/ip4range.cpp" line="92"/>
         <source>Bad format</source>
         <translation>Некорректный формат</translation>
     </message>
     <message>
-        <location filename="../util/ip4range.cpp" line="110"/>
+        <location filename="../util/net/ip4range.cpp" line="110"/>
         <source>Bad IP address</source>
         <translation>Некорректный IP адрес</translation>
     </message>
     <message>
-        <location filename="../util/ip4range.cpp" line="117"/>
+        <location filename="../util/net/ip4range.cpp" line="117"/>
         <source>Bad second IP address</source>
         <translation>Некорректный второй IP адрес</translation>
     </message>
     <message>
-        <location filename="../util/ip4range.cpp" line="121"/>
+        <location filename="../util/net/ip4range.cpp" line="121"/>
         <source>Bad range</source>
         <translation>Некорректный диапазон</translation>
     </message>
     <message>
-        <location filename="../util/ip4range.cpp" line="102"/>
-        <location filename="../util/ip4range.cpp" line="129"/>
+        <location filename="../util/net/ip4range.cpp" line="102"/>
+        <location filename="../util/net/ip4range.cpp" line="129"/>
         <source>Bad mask</source>
         <translation>Некорректная маска</translation>
     </message>
@@ -166,17 +166,17 @@
         <translation>Выделить всЁ</translation>
     </message>
     <message>
-        <location filename="../qml/pages/BlockedPage.qml" line="179"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="34"/>
         <source>Clear</source>
         <translation>Очистить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/BlockedPage.qml" line="185"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="40"/>
         <source>Resolve Addresses</source>
         <translation>Преобразовать адреса</translation>
     </message>
     <message>
-        <location filename="../qml/pages/BlockedPage.qml" line="197"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="59"/>
         <source>Log Blocked Applications</source>
         <translation>Показ блокированных приложений</translation>
     </message>
@@ -281,22 +281,27 @@
         <translation>Блокировано</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="91"/>
+        <location filename="../qml/pages/MainPage.qml" line="73"/>
+        <source>Statistics</source>
+        <translation>Статистика</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/MainPage.qml" line="97"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="105"/>
+        <location filename="../qml/pages/MainPage.qml" line="111"/>
         <source>Apply</source>
         <translation>Применить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="118"/>
+        <location filename="../qml/pages/MainPage.qml" line="124"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="123"/>
+        <location filename="../qml/pages/MainPage.qml" line="129"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -369,6 +374,11 @@
         <location filename="../qml/pages/SchedulePage.qml" line="90"/>
         <source>Last Success</source>
         <translation>Успешный запуск</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/StatisticsPage.qml" line="24"/>
+        <source>Collect Traffic Statistics</source>
+        <translation>Собирать статистику трафика</translation>
     </message>
 </context>
 </TS>

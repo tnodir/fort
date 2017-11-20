@@ -9,41 +9,14 @@ BasePage {
     readonly property LogManager logManager: fortManager.logManager
     readonly property AppBlockedModel appBlockedModel: logManager.appBlockedModel
 
-    property bool logBlockedEnabled: false
-    property bool addressResolvingEnabled: false
-
     readonly property string currentAppPath:
         (appListView.currentIndex >= 0 && appListView.currentItem)
         ? appListView.currentItem.appPath : ""
-
-    function switchLogBlocked(enable) {
-        if (logBlockedEnabled === enable)
-            return;
-
-        logBlockedEnabled = enable;
-
-        fortManager.setLogBlocked(enable);
-    }
-
-    function switchResolveAddresses(enable) {
-        if (addressResolvingEnabled === enable)
-            return;
-
-        addressResolvingEnabled = enable;
-    }
 
     function clearAppPaths() {
         appListView.currentIndex = -1;
 
         logManager.clearModels();
-    }
-
-    Connections {
-        target: mainPage
-        onClosed: {
-            switchResolveAddresses(false);
-            switchLogBlocked(false);
-        }
     }
 
     HostInfoCache {
@@ -65,7 +38,15 @@ BasePage {
             CheckBox {
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Resolve Addresses")
-                onToggled: switchResolveAddresses(checked)
+                checked: firewallConf.resolveAddress
+                onToggled: {
+                    if (firewallConf.resolveAddress === checked)
+                        return;
+
+                    firewallConf.resolveAddress = checked;
+
+                    fortManager.applyConfImmediateFlags();
+                }
             }
 
             Item {
@@ -73,11 +54,18 @@ BasePage {
             }
 
             Switch {
-                id: cbShowBlockedApps
                 font.weight: Font.DemiBold
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Log Blocked Applications")
-                onToggled: switchLogBlocked(checked)
+                checked: firewallConf.logBlocked
+                onToggled: {
+                    if (firewallConf.logBlocked === checked)
+                        return;
+
+                    firewallConf.logBlocked = checked;
+
+                    fortManager.applyConfImmediateFlags();
+                }
             }
         }
 
@@ -155,7 +143,8 @@ BasePage {
                     delegate: Label {
                         width: ipListView.width
                         elide: Text.ElideRight
-                        text: (addressResolvingEnabled && hostInfoCache.dummyBool
+                        text: (firewallConf.resolveAddress
+                               && hostInfoCache.dummyBool
                                && hostInfoCache.hostName(ipText)) || ipText
 
                         readonly property string ipText: display

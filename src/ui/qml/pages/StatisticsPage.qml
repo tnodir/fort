@@ -8,24 +8,6 @@ BasePage {
 
     readonly property LogManager logManager: fortManager.logManager
 
-    property bool logStatisticsEnabled: false
-
-    function switchLogStatistics(enable) {
-        if (logStatisticsEnabled === enable)
-            return;
-
-        logStatisticsEnabled = enable;
-
-        fortManager.setLogStat(enable);
-    }
-
-    Connections {
-        target: mainPage
-        onClosed: {
-            switchLogStatistics(false);
-        }
-    }
-
     ColumnLayout {
         anchors.fill: parent
         spacing: 10
@@ -39,8 +21,16 @@ BasePage {
                 id: cbShowBlockedApps
                 font.weight: Font.DemiBold
                 text: translationManager.dummyBool
-                      && qsTranslate("qml", "Collect Usage Statistics")
-                onToggled: switchLogStatistics(checked)
+                      && qsTranslate("qml", "Collect Traffic Statistics")
+                checked: firewallConf.logStat
+                onToggled: {
+                    if (firewallConf.logStat === checked)
+                        return;
+
+                    firewallConf.logStat = checked;
+
+                    fortManager.applyConfImmediateFlags();
+                }
             }
         }
 

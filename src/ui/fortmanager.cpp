@@ -226,9 +226,16 @@ bool FortManager::applyConf(bool onlyFlags)
 
     FirewallConf *newConf = cloneConf(*m_firewallConfToEdit);
 
-    newConf->copyTempFlags(*m_firewallConf);
-
     return saveSettings(newConf, onlyFlags);
+}
+
+bool FortManager::applyConfImmediateFlags()
+{
+    Q_ASSERT(m_firewallConfToEdit != nullConf());
+
+    m_firewallConf->copyImmediateFlags(*m_firewallConfToEdit);
+
+    return saveSettings(m_firewallConf, true, true);
 }
 
 void FortManager::setFirewallConfToEdit(FirewallConf *conf)
@@ -252,7 +259,8 @@ bool FortManager::loadSettings(FirewallConf *conf)
     return updateDriverConf(conf);
 }
 
-bool FortManager::saveSettings(FirewallConf *newConf, bool onlyFlags)
+bool FortManager::saveSettings(FirewallConf *newConf, bool onlyFlags,
+                               bool immediateFlags)
 {
     if (!(onlyFlags ? m_fortSettings->writeConfFlags(*newConf)
           : m_fortSettings->writeConf(*newConf))) {
@@ -265,7 +273,9 @@ bool FortManager::saveSettings(FirewallConf *newConf, bool onlyFlags)
         m_firewallConf = newConf;
     }
 
-    updateTrayMenu();
+    if (!immediateFlags) {
+        updateTrayMenu();
+    }
 
     return onlyFlags ? updateDriverConfFlags(m_firewallConf)
                      : updateDriverConf(m_firewallConf);
@@ -297,20 +307,6 @@ bool FortManager::updateDriverConfFlags(FirewallConf *conf)
     }
 
     return true;
-}
-
-void FortManager::setLogBlocked(bool enable)
-{
-    m_firewallConf->setLogBlocked(enable);
-
-    updateDriverConfFlags(m_firewallConf);
-}
-
-void FortManager::setLogStat(bool enable)
-{
-    m_firewallConf->setLogStat(enable);
-
-    updateDriverConfFlags(m_firewallConf);
 }
 
 void FortManager::setLanguage(int language)

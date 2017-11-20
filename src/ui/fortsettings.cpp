@@ -204,6 +204,8 @@ bool FortSettings::readConfFlags(FirewallConf &conf) const
     m_ini->beginGroup("confFlags");
     conf.setProvBoot(iniBool("provBoot"));
     conf.setFilterEnabled(iniBool("filterEnabled", true));
+    conf.setResolveAddress(iniBool("resolveAddress"));
+    conf.setLogBlocked(iniBool("logBlocked"));
     conf.setLogStat(iniBool("logStat"));
     conf.ipInclude()->setUseAll(iniBool("ipIncludeAll"));
     conf.ipExclude()->setUseAll(iniBool("ipExcludeAll"));
@@ -220,6 +222,8 @@ bool FortSettings::writeConfFlags(const FirewallConf &conf)
     m_ini->beginGroup("confFlags");
     setIniValue("provBoot", conf.provBoot());
     setIniValue("filterEnabled", conf.filterEnabled());
+    setIniValue("resolveAddress", conf.resolveAddress());
+    setIniValue("logBlocked", conf.logBlocked());
     setIniValue("logStat", conf.logStat());
     setIniValue("ipIncludeAll", conf.ipInclude()->useAll());
     setIniValue("ipExcludeAll", conf.ipExclude()->useAll());

@@ -53,9 +53,7 @@ public slots:
     bool saveOriginConf(const QString &message);
     bool saveConf(bool onlyFlags = false);
     bool applyConf(bool onlyFlags = false);
-
-    void setLogBlocked(bool enable);
-    void setLogStat(bool enable);
+    bool applyConfImmediateFlags();
 
     void setLanguage(int language);
 
@@ -76,7 +74,8 @@ private:
     bool setupEngine();
 
     bool loadSettings(FirewallConf *conf);
-    bool saveSettings(FirewallConf *newConf, bool onlyFlags = false);
+    bool saveSettings(FirewallConf *newConf, bool onlyFlags = false,
+                      bool immediateFlags = false);
 
     bool updateDriverConf(FirewallConf *conf);
     bool updateDriverConfFlags(FirewallConf *conf);
