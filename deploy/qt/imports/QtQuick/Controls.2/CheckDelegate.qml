@@ -76,7 +76,7 @@ T.CheckDelegate {
         implicitWidth: 28
         implicitHeight: 28
 
-        x: text ? (control.mirrored ? control.width - width - control.rightPadding : control.leftPadding) : control.leftPadding + (control.availableWidth - width) / 2
+        x: control.mirrored ? control.leftPadding : control.width - width - control.rightPadding
         y: control.topPadding + (control.availableHeight - height) / 2
 
         color: control.down ? control.palette.light : control.palette.base
