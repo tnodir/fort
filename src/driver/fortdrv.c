@@ -17,6 +17,7 @@
 #define FORT_DEVICE_POOL_TAG	'DwfF'
 
 #include "../common/fortconf.c"
+#include "../common/fortlog.c"
 #include "../common/fortprov.c"
 #include "fortbuf.c"
 #include "fortstat.c"

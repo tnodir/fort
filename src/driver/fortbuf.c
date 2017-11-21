@@ -2,8 +2,6 @@
 
 #define FORT_BUFFER_POOL_TAG	'BwfF'
 
-#include "../common/fortlog.c"
-
 typedef struct fort_buffer {
   UINT32 top;
   PCHAR data;
@@ -11,6 +9,7 @@ typedef struct fort_buffer {
   PIRP irp;  /* pending */
   PCHAR out;
   ULONG out_len;
+  UINT32 out_top;
 
   KSPIN_LOCK lock;
 } FORT_BUFFER, *PFORT_BUFFER;
@@ -41,7 +40,7 @@ fort_buffer_blocked_write (PFORT_BUFFER buf, UINT32 remote_ip, UINT32 pid,
                            UINT32 path_len, const PVOID path,
                            PIRP *irp, NTSTATUS *irp_status, ULONG_PTR *info)
 {
-  UINT32 len, new_top;
+  UINT32 len;
   PCHAR out;
   KIRQL irq;
   NTSTATUS status = STATUS_SUCCESS;
@@ -54,11 +53,13 @@ fort_buffer_blocked_write (PFORT_BUFFER buf, UINT32 remote_ip, UINT32 pid,
 
   KeAcquireSpinLock(&buf->lock, &irq);
 
-  new_top = buf->top + len;
-
   /* Try to directly write to pending client */
   if (buf->irp != NULL) {
-    if (FORT_LOG_BLOCKED_SIZE_MAX > buf->out_len - new_top) {
+    const UINT32 out_top = buf->out_top;
+    UINT32 new_top = out_top + len;
+
+    /* Is it time to flush logs? */
+    if (buf->out_len - new_top < FORT_LOG_BLOCKED_SIZE_MAX) {
       *irp = buf->irp;
       buf->irp = NULL;
 
@@ -68,21 +69,22 @@ fort_buffer_blocked_write (PFORT_BUFFER buf, UINT32 remote_ip, UINT32 pid,
       new_top = 0;
     }
 
-    out = buf->out;
+    out = buf->out + out_top;
+    buf->out_top = new_top;
   } else {
+    const UINT32 buf_top = buf->top;
+    const UINT32 new_top = buf_top + len;
+
     if (new_top > FORT_BUFFER_SIZE) {
       status = STATUS_BUFFER_TOO_SMALL;
       goto end;  /* drop on buffer overflow */
     }
 
-    out = buf->data;
+    out = buf->data + buf_top;
+    buf->top = new_top;
   }
 
-  out += buf->top;
-
   fort_log_blocked_write(out, remote_ip, pid, path_len, path);
-
-  buf->top = new_top;
 
  end:
   KeReleaseSpinLock(&buf->lock, irq);
@@ -94,14 +96,15 @@ static NTSTATUS
 fort_buffer_xmove (PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len,
                    ULONG_PTR *info)
 {
+  UINT32 buf_top;
   KIRQL irq;
   NTSTATUS status = STATUS_SUCCESS;
 
   KeAcquireSpinLock(&buf->lock, &irq);
 
-  *info = buf->top;
+  *info = buf_top = buf->top;
 
-  if (!buf->top) {
+  if (!buf_top) {
     if (buf->irp != NULL) {
       status = STATUS_INSUFFICIENT_RESOURCES;
     } else if (out_len < FORT_LOG_BLOCKED_SIZE_MAX) {
@@ -115,12 +118,12 @@ fort_buffer_xmove (PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len,
     goto end;
   }
 
-  if (out_len < buf->top) {
+  if (out_len < buf_top) {
     status = STATUS_BUFFER_TOO_SMALL;
     goto end;
   }
 
-  RtlCopyMemory(out, buf->data, buf->top);
+  RtlCopyMemory(out, buf->data, buf_top);
   buf->top = 0;
 
  end:
@@ -141,9 +144,9 @@ fort_buffer_cancel_pending (PFORT_BUFFER buf, PIRP irp, ULONG_PTR *info)
   if (irp == buf->irp) {
     buf->irp = NULL;
 
-    if (buf->top) {
-      *info = buf->top;
-      buf->top = 0;
+    if (buf->out_top) {
+      *info = buf->out_top;
+      buf->out_top = 0;
 
       status = STATUS_SUCCESS;
     }
