@@ -54,12 +54,14 @@ fort_buffer_blocked_write (PFORT_BUFFER buf, UINT32 remote_ip, UINT32 pid,
   KeAcquireSpinLock(&buf->lock, &irq);
 
   /* Try to directly write to pending client */
-  if (buf->irp != NULL) {
+  if (buf->out_len) {
     const UINT32 out_top = buf->out_top;
     UINT32 new_top = out_top + len;
 
     /* Is it time to flush logs? */
     if (buf->out_len - new_top < FORT_LOG_BLOCKED_SIZE_MAX) {
+      buf->out_len = 0;
+
       *irp = buf->irp;
       buf->irp = NULL;
 
@@ -105,7 +107,7 @@ fort_buffer_xmove (PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len,
   *info = buf_top = buf->top;
 
   if (!buf_top) {
-    if (buf->irp != NULL) {
+    if (buf->out_len) {
       status = STATUS_INSUFFICIENT_RESOURCES;
     } else if (out_len < FORT_LOG_BLOCKED_SIZE_MAX) {
       status = STATUS_BUFFER_TOO_SMALL;
@@ -143,6 +145,7 @@ fort_buffer_cancel_pending (PFORT_BUFFER buf, PIRP irp, ULONG_PTR *info)
   KeAcquireSpinLock(&buf->lock, &irq);
   if (irp == buf->irp) {
     buf->irp = NULL;
+    buf->out_len = 0;
 
     if (buf->out_top) {
       *info = buf->out_top;

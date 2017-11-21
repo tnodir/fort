@@ -12,23 +12,24 @@ static void
 fort_timer_callback (PKDPC dpc, PFORT_BUFFER buf, PVOID arg1, PVOID arg2)
 {
   PIRP irp = NULL;
-  ULONG info = 0;
+  ULONG info;
 
   UNUSED(dpc);
   UNUSED(arg1);
   UNUSED(arg2);
 
   KeAcquireSpinLockAtDpcLevel(&buf->lock);
-  if (buf->irp != NULL && buf->out_top) {
+  info = buf->out_top;
+  if (info) {
+    buf->out_top = 0;
+    buf->out_len = 0;
+
     irp = buf->irp;
     buf->irp = NULL;
-
-    info = buf->out_top;
-    buf->out_top = 0;
   }
   KeReleaseSpinLockFromDpcLevel(&buf->lock);
 
-  if (irp != NULL) {
+  if (info) {
     fort_request_complete_info(irp, STATUS_SUCCESS, info);
   }
 }
