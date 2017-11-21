@@ -2,9 +2,17 @@
 
 #define FORT_BUFFER_POOL_TAG	'BwfF'
 
-typedef struct fort_buffer {
+typedef struct fort_buffer_data {
+  struct fort_buffer_data *next;
+
   UINT32 top;
-  PCHAR data;
+  CHAR p[FORT_BUFFER_SIZE];
+} FORT_BUFFER_DATA, *PFORT_BUFFER_DATA;
+
+typedef struct fort_buffer {
+  PFORT_BUFFER_DATA data_head;
+  PFORT_BUFFER_DATA data_tail;  /* last is current */
+  PFORT_BUFFER_DATA data_free;
 
   PIRP irp;  /* pending */
   PCHAR out;
@@ -15,24 +23,86 @@ typedef struct fort_buffer {
 } FORT_BUFFER, *PFORT_BUFFER;
 
 
+static PFORT_BUFFER_DATA
+fort_buffer_data_new (PFORT_BUFFER buf)
+{
+  PFORT_BUFFER_DATA data = buf->data_free;
+
+  if (data != NULL) {
+    buf->data_free = data->next;
+  } else {
+    data = ExAllocatePoolWithTag(NonPagedPool, sizeof(FORT_BUFFER_DATA),
+                                 FORT_BUFFER_POOL_TAG);
+  }
+
+  return data;
+}
+
+static void
+fort_buffer_data_del (PFORT_BUFFER_DATA data)
+{
+  while (data != NULL) {
+    PFORT_BUFFER_DATA next = data->next;
+    ExFreePoolWithTag(data, FORT_BUFFER_POOL_TAG);
+    data = next;
+  }
+}
+
+static PFORT_BUFFER_DATA
+fort_buffer_data_prepare (PFORT_BUFFER buf, UINT32 len)
+{
+  PFORT_BUFFER_DATA data = buf->data_tail;
+
+  if (data == NULL || len > FORT_BUFFER_SIZE - data->top) {
+    PFORT_BUFFER_DATA new_data = fort_buffer_data_new(buf);
+
+    if (new_data == NULL)
+      return NULL;
+
+    new_data->top = 0;
+    new_data->next = NULL;
+
+    if (data == NULL) {
+      buf->data_head = new_data;
+    } else {
+      data->next = new_data;
+    }
+
+    buf->data_tail = new_data;
+
+    data = new_data;
+  }
+
+  return data;
+}
+
+
+static void
+fort_buffer_data_free (PFORT_BUFFER buf)
+{
+  PFORT_BUFFER_DATA data = buf->data_head;
+
+  buf->data_head = data->next;
+
+  if (data->next == NULL) {
+    buf->data_tail = NULL;
+  }
+
+  data->next = buf->data_free;
+  buf->data_free = data;
+}
+
 static void
 fort_buffer_init (PFORT_BUFFER buf)
 {
-  buf->data = ExAllocatePoolWithTag(NonPagedPool, FORT_BUFFER_SIZE,
-                                    FORT_BUFFER_POOL_TAG);
-
   KeInitializeSpinLock(&buf->lock);
 }
 
 static void
 fort_buffer_close (PFORT_BUFFER buf)
 {
-  if (buf->data != NULL) {
-    ExFreePoolWithTag(buf->data, FORT_BUFFER_POOL_TAG);
-
-    buf->data = NULL;
-    buf->top = 0;
-  }
+  fort_buffer_data_del(buf->data_head);
+  fort_buffer_data_del(buf->data_free);
 }
 
 static NTSTATUS
@@ -74,7 +144,8 @@ fort_buffer_blocked_write (PFORT_BUFFER buf, UINT32 remote_ip, UINT32 pid,
     out = buf->out + out_top;
     buf->out_top = new_top;
   } else {
-    const UINT32 buf_top = buf->top;
+    PFORT_BUFFER_DATA data = fort_buffer_data_prepare(buf, len);
+    const UINT32 buf_top = data ? data->top : FORT_BUFFER_SIZE;
     const UINT32 new_top = buf_top + len;
 
     if (new_top > FORT_BUFFER_SIZE) {
@@ -82,8 +153,8 @@ fort_buffer_blocked_write (PFORT_BUFFER buf, UINT32 remote_ip, UINT32 pid,
       goto end;  /* drop on buffer overflow */
     }
 
-    out = buf->data + buf_top;
-    buf->top = new_top;
+    out = data->p + buf_top;
+    data->top = new_top;
   }
 
   fort_log_blocked_write(out, remote_ip, pid, path_len, path);
@@ -98,13 +169,15 @@ static NTSTATUS
 fort_buffer_xmove (PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len,
                    ULONG_PTR *info)
 {
+  PFORT_BUFFER_DATA data;
   UINT32 buf_top;
   KIRQL irq;
   NTSTATUS status = STATUS_SUCCESS;
 
   KeAcquireSpinLock(&buf->lock, &irq);
 
-  *info = buf_top = buf->top;
+  data = buf->data_head;
+  *info = buf_top = (data ? data->top : 0);
 
   if (!buf_top) {
     if (buf->out_len) {
@@ -125,8 +198,9 @@ fort_buffer_xmove (PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len,
     goto end;
   }
 
-  RtlCopyMemory(out, buf->data, buf_top);
-  buf->top = 0;
+  RtlCopyMemory(out, data->p, buf_top);
+
+  fort_buffer_data_free(buf);
 
  end:
   KeReleaseSpinLock(&buf->lock, irq);
