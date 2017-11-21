@@ -1,0 +1,37 @@
+{
+	"files": {
+		"${TARGET}": {
+			"common": [
+				"${QTPATH}/bin/Qt5Core.dll",
+				"${QTPATH}/bin/Qt5Gui.dll",
+				"${QTPATH}/bin/Qt5Qml.dll",
+				"${QTPATH}/bin/Qt5Quick.dll",
+				"${QTPATH}/bin/Qt5QuickControls2.dll",
+				"${QTPATH}/bin/Qt5QuickTemplates2.dll",
+				"${QTPATH}/bin/Qt5Widgets.dll"
+			],
+			"fort": [
+				"${BUILD}/FortFirewall.exe",
+				"${BUILD}/i18n				| *.qm				|"
+			]
+		},
+		"${TARGET}/imports": {
+			"common": [
+				"${QTPATH}/qml/QtQuick.2		| *.dll *.qmltypes qmldir	| *d.dll"
+			]
+		},
+		"${TARGET}/imports/QtQuick": {
+			"common": [
+				"${QTPATH}/qml/QtQuick/Controls.2	| *.dll *.qmltypes qmldir *.qml	| *d.dll",
+				"${QTPATH}/qml/QtQuick/Layouts		| *.dll *.qmltypes qmldir	| *d.dll",
+				"${QTPATH}/qml/QtQuick/Templates.2	| *.dll *.qmltypes qmldir	| *d.dll",
+				"${QTPATH}/qml/QtQuick/Window.2		| *.dll *.qmltypes qmldir	| *d.dll"
+			]
+		},
+		"${TARGET}/plugins": {
+			"common": [
+				"${QTPATH}/plugins/platforms		| qwindows.dll			| *d.dll"
+			]
+		}
+	}
+}
