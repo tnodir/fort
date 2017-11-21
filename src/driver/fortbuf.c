@@ -49,7 +49,7 @@ fort_buffer_data_del (PFORT_BUFFER_DATA data)
 }
 
 static PFORT_BUFFER_DATA
-fort_buffer_data_prepare (PFORT_BUFFER buf, UINT32 len)
+fort_buffer_data_alloc (PFORT_BUFFER buf, UINT32 len)
 {
   PFORT_BUFFER_DATA data = buf->data_tail;
 
@@ -144,7 +144,7 @@ fort_buffer_blocked_write (PFORT_BUFFER buf, UINT32 remote_ip, UINT32 pid,
     out = buf->out + out_top;
     buf->out_top = new_top;
   } else {
-    PFORT_BUFFER_DATA data = fort_buffer_data_prepare(buf, len);
+    PFORT_BUFFER_DATA data = fort_buffer_data_alloc(buf, len);
     const UINT32 buf_top = data ? data->top : FORT_BUFFER_SIZE;
     const UINT32 new_top = buf_top + len;
 
