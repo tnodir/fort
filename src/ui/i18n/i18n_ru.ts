@@ -163,7 +163,7 @@
     <message>
         <location filename="../qml/controls/TextContextMenu.qml" line="55"/>
         <source>Select All</source>
-        <translation>Выделить всЁ</translation>
+        <translation>Выделить всё</translation>
     </message>
     <message>
         <location filename="../qml/pages/BlockedPage.qml" line="34"/>
