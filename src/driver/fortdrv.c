@@ -38,6 +38,7 @@ typedef struct fort_device {
   UINT32 flow4_id;
 
   FORT_BUFFER buffer;
+  FORT_STAT stat;
   FORT_TIMER timer;
 
   PFORT_CONF_REF volatile conf_ref;
@@ -51,8 +52,8 @@ static PFORT_CONF_REF
 fort_conf_ref_new (const PFORT_CONF conf, ULONG len)
 {
   const ULONG ref_len = len + offsetof(FORT_CONF_REF, conf);
-  PFORT_CONF_REF conf_ref = ExAllocatePoolWithTag(NonPagedPool, ref_len,
-   FORT_DEVICE_POOL_TAG);
+  PFORT_CONF_REF conf_ref = ExAllocatePoolWithTag(
+    NonPagedPool, ref_len, FORT_DEVICE_POOL_TAG);
 
   if (conf_ref != NULL) {
     conf_ref->refcount = 0;
@@ -208,7 +209,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   if (!blocked) {
     if (ip_included && conf_flags.log_stat) {
-      fort_stat_flow_associate(inMetaValues->flowHandle,
+      fort_stat_flow_associate(&g_device->stat, inMetaValues->flowHandle,
         g_device->flow4_id, (UINT32) inMetaValues->processId);
     }
     goto permit;
@@ -287,6 +288,34 @@ fort_callout_notify (FWPS_CALLOUT_NOTIFY_TYPE notifyType,
   UNUSED(filter);
 
   return STATUS_SUCCESS;
+}
+
+static void
+fort_callout_flow_delete_v4 (UINT16 layerId,
+                             UINT32 calloutId,
+                             UINT64 flowContext)
+{
+  UNUSED(layerId);
+  UNUSED(calloutId);
+
+  fort_stat_flow_delete(&g_device->stat, flowContext);
+}
+
+static void
+fort_callout_flow_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
+                               const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
+                               FWPS_STREAM_CALLOUT_IO_PACKET0 *packet,
+                               const FWPS_FILTER0 *filter,
+                               UINT64 flowContext,
+                               FWPS_CLASSIFY_OUT0 *classifyOut)
+{
+  FWPS_STREAM_DATA0 *streamData = packet->streamData;
+
+  fort_stat_flow_classify(&g_device->stat, flowContext,
+    (UINT32) streamData->dataLength,
+    (streamData->flags & FWPS_STREAM_FLAG_RECEIVE) != 0);
+
+  classifyOut->actionType = FWP_ACTION_CONTINUE;
 }
 
 static NTSTATUS
@@ -405,6 +434,24 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
   fort_timer_update(&g_device->timer, conf_flags);
 
   return status;
+}
+
+static void
+fort_callout_timer (void)
+{
+  // Flush traffic statistics
+  {
+  }
+
+  // Flush pending buffer
+  {
+    PIRP irp;
+    ULONG_PTR info;
+
+    if (fort_buffer_flush_pending(&g_device->buffer, &irp, &info)) {
+      fort_request_complete_info(irp, STATUS_SUCCESS, info);
+    }
+  }
 }
 
 static NTSTATUS
@@ -565,6 +612,7 @@ fort_driver_unload (PDRIVER_OBJECT driver)
 
   if (g_device != NULL) {
     fort_timer_close(&g_device->timer);
+    fort_stat_close(&g_device->stat);
     fort_buffer_close(&g_device->buffer);
 
     if (!g_device->prov_boot) {
@@ -638,7 +686,8 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
       RtlZeroMemory(g_device, sizeof(FORT_DEVICE));
 
       fort_buffer_init(&g_device->buffer);
-      fort_timer_init(&g_device->timer, &g_device->buffer);
+      fort_stat_init(&g_device->stat);
+      fort_timer_init(&g_device->timer, &fort_callout_timer);
 
       KeInitializeSpinLock(&g_device->conf_lock);
 

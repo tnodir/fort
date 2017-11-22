@@ -31,8 +31,8 @@ fort_buffer_data_new (PFORT_BUFFER buf)
   if (data != NULL) {
     buf->data_free = data->next;
   } else {
-    data = ExAllocatePoolWithTag(NonPagedPool, sizeof(FORT_BUFFER_DATA),
-                                 FORT_BUFFER_POOL_TAG);
+    data = ExAllocatePoolWithTag(NonPagedPool,
+      sizeof(FORT_BUFFER_DATA), FORT_BUFFER_POOL_TAG);
   }
 
   return data;
@@ -75,7 +75,6 @@ fort_buffer_data_alloc (PFORT_BUFFER buf, UINT32 len)
 
   return data;
 }
-
 
 static void
 fort_buffer_data_free (PFORT_BUFFER buf)
@@ -231,4 +230,25 @@ fort_buffer_cancel_pending (PFORT_BUFFER buf, PIRP irp, ULONG_PTR *info)
   KeReleaseSpinLock(&buf->lock, irq);
 
   return status;
+}
+
+static BOOL
+fort_buffer_flush_pending (PFORT_BUFFER buf, PIRP *irp, ULONG_PTR *info)
+{
+  UINT32 out_top;
+
+  KeAcquireSpinLockAtDpcLevel(&buf->lock);
+  out_top = buf->out_top;
+  if (out_top) {
+    *info = out_top;
+
+    buf->out_top = 0;
+    buf->out_len = 0;
+
+    *irp = buf->irp;
+    buf->irp = NULL;
+  }
+  KeReleaseSpinLockFromDpcLevel(&buf->lock);
+
+  return out_top != 0;
 }

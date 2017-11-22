@@ -1,7 +1,11 @@
 /* Fort Firewall Timer */
 
+typedef void (*FORT_TIMER_FUNC) (void);
+
 typedef struct fort_timer {
   UINT32 running	: 1;
+
+  FORT_TIMER_FUNC callback;
 
   KDPC dpc;
   KTIMER id;
@@ -9,35 +13,23 @@ typedef struct fort_timer {
 
 
 static void
-fort_timer_callback (PKDPC dpc, PFORT_BUFFER buf, PVOID arg1, PVOID arg2)
+fort_timer_callback (PKDPC dpc, PFORT_TIMER timer, PVOID arg1, PVOID arg2)
 {
-  PIRP irp = NULL;
-  ULONG info;
-
   UNUSED(dpc);
   UNUSED(arg1);
   UNUSED(arg2);
 
-  KeAcquireSpinLockAtDpcLevel(&buf->lock);
-  info = buf->out_top;
-  if (info) {
-    buf->out_top = 0;
-    buf->out_len = 0;
-
-    irp = buf->irp;
-    buf->irp = NULL;
-  }
-  KeReleaseSpinLockFromDpcLevel(&buf->lock);
-
-  if (info) {
-    fort_request_complete_info(irp, STATUS_SUCCESS, info);
+  if (timer->callback != NULL) {
+    timer->callback();
   }
 }
 
 static void
-fort_timer_init (PFORT_TIMER timer, PFORT_BUFFER buf)
+fort_timer_init (PFORT_TIMER timer, FORT_TIMER_FUNC callback)
 {
-  KeInitializeDpc(&timer->dpc, &fort_timer_callback, buf);
+  timer->callback = callback;
+
+  KeInitializeDpc(&timer->dpc, &fort_timer_callback, timer);
   KeInitializeTimer(&timer->id);
 }
 
