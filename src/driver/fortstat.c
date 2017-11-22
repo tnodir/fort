@@ -61,9 +61,9 @@ fort_stat_proc_dec (PFORT_STAT stat, int proc_index)
 }
 
 static void
-fort_stat_proc_del (PFORT_STAT stat)
+fort_stat_proc_del (PFORT_STAT_PROC procs)
 {
-  ExFreePoolWithTag(stat->procs, FORT_STAT_POOL_TAG);
+  ExFreePoolWithTag(procs, FORT_STAT_POOL_TAG);
 }
 
 static BOOL
@@ -77,9 +77,12 @@ fort_stat_proc_realloc (PFORT_STAT stat)
   if (new_procs == NULL)
     return FALSE;
 
-  RtlCopyMemory(new_procs, stat->procs, count * sizeof(FORT_STAT_PROC));
+  if (count) {
+    PFORT_STAT_PROC procs = stat->procs;
 
-  fort_stat_proc_del(stat);
+    RtlCopyMemory(new_procs, procs, stat->proc_top * sizeof(FORT_STAT_PROC));
+    fort_stat_proc_del(procs);
+  }
 
   stat->proc_count = new_count;
   stat->procs = new_procs;
@@ -126,7 +129,9 @@ fort_stat_init (PFORT_STAT stat)
 static void
 fort_stat_close (PFORT_STAT stat)
 {
-  fort_stat_proc_del(stat);
+  if (stat->procs != NULL) {
+    fort_stat_proc_del(stat->procs);
+  }
 }
 
 static void
