@@ -27,7 +27,7 @@ static int
 fort_stat_proc_index (PFORT_STAT stat, UINT32 process_id)
 {
   PFORT_STAT_PROC proc = stat->procs;
-  const int n = stat->proc_count;
+  const int n = stat->proc_top;
   int i;
 
   for (i = 0; i < n; ++i, ++proc) {
@@ -53,6 +53,11 @@ fort_stat_proc_dec (PFORT_STAT stat, int proc_index)
 
   if (--proc->refcount > 0)
     return;
+
+  if (proc_index == stat->proc_top - 1) {
+    stat->proc_top--;
+    return;
+  }
 
   proc->process_id = 0;
 
@@ -100,8 +105,7 @@ fort_stat_proc_add (PFORT_STAT stat, UINT32 process_id)
     proc = &stat->procs[proc_index];
 
     stat->proc_free_index = proc->refcount;
-  }
-  else {
+  } else {
     if (stat->proc_top >= stat->proc_count
         && !fort_stat_proc_realloc(stat)) {
       return -1;
