@@ -111,7 +111,7 @@ fort_buffer_blocked_write (PFORT_BUFFER buf, UINT32 remote_ip, UINT32 pid,
 {
   UINT32 len;
   PCHAR out;
-  KIRQL irq;
+  KLOCK_QUEUE_HANDLE lock_queue;
   NTSTATUS status = STATUS_SUCCESS;
 
   if (path_len > FORT_LOG_PATH_MAX) {
@@ -120,7 +120,7 @@ fort_buffer_blocked_write (PFORT_BUFFER buf, UINT32 remote_ip, UINT32 pid,
 
   len = FORT_LOG_BLOCKED_SIZE(path_len);
 
-  KeAcquireSpinLock(&buf->lock, &irq);
+  KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
 
   /* Try to directly write to pending client */
   if (buf->out_len) {
@@ -159,7 +159,7 @@ fort_buffer_blocked_write (PFORT_BUFFER buf, UINT32 remote_ip, UINT32 pid,
   fort_log_blocked_write(out, remote_ip, pid, path_len, path);
 
  end:
-  KeReleaseSpinLock(&buf->lock, irq);
+  KeReleaseInStackQueuedSpinLock(&lock_queue);
 
   return status;
 }
@@ -170,10 +170,10 @@ fort_buffer_xmove (PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len,
 {
   PFORT_BUFFER_DATA data;
   UINT32 buf_top;
-  KIRQL irq;
+  KLOCK_QUEUE_HANDLE lock_queue;
   NTSTATUS status = STATUS_SUCCESS;
 
-  KeAcquireSpinLock(&buf->lock, &irq);
+  KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
 
   data = buf->data_head;
   *info = buf_top = (data ? data->top : 0);
@@ -202,7 +202,7 @@ fort_buffer_xmove (PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len,
   fort_buffer_data_free(buf);
 
  end:
-  KeReleaseSpinLock(&buf->lock, irq);
+  KeReleaseInStackQueuedSpinLock(&lock_queue);
 
   return status;
 }
@@ -210,12 +210,12 @@ fort_buffer_xmove (PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len,
 static NTSTATUS
 fort_buffer_cancel_pending (PFORT_BUFFER buf, PIRP irp, ULONG_PTR *info)
 {
+  KLOCK_QUEUE_HANDLE lock_queue;
   NTSTATUS status = STATUS_CANCELLED;
-  KIRQL irq;
 
   *info = 0;
 
-  KeAcquireSpinLock(&buf->lock, &irq);
+  KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
   if (irp == buf->irp) {
     buf->irp = NULL;
     buf->out_len = 0;
@@ -227,7 +227,7 @@ fort_buffer_cancel_pending (PFORT_BUFFER buf, PIRP irp, ULONG_PTR *info)
       status = STATUS_SUCCESS;
     }
   }
-  KeReleaseSpinLock(&buf->lock, irq);
+  KeReleaseInStackQueuedSpinLock(&lock_queue);
 
   return status;
 }
@@ -235,9 +235,10 @@ fort_buffer_cancel_pending (PFORT_BUFFER buf, PIRP irp, ULONG_PTR *info)
 static BOOL
 fort_buffer_flush_pending (PFORT_BUFFER buf, PIRP *irp, ULONG_PTR *info)
 {
+  KLOCK_QUEUE_HANDLE lock_queue;
   UINT32 out_top;
 
-  KeAcquireSpinLockAtDpcLevel(&buf->lock);
+  KeAcquireInStackQueuedSpinLockAtDpcLevel(&buf->lock, &lock_queue);
   out_top = buf->out_top;
   if (out_top) {
     *info = out_top;
@@ -248,7 +249,7 @@ fort_buffer_flush_pending (PFORT_BUFFER buf, PIRP *irp, ULONG_PTR *info)
     *irp = buf->irp;
     buf->irp = NULL;
   }
-  KeReleaseSpinLockFromDpcLevel(&buf->lock);
+  KeReleaseInStackQueuedSpinLockFromDpcLevel(&lock_queue);
 
   return out_top != 0;
 }

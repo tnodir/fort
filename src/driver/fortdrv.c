@@ -67,9 +67,9 @@ fort_conf_ref_new (const PFORT_CONF conf, ULONG len)
 static void
 fort_conf_ref_put (PFORT_CONF_REF conf_ref)
 {
-  KIRQL irq;
+  KLOCK_QUEUE_HANDLE lock_queue;
 
-  KeAcquireSpinLock(&g_device->conf_lock, &irq);
+  KeAcquireInStackQueuedSpinLock(&g_device->conf_lock, &lock_queue);
   {
     const UINT32 refcount = --conf_ref->refcount;
 
@@ -77,23 +77,23 @@ fort_conf_ref_put (PFORT_CONF_REF conf_ref)
       ExFreePoolWithTag(conf_ref, FORT_DEVICE_POOL_TAG);
     }
   }
-  KeReleaseSpinLock(&g_device->conf_lock, irq);
+  KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
 static PFORT_CONF_REF
 fort_conf_ref_take (void)
 {
   PFORT_CONF_REF conf_ref;
-  KIRQL irq;
+  KLOCK_QUEUE_HANDLE lock_queue;
 
-  KeAcquireSpinLock(&g_device->conf_lock, &irq);
+  KeAcquireInStackQueuedSpinLock(&g_device->conf_lock, &lock_queue);
   {
     conf_ref = g_device->conf_ref;
     if (conf_ref) {
       ++conf_ref->refcount;
     }
   }
-  KeReleaseSpinLock(&g_device->conf_lock, irq);
+  KeReleaseInStackQueuedSpinLock(&lock_queue);
 
   return conf_ref;
 }
@@ -103,11 +103,11 @@ fort_conf_ref_set (PFORT_CONF_REF conf_ref)
 {
   PFORT_CONF_REF old_conf_ref;
   FORT_CONF_FLAGS old_conf_flags;
-  KIRQL irq;
+  KLOCK_QUEUE_HANDLE lock_queue;
 
   old_conf_ref = fort_conf_ref_take();
 
-  KeAcquireSpinLock(&g_device->conf_lock, &irq);
+  KeAcquireInStackQueuedSpinLock(&g_device->conf_lock, &lock_queue);
   {
     g_device->conf_ref = conf_ref;
 
@@ -120,7 +120,7 @@ fort_conf_ref_set (PFORT_CONF_REF conf_ref)
       g_device->prov_boot = conf_ref->conf.flags.prov_boot;
     }
   }
-  KeReleaseSpinLock(&g_device->conf_lock, irq);
+  KeReleaseInStackQueuedSpinLock(&lock_queue);
 
   if (old_conf_ref != NULL) {
     old_conf_flags = old_conf_ref->conf.flags;
@@ -134,9 +134,9 @@ static FORT_CONF_FLAGS
 fort_conf_ref_flags_set (const PFORT_CONF_FLAGS conf_flags)
 {
   FORT_CONF_FLAGS old_conf_flags;
-  KIRQL irq;
+  KLOCK_QUEUE_HANDLE lock_queue;
 
-  KeAcquireSpinLock(&g_device->conf_lock, &irq);
+  KeAcquireInStackQueuedSpinLock(&g_device->conf_lock, &lock_queue);
   {
     PFORT_CONF_REF conf_ref = g_device->conf_ref;
 
@@ -154,7 +154,7 @@ fort_conf_ref_flags_set (const PFORT_CONF_FLAGS conf_flags)
       old_conf_flags.prov_boot = g_device->prov_boot;
     }
   }
-  KeReleaseSpinLock(&g_device->conf_lock, irq);
+  KeReleaseInStackQueuedSpinLock(&lock_queue);
 
   return old_conf_flags;
 }
@@ -461,15 +461,15 @@ fort_device_create (PDEVICE_OBJECT device, PIRP irp)
 
   /* Device opened */
   {
-    KIRQL irq;
+    KLOCK_QUEUE_HANDLE lock_queue;
 
-    KeAcquireSpinLock(&g_device->conf_lock, &irq);
+    KeAcquireInStackQueuedSpinLock(&g_device->conf_lock, &lock_queue);
     if (g_device->is_opened) {
       status = STATUS_SHARING_VIOLATION;  // Only one client may connect
     } else {
       g_device->is_opened = TRUE;
     }
-    KeReleaseSpinLock(&g_device->conf_lock, irq);
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
   }
 
   fort_request_complete(irp, status);
@@ -503,11 +503,11 @@ fort_device_cleanup (PDEVICE_OBJECT device, PIRP irp)
 
   /* Device closed */
   {
-    KIRQL irq;
+    KLOCK_QUEUE_HANDLE lock_queue;
 
-    KeAcquireSpinLock(&g_device->conf_lock, &irq);
+    KeAcquireInStackQueuedSpinLock(&g_device->conf_lock, &lock_queue);
     g_device->is_opened = FALSE;
-    KeReleaseSpinLock(&g_device->conf_lock, irq);
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
   }
 
   fort_request_complete(irp, STATUS_SUCCESS);

@@ -142,11 +142,11 @@ static void
 fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
                           UINT32 callout_id, UINT32 process_id)
 {
-  KIRQL irq;
+  KLOCK_QUEUE_HANDLE lock_queue;
   UINT64 flow_context;
   int proc_index;
 
-  KeAcquireSpinLock(&stat->lock, &irq);
+  KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
   proc_index = fort_stat_proc_index(stat, process_id);
   if (proc_index == -1) {
@@ -165,7 +165,7 @@ fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
   }
 
  end:
-  KeReleaseSpinLock(&stat->lock, irq);
+  KeReleaseInStackQueuedSpinLock(&lock_queue);
 
   DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
              "FORT: flow +: %d\n", process_id);
@@ -174,14 +174,14 @@ fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
 static void
 fort_stat_flow_delete (PFORT_STAT stat, UINT64 flow_context)
 {
-  KIRQL irq;
+  KLOCK_QUEUE_HANDLE lock_queue;
   const int proc_index = (int) (flow_context >> 32);
 
-  KeAcquireSpinLock(&stat->lock, &irq);
+  KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
   fort_stat_proc_dec(stat, proc_index);
 
-  KeReleaseSpinLock(&stat->lock, irq);
+  KeReleaseInStackQueuedSpinLock(&lock_queue);
 
   DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
              "FORT: flow -: %d\n", (UINT32) flow_context);
@@ -192,11 +192,11 @@ fort_stat_flow_classify (PFORT_STAT stat, UINT64 flow_context,
                          UINT32 data_len, BOOL inbound)
 {
   PFORT_STAT_PROC proc;
-  KIRQL irq;
+  KLOCK_QUEUE_HANDLE lock_queue;
   const UINT32 process_id = (UINT32) flow_context;
   const int proc_index = (int) (flow_context >> 32);
 
-  KeAcquireSpinLock(&stat->lock, &irq);
+  KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
   proc = &stat->procs[proc_index];
 
@@ -206,7 +206,7 @@ fort_stat_flow_classify (PFORT_STAT stat, UINT64 flow_context,
     proc->out_bytes += data_len;
   }
 
-  KeReleaseSpinLock(&stat->lock, irq);
+  KeReleaseInStackQueuedSpinLock(&lock_queue);
 
   DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
              "FORT: flow >: %d %d\n", (UINT32) flow_context, data_len);
