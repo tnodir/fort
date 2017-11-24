@@ -46,23 +46,26 @@ fort_stat_proc_inc (PFORT_STAT stat, int proc_index)
   proc->refcount++;
 }
 
-static void
+static NTSTATUS
 fort_stat_proc_dec (PFORT_STAT stat, int proc_index)
 {
   PFORT_STAT_PROC proc = &stat->procs[proc_index];
 
   if (--proc->refcount > 0)
-    return;
+    return STATUS_OBJECT_NAME_EXISTS;
 
   if (proc_index == stat->proc_top - 1) {
+    /* Chop from buffer */
     stat->proc_top--;
-    return;
+  } else {
+    /* Add to free chain */
+    proc->process_id = 0;
+
+    proc->refcount = stat->proc_free_index;
+    stat->proc_free_index = proc_index;
   }
 
-  proc->process_id = 0;
-
-  proc->refcount = stat->proc_free_index;
-  stat->proc_free_index = proc_index;
+  return STATUS_SUCCESS;
 }
 
 static void
@@ -138,29 +141,34 @@ fort_stat_close (PFORT_STAT stat)
   }
 }
 
-static void
+static NTSTATUS
 fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
                           UINT32 callout_id, UINT32 process_id)
 {
   KLOCK_QUEUE_HANDLE lock_queue;
   UINT64 flow_context;
   int proc_index;
+  NTSTATUS status;
 
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
   proc_index = fort_stat_proc_index(stat, process_id);
   if (proc_index == -1) {
     proc_index = fort_stat_proc_add(stat, process_id);
-    if (proc_index == -1)
+    if (proc_index == -1) {
+      status = STATUS_INSUFFICIENT_RESOURCES;
       goto end;
+    }
   }
 
   flow_context = (UINT64) process_id | ((UINT64) proc_index << 32);
 
   fort_stat_proc_inc(stat, proc_index);
 
-  if (!NT_SUCCESS(FwpsFlowAssociateContext0(flow_id,
-      FWPS_LAYER_STREAM_V4, callout_id, flow_context))) {
+  status = FwpsFlowAssociateContext0(flow_id,
+    FWPS_LAYER_STREAM_V4, callout_id, flow_context);
+
+  if (!NT_SUCCESS(status)) {
     fort_stat_proc_dec(stat, proc_index);
   }
 
@@ -169,22 +177,27 @@ fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
 
   DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
              "FORT: flow +: %d\n", process_id);
+
+  return status;
 }
 
-static void
+static NTSTATUS
 fort_stat_flow_delete (PFORT_STAT stat, UINT64 flow_context)
 {
   KLOCK_QUEUE_HANDLE lock_queue;
+  NTSTATUS status;
   const int proc_index = (int) (flow_context >> 32);
 
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
-  fort_stat_proc_dec(stat, proc_index);
+  status = fort_stat_proc_dec(stat, proc_index);
 
   KeReleaseInStackQueuedSpinLock(&lock_queue);
 
   DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
              "FORT: flow -: %d\n", (UINT32) flow_context);
+
+  return status;
 }
 
 static void

@@ -172,9 +172,14 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   FORT_CONF_FLAGS conf_flags;
   UINT32 flags;
   UINT32 remote_ip;
+  UINT32 process_id;
   UINT32 path_len;
   PVOID path;
   BOOL ip_included, blocked;
+
+  PIRP irp = NULL;
+  ULONG_PTR info;
+  NTSTATUS irp_status;
 
   UNUSED(layerData);
   UNUSED(flowContext);
@@ -198,6 +203,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
     goto permit;
 
   remote_ip = inFixedValues->incomingValue[remoteIpField].value.uint32;
+  process_id = (UINT32) inMetaValues->processId;
   path_len = inMetaValues->processPath->size - sizeof(WCHAR);  // chop terminating zero
   path = inMetaValues->processPath->data;
 
@@ -209,44 +215,44 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   if (!blocked) {
     if (ip_included && conf_flags.log_stat) {
-      fort_stat_flow_associate(&g_device->stat, inMetaValues->flowHandle,
-        g_device->flow4_id, (UINT32) inMetaValues->processId);
+      NTSTATUS status;
+
+      status = fort_stat_flow_associate(&g_device->stat,
+        inMetaValues->flowHandle, g_device->flow4_id, process_id);
+
+      if (NT_SUCCESS(status)) {
+        fort_buffer_proc_new_write(&g_device->buffer,
+          process_id, path_len, path,
+          &irp, &irp_status, &info);
+      } else if (status != STATUS_OBJECT_NAME_EXISTS) {
+        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                   "FORT: Classify v4: Flow assoc. error: %d\n", status);
+      }
     }
     goto permit;
   }
 
   if (conf_flags.log_blocked) {
-    PIRP irp = NULL;
-    ULONG_PTR info;
-    NTSTATUS irp_status, status;
-
-    status = fort_buffer_blocked_write(
-        &g_device->buffer, remote_ip,
-        (UINT32) inMetaValues->processId, path_len, path,
-        &irp, &irp_status, &info);
-
-    if (NT_SUCCESS(status)) {
-      if (irp != NULL) {
-        fort_request_complete_info(irp, irp_status, info);
-      }
-    } else {
-      DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                 "FORT: Classify v4: Log buffer error: %d (path len: %d)\n",
-                 status, path_len);
-    }
+    fort_buffer_blocked_write(&g_device->buffer,
+      remote_ip, process_id, path_len, path,
+      &irp, &irp_status, &info);
   }
 
  block:
   classifyOut->actionType = FWP_ACTION_BLOCK;
   classifyOut->rights &= ~FWPS_RIGHT_ACTION_WRITE;
-  return;
+  goto end;
 
  permit:
   classifyOut->actionType = FWP_ACTION_PERMIT;
   if ((filter->flags & FWPS_FILTER_FLAG_CLEAR_ACTION_RIGHT)) {
     classifyOut->rights &= ~FWPS_RIGHT_ACTION_WRITE;
   }
-  return;
+
+ end:
+  if (irp != NULL) {
+    fort_request_complete_info(irp, irp_status, info);
+  }
 }
 
 static void
@@ -298,7 +304,11 @@ fort_callout_flow_delete_v4 (UINT16 layerId,
   UNUSED(layerId);
   UNUSED(calloutId);
 
-  fort_stat_flow_delete(&g_device->stat, flowContext);
+  if (NT_SUCCESS(fort_stat_flow_delete(&g_device->stat, flowContext))) {
+    const UINT32 process_id = (UINT32) flowContext;
+
+    fort_buffer_proc_del_write(&g_device->buffer, process_id);
+  }
 }
 
 static void

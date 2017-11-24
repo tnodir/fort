@@ -53,6 +53,21 @@ quint32 FortCommon::logBlockedSize(quint32 pathLen)
     return FORT_LOG_BLOCKED_SIZE(pathLen);
 }
 
+quint32 FortCommon::logProcNewHeaderSize()
+{
+    return FORT_LOG_PROC_NEW_HEADER_SIZE;
+}
+
+quint32 FortCommon::logProcNewSize(quint32 pathLen)
+{
+    return FORT_LOG_PROC_NEW_SIZE(pathLen);
+}
+
+quint32 FortCommon::logProcDelSize()
+{
+    return FORT_LOG_PROC_DEL_SIZE;
+}
+
 quint32 FortCommon::logType(const char *input)
 {
     return fort_log_type(input);
@@ -70,6 +85,28 @@ void FortCommon::logBlockedHeaderRead(const char *input,
                                       quint32 *pathLen)
 {
     fort_log_blocked_header_read(input, remoteIp, pid, pathLen);
+}
+
+void FortCommon::logProcNewHeaderWrite(char *output,
+                                       quint32 pid, quint32 pathLen)
+{
+    fort_log_proc_new_header_write(output, pid, pathLen);
+}
+
+void FortCommon::logProcNewHeaderRead(const char *input,
+                                      quint32 *pid, quint32 *pathLen)
+{
+    fort_log_proc_new_header_read(input, pid, pathLen);
+}
+
+void FortCommon::logProcDelWrite(char *output, quint32 pid)
+{
+    fort_log_proc_del_write(output, pid);
+}
+
+void FortCommon::logProcDelRead(const char *input, quint32 *pid)
+{
+    fort_log_proc_del_read(input, pid);
 }
 
 void FortCommon::confAppPermsMaskInit(void *drvConf)

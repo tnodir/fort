@@ -105,14 +105,59 @@ fort_buffer_close (PFORT_BUFFER buf)
 }
 
 static NTSTATUS
+fort_buffer_prepare (PFORT_BUFFER buf, UINT32 len, PCHAR *out,
+                     PIRP *irp, NTSTATUS *irp_status, ULONG_PTR *info)
+{
+  /* Check pending buffer */
+  if (buf->out_len && buf->out_top < buf->out_len) {
+    const UINT32 out_top = buf->out_top;
+    UINT32 new_top = out_top + len;
+
+    /* Is it time to flush logs? */
+    if (buf->out_len - new_top < FORT_LOG_SIZE_MAX) {
+      if (irp != NULL) {
+        buf->out_len = 0;
+
+        *irp = buf->irp;
+        buf->irp = NULL;
+
+        *irp_status = STATUS_SUCCESS;
+
+        *info = new_top;
+        new_top = 0;
+      } else {
+        buf->out_len = out_top;
+        new_top = out_top;
+      }
+    }
+
+    *out = buf->out + out_top;
+    buf->out_top = new_top;
+  } else {
+    PFORT_BUFFER_DATA data = fort_buffer_data_alloc(buf, len);
+    const UINT32 buf_top = data ? data->top : FORT_BUFFER_SIZE;
+    const UINT32 new_top = buf_top + len;
+
+    if (new_top > FORT_BUFFER_SIZE) {
+      return STATUS_BUFFER_TOO_SMALL;  /* drop on buffer overflow */
+    }
+
+    *out = data->p + buf_top;
+    data->top = new_top;
+  }
+
+  return STATUS_SUCCESS;
+}
+
+static NTSTATUS
 fort_buffer_blocked_write (PFORT_BUFFER buf, UINT32 remote_ip, UINT32 pid,
                            UINT32 path_len, const PVOID path,
                            PIRP *irp, NTSTATUS *irp_status, ULONG_PTR *info)
 {
-  UINT32 len;
   PCHAR out;
+  UINT32 len;
   KLOCK_QUEUE_HANDLE lock_queue;
-  NTSTATUS status = STATUS_SUCCESS;
+  NTSTATUS status;
 
   if (path_len > FORT_LOG_PATH_MAX) {
     path_len = 0;  /* drop too long path */
@@ -122,43 +167,64 @@ fort_buffer_blocked_write (PFORT_BUFFER buf, UINT32 remote_ip, UINT32 pid,
 
   KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
 
-  /* Try to directly write to pending client */
-  if (buf->out_len) {
-    const UINT32 out_top = buf->out_top;
-    UINT32 new_top = out_top + len;
+  status = fort_buffer_prepare(buf, len, &out,
+    irp, irp_status, info);
 
-    /* Is it time to flush logs? */
-    if (buf->out_len - new_top < FORT_LOG_BLOCKED_SIZE_MAX) {
-      buf->out_len = 0;
-
-      *irp = buf->irp;
-      buf->irp = NULL;
-
-      *irp_status = STATUS_SUCCESS;
-
-      *info = new_top;
-      new_top = 0;
-    }
-
-    out = buf->out + out_top;
-    buf->out_top = new_top;
-  } else {
-    PFORT_BUFFER_DATA data = fort_buffer_data_alloc(buf, len);
-    const UINT32 buf_top = data ? data->top : FORT_BUFFER_SIZE;
-    const UINT32 new_top = buf_top + len;
-
-    if (new_top > FORT_BUFFER_SIZE) {
-      status = STATUS_BUFFER_TOO_SMALL;
-      goto end;  /* drop on buffer overflow */
-    }
-
-    out = data->p + buf_top;
-    data->top = new_top;
+  if (NT_SUCCESS(status)) {
+    fort_log_blocked_write(out, remote_ip, pid, path_len, path);
   }
 
-  fort_log_blocked_write(out, remote_ip, pid, path_len, path);
+  KeReleaseInStackQueuedSpinLock(&lock_queue);
 
- end:
+  return status;
+}
+
+static NTSTATUS
+fort_buffer_proc_new_write (PFORT_BUFFER buf, UINT32 pid,
+                            UINT32 path_len, const PVOID path,
+                            PIRP *irp, NTSTATUS *irp_status, ULONG_PTR *info)
+{
+  PCHAR out;
+  UINT32 len;
+  KLOCK_QUEUE_HANDLE lock_queue;
+  NTSTATUS status;
+
+  if (path_len > FORT_LOG_PATH_MAX) {
+    path_len = 0;  /* drop too long path */
+  }
+
+  len = FORT_LOG_PROC_NEW_SIZE(path_len);
+
+  KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
+
+  status = fort_buffer_prepare(buf, len, &out,
+    irp, irp_status, info);
+
+  if (NT_SUCCESS(status)) {
+    fort_log_proc_new_write(out, pid, path_len, path);
+  }
+
+  KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+  return status;
+}
+
+static NTSTATUS
+fort_buffer_proc_del_write (PFORT_BUFFER buf, UINT32 pid)
+{
+  PCHAR out;
+  const UINT32 len = FORT_LOG_PROC_DEL_SIZE;
+  KLOCK_QUEUE_HANDLE lock_queue;
+  NTSTATUS status;
+
+  KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
+
+  status = fort_buffer_prepare(buf, len, &out, NULL, NULL, NULL);
+
+  if (NT_SUCCESS(status)) {
+    fort_log_proc_del_write(out, pid);
+  }
+
   KeReleaseInStackQueuedSpinLock(&lock_queue);
 
   return status;
@@ -181,7 +247,7 @@ fort_buffer_xmove (PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len,
   if (!buf_top) {
     if (buf->out_len) {
       status = STATUS_INSUFFICIENT_RESOURCES;
-    } else if (out_len < FORT_LOG_BLOCKED_SIZE_MAX) {
+    } else if (out_len < FORT_LOG_SIZE_MAX) {
       status = STATUS_BUFFER_TOO_SMALL;
     } else {
       buf->irp = irp;
