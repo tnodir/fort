@@ -2,11 +2,18 @@
 
 #define FORT_STAT_POOL_TAG	'SwfF'
 
+typedef struct fort_stat_traf {
+  UINT32 volatile in_bytes;
+  UINT32 volatile out_bytes;
+} FORT_STAT_TRAF, *PFORT_STAT_TRAF;
+
 typedef struct fort_stat_proc {
   UINT32 process_id;
 
-  UINT32 in_bytes;
-  UINT32 out_bytes;
+  union {
+    LARGE_INTEGER volatile traf_all;
+    FORT_STAT_TRAF traf;
+  };
 
   int refcount;
 } FORT_STAT_PROC, *PFORT_STAT_PROC;
@@ -119,7 +126,7 @@ fort_stat_proc_add (PFORT_STAT stat, UINT32 process_id)
   }
 
   proc->process_id = process_id;
-  proc->in_bytes = proc->out_bytes = 0;
+  proc->traf_all.QuadPart = 0;
   proc->refcount = 1;
 
   return proc_index;
@@ -214,9 +221,9 @@ fort_stat_flow_classify (PFORT_STAT stat, UINT64 flow_context,
   proc = &stat->procs[proc_index];
 
   if (inbound) {
-    proc->in_bytes += data_len;
+    proc->traf.in_bytes += data_len;
   } else {
-    proc->out_bytes += data_len;
+    proc->traf.out_bytes += data_len;
   }
 
   KeReleaseInStackQueuedSpinLock(&lock_queue);
