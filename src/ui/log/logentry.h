@@ -10,7 +10,9 @@ public:
         TypeNone    = -1,
         // synchronize with FORT_LOG_FLAG_*
         AppBlocked  = 0x01000000,
-        UsageStat   = 0x02000000
+        ProcNew     = 0x02000000,
+        ProcDel     = 0x04000000,
+        StatTraf    = 0x08000000
     };
 
     explicit LogEntry();

@@ -4,6 +4,8 @@
 #include "../fortcommon.h"
 #include "logbuffer.h"
 #include "logentryblocked.h"
+#include "logentryprocdel.h"
+#include "logentryprocnew.h"
 #include "model/appblockedmodel.h"
 
 LogManager::LogManager(DriverWorker *driverWorker,
@@ -88,6 +90,8 @@ void LogManager::processLogBuffer(LogBuffer *logBuffer, bool success,
 void LogManager::readLogEntries(LogBuffer *logBuffer)
 {
     LogEntryBlocked entryBlocked;
+    LogEntryProcNew entryProcNew;
+    LogEntryProcDel entryProcDel;
 
     forever {
         switch (logBuffer->peekEntryType()) {
@@ -96,7 +100,15 @@ void LogManager::readLogEntries(LogBuffer *logBuffer)
             m_appBlockedModel->addLogEntry(entryBlocked);
             break;
         }
-        case LogEntry::UsageStat: {
+        case LogEntry::ProcNew: {
+            logBuffer->readEntryProcNew(&entryProcNew);
+            break;
+        }
+        case LogEntry::ProcDel: {
+            logBuffer->readEntryProcDel(&entryProcDel);
+            break;
+        }
+        case LogEntry::StatTraf: {
             //break;
         }
         default:

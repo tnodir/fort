@@ -7,6 +7,8 @@
 #include "logentry.h"
 
 class LogEntryBlocked;
+class LogEntryProcDel;
+class LogEntryProcNew;
 
 class LogBuffer : public QObject
 {
@@ -25,6 +27,12 @@ public:
 
     void writeEntryBlocked(const LogEntryBlocked *logEntry);
     void readEntryBlocked(LogEntryBlocked *logEntry);
+
+    void writeEntryProcNew(const LogEntryProcNew *logEntry);
+    void readEntryProcNew(LogEntryProcNew *logEntry);
+
+    void writeEntryProcDel(const LogEntryProcDel *logEntry);
+    void readEntryProcDel(LogEntryProcDel *logEntry);
 
 signals:
 

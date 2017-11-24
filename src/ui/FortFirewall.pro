@@ -18,6 +18,8 @@ SOURCES += \
     log/logbuffer.cpp \
     log/logentry.cpp \
     log/logentryblocked.cpp \
+    log/logentryprocdel.cpp \
+    log/logentryprocnew.cpp \
     log/logmanager.cpp \
     log/model/appblockedmodel.cpp \
     log/model/iplistmodel.cpp \
@@ -55,6 +57,8 @@ HEADERS += \
     log/logbuffer.h \
     log/logentry.h \
     log/logentryblocked.h \
+    log/logentryprocdel.h \
+    log/logentryprocnew.h \
     log/logmanager.h \
     log/model/appblockedmodel.h \
     log/model/iplistmodel.h \

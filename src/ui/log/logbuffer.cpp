@@ -2,6 +2,8 @@
 
 #include "fortcommon.h"
 #include "logentryblocked.h"
+#include "logentryprocdel.h"
+#include "logentryprocnew.h"
 
 LogBuffer::LogBuffer(int bufferSize, QObject *parent) :
     QObject(parent),
@@ -85,5 +87,75 @@ void LogBuffer::readEntryBlocked(LogEntryBlocked *logEntry)
     logEntry->setKernelPath(path);
 
     const int entrySize = FortCommon::logBlockedSize(pathLen);
+    m_offset += entrySize;
+}
+
+void LogBuffer::writeEntryProcNew(const LogEntryProcNew *logEntry)
+{
+    const QString path = logEntry->kernelPath();
+    const int pathLen = path.size() * sizeof(wchar_t);
+
+    const int entrySize = FortCommon::logProcNewSize(pathLen);
+    prepareFor(entrySize);
+
+    char *output = this->output();
+
+    FortCommon::logProcNewHeaderWrite(output, logEntry->pid(), pathLen);
+    output += FortCommon::logProcNewHeaderSize();
+
+    if (pathLen) {
+        path.toWCharArray((wchar_t *) output);
+    }
+
+    m_top += entrySize;
+}
+
+void LogBuffer::readEntryProcNew(LogEntryProcNew *logEntry)
+{
+    Q_ASSERT(m_offset < m_top);
+
+    const char *input = this->input();
+
+    quint32 pid, pathLen;
+    FortCommon::logProcNewHeaderRead(input, &pid, &pathLen);
+
+    QString path;
+    if (pathLen) {
+        input += FortCommon::logProcNewHeaderSize();
+        path = QString::fromWCharArray((const wchar_t *) input,
+                                       pathLen / sizeof(wchar_t));
+    }
+
+    logEntry->setPid(pid);
+    logEntry->setKernelPath(path);
+
+    const int entrySize = FortCommon::logProcNewSize(pathLen);
+    m_offset += entrySize;
+}
+
+void LogBuffer::writeEntryProcDel(const LogEntryProcDel *logEntry)
+{
+    const int entrySize = FortCommon::logProcDelSize();
+    prepareFor(entrySize);
+
+    char *output = this->output();
+
+    FortCommon::logProcDelWrite(output, logEntry->pid());
+
+    m_top += entrySize;
+}
+
+void LogBuffer::readEntryProcDel(LogEntryProcDel *logEntry)
+{
+    Q_ASSERT(m_offset < m_top);
+
+    const char *input = this->input();
+
+    quint32 pid;
+    FortCommon::logProcDelRead(input, &pid);
+
+    logEntry->setPid(pid);
+
+    const int entrySize = FortCommon::logProcDelSize();
     m_offset += entrySize;
 }
