@@ -179,7 +179,6 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   PIRP irp = NULL;
   ULONG_PTR info;
-  NTSTATUS irp_status;
 
   UNUSED(layerData);
   UNUSED(flowContext);
@@ -222,8 +221,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
       if (NT_SUCCESS(status)) {
         fort_buffer_proc_new_write(&g_device->buffer,
-          process_id, path_len, path,
-          &irp, &irp_status, &info);
+          process_id, path_len, path, &irp, &info);
       } else if (status != STATUS_OBJECT_NAME_EXISTS) {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                    "FORT: Classify v4: Flow assoc. error: %d\n", status);
@@ -234,8 +232,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   if (conf_flags.log_blocked) {
     fort_buffer_blocked_write(&g_device->buffer,
-      remote_ip, process_id, path_len, path,
-      &irp, &irp_status, &info);
+      remote_ip, process_id, path_len, path, &irp, &info);
   }
 
  block:
@@ -251,7 +248,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
  end:
   if (irp != NULL) {
-    fort_request_complete_info(irp, irp_status, info);
+    fort_request_complete_info(irp, STATUS_SUCCESS, info);
   }
 }
 
@@ -403,7 +400,7 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
 {
   NTSTATUS status;
 
-  // Check provider filters
+  /* Check provider filters */
   if (old_conf_flags.prov_boot != conf_flags.prov_boot) {
     fort_prov_unregister();
 
@@ -416,7 +413,7 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
     goto end;
   }
 
-  // Check flow filter
+  /* Check flow filter */
   if (old_conf_flags.log_stat != conf_flags.log_stat) {
     if (old_conf_flags.log_stat) {
       fort_prov_flow_unregister();
@@ -433,7 +430,7 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
     goto end;
   }
 
-  // Force reauth filter
+  /* Force reauth filter */
   status = fort_prov_reauth();
   if (!NT_SUCCESS(status)) {
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
@@ -449,18 +446,45 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
 static void
 fort_callout_timer (void)
 {
-  // Flush traffic statistics
+  PFORT_BUFFER buf = &g_device->buffer;
+  PFORT_STAT stat = &g_device->stat;
+
+  KLOCK_QUEUE_HANDLE stat_lock_queue;
+  KLOCK_QUEUE_HANDLE buf_lock_queue;
+
+  PIRP irp = NULL;
+  ULONG_PTR info;
+
+  /* Lock stat */
+  fort_stat_dpc_begin(stat, &stat_lock_queue);
+
+  /* Lock buffer */
+  fort_buffer_dpc_begin(buf, &buf_lock_queue);
+
+  /* Flush traffic statistics */
   {
+    PCHAR out;
+    const UINT16 proc_count = stat->proc_count;
+    const UINT32 len = proc_count * sizeof(FORT_STAT_TRAF);
+
+    /* TODO: Write by chunks */
+    if (len < FORT_BUFFER_SIZE
+        && NT_SUCCESS(fort_buffer_prepare(buf, len, &out, &irp, &info))) {
+      fort_stat_dpc_traf_write(stat, 0, proc_count, out);
+    }
   }
 
-  // Flush pending buffer
-  {
-    PIRP irp;
-    ULONG_PTR info;
+  /* Unlock stat */
+  fort_stat_dpc_end(&stat_lock_queue);
 
-    if (fort_buffer_flush_pending(&g_device->buffer, &irp, &info)) {
-      fort_request_complete_info(irp, STATUS_SUCCESS, info);
-    }
+  /* Flush pending buffer */
+  fort_buffer_dpc_flush_pending(buf, &irp, &info);
+
+  /* Unlock buffer */
+  fort_buffer_dpc_end(&buf_lock_queue);
+
+  if (irp != NULL) {
+    fort_request_complete_info(irp, STATUS_SUCCESS, info);
   }
 }
 
@@ -529,15 +553,15 @@ static void
 fort_device_cancel_pending (PDEVICE_OBJECT device, PIRP irp)
 {
   ULONG_PTR info;
-  NTSTATUS irp_status;
+  NTSTATUS status;
 
   UNUSED(device);
 
-  irp_status = fort_buffer_cancel_pending(&g_device->buffer, irp, &info);
+  status = fort_buffer_cancel_pending(&g_device->buffer, irp, &info);
 
   IoReleaseCancelSpinLock(irp->CancelIrql);  /* before IoCompleteRequest()! */
 
-  fort_request_complete_info(irp, irp_status, info);
+  fort_request_complete_info(irp, status, info);
 }
 
 static NTSTATUS
@@ -664,7 +688,7 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 
   UNUSED(reg_path);
 
-  // Wait for BFE to start
+  /* Wait for BFE to start */
   status = fort_bfe_wait();
   if (!NT_SUCCESS(status)) {
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
@@ -701,17 +725,17 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 
       KeInitializeSpinLock(&g_device->conf_lock);
 
-      // Unegister old filters provider
+      /* Unegister old filters provider */
       {
         g_device->prov_boot = fort_prov_is_boot();
 
         fort_prov_unregister();
       }
 
-      // Install callouts
+      /* Install callouts */
       status = fort_callout_install(device);
 
-      // Register filters provider
+      /* Register filters provider */
       if (NT_SUCCESS(status)) {
         status = fort_prov_register(g_device->prov_boot);
       }

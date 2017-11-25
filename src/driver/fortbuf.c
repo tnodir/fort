@@ -106,7 +106,7 @@ fort_buffer_close (PFORT_BUFFER buf)
 
 static NTSTATUS
 fort_buffer_prepare (PFORT_BUFFER buf, UINT32 len, PCHAR *out,
-                     PIRP *irp, NTSTATUS *irp_status, ULONG_PTR *info)
+                     PIRP *irp, ULONG_PTR *info)
 {
   /* Check pending buffer */
   if (buf->out_len && buf->out_top < buf->out_len) {
@@ -120,8 +120,6 @@ fort_buffer_prepare (PFORT_BUFFER buf, UINT32 len, PCHAR *out,
 
         *irp = buf->irp;
         buf->irp = NULL;
-
-        *irp_status = STATUS_SUCCESS;
 
         *info = new_top;
         new_top = 0;
@@ -152,7 +150,7 @@ fort_buffer_prepare (PFORT_BUFFER buf, UINT32 len, PCHAR *out,
 static NTSTATUS
 fort_buffer_blocked_write (PFORT_BUFFER buf, UINT32 remote_ip, UINT32 pid,
                            UINT32 path_len, const PVOID path,
-                           PIRP *irp, NTSTATUS *irp_status, ULONG_PTR *info)
+                           PIRP *irp, ULONG_PTR *info)
 {
   PCHAR out;
   UINT32 len;
@@ -167,8 +165,7 @@ fort_buffer_blocked_write (PFORT_BUFFER buf, UINT32 remote_ip, UINT32 pid,
 
   KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
 
-  status = fort_buffer_prepare(buf, len, &out,
-    irp, irp_status, info);
+  status = fort_buffer_prepare(buf, len, &out, irp, info);
 
   if (NT_SUCCESS(status)) {
     fort_log_blocked_write(out, remote_ip, pid, path_len, path);
@@ -182,7 +179,7 @@ fort_buffer_blocked_write (PFORT_BUFFER buf, UINT32 remote_ip, UINT32 pid,
 static NTSTATUS
 fort_buffer_proc_new_write (PFORT_BUFFER buf, UINT32 pid,
                             UINT32 path_len, const PVOID path,
-                            PIRP *irp, NTSTATUS *irp_status, ULONG_PTR *info)
+                            PIRP *irp, ULONG_PTR *info)
 {
   PCHAR out;
   UINT32 len;
@@ -197,8 +194,7 @@ fort_buffer_proc_new_write (PFORT_BUFFER buf, UINT32 pid,
 
   KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
 
-  status = fort_buffer_prepare(buf, len, &out,
-    irp, irp_status, info);
+  status = fort_buffer_prepare(buf, len, &out, irp, info);
 
   if (NT_SUCCESS(status)) {
     fort_log_proc_new_write(out, pid, path_len, path);
@@ -219,7 +215,7 @@ fort_buffer_proc_del_write (PFORT_BUFFER buf, UINT32 pid)
 
   KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
 
-  status = fort_buffer_prepare(buf, len, &out, NULL, NULL, NULL);
+  status = fort_buffer_prepare(buf, len, &out, NULL, NULL);
 
   if (NT_SUCCESS(status)) {
     fort_log_proc_del_write(out, pid);
@@ -298,14 +294,23 @@ fort_buffer_cancel_pending (PFORT_BUFFER buf, PIRP irp, ULONG_PTR *info)
   return status;
 }
 
-static BOOL
-fort_buffer_flush_pending (PFORT_BUFFER buf, PIRP *irp, ULONG_PTR *info)
+static void
+fort_buffer_dpc_begin (PFORT_BUFFER buf, PKLOCK_QUEUE_HANDLE lock_queue)
 {
-  KLOCK_QUEUE_HANDLE lock_queue;
-  UINT32 out_top;
+  KeAcquireInStackQueuedSpinLockAtDpcLevel(&buf->lock, lock_queue);
+}
 
-  KeAcquireInStackQueuedSpinLockAtDpcLevel(&buf->lock, &lock_queue);
-  out_top = buf->out_top;
+static void
+fort_buffer_dpc_end (PKLOCK_QUEUE_HANDLE lock_queue)
+{
+  KeReleaseInStackQueuedSpinLockFromDpcLevel(lock_queue);
+}
+
+static void
+fort_buffer_dpc_flush_pending (PFORT_BUFFER buf, PIRP *irp, ULONG_PTR *info)
+{
+  const UINT32 out_top = buf->out_top;
+
   if (out_top) {
     *info = out_top;
 
@@ -315,7 +320,4 @@ fort_buffer_flush_pending (PFORT_BUFFER buf, PIRP *irp, ULONG_PTR *info)
     *irp = buf->irp;
     buf->irp = NULL;
   }
-  KeReleaseInStackQueuedSpinLockFromDpcLevel(&lock_queue);
-
-  return out_top != 0;
 }

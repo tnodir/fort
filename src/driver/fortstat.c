@@ -19,8 +19,9 @@ typedef struct fort_stat_proc {
 } FORT_STAT_PROC, *PFORT_STAT_PROC;
 
 typedef struct fort_stat {
-  UINT32 proc_top;
-  UINT32 proc_count;
+  UINT16 proc_top;
+  UINT16 proc_end;
+  UINT16 proc_count;
 
   int proc_free_index;
 
@@ -70,6 +71,8 @@ fort_stat_proc_dec (PFORT_STAT stat, int proc_index)
 
     proc->refcount = stat->proc_free_index;
     stat->proc_free_index = proc_index;
+
+    stat->proc_count--;
   }
 
   return STATUS_SUCCESS;
@@ -84,22 +87,22 @@ fort_stat_proc_del (PFORT_STAT_PROC procs)
 static BOOL
 fort_stat_proc_realloc (PFORT_STAT stat)
 {
-  const UINT32 count = stat->proc_count;
-  const UINT32 new_count = (count ? count : 16) * 3 / 2;
+  const UINT16 proc_end = stat->proc_end;
+  const UINT16 new_end = (proc_end ? proc_end : 16) * 3 / 2;
   PFORT_STAT_PROC new_procs = ExAllocatePoolWithTag(NonPagedPool,
-    new_count * sizeof(FORT_STAT_PROC), FORT_STAT_POOL_TAG);
+    new_end * sizeof(FORT_STAT_PROC), FORT_STAT_POOL_TAG);
 
   if (new_procs == NULL)
     return FALSE;
 
-  if (count) {
+  if (proc_end) {
     PFORT_STAT_PROC procs = stat->procs;
 
     RtlCopyMemory(new_procs, procs, stat->proc_top * sizeof(FORT_STAT_PROC));
     fort_stat_proc_del(procs);
   }
 
-  stat->proc_count = new_count;
+  stat->proc_end = new_end;
   stat->procs = new_procs;
 
   return TRUE;
@@ -116,7 +119,7 @@ fort_stat_proc_add (PFORT_STAT stat, UINT32 process_id)
 
     stat->proc_free_index = proc->refcount;
   } else {
-    if (stat->proc_top >= stat->proc_count
+    if (stat->proc_top >= stat->proc_end
         && !fort_stat_proc_realloc(stat)) {
       return -1;
     }
@@ -128,6 +131,8 @@ fort_stat_proc_add (PFORT_STAT stat, UINT32 process_id)
   proc->process_id = process_id;
   proc->traf_all.QuadPart = 0;
   proc->refcount = 1;
+
+  stat->proc_count++;
 
   return proc_index;
 }
@@ -229,5 +234,34 @@ fort_stat_flow_classify (PFORT_STAT stat, UINT64 flow_context,
   KeReleaseInStackQueuedSpinLock(&lock_queue);
 
   DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-             "FORT: flow >: %d %d\n", (UINT32) flow_context, data_len);
+             "FORT: flow >: %d %d %d\n", (UINT32) flow_context, data_len, inbound);
+}
+
+static void
+fort_stat_dpc_begin (PFORT_STAT stat, PKLOCK_QUEUE_HANDLE lock_queue)
+{
+  KeAcquireInStackQueuedSpinLockAtDpcLevel(&stat->lock, lock_queue);
+}
+
+static void
+fort_stat_dpc_end (PKLOCK_QUEUE_HANDLE lock_queue)
+{
+  KeReleaseInStackQueuedSpinLockFromDpcLevel(lock_queue);
+}
+
+static void
+fort_stat_dpc_traf_write (PFORT_STAT stat, UINT32 index, UINT32 count,
+                          PCHAR out)
+{
+  PFORT_STAT_PROC proc = &stat->procs[index];
+  PFORT_STAT_TRAF out_traf = (PFORT_STAT_TRAF) out;
+
+  for (; index < count; ++proc) {
+    if (!proc->process_id)
+      continue;
+
+    *out_traf = proc->traf;
+
+    ++index;
+  }
 }
