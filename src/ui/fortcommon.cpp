@@ -68,6 +68,16 @@ quint32 FortCommon::logProcDelSize()
     return FORT_LOG_PROC_DEL_SIZE;
 }
 
+quint32 FortCommon::logStatTrafHeaderSize()
+{
+    return FORT_LOG_STAT_TRAF_HEADER_SIZE;
+}
+
+quint32 FortCommon::logStatTrafSize(quint16 procCount)
+{
+    return FORT_LOG_STAT_TRAF_SIZE(procCount);
+}
+
 quint32 FortCommon::logType(const char *input)
 {
     return fort_log_type(input);
@@ -107,6 +117,12 @@ void FortCommon::logProcDelWrite(char *output, quint32 pid)
 void FortCommon::logProcDelRead(const char *input, quint32 *pid)
 {
     fort_log_proc_del_read(input, pid);
+}
+
+void FortCommon::logStatTrafHeaderRead(const char *input,
+                                       quint16 *procCount)
+{
+    fort_log_stat_traf_header_read(input, procCount);
 }
 
 void FortCommon::confAppPermsMaskInit(void *drvConf)

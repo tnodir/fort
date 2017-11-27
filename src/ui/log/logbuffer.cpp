@@ -4,6 +4,7 @@
 #include "logentryblocked.h"
 #include "logentryprocdel.h"
 #include "logentryprocnew.h"
+#include "logentrystattraf.h"
 
 LogBuffer::LogBuffer(int bufferSize, QObject *parent) :
     QObject(parent),
@@ -157,5 +158,26 @@ void LogBuffer::readEntryProcDel(LogEntryProcDel *logEntry)
     logEntry->setPid(pid);
 
     const int entrySize = FortCommon::logProcDelSize();
+    m_offset += entrySize;
+}
+
+void LogBuffer::readEntryStatTraf(LogEntryStatTraf *logEntry)
+{
+    Q_ASSERT(m_offset < m_top);
+
+    const char *input = this->input();
+
+    quint16 procCount;
+    FortCommon::logStatTrafHeaderRead(input, &procCount);
+
+    logEntry->setProcCount(procCount);
+
+    if (procCount) {
+        input += FortCommon::logStatTrafHeaderSize();
+
+        logEntry->setTrafBytes((const quint32 *) input);
+    }
+
+    const int entrySize = FortCommon::logStatTrafSize(procCount);
     m_offset += entrySize;
 }

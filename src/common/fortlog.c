@@ -26,6 +26,11 @@
 
 #define FORT_LOG_PROC_DEL_SIZE		(2 * sizeof(UINT32))
 
+#define FORT_LOG_STAT_TRAF_HEADER_SIZE	(sizeof(UINT32))
+
+#define FORT_LOG_STAT_TRAF_SIZE(proc_count) \
+  (FORT_LOG_STAT_TRAF_HEADER_SIZE + proc_count * 2 * sizeof(UINT32))
+
 #define FORT_LOG_SIZE_MAX		FORT_LOG_BLOCKED_SIZE_MAX
 
 #define fort_log_type(p)	(*((UINT32 *) (p)) & FORT_LOG_FLAG_TYPE_MASK)
@@ -57,7 +62,7 @@ static void
 fort_log_blocked_header_read (const char *p, UINT32 *remote_ip, UINT32 *pid,
                               UINT32 *path_len)
 {
-  UINT32 *up = (UINT32 *) p;
+  const UINT32 *up = (const UINT32 *) p;
 
   *path_len = (*up++ & ~FORT_LOG_FLAG_TYPE_MASK);
   *remote_ip = *up++;
@@ -89,7 +94,7 @@ static void
 fort_log_proc_new_header_read (const char *p, UINT32 *pid,
                                UINT32 *path_len)
 {
-  UINT32 *up = (UINT32 *) p;
+  const UINT32 *up = (const UINT32 *) p;
 
   *path_len = (*up++ & ~FORT_LOG_FLAG_TYPE_MASK);
   *pid = *up;
@@ -107,7 +112,24 @@ fort_log_proc_del_write (char *p, UINT32 pid)
 static void
 fort_log_proc_del_read (const char *p, UINT32 *pid)
 {
+  const UINT32 *up = (const UINT32 *) p;
+
+  up++;
+  *pid = *up;
+}
+
+static void
+fort_log_stat_traf_header_write (char *p, UINT16 proc_count)
+{
   UINT32 *up = (UINT32 *) p;
 
-  *pid = *up;
+  *up++ = FORT_LOG_FLAG_STAT_TRAF | proc_count;
+}
+
+static void
+fort_log_stat_traf_header_read (const char *p, UINT16 *proc_count)
+{
+  const UINT32 *up = (const UINT32 *) p;
+
+  *proc_count = (UINT16) *up;
 }

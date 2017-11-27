@@ -465,12 +465,13 @@ fort_callout_timer (void)
   {
     PCHAR out;
     const UINT16 proc_count = stat->proc_count;
-    const UINT32 len = proc_count * sizeof(FORT_STAT_TRAF);
+    const UINT32 len = FORT_LOG_STAT_TRAF_SIZE(proc_count);
 
     /* TODO: Write by chunks */
     if (len < FORT_BUFFER_SIZE
         && NT_SUCCESS(fort_buffer_prepare(buf, len, &out, &irp, &info))) {
-      fort_stat_dpc_traf_write(stat, 0, proc_count, out);
+      fort_log_stat_traf_header_write(out, proc_count);
+      fort_stat_dpc_traf_flush(stat, 0, proc_count, out);
     }
   }
 

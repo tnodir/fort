@@ -6,6 +6,7 @@
 #include "logentryblocked.h"
 #include "logentryprocdel.h"
 #include "logentryprocnew.h"
+#include "logentrystattraf.h"
 #include "model/appblockedmodel.h"
 
 LogManager::LogManager(DriverWorker *driverWorker,
@@ -87,11 +88,13 @@ void LogManager::processLogBuffer(LogBuffer *logBuffer, bool success,
     m_freeBuffers.append(logBuffer);
 }
 
+#include <QDebug>
 void LogManager::readLogEntries(LogBuffer *logBuffer)
 {
     LogEntryBlocked entryBlocked;
     LogEntryProcNew entryProcNew;
     LogEntryProcDel entryProcDel;
+    LogEntryStatTraf entryStatTraf;
 
     forever {
         switch (logBuffer->peekEntryType()) {
@@ -102,14 +105,17 @@ void LogManager::readLogEntries(LogBuffer *logBuffer)
         }
         case LogEntry::ProcNew: {
             logBuffer->readEntryProcNew(&entryProcNew);
+            qDebug() << "+>" << entryProcNew.pid() << entryProcNew.kernelPath();
             break;
         }
         case LogEntry::ProcDel: {
             logBuffer->readEntryProcDel(&entryProcDel);
+            qDebug() << "->" << entryProcNew.pid();
             break;
         }
         case LogEntry::StatTraf: {
-            //break;
+            logBuffer->readEntryStatTraf(&entryStatTraf);
+            break;
         }
         default:
             return;

@@ -27,6 +27,9 @@ public:
 
     static quint32 logProcDelSize();
 
+    static quint32 logStatTrafHeaderSize();
+    static quint32 logStatTrafSize(quint16 procCount);
+
     static quint32 logType(const char *input);
 
     static void logBlockedHeaderWrite(char *output,
@@ -43,6 +46,9 @@ public:
 
     static void logProcDelWrite(char *output, quint32 pid);
     static void logProcDelRead(const char *input, quint32 *pid);
+
+    static void logStatTrafHeaderRead(const char *input,
+                                      quint16 *procCount);
 
     static void confAppPermsMaskInit(void *drvConf);
     static bool confIpInRange(const void *drvConf, quint32 ip,

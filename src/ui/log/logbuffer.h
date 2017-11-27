@@ -9,6 +9,7 @@
 class LogEntryBlocked;
 class LogEntryProcDel;
 class LogEntryProcNew;
+class LogEntryStatTraf;
 
 class LogBuffer : public QObject
 {
@@ -33,6 +34,8 @@ public:
 
     void writeEntryProcDel(const LogEntryProcDel *logEntry);
     void readEntryProcDel(LogEntryProcDel *logEntry);
+
+    void readEntryStatTraf(LogEntryStatTraf *logEntry);
 
 signals:
 

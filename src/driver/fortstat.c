@@ -250,7 +250,7 @@ fort_stat_dpc_end (PKLOCK_QUEUE_HANDLE lock_queue)
 }
 
 static void
-fort_stat_dpc_traf_write (PFORT_STAT stat, UINT32 index, UINT32 count,
+fort_stat_dpc_traf_flush (PFORT_STAT stat, UINT32 index, UINT32 count,
                           PCHAR out)
 {
   PFORT_STAT_PROC proc = &stat->procs[index];
@@ -261,6 +261,7 @@ fort_stat_dpc_traf_write (PFORT_STAT stat, UINT32 index, UINT32 count,
       continue;
 
     *out_traf = proc->traf;
+    proc->traf_all.QuadPart = 0;
 
     ++index;
   }
