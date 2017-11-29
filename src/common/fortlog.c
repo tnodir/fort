@@ -6,8 +6,7 @@
 
 #define FORT_LOG_FLAG_BLOCKED		0x01000000
 #define FORT_LOG_FLAG_PROC_NEW		0x02000000
-#define FORT_LOG_FLAG_PROC_DEL		0x04000000
-#define FORT_LOG_FLAG_STAT_TRAF		0x08000000
+#define FORT_LOG_FLAG_STAT_TRAF		0x04000000
 #define FORT_LOG_FLAG_TYPE_MASK		0xFF000000
 
 #define FORT_LOG_BLOCKED_HEADER_SIZE	(3 * sizeof(UINT32))
@@ -24,12 +23,18 @@
   ((FORT_LOG_PROC_NEW_HEADER_SIZE + (path_len) \
     + (FORT_LOG_ALIGN - 1)) & ~(FORT_LOG_ALIGN - 1))
 
-#define FORT_LOG_PROC_DEL_SIZE		(2 * sizeof(UINT32))
+#define FORT_LOG_STAT_HEADER_SIZE	sizeof(UINT32)
 
-#define FORT_LOG_STAT_TRAF_HEADER_SIZE	(sizeof(UINT32))
+#define FORT_LOG_STAT_PROC_SIZE(proc_count) \
+  (((proc_count - 1) / 8 + 1 + (FORT_LOG_ALIGN - 1)) \
+    & ~(FORT_LOG_ALIGN - 1))
 
 #define FORT_LOG_STAT_TRAF_SIZE(proc_count) \
-  (FORT_LOG_STAT_TRAF_HEADER_SIZE + proc_count * 2 * sizeof(UINT32))
+  (proc_count * 2 * sizeof(UINT32))
+
+#define FORT_LOG_STAT_SIZE(proc_count) \
+  (FORT_LOG_STAT_HEADER_SIZE + FORT_LOG_STAT_PROC_SIZE(proc_count) \
+    + FORT_LOG_STAT_TRAF_SIZE(proc_count))
 
 #define FORT_LOG_SIZE_MAX		FORT_LOG_BLOCKED_SIZE_MAX
 
@@ -97,24 +102,6 @@ fort_log_proc_new_header_read (const char *p, UINT32 *pid,
   const UINT32 *up = (const UINT32 *) p;
 
   *path_len = (*up++ & ~FORT_LOG_FLAG_TYPE_MASK);
-  *pid = *up;
-}
-
-static void
-fort_log_proc_del_write (char *p, UINT32 pid)
-{
-  UINT32 *up = (UINT32 *) p;
-
-  *up++ = FORT_LOG_FLAG_PROC_DEL;
-  *up = pid;
-}
-
-static void
-fort_log_proc_del_read (const char *p, UINT32 *pid)
-{
-  const UINT32 *up = (const UINT32 *) p;
-
-  up++;
   *pid = *up;
 }
 

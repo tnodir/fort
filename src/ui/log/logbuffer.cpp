@@ -2,7 +2,6 @@
 
 #include "fortcommon.h"
 #include "logentryblocked.h"
-#include "logentryprocdel.h"
 #include "logentryprocnew.h"
 #include "logentrystattraf.h"
 
@@ -134,33 +133,6 @@ void LogBuffer::readEntryProcNew(LogEntryProcNew *logEntry)
     m_offset += entrySize;
 }
 
-void LogBuffer::writeEntryProcDel(const LogEntryProcDel *logEntry)
-{
-    const int entrySize = FortCommon::logProcDelSize();
-    prepareFor(entrySize);
-
-    char *output = this->output();
-
-    FortCommon::logProcDelWrite(output, logEntry->pid());
-
-    m_top += entrySize;
-}
-
-void LogBuffer::readEntryProcDel(LogEntryProcDel *logEntry)
-{
-    Q_ASSERT(m_offset < m_top);
-
-    const char *input = this->input();
-
-    quint32 pid;
-    FortCommon::logProcDelRead(input, &pid);
-
-    logEntry->setPid(pid);
-
-    const int entrySize = FortCommon::logProcDelSize();
-    m_offset += entrySize;
-}
-
 void LogBuffer::readEntryStatTraf(LogEntryStatTraf *logEntry)
 {
     Q_ASSERT(m_offset < m_top);
@@ -173,8 +145,10 @@ void LogBuffer::readEntryStatTraf(LogEntryStatTraf *logEntry)
     logEntry->setProcCount(procCount);
 
     if (procCount) {
-        input += FortCommon::logStatTrafHeaderSize();
+        input += FortCommon::logStatHeaderSize();
+        logEntry->setProcBits((const quint8 *) input);
 
+        input += FortCommon::logStatProcSize(procCount);
         logEntry->setTrafBytes((const quint32 *) input);
     }
 

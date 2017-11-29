@@ -4,7 +4,6 @@
 #include "../fortcommon.h"
 #include "logbuffer.h"
 #include "logentryblocked.h"
-#include "logentryprocdel.h"
 #include "logentryprocnew.h"
 #include "logentrystattraf.h"
 #include "model/appblockedmodel.h"
@@ -93,7 +92,6 @@ void LogManager::readLogEntries(LogBuffer *logBuffer)
 {
     LogEntryBlocked entryBlocked;
     LogEntryProcNew entryProcNew;
-    LogEntryProcDel entryProcDel;
     LogEntryStatTraf entryStatTraf;
 
     forever {
@@ -108,13 +106,9 @@ void LogManager::readLogEntries(LogBuffer *logBuffer)
             qDebug() << "+>" << entryProcNew.pid() << entryProcNew.kernelPath();
             break;
         }
-        case LogEntry::ProcDel: {
-            logBuffer->readEntryProcDel(&entryProcDel);
-            qDebug() << "->" << entryProcNew.pid();
-            break;
-        }
         case LogEntry::StatTraf: {
             logBuffer->readEntryStatTraf(&entryStatTraf);
+            qDebug() << ">" << entryStatTraf.procCount();
             break;
         }
         default:

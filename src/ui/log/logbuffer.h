@@ -7,7 +7,6 @@
 #include "logentry.h"
 
 class LogEntryBlocked;
-class LogEntryProcDel;
 class LogEntryProcNew;
 class LogEntryStatTraf;
 
@@ -31,9 +30,6 @@ public:
 
     void writeEntryProcNew(const LogEntryProcNew *logEntry);
     void readEntryProcNew(LogEntryProcNew *logEntry);
-
-    void writeEntryProcDel(const LogEntryProcDel *logEntry);
-    void readEntryProcDel(LogEntryProcDel *logEntry);
 
     void readEntryStatTraf(LogEntryStatTraf *logEntry);
 

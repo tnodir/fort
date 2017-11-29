@@ -225,7 +225,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
       if (NT_SUCCESS(status)) {
         fort_buffer_proc_new_write(&g_device->buffer,
           process_id, path_len, path, &irp, &info);
-      } else if (status != STATUS_OBJECT_NAME_EXISTS) {
+      } else {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                    "FORT: Classify v4: Flow assoc. error: %d\n", status);
       }
@@ -304,11 +304,7 @@ fort_callout_flow_delete_v4 (UINT16 layerId,
   UNUSED(layerId);
   UNUSED(calloutId);
 
-  if (NT_SUCCESS(fort_stat_flow_delete(&g_device->stat, flowContext))) {
-    const UINT32 process_id = (UINT32) flowContext;
-
-    fort_buffer_proc_del_write(&g_device->buffer, process_id);
-  }
+  fort_stat_flow_delete(&g_device->stat, flowContext);
 }
 
 static void
@@ -321,8 +317,8 @@ fort_callout_flow_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 {
   FWPS_STREAM_DATA0 *streamData = packet->streamData;
 
-  fort_stat_flow_classify(&g_device->stat, flowContext,
-    (UINT32) streamData->dataLength,
+  fort_stat_flow_classify(&g_device->stat, inMetaValues->flowHandle,
+    g_device->flow4_id, flowContext, (UINT32) streamData->dataLength,
     (streamData->flags & FWPS_STREAM_FLAG_RECEIVE) != 0);
 
   classifyOut->actionType = FWP_ACTION_CONTINUE;
@@ -424,6 +420,7 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
 
     if (conf_flags.log_stat) {
       status = fort_prov_flow_register();
+
       if (!NT_SUCCESS(status)) {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                    "FORT: Prov. Flow Register: Error: %d\n", status);
@@ -442,6 +439,7 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
 
  end:
   fort_timer_update(&g_device->timer, conf_flags);
+  fort_stat_update(&g_device->stat, conf_flags);
 
   return status;
 }
@@ -451,6 +449,7 @@ fort_callout_timer (void)
 {
   PFORT_BUFFER buf = &g_device->buffer;
   PFORT_STAT stat = &g_device->stat;
+  UINT16 proc_count;
 
   KLOCK_QUEUE_HANDLE stat_lock_queue;
   KLOCK_QUEUE_HANDLE buf_lock_queue;
@@ -458,17 +457,17 @@ fort_callout_timer (void)
   PIRP irp = NULL;
   ULONG_PTR info;
 
-  /* Lock stat */
-  fort_stat_dpc_begin(stat, &stat_lock_queue);
-
   /* Lock buffer */
   fort_buffer_dpc_begin(buf, &buf_lock_queue);
 
+  /* Lock stat */
+  fort_stat_dpc_begin(stat, &stat_lock_queue);
+
   /* Flush traffic statistics */
-  {
+  proc_count = stat->proc_count;
+  if (proc_count) {
     PCHAR out;
-    const UINT16 proc_count = stat->proc_count;
-    const UINT32 len = FORT_LOG_STAT_TRAF_SIZE(proc_count);
+    const UINT32 len = FORT_LOG_STAT_SIZE(proc_count);
 
     /* TODO: Write by chunks */
     if (len < FORT_BUFFER_SIZE
@@ -649,15 +648,15 @@ fort_driver_unload (PDRIVER_OBJECT driver)
   UNICODE_STRING device_link;
 
   if (g_device != NULL) {
-    fort_timer_close(&g_device->timer);
-    fort_stat_close(&g_device->stat);
-    fort_buffer_close(&g_device->buffer);
-
     if (!g_device->prov_boot) {
       fort_prov_unregister();
     }
 
     fort_callout_remove();
+
+    fort_timer_close(&g_device->timer);
+    fort_stat_close(&g_device->stat);
+    fort_buffer_close(&g_device->buffer);
   }
 
   RtlInitUnicodeString(&device_link, DOS_DEVICE_NAME);

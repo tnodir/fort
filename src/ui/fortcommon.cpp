@@ -63,19 +63,24 @@ quint32 FortCommon::logProcNewSize(quint32 pathLen)
     return FORT_LOG_PROC_NEW_SIZE(pathLen);
 }
 
-quint32 FortCommon::logProcDelSize()
+quint32 FortCommon::logStatHeaderSize()
 {
-    return FORT_LOG_PROC_DEL_SIZE;
+    return FORT_LOG_STAT_HEADER_SIZE;
 }
 
-quint32 FortCommon::logStatTrafHeaderSize()
+quint32 FortCommon::logStatProcSize(quint16 procCount)
 {
-    return FORT_LOG_STAT_TRAF_HEADER_SIZE;
+    return FORT_LOG_STAT_PROC_SIZE(procCount);
 }
 
 quint32 FortCommon::logStatTrafSize(quint16 procCount)
 {
     return FORT_LOG_STAT_TRAF_SIZE(procCount);
+}
+
+quint32 FortCommon::logStatSize(quint16 procCount)
+{
+    return FORT_LOG_STAT_SIZE(procCount);
 }
 
 quint32 FortCommon::logType(const char *input)
@@ -107,16 +112,6 @@ void FortCommon::logProcNewHeaderRead(const char *input,
                                       quint32 *pid, quint32 *pathLen)
 {
     fort_log_proc_new_header_read(input, pid, pathLen);
-}
-
-void FortCommon::logProcDelWrite(char *output, quint32 pid)
-{
-    fort_log_proc_del_write(output, pid);
-}
-
-void FortCommon::logProcDelRead(const char *input, quint32 *pid)
-{
-    fort_log_proc_del_read(input, pid);
 }
 
 void FortCommon::logStatTrafHeaderRead(const char *input,

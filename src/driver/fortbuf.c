@@ -206,27 +206,6 @@ fort_buffer_proc_new_write (PFORT_BUFFER buf, UINT32 pid,
 }
 
 static NTSTATUS
-fort_buffer_proc_del_write (PFORT_BUFFER buf, UINT32 pid)
-{
-  PCHAR out;
-  const UINT32 len = FORT_LOG_PROC_DEL_SIZE;
-  KLOCK_QUEUE_HANDLE lock_queue;
-  NTSTATUS status;
-
-  KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
-
-  status = fort_buffer_prepare(buf, len, &out, NULL, NULL);
-
-  if (NT_SUCCESS(status)) {
-    fort_log_proc_del_write(out, pid);
-  }
-
-  KeReleaseInStackQueuedSpinLock(&lock_queue);
-
-  return status;
-}
-
-static NTSTATUS
 fort_buffer_xmove (PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len,
                    ULONG_PTR *info)
 {
@@ -242,7 +221,7 @@ fort_buffer_xmove (PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len,
 
   if (!buf_top) {
     if (buf->out_len) {
-      status = STATUS_INSUFFICIENT_RESOURCES;
+      status = STATUS_UNSUCCESSFUL;
     } else if (out_len < FORT_LOG_SIZE_MAX) {
       status = STATUS_BUFFER_TOO_SMALL;
     } else {

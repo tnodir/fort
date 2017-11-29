@@ -25,10 +25,10 @@ public:
     static quint32 logProcNewHeaderSize();
     static quint32 logProcNewSize(quint32 pathLen);
 
-    static quint32 logProcDelSize();
-
-    static quint32 logStatTrafHeaderSize();
+    static quint32 logStatHeaderSize();
+    static quint32 logStatProcSize(quint16 procCount);
     static quint32 logStatTrafSize(quint16 procCount);
+    static quint32 logStatSize(quint16 procCount);
 
     static quint32 logType(const char *input);
 
@@ -43,9 +43,6 @@ public:
                                       quint32 pid, quint32 pathLen);
     static void logProcNewHeaderRead(const char *input,
                                      quint32 *pid, quint32 *pathLen);
-
-    static void logProcDelWrite(char *output, quint32 pid);
-    static void logProcDelRead(const char *input, quint32 *pid);
 
     static void logStatTrafHeaderRead(const char *input,
                                       quint16 *procCount);
