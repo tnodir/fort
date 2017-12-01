@@ -114,6 +114,11 @@ bool FortSettings::setTasks(const TasksMap &map)
     return iniSync();
 }
 
+QString FortSettings::statFilePath() const
+{
+    return m_profilePath + QLatin1String("FortFirewall.stat");
+}
+
 QString FortSettings::confFilePath() const
 {
     return m_profilePath + QLatin1String("FortFirewall.conf");

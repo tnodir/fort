@@ -12,6 +12,7 @@
 #include "conf/addressgroup.h"
 #include "conf/appgroup.h"
 #include "conf/firewallconf.h"
+#include "db/databasemanager.h"
 #include "driver/drivermanager.h"
 #include "fortsettings.h"
 #include "log/logmanager.h"
@@ -35,10 +36,13 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_fortSettings(fortSettings),
     m_firewallConf(new FirewallConf(this)),
     m_firewallConfToEdit(nullConf()),
+    m_databaseManager(new DatabaseManager(fortSettings->statFilePath(), this)),
     m_driverManager(new DriverManager(this)),
-    m_logManager(new LogManager(m_driverManager->driverWorker(), this)),
+    m_logManager(new LogManager(m_databaseManager,
+                                m_driverManager->driverWorker(), this)),
     m_taskManager(new TaskManager(this, this))
 {
+    setupDatabase();
     setupDriver();
 
     loadSettings(m_firewallConf);
@@ -88,6 +92,11 @@ void FortManager::registerQmlTypes()
     qmlRegisterType<HostInfoCache>("com.fortfirewall", 1, 0, "HostInfoCache");
     qmlRegisterType<NetUtil>("com.fortfirewall", 1, 0, "NetUtil");
     qmlRegisterType<OsUtil>("com.fortfirewall", 1, 0, "OsUtil");
+}
+
+bool FortManager::setupDatabase()
+{
+    return m_databaseManager->initialize();
 }
 
 bool FortManager::setupDriver()

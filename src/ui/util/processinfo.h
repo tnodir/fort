@@ -5,7 +5,7 @@
 
 typedef void *phandle_t;
 
-#define PROC_INVALID_PID        -1
+#define PROC_INVALID_PID        quint32(-1)
 #define PROC_INVALID_HANDLE     nullptr
 
 class ProcessInfo : public QObject

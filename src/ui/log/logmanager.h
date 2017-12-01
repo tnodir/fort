@@ -4,6 +4,7 @@
 #include <QObject>
 
 class AppBlockedModel;
+class DatabaseManager;
 class DriverWorker;
 class LogBuffer;
 class LogEntry;
@@ -15,7 +16,8 @@ class LogManager : public QObject
     Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
 
 public:
-    explicit LogManager(DriverWorker *driverWorker,
+    explicit LogManager(DatabaseManager *databaseManager,
+                        DriverWorker *driverWorker,
                         QObject *parent = nullptr);
 
     AppBlockedModel *appBlockedModel() const { return m_appBlockedModel; }
@@ -38,6 +40,7 @@ private slots:
 private:
     void setErrorMessage(const QString &errorMessage);
 
+    void setupDatabaseManager();
     void setupDriverWorker();
 
     void readLogAsync(LogBuffer *logBuffer);
@@ -49,6 +52,8 @@ private:
 
 private:
     bool m_logReadingEnabled;
+
+    DatabaseManager *m_databaseManager;
 
     DriverWorker *m_driverWorker;
     QList<LogBuffer *> m_freeBuffers;

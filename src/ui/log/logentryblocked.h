@@ -20,6 +20,8 @@ public:
     QString kernelPath() const { return m_kernelPath; }
     void setKernelPath(const QString &kernelPath);
 
+    QString path() const;
+
 private:
     quint32 m_ip;
     quint32 m_pid;

@@ -64,9 +64,6 @@ fort_stat_proc_free (PFORT_STAT stat, PFORT_STAT_PROC proc, UINT16 proc_index)
   }
 
   stat->proc_count--;
-
-  DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-             "FORT: proc -: %d %d\n", proc->process_id, stat->proc_count);
 }
 
 static void
@@ -140,9 +137,6 @@ fort_stat_proc_add (PFORT_STAT stat, UINT32 process_id)
   proc->traf_all.QuadPart = 0;
 
   stat->proc_count++;
-
-  DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-             "FORT: proc +: %d %d\n", proc->process_id, stat->proc_count);
 
   return proc_index;
 }

@@ -22,12 +22,20 @@ DEFINES += \
     SQLITE_OMIT_INCRBLOB \
     SQLITE_OMIT_INTEGRITY_CHECK \
     SQLITE_OMIT_LOAD_EXTENSION \
-    SQLITE_OMIT_MEMORYDB \
     SQLITE_OMIT_PROGRESS_CALLBACK \
     SQLITE_OMIT_SHARED_CACHE \
     SQLITE_OMIT_TCL_VARIABLE \
     SQLITE_OMIT_TEMPDB \
     SQLITE_OMIT_TRACE
 
-SOURCES += $$PWD/sqlite3.c
-HEADERS += $$PWD/sqlite3.h
+SOURCES += \
+    $$PWD/sqlite3.c \
+    $$PWD/sqlitedb.cpp \
+    $$PWD/sqliteengine.cpp \
+    $$PWD/sqlitestmt.cpp
+
+HEADERS += \
+    $$PWD/sqlite3.h \
+    $$PWD/sqlitedb.h \
+    $$PWD/sqliteengine.h \
+    $$PWD/sqlitestmt.h

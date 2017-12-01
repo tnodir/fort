@@ -8,6 +8,7 @@
 class QQmlApplicationEngine;
 class QSystemTrayIcon;
 
+class DatabaseManager;
 class DriverManager;
 class FortSettings;
 class FirewallConf;
@@ -67,6 +68,8 @@ private:
 
     static void registerQmlTypes();
 
+    bool setupDatabase();
+
     bool setupDriver();
     void closeDriver();
 
@@ -105,6 +108,7 @@ private:
     QAction *m_filterEnabledAction;
     QList<QAction *> m_appGroupActions;
 
+    DatabaseManager *m_databaseManager;
     DriverManager *m_driverManager;
     LogManager *m_logManager;
     TaskManager *m_taskManager;

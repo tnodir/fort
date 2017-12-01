@@ -10,6 +10,7 @@ SOURCES += \
     conf/addressgroup.cpp \
     conf/appgroup.cpp \
     conf/firewallconf.cpp \
+    db/databasemanager.cpp \
     driver/drivermanager.cpp \
     driver/driverworker.cpp \
     fortcommon.cpp \
@@ -49,6 +50,7 @@ HEADERS += \
     conf/addressgroup.h \
     conf/appgroup.h \
     conf/firewallconf.h \
+    db/databasemanager.h \
     driver/drivermanager.h \
     driver/driverworker.h \
     fortcommon.h \
@@ -132,4 +134,4 @@ installer_build {
     PRE_TARGETDEPS += $$fortdrv32.target $$fortdrv64.target
 }
 
-include(sqlite/sqlite.pri)
+include(db/sqlite/sqlite.pri)

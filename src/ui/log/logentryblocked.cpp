@@ -23,3 +23,8 @@ void LogEntryBlocked::setKernelPath(const QString &kernelPath)
 {
     m_kernelPath = kernelPath;
 }
+
+QString LogEntryBlocked::path() const
+{
+    return getAppPath(m_kernelPath, m_pid);
+}

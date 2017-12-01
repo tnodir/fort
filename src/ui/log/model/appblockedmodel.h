@@ -26,9 +26,6 @@ public slots:
     void clear() override;
 
 private:
-    static QString getEntryPath(const LogEntryBlocked &logEntry);
-
-private:
     QHash<QString, QStringList> m_appIpList;
     QHash<QString, QSet<QString>> m_appIpSet;
 

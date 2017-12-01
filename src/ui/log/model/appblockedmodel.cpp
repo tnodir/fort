@@ -1,8 +1,6 @@
 #include "appblockedmodel.h"
 
-#include "../../util/fileutil.h"
 #include "../../util/net/netutil.h"
-#include "../../util/osutil.h"
 #include "../logentryblocked.h"
 #include "iplistmodel.h"
 
@@ -36,7 +34,7 @@ void AppBlockedModel::clear()
 
 void AppBlockedModel::addLogEntry(const LogEntryBlocked &logEntry)
 {
-    const QString appPath = getEntryPath(logEntry);
+    const QString appPath = logEntry.path();
     const QString ipText = NetUtil::ip4ToText(logEntry.ip());
     bool isNewApp = false;
 
@@ -67,13 +65,4 @@ void AppBlockedModel::addLogEntry(const LogEntryBlocked &logEntry)
             m_ipListModel->setList(ipList);
         }
     }
-}
-
-QString AppBlockedModel::getEntryPath(const LogEntryBlocked &logEntry)
-{
-    const QString kernelPath = logEntry.kernelPath();
-
-    return kernelPath.isEmpty()
-            ? OsUtil::pidToPath(logEntry.pid())
-            : FileUtil::kernelPathToPath(kernelPath);
 }

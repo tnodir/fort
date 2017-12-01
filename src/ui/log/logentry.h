@@ -18,6 +18,9 @@ public:
     virtual ~LogEntry();
 
     virtual LogEntry::LogType type() const = 0;
+
+protected:
+    static QString getAppPath(const QString &kernelPath, quint32 pid);
 };
 
 #endif // LOGENTRY_H

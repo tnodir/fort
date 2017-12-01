@@ -41,6 +41,8 @@ public:
     TasksMap tasks() const;
     bool setTasks(const TasksMap &map);
 
+    QString statFilePath() const;
+
     QString errorMessage() const { return m_errorMessage; }
 
 signals:
