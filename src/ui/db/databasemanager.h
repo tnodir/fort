@@ -20,12 +20,11 @@ public:
 
     bool initialize();
 
+    SqliteDb *sqliteDb() const { return m_sqliteDb; }
+
     void handleProcNew(const QString &path);
     void handleStatTraf(quint16 procCount, const quint8 *procBits,
                         const quint32 *trafBytes);
-
-    void debugProcNew();
-    void debugStatTraf();
 
 signals:
 

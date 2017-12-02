@@ -3,6 +3,8 @@
 #include <QtTest>
 
 #include "db/databasemanager.h"
+#include "db/sqlite/sqlitedb.h"
+#include "db/sqlite/sqlitestmt.h"
 #include "util/fileutil.h"
 
 void Test::dbWriteRead()
@@ -24,7 +26,7 @@ void Test::dbWriteRead()
         databaseManager.handleProcNew(appPath);
     }
 
-    databaseManager.debugProcNew();
+    debugProcNew(databaseManager.sqliteDb());
 
     // Add app traffics
     {
@@ -37,7 +39,7 @@ void Test::dbWriteRead()
         databaseManager.handleStatTraf(procCount, &procBits, trafBytes);
     }
 
-    databaseManager.debugStatTraf();
+    debugStatTraf(databaseManager.sqliteDb());
 
     // Delete apps
     {
@@ -49,5 +51,42 @@ void Test::dbWriteRead()
         databaseManager.handleStatTraf(procCount, &procBits, trafBytes);
     }
 
-    databaseManager.debugStatTraf();
+    debugStatTraf(databaseManager.sqliteDb());
+}
+
+void Test::debugProcNew(SqliteDb *sqliteDb)
+{
+    SqliteStmt stmt;
+
+    QVERIFY(stmt.prepare(sqliteDb->db(),
+                         "SELECT id, path FROM app;"));
+
+    qDebug() << "> app <";
+    while (stmt.step() == SqliteStmt::StepRow) {
+        qDebug() << ">"
+                 << stmt.columnInt64(0)
+                 << stmt.columnText(1);
+    }
+    qDebug() << "--";
+}
+
+void Test::debugStatTraf(SqliteDb *sqliteDb)
+{
+    SqliteStmt stmt;
+
+    QVERIFY(stmt.prepare(sqliteDb->db(),
+                         "SELECT app_id, unix_hour, in_bytes, out_bytes"
+                         "  FROM traffic_app_hour;"));
+
+    qDebug() << "> traf <";
+    while (stmt.step() == SqliteStmt::StepRow) {
+        const qint64 unixTime = stmt.columnInt64(1) * 3600;
+
+        qDebug() << ">"
+                 << stmt.columnInt64(0)
+                 << QDateTime::fromSecsSinceEpoch(unixTime).toString()
+                 << stmt.columnInt64(2)
+                 << stmt.columnInt64(3);
+    }
+    qDebug() << "--";
 }

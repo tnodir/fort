@@ -10,6 +10,7 @@
 static const char * const sqlPragmas =
         "PRAGMA locking_mode=EXCLUSIVE;"
         "PRAGMA journal_mode=WAL;"
+        "PRAGMA synchronous=NORMAL;"
         ;
 
 static const char * const sqlCreateTables =
@@ -46,14 +47,6 @@ static const char * const sqlUpsertAppTraffic =
         "  FROM new LEFT JOIN traffic_app_hour AS old"
         "    ON new.app_id = old.app_id"
         "      AND new.unix_hour = old.unix_hour;"
-        ;
-
-static const char * const sqlSelectApp =
-        "SELECT id, path FROM app;"
-        ;
-static const char * const sqlSelectAppTraffic =
-        "SELECT app_id, unix_hour, in_bytes, out_bytes"
-        "  FROM traffic_app_hour;"
         ;
 
 DatabaseManager::DatabaseManager(const QString &filePath,
@@ -188,37 +181,4 @@ SqliteStmt *DatabaseManager::getSqliteStmt(const char *sql)
     }
 
     return stmt;
-}
-
-#include <QDebug>
-void DatabaseManager::debugProcNew()
-{
-    SqliteStmt *stmt = getSqliteStmt(sqlSelectApp);
-
-    qDebug() << "> app <";
-    while (stmt->step() == SqliteStmt::StepRow) {
-        qDebug() << ">"
-                 << stmt->columnInt64(0)
-                 << stmt->columnText(1);
-    }
-    qDebug() << "--";
-    stmt->reset();
-}
-
-void DatabaseManager::debugStatTraf()
-{
-    SqliteStmt *stmt = getSqliteStmt(sqlSelectAppTraffic);
-
-    qDebug() << "> traf <";
-    while (stmt->step() == SqliteStmt::StepRow) {
-        const qint64 unixTime = stmt->columnInt64(1) * 3600;
-
-        qDebug() << ">"
-                 << stmt->columnInt64(0)
-                 << QDateTime::fromSecsSinceEpoch(unixTime).toString()
-                 << stmt->columnInt64(2)
-                 << stmt->columnInt64(3);
-    }
-    qDebug() << "--";
-    stmt->reset();
 }
