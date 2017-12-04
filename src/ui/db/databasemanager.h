@@ -37,7 +37,18 @@ private:
 
     SqliteStmt *getSqliteStmt(const char *sql);
 
+    void insertTraffic(SqliteStmt *stmt, qint64 appId = 0);
+    void updateTraffic(SqliteStmt *stmt, quint32 inBytes,
+                          quint32 outBytes, qint64 appId = 0);
+
+    static qint32 getUnixDay(qint64 unixTime);
+    static qint32 getUnixMonth(qint64 unixTime);
+
 private:
+    qint32 m_lastUnixHour;
+    qint32 m_lastUnixDay;
+    qint32 m_lastUnixMonth;
+
     QString m_filePath;
 
     SqliteDb *m_sqliteDb;

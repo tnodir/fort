@@ -11,6 +11,7 @@ SOURCES += \
     conf/appgroup.cpp \
     conf/firewallconf.cpp \
     db/databasemanager.cpp \
+    db/databasesql.cpp \
     driver/drivermanager.cpp \
     driver/driverworker.cpp \
     fortcommon.cpp \
@@ -51,6 +52,7 @@ HEADERS += \
     conf/appgroup.h \
     conf/firewallconf.h \
     db/databasemanager.h \
+    db/databasesql.h \
     driver/drivermanager.h \
     driver/driverworker.h \
     fortcommon.h \

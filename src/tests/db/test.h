@@ -14,7 +14,10 @@ private slots:
 
 private:
     void debugProcNew(SqliteDb *sqliteDb);
+
     void debugStatTraf(SqliteDb *sqliteDb);
+    void debugStatTrafStep(SqliteDb *sqliteDb, const char *name,
+                           const char *sql);
 };
 
 #endif // TEST_H

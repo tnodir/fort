@@ -1,6 +1,7 @@
 #include "test.h"
 
 #include <QtTest>
+#include <QElapsedTimer>
 
 #include "db/databasemanager.h"
 #include "db/sqlite/sqlitedb.h"
@@ -28,6 +29,9 @@ void Test::dbWriteRead()
 
     debugProcNew(databaseManager.sqliteDb());
 
+    QElapsedTimer timer;
+    timer.start();
+
     // Add app traffics
     {
         const quint8 procBits = 0xFF;
@@ -39,7 +43,7 @@ void Test::dbWriteRead()
         databaseManager.handleStatTraf(procCount, &procBits, trafBytes);
     }
 
-    debugStatTraf(databaseManager.sqliteDb());
+    qDebug() << "elapsed>" << timer.restart() << "msec";
 
     // Delete apps
     {
@@ -50,6 +54,8 @@ void Test::dbWriteRead()
 
         databaseManager.handleStatTraf(procCount, &procBits, trafBytes);
     }
+
+    qDebug() << "elapsed>" << timer.elapsed() << "msec";
 
     debugStatTraf(databaseManager.sqliteDb());
 }
@@ -72,17 +78,39 @@ void Test::debugProcNew(SqliteDb *sqliteDb)
 
 void Test::debugStatTraf(SqliteDb *sqliteDb)
 {
+    debugStatTrafStep(sqliteDb, "traffic_app_hour",
+                      "SELECT app_id, unix_time, in_bytes, out_bytes"
+                      "  FROM traffic_app_hour;");
+    debugStatTrafStep(sqliteDb, "traffic_app_day",
+                      "SELECT app_id, unix_time, in_bytes, out_bytes"
+                      "  FROM traffic_app_day;");
+    debugStatTrafStep(sqliteDb, "traffic_app_month",
+                      "SELECT app_id, unix_time, in_bytes, out_bytes"
+                      "  FROM traffic_app_month;");
+
+    debugStatTrafStep(sqliteDb, "traffic_hour",
+                      "SELECT 0, unix_time, in_bytes, out_bytes"
+                      "  FROM traffic_hour;");
+    debugStatTrafStep(sqliteDb, "traffic_day",
+                      "SELECT 0, unix_time, in_bytes, out_bytes"
+                      "  FROM traffic_day;");
+    debugStatTrafStep(sqliteDb, "traffic_month",
+                      "SELECT 0, unix_time, in_bytes, out_bytes"
+                      "  FROM traffic_month;");
+}
+
+void Test::debugStatTrafStep(SqliteDb *sqliteDb, const char *name,
+                             const char *sql)
+{
     SqliteStmt stmt;
 
-    QVERIFY(stmt.prepare(sqliteDb->db(),
-                         "SELECT app_id, unix_hour, in_bytes, out_bytes"
-                         "  FROM traffic_app_hour;"));
+    QVERIFY(stmt.prepare(sqliteDb->db(), sql));
 
-    qDebug() << "> traf <";
+    qDebug() << '>' << name << '<';
     while (stmt.step() == SqliteStmt::StepRow) {
         const qint64 unixTime = stmt.columnInt64(1) * 3600;
 
-        qDebug() << ">"
+        qDebug() << '>'
                  << stmt.columnInt64(0)
                  << QDateTime::fromSecsSinceEpoch(unixTime).toString()
                  << stmt.columnInt64(2)

@@ -3,55 +3,17 @@
 #include <QDateTime>
 
 #include "../util/fileutil.h"
+#include "databasesql.h"
 #include "sqlite/sqliteengine.h"
 #include "sqlite/sqlitedb.h"
 #include "sqlite/sqlitestmt.h"
 
-static const char * const sqlPragmas =
-        "PRAGMA locking_mode=EXCLUSIVE;"
-        "PRAGMA journal_mode=WAL;"
-        "PRAGMA synchronous=NORMAL;"
-        ;
-
-static const char * const sqlCreateTables =
-        "CREATE TABLE app("
-        "  id INTEGER PRIMARY KEY,"
-        "  path TEXT UNIQUE NOT NULL"
-        ");"
-
-        "CREATE TABLE traffic_app_hour("
-        "  app_id INTEGER NOT NULL,"
-        "  unix_hour INTEGER NOT NULL,"
-        "  in_bytes INTEGER NOT NULL,"
-        "  out_bytes INTEGER NOT NULL,"
-        "  PRIMARY KEY (app_id, unix_hour)"
-        ") WITHOUT ROWID;"
-        ;
-
-static const char * const sqlSelectAppId =
-        "SELECT id FROM app WHERE path = ?1;"
-        ;
-
-static const char * const sqlInsertAppId =
-        "INSERT INTO app(path) VALUES(?1);"
-        ;
-
-static const char * const sqlUpsertAppTraffic =
-        "WITH new(app_id, unix_hour, in_bytes, out_bytes)"
-        "    AS ( VALUES(?1, ?2, ?3, ?4) )"
-        "  INSERT OR REPLACE INTO traffic_app_hour("
-        "    app_id, unix_hour, in_bytes, out_bytes)"
-        "  SELECT new.app_id, new.unix_hour,"
-        "    new.in_bytes + ifnull(old.in_bytes, 0),"
-        "    new.out_bytes + ifnull(old.out_bytes, 0)"
-        "  FROM new LEFT JOIN traffic_app_hour AS old"
-        "    ON new.app_id = old.app_id"
-        "      AND new.unix_hour = old.unix_hour;"
-        ;
-
 DatabaseManager::DatabaseManager(const QString &filePath,
                                  QObject *parent) :
     QObject(parent),
+    m_lastUnixHour(0),
+    m_lastUnixDay(0),
+    m_lastUnixMonth(0),
     m_filePath(filePath),
     m_sqliteDb(new SqliteDb())
 {
@@ -74,7 +36,7 @@ bool DatabaseManager::initialize()
     if (!m_sqliteDb->open(m_filePath))
         return false;
 
-    m_sqliteDb->execute(sqlPragmas);
+    m_sqliteDb->execute(DatabaseSql::sqlPragmas);
 
     return fileExists || createTables();
 }
@@ -92,11 +54,72 @@ void DatabaseManager::handleStatTraf(quint16 procCount, const quint8 *procBits,
 {
     QVector<quint16> delProcIndexes;
 
-    const qint32 unixHour = qint32(QDateTime::currentSecsSinceEpoch() / 3600);
+    const qint64 unixTime = QDateTime::currentSecsSinceEpoch();
 
-    SqliteStmt *stmtUpsert = getSqliteStmt(sqlUpsertAppTraffic);
+    const qint32 unixHour = qint32(unixTime / 3600);
+    const bool isNewHour = (unixHour != m_lastUnixHour);
 
-    stmtUpsert->bindInt(2, unixHour);
+    const qint32 unixDay = isNewHour ? getUnixDay(unixTime)
+                                     : m_lastUnixDay;
+    const bool isNewDay = (unixDay != m_lastUnixDay);
+
+    const qint32 unixMonth = isNewDay ? getUnixMonth(unixTime)
+                                      : m_lastUnixMonth;
+    const bool isNewMonth = (unixMonth != m_lastUnixMonth);
+
+    SqliteStmt *stmtInsertAppHour = nullptr;
+    SqliteStmt *stmtInsertAppDay = nullptr;
+    SqliteStmt *stmtInsertAppMonth = nullptr;
+
+    SqliteStmt *stmtInsertHour = nullptr;
+    SqliteStmt *stmtInsertDay = nullptr;
+    SqliteStmt *stmtInsertMonth = nullptr;
+
+    if (isNewHour) {
+        m_lastUnixHour = unixHour;
+
+        stmtInsertAppHour = getSqliteStmt(DatabaseSql::sqlInsertTrafficAppHour);
+        stmtInsertHour = getSqliteStmt(DatabaseSql::sqlInsertTrafficHour);
+
+        stmtInsertAppHour->bindInt(1, unixHour);
+        stmtInsertHour->bindInt(1, unixHour);
+
+        if (isNewDay) {
+            m_lastUnixDay = unixDay;
+
+            stmtInsertAppDay = getSqliteStmt(DatabaseSql::sqlInsertTrafficAppDay);
+            stmtInsertDay = getSqliteStmt(DatabaseSql::sqlInsertTrafficDay);
+
+            stmtInsertAppDay->bindInt(1, unixDay);
+            stmtInsertDay->bindInt(1, unixDay);
+
+            if (isNewMonth) {
+                m_lastUnixMonth = unixMonth;
+
+                stmtInsertAppMonth = getSqliteStmt(DatabaseSql::sqlInsertTrafficAppMonth);
+                stmtInsertMonth = getSqliteStmt(DatabaseSql::sqlInsertTrafficMonth);
+
+                stmtInsertAppMonth->bindInt(1, unixMonth);
+                stmtInsertMonth->bindInt(1, unixMonth);
+            }
+        }
+    }
+
+    SqliteStmt *stmtUpdateAppHour = getSqliteStmt(DatabaseSql::sqlUpdateTrafficAppHour);
+    SqliteStmt *stmtUpdateAppDay = getSqliteStmt(DatabaseSql::sqlUpdateTrafficAppDay);
+    SqliteStmt *stmtUpdateAppMonth = getSqliteStmt(DatabaseSql::sqlUpdateTrafficAppMonth);
+
+    SqliteStmt *stmtUpdateHour = getSqliteStmt(DatabaseSql::sqlUpdateTrafficHour);
+    SqliteStmt *stmtUpdateDay = getSqliteStmt(DatabaseSql::sqlUpdateTrafficDay);
+    SqliteStmt *stmtUpdateMonth = getSqliteStmt(DatabaseSql::sqlUpdateTrafficMonth);
+
+    stmtUpdateAppHour->bindInt(1, unixHour);
+    stmtUpdateAppDay->bindInt(1, unixDay);
+    stmtUpdateAppMonth->bindInt(1, unixMonth);
+
+    stmtUpdateHour->bindInt(1, unixHour);
+    stmtUpdateDay->bindInt(1, unixDay);
+    stmtUpdateMonth->bindInt(1, unixMonth);
 
     m_sqliteDb->beginTransaction();
 
@@ -110,16 +133,35 @@ void DatabaseManager::handleStatTraf(quint16 procCount, const quint8 *procBits,
         const quint32 inBytes = procTrafBytes[0];
         const quint32 outBytes = procTrafBytes[1];
 
-        if (inBytes != 0 || outBytes != 0) {
-            const qint64 appId = m_appIds.at(procIndex);
+        if (!(isNewHour || inBytes || outBytes))
+            continue;
 
-            stmtUpsert->bindInt64(1, appId);
-            stmtUpsert->bindInt64(3, inBytes);
-            stmtUpsert->bindInt64(4, outBytes);
+        const qint64 appId = m_appIds.at(procIndex);
 
-            stmtUpsert->step();
-            stmtUpsert->reset();
+        // Insert zero bytes
+        if (isNewHour) {
+            insertTraffic(stmtInsertAppHour, appId);
+            insertTraffic(stmtInsertHour);
+
+            if (isNewDay) {
+                insertTraffic(stmtInsertAppDay, appId);
+                insertTraffic(stmtInsertDay);
+
+                if (isNewMonth) {
+                    insertTraffic(stmtInsertAppMonth, appId);
+                    insertTraffic(stmtInsertMonth);
+                }
+            }
         }
+
+        // Update bytes
+        updateTraffic(stmtUpdateAppHour, inBytes, outBytes, appId);
+        updateTraffic(stmtUpdateAppDay, inBytes, outBytes, appId);
+        updateTraffic(stmtUpdateAppMonth, inBytes, outBytes, appId);
+
+        updateTraffic(stmtUpdateHour, inBytes, outBytes);
+        updateTraffic(stmtUpdateDay, inBytes, outBytes);
+        updateTraffic(stmtUpdateMonth, inBytes, outBytes);
     }
 
     m_sqliteDb->commitTransaction();
@@ -137,7 +179,7 @@ void DatabaseManager::handleStatTraf(quint16 procCount, const quint8 *procBits,
 
 bool DatabaseManager::createTables()
 {
-    return m_sqliteDb->execute(sqlCreateTables);
+    return m_sqliteDb->execute(DatabaseSql::sqlCreateTables);
 }
 
 qint64 DatabaseManager::getAppId(const QString &appPath)
@@ -146,7 +188,7 @@ qint64 DatabaseManager::getAppId(const QString &appPath)
 
     // Check existing
     {
-        SqliteStmt *stmt = getSqliteStmt(sqlSelectAppId);
+        SqliteStmt *stmt = getSqliteStmt(DatabaseSql::sqlSelectAppId);
 
         stmt->bindText(1, appPath);
         if (stmt->step() == SqliteStmt::StepRow) {
@@ -157,7 +199,7 @@ qint64 DatabaseManager::getAppId(const QString &appPath)
 
     // Create new one
     if (!appId) {
-        SqliteStmt *stmt = getSqliteStmt(sqlInsertAppId);
+        SqliteStmt *stmt = getSqliteStmt(DatabaseSql::sqlInsertAppId);
 
         stmt->bindText(1, appPath);
         if (stmt->step() == SqliteStmt::StepDone) {
@@ -181,4 +223,43 @@ SqliteStmt *DatabaseManager::getSqliteStmt(const char *sql)
     }
 
     return stmt;
+}
+
+void DatabaseManager::insertTraffic(SqliteStmt *stmt, qint64 appId)
+{
+    if (appId != 0) {
+        stmt->bindInt64(2, appId);
+    }
+
+    stmt->step();
+    stmt->reset();
+}
+
+void DatabaseManager::updateTraffic(SqliteStmt *stmt, quint32 inBytes,
+                                       quint32 outBytes, qint64 appId)
+{
+    stmt->bindInt64(2, inBytes);
+    stmt->bindInt64(3, outBytes);
+
+    if (appId != 0) {
+        stmt->bindInt64(4, appId);
+    }
+
+    stmt->step();
+    stmt->reset();
+}
+
+qint32 DatabaseManager::getUnixDay(qint64 unixTime)
+{
+    const QDate date = QDateTime::fromSecsSinceEpoch(unixTime).date();
+
+    return qint32(QDateTime(date).toSecsSinceEpoch() / 3600);
+}
+
+qint32 DatabaseManager::getUnixMonth(qint64 unixTime)
+{
+    const QDate date = QDateTime::fromSecsSinceEpoch(unixTime).date();
+
+    return qint32(QDateTime(QDate(date.year(), date.month(), 1))
+                  .toSecsSinceEpoch() / 3600);
 }
