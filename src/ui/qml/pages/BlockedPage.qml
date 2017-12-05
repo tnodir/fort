@@ -46,6 +46,8 @@ BasePage {
                     firewallConf.resolveAddress = checked;
 
                     fortManager.applyConfImmediateFlags();
+
+                    hostInfoCache.cacheChanged();  // refresh ipListView
                 }
             }
 
