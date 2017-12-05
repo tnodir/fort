@@ -9,7 +9,10 @@ const char * const DatabaseSql::sqlPragmas =
 const char * const DatabaseSql::sqlCreateTables =
         "CREATE TABLE app("
         "  id INTEGER PRIMARY KEY,"
-        "  path TEXT UNIQUE NOT NULL"
+        "  path TEXT UNIQUE NOT NULL,"
+        "  unix_time INTEGER NOT NULL,"
+        "  in_bytes INTEGER NOT NULL,"
+        "  out_bytes INTEGER NOT NULL"
         ");"
 
         "CREATE TABLE traffic_app_hour("
@@ -60,7 +63,8 @@ const char * const DatabaseSql::sqlSelectAppId =
         ;
 
 const char * const DatabaseSql::sqlInsertAppId =
-        "INSERT INTO app(path) VALUES(?1);"
+        "INSERT INTO app(path, unix_time, in_bytes, out_bytes)"
+        "  VALUES(?1, ?2, 0, 0);"
         ;
 
 const char * const DatabaseSql::sqlInsertTrafficAppHour =
@@ -133,4 +137,11 @@ const char * const DatabaseSql::sqlUpdateTrafficMonth =
         "  SET in_bytes = in_bytes + ?2,"
         "    out_bytes = out_bytes + ?3"
         "  WHERE unix_time = ?1;"
+        ;
+
+const char * const DatabaseSql::sqlUpdateTrafficAppTotal =
+        "UPDATE app"
+        "  SET in_bytes = in_bytes + ?2,"
+        "    out_bytes = out_bytes + ?3"
+        "  WHERE id = ?1;"
         ;

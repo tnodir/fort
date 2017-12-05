@@ -25,6 +25,8 @@ public:
     static const char * const sqlUpdateTrafficHour;
     static const char * const sqlUpdateTrafficDay;
     static const char * const sqlUpdateTrafficMonth;
+
+    static const char * const sqlUpdateTrafficAppTotal;
 };
 
 #endif // DATABASESQL_H

@@ -113,6 +113,8 @@ void DatabaseManager::handleStatTraf(quint16 procCount, const quint8 *procBits,
     SqliteStmt *stmtUpdateDay = getSqliteStmt(DatabaseSql::sqlUpdateTrafficDay);
     SqliteStmt *stmtUpdateMonth = getSqliteStmt(DatabaseSql::sqlUpdateTrafficMonth);
 
+    SqliteStmt *stmtUpdateAppTotal = getSqliteStmt(DatabaseSql::sqlUpdateTrafficAppTotal);
+
     stmtUpdateAppHour->bindInt(1, unixHour);
     stmtUpdateAppDay->bindInt(1, unixDay);
     stmtUpdateAppMonth->bindInt(1, unixMonth);
@@ -162,6 +164,10 @@ void DatabaseManager::handleStatTraf(quint16 procCount, const quint8 *procBits,
         updateTraffic(stmtUpdateHour, inBytes, outBytes);
         updateTraffic(stmtUpdateDay, inBytes, outBytes);
         updateTraffic(stmtUpdateMonth, inBytes, outBytes);
+
+        // Update total bytes
+        stmtUpdateAppTotal->bindInt64(1, appId);
+        updateTraffic(stmtUpdateAppTotal, inBytes, outBytes);
     }
 
     m_sqliteDb->commitTransaction();
@@ -202,6 +208,8 @@ qint64 DatabaseManager::getAppId(const QString &appPath)
         SqliteStmt *stmt = getSqliteStmt(DatabaseSql::sqlInsertAppId);
 
         stmt->bindText(1, appPath);
+        stmt->bindInt64(2, QDateTime::currentSecsSinceEpoch());
+
         if (stmt->step() == SqliteStmt::StepDone) {
             appId = m_sqliteDb->lastInsertRowid();
         }

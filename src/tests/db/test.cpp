@@ -97,10 +97,14 @@ void Test::debugStatTraf(SqliteDb *sqliteDb)
     debugStatTrafStep(sqliteDb, "traffic_month",
                       "SELECT 0, unix_time, in_bytes, out_bytes"
                       "  FROM traffic_month;");
+
+    debugStatTrafStep(sqliteDb, "traffic_app_total",
+                      "SELECT id, unix_time, in_bytes, out_bytes"
+                      "  FROM app;", 1);
 }
 
 void Test::debugStatTrafStep(SqliteDb *sqliteDb, const char *name,
-                             const char *sql)
+                             const char *sql, int timeMult)
 {
     SqliteStmt stmt;
 
@@ -108,7 +112,7 @@ void Test::debugStatTrafStep(SqliteDb *sqliteDb, const char *name,
 
     qDebug() << '>' << name << '<';
     while (stmt.step() == SqliteStmt::StepRow) {
-        const qint64 unixTime = stmt.columnInt64(1) * 3600;
+        const qint64 unixTime = stmt.columnInt64(1) * timeMult;
 
         qDebug() << '>'
                  << stmt.columnInt64(0)
