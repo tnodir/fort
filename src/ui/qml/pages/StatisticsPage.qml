@@ -52,9 +52,13 @@ BasePage {
                 AppListView {
                     id: appListView
                     Layout.fillWidth: true
+                    Layout.preferredWidth: 100
                     Layout.fillHeight: true
 
                     model: appStatModel
+
+                    emptyText: translationManager.dummyBool
+                               && qsTranslate("qml", "All")
                 }
 
             }

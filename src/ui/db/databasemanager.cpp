@@ -228,17 +228,14 @@ qint64 DatabaseManager::getAppId(const QString &appPath, bool &isNew)
     return appId;
 }
 
-QStringList DatabaseManager::getAppList()
+void DatabaseManager::getAppList(QStringList &list)
 {
-    QStringList list;
-
     SqliteStmt *stmt = getSqliteStmt(DatabaseSql::sqlSelectAppPaths);
+
     while (stmt->step() == SqliteStmt::StepRow) {
         list.append(stmt->columnText());
     }
     stmt->reset();
-
-    return list;
 }
 
 SqliteStmt *DatabaseManager::getSqliteStmt(const char *sql)

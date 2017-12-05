@@ -23,7 +23,12 @@ void AppStatModel::clear()
 
 void AppStatModel::updateList()
 {
-    setList(m_databaseManager->getAppList());
+    QStringList list;
+
+    list.append(QString());  // All
+    m_databaseManager->getAppList(list);
+
+    setList(list);
 }
 
 void AppStatModel::handleProcNew(const QString &appPath)

@@ -7,6 +7,8 @@ ListView {
 
     spacing: 10
 
+    property string emptyText
+
     highlightRangeMode: ListView.ApplyRange
     highlightResizeDuration: 0
     highlightMoveDuration: 200
@@ -38,7 +40,8 @@ ListView {
         Label {
             font.pixelSize: 20
             elide: Text.ElideRight
-            text: fileUtil.fileName(appItem.appPath)
+            text: appItem.appPath ? fileUtil.fileName(appItem.appPath)
+                                  : emptyText
         }
     }
 

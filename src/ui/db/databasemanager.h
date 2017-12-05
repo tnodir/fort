@@ -26,7 +26,7 @@ public:
     void addTraffic(quint16 procCount, const quint8 *procBits,
                     const quint32 *trafBytes);
 
-    QStringList getAppList();
+    void getAppList(QStringList &list);
 
 signals:
 
