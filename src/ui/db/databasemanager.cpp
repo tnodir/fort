@@ -45,7 +45,6 @@ void DatabaseManager::addApp(const QString &appPath, bool &isNew)
 {
     const qint64 appId = getAppId(appPath, isNew);
 
-    m_appPaths.append(appPath);
     m_appIds.append(appId);
 }
 
@@ -177,7 +176,6 @@ void DatabaseManager::addTraffic(quint16 procCount, const quint8 *procBits,
         int i = delProcIndexes.size();
         while (--i >= 0) {
             const quint16 procIndex = delProcIndexes.at(i);
-            m_appPaths.removeAt(procIndex);
             m_appIds.removeAt(procIndex);
         }
     }

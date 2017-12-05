@@ -16,6 +16,7 @@
         <file>qml/pages/apps/AppsColumn.qml</file>
         <file>qml/pages/apps/AppsTextColumn.qml</file>
         <file>qml/pages/log/AppListView.qml</file>
+        <file>qml/pages/log/TrafRow.qml</file>
         <file>qml/pages/schedule/TaskRow.qml</file>
     </qresource>
 </RCC>

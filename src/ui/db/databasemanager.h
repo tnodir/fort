@@ -57,7 +57,6 @@ private:
 
     QHash<const char *, SqliteStmt *> m_sqliteStmts;
 
-    QStringList m_appPaths;
     QVector<qint64> m_appIds;
 };
 

@@ -96,6 +96,7 @@ QML_FILES += \
     qml/pages/*.qml \
     qml/pages/addresses/*.qml \
     qml/pages/apps/*.qml \
+    qml/pages/log/*.qml \
     qml/pages/schedule/*.qml
 
 OTHER_FILES += \

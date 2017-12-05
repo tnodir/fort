@@ -5,8 +5,6 @@ import com.fortfirewall 1.0
 
 Row {
 
-    property var cellWidths
-
     property TaskInfo taskInfo
 
     function formatDate(date) {

@@ -6,6 +6,7 @@ import "log"
 import com.fortfirewall 1.0
 
 BasePage {
+    id: statisticsPage
 
     readonly property LogManager logManager: fortManager.logManager
     readonly property AppStatModel appStatModel: logManager.appStatModel
@@ -13,6 +14,13 @@ BasePage {
     readonly property string currentAppPath:
         (appListView.currentIndex >= 0 && appListView.currentItem)
         ? appListView.currentItem.appPath : ""
+
+    readonly property var trafCellWidths: [
+        trafsContainer.width * 0.4,
+        trafsContainer.width * 0.2,
+        trafsContainer.width * 0.2,
+        trafsContainer.width * 0.2
+    ]
 
     ColumnLayout {
         anchors.fill: parent
@@ -61,6 +69,84 @@ BasePage {
                                && qsTranslate("qml", "All")
                 }
 
+                ColumnLayout {
+                    id: trafsContainer
+                    Layout.fillWidth: true
+                    Layout.preferredWidth: 200
+                    Layout.fillHeight: true
+                    spacing: 10
+
+                    TabBar {
+                        id: tabBar
+                        Layout.fillWidth: true
+
+                        TabButton {
+                            text: translationManager.dummyBool
+                                  && qsTranslate("qml", "Hourly")
+                        }
+                        TabButton {
+                            text: translationManager.dummyBool
+                                  && qsTranslate("qml", "Daily")
+                        }
+                        TabButton {
+                            text: translationManager.dummyBool
+                                  && qsTranslate("qml", "Monthly")
+                        }
+                        TabButton {
+                            text: translationManager.dummyBool
+                                  && qsTranslate("qml", "Total")
+                        }
+                    }
+
+                    Row {
+                        Layout.fillWidth: true
+                        spacing: 0
+
+                        Label {
+                            width: trafCellWidths[0]
+                            text: translationManager.dummyBool
+                                  && qsTranslate("qml", "Date")
+                        }
+                        Label {
+                            width: trafCellWidths[1]
+                            text: translationManager.dummyBool
+                                  && qsTranslate("qml", "Download")
+                        }
+                        Label {
+                            width: trafCellWidths[2]
+                            text: translationManager.dummyBool
+                                  && qsTranslate("qml", "Upload")
+                        }
+                        Label {
+                            width: trafCellWidths[3]
+                            text: translationManager.dummyBool
+                                  && qsTranslate("qml", "Sum")
+                        }
+                    }
+
+                    Frame {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 1
+                    }
+
+                    ListView {
+                        id: trafListView
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        spacing: 4
+                        clip: true
+
+                        model: 1//appStatModel.trafListModel(currentAppPath)
+
+                        delegate: TrafRow {
+                            //text: display
+                            dateTime: "2017-12-06"
+                            download: "3 MB"
+                            upload: "1 MB"
+                            sum: "4 MB"
+                        }
+                    }
+                }
             }
         }
 
