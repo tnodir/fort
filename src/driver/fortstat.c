@@ -4,7 +4,6 @@
 
 #define FORT_PROC_BAD_INDEX	((UINT16) -1)
 #define FORT_FLOW_BAD_INDEX	((UINT32) -1)
-#define FORT_FLOW_BAD_ID	((UINT64) -1)
 
 typedef struct fort_stat_traf {
   UINT32 in_bytes;
