@@ -185,7 +185,13 @@ void DatabaseManager::handleStatTraf(quint16 procCount, const quint8 *procBits,
 
 bool DatabaseManager::createTables()
 {
-    return m_sqliteDb->execute(DatabaseSql::sqlCreateTables);
+    m_sqliteDb->beginTransaction();
+
+    const bool res = m_sqliteDb->execute(DatabaseSql::sqlCreateTables);
+
+    m_sqliteDb->commitTransaction();
+
+    return res;
 }
 
 qint64 DatabaseManager::getAppId(const QString &appPath)
