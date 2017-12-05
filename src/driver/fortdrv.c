@@ -317,8 +317,8 @@ fort_callout_flow_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 {
   FWPS_STREAM_DATA0 *streamData = packet->streamData;
 
-  fort_stat_flow_classify(&g_device->stat, inMetaValues->flowHandle,
-    g_device->flow4_id, flowContext, (UINT32) streamData->dataLength,
+  fort_stat_flow_classify(&g_device->stat, flowContext,
+    (UINT32) streamData->dataLength,
     (streamData->flags & FWPS_STREAM_FLAG_RECEIVE) != 0);
 
   classifyOut->actionType = FWP_ACTION_CONTINUE;
@@ -439,7 +439,7 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
 
  end:
   fort_timer_update(&g_device->timer, conf_flags);
-  fort_stat_update(&g_device->stat, conf_flags);
+  fort_stat_update(&g_device->stat, conf_flags, g_device->flow4_id);
 
   return status;
 }
@@ -648,15 +648,16 @@ fort_driver_unload (PDRIVER_OBJECT driver)
   UNICODE_STRING device_link;
 
   if (g_device != NULL) {
+    fort_timer_close(&g_device->timer);
+    fort_stat_close(&g_device->stat, g_device->flow4_id);
+    fort_buffer_close(&g_device->buffer);
+
     if (!g_device->prov_boot) {
       fort_prov_unregister();
     }
 
     fort_callout_remove();
 
-    fort_timer_close(&g_device->timer);
-    fort_stat_close(&g_device->stat);
-    fort_buffer_close(&g_device->buffer);
   }
 
   RtlInitUnicodeString(&device_link, DOS_DEVICE_NAME);
