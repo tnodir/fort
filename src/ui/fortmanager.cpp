@@ -17,6 +17,7 @@
 #include "fortsettings.h"
 #include "log/logmanager.h"
 #include "log/model/appblockedmodel.h"
+#include "log/model/appstatmodel.h"
 #include "log/model/iplistmodel.h"
 #include "task/taskinfo.h"
 #include "task/taskmanager.h"
@@ -42,7 +43,6 @@ FortManager::FortManager(FortSettings *fortSettings,
                                 m_driverManager->driverWorker(), this)),
     m_taskManager(new TaskManager(this, this))
 {
-    setupDatabase();
     setupDriver();
 
     loadSettings(m_firewallConf);
@@ -73,6 +73,8 @@ void FortManager::registerQmlTypes()
                                            "Singleton");
     qmlRegisterUncreatableType<AppBlockedModel>("com.fortfirewall", 1, 0, "AppBlockedModel",
                                                 "Singleton");
+    qmlRegisterUncreatableType<AppStatModel>("com.fortfirewall", 1, 0, "AppStatModel",
+                                                "Singleton");
     qmlRegisterUncreatableType<IpListModel>("com.fortfirewall", 1, 0, "IpListModel",
                                             "Singleton");
 
@@ -94,11 +96,6 @@ void FortManager::registerQmlTypes()
     qmlRegisterType<OsUtil>("com.fortfirewall", 1, 0, "OsUtil");
 }
 
-bool FortManager::setupDatabase()
-{
-    return m_databaseManager->initialize();
-}
-
 bool FortManager::setupDriver()
 {
     if (!m_driverManager->openDevice()) {
@@ -106,7 +103,7 @@ bool FortManager::setupDriver()
         return false;
     }
 
-    m_logManager->setLogReadingEnabled(true);
+    m_logManager->initialize();
 
     return true;
 }

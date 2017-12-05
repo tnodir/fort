@@ -4,6 +4,7 @@
 #include <QObject>
 
 class AppBlockedModel;
+class AppStatModel;
 class DatabaseManager;
 class DriverWorker;
 class LogBuffer;
@@ -13,6 +14,7 @@ class LogManager : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(AppBlockedModel *appBlockedModel READ appBlockedModel CONSTANT)
+    Q_PROPERTY(AppStatModel *appStatModel READ appStatModel CONSTANT)
     Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
 
 public:
@@ -21,16 +23,16 @@ public:
                         QObject *parent = nullptr);
 
     AppBlockedModel *appBlockedModel() const { return m_appBlockedModel; }
+    AppStatModel *appStatModel() const { return m_appStatModel; }
 
     QString errorMessage() const { return m_errorMessage; }
+
+    void initialize();
 
 signals:
     void errorMessageChanged();
 
 public slots:
-
-    void clearModels() const;
-
     void setLogReadingEnabled(bool enabled);
 
 private slots:
@@ -40,7 +42,6 @@ private slots:
 private:
     void setErrorMessage(const QString &errorMessage);
 
-    void setupDatabaseManager();
     void setupDriverWorker();
 
     void readLogAsync(LogBuffer *logBuffer);
@@ -53,12 +54,11 @@ private:
 private:
     bool m_logReadingEnabled;
 
-    DatabaseManager *m_databaseManager;
-
     DriverWorker *m_driverWorker;
     QList<LogBuffer *> m_freeBuffers;
 
     AppBlockedModel *m_appBlockedModel;
+    AppStatModel *m_appStatModel;
 
     QString m_errorMessage;
 };

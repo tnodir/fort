@@ -10,6 +10,8 @@ public:
     static const char * const sqlSelectAppId;
     static const char * const sqlInsertAppId;
 
+    static const char * const sqlSelectAppPaths;
+
     static const char * const sqlInsertTrafficAppHour;
     static const char * const sqlInsertTrafficAppDay;
     static const char * const sqlInsertTrafficAppMonth;

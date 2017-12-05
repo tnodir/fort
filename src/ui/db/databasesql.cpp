@@ -10,6 +10,7 @@ const char * const DatabaseSql::sqlCreateTables =
         "CREATE TABLE app("
         "  id INTEGER PRIMARY KEY,"
         "  path TEXT UNIQUE NOT NULL,"
+        "  creat_time INTEGER NOT NULL,"
         "  unix_time INTEGER NOT NULL,"
         "  in_bytes INTEGER NOT NULL,"
         "  out_bytes INTEGER NOT NULL"
@@ -63,8 +64,12 @@ const char * const DatabaseSql::sqlSelectAppId =
         ;
 
 const char * const DatabaseSql::sqlInsertAppId =
-        "INSERT INTO app(path, unix_time, in_bytes, out_bytes)"
-        "  VALUES(?1, ?2, 0, 0);"
+        "INSERT INTO app(path, creat_time, unix_time, in_bytes, out_bytes)"
+        "  VALUES(?1, ?2, ?3, 0, 0);"
+        ;
+
+const char * const DatabaseSql::sqlSelectAppPaths =
+        "SELECT path FROM app ORDER BY creat_time;"
         ;
 
 const char * const DatabaseSql::sqlInsertTrafficAppHour =

@@ -22,9 +22,11 @@ public:
 
     SqliteDb *sqliteDb() const { return m_sqliteDb; }
 
-    void handleProcNew(const QString &path);
-    void handleStatTraf(quint16 procCount, const quint8 *procBits,
-                        const quint32 *trafBytes);
+    void addApp(const QString &appPath, bool &isNew);
+    void addTraffic(quint16 procCount, const quint8 *procBits,
+                    const quint32 *trafBytes);
+
+    QStringList getAppList();
 
 signals:
 
@@ -33,7 +35,7 @@ public slots:
 private:
     bool createTables();
 
-    qint64 getAppId(const QString &appPath);
+    qint64 getAppId(const QString &appPath, bool &isNew);
 
     SqliteStmt *getSqliteStmt(const char *sql);
 

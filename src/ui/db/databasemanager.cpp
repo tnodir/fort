@@ -41,16 +41,16 @@ bool DatabaseManager::initialize()
     return fileExists || createTables();
 }
 
-void DatabaseManager::handleProcNew(const QString &appPath)
+void DatabaseManager::addApp(const QString &appPath, bool &isNew)
 {
-    const qint64 appId = getAppId(appPath);
+    const qint64 appId = getAppId(appPath, isNew);
 
     m_appPaths.append(appPath);
     m_appIds.append(appId);
 }
 
-void DatabaseManager::handleStatTraf(quint16 procCount, const quint8 *procBits,
-                                     const quint32 *trafBytes)
+void DatabaseManager::addTraffic(quint16 procCount, const quint8 *procBits,
+                                 const quint32 *trafBytes)
 {
     QVector<quint16> delProcIndexes;
 
@@ -194,7 +194,7 @@ bool DatabaseManager::createTables()
     return res;
 }
 
-qint64 DatabaseManager::getAppId(const QString &appPath)
+qint64 DatabaseManager::getAppId(const QString &appPath, bool &isNew)
 {
     qint64 appId = 0;
 
@@ -212,17 +212,33 @@ qint64 DatabaseManager::getAppId(const QString &appPath)
     // Create new one
     if (!appId) {
         SqliteStmt *stmt = getSqliteStmt(DatabaseSql::sqlInsertAppId);
+        const qint64 unixTime = QDateTime::currentSecsSinceEpoch();
 
         stmt->bindText(1, appPath);
-        stmt->bindInt64(2, QDateTime::currentSecsSinceEpoch());
+        stmt->bindInt64(2, unixTime);
+        stmt->bindInt64(3, unixTime);
 
         if (stmt->step() == SqliteStmt::StepDone) {
             appId = m_sqliteDb->lastInsertRowid();
+            isNew = true;
         }
         stmt->reset();
     }
 
     return appId;
+}
+
+QStringList DatabaseManager::getAppList()
+{
+    QStringList list;
+
+    SqliteStmt *stmt = getSqliteStmt(DatabaseSql::sqlSelectAppPaths);
+    while (stmt->step() == SqliteStmt::StepRow) {
+        list.append(stmt->columnText());
+    }
+    stmt->reset();
+
+    return list;
 }
 
 SqliteStmt *DatabaseManager::getSqliteStmt(const char *sql)

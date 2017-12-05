@@ -14,6 +14,7 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
+    const QStringList &list() const { return m_list; }
     void setList(const QStringList &list);
 
 protected:

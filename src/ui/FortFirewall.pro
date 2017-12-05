@@ -24,6 +24,7 @@ SOURCES += \
     log/logentrystattraf.cpp \
     log/logmanager.cpp \
     log/model/appblockedmodel.cpp \
+    log/model/appstatmodel.cpp \
     log/model/iplistmodel.cpp \
     log/model/stringlistmodel.cpp \
     mainwindow.cpp \
@@ -65,6 +66,7 @@ HEADERS += \
     log/logentrystattraf.h \
     log/logmanager.h \
     log/model/appblockedmodel.h \
+    log/model/appstatmodel.h \
     log/model/iplistmodel.h \
     log/model/stringlistmodel.h \
     mainwindow.h \

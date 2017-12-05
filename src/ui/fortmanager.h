@@ -68,8 +68,6 @@ private:
 
     static void registerQmlTypes();
 
-    bool setupDatabase();
-
     bool setupDriver();
     void closeDriver();
 

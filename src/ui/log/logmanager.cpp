@@ -2,28 +2,30 @@
 
 #include "../driver/driverworker.h"
 #include "../fortcommon.h"
-#include "db/databasemanager.h"
 #include "logbuffer.h"
 #include "logentryblocked.h"
 #include "logentryprocnew.h"
 #include "logentrystattraf.h"
 #include "model/appblockedmodel.h"
+#include "model/appstatmodel.h"
 
 LogManager::LogManager(DatabaseManager *databaseManager,
                        DriverWorker *driverWorker,
                        QObject *parent) :
     QObject(parent),
     m_logReadingEnabled(false),
-    m_databaseManager(databaseManager),
     m_driverWorker(driverWorker),
-    m_appBlockedModel(new AppBlockedModel(this))
+    m_appBlockedModel(new AppBlockedModel(this)),
+    m_appStatModel(new AppStatModel(databaseManager, this))
 {
     setupDriverWorker();
 }
 
-void LogManager::clearModels() const
+void LogManager::initialize()
 {
-    m_appBlockedModel->clear();
+    setLogReadingEnabled(true);
+
+    m_appStatModel->initialize();
 }
 
 void LogManager::setErrorMessage(const QString &errorMessage)
@@ -105,12 +107,12 @@ void LogManager::readLogEntries(LogBuffer *logBuffer)
         }
         case LogEntry::ProcNew: {
             logBuffer->readEntryProcNew(&entryProcNew);
-            m_databaseManager->handleProcNew(entryProcNew.path());
+            m_appStatModel->handleProcNew(entryProcNew.path());
             break;
         }
         case LogEntry::StatTraf: {
             logBuffer->readEntryStatTraf(&entryStatTraf);
-            m_databaseManager->handleStatTraf(
+            m_appStatModel->handleStatTraf(
                         entryStatTraf.procCount(), entryStatTraf.procBits(),
                         entryStatTraf.trafBytes());
             break;
