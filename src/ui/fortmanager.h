@@ -5,15 +5,15 @@
 
 #include "mainwindow.h"
 
-class QQmlApplicationEngine;
-class QSystemTrayIcon;
+QT_FORWARD_DECLARE_CLASS(QQmlApplicationEngine)
+QT_FORWARD_DECLARE_CLASS(QSystemTrayIcon)
 
-class DatabaseManager;
-class DriverManager;
-class FortSettings;
-class FirewallConf;
-class LogManager;
-class TaskManager;
+QT_FORWARD_DECLARE_CLASS(DatabaseManager)
+QT_FORWARD_DECLARE_CLASS(DriverManager)
+QT_FORWARD_DECLARE_CLASS(FortSettings)
+QT_FORWARD_DECLARE_CLASS(FirewallConf)
+QT_FORWARD_DECLARE_CLASS(LogManager)
+QT_FORWARD_DECLARE_CLASS(TaskManager)
 
 class FortManager : public QObject
 {

@@ -6,9 +6,9 @@
 #include <QList>
 #include <QMap>
 
-class AppGroup;
-class FirewallConf;
-class Ip4Range;
+QT_FORWARD_DECLARE_CLASS(AppGroup)
+QT_FORWARD_DECLARE_CLASS(FirewallConf)
+QT_FORWARD_DECLARE_CLASS(Ip4Range)
 
 typedef QMap<QString, quint32> appperms_map_t;
 typedef QVector<quint32> appperms_arr_t;

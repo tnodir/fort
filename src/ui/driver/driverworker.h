@@ -6,8 +6,8 @@
 #include <QRunnable>
 #include <QWaitCondition>
 
-class Device;
-class LogBuffer;
+QT_FORWARD_DECLARE_CLASS(Device)
+QT_FORWARD_DECLARE_CLASS(LogBuffer)
 
 class DriverWorker : public QObject, public QRunnable
 {

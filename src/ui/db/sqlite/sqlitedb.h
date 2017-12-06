@@ -3,7 +3,7 @@
 
 #include <QString>
 
-struct sqlite3;
+QT_FORWARD_DECLARE_STRUCT(sqlite3)
 
 class SqliteDb
 {

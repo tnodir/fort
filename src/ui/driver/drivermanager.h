@@ -3,9 +3,9 @@
 
 #include <QObject>
 
-class Device;
-class DriverWorker;
-class FirewallConf;
+QT_FORWARD_DECLARE_CLASS(Device)
+QT_FORWARD_DECLARE_CLASS(DriverWorker)
+QT_FORWARD_DECLARE_CLASS(FirewallConf)
 
 class DriverManager : public QObject
 {

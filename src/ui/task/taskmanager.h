@@ -5,9 +5,9 @@
 #include <QQmlListProperty>
 #include <QTimer>
 
-class FortManager;
-class FortSettings;
-class TaskInfo;
+QT_FORWARD_DECLARE_CLASS(FortManager)
+QT_FORWARD_DECLARE_CLASS(FortSettings)
+QT_FORWARD_DECLARE_CLASS(TaskInfo)
 
 class TaskManager : public QObject
 {

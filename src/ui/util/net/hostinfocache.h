@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QHash>
 
-class HostInfo;
+QT_FORWARD_DECLARE_CLASS(HostInfo)
 
 class HostInfoCache : public QObject
 {

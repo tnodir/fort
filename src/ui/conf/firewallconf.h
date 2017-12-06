@@ -5,8 +5,8 @@
 #include <QQmlListProperty>
 #include <QVariant>
 
-class AddressGroup;
-class AppGroup;
+QT_FORWARD_DECLARE_CLASS(AddressGroup)
+QT_FORWARD_DECLARE_CLASS(AppGroup)
 
 class FirewallConf : public QObject
 {

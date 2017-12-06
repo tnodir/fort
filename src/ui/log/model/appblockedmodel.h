@@ -6,8 +6,8 @@
 
 #include "stringlistmodel.h"
 
-class IpListModel;
-class LogEntryBlocked;
+QT_FORWARD_DECLARE_CLASS(IpListModel)
+QT_FORWARD_DECLARE_CLASS(LogEntryBlocked)
 
 class AppBlockedModel : public StringListModel
 {

@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class FortManager;
+QT_FORWARD_DECLARE_CLASS(FortManager)
 
 class TaskWorker : public QObject
 {

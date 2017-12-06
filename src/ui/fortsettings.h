@@ -7,7 +7,7 @@
 
 #include "../common/version.h"
 
-class FirewallConf;
+QT_FORWARD_DECLARE_CLASS(FirewallConf)
 
 typedef QHash<QString, QByteArray> TasksMap;
 

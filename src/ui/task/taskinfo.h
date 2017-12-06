@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QDateTime>
 
-class TaskWorker;
+QT_FORWARD_DECLARE_CLASS(TaskWorker)
 
 class TaskInfo : public QObject
 {

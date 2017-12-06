@@ -3,12 +3,12 @@
 
 #include <QObject>
 
-class AppBlockedModel;
-class AppStatModel;
-class DatabaseManager;
-class DriverWorker;
-class LogBuffer;
-class LogEntry;
+QT_FORWARD_DECLARE_CLASS(AppBlockedModel)
+QT_FORWARD_DECLARE_CLASS(AppStatModel)
+QT_FORWARD_DECLARE_CLASS(DatabaseManager)
+QT_FORWARD_DECLARE_CLASS(DriverWorker)
+QT_FORWARD_DECLARE_CLASS(LogBuffer)
+QT_FORWARD_DECLARE_CLASS(LogEntry)
 
 class LogManager : public QObject
 {

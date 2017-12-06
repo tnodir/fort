@@ -6,7 +6,7 @@
 #include <QStringList>
 #include <QVector>
 
-class QTranslator;
+QT_FORWARD_DECLARE_CLASS(QTranslator)
 
 class TranslationManager : public QObject
 {

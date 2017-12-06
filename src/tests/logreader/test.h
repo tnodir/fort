@@ -3,8 +3,8 @@
 
 #include <QObject>
 
-class Device;
-class LogBuffer;
+QT_FORWARD_DECLARE_CLASS(Device)
+QT_FORWARD_DECLARE_CLASS(LogBuffer)
 
 class Test : public QObject
 {

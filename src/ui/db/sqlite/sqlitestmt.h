@@ -4,7 +4,7 @@
 #include <QString>
 #include <QVariant>
 
-struct sqlite3_stmt;
+QT_FORWARD_DECLARE_STRUCT(sqlite3_stmt)
 
 class SqliteStmt
 {

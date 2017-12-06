@@ -6,8 +6,8 @@
 #include <QStringList>
 #include <QVector>
 
-class SqliteDb;
-class SqliteStmt;
+QT_FORWARD_DECLARE_CLASS(SqliteDb)
+QT_FORWARD_DECLARE_CLASS(SqliteStmt)
 
 class DatabaseManager : public QObject
 {

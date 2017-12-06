@@ -3,7 +3,7 @@
 
 #include "stringlistmodel.h"
 
-class DatabaseManager;
+QT_FORWARD_DECLARE_CLASS(DatabaseManager)
 
 class AppStatModel : public StringListModel
 {

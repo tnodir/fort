@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class HostInfoWorker;
+QT_FORWARD_DECLARE_CLASS(HostInfoWorker)
 
 class HostInfo : public QObject
 {
