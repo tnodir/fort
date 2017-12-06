@@ -82,19 +82,19 @@ BasePage {
 
                         TabButton {
                             text: translationManager.dummyBool
-                                  && qsTranslate("qml", "Hourly")
+                                  && qsTranslate("qml", "Hourly", "Stat")
                         }
                         TabButton {
                             text: translationManager.dummyBool
-                                  && qsTranslate("qml", "Daily")
+                                  && qsTranslate("qml", "Daily", "Stat")
                         }
                         TabButton {
                             text: translationManager.dummyBool
-                                  && qsTranslate("qml", "Monthly")
+                                  && qsTranslate("qml", "Monthly", "Stat")
                         }
                         TabButton {
                             text: translationManager.dummyBool
-                                  && qsTranslate("qml", "Total")
+                                  && qsTranslate("qml", "Total", "Stat")
                         }
                     }
 

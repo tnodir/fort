@@ -37,17 +37,17 @@
 <context>
     <name>FortManager</name>
     <message>
-        <location filename="../fortmanager.cpp" line="358"/>
+        <location filename="../fortmanager.cpp" line="367"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="363"/>
+        <location filename="../fortmanager.cpp" line="372"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="378"/>
+        <location filename="../fortmanager.cpp" line="387"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -55,27 +55,27 @@
 <context>
     <name>FortSettings</name>
     <message>
-        <location filename="../fortsettings.cpp" line="164"/>
+        <location filename="../fortsettings.cpp" line="169"/>
         <source>Can&apos;t write .ini file</source>
         <translation>Не удалось записать .ini файл</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="170"/>
+        <location filename="../fortsettings.cpp" line="175"/>
         <source>Can&apos;t rename old backup .conf file</source>
         <translation>Не удалось переименовать старый бэкап .conf файла</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="175"/>
+        <location filename="../fortsettings.cpp" line="180"/>
         <source>Can&apos;t create backup .conf file</source>
         <translation>Не удалось создать бэкап .conf файла</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="180"/>
+        <location filename="../fortsettings.cpp" line="185"/>
         <source>Can&apos;t rename backup .conf file</source>
         <translation>Не удалось переименовать бэкап .conf файла</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="195"/>
+        <location filename="../fortsettings.cpp" line="200"/>
         <source>Can&apos;t write .conf file</source>
         <translation>Не удалось записать .conf файл</translation>
     </message>
@@ -166,17 +166,17 @@
         <translation>Выделить всё</translation>
     </message>
     <message>
-        <location filename="../qml/pages/BlockedPage.qml" line="34"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="35"/>
         <source>Clear</source>
         <translation>Очистить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/BlockedPage.qml" line="40"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="41"/>
         <source>Resolve Addresses</source>
         <translation>Преобразовать адреса</translation>
     </message>
     <message>
-        <location filename="../qml/pages/BlockedPage.qml" line="59"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="62"/>
         <source>Log Blocked Applications</source>
         <translation>Показ блокированных приложений</translation>
     </message>
@@ -286,22 +286,22 @@
         <translation>Статистика</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="97"/>
+        <location filename="../qml/pages/MainPage.qml" line="98"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="111"/>
+        <location filename="../qml/pages/MainPage.qml" line="113"/>
         <source>Apply</source>
         <translation>Применить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="124"/>
+        <location filename="../qml/pages/MainPage.qml" line="127"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="129"/>
+        <location filename="../qml/pages/MainPage.qml" line="133"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -311,14 +311,19 @@
         <translation>Запускать вместе с Windows</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="31"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="32"/>
         <source>Block access to network when Fort Firewall is not running</source>
         <translation>Блокировать доступ к сети, когда Fort Firewall не запущен</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="42"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="44"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/OptionsPage.qml" line="59"/>
+        <source>Language:</source>
+        <translation>Язык:</translation>
     </message>
     <message>
         <location filename="../qml/pages/SchedulePage.qml" line="30"/>
@@ -376,9 +381,58 @@
         <translation>Успешный запуск</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="24"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="38"/>
         <source>Collect Traffic Statistics</source>
         <translation>Собирать статистику трафика</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/StatisticsPage.qml" line="69"/>
+        <source>All</source>
+        <translation>Все</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/StatisticsPage.qml" line="85"/>
+        <source>Hourly</source>
+        <comment>Stat</comment>
+        <translation>Почасовая</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/StatisticsPage.qml" line="89"/>
+        <source>Daily</source>
+        <comment>Stat</comment>
+        <translation>Подневная</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/StatisticsPage.qml" line="93"/>
+        <source>Monthly</source>
+        <comment>Stat</comment>
+        <translation>Помесячная</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/StatisticsPage.qml" line="97"/>
+        <source>Total</source>
+        <comment>Stat</comment>
+        <translation>Общая</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/StatisticsPage.qml" line="108"/>
+        <source>Date</source>
+        <translation>Дата</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/StatisticsPage.qml" line="113"/>
+        <source>Download</source>
+        <translation>Загрузка</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/StatisticsPage.qml" line="118"/>
+        <source>Upload</source>
+        <translation>Выгрузка</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/StatisticsPage.qml" line="123"/>
+        <source>Sum</source>
+        <translation>Сумма</translation>
     </message>
 </context>
 </TS>
