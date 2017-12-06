@@ -25,6 +25,7 @@ BasePage {
                     setConfFlagsEdited();
                 }
             }
+
             CheckBox {
                 id: cbBoot
                 text: translationManager.dummyBool
@@ -36,6 +37,7 @@ BasePage {
                     setConfFlagsEdited();
                 }
             }
+
             CheckBox {
                 id: cbFilter
                 text: translationManager.dummyBool
@@ -47,12 +49,22 @@ BasePage {
                     setConfFlagsEdited();
                 }
             }
-            ComboBox {
-                width: Math.max(implicitWidth, 180)
-                flat: true
-                currentIndex: translationManager.language
-                model: translationManager.naturalLabels
-                onActivated: fortManager.setLanguage(index)
+
+            Row {
+                spacing: 4
+
+                Label {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: translationManager.dummyBool
+                          && qsTranslate("qml", "Language:")
+                }
+                ComboBox {
+                    width: Math.max(implicitWidth, 180)
+                    flat: true
+                    currentIndex: translationManager.language
+                    model: translationManager.naturalLabels
+                    onActivated: fortManager.setLanguage(index)
+                }
             }
         }
     }
