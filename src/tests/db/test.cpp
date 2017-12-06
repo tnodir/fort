@@ -79,27 +79,27 @@ void Test::debugProcNew(SqliteDb *sqliteDb)
 void Test::debugStatTraf(SqliteDb *sqliteDb)
 {
     debugStatTrafStep(sqliteDb, "traffic_app_hour",
-                      "SELECT app_id, unix_time, in_bytes, out_bytes"
+                      "SELECT app_id, traf_time, in_bytes, out_bytes"
                       "  FROM traffic_app_hour;");
     debugStatTrafStep(sqliteDb, "traffic_app_day",
-                      "SELECT app_id, unix_time, in_bytes, out_bytes"
+                      "SELECT app_id, traf_time, in_bytes, out_bytes"
                       "  FROM traffic_app_day;");
     debugStatTrafStep(sqliteDb, "traffic_app_month",
-                      "SELECT app_id, unix_time, in_bytes, out_bytes"
+                      "SELECT app_id, traf_time, in_bytes, out_bytes"
                       "  FROM traffic_app_month;");
 
     debugStatTrafStep(sqliteDb, "traffic_hour",
-                      "SELECT 0, unix_time, in_bytes, out_bytes"
+                      "SELECT 0, traf_time, in_bytes, out_bytes"
                       "  FROM traffic_hour;");
     debugStatTrafStep(sqliteDb, "traffic_day",
-                      "SELECT 0, unix_time, in_bytes, out_bytes"
+                      "SELECT 0, traf_time, in_bytes, out_bytes"
                       "  FROM traffic_day;");
     debugStatTrafStep(sqliteDb, "traffic_month",
-                      "SELECT 0, unix_time, in_bytes, out_bytes"
+                      "SELECT 0, traf_time, in_bytes, out_bytes"
                       "  FROM traffic_month;");
 
     debugStatTrafStep(sqliteDb, "traffic_app_total",
-                      "SELECT id, unix_time, in_bytes, out_bytes"
+                      "SELECT id, traf_time, in_bytes, out_bytes"
                       "  FROM app;", 1);
 }
 
@@ -112,11 +112,11 @@ void Test::debugStatTrafStep(SqliteDb *sqliteDb, const char *name,
 
     qDebug() << '>' << name << '<';
     while (stmt.step() == SqliteStmt::StepRow) {
-        const qint64 unixTime = stmt.columnInt64(1) * timeMult;
+        const qint64 trafTime = stmt.columnInt64(1) * timeMult;
 
         qDebug() << '>'
                  << stmt.columnInt64(0)
-                 << QDateTime::fromSecsSinceEpoch(unixTime).toString()
+                 << QDateTime::fromSecsSinceEpoch(trafTime).toString()
                  << stmt.columnInt64(2)
                  << stmt.columnInt64(3);
     }

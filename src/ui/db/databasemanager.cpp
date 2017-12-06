@@ -11,9 +11,9 @@
 DatabaseManager::DatabaseManager(const QString &filePath,
                                  QObject *parent) :
     QObject(parent),
-    m_lastUnixHour(0),
-    m_lastUnixDay(0),
-    m_lastUnixMonth(0),
+    m_lastTrafHour(0),
+    m_lastTrafDay(0),
+    m_lastTrafMonth(0),
     m_filePath(filePath),
     m_sqliteDb(new SqliteDb())
 {
@@ -53,18 +53,18 @@ void DatabaseManager::addTraffic(quint16 procCount, const quint8 *procBits,
 {
     QVector<quint16> delProcIndexes;
 
-    const qint64 unixTime = QDateTime::currentSecsSinceEpoch();
+    const qint64 trafTime = QDateTime::currentSecsSinceEpoch();
 
-    const qint32 unixHour = qint32(unixTime / 3600);
-    const bool isNewHour = (unixHour != m_lastUnixHour);
+    const qint32 trafHour = qint32(trafTime / 3600);
+    const bool isNewHour = (trafHour != m_lastTrafHour);
 
-    const qint32 unixDay = isNewHour ? getUnixDay(unixTime)
-                                     : m_lastUnixDay;
-    const bool isNewDay = (unixDay != m_lastUnixDay);
+    const qint32 trafDay = isNewHour ? getUnixDay(trafTime)
+                                     : m_lastTrafDay;
+    const bool isNewDay = (trafDay != m_lastTrafDay);
 
-    const qint32 unixMonth = isNewDay ? getUnixMonth(unixTime)
-                                      : m_lastUnixMonth;
-    const bool isNewMonth = (unixMonth != m_lastUnixMonth);
+    const qint32 trafMonth = isNewDay ? getUnixMonth(trafTime)
+                                      : m_lastTrafMonth;
+    const bool isNewMonth = (trafMonth != m_lastTrafMonth);
 
     SqliteStmt *stmtInsertAppHour = nullptr;
     SqliteStmt *stmtInsertAppDay = nullptr;
@@ -75,31 +75,31 @@ void DatabaseManager::addTraffic(quint16 procCount, const quint8 *procBits,
     SqliteStmt *stmtInsertMonth = nullptr;
 
     if (isNewHour) {
-        m_lastUnixHour = unixHour;
+        m_lastTrafHour = trafHour;
 
         stmtInsertAppHour = getSqliteStmt(DatabaseSql::sqlInsertTrafficAppHour);
         stmtInsertHour = getSqliteStmt(DatabaseSql::sqlInsertTrafficHour);
 
-        stmtInsertAppHour->bindInt(1, unixHour);
-        stmtInsertHour->bindInt(1, unixHour);
+        stmtInsertAppHour->bindInt(1, trafHour);
+        stmtInsertHour->bindInt(1, trafHour);
 
         if (isNewDay) {
-            m_lastUnixDay = unixDay;
+            m_lastTrafDay = trafDay;
 
             stmtInsertAppDay = getSqliteStmt(DatabaseSql::sqlInsertTrafficAppDay);
             stmtInsertDay = getSqliteStmt(DatabaseSql::sqlInsertTrafficDay);
 
-            stmtInsertAppDay->bindInt(1, unixDay);
-            stmtInsertDay->bindInt(1, unixDay);
+            stmtInsertAppDay->bindInt(1, trafDay);
+            stmtInsertDay->bindInt(1, trafDay);
 
             if (isNewMonth) {
-                m_lastUnixMonth = unixMonth;
+                m_lastTrafMonth = trafMonth;
 
                 stmtInsertAppMonth = getSqliteStmt(DatabaseSql::sqlInsertTrafficAppMonth);
                 stmtInsertMonth = getSqliteStmt(DatabaseSql::sqlInsertTrafficMonth);
 
-                stmtInsertAppMonth->bindInt(1, unixMonth);
-                stmtInsertMonth->bindInt(1, unixMonth);
+                stmtInsertAppMonth->bindInt(1, trafMonth);
+                stmtInsertMonth->bindInt(1, trafMonth);
             }
         }
     }
@@ -114,13 +114,13 @@ void DatabaseManager::addTraffic(quint16 procCount, const quint8 *procBits,
 
     SqliteStmt *stmtUpdateAppTotal = getSqliteStmt(DatabaseSql::sqlUpdateTrafficAppTotal);
 
-    stmtUpdateAppHour->bindInt(1, unixHour);
-    stmtUpdateAppDay->bindInt(1, unixDay);
-    stmtUpdateAppMonth->bindInt(1, unixMonth);
+    stmtUpdateAppHour->bindInt(1, trafHour);
+    stmtUpdateAppDay->bindInt(1, trafDay);
+    stmtUpdateAppMonth->bindInt(1, trafMonth);
 
-    stmtUpdateHour->bindInt(1, unixHour);
-    stmtUpdateDay->bindInt(1, unixDay);
-    stmtUpdateMonth->bindInt(1, unixMonth);
+    stmtUpdateHour->bindInt(1, trafHour);
+    stmtUpdateDay->bindInt(1, trafDay);
+    stmtUpdateMonth->bindInt(1, trafMonth);
 
     m_sqliteDb->beginTransaction();
 
@@ -261,7 +261,7 @@ void DatabaseManager::insertTraffic(SqliteStmt *stmt, qint64 appId)
 }
 
 void DatabaseManager::updateTraffic(SqliteStmt *stmt, quint32 inBytes,
-                                       quint32 outBytes, qint64 appId)
+                                    quint32 outBytes, qint64 appId)
 {
     stmt->bindInt64(2, inBytes);
     stmt->bindInt64(3, outBytes);

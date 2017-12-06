@@ -41,15 +41,15 @@ private:
 
     void insertTraffic(SqliteStmt *stmt, qint64 appId = 0);
     void updateTraffic(SqliteStmt *stmt, quint32 inBytes,
-                          quint32 outBytes, qint64 appId = 0);
+                       quint32 outBytes, qint64 appId = 0);
 
     static qint32 getUnixDay(qint64 unixTime);
     static qint32 getUnixMonth(qint64 unixTime);
 
 private:
-    qint32 m_lastUnixHour;
-    qint32 m_lastUnixDay;
-    qint32 m_lastUnixMonth;
+    qint32 m_lastTrafHour;
+    qint32 m_lastTrafDay;
+    qint32 m_lastTrafMonth;
 
     QString m_filePath;
 
