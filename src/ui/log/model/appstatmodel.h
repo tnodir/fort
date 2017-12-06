@@ -2,9 +2,9 @@
 #define APPSTATMODEL_H
 
 #include "stringlistmodel.h"
-#include "traflistmodel.h"
 
 QT_FORWARD_DECLARE_CLASS(DatabaseManager)
+QT_FORWARD_DECLARE_CLASS(TrafListModel)
 
 class AppStatModel : public StringListModel
 {
@@ -16,7 +16,7 @@ public:
 
     void initialize();
 
-    Q_INVOKABLE TrafListModel *trafListModel(TrafListModel::TrafType type,
+    Q_INVOKABLE TrafListModel *trafListModel(int trafType,
                                              const QString &appPath) const;
 
     void handleProcNew(const QString &appPath);

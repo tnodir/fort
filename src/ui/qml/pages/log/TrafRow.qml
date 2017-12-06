@@ -5,11 +5,6 @@ import com.fortfirewall 1.0
 
 Row {
 
-    property string dateTime
-    property string download
-    property string upload
-    property string sum
-
     Label {
         width: trafCellWidths[0]
         fontSizeMode: Text.Fit
@@ -27,12 +22,14 @@ Row {
     Label {
         width: trafCellWidths[3]
         fontSizeMode: Text.Fit
-        text: upload
+        text: translationManager.dummyBool
+              && upload
     }
 
     Label {
         width: trafCellWidths[4]
         fontSizeMode: Text.Fit
-        text: sum
+        text: translationManager.dummyBool
+              && sum
     }
 }

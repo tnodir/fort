@@ -28,12 +28,16 @@ public:
 
     void getAppList(QStringList &list);
 
-signals:
-
-public slots:
     qint64 getAppId(const QString &appPath);
 
     qint32 getMinTrafTime(const char *sql, qint64 appId = 0);
+
+    void getTraffic(const char *sql, qint64 &inBytes,
+                    qint64 &outBytes, qint64 appId = 0);
+
+signals:
+
+public slots:
 
 private:
     bool createTables();

@@ -19,6 +19,7 @@
 #include "log/model/appblockedmodel.h"
 #include "log/model/appstatmodel.h"
 #include "log/model/iplistmodel.h"
+#include "log/model/traflistmodel.h"
 #include "task/taskinfo.h"
 #include "task/taskmanager.h"
 #include "translationmanager.h"
@@ -77,6 +78,8 @@ void FortManager::registerQmlTypes()
                                                 "Singleton");
     qmlRegisterUncreatableType<IpListModel>("com.fortfirewall", 1, 0, "IpListModel",
                                             "Singleton");
+    qmlRegisterUncreatableType<TrafListModel>("com.fortfirewall", 1, 0, "TrafListModel",
+                                              "Singleton");
 
     qmlRegisterUncreatableType<TranslationManager>("com.fortfirewall", 1, 0, "TranslationManager",
                                                    "Singleton");

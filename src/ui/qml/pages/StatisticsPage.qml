@@ -136,15 +136,10 @@ BasePage {
                         spacing: 4
                         clip: true
 
-                        model: 1//appStatModel.trafListModel(currentAppPath)
+                        model: appStatModel.trafListModel(tabBar.currentIndex,
+                                                          currentAppPath)
 
-                        delegate: TrafRow {
-                            //text: display
-                            dateTime: "2017-12-06"
-                            download: "3 MB"
-                            upload: "1 MB"
-                            sum: "4 MB"
-                        }
+                        delegate: TrafRow {}
                     }
                 }
             }

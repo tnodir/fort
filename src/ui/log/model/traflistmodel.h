@@ -47,12 +47,16 @@ public slots:
     void clear();
 
 private:
-    static qint32 getMaxTrafTime(TrafType type);
+    QString formatTrafTime(qint32 trafTime) const;
+
+    qint32 getTrafTime(int row) const;
+
     static qint32 getTrafCount(TrafType type, qint32 minTrafTime,
                                qint32 maxTrafTime);
+    static qint32 getMaxTrafTime(TrafType type);
 
     static const char *getSqlMinTrafTime(TrafType type, qint64 appId);
-    static const char *getSqlTrafBytes(TrafType type, qint64 appId);
+    static const char *getSqlSelectTraffic(TrafType type, qint64 appId);
 
 private:
     TrafType m_type;

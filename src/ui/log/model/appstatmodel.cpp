@@ -1,6 +1,7 @@
 #include "appstatmodel.h"
 
 #include "../../db/databasemanager.h"
+#include "traflistmodel.h"
 
 AppStatModel::AppStatModel(DatabaseManager *databaseManager,
                            QObject *parent) :
@@ -17,11 +18,11 @@ void AppStatModel::initialize()
     updateList();
 }
 
-TrafListModel *AppStatModel::trafListModel(TrafListModel::TrafType type,
+TrafListModel *AppStatModel::trafListModel(int trafType,
                                            const QString &appPath) const
 {
     if (appPath != m_trafListModel->appPath()) {
-        m_trafListModel->setType(type);
+        m_trafListModel->setType(static_cast<TrafListModel::TrafType>(trafType));
         m_trafListModel->setAppPath(appPath);
         m_trafListModel->reset();
     }

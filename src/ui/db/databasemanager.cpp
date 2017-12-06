@@ -281,6 +281,22 @@ qint32 DatabaseManager::getMinTrafTime(const char *sql, qint64 appId)
     return trafTime;
 }
 
+void DatabaseManager::getTraffic(const char *sql, qint64 &inBytes,
+                                 qint64 &outBytes, qint64 appId)
+{
+    SqliteStmt *stmt = getSqliteStmt(sql);
+
+    if (appId != 0) {
+        stmt->bindInt64(1, appId);
+    }
+
+    if (stmt->step() == SqliteStmt::StepRow) {
+        inBytes = stmt->columnInt64(0);
+        outBytes = stmt->columnInt64(1);
+    }
+    stmt->reset();
+}
+
 SqliteStmt *DatabaseManager::getSqliteStmt(const char *sql)
 {
     SqliteStmt *stmt = m_sqliteStmts.value(sql);

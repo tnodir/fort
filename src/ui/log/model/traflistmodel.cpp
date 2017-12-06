@@ -53,8 +53,23 @@ QVariant TrafListModel::data(const QModelIndex &index, int role) const
 {
     if (index.isValid() && role >= DateTimeRole && role <= SumRole) {
         const int row = index.row();
+        const qint32 trafTime = getTrafTime(row);
 
-        return QVariant();
+        if (role == DateTimeRole) {
+            return formatTrafTime(trafTime);
+        }
+
+        const char *sqlSelectTraffic = getSqlSelectTraffic(m_type, m_appId);
+
+        qint64 inBytes = 0, outBytes = 0;
+        m_databaseManager->getTraffic(sqlSelectTraffic, inBytes,
+                                      outBytes, m_appId);
+
+        switch (role) {
+        case DownloadRole: return inBytes;
+        case UploadRole: return outBytes;
+        case SumRole: return inBytes + outBytes;
+        }
     }
     return QVariant();
 }
@@ -75,14 +90,25 @@ void TrafListModel::clear()
 {
 }
 
-qint32 TrafListModel::getMaxTrafTime(TrafType type)
+QString TrafListModel::formatTrafTime(qint32 trafTime) const
 {
-    const qint64 unixTime = DateUtil::getUnixTime();
+    const qint64 unixTime = DateUtil::toUnixTime(trafTime);
 
-    switch (type) {
-    case TrafHourly: return DateUtil::getUnixHour(unixTime);
-    case TrafDaily: return DateUtil::getUnixDay(unixTime);
-    case TrafMonthly: return DateUtil::getUnixMonth(unixTime);
+    switch (m_type) {
+    case TrafHourly: return DateUtil::formatHour(unixTime);
+    case TrafDaily: return DateUtil::formatDay(unixTime);
+    case TrafMonthly: return DateUtil::formatMonth(unixTime);
+    case TrafTotal: return DateUtil::formatTime(unixTime);
+    }
+    return QString();
+}
+
+qint32 TrafListModel::getTrafTime(int row) const
+{
+    switch (m_type) {
+    case TrafHourly: return m_maxTrafTime - row;
+    case TrafDaily: return m_maxTrafTime - row * 24;
+    case TrafMonthly: return DateUtil::addUnixMonths(m_maxTrafTime, -row);
     case TrafTotal: break;
     }
     return 0;
@@ -106,6 +132,19 @@ qint32 TrafListModel::getTrafCount(TrafType type, qint32 minTrafTime,
     return 0;
 }
 
+qint32 TrafListModel::getMaxTrafTime(TrafType type)
+{
+    const qint64 unixTime = DateUtil::getUnixTime();
+
+    switch (type) {
+    case TrafHourly: return DateUtil::getUnixHour(unixTime);
+    case TrafDaily: return DateUtil::getUnixDay(unixTime);
+    case TrafMonthly: return DateUtil::getUnixMonth(unixTime);
+    case TrafTotal: break;
+    }
+    return 0;
+}
+
 const char *TrafListModel::getSqlMinTrafTime(TrafType type, qint64 appId)
 {
     switch (type) {
@@ -120,7 +159,7 @@ const char *TrafListModel::getSqlMinTrafTime(TrafType type, qint64 appId)
     return nullptr;
 }
 
-const char *TrafListModel::getSqlTrafBytes(TrafType type, qint64 appId)
+const char *TrafListModel::getSqlSelectTraffic(TrafType type, qint64 appId)
 {
     switch (type) {
     case TrafHourly: return appId ? DatabaseSql::sqlSelectTrafAppHour

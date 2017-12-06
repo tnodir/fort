@@ -36,3 +36,37 @@ qint32 DateUtil::getUnixMonth(qint64 unixTime)
     return getUnixHour(QDateTime(QDate(date.year(), date.month(), 1))
                        .toSecsSinceEpoch());
 }
+
+qint32 DateUtil::addUnixMonths(qint32 unixHour, int months)
+{
+    const qint64 unixTime = DateUtil::toUnixTime(unixHour);
+
+    return getUnixHour(QDateTime::fromSecsSinceEpoch(unixTime)
+                       .addMonths(months)
+                       .toSecsSinceEpoch());
+}
+
+QString DateUtil::formatTime(qint64 unixTime)
+{
+    return formatDateTime(unixTime, "yyyy-MM-dd hh:mm:ss");
+}
+
+QString DateUtil::formatHour(qint64 unixTime)
+{
+    return formatDateTime(unixTime, "yyyy-MM-dd hh:00");
+}
+
+QString DateUtil::formatDay(qint64 unixTime)
+{
+    return formatDateTime(unixTime, "yyyy-MM-dd");
+}
+
+QString DateUtil::formatMonth(qint64 unixTime)
+{
+    return formatDateTime(unixTime, "yyyy-MM");
+}
+
+QString DateUtil::formatDateTime(qint64 unixTime, const QString &format)
+{
+    return QDateTime::fromSecsSinceEpoch(unixTime).toString(format);
+}
