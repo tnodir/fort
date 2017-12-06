@@ -38,7 +38,7 @@ quint32 FortCommon::ioctlGetLog()
     return FORT_IOCTL_GETLOG;
 }
 
-quint32 FortCommon::bufferSize()
+int FortCommon::bufferSize()
 {
     return FORT_BUFFER_SIZE;
 }

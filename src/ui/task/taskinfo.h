@@ -1,8 +1,8 @@
 #ifndef TASKINFO_H
 #define TASKINFO_H
 
-#include <QObject>
 #include <QDateTime>
+#include <QObject>
 
 QT_FORWARD_DECLARE_CLASS(TaskWorker)
 

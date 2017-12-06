@@ -2,8 +2,8 @@
 
 #include <QThreadPool>
 
-#include "../fortcommon.h"
 #include "../conf/firewallconf.h"
+#include "../fortcommon.h"
 #include "../log/logbuffer.h"
 #include "../util/confutil.h"
 #include "../util/device.h"
@@ -93,7 +93,7 @@ bool DriverManager::writeConfFlags(const FirewallConf &conf)
                      buf, flagsSize);
 }
 
-bool DriverManager::writeData(int code, QByteArray &buf, int size)
+bool DriverManager::writeData(quint32 code, QByteArray &buf, int size)
 {
     m_driverWorker->cancelAsyncIo();
 

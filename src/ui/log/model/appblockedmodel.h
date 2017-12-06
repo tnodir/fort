@@ -18,11 +18,11 @@ public:
 
     void addLogEntry(const LogEntryBlocked &logEntry);
 
+    Q_INVOKABLE IpListModel *ipListModel(const QString &appPath) const;
+
 signals:
 
 public slots:
-    IpListModel *ipListModel(const QString &appPath) const;
-
     void clear() override;
 
 private:

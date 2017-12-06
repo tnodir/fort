@@ -50,7 +50,7 @@ bool Device::cancelIo()
     return CancelIoEx(m_handle, NULL);
 }
 
-bool Device::ioctl(int code, char *in, int inSize,
+bool Device::ioctl(quint32 code, char *in, int inSize,
                    char *out, int outSize,
                    int *retSize)
 {

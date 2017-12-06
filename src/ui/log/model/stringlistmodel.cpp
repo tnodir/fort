@@ -53,7 +53,7 @@ void StringListModel::replace(const QString &text, int row)
 
     const QModelIndex modelIndex = index(row);
 
-    dataChanged(modelIndex, modelIndex);
+    emit dataChanged(modelIndex, modelIndex);
 }
 
 void StringListModel::clear()

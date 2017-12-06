@@ -21,7 +21,7 @@ public slots:
 
     bool cancelIo();
 
-    bool ioctl(int code, char *in = nullptr, int inSize = 0,
+    bool ioctl(quint32 code, char *in = nullptr, int inSize = 0,
                char *out = nullptr, int outSize = 0,
                int *retSize = nullptr);
 

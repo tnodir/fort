@@ -38,7 +38,7 @@ private:
     void setupWorker();
     void abortWorker();
 
-    bool writeData(int code, QByteArray &buf, int size);
+    bool writeData(quint32 code, QByteArray &buf, int size);
 
 private:
     Device *m_device;

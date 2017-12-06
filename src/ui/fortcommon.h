@@ -17,7 +17,7 @@ public:
     static quint32 ioctlSetFlags();
     static quint32 ioctlGetLog();
 
-    static quint32 bufferSize();
+    static int bufferSize();
 
     static quint32 logBlockedHeaderSize();
     static quint32 logBlockedSize(quint32 pathLen);

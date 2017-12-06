@@ -8,7 +8,7 @@ AppGroup::AppGroup(QObject *parent) :
 
 void AppGroup::setEnabled(bool enabled)
 {
-    if ((bool) m_enabled != enabled) {
+    if (bool(m_enabled) != enabled) {
         m_enabled = enabled;
         emit enabledChanged();
     }
@@ -42,7 +42,6 @@ QVariant AppGroup::toVariant() const
 {
     QVariantMap map;
 
-    //map["enabled"] = enabled();
     map["name"] = name();
     map["blockText"] = blockText();
     map["allowText"] = allowText();
@@ -54,7 +53,6 @@ void AppGroup::fromVariant(const QVariant &v)
 {
     const QVariantMap map = v.toMap();
 
-    //m_enabled = map["enabled"].toBool();
     m_name = map["name"].toString();
     m_blockText = map["blockText"].toString();
     m_allowText = map["allowText"].toString();

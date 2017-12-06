@@ -3,8 +3,8 @@
 #include "../util/dateutil.h"
 #include "../util/fileutil.h"
 #include "databasesql.h"
-#include "sqlite/sqliteengine.h"
 #include "sqlite/sqlitedb.h"
+#include "sqlite/sqliteengine.h"
 #include "sqlite/sqlitestmt.h"
 
 DatabaseManager::DatabaseManager(const QString &filePath,
@@ -21,7 +21,7 @@ DatabaseManager::DatabaseManager(const QString &filePath,
 
 DatabaseManager::~DatabaseManager()
 {
-    qDeleteAll(m_sqliteStmts.values());
+    qDeleteAll(m_sqliteStmts);
 
     delete m_sqliteDb;
 
