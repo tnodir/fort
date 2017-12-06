@@ -150,3 +150,76 @@ const char * const DatabaseSql::sqlUpdateTrafficAppTotal =
         "    out_bytes = out_bytes + ?3"
         "  WHERE id = ?1;"
         ;
+
+const char * const DatabaseSql::sqlSelectMinTrafAppHour =
+        "SELECT min(traf_time) FROM traffic_app_hour"
+        "  WHERE app_id = ?1;"
+        ;
+
+const char * const DatabaseSql::sqlSelectMinTrafAppDay =
+        "SELECT min(traf_time) FROM traffic_app_day"
+        "  WHERE app_id = ?1;"
+        ;
+
+const char * const DatabaseSql::sqlSelectMinTrafAppMonth =
+        "SELECT min(traf_time) FROM traffic_app_month"
+        "  WHERE app_id = ?1;"
+        ;
+
+const char * const DatabaseSql::sqlSelectMinTrafHour =
+        "SELECT min(traf_time) FROM traffic_hour;"
+        ;
+
+const char * const DatabaseSql::sqlSelectMinTrafDay =
+        "SELECT min(traf_time) FROM traffic_app_day;"
+        ;
+
+const char * const DatabaseSql::sqlSelectMinTrafMonth =
+        "SELECT min(traf_time) FROM traffic_app_month;"
+        ;
+
+const char * const DatabaseSql::sqlSelectTrafAppHour =
+        "SELECT traf_time, in_bytes, out_bytes"
+        "  FROM traffic_app_hour"
+        "  WHERE app_id = ?1 and traf_time between ?2 and ?3;"
+        ;
+
+const char * const DatabaseSql::sqlSelectTrafAppDay =
+        "SELECT traf_time, in_bytes, out_bytes"
+        "  FROM traffic_app_day"
+        "  WHERE app_id = ?1 and traf_time between ?2 and ?3;"
+        ;
+
+const char * const DatabaseSql::sqlSelectTrafAppMonth =
+        "SELECT traf_time, in_bytes, out_bytes"
+        "  FROM traffic_app_month"
+        "  WHERE app_id = ?1 and traf_time between ?2 and ?3;"
+        ;
+
+const char * const DatabaseSql::sqlSelectTrafAppTotal =
+        "SELECT traf_time, in_bytes, out_bytes"
+        "  FROM app WHERE app_id = ?1;"
+        ;
+
+const char * const DatabaseSql::sqlSelectTrafHour =
+        "SELECT traf_time, in_bytes, out_bytes"
+        "  FROM traffic_hour"
+        "  WHERE traf_time between ?2 and ?3;"
+        ;
+
+const char * const DatabaseSql::sqlSelectTrafDay =
+        "SELECT traf_time, in_bytes, out_bytes"
+        "  FROM traffic_day"
+        "  WHERE traf_time between ?2 and ?3;"
+        ;
+
+const char * const DatabaseSql::sqlSelectTrafMonth =
+        "SELECT traf_time, in_bytes, out_bytes"
+        "  FROM traffic_month"
+        "  WHERE traf_time between ?2 and ?3;"
+        ;
+
+const char * const DatabaseSql::sqlSelectTrafTotal =
+        "SELECT traf_time, in_bytes, out_bytes"
+        "  FROM app;"
+        ;

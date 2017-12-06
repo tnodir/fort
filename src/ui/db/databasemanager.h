@@ -31,20 +31,20 @@ public:
 signals:
 
 public slots:
+    qint64 getAppId(const QString &appPath);
+
+    qint32 getMinTrafTime(const char *sql, qint64 appId = 0);
 
 private:
     bool createTables();
 
-    qint64 getAppId(const QString &appPath, bool &isNew);
+    qint64 createAppId(const QString &appPath);
 
     SqliteStmt *getSqliteStmt(const char *sql);
 
     void insertTraffic(SqliteStmt *stmt, qint64 appId = 0);
     void updateTraffic(SqliteStmt *stmt, quint32 inBytes,
                        quint32 outBytes, qint64 appId = 0);
-
-    static qint32 getUnixDay(qint64 unixTime);
-    static qint32 getUnixMonth(qint64 unixTime);
 
 private:
     qint32 m_lastTrafHour;

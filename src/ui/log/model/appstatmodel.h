@@ -2,6 +2,7 @@
 #define APPSTATMODEL_H
 
 #include "stringlistmodel.h"
+#include "traflistmodel.h"
 
 QT_FORWARD_DECLARE_CLASS(DatabaseManager)
 
@@ -22,6 +23,9 @@ public:
 signals:
 
 public slots:
+    TrafListModel *trafListModel(TrafListModel::TrafType type,
+                                 const QString &appPath) const;
+
     void clear() override;
 
 private:
@@ -29,6 +33,8 @@ private:
 
 private:
     DatabaseManager *m_databaseManager;
+
+    TrafListModel *m_trafListModel;
 };
 
 #endif // APPSTATMODEL_H

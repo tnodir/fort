@@ -5,7 +5,8 @@
 AppStatModel::AppStatModel(DatabaseManager *databaseManager,
                            QObject *parent) :
     StringListModel(parent),
-    m_databaseManager(databaseManager)
+    m_databaseManager(databaseManager),
+    m_trafListModel(new TrafListModel(databaseManager, this))
 {
 }
 
@@ -14,6 +15,18 @@ void AppStatModel::initialize()
     m_databaseManager->initialize();
 
     updateList();
+}
+
+TrafListModel *AppStatModel::trafListModel(TrafListModel::TrafType type,
+                                           const QString &appPath) const
+{
+    if (appPath != m_trafListModel->appPath()) {
+        m_trafListModel->setType(type);
+        m_trafListModel->setAppPath(appPath);
+        m_trafListModel->reset();
+    }
+
+    return m_trafListModel;
 }
 
 void AppStatModel::clear()

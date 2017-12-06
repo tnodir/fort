@@ -1,7 +1,6 @@
 #include "databasemanager.h"
 
-#include <QDateTime>
-
+#include "../util/dateutil.h"
 #include "../util/fileutil.h"
 #include "databasesql.h"
 #include "sqlite/sqliteengine.h"
@@ -43,7 +42,11 @@ bool DatabaseManager::initialize()
 
 void DatabaseManager::addApp(const QString &appPath, bool &isNew)
 {
-    const qint64 appId = getAppId(appPath, isNew);
+    qint64 appId = getAppId(appPath);
+    if (appId == 0) {
+        appId = createAppId(appPath);
+        isNew = true;
+    }
 
     m_appIds.append(appId);
 }
@@ -53,16 +56,16 @@ void DatabaseManager::addTraffic(quint16 procCount, const quint8 *procBits,
 {
     QVector<quint16> delProcIndexes;
 
-    const qint64 trafTime = QDateTime::currentSecsSinceEpoch();
+    const qint64 unixTime = DateUtil::getUnixTime();
 
-    const qint32 trafHour = qint32(trafTime / 3600);
+    const qint32 trafHour = DateUtil::getUnixHour(unixTime);
     const bool isNewHour = (trafHour != m_lastTrafHour);
 
-    const qint32 trafDay = isNewHour ? getUnixDay(trafTime)
+    const qint32 trafDay = isNewHour ? DateUtil::getUnixDay(unixTime)
                                      : m_lastTrafDay;
     const bool isNewDay = (trafDay != m_lastTrafDay);
 
-    const qint32 trafMonth = isNewDay ? getUnixMonth(trafTime)
+    const qint32 trafMonth = isNewDay ? DateUtil::getUnixMonth(unixTime)
                                       : m_lastTrafMonth;
     const bool isNewMonth = (trafMonth != m_lastTrafMonth);
 
@@ -192,36 +195,36 @@ bool DatabaseManager::createTables()
     return res;
 }
 
-qint64 DatabaseManager::getAppId(const QString &appPath, bool &isNew)
+qint64 DatabaseManager::getAppId(const QString &appPath)
 {
     qint64 appId = 0;
 
-    // Check existing
-    {
-        SqliteStmt *stmt = getSqliteStmt(DatabaseSql::sqlSelectAppId);
+    SqliteStmt *stmt = getSqliteStmt(DatabaseSql::sqlSelectAppId);
 
-        stmt->bindText(1, appPath);
-        if (stmt->step() == SqliteStmt::StepRow) {
-            appId = stmt->columnInt64();
-        }
-        stmt->reset();
+    stmt->bindText(1, appPath);
+    if (stmt->step() == SqliteStmt::StepRow) {
+        appId = stmt->columnInt64();
     }
+    stmt->reset();
 
-    // Create new one
-    if (!appId) {
-        SqliteStmt *stmt = getSqliteStmt(DatabaseSql::sqlInsertAppId);
-        const qint64 unixTime = QDateTime::currentSecsSinceEpoch();
+    return appId;
+}
 
-        stmt->bindText(1, appPath);
-        stmt->bindInt64(2, unixTime);
-        stmt->bindInt64(3, unixTime);
+qint64 DatabaseManager::createAppId(const QString &appPath)
+{
+    qint64 appId = 0;
 
-        if (stmt->step() == SqliteStmt::StepDone) {
-            appId = m_sqliteDb->lastInsertRowid();
-            isNew = true;
-        }
-        stmt->reset();
+    SqliteStmt *stmt = getSqliteStmt(DatabaseSql::sqlInsertAppId);
+    const qint64 unixTime = DateUtil::getUnixTime();
+
+    stmt->bindText(1, appPath);
+    stmt->bindInt64(2, unixTime);
+    stmt->bindInt64(3, DateUtil::getUnixHour(unixTime));
+
+    if (stmt->step() == SqliteStmt::StepDone) {
+        appId = m_sqliteDb->lastInsertRowid();
     }
+    stmt->reset();
 
     return appId;
 }
@@ -234,20 +237,6 @@ void DatabaseManager::getAppList(QStringList &list)
         list.append(stmt->columnText());
     }
     stmt->reset();
-}
-
-SqliteStmt *DatabaseManager::getSqliteStmt(const char *sql)
-{
-    SqliteStmt *stmt = m_sqliteStmts.value(sql);
-
-    if (stmt == nullptr) {
-        stmt = new SqliteStmt();
-        stmt->prepare(m_sqliteDb->db(), sql, SqliteStmt::PreparePersistent);
-
-        m_sqliteStmts.insert(sql, stmt);
-    }
-
-    return stmt;
 }
 
 void DatabaseManager::insertTraffic(SqliteStmt *stmt, qint64 appId)
@@ -274,17 +263,34 @@ void DatabaseManager::updateTraffic(SqliteStmt *stmt, quint32 inBytes,
     stmt->reset();
 }
 
-qint32 DatabaseManager::getUnixDay(qint64 unixTime)
+qint32 DatabaseManager::getMinTrafTime(const char *sql, qint64 appId)
 {
-    const QDate date = QDateTime::fromSecsSinceEpoch(unixTime).date();
+    qint32 trafTime = 0;
 
-    return qint32(QDateTime(date).toSecsSinceEpoch() / 3600);
+    SqliteStmt *stmt = getSqliteStmt(sql);
+
+    if (appId != 0) {
+        stmt->bindInt64(1, appId);
+    }
+
+    if (stmt->step() == SqliteStmt::StepRow) {
+        trafTime = stmt->columnInt();
+    }
+    stmt->reset();
+
+    return trafTime;
 }
 
-qint32 DatabaseManager::getUnixMonth(qint64 unixTime)
+SqliteStmt *DatabaseManager::getSqliteStmt(const char *sql)
 {
-    const QDate date = QDateTime::fromSecsSinceEpoch(unixTime).date();
+    SqliteStmt *stmt = m_sqliteStmts.value(sql);
 
-    return qint32(QDateTime(QDate(date.year(), date.month(), 1))
-                  .toSecsSinceEpoch() / 3600);
+    if (stmt == nullptr) {
+        stmt = new SqliteStmt();
+        stmt->prepare(m_sqliteDb->db(), sql, SqliteStmt::PreparePersistent);
+
+        m_sqliteStmts.insert(sql, stmt);
+    }
+
+    return stmt;
 }

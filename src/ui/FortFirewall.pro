@@ -27,6 +27,7 @@ SOURCES += \
     log/model/appstatmodel.cpp \
     log/model/iplistmodel.cpp \
     log/model/stringlistmodel.cpp \
+    log/model/traflistmodel.cpp \
     mainwindow.cpp \
     task/taskinfo.cpp \
     task/taskmanager.cpp \
@@ -35,6 +36,7 @@ SOURCES += \
     task/taskworker.cpp \
     translationmanager.cpp \
     util/confutil.cpp \
+    util/dateutil.cpp \
     util/device.cpp \
     util/fileutil.cpp \
     util/guiutil.cpp \
@@ -69,6 +71,7 @@ HEADERS += \
     log/model/appstatmodel.h \
     log/model/iplistmodel.h \
     log/model/stringlistmodel.h \
+    log/model/traflistmodel.h \
     mainwindow.h \
     task/taskinfo.h \
     task/taskmanager.h \
@@ -77,6 +80,7 @@ HEADERS += \
     task/taskworker.h \
     translationmanager.h \
     util/confutil.h \
+    util/dateutil.h \
     util/device.h \
     util/fileutil.h \
     util/guiutil.h \

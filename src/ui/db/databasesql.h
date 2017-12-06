@@ -29,6 +29,24 @@ public:
     static const char * const sqlUpdateTrafficMonth;
 
     static const char * const sqlUpdateTrafficAppTotal;
+
+    static const char * const sqlSelectMinTrafAppHour;
+    static const char * const sqlSelectMinTrafAppDay;
+    static const char * const sqlSelectMinTrafAppMonth;
+
+    static const char * const sqlSelectMinTrafHour;
+    static const char * const sqlSelectMinTrafDay;
+    static const char * const sqlSelectMinTrafMonth;
+
+    static const char * const sqlSelectTrafAppHour;
+    static const char * const sqlSelectTrafAppDay;
+    static const char * const sqlSelectTrafAppMonth;
+    static const char * const sqlSelectTrafAppTotal;
+
+    static const char * const sqlSelectTrafHour;
+    static const char * const sqlSelectTrafDay;
+    static const char * const sqlSelectTrafMonth;
+    static const char * const sqlSelectTrafTotal;
 };
 
 #endif // DATABASESQL_H
