@@ -473,6 +473,8 @@ fort_callout_timer (void)
     if (len < FORT_BUFFER_SIZE
         && NT_SUCCESS(fort_buffer_prepare(buf, len, &out, &irp, &info))) {
       fort_log_stat_traf_header_write(out, proc_count);
+      out += FORT_LOG_STAT_HEADER_SIZE;
+
       fort_stat_dpc_traf_flush(stat, 0, proc_count, out);
     }
   }
