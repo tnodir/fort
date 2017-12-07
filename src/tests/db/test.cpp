@@ -24,7 +24,9 @@ void Test::dbWriteRead()
 
     // Add apps
     foreach (const QString &appPath, appPaths) {
-        databaseManager.handleProcNew(appPath);
+        bool isNew;
+        databaseManager.addApp(appPath, isNew);
+        QVERIFY(isNew);
     }
 
     debugProcNew(databaseManager.sqliteDb());
@@ -39,8 +41,8 @@ void Test::dbWriteRead()
 
         const quint32 trafBytes[procCount * 2] = {100, 200, 300, 400, 500, 600};
 
-        databaseManager.handleStatTraf(procCount, &procBits, trafBytes);
-        databaseManager.handleStatTraf(procCount, &procBits, trafBytes);
+        databaseManager.addTraffic(procCount, &procBits, trafBytes);
+        databaseManager.addTraffic(procCount, &procBits, trafBytes);
     }
 
     qDebug() << "elapsed>" << timer.restart() << "msec";
@@ -52,7 +54,7 @@ void Test::dbWriteRead()
 
         const quint32 trafBytes[procCount * 2] = {10, 20, 30, 40, 50, 60};
 
-        databaseManager.handleStatTraf(procCount, &procBits, trafBytes);
+        databaseManager.addTraffic(procCount, &procBits, trafBytes);
     }
 
     qDebug() << "elapsed>" << timer.elapsed() << "msec";
