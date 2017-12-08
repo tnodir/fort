@@ -4,7 +4,6 @@
 
 #define FORT_PROC_BAD_INDEX	((UINT16) -1)
 #define FORT_FLOW_BAD_INDEX	((UINT32) -1)
-#define FORT_FLOW_BUSY_INDEX	((UINT32) -2)
 
 typedef struct fort_stat_traf {
   UINT32 in_bytes;
@@ -24,10 +23,12 @@ typedef struct fort_stat_proc {
 } FORT_STAT_PROC, *PFORT_STAT_PROC;
 
 typedef struct fort_stat_flow {
-  UINT32 next_index;
-
   union {
-    LARGE_INTEGER l;
+    struct {
+      UINT32 next_index;
+      UINT32 is_free;
+    };
+
     UINT64 flow_id;
   };
 } FORT_STAT_FLOW, *PFORT_STAT_FLOW;
@@ -218,6 +219,8 @@ fort_stat_flow_free (PFORT_STAT stat, UINT32 flow_index)
     PFORT_STAT_FLOW flow = &stat->flows[flow_index];
 
     /* Add to free chain */
+    flow->is_free = FORT_FLOW_BAD_INDEX;
+
     flow->next_index = stat->flow_free_index;
     stat->flow_free_index = flow_index;
   }
@@ -269,7 +272,6 @@ fort_stat_flow_add (PFORT_STAT stat, UINT64 flow_id)
     flow = &stat->flows[flow_index];
   }
 
-  flow->next_index = FORT_FLOW_BUSY_INDEX;
   flow->flow_id = flow_id;
 
   stat->flow_count++;
@@ -299,7 +301,7 @@ fort_stat_flow_remove_contexts (PFORT_STAT stat, UINT32 callout_id)
   UINT32 count = stat->flow_count;
 
   for (; count != 0; ++flow) {
-    if (flow->next_index == FORT_FLOW_BUSY_INDEX)
+    if (flow->is_free == FORT_FLOW_BAD_INDEX)
       continue;
 
     fort_stat_flow_remove_context(flow->flow_id, callout_id);
@@ -315,6 +317,9 @@ fort_stat_init_indexes (PFORT_STAT stat)
   stat->proc_free_index = FORT_PROC_BAD_INDEX;
 
   stat->flow_free_index = FORT_FLOW_BAD_INDEX;
+
+  while (!++stat->version)
+    continue;  /* version must not be zero to avoid zero flow-context */
 }
 
 static void
@@ -334,8 +339,6 @@ fort_stat_close (PFORT_STAT stat, UINT32 callout_id)
 
   stat->closing = TRUE;
   stat->is_dirty = FALSE;
-
-  stat->version++;
 
   if (stat->procs != NULL) {
     fort_stat_array_del(stat->procs);
