@@ -67,6 +67,7 @@ BasePage {
 
                     emptyText: translationManager.dummyBool
                                && qsTranslate("qml", "All")
+                    emptyIcon: "qrc:/images/application_double.png"
                 }
 
                 ColumnLayout {
@@ -136,8 +137,8 @@ BasePage {
                         spacing: 4
                         clip: true
 
-                        model: appStatModel.trafListModel(tabBar.currentIndex,
-                                                          currentAppPath)
+                        model: appStatModel.trafListModel(
+                                   tabBar.currentIndex, appListView.currentIndex)
 
                         delegate: TrafRow {}
                     }

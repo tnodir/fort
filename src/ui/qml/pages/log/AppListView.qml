@@ -8,6 +8,7 @@ ListView {
     spacing: 10
 
     property string emptyText
+    property string emptyIcon
 
     highlightRangeMode: ListView.ApplyRange
     highlightResizeDuration: 0
@@ -35,13 +36,14 @@ ListView {
         Image {
             anchors.verticalCenter: parent.verticalCenter
             anchors.verticalCenterOffset: 1
-            source: "qrc:/images/application.png"
+            source: (!appItem.appPath && emptyIcon)
+                    || "qrc:/images/application.png"
         }
         Label {
             font.pixelSize: 20
             elide: Text.ElideRight
-            text: appItem.appPath ? fileUtil.fileName(appItem.appPath)
-                                  : emptyText
+            text: (!appItem.appPath && emptyText)
+                  || fileUtil.fileName(appItem.appPath)
         }
     }
 
