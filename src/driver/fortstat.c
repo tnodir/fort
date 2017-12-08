@@ -378,6 +378,9 @@ fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
   UINT16 proc_index;
   NTSTATUS status;
 
+  if ((UINT32) flow_id == FORT_FLOW_BAD_INDEX)
+    return STATUS_INVALID_PARAMETER;
+
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
   proc_index = fort_stat_proc_index(stat, process_id);
