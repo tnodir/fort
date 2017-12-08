@@ -507,24 +507,25 @@ fort_stat_dpc_traf_flush (PFORT_STAT stat, PCHAR out)
   /* Mark processes as active to start */
   memset(out_proc_bits, 0xFF, proc_bits_len);
 
-  while (proc_index != FORT_PROC_BAD_INDEX) {
+  for (UINT16 i = 0; proc_index != FORT_PROC_BAD_INDEX; ++i) {
     PFORT_STAT_PROC proc = &stat->procs[proc_index];
+
+    proc_index = proc->next_index;
 
     /* Write bytes */
     *out_traf++ = proc->traf;
 
     if (!proc->refcount) {
       /* The process is inactive */
-      out_proc_bits[proc_index / 8] ^= (1 << (proc_index & 7));
+      out_proc_bits[i / 8] ^= (1 << (i & 7));
 
       fort_stat_proc_free(stat, proc, proc_index, prev_proc);
     } else {
       /* Zero active process's bytes */
       proc->traf_all.QuadPart = 0;
-    }
 
-    prev_proc = proc;
-    proc_index = proc->next_index;
+      prev_proc = proc;
+    }
   }
 
   stat->is_dirty = FALSE;
