@@ -119,22 +119,22 @@ void LogManager::readLogEntries(LogBuffer *logBuffer)
     forever {
         switch (logBuffer->peekEntryType()) {
         case LogEntry::AppBlocked: {
+            logBuffer->readEntryBlocked(&entryBlocked);
             if (m_logBlockedEnabled) {
-                logBuffer->readEntryBlocked(&entryBlocked);
                 m_appBlockedModel->addLogEntry(entryBlocked);
             }
             break;
         }
         case LogEntry::ProcNew: {
+            logBuffer->readEntryProcNew(&entryProcNew);
             if (m_logStatEnabled) {
-                logBuffer->readEntryProcNew(&entryProcNew);
                 m_appStatModel->handleProcNew(entryProcNew.path());
             }
             break;
         }
         case LogEntry::StatTraf: {
+            logBuffer->readEntryStatTraf(&entryStatTraf);
             if (m_logStatEnabled) {
-                logBuffer->readEntryStatTraf(&entryStatTraf);
                 m_appStatModel->handleStatTraf(
                             entryStatTraf.procCount(),
                             entryStatTraf.procBits(),
