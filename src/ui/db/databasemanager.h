@@ -22,11 +22,12 @@ public:
 
     SqliteDb *sqliteDb() const { return m_sqliteDb; }
 
-    void addApp(const QString &appPath, bool &isNew);
-    void addTraffic(quint16 procCount, const quint8 *procBits,
-                    const quint32 *trafBytes);
+    void logProcNew(const QString &appPath, bool &isNew);
+    void logStatTraf(quint16 procCount, const quint8 *procBits,
+                     const quint32 *trafBytes);
+    void logClear();
 
-    void getAppList(QStringList &list);
+    void getAppList(QStringList &list, QVector<qint64> &appIds);
 
     qint64 getAppId(const QString &appPath);
 
@@ -61,6 +62,7 @@ private:
 
     QHash<const char *, SqliteStmt *> m_sqliteStmts;
 
+    QStringList m_appPaths;
     QVector<qint64> m_appIds;
 };
 

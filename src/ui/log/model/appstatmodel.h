@@ -16,8 +16,7 @@ public:
 
     void initialize();
 
-    Q_INVOKABLE TrafListModel *trafListModel(int trafType,
-                                             const QString &appPath) const;
+    Q_INVOKABLE TrafListModel *trafListModel(int trafType, int row) const;
 
     void handleProcNew(const QString &appPath);
     void handleStatTraf(quint16 procCount, const quint8 *procBits,
@@ -35,6 +34,8 @@ private:
     DatabaseManager *m_databaseManager;
 
     TrafListModel *m_trafListModel;
+
+    QVector<qint64> m_appIds;
 };
 
 #endif // APPSTATMODEL_H

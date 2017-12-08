@@ -25,15 +25,25 @@ public:
     AppBlockedModel *appBlockedModel() const { return m_appBlockedModel; }
     AppStatModel *appStatModel() const { return m_appStatModel; }
 
+    void setActive(bool active);
+
+    bool logBlockedEnabled() const { return m_logBlockedEnabled; }
+    void setLogBlockedEnabled(bool enabled);
+
+    bool logStatEnabled() const { return m_logStatEnabled; }
+    void setLogStatEnabled(bool enabled);
+
     QString errorMessage() const { return m_errorMessage; }
 
     void initialize();
 
 signals:
+    void activeChanged();
+    void logBlockedEnabledChanged();
+    void logStatEnabledChanged();
     void errorMessageChanged();
 
 public slots:
-    void setLogReadingEnabled(bool enabled);
 
 private slots:
     void processLogBuffer(LogBuffer *logBuffer, bool success,
@@ -52,7 +62,9 @@ private:
     void readLogEntries(LogBuffer *logBuffer);
 
 private:
-    bool m_logReadingEnabled;
+    bool m_active;
+    bool m_logBlockedEnabled;
+    bool m_logStatEnabled;
 
     DriverWorker *m_driverWorker;
     QList<LogBuffer *> m_freeBuffers;

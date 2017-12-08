@@ -40,7 +40,7 @@ bool DatabaseManager::initialize()
     return fileExists || createTables();
 }
 
-void DatabaseManager::addApp(const QString &appPath, bool &isNew)
+void DatabaseManager::logProcNew(const QString &appPath, bool &isNew)
 {
     qint64 appId = getAppId(appPath);
     if (appId == 0) {
@@ -48,11 +48,12 @@ void DatabaseManager::addApp(const QString &appPath, bool &isNew)
         isNew = true;
     }
 
-    m_appIds.append(appId);
+    m_appPaths.prepend(appPath);
+    m_appIds.prepend(appId);
 }
 
-void DatabaseManager::addTraffic(quint16 procCount, const quint8 *procBits,
-                                 const quint32 *trafBytes)
+void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
+                                  const quint32 *trafBytes)
 {
     QVector<quint16> delProcIndexes;
 
@@ -179,9 +180,17 @@ void DatabaseManager::addTraffic(quint16 procCount, const quint8 *procBits,
         int i = delProcIndexes.size();
         while (--i >= 0) {
             const quint16 procIndex = delProcIndexes.at(i);
+
+            m_appPaths.removeAt(procIndex);
             m_appIds.removeAt(procIndex);
         }
     }
+}
+
+void DatabaseManager::logClear()
+{
+    m_appPaths.clear();
+    m_appIds.clear();
 }
 
 bool DatabaseManager::createTables()
@@ -229,12 +238,13 @@ qint64 DatabaseManager::createAppId(const QString &appPath)
     return appId;
 }
 
-void DatabaseManager::getAppList(QStringList &list)
+void DatabaseManager::getAppList(QStringList &list, QVector<qint64> &appIds)
 {
     SqliteStmt *stmt = getSqliteStmt(DatabaseSql::sqlSelectAppPaths);
 
     while (stmt->step() == SqliteStmt::StepRow) {
-        list.append(stmt->columnText());
+        appIds.append(stmt->columnInt64(0));
+        list.append(stmt->columnText(1));
     }
     stmt->reset();
 }

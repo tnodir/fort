@@ -218,16 +218,18 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   if (!blocked) {
     if (ip_included && conf_flags.log_stat) {
       NTSTATUS status;
+      BOOL is_new = FALSE;
 
       status = fort_stat_flow_associate(&g_device->stat,
-        inMetaValues->flowHandle, g_device->flow4_id, process_id);
+        inMetaValues->flowHandle, g_device->flow4_id,
+        process_id, &is_new);
 
-      if (NT_SUCCESS(status)) {
-        fort_buffer_proc_new_write(&g_device->buffer,
-          process_id, path_len, path, &irp, &info);
-      } else {
+      if (!NT_SUCCESS(status)) {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                    "FORT: Classify v4: Flow assoc. error: %d\n", status);
+      } else if (is_new) {
+        fort_buffer_proc_new_write(&g_device->buffer,
+          process_id, path_len, path, &irp, &info);
       }
     }
     goto permit;
@@ -449,7 +451,6 @@ fort_callout_timer (void)
 {
   PFORT_BUFFER buf = &g_device->buffer;
   PFORT_STAT stat = &g_device->stat;
-  UINT16 proc_count;
 
   KLOCK_QUEUE_HANDLE stat_lock_queue;
   KLOCK_QUEUE_HANDLE buf_lock_queue;
@@ -464,9 +465,9 @@ fort_callout_timer (void)
   fort_stat_dpc_begin(stat, &stat_lock_queue);
 
   /* Flush traffic statistics */
-  proc_count = stat->proc_count;
-  if (proc_count) {
+  if (stat->is_dirty) {
     PCHAR out;
+    const UINT16 proc_count = stat->proc_count;
     const UINT32 len = FORT_LOG_STAT_SIZE(proc_count);
 
     /* TODO: Write by chunks */
@@ -475,7 +476,7 @@ fort_callout_timer (void)
       fort_log_stat_traf_header_write(out, proc_count);
       out += FORT_LOG_STAT_HEADER_SIZE;
 
-      fort_stat_dpc_traf_flush(stat, 0, proc_count, out);
+      fort_stat_dpc_traf_flush(stat, out);
     }
   }
 
@@ -659,7 +660,6 @@ fort_driver_unload (PDRIVER_OBJECT driver)
     }
 
     fort_callout_remove();
-
   }
 
   RtlInitUnicodeString(&device_link, DOS_DEVICE_NAME);

@@ -71,6 +71,8 @@ private:
     bool setupDriver();
     void closeDriver();
 
+    void setupLogManager();
+
     void setupTrayIcon();
     bool setupEngine();
 
@@ -80,6 +82,8 @@ private:
 
     bool updateDriverConf(FirewallConf *conf);
     bool updateDriverConfFlags(FirewallConf *conf);
+
+    void updateLogManager(FirewallConf *conf);
 
     FirewallConf *cloneConf(const FirewallConf &conf);
 

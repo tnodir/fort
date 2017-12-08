@@ -13,7 +13,9 @@ LogManager::LogManager(DatabaseManager *databaseManager,
                        DriverWorker *driverWorker,
                        QObject *parent) :
     QObject(parent),
-    m_logReadingEnabled(false),
+    m_active(false),
+    m_logBlockedEnabled(false),
+    m_logStatEnabled(false),
     m_driverWorker(driverWorker),
     m_appBlockedModel(new AppBlockedModel(this)),
     m_appStatModel(new AppStatModel(databaseManager, this))
@@ -21,11 +23,36 @@ LogManager::LogManager(DatabaseManager *databaseManager,
     setupDriverWorker();
 }
 
-void LogManager::initialize()
+void LogManager::setActive(bool active)
 {
-    setLogReadingEnabled(true);
+    if (m_active != active) {
+        m_active = active;
 
-    m_appStatModel->initialize();
+        if (m_active) {
+            readLogAsync(getFreeBuffer());
+        } else {
+            cancelAsyncIo();
+            readLogAsync(nullptr);
+        }
+
+        emit activeChanged();
+    }
+}
+
+void LogManager::setLogBlockedEnabled(bool enabled)
+{
+    if (m_logBlockedEnabled != enabled) {
+        m_logBlockedEnabled = enabled;
+        emit logBlockedEnabledChanged();
+    }
+}
+
+void LogManager::setLogStatEnabled(bool enabled)
+{
+    if (m_logStatEnabled != enabled) {
+        m_logStatEnabled = enabled;
+        emit logStatEnabledChanged();
+    }
 }
 
 void LogManager::setErrorMessage(const QString &errorMessage)
@@ -36,18 +63,9 @@ void LogManager::setErrorMessage(const QString &errorMessage)
     }
 }
 
-void LogManager::setLogReadingEnabled(bool enabled)
+void LogManager::initialize()
 {
-    if (m_logReadingEnabled != enabled) {
-        m_logReadingEnabled = enabled;
-
-        if (m_logReadingEnabled) {
-            readLogAsync(getFreeBuffer());
-        } else {
-            cancelAsyncIo();
-            readLogAsync(nullptr);
-        }
-    }
+    m_appStatModel->initialize();
 }
 
 void LogManager::setupDriverWorker()
@@ -78,7 +96,7 @@ LogBuffer *LogManager::getFreeBuffer()
 void LogManager::processLogBuffer(LogBuffer *logBuffer, bool success,
                                   const QString &errorMessage)
 {
-    if (m_logReadingEnabled) {
+    if (m_active) {
         readLogAsync(getFreeBuffer());
     }
 
@@ -101,20 +119,27 @@ void LogManager::readLogEntries(LogBuffer *logBuffer)
     forever {
         switch (logBuffer->peekEntryType()) {
         case LogEntry::AppBlocked: {
-            logBuffer->readEntryBlocked(&entryBlocked);
-            m_appBlockedModel->addLogEntry(entryBlocked);
+            if (m_logBlockedEnabled) {
+                logBuffer->readEntryBlocked(&entryBlocked);
+                m_appBlockedModel->addLogEntry(entryBlocked);
+            }
             break;
         }
         case LogEntry::ProcNew: {
-            logBuffer->readEntryProcNew(&entryProcNew);
-            m_appStatModel->handleProcNew(entryProcNew.path());
+            if (m_logStatEnabled) {
+                logBuffer->readEntryProcNew(&entryProcNew);
+                m_appStatModel->handleProcNew(entryProcNew.path());
+            }
             break;
         }
         case LogEntry::StatTraf: {
-            logBuffer->readEntryStatTraf(&entryStatTraf);
-            m_appStatModel->handleStatTraf(
-                        entryStatTraf.procCount(), entryStatTraf.procBits(),
-                        entryStatTraf.trafBytes());
+            if (m_logStatEnabled) {
+                logBuffer->readEntryStatTraf(&entryStatTraf);
+                m_appStatModel->handleStatTraf(
+                            entryStatTraf.procCount(),
+                            entryStatTraf.procBits(),
+                            entryStatTraf.trafBytes());
+            }
             break;
         }
         default:

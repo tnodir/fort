@@ -69,7 +69,7 @@ const char * const DatabaseSql::sqlInsertAppId =
         ;
 
 const char * const DatabaseSql::sqlSelectAppPaths =
-        "SELECT path FROM app ORDER BY creat_time;"
+        "SELECT id, path FROM app ORDER BY creat_time;"
         ;
 
 const char * const DatabaseSql::sqlInsertTrafficAppHour =

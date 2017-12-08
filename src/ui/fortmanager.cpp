@@ -45,6 +45,7 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_taskManager(new TaskManager(this, this))
 {
     setupDriver();
+    setupLogManager();
 
     loadSettings(m_firewallConf);
 
@@ -106,16 +107,22 @@ bool FortManager::setupDriver()
         return false;
     }
 
-    m_logManager->initialize();
-
     return true;
 }
 
 void FortManager::closeDriver()
 {
-    m_logManager->setLogReadingEnabled(false);
+    m_logManager->setActive(false);
 
     m_driverManager->closeDevice();
+}
+
+void FortManager::setupLogManager()
+{
+    m_databaseManager->initialize();
+
+    m_logManager->initialize();
+    m_logManager->setActive(true);
 }
 
 void FortManager::setupTrayIcon()
@@ -301,6 +308,8 @@ bool FortManager::updateDriverConf(FirewallConf *conf)
         return false;
     }
 
+    updateLogManager(conf);
+
     return true;
 }
 
@@ -315,7 +324,19 @@ bool FortManager::updateDriverConfFlags(FirewallConf *conf)
         return false;
     }
 
+    updateLogManager(conf);
+
     return true;
+}
+
+void FortManager::updateLogManager(FirewallConf *conf)
+{
+    if (!conf->logStat()) {
+        m_databaseManager->logClear();
+    }
+
+    m_logManager->setLogBlockedEnabled(conf->logBlocked());
+    m_logManager->setLogStatEnabled(conf->logStat());
 }
 
 void FortManager::setLanguage(int language)

@@ -32,10 +32,10 @@ public:
     TrafListModel::TrafType type() const { return m_type; }
     void setType(TrafListModel::TrafType type);
 
-    QString appPath() const { return m_appPath; }
-    void setAppPath(const QString &appPath);
+    qint64 appId() const { return m_appId; }
+    void setAppId(qint64 appId);
 
-    void reset();
+    void reset(int appCount);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
@@ -60,7 +60,6 @@ private:
 
 private:
     TrafType m_type;
-    QString m_appPath;
 
     qint64 m_appId;
 

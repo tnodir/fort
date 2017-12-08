@@ -13,19 +13,14 @@ AppStatModel::AppStatModel(DatabaseManager *databaseManager,
 
 void AppStatModel::initialize()
 {
-    m_databaseManager->initialize();
-
     updateList();
 }
 
-TrafListModel *AppStatModel::trafListModel(int trafType,
-                                           const QString &appPath) const
+TrafListModel *AppStatModel::trafListModel(int trafType, int row) const
 {
-    if (appPath != m_trafListModel->appPath()) {
-        m_trafListModel->setType(static_cast<TrafListModel::TrafType>(trafType));
-        m_trafListModel->setAppPath(appPath);
-        m_trafListModel->reset();
-    }
+    m_trafListModel->setType(static_cast<TrafListModel::TrafType>(trafType));
+    m_trafListModel->setAppId(row == -1 ? 0 : m_appIds.at(row));
+    m_trafListModel->reset(m_appIds.size() - 1);
 
     return m_trafListModel;
 }
@@ -38,9 +33,12 @@ void AppStatModel::clear()
 void AppStatModel::updateList()
 {
     QStringList list;
-
     list.append(QString());  // All
-    m_databaseManager->getAppList(list);
+
+    m_appIds.clear();
+    m_appIds.append(0);  // All
+
+    m_databaseManager->getAppList(list, m_appIds);
 
     setList(list);
 }
@@ -48,7 +46,7 @@ void AppStatModel::updateList()
 void AppStatModel::handleProcNew(const QString &appPath)
 {
     bool isNew = false;
-    m_databaseManager->addApp(appPath, isNew);
+    m_databaseManager->logProcNew(appPath, isNew);
 
     if (isNew) {
         insert(appPath);
@@ -58,5 +56,5 @@ void AppStatModel::handleProcNew(const QString &appPath)
 void AppStatModel::handleStatTraf(quint16 procCount, const quint8 *procBits,
                                   const quint32 *trafBytes)
 {
-    m_databaseManager->addTraffic(procCount, procBits, trafBytes);
+    m_databaseManager->logStatTraf(procCount, procBits, trafBytes);
 }
