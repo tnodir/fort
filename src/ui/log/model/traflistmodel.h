@@ -35,7 +35,7 @@ public:
     qint64 appId() const { return m_appId; }
     void setAppId(qint64 appId);
 
-    void reset(int appCount);
+    void reset();
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;

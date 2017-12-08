@@ -228,7 +228,7 @@ qint64 DatabaseManager::createAppId(const QString &appPath)
 
     stmt->bindText(1, appPath);
     stmt->bindInt64(2, unixTime);
-    stmt->bindInt64(3, DateUtil::getUnixHour(unixTime));
+    stmt->bindInt(3, DateUtil::getUnixHour(unixTime));
 
     if (stmt->step() == SqliteStmt::StepDone) {
         appId = m_sqliteDb->lastInsertRowid();
@@ -273,7 +273,7 @@ void DatabaseManager::updateTraffic(SqliteStmt *stmt, quint32 inBytes,
     stmt->reset();
 }
 
-qint32 DatabaseManager::getMinTrafTime(const char *sql, qint64 appId)
+qint32 DatabaseManager::getTrafficTime(const char *sql, qint64 appId)
 {
     qint32 trafTime = 0;
 
@@ -291,13 +291,16 @@ qint32 DatabaseManager::getMinTrafTime(const char *sql, qint64 appId)
     return trafTime;
 }
 
-void DatabaseManager::getTraffic(const char *sql, qint64 &inBytes,
-                                 qint64 &outBytes, qint64 appId)
+void DatabaseManager::getTraffic(const char *sql, qint32 trafTime,
+                                 qint64 &inBytes, qint64 &outBytes,
+                                 qint64 appId)
 {
     SqliteStmt *stmt = getSqliteStmt(sql);
 
+    stmt->bindInt(1, trafTime);
+
     if (appId != 0) {
-        stmt->bindInt64(1, appId);
+        stmt->bindInt64(2, appId);
     }
 
     if (stmt->step() == SqliteStmt::StepRow) {

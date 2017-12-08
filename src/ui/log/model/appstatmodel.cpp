@@ -20,7 +20,7 @@ TrafListModel *AppStatModel::trafListModel(int trafType, int row) const
 {
     m_trafListModel->setType(static_cast<TrafListModel::TrafType>(trafType));
     m_trafListModel->setAppId(row == -1 ? 0 : m_appIds.at(row));
-    m_trafListModel->reset(m_appIds.size() - 1);
+    m_trafListModel->reset();
 
     return m_trafListModel;
 }

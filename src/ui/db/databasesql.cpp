@@ -8,7 +8,7 @@ const char * const DatabaseSql::sqlPragmas =
 
 const char * const DatabaseSql::sqlCreateTables =
         "CREATE TABLE app("
-        "  id INTEGER PRIMARY KEY,"
+        "  app_id INTEGER PRIMARY KEY,"
         "  path TEXT UNIQUE NOT NULL,"
         "  creat_time INTEGER NOT NULL,"
         "  traf_time INTEGER NOT NULL,"
@@ -60,7 +60,7 @@ const char * const DatabaseSql::sqlCreateTables =
         ;
 
 const char * const DatabaseSql::sqlSelectAppId =
-        "SELECT id FROM app WHERE path = ?1;"
+        "SELECT app_id FROM app WHERE path = ?1;"
         ;
 
 const char * const DatabaseSql::sqlInsertAppId =
@@ -69,7 +69,7 @@ const char * const DatabaseSql::sqlInsertAppId =
         ;
 
 const char * const DatabaseSql::sqlSelectAppPaths =
-        "SELECT id, path FROM app ORDER BY creat_time;"
+        "SELECT app_id, path FROM app ORDER BY creat_time;"
         ;
 
 const char * const DatabaseSql::sqlInsertTrafficAppHour =
@@ -148,7 +148,7 @@ const char * const DatabaseSql::sqlUpdateTrafficAppTotal =
         "UPDATE app"
         "  SET in_bytes = in_bytes + ?2,"
         "    out_bytes = out_bytes + ?3"
-        "  WHERE id = ?1;"
+        "  WHERE app_id = ?1;"
         ;
 
 const char * const DatabaseSql::sqlSelectMinTrafAppHour =
@@ -166,6 +166,10 @@ const char * const DatabaseSql::sqlSelectMinTrafAppMonth =
         "  WHERE app_id = ?1;"
         ;
 
+const char * const DatabaseSql::sqlSelectMinTrafAppTotal =
+        "SELECT traf_time FROM app WHERE app_id = ?1;"
+        ;
+
 const char * const DatabaseSql::sqlSelectMinTrafHour =
         "SELECT min(traf_time) FROM traffic_hour;"
         ;
@@ -178,48 +182,50 @@ const char * const DatabaseSql::sqlSelectMinTrafMonth =
         "SELECT min(traf_time) FROM traffic_app_month;"
         ;
 
+const char * const DatabaseSql::sqlSelectMinTrafTotal =
+        "SELECT min(traf_time) FROM app;"
+        ;
+
 const char * const DatabaseSql::sqlSelectTrafAppHour =
-        "SELECT traf_time, in_bytes, out_bytes"
+        "SELECT in_bytes, out_bytes"
         "  FROM traffic_app_hour"
-        "  WHERE app_id = ?1 and traf_time between ?2 and ?3;"
+        "  WHERE app_id = ?2 and traf_time = ?1;"
         ;
 
 const char * const DatabaseSql::sqlSelectTrafAppDay =
-        "SELECT traf_time, in_bytes, out_bytes"
+        "SELECT in_bytes, out_bytes"
         "  FROM traffic_app_day"
-        "  WHERE app_id = ?1 and traf_time between ?2 and ?3;"
+        "  WHERE app_id = ?2 and traf_time = ?1;"
         ;
 
 const char * const DatabaseSql::sqlSelectTrafAppMonth =
-        "SELECT traf_time, in_bytes, out_bytes"
+        "SELECT in_bytes, out_bytes"
         "  FROM traffic_app_month"
-        "  WHERE app_id = ?1 and traf_time between ?2 and ?3;"
+        "  WHERE app_id = ?2 and traf_time = ?1;"
         ;
 
 const char * const DatabaseSql::sqlSelectTrafAppTotal =
-        "SELECT traf_time, in_bytes, out_bytes"
-        "  FROM app WHERE app_id = ?1;"
+        "SELECT in_bytes, out_bytes"
+        "  FROM app"
+        "  WHERE app_id = ?2 and 0 != ?1;"
         ;
 
 const char * const DatabaseSql::sqlSelectTrafHour =
-        "SELECT traf_time, in_bytes, out_bytes"
-        "  FROM traffic_hour"
-        "  WHERE traf_time between ?2 and ?3;"
+        "SELECT in_bytes, out_bytes"
+        "  FROM traffic_hour WHERE traf_time = ?1;"
         ;
 
 const char * const DatabaseSql::sqlSelectTrafDay =
-        "SELECT traf_time, in_bytes, out_bytes"
-        "  FROM traffic_day"
-        "  WHERE traf_time between ?2 and ?3;"
+        "SELECT in_bytes, out_bytes"
+        "  FROM traffic_day WHERE traf_time = ?1;"
         ;
 
 const char * const DatabaseSql::sqlSelectTrafMonth =
-        "SELECT traf_time, in_bytes, out_bytes"
-        "  FROM traffic_month"
-        "  WHERE traf_time between ?2 and ?3;"
+        "SELECT in_bytes, out_bytes"
+        "  FROM traffic_month WHERE traf_time = ?1;"
         ;
 
 const char * const DatabaseSql::sqlSelectTrafTotal =
-        "SELECT traf_time, in_bytes, out_bytes"
-        "  FROM app;"
+        "SELECT sum(in_bytes), sum(out_bytes)"
+        "  FROM app WHERE 0 != ?1;"
         ;

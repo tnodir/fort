@@ -33,10 +33,12 @@ public:
     static const char * const sqlSelectMinTrafAppHour;
     static const char * const sqlSelectMinTrafAppDay;
     static const char * const sqlSelectMinTrafAppMonth;
+    static const char * const sqlSelectMinTrafAppTotal;
 
     static const char * const sqlSelectMinTrafHour;
     static const char * const sqlSelectMinTrafDay;
     static const char * const sqlSelectMinTrafMonth;
+    static const char * const sqlSelectMinTrafTotal;
 
     static const char * const sqlSelectTrafAppHour;
     static const char * const sqlSelectTrafAppDay;

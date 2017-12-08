@@ -25,24 +25,22 @@ void TrafListModel::setAppId(qint64 appId)
     m_appId = appId;
 }
 
-void TrafListModel::reset(int appCount)
+void TrafListModel::reset()
 {
     const char *sqlMinTrafTime = getSqlMinTrafTime(m_type, m_appId);
 
     beginResetModel();
 
-    if (sqlMinTrafTime) {
-        m_minTrafTime = m_databaseManager->getMinTrafTime(
-                    sqlMinTrafTime, m_appId);
+    m_minTrafTime = m_databaseManager->getTrafficTime(
+                sqlMinTrafTime, m_appId);
 
-        m_maxTrafTime = getMaxTrafTime(m_type);
+    m_maxTrafTime = getMaxTrafTime(m_type);
 
-        m_trafCount = getTrafCount(m_type, m_minTrafTime, m_minTrafTime);
-    } else {
-        m_minTrafTime = m_maxTrafTime = 0;
-
-        m_trafCount = m_appId ? 1 : appCount;
+    if (m_minTrafTime == 0) {
+        m_minTrafTime = m_maxTrafTime;
     }
+
+    m_trafCount = getTrafCount(m_type, m_minTrafTime, m_maxTrafTime);
 
     endResetModel();
 
@@ -70,8 +68,8 @@ QVariant TrafListModel::data(const QModelIndex &index, int role) const
         const char *sqlSelectTraffic = getSqlSelectTraffic(m_type, m_appId);
 
         qint64 inBytes = 0, outBytes = 0;
-        m_databaseManager->getTraffic(sqlSelectTraffic, inBytes,
-                                      outBytes, m_appId);
+        m_databaseManager->getTraffic(sqlSelectTraffic, trafTime,
+                                      inBytes, outBytes, m_appId);
 
         switch (role) {
         case DownloadRole: return inBytes;
@@ -103,10 +101,10 @@ QString TrafListModel::formatTrafTime(qint32 trafTime) const
     const qint64 unixTime = DateUtil::toUnixTime(trafTime);
 
     switch (m_type) {
+    case TrafTotal: Q_FALLTHROUGH();
     case TrafHourly: return DateUtil::formatHour(unixTime);
     case TrafDaily: return DateUtil::formatDay(unixTime);
     case TrafMonthly: return DateUtil::formatMonth(unixTime);
-    case TrafTotal: return DateUtil::formatTime(unixTime);
     }
     return QString();
 }
@@ -117,7 +115,7 @@ qint32 TrafListModel::getTrafTime(int row) const
     case TrafHourly: return m_maxTrafTime - row;
     case TrafDaily: return m_maxTrafTime - row * 24;
     case TrafMonthly: return DateUtil::addUnixMonths(m_maxTrafTime, -row);
-    case TrafTotal: break;
+    case TrafTotal: return m_minTrafTime;
     }
     return 0;
 }
@@ -125,18 +123,22 @@ qint32 TrafListModel::getTrafTime(int row) const
 qint32 TrafListModel::getTrafCount(TrafType type, qint32 minTrafTime,
                                    qint32 maxTrafTime)
 {
+    if (type == TrafTotal)
+        return 1;
+
     const qint32 hours = maxTrafTime - minTrafTime + 1;
     if (type == TrafHourly)
         return hours;
 
-    const qint32 days = hours / 24;
+    const qint32 days = hours / 24 + 1;
     if (type == TrafDaily)
         return days;
 
-    const qint32 months = days / 30;
+    const qint32 months = days / 30 + 1;
     if (type == TrafMonthly)
         return months;
 
+    Q_UNREACHABLE();
     return 0;
 }
 
@@ -145,11 +147,13 @@ qint32 TrafListModel::getMaxTrafTime(TrafType type)
     const qint64 unixTime = DateUtil::getUnixTime();
 
     switch (type) {
+    case TrafTotal: Q_FALLTHROUGH();
     case TrafHourly: return DateUtil::getUnixHour(unixTime);
     case TrafDaily: return DateUtil::getUnixDay(unixTime);
     case TrafMonthly: return DateUtil::getUnixMonth(unixTime);
-    case TrafTotal: break;
     }
+
+    Q_UNREACHABLE();
     return 0;
 }
 
@@ -162,8 +166,11 @@ const char *TrafListModel::getSqlMinTrafTime(TrafType type, qint64 appId)
                                  : DatabaseSql::sqlSelectMinTrafDay;
     case TrafMonthly: return appId ? DatabaseSql::sqlSelectMinTrafAppMonth
                                    : DatabaseSql::sqlSelectMinTrafMonth;
-    case TrafTotal: break;
+    case TrafTotal: return appId ? DatabaseSql::sqlSelectMinTrafAppTotal
+                                 : DatabaseSql::sqlSelectMinTrafTotal;
     }
+
+    Q_UNREACHABLE();
     return nullptr;
 }
 
@@ -179,5 +186,7 @@ const char *TrafListModel::getSqlSelectTraffic(TrafType type, qint64 appId)
     case TrafTotal: return appId ? DatabaseSql::sqlSelectTrafAppTotal
                                  : DatabaseSql::sqlSelectTrafTotal;
     }
+
+    Q_UNREACHABLE();
     return nullptr;
 }
