@@ -55,6 +55,8 @@ void DatabaseManager::logProcNew(const QString &appPath, bool &isNew)
 void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
                                   const quint32 *trafBytes)
 {
+    Q_ASSERT(procCount == m_appIds.size());
+
     QVector<quint16> delProcIndexes;
 
     const qint64 unixTime = DateUtil::getUnixTime();
