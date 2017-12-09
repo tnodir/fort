@@ -113,7 +113,7 @@ fort_stat_proc_exclude (PFORT_STAT stat, PFORT_STAT_PROC ex_proc,
 
 static void
 fort_stat_proc_free (PFORT_STAT stat, PFORT_STAT_PROC proc, UINT16 proc_index,
-                     PFORT_STAT_PROC prev_proc)
+                     PFORT_STAT_PROC prev_proc /* = NULL */)
 {
   /* Exclude from the active chain */
   if (prev_proc == NULL) {
@@ -512,8 +512,7 @@ fort_stat_dpc_traf_flush (PFORT_STAT stat, PCHAR out)
 
   for (UINT16 i = 0; proc_index != FORT_PROC_BAD_INDEX; ++i) {
     PFORT_STAT_PROC proc = &stat->procs[proc_index];
-
-    proc_index = proc->next_index;
+    const UINT16 next_index = proc->next_index;
 
     /* Write bytes */
     *out_traf++ = proc->traf;
@@ -529,6 +528,8 @@ fort_stat_dpc_traf_flush (PFORT_STAT stat, PCHAR out)
 
       prev_proc = proc;
     }
+
+    proc_index = next_index;
   }
 
   stat->is_dirty = FALSE;
