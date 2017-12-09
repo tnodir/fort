@@ -42,6 +42,8 @@ void TrafListModel::reset()
 
     m_trafCount = getTrafCount(m_type, m_minTrafTime, m_maxTrafTime);
 
+    m_rowCache.invalidate();
+
     endResetModel();
 
     m_databaseManager->debugApps();
@@ -59,22 +61,24 @@ QVariant TrafListModel::data(const QModelIndex &index, int role) const
 {
     if (index.isValid() && role >= DateTimeRole && role <= SumRole) {
         const int row = index.row();
-        const qint32 trafTime = getTrafTime(row);
 
-        if (role == DateTimeRole) {
-            return formatTrafTime(trafTime);
+        if (!m_rowCache.isValid(row)) {
+            m_rowCache.row = row;
+            m_rowCache.trafTime = getTrafTime(row);
+
+            const char *sqlSelectTraffic = getSqlSelectTraffic(m_type, m_appId);
+
+            m_databaseManager->getTraffic(
+                        sqlSelectTraffic, m_rowCache.trafTime,
+                        m_rowCache.inBytes, m_rowCache.outBytes,
+                        m_appId);
         }
 
-        const char *sqlSelectTraffic = getSqlSelectTraffic(m_type, m_appId);
-
-        qint64 inBytes = 0, outBytes = 0;
-        m_databaseManager->getTraffic(sqlSelectTraffic, trafTime,
-                                      inBytes, outBytes, m_appId);
-
         switch (role) {
-        case DownloadRole: return inBytes;
-        case UploadRole: return outBytes;
-        case SumRole: return inBytes + outBytes;
+        case DateTimeRole: return formatTrafTime(m_rowCache.trafTime);
+        case DownloadRole: return m_rowCache.inBytes;
+        case UploadRole: return m_rowCache.outBytes;
+        case SumRole: return m_rowCache.inBytes + m_rowCache.outBytes;
         }
     }
     return QVariant();

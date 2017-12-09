@@ -268,7 +268,10 @@ void DatabaseManager::getTraffic(const char *sql, qint32 trafTime,
     if (stmt->step() == SqliteStmt::StepRow) {
         inBytes = stmt->columnInt64(0);
         outBytes = stmt->columnInt64(1);
+    } else {
+        inBytes = outBytes = 0;
     }
+
     stmt->reset();
 }
 

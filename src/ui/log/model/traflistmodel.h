@@ -5,6 +5,16 @@
 
 QT_FORWARD_DECLARE_CLASS(DatabaseManager)
 
+struct TrafficRow {
+    bool isValid(int row) const { return row == this->row; }
+    void invalidate() { row = -1; }
+
+    int row;
+    qint32 trafTime;
+    qint64 inBytes;
+    qint64 outBytes;
+};
+
 class TrafListModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -66,6 +76,8 @@ private:
     qint32 m_minTrafTime;
     qint32 m_maxTrafTime;
     qint32 m_trafCount;
+
+    mutable TrafficRow m_rowCache;
 
     DatabaseManager *m_databaseManager;
 };
