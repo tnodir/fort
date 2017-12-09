@@ -25,7 +25,7 @@ void Test::dbWriteRead()
     // Add apps
     foreach (const QString &appPath, appPaths) {
         bool isNew;
-        databaseManager.addApp(appPath, isNew);
+        databaseManager.logProcNew(appPath, isNew);
         QVERIFY(isNew);
     }
 
@@ -41,8 +41,8 @@ void Test::dbWriteRead()
 
         const quint32 trafBytes[procCount * 2] = {100, 200, 300, 400, 500, 600};
 
-        databaseManager.addTraffic(procCount, &procBits, trafBytes);
-        databaseManager.addTraffic(procCount, &procBits, trafBytes);
+        databaseManager.logStatTraf(procCount, &procBits, trafBytes);
+        databaseManager.logStatTraf(procCount, &procBits, trafBytes);
     }
 
     qDebug() << "elapsed>" << timer.restart() << "msec";
@@ -54,7 +54,7 @@ void Test::dbWriteRead()
 
         const quint32 trafBytes[procCount * 2] = {10, 20, 30, 40, 50, 60};
 
-        databaseManager.addTraffic(procCount, &procBits, trafBytes);
+        databaseManager.logStatTraf(procCount, &procBits, trafBytes);
     }
 
     qDebug() << "elapsed>" << timer.elapsed() << "msec";
@@ -67,7 +67,7 @@ void Test::debugProcNew(SqliteDb *sqliteDb)
     SqliteStmt stmt;
 
     QVERIFY(stmt.prepare(sqliteDb->db(),
-                         "SELECT id, path FROM app;"));
+                         "SELECT app_id, path FROM app;"));
 
     qDebug() << "> app <";
     while (stmt.step() == SqliteStmt::StepRow) {
@@ -101,7 +101,7 @@ void Test::debugStatTraf(SqliteDb *sqliteDb)
                       "  FROM traffic_month;");
 
     debugStatTrafStep(sqliteDb, "traffic_app_total",
-                      "SELECT id, traf_time, in_bytes, out_bytes"
+                      "SELECT app_id, traf_time, in_bytes, out_bytes"
                       "  FROM app;", 1);
 }
 

@@ -30,9 +30,14 @@ bool SqliteDb::execute(const char *sql)
     return sqlite3_exec(m_db, sql, nullptr, nullptr, nullptr) == SQLITE_OK;
 }
 
-qint64 SqliteDb::lastInsertRowid()
+qint64 SqliteDb::lastInsertRowid() const
 {
     return sqlite3_last_insert_rowid(m_db);
+}
+
+int SqliteDb::changes() const
+{
+    return sqlite3_changes(m_db);
 }
 
 bool SqliteDb::beginTransaction()

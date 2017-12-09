@@ -70,109 +70,58 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
 
     const qint32 trafMonth = isNewDay ? DateUtil::getUnixMonth(unixTime)
                                       : m_lastTrafMonth;
-    const bool isNewMonth = (trafMonth != m_lastTrafMonth);
 
-    SqliteStmt *stmtInsertAppHour = nullptr;
-    SqliteStmt *stmtInsertAppDay = nullptr;
-    SqliteStmt *stmtInsertAppMonth = nullptr;
+    m_lastTrafHour = trafHour;
+    m_lastTrafDay = trafDay;
+    m_lastTrafMonth = trafMonth;
 
-    SqliteStmt *stmtInsertHour = nullptr;
-    SqliteStmt *stmtInsertDay = nullptr;
-    SqliteStmt *stmtInsertMonth = nullptr;
+    // Insert Statemets
+    QStmtList insertTrafAppStmts = QStmtList()
+            << getTrafficStmt(DatabaseSql::sqlInsertTrafficAppHour, trafHour)
+            << getTrafficStmt(DatabaseSql::sqlInsertTrafficAppDay, trafDay)
+            << getTrafficStmt(DatabaseSql::sqlInsertTrafficAppMonth, trafMonth)
+            << getTrafficStmt(DatabaseSql::sqlUpdateTrafficAppTotal, -1);
 
-    if (isNewHour) {
-        m_lastTrafHour = trafHour;
+    QStmtList insertTrafStmts = QStmtList()
+            << getTrafficStmt(DatabaseSql::sqlInsertTrafficHour, trafHour)
+            << getTrafficStmt(DatabaseSql::sqlInsertTrafficDay, trafDay)
+            << getTrafficStmt(DatabaseSql::sqlInsertTrafficMonth, trafMonth);
 
-        stmtInsertAppHour = getSqliteStmt(DatabaseSql::sqlInsertTrafficAppHour);
-        stmtInsertHour = getSqliteStmt(DatabaseSql::sqlInsertTrafficHour);
+    // Update Statemets
+    QStmtList updateTrafAppStmts = QStmtList()
+            << getTrafficStmt(DatabaseSql::sqlUpdateTrafficAppHour, trafHour)
+            << getTrafficStmt(DatabaseSql::sqlUpdateTrafficAppDay, trafDay)
+            << getTrafficStmt(DatabaseSql::sqlUpdateTrafficAppMonth, trafMonth)
+            << getTrafficStmt(DatabaseSql::sqlUpdateTrafficAppTotal, -1);
 
-        stmtInsertAppHour->bindInt(1, trafHour);
-        stmtInsertHour->bindInt(1, trafHour);
-
-        if (isNewDay) {
-            m_lastTrafDay = trafDay;
-
-            stmtInsertAppDay = getSqliteStmt(DatabaseSql::sqlInsertTrafficAppDay);
-            stmtInsertDay = getSqliteStmt(DatabaseSql::sqlInsertTrafficDay);
-
-            stmtInsertAppDay->bindInt(1, trafDay);
-            stmtInsertDay->bindInt(1, trafDay);
-
-            if (isNewMonth) {
-                m_lastTrafMonth = trafMonth;
-
-                stmtInsertAppMonth = getSqliteStmt(DatabaseSql::sqlInsertTrafficAppMonth);
-                stmtInsertMonth = getSqliteStmt(DatabaseSql::sqlInsertTrafficMonth);
-
-                stmtInsertAppMonth->bindInt(1, trafMonth);
-                stmtInsertMonth->bindInt(1, trafMonth);
-            }
-        }
-    }
-
-    SqliteStmt *stmtUpdateAppHour = getSqliteStmt(DatabaseSql::sqlUpdateTrafficAppHour);
-    SqliteStmt *stmtUpdateAppDay = getSqliteStmt(DatabaseSql::sqlUpdateTrafficAppDay);
-    SqliteStmt *stmtUpdateAppMonth = getSqliteStmt(DatabaseSql::sqlUpdateTrafficAppMonth);
-
-    SqliteStmt *stmtUpdateHour = getSqliteStmt(DatabaseSql::sqlUpdateTrafficHour);
-    SqliteStmt *stmtUpdateDay = getSqliteStmt(DatabaseSql::sqlUpdateTrafficDay);
-    SqliteStmt *stmtUpdateMonth = getSqliteStmt(DatabaseSql::sqlUpdateTrafficMonth);
-
-    SqliteStmt *stmtUpdateAppTotal = getSqliteStmt(DatabaseSql::sqlUpdateTrafficAppTotal);
-
-    stmtUpdateAppHour->bindInt(1, trafHour);
-    stmtUpdateAppDay->bindInt(1, trafDay);
-    stmtUpdateAppMonth->bindInt(1, trafMonth);
-
-    stmtUpdateHour->bindInt(1, trafHour);
-    stmtUpdateDay->bindInt(1, trafDay);
-    stmtUpdateMonth->bindInt(1, trafMonth);
+    QStmtList updateTrafStmts = QStmtList()
+            << getTrafficStmt(DatabaseSql::sqlUpdateTrafficHour, trafHour)
+            << getTrafficStmt(DatabaseSql::sqlUpdateTrafficDay, trafDay)
+            << getTrafficStmt(DatabaseSql::sqlUpdateTrafficMonth, trafMonth);
 
     m_sqliteDb->beginTransaction();
 
-    for (quint16 procIndex = 0; procIndex < procCount; ++procIndex) {
-        const bool active = procBits[procIndex / 8] & (1 << (procIndex & 7));
+    for (quint16 i = 0; i < procCount; ++i) {
+        const bool active = procBits[i / 8] & (1 << (i & 7));
         if (!active) {
-            delProcIndexes.append(procIndex);
+            delProcIndexes.append(i);
         }
 
-        const quint32 *procTrafBytes = &trafBytes[procIndex * 2];
+        const quint32 *procTrafBytes = &trafBytes[i * 2];
         const quint32 inBytes = procTrafBytes[0];
         const quint32 outBytes = procTrafBytes[1];
 
-        if (!(isNewHour || inBytes || outBytes))
-            continue;
+        if (inBytes || outBytes) {
+            const qint64 appId = m_appIds.at(i);
 
-        const qint64 appId = m_appIds.at(procIndex);
+            // Update or insert app bytes
+            updateTrafficList(insertTrafAppStmts, updateTrafAppStmts,
+                              inBytes, outBytes, appId);
 
-        // Insert zero bytes
-        if (isNewHour) {
-            insertTraffic(stmtInsertAppHour, appId);
-            insertTraffic(stmtInsertHour);
-
-            if (isNewDay) {
-                insertTraffic(stmtInsertAppDay, appId);
-                insertTraffic(stmtInsertDay);
-
-                if (isNewMonth) {
-                    insertTraffic(stmtInsertAppMonth, appId);
-                    insertTraffic(stmtInsertMonth);
-                }
-            }
+            // Update or insert total bytes
+            updateTrafficList(insertTrafStmts, updateTrafStmts,
+                              inBytes, outBytes);
         }
-
-        // Update bytes
-        updateTraffic(stmtUpdateAppHour, inBytes, outBytes, appId);
-        updateTraffic(stmtUpdateAppDay, inBytes, outBytes, appId);
-        updateTraffic(stmtUpdateAppMonth, inBytes, outBytes, appId);
-
-        updateTraffic(stmtUpdateHour, inBytes, outBytes);
-        updateTraffic(stmtUpdateDay, inBytes, outBytes);
-        updateTraffic(stmtUpdateMonth, inBytes, outBytes);
-
-        // Update total bytes
-        stmtUpdateAppTotal->bindInt64(1, appId);
-        updateTraffic(stmtUpdateAppTotal, inBytes, outBytes);
     }
 
     m_sqliteDb->commitTransaction();
@@ -251,17 +200,24 @@ void DatabaseManager::getAppList(QStringList &list, QVector<qint64> &appIds)
     stmt->reset();
 }
 
-void DatabaseManager::insertTraffic(SqliteStmt *stmt, qint64 appId)
+void DatabaseManager::updateTrafficList(const QStmtList &insertStmtList,
+                                        const QStmtList &updateStmtList,
+                                        quint32 inBytes, quint32 outBytes,
+                                        qint64 appId)
 {
-    if (appId != 0) {
-        stmt->bindInt64(2, appId);
-    }
+    int i = 0;
+    foreach (SqliteStmt *stmtUpdate, updateStmtList) {
+        if (!updateTraffic(stmtUpdate, inBytes, outBytes, appId)) {
+            qDebug() << "!Insert -> Update>";
 
-    stmt->step();
-    stmt->reset();
+            SqliteStmt *stmtInsert = insertStmtList.at(i);
+            updateTraffic(stmtInsert, inBytes, outBytes, appId);
+        }
+        ++i;
+    }
 }
 
-void DatabaseManager::updateTraffic(SqliteStmt *stmt, quint32 inBytes,
+bool DatabaseManager::updateTraffic(SqliteStmt *stmt, quint32 inBytes,
                                     quint32 outBytes, qint64 appId)
 {
     stmt->bindInt64(2, inBytes);
@@ -271,8 +227,12 @@ void DatabaseManager::updateTraffic(SqliteStmt *stmt, quint32 inBytes,
         stmt->bindInt64(4, appId);
     }
 
-    stmt->step();
+    const SqliteStmt::StepResult res = stmt->step();
+
     stmt->reset();
+
+    return res == SqliteStmt::StepDone
+            && m_sqliteDb->changes() != 0;
 }
 
 qint32 DatabaseManager::getTrafficTime(const char *sql, qint64 appId)
@@ -310,6 +270,15 @@ void DatabaseManager::getTraffic(const char *sql, qint32 trafTime,
         outBytes = stmt->columnInt64(1);
     }
     stmt->reset();
+}
+
+SqliteStmt *DatabaseManager::getTrafficStmt(const char *sql, qint32 trafTime)
+{
+    SqliteStmt *stmt = getSqliteStmt(sql);
+
+    stmt->bindInt(1, trafTime);
+
+    return stmt;
 }
 
 SqliteStmt *DatabaseManager::getSqliteStmt(const char *sql)

@@ -74,32 +74,32 @@ const char * const DatabaseSql::sqlSelectAppPaths =
 
 const char * const DatabaseSql::sqlInsertTrafficAppHour =
         "INSERT INTO traffic_app_hour(app_id, traf_time, in_bytes, out_bytes)"
-        "  VALUES(?2, ?1, 0, 0);"
+        "  VALUES(?4, ?1, ?2, ?3);"
         ;
 
 const char * const DatabaseSql::sqlInsertTrafficAppDay =
         "INSERT INTO traffic_app_day(app_id, traf_time, in_bytes, out_bytes)"
-        "  VALUES(?2, ?1, 0, 0);"
+        "  VALUES(?4, ?1, ?2, ?3);"
         ;
 
 const char * const DatabaseSql::sqlInsertTrafficAppMonth =
         "INSERT INTO traffic_app_month(app_id, traf_time, in_bytes, out_bytes)"
-        "  VALUES(?2, ?1, 0, 0);"
+        "  VALUES(?4, ?1, ?2, ?3);"
         ;
 
 const char * const DatabaseSql::sqlInsertTrafficHour =
         "INSERT INTO traffic_hour(traf_time, in_bytes, out_bytes)"
-        "  VALUES(?1, 0, 0);"
+        "  VALUES(?1, ?2, ?3);"
         ;
 
 const char * const DatabaseSql::sqlInsertTrafficDay =
         "INSERT INTO traffic_day(traf_time, in_bytes, out_bytes)"
-        "  VALUES(?1, 0, 0);"
+        "  VALUES(?1, ?2, ?3);"
         ;
 
 const char * const DatabaseSql::sqlInsertTrafficMonth =
         "INSERT INTO traffic_month(traf_time, in_bytes, out_bytes)"
-        "  VALUES(?1, 0, 0);"
+        "  VALUES(?1, ?2, ?3);"
         ;
 
 const char * const DatabaseSql::sqlUpdateTrafficAppHour =
@@ -123,6 +123,13 @@ const char * const DatabaseSql::sqlUpdateTrafficAppMonth =
         "  WHERE app_id = ?4 and traf_time = ?1;"
         ;
 
+const char * const DatabaseSql::sqlUpdateTrafficAppTotal =
+        "UPDATE app"
+        "  SET in_bytes = in_bytes + ?2,"
+        "    out_bytes = out_bytes + ?3"
+        "  WHERE app_id = ?4 and 0 != ?1;"
+        ;
+
 const char * const DatabaseSql::sqlUpdateTrafficHour =
         "UPDATE traffic_hour"
         "  SET in_bytes = in_bytes + ?2,"
@@ -142,13 +149,6 @@ const char * const DatabaseSql::sqlUpdateTrafficMonth =
         "  SET in_bytes = in_bytes + ?2,"
         "    out_bytes = out_bytes + ?3"
         "  WHERE traf_time = ?1;"
-        ;
-
-const char * const DatabaseSql::sqlUpdateTrafficAppTotal =
-        "UPDATE app"
-        "  SET in_bytes = in_bytes + ?2,"
-        "    out_bytes = out_bytes + ?3"
-        "  WHERE app_id = ?1;"
         ;
 
 const char * const DatabaseSql::sqlSelectMinTrafAppHour =

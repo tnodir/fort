@@ -42,15 +42,23 @@ signals:
 public slots:
 
 private:
+    typedef QList<SqliteStmt *> QStmtList;
+
     bool createTables();
 
     qint64 createAppId(const QString &appPath);
 
-    SqliteStmt *getSqliteStmt(const char *sql);
+    void updateTrafficList(const QStmtList &insertStmtList,
+                           const QStmtList &updateStmtList,
+                           quint32 inBytes, quint32 outBytes,
+                           qint64 appId = 0);
 
-    void insertTraffic(SqliteStmt *stmt, qint64 appId = 0);
-    void updateTraffic(SqliteStmt *stmt, quint32 inBytes,
+    bool updateTraffic(SqliteStmt *stmt, quint32 inBytes,
                        quint32 outBytes, qint64 appId = 0);
+
+    SqliteStmt *getTrafficStmt(const char *sql, qint32 trafTime);
+
+    SqliteStmt *getSqliteStmt(const char *sql);
 
 private:
     qint32 m_lastTrafHour;

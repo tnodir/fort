@@ -18,7 +18,8 @@ public:
 
     bool execute(const char *sql);
 
-    qint64 lastInsertRowid();
+    qint64 lastInsertRowid() const;
+    int changes() const;
 
     bool beginTransaction();
     bool commitTransaction();
