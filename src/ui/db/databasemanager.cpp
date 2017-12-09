@@ -208,8 +208,6 @@ void DatabaseManager::updateTrafficList(const QStmtList &insertStmtList,
     int i = 0;
     foreach (SqliteStmt *stmtUpdate, updateStmtList) {
         if (!updateTraffic(stmtUpdate, inBytes, outBytes, appId)) {
-            qDebug() << "!Insert -> Update>";
-
             SqliteStmt *stmtInsert = insertStmtList.at(i);
             updateTraffic(stmtInsert, inBytes, outBytes, appId);
         }

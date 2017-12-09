@@ -45,9 +45,6 @@ void TrafListModel::reset()
     m_rowCache.invalidate();
 
     endResetModel();
-
-    m_databaseManager->debugApps();
-    m_databaseManager->debugTraffic();
 }
 
 int TrafListModel::rowCount(const QModelIndex &parent) const
