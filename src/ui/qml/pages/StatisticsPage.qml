@@ -10,6 +10,8 @@ BasePage {
 
     readonly property LogManager logManager: fortManager.logManager
     readonly property AppStatModel appStatModel: logManager.appStatModel
+    readonly property TrafListModel trafListModel:
+        appStatModel.trafListModel(tabBar.currentIndex, appListView.currentIndex)
 
     readonly property string currentAppPath:
         (appListView.currentIndex >= 0 && appListView.currentItem)
@@ -27,6 +29,13 @@ BasePage {
         spacing: 10
 
         RowLayout {
+            Button {
+                enabled: appListView.currentIndex >= 0
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Refresh")
+                onClicked: trafListModel.refresh()
+            }
+
             Item {
                 Layout.fillWidth: true
             }
@@ -137,8 +146,7 @@ BasePage {
                         spacing: 4
                         clip: true
 
-                        model: appStatModel.trafListModel(
-                                   tabBar.currentIndex, appListView.currentIndex)
+                        model: trafListModel
 
                         delegate: TrafRow {}
                     }

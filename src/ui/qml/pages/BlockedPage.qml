@@ -9,6 +9,8 @@ BasePage {
 
     readonly property LogManager logManager: fortManager.logManager
     readonly property AppBlockedModel appBlockedModel: logManager.appBlockedModel
+    readonly property IpListModel ipListModel:
+        appBlockedModel.ipListModel(currentAppPath)
 
     readonly property string currentAppPath:
         (appListView.currentIndex >= 0 && appListView.currentItem)
@@ -95,7 +97,7 @@ BasePage {
                     Layout.fillHeight: true
                     spacing: 4
 
-                    model: appBlockedModel.ipListModel(currentAppPath)
+                    model: ipListModel
 
                     delegate: Label {
                         width: ipListView.width

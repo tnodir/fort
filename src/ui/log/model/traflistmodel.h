@@ -56,6 +56,8 @@ signals:
 public slots:
     void clear();
 
+    void refresh() { beginResetModel(); endResetModel(); }
+
 private:
     void updateRowCache(int row) const;
 
