@@ -17,7 +17,7 @@ private:
 
     void debugStatTraf(SqliteDb *sqliteDb);
     void debugStatTrafStep(SqliteDb *sqliteDb, const char *name,
-                           const char *sql, int timeMult = 3600);
+                           const char *sql);
 };
 
 #endif // TEST_H

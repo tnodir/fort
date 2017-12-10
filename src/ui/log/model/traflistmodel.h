@@ -57,6 +57,8 @@ public slots:
     void clear();
 
 private:
+    void updateRowCache(int row) const;
+
     QString formatTrafTime(qint32 trafTime) const;
 
     qint32 getTrafTime(int row) const;

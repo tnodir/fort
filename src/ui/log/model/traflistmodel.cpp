@@ -60,15 +60,7 @@ QVariant TrafListModel::data(const QModelIndex &index, int role) const
         const int row = index.row();
 
         if (!m_rowCache.isValid(row)) {
-            m_rowCache.row = row;
-            m_rowCache.trafTime = getTrafTime(row);
-
-            const char *sqlSelectTraffic = getSqlSelectTraffic(m_type, m_appId);
-
-            m_databaseManager->getTraffic(
-                        sqlSelectTraffic, m_rowCache.trafTime,
-                        m_rowCache.inBytes, m_rowCache.outBytes,
-                        m_appId);
+            updateRowCache(row);
         }
 
         switch (role) {
@@ -95,6 +87,19 @@ QHash<int, QByteArray> TrafListModel::roleNames() const
 
 void TrafListModel::clear()
 {
+}
+
+void TrafListModel::updateRowCache(int row) const
+{
+    m_rowCache.row = row;
+    m_rowCache.trafTime = getTrafTime(row);
+
+    const char *sqlSelectTraffic = getSqlSelectTraffic(m_type, m_appId);
+
+    m_databaseManager->getTraffic(
+                sqlSelectTraffic, m_rowCache.trafTime,
+                m_rowCache.inBytes, m_rowCache.outBytes,
+                m_appId);
 }
 
 QString TrafListModel::formatTrafTime(qint32 trafTime) const

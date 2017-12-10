@@ -75,6 +75,8 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
     m_lastTrafDay = trafDay;
     m_lastTrafMonth = trafMonth;
 
+    m_sqliteDb->beginTransaction();
+
     // Insert Statemets
     QStmtList insertTrafAppStmts = QStmtList()
             << getTrafficStmt(DatabaseSql::sqlInsertTrafficAppHour, trafHour)
@@ -98,8 +100,6 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
             << getTrafficStmt(DatabaseSql::sqlUpdateTrafficHour, trafHour)
             << getTrafficStmt(DatabaseSql::sqlUpdateTrafficDay, trafDay)
             << getTrafficStmt(DatabaseSql::sqlUpdateTrafficMonth, trafMonth);
-
-    m_sqliteDb->beginTransaction();
 
     for (quint16 i = 0; i < procCount; ++i) {
         const bool active = procBits[i / 8] & (1 << (i & 7));
@@ -174,6 +174,8 @@ qint64 DatabaseManager::createAppId(const QString &appPath)
 {
     qint64 appId = 0;
 
+    m_sqliteDb->beginTransaction();
+
     SqliteStmt *stmt = getSqliteStmt(DatabaseSql::sqlInsertAppId);
     const qint64 unixTime = DateUtil::getUnixTime();
 
@@ -185,6 +187,8 @@ qint64 DatabaseManager::createAppId(const QString &appPath)
         appId = m_sqliteDb->lastInsertRowid();
     }
     stmt->reset();
+
+    m_sqliteDb->commitTransaction();
 
     return appId;
 }

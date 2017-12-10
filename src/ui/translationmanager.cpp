@@ -23,7 +23,7 @@ TranslationManager::~TranslationManager()
 
 TranslationManager *TranslationManager::instance()
 {
-    static TranslationManager *g_instanceTranslationManager = 0;
+    static TranslationManager *g_instanceTranslationManager = nullptr;
 
     if (!g_instanceTranslationManager) {
         g_instanceTranslationManager = new TranslationManager();
