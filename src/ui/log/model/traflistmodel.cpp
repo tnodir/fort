@@ -1,5 +1,8 @@
 #include "traflistmodel.h"
 
+#include <QLocale>
+
+#include "../../conf/firewallconf.h"
 #include "../../db/databasemanager.h"
 #include "../../db/databasesql.h"
 #include "../../util/dateutil.h"
@@ -65,9 +68,10 @@ QVariant TrafListModel::data(const QModelIndex &index, int role) const
 
         switch (role) {
         case DateTimeRole: return formatTrafTime(m_rowCache.trafTime);
-        case DownloadRole: return m_rowCache.inBytes;
-        case UploadRole: return m_rowCache.outBytes;
-        case SumRole: return m_rowCache.inBytes + m_rowCache.outBytes;
+        case DownloadRole: return formatTrafUnit(m_rowCache.inBytes);
+        case UploadRole: return formatTrafUnit(m_rowCache.outBytes);
+        case SumRole: return formatTrafUnit(m_rowCache.inBytes
+                                            + m_rowCache.outBytes);
         }
     }
     return QVariant();
@@ -100,6 +104,36 @@ void TrafListModel::updateRowCache(int row) const
                 sqlSelectTraffic, m_rowCache.trafTime,
                 m_rowCache.inBytes, m_rowCache.outBytes,
                 m_appId);
+}
+
+QString TrafListModel::formatTrafUnit(qint64 bytes) const
+{
+    static const QVector<qint64> unitMults = {
+        1, // Adaptive
+        1, // Bytes
+        1024,  // KB
+        1024 * 1024,  // MB
+        qint64(1024) * 1024 * 1024,  // GB
+        qint64(1024) * 1024 * 1024 * 1024  // TB
+    };
+
+    if (bytes == 0) {
+        return QLatin1String("0");
+    }
+
+    const FirewallConf *conf = m_databaseManager->firewallConf();
+    const int trafUnit = conf ? conf->trafUnit() : 0;
+    const int trafPrec = (trafUnit == FirewallConf::UnitBytes) ? 0 : 2;
+
+    QLocale locale;
+
+    if (trafUnit == FirewallConf::UnitAdaptive) {
+        return locale.formattedDataSize(bytes, trafPrec);
+    }
+
+    const qint64 unitMult = unitMults.at(trafUnit);
+
+    return locale.toString(qreal(bytes) / unitMult, 'f', trafPrec);
 }
 
 QString TrafListModel::formatTrafTime(qint32 trafTime) const

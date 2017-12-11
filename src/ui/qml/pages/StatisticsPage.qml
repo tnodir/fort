@@ -24,16 +24,54 @@ BasePage {
         trafsContainer.width * 0.2
     ]
 
+    readonly property var trafUnitNames:
+        translationManager.dummyBool
+        && [
+            qsTranslate("qml", "Adaptive"),
+            qsTranslate("qml", "Bytes"),
+            qsTranslate("qml", "KiB"),
+            qsTranslate("qml", "MiB"),
+            qsTranslate("qml", "GiB"),
+            qsTranslate("qml", "TiB")
+        ]
+
     ColumnLayout {
         anchors.fill: parent
         spacing: 10
 
         RowLayout {
+            spacing: 15
+
             Button {
                 enabled: appListView.currentIndex >= 0
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Refresh")
                 onClicked: trafListModel.refresh()
+            }
+
+            Row {
+                spacing: 5
+
+                Label {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: translationManager.dummyBool
+                          && qsTranslate("qml", "Units:")
+                }
+
+                ComboBox {
+                    id: comboTrafUnit
+
+                    currentIndex: firewallConf.trafUnit
+                    model: trafUnitNames
+
+                    onActivated: {
+                        firewallConf.trafUnit = index;
+
+                        fortManager.applyConfImmediateValues();
+
+                        trafListModel.refresh();
+                    }
+                }
             }
 
             Item {
@@ -52,7 +90,7 @@ BasePage {
 
                     firewallConf.logStat = checked;
 
-                    fortManager.applyConfImmediateFlags();
+                    fortManager.applyConfImmediateValues();
                 }
             }
         }

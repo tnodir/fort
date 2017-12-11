@@ -31,6 +31,8 @@ BasePage {
         spacing: 10
 
         RowLayout {
+            spacing: 15
+
             Button {
                 enabled: appListView.count
                 text: translationManager.dummyBool
@@ -48,7 +50,7 @@ BasePage {
 
                     firewallConf.resolveAddress = checked;
 
-                    fortManager.applyConfImmediateFlags();
+                    fortManager.applyConfImmediateValues();
 
                     hostInfoCache.cacheChanged();  // refresh ipListView
                 }
@@ -69,7 +71,7 @@ BasePage {
 
                     firewallConf.logBlocked = checked;
 
-                    fortManager.applyConfImmediateFlags();
+                    fortManager.applyConfImmediateValues();
                 }
             }
         }

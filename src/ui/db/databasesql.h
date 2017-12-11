@@ -12,23 +12,23 @@ public:
 
     static const char * const sqlSelectAppPaths;
 
-    static const char * const sqlInsertTrafficAppHour;
-    static const char * const sqlInsertTrafficAppDay;
-    static const char * const sqlInsertTrafficAppMonth;
+    static const char * const sqlInsertTrafAppHour;
+    static const char * const sqlInsertTrafAppDay;
+    static const char * const sqlInsertTrafAppMonth;
 
-    static const char * const sqlInsertTrafficHour;
-    static const char * const sqlInsertTrafficDay;
-    static const char * const sqlInsertTrafficMonth;
+    static const char * const sqlInsertTrafHour;
+    static const char * const sqlInsertTrafDay;
+    static const char * const sqlInsertTrafMonth;
 
-    static const char * const sqlUpdateTrafficAppHour;
-    static const char * const sqlUpdateTrafficAppDay;
-    static const char * const sqlUpdateTrafficAppMonth;
+    static const char * const sqlUpdateTrafAppHour;
+    static const char * const sqlUpdateTrafAppDay;
+    static const char * const sqlUpdateTrafAppMonth;
 
-    static const char * const sqlUpdateTrafficHour;
-    static const char * const sqlUpdateTrafficDay;
-    static const char * const sqlUpdateTrafficMonth;
+    static const char * const sqlUpdateTrafHour;
+    static const char * const sqlUpdateTrafDay;
+    static const char * const sqlUpdateTrafMonth;
 
-    static const char * const sqlUpdateTrafficAppTotal;
+    static const char * const sqlUpdateTrafAppTotal;
 
     static const char * const sqlSelectMinTrafAppHour;
     static const char * const sqlSelectMinTrafAppDay;
@@ -49,6 +49,14 @@ public:
     static const char * const sqlSelectTrafDay;
     static const char * const sqlSelectTrafMonth;
     static const char * const sqlSelectTrafTotal;
+
+    static const char * const sqlDeleteTrafAppHour;
+    static const char * const sqlDeleteTrafAppDay;
+    static const char * const sqlDeleteTrafAppMonth;
+
+    static const char * const sqlDeleteTrafHour;
+    static const char * const sqlDeleteTrafDay;
+    static const char * const sqlDeleteTrafMonth;
 };
 
 #endif // DATABASESQL_H

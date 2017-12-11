@@ -245,11 +245,11 @@ bool FortManager::applyConf(bool onlyFlags)
     return saveSettings(newConf, onlyFlags);
 }
 
-bool FortManager::applyConfImmediateFlags()
+bool FortManager::applyConfImmediateValues()
 {
     Q_ASSERT(m_firewallConfToEdit != nullConf());
 
-    m_firewallConf->copyImmediateFlags(*m_firewallConfToEdit);
+    m_firewallConf->copyImmediateValues(*m_firewallConfToEdit);
 
     return saveSettings(m_firewallConf, true, true);
 }
@@ -276,9 +276,9 @@ bool FortManager::loadSettings(FirewallConf *conf)
 }
 
 bool FortManager::saveSettings(FirewallConf *newConf, bool onlyFlags,
-                               bool immediateFlags)
+                               bool immediateValues)
 {
-    if (!(onlyFlags ? m_fortSettings->writeConfFlags(*newConf)
+    if (!(onlyFlags ? m_fortSettings->writeConfIni(*newConf)
           : m_fortSettings->writeConf(*newConf))) {
         showErrorBox("Save Settings: " + m_fortSettings->errorMessage());
         return false;
@@ -289,7 +289,7 @@ bool FortManager::saveSettings(FirewallConf *newConf, bool onlyFlags,
         m_firewallConf = newConf;
     }
 
-    if (!immediateFlags) {
+    if (!immediateValues) {
         updateTrayMenu();
     }
 
@@ -308,7 +308,7 @@ bool FortManager::updateDriverConf(FirewallConf *conf)
         return false;
     }
 
-    updateLogManager(conf);
+    updateDatabaseManager(conf);
 
     return true;
 }
@@ -324,19 +324,14 @@ bool FortManager::updateDriverConfFlags(FirewallConf *conf)
         return false;
     }
 
-    updateLogManager(conf);
+    updateDatabaseManager(conf);
 
     return true;
 }
 
-void FortManager::updateLogManager(FirewallConf *conf)
+void FortManager::updateDatabaseManager(FirewallConf *conf)
 {
-    if (!conf->logStat()) {
-        m_databaseManager->logClear();
-    }
-
-    m_logManager->setLogBlockedEnabled(conf->logBlocked());
-    m_logManager->setLogStatEnabled(conf->logStat());
+    m_databaseManager->setFirewallConf(conf);
 }
 
 void FortManager::setLanguage(int language)
@@ -360,7 +355,7 @@ void FortManager::saveTrayFlags()
         ++i;
     }
 
-    m_fortSettings->writeConfFlags(*m_firewallConf);
+    m_fortSettings->writeConfIni(*m_firewallConf);
 
     updateDriverConfFlags(m_firewallConf);
 }

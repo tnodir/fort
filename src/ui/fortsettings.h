@@ -54,8 +54,8 @@ public slots:
     bool readConf(FirewallConf &conf);
     bool writeConf(const FirewallConf &conf);
 
-    bool readConfFlags(FirewallConf &conf) const;
-    bool writeConfFlags(const FirewallConf &conf);
+    bool readConfIni(FirewallConf &conf) const;
+    bool writeConfIni(const FirewallConf &conf);
 
 private:
     void processArguments(const QStringList &args);
@@ -71,7 +71,7 @@ private:
 
     bool iniBool(const QString &key, bool defaultValue = false) const;
     int iniInt(const QString &key, int defaultValue = 0) const;
-    int iniUInt(const QString &key, int defaultValue = 0) const;
+    uint iniUInt(const QString &key, int defaultValue = 0) const;
     int iniReal(const QString &key, qreal defaultValue = 0) const;
     QString iniText(const QString &key, const QString &defaultValue = QString()) const;
     QStringList iniList(const QString &key) const;

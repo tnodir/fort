@@ -1,5 +1,6 @@
 #include "databasemanager.h"
 
+#include "../conf/firewallconf.h"
 #include "../util/dateutil.h"
 #include "../util/fileutil.h"
 #include "databasesql.h"
@@ -14,6 +15,7 @@ DatabaseManager::DatabaseManager(const QString &filePath,
     m_lastTrafDay(0),
     m_lastTrafMonth(0),
     m_filePath(filePath),
+    m_conf(nullptr),
     m_sqliteDb(new SqliteDb())
 {
     SqliteEngine::initialize();
@@ -28,6 +30,15 @@ DatabaseManager::~DatabaseManager()
     SqliteEngine::shutdown();
 }
 
+void DatabaseManager::setFirewallConf(const FirewallConf *conf)
+{
+    m_conf = conf;
+
+    if (m_conf && !m_conf->logStat()) {
+        logClear();
+    }
+}
+
 bool DatabaseManager::initialize()
 {
     const bool fileExists = FileUtil::fileExists(m_filePath);
@@ -40,8 +51,11 @@ bool DatabaseManager::initialize()
     return fileExists || createTables();
 }
 
-void DatabaseManager::logProcNew(const QString &appPath, bool &isNew)
+qint64 DatabaseManager::logProcNew(const QString &appPath, bool &isNew)
 {
+    if (m_conf && !m_conf->logStat())
+        return 0;
+
     qint64 appId = getAppId(appPath);
     if (appId == 0) {
         appId = createAppId(appPath);
@@ -50,12 +64,17 @@ void DatabaseManager::logProcNew(const QString &appPath, bool &isNew)
 
     m_appPaths.prepend(appPath);
     m_appIds.prepend(appId);
+
+    return appId;
 }
 
 void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
                                   const quint32 *trafBytes)
 {
     Q_ASSERT(procCount == m_appIds.size());
+
+    if (m_conf && !m_conf->logStat())
+        return;
 
     QVector<quint16> delProcIndexes;
 
@@ -78,28 +97,28 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
     m_sqliteDb->beginTransaction();
 
     // Insert Statemets
-    QStmtList insertTrafAppStmts = QStmtList()
-            << getTrafficStmt(DatabaseSql::sqlInsertTrafficAppHour, trafHour)
-            << getTrafficStmt(DatabaseSql::sqlInsertTrafficAppDay, trafDay)
-            << getTrafficStmt(DatabaseSql::sqlInsertTrafficAppMonth, trafMonth)
-            << getTrafficStmt(DatabaseSql::sqlUpdateTrafficAppTotal, -1);
+    const QStmtList insertTrafAppStmts = QStmtList()
+            << getTrafficStmt(DatabaseSql::sqlInsertTrafAppHour, trafHour)
+            << getTrafficStmt(DatabaseSql::sqlInsertTrafAppDay, trafDay)
+            << getTrafficStmt(DatabaseSql::sqlInsertTrafAppMonth, trafMonth)
+            << getTrafficStmt(DatabaseSql::sqlUpdateTrafAppTotal, -1);
 
-    QStmtList insertTrafStmts = QStmtList()
-            << getTrafficStmt(DatabaseSql::sqlInsertTrafficHour, trafHour)
-            << getTrafficStmt(DatabaseSql::sqlInsertTrafficDay, trafDay)
-            << getTrafficStmt(DatabaseSql::sqlInsertTrafficMonth, trafMonth);
+    const QStmtList insertTrafStmts = QStmtList()
+            << getTrafficStmt(DatabaseSql::sqlInsertTrafHour, trafHour)
+            << getTrafficStmt(DatabaseSql::sqlInsertTrafDay, trafDay)
+            << getTrafficStmt(DatabaseSql::sqlInsertTrafMonth, trafMonth);
 
     // Update Statemets
-    QStmtList updateTrafAppStmts = QStmtList()
-            << getTrafficStmt(DatabaseSql::sqlUpdateTrafficAppHour, trafHour)
-            << getTrafficStmt(DatabaseSql::sqlUpdateTrafficAppDay, trafDay)
-            << getTrafficStmt(DatabaseSql::sqlUpdateTrafficAppMonth, trafMonth)
-            << getTrafficStmt(DatabaseSql::sqlUpdateTrafficAppTotal, -1);
+    const QStmtList updateTrafAppStmts = QStmtList()
+            << getTrafficStmt(DatabaseSql::sqlUpdateTrafAppHour, trafHour)
+            << getTrafficStmt(DatabaseSql::sqlUpdateTrafAppDay, trafDay)
+            << getTrafficStmt(DatabaseSql::sqlUpdateTrafAppMonth, trafMonth)
+            << getTrafficStmt(DatabaseSql::sqlUpdateTrafAppTotal, -1);
 
-    QStmtList updateTrafStmts = QStmtList()
-            << getTrafficStmt(DatabaseSql::sqlUpdateTrafficHour, trafHour)
-            << getTrafficStmt(DatabaseSql::sqlUpdateTrafficDay, trafDay)
-            << getTrafficStmt(DatabaseSql::sqlUpdateTrafficMonth, trafMonth);
+    const QStmtList updateTrafStmts = QStmtList()
+            << getTrafficStmt(DatabaseSql::sqlUpdateTrafHour, trafHour)
+            << getTrafficStmt(DatabaseSql::sqlUpdateTrafDay, trafDay)
+            << getTrafficStmt(DatabaseSql::sqlUpdateTrafMonth, trafMonth);
 
     for (quint16 i = 0; i < procCount; ++i) {
         const bool active = procBits[i / 8] & (1 << (i & 7));
@@ -122,6 +141,30 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
             updateTrafficList(insertTrafStmts, updateTrafStmts,
                               inBytes, outBytes);
         }
+    }
+
+    // Delete old data
+    if (isNewDay) {
+        const qint32 oldTrafHour = trafHour
+                - 24 * (m_conf ? m_conf->trafHourKeepDays()
+                               : DEFAULT_TRAF_HOUR_KEEP_DAYS);
+        const qint32 oldTrafDay = trafHour
+                - 24 * (m_conf ? m_conf->trafDayKeepDays()
+                               : DEFAULT_TRAF_DAY_KEEP_DAYS);
+        const qint32 oldTrafMonth = DateUtil::addUnixMonths(
+                    trafHour, -(m_conf ? m_conf->trafMonthKeepMonths()
+                                       : DEFAULT_TRAF_MONTH_KEEP_MONTHS));
+
+        // Delete Statemets
+        const QStmtList deleteTrafStmts = QStmtList()
+                << getTrafficStmt(DatabaseSql::sqlDeleteTrafAppHour, oldTrafHour)
+                << getTrafficStmt(DatabaseSql::sqlDeleteTrafAppDay, oldTrafDay)
+                << getTrafficStmt(DatabaseSql::sqlDeleteTrafAppMonth, oldTrafMonth)
+                << getTrafficStmt(DatabaseSql::sqlDeleteTrafHour, oldTrafHour)
+                << getTrafficStmt(DatabaseSql::sqlDeleteTrafDay, oldTrafDay)
+                << getTrafficStmt(DatabaseSql::sqlDeleteTrafMonth, oldTrafMonth);
+
+        deleteTrafficList(deleteTrafStmts);
     }
 
     m_sqliteDb->commitTransaction();
@@ -235,6 +278,14 @@ bool DatabaseManager::updateTraffic(SqliteStmt *stmt, quint32 inBytes,
 
     return res == SqliteStmt::StepDone
             && m_sqliteDb->changes() != 0;
+}
+
+void DatabaseManager::deleteTrafficList(const QStmtList &deleteStmtList)
+{
+    foreach (SqliteStmt *stmtDelete, deleteStmtList) {
+        stmtDelete->step();
+        stmtDelete->reset();
+    }
 }
 
 qint32 DatabaseManager::getTrafficTime(const char *sql, qint64 appId)

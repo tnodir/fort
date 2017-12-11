@@ -6,6 +6,7 @@
 #include <QStringList>
 #include <QVector>
 
+QT_FORWARD_DECLARE_CLASS(FirewallConf)
 QT_FORWARD_DECLARE_CLASS(SqliteDb)
 QT_FORWARD_DECLARE_CLASS(SqliteStmt)
 
@@ -18,11 +19,14 @@ public:
                              QObject *parent = nullptr);
     virtual ~DatabaseManager();
 
-    bool initialize();
+    const FirewallConf *firewallConf() const { return m_conf; }
+    void setFirewallConf(const FirewallConf *conf);
 
     SqliteDb *sqliteDb() const { return m_sqliteDb; }
 
-    void logProcNew(const QString &appPath, bool &isNew);
+    bool initialize();
+
+    qint64 logProcNew(const QString &appPath, bool &isNew);
     void logStatTraf(quint16 procCount, const quint8 *procBits,
                      const quint32 *trafBytes);
     void logClear();
@@ -56,6 +60,8 @@ private:
     bool updateTraffic(SqliteStmt *stmt, quint32 inBytes,
                        quint32 outBytes, qint64 appId = 0);
 
+    void deleteTrafficList(const QStmtList &deleteStmtList);
+
     SqliteStmt *getTrafficStmt(const char *sql, qint32 trafTime);
 
     SqliteStmt *getSqliteStmt(const char *sql);
@@ -66,6 +72,8 @@ private:
     qint32 m_lastTrafMonth;
 
     QString m_filePath;
+
+    const FirewallConf *m_conf;
 
     SqliteDb *m_sqliteDb;
 

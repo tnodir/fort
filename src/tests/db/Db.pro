@@ -1,6 +1,9 @@
 include(../common/Test.pri)
 
 SOURCES += \
+    $$UIPATH/conf/addressgroup.cpp \
+    $$UIPATH/conf/appgroup.cpp \
+    $$UIPATH/conf/firewallconf.cpp \
     $$UIPATH/db/databasemanager.cpp \
     $$UIPATH/db/databasesql.cpp \
     $$UIPATH/fortcommon.cpp \
@@ -8,6 +11,9 @@ SOURCES += \
     $$UIPATH/util/fileutil.cpp
 
 HEADERS += \
+    $$UIPATH/conf/addressgroup.h \
+    $$UIPATH/conf/appgroup.h \
+    $$UIPATH/conf/firewallconf.h \
     $$UIPATH/db/databasemanager.h \
     $$UIPATH/db/databasesql.h \
     $$UIPATH/fortcommon.h \

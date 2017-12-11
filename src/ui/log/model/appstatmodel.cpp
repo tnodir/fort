@@ -18,8 +18,10 @@ void AppStatModel::initialize()
 
 TrafListModel *AppStatModel::trafListModel(int trafType, int row) const
 {
+    Q_ASSERT(row < m_appIds.size());
+
     m_trafListModel->setType(static_cast<TrafListModel::TrafType>(trafType));
-    m_trafListModel->setAppId(row == -1 ? 0 : m_appIds.at(row));
+    m_trafListModel->setAppId(row < 0 ? 0 : m_appIds.at(row));
     m_trafListModel->reset();
 
     return m_trafListModel;
@@ -46,9 +48,10 @@ void AppStatModel::updateList()
 void AppStatModel::handleProcNew(const QString &appPath)
 {
     bool isNew = false;
-    m_databaseManager->logProcNew(appPath, isNew);
+    const qint64 appId = m_databaseManager->logProcNew(appPath, isNew);
 
     if (isNew) {
+        m_appIds.append(appId);
         insert(appPath);
     }
 }

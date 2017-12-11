@@ -12,6 +12,10 @@ FirewallConf::FirewallConf(QObject *parent) :
     m_logStat(false),
     m_appBlockAll(true),
     m_appAllowAll(false),
+    m_trafHourKeepDays(DEFAULT_TRAF_HOUR_KEEP_DAYS),
+    m_trafDayKeepDays(DEFAULT_TRAF_DAY_KEEP_DAYS),
+    m_trafMonthKeepMonths(DEFAULT_TRAF_MONTH_KEEP_MONTHS),
+    m_trafUnit(UnitAdaptive),
     m_ipInclude(new AddressGroup(this)),
     m_ipExclude(new AddressGroup(this))
 {
@@ -70,6 +74,38 @@ void FirewallConf::setAppAllowAll(bool appAllowAll)
     if (m_appAllowAll != appAllowAll) {
         m_appAllowAll = appAllowAll;
         emit appAllowAllChanged();
+    }
+}
+
+void FirewallConf::setTrafHourKeepDays(int trafHourKeepDays)
+{
+    if (m_trafHourKeepDays != trafHourKeepDays) {
+        m_trafHourKeepDays = trafHourKeepDays;
+        emit trafHourKeepDaysChanged();
+    }
+}
+
+void FirewallConf::setTrafDayKeepDays(int trafDayKeepDays)
+{
+    if (m_trafDayKeepDays != trafDayKeepDays) {
+        m_trafDayKeepDays = trafDayKeepDays;
+        emit trafDayKeepDaysChanged();
+    }
+}
+
+void FirewallConf::setTrafMonthKeepMonths(int trafMonthKeepMonths)
+{
+    if (m_trafMonthKeepMonths != trafMonthKeepMonths) {
+        m_trafMonthKeepMonths = trafMonthKeepMonths;
+        emit trafMonthKeepMonthsChanged();
+    }
+}
+
+void FirewallConf::setTrafUnit(int trafUnit)
+{
+    if (m_trafUnit != trafUnit) {
+        m_trafUnit = static_cast<TrafUnit>(trafUnit);
+        emit trafUnitChanged();
     }
 }
 
@@ -146,14 +182,15 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     setAppAllowAll(o.appAllowAll());
     setAppGroupBits(o.appGroupBits());
 
-    copyImmediateFlags(o);
+    copyImmediateValues(o);
 }
 
-void FirewallConf::copyImmediateFlags(const FirewallConf &o)
+void FirewallConf::copyImmediateValues(const FirewallConf &o)
 {
     setResolveAddress(o.resolveAddress());
     setLogBlocked(o.logBlocked());
     setLogStat(o.logStat());
+    setTrafUnit(o.trafUnit());
 }
 
 QVariant FirewallConf::toVariant() const

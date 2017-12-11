@@ -140,7 +140,7 @@ bool FortSettings::readConf(FirewallConf &conf)
     return (!(fileExists || backupFileExists)
             || (fileExists && tryToReadConf(conf, filePath))
             || tryToReadConf(conf, backupFilePath))
-            && readConfFlags(conf);  // read flags at the end to use correct app groups
+            && readConfIni(conf);  // read flags at the end to use correct app groups
 }
 
 bool FortSettings::tryToReadConf(FirewallConf &conf, const QString &filePath)
@@ -165,7 +165,7 @@ bool FortSettings::writeConf(const FirewallConf &conf)
     const QString filePath = confFilePath();
     const QString backupFilePath = confBackupFilePath();
 
-    if (!writeConfFlags(conf)) {
+    if (!writeConfIni(conf)) {
         setErrorMessage(tr("Can't write .ini file"));
         return false;
     }
@@ -204,7 +204,7 @@ bool FortSettings::tryToWriteConf(const FirewallConf &conf, const QString &fileP
     return true;
 }
 
-bool FortSettings::readConfFlags(FirewallConf &conf) const
+bool FortSettings::readConfIni(FirewallConf &conf) const
 {
     m_ini->beginGroup("confFlags");
     conf.setProvBoot(iniBool("provBoot"));
@@ -216,13 +216,20 @@ bool FortSettings::readConfFlags(FirewallConf &conf) const
     conf.ipExclude()->setUseAll(iniBool("ipExcludeAll"));
     conf.setAppBlockAll(iniBool("appBlockAll", true));
     conf.setAppAllowAll(iniBool("appAllowAll"));
-    conf.setAppGroupBits(iniUInt("appGroupBits", 0xFFFF));
+    conf.setAppGroupBits(iniUInt("appGroupBits", DEFAULT_APP_GROUP_BITS));
+    m_ini->endGroup();
+
+    m_ini->beginGroup("stat");
+    conf.setTrafHourKeepDays(iniInt("trafHourKeepDays", DEFAULT_TRAF_HOUR_KEEP_DAYS));
+    conf.setTrafDayKeepDays(iniInt("trafDayKeepDays", DEFAULT_TRAF_DAY_KEEP_DAYS));
+    conf.setTrafMonthKeepMonths(iniInt("trafMonthKeepMonths", DEFAULT_TRAF_MONTH_KEEP_MONTHS));
+    conf.setTrafUnit(iniInt("trafUnit"));
     m_ini->endGroup();
 
     return true;
 }
 
-bool FortSettings::writeConfFlags(const FirewallConf &conf)
+bool FortSettings::writeConfIni(const FirewallConf &conf)
 {
     m_ini->beginGroup("confFlags");
     setIniValue("provBoot", conf.provBoot());
@@ -234,7 +241,14 @@ bool FortSettings::writeConfFlags(const FirewallConf &conf)
     setIniValue("ipExcludeAll", conf.ipExclude()->useAll());
     setIniValue("appBlockAll", conf.appBlockAll());
     setIniValue("appAllowAll", conf.appAllowAll());
-    setIniValue("appGroupBits", conf.appGroupBits());
+    setIniValue("appGroupBits", conf.appGroupBits(), DEFAULT_APP_GROUP_BITS);
+    m_ini->endGroup();
+
+    m_ini->beginGroup("stat");
+    setIniValue("trafHourKeepDays", conf.trafHourKeepDays(), DEFAULT_TRAF_HOUR_KEEP_DAYS);
+    setIniValue("trafDayKeepDays", conf.trafDayKeepDays(), DEFAULT_TRAF_DAY_KEEP_DAYS);
+    setIniValue("trafMonthKeepMonths", conf.trafMonthKeepMonths(), DEFAULT_TRAF_MONTH_KEEP_MONTHS);
+    setIniValue("trafUnit", conf.trafUnit());
     m_ini->endGroup();
 
     return iniSync();
@@ -250,7 +264,7 @@ int FortSettings::iniInt(const QString &key, int defaultValue) const
     return iniValue(key, defaultValue).toInt();
 }
 
-int FortSettings::iniUInt(const QString &key, int defaultValue) const
+uint FortSettings::iniUInt(const QString &key, int defaultValue) const
 {
     return iniValue(key, defaultValue).toUInt();
 }

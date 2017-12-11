@@ -14,8 +14,6 @@ LogManager::LogManager(DatabaseManager *databaseManager,
                        QObject *parent) :
     QObject(parent),
     m_active(false),
-    m_logBlockedEnabled(false),
-    m_logStatEnabled(false),
     m_driverWorker(driverWorker),
     m_appBlockedModel(new AppBlockedModel(this)),
     m_appStatModel(new AppStatModel(databaseManager, this))
@@ -36,22 +34,6 @@ void LogManager::setActive(bool active)
         }
 
         emit activeChanged();
-    }
-}
-
-void LogManager::setLogBlockedEnabled(bool enabled)
-{
-    if (m_logBlockedEnabled != enabled) {
-        m_logBlockedEnabled = enabled;
-        emit logBlockedEnabledChanged();
-    }
-}
-
-void LogManager::setLogStatEnabled(bool enabled)
-{
-    if (m_logStatEnabled != enabled) {
-        m_logStatEnabled = enabled;
-        emit logStatEnabledChanged();
     }
 }
 
@@ -120,26 +102,20 @@ void LogManager::readLogEntries(LogBuffer *logBuffer)
         switch (logBuffer->peekEntryType()) {
         case LogEntry::AppBlocked: {
             logBuffer->readEntryBlocked(&entryBlocked);
-            if (m_logBlockedEnabled) {
-                m_appBlockedModel->addLogEntry(entryBlocked);
-            }
+            m_appBlockedModel->addLogEntry(entryBlocked);
             break;
         }
         case LogEntry::ProcNew: {
             logBuffer->readEntryProcNew(&entryProcNew);
-            if (m_logStatEnabled) {
-                m_appStatModel->handleProcNew(entryProcNew.path());
-            }
+            m_appStatModel->handleProcNew(entryProcNew.path());
             break;
         }
         case LogEntry::StatTraf: {
             logBuffer->readEntryStatTraf(&entryStatTraf);
-            if (m_logStatEnabled) {
-                m_appStatModel->handleStatTraf(
-                            entryStatTraf.procCount(),
-                            entryStatTraf.procBits(),
-                            entryStatTraf.trafBytes());
-            }
+            m_appStatModel->handleStatTraf(
+                        entryStatTraf.procCount(),
+                        entryStatTraf.procBits(),
+                        entryStatTraf.trafBytes());
             break;
         }
         default:

@@ -61,6 +61,7 @@ public slots:
 private:
     void updateRowCache(int row) const;
 
+    QString formatTrafUnit(qint64 bytes) const;
     QString formatTrafTime(qint32 trafTime) const;
 
     qint32 getTrafTime(int row) const;
