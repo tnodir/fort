@@ -440,13 +440,13 @@
         <location filename="../qml/pages/StatisticsPage.qml" line="137"/>
         <source>Daily</source>
         <comment>Stat</comment>
-        <translation>Подневная</translation>
+        <translation>Ежедневная</translation>
     </message>
     <message>
         <location filename="../qml/pages/StatisticsPage.qml" line="141"/>
         <source>Monthly</source>
         <comment>Stat</comment>
-        <translation>Помесячная</translation>
+        <translation>Ежемесячная</translation>
     </message>
     <message>
         <location filename="../qml/pages/StatisticsPage.qml" line="145"/>
