@@ -45,17 +45,22 @@ fort_conf_ip_included (const PFORT_CONF conf, UINT32 remote_ip)
 {
   const char *data = (const char *) conf + conf->data_off;
 
-  const BOOL ip_included = conf->flags.ip_include_all ? TRUE
-      : fort_conf_ip_inrange(remote_ip, conf->ip_include_n,
-                             (const UINT32 *) (data + conf->ip_from_include_off),
-                             (const UINT32 *) (data + conf->ip_to_include_off));
+  const BOOL include_all = conf->flags.ip_include_all;
+  const BOOL exclude_all = conf->flags.ip_exclude_all;
 
-  const BOOL ip_excluded = conf->flags.ip_exclude_all ? TRUE
-      : fort_conf_ip_inrange(remote_ip, conf->ip_exclude_n,
-                             (const UINT32 *) (data + conf->ip_from_exclude_off),
-                             (const UINT32 *) (data + conf->ip_to_exclude_off));
+  const BOOL ip_included = include_all ? TRUE
+    : fort_conf_ip_inrange(remote_ip, conf->ip_include_n,
+                           (const UINT32 *) (data + conf->ip_from_include_off),
+                           (const UINT32 *) (data + conf->ip_to_include_off));
 
-  return ip_included && !ip_excluded;
+  const BOOL ip_excluded = exclude_all ? TRUE
+    : fort_conf_ip_inrange(remote_ip, conf->ip_exclude_n,
+                           (const UINT32 *) (data + conf->ip_from_exclude_off),
+                           (const UINT32 *) (data + conf->ip_to_exclude_off));
+
+  return include_all ? !ip_excluded
+    : (exclude_all ? ip_included
+    : (ip_included && !ip_excluded));
 }
 
 static int
@@ -106,18 +111,22 @@ fort_conf_app_blocked (const PFORT_CONF conf,
                        UINT32 path_len, const char *path)
 {
   const char *data = (const char *) conf + conf->data_off;
+
   const int app_index = fort_conf_app_index(path_len, path, conf->apps_n,
       (const UINT32 *) (data + conf->apps_off));
+
   const UINT32 *app_perms = (const UINT32 *) (data + conf->app_perms_off);
   const UINT32 app_perm = (app_index != -1) ? app_perms[app_index] : 0;
 
-  const BOOL app_perm_blocked = (app_perm & conf->app_perms_block_mask);
-  const BOOL app_blocked = conf->flags.app_block_all ? TRUE : app_perm_blocked;
+  const BOOL block_all = conf->flags.app_block_all;
+  const BOOL allow_all = conf->flags.app_allow_all;
 
-  const BOOL app_perm_allowed = (app_perm & conf->app_perms_allow_mask);
-  const BOOL app_allowed = conf->flags.app_allow_all ? TRUE : app_perm_allowed;
+  const BOOL app_blocked = block_all ? TRUE : (app_perm & conf->app_perms_block_mask);
+  const BOOL app_allowed = allow_all ? TRUE : (app_perm & conf->app_perms_allow_mask);
 
-  return app_blocked && !app_allowed;
+  return block_all ? !app_allowed
+    : (allow_all ? app_blocked
+    : (app_blocked && !app_allowed));
 }
 
 static void
