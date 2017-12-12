@@ -45,17 +45,6 @@ BasePage {
             Button {
                 enabled: appListView.count
                 text: translationManager.dummyBool
-                      && qsTranslate("qml", "Clear")
-                onClicked: {
-                    appStatModel.clear();
-
-                    appListView.currentIndex = 0;
-                }
-            }
-
-            Button {
-                enabled: appListView.count
-                text: translationManager.dummyBool
                       && qsTranslate("qml", "Refresh")
                 onClicked: trafListModel.refresh()
             }
@@ -82,6 +71,17 @@ BasePage {
 
                         trafListModel.refresh();
                     }
+                }
+            }
+
+            Button {
+                enabled: appListView.count
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Clear")
+                onClicked: {
+                    appStatModel.clear();
+
+                    appListView.currentIndex = 0;
                 }
             }
 
