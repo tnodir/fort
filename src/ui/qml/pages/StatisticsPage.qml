@@ -192,7 +192,7 @@ BasePage {
                         id: trafListView
                         Layout.fillWidth: true
                         Layout.fillHeight: true
-                        spacing: 4
+                        spacing: 5
                         clip: true
 
                         model: trafListModel

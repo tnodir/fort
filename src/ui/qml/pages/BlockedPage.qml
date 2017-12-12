@@ -97,7 +97,7 @@ BasePage {
                     id: ipListView
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    spacing: 4
+                    spacing: 5
 
                     model: ipListModel
 

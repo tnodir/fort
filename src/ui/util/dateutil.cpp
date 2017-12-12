@@ -1,6 +1,7 @@
 #include "dateutil.h"
 
 #include <QDateTime>
+#include <QLocale>
 
 DateUtil::DateUtil(QObject *parent) :
     QObject(parent)
@@ -48,25 +49,26 @@ qint32 DateUtil::addUnixMonths(qint32 unixHour, int months)
 
 QString DateUtil::formatTime(qint64 unixTime)
 {
-    return formatDateTime(unixTime, "yyyy-MM-dd hh:mm:ss");
+    return formatDateTime(unixTime, "dd-MMM-yyyy hh:mm:ss");
 }
 
 QString DateUtil::formatHour(qint64 unixTime)
 {
-    return formatDateTime(unixTime, "yyyy-MM-dd hh:00");
+    return formatDateTime(unixTime, "dd-MMM-yyyy hh:00");
 }
 
 QString DateUtil::formatDay(qint64 unixTime)
 {
-    return formatDateTime(unixTime, "yyyy-MM-dd");
+    return formatDateTime(unixTime, "dd MMMM yyyy");
 }
 
 QString DateUtil::formatMonth(qint64 unixTime)
 {
-    return formatDateTime(unixTime, "yyyy-MM");
+    return formatDateTime(unixTime, "MMMM yyyy");
 }
 
 QString DateUtil::formatDateTime(qint64 unixTime, const QString &format)
 {
-    return QDateTime::fromSecsSinceEpoch(unixTime).toString(format);
+    const QDateTime dt = QDateTime::fromSecsSinceEpoch(unixTime);
+    return QLocale().toString(dt, format);
 }
