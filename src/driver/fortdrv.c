@@ -409,9 +409,10 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
     if (!NT_SUCCESS(status)) {
       DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                  "FORT: Prov. Register: Error: %d\n", status);
+      return status;
     }
-    
-    goto end;
+
+    goto stat;
   }
 
   /* Check flow filter */
@@ -420,12 +421,14 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
       fort_prov_flow_unregister();
     }
 
+ stat:
     if (conf_flags.log_stat) {
       status = fort_prov_flow_register();
 
       if (!NT_SUCCESS(status)) {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                    "FORT: Prov. Flow Register: Error: %d\n", status);
+        return status;
       }
     }
 
@@ -437,13 +440,14 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
   if (!NT_SUCCESS(status)) {
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                "FORT: Prov. Reauth: Error: %d\n", status);
+    return status;
   }
 
  end:
   fort_timer_update(&g_device->timer, conf_flags);
   fort_stat_update(&g_device->stat, conf_flags, g_device->flow4_id);
 
-  return status;
+  return STATUS_SUCCESS;
 }
 
 static void
