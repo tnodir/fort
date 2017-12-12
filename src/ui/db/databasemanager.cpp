@@ -11,9 +11,6 @@
 DatabaseManager::DatabaseManager(const QString &filePath,
                                  QObject *parent) :
     QObject(parent),
-    m_lastTrafHour(0),
-    m_lastTrafDay(0),
-    m_lastTrafMonth(0),
     m_filePath(filePath),
     m_conf(nullptr),
     m_sqliteDb(new SqliteDb())
@@ -23,7 +20,7 @@ DatabaseManager::DatabaseManager(const QString &filePath,
 
 DatabaseManager::~DatabaseManager()
 {
-    qDeleteAll(m_sqliteStmts);
+    clearStmts();
 
     delete m_sqliteDb;
 
@@ -43,12 +40,31 @@ bool DatabaseManager::initialize()
 {
     const bool fileExists = FileUtil::fileExists(m_filePath);
 
+    m_lastTrafHour = m_lastTrafDay = m_lastTrafMonth = 0;
+
     if (!m_sqliteDb->open(m_filePath))
         return false;
 
     m_sqliteDb->execute(DatabaseSql::sqlPragmas);
 
     return fileExists || createTables();
+}
+
+void DatabaseManager::clear()
+{
+    clearStmts();
+
+    m_sqliteDb->close();
+
+    FileUtil::removeFile(m_filePath);
+
+    initialize();
+}
+
+void DatabaseManager::clearStmts()
+{
+    qDeleteAll(m_sqliteStmts);
+    m_sqliteStmts.clear();
 }
 
 qint64 DatabaseManager::logProcNew(const QString &appPath, bool &isNew)

@@ -18,10 +18,10 @@ BasePage {
         ? appListView.currentItem.appPath : ""
 
     readonly property var trafCellWidths: [
-        trafsContainer.width * 0.4,
-        trafsContainer.width * 0.2,
-        trafsContainer.width * 0.2,
-        trafsContainer.width * 0.2
+        trafsContainer.width * 0.34,
+        trafsContainer.width * 0.22,
+        trafsContainer.width * 0.22,
+        trafsContainer.width * 0.22
     ]
 
     readonly property var trafUnitNames:
@@ -43,7 +43,18 @@ BasePage {
             spacing: 15
 
             Button {
-                enabled: appListView.currentIndex >= 0
+                enabled: appListView.count
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Clear")
+                onClicked: {
+                    appStatModel.clear();
+
+                    appListView.currentIndex = 0;
+                }
+            }
+
+            Button {
+                enabled: appListView.count
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Refresh")
                 onClicked: trafListModel.refresh()

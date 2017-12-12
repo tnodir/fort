@@ -44,11 +44,14 @@ public:
 signals:
 
 public slots:
+    void clear();
 
 private:
     typedef QList<SqliteStmt *> QStmtList;
 
     bool createTables();
+
+    void clearStmts();
 
     qint64 createAppId(const QString &appPath);
 

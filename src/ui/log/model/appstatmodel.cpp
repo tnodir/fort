@@ -29,7 +29,9 @@ TrafListModel *AppStatModel::trafListModel(int trafType, int row) const
 
 void AppStatModel::clear()
 {
-    StringListModel::clear();
+    m_trafListModel->clear();
+
+    updateList();
 }
 
 void AppStatModel::updateList()

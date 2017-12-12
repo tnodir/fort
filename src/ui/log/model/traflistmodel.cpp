@@ -91,6 +91,9 @@ QHash<int, QByteArray> TrafListModel::roleNames() const
 
 void TrafListModel::clear()
 {
+    m_databaseManager->clear();
+
+    reset();
 }
 
 void TrafListModel::updateRowCache(int row) const
