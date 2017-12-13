@@ -96,6 +96,13 @@ void TrafListModel::clear()
     reset();
 }
 
+void TrafListModel::refresh()
+{
+    beginResetModel();
+    m_rowCache.invalidate();
+    endResetModel();
+}
+
 void TrafListModel::updateRowCache(int row) const
 {
     m_rowCache.row = row;
