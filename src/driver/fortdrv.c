@@ -312,10 +312,14 @@ fort_callout_stream_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                                  FWPS_CLASSIFY_OUT0 *classifyOut)
 {
   const FWPS_STREAM_DATA0 *streamData = packet->streamData;
+  const UINT32 dataSize = (UINT32) streamData->dataLength;
+
+  const BOOL inbound = (streamData->flags & FWPS_STREAM_FLAG_RECEIVE) != 0;
+
+  const UINT32 headerSize = inbound ? inMetaValues->transportHeaderSize : 0;
 
   fort_stat_flow_classify(&g_device->stat, flowContext,
-    (UINT32) streamData->dataLength,
-    (streamData->flags & FWPS_STREAM_FLAG_RECEIVE) != 0);
+    headerSize + dataSize, inbound);
 
   classifyOut->actionType = FWP_ACTION_CONTINUE;
 }
@@ -333,9 +337,12 @@ fort_callout_datagram_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   const FWP_DIRECTION direction = (FWP_DIRECTION) inFixedValues->incomingValue[
     FWPS_FIELD_DATAGRAM_DATA_V4_DIRECTION].value.uint8;
+  const BOOL inbound = (direction == FWP_DIRECTION_INBOUND);
+
+  const UINT32 headerSize = inbound ? inMetaValues->transportHeaderSize : 0;
 
   fort_stat_flow_classify(&g_device->stat, flowContext,
-    dataSize, (direction == FWP_DIRECTION_INBOUND));
+    headerSize + dataSize, inbound);
 
   classifyOut->actionType = FWP_ACTION_CONTINUE;
 }
