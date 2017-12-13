@@ -1,0 +1,85 @@
+Fort Firewall ChangeLog
+
+v1.2.0, 2017-12-13:
+- Driver: Add ability to use "exclude_all && ip_included" and "allow_all && app_blocked" logic.
+- Driver: Add UDP traffic statistics.
+- Driver: Add transportHeaderSize to traffic statistics.
+- UI: StatisticsPage: Tweak date formats.
+
+v1.1.0, 2017-12-12:
+- Driver: Fix provider filters updating.
+- UI: StatisticsPage: Add "Clear" button.
+
+v1.0.0, 2017-12-11:
+- Driver: Enable local broadcast always.
+- Driver: Write statistic logs.
+- UI: Add StatisticsPage.
+- UI: Add button icons.
+
+v0.12.0, 2017-11-02:
+- UI: Fix reading non-existent .conf file.
+- UI: BlockedPage: Resolve addresses.
+- UI: BlockedPage: Show app names and path separately.
+- Driver: Add log type.
+- Driver: Log all blocked apps.
+
+v0.11.1, 2017-10-29:
+- Driver: Fix for Win7 x86.
+
+v0.11.0, 2017-10-28:
+- UI: Remove Include/ExcludeAll & Block/AllowAll from tray context menu.
+- UI: TextContextMenu & ApplicationsPage: Add icons.
+- Driver: Wait for BFE to start.
+
+v0.10.0, 2017-10-27:
+- UI: Add text context menu.
+- TaskUzonline: Improve address bounds detecting.
+- UI: Rename ActivityPage to BlockedPage.
+- UI: Include/ExcludeAll & Block/AllowAll are exclusive now.
+- Control "Block access to network when Fort Firewall is not running" from UI, not Installer.
+- Update Qt libraries.
+
+v0.9.0, 2017-10-25:
+- Driver: install.bat: Add dependence on BFE.
+- UI: ActivityPage: Fix blocked apps logging.
+- UI: Enable selecting texts by mouse.
+- TaskUzonline: Download and parse addresses.
+- Update Qt libraries.
+
+v0.8.0, 2017-10-20:
+- TaskTasix: Don't process empty response.
+- TaskTasix: Fix errors handling.
+- Driver: Fix pool tags.
+- Update Qt libraries.
+
+v0.7.0, 2017-10-02:
+- Driver: Improve scripts.
+- Installer: Always try to uninstall the driver first.
+- Fix Windows 7 support.
+
+v0.6.0, 2017-10-01:
+- TaskManager: Don't check running tasks.
+- TaskManager: Fix task canceling.
+- UI: SchedulePage: Tweak cell widths.
+- Update Qt libraries.
+
+v0.5.0, 2017-09-22:
+- UI: Fix some fields change notifications.
+- UI: SchedulePage: Fix state after reopening.
+
+v0.4.0, 2017-09-21:
+- IPv4 address masks handling fixes
+- UI: Add SchedulePage
+- Add TAS-IX addresses downloader
+
+v0.3.0, 2017-09-14:
+- Installer: Add option "Block access to network when Fort Firewall is not running".
+- Installer: Add Russian translation.
+
+v0.2.0, 2017-09-12:
+- UI: Fix tray menu's updating.
+- UI: ActivityPage: Show new addresses at top.
+- UI: Update translations.
+
+v0.1.0, 2017-09-11:
+- Initial release.
