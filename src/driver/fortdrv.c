@@ -35,7 +35,6 @@ typedef struct fort_device {
 
   UINT32 connect4_id;
   UINT32 accept4_id;
-  UINT32 flow4_id;
 
   FORT_BUFFER buffer;
   FORT_STAT stat;
@@ -162,11 +161,9 @@ fort_conf_ref_flags_set (const PFORT_CONF_FLAGS conf_flags)
 static void
 fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                           const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
-                          void *layerData,
                           const FWPS_FILTER0 *filter,
-                          UINT64 flowContext,
                           FWPS_CLASSIFY_OUT0 *classifyOut,
-                          int flagsField, int localIpField, int remoteIpField)
+                          int flagsField, int remoteIpField, int ipProtoField)
 {
   PFORT_CONF_REF conf_ref;
   FORT_CONF_FLAGS conf_flags;
@@ -179,9 +176,6 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   PIRP irp = NULL;
   ULONG_PTR info;
-
-  UNUSED(layerData);
-  UNUSED(flowContext);
 
   conf_ref = fort_conf_ref_take();
 
@@ -217,12 +211,14 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   if (!blocked) {
     if (ip_included && conf_flags.log_stat) {
-      NTSTATUS status;
+      const IPPROTO ip_proto = (IPPROTO) inFixedValues->incomingValue[
+        ipProtoField].value.uint8;
+      const BOOL is_udp = (ip_proto == IPPROTO_UDP);
       BOOL is_new = FALSE;
+      NTSTATUS status;
 
       status = fort_stat_flow_associate(&g_device->stat,
-        inMetaValues->flowHandle, g_device->flow4_id,
-        process_id, &is_new);
+        inMetaValues->flowHandle, process_id, is_udp, &is_new);
 
       if (!NT_SUCCESS(status)) {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
@@ -265,11 +261,10 @@ fort_callout_connect_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                          UINT64 flowContext,
                          FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-  fort_callout_classify_v4(inFixedValues, inMetaValues, layerData,
-      filter, flowContext, classifyOut,
+  fort_callout_classify_v4(inFixedValues, inMetaValues, filter, classifyOut,
       FWPS_FIELD_ALE_AUTH_CONNECT_V4_FLAGS,
-      FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_LOCAL_ADDRESS,
-      FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_REMOTE_ADDRESS);
+      FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_REMOTE_ADDRESS,
+      FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_PROTOCOL);
 }
 
 static void
@@ -280,11 +275,10 @@ fort_callout_accept_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                         UINT64 flowContext,
                         FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-  fort_callout_classify_v4(inFixedValues, inMetaValues, layerData,
-      filter, flowContext, classifyOut,
+  fort_callout_classify_v4(inFixedValues, inMetaValues, filter, classifyOut,
       FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_FLAGS,
-      FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_LOCAL_ADDRESS,
-      FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_REMOTE_ADDRESS);
+      FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_REMOTE_ADDRESS,
+      FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_PROTOCOL);
 }
 
 static NTSTATUS NTAPI
@@ -310,18 +304,38 @@ fort_callout_flow_delete_v4 (UINT16 layerId,
 }
 
 static void
-fort_callout_flow_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
-                               const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
-                               FWPS_STREAM_CALLOUT_IO_PACKET0 *packet,
-                               const FWPS_FILTER0 *filter,
-                               UINT64 flowContext,
-                               FWPS_CLASSIFY_OUT0 *classifyOut)
+fort_callout_stream_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
+                                 const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
+                                 const FWPS_STREAM_CALLOUT_IO_PACKET0 *packet,
+                                 const FWPS_FILTER0 *filter,
+                                 UINT64 flowContext,
+                                 FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-  FWPS_STREAM_DATA0 *streamData = packet->streamData;
+  const FWPS_STREAM_DATA0 *streamData = packet->streamData;
 
   fort_stat_flow_classify(&g_device->stat, flowContext,
     (UINT32) streamData->dataLength,
     (streamData->flags & FWPS_STREAM_FLAG_RECEIVE) != 0);
+
+  classifyOut->actionType = FWP_ACTION_CONTINUE;
+}
+
+static void
+fort_callout_datagram_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
+                                   const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
+                                   const PNET_BUFFER_LIST netBufList,
+                                   const FWPS_FILTER0 *filter,
+                                   UINT64 flowContext,
+                                   FWPS_CLASSIFY_OUT0 *classifyOut)
+{
+  const PNET_BUFFER netBuf = NET_BUFFER_LIST_FIRST_NB(netBufList);
+  const UINT32 dataSize = NET_BUFFER_DATA_LENGTH(netBuf);
+
+  const FWP_DIRECTION direction = (FWP_DIRECTION) inFixedValues->incomingValue[
+    FWPS_FIELD_DATAGRAM_DATA_V4_DIRECTION].value.uint8;
+
+  fort_stat_flow_classify(&g_device->stat, flowContext,
+    dataSize, (direction == FWP_DIRECTION_INBOUND));
 
   classifyOut->actionType = FWP_ACTION_CONTINUE;
 }
@@ -358,17 +372,31 @@ fort_callout_install (PDEVICE_OBJECT device)
     return status;
   }
 
-  /* IPv4 flow callout */
-  c.calloutKey = FORT_GUID_CALLOUT_FLOW_V4;
-  c.classifyFn = fort_callout_flow_classify_v4;
+  /* IPv4 stream callout */
+  c.calloutKey = FORT_GUID_CALLOUT_STREAM_V4;
+  c.classifyFn = fort_callout_stream_classify_v4;
 
   c.flowDeleteFn = fort_callout_flow_delete_v4;
   c.flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW;
 
-  status = FwpsCalloutRegister0(device, &c, &g_device->flow4_id);
+  status = FwpsCalloutRegister0(device, &c, &g_device->stat.stream4_id);
   if (!NT_SUCCESS(status)) {
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-               "FORT: Register Flow V4: Error: %d\n", status);
+               "FORT: Register Stream V4: Error: %d\n", status);
+    return status;
+  }
+
+  /* IPv4 datagram callout */
+  c.calloutKey = FORT_GUID_CALLOUT_DATAGRAM_V4;
+  c.classifyFn = fort_callout_datagram_classify_v4;
+
+  c.flowDeleteFn = fort_callout_flow_delete_v4;
+  c.flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW;
+
+  status = FwpsCalloutRegister0(device, &c, &g_device->stat.datagram4_id);
+  if (!NT_SUCCESS(status)) {
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+               "FORT: Register Datagram V4: Error: %d\n", status);
     return status;
   }
 
@@ -388,9 +416,14 @@ fort_callout_remove (void)
     g_device->accept4_id = 0;
   }
 
-  if (g_device->flow4_id) {
-    FwpsCalloutUnregisterById0(g_device->flow4_id);
-    g_device->flow4_id = 0;
+  if (g_device->stat.stream4_id) {
+    FwpsCalloutUnregisterById0(g_device->stat.stream4_id);
+    g_device->stat.stream4_id = 0;
+  }
+
+  if (g_device->stat.datagram4_id) {
+    FwpsCalloutUnregisterById0(g_device->stat.datagram4_id);
+    g_device->stat.datagram4_id = 0;
   }
 }
 
@@ -445,7 +478,7 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
 
  end:
   fort_timer_update(&g_device->timer, conf_flags);
-  fort_stat_update(&g_device->stat, conf_flags, g_device->flow4_id);
+  fort_stat_update(&g_device->stat, conf_flags);
 
   return STATUS_SUCCESS;
 }
@@ -656,7 +689,7 @@ fort_driver_unload (PDRIVER_OBJECT driver)
 
   if (g_device != NULL) {
     fort_timer_close(&g_device->timer);
-    fort_stat_close(&g_device->stat, g_device->flow4_id);
+    fort_stat_close(&g_device->stat);
     fort_buffer_close(&g_device->buffer);
 
     if (!g_device->prov_boot) {

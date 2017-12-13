@@ -52,6 +52,9 @@ typedef struct fort_stat {
 
   UINT32 flow_free_index;
 
+  UINT32 stream4_id;
+  UINT32 datagram4_id;
+
   PFORT_STAT_PROC procs;
   PFORT_STAT_FLOW flows;
 
@@ -280,22 +283,26 @@ fort_stat_flow_add (PFORT_STAT stat, UINT64 flow_id)
 }
 
 static NTSTATUS
-fort_stat_flow_set_context (UINT64 flow_id, UINT32 callout_id,
-                            UINT64 flow_context)
+fort_stat_flow_set_context (PFORT_STAT stat, UINT64 flow_id,
+                            UINT64 flow_context, BOOL is_udp)
 {
-  return FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_STREAM_V4,
+  const UINT16 layer_id = is_udp ? FWPS_LAYER_DATAGRAM_DATA_V4
+    : FWPS_LAYER_STREAM_V4;
+  const UINT32 callout_id = is_udp ? stat->datagram4_id : stat->stream4_id;
+
+  return FwpsFlowAssociateContext0(flow_id, layer_id,
     callout_id, flow_context);
 }
 
 static NTSTATUS
-fort_stat_flow_remove_context (UINT64 flow_id, UINT32 callout_id)
+fort_stat_flow_remove_context (UINT64 flow_id, UINT16 layer_id,
+                               UINT32 callout_id)
 {
-  return FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_STREAM_V4,
-    callout_id);
+  return FwpsFlowRemoveContext0(flow_id, layer_id, callout_id);
 }
 
 static void
-fort_stat_flow_remove_contexts (PFORT_STAT stat, UINT32 callout_id)
+fort_stat_flow_remove_contexts (PFORT_STAT stat)
 {
   PFORT_STAT_FLOW flow = stat->flows;
   UINT32 count = stat->flow_count;
@@ -304,7 +311,12 @@ fort_stat_flow_remove_contexts (PFORT_STAT stat, UINT32 callout_id)
     if (flow->is_free == FORT_FLOW_BAD_INDEX)
       continue;
 
-    fort_stat_flow_remove_context(flow->flow_id, callout_id);
+    if (!NT_SUCCESS(fort_stat_flow_remove_context(
+        flow->flow_id, FWPS_LAYER_STREAM_V4, stat->stream4_id))) {
+
+      fort_stat_flow_remove_context(flow->flow_id,
+        FWPS_LAYER_DATAGRAM_DATA_V4, stat->datagram4_id);
+    }
 
     --count;
   }
@@ -331,7 +343,7 @@ fort_stat_init (PFORT_STAT stat)
 }
 
 static void
-fort_stat_close (PFORT_STAT stat, UINT32 callout_id)
+fort_stat_close (PFORT_STAT stat)
 {
   KLOCK_QUEUE_HANDLE lock_queue;
 
@@ -350,7 +362,7 @@ fort_stat_close (PFORT_STAT stat, UINT32 callout_id)
   }
 
   if (stat->flows != NULL) {
-    fort_stat_flow_remove_contexts(stat, callout_id);
+    fort_stat_flow_remove_contexts(stat);
 
     fort_stat_array_del(stat->flows);
     stat->flows = NULL;
@@ -369,8 +381,7 @@ fort_stat_close (PFORT_STAT stat, UINT32 callout_id)
 
 static NTSTATUS
 fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
-                          UINT32 callout_id, UINT32 process_id,
-                          BOOL *is_new)
+                          UINT32 process_id, BOOL is_udp, BOOL *is_new)
 {
   KLOCK_QUEUE_HANDLE lock_queue;
   UINT64 flow_context;
@@ -407,7 +418,7 @@ fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
     | ((UINT64) proc_index << 32)
     | ((UINT64) stat->version << 48);
 
-  status = fort_stat_flow_set_context(flow_id, callout_id, flow_context);
+  status = fort_stat_flow_set_context(stat, flow_id, flow_context, is_udp);
 
   if (NT_SUCCESS(status)) {
     fort_stat_proc_inc(stat, proc_index);
@@ -477,11 +488,10 @@ fort_stat_flow_classify (PFORT_STAT stat, UINT64 flow_context,
 }
 
 static void
-fort_stat_update (PFORT_STAT stat, const FORT_CONF_FLAGS conf_flags,
-                  UINT32 callout_id)
+fort_stat_update (PFORT_STAT stat, const FORT_CONF_FLAGS conf_flags)
 {
   if (!conf_flags.log_stat) {
-    fort_stat_close(stat, callout_id);
+    fort_stat_close(stat);
   }
 }
 

@@ -22,12 +22,14 @@ fort_prov_unregister (void)
 
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_CONNECT_V4);
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_ACCEPT_V4);
-  FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_FLOW_V4);
+  FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_STREAM_V4);
+  FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_DATAGRAM_V4);
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH);
   FwpmSubLayerDeleteByKey0(engine, (GUID *) &FORT_GUID_SUBLAYER);
   FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_CONNECT_V4);
   FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_ACCEPT_V4);
-  FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_FLOW_V4);
+  FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_STREAM_V4);
+  FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_DATAGRAM_V4);
   FwpmProviderDeleteByKey0(engine, (GUID *) &FORT_GUID_PROVIDER);
 
   fort_prov_close(engine);
@@ -41,7 +43,8 @@ fort_prov_flow_unregister (void)
   if (fort_prov_open(&engine))
     return;
 
-  FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_FLOW_V4);
+  FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_STREAM_V4);
+  FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_DATAGRAM_V4);
 
   fort_prov_close(engine);
 }
@@ -50,7 +53,7 @@ static DWORD
 fort_prov_register (BOOL is_boot)
 {
   FWPM_PROVIDER0 provider;
-  FWPM_CALLOUT0 ocallout4, icallout4, fcallout4;
+  FWPM_CALLOUT0 ocallout4, icallout4, scallout4, dcallout4;
   FWPM_SUBLAYER0 sublayer;
   FWPM_FILTER0 ofilter4, ifilter4;
   HANDLE engine;
@@ -83,12 +86,19 @@ fort_prov_register (BOOL is_boot)
   icallout4.providerKey = (GUID *) &FORT_GUID_PROVIDER;
   icallout4.applicableLayer = FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4;
 
-  RtlZeroMemory(&fcallout4, sizeof(FWPM_CALLOUT0));
-  fcallout4.calloutKey = FORT_GUID_CALLOUT_FLOW_V4;
-  fcallout4.displayData.name = (PWCHAR) L"FortCalloutFlow4";
-  fcallout4.displayData.description = (PWCHAR) L"Fort Firewall Callout Flow V4";
-  fcallout4.providerKey = (GUID *) &FORT_GUID_PROVIDER;
-  fcallout4.applicableLayer = FWPM_LAYER_STREAM_V4;
+  RtlZeroMemory(&scallout4, sizeof(FWPM_CALLOUT0));
+  scallout4.calloutKey = FORT_GUID_CALLOUT_STREAM_V4;
+  scallout4.displayData.name = (PWCHAR) L"FortCalloutStream4";
+  scallout4.displayData.description = (PWCHAR) L"Fort Firewall Callout Stream V4";
+  scallout4.providerKey = (GUID *) &FORT_GUID_PROVIDER;
+  scallout4.applicableLayer = FWPM_LAYER_STREAM_V4;
+
+  RtlZeroMemory(&dcallout4, sizeof(FWPM_CALLOUT0));
+  dcallout4.calloutKey = FORT_GUID_CALLOUT_DATAGRAM_V4;
+  dcallout4.displayData.name = (PWCHAR) L"FortCalloutDatagram4";
+  dcallout4.displayData.description = (PWCHAR) L"Fort Firewall Callout Datagram V4";
+  dcallout4.providerKey = (GUID *) &FORT_GUID_PROVIDER;
+  dcallout4.applicableLayer = FWPM_LAYER_DATAGRAM_DATA_V4;
 
   RtlZeroMemory(&sublayer, sizeof(FWPM_SUBLAYER0));
   sublayer.subLayerKey = FORT_GUID_SUBLAYER;
@@ -120,7 +130,8 @@ fort_prov_register (BOOL is_boot)
       || (status = FwpmProviderAdd0(engine, &provider, NULL))
       || (status = FwpmCalloutAdd0(engine, &ocallout4, NULL, NULL))
       || (status = FwpmCalloutAdd0(engine, &icallout4, NULL, NULL))
-      || (status = FwpmCalloutAdd0(engine, &fcallout4, NULL, NULL))
+      || (status = FwpmCalloutAdd0(engine, &scallout4, NULL, NULL))
+      || (status = FwpmCalloutAdd0(engine, &dcallout4, NULL, NULL))
       || (status = FwpmSubLayerAdd0(engine, &sublayer, NULL))
       || (status = FwpmFilterAdd0(engine, &ofilter4, NULL, NULL))
       || (status = FwpmFilterAdd0(engine, &ifilter4, NULL, NULL))
@@ -137,24 +148,34 @@ fort_prov_register (BOOL is_boot)
 static DWORD
 fort_prov_flow_register (void)
 {
-  FWPM_FILTER0 ffilter4;
+  FWPM_FILTER0 sfilter4, dfilter4;
   HANDLE engine;
   DWORD status;
 
   if ((status = fort_prov_open(&engine)))
     goto end;
 
-  RtlZeroMemory(&ffilter4, sizeof(FWPM_FILTER0));
-  ffilter4.filterKey = FORT_GUID_FILTER_FLOW_V4;
-  ffilter4.layerKey = FWPM_LAYER_STREAM_V4;
-  ffilter4.subLayerKey = FORT_GUID_SUBLAYER;
-  ffilter4.displayData.name = (PWCHAR) L"FortFilterFlow4";
-  ffilter4.displayData.description = (PWCHAR) L"Fort Firewall Filter Flow V4";
-  ffilter4.action.type = FWP_ACTION_CALLOUT_INSPECTION;
-  ffilter4.action.calloutKey = FORT_GUID_CALLOUT_FLOW_V4;
+  RtlZeroMemory(&sfilter4, sizeof(FWPM_FILTER0));
+  sfilter4.filterKey = FORT_GUID_FILTER_STREAM_V4;
+  sfilter4.layerKey = FWPM_LAYER_STREAM_V4;
+  sfilter4.subLayerKey = FORT_GUID_SUBLAYER;
+  sfilter4.displayData.name = (PWCHAR) L"FortFilterStream4";
+  sfilter4.displayData.description = (PWCHAR) L"Fort Firewall Filter Stream V4";
+  sfilter4.action.type = FWP_ACTION_CALLOUT_INSPECTION;
+  sfilter4.action.calloutKey = FORT_GUID_CALLOUT_STREAM_V4;
+
+  RtlZeroMemory(&dfilter4, sizeof(FWPM_FILTER0));
+  dfilter4.filterKey = FORT_GUID_FILTER_DATAGRAM_V4;
+  dfilter4.layerKey = FWPM_LAYER_DATAGRAM_DATA_V4;
+  dfilter4.subLayerKey = FORT_GUID_SUBLAYER;
+  dfilter4.displayData.name = (PWCHAR) L"FortFilterDatagram4";
+  dfilter4.displayData.description = (PWCHAR) L"Fort Firewall Filter Datagram V4";
+  dfilter4.action.type = FWP_ACTION_CALLOUT_INSPECTION;
+  dfilter4.action.calloutKey = FORT_GUID_CALLOUT_DATAGRAM_V4;
 
   if ((status = FwpmTransactionBegin0(engine, 0))
-      || (status = FwpmFilterAdd0(engine, &ffilter4, NULL, NULL))
+      || (status = FwpmFilterAdd0(engine, &sfilter4, NULL, NULL))
+      || (status = FwpmFilterAdd0(engine, &dfilter4, NULL, NULL))
       || (status = FwpmTransactionCommit0(engine))) {
     FwpmTransactionAbort0(engine);
   }
