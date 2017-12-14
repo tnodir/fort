@@ -10,6 +10,9 @@ ListView {
     property string emptyText
     property string emptyIcon
 
+    Keys.onUpPressed: decrementCurrentIndex()
+    Keys.onDownPressed: incrementCurrentIndex()
+
     highlightRangeMode: ListView.ApplyRange
     highlightResizeDuration: 0
     highlightMoveDuration: 200
@@ -53,6 +56,7 @@ ListView {
             const index = appListView.indexAt(mouse.x, mouse.y);
             if (index >= 0) {
                 appListView.currentIndex = index;
+                appListView.forceActiveFocus();
             }
         }
     }
