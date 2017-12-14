@@ -1,6 +1,7 @@
 param (
     [string]$TargetPath = ".\build",
     [string]$BuildPath = "..\src\build-ui\release",
+    [string]$RootPath = "..",
     [string]$QtPath = "D:\opt\qt5-fort\qtbase"
 )
 
@@ -33,6 +34,7 @@ for ($i = 0; $i -lt $targetDirs.length; $i++) {
             $file = $files[$k]
             $file = $file -replace "/", "\"
             $file = $file -replace '\${BUILD}', "$BuildPath"
+            $file = $file -replace '\${ROOT}', "$RootPath"
             $file = $file -replace '\${QTPATH}', "$QtPath"
 
             if ($file.Contains('|')) {

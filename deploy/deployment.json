@@ -11,8 +11,9 @@
 				"${QTPATH}/bin/Qt5Widgets.dll"
 			],
 			"fort": [
+				"${ROOT}/ChangeLog",
 				"${BUILD}/FortFirewall.exe",
-				"${BUILD}/i18n				| *.qm				|"
+				"${ROOT}/src/ui/i18n			| *.qm				|"
 			]
 		},
 		"${TARGET}/imports": {
