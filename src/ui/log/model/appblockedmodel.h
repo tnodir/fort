@@ -25,6 +25,8 @@ signals:
 public slots:
     void clear() override;
 
+    void remove(int row = -1) override;
+
 private:
     QHash<QString, QStringList> m_appIpList;
     QHash<QString, QSet<QString>> m_appIpSet;

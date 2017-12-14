@@ -32,6 +32,22 @@ void AppBlockedModel::clear()
     StringListModel::clear();
 }
 
+void AppBlockedModel::remove(int row)
+{
+    row = adjustRow(row);
+
+    beginRemoveRows(QModelIndex(), row, row);
+
+    const QString appPath = list().at(row);
+
+    m_appIpList.remove(appPath);
+    m_appIpSet.remove(appPath);
+
+    removeRow(row);
+
+    endRemoveRows();
+}
+
 void AppBlockedModel::addLogEntry(const LogEntryBlocked &logEntry)
 {
     const QString appPath = logEntry.path();

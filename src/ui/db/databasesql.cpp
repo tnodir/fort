@@ -68,6 +68,10 @@ const char * const DatabaseSql::sqlInsertAppId =
         "  VALUES(?1, ?2, ?3, 0, 0);"
         ;
 
+const char * const DatabaseSql::sqlDeleteAppId =
+        "DELETE FROM app WHERE app_id = ?1;"
+        ;
+
 const char * const DatabaseSql::sqlSelectAppPaths =
         "SELECT app_id, path FROM app ORDER BY creat_time;"
         ;
@@ -258,4 +262,23 @@ const char * const DatabaseSql::sqlDeleteTrafDay =
 
 const char * const DatabaseSql::sqlDeleteTrafMonth =
         "DELETE FROM traffic_month WHERE traf_time < ?1;"
+        ;
+
+const char * const DatabaseSql::sqlDeleteAppTrafHour =
+        "DELETE FROM traffic_app_hour"
+        "  WHERE app_id = ?1;"
+        ;
+
+const char * const DatabaseSql::sqlDeleteAppTrafDay =
+        "DELETE FROM traffic_app_day"
+        "  WHERE app_id = ?1;"
+        ;
+
+const char * const DatabaseSql::sqlDeleteAppTrafMonth =
+        "DELETE FROM traffic_app_month"
+        "  WHERE app_id = ?1;"
+        ;
+
+const char * const DatabaseSql::sqlResetAppTrafTotals =
+        "UPDATE app SET traf_time = ?1, in_bytes = 0, out_bytes = 0;"
         ;

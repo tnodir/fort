@@ -56,9 +56,12 @@ signals:
 public slots:
     void clear();
 
+    void resetAppTotals();
+
     void refresh();
 
 private:
+    void invalidateRowCache();
     void updateRowCache(int row) const;
 
     QString formatTrafUnit(qint64 bytes) const;

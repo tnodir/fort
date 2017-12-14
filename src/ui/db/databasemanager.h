@@ -35,6 +35,10 @@ public:
 
     qint64 getAppId(const QString &appPath);
 
+    void deleteApp(qint64 appId);
+
+    void resetAppTotals();
+
     qint32 getTrafficTime(const char *sql, qint64 appId = 0);
 
     void getTraffic(const char *sql, qint32 trafTime,
@@ -63,9 +67,10 @@ private:
     bool updateTraffic(SqliteStmt *stmt, quint32 inBytes,
                        quint32 outBytes, qint64 appId = 0);
 
-    void deleteTrafficList(const QStmtList &deleteStmtList);
+    void stepStmtList(const QStmtList &stmtList);
 
     SqliteStmt *getTrafficStmt(const char *sql, qint32 trafTime);
+    SqliteStmt *getAppStmt(const char *sql, qint64 appId);
 
     SqliteStmt *getSqliteStmt(const char *sql);
 

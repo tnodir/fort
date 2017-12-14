@@ -9,6 +9,7 @@ public:
 
     static const char * const sqlSelectAppId;
     static const char * const sqlInsertAppId;
+    static const char * const sqlDeleteAppId;
 
     static const char * const sqlSelectAppPaths;
 
@@ -57,6 +58,12 @@ public:
     static const char * const sqlDeleteTrafHour;
     static const char * const sqlDeleteTrafDay;
     static const char * const sqlDeleteTrafMonth;
+
+    static const char * const sqlDeleteAppTrafHour;
+    static const char * const sqlDeleteAppTrafDay;
+    static const char * const sqlDeleteAppTrafMonth;
+
+    static const char * const sqlResetAppTrafTotals;
 };
 
 #endif // DATABASESQL_H

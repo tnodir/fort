@@ -11,7 +11,9 @@ BasePage {
     readonly property LogManager logManager: fortManager.logManager
     readonly property AppStatModel appStatModel: logManager.appStatModel
     readonly property TrafListModel trafListModel:
-        appStatModel.trafListModel(tabBar.currentIndex, appListView.currentIndex)
+        appStatModel.trafListModel(tabBar.currentIndex,
+                                   appListView.currentIndex,
+                                   currentAppPath)
 
     readonly property string currentAppPath:
         (appListView.currentIndex >= 0 && appListView.currentItem)
@@ -40,10 +42,9 @@ BasePage {
         spacing: 10
 
         RowLayout {
-            spacing: 15
-
             Button {
                 enabled: appListView.count
+                icon.source: "qrc:/images/arrow_refresh.png"
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Refresh")
                 onClicked: trafListModel.refresh()
@@ -51,6 +52,11 @@ BasePage {
 
             Row {
                 spacing: 5
+
+                Item {
+                    width: 1
+                    height: 1
+                }
 
                 Label {
                     anchors.verticalCenter: parent.verticalCenter
@@ -74,14 +80,28 @@ BasePage {
                 }
             }
 
-            Button {
+            ButtonMenu {
                 enabled: appListView.count
+                icon.source: "qrc:/images/bin_empty.png"
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Clear")
-                onClicked: {
-                    appStatModel.clear();
 
-                    appListView.currentIndex = 0;
+                MenuItem {
+                    enabled: appListView.currentIndex > 0
+                    text: "Remove Application"
+                    onTriggered: appStatModel.remove(
+                                     appListView.currentIndex)
+                }
+                MenuItem {
+                    text: "Reset Totals"
+                    onTriggered: trafListModel.resetAppTotals()
+                }
+                MenuItem {
+                    text: "Clear All"
+                    onTriggered: {
+                        appListView.currentIndex = 0;
+                        appStatModel.clear();
+                    }
                 }
             }
 

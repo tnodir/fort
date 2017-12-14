@@ -180,7 +180,7 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
                 << getTrafficStmt(DatabaseSql::sqlDeleteTrafDay, oldTrafDay)
                 << getTrafficStmt(DatabaseSql::sqlDeleteTrafMonth, oldTrafMonth);
 
-        deleteTrafficList(deleteTrafStmts);
+        stepStmtList(deleteTrafStmts);
     }
 
     m_sqliteDb->commitTransaction();
@@ -227,6 +227,33 @@ qint64 DatabaseManager::getAppId(const QString &appPath)
     stmt->reset();
 
     return appId;
+}
+
+void DatabaseManager::deleteApp(qint64 appId)
+{
+    // Delete Statemets
+    const QStmtList deleteAppStmts = QStmtList()
+            << getAppStmt(DatabaseSql::sqlDeleteAppTrafHour, appId)
+            << getAppStmt(DatabaseSql::sqlDeleteAppTrafDay, appId)
+            << getAppStmt(DatabaseSql::sqlDeleteAppTrafMonth, appId)
+            << getAppStmt(DatabaseSql::sqlDeleteAppId, appId);
+
+    stepStmtList(deleteAppStmts);
+}
+
+void DatabaseManager::resetAppTotals()
+{
+    m_sqliteDb->beginTransaction();
+
+    SqliteStmt *stmt = getSqliteStmt(DatabaseSql::sqlResetAppTrafTotals);
+    const qint64 unixTime = DateUtil::getUnixTime();
+
+    stmt->bindInt(1, DateUtil::getUnixHour(unixTime));
+
+    stmt->step();
+    stmt->reset();
+
+    m_sqliteDb->commitTransaction();
 }
 
 qint64 DatabaseManager::createAppId(const QString &appPath)
@@ -296,9 +323,9 @@ bool DatabaseManager::updateTraffic(SqliteStmt *stmt, quint32 inBytes,
             && m_sqliteDb->changes() != 0;
 }
 
-void DatabaseManager::deleteTrafficList(const QStmtList &deleteStmtList)
+void DatabaseManager::stepStmtList(const QStmtList &stmtList)
 {
-    foreach (SqliteStmt *stmtDelete, deleteStmtList) {
+    foreach (SqliteStmt *stmtDelete, stmtList) {
         stmtDelete->step();
         stmtDelete->reset();
     }
@@ -349,6 +376,15 @@ SqliteStmt *DatabaseManager::getTrafficStmt(const char *sql, qint32 trafTime)
     SqliteStmt *stmt = getSqliteStmt(sql);
 
     stmt->bindInt(1, trafTime);
+
+    return stmt;
+}
+
+SqliteStmt *DatabaseManager::getAppStmt(const char *sql, qint64 appId)
+{
+    SqliteStmt *stmt = getSqliteStmt(sql);
+
+    stmt->bindInt64(1, appId);
 
     return stmt;
 }

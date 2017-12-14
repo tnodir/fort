@@ -27,6 +27,11 @@ void StringListModel::setList(const QStringList &list)
     endResetModel();
 }
 
+void StringListModel::clear()
+{
+    setList(QStringList());
+}
+
 void StringListModel::insert(const QString &text, int row)
 {
     row = adjustRow(row);
@@ -41,7 +46,7 @@ void StringListModel::remove(int row)
     row = adjustRow(row);
 
     beginRemoveRows(QModelIndex(), row, row);
-    m_list.removeAt(row);
+    removeRow(row);
     endRemoveRows();
 }
 
@@ -56,9 +61,9 @@ void StringListModel::replace(const QString &text, int row)
     emit dataChanged(modelIndex, modelIndex);
 }
 
-void StringListModel::clear()
+void StringListModel::removeRow(int row)
 {
-    setList(QStringList());
+    m_list.removeAt(row);
 }
 
 int StringListModel::adjustRow(int row) const

@@ -16,8 +16,11 @@ void AppStatModel::initialize()
     updateList();
 }
 
-TrafListModel *AppStatModel::trafListModel(int trafType, int row) const
+TrafListModel *AppStatModel::trafListModel(int trafType, int row,
+                                           const QString &appPath) const
 {
+    Q_UNUSED(appPath)  // used to properly refresh trafListModel
+
     Q_ASSERT(row < m_appIds.size());
 
     m_trafListModel->setType(static_cast<TrafListModel::TrafType>(trafType));
@@ -32,6 +35,23 @@ void AppStatModel::clear()
     m_trafListModel->clear();
 
     updateList();
+}
+
+void AppStatModel::remove(int row)
+{
+    row = adjustRow(row);
+
+    beginRemoveRows(QModelIndex(), row, row);
+
+    const qint64 appId = m_appIds.at(row);
+
+    m_databaseManager->deleteApp(appId);
+
+    m_appIds.remove(row);
+
+    removeRow(row);
+
+    endRemoveRows();
 }
 
 void AppStatModel::updateList()

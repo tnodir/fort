@@ -16,7 +16,8 @@ public:
 
     void initialize();
 
-    Q_INVOKABLE TrafListModel *trafListModel(int trafType, int row) const;
+    Q_INVOKABLE TrafListModel *trafListModel(int trafType, int row,
+                                             const QString &appPath) const;
 
     void handleProcNew(const QString &appPath);
     void handleStatTraf(quint16 procCount, const quint8 *procBits,
@@ -26,6 +27,8 @@ signals:
 
 public slots:
     void clear() override;
+
+    void remove(int row = -1) override;
 
 private:
     void updateList();

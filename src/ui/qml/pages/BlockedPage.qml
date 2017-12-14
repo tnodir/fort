@@ -16,12 +16,6 @@ BasePage {
         (appListView.currentIndex >= 0 && appListView.currentItem)
         ? appListView.currentItem.appPath : ""
 
-    function clearAppPaths() {
-        appListView.currentIndex = -1;
-
-        appBlockedModel.clear();
-    }
-
     HostInfoCache {
         id: hostInfoCache
     }
@@ -31,13 +25,25 @@ BasePage {
         spacing: 10
 
         RowLayout {
-            spacing: 15
-
-            Button {
+            ButtonMenu {
                 enabled: appListView.count
+                icon.source: "qrc:/images/bin_empty.png"
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Clear")
-                onClicked: clearAppPaths()
+
+                MenuItem {
+                    enabled: appListView.currentIndex >= 0
+                    text: "Remove Application"
+                    onTriggered: appBlockedModel.remove(
+                                     appListView.currentIndex)
+                }
+                MenuItem {
+                    text: "Clear All"
+                    onTriggered: {
+                        appListView.currentIndex = -1;
+                        appBlockedModel.clear();
+                    }
+                }
             }
 
             CheckBox {

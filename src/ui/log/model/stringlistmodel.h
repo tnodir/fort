@@ -17,17 +17,18 @@ public:
     const QStringList &list() const { return m_list; }
     void setList(const QStringList &list);
 
-protected:
-    void insert(const QString &text, int row = -1);
-    void remove(int row = -1);
-    void replace(const QString &text, int row = -1);
-
 signals:
 
 public slots:
     virtual void clear();
 
-private:
+    virtual void insert(const QString &text, int row = -1);
+    virtual void remove(int row = -1);
+    virtual void replace(const QString &text, int row = -1);
+
+protected:
+    void removeRow(int row);
+
     int adjustRow(int row) const;
 
 private:
