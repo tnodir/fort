@@ -118,6 +118,8 @@ BasePage {
 
                         readonly property string ipText: display
                     }
+
+                    ScrollBar.vertical: ScrollBarControl {}
                 }
             }
         }
