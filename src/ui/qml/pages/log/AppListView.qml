@@ -1,5 +1,6 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
+import "../../controls"
 import com.fortfirewall 1.0
 
 ListView {
@@ -12,6 +13,8 @@ ListView {
 
     Keys.onUpPressed: decrementCurrentIndex()
     Keys.onDownPressed: incrementCurrentIndex()
+
+    ScrollBar.vertical: ScrollBarControl {}
 
     highlightRangeMode: ListView.ApplyRange
     highlightResizeDuration: 0

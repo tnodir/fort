@@ -2,6 +2,7 @@
     <qresource prefix="/">
         <file>qml/controls/ButtonMenu.qml</file>
         <file>qml/controls/ButtonPopup.qml</file>
+        <file>qml/controls/ScrollBarControl.qml</file>
         <file>qml/controls/SpinCombo.qml</file>
         <file>qml/controls/TextAreaFrame.qml</file>
         <file>qml/controls/TextContextMenu.qml</file>

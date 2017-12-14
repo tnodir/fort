@@ -226,6 +226,8 @@ BasePage {
                         model: trafListModel
 
                         delegate: TrafRow {}
+
+                        ScrollBar.vertical: ScrollBarControl {}
                     }
                 }
             }
