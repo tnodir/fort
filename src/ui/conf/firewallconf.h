@@ -10,7 +10,7 @@ QT_FORWARD_DECLARE_CLASS(AppGroup)
 
 #define DEFAULT_APP_GROUP_BITS          0xFFFF
 #define DEFAULT_TRAF_HOUR_KEEP_DAYS     90  // ~3 months
-#define DEFAULT_TRAF_DAY_KEEP_DAYS      356  // ~1 year
+#define DEFAULT_TRAF_DAY_KEEP_DAYS      365  // ~1 year
 #define DEFAULT_TRAF_MONTH_KEEP_MONTHS  360  // ~3 years
 
 class FirewallConf : public QObject
@@ -88,7 +88,7 @@ public:
     QQmlListProperty<AppGroup> appGroups();
 
     void copyFlags(const FirewallConf &o);
-    void copyImmediateValues(const FirewallConf &o);
+    void copyImmediateKeys(const FirewallConf &o);
 
     QVariant toVariant() const;
     void fromVariant(const QVariant &v);

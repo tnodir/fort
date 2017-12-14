@@ -1,6 +1,7 @@
 import QtQuick 2.9
-import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.2
+import QtQuick.Layouts 1.3
+import "../../controls"
 import com.fortfirewall 1.0
 
 Row {
@@ -38,44 +39,24 @@ Row {
               && taskInfo.title
     }
 
-    RowLayout {
+    SpinCombo {
         width: taskCellWidths[2]
 
-        SpinBox {
-            id: fieldInterval
-            Layout.fillWidth: true
-            Layout.preferredWidth: 110
+        fieldPreferredWidth: 110
 
-            editable: true
-            width: 180
+        names: taskIntervalNames
+        values: taskIntervalHours
+
+        field {
             from: 1
-            value: taskInfo.intervalHours
             to: 24 * 30 * 12  // ~Year
+            value: taskInfo.intervalHours
 
             onValueChanged: {
-                comboInterval.updateIndex(value);
-
+                const value = field.value;
                 if (value != taskInfo.intervalHours) {
                     setScheduleEdited();
                 }
-            }
-        }
-
-        ComboBox {
-            id: comboInterval
-            Layout.fillWidth: true
-
-            model: taskIntervalNames
-
-            function updateIndex(value) {
-                currentIndex = getIntervalIndexByValue(value);
-            }
-
-            onModelChanged: {
-                updateIndex(fieldInterval.value);
-            }
-            onActivated: {
-                fieldInterval.value = taskIntervalHours[index];
             }
         }
     }

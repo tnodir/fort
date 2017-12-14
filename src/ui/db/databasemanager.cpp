@@ -161,24 +161,41 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
 
     // Delete old data
     if (isNewDay) {
-        const qint32 oldTrafHour = trafHour
-                - 24 * (m_conf ? m_conf->trafHourKeepDays()
-                               : DEFAULT_TRAF_HOUR_KEEP_DAYS);
-        const qint32 oldTrafDay = trafHour
-                - 24 * (m_conf ? m_conf->trafDayKeepDays()
-                               : DEFAULT_TRAF_DAY_KEEP_DAYS);
-        const qint32 oldTrafMonth = DateUtil::addUnixMonths(
-                    trafHour, -(m_conf ? m_conf->trafMonthKeepMonths()
-                                       : DEFAULT_TRAF_MONTH_KEEP_MONTHS));
+        QStmtList deleteTrafStmts;
 
-        // Delete Statemets
-        const QStmtList deleteTrafStmts = QStmtList()
-                << getTrafficStmt(DatabaseSql::sqlDeleteTrafAppHour, oldTrafHour)
-                << getTrafficStmt(DatabaseSql::sqlDeleteTrafAppDay, oldTrafDay)
-                << getTrafficStmt(DatabaseSql::sqlDeleteTrafAppMonth, oldTrafMonth)
-                << getTrafficStmt(DatabaseSql::sqlDeleteTrafHour, oldTrafHour)
-                << getTrafficStmt(DatabaseSql::sqlDeleteTrafDay, oldTrafDay)
-                << getTrafficStmt(DatabaseSql::sqlDeleteTrafMonth, oldTrafMonth);
+        // Traffic Hour
+        const int trafHourKeepDays = m_conf ? m_conf->trafHourKeepDays()
+                                            : DEFAULT_TRAF_HOUR_KEEP_DAYS;
+        if (trafHourKeepDays >= 0) {
+            const qint32 oldTrafHour = trafHour - 24 * trafHourKeepDays;
+
+            deleteTrafStmts
+                    << getTrafficStmt(DatabaseSql::sqlDeleteTrafAppHour, oldTrafHour)
+                    << getTrafficStmt(DatabaseSql::sqlDeleteTrafHour, oldTrafHour);
+        }
+
+        // Traffic Day
+        const int trafDayKeepDays = m_conf ? m_conf->trafDayKeepDays()
+                                           : DEFAULT_TRAF_DAY_KEEP_DAYS;
+        if (trafDayKeepDays >= 0) {
+            const qint32 oldTrafDay = trafHour - 24 * trafDayKeepDays;
+
+            deleteTrafStmts
+                    << getTrafficStmt(DatabaseSql::sqlDeleteTrafAppDay, oldTrafDay)
+                    << getTrafficStmt(DatabaseSql::sqlDeleteTrafDay, oldTrafDay);
+        }
+
+        // Traffic Month
+        const int trafMonthKeepMonths = m_conf ? m_conf->trafMonthKeepMonths()
+                                               : DEFAULT_TRAF_MONTH_KEEP_MONTHS;
+        if (trafMonthKeepMonths >= 0) {
+            const qint32 oldTrafMonth = DateUtil::addUnixMonths(
+                        trafHour, -trafMonthKeepMonths);
+
+            deleteTrafStmts
+                    << getTrafficStmt(DatabaseSql::sqlDeleteTrafAppMonth, oldTrafMonth)
+                    << getTrafficStmt(DatabaseSql::sqlDeleteTrafMonth, oldTrafMonth);
+        }
 
         stepStmtList(deleteTrafStmts);
     }

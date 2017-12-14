@@ -269,7 +269,7 @@ uint FortSettings::iniUInt(const QString &key, int defaultValue) const
     return iniValue(key, defaultValue).toUInt();
 }
 
-int FortSettings::iniReal(const QString &key, qreal defaultValue) const
+qreal FortSettings::iniReal(const QString &key, qreal defaultValue) const
 {
     return iniValue(key, defaultValue).toReal();
 }

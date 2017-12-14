@@ -1,6 +1,6 @@
 import QtQuick 2.9
-import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.2
+import QtQuick.Layouts 1.3
 import "../controls"
 import "log"
 import com.fortfirewall 1.0
@@ -76,7 +76,7 @@ BasePage {
                     onActivated: {
                         firewallConf.trafUnit = index;
 
-                        fortManager.applyConfImmediateValues();
+                        fortManager.applyConfImmediateKeys();
 
                         trafListModel.refresh();
                     }
@@ -111,6 +111,8 @@ BasePage {
                 }
             }
 
+            TrafKeepButton {}
+
             Item {
                 Layout.fillWidth: true
             }
@@ -127,7 +129,7 @@ BasePage {
 
                     firewallConf.logStat = checked;
 
-                    fortManager.applyConfImmediateValues();
+                    fortManager.applyConfImmediateKeys();
                 }
             }
         }

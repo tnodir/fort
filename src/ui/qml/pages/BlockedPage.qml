@@ -1,6 +1,6 @@
 import QtQuick 2.9
-import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.2
+import QtQuick.Layouts 1.3
 import "../controls"
 import "log"
 import com.fortfirewall 1.0
@@ -58,7 +58,7 @@ BasePage {
 
                     firewallConf.resolveAddress = checked;
 
-                    fortManager.applyConfImmediateValues();
+                    fortManager.applyConfImmediateKeys();
 
                     hostInfoCache.cacheChanged();  // refresh ipListView
                 }
@@ -79,7 +79,7 @@ BasePage {
 
                     firewallConf.logBlocked = checked;
 
-                    fortManager.applyConfImmediateValues();
+                    fortManager.applyConfImmediateKeys();
                 }
             }
         }

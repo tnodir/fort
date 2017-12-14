@@ -1,6 +1,6 @@
 import QtQuick 2.9
-import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.2
+import QtQuick.Layouts 1.3
 import "schedule"
 import com.fortfirewall 1.0
 
@@ -35,15 +35,6 @@ BasePage {
             qsTranslate("qml", "Weekly"),
             qsTranslate("qml", "Monthly")
         ]
-
-    function getIntervalIndexByValue(value) {
-        for (var i = taskIntervalHours.length; --i >= 0; ) {
-            if (value === taskIntervalHours[i]) {
-                return i;
-            }
-        }
-        return 0;
-    }
 
     function onSaved() {  // override
         if (!scheduleEdited) return;

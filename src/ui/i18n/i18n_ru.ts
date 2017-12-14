@@ -167,19 +167,19 @@
     </message>
     <message>
         <location filename="../qml/pages/BlockedPage.qml" line="32"/>
-        <location filename="../qml/pages/StatisticsPage.qml" line="87"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="90"/>
         <source>Clear</source>
         <translation>Очистить</translation>
     </message>
     <message>
         <location filename="../qml/pages/BlockedPage.qml" line="37"/>
-        <location filename="../qml/pages/StatisticsPage.qml" line="92"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="95"/>
         <source>Remove Application</source>
         <translation>Удалить приложение</translation>
     </message>
     <message>
         <location filename="../qml/pages/BlockedPage.qml" line="43"/>
-        <location filename="../qml/pages/StatisticsPage.qml" line="103"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="106"/>
         <source>Clear All</source>
         <translation>Очистить всё</translation>
     </message>
@@ -339,9 +339,61 @@
         <translation>Язык:</translation>
     </message>
     <message>
+        <location filename="../qml/pages/log/TrafKeepButton.qml" line="11"/>
+        <source>Keep</source>
+        <translation>Хранить</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/log/TrafKeepButton.qml" line="20"/>
+        <location filename="../qml/pages/log/TrafKeepButton.qml" line="35"/>
         <location filename="../qml/pages/SchedulePage.qml" line="30"/>
         <source>Custom</source>
         <translation>Нестандартный</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/log/TrafKeepButton.qml" line="21"/>
+        <location filename="../qml/pages/log/TrafKeepButton.qml" line="36"/>
+        <source>Forever</source>
+        <translation>Навсегда</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/log/TrafKeepButton.qml" line="22"/>
+        <location filename="../qml/pages/log/TrafKeepButton.qml" line="37"/>
+        <source>3 months</source>
+        <translation>3 месяца</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/log/TrafKeepButton.qml" line="23"/>
+        <location filename="../qml/pages/log/TrafKeepButton.qml" line="38"/>
+        <source>6 months</source>
+        <translation>6 месяцев</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/log/TrafKeepButton.qml" line="24"/>
+        <location filename="../qml/pages/log/TrafKeepButton.qml" line="39"/>
+        <source>1 year</source>
+        <translation>1 год</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/log/TrafKeepButton.qml" line="25"/>
+        <location filename="../qml/pages/log/TrafKeepButton.qml" line="40"/>
+        <source>3 years</source>
+        <translation>3 года</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/log/TrafKeepButton.qml" line="48"/>
+        <source>Days for &apos;Hourly&apos;:</source>
+        <translation>Дней для &apos;Почасовая&apos;:</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/log/TrafKeepButton.qml" line="67"/>
+        <source>Days for &apos;Daily&apos;:</source>
+        <translation>Дней для &apos;Ежедневная&apos;:</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/log/TrafKeepButton.qml" line="86"/>
+        <source>Months for &apos;Monthly&apos;:</source>
+        <translation>Месяцев для &apos;Ежемесячная&apos;:</translation>
     </message>
     <message>
         <location filename="../qml/pages/SchedulePage.qml" line="31"/>
@@ -374,22 +426,22 @@
         <translation>Каждый месяц</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SchedulePage.qml" line="73"/>
+        <location filename="../qml/pages/SchedulePage.qml" line="64"/>
         <source>Name</source>
         <translation>Наименование</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SchedulePage.qml" line="78"/>
+        <location filename="../qml/pages/SchedulePage.qml" line="69"/>
         <source>Interval, hours</source>
         <translation>Интервал, часов</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SchedulePage.qml" line="84"/>
+        <location filename="../qml/pages/SchedulePage.qml" line="75"/>
         <source>Last Run</source>
         <translation>Последний запуск</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SchedulePage.qml" line="90"/>
+        <location filename="../qml/pages/SchedulePage.qml" line="81"/>
         <source>Last Success</source>
         <translation>Успешный запуск</translation>
     </message>
@@ -434,61 +486,61 @@
         <translation>Единицы:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="98"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="101"/>
         <source>Reset Total</source>
         <translation>Сбросить общую</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="119"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="124"/>
         <source>Collect Traffic Statistics</source>
         <translation>Собирать статистику трафика</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="150"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="155"/>
         <source>All</source>
         <translation>Все</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="167"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="172"/>
         <source>Hourly</source>
         <comment>Stat</comment>
         <translation>Почасовая</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="171"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="176"/>
         <source>Daily</source>
         <comment>Stat</comment>
         <translation>Ежедневная</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="175"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="180"/>
         <source>Monthly</source>
         <comment>Stat</comment>
         <translation>Ежемесячная</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="179"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="184"/>
         <source>Total</source>
         <comment>Stat</comment>
         <translation>Общая</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="190"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="195"/>
         <source>Date</source>
         <translation>Дата</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="195"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="200"/>
         <source>Download</source>
         <translation>Загрузка</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="200"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="205"/>
         <source>Upload</source>
         <translation>Выгрузка</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="205"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="210"/>
         <source>Sum</source>
         <translation>Сумма</translation>
     </message>
