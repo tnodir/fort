@@ -50,6 +50,36 @@ BasePage {
                 onClicked: trafListModel.refresh()
             }
 
+            ButtonMenu {
+                enabled: appListView.count
+                icon.source: "qrc:/images/bin_empty.png"
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Clear")
+
+                MenuItem {
+                    enabled: appListView.currentIndex > 0
+                    text: translationManager.dummyBool
+                          && qsTranslate("qml", "Remove Application")
+                    onTriggered: appStatModel.remove(
+                                     appListView.currentIndex)
+                }
+                MenuItem {
+                    text: translationManager.dummyBool
+                          && qsTranslate("qml", "Reset Total")
+                    onTriggered: trafListModel.resetAppTotals()
+                }
+                MenuItem {
+                    text: translationManager.dummyBool
+                          && qsTranslate("qml", "Clear All")
+                    onTriggered: {
+                        appListView.currentIndex = 0;
+                        appStatModel.clear();
+                    }
+                }
+            }
+
+            TrafKeepButton {}
+
             Row {
                 spacing: 5
 
@@ -82,36 +112,6 @@ BasePage {
                     }
                 }
             }
-
-            ButtonMenu {
-                enabled: appListView.count
-                icon.source: "qrc:/images/bin_empty.png"
-                text: translationManager.dummyBool
-                      && qsTranslate("qml", "Clear")
-
-                MenuItem {
-                    enabled: appListView.currentIndex > 0
-                    text: translationManager.dummyBool
-                          && qsTranslate("qml", "Remove Application")
-                    onTriggered: appStatModel.remove(
-                                     appListView.currentIndex)
-                }
-                MenuItem {
-                    text: translationManager.dummyBool
-                          && qsTranslate("qml", "Reset Total")
-                    onTriggered: trafListModel.resetAppTotals()
-                }
-                MenuItem {
-                    text: translationManager.dummyBool
-                          && qsTranslate("qml", "Clear All")
-                    onTriggered: {
-                        appListView.currentIndex = 0;
-                        appStatModel.clear();
-                    }
-                }
-            }
-
-            TrafKeepButton {}
 
             Item {
                 Layout.fillWidth: true
