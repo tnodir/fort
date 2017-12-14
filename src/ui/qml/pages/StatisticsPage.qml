@@ -70,6 +70,9 @@ BasePage {
                     currentIndex: firewallConf.trafUnit
                     model: trafUnitNames
 
+                    onModelChanged: {
+                        currentIndex = firewallConf.trafUnit;
+                    }
                     onActivated: {
                         firewallConf.trafUnit = index;
 
