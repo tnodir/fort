@@ -166,18 +166,30 @@
         <translation>Выделить всё</translation>
     </message>
     <message>
-        <location filename="../qml/pages/BlockedPage.qml" line="39"/>
-        <location filename="../qml/pages/StatisticsPage.qml" line="48"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="32"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="87"/>
         <source>Clear</source>
         <translation>Очистить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/BlockedPage.qml" line="45"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="37"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="92"/>
+        <source>Remove Application</source>
+        <translation>Удалить приложение</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/BlockedPage.qml" line="43"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="103"/>
+        <source>Clear All</source>
+        <translation>Очистить всё</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/BlockedPage.qml" line="53"/>
         <source>Resolve Addresses</source>
         <translation>Преобразовать адреса</translation>
     </message>
     <message>
-        <location filename="../qml/pages/BlockedPage.qml" line="66"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="74"/>
         <source>Log Blocked Applications</source>
         <translation>Показ блокированных приложений</translation>
     </message>
@@ -382,96 +394,101 @@
         <translation>Успешный запуск</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="30"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="32"/>
         <source>Adaptive</source>
         <translation>Адаптивный</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="31"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="33"/>
         <source>Bytes</source>
         <translation>Байты</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="32"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="34"/>
         <source>KiB</source>
         <translation>KiB</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="33"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="35"/>
         <source>MiB</source>
         <translation>MiB</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="34"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="36"/>
         <source>GiB</source>
         <translation>GiB</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="35"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="37"/>
         <source>TiB</source>
         <translation>TiB</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="55"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="49"/>
         <source>Refresh</source>
         <translation>Обновить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="65"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="64"/>
         <source>Units:</source>
         <translation>Единицы:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="92"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="98"/>
+        <source>Reset Total</source>
+        <translation>Сбросить общую</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/StatisticsPage.qml" line="119"/>
         <source>Collect Traffic Statistics</source>
         <translation>Собирать статистику трафика</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="123"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="150"/>
         <source>All</source>
         <translation>Все</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="140"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="167"/>
         <source>Hourly</source>
         <comment>Stat</comment>
         <translation>Почасовая</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="144"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="171"/>
         <source>Daily</source>
         <comment>Stat</comment>
         <translation>Ежедневная</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="148"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="175"/>
         <source>Monthly</source>
         <comment>Stat</comment>
         <translation>Ежемесячная</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="152"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="179"/>
         <source>Total</source>
         <comment>Stat</comment>
         <translation>Общая</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="163"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="190"/>
         <source>Date</source>
         <translation>Дата</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="168"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="195"/>
         <source>Download</source>
         <translation>Загрузка</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="173"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="200"/>
         <source>Upload</source>
         <translation>Выгрузка</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="178"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="205"/>
         <source>Sum</source>
         <translation>Сумма</translation>
     </message>

@@ -88,16 +88,19 @@ BasePage {
 
                 MenuItem {
                     enabled: appListView.currentIndex > 0
-                    text: "Remove Application"
+                    text: translationManager.dummyBool
+                          && qsTranslate("qml", "Remove Application")
                     onTriggered: appStatModel.remove(
                                      appListView.currentIndex)
                 }
                 MenuItem {
-                    text: "Reset Totals"
+                    text: translationManager.dummyBool
+                          && qsTranslate("qml", "Reset Total")
                     onTriggered: trafListModel.resetAppTotals()
                 }
                 MenuItem {
-                    text: "Clear All"
+                    text: translationManager.dummyBool
+                          && qsTranslate("qml", "Clear All")
                     onTriggered: {
                         appListView.currentIndex = 0;
                         appStatModel.clear();
