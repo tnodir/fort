@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v1.3.1, 2017-12-14:
+- Driver: Fix memory leak.
+- Driver: Increase initial stat buffer sizes.
+- UI: StatisticsPage: "Keep" changes should be confirmed.
+
 v1.3.0, 2017-12-14:
 - UI: BlockedPage, StatisticsPage: Improve "Clear" button.
 - UI: BlockedPage, StatisticsPage: Use up/down keys to select apps.
