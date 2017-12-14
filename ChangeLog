@@ -1,5 +1,13 @@
 Fort Firewall ChangeLog
 
+v1.3.0, 2017-12-14:
+- UI: BlockedPage, StatisticsPage: Improve "Clear" button.
+- UI: BlockedPage, StatisticsPage: Use up/down keys to select apps.
+- UI: StatisticsPage: Fix refreshing stats with only 1 row.
+- UI: StatisticsPage: Fix current unit after language change.
+- UI: StatisticsPage: Add "Keep" button.
+- UI: Add scrollbars.
+
 v1.2.0, 2017-12-13:
 - Driver: Add ability to use "exclude_all && ip_included" and "allow_all && app_blocked" logic.
 - Driver: Add UDP traffic statistics.
