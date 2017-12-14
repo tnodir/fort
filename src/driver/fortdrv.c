@@ -189,15 +189,15 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   conf_flags = conf_ref->conf.flags;
 
-  if (!conf_flags.filter_enabled)
-    goto permit;
-
   flags = inFixedValues->incomingValue[flagsField].value.uint32;
   remote_ip = inFixedValues->incomingValue[remoteIpField].value.uint32;
 
-  if ((flags & FWP_CONDITION_FLAG_IS_LOOPBACK)
-      || remote_ip == 0xFFFFFFFF)  // Local broadcast
+  if (!conf_flags.filter_enabled
+      || (flags & FWP_CONDITION_FLAG_IS_LOOPBACK)
+      || remote_ip == 0xFFFFFFFF) {  // Local broadcast
+    fort_conf_ref_put(conf_ref);
     goto permit;
+  }
 
   process_id = (UINT32) inMetaValues->processId;
   path_len = inMetaValues->processPath->size - sizeof(WCHAR);  // chop terminating zero
