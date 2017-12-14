@@ -88,7 +88,7 @@ public:
     QQmlListProperty<AppGroup> appGroups();
 
     void copyFlags(const FirewallConf &o);
-    void copyImmediateKeys(const FirewallConf &o);
+    void copyImmediateFlags(const FirewallConf &o);
 
     QVariant toVariant() const;
     void fromVariant(const QVariant &v);

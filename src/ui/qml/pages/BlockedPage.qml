@@ -58,7 +58,7 @@ BasePage {
 
                     firewallConf.resolveAddress = checked;
 
-                    fortManager.applyConfImmediateKeys();
+                    fortManager.applyConfImmediateFlags();
 
                     hostInfoCache.cacheChanged();  // refresh ipListView
                 }
@@ -79,7 +79,7 @@ BasePage {
 
                     firewallConf.logBlocked = checked;
 
-                    fortManager.applyConfImmediateKeys();
+                    fortManager.applyConfImmediateFlags();
                 }
             }
         }

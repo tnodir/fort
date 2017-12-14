@@ -245,11 +245,11 @@ bool FortManager::applyConf(bool onlyFlags)
     return saveSettings(newConf, onlyFlags);
 }
 
-bool FortManager::applyConfImmediateKeys()
+bool FortManager::applyConfImmediateFlags()
 {
     Q_ASSERT(m_firewallConfToEdit != nullConf());
 
-    m_firewallConf->copyImmediateKeys(*m_firewallConfToEdit);
+    m_firewallConf->copyImmediateFlags(*m_firewallConfToEdit);
 
     return saveSettings(m_firewallConf, true, true);
 }
@@ -276,7 +276,7 @@ bool FortManager::loadSettings(FirewallConf *conf)
 }
 
 bool FortManager::saveSettings(FirewallConf *newConf, bool onlyFlags,
-                               bool immediateKeys)
+                               bool immediateFlags)
 {
     if (!(onlyFlags ? m_fortSettings->writeConfIni(*newConf)
           : m_fortSettings->writeConf(*newConf))) {
@@ -289,7 +289,7 @@ bool FortManager::saveSettings(FirewallConf *newConf, bool onlyFlags,
         m_firewallConf = newConf;
     }
 
-    if (!immediateKeys) {
+    if (!immediateFlags) {
         updateTrayMenu();
     }
 

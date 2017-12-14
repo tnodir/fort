@@ -76,7 +76,7 @@ BasePage {
                     onActivated: {
                         firewallConf.trafUnit = index;
 
-                        fortManager.applyConfImmediateKeys();
+                        fortManager.applyConfImmediateFlags();
 
                         trafListModel.refresh();
                     }
@@ -129,7 +129,7 @@ BasePage {
 
                     firewallConf.logStat = checked;
 
-                    fortManager.applyConfImmediateKeys();
+                    fortManager.applyConfImmediateFlags();
                 }
             }
         }

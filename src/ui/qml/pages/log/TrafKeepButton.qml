@@ -55,7 +55,7 @@ ButtonPopup {
 
                     firewallConf.trafHourKeepDays = value;
 
-                    fortManager.applyConfImmediateKeys();
+                    setConfFlagsEdited();
                 }
             }
         }
@@ -74,7 +74,7 @@ ButtonPopup {
 
                     firewallConf.trafDayKeepDays = value;
 
-                    fortManager.applyConfImmediateKeys();
+                    setConfFlagsEdited();
                 }
             }
         }
@@ -93,7 +93,7 @@ ButtonPopup {
 
                     firewallConf.trafMonthKeepMonths = value;
 
-                    fortManager.applyConfImmediateKeys();
+                    setConfFlagsEdited();
                 }
             }
         }

@@ -182,17 +182,18 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     setAppAllowAll(o.appAllowAll());
     setAppGroupBits(o.appGroupBits());
 
-    copyImmediateKeys(o);
+    setTrafHourKeepDays(o.trafHourKeepDays());
+    setTrafDayKeepDays(o.trafDayKeepDays());
+    setTrafMonthKeepMonths(o.trafMonthKeepMonths());
+
+    copyImmediateFlags(o);
 }
 
-void FirewallConf::copyImmediateKeys(const FirewallConf &o)
+void FirewallConf::copyImmediateFlags(const FirewallConf &o)
 {
     setResolveAddress(o.resolveAddress());
     setLogBlocked(o.logBlocked());
     setLogStat(o.logStat());
-    setTrafHourKeepDays(o.trafHourKeepDays());
-    setTrafDayKeepDays(o.trafDayKeepDays());
-    setTrafMonthKeepMonths(o.trafMonthKeepMonths());
     setTrafUnit(o.trafUnit());
 }
 
