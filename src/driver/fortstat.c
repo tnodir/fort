@@ -159,7 +159,7 @@ static BOOL
 fort_stat_proc_realloc (PFORT_STAT stat)
 {
   const UINT16 proc_end = stat->proc_end;
-  const UINT16 new_end = (proc_end ? proc_end : 8) * 3 / 2;
+  const UINT16 new_end = (proc_end ? proc_end : 16) * 3 / 2;
   PFORT_STAT_PROC new_procs = fort_stat_array_new(
     new_end * sizeof(FORT_STAT_PROC));
 
@@ -235,7 +235,7 @@ static BOOL
 fort_stat_flow_realloc (PFORT_STAT stat)
 {
   const UINT32 flow_end = stat->flow_end;
-  const UINT32 new_end = (flow_end ? flow_end : 8) * 2;
+  const UINT32 new_end = (flow_end ? flow_end : 64) * 2;
   PFORT_STAT_FLOW new_flows = fort_stat_array_new(
     new_end * sizeof(FORT_STAT_FLOW));
 
