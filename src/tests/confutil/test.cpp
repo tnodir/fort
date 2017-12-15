@@ -36,7 +36,7 @@ void Test::confWriteRead()
                 "System"
                 );
     appGroup1->setAllowText(
-                "C:\\Programs\\Skype\\Phone\\Skype.exe\n"
+                "C:\\Program Files\\Skype\\Phone\\Skype.exe\n"
                 "C:\\Utils\\Dev\\Git\\\n"
                 );
 
@@ -68,7 +68,8 @@ void Test::confWriteRead()
     QVERIFY(!FortCommon::confIpInRange(data, NetUtil::textToIp4("193.0.0.0")));
 
     QVERIFY(FortCommon::confAppBlocked(data, "System"));
-    QVERIFY(!FortCommon::confAppBlocked(data, FileUtil::pathToKernelPath("C:\\Programs\\Skype\\Phone\\Skype.exe").toLower()));
+    QVERIFY(!FortCommon::confAppBlocked(data, FileUtil::pathToKernelPath("C:\\Program Files\\Skype\\Phone\\Skype.exe").toLower()));
     QVERIFY(!FortCommon::confAppBlocked(data, FileUtil::pathToKernelPath("C:\\Utils\\Dev\\Git\\").toLower()));
+    QVERIFY(FortCommon::confAppBlocked(data, FileUtil::pathToKernelPath("C:\\Program Files\\Test.exe").toLower()));
     QVERIFY(FortCommon::confAppBlocked(data, FileUtil::pathToKernelPath("C:\\Utils\\Firefox\\Bin\\firefox.exe").toLower()));
 }

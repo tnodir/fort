@@ -181,13 +181,13 @@ bool ConfUtil::parseApps(const QString &text, bool blocked,
 
 QString ConfUtil::parseAppPath(const QStringRef &line)
 {
-    const QRegularExpression re("\\s*\"?\\s*(\\S+)\\s*\"?\\s*");
+    const QRegularExpression re("\\s*\"?\\s*([^\"]+)\\s*\"?\\s*");
     const QRegularExpressionMatch match = re.match(line);
 
     if (!match.hasMatch())
         return QString();
 
-    const QStringRef path = match.capturedRef(1);
+    const QStringRef path = match.capturedRef(1).trimmed();
 
     const QString systemPath("System");
     if (!QStringRef::compare(path, systemPath, Qt::CaseInsensitive))
