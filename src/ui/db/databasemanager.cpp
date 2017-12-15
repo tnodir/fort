@@ -8,6 +8,8 @@
 #include "sqlite/sqliteengine.h"
 #include "sqlite/sqlitestmt.h"
 
+#define INVALID_APP_ID  qint64(-1)
+
 DatabaseManager::DatabaseManager(const QString &filePath,
                                  QObject *parent) :
     QObject(parent),
@@ -52,6 +54,8 @@ bool DatabaseManager::initialize()
 
 void DatabaseManager::clear()
 {
+    clearAppIds();
+
     clearStmts();
 
     m_sqliteDb->close();
@@ -67,21 +71,45 @@ void DatabaseManager::clearStmts()
     m_sqliteStmts.clear();
 }
 
-qint64 DatabaseManager::logProcNew(const QString &appPath, bool &isNew)
+void DatabaseManager::replaceAppIdAt(int index, qint64 appId)
+{
+    m_appIds.replace(index, appId);
+}
+
+void DatabaseManager::clearAppId(qint64 appId)
+{
+    const int index = m_appIds.indexOf(appId);
+
+    if (index >= 0) {
+        replaceAppIdAt(index, INVALID_APP_ID);
+    }
+}
+
+void DatabaseManager::clearAppIds()
+{
+    int index = m_appIds.size();
+
+    while (--index >= 0) {
+        replaceAppIdAt(index, INVALID_APP_ID);
+    }
+}
+
+void DatabaseManager::logProcNew(const QString &appPath)
 {
     if (m_conf && !m_conf->logStat())
-        return 0;
+        return;
+
+    m_sqliteDb->beginTransaction();
 
     qint64 appId = getAppId(appPath);
-    if (appId == 0) {
+    if (appId == INVALID_APP_ID) {
         appId = createAppId(appPath);
-        isNew = true;
     }
+
+    m_sqliteDb->commitTransaction();
 
     m_appPaths.prepend(appPath);
     m_appIds.prepend(appId);
-
-    return appId;
 }
 
 void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
@@ -147,7 +175,13 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
         const quint32 outBytes = procTrafBytes[1];
 
         if (inBytes || outBytes) {
-            const qint64 appId = m_appIds.at(i);
+            qint64 appId = m_appIds.at(i);
+
+            // Was the app cleared?
+            if (appId == INVALID_APP_ID) {
+                appId = createAppId(m_appPaths.at(i));
+                replaceAppIdAt(i, appId);
+            }
 
             // Update or insert app bytes
             updateTrafficList(insertTrafAppStmts, updateTrafAppStmts,
@@ -233,7 +267,7 @@ bool DatabaseManager::createTables()
 
 qint64 DatabaseManager::getAppId(const QString &appPath)
 {
-    qint64 appId = 0;
+    qint64 appId = INVALID_APP_ID;
 
     SqliteStmt *stmt = getSqliteStmt(DatabaseSql::sqlSelectAppId);
 
@@ -248,6 +282,8 @@ qint64 DatabaseManager::getAppId(const QString &appPath)
 
 void DatabaseManager::deleteApp(qint64 appId)
 {
+    clearAppId(appId);
+
     // Delete Statemets
     const QStmtList deleteAppStmts = QStmtList()
             << getAppStmt(DatabaseSql::sqlDeleteAppTrafHour, appId)
@@ -275,9 +311,7 @@ void DatabaseManager::resetAppTotals()
 
 qint64 DatabaseManager::createAppId(const QString &appPath)
 {
-    qint64 appId = 0;
-
-    m_sqliteDb->beginTransaction();
+    qint64 appId = INVALID_APP_ID;
 
     SqliteStmt *stmt = getSqliteStmt(DatabaseSql::sqlInsertAppId);
     const qint64 unixTime = DateUtil::getUnixTime();
@@ -288,10 +322,10 @@ qint64 DatabaseManager::createAppId(const QString &appPath)
 
     if (stmt->step() == SqliteStmt::StepDone) {
         appId = m_sqliteDb->lastInsertRowid();
+
+        emit appCreated(appId, appPath);
     }
     stmt->reset();
-
-    m_sqliteDb->commitTransaction();
 
     return appId;
 }

@@ -30,6 +30,9 @@ public slots:
 
     void remove(int row = -1) override;
 
+private slots:
+    void handleCreatedApp(qint64 appId, const QString &appPath);
+
 private:
     void updateList();
 

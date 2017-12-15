@@ -26,7 +26,7 @@ public:
 
     bool initialize();
 
-    qint64 logProcNew(const QString &appPath, bool &isNew);
+    void logProcNew(const QString &appPath);
     void logStatTraf(quint16 procCount, const quint8 *procBits,
                      const quint32 *trafBytes);
     void logClear();
@@ -46,6 +46,7 @@ public:
                     qint64 appId = 0);
 
 signals:
+    void appCreated(qint64 appId, const QString &appPath);
 
 public slots:
     void clear();
@@ -56,6 +57,10 @@ private:
     bool createTables();
 
     void clearStmts();
+
+    void replaceAppIdAt(int index, qint64 appId);
+    void clearAppId(qint64 appId);
+    void clearAppIds();
 
     qint64 createAppId(const QString &appPath);
 

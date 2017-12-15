@@ -9,6 +9,8 @@ AppStatModel::AppStatModel(DatabaseManager *databaseManager,
     m_databaseManager(databaseManager),
     m_trafListModel(new TrafListModel(databaseManager, this))
 {
+    connect(m_databaseManager, &DatabaseManager::appCreated,
+            this, &AppStatModel::handleCreatedApp);
 }
 
 void AppStatModel::initialize()
@@ -67,15 +69,15 @@ void AppStatModel::updateList()
     setList(list);
 }
 
+void AppStatModel::handleCreatedApp(qint64 appId, const QString &appPath)
+{
+    m_appIds.append(appId);
+    insert(appPath);
+}
+
 void AppStatModel::handleProcNew(const QString &appPath)
 {
-    bool isNew = false;
-    const qint64 appId = m_databaseManager->logProcNew(appPath, isNew);
-
-    if (isNew) {
-        m_appIds.append(appId);
-        insert(appPath);
-    }
+    m_databaseManager->logProcNew(appPath);
 }
 
 void AppStatModel::handleStatTraf(quint16 procCount, const quint8 *procBits,
