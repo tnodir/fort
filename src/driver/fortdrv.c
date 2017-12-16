@@ -471,8 +471,6 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
         return status;
       }
     }
-
-    goto end;
   }
 
   /* Force reauth filter */
@@ -483,7 +481,6 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
     return status;
   }
 
- end:
   fort_timer_update(&g_device->timer, conf_flags);
   fort_stat_update(&g_device->stat, conf_flags);
 
