@@ -2,8 +2,8 @@
 #define VERSION_H
 
 #define APP_NAME		"Fort Firewall"
-#define APP_VERSION_STR		"1.3.2"
-#define APP_VERSION		0x010302
+#define APP_VERSION_STR		"1.3.3"
+#define APP_VERSION		0x010303
 #define APP_UPDATES_URL		"https://github.com/tnodir/fort/releases"
 
 #define FORT_DRIVER_VERSION	3
