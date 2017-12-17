@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v1.3.3, 2017-12-17:
+- Driver: Fix traffic inspecting of connections, created before the program started.
+
 v1.3.2, 2017-12-15:
 - Conf: Fix parsing app paths with spaces.
 - UI: StatisticsPage: Fix "Clear" actions.
