@@ -1,5 +1,9 @@
 /* Fort Firewall Driver Provider (Un)Registration */
 
+#ifndef FWP_CALLOUT_FLAG_ALLOW_MID_STREAM_INSPECTION
+#define FWP_CALLOUT_FLAG_ALLOW_MID_STREAM_INSPECTION	(0x00000008)
+#endif
+
 static DWORD
 fort_prov_open (HANDLE *enginep)
 {
