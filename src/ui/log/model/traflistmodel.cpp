@@ -6,6 +6,7 @@
 #include "../../db/databasemanager.h"
 #include "../../db/databasesql.h"
 #include "../../util/dateutil.h"
+#include "../../util/net/netutil.h"
 
 TrafListModel::TrafListModel(DatabaseManager *databaseManager,
                              QObject *parent) :
@@ -147,15 +148,13 @@ QString TrafListModel::formatTrafUnit(qint64 bytes) const
     const int trafUnit = conf ? conf->trafUnit() : 0;
     const int trafPrec = (trafUnit == FirewallConf::UnitBytes) ? 0 : 2;
 
-    QLocale locale;
-
     if (trafUnit == FirewallConf::UnitAdaptive) {
-        return locale.formattedDataSize(bytes, trafPrec);
+        return NetUtil::formatDataSize(bytes, trafPrec);
     }
 
     const qint64 unitMult = unitMults.at(trafUnit);
 
-    return locale.toString(qreal(bytes) / unitMult, 'f', trafPrec);
+    return QLocale().toString(qreal(bytes) / unitMult, 'f', trafPrec);
 }
 
 QString TrafListModel::formatTrafTime(qint32 trafTime) const

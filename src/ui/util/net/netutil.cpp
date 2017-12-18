@@ -1,5 +1,7 @@
 #include "netutil.h"
 
+#include <QLocale>
+
 #define WIN32_LEAN_AND_MEAN
 #include <ws2tcpip.h>
 
@@ -68,6 +70,11 @@ int NetUtil::bitCount(quint32 u)
 
     return ((uCount + (uCount >> 3))
             & 030707070707) % 63;
+}
+
+QString NetUtil::formatDataSize(qint64 bytes, int precision)
+{
+    return QLocale().formattedDataSize(bytes, precision);
 }
 
 QString NetUtil::getHostName(const QString &address)

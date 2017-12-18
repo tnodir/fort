@@ -167,19 +167,19 @@
     </message>
     <message>
         <location filename="../qml/pages/BlockedPage.qml" line="32"/>
-        <location filename="../qml/pages/StatisticsPage.qml" line="90"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="57"/>
         <source>Clear</source>
         <translation>Очистить</translation>
     </message>
     <message>
         <location filename="../qml/pages/BlockedPage.qml" line="37"/>
-        <location filename="../qml/pages/StatisticsPage.qml" line="95"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="62"/>
         <source>Remove Application</source>
         <translation>Удалить приложение</translation>
     </message>
     <message>
         <location filename="../qml/pages/BlockedPage.qml" line="43"/>
-        <location filename="../qml/pages/StatisticsPage.qml" line="106"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="73"/>
         <source>Clear All</source>
         <translation>Очистить всё</translation>
     </message>
@@ -254,17 +254,17 @@
         <translation>Направо</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="37"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="39"/>
         <source>Enabled</source>
         <translation>Включено</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="55"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="57"/>
         <source>Block</source>
         <translation>Блокировать</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="78"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="80"/>
         <source>Allow</source>
         <translation>Разрешить</translation>
     </message>
@@ -344,11 +344,32 @@
         <translation>Хранить</translation>
     </message>
     <message>
+        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="12"/>
+        <source>Speed Limit</source>
+        <translation>Ограничение скорости</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="22"/>
         <location filename="../qml/pages/log/TrafKeepButton.qml" line="20"/>
         <location filename="../qml/pages/log/TrafKeepButton.qml" line="35"/>
-        <location filename="../qml/pages/SchedulePage.qml" line="30"/>
+        <location filename="../qml/pages/SchedulePage.qml" line="31"/>
         <source>Custom</source>
         <translation>Нестандартный</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="23"/>
+        <source>Never</source>
+        <translation>Никогда</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="56"/>
+        <source>Download speed limit:</source>
+        <translation>Ограничение скорости загрузки:</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="75"/>
+        <source>Upload speed limit:</source>
+        <translation>Ограничение скорости выгрузки:</translation>
     </message>
     <message>
         <location filename="../qml/pages/log/TrafKeepButton.qml" line="21"/>
@@ -386,62 +407,62 @@
         <translation>Дней для &apos;Почасовая&apos;:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafKeepButton.qml" line="67"/>
+        <location filename="../qml/pages/log/TrafKeepButton.qml" line="68"/>
         <source>Days for &apos;Daily&apos;:</source>
         <translation>Дней для &apos;Ежедневная&apos;:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafKeepButton.qml" line="86"/>
+        <location filename="../qml/pages/log/TrafKeepButton.qml" line="88"/>
         <source>Months for &apos;Monthly&apos;:</source>
         <translation>Месяцев для &apos;Ежемесячная&apos;:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SchedulePage.qml" line="31"/>
+        <location filename="../qml/pages/SchedulePage.qml" line="32"/>
         <source>Hourly</source>
         <translation>Каждый час</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SchedulePage.qml" line="32"/>
+        <location filename="../qml/pages/SchedulePage.qml" line="33"/>
         <source>Each 6 hours</source>
         <translation>Каждые 6 часов</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SchedulePage.qml" line="33"/>
+        <location filename="../qml/pages/SchedulePage.qml" line="34"/>
         <source>Each 12 hours</source>
         <translation>Каждые 12 часов</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SchedulePage.qml" line="34"/>
+        <location filename="../qml/pages/SchedulePage.qml" line="35"/>
         <source>Daily</source>
         <translation>Каждый день</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SchedulePage.qml" line="35"/>
+        <location filename="../qml/pages/SchedulePage.qml" line="36"/>
         <source>Weekly</source>
         <translation>Каждую неделю</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SchedulePage.qml" line="36"/>
+        <location filename="../qml/pages/SchedulePage.qml" line="37"/>
         <source>Monthly</source>
         <translation>Каждый месяц</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SchedulePage.qml" line="64"/>
+        <location filename="../qml/pages/SchedulePage.qml" line="65"/>
         <source>Name</source>
         <translation>Наименование</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SchedulePage.qml" line="69"/>
+        <location filename="../qml/pages/SchedulePage.qml" line="70"/>
         <source>Interval, hours</source>
         <translation>Интервал, часов</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SchedulePage.qml" line="75"/>
+        <location filename="../qml/pages/SchedulePage.qml" line="76"/>
         <source>Last Run</source>
         <translation>Последний запуск</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SchedulePage.qml" line="81"/>
+        <location filename="../qml/pages/SchedulePage.qml" line="82"/>
         <source>Last Success</source>
         <translation>Успешный запуск</translation>
     </message>
@@ -481,12 +502,12 @@
         <translation>Обновить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="64"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="94"/>
         <source>Units:</source>
         <translation>Единицы:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="101"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="68"/>
         <source>Reset Total</source>
         <translation>Сбросить общую</translation>
     </message>

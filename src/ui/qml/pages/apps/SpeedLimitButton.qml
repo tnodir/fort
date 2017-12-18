@@ -6,11 +6,11 @@ import com.fortfirewall 1.0
 
 ButtonPopup {
 
-    icon.source: (appGroup.speedLimitIn || appGroup.speedLimitOut)
-                 ? "qrc:/images/flag_yellow.png"
-                 : "qrc:/images/flag_green.png"
-    text: translationManager.dummyBool
-          && qsTranslate("qml", "Speed Limit")
+    icon.source: !speedLimitsText ? "qrc:/images/flag_green.png"
+                                  : "qrc:/images/flag_yellow.png"
+    text: (translationManager.dummyBool
+          && qsTranslate("qml", "Speed Limit"))
+          + speedLimitsText
 
     readonly property var speedLimitValues: [
         1024, 0, 100, 1024, 3 * 1024
@@ -21,10 +21,32 @@ ButtonPopup {
         && [
             qsTranslate("qml", "Custom"),
             qsTranslate("qml", "Never"),
-            "100 KiB/s",
-            "1 MiB/s",
-            "3 MiB/s"
+            formatSpeed(speedLimitValues[2]),
+            formatSpeed(speedLimitValues[3]),
+            formatSpeed(speedLimitValues[4])
         ]
+
+    readonly property string speedLimitsText: {
+        const limitIn = appGroup.speedLimitIn;
+        const limitOut = appGroup.speedLimitOut;
+
+        if (!(limitIn || limitOut))
+            return "";
+
+        var text = "";
+        if (limitIn) {
+            text = ": DL " + formatSpeed(limitIn);
+        }
+        if (limitOut) {
+            text += (text ? ";" : ":")
+                    + " UL " + formatSpeed(limitOut);
+        }
+        return text;
+    }
+
+    function formatSpeed(bytes) {
+        return netUtil.formatDataSize(bytes * 1024, 0) + "/s";
+    }
 
     ColumnLayout {
         SpinComboRow {
