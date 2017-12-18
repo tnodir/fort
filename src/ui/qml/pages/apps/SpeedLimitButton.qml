@@ -6,10 +6,11 @@ import com.fortfirewall 1.0
 
 ButtonPopup {
 
-    icon.source: !speedLimitsText ? "qrc:/images/flag_green.png"
-                                  : "qrc:/images/flag_yellow.png"
+    icon.source: !(appGroup.speedLimitIn || appGroup.speedLimitOut)
+                 ? "qrc:/images/flag_green.png"
+                 : "qrc:/images/flag_yellow.png"
     text: (translationManager.dummyBool
-          && qsTranslate("qml", "Speed Limit"))
+          && qsTranslate("qml", "Speed Limit: "))
           + speedLimitsText
 
     readonly property var speedLimitValues: [
@@ -20,7 +21,7 @@ ButtonPopup {
         translationManager.dummyBool
         && [
             qsTranslate("qml", "Custom"),
-            qsTranslate("qml", "Never"),
+            qsTranslate("qml", "Disabled"),
             formatSpeed(speedLimitValues[2]),
             formatSpeed(speedLimitValues[3]),
             formatSpeed(speedLimitValues[4])
@@ -31,15 +32,15 @@ ButtonPopup {
         const limitOut = appGroup.speedLimitOut;
 
         if (!(limitIn || limitOut))
-            return "";
+            return speedLimitNames[1];
 
         var text = "";
         if (limitIn) {
-            text = ": DL " + formatSpeed(limitIn);
+            text = "DL " + formatSpeed(limitIn);
         }
         if (limitOut) {
-            text += (text ? ";" : ":")
-                    + " UL " + formatSpeed(limitOut);
+            text += (text ? "; " : "")
+                    + "UL " + formatSpeed(limitOut);
         }
         return text;
     }
@@ -53,7 +54,7 @@ ButtonPopup {
             names: speedLimitNames
             values: speedLimitValues
             label.text: translationManager.dummyBool
-                        && qsTranslate("qml", "Download speed limit:")
+                        && qsTranslate("qml", "Download speed limit, KiB/s:")
             field {
                 value: appGroup.speedLimitIn
                 onValueChanged: {
@@ -72,7 +73,7 @@ ButtonPopup {
             names: speedLimitNames
             values: speedLimitValues
             label.text: translationManager.dummyBool
-                        && qsTranslate("qml", "Upload speed limit:")
+                        && qsTranslate("qml", "Upload speed limit, KiB/s:")
             field {
                 value: appGroup.speedLimitOut
                 onValueChanged: {

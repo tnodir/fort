@@ -345,8 +345,8 @@
     </message>
     <message>
         <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="12"/>
-        <source>Speed Limit</source>
-        <translation>Ограничение скорости</translation>
+        <source>Speed Limit: </source>
+        <translation>Ограничение скорости: </translation>
     </message>
     <message>
         <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="22"/>
@@ -358,18 +358,18 @@
     </message>
     <message>
         <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="23"/>
-        <source>Never</source>
-        <translation>Никогда</translation>
+        <source>Disabled</source>
+        <translation>Отключен</translation>
     </message>
     <message>
         <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="56"/>
-        <source>Download speed limit:</source>
-        <translation>Ограничение скорости загрузки:</translation>
+        <source>Download speed limit, KiB/s:</source>
+        <translation>Ограничение скорости загрузки, KiB/s:</translation>
     </message>
     <message>
         <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="75"/>
-        <source>Upload speed limit:</source>
-        <translation>Ограничение скорости выгрузки:</translation>
+        <source>Upload speed limit, KiB/s:</source>
+        <translation>Ограничение скорости выгрузки, KiB/s:</translation>
     </message>
     <message>
         <location filename="../qml/pages/log/TrafKeepButton.qml" line="21"/>
