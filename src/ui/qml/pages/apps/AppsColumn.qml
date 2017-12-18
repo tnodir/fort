@@ -28,6 +28,8 @@ ColumnLayout {
             onClicked: moveAppGroup(index, 1)
         }
 
+        SpeedLimitButton {}
+
         Item {
             Layout.fillWidth: true
         }

@@ -4,6 +4,7 @@
         <file>qml/controls/ButtonPopup.qml</file>
         <file>qml/controls/ScrollBarControl.qml</file>
         <file>qml/controls/SpinCombo.qml</file>
+        <file>qml/controls/SpinComboRow.qml</file>
         <file>qml/controls/TextAreaFrame.qml</file>
         <file>qml/controls/TextContextMenu.qml</file>
         <file>qml/controls/TextFieldFrame.qml</file>
@@ -19,9 +20,9 @@
         <file>qml/pages/addresses/AddressesColumn.qml</file>
         <file>qml/pages/apps/AppsColumn.qml</file>
         <file>qml/pages/apps/AppsTextColumn.qml</file>
+        <file>qml/pages/apps/SpeedLimitButton.qml</file>
         <file>qml/pages/log/AppListView.qml</file>
         <file>qml/pages/log/TrafKeepButton.qml</file>
-        <file>qml/pages/log/TrafKeepRow.qml</file>
         <file>qml/pages/log/TrafRow.qml</file>
         <file>qml/pages/schedule/TaskRow.qml</file>
     </qresource>

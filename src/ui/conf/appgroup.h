@@ -8,6 +8,8 @@ class AppGroup : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
+    Q_PROPERTY(quint32 speedLimitIn READ speedLimitIn WRITE setSpeedLimitIn NOTIFY speedLimitInChanged)
+    Q_PROPERTY(quint32 speedLimitOut READ speedLimitOut WRITE setSpeedLimitOut NOTIFY speedLimitOutChanged)
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(QString blockText READ blockText WRITE setBlockText NOTIFY blockTextChanged)
     Q_PROPERTY(QString allowText READ allowText WRITE setAllowText NOTIFY allowTextChanged)
@@ -17,6 +19,12 @@ public:
 
     bool enabled() const { return m_enabled; }
     void setEnabled(bool enabled);
+
+    quint32 speedLimitIn() const { return m_speedLimitIn; }
+    void setSpeedLimitIn(quint32 speedLimitIn);
+
+    quint32 speedLimitOut() const { return m_speedLimitOut; }
+    void setSpeedLimitOut(quint32 speedLimitOut);
 
     QString name() const { return m_name; }
     void setName(const QString &name);
@@ -32,6 +40,8 @@ public:
 
 signals:
     void enabledChanged();
+    void speedLimitInChanged();
+    void speedLimitOutChanged();
     void nameChanged();
     void blockTextChanged();
     void allowTextChanged();
@@ -40,6 +50,9 @@ public slots:
 
 private:
     uint m_enabled  : 1;
+
+    quint32 m_speedLimitIn;
+    quint32 m_speedLimitOut;
 
     QString m_name;
 

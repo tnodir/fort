@@ -41,12 +41,13 @@ ButtonPopup {
         ]
 
     ColumnLayout {
-        TrafKeepRow {
+        SpinComboRow {
             names: trafKeepDayNames
             values: trafKeepDayValues
             label.text: translationManager.dummyBool
                         && qsTranslate("qml", "Days for 'Hourly':")
             field {
+                from: -1
                 value: firewallConf.trafHourKeepDays
                 onValueChanged: {
                     const value = field.value;
@@ -60,12 +61,13 @@ ButtonPopup {
             }
         }
 
-        TrafKeepRow {
+        SpinComboRow {
             names: trafKeepDayNames
             values: trafKeepDayValues
             label.text: translationManager.dummyBool
                         && qsTranslate("qml", "Days for 'Daily':")
             field {
+                from: -1
                 value: firewallConf.trafDayKeepDays
                 onValueChanged: {
                     const value = field.value;
@@ -79,12 +81,13 @@ ButtonPopup {
             }
         }
 
-        TrafKeepRow {
+        SpinComboRow {
             names: trafKeepMonthNames
             values: trafKeepMonthValues
             label.text: translationManager.dummyBool
                         && qsTranslate("qml", "Months for 'Monthly':")
             field {
+                from: -1
                 value: firewallConf.trafMonthKeepMonths
                 onValueChanged: {
                     const value = field.value;
