@@ -359,7 +359,7 @@
     <message>
         <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="23"/>
         <source>Disabled</source>
-        <translation>Отключен</translation>
+        <translation>Отключено</translation>
     </message>
     <message>
         <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="56"/>
