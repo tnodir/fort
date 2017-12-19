@@ -8,7 +8,7 @@ ButtonPopup {
 
     icon.source: "qrc:/images/database_save.png"
     text: translationManager.dummyBool
-          && qsTranslate("qml", "Keep")
+          && qsTranslate("qml", "Keep…")
 
     readonly property var trafKeepDayValues: [
         90, -1, 90, 180, 365, 365 * 3

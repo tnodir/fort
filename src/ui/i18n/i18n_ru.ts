@@ -168,8 +168,8 @@
     <message>
         <location filename="../qml/pages/BlockedPage.qml" line="32"/>
         <location filename="../qml/pages/StatisticsPage.qml" line="57"/>
-        <source>Clear</source>
-        <translation>Очистить</translation>
+        <source>Clear…</source>
+        <translation>Очистить…</translation>
     </message>
     <message>
         <location filename="../qml/pages/BlockedPage.qml" line="37"/>
@@ -340,8 +340,8 @@
     </message>
     <message>
         <location filename="../qml/pages/log/TrafKeepButton.qml" line="11"/>
-        <source>Keep</source>
-        <translation>Хранить</translation>
+        <source>Keep…</source>
+        <translation>Хранить…</translation>
     </message>
     <message>
         <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="12"/>

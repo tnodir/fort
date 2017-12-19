@@ -54,7 +54,7 @@ BasePage {
                 enabled: appListView.count
                 icon.source: "qrc:/images/bin_empty.png"
                 text: translationManager.dummyBool
-                      && qsTranslate("qml", "Clear")
+                      && qsTranslate("qml", "Clear…")
 
                 MenuItem {
                     enabled: appListView.currentIndex > 0
