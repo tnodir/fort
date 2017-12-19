@@ -1,4 +1,7 @@
 Fort is a simple firewall for Windows 7+.
 
+Before installing, you have to enable the driver signature verification test mode:
+- Run "BcdEdit.exe -set TESTSIGNING ON" from the command line as Administrator and restart the computer.
+
 --
 Nodir Temirkhodjaev, <nodir.temir@gmail.com>
