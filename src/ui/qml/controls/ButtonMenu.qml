@@ -13,6 +13,9 @@ Button {
         y: bt.height
         visible: bt.checked
 
+        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+                     | Popup.CloseOnPressOutsideParent
+
         onClosed: {
             bt.checked = false;
         }
