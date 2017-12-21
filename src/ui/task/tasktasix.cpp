@@ -9,48 +9,22 @@
 #include "../util/net/netdownloader.h"
 
 TaskTasix::TaskTasix(QObject *parent) :
-    TaskWorker(parent),
-    m_downloader(nullptr)
+    TaskDownloader(parent)
 {
 }
 
-void TaskTasix::run()
-{
-    m_downloader = new NetDownloader(this);
-
-    connect(m_downloader, &NetDownloader::finished,
-            this, &TaskTasix::downloadFinished);
-
-    m_rangeText = QString();
-
-    setupDownloader();
-
-    downloader()->start();
-}
-
-void TaskTasix::setupDownloader() const
+void TaskTasix::setupDownloader()
 {
     downloader()->setUrl("http://mrlg.tas-ix.uz/index.cgi");
     downloader()->setData("router=cisco&pass1=&query=1&arg=");
-}
 
-void TaskTasix::abort(bool success)
-{
-    if (!m_downloader) return;
-
-    m_downloader->disconnect(this);  // to avoid recursive call on abort()
-
-    m_downloader->abort();
-    m_downloader->deleteLater();
-    m_downloader = nullptr;
-
-    emit finished(success);
+    m_rangeText = QString();
 }
 
 void TaskTasix::downloadFinished(bool success)
 {
     if (success) {
-        m_rangeText = parseBuffer(m_downloader->buffer());
+        m_rangeText = parseBuffer(downloader()->buffer());
         success = !m_rangeText.isEmpty();
     }
 

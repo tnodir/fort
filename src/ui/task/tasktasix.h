@@ -1,23 +1,19 @@
 #ifndef TASKTASIX_H
 #define TASKTASIX_H
 
-#include "taskworker.h"
+#include "taskdownloader.h"
 
-QT_FORWARD_DECLARE_CLASS(NetDownloader)
-
-class TaskTasix : public TaskWorker
+class TaskTasix : public TaskDownloader
 {
     Q_OBJECT
 
 public:
     explicit TaskTasix(QObject *parent = nullptr);
 
-    NetDownloader *downloader() const { return m_downloader; }
-
     static QStringList parseTasixBuffer(const QByteArray &buffer);
 
 protected:
-    virtual void setupDownloader() const;
+    void setupDownloader() override;
 
     QString parseBuffer(const QByteArray &buffer) const;
 
@@ -32,17 +28,12 @@ protected:
 signals:
 
 public slots:
-    void run() override;
-    void abort(bool success = false) override;
-
     bool processResult(FortManager *fortManager) override;
 
-private slots:
-    void downloadFinished(bool success);
+protected slots:
+    void downloadFinished(bool success) override;
 
 private:
-    NetDownloader *m_downloader;
-
     QString m_rangeText;
 };
 

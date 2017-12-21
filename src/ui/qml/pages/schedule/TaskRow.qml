@@ -14,7 +14,7 @@ Row {
 
     function saveTaskInfo() {
         taskInfo.enabled = cbEnabled.checked;
-        taskInfo.intervalHours = fieldInterval.value;
+        taskInfo.intervalHours = spinCombo.field.value;
     }
 
     Connections {
@@ -40,6 +40,7 @@ Row {
     }
 
     SpinCombo {
+        id: spinCombo
         width: taskCellWidths[2]
 
         fieldPreferredWidth: 110

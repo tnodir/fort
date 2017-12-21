@@ -4,6 +4,7 @@
 #include <QMetaEnum>
 
 #include "tasktasix.h"
+#include "taskupdatechecker.h"
 #include "taskuzonline.h"
 
 #define TASK_INFO_VERSION   1
@@ -42,6 +43,8 @@ void TaskInfo::setIntervalHours(int intervalHours)
 QString TaskInfo::title() const
 {
     switch (m_type) {
+    case UpdateChecker:
+        return tr("Update Checker");
     case Tasix:
         return tr("TAS-IX Addresses Downloader");
     case Uzonline:
@@ -196,6 +199,8 @@ void TaskInfo::handleFinished(bool success)
 TaskWorker *TaskInfo::createWorker()
 {
     switch (m_type) {
+    case UpdateChecker:
+        return new TaskUpdateChecker(this);
     case Tasix:
         return new TaskTasix(this);
     case Uzonline:

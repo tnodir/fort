@@ -10,7 +10,7 @@ TaskUzonline::TaskUzonline(QObject *parent) :
 {
 }
 
-void TaskUzonline::setupDownloader() const
+void TaskUzonline::setupDownloader()
 {
     downloader()->setUrl("https://alltor.me/viewtopic.php?p=1345405");
 }

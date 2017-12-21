@@ -29,9 +29,11 @@ SOURCES += \
     log/model/stringlistmodel.cpp \
     log/model/traflistmodel.cpp \
     mainwindow.cpp \
+    task/taskdownloader.cpp \
     task/taskinfo.cpp \
     task/taskmanager.cpp \
     task/tasktasix.cpp \
+    task/taskupdatechecker.cpp \
     task/taskuzonline.cpp \
     task/taskworker.cpp \
     translationmanager.cpp \
@@ -73,9 +75,11 @@ HEADERS += \
     log/model/stringlistmodel.h \
     log/model/traflistmodel.h \
     mainwindow.h \
+    task/taskdownloader.h \
     task/taskinfo.h \
     task/taskmanager.h \
     task/tasktasix.h \
+    task/taskupdatechecker.h \
     task/taskuzonline.h \
     task/taskworker.h \
     translationmanager.h \

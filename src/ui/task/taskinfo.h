@@ -20,7 +20,8 @@ class TaskInfo : public QObject
 public:
     enum TaskType {
         TypeNone = -1,
-        Tasix = 0,
+        UpdateChecker = 0,
+        Tasix,
         Uzonline
     };
     Q_ENUM(TaskType)

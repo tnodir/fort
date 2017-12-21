@@ -13,7 +13,7 @@ public:
     static QStringList parseUzonlineBuffer(const QByteArray &buffer);
 
 protected:
-    void setupDownloader() const override;
+    void setupDownloader() override;
 
     virtual QStringList parseCustomBuffer(const QByteArray &buffer) const override {
         return parseUzonlineBuffer(buffer);
