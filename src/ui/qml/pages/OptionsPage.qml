@@ -1,6 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
+import "../controls"
 import com.fortfirewall 1.0
 
 BasePage {
@@ -12,7 +13,7 @@ BasePage {
     Frame {
         anchors.fill: parent
 
-        Column {
+        ColumnLayout {
             anchors.fill: parent
             spacing: 10
 
@@ -64,6 +65,38 @@ BasePage {
                     currentIndex: translationManager.language
                     model: translationManager.naturalLabels
                     onActivated: fortManager.setLanguage(index)
+                }
+            }
+
+            Item {
+                Layout.fillHeight: true
+            }
+
+            Row {
+                spacing: 4
+
+                Label {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: translationManager.dummyBool
+                          && qsTranslate("qml", "Profile:")
+                }
+                LinkButton {
+                    text: fortSettings.profilePath
+                    onClicked: Qt.openUrlExternally("file:///" + text)
+                }
+            }
+
+            Row {
+                spacing: 4
+
+                Label {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: translationManager.dummyBool
+                          && qsTranslate("qml", "Release:")
+                }
+                LinkButton {
+                    text: fortSettings.appUpdatesUrl
+                    onClicked: Qt.openUrlExternally(text)
                 }
             }
         }

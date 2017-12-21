@@ -18,7 +18,9 @@ class FortSettings : public QObject
     Q_PROPERTY(QString language READ language WRITE setLanguage NOTIFY iniChanged)
     Q_PROPERTY(QString updatesUrl READ updatesUrl CONSTANT)
     Q_PROPERTY(bool startWithWindows READ startWithWindows WRITE setStartWithWindows NOTIFY startWithWindowsChanged)
+    Q_PROPERTY(QString profilePath READ profilePath CONSTANT)
     Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
+    Q_PROPERTY(QString appUpdatesUrl READ appUpdatesUrl CONSTANT)
 
 public:
     explicit FortSettings(const QStringList &args,
@@ -43,7 +45,11 @@ public:
 
     QString statFilePath() const;
 
+    QString profilePath() const { return m_profilePath; }
+
     QString errorMessage() const { return m_errorMessage; }
+
+    QString appUpdatesUrl() const { return APP_UPDATES_URL; }
 
 signals:
     void iniChanged();

@@ -284,17 +284,17 @@
         <translation>Приложения</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="63"/>
+        <location filename="../qml/pages/MainPage.qml" line="73"/>
         <source>Schedule</source>
         <translation>Расписание</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="68"/>
+        <location filename="../qml/pages/MainPage.qml" line="63"/>
         <source>Blocked</source>
         <translation>Блокировано</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="73"/>
+        <location filename="../qml/pages/MainPage.qml" line="68"/>
         <source>Statistics</source>
         <translation>Статистика</translation>
     </message>
@@ -319,24 +319,34 @@
         <translation>Выйти</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="22"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="23"/>
         <source>Start with Windows</source>
         <translation>Запускать вместе с Windows</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="32"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="33"/>
         <source>Block access to network when Fort Firewall is not running</source>
         <translation>Блокировать доступ к сети, когда Fort Firewall не запущен</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="44"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="45"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="59"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="60"/>
         <source>Language:</source>
         <translation>Язык:</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/OptionsPage.qml" line="81"/>
+        <source>Profile:</source>
+        <translation>Профиль:</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/OptionsPage.qml" line="95"/>
+        <source>Release:</source>
+        <translation>Релиз:</translation>
     </message>
     <message>
         <location filename="../qml/pages/log/TrafKeepButton.qml" line="11"/>
@@ -344,12 +354,12 @@
         <translation>Хранить…</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="12"/>
+        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="13"/>
         <source>Speed Limit: </source>
         <translation>Ограничение скорости: </translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="22"/>
+        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="23"/>
         <location filename="../qml/pages/log/TrafKeepButton.qml" line="20"/>
         <location filename="../qml/pages/log/TrafKeepButton.qml" line="35"/>
         <location filename="../qml/pages/SchedulePage.qml" line="31"/>
@@ -357,17 +367,17 @@
         <translation>Нестандартный</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="23"/>
+        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="24"/>
         <source>Disabled</source>
         <translation>Отключено</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="56"/>
+        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="57"/>
         <source>Download speed limit, KiB/s:</source>
         <translation>Ограничение скорости загрузки, KiB/s:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="75"/>
+        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="76"/>
         <source>Upload speed limit, KiB/s:</source>
         <translation>Ограничение скорости выгрузки, KiB/s:</translation>
     </message>
