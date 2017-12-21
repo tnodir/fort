@@ -58,11 +58,6 @@ Page {
                   && qsTranslate("qml", "Applications")
         }
         TabButton {
-            icon.source: "qrc:/images/clock.png"
-            text: translationManager.dummyBool
-                  && qsTranslate("qml", "Schedule")
-        }
-        TabButton {
             icon.source: "qrc:/images/application_error.png"
             text: translationManager.dummyBool
                   && qsTranslate("qml", "Blocked")
@@ -71,6 +66,11 @@ Page {
             icon.source: "qrc:/images/chart_line.png"
             text: translationManager.dummyBool
                   && qsTranslate("qml", "Statistics")
+        }
+        TabButton {
+            icon.source: "qrc:/images/clock.png"
+            text: translationManager.dummyBool
+                  && qsTranslate("qml", "Schedule")
         }
     }
 
@@ -82,9 +82,9 @@ Page {
         OptionsPage {}
         AddressesPage {}
         ApplicationsPage {}
-        SchedulePage {}
         BlockedPage {}
         StatisticsPage {}
+        SchedulePage {}
     }
 
     footer: Pane {
