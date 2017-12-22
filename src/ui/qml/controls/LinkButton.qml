@@ -5,7 +5,7 @@ Label {
     id: bt
 
     opacity: enabled ? 1.0 : 0.45
-    color: checked ? "darkblue" : (mouseover ? "purple" : "blue")
+    color: checked ? "darkblue" : (hovered ? "purple" : "blue")
 
     font.underline: true
 
@@ -17,7 +17,7 @@ Label {
     property bool pressed: ma.pressed && ma.containsMouse
     readonly property bool checked: selected || pressed
 
-    readonly property alias mouseover: ma.containsMouse
+    readonly property alias hovered: ma.containsMouse
 
     MouseArea {
         id: ma

@@ -1,6 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
+import "../../controls"
 import com.fortfirewall 1.0
 
 ColumnLayout {
@@ -9,23 +10,27 @@ ColumnLayout {
     property AppGroup appGroup
 
     RowLayout {
-        Button {
+        RoundButtonTip {
             icon.source: "qrc:/images/application_delete.png"
-            text: translationManager.dummyBool
-                  && qsTranslate("qml", "Remove Group")
+            tipText: translationManager.dummyBool
+                     && qsTranslate("qml", "Remove Group")
             onClicked: removeAppGroup(index)
         }
-        Button {
+        RoundButtonTip {
             icon.source: "qrc:/images/resultset_previous.png"
-            text: translationManager.dummyBool
-                  && qsTranslate("qml", "Move left")
+            tipText: translationManager.dummyBool
+                     && qsTranslate("qml", "Move left")
             onClicked: moveAppGroup(index, -1)
         }
-        Button {
+        RoundButtonTip {
             icon.source: "qrc:/images/resultset_next.png"
-            text: translationManager.dummyBool
-                  && qsTranslate("qml", "Move right")
+            tipText: translationManager.dummyBool
+                     && qsTranslate("qml", "Move right")
             onClicked: moveAppGroup(index, 1)
+        }
+
+        Item {
+            Layout.preferredWidth: 10
         }
 
         SpeedLimitButton {}

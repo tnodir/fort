@@ -71,11 +71,11 @@ BasePage {
                       && qsTranslate("qml", "Add Group")
                 onClicked: addAppGroup()
             }
-            Button {
+            RoundButtonTip {
                 enabled: editGroupName.text && appsColumn.enabled
                 icon.source: "qrc:/images/application_edit.png"
-                text: translationManager.dummyBool
-                      && qsTranslate("qml", "Rename Group")
+                tipText: translationManager.dummyBool
+                         && qsTranslate("qml", "Rename Group")
                 onClicked: renameAppGroup()
             }
 

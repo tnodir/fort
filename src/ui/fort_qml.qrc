@@ -3,6 +3,7 @@
         <file>qml/controls/ButtonMenu.qml</file>
         <file>qml/controls/ButtonPopup.qml</file>
         <file>qml/controls/LinkButton.qml</file>
+        <file>qml/controls/RoundButtonTip.qml</file>
         <file>qml/controls/ScrollBarControl.qml</file>
         <file>qml/controls/SpinCombo.qml</file>
         <file>qml/controls/SpinComboRow.qml</file>
