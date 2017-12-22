@@ -23,6 +23,7 @@ Label {
         id: ma
         anchors.fill: parent
         hoverEnabled: true
+        cursorShape: Qt.PointingHandCursor
         onClicked: bt.clicked()
     }
 }
