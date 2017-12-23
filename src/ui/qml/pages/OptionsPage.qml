@@ -92,7 +92,7 @@ BasePage {
                 Label {
                     anchors.verticalCenter: parent.verticalCenter
                     text: translationManager.dummyBool
-                          && qsTranslate("qml", "Release:")
+                          && qsTranslate("qml", "Releases:")
                 }
                 LinkButton {
                     text: fortSettings.appUpdatesUrl

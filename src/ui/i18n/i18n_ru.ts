@@ -55,27 +55,27 @@
 <context>
     <name>FortSettings</name>
     <message>
-        <location filename="../fortsettings.cpp" line="169"/>
+        <location filename="../fortsettings.cpp" line="172"/>
         <source>Can&apos;t write .ini file</source>
         <translation>Не удалось записать .ini файл</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="175"/>
+        <location filename="../fortsettings.cpp" line="178"/>
         <source>Can&apos;t rename old backup .conf file</source>
         <translation>Не удалось переименовать старый бэкап .conf файла</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="180"/>
+        <location filename="../fortsettings.cpp" line="183"/>
         <source>Can&apos;t create backup .conf file</source>
         <translation>Не удалось создать бэкап .conf файла</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="185"/>
+        <location filename="../fortsettings.cpp" line="188"/>
         <source>Can&apos;t rename backup .conf file</source>
         <translation>Не удалось переименовать бэкап .conf файла</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="200"/>
+        <location filename="../fortsettings.cpp" line="203"/>
         <source>Can&apos;t write .conf file</source>
         <translation>Не удалось записать .conf файл</translation>
     </message>
@@ -350,8 +350,8 @@
     </message>
     <message>
         <location filename="../qml/pages/OptionsPage.qml" line="95"/>
-        <source>Release:</source>
-        <translation>Релиз:</translation>
+        <source>Releases:</source>
+        <translation>Релизы:</translation>
     </message>
     <message>
         <location filename="../qml/pages/log/TrafKeepButton.qml" line="11"/>
@@ -359,12 +359,12 @@
         <translation>Хранить…</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="13"/>
+        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="14"/>
         <source>Speed Limit: </source>
         <translation>Ограничение скорости: </translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="23"/>
+        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="24"/>
         <location filename="../qml/pages/log/TrafKeepButton.qml" line="20"/>
         <location filename="../qml/pages/log/TrafKeepButton.qml" line="35"/>
         <location filename="../qml/pages/SchedulePage.qml" line="31"/>
@@ -372,17 +372,17 @@
         <translation>Нестандартный</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="24"/>
+        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="25"/>
         <source>Disabled</source>
         <translation>Отключено</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="62"/>
+        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="63"/>
         <source>Download speed limit, KiB/s:</source>
         <translation>Ограничение скорости загрузки, KiB/s:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="94"/>
+        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="95"/>
         <source>Upload speed limit, KiB/s:</source>
         <translation>Ограничение скорости выгрузки, KiB/s:</translation>
     </message>
