@@ -630,7 +630,7 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
     const PFORT_CONF conf = irp->AssociatedIrp.SystemBuffer;
     const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
 
-    if (conf->flags.driver_version == FORT_DRIVER_VERSION
+    if (conf->app_version == APP_VERSION
         && len > FORT_CONF_DATA_OFF) {
       PFORT_CONF_REF conf_ref = fort_conf_ref_new(conf, len);
 
@@ -649,8 +649,7 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
     const PFORT_CONF_FLAGS conf_flags = irp->AssociatedIrp.SystemBuffer;
     const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
 
-    if (conf_flags->driver_version == FORT_DRIVER_VERSION
-        && len == sizeof(FORT_CONF_FLAGS)) {
+    if (len == sizeof(FORT_CONF_FLAGS)) {
       const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_flags_set(conf_flags);
 
       status = fort_callout_force_reauth(device, old_conf_flags, *conf_flags);

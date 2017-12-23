@@ -11,13 +11,14 @@ typedef struct fort_conf_flags {
   UINT32 app_allow_all		: 1;
   UINT32 log_blocked		: 1;
   UINT32 log_stat		: 1;
-  UINT32 _reserved_		: 1;
-  UINT32 driver_version		: 6;
+  UINT32 _reserved_		: 7;
   UINT32 group_bits		: 16;
 } FORT_CONF_FLAGS, *PFORT_CONF_FLAGS;
 
 typedef struct fort_conf {
   FORT_CONF_FLAGS flags;
+
+  UINT32 app_version;
 
   UINT16 data_off;
 
