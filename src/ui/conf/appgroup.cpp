@@ -3,6 +3,8 @@
 AppGroup::AppGroup(QObject *parent) :
     QObject(parent),
     m_enabled(true),
+    m_limitInEnabled(false),
+    m_limitOutEnabled(false),
     m_speedLimitIn(0),
     m_speedLimitOut(0)
 {
@@ -16,18 +18,34 @@ void AppGroup::setEnabled(bool enabled)
     }
 }
 
-void AppGroup::setSpeedLimitIn(quint32 speedLimitIn)
+void AppGroup::setLimitInEnabled(bool enabled)
 {
-    if (m_speedLimitIn != speedLimitIn) {
-        m_speedLimitIn = speedLimitIn;
+    if (bool(m_limitInEnabled) != enabled) {
+        m_limitInEnabled = enabled;
+        emit limitInEnabledChanged();
+    }
+}
+
+void AppGroup::setLimitOutEnabled(bool enabled)
+{
+    if (bool(m_limitOutEnabled) != enabled) {
+        m_limitOutEnabled = enabled;
+        emit limitOutEnabledChanged();
+    }
+}
+
+void AppGroup::setSpeedLimitIn(quint32 limit)
+{
+    if (m_speedLimitIn != limit) {
+        m_speedLimitIn = limit;
         emit speedLimitInChanged();
     }
 }
 
-void AppGroup::setSpeedLimitOut(quint32 speedLimitOut)
+void AppGroup::setSpeedLimitOut(quint32 limit)
 {
-    if (m_speedLimitOut != speedLimitOut) {
-        m_speedLimitOut = speedLimitOut;
+    if (m_speedLimitOut != limit) {
+        m_speedLimitOut = limit;
         emit speedLimitOutChanged();
     }
 }
@@ -60,6 +78,8 @@ QVariant AppGroup::toVariant() const
 {
     QVariantMap map;
 
+    map["limitInEnabled"] = limitInEnabled();
+    map["limitOutEnabled"] = limitOutEnabled();
     map["speedLimitIn"] = speedLimitIn();
     map["speedLimitOut"] = speedLimitOut();
 
@@ -74,6 +94,8 @@ void AppGroup::fromVariant(const QVariant &v)
 {
     const QVariantMap map = v.toMap();
 
+    m_limitInEnabled = map["limitInEnabled"].toBool();
+    m_limitOutEnabled = map["limitOutEnabled"].toBool();
     m_speedLimitIn = map["speedLimitIn"].toUInt();
     m_speedLimitOut = map["speedLimitOut"].toUInt();
 

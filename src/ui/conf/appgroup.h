@@ -8,6 +8,8 @@ class AppGroup : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
+    Q_PROPERTY(bool limitInEnabled READ limitInEnabled WRITE setLimitInEnabled NOTIFY limitInEnabledChanged)
+    Q_PROPERTY(bool limitOutEnabled READ limitOutEnabled WRITE setLimitOutEnabled NOTIFY limitOutEnabledChanged)
     Q_PROPERTY(quint32 speedLimitIn READ speedLimitIn WRITE setSpeedLimitIn NOTIFY speedLimitInChanged)
     Q_PROPERTY(quint32 speedLimitOut READ speedLimitOut WRITE setSpeedLimitOut NOTIFY speedLimitOutChanged)
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
@@ -20,11 +22,17 @@ public:
     bool enabled() const { return m_enabled; }
     void setEnabled(bool enabled);
 
+    bool limitInEnabled() const { return m_limitInEnabled; }
+    void setLimitInEnabled(bool enabled);
+
+    bool limitOutEnabled() const { return m_limitOutEnabled; }
+    void setLimitOutEnabled(bool enabled);
+
     quint32 speedLimitIn() const { return m_speedLimitIn; }
-    void setSpeedLimitIn(quint32 speedLimitIn);
+    void setSpeedLimitIn(quint32 limit);
 
     quint32 speedLimitOut() const { return m_speedLimitOut; }
-    void setSpeedLimitOut(quint32 speedLimitOut);
+    void setSpeedLimitOut(quint32 limit);
 
     QString name() const { return m_name; }
     void setName(const QString &name);
@@ -40,6 +48,8 @@ public:
 
 signals:
     void enabledChanged();
+    void limitInEnabledChanged();
+    void limitOutEnabledChanged();
     void speedLimitInChanged();
     void speedLimitOutChanged();
     void nameChanged();
@@ -49,7 +59,9 @@ signals:
 public slots:
 
 private:
-    uint m_enabled  : 1;
+    uint m_enabled          : 1;
+    uint m_limitInEnabled   : 1;
+    uint m_limitOutEnabled  : 1;
 
     quint32 m_speedLimitIn;
     quint32 m_speedLimitOut;

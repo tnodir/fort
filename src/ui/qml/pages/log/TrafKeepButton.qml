@@ -44,8 +44,11 @@ ButtonPopup {
         SpinComboRow {
             names: trafKeepDayNames
             values: trafKeepDayValues
-            label.text: translationManager.dummyBool
-                        && qsTranslate("qml", "Days for 'Hourly':")
+            checkBox {
+                indicator: null
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Days for 'Hourly':")
+            }
             field {
                 from: -1
                 value: firewallConf.trafHourKeepDays
@@ -64,8 +67,11 @@ ButtonPopup {
         SpinComboRow {
             names: trafKeepDayNames
             values: trafKeepDayValues
-            label.text: translationManager.dummyBool
-                        && qsTranslate("qml", "Days for 'Daily':")
+            checkBox {
+                indicator: null
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Days for 'Daily':")
+            }
             field {
                 from: -1
                 value: firewallConf.trafDayKeepDays
@@ -84,8 +90,11 @@ ButtonPopup {
         SpinComboRow {
             names: trafKeepMonthNames
             values: trafKeepMonthValues
-            label.text: translationManager.dummyBool
-                        && qsTranslate("qml", "Months for 'Monthly':")
+            checkBox {
+                indicator: null
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Months for 'Monthly':")
+            }
             field {
                 from: -1
                 value: firewallConf.trafMonthKeepMonths

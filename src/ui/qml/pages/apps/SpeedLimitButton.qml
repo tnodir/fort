@@ -14,7 +14,7 @@ ButtonPopup {
           + speedLimitsText
 
     readonly property var speedLimitValues: [
-        1024, 0, 100, 1024, 3 * 1024
+        1, 0, 100, 1024, 3 * 1024
     ]
 
     readonly property var speedLimitNames:
@@ -27,12 +27,16 @@ ButtonPopup {
             formatSpeed(speedLimitValues[4])
         ]
 
+    readonly property var speedLimitDisabledText: speedLimitNames[1]
+
     readonly property string speedLimitsText: {
-        const limitIn = appGroup.speedLimitIn;
-        const limitOut = appGroup.speedLimitOut;
+        const limitIn = appGroup.limitInEnabled
+                ? appGroup.speedLimitIn : 0;
+        const limitOut = appGroup.limitOutEnabled
+                ? appGroup.speedLimitOut : 0;
 
         if (!(limitIn || limitOut))
-            return speedLimitNames[1];
+            return speedLimitDisabledText;
 
         var text = "";
         if (limitIn) {
@@ -53,9 +57,22 @@ ButtonPopup {
         SpinComboRow {
             names: speedLimitNames
             values: speedLimitValues
-            label.text: translationManager.dummyBool
-                        && qsTranslate("qml", "Download speed limit, KiB/s:")
+            checkBox {
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Download speed limit, KiB/s:")
+                checked: appGroup.limitInEnabled
+                onCheckedChanged: {
+                    const value = checkBox.checked;
+                    if (appGroup.limitInEnabled == value)
+                        return;
+
+                    appGroup.limitInEnabled = value;
+
+                    setConfEdited();
+                }
+            }
             field {
+                from: 0
                 value: appGroup.speedLimitIn
                 onValueChanged: {
                     const value = field.value;
@@ -72,9 +89,22 @@ ButtonPopup {
         SpinComboRow {
             names: speedLimitNames
             values: speedLimitValues
-            label.text: translationManager.dummyBool
-                        && qsTranslate("qml", "Upload speed limit, KiB/s:")
+            checkBox {
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Upload speed limit, KiB/s:")
+                checked: appGroup.limitOutEnabled
+                onCheckedChanged: {
+                    const value = checkBox.checked;
+                    if (appGroup.limitOutEnabled == value)
+                        return;
+
+                    appGroup.limitOutEnabled = value;
+
+                    setConfEdited();
+                }
+            }
             field {
+                from: 0
                 value: appGroup.speedLimitOut
                 onValueChanged: {
                     const value = field.value;

@@ -7,15 +7,15 @@ RowLayout {
 
     Layout.fillWidth: true
 
-    readonly property alias label: label
+    readonly property alias checkBox: checkBox
     readonly property alias field: spinCombo.field
     readonly property alias combo: spinCombo.combo
 
     property alias names: spinCombo.names
     property alias values: spinCombo.values
 
-    Label {
-        id: label
+    CheckBox {
+        id: checkBox
         Layout.fillWidth: true
     }
 
