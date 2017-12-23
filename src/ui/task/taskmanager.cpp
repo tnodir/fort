@@ -75,10 +75,10 @@ bool TaskManager::saveSettings(FortSettings *fortSettings)
 
 void TaskManager::handleTaskFinished(bool success)
 {
-    TaskInfo *taskInfo = qobject_cast<TaskInfo *>(sender());
-
     if (success) {
+        TaskInfo *taskInfo = qobject_cast<TaskInfo *>(sender());
         TaskWorker *taskWorker = taskInfo->taskWorker();
+
         taskWorker->processResult(m_fortManager);
     }
 

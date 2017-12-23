@@ -216,9 +216,22 @@ void FortManager::exit(int retcode)
     qApp->exit(retcode);
 }
 
-void FortManager::showErrorBox(const QString &text)
+void FortManager::showErrorBox(const QString &text,
+                               const QString &title)
 {
-    QMessageBox::warning(&m_window, QString(), text);
+    QMessageBox::warning(&m_window, title, text);
+}
+
+void FortManager::showInfoBox(const QString &text,
+                              const QString &title)
+{
+    QMessageBox box(&m_window);
+    box.setIcon(QMessageBox::Information);
+    box.setStandardButtons(QMessageBox::Ok);
+    box.setWindowTitle(title);
+    box.setText(text);
+    box.setTextInteractionFlags(Qt::TextBrowserInteraction);
+    box.exec();
 }
 
 bool FortManager::saveOriginConf(const QString &message)

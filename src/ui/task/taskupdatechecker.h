@@ -24,6 +24,8 @@ protected slots:
 private:
     bool parseBuffer(const QByteArray &buffer);
 
+    QString successMessage() const;
+
 private:
     QString m_releaseName;
     QString m_publishedAt;

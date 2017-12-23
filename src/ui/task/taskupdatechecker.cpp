@@ -1,5 +1,6 @@
 #include "taskupdatechecker.h"
 
+#include <QDateTime>
 #include <QJsonDocument>
 #include <QVariant>
 
@@ -8,6 +9,7 @@
 #include "../fortmanager.h"
 #endif
 #include "../util/net/netdownloader.h"
+#include "../util/net/netutil.h"
 
 TaskUpdateChecker::TaskUpdateChecker(QObject *parent) :
     TaskDownloader(parent)
@@ -31,7 +33,7 @@ void TaskUpdateChecker::downloadFinished(bool success)
 bool TaskUpdateChecker::processResult(FortManager *fortManager)
 {
 #ifndef TASK_TEST
-    fortManager->showTrayMessage(m_releaseName);
+    fortManager->showInfoBox(successMessage(), tr("New version!"));
 #else
     Q_UNUSED(fortManager)
 #endif
@@ -81,4 +83,18 @@ bool TaskUpdateChecker::parseBuffer(const QByteArray &buffer)
         return false;
 
     return true;
+}
+
+QString TaskUpdateChecker::successMessage() const
+{
+    const QDateTime publishedTime = QDateTime::fromString(
+                m_publishedAt, Qt::ISODate);
+
+    return "<b>" + m_releaseName + "</b> (<i>"
+            + publishedTime.toString("dd-MMM-yyyy hh:mm") + "</i>, "
+            + NetUtil::formatDataSize(m_downloadSize)
+            + ", #" + QString::number(m_downloadCount)
+            + "):<br/>\n"
+            + m_releaseNotes + "<br/><br/>\n"
+            + "<a href=\"" + m_downloadUrl + "\">" + m_downloadUrl + "</a>";
 }

@@ -49,7 +49,10 @@ public slots:
 
     void exit(int retcode = 0);
 
-    void showErrorBox(const QString &text);
+    void showErrorBox(const QString &text,
+                      const QString &title = QString());
+    void showInfoBox(const QString &text,
+                     const QString &title = QString());
 
     bool saveOriginConf(const QString &message);
     bool saveConf(bool onlyFlags = false);

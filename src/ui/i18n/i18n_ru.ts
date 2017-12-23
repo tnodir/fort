@@ -19,17 +19,17 @@
         <translation>Конфигурация слишком большая</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="114"/>
+        <location filename="../util/confutil.cpp" line="113"/>
         <source>Number of Application Groups must be &lt; %1</source>
         <translation>Количество групп приложений должно быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="126"/>
+        <location filename="../util/confutil.cpp" line="125"/>
         <source>Length of Application Group&apos;s Name must be &lt; %1</source>
         <translation>Длина наименования группы приложения должна быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="168"/>
+        <location filename="../util/confutil.cpp" line="167"/>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Длина пути приложения должна быть &lt; %1</translation>
     </message>
@@ -37,22 +37,22 @@
 <context>
     <name>FortManager</name>
     <message>
-        <location filename="../fortmanager.cpp" line="387"/>
+        <location filename="../fortmanager.cpp" line="394"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="392"/>
+        <location filename="../fortmanager.cpp" line="399"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="396"/>
+        <location filename="../fortmanager.cpp" line="403"/>
         <source>Stop Traffic</source>
         <translation>Отключить трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="411"/>
+        <location filename="../fortmanager.cpp" line="418"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -143,6 +143,14 @@
         <location filename="../task/tasktasix.h" line="25"/>
         <source>TAS-IX addresses updated!</source>
         <translation>TAS-IX адреса обновлены!</translation>
+    </message>
+</context>
+<context>
+    <name>TaskUpdateChecker</name>
+    <message>
+        <location filename="../task/taskupdatechecker.cpp" line="35"/>
+        <source>New version!</source>
+        <translation>Новая версия!</translation>
     </message>
 </context>
 <context>
