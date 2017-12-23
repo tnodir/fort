@@ -6,7 +6,8 @@ import com.fortfirewall 1.0
 
 ButtonPopup {
 
-    icon.source: !(appGroup.speedLimitIn || appGroup.speedLimitOut)
+    icon.source: !((appGroup.limitInEnabled && appGroup.speedLimitIn)
+                   || (appGroup.limitOutEnabled && appGroup.speedLimitOut))
                  ? "qrc:/images/flag_green.png"
                  : "qrc:/images/flag_yellow.png"
     text: (translationManager.dummyBool
