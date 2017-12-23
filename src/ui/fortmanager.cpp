@@ -225,13 +225,7 @@ void FortManager::showErrorBox(const QString &text,
 void FortManager::showInfoBox(const QString &text,
                               const QString &title)
 {
-    QMessageBox box(&m_window);
-    box.setIcon(QMessageBox::Information);
-    box.setStandardButtons(QMessageBox::Ok);
-    box.setWindowTitle(title);
-    box.setText(text);
-    box.setTextInteractionFlags(Qt::TextBrowserInteraction);
-    box.exec();
+    QMessageBox::information(&m_window, title, text);
 }
 
 bool FortManager::saveOriginConf(const QString &message)

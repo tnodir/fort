@@ -90,11 +90,10 @@ QString TaskUpdateChecker::successMessage() const
     const QDateTime publishedTime = QDateTime::fromString(
                 m_publishedAt, Qt::ISODate);
 
-    return "<b>" + m_releaseName + "</b> (<i>"
+    return "<a href=\"" + m_downloadUrl + "\">"
+            + m_releaseName+ "</a> (<i>"
             + publishedTime.toString("dd-MMM-yyyy hh:mm") + "</i>, "
             + NetUtil::formatDataSize(m_downloadSize)
             + ", #" + QString::number(m_downloadCount)
-            + "):<br/>\n"
-            + m_releaseNotes + "<br/><br/>\n"
-            + "<a href=\"" + m_downloadUrl + "\">" + m_downloadUrl + "</a>";
+            + "):<br/>\n" + m_releaseNotes;
 }
