@@ -43,7 +43,7 @@ Row {
         id: spinCombo
         width: taskCellWidths[2]
 
-        fieldPreferredWidth: 110
+        fieldPreferredWidth: 120
 
         names: taskIntervalNames
         values: taskIntervalHours

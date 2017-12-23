@@ -16,6 +16,7 @@ RowLayout {
         id: field
         Layout.fillWidth: true
         Layout.preferredWidth: fieldPreferredWidth
+        Layout.minimumWidth: fieldPreferredWidth
 
         editable: true
         from: 0
