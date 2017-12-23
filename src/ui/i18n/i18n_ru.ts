@@ -117,12 +117,17 @@
 <context>
     <name>TaskInfo</name>
     <message>
-        <location filename="../task/taskinfo.cpp" line="46"/>
+        <location filename="../task/taskinfo.cpp" line="47"/>
+        <source>Update Checker</source>
+        <translation>Проверка обновлений</translation>
+    </message>
+    <message>
+        <location filename="../task/taskinfo.cpp" line="49"/>
         <source>TAS-IX Addresses Downloader</source>
         <translation>Загрузчик TAS-IX адресов</translation>
     </message>
     <message>
-        <location filename="../task/taskinfo.cpp" line="48"/>
+        <location filename="../task/taskinfo.cpp" line="51"/>
         <source>UzOnline Addresses Downloader</source>
         <translation>Загрузчик UzOnline адресов</translation>
     </message>
@@ -130,7 +135,7 @@
 <context>
     <name>TaskTasix</name>
     <message>
-        <location filename="../task/tasktasix.h" line="29"/>
+        <location filename="../task/tasktasix.h" line="25"/>
         <source>TAS-IX addresses updated!</source>
         <translation>TAS-IX адреса обновлены!</translation>
     </message>
@@ -239,32 +244,32 @@
         <translation>Разрешить все</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="15"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="16"/>
         <source>Remove Group</source>
         <translation>Удалить группу</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="21"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="22"/>
         <source>Move left</source>
         <translation>Налево</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="27"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="28"/>
         <source>Move right</source>
         <translation>Направо</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="39"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="44"/>
         <source>Enabled</source>
         <translation>Включено</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="57"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="62"/>
         <source>Block</source>
         <translation>Блокировать</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="80"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="85"/>
         <source>Allow</source>
         <translation>Разрешить</translation>
     </message>
@@ -372,12 +377,12 @@
         <translation>Отключено</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="57"/>
+        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="62"/>
         <source>Download speed limit, KiB/s:</source>
         <translation>Ограничение скорости загрузки, KiB/s:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="76"/>
+        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="94"/>
         <source>Upload speed limit, KiB/s:</source>
         <translation>Ограничение скорости выгрузки, KiB/s:</translation>
     </message>
@@ -412,17 +417,17 @@
         <translation>3 года</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafKeepButton.qml" line="48"/>
+        <location filename="../qml/pages/log/TrafKeepButton.qml" line="50"/>
         <source>Days for &apos;Hourly&apos;:</source>
         <translation>Дней для &apos;Почасовая&apos;:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafKeepButton.qml" line="68"/>
+        <location filename="../qml/pages/log/TrafKeepButton.qml" line="73"/>
         <source>Days for &apos;Daily&apos;:</source>
         <translation>Дней для &apos;Ежедневная&apos;:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafKeepButton.qml" line="88"/>
+        <location filename="../qml/pages/log/TrafKeepButton.qml" line="96"/>
         <source>Months for &apos;Monthly&apos;:</source>
         <translation>Месяцев для &apos;Ежемесячная&apos;:</translation>
     </message>
