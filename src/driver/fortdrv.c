@@ -630,8 +630,8 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
     const PFORT_CONF conf = irp->AssociatedIrp.SystemBuffer;
     const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
 
-    if (conf->app_version == APP_VERSION
-        && len > FORT_CONF_DATA_OFF) {
+    if (len > FORT_CONF_DATA_OFF
+        && conf->app_version == APP_VERSION) {
       PFORT_CONF_REF conf_ref = fort_conf_ref_new(conf, len);
 
       if (conf_ref == NULL) {
