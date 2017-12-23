@@ -26,6 +26,9 @@ bool FortSettings::startWithWindows() const
 
 void FortSettings::setStartWithWindows(bool start)
 {
+    if (start == startWithWindows())
+        return;
+
     const QString linkPath = startupShortcutPath();
     if (start) {
         FileUtil::linkFile(qApp->applicationFilePath(), linkPath);
