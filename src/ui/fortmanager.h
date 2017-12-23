@@ -108,6 +108,7 @@ private:
     FirewallConf *m_firewallConfToEdit;
 
     QAction *m_filterEnabledAction;
+    QAction *m_stopTrafficAction;
     QList<QAction *> m_appGroupActions;
 
     DatabaseManager *m_databaseManager;

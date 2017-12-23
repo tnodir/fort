@@ -192,10 +192,13 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   flags = inFixedValues->incomingValue[flagsField].value.uint32;
   remote_ip = inFixedValues->incomingValue[remoteIpField].value.uint32;
 
-  if (!conf_flags.filter_enabled
+  if (!conf_flags.filter_enabled || conf_flags.stop_traffic
       || (flags & FWP_CONDITION_FLAG_IS_LOOPBACK)
       || remote_ip == 0xFFFFFFFF) {  // Local broadcast
     fort_conf_ref_put(conf_ref);
+    if (conf_flags.stop_traffic) {
+      goto block;
+    }
     goto permit;
   }
 

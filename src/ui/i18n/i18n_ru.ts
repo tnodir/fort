@@ -19,17 +19,17 @@
         <translation>Конфигурация слишком большая</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="113"/>
+        <location filename="../util/confutil.cpp" line="114"/>
         <source>Number of Application Groups must be &lt; %1</source>
         <translation>Количество групп приложений должно быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="125"/>
+        <location filename="../util/confutil.cpp" line="126"/>
         <source>Length of Application Group&apos;s Name must be &lt; %1</source>
         <translation>Длина наименования группы приложения должна быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="167"/>
+        <location filename="../util/confutil.cpp" line="168"/>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Длина пути приложения должна быть &lt; %1</translation>
     </message>
@@ -37,17 +37,22 @@
 <context>
     <name>FortManager</name>
     <message>
-        <location filename="../fortmanager.cpp" line="386"/>
+        <location filename="../fortmanager.cpp" line="387"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="391"/>
+        <location filename="../fortmanager.cpp" line="392"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="406"/>
+        <location filename="../fortmanager.cpp" line="396"/>
+        <source>Stop Traffic</source>
+        <translation>Отключить трафик</translation>
+    </message>
+    <message>
+        <location filename="../fortmanager.cpp" line="411"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -251,12 +256,12 @@
     <message>
         <location filename="../qml/pages/apps/AppsColumn.qml" line="22"/>
         <source>Move left</source>
-        <translation>Налево</translation>
+        <translation>Сдвинуть налево</translation>
     </message>
     <message>
         <location filename="../qml/pages/apps/AppsColumn.qml" line="28"/>
         <source>Move right</source>
-        <translation>Направо</translation>
+        <translation>Сдвинуть направо</translation>
     </message>
     <message>
         <location filename="../qml/pages/apps/AppsColumn.qml" line="44"/>
@@ -329,27 +334,32 @@
         <translation>Запускать вместе с Windows</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="33"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="32"/>
         <source>Block access to network when Fort Firewall is not running</source>
         <translation>Блокировать доступ к сети, когда Fort Firewall не запущен</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="45"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="43"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="60"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="54"/>
+        <source>Stop Traffic</source>
+        <translation>Отключить трафик</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/OptionsPage.qml" line="69"/>
         <source>Language:</source>
         <translation>Язык:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="81"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="90"/>
         <source>Profile:</source>
         <translation>Профиль:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="95"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="104"/>
         <source>Releases:</source>
         <translation>Релизы:</translation>
     </message>

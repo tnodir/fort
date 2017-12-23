@@ -4,13 +4,14 @@
 typedef struct fort_conf_flags {
   UINT32 prov_boot		: 1;
   UINT32 filter_enabled		: 1;
+  UINT32 stop_traffic		: 1;
   UINT32 ip_include_all		: 1;
   UINT32 ip_exclude_all		: 1;
   UINT32 app_block_all		: 1;
   UINT32 app_allow_all		: 1;
   UINT32 log_blocked		: 1;
   UINT32 log_stat		: 1;
-  UINT32 _reserved_		: 2;
+  UINT32 _reserved_		: 1;
   UINT32 driver_version		: 6;
   UINT32 group_bits		: 16;
 } FORT_CONF_FLAGS, *PFORT_CONF_FLAGS;

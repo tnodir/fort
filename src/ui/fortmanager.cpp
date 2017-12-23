@@ -347,6 +347,7 @@ void FortManager::setLanguage(int language)
 void FortManager::saveTrayFlags()
 {
     m_firewallConf->setFilterEnabled(m_filterEnabledAction->isChecked());
+    m_firewallConf->setStopTraffic(m_stopTrafficAction->isChecked());
 
     int i = 0;
     foreach (AppGroup *appGroup, m_firewallConf->appGroupsList()) {
@@ -391,6 +392,10 @@ void FortManager::updateTrayMenu()
                 menu, QIcon(), tr("Filter Enabled"),
                 this, SLOT(saveTrayFlags()),
                 true, conf.filterEnabled());
+    m_stopTrafficAction = addAction(
+                menu, QIcon(), tr("Stop Traffic"),
+                this, SLOT(saveTrayFlags()),
+                true, conf.stopTraffic());
 
     menu->addSeparator();
     m_appGroupActions.clear();

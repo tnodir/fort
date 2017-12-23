@@ -91,6 +91,7 @@ int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
 
     confFlags->prov_boot = conf.provBoot();
     confFlags->filter_enabled = conf.filterEnabled();
+    confFlags->stop_traffic = conf.stopTraffic();
     confFlags->ip_include_all = conf.ipInclude()->useAll();
     confFlags->ip_exclude_all = conf.ipExclude()->useAll();
     confFlags->app_block_all = conf.appBlockAll();
@@ -233,6 +234,7 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
 
     drvConf->flags.prov_boot = conf.provBoot();
     drvConf->flags.filter_enabled = conf.filterEnabled();
+    drvConf->flags.stop_traffic = conf.stopTraffic();
 
     drvConf->flags.ip_include_all = conf.ipInclude()->useAll();
     drvConf->flags.ip_exclude_all = conf.ipExclude()->useAll();
