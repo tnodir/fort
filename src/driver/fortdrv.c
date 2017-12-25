@@ -631,7 +631,7 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
     const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
 
     if (len > FORT_CONF_DATA_OFF
-        && conf->app_version == APP_VERSION) {
+        && conf->driver_version == DRIVER_VERSION) {
       PFORT_CONF_REF conf_ref = fort_conf_ref_new(conf, len);
 
       if (conf_ref == NULL) {

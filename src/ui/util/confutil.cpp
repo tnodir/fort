@@ -248,7 +248,7 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
 
     FortCommon::confAppPermsMaskInit(drvConf);
 
-    drvConf->app_version = APP_VERSION;
+    drvConf->driver_version = DRIVER_VERSION;
 
     drvConf->data_off = FORT_CONF_DATA_OFF;
 

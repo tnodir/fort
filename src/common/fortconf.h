@@ -18,7 +18,7 @@ typedef struct fort_conf_flags {
 typedef struct fort_conf {
   FORT_CONF_FLAGS flags;
 
-  UINT32 app_version;
+  UINT16 driver_version;
 
   UINT16 data_off;
 
