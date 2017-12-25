@@ -49,7 +49,7 @@
     <message>
         <location filename="../fortmanager.cpp" line="403"/>
         <source>Stop Traffic</source>
-        <translation>Отключить трафик</translation>
+        <translation>Остановить трафик</translation>
     </message>
     <message>
         <location filename="../fortmanager.cpp" line="418"/>
@@ -354,7 +354,7 @@
     <message>
         <location filename="../qml/pages/OptionsPage.qml" line="54"/>
         <source>Stop Traffic</source>
-        <translation>Отключить трафик</translation>
+        <translation>Остановить трафик</translation>
     </message>
     <message>
         <location filename="../qml/pages/OptionsPage.qml" line="69"/>
