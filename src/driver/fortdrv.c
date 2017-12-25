@@ -172,6 +172,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   UINT32 process_id;
   UINT32 path_len;
   PVOID path;
+  int app_index;
   BOOL ip_included, blocked;
 
   PIRP irp = NULL;
@@ -208,7 +209,8 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   ip_included = fort_conf_ip_included(&conf_ref->conf, remote_ip);
   blocked = ip_included
-    && fort_conf_app_blocked(&conf_ref->conf, path_len, path);
+    && ((app_index = fort_conf_app_index(&conf_ref->conf, path_len, path)),
+      fort_conf_app_blocked(&conf_ref->conf, app_index));
 
   fort_conf_ref_put(conf_ref);
 
@@ -216,12 +218,15 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
     if (ip_included && conf_flags.log_stat) {
       const IPPROTO ip_proto = (IPPROTO) inFixedValues->incomingValue[
         ipProtoField].value.uint8;
+      const UCHAR group_index = fort_conf_app_group_index(
+        &conf_ref->conf, app_index);
       const BOOL is_udp = (ip_proto == IPPROTO_UDP);
       BOOL is_new = FALSE;
       NTSTATUS status;
 
       status = fort_stat_flow_associate(&g_device->stat,
-        inMetaValues->flowHandle, process_id, is_udp, &is_new);
+        inMetaValues->flowHandle, process_id, group_index,
+        is_udp, &is_new);
 
       if (!NT_SUCCESS(status)) {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,

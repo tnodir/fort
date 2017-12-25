@@ -63,6 +63,7 @@ private:
     uint m_limitInEnabled   : 1;
     uint m_limitOutEnabled  : 1;
 
+    // KiBytes per sec.
     quint32 m_speedLimitIn;
     quint32 m_speedLimitOut;
 

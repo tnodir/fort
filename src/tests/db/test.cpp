@@ -24,9 +24,7 @@ void Test::dbWriteRead()
 
     // Add apps
     foreach (const QString &appPath, appPaths) {
-        bool isNew;
-        databaseManager.logProcNew(appPath, isNew);
-        QVERIFY(isNew);
+        databaseManager.logProcNew(appPath);
     }
 
     debugProcNew(databaseManager.sqliteDb());

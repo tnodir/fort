@@ -46,6 +46,8 @@ void Test::confWriteRead()
     appGroup2->setAllowText(
                 "C:\\Utils\\Firefox\\Bin\\firefox.exe"
                 );
+    appGroup2->setLimitInEnabled(true);
+    appGroup2->setSpeedLimitIn(1024);
 
     conf.addAppGroup(appGroup1);
     conf.addAppGroup(appGroup2);
@@ -67,9 +69,20 @@ void Test::confWriteRead()
     QVERIFY(FortCommon::confIpInRange(data, NetUtil::textToIp4("192.168.255.255")));
     QVERIFY(!FortCommon::confIpInRange(data, NetUtil::textToIp4("193.0.0.0")));
 
-    QVERIFY(FortCommon::confAppBlocked(data, "System"));
-    QVERIFY(!FortCommon::confAppBlocked(data, FileUtil::pathToKernelPath("C:\\Program Files\\Skype\\Phone\\Skype.exe").toLower()));
-    QVERIFY(!FortCommon::confAppBlocked(data, FileUtil::pathToKernelPath("C:\\Utils\\Dev\\Git\\").toLower()));
-    QVERIFY(FortCommon::confAppBlocked(data, FileUtil::pathToKernelPath("C:\\Program Files\\Test.exe").toLower()));
-    QVERIFY(FortCommon::confAppBlocked(data, FileUtil::pathToKernelPath("C:\\Utils\\Firefox\\Bin\\firefox.exe").toLower()));
+    QVERIFY(FortCommon::confAppBlocked(
+                data, FortCommon::confAppIndex(data, "System")));
+    QVERIFY(!FortCommon::confAppBlocked(
+                data, FortCommon::confAppIndex(
+                    data, FileUtil::pathToKernelPath("C:\\Program Files\\Skype\\Phone\\Skype.exe").toLower())));
+    QVERIFY(!FortCommon::confAppBlocked(
+                data, FortCommon::confAppIndex(
+                    data, FileUtil::pathToKernelPath("C:\\Utils\\Dev\\Git\\").toLower())));
+    QVERIFY(FortCommon::confAppBlocked(
+                data, FortCommon::confAppIndex(
+                    data, FileUtil::pathToKernelPath("C:\\Program Files\\Test.exe").toLower())));
+
+    const int firefoxIndex = FortCommon::confAppIndex(
+                data, FileUtil::pathToKernelPath("C:\\Utils\\Firefox\\Bin\\firefox.exe").toLower());
+    QVERIFY(FortCommon::confAppBlocked(data, firefoxIndex));
+    QCOMPARE(1, int(FortCommon::confAppGroupIndex(data, firefoxIndex)));
 }

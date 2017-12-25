@@ -140,15 +140,29 @@ bool FortCommon::confIpInRange(const void *drvConf, quint32 ip,
                                 (const quint32 *) (data + toOff));
 }
 
-bool FortCommon::confAppBlocked(const void *drvConf,
-                                const QString &kernelPath)
+int FortCommon::confAppIndex(const void *drvConf,
+                             const QString &kernelPath)
 {
     const PFORT_CONF conf = (const PFORT_CONF) drvConf;
     const QString kernelPathLower = kernelPath.toLower();
     const int len = kernelPathLower.size() * sizeof(wchar_t);
     const wchar_t *p = (const wchar_t *) kernelPathLower.utf16();
 
-    return fort_conf_app_blocked(conf, len, (const char *) p);
+    return fort_conf_app_index(conf, len, (const char *) p);
+}
+
+quint8 FortCommon::confAppGroupIndex(const void *drvConf, int appIndex)
+{
+    const PFORT_CONF conf = (const PFORT_CONF) drvConf;
+
+    return fort_conf_app_group_index(conf, appIndex);
+}
+
+bool FortCommon::confAppBlocked(const void *drvConf, int appIndex)
+{
+    const PFORT_CONF conf = (const PFORT_CONF) drvConf;
+
+    return fort_conf_app_blocked(conf, appIndex);
 }
 
 uint FortCommon::provRegister(bool isBoot)

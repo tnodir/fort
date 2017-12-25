@@ -2,6 +2,9 @@ include(../common/Test.pri)
 
 SOURCES += \
     $$UIPATH/conf/addressgroup.cpp \
+    $$UIPATH/conf/appgroup.cpp \
+    $$UIPATH/conf/firewallconf.cpp \
+    $$UIPATH/task/taskdownloader.cpp \
     $$UIPATH/task/tasktasix.cpp \
     $$UIPATH/task/taskworker.cpp \
     $$UIPATH/util/fileutil.cpp \
@@ -11,6 +14,9 @@ SOURCES += \
 
 HEADERS += \
     $$UIPATH/conf/addressgroup.h \
+    $$UIPATH/conf/appgroup.h \
+    $$UIPATH/conf/firewallconf.h \
+    $$UIPATH/task/taskdownloader.h \
     $$UIPATH/task/tasktasix.h \
     $$UIPATH/task/taskworker.h \
     $$UIPATH/util/fileutil.h \

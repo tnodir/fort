@@ -15,9 +15,9 @@
 #include "fileutil.h"
 #include "net/ip4range.h"
 
-#define APP_GROUP_MAX       16
+#define APP_GROUP_MAX       FORT_CONF_GROUP_MAX
 #define APP_GROUP_NAME_MAX  128
-#define APP_PATH_MAX        1024
+#define APP_PATH_MAX        (FORT_CONF_APP_PATH_MAX / sizeof(wchar_t))
 
 ConfUtil::ConfUtil(QObject *parent) :
     QObject(parent)
@@ -51,9 +51,11 @@ int ConfUtil::write(const FirewallConf &conf, QByteArray &buf)
     int appPathsLen = 0;
     QStringList appPaths;
     appperms_arr_t appPerms;
+    appgroups_arr_t appGroupIndexes;
 
     if (!parseAppGroups(conf.appGroupsList(),
-                        appPaths, appPathsLen, appPerms))
+                        appPaths, appPathsLen,
+                        appPerms, appGroupIndexes))
         return false;
 
     // Calculate maximum required buffer size
@@ -67,6 +69,7 @@ int ConfUtil::write(const FirewallConf &conf, QByteArray &buf)
     // Fill the buffer
     const int confSize = FORT_CONF_DATA_OFF
             + (incRange.size() + excRange.size()) * 2 * sizeof(quint32)
+            + FORT_CONF_STR_DATA_SIZE(appGroupIndexes.size())
             + appPaths.size() * sizeof(quint32)
             + FORT_CONF_STR_HEADER_SIZE(appPaths.size())
             + FORT_CONF_STR_DATA_SIZE(appPathsLen);
@@ -74,8 +77,8 @@ int ConfUtil::write(const FirewallConf &conf, QByteArray &buf)
     buf.reserve(confSize);
 
     writeData(buf.data(), conf,
-              incRange, excRange,
-              appPaths, appPerms);
+              incRange, excRange, appPaths,
+              appPerms, appGroupIndexes);
 
     return confSize;
 }
@@ -106,7 +109,8 @@ int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
 bool ConfUtil::parseAppGroups(const QList<AppGroup *> &appGroups,
                               QStringList &appPaths,
                               int &appPathsLen,
-                              appperms_arr_t &appPerms)
+                              appperms_arr_t &appPerms,
+                              appgroups_arr_t &appGroupIndexes)
 {
     const int groupsCount = appGroups.size();
     if (groupsCount > APP_GROUP_MAX) {
@@ -127,8 +131,10 @@ bool ConfUtil::parseAppGroups(const QList<AppGroup *> &appGroups,
             return false;
         }
 
-        if (!parseApps(appGroup->blockText(), true, appPermsMap, i)
-                || !parseApps(appGroup->allowText(), false, appPermsMap, i))
+        if (!parseApps(appGroup->blockText(), true,
+                       appPermsMap, appGroupIndexes, i)
+                || !parseApps(appGroup->allowText(), false,
+                              appPermsMap, appGroupIndexes, i))
             return false;
     }
 
@@ -152,7 +158,9 @@ bool ConfUtil::parseAppGroups(const QList<AppGroup *> &appGroups,
 }
 
 bool ConfUtil::parseApps(const QString &text, bool blocked,
-                         appperms_map_t &appPermsMap, int groupOffset)
+                         appperms_map_t &appPermsMap,
+                         appgroups_arr_t &appGroupIndexes,
+                         int groupOffset)
 {
     foreach (const QStringRef &line,
              text.splitRef(QLatin1Char('\n'))) {
@@ -171,7 +179,13 @@ bool ConfUtil::parseApps(const QString &text, bool blocked,
 
         const quint32 permVal = blocked ? 2 : 1;
         const quint32 appPerm = permVal << (groupOffset * 2);
-        const quint32 appPerms = appPerm | appPermsMap.value(appPath, 0);
+        quint32 appPerms = appPerm;
+
+        if (appPermsMap.contains(appPath)) {
+            appPerms |= appPermsMap.value(appPath);
+        } else {
+            appGroupIndexes.append(groupOffset);
+        }
 
         appPermsMap.insert(appPath, appPerms);
     }
@@ -200,7 +214,8 @@ QString ConfUtil::parseAppPath(const QStringRef &line)
 void ConfUtil::writeData(char *output, const FirewallConf &conf,
                          const Ip4Range &incRange, const Ip4Range &excRange,
                          const QStringList &appPaths,
-                         const appperms_arr_t &appPerms)
+                         const appperms_arr_t &appPerms,
+                         const appgroups_arr_t &appGroupIndexes)
 {
     PFORT_CONF drvConf = (PFORT_CONF) output;
     char *data = (char *) &drvConf->data;
@@ -209,7 +224,7 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     const quint32 appPathsSize = appPaths.size();
     quint32 incRangeFromOff, incRangeToOff;
     quint32 excRangeFromOff, excRangeToOff;
-    quint32 appPathsOff, appPermsOff;
+    quint32 appPathsOff, appPermsOff, appGroupsOff;
 
 #define CONF_DATA_OFFSET (data - (char *) &drvConf->data)
     incRangeFromOff = CONF_DATA_OFFSET;
@@ -223,6 +238,9 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
 
     excRangeToOff = CONF_DATA_OFFSET;
     writeNumbers(&data, excRange.toArray());
+
+    appGroupsOff = CONF_DATA_OFFSET;
+    writeChars(&data, appGroupIndexes);
 
     appPermsOff = CONF_DATA_OFFSET;
     writeNumbers(&data, appPerms);
@@ -255,6 +273,8 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     drvConf->ip_include_n = incRangeSize;
     drvConf->ip_exclude_n = excRangeSize;
 
+    drvConf->limit_bits = writeLimits(drvConf->limits, conf.appGroupsList());
+
     drvConf->apps_n = appPathsSize;
 
     drvConf->ip_from_include_off = incRangeFromOff;
@@ -263,8 +283,32 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     drvConf->ip_from_exclude_off = excRangeFromOff;
     drvConf->ip_to_exclude_off = excRangeToOff;
 
+    drvConf->app_groups_off = appGroupsOff;
     drvConf->app_perms_off = appPermsOff;
     drvConf->apps_off = appPathsOff;
+}
+
+quint16 ConfUtil::writeLimits(struct fort_conf_limit *limits,
+                              const QList<AppGroup *> &appGroups)
+{
+    PFORT_CONF_LIMIT limit = &limits[0];
+    quint16 limit_bits = 0;
+
+    const int groupsCount = appGroups.size();
+    for (int i = 0; i < groupsCount; ++i, ++limit) {
+        const AppGroup *appGroup = appGroups.at(i);
+
+        limit->in_bytes = appGroup->enabled() && appGroup->limitInEnabled()
+                ? appGroup->speedLimitIn() * 1024 / 2 : 0;
+        limit->out_bytes = appGroup->enabled() && appGroup->limitOutEnabled()
+                ? appGroup->speedLimitOut() * 1024 / 2 : 0;
+
+        if (limit->in_bytes || limit->out_bytes) {
+            limit_bits |= (1 << i);
+        }
+    }
+
+    return limit_bits;
 }
 
 void ConfUtil::writeNumbers(char **data, const QVector<quint32> &array)
@@ -274,6 +318,15 @@ void ConfUtil::writeNumbers(char **data, const QVector<quint32> &array)
     memcpy(*data, array.constData(), arraySize);
 
     *data += arraySize;
+}
+
+void ConfUtil::writeChars(char **data, const QVector<qint8> &array)
+{
+    const int arraySize = array.size();
+
+    memcpy(*data, array.constData(), arraySize);
+
+    *data += FORT_CONF_STR_DATA_SIZE(arraySize);
 }
 
 void ConfUtil::writeStrings(char **data, const QStringList &list)

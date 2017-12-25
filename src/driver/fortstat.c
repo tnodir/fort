@@ -34,10 +34,10 @@ typedef struct fort_stat_flow {
 } FORT_STAT_FLOW, *PFORT_STAT_FLOW;
 
 typedef struct fort_stat {
-  UINT8 volatile closing;
-  UINT8 is_dirty;
+  UCHAR volatile closing;
+  UCHAR is_dirty;
 
-  UINT16 version;
+  UCHAR version;
 
   UINT16 proc_count;
   UINT16 proc_top;
@@ -381,7 +381,8 @@ fort_stat_close (PFORT_STAT stat)
 
 static NTSTATUS
 fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
-                          UINT32 process_id, BOOL is_udp, BOOL *is_new)
+                          UINT32 process_id, UCHAR group_index,
+                          BOOL is_udp, BOOL *is_new)
 {
   KLOCK_QUEUE_HANDLE lock_queue;
   UINT64 flow_context;
@@ -415,8 +416,9 @@ fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
   }
 
   flow_context = (UINT64) flow_index
-    | ((UINT64) proc_index << 32)
-    | ((UINT64) stat->version << 48);
+    | ((UINT64) stat->version << 32)
+    | ((UINT64) proc_index << 40)
+    | ((UINT64) group_index << 56);
 
   status = fort_stat_flow_set_context(stat, flow_id, flow_context, is_udp);
 
@@ -446,8 +448,8 @@ fort_stat_flow_delete (PFORT_STAT stat, UINT64 flow_context)
 {
   KLOCK_QUEUE_HANDLE lock_queue;
   const UINT32 flow_index = (UINT32) flow_context;
-  const UINT16 proc_index = (UINT16) (flow_context >> 32);
-  const UINT16 stat_version = (UINT16) (flow_context >> 48);
+  const UINT16 proc_index = (UINT16) (flow_context >> 40);
+  const UCHAR stat_version = (UCHAR) (flow_context >> 32);
 
   if (stat->closing)
     return;
@@ -466,8 +468,8 @@ fort_stat_flow_classify (PFORT_STAT stat, UINT64 flow_context,
 {
   PFORT_STAT_PROC proc;
   KLOCK_QUEUE_HANDLE lock_queue;
-  const UINT16 proc_index = (UINT16) (flow_context >> 32);
-  const UINT16 stat_version = (UINT16) (flow_context >> 48);
+  const UINT16 proc_index = (UINT16) (flow_context >> 40);
+  const UCHAR stat_version = (UCHAR) (flow_context >> 32);
 
   if (stat->closing)
     return;

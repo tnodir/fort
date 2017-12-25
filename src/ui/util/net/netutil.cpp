@@ -74,7 +74,11 @@ int NetUtil::bitCount(quint32 u)
 
 QString NetUtil::formatDataSize(qint64 bytes, int precision)
 {
+#if QT_VERSION < QT_VERSION_CHECK(5, 10, 0)
+    return QString::number(double(bytes), 'f', precision);
+#else
     return QLocale().formattedDataSize(bytes, precision);
+#endif
 }
 
 QString NetUtil::getHostName(const QString &address)

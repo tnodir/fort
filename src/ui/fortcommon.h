@@ -50,8 +50,10 @@ public:
     static void confAppPermsMaskInit(void *drvConf);
     static bool confIpInRange(const void *drvConf, quint32 ip,
                               bool included = false);
-    static bool confAppBlocked(const void *drvConf,
-                               const QString &kernelPath);
+    static int confAppIndex(const void *drvConf,
+                            const QString &kernelPath);
+    static quint8 confAppGroupIndex(const void *drvConf, int appIndex);
+    static bool confAppBlocked(const void *drvConf, int appIndex);
 
     static uint provRegister(bool isBoot);
     static void provUnregister();
