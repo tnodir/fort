@@ -1,5 +1,43 @@
-import QtQuick 2.0
+import QtQuick 2.9
+import QtQuick.Controls 2.2
 
-Item {
+ListView {
+    id: listView
 
+    signal clicked(int index)
+
+    readonly property string currentItemText:
+        (currentIndex >= 0 && currentIndex < count && currentItem)
+        ? currentItem.displayText : ""
+
+    Keys.onUpPressed: decrementCurrentIndex()
+    Keys.onDownPressed: incrementCurrentIndex()
+
+    ScrollBar.vertical: ScrollBarControl {}
+
+    highlightRangeMode: ListView.ApplyRange
+    highlightResizeDuration: 0
+    highlightMoveDuration: 200
+
+    highlight: Item {
+        Rectangle {
+            anchors.fill: parent
+            anchors.margins: 1 - listView.spacing / 2 - border.width
+            radius: 2
+            border.width: 3
+            border.color: palette.highlight
+            color: "transparent"
+        }
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+            const index = listView.indexAt(mouse.x, mouse.y);
+            if (index >= 0) {
+                listView.currentIndex = index;
+                listView.clicked(index);
+            }
+        }
+    }
 }

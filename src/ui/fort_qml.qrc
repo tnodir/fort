@@ -3,6 +3,7 @@
         <file>qml/controls/ButtonMenu.qml</file>
         <file>qml/controls/ButtonPopup.qml</file>
         <file>qml/controls/LinkButton.qml</file>
+        <file>qml/controls/ListViewControl.qml</file>
         <file>qml/controls/RoundButtonTip.qml</file>
         <file>qml/controls/ScrollBarControl.qml</file>
         <file>qml/controls/SpinCombo.qml</file>
@@ -24,6 +25,7 @@
         <file>qml/pages/apps/AppsTextColumn.qml</file>
         <file>qml/pages/apps/SpeedLimitButton.qml</file>
         <file>qml/pages/log/AppListView.qml</file>
+        <file>qml/pages/log/IpListView.qml</file>
         <file>qml/pages/log/TrafKeepButton.qml</file>
         <file>qml/pages/log/TrafRow.qml</file>
         <file>qml/pages/schedule/TaskRow.qml</file>

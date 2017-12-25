@@ -12,9 +12,9 @@ BasePage {
     readonly property IpListModel ipListModel:
         appBlockedModel.ipListModel(currentAppPath)
 
-    readonly property string currentAppPath:
-        (appListView.currentIndex >= 0 && appListView.currentItem)
-        ? appListView.currentItem.appPath : ""
+    readonly property string currentAppPath: appListView.currentItemText
+
+    readonly property string currentIpText: ipListView.currentItemText
 
     HostInfoCache {
         id: hostInfoCache
@@ -45,6 +45,26 @@ BasePage {
                         appListView.currentIndex = -1;
                         appBlockedModel.clear();
                     }
+                }
+            }
+
+            ButtonMenu {
+                enabled: appListView.count
+                icon.source: "qrc:/images/page_copy.png"
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Copy…")
+
+                MenuItem {
+                    enabled: !!currentAppPath
+                    text: translationManager.dummyBool
+                          && qsTranslate("qml", "Application Path")
+                    onTriggered: guiUtil.setClipboardData(currentAppPath)
+                }
+                MenuItem {
+                    enabled: !!currentIpText
+                    text: translationManager.dummyBool
+                          && qsTranslate("qml", "IP Address")
+                    onTriggered: guiUtil.setClipboardData(currentIpText)
                 }
             }
 
@@ -101,25 +121,12 @@ BasePage {
                     model: appBlockedModel
                 }
 
-                ListView {
+                IpListView {
                     id: ipListView
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    spacing: 5
 
                     model: ipListModel
-
-                    delegate: Label {
-                        width: ipListView.width
-                        elide: Text.ElideRight
-                        text: (firewallConf.resolveAddress
-                               && hostInfoCache.dummyBool
-                               && hostInfoCache.hostName(ipText)) || ipText
-
-                        readonly property string ipText: display
-                    }
-
-                    ScrollBar.vertical: ScrollBarControl {}
                 }
             }
         }

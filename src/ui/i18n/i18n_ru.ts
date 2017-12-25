@@ -14,22 +14,22 @@
         <translation>Некорректный IP адрес для исключения: %1</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="63"/>
+        <location filename="../util/confutil.cpp" line="65"/>
         <source>Size of configuration is too big</source>
         <translation>Конфигурация слишком большая</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="113"/>
+        <location filename="../util/confutil.cpp" line="117"/>
         <source>Number of Application Groups must be &lt; %1</source>
         <translation>Количество групп приложений должно быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="125"/>
+        <location filename="../util/confutil.cpp" line="129"/>
         <source>Length of Application Group&apos;s Name must be &lt; %1</source>
         <translation>Длина наименования группы приложения должна быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="167"/>
+        <location filename="../util/confutil.cpp" line="175"/>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Длина пути приложения должна быть &lt; %1</translation>
     </message>
@@ -148,7 +148,7 @@
 <context>
     <name>TaskUpdateChecker</name>
     <message>
-        <location filename="../task/taskupdatechecker.cpp" line="35"/>
+        <location filename="../task/taskupdatechecker.cpp" line="36"/>
         <source>New version!</source>
         <translation>Новая версия!</translation>
     </message>
@@ -185,29 +185,44 @@
     </message>
     <message>
         <location filename="../qml/pages/BlockedPage.qml" line="32"/>
-        <location filename="../qml/pages/StatisticsPage.qml" line="57"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="55"/>
         <source>Clear…</source>
         <translation>Очистить…</translation>
     </message>
     <message>
         <location filename="../qml/pages/BlockedPage.qml" line="37"/>
-        <location filename="../qml/pages/StatisticsPage.qml" line="62"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="60"/>
         <source>Remove Application</source>
         <translation>Удалить приложение</translation>
     </message>
     <message>
         <location filename="../qml/pages/BlockedPage.qml" line="43"/>
-        <location filename="../qml/pages/StatisticsPage.qml" line="73"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="71"/>
         <source>Clear All</source>
         <translation>Очистить всё</translation>
     </message>
     <message>
-        <location filename="../qml/pages/BlockedPage.qml" line="53"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="55"/>
+        <source>Copy…</source>
+        <translation>Копировать…</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/BlockedPage.qml" line="60"/>
+        <source>Application Path</source>
+        <translation>Путь приложения</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/BlockedPage.qml" line="66"/>
+        <source>IP Address</source>
+        <translation>IP Адрес</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/BlockedPage.qml" line="73"/>
         <source>Resolve Addresses</source>
         <translation>Преобразовать адреса</translation>
     </message>
     <message>
-        <location filename="../qml/pages/BlockedPage.qml" line="74"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="94"/>
         <source>Log Blocked Applications</source>
         <translation>Показ блокированных приложений</translation>
     </message>
@@ -500,101 +515,101 @@
         <translation>Успешный запуск</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="32"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="30"/>
         <source>Adaptive</source>
         <translation>Адаптивный</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="33"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="31"/>
         <source>Bytes</source>
         <translation>Байты</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="34"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="32"/>
         <source>KiB</source>
         <translation>KiB</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="35"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="33"/>
         <source>MiB</source>
         <translation>MiB</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="36"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="34"/>
         <source>GiB</source>
         <translation>GiB</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="37"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="35"/>
         <source>TiB</source>
         <translation>TiB</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="49"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="47"/>
         <source>Refresh</source>
         <translation>Обновить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="94"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="92"/>
         <source>Units:</source>
         <translation>Единицы:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="68"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="66"/>
         <source>Reset Total</source>
         <translation>Сбросить общую</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="124"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="122"/>
         <source>Collect Traffic Statistics</source>
         <translation>Собирать статистику трафика</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="155"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="153"/>
         <source>All</source>
         <translation>Все</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="172"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="170"/>
         <source>Hourly</source>
         <comment>Stat</comment>
         <translation>Почасовая</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="176"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="174"/>
         <source>Daily</source>
         <comment>Stat</comment>
         <translation>Ежедневная</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="180"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="178"/>
         <source>Monthly</source>
         <comment>Stat</comment>
         <translation>Ежемесячная</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="184"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="182"/>
         <source>Total</source>
         <comment>Stat</comment>
         <translation>Общая</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="195"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="193"/>
         <source>Date</source>
         <translation>Дата</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="200"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="198"/>
         <source>Download</source>
         <translation>Загрузка</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="205"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="203"/>
         <source>Upload</source>
         <translation>Выгрузка</translation>
     </message>
     <message>
-        <location filename="../qml/pages/StatisticsPage.qml" line="210"/>
+        <location filename="../qml/pages/StatisticsPage.qml" line="208"/>
         <source>Sum</source>
         <translation>Сумма</translation>
     </message>

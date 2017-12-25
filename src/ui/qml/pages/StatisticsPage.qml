@@ -15,9 +15,7 @@ BasePage {
                                    appListView.currentIndex,
                                    currentAppPath)
 
-    readonly property string currentAppPath:
-        (appListView.currentIndex >= 0 && appListView.currentItem)
-        ? appListView.currentItem.appPath : ""
+    readonly property string currentAppPath: appListView.currentItemText
 
     readonly property var trafCellWidths: [
         trafsContainer.width * 0.34,

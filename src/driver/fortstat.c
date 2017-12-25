@@ -417,8 +417,8 @@ fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
 
   flow_context = (UINT64) flow_index
     | ((UINT64) stat->version << 32)
-    | ((UINT64) proc_index << 40)
-    | ((UINT64) group_index << 56);
+    | ((UINT64) group_index << 40)
+    | ((UINT64) proc_index << 48);
 
   status = fort_stat_flow_set_context(stat, flow_id, flow_context, is_udp);
 
@@ -448,7 +448,7 @@ fort_stat_flow_delete (PFORT_STAT stat, UINT64 flow_context)
 {
   KLOCK_QUEUE_HANDLE lock_queue;
   const UINT32 flow_index = (UINT32) flow_context;
-  const UINT16 proc_index = (UINT16) (flow_context >> 40);
+  const UINT16 proc_index = (UINT16) (flow_context >> 48);
   const UCHAR stat_version = (UCHAR) (flow_context >> 32);
 
   if (stat->closing)
@@ -468,7 +468,7 @@ fort_stat_flow_classify (PFORT_STAT stat, UINT64 flow_context,
 {
   PFORT_STAT_PROC proc;
   KLOCK_QUEUE_HANDLE lock_queue;
-  const UINT16 proc_index = (UINT16) (flow_context >> 40);
+  const UINT16 proc_index = (UINT16) (flow_context >> 48);
   const UCHAR stat_version = (UCHAR) (flow_context >> 32);
 
   if (stat->closing)
