@@ -15,7 +15,6 @@ ListView {
 
     ScrollBar.vertical: ScrollBarControl {}
 
-    highlightRangeMode: ListView.ApplyRange
     highlightResizeDuration: 0
     highlightMoveDuration: 200
 
@@ -33,7 +32,8 @@ ListView {
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            const index = listView.indexAt(mouse.x, mouse.y);
+            const index = listView.indexAt(listView.contentX + mouse.x,
+                                           listView.contentY + mouse.y);
             if (index >= 0) {
                 listView.currentIndex = index;
                 listView.clicked(index);
