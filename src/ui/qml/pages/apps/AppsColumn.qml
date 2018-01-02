@@ -33,7 +33,9 @@ ColumnLayout {
             Layout.preferredWidth: 10
         }
 
-        SpeedLimitButton {}
+        SpeedLimitButton {
+            visible: firewallConf.logStat
+        }
 
         Item {
             Layout.fillWidth: true

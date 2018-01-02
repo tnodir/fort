@@ -262,6 +262,9 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     drvConf->flags.log_blocked = conf.logBlocked();
     drvConf->flags.log_stat = conf.logStat();
 
+    drvConf->flags.speed_limit = writeLimits(
+                drvConf->limits, conf.appGroupsList());
+
     drvConf->flags.group_bits = conf.appGroupBits();
 
     FortCommon::confAppPermsMaskInit(drvConf);
@@ -272,8 +275,6 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
 
     drvConf->ip_include_n = incRangeSize;
     drvConf->ip_exclude_n = excRangeSize;
-
-    drvConf->limit_bits = writeLimits(drvConf->limits, conf.appGroupsList());
 
     drvConf->apps_n = appPathsSize;
 
@@ -288,11 +289,11 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     drvConf->apps_off = appPathsOff;
 }
 
-quint16 ConfUtil::writeLimits(struct fort_conf_limit *limits,
-                              const QList<AppGroup *> &appGroups)
+bool ConfUtil::writeLimits(struct fort_conf_limit *limits,
+                           const QList<AppGroup *> &appGroups)
 {
     PFORT_CONF_LIMIT limit = &limits[0];
-    quint16 limit_bits = 0;
+    bool speedLimit = false;
 
     const int groupsCount = appGroups.size();
     for (int i = 0; i < groupsCount; ++i, ++limit) {
@@ -303,12 +304,13 @@ quint16 ConfUtil::writeLimits(struct fort_conf_limit *limits,
         limit->out_bytes = appGroup->enabled() && appGroup->limitOutEnabled()
                 ? appGroup->speedLimitOut() * 1024 / 2 : 0;
 
+        const quint16 bit = quint16(1 << i);
         if (limit->in_bytes || limit->out_bytes) {
-            limit_bits |= (1 << i);
+            speedLimit = true;
         }
     }
 
-    return limit_bits;
+    return speedLimit;
 }
 
 void ConfUtil::writeNumbers(char **data, const QVector<quint32> &array)

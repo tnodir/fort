@@ -57,8 +57,8 @@ private:
                           const appperms_arr_t &appPerms,
                           const appgroups_arr_t &appGroupIndexes);
 
-    static quint16 writeLimits(struct fort_conf_limit *limits,
-                               const QList<AppGroup *> &appGroups);
+    static bool writeLimits(struct fort_conf_limit *limits,
+                            const QList<AppGroup *> &appGroups);
 
     static void writeNumbers(char **data, const QVector<quint32> &array);
     static void writeChars(char **data, const QVector<qint8> &array);

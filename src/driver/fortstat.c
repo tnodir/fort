@@ -4,11 +4,21 @@
 
 #define FORT_PROC_BAD_INDEX	((UINT16) -1)
 #define FORT_FLOW_BAD_INDEX	((UINT32) -1)
+#define FORT_FLOW_BAD_ID	((UINT64) -1LL)
 
 typedef struct fort_stat_traf {
   UINT32 in_bytes;
   UINT32 out_bytes;
 } FORT_STAT_TRAF, *PFORT_STAT_TRAF;
+
+typedef struct fort_stat_group {
+  FORT_CONF_LIMIT limit;
+
+  union {
+    LARGE_INTEGER traf_all;
+    FORT_STAT_TRAF traf;
+  };
+} FORT_STAT_GROUP, *PFORT_STAT_GROUP;
 
 typedef struct fort_stat_proc {
   UINT16 next_index;
@@ -23,14 +33,12 @@ typedef struct fort_stat_proc {
 } FORT_STAT_PROC, *PFORT_STAT_PROC;
 
 typedef struct fort_stat_flow {
-  union {
-    struct {
-      UINT32 next_index;
-      UINT32 is_free;
-    };
+  UINT32 is_udp		: 1;
+  UINT32 speed_limit	: 1;
 
-    UINT64 flow_id;
-  };
+  UINT32 next_free_index;
+
+  UINT64 flow_id;
 } FORT_STAT_FLOW, *PFORT_STAT_FLOW;
 
 typedef struct fort_stat {
@@ -54,6 +62,10 @@ typedef struct fort_stat {
 
   UINT32 stream4_id;
   UINT32 datagram4_id;
+  UINT32 in_transport4_id;
+  UINT32 out_transport4_id;
+
+  FORT_STAT_GROUP groups[FORT_CONF_GROUP_MAX];
 
   PFORT_STAT_PROC procs;
   PFORT_STAT_FLOW flows;
@@ -222,9 +234,9 @@ fort_stat_flow_free (PFORT_STAT stat, UINT32 flow_index)
     PFORT_STAT_FLOW flow = &stat->flows[flow_index];
 
     /* Add to free chain */
-    flow->is_free = FORT_FLOW_BAD_INDEX;
+    flow->flow_id = FORT_FLOW_BAD_ID;
 
-    flow->next_index = stat->flow_free_index;
+    flow->next_free_index = stat->flow_free_index;
     stat->flow_free_index = flow_index;
   }
 
@@ -256,7 +268,8 @@ fort_stat_flow_realloc (PFORT_STAT stat)
 }
 
 static UINT32
-fort_stat_flow_add (PFORT_STAT stat, UINT64 flow_id)
+fort_stat_flow_add (PFORT_STAT stat, UINT64 flow_id,
+                    BOOL is_udp, BOOL speed_limit)
 {
   PFORT_STAT_FLOW flow;
   UINT32 flow_index = stat->flow_free_index;
@@ -264,7 +277,7 @@ fort_stat_flow_add (PFORT_STAT stat, UINT64 flow_id)
   if (flow_index != FORT_FLOW_BAD_INDEX) {
     flow = &stat->flows[flow_index];
 
-    stat->flow_free_index = flow->next_index;
+    stat->flow_free_index = flow->next_free_index;
   } else {
     if (stat->flow_top >= stat->flow_end
         && !fort_stat_flow_realloc(stat)) {
@@ -275,6 +288,9 @@ fort_stat_flow_add (PFORT_STAT stat, UINT64 flow_id)
     flow = &stat->flows[flow_index];
   }
 
+  flow->is_udp = is_udp;
+  flow->speed_limit = speed_limit;
+
   flow->flow_id = flow_id;
 
   stat->flow_count++;
@@ -283,13 +299,9 @@ fort_stat_flow_add (PFORT_STAT stat, UINT64 flow_id)
 }
 
 static NTSTATUS
-fort_stat_flow_set_context (PFORT_STAT stat, UINT64 flow_id,
-                            UINT64 flow_context, BOOL is_udp)
+fort_stat_flow_set_context (UINT64 flow_id, UINT16 layer_id,
+                            UINT32 callout_id, UINT64 flow_context)
 {
-  const UINT16 layer_id = is_udp ? FWPS_LAYER_DATAGRAM_DATA_V4
-    : FWPS_LAYER_STREAM_V4;
-  const UINT32 callout_id = is_udp ? stat->datagram4_id : stat->stream4_id;
-
   return FwpsFlowAssociateContext0(flow_id, layer_id,
     callout_id, flow_context);
 }
@@ -302,20 +314,44 @@ fort_stat_flow_remove_context (UINT64 flow_id, UINT16 layer_id,
 }
 
 static void
+fort_stat_flow_transport_remove_contexts (PFORT_STAT stat, PFORT_STAT_FLOW flow)
+{
+  fort_stat_flow_remove_context(flow->flow_id,
+    FWPS_LAYER_INBOUND_TRANSPORT_V4, stat->in_transport4_id);
+  fort_stat_flow_remove_context(flow->flow_id,
+    FWPS_LAYER_OUTBOUND_TRANSPORT_V4, stat->out_transport4_id);
+}
+
+static void
+fort_stat_flow_transport_check_remove_contexts (PFORT_STAT stat, UINT32 flow_index)
+{
+  PFORT_STAT_FLOW flow = &stat->flows[flow_index];
+
+  if (!flow->is_udp && flow->speed_limit) {
+    fort_stat_flow_transport_remove_contexts(stat, flow);
+  }
+}
+
+static void
 fort_stat_flow_remove_contexts (PFORT_STAT stat)
 {
   PFORT_STAT_FLOW flow = stat->flows;
   UINT32 count = stat->flow_count;
 
   for (; count != 0; ++flow) {
-    if (flow->is_free == FORT_FLOW_BAD_INDEX)
+    if (flow->flow_id == FORT_FLOW_BAD_ID)
       continue;
 
-    if (!NT_SUCCESS(fort_stat_flow_remove_context(
-        flow->flow_id, FWPS_LAYER_STREAM_V4, stat->stream4_id))) {
-
+    // Remove stream/dgram layer context
+    if (flow->is_udp) {
       fort_stat_flow_remove_context(flow->flow_id,
         FWPS_LAYER_DATAGRAM_DATA_V4, stat->datagram4_id);
+    } else {
+      fort_stat_flow_remove_context(flow->flow_id,
+        FWPS_LAYER_STREAM_V4, stat->stream4_id);
+
+      // Remove stream transport layer contexts
+      fort_stat_flow_transport_remove_contexts(stat, flow);
     }
 
     --count;
@@ -382,7 +418,7 @@ fort_stat_close (PFORT_STAT stat)
 static NTSTATUS
 fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
                           UINT32 process_id, UCHAR group_index,
-                          BOOL is_udp, BOOL *is_new)
+                          BOOL is_udp, BOOL speed_limit, BOOL *is_new)
 {
   KLOCK_QUEUE_HANDLE lock_queue;
   UINT64 flow_context;
@@ -408,7 +444,7 @@ fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
     *is_new = TRUE;
   }
 
-  flow_index = fort_stat_flow_add(stat, flow_id);
+  flow_index = fort_stat_flow_add(stat, flow_id, is_udp, speed_limit);
 
   if (flow_index == FORT_FLOW_BAD_INDEX) {
     status = STATUS_INSUFFICIENT_RESOURCES;
@@ -420,9 +456,26 @@ fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
     | ((UINT64) group_index << 40)
     | ((UINT64) proc_index << 48);
 
-  status = fort_stat_flow_set_context(stat, flow_id, flow_context, is_udp);
+  // Set stream/dgram layer context
+  {
+    const UINT16 layer_id = is_udp ? FWPS_LAYER_DATAGRAM_DATA_V4
+      : FWPS_LAYER_STREAM_V4;
+    const UINT32 callout_id = is_udp ? stat->datagram4_id
+      : stat->stream4_id;
+
+    status = fort_stat_flow_set_context(
+      flow_id, layer_id, callout_id, flow_context);
+  }
 
   if (NT_SUCCESS(status)) {
+    // Set transport layer contexts
+    if (!is_udp && speed_limit) {
+      fort_stat_flow_set_context(flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V4,
+        stat->in_transport4_id, flow_context);
+      fort_stat_flow_set_context(flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V4,
+        stat->out_transport4_id, flow_context);
+    }
+
     fort_stat_proc_inc(stat, proc_index);
   } else {
     fort_stat_flow_free(stat, flow_index);
@@ -456,6 +509,7 @@ fort_stat_flow_delete (PFORT_STAT stat, UINT64 flow_context)
 
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
   if (stat_version == stat->version) {
+    fort_stat_flow_transport_check_remove_contexts(stat, flow_index);
     fort_stat_flow_free(stat, flow_index);
     fort_stat_proc_dec(stat, proc_index);
   }

@@ -221,12 +221,13 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
       const UCHAR group_index = fort_conf_app_group_index(
         &conf_ref->conf, app_index);
       const BOOL is_udp = (ip_proto == IPPROTO_UDP);
+      const BOOL speed_limit = conf_flags.speed_limit;
       BOOL is_new = FALSE;
       NTSTATUS status;
 
       status = fort_stat_flow_associate(&g_device->stat,
         inMetaValues->flowHandle, process_id, group_index,
-        is_udp, &is_new);
+        is_udp, speed_limit, &is_new);
 
       if (!NT_SUCCESS(status)) {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
@@ -355,6 +356,54 @@ fort_callout_datagram_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   classifyOut->actionType = FWP_ACTION_CONTINUE;
 }
 
+static void
+fort_callout_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
+                                    const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
+                                    const PNET_BUFFER_LIST netBufList,
+                                    const FWPS_FILTER0 *filter,
+                                    UINT64 flowContext,
+                                    FWPS_CLASSIFY_OUT0 *classifyOut,
+                                    BOOL inbound)
+{
+  //fort_stat_flow_shape(&g_device->stat, flowContext, inbound);
+
+  classifyOut->actionType = FWP_ACTION_CONTINUE;
+}
+
+static void
+fort_callout_in_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
+                                       const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
+                                       const PNET_BUFFER_LIST netBufList,
+                                       const FWPS_FILTER0 *filter,
+                                       UINT64 flowContext,
+                                       FWPS_CLASSIFY_OUT0 *classifyOut)
+{
+  fort_callout_transport_classify_v4(inFixedValues, inMetaValues, netBufList,
+    filter, flowContext, classifyOut, TRUE);
+}
+
+static void
+fort_callout_out_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
+                                        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
+                                        const PNET_BUFFER_LIST netBufList,
+                                        const FWPS_FILTER0 *filter,
+                                        UINT64 flowContext,
+                                        FWPS_CLASSIFY_OUT0 *classifyOut)
+{
+  fort_callout_transport_classify_v4(inFixedValues, inMetaValues, netBufList,
+    filter, flowContext, classifyOut, FALSE);
+}
+
+static void
+fort_callout_transport_delete_v4 (UINT16 layerId,
+                                  UINT32 calloutId,
+                                  UINT64 flowContext)
+{
+  UNUSED(layerId);
+  UNUSED(calloutId);
+  UNUSED(flowContext);
+}
+
 static NTSTATUS
 fort_callout_install (PDEVICE_OBJECT device)
 {
@@ -415,6 +464,34 @@ fort_callout_install (PDEVICE_OBJECT device)
     return status;
   }
 
+  /* IPv4 inbound transport callout */
+  c.calloutKey = FORT_GUID_CALLOUT_IN_TRANSPORT_V4;
+  c.classifyFn = fort_callout_in_transport_classify_v4;
+
+  c.flowDeleteFn = fort_callout_transport_delete_v4;
+  c.flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW;
+
+  status = FwpsCalloutRegister0(device, &c, &g_device->stat.in_transport4_id);
+  if (!NT_SUCCESS(status)) {
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+               "FORT: Register Inbound Transport V4: Error: %d\n", status);
+    return status;
+  }
+
+  /* IPv4 outbound transport callout */
+  c.calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V4;
+  c.classifyFn = fort_callout_out_transport_classify_v4;
+
+  c.flowDeleteFn = fort_callout_transport_delete_v4;
+  c.flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW;
+
+  status = FwpsCalloutRegister0(device, &c, &g_device->stat.out_transport4_id);
+  if (!NT_SUCCESS(status)) {
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+               "FORT: Register Outbound Transport V4: Error: %d\n", status);
+    return status;
+  }
+
   return STATUS_SUCCESS;
 }
 
@@ -439,6 +516,16 @@ fort_callout_remove (void)
   if (g_device->stat.datagram4_id) {
     FwpsCalloutUnregisterById0(g_device->stat.datagram4_id);
     g_device->stat.datagram4_id = 0;
+  }
+
+  if (g_device->stat.in_transport4_id) {
+    FwpsCalloutUnregisterById0(g_device->stat.in_transport4_id);
+    g_device->stat.in_transport4_id = 0;
+  }
+
+  if (g_device->stat.out_transport4_id) {
+    FwpsCalloutUnregisterById0(g_device->stat.out_transport4_id);
+    g_device->stat.out_transport4_id = 0;
   }
 }
 
