@@ -67,20 +67,20 @@ int ConfUtil::write(const FirewallConf &conf, QByteArray &buf)
     }
 
     // Fill the buffer
-    const int confSize = FORT_CONF_DATA_OFF
+    const int confIoSize = FORT_CONF_IO_CONF_OFF + FORT_CONF_DATA_OFF
             + (incRange.size() + excRange.size()) * 2 * sizeof(quint32)
             + FORT_CONF_STR_DATA_SIZE(appGroupIndexes.size())
             + appPaths.size() * sizeof(quint32)
             + FORT_CONF_STR_HEADER_SIZE(appPaths.size())
             + FORT_CONF_STR_DATA_SIZE(appPathsLen);
 
-    buf.reserve(confSize);
+    buf.reserve(confIoSize);
 
     writeData(buf.data(), conf,
               incRange, excRange, appPaths,
               appPerms, appGroupIndexes);
 
-    return confSize;
+    return confIoSize;
 }
 
 int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
@@ -217,7 +217,8 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
                          const appperms_arr_t &appPerms,
                          const appgroups_arr_t &appGroupIndexes)
 {
-    PFORT_CONF drvConf = (PFORT_CONF) output;
+    PFORT_CONF_IO drvConfIo = (PFORT_CONF_IO) output;
+    PFORT_CONF drvConf = &drvConfIo->conf;
     char *data = (char *) &drvConf->data;
     const quint32 incRangeSize = incRange.size();
     const quint32 excRangeSize = excRange.size();
@@ -249,6 +250,8 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     writeStrings(&data, appPaths);
 #undef CONF_DATA_OFFSET
 
+    drvConfIo->driver_version = DRIVER_VERSION;
+
     drvConf->flags.prov_boot = conf.provBoot();
     drvConf->flags.filter_enabled = conf.filterEnabled();
     drvConf->flags.stop_traffic = conf.stopTraffic();
@@ -263,13 +266,11 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     drvConf->flags.log_stat = conf.logStat();
 
     drvConf->flags.speed_limit = writeLimits(
-                drvConf->limits, conf.appGroupsList());
+                drvConfIo->limits, conf.appGroupsList());
 
     drvConf->flags.group_bits = conf.appGroupBits();
 
     FortCommon::confAppPermsMaskInit(drvConf);
-
-    drvConf->driver_version = DRIVER_VERSION;
 
     drvConf->data_off = FORT_CONF_DATA_OFF;
 

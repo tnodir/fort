@@ -12,8 +12,6 @@ typedef struct fort_stat_traf {
 } FORT_STAT_TRAF, *PFORT_STAT_TRAF;
 
 typedef struct fort_stat_group {
-  FORT_CONF_LIMIT limit;
-
   union {
     LARGE_INTEGER traf_all;
     FORT_STAT_TRAF traf;
@@ -65,6 +63,7 @@ typedef struct fort_stat {
   UINT32 in_transport4_id;
   UINT32 out_transport4_id;
 
+  FORT_CONF_LIMIT limits[FORT_CONF_GROUP_MAX];
   FORT_STAT_GROUP groups[FORT_CONF_GROUP_MAX];
 
   PFORT_STAT_PROC procs;
@@ -415,19 +414,47 @@ fort_stat_close (PFORT_STAT stat)
   KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
+static void
+fort_stat_update (PFORT_STAT stat, const FORT_CONF_FLAGS conf_flags)
+{
+  if (!conf_flags.log_stat) {
+    fort_stat_close(stat);
+  }
+}
+
+static void
+fort_stat_update_limits (PFORT_STAT stat, PFORT_CONF_LIMIT limits)
+{
+  KLOCK_QUEUE_HANDLE lock_queue;
+
+  KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
+  RtlCopyMemory(stat->limits, limits, sizeof(stat->limits));
+  KeReleaseInStackQueuedSpinLock(&lock_queue);
+}
+
 static NTSTATUS
 fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
                           UINT32 process_id, UCHAR group_index,
-                          BOOL is_udp, BOOL speed_limit, BOOL *is_new)
+                          BOOL is_udp, BOOL speed_limit,
+                          BOOL is_reauth, BOOL *is_new)
 {
+  const UINT16 layer_id = is_udp ? FWPS_LAYER_DATAGRAM_DATA_V4
+    : FWPS_LAYER_STREAM_V4;
+  const UINT32 callout_id = is_udp ? stat->datagram4_id
+    : stat->stream4_id;
+
   KLOCK_QUEUE_HANDLE lock_queue;
   UINT64 flow_context;
   UINT32 flow_index;
   UINT16 proc_index;
   NTSTATUS status;
 
-  if ((UINT32) flow_id == FORT_FLOW_BAD_INDEX)
+  if (flow_id == FORT_FLOW_BAD_ID)
     return STATUS_INVALID_PARAMETER;
+
+  if (is_reauth) {
+    fort_stat_flow_remove_context(flow_id, layer_id, callout_id);
+  }
 
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
@@ -457,15 +484,8 @@ fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
     | ((UINT64) proc_index << 48);
 
   // Set stream/dgram layer context
-  {
-    const UINT16 layer_id = is_udp ? FWPS_LAYER_DATAGRAM_DATA_V4
-      : FWPS_LAYER_STREAM_V4;
-    const UINT32 callout_id = is_udp ? stat->datagram4_id
-      : stat->stream4_id;
-
-    status = fort_stat_flow_set_context(
-      flow_id, layer_id, callout_id, flow_context);
-  }
+  status = fort_stat_flow_set_context(
+    flow_id, layer_id, callout_id, flow_context);
 
   if (NT_SUCCESS(status)) {
     // Set transport layer contexts
@@ -541,14 +561,6 @@ fort_stat_flow_classify (PFORT_STAT stat, UINT64 flow_context,
     stat->is_dirty = TRUE;
   }
   KeReleaseInStackQueuedSpinLock(&lock_queue);
-}
-
-static void
-fort_stat_update (PFORT_STAT stat, const FORT_CONF_FLAGS conf_flags)
-{
-  if (!conf_flags.log_stat) {
-    fort_stat_close(stat);
-  }
 }
 
 static void

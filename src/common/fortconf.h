@@ -1,7 +1,6 @@
 #ifndef FORTCONF_H
 #define FORTCONF_H
 
-#define FORT_CONF_DATA_OFF		offsetof(FORT_CONF, data)
 #define FORT_CONF_IP_MAX		(1 * 1024 * 1024)
 #define FORT_CONF_GROUP_MAX		16
 #define FORT_CONF_APPS_LEN_MAX		(64 * 1024 * 1024)
@@ -34,8 +33,6 @@ typedef struct fort_conf_limit {
 typedef struct fort_conf {
   FORT_CONF_FLAGS flags;
 
-  UINT16 driver_version;
-
   UINT16 data_off;
 
   UINT16 ip_include_n;
@@ -56,9 +53,18 @@ typedef struct fort_conf {
   UINT32 app_perms_off;
   UINT32 apps_off;
 
-  FORT_CONF_LIMIT limits[FORT_CONF_GROUP_MAX];
-
   UCHAR data[4];
 } FORT_CONF, *PFORT_CONF;
+
+typedef struct fort_conf_io {
+  UINT16 driver_version;
+
+  FORT_CONF_LIMIT limits[FORT_CONF_GROUP_MAX];
+
+  FORT_CONF conf;
+} FORT_CONF_IO, *PFORT_CONF_IO;
+
+#define FORT_CONF_DATA_OFF		offsetof(FORT_CONF, data)
+#define FORT_CONF_IO_CONF_OFF		offsetof(FORT_CONF_IO, conf)
 
 #endif FORTCONF_H

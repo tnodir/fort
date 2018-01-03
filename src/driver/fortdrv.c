@@ -222,12 +222,13 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
         &conf_ref->conf, app_index);
       const BOOL is_udp = (ip_proto == IPPROTO_UDP);
       const BOOL speed_limit = conf_flags.speed_limit;
+      const BOOL is_reauth = (flags & FWP_CONDITION_FLAG_IS_REAUTHORIZE);
       BOOL is_new = FALSE;
       NTSTATUS status;
 
       status = fort_stat_flow_associate(&g_device->stat,
         inMetaValues->flowHandle, process_id, group_index,
-        is_udp, speed_limit, &is_new);
+        is_udp, speed_limit, is_reauth, &is_new);
 
       if (!NT_SUCCESS(status)) {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
@@ -713,24 +714,26 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
   ULONG_PTR info = 0;
   NTSTATUS status = STATUS_INVALID_PARAMETER;
 
-  UNUSED(device);
-
   irp_stack = IoGetCurrentIrpStackLocation(irp);
 
   switch (irp_stack->Parameters.DeviceIoControl.IoControlCode) {
   case FORT_IOCTL_SETCONF: {
-    const PFORT_CONF conf = irp->AssociatedIrp.SystemBuffer;
+    const PFORT_CONF_IO conf_io = irp->AssociatedIrp.SystemBuffer;
     const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
 
-    if (len > FORT_CONF_DATA_OFF
-        && conf->driver_version == DRIVER_VERSION) {
-      PFORT_CONF_REF conf_ref = fort_conf_ref_new(conf, len);
+    if (len > sizeof(FORT_CONF_IO)
+        && conf_io->driver_version == DRIVER_VERSION) {
+      const PFORT_CONF conf = &conf_io->conf;
+      PFORT_CONF_REF conf_ref = fort_conf_ref_new(
+        conf, len - FORT_CONF_IO_CONF_OFF);
 
       if (conf_ref == NULL) {
         status = STATUS_INSUFFICIENT_RESOURCES;
       } else {
         const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(conf_ref);
         const FORT_CONF_FLAGS conf_flags = conf_ref->conf.flags;
+
+        fort_stat_update_limits(&g_device->stat, conf_io->limits);
 
         status = fort_callout_force_reauth(device, old_conf_flags, conf_flags);
       }

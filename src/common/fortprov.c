@@ -30,8 +30,8 @@ fort_prov_unregister (void)
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_DATAGRAM_V4);
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_TRANSPORT_V4);
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_OUT_TRANSPORT_V4);
-  FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH_OUT);
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH_IN);
+  FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH_OUT);
   FwpmSubLayerDeleteByKey0(engine, (GUID *) &FORT_GUID_SUBLAYER);
   FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_CONNECT_V4);
   FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_ACCEPT_V4);
@@ -277,19 +277,11 @@ fort_prov_reauth (void)
   if ((status = FwpmTransactionBegin0(engine, 0)))
     return status;
 
-  status = FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH_OUT);
+  status = FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH_IN);
   if (!status) {
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH_IN);
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH_OUT);
   } else {
-    FWPM_FILTER0 ofilter, ifilter;
-
-    RtlZeroMemory(&ofilter, sizeof(FWPM_FILTER0));
-    ofilter.filterKey = FORT_GUID_FILTER_REAUTH_OUT;
-    ofilter.layerKey = FWPM_LAYER_ALE_AUTH_CONNECT_V4;
-    ofilter.subLayerKey = FORT_GUID_SUBLAYER;
-    ofilter.displayData.name = (PWCHAR) L"FortFilterReauthOut";
-    ofilter.displayData.description = (PWCHAR) L"Fort Firewall Filter Reauth Outbound";
-    ofilter.action.type = FWP_ACTION_CONTINUE;
+    FWPM_FILTER0 ifilter, ofilter;
 
     RtlZeroMemory(&ifilter, sizeof(FWPM_FILTER0));
     ifilter.filterKey = FORT_GUID_FILTER_REAUTH_IN;
@@ -299,8 +291,16 @@ fort_prov_reauth (void)
     ifilter.displayData.description = (PWCHAR) L"Fort Firewall Filter Reauth Inbound";
     ifilter.action.type = FWP_ACTION_CONTINUE;
 
-    status = FwpmFilterAdd0(engine, &ofilter, NULL, NULL);
-    FwpmFilterAdd0(engine, &ifilter, NULL, NULL);
+    RtlZeroMemory(&ofilter, sizeof(FWPM_FILTER0));
+    ofilter.filterKey = FORT_GUID_FILTER_REAUTH_OUT;
+    ofilter.layerKey = FWPM_LAYER_ALE_AUTH_CONNECT_V4;
+    ofilter.subLayerKey = FORT_GUID_SUBLAYER;
+    ofilter.displayData.name = (PWCHAR) L"FortFilterReauthOut";
+    ofilter.displayData.description = (PWCHAR) L"Fort Firewall Filter Reauth Outbound";
+    ofilter.action.type = FWP_ACTION_CONTINUE;
+
+    status = FwpmFilterAdd0(engine, &ifilter, NULL, NULL);
+    FwpmFilterAdd0(engine, &ofilter, NULL, NULL);
   }
 
   FwpmTransactionCommit0(engine);
