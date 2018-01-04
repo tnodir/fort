@@ -45,6 +45,8 @@ typedef struct fort_stat {
 
   UCHAR version;
 
+  UINT16 limit_bits;
+
   UINT16 proc_count;
   UINT16 proc_top;
   UINT16 proc_end;
@@ -71,6 +73,9 @@ typedef struct fort_stat {
 
   KSPIN_LOCK lock;
 } FORT_STAT, *PFORT_STAT;
+
+#define fort_stat_group_speed_limit(stat, group_index) \
+  ((stat)->limit_bits & (1 << (group_index)))
 
 
 static void
@@ -428,20 +433,20 @@ fort_stat_update (PFORT_STAT stat, const FORT_CONF_FLAGS conf_flags)
 }
 
 static void
-fort_stat_update_limits (PFORT_STAT stat, PFORT_CONF_LIMIT limits)
+fort_stat_update_limits (PFORT_STAT stat, PFORT_CONF_IO conf_io)
 {
   KLOCK_QUEUE_HANDLE lock_queue;
 
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
-  RtlCopyMemory(stat->limits, limits, sizeof(stat->limits));
+  stat->limit_bits = conf_io->limit_bits;
+  RtlCopyMemory(stat->limits, conf_io->limits, sizeof(stat->limits));
   KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
 static NTSTATUS
 fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
                           UINT32 process_id, UCHAR group_index,
-                          BOOL is_udp, BOOL speed_limit,
-                          BOOL is_reauth, BOOL *is_new)
+                          BOOL is_udp, BOOL is_reauth, BOOL *is_new)
 {
   const UINT16 layer_id = is_udp ? FWPS_LAYER_DATAGRAM_DATA_V4
     : FWPS_LAYER_STREAM_V4;
@@ -452,6 +457,7 @@ fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
   UINT64 flow_context;
   UINT32 flow_index;
   UINT16 proc_index;
+  BOOL speed_limit;
   NTSTATUS status;
 
   if (flow_id == FORT_FLOW_BAD_ID)
@@ -475,6 +481,8 @@ fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
 
     *is_new = TRUE;
   }
+
+  speed_limit = fort_stat_group_speed_limit(stat, group_index);
 
   flow_index = fort_stat_flow_add(stat, flow_id, is_udp, speed_limit);
 
@@ -543,9 +551,9 @@ static void
 fort_stat_flow_classify (PFORT_STAT stat, UINT64 flow_context,
                          UINT32 data_len, BOOL inbound)
 {
-  PFORT_STAT_PROC proc;
   KLOCK_QUEUE_HANDLE lock_queue;
   const UINT16 proc_index = (UINT16) (flow_context >> 48);
+  const UCHAR group_index = (UCHAR) (flow_context >> 40);
   const UCHAR stat_version = (UCHAR) (flow_context >> 32);
 
   if (stat->closing)
@@ -553,12 +561,24 @@ fort_stat_flow_classify (PFORT_STAT stat, UINT64 flow_context,
 
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
   if (stat_version == stat->version) {
-    proc = &stat->procs[proc_index];
+    PFORT_STAT_PROC proc = &stat->procs[proc_index];
 
+    // Add traffic to process
     if (inbound) {
       proc->traf.in_bytes += data_len;
     } else {
       proc->traf.out_bytes += data_len;
+    }
+
+    if (fort_stat_group_speed_limit(stat, group_index)) {
+      PFORT_STAT_GROUP group = &stat->groups[group_index];
+
+      // Add traffic to app. group
+      if (inbound) {
+        group->traf.in_bytes += data_len;
+      } else {
+        group->traf.out_bytes += data_len;
+      }
     }
 
     stat->is_dirty = TRUE;

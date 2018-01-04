@@ -221,14 +221,13 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
       const UCHAR group_index = fort_conf_app_group_index(
         &conf_ref->conf, app_index);
       const BOOL is_udp = (ip_proto == IPPROTO_UDP);
-      const BOOL speed_limit = conf_flags.speed_limit;
       const BOOL is_reauth = (flags & FWP_CONDITION_FLAG_IS_REAUTHORIZE);
       BOOL is_new = FALSE;
       NTSTATUS status;
 
       status = fort_stat_flow_associate(&g_device->stat,
         inMetaValues->flowHandle, process_id, group_index,
-        is_udp, speed_limit, is_reauth, &is_new);
+        is_udp, is_reauth, &is_new);
 
       if (!NT_SUCCESS(status)) {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
@@ -733,7 +732,7 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
         const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(conf_ref);
         const FORT_CONF_FLAGS conf_flags = conf_ref->conf.flags;
 
-        fort_stat_update_limits(&g_device->stat, conf_io->limits);
+        fort_stat_update_limits(&g_device->stat, conf_io);
 
         status = fort_callout_force_reauth(device, old_conf_flags, conf_flags);
       }

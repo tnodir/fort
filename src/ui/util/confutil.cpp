@@ -101,7 +101,6 @@ int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
     confFlags->app_allow_all = conf.appAllowAll();
     confFlags->log_blocked = conf.logBlocked();
     confFlags->log_stat = conf.logStat();
-    confFlags->speed_limit = conf.speedLimit();
     confFlags->group_bits = conf.appGroupBits();
 
     return flagsSize;
@@ -253,6 +252,9 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
 
     drvConfIo->driver_version = DRIVER_VERSION;
 
+    drvConfIo->limit_bits = writeLimits(
+                drvConfIo->limits, conf.appGroupsList());
+
     drvConf->flags.prov_boot = conf.provBoot();
     drvConf->flags.filter_enabled = conf.filterEnabled();
     drvConf->flags.stop_traffic = conf.stopTraffic();
@@ -265,9 +267,6 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
 
     drvConf->flags.log_blocked = conf.logBlocked();
     drvConf->flags.log_stat = conf.logStat();
-
-    drvConf->flags.speed_limit = writeLimits(
-                drvConfIo->limits, conf.appGroupsList());
 
     drvConf->flags.group_bits = conf.appGroupBits();
 
@@ -291,11 +290,11 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     drvConf->apps_off = appPathsOff;
 }
 
-bool ConfUtil::writeLimits(struct fort_conf_limit *limits,
-                           const QList<AppGroup *> &appGroups)
+quint16 ConfUtil::writeLimits(struct fort_conf_limit *limits,
+                              const QList<AppGroup *> &appGroups)
 {
     PFORT_CONF_LIMIT limit = &limits[0];
-    bool speedLimit = false;
+    quint16 limitBits = 0;
 
     const int groupsCount = appGroups.size();
     for (int i = 0; i < groupsCount; ++i, ++limit) {
@@ -308,11 +307,11 @@ bool ConfUtil::writeLimits(struct fort_conf_limit *limits,
 
         const quint16 bit = quint16(1 << i);
         if (limit->in_bytes || limit->out_bytes) {
-            speedLimit = true;
+            limitBits |= (1 << i);
         }
     }
 
-    return speedLimit;
+    return limitBits;
 }
 
 void ConfUtil::writeNumbers(char **data, const QVector<quint32> &array)
