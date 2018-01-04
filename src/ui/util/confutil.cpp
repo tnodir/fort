@@ -101,6 +101,7 @@ int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
     confFlags->app_allow_all = conf.appAllowAll();
     confFlags->log_blocked = conf.logBlocked();
     confFlags->log_stat = conf.logStat();
+    confFlags->speed_limit = conf.speedLimit();
     confFlags->group_bits = conf.appGroupBits();
 
     return flagsSize;

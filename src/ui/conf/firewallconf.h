@@ -82,6 +82,8 @@ public:
     int trafUnit() const { return m_trafUnit; }
     void setTrafUnit(int trafUnit);
 
+    bool speedLimit() const;
+
     quint32 appGroupBits() const;
     void setAppGroupBits(quint32 groupBits);
 
