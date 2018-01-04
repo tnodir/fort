@@ -313,21 +313,26 @@ fort_stat_flow_remove_context (UINT64 flow_id, UINT16 layer_id,
 }
 
 static void
-fort_stat_flow_transport_remove_contexts (PFORT_STAT stat, PFORT_STAT_FLOW flow)
+fort_stat_flow_transport_set_contexts (PFORT_STAT stat, UINT64 flow_id,
+                                       UINT64 flow_context,
+                                       BOOL is_udp, BOOL speed_limit)
 {
-  fort_stat_flow_remove_context(flow->flow_id,
-    FWPS_LAYER_INBOUND_TRANSPORT_V4, stat->in_transport4_id);
-  fort_stat_flow_remove_context(flow->flow_id,
-    FWPS_LAYER_OUTBOUND_TRANSPORT_V4, stat->out_transport4_id);
+  if (!is_udp && speed_limit) {
+    fort_stat_flow_set_context(flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V4,
+      stat->in_transport4_id, flow_context);
+    fort_stat_flow_set_context(flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V4,
+      stat->out_transport4_id, flow_context);
+  }
 }
 
 static void
-fort_stat_flow_transport_check_remove_contexts (PFORT_STAT stat, UINT32 flow_index)
+fort_stat_flow_transport_remove_contexts (PFORT_STAT stat, PFORT_STAT_FLOW flow)
 {
-  PFORT_STAT_FLOW flow = &stat->flows[flow_index];
-
   if (!flow->is_udp && flow->speed_limit) {
-    fort_stat_flow_transport_remove_contexts(stat, flow);
+    fort_stat_flow_remove_context(flow->flow_id,
+      FWPS_LAYER_INBOUND_TRANSPORT_V4, stat->in_transport4_id);
+    fort_stat_flow_remove_context(flow->flow_id,
+      FWPS_LAYER_OUTBOUND_TRANSPORT_V4, stat->out_transport4_id);
   }
 }
 
@@ -348,10 +353,10 @@ fort_stat_flow_remove_contexts (PFORT_STAT stat)
     } else {
       fort_stat_flow_remove_context(flow->flow_id,
         FWPS_LAYER_STREAM_V4, stat->stream4_id);
-
-      // Remove stream transport layer contexts
-      fort_stat_flow_transport_remove_contexts(stat, flow);
     }
+
+    // Remove stream transport layer contexts
+    fort_stat_flow_transport_remove_contexts(stat, flow);
 
     --count;
   }
@@ -488,13 +493,9 @@ fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
     flow_id, layer_id, callout_id, flow_context);
 
   if (NT_SUCCESS(status)) {
-    // Set transport layer contexts
-    if (!is_udp && speed_limit) {
-      fort_stat_flow_set_context(flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V4,
-        stat->in_transport4_id, flow_context);
-      fort_stat_flow_set_context(flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V4,
-        stat->out_transport4_id, flow_context);
-    }
+    // Set stream transport layer contexts
+    fort_stat_flow_transport_set_contexts(
+      stat, flow_id, flow_context, is_udp, speed_limit);
 
     fort_stat_proc_inc(stat, proc_index);
   } else {
@@ -529,7 +530,9 @@ fort_stat_flow_delete (PFORT_STAT stat, UINT64 flow_context)
 
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
   if (stat_version == stat->version) {
-    fort_stat_flow_transport_check_remove_contexts(stat, flow_index);
+    PFORT_STAT_FLOW flow = &stat->flows[flow_index];
+
+    fort_stat_flow_transport_remove_contexts(stat, flow);
     fort_stat_flow_free(stat, flow_index);
     fort_stat_proc_dec(stat, proc_index);
   }
