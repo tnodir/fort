@@ -118,17 +118,6 @@ void FirewallConf::setTrafUnit(int trafUnit)
     }
 }
 
-bool FirewallConf::speedLimit() const
-{
-    foreach (const AppGroup *appGroup, appGroupsList()) {
-        if (appGroup->enabled()
-                && ((appGroup->limitInEnabled() && appGroup->speedLimitIn())
-                    || (appGroup->limitOutEnabled() && appGroup->speedLimitOut())))
-            return true;
-    }
-    return false;
-}
-
 quint32 FirewallConf::appGroupBits() const
 {
     quint32 groupBits = 0;
