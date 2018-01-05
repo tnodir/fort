@@ -159,6 +159,29 @@ fort_conf_ref_flags_set (const PFORT_CONF_FLAGS conf_flags)
 }
 
 static void
+fort_callout_classify_block (FWPS_CLASSIFY_OUT0 *classifyOut)
+{
+  classifyOut->actionType = FWP_ACTION_BLOCK;
+  classifyOut->rights &= ~FWPS_RIGHT_ACTION_WRITE;
+}
+
+static void
+fort_callout_classify_permit (const FWPS_FILTER0 *filter,
+                              FWPS_CLASSIFY_OUT0 *classifyOut)
+{
+  classifyOut->actionType = FWP_ACTION_PERMIT;
+  if ((filter->flags & FWPS_FILTER_FLAG_CLEAR_ACTION_RIGHT)) {
+    classifyOut->rights &= ~FWPS_RIGHT_ACTION_WRITE;
+  }
+}
+
+static void
+fort_callout_classify_continue (FWPS_CLASSIFY_OUT0 *classifyOut)
+{
+  classifyOut->actionType = FWP_ACTION_CONTINUE;
+}
+
+static void
 fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                           const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
                           const FWPS_FILTER0 *filter,
@@ -181,25 +204,26 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   conf_ref = fort_conf_ref_take();
 
   if (conf_ref == NULL) {
-    if (g_device->prov_boot)
-      goto block;
-
-    classifyOut->actionType = FWP_ACTION_CONTINUE;
+    if (g_device->prov_boot) {
+      fort_callout_classify_block(classifyOut);
+    } else {
+      fort_callout_classify_continue(classifyOut);
+    }
     return;
   }
 
   conf_flags = conf_ref->conf.flags;
 
+  if (conf_flags.stop_traffic) {
+    goto block;
+  }
+
   flags = inFixedValues->incomingValue[flagsField].value.uint32;
   remote_ip = inFixedValues->incomingValue[remoteIpField].value.uint32;
 
-  if (!conf_flags.filter_enabled || conf_flags.stop_traffic
+  if (!conf_flags.filter_enabled
       || (flags & FWP_CONDITION_FLAG_IS_LOOPBACK)
       || remote_ip == 0xFFFFFFFF) {  // Local broadcast
-    fort_conf_ref_put(conf_ref);
-    if (conf_flags.stop_traffic) {
-      goto block;
-    }
     goto permit;
   }
 
@@ -211,8 +235,6 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   blocked = ip_included
     && ((app_index = fort_conf_app_index(&conf_ref->conf, path_len, path)),
       fort_conf_app_blocked(&conf_ref->conf, app_index));
-
-  fort_conf_ref_put(conf_ref);
 
   if (!blocked) {
     if (ip_included && conf_flags.log_stat) {
@@ -246,17 +268,15 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   }
 
  block:
-  classifyOut->actionType = FWP_ACTION_BLOCK;
-  classifyOut->rights &= ~FWPS_RIGHT_ACTION_WRITE;
+  fort_callout_classify_block(classifyOut);
   goto end;
 
  permit:
-  classifyOut->actionType = FWP_ACTION_PERMIT;
-  if ((filter->flags & FWPS_FILTER_FLAG_CLEAR_ACTION_RIGHT)) {
-    classifyOut->rights &= ~FWPS_RIGHT_ACTION_WRITE;
-  }
+  fort_callout_classify_permit(filter, classifyOut);
 
  end:
+  fort_conf_ref_put(conf_ref);
+
   if (irp != NULL) {
     fort_request_complete_info(irp, STATUS_SUCCESS, info);
   }
@@ -313,6 +333,22 @@ fort_callout_flow_delete_v4 (UINT16 layerId,
 }
 
 static void
+fort_callout_flow_classify_v4 (const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
+                               UINT64 flowContext,
+                               FWPS_CLASSIFY_OUT0 *classifyOut,
+                               UINT32 dataSize, BOOL inbound)
+{
+  const UINT32 headerSize = inbound ? inMetaValues->transportHeaderSize : 0;
+
+  if (fort_stat_flow_classify(&g_device->stat, flowContext,
+      headerSize + dataSize, inbound)) {
+    fort_callout_classify_block(classifyOut);
+  } else {
+    fort_callout_classify_continue(classifyOut);
+  }
+}
+
+static void
 fort_callout_stream_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                                  const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
                                  const FWPS_STREAM_CALLOUT_IO_PACKET0 *packet,
@@ -325,12 +361,11 @@ fort_callout_stream_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   const BOOL inbound = (streamData->flags & FWPS_STREAM_FLAG_RECEIVE) != 0;
 
-  const UINT32 headerSize = inbound ? inMetaValues->transportHeaderSize : 0;
+  UNUSED(inFixedValues);
+  UNUSED(filter);
 
-  fort_stat_flow_classify(&g_device->stat, flowContext,
-    headerSize + dataSize, inbound);
-
-  classifyOut->actionType = FWP_ACTION_CONTINUE;
+  fort_callout_flow_classify_v4(inMetaValues, flowContext, classifyOut,
+    dataSize, inbound);
 }
 
 static void
@@ -348,12 +383,11 @@ fort_callout_datagram_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
     FWPS_FIELD_DATAGRAM_DATA_V4_DIRECTION].value.uint8;
   const BOOL inbound = (direction == FWP_DIRECTION_INBOUND);
 
-  const UINT32 headerSize = inbound ? inMetaValues->transportHeaderSize : 0;
+  UNUSED(inFixedValues);
+  UNUSED(filter);
 
-  fort_stat_flow_classify(&g_device->stat, flowContext,
-    headerSize + dataSize, inbound);
-
-  classifyOut->actionType = FWP_ACTION_CONTINUE;
+  fort_callout_flow_classify_v4(inMetaValues, flowContext, classifyOut,
+    dataSize, inbound);
 }
 
 static void

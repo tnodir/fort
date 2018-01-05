@@ -319,10 +319,19 @@ fort_stat_flow_remove_context (UINT64 flow_id, UINT16 layer_id,
 
 static void
 fort_stat_flow_transport_set_contexts (PFORT_STAT stat, UINT64 flow_id,
-                                       UINT64 flow_context,
-                                       BOOL is_udp, BOOL speed_limit)
+                                       UINT64 flow_context, BOOL is_udp,
+                                       BOOL speed_limit, BOOL is_reauth)
 {
-  if (!is_udp && speed_limit) {
+  if (is_udp) return;
+
+  if (is_reauth) {
+    fort_stat_flow_remove_context(flow_id,
+      FWPS_LAYER_INBOUND_TRANSPORT_V4, stat->in_transport4_id);
+    fort_stat_flow_remove_context(flow_id,
+      FWPS_LAYER_OUTBOUND_TRANSPORT_V4, stat->out_transport4_id);
+  }
+
+  if (speed_limit) {
     fort_stat_flow_set_context(flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V4,
       stat->in_transport4_id, flow_context);
     fort_stat_flow_set_context(flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V4,
@@ -438,8 +447,15 @@ fort_stat_update_limits (PFORT_STAT stat, PFORT_CONF_IO conf_io)
   KLOCK_QUEUE_HANDLE lock_queue;
 
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
-  stat->limit_bits = conf_io->limit_bits;
-  RtlCopyMemory(stat->limits, conf_io->limits, sizeof(stat->limits));
+  {
+    const UINT16 limit_bits = conf_io->limit_bits;
+
+    stat->limit_bits = limit_bits;
+
+    if (limit_bits != 0) {
+      RtlCopyMemory(stat->limits, conf_io->limits, sizeof(stat->limits));
+    }
+  }
   KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
@@ -503,7 +519,7 @@ fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
   if (NT_SUCCESS(status)) {
     // Set stream transport layer contexts
     fort_stat_flow_transport_set_contexts(
-      stat, flow_id, flow_context, is_udp, speed_limit);
+      stat, flow_id, flow_context, is_udp, speed_limit, is_reauth);
 
     fort_stat_proc_inc(stat, proc_index);
   } else {
@@ -547,7 +563,7 @@ fort_stat_flow_delete (PFORT_STAT stat, UINT64 flow_context)
   KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
-static void
+static BOOL
 fort_stat_flow_classify (PFORT_STAT stat, UINT64 flow_context,
                          UINT32 data_len, BOOL inbound)
 {
@@ -555,35 +571,44 @@ fort_stat_flow_classify (PFORT_STAT stat, UINT64 flow_context,
   const UINT16 proc_index = (UINT16) (flow_context >> 48);
   const UCHAR group_index = (UCHAR) (flow_context >> 40);
   const UCHAR stat_version = (UCHAR) (flow_context >> 32);
+  BOOL limited = FALSE;
 
   if (stat->closing)
-    return;
+    return FALSE;
 
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
   if (stat_version == stat->version) {
     PFORT_STAT_PROC proc = &stat->procs[proc_index];
+    UINT32 *proc_bytes = inbound ? &proc->traf.in_bytes
+      : &proc->traf.out_bytes;
 
     // Add traffic to process
-    if (inbound) {
-      proc->traf.in_bytes += data_len;
-    } else {
-      proc->traf.out_bytes += data_len;
-    }
+    *proc_bytes += data_len;
 
     if (fort_stat_group_speed_limit(stat, group_index)) {
-      PFORT_STAT_GROUP group = &stat->groups[group_index];
+      const PFORT_CONF_LIMIT group_limit = &stat->limits[group_index];
+      const UINT32 limit_bytes = inbound ? group_limit->in_bytes
+        : group_limit->out_bytes;
 
-      // Add traffic to app. group
-      if (inbound) {
-        group->traf.in_bytes += data_len;
-      } else {
-        group->traf.out_bytes += data_len;
+      if (limit_bytes != 0) {
+        PFORT_STAT_GROUP group = &stat->groups[group_index];
+        UINT32 *group_bytes = inbound ? &group->traf.in_bytes
+          : &group->traf.out_bytes;
+
+        if (*group_bytes < limit_bytes) {
+          // Add traffic to app. group
+          *group_bytes += data_len;
+        } else {
+          limited = TRUE;
+        }
       }
     }
 
     stat->is_dirty = TRUE;
   }
   KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+  return limited;
 }
 
 static void
@@ -604,6 +629,7 @@ fort_stat_dpc_traf_flush (PFORT_STAT stat, PCHAR out)
   const UINT32 proc_bits_len = FORT_LOG_STAT_PROC_SIZE(stat->proc_count);
   PFORT_STAT_TRAF out_traf = (PFORT_STAT_TRAF) (out + proc_bits_len);
   PUCHAR out_proc_bits = (PUCHAR) out;
+  UINT16 i;
 
   PFORT_STAT_PROC prev_proc = NULL;
   UINT16 proc_index = stat->proc_head_index;
@@ -611,7 +637,7 @@ fort_stat_dpc_traf_flush (PFORT_STAT stat, PCHAR out)
   /* Mark processes as active to start */
   memset(out_proc_bits, 0xFF, proc_bits_len);
 
-  for (UINT16 i = 0; proc_index != FORT_PROC_BAD_INDEX; ++i) {
+  for (i = 0; proc_index != FORT_PROC_BAD_INDEX; ++i) {
     PFORT_STAT_PROC proc = &stat->procs[proc_index];
     const UINT16 next_index = proc->next_index;
 
@@ -631,6 +657,19 @@ fort_stat_dpc_traf_flush (PFORT_STAT stat, PCHAR out)
     }
 
     proc_index = next_index;
+  }
+
+  if (stat->limit_bits) {
+    PFORT_STAT_GROUP group = stat->groups;
+    UINT16 limit_bits = stat->limit_bits;
+
+    for (; limit_bits != 0; ++group) {
+      if (limit_bits & 1) {
+        group->traf_all.QuadPart = 0;
+      }
+
+      limit_bits >>= 1;
+    }
   }
 
   stat->is_dirty = FALSE;

@@ -1,7 +1,6 @@
 #ifndef CONFUTIL_H
 #define CONFUTIL_H
 
-#include <QObject>
 #include <QByteArray>
 #include <QList>
 #include <QMap>
@@ -15,7 +14,7 @@ QT_FORWARD_DECLARE_STRUCT(fort_conf_limit)
 
 typedef QMap<QString, quint32> appperms_map_t;
 typedef QVector<quint32> appperms_arr_t;
-typedef QVector<qint8> appgroups_arr_t;
+typedef QMap<QString, qint8> appgroups_map_t;
 
 class ConfUtil : public QObject
 {
@@ -42,11 +41,11 @@ private:
                         QStringList &appPaths,
                         int &appPathsLen,
                         appperms_arr_t &appPerms,
-                        appgroups_arr_t &appGroupIndexes);
+                        appgroups_map_t &appGroupIndexes);
 
     bool parseApps(const QString &text, bool blocked,
                    appperms_map_t &appPermsMap,
-                   appgroups_arr_t &appGroupIndexes,
+                   appgroups_map_t &appGroupIndexes,
                    int groupOffset);
 
     static QString parseAppPath(const QStringRef &line);
@@ -55,7 +54,7 @@ private:
                           const Ip4Range &incRange, const Ip4Range &excRange,
                           const QStringList &appPaths,
                           const appperms_arr_t &appPerms,
-                          const appgroups_arr_t &appGroupIndexes);
+                          const appgroups_map_t &appGroupIndexes);
 
     static quint16 writeLimits(struct fort_conf_limit *limits,
                                const QList<AppGroup *> &appGroups);

@@ -51,7 +51,7 @@ int ConfUtil::write(const FirewallConf &conf, QByteArray &buf)
     int appPathsLen = 0;
     QStringList appPaths;
     appperms_arr_t appPerms;
-    appgroups_arr_t appGroupIndexes;
+    appgroups_map_t appGroupIndexes;
 
     if (!parseAppGroups(conf.appGroupsList(),
                         appPaths, appPathsLen,
@@ -110,7 +110,7 @@ bool ConfUtil::parseAppGroups(const QList<AppGroup *> &appGroups,
                               QStringList &appPaths,
                               int &appPathsLen,
                               appperms_arr_t &appPerms,
-                              appgroups_arr_t &appGroupIndexes)
+                              appgroups_map_t &appGroupIndexes)
 {
     const int groupsCount = appGroups.size();
     if (groupsCount > APP_GROUP_MAX) {
@@ -159,7 +159,7 @@ bool ConfUtil::parseAppGroups(const QList<AppGroup *> &appGroups,
 
 bool ConfUtil::parseApps(const QString &text, bool blocked,
                          appperms_map_t &appPermsMap,
-                         appgroups_arr_t &appGroupIndexes,
+                         appgroups_map_t &appGroupIndexes,
                          int groupOffset)
 {
     foreach (const QStringRef &line,
@@ -184,7 +184,7 @@ bool ConfUtil::parseApps(const QString &text, bool blocked,
         if (appPermsMap.contains(appPath)) {
             appPerms |= appPermsMap.value(appPath);
         } else {
-            appGroupIndexes.append(groupOffset);
+            appGroupIndexes.insert(appPath, groupOffset);
         }
 
         appPermsMap.insert(appPath, appPerms);
@@ -215,7 +215,7 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
                          const Ip4Range &incRange, const Ip4Range &excRange,
                          const QStringList &appPaths,
                          const appperms_arr_t &appPerms,
-                         const appgroups_arr_t &appGroupIndexes)
+                         const appgroups_map_t &appGroupIndexes)
 {
     PFORT_CONF_IO drvConfIo = (PFORT_CONF_IO) output;
     PFORT_CONF drvConf = &drvConfIo->conf;
@@ -241,7 +241,7 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     writeNumbers(&data, excRange.toArray());
 
     appGroupsOff = CONF_DATA_OFFSET;
-    writeChars(&data, appGroupIndexes);
+    writeChars(&data, appGroupIndexes.values().toVector());
 
     appPermsOff = CONF_DATA_OFFSET;
     writeNumbers(&data, appPerms);
