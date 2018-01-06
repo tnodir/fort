@@ -78,16 +78,16 @@ typedef struct fort_stat {
   ((stat)->limit_bits & (1 << (group_index)))
 
 
-static void
-fort_stat_array_del (PVOID p)
-{
-  ExFreePoolWithTag(p, FORT_STAT_POOL_TAG);
-}
-
 static PVOID
 fort_stat_array_new (SIZE_T size)
 {
-  return ExAllocatePoolWithTag(NonPagedPool, size, FORT_STAT_POOL_TAG);
+  return fort_mem_alloc(size, FORT_STAT_POOL_TAG);
+}
+
+static void
+fort_stat_array_del (PVOID p)
+{
+  fort_mem_free(p, FORT_STAT_POOL_TAG);
 }
 
 static UINT16

@@ -19,6 +19,7 @@
 #include "../common/fortconf.c"
 #include "../common/fortlog.c"
 #include "../common/fortprov.c"
+#include "forttds.c"
 #include "fortbuf.c"
 #include "fortstat.c"
 #include "forttmr.c"
@@ -51,8 +52,7 @@ static PFORT_CONF_REF
 fort_conf_ref_new (const PFORT_CONF conf, ULONG len)
 {
   const ULONG ref_len = len + offsetof(FORT_CONF_REF, conf);
-  PFORT_CONF_REF conf_ref = ExAllocatePoolWithTag(
-    NonPagedPool, ref_len, FORT_DEVICE_POOL_TAG);
+  PFORT_CONF_REF conf_ref = fort_mem_alloc(ref_len, FORT_DEVICE_POOL_TAG);
 
   if (conf_ref != NULL) {
     conf_ref->refcount = 0;
@@ -73,7 +73,7 @@ fort_conf_ref_put (PFORT_CONF_REF conf_ref)
     const UINT32 refcount = --conf_ref->refcount;
 
     if (refcount == 0 && conf_ref != g_device->conf_ref) {
-      ExFreePoolWithTag(conf_ref, FORT_DEVICE_POOL_TAG);
+      fort_mem_free(conf_ref, FORT_DEVICE_POOL_TAG);
     }
   }
   KeReleaseInStackQueuedSpinLock(&lock_queue);

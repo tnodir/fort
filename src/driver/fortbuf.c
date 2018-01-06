@@ -31,8 +31,7 @@ fort_buffer_data_new (PFORT_BUFFER buf)
   if (data != NULL) {
     buf->data_free = data->next;
   } else {
-    data = ExAllocatePoolWithTag(NonPagedPool,
-      sizeof(FORT_BUFFER_DATA), FORT_BUFFER_POOL_TAG);
+    data = fort_mem_alloc(sizeof(FORT_BUFFER_DATA), FORT_BUFFER_POOL_TAG);
   }
 
   return data;
@@ -43,7 +42,7 @@ fort_buffer_data_del (PFORT_BUFFER_DATA data)
 {
   while (data != NULL) {
     PFORT_BUFFER_DATA next = data->next;
-    ExFreePoolWithTag(data, FORT_BUFFER_POOL_TAG);
+    fort_mem_free(data, FORT_BUFFER_POOL_TAG);
     data = next;
   }
 }
