@@ -36,6 +36,9 @@ fort_timer_init (PFORT_TIMER timer, FORT_TIMER_FUNC callback)
 static void
 fort_timer_close (PFORT_TIMER timer)
 {
+  if (!timer->running)
+    return;
+
   timer->running = FALSE;
 
   KeCancelTimer(&timer->id);
@@ -43,10 +46,8 @@ fort_timer_close (PFORT_TIMER timer)
 }
 
 static void
-fort_timer_update (PFORT_TIMER timer, const FORT_CONF_FLAGS conf_flags)
+fort_timer_update (PFORT_TIMER timer, BOOL run)
 {
-  const BOOL run = conf_flags.log_blocked || conf_flags.log_stat;
-
   if (timer->running == run)
     return;
 

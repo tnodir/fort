@@ -201,6 +201,15 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   PIRP irp = NULL;
   ULONG_PTR info;
 
+  flags = inFixedValues->incomingValue[flagsField].value.uint32;
+  remote_ip = inFixedValues->incomingValue[remoteIpField].value.uint32;
+
+  if ((flags & FWP_CONDITION_FLAG_IS_LOOPBACK)
+      || remote_ip == 0xFFFFFFFF) {  // Local broadcast
+    fort_callout_classify_permit(filter, classifyOut);
+    return;
+  }
+
   conf_ref = fort_conf_ref_take();
 
   if (conf_ref == NULL) {
@@ -218,12 +227,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
     goto block;
   }
 
-  flags = inFixedValues->incomingValue[flagsField].value.uint32;
-  remote_ip = inFixedValues->incomingValue[remoteIpField].value.uint32;
-
-  if (!conf_flags.filter_enabled
-      || (flags & FWP_CONDITION_FLAG_IS_LOOPBACK)
-      || remote_ip == 0xFFFFFFFF) {  // Local broadcast
+  if (!conf_flags.filter_enabled) {
     goto permit;
   }
 
@@ -570,6 +574,10 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
 {
   NTSTATUS status;
 
+  if (old_conf_flags.log_stat) {
+    fort_stat_close(&g_device->stat);
+  }
+
   /* Check provider filters */
   if (old_conf_flags.prov_boot != conf_flags.prov_boot) {
     fort_prov_unregister();
@@ -610,8 +618,8 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
     return status;
   }
 
-  fort_timer_update(&g_device->timer, conf_flags);
-  fort_stat_update(&g_device->stat, conf_flags);
+  fort_timer_update(&g_device->timer,
+    (conf_flags.log_blocked || conf_flags.log_stat));
 
   return STATUS_SUCCESS;
 }

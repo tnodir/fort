@@ -251,7 +251,7 @@ static BOOL
 fort_stat_flow_realloc (PFORT_STAT stat)
 {
   const UINT32 flow_end = stat->flow_end;
-  const UINT32 new_end = (flow_end ? flow_end : 64) * 2;
+  const UINT32 new_end = (flow_end ? flow_end : 256) * 2;
   PFORT_STAT_FLOW new_flows = fort_stat_array_new(
     new_end * sizeof(FORT_STAT_FLOW));
 
@@ -431,14 +431,6 @@ fort_stat_close (PFORT_STAT stat)
   stat->closing = FALSE;
 
   KeReleaseInStackQueuedSpinLock(&lock_queue);
-}
-
-static void
-fort_stat_update (PFORT_STAT stat, const FORT_CONF_FLAGS conf_flags)
-{
-  if (!conf_flags.log_stat) {
-    fort_stat_close(stat);
-  }
 }
 
 static void
