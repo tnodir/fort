@@ -26,6 +26,7 @@ fort_prov_unregister (void)
 
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_CONNECT_V4);
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_ACCEPT_V4);
+  FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_CLOSURE_V4);
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_STREAM_V4);
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_DATAGRAM_V4);
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_TRANSPORT_V4);
@@ -35,6 +36,7 @@ fort_prov_unregister (void)
   FwpmSubLayerDeleteByKey0(engine, (GUID *) &FORT_GUID_SUBLAYER);
   FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_CONNECT_V4);
   FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_ACCEPT_V4);
+  FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_CLOSURE_V4);
   FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_STREAM_V4);
   FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_DATAGRAM_V4);
   FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_IN_TRANSPORT_V4);
@@ -64,11 +66,11 @@ static DWORD
 fort_prov_register (BOOL is_boot)
 {
   FWPM_PROVIDER0 provider;
-  FWPM_CALLOUT0 ocallout4, icallout4;
+  FWPM_CALLOUT0 ocallout4, icallout4, ccallout4;
   FWPM_CALLOUT0 scallout4, dcallout4;
   FWPM_CALLOUT0 itcallout4, otcallout4;
   FWPM_SUBLAYER0 sublayer;
-  FWPM_FILTER0 ofilter4, ifilter4;
+  FWPM_FILTER0 ofilter4, ifilter4, cfilter4;
   HANDLE engine;
   UINT32 filter_flags;
   DWORD status;
@@ -98,6 +100,13 @@ fort_prov_register (BOOL is_boot)
   icallout4.displayData.description = (PWCHAR) L"Fort Firewall Callout Accept V4";
   icallout4.providerKey = (GUID *) &FORT_GUID_PROVIDER;
   icallout4.applicableLayer = FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4;
+
+  RtlZeroMemory(&ccallout4, sizeof(FWPM_CALLOUT0));
+  ccallout4.calloutKey = FORT_GUID_CALLOUT_CLOSURE_V4;
+  ccallout4.displayData.name = (PWCHAR) L"FortCalloutClosure4";
+  ccallout4.displayData.description = (PWCHAR) L"Fort Firewall Callout Closure V4";
+  ccallout4.providerKey = (GUID *) &FORT_GUID_PROVIDER;
+  ccallout4.applicableLayer = FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V4;
 
   RtlZeroMemory(&scallout4, sizeof(FWPM_CALLOUT0));
   scallout4.calloutKey = FORT_GUID_CALLOUT_STREAM_V4;
@@ -153,10 +162,21 @@ fort_prov_register (BOOL is_boot)
   ifilter4.action.type = FWP_ACTION_CALLOUT_UNKNOWN;
   ifilter4.action.calloutKey = FORT_GUID_CALLOUT_ACCEPT_V4;
 
+  RtlZeroMemory(&cfilter4, sizeof(FWPM_FILTER0));
+  cfilter4.flags = filter_flags;
+  cfilter4.filterKey = FORT_GUID_FILTER_CLOSURE_V4;
+  cfilter4.layerKey = FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V4;
+  cfilter4.subLayerKey = FORT_GUID_SUBLAYER;
+  cfilter4.displayData.name = (PWCHAR) L"FortFilterClosure4";
+  cfilter4.displayData.description = (PWCHAR) L"Fort Firewall Filter Closure V4";
+  cfilter4.action.type = FWP_ACTION_CALLOUT_INSPECTION;
+  cfilter4.action.calloutKey = FORT_GUID_CALLOUT_CLOSURE_V4;
+
   if ((status = FwpmTransactionBegin0(engine, 0))
       || (status = FwpmProviderAdd0(engine, &provider, NULL))
       || (status = FwpmCalloutAdd0(engine, &ocallout4, NULL, NULL))
       || (status = FwpmCalloutAdd0(engine, &icallout4, NULL, NULL))
+      || (status = FwpmCalloutAdd0(engine, &ccallout4, NULL, NULL))
       || (status = FwpmCalloutAdd0(engine, &scallout4, NULL, NULL))
       || (status = FwpmCalloutAdd0(engine, &dcallout4, NULL, NULL))
       || (status = FwpmCalloutAdd0(engine, &itcallout4, NULL, NULL))
@@ -164,6 +184,7 @@ fort_prov_register (BOOL is_boot)
       || (status = FwpmSubLayerAdd0(engine, &sublayer, NULL))
       || (status = FwpmFilterAdd0(engine, &ofilter4, NULL, NULL))
       || (status = FwpmFilterAdd0(engine, &ifilter4, NULL, NULL))
+      || (status = FwpmFilterAdd0(engine, &cfilter4, NULL, NULL))
       || (status = FwpmTransactionCommit0(engine))) {
     FwpmTransactionAbort0(engine);
   }

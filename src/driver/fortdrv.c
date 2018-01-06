@@ -36,6 +36,7 @@ typedef struct fort_device {
 
   UINT32 connect4_id;
   UINT32 accept4_id;
+  UINT32 closure4_id;
 
   FORT_BUFFER buffer;
   FORT_STAT stat;
@@ -314,6 +315,19 @@ fort_callout_accept_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
       FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_PROTOCOL);
 }
 
+static void
+fort_callout_closure_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
+                         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
+                         void *layerData,
+                         const FWPS_FILTER0 *filter,
+                         UINT64 flowContext,
+                         FWPS_CLASSIFY_OUT0 *classifyOut)
+{
+  const UINT64 flowId = inMetaValues->flowHandle;
+
+  //fort_stat_flow_delete(&g_device->stat, flowId);
+}
+
 static NTSTATUS NTAPI
 fort_callout_notify (FWPS_CALLOUT_NOTIFY_TYPE notifyType,
                      const GUID *filterKey, const FWPS_FILTER0 *filter)
@@ -474,6 +488,17 @@ fort_callout_install (PDEVICE_OBJECT device)
     return status;
   }
 
+  /* IPv4 closure callout */
+  c.calloutKey = FORT_GUID_CALLOUT_CLOSURE_V4;
+  c.classifyFn = fort_callout_closure_v4;
+
+  status = FwpsCalloutRegister0(device, &c, &g_device->closure4_id);
+  if (!NT_SUCCESS(status)) {
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+               "FORT: Register Closure V4: Error: %d\n", status);
+    return status;
+  }
+
   /* IPv4 stream callout */
   c.calloutKey = FORT_GUID_CALLOUT_STREAM_V4;
   c.classifyFn = fort_callout_stream_classify_v4;
@@ -544,6 +569,11 @@ fort_callout_remove (void)
   if (g_device->accept4_id) {
     FwpsCalloutUnregisterById0(g_device->accept4_id);
     g_device->accept4_id = 0;
+  }
+
+  if (g_device->closure4_id) {
+    FwpsCalloutUnregisterById0(g_device->closure4_id);
+    g_device->closure4_id = 0;
   }
 
   if (g_device->stat.stream4_id) {
