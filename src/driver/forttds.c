@@ -47,8 +47,8 @@ fort_tommy_realloc (PVOID p, SIZE_T new_size)
 #define tommy_calloc	fort_tommy_calloc
 #define tommy_realloc	fort_tommy_realloc
 
-#include "3rdparty\tommyds\tommyarrayof.c"
-#include "3rdparty\tommyds\tommylist.c"
-#include "3rdparty\tommyds\tommyhash.c"
-#include "3rdparty\tommyds\tommyhashdyn.c"
+#include "..\3rdparty\tommyds\tommyarrayof.c"
+#include "..\3rdparty\tommyds\tommylist.c"
+#include "..\3rdparty\tommyds\tommyhash.c"
+#include "..\3rdparty\tommyds\tommyhashdyn.c"
 
