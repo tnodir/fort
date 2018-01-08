@@ -396,7 +396,7 @@ fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
     *is_new_proc = TRUE;
   }
 
-  speed_limit = fort_stat_group_speed_limit(stat, group_index);
+  speed_limit = fort_stat_group_speed_limit(stat, group_index) != 0;
 
   flow = fort_stat_flow_add(stat, flow_id, group_index, proc_index,
     is_udp, speed_limit);

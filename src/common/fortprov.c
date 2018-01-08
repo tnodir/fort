@@ -54,6 +54,7 @@ fort_prov_flow_unregister (void)
   if (fort_prov_open(&engine))
     return;
 
+  FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_CLOSURE_V4);
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_STREAM_V4);
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_DATAGRAM_V4);
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_TRANSPORT_V4);
@@ -200,7 +201,7 @@ fort_prov_flow_register (void)
     | FWP_CALLOUT_FLAG_ALLOW_MID_STREAM_INSPECTION;
 
   RtlZeroMemory(&cfilter4, sizeof(FWPM_FILTER0));
-  cfilter4.flags = filter_flags;
+  cfilter4.flags = 0;
   cfilter4.filterKey = FORT_GUID_FILTER_CLOSURE_V4;
   cfilter4.layerKey = FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V4;
   cfilter4.subLayerKey = FORT_GUID_SUBLAYER;
