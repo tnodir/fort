@@ -25,7 +25,7 @@ fort_timer_callback (PKDPC dpc, PFORT_TIMER timer, PVOID arg1, PVOID arg2)
 }
 
 static void
-fort_timer_init (PFORT_TIMER timer, FORT_TIMER_FUNC callback)
+fort_timer_open (PFORT_TIMER timer, FORT_TIMER_FUNC callback)
 {
   timer->callback = callback;
 
@@ -48,7 +48,7 @@ fort_timer_close (PFORT_TIMER timer)
 static void
 fort_timer_update (PFORT_TIMER timer, BOOL run)
 {
-  if (timer->running == run)
+  if ((BOOL) timer->running == run)
     return;
 
   timer->running = run;

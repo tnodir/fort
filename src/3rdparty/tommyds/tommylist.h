@@ -314,6 +314,7 @@ tommy_inline void tommy_list_concat(tommy_list* first, tommy_list* second)
  * \param cmp Compare function called with two elements.
  * The function should return <0 if the first element is less than the second, ==0 if equal, and >0 if greather.
  */
+TOMMY_API //!!
 void tommy_list_sort(tommy_list* list, tommy_compare_func* cmp);
 
 /**

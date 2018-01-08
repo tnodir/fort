@@ -30,6 +30,7 @@
 /******************************************************************************/
 /* array */
 
+TOMMY_API //!!
 void tommy_arrayof_init(tommy_arrayof* array, tommy_size_t element_size)
 {
 	tommy_uint_t i;
@@ -45,6 +46,7 @@ void tommy_arrayof_init(tommy_arrayof* array, tommy_size_t element_size)
 	array->count = 0;
 }
 
+TOMMY_API //!!
 void tommy_arrayof_done(tommy_arrayof* array)
 {
 	tommy_uint_t i;
@@ -56,6 +58,7 @@ void tommy_arrayof_done(tommy_arrayof* array)
 	}
 }
 
+TOMMY_API //!!
 void tommy_arrayof_grow(tommy_arrayof* array, tommy_count_t count)
 {
 	if (array->count >= count)
@@ -77,6 +80,7 @@ void tommy_arrayof_grow(tommy_arrayof* array, tommy_count_t count)
 	}
 }
 
+TOMMY_API //!!
 tommy_size_t tommy_arrayof_memory_usage(tommy_arrayof* array)
 {
 	return array->bucket_max * (tommy_size_t)array->element_size;

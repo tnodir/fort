@@ -75,17 +75,20 @@ typedef struct tommy_arrayof_struct {
  * Initializes the array.
  * \param element_size Size in byte of the element to store in the array.
  */
+TOMMY_API //!!
 void tommy_arrayof_init(tommy_arrayof* array, tommy_size_t element_size);
 
 /**
  * Deinitializes the array.
  */
+TOMMY_API //!!
 void tommy_arrayof_done(tommy_arrayof* array);
 
 /**
  * Grows the size up to the specified value.
  * All the new elements in the array are initialized with the 0 value.
  */
+TOMMY_API //!!
 void tommy_arrayof_grow(tommy_arrayof* array, tommy_count_t size);
 
 /**
@@ -119,6 +122,7 @@ tommy_inline tommy_count_t tommy_arrayof_size(tommy_arrayof* array)
 /**
  * Gets the size of allocated memory.
  */
+TOMMY_API //!!
 tommy_size_t tommy_arrayof_memory_usage(tommy_arrayof* array);
 
 #endif

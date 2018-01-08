@@ -31,6 +31,7 @@
 /******************************************************************************/
 /* hashdyn */
 
+TOMMY_API //!!
 void tommy_hashdyn_init(tommy_hashdyn* hashdyn)
 {
 	/* fixed initial size */
@@ -42,6 +43,7 @@ void tommy_hashdyn_init(tommy_hashdyn* hashdyn)
 	hashdyn->count = 0;
 }
 
+TOMMY_API //!!
 void tommy_hashdyn_done(tommy_hashdyn* hashdyn)
 {
 	tommy_free(hashdyn->bucket);
@@ -134,6 +136,7 @@ tommy_inline void hashdyn_shrink_step(tommy_hashdyn* hashdyn)
 		tommy_hashdyn_resize(hashdyn, hashdyn->bucket_bit - 1);
 }
 
+TOMMY_API //!!
 void tommy_hashdyn_insert(tommy_hashdyn* hashdyn, tommy_hashdyn_node* node, void* data, tommy_hash_t hash)
 {
 	tommy_count_t pos = hash & hashdyn->bucket_mask;
@@ -147,6 +150,7 @@ void tommy_hashdyn_insert(tommy_hashdyn* hashdyn, tommy_hashdyn_node* node, void
 	hashdyn_grow_step(hashdyn);
 }
 
+TOMMY_API //!!
 void* tommy_hashdyn_remove_existing(tommy_hashdyn* hashdyn, tommy_hashdyn_node* node)
 {
 	tommy_count_t pos = node->key & hashdyn->bucket_mask;
@@ -160,6 +164,7 @@ void* tommy_hashdyn_remove_existing(tommy_hashdyn* hashdyn, tommy_hashdyn_node* 
 	return node->data;
 }
 
+TOMMY_API //!!
 void* tommy_hashdyn_remove(tommy_hashdyn* hashdyn, tommy_search_func* cmp, const void* cmp_arg, tommy_hash_t hash)
 {
 	tommy_count_t pos = hash & hashdyn->bucket_mask;
@@ -182,6 +187,7 @@ void* tommy_hashdyn_remove(tommy_hashdyn* hashdyn, tommy_search_func* cmp, const
 	return 0;
 }
 
+TOMMY_API //!!
 void tommy_hashdyn_foreach(tommy_hashdyn* hashdyn, tommy_foreach_func* func)
 {
 	tommy_count_t bucket_max = hashdyn->bucket_max;
@@ -199,6 +205,7 @@ void tommy_hashdyn_foreach(tommy_hashdyn* hashdyn, tommy_foreach_func* func)
 	}
 }
 
+TOMMY_API //!!
 void tommy_hashdyn_foreach_arg(tommy_hashdyn* hashdyn, tommy_foreach_arg_func* func, void* arg)
 {
 	tommy_count_t bucket_max = hashdyn->bucket_max;
@@ -216,6 +223,7 @@ void tommy_hashdyn_foreach_arg(tommy_hashdyn* hashdyn, tommy_foreach_arg_func* f
 	}
 }
 
+TOMMY_API //!!
 tommy_size_t tommy_hashdyn_memory_usage(tommy_hashdyn* hashdyn)
 {
 	return hashdyn->bucket_max * (tommy_size_t)sizeof(hashdyn->bucket[0])

@@ -91,7 +91,7 @@ fort_buffer_data_free (PFORT_BUFFER buf)
 }
 
 static void
-fort_buffer_init (PFORT_BUFFER buf)
+fort_buffer_open (PFORT_BUFFER buf)
 {
   KeInitializeSpinLock(&buf->lock);
 }

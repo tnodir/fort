@@ -66,11 +66,11 @@ static DWORD
 fort_prov_register (BOOL is_boot)
 {
   FWPM_PROVIDER0 provider;
-  FWPM_CALLOUT0 ocallout4, icallout4, ccallout4;
-  FWPM_CALLOUT0 scallout4, dcallout4;
+  FWPM_CALLOUT0 ocallout4, icallout4;
+  FWPM_CALLOUT0 ccallout4, scallout4, dcallout4;
   FWPM_CALLOUT0 itcallout4, otcallout4;
   FWPM_SUBLAYER0 sublayer;
-  FWPM_FILTER0 ofilter4, ifilter4, cfilter4;
+  FWPM_FILTER0 ofilter4, ifilter4;
   HANDLE engine;
   UINT32 filter_flags;
   DWORD status;
@@ -162,16 +162,6 @@ fort_prov_register (BOOL is_boot)
   ifilter4.action.type = FWP_ACTION_CALLOUT_UNKNOWN;
   ifilter4.action.calloutKey = FORT_GUID_CALLOUT_ACCEPT_V4;
 
-  RtlZeroMemory(&cfilter4, sizeof(FWPM_FILTER0));
-  cfilter4.flags = filter_flags;
-  cfilter4.filterKey = FORT_GUID_FILTER_CLOSURE_V4;
-  cfilter4.layerKey = FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V4;
-  cfilter4.subLayerKey = FORT_GUID_SUBLAYER;
-  cfilter4.displayData.name = (PWCHAR) L"FortFilterClosure4";
-  cfilter4.displayData.description = (PWCHAR) L"Fort Firewall Filter Closure V4";
-  cfilter4.action.type = FWP_ACTION_CALLOUT_INSPECTION;
-  cfilter4.action.calloutKey = FORT_GUID_CALLOUT_CLOSURE_V4;
-
   if ((status = FwpmTransactionBegin0(engine, 0))
       || (status = FwpmProviderAdd0(engine, &provider, NULL))
       || (status = FwpmCalloutAdd0(engine, &ocallout4, NULL, NULL))
@@ -184,7 +174,6 @@ fort_prov_register (BOOL is_boot)
       || (status = FwpmSubLayerAdd0(engine, &sublayer, NULL))
       || (status = FwpmFilterAdd0(engine, &ofilter4, NULL, NULL))
       || (status = FwpmFilterAdd0(engine, &ifilter4, NULL, NULL))
-      || (status = FwpmFilterAdd0(engine, &cfilter4, NULL, NULL))
       || (status = FwpmTransactionCommit0(engine))) {
     FwpmTransactionAbort0(engine);
   }
@@ -198,7 +187,7 @@ fort_prov_register (BOOL is_boot)
 static DWORD
 fort_prov_flow_register (void)
 {
-  FWPM_FILTER0 sfilter4, dfilter4;
+  FWPM_FILTER0 cfilter4, sfilter4, dfilter4;
   FWPM_FILTER0 itfilter4, otfilter4;
   HANDLE engine;
   UINT32 filter_flags;
@@ -209,6 +198,16 @@ fort_prov_flow_register (void)
 
   filter_flags = FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED
     | FWP_CALLOUT_FLAG_ALLOW_MID_STREAM_INSPECTION;
+
+  RtlZeroMemory(&cfilter4, sizeof(FWPM_FILTER0));
+  cfilter4.flags = filter_flags;
+  cfilter4.filterKey = FORT_GUID_FILTER_CLOSURE_V4;
+  cfilter4.layerKey = FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V4;
+  cfilter4.subLayerKey = FORT_GUID_SUBLAYER;
+  cfilter4.displayData.name = (PWCHAR) L"FortFilterClosure4";
+  cfilter4.displayData.description = (PWCHAR) L"Fort Firewall Filter Closure V4";
+  cfilter4.action.type = FWP_ACTION_CALLOUT_INSPECTION;
+  cfilter4.action.calloutKey = FORT_GUID_CALLOUT_CLOSURE_V4;
 
   RtlZeroMemory(&sfilter4, sizeof(FWPM_FILTER0));
   sfilter4.flags = filter_flags;
@@ -251,6 +250,7 @@ fort_prov_flow_register (void)
   otfilter4.action.calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V4;
 
   if ((status = FwpmTransactionBegin0(engine, 0))
+      || (status = FwpmFilterAdd0(engine, &cfilter4, NULL, NULL))
       || (status = FwpmFilterAdd0(engine, &sfilter4, NULL, NULL))
       || (status = FwpmFilterAdd0(engine, &dfilter4, NULL, NULL))
       || (status = FwpmFilterAdd0(engine, &itfilter4, NULL, NULL))

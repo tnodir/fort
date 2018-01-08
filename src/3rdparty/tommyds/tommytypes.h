@@ -106,6 +106,13 @@ typedef tommy_uint32_t tommy_count_t;
 /* modificators */
 
 /** \internal
+ * Definition of the TOMMY_API. //!!
+ */
+#if !defined(TOMMY_API)
+#define TOMMY_API
+#endif
+
+/** \internal
  * Definition of the inline keyword if available.
  */
 #if !defined(tommy_inline)

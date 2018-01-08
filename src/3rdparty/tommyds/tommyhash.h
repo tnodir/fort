@@ -60,6 +60,7 @@ typedef tommy_key_t tommy_hash_t;
  * This function is endianess independent.
  * \return The hash value of 32 bits.
  */
+TOMMY_API //!!
 tommy_uint32_t tommy_hash_u32(tommy_uint32_t init_val, const void* void_key, tommy_size_t key_len);
 
 /**
@@ -80,6 +81,7 @@ tommy_uint32_t tommy_hash_u32(tommy_uint32_t init_val, const void* void_key, tom
  * This function is endianess independent.
  * \return The hash value of 64 bits.
  */
+TOMMY_API //!!
 tommy_uint64_t tommy_hash_u64(tommy_uint64_t init_val, const void* void_key, tommy_size_t key_len);
 
 /**
@@ -99,6 +101,7 @@ tommy_uint64_t tommy_hash_u64(tommy_uint64_t init_val, const void* void_key, tom
  * \return The hash value of 32 bits.
  */
 //!! tommy_uint64_t init_val -> tommy_uint32_t init_val
+TOMMY_API //!!
 tommy_uint32_t tommy_strhash_u32(tommy_uint32_t init_val, const void* void_key);
 
 /**
