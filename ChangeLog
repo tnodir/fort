@@ -1,5 +1,15 @@
 Fort Firewall ChangeLog
 
+v1.4.0, 2018-01-08:
+- UI: ApplicationsPage: Add "Speed Limit" button.
+- UI: BlockedPage: Add "Copy..." button.
+- UI: ButtonMenu/Popup: Fix popup closing by button.
+- UI: OptionsPage: Add ability to "Stop Traffic".
+- UI: OptionsPage: Add "Profile" & "Releases" links.
+- UI: SchedulePage: Add "Update Checker" task.
+- Driver: Drop speed limited traffic.
+- Driver: Use tommy_hashdyn instead of flow-contexts.
+
 v1.3.3, 2017-12-17:
 - Driver: Fix traffic inspecting of connections, created before the program started.
 
