@@ -667,8 +667,7 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
 
  stat:
     if (conf_flags.log_stat) {
-      status = fort_prov_flow_register();
-
+      status = fort_prov_flow_register(&g_device->stat.limit_bits != 0);
       if (!NT_SUCCESS(status)) {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                    "FORT: Prov. Flow Register: Error: %d\n", status);

@@ -73,13 +73,11 @@ fort_prov_register (BOOL is_boot)
   FWPM_SUBLAYER0 sublayer;
   FWPM_FILTER0 ofilter4, ifilter4;
   HANDLE engine;
-  UINT32 filter_flags;
+  const UINT32 filter_flags = is_boot ? 0 : FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED;
   DWORD status;
 
   if ((status = fort_prov_open(&engine)))
     goto end;
-
-  filter_flags = is_boot ? 0 : FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED;
 
   RtlZeroMemory(&provider, sizeof(FWPM_PROVIDER0));
   provider.flags = is_boot ? FWPM_PROVIDER_FLAG_PERSISTENT : 0;
@@ -186,19 +184,17 @@ fort_prov_register (BOOL is_boot)
 }
 
 static DWORD
-fort_prov_flow_register (void)
+fort_prov_flow_register (BOOL speed_limit)
 {
   FWPM_FILTER0 cfilter4, sfilter4, dfilter4;
   FWPM_FILTER0 itfilter4, otfilter4;
   HANDLE engine;
-  UINT32 filter_flags;
+  const UINT32 filter_flags = FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED
+    | FWP_CALLOUT_FLAG_ALLOW_MID_STREAM_INSPECTION;
   DWORD status;
 
   if ((status = fort_prov_open(&engine)))
     goto end;
-
-  filter_flags = FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED
-    | FWP_CALLOUT_FLAG_ALLOW_MID_STREAM_INSPECTION;
 
   RtlZeroMemory(&cfilter4, sizeof(FWPM_FILTER0));
   cfilter4.flags = 0;
@@ -254,8 +250,10 @@ fort_prov_flow_register (void)
       || (status = FwpmFilterAdd0(engine, &cfilter4, NULL, NULL))
       || (status = FwpmFilterAdd0(engine, &sfilter4, NULL, NULL))
       || (status = FwpmFilterAdd0(engine, &dfilter4, NULL, NULL))
-      || (status = FwpmFilterAdd0(engine, &itfilter4, NULL, NULL))
-      || (status = FwpmFilterAdd0(engine, &otfilter4, NULL, NULL))
+#if 0
+      || (speed_limit && ((status = FwpmFilterAdd0(engine, &itfilter4, NULL, NULL))
+        || (status = FwpmFilterAdd0(engine, &otfilter4, NULL, NULL))))
+#endif
       || (status = FwpmTransactionCommit0(engine))) {
     FwpmTransactionAbort0(engine);
   }
