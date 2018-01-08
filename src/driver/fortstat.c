@@ -29,7 +29,6 @@ typedef struct fort_stat_proc {
 } FORT_STAT_PROC, *PFORT_STAT_PROC;
 
 typedef struct fort_stat_flow_opt {
-  UCHAR is_udp		: 1;
   UCHAR speed_limit	: 1;
   UCHAR group_index;
   UINT16 proc_index;
@@ -269,7 +268,7 @@ fort_stat_flow_free (PFORT_STAT stat, PFORT_STAT_FLOW flow)
 static PFORT_STAT_FLOW
 fort_stat_flow_add (PFORT_STAT stat, UINT64 flow_id,
                     UCHAR group_index, UINT16 proc_index,
-                    BOOL is_udp, BOOL speed_limit)
+                    BOOL speed_limit)
 {
   const tommy_key_t flow_hash = fort_stat_flow_hash(flow_id);
   PFORT_STAT_FLOW flow = fort_stat_flow_get(stat, flow_id, flow_hash);
@@ -295,7 +294,6 @@ fort_stat_flow_add (PFORT_STAT stat, UINT64 flow_id,
     flow->flow_id = flow_id;
   }
 
-  flow->opt.is_udp = (UCHAR) is_udp;
   flow->opt.speed_limit = (UCHAR) speed_limit;
   flow->opt.group_index = group_index;
   flow->opt.proc_index = proc_index;
@@ -373,7 +371,7 @@ fort_stat_update_limits (PFORT_STAT stat, PFORT_CONF_IO conf_io)
 static NTSTATUS
 fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
                           UINT32 process_id, UCHAR group_index,
-                          BOOL is_udp, BOOL *is_new_proc)
+                          BOOL *is_new_proc)
 {
   KLOCK_QUEUE_HANDLE lock_queue;
   PFORT_STAT_FLOW flow;
@@ -398,8 +396,8 @@ fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
 
   speed_limit = fort_stat_group_speed_limit(stat, group_index) != 0;
 
-  flow = fort_stat_flow_add(stat, flow_id, group_index, proc_index,
-    is_udp, speed_limit);
+  flow = fort_stat_flow_add(stat, flow_id,
+    group_index, proc_index, speed_limit);
 
   if (flow == NULL) {
     if (*is_new_proc) {
