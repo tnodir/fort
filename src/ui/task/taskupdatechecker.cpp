@@ -47,7 +47,7 @@ bool TaskUpdateChecker::parseBuffer(const QByteArray &buffer)
     const QJsonDocument jsonDoc = QJsonDocument::fromJson(
                 buffer, &jsonParseError);
     if (jsonParseError.error != QJsonParseError::NoError) {
-        //TODO: jsonParseError.errorString()
+        // TODO: jsonParseError.errorString()
         return false;
     }
 
@@ -64,7 +64,9 @@ bool TaskUpdateChecker::parseBuffer(const QByteArray &buffer)
 
     m_releaseName = map["name"].toString();  // eg. "Fort Firewall v1.4.0"
     m_publishedAt = map["published_at"].toString();  // eg. "2017-12-17T02:27:19Z"
+
     m_releaseNotes = map["body"].toString();  // ChangeLog
+    m_releaseNotes.replace('\n', "<br/>");
 
     // Assets
     const QVariantList assets = map["assets"].toList();
@@ -95,5 +97,5 @@ QString TaskUpdateChecker::successMessage() const
             + publishedTime.toString("dd-MMM-yyyy hh:mm") + "</i>, "
             + NetUtil::formatDataSize(m_downloadSize)
             + ", #" + QString::number(m_downloadCount)
-            + "):<br/>\n" + m_releaseNotes;
+            + ")<br/>\nRelease Notes:<br/>\n" + m_releaseNotes;
 }
