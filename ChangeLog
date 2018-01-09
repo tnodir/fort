@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v1.5.0, 2018-01-09:
+- UI: Save/restore window's state.
+- UI: Use default conf on 1st start.
+- Update Qt libraries.
+
 v1.4.0, 2018-01-08:
 - UI: ApplicationsPage: Add "Speed Limit" button.
 - UI: BlockedPage: Add "Copy..." button.
