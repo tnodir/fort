@@ -64,6 +64,9 @@ public slots:
 private slots:
     void saveTrayFlags();
 
+    void onWindowRectChanged();
+    void onWindowVisibilityChanged();
+
 private:
     FirewallConf *nullConf() const { return nullptr; }
 
@@ -90,6 +93,9 @@ private:
 
     FirewallConf *cloneConf(const FirewallConf &conf);
 
+    void saveWindowState();
+    void restoreWindowState();
+
     void updateTrayMenu();
 
     static QAction *addAction(QWidget *widget,
@@ -101,6 +107,9 @@ private:
 
 private:
     MainWindow m_window;  // dummy window for tray icon
+
+    bool m_appWindowMaximized;
+    QRect m_appWindowRect, m_appWindowRectPrev;
 
     QSystemTrayIcon *m_trayIcon;
     QQmlApplicationEngine *m_engine;

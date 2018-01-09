@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QHash>
+#include <QRect>
 #include <QSettings>
 
 #include "../common/version.h"
@@ -34,6 +35,12 @@ public:
 
     QString language() const { return iniText("base/language", "en"); }
     void setLanguage(const QString &v) { setIniValue("base/language", v); }
+
+    QRect windowGeometry() const { return iniValue("window/geometry").toRect(); }
+    void setWindowGeometry(const QRect &v) { setIniValue("window/geometry", v); }
+
+    bool windowMaximized() const { return iniBool("window/maximized"); }
+    void setWindowMaximized(bool on) { setIniValue("window/maximized", on); }
 
     QString updatesUrl() const { return APP_UPDATES_URL; }
 

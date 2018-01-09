@@ -159,10 +159,14 @@ bool FortManager::setupEngine()
                 m_engine->rootObjects().first());
     Q_ASSERT(m_appWindow);
 
+    connect(m_appWindow, &QWindow::xChanged, this, &FortManager::onWindowRectChanged);
+    connect(m_appWindow, &QWindow::yChanged, this, &FortManager::onWindowRectChanged);
+    connect(m_appWindow, &QWindow::widthChanged, this, &FortManager::onWindowRectChanged);
+    connect(m_appWindow, &QWindow::heightChanged, this, &FortManager::onWindowRectChanged);
+    connect(m_appWindow, &QWindow::visibilityChanged, this, &FortManager::onWindowVisibilityChanged);
+
     // XXX: Workaround to fix icons' incorrect position on main tab buttons
-    QTimer::singleShot(100, [this]() {
-        m_appWindow->resize(1024, 768);
-    });
+    QTimer::singleShot(100, this, &FortManager::restoreWindowState);
 
     return true;
 }
@@ -207,10 +211,14 @@ void FortManager::exit(int retcode)
 {
     closeWindow();
 
+    if (m_appWindow) {
+        saveWindowState();
+        m_appWindow = nullptr;
+    }
+
     if (m_engine) {
         m_engine->deleteLater();
         m_engine = nullptr;
-        m_appWindow = nullptr;
     }
 
     qApp->exit(retcode);
@@ -378,6 +386,58 @@ FirewallConf *FortManager::cloneConf(const FirewallConf &conf)
     newConf->copyFlags(conf);
 
     return newConf;
+}
+
+void FortManager::onWindowRectChanged()
+{
+    if (m_appWindow->visibility() != QWindow::Windowed)
+        return;
+
+    const QRect rect = m_appWindow->geometry();
+
+    if (rect != m_appWindowRect) {
+        m_appWindowRectPrev = m_appWindowRect;
+        m_appWindowRect = rect;
+    }
+}
+
+void FortManager::onWindowVisibilityChanged()
+{
+    switch (m_appWindow->visibility()) {
+    case QWindow::Windowed:
+        m_appWindowMaximized = false;
+        break;
+    case QWindow::Maximized:
+        m_appWindowMaximized = true;
+        m_appWindowRect = m_appWindowRectPrev;
+        break;
+    default: break;
+    }
+}
+
+void FortManager::saveWindowState()
+{
+    m_fortSettings->setWindowGeometry(m_appWindowRect);
+    m_fortSettings->setWindowMaximized(m_appWindowMaximized);
+}
+
+void FortManager::restoreWindowState()
+{
+    const QRect rect = m_fortSettings->windowGeometry();
+
+    if (rect.isNull()) {
+        m_appWindow->resize(1024, 768);
+        return;
+    }
+
+    m_appWindowRect = m_appWindowRectPrev = rect;
+    m_appWindowMaximized = m_fortSettings->windowMaximized();
+
+    m_appWindow->setGeometry(m_appWindowRect);
+
+    if (m_appWindowMaximized) {
+        m_appWindow->setVisibility(QWindow::Maximized);
+    }
 }
 
 void FortManager::updateTrayMenu()
