@@ -282,9 +282,15 @@ void FortManager::setFirewallConfToEdit(FirewallConf *conf)
 
 bool FortManager::loadSettings(FirewallConf *conf)
 {
-    if (!m_fortSettings->readConf(*conf)) {
+    bool isNewConf;
+
+    if (!m_fortSettings->readConf(*conf, isNewConf)) {
         showErrorBox("Load Settings: " + m_fortSettings->errorMessage());
         return false;
+    }
+
+    if (isNewConf) {
+        conf->setupDefault();
     }
 
     return updateDriverConf(conf);

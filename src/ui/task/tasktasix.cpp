@@ -7,6 +7,7 @@
 #endif
 #include "../util/net/ip4range.h"
 #include "../util/net/netdownloader.h"
+#include "../util/net/netutil.h"
 
 TaskTasix::TaskTasix(QObject *parent) :
     TaskDownloader(parent)
@@ -92,11 +93,7 @@ QStringList TaskTasix::parseTasixBuffer(const QByteArray &buffer)
 
     // Include local networks
     if (!list.isEmpty()) {
-        list.append("10.0.0.0/8");
-        list.append("127.0.0.0/8");
-        list.append("169.254.0.0/16");
-        list.append("172.16.0.0/12");
-        list.append("192.168.0.0/16");
+        list.append(NetUtil::localIpv4Networks());
     }
 
     return list;

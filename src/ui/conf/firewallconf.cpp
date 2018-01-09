@@ -1,5 +1,8 @@
 #include "firewallconf.h"
 
+#include <QCoreApplication>
+
+#include "../util/net/netutil.h"
 #include "addressgroup.h"
 #include "appgroup.h"
 
@@ -236,4 +239,15 @@ void FirewallConf::fromVariant(const QVariant &v)
         appGroup->fromVariant(gv);
         addAppGroup(appGroup);
     }
+}
+
+void FirewallConf::setupDefault()
+{
+    m_ipInclude->setUseAll(true);
+    m_ipExclude->setText(NetUtil::localIpv4Networks().join('\n'));
+
+    AppGroup *appGroup = new AppGroup();
+    appGroup->setName("Main");
+    appGroup->setAllowText(qApp->applicationDirPath() + '/');
+    addAppGroup(appGroup);
 }

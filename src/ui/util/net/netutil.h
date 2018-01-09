@@ -22,7 +22,9 @@ public:
 
     Q_INVOKABLE static QString formatDataSize(qint64 bytes, int precision = 2);
 
-    static QString getHostName(const QString &address);
+    Q_INVOKABLE static QString getHostName(const QString &address);
+
+    Q_INVOKABLE static QStringList localIpv4Networks();
 
 private:
     static int first0Bit(quint32 u);

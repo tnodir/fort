@@ -64,7 +64,7 @@ signals:
     void errorMessageChanged();
 
 public slots:
-    bool readConf(FirewallConf &conf);
+    bool readConf(FirewallConf &conf, bool &isNew);
     bool writeConf(const FirewallConf &conf);
 
     bool readConfIni(FirewallConf &conf) const;

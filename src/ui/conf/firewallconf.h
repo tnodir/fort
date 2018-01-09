@@ -97,6 +97,8 @@ public:
     QVariant toVariant() const;
     void fromVariant(const QVariant &v);
 
+    void setupDefault();
+
 signals:
     void provBootChanged();
     void filterEnabledChanged();

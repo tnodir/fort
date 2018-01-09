@@ -132,7 +132,7 @@ QString FortSettings::confBackupFilePath() const
     return confFilePath() + QLatin1String(".backup");
 }
 
-bool FortSettings::readConf(FirewallConf &conf)
+bool FortSettings::readConf(FirewallConf &conf, bool &isNew)
 {
     const QString filePath = confFilePath();
     const QString backupFilePath = confBackupFilePath();
@@ -140,8 +140,9 @@ bool FortSettings::readConf(FirewallConf &conf)
     const bool fileExists = FileUtil::fileExists(filePath);
     const bool backupFileExists = FileUtil::fileExists(backupFilePath);
 
-    return (!(fileExists || backupFileExists)
-            || (fileExists && tryToReadConf(conf, filePath))
+    isNew = !(fileExists || backupFileExists);
+
+    return (isNew || (fileExists && tryToReadConf(conf, filePath))
             || tryToReadConf(conf, backupFilePath))
             && readConfIni(conf);  // read flags at the end to use correct app groups
 }
