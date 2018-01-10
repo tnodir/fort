@@ -28,6 +28,7 @@
 #include "util/net/hostinfocache.h"
 #include "util/net/netutil.h"
 #include "util/osutil.h"
+#include "util/windowstatewatcher.h"
 
 FortManager::FortManager(FortSettings *fortSettings,
                          QObject *parent) :
@@ -35,6 +36,7 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_trayIcon(new QSystemTrayIcon(this)),
     m_engine(nullptr),
     m_appWindow(nullptr),
+    m_appWindowState(new WindowStateWatcher(this)),
     m_fortSettings(fortSettings),
     m_firewallConf(new FirewallConf(this)),
     m_firewallConfToEdit(nullConf()),
@@ -159,11 +161,7 @@ bool FortManager::setupEngine()
                 m_engine->rootObjects().first());
     Q_ASSERT(m_appWindow);
 
-    connect(m_appWindow, &QWindow::xChanged, this, &FortManager::onWindowRectChanged);
-    connect(m_appWindow, &QWindow::yChanged, this, &FortManager::onWindowRectChanged);
-    connect(m_appWindow, &QWindow::widthChanged, this, &FortManager::onWindowRectChanged);
-    connect(m_appWindow, &QWindow::heightChanged, this, &FortManager::onWindowRectChanged);
-    connect(m_appWindow, &QWindow::visibilityChanged, this, &FortManager::onWindowVisibilityChanged);
+    m_appWindowState->setup(m_appWindow);
 
     // XXX: Workaround to fix icons' incorrect position on main tab buttons
     QTimer::singleShot(100, this, &FortManager::restoreWindowState);
@@ -394,37 +392,10 @@ FirewallConf *FortManager::cloneConf(const FirewallConf &conf)
     return newConf;
 }
 
-void FortManager::onWindowRectChanged()
-{
-    if (m_appWindow->visibility() != QWindow::Windowed)
-        return;
-
-    const QRect rect = m_appWindow->geometry();
-
-    if (rect != m_appWindowRect) {
-        m_appWindowRectPrev = m_appWindowRect;
-        m_appWindowRect = rect;
-    }
-}
-
-void FortManager::onWindowVisibilityChanged()
-{
-    switch (m_appWindow->visibility()) {
-    case QWindow::Windowed:
-        m_appWindowMaximized = false;
-        break;
-    case QWindow::Maximized:
-        m_appWindowMaximized = true;
-        m_appWindowRect = m_appWindowRectPrev;
-        break;
-    default: break;
-    }
-}
-
 void FortManager::saveWindowState()
 {
-    m_fortSettings->setWindowGeometry(m_appWindowRect);
-    m_fortSettings->setWindowMaximized(m_appWindowMaximized);
+    m_fortSettings->setWindowGeometry(m_appWindowState->geometry());
+    m_fortSettings->setWindowMaximized(m_appWindowState->maximized());
 }
 
 void FortManager::restoreWindowState()
@@ -436,12 +407,14 @@ void FortManager::restoreWindowState()
         return;
     }
 
-    m_appWindowRect = m_appWindowRectPrev = rect;
-    m_appWindowMaximized = m_fortSettings->windowMaximized();
+    const bool maximized = m_fortSettings->windowMaximized();
 
-    m_appWindow->setGeometry(m_appWindowRect);
+    m_appWindowState->setGeometry(rect);
+    m_appWindowState->setMaximized(maximized);
 
-    if (m_appWindowMaximized) {
+    m_appWindow->setGeometry(rect);
+
+    if (maximized) {
         m_appWindow->setVisibility(QWindow::Maximized);
     }
 }

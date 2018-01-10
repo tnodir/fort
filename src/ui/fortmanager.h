@@ -14,6 +14,7 @@ QT_FORWARD_DECLARE_CLASS(FortSettings)
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
 QT_FORWARD_DECLARE_CLASS(LogManager)
 QT_FORWARD_DECLARE_CLASS(TaskManager)
+QT_FORWARD_DECLARE_CLASS(WindowStateWatcher)
 
 class FortManager : public QObject
 {
@@ -64,9 +65,6 @@ public slots:
 private slots:
     void saveTrayFlags();
 
-    void onWindowRectChanged();
-    void onWindowVisibilityChanged();
-
 private:
     FirewallConf *nullConf() const { return nullptr; }
 
@@ -108,12 +106,11 @@ private:
 private:
     MainWindow m_window;  // dummy window for tray icon
 
-    bool m_appWindowMaximized;
-    QRect m_appWindowRect, m_appWindowRectPrev;
-
     QSystemTrayIcon *m_trayIcon;
     QQmlApplicationEngine *m_engine;
+
     QWindow *m_appWindow;
+    WindowStateWatcher *m_appWindowState;
 
     FortSettings *m_fortSettings;
     FirewallConf *m_firewallConf;

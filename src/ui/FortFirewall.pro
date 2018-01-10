@@ -50,7 +50,8 @@ SOURCES += \
     util/net/netutil.cpp \
     util/processinfo.cpp \
     util/osutil.cpp \
-    util/stringutil.cpp
+    util/stringutil.cpp \
+    util/windowstatewatcher.cpp
 
 HEADERS += \
     conf/addressgroup.h \
@@ -96,7 +97,8 @@ HEADERS += \
     util/net/netutil.h \
     util/processinfo.h \
     util/osutil.h \
-    util/stringutil.h
+    util/stringutil.h \
+    util/windowstatewatcher.h
 
 QML_FILES += \
     qml/*.qml \
