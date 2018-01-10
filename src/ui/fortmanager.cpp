@@ -28,6 +28,7 @@
 #include "util/net/hostinfocache.h"
 #include "util/net/netutil.h"
 #include "util/osutil.h"
+#include "util/stringutil.h"
 #include "util/windowstatewatcher.h"
 
 FortManager::FortManager(FortSettings *fortSettings,
@@ -100,6 +101,7 @@ void FortManager::registerQmlTypes()
     qmlRegisterType<HostInfoCache>("com.fortfirewall", 1, 0, "HostInfoCache");
     qmlRegisterType<NetUtil>("com.fortfirewall", 1, 0, "NetUtil");
     qmlRegisterType<OsUtil>("com.fortfirewall", 1, 0, "OsUtil");
+    qmlRegisterType<StringUtil>("com.fortfirewall", 1, 0, "StringUtil");
 }
 
 bool FortManager::setupDriver()
@@ -276,6 +278,8 @@ void FortManager::setFirewallConfToEdit(FirewallConf *conf)
 
     m_firewallConfToEdit = conf;
     emit firewallConfToEditChanged();
+
+    updateTrayMenu();
 }
 
 bool FortManager::loadSettings(FirewallConf *conf)
@@ -433,29 +437,33 @@ void FortManager::updateTrayMenu()
     addAction(menu, QIcon(":/images/cog.png"), tr("Options"),
               this, SLOT(showWindow()));
 
-    menu->addSeparator();
-    m_filterEnabledAction = addAction(
-                menu, QIcon(), tr("Filter Enabled"),
-                this, SLOT(saveTrayFlags()),
-                true, conf.filterEnabled());
-    m_stopTrafficAction = addAction(
-                menu, QIcon(), tr("Stop Traffic"),
-                this, SLOT(saveTrayFlags()),
-                true, conf.stopTraffic());
+    if (!conf.hasPassword() && !m_firewallConfToEdit) {
+        menu->addSeparator();
+        m_filterEnabledAction = addAction(
+                    menu, QIcon(), tr("Filter Enabled"),
+                    this, SLOT(saveTrayFlags()),
+                    true, conf.filterEnabled());
+        m_stopTrafficAction = addAction(
+                    menu, QIcon(), tr("Stop Traffic"),
+                    this, SLOT(saveTrayFlags()),
+                    true, conf.stopTraffic());
 
-    menu->addSeparator();
-    m_appGroupActions.clear();
-    foreach (const AppGroup *appGroup, conf.appGroupsList()) {
-        QAction *a = addAction(
-                    menu, QIcon(":/images/application_double.png"),
-                    appGroup->name(), this, SLOT(saveTrayFlags()),
-                    true, appGroup->enabled());
-        m_appGroupActions.append(a);
+        menu->addSeparator();
+        m_appGroupActions.clear();
+        foreach (const AppGroup *appGroup, conf.appGroupsList()) {
+            QAction *a = addAction(
+                        menu, QIcon(":/images/application_double.png"),
+                        appGroup->name(), this, SLOT(saveTrayFlags()),
+                        true, appGroup->enabled());
+            m_appGroupActions.append(a);
+        }
     }
 
-    menu->addSeparator();
-    addAction(menu, QIcon(":/images/cross.png"), tr("Quit"),
-              this, SLOT(exit()));
+    if (!conf.hasPassword()) {
+        menu->addSeparator();
+        addAction(menu, QIcon(":/images/cross.png"), tr("Quit"),
+                  this, SLOT(exit()));
+    }
 
     m_trayIcon->setContextMenu(menu);
 }

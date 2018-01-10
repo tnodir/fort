@@ -6,6 +6,14 @@ import com.fortfirewall 1.0
 
 BasePage {
 
+    function onAboutToSave() {  // override
+        const password = editPassword.text;
+        if (password) {
+            firewallConf.passwordHash = stringUtil.cryptoHash(password);
+            editPassword.text = "";
+        }
+    }
+
     function onSaved() {  // override
         fortSettings.startWithWindows = cbStart.checked;
     }
@@ -57,6 +65,38 @@ BasePage {
                     firewallConf.stopTraffic = checked;
 
                     setConfFlagsEdited();
+                }
+            }
+
+            Row {
+                spacing: 4
+
+                CheckBox {
+                    id: cbPassword
+                    text: translationManager.dummyBool
+                          && qsTranslate("qml", "Password:")
+                    checked: firewallConf.hasPassword
+                    onToggled: {
+                        if (!checked) {
+                            firewallConf.passwordHash =
+                                    editPassword.text = "";
+                        } else {
+                            editPassword.forceActiveFocus();
+                        }
+
+                        setConfEdited();
+                    }
+                }
+                TextFieldFrame {
+                    id: editPassword
+                    width: 180
+                    echoMode: TextInput.Password
+                    passwordMaskDelay: 300
+                    readOnly: firewallConf.hasPassword || !cbPassword.checked
+                    placeholderText: translationManager.dummyBool
+                                     && (firewallConf.hasPassword
+                                         ? qsTranslate("qml", "Installed")
+                                         : qsTranslate("qml", "Not Installed"))
                 }
             }
 

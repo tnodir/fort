@@ -28,6 +28,8 @@ class FirewallConf : public QObject
     Q_PROPERTY(int trafDayKeepDays READ trafDayKeepDays WRITE setTrafDayKeepDays NOTIFY trafDayKeepDaysChanged)
     Q_PROPERTY(int trafMonthKeepMonths READ trafMonthKeepMonths WRITE setTrafMonthKeepMonths NOTIFY trafMonthKeepMonthsChanged)
     Q_PROPERTY(int trafUnit READ trafUnit WRITE setTrafUnit NOTIFY trafUnitChanged)
+    Q_PROPERTY(bool hasPassword READ hasPassword NOTIFY passwordHashChanged)
+    Q_PROPERTY(QString passwordHash READ passwordHash WRITE setPasswordHash NOTIFY passwordHashChanged)
     Q_PROPERTY(AddressGroup *ipInclude READ ipInclude CONSTANT)
     Q_PROPERTY(AddressGroup *ipExclude READ ipExclude CONSTANT)
     Q_PROPERTY(QQmlListProperty<AppGroup> appGroups READ appGroups NOTIFY appGroupsChanged)
@@ -82,6 +84,11 @@ public:
     int trafUnit() const { return m_trafUnit; }
     void setTrafUnit(int trafUnit);
 
+    bool hasPassword() const { return !m_passwordHash.isEmpty(); }
+
+    QString passwordHash() const { return m_passwordHash; }
+    void setPasswordHash(const QString &passwordHash);
+
     quint32 appGroupBits() const;
     void setAppGroupBits(quint32 groupBits);
 
@@ -112,6 +119,7 @@ signals:
     void trafDayKeepDaysChanged();
     void trafMonthKeepMonthsChanged();
     void trafUnitChanged();
+    void passwordHashChanged();
     void appGroupsChanged();
 
 public slots:
@@ -138,6 +146,8 @@ private:
     int m_trafMonthKeepMonths;
 
     TrafUnit m_trafUnit;
+
+    QString m_passwordHash;
 
     AddressGroup *m_ipInclude;
     AddressGroup *m_ipExclude;

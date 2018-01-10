@@ -102,6 +102,7 @@ HEADERS += \
 
 QML_FILES += \
     qml/*.qml \
+    qml/boxes/*.qml \
     qml/controls/*.qml \
     qml/pages/*.qml \
     qml/pages/addresses/*.qml \

@@ -10,7 +10,9 @@ class StringUtil : public QObject
 public:
     explicit StringUtil(QObject *parent = nullptr);
 
-    static QString capitalize(const QString &text);
+    Q_INVOKABLE static QString capitalize(const QString &text);
+
+    Q_INVOKABLE static QString cryptoHash(const QString &text);
 };
 
 #endif // STRINGUTIL_H

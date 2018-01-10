@@ -37,22 +37,22 @@
 <context>
     <name>FortManager</name>
     <message>
-        <location filename="../fortmanager.cpp" line="394"/>
+        <location filename="../fortmanager.cpp" line="437"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="399"/>
+        <location filename="../fortmanager.cpp" line="443"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="403"/>
+        <location filename="../fortmanager.cpp" line="447"/>
         <source>Stop Traffic</source>
         <translation>Остановить трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="418"/>
+        <location filename="../fortmanager.cpp" line="464"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -60,27 +60,27 @@
 <context>
     <name>FortSettings</name>
     <message>
-        <location filename="../fortsettings.cpp" line="172"/>
+        <location filename="../fortsettings.cpp" line="169"/>
         <source>Can&apos;t write .ini file</source>
         <translation>Не удалось записать .ini файл</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="178"/>
+        <location filename="../fortsettings.cpp" line="175"/>
         <source>Can&apos;t rename old backup .conf file</source>
         <translation>Не удалось переименовать старый бэкап .conf файла</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="183"/>
+        <location filename="../fortsettings.cpp" line="180"/>
         <source>Can&apos;t create backup .conf file</source>
         <translation>Не удалось создать бэкап .conf файла</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="188"/>
+        <location filename="../fortsettings.cpp" line="185"/>
         <source>Can&apos;t rename backup .conf file</source>
         <translation>Не удалось переименовать бэкап .conf файла</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="203"/>
+        <location filename="../fortsettings.cpp" line="200"/>
         <source>Can&apos;t write .conf file</source>
         <translation>Не удалось записать .conf файл</translation>
     </message>
@@ -287,102 +287,120 @@
         <translation>Сдвинуть направо</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="44"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="46"/>
         <source>Enabled</source>
         <translation>Включено</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="62"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="64"/>
         <source>Block</source>
         <translation>Блокировать</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="85"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="87"/>
         <source>Allow</source>
         <translation>Разрешить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="48"/>
+        <location filename="../qml/pages/MainPage.qml" line="49"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="53"/>
+        <location filename="../qml/pages/MainPage.qml" line="54"/>
         <source>IPv4 Addresses</source>
         <translation>Адреса IPv4</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="58"/>
+        <location filename="../qml/pages/MainPage.qml" line="59"/>
         <source>Applications</source>
         <translation>Приложения</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="73"/>
+        <location filename="../qml/pages/MainPage.qml" line="74"/>
         <source>Schedule</source>
         <translation>Расписание</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="63"/>
+        <location filename="../qml/pages/MainPage.qml" line="64"/>
         <source>Blocked</source>
         <translation>Блокировано</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="68"/>
+        <location filename="../qml/pages/MainPage.qml" line="69"/>
         <source>Statistics</source>
         <translation>Статистика</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="98"/>
+        <location filename="../qml/boxes/PasswordBox.qml" line="34"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="76"/>
+        <source>Password:</source>
+        <translation>Пароль:</translation>
+    </message>
+    <message>
+        <location filename="../qml/boxes/PasswordBox.qml" line="50"/>
+        <location filename="../qml/pages/MainPage.qml" line="99"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="113"/>
+        <location filename="../qml/pages/MainPage.qml" line="116"/>
         <source>Apply</source>
         <translation>Применить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="127"/>
+        <location filename="../qml/boxes/PasswordBox.qml" line="62"/>
+        <location filename="../qml/pages/MainPage.qml" line="132"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="133"/>
+        <location filename="../qml/pages/MainPage.qml" line="138"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="23"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="30"/>
         <source>Start with Windows</source>
         <translation>Запускать вместе с Windows</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="32"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="39"/>
         <source>Block access to network when Fort Firewall is not running</source>
         <translation>Блокировать доступ к сети, когда Fort Firewall не запущен</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="43"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="50"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="54"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="61"/>
         <source>Stop Traffic</source>
         <translation>Остановить трафик</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="69"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="97"/>
+        <source>Installed</source>
+        <translation>Установлен</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/OptionsPage.qml" line="98"/>
+        <source>Not Installed</source>
+        <translation>Не установлен</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/OptionsPage.qml" line="108"/>
         <source>Language:</source>
         <translation>Язык:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="90"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="129"/>
         <source>Profile:</source>
         <translation>Профиль:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="104"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="143"/>
         <source>Releases:</source>
         <translation>Релизы:</translation>
     </message>

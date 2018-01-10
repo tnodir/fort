@@ -5,6 +5,5 @@ TextField {
     id: textField
     persistentSelection: true
     selectByMouse: true
-    // XXX: QTBUG-64048: mouse right click clears selected text
     onReleased: textContextMenu.show(event, textField)
 }

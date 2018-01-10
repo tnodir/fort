@@ -121,6 +121,14 @@ void FirewallConf::setTrafUnit(int trafUnit)
     }
 }
 
+void FirewallConf::setPasswordHash(const QString &passwordHash)
+{
+    if (m_passwordHash != passwordHash) {
+        m_passwordHash = passwordHash;
+        emit passwordHashChanged();
+    }
+}
+
 quint32 FirewallConf::appGroupBits() const
 {
     quint32 groupBits = 0;
@@ -193,6 +201,7 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     ipExclude()->setUseAll(o.ipExclude()->useAll());
     setAppBlockAll(o.appBlockAll());
     setAppAllowAll(o.appAllowAll());
+    setPasswordHash(o.passwordHash());
     setAppGroupBits(o.appGroupBits());
 
     setTrafHourKeepDays(o.trafHourKeepDays());
@@ -214,6 +223,8 @@ QVariant FirewallConf::toVariant() const
 {
     QVariantMap map;
 
+    map["passwordHash"] = m_passwordHash;
+
     map["ipInclude"] = ipInclude()->toVariant();
     map["ipExclude"] = ipExclude()->toVariant();
 
@@ -229,6 +240,8 @@ QVariant FirewallConf::toVariant() const
 void FirewallConf::fromVariant(const QVariant &v)
 {
     const QVariantMap map = v.toMap();
+
+    m_passwordHash = map["passwordHash"].toString();
 
     m_ipInclude->fromVariant(map["ipInclude"]);
     m_ipExclude->fromVariant(map["ipExclude"]);

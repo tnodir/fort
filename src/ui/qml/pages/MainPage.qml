@@ -8,6 +8,7 @@ Page {
 
     signal opened()
     signal closed()
+    signal aboutToSave()
     signal saved()
 
     property bool confFlagsEdited
@@ -97,6 +98,8 @@ Page {
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "OK")
                 onClicked: {
+                    mainPage.aboutToSave();
+
                     if (confFlagsEdited || confEdited) {
                         if (!fortManager.saveConf(confFlagsEdited))
                             return;
@@ -112,6 +115,8 @@ Page {
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Apply")
                 onClicked: {
+                    mainPage.aboutToSave();
+
                     if (confFlagsEdited || confEdited) {
                         if (!fortManager.applyConf(confFlagsEdited))
                             return;
