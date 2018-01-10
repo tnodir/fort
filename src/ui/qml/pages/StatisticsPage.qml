@@ -40,11 +40,11 @@ BasePage {
         spacing: 10
 
         RowLayout {
-            Button {
+            RoundButtonTip {
                 enabled: appListView.count
                 icon.source: "qrc:/images/arrow_refresh.png"
-                text: translationManager.dummyBool
-                      && qsTranslate("qml", "Refresh")
+                tipText: translationManager.dummyBool
+                         && qsTranslate("qml", "Refresh")
                 onClicked: trafListModel.refresh()
             }
 
