@@ -637,6 +637,7 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
                            const FORT_CONF_FLAGS old_conf_flags,
                            const FORT_CONF_FLAGS conf_flags)
 {
+  HANDLE engine;
   NTSTATUS status;
 
   UNUSED(device);
@@ -645,16 +646,17 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
     fort_stat_clear(&g_device->stat);
   }
 
+  if ((status = fort_prov_open(&engine)))
+    goto end;
+
+  fort_prov_trans_begin(engine);
+
   /* Check provider filters */
   if (old_conf_flags.prov_boot != conf_flags.prov_boot) {
-    fort_prov_unregister();
+    fort_prov_unregister(engine);
 
-    status = fort_prov_register(conf_flags.prov_boot);
-    if (!NT_SUCCESS(status)) {
-      DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                 "FORT: Prov. Register: Error: %d\n", status);
-      return status;
-    }
+    if ((status = fort_prov_register(engine, conf_flags.prov_boot)))
+      goto cleanup;
 
     goto stat;
   }
@@ -662,32 +664,40 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
   /* Check flow filter */
   if (old_conf_flags.log_stat != conf_flags.log_stat) {
     if (old_conf_flags.log_stat) {
-      fort_prov_flow_unregister();
+      fort_prov_flow_unregister(engine);
     }
 
  stat:
     if (conf_flags.log_stat) {
-      status = fort_prov_flow_register(&g_device->stat.limit_bits != 0);
-      if (!NT_SUCCESS(status)) {
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                   "FORT: Prov. Flow Register: Error: %d\n", status);
-        return status;
-      }
+      if ((status = fort_prov_flow_register(engine,
+          (&g_device->stat.limit_bits != 0))))
+        goto cleanup;
     }
   }
 
   /* Force reauth filter */
-  status = fort_prov_reauth();
-  if (!NT_SUCCESS(status)) {
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-               "FORT: Prov. Reauth: Error: %d\n", status);
-    return status;
-  }
+  if ((status = fort_prov_reauth(engine)))
+    goto cleanup;
 
   fort_timer_update(&g_device->timer,
     (conf_flags.log_blocked || conf_flags.log_stat));
 
-  return STATUS_SUCCESS;
+ cleanup:
+  if (NT_SUCCESS(status)) {
+    status = fort_prov_trans_commit(engine);
+  } else {
+    fort_prov_trans_abort(engine);
+  }
+
+  fort_prov_close(engine);
+
+ end:
+  if (!NT_SUCCESS(status)) {
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+               "FORT: Callout Reauth: Error: %d\n", status);
+  }
+
+  return status;
 }
 
 static void
@@ -901,7 +911,7 @@ fort_driver_unload (PDRIVER_OBJECT driver)
     fort_timer_close(&g_device->timer);
 
     if (!g_device->prov_boot) {
-      fort_prov_unregister();
+      fort_prov_unregister(0);
     }
 
     fort_callout_remove();
@@ -983,7 +993,7 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
       {
         g_device->prov_boot = fort_prov_is_boot();
 
-        fort_prov_unregister();
+        fort_prov_unregister(0);
       }
 
       /* Install callouts */
@@ -991,7 +1001,7 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 
       /* Register filters provider */
       if (NT_SUCCESS(status)) {
-        status = fort_prov_register(g_device->prov_boot);
+        status = fort_prov_register(0, g_device->prov_boot);
       }
     }
   }

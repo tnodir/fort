@@ -167,5 +167,5 @@ bool FortCommon::confAppBlocked(const void *drvConf, int appIndex)
 
 void FortCommon::provUnregister()
 {
-    fort_prov_unregister();
+    fort_prov_unregister(0);
 }

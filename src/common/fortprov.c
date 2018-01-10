@@ -1,24 +1,22 @@
 /* Fort Firewall Driver Provider (Un)Registration */
 
-static DWORD
-fort_prov_open (HANDLE *enginep)
-{
-  return FwpmEngineOpen0(NULL, RPC_C_AUTHN_WINNT, NULL, NULL, enginep);
-}
+#define fort_prov_open(engine)		FwpmEngineOpen0(NULL, RPC_C_AUTHN_WINNT, NULL, NULL, (engine))
+#define fort_prov_close(engine)		FwpmEngineClose0(engine)
+#define fort_prov_trans_begin(engine)	FwpmTransactionBegin0((engine), 0)
+#define fort_prov_trans_commit(engine)	FwpmTransactionCommit0(engine)
+#define fort_prov_trans_abort(engine)	FwpmTransactionAbort0(engine)
 
 static void
-fort_prov_close (HANDLE engine)
+fort_prov_unregister (HANDLE transEngine)
 {
-  FwpmEngineClose0(engine);
-}
+  HANDLE engine = transEngine;
 
-static void
-fort_prov_unregister (void)
-{
-  HANDLE engine;
+  if (!transEngine) {
+    if (fort_prov_open(&engine))
+      return;
 
-  if (fort_prov_open(&engine))
-    return;
+    fort_prov_trans_begin(engine);
+  }
 
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_CONNECT_V4);
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_ACCEPT_V4);
@@ -39,16 +37,23 @@ fort_prov_unregister (void)
   FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_OUT_TRANSPORT_V4);
   FwpmProviderDeleteByKey0(engine, (GUID *) &FORT_GUID_PROVIDER);
 
-  fort_prov_close(engine);
+  if (!transEngine) {
+    fort_prov_trans_commit(engine);
+    fort_prov_close(engine);
+  }
 }
 
 static void
-fort_prov_flow_unregister (void)
+fort_prov_flow_unregister (HANDLE transEngine)
 {
-  HANDLE engine;
+  HANDLE engine = transEngine;
 
-  if (fort_prov_open(&engine))
-    return;
+  if (!transEngine) {
+    if (fort_prov_open(&engine))
+      return;
+
+    fort_prov_trans_begin(engine);
+  }
 
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_CLOSURE_V4);
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_STREAM_V4);
@@ -56,11 +61,14 @@ fort_prov_flow_unregister (void)
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_TRANSPORT_V4);
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_OUT_TRANSPORT_V4);
 
-  fort_prov_close(engine);
+  if (!transEngine) {
+    fort_prov_trans_commit(engine);
+    fort_prov_close(engine);
+  }
 }
 
 static DWORD
-fort_prov_register (BOOL is_boot)
+fort_prov_register (HANDLE transEngine, BOOL is_boot)
 {
   FWPM_PROVIDER0 provider;
   FWPM_CALLOUT0 ocallout4, icallout4;
@@ -68,12 +76,16 @@ fort_prov_register (BOOL is_boot)
   FWPM_CALLOUT0 itcallout4, otcallout4;
   FWPM_SUBLAYER0 sublayer;
   FWPM_FILTER0 ofilter4, ifilter4;
-  HANDLE engine;
+  HANDLE engine = transEngine;
   const UINT32 filter_flags = is_boot ? 0 : FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED;
   DWORD status;
 
-  if ((status = fort_prov_open(&engine)))
-    goto end;
+  if (!transEngine) {
+    if ((status = fort_prov_open(&engine)))
+      goto end;
+
+    fort_prov_trans_begin(engine);
+  }
 
   RtlZeroMemory(&provider, sizeof(FWPM_PROVIDER0));
   provider.flags = is_boot ? FWPM_PROVIDER_FLAG_PERSISTENT : 0;
@@ -157,8 +169,7 @@ fort_prov_register (BOOL is_boot)
   ifilter4.action.type = FWP_ACTION_CALLOUT_UNKNOWN;
   ifilter4.action.calloutKey = FORT_GUID_CALLOUT_ACCEPT_V4;
 
-  if ((status = FwpmTransactionBegin0(engine, 0))
-      || (status = FwpmProviderAdd0(engine, &provider, NULL))
+  if ((status = FwpmProviderAdd0(engine, &provider, NULL))
       || (status = FwpmCalloutAdd0(engine, &ocallout4, NULL, NULL))
       || (status = FwpmCalloutAdd0(engine, &icallout4, NULL, NULL))
       || (status = FwpmCalloutAdd0(engine, &ccallout4, NULL, NULL))
@@ -168,29 +179,38 @@ fort_prov_register (BOOL is_boot)
       || (status = FwpmCalloutAdd0(engine, &otcallout4, NULL, NULL))
       || (status = FwpmSubLayerAdd0(engine, &sublayer, NULL))
       || (status = FwpmFilterAdd0(engine, &ofilter4, NULL, NULL))
-      || (status = FwpmFilterAdd0(engine, &ifilter4, NULL, NULL))
-      || (status = FwpmTransactionCommit0(engine))) {
-    FwpmTransactionAbort0(engine);
+      || (status = FwpmFilterAdd0(engine, &ifilter4, NULL, NULL))) {
+    fort_prov_trans_abort(engine);
   }
 
-  fort_prov_close(engine);
+  if (!transEngine) {
+    if (!status) {
+      status = fort_prov_trans_commit(engine);
+    }
+
+    fort_prov_close(engine);
+  }
 
  end:
   return status;
 }
 
 static DWORD
-fort_prov_flow_register (BOOL speed_limit)
+fort_prov_flow_register (HANDLE transEngine, BOOL speed_limit)
 {
   FWPM_FILTER0 cfilter4, sfilter4, dfilter4;
   FWPM_FILTER0 itfilter4, otfilter4;
-  HANDLE engine;
+  HANDLE engine = transEngine;
   const UINT32 filter_flags = FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED
     | FWP_CALLOUT_FLAG_ALLOW_MID_STREAM_INSPECTION;
   DWORD status;
 
-  if ((status = fort_prov_open(&engine)))
-    goto end;
+  if (!transEngine) {
+    if ((status = fort_prov_open(&engine)))
+      goto end;
+
+    fort_prov_trans_begin(engine);
+  }
 
   RtlZeroMemory(&cfilter4, sizeof(FWPM_FILTER0));
   cfilter4.flags = 0;
@@ -242,19 +262,24 @@ fort_prov_flow_register (BOOL speed_limit)
   otfilter4.action.type = FWP_ACTION_CALLOUT_UNKNOWN;
   otfilter4.action.calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V4;
 
-  if ((status = FwpmTransactionBegin0(engine, 0))
-      || (status = FwpmFilterAdd0(engine, &cfilter4, NULL, NULL))
+  if ((status = FwpmFilterAdd0(engine, &cfilter4, NULL, NULL))
       || (status = FwpmFilterAdd0(engine, &sfilter4, NULL, NULL))
       || (status = FwpmFilterAdd0(engine, &dfilter4, NULL, NULL))
 #if 0
       || (speed_limit && ((status = FwpmFilterAdd0(engine, &itfilter4, NULL, NULL))
         || (status = FwpmFilterAdd0(engine, &otfilter4, NULL, NULL))))
 #endif
-      || (status = FwpmTransactionCommit0(engine))) {
-    FwpmTransactionAbort0(engine);
+      ) {
+    fort_prov_trans_abort(engine);
   }
 
-  fort_prov_close(engine);
+  if (!transEngine) {
+    if (!status) {
+      status = fort_prov_trans_commit(engine);
+    }
+
+    fort_prov_close(engine);
+  }
 
  end:
   return status;
@@ -282,16 +307,17 @@ fort_prov_is_boot (void)
 }
 
 static DWORD
-fort_prov_reauth (void)
+fort_prov_reauth (HANDLE transEngine)
 {
-  HANDLE engine;
+  HANDLE engine = transEngine;
   DWORD status;
 
-  if ((status = fort_prov_open(&engine)))
-    return status;
+  if (!transEngine) {
+    if ((status = fort_prov_open(&engine)))
+      goto end;
 
-  if ((status = FwpmTransactionBegin0(engine, 0)))
-    return status;
+    fort_prov_trans_begin(engine);
+  }
 
   status = FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH_IN);
   if (!status) {
@@ -319,10 +345,17 @@ fort_prov_reauth (void)
     FwpmFilterAdd0(engine, &ofilter, NULL, NULL);
   }
 
-  FwpmTransactionCommit0(engine);
+  if (!transEngine) {
+    if (!status) {
+      status = fort_prov_trans_commit(engine);
+    } else {
+      fort_prov_trans_abort(engine);
+    }
 
-  fort_prov_close(engine);
+    fort_prov_close(engine);
+  }
 
+ end:
   return status;
 }
 
