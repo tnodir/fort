@@ -19,11 +19,10 @@ int main(int argc, char *argv[])
 
     FortSettings fortSettings(qApp->arguments());
 
-    // Register booted provider and exit
+    // Unregister booted provider and exit
     if (fortSettings.hasProvBoot()) {
         FortCommon::provUnregister();
-        return fortSettings.provBoot()
-                ? FortCommon::provRegister(true) : 0;
+        return 0;
     }
 
     // To check running instance

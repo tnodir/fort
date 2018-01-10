@@ -28,7 +28,6 @@ public:
                           QObject *parent = nullptr);
 
     bool hasProvBoot() const { return m_hasProvBoot; }
-    bool provBoot() const { return m_provBoot; }
 
     bool debug() const { return iniBool("base/debug"); }
     void setDebug(bool on) { setIniValue("base/debug", on); }
@@ -104,7 +103,6 @@ private:
 
 private:
     uint m_hasProvBoot  : 1;
-    uint m_provBoot     : 1;
 
     QString m_profilePath;
 

@@ -12,8 +12,7 @@
 FortSettings::FortSettings(const QStringList &args,
                            QObject *parent) :
     QObject(parent),
-    m_hasProvBoot(false),
-    m_provBoot(false)
+    m_hasProvBoot(false)
 {
     processArguments(args);
     setupIni();
@@ -44,7 +43,7 @@ void FortSettings::processArguments(const QStringList &args)
 
     const QCommandLineOption provBootOption(
                 QStringList() << "b" << "boot",
-                "Block access to network when Fort Firewall is not running.", "boot");
+                "Unblock access to network when Fort Firewall is not running.", "boot");
     parser.addOption(provBootOption);
 
     const QCommandLineOption profileOption(
@@ -58,9 +57,6 @@ void FortSettings::processArguments(const QStringList &args)
     parser.process(args);
 
     m_hasProvBoot = parser.isSet(provBootOption);
-    if (m_hasProvBoot) {
-        m_provBoot = QVariant(parser.value(provBootOption)).toBool();
-    }
 
     m_profilePath = parser.value(profileOption);
     if (m_profilePath.isEmpty()) {

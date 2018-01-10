@@ -55,7 +55,6 @@ public:
     static quint8 confAppGroupIndex(const void *drvConf, int appIndex);
     static bool confAppBlocked(const void *drvConf, int appIndex);
 
-    static uint provRegister(bool isBoot);
     static void provUnregister();
 };
 
