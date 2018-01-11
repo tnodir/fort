@@ -2,8 +2,11 @@ QT += core gui qml widgets
 
 CONFIG += c++11
 
-TARGET = FortFirewall
 TEMPLATE = app
+TARGET = FortFirewall
+DESTDIR = ./
+MOC_DIR = .moc
+OBJECTS_DIR = .obj
 
 SOURCES += \
     main.cpp \
@@ -121,14 +124,8 @@ RESOURCES += fort_images.qrc
 
 # Shadow Build: Copy i18n/ to build path
 !equals(PWD, $${OUT_PWD}) {
-    CONFIG(debug, debug|release) {
-        OUTDIR = debug
-    } else {
-        OUTDIR = release
-    }
-
     i18n.files = i18n/*.qm
-    i18n.path = $${OUT_PWD}/$${OUTDIR}/i18n
+    i18n.path = $${OUT_PWD}/i18n
     COPIES += i18n
 }
 
