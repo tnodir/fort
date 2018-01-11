@@ -75,6 +75,7 @@ private:
     bool setupDriver();
     void closeDriver();
 
+    void setupLogger();
     void setupLogManager();
 
     void setupTrayIcon();
@@ -94,6 +95,7 @@ private:
     void saveWindowState();
     void restoreWindowState();
 
+    void updateLogger();
     void updateTrayMenu();
 
     static QAction *addAction(QWidget *widget,

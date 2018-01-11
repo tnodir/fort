@@ -19,6 +19,7 @@ class FortSettings : public QObject
     Q_PROPERTY(QString language READ language WRITE setLanguage NOTIFY iniChanged)
     Q_PROPERTY(QString updatesUrl READ updatesUrl CONSTANT)
     Q_PROPERTY(bool startWithWindows READ startWithWindows WRITE setStartWithWindows NOTIFY startWithWindowsChanged)
+    Q_PROPERTY(QString logsPath READ logsPath CONSTANT)
     Q_PROPERTY(QString profilePath READ profilePath CONSTANT)
     Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
     Q_PROPERTY(QString appUpdatesUrl READ appUpdatesUrl CONSTANT)
@@ -31,6 +32,9 @@ public:
 
     bool debug() const { return iniBool("base/debug"); }
     void setDebug(bool on) { setIniValue("base/debug", on); }
+
+    bool console() const { return iniBool("base/console"); }
+    void setConsole(bool on) { setIniValue("base/console", on); }
 
     QString language() const { return iniText("base/language", "en"); }
     void setLanguage(const QString &v) { setIniValue("base/language", v); }
@@ -49,9 +53,11 @@ public:
     TasksMap tasks() const;
     bool setTasks(const TasksMap &map);
 
-    QString statFilePath() const;
+    QString logsPath() const;
 
     QString profilePath() const { return m_profilePath; }
+
+    QString statFilePath() const;
 
     QString errorMessage() const { return m_errorMessage; }
 

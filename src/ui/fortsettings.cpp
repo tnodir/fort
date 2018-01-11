@@ -113,6 +113,11 @@ bool FortSettings::setTasks(const TasksMap &map)
     return iniSync();
 }
 
+QString FortSettings::logsPath() const
+{
+    return m_profilePath + QLatin1String("logs/");
+}
+
 QString FortSettings::statFilePath() const
 {
     return m_profilePath + QLatin1String("FortFirewall.stat");
@@ -211,6 +216,7 @@ bool FortSettings::readConfIni(FirewallConf &conf) const
     conf.setFilterEnabled(iniBool("filterEnabled", true));
     conf.setStopTraffic(iniBool("stopTraffic"));
     conf.setResolveAddress(iniBool("resolveAddress"));
+    conf.setLogErrors(iniBool("logErrors"));
     conf.setLogBlocked(iniBool("logBlocked"));
     conf.setLogStat(iniBool("logStat"));
     conf.ipInclude()->setUseAll(iniBool("ipIncludeAll"));
@@ -237,6 +243,7 @@ bool FortSettings::writeConfIni(const FirewallConf &conf)
     setIniValue("filterEnabled", conf.filterEnabled());
     setIniValue("stopTraffic", conf.stopTraffic());
     setIniValue("resolveAddress", conf.resolveAddress());
+    setIniValue("logErrors", conf.logErrors());
     setIniValue("logBlocked", conf.logBlocked());
     setIniValue("logStat", conf.logStat());
     setIniValue("ipIncludeAll", conf.ipInclude()->useAll());

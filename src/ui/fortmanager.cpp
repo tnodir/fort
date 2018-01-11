@@ -25,6 +25,7 @@
 #include "translationmanager.h"
 #include "util/fileutil.h"
 #include "util/guiutil.h"
+#include "util/logger.h"
 #include "util/net/hostinfocache.h"
 #include "util/net/netutil.h"
 #include "util/osutil.h"
@@ -51,6 +52,8 @@ FortManager::FortManager(FortSettings *fortSettings,
     setupLogManager();
 
     loadSettings(m_firewallConf);
+
+    setupLogger();
 
     m_taskManager->loadSettings(m_fortSettings);
 
@@ -119,6 +122,13 @@ void FortManager::closeDriver()
     m_logManager->setActive(false);
 
     m_driverManager->closeDevice();
+}
+
+void FortManager::setupLogger()
+{
+    Logger::instance()->setPath(m_fortSettings->logsPath());
+
+    updateLogger();
 }
 
 void FortManager::setupLogManager()
@@ -313,6 +323,7 @@ bool FortManager::saveSettings(FirewallConf *newConf, bool onlyFlags,
     }
 
     if (!immediateFlags) {
+        updateLogger();
         updateTrayMenu();
     }
 
@@ -421,6 +432,13 @@ void FortManager::restoreWindowState()
     if (maximized) {
         m_appWindow->setVisibility(QWindow::Maximized);
     }
+}
+
+void FortManager::updateLogger()
+{
+    Logger::setupLogging(m_firewallConf->logErrors(),
+                         m_fortSettings->debug(),
+                         m_fortSettings->console());
 }
 
 void FortManager::updateTrayMenu()

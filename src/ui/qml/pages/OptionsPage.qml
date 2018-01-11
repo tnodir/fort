@@ -68,6 +68,17 @@ BasePage {
                 }
             }
 
+            CheckBox {
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Log Errors")
+                checked: firewallConf.logErrors
+                onToggled: {
+                    firewallConf.logErrors = checked;
+
+                    setConfFlagsEdited();
+                }
+            }
+
             Row {
                 spacing: 4
 
@@ -121,31 +132,36 @@ BasePage {
                 Layout.fillHeight: true
             }
 
-            Row {
-                spacing: 4
-
-                Label {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: translationManager.dummyBool
-                          && qsTranslate("qml", "Profile:")
-                }
+            RowLayout {
                 LinkButton {
-                    text: fortSettings.profilePath
-                    onClicked: Qt.openUrlExternally("file:///" + text)
-                }
-            }
-
-            Row {
-                spacing: 4
-
-                Label {
-                    anchors.verticalCenter: parent.verticalCenter
+                    visible: firewallConf.logErrors
                     text: translationManager.dummyBool
-                          && qsTranslate("qml", "Releases:")
+                          && qsTranslate("qml", "Logs")
+                    tipText: path
+                    onClicked: Qt.openUrlExternally("file:///" + path)
+                    readonly property string path: fortSettings.logsPath
                 }
+
+                VSeparator {
+                    visible: firewallConf.logErrors
+                }
+
                 LinkButton {
-                    text: fortSettings.appUpdatesUrl
-                    onClicked: Qt.openUrlExternally(text)
+                    text: translationManager.dummyBool
+                          && qsTranslate("qml", "Profile")
+                    tipText: path
+                    onClicked: Qt.openUrlExternally("file:///" + path)
+                    readonly property string path: fortSettings.profilePath
+                }
+
+                VSeparator {}
+
+                LinkButton {
+                    text: translationManager.dummyBool
+                          && qsTranslate("qml", "Releases")
+                    tipText: link
+                    onClicked: Qt.openUrlExternally(link)
+                    readonly property string link: fortSettings.appUpdatesUrl
                 }
             }
         }

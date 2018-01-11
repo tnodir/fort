@@ -19,11 +19,20 @@ Label {
 
     readonly property alias hovered: ma.containsMouse
 
+    property alias tipText: toolTip.text
+
     MouseArea {
         id: ma
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
         onClicked: bt.clicked()
+    }
+
+    ToolTip {
+        id: toolTip
+        visible: bt.hovered
+        delay: 500
+        timeout: 5000
     }
 }

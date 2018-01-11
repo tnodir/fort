@@ -45,6 +45,7 @@ SOURCES += \
     util/device.cpp \
     util/fileutil.cpp \
     util/guiutil.cpp \
+    util/logger.cpp \
     util/net/hostinfo.cpp \
     util/net/hostinfocache.cpp \
     util/net/hostinfoworker.cpp \
@@ -92,6 +93,7 @@ HEADERS += \
     util/device.h \
     util/fileutil.h \
     util/guiutil.h \
+    util/logger.h \
     util/net/hostinfo.h \
     util/net/hostinfocache.h \
     util/net/hostinfoworker.h \
