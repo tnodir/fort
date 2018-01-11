@@ -3,9 +3,10 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 
 Rectangle {
-    Layout.fillWidth: true
-    Layout.maximumWidth: parent.implicitWidth
-    Layout.preferredHeight: 1
+    width: parent.width
+    height: 1
+    Layout.preferredWidth: width
+    Layout.preferredHeight: height
 
     color: palette.mid
 }
