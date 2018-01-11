@@ -209,10 +209,7 @@ BasePage {
                         }
                     }
 
-                    Frame {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 1
-                    }
+                    HSeparator {}
 
                     ListView {
                         id: trafListView

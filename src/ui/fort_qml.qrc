@@ -3,6 +3,7 @@
         <file>qml/boxes/PasswordBox.qml</file>
         <file>qml/controls/ButtonMenu.qml</file>
         <file>qml/controls/ButtonPopup.qml</file>
+        <file>qml/controls/HSeparator.qml</file>
         <file>qml/controls/LinkButton.qml</file>
         <file>qml/controls/ListViewControl.qml</file>
         <file>qml/controls/RoundButtonTip.qml</file>
@@ -12,6 +13,7 @@
         <file>qml/controls/TextAreaFrame.qml</file>
         <file>qml/controls/TextContextMenu.qml</file>
         <file>qml/controls/TextFieldFrame.qml</file>
+        <file>qml/controls/VSeparator.qml</file>
         <file>qml/main.qml</file>
         <file>qml/pages/AddressesPage.qml</file>
         <file>qml/pages/ApplicationsPage.qml</file>
