@@ -37,22 +37,32 @@
 <context>
     <name>FortManager</name>
     <message>
-        <location filename="../fortmanager.cpp" line="455"/>
+        <location filename="../fortmanager.cpp" line="247"/>
+        <source>Password input</source>
+        <translation>Ввод пароля</translation>
+    </message>
+    <message>
+        <location filename="../fortmanager.cpp" line="247"/>
+        <source>Please enter the password</source>
+        <translation>Наберите пароль пожалуйста</translation>
+    </message>
+    <message>
+        <location filename="../fortmanager.cpp" line="474"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="461"/>
+        <location filename="../fortmanager.cpp" line="480"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="465"/>
+        <location filename="../fortmanager.cpp" line="484"/>
         <source>Stop Traffic</source>
         <translation>Остановить трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="482"/>
+        <location filename="../fortmanager.cpp" line="501"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -332,13 +342,11 @@
         <translation>Статистика</translation>
     </message>
     <message>
-        <location filename="../qml/boxes/PasswordBox.qml" line="32"/>
         <location filename="../qml/pages/OptionsPage.qml" line="88"/>
         <source>Password:</source>
         <translation>Пароль:</translation>
     </message>
     <message>
-        <location filename="../qml/boxes/PasswordBox.qml" line="48"/>
         <location filename="../qml/pages/MainPage.qml" line="99"/>
         <source>OK</source>
         <translation>OK</translation>
@@ -349,7 +357,6 @@
         <translation>Применить</translation>
     </message>
     <message>
-        <location filename="../qml/boxes/PasswordBox.qml" line="62"/>
         <location filename="../qml/pages/MainPage.qml" line="132"/>
         <source>Cancel</source>
         <translation>Отмена</translation>

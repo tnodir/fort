@@ -7,6 +7,7 @@ TARGET = FortFirewall
 DESTDIR = ./
 MOC_DIR = .moc
 OBJECTS_DIR = .obj
+RCC_DIR = .rcc
 
 SOURCES += \
     main.cpp \
@@ -107,7 +108,6 @@ HEADERS += \
 
 QML_FILES += \
     qml/*.qml \
-    qml/boxes/*.qml \
     qml/controls/*.qml \
     qml/pages/*.qml \
     qml/pages/addresses/*.qml \

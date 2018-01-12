@@ -1,6 +1,7 @@
 #include "fortmanager.h"
 
 #include <QApplication>
+#include <QInputDialog>
 #include <QMenu>
 #include <QMessageBox>
 #include <QQmlApplicationEngine>
@@ -197,7 +198,9 @@ void FortManager::showWindow()
         setupEngine();
     }
 
-    if (!m_appWindow) return;
+    if (!m_appWindow || !(m_appWindow->isVisible()
+                          || checkPassword()))
+        return;
 
     if (m_firewallConfToEdit == nullConf()) {
         setFirewallConfToEdit(cloneConf(*m_firewallConf));
@@ -232,6 +235,20 @@ void FortManager::exit(int retcode)
     }
 
     qApp->exit(retcode);
+}
+
+bool FortManager::checkPassword()
+{
+    const QString passwordHash = firewallConf()->passwordHash();
+    if (passwordHash.isEmpty())
+        return true;
+
+    const QString password = QInputDialog::getText(
+                &m_window, tr("Password input"), tr("Please enter the password"),
+                QLineEdit::Password);
+
+    return !password.isEmpty()
+            && StringUtil::cryptoHash(password) == passwordHash;
 }
 
 void FortManager::showErrorBox(const QString &text,

@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>qml/boxes/PasswordBox.qml</file>
         <file>qml/controls/ButtonMenu.qml</file>
         <file>qml/controls/ButtonPopup.qml</file>
         <file>qml/controls/HSeparator.qml</file>

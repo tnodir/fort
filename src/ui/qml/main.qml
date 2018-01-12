@@ -1,6 +1,5 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
-import "boxes"
 import "controls"
 import "pages"
 import com.fortfirewall 1.0
@@ -25,8 +24,6 @@ ApplicationWindow {
             closeWindow();
         }
     }
-
-    onVisibleChanged: passwordBox.reset()
 
     function closeWindow() {
         fortManager.closeWindow();
@@ -69,10 +66,5 @@ ApplicationWindow {
             Component.onCompleted: opened()
             Component.onDestruction: closed()
         }
-    }
-
-    PasswordBox {
-        id: passwordBox
-        anchors.fill: parent
     }
 }

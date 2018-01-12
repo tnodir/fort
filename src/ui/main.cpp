@@ -12,6 +12,8 @@ int main(int argc, char *argv[])
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
+    QApplication::setQuitOnLastWindowClosed(false);
+
     QApplication app(argc, argv);
     app.setApplicationName(APP_NAME);
     app.setApplicationVersion(APP_VERSION_STR);
