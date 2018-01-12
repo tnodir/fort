@@ -122,6 +122,7 @@ private:
 
     QAction *m_filterEnabledAction;
     QAction *m_stopTrafficAction;
+    QAction *m_stopInetTrafficAction;
     QList<QAction *> m_appGroupActions;
 
     DatabaseManager *m_databaseManager;

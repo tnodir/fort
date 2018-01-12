@@ -251,19 +251,21 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   conf_flags = conf_ref->conf.flags;
 
-  if (conf_flags.stop_traffic) {
+  if (conf_flags.stop_traffic)
     goto block;
-  }
 
-  if (!conf_flags.filter_enabled) {
+  if (!conf_flags.filter_enabled)
     goto permit;
-  }
+
+  ip_included = fort_conf_ip_included(&conf_ref->conf, remote_ip);
+
+  if (ip_included && conf_flags.stop_inet_traffic)
+    goto block;
 
   process_id = (UINT32) inMetaValues->processId;
   path_len = inMetaValues->processPath->size - sizeof(WCHAR);  // chop terminating zero
   path = inMetaValues->processPath->data;
 
-  ip_included = fort_conf_ip_included(&conf_ref->conf, remote_ip);
   blocked = ip_included
     && ((app_index = fort_conf_app_index(&conf_ref->conf, path_len, path)),
       fort_conf_app_blocked(&conf_ref->conf, app_index));

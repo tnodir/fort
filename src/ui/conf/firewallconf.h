@@ -19,6 +19,7 @@ class FirewallConf : public QObject
     Q_PROPERTY(bool provBoot READ provBoot WRITE setProvBoot NOTIFY provBootChanged)
     Q_PROPERTY(bool filterEnabled READ filterEnabled WRITE setFilterEnabled NOTIFY filterEnabledChanged)
     Q_PROPERTY(bool stopTraffic READ stopTraffic WRITE setStopTraffic NOTIFY stopTrafficChanged)
+    Q_PROPERTY(bool stopInetTraffic READ stopInetTraffic WRITE setStopInetTraffic NOTIFY stopInetTrafficChanged)
     Q_PROPERTY(bool resolveAddress READ resolveAddress WRITE setResolveAddress NOTIFY resolveAddressChanged)
     Q_PROPERTY(bool logErrors READ logErrors WRITE setLogErrors NOTIFY logErrorsChanged)
     Q_PROPERTY(bool logBlocked READ logBlocked WRITE setLogBlocked NOTIFY logBlockedChanged)
@@ -57,6 +58,9 @@ public:
 
     bool stopTraffic() const { return m_stopTraffic; }
     void setStopTraffic(bool stopTraffic);
+
+    bool stopInetTraffic() const { return m_stopInetTraffic; }
+    void setStopInetTraffic(bool stopInetTraffic);
 
     bool resolveAddress() const { return m_resolveAddress; }
     void setResolveAddress(bool resolveAddress);
@@ -114,6 +118,7 @@ signals:
     void provBootChanged();
     void filterEnabledChanged();
     void stopTrafficChanged();
+    void stopInetTrafficChanged();
     void resolveAddressChanged();
     void logErrorsChanged();
     void logBlockedChanged();
@@ -137,6 +142,7 @@ private:
     uint m_provBoot         : 1;
     uint m_filterEnabled    : 1;
     uint m_stopTraffic      : 1;
+    uint m_stopInetTraffic  : 1;
 
     uint m_resolveAddress   : 1;
 

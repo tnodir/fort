@@ -57,14 +57,29 @@ BasePage {
                 }
             }
 
-            CheckBox {
-                text: translationManager.dummyBool
-                      && qsTranslate("qml", "Stop Traffic")
-                checked: firewallConf.stopTraffic
-                onToggled: {
-                    firewallConf.stopTraffic = checked;
+            Row {
+                spacing: 20
 
-                    setConfFlagsEdited();
+                CheckBox {
+                    text: translationManager.dummyBool
+                          && qsTranslate("qml", "Stop Traffic")
+                    checked: firewallConf.stopTraffic
+                    onToggled: {
+                        firewallConf.stopTraffic = checked;
+
+                        setConfFlagsEdited();
+                    }
+                }
+
+                CheckBox {
+                    text: translationManager.dummyBool
+                          && qsTranslate("qml", "Stop Internet Traffic")
+                    checked: firewallConf.stopInetTraffic
+                    onToggled: {
+                        firewallConf.stopInetTraffic = checked;
+
+                        setConfFlagsEdited();
+                    }
                 }
             }
 

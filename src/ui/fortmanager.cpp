@@ -399,6 +399,7 @@ void FortManager::saveTrayFlags()
 {
     m_firewallConf->setFilterEnabled(m_filterEnabledAction->isChecked());
     m_firewallConf->setStopTraffic(m_stopTrafficAction->isChecked());
+    m_firewallConf->setStopInetTraffic(m_stopInetTrafficAction->isChecked());
 
     int i = 0;
     foreach (AppGroup *appGroup, m_firewallConf->appGroupsList()) {
@@ -484,6 +485,10 @@ void FortManager::updateTrayMenu()
                     menu, QIcon(), tr("Stop Traffic"),
                     this, SLOT(saveTrayFlags()),
                     true, conf.stopTraffic());
+        m_stopInetTrafficAction = addAction(
+                    menu, QIcon(), tr("Stop Internet Traffic"),
+                    this, SLOT(saveTrayFlags()),
+                    true, conf.stopInetTraffic());
 
         menu->addSeparator();
         m_appGroupActions.clear();
