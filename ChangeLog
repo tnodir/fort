@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v1.6.0, 2018-01-12:
+- UI: OptionsPage: Add protection by "Password".
+- UI: OptionsPage: Add "Log Errors" to store log files.
+- UI: StatisticsPage: Add "Month starts on" option.
+- Add ability to "Stop Internet Traffic".
+
 v1.5.0, 2018-01-09:
 - UI: Save/restore window's state.
 - UI: Use default conf on 1st start.
