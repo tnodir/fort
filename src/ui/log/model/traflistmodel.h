@@ -45,8 +45,6 @@ public:
     qint64 appId() const { return m_appId; }
     void setAppId(qint64 appId);
 
-    void reset();
-
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
@@ -58,6 +56,7 @@ public slots:
 
     void resetAppTotals();
 
+    void reset();
     void refresh();
 
 private:
@@ -77,6 +76,8 @@ private:
     static const char *getSqlSelectTraffic(TrafType type, qint64 appId);
 
 private:
+    bool m_isEmpty;
+
     TrafType m_type;
 
     qint64 m_appId;

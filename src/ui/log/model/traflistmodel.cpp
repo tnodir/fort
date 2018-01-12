@@ -11,6 +11,7 @@
 TrafListModel::TrafListModel(DatabaseManager *databaseManager,
                              QObject *parent) :
     QAbstractListModel(parent),
+    m_isEmpty(false),
     m_type(TrafHourly),
     m_appId(0),
     m_minTrafTime(0),
@@ -27,28 +28,6 @@ void TrafListModel::setType(TrafListModel::TrafType type)
 void TrafListModel::setAppId(qint64 appId)
 {
     m_appId = appId;
-}
-
-void TrafListModel::reset()
-{
-    const char *sqlMinTrafTime = getSqlMinTrafTime(m_type, m_appId);
-
-    beginResetModel();
-
-    m_minTrafTime = m_databaseManager->getTrafficTime(
-                sqlMinTrafTime, m_appId);
-
-    m_maxTrafTime = getMaxTrafTime(m_type);
-
-    if (m_minTrafTime == 0) {
-        m_minTrafTime = m_maxTrafTime;
-    }
-
-    m_trafCount = getTrafCount(m_type, m_minTrafTime, m_maxTrafTime);
-
-    invalidateRowCache();
-
-    endResetModel();
 }
 
 int TrafListModel::rowCount(const QModelIndex &parent) const
@@ -104,11 +83,39 @@ void TrafListModel::resetAppTotals()
     reset();
 }
 
+void TrafListModel::reset()
+{
+    const char *sqlMinTrafTime = getSqlMinTrafTime(m_type, m_appId);
+
+    beginResetModel();
+
+    m_minTrafTime = m_databaseManager->getTrafficTime(
+                sqlMinTrafTime, m_appId);
+
+    m_maxTrafTime = getMaxTrafTime(m_type);
+
+    m_isEmpty = (m_minTrafTime == 0);
+
+    if (m_minTrafTime == 0) {
+        m_minTrafTime = m_maxTrafTime;
+    }
+
+    m_trafCount = getTrafCount(m_type, m_minTrafTime, m_maxTrafTime);
+
+    invalidateRowCache();
+
+    endResetModel();
+}
+
 void TrafListModel::refresh()
 {
-    beginResetModel();
-    invalidateRowCache();
-    endResetModel();
+    if (m_isEmpty) {
+        reset();
+    } else {
+        beginResetModel();
+        invalidateRowCache();
+        endResetModel();
+    }
 }
 
 void TrafListModel::invalidateRowCache()
