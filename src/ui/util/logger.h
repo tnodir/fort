@@ -17,16 +17,17 @@ public:
     Q_ENUM(LogLevel)
 
     bool active() const { return m_active; }
-    void setActive(bool active) { m_active = active; }
+    void setActive(bool active);
+
+    bool debug() const { return m_debug; }
+    void setDebug(bool debug);
 
     bool console() const { return m_console; }
-    void setConsole(bool console) { m_console = console; }
+    void setConsole(bool console);
 
     void setPath(const QString &path);
 
     static Logger *instance();
-
-    static void setupLogging(bool enabled, bool debug, bool console);
 
 public slots:
     void writeLog(const QString &message, LogLevel level = Info);
@@ -50,6 +51,7 @@ private:
 
 private:
     uint m_active   : 1;
+    uint m_debug    : 1;
     uint m_console  : 1;
     uint m_writing  : 1;
 

@@ -17,6 +17,7 @@ static QtMessageHandler g_oldMessageHandler = nullptr;
 Logger::Logger(QObject *parent) :
     QObject(parent),
     m_active(false),
+    m_debug(false),
     m_console(false),
     m_writing(false)
 {
@@ -31,6 +32,35 @@ Logger *Logger::instance()
         g_instanceLogger = new Logger();
     }
     return g_instanceLogger;
+}
+
+void Logger::setActive(bool active)
+{
+    if (m_active != active) {
+        m_active = active;
+    }
+}
+
+void Logger::setDebug(bool debug)
+{
+    if (m_debug != debug) {
+        m_debug = debug;
+
+        QLoggingCategory::setFilterRules(debug ? QString() : "*.debug=false");
+    }
+}
+
+void Logger::setConsole(bool console)
+{
+    if (m_console != console) {
+        m_console = console;
+
+        if (console) {
+            AllocConsole();
+        } else {
+            FreeConsole();
+        }
+    }
 }
 
 void Logger::setPath(const QString &path)
@@ -172,19 +202,5 @@ void Logger::messageHandler(QtMsgType type,
 
     if (g_oldMessageHandler) {
         g_oldMessageHandler(type, context, message);
-    }
-}
-
-void Logger::setupLogging(bool enabled, bool debug, bool console)
-{
-    QLoggingCategory::setFilterRules(debug ? QString() : "*.debug=false");
-
-    instance()->setActive(enabled);
-    instance()->setConsole(console);
-
-    if (console) {
-        AllocConsole();
-    } else {
-        FreeConsole();
     }
 }

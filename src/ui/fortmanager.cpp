@@ -436,9 +436,11 @@ void FortManager::restoreWindowState()
 
 void FortManager::updateLogger()
 {
-    Logger::setupLogging(m_firewallConf->logErrors(),
-                         m_fortSettings->debug(),
-                         m_fortSettings->console());
+    Logger *logger = Logger::instance();
+
+    logger->setActive(m_firewallConf->logErrors());
+    logger->setDebug(m_fortSettings->debug());
+    logger->setConsole(m_fortSettings->console());
 }
 
 void FortManager::updateTrayMenu()
