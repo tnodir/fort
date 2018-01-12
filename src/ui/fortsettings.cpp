@@ -228,6 +228,7 @@ bool FortSettings::readConfIni(FirewallConf &conf) const
     m_ini->endGroup();
 
     m_ini->beginGroup("stat");
+    conf.setMonthStart(iniInt("monthStart", DEFAULT_MONTH_START));
     conf.setTrafHourKeepDays(iniInt("trafHourKeepDays", DEFAULT_TRAF_HOUR_KEEP_DAYS));
     conf.setTrafDayKeepDays(iniInt("trafDayKeepDays", DEFAULT_TRAF_DAY_KEEP_DAYS));
     conf.setTrafMonthKeepMonths(iniInt("trafMonthKeepMonths", DEFAULT_TRAF_MONTH_KEEP_MONTHS));
@@ -256,6 +257,7 @@ bool FortSettings::writeConfIni(const FirewallConf &conf)
     m_ini->endGroup();
 
     m_ini->beginGroup("stat");
+    setIniValue("monthStart", conf.monthStart(), DEFAULT_MONTH_START);
     setIniValue("trafHourKeepDays", conf.trafHourKeepDays(), DEFAULT_TRAF_HOUR_KEEP_DAYS);
     setIniValue("trafDayKeepDays", conf.trafDayKeepDays(), DEFAULT_TRAF_DAY_KEEP_DAYS);
     setIniValue("trafMonthKeepMonths", conf.trafMonthKeepMonths(), DEFAULT_TRAF_MONTH_KEEP_MONTHS);

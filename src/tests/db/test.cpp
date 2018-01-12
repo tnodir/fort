@@ -6,6 +6,7 @@
 #include "db/databasemanager.h"
 #include "db/sqlite/sqlitedb.h"
 #include "db/sqlite/sqlitestmt.h"
+#include "util/dateutil.h"
 #include "util/fileutil.h"
 
 void Test::dbWriteRead()
@@ -121,4 +122,20 @@ void Test::debugStatTrafStep(SqliteDb *sqliteDb, const char *name,
                  << stmt.columnInt64(3);
     }
     qDebug() << "--";
+}
+
+void Test::monthStart()
+{
+    const QDate d1(2018, 1, 8);
+    const QDateTime dt1(d1);
+
+    const qint32 unixHour = DateUtil::getUnixMonth(dt1.toSecsSinceEpoch(), 10);
+
+    const QDateTime dt2 = QDateTime::fromSecsSinceEpoch(
+                DateUtil::toUnixTime(unixHour));
+    const QDate d2 = dt2.date();
+
+    QCOMPARE(d2.year(), 2017);
+    QCOMPARE(d2.month(), 12);
+    QCOMPARE(d2.day(), 1);
 }

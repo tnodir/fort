@@ -76,7 +76,7 @@ BasePage {
                 }
             }
 
-            TrafKeepButton {}
+            TrafOptionsButton {}
 
             Row {
                 spacing: 5

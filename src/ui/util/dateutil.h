@@ -16,7 +16,7 @@ public:
 
     static qint32 getUnixHour(qint64 unixTime);
     static qint32 getUnixDay(qint64 unixTime);
-    static qint32 getUnixMonth(qint64 unixTime);
+    static qint32 getUnixMonth(qint64 unixTime, int monthStart = 1);
 
     static qint32 addUnixMonths(qint32 unixHour, int months);
 

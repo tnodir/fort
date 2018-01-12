@@ -9,7 +9,7 @@ RowLayout {
 
     property real fieldPreferredWidth
 
-    property var names
+    property var names: values
     property var values
 
     SpinBox {

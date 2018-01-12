@@ -8,7 +8,7 @@ ButtonPopup {
 
     icon.source: "qrc:/images/database_save.png"
     text: translationManager.dummyBool
-          && qsTranslate("qml", "Keep…")
+          && qsTranslate("qml", "Options…")
 
     readonly property var trafKeepDayValues: [
         90, -1, 90, 180, 365, 365 * 3
@@ -42,12 +42,43 @@ ButtonPopup {
 
     ColumnLayout {
         SpinComboRow {
+            values: {
+                var arr = [];
+                for (var i = 1; i <= 31; ++i) {
+                    arr.push(i);
+                }
+                return arr;
+            }
+            checkBox {
+                indicator: null
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Month starts on:")
+            }
+            field {
+                from: 1
+                to: 31
+                value: firewallConf.monthStart
+                onValueChanged: {
+                    const value = field.value;
+                    if (firewallConf.monthStart == value)
+                        return;
+
+                    firewallConf.monthStart = value;
+
+                    setConfFlagsEdited();
+                }
+            }
+        }
+
+        HSeparator {}
+
+        SpinComboRow {
             names: trafKeepDayNames
             values: trafKeepDayValues
             checkBox {
                 indicator: null
                 text: translationManager.dummyBool
-                      && qsTranslate("qml", "Days for 'Hourly':")
+                      && qsTranslate("qml", "Keep days for 'Hourly':")
             }
             field {
                 from: -1
@@ -70,7 +101,7 @@ ButtonPopup {
             checkBox {
                 indicator: null
                 text: translationManager.dummyBool
-                      && qsTranslate("qml", "Days for 'Daily':")
+                      && qsTranslate("qml", "Keep days for 'Daily':")
             }
             field {
                 from: -1
@@ -93,7 +124,7 @@ ButtonPopup {
             checkBox {
                 indicator: null
                 text: translationManager.dummyBool
-                      && qsTranslate("qml", "Months for 'Monthly':")
+                      && qsTranslate("qml", "Keep months for 'Monthly':")
             }
             field {
                 from: -1

@@ -18,6 +18,7 @@ FirewallConf::FirewallConf(QObject *parent) :
     m_logStat(false),
     m_appBlockAll(true),
     m_appAllowAll(false),
+    m_monthStart(DEFAULT_MONTH_START),
     m_trafHourKeepDays(DEFAULT_TRAF_HOUR_KEEP_DAYS),
     m_trafDayKeepDays(DEFAULT_TRAF_DAY_KEEP_DAYS),
     m_trafMonthKeepMonths(DEFAULT_TRAF_MONTH_KEEP_MONTHS),
@@ -104,6 +105,14 @@ void FirewallConf::setAppAllowAll(bool appAllowAll)
     if (m_appAllowAll != appAllowAll) {
         m_appAllowAll = appAllowAll;
         emit appAllowAllChanged();
+    }
+}
+
+void FirewallConf::setMonthStart(int monthStart)
+{
+    if (m_monthStart != monthStart) {
+        m_monthStart = monthStart;
+        emit monthStartChanged();
     }
 }
 
@@ -224,6 +233,7 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     setPasswordHash(o.passwordHash());
     setAppGroupBits(o.appGroupBits());
 
+    setMonthStart(o.monthStart());
     setTrafHourKeepDays(o.trafHourKeepDays());
     setTrafDayKeepDays(o.trafDayKeepDays());
     setTrafMonthKeepMonths(o.trafMonthKeepMonths());

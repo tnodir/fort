@@ -131,8 +131,9 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
                                      : m_lastTrafDay;
     const bool isNewDay = (trafDay != m_lastTrafDay);
 
-    const qint32 trafMonth = isNewDay ? DateUtil::getUnixMonth(unixTime)
-                                      : m_lastTrafMonth;
+    const qint32 trafMonth = isNewDay
+            ? DateUtil::getUnixMonth(unixTime, m_conf ? m_conf->monthStart() : 1)
+            : m_lastTrafMonth;
 
     m_lastTrafHour = trafHour;
     m_lastTrafDay = trafDay;

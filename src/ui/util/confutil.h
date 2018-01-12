@@ -4,6 +4,7 @@
 #include <QByteArray>
 #include <QList>
 #include <QMap>
+#include <QObject>
 #include <QVector>
 
 QT_FORWARD_DECLARE_CLASS(AppGroup)

@@ -9,6 +9,7 @@ QT_FORWARD_DECLARE_CLASS(AddressGroup)
 QT_FORWARD_DECLARE_CLASS(AppGroup)
 
 #define DEFAULT_APP_GROUP_BITS          0xFFFF
+#define DEFAULT_MONTH_START             1
 #define DEFAULT_TRAF_HOUR_KEEP_DAYS     90  // ~3 months
 #define DEFAULT_TRAF_DAY_KEEP_DAYS      365  // ~1 year
 #define DEFAULT_TRAF_MONTH_KEEP_MONTHS  360  // ~3 years
@@ -26,6 +27,7 @@ class FirewallConf : public QObject
     Q_PROPERTY(bool logStat READ logStat WRITE setLogStat NOTIFY logStatChanged)
     Q_PROPERTY(bool appBlockAll READ appBlockAll WRITE setAppBlockAll NOTIFY appBlockAllChanged)
     Q_PROPERTY(bool appAllowAll READ appAllowAll WRITE setAppAllowAll NOTIFY appAllowAllChanged)
+    Q_PROPERTY(int monthStart READ monthStart WRITE setMonthStart NOTIFY monthStartChanged)
     Q_PROPERTY(int trafHourKeepDays READ trafHourKeepDays WRITE setTrafHourKeepDays NOTIFY trafHourKeepDaysChanged)
     Q_PROPERTY(int trafDayKeepDays READ trafDayKeepDays WRITE setTrafDayKeepDays NOTIFY trafDayKeepDaysChanged)
     Q_PROPERTY(int trafMonthKeepMonths READ trafMonthKeepMonths WRITE setTrafMonthKeepMonths NOTIFY trafMonthKeepMonthsChanged)
@@ -80,6 +82,9 @@ public:
     bool appAllowAll() const { return m_appAllowAll; }
     void setAppAllowAll(bool appAllowAll);
 
+    int monthStart() const { return m_monthStart; }
+    void setMonthStart(int monthStart);
+
     int trafHourKeepDays() const { return m_trafHourKeepDays; }
     void setTrafHourKeepDays(int trafHourKeepDays);
 
@@ -125,6 +130,7 @@ signals:
     void logStatChanged();
     void appBlockAllChanged();
     void appAllowAllChanged();
+    void monthStartChanged();
     void trafHourKeepDaysChanged();
     void trafDayKeepDaysChanged();
     void trafMonthKeepMonthsChanged();
@@ -152,6 +158,8 @@ private:
 
     uint m_appBlockAll      : 1;
     uint m_appAllowAll      : 1;
+
+    uint m_monthStart       : 5;
 
     int m_trafHourKeepDays;
     int m_trafDayKeepDays;

@@ -432,19 +432,14 @@
         <translation>Релизы</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafKeepButton.qml" line="11"/>
-        <source>Keep…</source>
-        <translation>Хранить…</translation>
-    </message>
-    <message>
         <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="14"/>
         <source>Speed Limit: </source>
         <translation>Ограничение скорости: </translation>
     </message>
     <message>
         <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="24"/>
-        <location filename="../qml/pages/log/TrafKeepButton.qml" line="20"/>
-        <location filename="../qml/pages/log/TrafKeepButton.qml" line="35"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="20"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="35"/>
         <location filename="../qml/pages/SchedulePage.qml" line="31"/>
         <source>Custom</source>
         <translation>Нестандартный</translation>
@@ -465,49 +460,59 @@
         <translation>Ограничение скорости выгрузки, KiB/s:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafKeepButton.qml" line="21"/>
-        <location filename="../qml/pages/log/TrafKeepButton.qml" line="36"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="11"/>
+        <source>Options…</source>
+        <translation>Настройки…</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="21"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="36"/>
         <source>Forever</source>
         <translation>Навсегда</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafKeepButton.qml" line="22"/>
-        <location filename="../qml/pages/log/TrafKeepButton.qml" line="37"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="22"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="37"/>
         <source>3 months</source>
         <translation>3 месяца</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafKeepButton.qml" line="23"/>
-        <location filename="../qml/pages/log/TrafKeepButton.qml" line="38"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="23"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="38"/>
         <source>6 months</source>
         <translation>6 месяцев</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafKeepButton.qml" line="24"/>
-        <location filename="../qml/pages/log/TrafKeepButton.qml" line="39"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="24"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="39"/>
         <source>1 year</source>
         <translation>1 год</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafKeepButton.qml" line="25"/>
-        <location filename="../qml/pages/log/TrafKeepButton.qml" line="40"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="25"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="40"/>
         <source>3 years</source>
         <translation>3 года</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafKeepButton.qml" line="50"/>
-        <source>Days for &apos;Hourly&apos;:</source>
-        <translation>Дней для &apos;Почасовая&apos;:</translation>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="55"/>
+        <source>Month starts on:</source>
+        <translation>Месяц начинается с:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafKeepButton.qml" line="73"/>
-        <source>Days for &apos;Daily&apos;:</source>
-        <translation>Дней для &apos;Ежедневная&apos;:</translation>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="81"/>
+        <source>Keep days for &apos;Hourly&apos;:</source>
+        <translation>Хранить дней для &apos;Почасовая&apos;:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafKeepButton.qml" line="96"/>
-        <source>Months for &apos;Monthly&apos;:</source>
-        <translation>Месяцев для &apos;Ежемесячная&apos;:</translation>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="104"/>
+        <source>Keep days for &apos;Daily&apos;:</source>
+        <translation>Хранить дней для &apos;Ежедневная&apos;:</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="127"/>
+        <source>Keep months for &apos;Monthly&apos;:</source>
+        <translation>Хранить месяцев для &apos;Ежемесячная&apos;:</translation>
     </message>
     <message>
         <location filename="../qml/pages/SchedulePage.qml" line="32"/>

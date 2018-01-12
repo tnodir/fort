@@ -8,7 +8,8 @@ SOURCES += \
     $$UIPATH/db/databasesql.cpp \
     $$UIPATH/fortcommon.cpp \
     $$UIPATH/util/dateutil.cpp \
-    $$UIPATH/util/fileutil.cpp
+    $$UIPATH/util/fileutil.cpp \
+    $$UIPATH/util/net/netutil.cpp
 
 HEADERS += \
     $$UIPATH/conf/addressgroup.h \
@@ -18,6 +19,7 @@ HEADERS += \
     $$UIPATH/db/databasesql.h \
     $$UIPATH/fortcommon.h \
     $$UIPATH/util/dateutil.h \
-    $$UIPATH/util/fileutil.h
+    $$UIPATH/util/fileutil.h \
+    $$UIPATH/util/net/netutil.h
 
 include($$UIPATH/db/sqlite/sqlite.pri)

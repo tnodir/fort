@@ -30,9 +30,13 @@ qint32 DateUtil::getUnixDay(qint64 unixTime)
     return getUnixHour(QDateTime(date).toSecsSinceEpoch());
 }
 
-qint32 DateUtil::getUnixMonth(qint64 unixTime)
+qint32 DateUtil::getUnixMonth(qint64 unixTime, int monthStart)
 {
-    const QDate date = QDateTime::fromSecsSinceEpoch(unixTime).date();
+    QDate date = QDateTime::fromSecsSinceEpoch(unixTime).date();
+
+    if (date.day() < monthStart) {
+        date = date.addMonths(-1);
+    }
 
     return getUnixHour(QDateTime(QDate(date.year(), date.month(), 1))
                        .toSecsSinceEpoch());
