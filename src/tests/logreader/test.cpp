@@ -61,11 +61,11 @@ void Test::setConf(Device &device)
     ConfUtil confUtil;
 
     QByteArray buf;
-    const int confSize = confUtil.write(conf, buf);
-    QVERIFY(confSize != 0);
+    const int confIoSize = confUtil.write(conf, buf);
+    QVERIFY(confIoSize != 0);
 
     QVERIFY(device.ioctl(FortCommon::ioctlSetConf(),
-                         buf.data(), confSize));
+                         buf.data(), confIoSize));
 }
 
 void Test::printLogs(LogBuffer &buf)

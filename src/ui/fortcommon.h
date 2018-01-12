@@ -19,6 +19,8 @@ public:
 
     static int bufferSize();
 
+    static quint32 confIoConfOff();
+
     static quint32 logBlockedHeaderSize();
     static quint32 logBlockedSize(quint32 pathLen);
 

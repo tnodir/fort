@@ -43,6 +43,11 @@ int FortCommon::bufferSize()
     return FORT_BUFFER_SIZE;
 }
 
+quint32 FortCommon::confIoConfOff()
+{
+    return FORT_CONF_IO_CONF_OFF;
+}
+
 quint32 FortCommon::logBlockedHeaderSize()
 {
     return FORT_LOG_BLOCKED_HEADER_SIZE;

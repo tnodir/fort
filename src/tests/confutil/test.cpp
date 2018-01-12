@@ -55,11 +55,11 @@ void Test::confWriteRead()
     ConfUtil confUtil;
 
     QByteArray buf;
-    const int confSize = confUtil.write(conf, buf);
-    QVERIFY(confSize != 0);
+    const int confIoSize = confUtil.write(conf, buf);
+    QVERIFY(confIoSize != 0);
 
     // Check the buffer
-    const char *data = buf.constData();
+    const char *data = buf.constData() + FortCommon::confIoConfOff();
 
     QVERIFY(!FortCommon::confIpInRange(data, 0, true));
     QVERIFY(!FortCommon::confIpInRange(data, NetUtil::textToIp4("9.255.255.255")));
