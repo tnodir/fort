@@ -302,6 +302,19 @@ typedef void tommy_foreach_func(void* obj);
  */
 typedef void tommy_foreach_arg_func(void* arg, void* obj);
 
+/**  //!!
+ * Foreach function.
+ * \param node Pointer to the node to iterate.
+ */
+typedef void tommy_foreach_node_func(void* node);
+
+/**  //!!
+ * Foreach function with an argument.
+ * \param arg Pointer to a generic argument.
+ * \param node Pointer to the node to iterate.
+ */
+typedef void tommy_foreach_node_arg_func(void* arg, void* node);
+
 /******************************************************************************/
 /* bit hacks */
 

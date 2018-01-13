@@ -20,7 +20,6 @@ fort_prov_unregister (HANDLE transEngine)
 
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_CONNECT_V4);
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_ACCEPT_V4);
-  FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_CLOSURE_V4);
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_STREAM_V4);
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_DATAGRAM_V4);
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_TRANSPORT_V4);
@@ -30,7 +29,6 @@ fort_prov_unregister (HANDLE transEngine)
   FwpmSubLayerDeleteByKey0(engine, (GUID *) &FORT_GUID_SUBLAYER);
   FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_CONNECT_V4);
   FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_ACCEPT_V4);
-  FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_CLOSURE_V4);
   FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_STREAM_V4);
   FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_DATAGRAM_V4);
   FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_IN_TRANSPORT_V4);
@@ -55,7 +53,6 @@ fort_prov_flow_unregister (HANDLE transEngine)
     fort_prov_trans_begin(engine);
   }
 
-  FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_CLOSURE_V4);
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_STREAM_V4);
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_DATAGRAM_V4);
   FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_TRANSPORT_V4);
@@ -72,7 +69,7 @@ fort_prov_register (HANDLE transEngine, BOOL is_boot)
 {
   FWPM_PROVIDER0 provider;
   FWPM_CALLOUT0 ocallout4, icallout4;
-  FWPM_CALLOUT0 ccallout4, scallout4, dcallout4;
+  FWPM_CALLOUT0 scallout4, dcallout4;
   FWPM_CALLOUT0 itcallout4, otcallout4;
   FWPM_SUBLAYER0 sublayer;
   FWPM_FILTER0 ofilter4, ifilter4;
@@ -107,13 +104,6 @@ fort_prov_register (HANDLE transEngine, BOOL is_boot)
   icallout4.displayData.description = (PWCHAR) L"Fort Firewall Callout Accept V4";
   icallout4.providerKey = (GUID *) &FORT_GUID_PROVIDER;
   icallout4.applicableLayer = FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4;
-
-  RtlZeroMemory(&ccallout4, sizeof(FWPM_CALLOUT0));
-  ccallout4.calloutKey = FORT_GUID_CALLOUT_CLOSURE_V4;
-  ccallout4.displayData.name = (PWCHAR) L"FortCalloutClosure4";
-  ccallout4.displayData.description = (PWCHAR) L"Fort Firewall Callout Closure V4";
-  ccallout4.providerKey = (GUID *) &FORT_GUID_PROVIDER;
-  ccallout4.applicableLayer = FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V4;
 
   RtlZeroMemory(&scallout4, sizeof(FWPM_CALLOUT0));
   scallout4.calloutKey = FORT_GUID_CALLOUT_STREAM_V4;
@@ -172,7 +162,6 @@ fort_prov_register (HANDLE transEngine, BOOL is_boot)
   if ((status = FwpmProviderAdd0(engine, &provider, NULL))
       || (status = FwpmCalloutAdd0(engine, &ocallout4, NULL, NULL))
       || (status = FwpmCalloutAdd0(engine, &icallout4, NULL, NULL))
-      || (status = FwpmCalloutAdd0(engine, &ccallout4, NULL, NULL))
       || (status = FwpmCalloutAdd0(engine, &scallout4, NULL, NULL))
       || (status = FwpmCalloutAdd0(engine, &dcallout4, NULL, NULL))
       || (status = FwpmCalloutAdd0(engine, &itcallout4, NULL, NULL))
@@ -198,7 +187,7 @@ fort_prov_register (HANDLE transEngine, BOOL is_boot)
 static DWORD
 fort_prov_flow_register (HANDLE transEngine, BOOL speed_limit)
 {
-  FWPM_FILTER0 cfilter4, sfilter4, dfilter4;
+  FWPM_FILTER0 sfilter4, dfilter4;
   FWPM_FILTER0 itfilter4, otfilter4;
   HANDLE engine = transEngine;
   const UINT32 filter_flags = FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED
@@ -211,16 +200,6 @@ fort_prov_flow_register (HANDLE transEngine, BOOL speed_limit)
 
     fort_prov_trans_begin(engine);
   }
-
-  RtlZeroMemory(&cfilter4, sizeof(FWPM_FILTER0));
-  cfilter4.flags = 0;
-  cfilter4.filterKey = FORT_GUID_FILTER_CLOSURE_V4;
-  cfilter4.layerKey = FWPM_LAYER_ALE_ENDPOINT_CLOSURE_V4;
-  cfilter4.subLayerKey = FORT_GUID_SUBLAYER;
-  cfilter4.displayData.name = (PWCHAR) L"FortFilterClosure4";
-  cfilter4.displayData.description = (PWCHAR) L"Fort Firewall Filter Closure V4";
-  cfilter4.action.type = FWP_ACTION_CALLOUT_INSPECTION;
-  cfilter4.action.calloutKey = FORT_GUID_CALLOUT_CLOSURE_V4;
 
   RtlZeroMemory(&sfilter4, sizeof(FWPM_FILTER0));
   sfilter4.flags = filter_flags;
@@ -262,8 +241,7 @@ fort_prov_flow_register (HANDLE transEngine, BOOL speed_limit)
   otfilter4.action.type = FWP_ACTION_CALLOUT_UNKNOWN;
   otfilter4.action.calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V4;
 
-  if ((status = FwpmFilterAdd0(engine, &cfilter4, NULL, NULL))
-      || (status = FwpmFilterAdd0(engine, &sfilter4, NULL, NULL))
+  if ((status = FwpmFilterAdd0(engine, &sfilter4, NULL, NULL))
       || (status = FwpmFilterAdd0(engine, &dfilter4, NULL, NULL))
 #if 0
       || (speed_limit && ((status = FwpmFilterAdd0(engine, &itfilter4, NULL, NULL))

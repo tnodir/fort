@@ -56,14 +56,10 @@ typedef struct fort_conf_ref {
 typedef struct fort_device {
   UINT32 prov_boot	: 1;
   UINT32 is_opened	: 1;
+  UINT32 was_conf	: 1;
 
   UINT32 connect4_id;
   UINT32 accept4_id;
-  UINT32 closure4_id;
-  UINT32 stream4_id;
-  UINT32 datagram4_id;
-  UINT32 in_transport4_id;
-  UINT32 out_transport4_id;
 
   FORT_BUFFER buffer;
   FORT_STAT stat;
@@ -145,6 +141,7 @@ fort_conf_ref_set (PFORT_CONF_REF conf_ref)
 
     if (conf_ref != NULL) {
       g_device->prov_boot = conf_ref->conf.flags.prov_boot;
+      g_device->was_conf = TRUE;
     }
   }
   KeReleaseInStackQueuedSpinLock(&lock_queue);
@@ -241,7 +238,8 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   conf_ref = fort_conf_ref_take();
 
   if (conf_ref == NULL) {
-    if (g_device->prov_boot) {
+    if (g_device->prov_boot || ((flags & FWP_CONDITION_FLAG_IS_REAUTHORIZE)
+        && !g_device->was_conf)) {  // Block existing flows after driver installation to use flow-contexts
       fort_callout_classify_block(classifyOut);
     } else {
       fort_callout_classify_continue(classifyOut);
@@ -275,16 +273,16 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
       const UINT64 flowId = inMetaValues->flowHandle;
       const UCHAR group_index = fort_conf_app_group_index(
         &conf_ref->conf, app_index);
-      BOOL is_new = FALSE;
+      BOOL is_new_proc = FALSE;
       NTSTATUS status;
 
       status = fort_stat_flow_associate(&g_device->stat,
-        flowId, process_id, group_index, &is_new);
+        flowId, process_id, group_index, &is_new_proc);
 
       if (!NT_SUCCESS(status)) {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                    "FORT: Classify v4: Flow assoc. error: %d\n", status);
-      } else if (is_new) {
+      } else if (is_new_proc) {
         fort_buffer_proc_new_write(&g_device->buffer,
           process_id, path_len, path, &irp, &info);
       }
@@ -342,25 +340,6 @@ fort_callout_accept_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   fort_callout_classify_v4(inFixedValues, inMetaValues, filter, classifyOut,
       FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_FLAGS,
       FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_REMOTE_ADDRESS);
-}
-
-static void
-fort_callout_closure_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
-                         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
-                         void *layerData,
-                         const FWPS_FILTER0 *filter,
-                         UINT64 flowContext,
-                         FWPS_CLASSIFY_OUT0 *classifyOut)
-{
-  const UINT64 flowId = inMetaValues->flowHandle;
-
-  UNUSED(inFixedValues);
-  UNUSED(layerData);
-  UNUSED(filter);
-  UNUSED(flowContext);
-  UNUSED(classifyOut);
-
-  fort_stat_flow_delete(&g_device->stat, flowId);
 }
 
 static NTSTATUS NTAPI
@@ -450,6 +429,15 @@ fort_callout_datagram_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 }
 
 static void
+fort_callout_flow_delete_v4 (UINT16 layerId, UINT32 calloutId, UINT64 flowId)
+{
+  UNUSED(layerId);
+  UNUSED(calloutId);
+
+  fort_stat_flow_delete(&g_device->stat, flowId);
+}
+
+static void
 fort_callout_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                                     const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
                                     const PNET_BUFFER_LIST netBufList,
@@ -522,6 +510,14 @@ fort_callout_out_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValu
     FALSE);
 }
 
+static void
+fort_callout_transport_delete_v4 (UINT16 layerId, UINT32 calloutId, UINT64 flowId)
+{
+  UNUSED(layerId);
+  UNUSED(calloutId);
+  UNUSED(flowId);
+}
+
 static NTSTATUS
 fort_callout_install (PDEVICE_OBJECT device)
 {
@@ -554,22 +550,14 @@ fort_callout_install (PDEVICE_OBJECT device)
     return status;
   }
 
-  /* IPv4 closure callout */
-  c.calloutKey = FORT_GUID_CALLOUT_CLOSURE_V4;
-  c.classifyFn = fort_callout_closure_v4;
-
-  status = FwpsCalloutRegister0(device, &c, &g_device->closure4_id);
-  if (!NT_SUCCESS(status)) {
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-               "FORT: Register Closure V4: Error: %d\n", status);
-    return status;
-  }
-
   /* IPv4 stream callout */
   c.calloutKey = FORT_GUID_CALLOUT_STREAM_V4;
   c.classifyFn = fort_callout_stream_classify_v4;
 
-  status = FwpsCalloutRegister0(device, &c, &g_device->stream4_id);
+  c.flowDeleteFn = fort_callout_flow_delete_v4;
+  c.flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW;
+
+  status = FwpsCalloutRegister0(device, &c, &g_device->stat.stream4_id);
   if (!NT_SUCCESS(status)) {
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                "FORT: Register Stream V4: Error: %d\n", status);
@@ -580,7 +568,7 @@ fort_callout_install (PDEVICE_OBJECT device)
   c.calloutKey = FORT_GUID_CALLOUT_DATAGRAM_V4;
   c.classifyFn = fort_callout_datagram_classify_v4;
 
-  status = FwpsCalloutRegister0(device, &c, &g_device->datagram4_id);
+  status = FwpsCalloutRegister0(device, &c, &g_device->stat.datagram4_id);
   if (!NT_SUCCESS(status)) {
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                "FORT: Register Datagram V4: Error: %d\n", status);
@@ -591,7 +579,9 @@ fort_callout_install (PDEVICE_OBJECT device)
   c.calloutKey = FORT_GUID_CALLOUT_IN_TRANSPORT_V4;
   c.classifyFn = fort_callout_in_transport_classify_v4;
 
-  status = FwpsCalloutRegister0(device, &c, &g_device->in_transport4_id);
+  c.flowDeleteFn = fort_callout_transport_delete_v4;
+
+  status = FwpsCalloutRegister0(device, &c, &g_device->stat.in_transport4_id);
   if (!NT_SUCCESS(status)) {
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                "FORT: Register Inbound Transport V4: Error: %d\n", status);
@@ -602,7 +592,7 @@ fort_callout_install (PDEVICE_OBJECT device)
   c.calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V4;
   c.classifyFn = fort_callout_out_transport_classify_v4;
 
-  status = FwpsCalloutRegister0(device, &c, &g_device->out_transport4_id);
+  status = FwpsCalloutRegister0(device, &c, &g_device->stat.out_transport4_id);
   if (!NT_SUCCESS(status)) {
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                "FORT: Register Outbound Transport V4: Error: %d\n", status);
@@ -625,29 +615,24 @@ fort_callout_remove (void)
     g_device->accept4_id = 0;
   }
 
-  if (g_device->closure4_id) {
-    FwpsCalloutUnregisterById0(g_device->closure4_id);
-    g_device->closure4_id = 0;
+  if (g_device->stat.stream4_id) {
+    FwpsCalloutUnregisterById0(g_device->stat.stream4_id);
+    g_device->stat.stream4_id = 0;
   }
 
-  if (g_device->stream4_id) {
-    FwpsCalloutUnregisterById0(g_device->stream4_id);
-    g_device->stream4_id = 0;
+  if (g_device->stat.datagram4_id) {
+    FwpsCalloutUnregisterById0(g_device->stat.datagram4_id);
+    g_device->stat.datagram4_id = 0;
   }
 
-  if (g_device->datagram4_id) {
-    FwpsCalloutUnregisterById0(g_device->datagram4_id);
-    g_device->datagram4_id = 0;
+  if (g_device->stat.in_transport4_id) {
+    FwpsCalloutUnregisterById0(g_device->stat.in_transport4_id);
+    g_device->stat.in_transport4_id = 0;
   }
 
-  if (g_device->in_transport4_id) {
-    FwpsCalloutUnregisterById0(g_device->in_transport4_id);
-    g_device->in_transport4_id = 0;
-  }
-
-  if (g_device->out_transport4_id) {
-    FwpsCalloutUnregisterById0(g_device->out_transport4_id);
-    g_device->out_transport4_id = 0;
+  if (g_device->stat.out_transport4_id) {
+    FwpsCalloutUnregisterById0(g_device->stat.out_transport4_id);
+    g_device->stat.out_transport4_id = 0;
   }
 }
 
@@ -656,14 +641,14 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
                            const FORT_CONF_FLAGS old_conf_flags,
                            const FORT_CONF_FLAGS conf_flags)
 {
+  PFORT_STAT stat = &g_device->stat;
+
   HANDLE engine;
   NTSTATUS status;
 
   UNUSED(device);
 
-  if (old_conf_flags.log_stat) {
-    fort_stat_clear(&g_device->stat);
-  }
+  fort_stat_update(stat, conf_flags.log_stat);
 
   if ((status = fort_prov_open(&engine)))
     goto end;
@@ -689,7 +674,7 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
  stat:
     if (conf_flags.log_stat) {
       if ((status = fort_prov_flow_register(engine,
-          (&g_device->stat.limit_bits != 0))))
+          (stat->limit_bits != 0))))
         goto cleanup;
     }
   }
@@ -928,15 +913,14 @@ fort_driver_unload (PDRIVER_OBJECT driver)
 
   if (g_device != NULL) {
     fort_timer_close(&g_device->timer);
+    fort_stat_close(&g_device->stat);
+    fort_buffer_close(&g_device->buffer);
 
     if (!g_device->prov_boot) {
       fort_prov_unregister(0);
     }
 
     fort_callout_remove();
-
-    fort_stat_close(&g_device->stat);
-    fort_buffer_close(&g_device->buffer);
   }
 
   RtlInitUnicodeString(&device_link, DOS_DEVICE_NAME);

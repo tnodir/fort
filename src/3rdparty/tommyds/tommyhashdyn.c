@@ -224,6 +224,42 @@ void tommy_hashdyn_foreach_arg(tommy_hashdyn* hashdyn, tommy_foreach_arg_func* f
 }
 
 TOMMY_API //!!
+void tommy_hashdyn_foreach_node(tommy_hashdyn* hashdyn, tommy_foreach_node_func* func)
+{
+	tommy_count_t bucket_max = hashdyn->bucket_max;
+	tommy_hashdyn_node** bucket = hashdyn->bucket;
+	tommy_count_t pos;
+
+	for (pos = 0; pos < bucket_max; ++pos) {
+		tommy_hashdyn_node* node = bucket[pos];
+
+		while (node) {
+			tommy_hashdyn_node* next = node->next;
+			func(node);
+			node = next;
+		}
+	}
+}
+
+TOMMY_API //!!
+void tommy_hashdyn_foreach_node_arg(tommy_hashdyn* hashdyn, tommy_foreach_node_arg_func* func, void* arg)
+{
+	tommy_count_t bucket_max = hashdyn->bucket_max;
+	tommy_hashdyn_node** bucket = hashdyn->bucket;
+	tommy_count_t pos;
+
+	for (pos = 0; pos < bucket_max; ++pos) {
+		tommy_hashdyn_node* node = bucket[pos];
+
+		while (node) {
+			tommy_hashdyn_node* next = node->next;
+			func(arg, node);
+			node = next;
+		}
+	}
+}
+
+TOMMY_API //!!
 tommy_size_t tommy_hashdyn_memory_usage(tommy_hashdyn* hashdyn)
 {
 	return hashdyn->bucket_max * (tommy_size_t)sizeof(hashdyn->bucket[0])

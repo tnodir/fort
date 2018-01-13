@@ -286,6 +286,18 @@ TOMMY_API //!!
 void tommy_hashdyn_foreach_arg(tommy_hashdyn* hashdyn, tommy_foreach_arg_func* func, void* arg);
 
 /**
+ * Calls the specified function for each node in the hashtable.
+ */
+TOMMY_API //!!
+void tommy_hashdyn_foreach_node(tommy_hashdyn* hashdyn, tommy_foreach_node_func* func);
+
+/**
+ * Calls the specified function with an argument for each node in the hashtable.
+ */
+TOMMY_API //!!
+void tommy_hashdyn_foreach_node_arg(tommy_hashdyn* hashdyn, tommy_foreach_node_arg_func* func, void* arg);
+
+/**
  * Gets the number of elements.
  */
 tommy_inline tommy_count_t tommy_hashdyn_count(tommy_hashdyn* hashdyn)
