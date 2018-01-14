@@ -377,22 +377,14 @@ fort_callout_stream_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                                  UINT64 flowContext,
                                  FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-  const UINT32 flags = inFixedValues->incomingValue[
-    FWPS_FIELD_STREAM_V4_FLAGS].value.uint32;
-  FWPS_STREAM_DATA0 *streamData;
-  UINT32 dataSize;
-  BOOL inbound;
+  const FWPS_STREAM_DATA0 *streamData = packet->streamData;
+  const UINT32 dataSize = (UINT32) streamData->dataLength;
 
+  const BOOL inbound = (streamData->flags & FWPS_STREAM_FLAG_RECEIVE) != 0;
+
+  UNUSED(inFixedValues);
   UNUSED(filter);
   UNUSED(flowContext);
-
-  if (flags & FWP_CONDITION_FLAG_IS_LOOPBACK)
-    return;
-
-  streamData = packet->streamData;
-  dataSize = (UINT32) streamData->dataLength;
-
-  inbound = (streamData->flags & FWPS_STREAM_FLAG_RECEIVE) != 0;
 
   fort_callout_flow_classify_v4(inMetaValues, classifyOut, dataSize, inbound);
 }
@@ -405,25 +397,16 @@ fort_callout_datagram_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                                    UINT64 flowContext,
                                    FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-  const UINT32 flags = inFixedValues->incomingValue[
-    FWPS_FIELD_DATAGRAM_DATA_V4_FLAGS].value.uint32;
-  PNET_BUFFER netBuf;
-  UINT32 dataSize;
-  FWP_DIRECTION direction;
-  BOOL inbound;
+  const PNET_BUFFER netBuf = NET_BUFFER_LIST_FIRST_NB(netBufList);
+  const UINT32 dataSize = NET_BUFFER_DATA_LENGTH(netBuf);
 
+  const FWP_DIRECTION direction = (FWP_DIRECTION) inFixedValues->incomingValue[
+    FWPS_FIELD_DATAGRAM_DATA_V4_DIRECTION].value.uint8;
+  const BOOL inbound = (direction == FWP_DIRECTION_INBOUND);
+
+  UNUSED(inFixedValues);
   UNUSED(filter);
   UNUSED(flowContext);
-
-  if (flags & FWP_CONDITION_FLAG_IS_LOOPBACK)
-    return;
-
-  netBuf = NET_BUFFER_LIST_FIRST_NB(netBufList);
-  dataSize = NET_BUFFER_DATA_LENGTH(netBuf);
-
-  direction = (FWP_DIRECTION) inFixedValues->incomingValue[
-    FWPS_FIELD_DATAGRAM_DATA_V4_DIRECTION].value.uint8;
-  inbound = (direction == FWP_DIRECTION_INBOUND);
 
   fort_callout_flow_classify_v4(inMetaValues, classifyOut, dataSize, inbound);
 }
