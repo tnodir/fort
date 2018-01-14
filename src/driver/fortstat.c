@@ -58,7 +58,8 @@ typedef struct fort_stat_flow {
 } FORT_STAT_FLOW, *PFORT_STAT_FLOW;
 
 typedef struct fort_stat {
-  UCHAR closed		: 1;
+  UCHAR volatile closed;
+
   UCHAR is_dirty	: 1;
   UCHAR log_stat	: 1;
 
@@ -485,6 +486,9 @@ fort_stat_flow_delete (PFORT_STAT stat, UINT64 flowContext)
 {
   KLOCK_QUEUE_HANDLE lock_queue;
   PFORT_STAT_FLOW flow = (PFORT_STAT_FLOW) flowContext;
+
+  if (stat->closed)
+    return;  // double check to avoid deadlock after remove-flow-context
 
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
   if (!stat->closed) {

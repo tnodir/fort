@@ -452,10 +452,8 @@ fort_callout_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
         NULL, sizeof(UINT16), 0);
 
       if (tcpHeader->ack) {
-        const UINT64 flowId = inMetaValues->flowHandle;
-
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                   "FORT: Ack: %d %d\n", flowId, inbound);
+                   "FORT: Ack: %d %d\n", (UINT32) flowContext, inbound);
 
         //fort_stat_flow_shape(&g_device->stat, flowContext, inbound);
       }
@@ -495,11 +493,11 @@ fort_callout_out_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValu
 }
 
 static void
-fort_callout_transport_delete_v4 (UINT16 layerId, UINT32 calloutId, UINT64 flowId)
+fort_callout_delete_v4 (UINT16 layerId, UINT32 calloutId, UINT64 flowContext)
 {
   UNUSED(layerId);
   UNUSED(calloutId);
-  UNUSED(flowId);
+  UNUSED(flowContext);
 }
 
 static NTSTATUS
@@ -552,6 +550,8 @@ fort_callout_install (PDEVICE_OBJECT device)
   c.calloutKey = FORT_GUID_CALLOUT_DATAGRAM_V4;
   c.classifyFn = fort_callout_datagram_classify_v4;
 
+  c.flowDeleteFn = fort_callout_delete_v4;
+
   status = FwpsCalloutRegister0(device, &c, &g_device->stat.datagram4_id);
   if (!NT_SUCCESS(status)) {
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
@@ -562,8 +562,6 @@ fort_callout_install (PDEVICE_OBJECT device)
   /* IPv4 inbound transport callout */
   c.calloutKey = FORT_GUID_CALLOUT_IN_TRANSPORT_V4;
   c.classifyFn = fort_callout_in_transport_classify_v4;
-
-  c.flowDeleteFn = fort_callout_transport_delete_v4;
 
   status = FwpsCalloutRegister0(device, &c, &g_device->stat.in_transport4_id);
   if (!NT_SUCCESS(status)) {
