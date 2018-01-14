@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v1.6.1, 2018-01-14:
+- Driver: Use flow-contexts to track UDP closure.
+- Driver: Optimize flow-context usage.
+
 v1.6.0, 2018-01-12:
 - UI: OptionsPage: Add protection by "Password".
 - UI: OptionsPage: Add "Log Errors" to store log files.
