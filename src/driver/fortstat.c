@@ -58,8 +58,7 @@ typedef struct fort_stat_flow {
 } FORT_STAT_FLOW, *PFORT_STAT_FLOW;
 
 typedef struct fort_stat {
-  UCHAR volatile closing;
-
+  UCHAR closed		: 1;
   UCHAR is_dirty	: 1;
   UCHAR log_stat	: 1;
 
@@ -247,12 +246,15 @@ fort_stat_proc_add (PFORT_STAT stat, UINT32 process_id)
 }
 
 static void
-fort_stat_flow_context_set (PFORT_STAT stat, UINT64 flow_id)
+fort_stat_flow_context_set (PFORT_STAT stat, PFORT_STAT_FLOW flow)
 {
-  FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_STREAM_V4, stat->stream4_id, flow_id);
-  FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_DATAGRAM_DATA_V4, stat->datagram4_id, flow_id);
-  FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V4, stat->in_transport4_id, flow_id);
-  FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V4, stat->out_transport4_id, flow_id);
+  const UINT64 flow_id = flow->flow_id;
+  const UINT64 flowContext = (UINT64) flow;
+
+  FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_STREAM_V4, stat->stream4_id, flowContext);
+  FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_DATAGRAM_DATA_V4, stat->datagram4_id, flowContext);
+  FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V4, stat->in_transport4_id, flowContext);
+  FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V4, stat->out_transport4_id, flowContext);
 }
 
 static void
@@ -330,7 +332,7 @@ fort_stat_flow_add (PFORT_STAT stat, UINT64 flow_id,
 
     flow->flow_id = flow_id;
 
-    fort_stat_flow_context_set(stat, flow_id);
+    fort_stat_flow_context_set(stat, flow);
 
     is_new_flow = TRUE;
   } else {
@@ -380,13 +382,19 @@ fort_stat_open (PFORT_STAT stat)
 static void
 fort_stat_close (PFORT_STAT stat)
 {
-  stat->closing = TRUE;
+  KLOCK_QUEUE_HANDLE lock_queue;
+
+  KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
+
+  stat->closed = TRUE;
 
   tommy_hashdyn_foreach_node_arg(&stat->flows_map,
     fort_stat_flow_context_remove, stat);
 
   tommy_arrayof_done(&stat->flows);
   tommy_hashdyn_done(&stat->flows_map);
+
+  KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
 static void
@@ -473,40 +481,29 @@ fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
 }
 
 static void
-fort_stat_flow_delete (PFORT_STAT stat, UINT64 flow_id)
+fort_stat_flow_delete (PFORT_STAT stat, UINT64 flowContext)
 {
   KLOCK_QUEUE_HANDLE lock_queue;
-  PFORT_STAT_FLOW flow;
-  const tommy_key_t flow_hash = fort_stat_flow_hash(flow_id);
-
-  if (stat->closing)
-    return;
+  PFORT_STAT_FLOW flow = (PFORT_STAT_FLOW) flowContext;
 
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
-  flow = fort_stat_flow_get(stat, flow_id, flow_hash);
-  if (flow != NULL) {
+  if (!stat->closed) {
     fort_stat_flow_free(stat, flow);
   }
   KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
 static BOOL
-fort_stat_flow_classify (PFORT_STAT stat, UINT64 flow_id,
+fort_stat_flow_classify (PFORT_STAT stat, UINT64 flowContext,
                          UINT32 data_len, BOOL inbound)
 {
   KLOCK_QUEUE_HANDLE lock_queue;
-  PFORT_STAT_FLOW flow;
-  const tommy_key_t flow_hash = fort_stat_flow_hash(flow_id);
+  PFORT_STAT_FLOW flow = (PFORT_STAT_FLOW) flowContext;
   BOOL limited = FALSE;
 
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
-  if (!stat->log_stat)
-    goto end;
-
-  flow = fort_stat_flow_get(stat, flow_id, flow_hash);
-
-  if (flow != NULL && flow->opt.proc_index != FORT_PROC_BAD_INDEX) {
+  if (stat->log_stat && flow->opt.proc_index != FORT_PROC_BAD_INDEX) {
     PFORT_STAT_PROC proc = &stat->procs[flow->opt.proc_index];
     UINT32 *proc_bytes = inbound ? &proc->traf.in_bytes
       : &proc->traf.out_bytes;
@@ -537,7 +534,6 @@ fort_stat_flow_classify (PFORT_STAT stat, UINT64 flow_id,
     stat->is_dirty = TRUE;
   }
 
- end:
   KeReleaseInStackQueuedSpinLock(&lock_queue);
 
   return limited;

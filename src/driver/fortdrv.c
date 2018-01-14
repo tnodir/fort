@@ -355,13 +355,13 @@ fort_callout_notify (FWPS_CALLOUT_NOTIFY_TYPE notifyType,
 
 static void
 fort_callout_flow_classify_v4 (const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
+                               UINT64 flowContext,
                                FWPS_CLASSIFY_OUT0 *classifyOut,
                                UINT32 dataSize, BOOL inbound)
 {
-  const UINT64 flowId = inMetaValues->flowHandle;
   const UINT32 headerSize = inbound ? inMetaValues->transportHeaderSize : 0;
 
-  if (fort_stat_flow_classify(&g_device->stat, flowId,
+  if (fort_stat_flow_classify(&g_device->stat, flowContext,
       headerSize + dataSize, inbound)) {
     fort_callout_classify_block(classifyOut);
   } else {
@@ -384,9 +384,9 @@ fort_callout_stream_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   UNUSED(inFixedValues);
   UNUSED(filter);
-  UNUSED(flowContext);
 
-  fort_callout_flow_classify_v4(inMetaValues, classifyOut, dataSize, inbound);
+  fort_callout_flow_classify_v4(inMetaValues, flowContext, classifyOut,
+    dataSize, inbound);
 }
 
 static void
@@ -408,16 +408,17 @@ fort_callout_datagram_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   UNUSED(filter);
   UNUSED(flowContext);
 
-  fort_callout_flow_classify_v4(inMetaValues, classifyOut, dataSize, inbound);
+  fort_callout_flow_classify_v4(inMetaValues, flowContext, classifyOut,
+    dataSize, inbound);
 }
 
 static void
-fort_callout_flow_delete_v4 (UINT16 layerId, UINT32 calloutId, UINT64 flowId)
+fort_callout_flow_delete_v4 (UINT16 layerId, UINT32 calloutId, UINT64 flowContext)
 {
   UNUSED(layerId);
   UNUSED(calloutId);
 
-  fort_stat_flow_delete(&g_device->stat, flowId);
+  fort_stat_flow_delete(&g_device->stat, flowContext);
 }
 
 static void
