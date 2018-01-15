@@ -238,7 +238,7 @@
     </message>
     <message>
         <location filename="../qml/pages/BlockedPage.qml" line="94"/>
-        <source>Log Blocked Applications</source>
+        <source>Show Blocked Applications</source>
         <translation>Показ блокированных приложений</translation>
     </message>
     <message>

@@ -91,7 +91,7 @@ BasePage {
             Switch {
                 font.weight: Font.DemiBold
                 text: translationManager.dummyBool
-                      && qsTranslate("qml", "Log Blocked Applications")
+                      && qsTranslate("qml", "Show Blocked Applications")
                 checked: firewallConf.logBlocked
                 onToggled: {
                     if (firewallConf.logBlocked === checked)
