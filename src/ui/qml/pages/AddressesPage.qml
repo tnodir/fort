@@ -1,65 +1,38 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
+import "../controls"
 import "addresses"
 import com.fortfirewall 1.0
 
 BasePage {
 
-    property AddressGroup addressGroup: firewallConf.inetAddressGroup
-
-    RowLayout {
+    ColumnLayout {
         anchors.fill: parent
-        spacing: 10
 
-        AddressesColumn {
-            id: includeAddresses
+        TabBar {
+            id: barGroups
+            Layout.fillWidth: true
 
-            title {
+            TabButton {
+                icon.source: "qrc:/images/world.png"
                 text: translationManager.dummyBool
-                      && qsTranslate("qml", "Include")
+                      && qsTranslate("qml", "Internet")
             }
-            checkBoxAll {
-                enabled: !excludeAddresses.checkBoxAll.checked
-                         || checkBoxAll.checked
+            TabButton {
+                icon.source: "qrc:/images/world_link.png"
                 text: translationManager.dummyBool
-                      && qsTranslate("qml", "Include All")
-            }
-
-            useAll: addressGroup.includeAll
-            ipText: addressGroup.includeText
-
-            onUseAllToggled: {
-                addressGroup.includeAll = checked;
-            }
-            onIpTextEdited: {
-                addressGroup.includeText = ipText;
+                      && qsTranslate("qml", "Filter Internet")
             }
         }
 
-        AddressesColumn {
-            id: excludeAddresses
+        HSeparator {}
 
-            title {
-                text: translationManager.dummyBool
-                      && qsTranslate("qml", "Exclude")
-            }
-            checkBoxAll {
-                enabled: !includeAddresses.checkBoxAll.checked
-                         || checkBoxAll.checked
-                text: translationManager.dummyBool
-                      && qsTranslate("qml", "Exclude All")
-            }
+        AddressGroupRow {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
 
-            useAll: addressGroup.excludeAll
-            ipText: addressGroup.excludeText
-
-            onUseAllToggled: {
-                addressGroup.excludeAll = checked;
-            }
-            onIpTextEdited: {
-                addressGroup.excludeText = ipText;
-            }
+            addressGroup: firewallConf.addressGroups[barGroups.currentIndex]
         }
     }
 }
