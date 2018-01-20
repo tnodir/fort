@@ -80,27 +80,27 @@
 <context>
     <name>FortSettings</name>
     <message>
-        <location filename="../fortsettings.cpp" line="174"/>
+        <location filename="../fortsettings.cpp" line="178"/>
         <source>Can&apos;t write .ini file</source>
         <translation>Не удалось записать .ini файл</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="180"/>
+        <location filename="../fortsettings.cpp" line="184"/>
         <source>Can&apos;t rename old backup .conf file</source>
         <translation>Не удалось переименовать старый бэкап .conf файла</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="185"/>
+        <location filename="../fortsettings.cpp" line="189"/>
         <source>Can&apos;t create backup .conf file</source>
         <translation>Не удалось создать бэкап .conf файла</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="190"/>
+        <location filename="../fortsettings.cpp" line="194"/>
         <source>Can&apos;t rename backup .conf file</source>
         <translation>Не удалось переименовать бэкап .conf файла</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="205"/>
+        <location filename="../fortsettings.cpp" line="211"/>
         <source>Can&apos;t write .conf file</source>
         <translation>Не удалось записать .conf файл</translation>
     </message>
@@ -113,28 +113,28 @@
         <translation>Ошибка в строке %1: %2</translation>
     </message>
     <message>
-        <location filename="../util/net/ip4range.cpp" line="100"/>
+        <location filename="../util/net/ip4range.cpp" line="102"/>
         <source>Bad format</source>
         <translation>Некорректный формат</translation>
     </message>
     <message>
-        <location filename="../util/net/ip4range.cpp" line="118"/>
+        <location filename="../util/net/ip4range.cpp" line="120"/>
         <source>Bad IP address</source>
         <translation>Некорректный IP адрес</translation>
     </message>
     <message>
-        <location filename="../util/net/ip4range.cpp" line="125"/>
+        <location filename="../util/net/ip4range.cpp" line="127"/>
         <source>Bad second IP address</source>
         <translation>Некорректный второй IP адрес</translation>
     </message>
     <message>
-        <location filename="../util/net/ip4range.cpp" line="129"/>
+        <location filename="../util/net/ip4range.cpp" line="131"/>
         <source>Bad range</source>
         <translation>Некорректный диапазон</translation>
     </message>
     <message>
-        <location filename="../util/net/ip4range.cpp" line="110"/>
-        <location filename="../util/net/ip4range.cpp" line="137"/>
+        <location filename="../util/net/ip4range.cpp" line="112"/>
+        <location filename="../util/net/ip4range.cpp" line="139"/>
         <source>Bad mask</source>
         <translation>Некорректная маска</translation>
     </message>
@@ -247,22 +247,22 @@
         <translation>Показ блокированных приложений</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AddressesPage.qml" line="20"/>
+        <location filename="../qml/pages/addresses/AddressGroupRow.qml" line="17"/>
         <source>Include</source>
         <translation>Включить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AddressesPage.qml" line="26"/>
+        <location filename="../qml/pages/addresses/AddressGroupRow.qml" line="23"/>
         <source>Include All</source>
         <translation>Включить все</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AddressesPage.qml" line="37"/>
+        <location filename="../qml/pages/addresses/AddressGroupRow.qml" line="42"/>
         <source>Exclude</source>
         <translation>Исключить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/AddressesPage.qml" line="43"/>
+        <location filename="../qml/pages/addresses/AddressGroupRow.qml" line="48"/>
         <source>Exclude All</source>
         <translation>Исключить все</translation>
     </message>
@@ -667,6 +667,16 @@
         <location filename="../qml/pages/StatisticsPage.qml" line="208"/>
         <source>Sum</source>
         <translation>Сумма</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/AddressesPage.qml" line="20"/>
+        <source>Internet Addresses</source>
+        <translation>Адреса Интернета</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/AddressesPage.qml" line="25"/>
+        <source>Allowed Internet Addresses</source>
+        <translation>Разрешённые адреса Интернета</translation>
     </message>
 </context>
 </TS>
