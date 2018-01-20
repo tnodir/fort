@@ -34,7 +34,7 @@ ColumnLayout {
         }
 
         SpeedLimitButton {
-            visible: firewallConf.logStat
+            enabled: firewallConf.logStat
         }
 
         Item {
