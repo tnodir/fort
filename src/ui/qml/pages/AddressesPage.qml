@@ -6,14 +6,14 @@ import com.fortfirewall 1.0
 
 BasePage {
 
+    property AddressGroup addressGroup: firewallConf.inetAddressGroup
+
     RowLayout {
         anchors.fill: parent
         spacing: 10
 
         AddressesColumn {
             id: includeAddresses
-
-            addressGroup: firewallConf.ipInclude
 
             title {
                 text: translationManager.dummyBool
@@ -25,12 +25,20 @@ BasePage {
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Include All")
             }
+
+            useAll: addressGroup.includeAll
+            ipText: addressGroup.includeText
+
+            onUseAllToggled: {
+                addressGroup.includeAll = checked;
+            }
+            onIpTextEdited: {
+                addressGroup.includeText = ipText;
+            }
         }
 
         AddressesColumn {
             id: excludeAddresses
-
-            addressGroup: firewallConf.ipExclude
 
             title {
                 text: translationManager.dummyBool
@@ -41,6 +49,16 @@ BasePage {
                          || checkBoxAll.checked
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Exclude All")
+            }
+
+            useAll: addressGroup.excludeAll
+            ipText: addressGroup.excludeText
+
+            onUseAllToggled: {
+                addressGroup.excludeAll = checked;
+            }
+            onIpTextEdited: {
+                addressGroup.excludeText = ipText;
             }
         }
     }

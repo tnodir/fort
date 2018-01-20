@@ -214,14 +214,12 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                           int flagsField, int remoteIpField)
 {
   PFORT_CONF_REF conf_ref;
+  PVOID path;
   FORT_CONF_FLAGS conf_flags;
   UINT32 flags;
   UINT32 remote_ip;
   UINT32 process_id;
   UINT32 path_len;
-  PVOID path;
-  int app_index;
-  BOOL ip_included, blocked;
 
   PIRP irp = NULL;
   ULONG_PTR info;
@@ -252,42 +250,41 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   if (conf_flags.stop_traffic)
     goto block;
 
-  if (!conf_flags.filter_enabled)
+  if (!conf_flags.filter_enabled
+      || !fort_conf_ip_is_inet(&conf_ref->conf, remote_ip))
     goto permit;
 
-  ip_included = fort_conf_ip_included(&conf_ref->conf, remote_ip);
-
-  if (ip_included && conf_flags.stop_inet_traffic)
+  if (conf_flags.stop_inet_traffic)
     goto block;
 
   process_id = (UINT32) inMetaValues->processId;
   path_len = inMetaValues->processPath->size - sizeof(WCHAR);  // chop terminating zero
   path = inMetaValues->processPath->data;
 
-  blocked = ip_included
-    && ((app_index = fort_conf_app_index(&conf_ref->conf, path_len, path)),
-      fort_conf_app_blocked(&conf_ref->conf, app_index));
+  if (fort_conf_ip_inet_included(&conf_ref->conf, remote_ip)) {
+    const int app_index = fort_conf_app_index(&conf_ref->conf, path_len, path);
 
-  if (!blocked) {
-    if (ip_included && conf_flags.log_stat) {
-      const UINT64 flowId = inMetaValues->flowHandle;
-      const UCHAR group_index = fort_conf_app_group_index(
-        &conf_ref->conf, app_index);
-      BOOL is_new_proc = FALSE;
-      NTSTATUS status;
+    if (!fort_conf_app_blocked(&conf_ref->conf, app_index)) {
+      if (conf_flags.log_stat) {
+        const UINT64 flowId = inMetaValues->flowHandle;
+        const UCHAR group_index = fort_conf_app_group_index(
+          &conf_ref->conf, app_index);
+        BOOL is_new_proc = FALSE;
+        NTSTATUS status;
 
-      status = fort_stat_flow_associate(&g_device->stat,
-        flowId, process_id, group_index, &is_new_proc);
+        status = fort_stat_flow_associate(&g_device->stat,
+          flowId, process_id, group_index, &is_new_proc);
 
-      if (!NT_SUCCESS(status)) {
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                   "FORT: Classify v4: Flow assoc. error: %d\n", status);
-      } else if (is_new_proc) {
-        fort_buffer_proc_new_write(&g_device->buffer,
-          process_id, path_len, path, &irp, &info);
+        if (!NT_SUCCESS(status)) {
+          DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                     "FORT: Classify v4: Flow assoc. error: %d\n", status);
+        } else if (is_new_proc) {
+          fort_buffer_proc_new_write(&g_device->buffer,
+            process_id, path_len, path, &irp, &info);
+        }
       }
+      goto permit;
     }
-    goto permit;
   }
 
   if (conf_flags.log_blocked) {

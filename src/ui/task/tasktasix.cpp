@@ -36,12 +36,12 @@ bool TaskTasix::processResult(FortManager *fortManager)
 {
 #ifndef TASK_TEST
     FirewallConf *conf = fortManager->firewallConf();
-    AddressGroup *ipExclude = conf->ipExclude();
+    AddressGroup *inetGroup = conf->inetAddressGroup();
 
-    if (ipExclude->text() == m_rangeText)
+    if (inetGroup->excludeText() == m_rangeText)
         return false;
 
-    ipExclude->setText(m_rangeText);
+    inetGroup->setExcludeText(m_rangeText);
 
     return fortManager->saveOriginConf(successMessage());
 #else

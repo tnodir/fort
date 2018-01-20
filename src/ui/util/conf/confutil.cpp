@@ -5,15 +5,16 @@
 #define UCHAR   quint8
 #define UINT16  quint16
 #define UINT32  quint32
+#define UINT64  quint64
 
-#include "../common/fortconf.h"
-#include "../common/version.h"
-#include "../conf/addressgroup.h"
-#include "../conf/appgroup.h"
-#include "../conf/firewallconf.h"
-#include "../fortcommon.h"
-#include "fileutil.h"
-#include "net/ip4range.h"
+#include "../../common/fortconf.h"
+#include "../../common/version.h"
+#include "../../conf/addressgroup.h"
+#include "../../conf/appgroup.h"
+#include "../../conf/firewallconf.h"
+#include "../../fortcommon.h"
+#include "../fileutil.h"
+#include "../net/ip4range.h"
 
 #define APP_GROUP_MAX       FORT_CONF_GROUP_MAX
 #define APP_GROUP_NAME_MAX  128
@@ -34,23 +35,17 @@ void ConfUtil::setErrorMessage(const QString &errorMessage)
 
 int ConfUtil::write(const FirewallConf &conf, QByteArray &buf)
 {
-    Ip4Range incRange;
-    if (!incRange.fromText(conf.ipInclude()->text())) {
-        setErrorMessage(tr("Bad Include IP address: %1")
-                        .arg(incRange.errorLineAndMessage()));
-        return false;
-    }
+    quint32 addressGroupsSize = 0;
+    numbers_arr_t addressGroupOffsets;
+    addrranges_arr_t addressRanges(conf.addressGroupsList().size());
 
-    Ip4Range excRange;
-    if (!excRange.fromText(conf.ipExclude()->text())) {
-        setErrorMessage(tr("Bad Exclude IP address: %1")
-                        .arg(excRange.errorLineAndMessage()));
+    if (!parseAddressGroups(conf.addressGroupsList(), addressRanges,
+                            addressGroupOffsets, addressGroupsSize))
         return false;
-    }
 
-    int appPathsLen = 0;
+    quint32 appPathsLen = 0;
     QStringList appPaths;
-    appperms_arr_t appPerms;
+    numbers_arr_t appPerms;
     appgroups_map_t appGroupIndexes;
 
     if (!parseAppGroups(conf.appGroupsList(),
@@ -58,17 +53,14 @@ int ConfUtil::write(const FirewallConf &conf, QByteArray &buf)
                         appPerms, appGroupIndexes))
         return false;
 
-    // Calculate maximum required buffer size
-    if (incRange.size() > FORT_CONF_IP_MAX
-            || excRange.size() > FORT_CONF_IP_MAX
-            || appPathsLen > FORT_CONF_APPS_LEN_MAX) {
-        setErrorMessage(tr("Size of configuration is too big"));
+    if (appPathsLen > FORT_CONF_APPS_LEN_MAX) {
+        setErrorMessage(tr("Too many application paths"));
         return false;
     }
 
     // Fill the buffer
     const int confIoSize = FORT_CONF_IO_CONF_OFF + FORT_CONF_DATA_OFF
-            + (incRange.size() + excRange.size()) * 2 * sizeof(quint32)
+            + addressGroupsSize
             + FORT_CONF_STR_DATA_SIZE(appGroupIndexes.size())
             + appPaths.size() * sizeof(quint32)
             + FORT_CONF_STR_HEADER_SIZE(appPaths.size())
@@ -77,8 +69,8 @@ int ConfUtil::write(const FirewallConf &conf, QByteArray &buf)
     buf.reserve(confIoSize);
 
     writeData(buf.data(), conf,
-              incRange, excRange, appPaths,
-              appPerms, appGroupIndexes);
+              addressRanges, addressGroupOffsets,
+              appPaths, appPerms, appGroupIndexes);
 
     return confIoSize;
 }
@@ -96,8 +88,6 @@ int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
     confFlags->filter_enabled = conf.filterEnabled();
     confFlags->stop_traffic = conf.stopTraffic();
     confFlags->stop_inet_traffic = conf.stopInetTraffic();
-    confFlags->ip_include_all = conf.ipInclude()->useAll();
-    confFlags->ip_exclude_all = conf.ipExclude()->useAll();
     confFlags->app_block_all = conf.appBlockAll();
     confFlags->app_allow_all = conf.appAllowAll();
     confFlags->log_blocked = conf.logBlocked();
@@ -107,10 +97,61 @@ int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
     return flagsSize;
 }
 
+bool ConfUtil::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
+                                  addrranges_arr_t &addressRanges,
+                                  numbers_arr_t &addressGroupOffsets,
+                                  quint32 &addressGroupsSize)
+{
+    const int groupsCount = addressGroups.size();
+
+    addressGroupsSize = groupsCount * sizeof(quint32);  // offsets
+
+    for (int i = 0; i < groupsCount; ++i) {
+        AddressGroup *addressGroup = addressGroups.at(i);
+
+        AddressRange &addressRange = addressRanges[i];
+        addressRange.setIncludeAll(addressGroup->includeAll());
+        addressRange.setExcludeAll(addressGroup->excludeAll());
+
+        if (!addressRange.includeRange()
+                .fromText(addressGroup->includeText())) {
+            setErrorMessage(tr("Bad Include IP address: %1")
+                            .arg(addressRange.includeRange()
+                                 .errorLineAndMessage()));
+            return false;
+        }
+
+        if (!addressRange.excludeRange()
+                .fromText(addressGroup->excludeText())) {
+            setErrorMessage(tr("Bad Exclude IP address: %1")
+                            .arg(addressRange.excludeRange()
+                                 .errorLineAndMessage()));
+            return false;
+        }
+
+        const int incRangeSize = addressRange.includeRange().size();
+        const int excRangeSize = addressRange.excludeRange().size();
+
+        if (incRangeSize > FORT_CONF_IP_MAX
+                || excRangeSize > FORT_CONF_IP_MAX) {
+            setErrorMessage(tr("Too many IP addresses"));
+            return false;
+        }
+
+        addressGroupOffsets.append(addressGroupsSize);
+
+        addressGroupsSize += FORT_CONF_ADDR_DATA_OFF
+                + FORT_CONF_IP_RANGE_SIZE(incRangeSize)
+                + FORT_CONF_IP_RANGE_SIZE(excRangeSize);
+    }
+
+    return true;
+}
+
 bool ConfUtil::parseAppGroups(const QList<AppGroup *> &appGroups,
                               QStringList &appPaths,
-                              int &appPathsLen,
-                              appperms_arr_t &appPerms,
+                              quint32 &appPathsLen,
+                              numbers_arr_t &appPerms,
                               appgroups_map_t &appGroupIndexes)
 {
     const int groupsCount = appGroups.size();
@@ -213,33 +254,23 @@ QString ConfUtil::parseAppPath(const QStringRef &line)
 }
 
 void ConfUtil::writeData(char *output, const FirewallConf &conf,
-                         const Ip4Range &incRange, const Ip4Range &excRange,
+                         const addrranges_arr_t &addressRanges,
+                         const numbers_arr_t &addressGroupOffsets,
                          const QStringList &appPaths,
-                         const appperms_arr_t &appPerms,
+                         const numbers_arr_t &appPerms,
                          const appgroups_map_t &appGroupIndexes)
 {
     PFORT_CONF_IO drvConfIo = (PFORT_CONF_IO) output;
     PFORT_CONF drvConf = &drvConfIo->conf;
-    char *data = (char *) &drvConf->data;
-    const quint32 incRangeSize = incRange.size();
-    const quint32 excRangeSize = excRange.size();
+    char *data = drvConf->data;
     const quint32 appPathsSize = appPaths.size();
-    quint32 incRangeFromOff, incRangeToOff;
-    quint32 excRangeFromOff, excRangeToOff;
+    quint32 addrGroupsOff;
     quint32 appPathsOff, appPermsOff, appGroupsOff;
 
-#define CONF_DATA_OFFSET (data - (char *) &drvConf->data)
-    incRangeFromOff = CONF_DATA_OFFSET;
-    writeNumbers(&data, incRange.fromArray());
-
-    incRangeToOff = CONF_DATA_OFFSET;
-    writeNumbers(&data, incRange.toArray());
-
-    excRangeFromOff = CONF_DATA_OFFSET;
-    writeNumbers(&data, excRange.fromArray());
-
-    excRangeToOff = CONF_DATA_OFFSET;
-    writeNumbers(&data, excRange.toArray());
+#define CONF_DATA_OFFSET (data - drvConf->data)
+    addrGroupsOff = CONF_DATA_OFFSET;
+    writeNumbers(&data, addressGroupOffsets);
+    writeAddressRanges(&data, addressRanges);
 
     appGroupsOff = CONF_DATA_OFFSET;
     writeChars(&data, appGroupIndexes.values().toVector());
@@ -261,9 +292,6 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     drvConf->flags.stop_traffic = conf.stopTraffic();
     drvConf->flags.stop_inet_traffic = conf.stopInetTraffic();
 
-    drvConf->flags.ip_include_all = conf.ipInclude()->useAll();
-    drvConf->flags.ip_exclude_all = conf.ipExclude()->useAll();
-
     drvConf->flags.app_block_all = conf.appBlockAll();
     drvConf->flags.app_allow_all = conf.appAllowAll();
 
@@ -274,18 +302,9 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
 
     FortCommon::confAppPermsMaskInit(drvConf);
 
-    drvConf->data_off = FORT_CONF_DATA_OFF;
-
-    drvConf->ip_include_n = incRangeSize;
-    drvConf->ip_exclude_n = excRangeSize;
-
     drvConf->apps_n = appPathsSize;
 
-    drvConf->ip_from_include_off = incRangeFromOff;
-    drvConf->ip_to_include_off = incRangeToOff;
-
-    drvConf->ip_from_exclude_off = excRangeFromOff;
-    drvConf->ip_to_exclude_off = excRangeToOff;
+    drvConf->addr_groups_off = addrGroupsOff;
 
     drvConf->app_groups_off = appGroupsOff;
     drvConf->app_perms_off = appPermsOff;
@@ -314,6 +333,38 @@ quint16 ConfUtil::writeLimits(struct fort_conf_limit *limits,
     }
 
     return limitBits;
+}
+
+void ConfUtil::writeAddressRanges(char **data,
+                                  const addrranges_arr_t &addressRanges)
+{
+    const int rangesCount = addressRanges.size();
+
+    for (int i = 0; i < rangesCount; ++i) {
+        const AddressRange &addressRange = addressRanges[i];
+
+        writeAddressRange(data, addressRange);
+    }
+}
+
+void ConfUtil::writeAddressRange(char **data,
+                                 const AddressRange &addressRange)
+{
+    PFORT_CONF_ADDR_GROUP addrGroup = PFORT_CONF_ADDR_GROUP(*data);
+
+    addrGroup->include_all = addressRange.includeAll();
+    addrGroup->exclude_all = addressRange.excludeAll();
+
+    addrGroup->include_n = addressRange.includeRange().fromArray().size();
+    addrGroup->exclude_n = addressRange.excludeRange().fromArray().size();
+
+    *data += FORT_CONF_ADDR_DATA_OFF;
+
+    writeNumbers(data, addressRange.includeRange().fromArray());
+    writeNumbers(data, addressRange.includeRange().toArray());
+
+    writeNumbers(data, addressRange.excludeRange().fromArray());
+    writeNumbers(data, addressRange.excludeRange().toArray());
 }
 
 void ConfUtil::writeNumbers(char **data, const QVector<quint32> &array)

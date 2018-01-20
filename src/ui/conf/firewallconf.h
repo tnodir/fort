@@ -34,8 +34,8 @@ class FirewallConf : public QObject
     Q_PROPERTY(int trafUnit READ trafUnit WRITE setTrafUnit NOTIFY trafUnitChanged)
     Q_PROPERTY(bool hasPassword READ hasPassword NOTIFY passwordHashChanged)
     Q_PROPERTY(QString passwordHash READ passwordHash WRITE setPasswordHash NOTIFY passwordHashChanged)
-    Q_PROPERTY(AddressGroup *ipInclude READ ipInclude CONSTANT)
-    Q_PROPERTY(AddressGroup *ipExclude READ ipExclude CONSTANT)
+    Q_PROPERTY(AddressGroup *inetAddressGroup READ inetAddressGroup NOTIFY addressGroupsChanged)
+    Q_PROPERTY(QQmlListProperty<AddressGroup> addressGroups READ addressGroups NOTIFY addressGroupsChanged)
     Q_PROPERTY(QQmlListProperty<AppGroup> appGroups READ appGroups NOTIFY appGroupsChanged)
     Q_CLASSINFO("DefaultProperty", "appGroups")
 
@@ -105,8 +105,10 @@ public:
     quint32 appGroupBits() const;
     void setAppGroupBits(quint32 groupBits);
 
-    AddressGroup *ipInclude() const { return m_ipInclude; }
-    AddressGroup *ipExclude() const { return m_ipExclude; }
+    AddressGroup *inetAddressGroup() const { return m_addressGroups.at(0); }
+
+    const QList<AddressGroup *> &addressGroupsList() const { return m_addressGroups; }
+    QQmlListProperty<AddressGroup> addressGroups();
 
     const QList<AppGroup *> &appGroupsList() const { return m_appGroups; }
     QQmlListProperty<AppGroup> appGroups();
@@ -136,6 +138,7 @@ signals:
     void trafMonthKeepMonthsChanged();
     void trafUnitChanged();
     void passwordHashChanged();
+    void addressGroupsChanged();
     void appGroupsChanged();
 
 public slots:
@@ -169,9 +172,7 @@ private:
 
     QString m_passwordHash;
 
-    AddressGroup *m_ipInclude;
-    AddressGroup *m_ipExclude;
-
+    QList<AddressGroup *> m_addressGroups;
     QList<AppGroup *> m_appGroups;
 };
 

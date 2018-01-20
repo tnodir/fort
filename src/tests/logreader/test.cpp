@@ -10,7 +10,7 @@
 #include "fortcommon.h"
 #include "log/logbuffer.h"
 #include "log/logentryblocked.h"
-#include "util/confutil.h"
+#include "util/conf/confutil.h"
 #include "util/device.h"
 #include "util/fileutil.h"
 #include "util/net/netutil.h"
@@ -42,21 +42,19 @@ void Test::setConf(Device &device)
 
     conf.setProvBoot(true);
 
-    conf.ipInclude()->setUseAll(true);
-    conf.ipExclude()->setUseAll(false);
+    AddressGroup *inetGroup = conf.inetAddressGroup();
+
+    inetGroup->setIncludeAll(true);
+    inetGroup->setExcludeAll(false);
+
+    inetGroup->setExcludeText(
+                NetUtil::localIpv4Networks().join('\n')
+                );
 
     conf.setAppBlockAll(true);
     conf.setAppAllowAll(false);
 
     conf.setLogBlocked(true);
-
-    conf.ipExclude()->setText(
-                "10.0.0.0/8\n"
-                "127.0.0.0/8\n"
-                "169.254.0.0/16\n"
-                "172.16.0.0/12\n"
-                "192.168.0.0/16\n"
-                );
 
     ConfUtil confUtil;
 

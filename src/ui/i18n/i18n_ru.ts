@@ -4,32 +4,37 @@
 <context>
     <name>ConfUtil</name>
     <message>
-        <location filename="../util/confutil.cpp" line="39"/>
+        <location filename="../util/conf/confutil.cpp" line="118"/>
         <source>Bad Include IP address: %1</source>
         <translation>Некорректный IP адрес для включения: %1</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="46"/>
+        <location filename="../util/conf/confutil.cpp" line="126"/>
         <source>Bad Exclude IP address: %1</source>
         <translation>Некорректный IP адрес для исключения: %1</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="65"/>
-        <source>Size of configuration is too big</source>
-        <translation>Конфигурация слишком большая</translation>
+        <location filename="../util/conf/confutil.cpp" line="137"/>
+        <source>Too many IP addresses</source>
+        <translation>Слишком много IP адресов</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="118"/>
+        <location filename="../util/conf/confutil.cpp" line="57"/>
+        <source>Too many application paths</source>
+        <translation>Слишком много путей приложений</translation>
+    </message>
+    <message>
+        <location filename="../util/conf/confutil.cpp" line="159"/>
         <source>Number of Application Groups must be &lt; %1</source>
         <translation>Количество групп приложений должно быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="130"/>
+        <location filename="../util/conf/confutil.cpp" line="171"/>
         <source>Length of Application Group&apos;s Name must be &lt; %1</source>
         <translation>Длина наименования группы приложения должна быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/confutil.cpp" line="176"/>
+        <location filename="../util/conf/confutil.cpp" line="217"/>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Длина пути приложения должна быть &lt; %1</translation>
     </message>
@@ -103,33 +108,33 @@
 <context>
     <name>Ip4Range</name>
     <message>
-        <location filename="../util/net/ip4range.cpp" line="32"/>
+        <location filename="../util/net/ip4range.cpp" line="41"/>
         <source>Error at line %1: %2</source>
         <translation>Ошибка в строке %1: %2</translation>
     </message>
     <message>
-        <location filename="../util/net/ip4range.cpp" line="92"/>
+        <location filename="../util/net/ip4range.cpp" line="100"/>
         <source>Bad format</source>
         <translation>Некорректный формат</translation>
     </message>
     <message>
-        <location filename="../util/net/ip4range.cpp" line="110"/>
+        <location filename="../util/net/ip4range.cpp" line="118"/>
         <source>Bad IP address</source>
         <translation>Некорректный IP адрес</translation>
     </message>
     <message>
-        <location filename="../util/net/ip4range.cpp" line="117"/>
+        <location filename="../util/net/ip4range.cpp" line="125"/>
         <source>Bad second IP address</source>
         <translation>Некорректный второй IP адрес</translation>
     </message>
     <message>
-        <location filename="../util/net/ip4range.cpp" line="121"/>
+        <location filename="../util/net/ip4range.cpp" line="129"/>
         <source>Bad range</source>
         <translation>Некорректный диапазон</translation>
     </message>
     <message>
-        <location filename="../util/net/ip4range.cpp" line="102"/>
-        <location filename="../util/net/ip4range.cpp" line="129"/>
+        <location filename="../util/net/ip4range.cpp" line="110"/>
+        <location filename="../util/net/ip4range.cpp" line="137"/>
         <source>Bad mask</source>
         <translation>Некорректная маска</translation>
     </message>

@@ -10,7 +10,8 @@ SOURCES += \
     $$UIPATH/log/logentryblocked.cpp \
     $$UIPATH/log/logentryprocnew.cpp \
     $$UIPATH/log/logentrystattraf.cpp \
-    $$UIPATH/util/confutil.cpp \
+    $$UIPATH/util/conf/addressrange.cpp \
+    $$UIPATH/util/conf/confutil.cpp \
     $$UIPATH/util/device.cpp \
     $$UIPATH/util/fileutil.cpp \
     $$UIPATH/util/net/ip4range.cpp \
@@ -28,7 +29,8 @@ HEADERS += \
     $$UIPATH/log/logentryblocked.h \
     $$UIPATH/log/logentryprocnew.h \
     $$UIPATH/log/logentrystattraf.h \
-    $$UIPATH/util/confutil.h \
+    $$UIPATH/util/conf/addressrange.h \
+    $$UIPATH/util/conf/confutil.h \
     $$UIPATH/util/device.h \
     $$UIPATH/util/fileutil.h \
     $$UIPATH/util/net/ip4range.h \

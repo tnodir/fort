@@ -11,6 +11,15 @@ Ip4Range::Ip4Range(QObject *parent) :
 {
 }
 
+void Ip4Range::clear()
+{
+    m_errorLineNo = 0;
+    m_errorMessage = QString();
+
+    m_fromArray.clear();
+    m_toArray.clear();
+}
+
 void Ip4Range::setErrorLineNo(int lineNo)
 {
     if (m_errorLineNo != lineNo) {
@@ -52,8 +61,7 @@ QString Ip4Range::toText()
 
 bool Ip4Range::fromText(const QString &text)
 {
-    m_fromArray.clear();
-    m_toArray.clear();
+    clear();
 
     ip4range_map_t ipRangeMap;
 

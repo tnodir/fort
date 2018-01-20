@@ -22,10 +22,10 @@ FirewallConf::FirewallConf(QObject *parent) :
     m_trafHourKeepDays(DEFAULT_TRAF_HOUR_KEEP_DAYS),
     m_trafDayKeepDays(DEFAULT_TRAF_DAY_KEEP_DAYS),
     m_trafMonthKeepMonths(DEFAULT_TRAF_MONTH_KEEP_MONTHS),
-    m_trafUnit(UnitAdaptive),
-    m_ipInclude(new AddressGroup(this)),
-    m_ipExclude(new AddressGroup(this))
+    m_trafUnit(UnitAdaptive)
 {
+    m_addressGroups.append(new AddressGroup(this));
+    m_addressGroups.append(new AddressGroup(this));
 }
 
 void FirewallConf::setProvBoot(bool provBoot)
@@ -178,6 +178,11 @@ void FirewallConf::setAppGroupBits(quint32 groupBits)
     }
 }
 
+QQmlListProperty<AddressGroup> FirewallConf::addressGroups()
+{
+    return QQmlListProperty<AddressGroup>(this, m_addressGroups);
+}
+
 QQmlListProperty<AppGroup> FirewallConf::appGroups()
 {
     return QQmlListProperty<AppGroup>(this, m_appGroups);
@@ -226,8 +231,6 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     setStopTraffic(o.stopTraffic());
     setStopInetTraffic(o.stopInetTraffic());
     setLogErrors(o.logErrors());
-    ipInclude()->setUseAll(o.ipInclude()->useAll());
-    ipExclude()->setUseAll(o.ipExclude()->useAll());
     setAppBlockAll(o.appBlockAll());
     setAppAllowAll(o.appAllowAll());
     setPasswordHash(o.passwordHash());
@@ -255,8 +258,11 @@ QVariant FirewallConf::toVariant() const
 
     map["passwordHash"] = m_passwordHash;
 
-    map["ipInclude"] = ipInclude()->toVariant();
-    map["ipExclude"] = ipExclude()->toVariant();
+    QVariantList addresses;
+    foreach (const AddressGroup *addressGroup, addressGroupsList()) {
+        addresses.append(addressGroup->toVariant());
+    }
+    map["addressGroups"] = addresses;
 
     QVariantList groups;
     foreach (const AppGroup *appGroup, appGroupsList()) {
@@ -273,8 +279,12 @@ void FirewallConf::fromVariant(const QVariant &v)
 
     m_passwordHash = map["passwordHash"].toString();
 
-    m_ipInclude->fromVariant(map["ipInclude"]);
-    m_ipExclude->fromVariant(map["ipExclude"]);
+    const QVariantList addresses = map["addressGroups"].toList();
+    int addrGroupIndex = 0;
+    foreach (const QVariant &av, addresses) {
+        AddressGroup *addressGroup = m_addressGroups.at(addrGroupIndex++);
+        addressGroup->fromVariant(av);
+    }
 
     const QVariantList groups = map["appGroups"].toList();
     foreach (const QVariant &gv, groups) {
@@ -286,8 +296,8 @@ void FirewallConf::fromVariant(const QVariant &v)
 
 void FirewallConf::setupDefault()
 {
-    m_ipInclude->setUseAll(true);
-    m_ipExclude->setText(NetUtil::localIpv4Networks().join('\n'));
+    AddressGroup *inetGroup = inetAddressGroup();
+    inetGroup->setExcludeText(NetUtil::localIpv4Networks().join('\n'));
 
     AppGroup *appGroup = new AppGroup();
     appGroup->setName("Main");

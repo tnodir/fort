@@ -40,6 +40,8 @@ signals:
     void errorMessageChanged();
 
 public slots:
+    void clear();
+
     QString toText();
 
     // Parse IPv4 ranges from text

@@ -160,7 +160,11 @@ bool FortSettings::tryToReadConf(FirewallConf &conf, const QString &filePath)
         return false;
     }
 
-    conf.fromVariant(jsonDoc.toVariant());
+    QVariant confVar = jsonDoc.toVariant();
+
+    confVar = migrateConf(confVar);
+
+    conf.fromVariant(confVar);
 
     return true;
 }
@@ -191,6 +195,8 @@ bool FortSettings::writeConf(const FirewallConf &conf)
         return false;
     }
 
+    removeMigratedKeys();
+
     return true;
 }
 
@@ -220,8 +226,6 @@ bool FortSettings::readConfIni(FirewallConf &conf) const
     conf.setLogErrors(iniBool("logErrors"));
     conf.setLogBlocked(iniBool("logBlocked"));
     conf.setLogStat(iniBool("logStat"));
-    conf.ipInclude()->setUseAll(iniBool("ipIncludeAll"));
-    conf.ipExclude()->setUseAll(iniBool("ipExcludeAll"));
     conf.setAppBlockAll(iniBool("appBlockAll", true));
     conf.setAppAllowAll(iniBool("appAllowAll"));
     conf.setAppGroupBits(iniUInt("appGroupBits", DEFAULT_APP_GROUP_BITS));
@@ -249,8 +253,6 @@ bool FortSettings::writeConfIni(const FirewallConf &conf)
     setIniValue("logErrors", conf.logErrors());
     setIniValue("logBlocked", conf.logBlocked());
     setIniValue("logStat", conf.logStat());
-    setIniValue("ipIncludeAll", conf.ipInclude()->useAll());
-    setIniValue("ipExcludeAll", conf.ipExclude()->useAll());
     setIniValue("appBlockAll", conf.appBlockAll());
     setIniValue("appAllowAll", conf.appAllowAll());
     setIniValue("appGroupBits", conf.appGroupBits(), DEFAULT_APP_GROUP_BITS);
@@ -265,6 +267,53 @@ bool FortSettings::writeConfIni(const FirewallConf &conf)
     m_ini->endGroup();
 
     return iniSync();
+}
+
+QVariant FortSettings::migrateConf(const QVariant &confVar)
+{
+    const int version = iniVersion();
+    if (version == APP_VERSION)
+        return confVar;
+
+    QVariantMap map = confVar.toMap();
+
+    // v1.7.0: AddressGroups
+    if (version < 0x010700) {
+        const QVariantMap oldIncMap = map["ipInclude"].toMap();
+        const QVariantMap oldExcMap = map["ipExclude"].toMap();
+
+        QVariantMap inetMap;
+
+        inetMap["includeAll"] = iniBool("confFlags/ipIncludeAll");
+        inetMap["excludeAll"] = iniBool("confFlags/ipExcludeAll");
+
+        inetMap["includeText"] = oldIncMap["text"];
+        inetMap["excludeText"] = oldExcMap["text"];
+
+        QVariantList addrList;
+        addrList.append(inetMap);
+
+        map["addressGroups"] = addrList;
+    }
+
+    return map;
+}
+
+void FortSettings::removeMigratedKeys()
+{
+    const int version = iniVersion();
+    if (version == APP_VERSION)
+        return;
+
+    setIniVersion(APP_VERSION);
+
+    // v1.7.0: AddressGroups
+    if (version < 0x010700) {
+        removeIniKey("confFlags/ipIncludeAll");
+        removeIniKey("confFlags/ipExcludeAll");
+    }
+
+    iniSync();
 }
 
 bool FortSettings::iniBool(const QString &key, bool defaultValue) const

@@ -9,10 +9,14 @@ ColumnLayout {
     Layout.fillWidth: true
     Layout.fillHeight: true
 
+    signal useAllToggled(bool checked)
+    signal ipTextEdited(string ipText)
+
     readonly property alias title: title
     readonly property alias checkBoxAll: checkBoxAll
 
-    property AddressGroup addressGroup
+    property bool useAll
+    property string ipText
 
     RowLayout {
         Label {
@@ -22,9 +26,9 @@ ColumnLayout {
         }
         CheckBox {
             id: checkBoxAll
-            checked: addressGroup.useAll
+            checked: useAll
             onToggled: {
-                addressGroup.useAll = checked;
+                useAllToggled(checked);
 
                 setConfFlagsEdited();
             }
@@ -37,14 +41,14 @@ ColumnLayout {
 
         textArea {
             placeholderText: netUtil.localIpv4Networks().join('\n')
-            text: addressGroup.text
+            text: ipText
         }
 
         onTextChanged: {
-            if (addressGroup.text == textArea.text)
+            if (ipText === textArea.text)
                 return;
 
-            addressGroup.text = textArea.text;
+            ipTextEdited(textArea.text);
 
             setConfEdited();
         }

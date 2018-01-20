@@ -39,6 +39,9 @@ public:
     QString language() const { return iniText("base/language", "en"); }
     void setLanguage(const QString &v) { setIniValue("base/language", v); }
 
+    int iniVersion() const { return iniInt("base/version"); }
+    void setIniVersion(int v) { setIniValue("base/version", v); }
+
     QRect windowGeometry() const { return iniValue("window/geometry").toRect(); }
     void setWindowGeometry(const QRect &v) { setIniValue("window/geometry", v); }
 
@@ -86,6 +89,9 @@ private:
 
     bool tryToReadConf(FirewallConf &conf, const QString &filePath);
     bool tryToWriteConf(const FirewallConf &conf, const QString &filePath);
+
+    QVariant migrateConf(const QVariant &confVar);
+    void removeMigratedKeys();
 
     bool iniBool(const QString &key, bool defaultValue = false) const;
     int iniInt(const QString &key, int defaultValue = 0) const;

@@ -5,7 +5,7 @@
 #include "../conf/firewallconf.h"
 #include "../fortcommon.h"
 #include "../log/logbuffer.h"
-#include "../util/confutil.h"
+#include "../util/conf/confutil.h"
 #include "../util/device.h"
 #include "../util/osutil.h"
 #include "driverworker.h"

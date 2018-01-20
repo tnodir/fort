@@ -51,7 +51,7 @@ public:
 
     static void confAppPermsMaskInit(void *drvConf);
     static bool confIpInRange(const void *drvConf, quint32 ip,
-                              bool included = false);
+                              bool included = false, int addrGroupIndex = 0);
     static int confAppIndex(const void *drvConf,
                             const QString &kernelPath);
     static quint8 confAppGroupIndex(const void *drvConf, int appIndex);

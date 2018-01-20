@@ -7,31 +7,43 @@
 class AddressGroup : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool useAll READ useAll WRITE setUseAll NOTIFY useAllChanged)
-    Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
+    Q_PROPERTY(bool includeAll READ includeAll WRITE setIncludeAll NOTIFY includeAllChanged)
+    Q_PROPERTY(bool excludeAll READ excludeAll WRITE setExcludeAll NOTIFY excludeAllChanged)
+    Q_PROPERTY(QString includeText READ includeText WRITE setIncludeText NOTIFY includeTextChanged)
+    Q_PROPERTY(QString excludeText READ excludeText WRITE setExcludeText NOTIFY excludeTextChanged)
 
 public:
     explicit AddressGroup(QObject *parent = nullptr);
 
-    bool useAll() const { return m_useAll; }
-    void setUseAll(bool useAll);
+    bool includeAll() const { return m_includeAll; }
+    void setIncludeAll(bool includeAll);
 
-    QString text() const { return m_text; }
-    void setText(const QString &text);
+    bool excludeAll() const { return m_excludeAll; }
+    void setExcludeAll(bool excludeAll);
+
+    QString includeText() const { return m_includeText; }
+    void setIncludeText(const QString &includeText);
+
+    QString excludeText() const { return m_excludeText; }
+    void setExcludeText(const QString &excludeText);
 
     QVariant toVariant() const;
     void fromVariant(const QVariant &v);
 
 signals:
-    void useAllChanged();
-    void textChanged();
+    void includeAllChanged();
+    void excludeAllChanged();
+    void includeTextChanged();
+    void excludeTextChanged();
 
 public slots:
 
 private:
-    uint m_useAll   : 1;
+    uint m_includeAll   : 1;
+    uint m_excludeAll   : 1;
 
-    QString m_text;
+    QString m_includeText;
+    QString m_excludeText;
 };
 
 #endif // ADDRESSGROUP_H

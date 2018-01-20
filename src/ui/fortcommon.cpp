@@ -131,18 +131,19 @@ void FortCommon::confAppPermsMaskInit(void *drvConf)
 }
 
 bool FortCommon::confIpInRange(const void *drvConf, quint32 ip,
-                               bool included)
+                               bool included, int addrGroupIndex)
 {
     const PFORT_CONF conf = (const PFORT_CONF) drvConf;
-    const char *data = (const char *) conf + conf->data_off;
+    const PFORT_CONF_ADDR_GROUP addr_group = fort_conf_addr_group_ref(
+      conf, addrGroupIndex);
 
-    const quint32 count = included ? conf->ip_include_n : conf->ip_exclude_n;
-    const quint32 fromOff = included ? conf->ip_from_include_off : conf->ip_from_exclude_off;
-    const quint32 toOff = included ? conf->ip_to_include_off : conf->ip_to_exclude_off;
+    const UINT32 count = included ? addr_group->include_n
+                                  : addr_group->exclude_n;
+    const UINT32 *iprange = included
+            ? fort_conf_addr_group_include_ref(addr_group)
+            : fort_conf_addr_group_exclude_ref(addr_group);
 
-    return fort_conf_ip_inrange(ip, count,
-                                (const quint32 *) (data + fromOff),
-                                (const quint32 *) (data + toOff));
+    return fort_conf_ip_inrange(ip, count, iprange);
 }
 
 int FortCommon::confAppIndex(const void *drvConf,

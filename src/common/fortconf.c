@@ -15,8 +15,7 @@ fort_memcmp (const char *p1, const char *p2, size_t len)
 #endif
 
 static BOOL
-fort_conf_ip_inrange (UINT32 ip, UINT32 count,
-                      const UINT32 *iprange_from, const UINT32 *iprange_to)
+fort_conf_ip_inrange (UINT32 ip, UINT32 count, const UINT32 *iprange)
 {
   int low, high;
 
@@ -27,7 +26,7 @@ fort_conf_ip_inrange (UINT32 ip, UINT32 count,
 
   do {
     const int mid = (low + high) / 2;
-    const UINT32 mid_ip = iprange_from[mid];
+    const UINT32 mid_ip = iprange[mid];
 
     if (ip < mid_ip)
       high = mid - 1;
@@ -37,31 +36,55 @@ fort_conf_ip_inrange (UINT32 ip, UINT32 count,
       return TRUE;
   } while (low <= high);
 
-  return high >= 0 && ip >= iprange_from[high] && ip <= iprange_to[high];
+  return high >= 0 && ip >= iprange[high]
+    && ip <= iprange[count + high];
 }
 
-static BOOL
-fort_conf_ip_included (const PFORT_CONF conf, UINT32 remote_ip)
+static const PFORT_CONF_ADDR_GROUP
+fort_conf_addr_group_ref (const PFORT_CONF conf, int addr_group_index)
 {
-  const char *data = (const char *) conf + conf->data_off;
+  const UINT32 *addr_group_offsets = (const UINT32 *)
+    (conf->data + conf->addr_groups_off);
+  const char *addr_group_data = (const char *) addr_group_offsets;
 
-  const BOOL include_all = conf->flags.ip_include_all;
-  const BOOL exclude_all = conf->flags.ip_exclude_all;
+  return (PFORT_CONF_ADDR_GROUP)
+    (addr_group_data + addr_group_offsets[addr_group_index]);
+}
+
+#define fort_conf_addr_group_include_ref(addr_group) \
+  (addr_group)->ip
+
+#define fort_conf_addr_group_exclude_ref(addr_group) \
+  &(addr_group)->ip[(addr_group)->include_n * 2]
+
+static BOOL
+fort_conf_ip_included (const PFORT_CONF conf, UINT32 remote_ip,
+                       int addr_group_index)
+{
+  const PFORT_CONF_ADDR_GROUP addr_group = fort_conf_addr_group_ref(
+    conf, addr_group_index);
+
+  const BOOL include_all = addr_group->include_all;
+  const BOOL exclude_all = addr_group->exclude_all;
 
   const BOOL ip_included = include_all ? TRUE
-    : fort_conf_ip_inrange(remote_ip, conf->ip_include_n,
-                           (const UINT32 *) (data + conf->ip_from_include_off),
-                           (const UINT32 *) (data + conf->ip_to_include_off));
+    : fort_conf_ip_inrange(remote_ip, addr_group->include_n,
+                           fort_conf_addr_group_include_ref(addr_group));
 
   const BOOL ip_excluded = exclude_all ? TRUE
-    : fort_conf_ip_inrange(remote_ip, conf->ip_exclude_n,
-                           (const UINT32 *) (data + conf->ip_from_exclude_off),
-                           (const UINT32 *) (data + conf->ip_to_exclude_off));
+    : fort_conf_ip_inrange(remote_ip, addr_group->exclude_n,
+                           fort_conf_addr_group_exclude_ref(addr_group));
 
   return include_all ? !ip_excluded
     : (exclude_all ? ip_included
     : (ip_included && !ip_excluded));
 }
+
+#define fort_conf_ip_is_inet(conf, remote_ip) \
+  fort_conf_ip_included((conf), (remote_ip), 0)
+
+#define fort_conf_ip_inet_included(conf, remote_ip) \
+  fort_conf_ip_included((conf), (remote_ip), 1)
 
 static int
 fort_conf_app_cmp (UINT32 path_len, const char *path,
@@ -90,7 +113,7 @@ fort_conf_app_index (const PFORT_CONF conf,
   if (count == 0)
     return -1;
 
-  data = (const char *) conf + conf->data_off;
+  data = conf->data;
   app_offsets = (const UINT32 *) (data + conf->apps_off);
 
   apps = (const char *) (app_offsets + count + 1);
@@ -115,7 +138,7 @@ fort_conf_app_index (const PFORT_CONF conf,
 static UCHAR
 fort_conf_app_group_index (const PFORT_CONF conf, int app_index)
 {
-  const char *data = (const char *) conf + conf->data_off;
+  const char *data = conf->data;
   const UCHAR *app_groups = (const UCHAR *) (data + conf->app_groups_off);
 
   const BOOL app_found = (app_index != -1);
@@ -126,7 +149,7 @@ fort_conf_app_group_index (const PFORT_CONF conf, int app_index)
 static BOOL
 fort_conf_app_blocked (const PFORT_CONF conf, int app_index)
 {
-  const char *data = (const char *) conf + conf->data_off;
+  const char *data = conf->data;
 
   const UINT32 *app_perms = (const UINT32 *) (data + conf->app_perms_off);
 

@@ -41,7 +41,8 @@ SOURCES += \
     task/taskuzonline.cpp \
     task/taskworker.cpp \
     translationmanager.cpp \
-    util/confutil.cpp \
+    util/conf/addressrange.cpp \
+    util/conf/confutil.cpp \
     util/dateutil.cpp \
     util/device.cpp \
     util/fileutil.cpp \
@@ -89,7 +90,8 @@ HEADERS += \
     task/taskuzonline.h \
     task/taskworker.h \
     translationmanager.h \
-    util/confutil.h \
+    util/conf/addressrange.h \
+    util/conf/confutil.h \
     util/dateutil.h \
     util/device.h \
     util/fileutil.h \
