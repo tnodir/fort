@@ -70,11 +70,13 @@ bool Ip4Range::fromText(const QString &text)
              text.splitRef(QLatin1Char('\n'))) {
         ++lineNo;
 
-        if (line.isEmpty())
+        const QStringRef lineTrimmed = line.trimmed();
+        if (lineTrimmed.isEmpty()
+                || lineTrimmed.startsWith('#'))  // commented line
             continue;
 
         quint32 from, to;
-        if (!parseAddressMask(line, from, to)) {
+        if (!parseAddressMask(lineTrimmed, from, to)) {
             setErrorLineNo(lineNo);
             return false;
         }
