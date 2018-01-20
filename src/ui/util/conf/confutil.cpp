@@ -206,10 +206,12 @@ bool ConfUtil::parseApps(const QString &text, bool blocked,
 {
     foreach (const QStringRef &line,
              text.splitRef(QLatin1Char('\n'))) {
-        if (line.isEmpty())
+        const QStringRef lineTrimmed = line.trimmed();
+        if (lineTrimmed.isEmpty()
+                || lineTrimmed.startsWith('#'))  // commented line
             continue;
 
-        const QString appPath = parseAppPath(line);
+        const QString appPath = parseAppPath(lineTrimmed);
         if (appPath.isEmpty())
             continue;
 
