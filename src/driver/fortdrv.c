@@ -238,8 +238,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                           const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
                           const FWPS_FILTER0 *filter,
                           FWPS_CLASSIFY_OUT0 *classifyOut,
-                          int flagsField, int remoteIpField,
-                          int localPortIpField, int remotePortIpField)
+                          int flagsField, int remoteIpField)
 {
   PFORT_CONF_REF conf_ref;
   PVOID path;
@@ -307,12 +306,6 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
           DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                      "FORT: Classify v4: Flow assoc. error: %d\n", status);
         } else if (is_new_proc) {
-          const UINT16 localPort = inFixedValues->incomingValue[localPortIpField].value.uint16;
-          const UINT16 remotePort = inFixedValues->incomingValue[remotePortIpField].value.uint16;
-
-          DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                     "FORT: Flow: %x %d %d (%ws)\n", (UINT32) flowId, localPort, remotePort, path);
-
           fort_buffer_proc_new_write(&g_device->buffer,
             process_id, path_len, path, &irp, &info);
         }
@@ -354,9 +347,7 @@ fort_callout_connect_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   fort_callout_classify_v4(inFixedValues, inMetaValues, filter, classifyOut,
       FWPS_FIELD_ALE_AUTH_CONNECT_V4_FLAGS,
-      FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_REMOTE_ADDRESS,
-      FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_LOCAL_PORT,
-      FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_REMOTE_PORT);
+      FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_REMOTE_ADDRESS);
 }
 
 static void
@@ -372,9 +363,7 @@ fort_callout_accept_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   fort_callout_classify_v4(inFixedValues, inMetaValues, filter, classifyOut,
       FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_FLAGS,
-      FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_REMOTE_ADDRESS,
-      FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_LOCAL_PORT,
-      FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_REMOTE_PORT);
+      FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_REMOTE_ADDRESS);
 }
 
 static NTSTATUS NTAPI
@@ -489,9 +478,6 @@ fort_callout_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
     NdisAdvanceNetBufferDataStart(netBuf, sizeof(TCP_HEADER), FALSE, NULL);
 
     if (blocked) {
-      DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                 "FORT: RST: %x %d %d flags=%x\n", (UINT32) inMetaValues->flowHandle, NTOHS(tcpHeader->dest), NTOHS(tcpHeader->source), tcpHeader->flags);
-
       fort_callout_classify_drop(classifyOut);
       return;
     }
