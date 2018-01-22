@@ -4,17 +4,17 @@
 <context>
     <name>ConfUtil</name>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="118"/>
+        <location filename="../util/conf/confutil.cpp" line="119"/>
         <source>Bad Include IP address: %1</source>
         <translation>Некорректный IP адрес для включения: %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="126"/>
+        <location filename="../util/conf/confutil.cpp" line="127"/>
         <source>Bad Exclude IP address: %1</source>
         <translation>Некорректный IP адрес для исключения: %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="137"/>
+        <location filename="../util/conf/confutil.cpp" line="138"/>
         <source>Too many IP addresses</source>
         <translation>Слишком много IP адресов</translation>
     </message>
@@ -24,17 +24,17 @@
         <translation>Слишком много путей приложений</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="159"/>
+        <location filename="../util/conf/confutil.cpp" line="160"/>
         <source>Number of Application Groups must be &lt; %1</source>
         <translation>Количество групп приложений должно быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="171"/>
+        <location filename="../util/conf/confutil.cpp" line="172"/>
         <source>Length of Application Group&apos;s Name must be &lt; %1</source>
         <translation>Длина наименования группы приложения должна быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="217"/>
+        <location filename="../util/conf/confutil.cpp" line="220"/>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Длина пути приложения должна быть &lt; %1</translation>
     </message>
@@ -352,7 +352,7 @@
         <translation>Статистика</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="103"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="115"/>
         <source>Password:</source>
         <translation>Пароль:</translation>
     </message>
@@ -402,37 +402,42 @@
         <translation>Остановить Интернет трафик</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="88"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="89"/>
+        <source>Ignore TCP RST-packets</source>
+        <translation>Игнорировать TCP RST-пакеты</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/OptionsPage.qml" line="100"/>
         <source>Log Errors</source>
         <translation>Лог ошибок</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="124"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="136"/>
         <source>Installed</source>
         <translation>Установлен</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="125"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="137"/>
         <source>Not Installed</source>
         <translation>Не установлен</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="135"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="147"/>
         <source>Language:</source>
         <translation>Язык:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="154"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="166"/>
         <source>Logs</source>
         <translation>Логи</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="166"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="178"/>
         <source>Profile</source>
         <translation>Профиль</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="176"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="188"/>
         <source>Releases</source>
         <translation>Релизы</translation>
     </message>

@@ -84,6 +84,18 @@ BasePage {
             }
 
             CheckBox {
+                enabled: firewallConf.logStat
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Ignore TCP RST-packets")
+                checked: firewallConf.ignoreTcpRst
+                onToggled: {
+                    firewallConf.ignoreTcpRst = checked;
+
+                    setConfFlagsEdited();
+                }
+            }
+
+            CheckBox {
                 text: translationManager.dummyBool
                       && qsTranslate("qml", "Log Errors")
                 checked: firewallConf.logErrors

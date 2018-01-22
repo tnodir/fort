@@ -12,6 +12,7 @@ FirewallConf::FirewallConf(QObject *parent) :
     m_filterEnabled(true),
     m_stopTraffic(false),
     m_stopInetTraffic(false),
+    m_ignoreTcpRst(false),
     m_resolveAddress(false),
     m_logErrors(false),
     m_logBlocked(false),
@@ -57,6 +58,14 @@ void FirewallConf::setStopInetTraffic(bool stopInetTraffic)
     if (m_stopInetTraffic != stopInetTraffic) {
         m_stopInetTraffic = stopInetTraffic;
         emit stopInetTrafficChanged();
+    }
+}
+
+void FirewallConf::setIgnoreTcpRst(bool ignoreTcpRst)
+{
+    if (m_ignoreTcpRst != ignoreTcpRst) {
+        m_ignoreTcpRst = ignoreTcpRst;
+        emit ignoreTcpRstChanged();
     }
 }
 
@@ -230,6 +239,7 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     setFilterEnabled(o.filterEnabled());
     setStopTraffic(o.stopTraffic());
     setStopInetTraffic(o.stopInetTraffic());
+    setIgnoreTcpRst(o.ignoreTcpRst());
     setLogErrors(o.logErrors());
     setAppBlockAll(o.appBlockAll());
     setAppAllowAll(o.appAllowAll());

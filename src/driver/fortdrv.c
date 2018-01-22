@@ -24,27 +24,35 @@
 #include "fortstat.c"
 #include "forttmr.c"
 
+#define HTONL(l)	_byteswap_ulong(l)
+#define NTOHL(l)	HTONL(l)
+#define HTONS(s)	_byteswap_ushort(s)
+#define NTOHS(s)	HTONS(s)
+
+#define TCP_HEADER_FLAG_FIN	0x0001
+#define TCP_HEADER_FLAG_SYN	0x0002
+#define TCP_HEADER_FLAG_RST	0x0004
+#define TCP_HEADER_FLAG_PSH	0x0008
+#define TCP_HEADER_FLAG_ACK	0x0010
+#define TCP_HEADER_FLAG_URG	0x0020
+#define TCP_HEADER_FLAG_ECE	0x0040
+#define TCP_HEADER_FLAG_CWR	0x0080
+
 typedef struct tcp_header {
-  UINT16 source;
-  UINT16 dest;
+  UINT16 source;	// Source Port
+  UINT16 dest;		// Destination Port
 
-  UINT32 seq;
-  UINT32 ack_seq;
+  UINT32 seq;		// Sequence number
+  UINT32 ack_seq;	// Acknowledgement number
 
-  UINT16 res1	: 4;
-  UINT16 doff	: 4;
-  UINT16 fin	: 1;
-  UINT16 syn	: 1;
-  UINT16 rst	: 1;
-  UINT16 psh	: 1;
-  UINT16 ack	: 1;
-  UINT16 urg	: 1;
-  UINT16 ece	: 1;
-  UINT16 cwr	: 1;
+  UCHAR res1	: 4;	// Unused
+  UCHAR doff	: 4;	// Data offset
 
-  UINT16 window;
-  UINT16 checksum;
-  UINT16 urg_ptr;
+  UCHAR flags;		// Flags
+
+  UINT16 window;	// Window size
+  UINT16 csum;		// Checksum
+  UINT16 urg_ptr;	// Urgent Pointer
 } TCP_HEADER, *PTCP_HEADER;
 
 typedef struct fort_conf_ref {
@@ -61,12 +69,13 @@ typedef struct fort_device {
   UINT32 connect4_id;
   UINT32 accept4_id;
 
+  FORT_CONF_FLAGS volatile conf_flags;
+  PFORT_CONF_REF volatile conf_ref;
+  KSPIN_LOCK conf_lock;
+
   FORT_BUFFER buffer;
   FORT_STAT stat;
   FORT_TIMER timer;
-
-  PFORT_CONF_REF volatile conf_ref;
-  KSPIN_LOCK conf_lock;
 } FORT_DEVICE, *PFORT_DEVICE;
 
 static PFORT_DEVICE g_device = NULL;
@@ -140,8 +149,14 @@ fort_conf_ref_set (PFORT_CONF_REF conf_ref)
     }
 
     if (conf_ref != NULL) {
-      g_device->prov_boot = conf_ref->conf.flags.prov_boot;
+      const PFORT_CONF_FLAGS conf_flags = &conf_ref->conf.flags;
+
+      g_device->prov_boot = conf_flags->prov_boot;
       g_device->was_conf = TRUE;
+
+      g_device->conf_flags = *conf_flags;
+    } else {
+      RtlZeroMemory((void *) &g_device->conf_flags, sizeof(FORT_CONF_FLAGS));
     }
   }
   KeReleaseInStackQueuedSpinLock(&lock_queue);
@@ -172,10 +187,14 @@ fort_conf_ref_flags_set (const PFORT_CONF_FLAGS conf_flags)
 
       fort_conf_app_perms_mask_init(conf);
 
-      g_device->prov_boot = conf->flags.prov_boot;
+      g_device->prov_boot = conf_flags->prov_boot;
+
+      g_device->conf_flags = *conf_flags;
     } else {
       RtlZeroMemory(&old_conf_flags, sizeof(FORT_CONF_FLAGS));
       old_conf_flags.prov_boot = g_device->prov_boot;
+
+      RtlZeroMemory((void *) &g_device->conf_flags, sizeof(FORT_CONF_FLAGS));
     }
   }
   KeReleaseInStackQueuedSpinLock(&lock_queue);
@@ -188,6 +207,14 @@ fort_callout_classify_block (FWPS_CLASSIFY_OUT0 *classifyOut)
 {
   classifyOut->actionType = FWP_ACTION_BLOCK;
   classifyOut->rights &= ~FWPS_RIGHT_ACTION_WRITE;
+}
+
+static void
+fort_callout_classify_drop (FWPS_CLASSIFY_OUT0 *classifyOut)
+{
+  classifyOut->flags |= FWPS_CLASSIFY_OUT_FLAG_ABSORB;
+
+  fort_callout_classify_block(classifyOut);
 }
 
 static void
@@ -211,7 +238,8 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                           const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
                           const FWPS_FILTER0 *filter,
                           FWPS_CLASSIFY_OUT0 *classifyOut,
-                          int flagsField, int remoteIpField)
+                          int flagsField, int remoteIpField,
+                          int localPortIpField, int remotePortIpField)
 {
   PFORT_CONF_REF conf_ref;
   PVOID path;
@@ -279,6 +307,12 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
           DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                      "FORT: Classify v4: Flow assoc. error: %d\n", status);
         } else if (is_new_proc) {
+          const UINT16 localPort = inFixedValues->incomingValue[localPortIpField].value.uint16;
+          const UINT16 remotePort = inFixedValues->incomingValue[remotePortIpField].value.uint16;
+
+          DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                     "FORT: Flow: %x %d %d (%ws)\n", (UINT32) flowId, localPort, remotePort, path);
+
           fort_buffer_proc_new_write(&g_device->buffer,
             process_id, path_len, path, &irp, &info);
         }
@@ -320,7 +354,9 @@ fort_callout_connect_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   fort_callout_classify_v4(inFixedValues, inMetaValues, filter, classifyOut,
       FWPS_FIELD_ALE_AUTH_CONNECT_V4_FLAGS,
-      FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_REMOTE_ADDRESS);
+      FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_REMOTE_ADDRESS,
+      FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_LOCAL_PORT,
+      FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_REMOTE_PORT);
 }
 
 static void
@@ -336,7 +372,9 @@ fort_callout_accept_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   fort_callout_classify_v4(inFixedValues, inMetaValues, filter, classifyOut,
       FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_FLAGS,
-      FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_REMOTE_ADDRESS);
+      FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_REMOTE_ADDRESS,
+      FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_LOCAL_PORT,
+      FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_REMOTE_PORT);
 }
 
 static NTSTATUS NTAPI
@@ -352,6 +390,7 @@ fort_callout_notify (FWPS_CALLOUT_NOTIFY_TYPE notifyType,
 
 static void
 fort_callout_flow_classify_v4 (const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
+                               const FWPS_FILTER0 *filter,
                                UINT64 flowContext,
                                FWPS_CLASSIFY_OUT0 *classifyOut,
                                UINT32 dataSize, BOOL inbound)
@@ -360,9 +399,9 @@ fort_callout_flow_classify_v4 (const FWPS_INCOMING_METADATA_VALUES0 *inMetaValue
 
   if (fort_stat_flow_classify(&g_device->stat, flowContext,
       headerSize + dataSize, inbound)) {
-    fort_callout_classify_block(classifyOut);
+    fort_callout_classify_drop(classifyOut);
   } else {
-    fort_callout_classify_continue(classifyOut);
+    fort_callout_classify_permit(filter, classifyOut);
   }
 }
 
@@ -380,10 +419,9 @@ fort_callout_stream_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   const BOOL inbound = (streamData->flags & FWPS_STREAM_FLAG_RECEIVE) != 0;
 
   UNUSED(inFixedValues);
-  UNUSED(filter);
 
-  fort_callout_flow_classify_v4(inMetaValues, flowContext, classifyOut,
-    dataSize, inbound);
+  fort_callout_flow_classify_v4(inMetaValues, filter, flowContext,
+    classifyOut, dataSize, inbound);
 }
 
 static void
@@ -402,11 +440,9 @@ fort_callout_datagram_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   const BOOL inbound = (direction == FWP_DIRECTION_INBOUND);
 
   UNUSED(inFixedValues);
-  UNUSED(filter);
-  UNUSED(flowContext);
 
-  fort_callout_flow_classify_v4(inMetaValues, flowContext, classifyOut,
-    dataSize, inbound);
+  fort_callout_flow_classify_v4(inMetaValues, filter, flowContext,
+    classifyOut, dataSize, inbound);
 }
 
 static void
@@ -427,38 +463,42 @@ fort_callout_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                                     FWPS_CLASSIFY_OUT0 *classifyOut,
                                     int ipProtoField, BOOL inbound)
 {
-#if 0
-  const PNET_BUFFER netBuf = NET_BUFFER_LIST_FIRST_NB(netBufList);
-  const UINT32 dataSize = NET_BUFFER_DATA_LENGTH(netBuf);
+  const IPPROTO ip_proto = (IPPROTO) inFixedValues->incomingValue[
+    ipProtoField].value.uint8;
+  const BOOL is_udp = (ip_proto == IPPROTO_UDP);
 
-  UNUSED(filter);
-  UNUSED(flowContext);
+  if (is_udp) goto permit;
 
-  if (dataSize == 0) {
-    const IPPROTO ip_proto = (IPPROTO) inFixedValues->incomingValue[
-      ipProtoField].value.uint8;
-    const BOOL is_udp = (ip_proto == IPPROTO_UDP);
+  /* Position in the packet data:
+   * FWPS_LAYER_INBOUND_TRANSPORT_V4: The beginning of the data.
+   * FWPS_LAYER_OUTBOUND_TRANSPORT_V4: The beginning of the transport header.
+   */
 
-    if (!is_udp) {
-      PTCP_HEADER tcpHeader;
+  if (inbound && g_device->conf_flags.ignore_tcp_rst) {
+    const PNET_BUFFER netBuf = NET_BUFFER_LIST_FIRST_NB(netBufList);
+    TCP_HEADER buf;
+    PTCP_HEADER tcpHeader;
+    BOOL blocked = FALSE;
 
-      NdisAdvanceNetBufferDataStart(netBuf,
-        inMetaValues->ipHeaderSize, FALSE, NULL);
+    NdisRetreatNetBufferDataStart(netBuf, sizeof(TCP_HEADER), 0, NULL);
 
-      tcpHeader = NdisGetDataBuffer(netBuf, sizeof(TCP_HEADER),
-        NULL, sizeof(UINT16), 0);
+    tcpHeader = NdisGetDataBuffer(netBuf, sizeof(TCP_HEADER), &buf, 1, 0);
 
-      if (tcpHeader->ack) {
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                   "FORT: Ack: %d %d\n", (UINT32) flowContext, inbound);
+    blocked = (tcpHeader->flags & TCP_HEADER_FLAG_RST);
 
-        //fort_stat_flow_shape(&g_device->stat, flowContext, inbound);
-      }
+    NdisAdvanceNetBufferDataStart(netBuf, sizeof(TCP_HEADER), FALSE, NULL);
+
+    if (blocked) {
+      DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                 "FORT: RST: %x %d %d flags=%x\n", (UINT32) inMetaValues->flowHandle, NTOHS(tcpHeader->dest), NTOHS(tcpHeader->source), tcpHeader->flags);
+
+      fort_callout_classify_drop(classifyOut);
+      return;
     }
   }
-#endif
 
-  classifyOut->actionType = FWP_ACTION_CONTINUE;
+ permit:
+  fort_callout_classify_permit(filter, classifyOut);
 }
 
 static void
@@ -653,7 +693,7 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
  stat:
     if (conf_flags.log_stat) {
       if ((status = fort_prov_flow_register(engine,
-          (stat->limit_bits != 0))))
+          (conf_flags.ignore_tcp_rst != 0))))
         goto cleanup;
     }
   }

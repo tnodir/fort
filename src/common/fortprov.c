@@ -185,7 +185,7 @@ fort_prov_register (HANDLE transEngine, BOOL is_boot)
 }
 
 static DWORD
-fort_prov_flow_register (HANDLE transEngine, BOOL speed_limit)
+fort_prov_flow_register (HANDLE transEngine, BOOL filter_transport)
 {
   FWPM_FILTER0 sfilter4, dfilter4;
   FWPM_FILTER0 itfilter4, otfilter4;
@@ -208,7 +208,7 @@ fort_prov_flow_register (HANDLE transEngine, BOOL speed_limit)
   sfilter4.subLayerKey = FORT_GUID_SUBLAYER;
   sfilter4.displayData.name = (PWCHAR) L"FortFilterStream4";
   sfilter4.displayData.description = (PWCHAR) L"Fort Firewall Filter Stream V4";
-  sfilter4.action.type = FWP_ACTION_CALLOUT_UNKNOWN;
+  sfilter4.action.type = FWP_ACTION_CALLOUT_TERMINATING;
   sfilter4.action.calloutKey = FORT_GUID_CALLOUT_STREAM_V4;
 
   RtlZeroMemory(&dfilter4, sizeof(FWPM_FILTER0));
@@ -218,7 +218,7 @@ fort_prov_flow_register (HANDLE transEngine, BOOL speed_limit)
   dfilter4.subLayerKey = FORT_GUID_SUBLAYER;
   dfilter4.displayData.name = (PWCHAR) L"FortFilterDatagram4";
   dfilter4.displayData.description = (PWCHAR) L"Fort Firewall Filter Datagram V4";
-  dfilter4.action.type = FWP_ACTION_CALLOUT_UNKNOWN;
+  dfilter4.action.type = FWP_ACTION_CALLOUT_TERMINATING;
   dfilter4.action.calloutKey = FORT_GUID_CALLOUT_DATAGRAM_V4;
 
   RtlZeroMemory(&itfilter4, sizeof(FWPM_FILTER0));
@@ -228,7 +228,7 @@ fort_prov_flow_register (HANDLE transEngine, BOOL speed_limit)
   itfilter4.subLayerKey = FORT_GUID_SUBLAYER;
   itfilter4.displayData.name = (PWCHAR) L"FortFilterInTransport4";
   itfilter4.displayData.description = (PWCHAR) L"Fort Firewall Filter Inbound Transport V4";
-  itfilter4.action.type = FWP_ACTION_CALLOUT_UNKNOWN;
+  itfilter4.action.type = FWP_ACTION_CALLOUT_TERMINATING;
   itfilter4.action.calloutKey = FORT_GUID_CALLOUT_IN_TRANSPORT_V4;
 
   RtlZeroMemory(&otfilter4, sizeof(FWPM_FILTER0));
@@ -238,15 +238,17 @@ fort_prov_flow_register (HANDLE transEngine, BOOL speed_limit)
   otfilter4.subLayerKey = FORT_GUID_SUBLAYER;
   otfilter4.displayData.name = (PWCHAR) L"FortFilterOutTransport4";
   otfilter4.displayData.description = (PWCHAR) L"Fort Firewall Filter Outbound Transport V4";
-  otfilter4.action.type = FWP_ACTION_CALLOUT_UNKNOWN;
+  otfilter4.action.type = FWP_ACTION_CALLOUT_TERMINATING;
   otfilter4.action.calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V4;
 
   if ((status = FwpmFilterAdd0(engine, &sfilter4, NULL, NULL))
       || (status = FwpmFilterAdd0(engine, &dfilter4, NULL, NULL))
+      || (filter_transport
+        && ((status = FwpmFilterAdd0(engine, &itfilter4, NULL, NULL))
 #if 0
-      || (speed_limit && ((status = FwpmFilterAdd0(engine, &itfilter4, NULL, NULL))
-        || (status = FwpmFilterAdd0(engine, &otfilter4, NULL, NULL))))
+        || (status = FwpmFilterAdd0(engine, &otfilter4, NULL, NULL))
 #endif
+        ))
       ) {
     fort_prov_trans_abort(engine);
   }

@@ -222,6 +222,7 @@ bool FortSettings::readConfIni(FirewallConf &conf) const
     conf.setFilterEnabled(iniBool("filterEnabled", true));
     conf.setStopTraffic(iniBool("stopTraffic"));
     conf.setStopInetTraffic(iniBool("stopInetTraffic"));
+    conf.setIgnoreTcpRst(iniBool("ignoreTcpRst"));
     conf.setResolveAddress(iniBool("resolveAddress"));
     conf.setLogErrors(iniBool("logErrors"));
     conf.setLogBlocked(iniBool("logBlocked"));
@@ -249,6 +250,7 @@ bool FortSettings::writeConfIni(const FirewallConf &conf)
     setIniValue("filterEnabled", conf.filterEnabled());
     setIniValue("stopTraffic", conf.stopTraffic());
     setIniValue("stopInetTraffic", conf.stopInetTraffic());
+    setIniValue("ignoreTcpRst", conf.ignoreTcpRst());
     setIniValue("resolveAddress", conf.resolveAddress());
     setIniValue("logErrors", conf.logErrors());
     setIniValue("logBlocked", conf.logBlocked());
