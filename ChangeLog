@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v1.8.0, 2018-01-22:
+- UI: ApplicationsPage: Disable inactive speed-limit button (instead of hiding).
+- UI: OptionsPage: Add ability to "Ignore TCP RST-packets".
+
 v1.7.0, 2018-01-20:
 - UI: AddressesPage: Add "Internet Addresses" & "Allowed Internet Addresses" tabs.
 - UI: Add ability to comment address & app. lines with "#".
