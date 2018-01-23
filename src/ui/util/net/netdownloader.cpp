@@ -51,6 +51,7 @@ void NetDownloader::abort(bool success)
     m_started = false;
 
     m_process.kill();
+    m_process.waitForFinished();
 
     emit finished(success);
 }
