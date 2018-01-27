@@ -79,6 +79,7 @@ ButtonPopup {
             }
             field {
                 from: 0
+                to: 99999
                 value: appGroup.speedLimitIn
                 onValueChanged: {
                     const value = field.value;
@@ -111,6 +112,7 @@ ButtonPopup {
             }
             field {
                 from: 0
+                to: 99999
                 value: appGroup.speedLimitOut
                 onValueChanged: {
                     const value = field.value;
