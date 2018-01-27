@@ -15,18 +15,22 @@ ButtonPopup {
           + speedLimitsText
 
     readonly property var speedLimitValues: [
-        1, 0, 100, 1024, 3 * 1024
+        10, 0, 20, 30, 50, 75, 100, 150, 200, 300, 500, 900,
+        1024, 1.5 * 1024, 2 * 1024, 3 * 1024, 5 * 1024, 7.5 * 1024,
+        10 * 1024, 15 * 1024, 20 * 1024, 30 * 1024, 50 * 1024
     ]
 
-    readonly property var speedLimitNames:
-        translationManager.dummyBool
-        && [
-            qsTranslate("qml", "Custom"),
-            qsTranslate("qml", "Disabled"),
-            formatSpeed(speedLimitValues[2]),
-            formatSpeed(speedLimitValues[3]),
-            formatSpeed(speedLimitValues[4])
-        ]
+    readonly property var speedLimitNames: {
+        var list = translationManager.dummyBool
+                && [qsTranslate("qml", "Custom"),
+                    qsTranslate("qml", "Disabled")];
+
+        const n = speedLimitValues.length;
+        for (var i = list.length; i < n; ++i) {
+            list.push(formatSpeed(speedLimitValues[i]));
+        }
+        return list;
+    }
 
     readonly property var speedLimitDisabledText: speedLimitNames[1]
 
@@ -51,7 +55,8 @@ ButtonPopup {
     }
 
     function formatSpeed(bytes) {
-        return netUtil.formatDataSize(bytes * 1024, 0) + "/s";
+        const prec = (bytes < 1024) ? 0 : 1;
+        return netUtil.formatDataSize(bytes * 1024, prec) + "/s";
     }
 
     ColumnLayout {
