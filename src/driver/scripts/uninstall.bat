@@ -22,8 +22,8 @@ Del "%DSTPATH%"
 
 
 @rem Remove driver from system storage
-CertMgr /del /c /n "%CERTNAME%" -s -r localMachine Root
-CertMgr /del /c /n "%CERTNAME%" -s "%DISPNAME%"
+"%~dp0CertMgr" /del /c /n "%CERTNAME%" -s -r localMachine Root
+"%~dp0CertMgr" /del /c /n "%CERTNAME%" -s "%DISPNAME%"
 
 
 @set RCODE=0

@@ -33,14 +33,14 @@ copy "%SRCPATH%" "%DSTPATH%"
     @goto CERT_ADDED
 )
 
-MakeCert -r -pe -ss "%DISPNAME%" -n "CN=%CERTNAME%" "%CERTPATH%"
+"%~dp0MakeCert" -r -pe -ss "%DISPNAME%" -n "CN=%CERTNAME%" "%CERTPATH%"
 @if ERRORLEVEL 1 (
     @echo Error: Cannot create certificate
     @set RCODE=%ERRORLEVEL%
     @goto EXIT
 )
 
-CertMgr /add "%CERTPATH%" /s /r localMachine root
+"%~dp0CertMgr" /add "%CERTPATH%" /s /r localMachine root
 @if ERRORLEVEL 1 (
     @echo Error: Cannot add certificate to store
     @set RCODE=%ERRORLEVEL%
@@ -53,7 +53,7 @@ Del "%CERTPATH%"
 
 
 @rem Sign the driver
-SignTool sign /a /v /s "%DISPNAME%" /n "%CERTNAME%" "%DSTPATH%"
+"%~dp0SignTool" sign /a /v /s "%DISPNAME%" /n "%CERTNAME%" "%DSTPATH%"
 @if ERRORLEVEL 1 (
     @echo Error: Cannot sign the driver
     @set RCODE=%ERRORLEVEL%
