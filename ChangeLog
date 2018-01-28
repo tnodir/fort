@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v1.9.0, 2018-01-28:
+- UI: NetDownloader: Wait process finishing.
+- UI: ApplicationsPage: Improve speed limits' list.
+- UI: Don't use swipe for tabs.
+- Installer: Fix scripts to use current path.
+
 v1.8.1, 2018-01-22:
 - Driver: Remove test debug prints.
 
