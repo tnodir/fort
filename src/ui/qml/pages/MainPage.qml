@@ -1,6 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
+import "../controls"
 import com.fortfirewall 1.0
 
 Page {
@@ -75,9 +76,11 @@ Page {
         }
     }
 
-    SwipeView {
+    SwipeViewControl {
         id: swipeView
         anchors.fill: parent
+
+        interactive: false
         currentIndex: tabBar.currentIndex
 
         OptionsPage {}
