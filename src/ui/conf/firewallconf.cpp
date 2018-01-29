@@ -14,7 +14,7 @@ FirewallConf::FirewallConf(QObject *parent) :
     m_stopInetTraffic(false),
     m_ignoreTcpRst(false),
     m_resolveAddress(false),
-    m_logErrors(false),
+    m_logErrors(true),
     m_logBlocked(false),
     m_logStat(false),
     m_appBlockAll(true),

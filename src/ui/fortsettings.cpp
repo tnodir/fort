@@ -224,7 +224,7 @@ bool FortSettings::readConfIni(FirewallConf &conf) const
     conf.setStopInetTraffic(iniBool("stopInetTraffic"));
     conf.setIgnoreTcpRst(iniBool("ignoreTcpRst"));
     conf.setResolveAddress(iniBool("resolveAddress"));
-    conf.setLogErrors(iniBool("logErrors"));
+    conf.setLogErrors(iniBool("logErrors", true));
     conf.setLogBlocked(iniBool("logBlocked"));
     conf.setLogStat(iniBool("logStat"));
     conf.setAppBlockAll(iniBool("appBlockAll", true));
