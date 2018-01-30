@@ -127,7 +127,10 @@ void FortManager::closeDriver()
 
 void FortManager::setupLogger()
 {
-    Logger::instance()->setPath(m_fortSettings->logsPath());
+    Logger *logger = Logger::instance();
+
+    logger->setPath(m_fortSettings->logsPath());
+    logger->setActive(true);
 
     updateLogger();
 }
@@ -456,7 +459,6 @@ void FortManager::updateLogger()
 {
     Logger *logger = Logger::instance();
 
-    logger->setActive(true);
     logger->setDebug(m_fortSettings->debug());
     logger->setConsole(m_fortSettings->console());
 }
