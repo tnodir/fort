@@ -65,9 +65,6 @@ ColumnLayout {
             }
 
             textArea {
-                placeholderText: "
-C:\\Program Files\\Internet Explorer\\iexplore.exe
-"
                 text: appGroup.blockText
             }
 
@@ -90,7 +87,7 @@ C:\\Program Files\\Internet Explorer\\iexplore.exe
             textArea {
                 placeholderText: "
 System
-C:\\Program Files\\Skype\\Phone\\Skype.exe
+C:\\Program Files (x86)\\Microsoft\\Skype for Desktop\\Skype.exe
 "
                 text: appGroup.allowText
             }
