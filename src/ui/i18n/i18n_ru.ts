@@ -317,62 +317,62 @@
         <translation>Блокировать</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="87"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="84"/>
         <source>Allow</source>
         <translation>Разрешить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="49"/>
+        <location filename="../qml/pages/MainPage.qml" line="50"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="54"/>
+        <location filename="../qml/pages/MainPage.qml" line="55"/>
         <source>IPv4 Addresses</source>
         <translation>Адреса IPv4</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="59"/>
+        <location filename="../qml/pages/MainPage.qml" line="60"/>
         <source>Applications</source>
         <translation>Приложения</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="74"/>
+        <location filename="../qml/pages/MainPage.qml" line="75"/>
         <source>Schedule</source>
         <translation>Расписание</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="64"/>
+        <location filename="../qml/pages/MainPage.qml" line="65"/>
         <source>Blocked</source>
         <translation>Блокировано</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="69"/>
+        <location filename="../qml/pages/MainPage.qml" line="70"/>
         <source>Statistics</source>
         <translation>Статистика</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="115"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="104"/>
         <source>Password:</source>
         <translation>Пароль:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="99"/>
+        <location filename="../qml/pages/MainPage.qml" line="102"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="116"/>
+        <location filename="../qml/pages/MainPage.qml" line="119"/>
         <source>Apply</source>
         <translation>Применить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="132"/>
+        <location filename="../qml/pages/MainPage.qml" line="135"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="138"/>
+        <location filename="../qml/pages/MainPage.qml" line="141"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -407,37 +407,32 @@
         <translation>Игнорировать TCP RST-пакеты</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="100"/>
-        <source>Log Errors</source>
-        <translation>Лог ошибок</translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="136"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="125"/>
         <source>Installed</source>
         <translation>Установлен</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="137"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="126"/>
         <source>Not Installed</source>
         <translation>Не установлен</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="147"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="136"/>
         <source>Language:</source>
         <translation>Язык:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="166"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="154"/>
         <source>Logs</source>
         <translation>Логи</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="178"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="164"/>
         <source>Profile</source>
         <translation>Профиль</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="188"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="174"/>
         <source>Releases</source>
         <translation>Релизы</translation>
     </message>
@@ -447,7 +442,7 @@
         <translation>Ограничение скорости: </translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="24"/>
+        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="25"/>
         <location filename="../qml/pages/log/TrafOptionsButton.qml" line="20"/>
         <location filename="../qml/pages/log/TrafOptionsButton.qml" line="35"/>
         <location filename="../qml/pages/SchedulePage.qml" line="31"/>
@@ -455,17 +450,17 @@
         <translation>Нестандартный</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="25"/>
+        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="26"/>
         <source>Disabled</source>
         <translation>Отключено</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="63"/>
+        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="68"/>
         <source>Download speed limit, KiB/s:</source>
         <translation>Ограничение скорости загрузки, KiB/s:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="95"/>
+        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="101"/>
         <source>Upload speed limit, KiB/s:</source>
         <translation>Ограничение скорости выгрузки, KiB/s:</translation>
     </message>

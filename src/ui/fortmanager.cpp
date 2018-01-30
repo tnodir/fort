@@ -456,7 +456,7 @@ void FortManager::updateLogger()
 {
     Logger *logger = Logger::instance();
 
-    logger->setActive(m_firewallConf->logErrors());
+    logger->setActive(true);
     logger->setDebug(m_fortSettings->debug());
     logger->setConsole(m_fortSettings->console());
 }

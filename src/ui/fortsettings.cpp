@@ -195,8 +195,6 @@ bool FortSettings::writeConf(const FirewallConf &conf)
         return false;
     }
 
-    removeMigratedKeys();
-
     return true;
 }
 
@@ -224,7 +222,6 @@ bool FortSettings::readConfIni(FirewallConf &conf) const
     conf.setStopInetTraffic(iniBool("stopInetTraffic"));
     conf.setIgnoreTcpRst(iniBool("ignoreTcpRst"));
     conf.setResolveAddress(iniBool("resolveAddress"));
-    conf.setLogErrors(iniBool("logErrors", true));
     conf.setLogBlocked(iniBool("logBlocked"));
     conf.setLogStat(iniBool("logStat"));
     conf.setAppBlockAll(iniBool("appBlockAll", true));
@@ -252,7 +249,6 @@ bool FortSettings::writeConfIni(const FirewallConf &conf)
     setIniValue("stopInetTraffic", conf.stopInetTraffic());
     setIniValue("ignoreTcpRst", conf.ignoreTcpRst());
     setIniValue("resolveAddress", conf.resolveAddress());
-    setIniValue("logErrors", conf.logErrors());
     setIniValue("logBlocked", conf.logBlocked());
     setIniValue("logStat", conf.logStat());
     setIniValue("appBlockAll", conf.appBlockAll());
@@ -267,6 +263,8 @@ bool FortSettings::writeConfIni(const FirewallConf &conf)
     setIniValue("trafMonthKeepMonths", conf.trafMonthKeepMonths(), DEFAULT_TRAF_MONTH_KEEP_MONTHS);
     setIniValue("trafUnit", conf.trafUnit());
     m_ini->endGroup();
+
+    removeMigratedKeys();
 
     return iniSync();
 }
@@ -315,7 +313,10 @@ void FortSettings::removeMigratedKeys()
         removeIniKey("confFlags/ipExcludeAll");
     }
 
-    iniSync();
+    // v1.10.0: Log Errors
+    if (version < 0x011000) {
+        removeIniKey("confFlags/logErrors");
+    }
 }
 
 bool FortSettings::iniBool(const QString &key, bool defaultValue) const

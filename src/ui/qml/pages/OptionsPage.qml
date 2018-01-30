@@ -95,17 +95,6 @@ BasePage {
                 }
             }
 
-            CheckBox {
-                text: translationManager.dummyBool
-                      && qsTranslate("qml", "Log Errors")
-                checked: firewallConf.logErrors
-                onToggled: {
-                    firewallConf.logErrors = checked;
-
-                    setConfFlagsEdited();
-                }
-            }
-
             Row {
                 spacing: 4
 
@@ -161,7 +150,6 @@ BasePage {
 
             RowLayout {
                 LinkButton {
-                    visible: firewallConf.logErrors
                     text: translationManager.dummyBool
                           && qsTranslate("qml", "Logs")
                     tipText: path
@@ -169,9 +157,7 @@ BasePage {
                     readonly property string path: fortSettings.logsPath
                 }
 
-                VSeparator {
-                    visible: firewallConf.logErrors
-                }
+                VSeparator {}
 
                 LinkButton {
                     text: translationManager.dummyBool
