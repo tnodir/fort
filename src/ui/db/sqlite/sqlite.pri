@@ -27,14 +27,17 @@ DEFINES += \
     SQLITE_OMIT_TEMPDB \
     SQLITE_OMIT_TRACE
 
+SQLITE_DIR = $$PWD/../../../3rdparty/sqlite
+INCLUDEPATH += $$SQLITE_DIR
+
 SOURCES += \
-    $$PWD/sqlite3.c \
+    $$SQLITE_DIR/sqlite3.c \
     $$PWD/sqlitedb.cpp \
     $$PWD/sqliteengine.cpp \
     $$PWD/sqlitestmt.cpp
 
 HEADERS += \
-    $$PWD/sqlite3.h \
+    $$SQLITE_DIR/sqlite3.h \
     $$PWD/sqlitedb.h \
     $$PWD/sqliteengine.h \
     $$PWD/sqlitestmt.h
