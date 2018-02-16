@@ -179,19 +179,14 @@ bool FortSettings::writeConf(const FirewallConf &conf)
         return false;
     }
 
-    if (FileUtil::fileExists(backupFilePath)
-            && !FileUtil::renameFile(backupFilePath, filePath)) {
-        setErrorMessage(tr("Can't rename old backup .conf file"));
-        return false;
-    }
-
     if (!tryToWriteConf(conf, backupFilePath)) {
         setErrorMessage(tr("Can't create backup .conf file"));
         return false;
     }
 
-    if (!FileUtil::renameFile(backupFilePath, filePath)) {
-        setErrorMessage(tr("Can't rename backup .conf file"));
+    if (!(FileUtil::removeFile(filePath)
+          && FileUtil::copyFile(backupFilePath, filePath))) {
+        setErrorMessage(tr("Can't create .conf file"));
         return false;
     }
 

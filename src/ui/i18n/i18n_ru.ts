@@ -42,37 +42,37 @@
 <context>
     <name>FortManager</name>
     <message>
-        <location filename="../fortmanager.cpp" line="247"/>
+        <location filename="../fortmanager.cpp" line="250"/>
         <source>Password input</source>
         <translation>Ввод пароля</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="247"/>
+        <location filename="../fortmanager.cpp" line="250"/>
         <source>Please enter the password</source>
         <translation>Наберите пароль пожалуйста</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="475"/>
+        <location filename="../fortmanager.cpp" line="477"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="481"/>
+        <location filename="../fortmanager.cpp" line="483"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="485"/>
+        <location filename="../fortmanager.cpp" line="487"/>
         <source>Stop Traffic</source>
         <translation>Остановить трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="489"/>
+        <location filename="../fortmanager.cpp" line="491"/>
         <source>Stop Internet Traffic</source>
         <translation>Остановить Интернет трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="506"/>
+        <location filename="../fortmanager.cpp" line="508"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -85,22 +85,17 @@
         <translation>Не удалось записать .ini файл</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="184"/>
-        <source>Can&apos;t rename old backup .conf file</source>
-        <translation>Не удалось переименовать старый бэкап .conf файла</translation>
+        <location filename="../fortsettings.cpp" line="189"/>
+        <source>Can&apos;t create .conf file</source>
+        <translation>Не удалось создать .conf файл</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="189"/>
+        <location filename="../fortsettings.cpp" line="183"/>
         <source>Can&apos;t create backup .conf file</source>
         <translation>Не удалось создать бэкап .conf файла</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="194"/>
-        <source>Can&apos;t rename backup .conf file</source>
-        <translation>Не удалось переименовать бэкап .conf файла</translation>
-    </message>
-    <message>
-        <location filename="../fortsettings.cpp" line="211"/>
+        <location filename="../fortsettings.cpp" line="204"/>
         <source>Can&apos;t write .conf file</source>
         <translation>Не удалось записать .conf файл</translation>
     </message>
