@@ -21,39 +21,9 @@
 #include "../common/fortprov.c"
 #include "forttds.c"
 #include "fortbuf.c"
+#include "fortpkt.c"
 #include "fortstat.c"
 #include "forttmr.c"
-
-#define HTONL(l)	_byteswap_ulong(l)
-#define NTOHL(l)	HTONL(l)
-#define HTONS(s)	_byteswap_ushort(s)
-#define NTOHS(s)	HTONS(s)
-
-#define TCP_HEADER_FLAG_FIN	0x0001
-#define TCP_HEADER_FLAG_SYN	0x0002
-#define TCP_HEADER_FLAG_RST	0x0004
-#define TCP_HEADER_FLAG_PSH	0x0008
-#define TCP_HEADER_FLAG_ACK	0x0010
-#define TCP_HEADER_FLAG_URG	0x0020
-#define TCP_HEADER_FLAG_ECE	0x0040
-#define TCP_HEADER_FLAG_CWR	0x0080
-
-typedef struct tcp_header {
-  UINT16 source;	// Source Port
-  UINT16 dest;		// Destination Port
-
-  UINT32 seq;		// Sequence number
-  UINT32 ack_seq;	// Acknowledgement number
-
-  UCHAR res1	: 4;	// Unused
-  UCHAR doff	: 4;	// Data offset
-
-  UCHAR flags;		// Flags
-
-  UINT16 window;	// Window size
-  UINT16 csum;		// Checksum
-  UINT16 urg_ptr;	// Urgent Pointer
-} TCP_HEADER, *PTCP_HEADER;
 
 typedef struct fort_conf_ref {
   UINT32 volatile refcount;
@@ -65,6 +35,7 @@ typedef struct fort_device {
   UINT32 prov_boot	: 1;
   UINT32 is_opened	: 1;
   UINT32 was_conf	: 1;
+  UINT32 power_off	: 1;
 
   UINT32 connect4_id;
   UINT32 accept4_id;
@@ -73,8 +44,12 @@ typedef struct fort_device {
   PFORT_CONF_REF volatile conf_ref;
   KSPIN_LOCK conf_lock;
 
+  PCALLBACK_OBJECT power_cb_obj;
+  PVOID power_cb_reg;
+
   FORT_BUFFER buffer;
   FORT_STAT stat;
+  FORT_DEFER defer;
   FORT_TIMER timer;
 } FORT_DEVICE, *PFORT_DEVICE;
 
@@ -304,7 +279,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
         if (!NT_SUCCESS(status)) {
           DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                     "FORT: Classify v4: Flow assoc. error: %d\n", status);
+                     "FORT: Classify v4: Flow assoc. error: %x\n", status);
         } else if (is_new_proc) {
           fort_buffer_proc_new_write(&g_device->buffer,
             process_id, path_len, path, &irp, &info);
@@ -388,6 +363,7 @@ fort_callout_flow_classify_v4 (const FWPS_INCOMING_METADATA_VALUES0 *inMetaValue
 
   if (fort_stat_flow_classify(&g_device->stat, flowContext,
       headerSize + dataSize, inbound)) {
+
     fort_callout_classify_drop(classifyOut);
   } else {
     fort_callout_classify_permit(filter, classifyOut);
@@ -444,9 +420,17 @@ fort_callout_flow_delete_v4 (UINT16 layerId, UINT32 calloutId, UINT64 flowContex
 }
 
 static void
+fort_transport_inject_complete (PFORT_PACKET pkt,
+                                PNET_BUFFER_LIST clonedNetBufList,
+                                BOOLEAN dispatchLevel)
+{
+  fort_defer_free(&g_device->defer, pkt, clonedNetBufList, dispatchLevel);
+}
+
+static void
 fort_callout_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                                     const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
-                                    const PNET_BUFFER_LIST netBufList,
+                                    PNET_BUFFER_LIST netBufList,
                                     const FWPS_FILTER0 *filter,
                                     UINT64 flowContext,
                                     FWPS_CLASSIFY_OUT0 *classifyOut,
@@ -456,35 +440,72 @@ fort_callout_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
     ipProtoField].value.uint8;
   const BOOL is_udp = (ip_proto == IPPROTO_UDP);
 
-  if (is_udp) goto permit;
+  if (!(is_udp || FWPS_IS_METADATA_FIELD_PRESENT(inMetaValues,
+        FWPS_METADATA_FIELD_ALE_CLASSIFY_REQUIRED))
+      && netBufList != NULL) {
 
-  /* Position in the packet data:
-   * FWPS_LAYER_INBOUND_TRANSPORT_V4: The beginning of the data.
-   * FWPS_LAYER_OUTBOUND_TRANSPORT_V4: The beginning of the transport header.
-   */
+    PFORT_STAT_FLOW flow = (PFORT_STAT_FLOW) flowContext;
 
-  if (inbound && g_device->conf_flags.ignore_tcp_rst) {
-    const PNET_BUFFER netBuf = NET_BUFFER_LIST_FIRST_NB(netBufList);
-    TCP_HEADER buf;
-    PTCP_HEADER tcpHeader;
-    BOOL blocked = FALSE;
+    const BOOL ignore_tcp_rst = inbound && g_device->conf_flags.ignore_tcp_rst;
+    const BOOL defer_flow = flow->opt.speed_limit && !g_device->power_off
+      && (inbound ? flow->opt.defer_in : flow->opt.defer_out);
 
-    NdisRetreatNetBufferDataStart(netBuf, sizeof(TCP_HEADER), 0, NULL);
+    if (ignore_tcp_rst || defer_flow) {
+      const PNET_BUFFER netBuf = NET_BUFFER_LIST_FIRST_NB(netBufList);
+      TCP_HEADER buf;
+      PTCP_HEADER tcpHeader;
+      UINT32 tcpFlags;
 
-    tcpHeader = NdisGetDataBuffer(netBuf, sizeof(TCP_HEADER), &buf, 1, 0);
+      if (netBuf == NULL)
+        goto permit;
 
-    blocked = (tcpHeader->flags & TCP_HEADER_FLAG_RST);
+      /* Position in the packet data:
+       * FWPS_LAYER_INBOUND_TRANSPORT_V4: The beginning of the data.
+       * FWPS_LAYER_OUTBOUND_TRANSPORT_V4: The beginning of the transport header.
+       */
+      const UINT32 headerOffset = inbound ? 0 : sizeof(TCP_HEADER);
 
-    NdisAdvanceNetBufferDataStart(netBuf, sizeof(TCP_HEADER), FALSE, NULL);
+      if (headerOffset != 0) {
+        NdisRetreatNetBufferDataStart(netBuf, headerOffset, 0, NULL);
+      }
 
-    if (blocked) {
-      fort_callout_classify_drop(classifyOut);
-      return;
+      tcpHeader = NdisGetDataBuffer(netBuf, sizeof(TCP_HEADER), &buf, 1, 0);
+      tcpFlags = tcpHeader ? tcpHeader->flags : 0;
+
+      if (headerOffset != 0) {
+        NdisAdvanceNetBufferDataStart(netBuf, headerOffset, FALSE, NULL);
+      }
+
+      if (tcpHeader == NULL)
+        goto permit;
+
+      if (ignore_tcp_rst && (tcpFlags & TCP_FLAG_RST))
+        goto block;
+
+      if (defer_flow //&& (tcpFlags & TCP_FLAG_ACK)
+          && NET_BUFFER_DATA_LENGTH(netBuf) == headerOffset) {
+        NTSTATUS status;
+
+        status = fort_defer_add(&g_device->defer, inFixedValues, inMetaValues,
+          netBufList, inbound);
+
+        if (!NT_SUCCESS(status)) {
+          DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                     "FORT: Transport Classify: Defer error: %x\n", status);
+        }
+
+        goto block;
+      }
     }
   }
 
  permit:
   fort_callout_classify_permit(filter, classifyOut);
+  return;
+
+ block:
+  fort_callout_classify_drop(classifyOut);
+  return;
 }
 
 static void
@@ -540,7 +561,7 @@ fort_callout_install (PDEVICE_OBJECT device)
   status = FwpsCalloutRegister0(device, &c, &g_device->connect4_id);
   if (!NT_SUCCESS(status)) {
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-               "FORT: Register Connect V4: Error: %d\n", status);
+               "FORT: Register Connect V4: Error: %x\n", status);
     return status;
   }
 
@@ -551,7 +572,7 @@ fort_callout_install (PDEVICE_OBJECT device)
   status = FwpsCalloutRegister0(device, &c, &g_device->accept4_id);
   if (!NT_SUCCESS(status)) {
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-               "FORT: Register Accept V4: Error: %d\n", status);
+               "FORT: Register Accept V4: Error: %x\n", status);
     return status;
   }
 
@@ -565,7 +586,7 @@ fort_callout_install (PDEVICE_OBJECT device)
   status = FwpsCalloutRegister0(device, &c, &g_device->stat.stream4_id);
   if (!NT_SUCCESS(status)) {
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-               "FORT: Register Stream V4: Error: %d\n", status);
+               "FORT: Register Stream V4: Error: %x\n", status);
     return status;
   }
 
@@ -578,7 +599,7 @@ fort_callout_install (PDEVICE_OBJECT device)
   status = FwpsCalloutRegister0(device, &c, &g_device->stat.datagram4_id);
   if (!NT_SUCCESS(status)) {
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-               "FORT: Register Datagram V4: Error: %d\n", status);
+               "FORT: Register Datagram V4: Error: %x\n", status);
     return status;
   }
 
@@ -589,7 +610,7 @@ fort_callout_install (PDEVICE_OBJECT device)
   status = FwpsCalloutRegister0(device, &c, &g_device->stat.in_transport4_id);
   if (!NT_SUCCESS(status)) {
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-               "FORT: Register Inbound Transport V4: Error: %d\n", status);
+               "FORT: Register Inbound Transport V4: Error: %x\n", status);
     return status;
   }
 
@@ -600,7 +621,7 @@ fort_callout_install (PDEVICE_OBJECT device)
   status = FwpsCalloutRegister0(device, &c, &g_device->stat.out_transport4_id);
   if (!NT_SUCCESS(status)) {
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-               "FORT: Register Outbound Transport V4: Error: %d\n", status);
+               "FORT: Register Outbound Transport V4: Error: %x\n", status);
     return status;
   }
 
@@ -667,7 +688,7 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
     if ((status = fort_prov_register(engine, conf_flags.prov_boot)))
       goto cleanup;
 
-    goto stat;
+    goto stat_prov;
   }
 
   /* Check flow filter */
@@ -676,10 +697,10 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
       fort_prov_flow_unregister(engine);
     }
 
- stat:
+ stat_prov:
     if (conf_flags.log_stat) {
       if ((status = fort_prov_flow_register(engine,
-          (conf_flags.ignore_tcp_rst != 0))))
+          (conf_flags.ignore_tcp_rst || stat->limit_bits))))
         goto cleanup;
     }
   }
@@ -703,7 +724,7 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
  end:
   if (!NT_SUCCESS(status)) {
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-               "FORT: Callout Reauth: Error: %d\n", status);
+               "FORT: Callout Reauth: Error: %x\n", status);
   }
 
   return status;
@@ -715,8 +736,8 @@ fort_callout_timer (void)
   PFORT_BUFFER buf = &g_device->buffer;
   PFORT_STAT stat = &g_device->stat;
 
-  KLOCK_QUEUE_HANDLE stat_lock_queue;
   KLOCK_QUEUE_HANDLE buf_lock_queue;
+  KLOCK_QUEUE_HANDLE stat_lock_queue;
 
   PIRP irp = NULL;
   ULONG_PTR info;
@@ -755,6 +776,19 @@ fort_callout_timer (void)
   if (irp != NULL) {
     fort_request_complete_info(irp, STATUS_SUCCESS, info);
   }
+
+  /* Flush deferred packets */
+  fort_defer_dpc_flush(&g_device->defer, fort_transport_inject_complete);
+}
+
+static void
+fort_callout_timer_force (void)
+{
+  KLOCK_QUEUE_HANDLE lock_queue;
+
+  KeAcquireInStackQueuedSpinLock(&g_device->conf_lock, &lock_queue);
+  fort_callout_timer();  // Should be called from DISPATCH_LEVEL!
+  KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
 static NTSTATUS
@@ -903,7 +937,7 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
 
   if (!NT_SUCCESS(status)) {
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-               "FORT: Device Control: Error: %d\n", status);
+               "FORT: Device Control: Error: %x\n", status);
   }
 
   fort_request_complete_info(irp, status, info);
@@ -912,14 +946,71 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
 }
 
 static void
+fort_power_callback (PVOID context, PVOID event, PVOID specifics)
+{
+  BOOL power_off;
+
+  UNUSED(context);
+
+  if (event != (PVOID) PO_CB_SYSTEM_STATE_LOCK)
+    return;
+
+  power_off = (specifics == NULL);
+  g_device->power_off = power_off;
+
+  if (power_off) {
+    fort_callout_timer_force();
+  }
+}
+
+static NTSTATUS
+fort_power_callback_register (void)
+{
+  OBJECT_ATTRIBUTES obj_attr;
+  UNICODE_STRING obj_name;
+  NTSTATUS status;
+
+  RtlInitUnicodeString(&obj_name, L"\\Callback\\PowerState");
+
+  InitializeObjectAttributes(&obj_attr, &obj_name,
+    OBJ_CASE_INSENSITIVE, NULL, NULL);
+
+  status = ExCreateCallback(&g_device->power_cb_obj, &obj_attr, FALSE, TRUE);
+
+  if (NT_SUCCESS(status)) {
+    g_device->power_cb_reg = ExRegisterCallback(g_device->power_cb_obj,
+      fort_power_callback, NULL);
+  }
+
+  return status;
+}
+
+static void
+fort_power_callback_unregister (void)
+{
+  if (g_device->power_cb_reg != NULL) {
+    ExUnregisterCallback(g_device->power_cb_reg);
+  }
+
+  if (g_device->power_cb_obj != NULL) {
+    ObDereferenceObject(g_device->power_cb_obj);
+  }
+}
+
+static void
 fort_driver_unload (PDRIVER_OBJECT driver)
 {
   UNICODE_STRING device_link;
 
   if (g_device != NULL) {
+    fort_callout_timer_force();
+
     fort_timer_close(&g_device->timer);
+    fort_defer_close(&g_device->defer);
     fort_stat_close(&g_device->stat);
     fort_buffer_close(&g_device->buffer);
+
+    fort_power_callback_unregister();
 
     if (!g_device->prov_boot) {
       fort_prov_unregister(0);
@@ -993,6 +1084,7 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 
       fort_buffer_open(&g_device->buffer);
       fort_stat_open(&g_device->stat);
+      fort_defer_open(&g_device->defer);
       fort_timer_open(&g_device->timer, &fort_callout_timer);
 
       KeInitializeSpinLock(&g_device->conf_lock);
@@ -1011,12 +1103,17 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
       if (NT_SUCCESS(status)) {
         status = fort_prov_register(0, g_device->prov_boot);
       }
+
+      /* Register power state change callback */
+      if (NT_SUCCESS(status)) {
+        status = fort_power_callback_register();
+      }
     }
   }
 
   if (!NT_SUCCESS(status)) {
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-               "FORT: Entry: Error: %d\n", status);
+               "FORT: Entry: Error: %x\n", status);
     fort_driver_unload(driver);
   }
 

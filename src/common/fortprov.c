@@ -245,10 +245,7 @@ fort_prov_flow_register (HANDLE transEngine, BOOL filter_transport)
       || (status = FwpmFilterAdd0(engine, &dfilter4, NULL, NULL))
       || (filter_transport
         && ((status = FwpmFilterAdd0(engine, &itfilter4, NULL, NULL))
-#if 0
-        || (status = FwpmFilterAdd0(engine, &otfilter4, NULL, NULL))
-#endif
-        ))
+        || (status = FwpmFilterAdd0(engine, &otfilter4, NULL, NULL))))
       ) {
     fort_prov_trans_abort(engine);
   }

@@ -30,6 +30,8 @@ typedef struct fort_stat_proc {
 
 typedef struct fort_stat_flow_opt {
   UCHAR speed_limit	: 1;
+  UCHAR defer_in	: 1;
+  UCHAR defer_out	: 1;
   UCHAR group_index;
   UINT16 proc_index;
 } FORT_STAT_FLOW_OPT, *PFORT_STAT_FLOW_OPT;
@@ -43,7 +45,7 @@ typedef struct fort_stat_flow {
 #if defined(_WIN64)
     UINT64 flow_id;
 #else
-    FORT_STAT_FLOW_OPT opt;
+    FORT_STAT_FLOW_OPT volatile opt;
 #endif
     void *data;
   };
@@ -51,7 +53,7 @@ typedef struct fort_stat_flow {
   tommy_key_t flow_hash;
 
 #if defined(_WIN64)
-  FORT_STAT_FLOW_OPT opt;
+  FORT_STAT_FLOW_OPT volatile opt;
 #else
   UINT64 flow_id;
 #endif
@@ -345,6 +347,7 @@ fort_stat_flow_add (PFORT_STAT stat, UINT64 flow_id,
   }
 
   flow->opt.speed_limit = (UCHAR) speed_limit;
+  flow->opt.defer_in = flow->opt.defer_out = FALSE;
   flow->opt.group_index = group_index;
   flow->opt.proc_index = proc_index;
 
@@ -525,12 +528,22 @@ fort_stat_flow_classify (PFORT_STAT stat, UINT64 flowContext,
         PFORT_STAT_GROUP group = &stat->groups[group_index];
         UINT32 *group_bytes = inbound ? &group->traf.in_bytes
           : &group->traf.out_bytes;
+        UCHAR defer_flow = TRUE;
 
         if (*group_bytes < limit_bytes) {
           // Add traffic to app. group
           *group_bytes += data_len;
+
+          defer_flow = (*group_bytes >= limit_bytes);
         } else {
           limited = TRUE;
+        }
+
+        // Defer ACK
+        if (inbound) {
+          flow->opt.defer_out = defer_flow;
+        } else {
+          flow->opt.defer_in = defer_flow;
         }
       }
     }
