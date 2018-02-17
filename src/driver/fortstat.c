@@ -324,7 +324,7 @@ fort_stat_flow_add (PFORT_STAT stat, UINT64 flow_id,
     } else {
       const tommy_count_t size = tommy_arrayof_size(&stat->flows);
 
-      // TODO: tommy_arrayof_grow(): check calloc()'s result for NULL
+      /* TODO: tommy_arrayof_grow(): check calloc()'s result for NULL */
       if (tommy_arrayof_grow(&stat->flows, size + 1), 0)
         return STATUS_INSUFFICIENT_RESOURCES;
 
@@ -491,7 +491,7 @@ fort_stat_flow_delete (PFORT_STAT stat, UINT64 flowContext)
   PFORT_STAT_FLOW flow = (PFORT_STAT_FLOW) flowContext;
 
   if (stat->closed)
-    return;  // double check to avoid deadlock after remove-flow-context
+    return;  /* double check to avoid deadlock after remove-flow-context */
 
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
   if (!stat->closed) {
@@ -515,7 +515,7 @@ fort_stat_flow_classify (PFORT_STAT stat, UINT64 flowContext,
     UINT32 *proc_bytes = inbound ? &proc->traf.in_bytes
       : &proc->traf.out_bytes;
 
-    // Add traffic to process
+    /* Add traffic to process */
     *proc_bytes += data_len;
 
     if (flow->opt.speed_limit) {
@@ -531,7 +531,7 @@ fort_stat_flow_classify (PFORT_STAT stat, UINT64 flowContext,
         UCHAR defer_flow = TRUE;
 
         if (*group_bytes < limit_bytes) {
-          // Add traffic to app. group
+          /* Add traffic to app. group */
           *group_bytes += data_len;
 
           defer_flow = (*group_bytes >= limit_bytes);
@@ -539,7 +539,7 @@ fort_stat_flow_classify (PFORT_STAT stat, UINT64 flowContext,
           limited = TRUE;
         }
 
-        // Defer ACK
+        /* Defer ACK */
         if (inbound) {
           flow->opt.defer_out = defer_flow;
         } else {

@@ -54,9 +54,9 @@ fort_timer_update (PFORT_TIMER timer, BOOL run)
   timer->running = run;
 
   if (run) {
-    const LONG period = 500;  // 500ms
+    const LONG period = 500;  /* 500ms */
     LARGE_INTEGER due;
-    due.QuadPart = period * -10000;  // 500000us
+    due.QuadPart = period * -10000;  /* 500000us */
 
     KeSetTimerEx(&timer->id, due, period, &timer->dpc);
   } else {

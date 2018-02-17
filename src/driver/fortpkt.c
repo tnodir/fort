@@ -15,20 +15,20 @@
 #define TCP_FLAG_CWR	0x0080
 
 typedef struct tcp_header {
-  UINT16 source;	// Source Port
-  UINT16 dest;		// Destination Port
+  UINT16 source;	/* Source Port */
+  UINT16 dest;		/* Destination Port */
 
-  UINT32 seq;		// Sequence number
-  UINT32 ack_seq;	// Acknowledgement number
+  UINT32 seq;		/* Sequence number */
+  UINT32 ack_seq;	/* Acknowledgement number */
 
-  UCHAR res1	: 4;	// Unused
-  UCHAR doff	: 4;	// Data offset
+  UCHAR res1	: 4;	/* Unused */
+  UCHAR doff	: 4;	/* Data offset */
 
-  UCHAR flags;		// Flags
+  UCHAR flags;		/* Flags */
 
-  UINT16 window;	// Window size
-  UINT16 csum;		// Checksum
-  UINT16 urg_ptr;	// Urgent Pointer
+  UINT16 window;	/* Window size */
+  UINT16 csum;		/* Checksum */
+  UINT16 urg_ptr;	/* Urgent Pointer */
 } TCP_HEADER, *PTCP_HEADER;
 
 typedef struct fort_packet_in {
@@ -143,7 +143,7 @@ fort_defer_add (PFORT_DEFER defer,
   } else {
     const tommy_count_t size = tommy_arrayof_size(&defer->packets);
 
-    // TODO: tommy_arrayof_grow(): check calloc()'s result for NULL
+    /* TODO: tommy_arrayof_grow(): check calloc()'s result for NULL */
     if (tommy_arrayof_grow(&defer->packets, size + 1), 0) {
       status = STATUS_INSUFFICIENT_RESOURCES;
       goto end;

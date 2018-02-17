@@ -3,7 +3,7 @@
 #define NDIS_WDM	1
 #define NDIS630		1
 
-#define WIN9X_COMPAT_SPINLOCK  // XXX: Support Windows 7: KeInitializeSpinLock()
+#define WIN9X_COMPAT_SPINLOCK  /* XXX: Support Windows 7: KeInitializeSpinLock() */
 
 #include <wdm.h>
 #include <fwpmk.h>
@@ -230,7 +230,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   remote_ip = inFixedValues->incomingValue[remoteIpField].value.uint32;
 
   if ((flags & FWP_CONDITION_FLAG_IS_LOOPBACK)
-      || remote_ip == 0xFFFFFFFF) {  // Local broadcast
+      || remote_ip == 0xFFFFFFFF) {  /* Local broadcast */
     fort_callout_classify_permit(filter, classifyOut);
     return;
   }
@@ -239,7 +239,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   if (conf_ref == NULL) {
     if (g_device->prov_boot || ((flags & FWP_CONDITION_FLAG_IS_REAUTHORIZE)
-        && !g_device->was_conf)) {  // Block existing flows after driver installation to use flow-contexts
+        && !g_device->was_conf)) {  /* Block existing flows after driver installation to use flow-contexts */
       fort_callout_classify_block(classifyOut);
     } else {
       fort_callout_classify_continue(classifyOut);
@@ -260,7 +260,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
     goto block;
 
   process_id = (UINT32) inMetaValues->processId;
-  path_len = inMetaValues->processPath->size - sizeof(WCHAR);  // chop terminating zero
+  path_len = inMetaValues->processPath->size - sizeof(WCHAR);  /* chop terminating zero */
   path = inMetaValues->processPath->data;
 
   if (fort_conf_ip_inet_included(&conf_ref->conf, remote_ip)) {
@@ -787,7 +787,7 @@ fort_callout_timer_force (void)
   KLOCK_QUEUE_HANDLE lock_queue;
 
   KeAcquireInStackQueuedSpinLock(&g_device->conf_lock, &lock_queue);
-  fort_callout_timer();  // Should be called from DISPATCH_LEVEL!
+  fort_callout_timer();  /* Should be called from DISPATCH_LEVEL! */
   KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
@@ -804,7 +804,7 @@ fort_device_create (PDEVICE_OBJECT device, PIRP irp)
 
     KeAcquireInStackQueuedSpinLock(&g_device->conf_lock, &lock_queue);
     if (g_device->is_opened) {
-      status = STATUS_SHARING_VIOLATION;  // Only one client may connect
+      status = STATUS_SHARING_VIOLATION;  /* Only one client may connect */
     } else {
       g_device->is_opened = TRUE;
     }
@@ -1028,8 +1028,8 @@ fort_driver_unload (PDRIVER_OBJECT driver)
 static NTSTATUS
 fort_bfe_wait (void) {
   LARGE_INTEGER delay;
-  delay.QuadPart = -5000000;  // sleep 500000us (500ms)
-  int count = 600;  // wait for 5 minutes
+  delay.QuadPart = -5000000;  /* sleep 500000us (500ms) */
+  int count = 600;  /* wait for 5 minutes */
 
   do {
     const FWPM_SERVICE_STATE state = FwpmBfeStateGet0();
