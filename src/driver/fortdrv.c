@@ -436,34 +436,35 @@ fort_callout_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                                     FWPS_CLASSIFY_OUT0 *classifyOut,
                                     int ipProtoField, BOOL inbound)
 {
+  PNET_BUFFER netBuf;
   const IPPROTO ip_proto = (IPPROTO) inFixedValues->incomingValue[
     ipProtoField].value.uint8;
   const BOOL is_udp = (ip_proto == IPPROTO_UDP);
 
   if (!(is_udp || FWPS_IS_METADATA_FIELD_PRESENT(inMetaValues,
         FWPS_METADATA_FIELD_ALE_CLASSIFY_REQUIRED))
-      && netBufList != NULL) {
-
+      && netBufList != NULL
+      && (netBuf = NET_BUFFER_LIST_FIRST_NB(netBufList)) != NULL) {
     PFORT_STAT_FLOW flow = (PFORT_STAT_FLOW) flowContext;
 
     const BOOL ignore_tcp_rst = inbound && g_device->conf_flags.ignore_tcp_rst;
-    const BOOL defer_flow = flow->opt.speed_limit && !g_device->power_off
-      && (inbound ? flow->opt.defer_in : flow->opt.defer_out);
 
-    if (ignore_tcp_rst || defer_flow) {
-      const PNET_BUFFER netBuf = NET_BUFFER_LIST_FIRST_NB(netBufList);
+    const UINT32 defer_flag = inbound
+      ? FORT_STAT_FLOW_DEFER_IN : FORT_STAT_FLOW_DEFER_OUT;
+    const UINT32 flow_flags = FORT_STAT_FLOW_SPEED_LIMIT | defer_flag;
+    const BOOL defer_flow = (flow->opt.flags & flow_flags) == flow_flags
+      && !g_device->power_off;
+
+    /* Position in the packet data:
+     * FWPS_LAYER_INBOUND_TRANSPORT_V4: The beginning of the data.
+     * FWPS_LAYER_OUTBOUND_TRANSPORT_V4: The beginning of the transport header.
+     */
+    const UINT32 headerOffset = inbound ? 0 : sizeof(TCP_HEADER);
+
+    if (ignore_tcp_rst) {
       TCP_HEADER buf;
       PTCP_HEADER tcpHeader;
       UINT32 tcpFlags;
-
-      if (netBuf == NULL)
-        goto permit;
-
-      /* Position in the packet data:
-       * FWPS_LAYER_INBOUND_TRANSPORT_V4: The beginning of the data.
-       * FWPS_LAYER_OUTBOUND_TRANSPORT_V4: The beginning of the transport header.
-       */
-      const UINT32 headerOffset = inbound ? 0 : sizeof(TCP_HEADER);
 
       if (headerOffset != 0) {
         NdisRetreatNetBufferDataStart(netBuf, headerOffset, 0, NULL);
@@ -479,22 +480,20 @@ fort_callout_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
       if (tcpHeader == NULL)
         goto permit;
 
-      if (ignore_tcp_rst && (tcpFlags & TCP_FLAG_RST))
+      if (tcpFlags & TCP_FLAG_RST)
+        goto block;
+    }
+
+    if (defer_flow && NET_BUFFER_DATA_LENGTH(netBuf) == headerOffset) {
+      const NTSTATUS status = fort_defer_add(&g_device->defer,
+        inFixedValues, inMetaValues, netBufList, inbound);
+
+      if (NT_SUCCESS(status))
         goto block;
 
-      if (defer_flow //&& (tcpFlags & TCP_FLAG_ACK)
-          && NET_BUFFER_DATA_LENGTH(netBuf) == headerOffset) {
-        NTSTATUS status;
-
-        status = fort_defer_add(&g_device->defer, inFixedValues, inMetaValues,
-          netBufList, inbound);
-
-        if (!NT_SUCCESS(status)) {
-          DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                     "FORT: Transport Classify: Defer error: %x\n", status);
-        }
-
-        goto block;
+      if (status == STATUS_CANT_TERMINATE_SELF) {
+        /* Clear ACK deferring */
+        flow->opt.flags &= ~defer_flag;
       }
     }
   }

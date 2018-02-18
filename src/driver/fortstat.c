@@ -28,10 +28,12 @@ typedef struct fort_stat_proc {
   };
 } FORT_STAT_PROC, *PFORT_STAT_PROC;
 
+#define FORT_STAT_FLOW_SPEED_LIMIT	0x01
+#define FORT_STAT_FLOW_DEFER_IN		0x02
+#define FORT_STAT_FLOW_DEFER_OUT	0x04
+
 typedef struct fort_stat_flow_opt {
-  UCHAR speed_limit	: 1;
-  UCHAR defer_in	: 1;
-  UCHAR defer_out	: 1;
+  UCHAR volatile flags;
   UCHAR group_index;
   UINT16 proc_index;
 } FORT_STAT_FLOW_OPT, *PFORT_STAT_FLOW_OPT;
@@ -45,7 +47,7 @@ typedef struct fort_stat_flow {
 #if defined(_WIN64)
     UINT64 flow_id;
 #else
-    FORT_STAT_FLOW_OPT volatile opt;
+    FORT_STAT_FLOW_OPT opt;
 #endif
     void *data;
   };
@@ -346,8 +348,7 @@ fort_stat_flow_add (PFORT_STAT stat, UINT64 flow_id,
     fort_stat_proc_inc(stat, proc_index);
   }
 
-  flow->opt.speed_limit = (UCHAR) speed_limit;
-  flow->opt.defer_in = flow->opt.defer_out = FALSE;
+  flow->opt.flags = (speed_limit ? FORT_STAT_FLOW_SPEED_LIMIT : 0);
   flow->opt.group_index = group_index;
   flow->opt.proc_index = proc_index;
 
@@ -518,7 +519,7 @@ fort_stat_flow_classify (PFORT_STAT stat, UINT64 flowContext,
     /* Add traffic to process */
     *proc_bytes += data_len;
 
-    if (flow->opt.speed_limit) {
+    if (flow->opt.flags & FORT_STAT_FLOW_SPEED_LIMIT) {
       const UCHAR group_index = flow->opt.group_index;
       const PFORT_CONF_LIMIT group_limit = &stat->limits[group_index];
       const UINT32 limit_bytes = inbound ? group_limit->in_bytes
@@ -528,7 +529,7 @@ fort_stat_flow_classify (PFORT_STAT stat, UINT64 flowContext,
         PFORT_STAT_GROUP group = &stat->groups[group_index];
         UINT32 *group_bytes = inbound ? &group->traf.in_bytes
           : &group->traf.out_bytes;
-        UCHAR defer_flow = TRUE;
+        BOOL defer_flow = TRUE;
 
         if (*group_bytes < limit_bytes) {
           /* Add traffic to app. group */
@@ -540,10 +541,14 @@ fort_stat_flow_classify (PFORT_STAT stat, UINT64 flowContext,
         }
 
         /* Defer ACK */
-        if (inbound) {
-          flow->opt.defer_out = defer_flow;
-        } else {
-          flow->opt.defer_in = defer_flow;
+        {
+          const UINT32 defer_flag = inbound
+            ? FORT_STAT_FLOW_DEFER_OUT : FORT_STAT_FLOW_DEFER_IN;
+
+          if (defer_flow)
+            flow->opt.flags |= defer_flag;
+          else
+            flow->opt.flags &= ~defer_flag;
         }
       }
     }

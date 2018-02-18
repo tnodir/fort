@@ -120,6 +120,16 @@ fort_defer_add (PFORT_DEFER defer,
   if (defer->injection4_id == INVALID_HANDLE_VALUE)
     return STATUS_FWP_TCPIP_NOT_READY;
 
+  /* Skip self injected packet */
+  {
+    const FWPS_PACKET_INJECTION_STATE state = FwpsQueryPacketInjectionState0(
+      defer->injection4_id, netBufList, NULL);
+
+    if (state == FWPS_PACKET_INJECTED_BY_SELF
+        || state == FWPS_PACKET_PREVIOUSLY_INJECTED_BY_SELF)
+      return STATUS_CANT_TERMINATE_SELF;
+  }
+
   /* Skip IpSec protected packet */
   if (inbound) {
     FWPS_PACKET_LIST_INFORMATION info;
@@ -156,6 +166,7 @@ fort_defer_add (PFORT_DEFER defer,
     defer->packet_head = defer->packet_tail = pkt;
   } else {
     defer->packet_tail->next = pkt;
+    defer->packet_tail = pkt;
   }
 
   pkt->inbound = inbound;
