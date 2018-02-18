@@ -325,19 +325,29 @@ fort_defer_inject_out (PFORT_DEFER defer, PFORT_PACKET pkt,
 }
 
 static void
-fort_defer_dpc_flush (PFORT_DEFER defer, FORT_INJECT_COMPLETE_FUNC complete_func)
+fort_defer_flush (PFORT_DEFER defer,
+                  FORT_INJECT_COMPLETE_FUNC complete_func,
+                  BOOL dispatchLevel)
 {
   KLOCK_QUEUE_HANDLE lock_queue;
   PFORT_PACKET pkt;
 
-  KeAcquireInStackQueuedSpinLockAtDpcLevel(&defer->lock, &lock_queue);
+  if (dispatchLevel) {
+    KeAcquireInStackQueuedSpinLockAtDpcLevel(&defer->lock, &lock_queue);
+  } else {
+    KeAcquireInStackQueuedSpinLock(&defer->lock, &lock_queue);
+  }
 
   pkt = defer->packet_head;
   if (pkt != NULL) {
     defer->packet_head = defer->packet_tail = NULL;
   }
 
-  KeReleaseInStackQueuedSpinLockFromDpcLevel(&lock_queue);
+  if (dispatchLevel) {
+    KeReleaseInStackQueuedSpinLockFromDpcLevel(&lock_queue);
+  } else {
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+  }
 
   while (pkt != NULL) {
     PFORT_PACKET pkt_next = pkt->next;

@@ -730,6 +730,12 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
 }
 
 static void
+fort_callout_defer_flush (BOOL dispatchLevel)
+{
+  fort_defer_flush(&g_device->defer, fort_transport_inject_complete, dispatchLevel);
+}
+
+static void
 fort_callout_timer (void)
 {
   PFORT_BUFFER buf = &g_device->buffer;
@@ -777,17 +783,7 @@ fort_callout_timer (void)
   }
 
   /* Flush deferred packets */
-  fort_defer_dpc_flush(&g_device->defer, fort_transport_inject_complete);
-}
-
-static void
-fort_callout_timer_force (void)
-{
-  KLOCK_QUEUE_HANDLE lock_queue;
-
-  KeAcquireInStackQueuedSpinLock(&g_device->conf_lock, &lock_queue);
-  fort_callout_timer();  /* Should be called from DISPATCH_LEVEL! */
-  KeReleaseInStackQueuedSpinLock(&lock_queue);
+  fort_callout_defer_flush(TRUE);
 }
 
 static NTSTATUS
@@ -958,7 +954,7 @@ fort_power_callback (PVOID context, PVOID event, PVOID specifics)
   g_device->power_off = power_off;
 
   if (power_off) {
-    fort_callout_timer_force();
+    fort_callout_defer_flush(FALSE);
   }
 }
 
@@ -1002,7 +998,7 @@ fort_driver_unload (PDRIVER_OBJECT driver)
   UNICODE_STRING device_link;
 
   if (g_device != NULL) {
-    fort_callout_timer_force();
+    fort_callout_defer_flush(FALSE);
 
     fort_timer_close(&g_device->timer);
     fort_defer_close(&g_device->defer);
