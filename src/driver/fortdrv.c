@@ -363,7 +363,6 @@ fort_callout_flow_classify_v4 (const FWPS_INCOMING_METADATA_VALUES0 *inMetaValue
 
   if (fort_stat_flow_classify(&g_device->stat, flowContext,
       headerSize + dataSize, inbound)) {
-
     fort_callout_classify_drop(classifyOut);
   } else {
     fort_callout_classify_permit(filter, classifyOut);
@@ -449,10 +448,10 @@ fort_callout_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
     const BOOL ignore_tcp_rst = inbound && g_device->conf_flags.ignore_tcp_rst;
 
-    const UINT32 defer_flag = inbound
+    const UCHAR defer_flag = inbound
       ? FORT_STAT_FLOW_DEFER_IN : FORT_STAT_FLOW_DEFER_OUT;
-    const UINT32 flow_flags = FORT_STAT_FLOW_SPEED_LIMIT | defer_flag;
-    const BOOL defer_flow = (flow->opt.flags & flow_flags) == flow_flags
+    const UCHAR flow_flags = FORT_STAT_FLOW_SPEED_LIMIT | defer_flag;
+    const BOOL defer_flow = (fort_stat_flow_flags(flow) & flow_flags) == flow_flags
       && !g_device->power_off;
 
     /* Position in the packet data:
@@ -493,7 +492,7 @@ fort_callout_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
       if (status == STATUS_CANT_TERMINATE_SELF) {
         /* Clear ACK deferring */
-        flow->opt.flags &= ~defer_flag;
+        fort_stat_flow_flags_clear(flow, defer_flag);
       }
     }
   }

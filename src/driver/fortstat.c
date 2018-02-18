@@ -55,7 +55,7 @@ typedef struct fort_stat_flow {
   tommy_key_t flow_hash;
 
 #if defined(_WIN64)
-  FORT_STAT_FLOW_OPT volatile opt;
+  FORT_STAT_FLOW_OPT opt;
 #else
   UINT64 flow_id;
 #endif
@@ -248,6 +248,24 @@ fort_stat_proc_add (PFORT_STAT stat, UINT32 process_id)
   stat->proc_count++;
 
   return proc_index;
+}
+
+static UCHAR
+fort_stat_flow_flags (PFORT_STAT_FLOW flow)
+{
+  return flow->opt.flags;
+}
+
+static void
+fort_stat_flow_flags_set (PFORT_STAT_FLOW flow, UCHAR flags)
+{
+  flow->opt.flags |= flags;
+}
+
+static void
+fort_stat_flow_flags_clear (PFORT_STAT_FLOW flow, UCHAR flags)
+{
+  flow->opt.flags &= ~flags;
 }
 
 static void
@@ -542,13 +560,13 @@ fort_stat_flow_classify (PFORT_STAT stat, UINT64 flowContext,
 
         /* Defer ACK */
         {
-          const UINT32 defer_flag = inbound
+          const UCHAR defer_flag = inbound
             ? FORT_STAT_FLOW_DEFER_OUT : FORT_STAT_FLOW_DEFER_IN;
 
           if (defer_flow)
-            flow->opt.flags |= defer_flag;
+            fort_stat_flow_flags_set(flow, defer_flag);
           else
-            flow->opt.flags &= ~defer_flag;
+            fort_stat_flow_flags_clear(flow, defer_flag);
         }
       }
     }
