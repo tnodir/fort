@@ -22,7 +22,9 @@ FirewallConf::FirewallConf(QObject *parent) :
     m_trafHourKeepDays(DEFAULT_TRAF_HOUR_KEEP_DAYS),
     m_trafDayKeepDays(DEFAULT_TRAF_DAY_KEEP_DAYS),
     m_trafMonthKeepMonths(DEFAULT_TRAF_MONTH_KEEP_MONTHS),
-    m_trafUnit(UnitAdaptive)
+    m_trafUnit(UnitAdaptive),
+    m_quotaDayMb(0),
+    m_quotaMonthMb(0)
 {
     m_addressGroups.append(new AddressGroup(this));
     m_addressGroups.append(new AddressGroup(this));
@@ -111,7 +113,7 @@ void FirewallConf::setAppAllowAll(bool appAllowAll)
 void FirewallConf::setMonthStart(int monthStart)
 {
     if (m_monthStart != monthStart) {
-        m_monthStart = monthStart;
+        m_monthStart = uint(monthStart);
         emit monthStartChanged();
     }
 }
@@ -145,6 +147,22 @@ void FirewallConf::setTrafUnit(int trafUnit)
     if (m_trafUnit != trafUnit) {
         m_trafUnit = static_cast<TrafUnit>(trafUnit);
         emit trafUnitChanged();
+    }
+}
+
+void FirewallConf::setQuotaDayMb(quint32 quotaDayMb)
+{
+    if (m_quotaDayMb != quotaDayMb) {
+        m_quotaDayMb = quotaDayMb;
+        emit quotaDayMbChanged();
+    }
+}
+
+void FirewallConf::setQuotaMonthMb(quint32 quotaMonthMb)
+{
+    if (m_quotaMonthMb != quotaMonthMb) {
+        m_quotaMonthMb = quotaMonthMb;
+        emit quotaMonthMbChanged();
     }
 }
 
@@ -240,6 +258,9 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     setTrafHourKeepDays(o.trafHourKeepDays());
     setTrafDayKeepDays(o.trafDayKeepDays());
     setTrafMonthKeepMonths(o.trafMonthKeepMonths());
+
+    setQuotaDayMb(o.quotaDayMb());
+    setQuotaMonthMb(o.quotaMonthMb());
 
     copyImmediateFlags(o);
 }

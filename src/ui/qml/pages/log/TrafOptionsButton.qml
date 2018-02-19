@@ -40,6 +40,27 @@ ButtonPopup {
             qsTranslate("qml", "3 years")
         ]
 
+    readonly property var quotaValues: [
+        10, 0, 100, 500, 1024, 8 * 1024, 10 * 1024, 30 * 1024,
+        50 * 1024, 100 * 1024
+    ]
+
+    readonly property var quotaNames: {
+        var list = translationManager.dummyBool
+                && [qsTranslate("qml", "Custom"),
+                    qsTranslate("qml", "Disabled")];
+
+        const n = quotaValues.length;
+        for (var i = list.length; i < n; ++i) {
+            list.push(formatQuota(quotaValues[i]));
+        }
+        return list;
+    }
+
+    function formatQuota(mbytes) {
+        return netUtil.formatDataSize(mbytes * 1024 * 1024, 1);
+    }
+
     ColumnLayout {
         SpinComboRow {
             values: {
@@ -135,6 +156,56 @@ ButtonPopup {
                         return;
 
                     firewallConf.trafMonthKeepMonths = value;
+
+                    setConfFlagsEdited();
+                }
+            }
+        }
+
+        HSeparator {}
+
+        SpinComboRow {
+            names: quotaNames
+            values: quotaValues
+            checkBox {
+                indicator: null
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Day's Quota:")
+            }
+            field {
+                from: 0
+                to: 999 * 1024
+                value: firewallConf.quotaDayMb
+                onValueChanged: {
+                    const value = field.value;
+                    if (firewallConf.quotaDayMb == value)
+                        return;
+
+                    firewallConf.quotaDayMb = value;
+
+                    setConfFlagsEdited();
+                }
+            }
+        }
+
+        SpinComboRow {
+            names: quotaNames
+            values: quotaValues
+            checkBox {
+                indicator: null
+                text: translationManager.dummyBool
+                      && qsTranslate("qml", "Month's Quota:")
+            }
+            field {
+                from: 0
+                to: 999 * 1024
+                value: firewallConf.quotaMonthMb
+                onValueChanged: {
+                    const value = field.value;
+                    if (firewallConf.quotaMonthMb == value)
+                        return;
+
+                    firewallConf.quotaMonthMb = value;
 
                     setConfFlagsEdited();
                 }

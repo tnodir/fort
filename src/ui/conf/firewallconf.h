@@ -32,6 +32,8 @@ class FirewallConf : public QObject
     Q_PROPERTY(int trafDayKeepDays READ trafDayKeepDays WRITE setTrafDayKeepDays NOTIFY trafDayKeepDaysChanged)
     Q_PROPERTY(int trafMonthKeepMonths READ trafMonthKeepMonths WRITE setTrafMonthKeepMonths NOTIFY trafMonthKeepMonthsChanged)
     Q_PROPERTY(int trafUnit READ trafUnit WRITE setTrafUnit NOTIFY trafUnitChanged)
+    Q_PROPERTY(quint32 quotaDayMb READ quotaDayMb WRITE setQuotaDayMb NOTIFY quotaDayMbChanged)
+    Q_PROPERTY(quint32 quotaMonthMb READ quotaMonthMb WRITE setQuotaMonthMb NOTIFY quotaMonthMbChanged)
     Q_PROPERTY(bool hasPassword READ hasPassword NOTIFY passwordHashChanged)
     Q_PROPERTY(QString passwordHash READ passwordHash WRITE setPasswordHash NOTIFY passwordHashChanged)
     Q_PROPERTY(AddressGroup *inetAddressGroup READ inetAddressGroup NOTIFY addressGroupsChanged)
@@ -97,6 +99,12 @@ public:
     int trafUnit() const { return m_trafUnit; }
     void setTrafUnit(int trafUnit);
 
+    quint32 quotaDayMb() const { return m_quotaDayMb; }
+    void setQuotaDayMb(quint32 quotaDayMb);
+
+    quint32 quotaMonthMb() const { return m_quotaMonthMb; }
+    void setQuotaMonthMb(quint32 quotaMonthMb);
+
     bool hasPassword() const { return !m_passwordHash.isEmpty(); }
 
     QString passwordHash() const { return m_passwordHash; }
@@ -137,6 +145,8 @@ signals:
     void trafDayKeepDaysChanged();
     void trafMonthKeepMonthsChanged();
     void trafUnitChanged();
+    void quotaDayMbChanged();
+    void quotaMonthMbChanged();
     void passwordHashChanged();
     void addressGroupsChanged();
     void appGroupsChanged();
@@ -169,6 +179,9 @@ private:
     int m_trafMonthKeepMonths;
 
     TrafUnit m_trafUnit;
+
+    quint32 m_quotaDayMb;
+    quint32 m_quotaMonthMb;
 
     QString m_passwordHash;
 

@@ -4,6 +4,7 @@
 #include "../util/dateutil.h"
 #include "../util/fileutil.h"
 #include "databasesql.h"
+#include "quotamanager.h"
 #include "sqlite/sqlitedb.h"
 #include "sqlite/sqliteengine.h"
 #include "sqlite/sqlitestmt.h"
@@ -11,9 +12,14 @@
 #define INVALID_APP_ID  qint64(-1)
 
 DatabaseManager::DatabaseManager(const QString &filePath,
+                                 QuotaManager *quotaManager,
                                  QObject *parent) :
     QObject(parent),
+    m_lastTrafHour(0),
+    m_lastTrafDay(0),
+    m_lastTrafMonth(0),
     m_filePath(filePath),
+    m_quotaManager(quotaManager),
     m_conf(nullptr),
     m_sqliteDb(new SqliteDb())
 {
@@ -36,6 +42,8 @@ void DatabaseManager::setFirewallConf(const FirewallConf *conf)
     if (m_conf && !m_conf->logStat()) {
         logClear();
     }
+
+    initializeQuota();
 }
 
 bool DatabaseManager::initialize()
@@ -52,10 +60,30 @@ bool DatabaseManager::initialize()
     return fileExists || createTables();
 }
 
+void DatabaseManager::initializeQuota()
+{
+    m_quotaManager->setQuotaDayBytes(
+                m_conf ? qint64(m_conf->quotaDayMb()) * 1024 * 1024 : 0);
+    m_quotaManager->setQuotaMonthBytes(
+                m_conf ? qint64(m_conf->quotaMonthMb()) * 1024 * 1024 : 0);
+
+    const qint64 unixTime = DateUtil::getUnixTime();
+    const qint32 trafDay = DateUtil::getUnixDay(unixTime);
+    const qint32 trafMonth = DateUtil::getUnixMonth(
+                unixTime, m_conf ? m_conf->monthStart() : 1);
+
+    qint64 inBytes, outBytes;
+
+    getTraffic(DatabaseSql::sqlSelectTrafDay, trafDay, inBytes, outBytes);
+    m_quotaManager->setTrafDayBytes(inBytes);
+
+    getTraffic(DatabaseSql::sqlSelectTrafMonth, trafMonth, inBytes, outBytes);
+    m_quotaManager->setTrafMonthBytes(inBytes);
+}
+
 void DatabaseManager::clear()
 {
     clearAppIds();
-
     clearStmts();
 
     m_sqliteDb->close();
@@ -63,6 +91,8 @@ void DatabaseManager::clear()
     FileUtil::removeFile(m_filePath);
 
     initialize();
+
+    m_quotaManager->clear();
 }
 
 void DatabaseManager::clearStmts()
@@ -134,10 +164,14 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
     const qint32 trafMonth = isNewDay
             ? DateUtil::getUnixMonth(unixTime, m_conf ? m_conf->monthStart() : 1)
             : m_lastTrafMonth;
+    const bool isNewMonth = (trafMonth != m_lastTrafMonth);
 
     m_lastTrafHour = trafHour;
     m_lastTrafDay = trafDay;
     m_lastTrafMonth = trafMonth;
+
+    // Initialize quotas traffic bytes
+    m_quotaManager->clear(isNewDay, isNewMonth);
 
     m_sqliteDb->beginTransaction();
 
@@ -191,6 +225,9 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
             // Update or insert total bytes
             updateTrafficList(insertTrafStmts, updateTrafStmts,
                               inBytes, outBytes);
+
+            // Update quota traffic bytes
+            m_quotaManager->addTraf(inBytes);
         }
     }
 
@@ -247,6 +284,10 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
             m_appIds.removeAt(procIndex);
         }
     }
+
+    // Check quotas
+    m_quotaManager->checkQuotaDay(trafDay);
+    m_quotaManager->checkQuotaMonth(trafMonth);
 }
 
 void DatabaseManager::logClear()

@@ -14,6 +14,7 @@
 #include "conf/appgroup.h"
 #include "conf/firewallconf.h"
 #include "db/databasemanager.h"
+#include "db/quotamanager.h"
 #include "driver/drivermanager.h"
 #include "fortsettings.h"
 #include "log/logmanager.h"
@@ -43,18 +44,21 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_fortSettings(fortSettings),
     m_firewallConf(new FirewallConf(this)),
     m_firewallConfToEdit(nullConf()),
-    m_databaseManager(new DatabaseManager(fortSettings->statFilePath(), this)),
+    m_quotaManager(new QuotaManager(fortSettings, this)),
+    m_databaseManager(new DatabaseManager(fortSettings->statFilePath(),
+                                          m_quotaManager, this)),
     m_driverManager(new DriverManager(this)),
     m_logManager(new LogManager(m_databaseManager,
                                 m_driverManager->driverWorker(), this)),
     m_taskManager(new TaskManager(this, this))
 {
     setupDriver();
+    setupDatabaseManager();
+
+    setupLogger();
     setupLogManager();
 
     loadSettings(m_firewallConf);
-
-    setupLogger();
 
     m_taskManager->loadSettings(m_fortSettings);
 
@@ -125,6 +129,14 @@ void FortManager::closeDriver()
     m_driverManager->closeDevice();
 }
 
+void FortManager::setupDatabaseManager()
+{
+    m_databaseManager->initialize();
+
+    connect(m_quotaManager, &QuotaManager::alert,
+            this, &FortManager::showInfoBox);
+}
+
 void FortManager::setupLogger()
 {
     Logger *logger = Logger::instance();
@@ -137,8 +149,6 @@ void FortManager::setupLogger()
 
 void FortManager::setupLogManager()
 {
-    m_databaseManager->initialize();
-
     m_logManager->initialize();
     m_logManager->setActive(true);
 }

@@ -232,6 +232,11 @@ bool FortSettings::readConfIni(FirewallConf &conf) const
     conf.setTrafUnit(iniInt("trafUnit"));
     m_ini->endGroup();
 
+    m_ini->beginGroup("quota");
+    conf.setQuotaDayMb(iniUInt("quotaDayMb"));
+    conf.setQuotaMonthMb(iniUInt("quotaMonthMb"));
+    m_ini->endGroup();
+
     return true;
 }
 
@@ -257,6 +262,11 @@ bool FortSettings::writeConfIni(const FirewallConf &conf)
     setIniValue("trafDayKeepDays", conf.trafDayKeepDays(), DEFAULT_TRAF_DAY_KEEP_DAYS);
     setIniValue("trafMonthKeepMonths", conf.trafMonthKeepMonths(), DEFAULT_TRAF_MONTH_KEEP_MONTHS);
     setIniValue("trafUnit", conf.trafUnit());
+    m_ini->endGroup();
+
+    m_ini->beginGroup("quota");
+    setIniValue("quotaDayMb", conf.quotaDayMb());
+    setIniValue("quotaMonthMb", conf.quotaMonthMb());
     m_ini->endGroup();
 
     removeMigratedKeys();

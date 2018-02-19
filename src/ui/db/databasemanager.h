@@ -7,6 +7,7 @@
 #include <QVector>
 
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
+QT_FORWARD_DECLARE_CLASS(QuotaManager)
 QT_FORWARD_DECLARE_CLASS(SqliteDb)
 QT_FORWARD_DECLARE_CLASS(SqliteStmt)
 
@@ -16,6 +17,7 @@ class DatabaseManager : public QObject
 
 public:
     explicit DatabaseManager(const QString &filePath,
+                             QuotaManager *quotaManager,
                              QObject *parent = nullptr);
     virtual ~DatabaseManager();
 
@@ -54,6 +56,8 @@ public slots:
 private:
     typedef QList<SqliteStmt *> QStmtList;
 
+    void initializeQuota();
+
     bool createTables();
 
     void clearStmts();
@@ -86,6 +90,7 @@ private:
 
     QString m_filePath;
 
+    QuotaManager *m_quotaManager;
     const FirewallConf *m_conf;
 
     SqliteDb *m_sqliteDb;

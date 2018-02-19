@@ -42,37 +42,37 @@
 <context>
     <name>FortManager</name>
     <message>
-        <location filename="../fortmanager.cpp" line="250"/>
+        <location filename="../fortmanager.cpp" line="260"/>
         <source>Password input</source>
         <translation>Ввод пароля</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="250"/>
+        <location filename="../fortmanager.cpp" line="260"/>
         <source>Please enter the password</source>
         <translation>Наберите пароль пожалуйста</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="477"/>
+        <location filename="../fortmanager.cpp" line="487"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="483"/>
+        <location filename="../fortmanager.cpp" line="493"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="487"/>
+        <location filename="../fortmanager.cpp" line="497"/>
         <source>Stop Traffic</source>
         <translation>Остановить трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="491"/>
+        <location filename="../fortmanager.cpp" line="501"/>
         <source>Stop Internet Traffic</source>
         <translation>Остановить Интернет трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="508"/>
+        <location filename="../fortmanager.cpp" line="518"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -132,6 +132,24 @@
         <location filename="../util/net/ip4range.cpp" line="139"/>
         <source>Bad mask</source>
         <translation>Некорректная маска</translation>
+    </message>
+</context>
+<context>
+    <name>QuotaManager</name>
+    <message>
+        <location filename="../db/quotamanager.cpp" line="74"/>
+        <source>Day traffic quota exceeded!</source>
+        <translation>Квота трафика на день исчерпана!</translation>
+    </message>
+    <message>
+        <location filename="../db/quotamanager.cpp" line="93"/>
+        <source>Month traffic quota exceeded!</source>
+        <translation>Квота трафика на месяц исчерпана!</translation>
+    </message>
+    <message>
+        <location filename="../db/quotamanager.h" line="30"/>
+        <source>Quota Alert</source>
+        <translation>Предупреждение о квоте трафика</translation>
     </message>
 </context>
 <context>
@@ -440,12 +458,14 @@
         <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="25"/>
         <location filename="../qml/pages/log/TrafOptionsButton.qml" line="20"/>
         <location filename="../qml/pages/log/TrafOptionsButton.qml" line="35"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="50"/>
         <location filename="../qml/pages/SchedulePage.qml" line="31"/>
         <source>Custom</source>
         <translation>Нестандартный</translation>
     </message>
     <message>
         <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="26"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="51"/>
         <source>Disabled</source>
         <translation>Отключено</translation>
     </message>
@@ -495,24 +515,34 @@
         <translation>3 года</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="55"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="76"/>
         <source>Month starts on:</source>
         <translation>Месяц начинается с:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="81"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="102"/>
         <source>Keep days for &apos;Hourly&apos;:</source>
         <translation>Хранить дней для &apos;Почасовая&apos;:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="104"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="125"/>
         <source>Keep days for &apos;Daily&apos;:</source>
         <translation>Хранить дней для &apos;Ежедневная&apos;:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="127"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="148"/>
         <source>Keep months for &apos;Monthly&apos;:</source>
         <translation>Хранить месяцев для &apos;Ежемесячная&apos;:</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="173"/>
+        <source>Day&apos;s Quota:</source>
+        <translation>Квота на день</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="197"/>
+        <source>Month&apos;s Quota:</source>
+        <translation>Квота на месяц</translation>
     </message>
     <message>
         <location filename="../qml/pages/SchedulePage.qml" line="32"/>

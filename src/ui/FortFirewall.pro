@@ -16,6 +16,7 @@ SOURCES += \
     conf/firewallconf.cpp \
     db/databasemanager.cpp \
     db/databasesql.cpp \
+    db/quotamanager.cpp \
     driver/drivermanager.cpp \
     driver/driverworker.cpp \
     fortcommon.cpp \
@@ -54,8 +55,8 @@ SOURCES += \
     util/net/ip4range.cpp \
     util/net/netdownloader.cpp \
     util/net/netutil.cpp \
-    util/processinfo.cpp \
     util/osutil.cpp \
+    util/processinfo.cpp \
     util/stringutil.cpp \
     util/windowstatewatcher.cpp
 
@@ -65,6 +66,7 @@ HEADERS += \
     conf/firewallconf.h \
     db/databasemanager.h \
     db/databasesql.h \
+    db/quotamanager.h \
     driver/drivermanager.h \
     driver/driverworker.h \
     fortcommon.h \
@@ -103,8 +105,8 @@ HEADERS += \
     util/net/ip4range.h \
     util/net/netdownloader.h \
     util/net/netutil.h \
-    util/processinfo.h \
     util/osutil.h \
+    util/processinfo.h \
     util/stringutil.h \
     util/windowstatewatcher.h
 

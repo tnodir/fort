@@ -54,9 +54,9 @@ ButtonPopup {
         return text;
     }
 
-    function formatSpeed(bytes) {
-        const prec = (bytes < 1024) ? 0 : 1;
-        return netUtil.formatDataSize(bytes * 1024, prec) + "/s";
+    function formatSpeed(kbytes) {
+        const prec = (kbytes < 1024) ? 0 : 1;
+        return netUtil.formatDataSize(kbytes * 1024, prec) + "/s";
     }
 
     ColumnLayout {

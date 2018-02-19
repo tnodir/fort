@@ -48,6 +48,12 @@ public:
     bool windowMaximized() const { return iniBool("window/maximized"); }
     void setWindowMaximized(bool on) { setIniValue("window/maximized", on); }
 
+    qint32 quotaDayAlerted() const { return iniInt("quota/dayAlerted"); }
+    void setQuotaDayAlerted(qint32 v) { setIniValue("quota/dayAlerted", v); }
+
+    qint32 quotaMonthAlerted() const { return iniInt("quota/monthAlerted"); }
+    void setQuotaMonthAlerted(qint32 v) { setIniValue("quota/monthAlerted", v); }
+
     QString updatesUrl() const { return APP_UPDATES_URL; }
 
     bool startWithWindows() const;

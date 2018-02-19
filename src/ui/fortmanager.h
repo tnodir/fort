@@ -10,9 +10,10 @@ QT_FORWARD_DECLARE_CLASS(QSystemTrayIcon)
 
 QT_FORWARD_DECLARE_CLASS(DatabaseManager)
 QT_FORWARD_DECLARE_CLASS(DriverManager)
-QT_FORWARD_DECLARE_CLASS(FortSettings)
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
+QT_FORWARD_DECLARE_CLASS(FortSettings)
 QT_FORWARD_DECLARE_CLASS(LogManager)
+QT_FORWARD_DECLARE_CLASS(QuotaManager)
 QT_FORWARD_DECLARE_CLASS(TaskManager)
 QT_FORWARD_DECLARE_CLASS(WindowStateWatcher)
 
@@ -77,6 +78,8 @@ private:
     bool setupDriver();
     void closeDriver();
 
+    void setupDatabaseManager();
+
     void setupLogger();
     void setupLogManager();
 
@@ -125,6 +128,7 @@ private:
     QAction *m_stopInetTrafficAction;
     QList<QAction *> m_appGroupActions;
 
+    QuotaManager *m_quotaManager;
     DatabaseManager *m_databaseManager;
     DriverManager *m_driverManager;
     LogManager *m_logManager;
