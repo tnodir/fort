@@ -23,10 +23,9 @@ TrafListModel *AppStatModel::trafListModel(int trafType, int row,
 {
     Q_UNUSED(appPath)  // used to properly refresh trafListModel
 
-    Q_ASSERT(row < m_appIds.size());
-
     m_trafListModel->setType(static_cast<TrafListModel::TrafType>(trafType));
-    m_trafListModel->setAppId(row < 0 ? 0 : m_appIds.at(row));
+    m_trafListModel->setAppId(row < 0 || row >= m_appIds.size()
+                              ? 0 : m_appIds.at(row));
     m_trafListModel->reset();
 
     return m_trafListModel;
