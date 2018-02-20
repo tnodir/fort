@@ -17,12 +17,24 @@ QuotaManager::QuotaManager(FortSettings *fortSettings,
 
 void QuotaManager::setQuotaDayBytes(qint64 bytes)
 {
-    m_quotaDayBytes = bytes;
+    if (m_quotaDayBytes != bytes) {
+        if (m_quotaDayBytes != 0) {
+            setQuotaDayAlerted(0);
+        }
+
+        m_quotaDayBytes = bytes;
+    }
 }
 
 void QuotaManager::setQuotaMonthBytes(qint64 bytes)
 {
-    m_quotaMonthBytes = bytes;
+    if (m_quotaMonthBytes != bytes) {
+        if (m_quotaMonthBytes != 0) {
+            setQuotaMonthAlerted(0);
+        }
+
+        m_quotaMonthBytes = bytes;
+    }
 }
 
 void QuotaManager::setTrafDayBytes(qint64 bytes)
