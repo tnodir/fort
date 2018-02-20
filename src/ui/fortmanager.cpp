@@ -124,7 +124,7 @@ bool FortManager::setupDriver()
 
 void FortManager::closeDriver()
 {
-    m_logManager->setActive(false);
+    updateLogManager(false);
 
     m_driverManager->closeDevice();
 }
@@ -150,7 +150,6 @@ void FortManager::setupLogger()
 void FortManager::setupLogManager()
 {
     m_logManager->initialize();
-    m_logManager->setActive(true);
 }
 
 void FortManager::setupTrayIcon()
@@ -366,15 +365,19 @@ bool FortManager::updateDriverConf(FirewallConf *conf)
     if (!m_driverManager->isDeviceOpened())
         return true;
 
+    updateLogManager(false);
+
     // Update driver
-    if (!m_driverManager->writeConf(*conf)) {
+    const bool res = m_driverManager->writeConf(*conf);
+    if (res) {
+        updateDatabaseManager(conf);
+    } else {
         showErrorBox("Update Driver Conf: " + m_driverManager->errorMessage());
-        return false;
     }
 
-    updateDatabaseManager(conf);
+    updateLogManager(true);
 
-    return true;
+    return res;
 }
 
 bool FortManager::updateDriverConfFlags(FirewallConf *conf)
@@ -382,15 +385,24 @@ bool FortManager::updateDriverConfFlags(FirewallConf *conf)
     if (!m_driverManager->isDeviceOpened())
         return true;
 
+    updateLogManager(false);
+
     // Update driver
-    if (!m_driverManager->writeConfFlags(*conf)) {
+    const bool res = m_driverManager->writeConfFlags(*conf);
+    if (res) {
+        updateDatabaseManager(conf);
+    } else {
         showErrorBox("Update Driver Conf Flags: " + m_driverManager->errorMessage());
-        return false;
     }
 
-    updateDatabaseManager(conf);
+    updateLogManager(true);
 
-    return true;
+    return res;
+}
+
+void FortManager::updateLogManager(bool active)
+{
+    m_logManager->setActive(active);
 }
 
 void FortManager::updateDatabaseManager(FirewallConf *conf)

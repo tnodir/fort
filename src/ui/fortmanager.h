@@ -93,6 +93,7 @@ private:
     bool updateDriverConf(FirewallConf *conf);
     bool updateDriverConfFlags(FirewallConf *conf);
 
+    void updateLogManager(bool active);
     void updateDatabaseManager(FirewallConf *conf);
 
     FirewallConf *cloneConf(const FirewallConf &conf);

@@ -39,7 +39,7 @@ void DatabaseManager::setFirewallConf(const FirewallConf *conf)
 {
     m_conf = conf;
 
-    if (m_conf && !m_conf->logStat()) {
+    if (!m_conf || !m_conf->logStat()) {
         logClear();
     }
 
@@ -62,15 +62,15 @@ bool DatabaseManager::initialize()
 
 void DatabaseManager::initializeQuota()
 {
-    m_quotaManager->setQuotaDayBytes(
-                m_conf ? qint64(m_conf->quotaDayMb()) * 1024 * 1024 : 0);
-    m_quotaManager->setQuotaMonthBytes(
-                m_conf ? qint64(m_conf->quotaMonthMb()) * 1024 * 1024 : 0);
+    if (!m_conf) return;
+
+    m_quotaManager->setQuotaDayBytes(qint64(m_conf->quotaDayMb()) * 1024 * 1024);
+    m_quotaManager->setQuotaMonthBytes(qint64(m_conf->quotaMonthMb()) * 1024 * 1024);
 
     const qint64 unixTime = DateUtil::getUnixTime();
     const qint32 trafDay = DateUtil::getUnixDay(unixTime);
     const qint32 trafMonth = DateUtil::getUnixMonth(
-                unixTime, m_conf ? m_conf->monthStart() : 1);
+                unixTime, m_conf->monthStart());
 
     qint64 inBytes, outBytes;
 
@@ -126,9 +126,6 @@ void DatabaseManager::clearAppIds()
 
 void DatabaseManager::logProcNew(const QString &appPath)
 {
-    if (m_conf && !m_conf->logStat())
-        return;
-
     m_sqliteDb->beginTransaction();
 
     qint64 appId = getAppId(appPath);
@@ -147,7 +144,7 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
 {
     Q_ASSERT(procCount == m_appIds.size());
 
-    if (m_conf && !m_conf->logStat())
+    if (!m_conf || !m_conf->logStat())
         return;
 
     QVector<quint16> delProcIndexes;
@@ -162,7 +159,7 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
     const bool isNewDay = (trafDay != m_lastTrafDay);
 
     const qint32 trafMonth = isNewDay
-            ? DateUtil::getUnixMonth(unixTime, m_conf ? m_conf->monthStart() : 1)
+            ? DateUtil::getUnixMonth(unixTime, m_conf->monthStart())
             : m_lastTrafMonth;
     const bool isNewMonth = (trafMonth != m_lastTrafMonth);
 
@@ -236,8 +233,7 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
         QStmtList deleteTrafStmts;
 
         // Traffic Hour
-        const int trafHourKeepDays = m_conf ? m_conf->trafHourKeepDays()
-                                            : DEFAULT_TRAF_HOUR_KEEP_DAYS;
+        const int trafHourKeepDays = m_conf->trafHourKeepDays();
         if (trafHourKeepDays >= 0) {
             const qint32 oldTrafHour = trafHour - 24 * trafHourKeepDays;
 
@@ -247,8 +243,7 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
         }
 
         // Traffic Day
-        const int trafDayKeepDays = m_conf ? m_conf->trafDayKeepDays()
-                                           : DEFAULT_TRAF_DAY_KEEP_DAYS;
+        const int trafDayKeepDays = m_conf->trafDayKeepDays();
         if (trafDayKeepDays >= 0) {
             const qint32 oldTrafDay = trafHour - 24 * trafDayKeepDays;
 
@@ -258,8 +253,7 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
         }
 
         // Traffic Month
-        const int trafMonthKeepMonths = m_conf ? m_conf->trafMonthKeepMonths()
-                                               : DEFAULT_TRAF_MONTH_KEEP_MONTHS;
+        const int trafMonthKeepMonths = m_conf->trafMonthKeepMonths();
         if (trafMonthKeepMonths >= 0) {
             const qint32 oldTrafMonth = DateUtil::addUnixMonths(
                         trafHour, -trafMonthKeepMonths);
