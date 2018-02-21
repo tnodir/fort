@@ -1,5 +1,14 @@
 Fort Firewall ChangeLog
 
+v1.10.0, 2018-02-21:
+- UI: Log errors always.
+- UI: Keep .conf's backup file.
+- UI: Add day & month traffic quota alerts.
+- UI: Fix old log files deleting.
+- Driver: Improve speed limiting by deferring ACK packets.
+- Driver: Fix clearing on device close.
+- Migrate to Qt 5.11
+
 v1.9.0, 2018-01-28:
 - UI: NetDownloader: Wait process finishing.
 - UI: ApplicationsPage: Improve speed limits' list.
