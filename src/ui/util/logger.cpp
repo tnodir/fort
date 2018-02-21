@@ -10,7 +10,7 @@
 #define LOGGER_FILE_PREFIX      "log_fort_"
 #define LOGGER_FILE_SUFFIX      ".txt"
 #define LOGGER_FILE_MAX_SIZE    (1024 * 1024)
-#define LOGGER_KEEP_FILES       9
+#define LOGGER_KEEP_FILES       6
 
 static QtMessageHandler g_oldMessageHandler = nullptr;
 
@@ -115,6 +115,8 @@ void Logger::writeLog(const QString &message, LogLevel level)
 
     // Create file when required to avoid empty files
     if (!m_file.isOpen()) {
+        checkLogFiles();
+
         if (!openLogFile()) {
             m_writing = false;
             return;
@@ -129,7 +131,6 @@ void Logger::writeLog(const QString &message, LogLevel level)
 
     if (m_file.size() > LOGGER_FILE_MAX_SIZE) {
         closeLogFile();  // Too big file
-        checkLogFiles();
     }
 
     m_writing = false;
