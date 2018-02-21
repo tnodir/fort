@@ -660,6 +660,12 @@ fort_callout_remove (void)
   }
 }
 
+static void
+fort_callout_defer_flush (BOOL dispatchLevel)
+{
+  fort_defer_flush(&g_device->defer, fort_transport_inject_complete, dispatchLevel);
+}
+
 static NTSTATUS
 fort_callout_force_reauth (PDEVICE_OBJECT device,
                            const FORT_CONF_FLAGS old_conf_flags,
@@ -672,7 +678,15 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
 
   UNUSED(device);
 
-  fort_stat_update(stat, conf_flags.log_stat);
+  fort_timer_update(&g_device->timer, FALSE);
+
+  if (old_conf_flags.log_stat != conf_flags.log_stat) {
+    fort_stat_update(stat, conf_flags.log_stat);
+
+    if (!conf_flags.log_stat) {
+      fort_callout_defer_flush(FALSE);
+    }
+  }
 
   if ((status = fort_prov_open(&engine)))
     goto end;
@@ -726,12 +740,6 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
   }
 
   return status;
-}
-
-static void
-fort_callout_defer_flush (BOOL dispatchLevel)
-{
-  fort_defer_flush(&g_device->defer, fort_transport_inject_complete, dispatchLevel);
 }
 
 static void
@@ -833,6 +841,9 @@ fort_device_cleanup (PDEVICE_OBJECT device, PIRP irp)
 
     fort_callout_force_reauth(device, old_conf_flags, conf_flags);
   }
+
+  /* Clear buffer */
+  fort_buffer_clear(&g_device->buffer);
 
   /* Device closed */
   {

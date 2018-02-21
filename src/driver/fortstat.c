@@ -427,7 +427,7 @@ fort_stat_update (PFORT_STAT stat, BOOL log_stat)
 
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
-  if (stat->log_stat) {
+  if (stat->log_stat && !log_stat) {
     tommy_hashdyn_foreach_node(&stat->flows_map, fort_stat_flow_close);
 
     fort_stat_init(stat);

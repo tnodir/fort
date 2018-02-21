@@ -103,6 +103,16 @@ fort_buffer_close (PFORT_BUFFER buf)
   fort_buffer_data_del(buf->data_free);
 }
 
+static void
+fort_buffer_clear (PFORT_BUFFER buf)
+{
+  fort_buffer_close(buf);
+
+  buf->data_head = NULL;
+  buf->data_tail = NULL;
+  buf->data_free = NULL;
+}
+
 static NTSTATUS
 fort_buffer_prepare (PFORT_BUFFER buf, UINT32 len, PCHAR *out,
                      PIRP *irp, ULONG_PTR *info)
