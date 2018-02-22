@@ -71,10 +71,9 @@ void Logger::setPath(const QString &path)
 
 bool Logger::openLogFile()
 {
-    const QString filename = QString("%1%2%3").arg(
-                QLatin1String(LOGGER_FILE_PREFIX),
-                QDateTime::currentDateTime().toString("yyyy-MM-dd_HH-mm-ss_zzz"),
-                QLatin1String(LOGGER_FILE_SUFFIX));
+    const QString filename = QLatin1String(LOGGER_FILE_PREFIX)
+            + QDateTime::currentDateTime().toString("yyyy-MM-dd_HH-mm-ss_zzz")
+            + QLatin1String(LOGGER_FILE_SUFFIX);
 
     m_file.setFileName(m_dir.filePath(filename));
 
@@ -96,10 +95,12 @@ void Logger::writeLogLine(Logger::LogLevel level, const QString &dateString,
                           const QString &message)
 {
     static const char * const g_levelTexts[] = {
-        "[Info ]", "[Warn ]", "[Error]"};
+        "[Info]", "[Warn]", "[Fail]"};
 
-    m_file.write(QString("%1%2 %3\n").arg(g_levelTexts[int(level)],
-                 dateString, message).toLatin1());
+    const QString line = dateString + g_levelTexts[int(level)]
+            + ' ' + message + '\n';
+
+    m_file.write(line.toLatin1());
     m_file.flush();
 }
 
@@ -178,9 +179,11 @@ void Logger::messageHandler(QtMsgType type,
 
         // Write only errors to log file
         if (level != Info) {
-            const QString text = context.category
-                    ? (QLatin1String(context.category) + ": " + message)
-                    : message;
+            const QLatin1String category(
+                        context.category && strcmp(context.category, "default") != 0
+                    ? context.category : "");
+            const QString text = category.isEmpty()
+                    ? message : category + ": " + message;
 
             instance()->writeLog(text, level);
         }
