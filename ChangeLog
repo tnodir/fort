@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v1.10.1, 2018-02-23:
+- Logger: Refactor format.
+- UI: Abort on UI & Driver's states mismatch.
+- UI: LogManager: Fix buffers handling.
+- UI: Fix quota alerting.
+
 v1.10.0, 2018-02-21:
 - UI: Log errors always.
 - UI: Keep .conf's backup file.
