@@ -142,10 +142,13 @@ void DatabaseManager::logProcNew(const QString &appPath)
 void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
                                   const quint32 *trafBytes)
 {
-    Q_ASSERT(procCount == m_appIds.size());
-
     if (!m_conf || !m_conf->logStat())
         return;
+
+    if (procCount != m_appIds.size()) {
+        qFatal("DatabaseManager: UI & Driver's states mismatch.");
+        abort();
+    }
 
     QVector<quint16> delProcIndexes;
 
