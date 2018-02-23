@@ -26,7 +26,7 @@ Logger::Logger(QObject *parent) :
 
 Logger *Logger::instance()
 {
-    static Logger *g_instanceLogger = 0;
+    static Logger *g_instanceLogger = nullptr;
 
     if (!g_instanceLogger) {
         g_instanceLogger = new Logger();
@@ -179,11 +179,11 @@ void Logger::messageHandler(QtMsgType type,
 
         // Write only errors to log file
         if (level != Info) {
-            const QLatin1String category(
-                        context.category && strcmp(context.category, "default") != 0
-                    ? context.category : "");
-            const QString text = category.isEmpty()
-                    ? message : category + ": " + message;
+            const bool isDefaultCategory = !context.category
+                    || strcmp(context.category, "default") != 0;
+            const QString text = isDefaultCategory
+                    ? message
+                    : QLatin1String(context.category) + ": " + message;
 
             instance()->writeLog(text, level);
         }
@@ -201,7 +201,8 @@ void Logger::messageHandler(QtMsgType type,
         data.append(message.toLatin1());
         data.append('\n');
 
-        WriteFile(stdoutHandle, data.constData(), data.size(), &nw, NULL);
+        WriteFile(stdoutHandle, data.constData(), DWORD(data.size()),
+                  &nw, nullptr);
     }
 
     if (g_oldMessageHandler) {
