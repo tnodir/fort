@@ -166,12 +166,13 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
             : m_lastTrafMonth;
     const bool isNewMonth = (trafMonth != m_lastTrafMonth);
 
+    // Initialize quotas traffic bytes
+    m_quotaManager->clear(isNewDay && m_lastTrafDay,
+                          isNewMonth && m_lastTrafMonth);
+
     m_lastTrafHour = trafHour;
     m_lastTrafDay = trafDay;
     m_lastTrafMonth = trafMonth;
-
-    // Initialize quotas traffic bytes
-    m_quotaManager->clear(isNewDay, isNewMonth);
 
     m_sqliteDb->beginTransaction();
 
