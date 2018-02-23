@@ -1,7 +1,7 @@
 #include "fortsettings.h"
 
-#include <QApplication>
 #include <QCommandLineParser>
+#include <QCoreApplication>
 #include <QJsonDocument>
 #include <QSettings>
 

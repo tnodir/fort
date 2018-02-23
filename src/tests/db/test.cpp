@@ -4,14 +4,19 @@
 #include <QElapsedTimer>
 
 #include "db/databasemanager.h"
+#include "db/quotamanager.h"
 #include "db/sqlite/sqlitedb.h"
 #include "db/sqlite/sqlitestmt.h"
+#include "fortsettings.h"
 #include "util/dateutil.h"
 #include "util/fileutil.h"
 
 void Test::dbWriteRead()
 {
-    DatabaseManager databaseManager(":memory:");
+    QStringList args("test");
+    FortSettings fortSettings(args);
+    QuotaManager quotaManager(&fortSettings);
+    DatabaseManager databaseManager(":memory:", &quotaManager);
 
     QVERIFY(databaseManager.initialize());
 
