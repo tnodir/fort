@@ -36,10 +36,7 @@ public:
 signals:
 
 public slots:
-    void reset(int top = 0) {
-        m_top = top;
-        m_offset = 0;
-    }
+    void reset(int top = 0);
 
 private:
     char *output();

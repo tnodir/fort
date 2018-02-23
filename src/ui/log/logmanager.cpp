@@ -75,6 +75,11 @@ LogBuffer *LogManager::getFreeBuffer()
     }
 }
 
+void LogManager::addFreeBuffer(LogBuffer *logBuffer)
+{
+    m_freeBuffers.append(logBuffer);
+}
+
 void LogManager::processLogBuffer(LogBuffer *logBuffer, bool success,
                                   const QString &errorMessage)
 {
@@ -89,7 +94,7 @@ void LogManager::processLogBuffer(LogBuffer *logBuffer, bool success,
         setErrorMessage(errorMessage);
     }
 
-    m_freeBuffers.append(logBuffer);
+    addFreeBuffer(logBuffer);
 }
 
 void LogManager::readLogEntries(LogBuffer *logBuffer)

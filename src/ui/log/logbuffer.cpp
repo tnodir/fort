@@ -14,6 +14,12 @@ LogBuffer::LogBuffer(int bufferSize, QObject *parent) :
 {
 }
 
+void LogBuffer::reset(int top)
+{
+    m_top = top;
+    m_offset = 0;
+}
+
 char *LogBuffer::output()
 {
     return m_array.data() + m_top;

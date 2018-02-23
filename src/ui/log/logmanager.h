@@ -50,6 +50,7 @@ private:
     void cancelAsyncIo();
 
     LogBuffer *getFreeBuffer();
+    void addFreeBuffer(LogBuffer *logBuffer);
 
     void readLogEntries(LogBuffer *logBuffer);
 
