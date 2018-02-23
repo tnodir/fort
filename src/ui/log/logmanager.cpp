@@ -27,10 +27,9 @@ void LogManager::setActive(bool active)
         m_active = active;
 
         if (m_active) {
-            readLogAsync(getFreeBuffer());
+            readLogAsync();
         } else {
             cancelAsyncIo();
-            readLogAsync(nullptr);
         }
 
         emit activeChanged();
@@ -56,9 +55,13 @@ void LogManager::setupDriverWorker()
             this, &LogManager::processLogBuffer, Qt::QueuedConnection);
 }
 
-void LogManager::readLogAsync(LogBuffer *logBuffer)
+void LogManager::readLogAsync()
 {
-    m_driverWorker->readLogAsync(logBuffer);
+    LogBuffer *logBuffer = getFreeBuffer();
+
+    if (!m_driverWorker->readLogAsync(logBuffer)) {
+        addFreeBuffer(logBuffer);
+    }
 }
 
 void LogManager::cancelAsyncIo()
@@ -84,7 +87,7 @@ void LogManager::processLogBuffer(LogBuffer *logBuffer, bool success,
                                   const QString &errorMessage)
 {
     if (m_active) {
-        readLogAsync(getFreeBuffer());
+        readLogAsync();
     }
 
     if (success) {
@@ -124,6 +127,7 @@ void LogManager::readLogEntries(LogBuffer *logBuffer)
             break;
         }
         default:
+            Q_ASSERT(logBuffer->offset() != 0);
             return;
         }
     }

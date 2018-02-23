@@ -46,7 +46,7 @@ private:
 
     void setupDriverWorker();
 
-    void readLogAsync(LogBuffer *logBuffer);
+    void readLogAsync();
     void cancelAsyncIo();
 
     LogBuffer *getFreeBuffer();

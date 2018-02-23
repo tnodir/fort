@@ -23,7 +23,7 @@ signals:
                        const QString &errorMessage);
 
 public slots:
-    void readLogAsync(LogBuffer *logBuffer);
+    bool readLogAsync(LogBuffer *logBuffer);
     void cancelAsyncIo();
     void abort();
 
