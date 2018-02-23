@@ -106,11 +106,17 @@ fort_buffer_close (PFORT_BUFFER buf)
 static void
 fort_buffer_clear (PFORT_BUFFER buf)
 {
+  KLOCK_QUEUE_HANDLE lock_queue;
+
+  KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
+
   fort_buffer_close(buf);
 
   buf->data_head = NULL;
   buf->data_tail = NULL;
   buf->data_free = NULL;
+
+  KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
 static NTSTATUS
