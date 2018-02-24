@@ -120,14 +120,13 @@ fort_stat_proc_index (PFORT_STAT stat, UINT32 process_id)
   while (proc_index != FORT_PROC_BAD_INDEX) {
     PFORT_STAT_PROC proc = &stat->procs[proc_index];
 
-    if (process_id == proc->process_id) {
-      return proc_index;
-    }
+    if (process_id == proc->process_id)
+      break;
 
     proc_index = proc->next_index;
   }
 
-  return FORT_PROC_BAD_INDEX;
+  return proc_index;
 }
 
 static void
