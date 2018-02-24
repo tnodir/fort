@@ -32,8 +32,14 @@ ListView {
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            const index = listView.indexAt(listView.contentX + mouse.x,
-                                           listView.contentY + mouse.y);
+            const mouseX = listView.contentX + mouse.x;
+            const mouseY = listView.contentY + mouse.y;
+
+            var index = listView.indexAt(mouseX, mouseY);
+            if (index < 0) {
+                index = listView.indexAt(mouseX, mouseY - listView.spacing);
+            }
+
             if (index >= 0) {
                 listView.currentIndex = index;
                 listView.clicked(index);
