@@ -5,27 +5,44 @@
 #define FORT_PROC_BAD_INDEX	((UINT16) -1)
 
 typedef struct fort_stat_traf {
-  UINT32 in_bytes;
-  UINT32 out_bytes;
+  union {
+    struct {
+      UINT32 in_bytes;
+      UINT32 out_bytes;
+    };
+
+    UINT64 v;
+  };
 } FORT_STAT_TRAF, *PFORT_STAT_TRAF;
 
 typedef struct fort_stat_group {
-  union {
-    LARGE_INTEGER traf_all;
-    FORT_STAT_TRAF traf;
-  };
+  FORT_STAT_TRAF traf;
 } FORT_STAT_GROUP, *PFORT_STAT_GROUP;
 
+/* Synchronize with tommy_hashdyn_node! */
 typedef struct fort_stat_proc {
-  UINT16 next_index;
-  UINT16 refcount;
-
-  UINT32 process_id;
+  struct fort_stat_proc *next;
+  struct fort_stat_proc *prev;
 
   union {
-    LARGE_INTEGER traf_all;
+#if defined(_WIN64)
     FORT_STAT_TRAF traf;
+#else
+    UINT32 process_id;
+#endif
+    void *data;
   };
+
+  tommy_key_t proc_hash;
+
+  UINT16 proc_index;
+  UINT16 refcount;
+
+#if defined(_WIN64)
+  UINT32 process_id;
+#else
+  FORT_STAT_TRAF traf;
+#endif
 } FORT_STAT_PROC, *PFORT_STAT_PROC;
 
 #define FORT_STAT_FLOW_SPEED_LIMIT	0x01
@@ -69,21 +86,16 @@ typedef struct fort_stat {
 
   UINT16 limit_bits;
 
-  UINT16 proc_count;
-  UINT16 proc_top;
-  UINT16 proc_end;
-
-  UINT16 proc_head_index;
-  UINT16 proc_free_index;
-
   UINT32 stream4_id;
   UINT32 datagram4_id;
   UINT32 in_transport4_id;
   UINT32 out_transport4_id;
 
-  PFORT_STAT_PROC procs;
-
+  PFORT_STAT_PROC proc_free;
   PFORT_STAT_FLOW flow_free;
+
+  tommy_arrayof procs;
+  tommy_hashdyn procs_map;
 
   tommy_arrayof flows;
   tommy_hashdyn flows_map;
@@ -94,90 +106,44 @@ typedef struct fort_stat {
   KSPIN_LOCK lock;
 } FORT_STAT, *PFORT_STAT;
 
+#define fort_stat_proc_hash(process_id)	tommy_inthash_u32((UINT32) (process_id))
 #define fort_stat_flow_hash(flow_id)	tommy_inthash_u32((UINT32) (flow_id))
+
+#define fort_stat_proc_count(stat)	(UINT16) tommy_hashdyn_count(&(stat)->procs_map)
 
 #define fort_stat_group_speed_limit(stat, group_index) \
   ((stat)->limit_bits & (1 << (group_index)))
 
 
-static PVOID
-fort_stat_array_new (SIZE_T size)
+static PFORT_STAT_PROC
+fort_stat_proc_get (PFORT_STAT stat, UINT32 process_id, tommy_key_t proc_hash)
 {
-  return fort_mem_alloc(size, FORT_STAT_POOL_TAG);
+  PFORT_STAT_PROC proc = (PFORT_STAT_PROC) tommy_hashdyn_bucket(
+    &stat->procs_map, proc_hash);
+
+  while (proc != NULL) {
+    if (proc->proc_hash == proc_hash && proc->process_id == process_id)
+      return proc;
+
+    proc = proc->next;
+  }
+  return NULL;
 }
 
 static void
-fort_stat_array_del (PVOID p)
+fort_stat_proc_free (PFORT_STAT stat, PFORT_STAT_PROC proc)
 {
-  fort_mem_free(p, FORT_STAT_POOL_TAG);
-}
+  tommy_hashdyn_remove_existing(&stat->procs_map, (tommy_hashdyn_node *) proc);
 
-static UINT16
-fort_stat_proc_index (PFORT_STAT stat, UINT32 process_id)
-{
-  UINT16 proc_index = stat->proc_head_index;
-
-  while (proc_index != FORT_PROC_BAD_INDEX) {
-    PFORT_STAT_PROC proc = &stat->procs[proc_index];
-
-    if (process_id == proc->process_id)
-      break;
-
-    proc_index = proc->next_index;
-  }
-
-  return proc_index;
-}
-
-static void
-fort_stat_proc_exclude (PFORT_STAT stat, PFORT_STAT_PROC ex_proc,
-                        UINT16 ex_proc_index)
-{
-  UINT16 proc_index = stat->proc_head_index;
-
-  if (proc_index == ex_proc_index) {
-    stat->proc_head_index = ex_proc->next_index;
-  } else {
-    do {
-      PFORT_STAT_PROC proc = &stat->procs[proc_index];
-
-      proc_index = proc->next_index;
-
-      if (proc_index == ex_proc_index) {
-        proc->next_index = ex_proc->next_index;
-        return;
-      }
-    } while (proc_index != FORT_PROC_BAD_INDEX);
-  }
-}
-
-static void
-fort_stat_proc_free (PFORT_STAT stat, PFORT_STAT_PROC proc, UINT16 proc_index,
-                     PFORT_STAT_PROC prev_proc /* = NULL */)
-{
-  /* Exclude from the active chain */
-  if (prev_proc == NULL) {
-    fort_stat_proc_exclude(stat, proc, proc_index);
-  } else {
-    prev_proc->next_index = proc->next_index;
-  }
-
-  if (proc_index == stat->proc_top - 1) {
-    /* Chop from buffer */
-    stat->proc_top--;
-  } else {
-    /* Add to free chain */
-    proc->next_index = stat->proc_free_index;
-    stat->proc_free_index = proc_index;
-  }
-
-  stat->proc_count--;
+  /* Add to free chain */
+  proc->next = stat->proc_free;
+  stat->proc_free = proc;
 }
 
 static void
 fort_stat_proc_inc (PFORT_STAT stat, UINT16 proc_index)
 {
-  PFORT_STAT_PROC proc = &stat->procs[proc_index];
+  PFORT_STAT_PROC proc = tommy_arrayof_ref(&stat->procs, proc_index);
 
   ++proc->refcount;
 }
@@ -185,68 +151,41 @@ fort_stat_proc_inc (PFORT_STAT stat, UINT16 proc_index)
 static void
 fort_stat_proc_dec (PFORT_STAT stat, UINT16 proc_index)
 {
-  PFORT_STAT_PROC proc = &stat->procs[proc_index];
+  PFORT_STAT_PROC proc = tommy_arrayof_ref(&stat->procs, proc_index);
 
   if (!--proc->refcount) {
     stat->is_dirty = TRUE;
   }
 }
 
-static BOOL
-fort_stat_proc_realloc (PFORT_STAT stat)
-{
-  const UINT16 proc_end = stat->proc_end;
-  const UINT16 new_end = (proc_end ? proc_end : 16) * 3 / 2;
-  PFORT_STAT_PROC new_procs = fort_stat_array_new(
-    new_end * sizeof(FORT_STAT_PROC));
-
-  if (new_procs == NULL)
-    return FALSE;
-
-  if (proc_end) {
-    PFORT_STAT_PROC procs = stat->procs;
-
-    RtlCopyMemory(new_procs, procs, stat->proc_top * sizeof(FORT_STAT_PROC));
-    fort_stat_array_del(procs);
-  }
-
-  stat->proc_end = new_end;
-  stat->procs = new_procs;
-
-  return TRUE;
-}
-
-static UINT16
+static PFORT_STAT_PROC
 fort_stat_proc_add (PFORT_STAT stat, UINT32 process_id)
 {
+  const tommy_key_t proc_hash = fort_stat_proc_hash(process_id);
   PFORT_STAT_PROC proc;
-  UINT16 proc_index = stat->proc_free_index;
 
-  if (proc_index != FORT_PROC_BAD_INDEX) {
-    proc = &stat->procs[proc_index];
-
-    stat->proc_free_index = proc->next_index;
+  if (stat->proc_free != NULL) {
+    proc = stat->proc_free;
+    stat->proc_free = proc->next;
   } else {
-    if (stat->proc_top >= stat->proc_end
-        && !fort_stat_proc_realloc(stat)) {
-      return FORT_PROC_BAD_INDEX;
-    }
+    const tommy_count_t size = tommy_arrayof_size(&stat->procs);
 
-    proc_index = stat->proc_top++;
-    proc = &stat->procs[proc_index];
+    /* TODO: tommy_arrayof_grow(): check calloc()'s result for NULL */
+    if (tommy_arrayof_grow(&stat->procs, size + 1), 0)
+      return NULL;
+
+    proc = tommy_arrayof_ref(&stat->procs, size);
+
+    proc->proc_index = (UINT16) size;
   }
 
-  /* Prepend to active processes chain */
-  proc->next_index = stat->proc_head_index;
-  stat->proc_head_index = proc_index;
+  tommy_hashdyn_insert(&stat->procs_map, (tommy_hashdyn_node *) proc, 0, proc_hash);
 
   proc->refcount = 0;
   proc->process_id = process_id;
-  proc->traf_all.QuadPart = 0;
+  proc->traf.v = 0;
 
-  stat->proc_count++;
-
-  return proc_index;
+  return proc;
 }
 
 static UCHAR
@@ -373,27 +312,10 @@ fort_stat_flow_add (PFORT_STAT stat, UINT64 flow_id,
 }
 
 static void
-fort_stat_init (PFORT_STAT stat)
-{
-  stat->is_dirty = FALSE;
-
-  if (stat->procs != NULL) {
-    fort_stat_array_del(stat->procs);
-    stat->procs = NULL;
-
-    stat->proc_count = 0;
-    stat->proc_top = 0;
-    stat->proc_end = 0;
-  }
-
-  stat->proc_head_index = FORT_PROC_BAD_INDEX;
-  stat->proc_free_index = FORT_PROC_BAD_INDEX;
-}
-
-static void
 fort_stat_open (PFORT_STAT stat)
 {
-  fort_stat_init(stat);
+  tommy_arrayof_init(&stat->procs, sizeof(FORT_STAT_PROC));
+  tommy_hashdyn_init(&stat->procs_map);
 
   tommy_arrayof_init(&stat->flows, sizeof(FORT_STAT_FLOW));
   tommy_hashdyn_init(&stat->flows_map);
@@ -413,10 +335,22 @@ fort_stat_close (PFORT_STAT stat)
   tommy_hashdyn_foreach_node_arg(&stat->flows_map,
     fort_stat_flow_context_remove, stat);
 
+  tommy_arrayof_done(&stat->procs);
+  tommy_hashdyn_done(&stat->procs_map);
+
   tommy_arrayof_done(&stat->flows);
   tommy_hashdyn_done(&stat->flows_map);
 
   KeReleaseInStackQueuedSpinLock(&lock_queue);
+}
+
+static void
+fort_stat_clear (PFORT_STAT stat)
+{
+  stat->is_dirty = FALSE;
+
+  tommy_hashdyn_foreach_node_arg(&stat->procs_map, fort_stat_proc_free, stat);
+  tommy_hashdyn_foreach_node(&stat->flows_map, fort_stat_flow_close);
 }
 
 static void
@@ -427,9 +361,7 @@ fort_stat_update (PFORT_STAT stat, BOOL log_stat)
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
   if (stat->log_stat && !log_stat) {
-    tommy_hashdyn_foreach_node(&stat->flows_map, fort_stat_flow_close);
-
-    fort_stat_init(stat);
+    fort_stat_clear(stat);
   }
 
   stat->log_stat = (UCHAR) log_stat;
@@ -460,8 +392,9 @@ fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
                           UINT32 process_id, UCHAR group_index,
                           BOOL *is_new_proc)
 {
+  const tommy_key_t proc_hash = fort_stat_proc_hash(process_id);
   KLOCK_QUEUE_HANDLE lock_queue;
-  UINT16 proc_index;
+  PFORT_STAT_PROC proc;
   BOOL speed_limit;
   NTSTATUS status;
 
@@ -472,12 +405,12 @@ fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
     goto end;
   }
 
-  proc_index = fort_stat_proc_index(stat, process_id);
+  proc = fort_stat_proc_get(stat, process_id, proc_hash);
 
-  if (proc_index == FORT_PROC_BAD_INDEX) {
-    proc_index = fort_stat_proc_add(stat, process_id);
+  if (proc == NULL) {
+    proc = fort_stat_proc_add(stat, process_id);
 
-    if (proc_index == FORT_PROC_BAD_INDEX) {
+    if (proc == NULL) {
       status = STATUS_INSUFFICIENT_RESOURCES;
       goto end;
     }
@@ -488,12 +421,10 @@ fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
   speed_limit = fort_stat_group_speed_limit(stat, group_index) != 0;
 
   status = fort_stat_flow_add(stat, flow_id,
-    group_index, proc_index, speed_limit);
+    group_index, proc->proc_index, speed_limit);
 
   if (!NT_SUCCESS(status) && *is_new_proc) {
-    PFORT_STAT_PROC proc = &stat->procs[proc_index];
-
-    fort_stat_proc_free(stat, proc, proc_index, NULL);
+    fort_stat_proc_free(stat, proc);
   }
 
  end:
@@ -529,7 +460,7 @@ fort_stat_flow_classify (PFORT_STAT stat, UINT64 flowContext,
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
   if (stat->log_stat && flow->opt.proc_index != FORT_PROC_BAD_INDEX) {
-    PFORT_STAT_PROC proc = &stat->procs[flow->opt.proc_index];
+    PFORT_STAT_PROC proc = tommy_arrayof_ref(&stat->procs, flow->opt.proc_index);
     UINT32 *proc_bytes = inbound ? &proc->traf.in_bytes
       : &proc->traf.out_bytes;
 
@@ -590,49 +521,59 @@ fort_stat_dpc_end (PKLOCK_QUEUE_HANDLE lock_queue)
   KeReleaseInStackQueuedSpinLockFromDpcLevel(lock_queue);
 }
 
+typedef struct fort_stat_proc_traf_iter {
+  PUCHAR out_proc_bits;
+  PFORT_STAT_TRAF out_traf;
+  PFORT_STAT stat;
+} FORT_STAT_PROC_TRAF_ITER, *PFORT_STAT_PROC_TRAF_ITER;
+
+static void
+fort_stat_dpc_traf_proc_flush (PFORT_STAT_PROC_TRAF_ITER iter, PFORT_STAT_PROC proc)
+{
+  const UINT16 i = proc->proc_index;
+
+  /* Write bytes */
+  iter->out_traf[i] = proc->traf;
+
+  if (!proc->refcount) {
+    /* The process is inactive */
+    PFORT_STAT stat = iter->stat;
+
+    iter->out_proc_bits[i / 8] ^= (1 << (i & 7));
+
+    fort_stat_proc_free(stat, proc);
+  } else {
+    /* Clear active process's bytes */
+    proc->traf.v = 0;
+  }
+}
+
 static void
 fort_stat_dpc_traf_flush (PFORT_STAT stat, PCHAR out)
 {
-  const UINT32 proc_bits_len = FORT_LOG_STAT_PROC_SIZE(stat->proc_count);
-  PFORT_STAT_TRAF out_traf = (PFORT_STAT_TRAF) (out + proc_bits_len);
-  PUCHAR out_proc_bits = (PUCHAR) out;
-  UINT16 i;
+  FORT_STAT_PROC_TRAF_ITER iter;
+  const UINT32 proc_bits_len = FORT_LOG_STAT_PROC_SIZE(
+    fort_stat_proc_count(stat));
 
-  PFORT_STAT_PROC prev_proc = NULL;
-  UINT16 proc_index = stat->proc_head_index;
+  iter.out_proc_bits = (PUCHAR) out;
+  iter.out_traf = (PFORT_STAT_TRAF) (out + proc_bits_len);
+  iter.stat = stat;
 
   /* Mark processes as active to start */
-  memset(out_proc_bits, 0xFF, proc_bits_len);
+  memset(iter.out_proc_bits, 0xFF, proc_bits_len);
 
-  for (i = 0; proc_index != FORT_PROC_BAD_INDEX; ++i) {
-    PFORT_STAT_PROC proc = &stat->procs[proc_index];
-    const UINT16 next_index = proc->next_index;
+  /* Iterate over active processes */
+  tommy_hashdyn_foreach_node_arg(&stat->procs_map,
+    fort_stat_dpc_traf_proc_flush, &iter);
 
-    /* Write bytes */
-    *out_traf++ = proc->traf;
-
-    if (!proc->refcount) {
-      /* The process is inactive */
-      out_proc_bits[i / 8] ^= (1 << (i & 7));
-
-      fort_stat_proc_free(stat, proc, proc_index, prev_proc);
-    } else {
-      /* Clear active process's bytes */
-      proc->traf_all.QuadPart = 0;
-
-      prev_proc = proc;
-    }
-
-    proc_index = next_index;
-  }
-
+  /* Clear process group's bytes */
   if (stat->limit_bits) {
     PFORT_STAT_GROUP group = stat->groups;
     UINT16 limit_bits = stat->limit_bits;
 
     for (; limit_bits != 0; ++group) {
       if (limit_bits & 1) {
-        group->traf_all.QuadPart = 0;
+        group->traf.v = 0;
       }
 
       limit_bits >>= 1;

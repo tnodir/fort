@@ -763,7 +763,7 @@ fort_callout_timer (void)
   /* Flush traffic statistics */
   if (stat->is_dirty) {
     PCHAR out;
-    const UINT16 proc_count = stat->proc_count;
+    const UINT16 proc_count = fort_stat_proc_count(stat);
     const UINT32 len = FORT_LOG_STAT_SIZE(proc_count);
 
     /* TODO: Write by chunks */
