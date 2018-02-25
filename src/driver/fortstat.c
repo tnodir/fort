@@ -522,6 +522,7 @@ fort_stat_dpc_end (PKLOCK_QUEUE_HANDLE lock_queue)
 }
 
 typedef struct fort_stat_proc_traf_iter {
+  UINT16 index;
   PUCHAR out_proc_bits;
   PFORT_STAT_TRAF out_traf;
   PFORT_STAT stat;
@@ -530,7 +531,7 @@ typedef struct fort_stat_proc_traf_iter {
 static void
 fort_stat_dpc_traf_proc_flush (PFORT_STAT_PROC_TRAF_ITER iter, PFORT_STAT_PROC proc)
 {
-  const UINT16 i = proc->proc_index;
+  const UINT16 i = iter->index++;
 
   /* Write bytes */
   iter->out_traf[i] = proc->traf;
@@ -555,6 +556,7 @@ fort_stat_dpc_traf_flush (PFORT_STAT stat, PCHAR out)
   const UINT32 proc_bits_len = FORT_LOG_STAT_PROC_SIZE(
     fort_stat_proc_count(stat));
 
+  iter.index = 0;
   iter.out_proc_bits = (PUCHAR) out;
   iter.out_traf = (PFORT_STAT_TRAF) (out + proc_bits_len);
   iter.stat = stat;
