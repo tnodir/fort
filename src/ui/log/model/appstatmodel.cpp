@@ -1,6 +1,8 @@
 #include "appstatmodel.h"
 
 #include "../../db/databasemanager.h"
+#include "../logentryprocnew.h"
+#include "../logentrystattraf.h"
 #include "traflistmodel.h"
 
 AppStatModel::AppStatModel(DatabaseManager *databaseManager,
@@ -74,13 +76,14 @@ void AppStatModel::handleCreatedApp(qint64 appId, const QString &appPath)
     insert(appPath);
 }
 
-void AppStatModel::handleProcNew(const QString &appPath)
+void AppStatModel::handleProcNew(const LogEntryProcNew &procNewEntry)
 {
-    m_databaseManager->logProcNew(appPath);
+    m_databaseManager->logProcNew(procNewEntry.pid(),
+                                  procNewEntry.path());
 }
 
-void AppStatModel::handleStatTraf(quint16 procCount, const quint8 *procBits,
-                                  const quint32 *trafBytes)
+void AppStatModel::handleStatTraf(const LogEntryStatTraf &statTrafEntry)
 {
-    m_databaseManager->logStatTraf(procCount, procBits, trafBytes);
+    m_databaseManager->logStatTraf(statTrafEntry.procCount(),
+                                   statTrafEntry.procTrafBytes());
 }

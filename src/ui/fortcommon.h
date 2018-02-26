@@ -28,7 +28,6 @@ public:
     static quint32 logProcNewSize(quint32 pathLen);
 
     static quint32 logStatHeaderSize();
-    static quint32 logStatProcSize(quint16 procCount);
     static quint32 logStatTrafSize(quint16 procCount);
     static quint32 logStatSize(quint16 procCount);
 

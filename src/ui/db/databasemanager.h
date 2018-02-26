@@ -28,14 +28,10 @@ public:
 
     bool initialize();
 
-    void logProcNew(const QString &appPath);
-    void logStatTraf(quint16 procCount, const quint8 *procBits,
-                     const quint32 *trafBytes);
-    void logClear();
+    void logProcNew(quint32 pid, const QString &appPath);
+    void logStatTraf(quint16 procCount, const quint32 *procTrafBytes);
 
     void getAppList(QStringList &list, QVector<qint64> &appIds);
-
-    qint64 getAppId(const QString &appPath);
 
     void deleteApp(qint64 appId);
 
@@ -66,6 +62,10 @@ private:
     void clearAppId(qint64 appId);
     void clearAppIds();
 
+    void logClear();
+    void logClearApp(quint32 pid, int index);
+
+    qint64 getAppId(const QString &appPath);
     qint64 createAppId(const QString &appPath);
 
     void updateTrafficList(const QStmtList &insertStmtList,
@@ -97,6 +97,7 @@ private:
 
     QHash<const char *, SqliteStmt *> m_sqliteStmts;
 
+    QHash<quint32, int> m_appIndexes;
     QStringList m_appPaths;
     QVector<qint64> m_appIds;
 };

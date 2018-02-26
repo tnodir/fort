@@ -73,11 +73,6 @@ quint32 FortCommon::logStatHeaderSize()
     return FORT_LOG_STAT_HEADER_SIZE;
 }
 
-quint32 FortCommon::logStatProcSize(quint16 procCount)
-{
-    return FORT_LOG_STAT_PROC_SIZE(procCount);
-}
-
 quint32 FortCommon::logStatTrafSize(quint16 procCount)
 {
     return FORT_LOG_STAT_TRAF_SIZE(procCount);

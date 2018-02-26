@@ -102,28 +102,25 @@ void LogManager::processLogBuffer(LogBuffer *logBuffer, bool success,
 
 void LogManager::readLogEntries(LogBuffer *logBuffer)
 {
-    LogEntryBlocked entryBlocked;
-    LogEntryProcNew entryProcNew;
-    LogEntryStatTraf entryStatTraf;
+    LogEntryBlocked blockedEntry;
+    LogEntryProcNew procNewEntry;
+    LogEntryStatTraf statTrafEntry;
 
     forever {
         switch (logBuffer->peekEntryType()) {
         case LogEntry::AppBlocked: {
-            logBuffer->readEntryBlocked(&entryBlocked);
-            m_appBlockedModel->addLogEntry(entryBlocked);
+            logBuffer->readEntryBlocked(&blockedEntry);
+            m_appBlockedModel->addLogEntry(blockedEntry);
             break;
         }
         case LogEntry::ProcNew: {
-            logBuffer->readEntryProcNew(&entryProcNew);
-            m_appStatModel->handleProcNew(entryProcNew.path());
+            logBuffer->readEntryProcNew(&procNewEntry);
+            m_appStatModel->handleProcNew(procNewEntry);
             break;
         }
         case LogEntry::StatTraf: {
-            logBuffer->readEntryStatTraf(&entryStatTraf);
-            m_appStatModel->handleStatTraf(
-                        entryStatTraf.procCount(),
-                        entryStatTraf.procBits(),
-                        entryStatTraf.trafBytes());
+            logBuffer->readEntryStatTraf(&statTrafEntry);
+            m_appStatModel->handleStatTraf(statTrafEntry);
             break;
         }
         default:

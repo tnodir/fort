@@ -152,10 +152,7 @@ void LogBuffer::readEntryStatTraf(LogEntryStatTraf *logEntry)
 
     if (procCount) {
         input += FortCommon::logStatHeaderSize();
-        logEntry->setProcBits((const quint8 *) input);
-
-        input += FortCommon::logStatProcSize(procCount);
-        logEntry->setTrafBytes((const quint32 *) input);
+        logEntry->setProcTrafBytes((const quint32 *) input);
     }
 
     const int entrySize = FortCommon::logStatTrafSize(procCount);

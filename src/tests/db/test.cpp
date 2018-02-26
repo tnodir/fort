@@ -29,8 +29,9 @@ void Test::dbWriteRead()
     QCOMPARE(int(procCount), appPaths.size());
 
     // Add apps
+    quint32 index = 0;
     foreach (const QString &appPath, appPaths) {
-        databaseManager.logProcNew(appPath);
+        databaseManager.logProcNew(++index * 10, appPath);
     }
 
     debugProcNew(databaseManager.sqliteDb());
@@ -40,25 +41,27 @@ void Test::dbWriteRead()
 
     // Add app traffics
     {
-        const quint8 procBits = 0xFF;
-        QVERIFY(sizeof(procBits) * 8 >= procCount);
+        const quint32 trafBytes[procCount * 3] = {
+            10, 100, 200,
+            20, 300, 400,
+            30, 500, 600
+        };
 
-        const quint32 trafBytes[procCount * 2] = {100, 200, 300, 400, 500, 600};
-
-        databaseManager.logStatTraf(procCount, &procBits, trafBytes);
-        databaseManager.logStatTraf(procCount, &procBits, trafBytes);
+        databaseManager.logStatTraf(procCount, trafBytes);
+        databaseManager.logStatTraf(procCount, trafBytes);
     }
 
     qDebug() << "elapsed>" << timer.restart() << "msec";
 
     // Delete apps
     {
-        const quint8 procBits = 0x02;
-        QVERIFY(sizeof(procBits) * 8 >= procCount);
+        const quint32 trafBytes[procCount * 3] = {
+            11, 10, 20,
+            21, 30, 40,
+            31, 50, 60
+        };
 
-        const quint32 trafBytes[procCount * 2] = {10, 20, 30, 40, 50, 60};
-
-        databaseManager.logStatTraf(procCount, &procBits, trafBytes);
+        databaseManager.logStatTraf(procCount, trafBytes);
     }
 
     qDebug() << "elapsed>" << timer.elapsed() << "msec";

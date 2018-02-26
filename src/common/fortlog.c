@@ -25,16 +25,11 @@
 
 #define FORT_LOG_STAT_HEADER_SIZE	sizeof(UINT32)
 
-#define FORT_LOG_STAT_PROC_SIZE(proc_count) \
-  (((proc_count - 1) / 8 + 1 + (FORT_LOG_ALIGN - 1)) \
-    & ~(FORT_LOG_ALIGN - 1))
-
 #define FORT_LOG_STAT_TRAF_SIZE(proc_count) \
-  (proc_count * 2 * sizeof(UINT32))
+  (proc_count * 3 * sizeof(UINT32))
 
 #define FORT_LOG_STAT_SIZE(proc_count) \
-  (FORT_LOG_STAT_HEADER_SIZE + FORT_LOG_STAT_PROC_SIZE(proc_count) \
-    + FORT_LOG_STAT_TRAF_SIZE(proc_count))
+  (FORT_LOG_STAT_HEADER_SIZE + FORT_LOG_STAT_TRAF_SIZE(proc_count))
 
 #define FORT_LOG_SIZE_MAX		FORT_LOG_BLOCKED_SIZE_MAX
 

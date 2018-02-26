@@ -124,8 +124,28 @@ void DatabaseManager::clearAppIds()
     }
 }
 
-void DatabaseManager::logProcNew(const QString &appPath)
+void DatabaseManager::logClear()
 {
+    m_appIndexes.clear();
+    m_appPaths.clear();
+    m_appIds.clear();
+}
+
+void DatabaseManager::logClearApp(quint32 pid, int index)
+{
+    m_appIndexes.remove(pid);
+    m_appPaths.removeAt(index);
+    m_appIds.removeAt(index);
+}
+
+void DatabaseManager::logProcNew(quint32 pid, const QString &appPath)
+{
+    Q_ASSERT(!m_appIndexes.contains(pid));
+
+    m_appIndexes.insert(pid, m_appPaths.size());
+    m_appPaths.append(appPath);
+
+    // Get appId
     m_sqliteDb->beginTransaction();
 
     qint64 appId = getAppId(appPath);
@@ -135,22 +155,13 @@ void DatabaseManager::logProcNew(const QString &appPath)
 
     m_sqliteDb->commitTransaction();
 
-    m_appPaths.prepend(appPath);
-    m_appIds.prepend(appId);
+    m_appIds.append(appId);
 }
 
-void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
-                                  const quint32 *trafBytes)
+void DatabaseManager::logStatTraf(quint16 procCount, const quint32 *procTrafBytes)
 {
     if (!m_conf || !m_conf->logStat())
         return;
-
-    if (procCount != m_appIds.size()) {
-        qFatal("DatabaseManager: UI & Driver's states mismatch.");
-        abort();
-    }
-
-    QVector<quint16> delProcIndexes;
 
     const qint64 unixTime = DateUtil::getUnixTime();
 
@@ -200,23 +211,29 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
             << getTrafficStmt(DatabaseSql::sqlUpdateTrafDay, trafDay)
             << getTrafficStmt(DatabaseSql::sqlUpdateTrafMonth, trafMonth);
 
-    for (quint16 i = 0; i < procCount; ++i) {
-        const bool active = procBits[i / 8] & (1 << (i & 7));
-        if (!active) {
-            delProcIndexes.append(i);
+    for (int i = 0; i < procCount; ++i) {
+        quint32 pid = *procTrafBytes++;
+        const bool inactive = (pid & 1) != 0;
+        const quint32 inBytes = *procTrafBytes++;
+        const quint32 outBytes = *procTrafBytes++;
+
+        if (inactive) {
+            pid ^= 1;
         }
 
-        const quint32 *procTrafBytes = &trafBytes[i * 2];
-        const quint32 inBytes = procTrafBytes[0];
-        const quint32 outBytes = procTrafBytes[1];
+        const int procIndex = m_appIndexes.value(pid, -1);
+        if (procIndex == -1) {
+            qFatal("DatabaseManager: UI & Driver's states mismatch.");
+            abort();
+        }
 
         if (inBytes || outBytes) {
-            qint64 appId = m_appIds.at(i);
+            qint64 appId = m_appIds.at(procIndex);
 
             // Was the app cleared?
             if (appId == INVALID_APP_ID) {
-                appId = createAppId(m_appPaths.at(i));
-                replaceAppIdAt(i, appId);
+                appId = createAppId(m_appPaths.at(procIndex));
+                replaceAppIdAt(procIndex, appId);
             }
 
             // Update or insert app bytes
@@ -229,6 +246,10 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
 
             // Update quota traffic bytes
             m_quotaManager->addTraf(inBytes);
+        }
+
+        if (inactive) {
+            logClearApp(pid, procIndex);
         }
     }
 
@@ -272,26 +293,9 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint8 *procBits,
 
     m_sqliteDb->commitTransaction();
 
-    // Delete inactive processes
-    {
-        int i = delProcIndexes.size();
-        while (--i >= 0) {
-            const quint16 procIndex = delProcIndexes.at(i);
-
-            m_appPaths.removeAt(procIndex);
-            m_appIds.removeAt(procIndex);
-        }
-    }
-
     // Check quotas
     m_quotaManager->checkQuotaDay(trafDay);
     m_quotaManager->checkQuotaMonth(trafMonth);
-}
-
-void DatabaseManager::logClear()
-{
-    m_appPaths.clear();
-    m_appIds.clear();
 }
 
 bool DatabaseManager::createTables()
@@ -303,21 +307,6 @@ bool DatabaseManager::createTables()
     m_sqliteDb->commitTransaction();
 
     return res;
-}
-
-qint64 DatabaseManager::getAppId(const QString &appPath)
-{
-    qint64 appId = INVALID_APP_ID;
-
-    SqliteStmt *stmt = getSqliteStmt(DatabaseSql::sqlSelectAppId);
-
-    stmt->bindText(1, appPath);
-    if (stmt->step() == SqliteStmt::StepRow) {
-        appId = stmt->columnInt64();
-    }
-    stmt->reset();
-
-    return appId;
 }
 
 void DatabaseManager::deleteApp(qint64 appId)
@@ -347,6 +336,21 @@ void DatabaseManager::resetAppTotals()
     stmt->reset();
 
     m_sqliteDb->commitTransaction();
+}
+
+qint64 DatabaseManager::getAppId(const QString &appPath)
+{
+    qint64 appId = INVALID_APP_ID;
+
+    SqliteStmt *stmt = getSqliteStmt(DatabaseSql::sqlSelectAppId);
+
+    stmt->bindText(1, appPath);
+    if (stmt->step() == SqliteStmt::StepRow) {
+        appId = stmt->columnInt64();
+    }
+    stmt->reset();
+
+    return appId;
 }
 
 qint64 DatabaseManager::createAppId(const QString &appPath)

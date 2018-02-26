@@ -1,12 +1,10 @@
 #include "logentrystattraf.h"
 
 LogEntryStatTraf::LogEntryStatTraf(quint16 procCount,
-                                   const quint8 *procBits,
-                                   const quint32 *trafBytes) :
+                                   const quint32 *procTrafBytes) :
     LogEntry(),
     m_procCount(procCount),
-    m_procBits(procBits),
-    m_trafBytes(trafBytes)
+    m_procTrafBytes(procTrafBytes)
 {
 }
 
@@ -15,12 +13,7 @@ void LogEntryStatTraf::setProcCount(quint16 procCount)
     m_procCount = procCount;
 }
 
-void LogEntryStatTraf::setProcBits(const quint8 *procBits)
+void LogEntryStatTraf::setProcTrafBytes(const quint32 *procTrafBytes)
 {
-    m_procBits = procBits;
-}
-
-void LogEntryStatTraf::setTrafBytes(const quint32 *trafBytes)
-{
-    m_trafBytes = trafBytes;
+    m_procTrafBytes = procTrafBytes;
 }

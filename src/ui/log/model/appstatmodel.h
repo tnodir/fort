@@ -4,6 +4,8 @@
 #include "stringlistmodel.h"
 
 QT_FORWARD_DECLARE_CLASS(DatabaseManager)
+QT_FORWARD_DECLARE_CLASS(LogEntryProcNew)
+QT_FORWARD_DECLARE_CLASS(LogEntryStatTraf)
 QT_FORWARD_DECLARE_CLASS(TrafListModel)
 
 class AppStatModel : public StringListModel
@@ -19,9 +21,8 @@ public:
     Q_INVOKABLE TrafListModel *trafListModel(int trafType, int row,
                                              const QString &appPath) const;
 
-    void handleProcNew(const QString &appPath);
-    void handleStatTraf(quint16 procCount, const quint8 *procBits,
-                        const quint32 *trafBytes);
+    void handleProcNew(const LogEntryProcNew &procNewEntry);
+    void handleStatTraf(const LogEntryStatTraf &statTrafEntry);
 
 signals:
 

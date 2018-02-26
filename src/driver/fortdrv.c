@@ -761,10 +761,10 @@ fort_callout_timer (void)
   fort_stat_dpc_begin(stat, &stat_lock_queue);
 
   /* Flush traffic statistics */
-  if (stat->is_dirty) {
-    PCHAR out;
-    const UINT16 proc_count = fort_stat_proc_count(stat);
+  if (stat->proc_active_count) {
+    const UINT16 proc_count = stat->proc_active_count;
     const UINT32 len = FORT_LOG_STAT_SIZE(proc_count);
+    PCHAR out;
 
     /* TODO: Write by chunks */
     if (len < FORT_BUFFER_SIZE
@@ -775,6 +775,9 @@ fort_callout_timer (void)
       fort_stat_dpc_traf_flush(stat, out);
     }
   }
+
+  /* Flush process group statistics */
+  fort_stat_dpc_group_flush(stat);
 
   /* Unlock stat */
   fort_stat_dpc_end(&stat_lock_queue);
