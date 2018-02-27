@@ -58,6 +58,7 @@ private:
 
     void clearStmts();
 
+    void replaceAppPathAt(int index, const QString &appPath);
     void replaceAppIdAt(int index, qint64 appId);
     void clearAppId(qint64 appId);
     void clearAppIds();
@@ -84,6 +85,8 @@ private:
     SqliteStmt *getSqliteStmt(const char *sql);
 
 private:
+    qint16 m_appFreeIndex;
+
     qint32 m_lastTrafHour;
     qint32 m_lastTrafDay;
     qint32 m_lastTrafMonth;
@@ -97,6 +100,7 @@ private:
 
     QHash<const char *, SqliteStmt *> m_sqliteStmts;
 
+    QVector<qint16> m_appFreeIndexes;
     QHash<quint32, int> m_appIndexes;
     QStringList m_appPaths;
     QVector<qint64> m_appIds;

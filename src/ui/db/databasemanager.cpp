@@ -9,12 +9,14 @@
 #include "sqlite/sqliteengine.h"
 #include "sqlite/sqlitestmt.h"
 
-#define INVALID_APP_ID  qint64(-1)
+#define INVALID_APP_INDEX   qint16(-1)
+#define INVALID_APP_ID      qint64(-1)
 
 DatabaseManager::DatabaseManager(const QString &filePath,
                                  QuotaManager *quotaManager,
                                  QObject *parent) :
     QObject(parent),
+    m_appFreeIndex(INVALID_APP_INDEX),
     m_lastTrafHour(0),
     m_lastTrafDay(0),
     m_lastTrafMonth(0),
@@ -101,6 +103,11 @@ void DatabaseManager::clearStmts()
     m_sqliteStmts.clear();
 }
 
+void DatabaseManager::replaceAppPathAt(int index, const QString &appPath)
+{
+    m_appPaths.replace(index, appPath);
+}
+
 void DatabaseManager::replaceAppIdAt(int index, qint64 appId)
 {
     m_appIds.replace(index, appId);
@@ -126,6 +133,8 @@ void DatabaseManager::clearAppIds()
 
 void DatabaseManager::logClear()
 {
+    m_appFreeIndex = INVALID_APP_INDEX;
+    m_appFreeIndexes.clear();
     m_appIndexes.clear();
     m_appPaths.clear();
     m_appIds.clear();
@@ -134,16 +143,25 @@ void DatabaseManager::logClear()
 void DatabaseManager::logClearApp(quint32 pid, int index)
 {
     m_appIndexes.remove(pid);
-    m_appPaths.removeAt(index);
-    m_appIds.removeAt(index);
+
+    if (index == m_appFreeIndexes.size() - 1) {
+        // Chop last index
+        m_appFreeIndexes.removeLast();
+        m_appPaths.removeLast();
+        m_appIds.removeLast();
+    } else {
+        // Reuse index later
+        m_appFreeIndexes[index] = m_appFreeIndex;
+        m_appFreeIndex = qint16(index);
+
+        replaceAppPathAt(index, QString());
+        replaceAppIdAt(index, INVALID_APP_ID);
+    }
 }
 
 void DatabaseManager::logProcNew(quint32 pid, const QString &appPath)
 {
     Q_ASSERT(!m_appIndexes.contains(pid));
-
-    m_appIndexes.insert(pid, m_appPaths.size());
-    m_appPaths.append(appPath);
 
     // Get appId
     m_sqliteDb->beginTransaction();
@@ -155,7 +173,23 @@ void DatabaseManager::logProcNew(quint32 pid, const QString &appPath)
 
     m_sqliteDb->commitTransaction();
 
-    m_appIds.append(appId);
+    // Add process
+    qint16 procIndex = m_appFreeIndex;
+    if (procIndex != INVALID_APP_INDEX) {
+        m_appFreeIndex = m_appFreeIndexes[procIndex];
+        m_appFreeIndexes[procIndex] = INVALID_APP_INDEX;
+
+        replaceAppPathAt(procIndex, appPath);
+        replaceAppIdAt(procIndex, appId);
+    } else {
+        procIndex = qint16(m_appFreeIndexes.size());
+        m_appFreeIndexes.append(INVALID_APP_INDEX);
+
+        m_appPaths.append(appPath);
+        m_appIds.append(appId);
+    }
+
+    m_appIndexes.insert(pid, procIndex);
 }
 
 void DatabaseManager::logStatTraf(quint16 procCount, const quint32 *procTrafBytes)
@@ -221,8 +255,8 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint32 *procTrafByte
             pid ^= 1;
         }
 
-        const int procIndex = m_appIndexes.value(pid, -1);
-        if (procIndex == -1) {
+        const int procIndex = m_appIndexes.value(pid, INVALID_APP_INDEX);
+        if (procIndex == INVALID_APP_INDEX) {
             qFatal("DatabaseManager: UI & Driver's states mismatch.");
             abort();
         }
