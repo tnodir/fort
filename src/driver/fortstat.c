@@ -553,13 +553,13 @@ fort_stat_dpc_end (PKLOCK_QUEUE_HANDLE lock_queue)
 }
 
 static void
-fort_stat_dpc_traf_flush (PFORT_STAT stat, PCHAR out)
+fort_stat_dpc_traf_flush (PFORT_STAT stat, UINT16 proc_count, PCHAR out)
 {
   PFORT_STAT_PROC proc;
 
   proc = stat->proc_active;
 
-  while (proc != NULL) {
+  while (proc != NULL && proc_count-- != 0) {
     PFORT_STAT_PROC proc_next = proc->next_active;
     UINT32 *out_proc = (UINT32 *) out;
     PFORT_STAT_TRAF out_traf = (PFORT_STAT_TRAF) (out_proc + 1);

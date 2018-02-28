@@ -761,19 +761,25 @@ fort_callout_timer (void)
   fort_stat_dpc_begin(stat, &stat_lock_queue);
 
   /* Flush traffic statistics */
-  if (stat->proc_active_count) {
-    const UINT16 proc_count = stat->proc_active_count;
+  while (stat->proc_active_count) {
+    const UINT16 proc_count =
+      (stat->proc_active_count < FORT_LOG_STAT_BUFFER_PROC_COUNT)
+      ? stat->proc_active_count : FORT_LOG_STAT_BUFFER_PROC_COUNT;
     const UINT32 len = FORT_LOG_STAT_SIZE(proc_count);
     PCHAR out;
+    NTSTATUS status;
 
-    /* TODO: Write by chunks */
-    if (len < FORT_BUFFER_SIZE
-        && NT_SUCCESS(fort_buffer_prepare(buf, len, &out, &irp, &info))) {
-      fort_log_stat_traf_header_write(out, proc_count);
-      out += FORT_LOG_STAT_HEADER_SIZE;
-
-      fort_stat_dpc_traf_flush(stat, out);
+    status = fort_buffer_prepare(buf, len, &out, &irp, &info);
+    if (!NT_SUCCESS(status)) {
+      DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                 "FORT: Callout Timer: Error: %x\n", status);
+      break;
     }
+
+    fort_log_stat_traf_header_write(out, proc_count);
+    out += FORT_LOG_STAT_HEADER_SIZE;
+
+    fort_stat_dpc_traf_flush(stat, proc_count, out);
   }
 
   /* Flush process group statistics */
