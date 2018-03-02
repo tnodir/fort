@@ -12,7 +12,7 @@ QT_FORWARD_DECLARE_CLASS(AppGroup)
 #define DEFAULT_MONTH_START             1
 #define DEFAULT_TRAF_HOUR_KEEP_DAYS     90  // ~3 months
 #define DEFAULT_TRAF_DAY_KEEP_DAYS      365  // ~1 year
-#define DEFAULT_TRAF_MONTH_KEEP_MONTHS  360  // ~3 years
+#define DEFAULT_TRAF_MONTH_KEEP_MONTHS  36  // ~3 years
 
 class FirewallConf : public QObject
 {

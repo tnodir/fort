@@ -11,7 +11,7 @@ ButtonPopup {
           && qsTranslate("qml", "Options…")
 
     readonly property var trafKeepDayValues: [
-        90, -1, 90, 180, 365, 365 * 3
+        60, -1, 90, 180, 365, 365 * 3
     ]
 
     readonly property var trafKeepDayNames:
@@ -26,7 +26,7 @@ ButtonPopup {
         ]
 
     readonly property var trafKeepMonthValues: [
-        360, -1, 3, 6, 12, 360
+        2, -1, 3, 6, 12, 36
     ]
 
     readonly property var trafKeepMonthNames:
