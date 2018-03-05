@@ -13,7 +13,7 @@ protected:
     explicit Logger(QObject *parent = nullptr);
 
 public:
-    enum LogLevel { Info = 0, Warning, Error, LevelCount };
+    enum LogLevel { Info = 0, Warning, Error };
     Q_ENUM(LogLevel)
 
     bool active() const { return m_active; }

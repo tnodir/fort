@@ -97,7 +97,8 @@ void Logger::writeLogLine(Logger::LogLevel level, const QString &dateString,
     static const char * const g_levelTexts[] = {
         "[Info]", "[Warn]", "[Fail]"};
 
-    const QString line = dateString + g_levelTexts[int(level)]
+    const QString line = dateString
+            + ' ' + g_levelTexts[int(level)]
             + ' ' + message + '\n';
 
     m_file.write(line.toLatin1());
@@ -112,7 +113,7 @@ void Logger::writeLog(const QString &message, LogLevel level)
     m_writing = true;
 
     const QString dateString = QDateTime::currentDateTime()
-            .toString("'['yyyy-MM-dd HH:mm:ss']'");
+            .toString("yyyy-MM-dd HH:mm:ss");
 
     // Create file when required to avoid empty files
     if (!m_file.isOpen()) {
