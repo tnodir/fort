@@ -42,37 +42,37 @@
 <context>
     <name>FortManager</name>
     <message>
-        <location filename="../fortmanager.cpp" line="260"/>
+        <location filename="../fortmanager.cpp" line="259"/>
         <source>Password input</source>
         <translation>Ввод пароля</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="260"/>
+        <location filename="../fortmanager.cpp" line="259"/>
         <source>Please enter the password</source>
         <translation>Наберите пароль пожалуйста</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="487"/>
+        <location filename="../fortmanager.cpp" line="499"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="493"/>
+        <location filename="../fortmanager.cpp" line="505"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="497"/>
+        <location filename="../fortmanager.cpp" line="509"/>
         <source>Stop Traffic</source>
         <translation>Остановить трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="501"/>
+        <location filename="../fortmanager.cpp" line="513"/>
         <source>Stop Internet Traffic</source>
         <translation>Остановить Интернет трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="518"/>
+        <location filename="../fortmanager.cpp" line="530"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -80,22 +80,22 @@
 <context>
     <name>FortSettings</name>
     <message>
-        <location filename="../fortsettings.cpp" line="178"/>
+        <location filename="../fortsettings.cpp" line="191"/>
         <source>Can&apos;t write .ini file</source>
         <translation>Не удалось записать .ini файл</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="189"/>
+        <location filename="../fortsettings.cpp" line="202"/>
         <source>Can&apos;t create .conf file</source>
         <translation>Не удалось создать .conf файл</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="183"/>
+        <location filename="../fortsettings.cpp" line="196"/>
         <source>Can&apos;t create backup .conf file</source>
         <translation>Не удалось создать бэкап .conf файла</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="204"/>
+        <location filename="../fortsettings.cpp" line="217"/>
         <source>Can&apos;t write .conf file</source>
         <translation>Не удалось записать .conf файл</translation>
     </message>
@@ -137,12 +137,12 @@
 <context>
     <name>QuotaManager</name>
     <message>
-        <location filename="../db/quotamanager.cpp" line="74"/>
+        <location filename="../db/quotamanager.cpp" line="86"/>
         <source>Day traffic quota exceeded!</source>
         <translation>Квота трафика на день исчерпана!</translation>
     </message>
     <message>
-        <location filename="../db/quotamanager.cpp" line="93"/>
+        <location filename="../db/quotamanager.cpp" line="105"/>
         <source>Month traffic quota exceeded!</source>
         <translation>Квота трафика на месяц исчерпана!</translation>
     </message>
@@ -155,17 +155,17 @@
 <context>
     <name>TaskInfo</name>
     <message>
-        <location filename="../task/taskinfo.cpp" line="47"/>
+        <location filename="../task/taskinfo.cpp" line="48"/>
         <source>Update Checker</source>
         <translation>Проверка обновлений</translation>
     </message>
     <message>
-        <location filename="../task/taskinfo.cpp" line="49"/>
+        <location filename="../task/taskinfo.cpp" line="50"/>
         <source>TAS-IX Addresses Downloader</source>
         <translation>Загрузчик TAS-IX адресов</translation>
     </message>
     <message>
-        <location filename="../task/taskinfo.cpp" line="51"/>
+        <location filename="../task/taskinfo.cpp" line="52"/>
         <source>UzOnline Addresses Downloader</source>
         <translation>Загрузчик UzOnline адресов</translation>
     </message>
@@ -361,6 +361,7 @@
     </message>
     <message>
         <location filename="../qml/pages/MainPage.qml" line="70"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="174"/>
         <source>Statistics</source>
         <translation>Статистика</translation>
     </message>
@@ -445,7 +446,7 @@
         <translation>Профиль</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="174"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="184"/>
         <source>Releases</source>
         <translation>Релизы</translation>
     </message>

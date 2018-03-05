@@ -171,6 +171,16 @@ BasePage {
 
                 LinkButton {
                     text: translationManager.dummyBool
+                          && qsTranslate("qml", "Statistics")
+                    tipText: path
+                    onClicked: Qt.openUrlExternally("file:///" + path)
+                    readonly property string path: fortSettings.statPath
+                }
+
+                VSeparator {}
+
+                LinkButton {
+                    text: translationManager.dummyBool
                           && qsTranslate("qml", "Releases")
                     tipText: link
                     onClicked: Qt.openUrlExternally(link)

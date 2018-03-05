@@ -21,6 +21,7 @@ class FortSettings : public QObject
     Q_PROPERTY(bool startWithWindows READ startWithWindows WRITE setStartWithWindows NOTIFY startWithWindowsChanged)
     Q_PROPERTY(QString logsPath READ logsPath CONSTANT)
     Q_PROPERTY(QString profilePath READ profilePath CONSTANT)
+    Q_PROPERTY(QString statPath READ statPath CONSTANT)
     Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
     Q_PROPERTY(QString appUpdatesUrl READ appUpdatesUrl CONSTANT)
 
