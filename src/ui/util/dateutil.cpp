@@ -1,11 +1,15 @@
 #include "dateutil.h"
 
-#include <QDateTime>
 #include <QLocale>
 
 DateUtil::DateUtil(QObject *parent) :
     QObject(parent)
 {
+}
+
+QDateTime DateUtil::now()
+{
+    return QDateTime::currentDateTime();
 }
 
 qint64 DateUtil::getUnixTime()

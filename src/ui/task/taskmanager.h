@@ -33,6 +33,7 @@ public slots:
 
 private slots:
     void handleTaskFinished(bool success);
+
     void runExpiredTasks();
 
 private:

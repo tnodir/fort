@@ -18,7 +18,7 @@ class TaskInfo : public QObject
     Q_PROPERTY(bool running READ running NOTIFY taskWorkerChanged)
 
 public:
-    enum TaskType {
+    enum TaskType : qint16 {
         TypeNone = -1,
         UpdateChecker = 0,
         Tasix,
@@ -59,8 +59,6 @@ public:
     static QString typeToString(TaskInfo::TaskType type);
     static TaskInfo::TaskType stringToType(const QString &name);
 
-    static QDateTime now();
-
 signals:
     void enabledChanged();
     void intervalHoursChanged();
@@ -82,9 +80,10 @@ private:
     TaskWorker *createWorker();
 
 private:
-    uint m_enabled          : 1;
-    uint m_aborted          : 1;  // transient
-    uint m_intervalHours    : 16;
+    quint8 m_enabled   : 1;
+    quint8 m_aborted   : 1;  // transient
+
+    quint16 m_intervalHours;
 
     TaskType m_type;
 

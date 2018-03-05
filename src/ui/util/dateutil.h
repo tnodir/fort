@@ -1,6 +1,7 @@
 #ifndef DATEUTIL_H
 #define DATEUTIL_H
 
+#include <QDateTime>
 #include <QObject>
 #include <QString>
 
@@ -10,6 +11,8 @@ class DateUtil : public QObject
 
 public:
     explicit DateUtil(QObject *parent = nullptr);
+
+    static QDateTime now();
 
     static qint64 getUnixTime();
     static qint64 toUnixTime(qint32 unixHour);

@@ -282,7 +282,7 @@ QVariant FortSettings::migrateConf(const QVariant &confVar)
 
     QVariantMap map = confVar.toMap();
 
-    // v1.7.0: AddressGroups
+    // COMPAT: v1.7.0: AddressGroups
     if (version < 0x010700) {
         const QVariantMap oldIncMap = map["ipInclude"].toMap();
         const QVariantMap oldExcMap = map["ipExclude"].toMap();
@@ -312,13 +312,13 @@ void FortSettings::removeMigratedKeys()
 
     setIniVersion(APP_VERSION);
 
-    // v1.7.0: AddressGroups
+    // COMPAT: v1.7.0: AddressGroups
     if (version < 0x010700) {
         removeIniKey("confFlags/ipIncludeAll");
         removeIniKey("confFlags/ipExcludeAll");
     }
 
-    // v1.10.0: Log Errors
+    // COMPAT: v1.10.0: Log Errors
     if (version < 0x011000) {
         removeIniKey("confFlags/logErrors");
     }

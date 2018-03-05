@@ -3,6 +3,7 @@
 #include <QDataStream>
 #include <QMetaEnum>
 
+#include "../util/dateutil.h"
 #include "tasktasix.h"
 #include "taskupdatechecker.h"
 #include "taskuzonline.h"
@@ -35,7 +36,7 @@ void TaskInfo::setEnabled(bool enabled)
 void TaskInfo::setIntervalHours(int intervalHours)
 {
     if (m_intervalHours != intervalHours) {
-        m_intervalHours = intervalHours;
+        m_intervalHours = quint16(intervalHours);
         emit intervalHoursChanged();
     }
 }
@@ -117,7 +118,7 @@ void TaskInfo::setRawData(const QByteArray &data)
     quint16 infoVersion;
     stream >> infoVersion;
 
-    if (infoVersion != TASK_INFO_VERSION)
+    if (infoVersion > TASK_INFO_VERSION)
         return;
 
     // Load data
@@ -145,11 +146,6 @@ TaskInfo::TaskType TaskInfo::stringToType(const QString &name)
     const QMetaEnum typeEnum = QMetaEnum::fromType<TaskType>();
     return static_cast<TaskInfo::TaskType>(
                 typeEnum.keyToValue(name.toLatin1()));
-}
-
-QDateTime TaskInfo::now()
-{
-    return QDateTime::currentDateTime();
 }
 
 void TaskInfo::run()
@@ -186,7 +182,7 @@ void TaskInfo::handleFinished(bool success)
 {
     if (!m_taskWorker) return;
 
-    setLastRun(now());
+    setLastRun(DateUtil::now());
     if (success) {
         setLastSuccess(lastRun());
     }

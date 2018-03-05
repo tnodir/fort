@@ -2,6 +2,7 @@
 
 #include "../fortmanager.h"
 #include "../fortsettings.h"
+#include "../util/dateutil.h"
 #include "taskinfo.h"
 #include "taskworker.h"
 
@@ -12,10 +13,10 @@ TaskManager::TaskManager(FortManager *fortManager,
 {
     setupTasks();
 
+    m_timer.setSingleShot(true);
+
     connect(&m_timer, &QTimer::timeout,
             this, &TaskManager::runExpiredTasks);
-
-    m_timer.setSingleShot(true);
 }
 
 QQmlListProperty<TaskInfo> TaskManager::taskInfos()
@@ -87,21 +88,22 @@ void TaskManager::handleTaskFinished(bool success)
 
 void TaskManager::runExpiredTasks()
 {
-    const QDateTime now = TaskInfo::now();
-    bool anyTaskEnabled = false;
+    const QDateTime now = DateUtil::now();
+    bool enabledTaskExists = false;
 
     foreach (TaskInfo *taskInfo, m_taskInfos) {
-        if (taskInfo->enabled()) {
-            anyTaskEnabled = true;
+        if (!taskInfo->enabled())
+            continue;
 
-            if (now > taskInfo->plannedRun()) {
-                taskInfo->run();
-            }
+        enabledTaskExists = true;
+
+        if (now >= taskInfo->plannedRun()) {
+            taskInfo->run();
         }
     }
 
-    if (anyTaskEnabled) {
-        m_timer.start(60 * 60 * 1000);  // hour
+    if (enabledTaskExists) {
+        m_timer.start(60 * 60 * 1000);  // 1 hour
     } else {
         m_timer.stop();
     }
