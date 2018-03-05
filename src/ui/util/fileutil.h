@@ -25,6 +25,7 @@ public:
     Q_INVOKABLE static QString fileName(const QString &path);
 
     static QString absolutePath(const QString &path);
+    static QString pathSlash(const QString &path);
 
     static bool makePath(const QString &path);
     static bool fileExists(const QString &filePath);

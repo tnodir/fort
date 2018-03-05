@@ -66,6 +66,7 @@ public:
 
     QString profilePath() const { return m_profilePath; }
 
+    QString statPath() const { return m_statPath; }
     QString statFilePath() const;
 
     QString errorMessage() const { return m_errorMessage; }
@@ -123,6 +124,7 @@ private:
     uint m_hasProvBoot  : 1;
 
     QString m_profilePath;
+    QString m_statPath;
 
     QString m_errorMessage;
 

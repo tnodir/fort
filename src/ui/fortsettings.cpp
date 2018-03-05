@@ -51,30 +51,43 @@ void FortSettings::processArguments(const QStringList &args)
                 "Directory to store settings.", "profile");
     parser.addOption(profileOption);
 
+    const QCommandLineOption statOption(
+                QStringList() << "s" << "stat",
+                "Directory to store statistics.", "stat");
+    parser.addOption(statOption);
+
     parser.addVersionOption();
     parser.addHelpOption();
 
     parser.process(args);
 
+    // Provider Boot
     m_hasProvBoot = parser.isSet(provBootOption);
 
+    // Profile Path
     m_profilePath = parser.value(profileOption);
     if (m_profilePath.isEmpty()) {
         m_profilePath = FileUtil::appConfigLocation();
     }
-    m_profilePath = FileUtil::absolutePath(m_profilePath);
+    m_profilePath = FileUtil::pathSlash(
+                FileUtil::absolutePath(m_profilePath));
 
-    const QLatin1Char slash('/');
-    if (!m_profilePath.endsWith(slash)) {
-        m_profilePath += slash;
+    // Statistics Path
+    m_statPath = parser.value(statOption);
+    if (m_statPath.isEmpty()) {
+        m_statPath = m_profilePath;
+    } else {
+        m_statPath = FileUtil::pathSlash(
+                    FileUtil::absolutePath(m_statPath));
     }
 }
 
 void FortSettings::setupIni()
 {
-    const QString iniPath(m_profilePath + "FortFirewall.ini");
+    const QString iniPath(profilePath() + "FortFirewall.ini");
 
-    FileUtil::makePath(m_profilePath);
+    FileUtil::makePath(profilePath());
+    FileUtil::makePath(statPath());
 
     m_ini = new QSettings(iniPath, QSettings::IniFormat, this);
 }
@@ -115,17 +128,17 @@ bool FortSettings::setTasks(const TasksMap &map)
 
 QString FortSettings::logsPath() const
 {
-    return m_profilePath + QLatin1String("logs/");
+    return profilePath() + QLatin1String("logs/");
 }
 
 QString FortSettings::statFilePath() const
 {
-    return m_profilePath + QLatin1String("FortFirewall.stat");
+    return statPath() + QLatin1String("FortFirewall.stat");
 }
 
 QString FortSettings::confFilePath() const
 {
-    return m_profilePath + QLatin1String("FortFirewall.conf");
+    return profilePath() + QLatin1String("FortFirewall.conf");
 }
 
 QString FortSettings::confBackupFilePath() const

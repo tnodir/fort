@@ -82,6 +82,12 @@ QString FileUtil::absolutePath(const QString &path)
     return QDir(path).absolutePath();
 }
 
+QString FileUtil::pathSlash(const QString &path)
+{
+    const QLatin1Char slash('/');
+    return path.endsWith(slash) ? path : path + slash;
+}
+
 bool FileUtil::makePath(const QString &path)
 {
     return QDir().mkpath(path);
