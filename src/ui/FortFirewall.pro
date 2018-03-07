@@ -48,6 +48,7 @@ SOURCES += \
     util/device.cpp \
     util/fileutil.cpp \
     util/guiutil.cpp \
+    util/hotkeymanager.cpp \
     util/logger.cpp \
     util/nativeeventfilter.cpp \
     util/net/hostinfo.cpp \
@@ -99,6 +100,7 @@ HEADERS += \
     util/device.h \
     util/fileutil.h \
     util/guiutil.h \
+    util/hotkeymanager.h \
     util/logger.h \
     util/nativeeventfilter.h \
     util/net/hostinfo.h \
