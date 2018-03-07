@@ -12,19 +12,19 @@ ColumnLayout {
     RowLayout {
         RoundButtonTip {
             icon.source: "qrc:/images/application_delete.png"
-            tipText: translationManager.dummyBool
+            tipText: translationManager.trTrigger
                      && qsTranslate("qml", "Remove Group")
             onClicked: removeAppGroup(index)
         }
         RoundButtonTip {
             icon.source: "qrc:/images/resultset_previous.png"
-            tipText: translationManager.dummyBool
+            tipText: translationManager.trTrigger
                      && qsTranslate("qml", "Move left")
             onClicked: moveAppGroup(index, -1)
         }
         RoundButtonTip {
             icon.source: "qrc:/images/resultset_next.png"
-            tipText: translationManager.dummyBool
+            tipText: translationManager.trTrigger
                      && qsTranslate("qml", "Move right")
             onClicked: moveAppGroup(index, 1)
         }
@@ -42,7 +42,7 @@ ColumnLayout {
         }
 
         CheckBox {
-            text: translationManager.dummyBool
+            text: translationManager.trTrigger
                   && qsTranslate("qml", "Enabled")
             checked: appGroup.enabled
             onToggled: {
@@ -60,7 +60,7 @@ ColumnLayout {
 
         AppsTextColumn {
             title {
-                text: translationManager.dummyBool
+                text: translationManager.trTrigger
                       && qsTranslate("qml", "Block")
             }
 
@@ -80,7 +80,7 @@ ColumnLayout {
 
         AppsTextColumn {
             title {
-                text: translationManager.dummyBool
+                text: translationManager.trTrigger
                       && qsTranslate("qml", "Allow")
             }
 

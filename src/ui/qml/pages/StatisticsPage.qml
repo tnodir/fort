@@ -25,7 +25,7 @@ BasePage {
     ]
 
     readonly property var trafUnitNames:
-        translationManager.dummyBool
+        translationManager.trTrigger
         && [
             qsTranslate("qml", "Adaptive"),
             qsTranslate("qml", "Bytes"),
@@ -43,7 +43,7 @@ BasePage {
             RoundButtonTip {
                 enabled: appListView.count
                 icon.source: "qrc:/images/arrow_refresh.png"
-                tipText: translationManager.dummyBool
+                tipText: translationManager.trTrigger
                          && qsTranslate("qml", "Refresh")
                 onClicked: trafListModel.refresh()
             }
@@ -51,23 +51,23 @@ BasePage {
             ButtonMenu {
                 enabled: appListView.count
                 icon.source: "qrc:/images/bin_empty.png"
-                text: translationManager.dummyBool
+                text: translationManager.trTrigger
                       && qsTranslate("qml", "Clear…")
 
                 MenuItem {
                     enabled: appListView.currentIndex > 0
-                    text: translationManager.dummyBool
+                    text: translationManager.trTrigger
                           && qsTranslate("qml", "Remove Application")
                     onTriggered: appStatModel.remove(
                                      appListView.currentIndex)
                 }
                 MenuItem {
-                    text: translationManager.dummyBool
+                    text: translationManager.trTrigger
                           && qsTranslate("qml", "Reset Total")
                     onTriggered: trafListModel.resetAppTotals()
                 }
                 MenuItem {
-                    text: translationManager.dummyBool
+                    text: translationManager.trTrigger
                           && qsTranslate("qml", "Clear All")
                     onTriggered: {
                         appListView.currentIndex = 0;
@@ -88,7 +88,7 @@ BasePage {
 
                 Label {
                     anchors.verticalCenter: parent.verticalCenter
-                    text: translationManager.dummyBool
+                    text: translationManager.trTrigger
                           && qsTranslate("qml", "Units:")
                 }
 
@@ -118,7 +118,7 @@ BasePage {
             Switch {
                 id: cbShowBlockedApps
                 font.weight: Font.DemiBold
-                text: translationManager.dummyBool
+                text: translationManager.trTrigger
                       && qsTranslate("qml", "Collect Traffic Statistics")
                 checked: firewallConf.logStat
                 onToggled: {
@@ -149,7 +149,7 @@ BasePage {
 
                     model: appStatModel
 
-                    emptyText: translationManager.dummyBool
+                    emptyText: translationManager.trTrigger
                                && qsTranslate("qml", "All")
                     emptyIcon: "qrc:/images/application_double.png"
                 }
@@ -166,19 +166,19 @@ BasePage {
                         Layout.fillWidth: true
 
                         TabButton {
-                            text: translationManager.dummyBool
+                            text: translationManager.trTrigger
                                   && qsTranslate("qml", "Hourly", "Stat")
                         }
                         TabButton {
-                            text: translationManager.dummyBool
+                            text: translationManager.trTrigger
                                   && qsTranslate("qml", "Daily", "Stat")
                         }
                         TabButton {
-                            text: translationManager.dummyBool
+                            text: translationManager.trTrigger
                                   && qsTranslate("qml", "Monthly", "Stat")
                         }
                         TabButton {
-                            text: translationManager.dummyBool
+                            text: translationManager.trTrigger
                                   && qsTranslate("qml", "Total", "Stat")
                         }
                     }
@@ -189,22 +189,22 @@ BasePage {
 
                         Label {
                             width: trafCellWidths[0]
-                            text: translationManager.dummyBool
+                            text: translationManager.trTrigger
                                   && qsTranslate("qml", "Date")
                         }
                         Label {
                             width: trafCellWidths[1]
-                            text: translationManager.dummyBool
+                            text: translationManager.trTrigger
                                   && qsTranslate("qml", "Download")
                         }
                         Label {
                             width: trafCellWidths[2]
-                            text: translationManager.dummyBool
+                            text: translationManager.trTrigger
                                   && qsTranslate("qml", "Upload")
                         }
                         Label {
                             width: trafCellWidths[3]
-                            text: translationManager.dummyBool
+                            text: translationManager.trTrigger
                                   && qsTranslate("qml", "Sum")
                         }
                     }

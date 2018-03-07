@@ -16,12 +16,12 @@ BasePage {
 
             TabButton {
                 icon.source: "qrc:/images/world.png"
-                text: translationManager.dummyBool
+                text: translationManager.trTrigger
                       && qsTranslate("qml", "Internet Addresses")
             }
             TabButton {
                 icon.source: "qrc:/images/world_link.png"
-                text: translationManager.dummyBool
+                text: translationManager.trTrigger
                       && qsTranslate("qml", "Allowed Internet Addresses")
             }
         }

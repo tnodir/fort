@@ -12,7 +12,7 @@ ListViewControl {
         width: ipListView.width
         elide: Text.ElideRight
         text: (firewallConf.resolveAddress
-               && hostInfoCache.dummyBool
+               && hostInfoCache.hostTrigger
                && hostInfoCache.hostName(displayText)) || displayText
 
         readonly property string displayText: display

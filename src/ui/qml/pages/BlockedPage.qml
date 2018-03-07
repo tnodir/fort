@@ -28,18 +28,18 @@ BasePage {
             ButtonMenu {
                 enabled: appListView.count
                 icon.source: "qrc:/images/bin_empty.png"
-                text: translationManager.dummyBool
+                text: translationManager.trTrigger
                       && qsTranslate("qml", "Clear…")
 
                 MenuItem {
                     enabled: appListView.currentIndex >= 0
-                    text: translationManager.dummyBool
+                    text: translationManager.trTrigger
                           && qsTranslate("qml", "Remove Application")
                     onTriggered: appBlockedModel.remove(
                                      appListView.currentIndex)
                 }
                 MenuItem {
-                    text: translationManager.dummyBool
+                    text: translationManager.trTrigger
                           && qsTranslate("qml", "Clear All")
                     onTriggered: {
                         appListView.currentIndex = -1;
@@ -51,25 +51,25 @@ BasePage {
             ButtonMenu {
                 enabled: appListView.count
                 icon.source: "qrc:/images/page_copy.png"
-                text: translationManager.dummyBool
+                text: translationManager.trTrigger
                       && qsTranslate("qml", "Copy…")
 
                 MenuItem {
                     enabled: !!currentAppPath
-                    text: translationManager.dummyBool
+                    text: translationManager.trTrigger
                           && qsTranslate("qml", "Application Path")
                     onTriggered: guiUtil.setClipboardData(currentAppPath)
                 }
                 MenuItem {
                     enabled: !!currentIpText
-                    text: translationManager.dummyBool
+                    text: translationManager.trTrigger
                           && qsTranslate("qml", "IP Address")
                     onTriggered: guiUtil.setClipboardData(currentIpText)
                 }
             }
 
             CheckBox {
-                text: translationManager.dummyBool
+                text: translationManager.trTrigger
                       && qsTranslate("qml", "Resolve Addresses")
                 checked: firewallConf.resolveAddress
                 onToggled: {
@@ -90,7 +90,7 @@ BasePage {
 
             Switch {
                 font.weight: Font.DemiBold
-                text: translationManager.dummyBool
+                text: translationManager.trTrigger
                       && qsTranslate("qml", "Show Blocked Applications")
                 checked: firewallConf.logBlocked
                 onToggled: {

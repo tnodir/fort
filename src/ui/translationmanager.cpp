@@ -144,7 +144,7 @@ QTranslator *TranslationManager::loadTranslator(int language, const QLocale &loc
 
 void TranslationManager::refreshTranslations()
 {
-    emit dummyBoolChanged();
+    emit trTriggerChanged();
 }
 
 QString TranslationManager::i18nDir()

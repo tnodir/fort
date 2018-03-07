@@ -26,7 +26,7 @@ BasePage {
     ]
 
     readonly property var taskIntervalNames:
-        translationManager.dummyBool
+        translationManager.trTrigger
         && [
             qsTranslate("qml", "Custom"),
             qsTranslate("qml", "Hourly"),
@@ -61,24 +61,24 @@ BasePage {
                 }
                 Label {
                     width: taskCellWidths[1]
-                    text: translationManager.dummyBool
+                    text: translationManager.trTrigger
                           && qsTranslate("qml", "Name")
                 }
                 Label {
                     width: taskCellWidths[2]
-                    text: translationManager.dummyBool
+                    text: translationManager.trTrigger
                           && qsTranslate("qml", "Interval, hours")
                 }
                 Label {
                     width: taskCellWidths[3]
                     horizontalAlignment: Text.AlignHCenter
-                    text: translationManager.dummyBool
+                    text: translationManager.trTrigger
                           && qsTranslate("qml", "Last Run")
                 }
                 Label {
                     width: taskCellWidths[4]
                     horizontalAlignment: Text.AlignHCenter
-                    text: translationManager.dummyBool
+                    text: translationManager.trTrigger
                           && qsTranslate("qml", "Last Success")
                 }
                 Item {

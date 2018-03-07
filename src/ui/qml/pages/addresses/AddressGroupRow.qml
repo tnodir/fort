@@ -13,13 +13,13 @@ RowLayout {
         id: includeAddresses
 
         title {
-            text: translationManager.dummyBool
+            text: translationManager.trTrigger
                   && qsTranslate("qml", "Include")
         }
         checkBoxAll {
             enabled: !excludeAddresses.checkBoxAll.checked
                      || checkBoxAll.checked
-            text: translationManager.dummyBool
+            text: translationManager.trTrigger
                   && qsTranslate("qml", "Include All")
         }
 
@@ -38,13 +38,13 @@ RowLayout {
         id: excludeAddresses
 
         title {
-            text: translationManager.dummyBool
+            text: translationManager.trTrigger
                   && qsTranslate("qml", "Exclude")
         }
         checkBoxAll {
             enabled: !includeAddresses.checkBoxAll.checked
                      || checkBoxAll.checked
-            text: translationManager.dummyBool
+            text: translationManager.trTrigger
                   && qsTranslate("qml", "Exclude All")
         }
 

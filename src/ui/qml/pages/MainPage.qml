@@ -46,32 +46,32 @@ Page {
 
         TabButton {
             icon.source: "qrc:/images/cog.png"
-            text: translationManager.dummyBool
+            text: translationManager.trTrigger
                   && qsTranslate("qml", "Options")
         }
         TabButton {
             icon.source: "qrc:/images/link.png"
-            text: translationManager.dummyBool
+            text: translationManager.trTrigger
                   && qsTranslate("qml", "IPv4 Addresses")
         }
         TabButton {
             icon.source: "qrc:/images/application_double.png"
-            text: translationManager.dummyBool
+            text: translationManager.trTrigger
                   && qsTranslate("qml", "Applications")
         }
         TabButton {
             icon.source: "qrc:/images/application_error.png"
-            text: translationManager.dummyBool
+            text: translationManager.trTrigger
                   && qsTranslate("qml", "Blocked")
         }
         TabButton {
             icon.source: "qrc:/images/chart_line.png"
-            text: translationManager.dummyBool
+            text: translationManager.trTrigger
                   && qsTranslate("qml", "Statistics")
         }
         TabButton {
             icon.source: "qrc:/images/clock.png"
-            text: translationManager.dummyBool
+            text: translationManager.trTrigger
                   && qsTranslate("qml", "Schedule")
         }
     }
@@ -98,7 +98,7 @@ Page {
             Button {
                 enabled: confFlagsEdited || confEdited || scheduleEdited
                 icon.source: "qrc:/images/tick.png"
-                text: translationManager.dummyBool
+                text: translationManager.trTrigger
                       && qsTranslate("qml", "OK")
                 onClicked: {
                     mainPage.aboutToSave();
@@ -115,7 +115,7 @@ Page {
             Button {
                 enabled: confFlagsEdited || confEdited || scheduleEdited
                 icon.source: "qrc:/images/accept.png"
-                text: translationManager.dummyBool
+                text: translationManager.trTrigger
                       && qsTranslate("qml", "Apply")
                 onClicked: {
                     mainPage.aboutToSave();
@@ -131,13 +131,13 @@ Page {
             }
             Button {
                 icon.source: "qrc:/images/cancel.png"
-                text: translationManager.dummyBool
+                text: translationManager.trTrigger
                       && qsTranslate("qml", "Cancel")
                 onClicked: closeWindow()
             }
             Button {
                 icon.source: "qrc:/images/cross.png"
-                text: translationManager.dummyBool
+                text: translationManager.trTrigger
                       && qsTranslate("qml", "Quit")
                 onClicked: fortManager.exit()
             }

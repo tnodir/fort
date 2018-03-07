@@ -11,7 +11,7 @@ QT_FORWARD_DECLARE_CLASS(QTranslator)
 class TranslationManager : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool dummyBool READ dummyBool NOTIFY dummyBoolChanged)
+    Q_PROPERTY(bool trTrigger READ trTrigger NOTIFY trTriggerChanged)
     Q_PROPERTY(int language READ language WRITE switchLanguage NOTIFY languageChanged)
     Q_PROPERTY(QStringList naturalLabels READ naturalLabels CONSTANT)
 
@@ -22,7 +22,7 @@ protected:
 public:
     static TranslationManager *instance();
 
-    bool dummyBool() const { return true; }
+    bool trTrigger() const { return true; }
 
     int language() const { return m_language; }
     QString localeName() const { return m_locale.name(); }
@@ -32,7 +32,7 @@ public:
     int getLanguageByName(const QString &localeName) const;
 
 signals:
-    void dummyBoolChanged();
+    void trTriggerChanged();
     void languageChanged(int language);
 
 public slots:

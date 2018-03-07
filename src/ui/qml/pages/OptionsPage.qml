@@ -27,7 +27,7 @@ BasePage {
 
             CheckBox {
                 id: cbStart
-                text: translationManager.dummyBool
+                text: translationManager.trTrigger
                       && qsTranslate("qml", "Start with Windows")
                 checked: fortSettings.startWithWindows
                 onToggled: {
@@ -36,7 +36,7 @@ BasePage {
             }
 
             CheckBox {
-                text: translationManager.dummyBool
+                text: translationManager.trTrigger
                       && qsTranslate("qml", "Block access to network when Fort Firewall is not running")
                 checked: firewallConf.provBoot
                 onToggled: {
@@ -47,7 +47,7 @@ BasePage {
             }
 
             CheckBox {
-                text: translationManager.dummyBool
+                text: translationManager.trTrigger
                       && qsTranslate("qml", "Filter Enabled")
                 checked: firewallConf.filterEnabled
                 onToggled: {
@@ -61,7 +61,7 @@ BasePage {
                 spacing: 20
 
                 CheckBox {
-                    text: translationManager.dummyBool
+                    text: translationManager.trTrigger
                           && qsTranslate("qml", "Stop Traffic")
                     checked: firewallConf.stopTraffic
                     onToggled: {
@@ -72,7 +72,7 @@ BasePage {
                 }
 
                 CheckBox {
-                    text: translationManager.dummyBool
+                    text: translationManager.trTrigger
                           && qsTranslate("qml", "Stop Internet Traffic")
                     checked: firewallConf.stopInetTraffic
                     onToggled: {
@@ -85,7 +85,7 @@ BasePage {
 
             CheckBox {
                 enabled: firewallConf.logStat
-                text: translationManager.dummyBool
+                text: translationManager.trTrigger
                       && qsTranslate("qml", "Ignore TCP RST-packets")
                 checked: firewallConf.ignoreTcpRst
                 onToggled: {
@@ -100,7 +100,7 @@ BasePage {
 
                 CheckBox {
                     id: cbPassword
-                    text: translationManager.dummyBool
+                    text: translationManager.trTrigger
                           && qsTranslate("qml", "Password:")
                     checked: firewallConf.hasPassword
                     onToggled: {
@@ -120,7 +120,7 @@ BasePage {
                     echoMode: TextInput.Password
                     passwordMaskDelay: 300
                     readOnly: firewallConf.hasPassword || !cbPassword.checked
-                    placeholderText: translationManager.dummyBool
+                    placeholderText: translationManager.trTrigger
                                      && (firewallConf.hasPassword
                                          ? qsTranslate("qml", "Installed")
                                          : qsTranslate("qml", "Not Installed"))
@@ -132,7 +132,7 @@ BasePage {
 
                 Label {
                     anchors.verticalCenter: parent.verticalCenter
-                    text: translationManager.dummyBool
+                    text: translationManager.trTrigger
                           && qsTranslate("qml", "Language:")
                 }
                 ComboBox {
@@ -150,7 +150,7 @@ BasePage {
 
             RowLayout {
                 LinkButton {
-                    text: translationManager.dummyBool
+                    text: translationManager.trTrigger
                           && qsTranslate("qml", "Logs")
                     tipText: path
                     onClicked: Qt.openUrlExternally("file:///" + path)
@@ -160,7 +160,7 @@ BasePage {
                 VSeparator {}
 
                 LinkButton {
-                    text: translationManager.dummyBool
+                    text: translationManager.trTrigger
                           && qsTranslate("qml", "Profile")
                     tipText: path
                     onClicked: Qt.openUrlExternally("file:///" + path)
@@ -170,7 +170,7 @@ BasePage {
                 VSeparator {}
 
                 LinkButton {
-                    text: translationManager.dummyBool
+                    text: translationManager.trTrigger
                           && qsTranslate("qml", "Statistics")
                     tipText: path
                     onClicked: Qt.openUrlExternally("file:///" + path)
@@ -180,7 +180,7 @@ BasePage {
                 VSeparator {}
 
                 LinkButton {
-                    text: translationManager.dummyBool
+                    text: translationManager.trTrigger
                           && qsTranslate("qml", "Releases")
                     tipText: link
                     onClicked: Qt.openUrlExternally(link)

@@ -35,7 +35,7 @@ Row {
         verticalAlignment: Text.AlignVCenter
         wrapMode: Text.WordWrap
         fontSizeMode: Text.Fit
-        text: translationManager.dummyBool
+        text: translationManager.trTrigger
               && taskInfo.title
     }
 

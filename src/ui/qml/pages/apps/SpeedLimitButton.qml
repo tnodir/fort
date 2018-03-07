@@ -10,7 +10,7 @@ ButtonPopup {
                    || (appGroup.limitOutEnabled && appGroup.speedLimitOut))
                  ? "qrc:/images/flag_green.png"
                  : "qrc:/images/flag_yellow.png"
-    text: (translationManager.dummyBool
+    text: (translationManager.trTrigger
           && qsTranslate("qml", "Speed Limit: "))
           + speedLimitsText
 
@@ -21,7 +21,7 @@ ButtonPopup {
     ]
 
     readonly property var speedLimitNames: {
-        var list = translationManager.dummyBool
+        var list = translationManager.trTrigger
                 && [qsTranslate("qml", "Custom"),
                     qsTranslate("qml", "Disabled")];
 
@@ -64,7 +64,7 @@ ButtonPopup {
             names: speedLimitNames
             values: speedLimitValues
             checkBox {
-                text: translationManager.dummyBool
+                text: translationManager.trTrigger
                       && qsTranslate("qml", "Download speed limit, KiB/s:")
                 checked: appGroup.limitInEnabled
                 onCheckedChanged: {
@@ -97,7 +97,7 @@ ButtonPopup {
             names: speedLimitNames
             values: speedLimitValues
             checkBox {
-                text: translationManager.dummyBool
+                text: translationManager.trTrigger
                       && qsTranslate("qml", "Upload speed limit, KiB/s:")
                 checked: appGroup.limitOutEnabled
                 onCheckedChanged: {

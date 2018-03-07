@@ -9,12 +9,12 @@ QT_FORWARD_DECLARE_CLASS(HostInfo)
 class HostInfoCache : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool dummyBool READ dummyBool NOTIFY cacheChanged)
+    Q_PROPERTY(bool hostTrigger READ hostTrigger NOTIFY cacheChanged)
 
 public:
     explicit HostInfoCache(QObject *parent = nullptr);
 
-    bool dummyBool() const { return true; }
+    bool hostTrigger() const { return true; }
 
 signals:
     void cacheChanged();

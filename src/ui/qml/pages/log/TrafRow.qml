@@ -8,28 +8,28 @@ Row {
     Label {
         width: trafCellWidths[0]
         fontSizeMode: Text.Fit
-        text: translationManager.dummyBool
+        text: translationManager.trTrigger
               && dateTime
     }
 
     Label {
         width: trafCellWidths[1]
         fontSizeMode: Text.Fit
-        text: translationManager.dummyBool
+        text: translationManager.trTrigger
               && download
     }
 
     Label {
         width: trafCellWidths[3]
         fontSizeMode: Text.Fit
-        text: translationManager.dummyBool
+        text: translationManager.trTrigger
               && upload
     }
 
     Label {
         width: trafCellWidths[4]
         fontSizeMode: Text.Fit
-        text: translationManager.dummyBool
+        text: translationManager.trTrigger
               && sum
     }
 }
