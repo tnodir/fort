@@ -1,5 +1,13 @@
 Fort Firewall ChangeLog
 
+v1.11.0, 2018-03-07:
+- UI: ListView: Improve item selection by click.
+- UI: Statistics Page: Fix keep options.
+- UI: Add --stat option to set statistics' path.
+- UI: OptionsPage: Add Statistics link.
+- UI: Add hot keys to tray context menu.
+- Driver: Optimize processes handling.
+
 v1.10.1, 2018-02-23:
 - Logger: Refactor format.
 - UI: Abort on UI & Driver's states mismatch.
