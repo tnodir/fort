@@ -12,7 +12,9 @@ QT_FORWARD_DECLARE_CLASS(DatabaseManager)
 QT_FORWARD_DECLARE_CLASS(DriverManager)
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
 QT_FORWARD_DECLARE_CLASS(FortSettings)
+QT_FORWARD_DECLARE_CLASS(HotKeyManager)
 QT_FORWARD_DECLARE_CLASS(LogManager)
+QT_FORWARD_DECLARE_CLASS(NativeEventFilter)
 QT_FORWARD_DECLARE_CLASS(QuotaManager)
 QT_FORWARD_DECLARE_CLASS(TaskManager)
 QT_FORWARD_DECLARE_CLASS(WindowStateWatcher)
@@ -104,6 +106,10 @@ private:
     void updateLogger();
     void updateTrayMenu();
 
+    void addHotKey(QAction *action, const QString &shortcutText,
+                   bool hotKeyEnabled);
+    void removeHotKeys();
+
     static QAction *addAction(QWidget *widget,
                               const QIcon &icon, const QString &text,
                               const QObject *receiver = nullptr, const char *member = nullptr,
@@ -133,6 +139,8 @@ private:
     DatabaseManager *m_databaseManager;
     DriverManager *m_driverManager;
     LogManager *m_logManager;
+    NativeEventFilter *m_nativeEventFilter;
+    HotKeyManager *m_hotKeyManager;
     TaskManager *m_taskManager;
 };
 

@@ -27,7 +27,9 @@
 #include "translationmanager.h"
 #include "util/fileutil.h"
 #include "util/guiutil.h"
+#include "util/hotkeymanager.h"
 #include "util/logger.h"
+#include "util/nativeeventfilter.h"
 #include "util/net/hostinfocache.h"
 #include "util/net/netutil.h"
 #include "util/osutil.h"
@@ -50,6 +52,8 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_driverManager(new DriverManager(this)),
     m_logManager(new LogManager(m_databaseManager,
                                 m_driverManager->driverWorker(), this)),
+    m_nativeEventFilter(new NativeEventFilter(this)),
+    m_hotKeyManager(new HotKeyManager(m_nativeEventFilter, this)),
     m_taskManager(new TaskManager(this, this))
 {
     setupDriver();
@@ -72,6 +76,8 @@ FortManager::FortManager(FortSettings *fortSettings,
 
 FortManager::~FortManager()
 {
+    removeHotKeys();
+
     closeDriver();
 }
 
@@ -488,6 +494,7 @@ void FortManager::updateLogger()
 void FortManager::updateTrayMenu()
 {
     const FirewallConf &conf = *m_firewallConf;
+    const bool hotKeyEnabled = fortSettings()->hotKeyEnabled();
 
     QMenu *menu = m_trayIcon->contextMenu();
     if (menu) {
@@ -496,42 +503,78 @@ void FortManager::updateTrayMenu()
 
     menu = new QMenu(&m_window);
 
-    addAction(menu, QIcon(":/images/cog.png"), tr("Options"),
-              this, SLOT(showWindow()));
+    QAction *optionsAction = addAction(
+                menu, QIcon(":/images/cog.png"), tr("Options"),
+                this, SLOT(showWindow()));
+    addHotKey(optionsAction, fortSettings()->hotKeyOptions(), hotKeyEnabled);
 
     if (!conf.hasPassword() && !m_firewallConfToEdit) {
         menu->addSeparator();
+
         m_filterEnabledAction = addAction(
                     menu, QIcon(), tr("Filter Enabled"),
                     this, SLOT(saveTrayFlags()),
                     true, conf.filterEnabled());
+        addHotKey(m_filterEnabledAction,
+                  fortSettings()->hotKeyFilter(), hotKeyEnabled);
+
         m_stopTrafficAction = addAction(
                     menu, QIcon(), tr("Stop Traffic"),
                     this, SLOT(saveTrayFlags()),
                     true, conf.stopTraffic());
+        addHotKey(m_stopTrafficAction,
+                  fortSettings()->hotKeyStopTraffic(), hotKeyEnabled);
+
         m_stopInetTrafficAction = addAction(
                     menu, QIcon(), tr("Stop Internet Traffic"),
                     this, SLOT(saveTrayFlags()),
                     true, conf.stopInetTraffic());
+        addHotKey(m_stopInetTrafficAction,
+                  fortSettings()->hotKeyStopInetTraffic(), hotKeyEnabled);
 
         menu->addSeparator();
         m_appGroupActions.clear();
+        int appGroupIndex = 0;
         foreach (const AppGroup *appGroup, conf.appGroupsList()) {
             QAction *a = addAction(
                         menu, QIcon(":/images/application_double.png"),
                         appGroup->name(), this, SLOT(saveTrayFlags()),
                         true, appGroup->enabled());
+
+            const QString shortcutText =
+                    fortSettings()->hotKeyAppGroupModifiers()
+                    + "+F" + QString::number(++appGroupIndex);
+
+            addHotKey(a, shortcutText, hotKeyEnabled);
+
             m_appGroupActions.append(a);
         }
     }
 
     if (!conf.hasPassword()) {
         menu->addSeparator();
-        addAction(menu, QIcon(":/images/cross.png"), tr("Quit"),
-                  this, SLOT(exit()));
+        QAction *quitAction = addAction(
+                    menu, QIcon(":/images/cross.png"), tr("Quit"),
+                    this, SLOT(exit()));
+        addHotKey(quitAction, fortSettings()->hotKeyQuit(), hotKeyEnabled);
     }
 
     m_trayIcon->setContextMenu(menu);
+}
+
+void FortManager::addHotKey(QAction *action, const QString &shortcutText,
+                            bool hotKeyEnabled)
+{
+    if (hotKeyEnabled && !shortcutText.isEmpty()) {
+        const QKeySequence shortcut = QKeySequence::fromString(shortcutText);
+
+        m_hotKeyManager->addAction(action, shortcut);
+    }
+}
+
+void FortManager::removeHotKeys()
+{
+    m_hotKeyManager->removeActions();
 }
 
 QAction *FortManager::addAction(QWidget *widget,

@@ -55,6 +55,14 @@ public:
     qint32 quotaMonthAlerted() const { return iniInt("quota/monthAlerted"); }
     void setQuotaMonthAlerted(qint32 v) { setIniValue("quota/monthAlerted", v); }
 
+    bool hotKeyEnabled() const { return iniBool("hotKey/enabled", true); }
+    QString hotKeyOptions() const { return iniText("hotKey/options"); }
+    QString hotKeyFilter() const { return iniText("hotKey/filter", "Ctrl+Alt+Shift+F"); }
+    QString hotKeyStopTraffic() const { return iniText("hotKey/stopTraffic"); }
+    QString hotKeyStopInetTraffic() const { return iniText("hotKey/stopInetTraffic"); }
+    QString hotKeyAppGroupModifiers() const { return iniText("hotKey/appGroupModifiers", "Ctrl+Alt+Shift"); }
+    QString hotKeyQuit() const { return iniText("hotKey/quit"); }
+
     QString updatesUrl() const { return APP_UPDATES_URL; }
 
     bool startWithWindows() const;

@@ -49,6 +49,7 @@ SOURCES += \
     util/fileutil.cpp \
     util/guiutil.cpp \
     util/logger.cpp \
+    util/nativeeventfilter.cpp \
     util/net/hostinfo.cpp \
     util/net/hostinfocache.cpp \
     util/net/hostinfoworker.cpp \
@@ -99,6 +100,7 @@ HEADERS += \
     util/fileutil.h \
     util/guiutil.h \
     util/logger.h \
+    util/nativeeventfilter.h \
     util/net/hostinfo.h \
     util/net/hostinfocache.h \
     util/net/hostinfoworker.h \
