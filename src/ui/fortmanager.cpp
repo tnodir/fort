@@ -56,10 +56,9 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_hotKeyManager(new HotKeyManager(m_nativeEventFilter, this)),
     m_taskManager(new TaskManager(this, this))
 {
+    setupLogger();
     setupDriver();
     setupDatabaseManager();
-
-    setupLogger();
     setupLogManager();
 
     loadSettings(m_firewallConf);

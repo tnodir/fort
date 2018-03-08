@@ -181,7 +181,7 @@ void Logger::messageHandler(QtMsgType type,
         // Write only errors to log file
         if (level != Info) {
             const bool isDefaultCategory = !context.category
-                    || strcmp(context.category, "default") != 0;
+                    || !strcmp(context.category, "default");
             const QString text = isDefaultCategory
                     ? message
                     : QLatin1String(context.category) + ": " + message;

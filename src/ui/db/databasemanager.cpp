@@ -1,5 +1,7 @@
 #include "databasemanager.h"
 
+#include <QLoggingCategory>
+
 #include "../conf/firewallconf.h"
 #include "../util/dateutil.h"
 #include "../util/fileutil.h"
@@ -8,6 +10,9 @@
 #include "sqlite/sqlitedb.h"
 #include "sqlite/sqliteengine.h"
 #include "sqlite/sqlitestmt.h"
+
+Q_DECLARE_LOGGING_CATEGORY(CLOG_DATABASE_MANAGER)
+Q_LOGGING_CATEGORY(CLOG_DATABASE_MANAGER, CLOG_DATABASE_MANAGER_STR)
 
 #define INVALID_APP_INDEX   qint16(-1)
 #define INVALID_APP_ID      qint64(-1)
@@ -54,12 +59,21 @@ bool DatabaseManager::initialize()
 
     m_lastTrafHour = m_lastTrafDay = m_lastTrafMonth = 0;
 
-    if (!m_sqliteDb->open(m_filePath))
+    if (!m_sqliteDb->open(m_filePath)) {
+        qCritical(CLOG_DATABASE_MANAGER()) << "File open error:"
+                                           << m_sqliteDb->errorMessage();
         return false;
+    }
 
     m_sqliteDb->execute(DatabaseSql::sqlPragmas);
 
-    return fileExists || createTables();
+    if (!(fileExists || createTables())) {
+        qCritical(CLOG_DATABASE_MANAGER()) << "Create tables error:"
+                                           << m_sqliteDb->errorMessage();
+        return false;
+    }
+
+    return true;
 }
 
 void DatabaseManager::initializeQuota()
@@ -257,7 +271,7 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint32 *procTrafByte
 
         const int procIndex = m_appIndexes.value(pid, INVALID_APP_INDEX);
         if (procIndex == INVALID_APP_INDEX) {
-            qFatal("DatabaseManager: UI & Driver's states mismatch.");
+            qCritical(CLOG_DATABASE_MANAGER()) << "UI & Driver's states mismatch.";
             abort();
         }
 
@@ -428,7 +442,10 @@ void DatabaseManager::updateTrafficList(const QStmtList &insertStmtList,
     foreach (SqliteStmt *stmtUpdate, updateStmtList) {
         if (!updateTraffic(stmtUpdate, inBytes, outBytes, appId)) {
             SqliteStmt *stmtInsert = insertStmtList.at(i);
-            updateTraffic(stmtInsert, inBytes, outBytes, appId);
+            if (!updateTraffic(stmtInsert, inBytes, outBytes, appId)) {
+                qCritical(CLOG_DATABASE_MANAGER()) << "Update traffic error:"
+                                                   << m_sqliteDb->errorMessage();
+            }
         }
         ++i;
     }

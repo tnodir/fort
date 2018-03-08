@@ -11,6 +11,8 @@ QT_FORWARD_DECLARE_CLASS(QuotaManager)
 QT_FORWARD_DECLARE_CLASS(SqliteDb)
 QT_FORWARD_DECLARE_CLASS(SqliteStmt)
 
+#define CLOG_DATABASE_MANAGER_STR   "fort.databaseManager"
+
 class DatabaseManager : public QObject
 {
     Q_OBJECT
