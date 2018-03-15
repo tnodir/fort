@@ -18,6 +18,7 @@ class FortSettings : public QObject
     Q_PROPERTY(bool debug READ debug WRITE setDebug NOTIFY iniChanged)
     Q_PROPERTY(QString language READ language WRITE setLanguage NOTIFY iniChanged)
     Q_PROPERTY(bool startWithWindows READ startWithWindows WRITE setStartWithWindows NOTIFY startWithWindowsChanged)
+    Q_PROPERTY(bool hotKeyEnabled READ hotKeyEnabled WRITE setHotKeyEnabled NOTIFY iniChanged)
     Q_PROPERTY(QString logsPath READ logsPath CONSTANT)
     Q_PROPERTY(QString profilePath READ profilePath CONSTANT)
     Q_PROPERTY(QString statPath READ statPath CONSTANT)
@@ -55,6 +56,8 @@ public:
     void setQuotaMonthAlerted(qint32 v) { setIniValue("quota/monthAlerted", v); }
 
     bool hotKeyEnabled() const { return iniBool("hotKey/enabled", true); }
+    void setHotKeyEnabled(bool on) { setIniValue("hotKey/enabled", on, true); }
+
     QString hotKeyOptions() const { return iniText("hotKey/options"); }
     QString hotKeyFilter() const { return iniText("hotKey/filter", "Ctrl+Alt+Shift+F"); }
     QString hotKeyStopTraffic() const { return iniText("hotKey/stopTraffic"); }

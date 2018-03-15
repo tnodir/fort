@@ -16,6 +16,7 @@ BasePage {
 
     function onSaved() {  // override
         fortSettings.startWithWindows = cbStart.checked;
+        fortSettings.hotKeyEnabled = cbHotKeys.checked;
     }
 
     Frame {
@@ -91,6 +92,16 @@ BasePage {
                 onToggled: {
                     firewallConf.ignoreTcpRst = checked;
 
+                    setConfFlagsEdited();
+                }
+            }
+
+            CheckBox {
+                id: cbHotKeys
+                text: translationManager.trTrigger
+                      && qsTranslate("qml", "Hot Keys")
+                checked: fortSettings.hotKeyEnabled
+                onToggled: {
                     setConfFlagsEdited();
                 }
             }
