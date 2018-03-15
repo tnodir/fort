@@ -12,11 +12,13 @@ QT_FORWARD_DECLARE_CLASS(DatabaseManager)
 QT_FORWARD_DECLARE_CLASS(DriverManager)
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
 QT_FORWARD_DECLARE_CLASS(FortSettings)
+QT_FORWARD_DECLARE_CLASS(GraphWindow)
 QT_FORWARD_DECLARE_CLASS(HotKeyManager)
 QT_FORWARD_DECLARE_CLASS(LogManager)
 QT_FORWARD_DECLARE_CLASS(NativeEventFilter)
 QT_FORWARD_DECLARE_CLASS(QuotaManager)
 QT_FORWARD_DECLARE_CLASS(TaskManager)
+QT_FORWARD_DECLARE_CLASS(WidgetWindowStateWatcher)
 QT_FORWARD_DECLARE_CLASS(WindowStateWatcher)
 
 class FortManager : public QObject
@@ -50,6 +52,10 @@ public slots:
 
     void showWindow();
     void closeWindow();
+
+    void showGraphWindow();
+    void closeGraphWindow();
+    void switchGraphWindow();
 
     void exit(int retcode = 0);
 
@@ -103,6 +109,9 @@ private:
     void saveWindowState();
     void restoreWindowState();
 
+    void saveGraphWindowState();
+    void restoreGraphWindowState();
+
     void updateLogger();
     void updateTrayMenu();
 
@@ -125,6 +134,9 @@ private:
 
     QWindow *m_appWindow;
     WindowStateWatcher *m_appWindowState;
+
+    GraphWindow *m_graphWindow;
+    WidgetWindowStateWatcher *m_graphWindowState;
 
     FortSettings *m_fortSettings;
     FirewallConf *m_firewallConf;

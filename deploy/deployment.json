@@ -2,6 +2,7 @@
 	"files": {
 		"${TARGET}": {
 			"common": [
+				"${QTPATH}/bin/Qt5Charts.dll",
 				"${QTPATH}/bin/Qt5Core.dll",
 				"${QTPATH}/bin/Qt5Gui.dll",
 				"${QTPATH}/bin/Qt5Qml.dll",

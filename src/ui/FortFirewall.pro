@@ -1,4 +1,4 @@
-QT += core gui qml widgets
+QT += charts core gui qml widgets
 
 CONFIG += c++11
 
@@ -22,6 +22,7 @@ SOURCES += \
     fortcommon.cpp \
     fortmanager.cpp \
     fortsettings.cpp \
+    graph/graphwindow.cpp \
     log/logbuffer.cpp \
     log/logentry.cpp \
     log/logentryblocked.cpp \
@@ -60,7 +61,10 @@ SOURCES += \
     util/osutil.cpp \
     util/processinfo.cpp \
     util/stringutil.cpp \
-    util/windowstatewatcher.cpp
+    util/window/basewindowstatewatcher.cpp \
+    util/window/widgetwindow.cpp \
+    util/window/widgetwindowstatewatcher.cpp \
+    util/window/windowstatewatcher.cpp
 
 HEADERS += \
     conf/addressgroup.h \
@@ -74,6 +78,7 @@ HEADERS += \
     fortcommon.h \
     fortmanager.h \
     fortsettings.h \
+    graph/graphwindow.h \
     log/logbuffer.h \
     log/logentry.h \
     log/logentryblocked.h \
@@ -112,7 +117,10 @@ HEADERS += \
     util/osutil.h \
     util/processinfo.h \
     util/stringutil.h \
-    util/windowstatewatcher.h
+    util/window/basewindowstatewatcher.h \
+    util/window/widgetwindow.h \
+    util/window/widgetwindowstatewatcher.h \
+    util/window/windowstatewatcher.h
 
 QML_FILES += \
     qml/*.qml \

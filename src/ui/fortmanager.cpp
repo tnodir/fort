@@ -17,6 +17,7 @@
 #include "db/quotamanager.h"
 #include "driver/drivermanager.h"
 #include "fortsettings.h"
+#include "graph/graphwindow.h"
 #include "log/logmanager.h"
 #include "log/model/appblockedmodel.h"
 #include "log/model/appstatmodel.h"
@@ -34,7 +35,8 @@
 #include "util/net/netutil.h"
 #include "util/osutil.h"
 #include "util/stringutil.h"
-#include "util/windowstatewatcher.h"
+#include "util/window/widgetwindowstatewatcher.h"
+#include "util/window/windowstatewatcher.h"
 
 FortManager::FortManager(FortSettings *fortSettings,
                          QObject *parent) :
@@ -43,6 +45,8 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_engine(nullptr),
     m_appWindow(nullptr),
     m_appWindowState(new WindowStateWatcher(this)),
+    m_graphWindow(nullptr),
+    m_graphWindowState(new WidgetWindowStateWatcher(this)),
     m_fortSettings(fortSettings),
     m_firewallConf(new FirewallConf(this)),
     m_firewallConfToEdit(nullConf()),
@@ -191,10 +195,7 @@ bool FortManager::setupEngine()
                 m_engine->rootObjects().first());
     Q_ASSERT(m_appWindow);
 
-    m_appWindowState->setup(m_appWindow);
-
-    // XXX: Workaround to fix icons' incorrect position on main tab buttons
-    QTimer::singleShot(100, this, &FortManager::restoreWindowState);
+    m_appWindowState->install(m_appWindow);
 
     return true;
 }
@@ -226,25 +227,64 @@ void FortManager::showWindow()
     m_appWindow->show();
     m_appWindow->raise();
     m_appWindow->requestActivate();
+
+    restoreWindowState();
 }
 
 void FortManager::closeWindow()
 {
-    if (m_appWindow) {
-        m_appWindow->hide();
-    }
+    if (!m_appWindow)
+        return;
+
+    saveWindowState();
+
+    m_appWindow->hide();
 
     setFirewallConfToEdit(nullConf());
 }
 
+void FortManager::showGraphWindow()
+{
+    if (!m_graphWindow) {
+        m_graphWindow = new GraphWindow();
+
+        m_graphWindowState->install(m_graphWindow);
+    }
+
+    m_graphWindow->show();
+
+    restoreGraphWindowState();
+}
+
+void FortManager::closeGraphWindow()
+{
+    if (!m_graphWindow)
+        return;
+
+    saveGraphWindowState();
+
+    m_graphWindowState->uninstall(m_graphWindow);
+
+    m_graphWindow->hide();
+
+    m_graphWindow->deleteLater();
+    m_graphWindow = nullptr;
+}
+
+void FortManager::switchGraphWindow()
+{
+    if (!m_graphWindow)
+        showGraphWindow();
+    else
+        closeGraphWindow();
+}
+
 void FortManager::exit(int retcode)
 {
+    closeGraphWindow();
     closeWindow();
 
-    if (m_appWindow) {
-        saveWindowState();
-        m_appWindow = nullptr;
-    }
+    m_appWindow = nullptr;
 
     if (m_engine) {
         m_engine->deleteLater();
@@ -315,6 +355,9 @@ bool FortManager::applyConfImmediateFlags()
 
 void FortManager::setFirewallConfToEdit(FirewallConf *conf)
 {
+    if (m_firewallConfToEdit == conf)
+        return;
+
     if (m_firewallConfToEdit != nullConf()
             && m_firewallConfToEdit != m_firewallConf) {
         m_firewallConfToEdit->deleteLater();
@@ -463,23 +506,22 @@ void FortManager::saveWindowState()
 
 void FortManager::restoreWindowState()
 {
-    const QRect rect = m_fortSettings->windowGeometry();
+    m_appWindowState->restore(m_appWindow, QSize(1024, 768),
+                              m_fortSettings->windowGeometry(),
+                              m_fortSettings->windowMaximized());
+}
 
-    if (rect.isNull()) {
-        m_appWindow->resize(1024, 768);
-        return;
-    }
+void FortManager::saveGraphWindowState()
+{
+    m_fortSettings->setGraphWindowGeometry(m_graphWindowState->geometry());
+    m_fortSettings->setGraphWindowMaximized(m_graphWindowState->maximized());
+}
 
-    const bool maximized = m_fortSettings->windowMaximized();
-
-    m_appWindowState->setGeometry(rect);
-    m_appWindowState->setMaximized(maximized);
-
-    m_appWindow->setGeometry(rect);
-
-    if (maximized) {
-        m_appWindow->setVisibility(QWindow::Maximized);
-    }
+void FortManager::restoreGraphWindowState()
+{
+    m_graphWindowState->restore(m_graphWindow, QSize(400, 300),
+                                m_fortSettings->graphWindowGeometry(),
+                                m_fortSettings->graphWindowMaximized());
 }
 
 void FortManager::updateLogger()
@@ -506,6 +548,11 @@ void FortManager::updateTrayMenu()
                 menu, QIcon(":/images/cog.png"), tr("Options"),
                 this, SLOT(showWindow()));
     addHotKey(optionsAction, fortSettings()->hotKeyOptions(), hotKeyEnabled);
+
+    QAction *graphAction = addAction(
+                menu, QIcon(":/images/chart_line.png"), tr("Graph"),
+                this, SLOT(switchGraphWindow()));
+    addHotKey(graphAction, fortSettings()->hotKeyGraph(), conf.logStat());
 
     if (!conf.hasPassword() && !m_firewallConfToEdit) {
         menu->addSeparator();

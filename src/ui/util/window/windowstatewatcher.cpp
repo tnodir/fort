@@ -3,12 +3,11 @@
 #include <QWindow>
 
 WindowStateWatcher::WindowStateWatcher(QObject *parent) :
-    QObject(parent),
-    m_maximized(false)
+    BaseWindowStateWatcher(parent)
 {
 }
 
-void WindowStateWatcher::setup(QWindow *window)
+void WindowStateWatcher::install(QWindow *window)
 {
     connect(window, &QWindow::xChanged, this, &WindowStateWatcher::onRectChanged);
     connect(window, &QWindow::yChanged, this, &WindowStateWatcher::onRectChanged);
@@ -21,29 +20,29 @@ void WindowStateWatcher::onRectChanged()
 {
     QWindow *window = qobject_cast<QWindow *>(sender());
 
-    if (window->visibility() != QWindow::Windowed)
-        return;
-
-    const QRect rect = window->geometry();
-
-    if (rect != m_rect) {
-        m_rectPrev = m_rect;
-        m_rect = rect;
-    }
+    handleRectChange(window->geometry(), window->visibility());
 }
 
 void WindowStateWatcher::onVisibilityChanged()
 {
     QWindow *window = qobject_cast<QWindow *>(sender());
 
-    switch (window->visibility()) {
-    case QWindow::Windowed:
-        m_maximized = false;
-        break;
-    case QWindow::Maximized:
-        m_maximized = true;
-        m_rect = m_rectPrev;
-        break;
-    default: break;
+    handleVisibilityChange(window->visibility());
+}
+
+void WindowStateWatcher::restore(QWindow *window, const QSize &defaultSize,
+                                 const QRect &rect, bool maximized)
+{
+    if (rect.isNull()) {
+        window->resize(defaultSize);
+        return;
+    }
+
+    this->reset(rect, maximized);
+
+    window->setGeometry(rect);
+
+    if (maximized) {
+        window->setVisibility(QWindow::Maximized);
     }
 }

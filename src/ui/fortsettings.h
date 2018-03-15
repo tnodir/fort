@@ -49,6 +49,12 @@ public:
     bool windowMaximized() const { return iniBool("window/maximized"); }
     void setWindowMaximized(bool on) { setIniValue("window/maximized", on); }
 
+    QRect graphWindowGeometry() const { return iniValue("graphWindow/geometry").toRect(); }
+    void setGraphWindowGeometry(const QRect &v) { setIniValue("graphWindow/geometry", v); }
+
+    bool graphWindowMaximized() const { return iniBool("graphWindow/maximized"); }
+    void setGraphWindowMaximized(bool on) { setIniValue("graphWindow/maximized", on); }
+
     qint32 quotaDayAlerted() const { return iniInt("quota/dayAlerted"); }
     void setQuotaDayAlerted(qint32 v) { setIniValue("quota/dayAlerted", v); }
 
@@ -59,6 +65,7 @@ public:
     void setHotKeyEnabled(bool on) { setIniValue("hotKey/enabled", on, true); }
 
     QString hotKeyOptions() const { return iniText("hotKey/options"); }
+    QString hotKeyGraph() const { return iniText("hotKey/graph"); }
     QString hotKeyFilter() const { return iniText("hotKey/filter", "Ctrl+Alt+Shift+F"); }
     QString hotKeyStopTraffic() const { return iniText("hotKey/stopTraffic"); }
     QString hotKeyStopInetTraffic() const { return iniText("hotKey/stopInetTraffic"); }
