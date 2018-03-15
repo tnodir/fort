@@ -17,7 +17,6 @@ class FortSettings : public QObject
     Q_OBJECT
     Q_PROPERTY(bool debug READ debug WRITE setDebug NOTIFY iniChanged)
     Q_PROPERTY(QString language READ language WRITE setLanguage NOTIFY iniChanged)
-    Q_PROPERTY(QString updatesUrl READ updatesUrl CONSTANT)
     Q_PROPERTY(bool startWithWindows READ startWithWindows WRITE setStartWithWindows NOTIFY startWithWindowsChanged)
     Q_PROPERTY(QString logsPath READ logsPath CONSTANT)
     Q_PROPERTY(QString profilePath READ profilePath CONSTANT)
@@ -62,8 +61,6 @@ public:
     QString hotKeyStopInetTraffic() const { return iniText("hotKey/stopInetTraffic"); }
     QString hotKeyAppGroupModifiers() const { return iniText("hotKey/appGroupModifiers", "Ctrl+Alt+Shift"); }
     QString hotKeyQuit() const { return iniText("hotKey/quit"); }
-
-    QString updatesUrl() const { return APP_UPDATES_URL; }
 
     bool startWithWindows() const;
     void setStartWithWindows(bool start);
