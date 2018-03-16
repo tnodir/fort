@@ -1,5 +1,7 @@
 #include "widgetwindow.h"
 
+#include <QWindowStateChangeEvent>
+
 WidgetWindow::WidgetWindow(QWidget *parent) :
     QWidget(parent)
 {
@@ -38,4 +40,17 @@ void WidgetWindow::closeEvent(QCloseEvent *event)
     emit aboutToClose();
 
     QWidget::closeEvent(event);
+}
+
+void WidgetWindow::changeEvent(QEvent *event)
+{
+    QWidget::changeEvent(event);
+
+    if (event->type() == QEvent::WindowStateChange) {
+        QWindowStateChangeEvent *e = static_cast<QWindowStateChangeEvent *>(event);
+
+        if (e->oldState() != this->windowState()) {
+            emit visibilityChanged();
+        }
+    }
 }

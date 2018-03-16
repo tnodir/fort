@@ -19,7 +19,8 @@ public slots:
     void install(QWindow *window);
 
 private slots:
-    void onRectChanged();
+    void onPositionChanged();
+    void onSizeChanged();
     void onVisibilityChanged();
 };
 

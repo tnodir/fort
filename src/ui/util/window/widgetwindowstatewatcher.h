@@ -21,7 +21,8 @@ public slots:
     void install(WidgetWindow *window);
 
 private slots:
-    void onRectChanged();
+    void onPositionChanged();
+    void onSizeChanged();
     void onVisibilityChanged();
 
 private:

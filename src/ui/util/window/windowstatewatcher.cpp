@@ -9,18 +9,25 @@ WindowStateWatcher::WindowStateWatcher(QObject *parent) :
 
 void WindowStateWatcher::install(QWindow *window)
 {
-    connect(window, &QWindow::xChanged, this, &WindowStateWatcher::onRectChanged);
-    connect(window, &QWindow::yChanged, this, &WindowStateWatcher::onRectChanged);
-    connect(window, &QWindow::widthChanged, this, &WindowStateWatcher::onRectChanged);
-    connect(window, &QWindow::heightChanged, this, &WindowStateWatcher::onRectChanged);
+    connect(window, &QWindow::xChanged, this, &WindowStateWatcher::onPositionChanged);
+    connect(window, &QWindow::yChanged, this, &WindowStateWatcher::onPositionChanged);
+    connect(window, &QWindow::widthChanged, this, &WindowStateWatcher::onSizeChanged);
+    connect(window, &QWindow::heightChanged, this, &WindowStateWatcher::onSizeChanged);
     connect(window, &QWindow::visibilityChanged, this, &WindowStateWatcher::onVisibilityChanged);
 }
 
-void WindowStateWatcher::onRectChanged()
+void WindowStateWatcher::onPositionChanged()
 {
     QWindow *window = qobject_cast<QWindow *>(sender());
 
-    handleRectChange(window->geometry(), window->visibility());
+    handlePositionChange(window->position(), window->visibility());
+}
+
+void WindowStateWatcher::onSizeChanged()
+{
+    QWindow *window = qobject_cast<QWindow *>(sender());
+
+    handleSizeChange(window->size(), window->visibility());
 }
 
 void WindowStateWatcher::onVisibilityChanged()

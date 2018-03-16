@@ -6,20 +6,49 @@ BaseWindowStateWatcher::BaseWindowStateWatcher(QObject *parent) :
 {
 }
 
+QRect BaseWindowStateWatcher::geometry() const
+{
+    return QRect(m_pos, m_size);
+}
+
+void BaseWindowStateWatcher::setGeometry(const QRect &rect)
+{
+    m_pos = m_posPrev = rect.topLeft();
+    m_size = m_sizePrev = rect.size();
+}
+
+void BaseWindowStateWatcher::reset(const QRect &rect, bool maximized)
+{
+    setGeometry(rect);
+    setMaximized(maximized);
+}
+
 void BaseWindowStateWatcher::uninstall(QObject *window)
 {
     disconnect(window);
 }
 
-void BaseWindowStateWatcher::handleRectChange(const QRect &rect,
+void BaseWindowStateWatcher::handlePositionChange(const QPoint &pos,
+                                                  QWindow::Visibility visibility)
+{
+    if (visibility != QWindow::Windowed)
+        return;
+
+    if (pos != m_pos) {
+        m_posPrev = m_pos;
+        m_pos = pos;
+    }
+}
+
+void BaseWindowStateWatcher::handleSizeChange(const QSize &size,
                                               QWindow::Visibility visibility)
 {
     if (visibility != QWindow::Windowed)
         return;
 
-    if (rect != m_rect) {
-        m_rectPrev = m_rect;
-        m_rect = rect;
+    if (size != m_size) {
+        m_sizePrev = m_size;
+        m_size = size;
     }
 }
 
@@ -31,7 +60,8 @@ void BaseWindowStateWatcher::handleVisibilityChange(QWindow::Visibility visibili
         break;
     case QWindow::Maximized:
         m_maximized = true;
-        m_rect = m_rectPrev;
+        m_pos = m_posPrev;
+        m_size = m_sizePrev;
         break;
     default: break;
     }

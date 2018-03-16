@@ -26,6 +26,8 @@ protected:
     void hideEvent(QHideEvent *event) override;
 
     void closeEvent(QCloseEvent *event) override;
+
+    void changeEvent(QEvent *event) override;
 };
 
 #endif // WIDGETWINDOW_H

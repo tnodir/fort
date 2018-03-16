@@ -13,13 +13,10 @@ public:
     bool maximized() const { return m_maximized; }
     void setMaximized(bool maximized) { m_maximized = maximized; }
 
-    QRect geometry() const { return m_rect; }
-    void setGeometry(const QRect &rect) { m_rect = m_rectPrev = rect; }
+    QRect geometry() const;
+    void setGeometry(const QRect &rect);
 
-    void reset(const QRect &rect, bool maximized) {
-        setGeometry(rect);
-        setMaximized(maximized);
-    }
+    void reset(const QRect &rect, bool maximized);
 
 signals:
 
@@ -27,14 +24,18 @@ public slots:
     void uninstall(QObject *window);
 
 protected:
-    void handleRectChange(const QRect &rect, QWindow::Visibility visibility);
+    void handlePositionChange(const QPoint &pos, QWindow::Visibility visibility);
+    void handleSizeChange(const QSize &size, QWindow::Visibility visibility);
     void handleVisibilityChange(QWindow::Visibility visibility);
 
 private:
     bool m_maximized;
 
-    QRect m_rect;
-    QRect m_rectPrev;
+    QPoint m_pos;
+    QPoint m_posPrev;
+
+    QSize m_size;
+    QSize m_sizePrev;
 };
 
 #endif // BASEWINDOWSTATEWATCHER_H
