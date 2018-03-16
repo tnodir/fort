@@ -249,6 +249,9 @@ void FortManager::showGraphWindow()
         m_graphWindow = new GraphWindow();
 
         m_graphWindowState->install(m_graphWindow);
+
+        connect(m_graphWindow, &GraphWindow::aboutToClose,
+                this, &FortManager::closeGraphWindow);
     }
 
     m_graphWindow->show();

@@ -32,3 +32,10 @@ void WidgetWindow::hideEvent(QHideEvent *event)
 
     emit visibilityChanged();
 }
+
+void WidgetWindow::closeEvent(QCloseEvent *event)
+{
+    emit aboutToClose();
+
+    QWidget::closeEvent(event);
+}

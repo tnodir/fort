@@ -16,12 +16,16 @@ signals:
 
     void visibilityChanged();
 
+    void aboutToClose();
+
 protected:
     void moveEvent(QMoveEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
 
     void showEvent(QShowEvent *event) override;
     void hideEvent(QHideEvent *event) override;
+
+    void closeEvent(QCloseEvent *event) override;
 };
 
 #endif // WIDGETWINDOW_H
