@@ -256,6 +256,8 @@ void FortManager::showGraphWindow()
 
     m_graphWindow->show();
 
+    m_graphWindowAction->setChecked(true);
+
     restoreGraphWindowState();
 }
 
@@ -272,6 +274,8 @@ void FortManager::closeGraphWindow()
 
     m_graphWindow->deleteLater();
     m_graphWindow = nullptr;
+
+    m_graphWindowAction->setChecked(false);
 }
 
 void FortManager::switchGraphWindow()
@@ -552,10 +556,10 @@ void FortManager::updateTrayMenu()
                 this, SLOT(showWindow()));
     addHotKey(optionsAction, fortSettings()->hotKeyOptions(), hotKeyEnabled);
 
-    QAction *graphAction = addAction(
+    m_graphWindowAction = addAction(
                 menu, QIcon(":/images/chart_line.png"), tr("Graph"),
-                this, SLOT(switchGraphWindow()));
-    addHotKey(graphAction, fortSettings()->hotKeyGraph(), conf.logStat());
+                this, SLOT(switchGraphWindow()), true);
+    addHotKey(m_graphWindowAction, fortSettings()->hotKeyGraph(), conf.logStat());
 
     if (!conf.hasPassword() && !m_firewallConfToEdit) {
         menu->addSeparator();

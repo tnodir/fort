@@ -142,6 +142,7 @@ private:
     FirewallConf *m_firewallConf;
     FirewallConf *m_firewallConfToEdit;
 
+    QAction *m_graphWindowAction;
     QAction *m_filterEnabledAction;
     QAction *m_stopTrafficAction;
     QAction *m_stopInetTrafficAction;

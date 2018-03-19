@@ -35,7 +35,6 @@ void GraphWindow::setupUi()
 
     QVBoxLayout *mainLayout = new QVBoxLayout();
     mainLayout->setMargin(0);
-    mainLayout->setContentsMargins(0, 0, 0, 0);
     mainLayout->addWidget(chartView);
     setLayout(mainLayout);
 }
