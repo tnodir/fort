@@ -61,8 +61,8 @@ public:
     qint32 quotaMonthAlerted() const { return iniInt("quota/monthAlerted"); }
     void setQuotaMonthAlerted(qint32 v) { setIniValue("quota/monthAlerted", v); }
 
-    bool hotKeyEnabled() const { return iniBool("hotKey/enabled", true); }
-    void setHotKeyEnabled(bool on) { setIniValue("hotKey/enabled", on, true); }
+    bool hotKeyEnabled() const { return iniBool("hotKey/enabled"); }
+    void setHotKeyEnabled(bool on) { setIniValue("hotKey/enabled", on); }
 
     QString hotKeyOptions() const { return iniText("hotKey/options"); }
     QString hotKeyGraph() const { return iniText("hotKey/graph"); }
