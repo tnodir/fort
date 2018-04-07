@@ -34,10 +34,10 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.11
-import QtQuick.Controls 2.4
-import QtQuick.Controls.impl 2.4
-import QtQuick.Templates 2.4 as T
+import QtQuick 2.12
+import QtQuick.Controls 2.5
+import QtQuick.Controls.impl 2.5
+import QtQuick.Templates 2.5 as T
 
 T.Button {
     id: control
@@ -46,11 +46,9 @@ T.Button {
                             contentItem.implicitWidth + leftPadding + rightPadding)
     implicitHeight: Math.max(background ? background.implicitHeight : 0,
                              contentItem.implicitHeight + topPadding + bottomPadding)
-    baselineOffset: contentItem.y + contentItem.baselineOffset
 
     padding: 6
-    leftPadding: padding + 2
-    rightPadding: padding + 2
+    horizontalPadding: padding + 2
     spacing: 6
 
     icon.width: 24

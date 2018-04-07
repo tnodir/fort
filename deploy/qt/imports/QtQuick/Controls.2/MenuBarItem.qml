@@ -34,10 +34,10 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.11
-import QtQuick.Templates 2.4 as T
-import QtQuick.Controls 2.4
-import QtQuick.Controls.impl 2.4
+import QtQuick 2.12
+import QtQuick.Templates 2.5 as T
+import QtQuick.Controls 2.5
+import QtQuick.Controls.impl 2.5
 
 T.MenuBarItem {
     id: control
@@ -47,7 +47,6 @@ T.MenuBarItem {
     implicitHeight: Math.max(background ? background.implicitHeight : 0,
                              Math.max(contentItem.implicitHeight,
                                       indicator ? indicator.implicitHeight : 0) + topPadding + bottomPadding)
-    baselineOffset: contentItem.y + contentItem.baselineOffset
 
     spacing: 6
     padding: 6
