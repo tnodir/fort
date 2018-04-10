@@ -15,12 +15,12 @@ QT_FORWARD_DECLARE_CLASS(FirewallConf)
 
 QT_FORWARD_DECLARE_STRUCT(fort_conf_limit)
 
-typedef QVector<quint32> numbers_arr_t;
+using numbers_arr_t = QVector<quint32>;
 
-typedef QVarLengthArray<AddressRange, 2> addrranges_arr_t;
+using addrranges_arr_t = QVarLengthArray<AddressRange, 2>;
 
-typedef QMap<QString, quint32> appperms_map_t;
-typedef QMap<QString, qint8> appgroups_map_t;
+using appperms_map_t = QMap<QString, quint32>;
+using appgroups_map_t = QMap<QString, qint8>;
 
 class ConfUtil : public QObject
 {

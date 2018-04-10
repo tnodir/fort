@@ -166,7 +166,7 @@ void FortManager::setupTrayIcon()
     m_trayIcon->setToolTip(qApp->applicationDisplayName());
     m_trayIcon->setIcon(QIcon(":/images/shield.png"));
 
-    connect(m_trayIcon, &QSystemTrayIcon::activated,
+    connect(m_trayIcon, &QSystemTrayIcon::activated, this,
             [this](QSystemTrayIcon::ActivationReason reason) {
         if (reason == QSystemTrayIcon::Trigger) {
             showWindow();
@@ -186,18 +186,29 @@ bool FortManager::setupEngine()
 
     m_engine->load(QUrl("qrc:/qml/main.qml"));
 
-    if (m_engine->rootObjects().isEmpty()) {
+    const QList<QObject *> rootObjects = m_engine->rootObjects();
+
+    if (rootObjects.isEmpty()) {
         showErrorBox("Cannot setup QML Engine");
         return false;
     }
 
-    m_appWindow = qobject_cast<QWindow *>(
-                m_engine->rootObjects().first());
+    m_appWindow = qobject_cast<QWindow *>(rootObjects.first());
     Q_ASSERT(m_appWindow);
 
     m_appWindowState->install(m_appWindow);
 
     return true;
+}
+
+void FortManager::closeEngine()
+{
+    m_appWindow = nullptr;
+
+    if (m_engine) {
+        m_engine->deleteLater();
+        m_engine = nullptr;
+    }
 }
 
 void FortManager::showTrayIcon()
@@ -291,12 +302,7 @@ void FortManager::exit(int retcode)
     closeGraphWindow();
     closeWindow();
 
-    m_appWindow = nullptr;
-
-    if (m_engine) {
-        m_engine->deleteLater();
-        m_engine = nullptr;
-    }
+    closeEngine();
 
     qApp->exit(retcode);
 }

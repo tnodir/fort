@@ -14,8 +14,8 @@ public:
         StatTraf    = 0x04000000
     };
 
-    explicit LogEntry();
-    virtual ~LogEntry();
+    explicit LogEntry() = default;
+    virtual ~LogEntry() = default;
 
     virtual LogEntry::LogType type() const = 0;
 

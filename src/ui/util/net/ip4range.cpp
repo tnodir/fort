@@ -95,7 +95,7 @@ bool Ip4Range::fromText(const QString &text)
 bool Ip4Range::parseAddressMask(const QStringRef &line,
                                 quint32 &from, quint32 &to)
 {
-    const QRegularExpression re("([\\d.]+)\\s*([/-]?)\\s*(\\S*)");
+    const QRegularExpression re(R"(([\d.]+)\s*([/-]?)\s*(\S*))");
     const QRegularExpressionMatch match = re.match(line);
 
     if (!match.hasMatch()) {

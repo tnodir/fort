@@ -92,7 +92,9 @@ private:
     void setupLogManager();
 
     void setupTrayIcon();
+
     bool setupEngine();
+    void closeEngine();
 
     bool loadSettings(FirewallConf *conf);
     bool saveSettings(FirewallConf *newConf, bool onlyFlags = false,

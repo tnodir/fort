@@ -18,7 +18,7 @@ QString OsUtil::pidToPath(quint32 pid, bool isKernelPath)
 
 bool OsUtil::createGlobalMutex(const char *name)
 {
-    return !CreateMutexA(NULL, FALSE, name);
+    return !CreateMutexA(nullptr, FALSE, name);
 }
 
 quint32 OsUtil::lastErrorCode()
@@ -28,12 +28,13 @@ quint32 OsUtil::lastErrorCode()
 
 QString OsUtil::lastErrorMessage(quint32 errorCode)
 {
-    LPWSTR buf = NULL;
+    LPWSTR buf = nullptr;
 
     FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER
                    | FORMAT_MESSAGE_FROM_SYSTEM
                    | FORMAT_MESSAGE_IGNORE_INSERTS,
-                   NULL, errorCode, 0, (LPWSTR) &buf, 0, NULL);
+                   nullptr, errorCode, 0,
+                   (LPWSTR) &buf, 0, nullptr);
 
     if (!buf) {
         return QString("System Error %1").arg(errorCode);

@@ -189,7 +189,7 @@ bool ConfUtil::parseAppGroups(const QList<AppGroup *> &appGroups,
         appPerms.reserve(appPermsMap.size());
 
         for (; it != end; ++it) {
-            const QString appPath = it.key();
+            const QString &appPath = it.key();
             appPathsLen += appPath.size() * sizeof(wchar_t);
 
             appPaths.append(appPath);
@@ -240,7 +240,7 @@ bool ConfUtil::parseApps(const QString &text, bool blocked,
 
 QString ConfUtil::parseAppPath(const QStringRef &line)
 {
-    const QRegularExpression re("\\s*\"?\\s*([^\"]+)\\s*\"?\\s*");
+    const QRegularExpression re(R"(\s*"?\s*([^"]+)\s*"?\s*)");
     const QRegularExpressionMatch match = re.match(line);
 
     if (!match.hasMatch())
@@ -330,7 +330,6 @@ quint16 ConfUtil::writeLimits(struct fort_conf_limit *limits,
         limit->out_bytes = appGroup->enabled() && appGroup->limitOutEnabled()
                 ? appGroup->speedLimitOut() * 1024 / 2 : 0;
 
-        const quint16 bit = quint16(1 << i);
         if (limit->in_bytes || limit->out_bytes) {
             limitBits |= (1 << i);
         }

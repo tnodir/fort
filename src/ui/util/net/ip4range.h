@@ -1,16 +1,16 @@
 #ifndef IP4RANGE_H
 #define IP4RANGE_H
 
-#include <QObject>
 #include <QMap>
+#include <QObject>
 #include <QVector>
 
-typedef struct {
+using Ip4Pair = struct {
     quint32 from, to;
-} Ip4Pair;
+};
 
-typedef QMap<quint32, quint32> ip4range_map_t;
-typedef QVector<quint32> ip4range_arr_t;
+using ip4range_map_t = QMap<quint32, quint32>;
+using ip4range_arr_t = QVector<quint32>;
 
 class Ip4Range : public QObject
 {
@@ -30,7 +30,7 @@ public:
     const ip4range_arr_t &fromArray() const { return m_fromArray; }
     const ip4range_arr_t &toArray() const { return m_toArray; }
 
-    const int size() const { return m_toArray.size(); }
+    int size() const { return m_toArray.size(); }
     const Ip4Pair at(int i) const {
         return Ip4Pair{m_fromArray.at(i), m_toArray.at(i)};
     }

@@ -22,7 +22,7 @@ QStringList TaskUzonline::parseUzonlineBuffer(const QByteArray &buffer)
     if (startPos < 0 || endPos < 0)
         return QStringList();
 
-    const QRegularExpression re("([\\d.]+)[^\\d.]*-[^\\d.]*([\\d.]+)");
+    const QRegularExpression re(R"(([\d.]+)[^\d.]*-[^\d.]*([\d.]+))");
 
     QStringList list;
 

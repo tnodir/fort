@@ -30,7 +30,8 @@ bool Device::open(const QString &filePath)
             | SECURITY_SQOS_PRESENT | SECURITY_IDENTIFICATION;
 
     m_handle = CreateFileW((LPCWSTR) filePath.utf16(),
-                           access, share, NULL, creation, attr, NULL);
+                           access, share, nullptr,
+                           creation, attr, nullptr);
 
     return m_handle != INVALID_HANDLE_VALUE;
 }
@@ -47,7 +48,7 @@ bool Device::close()
 
 bool Device::cancelIo()
 {
-    return CancelIoEx(m_handle, NULL);
+    return CancelIoEx(m_handle, nullptr);
 }
 
 bool Device::ioctl(quint32 code, char *in, int inSize,
@@ -58,7 +59,7 @@ bool Device::ioctl(quint32 code, char *in, int inSize,
     const bool res = DeviceIoControl(
                 m_handle, code,
                 in, inSize, out, outSize,
-                &size, NULL);
+                &size, nullptr);
 
     if (retSize) {
         *retSize = size;

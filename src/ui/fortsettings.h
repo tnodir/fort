@@ -1,8 +1,8 @@
 #ifndef FORTSETTINGS_H
 #define FORTSETTINGS_H
 
-#include <QObject>
 #include <QHash>
+#include <QObject>
 #include <QRect>
 #include <QSettings>
 
@@ -10,7 +10,7 @@
 
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
 
-typedef QHash<QString, QByteArray> TasksMap;
+using TasksMap = QHash<QString, QByteArray>;
 
 class FortSettings : public QObject
 {

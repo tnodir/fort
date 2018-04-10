@@ -1,8 +1,8 @@
 #ifndef DATABASEMANAGER_H
 #define DATABASEMANAGER_H
 
-#include <QObject>
 #include <QHash>
+#include <QObject>
 #include <QStringList>
 #include <QVector>
 
@@ -52,7 +52,7 @@ public slots:
     void clear();
 
 private:
-    typedef QList<SqliteStmt *> QStmtList;
+    using QStmtList = QList<SqliteStmt *>;
 
     void initializeQuota();
 
