@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QMessageBox>
 
 #include "../common/version.h"
 #include "driver/drivermanager.h"
@@ -6,6 +7,9 @@
 #include "fortmanager.h"
 #include "fortsettings.h"
 #include "util/osutil.h"
+
+#define FORT_ERROR_INSTANCE 1
+#define FORT_ERROR_DEVICE   2
 
 int main(int argc, char *argv[])
 {
@@ -28,13 +32,20 @@ int main(int argc, char *argv[])
     }
 
     // To check running instance
-    OsUtil::createGlobalMutex(APP_NAME);
+    if (!OsUtil::createGlobalMutex(APP_NAME)) {
+        QMessageBox::critical(nullptr, QString(),
+                              "Application is already running!");
+        return FORT_ERROR_INSTANCE;
+    }
 
     FortManager fortManager(&fortSettings);
 
     // Error: Cannot open the driver device
-    if (!fortManager.driverManager()->isDeviceOpened())
-        return 1;
+    if (!fortManager.driverManager()->isDeviceOpened()) {
+        QMessageBox::critical(nullptr, QString(),
+                              "Cannot open the driver device!");
+        return FORT_ERROR_DEVICE;
+    }
 
     fortManager.showTrayIcon();
 

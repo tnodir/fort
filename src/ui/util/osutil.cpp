@@ -18,7 +18,8 @@ QString OsUtil::pidToPath(quint32 pid, bool isKernelPath)
 
 bool OsUtil::createGlobalMutex(const char *name)
 {
-    return !CreateMutexA(nullptr, FALSE, name);
+    return CreateMutexA(nullptr, FALSE, name)
+            && GetLastError() != ERROR_ALREADY_EXISTS;
 }
 
 quint32 OsUtil::lastErrorCode()
