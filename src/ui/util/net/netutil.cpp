@@ -100,6 +100,9 @@ QString NetUtil::getHostName(const QString &address)
 QStringList NetUtil::localIpv4Networks()
 {
     static QStringList list = QStringList()
+            << "0.0.0.0/32"  // non-routable meta-address
+            << "239.255.255.250/32"  // IP Multicast for DLNA/UPNP
+            << "255.255.255.255/32"  // IP Broadcast
             << "10.0.0.0/8"
             << "127.0.0.0/8"
             << "169.254.0.0/16"
