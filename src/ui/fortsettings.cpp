@@ -197,8 +197,12 @@ bool FortSettings::writeConf(const FirewallConf &conf)
         return false;
     }
 
-    if (!(FileUtil::removeFile(filePath)
-          && FileUtil::copyFile(backupFilePath, filePath))) {
+    if (!FileUtil::removeFile(filePath)) {
+        setErrorMessage(tr("Can't remove .conf file"));
+        return false;
+    }
+
+    if (!FileUtil::copyFile(backupFilePath, filePath)) {
         setErrorMessage(tr("Can't create .conf file"));
         return false;
     }
