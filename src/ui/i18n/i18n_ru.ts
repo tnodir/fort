@@ -85,24 +85,14 @@
         <translation>Не удалось записать .ini файл</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="201"/>
-        <source>Can&apos;t remove .conf file</source>
-        <translation>Не удалось удалить .conf файл</translation>
-    </message>
-    <message>
         <location filename="../fortsettings.cpp" line="206"/>
         <source>Can&apos;t create .conf file</source>
         <translation>Не удалось создать .conf файл</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="196"/>
+        <location filename="../fortsettings.cpp" line="201"/>
         <source>Can&apos;t create backup .conf file</source>
         <translation>Не удалось создать бэкап .conf файла</translation>
-    </message>
-    <message>
-        <location filename="../fortsettings.cpp" line="221"/>
-        <source>Can&apos;t write .conf file</source>
-        <translation>Не удалось записать .conf файл</translation>
     </message>
 </context>
 <context>

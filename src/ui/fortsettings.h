@@ -111,7 +111,6 @@ private:
     QString confBackupFilePath() const;
 
     bool tryToReadConf(FirewallConf &conf, const QString &filePath);
-    bool tryToWriteConf(const FirewallConf &conf, const QString &filePath);
 
     QVariant migrateConf(const QVariant &confVar);
     void removeMigratedKeys();

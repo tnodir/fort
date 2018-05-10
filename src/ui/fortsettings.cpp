@@ -192,33 +192,18 @@ bool FortSettings::writeConf(const FirewallConf &conf)
         return false;
     }
 
-    if (!tryToWriteConf(conf, backupFilePath)) {
-        setErrorMessage(tr("Can't create backup .conf file"));
-        return false;
-    }
-
-    if (!FileUtil::removeFile(filePath)) {
-        setErrorMessage(tr("Can't remove .conf file"));
-        return false;
-    }
-
-    if (!FileUtil::copyFile(backupFilePath, filePath)) {
-        setErrorMessage(tr("Can't create .conf file"));
-        return false;
-    }
-
-    return true;
-}
-
-bool FortSettings::tryToWriteConf(const FirewallConf &conf, const QString &filePath)
-{
     const QJsonDocument jsonDoc = QJsonDocument::fromVariant(
                 conf.toVariant());
 
     const QByteArray data = jsonDoc.toJson(QJsonDocument::Indented);
 
+    if (!FileUtil::writeFileData(backupFilePath, data)) {
+        setErrorMessage(tr("Can't create backup .conf file"));
+        return false;
+    }
+
     if (!FileUtil::writeFileData(filePath, data)) {
-        setErrorMessage(tr("Can't write .conf file"));
+        setErrorMessage(tr("Can't create .conf file"));
         return false;
     }
 
