@@ -104,7 +104,7 @@ Page {
                     mainPage.aboutToSave();
 
                     if (confFlagsEdited || confEdited) {
-                        if (!fortManager.saveConf(confFlagsEdited))
+                        if (!fortManager.saveConf(confFlagsEdited && !confEdited))
                             return;
                     }
 
@@ -121,7 +121,7 @@ Page {
                     mainPage.aboutToSave();
 
                     if (confFlagsEdited || confEdited) {
-                        if (!fortManager.applyConf(confFlagsEdited))
+                        if (!fortManager.applyConf(confFlagsEdited && !confEdited))
                             return;
                     }
 
