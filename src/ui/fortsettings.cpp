@@ -86,11 +86,8 @@ void FortSettings::processArguments(const QStringList &args)
                     FileUtil::absolutePath(m_statPath));
     }
 
-    // Control QML file path
+    // Control JS file path
     m_controlPath = parser.value(controlOption);
-    if (!m_controlPath.isEmpty()) {
-        m_controlPath = FileUtil::absolutePath(m_controlPath);
-    }
 
     // Other Arguments
     m_args = parser.positionalArguments();
