@@ -14,6 +14,7 @@
 			"fort": [
 				"${ROOT}/ChangeLog",
 				"${BUILD}/FortFirewall.exe",
+				"${ROOT}/src/scripts			| *.qs Readme.txt		|",
 				"${ROOT}/src/ui/i18n			| *.qm				|"
 			]
 		},

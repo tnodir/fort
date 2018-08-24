@@ -57,6 +57,7 @@ Type: files; Name: "{app}\driver\*.sys"
 Type: filesandordirs; Name: "{app}\i18n"
 Type: filesandordirs; Name: "{app}\imports"
 Type: filesandordirs; Name: "{app}\plugins"
+Type: filesandordirs; Name: "{app}\scripts"
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}"
