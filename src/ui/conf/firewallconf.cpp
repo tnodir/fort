@@ -201,6 +201,15 @@ QQmlListProperty<AddressGroup> FirewallConf::addressGroups()
     return QQmlListProperty<AddressGroup>(this, m_addressGroups);
 }
 
+AppGroup *FirewallConf::appGroupByName(const QString &name) const
+{
+    foreach (AppGroup *appGroup, appGroupsList()) {
+        if (appGroup->name() == name)
+            return appGroup;
+    }
+    return nullptr;
+}
+
 QQmlListProperty<AppGroup> FirewallConf::appGroups()
 {
     return QQmlListProperty<AppGroup>(this, m_appGroups);

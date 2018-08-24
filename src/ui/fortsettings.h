@@ -85,6 +85,10 @@ public:
     QString statPath() const { return m_statPath; }
     QString statFilePath() const;
 
+    QString controlPath() const { return m_controlPath; }
+
+    QStringList args() const { return m_args; }
+
     QString errorMessage() const { return m_errorMessage; }
 
     QString appUpdatesUrl() const { return APP_UPDATES_URL; }
@@ -140,6 +144,8 @@ private:
 
     QString m_profilePath;
     QString m_statPath;
+    QString m_controlPath;
+    QStringList m_args;
 
     QString m_errorMessage;
 

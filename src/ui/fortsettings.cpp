@@ -56,6 +56,11 @@ void FortSettings::processArguments(const QStringList &args)
                 "Directory to store statistics.", "stat");
     parser.addOption(statOption);
 
+    const QCommandLineOption controlOption(
+                QStringList() << "c" << "control",
+                "Control running instance by executing the JS file.", "control");
+    parser.addOption(controlOption);
+
     parser.addVersionOption();
     parser.addHelpOption();
 
@@ -80,6 +85,15 @@ void FortSettings::processArguments(const QStringList &args)
         m_statPath = FileUtil::pathSlash(
                     FileUtil::absolutePath(m_statPath));
     }
+
+    // Control QML file path
+    m_controlPath = parser.value(controlOption);
+    if (!m_controlPath.isEmpty()) {
+        m_controlPath = FileUtil::absolutePath(m_controlPath);
+    }
+
+    // Other Arguments
+    m_args = parser.positionalArguments();
 }
 
 void FortSettings::setupIni()

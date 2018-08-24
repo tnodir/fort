@@ -40,6 +40,14 @@
     </message>
 </context>
 <context>
+    <name>ControlManager</name>
+    <message>
+        <location filename="../control/controlmanager.cpp" line="114"/>
+        <source>Control script executed</source>
+        <translation>Управляющий скрипт выполнен</translation>
+    </message>
+</context>
+<context>
     <name>FortManager</name>
     <message>
         <location filename="../fortmanager.cpp" line="317"/>
@@ -80,17 +88,17 @@
 <context>
     <name>FortSettings</name>
     <message>
-        <location filename="../fortsettings.cpp" line="191"/>
+        <location filename="../fortsettings.cpp" line="205"/>
         <source>Can&apos;t write .ini file</source>
         <translation>Не удалось записать .ini файл</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="206"/>
+        <location filename="../fortsettings.cpp" line="220"/>
         <source>Can&apos;t create .conf file</source>
         <translation>Не удалось создать .conf файл</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="201"/>
+        <location filename="../fortsettings.cpp" line="215"/>
         <source>Can&apos;t create backup .conf file</source>
         <translation>Не удалось создать бэкап .conf файла</translation>
     </message>

@@ -14,6 +14,8 @@ SOURCES += \
     conf/addressgroup.cpp \
     conf/appgroup.cpp \
     conf/firewallconf.cpp \
+    control/controlmanager.cpp \
+    control/controlworker.cpp \
     db/databasemanager.cpp \
     db/databasesql.cpp \
     db/quotamanager.cpp \
@@ -70,6 +72,8 @@ HEADERS += \
     conf/addressgroup.h \
     conf/appgroup.h \
     conf/firewallconf.h \
+    control/controlmanager.h \
+    control/controlworker.h \
     db/databasemanager.h \
     db/databasesql.h \
     db/quotamanager.h \

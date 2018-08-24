@@ -118,6 +118,8 @@ public:
     const QList<AddressGroup *> &addressGroupsList() const { return m_addressGroups; }
     QQmlListProperty<AddressGroup> addressGroups();
 
+    Q_INVOKABLE AppGroup *appGroupByName(const QString &name) const;
+
     const QList<AppGroup *> &appGroupsList() const { return m_appGroups; }
     QQmlListProperty<AppGroup> appGroups();
 

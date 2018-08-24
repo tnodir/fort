@@ -2,6 +2,8 @@
 #include <QMessageBox>
 
 #include "../common/version.h"
+#include "control/controlmanager.h"
+#include "control/controlworker.h"
 #include "driver/drivermanager.h"
 #include "fortcommon.h"
 #include "fortmanager.h"
@@ -10,6 +12,7 @@
 
 #define FORT_ERROR_INSTANCE 1
 #define FORT_ERROR_DEVICE   2
+#define FORT_ERROR_CONTROL  3
 
 int main(int argc, char *argv[])
 {
@@ -31,7 +34,16 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    // To check running instance
+    ControlManager controlManager(app.applicationName(),
+                                  fortSettings.controlPath());
+
+    // Send control request to running instance
+    if (controlManager.isClient()) {
+        return controlManager.post(fortSettings.args())
+                ? 0 : FORT_ERROR_CONTROL;
+    }
+
+    // Check running instance
     if (!OsUtil::createGlobalMutex(APP_NAME)) {
         QMessageBox::critical(nullptr, QString(),
                               "Application is already running!");
@@ -48,6 +60,11 @@ int main(int argc, char *argv[])
     }
 
     fortManager.showTrayIcon();
+
+    // Process control requests from clients
+    if (!controlManager.listen(&fortManager)) {
+        return FORT_ERROR_CONTROL;
+    }
 
     return app.exec();
 }
