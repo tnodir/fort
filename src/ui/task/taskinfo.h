@@ -21,8 +21,7 @@ public:
     enum TaskType : qint16 {
         TypeNone = -1,
         UpdateChecker = 0,
-        Tasix,
-        Uzonline
+        Tasix
     };
     Q_ENUM(TaskType)
 

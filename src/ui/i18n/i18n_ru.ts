@@ -167,11 +167,6 @@
         <source>TAS-IX Addresses Downloader</source>
         <translation>Загрузчик TAS-IX адресов</translation>
     </message>
-    <message>
-        <location filename="../task/taskinfo.cpp" line="52"/>
-        <source>UzOnline Addresses Downloader</source>
-        <translation>Загрузчик UzOnline адресов</translation>
-    </message>
 </context>
 <context>
     <name>TaskTasix</name>
@@ -187,14 +182,6 @@
         <location filename="../task/taskupdatechecker.cpp" line="36"/>
         <source>New version!</source>
         <translation>Новая версия!</translation>
-    </message>
-</context>
-<context>
-    <name>TaskUzonline</name>
-    <message>
-        <location filename="../task/taskuzonline.h" line="23"/>
-        <source>UzOnline addresses updated!</source>
-        <translation>UzOnline адреса обновлены!</translation>
     </message>
 </context>
 <context>

@@ -6,7 +6,6 @@
 #include "../util/dateutil.h"
 #include "tasktasix.h"
 #include "taskupdatechecker.h"
-#include "taskuzonline.h"
 
 #define TASK_INFO_VERSION   1
 
@@ -48,8 +47,6 @@ QString TaskInfo::title() const
         return tr("Update Checker");
     case Tasix:
         return tr("TAS-IX Addresses Downloader");
-    case Uzonline:
-        return tr("UzOnline Addresses Downloader");
     default:
         Q_UNREACHABLE();
         return QString();
@@ -199,8 +196,6 @@ TaskWorker *TaskInfo::createWorker()
         return new TaskUpdateChecker(this);
     case Tasix:
         return new TaskTasix(this);
-    case Uzonline:
-        return new TaskUzonline(this);
     default:
         Q_UNREACHABLE();
         return nullptr;

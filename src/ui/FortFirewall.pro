@@ -42,7 +42,6 @@ SOURCES += \
     task/taskmanager.cpp \
     task/tasktasix.cpp \
     task/taskupdatechecker.cpp \
-    task/taskuzonline.cpp \
     task/taskworker.cpp \
     translationmanager.cpp \
     util/conf/addressrange.cpp \
@@ -100,7 +99,6 @@ HEADERS += \
     task/taskmanager.h \
     task/tasktasix.h \
     task/taskupdatechecker.h \
-    task/taskuzonline.h \
     task/taskworker.h \
     translationmanager.h \
     util/conf/addressrange.h \

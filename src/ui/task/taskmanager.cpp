@@ -28,7 +28,6 @@ void TaskManager::setupTasks()
 {
     appendTaskInfo(new TaskInfo(TaskInfo::UpdateChecker, this));
     appendTaskInfo(new TaskInfo(TaskInfo::Tasix, this));
-    appendTaskInfo(new TaskInfo(TaskInfo::Uzonline, this));
 }
 
 void TaskManager::appendTaskInfo(TaskInfo *taskInfo)
