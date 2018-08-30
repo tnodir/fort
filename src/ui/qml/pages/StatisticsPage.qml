@@ -211,16 +211,25 @@ BasePage {
 
                     HSeparator {}
 
-                    ListView {
+                    TableView {
                         id: trafListView
                         Layout.fillWidth: true
                         Layout.fillHeight: true
-                        spacing: 5
+                        rowSpacing: 5
+                        columnSpacing: 0
                         clip: true
 
                         model: trafListModel
 
-                        delegate: TrafRow {}
+                        columnWidthProvider: function (column) {
+                            return trafCellWidths[column];
+                        }
+
+                        delegate: Label {
+                            fontSizeMode: Text.Fit
+                            text: translationManager.trTrigger
+                                  && model.display
+                        }
 
                         ScrollBar.vertical: ScrollBarControl {}
                     }

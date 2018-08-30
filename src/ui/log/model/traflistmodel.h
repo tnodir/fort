@@ -1,7 +1,7 @@
 #ifndef TRAFLISTMODEL_H
 #define TRAFLISTMODEL_H
 
-#include <QAbstractListModel>
+#include <QAbstractItemModel>
 
 QT_FORWARD_DECLARE_CLASS(DatabaseManager)
 
@@ -15,19 +15,11 @@ struct TrafficRow {
     qint64 outBytes;
 };
 
-class TrafListModel : public QAbstractListModel
+class TrafListModel : public QAbstractItemModel
 {
     Q_OBJECT
 
 public:
-    enum TrafRole {
-        DateTimeRole = Qt::DisplayRole,
-        DownloadRole = Qt::UserRole,
-        UploadRole,
-        SumRole
-    };
-    Q_ENUM(TrafRole)
-
     enum TrafType {
         TrafHourly = 0,
         TrafDaily,
@@ -45,9 +37,19 @@ public:
     qint64 appId() const { return m_appId; }
     void setAppId(qint64 appId);
 
+    QModelIndex index(int row, int column,
+                      const QModelIndex &parent = QModelIndex()) const override;
+    QModelIndex parent(const QModelIndex &child) const override;
+
+    QModelIndex sibling(int row, int column,
+                        const QModelIndex &index) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    bool hasChildren(const QModelIndex &parent = QModelIndex()) const override;
+
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    QHash<int, QByteArray> roleNames() const override;
+
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
 
 signals:
 

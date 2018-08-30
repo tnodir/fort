@@ -31,7 +31,6 @@
         <file>qml/pages/log/AppListView.qml</file>
         <file>qml/pages/log/IpListView.qml</file>
         <file>qml/pages/log/TrafOptionsButton.qml</file>
-        <file>qml/pages/log/TrafRow.qml</file>
         <file>qml/pages/schedule/TaskRow.qml</file>
     </qresource>
 </RCC>

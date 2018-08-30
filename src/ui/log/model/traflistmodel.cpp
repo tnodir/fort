@@ -10,7 +10,7 @@
 
 TrafListModel::TrafListModel(DatabaseManager *databaseManager,
                              QObject *parent) :
-    QAbstractListModel(parent),
+    QAbstractItemModel(parent),
     m_isEmpty(false),
     m_type(TrafHourly),
     m_appId(0),
@@ -30,6 +30,28 @@ void TrafListModel::setAppId(qint64 appId)
     m_appId = appId;
 }
 
+QModelIndex TrafListModel::index(int row, int column,
+                                 const QModelIndex &parent) const
+{
+    return hasIndex(row, column, parent)
+            ? createIndex(row, column) : QModelIndex();
+}
+
+QModelIndex TrafListModel::parent(const QModelIndex &child) const
+{
+    Q_UNUSED(child)
+
+    return QModelIndex();
+}
+
+QModelIndex TrafListModel::sibling(int row, int column,
+                                   const QModelIndex &index) const
+{
+    Q_UNUSED(index)
+
+    return this->index(row, column);
+}
+
 int TrafListModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
@@ -37,36 +59,40 @@ int TrafListModel::rowCount(const QModelIndex &parent) const
     return m_trafCount;
 }
 
+int TrafListModel::columnCount(const QModelIndex &parent) const
+{
+    return parent.isValid() ? 0 : 4;
+}
+
+bool TrafListModel::hasChildren(const QModelIndex &parent) const
+{
+    return !parent.isValid() && rowCount() > 0;
+}
+
 QVariant TrafListModel::data(const QModelIndex &index, int role) const
 {
-    if (index.isValid() && role >= DateTimeRole && role <= SumRole) {
+    if (index.isValid() && role == Qt::DisplayRole) {
         const int row = index.row();
+        const int column = index.column();
 
         if (!m_rowCache.isValid(row)) {
             updateRowCache(row);
         }
 
-        switch (role) {
-        case DateTimeRole: return formatTrafTime(m_rowCache.trafTime);
-        case DownloadRole: return formatTrafUnit(m_rowCache.inBytes);
-        case UploadRole: return formatTrafUnit(m_rowCache.outBytes);
-        case SumRole: return formatTrafUnit(m_rowCache.inBytes
-                                            + m_rowCache.outBytes);
+        switch (column) {
+        case 0: return formatTrafTime(m_rowCache.trafTime);
+        case 1: return formatTrafUnit(m_rowCache.inBytes);
+        case 2: return formatTrafUnit(m_rowCache.outBytes);
+        case 3: return formatTrafUnit(m_rowCache.inBytes + m_rowCache.outBytes);
         }
     }
     return QVariant();
 }
 
-QHash<int, QByteArray> TrafListModel::roleNames() const
+Qt::ItemFlags TrafListModel::flags(const QModelIndex &index) const
 {
-    static const QHash<int, QByteArray> roles {
-        {DateTimeRole, "dateTime"},
-        {DownloadRole, "download"},
-        {UploadRole, "upload"},
-        {SumRole, "sum"}
-    };
-
-    return roles;
+    return QAbstractItemModel::flags(index)
+            | (index.isValid() ? Qt::ItemNeverHasChildren : Qt::NoItemFlags);
 }
 
 void TrafListModel::clear()
