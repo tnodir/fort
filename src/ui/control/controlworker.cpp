@@ -71,7 +71,7 @@ bool ControlWorker::writeData(const QByteArray &data)
     *p++ = dataSize;
 
     if (dataSize != 0) {
-        memcpy(p, data.constData(), data.size());
+        memcpy(p, data.constData(), dataSize);
     }
 
     return true;
