@@ -9,6 +9,8 @@
         <file>qml/controls/ScrollBarControl.qml</file>
         <file>qml/controls/SpinCombo.qml</file>
         <file>qml/controls/SpinComboRow.qml</file>
+        <file>qml/controls/SpinDouble.qml</file>
+        <file>qml/controls/SpinDoubleRow.qml</file>
         <file>qml/controls/SwipeViewControl.qml</file>
         <file>qml/controls/TextAreaFrame.qml</file>
         <file>qml/controls/TextContextMenu.qml</file>

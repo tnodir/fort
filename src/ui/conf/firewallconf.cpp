@@ -18,6 +18,9 @@ FirewallConf::FirewallConf(QObject *parent) :
     m_logStat(false),
     m_appBlockAll(true),
     m_appAllowAll(false),
+    m_activePeriodEnabled(false),
+    m_activePeriodFrom(0),
+    m_activePeriodTo(0),
     m_monthStart(DEFAULT_MONTH_START),
     m_trafHourKeepDays(DEFAULT_TRAF_HOUR_KEEP_DAYS),
     m_trafDayKeepDays(DEFAULT_TRAF_DAY_KEEP_DAYS),
@@ -107,6 +110,30 @@ void FirewallConf::setAppAllowAll(bool appAllowAll)
     if (m_appAllowAll != appAllowAll) {
         m_appAllowAll = appAllowAll;
         emit appAllowAllChanged();
+    }
+}
+
+void FirewallConf::setActivePeriodEnabled(bool activePeriodEnabled)
+{
+    if (m_activePeriodEnabled != activePeriodEnabled) {
+        m_activePeriodEnabled = activePeriodEnabled;
+        emit activePeriodEnabledChanged();
+    }
+}
+
+void FirewallConf::setActivePeriodFrom(int activePeriodFrom)
+{
+    if (m_activePeriodFrom != activePeriodFrom) {
+        m_activePeriodFrom = uint(activePeriodFrom);
+        emit activePeriodFromChanged();
+    }
+}
+
+void FirewallConf::setActivePeriodTo(int activePeriodTo)
+{
+    if (m_activePeriodTo != activePeriodTo) {
+        m_activePeriodTo = uint(activePeriodTo);
+        emit activePeriodToChanged();
     }
 }
 
@@ -262,6 +289,10 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     setAppAllowAll(o.appAllowAll());
     setPasswordHash(o.passwordHash());
     setAppGroupBits(o.appGroupBits());
+
+    setActivePeriodEnabled(o.activePeriodEnabled());
+    setActivePeriodFrom(o.activePeriodFrom());
+    setActivePeriodTo(o.activePeriodTo());
 
     setMonthStart(o.monthStart());
     setTrafHourKeepDays(o.trafHourKeepDays());

@@ -182,7 +182,8 @@ void DatabaseManager::logProcNew(quint32 pid, const QString &appPath)
 
     qint64 appId = getAppId(appPath);
     if (appId == INVALID_APP_ID) {
-        appId = createAppId(appPath);
+        const qint64 unixTime = DateUtil::getUnixTime();
+        appId = createAppId(appPath, unixTime);
     }
 
     m_sqliteDb->commitTransaction();
@@ -235,69 +236,77 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint32 *procTrafByte
 
     m_sqliteDb->beginTransaction();
 
-    // Insert Statemets
-    const QStmtList insertTrafAppStmts = QStmtList()
-            << getTrafficStmt(DatabaseSql::sqlInsertTrafAppHour, trafHour)
-            << getTrafficStmt(DatabaseSql::sqlInsertTrafAppDay, trafDay)
-            << getTrafficStmt(DatabaseSql::sqlInsertTrafAppMonth, trafMonth)
-            << getTrafficStmt(DatabaseSql::sqlUpdateTrafAppTotal, -1);
+    // Store the data
+    const bool isActivePeriod = !m_conf->activePeriodEnabled()
+            || DateUtil::isHourBetween(trafHour, trafDay,
+                                       m_conf->activePeriodFrom(),
+                                       m_conf->activePeriodTo());
 
-    const QStmtList insertTrafStmts = QStmtList()
-            << getTrafficStmt(DatabaseSql::sqlInsertTrafHour, trafHour)
-            << getTrafficStmt(DatabaseSql::sqlInsertTrafDay, trafDay)
-            << getTrafficStmt(DatabaseSql::sqlInsertTrafMonth, trafMonth);
+    if (isActivePeriod) {
+        // Insert Statements
+        const QStmtList insertTrafAppStmts = QStmtList()
+                << getTrafficStmt(DatabaseSql::sqlInsertTrafAppHour, trafHour)
+                << getTrafficStmt(DatabaseSql::sqlInsertTrafAppDay, trafDay)
+                << getTrafficStmt(DatabaseSql::sqlInsertTrafAppMonth, trafMonth)
+                << getTrafficStmt(DatabaseSql::sqlUpdateTrafAppTotal, -1);
 
-    // Update Statemets
-    const QStmtList updateTrafAppStmts = QStmtList()
-            << getTrafficStmt(DatabaseSql::sqlUpdateTrafAppHour, trafHour)
-            << getTrafficStmt(DatabaseSql::sqlUpdateTrafAppDay, trafDay)
-            << getTrafficStmt(DatabaseSql::sqlUpdateTrafAppMonth, trafMonth)
-            << getTrafficStmt(DatabaseSql::sqlUpdateTrafAppTotal, -1);
+        const QStmtList insertTrafStmts = QStmtList()
+                << getTrafficStmt(DatabaseSql::sqlInsertTrafHour, trafHour)
+                << getTrafficStmt(DatabaseSql::sqlInsertTrafDay, trafDay)
+                << getTrafficStmt(DatabaseSql::sqlInsertTrafMonth, trafMonth);
 
-    const QStmtList updateTrafStmts = QStmtList()
-            << getTrafficStmt(DatabaseSql::sqlUpdateTrafHour, trafHour)
-            << getTrafficStmt(DatabaseSql::sqlUpdateTrafDay, trafDay)
-            << getTrafficStmt(DatabaseSql::sqlUpdateTrafMonth, trafMonth);
+        // Update Statements
+        const QStmtList updateTrafAppStmts = QStmtList()
+                << getTrafficStmt(DatabaseSql::sqlUpdateTrafAppHour, trafHour)
+                << getTrafficStmt(DatabaseSql::sqlUpdateTrafAppDay, trafDay)
+                << getTrafficStmt(DatabaseSql::sqlUpdateTrafAppMonth, trafMonth)
+                << getTrafficStmt(DatabaseSql::sqlUpdateTrafAppTotal, -1);
 
-    for (int i = 0; i < procCount; ++i) {
-        quint32 pid = *procTrafBytes++;
-        const bool inactive = (pid & 1) != 0;
-        const quint32 inBytes = *procTrafBytes++;
-        const quint32 outBytes = *procTrafBytes++;
+        const QStmtList updateTrafStmts = QStmtList()
+                << getTrafficStmt(DatabaseSql::sqlUpdateTrafHour, trafHour)
+                << getTrafficStmt(DatabaseSql::sqlUpdateTrafDay, trafDay)
+                << getTrafficStmt(DatabaseSql::sqlUpdateTrafMonth, trafMonth);
 
-        if (inactive) {
-            pid ^= 1;
-        }
+        for (int i = 0; i < procCount; ++i) {
+            quint32 pid = *procTrafBytes++;
+            const bool inactive = (pid & 1) != 0;
+            const quint32 inBytes = *procTrafBytes++;
+            const quint32 outBytes = *procTrafBytes++;
 
-        const int procIndex = m_appIndexes.value(pid, INVALID_APP_INDEX);
-        if (procIndex == INVALID_APP_INDEX) {
-            qCritical(CLOG_DATABASE_MANAGER()) << "UI & Driver's states mismatch.";
-            abort();
-        }
-
-        if (inBytes || outBytes) {
-            qint64 appId = m_appIds.at(procIndex);
-
-            // Was the app cleared?
-            if (appId == INVALID_APP_ID) {
-                appId = createAppId(m_appPaths.at(procIndex));
-                replaceAppIdAt(procIndex, appId);
+            if (inactive) {
+                pid ^= 1;
             }
 
-            // Update or insert app bytes
-            updateTrafficList(insertTrafAppStmts, updateTrafAppStmts,
-                              inBytes, outBytes, appId);
+            const int procIndex = m_appIndexes.value(pid, INVALID_APP_INDEX);
+            if (procIndex == INVALID_APP_INDEX) {
+                qCritical(CLOG_DATABASE_MANAGER()) << "UI & Driver's states mismatch.";
+                abort();
+            }
 
-            // Update or insert total bytes
-            updateTrafficList(insertTrafStmts, updateTrafStmts,
-                              inBytes, outBytes);
+            if (inBytes || outBytes) {
+                qint64 appId = m_appIds.at(procIndex);
 
-            // Update quota traffic bytes
-            m_quotaManager->addTraf(inBytes);
-        }
+                // Was the app cleared?
+                if (appId == INVALID_APP_ID) {
+                    appId = createAppId(m_appPaths.at(procIndex), unixTime);
+                    replaceAppIdAt(procIndex, appId);
+                }
 
-        if (inactive) {
-            logClearApp(pid, procIndex);
+                // Update or insert app bytes
+                updateTrafficList(insertTrafAppStmts, updateTrafAppStmts,
+                                  inBytes, outBytes, appId);
+
+                // Update or insert total bytes
+                updateTrafficList(insertTrafStmts, updateTrafStmts,
+                                  inBytes, outBytes);
+
+                // Update quota traffic bytes
+                m_quotaManager->addTraf(inBytes);
+            }
+
+            if (inactive) {
+                logClearApp(pid, procIndex);
+            }
         }
     }
 
@@ -361,7 +370,7 @@ void DatabaseManager::deleteApp(qint64 appId)
 {
     clearAppId(appId);
 
-    // Delete Statemets
+    // Delete Statements
     const QStmtList deleteAppStmts = QStmtList()
             << getAppStmt(DatabaseSql::sqlDeleteAppTrafHour, appId)
             << getAppStmt(DatabaseSql::sqlDeleteAppTrafDay, appId)
@@ -401,12 +410,11 @@ qint64 DatabaseManager::getAppId(const QString &appPath)
     return appId;
 }
 
-qint64 DatabaseManager::createAppId(const QString &appPath)
+qint64 DatabaseManager::createAppId(const QString &appPath, qint64 unixTime)
 {
     qint64 appId = INVALID_APP_ID;
 
     SqliteStmt *stmt = getSqliteStmt(DatabaseSql::sqlInsertAppId);
-    const qint64 unixTime = DateUtil::getUnixTime();
 
     stmt->bindText(1, appPath);
     stmt->bindInt64(2, unixTime);

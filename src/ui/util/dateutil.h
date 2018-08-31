@@ -29,6 +29,9 @@ public:
     static QString formatMonth(qint64 unixTime);
 
     static QString formatDateTime(qint64 unixTime, const QString &format);
+
+    static bool isHourBetween(qint32 unixHour, qint32 unixDay,
+                              int fromHour, int toHour);
 };
 
 #endif // DATEUTIL_H

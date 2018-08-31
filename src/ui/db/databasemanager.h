@@ -67,7 +67,7 @@ private:
     void logClearApp(quint32 pid, int index);
 
     qint64 getAppId(const QString &appPath);
-    qint64 createAppId(const QString &appPath);
+    qint64 createAppId(const QString &appPath, qint64 unixTime);
 
     void updateTrafficList(const QStmtList &insertStmtList,
                            const QStmtList &updateStmtList,

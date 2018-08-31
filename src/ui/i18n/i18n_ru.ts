@@ -88,17 +88,17 @@
 <context>
     <name>FortSettings</name>
     <message>
-        <location filename="../fortsettings.cpp" line="205"/>
+        <location filename="../fortsettings.cpp" line="202"/>
         <source>Can&apos;t write .ini file</source>
         <translation>Не удалось записать .ini файл</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="220"/>
+        <location filename="../fortsettings.cpp" line="217"/>
         <source>Can&apos;t create .conf file</source>
         <translation>Не удалось создать .conf файл</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="215"/>
+        <location filename="../fortsettings.cpp" line="212"/>
         <source>Can&apos;t create backup .conf file</source>
         <translation>Не удалось создать бэкап .conf файла</translation>
     </message>
@@ -158,12 +158,12 @@
 <context>
     <name>TaskInfo</name>
     <message>
-        <location filename="../task/taskinfo.cpp" line="48"/>
+        <location filename="../task/taskinfo.cpp" line="47"/>
         <source>Update Checker</source>
         <translation>Проверка обновлений</translation>
     </message>
     <message>
-        <location filename="../task/taskinfo.cpp" line="50"/>
+        <location filename="../task/taskinfo.cpp" line="49"/>
         <source>TAS-IX Addresses Downloader</source>
         <translation>Загрузчик TAS-IX адресов</translation>
     </message>
@@ -511,32 +511,37 @@
         <translation>3 года</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="76"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="68"/>
+        <source>Active period, hours:</source>
+        <translation>Активный период, часы</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="121"/>
         <source>Month starts on:</source>
         <translation>Месяц начинается с:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="102"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="147"/>
         <source>Keep days for &apos;Hourly&apos;:</source>
         <translation>Хранить дней для &apos;Почасовая&apos;:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="125"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="170"/>
         <source>Keep days for &apos;Daily&apos;:</source>
         <translation>Хранить дней для &apos;Ежедневная&apos;:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="148"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="193"/>
         <source>Keep months for &apos;Monthly&apos;:</source>
         <translation>Хранить месяцев для &apos;Ежемесячная&apos;:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="173"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="218"/>
         <source>Day&apos;s Quota:</source>
         <translation>Квота на день</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="197"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="242"/>
         <source>Month&apos;s Quota:</source>
         <translation>Квота на месяц</translation>
     </message>

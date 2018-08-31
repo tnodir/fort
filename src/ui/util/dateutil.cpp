@@ -80,3 +80,13 @@ QString DateUtil::formatDateTime(qint64 unixTime, const QString &format)
     const QDateTime dt = QDateTime::fromSecsSinceEpoch(unixTime);
     return QLocale().toString(dt, format);
 }
+
+bool DateUtil::isHourBetween(qint32 unixHour, qint32 unixDay,
+                             int fromHour, int toHour)
+{
+    const int hour = unixHour - unixDay;
+
+    return fromHour <= toHour
+            ? (hour >= fromHour && hour <= toHour)
+            : (hour == 0 || hour >= fromHour || hour <= toHour);
+}

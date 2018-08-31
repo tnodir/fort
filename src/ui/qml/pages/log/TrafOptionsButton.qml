@@ -62,6 +62,51 @@ ButtonPopup {
     }
 
     ColumnLayout {
+        SpinDoubleRow {
+            checkBox {
+                text: translationManager.trTrigger
+                      && qsTranslate("qml", "Active period, hours:")
+                checked: firewallConf.activePeriodEnabled
+                onCheckedChanged: {
+                    const value = checkBox.checked;
+                    if (firewallConf.activePeriodEnabled == value)
+                        return;
+
+                    firewallConf.activePeriodEnabled = value;
+
+                    setConfFlagsEdited();
+                }
+            }
+            field1 {
+                from: 0
+                to: 24
+                value: firewallConf.activePeriodFrom
+                onValueChanged: {
+                    const value = field1.value;
+                    if (firewallConf.activePeriodFrom == value)
+                        return;
+
+                    firewallConf.activePeriodFrom = value;
+
+                    setConfFlagsEdited();
+                }
+            }
+            field2 {
+                from: 0
+                to: 24
+                value: firewallConf.activePeriodTo
+                onValueChanged: {
+                    const value = field2.value;
+                    if (firewallConf.activePeriodTo == value)
+                        return;
+
+                    firewallConf.activePeriodTo = value;
+
+                    setConfFlagsEdited();
+                }
+            }
+        }
+
         SpinComboRow {
             values: {
                 var arr = [];
