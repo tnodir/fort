@@ -87,6 +87,6 @@ bool DateUtil::isHourBetween(qint32 unixHour, qint32 unixDay,
     const int hour = unixHour - unixDay;
 
     return fromHour <= toHour
-            ? (hour >= fromHour && hour <= toHour)
-            : (hour == 0 || hour >= fromHour || hour <= toHour);
+            ? (hour >= fromHour && hour < toHour)
+            : (hour == 0 || hour >= fromHour || hour < toHour);
 }
