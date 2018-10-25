@@ -1,14 +1,8 @@
 #include "graphwindow.h"
 
-#include <QGraphicsLayout>
 #include <QVBoxLayout>
-#include <QtCharts/QBarCategoryAxis>
-#include <QtCharts/QBarSeries>
-#include <QtCharts/QBarSet>
-#include <QtCharts/QChartView>
-#include <QtCharts/QLegend>
 
-QT_CHARTS_USE_NAMESPACE
+#include "qcustomplot.h"
 
 GraphWindow::GraphWindow(QWidget *parent) :
     WidgetWindow(parent)
@@ -26,15 +20,14 @@ GraphWindow::GraphWindow(QWidget *parent) :
 
 void GraphWindow::setupUi()
 {
-    QChart *chart = new QChart();
-    chart->layout()->setContentsMargins(0, 0, 0, 0);
-    chart->setBackgroundRoundness(0);
+    QCustomPlot *plot = new QCustomPlot(this);
+    plot->setContentsMargins(0, 0, 0, 0);
 
-    QChartView *chartView = new QChartView(chart);
-    chartView->setRenderHint(QPainter::Antialiasing);
+    QCPGraph *graph = plot->addGraph();
+    graph->setPen(QColor(250, 120, 0));
 
-    QVBoxLayout *mainLayout = new QVBoxLayout();
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->setMargin(0);
-    mainLayout->addWidget(chartView);
+    mainLayout->addWidget(plot);
     setLayout(mainLayout);
 }

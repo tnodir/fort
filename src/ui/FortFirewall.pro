@@ -1,4 +1,4 @@
-QT += charts core gui qml widgets
+QT += core gui qml widgets
 
 CONFIG += c++11
 
@@ -168,3 +168,5 @@ installer_build {
 }
 
 include(db/sqlite/sqlite.pri)
+
+include(graph/qcustomplot/qcustomplot.pri)
