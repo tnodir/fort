@@ -21,7 +21,6 @@ class FirewallConf : public QObject
     Q_PROPERTY(bool filterEnabled READ filterEnabled WRITE setFilterEnabled NOTIFY filterEnabledChanged)
     Q_PROPERTY(bool stopTraffic READ stopTraffic WRITE setStopTraffic NOTIFY stopTrafficChanged)
     Q_PROPERTY(bool stopInetTraffic READ stopInetTraffic WRITE setStopInetTraffic NOTIFY stopInetTrafficChanged)
-    Q_PROPERTY(bool ignoreTcpRst READ ignoreTcpRst WRITE setIgnoreTcpRst NOTIFY ignoreTcpRstChanged)
     Q_PROPERTY(bool resolveAddress READ resolveAddress WRITE setResolveAddress NOTIFY resolveAddressChanged)
     Q_PROPERTY(bool logBlocked READ logBlocked WRITE setLogBlocked NOTIFY logBlockedChanged)
     Q_PROPERTY(bool logStat READ logStat WRITE setLogStat NOTIFY logStatChanged)
@@ -68,9 +67,6 @@ public:
 
     bool stopInetTraffic() const { return m_stopInetTraffic; }
     void setStopInetTraffic(bool stopInetTraffic);
-
-    bool ignoreTcpRst() const { return m_ignoreTcpRst; }
-    void setIgnoreTcpRst(bool ignoreTcpRst);
 
     bool resolveAddress() const { return m_resolveAddress; }
     void setResolveAddress(bool resolveAddress);
@@ -148,7 +144,6 @@ signals:
     void filterEnabledChanged();
     void stopTrafficChanged();
     void stopInetTrafficChanged();
-    void ignoreTcpRstChanged();
     void resolveAddressChanged();
     void logBlockedChanged();
     void logStatChanged();
@@ -179,7 +174,6 @@ private:
     uint m_filterEnabled    : 1;
     uint m_stopTraffic      : 1;
     uint m_stopInetTraffic  : 1;
-    uint m_ignoreTcpRst     : 1;
 
     uint m_resolveAddress   : 1;
 

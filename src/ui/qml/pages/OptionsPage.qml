@@ -85,18 +85,6 @@ BasePage {
             }
 
             CheckBox {
-                enabled: firewallConf.logStat
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Ignore TCP RST-packets")
-                checked: firewallConf.ignoreTcpRst
-                onToggled: {
-                    firewallConf.ignoreTcpRst = checked;
-
-                    setConfFlagsEdited();
-                }
-            }
-
-            CheckBox {
                 id: cbHotKeys
                 text: translationManager.trTrigger
                       && qsTranslate("qml", "Hot Keys")

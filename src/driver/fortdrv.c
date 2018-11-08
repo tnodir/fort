@@ -446,8 +446,6 @@ fort_callout_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
       && (netBuf = NET_BUFFER_LIST_FIRST_NB(netBufList)) != NULL) {
     PFORT_STAT_FLOW flow = (PFORT_STAT_FLOW) flowContext;
 
-    const BOOL ignore_tcp_rst = inbound && g_device->conf_flags.ignore_tcp_rst;
-
     const UCHAR defer_flag = inbound
       ? FORT_STAT_FLOW_DEFER_IN : FORT_STAT_FLOW_DEFER_OUT;
     const UCHAR flow_flags = FORT_STAT_FLOW_SPEED_LIMIT | defer_flag;
@@ -459,6 +457,10 @@ fort_callout_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
      * FWPS_LAYER_OUTBOUND_TRANSPORT_V4: The beginning of the transport header.
      */
     const UINT32 headerOffset = inbound ? 0 : sizeof(TCP_HEADER);
+
+    /* Ignore TCP RST-packets */
+    #if 0
+    const BOOL ignore_tcp_rst = inbound && g_device->conf_flags.ignore_tcp_rst;
 
     if (ignore_tcp_rst) {
       TCP_HEADER buf;
@@ -482,7 +484,9 @@ fort_callout_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
       if (tcpFlags & TCP_FLAG_RST)
         goto block;
     }
+    #endif
 
+    /* Defer TCP zero ACK-packets */
     if (defer_flow && NET_BUFFER_DATA_LENGTH(netBuf) == headerOffset) {
       const NTSTATUS status = fort_defer_add(&g_device->defer,
         inFixedValues, inMetaValues, netBufList, inbound);
@@ -497,7 +501,7 @@ fort_callout_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
     }
   }
 
- permit:
+ /* permit: */
   fort_callout_classify_permit(filter, classifyOut);
   return;
 
@@ -711,8 +715,7 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
 
  stat_prov:
     if (conf_flags.log_stat) {
-      if ((status = fort_prov_flow_register(engine,
-          (conf_flags.ignore_tcp_rst || stat->limit_bits))))
+      if ((status = fort_prov_flow_register(engine, stat->limit_bits)))
         goto cleanup;
     }
   }
