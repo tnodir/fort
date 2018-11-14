@@ -1,9 +1,8 @@
 #include "test.h"
 
-#include <QtTest>
-#include <QDebug>
 #include <QFile>
 
+#include "commontest.h"
 #include "conf/addressgroup.h"
 #include "conf/appgroup.h"
 #include "conf/firewallconf.h"

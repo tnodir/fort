@@ -1,7 +1,6 @@
 #include "test.h"
 
-#include <QtTest>
-
+#include "commontest.h"
 #include "fortcommon.h"
 #include "log/logbuffer.h"
 #include "log/logentryblocked.h"

@@ -1,7 +1,6 @@
 #include "test.h"
 
-#include <QtTest>
-
+#include "commontest.h"
 #include "util/fileutil.h"
 #include "util/processinfo.h"
 

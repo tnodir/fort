@@ -6,14 +6,17 @@ CONFIG -= app_bundle
 TARGET = test
 TEMPLATE = app
 
-UIPATH = ../../ui
+UIPATH = $$PWD/../../ui
 INCLUDEPATH += $$UIPATH
 
+INCLUDEPATH += $$PWD
+
 SOURCES += \
-    ../common/main.cpp \
+    $$PWD/main.cpp \
     test.cpp
 
 HEADERS += \
+    $$PWD/commontest.h \
     test.h
 
 # Windows

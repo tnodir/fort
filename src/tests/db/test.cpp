@@ -1,8 +1,8 @@
 #include "test.h"
 
-#include <QtTest>
 #include <QElapsedTimer>
 
+#include "commontest.h"
 #include "db/databasemanager.h"
 #include "db/quotamanager.h"
 #include "db/sqlite/sqlitedb.h"

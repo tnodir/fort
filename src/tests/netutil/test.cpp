@@ -1,14 +1,10 @@
 #include "test.h"
 
-#include <QtTest>
-
+#include "commontest.h"
 #include "task/tasktasix.h"
 #include "util/fileutil.h"
 #include "util/net/ip4range.h"
 #include "util/net/netutil.h"
-
-#define _STR(x) #x
-#define STR(x)  _STR(x)
 
 void Test::ip4Text()
 {
