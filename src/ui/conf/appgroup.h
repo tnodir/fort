@@ -8,6 +8,9 @@ class AppGroup : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
+    Q_PROPERTY(bool periodEnabled READ periodEnabled WRITE setPeriodEnabled NOTIFY periodEnabledChanged)
+    Q_PROPERTY(int periodFrom READ periodFrom WRITE setPeriodFrom NOTIFY periodFromChanged)
+    Q_PROPERTY(int periodTo READ periodTo WRITE setPeriodTo NOTIFY periodToChanged)
     Q_PROPERTY(bool limitInEnabled READ limitInEnabled WRITE setLimitInEnabled NOTIFY limitInEnabledChanged)
     Q_PROPERTY(bool limitOutEnabled READ limitOutEnabled WRITE setLimitOutEnabled NOTIFY limitOutEnabledChanged)
     Q_PROPERTY(quint32 speedLimitIn READ speedLimitIn WRITE setSpeedLimitIn NOTIFY speedLimitInChanged)
@@ -21,6 +24,15 @@ public:
 
     bool enabled() const { return m_enabled; }
     void setEnabled(bool enabled);
+
+    bool periodEnabled() const { return m_periodEnabled; }
+    void setPeriodEnabled(bool periodEnabled);
+
+    int periodFrom() const { return m_periodFrom; }
+    void setPeriodFrom(int periodFrom);
+
+    int periodTo() const { return m_periodTo; }
+    void setPeriodTo(int periodTo);
 
     bool limitInEnabled() const { return m_limitInEnabled; }
     void setLimitInEnabled(bool enabled);
@@ -48,6 +60,9 @@ public:
 
 signals:
     void enabledChanged();
+    void periodEnabledChanged();
+    void periodFromChanged();
+    void periodToChanged();
     void limitInEnabledChanged();
     void limitOutEnabledChanged();
     void speedLimitInChanged();
@@ -60,6 +75,11 @@ public slots:
 
 private:
     uint m_enabled          : 1;
+
+    uint m_periodEnabled    : 1;
+    uint m_periodFrom       : 5;
+    uint m_periodTo         : 5;
+
     uint m_limitInEnabled   : 1;
     uint m_limitOutEnabled  : 1;
 

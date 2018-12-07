@@ -4,37 +4,37 @@
 <context>
     <name>ConfUtil</name>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="118"/>
+        <location filename="../util/conf/confutil.cpp" line="122"/>
         <source>Bad Include IP address: %1</source>
         <translation>Некорректный IP адрес для включения: %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="126"/>
+        <location filename="../util/conf/confutil.cpp" line="130"/>
         <source>Bad Exclude IP address: %1</source>
         <translation>Некорректный IP адрес для исключения: %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="137"/>
+        <location filename="../util/conf/confutil.cpp" line="141"/>
         <source>Too many IP addresses</source>
         <translation>Слишком много IP адресов</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="57"/>
+        <location filename="../util/conf/confutil.cpp" line="59"/>
         <source>Too many application paths</source>
         <translation>Слишком много путей приложений</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="159"/>
+        <location filename="../util/conf/confutil.cpp" line="165"/>
         <source>Number of Application Groups must be &lt; %1</source>
         <translation>Количество групп приложений должно быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="171"/>
+        <location filename="../util/conf/confutil.cpp" line="177"/>
         <source>Length of Application Group&apos;s Name must be &lt; %1</source>
         <translation>Длина наименования группы приложения должна быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="219"/>
+        <location filename="../util/conf/confutil.cpp" line="240"/>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Длина пути приложения должна быть &lt; %1</translation>
     </message>
@@ -310,17 +310,22 @@
         <translation>Сдвинуть направо</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="46"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="47"/>
         <source>Enabled</source>
         <translation>Включено</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="64"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="62"/>
+        <source>period, hours:</source>
+        <translation>период, часы</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="113"/>
         <source>Block</source>
         <translation>Блокировать</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="84"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="133"/>
         <source>Allow</source>
         <translation>Разрешить</translation>
     </message>

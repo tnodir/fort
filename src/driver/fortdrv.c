@@ -50,7 +50,8 @@ typedef struct fort_device {
   FORT_BUFFER buffer;
   FORT_STAT stat;
   FORT_DEFER defer;
-  FORT_TIMER timer;
+  FORT_TIMER log_timer;
+  FORT_TIMER app_timer;
 } FORT_DEVICE, *PFORT_DEVICE;
 
 static PFORT_DEVICE g_device = NULL;
@@ -160,7 +161,7 @@ fort_conf_ref_flags_set (const PFORT_CONF_FLAGS conf_flags)
       old_conf_flags = conf->flags;
       conf->flags = *conf_flags;
 
-      fort_conf_app_perms_mask_init(conf);
+      fort_conf_app_perms_mask_init(conf, conf->flags.group_bits);
 
       g_device->prov_boot = conf_flags->prov_boot;
 
@@ -175,6 +176,46 @@ fort_conf_ref_flags_set (const PFORT_CONF_FLAGS conf_flags)
   KeReleaseInStackQueuedSpinLock(&lock_queue);
 
   return old_conf_flags;
+}
+
+static BOOL
+fort_conf_period_update (void)
+{
+  PFORT_CONF_REF conf_ref;
+  int hour;
+  BOOL res = FALSE;
+
+  /* Get current hour */
+  {
+    TIME_FIELDS tf;
+    LARGE_INTEGER system_time, local_time;
+
+    KeQuerySystemTime(&system_time);
+    ExSystemTimeToLocalTime(&system_time, &local_time);
+    RtlTimeToTimeFields(&local_time, &tf);
+
+    hour = (tf.Hour + (tf.Minute > 58 ? 1 : 0)) % 24;
+  }
+
+  conf_ref = fort_conf_ref_take();
+
+  if (conf_ref != NULL) {
+    PFORT_CONF conf = &conf_ref->conf;
+
+    if (conf->app_periods_n != 0) {
+      int periods_n = 0;
+      const UINT16 period_bits =
+        fort_conf_app_period_bits(conf, hour, &periods_n);
+
+      fort_conf_app_perms_mask_init(conf, period_bits);
+
+      res = (periods_n != 0);
+    }
+
+    fort_conf_ref_put(conf_ref);
+  }
+
+  return res;
 }
 
 static void
@@ -682,7 +723,8 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
 
   UNUSED(device);
 
-  fort_timer_update(&g_device->timer, FALSE);
+  fort_timer_update(&g_device->log_timer, FALSE);
+  fort_timer_update(&g_device->app_timer, FALSE);
 
   if (old_conf_flags.log_stat != conf_flags.log_stat) {
     fort_stat_update(stat, conf_flags.log_stat);
@@ -724,8 +766,12 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
   if ((status = fort_prov_reauth(engine)))
     goto cleanup;
 
-  fort_timer_update(&g_device->timer,
+  fort_timer_update(&g_device->log_timer,
     (conf_flags.log_blocked || conf_flags.log_stat));
+
+  if (fort_conf_period_update()) {
+    fort_timer_update(&g_device->app_timer, TRUE);
+  }
 
  cleanup:
   if (NT_SUCCESS(status)) {
@@ -803,6 +849,12 @@ fort_callout_timer (void)
 
   /* Flush deferred packets */
   fort_callout_defer_flush(TRUE);
+}
+
+static void
+fort_app_period_timer (void)
+{
+  fort_conf_period_update();
 }
 
 static NTSTATUS
@@ -1022,7 +1074,8 @@ fort_driver_unload (PDRIVER_OBJECT driver)
   if (g_device != NULL) {
     fort_callout_defer_flush(FALSE);
 
-    fort_timer_close(&g_device->timer);
+    fort_timer_close(&g_device->app_timer);
+    fort_timer_close(&g_device->log_timer);
     fort_defer_close(&g_device->defer);
     fort_stat_close(&g_device->stat);
     fort_buffer_close(&g_device->buffer);
@@ -1102,7 +1155,8 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
       fort_buffer_open(&g_device->buffer);
       fort_stat_open(&g_device->stat);
       fort_defer_open(&g_device->defer);
-      fort_timer_open(&g_device->timer, &fort_callout_timer);
+      fort_timer_open(&g_device->log_timer, 500, &fort_callout_timer);
+      fort_timer_open(&g_device->app_timer, 60000, &fort_app_period_timer);
 
       KeInitializeSpinLock(&g_device->conf_lock);
 

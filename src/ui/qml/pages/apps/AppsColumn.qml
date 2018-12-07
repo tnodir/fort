@@ -42,6 +42,7 @@ ColumnLayout {
         }
 
         CheckBox {
+            id: cbEnabled
             text: translationManager.trTrigger
                   && qsTranslate("qml", "Enabled")
             checked: appGroup.enabled
@@ -49,6 +50,54 @@ ColumnLayout {
                 appGroup.enabled = checked;
 
                 setConfFlagsEdited();
+            }
+        }
+
+        SpinDoubleRow {
+            Layout.maximumWidth: implicitWidth
+            enabled: cbEnabled.checked
+
+            checkBox {
+                text: translationManager.trTrigger
+                      && qsTranslate("qml", "period, hours:")
+                checked: appGroup.periodEnabled
+                onCheckedChanged: {
+                    const value = checkBox.checked;
+                    if (appGroup.periodEnabled == value)
+                        return;
+
+                    appGroup.periodEnabled = value;
+
+                    setConfEdited();
+                }
+            }
+            field1 {
+                from: 0
+                to: 24
+                value: appGroup.periodFrom
+                onValueChanged: {
+                    const value = field1.value;
+                    if (appGroup.periodFrom == value)
+                        return;
+
+                    appGroup.periodFrom = value;
+
+                    setConfEdited();
+                }
+            }
+            field2 {
+                from: 0
+                to: 24
+                value: appGroup.periodTo
+                onValueChanged: {
+                    const value = field2.value;
+                    if (appGroup.periodTo == value)
+                        return;
+
+                    appGroup.periodTo = value;
+
+                    setConfEdited();
+                }
             }
         }
     }

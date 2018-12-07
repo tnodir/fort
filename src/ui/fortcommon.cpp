@@ -122,7 +122,9 @@ void FortCommon::logStatTrafHeaderRead(const char *input,
 
 void FortCommon::confAppPermsMaskInit(void *drvConf)
 {
-    fort_conf_app_perms_mask_init((PFORT_CONF) drvConf);
+    PFORT_CONF conf = (PFORT_CONF) drvConf;
+
+    fort_conf_app_perms_mask_init(conf, conf->flags.group_bits);
 }
 
 bool FortCommon::confIpInRange(const void *drvConf, quint32 ip,
@@ -164,6 +166,13 @@ bool FortCommon::confAppBlocked(const void *drvConf, int appIndex)
     const PFORT_CONF conf = (const PFORT_CONF) drvConf;
 
     return fort_conf_app_blocked(conf, appIndex);
+}
+
+quint16 FortCommon::confAppPeriodBits(const void *drvConf, int hour)
+{
+    const PFORT_CONF conf = (const PFORT_CONF) drvConf;
+
+    return fort_conf_app_period_bits(conf, hour, nullptr);
 }
 
 void FortCommon::provUnregister()

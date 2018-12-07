@@ -16,6 +16,7 @@ QT_FORWARD_DECLARE_CLASS(FirewallConf)
 QT_FORWARD_DECLARE_STRUCT(fort_conf_limit)
 
 using numbers_arr_t = QVector<quint32>;
+using chars_arr_t = QVector<qint8>;
 
 using addrranges_arr_t = QVarLengthArray<AddressRange, 2>;
 
@@ -52,6 +53,8 @@ private:
                         QStringList &appPaths,
                         quint32 &appPathsLen,
                         numbers_arr_t &appPerms,
+                        chars_arr_t &appPeriods,
+                        quint8 &appPeriodsCount,
                         appgroups_map_t &appGroupIndexes);
 
     bool parseApps(const QString &text, bool blocked,
@@ -66,6 +69,8 @@ private:
                           const numbers_arr_t &addressGroupOffsets,
                           const QStringList &appPaths,
                           const numbers_arr_t &appPerms,
+                          const chars_arr_t &appPeriods,
+                          quint8 appPeriodsCount,
                           const appgroups_map_t &appGroupIndexes);
 
     static quint16 writeLimits(struct fort_conf_limit *limits,
@@ -76,8 +81,8 @@ private:
     static void writeAddressRange(char **data,
                                   const AddressRange &addressRange);
 
-    static void writeNumbers(char **data, const QVector<quint32> &array);
-    static void writeChars(char **data, const QVector<qint8> &array);
+    static void writeNumbers(char **data, const numbers_arr_t &array);
+    static void writeChars(char **data, const chars_arr_t &array);
     static void writeStrings(char **data, const QStringList &list);
 
 private:

@@ -1,6 +1,7 @@
 /* Fort Firewall Driver Configuration */
 
 #include "fortconf.h"
+#include "util.h"
 
 
 #ifndef FORT_DRIVER
@@ -104,10 +105,10 @@ static int
 fort_conf_app_index (const PFORT_CONF conf,
                      UINT32 path_len, const char *path)
 {
-  const UINT32 count = conf->apps_n;
   const char *data;
   const UINT32 *app_offsets;
   const char *apps;
+  const UINT32 count = conf->apps_n;
   int low, high;
 
   if (count == 0)
@@ -168,10 +169,52 @@ fort_conf_app_blocked (const PFORT_CONF conf, int app_index)
     : (app_blocked && !app_allowed));
 }
 
-static void
-fort_conf_app_perms_mask_init (PFORT_CONF conf)
+static UINT16
+fort_conf_app_period_bits (const PFORT_CONF conf, int hour, int *periods_n)
 {
-  const UINT32 group_bits = conf->flags.group_bits;
+  const char *data;
+  const CHAR *app_periods;
+  UINT16 group_bits, period_bits;
+  UINT8 count = conf->app_periods_n;
+  int n, i;
+
+  if (count == 0)
+    return 0;
+
+  data = conf->data;
+  app_periods = (const CHAR *) (data + conf->app_periods_off);
+  group_bits = (UINT16) conf->flags.group_bits;
+  period_bits = group_bits;
+  n = 0;
+
+  for (i = 0; i < FORT_CONF_GROUP_MAX; ++i) {
+    const UINT16 bit = (1 << i);
+    const int periodFrom = *app_periods++;
+    const int periodTo = *app_periods++;
+
+    if ((group_bits & bit) != 0
+        && (periodFrom != 0 || periodTo != 0)) {
+      if (!is_hour_between(hour, periodFrom, periodTo)) {
+        period_bits ^= bit;
+      }
+
+      ++n;
+
+      if (--count == 0)
+        break;
+    }
+  }
+
+  if (periods_n != NULL) {
+    *periods_n = n;
+  }
+
+  return period_bits;
+}
+
+static void
+fort_conf_app_perms_mask_init (PFORT_CONF conf, UINT32 group_bits)
+{
   UINT32 perms_mask =
        (group_bits & 0x0001)        | ((group_bits & 0x0002) << 1)
     | ((group_bits & 0x0004) << 2)  | ((group_bits & 0x0008) << 3)

@@ -55,6 +55,7 @@ public:
                             const QString &kernelPath);
     static quint8 confAppGroupIndex(const void *drvConf, int appIndex);
     static bool confAppBlocked(const void *drvConf, int appIndex);
+    static quint16 confAppPeriodBits(const void *drvConf, int hour);
 
     static void provUnregister();
 };

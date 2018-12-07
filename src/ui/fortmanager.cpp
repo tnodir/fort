@@ -87,7 +87,7 @@ FortManager::~FortManager()
 void FortManager::registerQmlTypes()
 {
     qmlRegisterUncreatableType<DriverManager>("com.fortfirewall", 1, 0, "DriverManager",
-                                             "Singleton");
+                                              "Singleton");
     qmlRegisterUncreatableType<FortSettings>("com.fortfirewall", 1, 0, "FortSettings",
                                              "Singleton");
 

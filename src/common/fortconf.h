@@ -19,7 +19,7 @@ typedef struct fort_conf_flags {
   UINT32 app_allow_all		: 1;
   UINT32 log_blocked		: 1;
   UINT32 log_stat		: 1;
-  UINT32 _reserved_		: 9;
+
   UINT32 group_bits		: 16;
 } FORT_CONF_FLAGS, *PFORT_CONF_FLAGS;
 
@@ -43,6 +43,7 @@ typedef struct fort_conf {
   FORT_CONF_FLAGS flags;
 
   UINT16 apps_n;
+  UCHAR app_periods_n;
 
   UINT32 app_perms_block_mask;
   UINT32 app_perms_allow_mask;
@@ -51,6 +52,7 @@ typedef struct fort_conf {
 
   UINT32 app_groups_off;
   UINT32 app_perms_off;
+  UINT32 app_periods_off;
   UINT32 apps_off;
 
   char data[4];

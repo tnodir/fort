@@ -3,6 +3,9 @@
 AppGroup::AppGroup(QObject *parent) :
     QObject(parent),
     m_enabled(true),
+    m_periodEnabled(false),
+    m_periodFrom(0),
+    m_periodTo(0),
     m_limitInEnabled(false),
     m_limitOutEnabled(false),
     m_speedLimitIn(0),
@@ -15,6 +18,30 @@ void AppGroup::setEnabled(bool enabled)
     if (bool(m_enabled) != enabled) {
         m_enabled = enabled;
         emit enabledChanged();
+    }
+}
+
+void AppGroup::setPeriodEnabled(bool periodEnabled)
+{
+    if (bool(m_periodEnabled) != periodEnabled) {
+        m_periodEnabled = periodEnabled;
+        emit periodEnabledChanged();
+    }
+}
+
+void AppGroup::setPeriodFrom(int periodFrom)
+{
+    if (m_periodFrom != periodFrom) {
+        m_periodFrom = periodFrom;
+        emit periodFromChanged();
+    }
+}
+
+void AppGroup::setPeriodTo(int periodTo)
+{
+    if (m_periodTo != periodTo) {
+        m_periodTo = periodTo;
+        emit periodToChanged();
     }
 }
 
@@ -78,6 +105,10 @@ QVariant AppGroup::toVariant() const
 {
     QVariantMap map;
 
+    map["periodEnabled"] = periodEnabled();
+    map["periodFrom"] = periodFrom();
+    map["periodTo"] = periodTo();
+
     map["limitInEnabled"] = limitInEnabled();
     map["limitOutEnabled"] = limitOutEnabled();
     map["speedLimitIn"] = speedLimitIn();
@@ -93,6 +124,10 @@ QVariant AppGroup::toVariant() const
 void AppGroup::fromVariant(const QVariant &v)
 {
     const QVariantMap map = v.toMap();
+
+    m_periodEnabled = map["periodEnabled"].toBool();
+    m_periodFrom = map["periodFrom"].toInt();
+    m_periodTo = map["periodTo"].toInt();
 
     m_limitInEnabled = map["limitInEnabled"].toBool();
     m_limitOutEnabled = map["limitOutEnabled"].toBool();

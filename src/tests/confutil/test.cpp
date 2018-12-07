@@ -29,6 +29,9 @@ void Test::confWriteRead()
     AppGroup *appGroup1 = new AppGroup();
     appGroup1->setName("Base");
     appGroup1->setEnabled(true);
+    appGroup1->setPeriodEnabled(true);
+    appGroup1->setPeriodFrom(0);
+    appGroup1->setPeriodTo(12);
     appGroup1->setBlockText(
                 "System"
                 );
@@ -77,6 +80,9 @@ void Test::confWriteRead()
     QVERIFY(FortCommon::confAppBlocked(
                 data, FortCommon::confAppIndex(
                     data, FileUtil::pathToKernelPath("C:\\Program Files\\Test.exe").toLower())));
+
+    QCOMPARE(FortCommon::confAppPeriodBits(data, 0), 0x01);
+    QCOMPARE(FortCommon::confAppPeriodBits(data, 12), 0);
 
     const int firefoxIndex = FortCommon::confAppIndex(
                 data, FileUtil::pathToKernelPath("C:\\Utils\\Firefox\\Bin\\firefox.exe").toLower());

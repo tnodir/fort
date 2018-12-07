@@ -4,6 +4,7 @@ typedef void (*FORT_TIMER_FUNC) (void);
 
 typedef struct fort_timer {
   UINT32 running	: 1;
+  UINT32 period		: 31;  /* milliseconds */
 
   FORT_TIMER_FUNC callback;
 
@@ -25,8 +26,9 @@ fort_timer_callback (PKDPC dpc, PFORT_TIMER timer, PVOID arg1, PVOID arg2)
 }
 
 static void
-fort_timer_open (PFORT_TIMER timer, FORT_TIMER_FUNC callback)
+fort_timer_open (PFORT_TIMER timer, int period, FORT_TIMER_FUNC callback)
 {
+  timer->period = period;
   timer->callback = callback;
 
   KeInitializeDpc(&timer->dpc, &fort_timer_callback, timer);
@@ -54,9 +56,9 @@ fort_timer_update (PFORT_TIMER timer, BOOL run)
   timer->running = run;
 
   if (run) {
-    const LONG period = 500;  /* 500ms */
+    const LONG period = timer->period;
     LARGE_INTEGER due;
-    due.QuadPart = period * -10000;  /* 500000us */
+    due.QuadPart = period * -10000;  /* ms -> us */
 
     KeSetTimerEx(&timer->id, due, period, &timer->dpc);
   } else {

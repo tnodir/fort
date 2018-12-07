@@ -2,6 +2,8 @@
 
 #include <QLocale>
 
+#include "../../common/util.h"
+
 DateUtil::DateUtil(QObject *parent) :
     QObject(parent)
 {
@@ -86,7 +88,5 @@ bool DateUtil::isHourBetween(qint32 unixHour, qint32 unixDay,
 {
     const int hour = unixHour - unixDay;
 
-    return fromHour <= toHour
-            ? (hour >= fromHour && hour < toHour)
-            : (hour == 0 || hour >= fromHour || hour < toHour);
+    return is_hour_between(hour, fromHour, toHour);
 }
