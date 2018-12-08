@@ -47,6 +47,9 @@ typedef struct fort_device {
   PCALLBACK_OBJECT power_cb_obj;
   PVOID power_cb_reg;
 
+  PCALLBACK_OBJECT systime_cb_obj;
+  PVOID systime_cb_reg;
+
   FORT_BUFFER buffer;
   FORT_STAT stat;
   FORT_DEFER defer;
@@ -1080,6 +1083,52 @@ fort_power_callback_unregister (void)
 }
 
 static void
+fort_systime_callback (PVOID context, PVOID event, PVOID specifics)
+{
+  UNUSED(context);
+  UNUSED(event);
+  UNUSED(specifics);
+
+  if (g_device->app_timer.running) {
+    fort_app_period_timer();
+  }
+}
+
+static NTSTATUS
+fort_systime_callback_register (void)
+{
+  OBJECT_ATTRIBUTES obj_attr;
+  UNICODE_STRING obj_name;
+  NTSTATUS status;
+
+  RtlInitUnicodeString(&obj_name, L"\\Callback\\SetSystemTime");
+
+  InitializeObjectAttributes(&obj_attr, &obj_name,
+    OBJ_CASE_INSENSITIVE, NULL, NULL);
+
+  status = ExCreateCallback(&g_device->systime_cb_obj, &obj_attr, FALSE, TRUE);
+
+  if (NT_SUCCESS(status)) {
+    g_device->systime_cb_reg = ExRegisterCallback(g_device->systime_cb_obj,
+      fort_systime_callback, NULL);
+  }
+
+  return status;
+}
+
+static void
+fort_systime_callback_unregister (void)
+{
+  if (g_device->systime_cb_reg != NULL) {
+    ExUnregisterCallback(g_device->systime_cb_reg);
+  }
+
+  if (g_device->systime_cb_obj != NULL) {
+    ObDereferenceObject(g_device->systime_cb_obj);
+  }
+}
+
+static void
 fort_driver_unload (PDRIVER_OBJECT driver)
 {
   UNICODE_STRING device_link;
@@ -1094,6 +1143,7 @@ fort_driver_unload (PDRIVER_OBJECT driver)
     fort_buffer_close(&g_device->buffer);
 
     fort_power_callback_unregister();
+    fort_systime_callback_unregister();
 
     if (!g_device->prov_boot) {
       fort_prov_unregister(0);
@@ -1191,6 +1241,11 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
       /* Register power state change callback */
       if (NT_SUCCESS(status)) {
         status = fort_power_callback_register();
+      }
+
+      /* Register system time change callback */
+      if (NT_SUCCESS(status)) {
+        status = fort_systime_callback_register();
       }
     }
   }
