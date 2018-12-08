@@ -179,10 +179,10 @@ fort_conf_ref_flags_set (const PFORT_CONF_FLAGS conf_flags)
 }
 
 static BOOL
-fort_conf_period_update (void)
+fort_conf_period_update (int *periods_n)
 {
   PFORT_CONF_REF conf_ref;
-  int hour;
+  int hour1, hour2;
   BOOL res = FALSE;
 
   /* Get current hour */
@@ -194,7 +194,8 @@ fort_conf_period_update (void)
     ExSystemTimeToLocalTime(&system_time, &local_time);
     RtlTimeToTimeFields(&local_time, &tf);
 
-    hour = (tf.Hour + (tf.Minute > 58 ? 1 : 0)) % 24;
+    hour1 = tf.Hour;
+    hour2 = (tf.Hour + (tf.Minute > 58 ? 1 : 0)) % 24;
   }
 
   conf_ref = fort_conf_ref_take();
@@ -203,13 +204,16 @@ fort_conf_period_update (void)
     PFORT_CONF conf = &conf_ref->conf;
 
     if (conf->app_periods_n != 0) {
-      int periods_n = 0;
       const UINT16 period_bits =
-        fort_conf_app_period_bits(conf, hour, &periods_n);
+        fort_conf_app_period_bits(conf, hour1, hour2, periods_n);
 
-      fort_conf_app_perms_mask_init(conf, period_bits);
+      if (g_device->conf_flags.group_bits != period_bits) {
+        g_device->conf_flags.group_bits = period_bits;
 
-      res = (periods_n != 0);
+        fort_conf_app_perms_mask_init(conf, period_bits);
+
+        res = TRUE;
+      }
     }
 
     fort_conf_ref_put(conf_ref);
@@ -769,8 +773,14 @@ fort_callout_force_reauth (PDEVICE_OBJECT device,
   fort_timer_update(&g_device->log_timer,
     (conf_flags.log_blocked || conf_flags.log_stat));
 
-  if (fort_conf_period_update()) {
-    fort_timer_update(&g_device->app_timer, TRUE);
+  /* Check app group periods */
+  {
+    int periods_n = 0;
+
+    fort_conf_period_update(&periods_n);
+
+    fort_timer_update(&g_device->app_timer,
+      (periods_n != 0));
   }
 
  cleanup:
@@ -854,7 +864,10 @@ fort_callout_timer (void)
 static void
 fort_app_period_timer (void)
 {
-  fort_conf_period_update();
+  if (fort_conf_period_update(NULL)) {
+    /* Force reauth filter */
+    fort_prov_reauth(NULL);
+  }
 }
 
 static NTSTATUS

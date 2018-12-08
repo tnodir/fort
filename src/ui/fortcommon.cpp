@@ -172,7 +172,7 @@ quint16 FortCommon::confAppPeriodBits(const void *drvConf, int hour)
 {
     const PFORT_CONF conf = (const PFORT_CONF) drvConf;
 
-    return fort_conf_app_period_bits(conf, hour, nullptr);
+    return fort_conf_app_period_bits(conf, hour, hour, nullptr);
 }
 
 void FortCommon::provUnregister()

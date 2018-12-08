@@ -170,7 +170,8 @@ fort_conf_app_blocked (const PFORT_CONF conf, int app_index)
 }
 
 static UINT16
-fort_conf_app_period_bits (const PFORT_CONF conf, int hour, int *periods_n)
+fort_conf_app_period_bits (const PFORT_CONF conf, int hour1, int hour2,
+                           int *periods_n)
 {
   const char *data;
   const CHAR *app_periods;
@@ -194,7 +195,8 @@ fort_conf_app_period_bits (const PFORT_CONF conf, int hour, int *periods_n)
 
     if ((group_bits & bit) != 0
         && (periodFrom != 0 || periodTo != 0)) {
-      if (!is_hour_between(hour, periodFrom, periodTo)) {
+      if (!(is_hour_between(hour1, periodFrom, periodTo)
+          && (hour1 == hour2 || is_hour_between(hour2, periodFrom, periodTo)))) {
         period_bits ^= bit;
       }
 
