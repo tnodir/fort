@@ -198,7 +198,7 @@ fort_conf_period_update (int *periods_n)
     RtlTimeToTimeFields(&local_time, &tf);
 
     hour1 = tf.Hour;
-    hour2 = (tf.Hour + (tf.Minute > 58 ? 1 : 0)) % 24;
+    hour2 = (tf.Hour + ((3600 - tf.Minute * 60 - tf.Second) < 66 ? 1 : 0)) % 24;
   }
 
   conf_ref = fort_conf_ref_take();
