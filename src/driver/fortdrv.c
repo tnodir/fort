@@ -24,6 +24,7 @@
 #include "fortpkt.c"
 #include "fortstat.c"
 #include "forttmr.c"
+#include "fortwrk.c"
 
 typedef struct fort_conf_ref {
   UINT32 volatile refcount;
@@ -55,6 +56,7 @@ typedef struct fort_device {
   FORT_DEFER defer;
   FORT_TIMER log_timer;
   FORT_TIMER app_timer;
+  FORT_WORKER worker;
 } FORT_DEVICE, *PFORT_DEVICE;
 
 static PFORT_DEVICE g_device = NULL;
@@ -719,16 +721,13 @@ fort_callout_defer_flush (BOOL dispatchLevel)
 }
 
 static NTSTATUS
-fort_callout_force_reauth (PDEVICE_OBJECT device,
-                           const FORT_CONF_FLAGS old_conf_flags,
+fort_callout_force_reauth (const FORT_CONF_FLAGS old_conf_flags,
                            const FORT_CONF_FLAGS conf_flags)
 {
   PFORT_STAT stat = &g_device->stat;
 
   HANDLE engine;
   NTSTATUS status;
-
-  UNUSED(device);
 
   fort_timer_update(&g_device->log_timer, FALSE);
   fort_timer_update(&g_device->app_timer, FALSE);
@@ -868,8 +867,7 @@ static void
 fort_app_period_timer (void)
 {
   if (fort_conf_period_update(NULL)) {
-    /* Force reauth filter */
-    fort_prov_reauth(NULL);
+    fort_worker_queue(&g_device->worker, FORT_WORKER_REAUTH);
   }
 }
 
@@ -919,7 +917,7 @@ fort_device_cleanup (PDEVICE_OBJECT device, PIRP irp)
     RtlZeroMemory(&conf_flags, sizeof(FORT_CONF_FLAGS));
     conf_flags.prov_boot = g_device->prov_boot;
 
-    fort_callout_force_reauth(device, old_conf_flags, conf_flags);
+    fort_callout_force_reauth(old_conf_flags, conf_flags);
   }
 
   /* Clear buffer */
@@ -982,7 +980,7 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
 
         fort_stat_update_limits(&g_device->stat, conf_io);
 
-        status = fort_callout_force_reauth(device, old_conf_flags, conf_flags);
+        status = fort_callout_force_reauth(old_conf_flags, conf_flags);
       }
     }
     break;
@@ -994,7 +992,7 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
     if (len == sizeof(FORT_CONF_FLAGS)) {
       const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_flags_set(conf_flags);
 
-      status = fort_callout_force_reauth(device, old_conf_flags, *conf_flags);
+      status = fort_callout_force_reauth(old_conf_flags, *conf_flags);
     }
     break;
   }
@@ -1142,6 +1140,8 @@ fort_driver_unload (PDRIVER_OBJECT driver)
     fort_stat_close(&g_device->stat);
     fort_buffer_close(&g_device->buffer);
 
+    fort_worker_unregister(&g_device->worker);
+
     fort_power_callback_unregister();
     fort_systime_callback_unregister();
 
@@ -1218,8 +1218,8 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
       fort_buffer_open(&g_device->buffer);
       fort_stat_open(&g_device->stat);
       fort_defer_open(&g_device->defer);
-      fort_timer_open(&g_device->log_timer, 500, &fort_callout_timer);
-      fort_timer_open(&g_device->app_timer, 60000, &fort_app_period_timer);
+      fort_timer_open(&g_device->log_timer, 500, FALSE, &fort_callout_timer);
+      fort_timer_open(&g_device->app_timer, 60000, TRUE, &fort_app_period_timer);
 
       KeInitializeSpinLock(&g_device->conf_lock);
 
@@ -1232,6 +1232,11 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 
       /* Install callouts */
       status = fort_callout_install(device);
+
+      /* Register worker */
+      if (NT_SUCCESS(status)) {
+        status = fort_worker_register(device, &g_device->worker);
+      }
 
       /* Register filters provider */
       if (NT_SUCCESS(status)) {

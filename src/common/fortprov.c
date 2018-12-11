@@ -173,7 +173,7 @@ fort_prov_register (HANDLE transEngine, BOOL is_boot)
   }
 
   if (!transEngine) {
-    if (!status) {
+    if (NT_SUCCESS(status)) {
       status = fort_prov_trans_commit(engine);
     }
 
@@ -251,7 +251,7 @@ fort_prov_flow_register (HANDLE transEngine, BOOL filter_transport)
   }
 
   if (!transEngine) {
-    if (!status) {
+    if (NT_SUCCESS(status)) {
       status = fort_prov_trans_commit(engine);
     }
 
@@ -297,7 +297,7 @@ fort_prov_reauth (HANDLE transEngine)
   }
 
   status = FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH_IN);
-  if (!status) {
+  if (NT_SUCCESS(status)) {
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH_OUT);
   } else {
     FWPM_FILTER0 ifilter, ofilter;
@@ -323,7 +323,7 @@ fort_prov_reauth (HANDLE transEngine)
   }
 
   if (!transEngine) {
-    if (!status) {
+    if (NT_SUCCESS(status)) {
       status = fort_prov_trans_commit(engine);
     } else {
       fort_prov_trans_abort(engine);

@@ -175,7 +175,7 @@ fort_conf_app_period_bits (const PFORT_CONF conf, int hour1, int hour2,
 {
   const char *data;
   const CHAR *app_periods;
-  UINT16 group_bits, period_bits;
+  UINT16 period_bits;
   UINT8 count = conf->app_periods_n;
   int n, i;
 
@@ -184,8 +184,7 @@ fort_conf_app_period_bits (const PFORT_CONF conf, int hour1, int hour2,
 
   data = conf->data;
   app_periods = (const CHAR *) (data + conf->app_periods_off);
-  group_bits = (UINT16) conf->flags.group_bits;
-  period_bits = group_bits;
+  period_bits = (UINT16) conf->flags.group_bits;
   n = 0;
 
   for (i = 0; i < FORT_CONF_GROUP_MAX; ++i) {
@@ -193,7 +192,7 @@ fort_conf_app_period_bits (const PFORT_CONF conf, int hour1, int hour2,
     const int periodFrom = *app_periods++;
     const int periodTo = *app_periods++;
 
-    if ((group_bits & bit) != 0
+    if ((period_bits & bit) != 0
         && (periodFrom != 0 || periodTo != 0)) {
       if (!(is_hour_between(hour1, periodFrom, periodTo)
           && (hour1 == hour2 || is_hour_between(hour2, periodFrom, periodTo)))) {
