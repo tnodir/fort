@@ -1,5 +1,15 @@
 Fort Firewall ChangeLog
 
+v2.0.0, 2018-12-12:
+- UI: ApplicationsPage: Add hour period to enabled state.
+- UI: StatisticsPage: Add active period hours.
+- UI: Add --control <PATH> argument.
+- UI: NetUtil: Add special local IPv4 addresses.
+- UI: OptionsPage: Add ability to disable hot keys.
+- UI: OptionsPage: Remove ability to "Ignore TCP RST-packets".
+- UI: Remove Task "UzOnline".
+- Update to SQLite v3.26.0
+
 v1.11.0, 2018-03-07:
 - UI: ListView: Improve item selection by click.
 - UI: Statistics Page: Fix keep options.
