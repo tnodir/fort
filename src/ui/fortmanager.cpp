@@ -567,6 +567,10 @@ void FortManager::updateTrayMenu()
                 this, SLOT(switchGraphWindow()), true);
     addHotKey(m_graphWindowAction, fortSettings()->hotKeyGraph(), conf.logStat());
 
+    // TODO
+    m_graphWindowAction->setEnabled(false);
+    m_graphWindowAction->setVisible(false);
+
     if (!conf.hasPassword() && !m_firewallConfToEdit) {
         menu->addSeparator();
 
