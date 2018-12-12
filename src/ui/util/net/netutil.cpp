@@ -101,13 +101,15 @@ QStringList NetUtil::localIpv4Networks()
 {
     static QStringList list = QStringList()
             << "0.0.0.0/32"  // non-routable meta-address
+            << "10.0.0.0/8"
+            << "100.64.0.0/10"  // for carrier-grade NAT deployment
+            << "127.0.0.0/8"  // Loopback
+            << "169.254.0.0/16"  // if cannot obtain a network address via DHCP
+            << "172.16.0.0/12"
+            << "192.168.0.0/16"
             << "239.255.255.250/32"  // IP Multicast for DLNA/UPNP
             << "255.255.255.255/32"  // IP Broadcast
-            << "10.0.0.0/8"
-            << "127.0.0.0/8"
-            << "169.254.0.0/16"
-            << "172.16.0.0/12"
-            << "192.168.0.0/16";
+               ;
 
     return list;
 }
