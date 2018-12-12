@@ -45,7 +45,7 @@ QString NetUtil::ip4ToText(quint32 ip)
     wchar_t buf[MAX_IPV4_LEN];
 
     if (!InetNtopW(AF_INET, (PVOID) p, buf, MAX_IPV4_LEN))
-        return false;
+        return QString();
 
     return QString::fromWCharArray(buf);
 }
