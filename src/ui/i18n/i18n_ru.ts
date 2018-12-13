@@ -4,17 +4,17 @@
 <context>
     <name>ConfUtil</name>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="122"/>
+        <location filename="../util/conf/confutil.cpp" line="123"/>
         <source>Bad Include IP address: %1</source>
         <translation>Некорректный IP адрес для включения: %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="130"/>
+        <location filename="../util/conf/confutil.cpp" line="131"/>
         <source>Bad Exclude IP address: %1</source>
         <translation>Некорректный IP адрес для исключения: %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="141"/>
+        <location filename="../util/conf/confutil.cpp" line="142"/>
         <source>Too many IP addresses</source>
         <translation>Слишком много IP адресов</translation>
     </message>
@@ -24,17 +24,17 @@
         <translation>Слишком много путей приложений</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="165"/>
+        <location filename="../util/conf/confutil.cpp" line="166"/>
         <source>Number of Application Groups must be &lt; %1</source>
         <translation>Количество групп приложений должно быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="177"/>
+        <location filename="../util/conf/confutil.cpp" line="178"/>
         <source>Length of Application Group&apos;s Name must be &lt; %1</source>
         <translation>Длина наименования группы приложения должна быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="240"/>
+        <location filename="../util/conf/confutil.cpp" line="241"/>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Длина пути приложения должна быть &lt; %1</translation>
     </message>
@@ -70,17 +70,17 @@
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="581"/>
+        <location filename="../fortmanager.cpp" line="585"/>
         <source>Stop Traffic</source>
         <translation>Остановить трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="588"/>
+        <location filename="../fortmanager.cpp" line="592"/>
         <source>Stop Internet Traffic</source>
         <translation>Остановить Интернет трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="616"/>
+        <location filename="../fortmanager.cpp" line="620"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -356,12 +356,12 @@
     </message>
     <message>
         <location filename="../qml/pages/MainPage.qml" line="70"/>
-        <location filename="../qml/pages/OptionsPage.qml" line="173"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="184"/>
         <source>Statistics</source>
         <translation>Статистика</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="103"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="114"/>
         <source>Password:</source>
         <translation>Пароль:</translation>
     </message>
@@ -401,47 +401,52 @@
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="66"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="63"/>
+        <source>Filter Local Addresses</source>
+        <translation>Фильтр локальных адресов</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/OptionsPage.qml" line="77"/>
         <source>Stop Traffic</source>
         <translation>Остановить трафик</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="77"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="88"/>
         <source>Stop Internet Traffic</source>
         <translation>Остановить Интернет трафик</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="90"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="101"/>
         <source>Hot Keys</source>
         <translation>Горячие клавиши</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="124"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="135"/>
         <source>Installed</source>
         <translation>Установлен</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="125"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="136"/>
         <source>Not Installed</source>
         <translation>Не установлен</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="135"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="146"/>
         <source>Language:</source>
         <translation>Язык:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="153"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="164"/>
         <source>Logs</source>
         <translation>Логи</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="163"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="174"/>
         <source>Profile</source>
         <translation>Профиль</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="183"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="194"/>
         <source>Releases</source>
         <translation>Релизы</translation>
     </message>

@@ -279,8 +279,9 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   flags = inFixedValues->incomingValue[flagsField].value.uint32;
   remote_ip = inFixedValues->incomingValue[remoteIpField].value.uint32;
 
-  if ((flags & FWP_CONDITION_FLAG_IS_LOOPBACK)
-      || remote_ip == 0xFFFFFFFF) {  /* Local broadcast */
+  if (!g_device->conf_flags.filter_locals
+      && ((flags & FWP_CONDITION_FLAG_IS_LOOPBACK)
+        || remote_ip == 0xFFFFFFFF)) {  /* Local broadcast */
     fort_callout_classify_permit(filter, classifyOut);
     return;
   }

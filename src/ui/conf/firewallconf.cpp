@@ -10,6 +10,7 @@ FirewallConf::FirewallConf(QObject *parent) :
     QObject(parent),
     m_provBoot(false),
     m_filterEnabled(true),
+    m_filterLocals(false),
     m_stopTraffic(false),
     m_stopInetTraffic(false),
     m_resolveAddress(false),
@@ -45,6 +46,14 @@ void FirewallConf::setFilterEnabled(bool filterEnabled)
     if (m_filterEnabled != filterEnabled) {
         m_filterEnabled = filterEnabled;
         emit filterEnabledChanged();
+    }
+}
+
+void FirewallConf::setFilterLocals(bool filterLocals)
+{
+    if (m_filterLocals != filterLocals) {
+        m_filterLocals = filterLocals;
+        emit filterLocalsChanged();
     }
 }
 
@@ -273,6 +282,7 @@ void FirewallConf::copyFlags(const FirewallConf &o)
 {
     setProvBoot(o.provBoot());
     setFilterEnabled(o.filterEnabled());
+    setFilterLocals(o.filterLocals());
     setStopTraffic(o.stopTraffic());
     setStopInetTraffic(o.stopInetTraffic());
     setAppBlockAll(o.appBlockAll());

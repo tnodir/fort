@@ -47,14 +47,29 @@ BasePage {
                 }
             }
 
-            CheckBox {
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Filter Enabled")
-                checked: firewallConf.filterEnabled
-                onToggled: {
-                    firewallConf.filterEnabled = checked;
+            Row {
+                spacing: 20
 
-                    setConfFlagsEdited();
+                CheckBox {
+                    text: translationManager.trTrigger
+                          && qsTranslate("qml", "Filter Enabled")
+                    checked: firewallConf.filterEnabled
+                    onToggled: {
+                        firewallConf.filterEnabled = checked;
+
+                        setConfFlagsEdited();
+                    }
+                }
+
+                CheckBox {
+                    text: translationManager.trTrigger
+                          && qsTranslate("qml", "Filter Local Addresses")
+                    checked: firewallConf.filterLocals
+                    onToggled: {
+                        firewallConf.filterLocals = checked;
+
+                        setConfFlagsEdited();
+                    }
                 }
             }
 

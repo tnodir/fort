@@ -19,6 +19,7 @@ class FirewallConf : public QObject
     Q_OBJECT
     Q_PROPERTY(bool provBoot READ provBoot WRITE setProvBoot NOTIFY provBootChanged)
     Q_PROPERTY(bool filterEnabled READ filterEnabled WRITE setFilterEnabled NOTIFY filterEnabledChanged)
+    Q_PROPERTY(bool filterLocals READ filterLocals WRITE setFilterLocals NOTIFY filterLocalsChanged)
     Q_PROPERTY(bool stopTraffic READ stopTraffic WRITE setStopTraffic NOTIFY stopTrafficChanged)
     Q_PROPERTY(bool stopInetTraffic READ stopInetTraffic WRITE setStopInetTraffic NOTIFY stopInetTrafficChanged)
     Q_PROPERTY(bool resolveAddress READ resolveAddress WRITE setResolveAddress NOTIFY resolveAddressChanged)
@@ -61,6 +62,9 @@ public:
 
     bool filterEnabled() const { return m_filterEnabled; }
     void setFilterEnabled(bool filterEnabled);
+
+    bool filterLocals() const { return m_filterLocals; }
+    void setFilterLocals(bool filterLocals);
 
     bool stopTraffic() const { return m_stopTraffic; }
     void setStopTraffic(bool stopTraffic);
@@ -142,6 +146,7 @@ public:
 signals:
     void provBootChanged();
     void filterEnabledChanged();
+    void filterLocalsChanged();
     void stopTrafficChanged();
     void stopInetTrafficChanged();
     void resolveAddressChanged();
@@ -172,6 +177,7 @@ public slots:
 private:
     uint m_provBoot         : 1;
     uint m_filterEnabled    : 1;
+    uint m_filterLocals     : 1;
     uint m_stopTraffic      : 1;
     uint m_stopInetTraffic  : 1;
 
