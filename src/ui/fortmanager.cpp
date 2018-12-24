@@ -136,6 +136,7 @@ void FortManager::closeDriver()
     updateLogManager(false);
 
     m_driverManager->closeDevice();
+    m_logManager->close();
 }
 
 void FortManager::setupDatabaseManager()

@@ -1,5 +1,7 @@
 #include "logmanager.h"
 
+#include <QCoreApplication>
+
 #include "../driver/driverworker.h"
 #include "../fortcommon.h"
 #include "logbuffer.h"
@@ -47,6 +49,13 @@ void LogManager::setErrorMessage(const QString &errorMessage)
 void LogManager::initialize()
 {
     m_appStatModel->initialize();
+}
+
+void LogManager::close()
+{
+    QCoreApplication::sendPostedEvents(this);
+
+    m_driverWorker->disconnect(this);
 }
 
 void LogManager::setupDriverWorker()

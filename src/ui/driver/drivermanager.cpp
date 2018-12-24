@@ -38,8 +38,6 @@ void DriverManager::setupWorker()
 
 void DriverManager::abortWorker()
 {
-    m_driverWorker->disconnect(this);
-
     m_driverWorker->abort();
 }
 

@@ -55,6 +55,8 @@ void DriverWorker::cancelAsyncIo()
 
 void DriverWorker::abort()
 {
+    if (m_aborted) return;
+
     m_aborted = true;
 
     cancelAsyncIo();

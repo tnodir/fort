@@ -36,6 +36,7 @@ signals:
     void errorMessageChanged();
 
 public slots:
+    void close();
 
 private slots:
     void processLogBuffer(LogBuffer *logBuffer, bool success,
