@@ -91,6 +91,8 @@ private:
     void setupLogger();
     void setupLogManager();
 
+    void setupTranslationManager();
+
     void setupTrayIcon();
 
     bool setupEngine();
@@ -100,8 +102,7 @@ private:
     bool saveSettings(FirewallConf *newConf, bool onlyFlags = false,
                       bool immediateFlags = false);
 
-    bool updateDriverConf(FirewallConf *conf);
-    bool updateDriverConfFlags(FirewallConf *conf);
+    bool updateDriverConf(FirewallConf *conf, bool onlyFlags = false);
 
     void updateLogManager(bool active);
     void updateDatabaseManager(FirewallConf *conf);

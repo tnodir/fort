@@ -61,19 +61,17 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_taskManager(new TaskManager(this, this))
 {
     setupLogger();
-    setupDriver();
     setupDatabaseManager();
     setupLogManager();
+    setupDriver();
 
     loadSettings(m_firewallConf);
 
     m_taskManager->loadSettings(m_fortSettings);
 
-    TranslationManager::instance()->switchLanguageByName(
-                m_fortSettings->language());
-
     registerQmlTypes();
 
+    setupTranslationManager();
     setupTrayIcon();
 }
 
@@ -160,6 +158,12 @@ void FortManager::setupLogger()
 void FortManager::setupLogManager()
 {
     m_logManager->initialize();
+}
+
+void FortManager::setupTranslationManager()
+{
+    TranslationManager::instance()->switchLanguageByName(
+                m_fortSettings->language());
 }
 
 void FortManager::setupTrayIcon()
@@ -418,11 +422,10 @@ bool FortManager::saveSettings(FirewallConf *newConf, bool onlyFlags,
         updateTrayMenu();
     }
 
-    return onlyFlags ? updateDriverConfFlags(m_firewallConf)
-                     : updateDriverConf(m_firewallConf);
+    return updateDriverConf(m_firewallConf, onlyFlags);
 }
 
-bool FortManager::updateDriverConf(FirewallConf *conf)
+bool FortManager::updateDriverConf(FirewallConf *conf, bool onlyFlags)
 {
     if (!m_driverManager->isDeviceOpened())
         return true;
@@ -430,31 +433,14 @@ bool FortManager::updateDriverConf(FirewallConf *conf)
     updateLogManager(false);
 
     // Update driver
-    const bool res = m_driverManager->writeConf(*conf);
+    const bool res = onlyFlags
+            ? m_driverManager->writeConfFlags(*conf)
+            : m_driverManager->writeConf(*conf);
+
     if (res) {
         updateDatabaseManager(conf);
     } else {
         showErrorBox("Update Driver Conf: " + m_driverManager->errorMessage());
-    }
-
-    updateLogManager(true);
-
-    return res;
-}
-
-bool FortManager::updateDriverConfFlags(FirewallConf *conf)
-{
-    if (!m_driverManager->isDeviceOpened())
-        return true;
-
-    updateLogManager(false);
-
-    // Update driver
-    const bool res = m_driverManager->writeConfFlags(*conf);
-    if (res) {
-        updateDatabaseManager(conf);
-    } else {
-        showErrorBox("Update Driver Conf Flags: " + m_driverManager->errorMessage());
     }
 
     updateLogManager(true);
@@ -497,7 +483,7 @@ void FortManager::saveTrayFlags()
 
     m_fortSettings->writeConfIni(*m_firewallConf);
 
-    updateDriverConfFlags(m_firewallConf);
+    updateDriverConf(m_firewallConf, true);
 }
 
 FirewallConf *FortManager::cloneConf(const FirewallConf &conf)

@@ -55,7 +55,7 @@ void LogManager::close()
 {
     QCoreApplication::sendPostedEvents(this);
 
-    m_driverWorker->disconnect(this);
+    disconnect(m_driverWorker);
 }
 
 void LogManager::setupDriverWorker()
