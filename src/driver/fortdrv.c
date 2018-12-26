@@ -35,7 +35,6 @@ typedef struct fort_conf_ref {
 typedef struct fort_device {
   UINT32 prov_boot	: 1;
   UINT32 is_opened	: 1;
-  UINT32 was_conf	: 1;
   UINT32 power_off	: 1;
 
   UINT32 connect4_id;
@@ -133,7 +132,6 @@ fort_conf_ref_set (PFORT_CONF_REF conf_ref)
       const PFORT_CONF_FLAGS conf_flags = &conf_ref->conf.flags;
 
       g_device->prov_boot = conf_flags->prov_boot;
-      g_device->was_conf = TRUE;
 
       g_device->conf_flags = *conf_flags;
     } else {
@@ -289,8 +287,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   conf_ref = fort_conf_ref_take();
 
   if (conf_ref == NULL) {
-    if (g_device->prov_boot || ((flags & FWP_CONDITION_FLAG_IS_REAUTHORIZE)
-        && !g_device->was_conf)) {  /* Block existing flows after driver installation to use flow-contexts */
+    if (g_device->prov_boot) {
       fort_callout_classify_block(classifyOut);
     } else {
       fort_callout_classify_continue(classifyOut);
@@ -322,13 +319,17 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
         const UINT64 flowId = inMetaValues->flowHandle;
         const UCHAR group_index = fort_conf_app_group_index(
           &conf_ref->conf, app_index);
+        const BOOL is_reauth = (flags & FWP_CONDITION_FLAG_IS_REAUTHORIZE);
         BOOL is_new_proc = FALSE;
         NTSTATUS status;
 
         status = fort_stat_flow_associate(&g_device->stat,
-          flowId, process_id, group_index, &is_new_proc);
+          flowId, process_id, group_index, is_reauth, &is_new_proc);
 
         if (!NT_SUCCESS(status)) {
+          if (status == FORT_STATUS_FLOW_BLOCK)
+            goto block;
+
           DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                      "FORT: Classify v4: Flow assoc. error: %x\n", status);
         } else if (is_new_proc) {

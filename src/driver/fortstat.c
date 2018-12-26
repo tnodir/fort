@@ -5,6 +5,8 @@
 #define FORT_PROC_BAD_INDEX	((UINT16) -1)
 #define FORT_PROC_COUNT_MAX	0x7FFF
 
+#define FORT_STATUS_FLOW_BLOCK	STATUS_NOT_SAME_DEVICE
+
 typedef struct fort_stat_traf {
   union {
     struct {
@@ -300,13 +302,17 @@ fort_stat_flow_free (PFORT_STAT stat, PFORT_STAT_FLOW flow)
 static NTSTATUS
 fort_stat_flow_add (PFORT_STAT stat, UINT64 flow_id,
                     UCHAR group_index, UINT16 proc_index,
-                    BOOL speed_limit)
+                    BOOL speed_limit, BOOL is_reauth)
 {
   const tommy_key_t flow_hash = fort_stat_flow_hash(flow_id);
   PFORT_STAT_FLOW flow = fort_stat_flow_get(stat, flow_id, flow_hash);
   BOOL is_new_flow = FALSE;
 
   if (flow == NULL) {
+    if (is_reauth) {
+      return FORT_STATUS_FLOW_BLOCK;  /* Block existing flow after reauth. to be able to use flow-context */
+    }
+
     if (stat->flow_free != NULL) {
       flow = stat->flow_free;
       stat->flow_free = flow->next;
@@ -421,7 +427,7 @@ fort_stat_update_limits (PFORT_STAT stat, PFORT_CONF_IO conf_io)
 static NTSTATUS
 fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
                           UINT32 process_id, UCHAR group_index,
-                          BOOL *is_new_proc)
+                          BOOL is_reauth, BOOL *is_new_proc)
 {
   const tommy_key_t proc_hash = fort_stat_proc_hash(process_id);
   KLOCK_QUEUE_HANDLE lock_queue;
@@ -432,13 +438,18 @@ fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
   if (!stat->log_stat) {
-    status = STATUS_RESOURCE_REQUIREMENTS_CHANGED;
+    status = STATUS_DEVICE_DATA_ERROR;
     goto end;
   }
 
   proc = fort_stat_proc_get(stat, process_id, proc_hash);
 
   if (proc == NULL) {
+    if (is_reauth) {
+      status = FORT_STATUS_FLOW_BLOCK;  /* Block existing flow after reauth. to be able to use flow-context */
+      goto end;
+    }
+
     proc = fort_stat_proc_add(stat, process_id);
 
     if (proc == NULL) {
@@ -452,7 +463,7 @@ fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
   speed_limit = fort_stat_group_speed_limit(stat, group_index) != 0;
 
   status = fort_stat_flow_add(stat, flow_id,
-    group_index, proc->proc_index, speed_limit);
+    group_index, proc->proc_index, speed_limit, is_reauth);
 
   if (!NT_SUCCESS(status) && *is_new_proc) {
     fort_stat_proc_free(stat, proc);
