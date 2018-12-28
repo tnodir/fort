@@ -85,7 +85,7 @@ DEFINE_GUID(FORT_GUID_FILTER_REAUTH_OUT,
 
 
 #ifndef NT_SUCCESS
-#define NT_SUCCESS(status)		!(status)
+#define NT_SUCCESS(status)	((LONG) (status) >= 0)
 #endif
 
 #endif COMMON_H
