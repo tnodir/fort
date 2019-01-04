@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v2.1.0, 2019-01-04:
+- UI: Tray menu: Show app-group's speed & period.
+- Driver: Fix blocking existing flows for reauth.
+- Add ability to filter local addresses (127.*, 255.255.255.255).
+
 v2.0.0, 2018-12-12:
 - UI: ApplicationsPage: Add hour period to enabled state.
 - UI: StatisticsPage: Add active period hours.
