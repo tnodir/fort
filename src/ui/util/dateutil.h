@@ -30,6 +30,8 @@ public:
 
     static QString formatDateTime(qint64 unixTime, const QString &format);
 
+    static QString formatPeriod(int fromHour, int toHour);
+
     static bool isHourBetween(qint32 unixHour, qint32 unixDay,
                               int fromHour, int toHour);
 };

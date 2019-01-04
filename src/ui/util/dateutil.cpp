@@ -83,6 +83,13 @@ QString DateUtil::formatDateTime(qint64 unixTime, const QString &format)
     return QLocale().toString(dt, format);
 }
 
+QString DateUtil::formatPeriod(int fromHour, int toHour)
+{
+    return QString::fromLatin1("[%1:00-%2:00)")
+            .arg(QString::number(fromHour),
+                 QString::number(toHour));
+}
+
 bool DateUtil::isHourBetween(qint32 unixHour, qint32 unixDay,
                              int fromHour, int toHour)
 {

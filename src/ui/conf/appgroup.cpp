@@ -1,5 +1,8 @@
 #include "appgroup.h"
 
+#include "../util/dateutil.h"
+#include "../util/net/netutil.h"
+
 AppGroup::AppGroup(QObject *parent) :
     QObject(parent),
     m_enabled(true),
@@ -99,6 +102,30 @@ void AppGroup::setAllowText(const QString &allowText)
         m_allowText = allowText;
         emit allowTextChanged();
     }
+}
+
+QString AppGroup::label() const
+{
+    QString text = name();
+
+    if (limitInEnabled() && speedLimitIn() != 0) {
+        text += QLatin1Char(' ')
+                + QChar(0x2207)  // ∇
+                + NetUtil::formatSpeed(speedLimitIn());
+    }
+
+    if (limitOutEnabled() && speedLimitOut() != 0) {
+        text += QLatin1Char(' ')
+                + QChar(0x2206)  // ∆
+                + NetUtil::formatSpeed(speedLimitOut());
+    }
+
+    if (periodEnabled()) {
+        text += QLatin1Char(' ')
+                + DateUtil::formatPeriod(periodFrom(), periodTo());
+    }
+
+    return text;
 }
 
 QVariant AppGroup::toVariant() const

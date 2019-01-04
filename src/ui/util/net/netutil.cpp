@@ -81,6 +81,13 @@ QString NetUtil::formatDataSize(qint64 bytes, int precision)
 #endif
 }
 
+QString NetUtil::formatSpeed(quint32 kbytes)
+{
+    const int prec = (kbytes < 1024) ? 0 : 1;
+    return formatDataSize(kbytes * 1024, prec)
+            + QLatin1String("/s");
+}
+
 QString NetUtil::getHostName(const QString &address)
 {
     WCHAR hostName[NI_MAXHOST];

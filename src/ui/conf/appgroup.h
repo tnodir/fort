@@ -55,6 +55,8 @@ public:
     QString allowText() const { return m_allowText; }
     void setAllowText(const QString &allowText);
 
+    QString label() const;
+
     QVariant toVariant() const;
     void fromVariant(const QVariant &v);
 

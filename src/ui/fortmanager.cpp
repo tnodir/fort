@@ -588,7 +588,7 @@ void FortManager::updateTrayMenu()
         foreach (const AppGroup *appGroup, conf.appGroupsList()) {
             QAction *a = addAction(
                         menu, QIcon(":/images/application_double.png"),
-                        appGroup->name(), this, SLOT(saveTrayFlags()),
+                        appGroup->label(), this, SLOT(saveTrayFlags()),
                         true, appGroup->enabled());
 
             const QString shortcutText =
