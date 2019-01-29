@@ -34,11 +34,16 @@ typedef struct fort_conf_addr_group {
   UINT32 ip[2];
 } FORT_CONF_ADDR_GROUP, *PFORT_CONF_ADDR_GROUP;
 
-typedef struct fort_conf_limit {
-  /* Bytes per 0.5 sec. */
-  UINT32 in_bytes;
-  UINT32 out_bytes;
-} FORT_CONF_LIMIT, *PFORT_CONF_LIMIT;
+typedef struct fort_traf {
+  union {
+    struct {
+      UINT32 in_bytes;
+      UINT32 out_bytes;
+    };
+
+    UINT64 v;
+  };
+} FORT_TRAF, *PFORT_TRAF;
 
 typedef struct fort_conf {
   FORT_CONF_FLAGS flags;
@@ -62,9 +67,9 @@ typedef struct fort_conf {
 typedef struct fort_conf_io {
   UINT16 driver_version;
 
-  UINT16 limit_bits;
+  UINT32 limit_bits;
 
-  FORT_CONF_LIMIT limits[FORT_CONF_GROUP_MAX];
+  FORT_TRAF limits[FORT_CONF_GROUP_MAX];  /* Bytes per 0.5 sec. */
 
   FORT_CONF conf;
 } FORT_CONF_IO, *PFORT_CONF_IO;

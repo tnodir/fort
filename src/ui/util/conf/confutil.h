@@ -13,7 +13,7 @@ QT_FORWARD_DECLARE_CLASS(AddressGroup)
 QT_FORWARD_DECLARE_CLASS(AppGroup)
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
 
-QT_FORWARD_DECLARE_STRUCT(fort_conf_limit)
+QT_FORWARD_DECLARE_STRUCT(fort_traf)
 
 using numbers_arr_t = QVector<quint32>;
 using chars_arr_t = QVector<qint8>;
@@ -73,7 +73,7 @@ private:
                           quint8 appPeriodsCount,
                           const appgroups_map_t &appGroupIndexes);
 
-    static quint16 writeLimits(struct fort_conf_limit *limits,
+    static quint32 writeLimits(struct fort_traf *limits,
                                const QList<AppGroup *> &appGroups);
 
     static void writeAddressRanges(char **data,

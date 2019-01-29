@@ -7,19 +7,8 @@
 
 #define FORT_STATUS_FLOW_BLOCK	STATUS_NOT_SAME_DEVICE
 
-typedef struct fort_stat_traf {
-  union {
-    struct {
-      UINT32 in_bytes;
-      UINT32 out_bytes;
-    };
-
-    UINT64 v;
-  };
-} FORT_STAT_TRAF, *PFORT_STAT_TRAF;
-
 typedef struct fort_stat_group {
-  FORT_STAT_TRAF traf;
+  FORT_TRAF traf;
 } FORT_STAT_GROUP, *PFORT_STAT_GROUP;
 
 /* Synchronize with tommy_hashdyn_node! */
@@ -29,7 +18,7 @@ typedef struct fort_stat_proc {
 
   union {
 #if defined(_WIN64)
-    FORT_STAT_TRAF traf;
+    FORT_TRAF traf;
 #else
     UINT32 process_id;
 #endif
@@ -46,15 +35,17 @@ typedef struct fort_stat_proc {
 #if defined(_WIN64)
   UINT32 process_id;
 #else
-  FORT_STAT_TRAF traf;
+  FORT_TRAF traf;
 #endif
 
   struct fort_stat_proc *next_active;
 } FORT_STAT_PROC, *PFORT_STAT_PROC;
 
-#define FORT_STAT_FLOW_SPEED_LIMIT	0x01
-#define FORT_STAT_FLOW_DEFER_IN		0x02
-#define FORT_STAT_FLOW_DEFER_OUT	0x04
+#define FORT_STAT_FLOW_SPEED_LIMIT_IN	0x01
+#define FORT_STAT_FLOW_SPEED_LIMIT_OUT	0x02
+#define FORT_STAT_FLOW_SPEED_LIMIT	(FORT_STAT_FLOW_SPEED_LIMIT_IN | FORT_STAT_FLOW_SPEED_LIMIT_OUT)
+#define FORT_STAT_FLOW_DEFER_IN		0x04
+#define FORT_STAT_FLOW_DEFER_OUT	0x08
 
 typedef struct fort_stat_flow_opt {
   UCHAR volatile flags;
@@ -90,8 +81,10 @@ typedef struct fort_stat {
 
   UCHAR log_stat	: 1;
 
-  UINT16 limit_bits;
   UINT16 proc_active_count;
+
+  UINT32 limit_bits;
+  UINT32 group_flush_bits;
 
   UINT32 stream4_id;
   UINT32 datagram4_id;
@@ -109,7 +102,7 @@ typedef struct fort_stat {
   tommy_arrayof flows;
   tommy_hashdyn flows_map;
 
-  FORT_CONF_LIMIT limits[FORT_CONF_GROUP_MAX];
+  FORT_TRAF limits[FORT_CONF_GROUP_MAX];
   FORT_STAT_GROUP groups[FORT_CONF_GROUP_MAX];
 
   KSPIN_LOCK lock;
@@ -119,7 +112,7 @@ typedef struct fort_stat {
 #define fort_stat_flow_hash(flow_id)	tommy_inthash_u32((UINT32) (flow_id))
 
 #define fort_stat_group_speed_limit(stat, group_index) \
-  ((stat)->limit_bits & (1 << (group_index)))
+  (((stat)->limit_bits >> ((group_index) * 2)) & 3)
 
 
 static void
@@ -302,7 +295,7 @@ fort_stat_flow_free (PFORT_STAT stat, PFORT_STAT_FLOW flow)
 static NTSTATUS
 fort_stat_flow_add (PFORT_STAT stat, UINT64 flow_id,
                     UCHAR group_index, UINT16 proc_index,
-                    BOOL speed_limit, BOOL is_reauth)
+                    UCHAR speed_limit, BOOL is_reauth)
 {
   const tommy_key_t flow_hash = fort_stat_flow_hash(flow_id);
   PFORT_STAT_FLOW flow = fort_stat_flow_get(stat, flow_id, flow_hash);
@@ -341,7 +334,7 @@ fort_stat_flow_add (PFORT_STAT stat, UINT64 flow_id,
     fort_stat_proc_inc(stat, proc_index);
   }
 
-  flow->opt.flags = (speed_limit ? FORT_STAT_FLOW_SPEED_LIMIT : 0);
+  flow->opt.flags = speed_limit;
   flow->opt.group_index = group_index;
   flow->opt.proc_index = proc_index;
 
@@ -388,6 +381,8 @@ fort_stat_clear (PFORT_STAT stat)
 
   tommy_hashdyn_foreach_node_arg(&stat->procs_map, fort_stat_proc_free, stat);
   tommy_hashdyn_foreach_node(&stat->flows_map, fort_stat_flow_close);
+
+  RtlZeroMemory(stat->groups, sizeof(stat->groups));
 }
 
 static void
@@ -413,7 +408,7 @@ fort_stat_update_limits (PFORT_STAT stat, PFORT_CONF_IO conf_io)
 
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
   {
-    const UINT16 limit_bits = conf_io->limit_bits;
+    const UINT32 limit_bits = conf_io->limit_bits;
 
     stat->limit_bits = limit_bits;
 
@@ -432,7 +427,7 @@ fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
   const tommy_key_t proc_hash = fort_stat_proc_hash(process_id);
   KLOCK_QUEUE_HANDLE lock_queue;
   PFORT_STAT_PROC proc;
-  BOOL speed_limit;
+  UCHAR speed_limit;
   NTSTATUS status;
 
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
@@ -460,7 +455,7 @@ fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
     *is_new_proc = TRUE;
   }
 
-  speed_limit = fort_stat_group_speed_limit(stat, group_index) != 0;
+  speed_limit = fort_stat_group_speed_limit(stat, group_index);
 
   status = fort_stat_flow_add(stat, flow_id,
     group_index, proc->proc_index, speed_limit, is_reauth);
@@ -491,13 +486,12 @@ fort_stat_flow_delete (PFORT_STAT stat, UINT64 flowContext)
   KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
-static BOOL
+static void
 fort_stat_flow_classify (PFORT_STAT stat, UINT64 flowContext,
                          UINT32 data_len, BOOL inbound)
 {
   KLOCK_QUEUE_HANDLE lock_queue;
   PFORT_STAT_FLOW flow = (PFORT_STAT_FLOW) flowContext;
-  BOOL limited = FALSE;
 
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
@@ -509,46 +503,44 @@ fort_stat_flow_classify (PFORT_STAT stat, UINT64 flowContext,
     /* Add traffic to process */
     *proc_bytes += data_len;
 
-    if (flow->opt.flags & FORT_STAT_FLOW_SPEED_LIMIT) {
+    if (flow->opt.flags & (inbound ? FORT_STAT_FLOW_SPEED_LIMIT_IN
+        : FORT_STAT_FLOW_SPEED_LIMIT_OUT)) {
       const UCHAR group_index = flow->opt.group_index;
-      const PFORT_CONF_LIMIT group_limit = &stat->limits[group_index];
+
+      PFORT_STAT_GROUP group = &stat->groups[group_index];
+      UINT32 *group_bytes = inbound ? &group->traf.in_bytes
+        : &group->traf.out_bytes;
+
+      const PFORT_TRAF group_limit = &stat->limits[group_index];
       const UINT32 limit_bytes = inbound ? group_limit->in_bytes
         : group_limit->out_bytes;
 
-      if (limit_bytes != 0) {
-        PFORT_STAT_GROUP group = &stat->groups[group_index];
-        UINT32 *group_bytes = inbound ? &group->traf.in_bytes
-          : &group->traf.out_bytes;
-        BOOL defer_flow = TRUE;
+      const UINT16 list_index = group_index * 2 + (inbound ? 0 : 1);
+      BOOL defer_flow;
 
-        if (*group_bytes < limit_bytes) {
-          /* Add traffic to app. group */
-          *group_bytes += data_len;
+      /* Add traffic to app. group */
+      *group_bytes += data_len;
 
-          defer_flow = (*group_bytes >= limit_bytes);
-        } else {
-          limited = TRUE;
-        }
+      defer_flow = (*group_bytes >= limit_bytes);
 
-        /* Defer ACK */
-        {
-          const UCHAR defer_flag = inbound
-            ? FORT_STAT_FLOW_DEFER_OUT : FORT_STAT_FLOW_DEFER_IN;
+      /* Defer ACK */
+      {
+        const UCHAR defer_flag = inbound
+          ? FORT_STAT_FLOW_DEFER_OUT : FORT_STAT_FLOW_DEFER_IN;
 
-          if (defer_flow)
-            fort_stat_flow_flags_set(flow, defer_flag);
-          else
-            fort_stat_flow_flags_clear(flow, defer_flag);
-        }
+        if (defer_flow)
+          fort_stat_flow_flags_set(flow, defer_flag);
+        else
+          fort_stat_flow_flags_clear(flow, defer_flag);
       }
+
+      stat->group_flush_bits |= (1 << list_index);
     }
 
     fort_stat_proc_active_add(stat, proc);
   }
 
   KeReleaseInStackQueuedSpinLock(&lock_queue);
-
-  return limited;
 }
 
 static void
@@ -573,7 +565,7 @@ fort_stat_dpc_traf_flush (PFORT_STAT stat, UINT16 proc_count, PCHAR out)
   while (proc != NULL && proc_count-- != 0) {
     PFORT_STAT_PROC proc_next = proc->next_active;
     UINT32 *out_proc = (UINT32 *) out;
-    PFORT_STAT_TRAF out_traf = (PFORT_STAT_TRAF) (out_proc + 1);
+    PFORT_TRAF out_traf = (PFORT_TRAF) (out_proc + 1);
 
     out = (PCHAR) (out_traf + 1);
 
@@ -603,20 +595,72 @@ fort_stat_dpc_traf_flush (PFORT_STAT stat, UINT16 proc_count, PCHAR out)
   stat->proc_active = proc;
 }
 
-static void
+static UINT32
 fort_stat_dpc_group_flush (PFORT_STAT stat)
 {
-  /* Clear process group's bytes */
-  if (stat->limit_bits) {
-    PFORT_STAT_GROUP group = stat->groups;
-    UINT16 limit_bits = stat->limit_bits;
+  UINT32 defer_flush_bits = 0;
+  UINT32 flush_bits = stat->group_flush_bits;
+  int i;
 
-    for (; limit_bits != 0; ++group) {
-      if (limit_bits & 1) {
-        group->traf.v = 0;
+  /* Handle process group's bytes */
+  for (i = 0; flush_bits != 0; ++i) {
+    PFORT_STAT_GROUP group;
+    PFORT_TRAF group_limit;
+    FORT_TRAF traf;
+    UINT32 flush_bit = (flush_bits & 3);
+
+    flush_bits >>= 2;
+    if (flush_bit == 0)
+      continue;
+
+    group = &stat->groups[i];
+    group_limit = &stat->limits[i];
+
+    traf = group->traf;
+
+    // Inbound
+    if (flush_bit & 1) {
+      const UINT32 limit_bytes = group_limit->in_bytes;
+
+      if (limit_bytes == 0 || traf.in_bytes <= limit_bytes) {
+        traf.in_bytes = 0;
+      } else {
+        traf.in_bytes -= limit_bytes;
       }
 
-      limit_bits >>= 1;
+      if (traf.in_bytes < limit_bytes) {
+        defer_flush_bits |= (1 << (i * 2 + 1));  // Flush outbound ACK-s
+      } else {
+        flush_bit ^= 1;
+      }
+    } else {
+      traf.in_bytes = 0;
     }
+
+    // Outbound
+    if (flush_bit & 2) {
+      const UINT32 limit_bytes = group_limit->out_bytes;
+
+      if (limit_bytes == 0 || traf.out_bytes <= limit_bytes) {
+        traf.out_bytes = 0;
+      } else {
+        traf.out_bytes -= limit_bytes;
+      }
+
+      if (traf.out_bytes < limit_bytes) {
+        defer_flush_bits |= (1 << (i * 2));  // Flush inbound ACK-s
+      } else {
+        flush_bit ^= 2;
+      }
+    } else {
+      traf.out_bytes = 0;
+    }
+
+    // Adjust flushed bytes
+    group->traf = traf;
+
+    stat->group_flush_bits &= ~(flush_bit << (i * 2));
   }
+
+  return defer_flush_bits;
 }

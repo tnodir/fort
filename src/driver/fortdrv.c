@@ -413,12 +413,10 @@ fort_callout_flow_classify_v4 (const FWPS_INCOMING_METADATA_VALUES0 *inMetaValue
 {
   const UINT32 headerSize = inbound ? inMetaValues->transportHeaderSize : 0;
 
-  if (fort_stat_flow_classify(&g_device->stat, flowContext,
-      headerSize + dataSize, inbound)) {
-    fort_callout_classify_drop(classifyOut);
-  } else {
-    fort_callout_classify_permit(filter, classifyOut);
-  }
+  fort_stat_flow_classify(&g_device->stat, flowContext,
+    headerSize + dataSize, inbound);
+
+  fort_callout_classify_continue(classifyOut);
 }
 
 static void
@@ -500,7 +498,10 @@ fort_callout_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
     const UCHAR defer_flag = inbound
       ? FORT_STAT_FLOW_DEFER_IN : FORT_STAT_FLOW_DEFER_OUT;
-    const UCHAR flow_flags = FORT_STAT_FLOW_SPEED_LIMIT | defer_flag;
+    const UCHAR speed_limit = inbound
+      ? FORT_STAT_FLOW_SPEED_LIMIT_OUT : FORT_STAT_FLOW_SPEED_LIMIT_IN;
+
+    const UCHAR flow_flags = speed_limit | defer_flag;
     const BOOL defer_flow = (fort_stat_flow_flags(flow) & flow_flags) == flow_flags
       && !g_device->power_off;
 
@@ -538,10 +539,11 @@ fort_callout_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
     }
     #endif
 
-    /* Defer TCP zero ACK-packets */
+    /* Defer TCP Pure (zero length) ACK-packets */
     if (defer_flow && NET_BUFFER_DATA_LENGTH(netBuf) == headerOffset) {
       const NTSTATUS status = fort_defer_add(&g_device->defer,
-        inFixedValues, inMetaValues, netBufList, inbound);
+        inFixedValues, inMetaValues, netBufList, inbound,
+        flow->opt.group_index);
 
       if (NT_SUCCESS(status))
         goto block;
@@ -717,14 +719,16 @@ fort_callout_remove (void)
 }
 
 static void
-fort_callout_defer_flush (BOOL dispatchLevel)
+fort_callout_defer_flush (UINT32 list_bits, BOOL dispatchLevel)
 {
-  fort_defer_flush(&g_device->defer, fort_transport_inject_complete, dispatchLevel);
+  fort_defer_flush(&g_device->defer, fort_transport_inject_complete,
+                   list_bits, dispatchLevel);
 }
 
 static NTSTATUS
 fort_callout_force_reauth (const FORT_CONF_FLAGS old_conf_flags,
-                           const FORT_CONF_FLAGS conf_flags)
+                           const FORT_CONF_FLAGS conf_flags,
+                           UINT32 defer_flush_bits)
 {
   PFORT_STAT stat = &g_device->stat;
 
@@ -738,8 +742,12 @@ fort_callout_force_reauth (const FORT_CONF_FLAGS old_conf_flags,
     fort_stat_update(stat, conf_flags.log_stat);
 
     if (!conf_flags.log_stat) {
-      fort_callout_defer_flush(FALSE);
+      defer_flush_bits = FORT_DEFER_FLUSH_ALL;
     }
+  }
+
+  if (defer_flush_bits != 0) {
+    fort_callout_defer_flush(defer_flush_bits, FALSE);
   }
 
   if ((status = fort_prov_open(&engine)))
@@ -765,7 +773,8 @@ fort_callout_force_reauth (const FORT_CONF_FLAGS old_conf_flags,
 
  stat_prov:
     if (conf_flags.log_stat) {
-      if ((status = fort_prov_flow_register(engine, stat->limit_bits)))
+      const BOOL is_speed_limit = (stat->limit_bits != 0);
+      if ((status = fort_prov_flow_register(engine, is_speed_limit)))
         goto cleanup;
     }
   }
@@ -817,6 +826,8 @@ fort_callout_timer (void)
   PIRP irp = NULL;
   ULONG_PTR info;
 
+  UINT32 defer_flush_bits;
+
   /* Lock buffer */
   fort_buffer_dpc_begin(buf, &buf_lock_queue);
 
@@ -846,7 +857,7 @@ fort_callout_timer (void)
   }
 
   /* Flush process group statistics */
-  fort_stat_dpc_group_flush(stat);
+  defer_flush_bits = fort_stat_dpc_group_flush(stat);
 
   /* Unlock stat */
   fort_stat_dpc_end(&stat_lock_queue);
@@ -862,7 +873,7 @@ fort_callout_timer (void)
   }
 
   /* Flush deferred packets */
-  fort_callout_defer_flush(TRUE);
+  fort_callout_defer_flush(defer_flush_bits, TRUE);
 }
 
 static void
@@ -919,7 +930,8 @@ fort_device_cleanup (PDEVICE_OBJECT device, PIRP irp)
     RtlZeroMemory(&conf_flags, sizeof(FORT_CONF_FLAGS));
     conf_flags.prov_boot = g_device->prov_boot;
 
-    fort_callout_force_reauth(old_conf_flags, conf_flags);
+    fort_callout_force_reauth(old_conf_flags, conf_flags,
+                              FORT_DEFER_FLUSH_ALL);
   }
 
   /* Clear buffer */
@@ -980,9 +992,13 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
         const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(conf_ref);
         const FORT_CONF_FLAGS conf_flags = conf_ref->conf.flags;
 
+        const UINT32 defer_flush_bits =
+          (g_device->stat.limit_bits ^ conf_io->limit_bits);
+
         fort_stat_update_limits(&g_device->stat, conf_io);
 
-        status = fort_callout_force_reauth(old_conf_flags, conf_flags);
+        status = fort_callout_force_reauth(old_conf_flags, conf_flags,
+                                           defer_flush_bits);
       }
     }
     break;
@@ -994,7 +1010,11 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
     if (len == sizeof(FORT_CONF_FLAGS)) {
       const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_flags_set(conf_flags);
 
-      status = fort_callout_force_reauth(old_conf_flags, *conf_flags);
+      const UINT32 defer_flush_bits =
+        (old_conf_flags.group_bits != conf_flags->group_bits ? FORT_DEFER_FLUSH_ALL : 0);
+
+      status = fort_callout_force_reauth(old_conf_flags, *conf_flags,
+                                         defer_flush_bits);
     }
     break;
   }
@@ -1044,7 +1064,7 @@ fort_power_callback (PVOID context, PVOID event, PVOID specifics)
   g_device->power_off = power_off;
 
   if (power_off) {
-    fort_callout_defer_flush(FALSE);
+    fort_callout_defer_flush(FORT_DEFER_FLUSH_ALL, FALSE);
   }
 }
 
@@ -1134,7 +1154,7 @@ fort_driver_unload (PDRIVER_OBJECT driver)
   UNICODE_STRING device_link;
 
   if (g_device != NULL) {
-    fort_callout_defer_flush(FALSE);
+    fort_callout_defer_flush(FORT_DEFER_FLUSH_ALL, FALSE);
 
     fort_timer_close(&g_device->app_timer);
     fort_timer_close(&g_device->log_timer);

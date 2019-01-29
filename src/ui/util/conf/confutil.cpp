@@ -293,7 +293,7 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     quint32 addrGroupsOff, appGroupsOff;
     quint32 appPathsOff, appPermsOff, appPeriodsOff;
 
-#define CONF_DATA_OFFSET (data - drvConf->data)
+#define CONF_DATA_OFFSET quint32(data - drvConf->data)
     addrGroupsOff = CONF_DATA_OFFSET;
     writeNumbers(&data, addressGroupOffsets);
     writeAddressRanges(&data, addressRanges);
@@ -343,11 +343,11 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     drvConf->apps_off = appPathsOff;
 }
 
-quint16 ConfUtil::writeLimits(struct fort_conf_limit *limits,
+quint32 ConfUtil::writeLimits(struct fort_traf *limits,
                               const QList<AppGroup *> &appGroups)
 {
-    PFORT_CONF_LIMIT limit = &limits[0];
-    quint16 limitBits = 0;
+    PFORT_TRAF limit = &limits[0];
+    quint32 limitBits = 0;
 
     const int groupsCount = appGroups.size();
     for (int i = 0; i < groupsCount; ++i, ++limit) {
@@ -358,8 +358,11 @@ quint16 ConfUtil::writeLimits(struct fort_conf_limit *limits,
         limit->out_bytes = appGroup->enabled() && appGroup->limitOutEnabled()
                 ? appGroup->speedLimitOut() * 1024 / 2 : 0;
 
-        if (limit->in_bytes || limit->out_bytes) {
-            limitBits |= (1 << i);
+        if (limit->in_bytes) {
+            limitBits |= (1 << (i * 2));
+        }
+        if (limit->out_bytes) {
+            limitBits |= (1 << (i * 2 + 1));
         }
     }
 

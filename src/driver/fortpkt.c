@@ -1,5 +1,8 @@
 /* Fort Firewall ACK Packets Deferring & Re-injection */
 
+#define FORT_DEFER_FLUSH_ALL	0xFFFFFFFF
+#define FORT_DEFER_LIST_MAX	(FORT_CONF_GROUP_MAX * 2)
+
 #define HTONL(l)	_byteswap_ulong(l)
 #define NTOHL(l)	HTONL(l)
 #define HTONS(s)	_byteswap_ushort(s)
@@ -63,14 +66,21 @@ typedef struct fort_packet {
   };
 } FORT_PACKET, *PFORT_PACKET;
 
-typedef struct fort_defer {
-  HANDLE injection4_id;
-
+typedef struct fort_defer_list {
   PFORT_PACKET packet_head;
   PFORT_PACKET packet_tail;
+} FORT_DEFER_LIST, *PFORT_DEFER_LIST;
+
+typedef struct fort_defer {
+  UINT32 list_bits;
+
+  HANDLE injection4_id;
+
   PFORT_PACKET packet_free;
 
   tommy_arrayof packets;
+
+  FORT_DEFER_LIST lists[FORT_DEFER_LIST_MAX];  /* in/out-bounds */
 
   KSPIN_LOCK lock;
 } FORT_DEFER, *PFORT_DEFER;
@@ -111,10 +121,12 @@ fort_defer_add (PFORT_DEFER defer,
                 const FWPS_INCOMING_VALUES0 *inFixedValues,
                 const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
                 PNET_BUFFER_LIST netBufList,
-                BOOL inbound)
+                BOOL inbound, UCHAR group_index)
 {
   KLOCK_QUEUE_HANDLE lock_queue;
+  PFORT_DEFER_LIST defer_list;
   PFORT_PACKET pkt;
+  UINT16 list_index;
   NTSTATUS status;
 
   if (defer->injection4_id == INVALID_HANDLE_VALUE)
@@ -145,7 +157,11 @@ fort_defer_add (PFORT_DEFER defer,
       return STATUS_UNSUCCESSFUL;
   }
 
+  list_index = group_index * 2 + (inbound ? 0 : 1);
+
   KeAcquireInStackQueuedSpinLock(&defer->lock, &lock_queue);
+
+  defer_list = &defer->lists[list_index];
 
   if (defer->packet_free != NULL) {
     pkt = defer->packet_free;
@@ -162,11 +178,11 @@ fort_defer_add (PFORT_DEFER defer,
     pkt = tommy_arrayof_ref(&defer->packets, size);
   }
 
-  if (defer->packet_tail == NULL) {
-    defer->packet_head = defer->packet_tail = pkt;
+  if (defer_list->packet_tail == NULL) {
+    defer_list->packet_head = defer_list->packet_tail = pkt;
   } else {
-    defer->packet_tail->next = pkt;
-    defer->packet_tail = pkt;
+    defer_list->packet_tail->next = pkt;
+    defer_list->packet_tail = pkt;
   }
 
   pkt->inbound = inbound;
@@ -209,6 +225,9 @@ fort_defer_add (PFORT_DEFER defer,
   }
 
   FwpsReferenceNetBufferList0(netBufList, TRUE);
+
+  /* Set to be flushed bit */
+  defer->list_bits |= (1 << list_index);
 
   status = STATUS_SUCCESS;
 
@@ -327,10 +346,19 @@ fort_defer_inject_out (PFORT_DEFER defer, PFORT_PACKET pkt,
 static void
 fort_defer_flush (PFORT_DEFER defer,
                   FORT_INJECT_COMPLETE_FUNC complete_func,
+                  UINT32 list_bits,
                   BOOL dispatchLevel)
 {
   KLOCK_QUEUE_HANDLE lock_queue;
+  PFORT_DEFER_LIST defer_list;
   PFORT_PACKET pkt;
+  int i;
+
+  list_bits &= defer->list_bits;
+  if (list_bits == 0)
+    return;
+
+  pkt = NULL;
 
   if (dispatchLevel) {
     KeAcquireInStackQueuedSpinLockAtDpcLevel(&defer->lock, &lock_queue);
@@ -338,10 +366,25 @@ fort_defer_flush (PFORT_DEFER defer,
     KeAcquireInStackQueuedSpinLock(&defer->lock, &lock_queue);
   }
 
-  pkt = defer->packet_head;
-  if (pkt != NULL) {
-    defer->packet_head = defer->packet_tail = NULL;
+  for (i = 0; list_bits != 0; ++i) {
+    const UINT32 list_bit = (list_bits & 1);
+
+    list_bits >>= 1;
+    if (list_bit == 0)
+      continue;
+
+    defer_list = &defer->lists[i];
+
+    if (defer_list->packet_head != NULL) {
+      defer_list->packet_tail->next = pkt;
+      pkt = defer_list->packet_head;
+
+      defer_list->packet_head = defer_list->packet_tail = NULL;
+    }
   }
+
+  /* Clear flushed bits */
+  defer->list_bits &= ~list_bits;
 
   if (dispatchLevel) {
     KeReleaseInStackQueuedSpinLockFromDpcLevel(&lock_queue);
@@ -359,11 +402,11 @@ fort_defer_flush (PFORT_DEFER defer,
       : fort_defer_inject_out(defer, pkt, &clonedNetBufList, complete_func);
 
     if (!NT_SUCCESS(status)) {
+      DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                 "FORT: Defer: Injection prepare error: %x\n", status);
+
       if (clonedNetBufList != NULL) {
-        clonedNetBufList->Status = status;
-      } else {
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                   "FORT: Defer: Injection prepare error: %x\n", status);
+        clonedNetBufList->Status = STATUS_SUCCESS;
       }
 
       fort_defer_free(defer, pkt, clonedNetBufList, TRUE);
