@@ -262,12 +262,15 @@ void FortManager::closeWindow()
 void FortManager::showGraphWindow()
 {
     if (!m_graphWindow) {
-        m_graphWindow = new GraphWindow();
+        m_graphWindow = new GraphWindow(m_fortSettings);
 
         m_graphWindowState->install(m_graphWindow);
 
         connect(m_graphWindow, &GraphWindow::aboutToClose,
                 this, &FortManager::closeGraphWindow);
+
+        connect(m_databaseManager, &DatabaseManager::trafficAdded,
+                m_graphWindow, &GraphWindow::addTraffic);
     }
 
     m_graphWindow->show();
@@ -549,14 +552,12 @@ void FortManager::updateTrayMenu()
                 this, SLOT(showWindow()));
     addHotKey(optionsAction, fortSettings()->hotKeyOptions(), hotKeyEnabled);
 
-    m_graphWindowAction = addAction(
-                menu, QIcon(":/images/chart_line.png"), tr("Graph"),
-                this, SLOT(switchGraphWindow()), true);
-    addHotKey(m_graphWindowAction, fortSettings()->hotKeyGraph(), conf.logStat());
-
-    // TODO
-    m_graphWindowAction->setEnabled(false);
-    m_graphWindowAction->setVisible(false);
+    if (fortSettings()->graphWindowEnabled()) {
+        m_graphWindowAction = addAction(
+                    menu, QIcon(":/images/chart_line.png"), tr("Traffic Graph"),
+                    this, SLOT(switchGraphWindow()), true);
+        addHotKey(m_graphWindowAction, fortSettings()->hotKeyGraph(), conf.logStat());
+    }
 
     if (!conf.hasPassword() && !m_firewallConfToEdit) {
         menu->addSeparator();

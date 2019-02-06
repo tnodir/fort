@@ -1,6 +1,7 @@
 #ifndef FORTSETTINGS_H
 #define FORTSETTINGS_H
 
+#include <QColor>
 #include <QHash>
 #include <QObject>
 #include <QRect>
@@ -49,11 +50,37 @@ public:
     bool windowMaximized() const { return iniBool("window/maximized"); }
     void setWindowMaximized(bool on) { setIniValue("window/maximized", on); }
 
+    bool graphWindowEnabled() const { return iniBool("graphWindow/enabled"); }
+
     QRect graphWindowGeometry() const { return iniValue("graphWindow/geometry").toRect(); }
     void setGraphWindowGeometry(const QRect &v) { setIniValue("graphWindow/geometry", v); }
 
     bool graphWindowMaximized() const { return iniBool("graphWindow/maximized"); }
     void setGraphWindowMaximized(bool on) { setIniValue("graphWindow/maximized", on); }
+
+    bool graphWindowAlwaysOnTop() const { return iniBool("graphWindow/alwaysOnTop", true); }
+    void setGraphWindowAlwaysOnTop(bool on) { setIniValue("graphWindow/alwaysOnTop", on); }
+
+    bool graphWindowFrameless() const { return iniBool("graphWindow/frameless"); }
+    void setGraphWindowFrameless(bool on) { setIniValue("graphWindow/frameless", on); }
+
+    bool graphWindowClickThrough() const { return iniBool("graphWindow/clickThrough"); }
+    void setGraphWindowClickThrough(bool on) { setIniValue("graphWindow/clickThrough", on); }
+
+    int graphWindowOpacity() const { return iniInt("graphWindow/opacity", 70); }
+    void setGraphWindowOpacity(int v) { setIniValue("graphWindow/opacity", v); }
+
+    int graphWindowMaxSeconds() const { return iniInt("graphWindow/maxSeconds", 600); }
+    void setGraphWindowMaxSeconds(int v) { setIniValue("graphWindow/maxSeconds", v); }
+
+    QColor graphWindowColor() const { return iniColor("graphWindow/color", QColor(255, 255, 255)); }
+    void setGraphWindowColor(const QColor &v) { setIniColor("graphWindow/color", v); }
+
+    QColor graphWindowColorIn() const { return iniColor("graphWindow/colorIn", QColor(52, 196, 84)); }
+    void setGraphWindowColorIn(const QColor &v) { setIniColor("graphWindow/colorIn", v); }
+
+    QColor graphWindowColorOut() const { return iniColor("graphWindow/colorOut", QColor(235, 71, 63)); }
+    void setGraphWindowColorOut(const QColor &v) { setIniColor("graphWindow/colorOut", v); }
 
     qint32 quotaDayAlerted() const { return iniInt("quota/dayAlerted"); }
     void setQuotaDayAlerted(qint32 v) { setIniValue("quota/dayAlerted", v); }
@@ -125,6 +152,10 @@ private:
     qreal iniReal(const QString &key, qreal defaultValue = 0) const;
     QString iniText(const QString &key, const QString &defaultValue = QString()) const;
     QStringList iniList(const QString &key) const;
+
+    QColor iniColor(const QString &key, const QColor &defaultValue) const;
+    void setIniColor(const QString &key, const QColor &value,
+                     const QColor &defaultValue = QColor());
 
     QVariant iniValue(const QString &key,
                       const QVariant &defaultValue = QVariant()) const;

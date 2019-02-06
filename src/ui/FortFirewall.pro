@@ -24,6 +24,8 @@ SOURCES += \
     fortcommon.cpp \
     fortmanager.cpp \
     fortsettings.cpp \
+    graph/axistickerspeed.cpp \
+    graph/graphplot.cpp \
     graph/graphwindow.cpp \
     log/logbuffer.cpp \
     log/logentry.cpp \
@@ -81,6 +83,8 @@ HEADERS += \
     fortcommon.h \
     fortmanager.h \
     fortsettings.h \
+    graph/axistickerspeed.h \
+    graph/graphplot.h \
     graph/graphwindow.h \
     log/logbuffer.h \
     log/logentry.h \

@@ -27,7 +27,7 @@ ButtonPopup {
 
         const n = speedLimitValues.length;
         for (var i = list.length; i < n; ++i) {
-            list.push(netUtil.formatSpeed(speedLimitValues[i]));
+            list.push(formatSpeed(speedLimitValues[i]));
         }
         return list;
     }
@@ -45,13 +45,17 @@ ButtonPopup {
 
         var text = "";
         if (limitIn) {
-            text = "DL " + netUtil.formatSpeed(limitIn);
+            text = "DL " + formatSpeed(limitIn);
         }
         if (limitOut) {
             text += (text ? "; " : "")
-                    + "UL " + netUtil.formatSpeed(limitOut);
+                    + "UL " + formatSpeed(limitOut);
         }
         return text;
+    }
+
+    function formatSpeed(kbytes) {
+        return netUtil.formatSpeed(kbytes * 1024);
     }
 
     ColumnLayout {

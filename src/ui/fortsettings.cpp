@@ -373,6 +373,17 @@ QStringList FortSettings::iniList(const QString &key) const
     return iniValue(key).toStringList();
 }
 
+QColor FortSettings::iniColor(const QString &key, const QColor &defaultValue) const
+{
+    return QColor::fromRgba(iniUInt(key, defaultValue.rgba()));
+}
+
+void FortSettings::setIniColor(const QString &key, const QColor &value,
+                               const QColor &defaultValue)
+{
+    setIniValue(key, value.rgba(), defaultValue.rgba());
+}
+
 QVariant FortSettings::iniValue(const QString &key,
                                 const QVariant &defaultValue) const
 {

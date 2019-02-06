@@ -1,33 +1,187 @@
 #include "graphwindow.h"
 
+#include <QDebug>
 #include <QVBoxLayout>
 
-#include "qcustomplot.h"
+#include "../fortsettings.h"
+#include "../util/dateutil.h"
+#include "axistickerspeed.h"
+#include "graphplot.h"
 
-GraphWindow::GraphWindow(QWidget *parent) :
-    WidgetWindow(parent)
+GraphWindow::GraphWindow(FortSettings *fortSettings,
+                         QWidget *parent) :
+    WidgetWindow(parent),
+    m_fortSettings(fortSettings)
 {
     setupUi();
+    setupTimer();
 
-    setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint
+    setupWindow();
+
+    connect(m_fortSettings, &FortSettings::iniChanged, this, &GraphWindow::setupWindow);
+
+    setWindowTitle(tr("Traffic"));
+    setMinimumSize(QSize(200, 50));
+}
+
+void GraphWindow::setupWindow()
+{
+    setWindowFlags(Qt::Tool
                    | Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint
-                   //| Qt::FramelessWindowHint | Qt::WindowTransparentForInput
+                   | (m_fortSettings->graphWindowAlwaysOnTop()
+                      ? Qt::WindowStaysOnTopHint : Qt::Widget)
+                   | (m_fortSettings->graphWindowFrameless()
+                      ? Qt::FramelessWindowHint : Qt::Widget)
+                   | (m_fortSettings->graphWindowClickThrough()
+                      ? Qt::WindowTransparentForInput : Qt::Widget)
                    );
 
-    setWindowTitle(tr("Graph"));
-    setMinimumSize(QSize(200, 50));
+    setWindowOpacity(qreal(m_fortSettings->graphWindowOpacity()) / 100.0);
+
+    m_plot->setBackground(QBrush(m_fortSettings->graphWindowColor()));
 }
 
 void GraphWindow::setupUi()
 {
-    QCustomPlot *plot = new QCustomPlot(this);
-    plot->setContentsMargins(0, 0, 0, 0);
+    m_plot = new GraphPlot(this);
+    m_plot->setContentsMargins(0, 0, 0, 0);
 
-    QCPGraph *graph = plot->addGraph();
-    graph->setPen(QColor(250, 120, 0));
+    // Interactions
+    connect(m_plot, &GraphPlot::mouseDoubleClick, this, &GraphWindow::onMouseDoubleClick);
+    connect(m_plot, &GraphPlot::mouseDragBegin, this, &GraphWindow::onMouseDragBegin);
+    connect(m_plot, &GraphPlot::mouseDragMove, this, &GraphWindow::onMouseDragMove);
+    connect(m_plot, &GraphPlot::mouseDragEnd, this, &GraphWindow::onMouseDragEnd);
 
+    // Axis
+    m_plot->xAxis->setVisible(false);
+
+    m_plot->yAxis->setVisible(true);
+    m_plot->yAxis->setPadding(2);
+
+    // Axis Rect
+    auto axisRect = m_plot->axisRect();
+    axisRect->setMinimumMargins(QMargins(1, 1, 1, 1));
+
+    // Tick label
+    QSharedPointer<AxisTickerSpeed> ticker(new AxisTickerSpeed());
+    m_plot->yAxis->setTicker(ticker);
+
+    // Graph Inbound
+    m_graphIn = new QCPBars(m_plot->xAxis, m_plot->yAxis);
+    m_graphIn->setAntialiased(false);
+    m_graphIn->setPen(QPen(m_fortSettings->graphWindowColorIn()));
+    m_graphIn->setWidthType(QCPBars::wtAbsolute);
+    m_graphIn->setWidth(1);
+
+    // Graph Outbound
+    m_graphOut = new QCPBars(m_plot->xAxis, m_plot->yAxis);
+    m_graphOut->setAntialiased(false);
+    m_graphOut->setPen(QPen(m_fortSettings->graphWindowColorOut()));
+    m_graphOut->setWidthType(QCPBars::wtAbsolute);
+    m_graphOut->setWidth(1);
+
+    // Bars Group
+    QCPBarsGroup *group = new QCPBarsGroup(m_plot);
+    group->setSpacing(1);
+    group->append(m_graphIn);
+    group->append(m_graphOut);
+
+    // Widget Layout
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->setMargin(0);
-    mainLayout->addWidget(plot);
+    mainLayout->addWidget(m_plot);
     setLayout(mainLayout);
+}
+
+void GraphWindow::setupTimer()
+{
+    connect(&m_timer, &QTimer::timeout, this, &GraphWindow::addEmptyTraffic);
+
+    m_timer.start(1000);  // 1 second
+}
+
+void GraphWindow::onMouseDoubleClick(QMouseEvent *event)
+{
+    Q_UNUSED(event)
+
+    if (isFullScreen()) {
+        showNormal();
+    } else {
+        showFullScreen();
+    }
+}
+
+void GraphWindow::onMouseDragBegin(QMouseEvent *event)
+{
+    m_mousePressOffset = event->globalPos() - pos();
+
+    QGuiApplication::setOverrideCursor(Qt::SizeAllCursor);
+}
+
+void GraphWindow::onMouseDragMove(QMouseEvent *event)
+{
+    if (isMaximized() || isFullScreen())
+        return;
+
+    move(event->globalPos() - m_mousePressOffset);
+}
+
+void GraphWindow::onMouseDragEnd(QMouseEvent *event)
+{
+    Q_UNUSED(event)
+
+    QGuiApplication::restoreOverrideCursor();
+}
+
+void GraphWindow::addTraffic(qint64 unixTime, qint32 inBytes, qint32 outBytes)
+{
+    const qint64 rangeLower = unixTime - m_fortSettings->graphWindowMaxSeconds();
+
+    addData(m_graphIn, rangeLower, unixTime, inBytes);
+    addData(m_graphOut, rangeLower, unixTime, outBytes);
+
+    m_graphIn->rescaleValueAxis(false, true);
+    m_graphOut->rescaleValueAxis(false, true);
+
+    m_plot->xAxis->setRange(unixTime,
+                            m_plot->axisRect()->width() / 4,
+                            Qt::AlignRight);
+
+    m_plot->replot();
+}
+
+void GraphWindow::addEmptyTraffic()
+{
+    addTraffic(DateUtil::getUnixTime(), 0, 0);
+}
+
+void GraphWindow::addData(QCPBars *graph, qint64 rangeLower,
+                          qint64 unixTime, qint32 bytes)
+{
+    auto data = graph->data();
+
+    if (!data->isEmpty()) {
+        // Remove old keys
+        auto lo = data->constBegin();
+        if (lo->mainKey() < rangeLower) {
+            data->removeBefore(rangeLower);
+        }
+
+        // Check existing key
+        auto hi = data->constEnd() - 1;
+        if (unixTime == hi->mainKey()) {
+            if (bytes == 0)
+                return;
+
+            bytes += hi->mainValue();
+
+            data->removeAfter(unixTime);
+        }
+        else if (unixTime < hi->mainKey()) {
+            data->clear();
+        }
+    }
+
+    // Add data
+    data->add(QCPBarsData(unixTime, bytes));
 }

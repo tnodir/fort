@@ -46,6 +46,8 @@ public:
 signals:
     void appCreated(qint64 appId, const QString &appPath);
 
+    void trafficAdded(qint64 unixTime, qint32 inBytes, qint32 outBytes);
+
 public slots:
     void clear();
 

@@ -111,13 +111,13 @@ QString AppGroup::label() const
     if (limitInEnabled() && speedLimitIn() != 0) {
         text += QLatin1Char(' ')
                 + QChar(0x2207)  // ∇
-                + NetUtil::formatSpeed(speedLimitIn());
+                + NetUtil::formatSpeed(speedLimitIn() * 1024);
     }
 
     if (limitOutEnabled() && speedLimitOut() != 0) {
         text += QLatin1Char(' ')
                 + QChar(0x2206)  // ∆
-                + NetUtil::formatSpeed(speedLimitOut());
+                + NetUtil::formatSpeed(speedLimitOut() * 1024);
     }
 
     if (periodEnabled()) {

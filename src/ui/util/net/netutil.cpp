@@ -81,10 +81,10 @@ QString NetUtil::formatDataSize(qint64 bytes, int precision)
 #endif
 }
 
-QString NetUtil::formatSpeed(quint32 kbytes)
+QString NetUtil::formatSpeed(quint32 bytes)
 {
-    const int prec = (kbytes < 1024) ? 0 : 1;
-    return formatDataSize(kbytes * 1024, prec)
+    const int prec = (bytes < 1024 * 1024) ? 0 : 1;
+    return formatDataSize(bytes, prec)
             + QLatin1String("/s");
 }
 
