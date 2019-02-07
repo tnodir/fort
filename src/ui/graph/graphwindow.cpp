@@ -65,12 +65,14 @@ void GraphWindow::setupUi()
 
     auto yAxis = m_plot->yAxis;
     yAxis->setVisible(true);
-    yAxis->setPadding(2);
+    yAxis->setPadding(1);
+    yAxis->setTickLabelPadding(2);
 
-    yAxis->setBasePen(adjustPen(yAxis->basePen(),
-                                m_fortSettings->graphWindowAxisColor()));
-    yAxis->setTickPen(adjustPen(yAxis->tickPen(),
-                                m_fortSettings->graphWindowAxisColor()));
+    const QColor axisColor = m_fortSettings->graphWindowAxisColor();
+    yAxis->setBasePen(adjustPen(yAxis->basePen(), axisColor));
+    yAxis->setTickPen(adjustPen(yAxis->tickPen(), axisColor));
+    yAxis->setSubTickPen(adjustPen(yAxis->subTickPen(), axisColor));
+
     yAxis->setTickLabelColor(m_fortSettings->graphWindowTickLabelColor());
     yAxis->setLabelColor(m_fortSettings->graphWindowLabelColor());
 
