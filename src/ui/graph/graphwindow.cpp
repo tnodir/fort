@@ -128,10 +128,10 @@ void GraphWindow::onMouseDoubleClick(QMouseEvent *event)
     if (event->button() != Qt::LeftButton)
         return;
 
-    if (isFullScreen()) {
+    if (isMaximized() || isFullScreen()) {
         showNormal();
     } else {
-        showFullScreen();
+        showMaximized();
     }
 }
 
