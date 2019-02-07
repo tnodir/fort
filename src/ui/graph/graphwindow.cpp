@@ -237,6 +237,9 @@ void GraphWindow::addData(QCPBars *graph, qint64 rangeLower,
 
 void GraphWindow::updateWindowTitleSpeed()
 {
+    if (windowFlags() & Qt::FramelessWindowHint)
+        return;
+
     const auto inBytes = m_graphIn->data()->isEmpty()
             ? 0 : (m_graphIn->data()->constEnd() - 1)->mainValue();
     const auto outBytes = m_graphOut->data()->isEmpty()
