@@ -5,6 +5,7 @@
 
 #include "../fortsettings.h"
 #include "../util/dateutil.h"
+#include "../util/net/netutil.h"
 #include "axistickerspeed.h"
 #include "graphplot.h"
 
@@ -20,7 +21,6 @@ GraphWindow::GraphWindow(FortSettings *fortSettings,
 
     connect(m_fortSettings, &FortSettings::iniChanged, this, &GraphWindow::setupWindow);
 
-    setWindowTitle(tr("Traffic"));
     setMinimumSize(QSize(100, 50));
 }
 
@@ -38,7 +38,7 @@ void GraphWindow::setupWindow()
                       ? Qt::WindowTransparentForInput : Qt::Widget)
                    );
 
-    setWindowOpacity(qreal(m_fortSettings->graphWindowOpacity()) / 100.0);
+    setWindowOpacityPercent(m_fortSettings->graphWindowOpacity());
 
     m_plot->setBackground(QBrush(m_fortSettings->graphWindowColor()));
 
@@ -56,6 +56,8 @@ void GraphWindow::setupUi()
     connect(m_plot, &GraphPlot::resized, this, &GraphWindow::addEmptyTraffic);
 
     connect(m_plot, &GraphPlot::mouseDoubleClick, this, &GraphWindow::onMouseDoubleClick);
+    connect(m_plot, &GraphPlot::mouseRightClick, this, &GraphWindow::mouseRightClick);
+
     connect(m_plot, &GraphPlot::mouseDragBegin, this, &GraphWindow::onMouseDragBegin);
     connect(m_plot, &GraphPlot::mouseDragMove, this, &GraphWindow::onMouseDragMove);
     connect(m_plot, &GraphPlot::mouseDragEnd, this, &GraphWindow::onMouseDragEnd);
@@ -123,7 +125,8 @@ void GraphWindow::setupTimer()
 
 void GraphWindow::onMouseDoubleClick(QMouseEvent *event)
 {
-    Q_UNUSED(event)
+    if (event->button() != Qt::LeftButton)
+        return;
 
     if (isFullScreen()) {
         showNormal();
@@ -154,6 +157,20 @@ void GraphWindow::onMouseDragEnd(QMouseEvent *event)
     QGuiApplication::restoreOverrideCursor();
 }
 
+void GraphWindow::enterEvent(QEvent *event)
+{
+    Q_UNUSED(event)
+
+    setWindowOpacityPercent(m_fortSettings->graphWindowHoverOpacity());
+}
+
+void GraphWindow::leaveEvent(QEvent *event)
+{
+    Q_UNUSED(event)
+
+    setWindowOpacityPercent(m_fortSettings->graphWindowOpacity());
+}
+
 void GraphWindow::addTraffic(qint64 unixTime, qint32 inBytes, qint32 outBytes)
 {
     const qint64 rangeLower = unixTime - m_fortSettings->graphWindowMaxSeconds();
@@ -178,6 +195,8 @@ void GraphWindow::addTraffic(qint64 unixTime, qint32 inBytes, qint32 outBytes)
     }
 
     m_plot->replot();
+
+    updateWindowTitleSpeed();
 }
 
 void GraphWindow::addEmptyTraffic()
@@ -214,6 +233,26 @@ void GraphWindow::addData(QCPBars *graph, qint64 rangeLower,
 
     // Add data
     data->add(QCPBarsData(unixTime, bytes));
+}
+
+void GraphWindow::updateWindowTitleSpeed()
+{
+    const auto inBytes = m_graphIn->data()->isEmpty()
+            ? 0 : (m_graphIn->data()->constEnd() - 1)->mainValue();
+    const auto outBytes = m_graphOut->data()->isEmpty()
+            ? 0 : (m_graphOut->data()->constEnd() - 1)->mainValue();
+
+    setWindowTitle(QChar(0x2207)  // ∇
+                   + NetUtil::formatSpeed(inBytes)
+                   + QLatin1Char(' ')
+                   + QChar(0x2206)  // ∆
+                   + NetUtil::formatSpeed(outBytes)
+                   );
+}
+
+void GraphWindow::setWindowOpacityPercent(int percent)
+{
+    setWindowOpacity(qreal(100 - qBound(0, percent, 100)) / 100.0);
 }
 
 QPen GraphWindow::adjustPen(const QPen &pen, const QColor &color)

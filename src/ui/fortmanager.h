@@ -49,6 +49,7 @@ signals:
 public slots:
     void showTrayIcon();
     void showTrayMessage(const QString &message);
+    void showTrayMenu(QMouseEvent *event);
 
     void showWindow();
     void closeWindow();

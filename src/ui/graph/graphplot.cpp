@@ -48,4 +48,7 @@ void GraphPlot::mouseReleaseEvent(QMouseEvent *event)
         m_mouseDragging = false;
         emit mouseDragEnd(event);
     }
+    else if (event->button() == Qt::RightButton) {
+        emit mouseRightClick(event);
+    }
 }

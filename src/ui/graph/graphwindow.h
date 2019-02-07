@@ -18,6 +18,7 @@ public:
                          QWidget *parent = nullptr);
 
 signals:
+    void mouseRightClick(QMouseEvent *event);
 
 public slots:
     void addTraffic(qint64 unixTime, qint32 inBytes, qint32 outBytes);
@@ -40,7 +41,14 @@ private:
     void addData(QCPBars *graph, qint64 rangeLower,
                  qint64 unixTime, qint32 bytes);
 
+    void updateWindowTitleSpeed();
+    void setWindowOpacityPercent(int percent);
+
     static QPen adjustPen(const QPen &pen, const QColor &color);
+
+protected:
+    void enterEvent(QEvent *event) override;
+    void leaveEvent(QEvent *event) override;
 
 private:
     FortSettings *m_fortSettings;

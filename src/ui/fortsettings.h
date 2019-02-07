@@ -67,8 +67,11 @@ public:
     bool graphWindowClickThrough() const { return iniBool("graphWindow/clickThrough"); }
     void setGraphWindowClickThrough(bool on) { setIniValue("graphWindow/clickThrough", on); }
 
-    int graphWindowOpacity() const { return iniInt("graphWindow/opacity", 90); }
+    int graphWindowOpacity() const { return iniInt("graphWindow/opacity", 10); }
     void setGraphWindowOpacity(int v) { setIniValue("graphWindow/opacity", v); }
+
+    int graphWindowHoverOpacity() const { return iniInt("graphWindow/hoverOpacity", 5); }
+    void setGraphWindowHoverOpacity(int v) { setIniValue("graphWindow/hoverOpacity", v); }
 
     int graphWindowMaxSeconds() const { return iniInt("graphWindow/maxSeconds", 500); }
     void setGraphWindowMaxSeconds(int v) { setIniValue("graphWindow/maxSeconds", v); }

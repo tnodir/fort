@@ -12,6 +12,7 @@ public:
 
 signals:
     void resized(QResizeEvent *event);
+    void mouseRightClick(QMouseEvent *event);
     void mouseDragBegin(QMouseEvent *event);
     void mouseDragMove(QMouseEvent *event);
     void mouseDragEnd(QMouseEvent *event);

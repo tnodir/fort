@@ -226,6 +226,14 @@ void FortManager::showTrayMessage(const QString &message)
     m_trayIcon->showMessage(qApp->applicationDisplayName(), message);
 }
 
+void FortManager::showTrayMenu(QMouseEvent *event)
+{
+    QMenu *menu = m_trayIcon->contextMenu();
+    if (!menu) return;
+
+    menu->popup(event->globalPos());
+}
+
 void FortManager::showWindow()
 {
     if (!m_engine) {
@@ -268,6 +276,9 @@ void FortManager::showGraphWindow()
 
         connect(m_graphWindow, &GraphWindow::aboutToClose,
                 this, &FortManager::closeGraphWindow);
+
+        connect(m_graphWindow, &GraphWindow::mouseRightClick,
+                this, &FortManager::showTrayMenu);
 
         connect(m_databaseManager, &DatabaseManager::trafficAdded,
                 m_graphWindow, &GraphWindow::addTraffic);
