@@ -9,6 +9,13 @@ GraphPlot::GraphPlot(QWidget *parent) :
 {
 }
 
+void GraphPlot::resizeEvent(QResizeEvent *event)
+{
+    QCustomPlot::resizeEvent(event);
+
+    emit resized(event);
+}
+
 void GraphPlot::mousePressEvent(QMouseEvent *event)
 {
     QCustomPlot::mousePressEvent(event);

@@ -16,7 +16,6 @@ double AxisTickerSpeed::getTickStep(const QCPRange &range)
 
 QString AxisTickerSpeed::getTickLabel(double tick, const QLocale &locale,
                                       QChar formatChar, int precision)
-
 {
     Q_UNUSED(locale)
     Q_UNUSED(formatChar)

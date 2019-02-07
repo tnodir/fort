@@ -40,6 +40,8 @@ private:
     void addData(QCPBars *graph, qint64 rangeLower,
                  qint64 unixTime, qint32 bytes);
 
+    static QPen adjustPen(const QPen &pen, const QColor &color);
+
 private:
     FortSettings *m_fortSettings;
 

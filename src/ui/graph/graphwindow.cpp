@@ -21,11 +21,13 @@ GraphWindow::GraphWindow(FortSettings *fortSettings,
     connect(m_fortSettings, &FortSettings::iniChanged, this, &GraphWindow::setupWindow);
 
     setWindowTitle(tr("Traffic"));
-    setMinimumSize(QSize(200, 50));
+    setMinimumSize(QSize(100, 50));
 }
 
 void GraphWindow::setupWindow()
 {
+    const bool visible = isVisible();
+
     setWindowFlags(Qt::Tool
                    | Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint
                    | (m_fortSettings->graphWindowAlwaysOnTop()
@@ -39,6 +41,10 @@ void GraphWindow::setupWindow()
     setWindowOpacity(qreal(m_fortSettings->graphWindowOpacity()) / 100.0);
 
     m_plot->setBackground(QBrush(m_fortSettings->graphWindowColor()));
+
+    if (visible) {
+        show();  // setWindowFlags() hides the window
+    }
 }
 
 void GraphWindow::setupUi()
@@ -47,6 +53,8 @@ void GraphWindow::setupUi()
     m_plot->setContentsMargins(0, 0, 0, 0);
 
     // Interactions
+    connect(m_plot, &GraphPlot::resized, this, &GraphWindow::addEmptyTraffic);
+
     connect(m_plot, &GraphPlot::mouseDoubleClick, this, &GraphWindow::onMouseDoubleClick);
     connect(m_plot, &GraphPlot::mouseDragBegin, this, &GraphWindow::onMouseDragBegin);
     connect(m_plot, &GraphPlot::mouseDragMove, this, &GraphWindow::onMouseDragMove);
@@ -55,16 +63,27 @@ void GraphWindow::setupUi()
     // Axis
     m_plot->xAxis->setVisible(false);
 
-    m_plot->yAxis->setVisible(true);
-    m_plot->yAxis->setPadding(2);
+    auto yAxis = m_plot->yAxis;
+    yAxis->setVisible(true);
+    yAxis->setPadding(2);
+
+    yAxis->setBasePen(adjustPen(yAxis->basePen(),
+                                m_fortSettings->graphWindowAxisColor()));
+    yAxis->setTickPen(adjustPen(yAxis->tickPen(),
+                                m_fortSettings->graphWindowAxisColor()));
+    yAxis->setTickLabelColor(m_fortSettings->graphWindowTickLabelColor());
+    yAxis->setLabelColor(m_fortSettings->graphWindowLabelColor());
+
+    yAxis->grid()->setPen(adjustPen(yAxis->grid()->pen(),
+                                    m_fortSettings->graphWindowGridColor()));
 
     // Axis Rect
     auto axisRect = m_plot->axisRect();
     axisRect->setMinimumMargins(QMargins(1, 1, 1, 1));
 
-    // Tick label
+    // Axis Ticker
     QSharedPointer<AxisTickerSpeed> ticker(new AxisTickerSpeed());
-    m_plot->yAxis->setTicker(ticker);
+    yAxis->setTicker(ticker);
 
     // Graph Inbound
     m_graphIn = new QCPBars(m_plot->xAxis, m_plot->yAxis);
@@ -140,12 +159,21 @@ void GraphWindow::addTraffic(qint64 unixTime, qint32 inBytes, qint32 outBytes)
     addData(m_graphIn, rangeLower, unixTime, inBytes);
     addData(m_graphOut, rangeLower, unixTime, outBytes);
 
-    m_graphIn->rescaleValueAxis(false, true);
-    m_graphOut->rescaleValueAxis(false, true);
-
     m_plot->xAxis->setRange(unixTime,
                             m_plot->axisRect()->width() / 4,
                             Qt::AlignRight);
+
+    m_graphIn->rescaleValueAxis(false, true);
+    m_graphOut->rescaleValueAxis(true, true);
+
+    // Avoid negative Y range
+    QCPRange yRange = m_plot->yAxis->range();
+    if (yRange.lower < 0) {
+        yRange.upper -= yRange.lower;
+        yRange.lower = 0;
+
+        m_plot->yAxis->setRange(yRange);
+    }
 
     m_plot->replot();
 }
@@ -184,4 +212,11 @@ void GraphWindow::addData(QCPBars *graph, qint64 rangeLower,
 
     // Add data
     data->add(QCPBarsData(unixTime, bytes));
+}
+
+QPen GraphWindow::adjustPen(const QPen &pen, const QColor &color)
+{
+    QPen newPen(pen);
+    newPen.setColor(color);
+    return newPen;
 }

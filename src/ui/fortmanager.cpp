@@ -552,14 +552,16 @@ void FortManager::updateTrayMenu()
                 this, SLOT(showWindow()));
     addHotKey(optionsAction, fortSettings()->hotKeyOptions(), hotKeyEnabled);
 
-    if (fortSettings()->graphWindowEnabled()) {
-        m_graphWindowAction = addAction(
-                    menu, QIcon(":/images/chart_line.png"), tr("Traffic Graph"),
-                    this, SLOT(switchGraphWindow()), true);
-        addHotKey(m_graphWindowAction, fortSettings()->hotKeyGraph(), conf.logStat());
-    }
-
     if (!conf.hasPassword() && !m_firewallConfToEdit) {
+        if (fortSettings()->graphWindowEnabled()) {
+            m_graphWindowAction = addAction(
+                        menu, QIcon(":/images/chart_bar.png"), tr("Traffic Graph"),
+                        this, SLOT(switchGraphWindow()), true,
+                        (m_graphWindow != nullptr));
+            addHotKey(m_graphWindowAction, fortSettings()->hotKeyGraph(),
+                      conf.logStat());
+        }
+
         menu->addSeparator();
 
         m_filterEnabledAction = addAction(

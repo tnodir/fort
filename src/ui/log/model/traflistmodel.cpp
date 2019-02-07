@@ -187,7 +187,7 @@ QString TrafListModel::formatTrafUnit(qint64 bytes) const
 
     const qint64 unitMult = unitMults.at(trafUnit);
 
-    return QLocale().toString(qreal(bytes) / unitMult, 'f', trafPrec);
+    return QLocale::c().toString(qreal(bytes) / unitMult, 'f', trafPrec);
 }
 
 QString TrafListModel::formatTrafTime(qint32 trafTime) const

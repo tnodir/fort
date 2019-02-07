@@ -396,7 +396,8 @@ QVariant FortSettings::iniValue(const QString &key,
 void FortSettings::setIniValue(const QString &key, const QVariant &value,
                                const QVariant &defaultValue)
 {
-    if (m_ini->value(key, defaultValue) == value)
+    if (!defaultValue.isNull()
+            && m_ini->value(key, defaultValue) == value)
         return;
 
     m_ini->setValue(key, value);

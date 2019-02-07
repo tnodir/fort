@@ -77,15 +77,15 @@ QString NetUtil::formatDataSize(qint64 bytes, int precision)
 #if QT_VERSION < QT_VERSION_CHECK(5, 10, 0)
     return QString::number(double(bytes), 'f', precision);
 #else
-    return QLocale().formattedDataSize(bytes, precision);
+    return QLocale::c().formattedDataSize(bytes, precision);
 #endif
 }
 
 QString NetUtil::formatSpeed(quint32 bytes)
 {
-    const int prec = (bytes < 1024 * 1024) ? 0 : 1;
-    return formatDataSize(bytes, prec)
-            + QLatin1String("/s");
+    QString text = formatDataSize(bytes, 1);
+    text.remove(QLatin1String(".0"));
+    return text + QLatin1String("/s");
 }
 
 QString NetUtil::getHostName(const QString &address)

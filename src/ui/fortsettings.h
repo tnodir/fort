@@ -70,7 +70,7 @@ public:
     int graphWindowOpacity() const { return iniInt("graphWindow/opacity", 70); }
     void setGraphWindowOpacity(int v) { setIniValue("graphWindow/opacity", v); }
 
-    int graphWindowMaxSeconds() const { return iniInt("graphWindow/maxSeconds", 600); }
+    int graphWindowMaxSeconds() const { return iniInt("graphWindow/maxSeconds", 500); }
     void setGraphWindowMaxSeconds(int v) { setIniValue("graphWindow/maxSeconds", v); }
 
     QColor graphWindowColor() const { return iniColor("graphWindow/color", QColor(255, 255, 255)); }
@@ -81,6 +81,18 @@ public:
 
     QColor graphWindowColorOut() const { return iniColor("graphWindow/colorOut", QColor(235, 71, 63)); }
     void setGraphWindowColorOut(const QColor &v) { setIniColor("graphWindow/colorOut", v); }
+
+    QColor graphWindowAxisColor() const { return iniColor("graphWindow/axisColor", QColor(0, 0, 0)); }
+    void setGraphWindowAxisColor(const QColor &v) { setIniColor("graphWindow/axisColor", v); }
+
+    QColor graphWindowTickLabelColor() const { return iniColor("graphWindow/tickLabelColor", QColor(0, 0, 0)); }
+    void setGraphWindowTickLabelColor(const QColor &v) { setIniColor("graphWindow/tickLabelColor", v); }
+
+    QColor graphWindowLabelColor() const { return iniColor("graphWindow/labelColor", QColor(0, 0, 0)); }
+    void setGraphWindowLabelColor(const QColor &v) { setIniColor("graphWindow/labelColor", v); }
+
+    QColor graphWindowGridColor() const { return iniColor("graphWindow/gridColor", QColor(200, 200, 200)); }
+    void setGraphWindowGridColor(const QColor &v) { setIniColor("graphWindow/gridColor", v); }
 
     qint32 quotaDayAlerted() const { return iniInt("quota/dayAlerted"); }
     void setQuotaDayAlerted(qint32 v) { setIniValue("quota/dayAlerted", v); }
