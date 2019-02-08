@@ -123,9 +123,9 @@ extern "C" {
 ** [sqlite3_libversion_number()], [sqlite3_sourceid()],
 ** [sqlite_version()] and [sqlite_source_id()].
 */
-#define SQLITE_VERSION        "3.27.0"
-#define SQLITE_VERSION_NUMBER 3027000
-#define SQLITE_SOURCE_ID      "2019-02-07 17:02:52 97744701c3bd414e6c9d7182639d8c2ce7cf124c4fce625071ae65658ac61713"
+#define SQLITE_VERSION        "3.27.1"
+#define SQLITE_VERSION_NUMBER 3027001
+#define SQLITE_SOURCE_ID      "2019-02-08 13:17:39 0eca3dd3d38b31c92b49ca2d311128b74584714d9e7de895b1a6286ef959a1dd"
 
 /*
 ** CAPI3REF: Run-Time Library Version Numbers
