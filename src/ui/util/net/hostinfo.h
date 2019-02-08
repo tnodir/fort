@@ -11,7 +11,7 @@ class HostInfo : public QObject
 
 public:
     explicit HostInfo(QObject *parent = nullptr);
-    virtual ~HostInfo();
+    ~HostInfo() override;
 
 signals:
     void lookupFinished(const QString &address, const QString &hostName);

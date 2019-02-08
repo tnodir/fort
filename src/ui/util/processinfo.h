@@ -16,7 +16,7 @@ class ProcessInfo : public QObject
 public:
     explicit ProcessInfo(quint32 pid = PROC_INVALID_PID,
                          QObject *parent = nullptr);
-    virtual ~ProcessInfo();
+    ~ProcessInfo() override;
 
     quint32 pid() const { return m_pid; }
 

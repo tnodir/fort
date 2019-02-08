@@ -14,7 +14,7 @@ class DriverManager : public QObject
 
 public:
     explicit DriverManager(QObject *parent = nullptr);
-    virtual ~DriverManager();
+    ~DriverManager() override;
 
     DriverWorker *driverWorker() const { return m_driverWorker; }
 

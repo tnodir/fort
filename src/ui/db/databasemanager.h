@@ -19,7 +19,7 @@ public:
     explicit DatabaseManager(const QString &filePath,
                              QuotaManager *quotaManager,
                              QObject *parent = nullptr);
-    virtual ~DatabaseManager();
+    ~DatabaseManager() override;
 
     const FirewallConf *firewallConf() const { return m_conf; }
     void setFirewallConf(const FirewallConf *conf);
@@ -46,7 +46,7 @@ public:
 signals:
     void appCreated(qint64 appId, const QString &appPath);
 
-    void trafficAdded(qint64 unixTime, qint32 inBytes, qint32 outBytes);
+    void trafficAdded(qint64 unixTime, quint32 inBytes, quint32 outBytes);
 
 public slots:
     void clear();

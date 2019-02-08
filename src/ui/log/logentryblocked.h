@@ -9,7 +9,7 @@ public:
     explicit LogEntryBlocked(quint32 ip = 0, quint32 pid = 0,
                              const QString &kernelPath = QString());
 
-    virtual LogEntry::LogType type() const { return AppBlocked; }
+    LogEntry::LogType type() const override { return AppBlocked; }
 
     quint32 ip() const { return m_ip; }
     void setIp(quint32 ip);

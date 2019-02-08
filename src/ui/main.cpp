@@ -22,9 +22,9 @@ int main(int argc, char *argv[])
     QApplication::setQuitOnLastWindowClosed(false);
 
     QApplication app(argc, argv);
-    app.setApplicationName(APP_NAME);
-    app.setApplicationVersion(APP_VERSION_STR);
-    app.setApplicationDisplayName(APP_NAME " v" APP_VERSION_STR);
+    QApplication::setApplicationName(APP_NAME);
+    QApplication::setApplicationVersion(APP_VERSION_STR);
+    QApplication::setApplicationDisplayName(APP_NAME " v" APP_VERSION_STR);
 
     FortSettings fortSettings(qApp->arguments());
 
@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    ControlManager controlManager(app.applicationName(),
+    ControlManager controlManager(QApplication::applicationName(),
                                   fortSettings.controlPath());
 
     // Send control request to running instance
@@ -66,5 +66,5 @@ int main(int argc, char *argv[])
         return FORT_ERROR_CONTROL;
     }
 
-    return app.exec();
+    return QApplication::exec();
 }

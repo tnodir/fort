@@ -26,7 +26,7 @@ public:
     Q_ENUM(TaskType)
 
     explicit TaskInfo(TaskInfo::TaskType type, QObject *parent = nullptr);
-    virtual ~TaskInfo();
+    ~TaskInfo() override;
 
     bool enabled() const { return m_enabled; }
     void setEnabled(bool enabled);

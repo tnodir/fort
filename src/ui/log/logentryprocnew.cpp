@@ -2,7 +2,6 @@
 
 LogEntryProcNew::LogEntryProcNew(quint32 pid,
                                  const QString &kernelPath) :
-    LogEntry(),
     m_pid(pid),
     m_kernelPath(kernelPath)
 {

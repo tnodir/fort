@@ -2,7 +2,6 @@
 
 LogEntryBlocked::LogEntryBlocked(quint32 ip, quint32 pid,
                                  const QString &kernelPath) :
-    LogEntry(),
     m_ip(ip),
     m_pid(pid),
     m_kernelPath(kernelPath)

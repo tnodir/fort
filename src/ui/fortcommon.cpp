@@ -177,5 +177,5 @@ quint16 FortCommon::confAppPeriodBits(const void *drvConf, int hour)
 
 void FortCommon::provUnregister()
 {
-    fort_prov_unregister(0);
+    fort_prov_unregister(nullptr);
 }

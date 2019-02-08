@@ -8,7 +8,7 @@ class GraphPlot : public QCustomPlot
     Q_OBJECT
 
 public:
-    explicit GraphPlot(QWidget *parent = 0);
+    explicit GraphPlot(QWidget *parent = nullptr);
 
 signals:
     void resized(QResizeEvent *event);

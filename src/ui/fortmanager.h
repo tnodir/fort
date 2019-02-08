@@ -33,7 +33,7 @@ class FortManager : public QObject
 public:
     explicit FortManager(FortSettings *fortSettings,
                          QObject *parent = nullptr);
-    virtual ~FortManager();
+    ~FortManager() override;
 
     FortSettings *fortSettings() const { return m_fortSettings; }
     FirewallConf *firewallConf() const { return m_firewallConf; }

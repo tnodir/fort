@@ -16,7 +16,7 @@ public:
     explicit ControlManager(const QString &globalName,
                             const QString &scriptPath,
                             QObject *parent = nullptr);
-    virtual ~ControlManager();
+    ~ControlManager() override;
 
     bool isClient() const { return m_isClient; }
 

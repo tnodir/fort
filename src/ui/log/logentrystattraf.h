@@ -9,7 +9,7 @@ public:
     explicit LogEntryStatTraf(quint16 procCount = 0,
                               const quint32 *procTrafBytes = nullptr);
 
-    virtual LogEntry::LogType type() const { return StatTraf; }
+    LogEntry::LogType type() const override { return StatTraf; }
 
     quint16 procCount() const { return m_procCount; }
     void setProcCount(quint16 procCount);

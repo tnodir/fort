@@ -2,10 +2,6 @@
 
 #include "../util/net/netutil.h"
 
-AxisTickerSpeed::AxisTickerSpeed()
-{
-}
-
 double AxisTickerSpeed::getTickStep(const QCPRange &range)
 {
     const double exactStep = range.size() / tickCount();

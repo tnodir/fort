@@ -2,7 +2,6 @@
 
 LogEntryStatTraf::LogEntryStatTraf(quint16 procCount,
                                    const quint32 *procTrafBytes) :
-    LogEntry(),
     m_procCount(procCount),
     m_procTrafBytes(procTrafBytes)
 {

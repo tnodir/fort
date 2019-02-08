@@ -21,7 +21,7 @@ signals:
     void mouseRightClick(QMouseEvent *event);
 
 public slots:
-    void addTraffic(qint64 unixTime, qint32 inBytes, qint32 outBytes);
+    void addTraffic(qint64 unixTime, quint32 inBytes, quint32 outBytes);
 
 private slots:
     void setupWindow();
@@ -39,7 +39,7 @@ private:
     void setupTimer();
 
     void addData(QCPBars *graph, qint64 rangeLower,
-                 qint64 unixTime, qint32 bytes);
+                 qint64 unixTime, quint32 bytes);
 
     void updateWindowTitleSpeed();
     void setWindowOpacityPercent(int percent);

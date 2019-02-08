@@ -80,11 +80,10 @@ void LogManager::cancelAsyncIo()
 
 LogBuffer *LogManager::getFreeBuffer()
 {
-    if (m_freeBuffers.isEmpty()) {
+    if (m_freeBuffers.isEmpty())
         return new LogBuffer(FortCommon::bufferSize(), this);
-    } else {
-        return m_freeBuffers.takeLast();
-    }
+
+    return m_freeBuffers.takeLast();
 }
 
 void LogManager::addFreeBuffer(LogBuffer *logBuffer)

@@ -171,7 +171,7 @@ void GraphWindow::leaveEvent(QEvent *event)
     setWindowOpacityPercent(m_fortSettings->graphWindowOpacity());
 }
 
-void GraphWindow::addTraffic(qint64 unixTime, qint32 inBytes, qint32 outBytes)
+void GraphWindow::addTraffic(qint64 unixTime, quint32 inBytes, quint32 outBytes)
 {
     const qint64 rangeLower = unixTime - m_fortSettings->graphWindowMaxSeconds();
 
@@ -205,7 +205,7 @@ void GraphWindow::addEmptyTraffic()
 }
 
 void GraphWindow::addData(QCPBars *graph, qint64 rangeLower,
-                          qint64 unixTime, qint32 bytes)
+                          qint64 unixTime, quint32 bytes)
 {
     auto data = graph->data();
 
@@ -218,11 +218,11 @@ void GraphWindow::addData(QCPBars *graph, qint64 rangeLower,
 
         // Check existing key
         auto hi = data->constEnd() - 1;
-        if (unixTime == hi->mainKey()) {
+        if (qFuzzyCompare(unixTime, hi->mainKey())) {
             if (bytes == 0)
                 return;
 
-            bytes += hi->mainValue();
+            bytes += quint32(hi->mainValue());
 
             data->removeAfter(unixTime);
         }
@@ -246,10 +246,10 @@ void GraphWindow::updateWindowTitleSpeed()
             ? 0 : (m_graphOut->data()->constEnd() - 1)->mainValue();
 
     setWindowTitle(QChar(0x2207)  // ∇
-                   + NetUtil::formatSpeed(inBytes)
+                   + NetUtil::formatSpeed(quint32(inBytes))
                    + QLatin1Char(' ')
                    + QChar(0x2206)  // ∆
-                   + NetUtil::formatSpeed(outBytes)
+                   + NetUtil::formatSpeed(quint32(outBytes))
                    );
 }
 

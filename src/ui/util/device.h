@@ -9,7 +9,7 @@ class Device : public QObject
 
 public:
     explicit Device(QObject *parent = nullptr);
-    virtual ~Device();
+    ~Device() override;
 
     bool isOpened() const;
 

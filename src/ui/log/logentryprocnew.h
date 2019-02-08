@@ -9,7 +9,7 @@ public:
     explicit LogEntryProcNew(quint32 pid = 0,
                              const QString &kernelPath = QString());
 
-    virtual LogEntry::LogType type() const { return ProcNew; }
+    LogEntry::LogType type() const override { return ProcNew; }
 
     quint32 pid() const { return m_pid; }
     void setPid(quint32 pid);

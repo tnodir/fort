@@ -8,7 +8,7 @@ class AxisTickerSpeed : public QCPAxisTicker
     Q_GADGET
 
 public:
-    explicit AxisTickerSpeed();
+    explicit AxisTickerSpeed() = default;
 
 protected:
     double getTickStep(const QCPRange &range) override;

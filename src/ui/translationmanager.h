@@ -17,7 +17,7 @@ class TranslationManager : public QObject
 
 protected:
     explicit TranslationManager(QObject *parent = nullptr);
-    virtual ~TranslationManager();
+    ~TranslationManager() override;
 
 public:
     static TranslationManager *instance();
