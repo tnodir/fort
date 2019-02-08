@@ -51,6 +51,10 @@ public:
     void setWindowMaximized(bool on) { setIniValue("window/maximized", on); }
 
     bool graphWindowEnabled() const { return iniBool("graphWindow/enabled"); }
+    void setGraphWindowEnabled(bool on) { setIniValue("graphWindow/enabled", on); }
+
+    bool graphWindowVisible() const { return iniBool("graphWindow/visible"); }
+    void setGraphWindowVisible(bool on) { setIniValue("graphWindow/visible", on); }
 
     QRect graphWindowGeometry() const { return iniValue("graphWindow/geometry").toRect(); }
     void setGraphWindowGeometry(const QRect &v) { setIniValue("graphWindow/geometry", v); }

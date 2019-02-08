@@ -47,6 +47,8 @@ signals:
     void firewallConfToEditChanged();
 
 public slots:
+    void launch();
+
     void showTrayIcon();
     void showTrayMessage(const QString &message);
     void showTrayMenu(QMouseEvent *event);
@@ -131,6 +133,8 @@ private:
                                    const QObject *receiver = nullptr, const char *member = nullptr);
 
 private:
+    uint m_exiting  : 1;
+
     MainWindow m_window;  // dummy window for tray icon
 
     QSystemTrayIcon *m_trayIcon;

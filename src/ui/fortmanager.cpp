@@ -41,6 +41,7 @@
 FortManager::FortManager(FortSettings *fortSettings,
                          QObject *parent) :
     QObject(parent),
+    m_exiting(false),
     m_trayIcon(new QSystemTrayIcon(this)),
     m_engine(nullptr),
     m_appWindow(nullptr),
@@ -216,6 +217,16 @@ void FortManager::closeEngine()
     }
 }
 
+void FortManager::launch()
+{
+    showTrayIcon();
+
+    if (m_fortSettings->graphWindowEnabled()
+            && m_fortSettings->graphWindowVisible()) {
+        showGraphWindow();
+    }
+}
+
 void FortManager::showTrayIcon()
 {
     m_trayIcon->show();
@@ -318,6 +329,8 @@ void FortManager::switchGraphWindow()
 
 void FortManager::exit(int retcode)
 {
+    m_exiting = true;
+
     closeGraphWindow();
     closeWindow();
 
@@ -527,6 +540,7 @@ void FortManager::restoreWindowState()
 
 void FortManager::saveGraphWindowState()
 {
+    m_fortSettings->setGraphWindowVisible(m_exiting);
     m_fortSettings->setGraphWindowGeometry(m_graphWindowState->geometry());
     m_fortSettings->setGraphWindowMaximized(m_graphWindowState->maximized());
 }

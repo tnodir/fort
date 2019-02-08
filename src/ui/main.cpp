@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
         return FORT_ERROR_DEVICE;
     }
 
-    fortManager.showTrayIcon();
+    fortManager.launch();
 
     // Process control requests from clients
     if (!controlManager.listen(&fortManager)) {
