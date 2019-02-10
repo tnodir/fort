@@ -73,9 +73,6 @@ BasePage {
                       && qsTranslate("qml", "Resolve Addresses")
                 checked: firewallConf.resolveAddress
                 onToggled: {
-                    if (firewallConf.resolveAddress === checked)
-                        return;
-
                     firewallConf.resolveAddress = checked;
 
                     fortManager.applyConfImmediateFlags();

@@ -9,12 +9,13 @@ Page {
 
     signal opened()
     signal closed()
+    signal editResetted()
     signal aboutToSave()
     signal saved()
 
     property bool confFlagsEdited
     property bool confEdited
-    property bool scheduleEdited
+    property bool othersEdited
 
     function setConfFlagsEdited() {
         confFlagsEdited = true;
@@ -24,14 +25,44 @@ Page {
         confEdited = true;
     }
 
-    function setScheduleEdited() {
-        scheduleEdited = true;
+    function setOthersEdited() {
+        othersEdited = true;
     }
 
     function resetEdited() {
         confFlagsEdited = false;
         confEdited = false;
-        scheduleEdited = false;
+        othersEdited = false;
+
+        editResetted();
+    }
+
+    function save(closeOnSuccess) {
+        fortSettings.bulkUpdateBegin();
+
+        mainPage.aboutToSave();
+
+        var confSaved = true;
+        if (confFlagsEdited || confEdited) {
+            const confFlagsOnly = confFlagsEdited && !confEdited;
+            confSaved = closeOnSuccess
+                    ? fortManager.saveConf(confFlagsOnly)
+                    : fortManager.applyConf(confFlagsOnly);
+        }
+
+        if (confSaved) {
+            mainPage.saved();
+        }
+
+        fortSettings.bulkUpdateEnd();
+
+        if (confSaved) {
+            if (closeOnSuccess) {
+                closeWindow();
+            } else {
+                resetEdited();
+            }
+        }
     }
 
     onOpened: {
@@ -96,38 +127,18 @@ Page {
             anchors.right: parent.right
 
             Button {
-                enabled: confFlagsEdited || confEdited || scheduleEdited
+                enabled: confFlagsEdited || confEdited || othersEdited
                 icon.source: "qrc:/images/tick.png"
                 text: translationManager.trTrigger
                       && qsTranslate("qml", "OK")
-                onClicked: {
-                    mainPage.aboutToSave();
-
-                    if (confFlagsEdited || confEdited) {
-                        if (!fortManager.saveConf(confFlagsEdited && !confEdited))
-                            return;
-                    }
-
-                    mainPage.saved();
-                    closeWindow();
-                }
+                onClicked: mainPage.save(true)
             }
             Button {
-                enabled: confFlagsEdited || confEdited || scheduleEdited
+                enabled: confFlagsEdited || confEdited || othersEdited
                 icon.source: "qrc:/images/accept.png"
                 text: translationManager.trTrigger
                       && qsTranslate("qml", "Apply")
-                onClicked: {
-                    mainPage.aboutToSave();
-
-                    if (confFlagsEdited || confEdited) {
-                        if (!fortManager.applyConf(confFlagsEdited && !confEdited))
-                            return;
-                    }
-
-                    mainPage.saved();
-                    resetEdited();
-                }
+                onClicked: mainPage.save(false)
             }
             Button {
                 icon.source: "qrc:/images/cancel.png"

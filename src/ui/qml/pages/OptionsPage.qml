@@ -6,6 +6,18 @@ import com.fortfirewall 1.0
 
 BasePage {
 
+    property bool iniEdited
+
+    function setIniEdited() {
+        iniEdited = true;
+
+        setOthersEdited();
+    }
+
+    function onEditResetted() {  // override
+        iniEdited = false;
+    }
+
     function onAboutToSave() {  // override
         const password = editPassword.text;
         if (password) {
@@ -15,6 +27,8 @@ BasePage {
     }
 
     function onSaved() {  // override
+        if (!iniEdited) return;
+
         fortSettings.startWithWindows = cbStart.checked;
         fortSettings.hotKeyEnabled = cbHotKeys.checked;
     }
@@ -31,9 +45,7 @@ BasePage {
                 text: translationManager.trTrigger
                       && qsTranslate("qml", "Start with Windows")
                 checked: fortSettings.startWithWindows
-                onToggled: {
-                    setConfFlagsEdited();
-                }
+                onToggled: setIniEdited()
             }
 
             CheckBox {
@@ -104,9 +116,7 @@ BasePage {
                 text: translationManager.trTrigger
                       && qsTranslate("qml", "Hot Keys")
                 checked: fortSettings.hotKeyEnabled
-                onToggled: {
-                    setConfFlagsEdited();
-                }
+                onToggled: setIniEdited()
             }
 
             Row {

@@ -6,6 +6,9 @@ Pane {
 
     bottomPadding: 0
 
+    function onEditResetted() {
+    }
+
     function onAboutToSave() {
     }
 
@@ -14,6 +17,7 @@ Pane {
 
     Connections {
         target: mainPage
+        onEditResetted: page.onEditResetted()
         onAboutToSave: page.onAboutToSave()
         onSaved: page.onSaved()
     }

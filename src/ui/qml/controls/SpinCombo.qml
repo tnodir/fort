@@ -12,15 +12,11 @@ RowLayout {
     property var names: values
     property var values
 
-    SpinBox {
+    SpinBoxControl {
         id: field
         Layout.fillWidth: true
         Layout.preferredWidth: fieldPreferredWidth
         Layout.minimumWidth: fieldPreferredWidth
-
-        editable: true
-        from: 0
-        to: 9999
 
         onValueChanged: {
             combo.updateIndex(value);

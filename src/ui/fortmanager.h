@@ -57,8 +57,9 @@ public slots:
     void closeWindow();
 
     void showGraphWindow();
-    void closeGraphWindow();
+    void closeGraphWindow(bool storeVisibility = false);
     void switchGraphWindow();
+    void updateGraphWindow();
 
     void exit(int retcode = 0);
 
@@ -115,7 +116,7 @@ private:
     void saveWindowState();
     void restoreWindowState();
 
-    void saveGraphWindowState();
+    void saveGraphWindowState(bool visible);
     void restoreGraphWindowState();
 
     void updateLogger();
@@ -133,8 +134,6 @@ private:
                                    const QObject *receiver = nullptr, const char *member = nullptr);
 
 private:
-    uint m_exiting  : 1;
-
     MainWindow m_window;  // dummy window for tray icon
 
     QSystemTrayIcon *m_trayIcon;

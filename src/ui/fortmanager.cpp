@@ -41,7 +41,6 @@
 FortManager::FortManager(FortSettings *fortSettings,
                          QObject *parent) :
     QObject(parent),
-    m_exiting(false),
     m_trayIcon(new QSystemTrayIcon(this)),
     m_engine(nullptr),
     m_appWindow(nullptr),
@@ -221,8 +220,7 @@ void FortManager::launch()
 {
     showTrayIcon();
 
-    if (m_fortSettings->graphWindowEnabled()
-            && m_fortSettings->graphWindowVisible()) {
+    if (m_fortSettings->graphWindowVisible()) {
         showGraphWindow();
     }
 }
@@ -285,8 +283,9 @@ void FortManager::showGraphWindow()
 
         m_graphWindowState->install(m_graphWindow);
 
-        connect(m_graphWindow, &GraphWindow::aboutToClose,
-                this, &FortManager::closeGraphWindow);
+        connect(m_graphWindow, &GraphWindow::aboutToClose, [this] {
+            closeGraphWindow();
+        });
 
         connect(m_graphWindow, &GraphWindow::mouseRightClick,
                 this, &FortManager::showTrayMenu);
@@ -302,12 +301,12 @@ void FortManager::showGraphWindow()
     restoreGraphWindowState();
 }
 
-void FortManager::closeGraphWindow()
+void FortManager::closeGraphWindow(bool storeVisibility)
 {
     if (!m_graphWindow)
         return;
 
-    saveGraphWindowState();
+    saveGraphWindowState(storeVisibility);
 
     m_graphWindowState->uninstall(m_graphWindow);
 
@@ -327,11 +326,18 @@ void FortManager::switchGraphWindow()
         closeGraphWindow();
 }
 
+void FortManager::updateGraphWindow()
+{
+    if (!m_graphWindow)
+        return;
+
+    m_graphWindow->updateColors();
+    m_graphWindow->updateWindowFlags();
+}
+
 void FortManager::exit(int retcode)
 {
-    m_exiting = true;
-
-    closeGraphWindow();
+    closeGraphWindow(true);
     closeWindow();
 
     closeEngine();
@@ -538,9 +544,9 @@ void FortManager::restoreWindowState()
                               m_fortSettings->windowMaximized());
 }
 
-void FortManager::saveGraphWindowState()
+void FortManager::saveGraphWindowState(bool visible)
 {
-    m_fortSettings->setGraphWindowVisible(m_exiting);
+    m_fortSettings->setGraphWindowVisible(visible);
     m_fortSettings->setGraphWindowGeometry(m_graphWindowState->geometry());
     m_fortSettings->setGraphWindowMaximized(m_graphWindowState->maximized());
 }
@@ -577,16 +583,14 @@ void FortManager::updateTrayMenu()
                 this, SLOT(showWindow()));
     addHotKey(optionsAction, fortSettings()->hotKeyOptions(), hotKeyEnabled);
 
-    if (!conf.hasPassword() && !m_firewallConfToEdit) {
-        if (fortSettings()->graphWindowEnabled()) {
-            m_graphWindowAction = addAction(
-                        menu, QIcon(":/images/chart_bar.png"), tr("Traffic Graph"),
-                        this, SLOT(switchGraphWindow()), true,
-                        (m_graphWindow != nullptr));
-            addHotKey(m_graphWindowAction, fortSettings()->hotKeyGraph(),
-                      conf.logStat());
-        }
+    m_graphWindowAction = addAction(
+                menu, QIcon(":/images/chart_bar.png"), tr("Traffic Graph"),
+                this, SLOT(switchGraphWindow()), true,
+                (m_graphWindow != nullptr));
+    addHotKey(m_graphWindowAction, fortSettings()->hotKeyGraph(),
+              conf.logStat());
 
+    if (!conf.hasPassword() && !m_firewallConfToEdit) {
         menu->addSeparator();
 
         m_filterEnabledAction = addAction(

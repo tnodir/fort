@@ -35,6 +35,26 @@ BasePage {
             qsTranslate("qml", "TiB")
         ]
 
+    property bool graphEdited
+
+    function setGraphEdited() {
+        graphEdited = true;
+
+        setOthersEdited();
+    }
+
+    function onEditResetted() {  // override
+        graphEdited = false;
+    }
+
+    function onSaved() {  // override
+        if (!graphEdited) return;
+
+        graphButton.save();
+
+        fortManager.updateGraphWindow();
+    }
+
     ColumnLayout {
         anchors.fill: parent
         spacing: 10
@@ -77,6 +97,10 @@ BasePage {
             }
 
             TrafOptionsButton {}
+
+            GraphButton {
+                id: graphButton
+            }
 
             Row {
                 spacing: 5

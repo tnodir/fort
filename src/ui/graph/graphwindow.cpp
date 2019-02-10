@@ -17,14 +17,13 @@ GraphWindow::GraphWindow(FortSettings *fortSettings,
     setupUi();
     setupTimer();
 
-    setupWindow();
-
-    connect(m_fortSettings, &FortSettings::iniChanged, this, &GraphWindow::setupWindow);
+    updateWindowFlags();
+    updateColors();
 
     setMinimumSize(QSize(100, 50));
 }
 
-void GraphWindow::setupWindow()
+void GraphWindow::updateWindowFlags()
 {
     const bool visible = isVisible();
 
@@ -38,13 +37,36 @@ void GraphWindow::setupWindow()
                       ? Qt::WindowTransparentForInput : Qt::Widget)
                    );
 
+    if (visible) {
+        show();  // setWindowFlags() hides the window
+    }
+}
+
+void GraphWindow::updateColors()
+{
     setWindowOpacityPercent(m_fortSettings->graphWindowOpacity());
 
     m_plot->setBackground(QBrush(m_fortSettings->graphWindowColor()));
 
-    if (visible) {
-        show();  // setWindowFlags() hides the window
-    }
+    // Axis
+    auto yAxis = m_plot->yAxis;
+
+    const QColor axisColor = m_fortSettings->graphWindowAxisColor();
+    yAxis->setBasePen(adjustPen(yAxis->basePen(), axisColor));
+    yAxis->setTickPen(adjustPen(yAxis->tickPen(), axisColor));
+    yAxis->setSubTickPen(adjustPen(yAxis->subTickPen(), axisColor));
+
+    yAxis->setTickLabelColor(m_fortSettings->graphWindowTickLabelColor());
+    yAxis->setLabelColor(m_fortSettings->graphWindowLabelColor());
+
+    yAxis->grid()->setPen(adjustPen(yAxis->grid()->pen(),
+                                    m_fortSettings->graphWindowGridColor()));
+
+    // Graph Inbound
+    m_graphIn->setPen(QPen(m_fortSettings->graphWindowColorIn()));
+
+    // Graph Outbound
+    m_graphOut->setPen(QPen(m_fortSettings->graphWindowColorOut()));
 }
 
 void GraphWindow::setupUi()
@@ -70,17 +92,6 @@ void GraphWindow::setupUi()
     yAxis->setPadding(1);
     yAxis->setTickLabelPadding(2);
 
-    const QColor axisColor = m_fortSettings->graphWindowAxisColor();
-    yAxis->setBasePen(adjustPen(yAxis->basePen(), axisColor));
-    yAxis->setTickPen(adjustPen(yAxis->tickPen(), axisColor));
-    yAxis->setSubTickPen(adjustPen(yAxis->subTickPen(), axisColor));
-
-    yAxis->setTickLabelColor(m_fortSettings->graphWindowTickLabelColor());
-    yAxis->setLabelColor(m_fortSettings->graphWindowLabelColor());
-
-    yAxis->grid()->setPen(adjustPen(yAxis->grid()->pen(),
-                                    m_fortSettings->graphWindowGridColor()));
-
     // Axis Rect
     auto axisRect = m_plot->axisRect();
     axisRect->setMinimumMargins(QMargins(1, 1, 1, 1));
@@ -92,14 +103,12 @@ void GraphWindow::setupUi()
     // Graph Inbound
     m_graphIn = new QCPBars(m_plot->xAxis, m_plot->yAxis);
     m_graphIn->setAntialiased(false);
-    m_graphIn->setPen(QPen(m_fortSettings->graphWindowColorIn()));
     m_graphIn->setWidthType(QCPBars::wtAbsolute);
     m_graphIn->setWidth(1);
 
     // Graph Outbound
     m_graphOut = new QCPBars(m_plot->xAxis, m_plot->yAxis);
     m_graphOut->setAntialiased(false);
-    m_graphOut->setPen(QPen(m_fortSettings->graphWindowColorOut()));
     m_graphOut->setWidthType(QCPBars::wtAbsolute);
     m_graphOut->setWidth(1);
 
@@ -118,9 +127,10 @@ void GraphWindow::setupUi()
 
 void GraphWindow::setupTimer()
 {
-    connect(&m_timer, &QTimer::timeout, this, &GraphWindow::addEmptyTraffic);
+    connect(&m_hoverTimer, &QTimer::timeout, this, &GraphWindow::checkHoverLeave);
+    connect(&m_updateTimer, &QTimer::timeout, this, &GraphWindow::addEmptyTraffic);
 
-    m_timer.start(1000);  // 1 second
+    m_updateTimer.start(1000);  // 1 second
 }
 
 void GraphWindow::onMouseDoubleClick(QMouseEvent *event)
@@ -161,6 +171,12 @@ void GraphWindow::enterEvent(QEvent *event)
 {
     Q_UNUSED(event)
 
+    if (m_fortSettings->graphWindowHideOnHover()) {
+        hide();
+        m_hoverTimer.start(200);
+        return;
+    }
+
     setWindowOpacityPercent(m_fortSettings->graphWindowHoverOpacity());
 }
 
@@ -169,6 +185,16 @@ void GraphWindow::leaveEvent(QEvent *event)
     Q_UNUSED(event)
 
     setWindowOpacityPercent(m_fortSettings->graphWindowOpacity());
+}
+
+void GraphWindow::checkHoverLeave()
+{
+    const QPoint mousePos = QCursor::pos();
+
+    if (!geometry().contains(mousePos)) {
+        m_hoverTimer.stop();
+        show();
+    }
 }
 
 void GraphWindow::addTraffic(qint64 unixTime, quint32 inBytes, quint32 outBytes)

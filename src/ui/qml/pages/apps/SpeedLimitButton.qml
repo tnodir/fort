@@ -66,12 +66,8 @@ ButtonPopup {
                 text: translationManager.trTrigger
                       && qsTranslate("qml", "Download speed limit, KiB/s:")
                 checked: appGroup.limitInEnabled
-                onCheckedChanged: {
-                    const value = checkBox.checked;
-                    if (appGroup.limitInEnabled == value)
-                        return;
-
-                    appGroup.limitInEnabled = value;
+                onToggled: {
+                    appGroup.limitInEnabled = checkBox.checked;
 
                     setConfEdited();
                 }
@@ -79,13 +75,9 @@ ButtonPopup {
             field {
                 from: 0
                 to: 99999
-                value: appGroup.speedLimitIn
-                onValueChanged: {
-                    const value = field.value;
-                    if (appGroup.speedLimitIn == value)
-                        return;
-
-                    appGroup.speedLimitIn = value;
+                defaultValue: appGroup.speedLimitIn
+                onValueEdited: {
+                    appGroup.speedLimitIn = field.value;
 
                     setConfEdited();
                 }
@@ -99,12 +91,8 @@ ButtonPopup {
                 text: translationManager.trTrigger
                       && qsTranslate("qml", "Upload speed limit, KiB/s:")
                 checked: appGroup.limitOutEnabled
-                onCheckedChanged: {
-                    const value = checkBox.checked;
-                    if (appGroup.limitOutEnabled == value)
-                        return;
-
-                    appGroup.limitOutEnabled = value;
+                onToggled: {
+                    appGroup.limitOutEnabled = checkBox.checked;
 
                     setConfEdited();
                 }
@@ -112,13 +100,9 @@ ButtonPopup {
             field {
                 from: 0
                 to: 99999
-                value: appGroup.speedLimitOut
-                onValueChanged: {
-                    const value = field.value;
-                    if (appGroup.speedLimitOut == value)
-                        return;
-
-                    appGroup.speedLimitOut = value;
+                defaultValue: appGroup.speedLimitOut
+                onValueEdited: {
+                    appGroup.speedLimitOut = field.value;
 
                     setConfEdited();
                 }

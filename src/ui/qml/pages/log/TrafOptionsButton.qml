@@ -67,12 +67,8 @@ ButtonPopup {
                 text: translationManager.trTrigger
                       && qsTranslate("qml", "Active period, hours:")
                 checked: firewallConf.activePeriodEnabled
-                onCheckedChanged: {
-                    const value = checkBox.checked;
-                    if (firewallConf.activePeriodEnabled == value)
-                        return;
-
-                    firewallConf.activePeriodEnabled = value;
+                onToggled: {
+                    firewallConf.activePeriodEnabled = checkBox.checked;
 
                     setConfFlagsEdited();
                 }
@@ -80,13 +76,9 @@ ButtonPopup {
             field1 {
                 from: 0
                 to: 24
-                value: firewallConf.activePeriodFrom
-                onValueChanged: {
-                    const value = field1.value;
-                    if (firewallConf.activePeriodFrom == value)
-                        return;
-
-                    firewallConf.activePeriodFrom = value;
+                defaultValue: firewallConf.activePeriodFrom
+                onValueEdited: {
+                    firewallConf.activePeriodFrom = field1.value;
 
                     setConfFlagsEdited();
                 }
@@ -94,13 +86,9 @@ ButtonPopup {
             field2 {
                 from: 0
                 to: 24
-                value: firewallConf.activePeriodTo
-                onValueChanged: {
-                    const value = field2.value;
-                    if (firewallConf.activePeriodTo == value)
-                        return;
-
-                    firewallConf.activePeriodTo = value;
+                defaultValue: firewallConf.activePeriodTo
+                onValueEdited: {
+                    firewallConf.activePeriodTo = field2.value;
 
                     setConfFlagsEdited();
                 }
@@ -123,13 +111,9 @@ ButtonPopup {
             field {
                 from: 1
                 to: 31
-                value: firewallConf.monthStart
-                onValueChanged: {
-                    const value = field.value;
-                    if (firewallConf.monthStart == value)
-                        return;
-
-                    firewallConf.monthStart = value;
+                defaultValue: firewallConf.monthStart
+                onValueEdited: {
+                    firewallConf.monthStart = field.value;
 
                     setConfFlagsEdited();
                 }
@@ -148,13 +132,9 @@ ButtonPopup {
             }
             field {
                 from: -1
-                value: firewallConf.trafHourKeepDays
-                onValueChanged: {
-                    const value = field.value;
-                    if (firewallConf.trafHourKeepDays == value)
-                        return;
-
-                    firewallConf.trafHourKeepDays = value;
+                defaultValue: firewallConf.trafHourKeepDays
+                onValueEdited: {
+                    firewallConf.trafHourKeepDays = field.value;
 
                     setConfFlagsEdited();
                 }
@@ -171,13 +151,9 @@ ButtonPopup {
             }
             field {
                 from: -1
-                value: firewallConf.trafDayKeepDays
-                onValueChanged: {
-                    const value = field.value;
-                    if (firewallConf.trafDayKeepDays == value)
-                        return;
-
-                    firewallConf.trafDayKeepDays = value;
+                defaultValue: firewallConf.trafDayKeepDays
+                onValueEdited: {
+                    firewallConf.trafDayKeepDays = field.value;
 
                     setConfFlagsEdited();
                 }
@@ -194,13 +170,9 @@ ButtonPopup {
             }
             field {
                 from: -1
-                value: firewallConf.trafMonthKeepMonths
-                onValueChanged: {
-                    const value = field.value;
-                    if (firewallConf.trafMonthKeepMonths == value)
-                        return;
-
-                    firewallConf.trafMonthKeepMonths = value;
+                defaultValue: firewallConf.trafMonthKeepMonths
+                onValueEdited: {
+                    firewallConf.trafMonthKeepMonths = field.value;
 
                     setConfFlagsEdited();
                 }
@@ -220,13 +192,9 @@ ButtonPopup {
             field {
                 from: 0
                 to: 999 * 1024
-                value: firewallConf.quotaDayMb
-                onValueChanged: {
-                    const value = field.value;
-                    if (firewallConf.quotaDayMb == value)
-                        return;
-
-                    firewallConf.quotaDayMb = value;
+                defaultValue: firewallConf.quotaDayMb
+                onValueEdited: {
+                    firewallConf.quotaDayMb = field.value;
 
                     setConfFlagsEdited();
                 }
@@ -244,13 +212,9 @@ ButtonPopup {
             field {
                 from: 0
                 to: 999 * 1024
-                value: firewallConf.quotaMonthMb
-                onValueChanged: {
-                    const value = field.value;
-                    if (firewallConf.quotaMonthMb == value)
-                        return;
-
-                    firewallConf.quotaMonthMb = value;
+                defaultValue: firewallConf.quotaMonthMb
+                onValueEdited: {
+                    firewallConf.quotaMonthMb = field.value;
 
                     setConfFlagsEdited();
                 }

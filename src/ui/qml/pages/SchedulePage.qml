@@ -37,6 +37,18 @@ BasePage {
             qsTranslate("qml", "Monthly")
         ]
 
+    property bool scheduleEdited
+
+    function setScheduleEdited() {
+        scheduleEdited = true;
+
+        setOthersEdited();
+    }
+
+    function onEditResetted() {  // override
+        scheduleEdited = false;
+    }
+
     function onSaved() {  // override
         if (!scheduleEdited) return;
 

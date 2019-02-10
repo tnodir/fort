@@ -12,7 +12,9 @@
 FortSettings::FortSettings(const QStringList &args,
                            QObject *parent) :
     QObject(parent),
-    m_hasProvBoot(false)
+    m_hasProvBoot(false),
+    m_bulkUpdating(false),
+    m_bulkUpdatingEmit(false)
 {
     processArguments(args);
     setupIni();
@@ -396,12 +398,39 @@ QVariant FortSettings::iniValue(const QString &key,
 void FortSettings::setIniValue(const QString &key, const QVariant &value,
                                const QVariant &defaultValue)
 {
-    if (!defaultValue.isNull()
-            && m_ini->value(key, defaultValue) == value)
+    const QVariant oldValue = m_ini->value(key, defaultValue);
+    if (oldValue == value)
         return;
 
     m_ini->setValue(key, value);
-    emit iniChanged();
+
+    if (m_bulkUpdating) {
+        m_bulkUpdatingEmit = true;
+    } else {
+        emit iniChanged();
+    }
+}
+
+void FortSettings::bulkUpdateBegin()
+{
+    Q_ASSERT(!m_bulkUpdating);
+
+    m_bulkUpdating = true;
+    m_bulkUpdatingEmit = false;
+}
+
+void FortSettings::bulkUpdateEnd()
+{
+    Q_ASSERT(m_bulkUpdating);
+
+    m_bulkUpdating = false;
+
+    const bool doEmit = m_bulkUpdatingEmit;
+    m_bulkUpdatingEmit = false;
+
+    if (doEmit) {
+        emit iniChanged();
+    }
 }
 
 void FortSettings::removeIniKey(const QString &key)

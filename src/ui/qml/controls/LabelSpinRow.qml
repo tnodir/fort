@@ -1,25 +1,27 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
+import com.fortfirewall 1.0
 
 RowLayout {
 
-    readonly property alias field1: field1
-    readonly property alias field2: field2
+    Layout.fillWidth: true
 
-    property real fieldPreferredWidth
+    readonly property alias label: label
+    readonly property alias field: field
 
-    SpinBoxControl {
-        id: field1
+    property real fieldPreferredWidth: 140
+
+    Label {
+        id: label
         Layout.fillWidth: true
-        Layout.preferredWidth: fieldPreferredWidth
-        Layout.minimumWidth: fieldPreferredWidth
     }
 
     SpinBoxControl {
-        id: field2
+        id: field
         Layout.fillWidth: true
         Layout.preferredWidth: fieldPreferredWidth
         Layout.minimumWidth: fieldPreferredWidth
+        Layout.maximumWidth: implicitWidth
     }
 }

@@ -18,6 +18,21 @@ class FortSettings : public QObject
     Q_OBJECT
     Q_PROPERTY(bool debug READ debug WRITE setDebug NOTIFY iniChanged)
     Q_PROPERTY(QString language READ language WRITE setLanguage NOTIFY iniChanged)
+    Q_PROPERTY(bool graphWindowVisible READ graphWindowVisible WRITE setGraphWindowVisible NOTIFY iniChanged)
+    Q_PROPERTY(bool graphWindowAlwaysOnTop READ graphWindowAlwaysOnTop WRITE setGraphWindowAlwaysOnTop NOTIFY iniChanged)
+    Q_PROPERTY(bool graphWindowFrameless READ graphWindowFrameless WRITE setGraphWindowFrameless NOTIFY iniChanged)
+    Q_PROPERTY(bool graphWindowClickThrough READ graphWindowClickThrough WRITE setGraphWindowClickThrough NOTIFY iniChanged)
+    Q_PROPERTY(bool graphWindowHideOnHover READ graphWindowHideOnHover WRITE setGraphWindowHideOnHover NOTIFY iniChanged)
+    Q_PROPERTY(int graphWindowOpacity READ graphWindowOpacity WRITE setGraphWindowOpacity NOTIFY iniChanged)
+    Q_PROPERTY(int graphWindowHoverOpacity READ graphWindowHoverOpacity WRITE setGraphWindowHoverOpacity NOTIFY iniChanged)
+    Q_PROPERTY(int graphWindowMaxSeconds READ graphWindowMaxSeconds WRITE setGraphWindowMaxSeconds NOTIFY iniChanged)
+    Q_PROPERTY(QColor graphWindowColor READ graphWindowColor WRITE setGraphWindowColor NOTIFY iniChanged)
+    Q_PROPERTY(QColor graphWindowColorIn READ graphWindowColorIn WRITE setGraphWindowColorIn NOTIFY iniChanged)
+    Q_PROPERTY(QColor graphWindowColorOut READ graphWindowColorOut WRITE setGraphWindowColorOut NOTIFY iniChanged)
+    Q_PROPERTY(QColor graphWindowAxisColor READ graphWindowAxisColor WRITE setGraphWindowAxisColor NOTIFY iniChanged)
+    Q_PROPERTY(QColor graphWindowTickLabelColor READ graphWindowTickLabelColor WRITE setGraphWindowTickLabelColor NOTIFY iniChanged)
+    Q_PROPERTY(QColor graphWindowLabelColor READ graphWindowLabelColor WRITE setGraphWindowLabelColor NOTIFY iniChanged)
+    Q_PROPERTY(QColor graphWindowGridColor READ graphWindowGridColor WRITE setGraphWindowGridColor NOTIFY iniChanged)
     Q_PROPERTY(bool startWithWindows READ startWithWindows WRITE setStartWithWindows NOTIFY startWithWindowsChanged)
     Q_PROPERTY(bool hotKeyEnabled READ hotKeyEnabled WRITE setHotKeyEnabled NOTIFY iniChanged)
     Q_PROPERTY(QString logsPath READ logsPath CONSTANT)
@@ -50,9 +65,6 @@ public:
     bool windowMaximized() const { return iniBool("window/maximized"); }
     void setWindowMaximized(bool on) { setIniValue("window/maximized", on); }
 
-    bool graphWindowEnabled() const { return iniBool("graphWindow/enabled"); }
-    void setGraphWindowEnabled(bool on) { setIniValue("graphWindow/enabled", on); }
-
     bool graphWindowVisible() const { return iniBool("graphWindow/visible"); }
     void setGraphWindowVisible(bool on) { setIniValue("graphWindow/visible", on); }
 
@@ -70,6 +82,9 @@ public:
 
     bool graphWindowClickThrough() const { return iniBool("graphWindow/clickThrough"); }
     void setGraphWindowClickThrough(bool on) { setIniValue("graphWindow/clickThrough", on); }
+
+    bool graphWindowHideOnHover() const { return iniBool("graphWindow/hideOnHover"); }
+    void setGraphWindowHideOnHover(bool on) { setIniValue("graphWindow/hideOnHover", on); }
 
     int graphWindowOpacity() const { return iniInt("graphWindow/opacity", 10); }
     void setGraphWindowOpacity(int v) { setIniValue("graphWindow/opacity", v); }
@@ -151,6 +166,9 @@ public slots:
     bool readConfIni(FirewallConf &conf) const;
     bool writeConfIni(const FirewallConf &conf);
 
+    void bulkUpdateBegin();
+    void bulkUpdateEnd();
+
 private:
     void processArguments(const QStringList &args);
     void setupIni();
@@ -190,7 +208,9 @@ private:
     static QString startupShortcutPath();
 
 private:
-    uint m_hasProvBoot  : 1;
+    uint m_hasProvBoot      : 1;
+    uint m_bulkUpdating     : 1;
+    uint m_bulkUpdatingEmit : 1;
 
     QString m_profilePath;
     QString m_statPath;

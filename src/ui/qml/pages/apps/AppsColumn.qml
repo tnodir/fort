@@ -61,12 +61,8 @@ ColumnLayout {
                 text: translationManager.trTrigger
                       && qsTranslate("qml", "period, hours:")
                 checked: appGroup.periodEnabled
-                onCheckedChanged: {
-                    const value = checkBox.checked;
-                    if (appGroup.periodEnabled == value)
-                        return;
-
-                    appGroup.periodEnabled = value;
+                onToggled: {
+                    appGroup.periodEnabled = checkBox.checked;
 
                     setConfEdited();
                 }
@@ -74,13 +70,9 @@ ColumnLayout {
             field1 {
                 from: 0
                 to: 24
-                value: appGroup.periodFrom
-                onValueChanged: {
-                    const value = field1.value;
-                    if (appGroup.periodFrom == value)
-                        return;
-
-                    appGroup.periodFrom = value;
+                defaultValue: appGroup.periodFrom
+                onValueEdited: {
+                    appGroup.periodFrom = field1.value;
 
                     setConfEdited();
                 }
@@ -88,13 +80,9 @@ ColumnLayout {
             field2 {
                 from: 0
                 to: 24
-                value: appGroup.periodTo
-                onValueChanged: {
-                    const value = field2.value;
-                    if (appGroup.periodTo == value)
-                        return;
-
-                    appGroup.periodTo = value;
+                defaultValue: appGroup.periodTo
+                onValueEdited: {
+                    appGroup.periodTo = field2.value;
 
                     setConfEdited();
                 }

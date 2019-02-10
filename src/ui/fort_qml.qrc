@@ -3,10 +3,13 @@
         <file>qml/controls/ButtonMenu.qml</file>
         <file>qml/controls/ButtonPopup.qml</file>
         <file>qml/controls/HSeparator.qml</file>
+        <file>qml/controls/LabelColorRow.qml</file>
+        <file>qml/controls/LabelSpinRow.qml</file>
         <file>qml/controls/LinkButton.qml</file>
         <file>qml/controls/ListViewControl.qml</file>
         <file>qml/controls/RoundButtonTip.qml</file>
         <file>qml/controls/ScrollBarControl.qml</file>
+        <file>qml/controls/SpinBoxControl.qml</file>
         <file>qml/controls/SpinCombo.qml</file>
         <file>qml/controls/SpinComboRow.qml</file>
         <file>qml/controls/SpinDouble.qml</file>
@@ -31,6 +34,7 @@
         <file>qml/pages/apps/AppsTextColumn.qml</file>
         <file>qml/pages/apps/SpeedLimitButton.qml</file>
         <file>qml/pages/log/AppListView.qml</file>
+        <file>qml/pages/log/GraphButton.qml</file>
         <file>qml/pages/log/IpListView.qml</file>
         <file>qml/pages/log/TrafOptionsButton.qml</file>
         <file>qml/pages/schedule/TaskRow.qml</file>

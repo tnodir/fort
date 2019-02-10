@@ -51,14 +51,8 @@ Row {
         field {
             from: 1
             to: 24 * 30 * 12  // ~Year
-            value: taskInfo.intervalHours
-
-            onValueChanged: {
-                const value = field.value;
-                if (value != taskInfo.intervalHours) {
-                    setScheduleEdited();
-                }
-            }
+            defaultValue: taskInfo.intervalHours
+            onValueEdited: setScheduleEdited()
         }
     }
 

@@ -21,10 +21,13 @@ signals:
     void mouseRightClick(QMouseEvent *event);
 
 public slots:
+    void updateWindowFlags();
+    void updateColors();
+
     void addTraffic(qint64 unixTime, quint32 inBytes, quint32 outBytes);
 
 private slots:
-    void setupWindow();
+    void checkHoverLeave();
 
     void addEmptyTraffic();
 
@@ -59,7 +62,8 @@ private:
 
     QPoint m_mousePressOffset;
 
-    QTimer m_timer;
+    QTimer m_updateTimer;
+    QTimer m_hoverTimer;
 };
 
 #endif // GRAPHWINDOW_H
