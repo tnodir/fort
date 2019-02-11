@@ -190,7 +190,7 @@ private:
     QString iniText(const QString &key, const QString &defaultValue = QString()) const;
     QStringList iniList(const QString &key) const;
 
-    QColor iniColor(const QString &key, const QColor &defaultValue) const;
+    QColor iniColor(const QString &key, const QColor &defaultValue = QColor()) const;
     void setIniColor(const QString &key, const QColor &value,
                      const QColor &defaultValue = QColor());
 
