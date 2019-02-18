@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v2.3.0, 2019-02-19:
+- Add ability to fragment first TCP packet.
+- Settings: Store colors in hex.
+
 v2.2.0, 2019-02-10:
 - UI: Add Traffic Graph window.
 - Improve speed limiting.
