@@ -20,6 +20,7 @@ typedef struct fort_conf_flags {
   UINT32 app_allow_all		: 1;
   UINT32 log_blocked		: 1;
   UINT32 log_stat		: 1;
+  UINT32 filter_transport	: 1;
 
   UINT32 group_bits		: 16;
 } FORT_CONF_FLAGS, *PFORT_CONF_FLAGS;
@@ -45,6 +46,13 @@ typedef struct fort_traf {
   };
 } FORT_TRAF, *PFORT_TRAF;
 
+typedef struct fort_conf_group {
+  UINT16 fragment_bits;
+  UINT32 limit_bits;
+
+  FORT_TRAF limits[FORT_CONF_GROUP_MAX];  /* Bytes per 0.5 sec. */
+} FORT_CONF_GROUP, *PFORT_CONF_GROUP;
+
 typedef struct fort_conf {
   FORT_CONF_FLAGS flags;
 
@@ -67,9 +75,7 @@ typedef struct fort_conf {
 typedef struct fort_conf_io {
   UINT16 driver_version;
 
-  UINT32 limit_bits;
-
-  FORT_TRAF limits[FORT_CONF_GROUP_MAX];  /* Bytes per 0.5 sec. */
+  FORT_CONF_GROUP conf_group;
 
   FORT_CONF conf;
 } FORT_CONF_IO, *PFORT_CONF_IO;

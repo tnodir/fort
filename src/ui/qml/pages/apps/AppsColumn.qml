@@ -33,7 +33,7 @@ ColumnLayout {
             Layout.preferredWidth: 10
         }
 
-        SpeedLimitButton {
+        GroupOptionsButton {
             enabled: firewallConf.logStat
         }
 

@@ -6,6 +6,7 @@
 AppGroup::AppGroup(QObject *parent) :
     QObject(parent),
     m_enabled(true),
+    m_fragmentPacket(false),
     m_periodEnabled(false),
     m_periodFrom(0),
     m_periodTo(0),
@@ -21,6 +22,14 @@ void AppGroup::setEnabled(bool enabled)
     if (bool(m_enabled) != enabled) {
         m_enabled = enabled;
         emit enabledChanged();
+    }
+}
+
+void AppGroup::setFragmentPacket(bool enabled)
+{
+    if (bool(m_fragmentPacket) != enabled) {
+        m_fragmentPacket = enabled;
+        emit fragmentPacketChanged();
     }
 }
 
@@ -108,15 +117,20 @@ QString AppGroup::label() const
 {
     QString text = name();
 
-    if (limitInEnabled() && speedLimitIn() != 0) {
+    if (fragmentPacket()) {
         text += QLatin1Char(' ')
-                + QChar(0x2207)  // ∇
+                + QChar(0x00F7);  // ÷
+    }
+
+    if (enabledSpeedLimitIn() != 0) {
+        text += QLatin1Char(' ')
+                + QChar(0x25BC)  // ▼
                 + NetUtil::formatSpeed(speedLimitIn() * 1024);
     }
 
-    if (limitOutEnabled() && speedLimitOut() != 0) {
+    if (enabledSpeedLimitOut() != 0) {
         text += QLatin1Char(' ')
-                + QChar(0x2206)  // ∆
+                + QChar(0x25B2)  // ▲
                 + NetUtil::formatSpeed(speedLimitOut() * 1024);
     }
 
@@ -131,6 +145,8 @@ QString AppGroup::label() const
 QVariant AppGroup::toVariant() const
 {
     QVariantMap map;
+
+    map["fragmentPacket"] = fragmentPacket();
 
     map["periodEnabled"] = periodEnabled();
     map["periodFrom"] = periodFrom();
@@ -151,6 +167,8 @@ QVariant AppGroup::toVariant() const
 void AppGroup::fromVariant(const QVariant &v)
 {
     const QVariantMap map = v.toMap();
+
+    m_fragmentPacket = map["fragmentPacket"].toBool();
 
     m_periodEnabled = map["periodEnabled"].toBool();
     m_periodFrom = map["periodFrom"].toInt();

@@ -7,6 +7,7 @@
     <file>images/application_double.png</file>
     <file>images/application_edit.png</file>
     <file>images/application_error.png</file>
+    <file>images/application_key.png</file>
     <file>images/arrow_refresh.png</file>
     <file>images/bin_empty.png</file>
     <file>images/cancel.png</file>
@@ -17,8 +18,6 @@
     <file>images/cross.png</file>
     <file>images/cut.png</file>
     <file>images/database_save.png</file>
-    <file>images/flag_green.png</file>
-    <file>images/flag_yellow.png</file>
     <file>images/link.png</file>
     <file>images/page_copy.png</file>
     <file>images/page_paste.png</file>

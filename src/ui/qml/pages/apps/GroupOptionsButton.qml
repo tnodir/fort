@@ -6,13 +6,9 @@ import com.fortfirewall 1.0
 
 ButtonPopup {
 
-    icon.source: !((appGroup.limitInEnabled && appGroup.speedLimitIn)
-                   || (appGroup.limitOutEnabled && appGroup.speedLimitOut))
-                 ? "qrc:/images/flag_green.png"
-                 : "qrc:/images/flag_yellow.png"
-    text: (translationManager.trTrigger
-          && qsTranslate("qml", "Speed Limit: "))
-          + speedLimitsText
+    icon.source: "qrc:/images/application_key.png"
+    text: translationManager.trTrigger
+          && qsTranslate("qml", "Options…")
 
     readonly property var speedLimitValues: [
         10, 0, 20, 30, 50, 75, 100, 150, 200, 300, 500, 900,
@@ -30,28 +26,6 @@ ButtonPopup {
             list.push(formatSpeed(speedLimitValues[i]));
         }
         return list;
-    }
-
-    readonly property var speedLimitDisabledText: speedLimitNames[1]
-
-    readonly property string speedLimitsText: {
-        const limitIn = appGroup.limitInEnabled
-                ? appGroup.speedLimitIn : 0;
-        const limitOut = appGroup.limitOutEnabled
-                ? appGroup.speedLimitOut : 0;
-
-        if (!(limitIn || limitOut))
-            return speedLimitDisabledText;
-
-        var text = "";
-        if (limitIn) {
-            text = "DL " + formatSpeed(limitIn);
-        }
-        if (limitOut) {
-            text += (text ? "; " : "")
-                    + "UL " + formatSpeed(limitOut);
-        }
-        return text;
     }
 
     function formatSpeed(kbytes) {
@@ -106,6 +80,19 @@ ButtonPopup {
 
                     setConfEdited();
                 }
+            }
+        }
+
+        HSeparator {}
+
+        CheckBox {
+            text: translationManager.trTrigger
+                  && qsTranslate("qml", "Fragment first TCP packet")
+            checked: appGroup.fragmentPacket
+            onToggled: {
+                appGroup.fragmentPacket = checked;
+
+                setConfEdited();
             }
         }
     }

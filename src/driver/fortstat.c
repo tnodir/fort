@@ -41,28 +41,32 @@ typedef struct fort_stat_proc {
   struct fort_stat_proc *next_active;
 } FORT_STAT_PROC, *PFORT_STAT_PROC;
 
-#define FORT_STAT_FLOW_SPEED_LIMIT_IN	0x01
-#define FORT_STAT_FLOW_SPEED_LIMIT_OUT	0x02
-#define FORT_STAT_FLOW_SPEED_LIMIT	(FORT_STAT_FLOW_SPEED_LIMIT_IN | FORT_STAT_FLOW_SPEED_LIMIT_OUT)
-#define FORT_STAT_FLOW_DEFER_IN		0x04
-#define FORT_STAT_FLOW_DEFER_OUT	0x08
+#define FORT_FLOW_SPEED_LIMIT_IN	0x01
+#define FORT_FLOW_SPEED_LIMIT_OUT	0x02
+#define FORT_FLOW_SPEED_LIMIT		(FORT_FLOW_SPEED_LIMIT_IN | FORT_FLOW_SPEED_LIMIT_OUT)
+#define FORT_FLOW_DEFER_IN		0x04
+#define FORT_FLOW_DEFER_OUT		0x08
+#define FORT_FLOW_FRAGMENT		0x10
+#define FORT_FLOW_FRAGMENT_DEFER	0x20
+#define FORT_FLOW_FRAGMENTED		0x40
+#define FORT_FLOW_XFLAGS		(FORT_FLOW_FRAGMENT_DEFER | FORT_FLOW_FRAGMENTED)
 
-typedef struct fort_stat_flow_opt {
+typedef struct fort_flow_opt {
   UCHAR volatile flags;
   UCHAR group_index;
   UINT16 proc_index;
-} FORT_STAT_FLOW_OPT, *PFORT_STAT_FLOW_OPT;
+} FORT_FLOW_OPT, *PFORT_FLOW_OPT;
 
 /* Synchronize with tommy_hashdyn_node! */
-typedef struct fort_stat_flow {
-  struct fort_stat_flow *next;
-  struct fort_stat_flow *prev;
+typedef struct fort_flow {
+  struct fort_flow *next;
+  struct fort_flow *prev;
 
   union {
 #if defined(_WIN64)
     UINT64 flow_id;
 #else
-    FORT_STAT_FLOW_OPT opt;
+    FORT_FLOW_OPT opt;
 #endif
     void *data;
   };
@@ -70,11 +74,11 @@ typedef struct fort_stat_flow {
   tommy_key_t flow_hash;
 
 #if defined(_WIN64)
-  FORT_STAT_FLOW_OPT opt;
+  FORT_FLOW_OPT opt;
 #else
   UINT64 flow_id;
 #endif
-} FORT_STAT_FLOW, *PFORT_STAT_FLOW;
+} FORT_FLOW, *PFORT_FLOW;
 
 typedef struct fort_stat {
   UCHAR volatile closed;
@@ -83,7 +87,6 @@ typedef struct fort_stat {
 
   UINT16 proc_active_count;
 
-  UINT32 limit_bits;
   UINT32 group_flush_bits;
 
   UINT32 stream4_id;
@@ -94,7 +97,7 @@ typedef struct fort_stat {
   PFORT_STAT_PROC proc_free;
   PFORT_STAT_PROC proc_active;
 
-  PFORT_STAT_FLOW flow_free;
+  PFORT_FLOW flow_free;
 
   tommy_arrayof procs;
   tommy_hashdyn procs_map;
@@ -102,17 +105,22 @@ typedef struct fort_stat {
   tommy_arrayof flows;
   tommy_hashdyn flows_map;
 
-  FORT_TRAF limits[FORT_CONF_GROUP_MAX];
+  FORT_CONF_GROUP conf_group;
+
   FORT_STAT_GROUP groups[FORT_CONF_GROUP_MAX];
 
   KSPIN_LOCK lock;
 } FORT_STAT, *PFORT_STAT;
 
 #define fort_stat_proc_hash(process_id)	tommy_inthash_u32((UINT32) (process_id))
-#define fort_stat_flow_hash(flow_id)	tommy_inthash_u32((UINT32) (flow_id))
+#define fort_flow_hash(flow_id)	tommy_inthash_u32((UINT32) (flow_id))
+
+#define fort_stat_group_fragment(stat, group_index) \
+  ((((stat)->conf_group.fragment_bits >> (group_index)) & 1) != 0 \
+    ? FORT_FLOW_FRAGMENT : 0)
 
 #define fort_stat_group_speed_limit(stat, group_index) \
-  (((stat)->limit_bits >> ((group_index) * 2)) & 3)
+  (((stat)->conf_group.limit_bits >> ((group_index) * 2)) & 3)
 
 
 static void
@@ -215,25 +223,25 @@ fort_stat_proc_add (PFORT_STAT stat, UINT32 process_id)
 }
 
 static UCHAR
-fort_stat_flow_flags (PFORT_STAT_FLOW flow)
+fort_flow_flags_set (PFORT_FLOW flow, UCHAR flags)
 {
-  return flow->opt.flags;
+  return InterlockedOr8(&flow->opt.flags, flags);
+}
+
+static UCHAR
+fort_flow_flags_clear (PFORT_FLOW flow, UCHAR flags)
+{
+  return InterlockedAnd8(&flow->opt.flags, ~flags);
+}
+
+static UCHAR
+fort_flow_flags (PFORT_FLOW flow)
+{
+  return fort_flow_flags_set(flow, 0);
 }
 
 static void
-fort_stat_flow_flags_set (PFORT_STAT_FLOW flow, UCHAR flags)
-{
-  flow->opt.flags |= flags;
-}
-
-static void
-fort_stat_flow_flags_clear (PFORT_STAT_FLOW flow, UCHAR flags)
-{
-  flow->opt.flags &= ~flags;
-}
-
-static void
-fort_stat_flow_context_set (PFORT_STAT stat, PFORT_STAT_FLOW flow)
+fort_flow_context_set (PFORT_STAT stat, PFORT_FLOW flow)
 {
   const UINT64 flow_id = flow->flow_id;
   const UINT64 flowContext = (UINT64) flow;
@@ -245,7 +253,7 @@ fort_stat_flow_context_set (PFORT_STAT stat, PFORT_STAT_FLOW flow)
 }
 
 static void
-fort_stat_flow_context_remove (PFORT_STAT stat, PFORT_STAT_FLOW flow)
+fort_flow_context_remove (PFORT_STAT stat, PFORT_FLOW flow)
 {
   const UINT64 flow_id = flow->flow_id;
 
@@ -256,15 +264,15 @@ fort_stat_flow_context_remove (PFORT_STAT stat, PFORT_STAT_FLOW flow)
 }
 
 static void
-fort_stat_flow_close (PFORT_STAT_FLOW flow)
+fort_flow_close (PFORT_FLOW flow)
 {
   flow->opt.proc_index = FORT_PROC_BAD_INDEX;
 }
 
-static PFORT_STAT_FLOW
-fort_stat_flow_get (PFORT_STAT stat, UINT64 flow_id, tommy_key_t flow_hash)
+static PFORT_FLOW
+fort_flow_get (PFORT_STAT stat, UINT64 flow_id, tommy_key_t flow_hash)
 {
-  PFORT_STAT_FLOW flow = (PFORT_STAT_FLOW) tommy_hashdyn_bucket(
+  PFORT_FLOW flow = (PFORT_FLOW) tommy_hashdyn_bucket(
     &stat->flows_map, flow_hash);
 
   while (flow != NULL) {
@@ -277,7 +285,7 @@ fort_stat_flow_get (PFORT_STAT stat, UINT64 flow_id, tommy_key_t flow_hash)
 }
 
 static void
-fort_stat_flow_free (PFORT_STAT stat, PFORT_STAT_FLOW flow)
+fort_flow_free (PFORT_STAT stat, PFORT_FLOW flow)
 {
   const UINT16 proc_index = flow->opt.proc_index;
 
@@ -293,12 +301,12 @@ fort_stat_flow_free (PFORT_STAT stat, PFORT_STAT_FLOW flow)
 }
 
 static NTSTATUS
-fort_stat_flow_add (PFORT_STAT stat, UINT64 flow_id,
-                    UCHAR group_index, UINT16 proc_index,
-                    UCHAR speed_limit, BOOL is_reauth)
+fort_flow_add (PFORT_STAT stat, UINT64 flow_id,
+               UCHAR group_index, UINT16 proc_index,
+               UCHAR fragment, UCHAR speed_limit, BOOL is_reauth)
 {
-  const tommy_key_t flow_hash = fort_stat_flow_hash(flow_id);
-  PFORT_STAT_FLOW flow = fort_stat_flow_get(stat, flow_id, flow_hash);
+  const tommy_key_t flow_hash = fort_flow_hash(flow_id);
+  PFORT_FLOW flow = fort_flow_get(stat, flow_id, flow_hash);
   BOOL is_new_flow = FALSE;
 
   if (flow == NULL) {
@@ -323,7 +331,7 @@ fort_stat_flow_add (PFORT_STAT stat, UINT64 flow_id,
 
     flow->flow_id = flow_id;
 
-    fort_stat_flow_context_set(stat, flow);
+    fort_flow_context_set(stat, flow);
 
     is_new_flow = TRUE;
   } else {
@@ -334,7 +342,8 @@ fort_stat_flow_add (PFORT_STAT stat, UINT64 flow_id,
     fort_stat_proc_inc(stat, proc_index);
   }
 
-  flow->opt.flags = speed_limit;
+  flow->opt.flags = fragment | speed_limit
+    | (is_new_flow ? 0 : (flow->opt.flags & FORT_FLOW_XFLAGS));
   flow->opt.group_index = group_index;
   flow->opt.proc_index = proc_index;
 
@@ -347,7 +356,7 @@ fort_stat_open (PFORT_STAT stat)
   tommy_arrayof_init(&stat->procs, sizeof(FORT_STAT_PROC));
   tommy_hashdyn_init(&stat->procs_map);
 
-  tommy_arrayof_init(&stat->flows, sizeof(FORT_STAT_FLOW));
+  tommy_arrayof_init(&stat->flows, sizeof(FORT_FLOW));
   tommy_hashdyn_init(&stat->flows_map);
 
   KeInitializeSpinLock(&stat->lock);
@@ -363,7 +372,7 @@ fort_stat_close (PFORT_STAT stat)
   stat->closed = TRUE;
 
   tommy_hashdyn_foreach_node_arg(&stat->flows_map,
-    fort_stat_flow_context_remove, stat);
+    fort_flow_context_remove, stat);
 
   tommy_arrayof_done(&stat->procs);
   tommy_hashdyn_done(&stat->procs_map);
@@ -380,7 +389,7 @@ fort_stat_clear (PFORT_STAT stat)
   fort_stat_proc_active_clear(stat);
 
   tommy_hashdyn_foreach_node_arg(&stat->procs_map, fort_stat_proc_free, stat);
-  tommy_hashdyn_foreach_node(&stat->flows_map, fort_stat_flow_close);
+  tommy_hashdyn_foreach_node(&stat->flows_map, fort_flow_close);
 
   RtlZeroMemory(stat->groups, sizeof(stat->groups));
 }
@@ -402,32 +411,26 @@ fort_stat_update (PFORT_STAT stat, BOOL log_stat)
 }
 
 static void
-fort_stat_update_limits (PFORT_STAT stat, PFORT_CONF_IO conf_io)
+fort_stat_conf_update (PFORT_STAT stat, PFORT_CONF_IO conf_io)
 {
   KLOCK_QUEUE_HANDLE lock_queue;
 
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
   {
-    const UINT32 limit_bits = conf_io->limit_bits;
-
-    stat->limit_bits = limit_bits;
-
-    if (limit_bits != 0) {
-      RtlCopyMemory(stat->limits, conf_io->limits, sizeof(stat->limits));
-    }
+    stat->conf_group = conf_io->conf_group;
   }
   KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
 static NTSTATUS
-fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
-                          UINT32 process_id, UCHAR group_index,
-                          BOOL is_reauth, BOOL *is_new_proc)
+fort_flow_associate (PFORT_STAT stat, UINT64 flow_id,
+                     UINT32 process_id, UCHAR group_index,
+                     BOOL is_reauth, BOOL *is_new_proc)
 {
   const tommy_key_t proc_hash = fort_stat_proc_hash(process_id);
   KLOCK_QUEUE_HANDLE lock_queue;
   PFORT_STAT_PROC proc;
-  UCHAR speed_limit;
+  UCHAR fragment, speed_limit;
   NTSTATUS status;
 
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
@@ -455,10 +458,12 @@ fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
     *is_new_proc = TRUE;
   }
 
+  fragment = fort_stat_group_fragment(stat, group_index);
   speed_limit = fort_stat_group_speed_limit(stat, group_index);
 
-  status = fort_stat_flow_add(stat, flow_id,
-    group_index, proc->proc_index, speed_limit, is_reauth);
+  status = fort_flow_add(stat, flow_id,
+    group_index, proc->proc_index,
+    fragment, speed_limit, is_reauth);
 
   if (!NT_SUCCESS(status) && *is_new_proc) {
     fort_stat_proc_free(stat, proc);
@@ -471,27 +476,27 @@ fort_stat_flow_associate (PFORT_STAT stat, UINT64 flow_id,
 }
 
 static void
-fort_stat_flow_delete (PFORT_STAT stat, UINT64 flowContext)
+fort_flow_delete (PFORT_STAT stat, UINT64 flowContext)
 {
   KLOCK_QUEUE_HANDLE lock_queue;
-  PFORT_STAT_FLOW flow = (PFORT_STAT_FLOW) flowContext;
+  PFORT_FLOW flow = (PFORT_FLOW) flowContext;
 
   if (stat->closed)
     return;  /* double check to avoid deadlock after remove-flow-context */
 
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
   if (!stat->closed) {
-    fort_stat_flow_free(stat, flow);
+    fort_flow_free(stat, flow);
   }
   KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
 static void
-fort_stat_flow_classify (PFORT_STAT stat, UINT64 flowContext,
-                         UINT32 data_len, BOOL inbound)
+fort_flow_classify (PFORT_STAT stat, UINT64 flowContext,
+                    UINT32 data_len, BOOL inbound)
 {
   KLOCK_QUEUE_HANDLE lock_queue;
-  PFORT_STAT_FLOW flow = (PFORT_STAT_FLOW) flowContext;
+  PFORT_FLOW flow = (PFORT_FLOW) flowContext;
 
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
@@ -500,18 +505,20 @@ fort_stat_flow_classify (PFORT_STAT stat, UINT64 flowContext,
     UINT32 *proc_bytes = inbound ? &proc->traf.in_bytes
       : &proc->traf.out_bytes;
 
+    const UCHAR stat_flow_flags = fort_flow_flags(flow);
+
     /* Add traffic to process */
     *proc_bytes += data_len;
 
-    if (flow->opt.flags & (inbound ? FORT_STAT_FLOW_SPEED_LIMIT_IN
-        : FORT_STAT_FLOW_SPEED_LIMIT_OUT)) {
+    if (stat_flow_flags & (inbound ? FORT_FLOW_SPEED_LIMIT_IN
+        : FORT_FLOW_SPEED_LIMIT_OUT)) {
       const UCHAR group_index = flow->opt.group_index;
 
       PFORT_STAT_GROUP group = &stat->groups[group_index];
       UINT32 *group_bytes = inbound ? &group->traf.in_bytes
         : &group->traf.out_bytes;
 
-      const PFORT_TRAF group_limit = &stat->limits[group_index];
+      const PFORT_TRAF group_limit = &stat->conf_group.limits[group_index];
       const UINT32 limit_bytes = inbound ? group_limit->in_bytes
         : group_limit->out_bytes;
 
@@ -526,12 +533,12 @@ fort_stat_flow_classify (PFORT_STAT stat, UINT64 flowContext,
       /* Defer ACK */
       {
         const UCHAR defer_flag = inbound
-          ? FORT_STAT_FLOW_DEFER_OUT : FORT_STAT_FLOW_DEFER_IN;
+          ? FORT_FLOW_DEFER_OUT : FORT_FLOW_DEFER_IN;
 
         if (defer_flow)
-          fort_stat_flow_flags_set(flow, defer_flag);
+          fort_flow_flags_set(flow, defer_flag);
         else
-          fort_stat_flow_flags_clear(flow, defer_flag);
+          fort_flow_flags_clear(flow, defer_flag);
       }
 
       stat->group_flush_bits |= (1 << list_index);
@@ -614,7 +621,7 @@ fort_stat_dpc_group_flush (PFORT_STAT stat)
       continue;
 
     group = &stat->groups[i];
-    group_limit = &stat->limits[i];
+    group_limit = &stat->conf_group.limits[i];
 
     traf = group->traf;
 

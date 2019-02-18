@@ -271,10 +271,10 @@ void GraphWindow::updateWindowTitleSpeed()
     const auto outBytes = m_graphOut->data()->isEmpty()
             ? 0 : (m_graphOut->data()->constEnd() - 1)->mainValue();
 
-    setWindowTitle(QChar(0x2207)  // ∇
+    setWindowTitle(QChar(0x25BC)  // ▼
                    + NetUtil::formatSpeed(quint32(inBytes))
                    + QLatin1Char(' ')
-                   + QChar(0x2206)  // ∆
+                   + QChar(0x25B2)  // ▲
                    + NetUtil::formatSpeed(quint32(outBytes))
                    );
 }

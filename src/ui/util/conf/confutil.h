@@ -73,6 +73,9 @@ private:
                           quint8 appPeriodsCount,
                           const appgroups_map_t &appGroupIndexes);
 
+    static quint16 appGroupFragmentBits(const FirewallConf &conf);
+    static bool appGroupFilterTransport(const FirewallConf &conf);
+
     static quint32 writeLimits(struct fort_traf *limits,
                                const QList<AppGroup *> &appGroups);
 

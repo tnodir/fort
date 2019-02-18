@@ -4,6 +4,7 @@
 #define NDIS630		1
 
 #define WIN9X_COMPAT_SPINLOCK  /* XXX: Support Windows 7: KeInitializeSpinLock() */
+#define POOL_NX_OPTIN	1  /* Enhanced protection of NX pool */
 
 #include <wdm.h>
 #include <fwpmk.h>
@@ -323,8 +324,8 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
         BOOL is_new_proc = FALSE;
         NTSTATUS status;
 
-        status = fort_stat_flow_associate(&g_device->stat,
-          flowId, process_id, group_index, is_reauth, &is_new_proc);
+        status = fort_flow_associate(&g_device->stat, flowId, process_id,
+          group_index, is_reauth, &is_new_proc);
 
         if (!NT_SUCCESS(status)) {
           if (status == FORT_STATUS_FLOW_BLOCK)
@@ -405,37 +406,84 @@ fort_callout_notify (FWPS_CALLOUT_NOTIFY_TYPE notifyType,
 }
 
 static void
+fort_packet_inject_complete (PFORT_PACKET pkt,
+                             PNET_BUFFER_LIST clonedNetBufList,
+                             BOOLEAN dispatchLevel)
+{
+  fort_defer_packet_free(&g_device->defer, pkt, clonedNetBufList, dispatchLevel);
+}
+
+static void
 fort_callout_flow_classify_v4 (const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
-                               const FWPS_FILTER0 *filter,
                                UINT64 flowContext,
                                FWPS_CLASSIFY_OUT0 *classifyOut,
                                UINT32 dataSize, BOOL inbound)
 {
   const UINT32 headerSize = inbound ? inMetaValues->transportHeaderSize : 0;
 
-  fort_stat_flow_classify(&g_device->stat, flowContext,
+  fort_flow_classify(&g_device->stat, flowContext,
     headerSize + dataSize, inbound);
-
-  fort_callout_classify_continue(classifyOut);
 }
 
 static void
 fort_callout_stream_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                                  const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
-                                 const FWPS_STREAM_CALLOUT_IO_PACKET0 *packet,
+                                 FWPS_STREAM_CALLOUT_IO_PACKET0 *packet,
                                  const FWPS_FILTER0 *filter,
                                  UINT64 flowContext,
                                  FWPS_CLASSIFY_OUT0 *classifyOut)
 {
   const FWPS_STREAM_DATA0 *streamData = packet->streamData;
+  const UINT32 streamFlags = streamData->flags;
   const UINT32 dataSize = (UINT32) streamData->dataLength;
 
-  const BOOL inbound = (streamData->flags & FWPS_STREAM_FLAG_RECEIVE) != 0;
+  const BOOL inbound = (streamFlags & FWPS_STREAM_FLAG_RECEIVE) != 0;
 
   UNUSED(inFixedValues);
 
-  fort_callout_flow_classify_v4(inMetaValues, filter, flowContext,
+  fort_callout_flow_classify_v4(inMetaValues, flowContext,
     classifyOut, dataSize, inbound);
+
+  /* Fragment first TCP packet */
+  if ((streamFlags & (FWPS_STREAM_FLAG_SEND
+        | FWPS_STREAM_FLAG_SEND_EXPEDITED
+        | FWPS_STREAM_FLAG_SEND_DISCONNECT))
+      == FWPS_STREAM_FLAG_SEND) {
+    PFORT_FLOW flow = (PFORT_FLOW) flowContext;
+
+    const UCHAR flow_flags = fort_flow_flags(flow);
+
+    const UCHAR fragment_flags = (flow_flags
+        & (FORT_FLOW_FRAGMENT | FORT_FLOW_FRAGMENT_DEFER | FORT_FLOW_FRAGMENTED));
+
+    if (fragment_flags != 0
+        && !(fragment_flags & FORT_FLOW_FRAGMENTED)) {
+      const UCHAR fragment_size = 3;
+
+      if (fragment_flags & FORT_FLOW_FRAGMENT_DEFER) {
+        const NTSTATUS status = fort_defer_stream_add(&g_device->defer,
+          inFixedValues, inMetaValues, streamData, filter, inbound);
+
+        if (NT_SUCCESS(status))
+          goto drop;
+
+        fort_flow_flags_set(flow, FORT_FLOW_FRAGMENTED);
+      }
+      else if (dataSize > fragment_size) {
+        packet->countBytesEnforced = fragment_size;
+
+        fort_flow_flags_set(flow, FORT_FLOW_FRAGMENT_DEFER);
+      }
+    }
+  }
+
+ /* permit: */
+  fort_callout_classify_permit(filter, classifyOut);
+  return;
+
+ drop:
+  fort_callout_classify_drop(classifyOut);
+  return;
 }
 
 static void
@@ -454,9 +502,12 @@ fort_callout_datagram_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   const BOOL inbound = (direction == FWP_DIRECTION_INBOUND);
 
   UNUSED(inFixedValues);
+  UNUSED(filter);
 
-  fort_callout_flow_classify_v4(inMetaValues, filter, flowContext,
+  fort_callout_flow_classify_v4(inMetaValues, flowContext,
     classifyOut, dataSize, inbound);
+
+  fort_callout_classify_continue(classifyOut);
 }
 
 static void
@@ -465,15 +516,7 @@ fort_callout_flow_delete_v4 (UINT16 layerId, UINT32 calloutId, UINT64 flowContex
   UNUSED(layerId);
   UNUSED(calloutId);
 
-  fort_stat_flow_delete(&g_device->stat, flowContext);
-}
-
-static void
-fort_transport_inject_complete (PFORT_PACKET pkt,
-                                PNET_BUFFER_LIST clonedNetBufList,
-                                BOOLEAN dispatchLevel)
-{
-  fort_defer_free(&g_device->defer, pkt, clonedNetBufList, dispatchLevel);
+  fort_flow_delete(&g_device->stat, flowContext);
 }
 
 static void
@@ -494,16 +537,22 @@ fort_callout_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
         FWPS_METADATA_FIELD_ALE_CLASSIFY_REQUIRED))
       && netBufList != NULL
       && (netBuf = NET_BUFFER_LIST_FIRST_NB(netBufList)) != NULL) {
-    PFORT_STAT_FLOW flow = (PFORT_STAT_FLOW) flowContext;
+    PFORT_FLOW flow = (PFORT_FLOW) flowContext;
+
+    const UCHAR flow_flags = fort_flow_flags(flow);
 
     const UCHAR defer_flag = inbound
-      ? FORT_STAT_FLOW_DEFER_IN : FORT_STAT_FLOW_DEFER_OUT;
+      ? FORT_FLOW_DEFER_IN : FORT_FLOW_DEFER_OUT;
     const UCHAR speed_limit = inbound
-      ? FORT_STAT_FLOW_SPEED_LIMIT_OUT : FORT_STAT_FLOW_SPEED_LIMIT_IN;
+      ? FORT_FLOW_SPEED_LIMIT_OUT : FORT_FLOW_SPEED_LIMIT_IN;
 
-    const UCHAR flow_flags = speed_limit | defer_flag;
-    const BOOL defer_flow = (fort_stat_flow_flags(flow) & flow_flags) == flow_flags
+    const UCHAR speed_defer_flags = speed_limit | defer_flag;
+    const BOOL defer_flow = (flow_flags & speed_defer_flags) == speed_defer_flags
       && !g_device->power_off;
+
+    const BOOL fragment_packet = !inbound && (flow_flags
+      & (FORT_FLOW_FRAGMENT_DEFER | FORT_FLOW_FRAGMENTED))
+      == FORT_FLOW_FRAGMENT_DEFER;
 
     /* Position in the packet data:
      * FWPS_LAYER_INBOUND_TRANSPORT_V4: The beginning of the data.
@@ -541,25 +590,35 @@ fort_callout_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
     /* Defer TCP Pure (zero length) ACK-packets */
     if (defer_flow && NET_BUFFER_DATA_LENGTH(netBuf) == headerOffset) {
-      const NTSTATUS status = fort_defer_add(&g_device->defer,
+      const NTSTATUS status = fort_defer_packet_add(&g_device->defer,
         inFixedValues, inMetaValues, netBufList, inbound,
         flow->opt.group_index);
 
       if (NT_SUCCESS(status))
-        goto block;
+        goto drop;
 
       if (status == STATUS_CANT_TERMINATE_SELF) {
         /* Clear ACK deferring */
-        fort_stat_flow_flags_clear(flow, defer_flag);
+        fort_flow_flags_clear(flow, defer_flag);
       }
+
+      goto permit;
+    }
+
+    /* Fragment first TCP packet */
+    if (fragment_packet) {
+      fort_defer_stream_flush(&g_device->defer, fort_packet_inject_complete,
+        flow->flow_id, FALSE);
+
+      fort_flow_flags_set(flow, FORT_FLOW_FRAGMENTED);
     }
   }
 
- /* permit: */
+ permit:
   fort_callout_classify_permit(filter, classifyOut);
   return;
 
- block:
+ drop:
   fort_callout_classify_drop(classifyOut);
   return;
 }
@@ -721,8 +780,17 @@ fort_callout_remove (void)
 static void
 fort_callout_defer_flush (UINT32 list_bits, BOOL dispatchLevel)
 {
-  fort_defer_flush(&g_device->defer, fort_transport_inject_complete,
-                   list_bits, dispatchLevel);
+  fort_defer_packet_flush(&g_device->defer, fort_packet_inject_complete,
+                          list_bits, dispatchLevel);
+}
+
+static void
+fort_callout_defer_flush_all (void)
+{
+  fort_callout_defer_flush(FORT_DEFER_FLUSH_ALL, FALSE);
+
+  fort_defer_stream_flush(&g_device->defer, fort_packet_inject_complete,
+                          FORT_DEFER_STREAM_ALL, FALSE);
 }
 
 static NTSTATUS
@@ -766,15 +834,16 @@ fort_callout_force_reauth (const FORT_CONF_FLAGS old_conf_flags,
   }
 
   /* Check flow filter */
-  if (old_conf_flags.log_stat != conf_flags.log_stat) {
+  if (old_conf_flags.log_stat != conf_flags.log_stat
+      || old_conf_flags.filter_transport != conf_flags.filter_transport) {
     if (old_conf_flags.log_stat) {
       fort_prov_flow_unregister(engine);
     }
 
  stat_prov:
     if (conf_flags.log_stat) {
-      const BOOL is_speed_limit = (stat->limit_bits != 0);
-      if ((status = fort_prov_flow_register(engine, is_speed_limit)))
+      if ((status = fort_prov_flow_register(engine,
+          conf_flags.filter_transport)))
         goto cleanup;
     }
   }
@@ -989,13 +1058,15 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
       if (conf_ref == NULL) {
         status = STATUS_INSUFFICIENT_RESOURCES;
       } else {
+        PFORT_STAT stat = &g_device->stat;
+
         const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(conf_ref);
         const FORT_CONF_FLAGS conf_flags = conf_ref->conf.flags;
 
         const UINT32 defer_flush_bits =
-          (g_device->stat.limit_bits ^ conf_io->limit_bits);
+          (stat->conf_group.limit_bits ^ conf_io->conf_group.limit_bits);
 
-        fort_stat_update_limits(&g_device->stat, conf_io);
+        fort_stat_conf_update(stat, conf_io);
 
         status = fort_callout_force_reauth(old_conf_flags, conf_flags,
                                            defer_flush_bits);
@@ -1064,7 +1135,7 @@ fort_power_callback (PVOID context, PVOID event, PVOID specifics)
   g_device->power_off = power_off;
 
   if (power_off) {
-    fort_callout_defer_flush(FORT_DEFER_FLUSH_ALL, FALSE);
+    fort_callout_defer_flush_all();
   }
 }
 
@@ -1154,7 +1225,7 @@ fort_driver_unload (PDRIVER_OBJECT driver)
   UNICODE_STRING device_link;
 
   if (g_device != NULL) {
-    fort_callout_defer_flush(FORT_DEFER_FLUSH_ALL, FALSE);
+    fort_callout_defer_flush_all();
 
     fort_timer_close(&g_device->app_timer);
     fort_timer_close(&g_device->log_timer);
@@ -1205,6 +1276,9 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
   NTSTATUS status;
 
   UNUSED(reg_path);
+
+  // Use NX Non-Paged Pool
+  ExInitializeDriverRuntime(DrvRtPoolNxOptIn);
 
   /* Wait for BFE to start */
   status = fort_bfe_wait();

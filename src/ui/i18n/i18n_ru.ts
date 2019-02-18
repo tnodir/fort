@@ -315,22 +315,22 @@
         <translation>Сдвинуть направо</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="47"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="49"/>
         <source>Enabled</source>
         <translation>Включено</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="62"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="64"/>
         <source>period, hours:</source>
         <translation>период, часы</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="101"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="103"/>
         <source>Block</source>
         <translation>Блокировать</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="121"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="123"/>
         <source>Allow</source>
         <translation>Разрешить</translation>
     </message>
@@ -486,9 +486,15 @@
         <translation>Ограничение скорости выгрузки, KiB/s:</translation>
     </message>
     <message>
+        <location filename="../qml/pages/apps/GroupOptionsButton.qml" line="11"/>
         <location filename="../qml/pages/log/TrafOptionsButton.qml" line="11"/>
         <source>Options…</source>
         <translation>Настройки…</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/apps/GroupOptionsButton.qml" line="16"/>
+        <source>Fragment first TCP packet</source>
+        <translation>Фрагментировать первый TCP пакет</translation>
     </message>
     <message>
         <location filename="../qml/pages/log/TrafOptionsButton.qml" line="21"/>

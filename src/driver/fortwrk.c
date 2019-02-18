@@ -3,7 +3,7 @@
 #define FORT_WORKER_REAUTH	0x01
 
 typedef struct fort_worker {
-  LONG volatile id_bits;
+  UCHAR volatile id_bits;
 
   PIO_WORKITEM item;
 } FORT_WORKER, *PFORT_WORKER;
@@ -27,7 +27,7 @@ static void
 fort_worker_callback (PVOID device, PVOID context, PIO_WORKITEM item)
 {
   PFORT_WORKER worker = (PFORT_WORKER) context;
-  const LONG id_bits = InterlockedAnd(&worker->id_bits, 0);
+  const UCHAR id_bits = InterlockedAnd8(&worker->id_bits, 0);
 
   UNUSED(device);
   UNUSED(item);
@@ -38,9 +38,9 @@ fort_worker_callback (PVOID device, PVOID context, PIO_WORKITEM item)
 }
 
 static void
-fort_worker_queue (PFORT_WORKER worker, int work_id)
+fort_worker_queue (PFORT_WORKER worker, UCHAR work_id)
 {
-  const LONG id_bits = InterlockedOr(&worker->id_bits, work_id);
+  const UCHAR id_bits = InterlockedOr8(&worker->id_bits, work_id);
 
   if (id_bits == 0) {
     IoQueueWorkItemEx(worker->item, &fort_worker_callback,

@@ -8,6 +8,7 @@ class AppGroup : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
+    Q_PROPERTY(bool fragmentPacket READ fragmentPacket WRITE setFragmentPacket NOTIFY fragmentPacketChanged)
     Q_PROPERTY(bool periodEnabled READ periodEnabled WRITE setPeriodEnabled NOTIFY periodEnabledChanged)
     Q_PROPERTY(int periodFrom READ periodFrom WRITE setPeriodFrom NOTIFY periodFromChanged)
     Q_PROPERTY(int periodTo READ periodTo WRITE setPeriodTo NOTIFY periodToChanged)
@@ -24,6 +25,9 @@ public:
 
     bool enabled() const { return m_enabled; }
     void setEnabled(bool enabled);
+
+    bool fragmentPacket() const { return m_fragmentPacket; }
+    void setFragmentPacket(bool enabled);
 
     bool periodEnabled() const { return m_periodEnabled; }
     void setPeriodEnabled(bool periodEnabled);
@@ -46,6 +50,13 @@ public:
     quint32 speedLimitOut() const { return m_speedLimitOut; }
     void setSpeedLimitOut(quint32 limit);
 
+    quint32 enabledSpeedLimitIn() const {
+        return limitInEnabled() ? speedLimitIn() : 0;
+    }
+    quint32 enabledSpeedLimitOut() const {
+        return limitOutEnabled() ? speedLimitOut() : 0;
+    }
+
     QString name() const { return m_name; }
     void setName(const QString &name);
 
@@ -62,6 +73,7 @@ public:
 
 signals:
     void enabledChanged();
+    void fragmentPacketChanged();
     void periodEnabledChanged();
     void periodFromChanged();
     void periodToChanged();
@@ -77,6 +89,8 @@ public slots:
 
 private:
     uint m_enabled          : 1;
+
+    uint m_fragmentPacket   : 1;
 
     uint m_periodEnabled    : 1;
     uint m_periodFrom       : 5;

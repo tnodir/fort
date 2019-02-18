@@ -97,6 +97,7 @@ int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
     confFlags->app_allow_all = conf.appAllowAll();
     confFlags->log_blocked = conf.logBlocked();
     confFlags->log_stat = conf.logStat();
+    confFlags->filter_transport = appGroupFilterTransport(conf);
     confFlags->group_bits = conf.appGroupBits();
 
     return flagsSize;
@@ -313,8 +314,10 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
 
     drvConfIo->driver_version = DRIVER_VERSION;
 
-    drvConfIo->limit_bits = writeLimits(
-                drvConfIo->limits, conf.appGroupsList());
+    drvConfIo->conf_group.fragment_bits = appGroupFragmentBits(conf);
+
+    drvConfIo->conf_group.limit_bits = writeLimits(
+                drvConfIo->conf_group.limits, conf.appGroupsList());
 
     drvConf->flags.prov_boot = conf.provBoot();
     drvConf->flags.filter_enabled = conf.filterEnabled();
@@ -327,6 +330,8 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
 
     drvConf->flags.log_blocked = conf.logBlocked();
     drvConf->flags.log_stat = conf.logStat();
+
+    drvConf->flags.filter_transport = appGroupFilterTransport(conf);
 
     drvConf->flags.group_bits = conf.appGroupBits();
 
@@ -343,6 +348,37 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     drvConf->apps_off = appPathsOff;
 }
 
+quint16 ConfUtil::appGroupFragmentBits(const FirewallConf &conf)
+{
+    quint16 fragmentBits = 0;
+    int i = 0;
+    foreach (const AppGroup *appGroup, conf.appGroupsList()) {
+        if (appGroup->enabled() && appGroup->fragmentPacket()) {
+            fragmentBits |= (1 << i);
+        }
+        ++i;
+    }
+    return fragmentBits;
+}
+
+bool ConfUtil::appGroupFilterTransport(const FirewallConf &conf)
+{
+    foreach (const AppGroup *appGroup, conf.appGroupsList()) {
+        if (!appGroup->enabled())
+            continue;
+
+        // Fragment
+        if (appGroup->fragmentPacket())
+            return true;
+
+        // Speed limit
+        if (appGroup->enabledSpeedLimitIn() != 0
+                || appGroup->enabledSpeedLimitOut() != 0)
+            return true;
+    }
+    return false;
+}
+
 quint32 ConfUtil::writeLimits(struct fort_traf *limits,
                               const QList<AppGroup *> &appGroups)
 {
@@ -353,10 +389,11 @@ quint32 ConfUtil::writeLimits(struct fort_traf *limits,
     for (int i = 0; i < groupsCount; ++i, ++limit) {
         const AppGroup *appGroup = appGroups.at(i);
 
-        limit->in_bytes = appGroup->enabled() && appGroup->limitInEnabled()
-                ? appGroup->speedLimitIn() * 1024 / 2 : 0;
-        limit->out_bytes = appGroup->enabled() && appGroup->limitOutEnabled()
-                ? appGroup->speedLimitOut() * 1024 / 2 : 0;
+        if (!appGroup->enabled())
+            continue;
+
+        limit->in_bytes = appGroup->enabledSpeedLimitIn() * 1024 / 2;
+        limit->out_bytes = appGroup->enabledSpeedLimitOut() * 1024 / 2;
 
         if (limit->in_bytes) {
             limitBits |= (1 << (i * 2));

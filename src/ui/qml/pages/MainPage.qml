@@ -50,7 +50,7 @@ Page {
                     : fortManager.applyConf(confFlagsOnly);
         }
 
-        if (confSaved) {
+        if (confSaved && othersEdited) {
             mainPage.saved();
         }
 
