@@ -13,6 +13,8 @@ Frame {
     ScrollView {
         anchors.fill: parent
 
+        contentHeight: textArea.implicitHeight  // Workaround for QTBUG-72536
+
         TextArea {
             id: textArea
             clip: true  // to clip placeholder text
