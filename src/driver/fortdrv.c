@@ -317,14 +317,14 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
     if (!fort_conf_app_blocked(&conf_ref->conf, app_index)) {
       if (conf_flags.log_stat) {
-        const UINT64 flowId = inMetaValues->flowHandle;
+        const UINT64 flow_id = inMetaValues->flowHandle;
         const UCHAR group_index = fort_conf_app_group_index(
           &conf_ref->conf, app_index);
         const BOOL is_reauth = (flags & FWP_CONDITION_FLAG_IS_REAUTHORIZE);
         BOOL is_new_proc = FALSE;
         NTSTATUS status;
 
-        status = fort_flow_associate(&g_device->stat, flowId, process_id,
+        status = fort_flow_associate(&g_device->stat, flow_id, process_id,
           group_index, is_reauth, &is_new_proc);
 
         if (!NT_SUCCESS(status)) {
@@ -414,6 +414,30 @@ fort_packet_inject_complete (PFORT_PACKET pkt,
 }
 
 static void
+fort_callout_defer_packet_flush (UINT64 flow_id,
+                                 UINT32 list_bits,
+                                 BOOL dispatchLevel)
+{
+  fort_defer_packet_flush(&g_device->defer, fort_packet_inject_complete,
+                          flow_id, list_bits, dispatchLevel);
+}
+
+static void
+fort_callout_defer_stream_flush (UINT64 flow_id,
+                                 BOOL dispatchLevel)
+{
+  fort_defer_stream_flush(&g_device->defer, fort_packet_inject_complete,
+                          flow_id, FALSE);
+}
+
+static void
+fort_callout_defer_flush (UINT64 flow_id)
+{
+  fort_callout_defer_packet_flush(flow_id, FORT_DEFER_FLUSH_ALL, FALSE);
+  fort_callout_defer_stream_flush(flow_id, FALSE);
+}
+
+static void
 fort_callout_flow_classify_v4 (const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
                                UINT64 flowContext,
                                FWPS_CLASSIFY_OUT0 *classifyOut,
@@ -443,6 +467,20 @@ fort_callout_stream_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   fort_callout_flow_classify_v4(inMetaValues, flowContext,
     classifyOut, dataSize, inbound);
+
+  /* Flush flow's deferred TCP packets on FIN */
+  if (streamFlags & (FWPS_STREAM_FLAG_RECEIVE_DISCONNECT
+      | FWPS_STREAM_FLAG_SEND_DISCONNECT)) {
+    PFORT_FLOW flow = (PFORT_FLOW) flowContext;
+
+    const UCHAR flow_flags = fort_flow_flags(flow);
+
+    if (flow_flags & (FORT_FLOW_SPEED_LIMIT | FORT_FLOW_FRAGMENT)) {
+      fort_callout_defer_flush(flow->flow_id);
+    }
+
+    goto permit;
+  }
 
   /* Fragment first TCP packet */
   if ((streamFlags & (FWPS_STREAM_FLAG_SEND
@@ -477,7 +515,7 @@ fort_callout_stream_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
     }
   }
 
- /* permit: */
+ permit:
   fort_callout_classify_permit(filter, classifyOut);
   return;
 
@@ -777,22 +815,6 @@ fort_callout_remove (void)
   }
 }
 
-static void
-fort_callout_defer_flush (UINT32 list_bits, BOOL dispatchLevel)
-{
-  fort_defer_packet_flush(&g_device->defer, fort_packet_inject_complete,
-                          list_bits, dispatchLevel);
-}
-
-static void
-fort_callout_defer_flush_all (void)
-{
-  fort_callout_defer_flush(FORT_DEFER_FLUSH_ALL, FALSE);
-
-  fort_defer_stream_flush(&g_device->defer, fort_packet_inject_complete,
-                          FORT_DEFER_STREAM_ALL, FALSE);
-}
-
 static NTSTATUS
 fort_callout_force_reauth (const FORT_CONF_FLAGS old_conf_flags,
                            const FORT_CONF_FLAGS conf_flags,
@@ -815,7 +837,7 @@ fort_callout_force_reauth (const FORT_CONF_FLAGS old_conf_flags,
   }
 
   if (defer_flush_bits != 0) {
-    fort_callout_defer_flush(defer_flush_bits, FALSE);
+    fort_callout_defer_packet_flush(FORT_DEFER_STREAM_ALL, defer_flush_bits, FALSE);
   }
 
   if ((status = fort_prov_open(&engine)))
@@ -942,7 +964,7 @@ fort_callout_timer (void)
   }
 
   /* Flush deferred packets */
-  fort_callout_defer_flush(defer_flush_bits, TRUE);
+  fort_callout_defer_packet_flush(FORT_DEFER_STREAM_ALL, defer_flush_bits, TRUE);
 }
 
 static void
@@ -1135,7 +1157,7 @@ fort_power_callback (PVOID context, PVOID event, PVOID specifics)
   g_device->power_off = power_off;
 
   if (power_off) {
-    fort_callout_defer_flush_all();
+    fort_callout_defer_flush(FORT_DEFER_STREAM_ALL);
   }
 }
 
@@ -1225,7 +1247,7 @@ fort_driver_unload (PDRIVER_OBJECT driver)
   UNICODE_STRING device_link;
 
   if (g_device != NULL) {
-    fort_callout_defer_flush_all();
+    fort_callout_defer_flush(FORT_DEFER_STREAM_ALL);
 
     fort_timer_close(&g_device->app_timer);
     fort_timer_close(&g_device->log_timer);
