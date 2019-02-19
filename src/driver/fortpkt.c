@@ -50,8 +50,8 @@ typedef struct fort_packet_out {
   COMPARTMENT_ID compartmentId;
 
   UINT32 remoteAddr4;
-
   SCOPE_ID remoteScopeId;
+
   UINT64 endpointHandle;
 } FORT_PACKET_OUT, *PFORT_PACKET_OUT;
 
