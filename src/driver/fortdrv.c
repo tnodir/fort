@@ -475,8 +475,12 @@ fort_callout_stream_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
     const UCHAR flow_flags = fort_flow_flags(flow);
 
-    if (flow_flags & (FORT_FLOW_SPEED_LIMIT | FORT_FLOW_FRAGMENT)) {
-      fort_callout_defer_flush(flow->flow_id);
+    if (flow_flags & FORT_FLOW_SPEED_LIMIT) {
+      fort_callout_defer_packet_flush(flow->flow_id, FORT_DEFER_FLUSH_ALL, FALSE);
+    }
+
+    if (flow_flags & FORT_FLOW_FRAGMENT) {
+      fort_callout_defer_stream_flush(flow->flow_id, FALSE);
     }
 
     goto permit;
