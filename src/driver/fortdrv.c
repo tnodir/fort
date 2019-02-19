@@ -431,10 +431,10 @@ fort_callout_defer_stream_flush (UINT64 flow_id,
 }
 
 static void
-fort_callout_defer_flush (UINT64 flow_id)
+fort_callout_defer_flush (void)
 {
-  fort_callout_defer_packet_flush(flow_id, FORT_DEFER_FLUSH_ALL, FALSE);
-  fort_callout_defer_stream_flush(flow_id, FALSE);
+  fort_callout_defer_packet_flush(FORT_DEFER_STREAM_ALL, FORT_DEFER_FLUSH_ALL, FALSE);
+  fort_callout_defer_stream_flush(FORT_DEFER_STREAM_ALL, FALSE);
 }
 
 static void
@@ -1161,7 +1161,7 @@ fort_power_callback (PVOID context, PVOID event, PVOID specifics)
   g_device->power_off = power_off;
 
   if (power_off) {
-    fort_callout_defer_flush(FORT_DEFER_STREAM_ALL);
+    fort_callout_defer_flush();
   }
 }
 
@@ -1251,7 +1251,7 @@ fort_driver_unload (PDRIVER_OBJECT driver)
   UNICODE_STRING device_link;
 
   if (g_device != NULL) {
-    fort_callout_defer_flush(FORT_DEFER_STREAM_ALL);
+    fort_callout_defer_flush();
 
     fort_timer_close(&g_device->app_timer);
     fort_timer_close(&g_device->log_timer);
