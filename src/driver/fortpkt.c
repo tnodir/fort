@@ -60,6 +60,8 @@ typedef struct fort_packet_stream {
 
   UINT32 streamFlags;
   UINT32 calloutId;
+
+  UINT64 flow_id;
 } FORT_PACKET_STREAM, *PFORT_PACKET_STREAM;
 
 typedef struct fort_packet {
@@ -67,8 +69,6 @@ typedef struct fort_packet {
   UINT32 is_stream	: 1;
   UINT32 dataOffset	: 12;
   UINT32 dataSize	: 18;
-
-  UINT64 flow_id;
 
   PNET_BUFFER_LIST netBufList;
 
@@ -200,7 +200,7 @@ fort_packet_inject_stream (PFORT_DEFER defer,
   if (NT_SUCCESS(status)) {
     status = FwpsStreamInjectAsync0(
       defer->stream_injection4_id, NULL, 0,
-      pkt->flow_id, pkt_stream->calloutId,
+      pkt_stream->flow_id, pkt_stream->calloutId,
       pkt_stream->layerId, pkt_stream->streamFlags,
       *clonedNetBufList, pkt->dataSize,
       complete_func, pkt);
@@ -300,46 +300,57 @@ fort_defer_list_add (PFORT_DEFER_LIST defer_list,
 
 static PFORT_PACKET
 fort_defer_list_get (PFORT_DEFER_LIST defer_list,
-                     PFORT_PACKET pkt_chain,
-                     UINT64 flow_id)
+                     PFORT_PACKET pkt_chain)
 {
   if (defer_list->packet_head != NULL) {
-    if (flow_id == FORT_DEFER_STREAM_ALL) {
-      defer_list->packet_tail->next = pkt_chain;
-      pkt_chain = defer_list->packet_head;
+    defer_list->packet_tail->next = pkt_chain;
+    pkt_chain = defer_list->packet_head;
 
-      defer_list->packet_head = defer_list->packet_tail = NULL;
-    } else {
-      PFORT_PACKET pkt_tail = pkt_chain;
-      PFORT_PACKET pkt_prev = NULL;
-      PFORT_PACKET pkt = defer_list->packet_head;
+    defer_list->packet_head = defer_list->packet_tail = NULL;
+  }
 
-      do {
-        PFORT_PACKET pkt_next = pkt->next;
+  return pkt_chain;
+}
 
-        if (flow_id == pkt->flow_id) {
-          if (pkt_prev == NULL) {
-            pkt_chain = pkt;
-          } else {
-            pkt_prev->next = pkt;
-          }
+static PFORT_PACKET
+fort_defer_list_flow_get (PFORT_DEFER_LIST defer_list,
+                          PFORT_PACKET pkt_chain,
+                          UINT64 flow_id)
+{
+  if (flow_id == FORT_DEFER_STREAM_ALL) {
+    return fort_defer_list_get(defer_list, pkt_chain);
+  }
 
-          pkt_prev = pkt;
-          pkt->next = pkt_tail;
+  if (defer_list->packet_head != NULL) {
+    PFORT_PACKET pkt_tail = pkt_chain;
+    PFORT_PACKET pkt_prev = NULL;
+    PFORT_PACKET pkt = defer_list->packet_head;
 
-          if (pkt == defer_list->packet_head) {
-            defer_list->packet_head = pkt_next;
-          }
+    do {
+      PFORT_PACKET pkt_next = pkt->next;
 
-          if (pkt == defer_list->packet_tail) {
-            defer_list->packet_tail = NULL;
-            break;
-          }
+      if (flow_id == pkt->stream.flow_id) {
+        if (pkt_prev == NULL) {
+          pkt_chain = pkt;
+        } else {
+          pkt_prev->next = pkt;
         }
 
-        pkt = pkt_next;
-      } while (pkt != NULL);
-    }
+        pkt_prev = pkt;
+        pkt->next = pkt_tail;
+
+        if (pkt == defer_list->packet_head) {
+          defer_list->packet_head = pkt_next;
+        }
+
+        if (pkt == defer_list->packet_tail) {
+          defer_list->packet_tail = NULL;
+          break;
+        }
+      }
+
+      pkt = pkt_next;
+    } while (pkt != NULL);
   }
 
   return pkt_chain;
@@ -398,7 +409,6 @@ fort_defer_packet_add (PFORT_DEFER defer,
   pkt->is_stream = FALSE;
   pkt->dataOffset = 0;
   pkt->dataSize = 0;  /* not used */
-  pkt->flow_id = inMetaValues->flowHandle;
   pkt->netBufList = netBufList;
   pkt->next = NULL;
 
@@ -493,7 +503,6 @@ fort_defer_stream_add (PFORT_DEFER defer,
   pkt->is_stream = TRUE;
   pkt->dataOffset = (UINT32) streamData->dataOffset.streamDataOffset;
   pkt->dataSize = (UINT32) streamData->dataLength;
-  pkt->flow_id = inMetaValues->flowHandle;
   pkt->netBufList = streamData->netBufferListChain;
   pkt->next = NULL;
 
@@ -503,6 +512,7 @@ fort_defer_stream_add (PFORT_DEFER defer,
     pkt_stream->layerId = inFixedValues->layerId;
     pkt_stream->streamFlags = streamData->flags;
     pkt_stream->calloutId = filter->action.calloutId;
+    pkt_stream->flow_id = inMetaValues->flowHandle;
   }
 
   FwpsReferenceNetBufferList0(pkt->netBufList, TRUE);
@@ -587,7 +597,6 @@ fort_defer_packet_inject (PFORT_DEFER defer,
 static void
 fort_defer_packet_flush (PFORT_DEFER defer,
                          FORT_INJECT_COMPLETE_FUNC complete_func,
-                         UINT64 flow_id,
                          UINT32 list_bits,
                          BOOL dispatchLevel)
 {
@@ -617,7 +626,7 @@ fort_defer_packet_flush (PFORT_DEFER defer,
 
     defer_list = &defer->lists[i];
 
-    pkt_chain = fort_defer_list_get(defer_list, pkt_chain, flow_id);
+    pkt_chain = fort_defer_list_get(defer_list, pkt_chain);
   }
 
   /* Clear flushed bits */
@@ -647,7 +656,7 @@ fort_defer_stream_flush (PFORT_DEFER defer,
     KeAcquireInStackQueuedSpinLock(&defer->lock, &lock_queue);
   }
 
-  pkt_chain = fort_defer_list_get(&defer->stream_list, NULL, flow_id);
+  pkt_chain = fort_defer_list_flow_get(&defer->stream_list, NULL, flow_id);
 
   if (dispatchLevel) {
     KeReleaseInStackQueuedSpinLockFromDpcLevel(&lock_queue);

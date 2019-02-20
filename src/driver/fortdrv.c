@@ -414,12 +414,11 @@ fort_packet_inject_complete (PFORT_PACKET pkt,
 }
 
 static void
-fort_callout_defer_packet_flush (UINT64 flow_id,
-                                 UINT32 list_bits,
+fort_callout_defer_packet_flush (UINT32 list_bits,
                                  BOOL dispatchLevel)
 {
   fort_defer_packet_flush(&g_device->defer, fort_packet_inject_complete,
-                          flow_id, list_bits, dispatchLevel);
+                          list_bits, dispatchLevel);
 }
 
 static void
@@ -433,7 +432,7 @@ fort_callout_defer_stream_flush (UINT64 flow_id,
 static void
 fort_callout_defer_flush (void)
 {
-  fort_callout_defer_packet_flush(FORT_DEFER_STREAM_ALL, FORT_DEFER_FLUSH_ALL, FALSE);
+  fort_callout_defer_packet_flush(FORT_DEFER_FLUSH_ALL, FALSE);
   fort_callout_defer_stream_flush(FORT_DEFER_STREAM_ALL, FALSE);
 }
 
@@ -469,6 +468,7 @@ fort_callout_stream_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
     classifyOut, dataSize, inbound);
 
   /* Flush flow's deferred TCP packets on FIN */
+  #if 0
   if (streamFlags & (FWPS_STREAM_FLAG_RECEIVE_DISCONNECT
       | FWPS_STREAM_FLAG_SEND_DISCONNECT)) {
     PFORT_FLOW flow = (PFORT_FLOW) flowContext;
@@ -485,6 +485,7 @@ fort_callout_stream_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
     goto permit;
   }
+  #endif
 
   /* Fragment first TCP packet */
   if ((streamFlags & (FWPS_STREAM_FLAG_SEND
@@ -519,7 +520,7 @@ fort_callout_stream_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
     }
   }
 
- permit:
+ /* permit: */
   fort_callout_classify_permit(filter, classifyOut);
   return;
 
@@ -841,7 +842,7 @@ fort_callout_force_reauth (const FORT_CONF_FLAGS old_conf_flags,
   }
 
   if (defer_flush_bits != 0) {
-    fort_callout_defer_packet_flush(FORT_DEFER_STREAM_ALL, defer_flush_bits, FALSE);
+    fort_callout_defer_packet_flush(defer_flush_bits, FALSE);
   }
 
   if ((status = fort_prov_open(&engine)))
@@ -968,7 +969,7 @@ fort_callout_timer (void)
   }
 
   /* Flush deferred packets */
-  fort_callout_defer_packet_flush(FORT_DEFER_STREAM_ALL, defer_flush_bits, TRUE);
+  fort_callout_defer_packet_flush(defer_flush_bits, TRUE);
 }
 
 static void
