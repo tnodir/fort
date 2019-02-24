@@ -281,7 +281,7 @@ void GraphWindow::updateWindowTitleSpeed()
 
 void GraphWindow::setWindowOpacityPercent(int percent)
 {
-    setWindowOpacity(qreal(100 - qBound(0, percent, 99)) / 100.0);
+    setWindowOpacity(qreal(qBound(0, percent, 99)) / 100.0);
 }
 
 QPen GraphWindow::adjustPen(const QPen &pen, const QColor &color)

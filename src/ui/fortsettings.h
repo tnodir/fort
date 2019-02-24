@@ -86,10 +86,10 @@ public:
     bool graphWindowHideOnHover() const { return iniBool("graphWindow/hideOnHover"); }
     void setGraphWindowHideOnHover(bool on) { setIniValue("graphWindow/hideOnHover", on); }
 
-    int graphWindowOpacity() const { return iniInt("graphWindow/opacity", 10); }
+    int graphWindowOpacity() const { return iniInt("graphWindow/opacity", 90); }
     void setGraphWindowOpacity(int v) { setIniValue("graphWindow/opacity", v); }
 
-    int graphWindowHoverOpacity() const { return iniInt("graphWindow/hoverOpacity", 5); }
+    int graphWindowHoverOpacity() const { return iniInt("graphWindow/hoverOpacity", 95); }
     void setGraphWindowHoverOpacity(int v) { setIniValue("graphWindow/hoverOpacity", v); }
 
     int graphWindowMaxSeconds() const { return iniInt("graphWindow/maxSeconds", 500); }
