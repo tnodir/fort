@@ -37,6 +37,7 @@ typedef struct fort_device {
   UINT32 prov_boot	: 1;
   UINT32 is_opened	: 1;
   UINT32 power_off	: 1;
+  UINT32 filter_transport : 1;
 
   UINT32 connect4_id;
   UINT32 accept4_id;
@@ -864,12 +865,12 @@ fort_callout_force_reauth (const FORT_CONF_FLAGS old_conf_flags,
   {
     const UINT16 filter_bits = (stat->conf_group.fragment_bits
       | stat->conf_group.limit_bits);
-
-    const BOOL old_filter_transport = (old_conf_flags.group_bits & filter_bits) != 0;
     const BOOL filter_transport = (conf_flags.group_bits & filter_bits) != 0;
 
     if (old_conf_flags.log_stat != conf_flags.log_stat
-        || old_filter_transport != filter_transport) {
+        || g_device->filter_transport != filter_transport) {
+      g_device->filter_transport = filter_transport;
+
       if (old_conf_flags.log_stat) {
         fort_prov_flow_unregister(engine);
       }
