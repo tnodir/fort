@@ -131,13 +131,16 @@ fort_conf_ref_set (PFORT_CONF_REF conf_ref)
     }
 
     if (conf_ref != NULL) {
-      const PFORT_CONF_FLAGS conf_flags = &conf_ref->conf.flags;
+      PFORT_CONF conf = &conf_ref->conf;
+      const PFORT_CONF_FLAGS conf_flags = &conf->flags;
 
       g_device->prov_boot = conf_flags->prov_boot;
 
       g_device->conf_flags = *conf_flags;
     } else {
       RtlZeroMemory((void *) &g_device->conf_flags, sizeof(FORT_CONF_FLAGS));
+
+      g_device->conf_flags.prov_boot = g_device->prov_boot;
     }
   }
   KeReleaseInStackQueuedSpinLock(&lock_queue);
@@ -166,7 +169,7 @@ fort_conf_ref_flags_set (const PFORT_CONF_FLAGS conf_flags)
       old_conf_flags = conf->flags;
       conf->flags = *conf_flags;
 
-      fort_conf_app_perms_mask_init(conf, conf->flags.group_bits);
+      fort_conf_app_perms_mask_init(conf, conf_flags->group_bits);
 
       g_device->prov_boot = conf_flags->prov_boot;
 
@@ -175,7 +178,7 @@ fort_conf_ref_flags_set (const PFORT_CONF_FLAGS conf_flags)
       RtlZeroMemory(&old_conf_flags, sizeof(FORT_CONF_FLAGS));
       old_conf_flags.prov_boot = g_device->prov_boot;
 
-      RtlZeroMemory((void *) &g_device->conf_flags, sizeof(FORT_CONF_FLAGS));
+      g_device->conf_flags = old_conf_flags;
     }
   }
   KeReleaseInStackQueuedSpinLock(&lock_queue);
@@ -823,17 +826,29 @@ fort_callout_remove (void)
 
 static NTSTATUS
 fort_callout_force_reauth (const FORT_CONF_FLAGS old_conf_flags,
-                           const FORT_CONF_FLAGS conf_flags,
                            UINT32 defer_flush_bits)
 {
   PFORT_STAT stat = &g_device->stat;
+  FORT_CONF_FLAGS conf_flags;
 
   HANDLE engine;
   NTSTATUS status;
 
   fort_timer_update(&g_device->log_timer, FALSE);
-  fort_timer_update(&g_device->app_timer, FALSE);
 
+  /* Check app group periods & update group_bits */
+  {
+    int periods_n = 0;
+
+    fort_conf_period_update(&periods_n);
+
+    fort_timer_update(&g_device->app_timer,
+      (periods_n != 0));
+  }
+
+  conf_flags = g_device->conf_flags;
+
+  /* Handle log_stat */
   if (old_conf_flags.log_stat != conf_flags.log_stat) {
     fort_stat_update(stat, conf_flags.log_stat);
 
@@ -846,6 +861,7 @@ fort_callout_force_reauth (const FORT_CONF_FLAGS old_conf_flags,
     fort_callout_defer_packet_flush(defer_flush_bits, FALSE);
   }
 
+  /* Open provider */
   if ((status = fort_prov_open(&engine)))
     goto end;
 
@@ -863,8 +879,9 @@ fort_callout_force_reauth (const FORT_CONF_FLAGS old_conf_flags,
 
   /* Check flow filter */
   {
-    const UINT16 filter_bits = (stat->conf_group.fragment_bits
-      | stat->conf_group.limit_bits);
+    const PFORT_CONF_GROUP conf_group = &stat->conf_group;
+    const UINT16 filter_bits = (conf_group->fragment_bits | conf_group->limit_bits);
+
     const BOOL filter_transport = (conf_flags.group_bits & filter_bits) != 0;
 
     if (old_conf_flags.log_stat != conf_flags.log_stat
@@ -889,16 +906,6 @@ fort_callout_force_reauth (const FORT_CONF_FLAGS old_conf_flags,
 
   fort_timer_update(&g_device->log_timer,
     (conf_flags.log_blocked || conf_flags.log_stat));
-
-  /* Check app group periods */
-  {
-    int periods_n = 0;
-
-    fort_conf_period_update(&periods_n);
-
-    fort_timer_update(&g_device->app_timer,
-      (periods_n != 0));
-  }
 
  cleanup:
   if (NT_SUCCESS(status)) {
@@ -981,10 +988,25 @@ fort_callout_timer (void)
 }
 
 static void
+fort_worker_reauth (void)
+{
+  const FORT_CONF_FLAGS conf_flags = g_device->conf_flags;
+  NTSTATUS status;
+
+  status = fort_callout_force_reauth(conf_flags, 0);
+
+  if (!NT_SUCCESS(status)) {
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+               "FORT: Worker Reauth: Error: %x\n", status);
+  }
+}
+
+static void
 fort_app_period_timer (void)
 {
   if (fort_conf_period_update(NULL)) {
-    fort_worker_queue(&g_device->worker, FORT_WORKER_REAUTH);
+    fort_worker_queue(&g_device->worker,
+      FORT_WORKER_REAUTH, &fort_worker_reauth);
   }
 }
 
@@ -1029,13 +1051,8 @@ fort_device_cleanup (PDEVICE_OBJECT device, PIRP irp)
   /* Clear conf */
   {
     const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(NULL);
-    FORT_CONF_FLAGS conf_flags;
 
-    RtlZeroMemory(&conf_flags, sizeof(FORT_CONF_FLAGS));
-    conf_flags.prov_boot = g_device->prov_boot;
-
-    fort_callout_force_reauth(old_conf_flags, conf_flags,
-                              FORT_DEFER_FLUSH_ALL);
+    fort_callout_force_reauth(old_conf_flags, FORT_DEFER_FLUSH_ALL);
   }
 
   /* Clear buffer */
@@ -1096,15 +1113,13 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
         PFORT_STAT stat = &g_device->stat;
 
         const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(conf_ref);
-        const FORT_CONF_FLAGS conf_flags = conf_ref->conf.flags;
 
         const UINT32 defer_flush_bits =
           (stat->conf_group.limit_2bits ^ conf_io->conf_group.limit_2bits);
 
         fort_stat_conf_update(stat, conf_io);
 
-        status = fort_callout_force_reauth(old_conf_flags, conf_flags,
-                                           defer_flush_bits);
+        status = fort_callout_force_reauth(old_conf_flags, defer_flush_bits);
       }
     }
     break;
@@ -1119,8 +1134,7 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
       const UINT32 defer_flush_bits =
         (old_conf_flags.group_bits != conf_flags->group_bits ? FORT_DEFER_FLUSH_ALL : 0);
 
-      status = fort_callout_force_reauth(old_conf_flags, *conf_flags,
-                                         defer_flush_bits);
+      status = fort_callout_force_reauth(old_conf_flags, defer_flush_bits);
     }
     break;
   }

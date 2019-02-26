@@ -2,26 +2,16 @@
 
 #define FORT_WORKER_REAUTH	0x01
 
+typedef void (*FORT_WORKER_FUNC) (void);
+
 typedef struct fort_worker {
   UCHAR volatile id_bits;
+
+  FORT_WORKER_FUNC reauth_func;
 
   PIO_WORKITEM item;
 } FORT_WORKER, *PFORT_WORKER;
 
-
-static void
-fort_worker_reauth (void)
-{
-  NTSTATUS status;
-
-  /* Force reauth filter */
-  status = fort_prov_reauth(NULL);
-
-  if (!NT_SUCCESS(status)) {
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-               "FORT: Worker Reauth: Error: %x\n", status);
-  }
-}
 
 static void
 fort_worker_callback (PVOID device, PVOID context, PIO_WORKITEM item)
@@ -33,14 +23,19 @@ fort_worker_callback (PVOID device, PVOID context, PIO_WORKITEM item)
   UNUSED(item);
 
   if (id_bits & FORT_WORKER_REAUTH) {
-    fort_worker_reauth();
+    worker->reauth_func();
   }
 }
 
 static void
-fort_worker_queue (PFORT_WORKER worker, UCHAR work_id)
+fort_worker_queue (PFORT_WORKER worker, UCHAR work_id,
+                   FORT_WORKER_FUNC worker_func)
 {
   const UCHAR id_bits = InterlockedOr8(&worker->id_bits, work_id);
+
+  if (work_id == FORT_WORKER_REAUTH) {
+    worker->reauth_func = worker_func;
+  }
 
   if (id_bits == 0) {
     IoQueueWorkItemEx(worker->item, &fort_worker_callback,
