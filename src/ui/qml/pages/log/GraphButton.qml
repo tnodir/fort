@@ -70,7 +70,7 @@ ButtonPopup {
             LabelSpinRow {
                 id: rowOpacity
                 label.text: (translationManager.trTrigger
-                             && qsTranslate("qml", "Opacity")) + ":"
+                             && qsTranslate("qml", "Opacity, %")) + ":"
                 field {
                     from: 0
                     to: 100
@@ -82,7 +82,7 @@ ButtonPopup {
             LabelSpinRow {
                 id: rowHoverOpacity
                 label.text: (translationManager.trTrigger
-                             && qsTranslate("qml", "Hover opacity")) + ":"
+                             && qsTranslate("qml", "Hover opacity, %")) + ":"
                 field {
                     from: 0
                     to: 100
@@ -114,7 +114,7 @@ ButtonPopup {
             LabelColorRow {
                 id: rowColor
                 label.text: (translationManager.trTrigger
-                             && qsTranslate("qml", "Background color")) + ":"
+                             && qsTranslate("qml", "Background")) + ":"
                 defaultColor: fortSettings.graphWindowColor
                 onColorEdited: setGraphEdited()
             }
@@ -122,7 +122,7 @@ ButtonPopup {
             LabelColorRow {
                 id: rowColorIn
                 label.text: (translationManager.trTrigger
-                             && qsTranslate("qml", "Download color")) + ":"
+                             && qsTranslate("qml", "Download")) + ":"
                 defaultColor: fortSettings.graphWindowColorIn
                 onColorEdited: setGraphEdited()
             }
@@ -130,7 +130,7 @@ ButtonPopup {
             LabelColorRow {
                 id: rowColorOut
                 label.text: (translationManager.trTrigger
-                             && qsTranslate("qml", "Upload color")) + ":"
+                             && qsTranslate("qml", "Upload")) + ":"
                 defaultColor: fortSettings.graphWindowColorOut
                 onColorEdited: setGraphEdited()
             }
@@ -138,7 +138,7 @@ ButtonPopup {
             LabelColorRow {
                 id: rowAxisColor
                 label.text: (translationManager.trTrigger
-                             && qsTranslate("qml", "Axis color")) + ":"
+                             && qsTranslate("qml", "Axis")) + ":"
                 defaultColor: fortSettings.graphWindowAxisColor
                 onColorEdited: setGraphEdited()
             }
@@ -146,7 +146,7 @@ ButtonPopup {
             LabelColorRow {
                 id: rowTickLabelColor
                 label.text: (translationManager.trTrigger
-                             && qsTranslate("qml", "Tick label color")) + ":"
+                             && qsTranslate("qml", "Tick label")) + ":"
                 defaultColor: fortSettings.graphWindowTickLabelColor
                 onColorEdited: setGraphEdited()
             }
@@ -154,7 +154,7 @@ ButtonPopup {
             LabelColorRow {
                 id: rowLabelColor
                 label.text: (translationManager.trTrigger
-                             && qsTranslate("qml", "Label color")) + ":"
+                             && qsTranslate("qml", "Label")) + ":"
                 defaultColor: fortSettings.graphWindowLabelColor
                 onColorEdited: setGraphEdited()
             }
@@ -162,7 +162,7 @@ ButtonPopup {
             LabelColorRow {
                 id: rowGridColor
                 label.text: (translationManager.trTrigger
-                             && qsTranslate("qml", "Grid color")) + ":"
+                             && qsTranslate("qml", "Grid")) + ":"
                 defaultColor: fortSettings.graphWindowGridColor
                 onColorEdited: setGraphEdited()
             }

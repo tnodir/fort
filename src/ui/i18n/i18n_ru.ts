@@ -4,17 +4,17 @@
 <context>
     <name>ConfUtil</name>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="123"/>
+        <location filename="../util/conf/confutil.cpp" line="124"/>
         <source>Bad Include IP address: %1</source>
         <translation>Некорректный IP адрес для включения: %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="131"/>
+        <location filename="../util/conf/confutil.cpp" line="132"/>
         <source>Bad Exclude IP address: %1</source>
         <translation>Некорректный IP адрес для исключения: %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="142"/>
+        <location filename="../util/conf/confutil.cpp" line="143"/>
         <source>Too many IP addresses</source>
         <translation>Слишком много IP адресов</translation>
     </message>
@@ -24,17 +24,17 @@
         <translation>Слишком много путей приложений</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="166"/>
+        <location filename="../util/conf/confutil.cpp" line="167"/>
         <source>Number of Application Groups must be &lt; %1</source>
         <translation>Количество групп приложений должно быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="178"/>
+        <location filename="../util/conf/confutil.cpp" line="179"/>
         <source>Length of Application Group&apos;s Name must be &lt; %1</source>
         <translation>Длина наименования группы приложения должна быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="241"/>
+        <location filename="../util/conf/confutil.cpp" line="242"/>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Длина пути приложения должна быть &lt; %1</translation>
     </message>
@@ -315,22 +315,22 @@
         <translation>Сдвинуть направо</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="49"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="47"/>
         <source>Enabled</source>
         <translation>Включено</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="64"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="62"/>
         <source>period, hours:</source>
         <translation>период, часы</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="103"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="101"/>
         <source>Block</source>
         <translation>Блокировать</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="123"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="121"/>
         <source>Allow</source>
         <translation>Разрешить</translation>
     </message>
@@ -456,12 +456,7 @@
         <translation>Релизы</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="14"/>
-        <source>Speed Limit: </source>
-        <translation>Ограничение скорости: </translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="25"/>
+        <location filename="../qml/pages/apps/GroupOptionsButton.qml" line="21"/>
         <location filename="../qml/pages/log/TrafOptionsButton.qml" line="20"/>
         <location filename="../qml/pages/log/TrafOptionsButton.qml" line="35"/>
         <location filename="../qml/pages/log/TrafOptionsButton.qml" line="50"/>
@@ -470,18 +465,18 @@
         <translation>Нестандартный</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="26"/>
+        <location filename="../qml/pages/apps/GroupOptionsButton.qml" line="22"/>
         <location filename="../qml/pages/log/TrafOptionsButton.qml" line="51"/>
         <source>Disabled</source>
         <translation>Отключено</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="67"/>
+        <location filename="../qml/pages/apps/GroupOptionsButton.qml" line="41"/>
         <source>Download speed limit, KiB/s:</source>
         <translation>Ограничение скорости загрузки, KiB/s:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/SpeedLimitButton.qml" line="92"/>
+        <location filename="../qml/pages/apps/GroupOptionsButton.qml" line="66"/>
         <source>Upload speed limit, KiB/s:</source>
         <translation>Ограничение скорости выгрузки, KiB/s:</translation>
     </message>
@@ -492,7 +487,7 @@
         <translation>Настройки…</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/GroupOptionsButton.qml" line="16"/>
+        <location filename="../qml/pages/apps/GroupOptionsButton.qml" line="90"/>
         <source>Fragment first TCP packet</source>
         <translation>Фрагментировать первый TCP пакет</translation>
     </message>
@@ -696,11 +691,13 @@
         <translation>Дата</translation>
     </message>
     <message>
+        <location filename="../qml/pages/log/GraphButton.qml" line="125"/>
         <location filename="../qml/pages/StatisticsPage.qml" line="222"/>
         <source>Download</source>
         <translation>Загрузка</translation>
     </message>
     <message>
+        <location filename="../qml/pages/log/GraphButton.qml" line="133"/>
         <location filename="../qml/pages/StatisticsPage.qml" line="227"/>
         <source>Upload</source>
         <translation>Выгрузка</translation>
@@ -747,13 +744,13 @@
     </message>
     <message>
         <location filename="../qml/pages/log/GraphButton.qml" line="73"/>
-        <source>Opacity</source>
-        <translation>Прозрачность</translation>
+        <source>Opacity, %</source>
+        <translation>Непрозрачность, %</translation>
     </message>
     <message>
         <location filename="../qml/pages/log/GraphButton.qml" line="85"/>
-        <source>Hover opacity</source>
-        <translation>Прозрачность при наведении</translation>
+        <source>Hover opacity, %</source>
+        <translation>Непрозрачность при наведении, %</translation>
     </message>
     <message>
         <location filename="../qml/pages/log/GraphButton.qml" line="97"/>
@@ -762,38 +759,28 @@
     </message>
     <message>
         <location filename="../qml/pages/log/GraphButton.qml" line="117"/>
-        <source>Background color</source>
-        <translation>Цвет фона</translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/log/GraphButton.qml" line="125"/>
-        <source>Download color</source>
-        <translation>Цвет загрузки</translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/log/GraphButton.qml" line="133"/>
-        <source>Upload color</source>
-        <translation>Цвет выгрузки</translation>
+        <source>Background</source>
+        <translation>Фон</translation>
     </message>
     <message>
         <location filename="../qml/pages/log/GraphButton.qml" line="141"/>
-        <source>Axis color</source>
-        <translation>Цвет оси</translation>
+        <source>Axis</source>
+        <translation>Ось</translation>
     </message>
     <message>
         <location filename="../qml/pages/log/GraphButton.qml" line="149"/>
-        <source>Tick label color</source>
-        <translation>Цвет метки</translation>
+        <source>Tick label</source>
+        <translation>Метка</translation>
     </message>
     <message>
         <location filename="../qml/pages/log/GraphButton.qml" line="157"/>
-        <source>Label color</source>
-        <translation>Цвет маркировки</translation>
+        <source>Label</source>
+        <translation>Маркировка</translation>
     </message>
     <message>
         <location filename="../qml/pages/log/GraphButton.qml" line="165"/>
-        <source>Grid color</source>
-        <translation>Цвет сетки</translation>
+        <source>Grid</source>
+        <translation>Сетка</translation>
     </message>
 </context>
 </TS>
