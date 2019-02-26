@@ -73,11 +73,12 @@ private:
                           quint8 appPeriodsCount,
                           const appgroups_map_t &appGroupIndexes);
 
-    static quint16 appGroupFragmentBits(const FirewallConf &conf);
-    static bool appGroupFilterTransport(const FirewallConf &conf);
+    static void writeFragmentBits(quint16 *fragmentBits,
+                                  const FirewallConf &conf);
 
-    static quint32 writeLimits(struct fort_traf *limits,
-                               const QList<AppGroup *> &appGroups);
+    static void writeLimits(struct fort_traf *limits,
+                            quint16 *limitBits, quint32 *limit2Bits,
+                            const QList<AppGroup *> &appGroups);
 
     static void writeAddressRanges(char **data,
                                    const addrranges_arr_t &addressRanges);

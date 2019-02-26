@@ -120,7 +120,7 @@ typedef struct fort_stat {
     ? FORT_FLOW_FRAGMENT : 0)
 
 #define fort_stat_group_speed_limit(stat, group_index) \
-  (((stat)->conf_group.limit_bits >> ((group_index) * 2)) & 3)
+  (((stat)->conf_group.limit_bits >> (group_index)) & 1)
 
 
 static void

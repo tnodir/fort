@@ -861,17 +861,24 @@ fort_callout_force_reauth (const FORT_CONF_FLAGS old_conf_flags,
   }
 
   /* Check flow filter */
-  if (old_conf_flags.log_stat != conf_flags.log_stat
-      || old_conf_flags.filter_transport != conf_flags.filter_transport) {
-    if (old_conf_flags.log_stat) {
-      fort_prov_flow_unregister(engine);
-    }
+  {
+    const UINT16 filter_bits = (stat->conf_group.fragment_bits
+      | stat->conf_group.limit_bits);
+
+    const BOOL old_filter_transport = (old_conf_flags.group_bits & filter_bits) != 0;
+    const BOOL filter_transport = (conf_flags.group_bits & filter_bits) != 0;
+
+    if (old_conf_flags.log_stat != conf_flags.log_stat
+        || old_filter_transport != filter_transport) {
+      if (old_conf_flags.log_stat) {
+        fort_prov_flow_unregister(engine);
+      }
 
  stat_prov:
-    if (conf_flags.log_stat) {
-      if ((status = fort_prov_flow_register(engine,
-          conf_flags.filter_transport)))
-        goto cleanup;
+      if (conf_flags.log_stat) {
+        if ((status = fort_prov_flow_register(engine, filter_transport)))
+          goto cleanup;
+      }
     }
   }
 
@@ -1091,7 +1098,7 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
         const FORT_CONF_FLAGS conf_flags = conf_ref->conf.flags;
 
         const UINT32 defer_flush_bits =
-          (stat->conf_group.limit_bits ^ conf_io->conf_group.limit_bits);
+          (stat->conf_group.limit_2bits ^ conf_io->conf_group.limit_2bits);
 
         fort_stat_conf_update(stat, conf_io);
 
