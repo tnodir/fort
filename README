@@ -1,7 +1,12 @@
 Fort is a simple firewall for Windows 7+.
 
-Before installing, you have to enable the driver signature verification test mode:
-- Run "BcdEdit.exe -set TESTSIGNING ON" from the command line as Administrator and restart the computer.
+Features:
+- Filter by network addresses, application groups
+- Application group speed limits
+- Stores hourly, daily, monthly and yearly statistics
+- Graphical display of bandwidth
+- No alert popups
+- Based on Windows Filtering Platform (WFP)
 
 --
 Nodir Temirkhodjaev, <nodir.temir@gmail.com>
