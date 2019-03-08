@@ -53,7 +53,7 @@ Filename: "{app}\{#APP_EXE_NAME}"; Parameters: "-b=0"; Flags: runascurrentuser
 [InstallDelete]
 Type: files; Name: "{app}\*.dll"
 Type: files; Name: "{app}\*.exe"
-Type: files; Name: "{app}\driver\*.sys"
+Type: filesandordirs; Name: "{app}\driver"
 Type: filesandordirs; Name: "{app}\i18n"
 Type: filesandordirs; Name: "{app}\imports"
 Type: filesandordirs; Name: "{app}\plugins"
