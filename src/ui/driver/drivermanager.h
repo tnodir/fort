@@ -22,12 +22,16 @@ public:
 
     bool isDeviceOpened() const;
 
+    static void reinstallDriver();
+
 signals:
     void errorMessageChanged();
 
 public slots:
     bool openDevice();
     bool closeDevice();
+
+    bool validate();
 
     bool writeConf(const FirewallConf &conf);
     bool writeConfFlags(const FirewallConf &conf);

@@ -102,6 +102,20 @@ int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
     return flagsSize;
 }
 
+int ConfUtil::writeVersion(QByteArray &buf)
+{
+    const int verSize = sizeof(FORT_CONF_VERSION);
+
+    buf.reserve(verSize);
+
+    // Fill the buffer
+    PFORT_CONF_VERSION confVer = (PFORT_CONF_VERSION) buf.data();
+
+    confVer->driver_version = DRIVER_VERSION;
+
+    return verSize;
+}
+
 bool ConfUtil::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
                                   addrranges_arr_t &addressRanges,
                                   numbers_arr_t &addressGroupOffsets,

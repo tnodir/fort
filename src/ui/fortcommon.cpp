@@ -23,6 +23,11 @@ QString FortCommon::deviceName()
     return QLatin1String(FORT_DEVICE_NAME);
 }
 
+quint32 FortCommon::ioctlValidate()
+{
+    return FORT_IOCTL_VALIDATE;
+}
+
 quint32 FortCommon::ioctlSetConf()
 {
     return FORT_IOCTL_SETCONF;

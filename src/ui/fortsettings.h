@@ -45,6 +45,7 @@ public:
     explicit FortSettings(const QStringList &args,
                           QObject *parent = nullptr);
 
+    bool isPortable() const { return m_isPortable; }
     bool hasProvBoot() const { return m_hasProvBoot; }
 
     bool debug() const { return iniBool("base/debug"); }
@@ -208,6 +209,7 @@ private:
     static QString startupShortcutPath();
 
 private:
+    uint m_isPortable       : 1;
     uint m_hasProvBoot      : 1;
     uint m_bulkUpdating     : 1;
     uint m_bulkUpdatingEmit : 1;

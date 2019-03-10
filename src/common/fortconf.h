@@ -73,6 +73,10 @@ typedef struct fort_conf {
   char data[4];
 } FORT_CONF, *PFORT_CONF;
 
+typedef struct fort_conf_version {
+  UINT16 driver_version;
+} FORT_CONF_VERSION, *PFORT_CONF_VERSION;
+
 typedef struct fort_conf_io {
   UINT16 driver_version;
 

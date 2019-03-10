@@ -13,6 +13,7 @@ public:
 
     static QString deviceName();
 
+    static quint32 ioctlValidate();
     static quint32 ioctlSetConf();
     static quint32 ioctlSetFlags();
     static quint32 ioctlGetLog();

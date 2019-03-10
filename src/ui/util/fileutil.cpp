@@ -1,5 +1,6 @@
 #include "fileutil.h"
 
+#include <QCoreApplication>
 #include <QDir>
 #include <QFileInfo>
 #include <QStandardPaths>
@@ -147,6 +148,11 @@ bool FileUtil::writeFileData(const QString &filePath, const QByteArray &data)
 
     return file.write(data) == data.size()
             && file.flush();
+}
+
+QString FileUtil::appBinLocation()
+{
+    return QCoreApplication::applicationDirPath();
 }
 
 QString FileUtil::appConfigLocation()

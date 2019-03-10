@@ -1,5 +1,6 @@
 #include "drivermanager.h"
 
+#include <QProcess>
 #include <QThreadPool>
 
 #include "../conf/firewallconf.h"
@@ -7,6 +8,7 @@
 #include "../log/logbuffer.h"
 #include "../util/conf/confutil.h"
 #include "../util/device.h"
+#include "../util/fileutil.h"
 #include "../util/osutil.h"
 #include "driverworker.h"
 
@@ -61,6 +63,21 @@ bool DriverManager::closeDevice()
     return m_device->close();
 }
 
+bool DriverManager::validate()
+{
+    ConfUtil confUtil;
+    QByteArray buf;
+
+    const int verSize = confUtil.writeVersion(buf);
+    if (!verSize) {
+        setErrorMessage(confUtil.errorMessage());
+        return false;
+    }
+
+    return writeData(FortCommon::ioctlValidate(),
+                     buf, verSize);
+}
+
 bool DriverManager::writeConf(const FirewallConf &conf)
 {
     ConfUtil confUtil;
@@ -101,4 +118,15 @@ bool DriverManager::writeData(quint32 code, QByteArray &buf, int size)
     }
 
     return true;
+}
+
+void DriverManager::reinstallDriver()
+{
+    QString binPath = FileUtil::appBinLocation();
+    binPath.replace('/', '\\');
+
+    const QString cmdPath = qEnvironmentVariable("COMSPEC");
+    const QString scriptPath = binPath + "\\driver\\scripts\\reinstall-lnk.bat";
+
+    QProcess::execute(cmdPath, QStringList() << "/C" << scriptPath);
 }

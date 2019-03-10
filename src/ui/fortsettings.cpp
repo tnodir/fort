@@ -68,13 +68,19 @@ void FortSettings::processArguments(const QStringList &args)
 
     parser.process(args);
 
+    // Portable Mode
+    m_isPortable = FileUtil::fileExists(FileUtil::appBinLocation()
+                                        + "/README.portable");
+
     // Provider Boot
     m_hasProvBoot = parser.isSet(provBootOption);
 
     // Profile Path
     m_profilePath = parser.value(profileOption);
     if (m_profilePath.isEmpty()) {
-        m_profilePath = FileUtil::appConfigLocation();
+        m_profilePath = m_isPortable
+                ? FileUtil::appBinLocation() + "/Data"
+                : FileUtil::appConfigLocation();
     }
     m_profilePath = FileUtil::pathSlash(
                 FileUtil::absolutePath(m_profilePath));

@@ -1,7 +1,7 @@
 #include "firewallconf.h"
 
-#include <QCoreApplication>
 
+#include "../util/fileutil.h"
 #include "../util/net/netutil.h"
 #include "addressgroup.h"
 #include "appgroup.h"
@@ -362,6 +362,6 @@ void FirewallConf::setupDefault()
 
     AppGroup *appGroup = new AppGroup();
     appGroup->setName("Main");
-    appGroup->setAllowText(qApp->applicationDirPath() + '/');
+    appGroup->setAllowText(FileUtil::appBinLocation() + '/');
     addAppGroup(appGroup);
 }

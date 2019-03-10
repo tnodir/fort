@@ -4,6 +4,7 @@
 #include <QDir>
 #include <QTranslator>
 
+#include "util/fileutil.h"
 #include "util/stringutil.h"
 
 #define TRANSLATION_FILE_PREFIX     "i18n_"
@@ -113,7 +114,7 @@ void TranslationManager::uninstallTranslator(int language)
 {
     QTranslator *translator = m_translators.at(language);
     if (translator) {
-        qApp->removeTranslator(translator);
+        QCoreApplication::removeTranslator(translator);
     }
 }
 
@@ -124,7 +125,7 @@ void TranslationManager::installTranslator(int language, const QLocale &locale)
         translator = loadTranslator(language, locale);
     }
     if (translator) {
-        qApp->installTranslator(translator);
+        QCoreApplication::installTranslator(translator);
     }
 }
 
@@ -149,5 +150,5 @@ void TranslationManager::refreshTranslations()
 
 QString TranslationManager::i18nDir()
 {
-    return qApp->applicationDirPath() + "/i18n";
+    return FileUtil::appBinLocation() + "/i18n";
 }

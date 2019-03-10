@@ -1097,6 +1097,16 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
   irp_stack = IoGetCurrentIrpStackLocation(irp);
 
   switch (irp_stack->Parameters.DeviceIoControl.IoControlCode) {
+  case FORT_IOCTL_VALIDATE: {
+    const PFORT_CONF_VERSION conf_ver = irp->AssociatedIrp.SystemBuffer;
+    const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
+
+    if (len == sizeof(FORT_CONF_VERSION)) {
+      status = (conf_ver->driver_version == DRIVER_VERSION)
+        ? STATUS_SUCCESS : STATUS_UNSUCCESSFUL;
+    }
+    break;
+  }
   case FORT_IOCTL_SETCONF: {
     const PFORT_CONF_IO conf_io = irp->AssociatedIrp.SystemBuffer;
     const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;

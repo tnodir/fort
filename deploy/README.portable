@@ -1,0 +1,9 @@
+README.portable
+===============
+
+This version of Fort Firewall is portable, i.e. does not need to
+be installed. It will run from any directory you place it in, even
+from a USB thumbdrive. It will not write permanent entries into the
+Windows registry.
+
+It needs administrator privileges to install drivers only.

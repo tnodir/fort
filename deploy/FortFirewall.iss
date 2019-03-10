@@ -24,6 +24,7 @@ AlwaysShowDirOnReadyPage=yes
 AlwaysShowGroupOnReadyPage=yes
 AllowNoIcons=yes
 OutputBaseFilename=FortFirewall-{#APP_VERSION_STR}
+Uninstallable=not IsTaskSelected('portable')
 UninstallFilesDir={app}\uninst
 ArchitecturesInstallIn64BitMode=x64
 Compression=lzma2/ultra
@@ -33,8 +34,12 @@ SolidCompression=yes
 Name: en; MessagesFile: "compiler:Default.isl"
 Name: ru; MessagesFile: "compiler:Languages\Russian.isl"
 
+[Tasks]
+Name: "portable"; Description: "Portable"; Flags: unchecked
+
 [Files]
 Source: ".\build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: ".\README.portable"; DestDir: "{app}"; Check: IsTaskSelected('portable')
 
 [Icons]
 ; Start menu shortcut
@@ -43,8 +48,7 @@ Name: "{group}\{#APP_NAME}"; Filename: "{app}\{#APP_EXE_NAME}"; IconFilename: "{
 Name: "{group}\{cm:UninstallProgram,{#APP_NAME}}"; Filename: "{uninstallexe}"; IconFilename: "{app}\FortFirewall.ico"
 
 [Run]
-Filename: "{app}\driver\scripts\uninstall.bat"; Description: "Uninstall driver"; Flags: runascurrentuser
-Filename: "{app}\driver\scripts\install.bat"; Description: "Install driver"; Flags: runascurrentuser
+Filename: "{app}\driver\scripts\reinstall.bat"; Description: "Re-install driver"; Flags: runascurrentuser
 
 [UninstallRun]
 Filename: "{app}\driver\scripts\uninstall.bat"; Flags: runascurrentuser

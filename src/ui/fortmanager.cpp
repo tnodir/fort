@@ -121,7 +121,21 @@ void FortManager::registerQmlTypes()
 
 bool FortManager::setupDriver()
 {
-    if (!m_driverManager->openDevice()) {
+    bool opened = m_driverManager->openDevice();
+
+    // Try to (re)install the driver in portable mode
+    if (m_fortSettings->isPortable()
+            && !(opened && m_driverManager->validate())) {
+        if (opened) {
+            m_driverManager->closeDevice();
+        }
+
+        m_driverManager->reinstallDriver();
+
+        opened = m_driverManager->openDevice();
+    }
+
+    if (!opened) {
         showErrorBox("Setup Driver: " + m_driverManager->errorMessage());
         return false;
     }

@@ -7,6 +7,6 @@
 #define APP_UPDATES_URL		"https://github.com/tnodir/fort/releases"
 #define APP_UPDATES_API_URL	"https://api.github.com/repos/tnodir/fort/releases/latest"
 
-#define DRIVER_VERSION		10
+#define DRIVER_VERSION		11
 
 #endif // VERSION_H
