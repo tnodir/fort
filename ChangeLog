@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v2.5.0, 2019-03-10:
+- Installer: Add "Portable" option.
+
 v2.4.0, 2019-03-08:
 - UI: Graph options: Fix texts and meaning of opacity.
 - Driver: Improve app groups handling.
