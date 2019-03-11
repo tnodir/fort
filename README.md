@@ -1,8 +1,6 @@
 # Fort Firewall
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-
-[![Download]()](https://github.com/tnodir/fort/releases/latest) | [![Screenshots]()](https://imgur.com/a/fZbAbfy)
+[![Downloads](https://img.shields.io/github/downloads/tnodir/fort/total.svg?maxAge=86400)](https://github.com/tnodir/fort/releases/latest) [![Screenshots](https://img.shields.io/static/v1.svg?label=screenshots&message=11&color=yellow)](https://imgur.com/a/fZbAbfy) [![License](https://img.shields.io/github/license/tnodir/fort.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 Fort is a simple firewall for Windows 7+.
 
