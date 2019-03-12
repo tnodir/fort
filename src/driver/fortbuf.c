@@ -134,17 +134,14 @@ fort_buffer_prepare (PFORT_BUFFER buf, UINT32 len, PCHAR *out,
     /* Is it time to flush logs? */
     if (out_len - new_top < FORT_LOG_SIZE_MAX) {
       if (irp != NULL) {
-        buf->out_len = 0;
-
         *irp = buf->irp;
         buf->irp = NULL;
 
         *info = new_top;
         new_top = 0;
-      } else {
-        buf->out_len = out_top;
-        new_top = out_top;
       }
+
+      buf->out_len = new_top;
     }
 
     *out = buf->out + out_top;
@@ -310,7 +307,7 @@ fort_buffer_dpc_flush_pending (PFORT_BUFFER buf, PIRP *irp, ULONG_PTR *info)
   /* Move data from buffer to pending */
   if (out_top == 0 && buf->out_len != 0) {
     PFORT_BUFFER_DATA data = buf->data_head;
-    
+
     out_top = (data ? data->top : 0);
 
     if (out_top != 0) {
