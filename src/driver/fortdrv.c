@@ -946,7 +946,7 @@ fort_callout_timer (void)
   fort_stat_dpc_begin(stat, &stat_lock_queue);
 
   /* Flush traffic statistics */
-  while (stat->proc_active_count) {
+  while (stat->proc_active_count != 0) {
     const UINT16 proc_count =
       (stat->proc_active_count < FORT_LOG_STAT_BUFFER_PROC_COUNT)
       ? stat->proc_active_count : FORT_LOG_STAT_BUFFER_PROC_COUNT;
@@ -974,7 +974,9 @@ fort_callout_timer (void)
   fort_stat_dpc_end(&stat_lock_queue);
 
   /* Flush pending buffer */
-  fort_buffer_dpc_flush_pending(buf, &irp, &info);
+  if (irp == NULL) {
+    fort_buffer_dpc_flush_pending(buf, &irp, &info);
+  }
 
   /* Unlock buffer */
   fort_buffer_dpc_end(&buf_lock_queue);
@@ -1152,18 +1154,22 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
     PVOID out = irp->AssociatedIrp.SystemBuffer;
     const ULONG out_len = irp_stack->Parameters.DeviceIoControl.OutputBufferLength;
 
-    status = fort_buffer_xmove(&g_device->buffer, irp, out, out_len, &info);
+    if (out_len < FORT_BUFFER_SIZE) {
+      status = STATUS_BUFFER_TOO_SMALL;
+    } else {
+      status = fort_buffer_xmove(&g_device->buffer, irp, out, out_len, &info);
 
-    if (status == STATUS_PENDING) {
-      KIRQL cirq;
+      if (status == STATUS_PENDING) {
+        KIRQL cirq;
 
-      IoMarkIrpPending(irp);
+        IoMarkIrpPending(irp);
 
-      IoAcquireCancelSpinLock(&cirq);
-      IoSetCancelRoutine(irp, fort_device_cancel_pending);
-      IoReleaseCancelSpinLock(cirq);
+        IoAcquireCancelSpinLock(&cirq);
+        IoSetCancelRoutine(irp, fort_device_cancel_pending);
+        IoReleaseCancelSpinLock(cirq);
 
-      return STATUS_PENDING;
+        return STATUS_PENDING;
+      }
     }
     break;
   }

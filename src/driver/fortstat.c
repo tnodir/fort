@@ -582,7 +582,7 @@ fort_stat_dpc_traf_flush (PFORT_STAT stat, UINT16 proc_count, PCHAR out)
     /* Write process_id */
     *out_proc = proc->process_id;
 
-    if (!proc->refcount) {
+    if (proc->refcount == 0) {
       /* The process is inactive */
       *out_proc |= 1;
 

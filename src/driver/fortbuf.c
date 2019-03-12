@@ -76,7 +76,7 @@ fort_buffer_data_alloc (PFORT_BUFFER buf, UINT32 len)
 }
 
 static void
-fort_buffer_data_free (PFORT_BUFFER buf)
+fort_buffer_data_shift (PFORT_BUFFER buf)
 {
   PFORT_BUFFER_DATA data = buf->data_head;
 
@@ -123,13 +123,16 @@ static NTSTATUS
 fort_buffer_prepare (PFORT_BUFFER buf, UINT32 len, PCHAR *out,
                      PIRP *irp, ULONG_PTR *info)
 {
+  const ULONG out_len = buf->out_len;
+
   /* Check pending buffer */
-  if (buf->out_len && buf->out_top < buf->out_len) {
+  if (buf->data_head == NULL
+      && out_len != 0 && buf->out_top < out_len) {
     const UINT32 out_top = buf->out_top;
     UINT32 new_top = out_top + len;
 
     /* Is it time to flush logs? */
-    if (buf->out_len - new_top < FORT_LOG_SIZE_MAX) {
+    if (out_len - new_top < FORT_LOG_SIZE_MAX) {
       if (irp != NULL) {
         buf->out_len = 0;
 
@@ -234,15 +237,14 @@ fort_buffer_xmove (PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len,
   data = buf->data_head;
   *info = buf_top = (data ? data->top : 0);
 
-  if (!buf_top) {
-    if (buf->out_len) {
-      status = STATUS_UNSUCCESSFUL;
-    } else if (out_len < FORT_LOG_SIZE_MAX) {
-      status = STATUS_BUFFER_TOO_SMALL;
+  if (buf_top == 0) {
+    if (buf->out_len != 0) {
+      status = STATUS_UNSUCCESSFUL;  /* collision */
     } else {
       buf->irp = irp;
       buf->out = out;
       buf->out_len = out_len;
+      buf->out_top = 0;
       status = STATUS_PENDING;
     }
     goto end;
@@ -255,7 +257,7 @@ fort_buffer_xmove (PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len,
 
   RtlCopyMemory(out, data->p, buf_top);
 
-  fort_buffer_data_free(buf);
+  fort_buffer_data_shift(buf);
 
  end:
   KeReleaseInStackQueuedSpinLock(&lock_queue);
@@ -276,7 +278,7 @@ fort_buffer_cancel_pending (PFORT_BUFFER buf, PIRP irp, ULONG_PTR *info)
     buf->irp = NULL;
     buf->out_len = 0;
 
-    if (buf->out_top) {
+    if (buf->out_top != 0) {
       *info = buf->out_top;
       buf->out_top = 0;
 
@@ -303,9 +305,22 @@ fort_buffer_dpc_end (PKLOCK_QUEUE_HANDLE lock_queue)
 static void
 fort_buffer_dpc_flush_pending (PFORT_BUFFER buf, PIRP *irp, ULONG_PTR *info)
 {
-  const UINT32 out_top = buf->out_top;
+  UINT32 out_top = buf->out_top;
 
-  if (out_top) {
+  /* Move data from buffer to pending */
+  if (out_top == 0 && buf->out_len != 0) {
+    PFORT_BUFFER_DATA data = buf->data_head;
+    
+    out_top = (data ? data->top : 0);
+
+    if (out_top != 0) {
+      RtlCopyMemory(buf->out, data->p, out_top);
+
+      fort_buffer_data_shift(buf);
+    }
+  }
+
+  if (out_top != 0) {
     *info = out_top;
 
     buf->out_top = 0;
