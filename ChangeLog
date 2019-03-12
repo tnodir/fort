@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v2.5.1, 2019-03-12:
+- Driver: Robust buffer handling.
+- Driver: Fix pending buffer flush.
+
 v2.5.0, 2019-03-10:
 - Installer: Add "Portable" option.
 
