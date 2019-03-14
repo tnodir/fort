@@ -35,6 +35,7 @@ Name: en; MessagesFile: "compiler:Default.isl"
 Name: ru; MessagesFile: "compiler:Languages\Russian.isl"
 
 [Tasks]
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; Flags: unchecked
 Name: "portable"; Description: "Portable"; Flags: unchecked
 
 [Files]
@@ -46,6 +47,8 @@ Source: ".\README.portable"; DestDir: "{app}"; Check: IsTaskSelected('portable')
 Name: "{group}\{#APP_NAME}"; Filename: "{app}\{#APP_EXE_NAME}"; IconFilename: "{app}\FortFirewall.ico"
 ; Uninstaller shortcut
 Name: "{group}\{cm:UninstallProgram,{#APP_NAME}}"; Filename: "{uninstallexe}"; IconFilename: "{app}\FortFirewall.ico"
+; Desktop shortcut
+Name: "{commondesktop}\{#APP_NAME}"; Filename: "{app}\{#APP_EXE_NAME}"; WorkingDir: "{app}"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\driver\scripts\reinstall.bat"; Description: "Re-install driver"; Flags: runascurrentuser
