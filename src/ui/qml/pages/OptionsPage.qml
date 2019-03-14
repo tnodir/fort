@@ -63,6 +63,8 @@ BasePage {
                 spacing: 20
 
                 CheckBox {
+                    id: cbFilterEnabled
+                    width: Math.max(implicitWidth, cbStopTraffic.implicitWidth)
                     text: translationManager.trTrigger
                           && qsTranslate("qml", "Filter Enabled")
                     checked: firewallConf.filterEnabled
@@ -89,6 +91,8 @@ BasePage {
                 spacing: 20
 
                 CheckBox {
+                    id: cbStopTraffic
+                    width: cbFilterEnabled.width
                     text: translationManager.trTrigger
                           && qsTranslate("qml", "Stop Traffic")
                     checked: firewallConf.stopTraffic
@@ -170,46 +174,6 @@ BasePage {
 
             Item {
                 Layout.fillHeight: true
-            }
-
-            RowLayout {
-                LinkButton {
-                    text: translationManager.trTrigger
-                          && qsTranslate("qml", "Logs")
-                    tipText: path
-                    onClicked: Qt.openUrlExternally("file:///" + path)
-                    readonly property string path: fortSettings.logsPath
-                }
-
-                VSeparator {}
-
-                LinkButton {
-                    text: translationManager.trTrigger
-                          && qsTranslate("qml", "Profile")
-                    tipText: path
-                    onClicked: Qt.openUrlExternally("file:///" + path)
-                    readonly property string path: fortSettings.profilePath
-                }
-
-                VSeparator {}
-
-                LinkButton {
-                    text: translationManager.trTrigger
-                          && qsTranslate("qml", "Statistics")
-                    tipText: path
-                    onClicked: Qt.openUrlExternally("file:///" + path)
-                    readonly property string path: fortSettings.statPath
-                }
-
-                VSeparator {}
-
-                LinkButton {
-                    text: translationManager.trTrigger
-                          && qsTranslate("qml", "Releases")
-                    tipText: link
-                    onClicked: Qt.openUrlExternally(link)
-                    readonly property string link: fortSettings.appUpdatesUrl
-                }
             }
         }
     }

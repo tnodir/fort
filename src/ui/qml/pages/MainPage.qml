@@ -124,7 +124,51 @@ Page {
 
     footer: Pane {
         RowLayout {
-            anchors.right: parent.right
+            width: parent.width
+
+            RowLayout {
+                LinkButton {
+                    text: translationManager.trTrigger
+                          && qsTranslate("qml", "Logs")
+                    tipText: path
+                    onClicked: Qt.openUrlExternally("file:///" + path)
+                    readonly property string path: fortSettings.logsPath
+                }
+
+                VSeparator {}
+
+                LinkButton {
+                    text: translationManager.trTrigger
+                          && qsTranslate("qml", "Profile")
+                    tipText: path
+                    onClicked: Qt.openUrlExternally("file:///" + path)
+                    readonly property string path: fortSettings.profilePath
+                }
+
+                VSeparator {}
+
+                LinkButton {
+                    text: translationManager.trTrigger
+                          && qsTranslate("qml", "Statistics")
+                    tipText: path
+                    onClicked: Qt.openUrlExternally("file:///" + path)
+                    readonly property string path: fortSettings.statPath
+                }
+
+                VSeparator {}
+
+                LinkButton {
+                    text: translationManager.trTrigger
+                          && qsTranslate("qml", "Releases")
+                    tipText: link
+                    onClicked: Qt.openUrlExternally(link)
+                    readonly property string link: fortSettings.appUpdatesUrl
+                }
+            }
+
+            Item {
+                Layout.fillWidth: true
+            }
 
             Button {
                 enabled: confFlagsEdited || confEdited || othersEdited
