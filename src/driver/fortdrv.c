@@ -33,11 +33,13 @@ typedef struct fort_conf_ref {
   FORT_CONF conf;
 } FORT_CONF_REF, *PFORT_CONF_REF;
 
+#define FORT_DEVICE_PROV_BOOT		0x01
+#define FORT_DEVICE_IS_OPENED		0x02
+#define FORT_DEVICE_POWER_OFF		0x04
+#define FORT_DEVICE_FILTER_TRANSPORT	0x08
+
 typedef struct fort_device {
-  UINT32 prov_boot	: 1;
-  UINT32 is_opened	: 1;
-  UINT32 power_off	: 1;
-  UINT32 filter_transport : 1;
+  UCHAR volatile flags;
 
   UINT32 connect4_id;
   UINT32 accept4_id;
@@ -62,6 +64,25 @@ typedef struct fort_device {
 
 static PFORT_DEVICE g_device = NULL;
 
+
+static UCHAR
+fort_device_flag_set (UCHAR flag, BOOL on)
+{
+  return on ? InterlockedOr8(&g_device->flags, flag)
+            : InterlockedAnd8(&g_device->flags, ~flag);
+}
+
+static UCHAR
+fort_device_flags (void)
+{
+  return fort_device_flag_set(0, TRUE);
+}
+
+static UCHAR
+fort_device_flag (UCHAR flag)
+{
+  return fort_device_flags() & flag;
+}
 
 static PFORT_CONF_REF
 fort_conf_ref_new (const PFORT_CONF conf, ULONG len)
@@ -127,20 +148,20 @@ fort_conf_ref_set (PFORT_CONF_REF conf_ref)
 
     if (old_conf_ref == NULL) {
       RtlZeroMemory(&old_conf_flags, sizeof(FORT_CONF_FLAGS));
-      old_conf_flags.prov_boot = g_device->prov_boot;
+      old_conf_flags.prov_boot = fort_device_flag(FORT_DEVICE_PROV_BOOT) != 0;
     }
 
     if (conf_ref != NULL) {
       PFORT_CONF conf = &conf_ref->conf;
       const PFORT_CONF_FLAGS conf_flags = &conf->flags;
 
-      g_device->prov_boot = conf_flags->prov_boot;
+      fort_device_flag_set(FORT_DEVICE_PROV_BOOT, conf_flags->prov_boot);
 
       g_device->conf_flags = *conf_flags;
     } else {
       RtlZeroMemory((void *) &g_device->conf_flags, sizeof(FORT_CONF_FLAGS));
 
-      g_device->conf_flags.prov_boot = g_device->prov_boot;
+      g_device->conf_flags.prov_boot = fort_device_flag(FORT_DEVICE_PROV_BOOT) != 0;
     }
   }
   KeReleaseInStackQueuedSpinLock(&lock_queue);
@@ -171,12 +192,12 @@ fort_conf_ref_flags_set (const PFORT_CONF_FLAGS conf_flags)
 
       fort_conf_app_perms_mask_init(conf, conf_flags->group_bits);
 
-      g_device->prov_boot = conf_flags->prov_boot;
+      fort_device_flag_set(FORT_DEVICE_PROV_BOOT, conf_flags->prov_boot);
 
       g_device->conf_flags = *conf_flags;
     } else {
       RtlZeroMemory(&old_conf_flags, sizeof(FORT_CONF_FLAGS));
-      old_conf_flags.prov_boot = g_device->prov_boot;
+      old_conf_flags.prov_boot = fort_device_flag(FORT_DEVICE_PROV_BOOT) != 0;
 
       g_device->conf_flags = old_conf_flags;
     }
@@ -292,7 +313,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   conf_ref = fort_conf_ref_take();
 
   if (conf_ref == NULL) {
-    if (g_device->prov_boot) {
+    if (device_flags & FORT_DEVICE_PROV_BOOT) {
       fort_callout_classify_block(classifyOut);
     } else {
       fort_callout_classify_continue(classifyOut);
@@ -595,7 +616,7 @@ fort_callout_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
     const UCHAR speed_defer_flags = speed_limit | defer_flag;
     const BOOL defer_flow = (flow_flags & speed_defer_flags) == speed_defer_flags
-      && !g_device->power_off;
+      && !fort_device_flag(FORT_DEVICE_POWER_OFF);
 
     const BOOL fragment_packet = !inbound && (flow_flags
       & (FORT_FLOW_FRAGMENT_DEFER | FORT_FLOW_FRAGMENTED))
@@ -882,11 +903,12 @@ fort_callout_force_reauth (const FORT_CONF_FLAGS old_conf_flags,
     const PFORT_CONF_GROUP conf_group = &stat->conf_group;
     const UINT16 filter_bits = (conf_group->fragment_bits | conf_group->limit_bits);
 
+    const BOOL old_filter_transport = fort_device_flag(FORT_DEVICE_FILTER_TRANSPORT) != 0;
     const BOOL filter_transport = (conf_flags.group_bits & filter_bits) != 0;
 
     if (old_conf_flags.log_stat != conf_flags.log_stat
-        || g_device->filter_transport != filter_transport) {
-      g_device->filter_transport = filter_transport;
+        || old_filter_transport != filter_transport) {
+      fort_device_flag_set(FORT_DEVICE_FILTER_TRANSPORT, filter_transport);
 
       if (old_conf_flags.log_stat) {
         fort_prov_flow_unregister(engine);
@@ -1020,16 +1042,10 @@ fort_device_create (PDEVICE_OBJECT device, PIRP irp)
   UNUSED(device);
 
   /* Device opened */
-  {
-    KLOCK_QUEUE_HANDLE lock_queue;
-
-    KeAcquireInStackQueuedSpinLock(&g_device->conf_lock, &lock_queue);
-    if (g_device->is_opened) {
-      status = STATUS_SHARING_VIOLATION;  /* Only one client may connect */
-    } else {
-      g_device->is_opened = TRUE;
-    }
-    KeReleaseInStackQueuedSpinLock(&lock_queue);
+  if (fort_device_flag(FORT_DEVICE_IS_OPENED)) {
+    status = STATUS_SHARING_VIOLATION;  /* Only one client may connect */
+  } else {
+    fort_device_flag_set(FORT_DEVICE_IS_OPENED, TRUE);
   }
 
   fort_request_complete(irp, status);
@@ -1050,6 +1066,9 @@ fort_device_close (PDEVICE_OBJECT device, PIRP irp)
 static NTSTATUS
 fort_device_cleanup (PDEVICE_OBJECT device, PIRP irp)
 {
+  /* Device closed */
+  fort_device_flag_set(FORT_DEVICE_IS_OPENED, FALSE);
+
   /* Clear conf */
   {
     const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(NULL);
@@ -1059,15 +1078,6 @@ fort_device_cleanup (PDEVICE_OBJECT device, PIRP irp)
 
   /* Clear buffer */
   fort_buffer_clear(&g_device->buffer);
-
-  /* Device closed */
-  {
-    KLOCK_QUEUE_HANDLE lock_queue;
-
-    KeAcquireInStackQueuedSpinLock(&g_device->conf_lock, &lock_queue);
-    g_device->is_opened = FALSE;
-    KeReleaseInStackQueuedSpinLock(&lock_queue);
-  }
 
   fort_request_complete(irp, STATUS_SUCCESS);
 
@@ -1197,7 +1207,8 @@ fort_power_callback (PVOID context, PVOID event, PVOID specifics)
     return;
 
   power_off = (specifics == NULL);
-  g_device->power_off = power_off;
+
+  fort_device_flag_set(FORT_DEVICE_POWER_OFF, power_off);
 
   if (power_off) {
     fort_callout_defer_flush();
@@ -1303,7 +1314,7 @@ fort_driver_unload (PDRIVER_OBJECT driver)
     fort_power_callback_unregister();
     fort_systime_callback_unregister();
 
-    if (!g_device->prov_boot) {
+    if (!fort_device_flag(FORT_DEVICE_PROV_BOOT)) {
       fort_prov_unregister(0);
     }
 
@@ -1386,7 +1397,7 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 
       /* Unegister old filters provider */
       {
-        g_device->prov_boot = fort_prov_is_boot();
+        fort_device_flag_set(FORT_DEVICE_PROV_BOOT, fort_prov_is_boot());
 
         fort_prov_unregister(0);
       }
@@ -1401,7 +1412,9 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 
       /* Register filters provider */
       if (NT_SUCCESS(status)) {
-        status = fort_prov_register(0, g_device->prov_boot);
+        const BOOL prov_boot = fort_device_flag(FORT_DEVICE_PROV_BOOT);
+
+        status = fort_prov_register(0, prov_boot);
       }
 
       /* Register power state change callback */
