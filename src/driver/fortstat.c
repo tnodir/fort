@@ -223,21 +223,16 @@ fort_stat_proc_add (PFORT_STAT stat, UINT32 process_id)
 }
 
 static UCHAR
-fort_flow_flags_set (PFORT_FLOW flow, UCHAR flags)
+fort_flow_flags_set (PFORT_FLOW flow, UCHAR flags, BOOL on)
 {
-  return InterlockedOr8(&flow->opt.flags, flags);
-}
-
-static UCHAR
-fort_flow_flags_clear (PFORT_FLOW flow, UCHAR flags)
-{
-  return InterlockedAnd8(&flow->opt.flags, ~flags);
+  return on ? InterlockedOr8(&flow->opt.flags, flags)
+            : InterlockedAnd8(&flow->opt.flags, ~flags);
 }
 
 static UCHAR
 fort_flow_flags (PFORT_FLOW flow)
 {
-  return fort_flow_flags_set(flow, 0);
+  return fort_flow_flags_set(flow, 0, TRUE);
 }
 
 static void
@@ -535,10 +530,7 @@ fort_flow_classify (PFORT_STAT stat, UINT64 flowContext,
         const UCHAR defer_flag = inbound
           ? FORT_FLOW_DEFER_OUT : FORT_FLOW_DEFER_IN;
 
-        if (defer_flow)
-          fort_flow_flags_set(flow, defer_flag);
-        else
-          fort_flow_flags_clear(flow, defer_flag);
+        fort_flow_flags_set(flow, defer_flag, defer_flow);
       }
 
       stat->group_flush_bits |= (1 << list_index);

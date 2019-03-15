@@ -535,12 +535,12 @@ fort_callout_stream_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
         if (NT_SUCCESS(status))
           goto drop;
 
-        fort_flow_flags_set(flow, FORT_FLOW_FRAGMENTED);
+        fort_flow_flags_set(flow, FORT_FLOW_FRAGMENTED, TRUE);
       }
       else if (dataSize > fragment_size) {
         packet->countBytesEnforced = fragment_size;
 
-        fort_flow_flags_set(flow, FORT_FLOW_FRAGMENT_DEFER);
+        fort_flow_flags_set(flow, FORT_FLOW_FRAGMENT_DEFER, TRUE);
       }
     }
   }
@@ -667,7 +667,7 @@ fort_callout_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
       if (status == STATUS_CANT_TERMINATE_SELF) {
         /* Clear ACK deferring */
-        fort_flow_flags_clear(flow, defer_flag);
+        fort_flow_flags_set(flow, defer_flag, FALSE);
       }
 
       goto permit;
@@ -678,7 +678,7 @@ fort_callout_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
       fort_defer_stream_flush(&g_device->defer, fort_packet_inject_complete,
         flow->flow_id, FALSE);
 
-      fort_flow_flags_set(flow, FORT_FLOW_FRAGMENTED);
+      fort_flow_flags_set(flow, FORT_FLOW_FRAGMENTED, TRUE);
     }
   }
 
