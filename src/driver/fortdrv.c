@@ -1042,10 +1042,9 @@ fort_device_create (PDEVICE_OBJECT device, PIRP irp)
   UNUSED(device);
 
   /* Device opened */
-  if (fort_device_flag(FORT_DEVICE_IS_OPENED)) {
+  if (fort_device_flag_set(FORT_DEVICE_IS_OPENED, TRUE)
+      & FORT_DEVICE_IS_OPENED) {
     status = STATUS_SHARING_VIOLATION;  /* Only one client may connect */
-  } else {
-    fort_device_flag_set(FORT_DEVICE_IS_OPENED, TRUE);
   }
 
   fort_request_complete(irp, status);
