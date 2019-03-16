@@ -287,7 +287,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                           const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
                           const FWPS_FILTER0 *filter,
                           FWPS_CLASSIFY_OUT0 *classifyOut,
-                          int flagsField, int remoteIpField)
+                          int flagsField, int remoteIpField, int ipProtoField)
 {
   PFORT_CONF_REF conf_ref;
   PVOID path;
@@ -313,7 +313,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   conf_ref = fort_conf_ref_take();
 
   if (conf_ref == NULL) {
-    if (device_flags & FORT_DEVICE_PROV_BOOT) {
+    if (fort_device_flag(FORT_DEVICE_PROV_BOOT)) {
       fort_callout_classify_block(classifyOut);
     } else {
       fort_callout_classify_continue(classifyOut);
@@ -343,14 +343,20 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
     if (!fort_conf_app_blocked(&conf_ref->conf, app_index)) {
       if (conf_flags.log_stat) {
         const UINT64 flow_id = inMetaValues->flowHandle;
+
+        const IPPROTO ip_proto = (IPPROTO) inFixedValues->incomingValue[
+          ipProtoField].value.uint8;
+        const BOOL is_tcp = (ip_proto == IPPROTO_TCP);
+
         const UCHAR group_index = fort_conf_app_group_index(
           &conf_ref->conf, app_index);
         const BOOL is_reauth = (flags & FWP_CONDITION_FLAG_IS_REAUTHORIZE);
+
         BOOL is_new_proc = FALSE;
         NTSTATUS status;
 
         status = fort_flow_associate(&g_device->stat, flow_id, process_id,
-          group_index, is_reauth, &is_new_proc);
+          group_index, is_tcp, is_reauth, &is_new_proc);
 
         if (!NT_SUCCESS(status)) {
           if (status == FORT_STATUS_FLOW_BLOCK)
@@ -363,6 +369,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
             process_id, path_len, path, &irp, &info);
         }
       }
+
       goto permit;
     }
   }
@@ -392,7 +399,7 @@ fort_callout_connect_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                          const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
                          void *layerData,
                          const FWPS_FILTER0 *filter,
-                         UINT64 flowContext,
+                         const UINT64 flowContext,
                          FWPS_CLASSIFY_OUT0 *classifyOut)
 {
   UNUSED(layerData);
@@ -400,7 +407,8 @@ fort_callout_connect_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   fort_callout_classify_v4(inFixedValues, inMetaValues, filter, classifyOut,
       FWPS_FIELD_ALE_AUTH_CONNECT_V4_FLAGS,
-      FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_REMOTE_ADDRESS);
+      FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_REMOTE_ADDRESS,
+      FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_PROTOCOL);
 }
 
 static void
@@ -408,7 +416,7 @@ fort_callout_accept_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
                         void *layerData,
                         const FWPS_FILTER0 *filter,
-                        UINT64 flowContext,
+                        const UINT64 flowContext,
                         FWPS_CLASSIFY_OUT0 *classifyOut)
 {
   UNUSED(layerData);
@@ -416,7 +424,8 @@ fort_callout_accept_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   fort_callout_classify_v4(inFixedValues, inMetaValues, filter, classifyOut,
       FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_FLAGS,
-      FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_REMOTE_ADDRESS);
+      FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_REMOTE_ADDRESS, 
+      FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_PROTOCOL);
 }
 
 static NTSTATUS NTAPI
@@ -465,12 +474,12 @@ static void
 fort_callout_flow_classify_v4 (const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
                                UINT64 flowContext,
                                FWPS_CLASSIFY_OUT0 *classifyOut,
-                               UINT32 dataSize, BOOL inbound)
+                               UINT32 dataSize, BOOL is_tcp, BOOL inbound)
 {
   const UINT32 headerSize = inbound ? inMetaValues->transportHeaderSize : 0;
 
   fort_flow_classify(&g_device->stat, flowContext,
-    headerSize + dataSize, inbound);
+    headerSize + dataSize, is_tcp, inbound);
 }
 
 static void
@@ -490,7 +499,7 @@ fort_callout_stream_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   UNUSED(inFixedValues);
 
   fort_callout_flow_classify_v4(inMetaValues, flowContext,
-    classifyOut, dataSize, inbound);
+    classifyOut, dataSize, TRUE, inbound);
 
   /* Flush flow's deferred TCP packets on FIN */
   #if 0
@@ -569,13 +578,10 @@ fort_callout_datagram_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
     FWPS_FIELD_DATAGRAM_DATA_V4_DIRECTION].value.uint8;
   const BOOL inbound = (direction == FWP_DIRECTION_INBOUND);
 
-  UNUSED(inFixedValues);
-  UNUSED(filter);
-
   fort_callout_flow_classify_v4(inMetaValues, flowContext,
-    classifyOut, dataSize, inbound);
+    classifyOut, dataSize, FALSE, inbound);
 
-  fort_callout_classify_continue(classifyOut);
+  fort_callout_classify_permit(filter, classifyOut);
 }
 
 static void
@@ -594,15 +600,12 @@ fort_callout_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                                     const FWPS_FILTER0 *filter,
                                     UINT64 flowContext,
                                     FWPS_CLASSIFY_OUT0 *classifyOut,
-                                    int ipProtoField, BOOL inbound)
+                                    BOOL inbound)
 {
   PNET_BUFFER netBuf;
-  const IPPROTO ip_proto = (IPPROTO) inFixedValues->incomingValue[
-    ipProtoField].value.uint8;
-  const BOOL is_udp = (ip_proto == IPPROTO_UDP);
 
-  if (!(is_udp || FWPS_IS_METADATA_FIELD_PRESENT(inMetaValues,
-        FWPS_METADATA_FIELD_ALE_CLASSIFY_REQUIRED))
+  if (!FWPS_IS_METADATA_FIELD_PRESENT(inMetaValues,
+        FWPS_METADATA_FIELD_ALE_CLASSIFY_REQUIRED)
       && netBufList != NULL
       && (netBuf = NET_BUFFER_LIST_FIRST_NB(netBufList)) != NULL) {
     PFORT_FLOW flow = (PFORT_FLOW) flowContext;
@@ -700,9 +703,7 @@ fort_callout_in_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValue
                                        FWPS_CLASSIFY_OUT0 *classifyOut)
 {
   fort_callout_transport_classify_v4(inFixedValues, inMetaValues, netBufList,
-    filter, flowContext, classifyOut,
-    FWPS_FIELD_INBOUND_TRANSPORT_V4_IP_PROTOCOL,
-    TRUE);
+    filter, flowContext, classifyOut, TRUE);
 }
 
 static void
@@ -714,9 +715,7 @@ fort_callout_out_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValu
                                         FWPS_CLASSIFY_OUT0 *classifyOut)
 {
   fort_callout_transport_classify_v4(inFixedValues, inMetaValues, netBufList,
-    filter, flowContext, classifyOut,
-    FWPS_FIELD_OUTBOUND_TRANSPORT_V4_IP_PROTOCOL,
-    FALSE);
+    filter, flowContext, classifyOut, FALSE);
 }
 
 static void
@@ -777,7 +776,7 @@ fort_callout_install (PDEVICE_OBJECT device)
   c.calloutKey = FORT_GUID_CALLOUT_DATAGRAM_V4;
   c.classifyFn = fort_callout_datagram_classify_v4;
 
-  c.flowDeleteFn = fort_callout_delete_v4;
+  /* reuse c.flowDeleteFn & c.flags */
 
   status = FwpsCalloutRegister0(device, &c, &g_device->stat.datagram4_id);
   if (!NT_SUCCESS(status)) {
@@ -790,6 +789,9 @@ fort_callout_install (PDEVICE_OBJECT device)
   c.calloutKey = FORT_GUID_CALLOUT_IN_TRANSPORT_V4;
   c.classifyFn = fort_callout_in_transport_classify_v4;
 
+  c.flowDeleteFn = fort_callout_delete_v4;
+  /* reuse c.flags */
+
   status = FwpsCalloutRegister0(device, &c, &g_device->stat.in_transport4_id);
   if (!NT_SUCCESS(status)) {
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
@@ -800,6 +802,8 @@ fort_callout_install (PDEVICE_OBJECT device)
   /* IPv4 outbound transport callout */
   c.calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V4;
   c.classifyFn = fort_callout_out_transport_classify_v4;
+
+  /* reuse c.flowDeleteFn & c.flags */
 
   status = FwpsCalloutRegister0(device, &c, &g_device->stat.out_transport4_id);
   if (!NT_SUCCESS(status)) {

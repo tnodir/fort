@@ -236,15 +236,18 @@ fort_flow_flags (PFORT_FLOW flow)
 }
 
 static void
-fort_flow_context_set (PFORT_STAT stat, PFORT_FLOW flow)
+fort_flow_context_set (PFORT_STAT stat, PFORT_FLOW flow, BOOL is_tcp)
 {
   const UINT64 flow_id = flow->flow_id;
   const UINT64 flowContext = (UINT64) flow;
 
-  FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_STREAM_V4, stat->stream4_id, flowContext);
-  FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_DATAGRAM_DATA_V4, stat->datagram4_id, flowContext);
-  FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V4, stat->in_transport4_id, flowContext);
-  FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V4, stat->out_transport4_id, flowContext);
+  if (is_tcp) {
+    FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_STREAM_V4, stat->stream4_id, flowContext);
+    FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V4, stat->in_transport4_id, flowContext);
+    FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V4, stat->out_transport4_id, flowContext);
+  } else {
+    FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_DATAGRAM_DATA_V4, stat->datagram4_id, flowContext);
+  }
 }
 
 static void
@@ -298,7 +301,8 @@ fort_flow_free (PFORT_STAT stat, PFORT_FLOW flow)
 static NTSTATUS
 fort_flow_add (PFORT_STAT stat, UINT64 flow_id,
                UCHAR group_index, UINT16 proc_index,
-               UCHAR fragment, UCHAR speed_limit, BOOL is_reauth)
+               UCHAR fragment, UCHAR speed_limit,
+               BOOL is_tcp, BOOL is_reauth)
 {
   const tommy_key_t flow_hash = fort_flow_hash(flow_id);
   PFORT_FLOW flow = fort_flow_get(stat, flow_id, flow_hash);
@@ -326,7 +330,7 @@ fort_flow_add (PFORT_STAT stat, UINT64 flow_id,
 
     flow->flow_id = flow_id;
 
-    fort_flow_context_set(stat, flow);
+    fort_flow_context_set(stat, flow, is_tcp);
 
     is_new_flow = TRUE;
   } else {
@@ -420,12 +424,12 @@ fort_stat_conf_update (PFORT_STAT stat, PFORT_CONF_IO conf_io)
 static NTSTATUS
 fort_flow_associate (PFORT_STAT stat, UINT64 flow_id,
                      UINT32 process_id, UCHAR group_index,
-                     BOOL is_reauth, BOOL *is_new_proc)
+                     BOOL is_tcp, BOOL is_reauth,
+                     BOOL *is_new_proc)
 {
   const tommy_key_t proc_hash = fort_stat_proc_hash(process_id);
   KLOCK_QUEUE_HANDLE lock_queue;
   PFORT_STAT_PROC proc;
-  UCHAR fragment, speed_limit;
   NTSTATUS status;
 
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
@@ -453,15 +457,18 @@ fort_flow_associate (PFORT_STAT stat, UINT64 flow_id,
     *is_new_proc = TRUE;
   }
 
-  fragment = fort_stat_group_fragment(stat, group_index);
-  speed_limit = fort_stat_group_speed_limit(stat, group_index);
+  /* Add flow */
+  {
+    const UCHAR fragment = fort_stat_group_fragment(stat, group_index);
+    const UCHAR speed_limit = fort_stat_group_speed_limit(stat, group_index);
 
-  status = fort_flow_add(stat, flow_id,
-    group_index, proc->proc_index,
-    fragment, speed_limit, is_reauth);
+    status = fort_flow_add(stat, flow_id,
+      group_index, proc->proc_index,
+      fragment, speed_limit, is_tcp, is_reauth);
 
-  if (!NT_SUCCESS(status) && *is_new_proc) {
-    fort_stat_proc_free(stat, proc);
+    if (!NT_SUCCESS(status) && *is_new_proc) {
+      fort_stat_proc_free(stat, proc);
+    }
   }
 
  end:
@@ -488,26 +495,31 @@ fort_flow_delete (PFORT_STAT stat, UINT64 flowContext)
 
 static void
 fort_flow_classify (PFORT_STAT stat, UINT64 flowContext,
-                    UINT32 data_len, BOOL inbound)
+                    UINT32 data_len, BOOL is_tcp, BOOL inbound)
 {
   KLOCK_QUEUE_HANDLE lock_queue;
   PFORT_FLOW flow = (PFORT_FLOW) flowContext;
+  FORT_FLOW_OPT opt;
 
   KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
-  if (stat->log_stat && flow->opt.proc_index != FORT_PROC_BAD_INDEX) {
-    PFORT_STAT_PROC proc = tommy_arrayof_ref(&stat->procs, flow->opt.proc_index);
+  if (!stat->log_stat)
+    goto end;
+
+  opt = flow->opt;
+
+  if (opt.proc_index != FORT_PROC_BAD_INDEX) {
+    PFORT_STAT_PROC proc = tommy_arrayof_ref(&stat->procs, opt.proc_index);
     UINT32 *proc_bytes = inbound ? &proc->traf.in_bytes
       : &proc->traf.out_bytes;
-
-    const UCHAR stat_flow_flags = fort_flow_flags(flow);
 
     /* Add traffic to process */
     *proc_bytes += data_len;
 
-    if (stat_flow_flags & (inbound ? FORT_FLOW_SPEED_LIMIT_IN
-        : FORT_FLOW_SPEED_LIMIT_OUT)) {
-      const UCHAR group_index = flow->opt.group_index;
+    if (is_tcp
+        && (fort_flow_flags(flow) & (inbound ? FORT_FLOW_SPEED_LIMIT_IN
+                                             : FORT_FLOW_SPEED_LIMIT_OUT))) {
+      const UCHAR group_index = opt.group_index;
 
       PFORT_STAT_GROUP group = &stat->groups[group_index];
       UINT32 *group_bytes = inbound ? &group->traf.in_bytes
@@ -539,6 +551,7 @@ fort_flow_classify (PFORT_STAT stat, UINT64 flowContext,
     fort_stat_proc_active_add(stat, proc);
   }
 
+ end:
   KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
