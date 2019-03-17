@@ -26,6 +26,7 @@ public:
 
     static QString absolutePath(const QString &path);
     static QString pathSlash(const QString &path);
+    static QString toNativeSeparators(const QString &path);
 
     static bool makePath(const QString &path);
     static bool fileExists(const QString &filePath);

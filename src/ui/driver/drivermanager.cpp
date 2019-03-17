@@ -122,8 +122,8 @@ bool DriverManager::writeData(quint32 code, QByteArray &buf, int size)
 
 void DriverManager::reinstallDriver()
 {
-    QString binPath = FileUtil::appBinLocation();
-    binPath.replace('/', '\\');
+    const QString binPath = FileUtil::toNativeSeparators(
+                FileUtil::appBinLocation());
 
     const QString cmdPath = qEnvironmentVariable("COMSPEC");
     const QString scriptPath = binPath + "\\driver\\scripts\\reinstall-lnk.bat";

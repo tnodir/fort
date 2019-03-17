@@ -89,6 +89,11 @@ QString FileUtil::pathSlash(const QString &path)
     return path.endsWith(slash) ? path : path + slash;
 }
 
+QString FileUtil::toNativeSeparators(const QString &path)
+{
+    return QDir::toNativeSeparators(path);
+}
+
 bool FileUtil::makePath(const QString &path)
 {
     return QDir().mkpath(path);
