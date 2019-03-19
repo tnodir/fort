@@ -50,7 +50,7 @@ BasePage {
 
             CheckBox {
                 text: translationManager.trTrigger
-                      && qsTranslate("qml", "Block access to network when Fort Firewall is not running")
+                      && qsTranslate("qml", "Stop traffic when Fort Firewall is not running")
                 checked: firewallConf.provBoot
                 onToggled: {
                     firewallConf.provBoot = checked;

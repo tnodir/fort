@@ -187,7 +187,7 @@ ButtonPopup {
             checkBox {
                 indicator: null
                 text: translationManager.trTrigger
-                      && qsTranslate("qml", "Day's Quota:")
+                      && qsTranslate("qml", "Day's Quota, MiB:")
             }
             field {
                 from: 0
@@ -207,7 +207,7 @@ ButtonPopup {
             checkBox {
                 indicator: null
                 text: translationManager.trTrigger
-                      && qsTranslate("qml", "Month's Quota:")
+                      && qsTranslate("qml", "Month's Quota, MiB:")
             }
             field {
                 from: 0

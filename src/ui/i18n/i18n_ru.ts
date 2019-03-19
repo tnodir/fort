@@ -397,8 +397,8 @@
     </message>
     <message>
         <location filename="../qml/pages/OptionsPage.qml" line="53"/>
-        <source>Block access to network when Fort Firewall is not running</source>
-        <translation>Блокировать доступ к сети, когда Fort Firewall не запущен</translation>
+        <source>Stop traffic when Fort Firewall is not running</source>
+        <translation>Остановить трафик, когда Fort Firewall не запущен</translation>
     </message>
     <message>
         <location filename="../qml/pages/OptionsPage.qml" line="67"/>
@@ -548,13 +548,13 @@
     </message>
     <message>
         <location filename="../qml/pages/log/TrafOptionsButton.qml" line="190"/>
-        <source>Day&apos;s Quota:</source>
-        <translation>Квота на день</translation>
+        <source>Day&apos;s Quota, MiB:</source>
+        <translation>Квота на день, MiB</translation>
     </message>
     <message>
         <location filename="../qml/pages/log/TrafOptionsButton.qml" line="210"/>
-        <source>Month&apos;s Quota:</source>
-        <translation>Квота на месяц</translation>
+        <source>Month&apos;s Quota, MiB:</source>
+        <translation>Квота на месяц, MiB</translation>
     </message>
     <message>
         <location filename="../qml/pages/SchedulePage.qml" line="32"/>
