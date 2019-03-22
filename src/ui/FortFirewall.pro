@@ -46,6 +46,8 @@ SOURCES += \
     task/taskupdatechecker.cpp \
     task/taskworker.cpp \
     translationmanager.cpp \
+    util/app/appinfomanager.cpp \
+    util/app/appinfoworker.cpp \
     util/conf/addressrange.cpp \
     util/conf/confutil.cpp \
     util/dateutil.cpp \
@@ -55,8 +57,8 @@ SOURCES += \
     util/hotkeymanager.cpp \
     util/logger.cpp \
     util/nativeeventfilter.cpp \
-    util/net/hostinfo.cpp \
     util/net/hostinfocache.cpp \
+    util/net/hostinfomanager.cpp \
     util/net/hostinfoworker.cpp \
     util/net/ip4range.cpp \
     util/net/netdownloader.cpp \
@@ -67,7 +69,9 @@ SOURCES += \
     util/window/basewindowstatewatcher.cpp \
     util/window/widgetwindow.cpp \
     util/window/widgetwindowstatewatcher.cpp \
-    util/window/windowstatewatcher.cpp
+    util/window/windowstatewatcher.cpp \
+    util/worker/workermanager.cpp \
+    util/worker/workerobject.cpp
 
 HEADERS += \
     conf/addressgroup.h \
@@ -105,6 +109,8 @@ HEADERS += \
     task/taskupdatechecker.h \
     task/taskworker.h \
     translationmanager.h \
+    util/app/appinfomanager.h \
+    util/app/appinfoworker.h \
     util/conf/addressrange.h \
     util/conf/confutil.h \
     util/dateutil.h \
@@ -114,8 +120,8 @@ HEADERS += \
     util/hotkeymanager.h \
     util/logger.h \
     util/nativeeventfilter.h \
-    util/net/hostinfo.h \
     util/net/hostinfocache.h \
+    util/net/hostinfomanager.h \
     util/net/hostinfoworker.h \
     util/net/ip4range.h \
     util/net/netdownloader.h \
@@ -126,7 +132,9 @@ HEADERS += \
     util/window/basewindowstatewatcher.h \
     util/window/widgetwindow.h \
     util/window/widgetwindowstatewatcher.h \
-    util/window/windowstatewatcher.h
+    util/window/windowstatewatcher.h \
+    util/worker/workermanager.h \
+    util/worker/workerobject.h
 
 QML_FILES += \
     qml/*.qml \

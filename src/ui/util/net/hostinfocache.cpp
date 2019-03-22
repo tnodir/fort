@@ -1,12 +1,12 @@
 #include "hostinfocache.h"
 
-#include "hostinfo.h"
+#include "hostinfomanager.h"
 
 HostInfoCache::HostInfoCache(QObject *parent) :
     QObject(parent),
-    m_hostInfo(new HostInfo(this))
+    m_manager(new HostInfoManager(this))
 {
-    connect(m_hostInfo, &HostInfo::lookupFinished,
+    connect(m_manager, &HostInfoManager::lookupFinished,
             this, &HostInfoCache::handleFinishedLookup);
 }
 
@@ -14,7 +14,7 @@ QString HostInfoCache::hostName(const QString &address)
 {
     if (!m_cache.contains(address)) {
         m_cache.insert(address, QString());
-        m_hostInfo->lookupHost(address);
+        m_manager->lookupHost(address);
         return QString();
     }
 
@@ -23,7 +23,7 @@ QString HostInfoCache::hostName(const QString &address)
 
 void HostInfoCache::clear()
 {
-    m_hostInfo->clear();
+    m_manager->clear();
     m_cache.clear();
 
     emitCacheChanged();

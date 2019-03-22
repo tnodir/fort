@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QHash>
 
-QT_FORWARD_DECLARE_CLASS(HostInfo)
+QT_FORWARD_DECLARE_CLASS(HostInfoManager)
 
 class HostInfoCache : public QObject
 {
@@ -32,7 +32,7 @@ private:
     void emitCacheChanged();
 
 private:
-    HostInfo *m_hostInfo;
+    HostInfoManager *m_manager;
 
     QHash<QString, QString> m_cache;
 };

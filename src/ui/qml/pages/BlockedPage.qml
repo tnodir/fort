@@ -44,6 +44,7 @@ BasePage {
                     onTriggered: {
                         appListView.currentIndex = -1;
                         appBlockedModel.clear();
+                        hostInfoCache.clear();
                     }
                 }
             }
@@ -73,6 +74,9 @@ BasePage {
                       && qsTranslate("qml", "Resolve Addresses")
                 checked: firewallConf.resolveAddress
                 onToggled: {
+                    if (firewallConf.resolveAddress === checked)
+                        return;
+
                     firewallConf.resolveAddress = checked;
 
                     fortManager.applyConfImmediateFlags();
