@@ -229,7 +229,7 @@ fort_defer_packet_get (PFORT_DEFER defer)
     pkt = defer->packet_free;
     defer->packet_free = pkt->next;
   } else {
-    const tommy_count_t size = tommy_arrayof_size(&defer->packets);
+    const tommy_size_t size = tommy_arrayof_size(&defer->packets);
 
     /* TODO: tommy_arrayof_grow(): check calloc()'s result for NULL */
     tommy_arrayof_grow(&defer->packets, size + 1);

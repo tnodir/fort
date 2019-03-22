@@ -188,6 +188,13 @@ fort_stat_proc_free (PFORT_STAT stat, PFORT_STAT_PROC proc)
   stat->proc_free = proc;
 }
 
+static void
+fort_stat_proc_free_data (PFORT_STAT stat, void *data)
+{
+  PFORT_STAT_PROC proc = (PFORT_STAT_PROC) fort_tommyhashdyn_node(data);
+  fort_stat_proc_free(stat, proc);
+}
+
 static PFORT_STAT_PROC
 fort_stat_proc_add (PFORT_STAT stat, UINT32 process_id)
 {
@@ -198,7 +205,7 @@ fort_stat_proc_add (PFORT_STAT stat, UINT32 process_id)
     proc = stat->proc_free;
     stat->proc_free = proc->next;
   } else {
-    const tommy_count_t size = tommy_arrayof_size(&stat->procs);
+    const tommy_size_t size = tommy_arrayof_size(&stat->procs);
 
     if (size + 1 >= FORT_PROC_COUNT_MAX)
       return NULL;
@@ -262,9 +269,23 @@ fort_flow_context_remove (PFORT_STAT stat, PFORT_FLOW flow)
 }
 
 static void
+fort_flow_context_remove_data (PFORT_STAT stat, void *data)
+{
+  PFORT_FLOW flow = (PFORT_FLOW) fort_tommyhashdyn_node(data);
+  fort_flow_context_remove(stat, flow);
+}
+
+static void
 fort_flow_close (PFORT_FLOW flow)
 {
   flow->opt.proc_index = FORT_PROC_BAD_INDEX;
+}
+
+static void
+fort_flow_close_data (void *data)
+{
+  PFORT_FLOW flow = (PFORT_FLOW) fort_tommyhashdyn_node(data);
+  fort_flow_close(flow);
 }
 
 static PFORT_FLOW
@@ -317,7 +338,7 @@ fort_flow_add (PFORT_STAT stat, UINT64 flow_id,
       flow = stat->flow_free;
       stat->flow_free = flow->next;
     } else {
-      const tommy_count_t size = tommy_arrayof_size(&stat->flows);
+      const tommy_size_t size = tommy_arrayof_size(&stat->flows);
 
       /* TODO: tommy_arrayof_grow(): check calloc()'s result for NULL */
       if (tommy_arrayof_grow(&stat->flows, size + 1), 0)
@@ -370,7 +391,7 @@ fort_stat_close (PFORT_STAT stat)
 
   stat->closed = TRUE;
 
-  tommy_hashdyn_foreach_node_arg(&stat->flows_map,
+  tommy_hashdyn_foreach_arg(&stat->flows_map,
     fort_flow_context_remove, stat);
 
   tommy_arrayof_done(&stat->procs);
@@ -387,8 +408,8 @@ fort_stat_clear (PFORT_STAT stat)
 {
   fort_stat_proc_active_clear(stat);
 
-  tommy_hashdyn_foreach_node_arg(&stat->procs_map, fort_stat_proc_free, stat);
-  tommy_hashdyn_foreach_node(&stat->flows_map, fort_flow_close);
+  tommy_hashdyn_foreach_arg(&stat->procs_map, fort_stat_proc_free, stat);
+  tommy_hashdyn_foreach(&stat->flows_map, fort_flow_close);
 
   RtlZeroMemory(stat->groups, sizeof(stat->groups));
 }

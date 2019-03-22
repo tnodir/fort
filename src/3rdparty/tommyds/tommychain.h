@@ -137,11 +137,6 @@ tommy_inline void tommy_chain_merge_degenerated(tommy_chain* first, tommy_chain*
 }
 
 /**
- * Max number of elements as a power of 2.
- */
-#define TOMMY_CHAIN_BIT_MAX 32
-
-/**
  * Sorts a chain.
  * It's a stable merge sort using power of 2 buckets, with O(N*log(N)) complexity,
  * similar at the one used in the SGI STL libraries and in the Linux Kernel,
@@ -158,20 +153,20 @@ tommy_inline void tommy_chain_mergesort(tommy_chain* chain, tommy_compare_func* 
 	/*
 	 * Bit buckets of chains.
 	 * Each bucket contains 2^i nodes or it's empty.
-	 * The chain at address TOMMY_CHAIN_BIT_MAX is an independet variable operating as "carry".
+	 * The chain at address TOMMY_BIT_MAX is an independet variable operating as "carry".
 	 * We keep it in the same "bit" vector to avoid reports from the valgrind tool sgcheck.
 	 */
-	tommy_chain bit[TOMMY_CHAIN_BIT_MAX + 1];
+	tommy_chain bit[TOMMY_SIZE_BIT + 1];
 
 	/**
 	 * Value stored inside the bit bucket.
 	 * It's used to know which bucket is empty of full.
 	 */
-	tommy_count_t counter;
+	tommy_size_t counter;
 	tommy_node* node = chain->head;
 	tommy_node* tail = chain->tail;
-	tommy_count_t mask;
-	tommy_count_t i;
+	tommy_size_t mask;
+	tommy_size_t i;
 
 	counter = 0;
 	while (1) {
@@ -179,9 +174,9 @@ tommy_inline void tommy_chain_mergesort(tommy_chain* chain, tommy_compare_func* 
 		tommy_chain* last;
 
 		/* carry bit to add */
-		last = &bit[TOMMY_CHAIN_BIT_MAX];
-		bit[TOMMY_CHAIN_BIT_MAX].head = node;
-		bit[TOMMY_CHAIN_BIT_MAX].tail = node;
+		last = &bit[TOMMY_SIZE_BIT];
+		bit[TOMMY_SIZE_BIT].head = node;
+		bit[TOMMY_SIZE_BIT].tail = node;
 		next = node->next;
 
 		/* add the bit, propagating the carry */
@@ -206,7 +201,7 @@ tommy_inline void tommy_chain_mergesort(tommy_chain* chain, tommy_compare_func* 
 	}
 
 	/* merge the buckets */
-	i = tommy_ctz_u32(counter);
+	i = tommy_ctz(counter);
 	mask = counter >> i;
 	while (mask != 1) {
 		mask >>= 1;

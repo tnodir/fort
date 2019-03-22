@@ -53,3 +53,6 @@ fort_tommy_realloc (PVOID p, SIZE_T new_size)
 #include "..\3rdparty\tommyds\tommylist.c"
 #include "..\3rdparty\tommyds\tommyhash.c"
 #include "..\3rdparty\tommyds\tommyhashdyn.c"
+
+#define fort_tommyhashdyn_node(datap) \
+  ((tommy_hashdyn_node *) ((char *) (datap) - offsetof(tommy_hashdyn_node, data)))

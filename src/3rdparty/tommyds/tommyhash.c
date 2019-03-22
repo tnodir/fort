@@ -66,8 +66,7 @@ tommy_inline tommy_uint32_t tommy_le_uint32_read(const void* ptr)
 		c ^= b; c -= tommy_rot(b, 24); \
 	} while (0)
 
-TOMMY_API //!!
-tommy_uint32_t tommy_hash_u32(tommy_uint32_t init_val, const void* void_key, tommy_size_t key_len)
+TOMMY_API tommy_uint32_t tommy_hash_u32(tommy_uint32_t init_val, const void* void_key, tommy_size_t key_len)
 {
 	const unsigned char* key = tommy_cast(const unsigned char*, void_key);
 	tommy_uint32_t a, b, c;
@@ -93,22 +92,22 @@ tommy_uint32_t tommy_hash_u32(tommy_uint32_t init_val, const void* void_key, tom
 		b += tommy_le_uint32_read(key + 4);
 		a += tommy_le_uint32_read(key + 0);
 		break;
-	case 11 : c += ((tommy_uint32_t)key[10]) << 16;
-	case 10 : c += ((tommy_uint32_t)key[9]) << 8;
-	case 9 : c += key[8];
+	case 11 : c += ((tommy_uint32_t)key[10]) << 16; /* fallthrough */
+	case 10 : c += ((tommy_uint32_t)key[9]) << 8; /* fallthrough */
+	case 9 : c += key[8]; /* fallthrough */
 	case 8 :
 		b += tommy_le_uint32_read(key + 4);
 		a += tommy_le_uint32_read(key + 0);
 		break;
-	case 7 : b += ((tommy_uint32_t)key[6]) << 16;
-	case 6 : b += ((tommy_uint32_t)key[5]) << 8;
-	case 5 : b += key[4];
+	case 7 : b += ((tommy_uint32_t)key[6]) << 16; /* fallthrough */
+	case 6 : b += ((tommy_uint32_t)key[5]) << 8; /* fallthrough */
+	case 5 : b += key[4]; /* fallthrough */
 	case 4 :
 		a += tommy_le_uint32_read(key + 0);
 		break;
-	case 3 : a += ((tommy_uint32_t)key[2]) << 16;
-	case 2 : a += ((tommy_uint32_t)key[1]) << 8;
-	case 1 : a += key[0];
+	case 3 : a += ((tommy_uint32_t)key[2]) << 16; /* fallthrough */
+	case 2 : a += ((tommy_uint32_t)key[1]) << 8; /* fallthrough */
+	case 1 : a += key[0]; /* fallthrough */
 	}
 
 	tommy_final(a, b, c);
@@ -116,8 +115,7 @@ tommy_uint32_t tommy_hash_u32(tommy_uint32_t init_val, const void* void_key, tom
 	return c;
 }
 
-TOMMY_API //!!
-tommy_uint64_t tommy_hash_u64(tommy_uint64_t init_val, const void* void_key, tommy_size_t key_len)
+TOMMY_API tommy_uint64_t tommy_hash_u64(tommy_uint64_t init_val, const void* void_key, tommy_size_t key_len)
 {
 	const unsigned char* key = tommy_cast(const unsigned char*, void_key);
 	tommy_uint32_t a, b, c;
@@ -144,22 +142,22 @@ tommy_uint64_t tommy_hash_u64(tommy_uint64_t init_val, const void* void_key, tom
 		b += tommy_le_uint32_read(key + 4);
 		a += tommy_le_uint32_read(key + 0);
 		break;
-	case 11 : c += ((tommy_uint32_t)key[10]) << 16;
-	case 10 : c += ((tommy_uint32_t)key[9]) << 8;
-	case 9 : c += key[8];
+	case 11 : c += ((tommy_uint32_t)key[10]) << 16; /* fallthrough */
+	case 10 : c += ((tommy_uint32_t)key[9]) << 8; /* fallthrough */
+	case 9 : c += key[8]; /* fallthrough */
 	case 8 :
 		b += tommy_le_uint32_read(key + 4);
 		a += tommy_le_uint32_read(key + 0);
 		break;
-	case 7 : b += ((tommy_uint32_t)key[6]) << 16;
-	case 6 : b += ((tommy_uint32_t)key[5]) << 8;
-	case 5 : b += key[4];
+	case 7 : b += ((tommy_uint32_t)key[6]) << 16; /* fallthrough */
+	case 6 : b += ((tommy_uint32_t)key[5]) << 8; /* fallthrough */
+	case 5 : b += key[4]; /* fallthrough */
 	case 4 :
 		a += tommy_le_uint32_read(key + 0);
 		break;
-	case 3 : a += ((tommy_uint32_t)key[2]) << 16;
-	case 2 : a += ((tommy_uint32_t)key[1]) << 8;
-	case 1 : a += key[0];
+	case 3 : a += ((tommy_uint32_t)key[2]) << 16; /* fallthrough */
+	case 2 : a += ((tommy_uint32_t)key[1]) << 8; /* fallthrough */
+	case 1 : a += key[0]; /* fallthrough */
 	}
 
 	tommy_final(a, b, c);
@@ -167,9 +165,7 @@ tommy_uint64_t tommy_hash_u64(tommy_uint64_t init_val, const void* void_key, tom
 	return c + ((tommy_uint64_t)b << 32);
 }
 
-//!! tommy_uint64_t init_val -> tommy_uint32_t init_val
-TOMMY_API //!!
-tommy_uint32_t tommy_strhash_u32(tommy_uint32_t init_val, const void* void_key)
+TOMMY_API tommy_uint32_t tommy_strhash_u32(tommy_uint32_t init_val, const void* void_key)
 {
 	const unsigned char* key = tommy_cast(const unsigned char*, void_key);
 	tommy_uint32_t a, b, c;
