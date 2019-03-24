@@ -392,7 +392,7 @@ fort_stat_close (PFORT_STAT stat)
   stat->closed = TRUE;
 
   tommy_hashdyn_foreach_arg(&stat->flows_map,
-    fort_flow_context_remove, stat);
+    fort_flow_context_remove_data, stat);
 
   tommy_arrayof_done(&stat->procs);
   tommy_hashdyn_done(&stat->procs_map);
@@ -408,8 +408,8 @@ fort_stat_clear (PFORT_STAT stat)
 {
   fort_stat_proc_active_clear(stat);
 
-  tommy_hashdyn_foreach_arg(&stat->procs_map, fort_stat_proc_free, stat);
-  tommy_hashdyn_foreach(&stat->flows_map, fort_flow_close);
+  tommy_hashdyn_foreach_arg(&stat->procs_map, fort_stat_proc_free_data, stat);
+  tommy_hashdyn_foreach(&stat->flows_map, fort_flow_close_data);
 
   RtlZeroMemory(stat->groups, sizeof(stat->groups));
 }
