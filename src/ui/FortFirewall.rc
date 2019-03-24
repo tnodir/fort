@@ -1,1 +1,60 @@
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
+#include "../common/version.h"
+
+#define VER_FILEVERSION             APP_VERSION_MAJOR,APP_VERSION_MINOR,APP_VERSION_PATCH,0
+#define VER_FILEVERSION_STR         APP_VERSION_STR
+#define VER_PRODUCTVERSION          VER_FILEVERSION
+#define VER_PRODUCTVERSION_STR      APP_VERSION_STR
+
+#define VER_COMPANYNAME_STR         "Open Source Developer, Nodir Temirkhodjaev"
+#define VER_FILEDESCRIPTION_STR     "Fort Firewall"
+#define VER_INTERNALNAME_STR        "FortFirewall"
+#define VER_LEGALCOPYRIGHT_STR      "Copyright 2015 Nodir Temirkhodjaev"
+#define VER_LEGALTRADEMARKS1_STR    ""
+#define VER_LEGALTRADEMARKS2_STR    ""
+#define VER_ORIGINALFILENAME_STR    "FortFirewall.exe"
+#define VER_PRODUCTNAME_STR         "Fort Firewall"
+
+#ifdef _DEBUG
+#define VER_DEBUG (VS_FF_PRIVATEBUILD|VS_FF_PRERELEASE|VS_FF_DEBUG)
+#else
+#define VER_DEBUG 0
+#endif
+
+
 IDI_ICON1               ICON    DISCARDABLE     FortFirewall.ico
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION     VER_FILEVERSION
+PRODUCTVERSION  VER_PRODUCTVERSION
+
+FILEFLAGSMASK   VS_FFI_FILEFLAGSMASK
+FILEFLAGS       VER_DEBUG
+FILEOS          VOS__WINDOWS32
+FILETYPE        VFT_APP
+FILESUBTYPE     0x0L
+
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "CompanyName",      VER_COMPANYNAME_STR
+            VALUE "FileDescription",  VER_FILEDESCRIPTION_STR
+            VALUE "FileVersion",      VER_FILEVERSION_STR
+            VALUE "InternalName",     VER_INTERNALNAME_STR
+            VALUE "LegalCopyright",   VER_LEGALCOPYRIGHT_STR
+            VALUE "LegalTrademarks1", VER_LEGALTRADEMARKS1_STR
+            VALUE "LegalTrademarks2", VER_LEGALTRADEMARKS2_STR
+            VALUE "OriginalFilename", VER_ORIGINALFILENAME_STR
+            VALUE "ProductName",      VER_PRODUCTNAME_STR
+            VALUE "ProductVersion",   VER_PRODUCTVERSION_STR
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
