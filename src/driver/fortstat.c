@@ -188,13 +188,6 @@ fort_stat_proc_free (PFORT_STAT stat, PFORT_STAT_PROC proc)
   stat->proc_free = proc;
 }
 
-static void
-fort_stat_proc_free_data (PFORT_STAT stat, void *data)
-{
-  PFORT_STAT_PROC proc = (PFORT_STAT_PROC) fort_tommyhashdyn_node(data);
-  fort_stat_proc_free(stat, proc);
-}
-
 static PFORT_STAT_PROC
 fort_stat_proc_add (PFORT_STAT stat, UINT32 process_id)
 {
@@ -269,23 +262,9 @@ fort_flow_context_remove (PFORT_STAT stat, PFORT_FLOW flow)
 }
 
 static void
-fort_flow_context_remove_data (PFORT_STAT stat, void *data)
-{
-  PFORT_FLOW flow = (PFORT_FLOW) fort_tommyhashdyn_node(data);
-  fort_flow_context_remove(stat, flow);
-}
-
-static void
 fort_flow_close (PFORT_FLOW flow)
 {
   flow->opt.proc_index = FORT_PROC_BAD_INDEX;
-}
-
-static void
-fort_flow_close_data (void *data)
-{
-  PFORT_FLOW flow = (PFORT_FLOW) fort_tommyhashdyn_node(data);
-  fort_flow_close(flow);
 }
 
 static PFORT_FLOW
@@ -391,8 +370,8 @@ fort_stat_close (PFORT_STAT stat)
 
   stat->closed = TRUE;
 
-  tommy_hashdyn_foreach_arg(&stat->flows_map,
-    fort_flow_context_remove_data, stat);
+  tommy_hashdyn_foreach_node_arg(&stat->flows_map,
+    fort_flow_context_remove, stat);
 
   tommy_arrayof_done(&stat->procs);
   tommy_hashdyn_done(&stat->procs_map);
@@ -408,8 +387,8 @@ fort_stat_clear (PFORT_STAT stat)
 {
   fort_stat_proc_active_clear(stat);
 
-  tommy_hashdyn_foreach_arg(&stat->procs_map, fort_stat_proc_free_data, stat);
-  tommy_hashdyn_foreach(&stat->flows_map, fort_flow_close_data);
+  tommy_hashdyn_foreach_node_arg(&stat->procs_map, fort_stat_proc_free, stat);
+  tommy_hashdyn_foreach_node(&stat->flows_map, fort_flow_close);
 
   RtlZeroMemory(stat->groups, sizeof(stat->groups));
 }
