@@ -86,10 +86,10 @@ bool WorkerManager::dequeueJob(QString &job)
 
     while (!m_aborted && m_queue.isEmpty()) {
         if (!m_waitCondition.wait(&m_mutex, WORKER_TIMEOUT_MSEC))
-            return false;  // timed out
+            break;  // timed out
     }
 
-    if (m_aborted)
+    if (m_aborted || m_queue.isEmpty())
         return false;
 
     job = m_queue.dequeue();
