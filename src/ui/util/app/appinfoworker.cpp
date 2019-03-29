@@ -3,6 +3,7 @@
 #include <QImage>
 
 #include "appinfomanager.h"
+#include "apputil.h"
 
 AppInfoWorker::AppInfoWorker(AppInfoManager *manager) :
     WorkerObject(manager)

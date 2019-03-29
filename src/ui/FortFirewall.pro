@@ -48,6 +48,7 @@ SOURCES += \
     translationmanager.cpp \
     util/app/appinfomanager.cpp \
     util/app/appinfoworker.cpp \
+    util/app/apputil.cpp \
     util/conf/addressrange.cpp \
     util/conf/confutil.cpp \
     util/dateutil.cpp \
@@ -111,6 +112,7 @@ HEADERS += \
     translationmanager.h \
     util/app/appinfomanager.h \
     util/app/appinfoworker.h \
+    util/app/apputil.h \
     util/conf/addressrange.h \
     util/conf/confutil.h \
     util/dateutil.h \
