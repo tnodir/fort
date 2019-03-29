@@ -1,5 +1,7 @@
 include(../common/Test.pri)
 
+QT += gui
+
 SOURCES += \
     $$UIPATH/conf/addressgroup.cpp \
     $$UIPATH/conf/appgroup.cpp \
