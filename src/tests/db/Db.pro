@@ -28,4 +28,9 @@ HEADERS += \
     $$UIPATH/util/fileutil.h \
     $$UIPATH/util/net/netutil.h
 
-include($$UIPATH/db/sqlite/sqlite.pri)
+# Database Migrations
+RESOURCES += $$UIPATH/db/migrations.qrc
+
+# 3rd party integrations
+CONFIG += sqlite
+include($$UIPATH/3rdparty/3rdparty.pri)

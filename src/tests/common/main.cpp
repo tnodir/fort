@@ -2,4 +2,4 @@
 
 #include "test.h"
 
-QTEST_APPLESS_MAIN(Test)
+QTEST_MAIN(Test)

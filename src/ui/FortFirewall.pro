@@ -186,4 +186,5 @@ installer_build {
 }
 
 # 3rd party integrations
+CONFIG += qcustomplot sqlite
 include(3rdparty/3rdparty.pri)

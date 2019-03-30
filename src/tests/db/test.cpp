@@ -5,11 +5,11 @@
 #include "commontest.h"
 #include "db/databasemanager.h"
 #include "db/quotamanager.h"
-#include "db/sqlite/sqlitedb.h"
-#include "db/sqlite/sqlitestmt.h"
 #include "fortsettings.h"
 #include "util/dateutil.h"
 #include "util/fileutil.h"
+#include <sqlite/sqlitedb.h>
+#include <sqlite/sqlitestmt.h>
 
 void Test::dbWriteRead()
 {
@@ -21,9 +21,9 @@ void Test::dbWriteRead()
     QVERIFY(databaseManager.initialize());
 
     const QStringList appPaths = QStringList()
-            << "C:\test\test.exe"
-            << "C:\test\test2.exe"
-            << "C:\test\test3.exe";
+            << "C:\\test\\test.exe"
+            << "C:\\test\\test2.exe"
+            << "C:\\test\\test3.exe";
 
     const quint16 procCount = 3;
     QCOMPARE(int(procCount), appPaths.size());
