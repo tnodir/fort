@@ -1,5 +1,7 @@
 PRAGMA user_version = 1;
 
+PRAGMA journal_mode=WAL;
+
 CREATE TABLE IF NOT EXISTS app(
   app_id INTEGER PRIMARY KEY,
   path TEXT UNIQUE NOT NULL,

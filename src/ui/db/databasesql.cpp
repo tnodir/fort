@@ -2,7 +2,6 @@
 
 const char * const DatabaseSql::sqlPragmas =
         "PRAGMA locking_mode=EXCLUSIVE;"
-        "PRAGMA journal_mode=WAL;"
         "PRAGMA synchronous=NORMAL;"
         ;
 
