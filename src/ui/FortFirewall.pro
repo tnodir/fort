@@ -168,8 +168,9 @@ RESOURCES += db/migrations.qrc
 }
 
 # Windows
-LIBS += -lfwpuclnt -lkernel32 -luser32 -luuid -lws2_32
+LIBS += -lfwpuclnt -lkernel32 -luser32 -luuid -lversion -lws2_32
 RC_FILE = FortFirewall.rc
+OTHER_FILES += $${RC_FILE}
 
 # Kernel Driver
 installer_build {

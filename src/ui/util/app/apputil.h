@@ -4,14 +4,18 @@
 #include <QObject>
 #include <QPixmap>
 
-class AppUtil : public QObject
+typedef struct AppInfo {
+    QString fileDescription;
+    QString companyName;
+    QString productName;
+    QString productVersion;
+} AppInfo;
+
+class AppUtil
 {
-    Q_OBJECT
-
 public:
-    explicit AppUtil(QObject *parent = nullptr);
-
-    Q_INVOKABLE static QPixmap getIcon(const QString &appPath);
+    static QPixmap getIcon(const QString &appPath);
+    static bool getInfo(const QString &appPath, AppInfo &appInfo);
 };
 
 #endif // APPUTIL_H
