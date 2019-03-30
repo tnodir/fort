@@ -56,8 +56,6 @@ private:
 
     void initializeQuota();
 
-    bool createTables();
-
     void clearStmts();
 
     void replaceAppPathAt(int index, const QString &appPath);

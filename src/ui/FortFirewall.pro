@@ -156,6 +156,10 @@ RESOURCES += fort_qml.qrc
 # Images
 RESOURCES += fort_images.qrc
 
+# Database Migrations
+OTHER_FILES += db/migrations/*.sql
+RESOURCES += db/migrations.qrc
+
 # Shadow Build: Copy i18n/ to build path
 !equals(PWD, $${OUT_PWD}) {
     i18n.files = i18n/*.qm
