@@ -1,7 +1,7 @@
 #ifndef AXISTICKERSPEED_H
 #define AXISTICKERSPEED_H
 
-#include "qcustomplot.h"
+#include <qcustomplot.h>
 
 class AxisTickerSpeed : public QCPAxisTicker
 {

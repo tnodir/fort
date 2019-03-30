@@ -1,6 +1,6 @@
 #include "sqlitestmt.h"
 
-#include "sqlite3.h"
+#include <sqlite3.h>
 
 SqliteStmt::SqliteStmt() :
     m_stmt(nullptr)

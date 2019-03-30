@@ -1,6 +1,6 @@
 #include "sqliteengine.h"
 
-#include "sqlite3.h"
+#include <sqlite3.h>
 
 void SqliteEngine::initialize()
 {

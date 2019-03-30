@@ -181,6 +181,5 @@ installer_build {
     PRE_TARGETDEPS += $$fortdrv32.target $$fortdrv64.target
 }
 
-include(db/sqlite/sqlite.pri)
-
-include(graph/qcustomplot/qcustomplot.pri)
+# 3rd party integrations
+include(3rdparty/3rdparty.pri)

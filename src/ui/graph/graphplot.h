@@ -1,7 +1,7 @@
 #ifndef GRAPHPLOT_H
 #define GRAPHPLOT_H
 
-#include "qcustomplot.h"
+#include <qcustomplot.h>
 
 class GraphPlot : public QCustomPlot
 {
