@@ -87,7 +87,7 @@ static bool extractAppInfo(const QString &appPath, AppInfo &appInfo)
     // Product Version
     {
         VS_FIXEDFILEINFO *ffi;
-        if (!VerQueryValueA(infoData, "\\", (LPVOID *) &ffi, (PUINT) dummy))
+        if (!VerQueryValueA(infoData, "\\", (LPVOID *) &ffi, (PUINT) &dummy))
             return false;
 
         const DWORD leftMost = HIWORD(ffi->dwProductVersionMS);
@@ -107,7 +107,7 @@ static bool extractAppInfo(const QString &appPath, AppInfo &appInfo)
     // Language info
     WORD *langInfo;
     if (!VerQueryValueA(infoData, "\\VarFileInfo\\Translation",
-                        (LPVOID *) &langInfo, (PUINT) dummy))
+                        (LPVOID *) &langInfo, (PUINT) &dummy))
         return false;
 
     // Texts
