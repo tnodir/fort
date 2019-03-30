@@ -8,7 +8,6 @@
 #include "databasesql.h"
 #include "quotamanager.h"
 #include <sqlite/sqlitedb.h>
-#include <sqlite/sqliteengine.h>
 #include <sqlite/sqlitestmt.h>
 
 Q_DECLARE_LOGGING_CATEGORY(CLOG_DATABASE_MANAGER)
@@ -32,7 +31,6 @@ DatabaseManager::DatabaseManager(const QString &filePath,
     m_conf(nullptr),
     m_sqliteDb(new SqliteDb())
 {
-    SqliteEngine::initialize();
 }
 
 DatabaseManager::~DatabaseManager()
@@ -40,8 +38,6 @@ DatabaseManager::~DatabaseManager()
     clearStmts();
 
     delete m_sqliteDb;
-
-    SqliteEngine::shutdown();
 }
 
 void DatabaseManager::setFirewallConf(const FirewallConf *conf)
@@ -68,8 +64,7 @@ bool DatabaseManager::initialize()
     m_sqliteDb->execute(DatabaseSql::sqlPragmas);
 
     if (!m_sqliteDb->migrate(":/db/migrations", DATABASE_SCHEMA_VERSION)) {
-        qCritical(CLOG_DATABASE_MANAGER()) << "Migration error:"
-                                           << m_sqliteDb->errorMessage();
+        qCritical(CLOG_DATABASE_MANAGER()) << "Migration error";
         return false;
     }
 

@@ -28,6 +28,9 @@ HEADERS += \
     $$UIPATH/util/fileutil.h \
     $$UIPATH/util/net/netutil.h
 
+# Test Data
+RESOURCES += data.qrc
+
 # Database Migrations
 RESOURCES += $$UIPATH/db/migrations.qrc
 

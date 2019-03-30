@@ -13,6 +13,7 @@ private slots:
     void dbWriteRead();
     void activePeriod();
     void monthStart();
+    void migrations();
 
 private:
     void debugProcNew(SqliteDb *sqliteDb);

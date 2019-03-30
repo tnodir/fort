@@ -168,3 +168,12 @@ void Test::monthStart()
     QCOMPARE(d2.month(), 12);
     QCOMPARE(d2.day(), 1);
 }
+
+void Test::migrations()
+{
+    SqliteDb db;
+    QVERIFY(db.open(":memory:"));
+
+    QVERIFY(!db.migrate(":/data/migrations", 3));
+    QCOMPARE(db.userVersion(), 2);
+}

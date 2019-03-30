@@ -34,11 +34,9 @@ INCLUDEPATH += $$SQLITE_DIR
 SOURCES += \
     $$SQLITE_DIR/sqlite3.c \
     $$PWD/sqlitedb.cpp \
-    $$PWD/sqliteengine.cpp \
     $$PWD/sqlitestmt.cpp
 
 HEADERS += \
     $$SQLITE_DIR/sqlite3.h \
     $$PWD/sqlitedb.h \
-    $$PWD/sqliteengine.h \
     $$PWD/sqlitestmt.h

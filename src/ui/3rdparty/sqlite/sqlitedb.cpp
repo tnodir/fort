@@ -1,5 +1,6 @@
 #include "sqlitedb.h"
 
+#include <QDebug>
 #include <QDir>
 
 #include <sqlite3.h>
@@ -7,11 +8,14 @@
 SqliteDb::SqliteDb() :
     m_db(nullptr)
 {
+    sqlite3_initialize();
 }
 
 SqliteDb::~SqliteDb()
 {
     close();
+
+    sqlite3_shutdown();
 }
 
 bool SqliteDb::open(const QString &filePath)
@@ -54,7 +58,7 @@ QVariant SqliteDb::executeOut(const char *sql)
     sqlite3_stmt *stmt = nullptr;
     sqlite3_prepare_v2(db(), sql, -1, &stmt, nullptr);
     if (stmt != nullptr) {
-        if (sqlite3_step(stmt) == SQLITE_DONE) {
+        if (sqlite3_step(stmt) == SQLITE_ROW) {
             switch (sqlite3_column_type(stmt, 0)) {
             case SQLITE_INTEGER:
                 res = sqlite3_column_int64(stmt, 0);
@@ -128,10 +132,15 @@ QString SqliteDb::errorMessage() const
     return QString::fromUtf8(text);
 }
 
+int SqliteDb::userVersion()
+{
+    return executeOut("PRAGMA user_version;").toInt();
+}
+
 bool SqliteDb::migrate(const QString &sqlDir, int version)
 {
     // Check version
-    const int userVersion = executeOut("PRAGMA user_version;").toInt();
+    const int userVersion = this->userVersion();
     if (userVersion == version)
         return true;
 
@@ -153,6 +162,8 @@ bool SqliteDb::migrate(const QString &sqlDir, int version)
 
         beginSavepoint();
         if (!execute(data.constData())) {
+            qWarning() << "SQLite: Migrate error:" << filePath << errorMessage();
+
             res = false;
             rollbackSavepoint();
             break;

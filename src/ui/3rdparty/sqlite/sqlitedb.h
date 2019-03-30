@@ -36,6 +36,8 @@ public:
 
     QString errorMessage() const;
 
+    int userVersion();
+
     bool migrate(const QString &sqlDir, int version);
 
 private:
