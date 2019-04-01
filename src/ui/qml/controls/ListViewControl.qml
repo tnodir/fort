@@ -6,6 +6,9 @@ ListView {
 
     signal clicked(int index)
 
+    readonly property bool hasCurrentItem:
+        currentIndex >= 0 && currentIndex < count && !!currentItem
+
     readonly property string currentItemText:
         (currentIndex >= 0 && currentIndex < count && currentItem)
         ? currentItem.displayText : ""

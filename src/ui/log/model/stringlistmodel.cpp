@@ -70,3 +70,8 @@ int StringListModel::adjustRow(int row) const
 {
     return (row < 0) ? (m_list.size() + 1 + row) : row;
 }
+
+void StringListModel::triggerUpdate()
+{
+    emit dataChanged(QModelIndex(), QModelIndex());
+}

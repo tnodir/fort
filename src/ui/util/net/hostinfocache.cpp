@@ -8,6 +8,10 @@ HostInfoCache::HostInfoCache(QObject *parent) :
 {
     connect(m_manager, &HostInfoManager::lookupFinished,
             this, &HostInfoCache::handleFinishedLookup);
+
+    m_timer.setInterval(300);
+    connect(&m_timer, &QTimer::timeout,
+            this, &HostInfoCache::cacheChanged);
 }
 
 QString HostInfoCache::hostName(const QString &address)
@@ -39,5 +43,7 @@ void HostInfoCache::handleFinishedLookup(const QString &address,
 
 void HostInfoCache::emitCacheChanged()
 {
-    emit cacheChanged();
+    if (!m_timer.isActive()) {
+        m_timer.start();
+    }
 }

@@ -12,12 +12,21 @@ BasePage {
     readonly property IpListModel ipListModel:
         appBlockedModel.ipListModel(currentAppPath)
 
-    readonly property string currentAppPath: appListView.currentItemText
+    readonly property Item currentAppItem:
+        appListView.hasCurrentItem ? appListView.currentItem : null
+    readonly property string currentAppPath:
+        (currentAppItem && currentAppItem.displayText) || ""
 
-    readonly property string currentIpText: ipListView.currentItemText
+    readonly property Item currentIpItem:
+        ipListView.hasCurrentItem ? ipListView.currentItem : null
+    readonly property string currentIpText:
+        (currentIpItem && currentIpItem.displayText) || ""
+    readonly property string currentHostName:
+        (currentIpItem && currentIpItem.hostName) || ""
 
     HostInfoCache {
         id: hostInfoCache
+        onCacheChanged: ipListView.update()
     }
 
     ColumnLayout {
@@ -67,11 +76,17 @@ BasePage {
                           && qsTranslate("qml", "IP Address")
                     onTriggered: guiUtil.setClipboardData(currentIpText)
                 }
+                MenuItem {
+                    enabled: !!currentHostName
+                    text: translationManager.trTrigger
+                          && qsTranslate("qml", "Host name")
+                    onTriggered: guiUtil.setClipboardData(currentHostName)
+                }
             }
 
             CheckBox {
                 text: translationManager.trTrigger
-                      && qsTranslate("qml", "Resolve Addresses")
+                      && qsTranslate("qml", "Show host names")
                 checked: firewallConf.resolveAddress
                 onToggled: {
                     if (firewallConf.resolveAddress === checked)
@@ -81,7 +96,7 @@ BasePage {
 
                     fortManager.applyConfImmediateFlags();
 
-                    hostInfoCache.cacheChanged();  // refresh ipListView
+                    ipListView.update();
                 }
             }
 
@@ -128,6 +143,10 @@ BasePage {
                     Layout.fillHeight: true
 
                     model: ipListModel
+
+                    function update() {
+                        ipListModel.triggerUpdate();
+                    }
                 }
             }
         }

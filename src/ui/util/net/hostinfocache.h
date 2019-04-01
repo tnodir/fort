@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QHash>
+#include <QTimer>
 
 QT_FORWARD_DECLARE_CLASS(HostInfoManager)
 
@@ -35,6 +36,8 @@ private:
     HostInfoManager *m_manager;
 
     QHash<QString, QString> m_cache;
+
+    QTimer m_timer;
 };
 
 #endif // HOSTINFOCACHE_H
