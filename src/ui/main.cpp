@@ -11,8 +11,7 @@
 #include "util/osutil.h"
 
 #define FORT_ERROR_INSTANCE 1
-#define FORT_ERROR_DEVICE   2
-#define FORT_ERROR_CONTROL  3
+#define FORT_ERROR_CONTROL  2
 
 int main(int argc, char *argv[])
 {
@@ -52,14 +51,6 @@ int main(int argc, char *argv[])
     }
 
     FortManager fortManager(&fortSettings);
-
-    // Error: Cannot open the driver device
-    if (!fortManager.driverManager()->isDeviceOpened()) {
-        QMessageBox::critical(nullptr, QString(),
-                              "Cannot open the driver device!");
-        return FORT_ERROR_DEVICE;
-    }
-
     fortManager.launch();
 
     // Process control requests from clients

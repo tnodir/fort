@@ -47,6 +47,9 @@ signals:
     void firewallConfToEditChanged();
 
 public slots:
+    void installDriver();
+    void removeDriver();
+
     void launch();
 
     void showTrayIcon();
@@ -90,10 +93,12 @@ private:
     bool setupDriver();
     void closeDriver();
 
+    void setupLogManager();
+    void closeLogManager();
+
     void setupDatabaseManager();
 
     void setupLogger();
-    void setupLogManager();
 
     void setupTranslationManager();
 

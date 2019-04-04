@@ -2,6 +2,7 @@
     <qresource prefix="/">
         <file>qml/controls/ButtonMenu.qml</file>
         <file>qml/controls/ButtonPopup.qml</file>
+        <file>qml/controls/DelayButtonControl.qml</file>
         <file>qml/controls/HSeparator.qml</file>
         <file>qml/controls/LabelColorRow.qml</file>
         <file>qml/controls/LabelSpinRow.qml</file>

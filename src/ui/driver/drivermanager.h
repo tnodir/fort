@@ -11,6 +11,7 @@ class DriverManager : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
+    Q_PROPERTY(bool isDeviceOpened READ isDeviceOpened NOTIFY isDeviceOpenedChanged)
 
 public:
     explicit DriverManager(QObject *parent = nullptr);
@@ -23,9 +24,11 @@ public:
     bool isDeviceOpened() const;
 
     static void reinstallDriver();
+    static void uninstallDriver();
 
 signals:
     void errorMessageChanged();
+    void isDeviceOpenedChanged();
 
 public slots:
     bool openDevice();
@@ -43,6 +46,8 @@ private:
     void abortWorker();
 
     bool writeData(quint32 code, QByteArray &buf, int size);
+
+    static void executeCommand(const QString &fileName);
 
 private:
     Device *m_device;

@@ -62,6 +62,7 @@ FortManager::FortManager(FortSettings *fortSettings,
 {
     setupLogger();
     setupDatabaseManager();
+
     setupLogManager();
     setupDriver();
 
@@ -80,6 +81,7 @@ FortManager::~FortManager()
     removeHotKeys();
 
     closeDriver();
+    closeLogManager();
 }
 
 void FortManager::registerQmlTypes()
@@ -119,28 +121,35 @@ void FortManager::registerQmlTypes()
     qmlRegisterType<StringUtil>("com.fortfirewall", 1, 0, "StringUtil");
 }
 
+void FortManager::installDriver()
+{
+    closeDriver();
+
+    m_driverManager->reinstallDriver();
+
+    if (setupDriver()) {
+        updateDriverConf(m_firewallConf);
+    }
+}
+
+void FortManager::removeDriver()
+{
+    closeDriver();
+
+    m_driverManager->uninstallDriver();
+}
+
 bool FortManager::setupDriver()
 {
     bool opened = m_driverManager->openDevice();
 
-    // Try to (re)install the driver in portable mode
-    if (m_fortSettings->isPortable()
-            && !(opened && m_driverManager->validate())) {
-        if (opened) {
-            m_driverManager->closeDevice();
-        }
+    if (!m_driverManager->validate()) {
+        m_driverManager->closeDevice();
 
-        m_driverManager->reinstallDriver();
-
-        opened = m_driverManager->openDevice();
+        opened = false;
     }
 
-    if (!opened) {
-        showErrorBox("Setup Driver: " + m_driverManager->errorMessage());
-        return false;
-    }
-
-    return true;
+    return opened;
 }
 
 void FortManager::closeDriver()
@@ -148,6 +157,15 @@ void FortManager::closeDriver()
     updateLogManager(false);
 
     m_driverManager->closeDevice();
+}
+
+void FortManager::setupLogManager()
+{
+    m_logManager->initialize();
+}
+
+void FortManager::closeLogManager()
+{
     m_logManager->close();
 }
 
@@ -167,11 +185,6 @@ void FortManager::setupLogger()
     logger->setActive(true);
 
     updateLogger();
-}
-
-void FortManager::setupLogManager()
-{
-    m_logManager->initialize();
 }
 
 void FortManager::setupTranslationManager()
@@ -201,6 +214,7 @@ bool FortManager::setupEngine()
 
     QQmlContext *context = m_engine->rootContext();
     context->setContextProperty("fortManager", this);
+    context->setContextProperty("driverManager", m_driverManager);
     context->setContextProperty("translationManager", TranslationManager::instance());
 
     m_engine->load(QUrl("qrc:/qml/main.qml"));
@@ -486,8 +500,6 @@ bool FortManager::updateDriverConf(FirewallConf *conf, bool onlyFlags)
 
     if (res) {
         updateDatabaseManager(conf);
-    } else {
-        showErrorBox("Update Driver Conf: " + m_driverManager->errorMessage());
     }
 
     updateLogManager(true);

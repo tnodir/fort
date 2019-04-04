@@ -50,17 +50,23 @@ bool DriverManager::isDeviceOpened() const
 
 bool DriverManager::openDevice()
 {
-    if (!m_device->open(FortCommon::deviceName())) {
+    const bool res = m_device->open(FortCommon::deviceName());
+    if (!res) {
         setErrorMessage(OsUtil::lastErrorMessage());
-        return false;
     }
 
-    return true;
+    emit isDeviceOpenedChanged();
+
+    return res;
 }
 
 bool DriverManager::closeDevice()
 {
-    return m_device->close();
+    const bool res = m_device->close();
+
+    emit isDeviceOpenedChanged();
+
+    return res;
 }
 
 bool DriverManager::validate()
@@ -122,11 +128,21 @@ bool DriverManager::writeData(quint32 code, QByteArray &buf, int size)
 
 void DriverManager::reinstallDriver()
 {
+    executeCommand("reinstall.lnk");
+}
+
+void DriverManager::uninstallDriver()
+{
+    executeCommand("uninstall.lnk");
+}
+
+void DriverManager::executeCommand(const QString &fileName)
+{
     const QString binPath = FileUtil::toNativeSeparators(
                 FileUtil::appBinLocation());
 
     const QString cmdPath = qEnvironmentVariable("COMSPEC");
-    const QString scriptPath = binPath + "\\driver\\scripts\\reinstall-lnk.bat";
+    const QString scriptPath = binPath + "\\driver\\scripts\\execute-cmd.bat";
 
-    QProcess::execute(cmdPath, QStringList() << "/C" << scriptPath);
+    QProcess::execute(cmdPath, QStringList() << "/C" << scriptPath << fileName);
 }

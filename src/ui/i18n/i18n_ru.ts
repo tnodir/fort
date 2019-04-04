@@ -50,42 +50,42 @@
 <context>
     <name>FortManager</name>
     <message>
-        <location filename="../fortmanager.cpp" line="369"/>
+        <location filename="../fortmanager.cpp" line="383"/>
         <source>Password input</source>
         <translation>Ввод пароля</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="369"/>
+        <location filename="../fortmanager.cpp" line="383"/>
         <source>Please enter the password</source>
         <translation>Наберите пароль пожалуйста</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="596"/>
+        <location filename="../fortmanager.cpp" line="608"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="601"/>
+        <location filename="../fortmanager.cpp" line="613"/>
         <source>Traffic Graph</source>
         <translation>График трафика</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="611"/>
+        <location filename="../fortmanager.cpp" line="623"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="618"/>
+        <location filename="../fortmanager.cpp" line="630"/>
         <source>Stop Traffic</source>
         <translation>Остановить трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="625"/>
+        <location filename="../fortmanager.cpp" line="637"/>
         <source>Stop Internet Traffic</source>
         <translation>Остановить Интернет трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="653"/>
+        <location filename="../fortmanager.cpp" line="665"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -371,7 +371,7 @@
         <translation>Статистика</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="132"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="135"/>
         <source>Password:</source>
         <translation>Пароль:</translation>
     </message>
@@ -396,54 +396,71 @@
         <translation>Выйти</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="46"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="49"/>
         <source>Start with Windows</source>
         <translation>Запускать вместе с Windows</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="53"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="56"/>
         <source>Stop traffic when Fort Firewall is not running</source>
         <translation>Остановить трафик, когда Fort Firewall не запущен</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="69"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="72"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="80"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="83"/>
         <source>Filter Local Addresses</source>
         <translation>Фильтр локальных адресов</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="97"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="100"/>
         <source>Stop Traffic</source>
         <translation>Остановить трафик</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="108"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="111"/>
         <source>Stop Internet Traffic</source>
         <translation>Остановить Интернет трафик</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="121"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="124"/>
         <source>Hot Keys</source>
         <translation>Горячие клавиши</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="153"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="156"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="209"/>
         <source>Installed</source>
         <translation>Установлен</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="154"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="157"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="210"/>
         <source>Not Installed</source>
         <translation>Не установлен</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="164"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="167"/>
         <source>Language:</source>
         <translation>Язык:</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/OptionsPage.qml" line="201"/>
+        <source>Driver:</source>
+        <translation>Драйвер:</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/OptionsPage.qml" line="219"/>
+        <source>Install</source>
+        <translation>Установить</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/OptionsPage.qml" line="224"/>
+        <source>Remove</source>
+        <translation>Удалить</translation>
     </message>
     <message>
         <location filename="../qml/pages/MainPage.qml" line="132"/>

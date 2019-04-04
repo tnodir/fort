@@ -17,6 +17,11 @@
 				"${ROOT}/src/ui/i18n			| *.qm				|"
 			]
 		},
+		"${TARGET}/driver": {
+			"fort": [
+				"${ROOT}/src/driver/scripts		| *.bat *.lnk			|"
+			]
+		},
 		"${TARGET}/imports": {
 			"common": [
 				"${QTPATH}/qml/QtQuick.2		| *.dll *.qmltypes qmldir	| *d.dll"
