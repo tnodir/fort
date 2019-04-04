@@ -51,9 +51,8 @@ bool DriverManager::isDeviceOpened() const
 bool DriverManager::openDevice()
 {
     const bool res = m_device->open(FortCommon::deviceName());
-    if (!res) {
-        setErrorMessage(OsUtil::lastErrorMessage());
-    }
+
+    setErrorMessage(res ? QString() : OsUtil::lastErrorMessage());
 
     emit isDeviceOpenedChanged();
 
