@@ -105,7 +105,7 @@ void Logger::writeLogLine(Logger::LogLevel level, const QString &dateString,
     m_file.flush();
 }
 
-void Logger::writeLog(const QString &message, LogLevel level)
+void Logger::writeLog(const QString &message, Logger::LogLevel level)
 {
     if (m_writing)
         return;  // avoid recursive calls
@@ -139,7 +139,7 @@ void Logger::writeLog(const QString &message, LogLevel level)
 }
 
 void Logger::writeLogList(const QString &message, const QStringList &list,
-                          LogLevel level)
+                          Logger::LogLevel level)
 {
     writeLog(message + '{' + list.join(',') + '}', level);
 }

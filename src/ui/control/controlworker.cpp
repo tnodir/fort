@@ -71,7 +71,7 @@ bool ControlWorker::writeData(const QByteArray &data)
     *p++ = dataSize;
 
     if (dataSize != 0) {
-        memcpy(p, data.constData(), dataSize);
+        memcpy(p, data.constData(), size_t(dataSize));
     }
 
     return true;
@@ -85,7 +85,7 @@ QByteArray ControlWorker::readData() const
     if (dataSize < 0 || int(sizeof(int)) + dataSize > m_sharedMemory->size())
         return QByteArray();
 
-    return QByteArray::fromRawData((const char *) p, dataSize);
+    return QByteArray::fromRawData(reinterpret_cast<const char *>(p), dataSize);
 }
 
 bool ControlWorker::writeDataStream(const QString &scriptPath,

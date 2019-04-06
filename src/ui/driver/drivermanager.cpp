@@ -141,7 +141,7 @@ void DriverManager::executeCommand(const QString &fileName)
                 FileUtil::appBinLocation());
 
     const QString cmdPath = qEnvironmentVariable("COMSPEC");
-    const QString scriptPath = binPath + "\\driver\\scripts\\execute-cmd.bat";
+    const QString scriptPath = binPath + R"(\driver\scripts\execute-cmd.bat)";
 
     QProcess::execute(cmdPath, QStringList() << "/C" << scriptPath << fileName);
 }

@@ -225,7 +225,7 @@ void FirewallConf::setAppGroupBits(quint32 groupBits)
 
 QQmlListProperty<AddressGroup> FirewallConf::addressGroups()
 {
-    return QQmlListProperty<AddressGroup>(this, m_addressGroups);
+    return {this, m_addressGroups};
 }
 
 AppGroup *FirewallConf::appGroupByName(const QString &name) const
@@ -239,7 +239,7 @@ AppGroup *FirewallConf::appGroupByName(const QString &name) const
 
 QQmlListProperty<AppGroup> FirewallConf::appGroups()
 {
-    return QQmlListProperty<AppGroup>(this, m_appGroups);
+    return {this, m_appGroups};
 }
 
 void FirewallConf::addAppGroup(AppGroup *appGroup, int to)
@@ -256,7 +256,7 @@ void FirewallConf::addAppGroup(AppGroup *appGroup, int to)
 
 void FirewallConf::addAppGroupByName(const QString &name)
 {
-    AppGroup *appGroup = new AppGroup();
+    auto appGroup = new AppGroup();
     appGroup->setName(name);
     addAppGroup(appGroup);
 }
@@ -349,7 +349,7 @@ void FirewallConf::fromVariant(const QVariant &v)
 
     const QVariantList groups = map["appGroups"].toList();
     foreach (const QVariant &gv, groups) {
-        AppGroup *appGroup = new AppGroup();
+        auto appGroup = new AppGroup();
         appGroup->fromVariant(gv);
         addAppGroup(appGroup);
     }
@@ -360,7 +360,7 @@ void FirewallConf::setupDefault()
     AddressGroup *inetGroup = inetAddressGroup();
     inetGroup->setExcludeText(NetUtil::localIpv4Networks().join('\n'));
 
-    AppGroup *appGroup = new AppGroup();
+    auto appGroup = new AppGroup();
     appGroup->setName("Main");
     appGroup->setAllowText(FileUtil::appBinLocation() + '/');
     addAppGroup(appGroup);

@@ -41,7 +41,7 @@ QModelIndex TrafListModel::parent(const QModelIndex &child) const
 {
     Q_UNUSED(child)
 
-    return QModelIndex();
+    return {};
 }
 
 QModelIndex TrafListModel::sibling(int row, int column,

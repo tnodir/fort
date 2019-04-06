@@ -125,7 +125,7 @@ void FortManager::installDriver()
 {
     closeDriver();
 
-    m_driverManager->reinstallDriver();
+    DriverManager::reinstallDriver();
 
     if (setupDriver()) {
         updateDriverConf(m_firewallConf);
@@ -136,7 +136,7 @@ void FortManager::removeDriver()
 {
     closeDriver();
 
-    m_driverManager->uninstallDriver();
+    DriverManager::uninstallDriver();
 }
 
 bool FortManager::setupDriver()
@@ -195,7 +195,7 @@ void FortManager::setupTranslationManager()
 
 void FortManager::setupTrayIcon()
 {
-    m_trayIcon->setToolTip(qApp->applicationDisplayName());
+    m_trayIcon->setToolTip(QGuiApplication::applicationDisplayName());
     m_trayIcon->setIcon(QIcon(":/images/shield.png"));
 
     connect(m_trayIcon, &QSystemTrayIcon::activated, this,
@@ -260,7 +260,7 @@ void FortManager::showTrayIcon()
 
 void FortManager::showTrayMessage(const QString &message)
 {
-    m_trayIcon->showMessage(qApp->applicationDisplayName(), message);
+    m_trayIcon->showMessage(QGuiApplication::applicationDisplayName(), message);
 }
 
 void FortManager::showTrayMenu(QMouseEvent *event)
@@ -370,7 +370,7 @@ void FortManager::exit(int retcode)
 
     closeEngine();
 
-    qApp->exit(retcode);
+    QCoreApplication::exit(retcode);
 }
 
 bool FortManager::checkPassword()
@@ -547,7 +547,7 @@ void FortManager::saveTrayFlags()
 
 FirewallConf *FortManager::cloneConf(const FirewallConf &conf)
 {
-    FirewallConf *newConf = new FirewallConf(this);
+    auto newConf = new FirewallConf(this);
 
     const QVariant data = conf.toVariant();
     newConf->fromVariant(data);
@@ -690,7 +690,7 @@ QAction *FortManager::addAction(QWidget *widget,
                                 const QObject *receiver, const char *member,
                                 bool checkable, bool checked)
 {
-    QAction *action = new QAction(icon, text, widget);
+    auto action = new QAction(icon, text, widget);
 
     if (receiver) {
         connect(action, SIGNAL(triggered(bool)), receiver, member);

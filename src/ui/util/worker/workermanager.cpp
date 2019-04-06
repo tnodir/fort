@@ -5,7 +5,7 @@
 #include "workerobject.h"
 
 namespace {
-static const unsigned long WORKER_TIMEOUT_MSEC = 15000;
+const unsigned long WORKER_TIMEOUT_MSEC = 15000;
 }
 
 WorkerManager::WorkerManager(QObject *parent) :

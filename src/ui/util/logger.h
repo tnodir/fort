@@ -30,9 +30,9 @@ public:
     static Logger *instance();
 
 public slots:
-    void writeLog(const QString &message, LogLevel level = Info);
+    void writeLog(const QString &message, Logger::LogLevel level = Info);
     void writeLogList(const QString &message, const QStringList &list,
-                      LogLevel level = Info);
+                      Logger::LogLevel level = Info);
 
 signals:
 

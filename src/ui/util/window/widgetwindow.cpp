@@ -47,7 +47,7 @@ void WidgetWindow::changeEvent(QEvent *event)
     QWidget::changeEvent(event);
 
     if (event->type() == QEvent::WindowStateChange) {
-        QWindowStateChangeEvent *e = static_cast<QWindowStateChangeEvent *>(event);
+        auto e = static_cast<QWindowStateChangeEvent *>(event);
 
         if (e->oldState() != this->windowState()) {
             emit visibilityChanged();

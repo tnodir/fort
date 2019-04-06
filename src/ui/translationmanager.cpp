@@ -135,7 +135,7 @@ QTranslator *TranslationManager::loadTranslator(int language, const QLocale &loc
         return nullptr;
 
     // Load .qm file
-    QTranslator *translator = new QTranslator(this);
+    auto translator = new QTranslator(this);
     translator->load(TRANSLATION_FILE_PREFIX + locale.name(), i18nDir());
 
     m_translators.replace(language, translator);

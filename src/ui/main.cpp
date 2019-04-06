@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     QApplication::setApplicationVersion(APP_VERSION_STR);
     QApplication::setApplicationDisplayName(APP_NAME " v" APP_VERSION_STR);
 
-    FortSettings fortSettings(qApp->arguments());
+    FortSettings fortSettings(QCoreApplication::arguments());
 
     // Unregister booted provider and exit
     if (fortSettings.hasProvBoot()) {

@@ -113,13 +113,13 @@ void GraphWindow::setupUi()
     m_graphOut->setWidth(1);
 
     // Bars Group
-    QCPBarsGroup *group = new QCPBarsGroup(m_plot);
+    auto group = new QCPBarsGroup(m_plot);
     group->setSpacing(1);
     group->append(m_graphIn);
     group->append(m_graphOut);
 
     // Widget Layout
-    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    auto mainLayout = new QVBoxLayout(this);
     mainLayout->setMargin(0);
     mainLayout->addWidget(m_plot);
     setLayout(mainLayout);

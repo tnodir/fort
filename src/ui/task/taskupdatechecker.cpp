@@ -81,10 +81,7 @@ bool TaskUpdateChecker::parseBuffer(const QByteArray &buffer)
     m_downloadSize = assetMap["size"].toInt();
     m_downloadCount = assetMap["download_count"].toInt();
 
-    if (m_downloadUrl.isEmpty() || !m_downloadSize)
-        return false;
-
-    return true;
+    return !m_downloadUrl.isEmpty() && m_downloadSize != 0;
 }
 
 QString TaskUpdateChecker::successMessage() const

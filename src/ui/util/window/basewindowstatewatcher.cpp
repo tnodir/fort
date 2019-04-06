@@ -8,7 +8,7 @@ BaseWindowStateWatcher::BaseWindowStateWatcher(QObject *parent) :
 
 QRect BaseWindowStateWatcher::geometry() const
 {
-    return QRect(m_pos, m_size);
+    return {m_pos, m_size};
 }
 
 void BaseWindowStateWatcher::setGeometry(const QRect &rect)

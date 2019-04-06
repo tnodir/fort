@@ -12,6 +12,7 @@
 FortSettings::FortSettings(const QStringList &args,
                            QObject *parent) :
     QObject(parent),
+    m_isPortable(false),
     m_hasProvBoot(false),
     m_bulkUpdating(false),
     m_bulkUpdatingEmit(false)
@@ -390,7 +391,7 @@ QColor FortSettings::iniColor(const QString &key, const QColor &defaultValue) co
     if (text.at(0).isDigit())
         return QColor::fromRgba(text.toUInt());
 
-    return QColor(text);
+    return {text};
 }
 
 void FortSettings::setIniColor(const QString &key, const QColor &value,

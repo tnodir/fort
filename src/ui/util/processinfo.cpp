@@ -49,12 +49,12 @@ QString ProcessInfo::path(bool isKernelPath) const
 {
     if (isValid()) {
         QByteArray buf(PROC_PATH_MAX * sizeof(wchar_t), Qt::Uninitialized);
-        wchar_t *p = (wchar_t *) buf.data();
+        wchar_t *p = reinterpret_cast<wchar_t *>(buf.data());
         const DWORD flags = (isKernelPath ? PROCESS_NAME_NATIVE : 0);
         DWORD len = PROC_PATH_MAX;
 
         if (QueryFullProcessImageNameW(m_handle, flags, (LPWSTR) p, &len)) {
-            return QString::fromWCharArray(p, len);
+            return QString::fromWCharArray(p, int(len));
         }
     }
 

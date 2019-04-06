@@ -13,7 +13,7 @@ Q_GUI_EXPORT QPixmap qt_pixmapFromWinHICON(HICON icon);
 
 namespace {
 
-static QPixmap pixmapFromImageList(int iImageList, const SHFILEINFO &info)
+QPixmap pixmapFromImageList(int iImageList, const SHFILEINFO &info)
 {
     QPixmap result;
 
@@ -29,7 +29,7 @@ static QPixmap pixmapFromImageList(int iImageList, const SHFILEINFO &info)
     return result;
 }
 
-static QPixmap extractShellIcon(const QString &appPath)
+QPixmap extractShellIcon(const QString &appPath)
 {
     const wchar_t *appPathW = (LPCWSTR) appPath.utf16();
 
@@ -49,7 +49,7 @@ static QPixmap extractShellIcon(const QString &appPath)
     return pixmap;
 }
 
-static QString extractInfoText(LPVOID infoData, const WORD *langInfo,
+QString extractInfoText(LPVOID infoData, const WORD *langInfo,
                                const WCHAR *name)
 {
     WCHAR verStrName[128];
@@ -67,7 +67,7 @@ static QString extractInfoText(LPVOID infoData, const WORD *langInfo,
     return QString();
 }
 
-static bool extractAppInfo(const QString &appPath, AppInfo &appInfo)
+bool extractAppInfo(const QString &appPath, AppInfo &appInfo)
 {
     const wchar_t *appPathW = (LPCWSTR) appPath.utf16();
 

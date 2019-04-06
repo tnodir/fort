@@ -21,7 +21,7 @@ TaskManager::TaskManager(FortManager *fortManager,
 
 QQmlListProperty<TaskInfo> TaskManager::taskInfos()
 {
-    return QQmlListProperty<TaskInfo>(this, m_taskInfos);
+    return {this, m_taskInfos};
 }
 
 void TaskManager::setupTasks()
@@ -76,7 +76,7 @@ bool TaskManager::saveSettings(FortSettings *fortSettings)
 void TaskManager::handleTaskFinished(bool success)
 {
     if (success) {
-        TaskInfo *taskInfo = qobject_cast<TaskInfo *>(sender());
+        auto taskInfo = qobject_cast<TaskInfo *>(sender());
         TaskWorker *taskWorker = taskInfo->taskWorker();
 
         taskWorker->processResult(m_fortManager);

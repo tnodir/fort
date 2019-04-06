@@ -17,5 +17,5 @@ QString AxisTickerSpeed::getTickLabel(double tick, const QLocale &locale,
     Q_UNUSED(formatChar)
     Q_UNUSED(precision)
 
-    return NetUtil::formatSpeed(tick);
+    return NetUtil::formatSpeed(quint32(tick));
 }
