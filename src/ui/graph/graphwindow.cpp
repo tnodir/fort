@@ -12,6 +12,7 @@
 GraphWindow::GraphWindow(FortSettings *fortSettings,
                          QWidget *parent) :
     WidgetWindow(parent),
+    m_lastUnixTime(0),
     m_fortSettings(fortSettings)
 {
     setupUi();
@@ -199,6 +200,12 @@ void GraphWindow::checkHoverLeave()
 
 void GraphWindow::addTraffic(qint64 unixTime, quint32 inBytes, quint32 outBytes)
 {
+    if (m_lastUnixTime != unixTime) {
+        m_lastUnixTime = unixTime;
+
+        updateWindowTitleSpeed();
+    }
+
     const qint64 rangeLower = unixTime - m_fortSettings->graphWindowMaxSeconds();
 
     addData(m_graphIn, rangeLower, unixTime, inBytes);
@@ -221,8 +228,6 @@ void GraphWindow::addTraffic(qint64 unixTime, quint32 inBytes, quint32 outBytes)
     }
 
     m_plot->replot();
-
-    updateWindowTitleSpeed();
 }
 
 void GraphWindow::addEmptyTraffic()

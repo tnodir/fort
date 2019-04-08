@@ -54,6 +54,8 @@ protected:
     void leaveEvent(QEvent *event) override;
 
 private:
+    qint64 m_lastUnixTime;
+
     FortSettings *m_fortSettings;
 
     GraphPlot *m_plot;
