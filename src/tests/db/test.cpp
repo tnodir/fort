@@ -136,7 +136,7 @@ void Test::activePeriod()
 {
     const QDate d1(2018, 8, 31);
     const QTime t1(15, 35, 24);
-    const QDateTime dt1(d1, t1);
+    const QDateTime dt1(d1, t1, Qt::UTC);
 
     const qint64 unixTime = dt1.toSecsSinceEpoch();
     const qint32 unixDay = DateUtil::getUnixDay(unixTime);
