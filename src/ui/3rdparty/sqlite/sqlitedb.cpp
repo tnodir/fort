@@ -52,12 +52,42 @@ bool SqliteDb::executeStr(const QString &sql)
     return execute16(sql.utf16());
 }
 
-QVariant SqliteDb::executeOut(const char *sql)
+QVariant SqliteDb::executeEx(const char *sql,
+                              const QVariantList &vars)
 {
     QVariant res;
+    QStringList bindTexts;
     sqlite3_stmt *stmt = nullptr;
+
     sqlite3_prepare_v2(db(), sql, -1, &stmt, nullptr);
     if (stmt != nullptr) {
+        // Bind variables
+        if (!vars.isEmpty()) {
+            int index = 0;
+            for (const QVariant &v : vars) {
+                ++index;
+                switch (v.type()) {
+                case QVariant::Int:
+                    sqlite3_bind_int(stmt, index, v.toInt());
+                    break;
+                case QVariant::Double:
+                    sqlite3_bind_double(stmt, index, v.toDouble());
+                    break;
+                case QVariant::String: {
+                    const QString text = v.toString();
+                    const int bytesCount = text.size() * int(sizeof(wchar_t));
+                    bindTexts.append(text);
+
+                    sqlite3_bind_text16(stmt, index, text.utf16(),
+                                        bytesCount, SQLITE_STATIC);
+                    break;
+                }
+                default:
+                    Q_UNREACHABLE();
+                }
+            }
+        }
+
         if (sqlite3_step(stmt) == SQLITE_ROW) {
             switch (sqlite3_column_type(stmt, 0)) {
             case SQLITE_INTEGER:
@@ -76,6 +106,7 @@ QVariant SqliteDb::executeOut(const char *sql)
         }
         sqlite3_finalize(stmt);
     }
+
     return res;
 }
 
@@ -134,10 +165,12 @@ QString SqliteDb::errorMessage() const
 
 int SqliteDb::userVersion()
 {
-    return executeOut("PRAGMA user_version;").toInt();
+    return executeEx("PRAGMA user_version;").toInt();
 }
 
-bool SqliteDb::migrate(const QString &sqlDir, int version)
+bool SqliteDb::migrate(const QString &sqlDir, int version,
+                       SQLITEDB_MIGRATE_FUNC migrateFunc,
+                       void *migrateContext)
 {
     // Check version
     const int userVersion = this->userVersion();
@@ -161,7 +194,9 @@ bool SqliteDb::migrate(const QString &sqlDir, int version)
             continue;
 
         beginSavepoint();
-        if (!execute(data.constData())) {
+        if (!execute(data.constData())
+                || !(migrateFunc == nullptr
+                     || migrateFunc(this, i, migrateContext))) {
             qWarning() << "SQLite: Migrate error:" << filePath << errorMessage();
 
             res = false;

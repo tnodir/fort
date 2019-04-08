@@ -4,7 +4,10 @@
 #include <QString>
 #include <QVariant>
 
+QT_FORWARD_DECLARE_CLASS(SqliteDb)
 QT_FORWARD_DECLARE_STRUCT(sqlite3)
+
+typedef bool (*SQLITEDB_MIGRATE_FUNC) (SqliteDb *db, int version, void *context);
 
 class SqliteDb
 {
@@ -21,7 +24,8 @@ public:
     bool execute16(const ushort *sql);
     bool executeStr(const QString &sql);
 
-    QVariant executeOut(const char *sql);
+    QVariant executeEx(const char *sql,
+                       const QVariantList &vars = QVariantList());
 
     qint64 lastInsertRowid() const;
     int changes() const;
@@ -38,7 +42,9 @@ public:
 
     int userVersion();
 
-    bool migrate(const QString &sqlDir, int version);
+    bool migrate(const QString &sqlDir, int version,
+                 SQLITEDB_MIGRATE_FUNC migrateFunc = nullptr,
+                 void *migrateContext = nullptr);
 
 private:
     sqlite3 *m_db;

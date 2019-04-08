@@ -13,10 +13,39 @@
 Q_DECLARE_LOGGING_CATEGORY(CLOG_DATABASE_MANAGER)
 Q_LOGGING_CATEGORY(CLOG_DATABASE_MANAGER, "fort.databaseManager")
 
-#define DATABASE_SCHEMA_VERSION 1
+#define DATABASE_USER_VERSION   2
 
-#define INVALID_APP_INDEX   qint16(-1)
-#define INVALID_APP_ID      qint64(-1)
+#define INVALID_APP_INDEX       qint16(-1)
+#define INVALID_APP_ID          qint64(-1)
+
+namespace {
+
+bool migrateFunc(SqliteDb *db, int version, void *ctx)
+{
+    Q_UNUSED(ctx);
+
+    if (version == 2) {
+        // Fix statistics dates to use UTC
+        const qint64 unixTime = DateUtil::getUnixTime();
+        const QDate date = QDateTime::fromSecsSinceEpoch(unixTime).date();
+
+        const qint32 unixDay = DateUtil::getUnixDay(unixTime);
+        const qint32 localDay = DateUtil::getUnixHour(
+                    QDateTime(date).toSecsSinceEpoch());
+
+        if (unixDay != localDay) {
+            const QVariantList vars = QVariantList() << (unixDay - localDay);
+            db->executeEx("UPDATE traffic_app_day SET traf_time = traf_time + ?1;", vars);
+            db->executeEx("UPDATE traffic_day SET traf_time = traf_time + ?1;", vars);
+            db->executeEx("UPDATE traffic_app_month SET traf_time = traf_time + ?1;", vars);
+            db->executeEx("UPDATE traffic_month SET traf_time = traf_time + ?1;", vars);
+        }
+    }
+
+    return true;
+}
+
+}
 
 DatabaseManager::DatabaseManager(const QString &filePath,
                                  QuotaManager *quotaManager,
@@ -63,7 +92,8 @@ bool DatabaseManager::initialize()
 
     m_sqliteDb->execute(DatabaseSql::sqlPragmas);
 
-    if (!m_sqliteDb->migrate(":/db/migrations", DATABASE_SCHEMA_VERSION)) {
+    if (!m_sqliteDb->migrate(":/db/migrations", DATABASE_USER_VERSION,
+                             &migrateFunc)) {
         qCritical(CLOG_DATABASE_MANAGER()) << "Migration error";
         return false;
     }

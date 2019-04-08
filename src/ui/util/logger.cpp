@@ -1,11 +1,10 @@
 #include "logger.h"
 
-#include <QDateTime>
-
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 
 #include "../../common/version.h"
+#include "dateutil.h"
 
 #define LOGGER_FILE_PREFIX      "log_fort_"
 #define LOGGER_FILE_SUFFIX      ".txt"
@@ -72,7 +71,7 @@ void Logger::setPath(const QString &path)
 bool Logger::openLogFile()
 {
     const QString filename = QLatin1String(LOGGER_FILE_PREFIX)
-            + QDateTime::currentDateTime().toString("yyyy-MM-dd_HH-mm-ss_zzz")
+            + DateUtil::now().toString("yyyy-MM-dd_HH-mm-ss_zzz")
             + QLatin1String(LOGGER_FILE_SUFFIX);
 
     m_file.setFileName(m_dir.filePath(filename));
@@ -112,7 +111,7 @@ void Logger::writeLog(const QString &message, Logger::LogLevel level)
 
     m_writing = true;
 
-    const QString dateString = QDateTime::currentDateTime()
+    const QString dateString = DateUtil::now()
             .toString("yyyy-MM-dd HH:mm:ss");
 
     // Create file when required to avoid empty files
