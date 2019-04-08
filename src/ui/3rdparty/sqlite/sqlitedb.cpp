@@ -177,6 +177,12 @@ bool SqliteDb::migrate(const QString &sqlDir, int version,
     if (userVersion == version)
         return true;
 
+    if (userVersion > version) {
+        qWarning() << "SQLite: Cannot open new DB" << userVersion
+                   << "from old code" << version;
+        return false;
+    }
+
     // Run migration SQL scripts
     QDir dir(sqlDir);
     bool res = true;
@@ -186,19 +192,24 @@ bool SqliteDb::migrate(const QString &sqlDir, int version,
         const QString filePath = dir.filePath(QString::number(i) + ".sql");
 
         QFile file(filePath);
-        if (!file.open(QFile::ReadOnly | QFile::Text))
-            continue;
+        if (!file.open(QFile::ReadOnly | QFile::Text)) {
+            qWarning() << "SQLite: Cannot open migration file" << filePath;
+            res = false;
+            break;
+        }
 
         const QByteArray data = file.readAll();
-        if (data.isEmpty())
-            continue;
+        if (data.isEmpty()) {
+            qWarning() << "SQLite: Migration file is empty" << filePath;
+            res = false;
+            break;
+        }
 
         beginSavepoint();
         if (!execute(data.constData())
                 || !(migrateFunc == nullptr
                      || migrateFunc(this, i, migrateContext))) {
-            qWarning() << "SQLite: Migrate error:" << filePath << errorMessage();
-
+            qWarning() << "SQLite: Migration error:" << filePath << errorMessage();
             res = false;
             rollbackSavepoint();
             break;
