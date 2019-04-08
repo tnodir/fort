@@ -93,11 +93,10 @@ void Logger::closeLogFile()
 void Logger::writeLogLine(Logger::LogLevel level, const QString &dateString,
                           const QString &message)
 {
-    static const char * const g_levelTexts[] = {
-        "[Info]", "[Warn]", "[Fail]"};
+    static const char * const g_levelChars = "IWE";
 
     const QString line = dateString
-            + ' ' + g_levelTexts[int(level)]
+            + ' ' + g_levelChars[int(level)]
             + ' ' + message + '\n';
 
     m_file.write(line.toLatin1());
@@ -124,8 +123,7 @@ void Logger::writeLog(const QString &message, Logger::LogLevel level)
         }
 
         // Write file header
-        writeLogLine(Info, dateString, APP_NAME " version: " APP_VERSION_STR
-                                       " build date: " __DATE__ " " __TIME__);
+        writeLogLine(Info, dateString, APP_NAME " version: " APP_VERSION_STR);
     }
 
     writeLogLine(level, dateString, message);
