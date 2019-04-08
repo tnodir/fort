@@ -39,8 +39,8 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; Flags: unchecked
 Name: "portable"; Description: "Portable"; Flags: unchecked
 
 [Files]
-Source: ".\build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: ".\README.portable"; DestDir: "{app}"; Check: IsTaskSelected('portable')
+Source: "build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "README.portable"; DestDir: "{app}"; Check: IsTaskSelected('portable')
 
 [Icons]
 ; Start menu shortcut
