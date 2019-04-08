@@ -10,7 +10,7 @@
 taskkill /F /IM mmc.exe
 
 @rem Stop the service
-net stop %BASENAME%
+sc stop %BASENAME%
 
 @rem Remove the service
 sc delete %BASENAME%
