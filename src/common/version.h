@@ -2,10 +2,10 @@
 #define VERSION_H
 
 #define APP_VERSION_MAJOR	2
-#define APP_VERSION_MINOR	6
+#define APP_VERSION_MINOR	7
 #define APP_VERSION_PATCH	0
-#define APP_VERSION_STR		"2.6.0"
-#define APP_VERSION		0x020600
+#define APP_VERSION_STR		"2.7.0"
+#define APP_VERSION		0x020700
 
 #define APP_NAME		"Fort Firewall"
 #define APP_UPDATES_URL		"https://github.com/tnodir/fort/releases"
