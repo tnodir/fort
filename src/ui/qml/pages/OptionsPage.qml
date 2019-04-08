@@ -197,6 +197,7 @@ BasePage {
                                         : "qrc:/images/plugin_disabled.png"
                             }
                             Label {
+                                font.weight: Font.Bold
                                 text: translationManager.trTrigger
                                       && qsTranslate("qml", "Driver:")
                             }
