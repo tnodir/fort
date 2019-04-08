@@ -1,5 +1,13 @@
 Fort Firewall ChangeLog
 
+v2.6.0, 2019-04-08:
+- UI: GraphWindow: Fix speed updating on title.
+- UI: Update Dl/Ul icons.
+- UI: OptionsPage: Show driver's state; allow to install/remove the driver.
+- UI: Polish BlockedPage.
+- DB: Fix statistics dates to use UTC.
+- Update to SQLite v3.27.2
+
 v2.5.2, 2019-03-16:
 - UI: Polish OptionsPage.
 - Installer: Add "Create Desktop Icon" option.
