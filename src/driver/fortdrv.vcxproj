@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="fortdrv.c" />
+    <ResourceCompile Include="fortdrv.rc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\common.h" />
