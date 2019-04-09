@@ -23,6 +23,10 @@ Windows         | 7 SP1+, 8.1, 10               | x86, x64
 
 ## FAQ
 
+### Windows 7 SP1 64-bit fails to install not digitally signed drivers
+
+See "[SHA-2 Code Signing Support for Windows 7](https://docs.microsoft.com/en-us/security-updates/SecurityAdvisories/2015/3033929)".
+
 ### What the difference is between "Internet Addresses" and "Allowed Internet Addresses" on the IPV4 Addresses tab?
 
 1. All FW rules act on "Internet Addresses" only.
