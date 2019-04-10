@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v2.6.1, 2019-04-10:
+- Driver: SHA-1 signing for Windows 7.
+- Driver: Add details info.
+- UI: Remove Quit button.
+- Update program's icon.
+
 v2.6.0, 2019-04-08:
 - UI: GraphWindow: Fix speed updating on title.
 - UI: Update Dl/Ul icons.
