@@ -190,12 +190,6 @@ Page {
                       && qsTranslate("qml", "Cancel")
                 onClicked: closeWindow()
             }
-            Button {
-                icon.source: "qrc:/images/cross.png"
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Quit")
-                onClicked: fortManager.exit()
-            }
         }
     }
 }
