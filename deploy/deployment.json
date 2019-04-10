@@ -11,9 +11,10 @@
 				"${QTPATH}/bin/Qt5Widgets.dll"
 			],
 			"fort": [
-				"${ROOT}/ChangeLog",
 				"${BUILD}/FortFirewall.exe",
+				"${ROOT}/ChangeLog",
 				"${ROOT}/src/scripts			| *.qs Readme.txt		|",
+				"${ROOT}/src/ui/FortFirewall.ico",
 				"${ROOT}/src/ui/i18n			| *.qm				|"
 			]
 		},

@@ -196,7 +196,7 @@ void FortManager::setupTranslationManager()
 void FortManager::setupTrayIcon()
 {
     m_trayIcon->setToolTip(QGuiApplication::applicationDisplayName());
-    m_trayIcon->setIcon(QIcon(":/images/shield.png"));
+    m_trayIcon->setIcon(QIcon(":/images/sheild-96.png"));
 
     connect(m_trayIcon, &QSystemTrayIcon::activated, this,
             [this](QSystemTrayIcon::ActivationReason reason) {
