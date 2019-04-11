@@ -44,9 +44,9 @@ Source: "README.portable"; DestDir: "{app}"; Check: IsTaskSelected('portable')
 
 [Icons]
 ; Start menu shortcut
-Name: "{group}\{#APP_NAME}"; Filename: "{app}\{#APP_EXE_NAME}"; IconFilename: "{app}\FortFirewall.ico"
+Name: "{group}\{#APP_NAME}"; Filename: "{app}\{#APP_EXE_NAME}"
 ; Uninstaller shortcut
-Name: "{group}\{cm:UninstallProgram,{#APP_NAME}}"; Filename: "{uninstallexe}"; IconFilename: "{app}\FortFirewall.ico"
+Name: "{group}\{cm:UninstallProgram,{#APP_NAME}}"; Filename: "{uninstallexe}"
 ; Desktop shortcut
 Name: "{commondesktop}\{#APP_NAME}"; Filename: "{app}\{#APP_EXE_NAME}"; WorkingDir: "{app}"; Tasks: desktopicon
 
