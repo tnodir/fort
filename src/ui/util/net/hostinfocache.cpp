@@ -9,7 +9,9 @@ HostInfoCache::HostInfoCache(QObject *parent) :
     connect(m_manager, &HostInfoManager::lookupFinished,
             this, &HostInfoCache::handleFinishedLookup);
 
-    m_timer.setInterval(300);
+    m_timer.setSingleShot(true);
+    m_timer.setInterval(200);
+
     connect(&m_timer, &QTimer::timeout,
             this, &HostInfoCache::cacheChanged);
 }

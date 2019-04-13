@@ -26,7 +26,6 @@ BasePage {
 
     HostInfoCache {
         id: hostInfoCache
-        onCacheChanged: ipListView.update()
     }
 
     ColumnLayout {
@@ -95,8 +94,6 @@ BasePage {
                     firewallConf.resolveAddress = checked;
 
                     fortManager.applyConfImmediateFlags();
-
-                    ipListView.update();
                 }
             }
 
@@ -143,10 +140,6 @@ BasePage {
                     Layout.fillHeight: true
 
                     model: ipListModel
-
-                    function update() {
-                        ipListModel.triggerUpdate();
-                    }
                 }
             }
         }

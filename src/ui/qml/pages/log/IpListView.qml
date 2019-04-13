@@ -16,6 +16,7 @@ ListViewControl {
 
         readonly property string hostName:
             (firewallConf.resolveAddress
+             && hostInfoCache.hostTrigger
              && hostInfoCache.hostName(displayText)) || ""
 
         readonly property string displayText: display
