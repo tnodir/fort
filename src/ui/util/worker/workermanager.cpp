@@ -40,6 +40,10 @@ void WorkerManager::workerFinished(WorkerObject *worker)
     QMutexLocker locker(&m_mutex);
 
     m_workers.removeOne(worker);
+
+    if (m_workers.isEmpty()) {
+        m_waitCondition.wakeOne();
+    }
 }
 
 void WorkerManager::clear()
@@ -53,20 +57,19 @@ void WorkerManager::abort()
 {
     QMutexLocker locker(&m_mutex);
 
-    abortWorkers();
-
     m_aborted = true;
 
-    m_waitCondition.wakeAll();
-}
+    if (!m_workers.isEmpty()) {
+        for (WorkerObject *worker : m_workers) {
+            worker->abort();
+        }
 
-void WorkerManager::abortWorkers()
-{
-    for (WorkerObject *worker : m_workers) {
-        worker->abort();
+        m_waitCondition.wakeAll();
+
+        do {
+            m_waitCondition.wait(&m_mutex);
+        } while (!m_workers.isEmpty());
     }
-
-    m_workers.clear();
 }
 
 void WorkerManager::enqueueJob(const QString &job)

@@ -41,7 +41,6 @@ private:
     void setupWorker();
 
     void abort();
-    void abortWorkers();
 
 private:
     volatile bool m_aborted;

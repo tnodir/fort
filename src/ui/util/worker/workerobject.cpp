@@ -19,7 +19,5 @@ void WorkerObject::run()
         doJob(job);
     }
 
-    if (!aborted()) {
-        manager()->workerFinished(this);
-    }
+    manager()->workerFinished(this);
 }
