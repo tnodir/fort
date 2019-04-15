@@ -58,6 +58,7 @@ SOURCES += \
     util/hotkeymanager.cpp \
     util/logger.cpp \
     util/nativeeventfilter.cpp \
+    util/net/hostinfo.cpp \
     util/net/hostinfocache.cpp \
     util/net/hostinfomanager.cpp \
     util/net/hostinfoworker.cpp \
@@ -122,6 +123,7 @@ HEADERS += \
     util/hotkeymanager.h \
     util/logger.h \
     util/nativeeventfilter.h \
+    util/net/hostinfo.h \
     util/net/hostinfocache.h \
     util/net/hostinfomanager.h \
     util/net/hostinfoworker.h \

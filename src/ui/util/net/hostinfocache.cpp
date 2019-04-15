@@ -4,27 +4,31 @@
 
 HostInfoCache::HostInfoCache(QObject *parent) :
     QObject(parent),
-    m_manager(new HostInfoManager(this))
+    m_manager(new HostInfoManager(this)),
+    m_cache(1 * 1024 * 1024)
 {
     connect(m_manager, &HostInfoManager::lookupFinished,
             this, &HostInfoCache::handleFinishedLookup);
 
-    m_timer.setSingleShot(true);
-    m_timer.setInterval(200);
+    m_triggerTimer.setSingleShot(true);
+    m_triggerTimer.setInterval(200);
 
-    connect(&m_timer, &QTimer::timeout,
+    connect(&m_triggerTimer, &QTimer::timeout,
             this, &HostInfoCache::cacheChanged);
 }
 
 QString HostInfoCache::hostName(const QString &address)
 {
-    if (!m_cache.contains(address)) {
-        m_cache.insert(address, QString());
+    HostInfo *hostInfo = m_cache.object(address);
+
+    if (hostInfo == nullptr) {
+        hostInfo = new HostInfo();
+
+        m_cache.insert(address, hostInfo, 4);
         m_manager->lookupHost(address);
-        return QString();
     }
 
-    return m_cache.value(address);
+    return hostInfo->hostName;
 }
 
 void HostInfoCache::clear()
@@ -38,14 +42,19 @@ void HostInfoCache::clear()
 void HostInfoCache::handleFinishedLookup(const QString &address,
                                          const QString &hostName)
 {
-    m_cache.insert(address, hostName);
+    HostInfo *hostInfo = m_cache.take(address);
+    if (hostInfo == nullptr)
+        return;
+
+    hostInfo->hostName = hostName;
+    m_cache.insert(address, hostInfo, hostName.size());
 
     emitCacheChanged();
 }
 
 void HostInfoCache::emitCacheChanged()
 {
-    if (!m_timer.isActive()) {
-        m_timer.start();
+    if (!m_triggerTimer.isActive()) {
+        m_triggerTimer.start();
     }
 }

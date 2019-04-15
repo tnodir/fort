@@ -1,9 +1,11 @@
 #ifndef HOSTINFOCACHE_H
 #define HOSTINFOCACHE_H
 
+#include <QCache>
 #include <QObject>
-#include <QHash>
 #include <QTimer>
+
+#include "hostinfo.h"
 
 QT_FORWARD_DECLARE_CLASS(HostInfoManager)
 
@@ -35,9 +37,9 @@ private:
 private:
     HostInfoManager *m_manager;
 
-    QHash<QString, QString> m_cache;
+    QCache<QString, HostInfo> m_cache;
 
-    QTimer m_timer;
+    QTimer m_triggerTimer;
 };
 
 #endif // HOSTINFOCACHE_H
