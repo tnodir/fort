@@ -5,7 +5,7 @@
 HostInfoCache::HostInfoCache(QObject *parent) :
     QObject(parent),
     m_manager(new HostInfoManager(this)),
-    m_cache(1 * 1024 * 1024)
+    m_cache(1000)
 {
     connect(m_manager, &HostInfoManager::lookupFinished,
             this, &HostInfoCache::handleFinishedLookup);
@@ -24,7 +24,7 @@ QString HostInfoCache::hostName(const QString &address)
     if (hostInfo == nullptr) {
         hostInfo = new HostInfo();
 
-        m_cache.insert(address, hostInfo, 4);
+        m_cache.insert(address, hostInfo, 1);
         m_manager->lookupHost(address);
     }
 
@@ -42,12 +42,11 @@ void HostInfoCache::clear()
 void HostInfoCache::handleFinishedLookup(const QString &address,
                                          const QString &hostName)
 {
-    HostInfo *hostInfo = m_cache.take(address);
+    HostInfo *hostInfo = m_cache.object(address);
     if (hostInfo == nullptr)
         return;
 
     hostInfo->hostName = hostName;
-    m_cache.insert(address, hostInfo, hostName.size());
 
     emitCacheChanged();
 }
