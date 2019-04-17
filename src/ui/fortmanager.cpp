@@ -26,6 +26,7 @@
 #include "task/taskinfo.h"
 #include "task/taskmanager.h"
 #include "translationmanager.h"
+#include "util/app/appinfocache.h"
 #include "util/fileutil.h"
 #include "util/guiutil.h"
 #include "util/hotkeymanager.h"
@@ -113,6 +114,8 @@ void FortManager::registerQmlTypes()
     qmlRegisterType<AppGroup>("com.fortfirewall", 1, 0, "AppGroup");
     qmlRegisterType<FirewallConf>("com.fortfirewall", 1, 0, "FirewallConf");
 
+    qRegisterMetaType<AppInfo>();
+    qmlRegisterType<AppInfoCache>("com.fortfirewall", 1, 0, "AppInfoCache");
     qmlRegisterType<FileUtil>("com.fortfirewall", 1, 0, "FileUtil");
     qmlRegisterType<GuiUtil>("com.fortfirewall", 1, 0, "GuiUtil");
     qmlRegisterType<HostInfoCache>("com.fortfirewall", 1, 0, "HostInfoCache");

@@ -2,6 +2,7 @@
 
 #include <QImage>
 
+#include "appinfo.h"
 #include "appinfomanager.h"
 #include "apputil.h"
 
@@ -12,12 +13,11 @@ AppInfoWorker::AppInfoWorker(AppInfoManager *manager) :
 
 void AppInfoWorker::doJob(const QString &appPath)
 {
-    // TODO
+    AppInfo appInfo;
+
+    AppUtil::getInfo(appPath, appInfo);
 
     if (aborted()) return;
 
-    const QVariantList result = QVariantList()
-            << QString() << QImage();
-
-    manager()->handleWorkerResult(appPath, result);
+    manager()->handleWorkerResult(appPath, QVariant::fromValue(appInfo));
 }

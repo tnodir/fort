@@ -2,19 +2,12 @@
 #define APPUTIL_H
 
 #include <QObject>
-#include <QPixmap>
 
-typedef struct AppInfo {
-    QString fileDescription;
-    QString companyName;
-    QString productName;
-    QString productVersion;
-} AppInfo;
+QT_FORWARD_DECLARE_CLASS(AppInfo)
 
 class AppUtil
 {
 public:
-    static QPixmap getIcon(const QString &appPath);
     static bool getInfo(const QString &appPath, AppInfo &appInfo);
 };
 

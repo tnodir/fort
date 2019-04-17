@@ -160,6 +160,11 @@ QString FileUtil::appBinLocation()
     return QCoreApplication::applicationDirPath();
 }
 
+QString FileUtil::appCacheLocation()
+{
+    return QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+}
+
 QString FileUtil::appConfigLocation()
 {
     return QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);

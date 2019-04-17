@@ -86,6 +86,7 @@ bool DatabaseManager::initialize()
 
     if (!m_sqliteDb->open(m_filePath)) {
         qCritical(CLOG_DATABASE_MANAGER()) << "File open error:"
+                                           << m_filePath
                                            << m_sqliteDb->errorMessage();
         return false;
     }
@@ -94,7 +95,7 @@ bool DatabaseManager::initialize()
 
     if (!m_sqliteDb->migrate(":/db/migrations", DATABASE_USER_VERSION,
                              &migrateFunc)) {
-        qCritical(CLOG_DATABASE_MANAGER()) << "Migration error";
+        qCritical(CLOG_DATABASE_MANAGER()) << "Migration error" << m_filePath;
         return false;
     }
 

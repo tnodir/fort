@@ -8,6 +8,8 @@
 #include <objbase.h>
 #include <shellapi.h>
 
+#include "appinfo.h"
+
 // Defined in qpixmap_win.cpp
 Q_GUI_EXPORT QPixmap qt_pixmapFromWinHICON(HICON icon);
 
@@ -67,7 +69,7 @@ QString extractInfoText(LPVOID infoData, const WORD *langInfo,
     return QString();
 }
 
-bool extractAppInfo(const QString &appPath, AppInfo &appInfo)
+bool extractVersionInfo(const QString &appPath, AppInfo &appInfo)
 {
     const wchar_t *appPathW = (LPCWSTR) appPath.utf16();
 
@@ -120,12 +122,11 @@ bool extractAppInfo(const QString &appPath, AppInfo &appInfo)
 
 }
 
-QPixmap AppUtil::getIcon(const QString &appPath)
-{
-    return extractShellIcon(appPath);
-}
-
 bool AppUtil::getInfo(const QString &appPath, AppInfo &appInfo)
 {
-    return extractAppInfo(appPath, appInfo);
+    if (extractVersionInfo(appPath, appInfo)) {
+        appInfo.icon = extractShellIcon(appPath);
+        return true;
+    }
+    return false;
 }

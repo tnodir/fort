@@ -23,9 +23,7 @@ void AppInfoManager::lookupApp(const QString &appPath)
 void AppInfoManager::handleWorkerResult(const QString &appPath,
                                         const QVariant &result)
 {
-    const QVariantList list = result.toList();
-    const QString &displayName = list.at(0).toString();
-    const QImage &icon = list.at(1).value<QImage>();
+    auto appInfo = result.value<AppInfo>();
 
-    emit lookupFinished(appPath, displayName, icon);
+    emit lookupFinished(appPath, appInfo);
 }

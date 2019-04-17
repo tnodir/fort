@@ -42,6 +42,7 @@ public:
     static bool writeFileData(const QString &filePath, const QByteArray &data);
 
     static QString appBinLocation();
+    static QString appCacheLocation();
     static QString appConfigLocation();
     static QString applicationsLocation();
 };

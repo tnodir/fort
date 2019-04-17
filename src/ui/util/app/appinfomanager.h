@@ -2,6 +2,7 @@
 #define APPINFOMANAGER_H
 
 #include "../worker/workermanager.h"
+#include "appinfo.h"
 
 class AppInfoManager : public WorkerManager
 {
@@ -11,8 +12,7 @@ public:
     explicit AppInfoManager(QObject *parent = nullptr);
 
 signals:
-    void lookupFinished(const QString &appPath, const QString &displayName,
-                        const QImage &icon);
+    void lookupFinished(const QString &appPath, const AppInfo appInfo);
 
 public slots:
     void lookupApp(const QString &appPath);

@@ -46,6 +46,8 @@ SOURCES += \
     task/taskupdatechecker.cpp \
     task/taskworker.cpp \
     translationmanager.cpp \
+    util/app/appinfo.cpp \
+    util/app/appinfocache.cpp \
     util/app/appinfomanager.cpp \
     util/app/appinfoworker.cpp \
     util/app/apputil.cpp \
@@ -111,6 +113,8 @@ HEADERS += \
     task/taskupdatechecker.h \
     task/taskworker.h \
     translationmanager.h \
+    util/app/appinfo.h \
+    util/app/appinfocache.h \
     util/app/appinfomanager.h \
     util/app/appinfoworker.h \
     util/app/apputil.h \
@@ -159,8 +163,13 @@ RESOURCES += fort_qml.qrc
 RESOURCES += fort_images.qrc
 
 # Database Migrations
-OTHER_FILES += db/migrations/*.sql
-RESOURCES += db/migrations.qrc
+OTHER_FILES += \
+    db/migrations/*.sql \
+    util/app/migrations/*.sql
+
+RESOURCES += \
+    db/migrations.qrc \
+    util/app/migrations.qrc
 
 # Shadow Build: Copy i18n/ to build path
 !equals(PWD, $${OUT_PWD}) {
