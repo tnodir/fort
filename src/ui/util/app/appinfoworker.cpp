@@ -58,8 +58,20 @@ const char * const sqlSelectAppCount =
         "SELECT count(*) FROM app;"
         ;
 
-const char * const sqlDeleteIconIfLast =
-        "DELETE FROM icon WHERE icon_id = ?1 AND ref_count = 1;"
+const char * const sqlSelectAppOlds =
+        "SELECT path, icon_id"
+        "  FROM app"
+        "  ORDER BY access_time DESC"
+        "  LIMIT ?1;"
+        ;
+
+const char * const sqlDeleteIconIfNotUsed =
+        "DELETE FROM icon"
+        "  WHERE icon_id = ?1 AND ref_count = 0;"
+        ;
+
+const char * const sqlDeleteApp =
+        "DELETE FROM app WHERE path = ?1;"
         ;
 
 }
@@ -209,4 +221,57 @@ bool AppInfoWorker::saveToDb(const QString &appPath, const AppInfo &appInfo)
 
 void AppInfoWorker::shrinkDb(int excessCount)
 {
+    QStringList appPaths;
+    QHash<qint64, int> iconIds;
+
+    bool ok = false;
+
+    m_sqliteDb->beginTransaction();
+
+    // Get old app info list
+    {
+        SqliteStmt stmt;
+        if (stmt.prepare(m_sqliteDb->db(), sqlSelectAppOlds,
+                         SqliteStmt::PreparePersistent)
+                && stmt.bindInt(1, excessCount)) {
+
+            while (stmt.step() == SqliteStmt::StepRow) {
+                const QString appPath = stmt.columnText(0);
+                appPaths.append(appPath);
+
+                const qint64 iconId = stmt.columnInt64(1);
+                const int iconCount = iconIds.value(iconId);
+                iconIds.insert(iconId, iconCount + 1);
+            }
+
+            ok = true;
+        }
+    }
+
+    // Delete old icons
+    auto iconIt = iconIds.constBegin();
+    while (iconIt != iconIds.constEnd()) {
+        const qint64 iconId = iconIt.key();
+        const int count = iconIt.value();
+
+        m_sqliteDb->executeEx(sqlUpdateIconRefCount,
+                              QVariantList() << iconId << -count,
+                              0, &ok);
+        if (!ok) goto end;
+
+        m_sqliteDb->executeEx(sqlDeleteIconIfNotUsed,
+                              QVariantList() << iconId,
+                              0, &ok);
+        if (!ok) goto end;
+    }
+
+    // Delete old app infos
+    for (const QString &path : appPaths) {
+        m_sqliteDb->executeEx(sqlDeleteApp, QVariantList() << path,
+                              0, &ok);
+        if (!ok) goto end;
+    }
+
+ end:
+    m_sqliteDb->endTransaction(ok);
 }
