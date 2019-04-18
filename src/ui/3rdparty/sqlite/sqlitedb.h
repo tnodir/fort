@@ -25,12 +25,15 @@ public:
     bool executeStr(const QString &sql);
 
     QVariant executeEx(const char *sql,
-                       const QVariantList &vars = QVariantList());
+                       const QVariantList &vars = QVariantList(),
+                       int resultCount = 1,
+                       bool *ok = nullptr);
 
     qint64 lastInsertRowid() const;
     int changes() const;
 
     bool beginTransaction();
+    bool endTransaction(bool ok = true);
     bool commitTransaction();
     bool rollbackTransaction();
 

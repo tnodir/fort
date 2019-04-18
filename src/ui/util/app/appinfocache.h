@@ -8,7 +8,6 @@
 #include "appinfo.h"
 
 QT_FORWARD_DECLARE_CLASS(AppInfoManager)
-QT_FORWARD_DECLARE_CLASS(SqliteDb)
 
 class AppInfoCache : public QObject
 {
@@ -17,7 +16,6 @@ class AppInfoCache : public QObject
 
 public:
     explicit AppInfoCache(QObject *parent = nullptr);
-    ~AppInfoCache() override;
 
     bool infoTrigger() const { return true; }
 
@@ -32,14 +30,10 @@ private slots:
                               const AppInfo info);
 
 private:
-    void setupDb();
-
     void emitCacheChanged();
 
 private:
     AppInfoManager *m_manager;
-
-    SqliteDb *m_sqliteDb;
 
     QCache<QString, AppInfo> m_cache;
 

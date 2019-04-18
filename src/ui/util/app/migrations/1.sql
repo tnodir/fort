@@ -9,13 +9,16 @@ CREATE TABLE IF NOT EXISTS app(
   product_name TEXT,
   product_ver TEXT,
   icon_id INTEGER,
-  persist BOOL DEFAULT 0,
-  access_time DATE DEFAULT date('now')
+  access_time DATETIME DEFAULT datetime('now')
 ) WITHOUT ROWID;
+
+CREATE INDEX idx_app_access_time ON app(access_time);
 
 CREATE TABLE IF NOT EXISTS icon(
   icon_id INTEGER PRIMARY KEY,
-  ref_count INTEGER NOT NULL DEFAULT 0,
-  hash TEXT NOT NULL,
-  icon BLOB NOT NULL
+  ref_count INTEGER NOT NULL DEFAULT 1,
+  hash INTEGER NOT NULL,
+  image BLOB NOT NULL
 );
+
+CREATE INDEX idx_icon_hash ON icon(hash);
