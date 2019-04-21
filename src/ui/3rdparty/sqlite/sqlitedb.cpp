@@ -1,8 +1,10 @@
 #include "sqlitedb.h"
 
 #include <QDataStream>
+#include <QBuffer>
 #include <QDebug>
 #include <QDir>
+#include <QImage>
 
 #include <sqlite3.h>
 
@@ -59,7 +61,10 @@ QVariant SqliteDb::executeEx(const char *sql,
                              bool *ok)
 {
     QVariantList list;
+
     QStringList bindTexts;
+    QList<QByteArray> bindDatas;
+
     sqlite3_stmt *stmt = nullptr;
     int res;
 
@@ -72,22 +77,29 @@ QVariant SqliteDb::executeEx(const char *sql,
         int index = 0;
         for (const QVariant &v : vars) {
             ++index;
-            switch (v.type()) {
+
+            const int vType = v.type();
+
+            switch (vType) {
             case QVariant::Invalid:
                 res = sqlite3_bind_null(stmt, index);
                 break;
+            case QVariant::Bool:
             case QVariant::Int:
+            case QVariant::UInt:
                 res = sqlite3_bind_int(stmt, index, v.toInt());
+                break;
+            case QVariant::LongLong:
+            case QVariant::ULongLong:
+                res = sqlite3_bind_int64(stmt, index, v.toLongLong());
                 break;
             case QVariant::Double:
                 res = sqlite3_bind_double(stmt, index, v.toDouble());
                 break;
-            case QVariant::LongLong:
-                res = sqlite3_bind_int64(stmt, index, v.toLongLong());
-                break;
             case QVariant::String: {
                 const QString text = v.toString();
                 const int bytesCount = text.size() * int(sizeof(wchar_t));
+
                 bindTexts.append(text);
 
                 res = sqlite3_bind_text16(stmt, index, text.utf16(),
@@ -96,11 +108,36 @@ QVariant SqliteDb::executeEx(const char *sql,
             }
             default: {
                 QByteArray data;
-                QDataStream stream(data);
-                stream << v;
+
+                // Write type
+                QDataStream stream(&data, QIODevice::WriteOnly);
+                stream << vType;
+
+                // Write content
+                {
+                    QByteArray bufData;
+
+                    QBuffer buf(&bufData);
+                    buf.open(QIODevice::WriteOnly);
+
+                    switch (vType) {
+                    case QVariant::Image: {
+                        const QImage image = v.value<QImage>();
+                        image.save(&buf, "PNG");
+                        break;
+                    }
+                    default:
+                        Q_UNREACHABLE();
+                    }
+
+                    buf.close();
+                    stream << bufData;
+                }
 
                 const char *bits = data.constData();
                 const int bytesCount = data.size();
+
+                bindDatas.append(data);
 
                 res = sqlite3_bind_blob(stmt, index, bits,
                                         bytesCount, SQLITE_STATIC);
@@ -135,7 +172,27 @@ QVariant SqliteDb::executeEx(const char *sql,
 
                 QByteArray data(bits, bytesCount);
                 QDataStream stream(data);
-                stream >> v;
+
+                // Load type
+                int vType;
+                stream >> vType;
+
+                // Load content
+                {
+                    QByteArray bufData;
+                    stream >> bufData;
+
+                    switch (vType) {
+                    case QVariant::Image: {
+                        QImage image;
+                        image.loadFromData(bufData, "PNG");
+                        v = image;
+                        break;
+                    }
+                    default:
+                        Q_UNREACHABLE();
+                    }
+                }
                 break;
             }
             case SQLITE_NULL:
@@ -156,7 +213,9 @@ QVariant SqliteDb::executeEx(const char *sql,
         *ok = (res == SQLITE_OK || res == SQLITE_ROW || res == SQLITE_DONE);
     }
 
-    return (list.size() == 1) ? list.at(0) : list;
+    const int listSize = list.size();
+    return (listSize == 0) ? QVariant()
+                           : (list.size() == 1) ? list.at(0) : list;
 }
 
 qint64 SqliteDb::lastInsertRowid() const
@@ -248,7 +307,8 @@ bool SqliteDb::migrate(const QString &sqlDir, int version,
 
         QFile file(filePath);
         if (!file.open(QFile::ReadOnly | QFile::Text)) {
-            qWarning() << "SQLite: Cannot open migration file" << filePath;
+            qWarning() << "SQLite: Cannot open migration file" << filePath
+                       << file.errorString();
             res = false;
             break;
         }

@@ -26,6 +26,7 @@
 #include "task/taskinfo.h"
 #include "task/taskmanager.h"
 #include "translationmanager.h"
+#include "util/app/appiconprovider.h"
 #include "util/app/appinfocache.h"
 #include "util/fileutil.h"
 #include "util/guiutil.h"
@@ -59,7 +60,8 @@ FortManager::FortManager(FortSettings *fortSettings,
                                 m_driverManager->driverWorker(), this)),
     m_nativeEventFilter(new NativeEventFilter(this)),
     m_hotKeyManager(new HotKeyManager(m_nativeEventFilter, this)),
-    m_taskManager(new TaskManager(this, this))
+    m_taskManager(new TaskManager(this, this)),
+    m_appInfoCache(new AppInfoCache(this))
 {
     setupLogger();
     setupDatabaseManager();
@@ -219,6 +221,10 @@ bool FortManager::setupEngine()
     context->setContextProperty("fortManager", this);
     context->setContextProperty("driverManager", m_driverManager);
     context->setContextProperty("translationManager", TranslationManager::instance());
+    context->setContextProperty("appInfoCache", m_appInfoCache);
+
+    m_engine->addImageProvider(AppIconProvider::id(),
+                               new AppIconProvider(m_appInfoCache->manager()));
 
     m_engine->load(QUrl("qrc:/qml/main.qml"));
 

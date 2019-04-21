@@ -70,15 +70,16 @@ void Logger::setPath(const QString &path)
 
 bool Logger::openLogFile()
 {
-    const QString filename = QLatin1String(LOGGER_FILE_PREFIX)
+    const QString fileName = QLatin1String(LOGGER_FILE_PREFIX)
             + DateUtil::now().toString("yyyy-MM-dd_HH-mm-ss_zzz")
             + QLatin1String(LOGGER_FILE_SUFFIX);
 
-    m_file.setFileName(m_dir.filePath(filename));
+    m_file.setFileName(m_dir.filePath(fileName));
 
     if (!m_file.open(QIODevice::WriteOnly | QIODevice::Text
                      | QIODevice::Truncate)) {
-        qWarning() << "Cannot open log file: " << m_file.errorString();
+        qWarning() << "Cannot open log file: " << m_file.fileName()
+                   << m_file.errorString();
         return false;
     }
 

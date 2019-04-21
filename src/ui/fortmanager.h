@@ -8,6 +8,7 @@
 QT_FORWARD_DECLARE_CLASS(QQmlApplicationEngine)
 QT_FORWARD_DECLARE_CLASS(QSystemTrayIcon)
 
+QT_FORWARD_DECLARE_CLASS(AppInfoCache)
 QT_FORWARD_DECLARE_CLASS(DatabaseManager)
 QT_FORWARD_DECLARE_CLASS(DriverManager)
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
@@ -167,6 +168,7 @@ private:
     NativeEventFilter *m_nativeEventFilter;
     HotKeyManager *m_hotKeyManager;
     TaskManager *m_taskManager;
+    AppInfoCache *m_appInfoCache;
 };
 
 #endif // FORTMANAGER_H

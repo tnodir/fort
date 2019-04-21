@@ -26,7 +26,7 @@ void WorkerManager::setupWorker()
 
     if (workersCount != 0
             && (workersCount >= maxWorkersCount()
-                || m_queue.isEmpty()))
+                || m_jobQueue.isEmpty()))
         return;
 
     WorkerObject *worker = createWorker();  // autoDelete = true
@@ -46,11 +46,16 @@ void WorkerManager::workerFinished(WorkerObject *worker)
     }
 }
 
+WorkerObject *WorkerManager::createWorker()
+{
+    return new WorkerObject(this);
+}
+
 void WorkerManager::clear()
 {
     QMutexLocker locker(&m_mutex);
 
-    m_queue.clear();
+    m_jobQueue.clear();
 }
 
 void WorkerManager::abort()
@@ -59,42 +64,35 @@ void WorkerManager::abort()
 
     m_aborted = true;
 
-    if (!m_workers.isEmpty()) {
-        for (WorkerObject *worker : m_workers) {
-            worker->abort();
-        }
+    m_waitCondition.wakeAll();
 
-        m_waitCondition.wakeAll();
-
-        do {
-            m_waitCondition.wait(&m_mutex);
-        } while (!m_workers.isEmpty());
+    while (!m_workers.isEmpty()) {
+        m_waitCondition.wait(&m_mutex);
     }
 }
 
-void WorkerManager::enqueueJob(const QString &job)
+void WorkerManager::enqueueJob(WorkerJob *job)
 {
     QMutexLocker locker(&m_mutex);
 
     setupWorker();
 
-    m_queue.enqueue(job);
+    m_jobQueue.enqueue(job);
 
     m_waitCondition.wakeOne();
 }
 
-bool WorkerManager::dequeueJob(QString &job)
+WorkerJob *WorkerManager::dequeueJob()
 {
     QMutexLocker locker(&m_mutex);
 
-    while (!m_aborted && m_queue.isEmpty()) {
+    while (!m_aborted && m_jobQueue.isEmpty()) {
         if (!m_waitCondition.wait(&m_mutex, WORKER_TIMEOUT_MSEC))
             break;  // timed out
     }
 
-    if (m_aborted || m_queue.isEmpty())
-        return false;
+    if (m_aborted || m_jobQueue.isEmpty())
+        return nullptr;
 
-    job = m_queue.dequeue();
-    return true;
+    return m_jobQueue.dequeue();
 }

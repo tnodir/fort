@@ -11,14 +11,14 @@ ListViewControl {
     delegate: Label {
         width: ipListView.width
         elide: Text.ElideRight
-        text: hostName || displayText
+        text: hostName || ipAddress
         font.italic: !!hostName
 
         readonly property string hostName:
             (firewallConf.resolveAddress
              && hostInfoCache.hostTrigger
-             && hostInfoCache.hostName(displayText)) || ""
+             && hostInfoCache.hostName(ipAddress)) || ""
 
-        readonly property string displayText: display
+        readonly property string ipAddress: display
     }
 }

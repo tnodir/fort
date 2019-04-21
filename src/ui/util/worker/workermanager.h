@@ -8,6 +8,7 @@
 #include <QVariant>
 #include <QWaitCondition>
 
+QT_FORWARD_DECLARE_CLASS(WorkerJob)
 QT_FORWARD_DECLARE_CLASS(WorkerObject)
 
 class WorkerManager : public QObject
@@ -26,21 +27,21 @@ signals:
 public slots:
     void clear();
 
-    void enqueueJob(const QString &job);
-    bool dequeueJob(QString &job);
+    void enqueueJob(WorkerJob *job);
+    WorkerJob *dequeueJob();
 
     void workerFinished(WorkerObject *worker);
 
-    virtual void handleWorkerResult(const QString &job,
-                                    const QVariant &result) = 0;
+    virtual void handleWorkerResult(WorkerJob *job) = 0;
 
 protected:
-    virtual WorkerObject *createWorker() = 0;
+    virtual WorkerObject *createWorker();
+
+    bool aborted() const { return m_aborted; }
+    void abort();
 
 private:
     void setupWorker();
-
-    void abort();
 
 private:
     volatile bool m_aborted;
@@ -49,7 +50,7 @@ private:
 
     QList<WorkerObject *> m_workers;
 
-    QQueue<QString> m_queue;
+    QQueue<WorkerJob *> m_jobQueue;
 
     QMutex m_mutex;
     QWaitCondition m_waitCondition;

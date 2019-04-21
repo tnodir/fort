@@ -1,6 +1,7 @@
 #include "apputil.h"
 
 #include <QDir>
+#include <QPixmap>
 
 #include <comdef.h>
 #include <commctrl.h>
@@ -45,7 +46,7 @@ QPixmap extractShellIcon(const QString &appPath)
     const HRESULT hr = SHGetFileInfoW(appPathW, 0, &info,
                                       sizeof(SHFILEINFOW), flags);
     if (SUCCEEDED(hr)) {
-        pixmap = pixmapFromImageList(SHIL_JUMBO, info);
+        pixmap = pixmapFromImageList(SHIL_EXTRALARGE, info);
     }
 
     return pixmap;
@@ -124,9 +125,11 @@ bool extractVersionInfo(const QString &appPath, AppInfo &appInfo)
 
 bool AppUtil::getInfo(const QString &appPath, AppInfo &appInfo)
 {
-    if (extractVersionInfo(appPath, appInfo)) {
-        appInfo.icon = extractShellIcon(appPath);
-        return true;
-    }
-    return false;
+    return extractVersionInfo(appPath, appInfo);
+}
+
+QImage AppUtil::getIcon(const QString &appPath)
+{
+    return extractShellIcon(appPath)
+            .toImage();
 }

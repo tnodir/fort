@@ -7,6 +7,7 @@
 
 #include "appinfo.h"
 
+QT_FORWARD_DECLARE_CLASS(AppIconProvider)
 QT_FORWARD_DECLARE_CLASS(AppInfoManager)
 
 class AppInfoCache : public QObject
@@ -19,11 +20,13 @@ public:
 
     bool infoTrigger() const { return true; }
 
+    AppInfoManager *manager() const { return m_manager; }
+
 signals:
     void cacheChanged();
 
 public slots:
-    AppInfo *appInfo(const QString &appPath);
+    AppInfo appInfo(const QString &appPath);
 
 private slots:
     void handleFinishedLookup(const QString &appPath,

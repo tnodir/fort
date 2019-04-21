@@ -1,23 +1,29 @@
 #include "workerobject.h"
 
+#include "workerjob.h"
 #include "workermanager.h"
 
 WorkerObject::WorkerObject(WorkerManager *manager) :
-    m_aborted(false),
     m_manager(manager)
 {
 }
 
 void WorkerObject::run()
 {
-    while (!aborted()) {
-        QString job;
-
-        if (!manager()->dequeueJob(job))
+    for (; ; ) {
+        WorkerJob *job = manager()->dequeueJob();
+        if (job == nullptr)
             break;
 
         doJob(job);
     }
 
     manager()->workerFinished(this);
+}
+
+void WorkerObject::doJob(WorkerJob *job)
+{
+    job->doJob();
+
+    manager()->handleWorkerResult(job);
 }

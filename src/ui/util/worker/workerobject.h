@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QRunnable>
 
+QT_FORWARD_DECLARE_CLASS(WorkerJob)
 QT_FORWARD_DECLARE_CLASS(WorkerManager)
 
 class WorkerObject : public QRunnable
@@ -13,17 +14,12 @@ public:
 
     WorkerManager *manager() const { return m_manager; }
 
-    bool aborted() const { return m_aborted; }
-    virtual void abort() { m_aborted = true; }
-
     void run() override;
 
 protected:
-    virtual void doJob(const QString &job) = 0;
+    virtual void doJob(WorkerJob *job);
 
 private:
-    volatile bool m_aborted;
-
     WorkerManager *m_manager;
 };
 

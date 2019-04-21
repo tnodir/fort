@@ -16,11 +16,7 @@ signals:
 public slots:
     void lookupHost(const QString &address);
 
-    void handleWorkerResult(const QString &address,
-                            const QVariant &hostName) override;
-
-protected:
-    WorkerObject *createWorker() override;
+    void handleWorkerResult(WorkerJob *workerJob) override;
 };
 
 #endif // HOSTINFOMANAGER_H

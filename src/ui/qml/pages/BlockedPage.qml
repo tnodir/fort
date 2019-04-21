@@ -15,12 +15,12 @@ BasePage {
     readonly property Item currentAppItem:
         appListView.hasCurrentItem ? appListView.currentItem : null
     readonly property string currentAppPath:
-        (currentAppItem && currentAppItem.displayText) || ""
+        (currentAppItem && currentAppItem.appPath) || ""
 
     readonly property Item currentIpItem:
         ipListView.hasCurrentItem ? ipListView.currentItem : null
     readonly property string currentIpText:
-        (currentIpItem && currentIpItem.displayText) || ""
+        (currentIpItem && currentIpItem.ipAddress) || ""
     readonly property string currentHostName:
         (currentIpItem && currentIpItem.hostName) || ""
 

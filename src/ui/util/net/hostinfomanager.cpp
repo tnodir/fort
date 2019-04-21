@@ -1,6 +1,6 @@
 #include "hostinfomanager.h"
 
-#include "hostinfoworker.h"
+#include "hostinfojob.h"
 
 HostInfoManager::HostInfoManager(QObject *parent) :
     WorkerManager(parent)
@@ -10,18 +10,18 @@ HostInfoManager::HostInfoManager(QObject *parent) :
     QSysInfo::machineHostName();  // Initialize ws2_32.dll
 }
 
-WorkerObject *HostInfoManager::createWorker()
-{
-    return new HostInfoWorker(this);
-}
-
 void HostInfoManager::lookupHost(const QString &address)
 {
-    enqueueJob(address);
+    enqueueJob(new HostInfoJob(address));
 }
 
-void HostInfoManager::handleWorkerResult(const QString &address,
-                                         const QVariant &hostName)
+void HostInfoManager::handleWorkerResult(WorkerJob *workerJob)
 {
-    emit lookupFinished(address, hostName.toString());
+    if (!aborted()) {
+        auto job = static_cast<HostInfoJob *>(workerJob);
+
+        emit lookupFinished(job->address(), job->hostName);
+    }
+
+    delete workerJob;
 }

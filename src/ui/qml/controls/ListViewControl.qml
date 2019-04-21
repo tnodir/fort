@@ -9,10 +9,6 @@ ListView {
     readonly property bool hasCurrentItem:
         currentIndex >= 0 && currentIndex < count && !!currentItem
 
-    readonly property string currentItemText:
-        (currentIndex >= 0 && currentIndex < count && currentItem)
-        ? currentItem.displayText : ""
-
     Keys.onUpPressed: decrementCurrentIndex()
     Keys.onDownPressed: incrementCurrentIndex()
 

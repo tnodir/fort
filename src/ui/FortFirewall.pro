@@ -1,4 +1,4 @@
-QT += core gui qml widgets
+QT += core gui qml quick widgets
 
 CONFIG += c++11
 
@@ -46,8 +46,10 @@ SOURCES += \
     task/taskupdatechecker.cpp \
     task/taskworker.cpp \
     translationmanager.cpp \
+    util/app/appiconprovider.cpp \
     util/app/appinfo.cpp \
     util/app/appinfocache.cpp \
+    util/app/appinfojob.cpp \
     util/app/appinfomanager.cpp \
     util/app/appinfoworker.cpp \
     util/app/apputil.cpp \
@@ -62,8 +64,8 @@ SOURCES += \
     util/nativeeventfilter.cpp \
     util/net/hostinfo.cpp \
     util/net/hostinfocache.cpp \
+    util/net/hostinfojob.cpp \
     util/net/hostinfomanager.cpp \
-    util/net/hostinfoworker.cpp \
     util/net/ip4range.cpp \
     util/net/netdownloader.cpp \
     util/net/netutil.cpp \
@@ -74,6 +76,7 @@ SOURCES += \
     util/window/widgetwindow.cpp \
     util/window/widgetwindowstatewatcher.cpp \
     util/window/windowstatewatcher.cpp \
+    util/worker/workerjob.cpp \
     util/worker/workermanager.cpp \
     util/worker/workerobject.cpp
 
@@ -113,8 +116,10 @@ HEADERS += \
     task/taskupdatechecker.h \
     task/taskworker.h \
     translationmanager.h \
+    util/app/appiconprovider.h \
     util/app/appinfo.h \
     util/app/appinfocache.h \
+    util/app/appinfojob.h \
     util/app/appinfomanager.h \
     util/app/appinfoworker.h \
     util/app/apputil.h \
@@ -129,8 +134,8 @@ HEADERS += \
     util/nativeeventfilter.h \
     util/net/hostinfo.h \
     util/net/hostinfocache.h \
+    util/net/hostinfojob.h \
     util/net/hostinfomanager.h \
-    util/net/hostinfoworker.h \
     util/net/ip4range.h \
     util/net/netdownloader.h \
     util/net/netutil.h \
@@ -141,6 +146,7 @@ HEADERS += \
     util/window/widgetwindow.h \
     util/window/widgetwindowstatewatcher.h \
     util/window/windowstatewatcher.h \
+    util/worker/workerjob.h \
     util/worker/workermanager.h \
     util/worker/workerobject.h
 
@@ -168,8 +174,8 @@ OTHER_FILES += \
     util/app/migrations/*.sql
 
 RESOURCES += \
-    db/migrations.qrc \
-    util/app/migrations.qrc
+    db/db-migrations.qrc \
+    util/app/app-migrations.qrc
 
 # Shadow Build: Copy i18n/ to build path
 !equals(PWD, $${OUT_PWD}) {

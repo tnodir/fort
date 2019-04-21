@@ -17,7 +17,7 @@ AppInfoCache::AppInfoCache(QObject *parent) :
             this, &AppInfoCache::cacheChanged);
 }
 
-AppInfo *AppInfoCache::appInfo(const QString &appPath)
+AppInfo AppInfoCache::appInfo(const QString &appPath)
 {
     AppInfo *appInfo = m_cache.object(appPath);
 
@@ -25,10 +25,10 @@ AppInfo *AppInfoCache::appInfo(const QString &appPath)
         appInfo = new AppInfo();
 
         m_cache.insert(appPath, appInfo, 1);
-        m_manager->lookupApp(appPath);
+        m_manager->lookupAppInfo(appPath);
     }
 
-    return appInfo;
+    return *appInfo;
 }
 
 void AppInfoCache::handleFinishedLookup(const QString &appPath,

@@ -1,22 +1,22 @@
 PRAGMA user_version = 1;
 
-PRAGMA journal_mode=WAL;
+PRAGMA journal_mode = WAL;
 
-CREATE TABLE IF NOT EXISTS app(
+CREATE TABLE app(
   path TEXT PRIMARY KEY,
   file_descr TEXT,
   company_name TEXT,
   product_name TEXT,
   product_ver TEXT,
   icon_id INTEGER,
-  access_time DATETIME DEFAULT datetime('now')
+  access_time DATETIME
 ) WITHOUT ROWID;
 
 CREATE INDEX idx_app_access_time ON app(access_time);
 
-CREATE TABLE IF NOT EXISTS icon(
+CREATE TABLE icon(
   icon_id INTEGER PRIMARY KEY,
-  ref_count INTEGER NOT NULL DEFAULT 1,
+  ref_count INTEGER NOT NULL,
   hash INTEGER NOT NULL,
   image BLOB NOT NULL
 );
