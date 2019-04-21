@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v2.7.0, 2019-04-21:
+- UI: Show app names & icons.
+- UI: BlockedPage: Fix host names updating.
+- Update to SQLite v3.28.0
+
 v2.6.1, 2019-04-10:
 - Driver: SHA-1 signing for Windows 7.
 - Driver: Add details info.
