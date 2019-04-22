@@ -144,9 +144,9 @@ BasePage {
             }
         }
 
-        TextFieldFrame {
+        AppInfoRow {
             Layout.fillWidth: true
-            text: currentAppPath || ""
+            appPath: currentAppPath
         }
     }
 }

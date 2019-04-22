@@ -1,5 +1,8 @@
 #include "osutil.h"
 
+#include <QDir>
+#include <QProcess>
+
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 
@@ -14,6 +17,14 @@ QString OsUtil::pidToPath(quint32 pid, bool isKernelPath)
 {
     const ProcessInfo pi(pid);
     return pi.path(isKernelPath);
+}
+
+void OsUtil::openFolder(const QString &filePath)
+{
+    const QString nativePath = QDir::toNativeSeparators(filePath);
+
+    QProcess::execute(QString("explorer.exe /select,%1")
+                      .arg(nativePath));
 }
 
 bool OsUtil::createGlobalMutex(const char *name)

@@ -35,6 +35,7 @@
         <file>qml/pages/apps/AppsColumn.qml</file>
         <file>qml/pages/apps/AppsTextColumn.qml</file>
         <file>qml/pages/apps/GroupOptionsButton.qml</file>
+        <file>qml/pages/log/AppInfoRow.qml</file>
         <file>qml/pages/log/AppListView.qml</file>
         <file>qml/pages/log/GraphButton.qml</file>
         <file>qml/pages/log/IpListView.qml</file>
