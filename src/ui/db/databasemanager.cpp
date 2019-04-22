@@ -22,7 +22,7 @@ namespace {
 
 bool migrateFunc(SqliteDb *db, int version, void *ctx)
 {
-    Q_UNUSED(ctx);
+    Q_UNUSED(ctx)
 
     if (version == 2) {
         // Fix statistics dates to use UTC

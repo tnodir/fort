@@ -13,7 +13,7 @@
 Q_DECLARE_LOGGING_CATEGORY(CLOG_APPINFOCACHE)
 Q_LOGGING_CATEGORY(CLOG_APPINFOCACHE, "fort.appInfoWorker")
 
-#define DATABASE_USER_VERSION   1
+#define DATABASE_USER_VERSION   2
 
 #define APP_CACHE_MAX_COUNT     2000
 
@@ -76,6 +76,25 @@ const char * const sqlDeleteApp =
         "DELETE FROM app WHERE path = ?1;"
         ;
 
+bool migrateFunc(SqliteDb *db, int version, void *ctx)
+{
+    Q_UNUSED(db)
+
+    AppInfoManager *manager = static_cast<AppInfoManager *>(ctx);
+    bool res = true;
+
+    if (version == 2) {
+        // Delete "System" app
+        const char * const sqlSelectAppSystem =
+                "SELECT path, icon_id FROM app"
+                "  WHERE path = 'System';"
+                ;
+        res = manager->deleteApps(sqlSelectAppSystem);
+    }
+
+    return res;
+}
+
 }
 
 AppInfoManager::AppInfoManager(QObject *parent) :
@@ -107,7 +126,8 @@ void AppInfoManager::setupDb()
         return;
     }
 
-    if (!m_sqliteDb->migrate(":/appinfocache/migrations", DATABASE_USER_VERSION)) {
+    if (!m_sqliteDb->migrate(":/appinfocache/migrations", DATABASE_USER_VERSION,
+                             &migrateFunc, this)) {
         qCritical(CLOG_APPINFOCACHE()) << "Migration error" << filePath;
         return;
     }
@@ -235,14 +255,14 @@ bool AppInfoManager::saveToDb(const QString &appPath, AppInfo &appInfo,
         const int excessCount = appCount - APP_CACHE_MAX_COUNT;
 
         if (excessCount > 0) {
-            shrinkDb(excessCount);
+            deleteApps(sqlSelectAppOlds, excessCount);
         }
     }
 
     return ok;
 }
 
-void AppInfoManager::shrinkDb(int excessCount)
+bool AppInfoManager::deleteApps(const char *sql, int limitCount)
 {
     QStringList appPaths;
     QHash<qint64, int> iconIds;
@@ -254,17 +274,19 @@ void AppInfoManager::shrinkDb(int excessCount)
     // Get old app info list
     {
         SqliteStmt stmt;
-        if (stmt.prepare(m_sqliteDb->db(), sqlSelectAppOlds,
-                         SqliteStmt::PreparePersistent)
-                && stmt.bindInt(1, excessCount)) {
+        if (stmt.prepare(m_sqliteDb->db(), sql,
+                         SqliteStmt::PreparePersistent)) {
+            if (limitCount != 0) {
+                stmt.bindInt(1, limitCount);
+            }
 
             while (stmt.step() == SqliteStmt::StepRow) {
                 const QString appPath = stmt.columnText(0);
                 appPaths.append(appPath);
 
                 const qint64 iconId = stmt.columnInt64(1);
-                const int iconCount = iconIds.value(iconId);
-                iconIds.insert(iconId, iconCount + 1);
+                const int iconCount = iconIds.value(iconId) + 1;
+                iconIds.insert(iconId, iconCount);
             }
 
             ok = true;
@@ -273,7 +295,7 @@ void AppInfoManager::shrinkDb(int excessCount)
 
     // Delete old icons
     auto iconIt = iconIds.constBegin();
-    while (iconIt != iconIds.constEnd()) {
+    for (; iconIt != iconIds.constEnd(); ++iconIt) {
         const qint64 iconId = iconIt.key();
         const int count = iconIt.value();
 
@@ -297,4 +319,6 @@ void AppInfoManager::shrinkDb(int excessCount)
 
  end:
     m_sqliteDb->endTransaction(ok);
+
+    return ok;
 }
