@@ -71,7 +71,7 @@ Page {
         tabBar.currentItem.forceActiveFocus();
     }
 
-    header: TabBar {
+    header: TabBarControl {
         id: tabBar
         currentIndex: swipeView.currentIndex
 

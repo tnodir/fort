@@ -188,7 +188,7 @@ BasePage {
                     Layout.fillHeight: true
                     spacing: 10
 
-                    TabBar {
+                    TabBarControl {
                         id: tabBar
                         Layout.fillWidth: true
 

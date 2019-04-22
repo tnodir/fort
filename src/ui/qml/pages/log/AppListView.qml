@@ -19,21 +19,24 @@ ListViewControl {
         width: appListView.width
         spacing: 6
 
-        readonly property string appPath: display
+        readonly property bool isCurrent: ListView.isCurrentItem
+        readonly property int iconWidth: isCurrent ? 32 : 22
 
+        readonly property string appPath: display
         readonly property var appInfo:
             appInfoCache.infoTrigger && appInfoCache.appInfo(appPath)
 
         Image {
             Layout.topMargin: 1
-            Layout.preferredWidth: 22
-            Layout.preferredHeight: 22
+            Layout.preferredWidth: appItem.iconWidth
+            Layout.preferredHeight: appItem.iconWidth
             source: (!appItem.appPath && emptyIcon)
                     || appInfo.iconPath
                     || "qrc:/images/application.png"
         }
         Label {
             Layout.fillWidth: true
+            color: appItem.isCurrent ? palette.highlight : palette.windowText
             font.pixelSize: 18
             elide: Text.ElideRight
             text: (!appItem.appPath && emptyText)

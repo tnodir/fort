@@ -109,7 +109,7 @@ BasePage {
             }
         }
 
-        TabBar {
+        TabBarControl {
             id: barGroups
             Layout.fillWidth: true
             clip: true

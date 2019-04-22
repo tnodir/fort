@@ -19,12 +19,12 @@ ListView {
 
     highlight: Item {
         Rectangle {
-            anchors.fill: parent
-            anchors.margins: 1 - listView.spacing / 2 - border.width
-            radius: 2
-            border.width: 3
-            border.color: palette.highlight
-            color: "transparent"
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            anchors.margins: -8
+            width: 3
+            color: palette.highlight
         }
     }
 

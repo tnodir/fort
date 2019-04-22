@@ -16,6 +16,7 @@
         <file>qml/controls/SpinDouble.qml</file>
         <file>qml/controls/SpinDoubleRow.qml</file>
         <file>qml/controls/SwipeViewControl.qml</file>
+        <file>qml/controls/TabBarControl.qml</file>
         <file>qml/controls/TextAreaFrame.qml</file>
         <file>qml/controls/TextContextMenu.qml</file>
         <file>qml/controls/TextFieldFrame.qml</file>

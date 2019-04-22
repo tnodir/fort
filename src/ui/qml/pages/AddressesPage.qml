@@ -10,7 +10,7 @@ BasePage {
     ColumnLayout {
         anchors.fill: parent
 
-        TabBar {
+        TabBarControl {
             id: barGroups
             Layout.fillWidth: true
 
