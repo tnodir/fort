@@ -121,15 +121,29 @@ bool extractVersionInfo(const QString &appPath, AppInfo &appInfo)
     return true;
 }
 
+bool isSystemApp(const QString &appPath)
+{
+    return appPath.compare("System", Qt::CaseInsensitive) == 0;
+}
+
 }
 
 bool AppUtil::getInfo(const QString &appPath, AppInfo &appInfo)
 {
+    if (isSystemApp(appPath)) {
+        appInfo.fileDescription = appPath;
+        return true;
+    }
+
     return extractVersionInfo(appPath, appInfo);
 }
 
 QImage AppUtil::getIcon(const QString &appPath)
 {
+    if (isSystemApp(appPath)) {
+        return QImage(":/images/windows-48.png");
+    }
+
     return extractShellIcon(appPath)
             .toImage();
 }
