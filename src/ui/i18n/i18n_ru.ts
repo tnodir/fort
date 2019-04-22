@@ -50,42 +50,42 @@
 <context>
     <name>FortManager</name>
     <message>
-        <location filename="../fortmanager.cpp" line="383"/>
+        <location filename="../fortmanager.cpp" line="392"/>
         <source>Password input</source>
         <translation>Ввод пароля</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="383"/>
+        <location filename="../fortmanager.cpp" line="392"/>
         <source>Please enter the password</source>
         <translation>Наберите пароль пожалуйста</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="608"/>
+        <location filename="../fortmanager.cpp" line="617"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="613"/>
+        <location filename="../fortmanager.cpp" line="622"/>
         <source>Traffic Graph</source>
         <translation>График трафика</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="623"/>
+        <location filename="../fortmanager.cpp" line="632"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="630"/>
+        <location filename="../fortmanager.cpp" line="639"/>
         <source>Stop Traffic</source>
         <translation>Остановить трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="637"/>
+        <location filename="../fortmanager.cpp" line="646"/>
         <source>Stop Internet Traffic</source>
         <translation>Остановить Интернет трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="665"/>
+        <location filename="../fortmanager.cpp" line="674"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -93,17 +93,17 @@
 <context>
     <name>FortSettings</name>
     <message>
-        <location filename="../fortsettings.cpp" line="210"/>
+        <location filename="../fortsettings.cpp" line="211"/>
         <source>Can&apos;t write .ini file</source>
         <translation>Не удалось записать .ini файл</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="225"/>
+        <location filename="../fortsettings.cpp" line="226"/>
         <source>Can&apos;t create .conf file</source>
         <translation>Не удалось создать .conf файл</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="220"/>
+        <location filename="../fortsettings.cpp" line="221"/>
         <source>Can&apos;t create backup .conf file</source>
         <translation>Не удалось создать бэкап .conf файла</translation>
     </message>
@@ -212,50 +212,50 @@
         <translation>Выделить всё</translation>
     </message>
     <message>
-        <location filename="../qml/pages/BlockedPage.qml" line="41"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="40"/>
         <location filename="../qml/pages/StatisticsPage.qml" line="78"/>
         <source>Clear…</source>
         <translation>Очистить…</translation>
     </message>
     <message>
-        <location filename="../qml/pages/BlockedPage.qml" line="46"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="45"/>
         <location filename="../qml/pages/StatisticsPage.qml" line="83"/>
         <source>Remove Application</source>
         <translation>Удалить приложение</translation>
     </message>
     <message>
-        <location filename="../qml/pages/BlockedPage.qml" line="52"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="51"/>
         <location filename="../qml/pages/StatisticsPage.qml" line="94"/>
         <source>Clear All</source>
         <translation>Очистить всё</translation>
     </message>
     <message>
-        <location filename="../qml/pages/BlockedPage.qml" line="65"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="64"/>
         <source>Copy…</source>
         <translation>Копировать…</translation>
     </message>
     <message>
-        <location filename="../qml/pages/BlockedPage.qml" line="70"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="69"/>
         <source>Application Path</source>
         <translation>Путь приложения</translation>
     </message>
     <message>
-        <location filename="../qml/pages/BlockedPage.qml" line="76"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="75"/>
         <source>IP Address</source>
         <translation>IP Адрес</translation>
     </message>
     <message>
-        <location filename="../qml/pages/BlockedPage.qml" line="82"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="81"/>
         <source>Host name</source>
         <translation>Имя хоста</translation>
     </message>
     <message>
-        <location filename="../qml/pages/BlockedPage.qml" line="89"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="88"/>
         <source>Show host names</source>
         <translation>Показ имён хостов</translation>
     </message>
     <message>
-        <location filename="../qml/pages/BlockedPage.qml" line="110"/>
+        <location filename="../qml/pages/BlockedPage.qml" line="107"/>
         <source>Show Blocked Applications</source>
         <translation>Показ блокированных приложений</translation>
     </message>
@@ -391,11 +391,6 @@
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="196"/>
-        <source>Quit</source>
-        <translation>Выйти</translation>
-    </message>
-    <message>
         <location filename="../qml/pages/OptionsPage.qml" line="49"/>
         <source>Start with Windows</source>
         <translation>Запускать вместе с Windows</translation>
@@ -432,13 +427,13 @@
     </message>
     <message>
         <location filename="../qml/pages/OptionsPage.qml" line="156"/>
-        <location filename="../qml/pages/OptionsPage.qml" line="209"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="210"/>
         <source>Installed</source>
         <translation>Установлен</translation>
     </message>
     <message>
         <location filename="../qml/pages/OptionsPage.qml" line="157"/>
-        <location filename="../qml/pages/OptionsPage.qml" line="210"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="211"/>
         <source>Not Installed</source>
         <translation>Не установлен</translation>
     </message>
@@ -448,17 +443,17 @@
         <translation>Язык:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="201"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="202"/>
         <source>Driver:</source>
         <translation>Драйвер:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="219"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="220"/>
         <source>Install</source>
         <translation>Установить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/OptionsPage.qml" line="224"/>
+        <location filename="../qml/pages/OptionsPage.qml" line="225"/>
         <source>Remove</source>
         <translation>Удалить</translation>
     </message>
@@ -803,6 +798,11 @@
         <location filename="../qml/pages/log/GraphButton.qml" line="165"/>
         <source>Grid</source>
         <translation>Сетка</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/log/AppInfoRow.qml" line="21"/>
+        <source>Open Folder</source>
+        <translation>Открыть папку</translation>
     </message>
 </context>
 </TS>
