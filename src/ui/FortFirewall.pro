@@ -150,6 +150,8 @@ HEADERS += \
     util/worker/workermanager.h \
     util/worker/workerobject.h
 
+include(../common/Common.pri)
+
 QML_FILES += \
     qml/*.qml \
     qml/controls/*.qml \
