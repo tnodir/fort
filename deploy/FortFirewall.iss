@@ -1,8 +1,6 @@
 
 #include AddBackslash(SourcePath) + "..\src\common\version.h"
 
-#define APP_PUBLISHER	"Nodir Temirkhodjaev"
-#define APP_URL		"https://github.com/tnodir"
 #define APP_EXE_NAME	"FortFirewall.exe"
 
 [Setup]
@@ -12,8 +10,9 @@
 AppMutex={#APP_NAME}
 AppName={#APP_NAME}
 AppVersion={#APP_VERSION_STR}
+VersionInfoVersion={#APP_VERSION_STR}
 AppVerName={#APP_NAME}
-AppCopyright=Copyright (C) 2015 Nodir Temirkhodjaev
+AppCopyright={#APP_LEGALCOPYRIGHT}
 AppPublisher={#APP_PUBLISHER}
 AppPublisherURL={#APP_URL}
 AppSupportURL={#APP_URL}

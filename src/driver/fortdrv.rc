@@ -8,7 +8,7 @@
 #define VER_PRODUCTVERSION          VER_FILEVERSION
 #define VER_PRODUCTVERSION_STR      APP_VERSION_STR
 
-#define VER_COMPANYNAME_STR         "Nodir Temirkhodjaev"
+#define VER_COMPANYNAME_STR         APP_PUBLISHER
 #define VER_FILEDESCRIPTION_STR     "Fort Firewall Driver"
 #define VER_INTERNALNAME_STR        "fortfw"
 #define VER_LEGALCOPYRIGHT_STR      APP_LEGALCOPYRIGHT
