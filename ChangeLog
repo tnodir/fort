@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v2.7.1, 2019-04-24:
+- UI: Special icon for "System" app.
+- UI: Add ability to "Open Folder" of selected app.
+- UI: Tweak selected items highlighting.
+- Windows 7: Fix driver SHA-1 signing.
+
 v2.7.0, 2019-04-21:
 - UI: Show app names & icons.
 - UI: BlockedPage: Fix host names updating.
