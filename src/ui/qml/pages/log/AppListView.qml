@@ -20,7 +20,6 @@ ListViewControl {
         spacing: 6
 
         readonly property bool isCurrent: ListView.isCurrentItem
-        readonly property int iconWidth: isCurrent ? 32 : 22
 
         readonly property string appPath: display
         readonly property var appInfo:
@@ -28,11 +27,15 @@ ListViewControl {
 
         Image {
             Layout.topMargin: 1
-            Layout.preferredWidth: appItem.iconWidth
-            Layout.preferredHeight: appItem.iconWidth
+            Layout.preferredWidth: iconWidth
+            Layout.preferredHeight: iconWidth
             source: (!appItem.appPath && emptyIcon)
                     || appInfo.iconPath
                     || "qrc:/images/application.png"
+
+            property int iconWidth: appItem.isCurrent ? 32 : 22
+
+            Behavior on iconWidth { NumberAnimation { duration: 100 } }
         }
         Label {
             Layout.fillWidth: true
