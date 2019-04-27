@@ -19,10 +19,10 @@ Label {
 
     readonly property alias hovered: ma.containsMouse
 
-    property string tipText
+    property string tipText: truncated ? text : ""
 
     ToolTip.text: tipText
-    ToolTip.visible: bt.hovered
+    ToolTip.visible: bt.hovered && !!tipText
     ToolTip.delay: 500
     ToolTip.timeout: 5000
 

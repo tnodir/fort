@@ -6,15 +6,13 @@ import com.fortfirewall 1.0
 
 RowLayout {
 
+    spacing: 10
     visible: !!appPath
 
     property string appPath
 
-    TextFieldFrame {
-        id: textField
-        Layout.fillWidth: true
-        text: appPath
-    }
+    readonly property var appInfo:
+        appInfoCache.infoTrigger && appInfoCache.appInfo(appPath)
 
     RoundButtonTip {
         icon.source: "qrc:/images/page_copy.png"
@@ -23,10 +21,20 @@ RowLayout {
         onClicked: guiUtil.setClipboardData(appPath)
     }
 
-    RoundButtonTip {
-        icon.source: "qrc:/images/folder_go.png"
-        tipText: translationManager.trTrigger
-                 && qsTranslate("qml", "Open Folder")
+    LinkButton {
+        Layout.fillWidth: true
+        elide: Text.ElideRight
+        text: appPath
         onClicked: osUtil.openFolder(appPath)
+    }
+
+    Label {
+        visible: !!appInfo.productName
+        font.weight: Font.DemiBold
+        text: appInfo.productName + " v" + appInfo.productVersion
+    }
+    Label {
+        visible: !!appInfo.companyName
+        text: appInfo.companyName
     }
 }

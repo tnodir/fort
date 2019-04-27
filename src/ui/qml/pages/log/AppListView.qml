@@ -12,19 +12,8 @@ ListViewControlTip {
     property string emptyText
     property string emptyIcon
 
-    tipText: {
-        var text = "";
-        if (hoveredItem) {
-            const appInfo = hoveredItem.appInfo;
-            if (appInfo.productName) {
-                text = appInfo.productName
-                        + " v" + appInfo.productVersion
-                        + "<br/><font color='gray'>("
-                        + appInfo.companyName + ")</font>";
-            }
-        }
-        return text;
-    }
+    tipText: (hoveredItem && hoveredItem.label.truncated)
+             ? hoveredItem.label.text : ""
 
     onClicked: forceActiveFocus()
 
@@ -32,6 +21,8 @@ ListViewControlTip {
         id: appItem
         width: appListView.width
         spacing: 6
+
+        readonly property alias label: label
 
         readonly property bool isCurrent: ListView.isCurrentItem
 
@@ -52,6 +43,7 @@ ListViewControlTip {
             Behavior on iconWidth { NumberAnimation { duration: 100 } }
         }
         Label {
+            id: label
             Layout.fillWidth: true
             color: appItem.isCurrent ? palette.highlight : palette.windowText
             font.pixelSize: 18

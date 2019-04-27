@@ -50,42 +50,42 @@
 <context>
     <name>FortManager</name>
     <message>
-        <location filename="../fortmanager.cpp" line="392"/>
+        <location filename="../fortmanager.cpp" line="401"/>
         <source>Password input</source>
         <translation>Ввод пароля</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="392"/>
+        <location filename="../fortmanager.cpp" line="401"/>
         <source>Please enter the password</source>
         <translation>Наберите пароль пожалуйста</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="617"/>
+        <location filename="../fortmanager.cpp" line="626"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="622"/>
+        <location filename="../fortmanager.cpp" line="631"/>
         <source>Traffic Graph</source>
         <translation>График трафика</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="632"/>
+        <location filename="../fortmanager.cpp" line="641"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="639"/>
+        <location filename="../fortmanager.cpp" line="648"/>
         <source>Stop Traffic</source>
         <translation>Остановить трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="646"/>
+        <location filename="../fortmanager.cpp" line="655"/>
         <source>Stop Internet Traffic</source>
         <translation>Остановить Интернет трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="674"/>
+        <location filename="../fortmanager.cpp" line="683"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -800,14 +800,9 @@
         <translation>Сетка</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/AppInfoRow.qml" line="22"/>
+        <location filename="../qml/pages/log/AppInfoRow.qml" line="44"/>
         <source>Copy Path</source>
         <translation>Копировать Путь</translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/log/AppInfoRow.qml" line="29"/>
-        <source>Open Folder</source>
-        <translation>Открыть папку</translation>
     </message>
 </context>
 </TS>
