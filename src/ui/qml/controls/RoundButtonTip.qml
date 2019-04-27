@@ -5,12 +5,10 @@ RoundButton {
     id: bt
     hoverEnabled: true
 
-    property alias tipText: toolTip.text
+    property string tipText
 
-    ToolTip {
-        id: toolTip
-        visible: bt.hovered
-        delay: 500
-        timeout: 5000
-    }
+    ToolTip.text: tipText
+    ToolTip.visible: bt.hovered
+    ToolTip.delay: 500
+    ToolTip.timeout: 5000
 }

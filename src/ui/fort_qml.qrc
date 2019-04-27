@@ -8,6 +8,7 @@
         <file>qml/controls/LabelSpinRow.qml</file>
         <file>qml/controls/LinkButton.qml</file>
         <file>qml/controls/ListViewControl.qml</file>
+        <file>qml/controls/ListViewControlTip.qml</file>
         <file>qml/controls/RoundButtonTip.qml</file>
         <file>qml/controls/ScrollBarControl.qml</file>
         <file>qml/controls/SpinBoxControl.qml</file>

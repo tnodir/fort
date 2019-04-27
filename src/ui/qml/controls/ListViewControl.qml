@@ -6,6 +6,8 @@ ListView {
 
     signal clicked(int index)
 
+    readonly property alias mouseArea: mouseArea
+
     readonly property bool hasCurrentItem:
         currentIndex >= 0 && currentIndex < count && !!currentItem
 
@@ -28,17 +30,35 @@ ListView {
         }
     }
 
+    function itemAtContent(mouse) {
+        const posX = listView.contentX + mouse.x;
+        const posY = listView.contentY + mouse.y;
+
+        var item = listView.itemAt(posX, posY);
+        if (!item) {
+            item = listView.itemAt(posX, posY - listView.spacing);
+        }
+
+        return item;
+    }
+
+    function indexAtContent(mouse) {
+        const posX = listView.contentX + mouse.x;
+        const posY = listView.contentY + mouse.y;
+
+        var index = listView.indexAt(posX, posY);
+        if (index < 0) {
+            index = listView.indexAt(posX, posY - listView.spacing);
+        }
+
+        return index;
+    }
+
     MouseArea {
+        id: mouseArea
         anchors.fill: parent
         onClicked: {
-            const mouseX = listView.contentX + mouse.x;
-            const mouseY = listView.contentY + mouse.y;
-
-            var index = listView.indexAt(mouseX, mouseY);
-            if (index < 0) {
-                index = listView.indexAt(mouseX, mouseY - listView.spacing);
-            }
-
+            const index = indexAtContent(mouse);
             if (index >= 0) {
                 listView.currentIndex = index;
                 listView.clicked(index);

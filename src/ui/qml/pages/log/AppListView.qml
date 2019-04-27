@@ -4,13 +4,27 @@ import QtQuick.Layouts 1.12
 import "../../controls"
 import com.fortfirewall 1.0
 
-ListViewControl {
+ListViewControlTip {
     id: appListView
 
     spacing: 10
 
     property string emptyText
     property string emptyIcon
+
+    tipText: {
+        var text = "";
+        if (hoveredItem) {
+            const appInfo = hoveredItem.appInfo;
+            if (appInfo.productName) {
+                text = "<b>" + appInfo.productName
+                        + " v" + appInfo.productVersion
+                        + "</b><br/><font color='darkblue'>"
+                        + appInfo.companyName + "</font>";
+            }
+        }
+        return text;
+    }
 
     onClicked: forceActiveFocus()
 
