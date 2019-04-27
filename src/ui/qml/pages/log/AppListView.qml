@@ -17,10 +17,10 @@ ListViewControlTip {
         if (hoveredItem) {
             const appInfo = hoveredItem.appInfo;
             if (appInfo.productName) {
-                text = "<b>" + appInfo.productName
+                text = appInfo.productName
                         + " v" + appInfo.productVersion
-                        + "</b><br/><font color='darkblue'>"
-                        + appInfo.companyName + "</font>";
+                        + "<br/><font color='gray'>("
+                        + appInfo.companyName + ")</font>";
             }
         }
         return text;
