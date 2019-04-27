@@ -7,6 +7,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QSystemTrayIcon>
+#include <QThreadPool>
 #include <QTimer>
 #include <QWindow>
 
@@ -63,6 +64,8 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_taskManager(new TaskManager(this, this)),
     m_appInfoCache(new AppInfoCache(this))
 {
+    setupThreadPool();
+
     setupLogger();
     setupDatabaseManager();
 
@@ -124,6 +127,12 @@ void FortManager::registerQmlTypes()
     qmlRegisterType<NetUtil>("com.fortfirewall", 1, 0, "NetUtil");
     qmlRegisterType<OsUtil>("com.fortfirewall", 1, 0, "OsUtil");
     qmlRegisterType<StringUtil>("com.fortfirewall", 1, 0, "StringUtil");
+}
+
+void FortManager::setupThreadPool()
+{
+    QThreadPool::globalInstance()->setMaxThreadCount(
+                qMin(8, QThread::idealThreadCount() * 2));
 }
 
 void FortManager::installDriver()

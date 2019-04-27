@@ -53,7 +53,7 @@ QPixmap extractShellIcon(const QString &appPath)
 }
 
 QString extractInfoText(LPVOID infoData, const WORD *langInfo,
-                               const WCHAR *name)
+                        const WCHAR *name)
 {
     WCHAR verStrName[128];
     wsprintfW(verStrName, L"\\StringFileInfo\\%04x%04x\\%s",
@@ -130,6 +130,9 @@ bool isSystemApp(const QString &appPath)
 
 bool AppUtil::getInfo(const QString &appPath, AppInfo &appInfo)
 {
+    if (appPath.isEmpty())
+        return false;
+
     if (isSystemApp(appPath)) {
         appInfo.fileDescription = appPath;
         return true;
@@ -140,6 +143,9 @@ bool AppUtil::getInfo(const QString &appPath, AppInfo &appInfo)
 
 QImage AppUtil::getIcon(const QString &appPath)
 {
+    if (appPath.isEmpty())
+        return {};
+
     if (isSystemApp(appPath)) {
         return QImage(":/images/windows-48.png");
     }

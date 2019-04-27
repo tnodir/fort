@@ -166,6 +166,9 @@ QImage AppInfoManager::loadIconFromFs(const QString &appPath)
 
 bool AppInfoManager::loadInfoFromDb(const QString &appPath, AppInfo &appInfo)
 {
+    if (appPath.isEmpty())
+        return false;
+
     QMutexLocker locker(&m_mutex);
 
     const QVariantList vars = QVariantList() << appPath;

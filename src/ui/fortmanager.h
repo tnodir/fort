@@ -91,6 +91,8 @@ private:
 
     static void registerQmlTypes();
 
+    void setupThreadPool();
+
     bool setupDriver();
     void closeDriver();
 
