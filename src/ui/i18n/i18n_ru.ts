@@ -800,7 +800,12 @@
         <translation>Сетка</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/AppInfoRow.qml" line="21"/>
+        <location filename="../qml/pages/log/AppInfoRow.qml" line="22"/>
+        <source>Copy Path</source>
+        <translation>Копировать Путь</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/log/AppInfoRow.qml" line="29"/>
         <source>Open Folder</source>
         <translation>Открыть папку</translation>
     </message>

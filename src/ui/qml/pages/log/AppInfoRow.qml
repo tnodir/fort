@@ -11,8 +11,16 @@ RowLayout {
     property string appPath
 
     TextFieldFrame {
+        id: textField
         Layout.fillWidth: true
         text: appPath
+    }
+
+    RoundButtonTip {
+        icon.source: "qrc:/images/page_copy.png"
+        tipText: translationManager.trTrigger
+                 && qsTranslate("qml", "Copy Path")
+        onClicked: guiUtil.setClipboardData(appPath)
     }
 
     RoundButtonTip {
