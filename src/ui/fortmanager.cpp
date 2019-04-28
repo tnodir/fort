@@ -132,7 +132,7 @@ void FortManager::registerQmlTypes()
 void FortManager::setupThreadPool()
 {
     QThreadPool::globalInstance()->setMaxThreadCount(
-                qMin(8, QThread::idealThreadCount() * 2));
+                qMax(8, QThread::idealThreadCount() * 2));
 }
 
 void FortManager::installDriver()
