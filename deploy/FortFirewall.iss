@@ -25,6 +25,7 @@ AllowNoIcons=yes
 OutputBaseFilename=FortFirewall-{#APP_VERSION_STR}
 Uninstallable=not IsTaskSelected('portable')
 UninstallFilesDir={app}\uninst
+;UninstallDisplayIcon={app}\{#APP_EXE_NAME}
 ArchitecturesInstallIn64BitMode=x64
 Compression=lzma2/ultra
 SolidCompression=yes
