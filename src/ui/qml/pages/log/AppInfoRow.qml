@@ -23,7 +23,7 @@ RowLayout {
 
     LinkButton {
         Layout.fillWidth: true
-        elide: Text.ElideRight
+        elide: Text.ElideLeft
         text: appPath
         onClicked: osUtil.openFolder(appPath)
     }
