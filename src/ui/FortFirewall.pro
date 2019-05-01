@@ -154,6 +154,7 @@ include(../common/Common.pri)
 
 QML_FILES += \
     qml/*.qml \
+    qml/box/*.qml \
     qml/controls/*.qml \
     qml/pages/*.qml \
     qml/pages/addresses/*.qml \

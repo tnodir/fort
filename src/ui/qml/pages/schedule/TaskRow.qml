@@ -80,13 +80,16 @@ Row {
         width: taskCellWidths[5]
         height: parent.height
 
-        RoundButton {
+        RoundButtonTipSmall {
             id: btRun
             anchors.centerIn: parent
             width: 30
             height: width
             icon.source: taskInfo.running ? "qrc:/images/cancel.png"
                                           : "qrc:/images/run.png"
+            tipText: translationManager.trTrigger
+                     && (taskInfo.running ? qsTranslate("qml", "Cancel")
+                                          : qsTranslate("qml", "Run"))
             onClicked: taskInfo.running ? taskInfo.abort()
                                         : taskInfo.run()
         }

@@ -22,3 +22,14 @@ QString StringUtil::cryptoHash(const QString &text)
 
     return QString::fromLatin1(hash.toHex());
 }
+
+int StringUtil::lineStart(const QString &text, int pos)
+{
+    return text.lastIndexOf(QLatin1Char('\n'), pos);
+}
+
+int StringUtil::lineEnd(const QString &text, int pos)
+{
+    const int end = text.indexOf(QLatin1Char('\n'), pos);
+    return (end > -1) ? end : text.size() - 1;
+}

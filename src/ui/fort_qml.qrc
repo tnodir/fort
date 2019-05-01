@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file>qml/box/TextArea2SplitBox.qml</file>
         <file>qml/controls/ButtonMenu.qml</file>
         <file>qml/controls/ButtonPopup.qml</file>
         <file>qml/controls/DelayButtonControl.qml</file>
@@ -10,6 +11,7 @@
         <file>qml/controls/ListViewControl.qml</file>
         <file>qml/controls/ListViewControlTip.qml</file>
         <file>qml/controls/RoundButtonTip.qml</file>
+        <file>qml/controls/RoundButtonTipSmall.qml</file>
         <file>qml/controls/ScrollBarControl.qml</file>
         <file>qml/controls/SpinBoxControl.qml</file>
         <file>qml/controls/SpinCombo.qml</file>

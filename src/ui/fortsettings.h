@@ -18,6 +18,8 @@ class FortSettings : public QObject
     Q_OBJECT
     Q_PROPERTY(bool debug READ debug WRITE setDebug NOTIFY iniChanged)
     Q_PROPERTY(QString language READ language WRITE setLanguage NOTIFY iniChanged)
+    Q_PROPERTY(qreal windowAddrSplit READ windowAddrSplit WRITE setWindowAddrSplit NOTIFY iniChanged)
+    Q_PROPERTY(qreal windowAppsSplit READ windowAppsSplit WRITE setWindowAppsSplit NOTIFY iniChanged)
     Q_PROPERTY(bool graphWindowVisible READ graphWindowVisible WRITE setGraphWindowVisible NOTIFY iniChanged)
     Q_PROPERTY(bool graphWindowAlwaysOnTop READ graphWindowAlwaysOnTop WRITE setGraphWindowAlwaysOnTop NOTIFY iniChanged)
     Q_PROPERTY(bool graphWindowFrameless READ graphWindowFrameless WRITE setGraphWindowFrameless NOTIFY iniChanged)
@@ -65,6 +67,12 @@ public:
 
     bool windowMaximized() const { return iniBool("window/maximized"); }
     void setWindowMaximized(bool on) { setIniValue("window/maximized", on); }
+
+    qreal windowAddrSplit() const { return iniReal("window/addrSplit"); }
+    void setWindowAddrSplit(qreal v) { setIniValue("window/addrSplit", v); }
+
+    qreal windowAppsSplit() const { return iniReal("window/appsSplit"); }
+    void setWindowAppsSplit(qreal v) { setIniValue("window/appsSplit", v); }
 
     bool graphWindowVisible() const { return iniBool("graphWindow/visible"); }
     void setGraphWindowVisible(bool on) { setIniValue("graphWindow/visible", on); }
@@ -190,6 +198,7 @@ private:
     qreal iniReal(const QString &key, qreal defaultValue = 0) const;
     QString iniText(const QString &key, const QString &defaultValue = QString()) const;
     QStringList iniList(const QString &key) const;
+    QVariantMap iniMap(const QString &key) const;
 
     QColor iniColor(const QString &key, const QColor &defaultValue = QColor()) const;
     void setIniColor(const QString &key, const QColor &value,

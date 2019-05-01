@@ -24,6 +24,7 @@ ColumnLayout {
         Layout.preferredWidth: 100
         Layout.fillWidth: true
         Layout.fillHeight: true
+        clip: true
 
         onTextChanged: container.textChanged()
     }

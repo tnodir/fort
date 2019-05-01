@@ -21,11 +21,18 @@ RowLayout {
         onClicked: guiUtil.setClipboardData(appPath)
     }
 
-    LinkButton {
+    Item {
         Layout.fillWidth: true
-        elide: Text.ElideLeft
-        text: appPath
-        onClicked: osUtil.openFolder(appPath)
+        LinkButton {
+            anchors.verticalCenter: parent.verticalCenter
+            width: Math.min(implicitWidth, parent.width)
+            elide: Text.ElideLeft
+            tipText: (translationManager.trTrigger
+                      && qsTranslate("qml", "Open Folder"))
+                     + (truncated ? "<br/>" + text : "")
+            text: appPath
+            onClicked: osUtil.openFolder(appPath)
+        }
     }
 
     Label {

@@ -1,16 +1,32 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
+import "../../box"
 import com.fortfirewall 1.0
 
-RowLayout {
-
-    spacing: 10
+TextArea2SplitBox {
+    id: splitBox
 
     property AddressGroup addressGroup
 
+    textArea1: includeAddresses.textArea
+    textArea2: excludeAddresses.textArea
+
+    textMoveAllFrom1To2: translationManager.trTrigger
+                         && qsTranslate("qml", "Move All Lines to 'Exclude'")
+    textMoveAllFrom2To1: translationManager.trTrigger
+                         && qsTranslate("qml", "Move All Lines to 'Include'")
+    textMoveSelectedFrom1To2: translationManager.trTrigger
+                              && qsTranslate("qml", "Move Selected Lines to 'Exclude'")
+    textMoveSelectedFrom2To1: translationManager.trTrigger
+                              && qsTranslate("qml", "Move Selected Lines to 'Include'")
+
+    settingsPropName: "windowAddrSplit"
+
     AddressesColumn {
         id: includeAddresses
+        SplitView.preferredWidth: splitBox.textArea1Width
+        SplitView.minimumWidth: 250
 
         title {
             text: translationManager.trTrigger
@@ -36,6 +52,7 @@ RowLayout {
 
     AddressesColumn {
         id: excludeAddresses
+        SplitView.minimumWidth: 250
 
         title {
             text: translationManager.trTrigger

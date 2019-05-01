@@ -15,6 +15,10 @@
     <file>images/chart_line.png</file>
     <file>images/clock.png</file>
     <file>images/cog.png</file>
+    <file>images/control_fastforward.png</file>
+    <file>images/control_play.png</file>
+    <file>images/control_play_backward.png</file>
+    <file>images/control_rewind.png</file>
     <file>images/cross.png</file>
     <file>images/cut.png</file>
     <file>images/database_save.png</file>
@@ -29,6 +33,7 @@
     <file>images/run.png</file>
     <file>images/shield.png</file>
     <file>images/sheild-96.png</file>
+    <file>images/stripes-light.png</file>
     <file>images/textfield_rename.png</file>
     <file>images/tick.png</file>
     <file>images/windows-48.png</file>

@@ -47,6 +47,9 @@ public:
 signals:
     void firewallConfToEditChanged();
 
+    void afterSaveWindowState();
+    void afterRestoreWindowState();
+
 public slots:
     void installDriver();
     void removeDriver();

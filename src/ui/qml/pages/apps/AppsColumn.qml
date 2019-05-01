@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
+import "../../box"
 import "../../controls"
 import com.fortfirewall 1.0
 
@@ -90,12 +91,30 @@ ColumnLayout {
         }
     }
 
-    RowLayout {
+    TextArea2SplitBox {
+        id: splitBox
         Layout.fillWidth: true
         Layout.fillHeight: true
-        spacing: 10
+
+        textArea1: blockApps.textArea
+        textArea2: allowApps.textArea
+
+        textMoveAllFrom1To2: translationManager.trTrigger
+                             && qsTranslate("qml", "Move All Lines to 'Allow'")
+        textMoveAllFrom2To1: translationManager.trTrigger
+                             && qsTranslate("qml", "Move All Lines to 'Block'")
+        textMoveSelectedFrom1To2: translationManager.trTrigger
+                                  && qsTranslate("qml", "Move Selected Lines to 'Allow'")
+        textMoveSelectedFrom2To1: translationManager.trTrigger
+                                  && qsTranslate("qml", "Move Selected Lines to 'Block'")
+
+        settingsPropName: "windowAppsSplit"
 
         AppsTextColumn {
+            id: blockApps
+            SplitView.preferredWidth: splitBox.textArea1Width
+            SplitView.minimumWidth: 150
+
             title {
                 text: translationManager.trTrigger
                       && qsTranslate("qml", "Block")
@@ -106,7 +125,7 @@ ColumnLayout {
             }
 
             onTextChanged: {
-                if (appGroup.blockText == textArea.text)
+                if (appGroup.blockText === textArea.text)
                     return;
 
                 appGroup.blockText = textArea.text;
@@ -116,6 +135,9 @@ ColumnLayout {
         }
 
         AppsTextColumn {
+            id: allowApps
+            SplitView.minimumWidth: 150
+
             title {
                 text: translationManager.trTrigger
                       && qsTranslate("qml", "Allow")
@@ -130,7 +152,7 @@ C:\\Program Files (x86)\\Microsoft\\Skype for Desktop\\Skype.exe
             }
 
             onTextChanged: {
-                if (appGroup.allowText == textArea.text)
+                if (appGroup.allowText === textArea.text)
                     return;
 
                 appGroup.allowText = textArea.text;

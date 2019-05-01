@@ -382,6 +382,11 @@ QStringList FortSettings::iniList(const QString &key) const
     return iniValue(key).toStringList();
 }
 
+QVariantMap FortSettings::iniMap(const QString &key) const
+{
+    return iniValue(key).toMap();
+}
+
 QColor FortSettings::iniColor(const QString &key, const QColor &defaultValue) const
 {
     const QString text = iniText(key);

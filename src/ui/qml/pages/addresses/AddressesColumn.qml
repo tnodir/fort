@@ -14,6 +14,7 @@ ColumnLayout {
 
     readonly property alias title: title
     readonly property alias checkBoxAll: checkBoxAll
+    readonly property alias textArea: textAreaFrame.textArea
 
     property bool useAll
     property string ipText
@@ -36,8 +37,10 @@ ColumnLayout {
     }
 
     TextAreaFrame {
+        id: textAreaFrame
         Layout.fillWidth: true
         Layout.fillHeight: true
+        clip: true
 
         textArea {
             placeholderText: netUtil.localIpv4Networks().join('\n')

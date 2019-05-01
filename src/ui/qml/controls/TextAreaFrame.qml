@@ -18,6 +18,7 @@ Frame {
             clip: true  // to clip placeholder text
             persistentSelection: true
             selectByMouse: true
+            hoverEnabled: false
             onTextChanged: frame.textChanged()
             onReleased: textContextMenu.show(event, textArea)
         }
