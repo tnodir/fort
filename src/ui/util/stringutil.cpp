@@ -23,13 +23,15 @@ QString StringUtil::cryptoHash(const QString &text)
     return QString::fromLatin1(hash.toHex());
 }
 
-int StringUtil::lineStart(const QString &text, int pos)
+int StringUtil::lineStart(const QString &text, int pos,
+                          int badPos)
 {
-    return text.lastIndexOf(QLatin1Char('\n'), pos);
+    const int startPos = text.lastIndexOf(QLatin1Char('\n'), pos);
+    return (startPos != -1) ? startPos : badPos;
 }
 
-int StringUtil::lineEnd(const QString &text, int pos)
+int StringUtil::lineEnd(const QString &text, int pos, int badPos)
 {
-    const int end = text.indexOf(QLatin1Char('\n'), pos);
-    return (end > -1) ? end : text.size() - 1;
+    const int endPos = text.indexOf(QLatin1Char('\n'), pos);
+    return (endPos != -1) ? endPos : badPos;
 }

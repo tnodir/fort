@@ -35,7 +35,14 @@ T.SplitView {
 
         // Append the text to area
         const areaOldLen = area.length;
-        area.append(text);
+        const areaOldText = area.text;
+
+        const lineEnd = stringUtil.lineEnd(areaOldText, areaOldLen - 1);
+        if (lineEnd < 0) {
+            area.append(text);
+        } else {
+            area.insert(lineEnd + 1, text);
+        }
 
         // Select new text
         selectText(area, areaOldLen, area.length);
@@ -52,18 +59,31 @@ T.SplitView {
     }
 
     function moveSelectedLines(srcArea, dstArea) {
-        //if (!srcArea.has)
-
         // Cut the text from srcArea
         const srcText = srcArea.text;
-        const srcStart = stringUtil.lineStart(srcText, srcArea.selectionStart) + 1;
-        const srcEnd = stringUtil.lineEnd(srcText, srcArea.selectionEnd) + 1;
+        const srcTextEnd = srcText.length - 1;
 
-        const text = srcArea.getText(srcStart, srcEnd);
-        srcArea.remove(srcStart, srcEnd);
+        // Adgust to last line, when cursor at the end
+        if (srcArea.selectionStart === srcArea.selectionEnd
+                && srcArea.selectionStart > srcTextEnd
+                && srcTextEnd > 0) {
+            srcArea.cursorPosition = srcTextEnd - 1;
+        }
+
+        const srcSelStart = Math.min(srcArea.selectionStart, srcTextEnd);
+        var srcStart = stringUtil.lineStart(srcText, srcSelStart) + 1;
+
+        const srcSelEnd = srcArea.selectionEnd;
+        const srcEnd = stringUtil.lineEnd(srcText, srcSelEnd, srcTextEnd) + 1;
+
+        if (srcStart >= srcEnd
+                && --srcStart < 0)  // try to select empty line
+            return;
+
+        const text = srcArea.getText(srcStart, srcEnd, srcTextEnd);
+
         srcArea.deselect();
-
-        console.log(">", srcStart, srcEnd, text.length);
+        srcArea.remove(srcStart, srcEnd);
 
         // Paste the text to dstArea
         appendText(dstArea, text);
@@ -130,15 +150,15 @@ T.SplitView {
             }
 
             RoundButtonTipSmall {
-                icon.source: "qrc:/images/control_rewind.png"
-                tipText: textMoveAllFrom2To1
-                onClicked: moveAllLines(textArea2, textArea1)
-            }
-
-            RoundButtonTipSmall {
                 icon.source: "qrc:/images/control_play_backward.png"
                 tipText: textMoveSelectedFrom2To1
                 onClicked: moveSelectedLines(textArea2, textArea1)
+            }
+
+            RoundButtonTipSmall {
+                icon.source: "qrc:/images/control_rewind.png"
+                tipText: textMoveAllFrom2To1
+                onClicked: moveAllLines(textArea2, textArea1)
             }
         }
     }

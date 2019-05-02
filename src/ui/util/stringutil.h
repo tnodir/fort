@@ -14,8 +14,10 @@ public:
 
     Q_INVOKABLE static QString cryptoHash(const QString &text);
 
-    Q_INVOKABLE static int lineStart(const QString &text, int pos);
-    Q_INVOKABLE static int lineEnd(const QString &text, int pos);
+    Q_INVOKABLE static int lineStart(const QString &text, int pos,
+                                     int badPos = -1);
+    Q_INVOKABLE static int lineEnd(const QString &text, int pos,
+                                   int badPos = -1);
 };
 
 #endif // STRINGUTIL_H
