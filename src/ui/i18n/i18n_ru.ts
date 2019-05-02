@@ -60,32 +60,32 @@
         <translation>Наберите пароль пожалуйста</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="626"/>
+        <location filename="../fortmanager.cpp" line="630"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="631"/>
+        <location filename="../fortmanager.cpp" line="635"/>
         <source>Traffic Graph</source>
         <translation>График трафика</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="641"/>
+        <location filename="../fortmanager.cpp" line="645"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="648"/>
+        <location filename="../fortmanager.cpp" line="652"/>
         <source>Stop Traffic</source>
         <translation>Остановить трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="655"/>
+        <location filename="../fortmanager.cpp" line="659"/>
         <source>Stop Internet Traffic</source>
         <translation>Остановить Интернет трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="683"/>
+        <location filename="../fortmanager.cpp" line="687"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -260,22 +260,42 @@
         <translation>Показ блокированных приложений</translation>
     </message>
     <message>
-        <location filename="../qml/pages/addresses/AddressGroupRow.qml" line="17"/>
+        <location filename="../qml/pages/addresses/AddressGroupRow.qml" line="16"/>
+        <source>Move All Lines to &apos;Exclude&apos;</source>
+        <translation>Перенести все строки в &apos;Исключить&apos;</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/addresses/AddressGroupRow.qml" line="18"/>
+        <source>Move All Lines to &apos;Include&apos;</source>
+        <translation>Перенести все строки во &apos;Включить&apos;</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/addresses/AddressGroupRow.qml" line="20"/>
+        <source>Move Selected Lines to &apos;Exclude&apos;</source>
+        <translation>Перенести выделенные строки в &apos;Исключить&apos;</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/addresses/AddressGroupRow.qml" line="22"/>
+        <source>Move Selected Lines to &apos;Include&apos;</source>
+        <translation>Перенести выделенные строки во &apos;Включить&apos;</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/addresses/AddressGroupRow.qml" line="33"/>
         <source>Include</source>
         <translation>Включить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/addresses/AddressGroupRow.qml" line="23"/>
+        <location filename="../qml/pages/addresses/AddressGroupRow.qml" line="39"/>
         <source>Include All</source>
         <translation>Включить все</translation>
     </message>
     <message>
-        <location filename="../qml/pages/addresses/AddressGroupRow.qml" line="42"/>
+        <location filename="../qml/pages/addresses/AddressGroupRow.qml" line="59"/>
         <source>Exclude</source>
         <translation>Исключить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/addresses/AddressGroupRow.qml" line="48"/>
+        <location filename="../qml/pages/addresses/AddressGroupRow.qml" line="65"/>
         <source>Exclude All</source>
         <translation>Исключить все</translation>
     </message>
@@ -305,37 +325,57 @@
         <translation>Разрешить все</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="16"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="17"/>
         <source>Remove Group</source>
         <translation>Удалить группу</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="22"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="23"/>
         <source>Move left</source>
         <translation>Сдвинуть налево</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="28"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="29"/>
         <source>Move right</source>
         <translation>Сдвинуть направо</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="47"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="48"/>
         <source>Enabled</source>
         <translation>Включено</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="62"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="63"/>
         <source>period, hours:</source>
         <translation>период, часы</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="101"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="103"/>
+        <source>Move All Lines to &apos;Allow&apos;</source>
+        <translation>Перенести все строки в &apos;Разрешить&apos;</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="105"/>
+        <source>Move All Lines to &apos;Block&apos;</source>
+        <translation>Перенести все строки в &apos;Блокировать&apos;</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="107"/>
+        <source>Move Selected Lines to &apos;Allow&apos;</source>
+        <translation>Перенести выделенные строки в &apos;Разрешить&apos;</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="109"/>
+        <source>Move Selected Lines to &apos;Block&apos;</source>
+        <translation>Перенести выделенные строки в &apos;Блокировать&apos;</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="120"/>
         <source>Block</source>
         <translation>Блокировать</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="121"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="143"/>
         <source>Allow</source>
         <translation>Разрешить</translation>
     </message>
@@ -387,6 +427,7 @@
     </message>
     <message>
         <location filename="../qml/pages/MainPage.qml" line="190"/>
+        <location filename="../qml/pages/schedule/TaskRow.qml" line="91"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
@@ -800,9 +841,19 @@
         <translation>Сетка</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/AppInfoRow.qml" line="44"/>
+        <location filename="../qml/pages/log/AppInfoRow.qml" line="20"/>
         <source>Copy Path</source>
-        <translation>Копировать Путь</translation>
+        <translation>Копировать путь</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/log/AppInfoRow.qml" line="31"/>
+        <source>Open Folder</source>
+        <translation>Открыть папку</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/schedule/TaskRow.qml" line="92"/>
+        <source>Run</source>
+        <translation>Запустить</translation>
     </message>
 </context>
 </TS>
