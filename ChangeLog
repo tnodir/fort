@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v2.7.2, 2019-05-02:
+- UI: AddressesPage, ApplicationsPage: Add splitter and text control buttons.
+- UI: Polish app info details showing.
+- UI: Add "Copy Path" button for selected app.
+
 v2.7.1, 2019-04-24:
 - UI: Special icon for "System" app.
 - UI: Add ability to "Open Folder" of selected app.
