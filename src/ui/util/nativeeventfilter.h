@@ -5,6 +5,8 @@
 #include <QHash>
 #include <QObject>
 
+#include "classhelpers.h"
+
 class NativeEventFilter : public QObject, public QAbstractNativeEventFilter
 {
     Q_OBJECT
@@ -12,6 +14,7 @@ class NativeEventFilter : public QObject, public QAbstractNativeEventFilter
 public:
     explicit NativeEventFilter(QObject *parent = nullptr);
     ~NativeEventFilter() override;
+    CLASS_DELETE_COPY_MOVE(NativeEventFilter)
 
     bool nativeEventFilter(const QByteArray &eventType,
                            void *message, long *result) override;

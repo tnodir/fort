@@ -441,7 +441,7 @@ void ConfUtil::writeAddressRange(char **data,
 
 void ConfUtil::writeNumbers(char **data, const numbers_arr_t &array)
 {
-    const int arraySize = array.size() * sizeof(quint32);
+    const size_t arraySize = size_t(array.size()) * sizeof(quint32);
 
     memcpy(*data, array.constData(), arraySize);
 
@@ -467,7 +467,7 @@ void ConfUtil::writeStrings(char **data, const QStringList &list)
     *offp++ = 0;
 
     foreach (const QString &s, list) {
-        const int len = s.toWCharArray((wchar_t *) p)
+        const quint32 len = s.toWCharArray((wchar_t *) p)
                 * sizeof(wchar_t);
 
         off += len;

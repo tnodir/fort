@@ -4,6 +4,8 @@
 #include <QDateTime>
 #include <QObject>
 
+#include "../util/classhelpers.h"
+
 QT_FORWARD_DECLARE_CLASS(TaskWorker)
 
 class TaskInfo : public QObject
@@ -27,6 +29,7 @@ public:
 
     explicit TaskInfo(TaskInfo::TaskType type, QObject *parent = nullptr);
     ~TaskInfo() override;
+    CLASS_DELETE_COPY_MOVE(TaskInfo)
 
     bool enabled() const { return m_enabled; }
     void setEnabled(bool enabled);

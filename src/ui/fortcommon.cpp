@@ -153,7 +153,7 @@ int FortCommon::confAppIndex(const void *drvConf,
 {
     const PFORT_CONF conf = (const PFORT_CONF) drvConf;
     const QString kernelPathLower = kernelPath.toLower();
-    const int len = kernelPathLower.size() * sizeof(wchar_t);
+    const int len = kernelPathLower.size() * int(sizeof(wchar_t));
     const wchar_t *p = (const wchar_t *) kernelPathLower.utf16();
 
     return fort_conf_app_index(conf, len, (const char *) p);

@@ -16,6 +16,7 @@ TrafListModel::TrafListModel(DatabaseManager *databaseManager,
     m_appId(0),
     m_minTrafTime(0),
     m_maxTrafTime(0),
+    m_trafCount(0),
     m_databaseManager(databaseManager)
 {
 }

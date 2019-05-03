@@ -4,6 +4,8 @@
 #include <QString>
 #include <QVariant>
 
+#include "../../util/classhelpers.h"
+
 QT_FORWARD_DECLARE_STRUCT(sqlite3_stmt)
 
 class SqliteStmt
@@ -22,6 +24,7 @@ public:
 
     explicit SqliteStmt();
     ~SqliteStmt();
+    CLASS_DEFAULT_COPY_MOVE(SqliteStmt)
 
     bool prepare(struct sqlite3 *db, const char *sql,
                  PrepareFlags flags = PrepareDefault);

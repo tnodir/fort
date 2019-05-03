@@ -5,6 +5,8 @@
 #include <QSharedMemory>
 #include <QSystemSemaphore>
 
+#include "../util/classhelpers.h"
+
 QT_FORWARD_DECLARE_CLASS(ControlWorker)
 QT_FORWARD_DECLARE_CLASS(FortManager)
 
@@ -17,6 +19,7 @@ public:
                             const QString &scriptPath,
                             QObject *parent = nullptr);
     ~ControlManager() override;
+    CLASS_DELETE_COPY_MOVE(ControlManager)
 
     bool isClient() const { return m_isClient; }
 

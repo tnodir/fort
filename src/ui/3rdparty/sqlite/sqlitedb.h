@@ -4,16 +4,19 @@
 #include <QString>
 #include <QVariant>
 
+#include "../../util/classhelpers.h"
+
 QT_FORWARD_DECLARE_CLASS(SqliteDb)
 QT_FORWARD_DECLARE_STRUCT(sqlite3)
 
-typedef bool (*SQLITEDB_MIGRATE_FUNC) (SqliteDb *db, int version, void *context);
+using SQLITEDB_MIGRATE_FUNC = bool (*)(SqliteDb *db, int version, void *context);
 
 class SqliteDb
 {
 public:
     explicit SqliteDb();
     ~SqliteDb();
+    CLASS_DEFAULT_COPY_MOVE(SqliteDb)
 
     bool open(const QString &filePath);
     void close();

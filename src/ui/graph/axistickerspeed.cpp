@@ -7,7 +7,7 @@ double AxisTickerSpeed::getTickStep(const QCPRange &range)
     const double exactStep = range.size() / tickCount();
     const int tickStep = 2;
 
-    return qPow(tickStep, int(qLn(exactStep) / qLn(tickStep) + 0.5));
+    return qPow(tickStep, qFloor(qLn(exactStep) / qLn(tickStep) + 0.5));
 }
 
 QString AxisTickerSpeed::getTickLabel(double tick, const QLocale &locale,

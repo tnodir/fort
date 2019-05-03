@@ -31,7 +31,7 @@ public:
     const ip4range_arr_t &toArray() const { return m_toArray; }
 
     int size() const { return m_toArray.size(); }
-    const Ip4Pair at(int i) const {
+    Ip4Pair at(int i) const {
         return Ip4Pair{m_fromArray.at(i), m_toArray.at(i)};
     }
 

@@ -8,6 +8,8 @@
 #include <QVariant>
 #include <QWaitCondition>
 
+#include "../classhelpers.h"
+
 QT_FORWARD_DECLARE_CLASS(WorkerJob)
 QT_FORWARD_DECLARE_CLASS(WorkerObject)
 
@@ -18,6 +20,7 @@ class WorkerManager : public QObject
 public:
     explicit WorkerManager(QObject *parent = nullptr);
     ~WorkerManager() override;
+    CLASS_DELETE_COPY_MOVE(WorkerManager)
 
     int maxWorkersCount() const { return m_maxWorkersCount; }
     void setMaxWorkersCount(int v) { m_maxWorkersCount = v; }

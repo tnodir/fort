@@ -15,7 +15,8 @@ FortSettings::FortSettings(const QStringList &args,
     m_isPortable(false),
     m_hasProvBoot(false),
     m_bulkUpdating(false),
-    m_bulkUpdatingEmit(false)
+    m_bulkUpdatingEmit(false),
+    m_ini(nullptr)
 {
     processArguments(args);
     setupIni();
@@ -138,7 +139,9 @@ bool FortSettings::setTasks(const TasksMap &map)
 
     removeIniKey(tasksPrefix);
 
-    foreach (const QString &taskName, map.keys()) {
+    auto keyIt = map.keyBegin();
+    for (; keyIt != map.keyEnd(); ++keyIt) {
+        const QString taskName = *keyIt;
         const QString taskKey(tasksPrefix + '/' + taskName);
         setIniValue(taskKey, map.value(taskName));
     }
@@ -185,7 +188,7 @@ bool FortSettings::tryToReadConf(FirewallConf &conf, const QString &filePath)
 {
     const QByteArray data = FileUtil::readFileData(filePath);
 
-    QJsonParseError jsonParseError;
+    QJsonParseError jsonParseError{};
     const QJsonDocument jsonDoc = QJsonDocument::fromJson(
                 data, &jsonParseError);
     if (jsonParseError.error != QJsonParseError::NoError) {

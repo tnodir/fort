@@ -6,6 +6,8 @@
 #include <QStringList>
 #include <QVector>
 
+#include "../util/classhelpers.h"
+
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
 QT_FORWARD_DECLARE_CLASS(QuotaManager)
 QT_FORWARD_DECLARE_CLASS(SqliteDb)
@@ -20,6 +22,7 @@ public:
                              QuotaManager *quotaManager,
                              QObject *parent = nullptr);
     ~DatabaseManager() override;
+    CLASS_DELETE_COPY_MOVE(DatabaseManager)
 
     const FirewallConf *firewallConf() const { return m_conf; }
     void setFirewallConf(const FirewallConf *conf);

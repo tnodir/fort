@@ -3,6 +3,7 @@
 
 #include <QMutex>
 
+#include "../classhelpers.h"
 #include "../worker/workermanager.h"
 #include "appinfo.h"
 
@@ -15,6 +16,7 @@ class AppInfoManager : public WorkerManager
 public:
     explicit AppInfoManager(QObject *parent = nullptr);
     ~AppInfoManager() override;
+    CLASS_DELETE_COPY_MOVE(AppInfoManager)
 
     bool loadInfoFromFs(const QString &appPath, AppInfo &appInfo);
     QImage loadIconFromFs(const QString &appPath);

@@ -9,10 +9,10 @@ struct TrafficRow {
     bool isValid(int row) const { return row == this->row; }
     void invalidate() { row = -1; }
 
-    int row;
-    qint32 trafTime;
-    qint64 inBytes;
-    qint64 outBytes;
+    int row = -1;
+    qint32 trafTime = 0;
+    qint64 inBytes = 0;
+    qint64 outBytes = 0;
 };
 
 class TrafListModel : public QAbstractItemModel

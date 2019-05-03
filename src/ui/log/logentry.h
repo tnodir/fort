@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include "../util/classhelpers.h"
+
 class LogEntry
 {
 public:
@@ -16,6 +18,7 @@ public:
 
     explicit LogEntry() = default;
     virtual ~LogEntry() = default;
+    CLASS_DEFAULT_COPY_MOVE(LogEntry)
 
     virtual LogEntry::LogType type() const = 0;
 

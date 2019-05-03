@@ -3,11 +3,14 @@
 
 #include <QObject>
 
+#include "../classhelpers.h"
+
 class WorkerJob
 {
 public:
     explicit WorkerJob(const QString &_text);
-    virtual ~WorkerJob() {}
+    virtual ~WorkerJob() = default;
+    CLASS_DEFAULT_COPY_MOVE(WorkerJob)
 
     virtual void doJob() {}
 

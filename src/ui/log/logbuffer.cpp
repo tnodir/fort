@@ -54,9 +54,9 @@ LogEntry::LogType LogBuffer::peekEntryType()
 void LogBuffer::writeEntryBlocked(const LogEntryBlocked *logEntry)
 {
     const QString path = logEntry->kernelPath();
-    const int pathLen = path.size() * sizeof(wchar_t);
+    const quint32 pathLen = quint32(path.size()) * sizeof(wchar_t);
 
-    const int entrySize = FortCommon::logBlockedSize(pathLen);
+    const int entrySize = int(FortCommon::logBlockedSize(pathLen));
     prepareFor(entrySize);
 
     char *output = this->output();
@@ -85,23 +85,23 @@ void LogBuffer::readEntryBlocked(LogEntryBlocked *logEntry)
     if (pathLen) {
         input += FortCommon::logBlockedHeaderSize();
         path = QString::fromWCharArray((const wchar_t *) input,
-                                       pathLen / sizeof(wchar_t));
+                                       pathLen / int(sizeof(wchar_t)));
     }
 
     logEntry->setIp(ip);
     logEntry->setPid(pid);
     logEntry->setKernelPath(path);
 
-    const int entrySize = FortCommon::logBlockedSize(pathLen);
+    const int entrySize = int(FortCommon::logBlockedSize(pathLen));
     m_offset += entrySize;
 }
 
 void LogBuffer::writeEntryProcNew(const LogEntryProcNew *logEntry)
 {
     const QString path = logEntry->kernelPath();
-    const int pathLen = path.size() * sizeof(wchar_t);
+    const quint32 pathLen = quint32(path.size()) * sizeof(wchar_t);
 
-    const int entrySize = FortCommon::logProcNewSize(pathLen);
+    const int entrySize = int(FortCommon::logProcNewSize(pathLen));
     prepareFor(entrySize);
 
     char *output = this->output();
@@ -129,13 +129,13 @@ void LogBuffer::readEntryProcNew(LogEntryProcNew *logEntry)
     if (pathLen) {
         input += FortCommon::logProcNewHeaderSize();
         path = QString::fromWCharArray((const wchar_t *) input,
-                                       pathLen / sizeof(wchar_t));
+                                       pathLen / int(sizeof(wchar_t)));
     }
 
     logEntry->setPid(pid);
     logEntry->setKernelPath(path);
 
-    const int entrySize = FortCommon::logProcNewSize(pathLen);
+    const int entrySize = int(FortCommon::logProcNewSize(pathLen));
     m_offset += entrySize;
 }
 
@@ -152,9 +152,9 @@ void LogBuffer::readEntryStatTraf(LogEntryStatTraf *logEntry)
 
     if (procCount) {
         input += FortCommon::logStatHeaderSize();
-        logEntry->setProcTrafBytes((const quint32 *) input);
+        logEntry->setProcTrafBytes(reinterpret_cast<const quint32 *>(input));
     }
 
-    const int entrySize = FortCommon::logStatTrafSize(procCount);
+    const int entrySize = int(FortCommon::logStatTrafSize(procCount));
     m_offset += entrySize;
 }

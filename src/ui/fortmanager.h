@@ -4,6 +4,7 @@
 #include <QObject>
 
 #include "mainwindow.h"
+#include "util/classhelpers.h"
 
 QT_FORWARD_DECLARE_CLASS(QQmlApplicationEngine)
 QT_FORWARD_DECLARE_CLASS(QSystemTrayIcon)
@@ -35,6 +36,7 @@ public:
     explicit FortManager(FortSettings *fortSettings,
                          QObject *parent = nullptr);
     ~FortManager() override;
+    CLASS_DELETE_COPY_MOVE(FortManager)
 
     FortSettings *fortSettings() const { return m_fortSettings; }
     FirewallConf *firewallConf() const { return m_firewallConf; }

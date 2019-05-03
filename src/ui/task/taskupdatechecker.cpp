@@ -12,7 +12,9 @@
 #include "../util/net/netutil.h"
 
 TaskUpdateChecker::TaskUpdateChecker(QObject *parent) :
-    TaskDownloader(parent)
+    TaskDownloader(parent),
+    m_downloadSize(0),
+    m_downloadCount(0)
 {
 }
 
@@ -43,7 +45,7 @@ bool TaskUpdateChecker::processResult(FortManager *fortManager)
 
 bool TaskUpdateChecker::parseBuffer(const QByteArray &buffer)
 {
-    QJsonParseError jsonParseError;
+    QJsonParseError jsonParseError{};
     const QJsonDocument jsonDoc = QJsonDocument::fromJson(
                 buffer, &jsonParseError);
     if (jsonParseError.error != QJsonParseError::NoError) {

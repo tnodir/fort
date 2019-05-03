@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include "../util/classhelpers.h"
+
 QT_FORWARD_DECLARE_CLASS(Device)
 QT_FORWARD_DECLARE_CLASS(DriverWorker)
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
@@ -16,6 +18,7 @@ class DriverManager : public QObject
 public:
     explicit DriverManager(QObject *parent = nullptr);
     ~DriverManager() override;
+    CLASS_DELETE_COPY_MOVE(DriverManager)
 
     DriverWorker *driverWorker() const { return m_driverWorker; }
 

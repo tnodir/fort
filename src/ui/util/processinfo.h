@@ -3,7 +3,9 @@
 
 #include <QObject>
 
-typedef void *phandle_t;
+#include "classhelpers.h"
+
+using phandle_t = void *;
 
 #define PROC_INVALID_PID        quint32(-1)
 #define PROC_INVALID_HANDLE     nullptr
@@ -17,6 +19,7 @@ public:
     explicit ProcessInfo(quint32 pid = PROC_INVALID_PID,
                          QObject *parent = nullptr);
     ~ProcessInfo() override;
+    CLASS_DELETE_COPY_MOVE(ProcessInfo)
 
     quint32 pid() const { return m_pid; }
 

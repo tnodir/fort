@@ -64,7 +64,7 @@ QString extractInfoText(LPVOID infoData, const WORD *langInfo,
     if (VerQueryValueW(infoData, verStrName,
                        (LPVOID *) &content, &len)
             && len > 1) {
-        return QString::fromWCharArray(content, len - 1);
+        return QString::fromWCharArray(content, int(len) - 1);
     }
 
     return QString();

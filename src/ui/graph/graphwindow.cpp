@@ -13,7 +13,10 @@ GraphWindow::GraphWindow(FortSettings *fortSettings,
                          QWidget *parent) :
     WidgetWindow(parent),
     m_lastUnixTime(0),
-    m_fortSettings(fortSettings)
+    m_fortSettings(fortSettings),
+    m_plot(nullptr),
+    m_graphIn(nullptr),
+    m_graphOut(nullptr)
 {
     setupUi();
     setupTimer();
@@ -212,7 +215,7 @@ void GraphWindow::addTraffic(qint64 unixTime, quint32 inBytes, quint32 outBytes)
     addData(m_graphOut, rangeLower, unixTime, outBytes);
 
     m_plot->xAxis->setRange(unixTime,
-                            m_plot->axisRect()->width() / 4,
+                            qFloor(m_plot->axisRect()->width() / 4),
                             Qt::AlignRight);
 
     m_graphIn->rescaleValueAxis(false, true);

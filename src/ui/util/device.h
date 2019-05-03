@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include "classhelpers.h"
+
 class Device : public QObject
 {
     Q_OBJECT
@@ -10,6 +12,7 @@ class Device : public QObject
 public:
     explicit Device(QObject *parent = nullptr);
     ~Device() override;
+    CLASS_DELETE_COPY_MOVE(Device)
 
     bool isOpened() const;
 
