@@ -79,6 +79,8 @@ public slots:
     void showInfoBox(const QString &text,
                      const QString &title = QString());
 
+    QStringList getOpenFileNames(const QString &title = QString());
+
     bool saveOriginConf(const QString &message);
     bool saveConf(bool onlyFlags = false);
     bool applyConf(bool onlyFlags = false);

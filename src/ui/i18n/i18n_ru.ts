@@ -50,42 +50,42 @@
 <context>
     <name>FortManager</name>
     <message>
-        <location filename="../fortmanager.cpp" line="405"/>
+        <location filename="../fortmanager.cpp" line="406"/>
         <source>Password input</source>
         <translation>Ввод пароля</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="405"/>
+        <location filename="../fortmanager.cpp" line="406"/>
         <source>Please enter the password</source>
         <translation>Наберите пароль пожалуйста</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="634"/>
+        <location filename="../fortmanager.cpp" line="642"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="639"/>
+        <location filename="../fortmanager.cpp" line="647"/>
         <source>Traffic Graph</source>
         <translation>График трафика</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="649"/>
+        <location filename="../fortmanager.cpp" line="657"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="656"/>
+        <location filename="../fortmanager.cpp" line="664"/>
         <source>Stop Traffic</source>
         <translation>Остановить трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="663"/>
+        <location filename="../fortmanager.cpp" line="671"/>
         <source>Stop Internet Traffic</source>
         <translation>Остановить Интернет трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="691"/>
+        <location filename="../fortmanager.cpp" line="699"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -370,17 +370,17 @@
         <translation>Перенести выделенные строки в &apos;Блокировать&apos;</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="120"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="122"/>
         <source>Block</source>
         <translation>Блокировать</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="143"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="145"/>
         <source>Allow</source>
         <translation>Разрешить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="153"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="155"/>
         <source># All programs in the sub-path:</source>
         <translation># Все программы по под-пути:</translation>
     </message>
@@ -862,9 +862,14 @@
     </message>
     <message>
         <location filename="../qml/pages/addresses/AddressesColumn.qml" line="48"/>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="149"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="151"/>
         <source># Examples:</source>
         <translation># Примеры:</translation>
+    </message>
+    <message>
+        <location filename="../qml/box/TextArea2SplitBox.qml" line="170"/>
+        <source>Select File</source>
+        <translation>Выбрать файл</translation>
     </message>
 </context>
 </TS>

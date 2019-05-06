@@ -4,6 +4,7 @@ import QtQuick.Controls 2.13
 RoundButton {
     id: bt
     hoverEnabled: true
+    focusPolicy: Qt.NoFocus
 
     property string tipText
 

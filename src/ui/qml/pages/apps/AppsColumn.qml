@@ -108,6 +108,8 @@ ColumnLayout {
         textMoveSelectedFrom2To1: translationManager.trTrigger
                                   && qsTranslate("qml", "Move Selected Lines to 'Block'")
 
+        selectFileEnabled: true
+
         settingsPropName: "windowAppsSplit"
 
         AppsTextColumn {

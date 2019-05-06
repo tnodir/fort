@@ -1,6 +1,7 @@
 #include "fortmanager.h"
 
 #include <QApplication>
+#include <QFileDialog>
 #include <QInputDialog>
 #include <QMenu>
 #include <QMessageBox>
@@ -419,6 +420,13 @@ void FortManager::showInfoBox(const QString &text,
                               const QString &title)
 {
     QMessageBox::information(&m_window, title, text);
+}
+
+QStringList FortManager::getOpenFileNames(const QString &title)
+{
+    return QFileDialog::getOpenFileNames(
+                nullptr, title, QString(), QString(),
+                nullptr, QFileDialog::ReadOnly);
 }
 
 bool FortManager::saveOriginConf(const QString &message)

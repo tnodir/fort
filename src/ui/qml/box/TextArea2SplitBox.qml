@@ -15,6 +15,8 @@ T.SplitView {
     property string textMoveAllFrom2To1
     property string textMoveSelectedFrom2To1
 
+    property bool selectFileEnabled
+
     property string settingsPropName
 
     readonly property real handleWidth: 40
@@ -159,6 +161,20 @@ T.SplitView {
                 icon.source: "qrc:/images/control_rewind.png"
                 tipText: textMoveAllFrom2To1
                 onClicked: moveAllLines(textArea2, textArea1)
+            }
+
+            RoundButtonTipSmall {
+                visible: selectFileEnabled
+                icon.source: "qrc:/images/folder_explore.png"
+                tipText: translationManager.trTrigger
+                         && qsTranslate("qml", "Select File")
+                onClicked: {
+                    const area = textArea1.activeFocus ? textArea1 : textArea2;
+                    const filePaths = fortManager.getOpenFileNames();
+                    if (filePaths.length > 0) {
+                        appendText(area, filePaths.join('\n'));
+                    }
+                }
             }
         }
     }
