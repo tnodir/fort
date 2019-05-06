@@ -50,42 +50,42 @@
 <context>
     <name>FortManager</name>
     <message>
-        <location filename="../fortmanager.cpp" line="401"/>
+        <location filename="../fortmanager.cpp" line="405"/>
         <source>Password input</source>
         <translation>Ввод пароля</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="401"/>
+        <location filename="../fortmanager.cpp" line="405"/>
         <source>Please enter the password</source>
         <translation>Наберите пароль пожалуйста</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="630"/>
+        <location filename="../fortmanager.cpp" line="634"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="635"/>
+        <location filename="../fortmanager.cpp" line="639"/>
         <source>Traffic Graph</source>
         <translation>График трафика</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="645"/>
+        <location filename="../fortmanager.cpp" line="649"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="652"/>
+        <location filename="../fortmanager.cpp" line="656"/>
         <source>Stop Traffic</source>
         <translation>Остановить трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="659"/>
+        <location filename="../fortmanager.cpp" line="663"/>
         <source>Stop Internet Traffic</source>
         <translation>Остановить Интернет трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="687"/>
+        <location filename="../fortmanager.cpp" line="691"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -93,17 +93,17 @@
 <context>
     <name>FortSettings</name>
     <message>
-        <location filename="../fortsettings.cpp" line="211"/>
+        <location filename="../fortsettings.cpp" line="214"/>
         <source>Can&apos;t write .ini file</source>
         <translation>Не удалось записать .ini файл</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="226"/>
+        <location filename="../fortsettings.cpp" line="229"/>
         <source>Can&apos;t create .conf file</source>
         <translation>Не удалось создать .conf файл</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="221"/>
+        <location filename="../fortsettings.cpp" line="224"/>
         <source>Can&apos;t create backup .conf file</source>
         <translation>Не удалось создать бэкап .conf файла</translation>
     </message>
@@ -184,7 +184,7 @@
 <context>
     <name>TaskUpdateChecker</name>
     <message>
-        <location filename="../task/taskupdatechecker.cpp" line="36"/>
+        <location filename="../task/taskupdatechecker.cpp" line="38"/>
         <source>New version!</source>
         <translation>Новая версия!</translation>
     </message>
@@ -378,6 +378,11 @@
         <location filename="../qml/pages/apps/AppsColumn.qml" line="143"/>
         <source>Allow</source>
         <translation>Разрешить</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="153"/>
+        <source># All programs in the sub-path:</source>
+        <translation># Все программы по под-пути:</translation>
     </message>
     <message>
         <location filename="../qml/pages/MainPage.qml" line="81"/>
@@ -854,6 +859,12 @@
         <location filename="../qml/pages/schedule/TaskRow.qml" line="92"/>
         <source>Run</source>
         <translation>Запустить</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/addresses/AddressesColumn.qml" line="48"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="149"/>
+        <source># Examples:</source>
+        <translation># Примеры:</translation>
     </message>
 </context>
 </TS>

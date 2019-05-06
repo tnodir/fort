@@ -144,10 +144,15 @@ ColumnLayout {
             }
 
             textArea {
-                placeholderText: "
-System
-C:\\Program Files (x86)\\Microsoft\\Skype for Desktop\\Skype.exe
-"
+                placeholderText:
+                    translationManager.trTrigger && (
+                        qsTranslate("qml", "# Examples:")
+                        + "\nSystem"
+                        + "\nC:\\Program Files (x86)\\Microsoft\\Skype for Desktop\\Skype.exe"
+                        + "\n\n"
+                        + qsTranslate("qml", "# All programs in the sub-path:")
+                        + "\nC:\\Git\\"
+                        )
                 text: appGroup.allowText
             }
 
