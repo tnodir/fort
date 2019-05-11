@@ -56,3 +56,8 @@ QString OsUtil::lastErrorMessage(quint32 errorCode)
     LocalFree(buf);
     return text;
 }
+
+qint32 OsUtil::getTickCount()
+{
+    return qint32(GetTickCount());
+}

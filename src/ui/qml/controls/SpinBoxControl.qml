@@ -14,7 +14,7 @@ SpinBox {
 
     property int defaultValue
 
-    onValueChanged: {
+    onValueModified: {
         const value = field.value;
         if (value === defaultValue)
             return;

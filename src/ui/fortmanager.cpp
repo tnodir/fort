@@ -30,6 +30,7 @@
 #include "translationmanager.h"
 #include "util/app/appiconprovider.h"
 #include "util/app/appinfocache.h"
+#include "util/dateutil.h"
 #include "util/fileutil.h"
 #include "util/guiutil.h"
 #include "util/hotkeymanager.h"
@@ -126,6 +127,7 @@ void FortManager::registerQmlTypes()
 
     qRegisterMetaType<AppInfo>();
     qmlRegisterType<AppInfoCache>("com.fortfirewall", 1, 0, "AppInfoCache");
+    qmlRegisterType<DateUtil>("com.fortfirewall", 1, 0, "DateUtil");
     qmlRegisterType<FileUtil>("com.fortfirewall", 1, 0, "FileUtil");
     qmlRegisterType<GuiUtil>("com.fortfirewall", 1, 0, "GuiUtil");
     qmlRegisterType<HostInfoCache>("com.fortfirewall", 1, 0, "HostInfoCache");

@@ -208,13 +208,13 @@ fort_conf_ref_flags_set (const PFORT_CONF_FLAGS conf_flags)
 }
 
 static BOOL
-fort_conf_period_update (int *periods_n)
+fort_conf_period_update (int *periods_n, BOOL force)
 {
   PFORT_CONF_REF conf_ref;
-  int hour1, hour2;
+  FORT_TIME time;
   BOOL res = FALSE;
 
-  /* Get current hour */
+  /* Get current time */
   {
     TIME_FIELDS tf;
     LARGE_INTEGER system_time, local_time;
@@ -223,8 +223,8 @@ fort_conf_period_update (int *periods_n)
     ExSystemTimeToLocalTime(&system_time, &local_time);
     RtlTimeToTimeFields(&local_time, &tf);
 
-    hour1 = tf.Hour;
-    hour2 = (tf.Hour + ((3600 - tf.Minute * 60 - tf.Second) < 66 ? 1 : 0)) % 24;
+    time.hour = (UCHAR) tf.Hour;
+    time.minute = (UCHAR) tf.Minute;
   }
 
   conf_ref = fort_conf_ref_take();
@@ -234,9 +234,9 @@ fort_conf_period_update (int *periods_n)
 
     if (conf->app_periods_n != 0) {
       const UINT16 period_bits =
-        fort_conf_app_period_bits(conf, hour1, hour2, periods_n);
+        fort_conf_app_period_bits(conf, time, periods_n);
 
-      if (g_device->conf_flags.group_bits != period_bits) {
+      if (force || g_device->conf_flags.group_bits != period_bits) {
         g_device->conf_flags.group_bits = period_bits;
 
         fort_conf_app_perms_mask_init(conf, period_bits);
@@ -865,7 +865,7 @@ fort_callout_force_reauth (const FORT_CONF_FLAGS old_conf_flags,
   {
     int periods_n = 0;
 
-    fort_conf_period_update(&periods_n);
+    fort_conf_period_update(&periods_n, TRUE);
 
     fort_timer_update(&g_device->app_timer,
       (periods_n != 0));
@@ -1032,7 +1032,7 @@ fort_worker_reauth (void)
 static void
 fort_app_period_timer (void)
 {
-  if (fort_conf_period_update(NULL)) {
+  if (fort_conf_period_update(NULL, FALSE)) {
     fort_worker_queue(&g_device->worker,
       FORT_WORKER_REAUTH, &fort_worker_reauth);
   }
@@ -1398,7 +1398,7 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 
       KeInitializeSpinLock(&g_device->conf_lock);
 
-      /* Unegister old filters provider */
+      /* Unregister old filters provider */
       {
         fort_device_flag_set(FORT_DEVICE_PROV_BOOT, fort_prov_is_boot());
 

@@ -62,7 +62,7 @@ ButtonPopup {
     }
 
     ColumnLayout {
-        SpinDoubleRow {
+        SpinPeriodRow {
             checkBox {
                 text: translationManager.trTrigger
                       && qsTranslate("qml", "Active period, hours:")
@@ -74,21 +74,17 @@ ButtonPopup {
                 }
             }
             field1 {
-                from: 0
-                to: 24
-                defaultValue: firewallConf.activePeriodFrom
+                defaultTime: firewallConf.activePeriodFrom
                 onValueEdited: {
-                    firewallConf.activePeriodFrom = field1.value;
+                    firewallConf.activePeriodFrom = field1.valueTime;
 
                     setConfFlagsEdited();
                 }
             }
             field2 {
-                from: 0
-                to: 24
-                defaultValue: firewallConf.activePeriodTo
+                defaultTime: firewallConf.activePeriodTo
                 onValueEdited: {
-                    firewallConf.activePeriodTo = field2.value;
+                    firewallConf.activePeriodTo = field2.valueTime;
 
                     setConfFlagsEdited();
                 }

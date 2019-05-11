@@ -3,8 +3,10 @@
 #include <QLoggingCategory>
 
 #include "../conf/firewallconf.h"
+#include "../fortcommon.h"
 #include "../util/dateutil.h"
 #include "../util/fileutil.h"
+#include "../util/osutil.h"
 #include "databasesql.h"
 #include "quotamanager.h"
 #include <sqlite/sqlitedb.h>
@@ -17,6 +19,8 @@ Q_LOGGING_CATEGORY(CLOG_DATABASE_MANAGER, "fort.databaseManager")
 
 #define INVALID_APP_INDEX       qint16(-1)
 #define INVALID_APP_ID          qint64(-1)
+
+#define ACTIVE_PERIOD_CHECK_SECS (60 * OS_TICKS_PER_SECOND)
 
 namespace {
 
@@ -51,10 +55,17 @@ DatabaseManager::DatabaseManager(const QString &filePath,
                                  QuotaManager *quotaManager,
                                  QObject *parent) :
     QObject(parent),
+    m_isActivePeriodSet(false),
+    m_isActivePeriod(false),
+    activePeriodFromHour(0),
+    activePeriodFromMinute(0),
+    activePeriodToHour(0),
+    activePeriodToMinute(0),
     m_appFreeIndex(INVALID_APP_INDEX),
     m_lastTrafHour(0),
     m_lastTrafDay(0),
     m_lastTrafMonth(0),
+    m_lastTick(0),
     m_filePath(filePath),
     m_quotaManager(quotaManager),
     m_conf(nullptr),
@@ -77,6 +88,7 @@ void DatabaseManager::setFirewallConf(const FirewallConf *conf)
         logClear();
     }
 
+    initializeActivePeriod();
     initializeQuota();
 }
 
@@ -100,6 +112,21 @@ bool DatabaseManager::initialize()
     }
 
     return true;
+}
+
+void DatabaseManager::initializeActivePeriod()
+{
+    m_isActivePeriodSet = false;
+
+    activePeriodFromHour = activePeriodFromMinute
+            = activePeriodToHour = activePeriodToMinute = 0;
+
+    if (!m_conf) return;
+
+    DateUtil::parseTime(m_conf->activePeriodFrom(),
+                        activePeriodFromHour, activePeriodFromMinute);
+    DateUtil::parseTime(m_conf->activePeriodTo(),
+                        activePeriodToHour, activePeriodToMinute);
 }
 
 void DatabaseManager::initializeQuota()
@@ -266,11 +293,25 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint32 *procTrafByte
     quint32 sumInBytes = 0;
     quint32 sumOutBytes = 0;
 
-    // Store the data
-    const bool isActivePeriod = !m_conf->activePeriodEnabled()
-            || DateUtil::isHourBetween(trafHour, trafDay,
-                                       m_conf->activePeriodFrom(),
-                                       m_conf->activePeriodTo());
+    // Active period
+    const qint32 currentTick = OsUtil::getTickCount();
+    if (!m_isActivePeriodSet
+            || qAbs(currentTick - m_lastTick) >= ACTIVE_PERIOD_CHECK_SECS) {
+        m_lastTick = currentTick;
+
+        m_isActivePeriodSet = true;
+        m_isActivePeriod = true;
+
+        if (m_conf->activePeriodEnabled()) {
+            const int hour = trafHour - trafDay;
+            const int minute = int(unixTime - DateUtil::toUnixTime(trafHour)) / 60;
+
+            m_isActivePeriod = FortCommon::isTimeInPeriod(
+                        hour, minute,
+                        activePeriodFromHour, activePeriodFromMinute,
+                        activePeriodToHour, activePeriodToMinute);
+        }
+    }
 
     // Insert Statements
     const QStmtList insertTrafAppStmts = QStmtList()
@@ -321,7 +362,7 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint32 *procTrafByte
                 replaceAppIdAt(procIndex, appId);
             }
 
-            if (isActivePeriod) {
+            if (m_isActivePeriod) {
                 // Update or insert app bytes
                 updateTrafficList(insertTrafAppStmts, updateTrafAppStmts,
                                   inBytes, outBytes, appId);
@@ -337,7 +378,7 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint32 *procTrafByte
         }
     }
 
-    if (isActivePeriod) {
+    if (m_isActivePeriod) {
         // Update or insert total bytes
         updateTrafficList(insertTrafStmts, updateTrafStmts,
                           sumInBytes, sumOutBytes);
@@ -387,7 +428,7 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint32 *procTrafByte
     m_sqliteDb->commitTransaction();
 
     // Check quotas
-    if (isActivePeriod) {
+    if (m_isActivePeriod) {
         m_quotaManager->checkQuotaDay(trafDay);
         m_quotaManager->checkQuotaMonth(trafMonth);
     }

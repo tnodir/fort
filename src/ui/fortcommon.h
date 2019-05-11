@@ -56,7 +56,12 @@ public:
                             const QString &kernelPath);
     static quint8 confAppGroupIndex(const void *drvConf, int appIndex);
     static bool confAppBlocked(const void *drvConf, int appIndex);
-    static quint16 confAppPeriodBits(const void *drvConf, int hour);
+    static quint16 confAppPeriodBits(const void *drvConf,
+                                     quint8 hour, quint8 minute);
+
+    static bool isTimeInPeriod(quint8 hour, quint8 minute,
+                               quint8 fromHour, quint8 fromMinute,
+                               quint8 toHour, quint8 toMinute);
 
     static void provUnregister();
 };

@@ -1,6 +1,5 @@
 #include "firewallconf.h"
 
-
 #include "../util/fileutil.h"
 #include "../util/net/netutil.h"
 #include "addressgroup.h"
@@ -19,8 +18,6 @@ FirewallConf::FirewallConf(QObject *parent) :
     m_appBlockAll(true),
     m_appAllowAll(false),
     m_activePeriodEnabled(false),
-    m_activePeriodFrom(0),
-    m_activePeriodTo(0),
     m_monthStart(DEFAULT_MONTH_START),
     m_trafHourKeepDays(DEFAULT_TRAF_HOUR_KEEP_DAYS),
     m_trafDayKeepDays(DEFAULT_TRAF_DAY_KEEP_DAYS),
@@ -121,18 +118,18 @@ void FirewallConf::setActivePeriodEnabled(bool activePeriodEnabled)
     }
 }
 
-void FirewallConf::setActivePeriodFrom(int activePeriodFrom)
+void FirewallConf::setActivePeriodFrom(const QString &activePeriodFrom)
 {
     if (m_activePeriodFrom != activePeriodFrom) {
-        m_activePeriodFrom = uint(activePeriodFrom);
+        m_activePeriodFrom = activePeriodFrom;
         emit activePeriodFromChanged();
     }
 }
 
-void FirewallConf::setActivePeriodTo(int activePeriodTo)
+void FirewallConf::setActivePeriodTo(const QString &activePeriodTo)
 {
     if (m_activePeriodTo != activePeriodTo) {
-        m_activePeriodTo = uint(activePeriodTo);
+        m_activePeriodTo = activePeriodTo;
         emit activePeriodToChanged();
     }
 }

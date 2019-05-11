@@ -8,8 +8,6 @@ AppGroup::AppGroup(QObject *parent) :
     m_enabled(true),
     m_fragmentPacket(false),
     m_periodEnabled(false),
-    m_periodFrom(0),
-    m_periodTo(0),
     m_limitInEnabled(false),
     m_limitOutEnabled(false),
     m_speedLimitIn(0),
@@ -38,22 +36,6 @@ void AppGroup::setPeriodEnabled(bool periodEnabled)
     if (bool(m_periodEnabled) != periodEnabled) {
         m_periodEnabled = periodEnabled;
         emit periodEnabledChanged();
-    }
-}
-
-void AppGroup::setPeriodFrom(int periodFrom)
-{
-    if (m_periodFrom != periodFrom) {
-        m_periodFrom = periodFrom;
-        emit periodFromChanged();
-    }
-}
-
-void AppGroup::setPeriodTo(int periodTo)
-{
-    if (m_periodTo != periodTo) {
-        m_periodTo = periodTo;
-        emit periodToChanged();
     }
 }
 
@@ -110,6 +92,22 @@ void AppGroup::setAllowText(const QString &allowText)
     if (m_allowText != allowText) {
         m_allowText = allowText;
         emit allowTextChanged();
+    }
+}
+
+void AppGroup::setPeriodFrom(const QString &periodFrom)
+{
+    if (m_periodFrom != periodFrom) {
+        m_periodFrom = periodFrom;
+        emit periodFromChanged();
+    }
+}
+
+void AppGroup::setPeriodTo(const QString &periodTo)
+{
+    if (m_periodTo != periodTo) {
+        m_periodTo = periodTo;
+        emit periodToChanged();
     }
 }
 
@@ -171,8 +169,8 @@ void AppGroup::fromVariant(const QVariant &v)
     m_fragmentPacket = map["fragmentPacket"].toBool();
 
     m_periodEnabled = map["periodEnabled"].toBool();
-    m_periodFrom = map["periodFrom"].toInt();
-    m_periodTo = map["periodTo"].toInt();
+    m_periodFrom = DateUtil::reformatTime(map["periodFrom"].toString());
+    m_periodTo = DateUtil::reformatTime(map["periodTo"].toString());
 
     m_limitInEnabled = map["limitInEnabled"].toBool();
     m_limitOutEnabled = map["limitOutEnabled"].toBool();

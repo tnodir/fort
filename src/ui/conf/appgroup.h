@@ -10,8 +10,6 @@ class AppGroup : public QObject
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PROPERTY(bool fragmentPacket READ fragmentPacket WRITE setFragmentPacket NOTIFY fragmentPacketChanged)
     Q_PROPERTY(bool periodEnabled READ periodEnabled WRITE setPeriodEnabled NOTIFY periodEnabledChanged)
-    Q_PROPERTY(int periodFrom READ periodFrom WRITE setPeriodFrom NOTIFY periodFromChanged)
-    Q_PROPERTY(int periodTo READ periodTo WRITE setPeriodTo NOTIFY periodToChanged)
     Q_PROPERTY(bool limitInEnabled READ limitInEnabled WRITE setLimitInEnabled NOTIFY limitInEnabledChanged)
     Q_PROPERTY(bool limitOutEnabled READ limitOutEnabled WRITE setLimitOutEnabled NOTIFY limitOutEnabledChanged)
     Q_PROPERTY(quint32 speedLimitIn READ speedLimitIn WRITE setSpeedLimitIn NOTIFY speedLimitInChanged)
@@ -19,6 +17,8 @@ class AppGroup : public QObject
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(QString blockText READ blockText WRITE setBlockText NOTIFY blockTextChanged)
     Q_PROPERTY(QString allowText READ allowText WRITE setAllowText NOTIFY allowTextChanged)
+    Q_PROPERTY(QString periodFrom READ periodFrom WRITE setPeriodFrom NOTIFY periodFromChanged)
+    Q_PROPERTY(QString periodTo READ periodTo WRITE setPeriodTo NOTIFY periodToChanged)
 
 public:
     explicit AppGroup(QObject *parent = nullptr);
@@ -31,12 +31,6 @@ public:
 
     bool periodEnabled() const { return m_periodEnabled; }
     void setPeriodEnabled(bool periodEnabled);
-
-    int periodFrom() const { return m_periodFrom; }
-    void setPeriodFrom(int periodFrom);
-
-    int periodTo() const { return m_periodTo; }
-    void setPeriodTo(int periodTo);
 
     bool limitInEnabled() const { return m_limitInEnabled; }
     void setLimitInEnabled(bool enabled);
@@ -66,6 +60,12 @@ public:
     QString allowText() const { return m_allowText; }
     void setAllowText(const QString &allowText);
 
+    QString periodFrom() const { return m_periodFrom; }
+    void setPeriodFrom(const QString &periodFrom);
+
+    QString periodTo() const { return m_periodTo; }
+    void setPeriodTo(const QString &periodTo);
+
     QString label() const;
 
     QVariant toVariant() const;
@@ -75,8 +75,6 @@ signals:
     void enabledChanged();
     void fragmentPacketChanged();
     void periodEnabledChanged();
-    void periodFromChanged();
-    void periodToChanged();
     void limitInEnabledChanged();
     void limitOutEnabledChanged();
     void speedLimitInChanged();
@@ -84,6 +82,8 @@ signals:
     void nameChanged();
     void blockTextChanged();
     void allowTextChanged();
+    void periodFromChanged();
+    void periodToChanged();
 
 public slots:
 
@@ -93,8 +93,6 @@ private:
     uint m_fragmentPacket   : 1;
 
     uint m_periodEnabled    : 1;
-    uint m_periodFrom       : 5;
-    uint m_periodTo         : 5;
 
     uint m_limitInEnabled   : 1;
     uint m_limitOutEnabled  : 1;
@@ -107,6 +105,10 @@ private:
 
     QString m_blockText;
     QString m_allowText;
+
+    // In format "hh:mm"
+    QString m_periodFrom;
+    QString m_periodTo;
 };
 
 #endif // APPGROUP_H

@@ -132,27 +132,6 @@ void Test::debugStatTrafStep(SqliteDb *sqliteDb, const char *name,
     qDebug() << "--";
 }
 
-void Test::activePeriod()
-{
-    const QDate d1(2018, 8, 31);
-    const QTime t1(15, 35, 24);
-    const QDateTime dt1(d1, t1, Qt::UTC);
-
-    const qint64 unixTime = dt1.toSecsSinceEpoch();
-    const qint32 unixDay = DateUtil::getUnixDay(unixTime);
-    const qint32 unixHour = DateUtil::getUnixHour(unixTime);
-
-    QVERIFY(DateUtil::isHourBetween(unixHour, unixDay, 0, 24));
-    QVERIFY(DateUtil::isHourBetween(unixHour, unixDay, 15, 16));
-    QVERIFY(DateUtil::isHourBetween(unixHour, unixDay, 15, 10));
-    QVERIFY(!DateUtil::isHourBetween(unixHour, unixDay, 15, 15));
-    QVERIFY(!DateUtil::isHourBetween(unixHour, unixDay, 0, 15));
-    QVERIFY(!DateUtil::isHourBetween(unixHour, unixDay, 16, 15));
-    QVERIFY(!DateUtil::isHourBetween(unixHour, unixDay, 24, 0));
-    QVERIFY(!DateUtil::isHourBetween(unixHour, unixDay, 16, 14));
-    QVERIFY(!DateUtil::isHourBetween(unixHour, unixDay, 16, 24));
-}
-
 void Test::monthStart()
 {
     const QDate d1(2018, 1, 8);

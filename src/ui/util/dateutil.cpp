@@ -2,8 +2,6 @@
 
 #include <QLocale>
 
-#include "../../common/util.h"
-
 DateUtil::DateUtil(QObject *parent) :
     QObject(parent)
 {
@@ -85,17 +83,44 @@ QString DateUtil::formatDateTime(qint64 unixTime, const QString &format)
     return QLocale::c().toString(dt, format);
 }
 
-QString DateUtil::formatPeriod(int fromHour, int toHour)
+QString DateUtil::formatPeriod(const QString &from, const QString &to)
 {
-    return QString::fromLatin1("[%1:00-%2:00)")
-            .arg(QString::number(fromHour),
-                 QString::number(toHour));
+    return QString::fromLatin1("[%1-%2)")
+            .arg(from, to);
 }
 
-bool DateUtil::isHourBetween(qint32 unixHour, qint32 unixDay,
-                             int fromHour, int toHour)
+QString DateUtil::formatTime(quint8 hour, quint8 minute)
 {
-    const int hour = unixHour - unixDay;
+    return QString::fromLatin1("%1:%2")
+            .arg(hour, 2, 10, QLatin1Char('0'))
+            .arg(minute, 2, 10, QLatin1Char('0'));
+}
 
-    return is_hour_between(hour, fromHour, toHour);
+QString DateUtil::reformatTime(const QString &time)
+{
+    const int timeSize = time.size();
+    if (timeSize == 5)
+        return time;
+
+    const quint8 hour = parseTimeHour(time);
+    const quint8 minute = (timeSize < 4) ? 0 : parseTimeMinute(time);
+
+    return formatTime(hour, minute);
+}
+
+void DateUtil::parseTime(const QString &time,
+                         quint8 &hour, quint8 &minute)
+{
+    hour = parseTimeHour(time);
+    minute = parseTimeMinute(time);
+}
+
+quint8 DateUtil::parseTimeHour(const QString &period)
+{
+    return quint8(period.leftRef(2).toUInt());
+}
+
+quint8 DateUtil::parseTimeMinute(const QString &period)
+{
+    return quint8(period.rightRef(2).toUInt());
 }

@@ -11,7 +11,6 @@ class Test : public QObject
 
 private slots:
     void dbWriteRead();
-    void activePeriod();
     void monthStart();
     void migrations();
 

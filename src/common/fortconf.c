@@ -1,7 +1,6 @@
 /* Fort Firewall Driver Configuration */
 
 #include "fortconf.h"
-#include "util.h"
 
 
 #ifndef FORT_DRIVER
@@ -14,6 +13,17 @@ fort_memcmp (const char *p1, const char *p2, size_t len)
   return (n == len) ? 0 : (p1[n] - p2[n]);
 }
 #endif
+
+static BOOL
+is_time_in_period (FORT_TIME time, FORT_PERIOD period)
+{
+  const int x = time.hour * 60 + time.minute;
+  const int from = period.from.hour * 60 + period.from.minute;
+  const int to = period.to.hour * 60 + period.to.minute;
+
+  return (from <= to ? (x >= from && x < (to - 1))
+                     : (x >= from || x < (to - 1)));
+}
 
 static BOOL
 fort_conf_ip_inrange (UINT32 ip, UINT32 count, const UINT32 *iprange)
@@ -170,11 +180,11 @@ fort_conf_app_blocked (const PFORT_CONF conf, int app_index)
 }
 
 static UINT16
-fort_conf_app_period_bits (const PFORT_CONF conf, int hour1, int hour2,
+fort_conf_app_period_bits (const PFORT_CONF conf, FORT_TIME time,
                            int *periods_n)
 {
   const char *data;
-  const CHAR *app_periods;
+  PFORT_PERIOD app_periods;
   UINT16 period_bits;
   UINT8 count = conf->app_periods_n;
   int n, i;
@@ -183,19 +193,16 @@ fort_conf_app_period_bits (const PFORT_CONF conf, int hour1, int hour2,
     return 0;
 
   data = conf->data;
-  app_periods = (const CHAR *) (data + conf->app_periods_off);
+  app_periods = (const PFORT_PERIOD) (data + conf->app_periods_off);
   period_bits = (UINT16) conf->flags.group_bits;
   n = 0;
 
   for (i = 0; i < FORT_CONF_GROUP_MAX; ++i) {
     const UINT16 bit = (1 << i);
-    const int periodFrom = *app_periods++;
-    const int periodTo = *app_periods++;
+    const FORT_PERIOD period = *app_periods++;
 
-    if ((period_bits & bit) != 0
-        && (periodFrom != 0 || periodTo != 0)) {
-      if (!(is_hour_between(hour1, periodFrom, periodTo)
-          && (hour1 == hour2 || is_hour_between(hour2, periodFrom, periodTo)))) {
+    if ((period_bits & bit) != 0 && period.v != 0) {
+      if (!is_time_in_period(time, period)) {
         period_bits ^= bit;
       }
 

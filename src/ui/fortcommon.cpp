@@ -173,11 +173,33 @@ bool FortCommon::confAppBlocked(const void *drvConf, int appIndex)
     return fort_conf_app_blocked(conf, appIndex);
 }
 
-quint16 FortCommon::confAppPeriodBits(const void *drvConf, int hour)
+quint16 FortCommon::confAppPeriodBits(const void *drvConf,
+                                      quint8 hour, quint8 minute)
 {
     const PFORT_CONF conf = (const PFORT_CONF) drvConf;
 
-    return fort_conf_app_period_bits(conf, hour, hour, nullptr);
+    FORT_TIME time;
+    time.hour = hour;
+    time.minute = minute;
+
+    return fort_conf_app_period_bits(conf, time, nullptr);
+}
+
+bool FortCommon::isTimeInPeriod(quint8 hour, quint8 minute,
+                                quint8 fromHour, quint8 fromMinute,
+                                quint8 toHour, quint8 toMinute)
+{
+    FORT_TIME time;
+    time.hour = hour;
+    time.minute = minute;
+
+    FORT_PERIOD period;
+    period.from.hour = fromHour;
+    period.from.minute = fromMinute;
+    period.to.hour = toHour;
+    period.to.minute = toMinute;
+
+    return is_time_in_period(time, period);
 }
 
 void FortCommon::provUnregister()

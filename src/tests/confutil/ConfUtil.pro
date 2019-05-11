@@ -10,7 +10,9 @@ SOURCES += \
     $$UIPATH/util/dateutil.cpp \
     $$UIPATH/util/fileutil.cpp \
     $$UIPATH/util/net/ip4range.cpp \
-    $$UIPATH/util/net/netutil.cpp
+    $$UIPATH/util/net/netutil.cpp \
+    $$UIPATH/util/osutil.cpp \
+    $$UIPATH/util/processinfo.cpp
 
 HEADERS += \
     $$UIPATH/conf/addressgroup.h \
@@ -22,4 +24,6 @@ HEADERS += \
     $$UIPATH/util/dateutil.h \
     $$UIPATH/util/fileutil.h \
     $$UIPATH/util/net/ip4range.h \
-    $$UIPATH/util/net/netutil.h
+    $$UIPATH/util/net/netutil.h \
+    $$UIPATH/util/osutil.h \
+    $$UIPATH/util/processinfo.h

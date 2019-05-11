@@ -29,6 +29,10 @@ ApplicationWindow {
         fortManager.closeWindow();
     }
 
+    DateUtil {
+        id: dateUtil
+    }
+
     FileUtil {
         id: fileUtil
     }

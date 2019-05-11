@@ -57,6 +57,7 @@ public slots:
 private:
     using QStmtList = QList<SqliteStmt *>;
 
+    void initializeActivePeriod();
     void initializeQuota();
 
     void clearStmts();
@@ -88,11 +89,21 @@ private:
     SqliteStmt *getSqliteStmt(const char *sql);
 
 private:
+    bool m_isActivePeriodSet    : 1;
+    bool m_isActivePeriod       : 1;
+
+    quint8 activePeriodFromHour;
+    quint8 activePeriodFromMinute;
+    quint8 activePeriodToHour;
+    quint8 activePeriodToMinute;
+
     qint16 m_appFreeIndex;
 
     qint32 m_lastTrafHour;
     qint32 m_lastTrafDay;
     qint32 m_lastTrafMonth;
+
+    qint32 m_lastTick;
 
     QString m_filePath;
 

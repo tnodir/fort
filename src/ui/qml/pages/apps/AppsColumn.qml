@@ -54,7 +54,7 @@ ColumnLayout {
             }
         }
 
-        SpinDoubleRow {
+        SpinPeriodRow {
             Layout.maximumWidth: implicitWidth
             enabled: cbEnabled.checked
 
@@ -69,21 +69,17 @@ ColumnLayout {
                 }
             }
             field1 {
-                from: 0
-                to: 24
-                defaultValue: appGroup.periodFrom
+                defaultTime: appGroup.periodFrom
                 onValueEdited: {
-                    appGroup.periodFrom = field1.value;
+                    appGroup.periodFrom = field1.valueTime;
 
                     setConfEdited();
                 }
             }
             field2 {
-                from: 0
-                to: 24
-                defaultValue: appGroup.periodTo
+                defaultTime: appGroup.periodTo
                 onValueEdited: {
-                    appGroup.periodTo = field2.value;
+                    appGroup.periodTo = field2.valueTime;
 
                     setConfEdited();
                 }

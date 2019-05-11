@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#define OS_TICKS_PER_SECOND 1000
+
 class OsUtil : public QObject
 {
     Q_OBJECT
@@ -18,6 +20,8 @@ public:
 
     static quint32 lastErrorCode();
     static QString lastErrorMessage(quint32 errorCode = lastErrorCode());
+
+    static qint32 getTickCount();
 };
 
 #endif // OSUTIL_H

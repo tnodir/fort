@@ -30,10 +30,16 @@ public:
 
     static QString formatDateTime(qint64 unixTime, const QString &format);
 
-    static QString formatPeriod(int fromHour, int toHour);
+    static QString formatPeriod(const QString &from, const QString &to);
 
-    static bool isHourBetween(qint32 unixHour, qint32 unixDay,
-                              int fromHour, int toHour);
+    Q_INVOKABLE static QString formatTime(quint8 hour, quint8 minute);
+    static QString reformatTime(const QString &time);
+
+    static void parseTime(const QString &time,
+                          quint8 &hour, quint8 &minute);
+
+    Q_INVOKABLE static quint8 parseTimeHour(const QString &period);
+    Q_INVOKABLE static quint8 parseTimeMinute(const QString &period);
 };
 
 #endif // DATEUTIL_H

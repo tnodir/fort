@@ -45,6 +45,28 @@ typedef struct fort_traf {
   };
 } FORT_TRAF, *PFORT_TRAF;
 
+typedef struct fort_time {
+  union {
+    struct {
+      UCHAR hour;
+      UCHAR minute;
+    };
+
+    UINT16 v;
+  };
+} FORT_TIME, *PFORT_TIME;
+
+typedef struct fort_period {
+  union {
+    struct {
+      FORT_TIME from;
+      FORT_TIME to;
+    };
+
+    UINT32 v;
+  };
+} FORT_PERIOD, *PFORT_PERIOD;
+
 typedef struct fort_conf_group {
   UINT16 fragment_bits;
 

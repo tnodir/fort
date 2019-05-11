@@ -7,5 +7,4 @@ SOURCES += \
 HEADERS += \
     $$PWD/common.h \
     $$PWD/fortconf.h \
-    $$PWD/util.h \
     $$PWD/version.h

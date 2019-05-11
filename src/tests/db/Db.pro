@@ -13,7 +13,9 @@ SOURCES += \
     $$UIPATH/fortsettings.cpp \
     $$UIPATH/util/dateutil.cpp \
     $$UIPATH/util/fileutil.cpp \
-    $$UIPATH/util/net/netutil.cpp
+    $$UIPATH/util/net/netutil.cpp \
+    $$UIPATH/util/osutil.cpp \
+    $$UIPATH/util/processinfo.cpp
 
 HEADERS += \
     $$UIPATH/conf/addressgroup.h \
@@ -26,13 +28,15 @@ HEADERS += \
     $$UIPATH/fortsettings.h \
     $$UIPATH/util/dateutil.h \
     $$UIPATH/util/fileutil.h \
-    $$UIPATH/util/net/netutil.h
+    $$UIPATH/util/net/netutil.h \
+    $$UIPATH/util/osutil.h \
+    $$UIPATH/util/processinfo.h
 
 # Test Data
 RESOURCES += data.qrc
 
 # Database Migrations
-RESOURCES += $$UIPATH/db/migrations.qrc
+RESOURCES += $$UIPATH/db/db-migrations.qrc
 
 # 3rd party integrations
 CONFIG += sqlite

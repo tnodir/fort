@@ -7,6 +7,7 @@
 
 #include "conf/addressgroup.h"
 #include "conf/firewallconf.h"
+#include "util/dateutil.h"
 #include "util/fileutil.h"
 
 FortSettings::FortSettings(const QStringList &args,
@@ -251,8 +252,8 @@ bool FortSettings::readConfIni(FirewallConf &conf) const
 
     m_ini->beginGroup("stat");
     conf.setActivePeriodEnabled(iniBool("activePeriodEnabled"));
-    conf.setActivePeriodFrom(iniInt("activePeriodFrom"));
-    conf.setActivePeriodTo(iniInt("activePeriodTo"));
+    conf.setActivePeriodFrom(DateUtil::reformatTime(iniText("activePeriodFrom")));
+    conf.setActivePeriodTo(DateUtil::reformatTime(iniText("activePeriodTo")));
     conf.setMonthStart(iniInt("monthStart", DEFAULT_MONTH_START));
     conf.setTrafHourKeepDays(iniInt("trafHourKeepDays", DEFAULT_TRAF_HOUR_KEEP_DAYS));
     conf.setTrafDayKeepDays(iniInt("trafDayKeepDays", DEFAULT_TRAF_DAY_KEEP_DAYS));

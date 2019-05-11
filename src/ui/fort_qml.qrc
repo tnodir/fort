@@ -18,6 +18,9 @@
         <file>qml/controls/SpinComboRow.qml</file>
         <file>qml/controls/SpinDouble.qml</file>
         <file>qml/controls/SpinDoubleRow.qml</file>
+        <file>qml/controls/SpinPeriod.qml</file>
+        <file>qml/controls/SpinPeriodRow.qml</file>
+        <file>qml/controls/SpinTime.qml</file>
         <file>qml/controls/SwipeViewControl.qml</file>
         <file>qml/controls/TabBarControl.qml</file>
         <file>qml/controls/TextAreaFrame.qml</file>

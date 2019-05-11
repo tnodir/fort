@@ -30,8 +30,8 @@ void Test::confWriteRead()
     appGroup1->setName("Base");
     appGroup1->setEnabled(true);
     appGroup1->setPeriodEnabled(true);
-    appGroup1->setPeriodFrom(0);
-    appGroup1->setPeriodTo(12);
+    appGroup1->setPeriodFrom("00:00");
+    appGroup1->setPeriodTo("12:00");
     appGroup1->setBlockText(
                 "System"
                 );
@@ -81,11 +81,29 @@ void Test::confWriteRead()
                 data, FortCommon::confAppIndex(
                     data, FileUtil::pathToKernelPath("C:\\Program Files\\Test.exe").toLower())));
 
-    QCOMPARE(FortCommon::confAppPeriodBits(data, 0), 0x01);
-    QCOMPARE(FortCommon::confAppPeriodBits(data, 12), 0);
+    QCOMPARE(FortCommon::confAppPeriodBits(data, 0, 0), 0x01);
+    QCOMPARE(FortCommon::confAppPeriodBits(data, 12, 0), 0);
 
     const int firefoxIndex = FortCommon::confAppIndex(
                 data, FileUtil::pathToKernelPath("C:\\Utils\\Firefox\\Bin\\firefox.exe").toLower());
     QVERIFY(FortCommon::confAppBlocked(data, firefoxIndex));
     QCOMPARE(1, int(FortCommon::confAppGroupIndex(data, firefoxIndex)));
+}
+
+void Test::checkPeriod()
+{
+    const quint8 h = 15, m = 35;
+
+    QVERIFY(FortCommon::isTimeInPeriod(h, m, 0,0, 24,0));
+    QVERIFY(FortCommon::isTimeInPeriod(h, m, 15,0, 16,0));
+    QVERIFY(FortCommon::isTimeInPeriod(h, m, 15,0, 10,0));
+    QVERIFY(!FortCommon::isTimeInPeriod(h, m, 15,0, 15,0));
+    QVERIFY(!FortCommon::isTimeInPeriod(h, m, 0,0, 15,0));
+    QVERIFY(!FortCommon::isTimeInPeriod(h, m, 16,0, 15,0));
+    QVERIFY(!FortCommon::isTimeInPeriod(h, m, 24,0, 0,0));
+    QVERIFY(!FortCommon::isTimeInPeriod(h, m, 16,0, 14,0));
+    QVERIFY(!FortCommon::isTimeInPeriod(h, m, 16,0, 24,0));
+
+    QVERIFY(FortCommon::isTimeInPeriod(h, m, 15,35, 15,37));
+    QVERIFY(!FortCommon::isTimeInPeriod(h, m, 15,35, 15,36));
 }

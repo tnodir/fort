@@ -11,7 +11,9 @@ SOURCES += \
     $$UIPATH/util/fileutil.cpp \
     $$UIPATH/util/net/ip4range.cpp \
     $$UIPATH/util/net/netdownloader.cpp \
-    $$UIPATH/util/net/netutil.cpp
+    $$UIPATH/util/net/netutil.cpp \
+    $$UIPATH/util/osutil.cpp \
+    $$UIPATH/util/processinfo.cpp
 
 HEADERS += \
     $$UIPATH/conf/addressgroup.h \
@@ -24,7 +26,9 @@ HEADERS += \
     $$UIPATH/util/fileutil.h \
     $$UIPATH/util/net/ip4range.h \
     $$UIPATH/util/net/netdownloader.h \
-    $$UIPATH/util/net/netutil.h
+    $$UIPATH/util/net/netutil.h \
+    $$UIPATH/util/osutil.h \
+    $$UIPATH/util/processinfo.h
 
 DEFINES += \
     PWD='"$$PWD"' \

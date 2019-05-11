@@ -13,6 +13,7 @@
 #include "../../conf/appgroup.h"
 #include "../../conf/firewallconf.h"
 #include "../../fortcommon.h"
+#include "../dateutil.h"
 #include "../fileutil.h"
 #include "../net/ip4range.h"
 
@@ -36,7 +37,7 @@ void ConfUtil::setErrorMessage(const QString &errorMessage)
 int ConfUtil::write(const FirewallConf &conf, QByteArray &buf)
 {
     quint32 addressGroupsSize = 0;
-    numbers_arr_t addressGroupOffsets;
+    longs_arr_t addressGroupOffsets;
     addrranges_arr_t addressRanges(conf.addressGroupsList().size());
 
     if (!parseAddressGroups(conf.addressGroupsList(), addressRanges,
@@ -45,7 +46,7 @@ int ConfUtil::write(const FirewallConf &conf, QByteArray &buf)
 
     quint32 appPathsLen = 0;
     QStringList appPaths;
-    numbers_arr_t appPerms;
+    longs_arr_t appPerms;
     quint8 appPeriodsCount = 0;
     chars_arr_t appPeriods;
     appgroups_map_t appGroupIndexes;
@@ -64,7 +65,8 @@ int ConfUtil::write(const FirewallConf &conf, QByteArray &buf)
     const int confIoSize = FORT_CONF_IO_CONF_OFF + FORT_CONF_DATA_OFF
             + addressGroupsSize
             + FORT_CONF_STR_DATA_SIZE(appGroupIndexes.size())  // appPerms
-            + FORT_CONF_STR_DATA_SIZE(conf.appGroupsList().size() * 2)  // appPeriods
+            + FORT_CONF_STR_DATA_SIZE(conf.appGroupsList().size()
+                                      * sizeof(FORT_PERIOD))  // appPeriods
             + appPaths.size() * sizeof(quint32)
             + FORT_CONF_STR_HEADER_SIZE(appPaths.size())
             + FORT_CONF_STR_DATA_SIZE(appPathsLen);
@@ -118,12 +120,12 @@ int ConfUtil::writeVersion(QByteArray &buf)
 
 bool ConfUtil::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
                                   addrranges_arr_t &addressRanges,
-                                  numbers_arr_t &addressGroupOffsets,
+                                  longs_arr_t &addressGroupOffsets,
                                   quint32 &addressGroupsSize)
 {
     const int groupsCount = addressGroups.size();
 
-    addressGroupsSize = groupsCount * sizeof(quint32);  // offsets
+    addressGroupsSize = quint32(groupsCount) * sizeof(quint32);  // offsets
 
     for (int i = 0; i < groupsCount; ++i) {
         AddressGroup *addressGroup = addressGroups.at(i);
@@ -170,7 +172,7 @@ bool ConfUtil::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
 bool ConfUtil::parseAppGroups(const QList<AppGroup *> &appGroups,
                               QStringList &appPaths,
                               quint32 &appPathsLen,
-                              numbers_arr_t &appPerms,
+                              longs_arr_t &appPerms,
                               chars_arr_t &appPeriods,
                               quint8 &appPeriodsCount,
                               appgroups_map_t &appGroupIndexes)
@@ -202,30 +204,34 @@ bool ConfUtil::parseAppGroups(const QList<AppGroup *> &appGroups,
 
         // Enabled Period
         {
-            qint8 periodFrom = 0, periodTo = 0;
-            if (appGroup->enabled() && appGroup->periodEnabled()) {
-                periodFrom = qint8(appGroup->periodFrom());
-                periodTo = qint8(appGroup->periodTo());
+            quint8 fromHour = 0, fromMinute = 0;
+            quint8 toHour = 0, toMinute = 0;
 
-                if (periodFrom != 0 || periodTo != 0) {
+            if (appGroup->periodEnabled()) {
+                DateUtil::parseTime(appGroup->periodFrom(), fromHour, fromMinute);
+                DateUtil::parseTime(appGroup->periodTo(), toHour, toMinute);
+
+                if (fromHour != 0 || fromMinute != 0
+                        || toHour != 0 || toMinute != 0) {
                     ++appPeriodsCount;
                 }
             }
-            appPeriods.append(periodFrom);
-            appPeriods.append(periodTo);
+            appPeriods.append(qint8(fromHour));
+            appPeriods.append(qint8(fromMinute));
+            appPeriods.append(qint8(toHour));
+            appPeriods.append(qint8(toMinute));
         }
     }
 
     // Fill app. paths & perms arrays
     {
-        appperms_map_t::const_iterator it = appPermsMap.constBegin();
-        appperms_map_t::const_iterator end = appPermsMap.constEnd();
-
         appPerms.reserve(appPermsMap.size());
 
+        auto it = appPermsMap.constBegin();
+        auto end = appPermsMap.constEnd();
         for (; it != end; ++it) {
             const QString &appPath = it.key();
-            appPathsLen += appPath.size() * sizeof(wchar_t);
+            appPathsLen += quint32(appPath.size()) * sizeof(wchar_t);
 
             appPaths.append(appPath);
             appPerms.append(it.value());
@@ -251,7 +257,7 @@ bool ConfUtil::parseApps(const QString &text, bool blocked,
         if (appPath.isEmpty())
             continue;
 
-        if (appPath.size() > APP_PATH_MAX) {
+        if (appPath.size() > int(APP_PATH_MAX)) {
             setErrorMessage(tr("Length of Application's Path must be < %1")
                             .arg(APP_PATH_MAX));
             return false;
@@ -264,7 +270,7 @@ bool ConfUtil::parseApps(const QString &text, bool blocked,
         if (appPermsMap.contains(appPath)) {
             appPerms |= appPermsMap.value(appPath);
         } else {
-            appGroupIndexes.insert(appPath, groupOffset);
+            appGroupIndexes.insert(appPath, qint8(groupOffset));
         }
 
         appPermsMap.insert(appPath, appPerms);
@@ -293,9 +299,9 @@ QString ConfUtil::parseAppPath(const QStringRef &line)
 
 void ConfUtil::writeData(char *output, const FirewallConf &conf,
                          const addrranges_arr_t &addressRanges,
-                         const numbers_arr_t &addressGroupOffsets,
+                         const longs_arr_t &addressGroupOffsets,
                          const QStringList &appPaths,
-                         const numbers_arr_t &appPerms,
+                         const longs_arr_t &appPerms,
                          const chars_arr_t &appPeriods,
                          quint8 appPeriodsCount,
                          const appgroups_map_t &appGroupIndexes)
@@ -303,20 +309,20 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     PFORT_CONF_IO drvConfIo = (PFORT_CONF_IO) output;
     PFORT_CONF drvConf = &drvConfIo->conf;
     char *data = drvConf->data;
-    const quint32 appPathsSize = appPaths.size();
+    const quint32 appPathsSize = quint32(appPaths.size());
     quint32 addrGroupsOff, appGroupsOff;
     quint32 appPathsOff, appPermsOff, appPeriodsOff;
 
 #define CONF_DATA_OFFSET quint32(data - drvConf->data)
     addrGroupsOff = CONF_DATA_OFFSET;
-    writeNumbers(&data, addressGroupOffsets);
+    writeLongs(&data, addressGroupOffsets);
     writeAddressRanges(&data, addressRanges);
 
     appGroupsOff = CONF_DATA_OFFSET;
     writeChars(&data, appGroupIndexes.values().toVector());
 
     appPermsOff = CONF_DATA_OFFSET;
-    writeNumbers(&data, appPerms);
+    writeLongs(&data, appPerms);
 
     appPeriodsOff = CONF_DATA_OFFSET;
     writeChars(&data, appPeriods);
@@ -351,7 +357,7 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
 
     FortCommon::confAppPermsMaskInit(drvConf);
 
-    drvConf->apps_n = appPathsSize;
+    drvConf->apps_n = quint16(appPathsSize);
     drvConf->app_periods_n = appPeriodsCount;
 
     drvConf->addr_groups_off = addrGroupsOff;
@@ -368,7 +374,7 @@ void ConfUtil::writeFragmentBits(quint16 *fragmentBits,
     *fragmentBits = 0;
     int i = 0;
     foreach (const AppGroup *appGroup, conf.appGroupsList()) {
-        if (appGroup->enabled() && appGroup->fragmentPacket()) {
+        if (appGroup->fragmentPacket()) {
             *fragmentBits |= (1 << i);
         }
         ++i;
@@ -427,30 +433,43 @@ void ConfUtil::writeAddressRange(char **data,
     addrGroup->include_all = addressRange.includeAll();
     addrGroup->exclude_all = addressRange.excludeAll();
 
-    addrGroup->include_n = addressRange.includeRange().fromArray().size();
-    addrGroup->exclude_n = addressRange.excludeRange().fromArray().size();
+    addrGroup->include_n = quint32(addressRange.includeRange()
+                                   .fromArray().size());
+    addrGroup->exclude_n = quint32(addressRange.excludeRange()
+                                   .fromArray().size());
 
     *data += FORT_CONF_ADDR_DATA_OFF;
 
-    writeNumbers(data, addressRange.includeRange().fromArray());
-    writeNumbers(data, addressRange.includeRange().toArray());
+    writeLongs(data, addressRange.includeRange().fromArray());
+    writeLongs(data, addressRange.includeRange().toArray());
 
-    writeNumbers(data, addressRange.excludeRange().fromArray());
-    writeNumbers(data, addressRange.excludeRange().toArray());
+    writeLongs(data, addressRange.excludeRange().fromArray());
+    writeLongs(data, addressRange.excludeRange().toArray());
 }
 
-void ConfUtil::writeNumbers(char **data, const numbers_arr_t &array)
+void ConfUtil::writeShorts(char **data, const shorts_arr_t &array)
 {
-    const size_t arraySize = size_t(array.size()) * sizeof(quint32);
+    writeNumbers(data, array.constData(), array.size(), sizeof(quint16));
+}
 
-    memcpy(*data, array.constData(), arraySize);
+void ConfUtil::writeLongs(char **data, const longs_arr_t &array)
+{
+    writeNumbers(data, array.constData(), array.size(), sizeof(quint32));
+}
+
+void ConfUtil::writeNumbers(char **data, void const *src,
+                            int elemCount, uint elemSize)
+{
+    const size_t arraySize = size_t(elemCount) * elemSize;
+
+    memcpy(*data, src, arraySize);
 
     *data += arraySize;
 }
 
 void ConfUtil::writeChars(char **data, const chars_arr_t &array)
 {
-    const int arraySize = array.size();
+    const size_t arraySize = size_t(array.size());
 
     memcpy(*data, array.constData(), arraySize);
 

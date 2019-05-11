@@ -28,8 +28,8 @@ class FirewallConf : public QObject
     Q_PROPERTY(bool appBlockAll READ appBlockAll WRITE setAppBlockAll NOTIFY appBlockAllChanged)
     Q_PROPERTY(bool appAllowAll READ appAllowAll WRITE setAppAllowAll NOTIFY appAllowAllChanged)
     Q_PROPERTY(bool activePeriodEnabled READ activePeriodEnabled WRITE setActivePeriodEnabled NOTIFY activePeriodEnabledChanged)
-    Q_PROPERTY(int activePeriodFrom READ activePeriodFrom WRITE setActivePeriodFrom NOTIFY activePeriodFromChanged)
-    Q_PROPERTY(int activePeriodTo READ activePeriodTo WRITE setActivePeriodTo NOTIFY activePeriodToChanged)
+    Q_PROPERTY(QString activePeriodFrom READ activePeriodFrom WRITE setActivePeriodFrom NOTIFY activePeriodFromChanged)
+    Q_PROPERTY(QString activePeriodTo READ activePeriodTo WRITE setActivePeriodTo NOTIFY activePeriodToChanged)
     Q_PROPERTY(int monthStart READ monthStart WRITE setMonthStart NOTIFY monthStartChanged)
     Q_PROPERTY(int trafHourKeepDays READ trafHourKeepDays WRITE setTrafHourKeepDays NOTIFY trafHourKeepDaysChanged)
     Q_PROPERTY(int trafDayKeepDays READ trafDayKeepDays WRITE setTrafDayKeepDays NOTIFY trafDayKeepDaysChanged)
@@ -90,11 +90,11 @@ public:
     bool activePeriodEnabled() const { return m_activePeriodEnabled; }
     void setActivePeriodEnabled(bool activePeriodEnabled);
 
-    int activePeriodFrom() const { return m_activePeriodFrom; }
-    void setActivePeriodFrom(int activePeriodFrom);
+    QString activePeriodFrom() const { return m_activePeriodFrom; }
+    void setActivePeriodFrom(const QString &activePeriodFrom);
 
-    int activePeriodTo() const { return m_activePeriodTo; }
-    void setActivePeriodTo(int activePeriodTo);
+    QString activePeriodTo() const { return m_activePeriodTo; }
+    void setActivePeriodTo(const QString &activePeriodTo);
 
     int monthStart() const { return m_monthStart; }
     void setMonthStart(int monthStart);
@@ -190,8 +190,6 @@ private:
     uint m_appAllowAll      : 1;
 
     uint m_activePeriodEnabled : 1;
-    uint m_activePeriodFrom : 5;
-    uint m_activePeriodTo   : 5;
 
     uint m_monthStart       : 5;
 
@@ -203,6 +201,9 @@ private:
 
     quint32 m_quotaDayMb;
     quint32 m_quotaMonthMb;
+
+    QString m_activePeriodFrom;
+    QString m_activePeriodTo;
 
     QString m_passwordHash;
 

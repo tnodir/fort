@@ -15,7 +15,8 @@ QT_FORWARD_DECLARE_CLASS(FirewallConf)
 
 QT_FORWARD_DECLARE_STRUCT(fort_traf)
 
-using numbers_arr_t = QVector<quint32>;
+using longs_arr_t = QVector<quint32>;
+using shorts_arr_t = QVector<quint16>;
 using chars_arr_t = QVector<qint8>;
 
 using addrranges_arr_t = QVarLengthArray<AddressRange, 2>;
@@ -46,14 +47,14 @@ private:
 
     bool parseAddressGroups(const QList<AddressGroup *> &addressGroups,
                             addrranges_arr_t &addressRanges,
-                            numbers_arr_t &addressGroupOffsets,
+                            longs_arr_t &addressGroupOffsets,
                             quint32 &addressGroupsSize);
 
     // Convert app. groups to plain lists
     bool parseAppGroups(const QList<AppGroup *> &appGroups,
                         QStringList &appPaths,
                         quint32 &appPathsLen,
-                        numbers_arr_t &appPerms,
+                        longs_arr_t &appPerms,
                         chars_arr_t &appPeriods,
                         quint8 &appPeriodsCount,
                         appgroups_map_t &appGroupIndexes);
@@ -67,9 +68,9 @@ private:
 
     static void writeData(char *output, const FirewallConf &conf,
                           const addrranges_arr_t &addressRanges,
-                          const numbers_arr_t &addressGroupOffsets,
+                          const longs_arr_t &addressGroupOffsets,
                           const QStringList &appPaths,
-                          const numbers_arr_t &appPerms,
+                          const longs_arr_t &appPerms,
                           const chars_arr_t &appPeriods,
                           quint8 appPeriodsCount,
                           const appgroups_map_t &appGroupIndexes);
@@ -86,7 +87,10 @@ private:
     static void writeAddressRange(char **data,
                                   const AddressRange &addressRange);
 
-    static void writeNumbers(char **data, const numbers_arr_t &array);
+    static void writeShorts(char **data, const shorts_arr_t &array);
+    static void writeLongs(char **data, const longs_arr_t &array);
+    static void writeNumbers(char **data, void const *src,
+                             int elemCount, uint elemSize);
     static void writeChars(char **data, const chars_arr_t &array);
     static void writeStrings(char **data, const QStringList &list);
 
