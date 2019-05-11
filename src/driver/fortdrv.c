@@ -208,7 +208,7 @@ fort_conf_ref_flags_set (const PFORT_CONF_FLAGS conf_flags)
 }
 
 static BOOL
-fort_conf_period_update (int *periods_n, BOOL force)
+fort_conf_period_update (BOOL force, int *periods_n)
 {
   PFORT_CONF_REF conf_ref;
   FORT_TIME time;
@@ -865,7 +865,7 @@ fort_callout_force_reauth (const FORT_CONF_FLAGS old_conf_flags,
   {
     int periods_n = 0;
 
-    fort_conf_period_update(&periods_n, TRUE);
+    fort_conf_period_update(TRUE, &periods_n);
 
     fort_timer_update(&g_device->app_timer,
       (periods_n != 0));
@@ -1032,7 +1032,7 @@ fort_worker_reauth (void)
 static void
 fort_app_period_timer (void)
 {
-  if (fort_conf_period_update(NULL, FALSE)) {
+  if (fort_conf_period_update(FALSE, NULL)) {
     fort_worker_queue(&g_device->worker,
       FORT_WORKER_REAUTH, &fort_worker_reauth);
   }
