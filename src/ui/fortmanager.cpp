@@ -424,10 +424,11 @@ void FortManager::showInfoBox(const QString &text,
     QMessageBox::information(&m_window, title, text);
 }
 
-QStringList FortManager::getOpenFileNames(const QString &title)
+QStringList FortManager::getOpenFileNames(const QString &title,
+                                          const QString &filter)
 {
     return QFileDialog::getOpenFileNames(
-                nullptr, title, QString(), QString(),
+                nullptr, title, QString(), filter,
                 nullptr, QFileDialog::ReadOnly);
 }
 

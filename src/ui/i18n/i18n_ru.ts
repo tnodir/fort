@@ -4,37 +4,37 @@
 <context>
     <name>ConfUtil</name>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="137"/>
+        <location filename="../util/conf/confutil.cpp" line="139"/>
         <source>Bad Include IP address: %1</source>
         <translation>Некорректный IP адрес для включения: %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="145"/>
+        <location filename="../util/conf/confutil.cpp" line="147"/>
         <source>Bad Exclude IP address: %1</source>
         <translation>Некорректный IP адрес для исключения: %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="156"/>
+        <location filename="../util/conf/confutil.cpp" line="158"/>
         <source>Too many IP addresses</source>
         <translation>Слишком много IP адресов</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="59"/>
+        <location filename="../util/conf/confutil.cpp" line="60"/>
         <source>Too many application paths</source>
         <translation>Слишком много путей приложений</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="180"/>
+        <location filename="../util/conf/confutil.cpp" line="182"/>
         <source>Number of Application Groups must be &lt; %1</source>
         <translation>Количество групп приложений должно быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="192"/>
+        <location filename="../util/conf/confutil.cpp" line="194"/>
         <source>Length of Application Group&apos;s Name must be &lt; %1</source>
         <translation>Длина наименования группы приложения должна быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="255"/>
+        <location filename="../util/conf/confutil.cpp" line="261"/>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Длина пути приложения должна быть &lt; %1</translation>
     </message>
@@ -50,42 +50,42 @@
 <context>
     <name>FortManager</name>
     <message>
-        <location filename="../fortmanager.cpp" line="406"/>
+        <location filename="../fortmanager.cpp" line="408"/>
         <source>Password input</source>
         <translation>Ввод пароля</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="406"/>
+        <location filename="../fortmanager.cpp" line="408"/>
         <source>Please enter the password</source>
         <translation>Наберите пароль пожалуйста</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="642"/>
+        <location filename="../fortmanager.cpp" line="645"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="647"/>
+        <location filename="../fortmanager.cpp" line="650"/>
         <source>Traffic Graph</source>
         <translation>График трафика</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="657"/>
+        <location filename="../fortmanager.cpp" line="660"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="664"/>
+        <location filename="../fortmanager.cpp" line="667"/>
         <source>Stop Traffic</source>
         <translation>Остановить трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="671"/>
+        <location filename="../fortmanager.cpp" line="674"/>
         <source>Stop Internet Traffic</source>
         <translation>Остановить Интернет трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="699"/>
+        <location filename="../fortmanager.cpp" line="702"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -93,17 +93,17 @@
 <context>
     <name>FortSettings</name>
     <message>
-        <location filename="../fortsettings.cpp" line="214"/>
+        <location filename="../fortsettings.cpp" line="215"/>
         <source>Can&apos;t write .ini file</source>
         <translation>Не удалось записать .ini файл</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="229"/>
+        <location filename="../fortsettings.cpp" line="230"/>
         <source>Can&apos;t create .conf file</source>
         <translation>Не удалось создать .conf файл</translation>
     </message>
     <message>
-        <location filename="../fortsettings.cpp" line="224"/>
+        <location filename="../fortsettings.cpp" line="225"/>
         <source>Can&apos;t create backup .conf file</source>
         <translation>Не удалось создать бэкап .conf файла</translation>
     </message>
@@ -350,37 +350,37 @@
         <translation>период, часы</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="103"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="99"/>
         <source>Move All Lines to &apos;Allow&apos;</source>
         <translation>Перенести все строки в &apos;Разрешить&apos;</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="105"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="101"/>
         <source>Move All Lines to &apos;Block&apos;</source>
         <translation>Перенести все строки в &apos;Блокировать&apos;</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="107"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="103"/>
         <source>Move Selected Lines to &apos;Allow&apos;</source>
         <translation>Перенести выделенные строки в &apos;Разрешить&apos;</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="109"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="105"/>
         <source>Move Selected Lines to &apos;Block&apos;</source>
         <translation>Перенести выделенные строки в &apos;Блокировать&apos;</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="122"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="118"/>
         <source>Block</source>
         <translation>Блокировать</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="145"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="141"/>
         <source>Allow</source>
         <translation>Разрешить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="155"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="151"/>
         <source># All programs in the sub-path:</source>
         <translation># Все программы по под-пути:</translation>
     </message>
@@ -590,32 +590,32 @@
         <translation>Активный период, часы</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="109"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="105"/>
         <source>Month starts on:</source>
         <translation>Месяц начинается с:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="131"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="127"/>
         <source>Keep days for &apos;Hourly&apos;:</source>
         <translation>Хранить дней для &apos;Почасовая&apos;:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="150"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="146"/>
         <source>Keep days for &apos;Daily&apos;:</source>
         <translation>Хранить дней для &apos;Ежедневная&apos;:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="169"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="165"/>
         <source>Keep months for &apos;Monthly&apos;:</source>
         <translation>Хранить месяцев для &apos;Ежемесячная&apos;:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="190"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="186"/>
         <source>Day&apos;s Quota, MiB:</source>
         <translation>Квота на день, MiB</translation>
     </message>
     <message>
-        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="210"/>
+        <location filename="../qml/pages/log/TrafOptionsButton.qml" line="206"/>
         <source>Month&apos;s Quota, MiB:</source>
         <translation>Квота на месяц, MiB</translation>
     </message>
@@ -862,7 +862,7 @@
     </message>
     <message>
         <location filename="../qml/pages/addresses/AddressesColumn.qml" line="48"/>
-        <location filename="../qml/pages/apps/AppsColumn.qml" line="151"/>
+        <location filename="../qml/pages/apps/AppsColumn.qml" line="147"/>
         <source># Examples:</source>
         <translation># Примеры:</translation>
     </message>
@@ -870,6 +870,11 @@
         <location filename="../qml/box/TextArea2SplitBox.qml" line="170"/>
         <source>Select File</source>
         <translation>Выбрать файл</translation>
+    </message>
+    <message>
+        <location filename="../qml/box/TextArea2SplitBox.qml" line="173"/>
+        <source>Programs (*.exe);;All files (*.*)</source>
+        <translation>Программы (*.exe);;Все файлы (*.*)</translation>
     </message>
 </context>
 </TS>

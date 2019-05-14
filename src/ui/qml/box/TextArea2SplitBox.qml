@@ -170,7 +170,9 @@ T.SplitView {
                          && qsTranslate("qml", "Select File")
                 onClicked: {
                     const area = textArea1.activeFocus ? textArea1 : textArea2;
-                    const filePaths = fortManager.getOpenFileNames();
+                    const filter = qsTranslate("qml", "Programs (*.exe);;All files (*.*)");
+                    const filePaths = fortManager.getOpenFileNames(
+                                        tipText, filter);
                     if (filePaths.length > 0) {
                         appendText(area, filePaths.join('\n'));
                     }
