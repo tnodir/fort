@@ -118,9 +118,6 @@ void DatabaseManager::initializeActivePeriod()
 {
     m_isActivePeriodSet = false;
 
-    activePeriodFromHour = activePeriodFromMinute
-            = activePeriodToHour = activePeriodToMinute = 0;
-
     if (!m_conf) return;
 
     DateUtil::parseTime(m_conf->activePeriodFrom(),
@@ -303,11 +300,10 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint32 *procTrafByte
         m_isActivePeriod = true;
 
         if (m_conf->activePeriodEnabled()) {
-            const int hour = trafHour - trafDay;
-            const int minute = int(unixTime - DateUtil::toUnixTime(trafHour)) / 60;
+            const QTime now = QTime::currentTime();
 
             m_isActivePeriod = FortCommon::isTimeInPeriod(
-                        hour, minute,
+                        quint8(now.hour()), quint8(now.minute()),
                         activePeriodFromHour, activePeriodFromMinute,
                         activePeriodToHour, activePeriodToMinute);
         }
