@@ -258,6 +258,10 @@ BasePage {
                                   && model.display
                         }
 
+                        onRowsChanged: {
+                            contentY = 0;  // scroll to top on model changes
+                        }
+
                         ScrollBar.vertical: ScrollBarControl {}
                     }
                 }
