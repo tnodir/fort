@@ -64,7 +64,7 @@ T.ItemDelegate {
         icon: control.icon
         text: control.text
         font: control.font
-        color: control.palette.text
+        color: control.highlighted ? control.palette.highlightedText : control.palette.text
     }
 
     background: Rectangle {

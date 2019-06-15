@@ -62,7 +62,7 @@ T.TabButton {
         icon: control.icon
         text: control.text
         font: control.font
-        color: checked ? control.palette.windowText : control.palette.brightText
+        color: control.checked ? control.palette.windowText : control.palette.brightText
     }
 
     background: Rectangle {

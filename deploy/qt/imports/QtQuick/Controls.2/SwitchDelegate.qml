@@ -59,7 +59,7 @@ T.SwitchDelegate {
         implicitWidth: 56
         implicitHeight: 28
 
-        x: text ? (control.mirrored ? control.leftPadding : control.width - width - control.rightPadding) : control.leftPadding + (control.availableWidth - width) / 2
+        x: control.text ? (control.mirrored ? control.leftPadding : control.width - width - control.rightPadding) : control.leftPadding + (control.availableWidth - width) / 2
         y: control.topPadding + (control.availableHeight - height) / 2
 
         radius: 8
