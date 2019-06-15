@@ -62,6 +62,7 @@ void LogBuffer::writeEntryBlocked(const LogEntryBlocked *logEntry)
     char *output = this->output();
 
     FortCommon::logBlockedHeaderWrite(output, logEntry->ip(),
+                                      logEntry->port(), logEntry->proto(),
                                       logEntry->pid(), pathLen);
     output += FortCommon::logBlockedHeaderSize();
 
@@ -78,8 +79,10 @@ void LogBuffer::readEntryBlocked(LogEntryBlocked *logEntry)
 
     const char *input = this->input();
 
+    quint8 proto;
+    quint16 port;
     quint32 ip, pid, pathLen;
-    FortCommon::logBlockedHeaderRead(input, &ip, &pid, &pathLen);
+    FortCommon::logBlockedHeaderRead(input, &ip, &port, &proto, &pid, &pathLen);
 
     QString path;
     if (pathLen) {
@@ -89,6 +92,8 @@ void LogBuffer::readEntryBlocked(LogEntryBlocked *logEntry)
     }
 
     logEntry->setIp(ip);
+    logEntry->setPort(port);
+    logEntry->setProto(proto);
     logEntry->setPid(pid);
     logEntry->setKernelPath(path);
 

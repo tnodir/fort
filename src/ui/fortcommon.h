@@ -35,11 +35,11 @@ public:
     static quint32 logType(const char *input);
 
     static void logBlockedHeaderWrite(char *output,
-                                      quint32 remoteIp, quint32 pid,
-                                      quint32 pathLen);
+                                      quint32 remoteIp, quint16 remotePort,
+                                      quint8 ipProto, quint32 pid, quint32 pathLen);
     static void logBlockedHeaderRead(const char *input,
-                                     quint32 *remoteIp, quint32 *pid,
-                                     quint32 *pathLen);
+                                     quint32 *remoteIp, quint16 *remotePort,
+                                     quint8 *ipProto, quint32 *pid, quint32 *pathLen);
 
     static void logProcNewHeaderWrite(char *output,
                                       quint32 pid, quint32 pathLen);

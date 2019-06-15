@@ -11,7 +11,7 @@ ListViewControl {
     delegate: Label {
         width: ipListView.width
         elide: Text.ElideRight
-        text: hostName || ipAddress
+        text: (hostName || ipAddress) + ipProtoPort
         font.italic: !!hostName
 
         readonly property string hostName:
@@ -19,6 +19,15 @@ ListViewControl {
              && hostInfoCache.hostTrigger
              && hostInfoCache.hostName(ipAddress)) || ""
 
-        readonly property string ipAddress: display
+        readonly property var ipParts: {
+            const pos = display.indexOf(',');
+            const address = (pos < 0) ? display : display.substring(0, pos);
+            const protoPort = (pos < 0) ? "" : display.substring(pos);
+
+            return [address, protoPort];
+        }
+
+        readonly property string ipAddress: ipParts[0]
+        readonly property string ipProtoPort: ipParts[1]
     }
 }

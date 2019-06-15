@@ -163,8 +163,9 @@ fort_buffer_prepare (PFORT_BUFFER buf, UINT32 len, PCHAR *out,
 }
 
 static NTSTATUS
-fort_buffer_blocked_write (PFORT_BUFFER buf, UINT32 remote_ip, UINT32 pid,
-                           UINT32 path_len, const PVOID path,
+fort_buffer_blocked_write (PFORT_BUFFER buf, UINT32 remote_ip,
+                           UINT16 remote_port, UCHAR ip_proto,
+                           UINT32 pid, UINT32 path_len, const PVOID path,
                            PIRP *irp, ULONG_PTR *info)
 {
   PCHAR out;
@@ -183,7 +184,8 @@ fort_buffer_blocked_write (PFORT_BUFFER buf, UINT32 remote_ip, UINT32 pid,
   status = fort_buffer_prepare(buf, len, &out, irp, info);
 
   if (NT_SUCCESS(status)) {
-    fort_log_blocked_write(out, remote_ip, pid, path_len, path);
+    fort_log_blocked_write(out, remote_ip, remote_port,
+      ip_proto, pid, path_len, path);
   }
 
   KeReleaseInStackQueuedSpinLock(&lock_queue);

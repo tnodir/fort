@@ -287,7 +287,8 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
                           const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
                           const FWPS_FILTER0 *filter,
                           FWPS_CLASSIFY_OUT0 *classifyOut,
-                          int flagsField, int remoteIpField, int ipProtoField)
+                          int flagsField, int remoteIpField,
+                          int remotePortField, int ipProtoField)
 {
   PFORT_CONF_REF conf_ref;
   PVOID path;
@@ -375,8 +376,14 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   }
 
   if (conf_flags.log_blocked) {
+    const UINT16 remote_port = inFixedValues->incomingValue[
+      remotePortField].value.uint16;
+    const IPPROTO ip_proto = (IPPROTO) inFixedValues->incomingValue[
+      ipProtoField].value.uint8;
+
     fort_buffer_blocked_write(&g_device->buffer,
-      remote_ip, process_id, path_len, path, &irp, &info);
+      remote_ip, remote_port, ip_proto,
+      process_id, path_len, path, &irp, &info);
   }
 
  block:
@@ -408,6 +415,7 @@ fort_callout_connect_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   fort_callout_classify_v4(inFixedValues, inMetaValues, filter, classifyOut,
       FWPS_FIELD_ALE_AUTH_CONNECT_V4_FLAGS,
       FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_REMOTE_ADDRESS,
+      FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_REMOTE_PORT,
       FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_PROTOCOL);
 }
 
@@ -424,7 +432,8 @@ fort_callout_accept_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   fort_callout_classify_v4(inFixedValues, inMetaValues, filter, classifyOut,
       FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_FLAGS,
-      FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_REMOTE_ADDRESS, 
+      FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_REMOTE_ADDRESS,
+      FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_REMOTE_PORT,
       FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_PROTOCOL);
 }
 

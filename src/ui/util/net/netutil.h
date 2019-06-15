@@ -27,6 +27,8 @@ public:
 
     Q_INVOKABLE static QStringList localIpv4Networks();
 
+    Q_INVOKABLE static QString protocolName(quint8 ipProto);
+
 private:
     static int first0Bit(quint32 u);
     static int bitCount(quint32 u);

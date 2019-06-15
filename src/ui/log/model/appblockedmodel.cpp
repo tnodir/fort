@@ -51,7 +51,9 @@ void AppBlockedModel::remove(int row)
 void AppBlockedModel::addLogEntry(const LogEntryBlocked &logEntry)
 {
     const QString appPath = logEntry.path();
-    const QString ipText = NetUtil::ip4ToText(logEntry.ip());
+    const QString ipText = NetUtil::ip4ToText(logEntry.ip())
+            + ", " + NetUtil::protocolName(logEntry.proto())
+            + ':' + QString::number(logEntry.port());
     bool isNewApp = false;
 
     if (!m_appIpList.contains(appPath)) {

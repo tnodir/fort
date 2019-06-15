@@ -120,3 +120,14 @@ QStringList NetUtil::localIpv4Networks()
 
     return list;
 }
+
+QString NetUtil::protocolName(quint8 ipProto)
+{
+    switch (ipProto) {
+    case IPPROTO_ICMP: return "ICMP";
+    case IPPROTO_TCP: return "TCP";
+    case IPPROTO_UDP: return "UDP";
+    case IPPROTO_ICMPV6: return "IPv6-ICMP";
+    default: return QString("0x%1").arg(ipProto, 0, 16);
+    }
+}

@@ -19,8 +19,10 @@ void Test::logWriteRead()
 
     LogBuffer buf(entrySize * testCount);
 
+    const quint8 proto = 6;
+    const quint16 port = 3;
     const quint32 ip = 1, pid = 2;
-    LogEntryBlocked entry(ip, pid, path);
+    LogEntryBlocked entry(ip, port, proto, pid, path);
 
     // Write
     for (int i = 0; i < testCount; ++i) {
@@ -34,6 +36,8 @@ void Test::logWriteRead()
 
         QCOMPARE(entry.type(), LogEntry::AppBlocked);
         QCOMPARE(entry.ip(), ip);
+        QCOMPARE(entry.port(), port);
+        QCOMPARE(entry.proto(), proto);
         QCOMPARE(entry.pid(), pid);
         QCOMPARE(entry.kernelPath(), path);
 
