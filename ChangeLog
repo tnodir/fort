@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v2.9.0, 2019-06-15:
+- UI: BlockedPage: Show protocol name & port.
+- UI: StatisticsPage: Scroll to top on model changes.
+- UI: Improve file selection dialog.
+- DB: Fix active period handling.
+
 v2.8.0, 2019-05-11:
 - UI: Add minutes to time periods.
 - UI: ApplicationsPage: Add "Select File" button.
