@@ -1,6 +1,7 @@
 #include "graphwindow.h"
 
 #include <QDebug>
+#include <QGuiApplication>
 #include <QVBoxLayout>
 
 #include "../fortsettings.h"
