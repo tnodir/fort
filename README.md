@@ -57,5 +57,9 @@ Filtered apps will be shown in the "Blocked" tab.
 6) If **app path** is allowed, then _**PERMIT**_
 7) If "Show Blocked Applications" is turned on, then log about blocked event and _**BLOCK**_
 
+## Code Quality Monitor
+
+[![Code quality status](https://codescene.io/projects/5344/status.svg)](https://codescene.io/projects/5344/jobs/latest-successful/results)
+
 --
 Nodir Temirkhodjaev, <nodir.temir@gmail.com>
