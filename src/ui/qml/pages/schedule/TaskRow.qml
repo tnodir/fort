@@ -19,7 +19,9 @@ Row {
 
     Connections {
         target: schedulePage
-        onSaveTaskInfo: saveTaskInfo()
+        function onSaveTaskInfo() {
+            saveTaskInfo();
+        }
     }
 
     CheckBox {

@@ -93,12 +93,12 @@ T.SplitView {
 
     Connections {
         target: fortManager
-        onAfterSaveWindowState: {
+        function onAfterSaveWindowState() {
             if (splitOnEdited) {
                 fortSettings[settingsPropName] = splitOn;
             }
         }
-        onAfterRestoreWindowState: {
+        function onAfterRestoreWindowState() {
             splitOn = fortSettings[settingsPropName] || 0.5;
         }
     }

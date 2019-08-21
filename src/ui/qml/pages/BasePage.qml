@@ -17,8 +17,14 @@ Pane {
 
     Connections {
         target: mainPage
-        onEditResetted: page.onEditResetted()
-        onAboutToSave: page.onAboutToSave()
-        onSaved: page.onSaved()
+        function onEditResetted() {
+            page.onEditResetted();
+        }
+        function onAboutToSave() {
+            page.onAboutToSave();
+        }
+        function onSaved() {
+            page.onSaved();
+        }
     }
 }
