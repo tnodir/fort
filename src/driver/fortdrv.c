@@ -41,6 +41,10 @@ typedef struct fort_conf_ref {
 typedef struct fort_device {
   UCHAR volatile flags;
 
+#ifdef LOG_HEARTBEAT
+  UINT16 volatile heartbeat_tick;
+#endif
+
   UINT32 connect4_id;
   UINT32 accept4_id;
 
@@ -59,6 +63,9 @@ typedef struct fort_device {
   FORT_DEFER defer;
   FORT_TIMER log_timer;
   FORT_TIMER app_timer;
+#ifdef LOG_HEARTBEAT
+  FORT_TIMER heartbeat_timer;
+#endif
   FORT_WORKER worker;
 } FORT_DEVICE, *PFORT_DEVICE;
 
@@ -924,7 +931,7 @@ fort_callout_force_reauth (const FORT_CONF_FLAGS old_conf_flags,
       fort_device_flag_set(FORT_DEVICE_FILTER_TRANSPORT, filter_transport);
 
       if (old_conf_flags.log_stat) {
-        fort_prov_flow_unregister(engine);
+      fort_prov_flow_unregister(engine);
       }
 
  stat_prov:
@@ -1047,6 +1054,39 @@ fort_app_period_timer (void)
   }
 }
 
+#ifdef LOG_HEARTBEAT
+static void
+fort_heartbeat_timer (void)
+{
+  PFORT_BUFFER buf = &g_device->buffer;
+  KLOCK_QUEUE_HANDLE buf_lock_queue;
+
+  /* Lock buffer */
+  KeAcquireInStackQueuedSpinLock(&buf->lock, &buf_lock_queue);
+
+  /* Log heartbeat */
+  {
+    const UINT16 tick = InterlockedIncrement16(&g_device->heartbeat_tick);
+    const UINT32 len = FORT_LOG_HEARTBEAT_SIZE;
+    PCHAR out;
+    NTSTATUS status;
+
+    status = fort_buffer_prepare(buf, len, &out, NULL, NULL);
+    if (!NT_SUCCESS(status)) {
+      DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                 "FORT: Heartbeat Timer: Error: %x\n", status);
+      goto end;
+    }
+
+    fort_log_heartbeat_write(out, tick);
+  }
+
+ end:
+  /* Unlock buffer */
+  KeReleaseInStackQueuedSpinLock(&buf_lock_queue);
+}
+#endif
+
 static NTSTATUS
 fort_device_create (PDEVICE_OBJECT device, PIRP irp)
 {
@@ -1058,6 +1098,17 @@ fort_device_create (PDEVICE_OBJECT device, PIRP irp)
   if (fort_device_flag_set(FORT_DEVICE_IS_OPENED, TRUE)
       & FORT_DEVICE_IS_OPENED) {
     status = STATUS_SHARING_VIOLATION;  /* Only one client may connect */
+  }
+
+  if (NT_SUCCESS(status)) {
+    /* Clear buffer */
+    fort_buffer_clear(&g_device->buffer);
+
+#ifdef LOG_HEARTBEAT
+    InterlockedAnd16(&g_device->heartbeat_tick, 0);
+    fort_heartbeat_timer();
+    fort_timer_update(&g_device->heartbeat_timer, TRUE);
+#endif
   }
 
   fort_request_complete(irp, status);
@@ -1087,6 +1138,11 @@ fort_device_cleanup (PDEVICE_OBJECT device, PIRP irp)
 
     fort_callout_force_reauth(old_conf_flags, FORT_DEFER_FLUSH_ALL);
   }
+
+#ifdef LOG_HEARTBEAT
+  fort_timer_update(&g_device->heartbeat_timer, FALSE);
+  fort_heartbeat_timer();
+#endif
 
   /* Clear buffer */
   fort_buffer_clear(&g_device->buffer);
@@ -1315,6 +1371,9 @@ fort_driver_unload (PDRIVER_OBJECT driver)
   if (g_device != NULL) {
     fort_callout_defer_flush();
 
+#ifdef LOG_HEARTBEAT
+    fort_timer_close(&g_device->heartbeat_timer);
+#endif
     fort_timer_close(&g_device->app_timer);
     fort_timer_close(&g_device->log_timer);
     fort_defer_close(&g_device->defer);
@@ -1404,6 +1463,9 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
       fort_defer_open(&g_device->defer);
       fort_timer_open(&g_device->log_timer, 500, FALSE, &fort_callout_timer);
       fort_timer_open(&g_device->app_timer, 60000, TRUE, &fort_app_period_timer);
+#ifdef LOG_HEARTBEAT
+      fort_timer_open(&g_device->heartbeat_timer, 1000, TRUE, &fort_heartbeat_timer);
+#endif
 
       KeInitializeSpinLock(&g_device->conf_lock);
 

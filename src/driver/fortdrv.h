@@ -5,6 +5,7 @@
 #define DOS_DEVICE_NAME		L"\\DosDevices\\fortfw"
 
 #define FORT_DRIVER
+//#define LOG_HEARTBEAT
 
 #define fort_request_complete_info(irp, status, info) \
   do { \

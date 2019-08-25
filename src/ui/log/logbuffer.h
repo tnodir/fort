@@ -7,6 +7,7 @@
 #include "logentry.h"
 
 QT_FORWARD_DECLARE_CLASS(LogEntryBlocked)
+QT_FORWARD_DECLARE_CLASS(LogEntryHeartbeat)
 QT_FORWARD_DECLARE_CLASS(LogEntryProcNew)
 QT_FORWARD_DECLARE_CLASS(LogEntryStatTraf)
 
@@ -32,6 +33,8 @@ public:
     void readEntryProcNew(LogEntryProcNew *logEntry);
 
     void readEntryStatTraf(LogEntryStatTraf *logEntry);
+
+    void readEntryHeartbeat(LogEntryHeartbeat *logEntry);
 
 signals:
 

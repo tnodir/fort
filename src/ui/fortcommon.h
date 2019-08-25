@@ -32,6 +32,8 @@ public:
     static quint32 logStatTrafSize(quint16 procCount);
     static quint32 logStatSize(quint16 procCount);
 
+    static quint32 logHeartbeatSize();
+
     static quint32 logType(const char *input);
 
     static void logBlockedHeaderWrite(char *output,
@@ -48,6 +50,8 @@ public:
 
     static void logStatTrafHeaderRead(const char *input,
                                       quint16 *procCount);
+
+    static void logHeartbeatRead(const char *input, quint16 *tick);
 
     static void confAppPermsMaskInit(void *drvConf);
     static bool confIpInRange(const void *drvConf, quint32 ip,

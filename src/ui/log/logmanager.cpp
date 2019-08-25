@@ -1,11 +1,13 @@
 #include "logmanager.h"
 
 #include <QCoreApplication>
+#include <QDebug>
 
 #include "../driver/driverworker.h"
 #include "../fortcommon.h"
 #include "logbuffer.h"
 #include "logentryblocked.h"
+#include "logentryheartbeat.h"
 #include "logentryprocnew.h"
 #include "logentrystattraf.h"
 #include "model/appblockedmodel.h"
@@ -20,7 +22,6 @@ LogManager::LogManager(DatabaseManager *databaseManager,
     m_appBlockedModel(new AppBlockedModel(this)),
     m_appStatModel(new AppStatModel(databaseManager, this))
 {
-    setupDriverWorker();
 }
 
 void LogManager::setActive(bool active)
@@ -49,6 +50,9 @@ void LogManager::setErrorMessage(const QString &errorMessage)
 void LogManager::initialize()
 {
     m_appStatModel->initialize();
+
+    connect(m_driverWorker, &DriverWorker::readLogResult,
+            this, &LogManager::processLogBuffer, Qt::QueuedConnection);
 }
 
 void LogManager::close()
@@ -56,12 +60,6 @@ void LogManager::close()
     QCoreApplication::sendPostedEvents(this);
 
     disconnect(m_driverWorker);
-}
-
-void LogManager::setupDriverWorker()
-{
-    connect(m_driverWorker, &DriverWorker::readLogResult,
-            this, &LogManager::processLogBuffer, Qt::QueuedConnection);
 }
 
 void LogManager::readLogAsync()
@@ -110,25 +108,34 @@ void LogManager::processLogBuffer(LogBuffer *logBuffer, bool success,
 
 void LogManager::readLogEntries(LogBuffer *logBuffer)
 {
-    LogEntryBlocked blockedEntry;
-    LogEntryProcNew procNewEntry;
-    LogEntryStatTraf statTrafEntry;
-
     forever {
         switch (logBuffer->peekEntryType()) {
         case LogEntry::AppBlocked: {
+            LogEntryBlocked blockedEntry;
             logBuffer->readEntryBlocked(&blockedEntry);
             m_appBlockedModel->addLogEntry(blockedEntry);
             break;
         }
         case LogEntry::ProcNew: {
+            LogEntryProcNew procNewEntry;
             logBuffer->readEntryProcNew(&procNewEntry);
             m_appStatModel->handleProcNew(procNewEntry);
             break;
         }
         case LogEntry::StatTraf: {
+            LogEntryStatTraf statTrafEntry;
             logBuffer->readEntryStatTraf(&statTrafEntry);
             m_appStatModel->handleStatTraf(statTrafEntry);
+            break;
+        }
+        case LogEntry::Heartbeat: {
+            LogEntryHeartbeat heartbeatEntry;
+            logBuffer->readEntryHeartbeat(&heartbeatEntry);
+            if (++m_heartbeatTick != heartbeatEntry.tick()) {
+                qCritical() << "Heartbeat ticks mismatch! Expected:"
+                            << heartbeatEntry.tick() << "Got:" << m_heartbeatTick;
+                abort();
+            }
             break;
         }
         default:

@@ -88,6 +88,11 @@ quint32 FortCommon::logStatSize(quint16 procCount)
     return FORT_LOG_STAT_SIZE(procCount);
 }
 
+quint32 FortCommon::logHeartbeatSize()
+{
+    return FORT_LOG_HEARTBEAT_SIZE;
+}
+
 quint32 FortCommon::logType(const char *input)
 {
     return fort_log_type(input);
@@ -125,6 +130,11 @@ void FortCommon::logStatTrafHeaderRead(const char *input,
                                        quint16 *procCount)
 {
     fort_log_stat_traf_header_read(input, procCount);
+}
+
+void FortCommon::logHeartbeatRead(const char *input, quint16 *tick)
+{
+    fort_log_heartbeat_read(input, tick);
 }
 
 void FortCommon::confAppPermsMaskInit(void *drvConf)

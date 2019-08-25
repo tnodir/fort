@@ -45,8 +45,6 @@ private slots:
 private:
     void setErrorMessage(const QString &errorMessage);
 
-    void setupDriverWorker();
-
     void readLogAsync();
     void cancelAsyncIo();
 
@@ -57,6 +55,8 @@ private:
 
 private:
     bool m_active;
+
+    quint16 m_heartbeatTick;
 
     DriverWorker *m_driverWorker;
     QList<LogBuffer *> m_freeBuffers;

@@ -344,8 +344,9 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint32 *procTrafByte
         }
 
         const int procIndex = m_appIndexes.value(pid, INVALID_APP_INDEX);
-        if (procIndex == INVALID_APP_INDEX) {
-            qCritical(CLOG_DATABASE_MANAGER()) << "UI & Driver's states mismatch.";
+        if (Q_UNLIKELY(procIndex == INVALID_APP_INDEX)) {
+            qCritical(CLOG_DATABASE_MANAGER()) << "UI & Driver's states mismatch! Expected process count:"
+                                               << procCount << "Got:" << m_appIndexes.size();
             abort();
         }
 

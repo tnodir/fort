@@ -176,6 +176,7 @@ bool FortManager::setupDriver()
 void FortManager::closeDriver()
 {
     updateLogManager(false);
+    updateDatabaseManager(nullptr);
 
     m_driverManager->closeDevice();
 }
@@ -533,9 +534,10 @@ bool FortManager::updateDriverConf(FirewallConf *conf, bool onlyFlags)
 
     if (res) {
         updateDatabaseManager(conf);
+        updateLogManager(true);
+    } else {
+        closeDriver();
     }
-
-    updateLogManager(true);
 
     return res;
 }
