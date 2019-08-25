@@ -930,9 +930,7 @@ fort_callout_force_reauth (const FORT_CONF_FLAGS old_conf_flags,
         || old_filter_transport != filter_transport) {
       fort_device_flag_set(FORT_DEVICE_FILTER_TRANSPORT, filter_transport);
 
-      if (old_conf_flags.log_stat) {
       fort_prov_flow_unregister(engine);
-      }
 
  stat_prov:
       if (conf_flags.log_stat) {
