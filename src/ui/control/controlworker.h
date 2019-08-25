@@ -1,6 +1,7 @@
 #ifndef CONTROLWORKER_H
 #define CONTROLWORKER_H
 
+#include <QMutex>
 #include <QObject>
 #include <QRunnable>
 
@@ -44,6 +45,8 @@ private:
 
     QSystemSemaphore *m_semaphore;
     QSharedMemory *m_sharedMemory;
+
+    QMutex m_mutex;
 };
 
 #endif // CONTROLWORKER_H

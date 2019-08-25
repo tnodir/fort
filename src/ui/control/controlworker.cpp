@@ -16,7 +16,9 @@ ControlWorker::ControlWorker(QSystemSemaphore *semaphore,
 
 void ControlWorker::run()
 {
-    while (m_semaphore->acquire() && !m_aborted) {
+    QMutexLocker locker(&m_mutex);
+
+    while (!m_aborted && m_semaphore->acquire()) {
         processRequest();
     }
 }
@@ -26,6 +28,8 @@ void ControlWorker::abort()
     m_aborted = true;
 
     m_semaphore->release();
+
+    m_mutex.lock();
 }
 
 bool ControlWorker::post(const QString &scriptPath,
