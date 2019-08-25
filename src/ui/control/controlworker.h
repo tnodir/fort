@@ -42,6 +42,7 @@ private:
 
 private:
     volatile bool m_aborted;
+    volatile bool m_finished;
 
     QSystemSemaphore *m_semaphore;
     QSharedMemory *m_sharedMemory;

@@ -9,6 +9,7 @@ ControlWorker::ControlWorker(QSystemSemaphore *semaphore,
                              QObject *parent) :
     QObject(parent),
     m_aborted(false),
+    m_finished(false),
     m_semaphore(semaphore),
     m_sharedMemory(sharedMemory)
 {
@@ -21,6 +22,8 @@ void ControlWorker::run()
     while (!m_aborted && m_semaphore->acquire()) {
         processRequest();
     }
+
+    m_finished = true;
 }
 
 void ControlWorker::abort()
@@ -30,6 +33,9 @@ void ControlWorker::abort()
     m_semaphore->release();
 
     m_mutex.lock();
+    if (!m_finished) {
+        m_mutex.unlock();
+    }
 }
 
 bool ControlWorker::post(const QString &scriptPath,
