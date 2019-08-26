@@ -116,7 +116,8 @@ void ControlManager::processRequest(const QString &scriptPath,
 
 void ControlManager::setupWorker()
 {
-    m_worker = new ControlWorker(&m_semaphore, &m_sharedMemory);  // autoDelete = true
+    m_worker = new ControlWorker(&m_semaphore, &m_sharedMemory, this);
+    m_worker->setAutoDelete(false);
 
     connect(m_worker, &ControlWorker::requestReady,
             this, &ControlManager::processRequest);
@@ -131,5 +132,6 @@ void ControlManager::abort()
     m_worker->disconnect(this);
 
     m_worker->abort();
+    m_worker->deleteLater();
     m_worker = nullptr;
 }
