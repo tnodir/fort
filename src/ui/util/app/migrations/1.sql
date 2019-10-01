@@ -8,8 +8,8 @@ CREATE TABLE app(
   company_name TEXT,
   product_name TEXT,
   product_ver TEXT,
+  file_mod_time INTEGER,
   icon_id INTEGER,
-  file_mod_time DATETIME,
   access_time DATETIME
 ) WITHOUT ROWID;
 

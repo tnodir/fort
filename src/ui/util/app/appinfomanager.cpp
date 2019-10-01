@@ -21,8 +21,7 @@ namespace {
 
 const char * const sqlSelectAppInfo =
         "SELECT file_descr, company_name,"
-        "    product_name, product_ver, icon_id,"
-        "    file_mod_time"
+        "    product_name, product_ver, file_mod_time, icon_id"
         "  FROM app WHERE path = ?1;"
         ;
 
@@ -53,8 +52,8 @@ const char * const sqlUpdateIconRefCount =
 
 const char * const sqlInsertAppInfo =
         "INSERT INTO app(path, file_descr, company_name,"
-        "    product_name, product_ver, icon_id,"
-        "    file_mod_time, access_time)"
+        "    product_name, product_ver, file_mod_time,"
+        "    icon_id, access_time)"
         "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, datetime('now'));"
         ;
 
@@ -157,7 +156,7 @@ bool AppInfoManager::loadInfoFromDb(const QString &appPath, AppInfo &appInfo)
     const QVariantList vars = QVariantList() << appPath;
 
     // Load version info
-    const int resultCount = 5;
+    const int resultCount = 6;
     const QVariantList list = m_sqliteDb->executeEx(
                 sqlSelectAppInfo, vars, resultCount)
             .toList();
@@ -168,8 +167,8 @@ bool AppInfoManager::loadInfoFromDb(const QString &appPath, AppInfo &appInfo)
     appInfo.companyName = list.at(1).toString();
     appInfo.productName = list.at(2).toString();
     appInfo.productVersion = list.at(3).toString();
-    appInfo.iconId = list.at(4).toLongLong();
-    appInfo.fileModTime = list.at(5).toDateTime();
+    appInfo.fileModTime = list.at(4).toLongLong();
+    appInfo.iconId = list.at(5).toLongLong();
 
     // Update last access time
     m_sqliteDb->executeEx(sqlUpdateAppAccessTime, vars);
@@ -226,8 +225,8 @@ bool AppInfoManager::saveToDb(const QString &appPath, AppInfo &appInfo,
                 << appInfo.companyName
                 << appInfo.productName
                 << appInfo.productVersion
-                << iconId
                 << appInfo.fileModTime
+                << iconId
                    ;
 
         m_sqliteDb->executeEx(sqlInsertAppInfo, vars, 0, &ok);

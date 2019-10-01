@@ -1,6 +1,7 @@
 #include "sqlitedb.h"
 
 #include <QDataStream>
+#include <QDateTime>
 #include <QBuffer>
 #include <QDebug>
 #include <QDir>
@@ -79,7 +80,7 @@ QVariant SqliteDb::executeEx(const char *sql,
         for (const QVariant &v : vars) {
             ++index;
 
-            const int vType = v.type();
+            const qint16 vType = v.type();
 
             switch (vType) {
             case QVariant::Invalid:
@@ -116,23 +117,28 @@ QVariant SqliteDb::executeEx(const char *sql,
 
                 // Write content
                 {
-                    QByteArray bufData;
-
-                    QBuffer buf(&bufData);
-                    buf.open(QIODevice::WriteOnly);
-
                     switch (vType) {
+                    case QVariant::DateTime: {
+                        const qint64 msecs = v.toDateTime().toMSecsSinceEpoch();
+                        stream << msecs;
+                        break;
+                    }
                     case QVariant::Image: {
+                        QByteArray bufData;
+
+                        QBuffer buf(&bufData);
+                        buf.open(QIODevice::WriteOnly);
+
                         const QImage image = v.value<QImage>();
                         image.save(&buf, "PNG");
+
+                        buf.close();
+                        stream << bufData;
                         break;
                     }
                     default:
                         Q_UNREACHABLE();
                     }
-
-                    buf.close();
-                    stream << bufData;
                 }
 
                 const char *bits = data.constData();
@@ -175,16 +181,22 @@ QVariant SqliteDb::executeEx(const char *sql,
                 QDataStream stream(data);
 
                 // Load type
-                int vType;
+                qint16 vType;
                 stream >> vType;
 
                 // Load content
                 {
-                    QByteArray bufData;
-                    stream >> bufData;
-
                     switch (vType) {
+                    case QVariant::DateTime: {
+                        qint64 msecs;
+                        stream >> msecs;
+                        v = QDateTime::fromMSecsSinceEpoch(msecs);
+                        break;
+                    }
                     case QVariant::Image: {
+                        QByteArray bufData;
+                        stream >> bufData;
+
                         QImage image;
                         image.loadFromData(bufData, "PNG");
                         v = image;
@@ -289,7 +301,7 @@ bool SqliteDb::migrate(const QString &sqlDir, int version,
                        void *migrateContext)
 {
     // Check version
-    const int userVersion = this->userVersion();
+    int userVersion = this->userVersion();
     if (userVersion == version)
         return true;
 
@@ -306,6 +318,7 @@ bool SqliteDb::migrate(const QString &sqlDir, int version,
             qWarning() << "SQLite: Cannot re-create the DB" << m_filePath;
             return false;
         }
+        userVersion = 0;
     }
 
     // Run migration SQL scripts
