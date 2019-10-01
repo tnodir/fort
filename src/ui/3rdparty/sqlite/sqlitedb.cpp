@@ -23,6 +23,7 @@ SqliteDb::~SqliteDb()
 
 bool SqliteDb::open(const QString &filePath)
 {
+    m_filePath = filePath;
     return sqlite3_open16(filePath.utf16(), &m_db) == SQLITE_OK;
 }
 
@@ -283,6 +284,7 @@ int SqliteDb::userVersion()
 }
 
 bool SqliteDb::migrate(const QString &sqlDir, int version,
+                       bool recreate,
                        SQLITEDB_MIGRATE_FUNC migrateFunc,
                        void *migrateContext)
 {
@@ -297,15 +299,28 @@ bool SqliteDb::migrate(const QString &sqlDir, int version,
         return false;
     }
 
+    // Re-create the DB
+    if (recreate) {
+        close();
+        if (!(QFile::remove(m_filePath) && open(m_filePath))) {
+            qWarning() << "SQLite: Cannot re-create the DB" << m_filePath;
+            return false;
+        }
+    }
+
     // Run migration SQL scripts
     QDir dir(sqlDir);
     bool res = true;
 
     beginTransaction();
+
     for (int i = userVersion + 1; i <= version; ++i) {
         const QString filePath = dir.filePath(QString::number(i) + ".sql");
 
         QFile file(filePath);
+        if (!file.exists())
+            break;
+
         if (!file.open(QFile::ReadOnly | QFile::Text)) {
             qWarning() << "SQLite: Cannot open migration file" << filePath
                        << file.errorString();
@@ -331,6 +346,7 @@ bool SqliteDb::migrate(const QString &sqlDir, int version,
         }
         releaseSavepoint();
     }
+
     commitTransaction();
 
     return res;

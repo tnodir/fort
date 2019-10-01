@@ -21,11 +21,21 @@ void AppInfoWorker::doJob(WorkerJob *workerJob)
     auto job = static_cast<AppInfoJob *>(workerJob);
     const QString &appPath = job->appPath();
 
-    if (!manager()->loadInfoFromDb(appPath, job->appInfo)
-            && manager()->loadInfoFromFs(appPath, job->appInfo)) {
+    // Try to load from DB
+    AppInfo &appInfo = job->appInfo;
+    bool loadedFromDb = manager()->loadInfoFromDb(appPath, appInfo);
+
+    // Was the file modified?
+    if (loadedFromDb && appInfo.isFileModified(appPath)) {
+        loadedFromDb = false;
+        manager()->deleteAppInfo(appPath, appInfo);
+    }
+
+    // Try to load from FS
+    if (!loadedFromDb && manager()->loadInfoFromFs(appPath, appInfo)) {
         const QImage appIcon = manager()->loadIconFromFs(appPath);
 
-        manager()->saveToDb(appPath, job->appInfo, appIcon);
+        manager()->saveToDb(appPath, appInfo, appIcon);
     }
 
     WorkerObject::doJob(workerJob);

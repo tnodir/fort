@@ -27,7 +27,8 @@ public:
     bool saveToDb(const QString &appPath, AppInfo &appInfo,
                   const QImage &appIcon);
 
-    bool deleteApps(const char *sql, int limitCount = 0);
+    void deleteAppInfo(const QString &appPath, const AppInfo &appInfo);
+    void deleteOldApps(int limitCount = 0);
 
 signals:
     void lookupFinished(const QString &appPath, const AppInfo appInfo);
@@ -42,6 +43,9 @@ protected:
 
 private:
     void setupDb();
+
+    bool deleteAppsAndIcons(const QStringList &appPaths,
+                            const QHash<qint64, int> &iconIds);
 
 private:
     SqliteDb *m_sqliteDb;

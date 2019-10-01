@@ -49,11 +49,13 @@ public:
     int userVersion();
 
     bool migrate(const QString &sqlDir, int version,
+                 bool recreate = false,
                  SQLITEDB_MIGRATE_FUNC migrateFunc = nullptr,
                  void *migrateContext = nullptr);
 
 private:
     sqlite3 *m_db;
+    QString m_filePath;
 };
 
 #endif // SQLITEDB_H

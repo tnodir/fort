@@ -1,4 +1,4 @@
-PRAGMA user_version = 1;
+PRAGMA user_version = 3;
 
 PRAGMA journal_mode = WAL;
 
@@ -9,6 +9,7 @@ CREATE TABLE app(
   product_name TEXT,
   product_ver TEXT,
   icon_id INTEGER,
+  file_mod_time DATETIME,
   access_time DATETIME
 ) WITHOUT ROWID;
 

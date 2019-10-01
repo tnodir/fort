@@ -138,6 +138,9 @@ bool AppUtil::getInfo(const QString &appPath, AppInfo &appInfo)
         return true;
     }
 
+    // File modification time
+    appInfo.fileModTime = getModTime(appPath);
+
     return extractVersionInfo(appPath, appInfo);
 }
 
@@ -152,4 +155,10 @@ QImage AppUtil::getIcon(const QString &appPath)
 
     return extractShellIcon(appPath)
             .toImage();
+}
+
+QDateTime AppUtil::getModTime(const QString &appPath)
+{
+    QFileInfo fi(appPath);
+    return fi.lastModified();
 }

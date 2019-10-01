@@ -106,7 +106,7 @@ bool DatabaseManager::initialize()
     m_sqliteDb->execute(DatabaseSql::sqlPragmas);
 
     if (!m_sqliteDb->migrate(":/db/migrations", DATABASE_USER_VERSION,
-                             &migrateFunc)) {
+                             false, &migrateFunc)) {
         qCritical(CLOG_DATABASE_MANAGER()) << "Migration error" << m_filePath;
         return false;
     }

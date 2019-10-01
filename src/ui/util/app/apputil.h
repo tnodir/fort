@@ -1,6 +1,7 @@
 #ifndef APPUTIL_H
 #define APPUTIL_H
 
+#include <QDateTime>
 #include <QObject>
 #include <QImage>
 
@@ -11,6 +12,7 @@ class AppUtil
 public:
     static bool getInfo(const QString &appPath, AppInfo &appInfo);
     static QImage getIcon(const QString &appPath);
+    static QDateTime getModTime(const QString &appPath);
 };
 
 #endif // APPUTIL_H

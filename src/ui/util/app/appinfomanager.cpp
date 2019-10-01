@@ -13,7 +13,7 @@
 Q_DECLARE_LOGGING_CATEGORY(CLOG_APPINFOCACHE)
 Q_LOGGING_CATEGORY(CLOG_APPINFOCACHE, "fort.appInfoWorker")
 
-#define DATABASE_USER_VERSION   2
+#define DATABASE_USER_VERSION   3
 
 #define APP_CACHE_MAX_COUNT     2000
 
@@ -21,7 +21,8 @@ namespace {
 
 const char * const sqlSelectAppInfo =
         "SELECT file_descr, company_name,"
-        "    product_name, product_ver, icon_id"
+        "    product_name, product_ver, icon_id,"
+        "    file_mod_time"
         "  FROM app WHERE path = ?1;"
         ;
 
@@ -52,8 +53,9 @@ const char * const sqlUpdateIconRefCount =
 
 const char * const sqlInsertAppInfo =
         "INSERT INTO app(path, file_descr, company_name,"
-        "    product_name, product_ver, icon_id, access_time)"
-        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, datetime('now'));"
+        "    product_name, product_ver, icon_id,"
+        "    file_mod_time, access_time)"
+        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, datetime('now'));"
         ;
 
 const char * const sqlSelectAppCount =
@@ -75,25 +77,6 @@ const char * const sqlDeleteIconIfNotUsed =
 const char * const sqlDeleteApp =
         "DELETE FROM app WHERE path = ?1;"
         ;
-
-bool migrateFunc(SqliteDb *db, int version, void *ctx)
-{
-    Q_UNUSED(db)
-
-    AppInfoManager *manager = static_cast<AppInfoManager *>(ctx);
-    bool res = true;
-
-    if (version == 2) {
-        // Delete "System" app
-        const char * const sqlSelectAppSystem =
-                "SELECT path, icon_id FROM app"
-                "  WHERE path = 'System';"
-                ;
-        res = manager->deleteApps(sqlSelectAppSystem);
-    }
-
-    return res;
-}
 
 }
 
@@ -126,8 +109,8 @@ void AppInfoManager::setupDb()
         return;
     }
 
-    if (!m_sqliteDb->migrate(":/appinfocache/migrations", DATABASE_USER_VERSION,
-                             &migrateFunc, this)) {
+    if (!m_sqliteDb->migrate(":/appinfocache/migrations",
+                             DATABASE_USER_VERSION, true)) {
         qCritical(CLOG_APPINFOCACHE()) << "Migration error" << filePath;
         return;
     }
@@ -186,6 +169,7 @@ bool AppInfoManager::loadInfoFromDb(const QString &appPath, AppInfo &appInfo)
     appInfo.productName = list.at(2).toString();
     appInfo.productVersion = list.at(3).toString();
     appInfo.iconId = list.at(4).toLongLong();
+    appInfo.fileModTime = list.at(5).toDateTime();
 
     // Update last access time
     m_sqliteDb->executeEx(sqlUpdateAppAccessTime, vars);
@@ -243,6 +227,7 @@ bool AppInfoManager::saveToDb(const QString &appPath, AppInfo &appInfo,
                 << appInfo.productName
                 << appInfo.productVersion
                 << iconId
+                << appInfo.fileModTime
                    ;
 
         m_sqliteDb->executeEx(sqlInsertAppInfo, vars, 0, &ok);
@@ -258,26 +243,36 @@ bool AppInfoManager::saveToDb(const QString &appPath, AppInfo &appInfo,
         const int excessCount = appCount - APP_CACHE_MAX_COUNT;
 
         if (excessCount > 0) {
-            deleteApps(sqlSelectAppOlds, excessCount);
+            deleteOldApps(excessCount);
         }
     }
 
     return ok;
 }
 
-bool AppInfoManager::deleteApps(const char *sql, int limitCount)
+void AppInfoManager::deleteAppInfo(const QString &appPath, const AppInfo &appInfo)
 {
     QStringList appPaths;
     QHash<qint64, int> iconIds;
 
-    bool ok = false;
+    appPaths.append(appPath);
 
-    m_sqliteDb->beginTransaction();
+    if (appInfo.iconId != 0) {
+        iconIds.insert(appInfo.iconId, 1);
+    }
+
+    deleteAppsAndIcons(appPaths, iconIds);
+}
+
+void AppInfoManager::deleteOldApps(int limitCount)
+{
+    QStringList appPaths;
+    QHash<qint64, int> iconIds;
 
     // Get old app info list
     {
         SqliteStmt stmt;
-        if (stmt.prepare(m_sqliteDb->db(), sql,
+        if (stmt.prepare(m_sqliteDb->db(), sqlSelectAppOlds,
                          SqliteStmt::PreparePersistent)) {
             if (limitCount != 0) {
                 stmt.bindInt(1, limitCount);
@@ -291,10 +286,21 @@ bool AppInfoManager::deleteApps(const char *sql, int limitCount)
                 const int iconCount = iconIds.value(iconId) + 1;
                 iconIds.insert(iconId, iconCount);
             }
-
-            ok = true;
         }
     }
+
+    // Delete old app infos & icons
+    if (!appPaths.isEmpty()) {
+        deleteAppsAndIcons(appPaths, iconIds);
+    }
+}
+
+bool AppInfoManager::deleteAppsAndIcons(const QStringList &appPaths,
+                                        const QHash<qint64, int> &iconIds)
+{
+    bool ok = false;
+
+    m_sqliteDb->beginTransaction();
 
     // Delete old icons
     auto iconIt = iconIds.constBegin();

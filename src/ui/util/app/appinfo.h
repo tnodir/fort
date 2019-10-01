@@ -1,6 +1,7 @@
 #ifndef APPINFO_H
 #define APPINFO_H
 
+#include <QDateTime>
 #include <QObject>
 
 class AppInfo
@@ -15,6 +16,8 @@ class AppInfo
 public:
     QString iconPath() const;
 
+    bool isFileModified(const QString &appPath) const;
+
 public:
     qint64 iconId = 0;
 
@@ -22,6 +25,8 @@ public:
     QString companyName;
     QString productName;
     QString productVersion;
+
+    QDateTime fileModTime;
 };
 
 Q_DECLARE_METATYPE(AppInfo)
