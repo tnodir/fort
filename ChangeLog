@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v2.10.0, 2019-10-02:
+- UI: Reload app info on changes.
+- ControlManager: Fix worker's completion waiting.
+- Driver: Fix after app's crash.
+- Update SQLite to v3.29.0
+
 v2.9.0, 2019-06-15:
 - UI: BlockedPage: Show protocol name & port.
 - UI: StatisticsPage: Scroll to top on model changes.
