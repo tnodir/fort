@@ -61,7 +61,7 @@ private:
 
     QLocale m_locale;
 
-    QList<QLocale> m_locales;
+    QVector<QLocale> m_locales;
     QVector<QTranslator *> m_translators;
 };
 
