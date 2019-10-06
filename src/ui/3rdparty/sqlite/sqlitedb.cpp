@@ -36,6 +36,13 @@ void SqliteDb::close()
     }
 }
 
+bool SqliteDb::recreateDb()
+{
+    close();
+    QFile::remove(m_filePath);
+    return open(m_filePath);
+}
+
 bool SqliteDb::execute(const char *sql)
 {
     return sqlite3_exec(m_db, sql, nullptr, nullptr, nullptr) == SQLITE_OK;
@@ -313,8 +320,7 @@ bool SqliteDb::migrate(const QString &sqlDir, int version,
 
     // Re-create the DB
     if (recreate) {
-        close();
-        if (!(QFile::remove(m_filePath) && open(m_filePath))) {
+        if (!recreateDb()) {
             qWarning() << "SQLite: Cannot re-create the DB" << m_filePath;
             return false;
         }

@@ -21,6 +21,8 @@ public:
     bool open(const QString &filePath);
     void close();
 
+    bool recreateDb();
+
     struct sqlite3 *db() const { return m_db; }
 
     bool execute(const char *sql);

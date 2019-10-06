@@ -4,17 +4,24 @@
 
 AppInfoCache::AppInfoCache(QObject *parent) :
     QObject(parent),
-    m_manager(new AppInfoManager(this)),
+    m_manager(nullptr),
     m_cache(1000)
 {
-    connect(m_manager, &AppInfoManager::lookupFinished,
-            this, &AppInfoCache::handleFinishedLookup);
-
     m_triggerTimer.setSingleShot(true);
     m_triggerTimer.setInterval(200);
 
     connect(&m_triggerTimer, &QTimer::timeout,
             this, &AppInfoCache::cacheChanged);
+}
+
+void AppInfoCache::setManager(AppInfoManager *manager)
+{
+    Q_ASSERT(manager != nullptr);
+
+    m_manager = manager;
+
+    connect(m_manager, &AppInfoManager::lookupFinished,
+            this, &AppInfoCache::handleFinishedLookup);
 }
 
 AppInfo AppInfoCache::appInfo(const QString &appPath)
@@ -31,7 +38,7 @@ AppInfo AppInfoCache::appInfo(const QString &appPath)
         lookupRequired = appInfo->isFileModified(appPath);
     }
 
-    if (lookupRequired) {
+    if (lookupRequired && m_manager != nullptr) {
         m_manager->lookupAppInfo(appPath);
     }
 

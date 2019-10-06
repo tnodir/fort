@@ -21,6 +21,7 @@ public:
     bool infoTrigger() const { return true; }
 
     AppInfoManager *manager() const { return m_manager; }
+    void setManager(AppInfoManager *manager);
 
 signals:
     void cacheChanged();

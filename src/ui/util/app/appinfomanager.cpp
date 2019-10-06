@@ -3,7 +3,6 @@
 #include <QImage>
 #include <QLoggingCategory>
 
-#include "../fileutil.h"
 #include "appinfojob.h"
 #include "appinfoworker.h"
 #include "apputil.h"
@@ -84,8 +83,6 @@ AppInfoManager::AppInfoManager(QObject *parent) :
     m_sqliteDb(new SqliteDb())
 {
     setMaxWorkersCount(1);
-
-    setupDb();
 }
 
 AppInfoManager::~AppInfoManager()
@@ -93,14 +90,8 @@ AppInfoManager::~AppInfoManager()
     delete m_sqliteDb;
 }
 
-void AppInfoManager::setupDb()
+void AppInfoManager::setupDb(const QString &filePath)
 {
-    const QString cachePath = FileUtil::appCacheLocation();
-
-    FileUtil::makePath(cachePath);
-
-    const QString filePath = cachePath + "/appinfocache.db";
-
     if (!m_sqliteDb->open(filePath)) {
         qCritical(CLOG_APPINFOCACHE()) << "File open error:"
                                        << filePath

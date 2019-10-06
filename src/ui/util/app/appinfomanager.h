@@ -18,6 +18,8 @@ public:
     ~AppInfoManager() override;
     CLASS_DELETE_COPY_MOVE(AppInfoManager)
 
+    void setupDb(const QString &filePath);
+
     bool loadInfoFromFs(const QString &appPath, AppInfo &appInfo);
     QImage loadIconFromFs(const QString &appPath);
 
@@ -42,8 +44,6 @@ protected:
     WorkerObject *createWorker() override;
 
 private:
-    void setupDb();
-
     bool deleteAppsAndIcons(const QStringList &appPaths,
                             const QHash<qint64, int> &iconIds);
 

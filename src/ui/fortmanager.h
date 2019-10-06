@@ -115,6 +115,8 @@ private:
 
     void setupTrayIcon();
 
+    void setupAppInfoCache();
+
     bool setupEngine();
     void closeEngine();
 

@@ -30,6 +30,7 @@
 #include "translationmanager.h"
 #include "util/app/appiconprovider.h"
 #include "util/app/appinfocache.h"
+#include "util/app/appinfomanager.h"
 #include "util/dateutil.h"
 #include "util/fileutil.h"
 #include "util/guiutil.h"
@@ -73,6 +74,7 @@ FortManager::FortManager(FortSettings *fortSettings,
     setupThreadPool();
 
     setupLogger();
+    setupAppInfoCache();
     setupDatabaseManager();
 
     setupLogManager();
@@ -230,8 +232,30 @@ void FortManager::setupTrayIcon()
     updateTrayMenu();
 }
 
+void FortManager::setupAppInfoCache()
+{
+    QString dbPath;
+    if (m_fortSettings->isPortable()) {
+        dbPath = ":memory:";
+    } else {
+        const QString cachePath = FileUtil::appCacheLocation();
+        FileUtil::makePath(cachePath);
+        dbPath = cachePath + "/appinfocache.db";
+    }
+
+    AppInfoManager *manager = new AppInfoManager(this);
+    manager->setupDb(dbPath);
+
+    m_appInfoCache->setManager(manager);
+}
+
 bool FortManager::setupEngine()
 {
+    if (m_fortSettings->isPortable()) {
+        qputenv("QML_DISABLE_DISK_CACHE", "1");
+        qputenv("QT_DISABLE_SHADER_DISK_CACHE", "1");
+    }
+
     m_engine = new QQmlApplicationEngine(this);
 
     QQmlContext *context = m_engine->rootContext();
