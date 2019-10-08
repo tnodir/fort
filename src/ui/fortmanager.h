@@ -120,6 +120,8 @@ private:
     bool setupEngine();
     void closeEngine();
 
+    void closeUi();
+
     bool loadSettings(FirewallConf *conf);
     bool saveSettings(FirewallConf *newConf, bool onlyFlags = false,
                       bool immediateFlags = false);

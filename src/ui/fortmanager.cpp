@@ -92,6 +92,7 @@ FortManager::FortManager(FortSettings *fortSettings,
 
 FortManager::~FortManager()
 {
+    closeUi();
     removeHotKeys();
 
     closeDriver();
@@ -294,6 +295,14 @@ void FortManager::closeEngine()
     }
 }
 
+void FortManager::closeUi()
+{
+    closeGraphWindow(true);
+    closeWindow();
+
+    closeEngine();
+}
+
 void FortManager::launch()
 {
     showTrayIcon();
@@ -415,10 +424,7 @@ void FortManager::updateGraphWindow()
 
 void FortManager::exit(int retcode)
 {
-    closeGraphWindow(true);
-    closeWindow();
-
-    closeEngine();
+    closeUi();
 
     QCoreApplication::exit(retcode);
 }
