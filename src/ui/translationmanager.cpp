@@ -39,7 +39,7 @@ void TranslationManager::setupTranslation()
 
     m_locales.append(QLocale(QLocale::English, QLocale::UnitedStates));
 
-    foreach (const QFileInfo &fileInfo, QDir(i18nDir())
+    for (const QFileInfo &fileInfo : QDir(i18nDir())
              .entryInfoList(QStringList() << ("*" TRANSLATION_FILE_SUFFIX))) {
         const QString localeName = fileInfo.completeBaseName().mid(prefixLen);
         const QLocale locale(localeName);
@@ -57,7 +57,7 @@ QStringList TranslationManager::naturalLabels() const
     QStringList list;
     list.reserve(m_locales.size());
 
-    foreach (const QLocale &locale, m_locales) {
+    for (const QLocale &locale : m_locales) {
         list.append(StringUtil::capitalize(
                         locale.nativeLanguageName()));
     }
@@ -67,7 +67,7 @@ QStringList TranslationManager::naturalLabels() const
 int TranslationManager::getLanguageByName(const QString &localeName) const
 {
     int index = 0;
-    foreach (const QLocale &locale, m_locales) {
+    for (const QLocale &locale : m_locales) {
         if (localeName == locale.name()) {
             return index;
         }

@@ -42,7 +42,7 @@ void TaskManager::loadSettings(const FortSettings *fortSettings)
 {
     const TasksMap tasksMap = fortSettings->tasks();
 
-    foreach (TaskInfo *taskInfo, m_taskInfos) {
+    for (TaskInfo *taskInfo : m_taskInfos) {
         const QString taskName = TaskInfo::typeToString(taskInfo->type());
         const QByteArray taskData = tasksMap.value(taskName);
 
@@ -59,7 +59,7 @@ bool TaskManager::saveSettings(FortSettings *fortSettings)
     TasksMap tasksMap;
     QByteArray taskData;
 
-    foreach (const TaskInfo *taskInfo, m_taskInfos) {
+    for (const TaskInfo *taskInfo : m_taskInfos) {
         const QString taskName = TaskInfo::typeToString(taskInfo->type());
 
         taskData.clear();
@@ -90,7 +90,7 @@ void TaskManager::runExpiredTasks()
     const QDateTime now = DateUtil::now();
     bool enabledTaskExists = false;
 
-    foreach (TaskInfo *taskInfo, m_taskInfos) {
+    for (TaskInfo *taskInfo : m_taskInfos) {
         if (!taskInfo->enabled())
             continue;
 

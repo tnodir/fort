@@ -147,7 +147,7 @@ void Logger::checkLogFiles()
     int count = LOGGER_KEEP_FILES;
 
     // Remove old files
-    foreach (const QString &fileName, m_dir.entryList(
+    for (const QString &fileName : m_dir.entryList(
                  QStringList() << (QLatin1String(LOGGER_FILE_PREFIX) + '*'
                                    + QLatin1String(LOGGER_FILE_SUFFIX)),
                  QDir::Files, QDir::Time)) {

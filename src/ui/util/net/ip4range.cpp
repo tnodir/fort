@@ -66,7 +66,7 @@ bool Ip4Range::fromText(const QString &text)
     ip4range_map_t ipRangeMap;
 
     int lineNo = 0;
-    foreach (const QStringRef &line,
+    for (const QStringRef &line :
              text.splitRef(QLatin1Char('\n'))) {
         ++lineNo;
 

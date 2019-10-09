@@ -246,7 +246,7 @@ bool ConfUtil::parseApps(const QString &text, bool blocked,
                          appgroups_map_t &appGroupIndexes,
                          int groupOffset)
 {
-    foreach (const QStringRef &line,
+    for (const QStringRef &line :
              text.splitRef(QLatin1Char('\n'))) {
         const QStringRef lineTrimmed = line.trimmed();
         if (lineTrimmed.isEmpty()
@@ -373,7 +373,7 @@ void ConfUtil::writeFragmentBits(quint16 *fragmentBits,
 {
     *fragmentBits = 0;
     int i = 0;
-    foreach (const AppGroup *appGroup, conf.appGroupsList()) {
+    for (const AppGroup *appGroup : conf.appGroupsList()) {
         if (appGroup->fragmentPacket()) {
             *fragmentBits |= (1 << i);
         }
@@ -485,7 +485,7 @@ void ConfUtil::writeStrings(char **data, const QStringList &list)
 
     *offp++ = 0;
 
-    foreach (const QString &s, list) {
+    for (const QString &s : list) {
         const quint32 len = s.toWCharArray((wchar_t *) p)
                 * sizeof(wchar_t);
 

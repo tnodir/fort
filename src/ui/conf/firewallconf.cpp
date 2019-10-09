@@ -202,7 +202,7 @@ quint32 FirewallConf::appGroupBits() const
 {
     quint32 groupBits = 0;
     int i = 0;
-    foreach (const AppGroup *appGroup, appGroupsList()) {
+    for (const AppGroup *appGroup : appGroupsList()) {
         if (appGroup->enabled()) {
             groupBits |= (1 << i);
         }
@@ -214,7 +214,7 @@ quint32 FirewallConf::appGroupBits() const
 void FirewallConf::setAppGroupBits(quint32 groupBits)
 {
     int i = 0;
-    foreach (AppGroup *appGroup, appGroupsList()) {
+    for (AppGroup *appGroup : appGroupsList()) {
         appGroup->setEnabled(groupBits & (1 << i));
         ++i;
     }
@@ -227,7 +227,7 @@ QQmlListProperty<AddressGroup> FirewallConf::addressGroups()
 
 AppGroup *FirewallConf::appGroupByName(const QString &name) const
 {
-    foreach (AppGroup *appGroup, appGroupsList()) {
+    for (AppGroup *appGroup : appGroupsList()) {
         if (appGroup->name() == name)
             return appGroup;
     }
@@ -317,13 +317,13 @@ QVariant FirewallConf::toVariant() const
     map["passwordHash"] = m_passwordHash;
 
     QVariantList addresses;
-    foreach (const AddressGroup *addressGroup, addressGroupsList()) {
+    for (const AddressGroup *addressGroup : addressGroupsList()) {
         addresses.append(addressGroup->toVariant());
     }
     map["addressGroups"] = addresses;
 
     QVariantList groups;
-    foreach (const AppGroup *appGroup, appGroupsList()) {
+    for (const AppGroup *appGroup : appGroupsList()) {
         groups.append(appGroup->toVariant());
     }
     map["appGroups"] = groups;
@@ -339,13 +339,13 @@ void FirewallConf::fromVariant(const QVariant &v)
 
     const QVariantList addresses = map["addressGroups"].toList();
     int addrGroupIndex = 0;
-    foreach (const QVariant &av, addresses) {
+    for (const QVariant &av : addresses) {
         AddressGroup *addressGroup = m_addressGroups.at(addrGroupIndex++);
         addressGroup->fromVariant(av);
     }
 
     const QVariantList groups = map["appGroups"].toList();
-    foreach (const QVariant &gv, groups) {
+    for (const QVariant &gv : groups) {
         auto appGroup = new AppGroup();
         appGroup->fromVariant(gv);
         addAppGroup(appGroup);

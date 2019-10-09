@@ -73,7 +73,7 @@ QStringList TaskTasix::parseTasixBuffer(const QByteArray &buffer)
     // Parse lines
     const QString text = QString::fromLatin1(buffer);
 
-    foreach (const QStringRef &line, text.splitRef(
+    for (const QStringRef &line : text.splitRef(
                  '\n', QString::SkipEmptyParts)) {
         if (!line.startsWith('*'))
             continue;

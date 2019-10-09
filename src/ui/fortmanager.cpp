@@ -599,7 +599,7 @@ void FortManager::saveTrayFlags()
     m_firewallConf->setStopInetTraffic(m_stopInetTrafficAction->isChecked());
 
     int i = 0;
-    foreach (AppGroup *appGroup, m_firewallConf->appGroupsList()) {
+    for (AppGroup *appGroup : m_firewallConf->appGroupsList()) {
         const QAction *action = m_appGroupActions.at(i);
         appGroup->setEnabled(action->isChecked());
         ++i;
@@ -712,7 +712,7 @@ void FortManager::updateTrayMenu()
         menu->addSeparator();
         m_appGroupActions.clear();
         int appGroupIndex = 0;
-        foreach (const AppGroup *appGroup, conf.appGroupsList()) {
+        for (const AppGroup *appGroup : conf.appGroupsList()) {
             QAction *a = addAction(
                         menu, QIcon(":/images/application_double.png"),
                         appGroup->label(), this, SLOT(saveTrayFlags()),

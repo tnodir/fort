@@ -127,7 +127,7 @@ TasksMap FortSettings::tasks() const
     TasksMap map;
     const QString tasksPrefix("tasks");
 
-    foreach (const QString &taskName, iniChildKeys(tasksPrefix)) {
+    for (const QString &taskName : iniChildKeys(tasksPrefix)) {
         const QString taskKey(tasksPrefix + '/' + taskName);
         map.insert(taskName, iniValue(taskKey).toByteArray());
     }
