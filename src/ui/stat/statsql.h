@@ -1,7 +1,7 @@
-#ifndef DATABASESQL_H
-#define DATABASESQL_H
+#ifndef STATSQL_H
+#define STATSQL_H
 
-class DatabaseSql
+class StatSql
 {
 public:
     static const char * const sqlPragmas;
@@ -65,4 +65,4 @@ public:
     static const char * const sqlResetAppTrafTotals;
 };
 
-#endif // DATABASESQL_H
+#endif // STATSQL_H

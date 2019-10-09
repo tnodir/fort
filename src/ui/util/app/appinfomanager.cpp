@@ -3,11 +3,12 @@
 #include <QImage>
 #include <QLoggingCategory>
 
+#include <sqlite/sqlitedb.h>
+#include <sqlite/sqlitestmt.h>
+
 #include "appinfojob.h"
 #include "appinfoworker.h"
 #include "apputil.h"
-#include <sqlite/sqlitedb.h>
-#include <sqlite/sqlitestmt.h>
 
 Q_DECLARE_LOGGING_CATEGORY(CLOG_APPINFOCACHE)
 Q_LOGGING_CATEGORY(CLOG_APPINFOCACHE, "fort.appInfoWorker")

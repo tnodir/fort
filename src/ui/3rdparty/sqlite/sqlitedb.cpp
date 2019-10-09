@@ -338,7 +338,7 @@ bool SqliteDb::migrate(const QString &sqlDir, int version,
 
         QFile file(filePath);
         if (!file.exists())
-            break;
+            continue;
 
         if (!file.open(QFile::ReadOnly | QFile::Text)) {
             qWarning() << "SQLite: Cannot open migration file" << filePath

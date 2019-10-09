@@ -2,23 +2,24 @@
 
 #include <QElapsedTimer>
 
-#include "commontest.h"
-#include "db/databasemanager.h"
-#include "db/quotamanager.h"
-#include "fortsettings.h"
-#include "util/dateutil.h"
-#include "util/fileutil.h"
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
+
+#include "commontest.h"
+#include "fortsettings.h"
+#include "stat/quotamanager.h"
+#include "stat/statmanager.h"
+#include "util/dateutil.h"
+#include "util/fileutil.h"
 
 void Test::dbWriteRead()
 {
     QStringList args("test");
     FortSettings fortSettings(args);
     QuotaManager quotaManager(&fortSettings);
-    DatabaseManager databaseManager(":memory:", &quotaManager);
+    StatManager statManager(":memory:", &quotaManager);
 
-    QVERIFY(databaseManager.initialize());
+    QVERIFY(statManager.initialize());
 
     const QStringList appPaths = QStringList()
             << "C:\\test\\test.exe"
@@ -30,11 +31,11 @@ void Test::dbWriteRead()
 
     // Add apps
     quint32 index = 0;
-    foreach (const QString &appPath, appPaths) {
-        databaseManager.logProcNew(++index * 10, appPath);
+    for (const QString &appPath : appPaths) {
+        statManager.logProcNew(++index * 10, appPath);
     }
 
-    debugProcNew(databaseManager.sqliteDb());
+    debugProcNew(statManager.sqliteDb());
 
     QElapsedTimer timer;
     timer.start();
@@ -47,8 +48,8 @@ void Test::dbWriteRead()
             30, 500, 600
         };
 
-        databaseManager.logStatTraf(procCount, trafBytes);
-        databaseManager.logStatTraf(procCount, trafBytes);
+        statManager.logStatTraf(procCount, trafBytes);
+        statManager.logStatTraf(procCount, trafBytes);
     }
 
     qDebug() << "elapsed>" << timer.restart() << "msec";
@@ -61,12 +62,12 @@ void Test::dbWriteRead()
             31, 50, 60
         };
 
-        databaseManager.logStatTraf(procCount, trafBytes);
+        statManager.logStatTraf(procCount, trafBytes);
     }
 
     qDebug() << "elapsed>" << timer.elapsed() << "msec";
 
-    debugStatTraf(databaseManager.sqliteDb());
+    debugStatTraf(statManager.sqliteDb());
 }
 
 void Test::debugProcNew(SqliteDb *sqliteDb)

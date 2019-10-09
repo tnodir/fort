@@ -1,19 +1,20 @@
-#include "databasemanager.h"
+#include "statmanager.h"
 
 #include <QLoggingCategory>
+
+#include <sqlite/sqlitedb.h>
+#include <sqlite/sqlitestmt.h>
 
 #include "../conf/firewallconf.h"
 #include "../fortcommon.h"
 #include "../util/dateutil.h"
 #include "../util/fileutil.h"
 #include "../util/osutil.h"
-#include "databasesql.h"
 #include "quotamanager.h"
-#include <sqlite/sqlitedb.h>
-#include <sqlite/sqlitestmt.h>
+#include "statsql.h"
 
-Q_DECLARE_LOGGING_CATEGORY(CLOG_DATABASE_MANAGER)
-Q_LOGGING_CATEGORY(CLOG_DATABASE_MANAGER, "fort.databaseManager")
+Q_DECLARE_LOGGING_CATEGORY(CLOG_STAT_MANAGER)
+Q_LOGGING_CATEGORY(CLOG_STAT_MANAGER, "fort.statManager")
 
 #define DATABASE_USER_VERSION   2
 
@@ -51,9 +52,9 @@ bool migrateFunc(SqliteDb *db, int version, void *ctx)
 
 }
 
-DatabaseManager::DatabaseManager(const QString &filePath,
-                                 QuotaManager *quotaManager,
-                                 QObject *parent) :
+StatManager::StatManager(const QString &filePath,
+                         QuotaManager *quotaManager,
+                         QObject *parent) :
     QObject(parent),
     m_isActivePeriodSet(false),
     m_isActivePeriod(false),
@@ -73,14 +74,14 @@ DatabaseManager::DatabaseManager(const QString &filePath,
 {
 }
 
-DatabaseManager::~DatabaseManager()
+StatManager::~StatManager()
 {
     clearStmts();
 
     delete m_sqliteDb;
 }
 
-void DatabaseManager::setFirewallConf(const FirewallConf *conf)
+void StatManager::setFirewallConf(const FirewallConf *conf)
 {
     m_conf = conf;
 
@@ -92,29 +93,29 @@ void DatabaseManager::setFirewallConf(const FirewallConf *conf)
     initializeQuota();
 }
 
-bool DatabaseManager::initialize()
+bool StatManager::initialize()
 {
     m_lastTrafHour = m_lastTrafDay = m_lastTrafMonth = 0;
 
     if (!m_sqliteDb->open(m_filePath)) {
-        qCritical(CLOG_DATABASE_MANAGER()) << "File open error:"
-                                           << m_filePath
-                                           << m_sqliteDb->errorMessage();
+        qCritical(CLOG_STAT_MANAGER()) << "File open error:"
+                                       << m_filePath
+                                       << m_sqliteDb->errorMessage();
         return false;
     }
 
-    m_sqliteDb->execute(DatabaseSql::sqlPragmas);
+    m_sqliteDb->execute(StatSql::sqlPragmas);
 
-    if (!m_sqliteDb->migrate(":/db/migrations", DATABASE_USER_VERSION,
+    if (!m_sqliteDb->migrate(":/stat/migrations", DATABASE_USER_VERSION,
                              false, &migrateFunc)) {
-        qCritical(CLOG_DATABASE_MANAGER()) << "Migration error" << m_filePath;
+        qCritical(CLOG_STAT_MANAGER()) << "Migration error" << m_filePath;
         return false;
     }
 
     return true;
 }
 
-void DatabaseManager::initializeActivePeriod()
+void StatManager::initializeActivePeriod()
 {
     m_isActivePeriodSet = false;
 
@@ -126,7 +127,7 @@ void DatabaseManager::initializeActivePeriod()
                         activePeriodToHour, activePeriodToMinute);
 }
 
-void DatabaseManager::initializeQuota()
+void StatManager::initializeQuota()
 {
     if (!m_conf) return;
 
@@ -140,14 +141,14 @@ void DatabaseManager::initializeQuota()
 
     qint64 inBytes, outBytes;
 
-    getTraffic(DatabaseSql::sqlSelectTrafDay, trafDay, inBytes, outBytes);
+    getTraffic(StatSql::sqlSelectTrafDay, trafDay, inBytes, outBytes);
     m_quotaManager->setTrafDayBytes(inBytes);
 
-    getTraffic(DatabaseSql::sqlSelectTrafMonth, trafMonth, inBytes, outBytes);
+    getTraffic(StatSql::sqlSelectTrafMonth, trafMonth, inBytes, outBytes);
     m_quotaManager->setTrafMonthBytes(inBytes);
 }
 
-void DatabaseManager::clear()
+void StatManager::clear()
 {
     clearAppIds();
     clearStmts();
@@ -161,23 +162,23 @@ void DatabaseManager::clear()
     m_quotaManager->clear();
 }
 
-void DatabaseManager::clearStmts()
+void StatManager::clearStmts()
 {
     qDeleteAll(m_sqliteStmts);
     m_sqliteStmts.clear();
 }
 
-void DatabaseManager::replaceAppPathAt(int index, const QString &appPath)
+void StatManager::replaceAppPathAt(int index, const QString &appPath)
 {
     m_appPaths.replace(index, appPath);
 }
 
-void DatabaseManager::replaceAppIdAt(int index, qint64 appId)
+void StatManager::replaceAppIdAt(int index, qint64 appId)
 {
     m_appIds.replace(index, appId);
 }
 
-void DatabaseManager::clearAppId(qint64 appId)
+void StatManager::clearAppId(qint64 appId)
 {
     const int index = m_appIds.indexOf(appId);
 
@@ -186,7 +187,7 @@ void DatabaseManager::clearAppId(qint64 appId)
     }
 }
 
-void DatabaseManager::clearAppIds()
+void StatManager::clearAppIds()
 {
     int index = m_appIds.size();
 
@@ -195,7 +196,7 @@ void DatabaseManager::clearAppIds()
     }
 }
 
-void DatabaseManager::logClear()
+void StatManager::logClear()
 {
     m_appFreeIndex = INVALID_APP_INDEX;
     m_appFreeIndexes.clear();
@@ -204,7 +205,7 @@ void DatabaseManager::logClear()
     m_appIds.clear();
 }
 
-void DatabaseManager::logClearApp(quint32 pid, int index)
+void StatManager::logClearApp(quint32 pid, int index)
 {
     m_appIndexes.remove(pid);
 
@@ -223,7 +224,7 @@ void DatabaseManager::logClearApp(quint32 pid, int index)
     }
 }
 
-void DatabaseManager::logProcNew(quint32 pid, const QString &appPath)
+void StatManager::logProcNew(quint32 pid, const QString &appPath)
 {
     Q_ASSERT(!m_appIndexes.contains(pid));
 
@@ -257,7 +258,7 @@ void DatabaseManager::logProcNew(quint32 pid, const QString &appPath)
     m_appIndexes.insert(pid, procIndex);
 }
 
-void DatabaseManager::logStatTraf(quint16 procCount, const quint32 *procTrafBytes)
+void StatManager::logStatTraf(quint16 procCount, const quint32 *procTrafBytes)
 {
     if (!m_conf || !m_conf->logStat())
         return;
@@ -311,27 +312,27 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint32 *procTrafByte
 
     // Insert Statements
     const QStmtList insertTrafAppStmts = QStmtList()
-            << getTrafficStmt(DatabaseSql::sqlInsertTrafAppHour, trafHour)
-            << getTrafficStmt(DatabaseSql::sqlInsertTrafAppDay, trafDay)
-            << getTrafficStmt(DatabaseSql::sqlInsertTrafAppMonth, trafMonth)
-            << getTrafficStmt(DatabaseSql::sqlUpdateTrafAppTotal, -1);
+            << getTrafficStmt(StatSql::sqlInsertTrafAppHour, trafHour)
+            << getTrafficStmt(StatSql::sqlInsertTrafAppDay, trafDay)
+            << getTrafficStmt(StatSql::sqlInsertTrafAppMonth, trafMonth)
+            << getTrafficStmt(StatSql::sqlUpdateTrafAppTotal, -1);
 
     const QStmtList insertTrafStmts = QStmtList()
-            << getTrafficStmt(DatabaseSql::sqlInsertTrafHour, trafHour)
-            << getTrafficStmt(DatabaseSql::sqlInsertTrafDay, trafDay)
-            << getTrafficStmt(DatabaseSql::sqlInsertTrafMonth, trafMonth);
+            << getTrafficStmt(StatSql::sqlInsertTrafHour, trafHour)
+            << getTrafficStmt(StatSql::sqlInsertTrafDay, trafDay)
+            << getTrafficStmt(StatSql::sqlInsertTrafMonth, trafMonth);
 
     // Update Statements
     const QStmtList updateTrafAppStmts = QStmtList()
-            << getTrafficStmt(DatabaseSql::sqlUpdateTrafAppHour, trafHour)
-            << getTrafficStmt(DatabaseSql::sqlUpdateTrafAppDay, trafDay)
-            << getTrafficStmt(DatabaseSql::sqlUpdateTrafAppMonth, trafMonth)
-            << getTrafficStmt(DatabaseSql::sqlUpdateTrafAppTotal, -1);
+            << getTrafficStmt(StatSql::sqlUpdateTrafAppHour, trafHour)
+            << getTrafficStmt(StatSql::sqlUpdateTrafAppDay, trafDay)
+            << getTrafficStmt(StatSql::sqlUpdateTrafAppMonth, trafMonth)
+            << getTrafficStmt(StatSql::sqlUpdateTrafAppTotal, -1);
 
     const QStmtList updateTrafStmts = QStmtList()
-            << getTrafficStmt(DatabaseSql::sqlUpdateTrafHour, trafHour)
-            << getTrafficStmt(DatabaseSql::sqlUpdateTrafDay, trafDay)
-            << getTrafficStmt(DatabaseSql::sqlUpdateTrafMonth, trafMonth);
+            << getTrafficStmt(StatSql::sqlUpdateTrafHour, trafHour)
+            << getTrafficStmt(StatSql::sqlUpdateTrafDay, trafDay)
+            << getTrafficStmt(StatSql::sqlUpdateTrafMonth, trafMonth);
 
     for (int i = 0; i < procCount; ++i) {
         quint32 pid = *procTrafBytes++;
@@ -345,9 +346,9 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint32 *procTrafByte
 
         const int procIndex = m_appIndexes.value(pid, INVALID_APP_INDEX);
         if (Q_UNLIKELY(procIndex == INVALID_APP_INDEX)) {
-            qCritical(CLOG_DATABASE_MANAGER()) << "UI & Driver's states mismatch! Expected processes:"
-                                               << m_appIndexes.keys() << "Got:" << procCount
-                                               << "(" << i << pid << inactive << ")";
+            qCritical(CLOG_STAT_MANAGER()) << "UI & Driver's states mismatch! Expected processes:"
+                                           << m_appIndexes.keys() << "Got:" << procCount
+                                           << "(" << i << pid << inactive << ")";
             abort();
         }
 
@@ -395,8 +396,8 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint32 *procTrafByte
             const qint32 oldTrafHour = trafHour - 24 * trafHourKeepDays;
 
             deleteTrafStmts
-                    << getTrafficStmt(DatabaseSql::sqlDeleteTrafAppHour, oldTrafHour)
-                    << getTrafficStmt(DatabaseSql::sqlDeleteTrafHour, oldTrafHour);
+                    << getTrafficStmt(StatSql::sqlDeleteTrafAppHour, oldTrafHour)
+                    << getTrafficStmt(StatSql::sqlDeleteTrafHour, oldTrafHour);
         }
 
         // Traffic Day
@@ -405,8 +406,8 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint32 *procTrafByte
             const qint32 oldTrafDay = trafHour - 24 * trafDayKeepDays;
 
             deleteTrafStmts
-                    << getTrafficStmt(DatabaseSql::sqlDeleteTrafAppDay, oldTrafDay)
-                    << getTrafficStmt(DatabaseSql::sqlDeleteTrafDay, oldTrafDay);
+                    << getTrafficStmt(StatSql::sqlDeleteTrafAppDay, oldTrafDay)
+                    << getTrafficStmt(StatSql::sqlDeleteTrafDay, oldTrafDay);
         }
 
         // Traffic Month
@@ -416,8 +417,8 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint32 *procTrafByte
                         trafHour, -trafMonthKeepMonths);
 
             deleteTrafStmts
-                    << getTrafficStmt(DatabaseSql::sqlDeleteTrafAppMonth, oldTrafMonth)
-                    << getTrafficStmt(DatabaseSql::sqlDeleteTrafMonth, oldTrafMonth);
+                    << getTrafficStmt(StatSql::sqlDeleteTrafAppMonth, oldTrafMonth)
+                    << getTrafficStmt(StatSql::sqlDeleteTrafMonth, oldTrafMonth);
         }
 
         stepStmtList(deleteTrafStmts);
@@ -435,25 +436,25 @@ void DatabaseManager::logStatTraf(quint16 procCount, const quint32 *procTrafByte
     emit trafficAdded(unixTime, sumInBytes, sumOutBytes);
 }
 
-void DatabaseManager::deleteApp(qint64 appId)
+void StatManager::deleteApp(qint64 appId)
 {
     clearAppId(appId);
 
     // Delete Statements
     const QStmtList deleteAppStmts = QStmtList()
-            << getAppStmt(DatabaseSql::sqlDeleteAppTrafHour, appId)
-            << getAppStmt(DatabaseSql::sqlDeleteAppTrafDay, appId)
-            << getAppStmt(DatabaseSql::sqlDeleteAppTrafMonth, appId)
-            << getAppStmt(DatabaseSql::sqlDeleteAppId, appId);
+            << getAppStmt(StatSql::sqlDeleteAppTrafHour, appId)
+            << getAppStmt(StatSql::sqlDeleteAppTrafDay, appId)
+            << getAppStmt(StatSql::sqlDeleteAppTrafMonth, appId)
+            << getAppStmt(StatSql::sqlDeleteAppId, appId);
 
     stepStmtList(deleteAppStmts);
 }
 
-void DatabaseManager::resetAppTotals()
+void StatManager::resetAppTotals()
 {
     m_sqliteDb->beginTransaction();
 
-    SqliteStmt *stmt = getSqliteStmt(DatabaseSql::sqlResetAppTrafTotals);
+    SqliteStmt *stmt = getSqliteStmt(StatSql::sqlResetAppTrafTotals);
     const qint64 unixTime = DateUtil::getUnixTime();
 
     stmt->bindInt(1, DateUtil::getUnixHour(unixTime));
@@ -464,11 +465,11 @@ void DatabaseManager::resetAppTotals()
     m_sqliteDb->commitTransaction();
 }
 
-qint64 DatabaseManager::getAppId(const QString &appPath)
+qint64 StatManager::getAppId(const QString &appPath)
 {
     qint64 appId = INVALID_APP_ID;
 
-    SqliteStmt *stmt = getSqliteStmt(DatabaseSql::sqlSelectAppId);
+    SqliteStmt *stmt = getSqliteStmt(StatSql::sqlSelectAppId);
 
     stmt->bindText(1, appPath);
     if (stmt->step() == SqliteStmt::StepRow) {
@@ -479,11 +480,11 @@ qint64 DatabaseManager::getAppId(const QString &appPath)
     return appId;
 }
 
-qint64 DatabaseManager::createAppId(const QString &appPath, qint64 unixTime)
+qint64 StatManager::createAppId(const QString &appPath, qint64 unixTime)
 {
     qint64 appId = INVALID_APP_ID;
 
-    SqliteStmt *stmt = getSqliteStmt(DatabaseSql::sqlInsertAppId);
+    SqliteStmt *stmt = getSqliteStmt(StatSql::sqlInsertAppId);
 
     stmt->bindText(1, appPath);
     stmt->bindInt64(2, unixTime);
@@ -499,9 +500,9 @@ qint64 DatabaseManager::createAppId(const QString &appPath, qint64 unixTime)
     return appId;
 }
 
-void DatabaseManager::getAppList(QStringList &list, QVector<qint64> &appIds)
+void StatManager::getAppList(QStringList &list, QVector<qint64> &appIds)
 {
-    SqliteStmt *stmt = getSqliteStmt(DatabaseSql::sqlSelectAppPaths);
+    SqliteStmt *stmt = getSqliteStmt(StatSql::sqlSelectAppPaths);
 
     while (stmt->step() == SqliteStmt::StepRow) {
         appIds.append(stmt->columnInt64(0));
@@ -510,26 +511,26 @@ void DatabaseManager::getAppList(QStringList &list, QVector<qint64> &appIds)
     stmt->reset();
 }
 
-void DatabaseManager::updateTrafficList(const QStmtList &insertStmtList,
-                                        const QStmtList &updateStmtList,
-                                        quint32 inBytes, quint32 outBytes,
-                                        qint64 appId)
+void StatManager::updateTrafficList(const QStmtList &insertStmtList,
+                                    const QStmtList &updateStmtList,
+                                    quint32 inBytes, quint32 outBytes,
+                                    qint64 appId)
 {
     int i = 0;
-    foreach (SqliteStmt *stmtUpdate, updateStmtList) {
+    for (SqliteStmt *stmtUpdate : updateStmtList) {
         if (!updateTraffic(stmtUpdate, inBytes, outBytes, appId)) {
             SqliteStmt *stmtInsert = insertStmtList.at(i);
             if (!updateTraffic(stmtInsert, inBytes, outBytes, appId)) {
-                qCritical(CLOG_DATABASE_MANAGER()) << "Update traffic error:"
-                                                   << m_sqliteDb->errorMessage();
+                qCritical(CLOG_STAT_MANAGER()) << "Update traffic error:"
+                                               << m_sqliteDb->errorMessage();
             }
         }
         ++i;
     }
 }
 
-bool DatabaseManager::updateTraffic(SqliteStmt *stmt, quint32 inBytes,
-                                    quint32 outBytes, qint64 appId)
+bool StatManager::updateTraffic(SqliteStmt *stmt, quint32 inBytes,
+                                quint32 outBytes, qint64 appId)
 {
     stmt->bindInt64(2, inBytes);
     stmt->bindInt64(3, outBytes);
@@ -546,15 +547,15 @@ bool DatabaseManager::updateTraffic(SqliteStmt *stmt, quint32 inBytes,
             && m_sqliteDb->changes() != 0;
 }
 
-void DatabaseManager::stepStmtList(const QStmtList &stmtList)
+void StatManager::stepStmtList(const QStmtList &stmtList)
 {
-    foreach (SqliteStmt *stmtDelete, stmtList) {
+    for (SqliteStmt *stmtDelete : stmtList) {
         stmtDelete->step();
         stmtDelete->reset();
     }
 }
 
-qint32 DatabaseManager::getTrafficTime(const char *sql, qint64 appId)
+qint32 StatManager::getTrafficTime(const char *sql, qint64 appId)
 {
     qint32 trafTime = 0;
 
@@ -572,9 +573,9 @@ qint32 DatabaseManager::getTrafficTime(const char *sql, qint64 appId)
     return trafTime;
 }
 
-void DatabaseManager::getTraffic(const char *sql, qint32 trafTime,
-                                 qint64 &inBytes, qint64 &outBytes,
-                                 qint64 appId)
+void StatManager::getTraffic(const char *sql, qint32 trafTime,
+                             qint64 &inBytes, qint64 &outBytes,
+                             qint64 appId)
 {
     SqliteStmt *stmt = getSqliteStmt(sql);
 
@@ -594,7 +595,7 @@ void DatabaseManager::getTraffic(const char *sql, qint32 trafTime,
     stmt->reset();
 }
 
-SqliteStmt *DatabaseManager::getTrafficStmt(const char *sql, qint32 trafTime)
+SqliteStmt *StatManager::getTrafficStmt(const char *sql, qint32 trafTime)
 {
     SqliteStmt *stmt = getSqliteStmt(sql);
 
@@ -603,7 +604,7 @@ SqliteStmt *DatabaseManager::getTrafficStmt(const char *sql, qint32 trafTime)
     return stmt;
 }
 
-SqliteStmt *DatabaseManager::getAppStmt(const char *sql, qint64 appId)
+SqliteStmt *StatManager::getAppStmt(const char *sql, qint64 appId)
 {
     SqliteStmt *stmt = getSqliteStmt(sql);
 
@@ -612,7 +613,7 @@ SqliteStmt *DatabaseManager::getAppStmt(const char *sql, qint64 appId)
     return stmt;
 }
 
-SqliteStmt *DatabaseManager::getSqliteStmt(const char *sql)
+SqliteStmt *StatManager::getSqliteStmt(const char *sql)
 {
     SqliteStmt *stmt = m_sqliteStmts.value(sql);
 

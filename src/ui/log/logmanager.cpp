@@ -13,14 +13,14 @@
 #include "model/appblockedmodel.h"
 #include "model/appstatmodel.h"
 
-LogManager::LogManager(DatabaseManager *databaseManager,
+LogManager::LogManager(StatManager *statManager,
                        DriverWorker *driverWorker,
                        QObject *parent) :
     QObject(parent),
     m_active(false),
     m_driverWorker(driverWorker),
     m_appBlockedModel(new AppBlockedModel(this)),
-    m_appStatModel(new AppStatModel(databaseManager, this))
+    m_appStatModel(new AppStatModel(statManager, this))
 {
 }
 

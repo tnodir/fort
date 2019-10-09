@@ -16,9 +16,6 @@ SOURCES += \
     conf/firewallconf.cpp \
     control/controlmanager.cpp \
     control/controlworker.cpp \
-    db/databasemanager.cpp \
-    db/databasesql.cpp \
-    db/quotamanager.cpp \
     driver/drivermanager.cpp \
     driver/driverworker.cpp \
     fortcommon.cpp \
@@ -40,6 +37,9 @@ SOURCES += \
     log/model/stringlistmodel.cpp \
     log/model/traflistmodel.cpp \
     mainwindow.cpp \
+    stat/quotamanager.cpp \
+    stat/statmanager.cpp \
+    stat/statsql.cpp \
     task/taskdownloader.cpp \
     task/taskinfo.cpp \
     task/taskmanager.cpp \
@@ -87,9 +87,6 @@ HEADERS += \
     conf/firewallconf.h \
     control/controlmanager.h \
     control/controlworker.h \
-    db/databasemanager.h \
-    db/databasesql.h \
-    db/quotamanager.h \
     driver/drivermanager.h \
     driver/driverworker.h \
     fortcommon.h \
@@ -111,6 +108,9 @@ HEADERS += \
     log/model/stringlistmodel.h \
     log/model/traflistmodel.h \
     mainwindow.h \
+    stat/quotamanager.h \
+    stat/statmanager.h \
+    stat/statsql.h \
     task/taskdownloader.h \
     task/taskinfo.h \
     task/taskmanager.h \
@@ -175,11 +175,11 @@ RESOURCES += fort_images.qrc
 
 # Database Migrations
 OTHER_FILES += \
-    db/migrations/*.sql \
+    stat/migrations/*.sql \
     util/app/migrations/*.sql
 
 RESOURCES += \
-    db/db-migrations.qrc \
+    stat/stat-migrations.qrc \
     util/app/app-migrations.qrc
 
 # Shadow Build: Copy i18n/ to build path

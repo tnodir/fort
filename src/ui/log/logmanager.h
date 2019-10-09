@@ -5,7 +5,7 @@
 
 QT_FORWARD_DECLARE_CLASS(AppBlockedModel)
 QT_FORWARD_DECLARE_CLASS(AppStatModel)
-QT_FORWARD_DECLARE_CLASS(DatabaseManager)
+QT_FORWARD_DECLARE_CLASS(StatManager)
 QT_FORWARD_DECLARE_CLASS(DriverWorker)
 QT_FORWARD_DECLARE_CLASS(LogBuffer)
 QT_FORWARD_DECLARE_CLASS(LogEntry)
@@ -18,7 +18,7 @@ class LogManager : public QObject
     Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
 
 public:
-    explicit LogManager(DatabaseManager *databaseManager,
+    explicit LogManager(StatManager *statManager,
                         DriverWorker *driverWorker,
                         QObject *parent = nullptr);
 

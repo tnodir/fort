@@ -6,11 +6,11 @@ SOURCES += \
     $$UIPATH/conf/addressgroup.cpp \
     $$UIPATH/conf/appgroup.cpp \
     $$UIPATH/conf/firewallconf.cpp \
-    $$UIPATH/db/databasemanager.cpp \
-    $$UIPATH/db/databasesql.cpp \
-    $$UIPATH/db/quotamanager.cpp \
     $$UIPATH/fortcommon.cpp \
     $$UIPATH/fortsettings.cpp \
+    $$UIPATH/stat/quotamanager.cpp \
+    $$UIPATH/stat/statmanager.cpp \
+    $$UIPATH/stat/statsql.cpp \
     $$UIPATH/util/dateutil.cpp \
     $$UIPATH/util/fileutil.cpp \
     $$UIPATH/util/net/netutil.cpp \
@@ -21,11 +21,11 @@ HEADERS += \
     $$UIPATH/conf/addressgroup.h \
     $$UIPATH/conf/appgroup.h \
     $$UIPATH/conf/firewallconf.h \
-    $$UIPATH/db/databasemanager.h \
-    $$UIPATH/db/databasesql.h \
-    $$UIPATH/db/quotamanager.h \
     $$UIPATH/fortcommon.h \
     $$UIPATH/fortsettings.h \
+    $$UIPATH/stat/quotamanager.h \
+    $$UIPATH/stat/statmanager.h \
+    $$UIPATH/stat/statsql.h \
     $$UIPATH/util/dateutil.h \
     $$UIPATH/util/fileutil.h \
     $$UIPATH/util/net/netutil.h \
@@ -35,8 +35,8 @@ HEADERS += \
 # Test Data
 RESOURCES += data.qrc
 
-# Database Migrations
-RESOURCES += $$UIPATH/db/db-migrations.qrc
+# Stat Migrations
+RESOURCES += $$UIPATH/stat/stat-migrations.qrc
 
 # 3rd party integrations
 CONFIG += sqlite

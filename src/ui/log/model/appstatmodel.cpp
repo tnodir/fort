@@ -1,17 +1,17 @@
 #include "appstatmodel.h"
 
-#include "../../db/databasemanager.h"
+#include "../../stat/statmanager.h"
 #include "../logentryprocnew.h"
 #include "../logentrystattraf.h"
 #include "traflistmodel.h"
 
-AppStatModel::AppStatModel(DatabaseManager *databaseManager,
+AppStatModel::AppStatModel(StatManager *statManager,
                            QObject *parent) :
     StringListModel(parent),
-    m_databaseManager(databaseManager),
-    m_trafListModel(new TrafListModel(databaseManager, this))
+    m_statManager(statManager),
+    m_trafListModel(new TrafListModel(statManager, this))
 {
-    connect(m_databaseManager, &DatabaseManager::appCreated,
+    connect(m_statManager, &StatManager::appCreated,
             this, &AppStatModel::handleCreatedApp);
 }
 
@@ -48,7 +48,7 @@ void AppStatModel::remove(int row)
 
     const qint64 appId = m_appIds.at(row);
 
-    m_databaseManager->deleteApp(appId);
+    m_statManager->deleteApp(appId);
 
     m_appIds.remove(row);
 
@@ -65,7 +65,7 @@ void AppStatModel::updateList()
     m_appIds.clear();
     m_appIds.append(0);  // All
 
-    m_databaseManager->getAppList(list, m_appIds);
+    m_statManager->getAppList(list, m_appIds);
 
     setList(list);
 }
@@ -78,12 +78,12 @@ void AppStatModel::handleCreatedApp(qint64 appId, const QString &appPath)
 
 void AppStatModel::handleProcNew(const LogEntryProcNew &procNewEntry)
 {
-    m_databaseManager->logProcNew(procNewEntry.pid(),
-                                  procNewEntry.path());
+    m_statManager->logProcNew(procNewEntry.pid(),
+                              procNewEntry.path());
 }
 
 void AppStatModel::handleStatTraf(const LogEntryStatTraf &statTrafEntry)
 {
-    m_databaseManager->logStatTraf(statTrafEntry.procCount(),
-                                   statTrafEntry.procTrafBytes());
+    m_statManager->logStatTraf(statTrafEntry.procCount(),
+                               statTrafEntry.procTrafBytes());
 }

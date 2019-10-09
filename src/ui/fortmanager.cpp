@@ -15,8 +15,6 @@
 #include "conf/addressgroup.h"
 #include "conf/appgroup.h"
 #include "conf/firewallconf.h"
-#include "db/databasemanager.h"
-#include "db/quotamanager.h"
 #include "driver/drivermanager.h"
 #include "fortsettings.h"
 #include "graph/graphwindow.h"
@@ -25,6 +23,8 @@
 #include "log/model/appstatmodel.h"
 #include "log/model/iplistmodel.h"
 #include "log/model/traflistmodel.h"
+#include "stat/quotamanager.h"
+#include "stat/statmanager.h"
 #include "task/taskinfo.h"
 #include "task/taskmanager.h"
 #include "translationmanager.h"
@@ -61,10 +61,10 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_stopTrafficAction(nullptr),
     m_stopInetTrafficAction(nullptr),
     m_quotaManager(new QuotaManager(fortSettings, this)),
-    m_databaseManager(new DatabaseManager(fortSettings->statFilePath(),
-                                          m_quotaManager, this)),
+    m_statManager(new StatManager(fortSettings->statFilePath(),
+                                  m_quotaManager, this)),
     m_driverManager(new DriverManager(this)),
-    m_logManager(new LogManager(m_databaseManager,
+    m_logManager(new LogManager(m_statManager,
                                 m_driverManager->driverWorker(), this)),
     m_nativeEventFilter(new NativeEventFilter(this)),
     m_hotKeyManager(new HotKeyManager(m_nativeEventFilter, this)),
@@ -75,7 +75,7 @@ FortManager::FortManager(FortSettings *fortSettings,
 
     setupLogger();
     setupAppInfoCache();
-    setupDatabaseManager();
+    setupStatManager();
 
     setupLogManager();
     setupDriver();
@@ -179,7 +179,7 @@ bool FortManager::setupDriver()
 void FortManager::closeDriver()
 {
     updateLogManager(false);
-    updateDatabaseManager(nullptr);
+    updateStatManager(nullptr);
 
     m_driverManager->closeDevice();
 }
@@ -194,9 +194,9 @@ void FortManager::closeLogManager()
     m_logManager->close();
 }
 
-void FortManager::setupDatabaseManager()
+void FortManager::setupStatManager()
 {
-    m_databaseManager->initialize();
+    m_statManager->initialize();
 
     connect(m_quotaManager, &QuotaManager::alert,
             this, &FortManager::showInfoBox);
@@ -377,7 +377,7 @@ void FortManager::showGraphWindow()
         connect(m_graphWindow, &GraphWindow::mouseRightClick,
                 this, &FortManager::showTrayMenu);
 
-        connect(m_databaseManager, &DatabaseManager::trafficAdded,
+        connect(m_statManager, &StatManager::trafficAdded,
                 m_graphWindow, &GraphWindow::addTraffic);
     }
 
@@ -563,7 +563,7 @@ bool FortManager::updateDriverConf(FirewallConf *conf, bool onlyFlags)
             : m_driverManager->writeConf(*conf);
 
     if (res) {
-        updateDatabaseManager(conf);
+        updateStatManager(conf);
         updateLogManager(true);
     } else {
         closeDriver();
@@ -577,9 +577,9 @@ void FortManager::updateLogManager(bool active)
     m_logManager->setActive(active);
 }
 
-void FortManager::updateDatabaseManager(FirewallConf *conf)
+void FortManager::updateStatManager(FirewallConf *conf)
 {
-    m_databaseManager->setFirewallConf(conf);
+    m_statManager->setFirewallConf(conf);
 }
 
 void FortManager::setLanguage(int language)

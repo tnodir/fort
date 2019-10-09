@@ -3,7 +3,7 @@
 
 #include <QAbstractItemModel>
 
-QT_FORWARD_DECLARE_CLASS(DatabaseManager)
+QT_FORWARD_DECLARE_CLASS(StatManager)
 
 struct TrafficRow {
     bool isValid(int row) const { return row == this->row; }
@@ -28,7 +28,7 @@ public:
     };
     Q_ENUM(TrafType)
 
-    explicit TrafListModel(DatabaseManager *databaseManager,
+    explicit TrafListModel(StatManager *statManager,
                            QObject *parent = nullptr);
 
     TrafListModel::TrafType type() const { return m_type; }
@@ -90,7 +90,7 @@ private:
 
     mutable TrafficRow m_rowCache;
 
-    DatabaseManager *m_databaseManager;
+    StatManager *m_statManager;
 };
 
 #endif // TRAFLISTMODEL_H

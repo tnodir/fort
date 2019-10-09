@@ -10,7 +10,6 @@ QT_FORWARD_DECLARE_CLASS(QQmlApplicationEngine)
 QT_FORWARD_DECLARE_CLASS(QSystemTrayIcon)
 
 QT_FORWARD_DECLARE_CLASS(AppInfoCache)
-QT_FORWARD_DECLARE_CLASS(DatabaseManager)
 QT_FORWARD_DECLARE_CLASS(DriverManager)
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
 QT_FORWARD_DECLARE_CLASS(FortSettings)
@@ -19,6 +18,7 @@ QT_FORWARD_DECLARE_CLASS(HotKeyManager)
 QT_FORWARD_DECLARE_CLASS(LogManager)
 QT_FORWARD_DECLARE_CLASS(NativeEventFilter)
 QT_FORWARD_DECLARE_CLASS(QuotaManager)
+QT_FORWARD_DECLARE_CLASS(StatManager)
 QT_FORWARD_DECLARE_CLASS(TaskManager)
 QT_FORWARD_DECLARE_CLASS(WidgetWindowStateWatcher)
 QT_FORWARD_DECLARE_CLASS(WindowStateWatcher)
@@ -107,7 +107,7 @@ private:
     void setupLogManager();
     void closeLogManager();
 
-    void setupDatabaseManager();
+    void setupStatManager();
 
     void setupLogger();
 
@@ -129,7 +129,7 @@ private:
     bool updateDriverConf(FirewallConf *conf, bool onlyFlags = false);
 
     void updateLogManager(bool active);
-    void updateDatabaseManager(FirewallConf *conf);
+    void updateStatManager(FirewallConf *conf);
 
     FirewallConf *cloneConf(const FirewallConf &conf);
 
@@ -176,7 +176,7 @@ private:
     QList<QAction *> m_appGroupActions;
 
     QuotaManager *m_quotaManager;
-    DatabaseManager *m_databaseManager;
+    StatManager *m_statManager;
     DriverManager *m_driverManager;
     LogManager *m_logManager;
     NativeEventFilter *m_nativeEventFilter;

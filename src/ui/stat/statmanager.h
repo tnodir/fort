@@ -1,5 +1,5 @@
-#ifndef DATABASEMANAGER_H
-#define DATABASEMANAGER_H
+#ifndef STATMANAGER_H
+#define STATMANAGER_H
 
 #include <QHash>
 #include <QObject>
@@ -13,16 +13,16 @@ QT_FORWARD_DECLARE_CLASS(QuotaManager)
 QT_FORWARD_DECLARE_CLASS(SqliteDb)
 QT_FORWARD_DECLARE_CLASS(SqliteStmt)
 
-class DatabaseManager : public QObject
+class StatManager : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit DatabaseManager(const QString &filePath,
-                             QuotaManager *quotaManager,
-                             QObject *parent = nullptr);
-    ~DatabaseManager() override;
-    CLASS_DELETE_COPY_MOVE(DatabaseManager)
+    explicit StatManager(const QString &filePath,
+                         QuotaManager *quotaManager,
+                         QObject *parent = nullptr);
+    ~StatManager() override;
+    CLASS_DELETE_COPY_MOVE(StatManager)
 
     const FirewallConf *firewallConf() const { return m_conf; }
     void setFirewallConf(const FirewallConf *conf);
@@ -120,4 +120,4 @@ private:
     QVector<qint64> m_appIds;
 };
 
-#endif // DATABASEMANAGER_H
+#endif // STATMANAGER_H

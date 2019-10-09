@@ -145,17 +145,17 @@
 <context>
     <name>QuotaManager</name>
     <message>
-        <location filename="../db/quotamanager.cpp" line="86"/>
+        <location filename="../stat/quotamanager.cpp" line="86"/>
         <source>Day traffic quota exceeded!</source>
         <translation>Квота трафика на день исчерпана!</translation>
     </message>
     <message>
-        <location filename="../db/quotamanager.cpp" line="105"/>
+        <location filename="../stat/quotamanager.cpp" line="105"/>
         <source>Month traffic quota exceeded!</source>
         <translation>Квота трафика на месяц исчерпана!</translation>
     </message>
     <message>
-        <location filename="../db/quotamanager.h" line="30"/>
+        <location filename="../stat/quotamanager.h" line="30"/>
         <source>Quota Alert</source>
         <translation>Предупреждение о квоте трафика</translation>
     </message>

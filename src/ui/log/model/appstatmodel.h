@@ -3,9 +3,9 @@
 
 #include "stringlistmodel.h"
 
-QT_FORWARD_DECLARE_CLASS(DatabaseManager)
 QT_FORWARD_DECLARE_CLASS(LogEntryProcNew)
 QT_FORWARD_DECLARE_CLASS(LogEntryStatTraf)
+QT_FORWARD_DECLARE_CLASS(StatManager)
 QT_FORWARD_DECLARE_CLASS(TrafListModel)
 
 class AppStatModel : public StringListModel
@@ -13,7 +13,7 @@ class AppStatModel : public StringListModel
     Q_OBJECT
 
 public:
-    explicit AppStatModel(DatabaseManager *databaseManager,
+    explicit AppStatModel(StatManager *statManager,
                           QObject *parent = nullptr);
 
     void initialize();
@@ -38,8 +38,7 @@ private:
     void updateList();
 
 private:
-    DatabaseManager *m_databaseManager;
-
+    StatManager *m_statManager;
     TrafListModel *m_trafListModel;
 
     QVector<qint64> m_appIds;
