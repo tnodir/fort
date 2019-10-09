@@ -88,11 +88,12 @@ FortManager::FortManager(FortSettings *fortSettings,
 
     setupTranslationManager();
     setupTrayIcon();
+
+    connect(qApp, &QCoreApplication::aboutToQuit, this, &FortManager::closeUi);
 }
 
 FortManager::~FortManager()
 {
-    closeUi();
     removeHotKeys();
 
     closeDriver();
