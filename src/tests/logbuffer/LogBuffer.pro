@@ -5,6 +5,7 @@ SOURCES += \
     $$UIPATH/log/logbuffer.cpp \
     $$UIPATH/log/logentry.cpp \
     $$UIPATH/log/logentryblocked.cpp \
+    $$UIPATH/log/logentryheartbeat.cpp \
     $$UIPATH/log/logentryprocnew.cpp \
     $$UIPATH/log/logentrystattraf.cpp \
     $$UIPATH/util/dateutil.cpp \
@@ -18,6 +19,7 @@ HEADERS += \
     $$UIPATH/log/logbuffer.h \
     $$UIPATH/log/logentry.h \
     $$UIPATH/log/logentryblocked.h \
+    $$UIPATH/log/logentryheartbeat.h \
     $$UIPATH/log/logentryprocnew.h \
     $$UIPATH/log/logentrystattraf.h \
     $$UIPATH/util/dateutil.h \
