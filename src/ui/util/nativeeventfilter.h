@@ -17,7 +17,7 @@ public:
     CLASS_DELETE_COPY_MOVE(NativeEventFilter)
 
     bool nativeEventFilter(const QByteArray &eventType,
-                           void *message, long *result) override;
+                           void *message, qintptr *result) override;
 
     bool registerHotKey(int hotKeyId,
                         Qt::Key keyCode,
