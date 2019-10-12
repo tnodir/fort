@@ -2,14 +2,14 @@
 	"files": {
 		"${TARGET}": {
 			"common": [
-				"${QTPATH}/bin/Qt5Core.dll",
-				"${QTPATH}/bin/Qt5Gui.dll",
-				"${QTPATH}/bin/Qt5Qml.dll",
-				"${QTPATH}/bin/Qt5QmlModels.dll",
-				"${QTPATH}/bin/Qt5Quick.dll",
-				"${QTPATH}/bin/Qt5QuickControls2.dll",
-				"${QTPATH}/bin/Qt5QuickTemplates2.dll",
-				"${QTPATH}/bin/Qt5Widgets.dll"
+				"${QTPATH}/bin/Qt6Core.dll",
+				"${QTPATH}/bin/Qt6Gui.dll",
+				"${QTPATH}/bin/Qt6Qml.dll",
+				"${QTPATH}/bin/Qt6QmlModels.dll",
+				"${QTPATH}/bin/Qt6Quick.dll",
+				"${QTPATH}/bin/Qt6QuickControls2.dll",
+				"${QTPATH}/bin/Qt6QuickTemplates2.dll",
+				"${QTPATH}/bin/Qt6Widgets.dll"
 			],
 			"fort": [
 				"${BUILD}/FortFirewall.exe",
