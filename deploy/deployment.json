@@ -6,6 +6,7 @@
 				"${QTPATH}/bin/Qt6Gui.dll",
 				"${QTPATH}/bin/Qt6Qml.dll",
 				"${QTPATH}/bin/Qt6QmlModels.dll",
+				"${QTPATH}/bin/Qt6QmlWorkerScript.dll",
 				"${QTPATH}/bin/Qt6Quick.dll",
 				"${QTPATH}/bin/Qt6QuickControls2.dll",
 				"${QTPATH}/bin/Qt6QuickTemplates2.dll",
@@ -25,12 +26,14 @@
 		},
 		"${TARGET}/imports": {
 			"common": [
-				"${QTPATH}/qml/QtQuick.2		| *.dll qmldir		| *d.dll"
+				"${QTPATH}/qml/QtQuick.2		| *.dll qmldir		| *d.dll",
+				"${QTPATH}/qml/QtQml			| *.dll qmldir		| *d.dll"
 			]
 		},
 		"${TARGET}/imports/QtQml": {
 			"common": [
-				"${QTPATH}/qml/QtQml/Models.2		| *.dll qmldir		| *d.dll"
+				"${QTPATH}/qml/QtQml/Models.2		| *.dll qmldir		| *d.dll",
+				"${QTPATH}/qml/QtQml/WorkerScript.2	| *.dll qmldir		| *d.dll"
 			]
 		},
 		"${TARGET}/imports/QtQuick": {
