@@ -12,6 +12,7 @@ ApplicationWindow {
     minimumWidth: 950
     minimumHeight: 600
 
+    font.family: "Tahoma"
     font.pixelSize: 16
 
     readonly property FortSettings fortSettings: fortManager.fortSettings
