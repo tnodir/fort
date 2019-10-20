@@ -142,7 +142,7 @@ BasePage {
                                 editPassword.forceActiveFocus();
                             }
 
-                            setConfEdited();
+                            setIniEdited();
                         }
                     }
                     TextFieldFrame {
