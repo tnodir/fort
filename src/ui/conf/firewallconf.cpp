@@ -190,14 +190,6 @@ void FirewallConf::setQuotaMonthMb(quint32 quotaMonthMb)
     }
 }
 
-void FirewallConf::setPasswordHash(const QString &passwordHash)
-{
-    if (m_passwordHash != passwordHash) {
-        m_passwordHash = passwordHash;
-        emit passwordHashChanged();
-    }
-}
-
 quint32 FirewallConf::appGroupBits() const
 {
     quint32 groupBits = 0;
@@ -284,7 +276,6 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     setStopInetTraffic(o.stopInetTraffic());
     setAppBlockAll(o.appBlockAll());
     setAppAllowAll(o.appAllowAll());
-    setPasswordHash(o.passwordHash());
     setAppGroupBits(o.appGroupBits());
 
     setActivePeriodEnabled(o.activePeriodEnabled());
@@ -314,8 +305,6 @@ QVariant FirewallConf::toVariant() const
 {
     QVariantMap map;
 
-    map["passwordHash"] = m_passwordHash;
-
     QVariantList addresses;
     for (const AddressGroup *addressGroup : addressGroupsList()) {
         addresses.append(addressGroup->toVariant());
@@ -334,8 +323,6 @@ QVariant FirewallConf::toVariant() const
 void FirewallConf::fromVariant(const QVariant &v)
 {
     const QVariantMap map = v.toMap();
-
-    m_passwordHash = map["passwordHash"].toString();
 
     const QVariantList addresses = map["addressGroups"].toList();
     int addrGroupIndex = 0;

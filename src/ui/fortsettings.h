@@ -18,6 +18,8 @@ class FortSettings : public QObject
     Q_OBJECT
     Q_PROPERTY(bool debug READ debug WRITE setDebug NOTIFY iniChanged)
     Q_PROPERTY(QString language READ language WRITE setLanguage NOTIFY iniChanged)
+    Q_PROPERTY(bool hasPassword READ hasPassword NOTIFY iniChanged)
+    Q_PROPERTY(QString passwordHash READ passwordHash WRITE setPasswordHash NOTIFY iniChanged)
     Q_PROPERTY(qreal windowAddrSplit READ windowAddrSplit WRITE setWindowAddrSplit NOTIFY iniChanged)
     Q_PROPERTY(qreal windowAppsSplit READ windowAppsSplit WRITE setWindowAppsSplit NOTIFY iniChanged)
     Q_PROPERTY(bool graphWindowVisible READ graphWindowVisible WRITE setGraphWindowVisible NOTIFY iniChanged)
@@ -58,6 +60,11 @@ public:
 
     QString language() const { return iniText("base/language", "en"); }
     void setLanguage(const QString &v) { setIniValue("base/language", v); }
+
+    bool hasPassword() const { return !passwordHash().isEmpty(); }
+
+    QString passwordHash() const { return iniText("base/passwordHash"); }
+    void setPasswordHash(const QString &v) { setIniValue("base/passwordHash", v); }
 
     int iniVersion() const { return iniInt("base/version"); }
     void setIniVersion(int v) { setIniValue("base/version", v); }

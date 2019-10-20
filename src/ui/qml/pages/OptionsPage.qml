@@ -21,7 +21,7 @@ BasePage {
     function onAboutToSave() {  // override
         const password = editPassword.text;
         if (password) {
-            firewallConf.passwordHash = stringUtil.cryptoHash(password);
+            fortSettings.passwordHash = stringUtil.cryptoHash(password);
             editPassword.text = "";
         }
     }
@@ -133,10 +133,10 @@ BasePage {
                         id: cbPassword
                         text: translationManager.trTrigger
                               && qsTranslate("qml", "Password:")
-                        checked: firewallConf.hasPassword
+                        checked: fortSettings.hasPassword
                         onToggled: {
                             if (!checked) {
-                                firewallConf.passwordHash =
+                                fortSettings.passwordHash =
                                         editPassword.text = "";
                             } else {
                                 editPassword.forceActiveFocus();
@@ -150,9 +150,9 @@ BasePage {
                         width: 180
                         echoMode: TextInput.Password
                         passwordMaskDelay: 300
-                        readOnly: firewallConf.hasPassword || !cbPassword.checked
+                        readOnly: fortSettings.hasPassword || !cbPassword.checked
                         placeholderText: translationManager.trTrigger
-                                         && (firewallConf.hasPassword
+                                         && (fortSettings.hasPassword
                                              ? qsTranslate("qml", "Installed")
                                              : qsTranslate("qml", "Not Installed"))
                     }

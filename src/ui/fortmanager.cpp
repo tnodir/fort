@@ -433,7 +433,7 @@ void FortManager::exit(int retcode)
 
 bool FortManager::checkPassword()
 {
-    const QString passwordHash = firewallConf()->passwordHash();
+    const QString passwordHash = fortSettings()->passwordHash();
     if (passwordHash.isEmpty())
         return true;
 
@@ -687,7 +687,7 @@ void FortManager::updateTrayMenu()
     addHotKey(m_graphWindowAction, fortSettings()->hotKeyGraph(),
               conf.logStat());
 
-    if (!conf.hasPassword() && !m_firewallConfToEdit) {
+    if (!fortSettings()->hasPassword() && !m_firewallConfToEdit) {
         menu->addSeparator();
 
         m_filterEnabledAction = addAction(
@@ -730,7 +730,7 @@ void FortManager::updateTrayMenu()
         }
     }
 
-    if (!conf.hasPassword()) {
+    if (!fortSettings()->hasPassword()) {
         menu->addSeparator();
         QAction *quitAction = addAction(
                     menu, QIcon(":/images/cross.png"), tr("Quit"),
