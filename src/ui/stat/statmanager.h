@@ -27,8 +27,6 @@ public:
     const FirewallConf *firewallConf() const { return m_conf; }
     void setFirewallConf(const FirewallConf *conf);
 
-    SqliteDb *sqliteDb() const { return m_sqliteDb; }
-
     bool initialize();
 
     void logProcNew(quint32 pid, const QString &appPath);
@@ -104,8 +102,6 @@ private:
     qint32 m_lastTrafMonth;
 
     qint32 m_lastTick;
-
-    QString m_filePath;
 
     QuotaManager *m_quotaManager;
     const FirewallConf *m_conf;

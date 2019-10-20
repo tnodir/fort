@@ -14,16 +14,18 @@ using SQLITEDB_MIGRATE_FUNC = bool (*)(SqliteDb *db, int version, void *context)
 class SqliteDb
 {
 public:
-    explicit SqliteDb();
+    explicit SqliteDb(const QString &filePath = QString());
     ~SqliteDb();
     CLASS_DEFAULT_COPY_MOVE(SqliteDb)
 
-    bool open(const QString &filePath);
+    struct sqlite3 *db() const { return m_db; }
+
+    QString filePath() const { return m_filePath; }
+
+    bool open(const QString &filePath = QString());
     void close();
 
     bool recreateDb();
-
-    struct sqlite3 *db() const { return m_db; }
 
     bool execute(const char *sql);
     bool execute16(const ushort *sql);

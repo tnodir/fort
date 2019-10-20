@@ -67,10 +67,9 @@ StatManager::StatManager(const QString &filePath,
     m_lastTrafDay(0),
     m_lastTrafMonth(0),
     m_lastTick(0),
-    m_filePath(filePath),
     m_quotaManager(quotaManager),
     m_conf(nullptr),
-    m_sqliteDb(new SqliteDb())
+    m_sqliteDb(new SqliteDb(filePath))
 {
 }
 
@@ -97,9 +96,9 @@ bool StatManager::initialize()
 {
     m_lastTrafHour = m_lastTrafDay = m_lastTrafMonth = 0;
 
-    if (!m_sqliteDb->open(m_filePath)) {
+    if (!m_sqliteDb->open()) {
         qCritical(CLOG_STAT_MANAGER()) << "File open error:"
-                                       << m_filePath
+                                       << m_sqliteDb->filePath()
                                        << m_sqliteDb->errorMessage();
         return false;
     }
@@ -108,7 +107,8 @@ bool StatManager::initialize()
 
     if (!m_sqliteDb->migrate(":/stat/migrations", DATABASE_USER_VERSION,
                              false, &migrateFunc)) {
-        qCritical(CLOG_STAT_MANAGER()) << "Migration error" << m_filePath;
+        qCritical(CLOG_STAT_MANAGER()) << "Migration error"
+                                       << m_sqliteDb->filePath();
         return false;
     }
 
@@ -155,7 +155,7 @@ void StatManager::clear()
 
     m_sqliteDb->close();
 
-    FileUtil::removeFile(m_filePath);
+    FileUtil::removeFile(m_sqliteDb->filePath());
 
     initialize();
 

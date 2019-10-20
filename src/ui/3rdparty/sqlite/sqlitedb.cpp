@@ -9,8 +9,9 @@
 
 #include <sqlite3.h>
 
-SqliteDb::SqliteDb() :
-    m_db(nullptr)
+SqliteDb::SqliteDb(const QString &filePath) :
+    m_db(nullptr),
+    m_filePath(filePath)
 {
     sqlite3_initialize();
 }
@@ -24,8 +25,11 @@ SqliteDb::~SqliteDb()
 
 bool SqliteDb::open(const QString &filePath)
 {
-    m_filePath = filePath;
-    return sqlite3_open16(filePath.utf16(), &m_db) == SQLITE_OK;
+    if (!filePath.isEmpty()) {
+        m_filePath = filePath;
+    }
+
+    return sqlite3_open16(m_filePath.utf16(), &m_db) == SQLITE_OK;
 }
 
 void SqliteDb::close()
