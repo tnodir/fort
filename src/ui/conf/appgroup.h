@@ -66,7 +66,7 @@ public:
     QString periodTo() const { return m_periodTo; }
     void setPeriodTo(const QString &periodTo);
 
-    QString label() const;
+    QString menuLabel() const;
 
     QVariant toVariant() const;
     void fromVariant(const QVariant &v);

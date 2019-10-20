@@ -111,7 +111,7 @@ void AppGroup::setPeriodTo(const QString &periodTo)
     }
 }
 
-QString AppGroup::label() const
+QString AppGroup::menuLabel() const
 {
     QString text = name();
 
