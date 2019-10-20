@@ -333,6 +333,13 @@ QVariant FortSettings::migrateConf(const QVariant &confVar)
         map["addressGroups"] = addrList;
     }
 
+    // COMPAT: v2.11.0: PasswordHash
+    if (version < 0x021100) {
+        const QString oldPasswordHash = map["passwordHash"].toString();
+
+        setPasswordHash(oldPasswordHash);
+    }
+
     return map;
 }
 
