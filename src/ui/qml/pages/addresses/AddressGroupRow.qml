@@ -12,14 +12,10 @@ TextArea2SplitBox {
     textArea1: includeAddresses.textArea
     textArea2: excludeAddresses.textArea
 
-    textMoveAllFrom1To2: translationManager.trTrigger
-                         && qsTranslate("qml", "Move All Lines to 'Exclude'")
-    textMoveAllFrom2To1: translationManager.trTrigger
-                         && qsTranslate("qml", "Move All Lines to 'Include'")
-    textMoveSelectedFrom1To2: translationManager.trTrigger
-                              && qsTranslate("qml", "Move Selected Lines to 'Exclude'")
-    textMoveSelectedFrom2To1: translationManager.trTrigger
-                              && qsTranslate("qml", "Move Selected Lines to 'Include'")
+    textMoveAllFrom1To2: qsTranslate("qml", "Move All Lines to 'Exclude'")
+    textMoveAllFrom2To1: qsTranslate("qml", "Move All Lines to 'Include'")
+    textMoveSelectedFrom1To2: qsTranslate("qml", "Move Selected Lines to 'Exclude'")
+    textMoveSelectedFrom2To1: qsTranslate("qml", "Move Selected Lines to 'Include'")
 
     settingsPropName: "windowAddrSplit"
 
@@ -29,14 +25,12 @@ TextArea2SplitBox {
         SplitView.minimumWidth: 250
 
         title {
-            text: translationManager.trTrigger
-                  && qsTranslate("qml", "Include")
+            text: qsTranslate("qml", "Include")
         }
         checkBoxAll {
             enabled: !excludeAddresses.checkBoxAll.checked
                      || checkBoxAll.checked
-            text: translationManager.trTrigger
-                  && qsTranslate("qml", "Include All")
+            text: qsTranslate("qml", "Include All")
         }
 
         useAll: addressGroup.includeAll
@@ -55,14 +49,12 @@ TextArea2SplitBox {
         SplitView.minimumWidth: 250
 
         title {
-            text: translationManager.trTrigger
-                  && qsTranslate("qml", "Exclude")
+            text: qsTranslate("qml", "Exclude")
         }
         checkBoxAll {
             enabled: !includeAddresses.checkBoxAll.checked
                      || checkBoxAll.checked
-            text: translationManager.trTrigger
-                  && qsTranslate("qml", "Exclude All")
+            text: qsTranslate("qml", "Exclude All")
         }
 
         useAll: addressGroup.excludeAll

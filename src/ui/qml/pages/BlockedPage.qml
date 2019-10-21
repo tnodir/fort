@@ -36,19 +36,16 @@ BasePage {
             ButtonMenu {
                 enabled: appListView.count
                 icon.source: "qrc:/images/bin_empty.png"
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Clear…")
+                text: qsTranslate("qml", "Clear…")
 
                 MenuItem {
                     enabled: appListView.currentIndex >= 0
-                    text: translationManager.trTrigger
-                          && qsTranslate("qml", "Remove Application")
+                    text: qsTranslate("qml", "Remove Application")
                     onTriggered: appBlockedModel.remove(
                                      appListView.currentIndex)
                 }
                 MenuItem {
-                    text: translationManager.trTrigger
-                          && qsTranslate("qml", "Clear All")
+                    text: qsTranslate("qml", "Clear All")
                     onTriggered: {
                         appListView.currentIndex = -1;
                         appBlockedModel.clear();
@@ -60,32 +57,27 @@ BasePage {
             ButtonMenu {
                 enabled: appListView.count
                 icon.source: "qrc:/images/page_copy.png"
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Copy…")
+                text: qsTranslate("qml", "Copy…")
 
                 MenuItem {
                     enabled: !!currentAppPath
-                    text: translationManager.trTrigger
-                          && qsTranslate("qml", "Application Path")
+                    text: qsTranslate("qml", "Application Path")
                     onTriggered: guiUtil.setClipboardData(currentAppPath)
                 }
                 MenuItem {
                     enabled: !!currentIpText
-                    text: translationManager.trTrigger
-                          && qsTranslate("qml", "IP Address")
+                    text: qsTranslate("qml", "IP Address")
                     onTriggered: guiUtil.setClipboardData(currentIpText)
                 }
                 MenuItem {
                     enabled: !!currentHostName
-                    text: translationManager.trTrigger
-                          && qsTranslate("qml", "Host name")
+                    text: qsTranslate("qml", "Host name")
                     onTriggered: guiUtil.setClipboardData(currentHostName)
                 }
             }
 
             CheckBox {
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Show host names")
+                text: qsTranslate("qml", "Show host names")
                 checked: firewallConf.resolveAddress
                 onToggled: {
                     if (firewallConf.resolveAddress === checked)
@@ -103,8 +95,7 @@ BasePage {
 
             Switch {
                 font.weight: Font.DemiBold
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Show Blocked Applications")
+                text: qsTranslate("qml", "Show Blocked Applications")
                 checked: firewallConf.logBlocked
                 onToggled: {
                     if (firewallConf.logBlocked === checked)

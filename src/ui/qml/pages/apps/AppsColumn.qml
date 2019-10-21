@@ -13,20 +13,17 @@ ColumnLayout {
     RowLayout {
         RoundButtonTip {
             icon.source: "qrc:/images/application_delete.png"
-            tipText: translationManager.trTrigger
-                     && qsTranslate("qml", "Remove Group")
+            tipText: qsTranslate("qml", "Remove Group")
             onClicked: removeAppGroup(index)
         }
         RoundButtonTip {
             icon.source: "qrc:/images/resultset_previous.png"
-            tipText: translationManager.trTrigger
-                     && qsTranslate("qml", "Move left")
+            tipText: qsTranslate("qml", "Move left")
             onClicked: moveAppGroup(index, -1)
         }
         RoundButtonTip {
             icon.source: "qrc:/images/resultset_next.png"
-            tipText: translationManager.trTrigger
-                     && qsTranslate("qml", "Move right")
+            tipText: qsTranslate("qml", "Move right")
             onClicked: moveAppGroup(index, 1)
         }
 
@@ -44,8 +41,7 @@ ColumnLayout {
 
         CheckBox {
             id: cbEnabled
-            text: translationManager.trTrigger
-                  && qsTranslate("qml", "Enabled")
+            text: qsTranslate("qml", "Enabled")
             checked: appGroup.enabled
             onToggled: {
                 appGroup.enabled = checked;
@@ -59,8 +55,7 @@ ColumnLayout {
             enabled: cbEnabled.checked
 
             checkBox {
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "period, hours:")
+                text: qsTranslate("qml", "period, hours:")
                 checked: appGroup.periodEnabled
                 onToggled: {
                     appGroup.periodEnabled = checkBox.checked;
@@ -95,14 +90,10 @@ ColumnLayout {
         textArea1: blockApps.textArea
         textArea2: allowApps.textArea
 
-        textMoveAllFrom1To2: translationManager.trTrigger
-                             && qsTranslate("qml", "Move All Lines to 'Allow'")
-        textMoveAllFrom2To1: translationManager.trTrigger
-                             && qsTranslate("qml", "Move All Lines to 'Block'")
-        textMoveSelectedFrom1To2: translationManager.trTrigger
-                                  && qsTranslate("qml", "Move Selected Lines to 'Allow'")
-        textMoveSelectedFrom2To1: translationManager.trTrigger
-                                  && qsTranslate("qml", "Move Selected Lines to 'Block'")
+        textMoveAllFrom1To2: qsTranslate("qml", "Move All Lines to 'Allow'")
+        textMoveAllFrom2To1: qsTranslate("qml", "Move All Lines to 'Block'")
+        textMoveSelectedFrom1To2: qsTranslate("qml", "Move Selected Lines to 'Allow'")
+        textMoveSelectedFrom2To1: qsTranslate("qml", "Move Selected Lines to 'Block'")
 
         selectFileEnabled: true
 
@@ -114,8 +105,7 @@ ColumnLayout {
             SplitView.minimumWidth: 150
 
             title {
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Block")
+                text: qsTranslate("qml", "Block")
             }
 
             textArea {
@@ -137,20 +127,16 @@ ColumnLayout {
             SplitView.minimumWidth: 150
 
             title {
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Allow")
+                text: qsTranslate("qml", "Allow")
             }
 
             textArea {
-                placeholderText:
-                    translationManager.trTrigger && (
-                        qsTranslate("qml", "# Examples:")
-                        + "\nSystem"
-                        + "\nC:\\Program Files (x86)\\Microsoft\\Skype for Desktop\\Skype.exe"
-                        + "\n\n"
-                        + qsTranslate("qml", "# All programs in the sub-path:")
-                        + "\nC:\\Git\\"
-                        )
+                placeholderText: qsTranslate("qml", "# Examples:")
+                                 + "\nSystem"
+                                 + "\nC:\\Program Files (x86)\\Microsoft\\Skype for Desktop\\Skype.exe"
+                                 + "\n\n"
+                                 + qsTranslate("qml", "# All programs in the sub-path:")
+                                 + "\nC:\\Git\\"
                 text: appGroup.allowText
             }
 

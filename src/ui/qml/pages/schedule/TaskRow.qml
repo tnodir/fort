@@ -37,8 +37,7 @@ Row {
         verticalAlignment: Text.AlignVCenter
         wrapMode: Text.WordWrap
         fontSizeMode: Text.Fit
-        text: translationManager.trTrigger
-              && taskInfo.title
+        text: taskInfo.title
     }
 
     SpinCombo {
@@ -89,9 +88,8 @@ Row {
             height: width
             icon.source: taskInfo.running ? "qrc:/images/cancel.png"
                                           : "qrc:/images/run.png"
-            tipText: translationManager.trTrigger
-                     && (taskInfo.running ? qsTranslate("qml", "Cancel")
-                                          : qsTranslate("qml", "Run"))
+            tipText: taskInfo.running ? qsTranslate("qml", "Cancel")
+                                      : qsTranslate("qml", "Run")
             onClicked: taskInfo.running ? taskInfo.abort()
                                         : taskInfo.run()
         }

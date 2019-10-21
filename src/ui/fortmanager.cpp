@@ -279,6 +279,9 @@ bool FortManager::setupEngine()
         return false;
     }
 
+    connect(TranslationManager::instance(), &TranslationManager::languageChanged,
+            m_engine, &QQmlEngine::retranslate);
+
     m_appWindow = qobject_cast<QWindow *>(rootObjects.first());
     Q_ASSERT(m_appWindow);
 

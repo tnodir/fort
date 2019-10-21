@@ -77,33 +77,27 @@ Page {
 
         TabButton {
             icon.source: "qrc:/images/cog.png"
-            text: translationManager.trTrigger
-                  && qsTranslate("qml", "Options")
+            text: qsTranslate("qml", "Options")
         }
         TabButton {
             icon.source: "qrc:/images/link.png"
-            text: translationManager.trTrigger
-                  && qsTranslate("qml", "IPv4 Addresses")
+            text: qsTranslate("qml", "IPv4 Addresses")
         }
         TabButton {
             icon.source: "qrc:/images/application_double.png"
-            text: translationManager.trTrigger
-                  && qsTranslate("qml", "Applications")
+            text: qsTranslate("qml", "Applications")
         }
         TabButton {
             icon.source: "qrc:/images/application_error.png"
-            text: translationManager.trTrigger
-                  && qsTranslate("qml", "Blocked")
+            text: qsTranslate("qml", "Blocked")
         }
         TabButton {
             icon.source: "qrc:/images/chart_line.png"
-            text: translationManager.trTrigger
-                  && qsTranslate("qml", "Statistics")
+            text: qsTranslate("qml", "Statistics")
         }
         TabButton {
             icon.source: "qrc:/images/clock.png"
-            text: translationManager.trTrigger
-                  && qsTranslate("qml", "Schedule")
+            text: qsTranslate("qml", "Schedule")
         }
     }
 
@@ -128,8 +122,7 @@ Page {
 
             RowLayout {
                 LinkButton {
-                    text: translationManager.trTrigger
-                          && qsTranslate("qml", "Logs")
+                    text: qsTranslate("qml", "Logs")
                     tipText: path
                     onClicked: Qt.openUrlExternally("file:///" + path)
                     readonly property string path: fortSettings.logsPath
@@ -138,8 +131,7 @@ Page {
                 VSeparator {}
 
                 LinkButton {
-                    text: translationManager.trTrigger
-                          && qsTranslate("qml", "Profile")
+                    text: qsTranslate("qml", "Profile")
                     tipText: path
                     onClicked: Qt.openUrlExternally("file:///" + path)
                     readonly property string path: fortSettings.profilePath
@@ -148,8 +140,7 @@ Page {
                 VSeparator {}
 
                 LinkButton {
-                    text: translationManager.trTrigger
-                          && qsTranslate("qml", "Statistics")
+                    text: qsTranslate("qml", "Statistics")
                     tipText: path
                     onClicked: Qt.openUrlExternally("file:///" + path)
                     readonly property string path: fortSettings.statPath
@@ -158,8 +149,7 @@ Page {
                 VSeparator {}
 
                 LinkButton {
-                    text: translationManager.trTrigger
-                          && qsTranslate("qml", "Releases")
+                    text: qsTranslate("qml", "Releases")
                     tipText: link
                     onClicked: Qt.openUrlExternally(link)
                     readonly property string link: fortSettings.appUpdatesUrl
@@ -173,21 +163,18 @@ Page {
             Button {
                 enabled: confFlagsEdited || confEdited || othersEdited
                 icon.source: "qrc:/images/tick.png"
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "OK")
+                text: qsTranslate("qml", "OK")
                 onClicked: mainPage.save(true)
             }
             Button {
                 enabled: confFlagsEdited || confEdited || othersEdited
                 icon.source: "qrc:/images/accept.png"
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Apply")
+                text: qsTranslate("qml", "Apply")
                 onClicked: mainPage.save(false)
             }
             Button {
                 icon.source: "qrc:/images/cancel.png"
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Cancel")
+                text: qsTranslate("qml", "Cancel")
                 onClicked: closeWindow()
             }
         }

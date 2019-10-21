@@ -7,8 +7,7 @@ import com.fortfirewall 1.0
 ButtonPopup {
 
     icon.source: "qrc:/images/chart_bar.png"
-    text: translationManager.trTrigger
-          && qsTranslate("qml", "Graph…")
+    text: qsTranslate("qml", "Graph…")
 
     function save() {
         fortSettings.graphWindowAlwaysOnTop = cbAlwaysOnTop.checked;
@@ -35,32 +34,28 @@ ButtonPopup {
         ColumnLayout {
             CheckBox {
                 id: cbAlwaysOnTop
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Always on top")
+                text: qsTranslate("qml", "Always on top")
                 checked: fortSettings.graphWindowAlwaysOnTop
                 onToggled: setGraphEdited()
             }
 
             CheckBox {
                 id: cbFrameless
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Frameless")
+                text: qsTranslate("qml", "Frameless")
                 checked: fortSettings.graphWindowFrameless
                 onToggled: setGraphEdited()
             }
 
             CheckBox {
                 id: cbClickThrough
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Click through")
+                text: qsTranslate("qml", "Click through")
                 checked: fortSettings.graphWindowClickThrough
                 onToggled: setGraphEdited()
             }
 
             CheckBox {
                 id: cbHideOnHover
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Hide on hover")
+                text: qsTranslate("qml", "Hide on hover")
                 checked: fortSettings.graphWindowHideOnHover
                 onToggled: setGraphEdited()
             }
@@ -69,8 +64,7 @@ ButtonPopup {
 
             LabelSpinRow {
                 id: rowOpacity
-                label.text: (translationManager.trTrigger
-                             && qsTranslate("qml", "Opacity, %")) + ":"
+                label.text: qsTranslate("qml", "Opacity, %") + ":"
                 field {
                     from: 0
                     to: 100
@@ -81,8 +75,7 @@ ButtonPopup {
 
             LabelSpinRow {
                 id: rowHoverOpacity
-                label.text: (translationManager.trTrigger
-                             && qsTranslate("qml", "Hover opacity, %")) + ":"
+                label.text: qsTranslate("qml", "Hover opacity, %") + ":"
                 field {
                     from: 0
                     to: 100
@@ -93,8 +86,7 @@ ButtonPopup {
 
             LabelSpinRow {
                 id: rowMaxSeconds
-                label.text: (translationManager.trTrigger
-                             && qsTranslate("qml", "Max seconds")) + ":"
+                label.text: qsTranslate("qml", "Max seconds") + ":"
                 field {
                     from: 0
                     to: 9999
@@ -113,56 +105,49 @@ ButtonPopup {
         ColumnLayout {
             LabelColorRow {
                 id: rowColor
-                label.text: (translationManager.trTrigger
-                             && qsTranslate("qml", "Background")) + ":"
+                label.text: qsTranslate("qml", "Background") + ":"
                 defaultColor: fortSettings.graphWindowColor
                 onColorEdited: setGraphEdited()
             }
 
             LabelColorRow {
                 id: rowColorIn
-                label.text: (translationManager.trTrigger
-                             && qsTranslate("qml", "Download")) + ":"
+                label.text: qsTranslate("qml", "Download") + ":"
                 defaultColor: fortSettings.graphWindowColorIn
                 onColorEdited: setGraphEdited()
             }
 
             LabelColorRow {
                 id: rowColorOut
-                label.text: (translationManager.trTrigger
-                             && qsTranslate("qml", "Upload")) + ":"
+                label.text: qsTranslate("qml", "Upload") + ":"
                 defaultColor: fortSettings.graphWindowColorOut
                 onColorEdited: setGraphEdited()
             }
 
             LabelColorRow {
                 id: rowAxisColor
-                label.text: (translationManager.trTrigger
-                             && qsTranslate("qml", "Axis")) + ":"
+                label.text: qsTranslate("qml", "Axis") + ":"
                 defaultColor: fortSettings.graphWindowAxisColor
                 onColorEdited: setGraphEdited()
             }
 
             LabelColorRow {
                 id: rowTickLabelColor
-                label.text: (translationManager.trTrigger
-                             && qsTranslate("qml", "Tick label")) + ":"
+                label.text: qsTranslate("qml", "Tick label") + ":"
                 defaultColor: fortSettings.graphWindowTickLabelColor
                 onColorEdited: setGraphEdited()
             }
 
             LabelColorRow {
                 id: rowLabelColor
-                label.text: (translationManager.trTrigger
-                             && qsTranslate("qml", "Label")) + ":"
+                label.text: qsTranslate("qml", "Label") + ":"
                 defaultColor: fortSettings.graphWindowLabelColor
                 onColorEdited: setGraphEdited()
             }
 
             LabelColorRow {
                 id: rowGridColor
-                label.text: (translationManager.trTrigger
-                             && qsTranslate("qml", "Grid")) + ":"
+                label.text: qsTranslate("qml", "Grid") + ":"
                 defaultColor: fortSettings.graphWindowGridColor
                 onColorEdited: setGraphEdited()
             }

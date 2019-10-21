@@ -43,11 +43,8 @@ ColumnLayout {
         clip: true
 
         textArea {
-            placeholderText:
-                translationManager.trTrigger && (
-                    qsTranslate("qml", "# Examples:")
-                    + '\n' + netUtil.localIpv4Networks().join('\n')
-                    )
+            placeholderText: qsTranslate("qml", "# Examples:")
+                             + '\n' + netUtil.localIpv4Networks().join('\n')
             text: ipText
         }
 

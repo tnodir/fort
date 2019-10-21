@@ -16,8 +16,7 @@ RowLayout {
 
     RoundButtonTip {
         icon.source: "qrc:/images/page_copy.png"
-        tipText: translationManager.trTrigger
-                 && qsTranslate("qml", "Copy Path")
+        tipText: qsTranslate("qml", "Copy Path")
         onClicked: guiUtil.setClipboardData(appPath)
     }
 
@@ -27,8 +26,7 @@ RowLayout {
             anchors.verticalCenter: parent.verticalCenter
             width: Math.min(implicitWidth, parent.width)
             elide: Text.ElideLeft
-            tipText: (translationManager.trTrigger
-                      && qsTranslate("qml", "Open Folder"))
+            tipText: qsTranslate("qml", "Open Folder")
                      + (truncated ? "<br/>" + text : "")
             text: appPath
             onClicked: osUtil.openFolder(appPath)

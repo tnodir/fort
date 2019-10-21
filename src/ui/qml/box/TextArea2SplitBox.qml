@@ -166,8 +166,7 @@ T.SplitView {
             RoundButtonTipSmall {
                 visible: selectFileEnabled
                 icon.source: "qrc:/images/folder_explore.png"
-                tipText: translationManager.trTrigger
-                         && qsTranslate("qml", "Select File")
+                tipText: qsTranslate("qml", "Select File")
                 onClicked: {
                     const area = textArea1.activeFocus ? textArea1 : textArea2;
                     const filter = qsTranslate("qml", "Programs (*.exe);;All files (*.*)");

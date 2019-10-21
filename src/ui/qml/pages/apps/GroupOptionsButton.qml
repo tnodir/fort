@@ -7,8 +7,7 @@ import com.fortfirewall 1.0
 ButtonPopup {
 
     icon.source: "qrc:/images/application_key.png"
-    text: translationManager.trTrigger
-          && qsTranslate("qml", "Options…")
+    text: qsTranslate("qml", "Options…")
 
     readonly property var speedLimitValues: [
         10, 0, 20, 30, 50, 75, 100, 150, 200, 300, 500, 900,
@@ -17,8 +16,7 @@ ButtonPopup {
     ]
 
     readonly property var speedLimitNames: {
-        var list = translationManager.trTrigger
-                && [qsTranslate("qml", "Custom"),
+        var list = [qsTranslate("qml", "Custom"),
                     qsTranslate("qml", "Disabled")];
 
         const n = speedLimitValues.length;
@@ -37,8 +35,7 @@ ButtonPopup {
             names: speedLimitNames
             values: speedLimitValues
             checkBox {
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Download speed limit, KiB/s:")
+                text: qsTranslate("qml", "Download speed limit, KiB/s:")
                 checked: appGroup.limitInEnabled
                 onToggled: {
                     appGroup.limitInEnabled = checkBox.checked;
@@ -62,8 +59,7 @@ ButtonPopup {
             names: speedLimitNames
             values: speedLimitValues
             checkBox {
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Upload speed limit, KiB/s:")
+                text: qsTranslate("qml", "Upload speed limit, KiB/s:")
                 checked: appGroup.limitOutEnabled
                 onToggled: {
                     appGroup.limitOutEnabled = checkBox.checked;
@@ -86,8 +82,7 @@ ButtonPopup {
         HSeparator {}
 
         CheckBox {
-            text: translationManager.trTrigger
-                  && qsTranslate("qml", "Fragment first TCP packet")
+            text: qsTranslate("qml", "Fragment first TCP packet")
             checked: appGroup.fragmentPacket
             onToggled: {
                 appGroup.fragmentPacket = checked;

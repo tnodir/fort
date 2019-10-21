@@ -45,15 +45,13 @@ BasePage {
 
                 CheckBox {
                     id: cbStart
-                    text: translationManager.trTrigger
-                          && qsTranslate("qml", "Start with Windows")
+                    text: qsTranslate("qml", "Start with Windows")
                     checked: fortSettings.startWithWindows
                     onToggled: setIniEdited()
                 }
 
                 CheckBox {
-                    text: translationManager.trTrigger
-                          && qsTranslate("qml", "Stop traffic when Fort Firewall is not running")
+                    text: qsTranslate("qml", "Stop traffic when Fort Firewall is not running")
                     checked: firewallConf.provBoot
                     onToggled: {
                         firewallConf.provBoot = checked;
@@ -68,8 +66,7 @@ BasePage {
                     CheckBox {
                         id: cbFilterEnabled
                         width: Math.max(implicitWidth, cbStopTraffic.implicitWidth)
-                        text: translationManager.trTrigger
-                              && qsTranslate("qml", "Filter Enabled")
+                        text: qsTranslate("qml", "Filter Enabled")
                         checked: firewallConf.filterEnabled
                         onToggled: {
                             firewallConf.filterEnabled = checked;
@@ -79,8 +76,7 @@ BasePage {
                     }
 
                     CheckBox {
-                        text: translationManager.trTrigger
-                              && qsTranslate("qml", "Filter Local Addresses")
+                        text: qsTranslate("qml", "Filter Local Addresses")
                         checked: firewallConf.filterLocals
                         onToggled: {
                             firewallConf.filterLocals = checked;
@@ -96,8 +92,7 @@ BasePage {
                     CheckBox {
                         id: cbStopTraffic
                         width: cbFilterEnabled.width
-                        text: translationManager.trTrigger
-                              && qsTranslate("qml", "Stop Traffic")
+                        text: qsTranslate("qml", "Stop Traffic")
                         checked: firewallConf.stopTraffic
                         onToggled: {
                             firewallConf.stopTraffic = checked;
@@ -107,8 +102,7 @@ BasePage {
                     }
 
                     CheckBox {
-                        text: translationManager.trTrigger
-                              && qsTranslate("qml", "Stop Internet Traffic")
+                        text: qsTranslate("qml", "Stop Internet Traffic")
                         checked: firewallConf.stopInetTraffic
                         onToggled: {
                             firewallConf.stopInetTraffic = checked;
@@ -120,8 +114,7 @@ BasePage {
 
                 CheckBox {
                     id: cbHotKeys
-                    text: translationManager.trTrigger
-                          && qsTranslate("qml", "Hot Keys")
+                    text: qsTranslate("qml", "Hot Keys")
                     checked: fortSettings.hotKeyEnabled
                     onToggled: setIniEdited()
                 }
@@ -131,8 +124,7 @@ BasePage {
 
                     CheckBox {
                         id: cbPassword
-                        text: translationManager.trTrigger
-                              && qsTranslate("qml", "Password:")
+                        text: qsTranslate("qml", "Password:")
                         checked: fortSettings.hasPassword
                         onToggled: {
                             if (!checked) {
@@ -151,10 +143,9 @@ BasePage {
                         echoMode: TextInput.Password
                         passwordMaskDelay: 300
                         readOnly: fortSettings.hasPassword || !cbPassword.checked
-                        placeholderText: translationManager.trTrigger
-                                         && (fortSettings.hasPassword
-                                             ? qsTranslate("qml", "Installed")
-                                             : qsTranslate("qml", "Not Installed"))
+                        placeholderText: (fortSettings.hasPassword
+                                          ? qsTranslate("qml", "Installed")
+                                          : qsTranslate("qml", "Not Installed"))
                     }
                 }
 
@@ -163,8 +154,7 @@ BasePage {
 
                     Label {
                         anchors.verticalCenter: parent.verticalCenter
-                        text: translationManager.trTrigger
-                              && qsTranslate("qml", "Language:")
+                        text: qsTranslate("qml", "Language:")
                     }
                     ComboBox {
                         width: Math.max(implicitWidth, 180)
@@ -198,17 +188,15 @@ BasePage {
                             }
                             Label {
                                 font.weight: Font.Bold
-                                text: translationManager.trTrigger
-                                      && qsTranslate("qml", "Driver:")
+                                text: qsTranslate("qml", "Driver:")
                             }
                             Label {
                                 width: Math.min(implicitWidth, 300)
                                 wrapMode: Text.Wrap
-                                text: translationManager.trTrigger
-                                      && (driverManager.isDeviceOpened
-                                          ? (driverManager.errorMessage
-                                             || qsTranslate("qml", "Installed"))
-                                          : qsTranslate("qml", "Not Installed"))
+                                text: (driverManager.isDeviceOpened
+                                       ? (driverManager.errorMessage
+                                          || qsTranslate("qml", "Installed"))
+                                       : qsTranslate("qml", "Not Installed"))
                             }
                         }
 
@@ -216,13 +204,11 @@ BasePage {
                             Layout.alignment: Qt.AlignHCenter
                             spacing: 10
                             DelayButtonControl {
-                                text: translationManager.trTrigger
-                                      && qsTranslate("qml", "Install")
+                                text: qsTranslate("qml", "Install")
                                 onDelayClicked: fortManager.installDriver()
                             }
                             DelayButtonControl {
-                                text: translationManager.trTrigger
-                                      && qsTranslate("qml", "Remove")
+                                text: qsTranslate("qml", "Remove")
                                 onDelayClicked: fortManager.removeDriver()
                             }
                         }

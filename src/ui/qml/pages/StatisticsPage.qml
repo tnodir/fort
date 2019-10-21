@@ -27,16 +27,14 @@ BasePage {
         trafsContainer.width * 0.22
     ]
 
-    readonly property var trafUnitNames:
-        translationManager.trTrigger
-        && [
-            qsTranslate("qml", "Adaptive"),
-            qsTranslate("qml", "Bytes"),
-            qsTranslate("qml", "KiB"),
-            qsTranslate("qml", "MiB"),
-            qsTranslate("qml", "GiB"),
-            qsTranslate("qml", "TiB")
-        ]
+    readonly property var trafUnitNames: [
+        qsTranslate("qml", "Adaptive"),
+        qsTranslate("qml", "Bytes"),
+        qsTranslate("qml", "KiB"),
+        qsTranslate("qml", "MiB"),
+        qsTranslate("qml", "GiB"),
+        qsTranslate("qml", "TiB")
+    ]
 
     property bool graphEdited
 
@@ -66,32 +64,27 @@ BasePage {
             RoundButtonTip {
                 enabled: appListView.count
                 icon.source: "qrc:/images/arrow_refresh.png"
-                tipText: translationManager.trTrigger
-                         && qsTranslate("qml", "Refresh")
+                tipText: qsTranslate("qml", "Refresh")
                 onClicked: trafListModel.refresh()
             }
 
             ButtonMenu {
                 enabled: appListView.count
                 icon.source: "qrc:/images/bin_empty.png"
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Clear…")
+                text: qsTranslate("qml", "Clear…")
 
                 MenuItem {
                     enabled: appListView.currentIndex > 0
-                    text: translationManager.trTrigger
-                          && qsTranslate("qml", "Remove Application")
+                    text: qsTranslate("qml", "Remove Application")
                     onTriggered: appStatModel.remove(
                                      appListView.currentIndex)
                 }
                 MenuItem {
-                    text: translationManager.trTrigger
-                          && qsTranslate("qml", "Reset Total")
+                    text: qsTranslate("qml", "Reset Total")
                     onTriggered: trafListModel.resetAppTotals()
                 }
                 MenuItem {
-                    text: translationManager.trTrigger
-                          && qsTranslate("qml", "Clear All")
+                    text: qsTranslate("qml", "Clear All")
                     onTriggered: {
                         appListView.currentIndex = 0;
                         appStatModel.clear();
@@ -115,8 +108,7 @@ BasePage {
 
                 Label {
                     anchors.verticalCenter: parent.verticalCenter
-                    text: translationManager.trTrigger
-                          && qsTranslate("qml", "Units:")
+                    text: qsTranslate("qml", "Units:")
                 }
 
                 ComboBox {
@@ -145,8 +137,7 @@ BasePage {
             Switch {
                 id: cbShowBlockedApps
                 font.weight: Font.DemiBold
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Collect Traffic Statistics")
+                text: qsTranslate("qml", "Collect Traffic Statistics")
                 checked: firewallConf.logStat
                 onToggled: {
                     if (firewallConf.logStat === checked)
@@ -176,8 +167,7 @@ BasePage {
 
                     model: appStatModel
 
-                    emptyText: translationManager.trTrigger
-                               && qsTranslate("qml", "All")
+                    emptyText: qsTranslate("qml", "All")
                     emptyIcon: "qrc:/images/application_double.png"
                 }
 
@@ -193,20 +183,16 @@ BasePage {
                         Layout.fillWidth: true
 
                         TabButton {
-                            text: translationManager.trTrigger
-                                  && qsTranslate("qml", "Hourly", "Stat")
+                            text: qsTranslate("qml", "Hourly", "Stat")
                         }
                         TabButton {
-                            text: translationManager.trTrigger
-                                  && qsTranslate("qml", "Daily", "Stat")
+                            text: qsTranslate("qml", "Daily", "Stat")
                         }
                         TabButton {
-                            text: translationManager.trTrigger
-                                  && qsTranslate("qml", "Monthly", "Stat")
+                            text: qsTranslate("qml", "Monthly", "Stat")
                         }
                         TabButton {
-                            text: translationManager.trTrigger
-                                  && qsTranslate("qml", "Total", "Stat")
+                            text: qsTranslate("qml", "Total", "Stat")
                         }
                     }
 
@@ -216,23 +202,19 @@ BasePage {
 
                         Label {
                             width: trafCellWidths[0]
-                            text: translationManager.trTrigger
-                                  && qsTranslate("qml", "Date")
+                            text: qsTranslate("qml", "Date")
                         }
                         Label {
                             width: trafCellWidths[1]
-                            text: translationManager.trTrigger
-                                  && qsTranslate("qml", "Download")
+                            text: qsTranslate("qml", "Download")
                         }
                         Label {
                             width: trafCellWidths[2]
-                            text: translationManager.trTrigger
-                                  && qsTranslate("qml", "Upload")
+                            text: qsTranslate("qml", "Upload")
                         }
                         Label {
                             width: trafCellWidths[3]
-                            text: translationManager.trTrigger
-                                  && qsTranslate("qml", "Sum")
+                            text: qsTranslate("qml", "Sum")
                         }
                     }
 
@@ -254,8 +236,7 @@ BasePage {
 
                         delegate: Label {
                             fontSizeMode: Text.Fit
-                            text: translationManager.trTrigger
-                                  && model.display
+                            text: model.display
                         }
 
                         onRowsChanged: {

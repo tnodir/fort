@@ -25,17 +25,15 @@ BasePage {
         3, 1, 6, 12, 24, 24 * 7, 24 * 30
     ]
 
-    readonly property var taskIntervalNames:
-        translationManager.trTrigger
-        && [
-            qsTranslate("qml", "Custom"),
-            qsTranslate("qml", "Hourly"),
-            qsTranslate("qml", "Each 6 hours"),
-            qsTranslate("qml", "Each 12 hours"),
-            qsTranslate("qml", "Daily"),
-            qsTranslate("qml", "Weekly"),
-            qsTranslate("qml", "Monthly")
-        ]
+    readonly property var taskIntervalNames: [
+        qsTranslate("qml", "Custom"),
+        qsTranslate("qml", "Hourly"),
+        qsTranslate("qml", "Each 6 hours"),
+        qsTranslate("qml", "Each 12 hours"),
+        qsTranslate("qml", "Daily"),
+        qsTranslate("qml", "Weekly"),
+        qsTranslate("qml", "Monthly")
+    ]
 
     property bool scheduleEdited
 
@@ -73,25 +71,21 @@ BasePage {
                 }
                 Label {
                     width: taskCellWidths[1]
-                    text: translationManager.trTrigger
-                          && qsTranslate("qml", "Name")
+                    text: qsTranslate("qml", "Name")
                 }
                 Label {
                     width: taskCellWidths[2]
-                    text: translationManager.trTrigger
-                          && qsTranslate("qml", "Interval, hours")
+                    text: qsTranslate("qml", "Interval, hours")
                 }
                 Label {
                     width: taskCellWidths[3]
                     horizontalAlignment: Text.AlignHCenter
-                    text: translationManager.trTrigger
-                          && qsTranslate("qml", "Last Run")
+                    text: qsTranslate("qml", "Last Run")
                 }
                 Label {
                     width: taskCellWidths[4]
                     horizontalAlignment: Text.AlignHCenter
-                    text: translationManager.trTrigger
-                          && qsTranslate("qml", "Last Success")
+                    text: qsTranslate("qml", "Last Success")
                 }
                 Item {
                     width: taskCellWidths[5]

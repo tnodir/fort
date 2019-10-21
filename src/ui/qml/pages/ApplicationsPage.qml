@@ -61,21 +61,18 @@ BasePage {
             TextFieldFrame {
                 id: editGroupName
                 enabled: appGroupsCount < 16
-                placeholderText: translationManager.trTrigger
-                                 && qsTranslate("qml", "Group Name")
+                placeholderText: qsTranslate("qml", "Group Name")
             }
             Button {
                 enabled: editGroupName.text
                 icon.source: "qrc:/images/application_add.png"
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Add Group")
+                text: qsTranslate("qml", "Add Group")
                 onClicked: addAppGroup()
             }
             RoundButtonTip {
                 enabled: editGroupName.text && appsColumn.enabled
                 icon.source: "qrc:/images/application_edit.png"
-                tipText: translationManager.trTrigger
-                         && qsTranslate("qml", "Rename Group")
+                tipText: qsTranslate("qml", "Rename Group")
                 onClicked: renameAppGroup()
             }
 
@@ -86,8 +83,7 @@ BasePage {
             CheckBox {
                 id: cbBlockAll
                 enabled: !cbAllowAll.checked || checked
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Block All")
+                text: qsTranslate("qml", "Block All")
                 checked: firewallConf.appBlockAll
                 onToggled: {
                     firewallConf.appBlockAll = checked;
@@ -98,8 +94,7 @@ BasePage {
             CheckBox {
                 id: cbAllowAll
                 enabled: !cbBlockAll.checked || checked
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Allow All")
+                text: qsTranslate("qml", "Allow All")
                 checked: firewallConf.appAllowAll
                 onToggled: {
                     firewallConf.appAllowAll = checked;

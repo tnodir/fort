@@ -7,38 +7,33 @@ import com.fortfirewall 1.0
 ButtonPopup {
 
     icon.source: "qrc:/images/database_save.png"
-    text: translationManager.trTrigger
-          && qsTranslate("qml", "Options…")
+    text: qsTranslate("qml", "Options…")
 
     readonly property var trafKeepDayValues: [
         60, -1, 90, 180, 365, 365 * 3
     ]
 
-    readonly property var trafKeepDayNames:
-        translationManager.trTrigger
-        && [
-            qsTranslate("qml", "Custom"),
-            qsTranslate("qml", "Forever"),
-            qsTranslate("qml", "3 months"),
-            qsTranslate("qml", "6 months"),
-            qsTranslate("qml", "1 year"),
-            qsTranslate("qml", "3 years")
-        ]
+    readonly property var trafKeepDayNames: [
+        qsTranslate("qml", "Custom"),
+        qsTranslate("qml", "Forever"),
+        qsTranslate("qml", "3 months"),
+        qsTranslate("qml", "6 months"),
+        qsTranslate("qml", "1 year"),
+        qsTranslate("qml", "3 years")
+    ]
 
     readonly property var trafKeepMonthValues: [
         2, -1, 3, 6, 12, 36
     ]
 
-    readonly property var trafKeepMonthNames:
-        translationManager.trTrigger
-        && [
-            qsTranslate("qml", "Custom"),
-            qsTranslate("qml", "Forever"),
-            qsTranslate("qml", "3 months"),
-            qsTranslate("qml", "6 months"),
-            qsTranslate("qml", "1 year"),
-            qsTranslate("qml", "3 years")
-        ]
+    readonly property var trafKeepMonthNames: [
+        qsTranslate("qml", "Custom"),
+        qsTranslate("qml", "Forever"),
+        qsTranslate("qml", "3 months"),
+        qsTranslate("qml", "6 months"),
+        qsTranslate("qml", "1 year"),
+        qsTranslate("qml", "3 years")
+    ]
 
     readonly property var quotaValues: [
         10, 0, 100, 500, 1024, 8 * 1024, 10 * 1024, 30 * 1024,
@@ -46,8 +41,7 @@ ButtonPopup {
     ]
 
     readonly property var quotaNames: {
-        var list = translationManager.trTrigger
-                && [qsTranslate("qml", "Custom"),
+        var list = [qsTranslate("qml", "Custom"),
                     qsTranslate("qml", "Disabled")];
 
         const n = quotaValues.length;
@@ -64,8 +58,7 @@ ButtonPopup {
     ColumnLayout {
         SpinPeriodRow {
             checkBox {
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Active period, hours:")
+                text: qsTranslate("qml", "Active period, hours:")
                 checked: firewallConf.activePeriodEnabled
                 onToggled: {
                     firewallConf.activePeriodEnabled = checkBox.checked;
@@ -101,8 +94,7 @@ ButtonPopup {
             }
             checkBox {
                 indicator: null
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Month starts on:")
+                text: qsTranslate("qml", "Month starts on:")
             }
             field {
                 from: 1
@@ -123,8 +115,7 @@ ButtonPopup {
             values: trafKeepDayValues
             checkBox {
                 indicator: null
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Keep days for 'Hourly':")
+                text: qsTranslate("qml", "Keep days for 'Hourly':")
             }
             field {
                 from: -1
@@ -142,8 +133,7 @@ ButtonPopup {
             values: trafKeepDayValues
             checkBox {
                 indicator: null
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Keep days for 'Daily':")
+                text: qsTranslate("qml", "Keep days for 'Daily':")
             }
             field {
                 from: -1
@@ -161,8 +151,7 @@ ButtonPopup {
             values: trafKeepMonthValues
             checkBox {
                 indicator: null
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Keep months for 'Monthly':")
+                text: qsTranslate("qml", "Keep months for 'Monthly':")
             }
             field {
                 from: -1
@@ -182,8 +171,7 @@ ButtonPopup {
             values: quotaValues
             checkBox {
                 indicator: null
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Day's Quota, MiB:")
+                text: qsTranslate("qml", "Day's Quota, MiB:")
             }
             field {
                 from: 0
@@ -202,8 +190,7 @@ ButtonPopup {
             values: quotaValues
             checkBox {
                 indicator: null
-                text: translationManager.trTrigger
-                      && qsTranslate("qml", "Month's Quota, MiB:")
+                text: qsTranslate("qml", "Month's Quota, MiB:")
             }
             field {
                 from: 0

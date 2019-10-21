@@ -86,13 +86,10 @@ bool TranslationManager::switchLanguage(int language)
     QLocale::setDefault(m_locale);
 
     uninstallTranslator(m_language);
+    installTranslator(language, m_locale);
 
     m_language = language;
     emit languageChanged(m_language);
-
-    installTranslator(m_language, m_locale);
-
-    refreshTranslations();
 
     return true;
 }
@@ -141,11 +138,6 @@ QTranslator *TranslationManager::loadTranslator(int language, const QLocale &loc
     m_translators.replace(language, translator);
 
     return translator;
-}
-
-void TranslationManager::refreshTranslations()
-{
-    emit trTriggerChanged();
 }
 
 QString TranslationManager::i18nDir()
