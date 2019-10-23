@@ -12,6 +12,9 @@
 Q_DECLARE_LOGGING_CATEGORY(CLOG_CONTROL_MANAGER)
 Q_LOGGING_CATEGORY(CLOG_CONTROL_MANAGER, "fort.controlManager")
 
+#define logWarning() qCWarning(CLOG_CONTROL_MANAGER,)
+#define logCritical() qCCritical(CLOG_CONTROL_MANAGER,)
+
 ControlManager::ControlManager(const QString &globalName,
                                const QString &scriptPath,
                                QObject *parent) :
@@ -37,8 +40,8 @@ bool ControlManager::listen(FortManager *fortManager)
         return true;
 
     if (!m_sharedMemory.create(4096)) {
-        qWarning(CLOG_CONTROL_MANAGER()) << "Shared Memory create error:"
-                                         << m_sharedMemory.errorString();
+        logWarning() << "Shared Memory create error:"
+                     << m_sharedMemory.errorString();
         return false;
     }
 
@@ -54,8 +57,8 @@ bool ControlManager::listen(FortManager *fortManager)
 bool ControlManager::post(const QStringList &args)
 {
     if (!m_sharedMemory.attach()) {
-        qWarning(CLOG_CONTROL_MANAGER()) << "Shared Memory attach error:"
-                                         << m_sharedMemory.errorString();
+        logWarning() << "Shared Memory attach error:"
+                     << m_sharedMemory.errorString();
         return false;
     }
 
@@ -69,8 +72,8 @@ void ControlManager::processRequest(const QString &scriptPath,
 {
     const QString script = FileUtil::readFile(scriptPath);
     if (script.isEmpty()) {
-        qWarning(CLOG_CONTROL_MANAGER()) << "Script is empty:"
-                                         << scriptPath;
+        logWarning() << "Script is empty:"
+                     << scriptPath;
         return;
     }
 
@@ -104,10 +107,10 @@ void ControlManager::processRequest(const QString &scriptPath,
     // Run the script
     const QJSValue res = engine.evaluate(script, scriptPath);
     if (res.isError()) {
-        qWarning(CLOG_CONTROL_MANAGER()) << "Script error:"
-                                         << scriptPath << "line"
-                                         << res.property("lineNumber").toInt()
-                                         << ":" << res.toString();
+        logWarning() << "Script error:"
+                     << scriptPath << "line"
+                     << res.property("lineNumber").toInt()
+                     << ":" << res.toString();
         return;
     }
 

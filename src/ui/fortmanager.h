@@ -10,6 +10,7 @@ QT_FORWARD_DECLARE_CLASS(QQmlApplicationEngine)
 QT_FORWARD_DECLARE_CLASS(QSystemTrayIcon)
 
 QT_FORWARD_DECLARE_CLASS(AppInfoCache)
+QT_FORWARD_DECLARE_CLASS(ConfManager)
 QT_FORWARD_DECLARE_CLASS(DriverManager)
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
 QT_FORWARD_DECLARE_CLASS(FortSettings)
@@ -108,6 +109,7 @@ private:
     void closeLogManager();
 
     void setupStatManager();
+    void setupConfManager();
 
     void setupLogger();
 
@@ -177,6 +179,7 @@ private:
 
     QuotaManager *m_quotaManager;
     StatManager *m_statManager;
+    ConfManager *m_confManager;
     DriverManager *m_driverManager;
     LogManager *m_logManager;
     NativeEventFilter *m_nativeEventFilter;

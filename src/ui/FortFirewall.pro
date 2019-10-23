@@ -10,9 +10,9 @@ OBJECTS_DIR = .obj
 RCC_DIR = .rcc
 
 SOURCES += \
-    main.cpp \
     conf/addressgroup.cpp \
     conf/appgroup.cpp \
+    conf/confmanager.cpp \
     conf/firewallconf.cpp \
     control/controlmanager.cpp \
     control/controlworker.cpp \
@@ -36,6 +36,7 @@ SOURCES += \
     log/model/iplistmodel.cpp \
     log/model/stringlistmodel.cpp \
     log/model/traflistmodel.cpp \
+    main.cpp \
     mainwindow.cpp \
     stat/quotamanager.cpp \
     stat/statmanager.cpp \
@@ -84,6 +85,7 @@ SOURCES += \
 HEADERS += \
     conf/addressgroup.h \
     conf/appgroup.h \
+    conf/confmanager.h \
     conf/firewallconf.h \
     control/controlmanager.h \
     control/controlworker.h \
@@ -175,10 +177,12 @@ RESOURCES += fort_images.qrc
 
 # Database Migrations
 OTHER_FILES += \
+    conf/migrations/*.sql \
     stat/migrations/*.sql \
     util/app/migrations/*.sql
 
 RESOURCES += \
+    conf/conf-migrations.qrc \
     stat/stat-migrations.qrc \
     util/app/app-migrations.qrc
 

@@ -15,6 +15,7 @@
 
 #include "conf/addressgroup.h"
 #include "conf/appgroup.h"
+#include "conf/confmanager.h"
 #include "conf/firewallconf.h"
 #include "driver/drivermanager.h"
 #include "fortsettings.h"
@@ -64,6 +65,7 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_quotaManager(new QuotaManager(fortSettings, this)),
     m_statManager(new StatManager(fortSettings->statFilePath(),
                                   m_quotaManager, this)),
+    m_confManager(new ConfManager(fortSettings->confDbFilePath(), this)),
     m_driverManager(new DriverManager(this)),
     m_logManager(new LogManager(m_statManager,
                                 m_driverManager->driverWorker(), this)),
@@ -77,6 +79,7 @@ FortManager::FortManager(FortSettings *fortSettings,
     setupLogger();
     setupAppInfoCache();
     setupStatManager();
+    setupConfManager();
 
     setupLogManager();
     setupDriver();
@@ -202,6 +205,11 @@ void FortManager::setupStatManager()
 
     connect(m_quotaManager, &QuotaManager::alert,
             this, &FortManager::showInfoBox);
+}
+
+void FortManager::setupConfManager()
+{
+    m_confManager->initialize();
 }
 
 void FortManager::setupLogger()
@@ -619,10 +627,7 @@ FirewallConf *FortManager::cloneConf(const FirewallConf &conf)
 {
     auto newConf = new FirewallConf(this);
 
-    const QVariant data = conf.toVariant();
-    newConf->fromVariant(data);
-
-    newConf->copyFlags(conf);
+    newConf->copy(conf);
 
     return newConf;
 }

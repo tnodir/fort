@@ -16,6 +16,9 @@
 Q_DECLARE_LOGGING_CATEGORY(CLOG_STAT_MANAGER)
 Q_LOGGING_CATEGORY(CLOG_STAT_MANAGER, "fort.statManager")
 
+#define logWarning() qCWarning(CLOG_STAT_MANAGER,)
+#define logCritical() qCCritical(CLOG_STAT_MANAGER,)
+
 #define DATABASE_USER_VERSION   2
 
 #define INVALID_APP_INDEX       qint16(-1)
@@ -97,9 +100,9 @@ bool StatManager::initialize()
     m_lastTrafHour = m_lastTrafDay = m_lastTrafMonth = 0;
 
     if (!m_sqliteDb->open()) {
-        qCritical(CLOG_STAT_MANAGER()) << "File open error:"
-                                       << m_sqliteDb->filePath()
-                                       << m_sqliteDb->errorMessage();
+        logCritical() << "File open error:"
+                      << m_sqliteDb->filePath()
+                      << m_sqliteDb->errorMessage();
         return false;
     }
 
@@ -107,8 +110,8 @@ bool StatManager::initialize()
 
     if (!m_sqliteDb->migrate(":/stat/migrations", DATABASE_USER_VERSION,
                              false, &migrateFunc)) {
-        qCritical(CLOG_STAT_MANAGER()) << "Migration error"
-                                       << m_sqliteDb->filePath();
+        logCritical() << "Migration error"
+                      << m_sqliteDb->filePath();
         return false;
     }
 
@@ -346,9 +349,9 @@ void StatManager::logStatTraf(quint16 procCount, const quint32 *procTrafBytes)
 
         const int procIndex = m_appIndexes.value(pid, INVALID_APP_INDEX);
         if (Q_UNLIKELY(procIndex == INVALID_APP_INDEX)) {
-            qCritical(CLOG_STAT_MANAGER()) << "UI & Driver's states mismatch! Expected processes:"
-                                           << m_appIndexes.keys() << "Got:" << procCount
-                                           << "(" << i << pid << inactive << ")";
+            logCritical() << "UI & Driver's states mismatch! Expected processes:"
+                          << m_appIndexes.keys() << "Got:" << procCount
+                          << "(" << i << pid << inactive << ")";
             abort();
         }
 
@@ -521,8 +524,8 @@ void StatManager::updateTrafficList(const QStmtList &insertStmtList,
         if (!updateTraffic(stmtUpdate, inBytes, outBytes, appId)) {
             SqliteStmt *stmtInsert = insertStmtList.at(i);
             if (!updateTraffic(stmtInsert, inBytes, outBytes, appId)) {
-                qCritical(CLOG_STAT_MANAGER()) << "Update traffic error:"
-                                               << m_sqliteDb->errorMessage();
+                logCritical() << "Update traffic error:"
+                              << m_sqliteDb->errorMessage();
             }
         }
         ++i;

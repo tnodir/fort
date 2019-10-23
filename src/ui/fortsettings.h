@@ -162,6 +162,8 @@ public:
     QString statPath() const { return m_statPath; }
     QString statFilePath() const;
 
+    QString confDbFilePath() const;
+
     QString controlPath() const { return m_controlPath; }
 
     QStringList args() const { return m_args; }

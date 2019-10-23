@@ -301,6 +301,23 @@ void FirewallConf::copyImmediateFlags(const FirewallConf &o)
     setTrafUnit(o.trafUnit());
 }
 
+void FirewallConf::copy(const FirewallConf &o)
+{
+    copyFlags(o);
+
+    int addrGroupIndex = 0;
+    for (const AddressGroup *ag : o.addressGroupsList()) {
+        AddressGroup *addressGroup = m_addressGroups.at(addrGroupIndex++);
+        addressGroup->copy(*ag);
+    }
+
+    for (const AppGroup *ag : o.appGroupsList()) {
+        auto appGroup = new AppGroup();
+        appGroup->copy(*ag);
+        addAppGroup(appGroup);
+    }
+}
+
 QVariant FirewallConf::toVariant() const
 {
     QVariantMap map;

@@ -23,6 +23,9 @@ class AppGroup : public QObject
 public:
     explicit AppGroup(QObject *parent = nullptr);
 
+    bool edited() const { return m_edited; }
+    void setEdited(bool edited) { m_edited = edited; }
+
     bool enabled() const { return m_enabled; }
     void setEnabled(bool enabled);
 
@@ -30,7 +33,7 @@ public:
     void setFragmentPacket(bool enabled);
 
     bool periodEnabled() const { return m_periodEnabled; }
-    void setPeriodEnabled(bool periodEnabled);
+    void setPeriodEnabled(bool enabled);
 
     bool limitInEnabled() const { return m_limitInEnabled; }
     void setLimitInEnabled(bool enabled);
@@ -51,6 +54,9 @@ public:
         return limitOutEnabled() ? speedLimitOut() : 0;
     }
 
+    qint64 id() const { return m_id; }
+    void setId(qint64 id) { m_id = id; }
+
     QString name() const { return m_name; }
     void setName(const QString &name);
 
@@ -67,6 +73,8 @@ public:
     void setPeriodTo(const QString &periodTo);
 
     QString menuLabel() const;
+
+    void copy(const AppGroup &o);
 
     QVariant toVariant() const;
     void fromVariant(const QVariant &v);
@@ -88,6 +96,7 @@ signals:
 public slots:
 
 private:
+    uint m_edited           : 1;
     uint m_enabled          : 1;
 
     uint m_fragmentPacket   : 1;
@@ -100,6 +109,8 @@ private:
     // KiBytes per sec.
     quint32 m_speedLimitIn;
     quint32 m_speedLimitOut;
+
+    qint64 m_id;
 
     QString m_name;
 

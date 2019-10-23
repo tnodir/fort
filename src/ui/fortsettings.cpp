@@ -160,6 +160,11 @@ QString FortSettings::statFilePath() const
     return statPath() + QLatin1String("FortFirewall.stat");
 }
 
+QString FortSettings::confDbFilePath() const
+{
+    return profilePath() + QLatin1String("FortFirewall.config");
+}
+
 QString FortSettings::confFilePath() const
 {
     return profilePath() + QLatin1String("FortFirewall.conf");

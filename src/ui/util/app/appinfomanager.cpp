@@ -13,6 +13,9 @@
 Q_DECLARE_LOGGING_CATEGORY(CLOG_APPINFOCACHE)
 Q_LOGGING_CATEGORY(CLOG_APPINFOCACHE, "fort.appInfoWorker")
 
+#define logWarning() qCWarning(CLOG_APPINFOCACHE,)
+#define logCritical() qCCritical(CLOG_APPINFOCACHE,)
+
 #define DATABASE_USER_VERSION   3
 
 #define APP_CACHE_MAX_COUNT     2000
@@ -94,15 +97,15 @@ AppInfoManager::~AppInfoManager()
 void AppInfoManager::setupDb(const QString &filePath)
 {
     if (!m_sqliteDb->open(filePath)) {
-        qCritical(CLOG_APPINFOCACHE()) << "File open error:"
-                                       << filePath
-                                       << m_sqliteDb->errorMessage();
+        logCritical() << "File open error:"
+                      << filePath
+                      << m_sqliteDb->errorMessage();
         return;
     }
 
     if (!m_sqliteDb->migrate(":/appinfocache/migrations",
                              DATABASE_USER_VERSION, true)) {
-        qCritical(CLOG_APPINFOCACHE()) << "Migration error" << filePath;
+        logCritical() << "Migration error" << filePath;
         return;
     }
 }

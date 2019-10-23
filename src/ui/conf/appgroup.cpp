@@ -5,13 +5,15 @@
 
 AppGroup::AppGroup(QObject *parent) :
     QObject(parent),
+    m_edited(false),
     m_enabled(true),
     m_fragmentPacket(false),
     m_periodEnabled(false),
     m_limitInEnabled(false),
     m_limitOutEnabled(false),
     m_speedLimitIn(0),
-    m_speedLimitOut(0)
+    m_speedLimitOut(0),
+    m_id(0)
 {
 }
 
@@ -20,6 +22,8 @@ void AppGroup::setEnabled(bool enabled)
     if (bool(m_enabled) != enabled) {
         m_enabled = enabled;
         emit enabledChanged();
+
+        setEdited(true);
     }
 }
 
@@ -28,14 +32,18 @@ void AppGroup::setFragmentPacket(bool enabled)
     if (bool(m_fragmentPacket) != enabled) {
         m_fragmentPacket = enabled;
         emit fragmentPacketChanged();
+
+        setEdited(true);
     }
 }
 
-void AppGroup::setPeriodEnabled(bool periodEnabled)
+void AppGroup::setPeriodEnabled(bool enabled)
 {
-    if (bool(m_periodEnabled) != periodEnabled) {
-        m_periodEnabled = periodEnabled;
+    if (bool(m_periodEnabled) != enabled) {
+        m_periodEnabled = enabled;
         emit periodEnabledChanged();
+
+        setEdited(true);
     }
 }
 
@@ -44,6 +52,8 @@ void AppGroup::setLimitInEnabled(bool enabled)
     if (bool(m_limitInEnabled) != enabled) {
         m_limitInEnabled = enabled;
         emit limitInEnabledChanged();
+
+        setEdited(true);
     }
 }
 
@@ -52,6 +62,8 @@ void AppGroup::setLimitOutEnabled(bool enabled)
     if (bool(m_limitOutEnabled) != enabled) {
         m_limitOutEnabled = enabled;
         emit limitOutEnabledChanged();
+
+        setEdited(true);
     }
 }
 
@@ -60,6 +72,8 @@ void AppGroup::setSpeedLimitIn(quint32 limit)
     if (m_speedLimitIn != limit) {
         m_speedLimitIn = limit;
         emit speedLimitInChanged();
+
+        setEdited(true);
     }
 }
 
@@ -68,6 +82,8 @@ void AppGroup::setSpeedLimitOut(quint32 limit)
     if (m_speedLimitOut != limit) {
         m_speedLimitOut = limit;
         emit speedLimitOutChanged();
+
+        setEdited(true);
     }
 }
 
@@ -76,6 +92,8 @@ void AppGroup::setName(const QString &name)
     if (m_name != name) {
         m_name = name;
         emit nameChanged();
+
+        setEdited(true);
     }
 }
 
@@ -84,6 +102,8 @@ void AppGroup::setBlockText(const QString &blockText)
     if (m_blockText != blockText) {
         m_blockText = blockText;
         emit blockTextChanged();
+
+        setEdited(true);
     }
 }
 
@@ -92,6 +112,8 @@ void AppGroup::setAllowText(const QString &allowText)
     if (m_allowText != allowText) {
         m_allowText = allowText;
         emit allowTextChanged();
+
+        setEdited(true);
     }
 }
 
@@ -100,6 +122,8 @@ void AppGroup::setPeriodFrom(const QString &periodFrom)
     if (m_periodFrom != periodFrom) {
         m_periodFrom = periodFrom;
         emit periodFromChanged();
+
+        setEdited(true);
     }
 }
 
@@ -108,6 +132,8 @@ void AppGroup::setPeriodTo(const QString &periodTo)
     if (m_periodTo != periodTo) {
         m_periodTo = periodTo;
         emit periodToChanged();
+
+        setEdited(true);
     }
 }
 
@@ -138,6 +164,29 @@ QString AppGroup::menuLabel() const
     }
 
     return text;
+}
+
+void AppGroup::copy(const AppGroup &o)
+{
+    m_edited = false;
+
+    m_enabled = o.enabled();
+    m_fragmentPacket = o.fragmentPacket();
+
+    m_periodEnabled = o.periodEnabled();
+    m_periodFrom = o.periodFrom();
+    m_periodTo = o.periodTo();
+
+    m_limitInEnabled = o.limitInEnabled();
+    m_limitOutEnabled = o.limitOutEnabled();
+    m_speedLimitIn = o.speedLimitIn();
+    m_speedLimitOut = o.speedLimitOut();
+
+    m_id = 0;
+
+    m_name = o.name();
+    m_blockText = o.blockText();
+    m_allowText = o.allowText();
 }
 
 QVariant AppGroup::toVariant() const
