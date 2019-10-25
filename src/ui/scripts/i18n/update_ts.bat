@@ -3,4 +3,4 @@ set QT_BIN_PATH=D:\Qt\Qt5.12.3\5.12.3\msvc2017_64\bin
 
 cd ..\..\
 
-for /r %%f in (i18n\*.ts) do %QT_BIN_PATH%\lupdate .\ -ts %%f
+for /r %%f in (i18n\*.ts) do %QT_BIN_PATH%\lupdate -noobsolete .\ -ts %%f

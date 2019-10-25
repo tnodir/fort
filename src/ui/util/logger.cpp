@@ -124,7 +124,7 @@ void Logger::writeLog(const QString &message, Logger::LogLevel level)
         }
 
         // Write file header
-        writeLogLine(Info, dateString, APP_NAME " version: " APP_VERSION_STR);
+        writeLogLine(Info, dateString, APP_NAME " v" APP_VERSION_STR);
     }
 
     writeLogLine(level, dateString, message);
