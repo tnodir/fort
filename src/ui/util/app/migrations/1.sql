@@ -1,7 +1,5 @@
 PRAGMA user_version = 3;
 
-PRAGMA journal_mode = WAL;
-
 CREATE TABLE app(
   path TEXT PRIMARY KEY,
   file_descr TEXT,

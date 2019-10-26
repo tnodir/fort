@@ -160,24 +160,24 @@ QString FortSettings::statFilePath() const
     return statPath() + QLatin1String("FortFirewall.stat");
 }
 
-QString FortSettings::confDbFilePath() const
+QString FortSettings::confFilePath() const
 {
     return profilePath() + QLatin1String("FortFirewall.config");
 }
 
-QString FortSettings::confFilePath() const
+QString FortSettings::confOldFilePath() const
 {
     return profilePath() + QLatin1String("FortFirewall.conf");
 }
 
 QString FortSettings::confBackupFilePath() const
 {
-    return confFilePath() + QLatin1String(".backup");
+    return confOldFilePath() + QLatin1String(".backup");
 }
 
 bool FortSettings::readConf(FirewallConf &conf, bool &isNew)
 {
-    const QString filePath = confFilePath();
+    const QString filePath = confOldFilePath();
     const QString backupFilePath = confBackupFilePath();
 
     const bool fileExists = FileUtil::fileExists(filePath);
@@ -213,7 +213,7 @@ bool FortSettings::tryToReadConf(FirewallConf &conf, const QString &filePath)
 
 bool FortSettings::writeConf(const FirewallConf &conf)
 {
-    const QString filePath = confFilePath();
+    const QString filePath = confOldFilePath();
     const QString backupFilePath = confBackupFilePath();
 
     if (!writeConfIni(conf)) {

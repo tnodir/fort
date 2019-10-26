@@ -94,8 +94,6 @@ private slots:
     void saveTrayFlags();
 
 private:
-    FirewallConf *nullConf() const { return nullptr; }
-
     void setFirewallConfToEdit(FirewallConf *conf);
 
     static void registerQmlTypes();
@@ -132,8 +130,6 @@ private:
 
     void updateLogManager(bool active);
     void updateStatManager(FirewallConf *conf);
-
-    FirewallConf *cloneConf(const FirewallConf &conf);
 
     void saveWindowState();
     void restoreWindowState();

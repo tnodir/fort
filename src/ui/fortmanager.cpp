@@ -57,15 +57,14 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_graphWindowState(new WidgetWindowStateWatcher(this)),
     m_fortSettings(fortSettings),
     m_firewallConf(new FirewallConf(this)),
-    m_firewallConfToEdit(nullConf()),
+    m_firewallConfToEdit(nullptr),
     m_graphWindowAction(nullptr),
     m_filterEnabledAction(nullptr),
     m_stopTrafficAction(nullptr),
     m_stopInetTrafficAction(nullptr),
     m_quotaManager(new QuotaManager(fortSettings, this)),
-    m_statManager(new StatManager(fortSettings->statFilePath(),
-                                  m_quotaManager, this)),
-    m_confManager(new ConfManager(fortSettings->confDbFilePath(), this)),
+    m_statManager(new StatManager(fortSettings, m_quotaManager, this)),
+    m_confManager(new ConfManager(fortSettings, this)),
     m_driverManager(new DriverManager(this)),
     m_logManager(new LogManager(m_statManager,
                                 m_driverManager->driverWorker(), this)),
@@ -353,8 +352,9 @@ void FortManager::showWindow()
                           || checkPassword()))
         return;
 
-    if (m_firewallConfToEdit == nullConf()) {
-        setFirewallConfToEdit(cloneConf(*m_firewallConf));
+    if (m_firewallConfToEdit == nullptr) {
+        auto newConf = m_confManager->cloneConf(*m_firewallConf, this);
+        setFirewallConfToEdit(newConf);
     }
 
     m_appWindow->show();
@@ -373,7 +373,7 @@ void FortManager::closeWindow()
 
     m_appWindow->hide();
 
-    setFirewallConfToEdit(nullConf());
+    setFirewallConfToEdit(nullptr);
 }
 
 void FortManager::showGraphWindow()
@@ -493,16 +493,16 @@ bool FortManager::saveConf(bool onlyFlags)
 
 bool FortManager::applyConf(bool onlyFlags)
 {
-    Q_ASSERT(m_firewallConfToEdit != nullConf());
+    Q_ASSERT(m_firewallConfToEdit != nullptr);
 
-    FirewallConf *newConf = cloneConf(*m_firewallConfToEdit);
+    auto newConf = m_confManager->cloneConf(*m_firewallConfToEdit, this);
 
     return saveSettings(newConf, onlyFlags);
 }
 
 bool FortManager::applyConfImmediateFlags()
 {
-    Q_ASSERT(m_firewallConfToEdit != nullConf());
+    Q_ASSERT(m_firewallConfToEdit != nullptr);
 
     m_firewallConf->copyImmediateFlags(*m_firewallConfToEdit);
 
@@ -514,7 +514,7 @@ void FortManager::setFirewallConfToEdit(FirewallConf *conf)
     if (m_firewallConfToEdit == conf)
         return;
 
-    if (m_firewallConfToEdit != nullConf()
+    if (m_firewallConfToEdit != nullptr
             && m_firewallConfToEdit != m_firewallConf) {
         m_firewallConfToEdit->deleteLater();
     }
@@ -527,15 +527,9 @@ void FortManager::setFirewallConfToEdit(FirewallConf *conf)
 
 bool FortManager::loadSettings(FirewallConf *conf)
 {
-    bool isNewConf;
-
-    if (!m_fortSettings->readConf(*conf, isNewConf)) {
-        showErrorBox("Load Settings: " + m_fortSettings->errorMessage());
+    if (!m_confManager->load(*conf)) {
+        showErrorBox("Load Settings: " + m_confManager->errorMessage());
         return false;
-    }
-
-    if (isNewConf) {
-        conf->setupDefault();
     }
 
     return updateDriverConf(conf);
@@ -544,9 +538,8 @@ bool FortManager::loadSettings(FirewallConf *conf)
 bool FortManager::saveSettings(FirewallConf *newConf, bool onlyFlags,
                                bool immediateFlags)
 {
-    if (!(onlyFlags ? m_fortSettings->writeConfIni(*newConf)
-          : m_fortSettings->writeConf(*newConf))) {
-        showErrorBox("Save Settings: " + m_fortSettings->errorMessage());
+    if (!m_confManager->save(*newConf, onlyFlags)) {
+        showErrorBox("Save Settings: " + m_confManager->errorMessage());
         return false;
     }
 
@@ -621,15 +614,6 @@ void FortManager::saveTrayFlags()
     m_fortSettings->writeConfIni(*m_firewallConf);
 
     updateDriverConf(m_firewallConf, true);
-}
-
-FirewallConf *FortManager::cloneConf(const FirewallConf &conf)
-{
-    auto newConf = new FirewallConf(this);
-
-    newConf->copy(conf);
-
-    return newConf;
 }
 
 void FortManager::saveWindowState()

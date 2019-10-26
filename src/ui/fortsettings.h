@@ -162,7 +162,10 @@ public:
     QString statPath() const { return m_statPath; }
     QString statFilePath() const;
 
-    QString confDbFilePath() const;
+    QString confFilePath() const;
+
+    QString confOldFilePath() const;
+    QString confBackupFilePath() const;
 
     QString controlPath() const { return m_controlPath; }
 
@@ -192,9 +195,6 @@ private:
     void setupIni();
 
     void setErrorMessage(const QString &errorMessage);
-
-    QString confFilePath() const;
-    QString confBackupFilePath() const;
 
     bool tryToReadConf(FirewallConf &conf, const QString &filePath);
 

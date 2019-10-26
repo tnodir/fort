@@ -1,6 +1,7 @@
 #include "statsql.h"
 
 const char * const StatSql::sqlPragmas =
+        "PRAGMA journal_mode = WAL;"
         "PRAGMA locking_mode = EXCLUSIVE;"
         "PRAGMA synchronous = NORMAL;"
         ;

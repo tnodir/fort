@@ -136,8 +136,6 @@ public:
     QVariant toVariant() const;
     void fromVariant(const QVariant &v);
 
-    void setupDefault();
-
 signals:
     void provBootChanged();
     void filterEnabledChanged();
@@ -167,6 +165,9 @@ public slots:
     void addAppGroupByName(const QString &name);
     void moveAppGroup(int from, int to);
     void removeAppGroup(int from, int to);
+
+private:
+    void setupAddressGroups();
 
 private:
     uint m_provBoot         : 1;

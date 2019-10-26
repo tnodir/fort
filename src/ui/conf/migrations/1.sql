@@ -1,10 +1,8 @@
 PRAGMA user_version = 1;
 
-PRAGMA journal_mode = WAL;
-
 CREATE TABLE IF NOT EXISTS address_group(
   addr_group_id INTEGER PRIMARY KEY,
-  order INTEGER NOT NULL,
+  order_index INTEGER NOT NULL,
   include_all BOOLEAN NOT NULL,
   exclude_all BOOLEAN NOT NULL,
   include_text TEXT NOT NULL,
@@ -13,7 +11,7 @@ CREATE TABLE IF NOT EXISTS address_group(
 
 CREATE TABLE IF NOT EXISTS app_group(
   app_group_id INTEGER PRIMARY KEY,
-  order INTEGER NOT NULL,
+  order_index INTEGER NOT NULL,
   enabled BOOLEAN NOT NULL,
   fragment_packet BOOLEAN NOT NULL,
   period_enabled BOOLEAN NOT NULL,

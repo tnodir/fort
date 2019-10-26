@@ -1,7 +1,5 @@
 #include "firewallconf.h"
 
-#include "../util/fileutil.h"
-#include "../util/net/netutil.h"
 #include "addressgroup.h"
 #include "appgroup.h"
 
@@ -26,8 +24,7 @@ FirewallConf::FirewallConf(QObject *parent) :
     m_quotaDayMb(0),
     m_quotaMonthMb(0)
 {
-    m_addressGroups.append(new AddressGroup(this));
-    m_addressGroups.append(new AddressGroup(this));
+    setupAddressGroups();
 }
 
 void FirewallConf::setProvBoot(bool provBoot)
@@ -252,6 +249,9 @@ void FirewallConf::addAppGroupByName(const QString &name)
 
 void FirewallConf::moveAppGroup(int from, int to)
 {
+    m_appGroups.at(from)->setEdited(true);
+    m_appGroups.at(to)->setEdited(true);
+
     m_appGroups.move(from, to);
     emit appGroupsChanged();
 }
@@ -265,6 +265,12 @@ void FirewallConf::removeAppGroup(int from, int to)
         m_appGroups.removeAt(i);
     }
     emit appGroupsChanged();
+}
+
+void FirewallConf::setupAddressGroups()
+{
+    m_addressGroups.append(new AddressGroup(this));
+    m_addressGroups.append(new AddressGroup(this));
 }
 
 void FirewallConf::copyFlags(const FirewallConf &o)
@@ -354,15 +360,4 @@ void FirewallConf::fromVariant(const QVariant &v)
         appGroup->fromVariant(gv);
         addAppGroup(appGroup);
     }
-}
-
-void FirewallConf::setupDefault()
-{
-    AddressGroup *inetGroup = inetAddressGroup();
-    inetGroup->setExcludeText(NetUtil::localIpv4Networks().join('\n'));
-
-    auto appGroup = new AppGroup();
-    appGroup->setName("Main");
-    appGroup->setAllowText(FileUtil::appBinLocation() + '/');
-    addAppGroup(appGroup);
 }
