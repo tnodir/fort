@@ -128,6 +128,9 @@ public:
     const QList<AppGroup *> &appGroupsList() const { return m_appGroups; }
     QQmlListProperty<AppGroup> appGroups();
 
+    const QList<AppGroup *> &removedAppGroupsList() const { return m_removedAppGroups; }
+    void clearRemovedAppGroups() const;
+
     void copyFlags(const FirewallConf &o);
     void copyImmediateFlags(const FirewallConf &o);
 
@@ -202,6 +205,7 @@ private:
 
     QList<AddressGroup *> m_addressGroups;
     QList<AppGroup *> m_appGroups;
+    mutable QList<AppGroup *> m_removedAppGroups;
 };
 
 #endif // FIREWALLCONF_H

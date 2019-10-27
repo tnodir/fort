@@ -56,7 +56,7 @@ void AddressGroup::copy(const AddressGroup &o)
     m_includeAll = o.includeAll();
     m_excludeAll = o.excludeAll();
 
-    m_id = 0;
+    m_id = o.id();
 
     m_includeText = o.includeText();
     m_excludeText = o.excludeText();

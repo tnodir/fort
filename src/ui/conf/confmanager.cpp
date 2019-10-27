@@ -84,6 +84,11 @@ const char * const sqlUpdateAppGroup =
         "  WHERE app_group_id = ?1;"
         ;
 
+const char * const sqlDeleteAppGroup =
+        "DELETE FROM app_group"
+        "  WHERE app_group_id = ?1;"
+        ;
+
 }
 
 ConfManager::ConfManager(FortSettings *fortSettings,
@@ -253,8 +258,10 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
     m_sqliteDb->beginTransaction();
 
     // Save Address Groups
-    int orderIndex = 0;
+    int orderIndex = -1;
     for (AddressGroup *addrGroup : conf.addressGroupsList()) {
+        ++orderIndex;
+
         const bool rowExists = (addrGroup->id() != 0);
         if (!addrGroup->edited() && rowExists)
             continue;
@@ -280,15 +287,17 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
     }
 
     // Save App Groups
-    orderIndex = 0;
+    orderIndex = -1;
     for (AppGroup *appGroup : conf.appGroupsList()) {
+        ++orderIndex;
+
         const bool rowExists = (appGroup->id() != 0);
         if (!appGroup->edited() && rowExists)
             continue;
 
         const QVariantList vars = QVariantList()
                 << (rowExists ? appGroup->id() : QVariant())
-                << orderIndex++
+                << orderIndex
                 << appGroup->enabled()
                 << appGroup->fragmentPacket()
                 << appGroup->periodEnabled()
@@ -308,11 +317,23 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
         m_sqliteDb->executeEx(sql, vars, 0, &ok);
         if (!ok) goto end;
 
+        qWarning() << "save> appG:" << orderIndex << appGroup->id() << appGroup->name()
+                   << rowExists << m_sqliteDb->lastInsertRowid();
+
         if (!rowExists) {
             appGroup->setId(m_sqliteDb->lastInsertRowid());
         }
         appGroup->setEdited(false);
     }
+
+    // Remove App Groups
+    for (AppGroup *appGroup : conf.removedAppGroupsList()) {
+        m_sqliteDb->executeEx(sqlDeleteAppGroup,
+                              QVariantList() << appGroup->id(), 0, &ok);
+        if (!ok) goto end;
+    }
+
+    conf.clearRemovedAppGroups();
 
  end:
     if (!ok) {

@@ -242,15 +242,20 @@ void FirewallConf::addAppGroup(AppGroup *appGroup, int to)
 
 void FirewallConf::addAppGroupByName(const QString &name)
 {
-    auto appGroup = new AppGroup();
+    auto appGroup = !m_removedAppGroups.isEmpty()
+            ? m_removedAppGroups.takeLast()
+            : new AppGroup();
     appGroup->setName(name);
     addAppGroup(appGroup);
 }
 
 void FirewallConf::moveAppGroup(int from, int to)
 {
-    m_appGroups.at(from)->setEdited(true);
-    m_appGroups.at(to)->setEdited(true);
+    const int lo = qMin(from, to);
+    const int hi = qMax(from, to);
+    for (int i = lo; i >= hi; --i) {
+        m_appGroups.at(i)->setEdited(true);
+    }
 
     m_appGroups.move(from, to);
     emit appGroupsChanged();
@@ -258,13 +263,26 @@ void FirewallConf::moveAppGroup(int from, int to)
 
 void FirewallConf::removeAppGroup(int from, int to)
 {
-    for (int i = to; i >= from; --i) {
+    const int lo = qMin(from, to);
+    const int hi = qMax(from, to);
+    for (int i = hi; i >= lo; --i) {
         AppGroup *appGroup = m_appGroups.at(i);
-        appGroup->deleteLater();
+        if (appGroup->id() == 0) {
+            appGroup->deleteLater();
+        } else {
+            appGroup->clear();
+            m_removedAppGroups.append(appGroup);
+        }
 
         m_appGroups.removeAt(i);
     }
     emit appGroupsChanged();
+}
+
+void FirewallConf::clearRemovedAppGroups() const
+{
+    qDeleteAll(m_removedAppGroups);
+    m_removedAppGroups.clear();
 }
 
 void FirewallConf::setupAddressGroups()

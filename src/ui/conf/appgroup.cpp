@@ -166,6 +166,30 @@ QString AppGroup::menuLabel() const
     return text;
 }
 
+void AppGroup::clear()
+{
+    m_enabled = true;
+
+    m_fragmentPacket = false;
+    m_periodEnabled = false;
+
+    m_limitInEnabled = false;
+    m_limitOutEnabled = false;
+
+    m_speedLimitIn = 0;
+    m_speedLimitOut = 0;
+
+    // m_id should pe preserved
+
+    m_name = QString();
+
+    m_blockText = QString();
+    m_allowText = QString();
+
+    m_periodFrom = QString();
+    m_periodTo = QString();
+}
+
 void AppGroup::copy(const AppGroup &o)
 {
     m_edited = false;
@@ -182,7 +206,7 @@ void AppGroup::copy(const AppGroup &o)
     m_speedLimitIn = o.speedLimitIn();
     m_speedLimitOut = o.speedLimitOut();
 
-    m_id = 0;
+    m_id = o.id();
 
     m_name = o.name();
     m_blockText = o.blockText();
