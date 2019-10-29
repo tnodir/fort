@@ -6,6 +6,7 @@
 
 #include "../util/classhelpers.h"
 
+QT_FORWARD_DECLARE_CLASS(FortManager)
 QT_FORWARD_DECLARE_CLASS(TaskWorker)
 
 class TaskInfo : public QObject
@@ -17,6 +18,7 @@ class TaskInfo : public QObject
     Q_PROPERTY(TaskInfo::TaskType type READ type WRITE setType NOTIFY typeChanged)
     Q_PROPERTY(QDateTime lastRun READ lastRun WRITE setLastRun NOTIFY lastRunChanged)
     Q_PROPERTY(QDateTime lastSuccess READ lastSuccess WRITE setLastSuccess NOTIFY lastSuccessChanged)
+    Q_PROPERTY(QString infoText READ infoText NOTIFY infoTextChanged)
     Q_PROPERTY(bool running READ running NOTIFY taskWorkerChanged)
 
 public:
@@ -31,6 +33,8 @@ public:
     ~TaskInfo() override;
     CLASS_DELETE_COPY_MOVE(TaskInfo)
 
+    QString name() const { return typeToString(type()); }
+
     bool enabled() const { return m_enabled; }
     void setEnabled(bool enabled);
 
@@ -42,6 +46,9 @@ public:
     TaskInfo::TaskType type() const { return m_type; }
     void setType(TaskInfo::TaskType type);
 
+    qint64 id() const { return m_id; }
+    void setId(qint64 id) { m_id = id; }
+
     QDateTime lastRun() const { return m_lastRun; }
     void setLastRun(const QDateTime &lastRun);
 
@@ -49,6 +56,11 @@ public:
 
     QDateTime lastSuccess() const { return m_lastSuccess; }
     void setLastSuccess(const QDateTime &lastSuccess);
+
+    virtual QString infoText() const { return QString(); }
+
+    virtual QByteArray data() const { return QByteArray(); }
+    virtual void setData(const QByteArray &data) { Q_UNUSED(data) }
 
     TaskWorker *taskWorker() const { return m_taskWorker; }
     void setTaskWorker(TaskWorker *taskWorker);
@@ -67,6 +79,7 @@ signals:
     void typeChanged();
     void lastRunChanged();
     void lastSuccessChanged();
+    void infoTextChanged();
     void taskWorkerChanged();
 
     void workFinished(bool success);
@@ -75,7 +88,9 @@ public slots:
     void run();
     void abort();
 
-private slots:
+    virtual bool processResult(FortManager *fortManager, bool success) = 0;
+
+protected slots:
     void handleFinished(bool success);
 
 private:
@@ -88,6 +103,8 @@ private:
     quint16 m_intervalHours;
 
     TaskType m_type;
+
+    qint64 m_id;
 
     QDateTime m_lastRun;
     QDateTime m_lastSuccess;

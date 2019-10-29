@@ -10,6 +10,8 @@ class TaskTasix : public TaskDownloader
 public:
     explicit TaskTasix(QObject *parent = nullptr);
 
+    QString rangeText() const { return m_rangeText; }
+
     static QStringList parseTasixBuffer(const QByteArray &buffer);
 
 protected:
@@ -20,15 +22,6 @@ protected:
     virtual QStringList parseCustomBuffer(const QByteArray &buffer) const {
         return parseTasixBuffer(buffer);
     }
-
-    virtual QString successMessage() const {
-        return tr("TAS-IX addresses updated!");
-    }
-
-signals:
-
-public slots:
-    bool processResult(FortManager *fortManager) override;
 
 protected slots:
     void downloadFinished(bool success) override;

@@ -1,5 +1,7 @@
 #include "netdownloader.h"
 
+#include <QDebug>
+
 #define DOWNLOAD_TIMEOUT  30  // 30 seconds timeout
 #define DOWNLOAD_MAXSIZE  (64 * 1024)
 
@@ -69,7 +71,7 @@ void NetDownloader::processReadyRead()
 
 void NetDownloader::processError(QProcess::ProcessError error)
 {
-    Q_UNUSED(error)
+    qWarning() << "NetDownloader: Cannot run `curl`:" << error;
 
     abort();
 }

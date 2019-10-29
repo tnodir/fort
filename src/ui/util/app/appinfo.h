@@ -1,6 +1,7 @@
 #ifndef APPINFO_H
 #define APPINFO_H
 
+#include <QDateTime>
 #include <QObject>
 
 class AppInfo
@@ -19,7 +20,8 @@ public:
 
 public:
     qint64 iconId = 0;
-    qint64 fileModTime = 0;
+
+    QDateTime fileModTime;
 
     QString fileDescription;
     QString companyName;

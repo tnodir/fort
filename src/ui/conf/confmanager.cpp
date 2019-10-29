@@ -7,6 +7,7 @@
 
 #include "../fortcommon.h"
 #include "../fortsettings.h"
+#include "../task/taskinfo.h"
 #include "../util/dateutil.h"
 #include "../util/fileutil.h"
 #include "../util/net/netutil.h"
@@ -89,13 +90,34 @@ const char * const sqlDeleteAppGroup =
         "  WHERE app_group_id = ?1;"
         ;
 
+const char * const sqlSelectTaskByName =
+        "SELECT task_id, enabled, interval_hours,"
+        "    last_run, last_success, data"
+        "  FROM task"
+        "  WHERE name = ?1;"
+        ;
+
+const char * const sqlInsertTask =
+        "INSERT INTO task(task_id, name, enabled, interval_hours,"
+        "    last_run, last_success, data)"
+        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7);"
+        ;
+
+const char * const sqlUpdateTask =
+        "UPDATE task"
+        "  SET name = ?2, enabled = ?3, interval_hours = ?4,"
+        "    last_run = ?5, last_success = ?6, data = ?7"
+        "  WHERE task_id = ?1;"
+        ;
+
 }
 
-ConfManager::ConfManager(FortSettings *fortSettings,
+ConfManager::ConfManager(const QString &filePath,
+                         FortSettings *fortSettings,
                          QObject *parent) :
     QObject(parent),
     m_fortSettings(fortSettings),
-    m_sqliteDb(new SqliteDb(fortSettings->confFilePath()))
+    m_sqliteDb(new SqliteDb(filePath))
 {
 }
 
@@ -189,6 +211,37 @@ bool ConfManager::save(const FirewallConf &conf, bool onlyFlags)
     FileUtil::removeFile(m_fortSettings->confBackupFilePath());
 
     return true;
+}
+
+bool ConfManager::loadTasks(const QList<TaskInfo *> &taskInfos)
+{
+    for (TaskInfo *taskInfo : taskInfos) {
+        if (!loadTask(taskInfo))
+            return false;
+    }
+    return true;
+}
+
+bool ConfManager::saveTasks(const QList<TaskInfo *> &taskInfos)
+{
+    bool ok = true;
+
+    m_sqliteDb->beginTransaction();
+
+    for (TaskInfo *taskInfo : taskInfos) {
+        if (!saveTask(taskInfo)) {
+            ok = false;
+            break;
+        }
+    }
+
+    if (!ok) {
+        setErrorMessage(m_sqliteDb->errorMessage());
+    }
+
+    m_sqliteDb->endTransaction(ok);
+
+    return ok;
 }
 
 bool ConfManager::loadFromDb(FirewallConf &conf, bool &isNew)
@@ -317,9 +370,6 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
         m_sqliteDb->executeEx(sql, vars, 0, &ok);
         if (!ok) goto end;
 
-        qWarning() << "save> appG:" << orderIndex << appGroup->id() << appGroup->name()
-                   << rowExists << m_sqliteDb->lastInsertRowid();
-
         if (!rowExists) {
             appGroup->setId(m_sqliteDb->lastInsertRowid());
         }
@@ -343,4 +393,52 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
     m_sqliteDb->endTransaction(ok);
 
     return ok;
+}
+
+bool ConfManager::loadTask(TaskInfo *taskInfo)
+{
+    SqliteStmt stmt;
+    if (!stmt.prepare(m_sqliteDb->db(), sqlSelectTaskByName))
+        return false;
+
+    stmt.bindText(1, taskInfo->name());
+
+    if (stmt.step() != SqliteStmt::StepRow)
+        return false;
+
+    taskInfo->setId(stmt.columnInt64(0));
+    taskInfo->setEnabled(stmt.columnInt(1));
+    taskInfo->setIntervalHours(stmt.columnInt(2));
+    taskInfo->setLastRun(stmt.columnDateTime(3));
+    taskInfo->setLastSuccess(stmt.columnDateTime(4));
+    taskInfo->setData(stmt.columnBlob(5));
+
+    return true;
+}
+
+bool ConfManager::saveTask(TaskInfo *taskInfo)
+{
+    const bool rowExists = (taskInfo->id() != 0);
+
+    const QVariantList vars = QVariantList()
+            << (rowExists ? taskInfo->id() : QVariant())
+            << taskInfo->name()
+            << taskInfo->enabled()
+            << taskInfo->intervalHours()
+            << taskInfo->lastRun()
+            << taskInfo->lastSuccess()
+            << taskInfo->data()
+               ;
+
+    const char *sql = rowExists ? sqlUpdateTask : sqlInsertTask;
+
+    bool ok = true;
+    m_sqliteDb->executeEx(sql, vars, 0, &ok);
+    if (!ok)
+        return false;
+
+    if (!rowExists) {
+        taskInfo->setId(m_sqliteDb->lastInsertRowid());
+    }
+    return true;
 }

@@ -43,6 +43,7 @@ public:
     FirewallConf *firewallConf() const { return m_firewallConf; }
     FirewallConf *firewallConfToEdit() const { return m_firewallConfToEdit; }
 
+    ConfManager *confManager() const { return m_confManager; }
     DriverManager *driverManager() const { return m_driverManager; }
     LogManager *logManager() const { return m_logManager; }
     TaskManager *taskManager() const { return m_taskManager; }
@@ -111,6 +112,7 @@ private:
 
     void setupLogger();
 
+    void setupTaskManager();
     void setupTranslationManager();
 
     void setupTrayIcon();

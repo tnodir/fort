@@ -31,5 +31,4 @@ HEADERS += \
     $$UIPATH/util/processinfo.h
 
 DEFINES += \
-    PWD='"$$PWD"' \
-    TASK_TEST
+    PWD='"$$PWD"'

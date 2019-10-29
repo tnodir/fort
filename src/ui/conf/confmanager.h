@@ -9,6 +9,7 @@ QT_FORWARD_DECLARE_CLASS(FirewallConf)
 QT_FORWARD_DECLARE_CLASS(FortSettings)
 QT_FORWARD_DECLARE_CLASS(SqliteDb)
 QT_FORWARD_DECLARE_CLASS(SqliteStmt)
+QT_FORWARD_DECLARE_CLASS(TaskInfo)
 
 class ConfManager : public QObject
 {
@@ -16,7 +17,8 @@ class ConfManager : public QObject
     Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
 
 public:
-    explicit ConfManager(FortSettings *fortSettings,
+    explicit ConfManager(const QString &filePath,
+                         FortSettings *fortSettings,
                          QObject *parent = nullptr);
     ~ConfManager() override;
     CLASS_DELETE_COPY_MOVE(ConfManager)
@@ -28,6 +30,9 @@ public:
 
     bool load(FirewallConf &conf);
     bool save(const FirewallConf &conf, bool onlyFlags = false);
+
+    bool loadTasks(const QList<TaskInfo *> &taskInfos);
+    bool saveTasks(const QList<TaskInfo *> &taskInfos);
 
     QString errorMessage() const { return m_errorMessage; }
 
@@ -41,6 +46,9 @@ private:
 
     bool loadFromDb(FirewallConf &conf, bool &isNew);
     bool saveToDb(const FirewallConf &conf);
+
+    bool loadTask(TaskInfo *taskInfo);
+    bool saveTask(TaskInfo *taskInfo);
 
 private:
     QString m_errorMessage;

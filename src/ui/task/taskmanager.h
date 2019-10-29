@@ -5,6 +5,7 @@
 #include <QQmlListProperty>
 #include <QTimer>
 
+QT_FORWARD_DECLARE_CLASS(ConfManager)
 QT_FORWARD_DECLARE_CLASS(FortManager)
 QT_FORWARD_DECLARE_CLASS(FortSettings)
 QT_FORWARD_DECLARE_CLASS(TaskInfo)
@@ -28,8 +29,8 @@ signals:
     void taskInfosChanged();
 
 public slots:
-    void loadSettings(const FortSettings *fortSettings);
-    bool saveSettings(FortSettings *fortSettings);
+    void loadSettings(const FortSettings *fortSettings, ConfManager *confManager);
+    bool saveSettings(FortSettings *fortSettings, ConfManager *confManager);
 
 private slots:
     void handleTaskFinished(bool success);

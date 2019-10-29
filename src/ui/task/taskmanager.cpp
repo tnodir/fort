@@ -1,9 +1,11 @@
 #include "taskmanager.h"
 
+#include "../conf/confmanager.h"
 #include "../fortmanager.h"
 #include "../fortsettings.h"
 #include "../util/dateutil.h"
-#include "taskinfo.h"
+#include "taskinfotasix.h"
+#include "taskinfoupdatechecker.h"
 #include "taskworker.h"
 
 TaskManager::TaskManager(FortManager *fortManager,
@@ -26,8 +28,8 @@ QQmlListProperty<TaskInfo> TaskManager::taskInfos()
 
 void TaskManager::setupTasks()
 {
-    appendTaskInfo(new TaskInfo(TaskInfo::UpdateChecker, this));
-    appendTaskInfo(new TaskInfo(TaskInfo::Tasix, this));
+    appendTaskInfo(new TaskInfoUpdateChecker(this));
+    appendTaskInfo(new TaskInfoTasix(this));
 }
 
 void TaskManager::appendTaskInfo(TaskInfo *taskInfo)
@@ -38,51 +40,44 @@ void TaskManager::appendTaskInfo(TaskInfo *taskInfo)
     m_taskInfos.append(taskInfo);
 }
 
-void TaskManager::loadSettings(const FortSettings *fortSettings)
+void TaskManager::loadSettings(const FortSettings *fortSettings,
+                               ConfManager *confManager)
 {
-    const TasksMap tasksMap = fortSettings->tasks();
-
-    for (TaskInfo *taskInfo : m_taskInfos) {
-        const QString taskName = TaskInfo::typeToString(taskInfo->type());
-        const QByteArray taskData = tasksMap.value(taskName);
-
-        if (!taskData.isNull()) {
-            taskInfo->setRawData(taskData);
+    if (!confManager->loadTasks(m_taskInfos)) {
+        const TasksMap tasksMap = fortSettings->tasks();
+        if (!tasksMap.isEmpty()) {
+            for (TaskInfo *taskInfo : m_taskInfos) {
+                const QByteArray taskData = tasksMap.value(taskInfo->name());
+                if (!taskData.isNull()) {
+                    taskInfo->setRawData(taskData);
+                }
+            }
         }
     }
 
     runExpiredTasks();
 }
 
-bool TaskManager::saveSettings(FortSettings *fortSettings)
+bool TaskManager::saveSettings(FortSettings *fortSettings,
+                               ConfManager *confManager)
 {
-    TasksMap tasksMap;
-    QByteArray taskData;
-
-    for (const TaskInfo *taskInfo : m_taskInfos) {
-        const QString taskName = TaskInfo::typeToString(taskInfo->type());
-
-        taskData.clear();
-        taskInfo->rawData(taskData);
-
-        tasksMap.insert(taskName, taskData);
-    }
-
     runExpiredTasks();
 
-    return fortSettings->setTasks(tasksMap);
+    if (!confManager->saveTasks(m_taskInfos))
+        return false;
+
+    fortSettings->removeTasks();
+    return true;
 }
 
 void TaskManager::handleTaskFinished(bool success)
 {
-    if (success) {
-        auto taskInfo = qobject_cast<TaskInfo *>(sender());
-        TaskWorker *taskWorker = taskInfo->taskWorker();
+    auto taskInfo = qobject_cast<TaskInfo *>(sender());
 
-        taskWorker->processResult(m_fortManager);
-    }
+    taskInfo->processResult(m_fortManager, success);
 
-    saveSettings(m_fortManager->fortSettings());
+    saveSettings(m_fortManager->fortSettings(),
+                 m_fortManager->confManager());
 }
 
 void TaskManager::runExpiredTasks()

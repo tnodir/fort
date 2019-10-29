@@ -1,6 +1,7 @@
 #ifndef SQLITESTMT_H
 #define SQLITESTMT_H
 
+#include <QDateTime>
 #include <QString>
 #include <QVariant>
 
@@ -32,8 +33,12 @@ public:
 
     bool bindInt(int index, qint32 number);
     bool bindInt64(int index, qint64 number);
+    bool bindDouble(int index, double number);
     bool bindNull(int index = 1);
     bool bindText(int index, const QString &text);
+    bool bindDateTime(int index, const QDateTime &dateTime);
+    bool bindBlob(int index, const QByteArray &data);
+    bool bindVar(int index, const QVariant &v);
 
     bool clearBindings();
     bool reset();
@@ -46,7 +51,11 @@ public:
 
     qint32 columnInt(int column = 0);
     qint64 columnInt64(int column = 0);
+    double columnDouble(int column = 0);
     QString columnText(int column = 0);
+    QDateTime columnDateTime(int column = 0);
+    QByteArray columnBlob(int column = 0);
+    QVariant columnVar(int column = 0);
 
 private:
     sqlite3_stmt *m_stmt;

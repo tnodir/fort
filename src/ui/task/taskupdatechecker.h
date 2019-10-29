@@ -10,13 +10,12 @@ class TaskUpdateChecker : public TaskDownloader
 public:
     explicit TaskUpdateChecker(QObject *parent = nullptr);
 
+    QString version() const { return m_version; }
+
+    QString releaseText() const;
+
 protected:
     void setupDownloader() override;
-
-signals:
-
-public slots:
-    bool processResult(FortManager *fortManager) override;
 
 protected slots:
     void downloadFinished(bool success) override;
@@ -24,9 +23,9 @@ protected slots:
 private:
     bool parseBuffer(const QByteArray &buffer);
 
-    QString successMessage() const;
-
 private:
+    QString m_version;
+
     QString m_releaseName;
     QString m_publishedAt;
     QString m_releaseNotes;

@@ -39,3 +39,13 @@ CREATE INDEX idx_app_end_time ON app(end_time);
 CREATE TABLE IF NOT EXISTS app_alert(
   app_id INTEGER PRIMARY KEY
 );
+
+CREATE TABLE IF NOT EXISTS task(
+  task_id INTEGER PRIMARY KEY,
+  name TEXT UNIQUE NOT NULL,
+  enabled BOOLEAN NOT NULL,
+  interval_hours INTEGER NOT NULL,
+  last_run INTEGER NOT NULL,
+  last_success INTEGER NOT NULL,
+  data BLOB
+);

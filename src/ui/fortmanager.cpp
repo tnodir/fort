@@ -63,8 +63,10 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_stopTrafficAction(nullptr),
     m_stopInetTrafficAction(nullptr),
     m_quotaManager(new QuotaManager(fortSettings, this)),
-    m_statManager(new StatManager(fortSettings, m_quotaManager, this)),
-    m_confManager(new ConfManager(fortSettings, this)),
+    m_statManager(new StatManager(fortSettings->statFilePath(),
+                                  m_quotaManager, this)),
+    m_confManager(new ConfManager(fortSettings->confFilePath(),
+                                  fortSettings, this)),
     m_driverManager(new DriverManager(this)),
     m_logManager(new LogManager(m_statManager,
                                 m_driverManager->driverWorker(), this)),
@@ -85,10 +87,9 @@ FortManager::FortManager(FortSettings *fortSettings,
 
     loadSettings(m_firewallConf);
 
-    m_taskManager->loadSettings(m_fortSettings);
-
     registerQmlTypes();
 
+    setupTaskManager();
     setupTranslationManager();
     setupTrayIcon();
 
@@ -219,6 +220,11 @@ void FortManager::setupLogger()
     logger->setActive(true);
 
     updateLogger();
+}
+
+void FortManager::setupTaskManager()
+{
+    m_taskManager->loadSettings(m_fortSettings, m_confManager);
 }
 
 void FortManager::setupTranslationManager()

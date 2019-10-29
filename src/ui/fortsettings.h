@@ -152,8 +152,10 @@ public:
     bool startWithWindows() const;
     void setStartWithWindows(bool start);
 
+    QString tasksKey() const { return "tasks"; }
     TasksMap tasks() const;
     bool setTasks(const TasksMap &map);
+    void removeTasks();
 
     QString logsPath() const;
 

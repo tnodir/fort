@@ -1,6 +1,5 @@
 #include "apputil.h"
 
-#include <QDateTime>
 #include <QDir>
 #include <QPixmap>
 
@@ -158,8 +157,8 @@ QImage AppUtil::getIcon(const QString &appPath)
             .toImage();
 }
 
-qint64 AppUtil::getModTime(const QString &appPath)
+QDateTime AppUtil::getModTime(const QString &appPath)
 {
     QFileInfo fi(appPath);
-    return fi.lastModified().toMSecsSinceEpoch();
+    return fi.lastModified();
 }

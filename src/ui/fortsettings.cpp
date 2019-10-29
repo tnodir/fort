@@ -125,10 +125,9 @@ void FortSettings::setErrorMessage(const QString &errorMessage)
 TasksMap FortSettings::tasks() const
 {
     TasksMap map;
-    const QString tasksPrefix("tasks");
 
-    for (const QString &taskName : iniChildKeys(tasksPrefix)) {
-        const QString taskKey(tasksPrefix + '/' + taskName);
+    for (const QString &taskName : iniChildKeys(tasksKey())) {
+        const QString taskKey(tasksKey() + '/' + taskName);
         map.insert(taskName, iniValue(taskKey).toByteArray());
     }
     return map;
@@ -136,18 +135,21 @@ TasksMap FortSettings::tasks() const
 
 bool FortSettings::setTasks(const TasksMap &map)
 {
-    const QString tasksPrefix("tasks");
-
-    removeIniKey(tasksPrefix);
+    removeTasks();
 
     auto keyIt = map.keyBegin();
     for (; keyIt != map.keyEnd(); ++keyIt) {
         const QString taskName = *keyIt;
-        const QString taskKey(tasksPrefix + '/' + taskName);
+        const QString taskKey(tasksKey() + '/' + taskName);
         setIniValue(taskKey, map.value(taskName));
     }
 
     return iniSync();
+}
+
+void FortSettings::removeTasks()
+{
+    removeIniKey(tasksKey());
 }
 
 QString FortSettings::logsPath() const

@@ -5,9 +5,6 @@
 #include <QVariant>
 
 #include "../../common/version.h"
-#ifndef TASK_TEST
-#include "../fortmanager.h"
-#endif
 #include "../util/net/netdownloader.h"
 #include "../util/net/netutil.h"
 
@@ -32,17 +29,6 @@ void TaskUpdateChecker::downloadFinished(bool success)
     abort(success);
 }
 
-bool TaskUpdateChecker::processResult(FortManager *fortManager)
-{
-#ifndef TASK_TEST
-    fortManager->showInfoBox(successMessage(), tr("New version!"));
-#else
-    Q_UNUSED(fortManager)
-#endif
-
-    return true;
-}
-
 bool TaskUpdateChecker::parseBuffer(const QByteArray &buffer)
 {
     QJsonParseError jsonParseError{};
@@ -55,25 +41,25 @@ bool TaskUpdateChecker::parseBuffer(const QByteArray &buffer)
 
     const QVariantMap map = jsonDoc.toVariant().toMap();
 
+    // Check version (eg. "v1.4.0")
+    const QString tagName = map["tag_name"].toString();
+    m_version = tagName.mid(1);
+    if (m_version == APP_VERSION_STR)
+        return false;
+
     // Check draft/prerelease
     if (map["draft"].toBool() || map["prerelease"].toBool())
         return false;
 
-    // Check version (eg. "v1.4.0")
-    const QString tagName = map["tag_name"].toString();
-    if (tagName.midRef(1) == APP_VERSION_STR)
+    // Check Assets
+    const QVariantList assets = map["assets"].toList();
+    if (assets.isEmpty())
         return false;
 
     m_releaseName = map["name"].toString();  // eg. "Fort Firewall v1.4.0"
     m_publishedAt = map["published_at"].toString();  // eg. "2017-12-17T02:27:19Z"
 
     m_releaseNotes = map["body"].toString();  // ChangeLog
-    m_releaseNotes.replace('\n', "<br/>");
-
-    // Assets
-    const QVariantList assets = map["assets"].toList();
-    if (assets.isEmpty())
-        return false;
 
     // Assets
     const QVariantMap assetMap = assets.first().toMap();
@@ -86,15 +72,19 @@ bool TaskUpdateChecker::parseBuffer(const QByteArray &buffer)
     return !m_downloadUrl.isEmpty() && m_downloadSize != 0;
 }
 
-QString TaskUpdateChecker::successMessage() const
+QString TaskUpdateChecker::releaseText() const
 {
     const QDateTime publishedTime = QDateTime::fromString(
                 m_publishedAt, Qt::ISODate);
 
+    QString releaseNotes = m_releaseNotes;
+    releaseNotes.replace('\n', "<br/>");
+
     return "<a href=\"" + m_downloadUrl + "\">"
-            + m_releaseName+ "</a> (<i>"
+            + m_releaseName + "</a> (<i>"
             + publishedTime.toString("dd-MMM-yyyy hh:mm") + "</i>, "
             + NetUtil::formatDataSize(m_downloadSize)
             + ", #" + QString::number(m_downloadCount)
-            + ")<br/>\nRelease Notes:<br/>\n" + m_releaseNotes;
+            + ")<br/>\nRelease Notes:<br/>\n"
+            + releaseNotes;
 }

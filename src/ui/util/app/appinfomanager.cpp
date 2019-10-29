@@ -156,25 +156,26 @@ bool AppInfoManager::loadInfoFromDb(const QString &appPath, AppInfo &appInfo)
 
     QMutexLocker locker(&m_mutex);
 
-    const QVariantList vars = QVariantList() << appPath;
-
     // Load version info
-    const int resultCount = 6;
-    const QVariantList list = m_sqliteDb->executeEx(
-                sqlSelectAppInfo, vars, resultCount)
-            .toList();
-    if (list.size() != resultCount)
+    SqliteStmt stmt;
+    if (!stmt.prepare(m_sqliteDb->db(), sqlSelectAppInfo))
         return false;
 
-    appInfo.fileDescription = list.at(0).toString();
-    appInfo.companyName = list.at(1).toString();
-    appInfo.productName = list.at(2).toString();
-    appInfo.productVersion = list.at(3).toString();
-    appInfo.fileModTime = list.at(4).toLongLong();
-    appInfo.iconId = list.at(5).toLongLong();
+    stmt.bindText(1, appPath);
+
+    if (stmt.step() != SqliteStmt::StepRow)
+        return false;
+
+    appInfo.fileDescription = stmt.columnText(0);
+    appInfo.companyName = stmt.columnText(1);
+    appInfo.productName = stmt.columnText(2);
+    appInfo.productVersion = stmt.columnText(3);
+    appInfo.fileModTime = stmt.columnDateTime(4);
+    appInfo.iconId = stmt.columnInt64(5);
 
     // Update last access time
-    m_sqliteDb->executeEx(sqlUpdateAppAccessTime, vars);
+    m_sqliteDb->executeEx(sqlUpdateAppAccessTime,
+                          QVariantList() << appPath);
 
     return true;
 }

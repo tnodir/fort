@@ -9,7 +9,6 @@
 #include "../util/classhelpers.h"
 
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
-QT_FORWARD_DECLARE_CLASS(FortSettings)
 QT_FORWARD_DECLARE_CLASS(QuotaManager)
 QT_FORWARD_DECLARE_CLASS(SqliteDb)
 QT_FORWARD_DECLARE_CLASS(SqliteStmt)
@@ -19,7 +18,7 @@ class StatManager : public QObject
     Q_OBJECT
 
 public:
-    explicit StatManager(FortSettings *fortSettings,
+    explicit StatManager(const QString &filePath,
                          QuotaManager *quotaManager,
                          QObject *parent = nullptr);
     ~StatManager() override;
@@ -27,6 +26,8 @@ public:
 
     const FirewallConf *firewallConf() const { return m_conf; }
     void setFirewallConf(const FirewallConf *conf);
+
+    SqliteDb *sqliteDb() const { return m_sqliteDb; }
 
     bool initialize();
 

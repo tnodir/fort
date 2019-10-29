@@ -10,6 +10,5 @@ QString AppInfo::iconPath() const
 
 bool AppInfo::isFileModified(const QString &appPath) const
 {
-    return fileModTime != 0
-            && fileModTime != AppUtil::getModTime(appPath);
+    return fileModTime != AppUtil::getModTime(appPath);
 }

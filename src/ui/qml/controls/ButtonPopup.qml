@@ -8,16 +8,7 @@ Button {
 
     default property alias content: popup.contentData
 
-    Popup {
+    PopupBox {
         id: popup
-        y: bt.height
-        visible: bt.checked
-
-        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-                     | Popup.CloseOnPressOutsideParent
-
-        onClosed: {
-            bt.checked = false;
-        }
     }
 }

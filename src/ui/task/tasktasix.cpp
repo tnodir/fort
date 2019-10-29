@@ -1,10 +1,5 @@
 #include "tasktasix.h"
 
-#include "../conf/addressgroup.h"
-#include "../conf/firewallconf.h"
-#ifndef TASK_TEST
-#include "../fortmanager.h"
-#endif
 #include "../util/net/ip4range.h"
 #include "../util/net/netdownloader.h"
 #include "../util/net/netutil.h"
@@ -30,25 +25,6 @@ void TaskTasix::downloadFinished(bool success)
     }
 
     abort(success);
-}
-
-bool TaskTasix::processResult(FortManager *fortManager)
-{
-#ifndef TASK_TEST
-    FirewallConf *conf = fortManager->firewallConf();
-    AddressGroup *inetGroup = conf->inetAddressGroup();
-
-    if (inetGroup->excludeText() == m_rangeText)
-        return false;
-
-    inetGroup->setExcludeText(m_rangeText);
-
-    return fortManager->saveOriginConf(successMessage());
-#else
-    Q_UNUSED(fortManager)
-
-    return true;
-#endif
 }
 
 QString TaskTasix::parseBuffer(const QByteArray &buffer) const

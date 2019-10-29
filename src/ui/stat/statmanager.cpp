@@ -7,7 +7,6 @@
 
 #include "../conf/firewallconf.h"
 #include "../fortcommon.h"
-#include "../fortsettings.h"
 #include "../util/dateutil.h"
 #include "../util/fileutil.h"
 #include "../util/osutil.h"
@@ -56,7 +55,7 @@ bool migrateFunc(SqliteDb *db, int version, void *ctx)
 
 }
 
-StatManager::StatManager(FortSettings *fortSettings,
+StatManager::StatManager(const QString &filePath,
                          QuotaManager *quotaManager,
                          QObject *parent) :
     QObject(parent),
@@ -73,7 +72,7 @@ StatManager::StatManager(FortSettings *fortSettings,
     m_lastTick(0),
     m_quotaManager(quotaManager),
     m_conf(nullptr),
-    m_sqliteDb(new SqliteDb(fortSettings->statFilePath()))
+    m_sqliteDb(new SqliteDb(filePath))
 {
 }
 
