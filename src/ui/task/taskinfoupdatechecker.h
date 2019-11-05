@@ -10,6 +10,8 @@ class TaskInfoUpdateChecker : public TaskInfo
 public:
     explicit TaskInfoUpdateChecker(QObject *parent = nullptr);
 
+    QString version() const { return m_version; }
+
     QString infoText() const override;
 
     QByteArray data() const override;

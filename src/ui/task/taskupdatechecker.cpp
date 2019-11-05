@@ -75,9 +75,9 @@ QString TaskUpdateChecker::releaseText() const
     const QDateTime publishedTime = QDateTime::fromString(
                 m_publishedAt, Qt::ISODate);
 
-    return "[" + m_releaseName + "](" + m_downloadUrl + ") (_"
-            + publishedTime.toString("dd-MMM-yyyy hh:mm") + "_, "
+    return "[" + m_releaseName + "](" + m_downloadUrl + ") (*"
+            + publishedTime.toString("dd-MMM-yyyy hh:mm") + "*, "
             + NetUtil::formatDataSize(m_downloadSize)
-            + ")\n\nRelease Notes:\n"
+            + ")\n\n*Release Notes:*\n"
             + m_releaseNotes;
 }

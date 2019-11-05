@@ -50,42 +50,42 @@
 <context>
     <name>FortManager</name>
     <message>
-        <location filename="../fortmanager.cpp" line="458"/>
+        <location filename="../fortmanager.cpp" line="467"/>
         <source>Password input</source>
         <translation>Ввод пароля</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="458"/>
+        <location filename="../fortmanager.cpp" line="467"/>
         <source>Please enter the password</source>
         <translation>Наберите пароль пожалуйста</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="677"/>
+        <location filename="../fortmanager.cpp" line="686"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="682"/>
+        <location filename="../fortmanager.cpp" line="691"/>
         <source>Traffic Graph</source>
         <translation>График трафика</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="692"/>
+        <location filename="../fortmanager.cpp" line="701"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="699"/>
+        <location filename="../fortmanager.cpp" line="708"/>
         <source>Stop Traffic</source>
         <translation>Остановить трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="706"/>
+        <location filename="../fortmanager.cpp" line="715"/>
         <source>Stop Internet Traffic</source>
         <translation>Остановить Интернет трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="734"/>
+        <location filename="../fortmanager.cpp" line="743"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -185,8 +185,8 @@
     <name>TaskInfoUpdateChecker</name>
     <message>
         <location filename="../task/taskinfoupdatechecker.cpp" line="77"/>
-        <source>New version!</source>
-        <translation>Новая версия!</translation>
+        <source>New version v%1 available!</source>
+        <translation>Новая версия v% доступна!</translation>
     </message>
 </context>
 <context>
@@ -421,18 +421,18 @@
         <translation>Пароль:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="166"/>
+        <location filename="../qml/pages/MainPage.qml" line="175"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="172"/>
+        <location filename="../qml/pages/MainPage.qml" line="181"/>
         <source>Apply</source>
         <translation>Применить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="177"/>
-        <location filename="../qml/pages/schedule/TaskRow.qml" line="114"/>
+        <location filename="../qml/pages/MainPage.qml" line="186"/>
+        <location filename="../qml/pages/schedule/TaskRow.qml" line="115"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
@@ -861,7 +861,7 @@
         <translation>Информация</translation>
     </message>
     <message>
-        <location filename="../qml/pages/schedule/TaskRow.qml" line="115"/>
+        <location filename="../qml/pages/schedule/TaskRow.qml" line="116"/>
         <source>Run</source>
         <translation>Запустить</translation>
     </message>

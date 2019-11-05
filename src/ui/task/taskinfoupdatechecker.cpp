@@ -66,14 +66,15 @@ bool TaskInfoUpdateChecker::processResult(FortManager *fortManager, bool success
 
     const auto updateChecker = static_cast<TaskUpdateChecker *>(taskWorker());
 
+    if (m_version == updateChecker->version())
+        return false;
+
     m_version = updateChecker->version();
     m_releaseText = updateChecker->releaseText();
 
     emit infoTextChanged();
 
-    if (m_version == updateChecker->version())
-        return false;
-
-    fortManager->showInfoBox(m_releaseText, tr("New version!"));
+    fortManager->showTrayMessage(tr("New version v%1 available!")
+                                 .arg(m_version));
     return true;
 }

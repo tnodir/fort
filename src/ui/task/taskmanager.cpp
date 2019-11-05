@@ -11,7 +11,8 @@
 TaskManager::TaskManager(FortManager *fortManager,
                          QObject *parent) :
     QObject(parent),
-    m_fortManager(fortManager)
+    m_fortManager(fortManager),
+    m_taskInfoUpdateChecker(nullptr)
 {
     setupTasks();
 
@@ -28,7 +29,9 @@ QQmlListProperty<TaskInfo> TaskManager::taskInfos()
 
 void TaskManager::setupTasks()
 {
-    appendTaskInfo(new TaskInfoUpdateChecker(this));
+    m_taskInfoUpdateChecker = new TaskInfoUpdateChecker(this);
+
+    appendTaskInfo(m_taskInfoUpdateChecker);
     appendTaskInfo(new TaskInfoTasix(this));
 }
 

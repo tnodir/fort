@@ -154,6 +154,15 @@ Page {
                     onClicked: Qt.openUrlExternally(link)
                     readonly property string link: fortSettings.appUpdatesUrl
                 }
+
+                Label {
+                    visible: !!fortManager.newVersion
+                    color: "red"
+                    font.family: "Georgia"
+                    font.bold: true
+                    font.pixelSize: 20
+                    text: "v" + fortManager.newVersion
+                }
             }
 
             Item {

@@ -28,6 +28,7 @@
 #include "stat/quotamanager.h"
 #include "stat/statmanager.h"
 #include "task/taskinfo.h"
+#include "task/taskinfoupdatechecker.h"
 #include "task/taskmanager.h"
 #include "translationmanager.h"
 #include "util/app/appiconprovider.h"
@@ -222,8 +223,16 @@ void FortManager::setupLogger()
     updateLogger();
 }
 
+QString FortManager::newVersion() const
+{
+    return m_taskManager->taskInfoUpdateChecker()->version();
+}
+
 void FortManager::setupTaskManager()
 {
+    connect(m_taskManager->taskInfoUpdateChecker(), &TaskInfoUpdateChecker::infoTextChanged,
+            this, &FortManager::newVersionChanged);
+
     m_taskManager->loadSettings(m_fortSettings, m_confManager);
 }
 
