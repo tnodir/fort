@@ -25,7 +25,8 @@
 		},
 		"${TARGET}/imports": {
 			"common": [
-				"${QTPATH}/qml/QtQuick.2		| *.dll qmldir		| *d.dll"
+				"${QTPATH}/qml/QtQuick.2		| *.dll qmldir		| *d.dll",
+				"${QTPATH}/qml/QtQml			| *.dll qmldir		| *d.dll"
 			]
 		},
 		"${TARGET}/imports/QtQml": {
