@@ -31,37 +31,13 @@ Row {
         onToggled: setScheduleEdited()
     }
 
-    Row {
+    Label {
         width: taskCellWidths[1]
         height: parent.height
-        spacing: 7
-
-        Label {
-            width: Math.min(implicitWidth, parent.width - parent.spacing
-                            + infoButton.width)
-            height: parent.height
-            verticalAlignment: Text.AlignVCenter
-            wrapMode: Text.WordWrap
-            fontSizeMode: Text.Fit
-            text: taskInfo.title
-        }
-
-        RoundButtonTipSmall {
-            id: infoButton
-            anchors.verticalCenter: parent.verticalCenter
-            visible: !!taskInfo.infoText
-            checkable: true
-            icon.source: "qrc:/images/information.png"
-            tipText: qsTranslate("qml", "Information")
-
-            PopupBox {
-                Label {
-                    textFormat: Text.MarkdownText
-                    text: taskInfo.infoText
-                    onLinkActivated: Qt.openUrlExternally(link)
-                }
-            }
-        }
+        verticalAlignment: Text.AlignVCenter
+        wrapMode: Text.WordWrap
+        fontSizeMode: Text.Fit
+        text: taskInfo.title
     }
 
     SpinCombo {

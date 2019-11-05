@@ -129,6 +129,8 @@ void FortManager::registerQmlTypes()
                                             "Singleton");
     qmlRegisterUncreatableType<TaskInfo>("com.fortfirewall", 1, 0, "TaskInfo",
                                          "Singleton");
+    qmlRegisterUncreatableType<TaskInfoUpdateChecker>("com.fortfirewall", 1, 0, "TaskInfoUpdateChecker",
+                                                      "Singleton");
 
     qmlRegisterType<AddressGroup>("com.fortfirewall", 1, 0, "AddressGroup");
     qmlRegisterType<AppGroup>("com.fortfirewall", 1, 0, "AppGroup");
@@ -223,16 +225,8 @@ void FortManager::setupLogger()
     updateLogger();
 }
 
-QString FortManager::newVersion() const
-{
-    return m_taskManager->taskInfoUpdateChecker()->version();
-}
-
 void FortManager::setupTaskManager()
 {
-    connect(m_taskManager->taskInfoUpdateChecker(), &TaskInfoUpdateChecker::infoTextChanged,
-            this, &FortManager::newVersionChanged);
-
     m_taskManager->loadSettings(m_fortSettings, m_confManager);
 }
 
@@ -287,6 +281,7 @@ bool FortManager::setupEngine()
     context->setContextProperty("fortManager", this);
     context->setContextProperty("driverManager", m_driverManager);
     context->setContextProperty("translationManager", TranslationManager::instance());
+    context->setContextProperty("taskManager", m_taskManager);
     context->setContextProperty("appInfoCache", m_appInfoCache);
 
     m_engine->addImageProvider(AppIconProvider::id(),

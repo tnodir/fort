@@ -11,6 +11,7 @@ public:
     explicit TaskUpdateChecker(QObject *parent = nullptr);
 
     QString version() const { return m_version; }
+    QString downloadUrl() const { return m_downloadUrl; }
 
     QString releaseText() const;
 

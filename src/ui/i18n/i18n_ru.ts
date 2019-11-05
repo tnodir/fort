@@ -50,42 +50,42 @@
 <context>
     <name>FortManager</name>
     <message>
-        <location filename="../fortmanager.cpp" line="467"/>
+        <location filename="../fortmanager.cpp" line="462"/>
         <source>Password input</source>
         <translation>Ввод пароля</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="467"/>
+        <location filename="../fortmanager.cpp" line="462"/>
         <source>Please enter the password</source>
         <translation>Наберите пароль пожалуйста</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="686"/>
+        <location filename="../fortmanager.cpp" line="681"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="691"/>
+        <location filename="../fortmanager.cpp" line="686"/>
         <source>Traffic Graph</source>
         <translation>График трафика</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="701"/>
+        <location filename="../fortmanager.cpp" line="696"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="708"/>
+        <location filename="../fortmanager.cpp" line="703"/>
         <source>Stop Traffic</source>
         <translation>Остановить трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="715"/>
+        <location filename="../fortmanager.cpp" line="710"/>
         <source>Stop Internet Traffic</source>
         <translation>Остановить Интернет трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="743"/>
+        <location filename="../fortmanager.cpp" line="738"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -184,7 +184,7 @@
 <context>
     <name>TaskInfoUpdateChecker</name>
     <message>
-        <location filename="../task/taskinfoupdatechecker.cpp" line="77"/>
+        <location filename="../task/taskinfoupdatechecker.cpp" line="72"/>
         <source>New version v%1 available!</source>
         <translation>Новая версия v% доступна!</translation>
     </message>
@@ -385,33 +385,38 @@
         <translation># Все программы по под-пути:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="80"/>
+        <location filename="../qml/pages/MainPage.qml" line="82"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="84"/>
+        <location filename="../qml/pages/MainPage.qml" line="86"/>
         <source>IPv4 Addresses</source>
         <translation>Адреса IPv4</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="88"/>
+        <location filename="../qml/pages/MainPage.qml" line="90"/>
         <source>Applications</source>
         <translation>Приложения</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="100"/>
+        <location filename="../qml/pages/MainPage.qml" line="102"/>
         <source>Schedule</source>
         <translation>Расписание</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="92"/>
+        <location filename="../qml/pages/MainPage.qml" line="168"/>
+        <source>New version:</source>
+        <translation>Новая версия:</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/MainPage.qml" line="94"/>
         <source>Blocked</source>
         <translation>Блокировано</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="96"/>
-        <location filename="../qml/pages/MainPage.qml" line="143"/>
+        <location filename="../qml/pages/MainPage.qml" line="98"/>
+        <location filename="../qml/pages/MainPage.qml" line="145"/>
         <source>Statistics</source>
         <translation>Статистика</translation>
     </message>
@@ -421,18 +426,18 @@
         <translation>Пароль:</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="175"/>
+        <location filename="../qml/pages/MainPage.qml" line="182"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="181"/>
+        <location filename="../qml/pages/MainPage.qml" line="188"/>
         <source>Apply</source>
         <translation>Применить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="186"/>
-        <location filename="../qml/pages/schedule/TaskRow.qml" line="115"/>
+        <location filename="../qml/pages/MainPage.qml" line="193"/>
+        <location filename="../qml/pages/schedule/TaskRow.qml" line="91"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
@@ -504,17 +509,17 @@
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="125"/>
+        <location filename="../qml/pages/MainPage.qml" line="127"/>
         <source>Logs</source>
         <translation>Логи</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="134"/>
+        <location filename="../qml/pages/MainPage.qml" line="136"/>
         <source>Profile</source>
         <translation>Профиль</translation>
     </message>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="152"/>
+        <location filename="../qml/pages/MainPage.qml" line="154"/>
         <source>Releases</source>
         <translation>Релизы</translation>
     </message>
@@ -856,12 +861,7 @@
         <translation>Открыть папку</translation>
     </message>
     <message>
-        <location filename="../qml/pages/schedule/TaskRow.qml" line="55"/>
-        <source>Information</source>
-        <translation>Информация</translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/schedule/TaskRow.qml" line="116"/>
+        <location filename="../qml/pages/schedule/TaskRow.qml" line="92"/>
         <source>Run</source>
         <translation>Запустить</translation>
     </message>

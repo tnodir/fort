@@ -13,6 +13,8 @@ Page {
     signal aboutToSave()
     signal saved()
 
+    readonly property TaskInfoUpdateChecker updateChecker: taskManager.taskInfoUpdateChecker
+
     property bool confFlagsEdited
     property bool confEdited
     property bool othersEdited
@@ -155,13 +157,26 @@ Page {
                     readonly property string link: fortSettings.appUpdatesUrl
                 }
 
-                Label {
-                    visible: !!fortManager.newVersion
-                    color: "red"
-                    font.family: "Georgia"
-                    font.bold: true
-                    font.pixelSize: 20
-                    text: "v" + fortManager.newVersion
+                VSeparator {
+                    visible: !!updateChecker.version
+                }
+
+                LinkButton {
+                    visible: !!updateChecker.version
+                    normalColor: "red"
+                    text: qsTranslate("qml", "New version:")
+                          + " v" + updateChecker.version
+                    onClicked: Qt.openUrlExternally(updateChecker.downloadUrl)
+
+                    PopupBox {
+                        y: parent.y - height
+                        visible: parent.hovered
+                        Label {
+                            textFormat: Text.MarkdownText
+                            text: updateChecker.releaseText
+                            onLinkActivated: Qt.openUrlExternally(link)
+                        }
+                    }
                 }
             }
 

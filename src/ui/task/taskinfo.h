@@ -18,7 +18,6 @@ class TaskInfo : public QObject
     Q_PROPERTY(TaskInfo::TaskType type READ type WRITE setType NOTIFY typeChanged)
     Q_PROPERTY(QDateTime lastRun READ lastRun WRITE setLastRun NOTIFY lastRunChanged)
     Q_PROPERTY(QDateTime lastSuccess READ lastSuccess WRITE setLastSuccess NOTIFY lastSuccessChanged)
-    Q_PROPERTY(QString infoText READ infoText NOTIFY infoTextChanged)
     Q_PROPERTY(bool running READ running NOTIFY taskWorkerChanged)
 
 public:
@@ -57,8 +56,6 @@ public:
     QDateTime lastSuccess() const { return m_lastSuccess; }
     void setLastSuccess(const QDateTime &lastSuccess);
 
-    virtual QString infoText() const { return QString(); }
-
     virtual QByteArray data() const { return QByteArray(); }
     virtual void setData(const QByteArray &data) { Q_UNUSED(data) }
 
@@ -79,7 +76,6 @@ signals:
     void typeChanged();
     void lastRunChanged();
     void lastSuccessChanged();
-    void infoTextChanged();
     void taskWorkerChanged();
 
     void workFinished(bool success);

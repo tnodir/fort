@@ -5,11 +5,15 @@ Label {
     id: bt
 
     opacity: enabled ? 1.0 : 0.45
-    color: checked ? "darkblue" : (hovered ? "purple" : "blue")
+    color: checked ? checkedColor : (hovered ? hoveredColor : normalColor)
 
     font.underline: true
 
     signal clicked()
+
+    property color normalColor: "blue"
+    property color hoveredColor: "purple"
+    property color checkedColor: "darkblue"
 
     readonly property alias mouseArea: ma
 

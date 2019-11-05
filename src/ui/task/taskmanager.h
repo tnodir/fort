@@ -14,6 +14,7 @@ QT_FORWARD_DECLARE_CLASS(TaskInfoUpdateChecker)
 class TaskManager : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(TaskInfoUpdateChecker *taskInfoUpdateChecker READ taskInfoUpdateChecker CONSTANT)
     Q_PROPERTY(QQmlListProperty<TaskInfo> taskInfos READ taskInfos NOTIFY taskInfosChanged)
     Q_CLASSINFO("DefaultProperty", "taskInfos")
 

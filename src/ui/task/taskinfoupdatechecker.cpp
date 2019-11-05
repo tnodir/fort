@@ -13,14 +13,6 @@ TaskInfoUpdateChecker::TaskInfoUpdateChecker(QObject *parent) :
 {
 }
 
-QString TaskInfoUpdateChecker::infoText() const
-{
-    if (m_version.isEmpty() || m_version == APP_VERSION_STR)
-        return QString();
-
-    return m_releaseText;
-}
-
 QByteArray TaskInfoUpdateChecker::data() const
 {
     QByteArray data;
@@ -32,6 +24,7 @@ QByteArray TaskInfoUpdateChecker::data() const
     stream
             << infoVersion
             << m_version
+            << m_downloadUrl
             << m_releaseText;
 
     return data;
@@ -51,9 +44,10 @@ void TaskInfoUpdateChecker::setData(const QByteArray &data)
     // Load data
     stream
             >> m_version
+            >> m_downloadUrl
             >> m_releaseText;
 
-    emit infoTextChanged();
+    emit versionChanged();
 }
 
 bool TaskInfoUpdateChecker::processResult(FortManager *fortManager, bool success)
@@ -70,9 +64,10 @@ bool TaskInfoUpdateChecker::processResult(FortManager *fortManager, bool success
         return false;
 
     m_version = updateChecker->version();
+    m_downloadUrl = updateChecker->downloadUrl();
     m_releaseText = updateChecker->releaseText();
 
-    emit infoTextChanged();
+    emit versionChanged();
 
     fortManager->showTrayMessage(tr("New version v%1 available!")
                                  .arg(m_version));

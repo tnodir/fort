@@ -32,7 +32,6 @@ class FortManager : public QObject
     Q_PROPERTY(FirewallConf *firewallConfToEdit READ firewallConfToEdit NOTIFY firewallConfToEditChanged)
     Q_PROPERTY(LogManager *logManager READ logManager CONSTANT)
     Q_PROPERTY(TaskManager *taskManager READ taskManager CONSTANT)
-    Q_PROPERTY(QString newVersion READ newVersion NOTIFY newVersionChanged)
 
 public:
     explicit FortManager(FortSettings *fortSettings,
@@ -49,15 +48,11 @@ public:
     LogManager *logManager() const { return m_logManager; }
     TaskManager *taskManager() const { return m_taskManager; }
 
-    QString newVersion() const;
-
 signals:
     void firewallConfToEditChanged();
 
     void afterSaveWindowState();
     void afterRestoreWindowState();
-
-    void newVersionChanged();
 
 public slots:
     void installDriver();
