@@ -168,7 +168,7 @@ Page {
                           + " v" + updateChecker.version
                     onClicked: Qt.openUrlExternally(updateChecker.downloadUrl)
 
-                    PopupBox {
+                    Popup {
                         y: parent.y - height
                         visible: parent.hovered
                         Label {
