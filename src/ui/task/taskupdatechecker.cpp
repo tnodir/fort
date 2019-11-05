@@ -10,8 +10,7 @@
 
 TaskUpdateChecker::TaskUpdateChecker(QObject *parent) :
     TaskDownloader(parent),
-    m_downloadSize(0),
-    m_downloadCount(0)
+    m_downloadSize(0)
 {
 }
 
@@ -67,7 +66,6 @@ bool TaskUpdateChecker::parseBuffer(const QByteArray &buffer)
     // eg. "https://github.com/tnodir/fort/releases/download/v1.4.0/FortFirewall-1.4.0.exe"
     m_downloadUrl = assetMap["browser_download_url"].toString();
     m_downloadSize = assetMap["size"].toInt();
-    m_downloadCount = assetMap["download_count"].toInt();
 
     return !m_downloadUrl.isEmpty() && m_downloadSize != 0;
 }
@@ -77,14 +75,9 @@ QString TaskUpdateChecker::releaseText() const
     const QDateTime publishedTime = QDateTime::fromString(
                 m_publishedAt, Qt::ISODate);
 
-    QString releaseNotes = m_releaseNotes;
-    releaseNotes.replace('\n', "<br/>");
-
-    return "<a href=\"" + m_downloadUrl + "\">"
-            + m_releaseName + "</a> (<i>"
-            + publishedTime.toString("dd-MMM-yyyy hh:mm") + "</i>, "
+    return "[" + m_releaseName + "](" + m_downloadUrl + ") (_"
+            + publishedTime.toString("dd-MMM-yyyy hh:mm") + "_, "
             + NetUtil::formatDataSize(m_downloadSize)
-            + ", #" + QString::number(m_downloadCount)
-            + ")<br/>\nRelease Notes:<br/>\n"
-            + releaseNotes;
+            + ")\n\nRelease Notes:\n"
+            + m_releaseNotes;
 }

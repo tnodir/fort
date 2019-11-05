@@ -56,6 +56,7 @@ Row {
 
             PopupBox {
                 Label {
+                    textFormat: Text.MarkdownText
                     text: taskInfo.infoText
                     onLinkActivated: Qt.openUrlExternally(link)
                 }

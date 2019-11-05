@@ -32,7 +32,6 @@ private:
 
     QString m_downloadUrl;
     int m_downloadSize;
-    int m_downloadCount;
 };
 
 #endif // TASKUPDATECHECKER_H
