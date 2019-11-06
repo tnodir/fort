@@ -169,7 +169,8 @@ Page {
                     onClicked: Qt.openUrlExternally(updateChecker.downloadUrl)
 
                     Popup {
-                        y: parent.y - height
+                        x: (parent.width - width) / 2
+                        y: parent.y - height - 3
                         visible: parent.hovered
                         Label {
                             textFormat: Text.MarkdownText
