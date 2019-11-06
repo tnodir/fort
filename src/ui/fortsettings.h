@@ -186,7 +186,7 @@ public slots:
     bool readConf(FirewallConf &conf, bool &isNew);
     bool writeConf(const FirewallConf &conf);
 
-    bool readConfIni(FirewallConf &conf) const;
+    void readConfIni(FirewallConf &conf) const;
     bool writeConfIni(const FirewallConf &conf);
 
     void bulkUpdateBegin();

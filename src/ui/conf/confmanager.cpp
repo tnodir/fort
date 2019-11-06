@@ -184,14 +184,18 @@ bool ConfManager::load(FirewallConf &conf)
         return false;
     }
 
-    if (isNewConf && !m_fortSettings->readConf(conf, isNewConf)) {
-        setErrorMessage(m_fortSettings->errorMessage());
-        return false;
+    if (isNewConf) {
+        if (!m_fortSettings->readConf(conf, isNewConf)) {
+            setErrorMessage(m_fortSettings->errorMessage());
+            return false;
+        }
+
+        if (isNewConf) {
+            setupDefault(conf);
+        }
     }
 
-    if (isNewConf) {
-        setupDefault(conf);
-    }
+    m_fortSettings->readConfIni(conf);
 
     return true;
 }

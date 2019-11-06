@@ -187,9 +187,8 @@ bool FortSettings::readConf(FirewallConf &conf, bool &isNew)
 
     isNew = !(fileExists || backupFileExists);
 
-    return (isNew || (fileExists && tryToReadConf(conf, filePath))
-            || tryToReadConf(conf, backupFilePath))
-            && readConfIni(conf);  // read flags at the end to use correct app groups
+    return isNew || (fileExists && tryToReadConf(conf, filePath))
+            || tryToReadConf(conf, backupFilePath);
 }
 
 bool FortSettings::tryToReadConf(FirewallConf &conf, const QString &filePath)
@@ -241,7 +240,7 @@ bool FortSettings::writeConf(const FirewallConf &conf)
     return true;
 }
 
-bool FortSettings::readConfIni(FirewallConf &conf) const
+void FortSettings::readConfIni(FirewallConf &conf) const
 {
     m_ini->beginGroup("confFlags");
     conf.setProvBoot(iniBool("provBoot"));
@@ -272,8 +271,6 @@ bool FortSettings::readConfIni(FirewallConf &conf) const
     conf.setQuotaDayMb(iniUInt("quotaDayMb"));
     conf.setQuotaMonthMb(iniUInt("quotaMonthMb"));
     m_ini->endGroup();
-
-    return true;
 }
 
 bool FortSettings::writeConfIni(const FirewallConf &conf)
