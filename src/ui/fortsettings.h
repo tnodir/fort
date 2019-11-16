@@ -20,6 +20,8 @@ class FortSettings : public QObject
     Q_PROPERTY(QString language READ language WRITE setLanguage NOTIFY iniChanged)
     Q_PROPERTY(bool hasPassword READ hasPassword NOTIFY iniChanged)
     Q_PROPERTY(QString passwordHash READ passwordHash WRITE setPasswordHash NOTIFY iniChanged)
+    Q_PROPERTY(int appVersion READ appVersion CONSTANT)
+    Q_PROPERTY(int iniVersion READ iniVersion WRITE setIniVersion NOTIFY iniChanged)
     Q_PROPERTY(qreal windowAddrSplit READ windowAddrSplit WRITE setWindowAddrSplit NOTIFY iniChanged)
     Q_PROPERTY(qreal windowAppsSplit READ windowAppsSplit WRITE setWindowAppsSplit NOTIFY iniChanged)
     Q_PROPERTY(bool graphWindowVisible READ graphWindowVisible WRITE setGraphWindowVisible NOTIFY iniChanged)
@@ -65,6 +67,8 @@ public:
 
     QString passwordHash() const { return iniText("base/passwordHash"); }
     void setPasswordHash(const QString &v) { setIniValue("base/passwordHash", v); }
+
+    int appVersion() const { return APP_VERSION; }
 
     int iniVersion() const { return iniInt("base/version"); }
     void setIniVersion(int v) { setIniValue("base/version", v); }
@@ -189,6 +193,9 @@ public slots:
     void readConfIni(FirewallConf &conf) const;
     bool writeConfIni(const FirewallConf &conf);
 
+    bool confMigrated() const;
+    bool confCanMigrate(QString &viaVersion) const;
+
     void bulkUpdateBegin();
     void bulkUpdateEnd();
 
@@ -229,6 +236,7 @@ private:
     static QString startupShortcutPath();
 
 private:
+    uint m_iniExists        : 1;
     uint m_isPortable       : 1;
     uint m_hasProvBoot      : 1;
     uint m_bulkUpdating     : 1;

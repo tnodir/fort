@@ -13,6 +13,7 @@
 FortSettings::FortSettings(const QStringList &args,
                            QObject *parent) :
     QObject(parent),
+    m_iniExists(false),
     m_isPortable(false),
     m_hasProvBoot(false),
     m_bulkUpdating(false),
@@ -111,6 +112,7 @@ void FortSettings::setupIni()
     FileUtil::makePath(profilePath());
     FileUtil::makePath(statPath());
 
+    m_iniExists = FileUtil::fileExists(iniPath);
     m_ini = new QSettings(iniPath, QSettings::IniFormat, this);
 }
 
@@ -313,7 +315,7 @@ bool FortSettings::writeConfIni(const FirewallConf &conf)
 QVariant FortSettings::migrateConf(const QVariant &confVar)
 {
     const int version = iniVersion();
-    if (version == APP_VERSION)
+    if (version == appVersion())
         return confVar;
 
     QVariantMap map = confVar.toMap();
@@ -350,10 +352,10 @@ QVariant FortSettings::migrateConf(const QVariant &confVar)
 void FortSettings::removeMigratedKeys()
 {
     const int version = iniVersion();
-    if (version == APP_VERSION)
+    if (version == appVersion())
         return;
 
-    setIniVersion(APP_VERSION);
+    setIniVersion(appVersion());
 
     // COMPAT: v1.7.0: AddressGroups
     if (version < 0x010700) {
@@ -365,6 +367,40 @@ void FortSettings::removeMigratedKeys()
     if (version < 0x011000) {
         removeIniKey("confFlags/logErrors");
     }
+}
+
+bool FortSettings::confMigrated() const
+{
+    if (!m_iniExists)
+        return false;
+
+    const int version = iniVersion();
+    if (version == appVersion())
+        return false;
+
+    // COMPAT: v3.0.0
+    if (version < 0x030000 && appVersion() >= 0x030000)
+        return true;
+
+    return false;
+}
+
+bool FortSettings::confCanMigrate(QString &viaVersion) const
+{
+    if (!m_iniExists)
+        return true;
+
+    const int version = iniVersion();
+    if (version == appVersion())
+        return true;
+
+    // COMPAT: v3.0.0
+    if (version < 0x030000 && appVersion() > 0x030000) {
+        viaVersion = "3.0.0";
+        return false;
+    }
+
+    return true;
 }
 
 bool FortSettings::iniBool(const QString &key, bool defaultValue) const

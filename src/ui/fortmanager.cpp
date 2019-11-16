@@ -537,6 +537,13 @@ void FortManager::setFirewallConfToEdit(FirewallConf *conf)
 
 bool FortManager::loadSettings(FirewallConf *conf)
 {
+    QString viaVersion;
+    if (!m_fortSettings->confCanMigrate(viaVersion)) {
+        showInfoBox("Please first install Fort Firewall v" + viaVersion
+                    + " and save Options from it.");
+        abort();  //  Abort the program
+    }
+
     if (!m_confManager->load(*conf)) {
         showErrorBox("Load Settings: " + m_confManager->errorMessage());
         return false;

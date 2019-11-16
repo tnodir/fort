@@ -70,6 +70,11 @@ Page {
     onOpened: {
         resetEdited();
 
+        // Settings/configuration was migrated?
+        if (fortSettings.confMigrated()) {
+            setConfEdited(true);
+        }
+
         tabBar.currentItem.forceActiveFocus();
     }
 
