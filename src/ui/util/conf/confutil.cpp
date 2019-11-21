@@ -14,6 +14,7 @@
 #include "../../conf/firewallconf.h"
 #include "../../fortcommon.h"
 #include "../dateutil.h"
+#include "../envmanager.h"
 #include "../fileutil.h"
 #include "../net/ip4range.h"
 
@@ -34,7 +35,7 @@ void ConfUtil::setErrorMessage(const QString &errorMessage)
     }
 }
 
-int ConfUtil::write(const FirewallConf &conf, QByteArray &buf)
+int ConfUtil::write(const FirewallConf &conf, EnvManager &envManager, QByteArray &buf)
 {
     quint32 addressGroupsSize = 0;
     longs_arr_t addressGroupOffsets;
@@ -51,7 +52,7 @@ int ConfUtil::write(const FirewallConf &conf, QByteArray &buf)
     chars_arr_t appPeriods;
     appgroups_map_t appGroupIndexes;
 
-    if (!parseAppGroups(conf.appGroupsList(),
+    if (!parseAppGroups(envManager, conf.appGroupsList(),
                         appPaths, appPathsLen, appPerms,
                         appPeriods, appPeriodsCount, appGroupIndexes))
         return false;
@@ -169,7 +170,8 @@ bool ConfUtil::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
     return true;
 }
 
-bool ConfUtil::parseAppGroups(const QList<AppGroup *> &appGroups,
+bool ConfUtil::parseAppGroups(EnvManager &envManager,
+                              const QList<AppGroup *> &appGroups,
                               QStringList &appPaths,
                               quint32 &appPathsLen,
                               longs_arr_t &appPerms,
@@ -184,6 +186,8 @@ bool ConfUtil::parseAppGroups(const QList<AppGroup *> &appGroups,
         return false;
     }
 
+    envManager.clearCache();  // evaluate env vars on each save to GC
+
     appperms_map_t appPermsMap;
 
     for (int i = 0; i < groupsCount; ++i) {
@@ -196,10 +200,11 @@ bool ConfUtil::parseAppGroups(const QList<AppGroup *> &appGroups,
             return false;
         }
 
-        if (!parseApps(appGroup->blockText(), true,
-                       appPermsMap, appGroupIndexes, i)
-                || !parseApps(appGroup->allowText(), false,
-                              appPermsMap, appGroupIndexes, i))
+        const auto blockText = envManager.expandString(appGroup->blockText());
+        const auto allowText = envManager.expandString(appGroup->allowText());
+
+        if (!parseApps(blockText, true, appPermsMap, appGroupIndexes, i)
+                || !parseApps(allowText, false, appPermsMap, appGroupIndexes, i))
             return false;
 
         // Enabled Period

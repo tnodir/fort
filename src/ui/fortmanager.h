@@ -12,6 +12,7 @@ QT_FORWARD_DECLARE_CLASS(QSystemTrayIcon)
 QT_FORWARD_DECLARE_CLASS(AppInfoCache)
 QT_FORWARD_DECLARE_CLASS(ConfManager)
 QT_FORWARD_DECLARE_CLASS(DriverManager)
+QT_FORWARD_DECLARE_CLASS(EnvManager)
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
 QT_FORWARD_DECLARE_CLASS(FortSettings)
 QT_FORWARD_DECLARE_CLASS(GraphWindow)
@@ -107,6 +108,7 @@ private:
     void setupLogManager();
     void closeLogManager();
 
+    void setupEnvManager();
     void setupStatManager();
     void setupConfManager();
 
@@ -124,11 +126,11 @@ private:
 
     void closeUi();
 
-    bool loadSettings(FirewallConf *conf);
+    bool loadSettings();
     bool saveSettings(FirewallConf *newConf, bool onlyFlags = false,
                       bool immediateFlags = false);
 
-    bool updateDriverConf(FirewallConf *conf, bool onlyFlags = false);
+    bool updateDriverConf(bool onlyFlags = false);
 
     void updateLogManager(bool active);
     void updateStatManager(FirewallConf *conf);
@@ -179,6 +181,7 @@ private:
     StatManager *m_statManager;
     ConfManager *m_confManager;
     DriverManager *m_driverManager;
+    EnvManager *m_envManager;
     LogManager *m_logManager;
     NativeEventFilter *m_nativeEventFilter;
     HotKeyManager *m_hotKeyManager;

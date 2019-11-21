@@ -23,8 +23,7 @@ public:
                         Qt::Key keyCode,
                         Qt::KeyboardModifiers modifiers,
                         bool autoRepeat = false);
-    bool registerHotKey(int hotKeyId,
-                        const QKeySequence &shortcut,
+    bool registerHotKey(int hotKeyId, int key,
                         bool autoRepeat = false);
 
     void unregisterHotKey(int hotKeyId);
@@ -32,6 +31,7 @@ public:
 
 signals:
     void hotKeyPressed(int hotKeyId);
+    void environmentChanged();
 
 public slots:
 

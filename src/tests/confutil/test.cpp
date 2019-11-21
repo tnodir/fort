@@ -6,11 +6,13 @@
 #include "conf/firewallconf.h"
 #include "fortcommon.h"
 #include "util/conf/confutil.h"
+#include "util/envmanager.h"
 #include "util/fileutil.h"
 #include "util/net/netutil.h"
 
 void Test::confWriteRead()
 {
+    EnvManager envManager;
     FirewallConf conf;
 
     AddressGroup *inetGroup = conf.inetAddressGroup();
@@ -55,7 +57,7 @@ void Test::confWriteRead()
     ConfUtil confUtil;
 
     QByteArray buf;
-    const int confIoSize = confUtil.write(conf, buf);
+    const int confIoSize = confUtil.write(conf, envManager, buf);
     QVERIFY(confIoSize != 0);
 
     // Check the buffer
@@ -106,4 +108,29 @@ void Test::checkPeriod()
 
     QVERIFY(FortCommon::isTimeInPeriod(h, m, 15,35, 15,37));
     QVERIFY(!FortCommon::isTimeInPeriod(h, m, 15,35, 15,36));
+}
+
+void Test::checkEnvManager()
+{
+    EnvManager envManager;
+
+    envManager.setCachedEnvVar("a", "a");
+    envManager.setCachedEnvVar("b", "b");
+    envManager.setCachedEnvVar("c", "c");
+
+    QCOMPARE("%abc-cba%", envManager.expandString("%%%a%%b%%c%-%c%%b%%a%%%"));
+
+    envManager.setCachedEnvVar("d", "%e%");
+    envManager.setCachedEnvVar("e", "%f%");
+    envManager.setCachedEnvVar("f", "%d%");
+
+    QCOMPARE("", envManager.expandString("%d%"));
+
+    envManager.setCachedEnvVar("d", "%e%");
+    envManager.setCachedEnvVar("e", "%f%");
+    envManager.setCachedEnvVar("f", "%a%");
+
+    QCOMPARE("a", envManager.expandString("%d%"));
+
+    QVERIFY(!envManager.expandString("%HOME%").isEmpty());
 }

@@ -11,6 +11,7 @@
 
 QT_FORWARD_DECLARE_CLASS(AddressGroup)
 QT_FORWARD_DECLARE_CLASS(AppGroup)
+QT_FORWARD_DECLARE_CLASS(EnvManager)
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
 
 QT_FORWARD_DECLARE_STRUCT(fort_traf)
@@ -38,7 +39,7 @@ signals:
     void errorMessageChanged();
 
 public slots:
-    int write(const FirewallConf &conf, QByteArray &buf);
+    int write(const FirewallConf &conf, EnvManager &envManager, QByteArray &buf);
     int writeFlags(const FirewallConf &conf, QByteArray &buf);
     int writeVersion(QByteArray &buf);
 
@@ -51,7 +52,8 @@ private:
                             quint32 &addressGroupsSize);
 
     // Convert app. groups to plain lists
-    bool parseAppGroups(const QList<AppGroup *> &appGroups,
+    bool parseAppGroups(EnvManager &envManager,
+                        const QList<AppGroup *> &appGroups,
                         QStringList &appPaths,
                         quint32 &appPathsLen,
                         longs_arr_t &appPerms,

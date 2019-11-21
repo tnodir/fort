@@ -15,6 +15,7 @@ SOURCES += \
     $$UIPATH/util/conf/confutil.cpp \
     $$UIPATH/util/dateutil.cpp \
     $$UIPATH/util/device.cpp \
+    $$UIPATH/util/envmanager.cpp \
     $$UIPATH/util/fileutil.cpp \
     $$UIPATH/util/net/ip4range.cpp \
     $$UIPATH/util/net/netutil.cpp \
@@ -36,6 +37,7 @@ HEADERS += \
     $$UIPATH/util/conf/confutil.h \
     $$UIPATH/util/dateutil.h \
     $$UIPATH/util/device.h \
+    $$UIPATH/util/envmanager.h \
     $$UIPATH/util/fileutil.h \
     $$UIPATH/util/net/ip4range.h \
     $$UIPATH/util/net/netutil.h \

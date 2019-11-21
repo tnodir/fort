@@ -11,6 +11,7 @@
 #include "log/logentryblocked.h"
 #include "util/conf/confutil.h"
 #include "util/device.h"
+#include "util/envmanager.h"
 #include "util/fileutil.h"
 #include "util/net/netutil.h"
 #include "util/osutil.h"
@@ -37,6 +38,7 @@ void Test::logRead()
 
 void Test::setConf(Device &device)
 {
+    EnvManager envManager;
     FirewallConf conf;
 
     conf.setProvBoot(true);
@@ -58,7 +60,7 @@ void Test::setConf(Device &device)
     ConfUtil confUtil;
 
     QByteArray buf;
-    const int confIoSize = confUtil.write(conf, buf);
+    const int confIoSize = confUtil.write(conf, envManager, buf);
     QVERIFY(confIoSize != 0);
 
     QVERIFY(device.ioctl(FortCommon::ioctlSetConf(),

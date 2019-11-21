@@ -1,7 +1,6 @@
 #include "nativeeventfilter.h"
 
 #include <QCoreApplication>
-#include <QKeySequence>
 
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
@@ -35,12 +34,9 @@ bool NativeEventFilter::registerHotKey(int hotKeyId,
     return true;
 }
 
-bool NativeEventFilter::registerHotKey(int hotKeyId,
-                                       const QKeySequence &shortcut,
+bool NativeEventFilter::registerHotKey(int hotKeyId, int key,
                                        bool autoRepeat)
 {
-    const int key = shortcut[0];
-
     return registerHotKey(hotKeyId,
                           Qt::Key(key & ~Qt::KeyboardModifierMask),
                           Qt::KeyboardModifiers(key & Qt::KeyboardModifierMask),
@@ -93,12 +89,22 @@ bool NativeEventFilter::nativeEventFilter(const QByteArray &eventType,
 
     const MSG *msg = static_cast<MSG *>(message);
 
-    if (msg->message == WM_HOTKEY) {
+    switch (msg->message) {
+    case WM_HOTKEY: {
         const int hotKeyId = getKeyId(LOWORD(msg->lParam), HIWORD(msg->lParam));
 
         if (hotKeyId >= 0) {
             emit hotKeyPressed(hotKeyId);
         }
+        break;
+    }
+    case WM_SETTINGCHANGE: {
+        const auto src = reinterpret_cast<const wchar_t *>(msg->lParam);
+        if (src != nullptr && wcscmp(src, L"Environment") == 0) {
+            emit environmentChanged();
+        }
+        break;
+    }
     }
 
     return false;

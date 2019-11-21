@@ -1,6 +1,7 @@
 #include "hotkeymanager.h"
 
 #include <QAction>
+#include <QKeySequence>
 
 #include "nativeeventfilter.h"
 
@@ -17,7 +18,7 @@ bool HotKeyManager::addAction(QAction *action, const QKeySequence &shortcut)
 {
     const int hotKeyId = m_actions.size();
 
-    if (!m_nativeEventFilter->registerHotKey(hotKeyId, shortcut))
+    if (!m_nativeEventFilter->registerHotKey(hotKeyId, shortcut[0]))
         return false;
 
     action->setText(action->text() + '\t' + shortcut.toString());

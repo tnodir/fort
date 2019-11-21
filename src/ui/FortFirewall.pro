@@ -61,6 +61,7 @@ SOURCES += \
     util/conf/confutil.cpp \
     util/dateutil.cpp \
     util/device.cpp \
+    util/envmanager.cpp \
     util/fileutil.cpp \
     util/guiutil.cpp \
     util/hotkeymanager.cpp \
@@ -135,6 +136,7 @@ HEADERS += \
     util/conf/confutil.h \
     util/dateutil.h \
     util/device.h \
+    util/envmanager.h \
     util/fileutil.h \
     util/guiutil.h \
     util/hotkeymanager.h \

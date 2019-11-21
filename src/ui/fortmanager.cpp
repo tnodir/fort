@@ -35,6 +35,7 @@
 #include "util/app/appinfocache.h"
 #include "util/app/appinfomanager.h"
 #include "util/dateutil.h"
+#include "util/envmanager.h"
 #include "util/fileutil.h"
 #include "util/guiutil.h"
 #include "util/hotkeymanager.h"
@@ -69,6 +70,7 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_confManager(new ConfManager(fortSettings->confFilePath(),
                                   fortSettings, this)),
     m_driverManager(new DriverManager(this)),
+    m_envManager(new EnvManager(this)),
     m_logManager(new LogManager(m_statManager,
                                 m_driverManager->driverWorker(), this)),
     m_nativeEventFilter(new NativeEventFilter(this)),
@@ -80,13 +82,14 @@ FortManager::FortManager(FortSettings *fortSettings,
 
     setupLogger();
     setupAppInfoCache();
+    setupEnvManager();
     setupStatManager();
     setupConfManager();
 
     setupLogManager();
     setupDriver();
 
-    loadSettings(m_firewallConf);
+    loadSettings();
 
     registerQmlTypes();
 
@@ -160,7 +163,7 @@ void FortManager::installDriver()
     DriverManager::reinstallDriver();
 
     if (setupDriver()) {
-        updateDriverConf(m_firewallConf);
+        updateDriverConf();
     }
 }
 
@@ -200,6 +203,16 @@ void FortManager::setupLogManager()
 void FortManager::closeLogManager()
 {
     m_logManager->close();
+}
+
+void FortManager::setupEnvManager()
+{
+    connect(m_nativeEventFilter, &NativeEventFilter::environmentChanged,
+            m_envManager, &EnvManager::onEnvironmentChanged);
+
+    connect(m_envManager, &EnvManager::environmentUpdated, this, [&] {
+        updateDriverConf();
+    });
 }
 
 void FortManager::setupStatManager()
@@ -535,7 +548,7 @@ void FortManager::setFirewallConfToEdit(FirewallConf *conf)
     updateTrayMenu();
 }
 
-bool FortManager::loadSettings(FirewallConf *conf)
+bool FortManager::loadSettings()
 {
     QString viaVersion;
     if (!m_fortSettings->confCanMigrate(viaVersion)) {
@@ -544,12 +557,12 @@ bool FortManager::loadSettings(FirewallConf *conf)
         abort();  //  Abort the program
     }
 
-    if (!m_confManager->load(*conf)) {
+    if (!m_confManager->load(*m_firewallConf)) {
         showErrorBox("Load Settings: " + m_confManager->errorMessage());
         return false;
     }
 
-    return updateDriverConf(conf);
+    return updateDriverConf();
 }
 
 bool FortManager::saveSettings(FirewallConf *newConf, bool onlyFlags,
@@ -570,10 +583,10 @@ bool FortManager::saveSettings(FirewallConf *newConf, bool onlyFlags,
         updateTrayMenu();
     }
 
-    return updateDriverConf(m_firewallConf, onlyFlags);
+    return updateDriverConf(onlyFlags);
 }
 
-bool FortManager::updateDriverConf(FirewallConf *conf, bool onlyFlags)
+bool FortManager::updateDriverConf(bool onlyFlags)
 {
     if (!m_driverManager->isDeviceOpened())
         return true;
@@ -582,11 +595,11 @@ bool FortManager::updateDriverConf(FirewallConf *conf, bool onlyFlags)
 
     // Update driver
     const bool res = onlyFlags
-            ? m_driverManager->writeConfFlags(*conf)
-            : m_driverManager->writeConf(*conf);
+            ? m_driverManager->writeConfFlags(*m_firewallConf)
+            : m_driverManager->writeConf(*m_firewallConf, *m_envManager);
 
     if (res) {
-        updateStatManager(conf);
+        updateStatManager(m_firewallConf);
         updateLogManager(true);
     } else {
         closeDriver();
@@ -630,7 +643,7 @@ void FortManager::saveTrayFlags()
 
     m_fortSettings->writeConfIni(*m_firewallConf);
 
-    updateDriverConf(m_firewallConf, true);
+    updateDriverConf(true);
 }
 
 void FortManager::saveWindowState()

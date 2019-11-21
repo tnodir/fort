@@ -7,6 +7,7 @@
 
 QT_FORWARD_DECLARE_CLASS(Device)
 QT_FORWARD_DECLARE_CLASS(DriverWorker)
+QT_FORWARD_DECLARE_CLASS(EnvManager)
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
 
 class DriverManager : public QObject
@@ -39,7 +40,7 @@ public slots:
 
     bool validate();
 
-    bool writeConf(const FirewallConf &conf);
+    bool writeConf(const FirewallConf &conf, EnvManager &envManager);
     bool writeConfFlags(const FirewallConf &conf);
 
 private:

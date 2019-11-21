@@ -10,6 +10,7 @@ class Test : public QObject
 private slots:
     void confWriteRead();
     void checkPeriod();
+    void checkEnvManager();
 };
 
 #endif // TEST_H

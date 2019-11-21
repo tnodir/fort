@@ -83,12 +83,12 @@ bool DriverManager::validate()
                      buf, verSize);
 }
 
-bool DriverManager::writeConf(const FirewallConf &conf)
+bool DriverManager::writeConf(const FirewallConf &conf, EnvManager &envManager)
 {
     ConfUtil confUtil;
     QByteArray buf;
 
-    const int confSize = confUtil.write(conf, buf);
+    const int confSize = confUtil.write(conf, envManager, buf);
     if (!confSize) {
         setErrorMessage(confUtil.errorMessage());
         return false;
