@@ -346,9 +346,9 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   path = inMetaValues->processPath->data;
 
   if (fort_conf_ip_inet_included(&conf_ref->conf, remote_ip)) {
-    const int app_index = fort_conf_app_index(&conf_ref->conf, path_len, path);
+    const FORT_APP_FLAGS app_flags = fort_conf_app_find(&conf_ref->conf, path_len, path);
 
-    if (!fort_conf_app_blocked(&conf_ref->conf, app_index)) {
+    if (!fort_conf_app_blocked(&conf_ref->conf, app_flags)) {
       if (conf_flags.log_stat) {
         const UINT64 flow_id = inMetaValues->flowHandle;
 
@@ -356,8 +356,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
           ipProtoField].value.uint8;
         const BOOL is_tcp = (ip_proto == IPPROTO_TCP);
 
-        const UCHAR group_index = fort_conf_app_group_index(
-          &conf_ref->conf, app_index);
+        const UCHAR group_index = app_flags.group_index;
         const BOOL is_reauth = (flags & FWP_CONDITION_FLAG_IS_REAUTHORIZE);
 
         BOOL is_new_proc = FALSE;

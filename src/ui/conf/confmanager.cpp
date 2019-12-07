@@ -171,7 +171,7 @@ void ConfManager::setupDefault(FirewallConf &conf) const
 
     auto appGroup = new AppGroup();
     appGroup->setName("Main");
-    appGroup->setAllowText(FileUtil::appBinLocation() + '/');
+    appGroup->setAllowText(FileUtil::appBinLocation() + "/**");
     conf.addAppGroup(appGroup);
 }
 
@@ -184,15 +184,23 @@ bool ConfManager::load(FirewallConf &conf)
         return false;
     }
 
+    // COMPAT: v3.0.0
     if (isNewConf) {
         if (!m_fortSettings->readConf(conf, isNewConf)) {
             setErrorMessage(m_fortSettings->errorMessage());
             return false;
         }
 
-        if (isNewConf) {
-            setupDefault(conf);
+        if (!isNewConf) {
+            for (AppGroup *appGroup : conf.appGroupsList()) {
+                appGroup->setBlockText(migrateAppsText(appGroup->blockText()));
+                appGroup->setAllowText(migrateAppsText(appGroup->allowText()));
+            }
         }
+    }
+
+    if (isNewConf) {
+        setupDefault(conf);
     }
 
     m_fortSettings->readConfIni(conf);
@@ -445,4 +453,43 @@ bool ConfManager::saveTask(TaskInfo *taskInfo)
         taskInfo->setId(m_sqliteDb->lastInsertRowid());
     }
     return true;
+}
+
+QString ConfManager::migrateAppsText(const QString &text)
+{
+    if (text.isEmpty())
+        return QString();
+
+    QStringList list;
+
+    const QLatin1String systemPath("System");
+
+    for (const auto &line : text.splitRef('\n')) {
+        QString fixedLine = line.toString();
+
+        const auto lineTrimmed = line.trimmed();
+        if (!(lineTrimmed.isEmpty()
+              || lineTrimmed.startsWith('#'))) {
+
+            QStringRef path = lineTrimmed;
+            bool addQuotes = false;
+            if (path.startsWith('"') && path.endsWith('"')) {
+                path = path.mid(1, path.size() - 2);
+                addQuotes = true;
+            }
+
+            if (!path.isEmpty()
+                    && QStringRef::compare(path, systemPath, Qt::CaseInsensitive) != 0
+                    && !path.endsWith(".exe")) {
+                fixedLine = path + "**";
+                if (addQuotes) {
+                    fixedLine = '"' + fixedLine + '"';
+                }
+            }
+        }
+
+        list.append(fixedLine);
+    }
+
+    return list.join('\n');
 }

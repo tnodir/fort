@@ -339,8 +339,8 @@ QVariant FortSettings::migrateConf(const QVariant &confVar)
         map["addressGroups"] = addrList;
     }
 
-    // COMPAT: v2.11.0: PasswordHash
-    if (version < 0x021100) {
+    // COMPAT: v3.0.0: PasswordHash
+    if (version < 0x030000) {
         const QString oldPasswordHash = map["passwordHash"].toString();
 
         setPasswordHash(oldPasswordHash);

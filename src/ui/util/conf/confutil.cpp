@@ -22,6 +22,12 @@
 #define APP_GROUP_NAME_MAX  128
 #define APP_PATH_MAX        (FORT_CONF_APP_PATH_MAX / sizeof(wchar_t))
 
+namespace {
+
+const QLatin1String systemPath("System");
+
+}
+
 ConfUtil::ConfUtil(QObject *parent) :
     QObject(parent)
 {
@@ -45,19 +51,25 @@ int ConfUtil::write(const FirewallConf &conf, EnvManager &envManager, QByteArray
                             addressGroupOffsets, addressGroupsSize))
         return false;
 
-    quint32 appPathsLen = 0;
-    QStringList appPaths;
-    longs_arr_t appPerms;
     quint8 appPeriodsCount = 0;
     chars_arr_t appPeriods;
-    appgroups_map_t appGroupIndexes;
+
+    appentry_map_t wildAppsMap;
+    appentry_map_t prefixAppsMap;
+    appentry_map_t exeAppsMap;
+
+    quint32 wildAppsSize = 0;
+    quint32 prefixAppsSize = 0;
+    quint32 exeAppsSize = 0;
 
     if (!parseAppGroups(envManager, conf.appGroupsList(),
-                        appPaths, appPathsLen, appPerms,
-                        appPeriods, appPeriodsCount, appGroupIndexes))
+                        appPeriods, appPeriodsCount,
+                        wildAppsMap, prefixAppsMap, exeAppsMap,
+                        wildAppsSize, prefixAppsSize, exeAppsSize))
         return false;
 
-    if (appPathsLen > FORT_CONF_APPS_LEN_MAX) {
+    const quint32 appsSize = wildAppsSize + prefixAppsSize + exeAppsSize;
+    if (appsSize > FORT_CONF_APPS_LEN_MAX) {
         setErrorMessage(tr("Too many application paths"));
         return false;
     }
@@ -65,19 +77,19 @@ int ConfUtil::write(const FirewallConf &conf, EnvManager &envManager, QByteArray
     // Fill the buffer
     const int confIoSize = FORT_CONF_IO_CONF_OFF + FORT_CONF_DATA_OFF
             + addressGroupsSize
-            + FORT_CONF_STR_DATA_SIZE(appGroupIndexes.size())  // appPerms
             + FORT_CONF_STR_DATA_SIZE(conf.appGroupsList().size()
                                       * sizeof(FORT_PERIOD))  // appPeriods
-            + appPaths.size() * sizeof(quint32)
-            + FORT_CONF_STR_HEADER_SIZE(appPaths.size())
-            + FORT_CONF_STR_DATA_SIZE(appPathsLen);
+            + FORT_CONF_STR_DATA_SIZE(wildAppsSize)
+            + FORT_CONF_STR_HEADER_SIZE(prefixAppsMap.size())
+            + FORT_CONF_STR_DATA_SIZE(prefixAppsSize)
+            + FORT_CONF_STR_DATA_SIZE(exeAppsSize);
 
     buf.reserve(confIoSize);
 
     writeData(buf.data(), conf,
               addressRanges, addressGroupOffsets,
-              appPaths, appPerms,
-              appPeriods, appPeriodsCount, appGroupIndexes);
+              appPeriods, appPeriodsCount,
+              wildAppsMap, prefixAppsMap, exeAppsMap);
 
     return confIoSize;
 }
@@ -172,23 +184,23 @@ bool ConfUtil::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
 
 bool ConfUtil::parseAppGroups(EnvManager &envManager,
                               const QList<AppGroup *> &appGroups,
-                              QStringList &appPaths,
-                              quint32 &appPathsLen,
-                              longs_arr_t &appPerms,
                               chars_arr_t &appPeriods,
                               quint8 &appPeriodsCount,
-                              appgroups_map_t &appGroupIndexes)
+                              appentry_map_t &wildAppsMap,
+                              appentry_map_t &prefixAppsMap,
+                              appentry_map_t &exeAppsMap,
+                              quint32 &wildAppsSize,
+                              quint32 &prefixAppsSize,
+                              quint32 &exeAppsSize)
 {
     const int groupsCount = appGroups.size();
-    if (groupsCount > APP_GROUP_MAX) {
-        setErrorMessage(tr("Number of Application Groups must be < %1")
+    if (groupsCount < 1 || groupsCount > APP_GROUP_MAX) {
+        setErrorMessage(tr("Number of Application Groups must be between 1 and %1")
                         .arg(APP_GROUP_MAX));
         return false;
     }
 
     envManager.clearCache();  // evaluate env vars on each save to GC
-
-    appperms_map_t appPermsMap;
 
     for (int i = 0; i < groupsCount; ++i) {
         const AppGroup *appGroup = appGroups.at(i);
@@ -203,8 +215,12 @@ bool ConfUtil::parseAppGroups(EnvManager &envManager,
         const auto blockText = envManager.expandString(appGroup->blockText());
         const auto allowText = envManager.expandString(appGroup->allowText());
 
-        if (!parseApps(blockText, true, appPermsMap, appGroupIndexes, i)
-                || !parseApps(allowText, false, appPermsMap, appGroupIndexes, i))
+        if (!parseApps(i, true, blockText,
+                       wildAppsMap, prefixAppsMap, exeAppsMap,
+                       wildAppsSize, prefixAppsSize, exeAppsSize)
+                || !parseApps(i, false, allowText,
+                              wildAppsMap, prefixAppsMap, exeAppsMap,
+                              wildAppsSize, prefixAppsSize, exeAppsSize))
             return false;
 
         // Enabled Period
@@ -228,28 +244,16 @@ bool ConfUtil::parseAppGroups(EnvManager &envManager,
         }
     }
 
-    // Fill app. paths & perms arrays
-    {
-        appPerms.reserve(appPermsMap.size());
-
-        auto it = appPermsMap.constBegin();
-        auto end = appPermsMap.constEnd();
-        for (; it != end; ++it) {
-            const QString &appPath = it.key();
-            appPathsLen += quint32(appPath.size()) * sizeof(wchar_t);
-
-            appPaths.append(appPath);
-            appPerms.append(it.value());
-        }
-    }
-
     return true;
 }
 
-bool ConfUtil::parseApps(const QString &text, bool blocked,
-                         appperms_map_t &appPermsMap,
-                         appgroups_map_t &appGroupIndexes,
-                         int groupOffset)
+bool ConfUtil::parseApps(int groupOffset, bool blocked, const QString &text,
+                         appentry_map_t &wildAppsMap,
+                         appentry_map_t &prefixAppsMap,
+                         appentry_map_t &exeAppsMap,
+                         quint32 &wildAppsSize,
+                         quint32 &prefixAppsSize,
+                         quint32 &exeAppsSize)
 {
     for (const QStringRef &line :
              text.splitRef(QLatin1Char('\n'))) {
@@ -258,8 +262,18 @@ bool ConfUtil::parseApps(const QString &text, bool blocked,
                 || lineTrimmed.startsWith('#'))  // commented line
             continue;
 
-        const QString appPath = parseAppPath(lineTrimmed);
+        bool isWild = false;
+        bool isPrefix = false;
+        const QString appPath = parseAppPath(lineTrimmed, isWild, isPrefix);
         if (appPath.isEmpty())
+            continue;
+
+        isPrefix = !isWild;  // TODO: Remove after hash find impl
+
+        appentry_map_t &appsMap = isWild ? wildAppsMap
+                                         : isPrefix ? prefixAppsMap
+                                                    : exeAppsMap;
+        if (appsMap.contains(appPath))
             continue;
 
         if (appPath.size() > int(APP_PATH_MAX)) {
@@ -268,35 +282,55 @@ bool ConfUtil::parseApps(const QString &text, bool blocked,
             return false;
         }
 
-        const quint32 permVal = blocked ? 2 : 1;
-        const quint32 appPerm = permVal << (groupOffset * 2);
-        quint32 appPerms = appPerm;
+        const quint16 appPathLen = quint16(appPath.size()) * sizeof(wchar_t);
+        const quint32 appSize = sizeof(FORT_APP_ENTRY) + appPathLen;
 
-        if (appPermsMap.contains(appPath)) {
-            appPerms |= appPermsMap.value(appPath);
-        } else {
-            appGroupIndexes.insert(appPath, qint8(groupOffset));
-        }
+        quint32 &appsSize = isWild ? wildAppsSize
+                                   : isPrefix ? prefixAppsSize
+                                              : exeAppsSize;
+        appsSize += appSize;
 
-        appPermsMap.insert(appPath, appPerms);
+        FORT_APP_ENTRY appEntry;
+        appEntry.v = 0;
+        appEntry.path_len = appPathLen;
+        appEntry.flags.group_index = quint8(groupOffset);
+        appEntry.flags.use_group_perm = 1;
+        appEntry.flags.blocked = blocked;
+        appEntry.flags.found = 1;
+
+        appsMap.insert(appPath, appEntry.v);
     }
 
     return true;
 }
 
-QString ConfUtil::parseAppPath(const QStringRef &line)
+QString ConfUtil::parseAppPath(const QStringRef &line,
+                               bool &isWild, bool &isPrefix)
 {
-    const QRegularExpression re(R"(\s*"?\s*([^"]+)\s*"?\s*)");
-    const QRegularExpressionMatch match = re.match(line);
+    static const QRegularExpression wildMatcher("([*?[])");
 
-    if (!match.hasMatch())
+    QStringRef path = line;
+    if (path.startsWith('"') && path.endsWith('"')) {
+        path = path.mid(1, path.size() - 2);
+    }
+
+    if (path.isEmpty())
         return QString();
 
-    const QStringRef path = match.capturedRef(1).trimmed();
-
-    const QString systemPath("System");
-    if (!QStringRef::compare(path, systemPath, Qt::CaseInsensitive))
+    if (QStringRef::compare(path, systemPath, Qt::CaseInsensitive) == 0)
         return systemPath;
+
+    const auto wildMatch = wildMatcher.match(path);
+    if (wildMatch.hasMatch()) {
+        if (wildMatch.capturedStart() == path.size() - 2
+                && wildMatch.capturedRef().at(0) == '*'
+                && path.endsWith('*')) {
+            path.chop(2);
+            isPrefix = true;
+        } else {
+            isWild = true;
+        }
+    }
 
     const QString kernelPath = FileUtil::pathToKernelPath(path.toString());
     return kernelPath.toLower();
@@ -305,35 +339,35 @@ QString ConfUtil::parseAppPath(const QStringRef &line)
 void ConfUtil::writeData(char *output, const FirewallConf &conf,
                          const addrranges_arr_t &addressRanges,
                          const longs_arr_t &addressGroupOffsets,
-                         const QStringList &appPaths,
-                         const longs_arr_t &appPerms,
                          const chars_arr_t &appPeriods,
                          quint8 appPeriodsCount,
-                         const appgroups_map_t &appGroupIndexes)
+                         const appentry_map_t &wildAppsMap,
+                         const appentry_map_t &prefixAppsMap,
+                         const appentry_map_t &exeAppsMap)
 {
     PFORT_CONF_IO drvConfIo = (PFORT_CONF_IO) output;
     PFORT_CONF drvConf = &drvConfIo->conf;
     char *data = drvConf->data;
-    const quint32 appPathsSize = quint32(appPaths.size());
-    quint32 addrGroupsOff, appGroupsOff;
-    quint32 appPathsOff, appPermsOff, appPeriodsOff;
+    quint32 addrGroupsOff;
+    quint32 appPeriodsOff;
+    quint32 wildAppsOff, prefixAppsOff, exeAppsOff;
 
 #define CONF_DATA_OFFSET quint32(data - drvConf->data)
     addrGroupsOff = CONF_DATA_OFFSET;
     writeLongs(&data, addressGroupOffsets);
     writeAddressRanges(&data, addressRanges);
 
-    appGroupsOff = CONF_DATA_OFFSET;
-    writeChars(&data, appGroupIndexes.values().toVector());
-
-    appPermsOff = CONF_DATA_OFFSET;
-    writeLongs(&data, appPerms);
-
     appPeriodsOff = CONF_DATA_OFFSET;
     writeChars(&data, appPeriods);
 
-    appPathsOff = CONF_DATA_OFFSET;
-    writeStrings(&data, appPaths);
+    wildAppsOff = CONF_DATA_OFFSET;
+    writeApps(&data, wildAppsMap);
+
+    prefixAppsOff = CONF_DATA_OFFSET;
+    writeApps(&data, prefixAppsMap, true);
+
+    exeAppsOff = CONF_DATA_OFFSET;
+    writeApps(&data, exeAppsMap);
 #undef CONF_DATA_OFFSET
 
     drvConfIo->driver_version = DRIVER_VERSION;
@@ -362,15 +396,18 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
 
     FortCommon::confAppPermsMaskInit(drvConf);
 
-    drvConf->apps_n = quint16(appPathsSize);
     drvConf->app_periods_n = appPeriodsCount;
+
+    drvConf->wild_apps_n = quint16(wildAppsMap.size());
+    drvConf->prefix_apps_n = quint16(prefixAppsMap.size());
 
     drvConf->addr_groups_off = addrGroupsOff;
 
-    drvConf->app_groups_off = appGroupsOff;
-    drvConf->app_perms_off = appPermsOff;
     drvConf->app_periods_off = appPeriodsOff;
-    drvConf->apps_off = appPathsOff;
+
+    drvConf->wild_apps_off = wildAppsOff;
+    drvConf->prefix_apps_off = prefixAppsOff;
+    drvConf->exe_apps_off = exeAppsOff;
 }
 
 void ConfUtil::writeFragmentBits(quint16 *fragmentBits,
@@ -452,6 +489,43 @@ void ConfUtil::writeAddressRange(char **data,
     writeLongs(data, addressRange.excludeRange().toArray());
 }
 
+void ConfUtil::writeApps(char **data, const appentry_map_t &apps,
+                         bool useHeader)
+{
+    quint32 *offp = (quint32 *) *data;
+    const quint32 offTableSize = useHeader
+            ? FORT_CONF_STR_HEADER_SIZE(apps.size()) : 0;
+    char *p = *data + offTableSize;
+    quint32 off = 0;
+
+    if (useHeader) {
+        *offp++ = 0;
+    }
+
+    auto it = apps.constBegin();
+    const auto end = apps.constEnd();
+    for (; it != end; ++it) {
+        const QString &appPath = it.key();
+
+        FORT_APP_ENTRY appEntry;
+        appEntry.v = it.value();
+
+        PFORT_APP_ENTRY entry = (PFORT_APP_ENTRY) p;
+        *entry++ = appEntry;
+        appPath.toWCharArray((wchar_t *) entry);
+
+        const quint32 appSize = sizeof(FORT_APP_ENTRY) + appEntry.path_len;
+
+        if (useHeader) {
+            off += appSize;
+            *offp++ = off;
+        }
+        p += appSize;
+    }
+
+    *data += offTableSize + FORT_CONF_STR_DATA_SIZE(off);
+}
+
 void ConfUtil::writeShorts(char **data, const shorts_arr_t &array)
 {
     writeNumbers(data, array.constData(), array.size(), sizeof(quint16));
@@ -479,25 +553,4 @@ void ConfUtil::writeChars(char **data, const chars_arr_t &array)
     memcpy(*data, array.constData(), arraySize);
 
     *data += FORT_CONF_STR_DATA_SIZE(arraySize);
-}
-
-void ConfUtil::writeStrings(char **data, const QStringList &list)
-{
-    quint32 *offp = (quint32 *) *data;
-    const quint32 offTableSize = FORT_CONF_STR_HEADER_SIZE(list.size());
-    char *p = *data + offTableSize;
-    quint32 off = 0;
-
-    *offp++ = 0;
-
-    for (const QString &s : list) {
-        const quint32 len = s.toWCharArray((wchar_t *) p)
-                * sizeof(wchar_t);
-
-        off += len;
-        *offp++ = off;
-        p += len;
-    }
-
-    *data += offTableSize + FORT_CONF_STR_DATA_SIZE(off);
 }

@@ -98,85 +98,98 @@ fort_conf_ip_included (const PFORT_CONF conf, UINT32 remote_ip,
   fort_conf_ip_included((conf), (remote_ip), 1)
 
 static int
-fort_conf_app_cmp (UINT32 path_len, const char *path,
-                   const char *apps, const UINT32 *app_offp)
+fort_conf_app_prefix_cmp (UINT32 path_len, const char *path,
+                          PFORT_APP_ENTRY app_entry)
 {
-  const UINT32 app_off = *app_offp;
-  const UINT32 app_len = *(app_offp + 1) - app_off;
-  const char *app = apps + app_off;
+  const char *app_path = (const char *) (app_entry + 1);
+  const UINT32 app_path_len = app_entry->path_len;
 
-  if (path_len > app_len)
-    path_len = app_len;
+  if (path_len > app_path_len)
+    path_len = app_path_len;
 
-  return fort_memcmp(path, app, path_len);
+  return fort_memcmp(path, app_path, path_len);
 }
 
-static int
-fort_conf_app_index (const PFORT_CONF conf,
-                     UINT32 path_len, const char *path)
+static FORT_APP_FLAGS
+fort_conf_app_prefix_find (const PFORT_CONF conf,
+                           UINT32 path_len, const char *path)
 {
+  FORT_APP_FLAGS app_flags;
   const char *data;
   const UINT32 *app_offsets;
-  const char *apps;
-  const UINT32 count = conf->apps_n;
+  const char *app_entries;
+  const UINT32 count = conf->prefix_apps_n;
   int low, high;
 
   if (count == 0)
-    return -1;
+    goto not_found;
 
   data = conf->data;
-  app_offsets = (const UINT32 *) (data + conf->apps_off);
+  app_offsets = (const UINT32 *) (data + conf->prefix_apps_off);
 
-  apps = (const char *) (app_offsets + count + 1);
+  app_entries = (const char *) (app_offsets + count + 1);
   low = 0, high = count - 1;
 
   do {
     const int mid = (low + high) / 2;
-    const int res = fort_conf_app_cmp(path_len, path,
-                                      apps, app_offsets + mid);
+    const UINT32 app_off = app_offsets[mid];
+    const PFORT_APP_ENTRY app_entry = (PFORT_APP_ENTRY) (app_entries + app_off);
+    const int res = fort_conf_app_prefix_cmp(path_len, path, app_entry);
 
     if (res < 0)
       high = mid - 1;
     else if (res > 0)
       low = mid + 1;
-    else
-      return mid;
+    else {
+      app_flags = app_entry->flags;
+      goto end;
+    }
   } while (low <= high);
 
-  return -1;
+ not_found:
+  app_flags.v = 0;
+
+ end:
+  return app_flags;
 }
 
-static UCHAR
-fort_conf_app_group_index (const PFORT_CONF conf, int app_index)
+static FORT_APP_FLAGS
+fort_conf_app_find (const PFORT_CONF conf,
+                    UINT32 path_len, const char *path)
 {
-  const char *data = conf->data;
-  const UCHAR *app_groups = (const UCHAR *) (data + conf->app_groups_off);
+  FORT_APP_FLAGS app_flags;
 
-  const BOOL app_found = (app_index != -1);
+  app_flags = fort_conf_app_prefix_find(conf, path_len, path);
+  if (app_flags.v != 0)
+    goto end;
 
-  return app_found ? app_groups[app_index] : 0;
+ end:
+  return app_flags;
 }
 
 static BOOL
-fort_conf_app_blocked (const PFORT_CONF conf, int app_index)
+fort_conf_app_blocked (const PFORT_CONF conf, FORT_APP_FLAGS app_flags)
 {
-  const char *data = conf->data;
+  const BOOL app_found = app_flags.found;
 
-  const UINT32 *app_perms = (const UINT32 *) (data + conf->app_perms_off);
+  if (app_found && !app_flags.use_group_perm) {
+      return app_flags.blocked;
+  } else {
+    const UINT32 app_perm_val = app_flags.blocked ? 2 : 1;
+    const UINT32 app_perm = app_perm_val << (app_flags.group_index * 2);
 
-  const BOOL block_all = conf->flags.app_block_all;
-  const BOOL allow_all = conf->flags.app_allow_all;
+    const BOOL block_all = conf->flags.app_block_all;
+    const BOOL allow_all = conf->flags.app_allow_all;
 
-  const BOOL app_found = (app_index != -1);
+    const BOOL app_blocked = block_all ? TRUE : (app_found
+      && (app_perm & conf->app_perms_block_mask));
+    const BOOL app_allowed = allow_all ? TRUE : (app_found
+      && (app_perm & conf->app_perms_allow_mask));
 
-  const BOOL app_blocked = block_all ? TRUE : (app_found
-    && (app_perms[app_index] & conf->app_perms_block_mask));
-  const BOOL app_allowed = allow_all ? TRUE : (app_found
-    && (app_perms[app_index] & conf->app_perms_allow_mask));
-
-  return block_all ? !app_allowed
-    : (allow_all ? app_blocked
-    : (app_blocked && !app_allowed));
+    return block_all ? !app_allowed
+      : (allow_all ? app_blocked
+      : (app_blocked && !app_allowed));
+  }
 }
 
 static UINT16

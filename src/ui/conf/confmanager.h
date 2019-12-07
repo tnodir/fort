@@ -50,6 +50,8 @@ private:
     bool loadTask(TaskInfo *taskInfo);
     bool saveTask(TaskInfo *taskInfo);
 
+    static QString migrateAppsText(const QString &text);
+
 private:
     QString m_errorMessage;
 

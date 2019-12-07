@@ -21,9 +21,7 @@ using shorts_arr_t = QVector<quint16>;
 using chars_arr_t = QVector<qint8>;
 
 using addrranges_arr_t = QVarLengthArray<AddressRange, 2>;
-
-using appperms_map_t = QMap<QString, quint32>;
-using appgroups_map_t = QMap<QString, qint8>;
+using appentry_map_t = QMap<QString, quint32>;
 
 class ConfUtil : public QObject
 {
@@ -54,28 +52,34 @@ private:
     // Convert app. groups to plain lists
     bool parseAppGroups(EnvManager &envManager,
                         const QList<AppGroup *> &appGroups,
-                        QStringList &appPaths,
-                        quint32 &appPathsLen,
-                        longs_arr_t &appPerms,
                         chars_arr_t &appPeriods,
                         quint8 &appPeriodsCount,
-                        appgroups_map_t &appGroupIndexes);
+                        appentry_map_t &wildAppsMap,
+                        appentry_map_t &prefixAppsMap,
+                        appentry_map_t &exeAppsMap,
+                        quint32 &wildAppsSize,
+                        quint32 &prefixAppsSize,
+                        quint32 &exeAppsSize);
 
-    bool parseApps(const QString &text, bool blocked,
-                   appperms_map_t &appPermsMap,
-                   appgroups_map_t &appGroupIndexes,
-                   int groupOffset);
+    bool parseApps(int groupOffset, bool blocked, const QString &text,
+                   appentry_map_t &wildAppsMap,
+                   appentry_map_t &prefixAppsMap,
+                   appentry_map_t &exeAppsMap,
+                   quint32 &wildAppsSize,
+                   quint32 &prefixAppsSize,
+                   quint32 &exeAppsSize);
 
-    static QString parseAppPath(const QStringRef &line);
+    static QString parseAppPath(const QStringRef &line,
+                                bool &isWild, bool &isPrefix);
 
     static void writeData(char *output, const FirewallConf &conf,
                           const addrranges_arr_t &addressRanges,
                           const longs_arr_t &addressGroupOffsets,
-                          const QStringList &appPaths,
-                          const longs_arr_t &appPerms,
                           const chars_arr_t &appPeriods,
                           quint8 appPeriodsCount,
-                          const appgroups_map_t &appGroupIndexes);
+                          const appentry_map_t &wildAppsMap,
+                          const appentry_map_t &prefixAppsMap,
+                          const appentry_map_t &exeAppsMap);
 
     static void writeFragmentBits(quint16 *fragmentBits,
                                   const FirewallConf &conf);
@@ -89,12 +93,14 @@ private:
     static void writeAddressRange(char **data,
                                   const AddressRange &addressRange);
 
+    static void writeApps(char **data, const appentry_map_t &apps,
+                          bool useHeader = false);
+
     static void writeShorts(char **data, const shorts_arr_t &array);
     static void writeLongs(char **data, const longs_arr_t &array);
     static void writeNumbers(char **data, void const *src,
                              int elemCount, uint elemSize);
     static void writeChars(char **data, const chars_arr_t &array);
-    static void writeStrings(char **data, const QStringList &list);
 
 private:
     QString m_errorMessage;

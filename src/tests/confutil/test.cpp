@@ -72,24 +72,24 @@ void Test::confWriteRead()
     QVERIFY(!FortCommon::confIpInRange(data, NetUtil::textToIp4("193.0.0.0")));
 
     QVERIFY(FortCommon::confAppBlocked(
-                data, FortCommon::confAppIndex(data, "System")));
+                data, FortCommon::confAppFind(data, "System")));
     QVERIFY(!FortCommon::confAppBlocked(
-                data, FortCommon::confAppIndex(
-                    data, FileUtil::pathToKernelPath("C:\\Program Files\\Skype\\Phone\\Skype.exe").toLower())));
+                data, FortCommon::confAppFind(
+                    data, FileUtil::pathToKernelPath("C:\\Program Files\\Skype\\Phone\\Skype.exe"))));
     QVERIFY(!FortCommon::confAppBlocked(
-                data, FortCommon::confAppIndex(
-                    data, FileUtil::pathToKernelPath("C:\\Utils\\Dev\\Git\\").toLower())));
+                data, FortCommon::confAppFind(
+                    data, FileUtil::pathToKernelPath("C:\\Utils\\Dev\\Git\\**"))));
     QVERIFY(FortCommon::confAppBlocked(
-                data, FortCommon::confAppIndex(
-                    data, FileUtil::pathToKernelPath("C:\\Program Files\\Test.exe").toLower())));
+                data, FortCommon::confAppFind(
+                    data, FileUtil::pathToKernelPath("C:\\Program Files\\Test.exe"))));
 
     QCOMPARE(FortCommon::confAppPeriodBits(data, 0, 0), 0x01);
     QCOMPARE(FortCommon::confAppPeriodBits(data, 12, 0), 0);
 
-    const int firefoxIndex = FortCommon::confAppIndex(
-                data, FileUtil::pathToKernelPath("C:\\Utils\\Firefox\\Bin\\firefox.exe").toLower());
-    QVERIFY(FortCommon::confAppBlocked(data, firefoxIndex));
-    QCOMPARE(1, int(FortCommon::confAppGroupIndex(data, firefoxIndex)));
+    const quint16 firefoxFlags = FortCommon::confAppFind(
+                data, FileUtil::pathToKernelPath("C:\\Utils\\Firefox\\Bin\\firefox.exe"));
+    QVERIFY(FortCommon::confAppBlocked(data, firefoxFlags));
+    QCOMPARE(1, int(FortCommon::confAppGroupIndex(firefoxFlags)));
 }
 
 void Test::checkPeriod()

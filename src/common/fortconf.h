@@ -36,36 +36,60 @@ typedef struct fort_conf_addr_group {
 
 typedef struct fort_traf {
   union {
+    UINT64 v;
+
     struct {
       UINT32 in_bytes;
       UINT32 out_bytes;
     };
-
-    UINT64 v;
   };
 } FORT_TRAF, *PFORT_TRAF;
 
 typedef struct fort_time {
   union {
+    UINT16 v;
+
     struct {
       UCHAR hour;
       UCHAR minute;
     };
-
-    UINT16 v;
   };
 } FORT_TIME, *PFORT_TIME;
 
 typedef struct fort_period {
   union {
+    UINT32 v;
+
     struct {
       FORT_TIME from;
       FORT_TIME to;
     };
-
-    UINT32 v;
   };
 } FORT_PERIOD, *PFORT_PERIOD;
+
+typedef struct fort_app_flags {
+  union {
+    UINT16 v;
+
+    struct {
+      UCHAR group_index;
+      UCHAR use_group_perm  : 1;
+      UCHAR blocked         : 1;
+      UCHAR found           : 1;
+    };
+  };
+} FORT_APP_FLAGS, *PFORT_APP_FLAGS;
+
+typedef struct fort_app_entry {
+  union {
+    UINT32 v;
+
+    struct {
+      UINT16 path_len;
+      FORT_APP_FLAGS flags;
+    };
+  };
+} FORT_APP_ENTRY, *PFORT_APP_ENTRY;
 
 typedef struct fort_conf_group {
   UINT16 fragment_bits;
@@ -79,18 +103,21 @@ typedef struct fort_conf_group {
 typedef struct fort_conf {
   FORT_CONF_FLAGS flags;
 
-  UINT16 apps_n;
   UCHAR app_periods_n;
+
+  UINT16 wild_apps_n;
+  UINT16 prefix_apps_n;
 
   UINT32 app_perms_block_mask;
   UINT32 app_perms_allow_mask;
 
   UINT32 addr_groups_off;
 
-  UINT32 app_groups_off;
-  UINT32 app_perms_off;
   UINT32 app_periods_off;
-  UINT32 apps_off;
+
+  UINT32 wild_apps_off;
+  UINT32 prefix_apps_off;
+  UINT32 exe_apps_off;
 
   char data[4];
 } FORT_CONF, *PFORT_CONF;

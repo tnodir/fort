@@ -56,10 +56,10 @@ public:
     static void confAppPermsMaskInit(void *drvConf);
     static bool confIpInRange(const void *drvConf, quint32 ip,
                               bool included = false, int addrGroupIndex = 0);
-    static int confAppIndex(const void *drvConf,
-                            const QString &kernelPath);
-    static quint8 confAppGroupIndex(const void *drvConf, int appIndex);
-    static bool confAppBlocked(const void *drvConf, int appIndex);
+    static quint16 confAppFind(const void *drvConf,
+                               const QString &kernelPath);
+    static quint8 confAppGroupIndex(quint16 appFlags);
+    static bool confAppBlocked(const void *drvConf, quint16 appFlags);
     static quint16 confAppPeriodBits(const void *drvConf,
                                      quint8 hour, quint8 minute);
 
