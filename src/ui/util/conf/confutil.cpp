@@ -521,8 +521,8 @@ void ConfUtil::writeApps(char **data, const appentry_map_t &apps,
         const quint32 appSize = sizeof(FORT_APP_ENTRY) + appEntry.path_len
                 + sizeof(wchar_t);  // include terminating zero
 
+        off += appSize;
         if (useHeader) {
-            off += appSize;
             *offp++ = off;
         }
         p += appSize;

@@ -40,6 +40,7 @@ void Test::confWriteRead()
     appGroup1->setAllowText(
                 "C:\\Program Files\\Skype\\Phone\\Skype.exe\n"
                 "C:\\Utils\\Dev\\Git\\\n"
+                "D:\\**\\Programs\\**\n"
                 );
 
     AppGroup *appGroup2 = new AppGroup();
@@ -79,6 +80,9 @@ void Test::confWriteRead()
     QVERIFY(!FortCommon::confAppBlocked(
                 data, FortCommon::confAppFind(
                     data, FileUtil::pathToKernelPath("C:\\Utils\\Dev\\Git\\**"))));
+    QVERIFY(!FortCommon::confAppBlocked(
+                data, FortCommon::confAppFind(
+                    data, FileUtil::pathToKernelPath("D:\\My\\Programs\\Test.exe"))));
     QVERIFY(FortCommon::confAppBlocked(
                 data, FortCommon::confAppFind(
                     data, FileUtil::pathToKernelPath("C:\\Program Files\\Test.exe"))));

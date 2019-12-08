@@ -2,6 +2,8 @@
 
 #include "fortconf.h"
 
+#include "wildmatch.c"
+
 
 #ifndef FORT_DRIVER
 #define fort_memcmp	memcmp
@@ -118,7 +120,7 @@ fort_conf_app_prefix_find (const PFORT_CONF conf,
   const char *data;
   const UINT32 *app_offsets;
   const char *app_entries;
-  const UINT32 count = conf->prefix_apps_n;
+  const UINT16 count = conf->prefix_apps_n;
   int low, high;
 
   if (count == 0)
@@ -154,6 +156,41 @@ fort_conf_app_prefix_find (const PFORT_CONF conf,
 }
 
 static FORT_APP_FLAGS
+fort_conf_app_wild_find (const PFORT_CONF conf, const char *path)
+{
+  FORT_APP_FLAGS app_flags;
+  const char *data;
+  const char *app_entries;
+  UINT16 count = conf->wild_apps_n;
+
+  if (count == 0)
+    goto not_found;
+
+  data = conf->data;
+  app_entries = (const char *) (data + conf->wild_apps_off);
+
+  do {
+    const PFORT_APP_ENTRY app_entry = (const PFORT_APP_ENTRY) app_entries;
+    const WCHAR *app_path = (const WCHAR *) (app_entry + 1);
+    const int res = wildmatch(app_path, (const WCHAR *) path);
+
+    if (res == WM_MATCH) {
+      app_flags = app_entry->flags;
+      goto end;
+    }
+
+    app_entries += sizeof(FORT_APP_ENTRY) + app_entry->path_len
+            + sizeof(WCHAR);  /* include terminating zero */
+  } while (--count != 0);
+
+ not_found:
+  app_flags.v = 0;
+
+ end:
+  return app_flags;
+}
+
+static FORT_APP_FLAGS
 fort_conf_app_find (const PFORT_CONF conf,
                     UINT32 path_len, const char *path)
 {
@@ -162,6 +199,8 @@ fort_conf_app_find (const PFORT_CONF conf,
   app_flags = fort_conf_app_prefix_find(conf, path_len, path);
   if (app_flags.v != 0)
     goto end;
+
+  app_flags = fort_conf_app_wild_find(conf, path);
 
  end:
   return app_flags;
