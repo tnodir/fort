@@ -9,6 +9,7 @@
 #define FORT_CONF_STR_ALIGN		4
 #define FORT_CONF_STR_HEADER_SIZE(n)	(((n) + 1) * sizeof(UINT32))
 #define FORT_CONF_STR_DATA_SIZE(size)	((((size) + (FORT_CONF_STR_ALIGN - 1)) & ~(FORT_CONF_STR_ALIGN - 1)))
+#define FORT_CONF_APP_ENTRY_SIZE(len)	(sizeof(FORT_APP_ENTRY) + (len) + sizeof(wchar_t))  /* include terminating zero */
 
 typedef struct fort_conf_flags {
   UINT32 prov_boot		: 1;

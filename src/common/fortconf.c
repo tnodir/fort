@@ -179,8 +179,7 @@ fort_conf_app_wild_find (const PFORT_CONF conf, const char *path)
       goto end;
     }
 
-    app_entries += sizeof(FORT_APP_ENTRY) + app_entry->path_len
-            + sizeof(WCHAR);  /* include terminating zero */
+    app_entries += FORT_CONF_APP_ENTRY_SIZE(app_entry->path_len);
   } while (--count != 0);
 
  not_found:

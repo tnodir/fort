@@ -283,8 +283,7 @@ bool ConfUtil::parseApps(int groupOffset, bool blocked, const QString &text,
         }
 
         const quint16 appPathLen = quint16(appPath.size()) * sizeof(wchar_t);
-        const quint32 appSize = sizeof(FORT_APP_ENTRY) + appPathLen
-                + sizeof(wchar_t);  // include terminating zero
+        const quint32 appSize = FORT_CONF_APP_ENTRY_SIZE(appPathLen);
 
         quint32 &appsSize = isWild ? wildAppsSize
                                    : isPrefix ? prefixAppsSize
@@ -518,8 +517,7 @@ void ConfUtil::writeApps(char **data, const appentry_map_t &apps,
         appPath.toWCharArray(pathArray);
         pathArray[appEntry.path_len / sizeof(wchar_t)] = '\0';
 
-        const quint32 appSize = sizeof(FORT_APP_ENTRY) + appEntry.path_len
-                + sizeof(wchar_t);  // include terminating zero
+        const quint32 appSize = FORT_CONF_APP_ENTRY_SIZE(appEntry.path_len);
 
         off += appSize;
         if (useHeader) {
