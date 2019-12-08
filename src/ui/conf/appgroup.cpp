@@ -192,7 +192,7 @@ void AppGroup::clear()
 
 void AppGroup::copy(const AppGroup &o)
 {
-    m_edited = false;
+    m_edited = o.edited();
 
     m_enabled = o.enabled();
     m_fragmentPacket = o.fragmentPacket();

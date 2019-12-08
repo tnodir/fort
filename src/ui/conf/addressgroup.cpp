@@ -51,7 +51,7 @@ void AddressGroup::setExcludeText(const QString &excludeText)
 
 void AddressGroup::copy(const AddressGroup &o)
 {
-    m_edited = false;
+    m_edited = o.edited();
 
     m_includeAll = o.includeAll();
     m_excludeAll = o.excludeAll();
