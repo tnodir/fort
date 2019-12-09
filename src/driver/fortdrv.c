@@ -21,36 +21,16 @@
 #include "../common/fortlog.c"
 #include "../common/fortprov.c"
 #include "forttds.c"
+#include "fortcnf.c"
 #include "fortbuf.c"
 #include "fortpkt.c"
 #include "fortstat.c"
 #include "forttmr.c"
 #include "fortwrk.c"
 
-typedef struct fort_conf_ref {
-  UINT32 volatile refcount;
-
-  FORT_CONF conf;
-} FORT_CONF_REF, *PFORT_CONF_REF;
-
-#define FORT_DEVICE_PROV_BOOT		0x01
-#define FORT_DEVICE_IS_OPENED		0x02
-#define FORT_DEVICE_POWER_OFF		0x04
-#define FORT_DEVICE_FILTER_TRANSPORT	0x08
-
 typedef struct fort_device {
-  UCHAR volatile flags;
-
-#ifdef LOG_HEARTBEAT
-  UINT16 volatile heartbeat_tick;
-#endif
-
   UINT32 connect4_id;
   UINT32 accept4_id;
-
-  FORT_CONF_FLAGS volatile conf_flags;
-  PFORT_CONF_REF volatile conf_ref;
-  KSPIN_LOCK conf_lock;
 
   PCALLBACK_OBJECT power_cb_obj;
   PVOID power_cb_reg;
@@ -58,6 +38,7 @@ typedef struct fort_device {
   PCALLBACK_OBJECT systime_cb_obj;
   PVOID systime_cb_reg;
 
+  FORT_DEVICE_CONF conf;
   FORT_BUFFER buffer;
   FORT_STAT stat;
   FORT_DEFER defer;
@@ -65,198 +46,13 @@ typedef struct fort_device {
   FORT_TIMER app_timer;
 #ifdef LOG_HEARTBEAT
   FORT_TIMER heartbeat_timer;
+  UINT16 volatile heartbeat_tick;
 #endif
   FORT_WORKER worker;
 } FORT_DEVICE, *PFORT_DEVICE;
 
 static PFORT_DEVICE g_device = NULL;
 
-
-static UCHAR
-fort_device_flag_set (UCHAR flag, BOOL on)
-{
-  return on ? InterlockedOr8(&g_device->flags, flag)
-            : InterlockedAnd8(&g_device->flags, ~flag);
-}
-
-static UCHAR
-fort_device_flags (void)
-{
-  return fort_device_flag_set(0, TRUE);
-}
-
-static UCHAR
-fort_device_flag (UCHAR flag)
-{
-  return fort_device_flags() & flag;
-}
-
-static PFORT_CONF_REF
-fort_conf_ref_new (const PFORT_CONF conf, ULONG len)
-{
-  const ULONG ref_len = len + offsetof(FORT_CONF_REF, conf);
-  PFORT_CONF_REF conf_ref = fort_mem_alloc(ref_len, FORT_DEVICE_POOL_TAG);
-
-  if (conf_ref != NULL) {
-    conf_ref->refcount = 0;
-
-    RtlCopyMemory(&conf_ref->conf, conf, len);
-  }
-
-  return conf_ref;
-}
-
-static void
-fort_conf_ref_put (PFORT_CONF_REF conf_ref)
-{
-  KLOCK_QUEUE_HANDLE lock_queue;
-
-  KeAcquireInStackQueuedSpinLock(&g_device->conf_lock, &lock_queue);
-  {
-    const UINT32 refcount = --conf_ref->refcount;
-
-    if (refcount == 0 && conf_ref != g_device->conf_ref) {
-      fort_mem_free(conf_ref, FORT_DEVICE_POOL_TAG);
-    }
-  }
-  KeReleaseInStackQueuedSpinLock(&lock_queue);
-}
-
-static PFORT_CONF_REF
-fort_conf_ref_take (void)
-{
-  PFORT_CONF_REF conf_ref;
-  KLOCK_QUEUE_HANDLE lock_queue;
-
-  KeAcquireInStackQueuedSpinLock(&g_device->conf_lock, &lock_queue);
-  {
-    conf_ref = g_device->conf_ref;
-    if (conf_ref) {
-      ++conf_ref->refcount;
-    }
-  }
-  KeReleaseInStackQueuedSpinLock(&lock_queue);
-
-  return conf_ref;
-}
-
-static FORT_CONF_FLAGS
-fort_conf_ref_set (PFORT_CONF_REF conf_ref)
-{
-  PFORT_CONF_REF old_conf_ref;
-  FORT_CONF_FLAGS old_conf_flags;
-  KLOCK_QUEUE_HANDLE lock_queue;
-
-  old_conf_ref = fort_conf_ref_take();
-
-  KeAcquireInStackQueuedSpinLock(&g_device->conf_lock, &lock_queue);
-  {
-    g_device->conf_ref = conf_ref;
-
-    if (old_conf_ref == NULL) {
-      RtlZeroMemory(&old_conf_flags, sizeof(FORT_CONF_FLAGS));
-      old_conf_flags.prov_boot = fort_device_flag(FORT_DEVICE_PROV_BOOT) != 0;
-    }
-
-    if (conf_ref != NULL) {
-      PFORT_CONF conf = &conf_ref->conf;
-      const PFORT_CONF_FLAGS conf_flags = &conf->flags;
-
-      fort_device_flag_set(FORT_DEVICE_PROV_BOOT, conf_flags->prov_boot);
-
-      g_device->conf_flags = *conf_flags;
-    } else {
-      RtlZeroMemory((void *) &g_device->conf_flags, sizeof(FORT_CONF_FLAGS));
-
-      g_device->conf_flags.prov_boot = fort_device_flag(FORT_DEVICE_PROV_BOOT) != 0;
-    }
-  }
-  KeReleaseInStackQueuedSpinLock(&lock_queue);
-
-  if (old_conf_ref != NULL) {
-    old_conf_flags = old_conf_ref->conf.flags;
-    fort_conf_ref_put(old_conf_ref);
-  }
-
-  return old_conf_flags;
-}
-
-static FORT_CONF_FLAGS
-fort_conf_ref_flags_set (const PFORT_CONF_FLAGS conf_flags)
-{
-  FORT_CONF_FLAGS old_conf_flags;
-  KLOCK_QUEUE_HANDLE lock_queue;
-
-  KeAcquireInStackQueuedSpinLock(&g_device->conf_lock, &lock_queue);
-  {
-    PFORT_CONF_REF conf_ref = g_device->conf_ref;
-
-    if (conf_ref != NULL) {
-      PFORT_CONF conf = &conf_ref->conf;
-
-      old_conf_flags = conf->flags;
-      conf->flags = *conf_flags;
-
-      fort_conf_app_perms_mask_init(conf, conf_flags->group_bits);
-
-      fort_device_flag_set(FORT_DEVICE_PROV_BOOT, conf_flags->prov_boot);
-
-      g_device->conf_flags = *conf_flags;
-    } else {
-      RtlZeroMemory(&old_conf_flags, sizeof(FORT_CONF_FLAGS));
-      old_conf_flags.prov_boot = fort_device_flag(FORT_DEVICE_PROV_BOOT) != 0;
-
-      g_device->conf_flags = old_conf_flags;
-    }
-  }
-  KeReleaseInStackQueuedSpinLock(&lock_queue);
-
-  return old_conf_flags;
-}
-
-static BOOL
-fort_conf_period_update (BOOL force, int *periods_n)
-{
-  PFORT_CONF_REF conf_ref;
-  FORT_TIME time;
-  BOOL res = FALSE;
-
-  /* Get current time */
-  {
-    TIME_FIELDS tf;
-    LARGE_INTEGER system_time, local_time;
-
-    KeQuerySystemTime(&system_time);
-    ExSystemTimeToLocalTime(&system_time, &local_time);
-    RtlTimeToTimeFields(&local_time, &tf);
-
-    time.hour = (UCHAR) tf.Hour;
-    time.minute = (UCHAR) tf.Minute;
-  }
-
-  conf_ref = fort_conf_ref_take();
-
-  if (conf_ref != NULL) {
-    PFORT_CONF conf = &conf_ref->conf;
-
-    if (conf->app_periods_n != 0) {
-      const UINT16 period_bits =
-        fort_conf_app_period_bits(conf, time, periods_n);
-
-      if (force || g_device->conf_flags.group_bits != period_bits) {
-        g_device->conf_flags.group_bits = period_bits;
-
-        fort_conf_app_perms_mask_init(conf, period_bits);
-
-        res = TRUE;
-      }
-    }
-
-    fort_conf_ref_put(conf_ref);
-  }
-
-  return res;
-}
 
 static void
 fort_callout_classify_block (FWPS_CLASSIFY_OUT0 *classifyOut)
@@ -311,17 +107,17 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   flags = inFixedValues->incomingValue[flagsField].value.uint32;
   remote_ip = inFixedValues->incomingValue[remoteIpField].value.uint32;
 
-  if (!g_device->conf_flags.filter_locals
+  if (!g_device->conf.conf_flags.filter_locals
       && ((flags & FWP_CONDITION_FLAG_IS_LOOPBACK)
         || remote_ip == 0xFFFFFFFF)) {  /* Local broadcast */
     fort_callout_classify_permit(filter, classifyOut);
     return;
   }
 
-  conf_ref = fort_conf_ref_take();
+  conf_ref = fort_conf_ref_take(&g_device->conf);
 
   if (conf_ref == NULL) {
-    if (fort_device_flag(FORT_DEVICE_PROV_BOOT)) {
+    if (fort_device_flag(&g_device->conf, FORT_DEVICE_PROV_BOOT)) {
       fort_callout_classify_block(classifyOut);
     } else {
       fort_callout_classify_continue(classifyOut);
@@ -400,7 +196,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   fort_callout_classify_permit(filter, classifyOut);
 
  end:
-  fort_conf_ref_put(conf_ref);
+  fort_conf_ref_put(&g_device->conf, conf_ref);
 
   if (irp != NULL) {
     fort_request_complete_info(irp, STATUS_SUCCESS, info);
@@ -634,7 +430,7 @@ fort_callout_transport_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
     const UCHAR speed_defer_flags = speed_limit | defer_flag;
     const BOOL defer_flow = (flow_flags & speed_defer_flags) == speed_defer_flags
-      && !fort_device_flag(FORT_DEVICE_POWER_OFF);
+      && !fort_device_flag(&g_device->conf, FORT_DEVICE_POWER_OFF);
 
     const BOOL fragment_packet = !inbound && (flow_flags
       & (FORT_FLOW_FRAGMENT_DEFER | FORT_FLOW_FRAGMENTED))
@@ -880,13 +676,13 @@ fort_callout_force_reauth (const FORT_CONF_FLAGS old_conf_flags,
   {
     int periods_n = 0;
 
-    fort_conf_period_update(TRUE, &periods_n);
+    fort_conf_ref_period_update(&g_device->conf, TRUE, &periods_n);
 
     fort_timer_update(&g_device->app_timer,
       (periods_n != 0));
   }
 
-  conf_flags = g_device->conf_flags;
+  conf_flags = g_device->conf.conf_flags;
 
   /* Handle log_stat */
   if (old_conf_flags.log_stat != conf_flags.log_stat) {
@@ -922,12 +718,13 @@ fort_callout_force_reauth (const FORT_CONF_FLAGS old_conf_flags,
     const PFORT_CONF_GROUP conf_group = &stat->conf_group;
     const UINT16 filter_bits = (conf_group->fragment_bits | conf_group->limit_bits);
 
-    const BOOL old_filter_transport = fort_device_flag(FORT_DEVICE_FILTER_TRANSPORT) != 0;
+    const BOOL old_filter_transport = fort_device_flag(
+      &g_device->conf, FORT_DEVICE_FILTER_TRANSPORT) != 0;
     const BOOL filter_transport = (conf_flags.group_bits & filter_bits) != 0;
 
     if (old_conf_flags.log_stat != conf_flags.log_stat
         || old_filter_transport != filter_transport) {
-      fort_device_flag_set(FORT_DEVICE_FILTER_TRANSPORT, filter_transport);
+      fort_device_flag_set(&g_device->conf, FORT_DEVICE_FILTER_TRANSPORT, filter_transport);
 
       fort_prov_flow_unregister(engine);
 
@@ -1031,7 +828,7 @@ fort_callout_timer (void)
 static void
 fort_worker_reauth (void)
 {
-  const FORT_CONF_FLAGS conf_flags = g_device->conf_flags;
+  const FORT_CONF_FLAGS conf_flags = g_device->conf.conf_flags;
   NTSTATUS status;
 
   status = fort_callout_force_reauth(conf_flags, 0);
@@ -1045,7 +842,7 @@ fort_worker_reauth (void)
 static void
 fort_app_period_timer (void)
 {
-  if (fort_conf_period_update(FALSE, NULL)) {
+  if (fort_conf_ref_period_update(&g_device->conf, FALSE, NULL)) {
     fort_worker_queue(&g_device->worker,
       FORT_WORKER_REAUTH, &fort_worker_reauth);
   }
@@ -1092,7 +889,7 @@ fort_device_create (PDEVICE_OBJECT device, PIRP irp)
   UNUSED(device);
 
   /* Device opened */
-  if (fort_device_flag_set(FORT_DEVICE_IS_OPENED, TRUE)
+  if (fort_device_flag_set(&g_device->conf, FORT_DEVICE_IS_OPENED, TRUE)
       & FORT_DEVICE_IS_OPENED) {
     status = STATUS_SHARING_VIOLATION;  /* Only one client may connect */
   }
@@ -1127,11 +924,12 @@ static NTSTATUS
 fort_device_cleanup (PDEVICE_OBJECT device, PIRP irp)
 {
   /* Device closed */
-  fort_device_flag_set(FORT_DEVICE_IS_OPENED, FALSE);
+  fort_device_flag_set(&g_device->conf, FORT_DEVICE_IS_OPENED, FALSE);
 
   /* Clear conf */
   {
-    const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(NULL);
+    const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(
+      &g_device->conf, NULL);
 
     fort_callout_force_reauth(old_conf_flags, FORT_DEFER_FLUSH_ALL);
   }
@@ -1199,7 +997,8 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
       } else {
         PFORT_STAT stat = &g_device->stat;
 
-        const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(conf_ref);
+        const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(
+          &g_device->conf, conf_ref);
 
         const UINT32 defer_flush_bits =
           (stat->conf_group.limit_2bits ^ conf_io->conf_group.limit_2bits);
@@ -1216,7 +1015,8 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
     const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
 
     if (len == sizeof(FORT_CONF_FLAGS)) {
-      const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_flags_set(conf_flags);
+      const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_flags_set(
+        &g_device->conf, conf_flags);
 
       const UINT32 defer_flush_bits =
         (old_conf_flags.group_bits != conf_flags->group_bits ? FORT_DEFER_FLUSH_ALL : 0);
@@ -1273,7 +1073,7 @@ fort_power_callback (PVOID context, PVOID event, PVOID specifics)
 
   power_off = (specifics == NULL);
 
-  fort_device_flag_set(FORT_DEVICE_POWER_OFF, power_off);
+  fort_device_flag_set(&g_device->conf, FORT_DEVICE_POWER_OFF, power_off);
 
   if (power_off) {
     fort_callout_defer_flush();
@@ -1382,7 +1182,7 @@ fort_driver_unload (PDRIVER_OBJECT driver)
     fort_power_callback_unregister();
     fort_systime_callback_unregister();
 
-    if (!fort_device_flag(FORT_DEVICE_PROV_BOOT)) {
+    if (!fort_device_flag(&g_device->conf, FORT_DEVICE_PROV_BOOT)) {
       fort_prov_unregister(0);
     }
 
@@ -1455,6 +1255,7 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 
       RtlZeroMemory(g_device, sizeof(FORT_DEVICE));
 
+      fort_device_conf_open(&g_device->conf);
       fort_buffer_open(&g_device->buffer);
       fort_stat_open(&g_device->stat);
       fort_defer_open(&g_device->defer);
@@ -1464,11 +1265,9 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
       fort_timer_open(&g_device->heartbeat_timer, 1000, TRUE, &fort_heartbeat_timer);
 #endif
 
-      KeInitializeSpinLock(&g_device->conf_lock);
-
       /* Unregister old filters provider */
       {
-        fort_device_flag_set(FORT_DEVICE_PROV_BOOT, fort_prov_is_boot());
+        fort_device_flag_set(&g_device->conf, FORT_DEVICE_PROV_BOOT, fort_prov_is_boot());
 
         fort_prov_unregister(0);
       }
@@ -1483,7 +1282,7 @@ DriverEntry (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 
       /* Register filters provider */
       if (NT_SUCCESS(status)) {
-        const BOOL prov_boot = fort_device_flag(FORT_DEVICE_PROV_BOOT);
+        const BOOL prov_boot = fort_device_flag(&g_device->conf, FORT_DEVICE_PROV_BOOT);
 
         status = fort_prov_register(0, prov_boot);
       }
