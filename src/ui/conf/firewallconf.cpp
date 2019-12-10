@@ -1,5 +1,7 @@
 #include "firewallconf.h"
 
+#include "../util/fileutil.h"
+#include "../util/net/netutil.h"
 #include "addressgroup.h"
 #include "appgroup.h"
 
@@ -276,13 +278,32 @@ void FirewallConf::removeAppGroup(int from, int to)
 
         m_appGroups.removeAt(i);
     }
+
+    if (m_appGroups.isEmpty()) {
+        addDefaultAppGroup();
+    }
     emit appGroupsChanged();
+}
+
+void FirewallConf::addDefaultAppGroup()
+{
+    auto appGroup = new AppGroup();
+    appGroup->setName("Main");
+    appGroup->setAllowText(FileUtil::appBinLocation() + "/**");
+
+    addAppGroup(appGroup);
 }
 
 void FirewallConf::clearRemovedAppGroups() const
 {
     qDeleteAll(m_removedAppGroups);
     m_removedAppGroups.clear();
+}
+
+void FirewallConf::setupDefaultAddressGroups()
+{
+    AddressGroup *inetGroup = inetAddressGroup();
+    inetGroup->setExcludeText(NetUtil::localIpv4Networks().join('\n'));
 }
 
 void FirewallConf::setupAddressGroups()

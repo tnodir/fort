@@ -168,6 +168,9 @@ public slots:
     void addAppGroupByName(const QString &name);
     void moveAppGroup(int from, int to);
     void removeAppGroup(int from, int to);
+    void addDefaultAppGroup();
+
+    void setupDefaultAddressGroups();
 
 private:
     void setupAddressGroups();

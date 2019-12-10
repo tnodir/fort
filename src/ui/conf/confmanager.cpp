@@ -10,7 +10,6 @@
 #include "../task/taskinfo.h"
 #include "../util/dateutil.h"
 #include "../util/fileutil.h"
-#include "../util/net/netutil.h"
 #include "../util/osutil.h"
 #include "addressgroup.h"
 #include "appgroup.h"
@@ -166,13 +165,8 @@ FirewallConf *ConfManager::cloneConf(const FirewallConf &conf,
 
 void ConfManager::setupDefault(FirewallConf &conf) const
 {
-    AddressGroup *inetGroup = conf.inetAddressGroup();
-    inetGroup->setExcludeText(NetUtil::localIpv4Networks().join('\n'));
-
-    auto appGroup = new AppGroup();
-    appGroup->setName("Main");
-    appGroup->setAllowText(FileUtil::appBinLocation() + "/**");
-    conf.addAppGroup(appGroup);
+    conf.setupDefaultAddressGroups();
+    conf.addDefaultAppGroup();
 }
 
 bool ConfManager::load(FirewallConf &conf)
