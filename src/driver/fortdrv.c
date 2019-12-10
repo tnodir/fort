@@ -142,7 +142,8 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   path = inMetaValues->processPath->data;
 
   if (fort_conf_ip_inet_included(&conf_ref->conf, remote_ip)) {
-    const FORT_APP_FLAGS app_flags = fort_conf_app_find(&conf_ref->conf, path_len, path);
+    const FORT_APP_FLAGS app_flags = fort_conf_app_find(
+      &conf_ref->conf, path_len, path, fort_conf_ref_exe_find);
 
     if (!fort_conf_app_blocked(&conf_ref->conf, app_flags)) {
       if (conf_flags.log_stat) {

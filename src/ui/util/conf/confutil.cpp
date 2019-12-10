@@ -268,8 +268,6 @@ bool ConfUtil::parseApps(int groupOffset, bool blocked, const QString &text,
         if (appPath.isEmpty())
             continue;
 
-        isPrefix = !isWild;  // TODO: Remove after hash find impl
-
         appentry_map_t &appsMap = isWild ? wildAppsMap
                                          : isPrefix ? prefixAppsMap
                                                     : exeAppsMap;
@@ -400,6 +398,7 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
 
     drvConf->wild_apps_n = quint16(wildAppsMap.size());
     drvConf->prefix_apps_n = quint16(prefixAppsMap.size());
+    drvConf->exe_apps_n = quint16(exeAppsMap.size());
 
     drvConf->addr_groups_off = addrGroupsOff;
 

@@ -169,7 +169,8 @@ quint16 FortCommon::confAppFind(const void *drvConf,
     const wchar_t *p = (const wchar_t *) kernelPathLower.utf16();
 
     const FORT_APP_FLAGS app_flags =
-            fort_conf_app_find(conf, len, (const char *) p);
+            fort_conf_app_find(conf, len, (const char *) p,
+                               fort_conf_app_exe_find);
 
     return app_flags.v;
 }

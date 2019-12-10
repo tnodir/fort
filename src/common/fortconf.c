@@ -99,6 +99,52 @@ fort_conf_ip_included (const PFORT_CONF conf, UINT32 remote_ip,
 #define fort_conf_ip_inet_included(conf, remote_ip) \
   fort_conf_ip_included((conf), (remote_ip), 1)
 
+static BOOL
+fort_conf_app_exe_equal (UINT32 path_len, const char *path,
+                         PFORT_APP_ENTRY app_entry)
+{
+  const char *app_path = (const char *) (app_entry + 1);
+  const UINT32 app_path_len = app_entry->path_len;
+
+  if (path_len != app_path_len)
+    return FALSE;
+
+  return fort_memcmp(path, app_path, path_len) == 0;
+}
+
+static FORT_APP_FLAGS
+fort_conf_app_exe_find (const PFORT_CONF conf,
+                        UINT32 path_len, const char *path)
+{
+  FORT_APP_FLAGS app_flags;
+  const char *data;
+  const char *app_entries;
+  UINT16 count = conf->exe_apps_n;
+
+  if (count == 0)
+    goto not_found;
+
+  data = conf->data;
+  app_entries = (const char *) (data + conf->exe_apps_off);
+
+  do {
+    const PFORT_APP_ENTRY app_entry = (const PFORT_APP_ENTRY) app_entries;
+
+    if (fort_conf_app_exe_equal(path_len, path, app_entry)) {
+      app_flags = app_entry->flags;
+      goto end;
+    }
+
+    app_entries += FORT_CONF_APP_ENTRY_SIZE(app_entry->path_len);
+  } while (--count != 0);
+
+ not_found:
+  app_flags.v = 0;
+
+ end:
+  return app_flags;
+}
+
 static int
 fort_conf_app_prefix_cmp (UINT32 path_len, const char *path,
                           PFORT_APP_ENTRY app_entry)
@@ -191,9 +237,14 @@ fort_conf_app_wild_find (const PFORT_CONF conf, const char *path)
 
 static FORT_APP_FLAGS
 fort_conf_app_find (const PFORT_CONF conf,
-                    UINT32 path_len, const char *path)
+                    UINT32 path_len, const char *path,
+                    fort_conf_app_exe_find_func *exe_find_func)
 {
   FORT_APP_FLAGS app_flags;
+
+  app_flags = exe_find_func(conf, path_len, path);
+  if (app_flags.v != 0)
+    goto end;
 
   app_flags = fort_conf_app_prefix_find(conf, path_len, path);
   if (app_flags.v != 0)

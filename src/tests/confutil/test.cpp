@@ -39,7 +39,7 @@ void Test::confWriteRead()
                 );
     appGroup1->setAllowText(
                 "C:\\Program Files\\Skype\\Phone\\Skype.exe\n"
-                "C:\\Utils\\Dev\\Git\\\n"
+                "C:\\Utils\\Dev\\Git\\**\n"
                 "D:\\**\\Programs\\**\n"
                 );
 

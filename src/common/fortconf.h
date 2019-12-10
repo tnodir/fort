@@ -108,6 +108,7 @@ typedef struct fort_conf {
 
   UINT16 wild_apps_n;
   UINT16 prefix_apps_n;
+  UINT16 exe_apps_n;
 
   UINT32 app_perms_block_mask;
   UINT32 app_perms_allow_mask;
@@ -138,5 +139,8 @@ typedef struct fort_conf_io {
 #define FORT_CONF_DATA_OFF		offsetof(FORT_CONF, data)
 #define FORT_CONF_IO_CONF_OFF		offsetof(FORT_CONF_IO, conf)
 #define FORT_CONF_ADDR_DATA_OFF		offsetof(FORT_CONF_ADDR_GROUP, ip)
+
+typedef FORT_APP_FLAGS fort_conf_app_exe_find_func(
+    const PFORT_CONF conf, UINT32 path_len, const char *path);
 
 #endif FORTCONF_H
