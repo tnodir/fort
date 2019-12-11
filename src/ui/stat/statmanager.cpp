@@ -109,7 +109,7 @@ bool StatManager::initialize()
     m_sqliteDb->execute(StatSql::sqlPragmas);
 
     if (!m_sqliteDb->migrate(":/stat/migrations", DATABASE_USER_VERSION,
-                             false, &migrateFunc)) {
+                             false, false, &migrateFunc)) {
         logCritical() << "Migration error"
                       << m_sqliteDb->filePath();
         return false;

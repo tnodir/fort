@@ -1,4 +1,4 @@
-PRAGMA user_version = 1;
+PRAGMA user_version = 2;
 
 CREATE TABLE IF NOT EXISTS address_group(
   addr_group_id INTEGER PRIMARY KEY,
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS app_group(
 
 CREATE TABLE IF NOT EXISTS app(
   app_id INTEGER PRIMARY KEY,
-  app_group_id INTEGER NOT NULL,
+  app_group_id INTEGER NOT NULL DEFAULT 0,
   path TEXT UNIQUE NOT NULL,
   blocked BOOLEAN NOT NULL,
   creat_time INTEGER NOT NULL,

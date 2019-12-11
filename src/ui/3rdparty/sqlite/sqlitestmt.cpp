@@ -172,6 +172,17 @@ int SqliteStmt::dataCount()
     return sqlite3_data_count(m_stmt);
 }
 
+int SqliteStmt::columnCount()
+{
+    return sqlite3_column_count(m_stmt);
+}
+
+QString SqliteStmt::columnName(int column)
+{
+    const auto name = sqlite3_column_name16(m_stmt, column);
+    return QString::fromWCharArray((const wchar_t *) name);
+}
+
 qint32 SqliteStmt::columnInt(int column)
 {
     return sqlite3_column_int(m_stmt, column);

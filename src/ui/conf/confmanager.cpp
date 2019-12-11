@@ -21,7 +21,7 @@ Q_LOGGING_CATEGORY(CLOG_CONF_MANAGER, "fort.confManager")
 #define logWarning() qCWarning(CLOG_CONF_MANAGER,)
 #define logCritical() qCCritical(CLOG_CONF_MANAGER,)
 
-#define DATABASE_USER_VERSION   1
+#define DATABASE_USER_VERSION   2
 
 namespace {
 
@@ -150,7 +150,8 @@ bool ConfManager::initialize()
 
     m_sqliteDb->execute(sqlPragmas);
 
-    if (!m_sqliteDb->migrate(":/conf/migrations", DATABASE_USER_VERSION)) {
+    if (!m_sqliteDb->migrate(":/conf/migrations",
+                             DATABASE_USER_VERSION, true, true)) {
         logCritical() << "Migration error"
                       << m_sqliteDb->filePath();
         return false;

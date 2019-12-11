@@ -48,7 +48,9 @@ public:
     StepResult step();
 
     int dataCount();
+    int columnCount();
 
+    QString columnName(int column = 0);
     qint32 columnInt(int column = 0);
     qint64 columnInt64(int column = 0);
     double columnDouble(int column = 0);

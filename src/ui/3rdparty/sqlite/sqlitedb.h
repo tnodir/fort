@@ -25,7 +25,9 @@ public:
     bool open(const QString &filePath = QString());
     void close();
 
-    bool recreateDb();
+    bool attach(const QString &schemaName,
+                const QString &filePath = QString());
+    bool detach(const QString &schemaName);
 
     bool execute(const char *sql);
     bool execute16(const ushort *sql);
@@ -52,10 +54,19 @@ public:
 
     int userVersion();
 
+    static QString entityName(const QString &schemaName,
+                              const QString &objectName);
+    QStringList tableNames(const QString &schemaName = QString());
+    QStringList columnNames(const QString &tableName,
+                            const QString &schemaName = QString());
+
     bool migrate(const QString &sqlDir, int version,
                  bool recreate = false,
+                 bool importOldData = false,
                  SQLITEDB_MIGRATE_FUNC migrateFunc = nullptr,
                  void *migrateContext = nullptr);
+
+    bool importDb(const QString &sourceFilePath);
 
 private:
     sqlite3 *m_db;
