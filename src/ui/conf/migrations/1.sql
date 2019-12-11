@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS app(
   end_time INTEGER
 );
 
+CREATE INDEX idx_app_app_group_id ON app(app_group_id);
 CREATE INDEX idx_app_end_time ON app(end_time);
 
 CREATE TABLE IF NOT EXISTS app_alert(

@@ -89,6 +89,12 @@ const char * const sqlDeleteAppGroup =
         "  WHERE app_group_id = ?1;"
         ;
 
+const char * const sqlPurgeAppByGroupId =
+        "UPDATE app"
+        "  SET app_group_id = 0"
+        "  WHERE app_group_id = ?1;"
+        ;
+
 const char * const sqlSelectTaskByName =
         "SELECT task_id, enabled, interval_hours,"
         "    last_run, last_success, data"
@@ -384,6 +390,10 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
 
     // Remove App Groups
     for (AppGroup *appGroup : conf.removedAppGroupsList()) {
+        m_sqliteDb->executeEx(sqlPurgeAppByGroupId,
+                              QVariantList() << appGroup->id(), 0, &ok);
+        if (!ok) goto end;
+
         m_sqliteDb->executeEx(sqlDeleteAppGroup,
                               QVariantList() << appGroup->id(), 0, &ok);
         if (!ok) goto end;
