@@ -16,8 +16,13 @@ public:
     ~NativeEventFilter() override;
     CLASS_DELETE_COPY_MOVE(NativeEventFilter)
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     bool nativeEventFilter(const QByteArray &eventType,
                            void *message, qintptr *result) override;
+#else
+    bool nativeEventFilter(const QByteArray &eventType,
+                           void *message, long *result) override;
+#endif
 
     bool registerHotKey(int hotKeyId,
                         Qt::Key keyCode,

@@ -81,8 +81,13 @@ int NativeEventFilter::getKeyId(quint32 nativeMod, quint32 nativeKey) const
     return m_keyIdMap.value(nativeKeyMod, -1);
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 bool NativeEventFilter::nativeEventFilter(const QByteArray &eventType,
                                           void *message, qintptr *result)
+#else
+bool NativeEventFilter::nativeEventFilter(const QByteArray &eventType,
+                                          void *message, long *result)
+#endif
 {
     Q_UNUSED(eventType)
     Q_UNUSED(result)
