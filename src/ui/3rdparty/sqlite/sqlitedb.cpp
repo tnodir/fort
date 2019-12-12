@@ -248,7 +248,7 @@ QStringList SqliteDb::columnNames(const QString &tableName,
 
     const auto schemaTableName = entityName(schemaName, tableName);
     const auto sql = QString(
-                "SELECT * FROM %1 WHERE 0 = 1;"
+                "SELECT * FROM %1 WHERE 0 = 1 LIMIT 1;"
                 ).arg(schemaTableName);
 
     SqliteStmt stmt;
