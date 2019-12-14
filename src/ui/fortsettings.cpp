@@ -17,7 +17,7 @@ FortSettings::FortSettings(const QStringList &args,
     m_isPortable(false),
     m_hasProvBoot(false),
     m_bulkUpdating(false),
-    m_bulkUpdatingEmit(false),
+    m_bulkIniChanged(false),
     m_ini(nullptr)
 {
     processArguments(args);
@@ -114,6 +114,8 @@ void FortSettings::setupIni()
 
     m_iniExists = FileUtil::fileExists(iniPath);
     m_ini = new QSettings(iniPath, QSettings::IniFormat, this);
+
+    migrateIniOnStartup();
 }
 
 void FortSettings::setErrorMessage(const QString &errorMessage)
@@ -307,7 +309,7 @@ bool FortSettings::writeConfIni(const FirewallConf &conf)
     setIniValue("quotaMonthMb", conf.quotaMonthMb());
     m_ini->endGroup();
 
-    removeMigratedKeys();
+    migrateIniOnWrite();
 
     return iniSync();
 }
@@ -349,7 +351,22 @@ QVariant FortSettings::migrateConf(const QVariant &confVar)
     return map;
 }
 
-void FortSettings::removeMigratedKeys()
+void FortSettings::migrateIniOnStartup()
+{
+    const int version = iniVersion();
+    if (version == appVersion())
+        return;
+
+    // COMPAT: v3.0.0: Options Window
+    if (version < 0x030000) {
+        setCacheValue("optWindow/geometry", m_ini->value("window/geometry"));
+        setCacheValue("optWindow/maximized", m_ini->value("window/maximized"));
+        setCacheValue("optWindow/addrSplit", m_ini->value("window/addrSplit"));
+        setCacheValue("optWindow/appsSplit", m_ini->value("window/appsSplit"));
+    }
+}
+
+void FortSettings::migrateIniOnWrite()
 {
     const int version = iniVersion();
     if (version == appVersion())
@@ -367,13 +384,19 @@ void FortSettings::removeMigratedKeys()
     if (version < 0x011000) {
         removeIniKey("confFlags/logErrors");
     }
+
+    // COMPAT: v3.0.0: Options Window
+    if (version < 0x030000) {
+        removeIniKey("window");
+        m_ini->setValue("optWindow/geometry", cacheValue("optWindow/geometry"));
+        m_ini->setValue("optWindow/maximized", cacheValue("optWindow/maximized"));
+        m_ini->setValue("optWindow/addrSplit", cacheValue("optWindow/addrSplit"));
+        m_ini->setValue("optWindow/appsSplit", cacheValue("optWindow/appsSplit"));
+    }
 }
 
 bool FortSettings::confMigrated() const
 {
-    if (!m_iniExists)
-        return false;
-
     const int version = iniVersion();
     if (version == appVersion())
         return false;
@@ -387,9 +410,6 @@ bool FortSettings::confMigrated() const
 
 bool FortSettings::confCanMigrate(QString &viaVersion) const
 {
-    if (!m_iniExists)
-        return true;
-
     const int version = iniVersion();
     if (version == appVersion())
         return true;
@@ -463,23 +483,48 @@ QVariant FortSettings::iniValue(const QString &key,
     if (key.isEmpty())
         return QVariant();
 
-    return m_ini->value(key, defaultValue);
+    // Try to load from cache
+    const auto cachedValue = cacheValue(key);
+    if (!cachedValue.isNull())
+        return cachedValue;
+
+    // Load from .ini
+    const auto value = m_ini->value(key, defaultValue);
+
+    // Save to cache
+    setCacheValue(key, value);
+
+    return value;
 }
 
 void FortSettings::setIniValue(const QString &key, const QVariant &value,
                                const QVariant &defaultValue)
 {
-    const QVariant oldValue = m_ini->value(key, defaultValue);
+    const QVariant oldValue = iniValue(key, defaultValue);
     if (oldValue == value)
         return;
 
+    // Save to .ini
     m_ini->setValue(key, value);
 
+    // Save to cache
+    setCacheValue(key, value);
+
     if (m_bulkUpdating) {
-        m_bulkUpdatingEmit = true;
+        m_bulkIniChanged = true;
     } else {
         emit iniChanged();
     }
+}
+
+QVariant FortSettings::cacheValue(const QString &key) const
+{
+    return m_cache.value(key);
+}
+
+void FortSettings::setCacheValue(const QString &key, const QVariant &value) const
+{
+    m_cache.insert(key, value);
 }
 
 void FortSettings::bulkUpdateBegin()
@@ -487,7 +532,7 @@ void FortSettings::bulkUpdateBegin()
     Q_ASSERT(!m_bulkUpdating);
 
     m_bulkUpdating = true;
-    m_bulkUpdatingEmit = false;
+    m_bulkIniChanged = false;
 }
 
 void FortSettings::bulkUpdateEnd()
@@ -496,8 +541,10 @@ void FortSettings::bulkUpdateEnd()
 
     m_bulkUpdating = false;
 
-    const bool doEmit = m_bulkUpdatingEmit;
-    m_bulkUpdatingEmit = false;
+    const bool doEmit = m_bulkIniChanged;
+    m_bulkIniChanged = false;
+
+    iniSync();
 
     if (doEmit) {
         emit iniChanged();

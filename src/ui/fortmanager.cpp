@@ -648,8 +648,8 @@ void FortManager::saveTrayFlags()
 
 void FortManager::saveWindowState()
 {
-    m_fortSettings->setWindowGeometry(m_appWindowState->geometry());
-    m_fortSettings->setWindowMaximized(m_appWindowState->maximized());
+    m_fortSettings->setOptWindowGeometry(m_appWindowState->geometry());
+    m_fortSettings->setOptWindowMaximized(m_appWindowState->maximized());
 
     emit afterSaveWindowState();
 }
@@ -657,8 +657,8 @@ void FortManager::saveWindowState()
 void FortManager::restoreWindowState()
 {
     m_appWindowState->restore(m_appWindow, QSize(1024, 768),
-                              m_fortSettings->windowGeometry(),
-                              m_fortSettings->windowMaximized());
+                              m_fortSettings->optWindowGeometry(),
+                              m_fortSettings->optWindowMaximized());
 
     emit afterRestoreWindowState();
 }

@@ -22,8 +22,8 @@ class FortSettings : public QObject
     Q_PROPERTY(QString passwordHash READ passwordHash WRITE setPasswordHash NOTIFY iniChanged)
     Q_PROPERTY(int appVersion READ appVersion CONSTANT)
     Q_PROPERTY(int iniVersion READ iniVersion WRITE setIniVersion NOTIFY iniChanged)
-    Q_PROPERTY(qreal windowAddrSplit READ windowAddrSplit WRITE setWindowAddrSplit NOTIFY iniChanged)
-    Q_PROPERTY(qreal windowAppsSplit READ windowAppsSplit WRITE setWindowAppsSplit NOTIFY iniChanged)
+    Q_PROPERTY(qreal optWindowAddrSplit READ optWindowAddrSplit WRITE setOptWindowAddrSplit NOTIFY iniChanged)
+    Q_PROPERTY(qreal optWindowAppsSplit READ optWindowAppsSplit WRITE setOptWindowAppsSplit NOTIFY iniChanged)
     Q_PROPERTY(bool graphWindowVisible READ graphWindowVisible WRITE setGraphWindowVisible NOTIFY iniChanged)
     Q_PROPERTY(bool graphWindowAlwaysOnTop READ graphWindowAlwaysOnTop WRITE setGraphWindowAlwaysOnTop NOTIFY iniChanged)
     Q_PROPERTY(bool graphWindowFrameless READ graphWindowFrameless WRITE setGraphWindowFrameless NOTIFY iniChanged)
@@ -70,20 +70,20 @@ public:
 
     int appVersion() const { return APP_VERSION; }
 
-    int iniVersion() const { return iniInt("base/version"); }
+    int iniVersion() const { return iniInt("base/version", appVersion()); }
     void setIniVersion(int v) { setIniValue("base/version", v); }
 
-    QRect windowGeometry() const { return iniValue("window/geometry").toRect(); }
-    void setWindowGeometry(const QRect &v) { setIniValue("window/geometry", v); }
+    QRect optWindowGeometry() const { return iniValue("optWindow/geometry").toRect(); }
+    void setOptWindowGeometry(const QRect &v) { setIniValue("optWindow/geometry", v); }
 
-    bool windowMaximized() const { return iniBool("window/maximized"); }
-    void setWindowMaximized(bool on) { setIniValue("window/maximized", on); }
+    bool optWindowMaximized() const { return iniBool("optWindow/maximized"); }
+    void setOptWindowMaximized(bool on) { setIniValue("optWindow/maximized", on); }
 
-    qreal windowAddrSplit() const { return iniReal("window/addrSplit"); }
-    void setWindowAddrSplit(qreal v) { setIniValue("window/addrSplit", v); }
+    qreal optWindowAddrSplit() const { return iniReal("optWindow/addrSplit"); }
+    void setOptWindowAddrSplit(qreal v) { setIniValue("optWindow/addrSplit", v); }
 
-    qreal windowAppsSplit() const { return iniReal("window/appsSplit"); }
-    void setWindowAppsSplit(qreal v) { setIniValue("window/appsSplit", v); }
+    qreal optWindowAppsSplit() const { return iniReal("optWindow/appsSplit"); }
+    void setOptWindowAppsSplit(qreal v) { setIniValue("optWindow/appsSplit", v); }
 
     bool graphWindowVisible() const { return iniBool("graphWindow/visible"); }
     void setGraphWindowVisible(bool on) { setIniValue("graphWindow/visible", on); }
@@ -208,7 +208,9 @@ private:
     bool tryToReadConf(FirewallConf &conf, const QString &filePath);
 
     QVariant migrateConf(const QVariant &confVar);
-    void removeMigratedKeys();
+
+    void migrateIniOnStartup();
+    void migrateIniOnWrite();
 
     bool iniBool(const QString &key, bool defaultValue = false) const;
     int iniInt(const QString &key, int defaultValue = 0) const;
@@ -227,6 +229,9 @@ private:
     void setIniValue(const QString &key, const QVariant &value,
                      const QVariant &defaultValue = QVariant());
 
+    QVariant cacheValue(const QString &key) const;
+    void setCacheValue(const QString &key, const QVariant &value) const;
+
     void removeIniKey(const QString &key);
 
     QStringList iniChildKeys(const QString &prefix) const;
@@ -239,8 +244,9 @@ private:
     uint m_iniExists        : 1;
     uint m_isPortable       : 1;
     uint m_hasProvBoot      : 1;
+
     uint m_bulkUpdating     : 1;
-    uint m_bulkUpdatingEmit : 1;
+    uint m_bulkIniChanged   : 1;
 
     QString m_profilePath;
     QString m_statPath;
@@ -250,6 +256,8 @@ private:
     QString m_errorMessage;
 
     QSettings *m_ini;
+
+    mutable QHash<QString, QVariant> m_cache;
 };
 
 #endif // FORTSETTINGS_H
