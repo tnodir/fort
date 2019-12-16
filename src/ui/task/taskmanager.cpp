@@ -22,11 +22,6 @@ TaskManager::TaskManager(FortManager *fortManager,
             this, &TaskManager::runExpiredTasks);
 }
 
-QQmlListProperty<TaskInfo> TaskManager::taskInfos()
-{
-    return {this, m_taskInfos};
-}
-
 void TaskManager::setupTasks()
 {
     m_taskInfoUpdateChecker = new TaskInfoUpdateChecker(this);

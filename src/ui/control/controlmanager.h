@@ -16,7 +16,7 @@ class ControlManager : public QObject
 
 public:
     explicit ControlManager(const QString &globalName,
-                            const QString &scriptPath,
+                            const QString &command,
                             QObject *parent = nullptr);
     ~ControlManager() override;
     CLASS_DELETE_COPY_MOVE(ControlManager)
@@ -31,10 +31,14 @@ signals:
 public slots:
 
 private slots:
-    void processRequest(const QString &scriptPath,
+    void processRequest(const QString &command,
                         const QStringList &args);
 
 private:
+    bool processCommand(const QString &command,
+                        const QStringList &args,
+                        QString &errorMessage);
+
     void setupWorker();
 
     void abort();
@@ -42,7 +46,7 @@ private:
 private:
     bool m_isClient;
 
-    QString m_scriptPath;
+    QString m_command;
 
     FortManager *m_fortManager;
     ControlWorker *m_worker;

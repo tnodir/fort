@@ -6,8 +6,6 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QMouseEvent>
-#include <QQmlApplicationEngine>
-#include <QQmlContext>
 #include <QSystemTrayIcon>
 #include <QThreadPool>
 #include <QTimer>
@@ -18,6 +16,7 @@
 #include "conf/confmanager.h"
 #include "conf/firewallconf.h"
 #include "driver/drivermanager.h"
+#include "form/optionswindow.h"
 #include "fortsettings.h"
 #include "graph/graphwindow.h"
 #include "log/logmanager.h"
@@ -31,7 +30,6 @@
 #include "task/taskinfoupdatechecker.h"
 #include "task/taskmanager.h"
 #include "translationmanager.h"
-#include "util/app/appiconprovider.h"
 #include "util/app/appinfocache.h"
 #include "util/app/appinfomanager.h"
 #include "util/dateutil.h"
@@ -52,9 +50,8 @@ FortManager::FortManager(FortSettings *fortSettings,
                          QObject *parent) :
     QObject(parent),
     m_trayIcon(new QSystemTrayIcon(this)),
-    m_engine(nullptr),
-    m_appWindow(nullptr),
-    m_appWindowState(new WindowStateWatcher(this)),
+    m_optWindow(nullptr),
+    m_optWindowState(new WindowStateWatcher(this)),
     m_graphWindow(nullptr),
     m_graphWindowState(new WidgetWindowStateWatcher(this)),
     m_fortSettings(fortSettings),
@@ -91,8 +88,6 @@ FortManager::FortManager(FortSettings *fortSettings,
 
     loadSettings();
 
-    registerQmlTypes();
-
     setupTaskManager();
     setupTranslationManager();
     setupTrayIcon();
@@ -106,48 +101,6 @@ FortManager::~FortManager()
 
     closeDriver();
     closeLogManager();
-}
-
-void FortManager::registerQmlTypes()
-{
-    qmlRegisterUncreatableType<DriverManager>("com.fortfirewall", 1, 0, "DriverManager",
-                                              "Singleton");
-    qmlRegisterUncreatableType<FortSettings>("com.fortfirewall", 1, 0, "FortSettings",
-                                             "Singleton");
-
-    qmlRegisterUncreatableType<LogManager>("com.fortfirewall", 1, 0, "LogManager",
-                                           "Singleton");
-    qmlRegisterUncreatableType<AppBlockedModel>("com.fortfirewall", 1, 0, "AppBlockedModel",
-                                                "Singleton");
-    qmlRegisterUncreatableType<AppStatModel>("com.fortfirewall", 1, 0, "AppStatModel",
-                                                "Singleton");
-    qmlRegisterUncreatableType<IpListModel>("com.fortfirewall", 1, 0, "IpListModel",
-                                            "Singleton");
-    qmlRegisterUncreatableType<TrafListModel>("com.fortfirewall", 1, 0, "TrafListModel",
-                                              "Singleton");
-
-    qmlRegisterUncreatableType<TranslationManager>("com.fortfirewall", 1, 0, "TranslationManager",
-                                                   "Singleton");
-    qmlRegisterUncreatableType<TaskManager>("com.fortfirewall", 1, 0, "TaskManager",
-                                            "Singleton");
-    qmlRegisterUncreatableType<TaskInfo>("com.fortfirewall", 1, 0, "TaskInfo",
-                                         "Singleton");
-    qmlRegisterUncreatableType<TaskInfoUpdateChecker>("com.fortfirewall", 1, 0, "TaskInfoUpdateChecker",
-                                                      "Singleton");
-
-    qmlRegisterType<AddressGroup>("com.fortfirewall", 1, 0, "AddressGroup");
-    qmlRegisterType<AppGroup>("com.fortfirewall", 1, 0, "AppGroup");
-    qmlRegisterType<FirewallConf>("com.fortfirewall", 1, 0, "FirewallConf");
-
-    qRegisterMetaType<AppInfo>();
-    qmlRegisterType<AppInfoCache>("com.fortfirewall", 1, 0, "AppInfoCache");
-    qmlRegisterType<DateUtil>("com.fortfirewall", 1, 0, "DateUtil");
-    qmlRegisterType<FileUtil>("com.fortfirewall", 1, 0, "FileUtil");
-    qmlRegisterType<GuiUtil>("com.fortfirewall", 1, 0, "GuiUtil");
-    qmlRegisterType<HostInfoCache>("com.fortfirewall", 1, 0, "HostInfoCache");
-    qmlRegisterType<NetUtil>("com.fortfirewall", 1, 0, "NetUtil");
-    qmlRegisterType<OsUtil>("com.fortfirewall", 1, 0, "OsUtil");
-    qmlRegisterType<StringUtil>("com.fortfirewall", 1, 0, "StringUtil");
 }
 
 void FortManager::setupThreadPool()
@@ -257,7 +210,7 @@ void FortManager::setupTrayIcon()
     connect(m_trayIcon, &QSystemTrayIcon::activated, this,
             [this](QSystemTrayIcon::ActivationReason reason) {
         if (reason == QSystemTrayIcon::Trigger) {
-            showWindow();
+            showOptionsWindow();
         }
     });
 
@@ -281,61 +234,26 @@ void FortManager::setupAppInfoCache()
     m_appInfoCache->setManager(manager);
 }
 
-bool FortManager::setupEngine()
+bool FortManager::setupOptionsWindow()
 {
     if (m_fortSettings->isPortable()) {
-        qputenv("QML_DISABLE_DISK_CACHE", "1");
         qputenv("QT_DISABLE_SHADER_DISK_CACHE", "1");
     }
 
-    m_engine = new QQmlApplicationEngine(this);
-
-    QQmlContext *context = m_engine->rootContext();
-    context->setContextProperty("fortManager", this);
-    context->setContextProperty("driverManager", m_driverManager);
-    context->setContextProperty("translationManager", TranslationManager::instance());
-    context->setContextProperty("taskManager", m_taskManager);
-    context->setContextProperty("appInfoCache", m_appInfoCache);
-
-    m_engine->addImageProvider(AppIconProvider::id(),
-                               new AppIconProvider(m_appInfoCache->manager()));
-
-    m_engine->load(QUrl("qrc:/qml/main.qml"));
-
-    const QList<QObject *> rootObjects = m_engine->rootObjects();
-
-    if (rootObjects.isEmpty()) {
-        showErrorBox("Cannot setup QML Engine");
-        return false;
-    }
+    m_optWindow = new OptionsWindow();
 
     connect(TranslationManager::instance(), &TranslationManager::languageChanged,
-            m_engine, &QQmlEngine::retranslate);
+            m_optWindow, &OptionsWindow::retranslateUi);
 
-    m_appWindow = qobject_cast<QWindow *>(rootObjects.first());
-    Q_ASSERT(m_appWindow);
-
-    m_appWindowState->install(m_appWindow);
+    m_optWindowState->install(m_optWindow);
 
     return true;
-}
-
-void FortManager::closeEngine()
-{
-    m_appWindow = nullptr;
-
-    if (m_engine) {
-        m_engine->deleteLater();
-        m_engine = nullptr;
-    }
 }
 
 void FortManager::closeUi()
 {
     closeGraphWindow(true);
-    closeWindow();
-
-    closeEngine();
+    closeOptionsWindow();
 }
 
 void FortManager::launch()
@@ -365,13 +283,13 @@ void FortManager::showTrayMenu(QMouseEvent *event)
     menu->popup(event->globalPos());
 }
 
-void FortManager::showWindow()
+void FortManager::showOptionsWindow()
 {
-    if (!m_engine) {
-        setupEngine();
+    if (!m_optWindow) {
+        setupOptionsWindow();
     }
 
-    if (!m_appWindow || !(m_appWindow->isVisible()
+    if (!m_optWindow || !(m_optWindow->isVisible()
                           || checkPassword()))
         return;
 
@@ -380,21 +298,24 @@ void FortManager::showWindow()
         setFirewallConfToEdit(newConf);
     }
 
-    m_appWindow->show();
-    m_appWindow->raise();
-    m_appWindow->requestActivate();
+    m_optWindow->show();
+    m_optWindow->raise();
+    m_optWindow->requestActivate();
 
-    restoreWindowState();
+    restoreOptWindowState();
 }
 
-void FortManager::closeWindow()
+void FortManager::closeOptionsWindow()
 {
-    if (!m_appWindow)
+    if (!m_optWindow)
         return;
 
-    saveWindowState();
+    saveOptWindowState();
 
-    m_appWindow->hide();
+    m_optWindow->hide();
+
+    m_optWindow->deleteLater();
+    m_optWindow = nullptr;
 
     setFirewallConfToEdit(nullptr);
 }
@@ -504,7 +425,7 @@ bool FortManager::saveOriginConf(const QString &message)
     if (!saveSettings(m_firewallConf))
         return false;
 
-    closeWindow();
+    closeOptionsWindow();
     showTrayMessage(message);
     return true;
 }
@@ -646,17 +567,17 @@ void FortManager::saveTrayFlags()
     updateDriverConf(true);
 }
 
-void FortManager::saveWindowState()
+void FortManager::saveOptWindowState()
 {
-    m_fortSettings->setOptWindowGeometry(m_appWindowState->geometry());
-    m_fortSettings->setOptWindowMaximized(m_appWindowState->maximized());
+    m_fortSettings->setOptWindowGeometry(m_optWindowState->geometry());
+    m_fortSettings->setOptWindowMaximized(m_optWindowState->maximized());
 
     emit afterSaveWindowState();
 }
 
-void FortManager::restoreWindowState()
+void FortManager::restoreOptWindowState()
 {
-    m_appWindowState->restore(m_appWindow, QSize(1024, 768),
+    m_optWindowState->restore(m_optWindow, QSize(1024, 768),
                               m_fortSettings->optWindowGeometry(),
                               m_fortSettings->optWindowMaximized());
 
@@ -699,7 +620,7 @@ void FortManager::updateTrayMenu()
 
     QAction *optionsAction = addAction(
                 menu, QIcon(":/images/cog.png"), tr("Options"),
-                this, SLOT(showWindow()));
+                this, SLOT(showOptionsWindow()));
     addHotKey(optionsAction, fortSettings()->hotKeyOptions(), hotKeyEnabled);
 
     m_graphWindowAction = addAction(

@@ -32,7 +32,7 @@ public:
     int getLanguageByName(const QString &localeName) const;
 
 signals:
-    void languageChanged(int language);
+    void languageChanged();
 
 public slots:
     bool switchLanguage(int language = 0);

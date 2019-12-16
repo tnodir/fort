@@ -173,7 +173,7 @@ public:
     QString confOldFilePath() const;
     QString confBackupFilePath() const;
 
-    QString controlPath() const { return m_controlPath; }
+    QString controlCommand() const { return m_controlCommand; }
 
     QStringList args() const { return m_args; }
 
@@ -250,7 +250,7 @@ private:
 
     QString m_profilePath;
     QString m_statPath;
-    QString m_controlPath;
+    QString m_controlCommand;
     QStringList m_args;
 
     QString m_errorMessage;

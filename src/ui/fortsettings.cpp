@@ -64,7 +64,7 @@ void FortSettings::processArguments(const QStringList &args)
 
     const QCommandLineOption controlOption(
                 QStringList() << "c" << "control",
-                "Control running instance by executing the JS file.", "control");
+                "Control running instance by executing the command.", "control");
     parser.addOption(controlOption);
 
     parser.addVersionOption();
@@ -98,8 +98,8 @@ void FortSettings::processArguments(const QStringList &args)
                     FileUtil::absolutePath(m_statPath));
     }
 
-    // Control JS file path
-    m_controlPath = parser.value(controlOption);
+    // Control command
+    m_controlCommand = parser.value(controlOption);
 
     // Other Arguments
     m_args = parser.positionalArguments();

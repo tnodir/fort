@@ -1,4 +1,4 @@
-QT += core gui qml quick widgets
+QT += core gui widgets
 
 CONFIG += c++11
 
@@ -18,6 +18,7 @@ SOURCES += \
     control/controlworker.cpp \
     driver/drivermanager.cpp \
     driver/driverworker.cpp \
+    form/optionswindow.cpp \
     fortcommon.cpp \
     fortmanager.cpp \
     fortsettings.cpp \
@@ -50,7 +51,6 @@ SOURCES += \
     task/taskupdatechecker.cpp \
     task/taskworker.cpp \
     translationmanager.cpp \
-    util/app/appiconprovider.cpp \
     util/app/appinfo.cpp \
     util/app/appinfocache.cpp \
     util/app/appinfojob.cpp \
@@ -94,6 +94,7 @@ HEADERS += \
     control/controlworker.h \
     driver/drivermanager.h \
     driver/driverworker.h \
+    form/optionswindow.h \
     fortcommon.h \
     fortmanager.h \
     fortsettings.h \
@@ -125,7 +126,6 @@ HEADERS += \
     task/taskupdatechecker.h \
     task/taskworker.h \
     translationmanager.h \
-    util/app/appiconprovider.h \
     util/app/appinfo.h \
     util/app/appinfocache.h \
     util/app/appinfojob.h \
@@ -174,9 +174,6 @@ QML_FILES += \
 
 OTHER_FILES += \
     $${QML_FILES}
-
-# QML files
-RESOURCES += fort_qml.qrc
 
 # Images
 RESOURCES += fort_images.qrc

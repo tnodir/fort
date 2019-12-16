@@ -19,11 +19,11 @@ public:
 
     void run() override;
 
-    bool post(const QString &scriptPath,
+    bool post(const QString &command,
               const QStringList &args);
 
 signals:
-    void requestReady(const QString &scriptPath,
+    void requestReady(const QString &command,
                       const QStringList &args);
 
 public slots:
@@ -35,9 +35,9 @@ private:
     bool writeData(const QByteArray &data);
     QByteArray readData() const;
 
-    bool writeDataStream(const QString &scriptPath,
+    bool writeDataStream(const QString &command,
                          const QStringList &args);
-    bool readDataStream(QString &scriptPath,
+    bool readDataStream(QString &command,
                         QStringList &args) const;
 
 private:

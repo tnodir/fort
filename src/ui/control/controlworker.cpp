@@ -38,12 +38,12 @@ void ControlWorker::abort()
     }
 }
 
-bool ControlWorker::post(const QString &scriptPath,
+bool ControlWorker::post(const QString &command,
                          const QStringList &args)
 {
     m_sharedMemory->lock();
 
-    const bool res = writeDataStream(scriptPath, args);
+    const bool res = writeDataStream(command, args);
 
     m_sharedMemory->unlock();
 

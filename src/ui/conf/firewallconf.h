@@ -2,7 +2,6 @@
 #define FIREWALLCONF_H
 
 #include <QObject>
-#include <QQmlListProperty>
 #include <QVariant>
 
 QT_FORWARD_DECLARE_CLASS(AddressGroup)
@@ -38,8 +37,6 @@ class FirewallConf : public QObject
     Q_PROPERTY(quint32 quotaDayMb READ quotaDayMb WRITE setQuotaDayMb NOTIFY quotaDayMbChanged)
     Q_PROPERTY(quint32 quotaMonthMb READ quotaMonthMb WRITE setQuotaMonthMb NOTIFY quotaMonthMbChanged)
     Q_PROPERTY(AddressGroup *inetAddressGroup READ inetAddressGroup NOTIFY addressGroupsChanged)
-    Q_PROPERTY(QQmlListProperty<AddressGroup> addressGroups READ addressGroups NOTIFY addressGroupsChanged)
-    Q_PROPERTY(QQmlListProperty<AppGroup> appGroups READ appGroups NOTIFY appGroupsChanged)
     Q_CLASSINFO("DefaultProperty", "appGroups")
 
 public:
@@ -121,12 +118,10 @@ public:
     AddressGroup *inetAddressGroup() const { return m_addressGroups.at(0); }
 
     const QList<AddressGroup *> &addressGroupsList() const { return m_addressGroups; }
-    QQmlListProperty<AddressGroup> addressGroups();
 
     Q_INVOKABLE AppGroup *appGroupByName(const QString &name) const;
 
     const QList<AppGroup *> &appGroupsList() const { return m_appGroups; }
-    QQmlListProperty<AppGroup> appGroups();
 
     const QList<AppGroup *> &removedAppGroupsList() const { return m_removedAppGroups; }
     void clearRemovedAppGroups() const;

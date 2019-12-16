@@ -6,7 +6,6 @@
 #include "mainwindow.h"
 #include "util/classhelpers.h"
 
-QT_FORWARD_DECLARE_CLASS(QQmlApplicationEngine)
 QT_FORWARD_DECLARE_CLASS(QSystemTrayIcon)
 
 QT_FORWARD_DECLARE_CLASS(AppInfoCache)
@@ -19,6 +18,7 @@ QT_FORWARD_DECLARE_CLASS(GraphWindow)
 QT_FORWARD_DECLARE_CLASS(HotKeyManager)
 QT_FORWARD_DECLARE_CLASS(LogManager)
 QT_FORWARD_DECLARE_CLASS(NativeEventFilter)
+QT_FORWARD_DECLARE_CLASS(OptionsWindow)
 QT_FORWARD_DECLARE_CLASS(QuotaManager)
 QT_FORWARD_DECLARE_CLASS(StatManager)
 QT_FORWARD_DECLARE_CLASS(TaskManager)
@@ -65,8 +65,8 @@ public slots:
     void showTrayMessage(const QString &message);
     void showTrayMenu(QMouseEvent *event);
 
-    void showWindow();
-    void closeWindow();
+    void showOptionsWindow();
+    void closeOptionsWindow();
 
     void showGraphWindow();
     void closeGraphWindow(bool storeVisibility = false);
@@ -98,8 +98,6 @@ private slots:
 private:
     void setFirewallConfToEdit(FirewallConf *conf);
 
-    static void registerQmlTypes();
-
     void setupThreadPool();
 
     bool setupDriver();
@@ -121,8 +119,7 @@ private:
 
     void setupAppInfoCache();
 
-    bool setupEngine();
-    void closeEngine();
+    bool setupOptionsWindow();
 
     void closeUi();
 
@@ -135,8 +132,8 @@ private:
     void updateLogManager(bool active);
     void updateStatManager(FirewallConf *conf);
 
-    void saveWindowState();
-    void restoreWindowState();
+    void saveOptWindowState();
+    void restoreOptWindowState();
 
     void saveGraphWindowState(bool visible);
     void restoreGraphWindowState();
@@ -159,10 +156,9 @@ private:
     MainWindow m_window;  // dummy window for tray icon
 
     QSystemTrayIcon *m_trayIcon;
-    QQmlApplicationEngine *m_engine;
 
-    QWindow *m_appWindow;
-    WindowStateWatcher *m_appWindowState;
+    OptionsWindow *m_optWindow;
+    WindowStateWatcher *m_optWindowState;
 
     GraphWindow *m_graphWindow;
     WidgetWindowStateWatcher *m_graphWindowState;

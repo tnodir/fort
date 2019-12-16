@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
     }
 
     ControlManager controlManager(QApplication::applicationName(),
-                                  fortSettings.controlPath());
+                                  fortSettings.controlCommand());
 
     // Send control request to running instance
     if (controlManager.isClient()) {

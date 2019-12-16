@@ -4,42 +4,17 @@
 			"common": [
 				"${QTPATH}/bin/Qt6Core.dll",
 				"${QTPATH}/bin/Qt6Gui.dll",
-				"${QTPATH}/bin/Qt6Qml.dll",
-				"${QTPATH}/bin/Qt6QmlModels.dll",
-				"${QTPATH}/bin/Qt6Quick.dll",
-				"${QTPATH}/bin/Qt6QuickControls2.dll",
-				"${QTPATH}/bin/Qt6QuickTemplates2.dll",
 				"${QTPATH}/bin/Qt6Widgets.dll"
 			],
 			"fort": [
 				"${BUILD}/FortFirewall.exe",
 				"${ROOT}/ChangeLog",
-				"${ROOT}/src/scripts			| *.qs Readme.txt	|",
 				"${ROOT}/src/ui/i18n			| *.qm			|"
 			]
 		},
 		"${TARGET}/driver": {
 			"fort": [
 				"${ROOT}/src/driver/scripts		| *.bat *.lnk		|"
-			]
-		},
-		"${TARGET}/imports": {
-			"common": [
-				"${QTPATH}/qml/QtQuick.2		| *.dll qmldir		| *d.dll",
-				"${QTPATH}/qml/QtQml			| *.dll qmldir		| *d.dll"
-			]
-		},
-		"${TARGET}/imports/QtQml": {
-			"common": [
-				"${QTPATH}/qml/QtQml/Models.2		| *.dll qmldir		| *d.dll"
-			]
-		},
-		"${TARGET}/imports/QtQuick": {
-			"common": [
-				"${QTPATH}/qml/QtQuick/Controls.2	| *.dll qmldir *.qml	| *d.dll",
-				"${QTPATH}/qml/QtQuick/Layouts		| *.dll qmldir		| *d.dll",
-				"${QTPATH}/qml/QtQuick/Templates.2	| *.dll qmldir		| *d.dll",
-				"${QTPATH}/qml/QtQuick/Window.2		| *.dll qmldir		| *d.dll"
 			]
 		},
 		"${TARGET}/plugins": {

@@ -1,13 +1,14 @@
 #include "controlmanager.h"
 
-#include <QJSEngine>
 #include <QLoggingCategory>
 #include <QThreadPool>
 
+#include "../conf/appgroup.h"
 #include "../conf/firewallconf.h"
 #include "../util/fileutil.h"
 #include "controlworker.h"
 #include "fortmanager.h"
+#include "fortsettings.h"
 
 Q_DECLARE_LOGGING_CATEGORY(CLOG_CONTROL_MANAGER)
 Q_LOGGING_CATEGORY(CLOG_CONTROL_MANAGER, "fort.controlManager")
@@ -16,11 +17,11 @@ Q_LOGGING_CATEGORY(CLOG_CONTROL_MANAGER, "fort.controlManager")
 #define logCritical() qCCritical(CLOG_CONTROL_MANAGER,)
 
 ControlManager::ControlManager(const QString &globalName,
-                               const QString &scriptPath,
+                               const QString &command,
                                QObject *parent) :
     QObject(parent),
-    m_isClient(!scriptPath.isEmpty()),
-    m_scriptPath(scriptPath),
+    m_isClient(!command.isEmpty()),
+    m_command(command),
     m_fortManager(nullptr),
     m_worker(nullptr),
     m_semaphore(globalName + QLatin1String("_ControlSemaphore"), 0,
@@ -64,57 +65,60 @@ bool ControlManager::post(const QStringList &args)
 
     ControlWorker worker(&m_semaphore, &m_sharedMemory);
 
-    return worker.post(m_scriptPath, args);
+    return worker.post(m_command, args);
 }
 
-void ControlManager::processRequest(const QString &scriptPath,
+void ControlManager::processRequest(const QString &command,
                                     const QStringList &args)
 {
-    const QString script = FileUtil::readFile(scriptPath);
-    if (script.isEmpty()) {
-        logWarning() << "Script is empty:"
-                     << scriptPath;
-        return;
+    QString errorMessage;
+    if (!processCommand(command, args, errorMessage)) {
+        logWarning() << "Bad control command" << errorMessage
+                     << ':' << command << args;
     }
+}
 
-    QJSEngine engine;
-    engine.installExtensions(QJSEngine::ConsoleExtension);
+bool ControlManager::processCommand(const QString &command,
+                                    const QStringList &args,
+                                    QString &errorMessage)
+{
+    const int argsSize = args.size();
 
-    QJSValue globalObject = engine.globalObject();
-
-    // Arguments
-    QJSValue argsJs = engine.newArray(args.size());
-    QJSValue argsMapJs = engine.newObject();
-    for (int i = 0, n = args.size(); i < n; ++i) {
-        const QString &arg = args.at(i);
-        argsJs.setProperty(i, arg);
-
-        const int sepPos = arg.indexOf('=');
-        if (sepPos > 0) {
-            const QString k = arg.left(sepPos);
-            const QString v = arg.mid(sepPos + 1);
-            argsMapJs.setProperty(k, v);
+    if (command == QLatin1String("ini")) {
+        if (argsSize < 3) {
+            errorMessage = "ini <property> <value>";
+            return false;
         }
+
+        auto settings = m_fortManager->fortSettings();
+
+        settings->setProperty(args.at(0).toLatin1(), QVariant(args.at(1)));
+    } else if (command == QLatin1String("conf")) {
+        if (argsSize < 3) {
+            errorMessage = "conf <property> <value>";
+            return false;
+        }
+
+        auto conf = m_fortManager->firewallConf();
+
+        const auto confPropName = args.at(0);
+
+        if (confPropName == QLatin1String("appGroup")) {
+            if (argsSize < 4) {
+                errorMessage = "conf appGroup <group-name> <property> <value>";
+                return false;
+            }
+
+            auto appGroup = conf->appGroupByName(args.at(1));
+            appGroup->setProperty(args.at(2).toLatin1(), QVariant(args.at(3)));
+        } else {
+            conf->setProperty(confPropName.toLatin1(), QVariant(args.at(1)));
+        }
+
+        m_fortManager->saveOriginConf(tr("Control command executed"));
     }
-    globalObject.setProperty("args", argsJs);
-    globalObject.setProperty("arg", argsMapJs);
 
-    // FirewallConf
-    QJSValue firewallConfJs = engine.newQObject(
-                m_fortManager->firewallConf());
-    globalObject.setProperty("conf", firewallConfJs);
-
-    // Run the script
-    const QJSValue res = engine.evaluate(script, scriptPath);
-    if (res.isError()) {
-        logWarning() << "Script error:"
-                     << scriptPath << "line"
-                     << res.property("lineNumber").toInt()
-                     << ":" << res.toString();
-        return;
-    }
-
-    m_fortManager->saveOriginConf(tr("Control script executed"));
+    return true;
 }
 
 void ControlManager::setupWorker()

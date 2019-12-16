@@ -89,7 +89,7 @@ bool TranslationManager::switchLanguage(int language)
     installTranslator(language, m_locale);
 
     m_language = language;
-    emit languageChanged(m_language);
+    emit languageChanged();
 
     return true;
 }

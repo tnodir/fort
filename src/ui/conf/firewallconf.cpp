@@ -211,11 +211,6 @@ void FirewallConf::setAppGroupBits(quint32 groupBits)
     }
 }
 
-QQmlListProperty<AddressGroup> FirewallConf::addressGroups()
-{
-    return {this, m_addressGroups};
-}
-
 AppGroup *FirewallConf::appGroupByName(const QString &name) const
 {
     for (AppGroup *appGroup : appGroupsList()) {
@@ -223,11 +218,6 @@ AppGroup *FirewallConf::appGroupByName(const QString &name) const
             return appGroup;
     }
     return nullptr;
-}
-
-QQmlListProperty<AppGroup> FirewallConf::appGroups()
-{
-    return {this, m_appGroups};
 }
 
 void FirewallConf::addAppGroup(AppGroup *appGroup, int to)

@@ -2,7 +2,6 @@
 #define TASKMANAGER_H
 
 #include <QObject>
-#include <QQmlListProperty>
 #include <QTimer>
 
 QT_FORWARD_DECLARE_CLASS(ConfManager)
@@ -15,7 +14,6 @@ class TaskManager : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(TaskInfoUpdateChecker *taskInfoUpdateChecker READ taskInfoUpdateChecker CONSTANT)
-    Q_PROPERTY(QQmlListProperty<TaskInfo> taskInfos READ taskInfos NOTIFY taskInfosChanged)
     Q_CLASSINFO("DefaultProperty", "taskInfos")
 
 public:
@@ -27,7 +25,6 @@ public:
     TaskInfoUpdateChecker *taskInfoUpdateChecker() const { return m_taskInfoUpdateChecker; }
 
     const QList<TaskInfo *> &taskInfosList() const { return m_taskInfos; }
-    QQmlListProperty<TaskInfo> taskInfos();
 
 signals:
     void taskInfosChanged();
