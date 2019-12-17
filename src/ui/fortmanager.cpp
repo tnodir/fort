@@ -16,9 +16,9 @@
 #include "conf/confmanager.h"
 #include "conf/firewallconf.h"
 #include "driver/drivermanager.h"
-#include "form/optionswindow.h"
+#include "form/graph/graphwindow.h"
+#include "form/opt/optionswindow.h"
 #include "fortsettings.h"
-#include "graph/graphwindow.h"
 #include "log/logmanager.h"
 #include "log/model/appblockedmodel.h"
 #include "log/model/appstatmodel.h"
@@ -44,14 +44,13 @@
 #include "util/osutil.h"
 #include "util/stringutil.h"
 #include "util/window/widgetwindowstatewatcher.h"
-#include "util/window/windowstatewatcher.h"
 
 FortManager::FortManager(FortSettings *fortSettings,
                          QObject *parent) :
     QObject(parent),
     m_trayIcon(new QSystemTrayIcon(this)),
     m_optWindow(nullptr),
-    m_optWindowState(new WindowStateWatcher(this)),
+    m_optWindowState(new WidgetWindowStateWatcher(this)),
     m_graphWindow(nullptr),
     m_graphWindowState(new WidgetWindowStateWatcher(this)),
     m_fortSettings(fortSettings),
@@ -300,7 +299,7 @@ void FortManager::showOptionsWindow()
 
     m_optWindow->show();
     m_optWindow->raise();
-    m_optWindow->requestActivate();
+    m_optWindow->activateWindow();
 
     restoreOptWindowState();
 }

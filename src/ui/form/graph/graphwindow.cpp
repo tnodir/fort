@@ -1,12 +1,11 @@
 #include "graphwindow.h"
 
-#include <QDebug>
 #include <QGuiApplication>
 #include <QVBoxLayout>
 
-#include "../fortsettings.h"
-#include "../util/dateutil.h"
-#include "../util/net/netutil.h"
+#include "../../fortsettings.h"
+#include "../../util/dateutil.h"
+#include "../../util/net/netutil.h"
 #include "axistickerspeed.h"
 #include "graphplot.h"
 

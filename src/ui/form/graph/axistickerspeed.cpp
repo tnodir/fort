@@ -1,6 +1,6 @@
 #include "axistickerspeed.h"
 
-#include "../util/net/netutil.h"
+#include "../../util/net/netutil.h"
 
 double AxisTickerSpeed::getTickStep(const QCPRange &range)
 {

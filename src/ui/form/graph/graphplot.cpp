@@ -1,7 +1,5 @@
 #include "graphplot.h"
 
-#include <QDebug>
-
 GraphPlot::GraphPlot(QWidget *parent) :
     QCustomPlot(parent),
     m_mousePressed(false),

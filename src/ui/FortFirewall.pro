@@ -18,13 +18,13 @@ SOURCES += \
     control/controlworker.cpp \
     driver/drivermanager.cpp \
     driver/driverworker.cpp \
-    form/optionswindow.cpp \
+    form/graph/axistickerspeed.cpp \
+    form/graph/graphplot.cpp \
+    form/graph/graphwindow.cpp \
+    form/opt/optionswindow.cpp \
     fortcommon.cpp \
     fortmanager.cpp \
     fortsettings.cpp \
-    graph/axistickerspeed.cpp \
-    graph/graphplot.cpp \
-    graph/graphwindow.cpp \
     log/logbuffer.cpp \
     log/logentry.cpp \
     log/logentryblocked.cpp \
@@ -94,13 +94,13 @@ HEADERS += \
     control/controlworker.h \
     driver/drivermanager.h \
     driver/driverworker.h \
-    form/optionswindow.h \
+    form/graph/axistickerspeed.h \
+    form/graph/graphplot.h \
+    form/graph/graphwindow.h \
+    form/opt/optionswindow.h \
     fortcommon.h \
     fortmanager.h \
     fortsettings.h \
-    graph/axistickerspeed.h \
-    graph/graphplot.h \
-    graph/graphwindow.h \
     log/logbuffer.h \
     log/logentry.h \
     log/logentryblocked.h \

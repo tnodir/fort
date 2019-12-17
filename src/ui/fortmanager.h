@@ -23,7 +23,6 @@ QT_FORWARD_DECLARE_CLASS(QuotaManager)
 QT_FORWARD_DECLARE_CLASS(StatManager)
 QT_FORWARD_DECLARE_CLASS(TaskManager)
 QT_FORWARD_DECLARE_CLASS(WidgetWindowStateWatcher)
-QT_FORWARD_DECLARE_CLASS(WindowStateWatcher)
 
 class FortManager : public QObject
 {
@@ -158,7 +157,7 @@ private:
     QSystemTrayIcon *m_trayIcon;
 
     OptionsWindow *m_optWindow;
-    WindowStateWatcher *m_optWindowState;
+    WidgetWindowStateWatcher *m_optWindowState;
 
     GraphWindow *m_graphWindow;
     WidgetWindowStateWatcher *m_graphWindowState;
