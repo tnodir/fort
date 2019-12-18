@@ -7,13 +7,18 @@
 #include <QKeyEvent>
 #include <QPushButton>
 #include <QStackedLayout>
-#include <QTabBar>
+#include <QTabWidget>
 #include <QToolButton>
 #include <QVBoxLayout>
 
 #include "../../fortsettings.h"
 #include "../../task/taskmanager.h"
 #include "../../task/taskinfoupdatechecker.h"
+#include "pages/addressespage.h"
+#include "pages/applicationspage.h"
+#include "pages/optionspage.h"
+#include "pages/schedulepage.h"
+#include "pages/statisticspage.h"
 
 namespace {
 
@@ -38,17 +43,17 @@ OptionsWindow::OptionsWindow(FortManager *fortManager,
 void OptionsWindow::setupUi()
 {
     auto layout = new QVBoxLayout();
-    layout->setContentsMargins(2, 2, 2, 2);
-    //layout->setMargin(0);
+    layout->setContentsMargins(4, 4, 4, 4);
+
+    setupPages();
 
     // Main Tab Bar
-    m_tabBar = new QTabBar();
-    m_tabBar->addTab(QIcon(":/images/cog.png"), QString());
-    m_tabBar->addTab(QIcon(":/images/link.png"), QString());
-    m_tabBar->addTab(QIcon(":/images/application_double.png"), QString());
-    m_tabBar->addTab(QIcon(":/images/application.png"), QString());
-    m_tabBar->addTab(QIcon(":/images/chart_line.png"), QString());
-    m_tabBar->addTab(QIcon(":/images/clock.png"), QString());
+    m_tabBar = new QTabWidget();
+    m_tabBar->addTab(m_optionsPage, QIcon(":/images/cog.png"), QString());
+    m_tabBar->addTab(m_addressesPage, QIcon(":/images/link.png"), QString());
+    m_tabBar->addTab(m_applicationsPage, QIcon(":/images/application_double.png"), QString());
+    m_tabBar->addTab(m_statisticsPage, QIcon(":/images/chart_line.png"), QString());
+    m_tabBar->addTab(m_schedulePage, QIcon(":/images/clock.png"), QString());
     layout->addWidget(m_tabBar);
 
     m_stackLayout = new QStackedLayout();
@@ -61,10 +66,19 @@ void OptionsWindow::setupUi()
     this->setLayout(layout);
 }
 
+void OptionsWindow::setupPages()
+{
+    m_optionsPage = new OptionsPage();
+    m_addressesPage = new AddressesPage();
+    m_applicationsPage = new ApplicationsPage();
+    m_statisticsPage = new StatisticsPage();
+    m_schedulePage = new SchedulePage();
+}
+
 QLayout *OptionsWindow::setupDialogButtons()
 {
     auto buttonsLayout = new QHBoxLayout();
-    buttonsLayout->setContentsMargins(2, 2, 2, 2);
+    //buttonsLayout->setContentsMargins(2, 2, 2, 2);
 
     m_logsButton = createLinkButton(":/images/folder_error.png", fortSettings()->logsPath());
     m_profileButton = createLinkButton(":/images/folder_user.png", fortSettings()->profilePath());
@@ -122,10 +136,9 @@ void OptionsWindow::retranslateUi()
 {
     m_tabBar->setTabText(0, tr("Options"));
     m_tabBar->setTabText(1, tr("IPv4 Addresses"));
-    m_tabBar->setTabText(2, tr("Program Groups"));
-    m_tabBar->setTabText(3, tr("Programs"));
-    m_tabBar->setTabText(4, tr("Statistics"));
-    m_tabBar->setTabText(5, tr("Schedule"));
+    m_tabBar->setTabText(2, tr("Application Groups"));
+    m_tabBar->setTabText(3, tr("Statistics"));
+    m_tabBar->setTabText(4, tr("Schedule"));
 
     m_logsButton->setText(tr("Logs"));
     m_profileButton->setText(tr("Profile"));

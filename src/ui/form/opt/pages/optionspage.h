@@ -1,13 +1,14 @@
 #ifndef OPTIONSPAGE_H
 #define OPTIONSPAGE_H
 
-#include <QObject>
+#include "basepage.h"
 
-class OptionsPage : public QObject
+class OptionsPage : public BasePage
 {
     Q_OBJECT
+
 public:
-    explicit OptionsPage(QObject *parent = nullptr);
+    explicit OptionsPage(QWidget *parent = nullptr);
 
 signals:
 

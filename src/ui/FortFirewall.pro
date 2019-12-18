@@ -23,6 +23,12 @@ SOURCES += \
     form/graph/graphwindow.cpp \
     form/opt/optionscontroller.cpp \
     form/opt/optionswindow.cpp \
+    form/opt/pages/addressespage.cpp \
+    form/opt/pages/applicationspage.cpp \
+    form/opt/pages/basepage.cpp \
+    form/opt/pages/optionspage.cpp \
+    form/opt/pages/schedulepage.cpp \
+    form/opt/pages/statisticspage.cpp \
     fortcommon.cpp \
     fortmanager.cpp \
     fortsettings.cpp \
@@ -100,6 +106,12 @@ HEADERS += \
     form/graph/graphwindow.h \
     form/opt/optionscontroller.h \
     form/opt/optionswindow.h \
+    form/opt/pages/addressespage.h \
+    form/opt/pages/applicationspage.h \
+    form/opt/pages/basepage.h \
+    form/opt/pages/optionspage.h \
+    form/opt/pages/schedulepage.h \
+    form/opt/pages/statisticspage.h \
     fortcommon.h \
     fortmanager.h \
     fortsettings.h \

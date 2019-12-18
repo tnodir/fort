@@ -1,6 +1,6 @@
 #include "optionspage.h"
 
-OptionsPage::OptionsPage(QObject *parent) : QObject(parent)
+OptionsPage::OptionsPage(QWidget *parent) :
+    BasePage(parent)
 {
-
 }
