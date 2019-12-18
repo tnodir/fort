@@ -50,13 +50,13 @@ int main(int argc, char *argv[])
         return FORT_ERROR_INSTANCE;
     }
 
-    FortManager fortManager(&fortSettings);
-    fortManager.launch();
-
     // Process control requests from clients
     if (!controlManager.listen(&fortManager)) {
         return FORT_ERROR_CONTROL;
     }
+
+    FortManager fortManager(&fortSettings);
+    fortManager.launch();
 
     return QApplication::exec();
 }

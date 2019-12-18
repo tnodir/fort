@@ -22,7 +22,10 @@
     <file>images/cross.png</file>
     <file>images/cut.png</file>
     <file>images/database_save.png</file>
+    <file>images/folder_database.png</file>
+    <file>images/folder_error.png</file>
     <file>images/folder_explore.png</file>
+    <file>images/folder_user.png</file>
     <file>images/link.png</file>
     <file>images/page_copy.png</file>
     <file>images/page_paste.png</file>
@@ -32,6 +35,8 @@
     <file>images/resultset_next.png</file>
     <file>images/resultset_previous.png</file>
     <file>images/run.png</file>
+    <file>images/server_compressed.png</file>
+    <file>images/server_go.png</file>
     <file>images/shield.png</file>
     <file>images/sheild-96.png</file>
     <file>images/stripes-light.png</file>

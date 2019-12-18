@@ -74,6 +74,10 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_taskManager(new TaskManager(this, this)),
     m_appInfoCache(new AppInfoCache(this))
 {
+    if (m_fortSettings->isPortable()) {
+        qputenv("QT_DISABLE_SHADER_DISK_CACHE", "1");
+    }
+
     setupThreadPool();
 
     setupLogger();
@@ -235,11 +239,7 @@ void FortManager::setupAppInfoCache()
 
 bool FortManager::setupOptionsWindow()
 {
-    if (m_fortSettings->isPortable()) {
-        qputenv("QT_DISABLE_SHADER_DISK_CACHE", "1");
-    }
-
-    m_optWindow = new OptionsWindow();
+    m_optWindow = new OptionsWindow(this);
 
     connect(TranslationManager::instance(), &TranslationManager::languageChanged,
             m_optWindow, &OptionsWindow::retranslateUi);

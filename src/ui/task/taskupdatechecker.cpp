@@ -61,7 +61,7 @@ bool TaskUpdateChecker::parseBuffer(const QByteArray &buffer)
     m_releaseNotes = map["body"].toString();  // ChangeLog
 
     // Cut release text from dashes
-    const int releaseDashesPos = m_releaseNotes.indexOf("---");
+    const int releaseDashesPos = m_releaseNotes.indexOf("\n---");
     if (releaseDashesPos > 0) {
         m_releaseNotes.truncate(releaseDashesPos);
     }
