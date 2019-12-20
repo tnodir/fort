@@ -3,10 +3,12 @@
 
 #include <QObject>
 
+QT_FORWARD_DECLARE_CLASS(DriverManager)
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
 QT_FORWARD_DECLARE_CLASS(FortManager)
 QT_FORWARD_DECLARE_CLASS(FortSettings)
 QT_FORWARD_DECLARE_CLASS(TaskManager)
+QT_FORWARD_DECLARE_CLASS(TranslationManager)
 
 class OptionsController : public QObject
 {
@@ -33,9 +35,12 @@ public:
 
     void initialize();
 
-    FortSettings *settings();
-    FirewallConf *conf();
-    TaskManager *taskManager();
+    FortManager *fortManager() const { return m_fortManager; }
+    FortSettings *settings() const;
+    FirewallConf *conf() const;
+    TaskManager *taskManager() const;
+    DriverManager *driverManager() const;
+    TranslationManager *translationManager() const;
 
 signals:
     void editedChanged();

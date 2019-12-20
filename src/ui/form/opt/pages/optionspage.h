@@ -25,6 +25,9 @@ private:
     void setupEditPassword();
     void retranslateEditPassword();
     void setupComboLanguage();
+    QFrame *setupDriverFrame();
+    void setupDriverIcon();
+    void retranslateDriverMessage();
 
 private:
     bool m_iniEdited = false;
@@ -40,6 +43,11 @@ private:
     QLineEdit *m_editPassword = nullptr;
     QLabel *m_labelLanguage = nullptr;
     QComboBox *m_comboLanguage = nullptr;
+    QLabel *m_iconDriver = nullptr;
+    QLabel *m_labelDriver = nullptr;
+    QLabel *m_labelDriverMessage = nullptr;
+    QPushButton *m_installDriverButton = nullptr;
+    QPushButton *m_removeDriverButton = nullptr;
 };
 
 #endif // OPTIONSPAGE_H

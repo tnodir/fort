@@ -2,6 +2,7 @@
 
 #include "../../fortmanager.h"
 #include "../../fortsettings.h"
+#include "../../translationmanager.h"
 
 OptionsController::OptionsController(FortManager *fortManager,
                                      QObject *parent) :
@@ -54,19 +55,29 @@ void OptionsController::initialize()
     }
 }
 
-FortSettings *OptionsController::settings()
+FortSettings *OptionsController::settings() const
 {
     return m_fortManager->fortSettings();
 }
 
-FirewallConf *OptionsController::conf()
+FirewallConf *OptionsController::conf() const
 {
     return m_fortManager->firewallConfToEdit();
 }
 
-TaskManager *OptionsController::taskManager()
+TaskManager *OptionsController::taskManager() const
 {
     return m_fortManager->taskManager();
+}
+
+DriverManager *OptionsController::driverManager() const
+{
+    return m_fortManager->driverManager();
+}
+
+TranslationManager *OptionsController::translationManager() const
+{
+    return TranslationManager::instance();
 }
 
 void OptionsController::closeWindow()

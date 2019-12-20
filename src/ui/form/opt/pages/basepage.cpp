@@ -2,6 +2,7 @@
 
 #include <QCheckBox>
 #include <QComboBox>
+#include <QPushButton>
 
 #include "../optionscontroller.h"
 
@@ -13,14 +14,29 @@ BasePage::BasePage(OptionsController *ctrl,
     setupController();
 }
 
-FortSettings *BasePage::settings()
+FortManager *BasePage::fortManager() const
+{
+    return ctrl()->fortManager();
+}
+
+FortSettings *BasePage::settings() const
 {
     return ctrl()->settings();
 }
 
-FirewallConf *BasePage::conf()
+FirewallConf *BasePage::conf() const
 {
     return ctrl()->conf();
+}
+
+DriverManager *BasePage::driverManager() const
+{
+    return ctrl()->driverManager();
+}
+
+TranslationManager *BasePage::translationManager() const
+{
+    return ctrl()->translationManager();
 }
 
 void BasePage::setupController()
@@ -52,6 +68,15 @@ QComboBox *BasePage::createComboBox(const QStringList &texts,
     cb->addItems(texts);
 
     connect(cb, QOverload<int>::of(&QComboBox::activated), onActivated);
+
+    return cb;
+}
+
+QPushButton *BasePage::createButton(const std::function<void ()> &onClicked)
+{
+    auto cb = new QPushButton();
+
+    connect(cb, &QPushButton::clicked, onClicked);
 
     return cb;
 }

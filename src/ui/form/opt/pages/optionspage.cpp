@@ -5,10 +5,13 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QPushButton>
 #include <QVBoxLayout>
 
+#include "../../../fortmanager.h"
 #include "../../../fortsettings.h"
 #include "../../../conf/firewallconf.h"
+#include "../../../driver/drivermanager.h"
 #include "../../../translationmanager.h"
 #include "../../../util/stringutil.h"
 #include "../optionscontroller.h"
@@ -62,6 +65,12 @@ void OptionsPage::onRetranslateUi()
     retranslateEditPassword();
 
     m_labelLanguage->setText(tr("Language:"));
+
+    m_labelDriver->setText(tr("Driver:"));
+    retranslateDriverMessage();
+
+    m_installDriverButton->setText(tr("Install"));
+    m_removeDriverButton->setText(tr("Remove"));
 }
 
 void OptionsPage::setupUi()
@@ -149,7 +158,12 @@ void OptionsPage::setupUi()
     // Column #2
     auto colLayout2 = new QVBoxLayout();
     colLayout2->setSpacing(10);
-    rowLayout->addLayout(colLayout2);
+    rowLayout->addLayout(colLayout2, 1);
+
+    auto driverFrame = setupDriverFrame();
+
+    colLayout2->addWidget(driverFrame, 0, Qt::AlignHCenter);
+    colLayout2->addStretch(1);
 
     this->setLayout(rowLayout);
 }
@@ -182,20 +196,106 @@ void OptionsPage::retranslateEditPassword()
 
 void OptionsPage::setupComboLanguage()
 {
-    m_comboLanguage = createComboBox(TranslationManager::instance()->naturalLabels(), [&](int index) {
-        auto translationManager = TranslationManager::instance();
-        if (translationManager->switchLanguage(index)) {
-            settings()->setLanguage(translationManager->localeName());
+    m_comboLanguage = createComboBox(translationManager()->naturalLabels(), [&](int index) {
+        if (translationManager()->switchLanguage(index)) {
+            settings()->setLanguage(translationManager()->localeName());
         }
     });
     m_comboLanguage->setFixedWidth(200);
 
     const auto refreshComboLanguage = [&] {
-        m_comboLanguage->setCurrentIndex(TranslationManager::instance()->language());
+        m_comboLanguage->setCurrentIndex(translationManager()->language());
     };
 
     refreshComboLanguage();
 
-    connect(TranslationManager::instance(), &TranslationManager::languageChanged,
-            this, refreshComboLanguage);
+    connect(translationManager(), &TranslationManager::languageChanged, this, refreshComboLanguage);
+}
+
+QFrame *OptionsPage::setupDriverFrame()
+{
+    auto frame = new QFrame();
+    frame->setFrameShape(QFrame::Panel);
+
+    auto colLayout = new QVBoxLayout();
+    colLayout->setMargin(15);
+    colLayout->setSpacing(10);
+    frame->setLayout(colLayout);
+
+    // Label Row
+    auto labelLayout = new QHBoxLayout();
+    labelLayout->setSpacing(4);
+    colLayout->addLayout(labelLayout);
+
+    m_labelDriver = new QLabel();
+    {
+        QFont font;
+        font.setBold(true);
+        m_labelDriver->setFont(font);
+    }
+
+    m_labelDriverMessage = new QLabel();
+
+    setupDriverIcon();
+
+    labelLayout->addStretch(1);
+    labelLayout->addWidget(m_iconDriver, 0, Qt::AlignTop);
+    labelLayout->addWidget(m_labelDriver);
+    labelLayout->addWidget(m_labelDriverMessage);
+    labelLayout->addStretch(1);
+
+    // Buttons Row
+    auto buttonsLayout = new QHBoxLayout();
+    buttonsLayout->setSpacing(10);
+    colLayout->addLayout(buttonsLayout);
+
+    m_installDriverButton = createButton([&] {
+        if (fortManager()->showQuestionBox(tr("Install Driver?"))) {
+            fortManager()->installDriver();
+        }
+    });
+    m_removeDriverButton = createButton([&] {
+        if (fortManager()->showQuestionBox(tr("Remove Driver?"))) {
+            fortManager()->removeDriver();
+        }
+    });
+
+    buttonsLayout->addStretch(1);
+    buttonsLayout->addWidget(m_installDriverButton);
+    buttonsLayout->addWidget(m_removeDriverButton);
+    buttonsLayout->addStretch(1);
+
+    return frame;
+}
+
+void OptionsPage::setupDriverIcon()
+{
+    m_iconDriver = new QLabel();
+
+    const auto refreshDriverIcon = [&] {
+        const auto iconPath = driverManager()->isDeviceOpened()
+                ? (driverManager()->errorMessage().isEmpty()
+                   ? ":/images/plugin.png"
+                   : ":/images/plugin_error.png")
+                : ":/images/plugin_disabled.png";
+
+        m_iconDriver->setPixmap(QPixmap(iconPath));
+
+        retranslateDriverMessage();
+    };
+
+    refreshDriverIcon();
+
+    connect(driverManager(), &DriverManager::isDeviceOpenedChanged, this, refreshDriverIcon);
+}
+
+void OptionsPage::retranslateDriverMessage()
+{
+    const auto text = driverManager()->isDeviceOpened()
+            ? (!driverManager()->errorMessage().isEmpty()
+               ? driverManager()->errorMessage()
+               : tr("Installed"))
+            : tr("Not Installed");
+
+    m_labelDriverMessage->setText(text);
 }

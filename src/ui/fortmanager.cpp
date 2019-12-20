@@ -412,6 +412,12 @@ void FortManager::showInfoBox(const QString &text,
     QMessageBox::information(&m_window, title, text);
 }
 
+bool FortManager::showQuestionBox(const QString &text,
+                                  const QString &title)
+{
+    return QMessageBox::question(&m_window, title, text) == QMessageBox::Yes;
+}
+
 QStringList FortManager::getOpenFileNames(const QString &title,
                                           const QString &filter)
 {

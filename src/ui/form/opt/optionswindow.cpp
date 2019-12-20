@@ -69,7 +69,7 @@ void OptionsWindow::setupUi()
 
     // Size
     this->resize(1024, 768);
-    this->setMinimumSize(950, 600);
+    this->setMinimumSize(800, 500);
 }
 
 void OptionsWindow::setupPages()

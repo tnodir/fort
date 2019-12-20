@@ -80,6 +80,8 @@ public slots:
                       const QString &title = QString());
     void showInfoBox(const QString &text,
                      const QString &title = QString());
+    bool showQuestionBox(const QString &text,
+                         const QString &title = QString());
 
     QStringList getOpenFileNames(const QString &title = QString(),
                                  const QString &filter = QString());

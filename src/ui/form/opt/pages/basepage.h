@@ -9,10 +9,14 @@ QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QComboBox)
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QLineEdit)
+QT_FORWARD_DECLARE_CLASS(QPushButton)
 
+QT_FORWARD_DECLARE_CLASS(DriverManager)
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
+QT_FORWARD_DECLARE_CLASS(FortManager)
 QT_FORWARD_DECLARE_CLASS(FortSettings)
 QT_FORWARD_DECLARE_CLASS(OptionsController)
+QT_FORWARD_DECLARE_CLASS(TranslationManager)
 
 class BasePage : public QFrame
 {
@@ -23,9 +27,12 @@ public:
                       QWidget *parent = nullptr);
 
 protected:
-    OptionsController *ctrl() { return m_ctrl; }
-    FortSettings *settings();
-    FirewallConf *conf();
+    OptionsController *ctrl() const { return m_ctrl; }
+    FortManager *fortManager() const;
+    FortSettings *settings() const;
+    FirewallConf *conf() const;
+    DriverManager *driverManager() const;
+    TranslationManager *translationManager() const;
 
 protected slots:
     virtual void onEditResetted() {}
@@ -39,6 +46,7 @@ protected:
                                      const std::function<void (bool checked)> &onToggled);
     static QComboBox *createComboBox(const QStringList &texts,
                                      const std::function<void (int index)> &onActivated);
+    static QPushButton *createButton(const std::function<void ()> &onClicked);
 
 private:
     void setupController();
