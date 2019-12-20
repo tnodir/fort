@@ -1,6 +1,7 @@
 #include "applicationspage.h"
 
-ApplicationsPage::ApplicationsPage(QWidget *parent) :
-    BasePage(parent)
+ApplicationsPage::ApplicationsPage(OptionsController *ctrl,
+                                   QWidget *parent) :
+    BasePage(ctrl, parent)
 {
 }

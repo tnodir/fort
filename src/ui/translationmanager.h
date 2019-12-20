@@ -51,7 +51,7 @@ private:
     static QString i18nDir();
 
 private:
-    int m_language;
+    int m_language = 0;
 
     QLocale m_locale;
 

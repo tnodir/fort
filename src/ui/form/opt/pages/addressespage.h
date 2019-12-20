@@ -7,7 +7,8 @@ class AddressesPage : public BasePage
 {
     Q_OBJECT
 public:
-    explicit AddressesPage(QWidget *parent = nullptr);
+    explicit AddressesPage(OptionsController *ctrl = nullptr,
+                           QWidget *parent = nullptr);
 
 signals:
 

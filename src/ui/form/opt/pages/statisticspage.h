@@ -8,7 +8,8 @@ class StatisticsPage : public BasePage
     Q_OBJECT
 
 public:
-    explicit StatisticsPage(QWidget *parent = nullptr);
+    explicit StatisticsPage(OptionsController *ctrl = nullptr,
+                            QWidget *parent = nullptr);
 
 signals:
 

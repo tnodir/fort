@@ -203,6 +203,9 @@ void FortManager::setupTranslationManager()
 {
     TranslationManager::instance()->switchLanguageByName(
                 m_fortSettings->language());
+
+    connect(TranslationManager::instance(), &TranslationManager::languageChanged,
+            this, &FortManager::updateTrayMenu);
 }
 
 void FortManager::setupTrayIcon()
@@ -284,17 +287,15 @@ void FortManager::showTrayMenu(QMouseEvent *event)
 
 void FortManager::showOptionsWindow()
 {
-    if (!m_optWindow) {
-        setupOptionsWindow();
-    }
-
-    if (!m_optWindow || !(m_optWindow->isVisible()
-                          || checkPassword()))
+    if (!(m_optWindow && m_optWindow->isVisible())
+            && !checkPassword())
         return;
 
-    if (m_firewallConfToEdit == nullptr) {
+    if (!m_optWindow) {
         auto newConf = m_confManager->cloneConf(*m_firewallConf, this);
         setFirewallConfToEdit(newConf);
+
+        setupOptionsWindow();
     }
 
     m_optWindow->show();
@@ -536,16 +537,6 @@ void FortManager::updateLogManager(bool active)
 void FortManager::updateStatManager(FirewallConf *conf)
 {
     m_statManager->setFirewallConf(conf);
-}
-
-void FortManager::setLanguage(int language)
-{
-    if (!TranslationManager::instance()->switchLanguage(language))
-        return;
-
-    m_fortSettings->setLanguage(TranslationManager::instance()->localeName());
-
-    updateTrayMenu();
 }
 
 void FortManager::saveTrayFlags()

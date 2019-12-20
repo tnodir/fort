@@ -1,6 +1,7 @@
 #include "statisticspage.h"
 
-StatisticsPage::StatisticsPage(QWidget *parent) :
-    BasePage(parent)
+StatisticsPage::StatisticsPage(OptionsController *ctrl,
+                               QWidget *parent) :
+    BasePage(ctrl, parent)
 {
 }

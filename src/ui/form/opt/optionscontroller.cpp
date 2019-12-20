@@ -49,14 +49,19 @@ void OptionsController::resetEdited()
 void OptionsController::initialize()
 {
     // Settings/configuration was migrated?
-    if (fortSettings()->confMigrated()) {
+    if (settings()->confMigrated()) {
         setConfEdited(true);
     }
 }
 
-FortSettings *OptionsController::fortSettings()
+FortSettings *OptionsController::settings()
 {
     return m_fortManager->fortSettings();
+}
+
+FirewallConf *OptionsController::conf()
+{
+    return m_fortManager->firewallConfToEdit();
 }
 
 TaskManager *OptionsController::taskManager()
@@ -71,7 +76,7 @@ void OptionsController::closeWindow()
 
 void OptionsController::save(bool closeOnSuccess)
 {
-    fortSettings()->bulkUpdateBegin();
+    settings()->bulkUpdateBegin();
 
     emit aboutToSave();
 
@@ -87,7 +92,7 @@ void OptionsController::save(bool closeOnSuccess)
         emit saved();
     }
 
-    fortSettings()->bulkUpdateEnd();
+    settings()->bulkUpdateEnd();
 
     if (confSaved) {
         if (closeOnSuccess) {

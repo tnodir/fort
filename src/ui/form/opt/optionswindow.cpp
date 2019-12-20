@@ -2,11 +2,9 @@
 
 #include <QCloseEvent>
 #include <QDesktopServices>
-#include <QHBoxLayout>
 #include <QIcon>
 #include <QKeyEvent>
 #include <QPushButton>
-#include <QStackedLayout>
 #include <QTabWidget>
 #include <QToolButton>
 #include <QVBoxLayout>
@@ -34,16 +32,16 @@ OptionsWindow::OptionsWindow(FortManager *fortManager,
     WidgetWindow(parent),
     m_ctrl(fortManager)
 {
+    ctrl()->initialize();
+
     setupUi();
     retranslateUi();
-
-    ctrl()->initialize();
 }
 
 void OptionsWindow::setupUi()
 {
     auto layout = new QVBoxLayout();
-    layout->setContentsMargins(4, 4, 4, 4);
+    layout->setContentsMargins(6, 6, 6, 6);
 
     setupPages();
 
@@ -56,34 +54,41 @@ void OptionsWindow::setupUi()
     m_tabBar->addTab(m_schedulePage, QIcon(":/images/clock.png"), QString());
     layout->addWidget(m_tabBar);
 
-    m_stackLayout = new QStackedLayout();
-    layout->addLayout(m_stackLayout);
-
     // Dialog butons
     auto buttonsLayout = setupDialogButtons();
     layout->addLayout(buttonsLayout);
 
     this->setLayout(layout);
+
+    // Font
+    {
+        QFont font("Tahoma");
+        font.setPixelSize(16);
+        this->setFont(font);
+    }
+
+    // Size
+    this->resize(1024, 768);
+    this->setMinimumSize(950, 600);
 }
 
 void OptionsWindow::setupPages()
 {
-    m_optionsPage = new OptionsPage();
-    m_addressesPage = new AddressesPage();
-    m_applicationsPage = new ApplicationsPage();
-    m_statisticsPage = new StatisticsPage();
-    m_schedulePage = new SchedulePage();
+    m_optionsPage = new OptionsPage(ctrl());
+    m_addressesPage = new AddressesPage(ctrl());
+    m_applicationsPage = new ApplicationsPage(ctrl());
+    m_statisticsPage = new StatisticsPage(ctrl());
+    m_schedulePage = new SchedulePage(ctrl());
 }
 
 QLayout *OptionsWindow::setupDialogButtons()
 {
     auto buttonsLayout = new QHBoxLayout();
-    //buttonsLayout->setContentsMargins(2, 2, 2, 2);
 
-    m_logsButton = createLinkButton(":/images/folder_error.png", fortSettings()->logsPath());
-    m_profileButton = createLinkButton(":/images/folder_user.png", fortSettings()->profilePath());
-    m_statButton = createLinkButton(":/images/folder_database.png", fortSettings()->statPath());
-    m_releasesButton = createLinkButton(":/images/server_go.png", fortSettings()->appUpdatesUrl());
+    m_logsButton = createLinkButton(":/images/folder_error.png", settings()->logsPath());
+    m_profileButton = createLinkButton(":/images/folder_user.png", settings()->profilePath());
+    m_statButton = createLinkButton(":/images/folder_database.png", settings()->statPath());
+    m_releasesButton = createLinkButton(":/images/server_go.png", settings()->appUpdatesUrl());
     m_newVersionButton = createLinkButton(":/images/server_compressed.png");
 
     connect(m_logsButton, &QAbstractButton::clicked, this, &OptionsWindow::onLinkClicked);
@@ -110,6 +115,8 @@ QLayout *OptionsWindow::setupDialogButtons()
     connect(m_applyButton, &QAbstractButton::clicked, ctrl(), &OptionsController::applyChanges);
     connect(m_cancelButton, &QAbstractButton::clicked, ctrl(), &OptionsController::closeWindow);
 
+    setupOkApplyButtons();
+
     buttonsLayout->addWidget(m_okButton);
     buttonsLayout->addWidget(m_applyButton);
     buttonsLayout->addWidget(m_cancelButton);
@@ -132,8 +139,23 @@ void OptionsWindow::setupNewVersionButton()
     connect(updateChecker, &TaskInfoUpdateChecker::versionChanged, this, refreshNewVersionButton);
 }
 
+void OptionsWindow::setupOkApplyButtons()
+{
+    const auto refreshOkApplyButtons = [&] {
+        const bool anyEdited = ctrl()->anyEdited();
+        m_okButton->setEnabled(anyEdited);
+        m_applyButton->setEnabled(anyEdited);
+    };
+
+    refreshOkApplyButtons();
+
+    connect(ctrl(), &OptionsController::editedChanged, this, refreshOkApplyButtons);
+}
+
 void OptionsWindow::retranslateUi()
 {
+    ctrl()->retranslateUi();
+
     m_tabBar->setTabText(0, tr("Options"));
     m_tabBar->setTabText(1, tr("IPv4 Addresses"));
     m_tabBar->setTabText(2, tr("Application Groups"));
@@ -167,9 +189,9 @@ void OptionsWindow::keyReleaseEvent(QKeyEvent *event)
     }
 }
 
-FortSettings *OptionsWindow::fortSettings()
+FortSettings *OptionsWindow::settings()
 {
-    return ctrl()->fortSettings();
+    return ctrl()->settings();
 }
 
 TaskManager *OptionsWindow::taskManager()

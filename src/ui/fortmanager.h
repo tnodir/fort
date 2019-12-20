@@ -89,8 +89,6 @@ public slots:
     bool applyConf(bool onlyFlags = false);
     bool applyConfImmediateFlags();
 
-    void setLanguage(int language);
-
 private slots:
     void saveTrayFlags();
 

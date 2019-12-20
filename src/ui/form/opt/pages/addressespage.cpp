@@ -1,6 +1,7 @@
 #include "addressespage.h"
 
-AddressesPage::AddressesPage(QWidget *parent) :
-    BasePage(parent)
+AddressesPage::AddressesPage(OptionsController *ctrl,
+                             QWidget *parent) :
+    BasePage(ctrl, parent)
 {
 }

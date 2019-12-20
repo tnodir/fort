@@ -8,7 +8,8 @@ class ApplicationsPage : public BasePage
     Q_OBJECT
 
 public:
-    explicit ApplicationsPage(QWidget *parent = nullptr);
+    explicit ApplicationsPage(OptionsController *ctrl = nullptr,
+                              QWidget *parent = nullptr);
 
 signals:
 

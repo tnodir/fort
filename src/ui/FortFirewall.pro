@@ -176,19 +176,6 @@ HEADERS += \
 
 include(../common/Common.pri)
 
-QML_FILES += \
-    qml/*.qml \
-    qml/box/*.qml \
-    qml/controls/*.qml \
-    qml/pages/*.qml \
-    qml/pages/addresses/*.qml \
-    qml/pages/apps/*.qml \
-    qml/pages/log/*.qml \
-    qml/pages/schedule/*.qml
-
-OTHER_FILES += \
-    $${QML_FILES}
-
 # Images
 RESOURCES += fort_images.qrc
 

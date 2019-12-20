@@ -16,6 +16,9 @@ QString StringUtil::capitalize(const QString &text)
 
 QString StringUtil::cryptoHash(const QString &text)
 {
+    if (text.isEmpty())
+        return QString();
+
     const QByteArray data = text.toUtf8();
     const QByteArray hash = QCryptographicHash::hash(
                 data, QCryptographicHash::Sha1);

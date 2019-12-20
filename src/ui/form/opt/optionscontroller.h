@@ -3,6 +3,7 @@
 
 #include <QObject>
 
+QT_FORWARD_DECLARE_CLASS(FirewallConf)
 QT_FORWARD_DECLARE_CLASS(FortManager)
 QT_FORWARD_DECLARE_CLASS(FortSettings)
 QT_FORWARD_DECLARE_CLASS(TaskManager)
@@ -24,11 +25,16 @@ public:
     bool othersEdited() const { return m_othersEdited; }
     void setOthersEdited(bool v);
 
+    bool anyEdited() const {
+        return confFlagsEdited() || confEdited() || othersEdited();
+    }
+
     void resetEdited();
 
     void initialize();
 
-    FortSettings *fortSettings();
+    FortSettings *settings();
+    FirewallConf *conf();
     TaskManager *taskManager();
 
 signals:
@@ -37,6 +43,8 @@ signals:
 
     void aboutToSave();
     void saved();
+
+    void retranslateUi();
 
 public slots:
     void closeWindow();

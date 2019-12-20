@@ -11,8 +11,7 @@
 #define TRANSLATION_FILE_SUFFIX     ".qm"
 
 TranslationManager::TranslationManager(QObject *parent) :
-    QObject(parent),
-    m_language(0)
+    QObject(parent)
 {
     setupTranslation();
 }

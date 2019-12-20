@@ -8,7 +8,8 @@ class SchedulePage : public BasePage
     Q_OBJECT
 
 public:
-    explicit SchedulePage(QWidget *parent = nullptr);
+    explicit SchedulePage(OptionsController *ctrl = nullptr,
+                          QWidget *parent = nullptr);
 
 signals:
 

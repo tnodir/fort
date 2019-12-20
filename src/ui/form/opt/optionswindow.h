@@ -6,7 +6,6 @@
 
 QT_FORWARD_DECLARE_CLASS(QAbstractButton)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
-QT_FORWARD_DECLARE_CLASS(QStackedLayout)
 QT_FORWARD_DECLARE_CLASS(QTabWidget)
 
 QT_FORWARD_DECLARE_CLASS(AddressesPage)
@@ -42,8 +41,9 @@ private:
     void setupPages();
     QLayout *setupDialogButtons();
     void setupNewVersionButton();
+    void setupOkApplyButtons();
 
-    FortSettings *fortSettings();
+    FortSettings *settings();
     TaskManager *taskManager();
 
     static QAbstractButton *createLinkButton(const QString &iconPath,
@@ -54,7 +54,6 @@ private:
     OptionsController m_ctrl;
 
     QTabWidget *m_tabBar = nullptr;
-    QStackedLayout *m_stackLayout = nullptr;
 
     QAbstractButton *m_logsButton = nullptr;
     QAbstractButton *m_profileButton = nullptr;
