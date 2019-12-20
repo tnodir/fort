@@ -16,6 +16,7 @@ QT_FORWARD_DECLARE_CLASS(FirewallConf)
 QT_FORWARD_DECLARE_CLASS(FortManager)
 QT_FORWARD_DECLARE_CLASS(FortSettings)
 QT_FORWARD_DECLARE_CLASS(OptionsController)
+QT_FORWARD_DECLARE_CLASS(TaskManager)
 QT_FORWARD_DECLARE_CLASS(TranslationManager)
 
 class BasePage : public QFrame
@@ -33,6 +34,7 @@ protected:
     FirewallConf *conf() const;
     DriverManager *driverManager() const;
     TranslationManager *translationManager() const;
+    TaskManager *taskManager() const;
 
 protected slots:
     virtual void onEditResetted() {}
@@ -47,6 +49,9 @@ protected:
     static QComboBox *createComboBox(const QStringList &texts,
                                      const std::function<void (int index)> &onActivated);
     static QPushButton *createButton(const std::function<void ()> &onClicked);
+    static QPushButton *createLinkButton(const QString &iconPath,
+                                         const QString &linkPath = QString(),
+                                         const QString &toolTip = QString());
 
 private:
     void setupController();

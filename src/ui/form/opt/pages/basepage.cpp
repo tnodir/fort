@@ -39,6 +39,11 @@ TranslationManager *BasePage::translationManager() const
     return ctrl()->translationManager();
 }
 
+TaskManager *BasePage::taskManager() const
+{
+    return ctrl()->taskManager();
+}
+
 void BasePage::setupController()
 {
     Q_ASSERT(ctrl());
@@ -79,4 +84,14 @@ QPushButton *BasePage::createButton(const std::function<void ()> &onClicked)
     connect(cb, &QPushButton::clicked, onClicked);
 
     return cb;
+}
+
+QPushButton *BasePage::createLinkButton(const QString &iconPath,
+                                        const QString &linkPath,
+                                        const QString &toolTip)
+{
+    auto bt = new QPushButton(QIcon(iconPath), QString());
+    bt->setWindowFilePath(linkPath);
+    bt->setToolTip(!toolTip.isEmpty() ? toolTip : linkPath);
+    return bt;
 }

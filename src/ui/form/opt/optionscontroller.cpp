@@ -12,6 +12,8 @@ OptionsController::OptionsController(FortManager *fortManager,
     m_othersEdited(false),
     m_fortManager(fortManager)
 {
+    connect(translationManager(), &TranslationManager::languageChanged,
+            this, &OptionsController::retranslateUi);
 }
 
 void OptionsController::setConfFlagsEdited(bool v)
@@ -57,22 +59,22 @@ void OptionsController::initialize()
 
 FortSettings *OptionsController::settings() const
 {
-    return m_fortManager->fortSettings();
+    return fortManager()->fortSettings();
 }
 
 FirewallConf *OptionsController::conf() const
 {
-    return m_fortManager->firewallConfToEdit();
+    return fortManager()->firewallConfToEdit();
 }
 
 TaskManager *OptionsController::taskManager() const
 {
-    return m_fortManager->taskManager();
+    return fortManager()->taskManager();
 }
 
 DriverManager *OptionsController::driverManager() const
 {
-    return m_fortManager->driverManager();
+    return fortManager()->driverManager();
 }
 
 TranslationManager *OptionsController::translationManager() const
@@ -82,7 +84,7 @@ TranslationManager *OptionsController::translationManager() const
 
 void OptionsController::closeWindow()
 {
-    m_fortManager->closeOptionsWindow();
+    fortManager()->closeOptionsWindow();
 }
 
 void OptionsController::save(bool closeOnSuccess)
@@ -95,8 +97,8 @@ void OptionsController::save(bool closeOnSuccess)
     if (confFlagsEdited() || confEdited()) {
         const bool confFlagsOnly = confFlagsEdited() && !confEdited();
         confSaved = closeOnSuccess
-                ? m_fortManager->saveConf(confFlagsOnly)
-                : m_fortManager->applyConf(confFlagsOnly);
+                ? fortManager()->saveConf(confFlagsOnly)
+                : fortManager()->applyConf(confFlagsOnly);
     }
 
     if (confSaved && othersEdited()) {

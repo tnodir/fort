@@ -244,9 +244,6 @@ bool FortManager::setupOptionsWindow()
 {
     m_optWindow = new OptionsWindow(this);
 
-    connect(TranslationManager::instance(), &TranslationManager::languageChanged,
-            m_optWindow, &OptionsWindow::retranslateUi);
-
     m_optWindowState->install(m_optWindow);
 
     return true;
