@@ -16,6 +16,7 @@ public:
     QString version() const { return m_version; }
     QString downloadUrl() const { return m_downloadUrl; }
     QString releaseText() const { return m_releaseText; }
+    QString plainReleaseText() const;
 
     QByteArray data() const override;
     void setData(const QByteArray &data) override;

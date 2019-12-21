@@ -3,8 +3,6 @@
 
 #include <QFrame>
 
-#include <functional>
-
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QComboBox)
 QT_FORWARD_DECLARE_CLASS(QLabel)
@@ -42,16 +40,6 @@ protected slots:
     virtual void onSaved() {}
 
     virtual void onRetranslateUi() {}
-
-protected:
-    static QCheckBox *createCheckBox(bool checked,
-                                     const std::function<void (bool checked)> &onToggled);
-    static QComboBox *createComboBox(const QStringList &texts,
-                                     const std::function<void (int index)> &onActivated);
-    static QPushButton *createButton(const std::function<void ()> &onClicked);
-    static QPushButton *createLinkButton(const QString &iconPath,
-                                         const QString &linkPath = QString(),
-                                         const QString &toolTip = QString());
 
 private:
     void setupController();

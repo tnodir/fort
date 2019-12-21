@@ -27,21 +27,21 @@ QT_FORWARD_DECLARE_CLASS(WidgetWindowStateWatcher)
 class FortManager : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(FortSettings *fortSettings READ fortSettings CONSTANT)
-    Q_PROPERTY(FirewallConf *firewallConf READ firewallConf NOTIFY firewallConfToEditChanged)
-    Q_PROPERTY(FirewallConf *firewallConfToEdit READ firewallConfToEdit NOTIFY firewallConfToEditChanged)
+    Q_PROPERTY(FortSettings *settings READ settings CONSTANT)
+    Q_PROPERTY(FirewallConf *conf READ conf NOTIFY confToEditChanged)
+    Q_PROPERTY(FirewallConf *confToEdit READ confToEdit NOTIFY confToEditChanged)
     Q_PROPERTY(LogManager *logManager READ logManager CONSTANT)
     Q_PROPERTY(TaskManager *taskManager READ taskManager CONSTANT)
 
 public:
-    explicit FortManager(FortSettings *fortSettings,
+    explicit FortManager(FortSettings *settings,
                          QObject *parent = nullptr);
     ~FortManager() override;
     CLASS_DELETE_COPY_MOVE(FortManager)
 
-    FortSettings *fortSettings() const { return m_fortSettings; }
-    FirewallConf *firewallConf() const { return m_firewallConf; }
-    FirewallConf *firewallConfToEdit() const { return m_firewallConfToEdit; }
+    FortSettings *settings() const { return m_settings; }
+    FirewallConf *conf() const { return m_conf; }
+    FirewallConf *confToEdit() const { return m_confToEdit; }
 
     ConfManager *confManager() const { return m_confManager; }
     DriverManager *driverManager() const { return m_driverManager; }
@@ -49,7 +49,7 @@ public:
     TaskManager *taskManager() const { return m_taskManager; }
 
 signals:
-    void firewallConfToEditChanged();
+    void confToEditChanged();
 
     void afterSaveWindowState();
     void afterRestoreWindowState();
@@ -95,7 +95,7 @@ private slots:
     void saveTrayFlags();
 
 private:
-    void setFirewallConfToEdit(FirewallConf *conf);
+    void setConfToEdit(FirewallConf *conf);
 
     void setupThreadPool();
 
@@ -162,9 +162,9 @@ private:
     GraphWindow *m_graphWindow;
     WidgetWindowStateWatcher *m_graphWindowState;
 
-    FortSettings *m_fortSettings;
-    FirewallConf *m_firewallConf;
-    FirewallConf *m_firewallConfToEdit;
+    FortSettings *m_settings;
+    FirewallConf *m_conf;
+    FirewallConf *m_confToEdit;
 
     QAction *m_graphWindowAction;
     QAction *m_filterEnabledAction;

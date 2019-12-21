@@ -14,6 +14,7 @@
 #include "../../../driver/drivermanager.h"
 #include "../../../translationmanager.h"
 #include "../../../util/stringutil.h"
+#include "../../controls/controlutil.h"
 #include "../optionscontroller.h"
 
 OptionsPage::OptionsPage(OptionsController *ctrl,
@@ -82,30 +83,30 @@ void OptionsPage::setupUi()
     colLayout1->setSpacing(10);
     rowLayout->addLayout(colLayout1);
 
-    m_cbStart = createCheckBox(settings()->startWithWindows(), [&](bool) {
+    m_cbStart = ControlUtil::createCheckBox(settings()->startWithWindows(), [&](bool) {
         setIniEdited(true);
     });
-    m_cbProvBoot = createCheckBox(conf()->provBoot(), [&](bool checked) {
+    m_cbProvBoot = ControlUtil::createCheckBox(conf()->provBoot(), [&](bool checked) {
         conf()->setProvBoot(checked);
         ctrl()->setConfFlagsEdited(true);
     });
-    m_cbFilterEnabled = createCheckBox(conf()->filterEnabled(), [&](bool checked) {
+    m_cbFilterEnabled = ControlUtil::createCheckBox(conf()->filterEnabled(), [&](bool checked) {
         conf()->setFilterEnabled(checked);
         ctrl()->setConfFlagsEdited(true);
     });
-    m_cbFilterLocals = createCheckBox(conf()->filterLocals(), [&](bool checked) {
+    m_cbFilterLocals = ControlUtil::createCheckBox(conf()->filterLocals(), [&](bool checked) {
         conf()->setFilterLocals(checked);
         ctrl()->setConfFlagsEdited(true);
     });
-    m_cbStopTraffic = createCheckBox(conf()->stopTraffic(), [&](bool checked) {
+    m_cbStopTraffic = ControlUtil::createCheckBox(conf()->stopTraffic(), [&](bool checked) {
         conf()->setStopTraffic(checked);
         ctrl()->setConfFlagsEdited(true);
     });
-    m_cbStopInetTraffic = createCheckBox(conf()->stopInetTraffic(), [&](bool checked) {
+    m_cbStopInetTraffic = ControlUtil::createCheckBox(conf()->stopInetTraffic(), [&](bool checked) {
         conf()->setStopInetTraffic(checked);
         ctrl()->setConfFlagsEdited(true);
     });
-    m_cbHotKeys = createCheckBox(settings()->hotKeyEnabled(), [&](bool) {
+    m_cbHotKeys = ControlUtil::createCheckBox(settings()->hotKeyEnabled(), [&](bool) {
         setIniEdited(true);
     });
 
@@ -121,7 +122,7 @@ void OptionsPage::setupUi()
     auto passwordLayout = new QHBoxLayout();
     passwordLayout->setSpacing(6);
 
-    m_cbPassword = createCheckBox(settings()->hasPassword(), [&](bool checked) {
+    m_cbPassword = ControlUtil::createCheckBox(settings()->hasPassword(), [&](bool checked) {
         if (!checked) {
             m_editPassword->setText(QString());
         } else {
@@ -196,7 +197,7 @@ void OptionsPage::retranslateEditPassword()
 
 void OptionsPage::setupComboLanguage()
 {
-    m_comboLanguage = createComboBox(translationManager()->naturalLabels(), [&](int index) {
+    m_comboLanguage = ControlUtil::createComboBox(translationManager()->naturalLabels(), [&](int index) {
         if (translationManager()->switchLanguage(index)) {
             settings()->setLanguage(translationManager()->localeName());
         }
@@ -249,12 +250,12 @@ QFrame *OptionsPage::setupDriverFrame()
     buttonsLayout->setSpacing(10);
     colLayout->addLayout(buttonsLayout);
 
-    m_installDriverButton = createButton([&] {
+    m_installDriverButton = ControlUtil::createButton(QString(), [&] {
         if (fortManager()->showQuestionBox(tr("Install Driver?"))) {
             fortManager()->installDriver();
         }
     });
-    m_removeDriverButton = createButton([&] {
+    m_removeDriverButton = ControlUtil::createButton(QString(), [&] {
         if (fortManager()->showQuestionBox(tr("Remove Driver?"))) {
             fortManager()->removeDriver();
         }

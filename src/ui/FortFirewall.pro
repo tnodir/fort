@@ -18,11 +18,15 @@ SOURCES += \
     control/controlworker.cpp \
     driver/drivermanager.cpp \
     driver/driverworker.cpp \
+    form/controls/controlutil.cpp \
     form/graph/axistickerspeed.cpp \
     form/graph/graphplot.cpp \
     form/graph/graphwindow.cpp \
+    form/opt/controls/textarea2splitter.cpp \
+    form/opt/controls/textarea2splitterhandle.cpp \
     form/opt/optionscontroller.cpp \
     form/opt/optionswindow.cpp \
+    form/opt/pages/addresses/addressescolumn.cpp \
     form/opt/pages/addressespage.cpp \
     form/opt/pages/applicationspage.cpp \
     form/opt/pages/basepage.cpp \
@@ -102,11 +106,15 @@ HEADERS += \
     control/controlworker.h \
     driver/drivermanager.h \
     driver/driverworker.h \
+    form/controls/controlutil.h \
     form/graph/axistickerspeed.h \
     form/graph/graphplot.h \
     form/graph/graphwindow.h \
+    form/opt/controls/textarea2splitter.h \
+    form/opt/controls/textarea2splitterhandle.h \
     form/opt/optionscontroller.h \
     form/opt/optionswindow.h \
+    form/opt/pages/addresses/addressescolumn.h \
     form/opt/pages/addressespage.h \
     form/opt/pages/applicationspage.h \
     form/opt/pages/basepage.h \

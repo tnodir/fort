@@ -361,8 +361,7 @@ void FortSettings::migrateIniOnStartup()
     if (version < 0x030000) {
         setCacheValue("optWindow/geometry", m_ini->value("window/geometry"));
         setCacheValue("optWindow/maximized", m_ini->value("window/maximized"));
-        setCacheValue("optWindow/addrSplit", m_ini->value("window/addrSplit"));
-        setCacheValue("optWindow/appsSplit", m_ini->value("window/appsSplit"));
+        // Abandon "window/addrSplit" & "window/appsSplit"
     }
 }
 
@@ -390,8 +389,6 @@ void FortSettings::migrateIniOnWrite()
         removeIniKey("window");
         m_ini->setValue("optWindow/geometry", cacheValue("optWindow/geometry"));
         m_ini->setValue("optWindow/maximized", cacheValue("optWindow/maximized"));
-        m_ini->setValue("optWindow/addrSplit", cacheValue("optWindow/addrSplit"));
-        m_ini->setValue("optWindow/appsSplit", cacheValue("optWindow/appsSplit"));
     }
 }
 
@@ -456,6 +453,11 @@ QStringList FortSettings::iniList(const QString &key) const
 QVariantMap FortSettings::iniMap(const QString &key) const
 {
     return iniValue(key).toMap();
+}
+
+QByteArray FortSettings::iniByteArray(const QString &key) const
+{
+    return iniValue(key).toByteArray();
 }
 
 QColor FortSettings::iniColor(const QString &key, const QColor &defaultValue) const

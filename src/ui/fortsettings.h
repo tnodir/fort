@@ -22,8 +22,8 @@ class FortSettings : public QObject
     Q_PROPERTY(QString passwordHash READ passwordHash WRITE setPasswordHash NOTIFY iniChanged)
     Q_PROPERTY(int appVersion READ appVersion CONSTANT)
     Q_PROPERTY(int iniVersion READ iniVersion WRITE setIniVersion NOTIFY iniChanged)
-    Q_PROPERTY(qreal optWindowAddrSplit READ optWindowAddrSplit WRITE setOptWindowAddrSplit NOTIFY iniChanged)
-    Q_PROPERTY(qreal optWindowAppsSplit READ optWindowAppsSplit WRITE setOptWindowAppsSplit NOTIFY iniChanged)
+    Q_PROPERTY(QByteArray optWindowAddrSplit READ optWindowAddrSplit WRITE setOptWindowAddrSplit NOTIFY iniChanged)
+    Q_PROPERTY(QByteArray optWindowAppsSplit READ optWindowAppsSplit WRITE setOptWindowAppsSplit NOTIFY iniChanged)
     Q_PROPERTY(bool graphWindowVisible READ graphWindowVisible WRITE setGraphWindowVisible NOTIFY iniChanged)
     Q_PROPERTY(bool graphWindowAlwaysOnTop READ graphWindowAlwaysOnTop WRITE setGraphWindowAlwaysOnTop NOTIFY iniChanged)
     Q_PROPERTY(bool graphWindowFrameless READ graphWindowFrameless WRITE setGraphWindowFrameless NOTIFY iniChanged)
@@ -79,11 +79,11 @@ public:
     bool optWindowMaximized() const { return iniBool("optWindow/maximized"); }
     void setOptWindowMaximized(bool on) { setIniValue("optWindow/maximized", on); }
 
-    qreal optWindowAddrSplit() const { return iniReal("optWindow/addrSplit"); }
-    void setOptWindowAddrSplit(qreal v) { setIniValue("optWindow/addrSplit", v); }
+    QByteArray optWindowAddrSplit() const { return iniByteArray("optWindow/addrSplit"); }
+    void setOptWindowAddrSplit(const QByteArray &v) { setIniValue("optWindow/addrSplit", v); }
 
-    qreal optWindowAppsSplit() const { return iniReal("optWindow/appsSplit"); }
-    void setOptWindowAppsSplit(qreal v) { setIniValue("optWindow/appsSplit", v); }
+    QByteArray optWindowAppsSplit() const { return iniByteArray("optWindow/appsSplit"); }
+    void setOptWindowAppsSplit(const QByteArray &v) { setIniValue("optWindow/appsSplit", v); }
 
     bool graphWindowVisible() const { return iniBool("graphWindow/visible"); }
     void setGraphWindowVisible(bool on) { setIniValue("graphWindow/visible", on); }
@@ -219,6 +219,7 @@ private:
     QString iniText(const QString &key, const QString &defaultValue = QString()) const;
     QStringList iniList(const QString &key) const;
     QVariantMap iniMap(const QString &key) const;
+    QByteArray iniByteArray(const QString &key) const;
 
     QColor iniColor(const QString &key, const QColor &defaultValue = QColor()) const;
     void setIniColor(const QString &key, const QColor &value,

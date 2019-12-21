@@ -10,6 +10,7 @@
 #include "../../../fortsettings.h"
 #include "../../../task/taskinfoupdatechecker.h"
 #include "../../../task/taskmanager.h"
+#include "../../controls/controlutil.h"
 #include "../optionscontroller.h"
 #include "addressespage.h"
 #include "applicationspage.h"
@@ -41,15 +42,15 @@ void MainPage::onRetranslateUi()
     m_tabBar->setTabText(3, tr("Statistics"));
     m_tabBar->setTabText(4, tr("Schedule"));
 
-    m_logsButton->setText(tr("Logs"));
-    m_profileButton->setText(tr("Profile"));
-    m_statButton->setText(tr("Statistics"));
-    m_releasesButton->setText(tr("Releases"));
-    m_newVersionButton->setText(tr("New Version!"));
+    m_btLogs->setText(tr("Logs"));
+    m_btProfile->setText(tr("Profile"));
+    m_btStat->setText(tr("Statistics"));
+    m_btReleases->setText(tr("Releases"));
+    m_btNewVersion->setText(tr("New Version!"));
 
-    m_okButton->setText(tr("OK"));
-    m_applyButton->setText(tr("Apply"));
-    m_cancelButton->setText(tr("Cancel"));
+    m_btOk->setText(tr("OK"));
+    m_btApply->setText(tr("Apply"));
+    m_btCancel->setText(tr("Cancel"));
 }
 
 void MainPage::onLinkClicked()
@@ -92,41 +93,41 @@ QLayout *MainPage::setupDialogButtons()
 {
     auto buttonsLayout = new QHBoxLayout();
 
-    m_logsButton = createLinkButton(":/images/folder_error.png", settings()->logsPath());
-    m_profileButton = createLinkButton(":/images/folder_user.png", settings()->profilePath());
-    m_statButton = createLinkButton(":/images/folder_database.png", settings()->statPath());
-    m_releasesButton = createLinkButton(":/images/server_go.png", settings()->appUpdatesUrl());
-    m_newVersionButton = createLinkButton(":/images/server_compressed.png");
+    m_btLogs = ControlUtil::createLinkButton(":/images/folder_error.png", settings()->logsPath());
+    m_btProfile = ControlUtil::createLinkButton(":/images/folder_user.png", settings()->profilePath());
+    m_btStat = ControlUtil::createLinkButton(":/images/folder_database.png", settings()->statPath());
+    m_btReleases = ControlUtil::createLinkButton(":/images/server_go.png", settings()->appUpdatesUrl());
+    m_btNewVersion = ControlUtil::createLinkButton(":/images/server_compressed.png");
 
-    connect(m_logsButton, &QAbstractButton::clicked, this, &MainPage::onLinkClicked);
-    connect(m_profileButton, &QAbstractButton::clicked, this, &MainPage::onLinkClicked);
-    connect(m_statButton, &QAbstractButton::clicked, this, &MainPage::onLinkClicked);
-    connect(m_releasesButton, &QAbstractButton::clicked, this, &MainPage::onLinkClicked);
-    connect(m_newVersionButton, &QAbstractButton::clicked, this, &MainPage::onLinkClicked);
+    connect(m_btLogs, &QAbstractButton::clicked, this, &MainPage::onLinkClicked);
+    connect(m_btProfile, &QAbstractButton::clicked, this, &MainPage::onLinkClicked);
+    connect(m_btStat, &QAbstractButton::clicked, this, &MainPage::onLinkClicked);
+    connect(m_btReleases, &QAbstractButton::clicked, this, &MainPage::onLinkClicked);
+    connect(m_btNewVersion, &QAbstractButton::clicked, this, &MainPage::onLinkClicked);
 
     setupNewVersionButton();
 
-    buttonsLayout->addWidget(m_logsButton);
-    buttonsLayout->addWidget(m_profileButton);
-    buttonsLayout->addWidget(m_statButton);
-    buttonsLayout->addWidget(m_releasesButton);
-    buttonsLayout->addWidget(m_newVersionButton);
+    buttonsLayout->addWidget(m_btLogs);
+    buttonsLayout->addWidget(m_btProfile);
+    buttonsLayout->addWidget(m_btStat);
+    buttonsLayout->addWidget(m_btReleases);
+    buttonsLayout->addWidget(m_btNewVersion);
 
     buttonsLayout->addStretch(1);
 
-    m_okButton = new QPushButton(QIcon(":/images/tick.png"), QString());
-    m_applyButton = new QPushButton(QIcon(":/images/accept.png"), QString());
-    m_cancelButton = new QPushButton(QIcon(":/images/cancel.png"), QString());
+    m_btOk = new QPushButton(QIcon(":/images/tick.png"), QString());
+    m_btApply = new QPushButton(QIcon(":/images/accept.png"), QString());
+    m_btCancel = new QPushButton(QIcon(":/images/cancel.png"), QString());
 
-    connect(m_okButton, &QAbstractButton::clicked, ctrl(), &OptionsController::saveChanges);
-    connect(m_applyButton, &QAbstractButton::clicked, ctrl(), &OptionsController::applyChanges);
-    connect(m_cancelButton, &QAbstractButton::clicked, ctrl(), &OptionsController::closeWindow);
+    connect(m_btOk, &QAbstractButton::clicked, ctrl(), &OptionsController::saveChanges);
+    connect(m_btApply, &QAbstractButton::clicked, ctrl(), &OptionsController::applyChanges);
+    connect(m_btCancel, &QAbstractButton::clicked, ctrl(), &OptionsController::closeWindow);
 
     setupOkApplyButtons();
 
-    buttonsLayout->addWidget(m_okButton);
-    buttonsLayout->addWidget(m_applyButton);
-    buttonsLayout->addWidget(m_cancelButton);
+    buttonsLayout->addWidget(m_btOk);
+    buttonsLayout->addWidget(m_btApply);
+    buttonsLayout->addWidget(m_btCancel);
 
     return buttonsLayout;
 }
@@ -135,9 +136,9 @@ void MainPage::setupNewVersionButton()
 {
     const auto refreshNewVersionButton = [&] {
         auto updateChecker = taskManager()->taskInfoUpdateChecker();
-        m_newVersionButton->setVisible(!updateChecker->version().isEmpty());
-        m_newVersionButton->setWindowFilePath(updateChecker->downloadUrl());
-        m_newVersionButton->setToolTip(updateChecker->releaseText());
+        m_btNewVersion->setVisible(!updateChecker->version().isEmpty());
+        m_btNewVersion->setWindowFilePath(updateChecker->downloadUrl());
+        m_btNewVersion->setToolTip(updateChecker->plainReleaseText());
     };
 
     refreshNewVersionButton();
@@ -150,8 +151,8 @@ void MainPage::setupOkApplyButtons()
 {
     const auto refreshOkApplyButtons = [&] {
         const bool anyEdited = ctrl()->anyEdited();
-        m_okButton->setEnabled(anyEdited);
-        m_applyButton->setEnabled(anyEdited);
+        m_btOk->setEnabled(anyEdited);
+        m_btApply->setEnabled(anyEdited);
     };
 
     refreshOkApplyButtons();

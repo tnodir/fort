@@ -17,7 +17,7 @@ bool TaskInfoTasix::processResult(FortManager *fortManager, bool success)
 
     const auto tasix = static_cast<TaskTasix *>(taskWorker());
 
-    FirewallConf *conf = fortManager->firewallConf();
+    FirewallConf *conf = fortManager->conf();
     AddressGroup *inetGroup = conf->inetAddressGroup();
 
     if (inetGroup->excludeText() == tasix->rangeText())

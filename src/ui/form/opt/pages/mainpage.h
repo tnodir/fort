@@ -34,15 +34,15 @@ private:
 private:
     QTabWidget *m_tabBar = nullptr;
 
-    QPushButton *m_logsButton = nullptr;
-    QPushButton *m_profileButton = nullptr;
-    QPushButton *m_statButton = nullptr;
-    QPushButton *m_releasesButton = nullptr;
-    QPushButton *m_newVersionButton = nullptr;
+    QPushButton *m_btLogs = nullptr;
+    QPushButton *m_btProfile = nullptr;
+    QPushButton *m_btStat = nullptr;
+    QPushButton *m_btReleases = nullptr;
+    QPushButton *m_btNewVersion = nullptr;
 
-    QPushButton *m_okButton = nullptr;
-    QPushButton *m_applyButton = nullptr;
-    QPushButton *m_cancelButton = nullptr;
+    QPushButton *m_btOk = nullptr;
+    QPushButton *m_btApply = nullptr;
+    QPushButton *m_btCancel = nullptr;
 
     OptionsPage *m_optionsPage = nullptr;
     AddressesPage *m_addressesPage = nullptr;

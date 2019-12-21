@@ -53,9 +53,9 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_optWindowState(new WidgetWindowStateWatcher(this)),
     m_graphWindow(nullptr),
     m_graphWindowState(new WidgetWindowStateWatcher(this)),
-    m_fortSettings(fortSettings),
-    m_firewallConf(new FirewallConf(this)),
-    m_firewallConfToEdit(nullptr),
+    m_settings(fortSettings),
+    m_conf(new FirewallConf(this)),
+    m_confToEdit(nullptr),
     m_graphWindowAction(nullptr),
     m_filterEnabledAction(nullptr),
     m_stopTrafficAction(nullptr),
@@ -74,7 +74,7 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_taskManager(new TaskManager(this, this)),
     m_appInfoCache(new AppInfoCache(this))
 {
-    if (m_fortSettings->isPortable()) {
+    if (m_settings->isPortable()) {
         qputenv("QT_DISABLE_SHADER_DISK_CACHE", "1");
     }
 
@@ -188,7 +188,7 @@ void FortManager::setupLogger()
 {
     Logger *logger = Logger::instance();
 
-    logger->setPath(m_fortSettings->logsPath());
+    logger->setPath(m_settings->logsPath());
     logger->setActive(true);
 
     updateLogger();
@@ -196,13 +196,13 @@ void FortManager::setupLogger()
 
 void FortManager::setupTaskManager()
 {
-    m_taskManager->loadSettings(m_fortSettings, m_confManager);
+    m_taskManager->loadSettings(m_settings, m_confManager);
 }
 
 void FortManager::setupTranslationManager()
 {
     TranslationManager::instance()->switchLanguageByName(
-                m_fortSettings->language());
+                m_settings->language());
 
     connect(TranslationManager::instance(), &TranslationManager::languageChanged,
             this, &FortManager::updateTrayMenu);
@@ -226,7 +226,7 @@ void FortManager::setupTrayIcon()
 void FortManager::setupAppInfoCache()
 {
     QString dbPath;
-    if (m_fortSettings->isPortable()) {
+    if (m_settings->isPortable()) {
         dbPath = ":memory:";
     } else {
         const QString cachePath = FileUtil::appCacheLocation();
@@ -259,7 +259,7 @@ void FortManager::launch()
 {
     showTrayIcon();
 
-    if (m_fortSettings->graphWindowVisible()) {
+    if (m_settings->graphWindowVisible()) {
         showGraphWindow();
     }
 }
@@ -289,8 +289,8 @@ void FortManager::showOptionsWindow()
         return;
 
     if (!m_optWindow) {
-        auto newConf = m_confManager->cloneConf(*m_firewallConf, this);
-        setFirewallConfToEdit(newConf);
+        auto newConf = m_confManager->cloneConf(*m_conf, this);
+        setConfToEdit(newConf);
 
         setupOptionsWindow();
     }
@@ -314,13 +314,13 @@ void FortManager::closeOptionsWindow()
     m_optWindow->deleteLater();
     m_optWindow = nullptr;
 
-    setFirewallConfToEdit(nullptr);
+    setConfToEdit(nullptr);
 }
 
 void FortManager::showGraphWindow()
 {
     if (!m_graphWindow) {
-        m_graphWindow = new GraphWindow(m_fortSettings);
+        m_graphWindow = new GraphWindow(m_settings);
 
         m_graphWindowState->install(m_graphWindow);
 
@@ -385,7 +385,7 @@ void FortManager::exit(int retcode)
 
 bool FortManager::checkPassword()
 {
-    const QString passwordHash = fortSettings()->passwordHash();
+    const QString passwordHash = settings()->passwordHash();
     if (passwordHash.isEmpty())
         return true;
 
@@ -425,7 +425,7 @@ QStringList FortManager::getOpenFileNames(const QString &title,
 
 bool FortManager::saveOriginConf(const QString &message)
 {
-    if (!saveSettings(m_firewallConf))
+    if (!saveSettings(m_conf))
         return false;
 
     closeOptionsWindow();
@@ -435,39 +435,39 @@ bool FortManager::saveOriginConf(const QString &message)
 
 bool FortManager::saveConf(bool onlyFlags)
 {
-    return saveSettings(m_firewallConfToEdit, onlyFlags);
+    return saveSettings(m_confToEdit, onlyFlags);
 }
 
 bool FortManager::applyConf(bool onlyFlags)
 {
-    Q_ASSERT(m_firewallConfToEdit != nullptr);
+    Q_ASSERT(m_confToEdit != nullptr);
 
-    auto newConf = m_confManager->cloneConf(*m_firewallConfToEdit, this);
+    auto newConf = m_confManager->cloneConf(*m_confToEdit, this);
 
     return saveSettings(newConf, onlyFlags);
 }
 
 bool FortManager::applyConfImmediateFlags()
 {
-    Q_ASSERT(m_firewallConfToEdit != nullptr);
+    Q_ASSERT(m_confToEdit != nullptr);
 
-    m_firewallConf->copyImmediateFlags(*m_firewallConfToEdit);
+    m_conf->copyImmediateFlags(*m_confToEdit);
 
-    return saveSettings(m_firewallConf, true, true);
+    return saveSettings(m_conf, true, true);
 }
 
-void FortManager::setFirewallConfToEdit(FirewallConf *conf)
+void FortManager::setConfToEdit(FirewallConf *conf)
 {
-    if (m_firewallConfToEdit == conf)
+    if (m_confToEdit == conf)
         return;
 
-    if (m_firewallConfToEdit != nullptr
-            && m_firewallConfToEdit != m_firewallConf) {
-        m_firewallConfToEdit->deleteLater();
+    if (m_confToEdit != nullptr
+            && m_confToEdit != m_conf) {
+        m_confToEdit->deleteLater();
     }
 
-    m_firewallConfToEdit = conf;
-    emit firewallConfToEditChanged();
+    m_confToEdit = conf;
+    emit confToEditChanged();
 
     updateTrayMenu();
 }
@@ -475,13 +475,13 @@ void FortManager::setFirewallConfToEdit(FirewallConf *conf)
 bool FortManager::loadSettings()
 {
     QString viaVersion;
-    if (!m_fortSettings->confCanMigrate(viaVersion)) {
+    if (!m_settings->confCanMigrate(viaVersion)) {
         showInfoBox("Please first install Fort Firewall v" + viaVersion
                     + " and save Options from it.");
         abort();  //  Abort the program
     }
 
-    if (!m_confManager->load(*m_firewallConf)) {
+    if (!m_confManager->load(*m_conf)) {
         showErrorBox("Load Settings: " + m_confManager->errorMessage());
         return false;
     }
@@ -497,9 +497,9 @@ bool FortManager::saveSettings(FirewallConf *newConf, bool onlyFlags,
         return false;
     }
 
-    if (m_firewallConf != newConf) {
-        m_firewallConf->deleteLater();
-        m_firewallConf = newConf;
+    if (m_conf != newConf) {
+        m_conf->deleteLater();
+        m_conf = newConf;
     }
 
     if (!immediateFlags) {
@@ -519,11 +519,11 @@ bool FortManager::updateDriverConf(bool onlyFlags)
 
     // Update driver
     const bool res = onlyFlags
-            ? m_driverManager->writeConfFlags(*m_firewallConf)
-            : m_driverManager->writeConf(*m_firewallConf, *m_envManager);
+            ? m_driverManager->writeConfFlags(*m_conf)
+            : m_driverManager->writeConf(*m_conf, *m_envManager);
 
     if (res) {
-        updateStatManager(m_firewallConf);
+        updateStatManager(m_conf);
         updateLogManager(true);
     } else {
         closeDriver();
@@ -544,26 +544,26 @@ void FortManager::updateStatManager(FirewallConf *conf)
 
 void FortManager::saveTrayFlags()
 {
-    m_firewallConf->setFilterEnabled(m_filterEnabledAction->isChecked());
-    m_firewallConf->setStopTraffic(m_stopTrafficAction->isChecked());
-    m_firewallConf->setStopInetTraffic(m_stopInetTrafficAction->isChecked());
+    m_conf->setFilterEnabled(m_filterEnabledAction->isChecked());
+    m_conf->setStopTraffic(m_stopTrafficAction->isChecked());
+    m_conf->setStopInetTraffic(m_stopInetTrafficAction->isChecked());
 
     int i = 0;
-    for (AppGroup *appGroup : m_firewallConf->appGroupsList()) {
+    for (AppGroup *appGroup : m_conf->appGroupsList()) {
         const QAction *action = m_appGroupActions.at(i);
         appGroup->setEnabled(action->isChecked());
         ++i;
     }
 
-    m_fortSettings->writeConfIni(*m_firewallConf);
+    m_settings->writeConfIni(*m_conf);
 
     updateDriverConf(true);
 }
 
 void FortManager::saveOptWindowState()
 {
-    m_fortSettings->setOptWindowGeometry(m_optWindowState->geometry());
-    m_fortSettings->setOptWindowMaximized(m_optWindowState->maximized());
+    m_settings->setOptWindowGeometry(m_optWindowState->geometry());
+    m_settings->setOptWindowMaximized(m_optWindowState->maximized());
 
     emit afterSaveWindowState();
 }
@@ -571,38 +571,38 @@ void FortManager::saveOptWindowState()
 void FortManager::restoreOptWindowState()
 {
     m_optWindowState->restore(m_optWindow, QSize(1024, 768),
-                              m_fortSettings->optWindowGeometry(),
-                              m_fortSettings->optWindowMaximized());
+                              m_settings->optWindowGeometry(),
+                              m_settings->optWindowMaximized());
 
     emit afterRestoreWindowState();
 }
 
 void FortManager::saveGraphWindowState(bool visible)
 {
-    m_fortSettings->setGraphWindowVisible(visible);
-    m_fortSettings->setGraphWindowGeometry(m_graphWindowState->geometry());
-    m_fortSettings->setGraphWindowMaximized(m_graphWindowState->maximized());
+    m_settings->setGraphWindowVisible(visible);
+    m_settings->setGraphWindowGeometry(m_graphWindowState->geometry());
+    m_settings->setGraphWindowMaximized(m_graphWindowState->maximized());
 }
 
 void FortManager::restoreGraphWindowState()
 {
     m_graphWindowState->restore(m_graphWindow, QSize(400, 300),
-                                m_fortSettings->graphWindowGeometry(),
-                                m_fortSettings->graphWindowMaximized());
+                                m_settings->graphWindowGeometry(),
+                                m_settings->graphWindowMaximized());
 }
 
 void FortManager::updateLogger()
 {
     Logger *logger = Logger::instance();
 
-    logger->setDebug(m_fortSettings->debug());
-    logger->setConsole(m_fortSettings->console());
+    logger->setDebug(m_settings->debug());
+    logger->setConsole(m_settings->console());
 }
 
 void FortManager::updateTrayMenu()
 {
-    const FirewallConf &conf = *m_firewallConf;
-    const bool hotKeyEnabled = fortSettings()->hotKeyEnabled();
+    const FirewallConf &conf = *m_conf;
+    const bool hotKeyEnabled = settings()->hotKeyEnabled();
 
     QMenu *menu = m_trayIcon->contextMenu();
     if (menu) {
@@ -614,16 +614,16 @@ void FortManager::updateTrayMenu()
     QAction *optionsAction = addAction(
                 menu, QIcon(":/images/cog.png"), tr("Options"),
                 this, SLOT(showOptionsWindow()));
-    addHotKey(optionsAction, fortSettings()->hotKeyOptions(), hotKeyEnabled);
+    addHotKey(optionsAction, settings()->hotKeyOptions(), hotKeyEnabled);
 
     m_graphWindowAction = addAction(
                 menu, QIcon(":/images/chart_bar.png"), tr("Traffic Graph"),
                 this, SLOT(switchGraphWindow()), true,
                 (m_graphWindow != nullptr));
-    addHotKey(m_graphWindowAction, fortSettings()->hotKeyGraph(),
+    addHotKey(m_graphWindowAction, settings()->hotKeyGraph(),
               conf.logStat());
 
-    if (!fortSettings()->hasPassword() && !m_firewallConfToEdit) {
+    if (!settings()->hasPassword() && !m_confToEdit) {
         menu->addSeparator();
 
         m_filterEnabledAction = addAction(
@@ -631,21 +631,21 @@ void FortManager::updateTrayMenu()
                     this, SLOT(saveTrayFlags()),
                     true, conf.filterEnabled());
         addHotKey(m_filterEnabledAction,
-                  fortSettings()->hotKeyFilter(), hotKeyEnabled);
+                  settings()->hotKeyFilter(), hotKeyEnabled);
 
         m_stopTrafficAction = addAction(
                     menu, QIcon(), tr("Stop Traffic"),
                     this, SLOT(saveTrayFlags()),
                     true, conf.stopTraffic());
         addHotKey(m_stopTrafficAction,
-                  fortSettings()->hotKeyStopTraffic(), hotKeyEnabled);
+                  settings()->hotKeyStopTraffic(), hotKeyEnabled);
 
         m_stopInetTrafficAction = addAction(
                     menu, QIcon(), tr("Stop Internet Traffic"),
                     this, SLOT(saveTrayFlags()),
                     true, conf.stopInetTraffic());
         addHotKey(m_stopInetTrafficAction,
-                  fortSettings()->hotKeyStopInetTraffic(), hotKeyEnabled);
+                  settings()->hotKeyStopInetTraffic(), hotKeyEnabled);
 
         menu->addSeparator();
         m_appGroupActions.clear();
@@ -657,7 +657,7 @@ void FortManager::updateTrayMenu()
                         true, appGroup->enabled());
 
             const QString shortcutText =
-                    fortSettings()->hotKeyAppGroupModifiers()
+                    settings()->hotKeyAppGroupModifiers()
                     + "+F" + QString::number(++appGroupIndex);
 
             addHotKey(a, shortcutText, hotKeyEnabled);
@@ -666,12 +666,12 @@ void FortManager::updateTrayMenu()
         }
     }
 
-    if (!fortSettings()->hasPassword()) {
+    if (!settings()->hasPassword()) {
         menu->addSeparator();
         QAction *quitAction = addAction(
                     menu, QIcon(":/images/cross.png"), tr("Quit"),
                     this, SLOT(exit()));
-        addHotKey(quitAction, fortSettings()->hotKeyQuit(), hotKeyEnabled);
+        addHotKey(quitAction, settings()->hotKeyQuit(), hotKeyEnabled);
     }
 
     m_trayIcon->setContextMenu(menu);

@@ -90,7 +90,7 @@ bool ControlManager::processCommand(const QString &command,
             return false;
         }
 
-        auto settings = m_fortManager->fortSettings();
+        auto settings = m_fortManager->settings();
 
         settings->setProperty(args.at(0).toLatin1(), QVariant(args.at(1)));
     } else if (command == QLatin1String("conf")) {
@@ -99,7 +99,7 @@ bool ControlManager::processCommand(const QString &command,
             return false;
         }
 
-        auto conf = m_fortManager->firewallConf();
+        auto conf = m_fortManager->conf();
 
         const auto confPropName = args.at(0);
 

@@ -46,11 +46,7 @@ void OptionsWindow::setupUi()
     this->setLayout(layout);
 
     // Font
-    {
-        QFont font("Tahoma");
-        font.setPixelSize(16);
-        this->setFont(font);
-    }
+    this->setFont(QFont("Tahoma", 9));
 
     // Size
     this->resize(1024, 768);

@@ -59,12 +59,12 @@ void OptionsController::initialize()
 
 FortSettings *OptionsController::settings() const
 {
-    return fortManager()->fortSettings();
+    return fortManager()->settings();
 }
 
 FirewallConf *OptionsController::conf() const
 {
-    return fortManager()->firewallConfToEdit();
+    return fortManager()->confToEdit();
 }
 
 TaskManager *OptionsController::taskManager() const

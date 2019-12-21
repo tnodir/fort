@@ -1,9 +1,5 @@
 #include "basepage.h"
 
-#include <QCheckBox>
-#include <QComboBox>
-#include <QPushButton>
-
 #include "../optionscontroller.h"
 
 BasePage::BasePage(OptionsController *ctrl,
@@ -53,45 +49,4 @@ void BasePage::setupController()
     connect(ctrl(), &OptionsController::saved, this, &BasePage::onSaved);
 
     connect(ctrl(), &OptionsController::retranslateUi, this, &BasePage::onRetranslateUi);
-}
-
-QCheckBox *BasePage::createCheckBox(bool checked,
-                                    const std::function<void (bool checked)> &onToggled)
-{
-    auto cb = new QCheckBox();
-    cb->setChecked(checked);
-
-    connect(cb, &QCheckBox::toggled, onToggled);
-
-    return cb;
-}
-
-QComboBox *BasePage::createComboBox(const QStringList &texts,
-                                    const std::function<void (int index)> &onActivated)
-{
-    auto cb = new QComboBox();
-    cb->addItems(texts);
-
-    connect(cb, QOverload<int>::of(&QComboBox::activated), onActivated);
-
-    return cb;
-}
-
-QPushButton *BasePage::createButton(const std::function<void ()> &onClicked)
-{
-    auto cb = new QPushButton();
-
-    connect(cb, &QPushButton::clicked, onClicked);
-
-    return cb;
-}
-
-QPushButton *BasePage::createLinkButton(const QString &iconPath,
-                                        const QString &linkPath,
-                                        const QString &toolTip)
-{
-    auto bt = new QPushButton(QIcon(iconPath), QString());
-    bt->setWindowFilePath(linkPath);
-    bt->setToolTip(!toolTip.isEmpty() ? toolTip : linkPath);
-    return bt;
 }

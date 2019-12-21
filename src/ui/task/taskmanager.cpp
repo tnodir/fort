@@ -74,7 +74,7 @@ void TaskManager::handleTaskFinished(bool success)
 
     taskInfo->processResult(m_fortManager, success);
 
-    saveSettings(m_fortManager->fortSettings(),
+    saveSettings(m_fortManager->settings(),
                  m_fortManager->confManager());
 }
 
