@@ -136,7 +136,7 @@ ColumnLayout {
                                  + "\nC:\\Program Files (x86)\\Microsoft\\Skype for Desktop\\Skype.exe"
                                  + "\n\n"
                                  + qsTranslate("qml", "# All programs in the sub-path:")
-                                 + "\nC:\\Git\\"
+                                 + "\nC:\\Git\\**"
                 text: appGroup.allowText
             }
 

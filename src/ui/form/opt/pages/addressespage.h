@@ -3,8 +3,6 @@
 
 #include "basepage.h"
 
-QT_FORWARD_DECLARE_CLASS(QTabBar)
-
 QT_FORWARD_DECLARE_CLASS(AddressGroup)
 QT_FORWARD_DECLARE_CLASS(AddressesColumn)
 QT_FORWARD_DECLARE_CLASS(TextArea2Splitter)

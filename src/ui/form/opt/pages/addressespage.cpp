@@ -51,6 +51,7 @@ void AddressesPage::setupUi()
 
     // Tab Bar
     m_tabBar = new QTabBar();
+    m_tabBar->setShape(QTabBar::TriangularNorth);
     layout->addWidget(m_tabBar);
 
     m_tabBar->addTab(QIcon(":/images/world.png"), QString());

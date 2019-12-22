@@ -32,7 +32,7 @@ void OptionsPage::setIniEdited(bool v)
     if (m_iniEdited != v) {
         m_iniEdited = v;
 
-        if (m_iniEdited) {
+        if (iniEdited()) {
             ctrl()->setOthersEdited(true);
         }
     }
@@ -137,10 +137,10 @@ void OptionsPage::setupUi()
     passwordLayout->setSpacing(6);
 
     m_cbPassword = ControlUtil::createCheckBox(settings()->hasPassword(), [&](bool checked) {
-        if (!checked) {
-            m_editPassword->setText(QString());
-        } else {
+        if (checked) {
             m_editPassword->setFocus();
+        } else {
+            m_editPassword->setText(QString());
         }
 
         setIniEdited(true);
@@ -187,14 +187,14 @@ void OptionsPage::setupUi()
     colLayout2->addWidget(m_gbNewVersion);
     colLayout2->addStretch(1);
 
-    // Row
-    auto rowLayout = new QHBoxLayout();
-    rowLayout->addLayout(colLayout1);
-    rowLayout->addStretch();
-    rowLayout->addLayout(colLayout2);
-    rowLayout->addStretch();
+    // Main layout
+    auto layout = new QHBoxLayout();
+    layout->addLayout(colLayout1);
+    layout->addStretch();
+    layout->addLayout(colLayout2);
+    layout->addStretch();
 
-    this->setLayout(rowLayout);
+    this->setLayout(layout);
 }
 
 void OptionsPage::setupEditPassword()

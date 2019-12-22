@@ -19,6 +19,7 @@ SOURCES += \
     driver/drivermanager.cpp \
     driver/driverworker.cpp \
     form/controls/controlutil.cpp \
+    form/controls/tabbar.cpp \
     form/graph/axistickerspeed.cpp \
     form/graph/graphplot.cpp \
     form/graph/graphwindow.cpp \
@@ -29,6 +30,7 @@ SOURCES += \
     form/opt/pages/addresses/addressescolumn.cpp \
     form/opt/pages/addressespage.cpp \
     form/opt/pages/applicationspage.cpp \
+    form/opt/pages/apps/appscolumn.cpp \
     form/opt/pages/basepage.cpp \
     form/opt/pages/mainpage.cpp \
     form/opt/pages/optionspage.cpp \
@@ -107,6 +109,7 @@ HEADERS += \
     driver/drivermanager.h \
     driver/driverworker.h \
     form/controls/controlutil.h \
+    form/controls/tabbar.h \
     form/graph/axistickerspeed.h \
     form/graph/graphplot.h \
     form/graph/graphwindow.h \
@@ -117,6 +120,7 @@ HEADERS += \
     form/opt/pages/addresses/addressescolumn.h \
     form/opt/pages/addressespage.h \
     form/opt/pages/applicationspage.h \
+    form/opt/pages/apps/appscolumn.h \
     form/opt/pages/basepage.h \
     form/opt/pages/mainpage.h \
     form/opt/pages/optionspage.h \
