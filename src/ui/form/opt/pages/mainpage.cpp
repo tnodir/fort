@@ -1,6 +1,5 @@
 #include "mainpage.h"
 
-#include <QDesktopServices>
 #include <QIcon>
 #include <QPushButton>
 #include <QTabWidget>
@@ -8,8 +7,6 @@
 #include <QVBoxLayout>
 
 #include "../../../fortsettings.h"
-#include "../../../task/taskinfoupdatechecker.h"
-#include "../../../task/taskmanager.h"
 #include "../../controls/controlutil.h"
 #include "../optionscontroller.h"
 #include "addressespage.h"
@@ -17,15 +14,6 @@
 #include "optionspage.h"
 #include "schedulepage.h"
 #include "statisticspage.h"
-
-namespace {
-
-bool openUrlExternally(const QUrl &url)
-{
-    return QDesktopServices::openUrl(url);
-}
-
-}
 
 MainPage::MainPage(OptionsController *ctrl,
                    QWidget *parent) :
@@ -46,19 +34,10 @@ void MainPage::onRetranslateUi()
     m_btProfile->setText(tr("Profile"));
     m_btStat->setText(tr("Statistics"));
     m_btReleases->setText(tr("Releases"));
-    m_btNewVersion->setText(tr("New Version!"));
 
     m_btOk->setText(tr("OK"));
     m_btApply->setText(tr("Apply"));
     m_btCancel->setText(tr("Cancel"));
-}
-
-void MainPage::onLinkClicked()
-{
-    auto button = qobject_cast<QAbstractButton *>(sender());
-    if (button) {
-        openUrlExternally(QUrl::fromLocalFile(button->windowFilePath()));
-    }
 }
 
 void MainPage::setupUi()
@@ -97,21 +76,16 @@ QLayout *MainPage::setupDialogButtons()
     m_btProfile = ControlUtil::createLinkButton(":/images/folder_user.png", settings()->profilePath());
     m_btStat = ControlUtil::createLinkButton(":/images/folder_database.png", settings()->statPath());
     m_btReleases = ControlUtil::createLinkButton(":/images/server_go.png", settings()->appUpdatesUrl());
-    m_btNewVersion = ControlUtil::createLinkButton(":/images/server_compressed.png");
 
     connect(m_btLogs, &QAbstractButton::clicked, this, &MainPage::onLinkClicked);
     connect(m_btProfile, &QAbstractButton::clicked, this, &MainPage::onLinkClicked);
     connect(m_btStat, &QAbstractButton::clicked, this, &MainPage::onLinkClicked);
     connect(m_btReleases, &QAbstractButton::clicked, this, &MainPage::onLinkClicked);
-    connect(m_btNewVersion, &QAbstractButton::clicked, this, &MainPage::onLinkClicked);
-
-    setupNewVersionButton();
 
     buttonsLayout->addWidget(m_btLogs);
     buttonsLayout->addWidget(m_btProfile);
     buttonsLayout->addWidget(m_btStat);
     buttonsLayout->addWidget(m_btReleases);
-    buttonsLayout->addWidget(m_btNewVersion);
 
     buttonsLayout->addStretch(1);
 
@@ -130,21 +104,6 @@ QLayout *MainPage::setupDialogButtons()
     buttonsLayout->addWidget(m_btCancel);
 
     return buttonsLayout;
-}
-
-void MainPage::setupNewVersionButton()
-{
-    const auto refreshNewVersionButton = [&] {
-        auto updateChecker = taskManager()->taskInfoUpdateChecker();
-        m_btNewVersion->setVisible(!updateChecker->version().isEmpty());
-        m_btNewVersion->setWindowFilePath(updateChecker->downloadUrl());
-        m_btNewVersion->setToolTip(updateChecker->plainReleaseText());
-    };
-
-    refreshNewVersionButton();
-
-    connect(taskManager()->taskInfoUpdateChecker(), &TaskInfoUpdateChecker::versionChanged,
-            this, refreshNewVersionButton);
 }
 
 void MainPage::setupOkApplyButtons()

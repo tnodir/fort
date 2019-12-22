@@ -2,9 +2,11 @@
 #define BASEPAGE_H
 
 #include <QFrame>
+#include <QUrl>
 
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QComboBox)
+QT_FORWARD_DECLARE_CLASS(QGroupBox)
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QLineEdit)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
@@ -40,6 +42,9 @@ protected slots:
     virtual void onSaved() {}
 
     virtual void onRetranslateUi() {}
+
+    bool openUrlExternally(const QUrl &url);
+    void onLinkClicked();
 
 private:
     void setupController();

@@ -2,16 +2,19 @@
 
 #include <QCheckBox>
 #include <QComboBox>
+#include <QGroupBox>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QVBoxLayout>
 
-#include "../../../fortmanager.h"
-#include "../../../fortsettings.h"
 #include "../../../conf/firewallconf.h"
 #include "../../../driver/drivermanager.h"
+#include "../../../fortmanager.h"
+#include "../../../fortsettings.h"
+#include "../../../task/taskinfoupdatechecker.h"
+#include "../../../task/taskmanager.h"
 #include "../../../translationmanager.h"
 #include "../../../util/stringutil.h"
 #include "../../controls/controlutil.h"
@@ -54,6 +57,12 @@ void OptionsPage::onSaved()
 
 void OptionsPage::onRetranslateUi()
 {
+    m_gbStartup->setTitle(tr("Startup"));
+    m_gbTraffic->setTitle(tr("Traffic"));
+    m_gbGlobal->setTitle(tr("Global"));
+    m_gbDriver->setTitle(tr("Driver"));
+    m_gbNewVersion->setTitle(tr("New Version"));
+
     m_cbStart->setText(tr("Start with Windows"));
     m_cbProvBoot->setText(tr("Stop traffic when Fort Firewall is not running"));
     m_cbFilterEnabled->setText(tr("Filter Enabled"));
@@ -67,21 +76,18 @@ void OptionsPage::onRetranslateUi()
 
     m_labelLanguage->setText(tr("Language:"));
 
-    m_labelDriver->setText(tr("Driver:"));
     retranslateDriverMessage();
+    m_btInstallDriver->setText(tr("Install"));
+    m_btRemoveDriver->setText(tr("Remove"));
 
-    m_installDriverButton->setText(tr("Install"));
-    m_removeDriverButton->setText(tr("Remove"));
+    m_btNewVersion->setText(tr("Download"));
 }
 
 void OptionsPage::setupUi()
 {
-    auto rowLayout = new QHBoxLayout();
-
     // Column #1
     auto colLayout1 = new QVBoxLayout();
     colLayout1->setSpacing(10);
-    rowLayout->addLayout(colLayout1);
 
     m_cbStart = ControlUtil::createCheckBox(settings()->startWithWindows(), [&](bool) {
         setIniEdited(true);
@@ -110,13 +116,21 @@ void OptionsPage::setupUi()
         setIniEdited(true);
     });
 
-    colLayout1->addWidget(m_cbStart);
-    colLayout1->addWidget(m_cbProvBoot);
-    colLayout1->addWidget(m_cbFilterEnabled);
-    colLayout1->addWidget(m_cbFilterLocals);
-    colLayout1->addWidget(m_cbStopTraffic);
-    colLayout1->addWidget(m_cbStopInetTraffic);
-    colLayout1->addWidget(m_cbHotKeys);
+    m_gbStartup = new QGroupBox();
+    auto startupLayout = new QVBoxLayout();
+    startupLayout->addWidget(m_cbStart);
+    startupLayout->addWidget(m_cbProvBoot);
+    m_gbStartup->setLayout(startupLayout);
+    colLayout1->addWidget(m_gbStartup);
+
+    m_gbTraffic = new QGroupBox();
+    auto trafficLayout = new QVBoxLayout();
+    trafficLayout->addWidget(m_cbFilterEnabled);
+    trafficLayout->addWidget(m_cbFilterLocals);
+    trafficLayout->addWidget(m_cbStopTraffic);
+    trafficLayout->addWidget(m_cbStopInetTraffic);
+    m_gbTraffic->setLayout(trafficLayout);
+    colLayout1->addWidget(m_gbTraffic);
 
     // Password Row
     auto passwordLayout = new QHBoxLayout();
@@ -138,8 +152,6 @@ void OptionsPage::setupUi()
     passwordLayout->addWidget(m_editPassword);
     passwordLayout->addStretch(1);
 
-    colLayout1->addLayout(passwordLayout);
-
     // Language Row
     auto langLayout = new QHBoxLayout();
     langLayout->setSpacing(10);
@@ -152,19 +164,35 @@ void OptionsPage::setupUi()
     langLayout->addWidget(m_comboLanguage);
     langLayout->addStretch(1);
 
-    colLayout1->addLayout(langLayout);
+    m_gbGlobal = new QGroupBox();
+    auto globalLayout = new QVBoxLayout();
+    globalLayout->addWidget(m_cbHotKeys);
+    globalLayout->addLayout(passwordLayout);
+    globalLayout->addLayout(langLayout);
+    m_gbGlobal->setLayout(globalLayout);
+    colLayout1->addWidget(m_gbGlobal);
 
     colLayout1->addStretch(1);
 
     // Column #2
     auto colLayout2 = new QVBoxLayout();
     colLayout2->setSpacing(10);
-    rowLayout->addLayout(colLayout2, 1);
 
-    auto driverFrame = setupDriverFrame();
+    setupDriverBox();
 
-    colLayout2->addWidget(driverFrame, 0, Qt::AlignHCenter);
+    setupNewVersionBox();
+    setupNewVersionUpdate();
+
+    colLayout2->addWidget(m_gbDriver);
+    colLayout2->addWidget(m_gbNewVersion);
     colLayout2->addStretch(1);
+
+    // Row
+    auto rowLayout = new QHBoxLayout();
+    rowLayout->addLayout(colLayout1);
+    rowLayout->addStretch();
+    rowLayout->addLayout(colLayout2);
+    rowLayout->addStretch();
 
     this->setLayout(rowLayout);
 }
@@ -213,27 +241,18 @@ void OptionsPage::setupComboLanguage()
     connect(translationManager(), &TranslationManager::languageChanged, this, refreshComboLanguage);
 }
 
-QFrame *OptionsPage::setupDriverFrame()
+void OptionsPage::setupDriverBox()
 {
-    auto frame = new QFrame();
-    frame->setFrameShape(QFrame::Panel);
+    m_gbDriver = new QGroupBox();
 
     auto colLayout = new QVBoxLayout();
-    colLayout->setMargin(15);
     colLayout->setSpacing(10);
-    frame->setLayout(colLayout);
+    m_gbDriver->setLayout(colLayout);
 
     // Label Row
     auto labelLayout = new QHBoxLayout();
     labelLayout->setSpacing(4);
     colLayout->addLayout(labelLayout);
-
-    m_labelDriver = new QLabel();
-    {
-        QFont font;
-        font.setBold(true);
-        m_labelDriver->setFont(font);
-    }
 
     m_labelDriverMessage = new QLabel();
 
@@ -241,7 +260,6 @@ QFrame *OptionsPage::setupDriverFrame()
 
     labelLayout->addStretch(1);
     labelLayout->addWidget(m_iconDriver, 0, Qt::AlignTop);
-    labelLayout->addWidget(m_labelDriver);
     labelLayout->addWidget(m_labelDriverMessage);
     labelLayout->addStretch(1);
 
@@ -250,23 +268,21 @@ QFrame *OptionsPage::setupDriverFrame()
     buttonsLayout->setSpacing(10);
     colLayout->addLayout(buttonsLayout);
 
-    m_installDriverButton = ControlUtil::createButton(QString(), [&] {
+    m_btInstallDriver = ControlUtil::createButton(QString(), [&] {
         if (fortManager()->showQuestionBox(tr("Install Driver?"))) {
             fortManager()->installDriver();
         }
     });
-    m_removeDriverButton = ControlUtil::createButton(QString(), [&] {
+    m_btRemoveDriver = ControlUtil::createButton(QString(), [&] {
         if (fortManager()->showQuestionBox(tr("Remove Driver?"))) {
             fortManager()->removeDriver();
         }
     });
 
     buttonsLayout->addStretch(1);
-    buttonsLayout->addWidget(m_installDriverButton);
-    buttonsLayout->addWidget(m_removeDriverButton);
+    buttonsLayout->addWidget(m_btInstallDriver);
+    buttonsLayout->addWidget(m_btRemoveDriver);
     buttonsLayout->addStretch(1);
-
-    return frame;
 }
 
 void OptionsPage::setupDriverIcon()
@@ -299,4 +315,42 @@ void OptionsPage::retranslateDriverMessage()
             : tr("Not Installed");
 
     m_labelDriverMessage->setText(text);
+}
+
+void OptionsPage::setupNewVersionBox()
+{
+    m_gbNewVersion = new QGroupBox();
+
+    auto colLayout = new QVBoxLayout();
+    colLayout->setSpacing(10);
+    m_gbNewVersion->setLayout(colLayout);
+
+    // Label
+    m_labelNewVersion = new QLabel();
+    m_labelNewVersion->setTextFormat(Qt::MarkdownText);
+    m_labelNewVersion->setOpenExternalLinks(true);
+    colLayout->addWidget(m_labelNewVersion, 0, Qt::AlignHCenter);
+
+    // Button
+    m_btNewVersion = ControlUtil::createLinkButton(":/images/server_compressed.png");
+
+    connect(m_btNewVersion, &QAbstractButton::clicked, this, &OptionsPage::onLinkClicked);
+
+    colLayout->addWidget(m_btNewVersion, 0, Qt::AlignHCenter);
+}
+
+void OptionsPage::setupNewVersionUpdate()
+{
+    const auto refreshNewVersion = [&] {
+        auto updateChecker = taskManager()->taskInfoUpdateChecker();
+        m_gbNewVersion->setVisible(!updateChecker->version().isEmpty());
+        m_labelNewVersion->setText(updateChecker->releaseText());
+        m_btNewVersion->setWindowFilePath(updateChecker->downloadUrl());
+        m_btNewVersion->setToolTip(updateChecker->downloadUrl());
+    };
+
+    refreshNewVersion();
+
+    connect(taskManager()->taskInfoUpdateChecker(), &TaskInfoUpdateChecker::versionChanged,
+            this, refreshNewVersion);
 }

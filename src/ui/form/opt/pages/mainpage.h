@@ -22,13 +22,9 @@ public:
 protected slots:
     void onRetranslateUi() override;
 
-private slots:
-    void onLinkClicked();
-
 private:
     void setupUi();
     QLayout *setupDialogButtons();
-    void setupNewVersionButton();
     void setupOkApplyButtons();
 
 private:
@@ -38,7 +34,6 @@ private:
     QPushButton *m_btProfile = nullptr;
     QPushButton *m_btStat = nullptr;
     QPushButton *m_btReleases = nullptr;
-    QPushButton *m_btNewVersion = nullptr;
 
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btApply = nullptr;

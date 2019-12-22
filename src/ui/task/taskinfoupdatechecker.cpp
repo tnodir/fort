@@ -1,7 +1,6 @@
 #include "taskinfoupdatechecker.h"
 
 #include <QDataStream>
-#include <QTextDocument>
 
 #include "../../common/version.h"
 #include "../fortmanager.h"
@@ -12,13 +11,6 @@
 TaskInfoUpdateChecker::TaskInfoUpdateChecker(QObject *parent) :
     TaskInfo(UpdateChecker, parent)
 {
-}
-
-QString TaskInfoUpdateChecker::plainReleaseText() const
-{
-    QTextDocument doc;
-    doc.setMarkdown(releaseText());
-    return doc.toPlainText();
 }
 
 QByteArray TaskInfoUpdateChecker::data() const
