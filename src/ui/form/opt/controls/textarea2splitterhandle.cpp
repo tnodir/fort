@@ -1,8 +1,10 @@
 #include "textarea2splitterhandle.h"
 
 #include <QBoxLayout>
+#include <QPainter>
 #include <QPlainTextEdit>
 #include <QPushButton>
+#include <QStyleOption>
 
 #include "../../../fortmanager.h"
 #include "../../../util/stringutil.h"
@@ -144,20 +146,21 @@ FortManager *TextArea2SplitterHandle::fortManager() const
     return ctrl()->fortManager();
 }
 
-void TextArea2SplitterHandle::paintEvent(QPaintEvent *e)
+void TextArea2SplitterHandle::paintEvent(QPaintEvent *)
 {
-    Q_UNUSED(e)
-}
+    const int handlePaintedWidth = 4;
+    auto rect = contentsRect();
+    const int margin = (rect.width() - handlePaintedWidth) / 2;
+    rect.adjust(margin, 0, -margin, 0);
 
-void TextArea2SplitterHandle::mouseMoveEvent(QMouseEvent *e)
-{
-    // Avoid dragging by buttons
-    if (e->button() == Qt::LeftButton) {
-        if (e->isAccepted())
-            return;
-    }
-
-    QSplitterHandle::mouseMoveEvent(e);
+    QPainter p(this);
+    QStyleOption opt(0);
+    opt.rect = rect;
+    opt.palette = palette();
+    opt.state = (orientation() == Qt::Horizontal
+                 ? QStyle::State_Horizontal : QStyle::State_None)
+            | (isEnabled() ? QStyle::State_Enabled : QStyle::State_None);
+    parentWidget()->style()->drawControl(QStyle::CE_Splitter, &opt, &p, splitter());
 }
 
 void TextArea2SplitterHandle::setupUi(bool selectFileEnabled)

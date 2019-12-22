@@ -37,8 +37,7 @@ public:
     FortManager *fortManager() const;
 
 protected:
-    void paintEvent(QPaintEvent *e) override;
-    void mouseMoveEvent(QMouseEvent *e) override;
+    void paintEvent(QPaintEvent *) override;
 
 private:
     void setupUi(bool selectFileEnabled);
