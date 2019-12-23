@@ -14,6 +14,9 @@ public:
     explicit AddressesPage(OptionsController *ctrl = nullptr,
                            QWidget *parent = nullptr);
 
+    AddressGroup *addressGroup() const { return m_addressGroup; }
+    void setAddressGroup(AddressGroup *v) { m_addressGroup = v; }
+
 protected slots:
     void onRetranslateUi() override;
 
@@ -27,7 +30,6 @@ private:
     void refreshGroup();
     void setupAddressGroup();
 
-    AddressGroup *addressGroup() const { return m_addressGroup; }
     AddressGroup *addressGroupByIndex(int index) const;
 
 private:

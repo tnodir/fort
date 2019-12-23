@@ -6,6 +6,7 @@
 #include <QMenu>
 #include <QPushButton>
 #include <QSpinBox>
+#include <QTimeEdit>
 #include <QVBoxLayout>
 #include <QWidgetAction>
 
@@ -13,6 +14,7 @@
 #include "../../../conf/firewallconf.h"
 #include "../../../util/net/netutil.h"
 #include "../../controls/checkspincombo.h"
+#include "../../controls/checktimeperiod.h"
 #include "../../controls/controlutil.h"
 #include "../../controls/tabbar.h"
 #include "../optionscontroller.h"
@@ -44,10 +46,13 @@ void ApplicationsPage::onRetranslateUi()
     m_cbAllowAll->setText(tr("Allow All"));
 
     m_btGroupOptions->setText(tr("Options"));
-    m_cscLimitIn->checkBox()->setText(tr("Download speed limit, KiB/s:"));
-    m_cscLimitOut->checkBox()->setText(tr("Upload speed limit, KiB/s:"));
+    m_cscLimitIn->checkBox()->setText(tr("Download speed limit:"));
+    m_cscLimitOut->checkBox()->setText(tr("Upload speed limit:"));
     retranslateGroupLimits();
     m_cbFragmentPacket->setText(tr("Fragment first TCP packet"));
+
+    m_cbGroupEnabled->setText(tr("Enabled"));
+    m_ctpGroupPeriod->checkBox()->setText(tr("time period:"));
 }
 
 void ApplicationsPage::setupUi()
@@ -186,6 +191,7 @@ void ApplicationsPage::setupTabBar()
             m_tabBar->removeTab(index);
         } else {
             // Reset alone tab to default one
+            setAppGroup(appGroupByIndex(0));
             m_tabBar->setTabText(0, appGroup()->name());
         }
 
@@ -209,9 +215,14 @@ QLayout *ApplicationsPage::setupGroupHeader()
     auto layout = new QHBoxLayout();
 
     setupGroupOptions();
+    setupGroupEnabled();
+    setupGroupPeriod();
+    setupGroupPeriodEnabled();
 
     layout->addWidget(m_btGroupOptions);
     layout->addStretch();
+    layout->addWidget(m_cbGroupEnabled);
+    layout->addWidget(m_ctpGroupPeriod);
 
     return layout;
 }
@@ -249,6 +260,7 @@ void ApplicationsPage::setupGroupLimitIn()
 {
     m_cscLimitIn = new CheckSpinCombo();
     m_cscLimitIn->spinBox()->setRange(0, 99999);
+    m_cscLimitIn->spinBox()->setSuffix(" KiB/s");
     m_cscLimitIn->setValues(speedLimitValues);
 
     connect(m_cscLimitIn->checkBox(), &QCheckBox::toggled, [&](bool checked) {
@@ -275,6 +287,7 @@ void ApplicationsPage::setupGroupLimitOut()
 {
     m_cscLimitOut = new CheckSpinCombo();
     m_cscLimitOut->spinBox()->setRange(0, 99999);
+    m_cscLimitOut->spinBox()->setSuffix(" KiB/s");
     m_cscLimitOut->setValues(speedLimitValues);
 
     connect(m_cscLimitOut->checkBox(), &QCheckBox::toggled, [&](bool checked) {
@@ -309,6 +322,21 @@ void ApplicationsPage::setupGroupFragmentPacket()
     });
 }
 
+void ApplicationsPage::setupGroupOptionsEnabled()
+{
+    const auto refreshOptionsEnabled = [&] {
+        const bool logStat = conf()->logStat();
+
+        m_cscLimitIn->setEnabled(logStat);
+        m_cscLimitOut->setEnabled(logStat);
+        m_cbFragmentPacket->setEnabled(logStat);
+    };
+
+    refreshOptionsEnabled();
+
+    connect(conf(), &FirewallConf::logStatChanged, this, refreshOptionsEnabled);
+}
+
 void ApplicationsPage::retranslateGroupLimits()
 {
     QStringList list;
@@ -327,6 +355,63 @@ void ApplicationsPage::retranslateGroupLimits()
     m_cscLimitOut->setNames(list);
 }
 
+void ApplicationsPage::setupGroupEnabled()
+{
+    m_cbGroupEnabled = ControlUtil::createCheckBox(false, [&](bool checked) {
+        if (appGroup()->enabled() == checked)
+            return;
+
+        appGroup()->setEnabled(checked);
+
+        ctrl()->setConfFlagsEdited(true);
+    });
+}
+
+void ApplicationsPage::setupGroupPeriod()
+{
+    m_ctpGroupPeriod = new CheckTimePeriod();
+
+    connect(m_ctpGroupPeriod->checkBox(), &QCheckBox::toggled, [&](bool checked) {
+        if (appGroup()->periodEnabled() == checked)
+            return;
+
+        appGroup()->setPeriodEnabled(checked);
+
+        ctrl()->setConfEdited(true);
+    });
+    connect(m_ctpGroupPeriod->timeEdit1(), &QTimeEdit::userTimeChanged, [&](const QTime &time) {
+        const auto timeStr = time.toString(CheckTimePeriod::timeFormat());
+
+        if (appGroup()->periodFrom() == timeStr)
+            return;
+
+        appGroup()->setPeriodFrom(timeStr);
+
+        ctrl()->setConfEdited(true);
+    });
+    connect(m_ctpGroupPeriod->timeEdit2(), &QTimeEdit::userTimeChanged, [&](const QTime &time) {
+        const auto timeStr = time.toString(CheckTimePeriod::timeFormat());
+
+        if (appGroup()->periodTo() == timeStr)
+            return;
+
+        appGroup()->setPeriodTo(timeStr);
+
+        ctrl()->setConfEdited(true);
+    });
+}
+
+void ApplicationsPage::setupGroupPeriodEnabled()
+{
+    const auto refreshPeriodEnabled = [&] {
+        m_ctpGroupPeriod->setEnabled(m_cbGroupEnabled->isChecked());
+    };
+
+    refreshPeriodEnabled();
+
+    connect(m_cbGroupEnabled, &QCheckBox::toggled, this, refreshPeriodEnabled);
+}
+
 void ApplicationsPage::refreshGroup()
 {
     m_cscLimitIn->checkBox()->setChecked(appGroup()->limitInEnabled());
@@ -336,13 +421,23 @@ void ApplicationsPage::refreshGroup()
     m_cscLimitOut->spinBox()->setValue(int(appGroup()->speedLimitOut()));
 
     m_cbFragmentPacket->setChecked(appGroup()->fragmentPacket());
+
+    m_cbGroupEnabled->setChecked(appGroup()->enabled());
+
+    m_ctpGroupPeriod->checkBox()->setChecked(appGroup()->periodEnabled());
+    m_ctpGroupPeriod->timeEdit1()->setTime(
+                QTime::fromString(appGroup()->periodFrom(),
+                                  CheckTimePeriod::timeFormat()));
+    m_ctpGroupPeriod->timeEdit2()->setTime(
+                QTime::fromString(appGroup()->periodTo(),
+                                  CheckTimePeriod::timeFormat()));
 }
 
 void ApplicationsPage::setupAppGroup()
 {
     const auto refreshAppGroup = [&] {
         const int tabIndex = m_tabBar->currentIndex();
-        m_appGroup = appGroupByIndex(tabIndex);
+        setAppGroup(appGroupByIndex(tabIndex));
 
         refreshGroup();
     };

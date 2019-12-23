@@ -19,6 +19,7 @@ SOURCES += \
     driver/drivermanager.cpp \
     driver/driverworker.cpp \
     form/controls/checkspincombo.cpp \
+    form/controls/checktimeperiod.cpp \
     form/controls/controlutil.cpp \
     form/controls/tabbar.cpp \
     form/graph/axistickerspeed.cpp \
@@ -110,6 +111,7 @@ HEADERS += \
     driver/drivermanager.h \
     driver/driverworker.h \
     form/controls/checkspincombo.h \
+    form/controls/checktimeperiod.h \
     form/controls/controlutil.h \
     form/controls/tabbar.h \
     form/graph/axistickerspeed.h \

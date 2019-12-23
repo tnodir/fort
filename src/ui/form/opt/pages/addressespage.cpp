@@ -178,7 +178,7 @@ void AddressesPage::setupAddressGroup()
 {
     const auto refreshAddressGroup = [&] {
         const int tabIndex = m_tabBar->currentIndex();
-        m_addressGroup = addressGroupByIndex(tabIndex);
+        setAddressGroup(addressGroupByIndex(tabIndex));
 
         refreshGroup();
     };

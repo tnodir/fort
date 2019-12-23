@@ -6,6 +6,7 @@
 QT_FORWARD_DECLARE_CLASS(AppGroup)
 QT_FORWARD_DECLARE_CLASS(TabBar)
 QT_FORWARD_DECLARE_CLASS(CheckSpinCombo)
+QT_FORWARD_DECLARE_CLASS(CheckTimePeriod)
 
 class ApplicationsPage : public BasePage
 {
@@ -14,6 +15,9 @@ class ApplicationsPage : public BasePage
 public:
     explicit ApplicationsPage(OptionsController *ctrl = nullptr,
                               QWidget *parent = nullptr);
+
+    AppGroup *appGroup() const { return m_appGroup; }
+    void setAppGroup(AppGroup *v) { m_appGroup = v; }
 
 protected slots:
     void onRetranslateUi() override;
@@ -31,12 +35,15 @@ private:
     void setupGroupLimitIn();
     void setupGroupLimitOut();
     void setupGroupFragmentPacket();
+    void setupGroupOptionsEnabled();
     void retranslateGroupLimits();
+    void setupGroupEnabled();
+    void setupGroupPeriod();
+    void setupGroupPeriodEnabled();
     void refreshGroup();
     void setupAppGroup();
 
     int appGroupsCount() const;
-    AppGroup *appGroup() const { return m_appGroup; }
     AppGroup *appGroupByIndex(int index) const;
     void resetGroupName();
 
@@ -55,6 +62,8 @@ private:
     CheckSpinCombo *m_cscLimitIn = nullptr;
     CheckSpinCombo *m_cscLimitOut = nullptr;
     QCheckBox *m_cbFragmentPacket = nullptr;
+    QCheckBox *m_cbGroupEnabled = nullptr;
+    CheckTimePeriod *m_ctpGroupPeriod = nullptr;
 };
 
 #endif // APPLICATIONSPAGE_H

@@ -46,7 +46,7 @@ void CheckSpinCombo::setupUi()
 void CheckSpinCombo::setupSpin()
 {
     m_spinBox = new QSpinBox();
-    m_spinBox->setMinimumWidth(80);
+    m_spinBox->setMinimumWidth(110);
     m_spinBox->setRange(0, 9999);
 
     connect(m_spinBox, QOverload<int>::of(&QSpinBox::valueChanged),
