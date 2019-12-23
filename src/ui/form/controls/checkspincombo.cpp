@@ -30,6 +30,7 @@ void CheckSpinCombo::setNames(const QStringList &v)
 void CheckSpinCombo::setupUi()
 {
     auto layout = new QHBoxLayout();
+    layout->setMargin(0);
 
     m_checkBox = new QCheckBox();
 

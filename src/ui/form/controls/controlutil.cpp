@@ -2,8 +2,11 @@
 
 #include <QCheckBox>
 #include <QComboBox>
+#include <QMenu>
 #include <QPushButton>
 #include <QToolButton>
+#include <QVBoxLayout>
+#include <QWidgetAction>
 
 QCheckBox *ControlUtil::createCheckBox(bool checked,
                                        const std::function<void (bool)> &onToggled)
@@ -55,5 +58,32 @@ QPushButton *ControlUtil::createLinkButton(const QString &iconPath,
     auto c = new QPushButton(QIcon(iconPath), QString());
     c->setWindowFilePath(linkPath);
     c->setToolTip(!toolTip.isEmpty() ? toolTip : linkPath);
+    return c;
+}
+
+QMenu *ControlUtil::createMenuByWidgets(const QList<QWidget *> &widgets,
+                                        QWidget *parent)
+{
+    auto menu = new QMenu(parent);
+
+    auto layout = new QVBoxLayout();
+    for (auto w : widgets) {
+        layout->addWidget(w);
+    }
+
+    auto menuWidget = new QWidget();
+    menuWidget->setLayout(layout);
+
+    auto wa = new QWidgetAction(menu);
+    wa->setDefaultWidget(menuWidget);
+    menu->addAction(wa);
+
+    return menu;
+}
+
+QFrame *ControlUtil::createHSeparator()
+{
+    auto c = new QFrame();
+    c->setFrameShape(QFrame::HLine);
     return c;
 }

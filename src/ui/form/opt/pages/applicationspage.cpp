@@ -10,7 +10,6 @@
 #include <QSpinBox>
 #include <QTimeEdit>
 #include <QVBoxLayout>
-#include <QWidgetAction>
 
 #include "../../../conf/appgroup.h"
 #include "../../../conf/firewallconf.h"
@@ -74,6 +73,7 @@ void ApplicationsPage::onRetranslateUi()
     m_splitter->handle()->btMoveAllFrom2To1()->setToolTip(tr("Move All Lines to 'Block'"));
     m_splitter->handle()->btMoveSelectedFrom1To2()->setToolTip(tr("Move Selected Lines to 'Allow'"));
     m_splitter->handle()->btMoveSelectedFrom2To1()->setToolTip(tr("Move Selected Lines to 'Block'"));
+    m_splitter->handle()->btSelectFile()->setToolTip(tr("Select File"));
 
     retranslateAppsPlaceholderText();
 }
@@ -266,21 +266,13 @@ void ApplicationsPage::setupGroupOptions()
     setupGroupFragmentPacket();
 
     // Menu
-    auto menu = new QMenu(m_btGroupOptions);
-
-    auto waLimitIn = new QWidgetAction(this);
-    waLimitIn->setDefaultWidget(m_cscLimitIn);
-    menu->addAction(waLimitIn);
-
-    auto waLimitOut = new QWidgetAction(this);
-    waLimitOut->setDefaultWidget(m_cscLimitOut);
-    menu->addAction(waLimitOut);
-
-    menu->addSeparator();
-
-    auto waFragmentPacket = new QWidgetAction(this);
-    waFragmentPacket->setDefaultWidget(m_cbFragmentPacket);
-    menu->addAction(waFragmentPacket);
+    const QList<QWidget *> menuWidgets = {
+        m_cscLimitIn, m_cscLimitOut,
+        ControlUtil::createHSeparator(),
+        m_cbFragmentPacket
+    };
+    auto menu = ControlUtil::createMenuByWidgets(
+                menuWidgets, m_btGroupOptions);
 
     m_btGroupOptions->setMenu(menu);
 }
@@ -492,6 +484,7 @@ void ApplicationsPage::setupSplitter()
 {
     m_splitter = new TextArea2Splitter(ctrl());
 
+    m_splitter->setSelectFileEnabled(true);
     m_splitter->setSettingsPropName("optWindowAppsSplit");
 
     Q_ASSERT(!m_splitter->handle());

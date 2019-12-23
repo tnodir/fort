@@ -7,6 +7,8 @@
 
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QComboBox)
+QT_FORWARD_DECLARE_CLASS(QFrame)
+QT_FORWARD_DECLARE_CLASS(QMenu)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
@@ -24,6 +26,9 @@ public:
     static QPushButton *createLinkButton(const QString &iconPath,
                                          const QString &linkPath = QString(),
                                          const QString &toolTip = QString());
+    static QMenu *createMenuByWidgets(const QList<QWidget *> &widgets,
+                                      QWidget *parent);
+    static QFrame *createHSeparator();
 };
 
 #endif // CONTROLUTIL_H
