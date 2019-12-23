@@ -391,7 +391,7 @@ void ApplicationsPage::setupGroupPeriod()
         ctrl()->setConfEdited(true);
     });
     connect(m_ctpGroupPeriod->timeEdit1(), &QTimeEdit::userTimeChanged, [&](const QTime &time) {
-        const auto timeStr = time.toString(CheckTimePeriod::timeFormat());
+        const auto timeStr = CheckTimePeriod::fromTime(time);
 
         if (appGroup()->periodFrom() == timeStr)
             return;
@@ -401,7 +401,7 @@ void ApplicationsPage::setupGroupPeriod()
         ctrl()->setConfEdited(true);
     });
     connect(m_ctpGroupPeriod->timeEdit2(), &QTimeEdit::userTimeChanged, [&](const QTime &time) {
-        const auto timeStr = time.toString(CheckTimePeriod::timeFormat());
+        const auto timeStr = CheckTimePeriod::fromTime(time);
 
         if (appGroup()->periodTo() == timeStr)
             return;
@@ -436,12 +436,10 @@ void ApplicationsPage::refreshGroup()
     m_cbGroupEnabled->setChecked(appGroup()->enabled());
 
     m_ctpGroupPeriod->checkBox()->setChecked(appGroup()->periodEnabled());
-    m_ctpGroupPeriod->timeEdit1()->setTime(
-                QTime::fromString(appGroup()->periodFrom(),
-                                  CheckTimePeriod::timeFormat()));
-    m_ctpGroupPeriod->timeEdit2()->setTime(
-                QTime::fromString(appGroup()->periodTo(),
-                                  CheckTimePeriod::timeFormat()));
+    m_ctpGroupPeriod->timeEdit1()->setTime(CheckTimePeriod::toTime(
+                                               appGroup()->periodFrom()));
+    m_ctpGroupPeriod->timeEdit2()->setTime(CheckTimePeriod::toTime(
+                                               appGroup()->periodTo()));
 }
 
 void ApplicationsPage::setupAppGroup()

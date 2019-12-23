@@ -18,6 +18,8 @@ public:
     QTimeEdit *timeEdit2() const { return m_timeEdit2; }
 
     static QString timeFormat() { return "HH:mm"; }
+    static QString fromTime(const QTime &time);
+    static QTime toTime(const QString &text);
 
 private:
     void setupUi();

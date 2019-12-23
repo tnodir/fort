@@ -36,3 +36,16 @@ QTimeEdit *CheckTimePeriod::createTimeEdit()
     c->setWrapping(true);
     return c;
 }
+
+QString CheckTimePeriod::fromTime(const QTime &time)
+{
+    return time.toString(timeFormat());
+}
+
+QTime CheckTimePeriod::toTime(const QString &text)
+{
+    if (text.isEmpty())
+        return QTime(0, 0);
+
+    return QTime::fromString(text, timeFormat());
+}
