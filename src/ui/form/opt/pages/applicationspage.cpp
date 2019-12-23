@@ -2,8 +2,10 @@
 
 #include <QCheckBox>
 #include <QHBoxLayout>
+#include <QLabel>
 #include <QLineEdit>
 #include <QMenu>
+#include <QPlainTextEdit>
 #include <QPushButton>
 #include <QSpinBox>
 #include <QTimeEdit>
@@ -17,7 +19,10 @@
 #include "../../controls/checktimeperiod.h"
 #include "../../controls/controlutil.h"
 #include "../../controls/tabbar.h"
+#include "../controls/textarea2splitter.h"
+#include "../controls/textarea2splitterhandle.h"
 #include "../optionscontroller.h"
+#include "apps/appscolumn.h"
 
 namespace {
 
@@ -61,6 +66,16 @@ void ApplicationsPage::onRetranslateUi()
 
     m_cbGroupEnabled->setText(tr("Enabled"));
     m_ctpGroupPeriod->checkBox()->setText(tr("time period:"));
+
+    m_blockApps->labelTitle()->setText(tr("Block"));
+    m_allowApps->labelTitle()->setText(tr("Allow"));
+
+    m_splitter->handle()->btMoveAllFrom1To2()->setToolTip(tr("Move All Lines to 'Allow'"));
+    m_splitter->handle()->btMoveAllFrom2To1()->setToolTip(tr("Move All Lines to 'Block'"));
+    m_splitter->handle()->btMoveSelectedFrom1To2()->setToolTip(tr("Move Selected Lines to 'Allow'"));
+    m_splitter->handle()->btMoveSelectedFrom2To1()->setToolTip(tr("Move Selected Lines to 'Block'"));
+
+    retranslateAppsPlaceholderText();
 }
 
 void ApplicationsPage::setupUi()
@@ -79,9 +94,15 @@ void ApplicationsPage::setupUi()
     auto groupHeader = setupGroupHeader();
     layout->addLayout(groupHeader);
 
-    setupAppGroup();
+    // App Columns
+    setupBlockApps();
+    setupAllowApps();
 
-    layout->addStretch();
+    // Splitter
+    setupSplitter();
+    layout->addWidget(m_splitter, 1);
+
+    setupAppGroup();
 
     this->setLayout(layout);
 }
@@ -423,6 +444,67 @@ void ApplicationsPage::setupGroupPeriodEnabled()
     connect(m_cbGroupEnabled, &QCheckBox::toggled, this, refreshPeriodEnabled);
 }
 
+void ApplicationsPage::setupBlockApps()
+{
+    m_blockApps = new AppsColumn();
+
+    connect(m_blockApps->editText(), &QPlainTextEdit::textChanged, [&] {
+        const auto text = m_blockApps->editText()->toPlainText();
+
+        if (appGroup()->blockText() == text)
+            return;
+
+        appGroup()->setBlockText(text);
+
+        ctrl()->setConfEdited(true);
+    });
+}
+
+void ApplicationsPage::setupAllowApps()
+{
+    m_allowApps = new AppsColumn();
+
+    connect(m_allowApps->editText(), &QPlainTextEdit::textChanged, [&] {
+        const auto text = m_allowApps->editText()->toPlainText();
+
+        if (appGroup()->allowText() == text)
+            return;
+
+        appGroup()->setAllowText(text);
+
+        ctrl()->setConfEdited(true);
+    });
+}
+
+void ApplicationsPage::retranslateAppsPlaceholderText()
+{
+    const auto placeholderText = tr("# Examples:") + '\n'
+            + QLatin1String(
+                "System\n"
+                "C:\\Program Files (x86)\\Microsoft\\Skype for Desktop\\Skype.exe\n")
+            + '\n' + tr("# All programs in the sub-path:")
+            + QLatin1String("\nC:\\Git\\**");
+
+    m_allowApps->editText()->setPlaceholderText(placeholderText);
+}
+
+void ApplicationsPage::setupSplitter()
+{
+    m_splitter = new TextArea2Splitter(ctrl());
+
+    m_splitter->setSettingsPropName("optWindowAppsSplit");
+
+    Q_ASSERT(!m_splitter->handle());
+
+    m_splitter->addWidget(m_blockApps);
+    m_splitter->addWidget(m_allowApps);
+
+    Q_ASSERT(m_splitter->handle());
+
+    m_splitter->handle()->setTextArea1(m_blockApps->editText());
+    m_splitter->handle()->setTextArea2(m_allowApps->editText());
+}
+
 void ApplicationsPage::refreshGroup()
 {
     m_cscLimitIn->checkBox()->setChecked(appGroup()->limitInEnabled());
@@ -440,6 +522,9 @@ void ApplicationsPage::refreshGroup()
                                                appGroup()->periodFrom()));
     m_ctpGroupPeriod->timeEdit2()->setTime(CheckTimePeriod::toTime(
                                                appGroup()->periodTo()));
+
+    m_blockApps->editText()->setPlainText(appGroup()->blockText());
+    m_allowApps->editText()->setPlainText(appGroup()->allowText());
 }
 
 void ApplicationsPage::setupAppGroup()

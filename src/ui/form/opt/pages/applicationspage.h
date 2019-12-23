@@ -4,9 +4,11 @@
 #include "basepage.h"
 
 QT_FORWARD_DECLARE_CLASS(AppGroup)
-QT_FORWARD_DECLARE_CLASS(TabBar)
+QT_FORWARD_DECLARE_CLASS(AppsColumn)
 QT_FORWARD_DECLARE_CLASS(CheckSpinCombo)
 QT_FORWARD_DECLARE_CLASS(CheckTimePeriod)
+QT_FORWARD_DECLARE_CLASS(TabBar)
+QT_FORWARD_DECLARE_CLASS(TextArea2Splitter)
 
 class ApplicationsPage : public BasePage
 {
@@ -44,6 +46,10 @@ private:
     void setupGroupEnabled();
     void setupGroupPeriod();
     void setupGroupPeriodEnabled();
+    void setupBlockApps();
+    void setupAllowApps();
+    void retranslateAppsPlaceholderText();
+    void setupSplitter();
     void refreshGroup();
     void setupAppGroup();
 
@@ -68,6 +74,9 @@ private:
     QCheckBox *m_cbFragmentPacket = nullptr;
     QCheckBox *m_cbGroupEnabled = nullptr;
     CheckTimePeriod *m_ctpGroupPeriod = nullptr;
+    AppsColumn *m_blockApps = nullptr;
+    AppsColumn *m_allowApps = nullptr;
+    TextArea2Splitter *m_splitter = nullptr;
 };
 
 #endif // APPLICATIONSPAGE_H

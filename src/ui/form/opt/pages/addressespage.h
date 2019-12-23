@@ -25,11 +25,11 @@ protected slots:
 
 private:
     void setupUi();
-    void setupSplitter();
     void setupIncludeAddresses();
     void setupExcludeAddresses();
     void setupAddressesUseAllEnabled();
     void retranslateAddressesPlaceholderText();
+    void setupSplitter();
     void refreshGroup();
     void setupAddressGroup();
 

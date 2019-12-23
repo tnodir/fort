@@ -71,30 +71,13 @@ void AddressesPage::setupUi()
 
     setupAddressesUseAllEnabled();
 
-    setupAddressGroup();
-
     // Splitter
     setupSplitter();
     layout->addWidget(m_splitter, 1);
 
+    setupAddressGroup();
+
     this->setLayout(layout);
-}
-
-void AddressesPage::setupSplitter()
-{
-    m_splitter = new TextArea2Splitter(ctrl());
-
-    m_splitter->setSettingsPropName("optWindowAddrSplit");
-
-    Q_ASSERT(!m_splitter->handle());
-
-    m_splitter->addWidget(m_includeAddresses);
-    m_splitter->addWidget(m_excludeAddresses);
-
-    Q_ASSERT(m_splitter->handle());
-
-    m_splitter->handle()->setTextArea1(m_includeAddresses->editIpText());
-    m_splitter->handle()->setTextArea2(m_excludeAddresses->editIpText());
 }
 
 void AddressesPage::setupIncludeAddresses()
@@ -171,6 +154,23 @@ void AddressesPage::retranslateAddressesPlaceholderText()
 
     m_includeAddresses->editIpText()->setPlaceholderText(placeholderText);
     m_excludeAddresses->editIpText()->setPlaceholderText(placeholderText);
+}
+
+void AddressesPage::setupSplitter()
+{
+    m_splitter = new TextArea2Splitter(ctrl());
+
+    m_splitter->setSettingsPropName("optWindowAddrSplit");
+
+    Q_ASSERT(!m_splitter->handle());
+
+    m_splitter->addWidget(m_includeAddresses);
+    m_splitter->addWidget(m_excludeAddresses);
+
+    Q_ASSERT(m_splitter->handle());
+
+    m_splitter->handle()->setTextArea1(m_includeAddresses->editIpText());
+    m_splitter->handle()->setTextArea2(m_excludeAddresses->editIpText());
 }
 
 void AddressesPage::refreshGroup()
