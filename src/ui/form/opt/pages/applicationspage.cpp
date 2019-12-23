@@ -258,10 +258,7 @@ void ApplicationsPage::setupGroupOptions()
 
 void ApplicationsPage::setupGroupLimitIn()
 {
-    m_cscLimitIn = new CheckSpinCombo();
-    m_cscLimitIn->spinBox()->setRange(0, 99999);
-    m_cscLimitIn->spinBox()->setSuffix(" KiB/s");
-    m_cscLimitIn->setValues(speedLimitValues);
+    m_cscLimitIn = createGroupLimit();
 
     connect(m_cscLimitIn->checkBox(), &QCheckBox::toggled, [&](bool checked) {
         if (appGroup()->limitInEnabled() == checked)
@@ -285,10 +282,7 @@ void ApplicationsPage::setupGroupLimitIn()
 
 void ApplicationsPage::setupGroupLimitOut()
 {
-    m_cscLimitOut = new CheckSpinCombo();
-    m_cscLimitOut->spinBox()->setRange(0, 99999);
-    m_cscLimitOut->spinBox()->setSuffix(" KiB/s");
-    m_cscLimitOut->setValues(speedLimitValues);
+    m_cscLimitOut = createGroupLimit();
 
     connect(m_cscLimitOut->checkBox(), &QCheckBox::toggled, [&](bool checked) {
         if (appGroup()->limitOutEnabled() == checked)
@@ -308,6 +302,15 @@ void ApplicationsPage::setupGroupLimitOut()
 
         ctrl()->setConfEdited(true);
     });
+}
+
+CheckSpinCombo *ApplicationsPage::createGroupLimit()
+{
+    auto c = new CheckSpinCombo();
+    c->spinBox()->setRange(0, 99999);
+    c->spinBox()->setSuffix(" KiB/s");
+    c->setValues(speedLimitValues);
+    return c;
 }
 
 void ApplicationsPage::setupGroupFragmentPacket()

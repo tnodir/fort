@@ -34,6 +34,7 @@ private:
     void setupGroupOptions();
     void setupGroupLimitIn();
     void setupGroupLimitOut();
+    static CheckSpinCombo *createGroupLimit();
     void setupGroupFragmentPacket();
     void setupGroupOptionsEnabled();
     void retranslateGroupLimits();
