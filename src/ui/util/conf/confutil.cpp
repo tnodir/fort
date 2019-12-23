@@ -45,9 +45,9 @@ int ConfUtil::write(const FirewallConf &conf, EnvManager &envManager, QByteArray
 {
     quint32 addressGroupsSize = 0;
     longs_arr_t addressGroupOffsets;
-    addrranges_arr_t addressRanges(conf.addressGroupsList().size());
+    addrranges_arr_t addressRanges(conf.addressGroups().size());
 
-    if (!parseAddressGroups(conf.addressGroupsList(), addressRanges,
+    if (!parseAddressGroups(conf.addressGroups(), addressRanges,
                             addressGroupOffsets, addressGroupsSize))
         return false;
 
@@ -62,7 +62,7 @@ int ConfUtil::write(const FirewallConf &conf, EnvManager &envManager, QByteArray
     quint32 prefixAppsSize = 0;
     quint32 exeAppsSize = 0;
 
-    if (!parseAppGroups(envManager, conf.appGroupsList(),
+    if (!parseAppGroups(envManager, conf.appGroups(),
                         appPeriods, appPeriodsCount,
                         wildAppsMap, prefixAppsMap, exeAppsMap,
                         wildAppsSize, prefixAppsSize, exeAppsSize))
@@ -77,7 +77,7 @@ int ConfUtil::write(const FirewallConf &conf, EnvManager &envManager, QByteArray
     // Fill the buffer
     const int confIoSize = FORT_CONF_IO_CONF_OFF + FORT_CONF_DATA_OFF
             + addressGroupsSize
-            + FORT_CONF_STR_DATA_SIZE(conf.appGroupsList().size()
+            + FORT_CONF_STR_DATA_SIZE(conf.appGroups().size()
                                       * sizeof(FORT_PERIOD))  // appPeriods
             + FORT_CONF_STR_DATA_SIZE(wildAppsSize)
             + FORT_CONF_STR_HEADER_SIZE(prefixAppsMap.size())
@@ -376,7 +376,7 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     writeLimits(drvConfIo->conf_group.limits,
                 &drvConfIo->conf_group.limit_bits,
                 &drvConfIo->conf_group.limit_2bits,
-                conf.appGroupsList());
+                conf.appGroups());
 
     drvConf->flags.prov_boot = conf.provBoot();
     drvConf->flags.filter_enabled = conf.filterEnabled();
@@ -414,7 +414,7 @@ void ConfUtil::writeFragmentBits(quint16 *fragmentBits,
 {
     *fragmentBits = 0;
     int i = 0;
-    for (const AppGroup *appGroup : conf.appGroupsList()) {
+    for (const AppGroup *appGroup : conf.appGroups()) {
         if (appGroup->fragmentPacket()) {
             *fragmentBits |= (1 << i);
         }

@@ -175,7 +175,7 @@ void ApplicationsPage::setupTabBar()
     m_tabBar->setTabsClosable(true);
     m_tabBar->setMovable(true);
 
-    for (const auto appGroup : conf()->appGroupsList()) {
+    for (const auto appGroup : conf()->appGroups()) {
         addTab(appGroup->name());
     }
 
@@ -354,12 +354,12 @@ void ApplicationsPage::setupAppGroup()
 
 int ApplicationsPage::appGroupsCount() const
 {
-    return conf()->appGroupsList().size();
+    return conf()->appGroups().size();
 }
 
 AppGroup *ApplicationsPage::appGroupByIndex(int index) const
 {
-    return conf()->appGroupsList().at(index);
+    return conf()->appGroups().at(index);
 }
 
 void ApplicationsPage::resetGroupName()

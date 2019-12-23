@@ -193,7 +193,7 @@ bool ConfManager::load(FirewallConf &conf)
         }
 
         if (!isNewConf) {
-            for (AppGroup *appGroup : conf.appGroupsList()) {
+            for (AppGroup *appGroup : conf.appGroups()) {
                 appGroup->setBlockText(migrateAppsText(appGroup->blockText()));
                 appGroup->setAllowText(migrateAppsText(appGroup->allowText()));
             }
@@ -267,7 +267,7 @@ bool ConfManager::loadFromDb(FirewallConf &conf, bool &isNew)
 
         int index = 0;
         while (stmt.step() == SqliteStmt::StepRow) {
-            auto addrGroup = conf.addressGroupsList().at(index);
+            auto addrGroup = conf.addressGroups().at(index);
             Q_ASSERT(addrGroup != nullptr);
 
             addrGroup->setId(stmt.columnInt64(0));
@@ -325,7 +325,7 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
 
     // Save Address Groups
     int orderIndex = -1;
-    for (AddressGroup *addrGroup : conf.addressGroupsList()) {
+    for (AddressGroup *addrGroup : conf.addressGroups()) {
         ++orderIndex;
 
         const bool rowExists = (addrGroup->id() != 0);
@@ -354,7 +354,7 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
 
     // Save App Groups
     orderIndex = -1;
-    for (AppGroup *appGroup : conf.appGroupsList()) {
+    for (AppGroup *appGroup : conf.appGroups()) {
         ++orderIndex;
 
         const bool rowExists = (appGroup->id() != 0);

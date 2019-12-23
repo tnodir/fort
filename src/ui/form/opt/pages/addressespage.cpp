@@ -190,5 +190,5 @@ void AddressesPage::setupAddressGroup()
 
 AddressGroup *AddressesPage::addressGroupByIndex(int index) const
 {
-    return conf()->addressGroupsList().at(index);
+    return conf()->addressGroups().at(index);
 }

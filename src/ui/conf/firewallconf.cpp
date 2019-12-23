@@ -193,7 +193,7 @@ quint32 FirewallConf::appGroupBits() const
 {
     quint32 groupBits = 0;
     int i = 0;
-    for (const AppGroup *appGroup : appGroupsList()) {
+    for (const AppGroup *appGroup : appGroups()) {
         if (appGroup->enabled()) {
             groupBits |= (1 << i);
         }
@@ -205,7 +205,7 @@ quint32 FirewallConf::appGroupBits() const
 void FirewallConf::setAppGroupBits(quint32 groupBits)
 {
     int i = 0;
-    for (AppGroup *appGroup : appGroupsList()) {
+    for (AppGroup *appGroup : appGroups()) {
         appGroup->setEnabled(groupBits & (1 << i));
         ++i;
     }
@@ -213,7 +213,7 @@ void FirewallConf::setAppGroupBits(quint32 groupBits)
 
 AppGroup *FirewallConf::appGroupByName(const QString &name) const
 {
-    for (AppGroup *appGroup : appGroupsList()) {
+    for (AppGroup *appGroup : appGroups()) {
         if (appGroup->name() == name)
             return appGroup;
     }
@@ -341,12 +341,12 @@ void FirewallConf::copy(const FirewallConf &o)
     copyFlags(o);
 
     int addrGroupIndex = 0;
-    for (const AddressGroup *ag : o.addressGroupsList()) {
+    for (const AddressGroup *ag : o.addressGroups()) {
         AddressGroup *addressGroup = m_addressGroups.at(addrGroupIndex++);
         addressGroup->copy(*ag);
     }
 
-    for (const AppGroup *ag : o.appGroupsList()) {
+    for (const AppGroup *ag : o.appGroups()) {
         auto appGroup = new AppGroup();
         appGroup->copy(*ag);
         addAppGroup(appGroup);
@@ -358,13 +358,13 @@ QVariant FirewallConf::toVariant() const
     QVariantMap map;
 
     QVariantList addresses;
-    for (const AddressGroup *addressGroup : addressGroupsList()) {
+    for (const AddressGroup *addressGroup : addressGroups()) {
         addresses.append(addressGroup->toVariant());
     }
     map["addressGroups"] = addresses;
 
     QVariantList groups;
-    for (const AppGroup *appGroup : appGroupsList()) {
+    for (const AppGroup *appGroup : appGroups()) {
         groups.append(appGroup->toVariant());
     }
     map["appGroups"] = groups;

@@ -117,11 +117,11 @@ public:
 
     AddressGroup *inetAddressGroup() const { return m_addressGroups.at(0); }
 
-    const QList<AddressGroup *> &addressGroupsList() const { return m_addressGroups; }
+    const QList<AddressGroup *> &addressGroups() const { return m_addressGroups; }
 
     Q_INVOKABLE AppGroup *appGroupByName(const QString &name) const;
 
-    const QList<AppGroup *> &appGroupsList() const { return m_appGroups; }
+    const QList<AppGroup *> &appGroups() const { return m_appGroups; }
 
     const QList<AppGroup *> &removedAppGroupsList() const { return m_removedAppGroups; }
     void clearRemovedAppGroups() const;
