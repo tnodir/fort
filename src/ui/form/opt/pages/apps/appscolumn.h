@@ -1,14 +1,14 @@
 #ifndef APPSCOLUMN_H
 #define APPSCOLUMN_H
 
-#include <QObject>
+#include <QWidget>
 
-class AppsColumn : public QObject
+class AppsColumn : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit AppsColumn(QObject *parent = nullptr);
+    explicit AppsColumn(QWidget *parent = nullptr);
 
 };
 

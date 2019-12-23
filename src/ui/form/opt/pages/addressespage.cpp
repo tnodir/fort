@@ -165,20 +165,30 @@ void AddressesPage::retranslateAddressesPlaceholderText()
     m_excludeAddresses->editIpText()->setPlaceholderText(placeholderText);
 }
 
+void AddressesPage::refreshGroup()
+{
+    m_includeAddresses->cbUseAll()->setChecked(addressGroup()->includeAll());
+    m_includeAddresses->editIpText()->setPlainText(addressGroup()->includeText());
+
+    m_excludeAddresses->cbUseAll()->setChecked(addressGroup()->excludeAll());
+    m_excludeAddresses->editIpText()->setPlainText(addressGroup()->excludeText());
+}
+
 void AddressesPage::setupAddressGroup()
 {
     const auto refreshAddressGroup = [&] {
         const int tabIndex = m_tabBar->currentIndex();
-        m_addressGroup = conf()->addressGroupsList().at(tabIndex);
+        m_addressGroup = addressGroupByIndex(tabIndex);
 
-        m_includeAddresses->cbUseAll()->setChecked(addressGroup()->includeAll());
-        m_includeAddresses->editIpText()->setPlainText(addressGroup()->includeText());
-
-        m_excludeAddresses->cbUseAll()->setChecked(addressGroup()->excludeAll());
-        m_excludeAddresses->editIpText()->setPlainText(addressGroup()->excludeText());
+        refreshGroup();
     };
 
     refreshAddressGroup();
 
     connect(m_tabBar, &QTabBar::currentChanged, this, refreshAddressGroup);
+}
+
+AddressGroup *AddressesPage::addressGroupByIndex(int index) const
+{
+    return conf()->addressGroupsList().at(index);
 }

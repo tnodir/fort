@@ -1,6 +1,6 @@
 #include "appscolumn.h"
 
-AppsColumn::AppsColumn(QObject *parent) :
-    QObject(parent)
+AppsColumn::AppsColumn(QWidget *parent) :
+    QWidget(parent)
 {
 }
