@@ -36,6 +36,14 @@ ApplicationsPage::ApplicationsPage(OptionsController *ctrl,
     setupUi();
 }
 
+void ApplicationsPage::setAppGroup(AppGroup *v)
+{
+    if (m_appGroup != v) {
+        m_appGroup = v;
+        emit appGroupChanged();
+    }
+}
+
 void ApplicationsPage::onRetranslateUi()
 {
     m_editGroupName->setPlaceholderText(tr("Group Name"));
@@ -438,11 +446,11 @@ void ApplicationsPage::refreshGroup()
 
 void ApplicationsPage::setupAppGroup()
 {
+    connect(this, &ApplicationsPage::appGroupChanged, this, &ApplicationsPage::refreshGroup);
+
     const auto refreshAppGroup = [&] {
         const int tabIndex = m_tabBar->currentIndex();
         setAppGroup(appGroupByIndex(tabIndex));
-
-        refreshGroup();
     };
 
     refreshAppGroup();

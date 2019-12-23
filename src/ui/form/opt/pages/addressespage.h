@@ -15,7 +15,10 @@ public:
                            QWidget *parent = nullptr);
 
     AddressGroup *addressGroup() const { return m_addressGroup; }
-    void setAddressGroup(AddressGroup *v) { m_addressGroup = v; }
+    void setAddressGroup(AddressGroup *v);
+
+signals:
+    void addressGroupChanged();
 
 protected slots:
     void onRetranslateUi() override;

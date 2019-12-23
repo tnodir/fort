@@ -17,7 +17,10 @@ public:
                               QWidget *parent = nullptr);
 
     AppGroup *appGroup() const { return m_appGroup; }
-    void setAppGroup(AppGroup *v) { m_appGroup = v; }
+    void setAppGroup(AppGroup *v);
+
+signals:
+    void appGroupChanged();
 
 protected slots:
     void onRetranslateUi() override;

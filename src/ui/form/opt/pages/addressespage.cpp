@@ -26,6 +26,14 @@ AddressesPage::AddressesPage(OptionsController *ctrl,
     setupUi();
 }
 
+void AddressesPage::setAddressGroup(AddressGroup *v)
+{
+    if (m_addressGroup != v) {
+        m_addressGroup = v;
+        emit addressGroupChanged();
+    }
+}
+
 void AddressesPage::onRetranslateUi()
 {
     m_tabBar->setTabText(0, tr("Internet Addresses"));
@@ -176,11 +184,11 @@ void AddressesPage::refreshGroup()
 
 void AddressesPage::setupAddressGroup()
 {
+    connect(this, &AddressesPage::addressGroupChanged, this, &AddressesPage::refreshGroup);
+
     const auto refreshAddressGroup = [&] {
         const int tabIndex = m_tabBar->currentIndex();
         setAddressGroup(addressGroupByIndex(tabIndex));
-
-        refreshGroup();
     };
 
     refreshAddressGroup();
