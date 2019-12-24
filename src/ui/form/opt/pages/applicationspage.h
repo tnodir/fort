@@ -27,6 +27,9 @@ signals:
 protected slots:
     void onRetranslateUi() override;
 
+    void onSaveWindowState() override;
+    void onRestoreWindowState() override;
+
 private:
     void setupUi();
     QLayout *setupHeader();

@@ -44,6 +44,9 @@ protected slots:
 
     virtual void onRetranslateUi() {}
 
+    virtual void onSaveWindowState() {}
+    virtual void onRestoreWindowState() {}
+
     bool openUrlExternally(const QUrl &url);
     void onLinkClicked();
 

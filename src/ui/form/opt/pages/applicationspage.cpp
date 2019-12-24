@@ -13,13 +13,14 @@
 
 #include "../../../conf/appgroup.h"
 #include "../../../conf/firewallconf.h"
+#include "../../../fortsettings.h"
 #include "../../../util/net/netutil.h"
 #include "../../controls/checkspincombo.h"
 #include "../../controls/checktimeperiod.h"
 #include "../../controls/controlutil.h"
 #include "../../controls/tabbar.h"
-#include "../controls/textarea2splitter.h"
-#include "../controls/textarea2splitterhandle.h"
+#include "../../controls/textarea2splitter.h"
+#include "../../controls/textarea2splitterhandle.h"
 #include "../optionscontroller.h"
 #include "apps/appscolumn.h"
 
@@ -76,6 +77,16 @@ void ApplicationsPage::onRetranslateUi()
     m_splitter->handle()->btSelectFile()->setToolTip(tr("Select File"));
 
     retranslateAppsPlaceholderText();
+}
+
+void ApplicationsPage::onSaveWindowState()
+{
+    settings()->setOptWindowAppsSplit(m_splitter->saveState());
+}
+
+void ApplicationsPage::onRestoreWindowState()
+{
+    m_splitter->restoreState(settings()->optWindowAppsSplit());
 }
 
 void ApplicationsPage::setupUi()
@@ -482,10 +493,8 @@ void ApplicationsPage::retranslateAppsPlaceholderText()
 
 void ApplicationsPage::setupSplitter()
 {
-    m_splitter = new TextArea2Splitter(ctrl());
-
+    m_splitter = new TextArea2Splitter();
     m_splitter->setSelectFileEnabled(true);
-    m_splitter->setSettingsPropName("optWindowAppsSplit");
 
     Q_ASSERT(!m_splitter->handle());
 

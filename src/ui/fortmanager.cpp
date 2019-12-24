@@ -1,7 +1,6 @@
 #include "fortmanager.h"
 
 #include <QApplication>
-#include <QFileDialog>
 #include <QInputDialog>
 #include <QMenu>
 #include <QMessageBox>
@@ -415,14 +414,6 @@ bool FortManager::showQuestionBox(const QString &text,
     return QMessageBox::question(&m_window, title, text) == QMessageBox::Yes;
 }
 
-QStringList FortManager::getOpenFileNames(const QString &title,
-                                          const QString &filter)
-{
-    return QFileDialog::getOpenFileNames(
-                nullptr, title, QString(), filter,
-                nullptr, QFileDialog::ReadOnly);
-}
-
 bool FortManager::saveOriginConf(const QString &message)
 {
     if (!saveSettings(m_conf))
@@ -565,7 +556,7 @@ void FortManager::saveOptWindowState()
     m_settings->setOptWindowGeometry(m_optWindowState->geometry());
     m_settings->setOptWindowMaximized(m_optWindowState->maximized());
 
-    emit afterSaveWindowState();
+    emit afterSaveOptWindowState();
 }
 
 void FortManager::restoreOptWindowState()
@@ -574,7 +565,7 @@ void FortManager::restoreOptWindowState()
                               m_settings->optWindowGeometry(),
                               m_settings->optWindowMaximized());
 
-    emit afterRestoreWindowState();
+    emit afterRestoreOptWindowState();
 }
 
 void FortManager::saveGraphWindowState(bool visible)

@@ -6,8 +6,6 @@
 QT_FORWARD_DECLARE_CLASS(QPlainTextEdit)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 
-QT_FORWARD_DECLARE_CLASS(FortManager)
-QT_FORWARD_DECLARE_CLASS(OptionsController)
 QT_FORWARD_DECLARE_CLASS(TextArea2Splitter)
 
 class TextArea2SplitterHandle : public QSplitterHandle
@@ -32,9 +30,6 @@ public:
     QPushButton *btSelectFile() const { return m_btSelectFile; }
 
     TextArea2Splitter *splitter() const;
-
-    OptionsController *ctrl() const;
-    FortManager *fortManager() const;
 
 protected:
     void paintEvent(QPaintEvent *) override;

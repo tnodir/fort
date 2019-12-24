@@ -14,8 +14,8 @@
 #include "../../../fortmanager.h"
 #include "../../../fortsettings.h"
 #include "../../../util/net/netutil.h"
-#include "../controls/textarea2splitter.h"
-#include "../controls/textarea2splitterhandle.h"
+#include "../../controls/textarea2splitter.h"
+#include "../../controls/textarea2splitterhandle.h"
 #include "../optionscontroller.h"
 #include "addresses/addressescolumn.h"
 
@@ -51,6 +51,16 @@ void AddressesPage::onRetranslateUi()
     m_splitter->handle()->btMoveSelectedFrom2To1()->setToolTip(tr("Move Selected Lines to 'Include'"));
 
     retranslateAddressesPlaceholderText();
+}
+
+void AddressesPage::onSaveWindowState()
+{
+    settings()->setOptWindowAddrSplit(m_splitter->saveState());
+}
+
+void AddressesPage::onRestoreWindowState()
+{
+    m_splitter->restoreState(settings()->optWindowAddrSplit());
 }
 
 void AddressesPage::setupUi()
@@ -158,9 +168,7 @@ void AddressesPage::retranslateAddressesPlaceholderText()
 
 void AddressesPage::setupSplitter()
 {
-    m_splitter = new TextArea2Splitter(ctrl());
-
-    m_splitter->setSettingsPropName("optWindowAddrSplit");
+    m_splitter = new TextArea2Splitter();
 
     Q_ASSERT(!m_splitter->handle());
 

@@ -22,11 +22,11 @@ SOURCES += \
     form/controls/checktimeperiod.cpp \
     form/controls/controlutil.cpp \
     form/controls/tabbar.cpp \
+    form/controls/textarea2splitter.cpp \
+    form/controls/textarea2splitterhandle.cpp \
     form/graph/axistickerspeed.cpp \
     form/graph/graphplot.cpp \
     form/graph/graphwindow.cpp \
-    form/opt/controls/textarea2splitter.cpp \
-    form/opt/controls/textarea2splitterhandle.cpp \
     form/opt/optionscontroller.cpp \
     form/opt/optionswindow.cpp \
     form/opt/pages/addresses/addressescolumn.cpp \
@@ -114,11 +114,11 @@ HEADERS += \
     form/controls/checktimeperiod.h \
     form/controls/controlutil.h \
     form/controls/tabbar.h \
+    form/controls/textarea2splitter.h \
+    form/controls/textarea2splitterhandle.h \
     form/graph/axistickerspeed.h \
     form/graph/graphplot.h \
     form/graph/graphwindow.h \
-    form/opt/controls/textarea2splitter.h \
-    form/opt/controls/textarea2splitterhandle.h \
     form/opt/optionscontroller.h \
     form/opt/optionswindow.h \
     form/opt/pages/addresses/addressescolumn.h \

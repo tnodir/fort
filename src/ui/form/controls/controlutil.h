@@ -29,6 +29,9 @@ public:
     static QMenu *createMenuByWidgets(const QList<QWidget *> &widgets,
                                       QWidget *parent);
     static QFrame *createHSeparator();
+
+    static QStringList getOpenFileNames(const QString &title = QString(),
+                                        const QString &filter = QString());
 };
 
 #endif // CONTROLUTIL_H

@@ -2,6 +2,7 @@
 
 #include <QCheckBox>
 #include <QComboBox>
+#include <QFileDialog>
 #include <QMenu>
 #include <QPushButton>
 #include <QToolButton>
@@ -86,4 +87,12 @@ QFrame *ControlUtil::createHSeparator()
     auto c = new QFrame();
     c->setFrameShape(QFrame::HLine);
     return c;
+}
+
+QStringList ControlUtil::getOpenFileNames(const QString &title,
+                                          const QString &filter)
+{
+    return QFileDialog::getOpenFileNames(
+                nullptr, title, QString(), filter,
+                nullptr, QFileDialog::ReadOnly);
 }

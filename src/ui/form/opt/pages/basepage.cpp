@@ -3,6 +3,7 @@
 #include <QAbstractButton>
 #include <QDesktopServices>
 
+#include "../../../fortmanager.h"
 #include "../optionscontroller.h"
 
 BasePage::BasePage(OptionsController *ctrl,
@@ -52,6 +53,9 @@ void BasePage::setupController()
     connect(ctrl(), &OptionsController::saved, this, &BasePage::onSaved);
 
     connect(ctrl(), &OptionsController::retranslateUi, this, &BasePage::onRetranslateUi);
+
+    connect(fortManager(), &FortManager::afterSaveOptWindowState, this, &BasePage::onSaveWindowState);
+    connect(fortManager(), &FortManager::afterRestoreOptWindowState, this, &BasePage::onRestoreWindowState);
 }
 
 bool BasePage::openUrlExternally(const QUrl &url)

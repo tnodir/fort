@@ -51,8 +51,8 @@ public:
 signals:
     void confToEditChanged();
 
-    void afterSaveWindowState();
-    void afterRestoreWindowState();
+    void afterSaveOptWindowState();
+    void afterRestoreOptWindowState();
 
 public slots:
     void installDriver();
@@ -82,9 +82,6 @@ public slots:
                      const QString &title = QString());
     bool showQuestionBox(const QString &text,
                          const QString &title = QString());
-
-    QStringList getOpenFileNames(const QString &title = QString(),
-                                 const QString &filter = QString());
 
     bool saveOriginConf(const QString &message);
     bool saveConf(bool onlyFlags = false);

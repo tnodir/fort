@@ -6,10 +6,8 @@
 #include <QPushButton>
 #include <QStyleOption>
 
-#include "../../../fortmanager.h"
-#include "../../../util/stringutil.h"
-#include "../../controls/controlutil.h"
-#include "../optionscontroller.h"
+#include "../../util/stringutil.h"
+#include "../controls/controlutil.h"
 #include "textarea2splitter.h"
 
 namespace {
@@ -136,16 +134,6 @@ TextArea2Splitter *TextArea2SplitterHandle::splitter() const
     return qobject_cast<TextArea2Splitter *>(QSplitterHandle::splitter());
 }
 
-OptionsController *TextArea2SplitterHandle::ctrl() const
-{
-    return splitter()->ctrl();
-}
-
-FortManager *TextArea2SplitterHandle::fortManager() const
-{
-    return ctrl()->fortManager();
-}
-
 void TextArea2SplitterHandle::paintEvent(QPaintEvent *)
 {
     const int handlePaintedWidth = 4;
@@ -194,7 +182,7 @@ void TextArea2SplitterHandle::setupUi(bool selectFileEnabled)
     if (selectFileEnabled) {
         m_btSelectFile = createToolButton(":/images/folder_explore.png", [&] {
             auto area = textArea1()->hasFocus() ? textArea1() : textArea2();
-            const auto filePaths = fortManager()->getOpenFileNames(
+            const auto filePaths = ControlUtil::getOpenFileNames(
                         m_btSelectFile->text(),
                         tr("Programs (*.exe);;All files (*.*)"));
 
