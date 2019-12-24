@@ -150,7 +150,6 @@ void OptionsPage::setupUi()
 
     passwordLayout->addWidget(m_cbPassword);
     passwordLayout->addWidget(m_editPassword);
-    passwordLayout->addStretch(1);
 
     // Language Row
     auto langLayout = new QHBoxLayout();
@@ -162,7 +161,6 @@ void OptionsPage::setupUi()
 
     langLayout->addWidget(m_labelLanguage);
     langLayout->addWidget(m_comboLanguage);
-    langLayout->addStretch(1);
 
     m_gbGlobal = new QGroupBox();
     auto globalLayout = new QVBoxLayout();

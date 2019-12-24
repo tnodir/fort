@@ -57,6 +57,8 @@ QPushButton *ControlUtil::createLinkButton(const QString &iconPath,
                                            const QString &toolTip)
 {
     auto c = new QPushButton(QIcon(iconPath), QString());
+    c->setFlat(true);
+    c->setCursor(Qt::PointingHandCursor);
     c->setWindowFilePath(linkPath);
     c->setToolTip(!toolTip.isEmpty() ? toolTip : linkPath);
     return c;
