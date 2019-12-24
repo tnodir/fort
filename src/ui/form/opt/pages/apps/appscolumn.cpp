@@ -27,7 +27,6 @@ void AppsColumn::setupUi()
     }
 
     headerLayout->addWidget(m_labelTitle);
-    headerLayout->addStretch(1);
 
     // Text Area
     m_editText = new QPlainTextEdit();

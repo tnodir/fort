@@ -170,7 +170,7 @@ void OptionsPage::setupUi()
     m_gbGlobal->setLayout(globalLayout);
     colLayout1->addWidget(m_gbGlobal);
 
-    colLayout1->addStretch(1);
+    colLayout1->addStretch();
 
     // Column #2
     auto colLayout2 = new QVBoxLayout();
@@ -183,7 +183,7 @@ void OptionsPage::setupUi()
 
     colLayout2->addWidget(m_gbDriver);
     colLayout2->addWidget(m_gbNewVersion);
-    colLayout2->addStretch(1);
+    colLayout2->addStretch();
 
     // Main layout
     auto layout = new QHBoxLayout();
@@ -257,10 +257,10 @@ void OptionsPage::setupDriverBox()
 
     setupDriverIcon();
 
-    labelLayout->addStretch(1);
+    labelLayout->addStretch();
     labelLayout->addWidget(m_iconDriver, 0, Qt::AlignTop);
     labelLayout->addWidget(m_labelDriverMessage);
-    labelLayout->addStretch(1);
+    labelLayout->addStretch();
 
     // Buttons Row
     auto buttonsLayout = new QHBoxLayout();
@@ -278,10 +278,10 @@ void OptionsPage::setupDriverBox()
         }
     });
 
-    buttonsLayout->addStretch(1);
+    buttonsLayout->addStretch();
     buttonsLayout->addWidget(m_btInstallDriver);
     buttonsLayout->addWidget(m_btRemoveDriver);
-    buttonsLayout->addStretch(1);
+    buttonsLayout->addStretch();
 }
 
 void OptionsPage::setupDriverIcon()

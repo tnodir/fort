@@ -31,7 +31,7 @@ void AddressesColumn::setupUi()
     m_cbUseAll = new QCheckBox();
 
     headerLayout->addWidget(m_labelTitle);
-    headerLayout->addStretch(1);
+    headerLayout->addStretch();
     headerLayout->addWidget(m_cbUseAll);
 
     // Text Area

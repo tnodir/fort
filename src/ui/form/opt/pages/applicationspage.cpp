@@ -39,6 +39,8 @@ ApplicationsPage::ApplicationsPage(OptionsController *ctrl,
     BasePage(ctrl, parent)
 {
     setupUi();
+
+    setupAppGroup();
 }
 
 void ApplicationsPage::setAppGroup(AppGroup *v)
@@ -112,8 +114,6 @@ void ApplicationsPage::setupUi()
     // Splitter
     setupSplitter();
     layout->addWidget(m_splitter, 1);
-
-    setupAppGroup();
 
     this->setLayout(layout);
 }

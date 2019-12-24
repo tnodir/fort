@@ -87,7 +87,7 @@ QLayout *MainPage::setupDialogButtons()
     buttonsLayout->addWidget(m_btStat);
     buttonsLayout->addWidget(m_btReleases);
 
-    buttonsLayout->addStretch(1);
+    buttonsLayout->addStretch();
 
     m_btOk = new QPushButton(QIcon(":/images/tick.png"), QString());
     m_btApply = new QPushButton(QIcon(":/images/accept.png"), QString());

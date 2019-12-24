@@ -24,6 +24,8 @@ AddressesPage::AddressesPage(OptionsController *ctrl,
     BasePage(ctrl, parent)
 {
     setupUi();
+
+    setupAddressGroup();
 }
 
 void AddressesPage::setAddressGroup(AddressGroup *v)
@@ -84,8 +86,6 @@ void AddressesPage::setupUi()
     // Splitter
     setupSplitter();
     layout->addWidget(m_splitter, 1);
-
-    setupAddressGroup();
 
     this->setLayout(layout);
 }

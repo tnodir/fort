@@ -173,7 +173,7 @@ void TextArea2SplitterHandle::setupUi(bool selectFileEnabled)
         moveAllLines(textArea2(), textArea1());
     });
 
-    layout->addStretch(1);
+    layout->addStretch();
     layout->addWidget(m_btMoveAllFrom1To2, 0, Qt::AlignHCenter);
     layout->addWidget(m_btMoveSelectedFrom1To2, 0, Qt::AlignHCenter);
     layout->addWidget(m_btMoveSelectedFrom2To1, 0, Qt::AlignHCenter);
@@ -193,7 +193,7 @@ void TextArea2SplitterHandle::setupUi(bool selectFileEnabled)
 
         layout->addWidget(m_btSelectFile, 0, Qt::AlignHCenter);
     }
-    layout->addStretch(1);
+    layout->addStretch();
 
     this->setLayout(layout);
 }
