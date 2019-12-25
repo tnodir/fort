@@ -1,12 +1,12 @@
 #include "controlutil.h"
 
+#include <QBoxLayout>
 #include <QCheckBox>
 #include <QComboBox>
 #include <QFileDialog>
 #include <QMenu>
 #include <QPushButton>
 #include <QToolButton>
-#include <QVBoxLayout>
 #include <QWidgetAction>
 
 QCheckBox *ControlUtil::createCheckBox(bool checked,
@@ -65,11 +65,13 @@ QPushButton *ControlUtil::createLinkButton(const QString &iconPath,
 }
 
 QMenu *ControlUtil::createMenuByWidgets(const QList<QWidget *> &widgets,
-                                        QWidget *parent)
+                                        QWidget *parent,
+                                        Qt::Orientation o)
 {
     auto menu = new QMenu(parent);
 
-    auto layout = new QVBoxLayout();
+    auto layout = new QBoxLayout(o == Qt::Vertical ? QBoxLayout::TopToBottom
+                                                   : QBoxLayout::LeftToRight);
     for (auto w : widgets) {
         layout->addWidget(w);
     }
@@ -84,10 +86,10 @@ QMenu *ControlUtil::createMenuByWidgets(const QList<QWidget *> &widgets,
     return menu;
 }
 
-QFrame *ControlUtil::createHSeparator()
+QFrame *ControlUtil::createSeparator(Qt::Orientation o)
 {
     auto c = new QFrame();
-    c->setFrameShape(QFrame::HLine);
+    c->setFrameShape(o == Qt::Horizontal ? QFrame::HLine : QFrame::VLine);
     return c;
 }
 

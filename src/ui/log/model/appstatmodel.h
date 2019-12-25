@@ -18,13 +18,12 @@ public:
 
     void initialize();
 
-    Q_INVOKABLE TrafListModel *trafListModel(int trafType, int row,
-                                             const QString &appPath) const;
+    TrafListModel *trafListModel() const { return m_trafListModel; }
 
     void handleProcNew(const LogEntryProcNew &procNewEntry);
     void handleStatTraf(const LogEntryStatTraf &statTrafEntry);
 
-signals:
+    qint64 appIdByRow(int row) const;
 
 public slots:
     void clear() override;

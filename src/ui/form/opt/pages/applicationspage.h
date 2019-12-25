@@ -31,6 +31,8 @@ protected slots:
     void onRestoreWindowState() override;
 
 private:
+    void retranslateGroupLimits();
+
     void setupUi();
     QLayout *setupHeader();
     void setupAddGroup();
@@ -42,10 +44,8 @@ private:
     void setupGroupOptions();
     void setupGroupLimitIn();
     void setupGroupLimitOut();
-    static CheckSpinCombo *createGroupLimit();
     void setupGroupFragmentPacket();
     void setupGroupOptionsEnabled();
-    void retranslateGroupLimits();
     void setupGroupEnabled();
     void setupGroupPeriod();
     void setupGroupPeriodEnabled();
@@ -59,6 +59,8 @@ private:
     int appGroupsCount() const;
     AppGroup *appGroupByIndex(int index) const;
     void resetGroupName();
+
+    static CheckSpinCombo *createGroupLimit();
 
     static QString formatSpeed(int kbytes);
 

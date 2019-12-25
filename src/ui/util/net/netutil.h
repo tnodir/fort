@@ -21,6 +21,7 @@ public:
     Q_INVOKABLE static int ip4Mask(quint32 ip);
 
     Q_INVOKABLE static QString formatDataSize(qint64 bytes, int precision = 2);
+    Q_INVOKABLE static QString formatDataSize1(qint64 bytes);
     Q_INVOKABLE static QString formatSpeed(quint32 bytes);
 
     Q_INVOKABLE static QString getHostName(const QString &address);

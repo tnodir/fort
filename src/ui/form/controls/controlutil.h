@@ -27,8 +27,9 @@ public:
                                          const QString &linkPath = QString(),
                                          const QString &toolTip = QString());
     static QMenu *createMenuByWidgets(const QList<QWidget *> &widgets,
-                                      QWidget *parent);
-    static QFrame *createHSeparator();
+                                      QWidget *parent,
+                                      Qt::Orientation o = Qt::Vertical);
+    static QFrame *createSeparator(Qt::Orientation o = Qt::Horizontal);
 
     static QStringList getOpenFileNames(const QString &title = QString(),
                                         const QString &filter = QString());

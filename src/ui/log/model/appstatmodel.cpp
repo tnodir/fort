@@ -20,19 +20,6 @@ void AppStatModel::initialize()
     updateList();
 }
 
-TrafListModel *AppStatModel::trafListModel(int trafType, int row,
-                                           const QString &appPath) const
-{
-    Q_UNUSED(appPath)  // used to properly refresh trafListModel
-
-    m_trafListModel->setType(static_cast<TrafListModel::TrafType>(trafType));
-    m_trafListModel->setAppId(row < 0 || row >= m_appIds.size()
-                              ? 0 : m_appIds.at(row));
-    m_trafListModel->reset();
-
-    return m_trafListModel;
-}
-
 void AppStatModel::clear()
 {
     m_trafListModel->clear();
@@ -86,4 +73,10 @@ void AppStatModel::handleStatTraf(const LogEntryStatTraf &statTrafEntry)
 {
     m_statManager->logStatTraf(statTrafEntry.procCount(),
                                statTrafEntry.procTrafBytes());
+}
+
+qint64 AppStatModel::appIdByRow(int row) const
+{
+    return (row < 0 || row >= m_appIds.size())
+            ? 0 : m_appIds.at(row);
 }

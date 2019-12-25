@@ -81,6 +81,24 @@ void ApplicationsPage::onRetranslateUi()
     retranslateAppsPlaceholderText();
 }
 
+void ApplicationsPage::retranslateGroupLimits()
+{
+    QStringList list;
+
+    list.append(tr("Custom"));
+    list.append(tr("Disabled"));
+
+    int index = 0;
+    for (const int v : speedLimitValues) {
+        if (++index > 2) {
+            list.append(formatSpeed(v));
+        }
+    }
+
+    m_cscLimitIn->setNames(list);
+    m_cscLimitOut->setNames(list);
+}
+
 void ApplicationsPage::onSaveWindowState()
 {
     settings()->setOptWindowAppsSplit(m_splitter->saveState());
@@ -260,7 +278,7 @@ QLayout *ApplicationsPage::setupGroupHeader()
     setupGroupPeriodEnabled();
 
     layout->addWidget(m_btGroupOptions);
-    layout->addStretch();
+    layout->addStretch(1);
     layout->addWidget(m_cbGroupEnabled);
     layout->addWidget(m_ctpGroupPeriod);
 
@@ -269,9 +287,6 @@ QLayout *ApplicationsPage::setupGroupHeader()
 
 void ApplicationsPage::setupGroupOptions()
 {
-    m_btGroupOptions = new QPushButton();
-    m_btGroupOptions->setIcon(QIcon(":/images/application_key.png"));
-
     setupGroupLimitIn();
     setupGroupLimitOut();
     setupGroupFragmentPacket();
@@ -279,12 +294,12 @@ void ApplicationsPage::setupGroupOptions()
     // Menu
     const QList<QWidget *> menuWidgets = {
         m_cscLimitIn, m_cscLimitOut,
-        ControlUtil::createHSeparator(),
+        ControlUtil::createSeparator(),
         m_cbFragmentPacket
     };
-    auto menu = ControlUtil::createMenuByWidgets(
-                menuWidgets, m_btGroupOptions);
+    auto menu = ControlUtil::createMenuByWidgets(menuWidgets, this);
 
+    m_btGroupOptions = new QPushButton(QIcon(":/images/application_key.png"), QString());
     m_btGroupOptions->setMenu(menu);
 }
 
@@ -301,12 +316,12 @@ void ApplicationsPage::setupGroupLimitIn()
         ctrl()->setConfEdited(true);
     });
     connect(m_cscLimitIn->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), [&](int value) {
-        const auto speedLimit = quint32(value);
+        const auto kbytes = quint32(value);
 
-        if (appGroup()->speedLimitIn() == speedLimit)
+        if (appGroup()->speedLimitIn() == kbytes)
             return;
 
-        appGroup()->setSpeedLimitIn(speedLimit);
+        appGroup()->setSpeedLimitIn(kbytes);
 
         ctrl()->setConfEdited(true);
     });
@@ -325,24 +340,15 @@ void ApplicationsPage::setupGroupLimitOut()
         ctrl()->setConfEdited(true);
     });
     connect(m_cscLimitOut->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), [&](int value) {
-        const auto speedLimit = quint32(value);
+        const auto kbytes = quint32(value);
 
-        if (appGroup()->speedLimitOut() == speedLimit)
+        if (appGroup()->speedLimitOut() == kbytes)
             return;
 
-        appGroup()->setSpeedLimitOut(speedLimit);
+        appGroup()->setSpeedLimitOut(kbytes);
 
         ctrl()->setConfEdited(true);
     });
-}
-
-CheckSpinCombo *ApplicationsPage::createGroupLimit()
-{
-    auto c = new CheckSpinCombo();
-    c->spinBox()->setRange(0, 99999);
-    c->spinBox()->setSuffix(" KiB/s");
-    c->setValues(speedLimitValues);
-    return c;
 }
 
 void ApplicationsPage::setupGroupFragmentPacket()
@@ -370,24 +376,6 @@ void ApplicationsPage::setupGroupOptionsEnabled()
     refreshOptionsEnabled();
 
     connect(conf(), &FirewallConf::logStatChanged, this, refreshOptionsEnabled);
-}
-
-void ApplicationsPage::retranslateGroupLimits()
-{
-    QStringList list;
-
-    list.append(tr("Custom"));
-    list.append(tr("Disabled"));
-
-    int index = 0;
-    for (const int v : speedLimitValues) {
-        if (++index > 2) {
-            list.append(formatSpeed(v));
-        }
-    }
-
-    m_cscLimitIn->setNames(list);
-    m_cscLimitOut->setNames(list);
 }
 
 void ApplicationsPage::setupGroupEnabled()
@@ -557,6 +545,15 @@ void ApplicationsPage::resetGroupName()
 {
     m_editGroupName->setText(QString());
     m_editGroupName->setFocus();
+}
+
+CheckSpinCombo *ApplicationsPage::createGroupLimit()
+{
+    auto c = new CheckSpinCombo();
+    c->spinBox()->setRange(0, 99999);
+    c->spinBox()->setSuffix(" KiB/s");
+    c->setValues(speedLimitValues);
+    return c;
 }
 
 QString ApplicationsPage::formatSpeed(int kbytes)

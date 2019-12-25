@@ -81,11 +81,16 @@ QString NetUtil::formatDataSize(qint64 bytes, int precision)
 #endif
 }
 
-QString NetUtil::formatSpeed(quint32 bytes)
+QString NetUtil::formatDataSize1(qint64 bytes)
 {
     QString text = formatDataSize(bytes, 1);
     text.remove(QLatin1String(".0"));
-    return text + QLatin1String("/s");
+    return text;
+}
+
+QString NetUtil::formatSpeed(quint32 bytes)
+{
+    return formatDataSize1(bytes) + QLatin1String("/s");
 }
 
 QString NetUtil::getHostName(const QString &address)

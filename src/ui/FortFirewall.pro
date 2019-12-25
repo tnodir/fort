@@ -21,6 +21,8 @@ SOURCES += \
     form/controls/checkspincombo.cpp \
     form/controls/checktimeperiod.cpp \
     form/controls/controlutil.cpp \
+    form/controls/labelspincombo.cpp \
+    form/controls/spincombo.cpp \
     form/controls/tabbar.cpp \
     form/controls/textarea2splitter.cpp \
     form/controls/textarea2splitterhandle.cpp \
@@ -113,6 +115,8 @@ HEADERS += \
     form/controls/checkspincombo.h \
     form/controls/checktimeperiod.h \
     form/controls/controlutil.h \
+    form/controls/labelspincombo.h \
+    form/controls/spincombo.h \
     form/controls/tabbar.h \
     form/controls/textarea2splitter.h \
     form/controls/textarea2splitterhandle.h \
