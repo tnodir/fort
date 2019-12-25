@@ -2,9 +2,9 @@
 	"files": {
 		"${TARGET}": {
 			"common": [
-				"${QTPATH}/bin/Qt6Core.dll",
-				"${QTPATH}/bin/Qt6Gui.dll",
-				"${QTPATH}/bin/Qt6Widgets.dll"
+				"${QTPATH}/bin/Qt5Core.dll",
+				"${QTPATH}/bin/Qt5Gui.dll",
+				"${QTPATH}/bin/Qt5Widgets.dll"
 			],
 			"fort": [
 				"${BUILD}/FortFirewall.exe",
