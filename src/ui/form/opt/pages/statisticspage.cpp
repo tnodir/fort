@@ -251,16 +251,27 @@ void StatisticsPage::setupClearMenu()
     auto menu = new QMenu(this);
 
     m_actRemoveApp = menu->addAction(QIcon(":/images/application_delete.png"), QString());
+    m_actRemoveApp->setShortcut(Qt::Key_Delete);
+
     m_actResetTotal = menu->addAction(QString());
     m_actClearAll = menu->addAction(QString());
 
     connect(m_actRemoveApp, &QAction::triggered, [&] {
+        if (!fortManager()->showQuestionBox(tr("Are you sure to remove statistics for selected application?")))
+            return;
+
         //appStatModel()->remove(appListView.currentIndex);
     });
     connect(m_actResetTotal, &QAction::triggered, [&] {
+        if (!fortManager()->showQuestionBox(tr("Are you sure to reset total statistics?")))
+            return;
+
         trafListModel()->resetAppTotals();
     });
     connect(m_actClearAll, &QAction::triggered, [&] {
+        if (!fortManager()->showQuestionBox(tr("Are you sure to clear all statistics?")))
+            return;
+
         //appListView.currentIndex = 0;
         appStatModel()->clear();
     });
@@ -453,7 +464,9 @@ void StatisticsPage::setupGraphOptionsMenu()
     m_graphGridColor = new LabelColor();
 
     const auto onChanged = [&] {
-        setGraphEdited(true);
+        if (!m_pageUpdating) {
+            setGraphEdited(true);
+        }
     };
 
     connect(m_cbGraphAlwaysOnTop, &QCheckBox::toggled, onChanged);
@@ -536,6 +549,8 @@ void StatisticsPage::setupAppListView()
 
 void StatisticsPage::updatePage()
 {
+    m_pageUpdating = true;
+
     m_ctpActivePeriod->checkBox()->setChecked(conf()->activePeriodEnabled());
     m_ctpActivePeriod->timeEdit1()->setTime(CheckTimePeriod::toTime(
                                                 conf()->activePeriodFrom()));
@@ -569,6 +584,8 @@ void StatisticsPage::updatePage()
     updateTrafUnit();
 
     m_cbLogStat->setChecked(conf()->logStat());
+
+    m_pageUpdating = false;
 }
 
 void StatisticsPage::updateTrafUnit()

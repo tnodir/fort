@@ -22,7 +22,9 @@ void LabelColor::setColor(const QColor &v)
 
 void LabelColor::selectColor()
 {
-    const auto selectedColor = ControlUtil::getColor(color());
+    const auto title = tr("Select color for %1")
+            .arg(label()->text());
+    const auto selectedColor = ControlUtil::getColor(color(), title);
     if (selectedColor.isValid()) {
         setColor(selectedColor);
     }

@@ -38,7 +38,8 @@ public:
     static QStringList getOpenFileNames(const QString &title = QString(),
                                         const QString &filter = QString());
 
-    static QColor getColor(const QColor &initial = Qt::white);
+    static QColor getColor(const QColor &initial = Qt::white,
+                           const QString &title = QString());
 };
 
 #endif // CONTROLUTIL_H

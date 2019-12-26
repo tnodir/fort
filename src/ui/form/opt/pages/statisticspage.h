@@ -66,6 +66,7 @@ private:
 
 private:
     bool m_graphEdited = false;
+    bool m_pageUpdating = false;
 
     TrafListModel *m_trafListModel = nullptr;
 

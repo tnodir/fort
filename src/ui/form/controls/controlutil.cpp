@@ -117,7 +117,8 @@ QStringList ControlUtil::getOpenFileNames(const QString &title,
                 nullptr, QFileDialog::ReadOnly);
 }
 
-QColor ControlUtil::getColor(const QColor &initial)
+QColor ControlUtil::getColor(const QColor &initial,
+                             const QString &title)
 {
-    return QColorDialog::getColor(initial);
+    return QColorDialog::getColor(initial, nullptr, title);
 }
