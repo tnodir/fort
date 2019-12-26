@@ -26,6 +26,11 @@ public slots:
     virtual void remove(int row = -1);
     virtual void replace(const QString &text, int row = -1);
 
+    void reset() {
+        beginResetModel();
+        endResetModel();
+    }
+
 protected:
     void removeRow(int row);
 

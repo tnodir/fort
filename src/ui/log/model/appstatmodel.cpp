@@ -1,6 +1,10 @@
 #include "appstatmodel.h"
 
+#include <QIcon>
+
 #include "../../stat/statmanager.h"
+#include "../../util/app/appinfo.h"
+#include "../../util/app/appinfocache.h"
 #include "../logentryprocnew.h"
 #include "../logentrystattraf.h"
 #include "traflistmodel.h"
@@ -15,8 +19,21 @@ AppStatModel::AppStatModel(StatManager *statManager,
             this, &AppStatModel::handleCreatedApp);
 }
 
+void AppStatModel::setAppInfoCache(AppInfoCache *v)
+{
+    if (m_appInfoCache == v)
+        return;
+
+    m_appInfoCache = v;
+
+    connect(appInfoCache(), &AppInfoCache::cacheChanged,
+            this, &AppStatModel::reset);
+}
+
 void AppStatModel::initialize()
 {
+    Q_ASSERT(appInfoCache());
+
     updateList();
 }
 
@@ -79,4 +96,38 @@ qint64 AppStatModel::appIdByRow(int row) const
 {
     return (row < 0 || row >= m_appIds.size())
             ? 0 : m_appIds.at(row);
+}
+
+QVariant AppStatModel::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid())
+        QVariant();
+
+    // Label
+    if (role == Qt::DisplayRole || role == Qt::ToolTipRole) {
+        const int row = index.row();
+        if (row == 0)
+            return tr("All");
+
+        return list().at(row);
+    }
+
+    // Icon
+    if (role == Qt::DecorationRole) {
+        const int row = index.row();
+        if (row == 0) {
+            return QIcon(":/images/computer-96.png");
+        }
+
+        const auto appPath = list().at(row);
+        const auto appInfo = appInfoCache()->appInfo(appPath);
+        const auto appIcon = appInfoCache()->appIcon(appInfo);
+        if (!appIcon.isNull()) {
+            return QIcon(QPixmap::fromImage(appIcon));
+        }
+
+        return QIcon(":/images/application-window-96.png");
+    }
+
+    return StringListModel::data(index, role);
 }

@@ -264,6 +264,8 @@ void AppInfoManager::deleteAppInfo(const QString &appPath, const AppInfo &appInf
         iconIds.insert(appInfo.iconId, 1);
     }
 
+    QMutexLocker locker(&m_mutex);
+
     deleteAppsAndIcons(appPaths, iconIds);
 }
 

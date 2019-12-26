@@ -15,6 +15,7 @@ FortSettings::FortSettings(const QStringList &args,
     QObject(parent),
     m_iniExists(false),
     m_isPortable(false),
+    m_noCache(false),
     m_hasProvBoot(false),
     m_bulkUpdating(false),
     m_bulkIniChanged(false),
@@ -62,6 +63,11 @@ void FortSettings::processArguments(const QStringList &args)
                 "Directory to store statistics.", "stat");
     parser.addOption(statOption);
 
+    const QCommandLineOption noCacheOption(
+                QStringList() << "no-cache",
+                "Don't use cache on disk.");
+    parser.addOption(noCacheOption);
+
     const QCommandLineOption controlOption(
                 QStringList() << "c" << "control",
                 "Control running instance by executing the command.", "control");
@@ -75,6 +81,10 @@ void FortSettings::processArguments(const QStringList &args)
     // Portable Mode
     m_isPortable = FileUtil::fileExists(FileUtil::appBinLocation()
                                         + "/README.portable");
+
+    // No Cahce
+    m_noCache = parser.isSet(noCacheOption)
+            || isPortable();
 
     // Provider Boot
     m_hasProvBoot = parser.isSet(provBootOption);

@@ -2,6 +2,7 @@
 <qresource>
     <file>images/accept.png</file>
     <file>images/application.png</file>
+    <file>images/application-window-96.png</file>
     <file>images/application_add.png</file>
     <file>images/application_delete.png</file>
     <file>images/application_double.png</file>
@@ -15,6 +16,7 @@
     <file>images/chart_line.png</file>
     <file>images/clock.png</file>
     <file>images/cog.png</file>
+    <file>images/computer-96.png</file>
     <file>images/control_fastforward.png</file>
     <file>images/control_play.png</file>
     <file>images/control_play_backward.png</file>

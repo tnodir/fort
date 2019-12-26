@@ -3,6 +3,7 @@
 
 #include "stringlistmodel.h"
 
+QT_FORWARD_DECLARE_CLASS(AppInfoCache)
 QT_FORWARD_DECLARE_CLASS(LogEntryProcNew)
 QT_FORWARD_DECLARE_CLASS(LogEntryStatTraf)
 QT_FORWARD_DECLARE_CLASS(StatManager)
@@ -20,10 +21,15 @@ public:
 
     TrafListModel *trafListModel() const { return m_trafListModel; }
 
+    AppInfoCache *appInfoCache() const { return m_appInfoCache; }
+    void setAppInfoCache(AppInfoCache *v);
+
     void handleProcNew(const LogEntryProcNew &procNewEntry);
     void handleStatTraf(const LogEntryStatTraf &statTrafEntry);
 
     qint64 appIdByRow(int row) const;
+
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
 public slots:
     void clear() override;
@@ -39,6 +45,7 @@ private:
 private:
     StatManager *m_statManager;
     TrafListModel *m_trafListModel;
+    AppInfoCache *m_appInfoCache;
 
     QVector<qint64> m_appIds;
 };

@@ -1,5 +1,7 @@
 #include "appinfocache.h"
 
+#include <QImage>
+
 #include "appinfomanager.h"
 
 AppInfoCache::AppInfoCache(QObject *parent) :
@@ -22,6 +24,11 @@ void AppInfoCache::setManager(AppInfoManager *manager)
 
     connect(m_manager, &AppInfoManager::lookupFinished,
             this, &AppInfoCache::handleFinishedLookup);
+}
+
+QImage AppInfoCache::appIcon(const AppInfo &info) const
+{
+    return manager()->loadIconFromDb(info.iconId);
 }
 
 AppInfo AppInfoCache::appInfo(const QString &appPath)

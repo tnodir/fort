@@ -13,15 +13,14 @@ QT_FORWARD_DECLARE_CLASS(AppInfoManager)
 class AppInfoCache : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool infoTrigger READ infoTrigger NOTIFY cacheChanged)
 
 public:
     explicit AppInfoCache(QObject *parent = nullptr);
 
-    bool infoTrigger() const { return true; }
-
     AppInfoManager *manager() const { return m_manager; }
     void setManager(AppInfoManager *manager);
+
+    QImage appIcon(const AppInfo &info) const;
 
 signals:
     void cacheChanged();

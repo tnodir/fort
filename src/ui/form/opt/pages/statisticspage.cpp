@@ -24,6 +24,7 @@
 #include "../../controls/labelspin.h"
 #include "../../controls/labelspincombo.h"
 #include "../optionscontroller.h"
+#include "log/applistview.h"
 
 namespace {
 
@@ -44,10 +45,10 @@ StatisticsPage::StatisticsPage(OptionsController *ctrl,
                                QWidget *parent) :
     BasePage(ctrl, parent)
 {
+    setupTrafListModel();
+
     setupUi();
     updatePage();
-
-    setupModels();
 }
 
 AppStatModel *StatisticsPage::appStatModel() const
@@ -193,6 +194,15 @@ void StatisticsPage::retranslateTrafUnitNames()
     updateTrafUnit();
 }
 
+void StatisticsPage::setupTrafListModel()
+{
+    m_trafListModel = appStatModel()->trafListModel();
+
+//    m_trafListModel->setType(static_cast<TrafListModel::TrafType>(tabBar.currentIndex));
+//    m_trafListModel->setAppId(appStatModel()->appIdByRow(appListView.currentIndex));
+//    m_trafListModel->reset();
+}
+
 void StatisticsPage::setupUi()
 {
     auto layout = new QVBoxLayout();
@@ -201,7 +211,10 @@ void StatisticsPage::setupUi()
     auto header = setupHeader();
     layout->addLayout(header);
 
-    layout->addStretch();
+    // Content
+    setupAppListView();
+
+    layout->addWidget(m_appListView, 1);
 
     this->setLayout(layout);
 }
@@ -514,6 +527,13 @@ void StatisticsPage::setupLogStat()
     m_cbLogStat->setFont(ControlUtil::createFont(QFont::DemiBold));
 }
 
+void StatisticsPage::setupAppListView()
+{
+    m_appListView = new AppListView();
+
+    m_appListView->setModel(appStatModel());
+}
+
 void StatisticsPage::updatePage()
 {
     m_ctpActivePeriod->checkBox()->setChecked(conf()->activePeriodEnabled());
@@ -554,15 +574,6 @@ void StatisticsPage::updatePage()
 void StatisticsPage::updateTrafUnit()
 {
     m_comboTrafUnit->setCurrentIndex(conf()->trafUnit());
-}
-
-void StatisticsPage::setupModels()
-{
-    m_trafListModel = appStatModel()->trafListModel();
-
-//    m_trafListModel->setType(static_cast<TrafListModel::TrafType>(tabBar.currentIndex));
-//    m_trafListModel->setAppId(appStatModel()->appIdByRow(appListView.currentIndex));
-//    m_trafListModel->reset();
 }
 
 LabelSpinCombo *StatisticsPage::createSpinCombo(int min, int max,

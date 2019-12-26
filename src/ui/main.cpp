@@ -8,10 +8,16 @@
 #include "fortcommon.h"
 #include "fortmanager.h"
 #include "fortsettings.h"
+#include "util/app/appinfo.h"
 #include "util/osutil.h"
 
 #define FORT_ERROR_INSTANCE 1
 #define FORT_ERROR_CONTROL  2
+
+static void registerMetaTypes(void)
+{
+    qRegisterMetaType<AppInfo>("AppInfo");
+}
 
 int main(int argc, char *argv[])
 {
@@ -54,6 +60,8 @@ int main(int argc, char *argv[])
     if (!controlManager.listen(&fortManager)) {
         return FORT_ERROR_CONTROL;
     }
+
+    registerMetaTypes();
 
     FortManager fortManager(&fortSettings);
     fortManager.launch();

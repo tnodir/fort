@@ -73,7 +73,7 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_taskManager(new TaskManager(this, this)),
     m_appInfoCache(new AppInfoCache(this))
 {
-    if (m_settings->isPortable()) {
+    if (m_settings->noCache()) {
         qputenv("QT_DISABLE_SHADER_DISK_CACHE", "1");
     }
 
@@ -152,6 +152,8 @@ void FortManager::closeDriver()
 
 void FortManager::setupLogManager()
 {
+    m_logManager->appStatModel()->setAppInfoCache(m_appInfoCache);
+
     m_logManager->initialize();
 }
 
@@ -225,7 +227,7 @@ void FortManager::setupTrayIcon()
 void FortManager::setupAppInfoCache()
 {
     QString dbPath;
-    if (m_settings->isPortable()) {
+    if (m_settings->noCache()) {
         dbPath = ":memory:";
     } else {
         const QString cachePath = FileUtil::appCacheLocation();

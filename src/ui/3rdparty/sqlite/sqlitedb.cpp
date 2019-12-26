@@ -280,7 +280,7 @@ bool SqliteDb::migrate(const QString &sqlDir, int version,
 
     // Re-create the DB
     QString tempFilePath;
-    if (recreate) {
+    if (recreate && userVersion != 0) {
         close();
 
         tempFilePath = m_filePath + ".temp";
@@ -291,6 +291,7 @@ bool SqliteDb::migrate(const QString &sqlDir, int version,
             renameDbFile(tempFilePath, m_filePath);
             return false;
         }
+
         userVersion = 0;
     }
 
@@ -336,7 +337,7 @@ bool SqliteDb::migrate(const QString &sqlDir, int version,
     commitTransaction();
 
     // Re-create the DB: End
-    if (recreate) {
+    if (recreate && !tempFilePath.isEmpty()) {
         // Re-import the DB
         if (success && importOldData) {
             success = importDb(tempFilePath);

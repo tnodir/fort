@@ -38,6 +38,7 @@ SOURCES += \
     form/opt/pages/applicationspage.cpp \
     form/opt/pages/apps/appscolumn.cpp \
     form/opt/pages/basepage.cpp \
+    form/opt/pages/log/applistview.cpp \
     form/opt/pages/mainpage.cpp \
     form/opt/pages/optionspage.cpp \
     form/opt/pages/schedulepage.cpp \
@@ -134,6 +135,7 @@ HEADERS += \
     form/opt/pages/applicationspage.h \
     form/opt/pages/apps/appscolumn.h \
     form/opt/pages/basepage.h \
+    form/opt/pages/log/applistview.h \
     form/opt/pages/mainpage.h \
     form/opt/pages/optionspage.h \
     form/opt/pages/schedulepage.h \

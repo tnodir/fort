@@ -52,6 +52,7 @@ public:
                           QObject *parent = nullptr);
 
     bool isPortable() const { return m_isPortable; }
+    bool noCache() const { return m_noCache; }
     bool hasProvBoot() const { return m_hasProvBoot; }
 
     bool debug() const { return iniBool("base/debug"); }
@@ -244,6 +245,7 @@ private:
 private:
     uint m_iniExists        : 1;
     uint m_isPortable       : 1;
+    uint m_noCache          : 1;
     uint m_hasProvBoot      : 1;
 
     uint m_bulkUpdating     : 1;

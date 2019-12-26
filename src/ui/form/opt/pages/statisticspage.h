@@ -3,6 +3,7 @@
 
 #include "basepage.h"
 
+QT_FORWARD_DECLARE_CLASS(AppListView)
 QT_FORWARD_DECLARE_CLASS(AppStatModel)
 QT_FORWARD_DECLARE_CLASS(CheckTimePeriod)
 QT_FORWARD_DECLARE_CLASS(LabelColor)
@@ -36,6 +37,8 @@ private:
     void retranslateQuotaNames();
     void retranslateTrafUnitNames();
 
+    void setupTrafListModel();
+
     void setupUi();
     QLayout *setupHeader();
     void setupClearMenu();
@@ -50,9 +53,9 @@ private:
     void setupGraphOptionsMenu();
     void setupTrafUnits();
     void setupLogStat();
+    void setupAppListView();
     void updatePage();
     void updateTrafUnit();
-    void setupModels();
 
     static LabelSpinCombo *createSpinCombo(int min, int max,
                                            const QString &suffix = QString());
@@ -97,6 +100,7 @@ private:
     QLabel *m_traphUnits = nullptr;
     QComboBox *m_comboTrafUnit = nullptr;
     QCheckBox *m_cbLogStat = nullptr;
+    AppListView *m_appListView = nullptr;
 };
 
 #endif // STATISTICSPAGE_H
