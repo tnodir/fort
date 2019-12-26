@@ -33,7 +33,7 @@ private:
     void setupAddressesUseAllEnabled();
     void retranslateAddressesPlaceholderText();
     void setupSplitter();
-    void refreshGroup();
+    void updateGroup();
     void setupAddressGroup();
 
     AddressGroup *addressGroupByIndex(int index) const;

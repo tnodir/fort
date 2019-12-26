@@ -2,6 +2,8 @@
 
 #include <QAction>
 #include <QCheckBox>
+#include <QComboBox>
+#include <QHBoxLayout>
 #include <QLabel>
 #include <QMenu>
 #include <QPushButton>
@@ -11,12 +13,15 @@
 
 #include "../../../conf/firewallconf.h"
 #include "../../../fortmanager.h"
+#include "../../../fortsettings.h"
 #include "../../../log/logmanager.h"
 #include "../../../log/model/appstatmodel.h"
 #include "../../../log/model/traflistmodel.h"
 #include "../../../util/net/netutil.h"
 #include "../../controls/checktimeperiod.h"
 #include "../../controls/controlutil.h"
+#include "../../controls/labelcolor.h"
+#include "../../controls/labelspin.h"
 #include "../../controls/labelspincombo.h"
 #include "../optionscontroller.h"
 
@@ -40,7 +45,7 @@ StatisticsPage::StatisticsPage(OptionsController *ctrl,
     BasePage(ctrl, parent)
 {
     setupUi();
-    refreshPage();
+    updatePage();
 
     setupModels();
 }
@@ -59,7 +64,22 @@ void StatisticsPage::onSaved()
 {
     if (!graphEdited()) return;
 
-    //graphButton.save();
+    settings()->setGraphWindowAlwaysOnTop(m_cbGraphAlwaysOnTop->isChecked());
+    settings()->setGraphWindowFrameless(m_cbGraphFrameless->isChecked());
+    settings()->setGraphWindowClickThrough(m_cbGraphClickThrough->isChecked());
+    settings()->setGraphWindowHideOnHover(m_cbGraphHideOnHover->isChecked());
+
+    settings()->setGraphWindowOpacity(m_graphOpacity->spinBox()->value());
+    settings()->setGraphWindowHoverOpacity(m_graphHoverOpacity->spinBox()->value());
+    settings()->setGraphWindowMaxSeconds(m_graphMaxSeconds->spinBox()->value());
+
+    settings()->setGraphWindowColor(m_graphColor->color());
+    settings()->setGraphWindowColorIn(m_graphColorIn->color());
+    settings()->setGraphWindowColorOut(m_graphColorOut->color());
+    settings()->setGraphWindowAxisColor(m_graphAxisColor->color());
+    settings()->setGraphWindowTickLabelColor(m_graphTickLabelColor->color());
+    settings()->setGraphWindowLabelColor(m_graphLabelColor->color());
+    settings()->setGraphWindowGridColor(m_graphGridColor->color());
 
     fortManager()->updateGraphWindow();
 }
@@ -99,10 +119,30 @@ void StatisticsPage::onRetranslateUi()
     retranslateTrafKeepDayNames();
     retranslateTrafKeepMonthNames();
     retranslateQuotaNames();
+
+    m_btGraphOptions->setText(tr("Graph"));
+    m_cbGraphAlwaysOnTop->setText(tr("Always on top"));
+    m_cbGraphFrameless->setText(tr("Frameless"));
+    m_cbGraphClickThrough->setText(tr("Click through"));
+    m_cbGraphHideOnHover->setText(tr("Hide on hover"));
+    m_graphOpacity->label()->setText(tr("Opacity:"));
+    m_graphHoverOpacity->label()->setText(tr("Hover opacity:"));
+    m_graphMaxSeconds->label()->setText(tr("Max seconds:"));
+    m_graphColor->label()->setText(tr("Background:"));
+    m_graphColorIn->label()->setText(tr("Download:"));
+    m_graphColorOut->label()->setText(tr("Upload:"));
+    m_graphAxisColor->label()->setText(tr("Axis:"));
+    m_graphTickLabelColor->label()->setText(tr("Tick label:"));
+    m_graphLabelColor->label()->setText(tr("Label:"));
+    m_graphGridColor->label()->setText(tr("Grid:"));
+
+    m_traphUnits->setText(tr("Units:"));
     retranslateTrafUnitNames();
+
+    m_cbLogStat->setText(tr("Collect Traffic Statistics"));
 }
 
-void StatisticsPage::retranslateTrafKeepDayNames() const
+void StatisticsPage::retranslateTrafKeepDayNames()
 {
     const QStringList list = {
         tr("Custom"), tr("Forever"), tr("3 months"),
@@ -113,7 +153,7 @@ void StatisticsPage::retranslateTrafKeepDayNames() const
     m_lscTrafDayKeepDays->setNames(list);
 }
 
-void StatisticsPage::retranslateTrafKeepMonthNames() const
+void StatisticsPage::retranslateTrafKeepMonthNames()
 {
     const QStringList list = {
         tr("Custom"), tr("Forever"), tr("3 months"),
@@ -123,7 +163,7 @@ void StatisticsPage::retranslateTrafKeepMonthNames() const
     m_lscTrafMonthKeepMonths->setNames(list);
 }
 
-void StatisticsPage::retranslateQuotaNames() const
+void StatisticsPage::retranslateQuotaNames()
 {
     QStringList list;
 
@@ -141,9 +181,16 @@ void StatisticsPage::retranslateQuotaNames() const
     m_lscQuotaMonthMb->setNames(list);
 }
 
-void StatisticsPage::retranslateTrafUnitNames() const
+void StatisticsPage::retranslateTrafUnitNames()
 {
-    //return {tr("Adaptive"), tr("Bytes"), tr("KiB"), tr("MiB"), tr("GiB"), tr("TiB")};
+    const QStringList list = {
+        tr("Adaptive"), tr("Bytes"), "KiB", "MiB", "GiB", "TiB"
+    };
+
+    m_comboTrafUnit->clear();
+    m_comboTrafUnit->addItems(list);
+
+    updateTrafUnit();
 }
 
 void StatisticsPage::setupUi()
@@ -169,11 +216,19 @@ QLayout *StatisticsPage::setupHeader()
 
     setupClearMenu();
     setupTrafOptionsMenu();
+    setupGraphOptionsMenu();
+    setupTrafUnits();
+    setupLogStat();
 
     layout->addWidget(m_btRefresh);
     layout->addWidget(m_btClear);
     layout->addWidget(m_btTrafOptions);
+    layout->addWidget(m_btGraphOptions);
+    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
+    layout->addWidget(m_traphUnits);
+    layout->addWidget(m_comboTrafUnit);
     layout->addStretch();
+    layout->addWidget(m_cbLogStat);
 
     return layout;
 }
@@ -219,7 +274,9 @@ void StatisticsPage::setupTrafOptionsMenu()
         ControlUtil::createSeparator(),
         m_lscQuotaDayMb, m_lscQuotaMonthMb
     };
-    auto menu = ControlUtil::createMenuByWidgets(menuWidgets, this);
+    auto layout = ControlUtil::createLayoutByWidgets(menuWidgets);
+
+    auto menu = ControlUtil::createMenuByLayout(layout, this);
 
     m_btTrafOptions = new QPushButton(QIcon(":/images/database_save.png"), QString());
     m_btTrafOptions->setMenu(menu);
@@ -362,7 +419,102 @@ void StatisticsPage::setupQuotaMonthMb()
         ctrl()->setConfFlagsEdited(true);
     });
 }
-void StatisticsPage::refreshPage()
+
+void StatisticsPage::setupGraphOptionsMenu()
+{
+    m_cbGraphAlwaysOnTop = new QCheckBox();
+    m_cbGraphFrameless = new QCheckBox();
+    m_cbGraphClickThrough = new QCheckBox();
+    m_cbGraphHideOnHover = new QCheckBox();
+
+    m_graphOpacity = createSpin(0, 100, " %");
+    m_graphHoverOpacity = createSpin(0, 100, " %");
+    m_graphMaxSeconds = createSpin(0, 9999);
+
+    m_graphColor = new LabelColor();
+    m_graphColorIn = new LabelColor();
+    m_graphColorOut = new LabelColor();
+    m_graphAxisColor = new LabelColor();
+    m_graphTickLabelColor = new LabelColor();
+    m_graphLabelColor = new LabelColor();
+    m_graphGridColor = new LabelColor();
+
+    const auto onChanged = [&] {
+        setGraphEdited(true);
+    };
+
+    connect(m_cbGraphAlwaysOnTop, &QCheckBox::toggled, onChanged);
+    connect(m_cbGraphFrameless, &QCheckBox::toggled, onChanged);
+    connect(m_cbGraphClickThrough, &QCheckBox::toggled, onChanged);
+    connect(m_cbGraphHideOnHover, &QCheckBox::toggled, onChanged);
+
+    connect(m_graphOpacity->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), onChanged);
+    connect(m_graphHoverOpacity->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), onChanged);
+    connect(m_graphMaxSeconds->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), onChanged);
+
+    connect(m_graphColor, &LabelColor::colorChanged, onChanged);
+    connect(m_graphColorIn, &LabelColor::colorChanged, onChanged);
+    connect(m_graphColorOut, &LabelColor::colorChanged, onChanged);
+    connect(m_graphAxisColor, &LabelColor::colorChanged, onChanged);
+    connect(m_graphTickLabelColor, &LabelColor::colorChanged, onChanged);
+    connect(m_graphLabelColor, &LabelColor::colorChanged, onChanged);
+    connect(m_graphGridColor, &LabelColor::colorChanged, onChanged);
+
+    // Menu
+    auto colLayout1 = ControlUtil::createLayoutByWidgets({
+                                                             m_cbGraphAlwaysOnTop, m_cbGraphFrameless,
+                                                             m_cbGraphClickThrough, m_cbGraphHideOnHover,
+                                                             ControlUtil::createSeparator(),
+                                                             m_graphOpacity, m_graphHoverOpacity,
+                                                             m_graphMaxSeconds, nullptr
+                                                         });
+    auto colLayout2 = ControlUtil::createLayoutByWidgets({
+                                                             m_graphColor, m_graphColorIn, m_graphColorOut,
+                                                             m_graphAxisColor, m_graphTickLabelColor,
+                                                             m_graphLabelColor, m_graphGridColor
+                                                         });
+    auto layout = new QHBoxLayout();
+    layout->addLayout(colLayout1);
+    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
+    layout->addLayout(colLayout2);
+
+    auto menu = ControlUtil::createMenuByLayout(layout, this);
+
+    m_btGraphOptions = new QPushButton(QIcon(":/images/chart_bar.png"), QString());
+    m_btGraphOptions->setMenu(menu);
+}
+
+void StatisticsPage::setupTrafUnits()
+{
+    m_traphUnits = new QLabel();
+
+    m_comboTrafUnit = ControlUtil::createComboBox(QStringList(), [&](int index) {
+        if (conf()->trafUnit() == index)
+            return;
+
+        conf()->setTrafUnit(index);
+
+        fortManager()->applyConfImmediateFlags();
+
+        trafListModel()->refresh();
+    });
+}
+
+void StatisticsPage::setupLogStat()
+{
+    m_cbLogStat = ControlUtil::createCheckBox(false, [&](bool checked) {
+        if (conf()->logStat() == checked)
+            return;
+
+        conf()->setLogStat(checked);
+
+        fortManager()->applyConfImmediateFlags();
+    });
+
+    m_cbLogStat->setFont(ControlUtil::createFont(QFont::DemiBold));
+}
+
+void StatisticsPage::updatePage()
 {
     m_ctpActivePeriod->checkBox()->setChecked(conf()->activePeriodEnabled());
     m_ctpActivePeriod->timeEdit1()->setTime(CheckTimePeriod::toTime(
@@ -376,6 +528,32 @@ void StatisticsPage::refreshPage()
     m_lscTrafMonthKeepMonths->spinBox()->setValue(conf()->trafMonthKeepMonths());
     m_lscQuotaDayMb->spinBox()->setValue(int(conf()->quotaDayMb()));
     m_lscQuotaMonthMb->spinBox()->setValue(int(conf()->quotaMonthMb()));
+
+    m_cbGraphAlwaysOnTop->setChecked(settings()->graphWindowAlwaysOnTop());
+    m_cbGraphFrameless->setChecked(settings()->graphWindowFrameless());
+    m_cbGraphClickThrough->setChecked(settings()->graphWindowClickThrough());
+    m_cbGraphHideOnHover->setChecked(settings()->graphWindowHideOnHover());
+
+    m_graphOpacity->spinBox()->setValue(settings()->graphWindowOpacity());
+    m_graphHoverOpacity->spinBox()->setValue(settings()->graphWindowHoverOpacity());
+    m_graphMaxSeconds->spinBox()->setValue(settings()->graphWindowMaxSeconds());
+
+    m_graphColor->setColor(settings()->graphWindowColor());
+    m_graphColorIn->setColor(settings()->graphWindowColorIn());
+    m_graphColorOut->setColor(settings()->graphWindowColorOut());
+    m_graphAxisColor->setColor(settings()->graphWindowAxisColor());
+    m_graphTickLabelColor->setColor(settings()->graphWindowTickLabelColor());
+    m_graphLabelColor->setColor(settings()->graphWindowLabelColor());
+    m_graphGridColor->setColor(settings()->graphWindowGridColor());
+
+    updateTrafUnit();
+
+    m_cbLogStat->setChecked(conf()->logStat());
+}
+
+void StatisticsPage::updateTrafUnit()
+{
+    m_comboTrafUnit->setCurrentIndex(conf()->trafUnit());
 }
 
 void StatisticsPage::setupModels()
@@ -391,6 +569,14 @@ LabelSpinCombo *StatisticsPage::createSpinCombo(int min, int max,
                                                 const QString &suffix)
 {
     auto c = new LabelSpinCombo();
+    c->spinBox()->setRange(min, max);
+    c->spinBox()->setSuffix(suffix);
+    return c;
+}
+
+LabelSpin *StatisticsPage::createSpin(int min, int max, const QString &suffix)
+{
+    auto c = new LabelSpin();
     c->spinBox()->setRange(min, max);
     c->spinBox()->setSuffix(suffix);
     return c;

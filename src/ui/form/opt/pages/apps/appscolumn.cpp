@@ -4,6 +4,8 @@
 #include <QPlainTextEdit>
 #include <QVBoxLayout>
 
+#include "../../../controls/controlutil.h"
+
 AppsColumn::AppsColumn(QWidget *parent) :
     QWidget(parent)
 {
@@ -20,11 +22,7 @@ void AppsColumn::setupUi()
     layout->addLayout(headerLayout);
 
     m_labelTitle = new QLabel();
-    {
-        QFont font;
-        font.setWeight(QFont::DemiBold);
-        m_labelTitle->setFont(font);
-    }
+    m_labelTitle->setFont(ControlUtil::createFont(QFont::DemiBold));
 
     headerLayout->addWidget(m_labelTitle);
 

@@ -53,7 +53,7 @@ private:
     void setupAllowApps();
     void retranslateAppsPlaceholderText();
     void setupSplitter();
-    void refreshGroup();
+    void updateGroup();
     void setupAppGroup();
 
     int appGroupsCount() const;

@@ -5,6 +5,8 @@
 
 QT_FORWARD_DECLARE_CLASS(AppStatModel)
 QT_FORWARD_DECLARE_CLASS(CheckTimePeriod)
+QT_FORWARD_DECLARE_CLASS(LabelColor)
+QT_FORWARD_DECLARE_CLASS(LabelSpin)
 QT_FORWARD_DECLARE_CLASS(LabelSpinCombo)
 QT_FORWARD_DECLARE_CLASS(TrafListModel)
 
@@ -29,10 +31,10 @@ private:
     bool graphEdited() const { return m_graphEdited; }
     void setGraphEdited(bool v);
 
-    void retranslateTrafKeepDayNames() const;
-    void retranslateTrafKeepMonthNames() const;
-    void retranslateQuotaNames() const;
-    void retranslateTrafUnitNames() const;
+    void retranslateTrafKeepDayNames();
+    void retranslateTrafKeepMonthNames();
+    void retranslateQuotaNames();
+    void retranslateTrafUnitNames();
 
     void setupUi();
     QLayout *setupHeader();
@@ -45,11 +47,17 @@ private:
     void setupTrafMonthKeepMonths();
     void setupQuotaDayMb();
     void setupQuotaMonthMb();
-    void refreshPage();
+    void setupGraphOptionsMenu();
+    void setupTrafUnits();
+    void setupLogStat();
+    void updatePage();
+    void updateTrafUnit();
     void setupModels();
 
     static LabelSpinCombo *createSpinCombo(int min, int max,
                                            const QString &suffix = QString());
+    static LabelSpin *createSpin(int min, int max,
+                                 const QString &suffix = QString());
 
     static QString formatQuota(int mbytes);
 
@@ -71,6 +79,24 @@ private:
     LabelSpinCombo *m_lscTrafMonthKeepMonths = nullptr;
     LabelSpinCombo *m_lscQuotaDayMb = nullptr;
     LabelSpinCombo *m_lscQuotaMonthMb = nullptr;
+    QPushButton *m_btGraphOptions = nullptr;
+    QCheckBox *m_cbGraphAlwaysOnTop = nullptr;
+    QCheckBox *m_cbGraphFrameless = nullptr;
+    QCheckBox *m_cbGraphClickThrough = nullptr;
+    QCheckBox *m_cbGraphHideOnHover = nullptr;
+    LabelSpin *m_graphOpacity = nullptr;
+    LabelSpin *m_graphHoverOpacity = nullptr;
+    LabelSpin *m_graphMaxSeconds = nullptr;
+    LabelColor *m_graphColor = nullptr;
+    LabelColor *m_graphColorIn = nullptr;
+    LabelColor *m_graphColorOut = nullptr;
+    LabelColor *m_graphAxisColor = nullptr;
+    LabelColor *m_graphTickLabelColor = nullptr;
+    LabelColor *m_graphLabelColor = nullptr;
+    LabelColor *m_graphGridColor = nullptr;
+    QLabel *m_traphUnits = nullptr;
+    QComboBox *m_comboTrafUnit = nullptr;
+    QCheckBox *m_cbLogStat = nullptr;
 };
 
 #endif // STATISTICSPAGE_H

@@ -297,7 +297,9 @@ void ApplicationsPage::setupGroupOptions()
         ControlUtil::createSeparator(),
         m_cbFragmentPacket
     };
-    auto menu = ControlUtil::createMenuByWidgets(menuWidgets, this);
+    auto layout = ControlUtil::createLayoutByWidgets(menuWidgets);
+
+    auto menu = ControlUtil::createMenuByLayout(layout, this);
 
     m_btGroupOptions = new QPushButton(QIcon(":/images/application_key.png"), QString());
     m_btGroupOptions->setMenu(menu);
@@ -495,7 +497,7 @@ void ApplicationsPage::setupSplitter()
     m_splitter->handle()->setTextArea2(m_allowApps->editText());
 }
 
-void ApplicationsPage::refreshGroup()
+void ApplicationsPage::updateGroup()
 {
     m_cscLimitIn->checkBox()->setChecked(appGroup()->limitInEnabled());
     m_cscLimitIn->spinBox()->setValue(int(appGroup()->speedLimitIn()));
@@ -519,7 +521,7 @@ void ApplicationsPage::refreshGroup()
 
 void ApplicationsPage::setupAppGroup()
 {
-    connect(this, &ApplicationsPage::appGroupChanged, this, &ApplicationsPage::refreshGroup);
+    connect(this, &ApplicationsPage::appGroupChanged, this, &ApplicationsPage::updateGroup);
 
     const auto refreshAppGroup = [&] {
         const int tabIndex = m_tabBar->currentIndex();

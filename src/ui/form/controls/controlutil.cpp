@@ -2,6 +2,7 @@
 
 #include <QBoxLayout>
 #include <QCheckBox>
+#include <QColorDialog>
 #include <QComboBox>
 #include <QFileDialog>
 #include <QMenu>
@@ -10,7 +11,7 @@
 #include <QWidgetAction>
 
 QCheckBox *ControlUtil::createCheckBox(bool checked,
-                                       const std::function<void (bool)> &onToggled)
+                                       const std::function<void (bool checked)> &onToggled)
 {
     auto c = new QCheckBox();
     c->setChecked(checked);
@@ -21,7 +22,7 @@ QCheckBox *ControlUtil::createCheckBox(bool checked,
 }
 
 QComboBox *ControlUtil::createComboBox(const QStringList &texts,
-                                       const std::function<void (int)> &onActivated)
+                                       const std::function<void (int index)> &onActivated)
 {
     auto c = new QComboBox();
     c->addItems(texts);
@@ -64,17 +65,9 @@ QPushButton *ControlUtil::createLinkButton(const QString &iconPath,
     return c;
 }
 
-QMenu *ControlUtil::createMenuByWidgets(const QList<QWidget *> &widgets,
-                                        QWidget *parent,
-                                        Qt::Orientation o)
+QMenu *ControlUtil::createMenuByLayout(QBoxLayout *layout, QWidget *parent)
 {
     auto menu = new QMenu(parent);
-
-    auto layout = new QBoxLayout(o == Qt::Vertical ? QBoxLayout::TopToBottom
-                                                   : QBoxLayout::LeftToRight);
-    for (auto w : widgets) {
-        layout->addWidget(w);
-    }
 
     auto menuWidget = new QWidget();
     menuWidget->setLayout(layout);
@@ -86,11 +79,34 @@ QMenu *ControlUtil::createMenuByWidgets(const QList<QWidget *> &widgets,
     return menu;
 }
 
+QBoxLayout *ControlUtil::createLayoutByWidgets(const QList<QWidget *> &widgets,
+                                               Qt::Orientation o)
+{
+    auto layout = new QBoxLayout(o == Qt::Vertical ? QBoxLayout::TopToBottom
+                                                   : QBoxLayout::LeftToRight);
+    for (auto w : widgets) {
+        if (!w) {
+            layout->addStretch();
+        } else {
+            layout->addWidget(w);
+        }
+    }
+
+    return layout;
+}
+
 QFrame *ControlUtil::createSeparator(Qt::Orientation o)
 {
     auto c = new QFrame();
     c->setFrameShape(o == Qt::Horizontal ? QFrame::HLine : QFrame::VLine);
     return c;
+}
+
+QFont ControlUtil::createFont(int weight)
+{
+    QFont font;
+    font.setWeight(weight);
+    return font;
 }
 
 QStringList ControlUtil::getOpenFileNames(const QString &title,
@@ -99,4 +115,9 @@ QStringList ControlUtil::getOpenFileNames(const QString &title,
     return QFileDialog::getOpenFileNames(
                 nullptr, title, QString(), filter,
                 nullptr, QFileDialog::ReadOnly);
+}
+
+QColor ControlUtil::getColor(const QColor &initial)
+{
+    return QColorDialog::getColor(initial);
 }

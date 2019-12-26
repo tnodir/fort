@@ -1,7 +1,6 @@
 #include "guiutil.h"
 
 #include <QClipboard>
-#include <QColorDialog>
 #include <QGuiApplication>
 #include <QPixmap>
 #include <QImage>
@@ -25,14 +24,4 @@ void GuiUtil::setClipboardData(const QVariant &data)
     default:
         clipboard->setText(data.toString());
     }
-}
-
-QColor GuiUtil::getColor(const QColor &initial)
-{
-    return QColorDialog::getColor(initial);
-}
-
-bool GuiUtil::isValidColor(const QColor &color)
-{
-    return color.isValid();
 }

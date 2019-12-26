@@ -21,6 +21,8 @@ SOURCES += \
     form/controls/checkspincombo.cpp \
     form/controls/checktimeperiod.cpp \
     form/controls/controlutil.cpp \
+    form/controls/labelcolor.cpp \
+    form/controls/labelspin.cpp \
     form/controls/labelspincombo.cpp \
     form/controls/spincombo.cpp \
     form/controls/tabbar.cpp \
@@ -115,6 +117,8 @@ HEADERS += \
     form/controls/checkspincombo.h \
     form/controls/checktimeperiod.h \
     form/controls/controlutil.h \
+    form/controls/labelcolor.h \
+    form/controls/labelspin.h \
     form/controls/labelspincombo.h \
     form/controls/spincombo.h \
     form/controls/tabbar.h \

@@ -6,6 +6,8 @@
 #include <QPlainTextEdit>
 #include <QVBoxLayout>
 
+#include "../../../controls/controlutil.h"
+
 AddressesColumn::AddressesColumn(QWidget *parent) :
     QWidget(parent)
 {
@@ -22,11 +24,7 @@ void AddressesColumn::setupUi()
     layout->addLayout(headerLayout);
 
     m_labelTitle = new QLabel();
-    {
-        QFont font;
-        font.setWeight(QFont::DemiBold);
-        m_labelTitle->setFont(font);
-    }
+    m_labelTitle->setFont(ControlUtil::createFont(QFont::DemiBold));
 
     m_cbUseAll = new QCheckBox();
 

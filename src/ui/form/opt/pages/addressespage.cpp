@@ -181,7 +181,7 @@ void AddressesPage::setupSplitter()
     m_splitter->handle()->setTextArea2(m_excludeAddresses->editIpText());
 }
 
-void AddressesPage::refreshGroup()
+void AddressesPage::updateGroup()
 {
     m_includeAddresses->cbUseAll()->setChecked(addressGroup()->includeAll());
     m_includeAddresses->editIpText()->setPlainText(addressGroup()->includeText());
@@ -192,7 +192,7 @@ void AddressesPage::refreshGroup()
 
 void AddressesPage::setupAddressGroup()
 {
-    connect(this, &AddressesPage::addressGroupChanged, this, &AddressesPage::refreshGroup);
+    connect(this, &AddressesPage::addressGroupChanged, this, &AddressesPage::updateGroup);
 
     const auto refreshAddressGroup = [&] {
         const int tabIndex = m_tabBar->currentIndex();
