@@ -86,6 +86,9 @@ public:
     QByteArray optWindowAppsSplit() const { return iniByteArray("optWindow/appsSplit"); }
     void setOptWindowAppsSplit(const QByteArray &v) { setIniValue("optWindow/appsSplit", v); }
 
+    QByteArray optWindowStatSplit() const { return iniByteArray("optWindow/statSplit"); }
+    void setOptWindowStatSplit(const QByteArray &v) { setIniValue("optWindow/statSplit", v); }
+
     bool graphWindowVisible() const { return iniBool("graphWindow/visible"); }
     void setGraphWindowVisible(bool on) { setIniValue("graphWindow/visible", on); }
 

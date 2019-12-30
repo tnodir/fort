@@ -52,10 +52,10 @@ void BasePage::setupController()
     connect(ctrl(), &OptionsController::aboutToSave, this, &BasePage::onAboutToSave);
     connect(ctrl(), &OptionsController::saved, this, &BasePage::onSaved);
 
-    connect(ctrl(), &OptionsController::retranslateUi, this, &BasePage::onRetranslateUi);
-
     connect(fortManager(), &FortManager::afterSaveOptWindowState, this, &BasePage::onSaveWindowState);
     connect(fortManager(), &FortManager::afterRestoreOptWindowState, this, &BasePage::onRestoreWindowState);
+
+    connect(ctrl(), &OptionsController::retranslateUi, this, &BasePage::onRetranslateUi);
 }
 
 bool BasePage::openUrlExternally(const QUrl &url)

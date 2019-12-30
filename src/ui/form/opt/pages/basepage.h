@@ -43,10 +43,10 @@ protected slots:
     virtual void onAboutToSave() {}
     virtual void onSaved() {}
 
-    virtual void onRetranslateUi() {}
-
     virtual void onSaveWindowState() {}
     virtual void onRestoreWindowState() {}
+
+    virtual void onRetranslateUi() {}
 
     bool openUrlExternally(const QUrl &url);
     void onLinkClicked();

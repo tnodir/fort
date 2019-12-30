@@ -28,7 +28,9 @@ public:
     void handleStatTraf(const LogEntryStatTraf &statTrafEntry);
 
     qint64 appIdByRow(int row) const;
+    QString appPathByRow(int row) const;
 
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
 public slots:

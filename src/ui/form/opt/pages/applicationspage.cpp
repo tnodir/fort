@@ -51,6 +51,16 @@ void ApplicationsPage::setAppGroup(AppGroup *v)
     }
 }
 
+void ApplicationsPage::onSaveWindowState()
+{
+    settings()->setOptWindowAppsSplit(m_splitter->saveState());
+}
+
+void ApplicationsPage::onRestoreWindowState()
+{
+    m_splitter->restoreState(settings()->optWindowAppsSplit());
+}
+
 void ApplicationsPage::onRetranslateUi()
 {
     m_editGroupName->setPlaceholderText(tr("Group Name"));
@@ -97,16 +107,6 @@ void ApplicationsPage::retranslateGroupLimits()
 
     m_cscLimitIn->setNames(list);
     m_cscLimitOut->setNames(list);
-}
-
-void ApplicationsPage::onSaveWindowState()
-{
-    settings()->setOptWindowAppsSplit(m_splitter->saveState());
-}
-
-void ApplicationsPage::onRestoreWindowState()
-{
-    m_splitter->restoreState(settings()->optWindowAppsSplit());
 }
 
 void ApplicationsPage::setupUi()

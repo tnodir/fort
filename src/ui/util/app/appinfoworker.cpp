@@ -5,6 +5,7 @@
 #include "appinfo.h"
 #include "appinfomanager.h"
 #include "appinfojob.h"
+#include "apputil.h"
 
 AppInfoWorker::AppInfoWorker(AppInfoManager *manager) :
     WorkerObject(manager)
@@ -14,6 +15,15 @@ AppInfoWorker::AppInfoWorker(AppInfoManager *manager) :
 AppInfoManager *AppInfoWorker::manager() const
 {
     return static_cast<AppInfoManager *>(WorkerObject::manager());
+}
+
+void AppInfoWorker::run()
+{
+    AppUtil::initThread();
+
+    WorkerObject::run();
+
+    AppUtil::doneThread();
 }
 
 void AppInfoWorker::doJob(WorkerJob *workerJob)

@@ -3,13 +3,17 @@
 
 #include "basepage.h"
 
-QT_FORWARD_DECLARE_CLASS(AppListView)
+QT_FORWARD_DECLARE_CLASS(AppInfoCache)
 QT_FORWARD_DECLARE_CLASS(AppStatModel)
 QT_FORWARD_DECLARE_CLASS(CheckTimePeriod)
 QT_FORWARD_DECLARE_CLASS(LabelColor)
 QT_FORWARD_DECLARE_CLASS(LabelSpin)
 QT_FORWARD_DECLARE_CLASS(LabelSpinCombo)
+QT_FORWARD_DECLARE_CLASS(ListView)
 QT_FORWARD_DECLARE_CLASS(TrafListModel)
+
+QT_FORWARD_DECLARE_CLASS(QSplitter)
+QT_FORWARD_DECLARE_CLASS(QTableView)
 
 class StatisticsPage : public BasePage
 {
@@ -20,11 +24,15 @@ public:
                             QWidget *parent = nullptr);
 
     AppStatModel *appStatModel() const;
+    AppInfoCache *appInfoCache() const;
     TrafListModel *trafListModel() const { return m_trafListModel; }
 
 protected slots:
     void onEditResetted() override;
     void onSaved() override;
+
+    void onSaveWindowState() override;
+    void onRestoreWindowState() override;
 
     void onRetranslateUi() override;
 
@@ -36,6 +44,8 @@ private:
     void retranslateTrafKeepMonthNames();
     void retranslateQuotaNames();
     void retranslateTrafUnitNames();
+    void retranslateTabBar();
+    void retranslateAppOpenFolder();
 
     void setupTrafListModel();
 
@@ -54,8 +64,17 @@ private:
     void setupTrafUnits();
     void setupLogStat();
     void setupAppListView();
+    void setupTabBar();
+    void setupTableTraf();
+    void setupTableTrafHeader();
+    void setupAppInfoRow();
+    void setupAppInfoVersion();
+    void setupAppListViewChanged();
     void updatePage();
     void updateTrafUnit();
+
+    int appListCurrentIndex() const;
+    QString appListCurrentPath() const;
 
     static LabelSpinCombo *createSpinCombo(int min, int max,
                                            const QString &suffix = QString());
@@ -101,7 +120,15 @@ private:
     QLabel *m_traphUnits = nullptr;
     QComboBox *m_comboTrafUnit = nullptr;
     QCheckBox *m_cbLogStat = nullptr;
-    AppListView *m_appListView = nullptr;
+    QSplitter *m_splitter = nullptr;
+    ListView *m_appListView = nullptr;
+    QTabBar *m_tabBar = nullptr;
+    QTableView *m_tableTraf = nullptr;
+    QWidget *m_appInfoRow = nullptr;
+    QPushButton *m_btAppCopyPath = nullptr;
+    QPushButton *m_btAppOpenFolder = nullptr;
+    QLabel *m_labelAppProductName = nullptr;
+    QLabel *m_labelAppCompanyName = nullptr;
 };
 
 #endif // STATISTICSPAGE_H

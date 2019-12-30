@@ -24,6 +24,7 @@ SOURCES += \
     form/controls/labelcolor.cpp \
     form/controls/labelspin.cpp \
     form/controls/labelspincombo.cpp \
+    form/controls/listview.cpp \
     form/controls/spincombo.cpp \
     form/controls/tabbar.cpp \
     form/controls/textarea2splitter.cpp \
@@ -38,7 +39,6 @@ SOURCES += \
     form/opt/pages/applicationspage.cpp \
     form/opt/pages/apps/appscolumn.cpp \
     form/opt/pages/basepage.cpp \
-    form/opt/pages/log/applistview.cpp \
     form/opt/pages/mainpage.cpp \
     form/opt/pages/optionspage.cpp \
     form/opt/pages/schedulepage.cpp \
@@ -121,6 +121,7 @@ HEADERS += \
     form/controls/labelcolor.h \
     form/controls/labelspin.h \
     form/controls/labelspincombo.h \
+    form/controls/listview.h \
     form/controls/spincombo.h \
     form/controls/tabbar.h \
     form/controls/textarea2splitter.h \
@@ -135,7 +136,6 @@ HEADERS += \
     form/opt/pages/applicationspage.h \
     form/opt/pages/apps/appscolumn.h \
     form/opt/pages/basepage.h \
-    form/opt/pages/log/applistview.h \
     form/opt/pages/mainpage.h \
     form/opt/pages/optionspage.h \
     form/opt/pages/schedulepage.h \

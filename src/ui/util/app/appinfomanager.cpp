@@ -182,6 +182,9 @@ bool AppInfoManager::loadInfoFromDb(const QString &appPath, AppInfo &appInfo)
 
 QImage AppInfoManager::loadIconFromDb(qint64 iconId)
 {
+    if (iconId == 0)
+        return {};
+
     QMutexLocker locker(&m_mutex);
 
     const QVariant icon = m_sqliteDb->executeEx(

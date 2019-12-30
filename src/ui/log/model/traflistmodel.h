@@ -20,6 +20,16 @@ class TrafListModel : public QAbstractItemModel
     Q_OBJECT
 
 public:
+    enum TrafUnit {
+        UnitAdaptive = 0,
+        UnitBytes,
+        UnitKB,
+        UnitMB,
+        UnitGB,
+        UnitTB
+    };
+    Q_ENUM(TrafUnit)
+
     enum TrafType {
         TrafHourly = 0,
         TrafDaily,
@@ -30,6 +40,9 @@ public:
 
     explicit TrafListModel(StatManager *statManager,
                            QObject *parent = nullptr);
+
+    TrafListModel::TrafUnit unit() const { return m_unit; }
+    void setUnit(TrafListModel::TrafUnit unit);
 
     TrafListModel::TrafType type() const { return m_type; }
     void setType(TrafListModel::TrafType type);
@@ -47,11 +60,11 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     bool hasChildren(const QModelIndex &parent = QModelIndex()) const override;
 
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     Qt::ItemFlags flags(const QModelIndex &index) const override;
-
-signals:
 
 public slots:
     void clear();
@@ -80,6 +93,7 @@ private:
 private:
     bool m_isEmpty;
 
+    TrafUnit m_unit;
     TrafType m_type;
 
     qint64 m_appId;

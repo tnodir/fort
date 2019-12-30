@@ -12,8 +12,7 @@ AppInfoCache::AppInfoCache(QObject *parent) :
     m_triggerTimer.setSingleShot(true);
     m_triggerTimer.setInterval(200);
 
-    connect(&m_triggerTimer, &QTimer::timeout,
-            this, &AppInfoCache::cacheChanged);
+    connect(&m_triggerTimer, &QTimer::timeout, this, &AppInfoCache::cacheChanged);
 }
 
 void AppInfoCache::setManager(AppInfoManager *manager)
@@ -33,6 +32,9 @@ QImage AppInfoCache::appIcon(const AppInfo &info) const
 
 AppInfo AppInfoCache::appInfo(const QString &appPath)
 {
+    if (appPath.isEmpty())
+        return AppInfo();
+
     AppInfo *appInfo = m_cache.object(appPath);
     bool lookupRequired = false;
 

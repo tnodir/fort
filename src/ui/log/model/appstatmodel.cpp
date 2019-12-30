@@ -5,6 +5,7 @@
 #include "../../stat/statmanager.h"
 #include "../../util/app/appinfo.h"
 #include "../../util/app/appinfocache.h"
+#include "../../util/fileutil.h"
 #include "../logentryprocnew.h"
 #include "../logentrystattraf.h"
 #include "traflistmodel.h"
@@ -26,8 +27,7 @@ void AppStatModel::setAppInfoCache(AppInfoCache *v)
 
     m_appInfoCache = v;
 
-    connect(appInfoCache(), &AppInfoCache::cacheChanged,
-            this, &AppStatModel::reset);
+    connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &AppStatModel::reset);
 }
 
 void AppStatModel::initialize()
@@ -47,6 +47,7 @@ void AppStatModel::clear()
 void AppStatModel::remove(int row)
 {
     row = adjustRow(row);
+    Q_ASSERT(row > 0);
 
     beginRemoveRows(QModelIndex(), row, row);
 
@@ -98,6 +99,20 @@ qint64 AppStatModel::appIdByRow(int row) const
             ? 0 : m_appIds.at(row);
 }
 
+QString AppStatModel::appPathByRow(int row) const
+{
+    return (row <= 0 || row >= list().size())
+            ? QString() : list().at(row);
+}
+
+Qt::ItemFlags AppStatModel::flags(const QModelIndex &index) const
+{
+    if (!index.isValid())
+        return Qt::NoItemFlags;
+
+    return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemNeverHasChildren;
+}
+
 QVariant AppStatModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
@@ -109,7 +124,13 @@ QVariant AppStatModel::data(const QModelIndex &index, int role) const
         if (row == 0)
             return tr("All");
 
-        return list().at(row);
+        const auto appPath = list().at(row);
+        const auto appInfo = appInfoCache()->appInfo(appPath);
+        if (!appInfo.fileDescription.isEmpty()) {
+            return appInfo.fileDescription;
+        }
+
+        return FileUtil::fileName(appPath);
     }
 
     // Icon

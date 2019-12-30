@@ -25,10 +25,10 @@ signals:
     void appGroupChanged();
 
 protected slots:
-    void onRetranslateUi() override;
-
     void onSaveWindowState() override;
     void onRestoreWindowState() override;
+
+    void onRetranslateUi() override;
 
 private:
     void retranslateGroupLimits();

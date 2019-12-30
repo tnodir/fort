@@ -13,6 +13,8 @@ public:
 
     AppInfoManager *manager() const;
 
+    void run() override;
+
 protected:
     void doJob(WorkerJob *workerJob) override;
 };

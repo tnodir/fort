@@ -2,7 +2,6 @@
 
 #include <QLocale>
 
-#include "../../conf/firewallconf.h"
 #include "../../stat/statmanager.h"
 #include "../../stat/statsql.h"
 #include "../../util/dateutil.h"
@@ -12,6 +11,7 @@ TrafListModel::TrafListModel(StatManager *statManager,
                              QObject *parent) :
     QAbstractItemModel(parent),
     m_isEmpty(false),
+    m_unit(UnitAdaptive),
     m_type(TrafHourly),
     m_appId(0),
     m_minTrafTime(0),
@@ -19,6 +19,11 @@ TrafListModel::TrafListModel(StatManager *statManager,
     m_trafCount(0),
     m_statManager(statManager)
 {
+}
+
+void TrafListModel::setUnit(TrafListModel::TrafUnit unit)
+{
+    m_unit = unit;
 }
 
 void TrafListModel::setType(TrafListModel::TrafType type)
@@ -70,9 +75,26 @@ bool TrafListModel::hasChildren(const QModelIndex &parent) const
     return !parent.isValid() && rowCount() > 0;
 }
 
+QVariant TrafListModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (orientation == Qt::Horizontal
+            && role == Qt::DisplayRole) {
+        switch (section) {
+        case 0: return tr("Date");
+        case 1: return tr("Download");
+        case 2: return tr("Upload");
+        case 3: return tr("Sum");
+        }
+    }
+    return QVariant();
+}
+
 QVariant TrafListModel::data(const QModelIndex &index, int role) const
 {
-    if (index.isValid() && role == Qt::DisplayRole) {
+    if (!index.isValid())
+        return QVariant();
+
+    if (role == Qt::DisplayRole) {
         const int row = index.row();
         const int column = index.column();
 
@@ -87,6 +109,7 @@ QVariant TrafListModel::data(const QModelIndex &index, int role) const
         case 3: return formatTrafUnit(m_rowCache.inBytes + m_rowCache.outBytes);
         }
     }
+
     return QVariant();
 }
 
@@ -176,15 +199,13 @@ QString TrafListModel::formatTrafUnit(qint64 bytes) const
         return QLatin1String("0");
     }
 
-    const FirewallConf *conf = m_statManager->firewallConf();
-    const int trafUnit = conf ? conf->trafUnit() : 0;
-    const int trafPrec = (trafUnit == FirewallConf::UnitBytes) ? 0 : 2;
+    const int trafPrec = (unit() == UnitBytes) ? 0 : 2;
 
-    if (trafUnit == FirewallConf::UnitAdaptive) {
+    if (unit() == UnitAdaptive) {
         return NetUtil::formatDataSize(bytes, trafPrec);
     }
 
-    const qint64 unitMult = unitMults.at(trafUnit);
+    const qint64 unitMult = unitMults.at(unit());
 
     return QLocale::c().toString(qreal(bytes) / unitMult, 'f', trafPrec);
 }

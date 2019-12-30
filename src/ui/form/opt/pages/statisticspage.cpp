@@ -4,10 +4,14 @@
 #include <QCheckBox>
 #include <QComboBox>
 #include <QHBoxLayout>
+#include <QHeaderView>
 #include <QLabel>
 #include <QMenu>
 #include <QPushButton>
 #include <QSpinBox>
+#include <QSplitter>
+#include <QTabBar>
+#include <QTableView>
 #include <QTimeEdit>
 #include <QVBoxLayout>
 
@@ -17,14 +21,17 @@
 #include "../../../log/logmanager.h"
 #include "../../../log/model/appstatmodel.h"
 #include "../../../log/model/traflistmodel.h"
+#include "../../../util/app/appinfocache.h"
+#include "../../../util/guiutil.h"
 #include "../../../util/net/netutil.h"
+#include "../../../util/osutil.h"
 #include "../../controls/checktimeperiod.h"
 #include "../../controls/controlutil.h"
 #include "../../controls/labelcolor.h"
 #include "../../controls/labelspin.h"
 #include "../../controls/labelspincombo.h"
+#include "../../controls/listview.h"
 #include "../optionscontroller.h"
-#include "log/applistview.h"
 
 namespace {
 
@@ -56,6 +63,22 @@ AppStatModel *StatisticsPage::appStatModel() const
     return fortManager()->logManager()->appStatModel();
 }
 
+AppInfoCache *StatisticsPage::appInfoCache() const
+{
+    return appStatModel()->appInfoCache();
+}
+
+void StatisticsPage::setGraphEdited(bool v)
+{
+    if (m_graphEdited != v) {
+        m_graphEdited = v;
+
+        if (graphEdited()) {
+            ctrl()->setOthersEdited(true);
+        }
+    }
+}
+
 void StatisticsPage::onEditResetted()
 {
     setGraphEdited(false);
@@ -85,15 +108,14 @@ void StatisticsPage::onSaved()
     fortManager()->updateGraphWindow();
 }
 
-void StatisticsPage::setGraphEdited(bool v)
+void StatisticsPage::onSaveWindowState()
 {
-    if (m_graphEdited != v) {
-        m_graphEdited = v;
+    settings()->setOptWindowStatSplit(m_splitter->saveState());
+}
 
-        if (graphEdited()) {
-            ctrl()->setOthersEdited(true);
-        }
-    }
+void StatisticsPage::onRestoreWindowState()
+{
+    m_splitter->restoreState(settings()->optWindowStatSplit());
 }
 
 void StatisticsPage::onRetranslateUi()
@@ -141,6 +163,10 @@ void StatisticsPage::onRetranslateUi()
     retranslateTrafUnitNames();
 
     m_cbLogStat->setText(tr("Collect Traffic Statistics"));
+
+    retranslateTabBar();
+
+    m_btAppCopyPath->setToolTip(tr("Copy Path"));
 }
 
 void StatisticsPage::retranslateTrafKeepDayNames()
@@ -194,13 +220,27 @@ void StatisticsPage::retranslateTrafUnitNames()
     updateTrafUnit();
 }
 
+void StatisticsPage::retranslateTabBar()
+{
+    const QStringList list = {
+        tr("Hourly"), tr("Daily"), tr("Monthly"), tr("Total")
+    };
+
+    int index = 0;
+    for (const auto &v : list) {
+        m_tabBar->setTabText(index++, v);
+    }
+}
+
+void StatisticsPage::retranslateAppOpenFolder()
+{
+    m_btAppOpenFolder->setToolTip(tr("Open Folder") + ' '
+                                  + m_btAppOpenFolder->text());
+}
+
 void StatisticsPage::setupTrafListModel()
 {
     m_trafListModel = appStatModel()->trafListModel();
-
-//    m_trafListModel->setType(static_cast<TrafListModel::TrafType>(tabBar.currentIndex));
-//    m_trafListModel->setAppId(appStatModel()->appIdByRow(appListView.currentIndex));
-//    m_trafListModel->reset();
 }
 
 void StatisticsPage::setupUi()
@@ -212,9 +252,36 @@ void StatisticsPage::setupUi()
     layout->addLayout(header);
 
     // Content
-    setupAppListView();
+    m_splitter = new QSplitter();
 
-    layout->addWidget(m_appListView, 1);
+    setupAppListView();
+    m_splitter->addWidget(m_appListView);
+
+    // Tab Bar
+    auto trafLayout = new QVBoxLayout();
+    trafLayout->setMargin(0);
+
+    setupTabBar();
+    trafLayout->addWidget(m_tabBar);
+
+    // Traf Table
+    setupTableTraf();
+    setupTableTrafHeader();
+    trafLayout->addWidget(m_tableTraf);
+
+    auto trafWidget = new QWidget();
+    trafWidget->setLayout(trafLayout);
+    m_splitter->addWidget(trafWidget);
+
+    layout->addWidget(m_splitter, 1);
+
+    // App Info Row
+    setupAppInfoRow();
+    setupAppInfoVersion();
+    layout->addWidget(m_appInfoRow);
+
+    // Actions on app list view's current changed
+    setupAppListViewChanged();
 
     this->setLayout(layout);
 }
@@ -260,7 +327,7 @@ void StatisticsPage::setupClearMenu()
         if (!fortManager()->showQuestionBox(tr("Are you sure to remove statistics for selected application?")))
             return;
 
-        //appStatModel()->remove(appListView.currentIndex);
+        appStatModel()->remove(appListCurrentIndex());
     });
     connect(m_actResetTotal, &QAction::triggered, [&] {
         if (!fortManager()->showQuestionBox(tr("Are you sure to reset total statistics?")))
@@ -272,7 +339,7 @@ void StatisticsPage::setupClearMenu()
         if (!fortManager()->showQuestionBox(tr("Are you sure to clear all statistics?")))
             return;
 
-        //appListView.currentIndex = 0;
+        m_appListView->clearSelection();
         appStatModel()->clear();
     });
 
@@ -521,8 +588,6 @@ void StatisticsPage::setupTrafUnits()
         conf()->setTrafUnit(index);
 
         fortManager()->applyConfImmediateFlags();
-
-        trafListModel()->refresh();
     });
 }
 
@@ -542,9 +607,138 @@ void StatisticsPage::setupLogStat()
 
 void StatisticsPage::setupAppListView()
 {
-    m_appListView = new AppListView();
+    m_appListView = new ListView();
+    m_appListView->setFlow(QListView::TopToBottom);
+    m_appListView->setViewMode(QListView::ListMode);
+    m_appListView->setIconSize(QSize(24, 24));
+    m_appListView->setUniformItemSizes(true);
+    m_appListView->setAlternatingRowColors(true);
 
     m_appListView->setModel(appStatModel());
+}
+
+void StatisticsPage::setupTabBar()
+{
+    m_tabBar = new QTabBar();
+    m_tabBar->setShape(QTabBar::TriangularNorth);
+
+    for (int n = 4; --n >= 0; ) {
+        m_tabBar->addTab(QString());
+    }
+}
+
+void StatisticsPage::setupTableTraf()
+{
+    m_tableTraf = new QTableView();
+    m_tableTraf->setSelectionMode(QAbstractItemView::SingleSelection);
+    m_tableTraf->setSelectionBehavior(QAbstractItemView::SelectItems);
+
+    m_tableTraf->setModel(trafListModel());
+
+    const auto resetTableTraf = [&] {
+        trafListModel()->setType(static_cast<TrafListModel::TrafType>(m_tabBar->currentIndex()));
+        trafListModel()->setAppId(appStatModel()->appIdByRow(appListCurrentIndex()));
+        trafListModel()->reset();
+    };
+
+    resetTableTraf();
+
+    connect(m_tabBar, &QTabBar::currentChanged, this, resetTableTraf);
+    connect(m_appListView, &ListView::currentIndexChanged, this, resetTableTraf);
+
+    const auto refreshTableTraf = [&] {
+        trafListModel()->setUnit(static_cast<TrafListModel::TrafUnit>(conf()->trafUnit()));
+        trafListModel()->refresh();
+    };
+
+    refreshTableTraf();
+
+    connect(conf(), &FirewallConf::trafUnitChanged, this, refreshTableTraf);
+}
+
+void StatisticsPage::setupTableTrafHeader()
+{
+    auto header = m_tableTraf->horizontalHeader();
+
+    header->setSectionResizeMode(0, QHeaderView::Fixed);
+    header->setSectionResizeMode(1, QHeaderView::Stretch);
+    header->setSectionResizeMode(2, QHeaderView::Stretch);
+    header->setSectionResizeMode(3, QHeaderView::Stretch);
+
+    const auto refreshTableTrafHeader = [&] {
+        auto hh = m_tableTraf->horizontalHeader();
+        hh->resizeSection(0, qMin(qRound(hh->width() * 0.3), 180));
+    };
+
+    refreshTableTrafHeader();
+
+    connect(header, &QHeaderView::geometriesChanged, this, refreshTableTrafHeader);
+}
+
+void StatisticsPage::setupAppInfoRow()
+{
+    auto layout = new QHBoxLayout();
+    layout->setMargin(0);
+
+    m_btAppCopyPath = ControlUtil::createLinkButton(":/images/page_copy.png");
+    m_btAppOpenFolder = ControlUtil::createLinkButton(QString());
+
+    m_labelAppProductName = new QLabel();
+    m_labelAppProductName->setFont(ControlUtil::createFont(QFont::DemiBold));
+
+    m_labelAppCompanyName = new QLabel();
+
+    connect(m_btAppCopyPath, &QAbstractButton::clicked, [&] {
+        GuiUtil::setClipboardData(appListCurrentPath());
+    });
+    connect(m_btAppOpenFolder, &QAbstractButton::clicked, [&] {
+        OsUtil::openFolder(appListCurrentPath());
+    });
+
+    layout->addWidget(m_btAppCopyPath);
+    layout->addWidget(m_btAppOpenFolder, 1, Qt::AlignLeft);
+    layout->addWidget(m_labelAppProductName);
+    layout->addWidget(m_labelAppCompanyName);
+
+    m_appInfoRow = new QWidget();
+    m_appInfoRow->setLayout(layout);
+}
+
+void StatisticsPage::setupAppInfoVersion()
+{
+    const auto refreshAppInfoVersion = [&] {
+        const auto appPath = appListCurrentPath();
+        const auto appInfo = appInfoCache()->appInfo(appPath);
+
+        m_labelAppProductName->setVisible(!appInfo.productName.isEmpty());
+        m_labelAppProductName->setText(appInfo.productName + " v" + appInfo.productVersion);
+
+        m_labelAppCompanyName->setVisible(!appInfo.companyName.isEmpty());
+        m_labelAppCompanyName->setText(appInfo.companyName);
+    };
+
+    refreshAppInfoVersion();
+
+    connect(m_appListView, &ListView::currentIndexChanged, this, refreshAppInfoVersion);
+    connect(appInfoCache(), &AppInfoCache::cacheChanged, this, refreshAppInfoVersion);
+}
+
+void StatisticsPage::setupAppListViewChanged()
+{
+    const auto refreshAppListViewChanged = [&] {
+        const bool appSelected = (m_appListView->currentIndex().row() > 0);
+        m_actRemoveApp->setEnabled(appSelected);
+        m_appInfoRow->setVisible(appSelected);
+
+        if (appSelected) {
+            m_btAppOpenFolder->setText(appListCurrentPath());
+            retranslateAppOpenFolder();
+        }
+    };
+
+    refreshAppListViewChanged();
+
+    connect(m_appListView, &ListView::currentIndexChanged, this , refreshAppListViewChanged);
 }
 
 void StatisticsPage::updatePage()
@@ -591,6 +785,16 @@ void StatisticsPage::updatePage()
 void StatisticsPage::updateTrafUnit()
 {
     m_comboTrafUnit->setCurrentIndex(conf()->trafUnit());
+}
+
+int StatisticsPage::appListCurrentIndex() const
+{
+    return m_appListView->currentIndex().row();
+}
+
+QString StatisticsPage::appListCurrentPath() const
+{
+    return appStatModel()->appPathByRow(appListCurrentIndex());
 }
 
 LabelSpinCombo *StatisticsPage::createSpinCombo(int min, int max,

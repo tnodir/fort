@@ -22,7 +22,7 @@ FirewallConf::FirewallConf(QObject *parent) :
     m_trafHourKeepDays(DEFAULT_TRAF_HOUR_KEEP_DAYS),
     m_trafDayKeepDays(DEFAULT_TRAF_DAY_KEEP_DAYS),
     m_trafMonthKeepMonths(DEFAULT_TRAF_MONTH_KEEP_MONTHS),
-    m_trafUnit(UnitAdaptive),
+    m_trafUnit(0),
     m_quotaDayMb(0),
     m_quotaMonthMb(0)
 {
@@ -168,7 +168,7 @@ void FirewallConf::setTrafMonthKeepMonths(int trafMonthKeepMonths)
 void FirewallConf::setTrafUnit(int trafUnit)
 {
     if (m_trafUnit != trafUnit) {
-        m_trafUnit = static_cast<TrafUnit>(trafUnit);
+        m_trafUnit = trafUnit;
         emit trafUnitChanged();
     }
 }

@@ -162,3 +162,13 @@ QDateTime AppUtil::getModTime(const QString &appPath)
     QFileInfo fi(appPath);
     return fi.lastModified();
 }
+
+void AppUtil::initThread()
+{
+    CoInitialize(nullptr);
+}
+
+void AppUtil::doneThread()
+{
+    CoUninitialize();
+}

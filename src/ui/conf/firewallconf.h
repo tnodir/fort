@@ -40,16 +40,6 @@ class FirewallConf : public QObject
     Q_CLASSINFO("DefaultProperty", "appGroups")
 
 public:
-    enum TrafUnit {
-        UnitAdaptive = 0,
-        UnitBytes,
-        UnitKB,
-        UnitMB,
-        UnitGB,
-        UnitTB
-    };
-    Q_ENUM(TrafUnit)
-
     explicit FirewallConf(QObject *parent = nullptr);
 
     bool provBoot() const { return m_provBoot; }
@@ -193,7 +183,7 @@ private:
     int m_trafDayKeepDays;
     int m_trafMonthKeepMonths;
 
-    TrafUnit m_trafUnit;
+    int m_trafUnit;
 
     quint32 m_quotaDayMb;
     quint32 m_quotaMonthMb;
