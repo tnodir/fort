@@ -45,7 +45,7 @@ QPixmap extractShellIcon(const QString &appPath)
 
     const HRESULT hr = SHGetFileInfoW(appPathW, 0, &info,
                                       sizeof(SHFILEINFOW), flags);
-    if (SUCCEEDED(hr)) {
+    if (hr != 0) {
         pixmap = pixmapFromImageList(SHIL_EXTRALARGE, info);
     }
 
