@@ -44,6 +44,7 @@ class FortSettings : public QObject
     Q_PROPERTY(QString logsPath READ logsPath CONSTANT)
     Q_PROPERTY(QString profilePath READ profilePath CONSTANT)
     Q_PROPERTY(QString statPath READ statPath CONSTANT)
+    Q_PROPERTY(QString cachePath READ cachePath CONSTANT)
     Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
     Q_PROPERTY(QString appUpdatesUrl READ appUpdatesUrl CONSTANT)
 
@@ -172,6 +173,8 @@ public:
     QString statPath() const { return m_statPath; }
     QString statFilePath() const;
 
+    QString cachePath() const { return m_cachePath; }
+
     QString confFilePath() const;
 
     QString confOldFilePath() const;
@@ -256,6 +259,7 @@ private:
 
     QString m_profilePath;
     QString m_statPath;
+    QString m_cachePath;
     QString m_controlCommand;
     QStringList m_args;
 

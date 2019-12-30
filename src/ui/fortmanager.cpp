@@ -73,10 +73,6 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_taskManager(new TaskManager(this, this)),
     m_appInfoCache(new AppInfoCache(this))
 {
-    if (m_settings->noCache()) {
-        qputenv("QT_DISABLE_SHADER_DISK_CACHE", "1");
-    }
-
     setupThreadPool();
 
     setupLogger();
@@ -189,7 +185,7 @@ void FortManager::setupLogger()
 {
     Logger *logger = Logger::instance();
 
-    logger->setPath(m_settings->logsPath());
+    logger->setPath(settings()->logsPath());
     logger->setActive(true);
 
     updateLogger();
@@ -197,13 +193,13 @@ void FortManager::setupLogger()
 
 void FortManager::setupTaskManager()
 {
-    m_taskManager->loadSettings(m_settings, m_confManager);
+    m_taskManager->loadSettings(settings(), m_confManager);
 }
 
 void FortManager::setupTranslationManager()
 {
     TranslationManager::instance()->switchLanguageByName(
-                m_settings->language());
+                settings()->language());
 
     connect(TranslationManager::instance(), &TranslationManager::languageChanged,
             this, &FortManager::updateTrayMenu);
@@ -227,10 +223,10 @@ void FortManager::setupTrayIcon()
 void FortManager::setupAppInfoCache()
 {
     QString dbPath;
-    if (m_settings->noCache()) {
+    if (settings()->noCache()) {
         dbPath = ":memory:";
     } else {
-        const QString cachePath = FileUtil::appCacheLocation();
+        const QString cachePath = settings()->cachePath();
         FileUtil::makePath(cachePath);
         dbPath = cachePath + "/appinfocache.db";
     }
@@ -260,7 +256,7 @@ void FortManager::launch()
 {
     showTrayIcon();
 
-    if (m_settings->graphWindowVisible()) {
+    if (settings()->graphWindowVisible()) {
         showGraphWindow();
     }
 }
@@ -321,7 +317,7 @@ void FortManager::closeOptionsWindow()
 void FortManager::showGraphWindow()
 {
     if (!m_graphWindow) {
-        m_graphWindow = new GraphWindow(m_settings);
+        m_graphWindow = new GraphWindow(settings());
 
         m_graphWindowState->install(m_graphWindow);
 
@@ -468,7 +464,7 @@ void FortManager::setConfToEdit(FirewallConf *conf)
 bool FortManager::loadSettings()
 {
     QString viaVersion;
-    if (!m_settings->confCanMigrate(viaVersion)) {
+    if (!settings()->confCanMigrate(viaVersion)) {
         showInfoBox("Please first install Fort Firewall v" + viaVersion
                     + " and save Options from it.");
         abort();  //  Abort the program
@@ -548,15 +544,15 @@ void FortManager::saveTrayFlags()
         ++i;
     }
 
-    m_settings->writeConfIni(*m_conf);
+    settings()->writeConfIni(*m_conf);
 
     updateDriverConf(true);
 }
 
 void FortManager::saveOptWindowState()
 {
-    m_settings->setOptWindowGeometry(m_optWindowState->geometry());
-    m_settings->setOptWindowMaximized(m_optWindowState->maximized());
+    settings()->setOptWindowGeometry(m_optWindowState->geometry());
+    settings()->setOptWindowMaximized(m_optWindowState->maximized());
 
     emit afterSaveOptWindowState();
 }
@@ -564,32 +560,32 @@ void FortManager::saveOptWindowState()
 void FortManager::restoreOptWindowState()
 {
     m_optWindowState->restore(m_optWindow, QSize(1024, 768),
-                              m_settings->optWindowGeometry(),
-                              m_settings->optWindowMaximized());
+                              settings()->optWindowGeometry(),
+                              settings()->optWindowMaximized());
 
     emit afterRestoreOptWindowState();
 }
 
 void FortManager::saveGraphWindowState(bool visible)
 {
-    m_settings->setGraphWindowVisible(visible);
-    m_settings->setGraphWindowGeometry(m_graphWindowState->geometry());
-    m_settings->setGraphWindowMaximized(m_graphWindowState->maximized());
+    settings()->setGraphWindowVisible(visible);
+    settings()->setGraphWindowGeometry(m_graphWindowState->geometry());
+    settings()->setGraphWindowMaximized(m_graphWindowState->maximized());
 }
 
 void FortManager::restoreGraphWindowState()
 {
     m_graphWindowState->restore(m_graphWindow, QSize(400, 300),
-                                m_settings->graphWindowGeometry(),
-                                m_settings->graphWindowMaximized());
+                                settings()->graphWindowGeometry(),
+                                settings()->graphWindowMaximized());
 }
 
 void FortManager::updateLogger()
 {
     Logger *logger = Logger::instance();
 
-    logger->setDebug(m_settings->debug());
-    logger->setConsole(m_settings->console());
+    logger->setDebug(settings()->debug());
+    logger->setConsole(settings()->console());
 }
 
 void FortManager::updateTrayMenu()

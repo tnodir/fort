@@ -63,6 +63,11 @@ void FortSettings::processArguments(const QStringList &args)
                 "Directory to store statistics.", "stat");
     parser.addOption(statOption);
 
+    const QCommandLineOption cacheOption(
+                QStringList() << "cache",
+                "Directory to store cache.", "cache");
+    parser.addOption(cacheOption);
+
     const QCommandLineOption noCacheOption(
                 QStringList() << "no-cache",
                 "Don't use cache on disk.");
@@ -106,6 +111,15 @@ void FortSettings::processArguments(const QStringList &args)
     } else {
         m_statPath = FileUtil::pathSlash(
                     FileUtil::absolutePath(m_statPath));
+    }
+
+    // Statistics Path
+    m_cachePath = parser.value(cacheOption);
+    if (m_cachePath.isEmpty()) {
+        m_cachePath = FileUtil::appCacheLocation();
+    } else {
+        m_cachePath = FileUtil::pathSlash(
+                    FileUtil::absolutePath(m_cachePath));
     }
 
     // Control command
