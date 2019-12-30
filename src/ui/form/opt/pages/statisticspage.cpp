@@ -167,6 +167,7 @@ void StatisticsPage::onRetranslateUi()
     retranslateTabBar();
 
     m_btAppCopyPath->setToolTip(tr("Copy Path"));
+    m_btAppOpenFolder->setToolTip(tr("Open Folder"));
 }
 
 void StatisticsPage::retranslateTrafKeepDayNames()
@@ -230,12 +231,6 @@ void StatisticsPage::retranslateTabBar()
     for (const auto &v : list) {
         m_tabBar->setTabText(index++, v);
     }
-}
-
-void StatisticsPage::retranslateAppOpenFolder()
-{
-    m_btAppOpenFolder->setToolTip(tr("Open Folder") + ' '
-                                  + m_btAppOpenFolder->text());
 }
 
 void StatisticsPage::setupTrafListModel()
@@ -681,7 +676,10 @@ void StatisticsPage::setupAppInfoRow()
     layout->setMargin(0);
 
     m_btAppCopyPath = ControlUtil::createLinkButton(":/images/page_copy.png");
-    m_btAppOpenFolder = ControlUtil::createLinkButton(QString());
+    m_btAppOpenFolder = ControlUtil::createLinkButton(":/images/folder_go.png");
+
+    m_labelAppPath = new QLabel();
+    m_labelAppPath->setWordWrap(true);
 
     m_labelAppProductName = new QLabel();
     m_labelAppProductName->setFont(ControlUtil::createFont(QFont::DemiBold));
@@ -696,7 +694,8 @@ void StatisticsPage::setupAppInfoRow()
     });
 
     layout->addWidget(m_btAppCopyPath);
-    layout->addWidget(m_btAppOpenFolder, 1, Qt::AlignLeft);
+    layout->addWidget(m_btAppOpenFolder);
+    layout->addWidget(m_labelAppPath, 1);
     layout->addWidget(m_labelAppProductName);
     layout->addWidget(m_labelAppCompanyName);
 
@@ -709,6 +708,8 @@ void StatisticsPage::setupAppInfoVersion()
     const auto refreshAppInfoVersion = [&] {
         const auto appPath = appListCurrentPath();
         const auto appInfo = appInfoCache()->appInfo(appPath);
+
+        m_labelAppPath->setText(appPath);
 
         m_labelAppProductName->setVisible(!appInfo.productName.isEmpty());
         m_labelAppProductName->setText(appInfo.productName + " v" + appInfo.productVersion);
@@ -729,11 +730,6 @@ void StatisticsPage::setupAppListViewChanged()
         const bool appSelected = (m_appListView->currentIndex().row() > 0);
         m_actRemoveApp->setEnabled(appSelected);
         m_appInfoRow->setVisible(appSelected);
-
-        if (appSelected) {
-            m_btAppOpenFolder->setText(appListCurrentPath());
-            retranslateAppOpenFolder();
-        }
     };
 
     refreshAppListViewChanged();

@@ -3,6 +3,9 @@
 
 #include "basepage.h"
 
+QT_FORWARD_DECLARE_CLASS(QSplitter)
+QT_FORWARD_DECLARE_CLASS(QTableView)
+
 QT_FORWARD_DECLARE_CLASS(AppInfoCache)
 QT_FORWARD_DECLARE_CLASS(AppStatModel)
 QT_FORWARD_DECLARE_CLASS(CheckTimePeriod)
@@ -11,9 +14,6 @@ QT_FORWARD_DECLARE_CLASS(LabelSpin)
 QT_FORWARD_DECLARE_CLASS(LabelSpinCombo)
 QT_FORWARD_DECLARE_CLASS(ListView)
 QT_FORWARD_DECLARE_CLASS(TrafListModel)
-
-QT_FORWARD_DECLARE_CLASS(QSplitter)
-QT_FORWARD_DECLARE_CLASS(QTableView)
 
 class StatisticsPage : public BasePage
 {
@@ -45,7 +45,6 @@ private:
     void retranslateQuotaNames();
     void retranslateTrafUnitNames();
     void retranslateTabBar();
-    void retranslateAppOpenFolder();
 
     void setupTrafListModel();
 
@@ -127,6 +126,7 @@ private:
     QWidget *m_appInfoRow = nullptr;
     QPushButton *m_btAppCopyPath = nullptr;
     QPushButton *m_btAppOpenFolder = nullptr;
+    QLabel *m_labelAppPath = nullptr;
     QLabel *m_labelAppProductName = nullptr;
     QLabel *m_labelAppCompanyName = nullptr;
 };
