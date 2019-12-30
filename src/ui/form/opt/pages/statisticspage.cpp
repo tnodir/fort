@@ -667,7 +667,7 @@ void StatisticsPage::setupTableTrafHeader()
 
     const auto refreshTableTrafHeader = [&] {
         auto hh = m_tableTraf->horizontalHeader();
-        hh->resizeSection(0, qMin(qRound(hh->width() * 0.3), 180));
+        hh->resizeSection(0, qBound(150, qRound(hh->width() * 0.3), 180));
     };
 
     refreshTableTrafHeader();
