@@ -116,14 +116,14 @@ void OptionsPage::setupUi()
         setIniEdited(true);
     });
 
-    m_gbStartup = new QGroupBox();
+    m_gbStartup = new QGroupBox(this);
     auto startupLayout = new QVBoxLayout();
     startupLayout->addWidget(m_cbStart);
     startupLayout->addWidget(m_cbProvBoot);
     m_gbStartup->setLayout(startupLayout);
     colLayout1->addWidget(m_gbStartup);
 
-    m_gbTraffic = new QGroupBox();
+    m_gbTraffic = new QGroupBox(this);
     auto trafficLayout = new QVBoxLayout();
     trafficLayout->addWidget(m_cbFilterEnabled);
     trafficLayout->addWidget(m_cbFilterLocals);
@@ -162,7 +162,7 @@ void OptionsPage::setupUi()
     langLayout->addWidget(m_labelLanguage);
     langLayout->addWidget(m_comboLanguage);
 
-    m_gbGlobal = new QGroupBox();
+    m_gbGlobal = new QGroupBox(this);
     auto globalLayout = new QVBoxLayout();
     globalLayout->addWidget(m_cbHotKeys);
     globalLayout->addLayout(passwordLayout);
@@ -241,7 +241,7 @@ void OptionsPage::setupComboLanguage()
 
 void OptionsPage::setupDriverBox()
 {
-    m_gbDriver = new QGroupBox();
+    m_gbDriver = new QGroupBox(this);
 
     auto colLayout = new QVBoxLayout();
     colLayout->setSpacing(10);
@@ -318,7 +318,7 @@ void OptionsPage::retranslateDriverMessage()
 
 void OptionsPage::setupNewVersionBox()
 {
-    m_gbNewVersion = new QGroupBox();
+    m_gbNewVersion = new QGroupBox(this);
 
     auto colLayout = new QVBoxLayout();
     colLayout->setSpacing(10);
