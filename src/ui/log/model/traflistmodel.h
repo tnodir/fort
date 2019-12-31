@@ -1,7 +1,7 @@
 #ifndef TRAFLISTMODEL_H
 #define TRAFLISTMODEL_H
 
-#include <QAbstractItemModel>
+#include "../util/model/tableitemmodel.h"
 
 QT_FORWARD_DECLARE_CLASS(StatManager)
 
@@ -15,7 +15,7 @@ struct TrafficRow {
     qint64 outBytes = 0;
 };
 
-class TrafListModel : public QAbstractItemModel
+class TrafListModel : public TableItemModel
 {
     Q_OBJECT
 
@@ -50,21 +50,12 @@ public:
     qint64 appId() const { return m_appId; }
     void setAppId(qint64 appId);
 
-    QModelIndex index(int row, int column,
-                      const QModelIndex &parent = QModelIndex()) const override;
-    QModelIndex parent(const QModelIndex &child) const override;
-
-    QModelIndex sibling(int row, int column,
-                        const QModelIndex &index) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
-    bool hasChildren(const QModelIndex &parent = QModelIndex()) const override;
 
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-
-    Qt::ItemFlags flags(const QModelIndex &index) const override;
 
 public slots:
     void clear();
@@ -91,20 +82,20 @@ private:
     static const char *getSqlSelectTraffic(TrafType type, qint64 appId);
 
 private:
-    bool m_isEmpty;
+    bool m_isEmpty = false;
 
-    TrafUnit m_unit;
-    TrafType m_type;
+    TrafUnit m_unit = UnitAdaptive;
+    TrafType m_type = TrafHourly;
 
-    qint64 m_appId;
+    qint64 m_appId = 0;
 
-    qint32 m_minTrafTime;
-    qint32 m_maxTrafTime;
-    qint32 m_trafCount;
+    qint32 m_minTrafTime = 0;
+    qint32 m_maxTrafTime = 0;
+    qint32 m_trafCount = 0;
+
+    StatManager *m_statManager = nullptr;
 
     mutable TrafficRow m_rowCache;
-
-    StatManager *m_statManager;
 };
 
 #endif // TRAFLISTMODEL_H

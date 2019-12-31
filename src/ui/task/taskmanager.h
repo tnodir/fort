@@ -21,6 +21,8 @@ public:
                          QObject *parent = nullptr);
 
     FortManager *fortManager() const { return m_fortManager; }
+    FortSettings *settings() const;
+    ConfManager *confManager() const;
 
     TaskInfoUpdateChecker *taskInfoUpdateChecker() const { return m_taskInfoUpdateChecker; }
 
@@ -29,11 +31,15 @@ public:
 signals:
     void taskInfosChanged();
 
+    void taskStarted(TaskInfo *taskInfo);
+    void taskFinished(TaskInfo *taskInfo);
+
 public slots:
-    void loadSettings(const FortSettings *fortSettings, ConfManager *confManager);
-    bool saveSettings(FortSettings *fortSettings, ConfManager *confManager);
+    void loadSettings();
+    bool saveSettings();
 
 private slots:
+    void handleTaskStarted();
     void handleTaskFinished(bool success);
 
     void runExpiredTasks();

@@ -30,6 +30,7 @@ public slots:
         beginResetModel();
         endResetModel();
     }
+    void refresh();
 
 protected:
     void removeRow(int row);

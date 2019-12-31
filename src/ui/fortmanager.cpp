@@ -193,7 +193,7 @@ void FortManager::setupLogger()
 
 void FortManager::setupTaskManager()
 {
-    m_taskManager->loadSettings(settings(), m_confManager);
+    m_taskManager->loadSettings();
 }
 
 void FortManager::setupTranslationManager()

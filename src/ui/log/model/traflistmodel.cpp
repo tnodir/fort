@@ -9,14 +9,7 @@
 
 TrafListModel::TrafListModel(StatManager *statManager,
                              QObject *parent) :
-    QAbstractItemModel(parent),
-    m_isEmpty(false),
-    m_unit(UnitAdaptive),
-    m_type(TrafHourly),
-    m_appId(0),
-    m_minTrafTime(0),
-    m_maxTrafTime(0),
-    m_trafCount(0),
+    TableItemModel(parent),
     m_statManager(statManager)
 {
 }
@@ -36,28 +29,6 @@ void TrafListModel::setAppId(qint64 appId)
     m_appId = appId;
 }
 
-QModelIndex TrafListModel::index(int row, int column,
-                                 const QModelIndex &parent) const
-{
-    return hasIndex(row, column, parent)
-            ? createIndex(row, column) : QModelIndex();
-}
-
-QModelIndex TrafListModel::parent(const QModelIndex &child) const
-{
-    Q_UNUSED(child)
-
-    return {};
-}
-
-QModelIndex TrafListModel::sibling(int row, int column,
-                                   const QModelIndex &index) const
-{
-    Q_UNUSED(index)
-
-    return this->index(row, column);
-}
-
 int TrafListModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
@@ -68,11 +39,6 @@ int TrafListModel::rowCount(const QModelIndex &parent) const
 int TrafListModel::columnCount(const QModelIndex &parent) const
 {
     return parent.isValid() ? 0 : 4;
-}
-
-bool TrafListModel::hasChildren(const QModelIndex &parent) const
-{
-    return !parent.isValid() && rowCount() > 0;
 }
 
 QVariant TrafListModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -111,12 +77,6 @@ QVariant TrafListModel::data(const QModelIndex &index, int role) const
     }
 
     return QVariant();
-}
-
-Qt::ItemFlags TrafListModel::flags(const QModelIndex &index) const
-{
-    return QAbstractItemModel::flags(index)
-            | (index.isValid() ? Qt::ItemNeverHasChildren : Qt::NoItemFlags);
 }
 
 void TrafListModel::clear()

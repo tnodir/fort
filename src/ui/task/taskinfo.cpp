@@ -12,6 +12,7 @@
 TaskInfo::TaskInfo(TaskType type, QObject *parent) :
     QObject(parent),
     m_enabled(false),
+    m_running(false),
     m_aborted(false),
     m_intervalHours(24),
     m_type(type),
@@ -29,6 +30,14 @@ void TaskInfo::setEnabled(bool enabled)
 {
     if (m_enabled != enabled) {
         m_enabled = enabled;
+        emit enabledChanged();
+    }
+}
+
+void TaskInfo::setRunning(bool running)
+{
+    if (m_running != running) {
+        m_running = running;
         emit enabledChanged();
     }
 }
@@ -159,6 +168,9 @@ void TaskInfo::run()
 
     setTaskWorker(taskWorker);
 
+    setRunning(true);
+    emit workStarted();
+
     taskWorker->run();
 }
 
@@ -185,6 +197,7 @@ void TaskInfo::handleFinished(bool success)
         setLastSuccess(lastRun());
     }
 
+    setRunning(false);
     emit workFinished(success);
 
     abort();

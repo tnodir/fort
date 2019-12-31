@@ -734,7 +734,7 @@ void StatisticsPage::setupAppListViewChanged()
 
     refreshAppListViewChanged();
 
-    connect(m_appListView, &ListView::currentIndexChanged, this , refreshAppListViewChanged);
+    connect(m_appListView, &ListView::currentIndexChanged, this, refreshAppListViewChanged);
 }
 
 void StatisticsPage::updatePage()

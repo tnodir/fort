@@ -37,6 +37,9 @@ public:
     bool enabled() const { return m_enabled; }
     void setEnabled(bool enabled);
 
+    bool running() const { return m_running; }
+    void setRunning(bool running);
+
     int intervalHours() const { return m_intervalHours; }
     void setIntervalHours(int intervalHours);
 
@@ -62,8 +65,6 @@ public:
     TaskWorker *taskWorker() const { return m_taskWorker; }
     void setTaskWorker(TaskWorker *taskWorker);
 
-    bool running() const { return m_taskWorker != nullptr; }
-
     void rawData(QByteArray &data) const;
     void setRawData(const QByteArray &data);
 
@@ -72,12 +73,14 @@ public:
 
 signals:
     void enabledChanged();
+    void runningChanged();
     void intervalHoursChanged();
     void typeChanged();
     void lastRunChanged();
     void lastSuccessChanged();
     void taskWorkerChanged();
 
+    void workStarted();
     void workFinished(bool success);
 
 public slots:
@@ -94,6 +97,7 @@ private:
 
 private:
     quint8 m_enabled   : 1;
+    quint8 m_running   : 1;
     quint8 m_aborted   : 1;  // transient
 
     quint16 m_intervalHours;

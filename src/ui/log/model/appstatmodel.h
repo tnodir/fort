@@ -1,7 +1,7 @@
 #ifndef APPSTATMODEL_H
 #define APPSTATMODEL_H
 
-#include "stringlistmodel.h"
+#include "../../util/model/stringlistmodel.h"
 
 QT_FORWARD_DECLARE_CLASS(AppInfoCache)
 QT_FORWARD_DECLARE_CLASS(LogEntryProcNew)

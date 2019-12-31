@@ -27,6 +27,7 @@ SOURCES += \
     form/controls/listview.cpp \
     form/controls/spincombo.cpp \
     form/controls/tabbar.cpp \
+    form/controls/tableview.cpp \
     form/controls/textarea2splitter.cpp \
     form/controls/textarea2splitterhandle.cpp \
     form/graph/axistickerspeed.cpp \
@@ -56,7 +57,6 @@ SOURCES += \
     log/model/appblockedmodel.cpp \
     log/model/appstatmodel.cpp \
     log/model/iplistmodel.cpp \
-    log/model/stringlistmodel.cpp \
     log/model/traflistmodel.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -67,6 +67,7 @@ SOURCES += \
     task/taskinfo.cpp \
     task/taskinfotasix.cpp \
     task/taskinfoupdatechecker.cpp \
+    task/tasklistmodel.cpp \
     task/taskmanager.cpp \
     task/tasktasix.cpp \
     task/taskupdatechecker.cpp \
@@ -87,6 +88,8 @@ SOURCES += \
     util/guiutil.cpp \
     util/hotkeymanager.cpp \
     util/logger.cpp \
+    util/model/stringlistmodel.cpp \
+    util/model/tableitemmodel.cpp \
     util/nativeeventfilter.cpp \
     util/net/hostinfo.cpp \
     util/net/hostinfocache.cpp \
@@ -124,6 +127,7 @@ HEADERS += \
     form/controls/listview.h \
     form/controls/spincombo.h \
     form/controls/tabbar.h \
+    form/controls/tableview.h \
     form/controls/textarea2splitter.h \
     form/controls/textarea2splitterhandle.h \
     form/graph/axistickerspeed.h \
@@ -153,7 +157,6 @@ HEADERS += \
     log/model/appblockedmodel.h \
     log/model/appstatmodel.h \
     log/model/iplistmodel.h \
-    log/model/stringlistmodel.h \
     log/model/traflistmodel.h \
     mainwindow.h \
     stat/quotamanager.h \
@@ -163,6 +166,7 @@ HEADERS += \
     task/taskinfo.h \
     task/taskinfotasix.h \
     task/taskinfoupdatechecker.h \
+    task/tasklistmodel.h \
     task/taskmanager.h \
     task/tasktasix.h \
     task/taskupdatechecker.h \
@@ -183,6 +187,8 @@ HEADERS += \
     util/guiutil.h \
     util/hotkeymanager.h \
     util/logger.h \
+    util/model/stringlistmodel.h \
+    util/model/tableitemmodel.h \
     util/nativeeventfilter.h \
     util/net/hostinfo.h \
     util/net/hostinfocache.h \

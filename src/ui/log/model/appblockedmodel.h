@@ -4,7 +4,7 @@
 #include <QHash>
 #include <QSet>
 
-#include "stringlistmodel.h"
+#include "../../util/model/stringlistmodel.h"
 
 QT_FORWARD_DECLARE_CLASS(IpListModel)
 QT_FORWARD_DECLARE_CLASS(LogEntryBlocked)

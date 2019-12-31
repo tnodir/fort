@@ -6,7 +6,6 @@
 #include "../util/dateutil.h"
 #include "taskinfotasix.h"
 #include "taskinfoupdatechecker.h"
-#include "taskworker.h"
 
 TaskManager::TaskManager(FortManager *fortManager,
                          QObject *parent) :
@@ -18,8 +17,17 @@ TaskManager::TaskManager(FortManager *fortManager,
 
     m_timer.setSingleShot(true);
 
-    connect(&m_timer, &QTimer::timeout,
-            this, &TaskManager::runExpiredTasks);
+    connect(&m_timer, &QTimer::timeout, this, &TaskManager::runExpiredTasks);
+}
+
+FortSettings *TaskManager::settings() const
+{
+    return fortManager()->settings();
+}
+
+ConfManager *TaskManager::confManager() const
+{
+    return fortManager()->confManager();
 }
 
 void TaskManager::setupTasks()
@@ -32,17 +40,16 @@ void TaskManager::setupTasks()
 
 void TaskManager::appendTaskInfo(TaskInfo *taskInfo)
 {
-    connect(taskInfo, &TaskInfo::workFinished,
-            this, &TaskManager::handleTaskFinished);
+    connect(taskInfo, &TaskInfo::workStarted, this, &TaskManager::handleTaskStarted);
+    connect(taskInfo, &TaskInfo::workFinished, this, &TaskManager::handleTaskFinished);
 
     m_taskInfos.append(taskInfo);
 }
 
-void TaskManager::loadSettings(const FortSettings *fortSettings,
-                               ConfManager *confManager)
+void TaskManager::loadSettings()
 {
-    if (!confManager->loadTasks(m_taskInfos)) {
-        const TasksMap tasksMap = fortSettings->tasks();
+    if (!confManager()->loadTasks(m_taskInfos)) {
+        const TasksMap tasksMap = settings()->tasks();
         if (!tasksMap.isEmpty()) {
             for (TaskInfo *taskInfo : m_taskInfos) {
                 const QByteArray taskData = tasksMap.value(taskInfo->name());
@@ -56,16 +63,22 @@ void TaskManager::loadSettings(const FortSettings *fortSettings,
     runExpiredTasks();
 }
 
-bool TaskManager::saveSettings(FortSettings *fortSettings,
-                               ConfManager *confManager)
+bool TaskManager::saveSettings()
 {
     runExpiredTasks();
 
-    if (!confManager->saveTasks(m_taskInfos))
+    if (!confManager()->saveTasks(m_taskInfos))
         return false;
 
-    fortSettings->removeTasks();
+    settings()->removeTasks();
     return true;
+}
+
+void TaskManager::handleTaskStarted()
+{
+    auto taskInfo = qobject_cast<TaskInfo *>(sender());
+
+    emit taskStarted(taskInfo);
 }
 
 void TaskManager::handleTaskFinished(bool success)
@@ -74,8 +87,9 @@ void TaskManager::handleTaskFinished(bool success)
 
     taskInfo->processResult(m_fortManager, success);
 
-    saveSettings(m_fortManager->settings(),
-                 m_fortManager->confManager());
+    saveSettings();
+
+    emit taskFinished(taskInfo);
 }
 
 void TaskManager::runExpiredTasks()

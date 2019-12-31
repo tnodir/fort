@@ -62,6 +62,14 @@ void StringListModel::replace(const QString &text, int row)
     emit dataChanged(modelIndex, modelIndex);
 }
 
+void StringListModel::refresh()
+{
+    const auto firstCell = index(0, 0);
+    const auto lastCell = index(rowCount() - 1, 0);
+
+    emit dataChanged(firstCell, lastCell);
+}
+
 void StringListModel::removeRow(int row)
 {
     m_list.removeAt(row);
