@@ -597,7 +597,7 @@ void StatisticsPage::setupLogStat()
         fortManager()->applyConfImmediateFlags();
     });
 
-    m_cbLogStat->setFont(ControlUtil::createFont(QFont::DemiBold));
+    m_cbLogStat->setFont(ControlUtil::fontDemiBold());
 }
 
 void StatisticsPage::setupAppListView()
@@ -682,7 +682,7 @@ void StatisticsPage::setupAppInfoRow()
     m_labelAppPath->setWordWrap(true);
 
     m_labelAppProductName = new QLabel();
-    m_labelAppProductName->setFont(ControlUtil::createFont(QFont::DemiBold));
+    m_labelAppProductName->setFont(ControlUtil::fontDemiBold());
 
     m_labelAppCompanyName = new QLabel();
 

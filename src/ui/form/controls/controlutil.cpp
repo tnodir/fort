@@ -102,10 +102,10 @@ QFrame *ControlUtil::createSeparator(Qt::Orientation o)
     return c;
 }
 
-QFont ControlUtil::createFont(int weight)
+QFont ControlUtil::fontDemiBold()
 {
     QFont font;
-    font.setWeight(weight);
+    font.setWeight(QFont::DemiBold);
     return font;
 }
 

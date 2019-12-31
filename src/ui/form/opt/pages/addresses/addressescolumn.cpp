@@ -24,7 +24,7 @@ void AddressesColumn::setupUi()
     layout->addLayout(headerLayout);
 
     m_labelTitle = new QLabel();
-    m_labelTitle->setFont(ControlUtil::createFont(QFont::DemiBold));
+    m_labelTitle->setFont(ControlUtil::fontDemiBold());
 
     m_cbUseAll = new QCheckBox();
 

@@ -160,7 +160,7 @@ void SchedulePage::setupTaskDetails()
 void SchedulePage::setupTaskInterval()
 {
     m_lscTaskInterval = new CheckSpinCombo();
-    m_lscTaskInterval->checkBox()->setFont(ControlUtil::createFont(QFont::DemiBold));
+    m_lscTaskInterval->checkBox()->setFont(ControlUtil::fontDemiBold());
     m_lscTaskInterval->spinBox()->setRange(1, 24 * 30 * 12);  // ~Year
     m_lscTaskInterval->setValues(taskIntervalHourValues);
 

@@ -33,7 +33,7 @@ public:
                                              Qt::Orientation o = Qt::Vertical);
     static QFrame *createSeparator(Qt::Orientation o = Qt::Horizontal);
 
-    static QFont createFont(int weight);
+    static QFont fontDemiBold();
 
     static QStringList getOpenFileNames(const QString &title = QString(),
                                         const QString &filter = QString());

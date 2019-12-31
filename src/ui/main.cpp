@@ -56,15 +56,15 @@ int main(int argc, char *argv[])
         return FORT_ERROR_INSTANCE;
     }
 
-    // Process control requests from clients
-    if (!controlManager.listen(&fortManager)) {
-        return FORT_ERROR_CONTROL;
-    }
-
     registerMetaTypes();
 
     FortManager fortManager(&fortSettings);
     fortManager.launch();
+
+    // Process control requests from clients
+    if (!controlManager.listen(&fortManager)) {
+        return FORT_ERROR_CONTROL;
+    }
 
     return QApplication::exec();
 }

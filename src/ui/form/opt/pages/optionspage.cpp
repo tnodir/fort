@@ -254,6 +254,7 @@ void OptionsPage::setupDriverBox()
 
     m_labelDriverMessage = new QLabel();
     m_labelDriverMessage->setWordWrap(true);
+    m_labelDriverMessage->setFont(ControlUtil::fontDemiBold());
 
     setupDriverIcon();
 
