@@ -269,12 +269,12 @@ void OptionsPage::setupDriverBox()
     colLayout->addLayout(buttonsLayout);
 
     m_btInstallDriver = ControlUtil::createButton(QString(), [&] {
-        if (fortManager()->showQuestionBox(tr("Install Driver?"))) {
+        if (fortManager()->showQuestionBox(tr("Are you sure to install the Driver?"))) {
             fortManager()->installDriver();
         }
     });
     m_btRemoveDriver = ControlUtil::createButton(QString(), [&] {
-        if (fortManager()->showQuestionBox(tr("Remove Driver?"))) {
+        if (fortManager()->showQuestionBox(tr("Are you sure to remove the Driver?"))) {
             fortManager()->removeDriver();
         }
     });
