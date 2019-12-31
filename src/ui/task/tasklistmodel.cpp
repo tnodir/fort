@@ -10,6 +10,7 @@ TaskListModel::TaskListModel(TaskManager *taskManager,
 {
     setupTaskRows();
 
+    connect(m_taskManager, &TaskManager::taskStarted, this, &TaskListModel::refresh);
     connect(m_taskManager, &TaskManager::taskFinished, this, &TaskListModel::refresh);
 }
 
@@ -188,6 +189,7 @@ void TaskListModel::setTaskEnabled(const QModelIndex &index, bool v)
     taskRow->enabled = v;
 
     emit dataChanged(index, index, {Qt::CheckStateRole});
+    emit dataEdited();
 }
 
 int TaskListModel::taskIntervalHours(int index) const
@@ -215,6 +217,7 @@ void TaskListModel::setTaskIntervalHours(const QModelIndex &index, int v)
     taskRow->intervalHours = v;
 
     emit dataChanged(index, index, {Qt::DisplayRole});
+    emit dataEdited();
 }
 
 TaskRow *TaskListModel::addTaskRow(int index)

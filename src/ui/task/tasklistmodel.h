@@ -44,6 +44,9 @@ public:
 
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
+signals:
+    void dataEdited();
+
 public slots:
     void resetEdited();
 

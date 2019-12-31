@@ -72,7 +72,7 @@ void SchedulePage::onRetranslateUi()
 
 void SchedulePage::setupTaskListModel()
 {
-    connect(m_taskListModel, &TaskListModel::dataChanged, [&] {
+    connect(m_taskListModel, &TaskListModel::dataEdited, [&] {
         setScheduleEdited(true);
     });
 }
@@ -209,8 +209,6 @@ void SchedulePage::setupTableTasksChanged()
 
     connect(m_tableTasks, &TableView::currentIndexChanged, this, refreshTableTasksChanged);
     connect(taskListModel(), &TaskListModel::dataChanged, this, refreshTableTasksChanged);
-    connect(taskManager(), &TaskManager::taskStarted, this, refreshTableTasksChanged);
-    connect(taskManager(), &TaskManager::taskFinished, this, refreshTableTasksChanged);
 }
 
 int SchedulePage::currentTaskIndex() const

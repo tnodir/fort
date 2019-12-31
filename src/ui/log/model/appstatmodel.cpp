@@ -27,7 +27,7 @@ void AppStatModel::setAppInfoCache(AppInfoCache *v)
 
     m_appInfoCache = v;
 
-    connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &AppStatModel::reset);
+    connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &AppStatModel::refresh);
 }
 
 void AppStatModel::initialize()
