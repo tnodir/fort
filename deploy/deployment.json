@@ -19,7 +19,8 @@
 		},
 		"${TARGET}/plugins": {
 			"common": [
-				"${QTPATH}/plugins/platforms		| qwindows.dll		| *d.dll"
+				"${QTPATH}/plugins/platforms		| qwindows.dll		| *d.dll",
+				"${QTPATH}/plugins/styles		| qwindowsvista*.dll	| *d.dll"
 			]
 		}
 	}
