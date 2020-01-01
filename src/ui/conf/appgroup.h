@@ -97,21 +97,21 @@ signals:
 public slots:
 
 private:
-    uint m_edited           : 1;
-    uint m_enabled          : 1;
+    bool m_edited           : 1;
+    bool m_enabled          : 1;
 
-    uint m_fragmentPacket   : 1;
+    bool m_fragmentPacket   : 1;
 
-    uint m_periodEnabled    : 1;
+    bool m_periodEnabled    : 1;
 
-    uint m_limitInEnabled   : 1;
-    uint m_limitOutEnabled  : 1;
+    bool m_limitInEnabled   : 1;
+    bool m_limitOutEnabled  : 1;
 
     // KiBytes per sec.
-    quint32 m_speedLimitIn;
-    quint32 m_speedLimitOut;
+    quint32 m_speedLimitIn = 0;
+    quint32 m_speedLimitOut = 0;
 
-    qint64 m_id;
+    qint64 m_id = 0;
 
     QString m_name;
 

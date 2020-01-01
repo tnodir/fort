@@ -161,32 +161,32 @@ private:
     void setupAddressGroups();
 
 private:
-    uint m_provBoot         : 1;
-    uint m_filterEnabled    : 1;
-    uint m_filterLocals     : 1;
-    uint m_stopTraffic      : 1;
-    uint m_stopInetTraffic  : 1;
+    bool m_provBoot         : 1;
+    bool m_filterEnabled    : 1;
+    bool m_filterLocals     : 1;
+    bool m_stopTraffic      : 1;
+    bool m_stopInetTraffic  : 1;
 
-    uint m_resolveAddress   : 1;
+    bool m_resolveAddress   : 1;
 
-    uint m_logBlocked       : 1;
-    uint m_logStat          : 1;
+    bool m_logBlocked       : 1;
+    bool m_logStat          : 1;
 
-    uint m_appBlockAll      : 1;
-    uint m_appAllowAll      : 1;
+    bool m_appBlockAll      : 1;
+    bool m_appAllowAll      : 1;
 
-    uint m_activePeriodEnabled : 1;
+    bool m_activePeriodEnabled : 1;
 
-    uint m_monthStart       : 5;
+    int m_monthStart = DEFAULT_MONTH_START;
 
-    int m_trafHourKeepDays;
-    int m_trafDayKeepDays;
-    int m_trafMonthKeepMonths;
+    int m_trafHourKeepDays = DEFAULT_TRAF_HOUR_KEEP_DAYS;
+    int m_trafDayKeepDays = DEFAULT_TRAF_DAY_KEEP_DAYS;
+    int m_trafMonthKeepMonths = DEFAULT_TRAF_MONTH_KEEP_MONTHS;
 
-    int m_trafUnit;
+    int m_trafUnit = 0;
 
-    quint32 m_quotaDayMb;
-    quint32 m_quotaMonthMb;
+    quint32 m_quotaDayMb = 0;
+    quint32 m_quotaMonthMb = 0;
 
     QString m_activePeriodFrom;
     QString m_activePeriodTo;

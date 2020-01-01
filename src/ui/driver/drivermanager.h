@@ -54,8 +54,8 @@ private:
     static void executeCommand(const QString &fileName);
 
 private:
-    Device *m_device;
-    DriverWorker *m_driverWorker;
+    Device *m_device = nullptr;
+    DriverWorker *m_driverWorker = nullptr;
 
     QString m_errorMessage;
 };

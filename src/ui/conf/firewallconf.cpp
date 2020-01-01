@@ -17,14 +17,7 @@ FirewallConf::FirewallConf(QObject *parent) :
     m_logStat(false),
     m_appBlockAll(true),
     m_appAllowAll(false),
-    m_activePeriodEnabled(false),
-    m_monthStart(DEFAULT_MONTH_START),
-    m_trafHourKeepDays(DEFAULT_TRAF_HOUR_KEEP_DAYS),
-    m_trafDayKeepDays(DEFAULT_TRAF_DAY_KEEP_DAYS),
-    m_trafMonthKeepMonths(DEFAULT_TRAF_MONTH_KEEP_MONTHS),
-    m_trafUnit(0),
-    m_quotaDayMb(0),
-    m_quotaMonthMb(0)
+    m_activePeriodEnabled(false)
 {
     setupAddressGroups();
 }
@@ -136,7 +129,7 @@ void FirewallConf::setActivePeriodTo(const QString &activePeriodTo)
 void FirewallConf::setMonthStart(int monthStart)
 {
     if (m_monthStart != monthStart) {
-        m_monthStart = uint(monthStart);
+        m_monthStart = monthStart;
         emit monthStartChanged();
     }
 }

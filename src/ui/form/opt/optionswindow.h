@@ -25,7 +25,7 @@ private:
     void setupUi();
 
 private:
-    OptionsController *m_ctrl;
+    OptionsController *m_ctrl = nullptr;
 
     MainPage *m_mainPage = nullptr;
 };

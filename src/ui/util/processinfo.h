@@ -40,8 +40,8 @@ private:
     void closeProcess();
 
 private:
-    quint32 m_pid;
-    phandle_t m_handle;
+    quint32 m_pid = 0;
+    phandle_t m_handle = PROC_INVALID_HANDLE;
 };
 
 #endif // PROCESSINFO_H

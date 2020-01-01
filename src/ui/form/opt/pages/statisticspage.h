@@ -83,8 +83,8 @@ private:
     static QString formatQuota(int mbytes);
 
 private:
-    bool m_graphEdited = false;
-    bool m_pageUpdating = false;
+    bool m_graphEdited  : 1;
+    bool m_pageUpdating : 1;
 
     TrafListModel *m_trafListModel = nullptr;
 

@@ -12,11 +12,7 @@
 GraphWindow::GraphWindow(FortSettings *fortSettings,
                          QWidget *parent) :
     WidgetWindow(parent),
-    m_lastUnixTime(0),
-    m_fortSettings(fortSettings),
-    m_plot(nullptr),
-    m_graphIn(nullptr),
-    m_graphOut(nullptr)
+    m_fortSettings(fortSettings)
 {
     setupUi();
     setupTimer();

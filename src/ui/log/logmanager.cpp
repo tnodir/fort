@@ -10,17 +10,17 @@
 #include "logentryheartbeat.h"
 #include "logentryprocnew.h"
 #include "logentrystattraf.h"
-#include "model/appblockedmodel.h"
+#include "model/applistmodel.h"
 #include "model/appstatmodel.h"
 
-LogManager::LogManager(StatManager *statManager,
+LogManager::LogManager(ConfManager *confManager,
+                       StatManager *statManager,
                        DriverWorker *driverWorker,
                        QObject *parent) :
     QObject(parent),
-    m_active(false),
-    m_driverWorker(driverWorker),
-    m_appBlockedModel(new AppBlockedModel(this)),
-    m_appStatModel(new AppStatModel(statManager, this))
+    m_appListModel(new AppListModel(confManager, this)),
+    m_appStatModel(new AppStatModel(statManager, this)),
+    m_driverWorker(driverWorker)
 {
 }
 
@@ -113,7 +113,7 @@ void LogManager::readLogEntries(LogBuffer *logBuffer)
         case LogEntry::AppBlocked: {
             LogEntryBlocked blockedEntry;
             logBuffer->readEntryBlocked(&blockedEntry);
-            m_appBlockedModel->addLogEntry(blockedEntry);
+            m_appListModel->addLogEntry(blockedEntry);
             break;
         }
         case LogEntry::ProcNew: {

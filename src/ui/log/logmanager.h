@@ -3,8 +3,9 @@
 
 #include <QObject>
 
-QT_FORWARD_DECLARE_CLASS(AppBlockedModel)
+QT_FORWARD_DECLARE_CLASS(AppListModel)
 QT_FORWARD_DECLARE_CLASS(AppStatModel)
+QT_FORWARD_DECLARE_CLASS(ConfManager)
 QT_FORWARD_DECLARE_CLASS(StatManager)
 QT_FORWARD_DECLARE_CLASS(DriverWorker)
 QT_FORWARD_DECLARE_CLASS(LogBuffer)
@@ -13,16 +14,17 @@ QT_FORWARD_DECLARE_CLASS(LogEntry)
 class LogManager : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(AppBlockedModel *appBlockedModel READ appBlockedModel CONSTANT)
+    Q_PROPERTY(AppListModel *appListModel READ appListModel CONSTANT)
     Q_PROPERTY(AppStatModel *appStatModel READ appStatModel CONSTANT)
     Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
 
 public:
-    explicit LogManager(StatManager *statManager,
+    explicit LogManager(ConfManager *confManager,
+                        StatManager *statManager,
                         DriverWorker *driverWorker,
                         QObject *parent = nullptr);
 
-    AppBlockedModel *appBlockedModel() const { return m_appBlockedModel; }
+    AppListModel *appListModel() const { return m_appListModel; }
     AppStatModel *appStatModel() const { return m_appStatModel; }
 
     void setActive(bool active);
@@ -54,15 +56,15 @@ private:
     void readLogEntries(LogBuffer *logBuffer);
 
 private:
-    bool m_active;
+    bool m_active = false;
 
-    quint16 m_heartbeatTick;
+    quint16 m_heartbeatTick = 0;
 
-    DriverWorker *m_driverWorker;
+    AppListModel *m_appListModel = nullptr;
+    AppStatModel *m_appStatModel = nullptr;
+
+    DriverWorker *m_driverWorker = nullptr;
     QList<LogBuffer *> m_freeBuffers;
-
-    AppBlockedModel *m_appBlockedModel;
-    AppStatModel *m_appStatModel;
 
     QString m_errorMessage;
 };

@@ -1,18 +1,21 @@
-#include "appblockedmodel.h"
+#include "applistmodel.h"
 
+#include "../../conf/confmanager.h"
 #include "../../util/net/netutil.h"
 #include "../logentryblocked.h"
 #include "iplistmodel.h"
 
 #define IP_LIST_SIZE_MAX    64
 
-AppBlockedModel::AppBlockedModel(QObject *parent) :
+AppListModel::AppListModel(ConfManager *confManager,
+                           QObject *parent) :
     StringListModel(parent),
+    m_confManager(confManager),
     m_ipListModel(new IpListModel(this))
 {
 }
 
-IpListModel *AppBlockedModel::ipListModel(const QString &appPath) const
+IpListModel *AppListModel::ipListModel(const QString &appPath) const
 {
     if (appPath != m_ipListModel->appPath()) {
         m_ipListModel->setAppPath(appPath);
@@ -22,7 +25,7 @@ IpListModel *AppBlockedModel::ipListModel(const QString &appPath) const
     return m_ipListModel;
 }
 
-void AppBlockedModel::clear()
+void AppListModel::clear()
 {
     m_appIpList.clear();
     m_appIpSet.clear();
@@ -32,7 +35,7 @@ void AppBlockedModel::clear()
     StringListModel::clear();
 }
 
-void AppBlockedModel::remove(int row)
+void AppListModel::remove(int row)
 {
     row = adjustRow(row);
 
@@ -48,7 +51,7 @@ void AppBlockedModel::remove(int row)
     endRemoveRows();
 }
 
-void AppBlockedModel::addLogEntry(const LogEntryBlocked &logEntry)
+void AppListModel::addLogEntry(const LogEntryBlocked &logEntry)
 {
     const QString appPath = logEntry.path();
     const QString ipText = NetUtil::ip4ToText(logEntry.ip())

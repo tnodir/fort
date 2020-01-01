@@ -5,12 +5,6 @@
 QuotaManager::QuotaManager(FortSettings *fortSettings,
                            QObject *parent) :
     QObject(parent),
-    m_quotaDayAlerted(0),
-    m_quotaMonthAlerted(0),
-    m_quotaDayBytes(0),
-    m_quotaMonthBytes(0),
-    m_trafDayBytes(0),
-    m_trafMonthBytes(0),
     m_fortSettings(fortSettings)
 {
 }

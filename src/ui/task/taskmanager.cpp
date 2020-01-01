@@ -10,8 +10,7 @@
 TaskManager::TaskManager(FortManager *fortManager,
                          QObject *parent) :
     QObject(parent),
-    m_fortManager(fortManager),
-    m_taskInfoUpdateChecker(nullptr)
+    m_fortManager(fortManager)
 {
     setupTasks();
 

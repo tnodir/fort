@@ -48,8 +48,8 @@ private:
     void prepareFor(int len);
 
 private:
-    int m_top;
-    int m_offset;
+    int m_top = 0;
+    int m_offset = 0;
 
     QByteArray m_array;
 };

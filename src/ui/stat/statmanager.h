@@ -13,6 +13,9 @@ QT_FORWARD_DECLARE_CLASS(QuotaManager)
 QT_FORWARD_DECLARE_CLASS(SqliteDb)
 QT_FORWARD_DECLARE_CLASS(SqliteStmt)
 
+#define INVALID_APP_INDEX       qint16(-1)
+#define INVALID_APP_ID          qint64(-1)
+
 class StatManager : public QObject
 {
     Q_OBJECT
@@ -92,23 +95,22 @@ private:
     bool m_isActivePeriodSet    : 1;
     bool m_isActivePeriod       : 1;
 
-    quint8 activePeriodFromHour;
-    quint8 activePeriodFromMinute;
-    quint8 activePeriodToHour;
-    quint8 activePeriodToMinute;
+    quint8 activePeriodFromHour = 0;
+    quint8 activePeriodFromMinute = 0;
+    quint8 activePeriodToHour = 0;
+    quint8 activePeriodToMinute = 0;
 
-    qint16 m_appFreeIndex;
+    qint16 m_appFreeIndex = INVALID_APP_INDEX;
 
-    qint32 m_lastTrafHour;
-    qint32 m_lastTrafDay;
-    qint32 m_lastTrafMonth;
+    qint32 m_lastTrafHour = 0;
+    qint32 m_lastTrafDay = 0;
+    qint32 m_lastTrafMonth = 0;
+    qint32 m_lastTick = 0;
 
-    qint32 m_lastTick;
+    QuotaManager *m_quotaManager = nullptr;
+    const FirewallConf *m_conf = nullptr;
 
-    QuotaManager *m_quotaManager;
-    const FirewallConf *m_conf;
-
-    SqliteDb *m_sqliteDb;
+    SqliteDb *m_sqliteDb = nullptr;
 
     QHash<const char *, SqliteStmt *> m_sqliteStmts;
 

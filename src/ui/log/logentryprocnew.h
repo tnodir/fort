@@ -20,7 +20,7 @@ public:
     QString path() const;
 
 private:
-    quint32 m_pid;
+    quint32 m_pid = 0;
     QString m_kernelPath;
 };
 

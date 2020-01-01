@@ -7,11 +7,7 @@
 
 DriverWorker::DriverWorker(Device *device, QObject *parent) :
     QObject(parent),
-    m_isLogReading(false),
-    m_cancelled(false),
-    m_aborted(false),
-    m_device(device),
-    m_logBuffer(nullptr)
+    m_device(device)
 {
 }
 

@@ -1,8 +1,7 @@
 #include "basewindowstatewatcher.h"
 
 BaseWindowStateWatcher::BaseWindowStateWatcher(QObject *parent) :
-    QObject(parent),
-    m_maximized(false)
+    QObject(parent)
 {
 }
 

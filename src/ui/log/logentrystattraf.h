@@ -18,8 +18,8 @@ public:
     void setProcTrafBytes(const quint32 *procTrafBytes);
 
 private:
-    quint16 m_procCount;
-    const quint32 *m_procTrafBytes;
+    quint16 m_procCount = 0;
+    const quint32 *m_procTrafBytes = nullptr;
 };
 
 #endif // LOGENTRYSTATTRAF_H

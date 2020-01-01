@@ -55,8 +55,8 @@ private:
 private:
     QString m_errorMessage;
 
-    FortSettings *m_fortSettings;
-    SqliteDb *m_sqliteDb;
+    FortSettings *m_fortSettings = nullptr;
+    SqliteDb *m_sqliteDb = nullptr;
 };
 
 #endif // CONFMANAGER_H

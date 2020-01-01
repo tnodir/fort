@@ -30,10 +30,10 @@ public:
     QString path() const;
 
 private:
-    quint8 m_proto;
-    quint16 m_port;
-    quint32 m_ip;
-    quint32 m_pid;
+    quint8 m_proto = 0;
+    quint16 m_port = 0;
+    quint32 m_ip = 0;
+    quint32 m_pid = 0;
     QString m_kernelPath;
 };
 

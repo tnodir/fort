@@ -61,9 +61,9 @@ private:
     void save(bool closeOnSuccess);
 
 private:
-    uint m_confFlagsEdited  : 1;
-    uint m_confEdited       : 1;
-    uint m_othersEdited     : 1;
+    bool m_confFlagsEdited  : 1;
+    bool m_confEdited       : 1;
+    bool m_othersEdited     : 1;
 
     FortManager *m_fortManager = nullptr;
 };

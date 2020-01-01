@@ -31,7 +31,7 @@ private:
     void setupProcess();
 
 private:
-    bool m_started;
+    bool m_started = false;
 
     QString m_url;
     QByteArray m_data;

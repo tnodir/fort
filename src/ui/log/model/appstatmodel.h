@@ -45,9 +45,9 @@ private:
     void updateList();
 
 private:
-    StatManager *m_statManager;
-    TrafListModel *m_trafListModel;
-    AppInfoCache *m_appInfoCache;
+    StatManager *m_statManager = nullptr;
+    TrafListModel *m_trafListModel = nullptr;
+    AppInfoCache *m_appInfoCache = nullptr;
 
     QVector<qint64> m_appIds;
 };

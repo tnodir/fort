@@ -8,7 +8,6 @@ ControlWorker::ControlWorker(QSystemSemaphore *semaphore,
                              QSharedMemory *sharedMemory,
                              QObject *parent) :
     QObject(parent),
-    m_aborted(false),
     m_semaphore(semaphore),
     m_sharedMemory(sharedMemory)
 {

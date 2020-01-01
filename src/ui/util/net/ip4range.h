@@ -57,7 +57,7 @@ private:
     void fillRange(const ip4range_map_t &ipRangeMap);
 
 private:
-    int m_errorLineNo;
+    int m_errorLineNo = 0;
     QString m_errorMessage;
 
     ip4range_arr_t m_fromArray;

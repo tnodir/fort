@@ -22,8 +22,6 @@ ControlManager::ControlManager(const QString &globalName,
     QObject(parent),
     m_isClient(!command.isEmpty()),
     m_command(command),
-    m_fortManager(nullptr),
-    m_worker(nullptr),
     m_semaphore(globalName + QLatin1String("_ControlSemaphore"), 0,
                 isClient() ? QSystemSemaphore::Open : QSystemSemaphore::Create),
     m_sharedMemory(globalName + QLatin1String("_ControlSharedMemory"))

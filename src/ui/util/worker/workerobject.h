@@ -20,7 +20,7 @@ protected:
     virtual void doJob(WorkerJob *job);
 
 private:
-    WorkerManager *m_manager;
+    WorkerManager *m_manager = nullptr;
 };
 
 #endif // WORKEROBJECT_H

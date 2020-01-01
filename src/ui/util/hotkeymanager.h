@@ -26,7 +26,7 @@ private slots:
     void onHotKeyPressed(int hotKeyId);
 
 private:
-    NativeEventFilter *m_nativeEventFilter;
+    NativeEventFilter *m_nativeEventFilter = nullptr;
 
     QList<QAction *> m_actions;
 };

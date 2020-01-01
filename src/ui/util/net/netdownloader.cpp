@@ -6,8 +6,7 @@
 #define DOWNLOAD_MAXSIZE  (64 * 1024)
 
 NetDownloader::NetDownloader(QObject *parent) :
-    QObject(parent),
-    m_started(false)
+    QObject(parent)
 {
     setupProcess();
 }

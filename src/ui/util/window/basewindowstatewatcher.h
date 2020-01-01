@@ -29,7 +29,7 @@ protected:
     void handleVisibilityChange(QWindow::Visibility visibility);
 
 private:
-    bool m_maximized;
+    bool m_maximized = false;
 
     QPoint m_pos;
     QPoint m_posPrev;

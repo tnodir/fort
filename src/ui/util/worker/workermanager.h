@@ -47,9 +47,9 @@ private:
     void setupWorker();
 
 private:
-    volatile bool m_aborted;
+    volatile bool m_aborted = false;
 
-    int m_maxWorkersCount;
+    int m_maxWorkersCount = 0;
 
     QList<WorkerObject *> m_workers;
 

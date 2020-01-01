@@ -96,20 +96,20 @@ private:
     TaskWorker *createWorker();
 
 private:
-    quint8 m_enabled   : 1;
-    quint8 m_running   : 1;
-    quint8 m_aborted   : 1;  // transient
+    bool m_enabled   : 1;
+    bool m_running   : 1;
+    bool m_aborted   : 1;  // transient
 
-    quint16 m_intervalHours;
+    quint16 m_intervalHours = 24;
 
-    TaskType m_type;
+    TaskType m_type = TypeNone;
 
-    qint64 m_id;
+    qint64 m_id = 0;
 
     QDateTime m_lastRun;
     QDateTime m_lastSuccess;
 
-    TaskWorker *m_taskWorker;
+    TaskWorker *m_taskWorker = nullptr;
 };
 
 #endif // TASKINFO_H

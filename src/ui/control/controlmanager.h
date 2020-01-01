@@ -44,12 +44,12 @@ private:
     void abort();
 
 private:
-    bool m_isClient;
+    bool m_isClient = false;
+
+    FortManager *m_fortManager = nullptr;
+    ControlWorker *m_worker = nullptr;
 
     QString m_command;
-
-    FortManager *m_fortManager;
-    ControlWorker *m_worker;
 
     QSystemSemaphore m_semaphore;
     QSharedMemory m_sharedMemory;

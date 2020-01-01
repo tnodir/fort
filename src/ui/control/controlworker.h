@@ -41,10 +41,10 @@ private:
                         QStringList &args) const;
 
 private:
-    volatile bool m_aborted;
+    volatile bool m_aborted = false;
 
-    QSystemSemaphore *m_semaphore;
-    QSharedMemory *m_sharedMemory;
+    QSystemSemaphore *m_semaphore = nullptr;
+    QSharedMemory *m_sharedMemory = nullptr;
 
     QMutex m_mutex;
 };

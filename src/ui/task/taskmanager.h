@@ -50,9 +50,9 @@ private:
     void appendTaskInfo(TaskInfo *taskInfo);
 
 private:
-    FortManager *m_fortManager;
+    FortManager *m_fortManager = nullptr;
 
-    TaskInfoUpdateChecker *m_taskInfoUpdateChecker;
+    TaskInfoUpdateChecker *m_taskInfoUpdateChecker = nullptr;
     QList<TaskInfo *> m_taskInfos;
 
     QTimer m_timer;

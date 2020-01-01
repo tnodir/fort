@@ -19,7 +19,7 @@
 #include "form/opt/optionswindow.h"
 #include "fortsettings.h"
 #include "log/logmanager.h"
-#include "log/model/appblockedmodel.h"
+#include "log/model/applistmodel.h"
 #include "log/model/appstatmodel.h"
 #include "log/model/iplistmodel.h"
 #include "log/model/traflistmodel.h"
@@ -48,17 +48,10 @@ FortManager::FortManager(FortSettings *fortSettings,
                          QObject *parent) :
     QObject(parent),
     m_trayIcon(new QSystemTrayIcon(this)),
-    m_optWindow(nullptr),
     m_optWindowState(new WidgetWindowStateWatcher(this)),
-    m_graphWindow(nullptr),
     m_graphWindowState(new WidgetWindowStateWatcher(this)),
     m_settings(fortSettings),
     m_conf(new FirewallConf(this)),
-    m_confToEdit(nullptr),
-    m_graphWindowAction(nullptr),
-    m_filterEnabledAction(nullptr),
-    m_stopTrafficAction(nullptr),
-    m_stopInetTrafficAction(nullptr),
     m_quotaManager(new QuotaManager(fortSettings, this)),
     m_statManager(new StatManager(fortSettings->statFilePath(),
                                   m_quotaManager, this)),
@@ -66,7 +59,7 @@ FortManager::FortManager(FortSettings *fortSettings,
                                   fortSettings, this)),
     m_driverManager(new DriverManager(this)),
     m_envManager(new EnvManager(this)),
-    m_logManager(new LogManager(m_statManager,
+    m_logManager(new LogManager(m_confManager, m_statManager,
                                 m_driverManager->driverWorker(), this)),
     m_nativeEventFilter(new NativeEventFilter(this)),
     m_hotKeyManager(new HotKeyManager(m_nativeEventFilter, this)),

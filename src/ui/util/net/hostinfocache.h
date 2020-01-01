@@ -35,7 +35,7 @@ private:
     void emitCacheChanged();
 
 private:
-    HostInfoManager *m_manager;
+    HostInfoManager *m_manager = nullptr;
 
     QCache<QString, HostInfo> m_cache;
 

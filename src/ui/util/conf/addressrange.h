@@ -24,8 +24,8 @@ public:
     const Ip4Range &excludeRange() const { return m_excludeRange; }
 
 private:
-    uint m_includeAll   : 1;
-    uint m_excludeAll   : 1;
+    bool m_includeAll   : 1;
+    bool m_excludeAll   : 1;
 
     Ip4Range m_includeRange;
     Ip4Range m_excludeRange;

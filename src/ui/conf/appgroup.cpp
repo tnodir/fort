@@ -10,10 +10,7 @@ AppGroup::AppGroup(QObject *parent) :
     m_fragmentPacket(false),
     m_periodEnabled(false),
     m_limitInEnabled(false),
-    m_limitOutEnabled(false),
-    m_speedLimitIn(0),
-    m_speedLimitOut(0),
-    m_id(0)
+    m_limitOutEnabled(false)
 {
 }
 

@@ -151,34 +151,34 @@ private:
 private:
     MainWindow m_window;  // dummy window for tray icon
 
-    QSystemTrayIcon *m_trayIcon;
+    QSystemTrayIcon *m_trayIcon = nullptr;
 
-    OptionsWindow *m_optWindow;
-    WidgetWindowStateWatcher *m_optWindowState;
+    OptionsWindow *m_optWindow = nullptr;
+    WidgetWindowStateWatcher *m_optWindowState = nullptr;
 
-    GraphWindow *m_graphWindow;
-    WidgetWindowStateWatcher *m_graphWindowState;
+    GraphWindow *m_graphWindow = nullptr;
+    WidgetWindowStateWatcher *m_graphWindowState = nullptr;
 
-    FortSettings *m_settings;
-    FirewallConf *m_conf;
-    FirewallConf *m_confToEdit;
+    FortSettings *m_settings = nullptr;
+    FirewallConf *m_conf = nullptr;
+    FirewallConf *m_confToEdit = nullptr;
 
-    QAction *m_graphWindowAction;
-    QAction *m_filterEnabledAction;
-    QAction *m_stopTrafficAction;
-    QAction *m_stopInetTrafficAction;
+    QAction *m_graphWindowAction = nullptr;
+    QAction *m_filterEnabledAction = nullptr;
+    QAction *m_stopTrafficAction = nullptr;
+    QAction *m_stopInetTrafficAction = nullptr;
     QList<QAction *> m_appGroupActions;
 
-    QuotaManager *m_quotaManager;
-    StatManager *m_statManager;
-    ConfManager *m_confManager;
-    DriverManager *m_driverManager;
-    EnvManager *m_envManager;
-    LogManager *m_logManager;
-    NativeEventFilter *m_nativeEventFilter;
-    HotKeyManager *m_hotKeyManager;
-    TaskManager *m_taskManager;
-    AppInfoCache *m_appInfoCache;
+    QuotaManager *m_quotaManager = nullptr;
+    StatManager *m_statManager = nullptr;
+    ConfManager *m_confManager = nullptr;
+    DriverManager *m_driverManager = nullptr;
+    EnvManager *m_envManager = nullptr;
+    LogManager *m_logManager = nullptr;
+    NativeEventFilter *m_nativeEventFilter = nullptr;
+    HotKeyManager *m_hotKeyManager = nullptr;
+    TaskManager *m_taskManager = nullptr;
+    AppInfoCache *m_appInfoCache = nullptr;
 };
 
 #endif // FORTMANAGER_H

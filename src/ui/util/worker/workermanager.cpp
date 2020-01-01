@@ -9,9 +9,7 @@ const unsigned long WORKER_TIMEOUT_MSEC = 15000;
 }
 
 WorkerManager::WorkerManager(QObject *parent) :
-    QObject(parent),
-    m_aborted(false),
-    m_maxWorkersCount(0)
+    QObject(parent)
 {
 }
 

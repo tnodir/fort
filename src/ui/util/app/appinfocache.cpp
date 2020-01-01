@@ -6,7 +6,6 @@
 
 AppInfoCache::AppInfoCache(QObject *parent) :
     QObject(parent),
-    m_manager(nullptr),
     m_cache(1000)
 {
     m_triggerTimer.setSingleShot(true);

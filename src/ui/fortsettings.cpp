@@ -18,8 +18,7 @@ FortSettings::FortSettings(const QStringList &args,
     m_noCache(false),
     m_hasProvBoot(false),
     m_bulkUpdating(false),
-    m_bulkIniChanged(false),
-    m_ini(nullptr)
+    m_bulkIniChanged(false)
 {
     processArguments(args);
     setupIni();

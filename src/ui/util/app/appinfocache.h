@@ -36,7 +36,7 @@ private:
     void emitCacheChanged();
 
 private:
-    AppInfoManager *m_manager;
+    AppInfoManager *m_manager = nullptr;
 
     QCache<QString, AppInfo> m_cache;
 

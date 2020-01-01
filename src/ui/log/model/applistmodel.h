@@ -1,26 +1,26 @@
-#ifndef APPBLOCKEDMODEL_H
-#define APPBLOCKEDMODEL_H
+#ifndef APPLISTMODEL_H
+#define APPLISTMODEL_H
 
 #include <QHash>
 #include <QSet>
 
 #include "../../util/model/stringlistmodel.h"
 
+QT_FORWARD_DECLARE_CLASS(ConfManager)
 QT_FORWARD_DECLARE_CLASS(IpListModel)
 QT_FORWARD_DECLARE_CLASS(LogEntryBlocked)
 
-class AppBlockedModel : public StringListModel
+class AppListModel : public StringListModel
 {
     Q_OBJECT
 
 public:
-    explicit AppBlockedModel(QObject *parent = nullptr);
+    explicit AppListModel(ConfManager *confManager,
+                          QObject *parent = nullptr);
 
     void addLogEntry(const LogEntryBlocked &logEntry);
 
-    Q_INVOKABLE IpListModel *ipListModel(const QString &appPath) const;
-
-signals:
+    IpListModel *ipListModel(const QString &appPath) const;
 
 public slots:
     void clear() override;
@@ -31,7 +31,8 @@ private:
     QHash<QString, QStringList> m_appIpList;
     QHash<QString, QSet<QString>> m_appIpSet;
 
-    IpListModel *m_ipListModel;
+    ConfManager *m_confManager = nullptr;
+    IpListModel *m_ipListModel = nullptr;
 };
 
-#endif // APPBLOCKEDMODEL_H
+#endif // APPLISTMODEL_H

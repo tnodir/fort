@@ -29,7 +29,7 @@ public slots:
                int *retSize = nullptr);
 
 private:
-    void *m_handle;
+    void *m_handle = nullptr;
 };
 
 #endif // DEVICE_H

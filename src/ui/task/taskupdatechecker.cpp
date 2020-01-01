@@ -9,8 +9,7 @@
 #include "../util/net/netutil.h"
 
 TaskUpdateChecker::TaskUpdateChecker(QObject *parent) :
-    TaskDownloader(parent),
-    m_downloadSize(0)
+    TaskDownloader(parent)
 {
 }
 

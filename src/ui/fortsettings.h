@@ -249,13 +249,13 @@ private:
     static QString startupShortcutPath();
 
 private:
-    uint m_iniExists        : 1;
-    uint m_isPortable       : 1;
-    uint m_noCache          : 1;
-    uint m_hasProvBoot      : 1;
+    bool m_iniExists        : 1;
+    bool m_isPortable       : 1;
+    bool m_noCache          : 1;
+    bool m_hasProvBoot      : 1;
 
-    uint m_bulkUpdating     : 1;
-    uint m_bulkIniChanged   : 1;
+    bool m_bulkUpdating     : 1;
+    bool m_bulkIniChanged   : 1;
 
     QString m_profilePath;
     QString m_statPath;
@@ -265,7 +265,7 @@ private:
 
     QString m_errorMessage;
 
-    QSettings *m_ini;
+    QSettings *m_ini = nullptr;
 
     mutable QHash<QString, QVariant> m_cache;
 };

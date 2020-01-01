@@ -54,13 +54,13 @@ protected:
     void leaveEvent(QEvent *event) override;
 
 private:
-    qint64 m_lastUnixTime;
+    qint64 m_lastUnixTime = 0;
 
-    FortSettings *m_fortSettings;
+    FortSettings *m_fortSettings = nullptr;
 
-    GraphPlot *m_plot;
-    QCPBars *m_graphIn;
-    QCPBars *m_graphOut;
+    GraphPlot *m_plot = nullptr;
+    QCPBars *m_graphIn = nullptr;
+    QCPBars *m_graphOut = nullptr;
 
     QPoint m_mousePressOffset;
 

@@ -3,8 +3,7 @@
 #include "../util/net/netdownloader.h"
 
 TaskDownloader::TaskDownloader(QObject *parent) :
-    TaskWorker(parent),
-    m_downloader(nullptr)
+    TaskWorker(parent)
 {
 }
 

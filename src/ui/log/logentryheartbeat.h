@@ -14,7 +14,7 @@ public:
     void setTick(quint16 tick);
 
 private:
-    quint16 m_tick;
+    quint16 m_tick = 0;
 };
 
 #endif // LOGENTRYHEARBEAT_H

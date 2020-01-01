@@ -32,7 +32,7 @@ private:
     QString m_releaseNotes;
 
     QString m_downloadUrl;
-    int m_downloadSize;
+    int m_downloadSize = 0;
 };
 
 #endif // TASKUPDATECHECKER_H

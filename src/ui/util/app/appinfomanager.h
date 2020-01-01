@@ -48,7 +48,7 @@ private:
                             const QHash<qint64, int> &iconIds);
 
 private:
-    SqliteDb *m_sqliteDb;
+    SqliteDb *m_sqliteDb = nullptr;
     QMutex m_mutex;
 };
 

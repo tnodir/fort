@@ -6,8 +6,7 @@
 #include "netutil.h"
 
 Ip4Range::Ip4Range(QObject *parent) :
-    QObject(parent),
-    m_errorLineNo(0)
+    QObject(parent)
 {
 }
 

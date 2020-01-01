@@ -50,10 +50,10 @@ private:
                                const QString &message);
 
 private:
-    uint m_active   : 1;
-    uint m_debug    : 1;
-    uint m_console  : 1;
-    uint m_writing  : 1;
+    bool m_active   : 1;
+    bool m_debug    : 1;
+    bool m_console  : 1;
+    bool m_writing  : 1;
 
     QDir m_dir;
     QFile m_file;

@@ -21,9 +21,6 @@ Q_LOGGING_CATEGORY(CLOG_STAT_MANAGER, "fort.statManager")
 
 #define DATABASE_USER_VERSION   2
 
-#define INVALID_APP_INDEX       qint16(-1)
-#define INVALID_APP_ID          qint64(-1)
-
 #define ACTIVE_PERIOD_CHECK_SECS (60 * OS_TICKS_PER_SECOND)
 
 namespace {
@@ -61,17 +58,7 @@ StatManager::StatManager(const QString &filePath,
     QObject(parent),
     m_isActivePeriodSet(false),
     m_isActivePeriod(false),
-    activePeriodFromHour(0),
-    activePeriodFromMinute(0),
-    activePeriodToHour(0),
-    activePeriodToMinute(0),
-    m_appFreeIndex(INVALID_APP_INDEX),
-    m_lastTrafHour(0),
-    m_lastTrafDay(0),
-    m_lastTrafMonth(0),
-    m_lastTick(0),
     m_quotaManager(quotaManager),
-    m_conf(nullptr),
     m_sqliteDb(new SqliteDb(filePath))
 {
 }

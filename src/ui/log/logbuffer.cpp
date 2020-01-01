@@ -8,10 +8,8 @@
 
 LogBuffer::LogBuffer(int bufferSize, QObject *parent) :
     QObject(parent),
-    m_top(0),
-    m_offset(0),
     m_array(bufferSize ? bufferSize : FortCommon::bufferSize(),
-            Qt::Uninitialized)
+            Qt::Initialization::Uninitialized)
 {
 }
 

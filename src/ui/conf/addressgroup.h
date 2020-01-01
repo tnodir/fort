@@ -47,12 +47,12 @@ signals:
 public slots:
 
 private:
-    uint m_edited       : 1;
+    bool m_edited       : 1;
 
-    uint m_includeAll   : 1;
-    uint m_excludeAll   : 1;
+    bool m_includeAll   : 1;
+    bool m_excludeAll   : 1;
 
-    qint64 m_id;
+    qint64 m_id = 0;
 
     QString m_includeText;
     QString m_excludeText;

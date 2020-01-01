@@ -27,7 +27,7 @@ protected slots:
     virtual void downloadFinished(bool success) = 0;
 
 private:
-    NetDownloader *m_downloader;
+    NetDownloader *m_downloader = nullptr;
 };
 
 #endif // TASKDOWNLOADER_H

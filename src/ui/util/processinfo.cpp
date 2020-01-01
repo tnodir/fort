@@ -7,8 +7,7 @@
 
 ProcessInfo::ProcessInfo(quint32 pid, QObject *parent) :
     QObject(parent),
-    m_pid(pid),
-    m_handle(PROC_INVALID_HANDLE)
+    m_pid(pid)
 {
     openProcess();
 }

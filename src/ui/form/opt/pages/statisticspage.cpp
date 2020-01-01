@@ -50,7 +50,9 @@ const ValuesList quotaValues = {
 
 StatisticsPage::StatisticsPage(OptionsController *ctrl,
                                QWidget *parent) :
-    BasePage(ctrl, parent)
+    BasePage(ctrl, parent),
+    m_graphEdited(false),
+    m_pageUpdating(false)
 {
     setupTrafListModel();
 

@@ -44,6 +44,7 @@ SOURCES += \
     form/opt/pages/optionspage.cpp \
     form/opt/pages/schedulepage.cpp \
     form/opt/pages/statisticspage.cpp \
+    form/prog/programswindow.cpp \
     fortcommon.cpp \
     fortmanager.cpp \
     fortsettings.cpp \
@@ -54,7 +55,7 @@ SOURCES += \
     log/logentryprocnew.cpp \
     log/logentrystattraf.cpp \
     log/logmanager.cpp \
-    log/model/appblockedmodel.cpp \
+    log/model/applistmodel.cpp \
     log/model/appstatmodel.cpp \
     log/model/iplistmodel.cpp \
     log/model/traflistmodel.cpp \
@@ -144,6 +145,7 @@ HEADERS += \
     form/opt/pages/optionspage.h \
     form/opt/pages/schedulepage.h \
     form/opt/pages/statisticspage.h \
+    form/prog/programswindow.h \
     fortcommon.h \
     fortmanager.h \
     fortsettings.h \
@@ -154,7 +156,7 @@ HEADERS += \
     log/logentryprocnew.h \
     log/logentrystattraf.h \
     log/logmanager.h \
-    log/model/appblockedmodel.h \
+    log/model/applistmodel.h \
     log/model/appstatmodel.h \
     log/model/iplistmodel.h \
     log/model/traflistmodel.h \

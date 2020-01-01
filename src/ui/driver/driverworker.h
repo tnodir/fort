@@ -35,13 +35,13 @@ private:
     void readLog();
 
 private:
-    volatile bool m_isLogReading;
-    volatile bool m_cancelled;
-    volatile bool m_aborted;
+    volatile bool m_isLogReading = false;
+    volatile bool m_cancelled = false;
+    volatile bool m_aborted = false;
 
-    Device *m_device;
+    Device *m_device = nullptr;
 
-    LogBuffer *m_logBuffer;
+    LogBuffer *m_logBuffer = nullptr;
 
     QMutex m_mutex;
     QWaitCondition m_waitCondition;

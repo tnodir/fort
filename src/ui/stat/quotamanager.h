@@ -39,16 +39,16 @@ private:
     void setQuotaMonthAlerted(qint32 v);
 
 private:
-    qint32 m_quotaDayAlerted;
-    qint32 m_quotaMonthAlerted;
+    qint32 m_quotaDayAlerted = 0;
+    qint32 m_quotaMonthAlerted = 0;
 
-    qint64 m_quotaDayBytes;
-    qint64 m_quotaMonthBytes;
+    qint64 m_quotaDayBytes = 0;
+    qint64 m_quotaMonthBytes = 0;
 
-    qint64 m_trafDayBytes;
-    qint64 m_trafMonthBytes;
+    qint64 m_trafDayBytes = 0;
+    qint64 m_trafMonthBytes = 0;
 
-    FortSettings *m_fortSettings;
+    FortSettings *m_fortSettings = nullptr;
 };
 
 #endif // QUOTAMANAGER_H

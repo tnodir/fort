@@ -4,8 +4,7 @@ AddressGroup::AddressGroup(QObject *parent) :
     QObject(parent),
     m_edited(false),
     m_includeAll(true),
-    m_excludeAll(false),
-    m_id(0)
+    m_excludeAll(false)
 {
 }
 

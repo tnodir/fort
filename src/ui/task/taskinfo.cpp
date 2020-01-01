@@ -14,10 +14,7 @@ TaskInfo::TaskInfo(TaskType type, QObject *parent) :
     m_enabled(false),
     m_running(false),
     m_aborted(false),
-    m_intervalHours(24),
-    m_type(type),
-    m_id(0),
-    m_taskWorker(nullptr)
+    m_type(type)
 {
 }
 
