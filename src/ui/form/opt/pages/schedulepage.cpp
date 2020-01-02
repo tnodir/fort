@@ -70,13 +70,6 @@ void SchedulePage::onRetranslateUi()
     retranslateTaskDetails();
 }
 
-void SchedulePage::setupTaskListModel()
-{
-    connect(m_taskListModel, &TaskListModel::dataEdited, [&] {
-        setScheduleEdited(true);
-    });
-}
-
 void SchedulePage::retranslateTaskDetails()
 {
     const QStringList list = {
@@ -86,6 +79,13 @@ void SchedulePage::retranslateTaskDetails()
 
     m_lscTaskInterval->setNames(list);
     m_lscTaskInterval->spinBox()->setSuffix(tr(" hours"));
+}
+
+void SchedulePage::setupTaskListModel()
+{
+    connect(m_taskListModel, &TaskListModel::dataEdited, [&] {
+        setScheduleEdited(true);
+    });
 }
 
 void SchedulePage::setupUi()

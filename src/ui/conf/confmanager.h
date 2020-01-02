@@ -34,6 +34,17 @@ public:
     bool loadTasks(const QList<TaskInfo *> &taskInfos);
     bool saveTasks(const QList<TaskInfo *> &taskInfos);
 
+    int appCount();
+    bool getAppByIndex(bool &blocked, bool &alerted,
+                       qint64 &appId, qint64 &appGroupId,
+                       QString &appGroupName, QString &appPath,
+                       QDateTime &endTime, int row);
+    qint64 getDefaultAppGroupId();
+    bool addApp(const QString &appPath,
+                const QDateTime &endTime,
+                qint64 appGroupId,
+                bool blocked, bool alerted);
+
     QString errorMessage() const { return m_errorMessage; }
 
 signals:

@@ -54,6 +54,7 @@ public:
     qint32 columnInt(int column = 0);
     qint64 columnInt64(int column = 0);
     double columnDouble(int column = 0);
+    bool columnBool(int column = 0);
     QString columnText(int column = 0);
     QDateTime columnDateTime(int column = 0);
     QByteArray columnBlob(int column = 0);

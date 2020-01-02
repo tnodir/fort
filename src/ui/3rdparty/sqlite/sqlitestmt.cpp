@@ -198,6 +198,11 @@ double SqliteStmt::columnDouble(int column)
     return sqlite3_column_double(m_stmt, column);
 }
 
+bool SqliteStmt::columnBool(int column)
+{
+    return columnInt(column) != 0;
+}
+
 QString SqliteStmt::columnText(int column)
 {
     const ushort *p = static_cast<const ushort *>(

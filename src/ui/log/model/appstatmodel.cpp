@@ -22,9 +22,6 @@ AppStatModel::AppStatModel(StatManager *statManager,
 
 void AppStatModel::setAppInfoCache(AppInfoCache *v)
 {
-    if (m_appInfoCache == v)
-        return;
-
     m_appInfoCache = v;
 
     connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &AppStatModel::refresh);

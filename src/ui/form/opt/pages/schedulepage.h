@@ -18,6 +18,9 @@ public:
     explicit SchedulePage(OptionsController *ctrl = nullptr,
                           QWidget *parent = nullptr);
 
+    bool scheduleEdited() const { return m_scheduleEdited; }
+    void setScheduleEdited(bool v);
+
     TaskListModel *taskListModel() const { return m_taskListModel; }
 
 protected slots:
@@ -27,9 +30,6 @@ protected slots:
     void onRetranslateUi() override;
 
 private:
-    bool scheduleEdited() const { return m_scheduleEdited; }
-    void setScheduleEdited(bool v);
-
     void retranslateTaskDetails();
 
     void setupTaskListModel();

@@ -44,6 +44,7 @@ SOURCES += \
     form/opt/pages/optionspage.cpp \
     form/opt/pages/schedulepage.cpp \
     form/opt/pages/statisticspage.cpp \
+    form/prog/programscontroller.cpp \
     form/prog/programswindow.cpp \
     fortcommon.cpp \
     fortmanager.cpp \
@@ -145,6 +146,7 @@ HEADERS += \
     form/opt/pages/optionspage.h \
     form/opt/pages/schedulepage.h \
     form/opt/pages/statisticspage.h \
+    form/prog/programscontroller.h \
     form/prog/programswindow.h \
     fortcommon.h \
     fortmanager.h \

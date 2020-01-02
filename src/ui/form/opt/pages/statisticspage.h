@@ -23,6 +23,9 @@ public:
     explicit StatisticsPage(OptionsController *ctrl = nullptr,
                             QWidget *parent = nullptr);
 
+    bool graphEdited() const { return m_graphEdited; }
+    void setGraphEdited(bool v);
+
     AppStatModel *appStatModel() const;
     AppInfoCache *appInfoCache() const;
     TrafListModel *trafListModel() const { return m_trafListModel; }
@@ -37,9 +40,6 @@ protected slots:
     void onRetranslateUi() override;
 
 private:
-    bool graphEdited() const { return m_graphEdited; }
-    void setGraphEdited(bool v);
-
     void retranslateTrafKeepDayNames();
     void retranslateTrafKeepMonthNames();
     void retranslateQuotaNames();

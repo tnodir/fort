@@ -32,6 +32,7 @@ protected slots:
 
 private:
     void retranslateGroupLimits();
+    void retranslateAppsPlaceholderText();
 
     void setupUi();
     QLayout *setupHeader();
@@ -51,7 +52,6 @@ private:
     void setupGroupPeriodEnabled();
     void setupBlockApps();
     void setupAllowApps();
-    void retranslateAppsPlaceholderText();
     void setupSplitter();
     void updateGroup();
     void setupAppGroup();

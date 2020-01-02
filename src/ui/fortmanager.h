@@ -19,6 +19,7 @@ QT_FORWARD_DECLARE_CLASS(HotKeyManager)
 QT_FORWARD_DECLARE_CLASS(LogManager)
 QT_FORWARD_DECLARE_CLASS(NativeEventFilter)
 QT_FORWARD_DECLARE_CLASS(OptionsWindow)
+QT_FORWARD_DECLARE_CLASS(ProgramsWindow)
 QT_FORWARD_DECLARE_CLASS(QuotaManager)
 QT_FORWARD_DECLARE_CLASS(StatManager)
 QT_FORWARD_DECLARE_CLASS(TaskManager)
@@ -51,6 +52,9 @@ public:
 signals:
     void confToEditChanged();
 
+    void afterSaveProgWindowState();
+    void afterRestoreProgWindowState();
+
     void afterSaveOptWindowState();
     void afterRestoreOptWindowState();
 
@@ -63,6 +67,9 @@ public slots:
     void showTrayIcon();
     void showTrayMessage(const QString &message);
     void showTrayMenu(QMouseEvent *event);
+
+    void showProgramsWindow();
+    void closeProgramsWindow();
 
     void showOptionsWindow();
     void closeOptionsWindow();
@@ -115,6 +122,7 @@ private:
 
     void setupAppInfoCache();
 
+    bool setupProgramsWindow();
     bool setupOptionsWindow();
 
     void closeUi();
@@ -127,6 +135,9 @@ private:
 
     void updateLogManager(bool active);
     void updateStatManager(FirewallConf *conf);
+
+    void saveProgWindowState();
+    void restoreProgWindowState();
 
     void saveOptWindowState();
     void restoreOptWindowState();
@@ -151,7 +162,11 @@ private:
 private:
     MainWindow m_window;  // dummy window for tray icon
 
+    bool m_trayTriggered = false;
     QSystemTrayIcon *m_trayIcon = nullptr;
+
+    ProgramsWindow *m_progWindow = nullptr;
+    WidgetWindowStateWatcher *m_progWindowState = nullptr;
 
     OptionsWindow *m_optWindow = nullptr;
     WidgetWindowStateWatcher *m_optWindowState = nullptr;

@@ -75,6 +75,15 @@ public:
     int iniVersion() const { return iniInt("base/version", appVersion()); }
     void setIniVersion(int v) { setIniValue("base/version", v); }
 
+    QRect progWindowGeometry() const { return iniValue("progWindow/geometry").toRect(); }
+    void setProgWindowGeometry(const QRect &v) { setIniValue("progWindow/geometry", v); }
+
+    bool progWindowMaximized() const { return iniBool("progWindow/maximized"); }
+    void setProgWindowMaximized(bool on) { setIniValue("progWindow/maximized", on); }
+
+    QByteArray progAppsHeader() const { return iniByteArray("progWindow/appsHeader"); }
+    void setProgAppsHeader(const QByteArray &v) { setIniValue("progWindow/appsHeader", v); }
+
     QRect optWindowGeometry() const { return iniValue("optWindow/geometry").toRect(); }
     void setOptWindowGeometry(const QRect &v) { setIniValue("optWindow/geometry", v); }
 
@@ -150,6 +159,7 @@ public:
     bool hotKeyEnabled() const { return iniBool("hotKey/enabled"); }
     void setHotKeyEnabled(bool on) { setIniValue("hotKey/enabled", on); }
 
+    QString hotKeyPrograms() const { return iniText("hotKey/programs"); }
     QString hotKeyOptions() const { return iniText("hotKey/options"); }
     QString hotKeyGraph() const { return iniText("hotKey/graph"); }
     QString hotKeyFilter() const { return iniText("hotKey/filter", "Ctrl+Alt+Shift+F"); }

@@ -20,9 +20,9 @@ protected:
     void keyReleaseEvent(QKeyEvent *event) override;
 
 private:
-    OptionsController *ctrl() { return m_ctrl; }
-
     void setupUi();
+
+    OptionsController *ctrl() const { return m_ctrl; }
 
 private:
     OptionsController *m_ctrl = nullptr;

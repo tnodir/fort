@@ -17,6 +17,7 @@
 #include "driver/drivermanager.h"
 #include "form/graph/graphwindow.h"
 #include "form/opt/optionswindow.h"
+#include "form/prog/programswindow.h"
 #include "fortsettings.h"
 #include "log/logmanager.h"
 #include "log/model/applistmodel.h"
@@ -48,6 +49,7 @@ FortManager::FortManager(FortSettings *fortSettings,
                          QObject *parent) :
     QObject(parent),
     m_trayIcon(new QSystemTrayIcon(this)),
+    m_progWindowState(new WidgetWindowStateWatcher(this)),
     m_optWindowState(new WidgetWindowStateWatcher(this)),
     m_graphWindowState(new WidgetWindowStateWatcher(this)),
     m_settings(fortSettings),
@@ -141,6 +143,7 @@ void FortManager::closeDriver()
 
 void FortManager::setupLogManager()
 {
+    m_logManager->appListModel()->setAppInfoCache(m_appInfoCache);
     m_logManager->appStatModel()->setAppInfoCache(m_appInfoCache);
 
     m_logManager->initialize();
@@ -205,8 +208,26 @@ void FortManager::setupTrayIcon()
 
     connect(m_trayIcon, &QSystemTrayIcon::activated, this,
             [this](QSystemTrayIcon::ActivationReason reason) {
-        if (reason == QSystemTrayIcon::Trigger) {
-            showOptionsWindow();
+        switch (reason) {
+        case QSystemTrayIcon::Trigger:
+            m_trayTriggered = false;
+            QTimer::singleShot(200, this, [this] {
+                if (!m_trayTriggered) {
+                    m_trayTriggered = true;
+                    showProgramsWindow();
+                }
+            });
+            break;
+        case QSystemTrayIcon::DoubleClick:
+            if (!m_trayTriggered) {
+                m_trayTriggered = true;
+                showOptionsWindow();
+            }
+            break;
+        case QSystemTrayIcon::Unknown:
+        case QSystemTrayIcon::Context:
+        case QSystemTrayIcon::MiddleClick:
+            break;
         }
     });
 
@@ -230,6 +251,15 @@ void FortManager::setupAppInfoCache()
     m_appInfoCache->setManager(manager);
 }
 
+bool FortManager::setupProgramsWindow()
+{
+    m_progWindow = new ProgramsWindow(this);
+
+    m_progWindowState->install(m_progWindow);
+
+    return true;
+}
+
 bool FortManager::setupOptionsWindow()
 {
     m_optWindow = new OptionsWindow(this);
@@ -243,6 +273,7 @@ void FortManager::closeUi()
 {
     closeGraphWindow(true);
     closeOptionsWindow();
+    closeProgramsWindow();
 }
 
 void FortManager::launch()
@@ -270,6 +301,36 @@ void FortManager::showTrayMenu(QMouseEvent *event)
     if (!menu) return;
 
     menu->popup(event->globalPos());
+}
+
+void FortManager::showProgramsWindow()
+{
+    if (!(m_progWindow && m_progWindow->isVisible())
+            && !checkPassword())
+        return;
+
+    if (!m_progWindow) {
+        setupProgramsWindow();
+    }
+
+    m_progWindow->show();
+    m_progWindow->raise();
+    m_progWindow->activateWindow();
+
+    restoreProgWindowState();
+}
+
+void FortManager::closeProgramsWindow()
+{
+    if (!m_progWindow)
+        return;
+
+    saveProgWindowState();
+
+    m_progWindow->hide();
+
+    m_progWindow->deleteLater();
+    m_progWindow = nullptr;
 }
 
 void FortManager::showOptionsWindow()
@@ -431,9 +492,9 @@ bool FortManager::applyConf(bool onlyFlags)
 
 bool FortManager::applyConfImmediateFlags()
 {
-    Q_ASSERT(m_confToEdit != nullptr);
-
-    m_conf->copyImmediateFlags(*m_confToEdit);
+    if (m_confToEdit != nullptr) {
+        m_conf->copyImmediateFlags(*m_confToEdit);
+    }
 
     return saveSettings(m_conf, true, true);
 }
@@ -542,6 +603,23 @@ void FortManager::saveTrayFlags()
     updateDriverConf(true);
 }
 
+void FortManager::saveProgWindowState()
+{
+    settings()->setProgWindowGeometry(m_progWindowState->geometry());
+    settings()->setProgWindowMaximized(m_progWindowState->maximized());
+
+    emit afterSaveProgWindowState();
+}
+
+void FortManager::restoreProgWindowState()
+{
+    m_progWindowState->restore(m_progWindow, QSize(1024, 768),
+                               settings()->progWindowGeometry(),
+                               settings()->progWindowMaximized());
+
+    emit afterRestoreProgWindowState();
+}
+
 void FortManager::saveOptWindowState()
 {
     settings()->setOptWindowGeometry(m_optWindowState->geometry());
@@ -592,6 +670,11 @@ void FortManager::updateTrayMenu()
     }
 
     menu = new QMenu(&m_window);
+
+    QAction *programsAction = addAction(
+                menu, QIcon(":/images/application_double.png"), tr("Programs"),
+                this, SLOT(showProgramsWindow()));
+    addHotKey(programsAction, settings()->hotKeyPrograms(), hotKeyEnabled);
 
     QAction *optionsAction = addAction(
                 menu, QIcon(":/images/cog.png"), tr("Options"),

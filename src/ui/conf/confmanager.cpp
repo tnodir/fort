@@ -21,7 +21,7 @@ Q_LOGGING_CATEGORY(CLOG_CONF_MANAGER, "fort.confManager")
 #define logWarning() qCWarning(CLOG_CONF_MANAGER,)
 #define logCritical() qCCritical(CLOG_CONF_MANAGER,)
 
-#define DATABASE_USER_VERSION   2
+#define DATABASE_USER_VERSION   3
 
 namespace {
 
@@ -47,6 +47,12 @@ const char * const sqlSelectAppGroups =
         "    period_from, period_to"
         "  FROM app_group"
         "  ORDER BY order_index;"
+        ;
+
+const char * const sqlSelectDefaultAppGroupId =
+        "SELECT app_group_id"
+        "  FROM app_group"
+        "  WHERE order_index = 0;"
         ;
 
 const char * const sqlInsertAddressGroup =
@@ -113,6 +119,33 @@ const char * const sqlUpdateTask =
         "  SET name = ?2, enabled = ?3, interval_hours = ?4,"
         "    last_run = ?5, last_success = ?6, data = ?7"
         "  WHERE task_id = ?1;"
+        ;
+
+const char * const sqlSelectAppCount =
+        "SELECT count(*) FROM app;"
+        ;
+
+const char * const sqlSelectAppByIndex =
+        "SELECT t.app_id, t.app_group_id,"
+        "    g.name as app_group_name,"
+        "    t.path, t.blocked,"
+        "    (alert.app_id IS NOT NULL) as alerted,"
+        "    t.end_time"
+        "  FROM app t"
+        "    JOIN app_group alert g ON g.app_group_id = t.app_group_id"
+        "    LEFT JOIN app_alert alert ON alert.app_id = t.app_id"
+        "  LIMIT 1 OFFSET ?1;"
+        ;
+
+const char * const sqlInsertApp =
+        "INSERT INTO app(app_group_id, path, blocked,"
+        "    creat_time, end_time)"
+        "  VALUES(?1, ?2, ?3, ?4, ?5);"
+        ;
+
+const char * const sqlInsertAppAlert =
+        "INSERT INTO app_alert(app_id)"
+        "  VALUES(?1);"
         ;
 
 }
@@ -257,6 +290,89 @@ bool ConfManager::saveTasks(const QList<TaskInfo *> &taskInfos)
     return ok;
 }
 
+int ConfManager::appCount()
+{
+    SqliteStmt stmt;
+    if (!stmt.prepare(m_sqliteDb->db(), sqlSelectAppCount)
+            || stmt.step() != SqliteStmt::StepRow)
+        return 0;
+
+    return stmt.columnInt(0);
+}
+
+bool ConfManager::getAppByIndex(bool &blocked, bool &alerted,
+                                qint64 &appId, qint64 &appGroupId,
+                                QString &appGroupName, QString &appPath,
+                                QDateTime &endTime, int row)
+{
+    SqliteStmt stmt;
+    if (!stmt.prepare(m_sqliteDb->db(), sqlSelectAppByIndex))
+        return false;
+
+    stmt.bindInt(1, row);
+
+    if (stmt.step() != SqliteStmt::StepRow)
+        return false;
+
+    appId = stmt.columnInt64(0);
+    appGroupId = stmt.columnInt64(1);
+    appGroupName = stmt.columnText(2);
+    appPath = stmt.columnText(3);
+    blocked = stmt.columnBool(4);
+    alerted = stmt.columnBool(5);
+    endTime = stmt.columnDateTime(6);
+
+    return true;
+}
+
+qint64 ConfManager::getDefaultAppGroupId()
+{
+    return m_sqliteDb->executeEx(sqlSelectDefaultAppGroupId).toLongLong();
+}
+
+bool ConfManager::addApp(const QString &appPath,
+                         const QDateTime &endTime,
+                         qint64 appGroupId,
+                         bool blocked, bool alerted)
+{
+    bool ok = false;
+
+    m_sqliteDb->beginTransaction();
+
+    if (appGroupId == 0) {
+        appGroupId = getDefaultAppGroupId();
+    }
+
+    const QVariantList vars = QVariantList()
+            << appGroupId
+            << appPath
+            << blocked
+            << QDateTime::currentDateTime()
+            << endTime
+               ;
+
+    m_sqliteDb->executeEx(sqlInsertApp, vars, 0, &ok);
+    if (!ok) goto end;
+
+    // Alert
+    {
+        const qint64 appId = m_sqliteDb->lastInsertRowid();
+
+        if (alerted) {
+            m_sqliteDb->executeEx(sqlInsertAppAlert, {appId}, 0, &ok);
+        }
+    }
+
+end:
+    if (!ok) {
+        setErrorMessage(m_sqliteDb->errorMessage());
+    }
+
+    m_sqliteDb->endTransaction(ok);
+
+    return ok;
+}
+
 bool ConfManager::loadFromDb(FirewallConf &conf, bool &isNew)
 {
     // Load Address Groups
@@ -271,8 +387,8 @@ bool ConfManager::loadFromDb(FirewallConf &conf, bool &isNew)
             Q_ASSERT(addrGroup != nullptr);
 
             addrGroup->setId(stmt.columnInt64(0));
-            addrGroup->setIncludeAll(stmt.columnInt(1));
-            addrGroup->setExcludeAll(stmt.columnInt(2));
+            addrGroup->setIncludeAll(stmt.columnBool(1));
+            addrGroup->setExcludeAll(stmt.columnBool(2));
             addrGroup->setIncludeText(stmt.columnText(3));
             addrGroup->setExcludeText(stmt.columnText(4));
 
@@ -297,11 +413,11 @@ bool ConfManager::loadFromDb(FirewallConf &conf, bool &isNew)
             auto appGroup = new AppGroup();
 
             appGroup->setId(stmt.columnInt64(0));
-            appGroup->setEnabled(stmt.columnInt(1));
+            appGroup->setEnabled(stmt.columnBool(1));
             appGroup->setFragmentPacket(stmt.columnInt(2));
-            appGroup->setPeriodEnabled(stmt.columnInt(3));
-            appGroup->setLimitInEnabled(stmt.columnInt(4));
-            appGroup->setLimitOutEnabled(stmt.columnInt(5));
+            appGroup->setPeriodEnabled(stmt.columnBool(3));
+            appGroup->setLimitInEnabled(stmt.columnBool(4));
+            appGroup->setLimitOutEnabled(stmt.columnBool(5));
             appGroup->setSpeedLimitIn(quint32(stmt.columnInt(6)));
             appGroup->setSpeedLimitOut(quint32(stmt.columnInt(7)));
             appGroup->setName(stmt.columnText(8));
@@ -424,7 +540,7 @@ bool ConfManager::loadTask(TaskInfo *taskInfo)
         return false;
 
     taskInfo->setId(stmt.columnInt64(0));
-    taskInfo->setEnabled(stmt.columnInt(1));
+    taskInfo->setEnabled(stmt.columnBool(1));
     taskInfo->setIntervalHours(stmt.columnInt(2));
     taskInfo->setLastRun(stmt.columnDateTime(3));
     taskInfo->setLastSuccess(stmt.columnDateTime(4));

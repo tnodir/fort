@@ -1,89 +1,136 @@
 #include "applistmodel.h"
 
 #include "../../conf/confmanager.h"
+#include "../../util/app/appinfocache.h"
+#include "../../util/fileutil.h"
 #include "../../util/net/netutil.h"
 #include "../logentryblocked.h"
-#include "iplistmodel.h"
 
 #define IP_LIST_SIZE_MAX    64
 
 AppListModel::AppListModel(ConfManager *confManager,
                            QObject *parent) :
-    StringListModel(parent),
-    m_confManager(confManager),
-    m_ipListModel(new IpListModel(this))
+    TableItemModel(parent),
+    m_confManager(confManager)
 {
 }
 
-IpListModel *AppListModel::ipListModel(const QString &appPath) const
+void AppListModel::setAppInfoCache(AppInfoCache *v)
 {
-    if (appPath != m_ipListModel->appPath()) {
-        m_ipListModel->setAppPath(appPath);
-        m_ipListModel->setList(m_appIpList.value(appPath));
-    }
+    m_appInfoCache = v;
 
-    return m_ipListModel;
-}
-
-void AppListModel::clear()
-{
-    m_appIpList.clear();
-    m_appIpSet.clear();
-
-    m_ipListModel->clear();
-
-    StringListModel::clear();
-}
-
-void AppListModel::remove(int row)
-{
-    row = adjustRow(row);
-
-    beginRemoveRows(QModelIndex(), row, row);
-
-    const QString appPath = list().at(row);
-
-    m_appIpList.remove(appPath);
-    m_appIpSet.remove(appPath);
-
-    removeRow(row);
-
-    endRemoveRows();
+    connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &AppListModel::refresh);
 }
 
 void AppListModel::addLogEntry(const LogEntryBlocked &logEntry)
 {
     const QString appPath = logEntry.path();
+
+#if 0
     const QString ipText = NetUtil::ip4ToText(logEntry.ip())
             + ", " + NetUtil::protocolName(logEntry.proto())
             + ':' + QString::number(logEntry.port());
-    bool isNewApp = false;
+#endif
 
-    if (!m_appIpList.contains(appPath)) {
-        m_appIpList.insert(appPath, QStringList());
-        m_appIpSet.insert(appPath, QSet<QString>());
-        isNewApp = true;
+    beginResetModel();
+    confManager()->addApp(appPath, QDateTime(), 0, true, true);
+    endResetModel();
+}
+
+int AppListModel::rowCount(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent)
+
+    if (m_appCount < 0) {
+        m_appCount = confManager()->appCount();
     }
 
-    QSet<QString> &ipSet = m_appIpSet[appPath];
-    if (ipSet.contains(ipText))
-        return;
+    return m_appCount;
+}
 
-    ipSet.insert(ipText);
+int AppListModel::columnCount(const QModelIndex &parent) const
+{
+    return parent.isValid() ? 0 : 5;
+}
 
-    QStringList &ipList = m_appIpList[appPath];
-    ipList.prepend(ipText);
-
-    if (isNewApp) {
-        insert(appPath);  // update at the end to refresh the view
-    } else {
-        if (ipList.size() > IP_LIST_SIZE_MAX) {
-            const QString oldIpText = ipList.takeLast();
-            ipSet.remove(oldIpText);
-        }
-
-        if (appPath == m_ipListModel->appPath()) {
-            m_ipListModel->setList(ipList);
+QVariant AppListModel::headerData(int section, Qt::Orientation orientation,
+                                  int role) const
+{
+    if (orientation == Qt::Horizontal
+            && role == Qt::DisplayRole) {
+        switch (section) {
+        case 0: return tr("Program");
+        case 1: return tr("Path");
+        case 2: return tr("Group");
+        case 3: return tr("State");
+        case 4: return tr("End Time");
         }
     }
+    return QVariant();
+}
+
+QVariant AppListModel::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid())
+        return QVariant();
+
+    if (role == Qt::DisplayRole) {
+        const int row = index.row();
+        const int column = index.column();
+
+        if (!m_rowCache.isValid(row)) {
+            updateRowCache(row);
+
+            if (m_rowCache.isValid(row)) {
+                switch (column) {
+                case 0: {
+                    const auto appInfo = appInfoCache()->appInfo(m_rowCache.appPath);
+                    if (!appInfo.fileDescription.isEmpty()) {
+                        return appInfo.fileDescription;
+                    }
+
+                    return FileUtil::fileName(m_rowCache.appPath);
+                }
+                case 1: return m_rowCache.appPath;
+                case 2: return m_rowCache.appGroupName;
+                case 3: return appStateToString(m_rowCache.state);
+                case 4: return m_rowCache.endTime.isValid()
+                            ? m_rowCache.endTime : QVariant();
+                }
+            }
+        }
+    }
+
+    return QVariant();
+}
+
+void AppListModel::invalidateRowCache()
+{
+    m_rowCache.invalidate();
+}
+
+void AppListModel::updateRowCache(int row) const
+{
+    bool blocked = false;
+    bool alerted = false;
+
+    if (m_confManager->getAppByIndex(blocked, alerted,
+                                     m_rowCache.appId, m_rowCache.appGroupId,
+                                     m_rowCache.appGroupName, m_rowCache.appPath,
+                                     m_rowCache.endTime, row)) {
+        m_rowCache.state = alerted ? Alert : (blocked ? Block : Allow);
+        m_rowCache.row = row;
+    }
+}
+
+QString AppListModel::appStateToString(AppState state) const
+{
+    switch (state) {
+    case Alert: return tr("Alert");
+    case Block: return tr("Block");
+    case Allow: return tr("Allow");
+    }
+
+    Q_UNREACHABLE();
+    return QString();
 }

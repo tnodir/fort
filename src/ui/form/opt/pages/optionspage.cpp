@@ -83,6 +83,24 @@ void OptionsPage::onRetranslateUi()
     m_btNewVersion->setText(tr("Download"));
 }
 
+void OptionsPage::retranslateEditPassword()
+{
+    m_editPassword->setPlaceholderText(
+                settings()->hasPassword() ? tr("Installed")
+                                          : tr("Not Installed"));
+}
+
+void OptionsPage::retranslateDriverMessage()
+{
+    const auto text = driverManager()->isDeviceOpened()
+            ? (!driverManager()->errorMessage().isEmpty()
+               ? driverManager()->errorMessage()
+               : tr("Installed"))
+            : tr("Not Installed");
+
+    m_labelDriverMessage->setText(text);
+}
+
 void OptionsPage::setupUi()
 {
     // Column #1
@@ -214,13 +232,6 @@ void OptionsPage::setupEditPassword()
     connect(m_cbPassword, &QCheckBox::toggled, this, refreshEditPassword);
 }
 
-void OptionsPage::retranslateEditPassword()
-{
-    m_editPassword->setPlaceholderText(
-                settings()->hasPassword() ? tr("Installed")
-                                          : tr("Not Installed"));
-}
-
 void OptionsPage::setupComboLanguage()
 {
     m_comboLanguage = ControlUtil::createComboBox(translationManager()->naturalLabels(), [&](int index) {
@@ -304,17 +315,6 @@ void OptionsPage::setupDriverIcon()
     refreshDriverIcon();
 
     connect(driverManager(), &DriverManager::isDeviceOpenedChanged, this, refreshDriverIcon);
-}
-
-void OptionsPage::retranslateDriverMessage()
-{
-    const auto text = driverManager()->isDeviceOpened()
-            ? (!driverManager()->errorMessage().isEmpty()
-               ? driverManager()->errorMessage()
-               : tr("Installed"))
-            : tr("Not Installed");
-
-    m_labelDriverMessage->setText(text);
 }
 
 void OptionsPage::setupNewVersionBox()

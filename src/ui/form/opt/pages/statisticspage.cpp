@@ -60,16 +60,6 @@ StatisticsPage::StatisticsPage(OptionsController *ctrl,
     updatePage();
 }
 
-AppStatModel *StatisticsPage::appStatModel() const
-{
-    return fortManager()->logManager()->appStatModel();
-}
-
-AppInfoCache *StatisticsPage::appInfoCache() const
-{
-    return appStatModel()->appInfoCache();
-}
-
 void StatisticsPage::setGraphEdited(bool v)
 {
     if (m_graphEdited != v) {
@@ -79,6 +69,16 @@ void StatisticsPage::setGraphEdited(bool v)
             ctrl()->setOthersEdited(true);
         }
     }
+}
+
+AppStatModel *StatisticsPage::appStatModel() const
+{
+    return fortManager()->logManager()->appStatModel();
+}
+
+AppInfoCache *StatisticsPage::appInfoCache() const
+{
+    return appStatModel()->appInfoCache();
 }
 
 void StatisticsPage::onEditResetted()

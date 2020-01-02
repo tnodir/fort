@@ -45,6 +45,9 @@ void OptionsWindow::setupUi()
 
     this->setLayout(layout);
 
+    // Title
+    this->setWindowTitle(tr("Options"));
+
     // Font
     this->setFont(QFont("Tahoma", 9));
 

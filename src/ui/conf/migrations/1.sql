@@ -1,4 +1,4 @@
-PRAGMA user_version = 2;
+PRAGMA user_version = 3;
 
 CREATE TABLE IF NOT EXISTS address_group(
   addr_group_id INTEGER PRIMARY KEY,
@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS app(
 );
 
 CREATE INDEX idx_app_app_group_id ON app(app_group_id);
+CREATE INDEX idx_app_path ON app(path);
 CREATE INDEX idx_app_end_time ON app(end_time);
 
 CREATE TABLE IF NOT EXISTS app_alert(

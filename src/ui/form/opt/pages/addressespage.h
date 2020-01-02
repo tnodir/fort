@@ -21,17 +21,18 @@ signals:
     void addressGroupChanged();
 
 protected slots:
-    void onRetranslateUi() override;
-
     void onSaveWindowState() override;
     void onRestoreWindowState() override;
 
+    void onRetranslateUi() override;
+
 private:
+    void retranslateAddressesPlaceholderText();
+
     void setupUi();
     void setupIncludeAddresses();
     void setupExcludeAddresses();
     void setupAddressesUseAllEnabled();
-    void retranslateAddressesPlaceholderText();
     void setupSplitter();
     void updateGroup();
     void setupAddressGroup();

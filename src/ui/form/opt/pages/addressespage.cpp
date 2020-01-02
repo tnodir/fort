@@ -36,6 +36,16 @@ void AddressesPage::setAddressGroup(AddressGroup *v)
     }
 }
 
+void AddressesPage::onSaveWindowState()
+{
+    settings()->setOptWindowAddrSplit(m_splitter->saveState());
+}
+
+void AddressesPage::onRestoreWindowState()
+{
+    m_splitter->restoreState(settings()->optWindowAddrSplit());
+}
+
 void AddressesPage::onRetranslateUi()
 {
     m_tabBar->setTabText(0, tr("Internet Addresses"));
@@ -55,14 +65,13 @@ void AddressesPage::onRetranslateUi()
     retranslateAddressesPlaceholderText();
 }
 
-void AddressesPage::onSaveWindowState()
+void AddressesPage::retranslateAddressesPlaceholderText()
 {
-    settings()->setOptWindowAddrSplit(m_splitter->saveState());
-}
+    const auto placeholderText = tr("# Examples:") + '\n'
+            + NetUtil::localIpv4Networks().join('\n');
 
-void AddressesPage::onRestoreWindowState()
-{
-    m_splitter->restoreState(settings()->optWindowAddrSplit());
+    m_includeAddresses->editIpText()->setPlaceholderText(placeholderText);
+    m_excludeAddresses->editIpText()->setPlaceholderText(placeholderText);
 }
 
 void AddressesPage::setupUi()
@@ -155,15 +164,6 @@ void AddressesPage::setupAddressesUseAllEnabled()
 
     connect(m_includeAddresses->cbUseAll(), &QCheckBox::toggled, this, refreshUseAllEnabled);
     connect(m_excludeAddresses->cbUseAll(), &QCheckBox::toggled, this, refreshUseAllEnabled);
-}
-
-void AddressesPage::retranslateAddressesPlaceholderText()
-{
-    const auto placeholderText = tr("# Examples:") + '\n'
-            + NetUtil::localIpv4Networks().join('\n');
-
-    m_includeAddresses->editIpText()->setPlaceholderText(placeholderText);
-    m_excludeAddresses->editIpText()->setPlaceholderText(placeholderText);
 }
 
 void AddressesPage::setupSplitter()

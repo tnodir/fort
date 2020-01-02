@@ -1,38 +1,74 @@
 #ifndef APPLISTMODEL_H
 #define APPLISTMODEL_H
 
-#include <QHash>
-#include <QSet>
+#include <QDateTime>
 
-#include "../../util/model/stringlistmodel.h"
+#include "../util/model/tableitemmodel.h"
 
+QT_FORWARD_DECLARE_CLASS(AppInfoCache)
 QT_FORWARD_DECLARE_CLASS(ConfManager)
-QT_FORWARD_DECLARE_CLASS(IpListModel)
 QT_FORWARD_DECLARE_CLASS(LogEntryBlocked)
 
-class AppListModel : public StringListModel
+enum AppState {
+    Alert = 0,
+    Block,
+    Allow
+};
+
+struct AppRow {
+    bool isValid(int row) const { return row == this->row; }
+    void invalidate() { row = -1; }
+
+    int row = -1;
+
+    AppState state = Alert;
+
+    qint64 appId = 0;
+    qint64 appGroupId = 0;
+
+    QString appGroupName;
+    QString appPath;
+
+    QDateTime endTime;
+};
+
+class AppListModel : public TableItemModel
 {
     Q_OBJECT
 
 public:
+    Q_ENUM(AppState)
+
     explicit AppListModel(ConfManager *confManager,
                           QObject *parent = nullptr);
 
+    ConfManager *confManager() const { return m_confManager; }
+
+    AppInfoCache *appInfoCache() const { return m_appInfoCache; }
+    void setAppInfoCache(AppInfoCache *v);
+
     void addLogEntry(const LogEntryBlocked &logEntry);
 
-    IpListModel *ipListModel(const QString &appPath) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-public slots:
-    void clear() override;
-
-    void remove(int row = -1) override;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role = Qt::DisplayRole) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
 private:
-    QHash<QString, QStringList> m_appIpList;
-    QHash<QString, QSet<QString>> m_appIpSet;
+    void invalidateRowCache();
+    void updateRowCache(int row) const;
+
+    QString appStateToString(AppState state) const;
+
+private:
+    mutable int m_appCount = -1;
 
     ConfManager *m_confManager = nullptr;
-    IpListModel *m_ipListModel = nullptr;
+    AppInfoCache *m_appInfoCache = nullptr;
+
+    mutable AppRow m_rowCache;
 };
 
 #endif // APPLISTMODEL_H

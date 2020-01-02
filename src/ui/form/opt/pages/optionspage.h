@@ -11,6 +11,9 @@ public:
     explicit OptionsPage(OptionsController *ctrl = nullptr,
                          QWidget *parent = nullptr);
 
+    bool iniEdited() const { return m_iniEdited; }
+    void setIniEdited(bool v);
+
 protected slots:
     void onEditResetted() override;
     void onSaved() override;
@@ -18,16 +21,14 @@ protected slots:
     void onRetranslateUi() override;
 
 private:
-    bool iniEdited() const { return m_iniEdited; }
-    void setIniEdited(bool v);
+    void retranslateEditPassword();
+    void retranslateDriverMessage();
 
     void setupUi();
     void setupEditPassword();
-    void retranslateEditPassword();
     void setupComboLanguage();
     void setupDriverBox();
     void setupDriverIcon();
-    void retranslateDriverMessage();
     void setupNewVersionBox();
     void setupNewVersionUpdate();
 

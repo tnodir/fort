@@ -109,6 +109,18 @@ void ApplicationsPage::retranslateGroupLimits()
     m_cscLimitOut->setNames(list);
 }
 
+void ApplicationsPage::retranslateAppsPlaceholderText()
+{
+    const auto placeholderText = tr("# Examples:") + '\n'
+            + QLatin1String(
+                "System\n"
+                "C:\\Program Files (x86)\\Microsoft\\Skype for Desktop\\Skype.exe\n")
+            + '\n' + tr("# All programs in the sub-path:")
+            + QLatin1String("\nC:\\Git\\**");
+
+    m_allowApps->editText()->setPlaceholderText(placeholderText);
+}
+
 void ApplicationsPage::setupUi()
 {
     auto layout = new QVBoxLayout();
@@ -467,18 +479,6 @@ void ApplicationsPage::setupAllowApps()
 
         ctrl()->setConfEdited(true);
     });
-}
-
-void ApplicationsPage::retranslateAppsPlaceholderText()
-{
-    const auto placeholderText = tr("# Examples:") + '\n'
-            + QLatin1String(
-                "System\n"
-                "C:\\Program Files (x86)\\Microsoft\\Skype for Desktop\\Skype.exe\n")
-            + '\n' + tr("# All programs in the sub-path:")
-            + QLatin1String("\nC:\\Git\\**");
-
-    m_allowApps->editText()->setPlaceholderText(placeholderText);
 }
 
 void ApplicationsPage::setupSplitter()
