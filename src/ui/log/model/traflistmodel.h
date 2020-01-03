@@ -62,8 +62,8 @@ public slots:
 
     void resetAppTotals();
 
+    void resetTraf();
     void reset();
-    void refresh();
 
 private:
     void invalidateRowCache();

@@ -80,32 +80,38 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
 
         if (!m_rowCache.isValid(row)) {
             updateRowCache(row);
+        }
 
-            if (m_rowCache.isValid(row)) {
-                switch (column) {
-                case 0: {
-                    const auto appInfo = appInfoCache()->appInfo(m_rowCache.appPath);
-                    if (!appInfo.fileDescription.isEmpty()) {
-                        return appInfo.fileDescription;
-                    }
-
-                    return FileUtil::fileName(m_rowCache.appPath);
-                }
-                case 1: return m_rowCache.appPath;
-                case 2: return m_rowCache.appGroupName;
-                case 3: return appStateToString(m_rowCache.state);
-                case 4: return m_rowCache.endTime.isValid()
-                            ? m_rowCache.endTime : QVariant();
-                }
+        switch (column) {
+        case 0: {
+            const auto appInfo = appInfoCache()->appInfo(m_rowCache.appPath);
+            if (!appInfo.fileDescription.isEmpty()) {
+                return appInfo.fileDescription;
             }
+
+            return FileUtil::fileName(m_rowCache.appPath);
+        }
+        case 1: return m_rowCache.appPath;
+        case 2: return m_rowCache.appGroupName;
+        case 3: return appStateToString(m_rowCache.state);
+        case 4: return m_rowCache.endTime.isValid()
+                    ? m_rowCache.endTime : QVariant();
         }
     }
 
     return QVariant();
 }
 
+void AppListModel::reset()
+{
+    beginResetModel();
+    invalidateRowCache();
+    endResetModel();
+}
+
 void AppListModel::invalidateRowCache()
 {
+    m_appCount = -1;
     m_rowCache.invalidate();
 }
 

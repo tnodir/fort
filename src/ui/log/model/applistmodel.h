@@ -56,6 +56,9 @@ public:
                         int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
+public slots:
+    void reset();
+
 private:
     void invalidateRowCache();
     void updateRowCache(int row) const;

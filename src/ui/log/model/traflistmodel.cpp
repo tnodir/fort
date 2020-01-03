@@ -83,17 +83,17 @@ void TrafListModel::clear()
 {
     m_statManager->clear();
 
-    reset();
+    resetTraf();
 }
 
 void TrafListModel::resetAppTotals()
 {
     m_statManager->resetAppTotals();
 
-    reset();
+    resetTraf();
 }
 
-void TrafListModel::reset()
+void TrafListModel::resetTraf()
 {
     const char *sqlMinTrafTime = getSqlMinTrafTime(m_type, m_appId);
 
@@ -116,10 +116,10 @@ void TrafListModel::reset()
     endResetModel();
 }
 
-void TrafListModel::refresh()
+void TrafListModel::reset()
 {
     if (m_isEmpty) {
-        reset();
+        resetTraf();
     } else {
         beginResetModel();
         invalidateRowCache();

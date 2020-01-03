@@ -132,7 +132,7 @@ const char * const sqlSelectAppByIndex =
         "    (alert.app_id IS NOT NULL) as alerted,"
         "    t.end_time"
         "  FROM app t"
-        "    JOIN app_group alert g ON g.app_group_id = t.app_group_id"
+        "    JOIN app_group g ON g.app_group_id = t.app_group_id"
         "    LEFT JOIN app_alert alert ON alert.app_id = t.app_id"
         "  LIMIT 1 OFFSET ?1;"
         ;

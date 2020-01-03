@@ -288,7 +288,7 @@ QLayout *StatisticsPage::setupHeader()
     auto layout = new QHBoxLayout();
 
     m_btRefresh = ControlUtil::createButton(":/images/arrow_refresh.png", [&] {
-        trafListModel()->refresh();
+        trafListModel()->reset();
     });
 
     setupClearMenu();
@@ -635,7 +635,7 @@ void StatisticsPage::setupTableTraf()
     const auto resetTableTraf = [&] {
         trafListModel()->setType(static_cast<TrafListModel::TrafType>(m_tabBar->currentIndex()));
         trafListModel()->setAppId(appStatModel()->appIdByRow(appListCurrentIndex()));
-        trafListModel()->reset();
+        trafListModel()->resetTraf();
     };
 
     resetTableTraf();
