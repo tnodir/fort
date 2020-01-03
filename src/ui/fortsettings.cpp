@@ -62,6 +62,11 @@ void FortSettings::processArguments(const QStringList &args)
                 "Directory to store statistics.", "stat");
     parser.addOption(statOption);
 
+    const QCommandLineOption logsOption(
+                QStringList() << "logs",
+                "Directory to store logs.", "logs");
+    parser.addOption(logsOption);
+
     const QCommandLineOption cacheOption(
                 QStringList() << "cache",
                 "Directory to store cache.", "cache");
@@ -112,10 +117,19 @@ void FortSettings::processArguments(const QStringList &args)
                     FileUtil::absolutePath(m_statPath));
     }
 
-    // Statistics Path
+    // Logs Path
+    m_logsPath = parser.value(logsOption);
+    if (m_logsPath.isEmpty()) {
+        m_logsPath = m_profilePath + "logs/";
+    } else {
+        m_logsPath = FileUtil::pathSlash(
+                    FileUtil::absolutePath(m_logsPath));
+    }
+
+    // Cache Path
     m_cachePath = parser.value(cacheOption);
     if (m_cachePath.isEmpty()) {
-        m_cachePath = FileUtil::appCacheLocation();
+        m_cachePath = m_profilePath + "cache/";
     } else {
         m_cachePath = FileUtil::pathSlash(
                     FileUtil::absolutePath(m_cachePath));
@@ -177,11 +191,6 @@ bool FortSettings::setTasks(const TasksMap &map)
 void FortSettings::removeTasks()
 {
     removeIniKey(tasksKey());
-}
-
-QString FortSettings::logsPath() const
-{
-    return profilePath() + QLatin1String("logs/");
 }
 
 QString FortSettings::statFilePath() const

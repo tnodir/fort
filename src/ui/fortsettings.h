@@ -41,9 +41,9 @@ class FortSettings : public QObject
     Q_PROPERTY(QColor graphWindowGridColor READ graphWindowGridColor WRITE setGraphWindowGridColor NOTIFY iniChanged)
     Q_PROPERTY(bool startWithWindows READ startWithWindows WRITE setStartWithWindows NOTIFY startWithWindowsChanged)
     Q_PROPERTY(bool hotKeyEnabled READ hotKeyEnabled WRITE setHotKeyEnabled NOTIFY iniChanged)
-    Q_PROPERTY(QString logsPath READ logsPath CONSTANT)
     Q_PROPERTY(QString profilePath READ profilePath CONSTANT)
     Q_PROPERTY(QString statPath READ statPath CONSTANT)
+    Q_PROPERTY(QString logsPath READ logsPath CONSTANT)
     Q_PROPERTY(QString cachePath READ cachePath CONSTANT)
     Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
     Q_PROPERTY(QString appUpdatesUrl READ appUpdatesUrl CONSTANT)
@@ -176,13 +176,12 @@ public:
     bool setTasks(const TasksMap &map);
     void removeTasks();
 
-    QString logsPath() const;
-
     QString profilePath() const { return m_profilePath; }
 
     QString statPath() const { return m_statPath; }
     QString statFilePath() const;
 
+    QString logsPath() const { return m_logsPath; }
     QString cachePath() const { return m_cachePath; }
 
     QString confFilePath() const;
@@ -269,6 +268,7 @@ private:
 
     QString m_profilePath;
     QString m_statPath;
+    QString m_logsPath;
     QString m_cachePath;
     QString m_controlCommand;
     QStringList m_args;
