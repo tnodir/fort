@@ -1,5 +1,7 @@
 #include "applistmodel.h"
 
+#include <QIcon>
+
 #include "../../conf/confmanager.h"
 #include "../../util/app/appinfocache.h"
 #include "../../util/fileutil.h"
@@ -74,13 +76,12 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    if (role == Qt::DisplayRole) {
+    // Label
+    if (role == Qt::DisplayRole || role == Qt::ToolTipRole) {
         const int row = index.row();
         const int column = index.column();
 
-        if (!m_rowCache.isValid(row)) {
-            updateRowCache(row);
-        }
+        updateRowCache(row);
 
         switch (column) {
         case 0: {
@@ -99,7 +100,55 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
         }
     }
 
+    // Icon
+    if (role == Qt::DecorationRole) {
+        const int row = index.row();
+        const int column = index.column();
+
+        updateRowCache(row);
+
+        switch (column) {
+        case 0: {
+            const auto appPath = m_rowCache.appPath;
+            const auto appInfo = appInfoCache()->appInfo(appPath);
+            const auto appIcon = appInfoCache()->appIcon(appInfo);
+            if (!appIcon.isNull()) {
+                return QIcon(QPixmap::fromImage(appIcon));
+            }
+
+            return QIcon(":/images/application-window-96.png");
+        }
+        case 3: {
+            switch (m_rowCache.state) {
+            case Alert:
+                return QIcon(":/images/error.png");
+            case Block:
+                return QIcon(":/images/cancel.png");
+            case Allow:
+                return QIcon(":/images/accept.png");
+            }
+        }
+        }
+    }
+
+    // Text Alignment
+    if (role == Qt::TextAlignmentRole) {
+        const int column = index.column();
+
+        switch (column) {
+        case 2:
+        case 3: return int(Qt::AlignHCenter | Qt::AlignVCenter);
+        }
+    }
+
     return QVariant();
+}
+
+QString AppListModel::appPathByRow(int row) const
+{
+    updateRowCache(row);
+
+    return m_rowCache.appPath;
 }
 
 void AppListModel::reset()
@@ -117,6 +166,9 @@ void AppListModel::invalidateRowCache()
 
 void AppListModel::updateRowCache(int row) const
 {
+    if (m_rowCache.isValid(row))
+        return;
+
     bool blocked = false;
     bool alerted = false;
 

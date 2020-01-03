@@ -64,9 +64,7 @@ QVariant TrafListModel::data(const QModelIndex &index, int role) const
         const int row = index.row();
         const int column = index.column();
 
-        if (!m_rowCache.isValid(row)) {
-            updateRowCache(row);
-        }
+        updateRowCache(row);
 
         switch (column) {
         case 0: return formatTrafTime(m_rowCache.trafTime);
@@ -134,6 +132,9 @@ void TrafListModel::invalidateRowCache()
 
 void TrafListModel::updateRowCache(int row) const
 {
+    if (m_rowCache.isValid(row))
+        return;
+
     m_rowCache.row = row;
     m_rowCache.trafTime = getTrafTime(row);
 

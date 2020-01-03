@@ -111,7 +111,7 @@ void SchedulePage::setupTableTasks()
 {
     m_tableTasks = new TableView();
     m_tableTasks->setSelectionMode(QAbstractItemView::SingleSelection);
-    m_tableTasks->setSelectionBehavior(QAbstractItemView::SelectRows);
+    m_tableTasks->setSelectionBehavior(QAbstractItemView::SelectItems);
 
     m_tableTasks->setModel(taskListModel());
 }

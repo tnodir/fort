@@ -672,7 +672,7 @@ void FortManager::updateTrayMenu()
     menu = new QMenu(&m_window);
 
     QAction *programsAction = addAction(
-                menu, QIcon(":/images/application_double.png"), tr("Programs"),
+                menu, QIcon(":/images/application_cascade.png"), tr("Programs"),
                 this, SLOT(showProgramsWindow()));
     addHotKey(programsAction, settings()->hotKeyPrograms(), hotKeyEnabled);
 

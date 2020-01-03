@@ -4,6 +4,7 @@
     <file>images/application.png</file>
     <file>images/application-window-96.png</file>
     <file>images/application_add.png</file>
+    <file>images/application_cascade.png</file>
     <file>images/application_delete.png</file>
     <file>images/application_double.png</file>
     <file>images/application_edit.png</file>
@@ -23,6 +24,7 @@
     <file>images/control_rewind.png</file>
     <file>images/cross.png</file>
     <file>images/database_save.png</file>
+    <file>images/error.png</file>
     <file>images/folder_database.png</file>
     <file>images/folder_error.png</file>
     <file>images/folder_explore.png</file>

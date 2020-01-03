@@ -56,6 +56,8 @@ public:
                         int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
+    QString appPathByRow(int row) const;
+
 public slots:
     void reset();
 

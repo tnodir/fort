@@ -4,12 +4,17 @@
 #include <QCloseEvent>
 #include <QHeaderView>
 #include <QKeyEvent>
+#include <QLabel>
+#include <QPushButton>
 #include <QVBoxLayout>
 
 #include "../../conf/firewallconf.h"
 #include "../../fortmanager.h"
 #include "../../fortsettings.h"
 #include "../../log/model/applistmodel.h"
+#include "../../util/app/appinfocache.h"
+#include "../../util/guiutil.h"
+#include "../../util/osutil.h"
 #include "../controls/controlutil.h"
 #include "../controls/tableview.h"
 #include "programscontroller.h"
@@ -60,13 +65,13 @@ void ProgramsWindow::keyReleaseEvent(QKeyEvent *event)
 
 void ProgramsWindow::onSaveWindowState()
 {
-    auto header = m_tableApps->horizontalHeader();
+    auto header = m_appListView->horizontalHeader();
     settings()->setProgAppsHeader(header->saveState());
 }
 
 void ProgramsWindow::onRestoreWindowState()
 {
-    auto header = m_tableApps->horizontalHeader();
+    auto header = m_appListView->horizontalHeader();
     header->restoreState(settings()->progAppsHeader());
 }
 
@@ -75,6 +80,9 @@ void ProgramsWindow::onRetranslateUi()
     m_cbLogBlocked->setText(tr("Alert about Unknown Programs"));
 
     appListModel()->refresh();
+
+    m_btAppCopyPath->setToolTip(tr("Copy Path"));
+    m_btAppOpenFolder->setToolTip(tr("Open Folder"));
 }
 
 void ProgramsWindow::setupUi()
@@ -89,7 +97,12 @@ void ProgramsWindow::setupUi()
     // Table
     setupTableApps();
     setupTableAppsHeader();
-    layout->addWidget(m_tableApps, 1);
+    layout->addWidget(m_appListView, 1);
+
+    // App Info Row
+    setupAppInfoRow();
+    setupAppInfoVersion();
+    layout->addWidget(m_appInfoRow);
 
     this->setLayout(layout);
 
@@ -132,20 +145,88 @@ void ProgramsWindow::setupLogBlocked()
 
 void ProgramsWindow::setupTableApps()
 {
-    m_tableApps = new TableView();
+    m_appListView = new TableView();
+    m_appListView->setIconSize(QSize(24, 24));
+    m_appListView->setAlternatingRowColors(true);
+    m_appListView->setSelectionMode(QAbstractItemView::SingleSelection);
+    m_appListView->setSelectionBehavior(QAbstractItemView::SelectItems);
 
-    m_tableApps->setModel(appListModel());
+    m_appListView->setModel(appListModel());
 }
 
 void ProgramsWindow::setupTableAppsHeader()
 {
-    auto header = m_tableApps->horizontalHeader();
+    auto header = m_appListView->horizontalHeader();
 
     header->setSectionResizeMode(0, QHeaderView::Interactive);
     header->setSectionResizeMode(1, QHeaderView::Stretch);
     header->setSectionResizeMode(2, QHeaderView::Interactive);
     header->setSectionResizeMode(3, QHeaderView::Interactive);
     header->setSectionResizeMode(4, QHeaderView::Interactive);
+}
+
+void ProgramsWindow::setupAppInfoRow()
+{
+    auto layout = new QHBoxLayout();
+    layout->setMargin(0);
+
+    m_btAppCopyPath = ControlUtil::createLinkButton(":/images/page_copy.png");
+    m_btAppOpenFolder = ControlUtil::createLinkButton(":/images/folder_go.png");
+
+    m_labelAppPath = new QLabel();
+    m_labelAppPath->setWordWrap(true);
+
+    m_labelAppProductName = new QLabel();
+    m_labelAppProductName->setFont(ControlUtil::fontDemiBold());
+
+    m_labelAppCompanyName = new QLabel();
+
+    connect(m_btAppCopyPath, &QAbstractButton::clicked, [&] {
+        GuiUtil::setClipboardData(appListCurrentPath());
+    });
+    connect(m_btAppOpenFolder, &QAbstractButton::clicked, [&] {
+        OsUtil::openFolder(appListCurrentPath());
+    });
+
+    layout->addWidget(m_btAppCopyPath);
+    layout->addWidget(m_btAppOpenFolder);
+    layout->addWidget(m_labelAppPath, 1);
+    layout->addWidget(m_labelAppProductName);
+    layout->addWidget(m_labelAppCompanyName);
+
+    m_appInfoRow = new QWidget();
+    m_appInfoRow->setLayout(layout);
+}
+
+void ProgramsWindow::setupAppInfoVersion()
+{
+    const auto refreshAppInfoVersion = [&] {
+        const auto appPath = appListCurrentPath();
+        const auto appInfo = appInfoCache()->appInfo(appPath);
+
+        m_labelAppPath->setText(appPath);
+
+        m_labelAppProductName->setVisible(!appInfo.productName.isEmpty());
+        m_labelAppProductName->setText(appInfo.productName + " v" + appInfo.productVersion);
+
+        m_labelAppCompanyName->setVisible(!appInfo.companyName.isEmpty());
+        m_labelAppCompanyName->setText(appInfo.companyName);
+    };
+
+    refreshAppInfoVersion();
+
+    connect(m_appListView, &TableView::currentIndexChanged, this, refreshAppInfoVersion);
+    connect(appInfoCache(), &AppInfoCache::cacheChanged, this, refreshAppInfoVersion);
+}
+
+int ProgramsWindow::appListCurrentIndex() const
+{
+    return m_appListView->currentIndex().row();
+}
+
+QString ProgramsWindow::appListCurrentPath() const
+{
+    return appListModel()->appPathByRow(appListCurrentIndex());
 }
 
 FortManager *ProgramsWindow::fortManager() const
@@ -161,4 +242,9 @@ FortSettings *ProgramsWindow::settings() const
 FirewallConf *ProgramsWindow::conf() const
 {
     return ctrl()->conf();
+}
+
+AppInfoCache *ProgramsWindow::appInfoCache() const
+{
+    return appListModel()->appInfoCache();
 }
