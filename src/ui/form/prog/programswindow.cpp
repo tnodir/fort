@@ -72,7 +72,7 @@ void ProgramsWindow::onRestoreWindowState()
 
 void ProgramsWindow::onRetranslateUi()
 {
-    m_cbLogBlocked->setText(tr("Alert Blocked Programs"));
+    m_cbLogBlocked->setText(tr("Alert about Unknown Programs"));
 
     appListModel()->refresh();
 }
@@ -118,7 +118,7 @@ QLayout *ProgramsWindow::setupHeader()
 
 void ProgramsWindow::setupLogBlocked()
 {
-    m_cbLogBlocked = ControlUtil::createCheckBox(false, [&](bool checked) {
+    m_cbLogBlocked = ControlUtil::createCheckBox(conf()->logBlocked(), [&](bool checked) {
         if (conf()->logBlocked() == checked)
             return;
 
