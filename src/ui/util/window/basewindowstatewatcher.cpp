@@ -1,7 +1,9 @@
 #include "basewindowstatewatcher.h"
 
 BaseWindowStateWatcher::BaseWindowStateWatcher(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    m_visible(false),
+    m_maximized(false)
 {
 }
 
@@ -64,4 +66,6 @@ void BaseWindowStateWatcher::handleVisibilityChange(QWindow::Visibility visibili
         break;
     default: break;
     }
+
+    m_visible = (visibility != QWindow::Hidden);
 }

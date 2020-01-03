@@ -20,20 +20,39 @@ void WindowStateWatcher::onPositionChanged()
 {
     QWindow *window = qobject_cast<QWindow *>(sender());
 
-    handlePositionChange(window->position(), window->visibility());
+    handleWindowPositionChange(window);
 }
 
 void WindowStateWatcher::onSizeChanged()
 {
     QWindow *window = qobject_cast<QWindow *>(sender());
 
-    handleSizeChange(window->size(), window->visibility());
+    handleWindowSizeChange(window);
 }
 
 void WindowStateWatcher::onVisibilityChanged()
 {
     QWindow *window = qobject_cast<QWindow *>(sender());
 
+    handleWindowVisibilityChange(window);
+}
+
+void WindowStateWatcher::handleWindowPositionChange(QWindow *window)
+{
+    handlePositionChange(window->position(), window->visibility());
+}
+
+void WindowStateWatcher::handleWindowSizeChange(QWindow *window)
+{
+    handleSizeChange(window->size(), window->visibility());
+}
+
+void WindowStateWatcher::handleWindowVisibilityChange(QWindow *window)
+{
+    if (!visible()) {
+        handleWindowPositionChange(window);
+        handleWindowSizeChange(window);
+    }
     handleVisibilityChange(window->visibility());
 }
 

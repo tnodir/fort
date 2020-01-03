@@ -13,10 +13,13 @@ public:
     void restore(QWindow *window, const QSize &defaultSize,
                  const QRect &rect, bool maximized);
 
-signals:
-
 public slots:
     void install(QWindow *window);
+
+private:
+    void handleWindowPositionChange(QWindow *window);
+    void handleWindowSizeChange(QWindow *window);
+    void handleWindowVisibilityChange(QWindow *window);
 
 private slots:
     void onPositionChanged();

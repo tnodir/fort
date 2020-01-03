@@ -145,6 +145,7 @@ void ProgramsWindow::setupTableAppsHeader()
     header->setSectionResizeMode(1, QHeaderView::Stretch);
     header->setSectionResizeMode(2, QHeaderView::Interactive);
     header->setSectionResizeMode(3, QHeaderView::Interactive);
+    header->setSectionResizeMode(4, QHeaderView::Interactive);
 }
 
 FortManager *ProgramsWindow::fortManager() const

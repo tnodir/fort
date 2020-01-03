@@ -21,20 +21,39 @@ void WidgetWindowStateWatcher::onPositionChanged()
 {
     auto window = qobject_cast<WidgetWindow *>(sender());
 
-    handlePositionChange(window->geometry().topLeft(), getVisibility(window));
+    handleWindowPositionChange(window);
 }
 
 void WidgetWindowStateWatcher::onSizeChanged()
 {
     auto window = qobject_cast<WidgetWindow *>(sender());
 
-    handleSizeChange(window->size(), getVisibility(window));
+    handleWindowSizeChange(window);
 }
 
 void WidgetWindowStateWatcher::onVisibilityChanged()
 {
     auto window = qobject_cast<WidgetWindow *>(sender());
 
+    handleWindowVisibilityChange(window);
+}
+
+void WidgetWindowStateWatcher::handleWindowPositionChange(WidgetWindow *window)
+{
+    handlePositionChange(window->geometry().topLeft(), getVisibility(window));
+}
+
+void WidgetWindowStateWatcher::handleWindowSizeChange(WidgetWindow *window)
+{
+    handleSizeChange(window->size(), getVisibility(window));
+}
+
+void WidgetWindowStateWatcher::handleWindowVisibilityChange(WidgetWindow *window)
+{
+    if (!visible()) {
+        handleWindowPositionChange(window);
+        handleWindowSizeChange(window);
+    }
     handleVisibilityChange(getVisibility(window));
 }
 

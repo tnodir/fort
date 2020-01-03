@@ -10,6 +10,8 @@ class BaseWindowStateWatcher : public QObject
 public:
     explicit BaseWindowStateWatcher(QObject *parent = nullptr);
 
+    bool visible() const { return m_visible; }
+
     bool maximized() const { return m_maximized; }
     void setMaximized(bool maximized) { m_maximized = maximized; }
 
@@ -17,8 +19,6 @@ public:
     void setGeometry(const QRect &rect);
 
     void reset(const QRect &rect, bool maximized);
-
-signals:
 
 public slots:
     void uninstall(QObject *window);
@@ -29,7 +29,8 @@ protected:
     void handleVisibilityChange(QWindow::Visibility visibility);
 
 private:
-    bool m_maximized = false;
+    bool m_visible      : 1;
+    bool m_maximized    : 1;
 
     QPoint m_pos;
     QPoint m_posPrev;

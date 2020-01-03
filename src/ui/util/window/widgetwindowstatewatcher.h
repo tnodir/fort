@@ -15,8 +15,6 @@ public:
     void restore(WidgetWindow *window, const QSize &defaultSize,
                  const QRect &rect, bool maximized);
 
-signals:
-
 public slots:
     void install(WidgetWindow *window);
 
@@ -24,6 +22,11 @@ private slots:
     void onPositionChanged();
     void onSizeChanged();
     void onVisibilityChanged();
+
+private:
+    void handleWindowPositionChange(WidgetWindow *window);
+    void handleWindowSizeChange(WidgetWindow *window);
+    void handleWindowVisibilityChange(WidgetWindow *window);
 
 private:
     static QWindow::Visibility getVisibility(WidgetWindow *window);
