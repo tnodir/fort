@@ -91,9 +91,8 @@ void FortSettings::processArguments(const QStringList &args)
     m_isPortable = FileUtil::fileExists(FileUtil::appBinLocation()
                                         + "/README.portable");
 
-    // No Cahce
-    m_noCache = parser.isSet(noCacheOption)
-            || isPortable();
+    // No Cache
+    m_noCache = parser.isSet(noCacheOption);
 
     // Provider Boot
     m_hasProvBoot = parser.isSet(provBootOption);
