@@ -294,7 +294,7 @@ bool ConfUtil::parseApps(int groupOffset, bool blocked, const QString &text,
         appEntry.flags.group_index = quint8(groupOffset);
         appEntry.flags.use_group_perm = 1;
         appEntry.flags.blocked = blocked;
-        appEntry.flags.found = 1;
+        appEntry.flags.in_conf = 1;
 
         appsMap.insert(appPath, appEntry.v);
     }

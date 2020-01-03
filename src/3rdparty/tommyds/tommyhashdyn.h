@@ -236,9 +236,8 @@ tommy_inline void* tommy_hashdyn_search(tommy_hashdyn* hashdyn, tommy_search_fun
 /**
  * Removes an element from the hashtable.
  * You must already have the address of the element to remove.
- * \return The tommy_node::data field of the node removed.
  */
-TOMMY_API void* tommy_hashdyn_remove_existing(tommy_hashdyn* hashdyn, tommy_hashdyn_node* node);
+TOMMY_API void tommy_hashdyn_remove_existing(tommy_hashdyn* hashdyn, tommy_hashdyn_node* node);
 
 /**
  * Calls the specified function for each element in the hashtable.

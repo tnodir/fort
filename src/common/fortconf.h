@@ -76,7 +76,9 @@ typedef struct fort_app_flags {
       UCHAR group_index;
       UCHAR use_group_perm  : 1;
       UCHAR blocked         : 1;
-      UCHAR found           : 1;
+      UCHAR alerted         : 1;
+      UCHAR in_conf         : 1;
+      UCHAR in_pool         : 1;
     };
   };
 } FORT_APP_FLAGS, *PFORT_APP_FLAGS;
@@ -141,6 +143,6 @@ typedef struct fort_conf_io {
 #define FORT_CONF_ADDR_DATA_OFF		offsetof(FORT_CONF_ADDR_GROUP, ip)
 
 typedef FORT_APP_FLAGS fort_conf_app_exe_find_func(
-    const PFORT_CONF conf, UINT32 path_len, const char *path);
+    const PFORT_CONF conf, const char *path, UINT32 path_len);
 
 #endif FORTCONF_H

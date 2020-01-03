@@ -100,8 +100,8 @@ fort_conf_ip_included (const PFORT_CONF conf, UINT32 remote_ip,
   fort_conf_ip_included((conf), (remote_ip), 1)
 
 static BOOL
-fort_conf_app_exe_equal (UINT32 path_len, const char *path,
-                         PFORT_APP_ENTRY app_entry)
+fort_conf_app_exe_equal (PFORT_APP_ENTRY app_entry,
+                         const char *path, UINT32 path_len)
 {
   const char *app_path = (const char *) (app_entry + 1);
   const UINT32 app_path_len = app_entry->path_len;
@@ -114,7 +114,7 @@ fort_conf_app_exe_equal (UINT32 path_len, const char *path,
 
 static FORT_APP_FLAGS
 fort_conf_app_exe_find (const PFORT_CONF conf,
-                        UINT32 path_len, const char *path)
+                        const char *path, UINT32 path_len)
 {
   FORT_APP_FLAGS app_flags;
   const char *data;
@@ -130,7 +130,7 @@ fort_conf_app_exe_find (const PFORT_CONF conf,
   do {
     const PFORT_APP_ENTRY app_entry = (const PFORT_APP_ENTRY) app_entries;
 
-    if (fort_conf_app_exe_equal(path_len, path, app_entry)) {
+    if (fort_conf_app_exe_equal(app_entry, path, path_len)) {
       app_flags = app_entry->flags;
       goto end;
     }
@@ -146,8 +146,8 @@ fort_conf_app_exe_find (const PFORT_CONF conf,
 }
 
 static int
-fort_conf_app_prefix_cmp (UINT32 path_len, const char *path,
-                          PFORT_APP_ENTRY app_entry)
+fort_conf_app_prefix_cmp (PFORT_APP_ENTRY app_entry,
+                          const char *path, UINT32 path_len)
 {
   const char *app_path = (const char *) (app_entry + 1);
   const UINT32 app_path_len = app_entry->path_len;
@@ -160,7 +160,7 @@ fort_conf_app_prefix_cmp (UINT32 path_len, const char *path,
 
 static FORT_APP_FLAGS
 fort_conf_app_prefix_find (const PFORT_CONF conf,
-                           UINT32 path_len, const char *path)
+                           const char *path, UINT32 path_len)
 {
   FORT_APP_FLAGS app_flags;
   const char *data;
@@ -182,7 +182,7 @@ fort_conf_app_prefix_find (const PFORT_CONF conf,
     const int mid = (low + high) / 2;
     const UINT32 app_off = app_offsets[mid];
     const PFORT_APP_ENTRY app_entry = (PFORT_APP_ENTRY) (app_entries + app_off);
-    const int res = fort_conf_app_prefix_cmp(path_len, path, app_entry);
+    const int res = fort_conf_app_prefix_cmp(app_entry, path, path_len);
 
     if (res < 0)
       high = mid - 1;
@@ -237,16 +237,16 @@ fort_conf_app_wild_find (const PFORT_CONF conf, const char *path)
 
 static FORT_APP_FLAGS
 fort_conf_app_find (const PFORT_CONF conf,
-                    UINT32 path_len, const char *path,
+                    const char *path, UINT32 path_len,
                     fort_conf_app_exe_find_func *exe_find_func)
 {
   FORT_APP_FLAGS app_flags;
 
-  app_flags = exe_find_func(conf, path_len, path);
+  app_flags = exe_find_func(conf, path, path_len);
   if (app_flags.v != 0)
     goto end;
 
-  app_flags = fort_conf_app_prefix_find(conf, path_len, path);
+  app_flags = fort_conf_app_prefix_find(conf, path, path_len);
   if (app_flags.v != 0)
     goto end;
 
@@ -259,7 +259,7 @@ fort_conf_app_find (const PFORT_CONF conf,
 static BOOL
 fort_conf_app_blocked (const PFORT_CONF conf, FORT_APP_FLAGS app_flags)
 {
-  const BOOL app_found = app_flags.found;
+  const BOOL app_found = (app_flags.v != 0);
 
   if (app_found && !app_flags.use_group_perm) {
       return app_flags.blocked;

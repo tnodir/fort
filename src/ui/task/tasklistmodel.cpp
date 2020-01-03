@@ -69,8 +69,9 @@ QVariant TaskListModel::data(const QModelIndex &index, int role) const
         case 2: return formatDateTime(taskInfo->lastRun());
         case 3: return formatDateTime(taskInfo->lastSuccess());
         }
-    }
+
         break;
+    }
 
     case Qt::CheckStateRole:
     case RoleEnabled:

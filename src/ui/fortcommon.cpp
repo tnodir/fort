@@ -165,11 +165,11 @@ quint16 FortCommon::confAppFind(const void *drvConf,
 {
     const PFORT_CONF conf = (const PFORT_CONF) drvConf;
     const QString kernelPathLower = kernelPath.toLower();
-    const int len = kernelPathLower.size() * int(sizeof(wchar_t));
+    const quint32 len = quint32(kernelPathLower.size()) * sizeof(wchar_t);
     const wchar_t *p = (const wchar_t *) kernelPathLower.utf16();
 
     const FORT_APP_FLAGS app_flags =
-            fort_conf_app_find(conf, len, (const char *) p,
+            fort_conf_app_find(conf, (const char *) p, len,
                                fort_conf_app_exe_find);
 
     return app_flags.v;

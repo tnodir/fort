@@ -32,9 +32,9 @@ void AppListModel::addLogEntry(const LogEntryBlocked &logEntry)
             + ':' + QString::number(logEntry.port());
 #endif
 
-    beginResetModel();
-    confManager()->addApp(appPath, QDateTime(), 0, true, true);
-    endResetModel();
+    if (confManager()->addApp(appPath, QDateTime(), 0, true, true)) {
+        reset();
+    }
 }
 
 int AppListModel::rowCount(const QModelIndex &parent) const

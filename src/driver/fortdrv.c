@@ -20,6 +20,7 @@
 #include "../common/fortconf.c"
 #include "../common/fortlog.c"
 #include "../common/fortprov.c"
+#include "forttlsf.c"
 #include "forttds.c"
 #include "fortcnf.c"
 #include "fortbuf.c"
@@ -143,7 +144,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
 
   if (fort_conf_ip_inet_included(&conf_ref->conf, remote_ip)) {
     const FORT_APP_FLAGS app_flags = fort_conf_app_find(
-      &conf_ref->conf, path_len, path, fort_conf_ref_exe_find);
+      &conf_ref->conf, path, path_len, fort_conf_exe_find);
 
     if (!fort_conf_app_blocked(&conf_ref->conf, app_flags)) {
       if (conf_flags.log_stat) {
@@ -179,14 +180,21 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   }
 
   if (conf_flags.log_blocked) {
-    const UINT16 remote_port = inFixedValues->incomingValue[
-      remotePortField].value.uint16;
-    const IPPROTO ip_proto = (IPPROTO) inFixedValues->incomingValue[
-      ipProtoField].value.uint8;
+    FORT_APP_FLAGS flags;
+    flags.v = 0;
+    flags.blocked = 1;
+    flags.alerted = 1;
 
-    fort_buffer_blocked_write(&g_device->buffer,
-      remote_ip, remote_port, ip_proto,
-      process_id, path_len, path, &irp, &info);
+    if (fort_conf_ref_exe_add_path(conf_ref, path, path_len, flags)) {
+      const UINT16 remote_port = inFixedValues->incomingValue[
+        remotePortField].value.uint16;
+      const IPPROTO ip_proto = (IPPROTO) inFixedValues->incomingValue[
+        ipProtoField].value.uint8;
+
+      fort_buffer_blocked_write(&g_device->buffer,
+        remote_ip, remote_port, ip_proto,
+        process_id, path_len, path, &irp, &info);
+    }
   }
 
  block:
@@ -968,11 +976,13 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
 {
   PIO_STACK_LOCATION irp_stack;
   ULONG_PTR info = 0;
+  ULONG control_code;
   NTSTATUS status = STATUS_INVALID_PARAMETER;
 
   irp_stack = IoGetCurrentIrpStackLocation(irp);
+  control_code = irp_stack->Parameters.DeviceIoControl.IoControlCode;
 
-  switch (irp_stack->Parameters.DeviceIoControl.IoControlCode) {
+  switch (control_code) {
   case FORT_IOCTL_VALIDATE: {
     const PFORT_CONF_VERSION conf_ver = irp->AssociatedIrp.SystemBuffer;
     const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
@@ -1045,6 +1055,31 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
         IoReleaseCancelSpinLock(cirq);
 
         return STATUS_PENDING;
+      }
+    }
+    break;
+  }
+  case FORT_IOCTL_ADDAPP:
+  case FORT_IOCTL_DELAPP: {
+    const PFORT_APP_ENTRY app_entry = irp->AssociatedIrp.SystemBuffer;
+    const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
+
+    if (len > sizeof(FORT_APP_ENTRY)
+        && len >= (sizeof(FORT_APP_ENTRY) + app_entry->path_len)) {
+      PFORT_CONF_REF conf_ref = fort_conf_ref_take(&g_device->conf);
+
+      if (conf_ref == NULL) {
+        status = STATUS_INSUFFICIENT_RESOURCES;
+      } else {
+        if (control_code == FORT_IOCTL_ADDAPP) {
+          status = fort_conf_ref_exe_add_entry(conf_ref, app_entry)
+            ? STATUS_SUCCESS : STATUS_UNSUCCESSFUL;
+        } else {
+          fort_conf_ref_exe_del_entry(conf_ref, app_entry);
+          status = STATUS_SUCCESS;
+        }
+
+        fort_conf_ref_put(&g_device->conf, conf_ref);
       }
     }
     break;

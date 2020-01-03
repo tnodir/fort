@@ -147,7 +147,7 @@ TOMMY_API void tommy_hashdyn_insert(tommy_hashdyn* hashdyn, tommy_hashdyn_node* 
 	hashdyn_grow_step(hashdyn);
 }
 
-TOMMY_API void* tommy_hashdyn_remove_existing(tommy_hashdyn* hashdyn, tommy_hashdyn_node* node)
+TOMMY_API void tommy_hashdyn_remove_existing(tommy_hashdyn* hashdyn, tommy_hashdyn_node* node)
 {
 	tommy_size_t pos = node->index & hashdyn->bucket_mask;
 
@@ -156,8 +156,6 @@ TOMMY_API void* tommy_hashdyn_remove_existing(tommy_hashdyn* hashdyn, tommy_hash
 	--hashdyn->count;
 
 	hashdyn_shrink_step(hashdyn);
-
-	return node->data;
 }
 
 TOMMY_API void* tommy_hashdyn_remove(tommy_hashdyn* hashdyn, tommy_search_func* cmp, const void* cmp_arg, tommy_hash_t hash)

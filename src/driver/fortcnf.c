@@ -1,14 +1,15 @@
 /* Fort Firewall Configuration */
 
-#define FORT_CONF_BLOCK_SIZE (8 * 1024)
+#define FORT_CONF_POOL_SIZE	(8 * 1024)
+#define FORT_CONF_POOL_DATA_OFF	offsetof(FORT_CONF_POOL, data)
 
 /* Synchronize with tommy_node! */
-typedef struct fort_conf_block {
-  struct fort_conf_block *next;
-  struct fort_conf_block *prev;
+typedef struct fort_conf_pool {
+  struct fort_conf_pool *next;
+  struct fort_conf_pool *prev;
 
-  UINT16 top;
-} FORT_CONF_BLOCK, *PFORT_CONF_BLOCK;
+  char data[4];
+} FORT_CONF_POOL, *PFORT_CONF_POOL;
 
 /* Synchronize with tommy_hashdyn_node! */
 typedef struct fort_conf_exe_node {
@@ -23,7 +24,9 @@ typedef struct fort_conf_exe_node {
 typedef struct fort_conf_ref {
   UINT32 volatile refcount;
 
-  tommy_list exe_blocks;
+  tlsf_t tlsf;
+  tommy_list pools;
+  tommy_list free_nodes;
 
   tommy_arrayof exe_nodes;
   tommy_hashdyn exe_map;
@@ -71,31 +74,91 @@ fort_device_flag (PFORT_DEVICE_CONF device_conf, UCHAR flag)
   return fort_device_flags(device_conf) & flag;
 }
 
-static FORT_APP_FLAGS
-fort_conf_ref_exe_find (const PFORT_CONF conf,
-                        UINT32 path_len, const char *path)
+static void
+fort_conf_pool_done (PFORT_CONF_REF conf_ref)
 {
-  PFORT_CONF_REF conf_ref = (PFORT_CONF_REF) ((char *) conf - offsetof(FORT_CONF_REF, conf));
-  const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(
-    0, path, path_len);
+  tommy_node *pool = tommy_list_head(&conf_ref->pools);
+  while (pool != NULL) {
+    tommy_node *next = pool->next;
+    tommy_free(pool);
+    pool = next;
+  }
+}
 
+static void *
+fort_conf_pool_malloc (PFORT_CONF_REF conf_ref, UINT32 size)
+{
+  tommy_node *pool = tommy_list_tail(&conf_ref->pools);
+  void *p;
+
+  if (pool == NULL) {
+    const UINT32 pool_size = (size >= FORT_CONF_POOL_SIZE)
+      ? size * 2 : FORT_CONF_POOL_SIZE;
+
+    pool = tommy_malloc(pool_size);
+    if (pool == NULL)
+      return NULL;
+
+    tommy_list_insert_first(&conf_ref->pools, pool);
+
+    conf_ref->tlsf = tlsf_create_with_pool(
+      (char *) pool + FORT_CONF_POOL_DATA_OFF,
+      pool_size - FORT_CONF_POOL_DATA_OFF);
+  }
+
+  p = tlsf_malloc(conf_ref->tlsf, size);
+  if (p == NULL) {
+    const UINT32 pool_size = (size >= FORT_CONF_POOL_SIZE)
+      ? size * 2 : FORT_CONF_POOL_SIZE;
+
+    pool = tommy_malloc(pool_size);
+    if (pool == NULL)
+      return NULL;
+
+    tommy_list_insert_head_not_empty(&conf_ref->pools, pool);
+
+    tlsf_add_pool(conf_ref->tlsf,
+      (char *) pool + FORT_CONF_POOL_DATA_OFF,
+      pool_size - FORT_CONF_POOL_DATA_OFF);
+
+    p = tlsf_malloc(conf_ref->tlsf, size);
+  }
+
+  return p;
+}
+
+static PFORT_CONF_EXE_NODE
+fort_conf_ref_exe_find_node (PFORT_CONF_REF conf_ref,
+                             const char *path, UINT32 path_len,
+                             tommy_key_t path_hash)
+{
   PFORT_CONF_EXE_NODE node = (PFORT_CONF_EXE_NODE) tommy_hashdyn_bucket(
     &conf_ref->exe_map, path_hash);
 
-  FORT_APP_FLAGS app_flags;
-  app_flags.v = 0;
-
   while (node != NULL) {
-    PFORT_APP_ENTRY entry = node->app_entry;
-
     if (node->path_hash == path_hash
-        && fort_conf_app_exe_equal(path_len, path, entry)) {
-      app_flags = entry->flags;
-      break;
+        && fort_conf_app_exe_equal(node->app_entry, path, path_len)) {
+      return node;
     }
 
     node = node->next;
   }
+
+  return NULL;
+}
+
+static FORT_APP_FLAGS
+fort_conf_exe_find (const PFORT_CONF conf,
+                    const char *path, UINT32 path_len)
+{
+  PFORT_CONF_REF conf_ref = (PFORT_CONF_REF) ((char *) conf - offsetof(FORT_CONF_REF, conf));
+  const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, path_len);
+
+  const PFORT_CONF_EXE_NODE node = fort_conf_ref_exe_find_node(
+    conf_ref, path, path_len, path_hash);
+
+  FORT_APP_FLAGS app_flags;
+  app_flags.v = node ? node->app_entry->flags.v : 0;
 
   return app_flags;
 }
@@ -117,7 +180,7 @@ fort_conf_ref_exe_fill (PFORT_CONF_REF conf_ref)
   for (i = 0; i < count; ++i) {
     const PFORT_APP_ENTRY entry = (const PFORT_APP_ENTRY) app_entries;
     const char *path = (const char *) (entry + 1);
-    const UINT16 path_len = entry->path_len;
+    const UINT32 path_len = entry->path_len;
     const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, path_len);
 
     tommy_hashdyn_node *node = tommy_arrayof_ref(exe_nodes, i);
@@ -128,12 +191,133 @@ fort_conf_ref_exe_fill (PFORT_CONF_REF conf_ref)
   }
 }
 
+static BOOL
+fort_conf_ref_exe_add_path (PFORT_CONF_REF conf_ref,
+                            const char *path, UINT32 path_len,
+                            FORT_APP_FLAGS flags)
+{
+  const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, path_len);
+
+  const PFORT_CONF_EXE_NODE node = fort_conf_ref_exe_find_node(
+    conf_ref, path, path_len, path_hash);
+
+  if (node == NULL) {
+    const UINT16 entry_size = FORT_CONF_APP_ENTRY_SIZE(path_len);
+    PFORT_APP_ENTRY entry = fort_conf_pool_malloc(conf_ref, entry_size);
+
+    if (entry == NULL)
+      return FALSE;
+
+    flags.in_pool = 1;
+    entry->flags = flags;
+
+    entry->path_len = (UINT16) path_len;
+
+    // Copy path
+    {
+      char *new_path = (char *) (entry + 1);
+      RtlCopyMemory(new_path, path, path_len);
+    }
+
+    // Add exe node
+    {
+      PFORT_CONF conf = &conf_ref->conf;
+
+      tommy_arrayof *exe_nodes = &conf_ref->exe_nodes;
+      tommy_hashdyn *exe_map = &conf_ref->exe_map;
+
+      tommy_hashdyn_node *node = tommy_list_tail(&conf_ref->free_nodes);
+
+      if (node != NULL) {
+        tommy_list_remove_existing(&conf_ref->free_nodes, node);
+      } else {
+        const UINT16 index = conf->exe_apps_n;
+
+        tommy_arrayof_grow(exe_nodes, index + 1);
+
+        node = tommy_arrayof_ref(exe_nodes, index);
+      }
+
+      tommy_hashdyn_insert(exe_map, node, entry, path_hash);
+
+      ++conf->exe_apps_n;
+    }
+
+    return TRUE;
+  }
+
+  if (flags.alerted)
+    return FALSE;
+
+  // Replace flags
+  {
+    PFORT_APP_ENTRY entry = node->app_entry;
+
+    flags.in_pool = entry->flags.in_pool;
+    entry->flags = flags;
+
+    return TRUE;
+  }
+}
+
+static BOOL
+fort_conf_ref_exe_add_entry (PFORT_CONF_REF conf_ref, const PFORT_APP_ENTRY entry)
+{
+  const char *path = (const char *) (entry + 1);
+  const UINT32 path_len = entry->path_len;
+  const FORT_APP_FLAGS flags = entry->flags;
+
+  return fort_conf_ref_exe_add_path(conf_ref, path, path_len, flags);
+}
+
+static void
+fort_conf_ref_exe_del_path (PFORT_CONF_REF conf_ref,
+                            const char *path, UINT32 path_len)
+{
+  const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, path_len);
+
+  PFORT_CONF_EXE_NODE node = fort_conf_ref_exe_find_node(
+    conf_ref, path, path_len, path_hash);
+
+  if (node == NULL)
+    return;
+
+  // Delete from conf
+  {
+    PFORT_CONF conf = &conf_ref->conf;
+    --conf->exe_apps_n;
+  }
+
+  // Delete from pool
+  {
+    PFORT_APP_ENTRY entry = node->app_entry;
+    if (entry->flags.in_pool) {
+      tlsf_free(conf_ref->tlsf, entry);
+    }
+  }
+
+  // Delete from exe map
+  tommy_hashdyn_remove_existing(&conf_ref->exe_map, (tommy_hashdyn_node *) node);
+
+  tommy_list_insert_tail_check(&conf_ref->free_nodes, (tommy_node *) node);
+}
+
+static void
+fort_conf_ref_exe_del_entry (PFORT_CONF_REF conf_ref, const PFORT_APP_ENTRY entry)
+{
+  const char *path = (const char *) (entry + 1);
+  const UINT32 path_len = entry->path_len;
+
+  fort_conf_ref_exe_del_path(conf_ref, path, path_len);
+}
+
 static void
 fort_conf_ref_init (PFORT_CONF_REF conf_ref)
 {
   conf_ref->refcount = 0;
 
-  tommy_list_init(&conf_ref->exe_blocks);
+  tommy_list_init(&conf_ref->pools);
+  tommy_list_init(&conf_ref->free_nodes);
 
   tommy_arrayof_init(&conf_ref->exe_nodes, sizeof(FORT_CONF_EXE_NODE));
   tommy_hashdyn_init(&conf_ref->exe_map);
@@ -158,13 +342,7 @@ fort_conf_ref_new (const PFORT_CONF conf, ULONG len)
 static void
 fort_conf_ref_del (PFORT_CONF_REF conf_ref)
 {
-  /* Delete exe blocks */
-  tommy_node *exe_block = tommy_list_head(&conf_ref->exe_blocks);
-  while (exe_block) {
-      tommy_node *next = exe_block->next;
-      tommy_free(exe_block);
-      exe_block = next;
-  }
+  fort_conf_pool_done(conf_ref);
 
   tommy_hashdyn_done(&conf_ref->exe_map);
   tommy_arrayof_done(&conf_ref->exe_nodes);

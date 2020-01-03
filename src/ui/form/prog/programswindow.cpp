@@ -72,7 +72,7 @@ void ProgramsWindow::onRestoreWindowState()
 
 void ProgramsWindow::onRetranslateUi()
 {
-    m_cbLogBlocked->setText(tr("Show Blocked Programs"));
+    m_cbLogBlocked->setText(tr("Alert Blocked Programs"));
 
     appListModel()->refresh();
 }
