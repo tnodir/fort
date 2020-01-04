@@ -5,6 +5,7 @@
 
 #include "../util/classhelpers.h"
 
+QT_FORWARD_DECLARE_CLASS(ConfManager)
 QT_FORWARD_DECLARE_CLASS(Device)
 QT_FORWARD_DECLARE_CLASS(DriverWorker)
 QT_FORWARD_DECLARE_CLASS(EnvManager)
@@ -40,8 +41,13 @@ public slots:
 
     bool validate();
 
-    bool writeConf(const FirewallConf &conf, EnvManager &envManager);
+    bool writeConf(const FirewallConf &conf,
+                   ConfManager &confManager,
+                   EnvManager &envManager);
     bool writeConfFlags(const FirewallConf &conf);
+    bool writeApp(const QString &appPath,
+                  int groupIndex, bool useGroupPerm,
+                  bool blocked, bool alerted, bool remove = false);
 
 private:
     void setErrorMessage(const QString &errorMessage);

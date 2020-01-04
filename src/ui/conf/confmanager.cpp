@@ -5,6 +5,7 @@
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
+#include "../driver/drivermanager.h"
 #include "../fortcommon.h"
 #include "../fortsettings.h"
 #include "../task/taskinfo.h"
@@ -49,10 +50,10 @@ const char * const sqlSelectAppGroups =
         "  ORDER BY order_index;"
         ;
 
-const char * const sqlSelectDefaultAppGroupId =
+const char * const sqlSelectAppGroupIdByIndex =
         "SELECT app_group_id"
         "  FROM app_group"
-        "  WHERE order_index = 0;"
+        "  WHERE order_index = ?1;"
         ;
 
 const char * const sqlInsertAddressGroup =
@@ -126,7 +127,8 @@ const char * const sqlSelectAppCount =
         ;
 
 const char * const sqlSelectAppByIndex =
-        "SELECT t.app_id, t.app_group_id,"
+        "SELECT t.app_id,"
+        "    g.order_index as group_index,"
         "    g.name as app_group_name,"
         "    t.path, t.blocked,"
         "    (alert.app_id IS NOT NULL) as alerted,"
@@ -135,6 +137,16 @@ const char * const sqlSelectAppByIndex =
         "    JOIN app_group g ON g.app_group_id = t.app_group_id"
         "    LEFT JOIN app_alert alert ON alert.app_id = t.app_id"
         "  LIMIT 1 OFFSET ?1;"
+        ;
+
+const char * const sqlSelectApps =
+        "SELECT g.order_index as group_index,"
+        "    t.blocked,"
+        "    (alert.app_id IS NOT NULL) as alerted,"
+        "    t.path"
+        "  FROM app t"
+        "    JOIN app_group g ON g.app_group_id = t.app_group_id"
+        "    LEFT JOIN app_alert alert ON alert.app_id = t.app_id;"
         ;
 
 const char * const sqlInsertApp =
@@ -148,12 +160,36 @@ const char * const sqlInsertAppAlert =
         "  VALUES(?1);"
         ;
 
+const char * const sqlDeleteApp =
+        "DELETE FROM app WHERE app_id = ?1;"
+        ;
+
+const char * const sqlDeleteAppAlert =
+        "DELETE FROM app_alert WHERE app_id = ?1;"
+        ;
+
+const char * const sqlUpdateApp =
+        "UPDATE app"
+        "  SET app_group_id = ?2, blocked = ?3"
+        "  WHERE app_id = ?1;"
+        ;
+
+const char * const sqlUpdateAppResetGroup =
+        "UPDATE app"
+        "  SET app_group_id = ?2"
+        "  WHERE app_group_id = ?1;"
+        ;
+
 }
 
 ConfManager::ConfManager(const QString &filePath,
+                         DriverManager *driverManager,
+                         EnvManager *envManager,
                          FortSettings *fortSettings,
                          QObject *parent) :
     QObject(parent),
+    m_driverManager(driverManager),
+    m_envManager(envManager),
     m_fortSettings(fortSettings),
     m_sqliteDb(new SqliteDb(filePath))
 {
@@ -301,7 +337,7 @@ int ConfManager::appCount()
 }
 
 bool ConfManager::getAppByIndex(bool &blocked, bool &alerted,
-                                qint64 &appId, qint64 &appGroupId,
+                                qint64 &appId, int &groupIndex,
                                 QString &appGroupName, QString &appPath,
                                 QDateTime &endTime, int row)
 {
@@ -315,7 +351,7 @@ bool ConfManager::getAppByIndex(bool &blocked, bool &alerted,
         return false;
 
     appId = stmt.columnInt64(0);
-    appGroupId = stmt.columnInt64(1);
+    groupIndex = stmt.columnInt(1);
     appGroupName = stmt.columnText(2);
     appPath = stmt.columnText(3);
     blocked = stmt.columnBool(4);
@@ -325,26 +361,20 @@ bool ConfManager::getAppByIndex(bool &blocked, bool &alerted,
     return true;
 }
 
-qint64 ConfManager::getDefaultAppGroupId()
+qint64 ConfManager::appGroupIdByIndex(int index)
 {
-    return m_sqliteDb->executeEx(sqlSelectDefaultAppGroupId).toLongLong();
+    return m_sqliteDb->executeEx(sqlSelectAppGroupIdByIndex, {index}).toLongLong();
 }
 
-bool ConfManager::addApp(const QString &appPath,
-                         const QDateTime &endTime,
-                         qint64 appGroupId,
-                         bool blocked, bool alerted)
+bool ConfManager::addApp(const QString &appPath, const QDateTime &endTime,
+                         int groupIndex, bool blocked, bool alerted)
 {
     bool ok = false;
 
     m_sqliteDb->beginTransaction();
 
-    if (appGroupId == 0) {
-        appGroupId = getDefaultAppGroupId();
-    }
-
     const QVariantList vars = QVariantList()
-            << appGroupId
+            << appGroupIdByIndex(groupIndex)
             << appPath
             << blocked
             << QDateTime::currentDateTime()
@@ -371,6 +401,95 @@ end:
     m_sqliteDb->endTransaction(ok);
 
     return ok;
+}
+
+bool ConfManager::deleteApp(qint64 appId)
+{
+    bool ok = false;
+
+    m_sqliteDb->beginTransaction();
+
+    const QVariantList vars = QVariantList() << appId;
+
+    m_sqliteDb->executeEx(sqlDeleteApp, vars, 0, &ok);
+    if (!ok) goto end;
+
+    m_sqliteDb->executeEx(sqlDeleteAppAlert, vars, 0, &ok);
+
+end:
+    if (!ok) {
+        setErrorMessage(m_sqliteDb->errorMessage());
+    }
+
+    m_sqliteDb->endTransaction(ok);
+
+    return ok;
+}
+
+bool ConfManager::updateApp(qint64 appId, int groupIndex, bool blocked)
+{
+    bool ok = false;
+
+    m_sqliteDb->beginTransaction();
+
+    const QVariantList vars = QVariantList()
+            << appId
+            << appGroupIdByIndex(groupIndex)
+            << blocked;
+
+    m_sqliteDb->executeEx(sqlUpdateApp, vars, 0, &ok);
+    if (!ok) goto end;
+
+    m_sqliteDb->executeEx(sqlDeleteAppAlert, {appId}, 0, &ok);
+
+end:
+    if (!ok) {
+        setErrorMessage(m_sqliteDb->errorMessage());
+    }
+
+    m_sqliteDb->endTransaction(ok);
+
+    return ok;
+}
+
+bool ConfManager::walkApps(std::function<walkAppsCallback> func)
+{
+    SqliteStmt stmt;
+    if (!stmt.prepare(m_sqliteDb->db(), sqlSelectApps))
+        return false;
+
+    while (stmt.step() == SqliteStmt::StepRow) {
+        const int groupIndex = stmt.columnInt(0);
+        const bool useGroupPerm = false;
+        const bool blocked = stmt.columnBool(1);
+        const bool alerted = stmt.columnBool(2);
+        const QString appPath = stmt.columnText(3);
+
+        if (!func(groupIndex, useGroupPerm, blocked, alerted, appPath))
+            return false;
+    }
+
+    return true;
+}
+
+bool ConfManager::updateDriverConf(const FirewallConf &conf, bool onlyFlags)
+{
+    return onlyFlags
+            ? m_driverManager->writeConfFlags(conf)
+            : m_driverManager->writeConf(conf, *this, *m_envManager);
+}
+
+bool ConfManager::updateDriverDeleteApp(const QString &appPath)
+{
+    return m_driverManager->writeApp(appPath, 0, false, false, false, true);
+}
+
+bool ConfManager::updateDriverUpdateApp(const QString &appPath,
+                                        int groupIndex, bool useGroupPerm,
+                                        bool blocked, bool alerted)
+{
+    return m_driverManager->writeApp(appPath, groupIndex, useGroupPerm,
+                                     blocked, alerted, false);
 }
 
 bool ConfManager::loadFromDb(FirewallConf &conf, bool &isNew)
@@ -506,17 +625,27 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
     }
 
     // Remove App Groups
-    for (AppGroup *appGroup : conf.removedAppGroupsList()) {
-        m_sqliteDb->executeEx(sqlPurgeAppByGroupId,
-                              QVariantList() << appGroup->id(), 0, &ok);
-        if (!ok) goto end;
+    {
+        Q_ASSERT(!conf.appGroups().isEmpty());
+        const auto defaultAppGroupId = conf.appGroups().at(0)->id();
 
-        m_sqliteDb->executeEx(sqlDeleteAppGroup,
-                              QVariantList() << appGroup->id(), 0, &ok);
-        if (!ok) goto end;
+        for (AppGroup *appGroup : conf.removedAppGroupsList()) {
+            m_sqliteDb->executeEx(sqlPurgeAppByGroupId,
+                                  QVariantList() << appGroup->id(), 0, &ok);
+            if (!ok) goto end;
+
+            m_sqliteDb->executeEx(sqlDeleteAppGroup,
+                                  QVariantList() << appGroup->id(), 0, &ok);
+            if (!ok) goto end;
+
+            m_sqliteDb->executeEx(sqlUpdateAppResetGroup,
+                                  QVariantList() << appGroup->id()
+                                  << defaultAppGroupId, 0, &ok);
+            if (!ok) goto end;
+        }
+
+        conf.clearRemovedAppGroups();
     }
-
-    conf.clearRemovedAppGroups();
 
  end:
     if (!ok) {
@@ -524,6 +653,10 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
     }
 
     m_sqliteDb->endTransaction(ok);
+
+    if (ok) {
+        emit confSaved();
+    }
 
     return ok;
 }

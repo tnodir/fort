@@ -1080,6 +1080,8 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
         }
 
         fort_conf_ref_put(&g_device->conf, conf_ref);
+
+        fort_worker_reauth();
       }
     }
     break;

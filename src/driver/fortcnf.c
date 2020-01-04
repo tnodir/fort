@@ -1,6 +1,7 @@
 /* Fort Firewall Configuration */
 
-#define FORT_CONF_POOL_SIZE	(8 * 1024)
+#define FORT_CONF_POOL_SIZE	(64 * 1024)
+#define FORT_CONF_POOL_SIZE_MIN	(FORT_CONF_POOL_SIZE - 256)
 #define FORT_CONF_POOL_DATA_OFF	offsetof(FORT_CONF_POOL, data)
 
 /* Synchronize with tommy_node! */
@@ -75,6 +76,23 @@ fort_device_flag (PFORT_DEVICE_CONF device_conf, UCHAR flag)
 }
 
 static void
+fort_conf_pool_init (PFORT_CONF_REF conf_ref, UINT32 size)
+{
+  const UINT32 pool_size = (size >= FORT_CONF_POOL_SIZE_MIN)
+    ? size * 2 : FORT_CONF_POOL_SIZE;
+
+  tommy_node *pool = tommy_malloc(pool_size);
+  if (pool == NULL)
+    return;
+
+  tommy_list_insert_first(&conf_ref->pools, pool);
+
+  conf_ref->tlsf = tlsf_create_with_pool(
+    (char *) pool + FORT_CONF_POOL_DATA_OFF,
+    pool_size - FORT_CONF_POOL_DATA_OFF);
+}
+
+static void
 fort_conf_pool_done (PFORT_CONF_REF conf_ref)
 {
   tommy_node *pool = tommy_list_head(&conf_ref->pools);
@@ -91,24 +109,12 @@ fort_conf_pool_malloc (PFORT_CONF_REF conf_ref, UINT32 size)
   tommy_node *pool = tommy_list_tail(&conf_ref->pools);
   void *p;
 
-  if (pool == NULL) {
-    const UINT32 pool_size = (size >= FORT_CONF_POOL_SIZE)
-      ? size * 2 : FORT_CONF_POOL_SIZE;
-
-    pool = tommy_malloc(pool_size);
-    if (pool == NULL)
-      return NULL;
-
-    tommy_list_insert_first(&conf_ref->pools, pool);
-
-    conf_ref->tlsf = tlsf_create_with_pool(
-      (char *) pool + FORT_CONF_POOL_DATA_OFF,
-      pool_size - FORT_CONF_POOL_DATA_OFF);
-  }
+  if (pool == NULL)
+    return NULL;
 
   p = tlsf_malloc(conf_ref->tlsf, size);
   if (p == NULL) {
-    const UINT32 pool_size = (size >= FORT_CONF_POOL_SIZE)
+    const UINT32 pool_size = (size >= FORT_CONF_POOL_SIZE_MIN)
       ? size * 2 : FORT_CONF_POOL_SIZE;
 
     pool = tommy_malloc(pool_size);
@@ -163,34 +169,6 @@ fort_conf_exe_find (const PFORT_CONF conf,
   return app_flags;
 }
 
-static void
-fort_conf_ref_exe_fill (PFORT_CONF_REF conf_ref)
-{
-  tommy_arrayof *exe_nodes = &conf_ref->exe_nodes;
-  tommy_hashdyn *exe_map = &conf_ref->exe_map;
-
-  const PFORT_CONF conf = &conf_ref->conf;
-  const char *app_entries = (const char *) (conf->data + conf->exe_apps_off);
-
-  const int count = conf->exe_apps_n;
-  int i;
-
-  tommy_arrayof_grow(exe_nodes, count);
-
-  for (i = 0; i < count; ++i) {
-    const PFORT_APP_ENTRY entry = (const PFORT_APP_ENTRY) app_entries;
-    const char *path = (const char *) (entry + 1);
-    const UINT32 path_len = entry->path_len;
-    const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, path_len);
-
-    tommy_hashdyn_node *node = tommy_arrayof_ref(exe_nodes, i);
-
-    tommy_hashdyn_insert(exe_map, node, entry, path_hash);
-
-    app_entries += FORT_CONF_APP_ENTRY_SIZE(path_len);
-  }
-}
-
 static BOOL
 fort_conf_ref_exe_add_path (PFORT_CONF_REF conf_ref,
                             const char *path, UINT32 path_len,
@@ -208,7 +186,6 @@ fort_conf_ref_exe_add_path (PFORT_CONF_REF conf_ref,
     if (entry == NULL)
       return FALSE;
 
-    flags.in_pool = 1;
     entry->flags = flags;
 
     entry->path_len = (UINT16) path_len;
@@ -253,7 +230,6 @@ fort_conf_ref_exe_add_path (PFORT_CONF_REF conf_ref,
   {
     PFORT_APP_ENTRY entry = node->app_entry;
 
-    flags.in_pool = entry->flags.in_pool;
     entry->flags = flags;
 
     return TRUE;
@@ -268,6 +244,25 @@ fort_conf_ref_exe_add_entry (PFORT_CONF_REF conf_ref, const PFORT_APP_ENTRY entr
   const FORT_APP_FLAGS flags = entry->flags;
 
   return fort_conf_ref_exe_add_path(conf_ref, path, path_len, flags);
+}
+
+static void
+fort_conf_ref_exe_fill (PFORT_CONF_REF conf_ref, const PFORT_CONF conf)
+{
+  const char *app_entries = (const char *) (conf->data + conf->exe_apps_off);
+
+  const int count = conf->exe_apps_n;
+  int i;
+
+  tommy_arrayof_grow(&conf_ref->exe_nodes, count);
+
+  for (i = 0; i < count; ++i) {
+    const PFORT_APP_ENTRY entry = (const PFORT_APP_ENTRY) app_entries;
+
+    fort_conf_ref_exe_add_entry(conf_ref, entry);
+
+    app_entries += FORT_CONF_APP_ENTRY_SIZE(entry->path_len);
+  }
 }
 
 static void
@@ -291,9 +286,7 @@ fort_conf_ref_exe_del_path (PFORT_CONF_REF conf_ref,
   // Delete from pool
   {
     PFORT_APP_ENTRY entry = node->app_entry;
-    if (entry->flags.in_pool) {
-      tlsf_free(conf_ref->tlsf, entry);
-    }
+    tlsf_free(conf_ref->tlsf, entry);
   }
 
   // Delete from exe map
@@ -326,14 +319,18 @@ fort_conf_ref_init (PFORT_CONF_REF conf_ref)
 static PFORT_CONF_REF
 fort_conf_ref_new (const PFORT_CONF conf, ULONG len)
 {
-  const ULONG ref_len = len + offsetof(FORT_CONF_REF, conf);
+  const ULONG conf_len = FORT_CONF_DATA_OFF + conf->exe_apps_off;
+  const ULONG ref_len = conf_len + offsetof(FORT_CONF_REF, conf);
   PFORT_CONF_REF conf_ref = tommy_malloc(ref_len);
 
   if (conf_ref != NULL) {
-    RtlCopyMemory(&conf_ref->conf, conf, len);
+    RtlCopyMemory(&conf_ref->conf, conf, conf_len);
 
     fort_conf_ref_init(conf_ref);
-    fort_conf_ref_exe_fill(conf_ref);
+
+    fort_conf_pool_init(conf_ref, len - conf_len);
+
+    fort_conf_ref_exe_fill(conf_ref, conf);
   }
 
   return conf_ref;

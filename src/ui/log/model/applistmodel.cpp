@@ -15,6 +15,7 @@ AppListModel::AppListModel(ConfManager *confManager,
     TableItemModel(parent),
     m_confManager(confManager)
 {
+    connect(m_confManager, &ConfManager::confSaved, this, &AppListModel::reset);
 }
 
 void AppListModel::setAppInfoCache(AppInfoCache *v)
@@ -120,11 +121,11 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
         }
         case 3: {
             switch (m_rowCache.state) {
-            case Alert:
+            case AppAlert:
                 return QIcon(":/images/error.png");
-            case Block:
+            case AppBlock:
                 return QIcon(":/images/cancel.png");
-            case Allow:
+            case AppAllow:
                 return QIcon(":/images/accept.png");
             }
         }
@@ -151,6 +152,36 @@ QString AppListModel::appPathByRow(int row) const
     return m_rowCache.appPath;
 }
 
+void AppListModel::deleteApp(int row)
+{
+    updateRowCache(row);
+
+    const qint64 appId = m_rowCache.appId;
+    const QString appPath = m_rowCache.appPath;
+
+    if (confManager()->updateDriverDeleteApp(appPath)
+            && confManager()->deleteApp(appId)) {
+        beginRemoveRows(QModelIndex(), row, row);
+        invalidateRowCache();
+        endRemoveRows();
+    }
+}
+
+void AppListModel::updateApp(int row, int groupIndex, bool blocked)
+{
+    updateRowCache(row);
+
+    const qint64 appId = m_rowCache.appId;
+    const QString appPath = m_rowCache.appPath;
+
+    if (confManager()->updateDriverUpdateApp(appPath, groupIndex, false, blocked, false)
+            && confManager()->updateApp(appId, groupIndex, blocked)) {
+        const auto itemIndex = index(row, 3);
+        invalidateRowCache();
+        emit dataChanged(itemIndex, itemIndex);
+    }
+}
+
 void AppListModel::reset()
 {
     beginResetModel();
@@ -173,10 +204,10 @@ void AppListModel::updateRowCache(int row) const
     bool alerted = false;
 
     if (m_confManager->getAppByIndex(blocked, alerted,
-                                     m_rowCache.appId, m_rowCache.appGroupId,
+                                     m_rowCache.appId, m_rowCache.groupIndex,
                                      m_rowCache.appGroupName, m_rowCache.appPath,
                                      m_rowCache.endTime, row)) {
-        m_rowCache.state = alerted ? Alert : (blocked ? Block : Allow);
+        m_rowCache.state = alerted ? AppAlert : (blocked ? AppBlock : AppAllow);
         m_rowCache.row = row;
     }
 }
@@ -184,9 +215,9 @@ void AppListModel::updateRowCache(int row) const
 QString AppListModel::appStateToString(AppState state) const
 {
     switch (state) {
-    case Alert: return tr("Alert");
-    case Block: return tr("Block");
-    case Allow: return tr("Allow");
+    case AppAlert: return tr("Alert");
+    case AppBlock: return tr("Block");
+    case AppAllow: return tr("Allow");
     }
 
     Q_UNREACHABLE();

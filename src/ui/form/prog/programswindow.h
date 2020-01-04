@@ -60,6 +60,10 @@ private:
 
     AppListModel *m_appListModel = nullptr;
 
+    QPushButton *m_btAllowApp = nullptr;
+    QPushButton *m_btBlockApp = nullptr;
+    QPushButton *m_btAddApp = nullptr;
+    QPushButton *m_btDeleteApp = nullptr;
     QCheckBox *m_cbLogBlocked = nullptr;
     TableView *m_appListView = nullptr;
     QWidget *m_appInfoRow = nullptr;

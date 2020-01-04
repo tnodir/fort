@@ -10,9 +10,9 @@ QT_FORWARD_DECLARE_CLASS(ConfManager)
 QT_FORWARD_DECLARE_CLASS(LogEntryBlocked)
 
 enum AppState {
-    Alert = 0,
-    Block,
-    Allow
+    AppAlert = 0,
+    AppBlock,
+    AppAllow
 };
 
 struct AppRow {
@@ -21,10 +21,10 @@ struct AppRow {
 
     int row = -1;
 
-    AppState state = Alert;
+    AppState state = AppAlert;
+    int groupIndex = 0;
 
     qint64 appId = 0;
-    qint64 appGroupId = 0;
 
     QString appGroupName;
     QString appPath;
@@ -57,6 +57,9 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     QString appPathByRow(int row) const;
+
+    void deleteApp(int row);
+    void updateApp(int row, int groupIndex, bool blocked);
 
 public slots:
     void reset();

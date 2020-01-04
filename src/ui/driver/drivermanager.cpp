@@ -83,13 +83,18 @@ bool DriverManager::validate()
                      buf, verSize);
 }
 
-bool DriverManager::writeConf(const FirewallConf &conf, EnvManager &envManager)
+bool DriverManager::writeConf(const FirewallConf &conf,
+                              ConfManager &confManager,
+                              EnvManager &envManager)
 {
+    if (!isDeviceOpened())
+        return true;
+
     ConfUtil confUtil;
     QByteArray buf;
 
-    const int confSize = confUtil.write(conf, envManager, buf);
-    if (!confSize) {
+    const int confSize = confUtil.write(conf, confManager, envManager, buf);
+    if (confSize == 0) {
         setErrorMessage(confUtil.errorMessage());
         return false;
     }
@@ -100,6 +105,9 @@ bool DriverManager::writeConf(const FirewallConf &conf, EnvManager &envManager)
 
 bool DriverManager::writeConfFlags(const FirewallConf &conf)
 {
+    if (!isDeviceOpened())
+        return true;
+
     ConfUtil confUtil;
     QByteArray buf;
 
@@ -111,6 +119,30 @@ bool DriverManager::writeConfFlags(const FirewallConf &conf)
 
     return writeData(FortCommon::ioctlSetFlags(),
                      buf, flagsSize);
+}
+
+bool DriverManager::writeApp(const QString &appPath,
+                             int groupIndex, bool useGroupPerm,
+                             bool blocked, bool alerted, bool remove)
+{
+    if (!isDeviceOpened())
+        return true;
+
+    ConfUtil confUtil;
+    QByteArray buf;
+
+    const int entrySize = confUtil.writeAppEntry(
+                groupIndex, useGroupPerm, blocked, alerted,
+                appPath, buf);
+
+    if (entrySize == 0) {
+        setErrorMessage(confUtil.errorMessage());
+        return false;
+    }
+
+    return writeData(remove ? FortCommon::ioctlDelApp()
+                            : FortCommon::ioctlAddApp(),
+                     buf, entrySize);
 }
 
 bool DriverManager::writeData(quint32 code, QByteArray &buf, int size)

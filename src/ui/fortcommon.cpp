@@ -43,6 +43,16 @@ quint32 FortCommon::ioctlGetLog()
     return FORT_IOCTL_GETLOG;
 }
 
+quint32 FortCommon::ioctlAddApp()
+{
+    return FORT_IOCTL_ADDAPP;
+}
+
+quint32 FortCommon::ioctlDelApp()
+{
+    return FORT_IOCTL_DELAPP;
+}
+
 int FortCommon::bufferSize()
 {
     return FORT_BUFFER_SIZE;

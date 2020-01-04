@@ -186,9 +186,9 @@ private:
 
     QuotaManager *m_quotaManager = nullptr;
     StatManager *m_statManager = nullptr;
-    ConfManager *m_confManager = nullptr;
     DriverManager *m_driverManager = nullptr;
     EnvManager *m_envManager = nullptr;
+    ConfManager *m_confManager = nullptr;
     LogManager *m_logManager = nullptr;
     NativeEventFilter *m_nativeEventFilter = nullptr;
     HotKeyManager *m_hotKeyManager = nullptr;

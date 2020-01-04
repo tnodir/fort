@@ -57,10 +57,11 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_quotaManager(new QuotaManager(fortSettings, this)),
     m_statManager(new StatManager(fortSettings->statFilePath(),
                                   m_quotaManager, this)),
-    m_confManager(new ConfManager(fortSettings->confFilePath(),
-                                  fortSettings, this)),
     m_driverManager(new DriverManager(this)),
     m_envManager(new EnvManager(this)),
+    m_confManager(new ConfManager(fortSettings->confFilePath(),
+                                  m_driverManager, m_envManager,
+                                  fortSettings, this)),
     m_logManager(new LogManager(m_confManager, m_statManager,
                                 m_driverManager->driverWorker(), this)),
     m_nativeEventFilter(new NativeEventFilter(this)),
@@ -555,24 +556,16 @@ bool FortManager::saveSettings(FirewallConf *newConf, bool onlyFlags,
 
 bool FortManager::updateDriverConf(bool onlyFlags)
 {
-    if (!m_driverManager->isDeviceOpened())
-        return true;
-
     updateLogManager(false);
 
-    // Update driver
-    const bool res = onlyFlags
-            ? m_driverManager->writeConfFlags(*m_conf)
-            : m_driverManager->writeConf(*m_conf, *m_envManager);
-
-    if (res) {
+    if (m_confManager->updateDriverConf(*m_conf, onlyFlags)) {
         updateStatManager(m_conf);
         updateLogManager(true);
+        return true;
     } else {
         closeDriver();
+        return false;
     }
-
-    return res;
 }
 
 void FortManager::updateLogManager(bool active)

@@ -11,6 +11,7 @@
 
 QT_FORWARD_DECLARE_CLASS(AddressGroup)
 QT_FORWARD_DECLARE_CLASS(AppGroup)
+QT_FORWARD_DECLARE_CLASS(ConfManager)
 QT_FORWARD_DECLARE_CLASS(EnvManager)
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
 
@@ -37,8 +38,13 @@ signals:
     void errorMessageChanged();
 
 public slots:
-    int write(const FirewallConf &conf, EnvManager &envManager, QByteArray &buf);
+    int write(const FirewallConf &conf,
+              ConfManager &confManager,
+              EnvManager &envManager, QByteArray &buf);
     int writeFlags(const FirewallConf &conf, QByteArray &buf);
+    int writeAppEntry(int groupIndex, bool useGroupPerm,
+                      bool blocked, bool alerted,
+                      const QString &appPath, QByteArray &buf);
     int writeVersion(QByteArray &buf);
 
 private:
@@ -61,13 +67,23 @@ private:
                         quint32 &prefixAppsSize,
                         quint32 &exeAppsSize);
 
-    bool parseApps(int groupOffset, bool blocked, const QString &text,
-                   appentry_map_t &wildAppsMap,
-                   appentry_map_t &prefixAppsMap,
-                   appentry_map_t &exeAppsMap,
-                   quint32 &wildAppsSize,
-                   quint32 &prefixAppsSize,
-                   quint32 &exeAppsSize);
+    bool parseExeApps(ConfManager &confManager,
+                      appentry_map_t &exeAppsMap,
+                      quint32 &exeAppsSize);
+
+    bool parseAppsText(int groupIndex, bool blocked, const QString &text,
+                       appentry_map_t &wildAppsMap,
+                       appentry_map_t &prefixAppsMap,
+                       appentry_map_t &exeAppsMap,
+                       quint32 &wildAppsSize,
+                       quint32 &prefixAppsSize,
+                       quint32 &exeAppsSize);
+
+    bool addApp(int groupIndex, bool useGroupPerm,
+                bool blocked, bool alerted,
+                const QString &appPath,
+                appentry_map_t &appsMap,
+                quint32 &appsSize);
 
     static QString parseAppPath(const QStringRef &line,
                                 bool &isWild, bool &isPrefix);

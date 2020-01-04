@@ -17,6 +17,8 @@ public:
     static quint32 ioctlSetConf();
     static quint32 ioctlSetFlags();
     static quint32 ioctlGetLog();
+    static quint32 ioctlAddApp();
+    static quint32 ioctlDelApp();
 
     static int bufferSize();
 

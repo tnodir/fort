@@ -77,6 +77,11 @@ void ProgramsWindow::onRestoreWindowState()
 
 void ProgramsWindow::onRetranslateUi()
 {
+    m_btAllowApp->setToolTip(tr("Allow"));
+    m_btBlockApp->setToolTip(tr("Block"));
+    m_btAddApp->setToolTip(tr("Add Program"));
+    m_btDeleteApp->setToolTip(tr("Delete Program"));
+
     m_cbLogBlocked->setText(tr("Alert about Unknown Programs"));
 
     appListModel()->refresh();
@@ -121,8 +126,31 @@ QLayout *ProgramsWindow::setupHeader()
 {
     auto layout = new QHBoxLayout();
 
+    m_btAllowApp = ControlUtil::createLinkButton(":/images/accept.png");
+    m_btBlockApp = ControlUtil::createLinkButton(":/images/cancel.png");
+    m_btAddApp = ControlUtil::createLinkButton(":/images/application_add.png");
+    m_btDeleteApp = ControlUtil::createLinkButton(":/images/application_delete.png");
+
+    connect(m_btAllowApp, &QAbstractButton::clicked, [&] {
+        const int appIndex = appListCurrentIndex();
+        appListModel()->updateApp(appIndex, 0, false);
+    });
+    connect(m_btBlockApp, &QAbstractButton::clicked, [&] {
+        const int appIndex = appListCurrentIndex();
+        appListModel()->updateApp(appIndex, 0, true);
+    });
+    connect(m_btDeleteApp, &QAbstractButton::clicked, [&] {
+        const int appIndex = appListCurrentIndex();
+        appListModel()->deleteApp(appIndex);
+    });
+
     setupLogBlocked();
 
+    layout->addWidget(m_btAllowApp);
+    layout->addWidget(m_btBlockApp);
+    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
+    layout->addWidget(m_btAddApp);
+    layout->addWidget(m_btDeleteApp);
     layout->addStretch();
     layout->addWidget(m_cbLogBlocked);
 
