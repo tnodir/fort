@@ -54,7 +54,7 @@ private:
 
     TableView *m_tableTasks = nullptr;
     QWidget *m_taskDetailsRow = nullptr;
-    CheckSpinCombo *m_lscTaskInterval = nullptr;
+    CheckSpinCombo *m_cscTaskInterval = nullptr;
     QPushButton *m_btTaskRun = nullptr;
     QPushButton *m_btTaskAbort = nullptr;
 };

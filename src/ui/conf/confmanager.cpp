@@ -164,7 +164,7 @@ const char * const sqlDeleteAppAlert =
 
 const char * const sqlUpdateApp =
         "UPDATE app"
-        "  SET app_group_id = ?2, blocked = ?3"
+        "  SET app_group_id = ?2, blocked = ?3, end_time = ?4"
         "  WHERE app_id = ?1;"
         ;
 
@@ -420,7 +420,8 @@ end:
     return ok;
 }
 
-bool ConfManager::updateApp(qint64 appId, int groupIndex, bool blocked)
+bool ConfManager::updateApp(qint64 appId, const QDateTime &endTime,
+                            int groupIndex, bool blocked)
 {
     bool ok = false;
 
@@ -429,7 +430,9 @@ bool ConfManager::updateApp(qint64 appId, int groupIndex, bool blocked)
     const QVariantList vars = QVariantList()
             << appId
             << appGroupIdByIndex(groupIndex)
-            << blocked;
+            << blocked
+            << endTime
+               ;
 
     m_sqliteDb->executeEx(sqlUpdateApp, vars, 0, &ok);
     if (!ok) goto end;

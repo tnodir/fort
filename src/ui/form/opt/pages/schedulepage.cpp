@@ -77,8 +77,8 @@ void SchedulePage::retranslateTaskDetails()
         tr("Each 12 hours"), tr("Daily"), tr("Weekly"), tr("Monthly")
     };
 
-    m_lscTaskInterval->setNames(list);
-    m_lscTaskInterval->spinBox()->setSuffix(tr(" hours"));
+    m_cscTaskInterval->setNames(list);
+    m_cscTaskInterval->spinBox()->setSuffix(tr(" hours"));
 }
 
 void SchedulePage::setupTaskListModel()
@@ -152,25 +152,25 @@ void SchedulePage::setupTaskDetails()
         currentTaskInfo()->abort();
     });
 
-    layout->addWidget(m_lscTaskInterval, 1);
+    layout->addWidget(m_cscTaskInterval, 1);
     layout->addWidget(m_btTaskRun);
     layout->addWidget(m_btTaskAbort);
 }
 
 void SchedulePage::setupTaskInterval()
 {
-    m_lscTaskInterval = new CheckSpinCombo();
-    m_lscTaskInterval->checkBox()->setFont(ControlUtil::fontDemiBold());
-    m_lscTaskInterval->spinBox()->setRange(1, 24 * 30 * 12);  // ~Year
-    m_lscTaskInterval->setValues(taskIntervalHourValues);
+    m_cscTaskInterval = new CheckSpinCombo();
+    m_cscTaskInterval->checkBox()->setFont(ControlUtil::fontDemiBold());
+    m_cscTaskInterval->spinBox()->setRange(1, 24 * 30 * 12);  // ~Year
+    m_cscTaskInterval->setValues(taskIntervalHourValues);
 
-    connect(m_lscTaskInterval->checkBox(), &QCheckBox::toggled, [&](bool checked) {
+    connect(m_cscTaskInterval->checkBox(), &QCheckBox::toggled, [&](bool checked) {
         const int taskIndex = currentTaskIndex();
         const auto index = taskListModel()->index(taskIndex, 0);
 
         taskListModel()->setData(index, checked, TaskListModel::RoleEnabled);
     });
-    connect(m_lscTaskInterval->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), [&](int value) {
+    connect(m_cscTaskInterval->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), [&](int value) {
         const int taskIndex = currentTaskIndex();
         const auto index = taskListModel()->index(taskIndex, 1);
 
@@ -192,11 +192,11 @@ void SchedulePage::setupTableTasksChanged()
         if (taskSelected) {
             const auto index = taskListModel()->index(taskIndex, 0);
 
-            m_lscTaskInterval->checkBox()->setChecked(
+            m_cscTaskInterval->checkBox()->setChecked(
                         taskListModel()->data(index, TaskListModel::RoleEnabled).toBool());
-            m_lscTaskInterval->checkBox()->setText(
+            m_cscTaskInterval->checkBox()->setText(
                         taskListModel()->data(index).toString());
-            m_lscTaskInterval->spinBox()->setValue(
+            m_cscTaskInterval->spinBox()->setValue(
                         taskListModel()->data(index, TaskListModel::RoleIntervalHours).toInt());
 
             const bool running = currentTaskInfo()->running();

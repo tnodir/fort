@@ -61,8 +61,10 @@ public:
     QString appPathByRow(int row) const;
     AppRow appRow(int row) const;
 
-    bool addApp(const QString &appPath, int groupIndex, bool blocked);
-    bool updateApp(int row, int groupIndex, bool blocked);
+    bool addApp(const QString &appPath, int groupIndex, bool blocked,
+                const QDateTime &endTime = QDateTime());
+    bool updateApp(int row, int groupIndex, bool blocked,
+                   const QDateTime &endTime = QDateTime());
     void deleteApp(int row);
 
 public slots:

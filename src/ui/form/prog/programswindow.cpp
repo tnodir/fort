@@ -11,6 +11,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QRadioButton>
+#include <QSpinBox>
 #include <QVBoxLayout>
 
 #include "../../conf/appgroup.h"
@@ -22,9 +23,18 @@
 #include "../../util/app/appinfocache.h"
 #include "../../util/guiutil.h"
 #include "../../util/osutil.h"
+#include "../controls/checkspincombo.h"
 #include "../controls/controlutil.h"
 #include "../controls/tableview.h"
 #include "programscontroller.h"
+
+namespace {
+
+const ValuesList appBlockInHourValues = {
+    3, 1, 6, 12, 24, 24 * 7, 24 * 30
+};
+
+}
 
 ProgramsWindow::ProgramsWindow(FortManager *fortManager,
                                QWidget *parent) :
@@ -33,7 +43,6 @@ ProgramsWindow::ProgramsWindow(FortManager *fortManager,
     m_appListModel(ctrl()->appListModel())
 {
     setupController();
-    setupAppListModel();
 
     setupUi();
 
@@ -48,10 +57,6 @@ void ProgramsWindow::setupController()
             this, &ProgramsWindow::onSaveWindowState);
     connect(fortManager(), &FortManager::afterRestoreProgWindowState,
             this, &ProgramsWindow::onRestoreWindowState);
-}
-
-void ProgramsWindow::setupAppListModel()
-{
 }
 
 void ProgramsWindow::closeEvent(QCloseEvent *event)
@@ -96,6 +101,8 @@ void ProgramsWindow::onRetranslateUi()
     m_labelAppGroup->setText(tr("Application Group:"));
     m_rbAllowApp->setText(tr("Allow"));
     m_rbBlockApp->setText(tr("Block"));
+    m_cscBlockApp->checkBox()->setText(tr("Block In"));
+    retranslateAppBlockInHours();
     m_btEditOk->setText(tr("OK"));
     m_btEditCancel->setText(tr("Cancel"));
 
@@ -105,6 +112,17 @@ void ProgramsWindow::onRetranslateUi()
 
     m_btAppCopyPath->setToolTip(tr("Copy Path"));
     m_btAppOpenFolder->setToolTip(tr("Open Folder"));
+}
+
+void ProgramsWindow::retranslateAppBlockInHours()
+{
+    const QStringList list = {
+        tr("Custom"), tr("1 hour"), tr("6 hours"),
+        tr("12 hours"), tr("Day"), tr("Week"), tr("Month")
+    };
+
+    m_cscBlockApp->setNames(list);
+    m_cscBlockApp->spinBox()->setSuffix(tr(" hours"));
 }
 
 void ProgramsWindow::setupUi()
@@ -157,24 +175,15 @@ QLayout *ProgramsWindow::setupHeader()
     m_btBlockApp = ControlUtil::createLinkButton(":/images/stop.png");
 
     connect(m_btAddApp, &QAbstractButton::clicked, [&] {
-        m_editPath->setText(QString());
-        m_editPath->setReadOnly(false);
-        m_btSelectFile->setEnabled(true);
-        m_formAppEdit->show();
+        const AppRow appRow;
+        updateAppEditForm(appRow);
     });
     connect(m_btEditApp, &QAbstractButton::clicked, [&] {
         const auto appIndex = appListCurrentIndex();
-        if (appIndex < 0)
-            return;
-
-        const auto appRow = appListModel()->appRow(appIndex);
-
-        m_editPath->setText(appRow.appPath);
-        m_editPath->setReadOnly(true);
-        m_btSelectFile->setEnabled(false);
-        m_comboAppGroup->setCurrentIndex(appRow.groupIndex);
-        m_rbBlockApp->setChecked(appRow.blocked());
-        m_formAppEdit->show();
+        if (appIndex >= 0) {
+            const auto appRow = appListModel()->appRow(appIndex);
+            updateAppEditForm(appRow);
+        }
     });
     connect(m_btDeleteApp, &QAbstractButton::clicked, [&] {
         if (!fortManager()->showQuestionBox(tr("Are you sure to remove the selected program?")))
@@ -244,6 +253,12 @@ void ProgramsWindow::setupAppEditForm()
     allowLayout->addWidget(m_rbAllowApp, 1, Qt::AlignRight);
     allowLayout->addWidget(m_rbBlockApp, 1, Qt::AlignLeft);
 
+    // Block after N hours
+    m_cscBlockApp = new CheckSpinCombo();
+    m_cscBlockApp->spinBox()->setRange(1, 24 * 30 * 12);  // ~Year
+    m_cscBlockApp->setValues(appBlockInHourValues);
+    m_cscBlockApp->setNamesByValues();
+
     // OK/Cancel
     auto buttonsLayout = new QHBoxLayout();
 
@@ -257,10 +272,12 @@ void ProgramsWindow::setupAppEditForm()
     auto layout = new QVBoxLayout();
     layout->addLayout(formLayout);
     layout->addLayout(allowLayout);
+    layout->addWidget(m_cscBlockApp);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(buttonsLayout);
 
     m_formAppEdit = new QDialog(this);
+    m_formAppEdit->setWindowModality(Qt::WindowModal);
     m_formAppEdit->setSizeGripEnabled(true);
     m_formAppEdit->setLayout(layout);
     m_formAppEdit->setMinimumWidth(500);
@@ -275,6 +292,8 @@ void ProgramsWindow::setupAppEditForm()
         }
     });
 
+    connect(m_rbAllowApp, &QRadioButton::toggled, m_cscBlockApp, &CheckSpinCombo::setEnabled);
+
     connect(m_btEditOk, &QAbstractButton::clicked, [&] {
         const QString appPath = m_editPath->text();
         if (appPath.isEmpty())
@@ -283,7 +302,18 @@ void ProgramsWindow::setupAppEditForm()
         const int groupIndex = m_comboAppGroup->currentIndex();
         const bool blocked = m_rbBlockApp->isChecked();
 
-        if (appListModel()->updateApp(appListCurrentIndex(), groupIndex, blocked)) {
+        QDateTime endTime;
+        if (!blocked && m_cscBlockApp->checkBox()->isChecked()) {
+            const int hours = m_cscBlockApp->spinBox()->value();
+
+            endTime = QDateTime::currentDateTime()
+                    .addSecs(hours * 60 * 60);
+        }
+
+        if (m_formAppIsEditing
+                ? appListModel()->updateApp(appListCurrentIndex(),
+                                            groupIndex, blocked, endTime)
+                : appListModel()->addApp(appPath, groupIndex, blocked, endTime)) {
             m_formAppEdit->close();
         }
     });
@@ -417,6 +447,21 @@ void ProgramsWindow::setupTableAppsChanged()
     refreshTableAppsChanged();
 
     connect(m_appListView, &TableView::currentIndexChanged, this, refreshTableAppsChanged);
+}
+
+void ProgramsWindow::updateAppEditForm(const AppRow &appRow)
+{
+    m_formAppIsEditing = !appRow.appPath.isEmpty();
+
+    m_editPath->setText(appRow.appPath);
+    m_editPath->setReadOnly(m_formAppIsEditing);
+    m_btSelectFile->setEnabled(!m_formAppIsEditing);
+    m_comboAppGroup->setCurrentIndex(appRow.groupIndex);
+    m_rbAllowApp->setChecked(!appRow.blocked());
+    m_rbBlockApp->setChecked(appRow.blocked());
+    m_cscBlockApp->setEnabled(!appRow.blocked());
+    m_cscBlockApp->checkBox()->setChecked(false);
+    m_formAppEdit->show();
 }
 
 int ProgramsWindow::appListCurrentIndex() const

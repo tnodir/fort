@@ -13,11 +13,14 @@ QT_FORWARD_DECLARE_CLASS(QRadioButton)
 
 QT_FORWARD_DECLARE_CLASS(AppInfoCache)
 QT_FORWARD_DECLARE_CLASS(AppListModel)
+QT_FORWARD_DECLARE_CLASS(CheckSpinCombo)
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
 QT_FORWARD_DECLARE_CLASS(FortManager)
 QT_FORWARD_DECLARE_CLASS(FortSettings)
 QT_FORWARD_DECLARE_CLASS(ProgramsController)
 QT_FORWARD_DECLARE_CLASS(TableView)
+
+QT_FORWARD_DECLARE_STRUCT(AppRow)
 
 class ProgramsWindow : public WidgetWindow
 {
@@ -39,7 +42,8 @@ protected:
 
 private:
     void setupController();
-    void setupAppListModel();
+
+    void retranslateAppBlockInHours();
 
     void setupUi();
     void setupAppEditForm();
@@ -51,6 +55,7 @@ private:
     void setupAppInfoRow();
     void setupAppInfoVersion();
     void setupTableAppsChanged();
+    void updateAppEditForm(const AppRow &appRow);
 
     int appListCurrentIndex() const;
     QString appListCurrentPath() const;
@@ -63,6 +68,8 @@ private:
     AppInfoCache *appInfoCache() const;
 
 private:
+    bool m_formAppIsEditing = false;
+
     ProgramsController *m_ctrl = nullptr;
 
     AppListModel *m_appListModel = nullptr;
@@ -79,6 +86,7 @@ private:
     QComboBox *m_comboAppGroup = nullptr;
     QRadioButton *m_rbAllowApp = nullptr;
     QRadioButton *m_rbBlockApp = nullptr;
+    CheckSpinCombo *m_cscBlockApp = nullptr;
     QPushButton *m_btEditOk = nullptr;
     QPushButton *m_btEditCancel = nullptr;
     QDialog *m_formAppEdit = nullptr;

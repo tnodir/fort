@@ -52,7 +52,8 @@ public:
     bool addApp(const QString &appPath, const QDateTime &endTime,
                 int groupIndex, bool blocked, bool alerted);
     bool deleteApp(qint64 appId);
-    bool updateApp(qint64 appId, int groupIndex, bool blocked);
+    bool updateApp(qint64 appId, const QDateTime &endTime,
+                   int groupIndex, bool blocked);
     bool walkApps(std::function<walkAppsCallback> func);
 
     bool updateDriverConf(const FirewallConf &conf, bool onlyFlags = false);

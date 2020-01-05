@@ -159,17 +159,19 @@ AppRow AppListModel::appRow(int row) const
     return m_rowCache;
 }
 
-bool AppListModel::addApp(const QString &appPath, int groupIndex, bool blocked)
+bool AppListModel::addApp(const QString &appPath, int groupIndex, bool blocked,
+                          const QDateTime &endTime)
 {
     if (confManager()->updateDriverUpdateApp(appPath, groupIndex, false, blocked, false)
-            && confManager()->addApp(appPath, QDateTime(), groupIndex, blocked, false)) {
+            && confManager()->addApp(appPath, endTime, groupIndex, blocked, false)) {
         reset();
         return true;
     }
     return false;
 }
 
-bool AppListModel::updateApp(int row, int groupIndex, bool blocked)
+bool AppListModel::updateApp(int row, int groupIndex, bool blocked,
+                             const QDateTime &endTime)
 {
     updateRowCache(row);
 
@@ -177,7 +179,7 @@ bool AppListModel::updateApp(int row, int groupIndex, bool blocked)
     const QString appPath = m_rowCache.appPath;
 
     if (confManager()->updateDriverUpdateApp(appPath, groupIndex, false, blocked, false)
-            && confManager()->updateApp(appId, groupIndex, blocked)) {
+            && confManager()->updateApp(appId, endTime, groupIndex, blocked)) {
         const auto itemIndex = index(row, 3);
         invalidateRowCache();
         emit dataChanged(itemIndex, itemIndex);
