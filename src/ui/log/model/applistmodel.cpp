@@ -124,9 +124,9 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
             case AppAlert:
                 return QIcon(":/images/error.png");
             case AppBlock:
-                return QIcon(":/images/cancel.png");
+                return QIcon(":/images/stop.png");
             case AppAllow:
-                return QIcon(":/images/accept.png");
+                return QIcon(":/images/arrow_switch.png");
             }
         }
         }
@@ -152,6 +152,40 @@ QString AppListModel::appPathByRow(int row) const
     return m_rowCache.appPath;
 }
 
+AppRow AppListModel::appRow(int row) const
+{
+    updateRowCache(row);
+
+    return m_rowCache;
+}
+
+bool AppListModel::addApp(const QString &appPath, int groupIndex, bool blocked)
+{
+    if (confManager()->updateDriverUpdateApp(appPath, groupIndex, false, blocked, false)
+            && confManager()->addApp(appPath, QDateTime(), groupIndex, blocked, false)) {
+        reset();
+        return true;
+    }
+    return false;
+}
+
+bool AppListModel::updateApp(int row, int groupIndex, bool blocked)
+{
+    updateRowCache(row);
+
+    const qint64 appId = m_rowCache.appId;
+    const QString appPath = m_rowCache.appPath;
+
+    if (confManager()->updateDriverUpdateApp(appPath, groupIndex, false, blocked, false)
+            && confManager()->updateApp(appId, groupIndex, blocked)) {
+        const auto itemIndex = index(row, 3);
+        invalidateRowCache();
+        emit dataChanged(itemIndex, itemIndex);
+        return true;
+    }
+    return false;
+}
+
 void AppListModel::deleteApp(int row)
 {
     updateRowCache(row);
@@ -164,21 +198,6 @@ void AppListModel::deleteApp(int row)
         beginRemoveRows(QModelIndex(), row, row);
         invalidateRowCache();
         endRemoveRows();
-    }
-}
-
-void AppListModel::updateApp(int row, int groupIndex, bool blocked)
-{
-    updateRowCache(row);
-
-    const qint64 appId = m_rowCache.appId;
-    const QString appPath = m_rowCache.appPath;
-
-    if (confManager()->updateDriverUpdateApp(appPath, groupIndex, false, blocked, false)
-            && confManager()->updateApp(appId, groupIndex, blocked)) {
-        const auto itemIndex = index(row, 3);
-        invalidateRowCache();
-        emit dataChanged(itemIndex, itemIndex);
     }
 }
 

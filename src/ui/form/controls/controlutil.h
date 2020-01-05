@@ -35,6 +35,8 @@ public:
 
     static QFont fontDemiBold();
 
+    static QString getOpenFileName(const QString &title = QString(),
+                                   const QString &filter = QString());
     static QStringList getOpenFileNames(const QString &title = QString(),
                                         const QString &filter = QString());
 

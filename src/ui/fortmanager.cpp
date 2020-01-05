@@ -544,6 +544,7 @@ bool FortManager::saveSettings(FirewallConf *newConf, bool onlyFlags,
     if (m_conf != newConf) {
         m_conf->deleteLater();
         m_conf = newConf;
+        emit confChanged();
     }
 
     if (!immediateFlags) {

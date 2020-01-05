@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include <functional>
+
 #include "../util/classhelpers.h"
 
 QT_FORWARD_DECLARE_CLASS(DriverManager)

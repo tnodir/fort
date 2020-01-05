@@ -1,14 +1,21 @@
 #include "programswindow.h"
 
 #include <QCheckBox>
+#include <QComboBox>
 #include <QCloseEvent>
+#include <QDialog>
+#include <QFormLayout>
 #include <QHeaderView>
 #include <QKeyEvent>
 #include <QLabel>
+#include <QLineEdit>
 #include <QPushButton>
+#include <QRadioButton>
 #include <QVBoxLayout>
 
+#include "../../conf/appgroup.h"
 #include "../../conf/firewallconf.h"
+#include "../../conf/confmanager.h"
 #include "../../fortmanager.h"
 #include "../../fortsettings.h"
 #include "../../log/model/applistmodel.h"
@@ -77,10 +84,20 @@ void ProgramsWindow::onRestoreWindowState()
 
 void ProgramsWindow::onRetranslateUi()
 {
-    m_btAllowApp->setToolTip(tr("Allow"));
-    m_btBlockApp->setToolTip(tr("Block"));
-    m_btAddApp->setToolTip(tr("Add Program"));
-    m_btDeleteApp->setToolTip(tr("Delete Program"));
+    m_btAddApp->setText(tr("Add"));
+    m_btEditApp->setText(tr("Edit"));
+    m_btDeleteApp->setText(tr("Delete"));
+
+    m_btAllowApp->setText(tr("Allow"));
+    m_btBlockApp->setText(tr("Block"));
+
+    m_labelEditPath->setText(tr("Program Path:"));
+    m_btSelectFile->setToolTip(tr("Select File"));
+    m_labelAppGroup->setText(tr("Application Group:"));
+    m_rbAllowApp->setText(tr("Allow"));
+    m_rbBlockApp->setText(tr("Block"));
+    m_btEditOk->setText(tr("OK"));
+    m_btEditCancel->setText(tr("Cancel"));
 
     m_cbLogBlocked->setText(tr("Alert about Unknown Programs"));
 
@@ -95,6 +112,9 @@ void ProgramsWindow::setupUi()
     auto layout = new QVBoxLayout();
     layout->setContentsMargins(6, 6, 6, 6);
 
+    // App Add/Edit Form
+    setupAppEditForm();
+
     // Header
     auto header = setupHeader();
     layout->addLayout(header);
@@ -108,6 +128,9 @@ void ProgramsWindow::setupUi()
     setupAppInfoRow();
     setupAppInfoVersion();
     layout->addWidget(m_appInfoRow);
+
+    // Actions on app table's current changed
+    setupTableAppsChanged();
 
     this->setLayout(layout);
 
@@ -126,10 +149,40 @@ QLayout *ProgramsWindow::setupHeader()
 {
     auto layout = new QHBoxLayout();
 
-    m_btAllowApp = ControlUtil::createLinkButton(":/images/accept.png");
-    m_btBlockApp = ControlUtil::createLinkButton(":/images/cancel.png");
     m_btAddApp = ControlUtil::createLinkButton(":/images/application_add.png");
+    m_btEditApp = ControlUtil::createLinkButton(":/images/application_edit.png");
     m_btDeleteApp = ControlUtil::createLinkButton(":/images/application_delete.png");
+
+    m_btAllowApp = ControlUtil::createLinkButton(":/images/arrow_switch.png");
+    m_btBlockApp = ControlUtil::createLinkButton(":/images/stop.png");
+
+    connect(m_btAddApp, &QAbstractButton::clicked, [&] {
+        m_editPath->setText(QString());
+        m_editPath->setReadOnly(false);
+        m_btSelectFile->setEnabled(true);
+        m_formAppEdit->show();
+    });
+    connect(m_btEditApp, &QAbstractButton::clicked, [&] {
+        const auto appIndex = appListCurrentIndex();
+        if (appIndex < 0)
+            return;
+
+        const auto appRow = appListModel()->appRow(appIndex);
+
+        m_editPath->setText(appRow.appPath);
+        m_editPath->setReadOnly(true);
+        m_btSelectFile->setEnabled(false);
+        m_comboAppGroup->setCurrentIndex(appRow.groupIndex);
+        m_rbBlockApp->setChecked(appRow.blocked());
+        m_formAppEdit->show();
+    });
+    connect(m_btDeleteApp, &QAbstractButton::clicked, [&] {
+        if (!fortManager()->showQuestionBox(tr("Are you sure to remove the selected program?")))
+            return;
+
+        const int appIndex = appListCurrentIndex();
+        appListModel()->deleteApp(appIndex);
+    });
 
     connect(m_btAllowApp, &QAbstractButton::clicked, [&] {
         const int appIndex = appListCurrentIndex();
@@ -139,22 +192,122 @@ QLayout *ProgramsWindow::setupHeader()
         const int appIndex = appListCurrentIndex();
         appListModel()->updateApp(appIndex, 0, true);
     });
-    connect(m_btDeleteApp, &QAbstractButton::clicked, [&] {
-        const int appIndex = appListCurrentIndex();
-        appListModel()->deleteApp(appIndex);
-    });
 
     setupLogBlocked();
 
+    layout->addWidget(m_btAddApp);
+    layout->addWidget(m_btEditApp);
+    layout->addWidget(m_btDeleteApp);
+    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
     layout->addWidget(m_btAllowApp);
     layout->addWidget(m_btBlockApp);
-    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
-    layout->addWidget(m_btAddApp);
-    layout->addWidget(m_btDeleteApp);
     layout->addStretch();
     layout->addWidget(m_cbLogBlocked);
 
     return layout;
+}
+
+void ProgramsWindow::setupAppEditForm()
+{
+    auto formLayout = new QFormLayout();
+
+    // App Path
+    auto pathLayout = new QHBoxLayout();
+
+    m_editPath = new QLineEdit();
+
+    m_btSelectFile = ControlUtil::createLinkButton(":/images/folder_explore.png");
+
+    pathLayout->addWidget(m_editPath);
+    pathLayout->addWidget(m_btSelectFile);
+
+    formLayout->addRow("Program Path:", pathLayout);
+    m_labelEditPath = qobject_cast<QLabel *>(formLayout->labelForField(pathLayout));
+
+    // App Group
+    setupComboAppGroups();
+
+    formLayout->addRow("Application Group:", m_comboAppGroup);
+    m_labelAppGroup = qobject_cast<QLabel *>(formLayout->labelForField(m_comboAppGroup));
+
+    // Allow/Block
+    auto allowLayout = new QHBoxLayout();
+    allowLayout->setSpacing(20);
+
+    m_rbAllowApp = new QRadioButton();
+    m_rbAllowApp->setIcon(QIcon(":/images/arrow_switch.png"));
+    m_rbAllowApp->setChecked(true);
+
+    m_rbBlockApp = new QRadioButton();
+    m_rbBlockApp->setIcon(QIcon(":/images/stop.png"));
+
+    allowLayout->addWidget(m_rbAllowApp, 1, Qt::AlignRight);
+    allowLayout->addWidget(m_rbBlockApp, 1, Qt::AlignLeft);
+
+    // OK/Cancel
+    auto buttonsLayout = new QHBoxLayout();
+
+    m_btEditOk = new QPushButton(QIcon(":/images/tick.png"), QString());
+    m_btEditCancel = new QPushButton(QIcon(":/images/cancel.png"), QString());
+
+    buttonsLayout->addWidget(m_btEditOk, 1, Qt::AlignRight);
+    buttonsLayout->addWidget(m_btEditCancel);
+
+    // Form
+    auto layout = new QVBoxLayout();
+    layout->addLayout(formLayout);
+    layout->addLayout(allowLayout);
+    layout->addWidget(ControlUtil::createSeparator());
+    layout->addLayout(buttonsLayout);
+
+    m_formAppEdit = new QDialog(this);
+    m_formAppEdit->setSizeGripEnabled(true);
+    m_formAppEdit->setLayout(layout);
+    m_formAppEdit->setMinimumWidth(500);
+
+    connect(m_btSelectFile, &QAbstractButton::clicked, [&] {
+        const auto filePath = ControlUtil::getOpenFileName(
+                    m_labelEditPath->text(),
+                    tr("Programs (*.exe);;All files (*.*)"));
+
+        if (!filePath.isEmpty()) {
+            m_editPath->setText(filePath);
+        }
+    });
+
+    connect(m_btEditOk, &QAbstractButton::clicked, [&] {
+        const QString appPath = m_editPath->text();
+        if (appPath.isEmpty())
+            return;
+
+        const int groupIndex = m_comboAppGroup->currentIndex();
+        const bool blocked = m_rbBlockApp->isChecked();
+
+        if (appListModel()->updateApp(appListCurrentIndex(), groupIndex, blocked)) {
+            m_formAppEdit->close();
+        }
+    });
+    connect(m_btEditCancel, &QAbstractButton::clicked, m_formAppEdit, &QWidget::close);
+}
+
+void ProgramsWindow::setupComboAppGroups()
+{
+    m_comboAppGroup = new QComboBox();
+
+    const auto refreshComboAppGroups = [&] {
+        QStringList list;
+        for (const auto appGroup : conf()->appGroups()) {
+            list.append(appGroup->name());
+        }
+
+        m_comboAppGroup->clear();
+        m_comboAppGroup->addItems(list);
+        m_comboAppGroup->setCurrentIndex(0);
+    };
+
+    refreshComboAppGroups();
+
+    connect(fortManager(), &FortManager::confChanged, this, refreshComboAppGroups);
 }
 
 void ProgramsWindow::setupLogBlocked()
@@ -180,6 +333,8 @@ void ProgramsWindow::setupTableApps()
     m_appListView->setSelectionBehavior(QAbstractItemView::SelectItems);
 
     m_appListView->setModel(appListModel());
+
+    connect(m_appListView, &TableView::doubleClicked, m_btEditApp, &QPushButton::click);
 }
 
 void ProgramsWindow::setupTableAppsHeader()
@@ -245,6 +400,23 @@ void ProgramsWindow::setupAppInfoVersion()
 
     connect(m_appListView, &TableView::currentIndexChanged, this, refreshAppInfoVersion);
     connect(appInfoCache(), &AppInfoCache::cacheChanged, this, refreshAppInfoVersion);
+}
+
+void ProgramsWindow::setupTableAppsChanged()
+{
+    const auto refreshTableAppsChanged = [&] {
+        const int appIndex = appListCurrentIndex();
+        const bool appSelected = (appIndex >= 0);
+        m_btEditApp->setEnabled(appSelected);
+        m_btDeleteApp->setEnabled(appSelected);
+        m_btAllowApp->setEnabled(appSelected);
+        m_btBlockApp->setEnabled(appSelected);
+        m_appInfoRow->setVisible(appSelected);
+    };
+
+    refreshTableAppsChanged();
+
+    connect(m_appListView, &TableView::currentIndexChanged, this, refreshTableAppsChanged);
 }
 
 int ProgramsWindow::appListCurrentIndex() const

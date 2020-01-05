@@ -19,6 +19,8 @@ struct AppRow {
     bool isValid(int row) const { return row == this->row; }
     void invalidate() { row = -1; }
 
+    bool blocked() const { return state == AppBlock; }
+
     int row = -1;
 
     AppState state = AppAlert;
@@ -57,9 +59,11 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     QString appPathByRow(int row) const;
+    AppRow appRow(int row) const;
 
+    bool addApp(const QString &appPath, int groupIndex, bool blocked);
+    bool updateApp(int row, int groupIndex, bool blocked);
     void deleteApp(int row);
-    void updateApp(int row, int groupIndex, bool blocked);
 
 public slots:
     void reset();

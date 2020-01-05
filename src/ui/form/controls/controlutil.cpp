@@ -99,6 +99,7 @@ QFrame *ControlUtil::createSeparator(Qt::Orientation o)
 {
     auto c = new QFrame();
     c->setFrameShape(o == Qt::Horizontal ? QFrame::HLine : QFrame::VLine);
+    c->setFrameShadow(QFrame::Sunken);
     return c;
 }
 
@@ -107,6 +108,13 @@ QFont ControlUtil::fontDemiBold()
     QFont font;
     font.setWeight(QFont::DemiBold);
     return font;
+}
+
+QString ControlUtil::getOpenFileName(const QString &title, const QString &filter)
+{
+    return QFileDialog::getOpenFileName(
+                nullptr, title, QString(), filter,
+                nullptr, QFileDialog::ReadOnly);
 }
 
 QStringList ControlUtil::getOpenFileNames(const QString &title,

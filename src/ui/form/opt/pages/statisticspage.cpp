@@ -729,7 +729,7 @@ void StatisticsPage::setupAppInfoVersion()
 void StatisticsPage::setupAppListViewChanged()
 {
     const auto refreshAppListViewChanged = [&] {
-        const bool appSelected = (m_appListView->currentIndex().row() > 0);
+        const bool appSelected = (appListCurrentIndex() > 0);
         m_actRemoveApp->setEnabled(appSelected);
         m_appInfoRow->setVisible(appSelected);
     };

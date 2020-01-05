@@ -4,8 +4,12 @@
 #include "../../util/window/widgetwindow.h"
 
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
+QT_FORWARD_DECLARE_CLASS(QComboBox)
+QT_FORWARD_DECLARE_CLASS(QDialog)
 QT_FORWARD_DECLARE_CLASS(QLabel)
+QT_FORWARD_DECLARE_CLASS(QLineEdit)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
+QT_FORWARD_DECLARE_CLASS(QRadioButton)
 
 QT_FORWARD_DECLARE_CLASS(AppInfoCache)
 QT_FORWARD_DECLARE_CLASS(AppListModel)
@@ -38,12 +42,15 @@ private:
     void setupAppListModel();
 
     void setupUi();
+    void setupAppEditForm();
+    void setupComboAppGroups();
     QLayout *setupHeader();
     void setupLogBlocked();
     void setupTableApps();
     void setupTableAppsHeader();
     void setupAppInfoRow();
     void setupAppInfoVersion();
+    void setupTableAppsChanged();
 
     int appListCurrentIndex() const;
     QString appListCurrentPath() const;
@@ -60,10 +67,21 @@ private:
 
     AppListModel *m_appListModel = nullptr;
 
+    QPushButton *m_btAddApp = nullptr;
+    QPushButton *m_btEditApp = nullptr;
+    QPushButton *m_btDeleteApp = nullptr;
     QPushButton *m_btAllowApp = nullptr;
     QPushButton *m_btBlockApp = nullptr;
-    QPushButton *m_btAddApp = nullptr;
-    QPushButton *m_btDeleteApp = nullptr;
+    QLabel *m_labelEditPath = nullptr;
+    QLineEdit *m_editPath = nullptr;
+    QPushButton *m_btSelectFile = nullptr;
+    QLabel *m_labelAppGroup = nullptr;
+    QComboBox *m_comboAppGroup = nullptr;
+    QRadioButton *m_rbAllowApp = nullptr;
+    QRadioButton *m_rbBlockApp = nullptr;
+    QPushButton *m_btEditOk = nullptr;
+    QPushButton *m_btEditCancel = nullptr;
+    QDialog *m_formAppEdit = nullptr;
     QCheckBox *m_cbLogBlocked = nullptr;
     TableView *m_appListView = nullptr;
     QWidget *m_appInfoRow = nullptr;

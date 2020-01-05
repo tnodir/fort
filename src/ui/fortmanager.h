@@ -29,7 +29,7 @@ class FortManager : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(FortSettings *settings READ settings CONSTANT)
-    Q_PROPERTY(FirewallConf *conf READ conf NOTIFY confToEditChanged)
+    Q_PROPERTY(FirewallConf *conf READ conf NOTIFY confChanged)
     Q_PROPERTY(FirewallConf *confToEdit READ confToEdit NOTIFY confToEditChanged)
     Q_PROPERTY(LogManager *logManager READ logManager CONSTANT)
     Q_PROPERTY(TaskManager *taskManager READ taskManager CONSTANT)
@@ -50,6 +50,7 @@ public:
     TaskManager *taskManager() const { return m_taskManager; }
 
 signals:
+    void confChanged();
     void confToEditChanged();
 
     void afterSaveProgWindowState();
