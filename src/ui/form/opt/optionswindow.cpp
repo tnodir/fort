@@ -12,9 +12,16 @@ OptionsWindow::OptionsWindow(FortManager *fortManager,
     WidgetWindow(parent),
     m_ctrl(new OptionsController(fortManager, this))
 {
+    setupUi();
+
+    setupController();
+}
+
+void OptionsWindow::setupController()
+{
     ctrl()->initialize();
 
-    setupUi();
+    connect(ctrl(), &OptionsController::retranslateUi, this, &OptionsWindow::onRetranslateUi);
 
     emit ctrl()->retranslateUi();
 }
@@ -35,6 +42,11 @@ void OptionsWindow::keyReleaseEvent(QKeyEvent *event)
     }
 }
 
+void OptionsWindow::onRetranslateUi()
+{
+    this->setWindowTitle(tr("Options"));
+}
+
 void OptionsWindow::setupUi()
 {
     auto layout = new QVBoxLayout();
@@ -44,9 +56,6 @@ void OptionsWindow::setupUi()
     layout->addWidget(m_mainPage);
 
     this->setLayout(layout);
-
-    // Title
-    this->setWindowTitle(tr("Options"));
 
     // Font
     this->setFont(QFont("Tahoma", 9));

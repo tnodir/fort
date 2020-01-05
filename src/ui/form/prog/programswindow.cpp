@@ -42,11 +42,9 @@ ProgramsWindow::ProgramsWindow(FortManager *fortManager,
     m_ctrl(new ProgramsController(fortManager, this)),
     m_appListModel(ctrl()->appListModel())
 {
-    setupController();
-
     setupUi();
 
-    emit ctrl()->retranslateUi();
+    setupController();
 }
 
 void ProgramsWindow::setupController()
@@ -57,6 +55,8 @@ void ProgramsWindow::setupController()
             this, &ProgramsWindow::onSaveWindowState);
     connect(fortManager(), &FortManager::afterRestoreProgWindowState,
             this, &ProgramsWindow::onRestoreWindowState);
+
+    emit ctrl()->retranslateUi();
 }
 
 void ProgramsWindow::closeEvent(QCloseEvent *event)
@@ -101,10 +101,12 @@ void ProgramsWindow::onRetranslateUi()
     m_labelAppGroup->setText(tr("Application Group:"));
     m_rbAllowApp->setText(tr("Allow"));
     m_rbBlockApp->setText(tr("Block"));
-    m_cscBlockApp->checkBox()->setText(tr("Block In"));
+    m_cscBlockApp->checkBox()->setText(tr("Block In:"));
     retranslateAppBlockInHours();
     m_btEditOk->setText(tr("OK"));
     m_btEditCancel->setText(tr("Cancel"));
+
+    m_formAppEdit->setWindowTitle(tr("Edit Program"));
 
     m_cbLogBlocked->setText(tr("Alert about Unknown Programs"));
 
@@ -112,6 +114,8 @@ void ProgramsWindow::onRetranslateUi()
 
     m_btAppCopyPath->setToolTip(tr("Copy Path"));
     m_btAppOpenFolder->setToolTip(tr("Open Folder"));
+
+    this->setWindowTitle(tr("Programs"));
 }
 
 void ProgramsWindow::retranslateAppBlockInHours()
@@ -151,9 +155,6 @@ void ProgramsWindow::setupUi()
     setupTableAppsChanged();
 
     this->setLayout(layout);
-
-    // Title
-    this->setWindowTitle(tr("Programs"));
 
     // Font
     this->setFont(QFont("Tahoma", 9));
@@ -461,6 +462,7 @@ void ProgramsWindow::updateAppEditForm(bool editCurrentApp)
     m_rbBlockApp->setChecked(appRow.blocked());
     m_cscBlockApp->setEnabled(!appRow.blocked());
     m_cscBlockApp->checkBox()->setChecked(false);
+
     m_formAppEdit->show();
 }
 

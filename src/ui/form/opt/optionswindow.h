@@ -15,11 +15,16 @@ public:
     explicit OptionsWindow(FortManager *fortManager,
                            QWidget *parent = nullptr);
 
+protected slots:
+    void onRetranslateUi();
+
 protected:
     void closeEvent(QCloseEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
 
 private:
+    void setupController();
+
     void setupUi();
 
     OptionsController *ctrl() const { return m_ctrl; }
