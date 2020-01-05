@@ -16,6 +16,7 @@ AppListModel::AppListModel(ConfManager *confManager,
     m_confManager(confManager)
 {
     connect(m_confManager, &ConfManager::confSaved, this, &AppListModel::reset);
+    connect(m_confManager, &ConfManager::appEndTimesUpdated, this, &AppListModel::refresh);
 }
 
 void AppListModel::setAppInfoCache(AppInfoCache *v)
@@ -170,44 +171,36 @@ bool AppListModel::addApp(const QString &appPath, int groupIndex, bool blocked,
     return false;
 }
 
-bool AppListModel::updateApp(int row, int groupIndex, bool blocked,
+bool AppListModel::updateApp(qint64 appId, const QString &appPath,
+                             int groupIndex, bool blocked,
                              const QDateTime &endTime)
 {
-    updateRowCache(row);
-
-    const qint64 appId = m_rowCache.appId;
-    const QString appPath = m_rowCache.appPath;
-
     if (confManager()->updateDriverUpdateApp(appPath, groupIndex, false, blocked, false)
             && confManager()->updateApp(appId, endTime, groupIndex, blocked)) {
-        const auto itemIndex = index(row, 3);
-        invalidateRowCache();
-        emit dataChanged(itemIndex, itemIndex);
+        refresh();
         return true;
     }
     return false;
 }
 
-void AppListModel::deleteApp(int row)
+void AppListModel::deleteApp(qint64 appId, const QString &appPath)
 {
-    updateRowCache(row);
-
-    const qint64 appId = m_rowCache.appId;
-    const QString appPath = m_rowCache.appPath;
-
     if (confManager()->updateDriverDeleteApp(appPath)
             && confManager()->deleteApp(appId)) {
-        beginRemoveRows(QModelIndex(), row, row);
-        invalidateRowCache();
-        endRemoveRows();
+        reset();
     }
 }
 
 void AppListModel::reset()
 {
-    beginResetModel();
     invalidateRowCache();
-    endResetModel();
+    TableItemModel::reset();
+}
+
+void AppListModel::refresh()
+{
+    invalidateRowCache();
+    TableItemModel::refresh();
 }
 
 void AppListModel::invalidateRowCache()

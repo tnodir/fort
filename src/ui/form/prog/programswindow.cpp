@@ -175,31 +175,22 @@ QLayout *ProgramsWindow::setupHeader()
     m_btBlockApp = ControlUtil::createLinkButton(":/images/stop.png");
 
     connect(m_btAddApp, &QAbstractButton::clicked, [&] {
-        const AppRow appRow;
-        updateAppEditForm(appRow);
+        updateAppEditForm(false);
     });
     connect(m_btEditApp, &QAbstractButton::clicked, [&] {
-        const auto appIndex = appListCurrentIndex();
-        if (appIndex >= 0) {
-            const auto appRow = appListModel()->appRow(appIndex);
-            updateAppEditForm(appRow);
-        }
+        updateAppEditForm(true);
     });
     connect(m_btDeleteApp, &QAbstractButton::clicked, [&] {
-        if (!fortManager()->showQuestionBox(tr("Are you sure to remove the selected program?")))
-            return;
-
-        const int appIndex = appListCurrentIndex();
-        appListModel()->deleteApp(appIndex);
+        if (fortManager()->showQuestionBox(tr("Are you sure to remove the selected program?"))) {
+            deleteCurrentApp();
+        }
     });
 
     connect(m_btAllowApp, &QAbstractButton::clicked, [&] {
-        const int appIndex = appListCurrentIndex();
-        appListModel()->updateApp(appIndex, 0, false);
+        updateCurrentApp(false);
     });
     connect(m_btBlockApp, &QAbstractButton::clicked, [&] {
-        const int appIndex = appListCurrentIndex();
-        appListModel()->updateApp(appIndex, 0, true);
+        updateCurrentApp(true);
     });
 
     setupLogBlocked();
@@ -310,8 +301,8 @@ void ProgramsWindow::setupAppEditForm()
                     .addSecs(hours * 60 * 60);
         }
 
-        if (m_formAppIsEditing
-                ? appListModel()->updateApp(appListCurrentIndex(),
+        if (m_formAppId != 0
+                ? appListModel()->updateApp(m_formAppId, appPath,
                                             groupIndex, blocked, endTime)
                 : appListModel()->addApp(appPath, groupIndex, blocked, endTime)) {
             m_formAppEdit->close();
@@ -449,19 +440,47 @@ void ProgramsWindow::setupTableAppsChanged()
     connect(m_appListView, &TableView::currentIndexChanged, this, refreshTableAppsChanged);
 }
 
-void ProgramsWindow::updateAppEditForm(const AppRow &appRow)
+void ProgramsWindow::updateAppEditForm(bool editCurrentApp)
 {
-    m_formAppIsEditing = !appRow.appPath.isEmpty();
+    AppRow appRow;
+    if (editCurrentApp) {
+        const auto appIndex = appListCurrentIndex();
+        if (appIndex < 0) return;
+
+        appRow = appListModel()->appRow(appIndex);
+        m_formAppId = appRow.appId;
+    } else {
+        m_formAppId = 0;
+    }
 
     m_editPath->setText(appRow.appPath);
-    m_editPath->setReadOnly(m_formAppIsEditing);
-    m_btSelectFile->setEnabled(!m_formAppIsEditing);
+    m_editPath->setReadOnly(editCurrentApp);
+    m_btSelectFile->setEnabled(!editCurrentApp);
     m_comboAppGroup->setCurrentIndex(appRow.groupIndex);
     m_rbAllowApp->setChecked(!appRow.blocked());
     m_rbBlockApp->setChecked(appRow.blocked());
     m_cscBlockApp->setEnabled(!appRow.blocked());
     m_cscBlockApp->checkBox()->setChecked(false);
     m_formAppEdit->show();
+}
+
+void ProgramsWindow::updateCurrentApp(bool blocked)
+{
+    const int appIndex = appListCurrentIndex();
+    if (appIndex >= 0) {
+        const auto appRow = appListModel()->appRow(appIndex);
+        appListModel()->updateApp(appRow.appId, appRow.appPath,
+                                  appRow.groupIndex, blocked);
+    }
+}
+
+void ProgramsWindow::deleteCurrentApp()
+{
+    const int appIndex = appListCurrentIndex();
+    if (appIndex >= 0) {
+        const auto appRow = appListModel()->appRow(appIndex);
+        appListModel()->deleteApp(appRow.appId, appRow.appPath);
+    }
 }
 
 int ProgramsWindow::appListCurrentIndex() const

@@ -135,12 +135,27 @@ const char * const sqlSelectAppByIndex =
 
 const char * const sqlSelectApps =
         "SELECT g.order_index as group_index,"
-        "    t.blocked,"
-        "    (alert.app_id IS NOT NULL) as alerted,"
-        "    t.path"
+        "    t.path, t.blocked,"
+        "    (alert.app_id IS NOT NULL) as alerted"
         "  FROM app t"
         "    JOIN app_group g ON g.app_group_id = t.app_group_id"
         "    LEFT JOIN app_alert alert ON alert.app_id = t.app_id;"
+        ;
+
+const char * const sqlSelectEndAppsCount =
+        "SELECT COUNT(*) FROM app"
+        "  WHERE end_time IS NOT NULL AND end_time != 0;"
+        ;
+
+const char * const sqlSelectEndedApps =
+        "SELECT t.app_id,"
+        "    g.order_index as group_index,"
+        "    t.path,"
+        "    (alert.app_id IS NOT NULL) as alerted"
+        "  FROM app t"
+        "    JOIN app_group g ON g.app_group_id = t.app_group_id"
+        "    LEFT JOIN app_alert alert ON alert.app_id = t.app_id"
+        "  WHERE end_time <= ?1;"
         ;
 
 const char * const sqlInsertApp =
@@ -187,6 +202,8 @@ ConfManager::ConfManager(const QString &filePath,
     m_fortSettings(fortSettings),
     m_sqliteDb(new SqliteDb(filePath))
 {
+    m_appEndTimer.setInterval(5 * 60 * 1000);  // 5 minutes
+    connect(&m_appEndTimer, &QTimer::timeout, this, &ConfManager::checkAppEndTimes);
 }
 
 ConfManager::~ConfManager()
@@ -219,6 +236,8 @@ bool ConfManager::initialize()
                       << m_sqliteDb->filePath();
         return false;
     }
+
+    m_appEndTimer.start();
 
     return true;
 }
@@ -372,7 +391,7 @@ bool ConfManager::addApp(const QString &appPath, const QDateTime &endTime,
             << appPath
             << blocked
             << QDateTime::currentDateTime()
-            << endTime
+            << (!endTime.isNull() ? endTime : QVariant())
                ;
 
     m_sqliteDb->executeEx(sqlInsertApp, vars, 0, &ok);
@@ -393,6 +412,10 @@ end:
     }
 
     m_sqliteDb->endTransaction(ok);
+
+    if (ok && !endTime.isNull()) {
+        m_appEndTimer.start();
+    }
 
     return ok;
 }
@@ -431,7 +454,7 @@ bool ConfManager::updateApp(qint64 appId, const QDateTime &endTime,
             << appId
             << appGroupIdByIndex(groupIndex)
             << blocked
-            << endTime
+            << (!endTime.isNull() ? endTime : QVariant())
                ;
 
     m_sqliteDb->executeEx(sqlUpdateApp, vars, 0, &ok);
@@ -446,6 +469,10 @@ end:
 
     m_sqliteDb->endTransaction(ok);
 
+    if (ok && !endTime.isNull()) {
+        m_appEndTimer.start();
+    }
+
     return ok;
 }
 
@@ -457,16 +484,63 @@ bool ConfManager::walkApps(std::function<walkAppsCallback> func)
 
     while (stmt.step() == SqliteStmt::StepRow) {
         const int groupIndex = stmt.columnInt(0);
+        const QString appPath = stmt.columnText(1);
         const bool useGroupPerm = false;
-        const bool blocked = stmt.columnBool(1);
-        const bool alerted = stmt.columnBool(2);
-        const QString appPath = stmt.columnText(3);
+        const bool blocked = stmt.columnBool(2);
+        const bool alerted = stmt.columnBool(3);
 
         if (!func(groupIndex, useGroupPerm, blocked, alerted, appPath))
             return false;
     }
 
     return true;
+}
+
+int ConfManager::appEndsCount()
+{
+    SqliteStmt stmt;
+    if (!stmt.prepare(m_sqliteDb->db(), sqlSelectEndAppsCount)
+            || stmt.step() != SqliteStmt::StepRow)
+        return 0;
+
+    return stmt.columnInt(0);
+}
+
+void ConfManager::updateAppEndTimes()
+{
+    SqliteStmt stmt;
+    if (!stmt.prepare(m_sqliteDb->db(), sqlSelectEndedApps))
+        return;
+
+    stmt.bindDateTime(1, QDateTime::currentDateTime());
+
+    bool isAppEndTimesUpdated = false;
+
+    while (stmt.step() == SqliteStmt::StepRow) {
+        const qint64 appId = stmt.columnInt64(0);
+        const int groupIndex = stmt.columnInt(1);
+        const QString appPath = stmt.columnText(3);
+        const bool alerted = stmt.columnBool(4);
+
+        if (updateDriverUpdateApp(appPath, groupIndex,
+                                  false, true, alerted)
+                && updateApp(appId, QDateTime(), groupIndex, true)) {
+            isAppEndTimesUpdated = true;
+        }
+    }
+
+    if (isAppEndTimesUpdated) {
+        emit appEndTimesUpdated();
+    }
+}
+
+void ConfManager::checkAppEndTimes()
+{
+    if (appEndsCount() == 0) {
+        m_appEndTimer.stop();
+    } else {
+        updateAppEndTimes();
+    }
 }
 
 bool ConfManager::updateDriverConf(const FirewallConf &conf, bool onlyFlags)

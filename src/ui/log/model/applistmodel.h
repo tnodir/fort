@@ -63,12 +63,14 @@ public:
 
     bool addApp(const QString &appPath, int groupIndex, bool blocked,
                 const QDateTime &endTime = QDateTime());
-    bool updateApp(int row, int groupIndex, bool blocked,
+    bool updateApp(qint64 appId, const QString &appPath,
+                   int groupIndex, bool blocked,
                    const QDateTime &endTime = QDateTime());
-    void deleteApp(int row);
+    void deleteApp(qint64 appId, const QString &appPath);
 
 public slots:
     void reset();
+    void refresh();
 
 private:
     void invalidateRowCache();

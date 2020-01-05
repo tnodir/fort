@@ -55,7 +55,10 @@ private:
     void setupAppInfoRow();
     void setupAppInfoVersion();
     void setupTableAppsChanged();
-    void updateAppEditForm(const AppRow &appRow);
+
+    void updateAppEditForm(bool editCurrentApp);
+    void updateCurrentApp(bool blocked);
+    void deleteCurrentApp();
 
     int appListCurrentIndex() const;
     QString appListCurrentPath() const;
@@ -68,7 +71,7 @@ private:
     AppInfoCache *appInfoCache() const;
 
 private:
-    bool m_formAppIsEditing = false;
+    qint64 m_formAppId = 0;
 
     ProgramsController *m_ctrl = nullptr;
 

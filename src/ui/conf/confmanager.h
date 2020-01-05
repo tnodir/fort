@@ -2,6 +2,7 @@
 #define CONFMANAGER_H
 
 #include <QObject>
+#include <QTimer>
 
 #include <functional>
 
@@ -49,12 +50,17 @@ public:
                        QString &appGroupName, QString &appPath,
                        QDateTime &endTime, int row);
     qint64 appGroupIdByIndex(int index = 0);
+
     bool addApp(const QString &appPath, const QDateTime &endTime,
                 int groupIndex, bool blocked, bool alerted);
     bool deleteApp(qint64 appId);
     bool updateApp(qint64 appId, const QDateTime &endTime,
                    int groupIndex, bool blocked);
     bool walkApps(std::function<walkAppsCallback> func);
+
+    int appEndsCount();
+    void updateAppEndTimes();
+    void checkAppEndTimes();
 
     bool updateDriverConf(const FirewallConf &conf, bool onlyFlags = false);
     bool updateDriverDeleteApp(const QString &appPath);
@@ -67,6 +73,7 @@ public:
 signals:
     void errorMessageChanged();
     void confSaved();
+    void appEndTimesUpdated();
 
 private:
     void setErrorMessage(const QString &errorMessage);
@@ -88,6 +95,8 @@ private:
     EnvManager *m_envManager = nullptr;
     FortSettings *m_fortSettings = nullptr;
     SqliteDb *m_sqliteDb = nullptr;
+
+    QTimer m_appEndTimer;
 };
 
 #endif // CONFMANAGER_H
