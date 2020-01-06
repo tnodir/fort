@@ -36,7 +36,7 @@ void AppListModel::addLogEntry(const LogEntryBlocked &logEntry)
             + ':' + QString::number(logEntry.port());
 #endif
 
-    if (confManager()->addApp(appPath, QDateTime(), 0, true, true)) {
+    if (confManager()->addApp(appPath, QDateTime(), 0, true, true, true)) {
         reset();
     }
 }
@@ -64,8 +64,8 @@ QVariant AppListModel::headerData(int section, Qt::Orientation orientation,
             && role == Qt::DisplayRole) {
         switch (section) {
         case 0: return tr("Program");
-        case 1: return tr("Path");
-        case 2: return tr("Group");
+        case 1: return tr("Group");
+        case 2: return tr("Gr.");
         case 3: return tr("State");
         case 4: return tr("End Time");
         }
@@ -78,8 +78,10 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
+    switch (role) {
     // Label
-    if (role == Qt::DisplayRole || role == Qt::ToolTipRole) {
+    case Qt::DisplayRole:
+    case Qt::ToolTipRole: {
         const int row = index.row();
         const int column = index.column();
 
@@ -94,16 +96,17 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
 
             return FileUtil::fileName(m_rowCache.appPath);
         }
-        case 1: return m_rowCache.appPath;
-        case 2: return m_rowCache.appGroupName;
+        case 1: return m_rowCache.appGroupName;
         case 3: return appStateToString(m_rowCache.state);
         case 4: return m_rowCache.endTime.isValid()
                     ? m_rowCache.endTime : QVariant();
         }
+
+        break;
     }
 
     // Icon
-    if (role == Qt::DecorationRole) {
+    case Qt::DecorationRole: {
         const int row = index.row();
         const int column = index.column();
 
@@ -131,16 +134,30 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
             }
         }
         }
+
+        break;
     }
 
     // Text Alignment
-    if (role == Qt::TextAlignmentRole) {
+    case Qt::TextAlignmentRole: {
         const int column = index.column();
 
-        switch (column) {
-        case 2:
-        case 3: return int(Qt::AlignHCenter | Qt::AlignVCenter);
+        if (column >= 1 && column <= 3) {
+            return int(Qt::AlignHCenter | Qt::AlignVCenter);
         }
+
+        break;
+    }
+
+    // Check State
+    case Qt::CheckStateRole: {
+        if (index.column() == 2) {
+            updateRowCache(index.row());
+            return m_rowCache.useGroupPerm;
+        }
+
+        break;
+    }
     }
 
     return QVariant();
@@ -160,11 +177,14 @@ AppRow AppListModel::appRow(int row) const
     return m_rowCache;
 }
 
-bool AppListModel::addApp(const QString &appPath, int groupIndex, bool blocked,
+bool AppListModel::addApp(const QString &appPath, int groupIndex,
+                          bool useGroupPerm, bool blocked,
                           const QDateTime &endTime)
 {
-    if (confManager()->updateDriverUpdateApp(appPath, groupIndex, false, blocked, false)
-            && confManager()->addApp(appPath, endTime, groupIndex, blocked, false)) {
+    if (confManager()->updateDriverUpdateApp(appPath, groupIndex,
+                                             useGroupPerm, blocked, false)
+            && confManager()->addApp(appPath, endTime, groupIndex,
+                                     useGroupPerm, blocked, false)) {
         reset();
         return true;
     }
@@ -172,11 +192,13 @@ bool AppListModel::addApp(const QString &appPath, int groupIndex, bool blocked,
 }
 
 bool AppListModel::updateApp(qint64 appId, const QString &appPath,
-                             int groupIndex, bool blocked,
+                             int groupIndex, bool useGroupPerm, bool blocked,
                              const QDateTime &endTime)
 {
-    if (confManager()->updateDriverUpdateApp(appPath, groupIndex, false, blocked, false)
-            && confManager()->updateApp(appId, endTime, groupIndex, blocked)) {
+    if (confManager()->updateDriverUpdateApp(appPath, groupIndex,
+                                             useGroupPerm, blocked, false)
+            && confManager()->updateApp(appId, endTime, groupIndex,
+                                        useGroupPerm, blocked)) {
         refresh();
         return true;
     }
@@ -217,7 +239,7 @@ void AppListModel::updateRowCache(int row) const
     bool blocked = false;
     bool alerted = false;
 
-    if (m_confManager->getAppByIndex(blocked, alerted,
+    if (m_confManager->getAppByIndex(m_rowCache.useGroupPerm, blocked, alerted,
                                      m_rowCache.appId, m_rowCache.groupIndex,
                                      m_rowCache.appGroupName, m_rowCache.appPath,
                                      m_rowCache.endTime, row)) {

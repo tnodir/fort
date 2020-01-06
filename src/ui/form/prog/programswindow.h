@@ -87,6 +87,7 @@ private:
     QPushButton *m_btSelectFile = nullptr;
     QLabel *m_labelAppGroup = nullptr;
     QComboBox *m_comboAppGroup = nullptr;
+    QCheckBox *m_cbUseGroupPerm = nullptr;
     QRadioButton *m_rbAllowApp = nullptr;
     QRadioButton *m_rbBlockApp = nullptr;
     CheckSpinCombo *m_cscBlockApp = nullptr;

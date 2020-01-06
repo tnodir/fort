@@ -23,6 +23,7 @@ struct AppRow {
 
     int row = -1;
 
+    bool useGroupPerm = true;
     AppState state = AppAlert;
     int groupIndex = 0;
 
@@ -61,10 +62,11 @@ public:
     QString appPathByRow(int row) const;
     AppRow appRow(int row) const;
 
-    bool addApp(const QString &appPath, int groupIndex, bool blocked,
+    bool addApp(const QString &appPath, int groupIndex,
+                bool useGroupPerm, bool blocked,
                 const QDateTime &endTime = QDateTime());
     bool updateApp(qint64 appId, const QString &appPath,
-                   int groupIndex, bool blocked,
+                   int groupIndex, bool useGroupPerm, bool blocked,
                    const QDateTime &endTime = QDateTime());
     void deleteApp(qint64 appId, const QString &appPath);
 

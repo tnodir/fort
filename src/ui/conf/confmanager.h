@@ -45,17 +45,18 @@ public:
     bool saveTasks(const QList<TaskInfo *> &taskInfos);
 
     int appCount();
-    bool getAppByIndex(bool &blocked, bool &alerted,
+    bool getAppByIndex(bool &useGroupPerm, bool &blocked, bool &alerted,
                        qint64 &appId, int &groupIndex,
                        QString &appGroupName, QString &appPath,
                        QDateTime &endTime, int row);
     qint64 appGroupIdByIndex(int index = 0);
 
     bool addApp(const QString &appPath, const QDateTime &endTime,
-                int groupIndex, bool blocked, bool alerted);
+                int groupIndex, bool useGroupPerm,
+                bool blocked, bool alerted);
     bool deleteApp(qint64 appId);
     bool updateApp(qint64 appId, const QDateTime &endTime,
-                   int groupIndex, bool blocked);
+                   int groupIndex, bool useGroupPerm, bool blocked);
     bool walkApps(std::function<walkAppsCallback> func);
 
     int appEndsCount();

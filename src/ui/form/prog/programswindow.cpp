@@ -99,6 +99,7 @@ void ProgramsWindow::onRetranslateUi()
     m_labelEditPath->setText(tr("Program Path:"));
     m_btSelectFile->setToolTip(tr("Select File"));
     m_labelAppGroup->setText(tr("Application Group:"));
+    m_cbUseGroupPerm->setText(tr("Use Application Group's Enabled State"));
     m_rbAllowApp->setText(tr("Allow"));
     m_rbBlockApp->setText(tr("Block"));
     m_cscBlockApp->checkBox()->setText(tr("Block In:"));
@@ -231,6 +232,11 @@ void ProgramsWindow::setupAppEditForm()
     formLayout->addRow("Application Group:", m_comboAppGroup);
     m_labelAppGroup = qobject_cast<QLabel *>(formLayout->labelForField(m_comboAppGroup));
 
+    // Use Group Perm.
+    m_cbUseGroupPerm = new QCheckBox();
+
+    formLayout->addRow(QString(), m_cbUseGroupPerm);
+
     // Allow/Block
     auto allowLayout = new QHBoxLayout();
     allowLayout->setSpacing(20);
@@ -263,6 +269,7 @@ void ProgramsWindow::setupAppEditForm()
     // Form
     auto layout = new QVBoxLayout();
     layout->addLayout(formLayout);
+    layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(allowLayout);
     layout->addWidget(m_cscBlockApp);
     layout->addWidget(ControlUtil::createSeparator());
@@ -292,6 +299,7 @@ void ProgramsWindow::setupAppEditForm()
             return;
 
         const int groupIndex = m_comboAppGroup->currentIndex();
+        const bool useGroupPerm = m_cbUseGroupPerm->isChecked();
         const bool blocked = m_rbBlockApp->isChecked();
 
         QDateTime endTime;
@@ -303,9 +311,10 @@ void ProgramsWindow::setupAppEditForm()
         }
 
         if (m_formAppId != 0
-                ? appListModel()->updateApp(m_formAppId, appPath,
-                                            groupIndex, blocked, endTime)
-                : appListModel()->addApp(appPath, groupIndex, blocked, endTime)) {
+                ? appListModel()->updateApp(m_formAppId, appPath, groupIndex,
+                                            useGroupPerm, blocked, endTime)
+                : appListModel()->addApp(appPath, groupIndex,
+                                         useGroupPerm, blocked, endTime)) {
             m_formAppEdit->close();
         }
     });
@@ -365,9 +374,13 @@ void ProgramsWindow::setupTableAppsHeader()
 
     header->setSectionResizeMode(0, QHeaderView::Interactive);
     header->setSectionResizeMode(1, QHeaderView::Stretch);
-    header->setSectionResizeMode(2, QHeaderView::Interactive);
+    header->setSectionResizeMode(2, QHeaderView::Fixed);
     header->setSectionResizeMode(3, QHeaderView::Interactive);
-    header->setSectionResizeMode(4, QHeaderView::Interactive);
+    header->setSectionResizeMode(4, QHeaderView::Stretch);
+
+    header->resizeSection(0, 500);
+    header->resizeSection(2, 20);
+    header->resizeSection(3, 80);
 }
 
 void ProgramsWindow::setupAppInfoRow()
@@ -458,6 +471,7 @@ void ProgramsWindow::updateAppEditForm(bool editCurrentApp)
     m_editPath->setReadOnly(editCurrentApp);
     m_btSelectFile->setEnabled(!editCurrentApp);
     m_comboAppGroup->setCurrentIndex(appRow.groupIndex);
+    m_cbUseGroupPerm->setChecked(appRow.useGroupPerm);
     m_rbAllowApp->setChecked(!appRow.blocked());
     m_rbBlockApp->setChecked(appRow.blocked());
     m_cscBlockApp->setEnabled(!appRow.blocked());
@@ -472,7 +486,7 @@ void ProgramsWindow::updateCurrentApp(bool blocked)
     if (appIndex >= 0) {
         const auto appRow = appListModel()->appRow(appIndex);
         appListModel()->updateApp(appRow.appId, appRow.appPath,
-                                  appRow.groupIndex, blocked);
+                                  appRow.groupIndex, appRow.useGroupPerm, blocked);
     }
 }
 
