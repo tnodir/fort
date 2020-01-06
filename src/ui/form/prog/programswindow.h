@@ -45,6 +45,8 @@ private:
 
     void retranslateAppBlockInHours();
 
+    void setupAppListModel();
+
     void setupUi();
     void setupAppEditForm();
     void setupComboAppGroups();

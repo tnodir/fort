@@ -15,7 +15,6 @@ AppListModel::AppListModel(ConfManager *confManager,
     TableItemModel(parent),
     m_confManager(confManager)
 {
-    connect(m_confManager, &ConfManager::confSaved, this, &AppListModel::reset);
     connect(m_confManager, &ConfManager::appEndTimesUpdated, this, &AppListModel::refresh);
 }
 
@@ -24,6 +23,18 @@ void AppListModel::setAppInfoCache(AppInfoCache *v)
     m_appInfoCache = v;
 
     connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &AppListModel::refresh);
+}
+
+void AppListModel::initialize()
+{
+    if (appGroupNames().isEmpty()) {
+        updateAppGroupNames();
+    }
+
+    connect(m_confManager, &ConfManager::confSaved, this, [&] {
+        updateAppGroupNames();
+        reset();
+    });
 }
 
 void AppListModel::addLogEntry(const LogEntryBlocked &logEntry)
@@ -96,7 +107,7 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
 
             return FileUtil::fileName(m_rowCache.appPath);
         }
-        case 1: return m_rowCache.appGroupName;
+        case 1: return appGroupNameByIndex(m_rowCache.groupIndex);
         case 3: return appStateToString(m_rowCache.state);
         case 4: return m_rowCache.endTime.isValid()
                     ? m_rowCache.endTime : QVariant();
@@ -241,11 +252,23 @@ void AppListModel::updateRowCache(int row) const
 
     if (m_confManager->getAppByIndex(m_rowCache.useGroupPerm, blocked, alerted,
                                      m_rowCache.appId, m_rowCache.groupIndex,
-                                     m_rowCache.appGroupName, m_rowCache.appPath,
-                                     m_rowCache.endTime, row)) {
+                                     m_rowCache.appPath, m_rowCache.endTime, row)) {
         m_rowCache.state = alerted ? AppAlert : (blocked ? AppBlock : AppAllow);
         m_rowCache.row = row;
     }
+}
+
+void AppListModel::updateAppGroupNames()
+{
+    m_appGroupNames = confManager()->appGroupNames();
+}
+
+QString AppListModel::appGroupNameByIndex(int groupIndex) const
+{
+    if (groupIndex < 0 || groupIndex >= m_appGroupNames.size())
+        return QString();
+
+    return m_appGroupNames.at(groupIndex);
 }
 
 QString AppListModel::appStateToString(AppState state) const

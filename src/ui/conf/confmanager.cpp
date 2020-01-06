@@ -56,6 +56,12 @@ const char * const sqlSelectAppGroupIdByIndex =
         "  WHERE order_index = ?1;"
         ;
 
+const char * const sqlSelectAppGroupNames =
+        "SELECT name"
+        "  FROM app_group"
+        "  ORDER BY order_index;"
+        ;
+
 const char * const sqlInsertAddressGroup =
         "INSERT INTO address_group(addr_group_id, order_index,"
         "    include_all, exclude_all, include_text, exclude_text)"
@@ -123,7 +129,6 @@ const char * const sqlSelectAppCount =
 const char * const sqlSelectAppByIndex =
         "SELECT t.app_id,"
         "    g.order_index as group_index,"
-        "    g.name as app_group_name,"
         "    t.path, t.use_group_perm, t.blocked,"
         "    (alert.app_id IS NOT NULL) as alerted,"
         "    t.end_time"
@@ -332,8 +337,7 @@ int ConfManager::appCount()
 
 bool ConfManager::getAppByIndex(bool &useGroupPerm, bool &blocked, bool &alerted,
                                 qint64 &appId, int &groupIndex,
-                                QString &appGroupName, QString &appPath,
-                                QDateTime &endTime, int row)
+                                QString &appPath, QDateTime &endTime, int row)
 {
     SqliteStmt stmt;
     if (!stmt.prepare(m_sqliteDb->db(), sqlSelectAppByIndex))
@@ -346,12 +350,11 @@ bool ConfManager::getAppByIndex(bool &useGroupPerm, bool &blocked, bool &alerted
 
     appId = stmt.columnInt64(0);
     groupIndex = stmt.columnInt(1);
-    appGroupName = stmt.columnText(2);
-    appPath = stmt.columnText(3);
-    useGroupPerm = stmt.columnBool(4);
-    blocked = stmt.columnBool(5);
-    alerted = stmt.columnBool(6);
-    endTime = stmt.columnDateTime(7);
+    appPath = stmt.columnText(2);
+    useGroupPerm = stmt.columnBool(3);
+    blocked = stmt.columnBool(4);
+    alerted = stmt.columnBool(5);
+    endTime = stmt.columnDateTime(6);
 
     return true;
 }
@@ -359,6 +362,21 @@ bool ConfManager::getAppByIndex(bool &useGroupPerm, bool &blocked, bool &alerted
 qint64 ConfManager::appGroupIdByIndex(int index)
 {
     return m_sqliteDb->executeEx(sqlSelectAppGroupIdByIndex, {index}).toLongLong();
+}
+
+QStringList ConfManager::appGroupNames()
+{
+    QStringList list;
+
+    SqliteStmt stmt;
+    if (stmt.prepare(m_sqliteDb->db(), sqlSelectAppGroupNames)) {
+        while (stmt.step() == SqliteStmt::StepRow) {
+            const auto name = stmt.columnText();
+            list.append(name);
+        }
+    }
+
+    return list;
 }
 
 bool ConfManager::addApp(const QString &appPath, const QDateTime &endTime,

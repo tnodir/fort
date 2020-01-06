@@ -42,8 +42,9 @@ ProgramsWindow::ProgramsWindow(FortManager *fortManager,
     m_ctrl(new ProgramsController(fortManager, this)),
     m_appListModel(ctrl()->appListModel())
 {
-    setupUi();
+    setupAppListModel();
 
+    setupUi();
     setupController();
 }
 
@@ -128,6 +129,11 @@ void ProgramsWindow::retranslateAppBlockInHours()
 
     m_cscBlockApp->setNames(list);
     m_cscBlockApp->spinBox()->setSuffix(tr(" hours"));
+}
+
+void ProgramsWindow::setupAppListModel()
+{
+    appListModel()->initialize();
 }
 
 void ProgramsWindow::setupUi()
@@ -326,13 +332,8 @@ void ProgramsWindow::setupComboAppGroups()
     m_comboAppGroup = new QComboBox();
 
     const auto refreshComboAppGroups = [&] {
-        QStringList list;
-        for (const auto appGroup : conf()->appGroups()) {
-            list.append(appGroup->name());
-        }
-
         m_comboAppGroup->clear();
-        m_comboAppGroup->addItems(list);
+        m_comboAppGroup->addItems(appListModel()->appGroupNames());
         m_comboAppGroup->setCurrentIndex(0);
     };
 

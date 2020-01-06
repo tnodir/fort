@@ -29,7 +29,6 @@ struct AppRow {
 
     qint64 appId = 0;
 
-    QString appGroupName;
     QString appPath;
 
     QDateTime endTime;
@@ -49,6 +48,8 @@ public:
 
     AppInfoCache *appInfoCache() const { return m_appInfoCache; }
     void setAppInfoCache(AppInfoCache *v);
+
+    void initialize();
 
     void addLogEntry(const LogEntryBlocked &logEntry);
 
@@ -70,6 +71,9 @@ public:
                    const QDateTime &endTime = QDateTime());
     void deleteApp(qint64 appId, const QString &appPath);
 
+    QStringList appGroupNames() const { return m_appGroupNames; }
+    QString appGroupNameByIndex(int groupIndex) const;
+
 public slots:
     void reset();
     void refresh();
@@ -78,10 +82,14 @@ private:
     void invalidateRowCache();
     void updateRowCache(int row) const;
 
+    void updateAppGroupNames();
+
     QString appStateToString(AppState state) const;
 
 private:
     mutable int m_appCount = -1;
+
+    QStringList m_appGroupNames;
 
     ConfManager *m_confManager = nullptr;
     AppInfoCache *m_appInfoCache = nullptr;

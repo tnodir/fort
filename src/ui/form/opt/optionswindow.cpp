@@ -13,7 +13,6 @@ OptionsWindow::OptionsWindow(FortManager *fortManager,
     m_ctrl(new OptionsController(fortManager, this))
 {
     setupUi();
-
     setupController();
 }
 

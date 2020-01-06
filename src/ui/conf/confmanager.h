@@ -47,9 +47,9 @@ public:
     int appCount();
     bool getAppByIndex(bool &useGroupPerm, bool &blocked, bool &alerted,
                        qint64 &appId, int &groupIndex,
-                       QString &appGroupName, QString &appPath,
-                       QDateTime &endTime, int row);
+                       QString &appPath, QDateTime &endTime, int row);
     qint64 appGroupIdByIndex(int index = 0);
+    QStringList appGroupNames();
 
     bool addApp(const QString &appPath, const QDateTime &endTime,
                 int groupIndex, bool useGroupPerm,
