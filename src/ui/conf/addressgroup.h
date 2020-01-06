@@ -35,9 +35,6 @@ public:
 
     void copy(const AddressGroup &o);
 
-    QVariant toVariant() const;
-    void fromVariant(const QVariant &v);
-
 signals:
     void includeAllChanged();
     void excludeAllChanged();

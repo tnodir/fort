@@ -77,9 +77,6 @@ public:
     void clear();
     void copy(const AppGroup &o);
 
-    QVariant toVariant() const;
-    void fromVariant(const QVariant &v);
-
 signals:
     void enabledChanged();
     void fragmentPacketChanged();

@@ -186,9 +186,6 @@ public:
 
     QString confFilePath() const;
 
-    QString confOldFilePath() const;
-    QString confBackupFilePath() const;
-
     QString controlCommand() const { return m_controlCommand; }
 
     QStringList args() const { return m_args; }
@@ -203,9 +200,6 @@ signals:
     void errorMessageChanged();
 
 public slots:
-    bool readConf(FirewallConf &conf, bool &isNew);
-    bool writeConf(const FirewallConf &conf);
-
     void readConfIni(FirewallConf &conf) const;
     bool writeConfIni(const FirewallConf &conf);
 
@@ -220,10 +214,6 @@ private:
     void setupIni();
 
     void setErrorMessage(const QString &errorMessage);
-
-    bool tryToReadConf(FirewallConf &conf, const QString &filePath);
-
-    QVariant migrateConf(const QVariant &confVar);
 
     void migrateIniOnStartup();
     void migrateIniOnWrite();

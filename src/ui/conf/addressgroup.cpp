@@ -60,27 +60,3 @@ void AddressGroup::copy(const AddressGroup &o)
     m_includeText = o.includeText();
     m_excludeText = o.excludeText();
 }
-
-QVariant AddressGroup::toVariant() const
-{
-    QVariantMap map;
-
-    map["includeAll"] = includeAll();
-    map["excludeAll"] = excludeAll();
-
-    map["includeText"] = includeText();
-    map["excludeText"] = excludeText();
-
-    return map;
-}
-
-void AddressGroup::fromVariant(const QVariant &v)
-{
-    const QVariantMap map = v.toMap();
-
-    m_includeAll = map["includeAll"].toBool();
-    m_excludeAll = map["excludeAll"].toBool();
-
-    m_includeText = map["includeText"].toString();
-    m_excludeText = map["excludeText"].toString();
-}

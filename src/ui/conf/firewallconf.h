@@ -121,9 +121,6 @@ public:
 
     void copy(const FirewallConf &o);
 
-    QVariant toVariant() const;
-    void fromVariant(const QVariant &v);
-
 signals:
     void provBootChanged();
     void filterEnabledChanged();

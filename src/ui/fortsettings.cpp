@@ -202,79 +202,6 @@ QString FortSettings::confFilePath() const
     return profilePath() + QLatin1String("FortFirewall.config");
 }
 
-QString FortSettings::confOldFilePath() const
-{
-    return profilePath() + QLatin1String("FortFirewall.conf");
-}
-
-QString FortSettings::confBackupFilePath() const
-{
-    return confOldFilePath() + QLatin1String(".backup");
-}
-
-bool FortSettings::readConf(FirewallConf &conf, bool &isNew)
-{
-    const QString filePath = confOldFilePath();
-    const QString backupFilePath = confBackupFilePath();
-
-    const bool fileExists = FileUtil::fileExists(filePath);
-    const bool backupFileExists = FileUtil::fileExists(backupFilePath);
-
-    isNew = !(fileExists || backupFileExists);
-
-    return isNew || (fileExists && tryToReadConf(conf, filePath))
-            || tryToReadConf(conf, backupFilePath);
-}
-
-bool FortSettings::tryToReadConf(FirewallConf &conf, const QString &filePath)
-{
-    const QByteArray data = FileUtil::readFileData(filePath);
-
-    QJsonParseError jsonParseError{};
-    const QJsonDocument jsonDoc = QJsonDocument::fromJson(
-                data, &jsonParseError);
-    if (jsonParseError.error != QJsonParseError::NoError) {
-        setErrorMessage(jsonParseError.errorString());
-        return false;
-    }
-
-    QVariant confVar = jsonDoc.toVariant();
-
-    confVar = migrateConf(confVar);
-
-    conf.fromVariant(confVar);
-
-    return true;
-}
-
-bool FortSettings::writeConf(const FirewallConf &conf)
-{
-    const QString filePath = confOldFilePath();
-    const QString backupFilePath = confBackupFilePath();
-
-    if (!writeConfIni(conf)) {
-        setErrorMessage(tr("Can't write .ini file"));
-        return false;
-    }
-
-    const QJsonDocument jsonDoc = QJsonDocument::fromVariant(
-                conf.toVariant());
-
-    const QByteArray data = jsonDoc.toJson(QJsonDocument::Indented);
-
-    if (!FileUtil::writeFileData(backupFilePath, data)) {
-        setErrorMessage(tr("Can't create backup .conf file"));
-        return false;
-    }
-
-    if (!FileUtil::writeFileData(filePath, data)) {
-        setErrorMessage(tr("Can't create .conf file"));
-        return false;
-    }
-
-    return true;
-}
-
 void FortSettings::readConfIni(FirewallConf &conf) const
 {
     m_ini->beginGroup("confFlags");
@@ -345,55 +272,20 @@ bool FortSettings::writeConfIni(const FirewallConf &conf)
     return iniSync();
 }
 
-QVariant FortSettings::migrateConf(const QVariant &confVar)
-{
-    const int version = iniVersion();
-    if (version == appVersion())
-        return confVar;
-
-    QVariantMap map = confVar.toMap();
-
-    // COMPAT: v1.7.0: AddressGroups
-    if (version < 0x010700) {
-        const QVariantMap oldIncMap = map["ipInclude"].toMap();
-        const QVariantMap oldExcMap = map["ipExclude"].toMap();
-
-        QVariantMap inetMap;
-
-        inetMap["includeAll"] = iniBool("confFlags/ipIncludeAll");
-        inetMap["excludeAll"] = iniBool("confFlags/ipExcludeAll");
-
-        inetMap["includeText"] = oldIncMap["text"];
-        inetMap["excludeText"] = oldExcMap["text"];
-
-        QVariantList addrList;
-        addrList.append(inetMap);
-
-        map["addressGroups"] = addrList;
-    }
-
-    // COMPAT: v3.0.0: PasswordHash
-    if (version < 0x030000) {
-        const QString oldPasswordHash = map["passwordHash"].toString();
-
-        setPasswordHash(oldPasswordHash);
-    }
-
-    return map;
-}
-
 void FortSettings::migrateIniOnStartup()
 {
     const int version = iniVersion();
     if (version == appVersion())
         return;
 
+#if 0
     // COMPAT: v3.0.0: Options Window
     if (version < 0x030000) {
         setCacheValue("optWindow/geometry", m_ini->value("window/geometry"));
         setCacheValue("optWindow/maximized", m_ini->value("window/maximized"));
         // Abandon "window/addrSplit" & "window/appsSplit"
     }
+#endif
 }
 
 void FortSettings::migrateIniOnWrite()
@@ -404,23 +296,14 @@ void FortSettings::migrateIniOnWrite()
 
     setIniVersion(appVersion());
 
-    // COMPAT: v1.7.0: AddressGroups
-    if (version < 0x010700) {
-        removeIniKey("confFlags/ipIncludeAll");
-        removeIniKey("confFlags/ipExcludeAll");
-    }
-
-    // COMPAT: v1.10.0: Log Errors
-    if (version < 0x011000) {
-        removeIniKey("confFlags/logErrors");
-    }
-
+#if 0
     // COMPAT: v3.0.0: Options Window
     if (version < 0x030000) {
         removeIniKey("window");
         m_ini->setValue("optWindow/geometry", cacheValue("optWindow/geometry"));
         m_ini->setValue("optWindow/maximized", cacheValue("optWindow/maximized"));
     }
+#endif
 }
 
 bool FortSettings::confMigrated() const
@@ -429,9 +312,11 @@ bool FortSettings::confMigrated() const
     if (version == appVersion())
         return false;
 
+#if 0
     // COMPAT: v3.0.0
     if (version < 0x030000 && appVersion() >= 0x030000)
         return true;
+#endif
 
     return false;
 }
