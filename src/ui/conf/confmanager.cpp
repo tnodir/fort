@@ -144,18 +144,17 @@ const char * const sqlSelectApps =
 
 const char * const sqlSelectEndAppsCount =
         "SELECT COUNT(*) FROM app"
-        "  WHERE end_time IS NOT NULL AND end_time != 0;"
+        "  WHERE end_time IS NOT NULL AND end_time != 0"
+        "    AND blocked = 0;"
         ;
 
 const char * const sqlSelectEndedApps =
         "SELECT t.app_id,"
         "    g.order_index as group_index,"
-        "    t.path,"
-        "    (alert.app_id IS NOT NULL) as alerted"
+        "    t.path"
         "  FROM app t"
         "    JOIN app_group g ON g.app_group_id = t.app_group_id"
-        "    LEFT JOIN app_alert alert ON alert.app_id = t.app_id"
-        "  WHERE end_time <= ?1;"
+        "  WHERE end_time <= ?1 AND blocked = 0;"
         ;
 
 const char * const sqlInsertApp =
@@ -519,11 +518,9 @@ void ConfManager::updateAppEndTimes()
     while (stmt.step() == SqliteStmt::StepRow) {
         const qint64 appId = stmt.columnInt64(0);
         const int groupIndex = stmt.columnInt(1);
-        const QString appPath = stmt.columnText(3);
-        const bool alerted = stmt.columnBool(4);
+        const QString appPath = stmt.columnText(2);
 
-        if (updateDriverUpdateApp(appPath, groupIndex,
-                                  false, true, alerted)
+        if (updateDriverUpdateApp(appPath, groupIndex, false, true, false)
                 && updateApp(appId, QDateTime(), groupIndex, true)) {
             isAppEndTimesUpdated = true;
         }
