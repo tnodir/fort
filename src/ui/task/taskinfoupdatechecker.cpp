@@ -15,7 +15,8 @@ TaskInfoUpdateChecker::TaskInfoUpdateChecker(QObject *parent) :
 
 bool TaskInfoUpdateChecker::isNewVersion() const
 {
-    return version() != APP_VERSION_STR;
+    return !version().isEmpty()
+            && version() != APP_VERSION_STR;
 }
 
 QByteArray TaskInfoUpdateChecker::data() const
