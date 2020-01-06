@@ -1,5 +1,16 @@
 Fort Firewall ChangeLog
 
+v3.0.0, 2020-01-06:
+- UI: Add Programs Window.
+- UI: Add ability to use wild matching (see .gitignore rules) and env vars (e.g. %HOME%) in the app groups.
+- UI: OptionsPage: Show new version info.
+- UI: Add --cache <path> and --logs <path> arguments.
+- Migrate .conf JSON-file to .config DB-file.
+- UI: Migrate to Widgets from QML.
+- Update SQLite to v3.30.1
+
+Attention: Next versions will be not compatible with v1.* & v2.* versions!
+
 v2.10.0, 2019-10-02:
 - UI: Reload app info on changes.
 - ControlManager: Fix worker's completion waiting.

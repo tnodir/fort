@@ -9,7 +9,7 @@
 
 #define APP_NAME		"Fort Firewall"
 #define APP_PUBLISHER		"Nodir Temirkhodjaev"
-#define APP_LEGALCOPYRIGHT	"Copyright (C) 2015-2019 Nodir Temirkhodjaev. All Rights Reserved."
+#define APP_LEGALCOPYRIGHT	"Copyright (C) 2015-2020 Nodir Temirkhodjaev. All Rights Reserved."
 #define APP_URL			"https://github.com/tnodir/fort"
 #define APP_UPDATES_URL		"https://github.com/tnodir/fort/releases"
 #define APP_UPDATES_API_URL	"https://api.github.com/repos/tnodir/fort/releases/latest"
