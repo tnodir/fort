@@ -39,10 +39,10 @@ bool TaskUpdateChecker::parseBuffer(const QByteArray &buffer)
 
     const QVariantMap map = jsonDoc.toVariant().toMap();
 
-    // Check version (eg. "v1.4.0")
+    // Version (eg. "v1.4.0")
     const QString tagName = map["tag_name"].toString();
     m_version = tagName.mid(1);
-    if (m_version == APP_VERSION_STR)
+    if (m_version.isEmpty())
         return false;
 
     // Check draft/prerelease

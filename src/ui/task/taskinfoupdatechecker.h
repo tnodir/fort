@@ -13,6 +13,7 @@ class TaskInfoUpdateChecker : public TaskInfo
 public:
     explicit TaskInfoUpdateChecker(QObject *parent = nullptr);
 
+    bool isNewVersion() const;
     QString version() const { return m_version; }
     QString downloadUrl() const { return m_downloadUrl; }
     QString releaseText() const { return m_releaseText; }

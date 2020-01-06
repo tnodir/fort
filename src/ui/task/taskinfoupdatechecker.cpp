@@ -13,6 +13,11 @@ TaskInfoUpdateChecker::TaskInfoUpdateChecker(QObject *parent) :
 {
 }
 
+bool TaskInfoUpdateChecker::isNewVersion() const
+{
+    return version() != APP_VERSION_STR;
+}
+
 QByteArray TaskInfoUpdateChecker::data() const
 {
     QByteArray data;
@@ -52,11 +57,8 @@ void TaskInfoUpdateChecker::setData(const QByteArray &data)
 
 bool TaskInfoUpdateChecker::processResult(FortManager *fortManager, bool success)
 {
-    if (!success) {
-        m_version = QString();
-        m_releaseText = QString();
+    if (!success)
         return false;
-    }
 
     const auto updateChecker = static_cast<TaskUpdateChecker *>(taskWorker());
 

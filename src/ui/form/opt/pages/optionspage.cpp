@@ -346,7 +346,7 @@ void OptionsPage::setupNewVersionUpdate()
 {
     const auto refreshNewVersion = [&] {
         auto updateChecker = taskManager()->taskInfoUpdateChecker();
-        m_gbNewVersion->setVisible(!updateChecker->version().isEmpty());
+        m_gbNewVersion->setVisible(updateChecker->isNewVersion());
         m_labelNewVersion->setText(updateChecker->releaseText());
         m_btNewVersion->setWindowFilePath(updateChecker->downloadUrl());
         m_btNewVersion->setToolTip(updateChecker->downloadUrl());
