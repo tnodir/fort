@@ -126,7 +126,7 @@ private:
     QWidget *m_appInfoRow = nullptr;
     QPushButton *m_btAppCopyPath = nullptr;
     QPushButton *m_btAppOpenFolder = nullptr;
-    QLabel *m_labelAppPath = nullptr;
+    QLineEdit *m_lineAppPath = nullptr;
     QLabel *m_labelAppProductName = nullptr;
     QLabel *m_labelAppCompanyName = nullptr;
 };

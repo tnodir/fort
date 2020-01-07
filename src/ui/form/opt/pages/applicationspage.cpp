@@ -153,6 +153,7 @@ QLayout *ApplicationsPage::setupHeader()
     auto layout = new QHBoxLayout();
 
     m_editGroupName = new QLineEdit();
+    m_editGroupName->setClearButtonEnabled(true);
     m_editGroupName->setFixedWidth(200);
 
     setupAddGroup();

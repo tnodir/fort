@@ -223,6 +223,7 @@ void ProgramsWindow::setupAppEditForm()
     auto pathLayout = new QHBoxLayout();
 
     m_editPath = new QLineEdit();
+    m_editPath->setClearButtonEnabled(true);
 
     m_btSelectFile = ControlUtil::createLinkButton(":/images/folder_explore.png");
 
@@ -392,8 +393,7 @@ void ProgramsWindow::setupAppInfoRow()
     m_btAppCopyPath = ControlUtil::createLinkButton(":/images/page_copy.png");
     m_btAppOpenFolder = ControlUtil::createLinkButton(":/images/folder_go.png");
 
-    m_labelAppPath = new QLabel();
-    m_labelAppPath->setWordWrap(true);
+    m_lineAppPath = ControlUtil::createLineLabel();
 
     m_labelAppProductName = new QLabel();
     m_labelAppProductName->setFont(ControlUtil::fontDemiBold());
@@ -409,7 +409,7 @@ void ProgramsWindow::setupAppInfoRow()
 
     layout->addWidget(m_btAppCopyPath);
     layout->addWidget(m_btAppOpenFolder);
-    layout->addWidget(m_labelAppPath, 1);
+    layout->addWidget(m_lineAppPath, 1);
     layout->addWidget(m_labelAppProductName);
     layout->addWidget(m_labelAppCompanyName);
 
@@ -423,7 +423,8 @@ void ProgramsWindow::setupAppInfoVersion()
         const auto appPath = appListCurrentPath();
         const auto appInfo = appInfoCache()->appInfo(appPath);
 
-        m_labelAppPath->setText(appPath);
+        m_lineAppPath->setText(appPath);
+        m_lineAppPath->setToolTip(appPath);
 
         m_labelAppProductName->setVisible(!appInfo.productName.isEmpty());
         m_labelAppProductName->setText(appInfo.productName + " v" + appInfo.productVersion);

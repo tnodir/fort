@@ -11,6 +11,7 @@ QT_FORWARD_DECLARE_CLASS(QComboBox)
 QT_FORWARD_DECLARE_CLASS(QFrame)
 QT_FORWARD_DECLARE_CLASS(QBoxLayout)
 QT_FORWARD_DECLARE_CLASS(QMenu)
+QT_FORWARD_DECLARE_CLASS(QLineEdit)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
@@ -28,6 +29,7 @@ public:
     static QPushButton *createLinkButton(const QString &iconPath,
                                          const QString &linkPath = QString(),
                                          const QString &toolTip = QString());
+    static QLineEdit *createLineLabel();
     static QMenu *createMenuByLayout(QBoxLayout *layout, QWidget *parent);
     static QBoxLayout *createLayoutByWidgets(const QList<QWidget *> &widgets,
                                              Qt::Orientation o = Qt::Vertical);

@@ -6,6 +6,7 @@
 #include <QComboBox>
 #include <QFileDialog>
 #include <QMenu>
+#include <QLineEdit>
 #include <QPushButton>
 #include <QToolButton>
 #include <QWidgetAction>
@@ -62,6 +63,19 @@ QPushButton *ControlUtil::createLinkButton(const QString &iconPath,
     c->setCursor(Qt::PointingHandCursor);
     c->setWindowFilePath(linkPath);
     c->setToolTip(!toolTip.isEmpty() ? toolTip : linkPath);
+    return c;
+}
+
+QLineEdit *ControlUtil::createLineLabel()
+{
+    auto c = new QLineEdit();
+    c->setReadOnly(true);
+    c->setFrame(false);
+
+    QPalette pal;
+    pal.setColor(QPalette::Base, Qt::transparent);
+    c->setPalette(pal);
+
     return c;
 }
 

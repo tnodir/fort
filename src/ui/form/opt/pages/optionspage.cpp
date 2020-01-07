@@ -216,8 +216,9 @@ void OptionsPage::setupUi()
 void OptionsPage::setupEditPassword()
 {
     m_editPassword = new QLineEdit();
-    m_editPassword->setFixedWidth(200);
+    m_editPassword->setClearButtonEnabled(true);
     m_editPassword->setEchoMode(QLineEdit::Password);
+    m_editPassword->setFixedWidth(200);
 
     const auto refreshEditPassword = [&] {
         m_editPassword->setReadOnly(settings()->hasPassword()
