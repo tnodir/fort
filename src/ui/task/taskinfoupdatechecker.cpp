@@ -29,7 +29,7 @@ QByteArray TaskInfoUpdateChecker::data() const
 
     stream
             << infoVersion
-            << APP_VERSION_STR
+            << QString::fromLatin1(APP_VERSION_STR)
             << m_version
             << m_downloadUrl
             << m_releaseText;
