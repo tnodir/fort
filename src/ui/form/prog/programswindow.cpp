@@ -26,6 +26,7 @@
 #include "../controls/checkspincombo.h"
 #include "../controls/controlutil.h"
 #include "../controls/tableview.h"
+#include "../controls/widebutton.h"
 #include "programscontroller.h"
 
 namespace {
@@ -267,8 +268,8 @@ void ProgramsWindow::setupAppEditForm()
     // OK/Cancel
     auto buttonsLayout = new QHBoxLayout();
 
-    m_btEditOk = new QPushButton(QIcon(":/images/tick.png"), QString());
-    m_btEditCancel = new QPushButton(QIcon(":/images/cancel.png"), QString());
+    m_btEditOk = new WideButton(QIcon(":/images/tick.png"));
+    m_btEditCancel = new WideButton(QIcon(":/images/cancel.png"));
 
     buttonsLayout->addWidget(m_btEditOk, 1, Qt::AlignRight);
     buttonsLayout->addWidget(m_btEditCancel);

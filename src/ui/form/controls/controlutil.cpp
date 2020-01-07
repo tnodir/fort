@@ -12,6 +12,8 @@
 #include <QToolButton>
 #include <QWidgetAction>
 
+#include "widebutton.h"
+
 QCheckBox *ControlUtil::createCheckBox(bool checked,
                                        const std::function<void (bool checked)> &onToggled)
 {
@@ -37,7 +39,7 @@ QComboBox *ControlUtil::createComboBox(const QStringList &texts,
 QPushButton *ControlUtil::createButton(const QString &iconPath,
                                        const std::function<void ()> &onClicked)
 {
-    auto c = new QPushButton(QIcon(iconPath), QString());
+    auto c = new WideButton(QIcon(iconPath));
 
     c->connect(c, &QPushButton::clicked, onClicked);
 

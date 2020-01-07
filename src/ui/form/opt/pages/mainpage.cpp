@@ -8,6 +8,7 @@
 
 #include "../../../fortsettings.h"
 #include "../../controls/controlutil.h"
+#include "../../controls/widebutton.h"
 #include "../optionscontroller.h"
 #include "addressespage.h"
 #include "applicationspage.h"
@@ -89,9 +90,9 @@ QLayout *MainPage::setupDialogButtons()
 
     buttonsLayout->addStretch();
 
-    m_btOk = new QPushButton(QIcon(":/images/tick.png"), QString());
-    m_btApply = new QPushButton(QIcon(":/images/accept.png"), QString());
-    m_btCancel = new QPushButton(QIcon(":/images/cancel.png"), QString());
+    m_btOk = new WideButton(QIcon(":/images/tick.png"));
+    m_btApply = new WideButton(QIcon(":/images/accept.png"));
+    m_btCancel = new WideButton(QIcon(":/images/cancel.png"));
 
     connect(m_btOk, &QAbstractButton::clicked, ctrl(), &OptionsController::saveChanges);
     connect(m_btApply, &QAbstractButton::clicked, ctrl(), &OptionsController::applyChanges);
