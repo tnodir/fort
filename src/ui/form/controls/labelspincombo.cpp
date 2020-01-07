@@ -3,6 +3,8 @@
 #include <QHBoxLayout>
 #include <QLabel>
 
+#include "controlutil.h"
+
 LabelSpinCombo::LabelSpinCombo(QWidget *parent) :
     SpinCombo(parent)
 {
@@ -11,7 +13,7 @@ LabelSpinCombo::LabelSpinCombo(QWidget *parent) :
 
 void LabelSpinCombo::setupUi()
 {
-    m_label = new QLabel();
+    m_label = ControlUtil::createLabel();
 
     boxLayout()->insertWidget(0, m_label, 1);
 }

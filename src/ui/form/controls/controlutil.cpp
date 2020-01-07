@@ -6,6 +6,7 @@
 #include <QComboBox>
 #include <QFileDialog>
 #include <QMenu>
+#include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QToolButton>
@@ -63,6 +64,13 @@ QPushButton *ControlUtil::createLinkButton(const QString &iconPath,
     c->setCursor(Qt::PointingHandCursor);
     c->setWindowFilePath(linkPath);
     c->setToolTip(!toolTip.isEmpty() ? toolTip : linkPath);
+    return c;
+}
+
+QLabel *ControlUtil::createLabel(const QString &text)
+{
+    auto c = new QLabel(text);
+    c->setIndent(2);  // Workaround for clipping bug
     return c;
 }
 

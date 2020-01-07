@@ -395,10 +395,10 @@ void ProgramsWindow::setupAppInfoRow()
 
     m_lineAppPath = ControlUtil::createLineLabel();
 
-    m_labelAppProductName = new QLabel();
+    m_labelAppProductName = ControlUtil::createLabel();
     m_labelAppProductName->setFont(ControlUtil::fontDemiBold());
 
-    m_labelAppCompanyName = new QLabel();
+    m_labelAppCompanyName = ControlUtil::createLabel();
 
     connect(m_btAppCopyPath, &QAbstractButton::clicked, [&] {
         GuiUtil::setClipboardData(appListCurrentPath());

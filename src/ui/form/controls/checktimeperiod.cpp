@@ -5,6 +5,8 @@
 #include <QLabel>
 #include <QTimeEdit>
 
+#include "controlutil.h"
+
 CheckTimePeriod::CheckTimePeriod(QWidget *parent) :
     QWidget(parent)
 {
@@ -23,7 +25,7 @@ void CheckTimePeriod::setupUi()
 
     layout->addWidget(m_checkBox, 1);
     layout->addWidget(m_timeEdit1);
-    layout->addWidget(new QLabel("–"));
+    layout->addWidget(ControlUtil::createLabel("–"));
     layout->addWidget(m_timeEdit2);
 
     this->setLayout(layout);

@@ -173,7 +173,7 @@ void OptionsPage::setupUi()
     auto langLayout = new QHBoxLayout();
     langLayout->setSpacing(10);
 
-    m_labelLanguage = new QLabel();
+    m_labelLanguage = ControlUtil::createLabel();
 
     setupComboLanguage();
 
@@ -264,7 +264,7 @@ void OptionsPage::setupDriverBox()
     labelLayout->setSpacing(4);
     colLayout->addLayout(labelLayout);
 
-    m_labelDriverMessage = new QLabel();
+    m_labelDriverMessage = ControlUtil::createLabel();
     m_labelDriverMessage->setWordWrap(true);
     m_labelDriverMessage->setFont(ControlUtil::fontDemiBold());
 
@@ -299,7 +299,7 @@ void OptionsPage::setupDriverBox()
 
 void OptionsPage::setupDriverIcon()
 {
-    m_iconDriver = new QLabel();
+    m_iconDriver = ControlUtil::createLabel();
 
     const auto refreshDriverIcon = [&] {
         const auto iconPath = driverManager()->isDeviceOpened()
@@ -327,7 +327,7 @@ void OptionsPage::setupNewVersionBox()
     m_gbNewVersion->setLayout(colLayout);
 
     // Label
-    m_labelNewVersion = new QLabel();
+    m_labelNewVersion = ControlUtil::createLabel();
 #if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
     m_labelNewVersion->setTextFormat(Qt::MarkdownText);
 #endif

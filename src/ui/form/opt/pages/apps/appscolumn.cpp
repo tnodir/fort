@@ -21,7 +21,7 @@ void AppsColumn::setupUi()
     auto headerLayout = new QHBoxLayout();
     layout->addLayout(headerLayout);
 
-    m_labelTitle = new QLabel();
+    m_labelTitle = ControlUtil::createLabel();
     m_labelTitle->setFont(ControlUtil::fontDemiBold());
 
     headerLayout->addWidget(m_labelTitle);

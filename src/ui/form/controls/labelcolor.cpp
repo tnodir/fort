@@ -35,7 +35,7 @@ void LabelColor::setupUi()
     auto layout = new QHBoxLayout();
     layout->setMargin(0);
 
-    m_label = new QLabel();
+    m_label = ControlUtil::createLabel();
 
     setupButton();
 

@@ -4,6 +4,8 @@
 #include <QLabel>
 #include <QSpinBox>
 
+#include "controlutil.h"
+
 LabelSpin::LabelSpin(QWidget *parent) :
     QWidget(parent)
 {
@@ -20,7 +22,7 @@ void LabelSpin::setupUi()
     auto layout = new QHBoxLayout();
     layout->setMargin(0);
 
-    m_label = new QLabel();
+    m_label = ControlUtil::createLabel();
 
     setupSpin();
 
