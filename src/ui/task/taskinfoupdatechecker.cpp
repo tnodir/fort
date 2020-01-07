@@ -6,7 +6,7 @@
 #include "../fortmanager.h"
 #include "taskupdatechecker.h"
 
-#define TASK_INFO_VERSION   1
+#define TASK_INFO_VERSION   2
 
 TaskInfoUpdateChecker::TaskInfoUpdateChecker(QObject *parent) :
     TaskInfo(UpdateChecker, parent)
@@ -29,6 +29,7 @@ QByteArray TaskInfoUpdateChecker::data() const
 
     stream
             << infoVersion
+            << APP_VERSION_STR
             << m_version
             << m_downloadUrl
             << m_releaseText;
@@ -47,7 +48,18 @@ void TaskInfoUpdateChecker::setData(const QByteArray &data)
     if (infoVersion > TASK_INFO_VERSION)
         return;
 
+    // COMPAT: v3.1.0: Self version
+    if (infoVersion < 2)
+        return;
+
     // Load data
+    QString appVersion;
+
+    stream >> appVersion;
+
+    if (appVersion != APP_VERSION_STR)
+        return;  // app upgraded
+
     stream
             >> m_version
             >> m_downloadUrl
