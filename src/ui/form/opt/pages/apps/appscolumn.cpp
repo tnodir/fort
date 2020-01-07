@@ -28,6 +28,7 @@ void AppsColumn::setupUi()
 
     // Text Area
     m_editText = new QPlainTextEdit();
+    m_editText->setTabChangesFocus(true);
     layout->addWidget(m_editText);
 
     this->setLayout(layout);

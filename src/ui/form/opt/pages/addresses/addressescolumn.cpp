@@ -34,6 +34,7 @@ void AddressesColumn::setupUi()
 
     // Text Area
     m_editIpText = new QPlainTextEdit();
+    m_editIpText->setTabChangesFocus(true);
     layout->addWidget(m_editIpText);
 
     this->setLayout(layout);
