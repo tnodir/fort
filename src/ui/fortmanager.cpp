@@ -212,7 +212,7 @@ void FortManager::setupTrayIcon()
         switch (reason) {
         case QSystemTrayIcon::Trigger:
             m_trayTriggered = false;
-            QTimer::singleShot(200, this, [this] {
+            QTimer::singleShot(QApplication::doubleClickInterval(), this, [this] {
                 if (!m_trayTriggered) {
                     m_trayTriggered = true;
                     showProgramsWindow();
@@ -231,6 +231,9 @@ void FortManager::setupTrayIcon()
             break;
         }
     });
+
+    connect(m_trayIcon, &QSystemTrayIcon::messageClicked,
+            this, &FortManager::showProgramsWindow);
 
     updateTrayMenu();
 }
