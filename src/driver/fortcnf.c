@@ -32,6 +32,8 @@ typedef struct fort_conf_ref {
   tommy_arrayof exe_nodes;
   tommy_hashdyn exe_map;
 
+  KSPIN_LOCK lock;
+
   FORT_CONF conf;
 } FORT_CONF_REF, *PFORT_CONF_REF;
 
@@ -159,23 +161,28 @@ fort_conf_exe_find (const PFORT_CONF conf,
 {
   PFORT_CONF_REF conf_ref = (PFORT_CONF_REF) ((char *) conf - offsetof(FORT_CONF_REF, conf));
   const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, path_len);
-
-  const PFORT_CONF_EXE_NODE node = fort_conf_ref_exe_find_node(
-    conf_ref, path, path_len, path_hash);
-
   FORT_APP_FLAGS app_flags;
-  app_flags.v = node ? node->app_entry->flags.v : 0;
+
+  KLOCK_QUEUE_HANDLE lock_queue;
+
+  KeAcquireInStackQueuedSpinLock(&conf_ref->lock, &lock_queue);
+  {
+    const PFORT_CONF_EXE_NODE node = fort_conf_ref_exe_find_node(
+      conf_ref, path, path_len, path_hash);
+
+    app_flags.v = node ? node->app_entry->flags.v : 0;
+  }
+  KeReleaseInStackQueuedSpinLock(&lock_queue);
 
   return app_flags;
 }
 
 static BOOL
-fort_conf_ref_exe_add_path (PFORT_CONF_REF conf_ref,
-                            const char *path, UINT32 path_len,
-                            FORT_APP_FLAGS flags)
+fort_conf_ref_exe_add_path_locked (PFORT_CONF_REF conf_ref,
+                                   const char *path, UINT32 path_len,
+                                   tommy_key_t path_hash,
+                                   FORT_APP_FLAGS flags)
 {
-  const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, path_len);
-
   const PFORT_CONF_EXE_NODE node = fort_conf_ref_exe_find_node(
     conf_ref, path, path_len, path_hash);
 
@@ -187,7 +194,6 @@ fort_conf_ref_exe_add_path (PFORT_CONF_REF conf_ref,
       return FALSE;
 
     entry->flags = flags;
-
     entry->path_len = (UINT16) path_len;
 
     // Copy path
@@ -221,29 +227,53 @@ fort_conf_ref_exe_add_path (PFORT_CONF_REF conf_ref,
     }
 
     return TRUE;
-  }
+  } else {
+    if (flags.alerted)
+      return FALSE;
 
-  if (flags.alerted)
-    return FALSE;
+    // Replace flags
+    {
+      PFORT_APP_ENTRY entry = node->app_entry;
 
-  // Replace flags
-  {
-    PFORT_APP_ENTRY entry = node->app_entry;
+      entry->flags = flags;
 
-    entry->flags = flags;
-
-    return TRUE;
+      return TRUE;
+    }
   }
 }
 
 static BOOL
-fort_conf_ref_exe_add_entry (PFORT_CONF_REF conf_ref, const PFORT_APP_ENTRY entry)
+fort_conf_ref_exe_add_path (PFORT_CONF_REF conf_ref,
+                            const char *path, UINT32 path_len,
+                            FORT_APP_FLAGS flags)
+{
+  const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, path_len);
+  BOOL res = FALSE;
+
+  KLOCK_QUEUE_HANDLE lock_queue;
+
+  KeAcquireInStackQueuedSpinLock(&conf_ref->lock, &lock_queue);
+  res = fort_conf_ref_exe_add_path_locked(conf_ref, path, path_len, path_hash, flags);
+  KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+  return res;
+}
+
+static BOOL
+fort_conf_ref_exe_add_entry (PFORT_CONF_REF conf_ref, const PFORT_APP_ENTRY entry,
+                             BOOL locked)
 {
   const char *path = (const char *) (entry + 1);
   const UINT32 path_len = entry->path_len;
   const FORT_APP_FLAGS flags = entry->flags;
 
-  return fort_conf_ref_exe_add_path(conf_ref, path, path_len, flags);
+  if (locked) {
+    const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, path_len);
+
+    return fort_conf_ref_exe_add_path_locked(conf_ref, path, path_len, path_hash, flags);
+  } else {
+    return fort_conf_ref_exe_add_path(conf_ref, path, path_len, flags);
+  }
 }
 
 static void
@@ -254,12 +284,10 @@ fort_conf_ref_exe_fill (PFORT_CONF_REF conf_ref, const PFORT_CONF conf)
   const int count = conf->exe_apps_n;
   int i;
 
-  tommy_arrayof_grow(&conf_ref->exe_nodes, count);
-
   for (i = 0; i < count; ++i) {
     const PFORT_APP_ENTRY entry = (const PFORT_APP_ENTRY) app_entries;
 
-    fort_conf_ref_exe_add_entry(conf_ref, entry);
+    fort_conf_ref_exe_add_entry(conf_ref, entry, TRUE);
 
     app_entries += FORT_CONF_APP_ENTRY_SIZE(entry->path_len);
   }
@@ -271,28 +299,33 @@ fort_conf_ref_exe_del_path (PFORT_CONF_REF conf_ref,
 {
   const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, path_len);
 
-  PFORT_CONF_EXE_NODE node = fort_conf_ref_exe_find_node(
-    conf_ref, path, path_len, path_hash);
+  KLOCK_QUEUE_HANDLE lock_queue;
 
-  if (node == NULL)
-    return;
-
-  // Delete from conf
+  KeAcquireInStackQueuedSpinLock(&conf_ref->lock, &lock_queue);
   {
-    PFORT_CONF conf = &conf_ref->conf;
-    --conf->exe_apps_n;
+    PFORT_CONF_EXE_NODE node = fort_conf_ref_exe_find_node(
+      conf_ref, path, path_len, path_hash);
+
+    if (node != NULL) {
+      // Delete from conf
+      {
+        PFORT_CONF conf = &conf_ref->conf;
+        --conf->exe_apps_n;
+      }
+
+      // Delete from pool
+      {
+        PFORT_APP_ENTRY entry = node->app_entry;
+        tlsf_free(conf_ref->tlsf, entry);
+      }
+
+      // Delete from exe map
+      tommy_hashdyn_remove_existing(&conf_ref->exe_map, (tommy_hashdyn_node *) node);
+
+      tommy_list_insert_tail_check(&conf_ref->free_nodes, (tommy_node *) node);
+    }
   }
-
-  // Delete from pool
-  {
-    PFORT_APP_ENTRY entry = node->app_entry;
-    tlsf_free(conf_ref->tlsf, entry);
-  }
-
-  // Delete from exe map
-  tommy_hashdyn_remove_existing(&conf_ref->exe_map, (tommy_hashdyn_node *) node);
-
-  tommy_list_insert_tail_check(&conf_ref->free_nodes, (tommy_node *) node);
+  KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
 static void
@@ -314,6 +347,8 @@ fort_conf_ref_init (PFORT_CONF_REF conf_ref)
 
   tommy_arrayof_init(&conf_ref->exe_nodes, sizeof(FORT_CONF_EXE_NODE));
   tommy_hashdyn_init(&conf_ref->exe_map);
+
+  KeInitializeSpinLock(&conf_ref->lock);
 }
 
 static PFORT_CONF_REF
@@ -327,7 +362,6 @@ fort_conf_ref_new (const PFORT_CONF conf, ULONG len)
     RtlCopyMemory(&conf_ref->conf, conf, conf_len);
 
     fort_conf_ref_init(conf_ref);
-
     fort_conf_pool_init(conf_ref, len - conf_len);
 
     fort_conf_ref_exe_fill(conf_ref, conf);

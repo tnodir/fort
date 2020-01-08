@@ -1072,7 +1072,7 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
         status = STATUS_INSUFFICIENT_RESOURCES;
       } else {
         if (control_code == FORT_IOCTL_ADDAPP) {
-          status = fort_conf_ref_exe_add_entry(conf_ref, app_entry)
+          status = fort_conf_ref_exe_add_entry(conf_ref, app_entry, FALSE)
             ? STATUS_SUCCESS : STATUS_UNSUCCESSFUL;
         } else {
           fort_conf_ref_exe_del_entry(conf_ref, app_entry);
