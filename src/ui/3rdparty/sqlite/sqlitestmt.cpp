@@ -136,6 +136,15 @@ bool SqliteStmt::bindVar(int index, const QVariant &v)
     }
 }
 
+bool SqliteStmt::bindVars(const QVariantList &vars, int index)
+{
+    for (const QVariant &v : vars) {
+        if (!bindVar(index++, v))
+            return false;
+    }
+    return true;
+}
+
 bool SqliteStmt::clearBindings()
 {
     m_bindObjects.clear();

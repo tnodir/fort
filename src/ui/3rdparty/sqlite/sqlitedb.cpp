@@ -115,28 +115,18 @@ QVariant SqliteDb::executeEx(const char *sql,
     QVariantList list;
 
     SqliteStmt stmt;
-    bool success = true;
+    bool success = false;
 
-    if (stmt.prepare(db(), sql)) {
-        // Bind variables
-        if (!vars.isEmpty()) {
-            int index = 0;
-            for (const QVariant &v : vars) {
-                success = stmt.bindVar(++index, v);
-                if (!success) break;
-            }
-        }
+    if (stmt.prepare(db(), sql)
+            && stmt.bindVars(vars)) {
+        const auto stepRes = stmt.step();
+        success = (stepRes != SqliteStmt::StepError);
 
-        if (success) {
-            const auto stepRes = stmt.step();
-            success = (stepRes != SqliteStmt::StepError);
-
-            // Get result
-            if (stepRes == SqliteStmt::StepRow) {
-                for (int i = 0; i < resultCount; ++i) {
-                    const QVariant v = stmt.columnVar(i);
-                    list.append(v);
-                }
+        // Get result
+        if (stepRes == SqliteStmt::StepRow) {
+            for (int i = 0; i < resultCount; ++i) {
+                const QVariant v = stmt.columnVar(i);
+                list.append(v);
             }
         }
     }

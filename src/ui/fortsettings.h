@@ -81,6 +81,15 @@ public:
     bool progWindowMaximized() const { return iniBool("progWindow/maximized"); }
     void setProgWindowMaximized(bool on) { setIniValue("progWindow/maximized", on); }
 
+    bool progAppsSortDesc() const { return iniBool("progWindow/appsSortDesc"); }
+    void setProgSortDesc(bool v) { setIniValue("progWindow/appsSortDesc", v); }
+
+    int progAppsSortColumn() const { return iniInt("progWindow/appsSortColumn"); }
+    void setProgSortColumn(int v) { setIniValue("progWindow/appsSortColumn", v); }
+
+    int progAppsHeaderVersion() const { return iniInt("progWindow/appsHeaderVersion"); }
+    void setProgAppsHeaderVersion(int v) { setIniValue("progWindow/appsHeaderVersion", v); }
+
     QByteArray progAppsHeader() const { return iniByteArray("progWindow/appsHeader"); }
     void setProgAppsHeader(const QByteArray &v) { setIniValue("progWindow/appsHeader", v); }
 

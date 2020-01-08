@@ -44,10 +44,11 @@ public:
     bool loadTasks(const QList<TaskInfo *> &taskInfos);
     bool saveTasks(const QList<TaskInfo *> &taskInfos);
 
-    int appCount();
+    int appCount(const QString &sql);
     bool getAppByIndex(bool &useGroupPerm, bool &blocked, bool &alerted,
-                       qint64 &appId, int &groupIndex,
-                       QString &appPath, QDateTime &endTime, int row);
+                       qint64 &appId, int &groupIndex, QString &appPath,
+                       QDateTime &endTime, QDateTime &creatTime,
+                       const QString &sql, const QVariantList &vars);
     qint64 appGroupIdByIndex(int index = 0);
     QStringList appGroupNames();
 

@@ -39,6 +39,7 @@ public:
     bool bindDateTime(int index, const QDateTime &dateTime);
     bool bindBlob(int index, const QByteArray &data);
     bool bindVar(int index, const QVariant &v);
+    bool bindVars(const QVariantList &vars, int index = 1);
 
     bool clearBindings();
     bool reset();

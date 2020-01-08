@@ -31,6 +31,8 @@
 
 namespace {
 
+#define APPS_HEADER_VERSION 1
+
 const ValuesList appBlockInHourValues = {
     3, 1, 6, 12, 24, 24 * 7, 24 * 30
 };
@@ -81,10 +83,14 @@ void ProgramsWindow::onSaveWindowState()
 {
     auto header = m_appListView->horizontalHeader();
     settings()->setProgAppsHeader(header->saveState());
+    settings()->setProgAppsHeaderVersion(APPS_HEADER_VERSION);
 }
 
 void ProgramsWindow::onRestoreWindowState()
 {
+    if (settings()->progAppsHeaderVersion() != APPS_HEADER_VERSION)
+        return;
+
     auto header = m_appListView->horizontalHeader();
     header->restoreState(settings()->progAppsHeader());
 }
@@ -224,7 +230,6 @@ void ProgramsWindow::setupAppEditForm()
     auto pathLayout = new QHBoxLayout();
 
     m_editPath = new QLineEdit();
-    m_editPath->setClearButtonEnabled(true);
 
     m_btSelectFile = ControlUtil::createLinkButton(":/images/folder_explore.png");
 
@@ -366,6 +371,7 @@ void ProgramsWindow::setupTableApps()
     m_appListView->setSelectionMode(QAbstractItemView::SingleSelection);
     m_appListView->setSelectionBehavior(QAbstractItemView::SelectItems);
 
+    m_appListView->setSortingEnabled(true);
     m_appListView->setModel(appListModel());
 
     connect(m_appListView, &TableView::doubleClicked, m_btEditApp, &QPushButton::click);
@@ -376,14 +382,19 @@ void ProgramsWindow::setupTableAppsHeader()
     auto header = m_appListView->horizontalHeader();
 
     header->setSectionResizeMode(0, QHeaderView::Interactive);
-    header->setSectionResizeMode(1, QHeaderView::Stretch);
+    header->setSectionResizeMode(1, QHeaderView::Interactive);
     header->setSectionResizeMode(2, QHeaderView::Fixed);
     header->setSectionResizeMode(3, QHeaderView::Interactive);
     header->setSectionResizeMode(4, QHeaderView::Stretch);
+    header->setSectionResizeMode(5, QHeaderView::Stretch);
 
     header->resizeSection(0, 500);
     header->resizeSection(2, 20);
     header->resizeSection(3, 80);
+
+    header->setSectionsClickable(true);
+    header->setSortIndicatorShown(true);
+    header->setSortIndicator(5, Qt::DescendingOrder);
 }
 
 void ProgramsWindow::setupAppInfoRow()
@@ -472,6 +483,7 @@ void ProgramsWindow::updateAppEditForm(bool editCurrentApp)
 
     m_editPath->setText(appRow.appPath);
     m_editPath->setReadOnly(editCurrentApp);
+    m_editPath->setClearButtonEnabled(!editCurrentApp);
     m_btSelectFile->setEnabled(!editCurrentApp);
     m_comboAppGroup->setCurrentIndex(appRow.groupIndex);
     m_cbUseGroupPerm->setChecked(appRow.useGroupPerm);
@@ -498,7 +510,7 @@ void ProgramsWindow::deleteCurrentApp()
     const int appIndex = appListCurrentIndex();
     if (appIndex >= 0) {
         const auto appRow = appListModel()->appRow(appIndex);
-        appListModel()->deleteApp(appRow.appId, appRow.appPath);
+        appListModel()->deleteApp(appRow.appId, appRow.appPath, appIndex);
     }
 }
 

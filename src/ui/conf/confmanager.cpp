@@ -122,22 +122,6 @@ const char * const sqlUpdateTask =
         "  WHERE task_id = ?1;"
         ;
 
-const char * const sqlSelectAppCount =
-        "SELECT count(*) FROM app;"
-        ;
-
-const char * const sqlSelectAppByIndex =
-        "SELECT t.app_id,"
-        "    g.order_index as group_index,"
-        "    t.path, t.use_group_perm, t.blocked,"
-        "    (alert.app_id IS NOT NULL) as alerted,"
-        "    t.end_time"
-        "  FROM app t"
-        "    JOIN app_group g ON g.app_group_id = t.app_group_id"
-        "    LEFT JOIN app_alert alert ON alert.app_id = t.app_id"
-        "  LIMIT 1 OFFSET ?1;"
-        ;
-
 const char * const sqlSelectApps =
         "SELECT g.order_index as group_index,"
         "    t.path, t.use_group_perm, t.blocked,"
@@ -325,10 +309,10 @@ bool ConfManager::saveTasks(const QList<TaskInfo *> &taskInfos)
     return ok;
 }
 
-int ConfManager::appCount()
+int ConfManager::appCount(const QString &sql)
 {
     SqliteStmt stmt;
-    if (!stmt.prepare(m_sqliteDb->db(), sqlSelectAppCount)
+    if (!stmt.prepare(m_sqliteDb->db(), sql.toLatin1())
             || stmt.step() != SqliteStmt::StepRow)
         return 0;
 
@@ -336,14 +320,14 @@ int ConfManager::appCount()
 }
 
 bool ConfManager::getAppByIndex(bool &useGroupPerm, bool &blocked, bool &alerted,
-                                qint64 &appId, int &groupIndex,
-                                QString &appPath, QDateTime &endTime, int row)
+                                qint64 &appId, int &groupIndex, QString &appPath,
+                                QDateTime &endTime, QDateTime &creatTime,
+                                const QString &sql, const QVariantList &vars)
 {
     SqliteStmt stmt;
-    if (!stmt.prepare(m_sqliteDb->db(), sqlSelectAppByIndex))
+    if (!stmt.prepare(m_sqliteDb->db(), sql.toLatin1())
+            || !stmt.bindVars(vars))
         return false;
-
-    stmt.bindInt(1, row);
 
     if (stmt.step() != SqliteStmt::StepRow)
         return false;
@@ -355,6 +339,7 @@ bool ConfManager::getAppByIndex(bool &useGroupPerm, bool &blocked, bool &alerted
     blocked = stmt.columnBool(4);
     alerted = stmt.columnBool(5);
     endTime = stmt.columnDateTime(6);
+    creatTime = stmt.columnDateTime(7);
 
     return true;
 }

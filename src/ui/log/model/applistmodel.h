@@ -32,6 +32,7 @@ struct AppRow {
     QString appPath;
 
     QDateTime endTime;
+    QDateTime creatTime;
 };
 
 class AppListModel : public TableItemModel
@@ -60,6 +61,8 @@ public:
                         int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
+    void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
+
     QString appPathByRow(int row) const;
     AppRow appRow(int row) const;
 
@@ -69,7 +72,7 @@ public:
     bool updateApp(qint64 appId, const QString &appPath,
                    int groupIndex, bool useGroupPerm, bool blocked,
                    const QDateTime &endTime = QDateTime());
-    void deleteApp(qint64 appId, const QString &appPath);
+    void deleteApp(qint64 appId, const QString &appPath, int row);
 
     QStringList appGroupNames() const { return m_appGroupNames; }
     QString appGroupNameByIndex(int groupIndex) const;
@@ -82,11 +85,19 @@ private:
     void invalidateRowCache();
     void updateRowCache(int row) const;
 
+    QString sqlCount() const;
+    QString sql() const;
+    QString sqlBase() const;
+    QString sqlOrder() const;
+
     void updateAppGroupNames();
 
     QString appStateToString(AppState state) const;
 
 private:
+    int m_sortColumn = 5;
+    Qt::SortOrder m_sortOrder = Qt::DescendingOrder;
+
     mutable int m_appCount = -1;
 
     QStringList m_appGroupNames;
