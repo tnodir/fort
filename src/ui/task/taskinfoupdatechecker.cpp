@@ -84,7 +84,10 @@ bool TaskInfoUpdateChecker::processResult(FortManager *fortManager, bool success
 
     emit versionChanged();
 
-    fortManager->showTrayMessage(tr("New version v%1 available!")
-                                 .arg(m_version));
+    if (isNewVersion()) {
+        fortManager->showTrayMessage(tr("New version v%1 available!")
+                                     .arg(m_version));
+    }
+
     return true;
 }
