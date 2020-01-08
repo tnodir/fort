@@ -65,6 +65,8 @@ bool TaskUpdateChecker::parseBuffer(const QByteArray &buffer)
         m_releaseNotes.truncate(releaseDashesPos);
     }
 
+    m_releaseNotes = m_releaseNotes.toHtmlEscaped();
+
     // Assets
     const QVariantMap assetMap = assets.first().toMap();
 
