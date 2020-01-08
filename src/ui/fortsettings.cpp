@@ -147,6 +147,10 @@ void FortSettings::setupIni()
 
     FileUtil::makePath(profilePath());
     FileUtil::makePath(statPath());
+    FileUtil::makePath(logsPath());
+    if (!noCache()) {
+        FileUtil::makePath(cachePath());
+    }
 
     m_iniExists = FileUtil::fileExists(iniPath);
     m_ini = new QSettings(iniPath, QSettings::IniFormat, this);

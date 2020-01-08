@@ -245,7 +245,6 @@ void FortManager::setupAppInfoCache()
         dbPath = ":memory:";
     } else {
         const QString cachePath = settings()->cachePath();
-        FileUtil::makePath(cachePath);
         dbPath = cachePath + "/appinfocache.db";
     }
 

@@ -65,7 +65,6 @@ void Logger::setConsole(bool console)
 void Logger::setPath(const QString &path)
 {
     m_dir.setPath(path);
-    m_dir.mkpath(".");
 }
 
 bool Logger::openLogFile()
