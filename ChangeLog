@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v3.1.0, 2020-01-08:
+- Driver: Fix conf changes locking.
+- UI: ProgramsWindow: Add sorting.
+- UI: OptionsPage: Fix new version visibility.
+- UI: Remove compatibility code with v1.* & v2.* versions.
+
 v3.0.0, 2020-01-06:
 - UI: Add Programs Window.
 - UI: Add ability to use wild matching (see .gitignore rules) and env vars (e.g. %HOME%) in the app groups.
