@@ -71,10 +71,12 @@ void ProgramsWindow::closeEvent(QCloseEvent *event)
     }
 }
 
-void ProgramsWindow::keyReleaseEvent(QKeyEvent *event)
+void ProgramsWindow::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Escape
-            && event->modifiers() == Qt::NoModifier) {
+            && event->modifiers() == Qt::NoModifier
+            && !event->isAutoRepeat()
+            && this->isActiveWindow()) {
         ctrl()->closeWindow();
     }
 }
@@ -374,7 +376,7 @@ void ProgramsWindow::setupTableApps()
     m_appListView->setSortingEnabled(true);
     m_appListView->setModel(appListModel());
 
-    connect(m_appListView, &TableView::doubleClicked, m_btEditApp, &QPushButton::click);
+    connect(m_appListView, &TableView::activated, m_btEditApp, &QPushButton::click);
 }
 
 void ProgramsWindow::setupTableAppsHeader()

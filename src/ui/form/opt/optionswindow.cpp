@@ -33,10 +33,12 @@ void OptionsWindow::closeEvent(QCloseEvent *event)
     }
 }
 
-void OptionsWindow::keyReleaseEvent(QKeyEvent *event)
+void OptionsWindow::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Escape
-            && event->modifiers() == Qt::NoModifier) {
+            && event->modifiers() == Qt::NoModifier
+            && !event->isAutoRepeat()
+            && this->isActiveWindow()) {
         ctrl()->closeWindow();
     }
 }
