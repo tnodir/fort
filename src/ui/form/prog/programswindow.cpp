@@ -9,6 +9,7 @@
 #include <QKeyEvent>
 #include <QLabel>
 #include <QLineEdit>
+#include <QMenu>
 #include <QPushButton>
 #include <QRadioButton>
 #include <QSpinBox>
@@ -99,9 +100,10 @@ void ProgramsWindow::onRestoreWindowState()
 
 void ProgramsWindow::onRetranslateUi()
 {
-    m_btAddApp->setText(tr("Add"));
-    m_btEditApp->setText(tr("Edit"));
-    m_btDeleteApp->setText(tr("Delete"));
+    m_btEdit->setText(tr("Edit"));
+    m_actAddApp->setText(tr("Add"));
+    m_actEditApp->setText(tr("Edit"));
+    m_actRemoveApp->setText(tr("Remove"));
 
     m_btAllowApp->setText(tr("Allow"));
     m_btBlockApp->setText(tr("Block"));
@@ -184,24 +186,36 @@ QLayout *ProgramsWindow::setupHeader()
 {
     auto layout = new QHBoxLayout();
 
-    m_btAddApp = ControlUtil::createLinkButton(":/images/application_add.png");
-    m_btEditApp = ControlUtil::createLinkButton(":/images/application_edit.png");
-    m_btDeleteApp = ControlUtil::createLinkButton(":/images/application_delete.png");
+    // Edit Menu
+    auto editMenu = new QMenu(this);
 
-    m_btAllowApp = ControlUtil::createLinkButton(":/images/arrow_switch.png");
-    m_btBlockApp = ControlUtil::createLinkButton(":/images/stop.png");
+    m_actAddApp = editMenu->addAction(QIcon(":/images/application_add.png"), QString());
+    m_actAddApp->setShortcut(Qt::Key_Plus);
 
-    connect(m_btAddApp, &QAbstractButton::clicked, [&] {
+    m_actEditApp = editMenu->addAction(QIcon(":/images/application_edit.png"), QString());
+    m_actEditApp->setShortcut(Qt::Key_Enter);
+
+    m_actRemoveApp = editMenu->addAction(QIcon(":/images/application_delete.png"), QString());
+    m_actRemoveApp->setShortcut(Qt::Key_Delete);
+
+    connect(m_actAddApp, &QAction::triggered, [&] {
         updateAppEditForm(false);
     });
-    connect(m_btEditApp, &QAbstractButton::clicked, [&] {
+    connect(m_actEditApp, &QAction::triggered, [&] {
         updateAppEditForm(true);
     });
-    connect(m_btDeleteApp, &QAbstractButton::clicked, [&] {
+    connect(m_actRemoveApp, &QAction::triggered, [&] {
         if (fortManager()->showQuestionBox(tr("Are you sure to remove the selected program?"))) {
             deleteCurrentApp();
         }
     });
+
+    m_btEdit = new WideButton(QIcon(":/images/application_edit.png"));
+    m_btEdit->setMenu(editMenu);
+
+    // Allow/Block
+    m_btAllowApp = ControlUtil::createLinkButton(":/images/arrow_switch.png");
+    m_btBlockApp = ControlUtil::createLinkButton(":/images/stop.png");
 
     connect(m_btAllowApp, &QAbstractButton::clicked, [&] {
         updateCurrentApp(false);
@@ -210,11 +224,10 @@ QLayout *ProgramsWindow::setupHeader()
         updateCurrentApp(true);
     });
 
+    // Log Blocked
     setupLogBlocked();
 
-    layout->addWidget(m_btAddApp);
-    layout->addWidget(m_btEditApp);
-    layout->addWidget(m_btDeleteApp);
+    layout->addWidget(m_btEdit);
     layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
     layout->addWidget(m_btAllowApp);
     layout->addWidget(m_btBlockApp);
@@ -376,7 +389,7 @@ void ProgramsWindow::setupTableApps()
     m_appListView->setSortingEnabled(true);
     m_appListView->setModel(appListModel());
 
-    connect(m_appListView, &TableView::activated, m_btEditApp, &QPushButton::click);
+    connect(m_appListView, &TableView::activated, m_actEditApp, &QAction::trigger);
 }
 
 void ProgramsWindow::setupTableAppsHeader()
@@ -458,8 +471,8 @@ void ProgramsWindow::setupTableAppsChanged()
     const auto refreshTableAppsChanged = [&] {
         const int appIndex = appListCurrentIndex();
         const bool appSelected = (appIndex >= 0);
-        m_btEditApp->setEnabled(appSelected);
-        m_btDeleteApp->setEnabled(appSelected);
+        m_actEditApp->setEnabled(appSelected);
+        m_actRemoveApp->setEnabled(appSelected);
         m_btAllowApp->setEnabled(appSelected);
         m_btBlockApp->setEnabled(appSelected);
         m_appInfoRow->setVisible(appSelected);

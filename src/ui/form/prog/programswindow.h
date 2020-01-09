@@ -79,9 +79,10 @@ private:
 
     AppListModel *m_appListModel = nullptr;
 
-    QPushButton *m_btAddApp = nullptr;
-    QPushButton *m_btEditApp = nullptr;
-    QPushButton *m_btDeleteApp = nullptr;
+    QPushButton *m_btEdit = nullptr;
+    QAction *m_actAddApp = nullptr;
+    QAction *m_actEditApp = nullptr;
+    QAction *m_actRemoveApp = nullptr;
     QPushButton *m_btAllowApp = nullptr;
     QPushButton *m_btBlockApp = nullptr;
     QLabel *m_labelEditPath = nullptr;

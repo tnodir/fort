@@ -62,42 +62,47 @@
 <context>
     <name>AppListModel</name>
     <message>
-        <location filename="../log/model/applistmodel.cpp" line="66"/>
+        <location filename="../log/model/applistmodel.cpp" line="78"/>
         <source>Program</source>
         <translation>Программа</translation>
     </message>
     <message>
-        <location filename="../log/model/applistmodel.cpp" line="67"/>
+        <location filename="../log/model/applistmodel.cpp" line="79"/>
         <source>Group</source>
         <translation>Группа</translation>
     </message>
     <message>
-        <location filename="../log/model/applistmodel.cpp" line="68"/>
+        <location filename="../log/model/applistmodel.cpp" line="80"/>
         <source>Gr.</source>
         <translation>Гр.</translation>
     </message>
     <message>
-        <location filename="../log/model/applistmodel.cpp" line="69"/>
+        <location filename="../log/model/applistmodel.cpp" line="81"/>
         <source>State</source>
         <translation>Состояние</translation>
     </message>
     <message>
-        <location filename="../log/model/applistmodel.cpp" line="70"/>
+        <location filename="../log/model/applistmodel.cpp" line="82"/>
         <source>End Time</source>
         <translation>Время окончания</translation>
     </message>
     <message>
-        <location filename="../log/model/applistmodel.cpp" line="254"/>
+        <location filename="../log/model/applistmodel.cpp" line="83"/>
+        <source>Creation Time</source>
+        <translation>Время создания</translation>
+    </message>
+    <message>
+        <location filename="../log/model/applistmodel.cpp" line="339"/>
         <source>Alert</source>
         <translation>Оповещение</translation>
     </message>
     <message>
-        <location filename="../log/model/applistmodel.cpp" line="255"/>
+        <location filename="../log/model/applistmodel.cpp" line="340"/>
         <source>Block</source>
         <translation>Блокировать</translation>
     </message>
     <message>
-        <location filename="../log/model/applistmodel.cpp" line="256"/>
+        <location filename="../log/model/applistmodel.cpp" line="341"/>
         <source>Allow</source>
         <translation>Разрешить</translation>
     </message>
@@ -113,112 +118,112 @@
 <context>
     <name>ApplicationsPage</name>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="66"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="67"/>
         <source>Group Name</source>
         <translation>Имя группы</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="67"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="68"/>
         <source>Add Group</source>
         <translation>Добавить группу</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="68"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="69"/>
         <source>Rename Group</source>
         <translation>Переименовать</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="70"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="71"/>
         <source>Block All</source>
         <translation>Блокировать все</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="71"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="72"/>
         <source>Allow All</source>
         <translation>Разрешить все</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="73"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="74"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="74"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="75"/>
         <source>Download speed limit:</source>
         <translation>Ограничение скорости загрузки</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="75"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="76"/>
         <source>Upload speed limit:</source>
         <translation>Ограничение скорости выгрузки</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="77"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="78"/>
         <source>Fragment first TCP packet</source>
         <translation>Фрагментировать первый TCP пакет</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="79"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="80"/>
         <source>Enabled</source>
         <translation>Включено</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="80"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="81"/>
         <source>time period:</source>
         <translation>период:</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="82"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="83"/>
         <source>Block</source>
         <translation>Блокировать</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="83"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="84"/>
         <source>Allow</source>
         <translation>Разрешить</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="85"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="86"/>
         <source>Move All Lines to &apos;Allow&apos;</source>
         <translation>Перенести все строки в &apos;Разрешить&apos;</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="86"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="87"/>
         <source>Move All Lines to &apos;Block&apos;</source>
         <translation>Перенести все строки в &apos;Блокировать&apos;</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="87"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="88"/>
         <source>Move Selected Lines to &apos;Allow&apos;</source>
         <translation>Перенести выделенные строки в &apos;Разрешить&apos;</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="88"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="89"/>
         <source>Move Selected Lines to &apos;Block&apos;</source>
         <translation>Перенести выделенные строки в &apos;Блокировать&apos;</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="89"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="90"/>
         <source>Select File</source>
         <translation>Выбрать файл</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="98"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="99"/>
         <source>Custom</source>
         <translation>Нестандартный</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="99"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="100"/>
         <source>Disabled</source>
         <translation>Отключено</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="114"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="115"/>
         <source># Examples:</source>
         <translation># Примеры:</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="118"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="119"/>
         <source># All programs in the sub-path:</source>
         <translation># Все программы по под-пути:</translation>
     </message>
@@ -272,67 +277,49 @@
 <context>
     <name>FortManager</name>
     <message>
-        <location filename="../fortmanager.cpp" line="445"/>
+        <location filename="../fortmanager.cpp" line="447"/>
         <source>Password input</source>
         <translation>Ввод пароля</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="445"/>
+        <location filename="../fortmanager.cpp" line="447"/>
         <source>Please enter the password</source>
         <translation>Наберите пароль пожалуйста</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="669"/>
+        <location filename="../fortmanager.cpp" line="671"/>
         <source>Programs</source>
         <translation>Программы</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="674"/>
+        <location filename="../fortmanager.cpp" line="676"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="679"/>
+        <location filename="../fortmanager.cpp" line="681"/>
         <source>Traffic Graph</source>
         <translation>График трафика</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="689"/>
+        <location filename="../fortmanager.cpp" line="691"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="696"/>
+        <location filename="../fortmanager.cpp" line="698"/>
         <source>Stop Traffic</source>
         <translation>Остановить трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="703"/>
+        <location filename="../fortmanager.cpp" line="705"/>
         <source>Stop Internet Traffic</source>
         <translation>Остановить Интернет трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="731"/>
+        <location filename="../fortmanager.cpp" line="733"/>
         <source>Quit</source>
         <translation>Выйти</translation>
-    </message>
-</context>
-<context>
-    <name>FortSettings</name>
-    <message>
-        <location filename="../fortsettings.cpp" line="256"/>
-        <source>Can&apos;t write .ini file</source>
-        <translation>Не удалось записать .ini файл</translation>
-    </message>
-    <message>
-        <location filename="../fortsettings.cpp" line="271"/>
-        <source>Can&apos;t create .conf file</source>
-        <translation>Не удалось создать .conf файл</translation>
-    </message>
-    <message>
-        <location filename="../fortsettings.cpp" line="266"/>
-        <source>Can&apos;t create backup .conf file</source>
-        <translation>Не удалось создать бэкап .conf файла</translation>
     </message>
 </context>
 <context>
@@ -380,58 +367,58 @@
 <context>
     <name>MainPage</name>
     <message>
-        <location filename="../form/opt/pages/mainpage.cpp" line="27"/>
+        <location filename="../form/opt/pages/mainpage.cpp" line="28"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/mainpage.cpp" line="28"/>
+        <location filename="../form/opt/pages/mainpage.cpp" line="29"/>
         <source>IPv4 Addresses</source>
         <translation>Адреса IPv4</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/mainpage.cpp" line="29"/>
+        <location filename="../form/opt/pages/mainpage.cpp" line="30"/>
         <source>Application Groups</source>
         <translation>Группы приложений</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/mainpage.cpp" line="30"/>
-        <location filename="../form/opt/pages/mainpage.cpp" line="35"/>
+        <location filename="../form/opt/pages/mainpage.cpp" line="31"/>
+        <location filename="../form/opt/pages/mainpage.cpp" line="36"/>
         <source>Statistics</source>
         <translation>Статистика</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/mainpage.cpp" line="31"/>
+        <location filename="../form/opt/pages/mainpage.cpp" line="32"/>
         <source>Schedule</source>
         <translation>Расписание</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/mainpage.cpp" line="33"/>
+        <location filename="../form/opt/pages/mainpage.cpp" line="34"/>
         <source>Logs</source>
         <translation>Логи</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/mainpage.cpp" line="34"/>
+        <location filename="../form/opt/pages/mainpage.cpp" line="35"/>
         <source>Profile</source>
         <translation>Профиль</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/mainpage.cpp" line="36"/>
+        <location filename="../form/opt/pages/mainpage.cpp" line="37"/>
         <source>Releases</source>
         <translation>Релизы</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/mainpage.cpp" line="38"/>
+        <location filename="../form/opt/pages/mainpage.cpp" line="39"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/mainpage.cpp" line="39"/>
+        <location filename="../form/opt/pages/mainpage.cpp" line="40"/>
         <source>Apply</source>
         <translation>Применить</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/mainpage.cpp" line="40"/>
+        <location filename="../form/opt/pages/mainpage.cpp" line="41"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
@@ -536,12 +523,12 @@
         <translation>Не установлен</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/optionspage.cpp" line="283"/>
+        <location filename="../form/opt/pages/optionspage.cpp" line="284"/>
         <source>Are you sure to install the Driver?</source>
         <translation>Установить драйвер?</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/optionspage.cpp" line="288"/>
+        <location filename="../form/opt/pages/optionspage.cpp" line="289"/>
         <source>Are you sure to remove the Driver?</source>
         <translation>Удалить драйвер?</translation>
     </message>
@@ -549,7 +536,7 @@
 <context>
     <name>OptionsWindow</name>
     <message>
-        <location filename="../form/opt/optionswindow.cpp" line="47"/>
+        <location filename="../form/opt/optionswindow.cpp" line="48"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
@@ -557,139 +544,140 @@
 <context>
     <name>ProgramsWindow</name>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="92"/>
+        <location filename="../form/prog/programswindow.cpp" line="104"/>
         <source>Add</source>
         <translation>Добавить</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="93"/>
+        <location filename="../form/prog/programswindow.cpp" line="103"/>
+        <location filename="../form/prog/programswindow.cpp" line="105"/>
         <source>Edit</source>
         <translation>Изменить</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="94"/>
-        <source>Delete</source>
-        <translation>Удалить</translation>
-    </message>
-    <message>
-        <location filename="../form/prog/programswindow.cpp" line="96"/>
-        <location filename="../form/prog/programswindow.cpp" line="103"/>
+        <location filename="../form/prog/programswindow.cpp" line="108"/>
+        <location filename="../form/prog/programswindow.cpp" line="115"/>
         <source>Allow</source>
         <translation>Разрешить</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="97"/>
-        <location filename="../form/prog/programswindow.cpp" line="104"/>
+        <location filename="../form/prog/programswindow.cpp" line="109"/>
+        <location filename="../form/prog/programswindow.cpp" line="116"/>
         <source>Block</source>
         <translation>Блокировать</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="99"/>
+        <location filename="../form/prog/programswindow.cpp" line="111"/>
         <source>Program Path:</source>
         <translation>Путь программы:</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="100"/>
+        <location filename="../form/prog/programswindow.cpp" line="112"/>
         <source>Select File</source>
         <translation>Выбрать файл</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="101"/>
+        <location filename="../form/prog/programswindow.cpp" line="113"/>
         <source>Application Group:</source>
         <translation>Группа приложений:</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="102"/>
+        <location filename="../form/prog/programswindow.cpp" line="114"/>
         <source>Use Application Group&apos;s Enabled State</source>
         <translation>Использовать вкл. состояние Группы приложения</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="105"/>
+        <location filename="../form/prog/programswindow.cpp" line="117"/>
         <source>Block In:</source>
         <translation>Блокировать через:</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="107"/>
+        <location filename="../form/prog/programswindow.cpp" line="119"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="108"/>
+        <location filename="../form/prog/programswindow.cpp" line="120"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="110"/>
+        <location filename="../form/prog/programswindow.cpp" line="122"/>
         <source>Edit Program</source>
         <translation>Редактирование программы</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="112"/>
+        <location filename="../form/prog/programswindow.cpp" line="124"/>
         <source>Alert about Unknown Programs</source>
         <translation>Оповещение о неизвестных программах</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="116"/>
+        <location filename="../form/prog/programswindow.cpp" line="128"/>
         <source>Copy Path</source>
         <translation>Копировать путь</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="117"/>
+        <location filename="../form/prog/programswindow.cpp" line="129"/>
         <source>Open Folder</source>
         <translation>Открыть папку</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="125"/>
+        <location filename="../form/prog/programswindow.cpp" line="137"/>
         <source>Custom</source>
         <translation>Нестандартный</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="125"/>
+        <location filename="../form/prog/programswindow.cpp" line="137"/>
         <source>1 hour</source>
         <translation>1 час</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="125"/>
+        <location filename="../form/prog/programswindow.cpp" line="137"/>
         <source>6 hours</source>
         <translation>6 часов</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="126"/>
+        <location filename="../form/prog/programswindow.cpp" line="138"/>
         <source>12 hours</source>
         <translation>12 часов</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="126"/>
+        <location filename="../form/prog/programswindow.cpp" line="138"/>
         <source>Day</source>
         <translation>День</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="126"/>
+        <location filename="../form/prog/programswindow.cpp" line="138"/>
         <source>Week</source>
         <translation>Неделя</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="126"/>
+        <location filename="../form/prog/programswindow.cpp" line="138"/>
         <source>Month</source>
         <translation>Месяц</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="130"/>
+        <location filename="../form/prog/programswindow.cpp" line="142"/>
         <source> hours</source>
         <translation> час.</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="119"/>
+        <location filename="../form/prog/programswindow.cpp" line="131"/>
         <source>Programs</source>
         <translation>Программы</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="186"/>
+        <location filename="../form/prog/programswindow.cpp" line="106"/>
+        <source>Remove</source>
+        <translation>Удалить</translation>
+    </message>
+    <message>
+        <location filename="../form/prog/programswindow.cpp" line="208"/>
         <source>Are you sure to remove the selected program?</source>
         <translation>Удалить выбранную программу?</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="287"/>
+        <location filename="../form/prog/programswindow.cpp" line="315"/>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Программы (*.exe);;Все файлы (*.*)</translation>
     </message>
@@ -768,260 +756,260 @@
 <context>
     <name>StatisticsPage</name>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="125"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="127"/>
         <source>Refresh</source>
         <translation>Обновить</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="126"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="128"/>
         <source>Clear</source>
         <translation>Очистить</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="128"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="130"/>
         <source>Remove Application</source>
         <translation>Удалить приложение</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="129"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="131"/>
         <source>Reset Total</source>
         <translation>Сбросить общую</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="130"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="132"/>
         <source>Clear All</source>
         <translation>Очистить всё</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="132"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="134"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="133"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="135"/>
         <source>Active time period:</source>
         <translation>Активный период:</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="134"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="136"/>
         <source>Month starts on:</source>
         <translation>Месяц начинается с:</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="135"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="137"/>
         <source>Keep data for &apos;Hourly&apos;:</source>
         <translation>Хранить данные для &apos;Почасовая&apos;:</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="136"/>
         <location filename="../form/opt/pages/statisticspage.cpp" line="138"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="140"/>
         <source> days</source>
         <translation> дней</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="137"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="139"/>
         <source>Keep data for &apos;Daily&apos;:</source>
         <translation>Хранить данные для &apos;Ежедневная&apos;:</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="139"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="141"/>
         <source>Keep data for &apos;Monthly&apos;:</source>
         <translation>Хранить данные для &apos;Ежемесячная&apos;:</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="140"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="142"/>
         <source> months</source>
         <translation> месяцев</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="141"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="143"/>
         <source>Day&apos;s Quota:</source>
         <translation>Квота на день</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="142"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="144"/>
         <source>Month&apos;s Quota:</source>
         <translation>Квота на месяц</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="148"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="150"/>
         <source>Graph</source>
         <translation>График</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="149"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="151"/>
         <source>Always on top</source>
         <translation>Всегда сверху</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="150"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="152"/>
         <source>Frameless</source>
         <translation>Без рамок</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="151"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="153"/>
         <source>Click through</source>
         <translation>Сквозной режим</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="152"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="154"/>
         <source>Hide on hover</source>
         <translation>Скрыть при наведении</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="153"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="155"/>
         <source>Opacity:</source>
         <translation>Непрозрачность:</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="154"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="156"/>
         <source>Hover opacity:</source>
         <translation>Непрозрачность при наведении:</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="155"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="157"/>
         <source>Max seconds:</source>
         <translation>Количество секунд:</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="156"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="158"/>
         <source>Background:</source>
         <translation>Фон:</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="157"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="159"/>
         <source>Download:</source>
         <translation>Загрузка:</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="158"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="160"/>
         <source>Upload:</source>
         <translation>Выгрузка:</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="159"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="161"/>
         <source>Axis:</source>
         <translation>Ось:</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="160"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="162"/>
         <source>Tick label:</source>
         <translation>Метка:</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="161"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="163"/>
         <source>Label:</source>
         <translation>Маркировка:</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="162"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="164"/>
         <source>Grid:</source>
         <translation>Сетка:</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="164"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="166"/>
         <source>Units:</source>
         <translation>Единицы:</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="167"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="169"/>
         <source>Collect Traffic Statistics</source>
         <translation>Собирать статистику трафика</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="171"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="173"/>
         <source>Copy Path</source>
         <translation>Копировать путь</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="172"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="174"/>
         <source>Open Folder</source>
         <translation>Открыть папку</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="178"/>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="189"/>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="200"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="180"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="191"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="202"/>
         <source>Custom</source>
         <translation>Нестандартный</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="178"/>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="189"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="180"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="191"/>
         <source>Forever</source>
         <translation>Навсегда</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="178"/>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="189"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="180"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="191"/>
         <source>3 months</source>
         <translation>3 месяца</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="179"/>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="190"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="181"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="192"/>
         <source>6 months</source>
         <translation>6 месяцев</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="179"/>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="190"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="181"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="192"/>
         <source>1 year</source>
         <translation>1 год</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="179"/>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="190"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="181"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="192"/>
         <source>3 years</source>
         <translation>3 года</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="201"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="203"/>
         <source>Disabled</source>
         <translation>Отключено</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="217"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="219"/>
         <source>Adaptive</source>
         <translation>Адаптивный</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="217"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="219"/>
         <source>Bytes</source>
         <translation>Байты</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="229"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="231"/>
         <source>Hourly</source>
         <translation>Почасовая</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="229"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="231"/>
         <source>Daily</source>
         <translation>Ежедневная</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="229"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="231"/>
         <source>Monthly</source>
         <translation>Ежемесячная</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="229"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="231"/>
         <source>Total</source>
         <translation>Общая</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="324"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="326"/>
         <source>Are you sure to remove statistics for selected application?</source>
         <translation>Удалить статистику для выбранного приложения?</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="330"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="332"/>
         <source>Are you sure to reset total statistics?</source>
         <translation>Обнулить общую статистику?</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/statisticspage.cpp" line="336"/>
+        <location filename="../form/opt/pages/statisticspage.cpp" line="338"/>
         <source>Are you sure to clear all statistics?</source>
         <translation>Очистить всю статистику?</translation>
     </message>
@@ -1050,7 +1038,7 @@
 <context>
     <name>TaskInfoUpdateChecker</name>
     <message>
-        <location filename="../task/taskinfoupdatechecker.cpp" line="72"/>
+        <location filename="../task/taskinfoupdatechecker.cpp" line="88"/>
         <source>New version v%1 available!</source>
         <translation>Новая версия v% доступна!</translation>
     </message>
