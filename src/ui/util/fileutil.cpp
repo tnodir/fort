@@ -8,11 +8,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 
-FileUtil::FileUtil(QObject *parent) :
-    QObject(parent)
-{
-    Q_ASSERT(sizeof(wchar_t) == sizeof(QChar));
-}
+Q_STATIC_ASSERT(sizeof(wchar_t) == sizeof(QChar));
 
 // Convert "\\Device\\HarddiskVolume1" to "C:"
 QString FileUtil::kernelNameToDrive(const QString &kernelName)
@@ -153,6 +149,12 @@ bool FileUtil::writeFileData(const QString &filePath, const QByteArray &data)
 
     return file.write(data) == data.size()
             && file.flush();
+}
+
+QDateTime FileUtil::fileModTime(const QString &filePath)
+{
+    QFileInfo fi(filePath);
+    return fi.lastModified();
 }
 
 QString FileUtil::appBinLocation()

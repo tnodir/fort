@@ -1,15 +1,12 @@
 #ifndef FILEUTIL_H
 #define FILEUTIL_H
 
+#include <QDateTime>
 #include <QObject>
 
-class FileUtil : public QObject
+class FileUtil
 {
-    Q_OBJECT
-
 public:
-    explicit FileUtil(QObject *parent = nullptr);
-
     // Convert DOS device name to drive letter (A: .. Z:)
     static QString kernelNameToDrive(const QString &kernelName);
 
@@ -17,12 +14,12 @@ public:
     static QString driveToKernelName(const QString &drive);
 
     // Convert Native path to Win32 path
-    Q_INVOKABLE static QString kernelPathToPath(const QString &kernelPath);
+    static QString kernelPathToPath(const QString &kernelPath);
 
     // Convert Win32 path to Native path
-    Q_INVOKABLE static QString pathToKernelPath(const QString &path);
+    static QString pathToKernelPath(const QString &path);
 
-    Q_INVOKABLE static QString fileName(const QString &path);
+    static QString fileName(const QString &path);
 
     static QString absolutePath(const QString &path);
     static QString pathSlash(const QString &path);
@@ -40,6 +37,8 @@ public:
 
     static bool writeFile(const QString &filePath, const QString &text);
     static bool writeFileData(const QString &filePath, const QByteArray &data);
+
+    static QDateTime fileModTime(const QString &filePath);
 
     static QString appBinLocation();
     static QString appCacheLocation();

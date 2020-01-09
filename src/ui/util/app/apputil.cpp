@@ -9,6 +9,7 @@
 #include <objbase.h>
 #include <shellapi.h>
 
+#include "../fileutil.h"
 #include "appinfo.h"
 
 // Defined in qpixmap_win.cpp
@@ -139,7 +140,7 @@ bool AppUtil::getInfo(const QString &appPath, AppInfo &appInfo)
     }
 
     // File modification time
-    appInfo.fileModTime = getModTime(appPath);
+    appInfo.fileModTime = FileUtil::fileModTime(appPath);
 
     return extractVersionInfo(appPath, appInfo);
 }
@@ -155,12 +156,6 @@ QImage AppUtil::getIcon(const QString &appPath)
 
     return extractShellIcon(appPath)
             .toImage();
-}
-
-QDateTime AppUtil::getModTime(const QString &appPath)
-{
-    QFileInfo fi(appPath);
-    return fi.lastModified();
 }
 
 void AppUtil::initThread()
