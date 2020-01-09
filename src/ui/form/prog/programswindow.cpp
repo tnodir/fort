@@ -76,8 +76,7 @@ void ProgramsWindow::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Escape
             && event->modifiers() == Qt::NoModifier
-            && !event->isAutoRepeat()
-            && this->isActiveWindow()) {
+            && !event->isAutoRepeat()) {
         ctrl()->closeWindow();
     }
 }
