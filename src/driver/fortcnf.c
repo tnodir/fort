@@ -32,7 +32,7 @@ typedef struct fort_conf_ref {
   tommy_arrayof exe_nodes;
   tommy_hashdyn exe_map;
 
-  KSPIN_LOCK lock;
+  EX_SPIN_LOCK lock;
 
   FORT_CONF conf;
 } FORT_CONF_REF, *PFORT_CONF_REF;
@@ -163,16 +163,14 @@ fort_conf_exe_find (const PFORT_CONF conf,
   const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, path_len);
   FORT_APP_FLAGS app_flags;
 
-  KLOCK_QUEUE_HANDLE lock_queue;
-
-  KeAcquireInStackQueuedSpinLock(&conf_ref->lock, &lock_queue);
+  KIRQL oldIrql = ExAcquireSpinLockShared(&conf_ref->lock);
   {
     const PFORT_CONF_EXE_NODE node = fort_conf_ref_exe_find_node(
       conf_ref, path, path_len, path_hash);
 
     app_flags.v = node ? node->app_entry->flags.v : 0;
   }
-  KeReleaseInStackQueuedSpinLock(&lock_queue);
+  ExReleaseSpinLockShared(&conf_ref->lock, oldIrql);
 
   return app_flags;
 }
@@ -250,11 +248,9 @@ fort_conf_ref_exe_add_path (PFORT_CONF_REF conf_ref,
   const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, path_len);
   BOOL res = FALSE;
 
-  KLOCK_QUEUE_HANDLE lock_queue;
-
-  KeAcquireInStackQueuedSpinLock(&conf_ref->lock, &lock_queue);
+  KIRQL oldIrql = ExAcquireSpinLockExclusive(&conf_ref->lock);
   res = fort_conf_ref_exe_add_path_locked(conf_ref, path, path_len, path_hash, flags);
-  KeReleaseInStackQueuedSpinLock(&lock_queue);
+  ExReleaseSpinLockExclusive(&conf_ref->lock, oldIrql);
 
   return res;
 }
@@ -299,9 +295,7 @@ fort_conf_ref_exe_del_path (PFORT_CONF_REF conf_ref,
 {
   const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, path_len);
 
-  KLOCK_QUEUE_HANDLE lock_queue;
-
-  KeAcquireInStackQueuedSpinLock(&conf_ref->lock, &lock_queue);
+  KIRQL oldIrql = ExAcquireSpinLockExclusive(&conf_ref->lock);
   {
     PFORT_CONF_EXE_NODE node = fort_conf_ref_exe_find_node(
       conf_ref, path, path_len, path_hash);
@@ -325,7 +319,7 @@ fort_conf_ref_exe_del_path (PFORT_CONF_REF conf_ref,
       tommy_list_insert_tail_check(&conf_ref->free_nodes, (tommy_node *) node);
     }
   }
-  KeReleaseInStackQueuedSpinLock(&lock_queue);
+  ExReleaseSpinLockExclusive(&conf_ref->lock, oldIrql);
 }
 
 static void
@@ -348,7 +342,7 @@ fort_conf_ref_init (PFORT_CONF_REF conf_ref)
   tommy_arrayof_init(&conf_ref->exe_nodes, sizeof(FORT_CONF_EXE_NODE));
   tommy_hashdyn_init(&conf_ref->exe_map);
 
-  KeInitializeSpinLock(&conf_ref->lock);
+  conf_ref->lock = 0;
 }
 
 static PFORT_CONF_REF
