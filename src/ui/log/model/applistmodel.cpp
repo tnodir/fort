@@ -234,12 +234,15 @@ bool AppListModel::updateApp(qint64 appId, const QString &appPath,
 
 void AppListModel::deleteApp(qint64 appId, const QString &appPath, int row)
 {
+    beginRemoveRows(QModelIndex(), row, row);
+
     if (confManager()->updateDriverDeleteApp(appPath)
             && confManager()->deleteApp(appId)) {
-        beginRemoveRows(QModelIndex(), row, row);
         invalidateRowCache();
-        endRemoveRows();
+        removeRow(row);
     }
+
+    endRemoveRows();
 }
 
 void AppListModel::reset()
