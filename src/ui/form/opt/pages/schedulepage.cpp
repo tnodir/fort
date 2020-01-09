@@ -92,17 +92,18 @@ void SchedulePage::setupUi()
 {
     auto layout = new QVBoxLayout();
 
+    // Task Details
+    setupTaskDetails();
+
     // Tasks Table
     setupTableTasks();
     setupTableTasksHeader();
-    layout->addWidget(m_tableTasks, 1);
-
-    // Task Details
-    setupTaskDetails();
-    layout->addWidget(m_taskDetailsRow);
 
     // Actions on tasks table's current changed
     setupTableTasksChanged();
+
+    layout->addWidget(m_taskDetailsRow);
+    layout->addWidget(m_tableTasks, 1);
 
     this->setLayout(layout);
 }
@@ -187,7 +188,7 @@ void SchedulePage::setupTableTasksChanged()
         setCurrentTaskInfo(taskSelected
                            ? taskListModel()->taskInfoAt(taskIndex)
                            : nullptr);
-        m_taskDetailsRow->setVisible(taskSelected);
+        m_taskDetailsRow->setEnabled(taskSelected);
 
         if (taskSelected) {
             const auto index = taskListModel()->index(taskIndex, 0);
@@ -202,6 +203,8 @@ void SchedulePage::setupTableTasksChanged()
             const bool running = currentTaskInfo()->running();
             m_btTaskRun->setEnabled(!running);
             m_btTaskAbort->setEnabled(running);
+        } else {
+            m_cscTaskInterval->checkBox()->setText(QString());
         }
     };
 
