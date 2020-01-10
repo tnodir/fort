@@ -208,12 +208,12 @@ bool AppListModel::addApp(const QString &appPath, int groupIndex,
                           bool useGroupPerm, bool blocked,
                           const QDateTime &endTime)
 {
-    if (confManager()->updateDriverUpdateApp(appPath, groupIndex,
-                                             useGroupPerm, blocked, false)
-            && confManager()->addApp(appPath, endTime, groupIndex,
-                                     useGroupPerm, blocked, false)) {
+    if (confManager()->addApp(appPath, endTime, groupIndex,
+                              useGroupPerm, blocked, false)) {
         reset();
-        return true;
+
+        return confManager()->updateDriverUpdateApp(
+                    appPath, groupIndex, useGroupPerm, blocked, false);
     }
     return false;
 }
@@ -222,12 +222,12 @@ bool AppListModel::updateApp(qint64 appId, const QString &appPath,
                              int groupIndex, bool useGroupPerm, bool blocked,
                              const QDateTime &endTime)
 {
-    if (confManager()->updateDriverUpdateApp(appPath, groupIndex,
-                                             useGroupPerm, blocked, false)
-            && confManager()->updateApp(appId, endTime, groupIndex,
-                                        useGroupPerm, blocked)) {
+    if (confManager()->updateApp(appId, endTime, groupIndex,
+                                 useGroupPerm, blocked)) {
         refresh();
-        return true;
+
+        return confManager()->updateDriverUpdateApp(
+                    appPath, groupIndex, useGroupPerm, blocked, false);
     }
     return false;
 }
@@ -236,8 +236,9 @@ void AppListModel::deleteApp(qint64 appId, const QString &appPath, int row)
 {
     beginRemoveRows(QModelIndex(), row, row);
 
-    if (confManager()->updateDriverDeleteApp(appPath)
-            && confManager()->deleteApp(appId)) {
+    if (confManager()->deleteApp(appId)) {
+        confManager()->updateDriverDeleteApp(appPath);
+
         invalidateRowCache();
         removeRow(row);
     }
