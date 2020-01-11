@@ -4,9 +4,8 @@
 #include <QObject>
 #include <QTimer>
 
-#include <functional>
-
 #include "../util/classhelpers.h"
+#include "../util/conf/confappswalker.h"
 
 QT_FORWARD_DECLARE_CLASS(DriverManager)
 QT_FORWARD_DECLARE_CLASS(EnvManager)
@@ -16,10 +15,7 @@ QT_FORWARD_DECLARE_CLASS(SqliteDb)
 QT_FORWARD_DECLARE_CLASS(SqliteStmt)
 QT_FORWARD_DECLARE_CLASS(TaskInfo)
 
-using walkAppsCallback = bool(int groupIndex, bool useGroupPerm,
-    bool blocked, bool alerted, const QString &appPath);
-
-class ConfManager : public QObject
+class ConfManager : public QObject, public ConfAppsWalker
 {
     Q_OBJECT
     Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
@@ -58,7 +54,8 @@ public:
     bool deleteApp(qint64 appId);
     bool updateApp(qint64 appId, const QDateTime &endTime,
                    int groupIndex, bool useGroupPerm, bool blocked);
-    bool walkApps(std::function<walkAppsCallback> func);
+
+    bool walkApps(std::function<walkAppsCallback> func) override;
 
     int appEndsCount();
     void updateAppEndTimes();

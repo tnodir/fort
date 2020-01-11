@@ -21,6 +21,7 @@ HEADERS += \
     $$UIPATH/conf/firewallconf.h \
     $$UIPATH/fortcommon.h \
     $$UIPATH/util/conf/addressrange.h \
+    $$UIPATH/util/conf/confappswalker.h \
     $$UIPATH/util/conf/confutil.h \
     $$UIPATH/util/dateutil.h \
     $$UIPATH/util/envmanager.h \

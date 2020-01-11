@@ -152,6 +152,8 @@ fort_buffer_prepare (PFORT_BUFFER buf, UINT32 len, PCHAR *out,
     const UINT32 new_top = buf_top + len;
 
     if (new_top > FORT_BUFFER_SIZE) {
+      DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                 "FORT: Buffer Overflow: data=%p len=%d\n", data, len);
       return STATUS_BUFFER_TOO_SMALL;  /* drop on buffer overflow */
     }
 

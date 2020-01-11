@@ -48,8 +48,8 @@ void Test::dbWriteRead()
             30, 500, 600
         };
 
-        statManager.logStatTraf(procCount, trafBytes);
-        statManager.logStatTraf(procCount, trafBytes);
+        statManager.logStatTraf(procCount, 0, trafBytes);
+        statManager.logStatTraf(procCount, 0, trafBytes);
     }
 
     qDebug() << "elapsed>" << timer.restart() << "msec";
@@ -62,7 +62,7 @@ void Test::dbWriteRead()
             31, 50, 60
         };
 
-        statManager.logStatTraf(procCount, trafBytes);
+        statManager.logStatTraf(procCount, 0, trafBytes);
     }
 
     qDebug() << "elapsed>" << timer.elapsed() << "msec";

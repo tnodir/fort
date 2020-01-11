@@ -5,6 +5,7 @@
 #include "conf/appgroup.h"
 #include "conf/firewallconf.h"
 #include "fortcommon.h"
+#include "util/conf/confappswalker.h"
 #include "util/conf/confutil.h"
 #include "util/envmanager.h"
 #include "util/fileutil.h"
@@ -58,7 +59,7 @@ void Test::confWriteRead()
     ConfUtil confUtil;
 
     QByteArray buf;
-    const int confIoSize = confUtil.write(conf, envManager, buf);
+    const int confIoSize = confUtil.write(conf, nullptr, envManager, buf);
     QVERIFY(confIoSize != 0);
 
     // Check the buffer

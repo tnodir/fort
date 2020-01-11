@@ -11,7 +11,7 @@
 
 QT_FORWARD_DECLARE_CLASS(AddressGroup)
 QT_FORWARD_DECLARE_CLASS(AppGroup)
-QT_FORWARD_DECLARE_CLASS(ConfManager)
+QT_FORWARD_DECLARE_CLASS(ConfAppsWalker)
 QT_FORWARD_DECLARE_CLASS(EnvManager)
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
 
@@ -39,7 +39,7 @@ signals:
 
 public slots:
     int write(const FirewallConf &conf,
-              ConfManager &confManager,
+              ConfAppsWalker *confAppsWalker,
               EnvManager &envManager, QByteArray &buf);
     int writeFlags(const FirewallConf &conf, QByteArray &buf);
     int writeAppEntry(int groupIndex, bool useGroupPerm,
@@ -67,7 +67,7 @@ private:
                         quint32 &prefixAppsSize,
                         quint32 &exeAppsSize);
 
-    bool parseExeApps(ConfManager &confManager,
+    bool parseExeApps(ConfAppsWalker *confAppsWalker,
                       appentry_map_t &exeAppsMap,
                       quint32 &exeAppsSize);
 

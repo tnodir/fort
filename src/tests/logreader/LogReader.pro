@@ -34,6 +34,7 @@ HEADERS += \
     $$UIPATH/log/logentryprocnew.h \
     $$UIPATH/log/logentrystattraf.h \
     $$UIPATH/util/conf/addressrange.h \
+    $$UIPATH/util/conf/confappswalker.cpp \
     $$UIPATH/util/conf/confutil.h \
     $$UIPATH/util/dateutil.h \
     $$UIPATH/util/device.h \

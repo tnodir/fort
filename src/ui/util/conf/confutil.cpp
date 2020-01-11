@@ -12,8 +12,8 @@
 #include "../../conf/addressgroup.h"
 #include "../../conf/appgroup.h"
 #include "../../conf/firewallconf.h"
-#include "../../conf/confmanager.h"
 #include "../../fortcommon.h"
+#include "../../util/conf/confappswalker.h"
 #include "../dateutil.h"
 #include "../envmanager.h"
 #include "../fileutil.h"
@@ -43,7 +43,7 @@ void ConfUtil::setErrorMessage(const QString &errorMessage)
 }
 
 int ConfUtil::write(const FirewallConf &conf,
-                    ConfManager &confManager,
+                    ConfAppsWalker *confAppsWalker,
                     EnvManager &envManager, QByteArray &buf)
 {
     quint32 addressGroupsSize = 0;
@@ -69,7 +69,7 @@ int ConfUtil::write(const FirewallConf &conf,
                         appPeriods, appPeriodsCount,
                         wildAppsMap, prefixAppsMap, exeAppsMap,
                         wildAppsSize, prefixAppsSize, exeAppsSize)
-            || !parseExeApps(confManager, exeAppsMap, exeAppsSize))
+            || !parseExeApps(confAppsWalker, exeAppsMap, exeAppsSize))
         return 0;
 
     const quint32 appsSize = wildAppsSize + prefixAppsSize + exeAppsSize;
@@ -273,13 +273,16 @@ bool ConfUtil::parseAppGroups(EnvManager &envManager,
     return true;
 }
 
-bool ConfUtil::parseExeApps(ConfManager &confManager,
+bool ConfUtil::parseExeApps(ConfAppsWalker *confAppsWalker,
                             appentry_map_t &exeAppsMap,
                             quint32 &exeAppsSize)
 {
-    return confManager.walkApps([&](int groupIndex, bool useGroupPerm,
-                                bool blocked, bool alerted,
-                                const QString &appPath) -> bool {
+    if (Q_UNLIKELY(confAppsWalker == nullptr))
+        return true;
+
+    return confAppsWalker->walkApps([&](int groupIndex, bool useGroupPerm,
+                                    bool blocked, bool alerted,
+                                    const QString &appPath) -> bool {
         return addApp(groupIndex, useGroupPerm,
                       blocked, alerted, appPath,
                       exeAppsMap, exeAppsSize);

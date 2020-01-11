@@ -3,6 +3,7 @@
 #include <QProcess>
 #include <QThreadPool>
 
+#include "../conf/confmanager.h"
 #include "../conf/firewallconf.h"
 #include "../fortcommon.h"
 #include "../log/logbuffer.h"
@@ -93,7 +94,7 @@ bool DriverManager::writeConf(const FirewallConf &conf,
     ConfUtil confUtil;
     QByteArray buf;
 
-    const int confSize = confUtil.write(conf, confManager, envManager, buf);
+    const int confSize = confUtil.write(conf, &confManager, envManager, buf);
     if (confSize == 0) {
         setErrorMessage(confUtil.errorMessage());
         return false;

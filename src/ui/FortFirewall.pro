@@ -185,6 +185,7 @@ HEADERS += \
     util/app/appinfoworker.h \
     util/app/apputil.h \
     util/conf/addressrange.h \
+    util/conf/confappswalker.h \
     util/conf/confutil.h \
     util/dateutil.h \
     util/device.h \

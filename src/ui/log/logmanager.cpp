@@ -108,8 +108,10 @@ void LogManager::processLogBuffer(LogBuffer *logBuffer, bool success,
 
 void LogManager::readLogEntries(LogBuffer *logBuffer)
 {
-    forever {
-        switch (logBuffer->peekEntryType()) {
+    for (; ; ) {
+        const auto logType = logBuffer->peekEntryType();
+
+        switch (logType) {
         case LogEntry::AppBlocked: {
             LogEntryBlocked blockedEntry;
             logBuffer->readEntryBlocked(&blockedEntry);
@@ -139,7 +141,9 @@ void LogManager::readLogEntries(LogBuffer *logBuffer)
             break;
         }
         default:
-            Q_ASSERT(logBuffer->offset() != 0);
+            if (logBuffer->offset() < logBuffer->top()) {
+                qCritical() << "Unknown Log entry!" << logType;
+            }
             return;
         }
     }

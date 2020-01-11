@@ -156,12 +156,12 @@ void LogBuffer::readEntryStatTraf(LogEntryStatTraf *logEntry)
     logEntry->setProcCount(procCount);
     logEntry->setUnixTime(unixTime);
 
-    if (procCount) {
+    if (procCount != 0) {
         input += FortCommon::logStatHeaderSize();
         logEntry->setProcTrafBytes(reinterpret_cast<const quint32 *>(input));
     }
 
-    const int entrySize = int(FortCommon::logStatTrafSize(procCount));
+    const int entrySize = int(FortCommon::logStatSize(procCount));
     m_offset += entrySize;
 }
 

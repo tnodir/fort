@@ -9,6 +9,7 @@
 #include "fortcommon.h"
 #include "log/logbuffer.h"
 #include "log/logentryblocked.h"
+#include "util/conf/confappswalker.h"
 #include "util/conf/confutil.h"
 #include "util/device.h"
 #include "util/envmanager.h"
@@ -60,7 +61,7 @@ void Test::setConf(Device &device)
     ConfUtil confUtil;
 
     QByteArray buf;
-    const int confIoSize = confUtil.write(conf, envManager, buf);
+    const int confIoSize = confUtil.write(conf, nullptr, envManager, buf);
     QVERIFY(confIoSize != 0);
 
     QVERIFY(device.ioctl(FortCommon::ioctlSetConf(),
