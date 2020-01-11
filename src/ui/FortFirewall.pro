@@ -259,3 +259,6 @@ installer_build {
 # 3rd party integrations
 CONFIG += qcustomplot sqlite
 include(3rdparty/3rdparty.pri)
+
+# Optional defines
+DEFINES += USE_CONTROL_COMMANDS APP_SINGLE_INSTANCE

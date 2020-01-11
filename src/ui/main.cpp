@@ -39,6 +39,7 @@ int main(int argc, char *argv[])
         return 0;
     }
 
+#ifdef USE_CONTROL_COMMANDS
     ControlManager controlManager(QApplication::applicationName(),
                                   fortSettings.controlCommand());
 
@@ -47,23 +48,28 @@ int main(int argc, char *argv[])
         return controlManager.post(fortSettings.args())
                 ? 0 : FORT_ERROR_CONTROL;
     }
+#endif
 
+#ifdef APP_SINGLE_INSTANCE
     // Check running instance
     if (!OsUtil::createGlobalMutex(APP_NAME)) {
         QMessageBox::critical(nullptr, QString(),
                               "Application is already running!");
         return FORT_ERROR_INSTANCE;
     }
+#endif
 
     registerMetaTypes();
 
     FortManager fortManager(&fortSettings);
     fortManager.launch();
 
+#ifdef USE_CONTROL_COMMANDS
     // Process control requests from clients
     if (!controlManager.listen(&fortManager)) {
         return FORT_ERROR_CONTROL;
     }
+#endif
 
     return QApplication::exec();
 }
