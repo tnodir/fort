@@ -328,16 +328,18 @@ bool ConfUtil::addApp(int groupIndex, bool useGroupPerm,
                       appentry_map_t &appsMap,
                       quint32 &appsSize)
 {
-    if (appsMap.contains(appPath))
+    const QString kernelPath = FileUtil::pathToKernelPath(appPath).toLower();
+
+    if (appsMap.contains(kernelPath))
         return true;
 
-    if (appPath.size() > int(APP_PATH_MAX)) {
+    if (kernelPath.size() > int(APP_PATH_MAX)) {
         setErrorMessage(tr("Length of Application's Path must be < %1")
                         .arg(APP_PATH_MAX));
         return false;
     }
 
-    const quint16 appPathLen = quint16(appPath.size()) * sizeof(wchar_t);
+    const quint16 appPathLen = quint16(kernelPath.size()) * sizeof(wchar_t);
     const quint32 appSize = FORT_CONF_APP_ENTRY_SIZE(appPathLen);
 
     appsSize += appSize;
@@ -351,7 +353,7 @@ bool ConfUtil::addApp(int groupIndex, bool useGroupPerm,
     appEntry.flags.alerted = alerted;
     appEntry.flags.found = 1;
 
-    appsMap.insert(appPath, appEntry.v);
+    appsMap.insert(kernelPath, appEntry.v);
 
     return true;
 }
@@ -384,8 +386,7 @@ QString ConfUtil::parseAppPath(const QStringRef &line,
         }
     }
 
-    const QString kernelPath = FileUtil::pathToKernelPath(path.toString());
-    return kernelPath.toLower();
+    return path.toString();
 }
 
 void ConfUtil::writeData(char *output, const FirewallConf &conf,
