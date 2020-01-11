@@ -85,6 +85,7 @@ void ApplicationsPage::onRetranslateUi()
 
     m_splitter->handle()->btMoveAllFrom1To2()->setToolTip(tr("Move All Lines to 'Allow'"));
     m_splitter->handle()->btMoveAllFrom2To1()->setToolTip(tr("Move All Lines to 'Block'"));
+    m_splitter->handle()->btInterchangeAll()->setToolTip(tr("Interchange All Lines"));
     m_splitter->handle()->btMoveSelectedFrom1To2()->setToolTip(tr("Move Selected Lines to 'Allow'"));
     m_splitter->handle()->btMoveSelectedFrom2To1()->setToolTip(tr("Move Selected Lines to 'Block'"));
     m_splitter->handle()->btSelectFile()->setToolTip(tr("Select File"));

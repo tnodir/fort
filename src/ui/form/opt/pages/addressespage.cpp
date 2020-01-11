@@ -59,6 +59,7 @@ void AddressesPage::onRetranslateUi()
 
     m_splitter->handle()->btMoveAllFrom1To2()->setToolTip(tr("Move All Lines to 'Exclude'"));
     m_splitter->handle()->btMoveAllFrom2To1()->setToolTip(tr("Move All Lines to 'Include'"));
+    m_splitter->handle()->btInterchangeAll()->setToolTip(tr("Interchange All Lines"));
     m_splitter->handle()->btMoveSelectedFrom1To2()->setToolTip(tr("Move Selected Lines to 'Exclude'"));
     m_splitter->handle()->btMoveSelectedFrom2To1()->setToolTip(tr("Move Selected Lines to 'Include'"));
 

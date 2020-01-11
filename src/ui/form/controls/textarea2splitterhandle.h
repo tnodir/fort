@@ -25,6 +25,7 @@ public:
 
     QPushButton *btMoveAllFrom1To2() const { return m_btMoveAllFrom1To2; }
     QPushButton *btMoveSelectedFrom1To2() const { return m_btMoveSelectedFrom1To2; }
+    QPushButton *btInterchangeAll() const { return m_btInterchangeAll; }
     QPushButton *btMoveSelectedFrom2To1() const { return m_btMoveSelectedFrom2To1; }
     QPushButton *btMoveAllFrom2To1() const { return m_btMoveAllFrom2To1; }
     QPushButton *btSelectFile() const { return m_btSelectFile; }
@@ -43,6 +44,7 @@ private:
 
     QPushButton *m_btMoveAllFrom1To2 = nullptr;
     QPushButton *m_btMoveSelectedFrom1To2 = nullptr;
+    QPushButton *m_btInterchangeAll = nullptr;
     QPushButton *m_btMoveSelectedFrom2To1 = nullptr;
     QPushButton *m_btMoveAllFrom2To1 = nullptr;
     QPushButton *m_btSelectFile = nullptr;

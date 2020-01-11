@@ -45,16 +45,21 @@
     </message>
     <message>
         <location filename="../form/opt/pages/addressespage.cpp" line="62"/>
+        <source>Interchange All Lines</source>
+        <translation>Обменять все строки</translation>
+    </message>
+    <message>
+        <location filename="../form/opt/pages/addressespage.cpp" line="63"/>
         <source>Move Selected Lines to &apos;Exclude&apos;</source>
         <translation>Перенести выделенные строки в &apos;Исключить&apos;</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/addressespage.cpp" line="63"/>
+        <location filename="../form/opt/pages/addressespage.cpp" line="64"/>
         <source>Move Selected Lines to &apos;Include&apos;</source>
         <translation>Перенести выделенные строки во &apos;Включить&apos;</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/addressespage.cpp" line="70"/>
+        <location filename="../form/opt/pages/addressespage.cpp" line="71"/>
         <source># Examples:</source>
         <translation># Примеры:</translation>
     </message>
@@ -92,17 +97,17 @@
         <translation>Время создания</translation>
     </message>
     <message>
-        <location filename="../log/model/applistmodel.cpp" line="339"/>
+        <location filename="../log/model/applistmodel.cpp" line="343"/>
         <source>Alert</source>
         <translation>Оповещение</translation>
     </message>
     <message>
-        <location filename="../log/model/applistmodel.cpp" line="340"/>
+        <location filename="../log/model/applistmodel.cpp" line="344"/>
         <source>Block</source>
         <translation>Блокировать</translation>
     </message>
     <message>
-        <location filename="../log/model/applistmodel.cpp" line="341"/>
+        <location filename="../log/model/applistmodel.cpp" line="345"/>
         <source>Allow</source>
         <translation>Разрешить</translation>
     </message>
@@ -110,7 +115,7 @@
 <context>
     <name>AppStatModel</name>
     <message>
-        <location filename="../log/model/appstatmodel.cpp" line="122"/>
+        <location filename="../log/model/appstatmodel.cpp" line="123"/>
         <source>All</source>
         <translation>Все</translation>
     </message>
@@ -194,36 +199,41 @@
     </message>
     <message>
         <location filename="../form/opt/pages/applicationspage.cpp" line="88"/>
+        <source>Interchange All Lines</source>
+        <translation>Обменять все строки</translation>
+    </message>
+    <message>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="89"/>
         <source>Move Selected Lines to &apos;Allow&apos;</source>
         <translation>Перенести выделенные строки в &apos;Разрешить&apos;</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="89"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="90"/>
         <source>Move Selected Lines to &apos;Block&apos;</source>
         <translation>Перенести выделенные строки в &apos;Блокировать&apos;</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="90"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="91"/>
         <source>Select File</source>
         <translation>Выбрать файл</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="99"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="100"/>
         <source>Custom</source>
         <translation>Нестандартный</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="100"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="101"/>
         <source>Disabled</source>
         <translation>Отключено</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="115"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="116"/>
         <source># Examples:</source>
         <translation># Примеры:</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/applicationspage.cpp" line="119"/>
+        <location filename="../form/opt/pages/applicationspage.cpp" line="120"/>
         <source># All programs in the sub-path:</source>
         <translation># Все программы по под-пути:</translation>
     </message>
@@ -261,7 +271,7 @@
         <translation>Длина наименования группы приложения должна быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="335"/>
+        <location filename="../util/conf/confutil.cpp" line="340"/>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Длина пути приложения должна быть &lt; %1</translation>
     </message>
@@ -544,140 +554,140 @@
 <context>
     <name>ProgramsWindow</name>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="104"/>
+        <location filename="../form/prog/programswindow.cpp" line="103"/>
         <source>Add</source>
         <translation>Добавить</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="103"/>
-        <location filename="../form/prog/programswindow.cpp" line="105"/>
+        <location filename="../form/prog/programswindow.cpp" line="102"/>
+        <location filename="../form/prog/programswindow.cpp" line="104"/>
         <source>Edit</source>
         <translation>Изменить</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="108"/>
-        <location filename="../form/prog/programswindow.cpp" line="115"/>
+        <location filename="../form/prog/programswindow.cpp" line="107"/>
+        <location filename="../form/prog/programswindow.cpp" line="114"/>
         <source>Allow</source>
         <translation>Разрешить</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="109"/>
-        <location filename="../form/prog/programswindow.cpp" line="116"/>
+        <location filename="../form/prog/programswindow.cpp" line="108"/>
+        <location filename="../form/prog/programswindow.cpp" line="115"/>
         <source>Block</source>
         <translation>Блокировать</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="111"/>
+        <location filename="../form/prog/programswindow.cpp" line="110"/>
         <source>Program Path:</source>
         <translation>Путь программы:</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="112"/>
+        <location filename="../form/prog/programswindow.cpp" line="111"/>
         <source>Select File</source>
         <translation>Выбрать файл</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="113"/>
+        <location filename="../form/prog/programswindow.cpp" line="112"/>
         <source>Application Group:</source>
         <translation>Группа приложений:</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="114"/>
+        <location filename="../form/prog/programswindow.cpp" line="113"/>
         <source>Use Application Group&apos;s Enabled State</source>
         <translation>Использовать вкл. состояние Группы приложения</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="117"/>
+        <location filename="../form/prog/programswindow.cpp" line="116"/>
         <source>Block In:</source>
         <translation>Блокировать через:</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="119"/>
+        <location filename="../form/prog/programswindow.cpp" line="118"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="120"/>
+        <location filename="../form/prog/programswindow.cpp" line="119"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="122"/>
+        <location filename="../form/prog/programswindow.cpp" line="121"/>
         <source>Edit Program</source>
         <translation>Редактирование программы</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="124"/>
+        <location filename="../form/prog/programswindow.cpp" line="123"/>
         <source>Alert about Unknown Programs</source>
         <translation>Оповещение о неизвестных программах</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="128"/>
+        <location filename="../form/prog/programswindow.cpp" line="127"/>
         <source>Copy Path</source>
         <translation>Копировать путь</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="129"/>
+        <location filename="../form/prog/programswindow.cpp" line="128"/>
         <source>Open Folder</source>
         <translation>Открыть папку</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="137"/>
+        <location filename="../form/prog/programswindow.cpp" line="136"/>
         <source>Custom</source>
         <translation>Нестандартный</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="137"/>
+        <location filename="../form/prog/programswindow.cpp" line="136"/>
         <source>1 hour</source>
         <translation>1 час</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="137"/>
+        <location filename="../form/prog/programswindow.cpp" line="136"/>
         <source>6 hours</source>
         <translation>6 часов</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="138"/>
+        <location filename="../form/prog/programswindow.cpp" line="137"/>
         <source>12 hours</source>
         <translation>12 часов</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="138"/>
+        <location filename="../form/prog/programswindow.cpp" line="137"/>
         <source>Day</source>
         <translation>День</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="138"/>
+        <location filename="../form/prog/programswindow.cpp" line="137"/>
         <source>Week</source>
         <translation>Неделя</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="138"/>
+        <location filename="../form/prog/programswindow.cpp" line="137"/>
         <source>Month</source>
         <translation>Месяц</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="142"/>
+        <location filename="../form/prog/programswindow.cpp" line="141"/>
         <source> hours</source>
         <translation> час.</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="131"/>
+        <location filename="../form/prog/programswindow.cpp" line="130"/>
         <source>Programs</source>
         <translation>Программы</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="106"/>
+        <location filename="../form/prog/programswindow.cpp" line="105"/>
         <source>Remove</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="208"/>
+        <location filename="../form/prog/programswindow.cpp" line="211"/>
         <source>Are you sure to remove the selected program?</source>
         <translation>Удалить выбранную программу?</translation>
     </message>
     <message>
-        <location filename="../form/prog/programswindow.cpp" line="315"/>
+        <location filename="../form/prog/programswindow.cpp" line="318"/>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Программы (*.exe);;Все файлы (*.*)</translation>
     </message>
@@ -1069,7 +1079,7 @@
 <context>
     <name>TextArea2SplitterHandle</name>
     <message>
-        <location filename="../form/controls/textarea2splitterhandle.cpp" line="187"/>
+        <location filename="../form/controls/textarea2splitterhandle.cpp" line="206"/>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Программы (*.exe);;Все файлы (*.*)</translation>
     </message>

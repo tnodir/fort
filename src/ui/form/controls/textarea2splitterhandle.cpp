@@ -72,6 +72,21 @@ void moveAllLines(QPlainTextEdit *srcArea, QPlainTextEdit *dstArea)
     appendText(dstArea, text);
 }
 
+void interchangeAllLines(QPlainTextEdit *srcArea, QPlainTextEdit *dstArea)
+{
+    // Cut the text from srcArea
+    const auto srcText = srcArea->toPlainText();
+    srcArea->clear();
+
+    // Cut the text from dstArea
+    const auto dstText = dstArea->toPlainText();
+    dstArea->clear();
+
+    // Paste texts
+    appendText(srcArea, dstText);
+    appendText(dstArea, srcText);
+}
+
 void moveSelectedLines(QPlainTextEdit *srcArea, QPlainTextEdit *dstArea)
 {
     const auto srcText = srcArea->toPlainText();
@@ -166,6 +181,9 @@ void TextArea2SplitterHandle::setupUi(bool selectFileEnabled)
     m_btMoveSelectedFrom1To2 = createToolButton(":/images/control_play.png", [&] {
         moveSelectedLines(textArea1(), textArea2());
     });
+    m_btInterchangeAll = createToolButton(":/images/control_repeat.png", [&] {
+        interchangeAllLines(textArea1(), textArea2());
+    });
     m_btMoveSelectedFrom2To1 = createToolButton(":/images/control_play_backward.png", [&] {
         moveSelectedLines(textArea2(), textArea1());
     });
@@ -176,6 +194,7 @@ void TextArea2SplitterHandle::setupUi(bool selectFileEnabled)
     layout->addStretch();
     layout->addWidget(m_btMoveAllFrom1To2, 0, Qt::AlignHCenter);
     layout->addWidget(m_btMoveSelectedFrom1To2, 0, Qt::AlignHCenter);
+    layout->addWidget(m_btInterchangeAll, 0, Qt::AlignHCenter);
     layout->addWidget(m_btMoveSelectedFrom2To1, 0, Qt::AlignHCenter);
     layout->addWidget(m_btMoveAllFrom2To1, 0, Qt::AlignHCenter);
 
