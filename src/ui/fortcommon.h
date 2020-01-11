@@ -51,6 +51,7 @@ public:
                                      quint32 *pid, quint32 *pathLen);
 
     static void logStatTrafHeaderRead(const char *input,
+                                      qint64 *unixTime,
                                       quint16 *procCount);
 
     static void logHeartbeatRead(const char *input, quint16 *tick);

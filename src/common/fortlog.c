@@ -24,7 +24,7 @@
   ((FORT_LOG_PROC_NEW_HEADER_SIZE + (path_len) \
     + (FORT_LOG_ALIGN - 1)) & ~(FORT_LOG_ALIGN - 1))
 
-#define FORT_LOG_STAT_HEADER_SIZE	sizeof(UINT32)
+#define FORT_LOG_STAT_HEADER_SIZE	(sizeof(UINT32) + sizeof(INT64))
 
 #define FORT_LOG_STAT_TRAF_SIZE(proc_count) \
   (proc_count * 3 * sizeof(UINT32))
@@ -114,19 +114,21 @@ fort_log_proc_new_header_read (const char *p, UINT32 *pid,
 }
 
 static void
-fort_log_stat_traf_header_write (char *p, UINT16 proc_count)
+fort_log_stat_traf_header_write (char *p, INT64 unix_time, UINT16 proc_count)
 {
   UINT32 *up = (UINT32 *) p;
 
   *up++ = FORT_LOG_FLAG_STAT_TRAF | proc_count;
+  *((INT64 *) up) = unix_time;
 }
 
 static void
-fort_log_stat_traf_header_read (const char *p, UINT16 *proc_count)
+fort_log_stat_traf_header_read (const char *p, INT64 *unix_time, UINT16 *proc_count)
 {
   const UINT32 *up = (const UINT32 *) p;
 
-  *proc_count = (UINT16) *up;
+  *proc_count = (UINT16) *up++;
+  *unix_time = *((INT64 *) up);
 }
 
 static void

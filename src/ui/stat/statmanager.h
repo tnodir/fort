@@ -35,7 +35,8 @@ public:
     bool initialize();
 
     void logProcNew(quint32 pid, const QString &appPath);
-    void logStatTraf(quint16 procCount, const quint32 *procTrafBytes);
+    void logStatTraf(quint16 procCount, qint64 unixTime,
+                     const quint32 *procTrafBytes);
 
     void getAppList(QStringList &list, QVector<qint64> &appIds);
 

@@ -87,6 +87,7 @@ void AppStatModel::handleProcNew(const LogEntryProcNew &procNewEntry)
 void AppStatModel::handleStatTraf(const LogEntryStatTraf &statTrafEntry)
 {
     m_statManager->logStatTraf(statTrafEntry.procCount(),
+                               statTrafEntry.unixTime(),
                                statTrafEntry.procTrafBytes());
 }
 

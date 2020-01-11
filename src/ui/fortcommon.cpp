@@ -137,9 +137,10 @@ void FortCommon::logProcNewHeaderRead(const char *input,
 }
 
 void FortCommon::logStatTrafHeaderRead(const char *input,
+                                       qint64 *unixTime,
                                        quint16 *procCount)
 {
-    fort_log_stat_traf_header_read(input, procCount);
+    fort_log_stat_traf_header_read(input, unixTime, procCount);
 }
 
 void FortCommon::logHeartbeatRead(const char *input, quint16 *tick)

@@ -248,12 +248,11 @@ void StatManager::logProcNew(quint32 pid, const QString &appPath)
     m_appIndexes.insert(pid, procIndex);
 }
 
-void StatManager::logStatTraf(quint16 procCount, const quint32 *procTrafBytes)
+void StatManager::logStatTraf(quint16 procCount, qint64 unixTime,
+                              const quint32 *procTrafBytes)
 {
     if (!m_conf || !m_conf->logStat())
         return;
-
-    const qint64 unixTime = DateUtil::getUnixTime();
 
     const qint32 trafHour = DateUtil::getUnixHour(unixTime);
     const bool isNewHour = (trafHour != m_lastTrafHour);

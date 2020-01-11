@@ -796,6 +796,7 @@ fort_callout_timer (void)
       (stat->proc_active_count < FORT_LOG_STAT_BUFFER_PROC_COUNT)
       ? stat->proc_active_count : FORT_LOG_STAT_BUFFER_PROC_COUNT;
     const UINT32 len = FORT_LOG_STAT_SIZE(proc_count);
+    INT64 unix_time;
     PCHAR out;
     NTSTATUS status;
 
@@ -806,7 +807,19 @@ fort_callout_timer (void)
       break;
     }
 
-    fort_log_stat_traf_header_write(out, proc_count);
+    /* Get current Unix time */
+    {
+      LARGE_INTEGER system_time;
+
+      KeQuerySystemTime(&system_time);
+
+      /* Convert system time to seconds since 1970 */
+      #define SECSPERDAY	86400
+      #define SECS_1601_TO_1970	((369 * 365 + 89) * (INT64) SECSPERDAY)  /* 1601 to 1970 is 369 years plus 89 leap days */
+      unix_time = system_time.QuadPart / 10000000 - SECS_1601_TO_1970;
+    }
+
+    fort_log_stat_traf_header_write(out, unix_time, proc_count);
     out += FORT_LOG_STAT_HEADER_SIZE;
 
     fort_stat_dpc_traf_flush(stat, proc_count, out);

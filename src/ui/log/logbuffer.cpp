@@ -149,10 +149,12 @@ void LogBuffer::readEntryStatTraf(LogEntryStatTraf *logEntry)
 
     const char *input = this->input();
 
+    qint64 unixTime;
     quint16 procCount;
-    FortCommon::logStatTrafHeaderRead(input, &procCount);
+    FortCommon::logStatTrafHeaderRead(input, &unixTime, &procCount);
 
     logEntry->setProcCount(procCount);
+    logEntry->setUnixTime(unixTime);
 
     if (procCount) {
         input += FortCommon::logStatHeaderSize();
