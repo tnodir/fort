@@ -1,5 +1,16 @@
 Fort Firewall ChangeLog
 
+v3.1.1, 2020-01-11:
+- UI: Fix filtering apps from Programs window.
+- UI: ProgramsWindow: Move edit buttons into menu.
+- UI: ProgramsWindow: Fix refresh after app removing.
+- UI: Use custom icons for windows.
+- UI: SchedulePage: Relayout.
+- UI: Fix Esc key handling.
+- UI: Fix message about new version.
+- Driver: Use R/W locks for exe apps.
+- Driver: Add timestamp to traffic stats.
+
 v3.1.0, 2020-01-08:
 - Driver: Fix conf changes locking.
 - UI: ProgramsWindow: Add sorting.
