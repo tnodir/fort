@@ -176,6 +176,10 @@ void ProgramsWindow::setupUi()
     // Font
     this->setFont(QFont("Tahoma", 9));
 
+    // Icon
+    this->setWindowIcon(GuiUtil::overlayIcon(":/images/sheild-96.png",
+                                             ":/images/application_cascade.png"));
+
     // Size
     this->resize(1024, 768);
     this->setMinimumSize(500, 400);

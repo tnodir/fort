@@ -4,6 +4,7 @@
 #include <QKeyEvent>
 #include <QVBoxLayout>
 
+#include "../../util/guiutil.h"
 #include "optionscontroller.h"
 #include "pages/mainpage.h"
 
@@ -59,6 +60,10 @@ void OptionsWindow::setupUi()
 
     // Font
     this->setFont(QFont("Tahoma", 9));
+
+    // Icon
+    this->setWindowIcon(GuiUtil::overlayIcon(":/images/sheild-96.png",
+                                             ":/images/cog.png"));
 
     // Size
     this->resize(1024, 768);

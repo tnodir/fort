@@ -1,17 +1,17 @@
 #ifndef GUIUTIL_H
 #define GUIUTIL_H
 
-#include <QObject>
+#include <QIcon>
 #include <QVariant>
 
-class GuiUtil : public QObject
+class GuiUtil
 {
-    Q_OBJECT
-
 public:
-    explicit GuiUtil(QObject *parent = nullptr);
+    static void setClipboardData(const QVariant &data);
 
-    Q_INVOKABLE static void setClipboardData(const QVariant &data);
+    static QIcon overlayIcon(const QString &basePath,
+                             const QString &overlayPath,
+                             Qt::Alignment alignment = Qt::AlignRight | Qt::AlignBottom);
 };
 
 #endif // GUIUTIL_H
