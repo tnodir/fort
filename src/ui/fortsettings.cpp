@@ -215,8 +215,8 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     conf.setStopTraffic(iniBool("stopTraffic"));
     conf.setStopInetTraffic(iniBool("stopInetTraffic"));
     conf.setResolveAddress(iniBool("resolveAddress"));
-    conf.setLogBlocked(iniBool("logBlocked"));
-    conf.setLogStat(iniBool("logStat"));
+    conf.setLogBlocked(iniBool("logBlocked", true));
+    conf.setLogStat(iniBool("logStat", true));
     conf.setAppBlockAll(iniBool("appBlockAll", true));
     conf.setAppAllowAll(iniBool("appAllowAll"));
     conf.setAppGroupBits(iniUInt("appGroupBits", DEFAULT_APP_GROUP_BITS));
