@@ -67,6 +67,7 @@ void OptionsPage::onRetranslateUi()
     m_cbProvBoot->setText(tr("Stop traffic when Fort Firewall is not running"));
     m_cbFilterEnabled->setText(tr("Filter Enabled"));
     m_cbFilterLocals->setText(tr("Filter Local Addresses"));
+    m_cbFilterLocals->setToolTip(tr("Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses"));
     m_cbStopTraffic->setText(tr("Stop Traffic"));
     m_cbStopInetTraffic->setText(tr("Stop Internet Traffic"));
     m_cbHotKeys->setText(tr("Hot Keys"));

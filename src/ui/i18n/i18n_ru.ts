@@ -67,47 +67,42 @@
 <context>
     <name>AppListModel</name>
     <message>
-        <location filename="../log/model/applistmodel.cpp" line="78"/>
+        <location filename="../log/model/applistmodel.cpp" line="90"/>
         <source>Program</source>
         <translation>Программа</translation>
     </message>
     <message>
-        <location filename="../log/model/applistmodel.cpp" line="79"/>
+        <location filename="../log/model/applistmodel.cpp" line="91"/>
         <source>Group</source>
         <translation>Группа</translation>
     </message>
     <message>
-        <location filename="../log/model/applistmodel.cpp" line="80"/>
-        <source>Gr.</source>
-        <translation>Гр.</translation>
-    </message>
-    <message>
-        <location filename="../log/model/applistmodel.cpp" line="81"/>
+        <location filename="../log/model/applistmodel.cpp" line="92"/>
         <source>State</source>
         <translation>Состояние</translation>
     </message>
     <message>
-        <location filename="../log/model/applistmodel.cpp" line="82"/>
+        <location filename="../log/model/applistmodel.cpp" line="93"/>
         <source>End Time</source>
         <translation>Время окончания</translation>
     </message>
     <message>
-        <location filename="../log/model/applistmodel.cpp" line="83"/>
+        <location filename="../log/model/applistmodel.cpp" line="94"/>
         <source>Creation Time</source>
         <translation>Время создания</translation>
     </message>
     <message>
-        <location filename="../log/model/applistmodel.cpp" line="343"/>
+        <location filename="../log/model/applistmodel.cpp" line="370"/>
         <source>Alert</source>
         <translation>Оповещение</translation>
     </message>
     <message>
-        <location filename="../log/model/applistmodel.cpp" line="344"/>
+        <location filename="../log/model/applistmodel.cpp" line="371"/>
         <source>Block</source>
         <translation>Блокировать</translation>
     </message>
     <message>
-        <location filename="../log/model/applistmodel.cpp" line="345"/>
+        <location filename="../log/model/applistmodel.cpp" line="372"/>
         <source>Allow</source>
         <translation>Разрешить</translation>
     </message>
@@ -287,47 +282,47 @@
 <context>
     <name>FortManager</name>
     <message>
-        <location filename="../fortmanager.cpp" line="447"/>
+        <location filename="../fortmanager.cpp" line="457"/>
         <source>Password input</source>
         <translation>Ввод пароля</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="447"/>
+        <location filename="../fortmanager.cpp" line="457"/>
         <source>Please enter the password</source>
         <translation>Наберите пароль пожалуйста</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="671"/>
+        <location filename="../fortmanager.cpp" line="656"/>
         <source>Programs</source>
         <translation>Программы</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="676"/>
+        <location filename="../fortmanager.cpp" line="661"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="681"/>
+        <location filename="../fortmanager.cpp" line="666"/>
         <source>Traffic Graph</source>
         <translation>График трафика</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="691"/>
+        <location filename="../fortmanager.cpp" line="676"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="698"/>
+        <location filename="../fortmanager.cpp" line="683"/>
         <source>Stop Traffic</source>
         <translation>Остановить трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="705"/>
+        <location filename="../fortmanager.cpp" line="690"/>
         <source>Stop Internet Traffic</source>
         <translation>Остановить Интернет трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="733"/>
+        <location filename="../fortmanager.cpp" line="718"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -482,63 +477,68 @@
     </message>
     <message>
         <location filename="../form/opt/pages/optionspage.cpp" line="70"/>
+        <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
+        <translation>Фильтр локальных Loopback (127.0.0.0/8) и Broadcast (255.255.255.255) адресов</translation>
+    </message>
+    <message>
+        <location filename="../form/opt/pages/optionspage.cpp" line="71"/>
         <source>Stop Traffic</source>
         <translation>Остановить трафик</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/optionspage.cpp" line="71"/>
+        <location filename="../form/opt/pages/optionspage.cpp" line="72"/>
         <source>Stop Internet Traffic</source>
         <translation>Остановить Интернет трафик</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/optionspage.cpp" line="72"/>
+        <location filename="../form/opt/pages/optionspage.cpp" line="73"/>
         <source>Hot Keys</source>
         <translation>Горячие клавиши</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/optionspage.cpp" line="74"/>
+        <location filename="../form/opt/pages/optionspage.cpp" line="75"/>
         <source>Password:</source>
         <translation>Пароль:</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/optionspage.cpp" line="77"/>
+        <location filename="../form/opt/pages/optionspage.cpp" line="78"/>
         <source>Language:</source>
         <translation>Язык:</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/optionspage.cpp" line="80"/>
+        <location filename="../form/opt/pages/optionspage.cpp" line="81"/>
         <source>Install</source>
         <translation>Установить</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/optionspage.cpp" line="81"/>
+        <location filename="../form/opt/pages/optionspage.cpp" line="82"/>
         <source>Remove</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/optionspage.cpp" line="83"/>
+        <location filename="../form/opt/pages/optionspage.cpp" line="84"/>
         <source>Download</source>
         <translation>Загрузка</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/optionspage.cpp" line="89"/>
-        <location filename="../form/opt/pages/optionspage.cpp" line="98"/>
+        <location filename="../form/opt/pages/optionspage.cpp" line="90"/>
+        <location filename="../form/opt/pages/optionspage.cpp" line="99"/>
         <source>Installed</source>
         <translation>Установлен</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/optionspage.cpp" line="90"/>
-        <location filename="../form/opt/pages/optionspage.cpp" line="99"/>
+        <location filename="../form/opt/pages/optionspage.cpp" line="91"/>
+        <location filename="../form/opt/pages/optionspage.cpp" line="100"/>
         <source>Not Installed</source>
         <translation>Не установлен</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/optionspage.cpp" line="284"/>
+        <location filename="../form/opt/pages/optionspage.cpp" line="285"/>
         <source>Are you sure to install the Driver?</source>
         <translation>Установить драйвер?</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/optionspage.cpp" line="289"/>
+        <location filename="../form/opt/pages/optionspage.cpp" line="290"/>
         <source>Are you sure to remove the Driver?</source>
         <translation>Удалить драйвер?</translation>
     </message>
