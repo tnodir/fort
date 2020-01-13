@@ -313,12 +313,15 @@ QString AppListModel::sql() const
 QString AppListModel::sqlBase() const
 {
     return
-            "SELECT t.app_id,"
+            "SELECT"
+            "    t.app_id,"
             "    g.order_index as group_index,"
-            "    t.path, t.use_group_perm,"
+            "    t.path,"
+            "    t.use_group_perm,"
             "    t.blocked,"
             "    (alert.app_id IS NOT NULL) as alerted,"
-            "    t.end_time, t.creat_time"
+            "    t.end_time,"
+            "    t.creat_time"
             "  FROM app t"
             "    JOIN app_group g ON g.app_group_id = t.app_group_id"
             "    LEFT JOIN app_alert alert ON alert.app_id = t.app_id"
@@ -331,10 +334,9 @@ QString AppListModel::sqlOrder() const
     switch (m_sortColumn) {
     case 0: columnsStr = "3"; break;  // Program
     case 1: columnsStr = "2"; break;  // Group
-    case 2: columnsStr = "4"; break;  // Gr.
-    case 3: columnsStr = "5, 6"; break;  // State
-    case 4: columnsStr = "7"; break;  // End Time
-    case 5: columnsStr = "1"; break;  // Creation Time
+    case 2: columnsStr = "5, 6"; break;  // State
+    case 3: columnsStr = "7"; break;  // End Time
+    case 4: columnsStr = "1"; break;  // Creation Time
     }
 
     const QString orderStr = (m_sortOrder == Qt::AscendingOrder)
