@@ -27,8 +27,11 @@ namespace {
 
 bool migrateFunc(SqliteDb *db, int version, void *ctx)
 {
+    Q_UNUSED(db)
+    Q_UNUSED(version)
     Q_UNUSED(ctx)
 
+#if 0
     if (version == 2) {
         // Fix statistics dates to use UTC
         const qint64 unixTime = DateUtil::getUnixTime();
@@ -46,6 +49,7 @@ bool migrateFunc(SqliteDb *db, int version, void *ctx)
             db->executeEx("UPDATE traffic_month SET traf_time = traf_time + ?1;", vars);
         }
     }
+#endif
 
     return true;
 }
@@ -87,8 +91,7 @@ bool StatManager::initialize()
     m_lastTrafHour = m_lastTrafDay = m_lastTrafMonth = 0;
 
     if (!m_sqliteDb->open()) {
-        logCritical() << "File open error:"
-                      << m_sqliteDb->filePath()
+        logCritical() << "File open error:" << m_sqliteDb->filePath()
                       << m_sqliteDb->errorMessage();
         return false;
     }
@@ -96,9 +99,8 @@ bool StatManager::initialize()
     m_sqliteDb->execute(StatSql::sqlPragmas);
 
     if (!m_sqliteDb->migrate(":/stat/migrations", DATABASE_USER_VERSION,
-                             false, false, &migrateFunc)) {
-        logCritical() << "Migration error"
-                      << m_sqliteDb->filePath();
+                             true, true, &migrateFunc)) {
+        logCritical() << "Migration error" << m_sqliteDb->filePath();
         return false;
     }
 

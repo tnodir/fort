@@ -210,6 +210,12 @@ int SqliteDb::userVersion()
     return executeEx("PRAGMA user_version;").toInt();
 }
 
+bool SqliteDb::setUserVersion(int v)
+{
+    const auto sql = QString("PRAGMA user_version = %1;").arg(v);
+    return executeStr(sql);
+}
+
 QString SqliteDb::entityName(const QString &schemaName,
                              const QString &objectName)
 {
@@ -297,38 +303,44 @@ bool SqliteDb::migrate(const QString &sqlDir, int version,
 
     beginTransaction();
 
-    for (int i = userVersion + 1; i <= version; ++i) {
-        const QString filePath = dir.filePath(QString::number(i) + ".sql");
-
-        QFile file(filePath);
-        if (!file.exists())
-            continue;
-
-        if (!file.open(QFile::ReadOnly | QFile::Text)) {
-            dbWarning() << "Cannot open migration file" << filePath
-                        << file.errorString();
-            success = false;
-            break;
-        }
-
-        const QByteArray data = file.readAll();
-        if (data.isEmpty()) {
-            dbWarning() << "Migration file is empty" << filePath;
-            success = false;
-            break;
-        }
+    while (userVersion++ < version) {
+        const QString filePath = dir.filePath(QString("%1.sql").arg(userVersion));
 
         beginSavepoint();
-        if (!execute(data.constData())
-                || !(migrateFunc == nullptr
-                     || migrateFunc(this, i, migrateContext))) {
+
+        QFile file(filePath);
+        if (file.exists()) {
+            if (!file.open(QFile::ReadOnly | QFile::Text)) {
+                dbWarning() << "Cannot open migration file" << filePath
+                            << file.errorString();
+                success = false;
+                break;
+            }
+
+            const QByteArray data = file.readAll();
+            if (data.isEmpty()) {
+                dbWarning() << "Migration file is empty" << filePath;
+                success = false;
+                break;
+            }
+
+            success = execute(data.constData());
+        }
+
+        if (success && migrateFunc != nullptr) {
+            success = migrateFunc(this, userVersion, migrateContext);
+        }
+
+        if (success) {
+            releaseSavepoint();
+        } else {
             dbCritical() << "Migration error:" << filePath << errorMessage();
-            success = false;
             rollbackSavepoint();
             break;
         }
-        releaseSavepoint();
     }
+
+    this->setUserVersion(userVersion);
 
     commitTransaction();
 

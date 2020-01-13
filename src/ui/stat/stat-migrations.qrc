@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/stat">
         <file>migrations/1.sql</file>
-        <file>migrations/2.sql</file>
     </qresource>
 </RCC>

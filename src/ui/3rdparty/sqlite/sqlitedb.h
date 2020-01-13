@@ -58,6 +58,7 @@ public:
     QString errorMessage() const;
 
     int userVersion();
+    bool setUserVersion(int v);
 
     static QString entityName(const QString &schemaName,
                               const QString &objectName);

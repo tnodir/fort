@@ -1,5 +1,3 @@
-PRAGMA user_version = 3;
-
 CREATE TABLE app(
   path TEXT PRIMARY KEY,
   file_descr TEXT,

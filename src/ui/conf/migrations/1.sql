@@ -1,6 +1,4 @@
-PRAGMA user_version = 4;
-
-CREATE TABLE IF NOT EXISTS address_group(
+CREATE TABLE address_group(
   addr_group_id INTEGER PRIMARY KEY,
   order_index INTEGER NOT NULL,
   include_all BOOLEAN NOT NULL,
@@ -9,7 +7,7 @@ CREATE TABLE IF NOT EXISTS address_group(
   exclude_text TEXT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS app_group(
+CREATE TABLE app_group(
   app_group_id INTEGER PRIMARY KEY,
   order_index INTEGER NOT NULL,
   enabled BOOLEAN NOT NULL,
@@ -26,7 +24,7 @@ CREATE TABLE IF NOT EXISTS app_group(
   period_to TEXT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS app(
+CREATE TABLE app(
   app_id INTEGER PRIMARY KEY,
   app_group_id INTEGER NOT NULL DEFAULT 0,
   path TEXT UNIQUE NOT NULL,
@@ -37,16 +35,16 @@ CREATE TABLE IF NOT EXISTS app(
 );
 
 CREATE INDEX idx_app_app_group_id ON app(app_group_id);
-CREATE INDEX idx_app_path ON app(path);
+CREATE UNIQUE INDEX uk_app_path ON app(path);
 CREATE INDEX idx_app_end_time ON app(end_time);
 
-CREATE TABLE IF NOT EXISTS app_alert(
+CREATE TABLE app_alert(
   app_id INTEGER PRIMARY KEY
 );
 
-CREATE TABLE IF NOT EXISTS task(
+CREATE TABLE task(
   task_id INTEGER PRIMARY KEY,
-  name TEXT UNIQUE NOT NULL,
+  name TEXT NOT NULL,
   enabled BOOLEAN NOT NULL,
   interval_hours INTEGER NOT NULL,
   last_run INTEGER NOT NULL,
