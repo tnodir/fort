@@ -28,11 +28,6 @@ QT_FORWARD_DECLARE_CLASS(WidgetWindowStateWatcher)
 class FortManager : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(FortSettings *settings READ settings CONSTANT)
-    Q_PROPERTY(FirewallConf *conf READ conf NOTIFY confChanged)
-    Q_PROPERTY(FirewallConf *confToEdit READ confToEdit NOTIFY confToEditChanged)
-    Q_PROPERTY(LogManager *logManager READ logManager CONSTANT)
-    Q_PROPERTY(TaskManager *taskManager READ taskManager CONSTANT)
 
 public:
     explicit FortManager(FortSettings *settings,
@@ -40,19 +35,17 @@ public:
     ~FortManager() override;
     CLASS_DELETE_COPY_MOVE(FortManager)
 
-    FortSettings *settings() const { return m_settings; }
-    FirewallConf *conf() const { return m_conf; }
-    FirewallConf *confToEdit() const { return m_confToEdit; }
+    FirewallConf *conf() const;
+    FirewallConf *confToEdit() const;
 
+    FortSettings *settings() const { return m_settings; }
     ConfManager *confManager() const { return m_confManager; }
     DriverManager *driverManager() const { return m_driverManager; }
+    EnvManager *envManager() const { return m_envManager; }
     LogManager *logManager() const { return m_logManager; }
     TaskManager *taskManager() const { return m_taskManager; }
 
 signals:
-    void confChanged();
-    void confToEditChanged();
-
     void afterSaveProgWindowState();
     void afterRestoreProgWindowState();
 
@@ -100,8 +93,6 @@ private slots:
     void saveTrayFlags();
 
 private:
-    void setConfToEdit(FirewallConf *conf);
-
     void setupThreadPool();
 
     bool setupDriver();
@@ -175,16 +166,13 @@ private:
     GraphWindow *m_graphWindow = nullptr;
     WidgetWindowStateWatcher *m_graphWindowState = nullptr;
 
-    FortSettings *m_settings = nullptr;
-    FirewallConf *m_conf = nullptr;
-    FirewallConf *m_confToEdit = nullptr;
-
     QAction *m_graphWindowAction = nullptr;
     QAction *m_filterEnabledAction = nullptr;
     QAction *m_stopTrafficAction = nullptr;
     QAction *m_stopInetTrafficAction = nullptr;
     QList<QAction *> m_appGroupActions;
 
+    FortSettings *m_settings = nullptr;
     QuotaManager *m_quotaManager = nullptr;
     StatManager *m_statManager = nullptr;
     DriverManager *m_driverManager = nullptr;

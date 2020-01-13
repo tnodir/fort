@@ -7,6 +7,7 @@
 
 #include "../driver/drivermanager.h"
 #include "../fortcommon.h"
+#include "../fortmanager.h"
 #include "../fortsettings.h"
 #include "../task/taskinfo.h"
 #include "../util/dateutil.h"
@@ -46,18 +47,6 @@ const char * const sqlSelectAppGroups =
         "    speed_limit_in, speed_limit_out,"
         "    name, block_text, allow_text,"
         "    period_from, period_to"
-        "  FROM app_group"
-        "  ORDER BY order_index;"
-        ;
-
-const char * const sqlSelectAppGroupIdByIndex =
-        "SELECT app_group_id"
-        "  FROM app_group"
-        "  WHERE order_index = ?1;"
-        ;
-
-const char * const sqlSelectAppGroupNames =
-        "SELECT name"
         "  FROM app_group"
         "  ORDER BY order_index;"
         ;
@@ -138,7 +127,7 @@ const char * const sqlSelectEndAppsCount =
         ;
 
 const char * const sqlSelectEndedApps =
-        "SELECT t.app_id,"
+        "SELECT t.app_id, t.app_group_id,"
         "    g.order_index as group_index,"
         "    t.path, t.use_group_perm"
         "  FROM app t"
@@ -181,15 +170,12 @@ const char * const sqlUpdateAppResetGroup =
 }
 
 ConfManager::ConfManager(const QString &filePath,
-                         DriverManager *driverManager,
-                         EnvManager *envManager,
-                         FortSettings *fortSettings,
+                         FortManager *fortManager,
                          QObject *parent) :
     QObject(parent),
-    m_driverManager(driverManager),
-    m_envManager(envManager),
-    m_fortSettings(fortSettings),
-    m_sqliteDb(new SqliteDb(filePath))
+    m_fortManager(fortManager),
+    m_sqliteDb(new SqliteDb(filePath)),
+    m_conf(new FirewallConf(this))
 {
     m_appEndTimer.setInterval(5 * 60 * 1000);  // 5 minutes
     connect(&m_appEndTimer, &QTimer::timeout, this, &ConfManager::checkAppEndTimes);
@@ -198,6 +184,21 @@ ConfManager::ConfManager(const QString &filePath,
 ConfManager::~ConfManager()
 {
     delete m_sqliteDb;
+}
+
+DriverManager *ConfManager::driverManager() const
+{
+    return fortManager()->driverManager();
+}
+
+EnvManager *ConfManager::envManager() const
+{
+    return fortManager()->envManager();
+}
+
+FortSettings *ConfManager::settings() const
+{
+    return fortManager()->settings();
 }
 
 void ConfManager::setErrorMessage(const QString &errorMessage)
@@ -231,8 +232,23 @@ bool ConfManager::initialize()
     return true;
 }
 
+void ConfManager::setConfToEdit(FirewallConf *conf)
+{
+    if (m_confToEdit == conf)
+        return;
+
+    if (m_confToEdit != nullptr
+            && m_confToEdit != m_conf) {
+        m_confToEdit->deleteLater();
+    }
+
+    m_confToEdit = conf;
+
+    emit isEditingChanged();
+}
+
 FirewallConf *ConfManager::cloneConf(const FirewallConf &conf,
-                                     QObject *parent)
+                                     QObject *parent) const
 {
     auto newConf = new FirewallConf(parent);
 
@@ -260,20 +276,31 @@ bool ConfManager::load(FirewallConf &conf)
         setupDefault(conf);
     }
 
-    m_fortSettings->readConfIni(conf);
+    settings()->readConfIni(conf);
 
     return true;
 }
 
-bool ConfManager::save(const FirewallConf &conf, bool onlyFlags)
+bool ConfManager::save(FirewallConf &newConf, bool onlyFlags)
 {
-    if (!onlyFlags && !saveToDb(conf))
+    if (!onlyFlags && !saveToDb(newConf))
         return false;
 
-    if (!m_fortSettings->writeConfIni(conf)) {
-        setErrorMessage(m_fortSettings->errorMessage());
+    if (!settings()->writeConfIni(newConf)) {
+        setErrorMessage(settings()->errorMessage());
         return false;
     }
+
+    if (m_conf != &newConf) {
+        m_conf->deleteLater();
+        m_conf = &newConf;
+
+        if (m_confToEdit == m_conf) {
+            setConfToEdit(nullptr);
+        }
+    }
+
+    emit confSaved(onlyFlags);
 
     return true;
 }
@@ -309,63 +336,8 @@ bool ConfManager::saveTasks(const QList<TaskInfo *> &taskInfos)
     return ok;
 }
 
-int ConfManager::appCount(const QString &sql)
-{
-    SqliteStmt stmt;
-    if (!stmt.prepare(m_sqliteDb->db(), sql.toLatin1())
-            || stmt.step() != SqliteStmt::StepRow)
-        return 0;
-
-    return stmt.columnInt(0);
-}
-
-bool ConfManager::getAppByIndex(bool &useGroupPerm, bool &blocked, bool &alerted,
-                                qint64 &appId, int &groupIndex, QString &appPath,
-                                QDateTime &endTime, QDateTime &creatTime,
-                                const QString &sql, const QVariantList &vars)
-{
-    SqliteStmt stmt;
-    if (!stmt.prepare(m_sqliteDb->db(), sql.toLatin1())
-            || !stmt.bindVars(vars))
-        return false;
-
-    if (stmt.step() != SqliteStmt::StepRow)
-        return false;
-
-    appId = stmt.columnInt64(0);
-    groupIndex = stmt.columnInt(1);
-    appPath = stmt.columnText(2);
-    useGroupPerm = stmt.columnBool(3);
-    blocked = stmt.columnBool(4);
-    alerted = stmt.columnBool(5);
-    endTime = stmt.columnDateTime(6);
-    creatTime = stmt.columnDateTime(7);
-
-    return true;
-}
-
-qint64 ConfManager::appGroupIdByIndex(int index)
-{
-    return m_sqliteDb->executeEx(sqlSelectAppGroupIdByIndex, {index}).toLongLong();
-}
-
-QStringList ConfManager::appGroupNames()
-{
-    QStringList list;
-
-    SqliteStmt stmt;
-    if (stmt.prepare(m_sqliteDb->db(), sqlSelectAppGroupNames)) {
-        while (stmt.step() == SqliteStmt::StepRow) {
-            const auto name = stmt.columnText();
-            list.append(name);
-        }
-    }
-
-    return list;
-}
-
 bool ConfManager::addApp(const QString &appPath, const QDateTime &endTime,
-                         int groupIndex, bool useGroupPerm,
+                         qint64 groupId, bool useGroupPerm,
                          bool blocked, bool alerted)
 {
     bool ok = false;
@@ -373,7 +345,7 @@ bool ConfManager::addApp(const QString &appPath, const QDateTime &endTime,
     m_sqliteDb->beginTransaction();
 
     const QVariantList vars = QVariantList()
-            << appGroupIdByIndex(groupIndex)
+            << groupId
             << appPath
             << useGroupPerm
             << blocked
@@ -431,7 +403,7 @@ end:
 }
 
 bool ConfManager::updateApp(qint64 appId, const QDateTime &endTime,
-                            int groupIndex, bool useGroupPerm, bool blocked)
+                            qint64 groupId, bool useGroupPerm, bool blocked)
 {
     bool ok = false;
 
@@ -439,7 +411,7 @@ bool ConfManager::updateApp(qint64 appId, const QDateTime &endTime,
 
     const QVariantList vars = QVariantList()
             << appId
-            << appGroupIdByIndex(groupIndex)
+            << groupId
             << useGroupPerm
             << blocked
             << (!endTime.isNull() ? endTime : QVariant())
@@ -486,12 +458,7 @@ bool ConfManager::walkApps(std::function<walkAppsCallback> func)
 
 int ConfManager::appEndsCount()
 {
-    SqliteStmt stmt;
-    if (!stmt.prepare(m_sqliteDb->db(), sqlSelectEndAppsCount)
-            || stmt.step() != SqliteStmt::StepRow)
-        return 0;
-
-    return stmt.columnInt(0);
+    return sqliteDb()->executeEx(sqlSelectEndAppsCount).toInt();
 }
 
 void ConfManager::updateAppEndTimes()
@@ -506,12 +473,14 @@ void ConfManager::updateAppEndTimes()
 
     while (stmt.step() == SqliteStmt::StepRow) {
         const qint64 appId = stmt.columnInt64(0);
-        const int groupIndex = stmt.columnInt(1);
-        const QString appPath = stmt.columnText(2);
-        const bool useGroupPerm = stmt.columnBool(3);
+        const qint64 groupId = stmt.columnInt64(1);
+        const int groupIndex = stmt.columnInt(2);
+        const QString appPath = stmt.columnText(3);
+        const bool useGroupPerm = stmt.columnBool(4);
 
-        if (updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, true, false)
-                && updateApp(appId, QDateTime(), groupIndex, useGroupPerm, true)) {
+        if (updateApp(appId, QDateTime(), groupId, useGroupPerm, true)) {
+            updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, true, false);
+
             isAppEndTimesUpdated = true;
         }
     }
@@ -530,23 +499,23 @@ void ConfManager::checkAppEndTimes()
     }
 }
 
-bool ConfManager::updateDriverConf(const FirewallConf &conf, bool onlyFlags)
+bool ConfManager::updateDriverConf(bool onlyFlags)
 {
     return onlyFlags
-            ? m_driverManager->writeConfFlags(conf)
-            : m_driverManager->writeConf(conf, *this, *m_envManager);
+            ? driverManager()->writeConfFlags(*conf())
+            : driverManager()->writeConf(*conf(), *this, *envManager());
 }
 
 bool ConfManager::updateDriverDeleteApp(const QString &appPath)
 {
-    return m_driverManager->writeApp(appPath, 0, false, false, false, true);
+    return driverManager()->writeApp(appPath, 0, false, false, false, true);
 }
 
 bool ConfManager::updateDriverUpdateApp(const QString &appPath,
                                         int groupIndex, bool useGroupPerm,
                                         bool blocked, bool alerted)
 {
-    return m_driverManager->writeApp(appPath, groupIndex, useGroupPerm,
+    return driverManager()->writeApp(appPath, groupIndex, useGroupPerm,
                                      blocked, alerted, false);
 }
 
@@ -707,10 +676,6 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
     }
 
     m_sqliteDb->endTransaction(ok);
-
-    if (ok) {
-        emit confSaved();
-    }
 
     return ok;
 }

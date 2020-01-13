@@ -14,6 +14,7 @@ QT_FORWARD_DECLARE_CLASS(QRadioButton)
 QT_FORWARD_DECLARE_CLASS(AppInfoCache)
 QT_FORWARD_DECLARE_CLASS(AppListModel)
 QT_FORWARD_DECLARE_CLASS(CheckSpinCombo)
+QT_FORWARD_DECLARE_CLASS(ConfManager)
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
 QT_FORWARD_DECLARE_CLASS(FortManager)
 QT_FORWARD_DECLARE_CLASS(FortSettings)
@@ -68,6 +69,7 @@ private:
     ProgramsController *ctrl() const { return m_ctrl; }
     FortManager *fortManager() const;
     FortSettings *settings() const;
+    ConfManager *confManager() const;
     FirewallConf *conf() const;
     AppListModel *appListModel() const { return m_appListModel; }
     AppInfoCache *appInfoCache() const;

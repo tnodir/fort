@@ -1,5 +1,6 @@
 #include "programscontroller.h"
 
+#include "../../conf/confmanager.h"
 #include "../../fortmanager.h"
 #include "../../log/logmanager.h"
 #include "../../translationmanager.h"
@@ -18,9 +19,14 @@ FortSettings *ProgramsController::settings() const
     return fortManager()->settings();
 }
 
+ConfManager *ProgramsController::confManager() const
+{
+    return fortManager()->confManager();
+}
+
 FirewallConf *ProgramsController::conf() const
 {
-    return fortManager()->conf();
+    return confManager()->conf();
 }
 
 AppListModel *ProgramsController::appListModel() const

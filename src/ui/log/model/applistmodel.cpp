@@ -2,9 +2,15 @@
 
 #include <QIcon>
 
+#include <sqlite/sqlitedb.h>
+#include <sqlite/sqlitestmt.h>
+
+#include "../../conf/appgroup.h"
 #include "../../conf/confmanager.h"
+#include "../../conf/firewallconf.h"
 #include "../../util/app/appinfocache.h"
 #include "../../util/fileutil.h"
+#include "../../util/guiutil.h"
 #include "../../util/net/netutil.h"
 #include "../logentryblocked.h"
 
@@ -15,7 +21,16 @@ AppListModel::AppListModel(ConfManager *confManager,
     TableItemModel(parent),
     m_confManager(confManager)
 {
-    connect(m_confManager, &ConfManager::appEndTimesUpdated, this, &AppListModel::refresh);
+}
+
+FirewallConf *AppListModel::conf() const
+{
+    return confManager()->conf();
+}
+
+SqliteDb *AppListModel::sqliteDb() const
+{
+    return confManager()->sqliteDb();
 }
 
 void AppListModel::setAppInfoCache(AppInfoCache *v)
@@ -27,14 +42,8 @@ void AppListModel::setAppInfoCache(AppInfoCache *v)
 
 void AppListModel::initialize()
 {
-    if (appGroupNames().isEmpty()) {
-        updateAppGroupNames();
-    }
-
-    connect(m_confManager, &ConfManager::confSaved, this, [&] {
-        updateAppGroupNames();
-        reset();
-    });
+    connect(confManager(), &ConfManager::confSaved, this, &AppListModel::reset);
+    connect(confManager(), &ConfManager::appEndTimesUpdated, this, &AppListModel::refresh);
 }
 
 void AppListModel::addLogEntry(const LogEntryBlocked &logEntry)
@@ -47,7 +56,10 @@ void AppListModel::addLogEntry(const LogEntryBlocked &logEntry)
             + ':' + QString::number(logEntry.port());
 #endif
 
-    if (confManager()->addApp(appPath, QDateTime(), 0, true, true, true)) {
+    const auto groupId = appGroupAt(0)->id();
+
+    if (confManager()->addApp(appPath, QDateTime(),
+                              groupId, true, true, true)) {
         reset();
     }
 }
@@ -57,7 +69,7 @@ int AppListModel::rowCount(const QModelIndex &parent) const
     Q_UNUSED(parent)
 
     if (m_appCount < 0) {
-        m_appCount = confManager()->appCount(sqlCount());
+        m_appCount = sqliteDb()->executeEx(sqlCount().toLatin1()).toInt();
     }
 
     return m_appCount;
@@ -65,7 +77,7 @@ int AppListModel::rowCount(const QModelIndex &parent) const
 
 int AppListModel::columnCount(const QModelIndex &parent) const
 {
-    return parent.isValid() ? 0 : 6;
+    return parent.isValid() ? 0 : 5;
 }
 
 QVariant AppListModel::headerData(int section, Qt::Orientation orientation,
@@ -77,10 +89,9 @@ QVariant AppListModel::headerData(int section, Qt::Orientation orientation,
             switch (section) {
             case 0: return tr("Program");
             case 1: return tr("Group");
-            case 2: return tr("Gr.");
-            case 3: return tr("State");
-            case 4: return tr("End Time");
-            case 5: return tr("Creation Time");
+            case 2: return tr("State");
+            case 3: return tr("End Time");
+            case 4: return tr("Creation Time");
             }
             break;
         }
@@ -101,22 +112,22 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
         const int row = index.row();
         const int column = index.column();
 
-        updateRowCache(row);
+        const auto appRow = appRowAt(row);
 
         switch (column) {
         case 0: {
-            const auto appInfo = appInfoCache()->appInfo(m_rowCache.appPath);
+            const auto appInfo = appInfoCache()->appInfo(appRow.appPath);
             if (!appInfo.fileDescription.isEmpty()) {
                 return appInfo.fileDescription;
             }
 
-            return FileUtil::fileName(m_rowCache.appPath);
+            return FileUtil::fileName(appRow.appPath);
         }
-        case 1: return appGroupNameByIndex(m_rowCache.groupIndex);
-        case 3: return appStateToString(m_rowCache.state);
-        case 4: return m_rowCache.endTime.isValid()
-                    ? m_rowCache.endTime : QVariant();
-        case 5: return m_rowCache.creatTime;
+        case 1: return appGroupAt(appRow.groupIndex)->name();
+        case 2: return appStateToString(appRow.state);
+        case 3: return appRow.endTime.isValid()
+                    ? appRow.endTime : QVariant();
+        case 4: return appRow.creatTime;
         }
 
         break;
@@ -127,11 +138,11 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
         const int row = index.row();
         const int column = index.column();
 
-        updateRowCache(row);
+        const auto appRow = appRowAt(row);
 
         switch (column) {
         case 0: {
-            const auto appPath = m_rowCache.appPath;
+            const auto appPath = appRow.appPath;
             const auto appInfo = appInfoCache()->appInfo(appPath);
             const auto appIcon = appInfoCache()->appIcon(appInfo);
             if (!appIcon.isNull()) {
@@ -140,14 +151,12 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
 
             return QIcon(":/images/application-window-96.png");
         }
-        case 3: {
-            switch (m_rowCache.state) {
-            case AppAlert:
-                return QIcon(":/images/error.png");
-            case AppBlock:
-                return QIcon(":/images/stop.png");
-            case AppAllow:
-                return QIcon(":/images/arrow_switch.png");
+        case 2: {
+            QString iconPath;
+            switch (appRow.state) {
+            case AppAlert: return QIcon(":/images/error.png");
+            case AppBlock: return QIcon(":/images/stop.png");
+            case AppAllow: return QIcon(":/images/arrow_switch.png");
             }
         }
         }
@@ -159,18 +168,8 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
     case Qt::TextAlignmentRole: {
         const int column = index.column();
 
-        if (column >= 1 && column <= 3) {
+        if (column >= 1 && column <= 2) {
             return int(Qt::AlignHCenter | Qt::AlignVCenter);
-        }
-
-        break;
-    }
-
-    // Check State
-    case Qt::CheckStateRole: {
-        if (index.column() == 2) {
-            updateRowCache(index.row());
-            return m_rowCache.useGroupPerm;
         }
 
         break;
@@ -178,6 +177,22 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
     }
 
     return QVariant();
+}
+
+Qt::ItemFlags AppListModel::flags(const QModelIndex &index) const
+{
+    auto flags = TableItemModel::flags(index);
+
+    if ((flags & Qt::ItemIsEnabled)
+            && index.column() == 2) {
+        const auto appRow = appRowAt(index.row());
+        if (appRow.useGroupPerm
+                && !appGroupAt(appRow.groupIndex)->enabled()) {
+            flags ^= Qt::ItemIsEnabled;
+        }
+    }
+
+    return flags;
 }
 
 void AppListModel::sort(int column, Qt::SortOrder order)
@@ -190,25 +205,20 @@ void AppListModel::sort(int column, Qt::SortOrder order)
     }
 }
 
-QString AppListModel::appPathByRow(int row) const
+const AppRow &AppListModel::appRowAt(int row) const
 {
     updateRowCache(row);
 
-    return m_rowCache.appPath;
-}
-
-AppRow AppListModel::appRow(int row) const
-{
-    updateRowCache(row);
-
-    return m_rowCache;
+    return m_appRow;
 }
 
 bool AppListModel::addApp(const QString &appPath, int groupIndex,
                           bool useGroupPerm, bool blocked,
                           const QDateTime &endTime)
 {
-    if (confManager()->addApp(appPath, endTime, groupIndex,
+    const auto groupId = appGroupAt(groupIndex)->id();
+
+    if (confManager()->addApp(appPath, endTime, groupId,
                               useGroupPerm, blocked, false)) {
         reset();
 
@@ -222,7 +232,9 @@ bool AppListModel::updateApp(qint64 appId, const QString &appPath,
                              int groupIndex, bool useGroupPerm, bool blocked,
                              const QDateTime &endTime)
 {
-    if (confManager()->updateApp(appId, endTime, groupIndex,
+    const auto groupId = appGroupAt(groupIndex)->id();
+
+    if (confManager()->updateApp(appId, endTime, groupId,
                                  useGroupPerm, blocked)) {
         refresh();
 
@@ -261,24 +273,30 @@ void AppListModel::refresh()
 void AppListModel::invalidateRowCache()
 {
     m_appCount = -1;
-    m_rowCache.invalidate();
+    m_appRow.invalidate();
 }
 
 void AppListModel::updateRowCache(int row) const
 {
-    if (m_rowCache.isValid(row))
+    if (m_appRow.isValid(row))
         return;
 
-    bool blocked = false;
-    bool alerted = false;
+    SqliteStmt stmt;
+    if (!(sqliteDb()->prepare(stmt, sql().toLatin1(), {row})
+          && stmt.step() == SqliteStmt::StepRow))
+        return;
 
-    if (m_confManager->getAppByIndex(m_rowCache.useGroupPerm, blocked, alerted,
-                                     m_rowCache.appId, m_rowCache.groupIndex,
-                                     m_rowCache.appPath, m_rowCache.endTime,
-                                     m_rowCache.creatTime, sql(), {row})) {
-        m_rowCache.state = alerted ? AppAlert : (blocked ? AppBlock : AppAllow);
-        m_rowCache.row = row;
-    }
+    m_appRow.appId = stmt.columnInt64(0);
+    m_appRow.groupIndex = stmt.columnInt(1);
+    m_appRow.appPath = stmt.columnText(2);
+    m_appRow.useGroupPerm = stmt.columnBool(3);
+    const bool blocked = stmt.columnBool(4);
+    const bool alerted = stmt.columnBool(5);
+    m_appRow.endTime = stmt.columnDateTime(6);
+    m_appRow.creatTime = stmt.columnDateTime(7);
+
+    m_appRow.state = alerted ? AppAlert : (blocked ? AppBlock : AppAllow);
+    m_appRow.row = row;
 }
 
 QString AppListModel::sqlCount() const
@@ -297,7 +315,8 @@ QString AppListModel::sqlBase() const
     return
             "SELECT t.app_id,"
             "    g.order_index as group_index,"
-            "    t.path, t.use_group_perm, t.blocked,"
+            "    t.path, t.use_group_perm,"
+            "    t.blocked,"
             "    (alert.app_id IS NOT NULL) as alerted,"
             "    t.end_time, t.creat_time"
             "  FROM app t"
@@ -324,17 +343,23 @@ QString AppListModel::sqlOrder() const
     return QString(" ORDER BY %1 %2").arg(columnsStr, orderStr);
 }
 
-void AppListModel::updateAppGroupNames()
+const AppGroup *AppListModel::appGroupAt(int index) const
 {
-    m_appGroupNames = confManager()->appGroupNames();
+    const auto appGroups = conf()->appGroups();
+    if (index < 0 || index >= appGroups.size()) {
+        static const AppGroup g_nullAppGroup;
+        return &g_nullAppGroup;
+    }
+    return appGroups.at(index);
 }
 
-QString AppListModel::appGroupNameByIndex(int groupIndex) const
+QStringList AppListModel::appGroupNames() const
 {
-    if (groupIndex < 0 || groupIndex >= m_appGroupNames.size())
-        return QString();
-
-    return m_appGroupNames.at(groupIndex);
+    QStringList list;
+    for (const auto &appGroup : conf()->appGroups()) {
+        list.append(appGroup->name());
+    }
+    return list;
 }
 
 QString AppListModel::appStateToString(AppState state) const

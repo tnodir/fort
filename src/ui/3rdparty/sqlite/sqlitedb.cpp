@@ -117,8 +117,7 @@ QVariant SqliteDb::executeEx(const char *sql,
     SqliteStmt stmt;
     bool success = false;
 
-    if (stmt.prepare(db(), sql)
-            && stmt.bindVars(vars)) {
+    if (prepare(stmt, sql, vars)) {
         const auto stepRes = stmt.step();
         success = (stepRes != SqliteStmt::StepError);
 
@@ -138,6 +137,13 @@ QVariant SqliteDb::executeEx(const char *sql,
     const int listSize = list.size();
     return (listSize == 0) ? QVariant()
                            : (listSize == 1 ? list.at(0) : list);
+}
+
+bool SqliteDb::prepare(SqliteStmt &stmt, const char *sql,
+                       const QVariantList &vars)
+{
+    return stmt.prepare(db(), sql)
+            && stmt.bindVars(vars);
 }
 
 qint64 SqliteDb::lastInsertRowid() const

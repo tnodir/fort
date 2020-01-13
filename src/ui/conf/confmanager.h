@@ -10,6 +10,7 @@
 QT_FORWARD_DECLARE_CLASS(DriverManager)
 QT_FORWARD_DECLARE_CLASS(EnvManager)
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
+QT_FORWARD_DECLARE_CLASS(FortManager)
 QT_FORWARD_DECLARE_CLASS(FortSettings)
 QT_FORWARD_DECLARE_CLASS(SqliteDb)
 QT_FORWARD_DECLARE_CLASS(SqliteStmt)
@@ -22,38 +23,40 @@ class ConfManager : public QObject, public ConfAppsWalker
 
 public:
     explicit ConfManager(const QString &filePath,
-                         DriverManager *driverManager,
-                         EnvManager *envManager,
-                         FortSettings *fortSettings,
+                         FortManager *fortManager,
                          QObject *parent = nullptr);
     ~ConfManager() override;
     CLASS_DELETE_COPY_MOVE(ConfManager)
 
+    FortManager *fortManager() const { return m_fortManager; }
+    DriverManager *driverManager() const;
+    EnvManager *envManager() const;
+    FortSettings *settings() const;
+    SqliteDb *sqliteDb() const { return m_sqliteDb; }
+
+    bool isEditing() const { return confToEdit() != nullptr; }
+
+    FirewallConf *conf() const { return m_conf; }
+    FirewallConf *confToEdit() const { return m_confToEdit; }
+
     bool initialize();
 
+    void setConfToEdit(FirewallConf *conf);
     FirewallConf *cloneConf(const FirewallConf &conf,
-                            QObject *parent = nullptr);
+                            QObject *parent = nullptr) const;
 
     bool load(FirewallConf &conf);
-    bool save(const FirewallConf &conf, bool onlyFlags = false);
+    bool save(FirewallConf &newConf, bool onlyFlags = false);
 
     bool loadTasks(const QList<TaskInfo *> &taskInfos);
     bool saveTasks(const QList<TaskInfo *> &taskInfos);
 
-    int appCount(const QString &sql);
-    bool getAppByIndex(bool &useGroupPerm, bool &blocked, bool &alerted,
-                       qint64 &appId, int &groupIndex, QString &appPath,
-                       QDateTime &endTime, QDateTime &creatTime,
-                       const QString &sql, const QVariantList &vars);
-    qint64 appGroupIdByIndex(int index = 0);
-    QStringList appGroupNames();
-
     bool addApp(const QString &appPath, const QDateTime &endTime,
-                int groupIndex, bool useGroupPerm,
+                qint64 groupId, bool useGroupPerm,
                 bool blocked, bool alerted);
     bool deleteApp(qint64 appId);
     bool updateApp(qint64 appId, const QDateTime &endTime,
-                   int groupIndex, bool useGroupPerm, bool blocked);
+                   qint64 groupId, bool useGroupPerm, bool blocked);
 
     bool walkApps(std::function<walkAppsCallback> func) override;
 
@@ -61,7 +64,7 @@ public:
     void updateAppEndTimes();
     void checkAppEndTimes();
 
-    bool updateDriverConf(const FirewallConf &conf, bool onlyFlags = false);
+    bool updateDriverConf(bool onlyFlags = false);
     bool updateDriverDeleteApp(const QString &appPath);
     bool updateDriverUpdateApp(const QString &appPath,
                                int groupIndex, bool useGroupPerm,
@@ -71,7 +74,8 @@ public:
 
 signals:
     void errorMessageChanged();
-    void confSaved();
+    void isEditingChanged();
+    void confSaved(bool onlyFlags);
     void appEndTimesUpdated();
 
 private:
@@ -88,10 +92,11 @@ private:
 private:
     QString m_errorMessage;
 
-    DriverManager *m_driverManager = nullptr;
-    EnvManager *m_envManager = nullptr;
-    FortSettings *m_fortSettings = nullptr;
+    FortManager *m_fortManager = nullptr;
     SqliteDb *m_sqliteDb = nullptr;
+
+    FirewallConf *m_conf = nullptr;
+    FirewallConf *m_confToEdit = nullptr;
 
     QTimer m_appEndTimer;
 };

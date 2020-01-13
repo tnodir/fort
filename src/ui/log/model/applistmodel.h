@@ -5,9 +5,12 @@
 
 #include "../util/model/tableitemmodel.h"
 
+QT_FORWARD_DECLARE_CLASS(AppGroup)
 QT_FORWARD_DECLARE_CLASS(AppInfoCache)
 QT_FORWARD_DECLARE_CLASS(ConfManager)
+QT_FORWARD_DECLARE_CLASS(FirewallConf)
 QT_FORWARD_DECLARE_CLASS(LogEntryBlocked)
+QT_FORWARD_DECLARE_CLASS(SqliteDb)
 
 enum AppState {
     AppAlert = 0,
@@ -46,6 +49,8 @@ public:
                           QObject *parent = nullptr);
 
     ConfManager *confManager() const { return m_confManager; }
+    FirewallConf *conf() const;
+    SqliteDb *sqliteDb() const;
 
     AppInfoCache *appInfoCache() const { return m_appInfoCache; }
     void setAppInfoCache(AppInfoCache *v);
@@ -61,10 +66,11 @@ public:
                         int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
+
     void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
 
-    QString appPathByRow(int row) const;
-    AppRow appRow(int row) const;
+    const AppRow &appRowAt(int row) const;
 
     bool addApp(const QString &appPath, int groupIndex,
                 bool useGroupPerm, bool blocked,
@@ -74,8 +80,8 @@ public:
                    const QDateTime &endTime = QDateTime());
     void deleteApp(qint64 appId, const QString &appPath, int row);
 
-    QStringList appGroupNames() const { return m_appGroupNames; }
-    QString appGroupNameByIndex(int groupIndex) const;
+    const AppGroup *appGroupAt(int index) const;
+    QStringList appGroupNames() const;
 
 public slots:
     void reset();
@@ -90,8 +96,6 @@ private:
     QString sqlBase() const;
     QString sqlOrder() const;
 
-    void updateAppGroupNames();
-
     QString appStateToString(AppState state) const;
 
 private:
@@ -100,12 +104,10 @@ private:
 
     mutable int m_appCount = -1;
 
-    QStringList m_appGroupNames;
-
     ConfManager *m_confManager = nullptr;
     AppInfoCache *m_appInfoCache = nullptr;
 
-    mutable AppRow m_rowCache;
+    mutable AppRow m_appRow;
 };
 
 #endif // APPLISTMODEL_H

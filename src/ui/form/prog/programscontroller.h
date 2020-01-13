@@ -4,6 +4,7 @@
 #include <QObject>
 
 QT_FORWARD_DECLARE_CLASS(AppListModel)
+QT_FORWARD_DECLARE_CLASS(ConfManager)
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
 QT_FORWARD_DECLARE_CLASS(FortManager)
 QT_FORWARD_DECLARE_CLASS(FortSettings)
@@ -19,6 +20,7 @@ public:
 
     FortManager *fortManager() const { return m_fortManager; }
     FortSettings *settings() const;
+    ConfManager *confManager() const;
     FirewallConf *conf() const;
     AppListModel *appListModel() const;
     TranslationManager *translationManager() const;

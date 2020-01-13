@@ -6,8 +6,10 @@
 
 #include "../../util/classhelpers.h"
 
-QT_FORWARD_DECLARE_CLASS(SqliteDb)
 QT_FORWARD_DECLARE_STRUCT(sqlite3)
+
+QT_FORWARD_DECLARE_CLASS(SqliteDb)
+QT_FORWARD_DECLARE_CLASS(SqliteStmt)
 
 using SQLITEDB_MIGRATE_FUNC = bool (*)(SqliteDb *db, int version, void *context);
 
@@ -37,6 +39,9 @@ public:
                        const QVariantList &vars = QVariantList(),
                        int resultCount = 1,
                        bool *ok = nullptr);
+
+    bool prepare(SqliteStmt &stmt, const char *sql,
+                 const QVariantList &vars = QVariantList());
 
     qint64 lastInsertRowid() const;
     int changes() const;

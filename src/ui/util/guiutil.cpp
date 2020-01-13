@@ -44,8 +44,8 @@ QIcon GuiUtil::overlayIcon(const QString &basePath,
 
     // Paint the overlay
     {
-        QPainter painter(&base);
-        painter.drawPixmap(rect, overlay);
+        QPainter p(&base);
+        p.drawPixmap(rect, overlay);
     }
 
     return base;

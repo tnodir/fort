@@ -32,7 +32,7 @@
 
 namespace {
 
-#define APPS_HEADER_VERSION 1
+#define APPS_HEADER_VERSION 2
 
 const ValuesList appBlockInHourValues = {
     3, 1, 6, 12, 24, 24 * 7, 24 * 30
@@ -356,7 +356,9 @@ void ProgramsWindow::setupComboAppGroups()
 {
     m_comboAppGroup = new QComboBox();
 
-    const auto refreshComboAppGroups = [&] {
+    const auto refreshComboAppGroups = [&](bool onlyFlags = false) {
+        if (onlyFlags) return;
+
         m_comboAppGroup->clear();
         m_comboAppGroup->addItems(appListModel()->appGroupNames());
         m_comboAppGroup->setCurrentIndex(0);
@@ -364,7 +366,7 @@ void ProgramsWindow::setupComboAppGroups()
 
     refreshComboAppGroups();
 
-    connect(fortManager(), &FortManager::confChanged, this, refreshComboAppGroups);
+    connect(confManager(), &ConfManager::confSaved, this, refreshComboAppGroups);
 }
 
 void ProgramsWindow::setupLogBlocked()
@@ -401,18 +403,16 @@ void ProgramsWindow::setupTableAppsHeader()
 
     header->setSectionResizeMode(0, QHeaderView::Interactive);
     header->setSectionResizeMode(1, QHeaderView::Interactive);
-    header->setSectionResizeMode(2, QHeaderView::Fixed);
-    header->setSectionResizeMode(3, QHeaderView::Interactive);
+    header->setSectionResizeMode(2, QHeaderView::Interactive);
+    header->setSectionResizeMode(3, QHeaderView::Stretch);
     header->setSectionResizeMode(4, QHeaderView::Stretch);
-    header->setSectionResizeMode(5, QHeaderView::Stretch);
 
-    header->resizeSection(0, 500);
-    header->resizeSection(2, 20);
-    header->resizeSection(3, 80);
+    header->resizeSection(0, 540);
+    header->resizeSection(2, 100);
 
     header->setSectionsClickable(true);
     header->setSortIndicatorShown(true);
-    header->setSortIndicator(5, Qt::DescendingOrder);
+    header->setSortIndicator(4, Qt::DescendingOrder);
 }
 
 void ProgramsWindow::setupAppInfoRow()
@@ -493,7 +493,7 @@ void ProgramsWindow::updateAppEditForm(bool editCurrentApp)
         const auto appIndex = appListCurrentIndex();
         if (appIndex < 0) return;
 
-        appRow = appListModel()->appRow(appIndex);
+        appRow = appListModel()->appRowAt(appIndex);
         m_formAppId = appRow.appId;
     } else {
         m_formAppId = 0;
@@ -517,7 +517,7 @@ void ProgramsWindow::updateCurrentApp(bool blocked)
 {
     const int appIndex = appListCurrentIndex();
     if (appIndex >= 0) {
-        const auto appRow = appListModel()->appRow(appIndex);
+        const auto appRow = appListModel()->appRowAt(appIndex);
         appListModel()->updateApp(appRow.appId, appRow.appPath,
                                   appRow.groupIndex, appRow.useGroupPerm, blocked);
     }
@@ -527,7 +527,7 @@ void ProgramsWindow::deleteCurrentApp()
 {
     const int appIndex = appListCurrentIndex();
     if (appIndex >= 0) {
-        const auto appRow = appListModel()->appRow(appIndex);
+        const auto appRow = appListModel()->appRowAt(appIndex);
         appListModel()->deleteApp(appRow.appId, appRow.appPath, appIndex);
     }
 }
@@ -539,7 +539,8 @@ int ProgramsWindow::appListCurrentIndex() const
 
 QString ProgramsWindow::appListCurrentPath() const
 {
-    return appListModel()->appPathByRow(appListCurrentIndex());
+    const auto appRow = appListModel()->appRowAt(appListCurrentIndex());
+    return appRow.appPath;
 }
 
 FortManager *ProgramsWindow::fortManager() const
@@ -550,6 +551,11 @@ FortManager *ProgramsWindow::fortManager() const
 FortSettings *ProgramsWindow::settings() const
 {
     return ctrl()->settings();
+}
+
+ConfManager *ProgramsWindow::confManager() const
+{
+    return ctrl()->confManager();
 }
 
 FirewallConf *ProgramsWindow::conf() const
