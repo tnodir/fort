@@ -23,12 +23,6 @@
 #define APP_GROUP_NAME_MAX  128
 #define APP_PATH_MAX        (FORT_CONF_APP_PATH_MAX / sizeof(wchar_t))
 
-namespace {
-
-const QLatin1String systemPath("System");
-
-}
-
 ConfUtil::ConfUtil(QObject *parent) :
     QObject(parent)
 {
@@ -318,7 +312,7 @@ bool ConfUtil::parseAppsText(int groupIndex, bool blocked, const QString &text,
                                               : exeAppsSize;
 
         if (!addApp(groupIndex, true, blocked, false,
-                      appPath, appsMap, appsSize))
+                    appPath, appsMap, appsSize))
             return false;
     }
 
@@ -331,7 +325,7 @@ bool ConfUtil::addApp(int groupIndex, bool useGroupPerm,
                       appentry_map_t &appsMap,
                       quint32 &appsSize)
 {
-    const QString kernelPath = FileUtil::pathToKernelPath(appPath).toLower();
+    const QString kernelPath = FileUtil::pathToKernelPath(appPath);
 
     if (appsMap.contains(kernelPath))
         return true;
@@ -373,9 +367,6 @@ QString ConfUtil::parseAppPath(const QStringRef &line,
 
     if (path.isEmpty())
         return QString();
-
-    if (QStringRef::compare(path, systemPath, Qt::CaseInsensitive) == 0)
-        return systemPath;
 
     const auto wildMatch = wildMatcher.match(path);
     if (wildMatch.hasMatch()) {

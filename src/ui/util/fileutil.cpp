@@ -10,6 +10,12 @@
 
 Q_STATIC_ASSERT(sizeof(wchar_t) == sizeof(QChar));
 
+namespace {
+
+const QLatin1String systemPath("System");
+
+}
+
 // Convert "\\Device\\HarddiskVolume1" to "C:"
 QString FileUtil::kernelNameToDrive(const QString &kernelName)
 {
@@ -58,15 +64,20 @@ QString FileUtil::kernelPathToPath(const QString &kernelPath)
 }
 
 // Convert "C:\\path" to "\\Device\\HarddiskVolume1\\path"
-QString FileUtil::pathToKernelPath(const QString &path)
+QString FileUtil::pathToKernelPath(const QString &path, bool lower)
 {
-    const QString drive = path.left(2);
-
-    if (drive.at(0).isLetter() && drive.at(1) == QLatin1Char(':')) {
-        return driveToKernelName(drive)
-                + path.mid(2).replace(QLatin1Char('/'), QLatin1Char('\\'));
+    QString kernelPath = path;
+    if (path.size() > 1 && path.at(0).isLetter()) {
+        if (path.at(1) == QLatin1Char(':')) {
+            const QString drive = path.left(2);
+            kernelPath = driveToKernelName(drive)
+                    + path.mid(2).replace(QLatin1Char('/'), QLatin1Char('\\'));
+        } else {
+            if (QString::compare(path, systemPath, Qt::CaseInsensitive) == 0)
+                return systemPath;
+        }
     }
-    return path;
+    return lower ? kernelPath.toLower() : kernelPath;
 }
 
 QString FileUtil::fileName(const QString &path)

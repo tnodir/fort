@@ -17,7 +17,7 @@ public:
     static QString kernelPathToPath(const QString &kernelPath);
 
     // Convert Win32 path to Native path
-    static QString pathToKernelPath(const QString &path);
+    static QString pathToKernelPath(const QString &path, bool lower = true);
 
     static QString fileName(const QString &path);
 
