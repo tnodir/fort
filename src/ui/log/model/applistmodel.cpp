@@ -1,5 +1,6 @@
 #include "applistmodel.h"
 
+#include <QFont>
 #include <QIcon>
 
 #include <sqlite/sqlitedb.h>
@@ -155,10 +156,48 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
             QString iconPath;
             switch (appRow.state) {
             case AppAlert: return QIcon(":/images/error.png");
+            case AppAllow: {
+                if (!appRow.useGroupPerm
+                        || appGroupAt(appRow.groupIndex)->enabled()) {
+                    return QIcon(":/images/arrow_switch.png");
+                }
+                Q_FALLTHROUGH();
+            }
             case AppBlock: return QIcon(":/images/stop.png");
-            case AppAllow: return QIcon(":/images/arrow_switch.png");
             }
         }
+        }
+
+        break;
+    }
+
+    // Font
+    case Qt::FontRole: {
+        if (index.column() == 2) {
+            QFont font;
+            font.setWeight(QFont::DemiBold);
+            return font;
+        }
+
+        break;
+    }
+
+    // Foreground
+    case Qt::ForegroundRole: {
+        if (index.column() == 2) {
+            const auto appRow = appRowAt(index.row());
+
+            switch (appRow.state) {
+            case AppAlert: return QColorConstants::Svg::orange;
+            case AppAllow: {
+                if (!appRow.useGroupPerm
+                        || appGroupAt(appRow.groupIndex)->enabled()) {
+                    return QColorConstants::Svg::green;
+                }
+                Q_FALLTHROUGH();
+            }
+            case AppBlock: return QColorConstants::Svg::red;
+            }
         }
 
         break;
@@ -177,22 +216,6 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
     }
 
     return QVariant();
-}
-
-Qt::ItemFlags AppListModel::flags(const QModelIndex &index) const
-{
-    auto flags = TableItemModel::flags(index);
-
-    if ((flags & Qt::ItemIsEnabled)
-            && index.column() == 2) {
-        const auto appRow = appRowAt(index.row());
-        if (appRow.useGroupPerm
-                && !appGroupAt(appRow.groupIndex)->enabled()) {
-            flags ^= Qt::ItemIsEnabled;
-        }
-    }
-
-    return flags;
 }
 
 void AppListModel::sort(int column, Qt::SortOrder order)
