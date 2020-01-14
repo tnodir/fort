@@ -59,7 +59,7 @@ void AppListModel::addLogEntry(const LogEntryBlocked &logEntry)
 
     const auto groupId = appGroupAt(0)->id();
 
-    if (confManager()->addApp(appPath, QDateTime(),
+    if (confManager()->addApp(appPath, QString(), QDateTime(),
                               groupId, true, true, true)) {
         reset();
     }
@@ -117,12 +117,18 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
 
         switch (column) {
         case 0: {
-            const auto appInfo = appInfoCache()->appInfo(appRow.appPath);
-            if (!appInfo.fileDescription.isEmpty()) {
-                return appInfo.fileDescription;
-            }
+            auto appName = appRow.appName;
+            if (appName.isEmpty()) {
+                const auto appInfo = appInfoCache()->appInfo(appRow.appPath);
+                appName = !appInfo.fileDescription.isEmpty()
+                        ? appInfo.fileDescription
+                        : FileUtil::fileName(appRow.appPath);
 
-            return FileUtil::fileName(appRow.appPath);
+                if (appInfo.iconId != 0) {
+                    confManager()->updateAppName(appRow.appId, appName);
+                }
+            }
+            return appName;
         }
         case 1: return appGroupAt(appRow.groupIndex)->name();
         case 2: return appStateToString(appRowStateByGroup(appRow));
@@ -223,34 +229,45 @@ const AppRow &AppListModel::appRowAt(int row) const
     return m_appRow;
 }
 
-bool AppListModel::addApp(const QString &appPath, int groupIndex,
-                          bool useGroupPerm, bool blocked,
-                          const QDateTime &endTime)
+bool AppListModel::addApp(const QString &appPath, const QString &appName,
+                          const QDateTime &endTime, int groupIndex,
+                          bool useGroupPerm, bool blocked, bool updateDriver)
 {
     const auto groupId = appGroupAt(groupIndex)->id();
 
-    if (confManager()->addApp(appPath, endTime, groupId,
-                              useGroupPerm, blocked, false)) {
+    if (confManager()->addApp(appPath, appName, endTime, groupId,
+                              useGroupPerm, blocked)) {
         reset();
 
-        return confManager()->updateDriverUpdateApp(
-                    appPath, groupIndex, useGroupPerm, blocked, false);
+        return !updateDriver
+                || confManager()->updateDriverUpdateApp(
+                    appPath, groupIndex, useGroupPerm, blocked);
     }
     return false;
 }
 
-bool AppListModel::updateApp(qint64 appId, const QString &appPath,
-                             int groupIndex, bool useGroupPerm, bool blocked,
-                             const QDateTime &endTime)
+bool AppListModel::updateApp(qint64 appId, const QString &appPath, const QString &appName,
+                             const QDateTime &endTime, int groupIndex,
+                             bool useGroupPerm, bool blocked, bool updateDriver)
 {
     const auto groupId = appGroupAt(groupIndex)->id();
 
-    if (confManager()->updateApp(appId, endTime, groupId,
+    if (confManager()->updateApp(appId, appName, endTime, groupId,
                                  useGroupPerm, blocked)) {
         refresh();
 
-        return confManager()->updateDriverUpdateApp(
-                    appPath, groupIndex, useGroupPerm, blocked, false);
+        return !updateDriver
+                || confManager()->updateDriverUpdateApp(
+                    appPath, groupIndex, useGroupPerm, blocked);
+    }
+    return false;
+}
+
+bool AppListModel::updateAppName(qint64 appId, const QString &appName)
+{
+    if (confManager()->updateAppName(appId, appName)) {
+        refresh();
+        return true;
     }
     return false;
 }
@@ -300,11 +317,12 @@ void AppListModel::updateRowCache(int row) const
     m_appRow.appId = stmt.columnInt64(0);
     m_appRow.groupIndex = stmt.columnInt(1);
     m_appRow.appPath = stmt.columnText(2);
-    m_appRow.useGroupPerm = stmt.columnBool(3);
-    const bool blocked = stmt.columnBool(4);
-    const bool alerted = stmt.columnBool(5);
-    m_appRow.endTime = stmt.columnDateTime(6);
-    m_appRow.creatTime = stmt.columnDateTime(7);
+    m_appRow.appName = stmt.columnText(3);
+    m_appRow.useGroupPerm = stmt.columnBool(4);
+    const bool blocked = stmt.columnBool(5);
+    const bool alerted = stmt.columnBool(6);
+    m_appRow.endTime = stmt.columnDateTime(7);
+    m_appRow.creatTime = stmt.columnDateTime(8);
 
     m_appRow.state = alerted ? AppAlert : (blocked ? AppBlock : AppAllow);
     m_appRow.row = row;
@@ -328,6 +346,7 @@ QString AppListModel::sqlBase() const
             "    t.app_id,"
             "    g.order_index as group_index,"
             "    t.path,"
+            "    t.name,"
             "    t.use_group_perm,"
             "    t.blocked,"
             "    (alert.app_id IS NOT NULL) as alerted,"
@@ -341,17 +360,17 @@ QString AppListModel::sqlBase() const
 
 QString AppListModel::sqlOrder() const
 {
-    QString columnsStr = "1";
-    switch (m_sortColumn) {
-    case 0: columnsStr = "3"; break;  // Program
-    case 1: columnsStr = "2"; break;  // Group
-    case 2: columnsStr = "5, 6"; break;  // State
-    case 3: columnsStr = "7"; break;  // End Time
-    case 4: columnsStr = "1"; break;  // Creation Time
-    }
-
     const QString orderStr = (m_sortOrder == Qt::AscendingOrder)
             ? "ASC" : "DESC";
+
+    QString columnsStr = "1";
+    switch (m_sortColumn) {
+    case 0: columnsStr = "4 " + orderStr + ", 3"; break;  // Program
+    case 1: columnsStr = "2"; break;  // Group
+    case 2: columnsStr = "6 " + orderStr + ", 7"; break;  // State
+    case 3: columnsStr = "8"; break;  // End Time
+    case 4: columnsStr = "1"; break;  // Creation Time
+    }
 
     return QString(" ORDER BY %1 %2").arg(columnsStr, orderStr);
 }

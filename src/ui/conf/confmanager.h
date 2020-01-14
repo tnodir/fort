@@ -51,12 +51,14 @@ public:
     bool loadTasks(const QList<TaskInfo *> &taskInfos);
     bool saveTasks(const QList<TaskInfo *> &taskInfos);
 
-    bool addApp(const QString &appPath, const QDateTime &endTime,
+    bool addApp(const QString &appPath, const QString &appName,
+                const QDateTime &endTime,
                 qint64 groupId, bool useGroupPerm,
-                bool blocked, bool alerted);
+                bool blocked, bool alerted = false);
     bool deleteApp(qint64 appId);
-    bool updateApp(qint64 appId, const QDateTime &endTime,
+    bool updateApp(qint64 appId, const QString &appName, const QDateTime &endTime,
                    qint64 groupId, bool useGroupPerm, bool blocked);
+    bool updateAppName(qint64 appId, const QString &appName);
 
     bool walkApps(std::function<walkAppsCallback> func) override;
 
@@ -68,7 +70,7 @@ public:
     bool updateDriverDeleteApp(const QString &appPath);
     bool updateDriverUpdateApp(const QString &appPath,
                                int groupIndex, bool useGroupPerm,
-                               bool blocked, bool alerted);
+                               bool blocked, bool alerted = false);
 
     QString errorMessage() const { return m_errorMessage; }
 

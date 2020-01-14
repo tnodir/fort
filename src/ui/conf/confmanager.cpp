@@ -23,7 +23,7 @@ Q_LOGGING_CATEGORY(CLOG_CONF_MANAGER, "fort.confManager")
 #define logWarning() qCWarning(CLOG_CONF_MANAGER,)
 #define logCritical() qCCritical(CLOG_CONF_MANAGER,)
 
-#define DATABASE_USER_VERSION   4
+#define DATABASE_USER_VERSION   5
 
 namespace {
 
@@ -129,16 +129,16 @@ const char * const sqlSelectEndAppsCount =
 const char * const sqlSelectEndedApps =
         "SELECT t.app_id, t.app_group_id,"
         "    g.order_index as group_index,"
-        "    t.path, t.use_group_perm"
+        "    t.path, t.name, t.use_group_perm"
         "  FROM app t"
         "    JOIN app_group g ON g.app_group_id = t.app_group_id"
         "  WHERE end_time <= ?1 AND blocked = 0;"
         ;
 
 const char * const sqlInsertApp =
-        "INSERT INTO app(app_group_id, path, use_group_perm, blocked,"
+        "INSERT INTO app(app_group_id, path, name, use_group_perm, blocked,"
         "    creat_time, end_time)"
-        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6);"
+        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7);"
         ;
 
 const char * const sqlInsertAppAlert =
@@ -156,8 +156,14 @@ const char * const sqlDeleteAppAlert =
 
 const char * const sqlUpdateApp =
         "UPDATE app"
-        "  SET app_group_id = ?2, use_group_perm = ?3,"
-        "    blocked = ?4, end_time = ?5"
+        "  SET app_group_id = ?2, name = ?3, use_group_perm = ?4,"
+        "    blocked = ?5, end_time = ?6"
+        "  WHERE app_id = ?1;"
+        ;
+
+const char * const sqlUpdateAppName =
+        "UPDATE app"
+        "  SET name = ?2"
         "  WHERE app_id = ?1;"
         ;
 
@@ -336,7 +342,8 @@ bool ConfManager::saveTasks(const QList<TaskInfo *> &taskInfos)
     return ok;
 }
 
-bool ConfManager::addApp(const QString &appPath, const QDateTime &endTime,
+bool ConfManager::addApp(const QString &appPath, const QString &appName,
+                         const QDateTime &endTime,
                          qint64 groupId, bool useGroupPerm,
                          bool blocked, bool alerted)
 {
@@ -344,9 +351,10 @@ bool ConfManager::addApp(const QString &appPath, const QDateTime &endTime,
 
     m_sqliteDb->beginTransaction();
 
-    const QVariantList vars = QVariantList()
+    const auto vars = QVariantList()
             << groupId
             << appPath
+            << appName
             << useGroupPerm
             << blocked
             << QDateTime::currentDateTime()
@@ -385,7 +393,7 @@ bool ConfManager::deleteApp(qint64 appId)
 
     m_sqliteDb->beginTransaction();
 
-    const QVariantList vars = QVariantList() << appId;
+    const auto vars = QVariantList() << appId;
 
     m_sqliteDb->executeEx(sqlDeleteApp, vars, 0, &ok);
     if (!ok) goto end;
@@ -402,16 +410,17 @@ end:
     return ok;
 }
 
-bool ConfManager::updateApp(qint64 appId, const QDateTime &endTime,
+bool ConfManager::updateApp(qint64 appId, const QString &appName, const QDateTime &endTime,
                             qint64 groupId, bool useGroupPerm, bool blocked)
 {
     bool ok = false;
 
     m_sqliteDb->beginTransaction();
 
-    const QVariantList vars = QVariantList()
+    const auto vars = QVariantList()
             << appId
             << groupId
+            << appName
             << useGroupPerm
             << blocked
             << (!endTime.isNull() ? endTime : QVariant())
@@ -431,6 +440,23 @@ end:
 
     if (ok && !endTime.isNull()) {
         m_appEndTimer.start();
+    }
+
+    return ok;
+}
+
+bool ConfManager::updateAppName(qint64 appId, const QString &appName)
+{
+    bool ok = false;
+
+    const auto vars = QVariantList()
+            << appId
+            << appName
+               ;
+
+    m_sqliteDb->executeEx(sqlUpdateAppName, vars, 0, &ok);
+    if (!ok) {
+        setErrorMessage(m_sqliteDb->errorMessage());
     }
 
     return ok;
@@ -476,9 +502,10 @@ void ConfManager::updateAppEndTimes()
         const qint64 groupId = stmt.columnInt64(1);
         const int groupIndex = stmt.columnInt(2);
         const QString appPath = stmt.columnText(3);
-        const bool useGroupPerm = stmt.columnBool(4);
+        const QString appName = stmt.columnText(4);
+        const bool useGroupPerm = stmt.columnBool(5);
 
-        if (updateApp(appId, QDateTime(), groupId, useGroupPerm, true)) {
+        if (updateApp(appId, appName, QDateTime(), groupId, useGroupPerm, true)) {
             updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, true, false);
 
             isAppEndTimesUpdated = true;
@@ -594,7 +621,7 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
         if (!addrGroup->edited() && rowExists)
             continue;
 
-        const QVariantList vars = QVariantList()
+        const auto vars = QVariantList()
                 << (rowExists ? addrGroup->id() : QVariant())
                 << orderIndex++
                 << addrGroup->includeAll()
@@ -623,7 +650,7 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
         if (!appGroup->edited() && rowExists)
             continue;
 
-        const QVariantList vars = QVariantList()
+        const auto vars = QVariantList()
                 << (rowExists ? appGroup->id() : QVariant())
                 << orderIndex
                 << appGroup->enabled()
@@ -705,7 +732,7 @@ bool ConfManager::saveTask(TaskInfo *taskInfo)
 {
     const bool rowExists = (taskInfo->id() != 0);
 
-    const QVariantList vars = QVariantList()
+    const auto vars = QVariantList()
             << (rowExists ? taskInfo->id() : QVariant())
             << taskInfo->name()
             << taskInfo->enabled()

@@ -28,6 +28,7 @@ CREATE TABLE app(
   app_id INTEGER PRIMARY KEY,
   app_group_id INTEGER NOT NULL DEFAULT 0,
   path TEXT UNIQUE NOT NULL,
+  name TEXT,
   use_group_perm BOOLEAN NOT NULL DEFAULT 1,
   blocked BOOLEAN NOT NULL,
   creat_time INTEGER NOT NULL,
@@ -36,6 +37,7 @@ CREATE TABLE app(
 
 CREATE INDEX idx_app_app_group_id ON app(app_group_id);
 CREATE UNIQUE INDEX uk_app_path ON app(path);
+CREATE INDEX idx_app_name ON app(name);
 CREATE INDEX idx_app_end_time ON app(end_time);
 
 CREATE TABLE app_alert(

@@ -303,7 +303,9 @@ bool SqliteDb::migrate(const QString &sqlDir, int version,
 
     beginTransaction();
 
-    while (userVersion++ < version) {
+    while (userVersion < version) {
+        ++userVersion;
+
         const QString filePath = dir.filePath(QString("%1.sql").arg(userVersion));
 
         beginSavepoint();

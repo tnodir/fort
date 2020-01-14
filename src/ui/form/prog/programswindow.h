@@ -89,6 +89,8 @@ private:
     QPushButton *m_btBlockApp = nullptr;
     QLabel *m_labelEditPath = nullptr;
     QLineEdit *m_editPath = nullptr;
+    QLabel *m_labelEditName = nullptr;
+    QLineEdit *m_editName = nullptr;
     QPushButton *m_btSelectFile = nullptr;
     QLabel *m_labelAppGroup = nullptr;
     QComboBox *m_comboAppGroup = nullptr;

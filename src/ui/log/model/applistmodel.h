@@ -33,6 +33,7 @@ struct AppRow {
     qint64 appId = 0;
 
     QString appPath;
+    QString appName;
 
     QDateTime endTime;
     QDateTime creatTime;
@@ -70,12 +71,13 @@ public:
 
     const AppRow &appRowAt(int row) const;
 
-    bool addApp(const QString &appPath, int groupIndex,
-                bool useGroupPerm, bool blocked,
-                const QDateTime &endTime = QDateTime());
-    bool updateApp(qint64 appId, const QString &appPath,
-                   int groupIndex, bool useGroupPerm, bool blocked,
-                   const QDateTime &endTime = QDateTime());
+    bool addApp(const QString &appPath, const QString &appName,
+                const QDateTime &endTime, int groupIndex, bool useGroupPerm,
+                bool blocked, bool updateDriver = true);
+    bool updateApp(qint64 appId, const QString &appPath, const QString &appName,
+                   const QDateTime &endTime, int groupIndex, bool useGroupPerm,
+                   bool blocked, bool updateDriver = true);
+    bool updateAppName(qint64 appId, const QString &appName);
     void deleteApp(qint64 appId, const QString &appPath, int row);
 
     const AppGroup *appGroupAt(int index) const;
