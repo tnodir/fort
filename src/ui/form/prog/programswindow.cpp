@@ -121,7 +121,7 @@ void ProgramsWindow::onRetranslateUi()
 
     m_formAppEdit->setWindowTitle(tr("Edit Program"));
 
-    m_cbLogBlocked->setText(tr("Alert about Unknown Programs"));
+    m_cbLogBlocked->setText(tr("Show Unknown Blocked Programs"));
 
     appListModel()->refresh();
 
