@@ -88,9 +88,6 @@ bool DriverManager::writeConf(const FirewallConf &conf,
                               ConfManager &confManager,
                               EnvManager &envManager)
 {
-    if (!isDeviceOpened())
-        return true;
-
     ConfUtil confUtil;
     QByteArray buf;
 
@@ -106,9 +103,6 @@ bool DriverManager::writeConf(const FirewallConf &conf,
 
 bool DriverManager::writeConfFlags(const FirewallConf &conf)
 {
-    if (!isDeviceOpened())
-        return true;
-
     ConfUtil confUtil;
     QByteArray buf;
 
@@ -124,16 +118,14 @@ bool DriverManager::writeConfFlags(const FirewallConf &conf)
 
 bool DriverManager::writeApp(const QString &appPath,
                              int groupIndex, bool useGroupPerm,
-                             bool blocked, bool alerted, bool remove)
+                             bool blocked, bool alerted,
+                             bool isNew, bool remove)
 {
-    if (!isDeviceOpened())
-        return true;
-
     ConfUtil confUtil;
     QByteArray buf;
 
     const int entrySize = confUtil.writeAppEntry(
-                groupIndex, useGroupPerm, blocked, alerted,
+                groupIndex, useGroupPerm, blocked, alerted, isNew,
                 appPath, buf);
 
     if (entrySize == 0) {
@@ -148,6 +140,9 @@ bool DriverManager::writeApp(const QString &appPath,
 
 bool DriverManager::writeData(quint32 code, QByteArray &buf, int size)
 {
+    if (!isDeviceOpened())
+        return true;
+
     m_driverWorker->cancelAsyncIo();
 
     if (!m_device->ioctl(code, buf.data(), size)) {

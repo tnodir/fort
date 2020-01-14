@@ -184,6 +184,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
     flags.v = 0;
     flags.blocked = 1;
     flags.alerted = 1;
+    flags.is_new = 1;
 
     if (fort_conf_ref_exe_add_path(conf_ref, path, path_len, flags)) {
       const UINT16 remote_port = inFixedValues->incomingValue[

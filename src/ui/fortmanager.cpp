@@ -548,14 +548,14 @@ bool FortManager::updateDriverConf(bool onlyFlags)
 {
     updateLogManager(false);
 
-    if (confManager()->updateDriverConf(onlyFlags)) {
+    const bool res = confManager()->updateDriverConf(onlyFlags);
+    if (res) {
         updateStatManager(conf());
-        updateLogManager(true);
-        return true;
-    } else {
-        closeDriver();
-        return false;
     }
+
+    updateLogManager(true);
+
+    return res;
 }
 
 void FortManager::updateLogManager(bool active)

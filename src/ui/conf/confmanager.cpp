@@ -505,9 +505,8 @@ void ConfManager::updateAppEndTimes()
         const QString appName = stmt.columnText(4);
         const bool useGroupPerm = stmt.columnBool(5);
 
-        if (updateApp(appId, appName, QDateTime(), groupId, useGroupPerm, true)) {
-            updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, true, false);
-
+        if (updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, true)
+                && updateApp(appId, appName, QDateTime(), groupId, useGroupPerm, true)) {
             isAppEndTimesUpdated = true;
         }
     }
@@ -528,22 +527,34 @@ void ConfManager::checkAppEndTimes()
 
 bool ConfManager::updateDriverConf(bool onlyFlags)
 {
-    return onlyFlags
-            ? driverManager()->writeConfFlags(*conf())
-            : driverManager()->writeConf(*conf(), *this, *envManager());
+    if (onlyFlags
+          ? driverManager()->writeConfFlags(*conf())
+          : driverManager()->writeConf(*conf(), *this, *envManager()))
+        return true;
+
+    fortManager()->showErrorBox(driverManager()->errorMessage());
+    return false;
 }
 
 bool ConfManager::updateDriverDeleteApp(const QString &appPath)
 {
-    return driverManager()->writeApp(appPath, 0, false, false, false, true);
+    if (driverManager()->writeApp(appPath, 0, false, false, false, false, true))
+        return true;
+
+    fortManager()->showErrorBox(driverManager()->errorMessage());
+    return false;
 }
 
 bool ConfManager::updateDriverUpdateApp(const QString &appPath,
                                         int groupIndex, bool useGroupPerm,
-                                        bool blocked, bool alerted)
+                                        bool blocked, bool isNew)
 {
-    return driverManager()->writeApp(appPath, groupIndex, useGroupPerm,
-                                     blocked, alerted, false);
+    if (driverManager()->writeApp(appPath, groupIndex, useGroupPerm,
+                                  blocked, false, isNew, false))
+        return true;
+
+    fortManager()->showErrorBox(driverManager()->errorMessage());
+    return false;
 }
 
 bool ConfManager::loadFromDb(FirewallConf &conf, bool &isNew)

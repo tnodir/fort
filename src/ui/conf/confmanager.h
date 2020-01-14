@@ -70,7 +70,7 @@ public:
     bool updateDriverDeleteApp(const QString &appPath);
     bool updateDriverUpdateApp(const QString &appPath,
                                int groupIndex, bool useGroupPerm,
-                               bool blocked, bool alerted = false);
+                               bool blocked, bool isNew = false);
 
     QString errorMessage() const { return m_errorMessage; }
 

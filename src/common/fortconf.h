@@ -77,6 +77,7 @@ typedef struct fort_app_flags {
       UCHAR use_group_perm  : 1;
       UCHAR blocked         : 1;
       UCHAR alerted         : 1;
+      UCHAR is_new          : 1;
       UCHAR found           : 1;
     };
   };

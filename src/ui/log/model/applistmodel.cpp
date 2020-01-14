@@ -235,14 +235,16 @@ bool AppListModel::addApp(const QString &appPath, const QString &appName,
 {
     const auto groupId = appGroupAt(groupIndex)->id();
 
+    if (updateDriver && !confManager()->updateDriverUpdateApp(
+                appPath, groupIndex, useGroupPerm, blocked, true))
+        return false;
+
     if (confManager()->addApp(appPath, appName, endTime, groupId,
                               useGroupPerm, blocked)) {
         reset();
-
-        return !updateDriver
-                || confManager()->updateDriverUpdateApp(
-                    appPath, groupIndex, useGroupPerm, blocked);
+        return true;
     }
+
     return false;
 }
 
@@ -252,14 +254,16 @@ bool AppListModel::updateApp(qint64 appId, const QString &appPath, const QString
 {
     const auto groupId = appGroupAt(groupIndex)->id();
 
+    if (updateDriver && !confManager()->updateDriverUpdateApp(
+                appPath, groupIndex, useGroupPerm, blocked, false))
+        return false;
+
     if (confManager()->updateApp(appId, appName, endTime, groupId,
                                  useGroupPerm, blocked)) {
         refresh();
-
-        return !updateDriver
-                || confManager()->updateDriverUpdateApp(
-                    appPath, groupIndex, useGroupPerm, blocked);
+        return true;
     }
+
     return false;
 }
 
@@ -276,9 +280,8 @@ void AppListModel::deleteApp(qint64 appId, const QString &appPath, int row)
 {
     beginRemoveRows(QModelIndex(), row, row);
 
-    if (confManager()->deleteApp(appId)) {
-        confManager()->updateDriverDeleteApp(appPath);
-
+    if (confManager()->updateDriverDeleteApp(appPath)
+            && confManager()->deleteApp(appId)) {
         invalidateRowCache();
         removeRow(row);
     }

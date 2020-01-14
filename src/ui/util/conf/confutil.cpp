@@ -116,14 +116,14 @@ int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
 }
 
 int ConfUtil::writeAppEntry(int groupIndex, bool useGroupPerm,
-                            bool blocked, bool alerted,
+                            bool blocked, bool alerted, bool isNew,
                             const QString &appPath, QByteArray &buf)
 {
     appentry_map_t exeAppsMap;
     quint32 exeAppsSize = 0;
 
     if (!addApp(groupIndex, useGroupPerm,
-                blocked, alerted, appPath,
+                blocked, alerted, isNew, appPath,
                 exeAppsMap, exeAppsSize))
         return 0;
 
@@ -278,8 +278,8 @@ bool ConfUtil::parseExeApps(ConfAppsWalker *confAppsWalker,
                                     bool blocked, bool alerted,
                                     const QString &appPath) -> bool {
         return addApp(groupIndex, useGroupPerm,
-                      blocked, alerted, appPath,
-                      exeAppsMap, exeAppsSize);
+                      blocked, alerted, true, appPath,
+                      exeAppsMap, exeAppsSize, false);
     });
 }
 
@@ -311,7 +311,7 @@ bool ConfUtil::parseAppsText(int groupIndex, bool blocked, const QString &text,
                                    : isPrefix ? prefixAppsSize
                                               : exeAppsSize;
 
-        if (!addApp(groupIndex, true, blocked, false,
+        if (!addApp(groupIndex, true, blocked, false, true,
                     appPath, appsMap, appsSize))
             return false;
     }
@@ -320,15 +320,20 @@ bool ConfUtil::parseAppsText(int groupIndex, bool blocked, const QString &text,
 }
 
 bool ConfUtil::addApp(int groupIndex, bool useGroupPerm,
-                      bool blocked, bool alerted,
-                      const QString &appPath,
-                      appentry_map_t &appsMap,
-                      quint32 &appsSize)
+                      bool blocked, bool alerted, bool isNew,
+                      const QString &appPath, appentry_map_t &appsMap,
+                      quint32 &appsSize, bool canCollide)
 {
     const QString kernelPath = FileUtil::pathToKernelPath(appPath);
 
-    if (appsMap.contains(kernelPath))
+    if (appsMap.contains(kernelPath)) {
+        if (!canCollide) {
+            setErrorMessage(tr("Application '%1' already exists")
+                            .arg(appPath));
+            return false;
+        }
         return true;
+    }
 
     if (kernelPath.size() > int(APP_PATH_MAX)) {
         setErrorMessage(tr("Length of Application's Path must be < %1")
@@ -348,6 +353,7 @@ bool ConfUtil::addApp(int groupIndex, bool useGroupPerm,
     appEntry.flags.use_group_perm = useGroupPerm;
     appEntry.flags.blocked = blocked;
     appEntry.flags.alerted = alerted;
+    appEntry.flags.is_new = isNew;
     appEntry.flags.found = 1;
 
     appsMap.insert(kernelPath, appEntry.v);

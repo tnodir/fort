@@ -47,7 +47,8 @@ public slots:
     bool writeConfFlags(const FirewallConf &conf);
     bool writeApp(const QString &appPath,
                   int groupIndex, bool useGroupPerm,
-                  bool blocked, bool alerted, bool remove = false);
+                  bool blocked, bool alerted,
+                  bool isNew = false, bool remove = false);
 
 private:
     void setErrorMessage(const QString &errorMessage);

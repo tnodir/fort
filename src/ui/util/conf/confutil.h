@@ -43,7 +43,7 @@ public slots:
               EnvManager &envManager, QByteArray &buf);
     int writeFlags(const FirewallConf &conf, QByteArray &buf);
     int writeAppEntry(int groupIndex, bool useGroupPerm,
-                      bool blocked, bool alerted,
+                      bool blocked, bool alerted, bool isNew,
                       const QString &appPath, QByteArray &buf);
     int writeVersion(QByteArray &buf);
 
@@ -80,10 +80,9 @@ private:
                        quint32 &exeAppsSize);
 
     bool addApp(int groupIndex, bool useGroupPerm,
-                bool blocked, bool alerted,
-                const QString &appPath,
-                appentry_map_t &appsMap,
-                quint32 &appsSize);
+                bool blocked, bool alerted, bool isNew,
+                const QString &appPath, appentry_map_t &appsMap,
+                quint32 &appsSize, bool canCollide = true);
 
     static QString parseAppPath(const QStringRef &line,
                                 bool &isWild, bool &isPrefix);
