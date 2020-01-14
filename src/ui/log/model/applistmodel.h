@@ -14,8 +14,8 @@ QT_FORWARD_DECLARE_CLASS(SqliteDb)
 
 enum AppState {
     AppAlert = 0,
-    AppBlock,
-    AppAllow
+    AppAllow,
+    AppBlock
 };
 
 struct AppRow {
@@ -94,6 +94,7 @@ private:
     QString sqlBase() const;
     QString sqlOrder() const;
 
+    AppState appRowStateByGroup(const AppRow &appRow) const;
     QString appStateToString(AppState state) const;
 
 private:

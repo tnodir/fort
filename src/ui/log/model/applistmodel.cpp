@@ -125,7 +125,7 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
             return FileUtil::fileName(appRow.appPath);
         }
         case 1: return appGroupAt(appRow.groupIndex)->name();
-        case 2: return appStateToString(appRow.state);
+        case 2: return appStateToString(appRowStateByGroup(appRow));
         case 3: return appRow.endTime.isValid()
                     ? appRow.endTime : QVariant();
         case 4: return appRow.creatTime;
@@ -156,13 +156,7 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
             QString iconPath;
             switch (appRow.state) {
             case AppAlert: return QIcon(":/images/error.png");
-            case AppAllow: {
-                if (!appRow.useGroupPerm
-                        || appGroupAt(appRow.groupIndex)->enabled()) {
-                    return QIcon(":/images/arrow_switch.png");
-                }
-                Q_FALLTHROUGH();
-            }
+            case AppAllow: return QIcon(":/images/arrow_switch.png");
             case AppBlock: return QIcon(":/images/stop.png");
             }
         }
@@ -187,15 +181,9 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
         if (index.column() == 2) {
             const auto appRow = appRowAt(index.row());
 
-            switch (appRow.state) {
+            switch (appRowStateByGroup(appRow)) {
             case AppAlert: return QColorConstants::Svg::orange;
-            case AppAllow: {
-                if (!appRow.useGroupPerm
-                        || appGroupAt(appRow.groupIndex)->enabled()) {
-                    return QColorConstants::Svg::green;
-                }
-                Q_FALLTHROUGH();
-            }
+            case AppAllow: return QColorConstants::Svg::green;
             case AppBlock: return QColorConstants::Svg::red;
             }
         }
@@ -385,6 +373,17 @@ QStringList AppListModel::appGroupNames() const
         list.append(appGroup->name());
     }
     return list;
+}
+
+AppState AppListModel::appRowStateByGroup(const AppRow &appRow) const
+{
+    auto state = appRow.state;
+    if (state == AppAllow
+            && appRow.useGroupPerm
+            && !appGroupAt(appRow.groupIndex)->enabled()) {
+        state = AppBlock;
+    }
+    return state;
 }
 
 QString AppListModel::appStateToString(AppState state) const
