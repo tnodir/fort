@@ -92,17 +92,17 @@
         <translation>Время создания</translation>
     </message>
     <message>
-        <location filename="../log/model/applistmodel.cpp" line="411"/>
+        <location filename="../log/model/applistmodel.cpp" line="414"/>
         <source>Alert</source>
         <translation>Оповещение</translation>
     </message>
     <message>
-        <location filename="../log/model/applistmodel.cpp" line="412"/>
+        <location filename="../log/model/applistmodel.cpp" line="415"/>
         <source>Block</source>
         <translation>Блокировать</translation>
     </message>
     <message>
-        <location filename="../log/model/applistmodel.cpp" line="413"/>
+        <location filename="../log/model/applistmodel.cpp" line="416"/>
         <source>Allow</source>
         <translation>Разрешить</translation>
     </message>
@@ -234,39 +234,52 @@
     </message>
 </context>
 <context>
+    <name>ConfManager</name>
+    <message>
+        <location filename="../conf/confmanager.cpp" line="586"/>
+        <source>Application &apos;%1&apos; already exists</source>
+        <translation>Приложение &apos;%1&apos; уже существует</translation>
+    </message>
+</context>
+<context>
     <name>ConfUtil</name>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="178"/>
+        <location filename="../util/conf/confutil.cpp" line="172"/>
         <source>Bad Include IP address: %1</source>
         <translation>Некорректный IP адрес для включения: %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="186"/>
+        <location filename="../util/conf/confutil.cpp" line="180"/>
         <source>Bad Exclude IP address: %1</source>
         <translation>Некорректный IP адрес для исключения: %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="197"/>
+        <location filename="../util/conf/confutil.cpp" line="191"/>
         <source>Too many IP addresses</source>
         <translation>Слишком много IP адресов</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="224"/>
+        <location filename="../util/conf/confutil.cpp" line="218"/>
         <source>Number of Application Groups must be between 1 and %1</source>
         <translation>Количество групп приложений должно быть от 1 до %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="77"/>
+        <location filename="../util/conf/confutil.cpp" line="71"/>
         <source>Too many application paths</source>
         <translation>Слишком много путей приложений</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="236"/>
+        <location filename="../util/conf/confutil.cpp" line="230"/>
         <source>Length of Application Group&apos;s Name must be &lt; %1</source>
         <translation>Длина наименования группы приложения должна быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="340"/>
+        <location filename="../util/conf/confutil.cpp" line="331"/>
+        <source>Application &apos;%1&apos; already exists</source>
+        <translation>Приложение &apos;%1&apos; уже существует</translation>
+    </message>
+    <message>
+        <location filename="../util/conf/confutil.cpp" line="339"/>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Длина пути приложения должна быть &lt; %1</translation>
     </message>
@@ -292,37 +305,37 @@
         <translation>Наберите пароль пожалуйста</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="656"/>
+        <location filename="../fortmanager.cpp" line="652"/>
         <source>Programs</source>
         <translation>Программы</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="661"/>
+        <location filename="../fortmanager.cpp" line="657"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="666"/>
+        <location filename="../fortmanager.cpp" line="662"/>
         <source>Traffic Graph</source>
         <translation>График трафика</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="676"/>
+        <location filename="../fortmanager.cpp" line="672"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="683"/>
+        <location filename="../fortmanager.cpp" line="679"/>
         <source>Stop Traffic</source>
         <translation>Остановить трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="690"/>
+        <location filename="../fortmanager.cpp" line="686"/>
         <source>Stop Internet Traffic</source>
         <translation>Остановить Интернет трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="718"/>
+        <location filename="../fortmanager.cpp" line="714"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>

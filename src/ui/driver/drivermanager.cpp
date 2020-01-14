@@ -3,11 +3,8 @@
 #include <QProcess>
 #include <QThreadPool>
 
-#include "../conf/confmanager.h"
 #include "../conf/firewallconf.h"
 #include "../fortcommon.h"
-#include "../log/logbuffer.h"
-#include "../util/conf/confutil.h"
 #include "../util/device.h"
 #include "../util/fileutil.h"
 #include "../util/osutil.h"
@@ -34,6 +31,18 @@ void DriverManager::setErrorMessage(const QString &errorMessage)
     }
 }
 
+void DriverManager::updateError(bool success)
+{
+    m_errorCode = success ? 0 : OsUtil::lastErrorCode();
+    setErrorMessage(success ? QString()
+                            : OsUtil::lastErrorMessage(m_errorCode));
+}
+
+bool DriverManager::isDeviceError() const
+{
+    return m_errorCode == OsUtil::userErrorCode();
+}
+
 void DriverManager::setupWorker()
 {
     QThreadPool::globalInstance()->start(m_driverWorker);
@@ -53,7 +62,7 @@ bool DriverManager::openDevice()
 {
     const bool res = m_device->open(FortCommon::deviceName());
 
-    setErrorMessage(res ? QString() : OsUtil::lastErrorMessage());
+    updateError(res);
 
     emit isDeviceOpenedChanged();
 
@@ -69,73 +78,25 @@ bool DriverManager::closeDevice()
     return res;
 }
 
-bool DriverManager::validate()
+bool DriverManager::validate(QByteArray &buf, int size)
 {
-    ConfUtil confUtil;
-    QByteArray buf;
-
-    const int verSize = confUtil.writeVersion(buf);
-    if (!verSize) {
-        setErrorMessage(confUtil.errorMessage());
-        return false;
-    }
-
     return writeData(FortCommon::ioctlValidate(),
-                     buf, verSize);
+                     buf, size);
 }
 
-bool DriverManager::writeConf(const FirewallConf &conf,
-                              ConfManager &confManager,
-                              EnvManager &envManager)
+bool DriverManager::writeConf(QByteArray &buf, int size,
+                              bool onlyFlags)
 {
-    ConfUtil confUtil;
-    QByteArray buf;
-
-    const int confSize = confUtil.write(conf, &confManager, envManager, buf);
-    if (confSize == 0) {
-        setErrorMessage(confUtil.errorMessage());
-        return false;
-    }
-
-    return writeData(FortCommon::ioctlSetConf(),
-                     buf, confSize);
+    return writeData(onlyFlags ? FortCommon::ioctlSetFlags()
+                               : FortCommon::ioctlSetConf(),
+                     buf, size);
 }
 
-bool DriverManager::writeConfFlags(const FirewallConf &conf)
+bool DriverManager::writeApp(QByteArray &buf, int size, bool remove)
 {
-    ConfUtil confUtil;
-    QByteArray buf;
-
-    const int flagsSize = confUtil.writeFlags(conf, buf);
-    if (!flagsSize) {
-        setErrorMessage(confUtil.errorMessage());
-        return false;
-    }
-
-    return writeData(FortCommon::ioctlSetFlags(),
-                     buf, flagsSize);
-}
-
-bool DriverManager::writeApp(const QString &appPath,
-                             int groupIndex, bool useGroupPerm,
-                             bool blocked, bool alerted,
-                             bool isNew, bool remove)
-{
-    ConfUtil confUtil;
-    QByteArray buf;
-
-    const int entrySize = confUtil.writeAppEntry(
-                groupIndex, useGroupPerm, blocked, alerted, isNew,
-                appPath, buf);
-
-    if (entrySize == 0) {
-        setErrorMessage(confUtil.errorMessage());
-        return false;
-    }
-
     return writeData(remove ? FortCommon::ioctlDelApp()
                             : FortCommon::ioctlAddApp(),
-                     buf, entrySize);
+                     buf, size);
 }
 
 bool DriverManager::writeData(quint32 code, QByteArray &buf, int size)
@@ -145,12 +106,11 @@ bool DriverManager::writeData(quint32 code, QByteArray &buf, int size)
 
     m_driverWorker->cancelAsyncIo();
 
-    if (!m_device->ioctl(code, buf.data(), size)) {
-        setErrorMessage(OsUtil::lastErrorMessage());
-        return false;
-    }
+    const bool res = m_device->ioctl(code, buf.data(), size);
 
-    return true;
+    updateError(res);
+
+    return res;
 }
 
 void DriverManager::reinstallDriver()

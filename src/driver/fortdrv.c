@@ -186,7 +186,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
     flags.alerted = 1;
     flags.is_new = 1;
 
-    if (fort_conf_ref_exe_add_path(conf_ref, path, path_len, flags)) {
+    if (NT_SUCCESS(fort_conf_ref_exe_add_path(conf_ref, path, path_len, flags))) {
       const UINT16 remote_port = inFixedValues->incomingValue[
         remotePortField].value.uint16;
       const IPPROTO ip_proto = (IPPROTO) inFixedValues->incomingValue[
@@ -1086,8 +1086,7 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
         status = STATUS_INSUFFICIENT_RESOURCES;
       } else {
         if (control_code == FORT_IOCTL_ADDAPP) {
-          status = fort_conf_ref_exe_add_entry(conf_ref, app_entry, FALSE)
-            ? STATUS_SUCCESS : STATUS_UNSUCCESSFUL;
+          status = fort_conf_ref_exe_add_entry(conf_ref, app_entry, FALSE);
         } else {
           fort_conf_ref_exe_del_entry(conf_ref, app_entry);
           status = STATUS_SUCCESS;

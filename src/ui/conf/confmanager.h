@@ -19,7 +19,6 @@ QT_FORWARD_DECLARE_CLASS(TaskInfo)
 class ConfManager : public QObject, public ConfAppsWalker
 {
     Q_OBJECT
-    Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
 
 public:
     explicit ConfManager(const QString &filePath,
@@ -66,22 +65,21 @@ public:
     void updateAppEndTimes();
     void checkAppEndTimes();
 
+    bool validateDriver();
     bool updateDriverConf(bool onlyFlags = false);
     bool updateDriverDeleteApp(const QString &appPath);
     bool updateDriverUpdateApp(const QString &appPath,
                                int groupIndex, bool useGroupPerm,
-                               bool blocked, bool isNew = false);
-
-    QString errorMessage() const { return m_errorMessage; }
+                               bool blocked, bool isNew = false,
+                               bool remove = false);
 
 signals:
-    void errorMessageChanged();
     void isEditingChanged();
     void confSaved(bool onlyFlags);
     void appEndTimesUpdated();
 
 private:
-    void setErrorMessage(const QString &errorMessage);
+    void showErrorMessage(const QString &errorMessage);
 
     void setupDefault(FirewallConf &conf) const;
 
@@ -92,8 +90,6 @@ private:
     bool saveTask(TaskInfo *taskInfo);
 
 private:
-    QString m_errorMessage;
-
     FortManager *m_fortManager = nullptr;
     SqliteDb *m_sqliteDb = nullptr;
 

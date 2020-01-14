@@ -132,7 +132,7 @@ bool FortManager::setupDriver()
 {
     bool opened = driverManager()->openDevice();
 
-    if (!driverManager()->validate()) {
+    if (!confManager()->validateDriver()) {
         driverManager()->closeDevice();
 
         opened = false;
@@ -521,10 +521,8 @@ bool FortManager::loadSettings()
         abort();  //  Abort the program
     }
 
-    if (!confManager()->load(*conf())) {
-        showErrorBox("Load Settings: " + confManager()->errorMessage());
+    if (!confManager()->load(*conf()))
         return false;
-    }
 
     return updateDriverConf();
 }
@@ -532,10 +530,8 @@ bool FortManager::loadSettings()
 bool FortManager::saveSettings(FirewallConf *newConf, bool onlyFlags,
                                bool immediateFlags)
 {
-    if (!confManager()->save(*newConf, onlyFlags)) {
-        showErrorBox("Save Settings: " + confManager()->errorMessage());
+    if (!confManager()->save(*newConf, onlyFlags))
         return false;
-    }
 
     if (!immediateFlags) {
         updateTrayMenu();

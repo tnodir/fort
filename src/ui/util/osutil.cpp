@@ -8,11 +8,6 @@
 
 #include "processinfo.h"
 
-OsUtil::OsUtil(QObject *parent) :
-    QObject(parent)
-{
-}
-
 QString OsUtil::pidToPath(quint32 pid, bool isKernelPath)
 {
     const ProcessInfo pi(pid);
@@ -31,6 +26,11 @@ bool OsUtil::createGlobalMutex(const char *name)
 {
     return CreateMutexA(nullptr, FALSE, name)
             && GetLastError() != ERROR_ALREADY_EXISTS;
+}
+
+quint32 OsUtil::userErrorCode()
+{
+    return STATUS_INVALID_PARAMETER;
 }
 
 quint32 OsUtil::lastErrorCode()

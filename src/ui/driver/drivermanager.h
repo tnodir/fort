@@ -14,8 +14,6 @@ QT_FORWARD_DECLARE_CLASS(FirewallConf)
 class DriverManager : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
-    Q_PROPERTY(bool isDeviceOpened READ isDeviceOpened NOTIFY isDeviceOpenedChanged)
 
 public:
     explicit DriverManager(QObject *parent = nullptr);
@@ -25,6 +23,7 @@ public:
     DriverWorker *driverWorker() const { return m_driverWorker; }
 
     QString errorMessage() const { return m_errorMessage; }
+    bool isDeviceError() const;
 
     bool isDeviceOpened() const;
 
@@ -39,19 +38,14 @@ public slots:
     bool openDevice();
     bool closeDevice();
 
-    bool validate();
+    bool validate(QByteArray &buf, int size);
 
-    bool writeConf(const FirewallConf &conf,
-                   ConfManager &confManager,
-                   EnvManager &envManager);
-    bool writeConfFlags(const FirewallConf &conf);
-    bool writeApp(const QString &appPath,
-                  int groupIndex, bool useGroupPerm,
-                  bool blocked, bool alerted,
-                  bool isNew = false, bool remove = false);
+    bool writeConf(QByteArray &buf, int size, bool onlyFlags = false);
+    bool writeApp(QByteArray &buf, int size, bool remove = false);
 
 private:
     void setErrorMessage(const QString &errorMessage);
+    void updateError(bool success);
 
     void setupWorker();
     void abortWorker();
@@ -61,6 +55,8 @@ private:
     static void executeCommand(const QString &fileName);
 
 private:
+    quint32 m_errorCode = 0;
+
     Device *m_device = nullptr;
     DriverWorker *m_driverWorker = nullptr;
 

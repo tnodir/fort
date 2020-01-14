@@ -94,7 +94,7 @@ void OptionsPage::retranslateEditPassword()
 void OptionsPage::retranslateDriverMessage()
 {
     const auto text = driverManager()->isDeviceOpened()
-            ? (!driverManager()->errorMessage().isEmpty()
+            ? (driverManager()->isDeviceError()
                ? driverManager()->errorMessage()
                : tr("Installed"))
             : tr("Not Installed");
@@ -304,9 +304,9 @@ void OptionsPage::setupDriverIcon()
 
     const auto refreshDriverIcon = [&] {
         const auto iconPath = driverManager()->isDeviceOpened()
-                ? (driverManager()->errorMessage().isEmpty()
-                   ? ":/images/plugin.png"
-                   : ":/images/plugin_error.png")
+                ? (driverManager()->isDeviceError()
+                   ? ":/images/plugin_error.png"
+                   : ":/images/plugin.png")
                 : ":/images/plugin_disabled.png";
 
         m_iconDriver->setPixmap(QPixmap(iconPath));

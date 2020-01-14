@@ -175,7 +175,7 @@ fort_conf_exe_find (const PFORT_CONF conf,
   return app_flags;
 }
 
-static BOOL
+static NTSTATUS
 fort_conf_ref_exe_add_path_locked (PFORT_CONF_REF conf_ref,
                                    const char *path, UINT32 path_len,
                                    tommy_key_t path_hash,
@@ -189,7 +189,7 @@ fort_conf_ref_exe_add_path_locked (PFORT_CONF_REF conf_ref,
     PFORT_APP_ENTRY entry = fort_conf_pool_malloc(conf_ref, entry_size);
 
     if (entry == NULL)
-      return FALSE;
+      return STATUS_INSUFFICIENT_RESOURCES;
 
     entry->flags = flags;
     entry->path_len = (UINT16) path_len;
@@ -227,7 +227,7 @@ fort_conf_ref_exe_add_path_locked (PFORT_CONF_REF conf_ref,
     return TRUE;
   } else {
     if (flags.is_new)
-      return FALSE;
+      return STATUS_INVALID_PARAMETER;
 
     // Replace flags
     {
@@ -235,27 +235,27 @@ fort_conf_ref_exe_add_path_locked (PFORT_CONF_REF conf_ref,
 
       entry->flags = flags;
 
-      return TRUE;
+      return STATUS_SUCCESS;
     }
   }
 }
 
-static BOOL
+static NTSTATUS
 fort_conf_ref_exe_add_path (PFORT_CONF_REF conf_ref,
                             const char *path, UINT32 path_len,
                             FORT_APP_FLAGS flags)
 {
   const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, path_len);
-  BOOL res = FALSE;
+  NTSTATUS status;
 
   KIRQL oldIrql = ExAcquireSpinLockExclusive(&conf_ref->lock);
-  res = fort_conf_ref_exe_add_path_locked(conf_ref, path, path_len, path_hash, flags);
+  status = fort_conf_ref_exe_add_path_locked(conf_ref, path, path_len, path_hash, flags);
   ExReleaseSpinLockExclusive(&conf_ref->lock, oldIrql);
 
-  return res;
+  return status;
 }
 
-static BOOL
+static NTSTATUS
 fort_conf_ref_exe_add_entry (PFORT_CONF_REF conf_ref, const PFORT_APP_ENTRY entry,
                              BOOL locked)
 {

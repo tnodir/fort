@@ -10,6 +10,7 @@
 #include "../fortmanager.h"
 #include "../fortsettings.h"
 #include "../task/taskinfo.h"
+#include "../util/conf/confutil.h"
 #include "../util/dateutil.h"
 #include "../util/fileutil.h"
 #include "../util/osutil.h"
@@ -207,12 +208,9 @@ FortSettings *ConfManager::settings() const
     return fortManager()->settings();
 }
 
-void ConfManager::setErrorMessage(const QString &errorMessage)
+void ConfManager::showErrorMessage(const QString &errorMessage)
 {
-    if (m_errorMessage != errorMessage) {
-        m_errorMessage = errorMessage;
-        emit errorMessageChanged();
-    }
+    fortManager()->showErrorBox(errorMessage);
 }
 
 bool ConfManager::initialize()
@@ -274,7 +272,7 @@ bool ConfManager::load(FirewallConf &conf)
     bool isNewConf = true;
 
     if (!loadFromDb(conf, isNewConf)) {
-        setErrorMessage(m_sqliteDb->errorMessage());
+        showErrorMessage("Load Settings: " + m_sqliteDb->errorMessage());
         return false;
     }
 
@@ -293,7 +291,7 @@ bool ConfManager::save(FirewallConf &newConf, bool onlyFlags)
         return false;
 
     if (!settings()->writeConfIni(newConf)) {
-        setErrorMessage(settings()->errorMessage());
+        showErrorMessage("Save Settings: " + settings()->errorMessage());
         return false;
     }
 
@@ -334,7 +332,7 @@ bool ConfManager::saveTasks(const QList<TaskInfo *> &taskInfos)
     }
 
     if (!ok) {
-        setErrorMessage(m_sqliteDb->errorMessage());
+        showErrorMessage(m_sqliteDb->errorMessage());
     }
 
     m_sqliteDb->endTransaction(ok);
@@ -375,7 +373,7 @@ bool ConfManager::addApp(const QString &appPath, const QString &appName,
 
 end:
     if (!ok) {
-        setErrorMessage(m_sqliteDb->errorMessage());
+        showErrorMessage(m_sqliteDb->errorMessage());
     }
 
     m_sqliteDb->endTransaction(ok);
@@ -402,7 +400,7 @@ bool ConfManager::deleteApp(qint64 appId)
 
 end:
     if (!ok) {
-        setErrorMessage(m_sqliteDb->errorMessage());
+        showErrorMessage(m_sqliteDb->errorMessage());
     }
 
     m_sqliteDb->endTransaction(ok);
@@ -433,7 +431,7 @@ bool ConfManager::updateApp(qint64 appId, const QString &appName, const QDateTim
 
 end:
     if (!ok) {
-        setErrorMessage(m_sqliteDb->errorMessage());
+        showErrorMessage(m_sqliteDb->errorMessage());
     }
 
     m_sqliteDb->endTransaction(ok);
@@ -456,7 +454,7 @@ bool ConfManager::updateAppName(qint64 appId, const QString &appName)
 
     m_sqliteDb->executeEx(sqlUpdateAppName, vars, 0, &ok);
     if (!ok) {
-        setErrorMessage(m_sqliteDb->errorMessage());
+        showErrorMessage(m_sqliteDb->errorMessage());
     }
 
     return ok;
@@ -525,36 +523,72 @@ void ConfManager::checkAppEndTimes()
     }
 }
 
+bool ConfManager::validateDriver()
+{
+    ConfUtil confUtil;
+    QByteArray buf;
+
+    const int verSize = confUtil.writeVersion(buf);
+    if (!verSize) {
+        showErrorMessage(confUtil.errorMessage());
+        return false;
+    }
+
+    return driverManager()->validate(buf, verSize);
+}
+
 bool ConfManager::updateDriverConf(bool onlyFlags)
 {
-    if (onlyFlags
-          ? driverManager()->writeConfFlags(*conf())
-          : driverManager()->writeConf(*conf(), *this, *envManager()))
-        return true;
+    ConfUtil confUtil;
+    QByteArray buf;
 
-    fortManager()->showErrorBox(driverManager()->errorMessage());
-    return false;
+    const int confSize = onlyFlags
+            ? confUtil.writeFlags(*conf(), buf)
+            : confUtil.write(*conf(), this, *envManager(), buf);
+
+    if (confSize == 0) {
+        showErrorMessage(confUtil.errorMessage());
+        return false;
+    }
+
+    if (!driverManager()->writeConf(buf, confSize, onlyFlags)) {
+        showErrorMessage(driverManager()->errorMessage());
+        return false;
+    }
+
+    return true;
 }
 
 bool ConfManager::updateDriverDeleteApp(const QString &appPath)
 {
-    if (driverManager()->writeApp(appPath, 0, false, false, false, false, true))
-        return true;
-
-    fortManager()->showErrorBox(driverManager()->errorMessage());
-    return false;
+    return updateDriverUpdateApp(appPath, 0, false, false, false, true);
 }
 
 bool ConfManager::updateDriverUpdateApp(const QString &appPath,
                                         int groupIndex, bool useGroupPerm,
-                                        bool blocked, bool isNew)
+                                        bool blocked, bool isNew, bool remove)
 {
-    if (driverManager()->writeApp(appPath, groupIndex, useGroupPerm,
-                                  blocked, false, isNew, false))
-        return true;
+    ConfUtil confUtil;
+    QByteArray buf;
 
-    fortManager()->showErrorBox(driverManager()->errorMessage());
-    return false;
+    const int entrySize = confUtil.writeAppEntry(
+                groupIndex, useGroupPerm, blocked, false, isNew,
+                appPath, buf);
+
+    if (entrySize == 0) {
+        showErrorMessage(confUtil.errorMessage());
+        return false;
+    }
+
+    if (!driverManager()->writeApp(buf, entrySize, remove)) {
+        const auto errorMessage = driverManager()->isDeviceError()
+                ? driverManager()->errorMessage()
+                : tr("Application '%1' already exists").arg(appPath);
+        showErrorMessage(errorMessage);
+        return false;
+    }
+
+    return true;
 }
 
 bool ConfManager::loadFromDb(FirewallConf &conf, bool &isNew)
@@ -710,7 +744,7 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
 
  end:
     if (!ok) {
-        setErrorMessage(m_sqliteDb->errorMessage());
+        showErrorMessage(m_sqliteDb->errorMessage());
     }
 
     m_sqliteDb->endTransaction(ok);
