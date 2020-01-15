@@ -1,5 +1,14 @@
 Fort Firewall ChangeLog
 
+v3.1.2, 2020-01-15:
+- Fix wild matching the drive letter.
+- UI: DriverManager: Refactor error handling.
+- UI: Avoid exe apps duplicates.
+- UI: ProgramsWindow: Fix "System" handling.
+- UI: Turn on "Collect Stats" & "Alert .. Programs" by default.
+- UI: ProgramsWindow: Relayout table; Sort/edit program name.
+- UI: Add "Interchange All Lines" button to text areas splitter.
+
 v3.1.1, 2020-01-11:
 - UI: Fix filtering apps from Programs window.
 - UI: ProgramsWindow: Move edit buttons into menu.
