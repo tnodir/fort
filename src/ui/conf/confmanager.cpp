@@ -278,6 +278,7 @@ bool ConfManager::load(FirewallConf &conf)
 
     if (isNewConf) {
         setupDefault(conf);
+        saveToDb(conf);
     }
 
     settings()->readConfIni(conf);
