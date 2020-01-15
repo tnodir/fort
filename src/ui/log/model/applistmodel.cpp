@@ -188,9 +188,15 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
             const auto appRow = appRowAt(index.row());
 
             switch (appRowStateByGroup(appRow)) {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
             case AppAlert: return QColorConstants::Svg::orange;
             case AppAllow: return QColorConstants::Svg::green;
             case AppBlock: return QColorConstants::Svg::red;
+#else
+            case AppAlert: return QColor{QColor::Rgb, 0xff * 0x101, 0xff * 0x101, 0xa5 * 0x101, 0x00 * 0x101};
+            case AppAllow: return QColor{QColor::Rgb, 0xff * 0x101, 0x00 * 0x101, 0x80 * 0x101, 0x00 * 0x101};
+            case AppBlock: return QColor{QColor::Rgb, 0xff * 0x101, 0xff * 0x101, 0x00 * 0x101, 0x00 * 0x101};
+#endif
             }
         }
 
