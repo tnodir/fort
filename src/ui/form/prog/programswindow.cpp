@@ -522,6 +522,8 @@ void ProgramsWindow::updateAppEditForm(bool editCurrentApp)
     m_editPath->setText(appRow.appPath);
     m_editPath->setReadOnly(editCurrentApp);
     m_editPath->setClearButtonEnabled(!editCurrentApp);
+    m_editPath->selectAll();
+    m_editPath->setFocus();
     m_btSelectFile->setEnabled(!editCurrentApp);
     m_editName->setText(appRow.appName);
     m_comboAppGroup->setCurrentIndex(appRow.groupIndex);
