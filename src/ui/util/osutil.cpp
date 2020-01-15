@@ -28,17 +28,12 @@ bool OsUtil::createGlobalMutex(const char *name)
             && GetLastError() != ERROR_ALREADY_EXISTS;
 }
 
-quint32 OsUtil::userErrorCode()
-{
-    return STATUS_INVALID_PARAMETER;
-}
-
 quint32 OsUtil::lastErrorCode()
 {
     return GetLastError();
 }
 
-QString OsUtil::lastErrorMessage(quint32 errorCode)
+QString OsUtil::errorMessage(quint32 errorCode)
 {
     LPWSTR buf = nullptr;
 

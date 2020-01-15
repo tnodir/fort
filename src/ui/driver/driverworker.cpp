@@ -109,7 +109,7 @@ void DriverWorker::readLog()
     if (success) {
         m_logBuffer->reset(nr);
     } else if (!m_cancelled) {
-        errorMessage = OsUtil::lastErrorMessage();
+        errorMessage = OsUtil::errorMessage();
     }
 
     emitReadLogResult(success, errorMessage);

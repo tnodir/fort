@@ -20,6 +20,8 @@ public:
     static quint32 ioctlAddApp();
     static quint32 ioctlDelApp();
 
+    static quint32 userErrorCode();
+
     static int bufferSize();
 
     static quint32 confIoConfOff();

@@ -23,24 +23,22 @@ DriverManager::~DriverManager()
     abortWorker();
 }
 
-void DriverManager::setErrorMessage(const QString &errorMessage)
+QString DriverManager::errorMessage() const
 {
-    if (m_errorMessage != errorMessage) {
-        m_errorMessage = errorMessage;
-        emit errorMessageChanged();
-    }
+    return (m_errorCode == 0) ? QString()
+                              : OsUtil::errorMessage(m_errorCode);
 }
 
 void DriverManager::updateError(bool success)
 {
     m_errorCode = success ? 0 : OsUtil::lastErrorCode();
-    setErrorMessage(success ? QString()
-                            : OsUtil::lastErrorMessage(m_errorCode));
+    emit errorMessageChanged();
 }
 
 bool DriverManager::isDeviceError() const
 {
-    return m_errorCode == OsUtil::userErrorCode();
+    return m_errorCode != 0
+            && m_errorCode != FortCommon::userErrorCode();
 }
 
 void DriverManager::setupWorker()

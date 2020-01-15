@@ -14,9 +14,8 @@ public:
 
     static bool createGlobalMutex(const char *name);
 
-    static quint32 userErrorCode();
     static quint32 lastErrorCode();
-    static QString lastErrorMessage(quint32 errorCode = lastErrorCode());
+    static QString errorMessage(quint32 errorCode = lastErrorCode());
 
     static qint32 getTickCount();
 };

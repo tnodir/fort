@@ -991,7 +991,7 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
   PIO_STACK_LOCATION irp_stack;
   ULONG_PTR info = 0;
   ULONG control_code;
-  NTSTATUS status = STATUS_INVALID_PARAMETER;
+  NTSTATUS status = STATUS_UNSUCCESSFUL;
 
   irp_stack = IoGetCurrentIrpStackLocation(irp);
   control_code = irp_stack->Parameters.DeviceIoControl.IoControlCode;
@@ -1102,7 +1102,7 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
   default: break;
   }
 
-  if (!NT_SUCCESS(status)) {
+  if (!NT_SUCCESS(status) && status != FORT_STATUS_USER_ERROR) {
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                "FORT: Device Control: Error: %x\n", status);
   }

@@ -486,7 +486,7 @@ fort_defer_stream_add (PFORT_DEFER defer,
     if (dataOffset->streamDataOffset != 0
         && (dataOffset->netBuffer != netBuf
         || dataOffset->mdl != NET_BUFFER_CURRENT_MDL(netBuf)))
-      return STATUS_INVALID_PARAMETER;
+      return STATUS_FWP_CANNOT_PEND;
   }
 
   KeAcquireInStackQueuedSpinLock(&defer->lock, &lock_queue);

@@ -227,7 +227,7 @@ fort_conf_ref_exe_add_path_locked (PFORT_CONF_REF conf_ref,
     return TRUE;
   } else {
     if (flags.is_new)
-      return STATUS_INVALID_PARAMETER;
+      return FORT_STATUS_USER_ERROR;
 
     // Replace flags
     {

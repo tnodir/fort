@@ -22,7 +22,7 @@ public:
 
     DriverWorker *driverWorker() const { return m_driverWorker; }
 
-    QString errorMessage() const { return m_errorMessage; }
+    QString errorMessage() const;
     bool isDeviceError() const;
 
     bool isDeviceOpened() const;
@@ -59,8 +59,6 @@ private:
 
     Device *m_device = nullptr;
     DriverWorker *m_driverWorker = nullptr;
-
-    QString m_errorMessage;
 };
 
 #endif // DRIVERMANAGER_H

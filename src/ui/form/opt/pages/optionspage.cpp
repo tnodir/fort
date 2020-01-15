@@ -310,13 +310,12 @@ void OptionsPage::setupDriverIcon()
                 : ":/images/plugin_disabled.png";
 
         m_iconDriver->setPixmap(QPixmap(iconPath));
-
-        retranslateDriverMessage();
     };
 
     refreshDriverIcon();
 
     connect(driverManager(), &DriverManager::isDeviceOpenedChanged, this, refreshDriverIcon);
+    connect(driverManager(), &DriverManager::errorMessageChanged, this, &OptionsPage::retranslateDriverMessage);
 }
 
 void OptionsPage::setupNewVersionBox()

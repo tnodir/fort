@@ -53,6 +53,11 @@ quint32 FortCommon::ioctlDelApp()
     return FORT_IOCTL_DELAPP;
 }
 
+quint32 FortCommon::userErrorCode()
+{
+    return FORT_ERROR_USER_ERROR;
+}
+
 int FortCommon::bufferSize()
 {
     return FORT_BUFFER_SIZE;
