@@ -97,6 +97,7 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   PFORT_CONF_REF conf_ref;
   PVOID path;
   FORT_CONF_FLAGS conf_flags;
+  FORT_APP_FLAGS app_flags;
   UINT32 flags;
   UINT32 remote_ip;
   UINT32 process_id;
@@ -142,9 +143,10 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   path_len = inMetaValues->processPath->size - sizeof(WCHAR);  /* chop terminating zero */
   path = inMetaValues->processPath->data;
 
+  app_flags.v = 0;
+
   if (fort_conf_ip_inet_included(&conf_ref->conf, remote_ip)) {
-    const FORT_APP_FLAGS app_flags = fort_conf_app_find(
-      &conf_ref->conf, path, path_len, fort_conf_exe_find);
+    app_flags = fort_conf_app_find(&conf_ref->conf, path, path_len, fort_conf_exe_find);
 
     if (!fort_conf_app_blocked(&conf_ref->conf, app_flags)) {
       if (conf_flags.log_stat) {
@@ -179,14 +181,12 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
     }
   }
 
-  if (conf_flags.log_blocked) {
-    FORT_APP_FLAGS flags;
-    flags.v = 0;
-    flags.blocked = 1;
-    flags.alerted = 1;
-    flags.is_new = 1;
+  if (app_flags.v == 0 && conf_flags.log_blocked) {
+    app_flags.blocked = 1;
+    app_flags.alerted = 1;
+    app_flags.is_new = 1;
 
-    if (NT_SUCCESS(fort_conf_ref_exe_add_path(conf_ref, path, path_len, flags))) {
+    if (NT_SUCCESS(fort_conf_ref_exe_add_path(conf_ref, path, path_len, app_flags))) {
       const UINT16 remote_port = inFixedValues->incomingValue[
         remotePortField].value.uint16;
       const IPPROTO ip_proto = (IPPROTO) inFixedValues->incomingValue[
