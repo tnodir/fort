@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.1.3, 2020-01-15:
+- UI: Fix empty conf on initial startup.
+
 v3.1.2, 2020-01-15:
 - Fix wild matching the drive letter.
 - UI: DriverManager: Refactor error handling.
