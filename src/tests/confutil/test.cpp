@@ -40,7 +40,7 @@ void Test::confWriteRead()
                 );
     appGroup1->setAllowText(
                 "C:\\Program Files\\Skype\\Phone\\Skype.exe\n"
-                "C:\\Utils\\Dev\\Git\\**\n"
+                "?:\\Utils\\Dev\\Git\\**\n"
                 "D:\\**\\Programs\\**\n"
                 );
 
@@ -80,7 +80,10 @@ void Test::confWriteRead()
                     data, FileUtil::pathToKernelPath("C:\\Program Files\\Skype\\Phone\\Skype.exe"))));
     QVERIFY(!FortCommon::confAppBlocked(
                 data, FortCommon::confAppFind(
-                    data, FileUtil::pathToKernelPath("C:\\Utils\\Dev\\Git\\**"))));
+                    data, FileUtil::pathToKernelPath("C:\\Utils\\Dev\\Git\\git.exe"))));
+    QVERIFY(!FortCommon::confAppBlocked(
+                data, FortCommon::confAppFind(
+                    data, FileUtil::pathToKernelPath("D:\\Utils\\Dev\\Git\\bin\\git.exe"))));
     QVERIFY(!FortCommon::confAppBlocked(
                 data, FortCommon::confAppFind(
                     data, FileUtil::pathToKernelPath("D:\\My\\Programs\\Test.exe"))));

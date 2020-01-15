@@ -67,14 +67,21 @@ QString FileUtil::kernelPathToPath(const QString &kernelPath)
 QString FileUtil::pathToKernelPath(const QString &path, bool lower)
 {
     QString kernelPath = path;
-    if (path.size() > 1 && path.at(0).isLetter()) {
-        if (path.at(1) == QLatin1Char(':')) {
-            const QString drive = path.left(2);
-            kernelPath = driveToKernelName(drive)
-                    + path.mid(2).replace(QLatin1Char('/'), QLatin1Char('\\'));
-        } else {
-            if (QString::compare(path, systemPath, Qt::CaseInsensitive) == 0)
-                return systemPath;
+    if (path.size() > 1) {
+        const auto char1 = path.at(0);
+        if (char1.isLetter()) {
+            if (path.at(1) == ':') {
+                const QString drive = path.left(2);
+                kernelPath = driveToKernelName(drive)
+                        + path.mid(2).replace(QLatin1Char('/'), QLatin1Char('\\'));
+            } else {
+                if (QString::compare(path, systemPath, Qt::CaseInsensitive) == 0)
+                    return systemPath;
+            }
+        } else if ((char1 == '?' || char1 == '*')
+                   && path.at(1) == ':') {
+            // Replace "?:\\" with "\\Device\\*\\"
+            kernelPath = "\\Device\\*" + path.mid(2);
         }
     }
     return lower ? kernelPath.toLower() : kernelPath;
