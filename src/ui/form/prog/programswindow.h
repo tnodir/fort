@@ -60,8 +60,11 @@ private:
     void setupTableAppsChanged();
 
     void updateAppEditForm(bool editCurrentApp);
-    void updateCurrentApp(bool blocked);
-    void deleteCurrentApp();
+    void updateApp(int row, bool blocked);
+    void deleteApp(int row);
+
+    void updateSelectedApps(bool blocked);
+    void deleteSelectedApps();
 
     int appListCurrentIndex() const;
     QString appListCurrentPath() const;

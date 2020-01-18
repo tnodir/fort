@@ -10,6 +10,8 @@ class TableView : public QTableView
 public:
     explicit TableView(QWidget *parent = nullptr);
 
+    QVector<int> selectedRows() const;
+
 signals:
     void currentIndexChanged(const QModelIndex &index);
 

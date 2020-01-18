@@ -209,8 +209,8 @@ QLayout *ProgramsWindow::setupHeader()
         updateAppEditForm(true);
     });
     connect(m_actRemoveApp, &QAction::triggered, [&] {
-        if (fortManager()->showQuestionBox(tr("Are you sure to remove the selected program?"))) {
-            deleteCurrentApp();
+        if (fortManager()->showQuestionBox(tr("Are you sure to remove selected program(s)?"))) {
+            deleteSelectedApps();
         }
     });
 
@@ -222,10 +222,10 @@ QLayout *ProgramsWindow::setupHeader()
     m_btBlockApp = ControlUtil::createLinkButton(":/images/stop.png");
 
     connect(m_btAllowApp, &QAbstractButton::clicked, [&] {
-        updateCurrentApp(false);
+        updateSelectedApps(false);
     });
     connect(m_btBlockApp, &QAbstractButton::clicked, [&] {
-        updateCurrentApp(true);
+        updateSelectedApps(true);
     });
 
     // Log Blocked
@@ -408,7 +408,7 @@ void ProgramsWindow::setupTableApps()
     m_appListView = new TableView();
     m_appListView->setIconSize(QSize(24, 24));
     m_appListView->setAlternatingRowColors(true);
-    m_appListView->setSelectionMode(QAbstractItemView::SingleSelection);
+    m_appListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_appListView->setSelectionBehavior(QAbstractItemView::SelectItems);
 
     m_appListView->setSortingEnabled(true);
@@ -536,23 +536,33 @@ void ProgramsWindow::updateAppEditForm(bool editCurrentApp)
     m_formAppEdit->show();
 }
 
-void ProgramsWindow::updateCurrentApp(bool blocked)
+void ProgramsWindow::updateApp(int row, bool blocked)
 {
-    const int appIndex = appListCurrentIndex();
-    if (appIndex >= 0) {
-        const auto appRow = appListModel()->appRowAt(appIndex);
-        appListModel()->updateApp(appRow.appId, appRow.appPath, appRow.appName,
-                                  QDateTime(), appRow.groupIndex,
-                                  appRow.useGroupPerm, blocked);
+    const auto appRow = appListModel()->appRowAt(row);
+    appListModel()->updateApp(appRow.appId, appRow.appPath, appRow.appName,
+                              QDateTime(), appRow.groupIndex,
+                              appRow.useGroupPerm, blocked);
+}
+
+void ProgramsWindow::deleteApp(int row)
+{
+    const auto appRow = appListModel()->appRowAt(row);
+    appListModel()->deleteApp(appRow.appId, appRow.appPath, row);
+}
+
+void ProgramsWindow::updateSelectedApps(bool blocked)
+{
+    const auto rows = m_appListView->selectedRows();
+    for (int i = rows.size(); --i >= 0; ) {
+        updateApp(rows.at(i), blocked);
     }
 }
 
-void ProgramsWindow::deleteCurrentApp()
+void ProgramsWindow::deleteSelectedApps()
 {
-    const int appIndex = appListCurrentIndex();
-    if (appIndex >= 0) {
-        const auto appRow = appListModel()->appRowAt(appIndex);
-        appListModel()->deleteApp(appRow.appId, appRow.appPath, appIndex);
+    const auto rows = m_appListView->selectedRows();
+    for (int i = rows.size(); --i >= 0; ) {
+        deleteApp(rows.at(i));
     }
 }
 
