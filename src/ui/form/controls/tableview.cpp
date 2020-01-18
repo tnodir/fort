@@ -1,5 +1,8 @@
 #include "tableview.h"
 
+#include <QContextMenuEvent>
+#include <QMenu>
+
 TableView::TableView(QWidget *parent) :
     QTableView(parent)
 {
@@ -23,4 +26,11 @@ void TableView::currentChanged(const QModelIndex &current,
     QTableView::currentChanged(current, previous);
 
     emit currentIndexChanged(current);
+}
+
+void TableView::contextMenuEvent(QContextMenuEvent *event)
+{
+    if (m_menu != nullptr) {
+        m_menu->popup(event->globalPos());
+    }
 }

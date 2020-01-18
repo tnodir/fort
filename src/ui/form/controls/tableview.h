@@ -10,6 +10,9 @@ class TableView : public QTableView
 public:
     explicit TableView(QWidget *parent = nullptr);
 
+    QMenu *menu() const { return m_menu; }
+    void setMenu(QMenu *menu) { m_menu = menu; }
+
     QVector<int> selectedRows() const;
 
 signals:
@@ -18,6 +21,11 @@ signals:
 protected:
     void currentChanged(const QModelIndex &current,
                         const QModelIndex &previous) override;
+
+    void contextMenuEvent(QContextMenuEvent *event) override;
+
+private:
+    QMenu *m_menu = nullptr;
 };
 
 #endif // TABLEVIEW_H

@@ -431,6 +431,8 @@ void ProgramsWindow::setupTableApps()
     m_appListView->setSortingEnabled(true);
     m_appListView->setModel(appListModel());
 
+    m_appListView->setMenu(m_btEdit->menu());
+
     connect(m_appListView, &TableView::activated, m_actEditApp, &QAction::trigger);
 }
 
