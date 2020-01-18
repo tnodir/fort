@@ -7,7 +7,6 @@
 #include "../fortcommon.h"
 #include "logbuffer.h"
 #include "logentryblocked.h"
-#include "logentryheartbeat.h"
 #include "logentryprocnew.h"
 #include "logentrystattraf.h"
 #include "model/applistmodel.h"
@@ -128,16 +127,6 @@ void LogManager::readLogEntries(LogBuffer *logBuffer)
             LogEntryStatTraf statTrafEntry;
             logBuffer->readEntryStatTraf(&statTrafEntry);
             m_appStatModel->handleStatTraf(statTrafEntry);
-            break;
-        }
-        case LogEntry::Heartbeat: {
-            LogEntryHeartbeat heartbeatEntry;
-            logBuffer->readEntryHeartbeat(&heartbeatEntry);
-            if (++m_heartbeatTick != heartbeatEntry.tick()) {
-                qCritical() << "Heartbeat ticks mismatch! Expected:"
-                            << heartbeatEntry.tick() << "Got:" << m_heartbeatTick;
-                abort();
-            }
             break;
         }
         default:

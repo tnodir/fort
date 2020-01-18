@@ -53,7 +53,6 @@ SOURCES += \
     log/logbuffer.cpp \
     log/logentry.cpp \
     log/logentryblocked.cpp \
-    log/logentryheartbeat.cpp \
     log/logentryprocnew.cpp \
     log/logentrystattraf.cpp \
     log/logmanager.cpp \
@@ -156,7 +155,6 @@ HEADERS += \
     log/logbuffer.h \
     log/logentry.h \
     log/logentryblocked.h \
-    log/logentryheartbeat.h \
     log/logentryprocnew.h \
     log/logentrystattraf.h \
     log/logmanager.h \

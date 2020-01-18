@@ -58,8 +58,6 @@ private:
 private:
     bool m_active = false;
 
-    quint16 m_heartbeatTick = 0;
-
     AppListModel *m_appListModel = nullptr;
     AppStatModel *m_appStatModel = nullptr;
 

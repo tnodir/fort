@@ -7,7 +7,6 @@
 #define FORT_LOG_FLAG_BLOCKED		0x01000000
 #define FORT_LOG_FLAG_PROC_NEW		0x02000000
 #define FORT_LOG_FLAG_STAT_TRAF		0x04000000
-#define FORT_LOG_FLAG_HEARTBEAT		0x08000000
 #define FORT_LOG_FLAG_BLOCKED_ALLOW	0x10000000
 #define FORT_LOG_FLAG_TYPE_MASK		0x0F000000
 #define FORT_LOG_FLAG_OPT_MASK		0xF0000000
@@ -37,8 +36,6 @@
 
 #define FORT_LOG_STAT_BUFFER_PROC_COUNT \
   ((FORT_BUFFER_SIZE - FORT_LOG_STAT_HEADER_SIZE) / FORT_LOG_STAT_TRAF_SIZE(1))
-
-#define FORT_LOG_HEARTBEAT_SIZE		sizeof(UINT32)
 
 #define FORT_LOG_SIZE_MAX	FORT_LOG_BLOCKED_SIZE_MAX
 
@@ -135,20 +132,4 @@ fort_log_stat_traf_header_read (const char *p, INT64 *unix_time, UINT16 *proc_co
 
   *proc_count = (UINT16) *up++;
   *unix_time = *((INT64 *) up);
-}
-
-static void
-fort_log_heartbeat_write (char *p, UINT16 tick)
-{
-  UINT32 *up = (UINT32 *) p;
-
-  *up = FORT_LOG_FLAG_HEARTBEAT | tick;
-}
-
-static void
-fort_log_heartbeat_read (const char *p, UINT16 *tick)
-{
-  const UINT32 *up = (const UINT32 *) p;
-
-  *tick = (UINT16) *up;
 }

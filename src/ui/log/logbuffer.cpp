@@ -2,7 +2,6 @@
 
 #include "fortcommon.h"
 #include "logentryblocked.h"
-#include "logentryheartbeat.h"
 #include "logentryprocnew.h"
 #include "logentrystattraf.h"
 
@@ -166,20 +165,5 @@ void LogBuffer::readEntryStatTraf(LogEntryStatTraf *logEntry)
     }
 
     const int entrySize = int(FortCommon::logStatSize(procCount));
-    m_offset += entrySize;
-}
-
-void LogBuffer::readEntryHeartbeat(LogEntryHeartbeat *logEntry)
-{
-    Q_ASSERT(m_offset < m_top);
-
-    const char *input = this->input();
-
-    quint16 tick;
-    FortCommon::logHeartbeatRead(input, &tick);
-
-    logEntry->setTick(tick);
-
-    const int entrySize = int(FortCommon::logHeartbeatSize());
     m_offset += entrySize;
 }
