@@ -71,6 +71,7 @@ public:
                    bool blocked, bool updateDriver = true);
     bool updateAppName(qint64 appId, const QString &appName);
     void deleteApp(qint64 appId, const QString &appPath, int row);
+    void purgeApps();
 
     const AppGroup *appGroupAt(int index) const;
     QStringList appGroupNames() const;

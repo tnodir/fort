@@ -293,6 +293,17 @@ void AppListModel::deleteApp(qint64 appId, const QString &appPath, int row)
     endRemoveRows();
 }
 
+void AppListModel::purgeApps()
+{
+    for (int row = rowCount(); --row >= 0; ) {
+        const auto appRow = appRowAt(row);
+        const auto appPath = appRow.appPath;
+        if (!FileUtil::fileExists(appPath)) {
+            deleteApp(appRow.appId, appPath, row);
+        }
+    }
+}
+
 void AppListModel::reset()
 {
     invalidateRowCache();

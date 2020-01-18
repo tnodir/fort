@@ -103,6 +103,7 @@ void ProgramsWindow::onRetranslateUi()
     m_actAddApp->setText(tr("Add"));
     m_actEditApp->setText(tr("Edit"));
     m_actRemoveApp->setText(tr("Remove"));
+    m_actPurgeApps->setText(tr("Purge All"));
 
     m_btAllowApp->setText(tr("Allow"));
     m_btBlockApp->setText(tr("Block"));
@@ -203,6 +204,10 @@ QLayout *ProgramsWindow::setupHeader()
     m_actRemoveApp = editMenu->addAction(QIcon(":/images/application_delete.png"), QString());
     m_actRemoveApp->setShortcut(Qt::Key_Delete);
 
+    editMenu->addSeparator();
+
+    m_actPurgeApps = editMenu->addAction(QIcon(":/images/bin_empty.png"), QString());
+
     connect(m_actAddApp, &QAction::triggered, [&] {
         updateAppEditForm(false);
     });
@@ -212,6 +217,11 @@ QLayout *ProgramsWindow::setupHeader()
     connect(m_actRemoveApp, &QAction::triggered, [&] {
         if (fortManager()->showQuestionBox(tr("Are you sure to remove selected program(s)?"))) {
             deleteSelectedApps();
+        }
+    });
+    connect(m_actPurgeApps, &QAction::triggered, [&] {
+        if (fortManager()->showQuestionBox(tr("Are you sure to remove all non-existent programs?"))) {
+            appListModel()->purgeApps();
         }
     });
 

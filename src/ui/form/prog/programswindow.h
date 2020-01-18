@@ -89,6 +89,7 @@ private:
     QAction *m_actAddApp = nullptr;
     QAction *m_actEditApp = nullptr;
     QAction *m_actRemoveApp = nullptr;
+    QAction *m_actPurgeApps = nullptr;
     QPushButton *m_btAllowApp = nullptr;
     QPushButton *m_btBlockApp = nullptr;
     QLabel *m_labelEditPath = nullptr;
