@@ -70,6 +70,7 @@ void OptionsPage::onRetranslateUi()
     m_cbFilterLocals->setToolTip(tr("Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses"));
     m_cbStopTraffic->setText(tr("Stop Traffic"));
     m_cbStopInetTraffic->setText(tr("Stop Internet Traffic"));
+    m_cbAllowAllNew->setText(tr("Allow All New Programs"));
     m_cbHotKeys->setText(tr("Hot Keys"));
 
     m_cbPassword->setText(tr("Password:"));
@@ -131,6 +132,10 @@ void OptionsPage::setupUi()
         conf()->setStopInetTraffic(checked);
         ctrl()->setConfFlagsEdited(true);
     });
+    m_cbAllowAllNew = ControlUtil::createCheckBox(conf()->allowAllNew(), [&](bool checked) {
+        conf()->setAllowAllNew(checked);
+        ctrl()->setConfFlagsEdited(true);
+    });
     m_cbHotKeys = ControlUtil::createCheckBox(settings()->hotKeyEnabled(), [&](bool) {
         setIniEdited(true);
     });
@@ -148,6 +153,7 @@ void OptionsPage::setupUi()
     trafficLayout->addWidget(m_cbFilterLocals);
     trafficLayout->addWidget(m_cbStopTraffic);
     trafficLayout->addWidget(m_cbStopInetTraffic);
+    trafficLayout->addWidget(m_cbAllowAllNew);
     m_gbTraffic->setLayout(trafficLayout);
     colLayout1->addWidget(m_gbTraffic);
 

@@ -509,7 +509,7 @@ bool FortManager::applyConfImmediateFlags()
         conf()->copyImmediateFlags(*confToEdit());
     }
 
-    return saveSettings(conf(), true, true);
+    return saveSettings(conf(), true, false);
 }
 
 bool FortManager::loadSettings()
@@ -528,12 +528,12 @@ bool FortManager::loadSettings()
 }
 
 bool FortManager::saveSettings(FirewallConf *newConf, bool onlyFlags,
-                               bool immediateFlags)
+                               bool isTrayMenuDirty)
 {
     if (!confManager()->save(*newConf, onlyFlags))
         return false;
 
-    if (!immediateFlags) {
+    if (!isTrayMenuDirty) {
         updateTrayMenu();
     }
 
@@ -569,6 +569,7 @@ void FortManager::saveTrayFlags()
     conf()->setFilterEnabled(m_filterEnabledAction->isChecked());
     conf()->setStopTraffic(m_stopTrafficAction->isChecked());
     conf()->setStopInetTraffic(m_stopInetTrafficAction->isChecked());
+    conf()->setAllowAllNew(m_allowAllNewAction->isChecked());
 
     int i = 0;
     for (AppGroup *appGroup : conf()->appGroups()) {
@@ -577,7 +578,7 @@ void FortManager::saveTrayFlags()
         ++i;
     }
 
-    saveSettings(conf(), true, true);
+    saveSettings(conf(), true, false);
 }
 
 void FortManager::saveProgWindowState()
@@ -688,6 +689,13 @@ void FortManager::updateTrayMenu()
                     true, conf.stopInetTraffic());
         addHotKey(m_stopInetTrafficAction,
                   settings()->hotKeyStopInetTraffic(), hotKeyEnabled);
+
+        m_allowAllNewAction = addAction(
+                    menu, QIcon(), tr("Allow All New Programs"),
+                    this, SLOT(saveTrayFlags()),
+                    true, conf.allowAllNew());
+        addHotKey(m_allowAllNewAction,
+                  settings()->hotKeyAllowAllNew(), hotKeyEnabled);
 
         menu->addSeparator();
         m_appGroupActions.clear();

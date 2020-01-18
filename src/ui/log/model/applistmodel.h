@@ -12,22 +12,16 @@ QT_FORWARD_DECLARE_CLASS(FirewallConf)
 QT_FORWARD_DECLARE_CLASS(LogEntryBlocked)
 QT_FORWARD_DECLARE_CLASS(SqliteDb)
 
-enum AppState {
-    AppAlert = 0,
-    AppAllow,
-    AppBlock
-};
-
 struct AppRow {
     bool isValid(int row) const { return row == this->row; }
     void invalidate() { row = -1; }
 
-    bool blocked() const { return state == AppBlock; }
-
     int row = -1;
 
     bool useGroupPerm = true;
-    AppState state = AppAlert;
+    bool blocked = false;
+    bool alerted = false;
+
     int groupIndex = 0;
 
     qint64 appId = 0;
@@ -44,8 +38,6 @@ class AppListModel : public TableItemModel
     Q_OBJECT
 
 public:
-    Q_ENUM(AppState)
-
     explicit AppListModel(ConfManager *confManager,
                           QObject *parent = nullptr);
 
@@ -96,8 +88,8 @@ private:
     QString sqlBase() const;
     QString sqlOrder() const;
 
-    AppState appRowStateByGroup(const AppRow &appRow) const;
-    QString appStateToString(AppState state) const;
+    bool appBlockedByGroup(const AppRow &appRow) const;
+    QString appStateToString(const AppRow &appRow) const;
 
 private:
     int m_sortColumn = 5;

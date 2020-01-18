@@ -287,17 +287,76 @@ QLayout *ApplicationsPage::setupGroupHeader()
 {
     auto layout = new QHBoxLayout();
 
-    setupGroupOptions();
     setupGroupEnabled();
     setupGroupPeriod();
     setupGroupPeriodEnabled();
+    setupGroupOptions();
 
-    layout->addWidget(m_btGroupOptions);
-    layout->addStretch(1);
     layout->addWidget(m_cbGroupEnabled);
     layout->addWidget(m_ctpGroupPeriod);
+    layout->addStretch(1);
+    layout->addWidget(m_btGroupOptions);
 
     return layout;
+}
+
+void ApplicationsPage::setupGroupEnabled()
+{
+    m_cbGroupEnabled = ControlUtil::createCheckBox(false, [&](bool checked) {
+        if (appGroup()->enabled() == checked)
+            return;
+
+        appGroup()->setEnabled(checked);
+
+        ctrl()->setConfFlagsEdited(true);
+    });
+
+    m_cbGroupEnabled->setFont(ControlUtil::fontDemiBold());
+}
+
+void ApplicationsPage::setupGroupPeriod()
+{
+    m_ctpGroupPeriod = new CheckTimePeriod();
+
+    connect(m_ctpGroupPeriod->checkBox(), &QCheckBox::toggled, [&](bool checked) {
+        if (appGroup()->periodEnabled() == checked)
+            return;
+
+        appGroup()->setPeriodEnabled(checked);
+
+        ctrl()->setConfEdited(true);
+    });
+    connect(m_ctpGroupPeriod->timeEdit1(), &QTimeEdit::userTimeChanged, [&](const QTime &time) {
+        const auto timeStr = CheckTimePeriod::fromTime(time);
+
+        if (appGroup()->periodFrom() == timeStr)
+            return;
+
+        appGroup()->setPeriodFrom(timeStr);
+
+        ctrl()->setConfEdited(true);
+    });
+    connect(m_ctpGroupPeriod->timeEdit2(), &QTimeEdit::userTimeChanged, [&](const QTime &time) {
+        const auto timeStr = CheckTimePeriod::fromTime(time);
+
+        if (appGroup()->periodTo() == timeStr)
+            return;
+
+        appGroup()->setPeriodTo(timeStr);
+
+        ctrl()->setConfEdited(true);
+    });
+}
+
+void ApplicationsPage::setupGroupPeriodEnabled()
+{
+    const auto refreshPeriodEnabled = [&] {
+        m_ctpGroupPeriod->setEnabled(m_cbGroupEnabled->isChecked());
+    };
+
+    refreshPeriodEnabled();
+
+    connect(m_cbGroupEnabled, &QCheckBox::toggled, this, refreshPeriodEnabled);
 }
 
 void ApplicationsPage::setupGroupOptions()
@@ -395,66 +454,10 @@ void ApplicationsPage::setupGroupOptionsEnabled()
     connect(conf(), &FirewallConf::logStatChanged, this, refreshOptionsEnabled);
 }
 
-void ApplicationsPage::setupGroupEnabled()
-{
-    m_cbGroupEnabled = ControlUtil::createCheckBox(false, [&](bool checked) {
-        if (appGroup()->enabled() == checked)
-            return;
-
-        appGroup()->setEnabled(checked);
-
-        ctrl()->setConfFlagsEdited(true);
-    });
-}
-
-void ApplicationsPage::setupGroupPeriod()
-{
-    m_ctpGroupPeriod = new CheckTimePeriod();
-
-    connect(m_ctpGroupPeriod->checkBox(), &QCheckBox::toggled, [&](bool checked) {
-        if (appGroup()->periodEnabled() == checked)
-            return;
-
-        appGroup()->setPeriodEnabled(checked);
-
-        ctrl()->setConfEdited(true);
-    });
-    connect(m_ctpGroupPeriod->timeEdit1(), &QTimeEdit::userTimeChanged, [&](const QTime &time) {
-        const auto timeStr = CheckTimePeriod::fromTime(time);
-
-        if (appGroup()->periodFrom() == timeStr)
-            return;
-
-        appGroup()->setPeriodFrom(timeStr);
-
-        ctrl()->setConfEdited(true);
-    });
-    connect(m_ctpGroupPeriod->timeEdit2(), &QTimeEdit::userTimeChanged, [&](const QTime &time) {
-        const auto timeStr = CheckTimePeriod::fromTime(time);
-
-        if (appGroup()->periodTo() == timeStr)
-            return;
-
-        appGroup()->setPeriodTo(timeStr);
-
-        ctrl()->setConfEdited(true);
-    });
-}
-
-void ApplicationsPage::setupGroupPeriodEnabled()
-{
-    const auto refreshPeriodEnabled = [&] {
-        m_ctpGroupPeriod->setEnabled(m_cbGroupEnabled->isChecked());
-    };
-
-    refreshPeriodEnabled();
-
-    connect(m_cbGroupEnabled, &QCheckBox::toggled, this, refreshPeriodEnabled);
-}
-
 void ApplicationsPage::setupBlockApps()
 {
     m_blockApps = new AppsColumn();
+    m_blockApps->icon()->setPixmap(QPixmap(":/images/stop.png"));
 
     connect(m_blockApps->editText(), &QPlainTextEdit::textChanged, [&] {
         const auto text = m_blockApps->editText()->toPlainText();
@@ -471,6 +474,7 @@ void ApplicationsPage::setupBlockApps()
 void ApplicationsPage::setupAllowApps()
 {
     m_allowApps = new AppsColumn();
+    m_allowApps->icon()->setPixmap(QPixmap(":/images/arrow_switch.png"));
 
     connect(m_allowApps->editText(), &QPlainTextEdit::textChanged, [&] {
         const auto text = m_allowApps->editText()->toPlainText();

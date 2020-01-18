@@ -121,7 +121,8 @@ void ProgramsWindow::onRetranslateUi()
 
     m_formAppEdit->setWindowTitle(tr("Edit Program"));
 
-    m_cbLogBlocked->setText(tr("Show Unknown Blocked Programs"));
+    m_btLogOptions->setText(tr("Options"));
+    m_cbLogBlocked->setText(tr("Show New Programs"));
 
     appListModel()->refresh();
 
@@ -228,15 +229,15 @@ QLayout *ProgramsWindow::setupHeader()
         updateSelectedApps(true);
     });
 
-    // Log Blocked
-    setupLogBlocked();
+    // Log Options
+    setupLogOptions();
 
     layout->addWidget(m_btEdit);
     layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
     layout->addWidget(m_btAllowApp);
     layout->addWidget(m_btBlockApp);
     layout->addStretch();
-    layout->addWidget(m_cbLogBlocked);
+    layout->addWidget(m_btLogOptions);
 
     return layout;
 }
@@ -357,7 +358,7 @@ void ProgramsWindow::setupAppEditForm()
         const bool appEdited = (appPath != appRow.appPath
                 || groupIndex != appRow.groupIndex
                 || useGroupPerm != appRow.useGroupPerm
-                || blocked != appRow.blocked()
+                || blocked != appRow.blocked
                 || endTime != appRow.endTime);
 
         if (!(appNameEdited || appEdited)
@@ -387,6 +388,22 @@ void ProgramsWindow::setupComboAppGroups()
     refreshComboAppGroups();
 
     connect(confManager(), &ConfManager::confSaved, this, refreshComboAppGroups);
+}
+
+void ProgramsWindow::setupLogOptions()
+{
+    setupLogBlocked();
+
+    // Menu
+    const QList<QWidget *> menuWidgets = {
+        m_cbLogBlocked
+    };
+    auto layout = ControlUtil::createLayoutByWidgets(menuWidgets);
+
+    auto menu = ControlUtil::createMenuByLayout(layout, this);
+
+    m_btLogOptions = new WideButton(QIcon(":/images/application_key.png"));
+    m_btLogOptions->setMenu(menu);
 }
 
 void ProgramsWindow::setupLogBlocked()
@@ -528,9 +545,9 @@ void ProgramsWindow::updateAppEditForm(bool editCurrentApp)
     m_editName->setText(appRow.appName);
     m_comboAppGroup->setCurrentIndex(appRow.groupIndex);
     m_cbUseGroupPerm->setChecked(appRow.useGroupPerm);
-    m_rbAllowApp->setChecked(!appRow.blocked());
-    m_rbBlockApp->setChecked(appRow.blocked());
-    m_cscBlockApp->setEnabled(!appRow.blocked());
+    m_rbAllowApp->setChecked(!appRow.blocked);
+    m_rbBlockApp->setChecked(appRow.blocked);
+    m_cscBlockApp->setEnabled(!appRow.blocked);
     m_cscBlockApp->checkBox()->setChecked(false);
 
     m_formAppEdit->show();

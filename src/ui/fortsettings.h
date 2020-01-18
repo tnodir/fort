@@ -174,6 +174,7 @@ public:
     QString hotKeyFilter() const { return iniText("hotKey/filter", "Ctrl+Alt+Shift+F"); }
     QString hotKeyStopTraffic() const { return iniText("hotKey/stopTraffic"); }
     QString hotKeyStopInetTraffic() const { return iniText("hotKey/stopInetTraffic"); }
+    QString hotKeyAllowAllNew() const { return iniText("hotKey/allowAllNew"); }
     QString hotKeyAppGroupModifiers() const { return iniText("hotKey/appGroupModifiers", "Ctrl+Alt+Shift"); }
     QString hotKeyQuit() const { return iniText("hotKey/quit"); }
 

@@ -148,7 +148,8 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
   if (fort_conf_ip_inet_included(&conf_ref->conf, remote_ip)) {
     app_flags = fort_conf_app_find(&conf_ref->conf, path, path_len, fort_conf_exe_find);
 
-    if (!fort_conf_app_blocked(&conf_ref->conf, app_flags)) {
+    if (app_flags.v == 0 ? conf_flags.allow_all_new
+        : !fort_conf_app_blocked(&conf_ref->conf, app_flags)) {
       if (conf_flags.log_stat) {
         const UINT64 flow_id = inMetaValues->flowHandle;
 
@@ -177,12 +178,16 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
         }
       }
 
-      goto permit;
+      if (app_flags.v == 0)
+        goto log_blocked;
+      else
+        goto permit;
     }
   }
 
   if (app_flags.v == 0 && conf_flags.log_blocked) {
-    app_flags.blocked = 1;
+ log_blocked:
+    app_flags.blocked = !conf_flags.allow_all_new;
     app_flags.alerted = 1;
     app_flags.is_new = 1;
 
@@ -192,10 +197,13 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
       const IPPROTO ip_proto = (IPPROTO) inFixedValues->incomingValue[
         ipProtoField].value.uint8;
 
-      fort_buffer_blocked_write(&g_device->buffer,
+      fort_buffer_blocked_write(&g_device->buffer, app_flags.blocked,
         remote_ip, remote_port, ip_proto,
         process_id, path_len, path, &irp, &info);
     }
+
+    if (!app_flags.blocked)
+      goto permit;
   }
 
  block:

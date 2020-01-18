@@ -12,6 +12,7 @@ FirewallConf::FirewallConf(QObject *parent) :
     m_filterLocals(false),
     m_stopTraffic(false),
     m_stopInetTraffic(false),
+    m_allowAllNew(false),
     m_resolveAddress(false),
     m_logBlocked(false),
     m_logStat(false),
@@ -59,6 +60,14 @@ void FirewallConf::setStopInetTraffic(bool stopInetTraffic)
     if (m_stopInetTraffic != stopInetTraffic) {
         m_stopInetTraffic = stopInetTraffic;
         emit stopInetTrafficChanged();
+    }
+}
+
+void FirewallConf::setAllowAllNew(bool allowAllNew)
+{
+    if (m_allowAllNew != allowAllNew) {
+        m_allowAllNew = allowAllNew;
+        emit tempAllowAllChanged();
     }
 }
 
@@ -302,6 +311,7 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     setFilterLocals(o.filterLocals());
     setStopTraffic(o.stopTraffic());
     setStopInetTraffic(o.stopInetTraffic());
+    setAllowAllNew(o.allowAllNew());
     setAppBlockAll(o.appBlockAll());
     setAppAllowAll(o.appAllowAll());
     setAppGroupBits(o.appGroupBits());

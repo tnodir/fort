@@ -40,10 +40,10 @@ public:
 
     static quint32 logType(const char *input);
 
-    static void logBlockedHeaderWrite(char *output,
+    static void logBlockedHeaderWrite(char *output, bool blocked,
                                       quint32 remoteIp, quint16 remotePort,
                                       quint8 ipProto, quint32 pid, quint32 pathLen);
-    static void logBlockedHeaderRead(const char *input,
+    static void logBlockedHeaderRead(const char *input, int *blocked,
                                      quint32 *remoteIp, quint16 *remotePort,
                                      quint8 *ipProto, quint32 *pid, quint32 *pathLen);
 

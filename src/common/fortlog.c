@@ -8,7 +8,10 @@
 #define FORT_LOG_FLAG_PROC_NEW		0x02000000
 #define FORT_LOG_FLAG_STAT_TRAF		0x04000000
 #define FORT_LOG_FLAG_HEARTBEAT		0x08000000
-#define FORT_LOG_FLAG_TYPE_MASK		0xFF000000
+#define FORT_LOG_FLAG_BLOCKED_ALLOW	0x10000000
+#define FORT_LOG_FLAG_TYPE_MASK		0x0F000000
+#define FORT_LOG_FLAG_OPT_MASK		0xF0000000
+#define FORT_LOG_FLAG_EX_MASK		0xFF000000
 
 #define FORT_LOG_BLOCKED_HEADER_SIZE	(4 * sizeof(UINT32))
 
@@ -43,24 +46,26 @@
 
 
 static void
-fort_log_blocked_header_write (char *p, UINT32 remote_ip,
+fort_log_blocked_header_write (char *p, BOOL blocked, UINT32 remote_ip,
                                UINT16 remote_port, UCHAR ip_proto,
                                UINT32 pid, UINT32 path_len)
 {
   UINT32 *up = (UINT32 *) p;
 
-  *up++ = FORT_LOG_FLAG_BLOCKED | path_len;
+  *up++ = FORT_LOG_FLAG_BLOCKED
+    | (blocked ? 0 : FORT_LOG_FLAG_BLOCKED_ALLOW)
+    | path_len;
   *up++ = remote_ip;
   *up++ = remote_port | (ip_proto << 16);
   *up = pid;
 }
 
 static void
-fort_log_blocked_write (char *p, UINT32 remote_ip,
+fort_log_blocked_write (char *p, BOOL blocked, UINT32 remote_ip,
                         UINT16 remote_port, UCHAR ip_proto,
                         UINT32 pid, UINT32 path_len, const char *path)
 {
-  fort_log_blocked_header_write(p, remote_ip, remote_port,
+  fort_log_blocked_header_write(p, blocked, remote_ip, remote_port,
     ip_proto, pid, path_len);
 
   if (path_len) {
@@ -69,13 +74,14 @@ fort_log_blocked_write (char *p, UINT32 remote_ip,
 }
 
 static void
-fort_log_blocked_header_read (const char *p, UINT32 *remote_ip,
+fort_log_blocked_header_read (const char *p, BOOL *blocked, UINT32 *remote_ip,
                               UINT16 *remote_port, UCHAR *ip_proto,
                               UINT32 *pid, UINT32 *path_len)
 {
   const UINT32 *up = (const UINT32 *) p;
 
-  *path_len = (*up++ & ~FORT_LOG_FLAG_TYPE_MASK);
+  *blocked = !(*up & FORT_LOG_FLAG_BLOCKED_ALLOW);
+  *path_len = (*up++ & ~FORT_LOG_FLAG_EX_MASK);
   *remote_ip = *up++;
   *remote_port = *((const UINT16 *) up);
   *ip_proto = (UCHAR) (*up++ >> 16);
@@ -109,7 +115,7 @@ fort_log_proc_new_header_read (const char *p, UINT32 *pid,
 {
   const UINT32 *up = (const UINT32 *) p;
 
-  *path_len = (*up++ & ~FORT_LOG_FLAG_TYPE_MASK);
+  *path_len = (*up++ & ~FORT_LOG_FLAG_EX_MASK);
   *pid = *up;
 }
 

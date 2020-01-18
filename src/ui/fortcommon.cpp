@@ -113,19 +113,19 @@ quint32 FortCommon::logType(const char *input)
     return fort_log_type(input);
 }
 
-void FortCommon::logBlockedHeaderWrite(char *output,
+void FortCommon::logBlockedHeaderWrite(char *output, bool blocked,
                                        quint32 remoteIp, quint16 remotePort,
                                        quint8 ipProto, quint32 pid, quint32 pathLen)
 {
-    fort_log_blocked_header_write(output, remoteIp, remotePort,
+    fort_log_blocked_header_write(output, blocked, remoteIp, remotePort,
                                   ipProto, pid, pathLen);
 }
 
-void FortCommon::logBlockedHeaderRead(const char *input,
+void FortCommon::logBlockedHeaderRead(const char *input, int *blocked,
                                       quint32 *remoteIp, quint16 *remotePort,
                                       quint8 *ipProto, quint32 *pid, quint32 *pathLen)
 {
-    fort_log_blocked_header_read(input, remoteIp, remotePort,
+    fort_log_blocked_header_read(input, blocked, remoteIp, remotePort,
                                  ipProto, pid, pathLen);
 }
 

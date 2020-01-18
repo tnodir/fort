@@ -294,20 +294,18 @@ QLayout *StatisticsPage::setupHeader()
     });
 
     setupClearMenu();
-    setupTrafOptionsMenu();
-    setupGraphOptionsMenu();
     setupTrafUnits();
-    setupLogStat();
+    setupGraphOptionsMenu();
+    setupTrafOptionsMenu();
 
     layout->addWidget(m_btRefresh);
     layout->addWidget(m_btClear);
-    layout->addWidget(m_btTrafOptions);
-    layout->addWidget(m_btGraphOptions);
     layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
     layout->addWidget(m_traphUnits);
     layout->addWidget(m_comboTrafUnit);
     layout->addStretch();
-    layout->addWidget(m_cbLogStat);
+    layout->addWidget(m_btGraphOptions);
+    layout->addWidget(m_btTrafOptions);
 
     return layout;
 }
@@ -346,8 +344,89 @@ void StatisticsPage::setupClearMenu()
     m_btClear->setMenu(menu);
 }
 
+void StatisticsPage::setupTrafUnits()
+{
+    m_traphUnits = ControlUtil::createLabel();
+
+    m_comboTrafUnit = ControlUtil::createComboBox(QStringList(), [&](int index) {
+        if (conf()->trafUnit() == index)
+            return;
+
+        conf()->setTrafUnit(index);
+
+        fortManager()->applyConfImmediateFlags();
+    });
+}
+
+void StatisticsPage::setupGraphOptionsMenu()
+{
+    m_cbGraphAlwaysOnTop = new QCheckBox();
+    m_cbGraphFrameless = new QCheckBox();
+    m_cbGraphClickThrough = new QCheckBox();
+    m_cbGraphHideOnHover = new QCheckBox();
+
+    m_graphOpacity = createSpin(0, 100, " %");
+    m_graphHoverOpacity = createSpin(0, 100, " %");
+    m_graphMaxSeconds = createSpin(0, 9999);
+
+    m_graphColor = new LabelColor();
+    m_graphColorIn = new LabelColor();
+    m_graphColorOut = new LabelColor();
+    m_graphAxisColor = new LabelColor();
+    m_graphTickLabelColor = new LabelColor();
+    m_graphLabelColor = new LabelColor();
+    m_graphGridColor = new LabelColor();
+
+    const auto onChanged = [&] {
+        if (!m_pageUpdating) {
+            setGraphEdited(true);
+        }
+    };
+
+    connect(m_cbGraphAlwaysOnTop, &QCheckBox::toggled, onChanged);
+    connect(m_cbGraphFrameless, &QCheckBox::toggled, onChanged);
+    connect(m_cbGraphClickThrough, &QCheckBox::toggled, onChanged);
+    connect(m_cbGraphHideOnHover, &QCheckBox::toggled, onChanged);
+
+    connect(m_graphOpacity->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), onChanged);
+    connect(m_graphHoverOpacity->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), onChanged);
+    connect(m_graphMaxSeconds->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), onChanged);
+
+    connect(m_graphColor, &LabelColor::colorChanged, onChanged);
+    connect(m_graphColorIn, &LabelColor::colorChanged, onChanged);
+    connect(m_graphColorOut, &LabelColor::colorChanged, onChanged);
+    connect(m_graphAxisColor, &LabelColor::colorChanged, onChanged);
+    connect(m_graphTickLabelColor, &LabelColor::colorChanged, onChanged);
+    connect(m_graphLabelColor, &LabelColor::colorChanged, onChanged);
+    connect(m_graphGridColor, &LabelColor::colorChanged, onChanged);
+
+    // Menu
+    auto colLayout1 = ControlUtil::createLayoutByWidgets({
+                                                             m_cbGraphAlwaysOnTop, m_cbGraphFrameless,
+                                                             m_cbGraphClickThrough, m_cbGraphHideOnHover,
+                                                             ControlUtil::createSeparator(),
+                                                             m_graphOpacity, m_graphHoverOpacity,
+                                                             m_graphMaxSeconds, nullptr
+                                                         });
+    auto colLayout2 = ControlUtil::createLayoutByWidgets({
+                                                             m_graphColor, m_graphColorIn, m_graphColorOut,
+                                                             m_graphAxisColor, m_graphTickLabelColor,
+                                                             m_graphLabelColor, m_graphGridColor
+                                                         });
+    auto layout = new QHBoxLayout();
+    layout->addLayout(colLayout1);
+    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
+    layout->addLayout(colLayout2);
+
+    auto menu = ControlUtil::createMenuByLayout(layout, this);
+
+    m_btGraphOptions = new WideButton(QIcon(":/images/chart_bar.png"));
+    m_btGraphOptions->setMenu(menu);
+}
+
 void StatisticsPage::setupTrafOptionsMenu()
 {
+    setupLogStat();
     setupActivePeriod();
     setupMonthStart();
     setupTrafHourKeepDays();
@@ -358,7 +437,7 @@ void StatisticsPage::setupTrafOptionsMenu()
 
     // Menu
     const QList<QWidget *> menuWidgets = {
-        m_ctpActivePeriod, m_lscMonthStart,
+        m_cbLogStat, m_ctpActivePeriod, m_lscMonthStart,
         ControlUtil::createSeparator(),
         m_lscTrafHourKeepDays, m_lscTrafDayKeepDays, m_lscTrafMonthKeepMonths,
         ControlUtil::createSeparator(),
@@ -370,6 +449,20 @@ void StatisticsPage::setupTrafOptionsMenu()
 
     m_btTrafOptions = new WideButton(QIcon(":/images/database_save.png"));
     m_btTrafOptions->setMenu(menu);
+}
+
+void StatisticsPage::setupLogStat()
+{
+    m_cbLogStat = ControlUtil::createCheckBox(false, [&](bool checked) {
+        if (conf()->logStat() == checked)
+            return;
+
+        conf()->setLogStat(checked);
+
+        fortManager()->applyConfImmediateFlags();
+    });
+
+    m_cbLogStat->setFont(ControlUtil::fontDemiBold());
 }
 
 void StatisticsPage::setupActivePeriod()
@@ -508,100 +601,6 @@ void StatisticsPage::setupQuotaMonthMb()
 
         ctrl()->setConfFlagsEdited(true);
     });
-}
-
-void StatisticsPage::setupGraphOptionsMenu()
-{
-    m_cbGraphAlwaysOnTop = new QCheckBox();
-    m_cbGraphFrameless = new QCheckBox();
-    m_cbGraphClickThrough = new QCheckBox();
-    m_cbGraphHideOnHover = new QCheckBox();
-
-    m_graphOpacity = createSpin(0, 100, " %");
-    m_graphHoverOpacity = createSpin(0, 100, " %");
-    m_graphMaxSeconds = createSpin(0, 9999);
-
-    m_graphColor = new LabelColor();
-    m_graphColorIn = new LabelColor();
-    m_graphColorOut = new LabelColor();
-    m_graphAxisColor = new LabelColor();
-    m_graphTickLabelColor = new LabelColor();
-    m_graphLabelColor = new LabelColor();
-    m_graphGridColor = new LabelColor();
-
-    const auto onChanged = [&] {
-        if (!m_pageUpdating) {
-            setGraphEdited(true);
-        }
-    };
-
-    connect(m_cbGraphAlwaysOnTop, &QCheckBox::toggled, onChanged);
-    connect(m_cbGraphFrameless, &QCheckBox::toggled, onChanged);
-    connect(m_cbGraphClickThrough, &QCheckBox::toggled, onChanged);
-    connect(m_cbGraphHideOnHover, &QCheckBox::toggled, onChanged);
-
-    connect(m_graphOpacity->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), onChanged);
-    connect(m_graphHoverOpacity->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), onChanged);
-    connect(m_graphMaxSeconds->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), onChanged);
-
-    connect(m_graphColor, &LabelColor::colorChanged, onChanged);
-    connect(m_graphColorIn, &LabelColor::colorChanged, onChanged);
-    connect(m_graphColorOut, &LabelColor::colorChanged, onChanged);
-    connect(m_graphAxisColor, &LabelColor::colorChanged, onChanged);
-    connect(m_graphTickLabelColor, &LabelColor::colorChanged, onChanged);
-    connect(m_graphLabelColor, &LabelColor::colorChanged, onChanged);
-    connect(m_graphGridColor, &LabelColor::colorChanged, onChanged);
-
-    // Menu
-    auto colLayout1 = ControlUtil::createLayoutByWidgets({
-                                                             m_cbGraphAlwaysOnTop, m_cbGraphFrameless,
-                                                             m_cbGraphClickThrough, m_cbGraphHideOnHover,
-                                                             ControlUtil::createSeparator(),
-                                                             m_graphOpacity, m_graphHoverOpacity,
-                                                             m_graphMaxSeconds, nullptr
-                                                         });
-    auto colLayout2 = ControlUtil::createLayoutByWidgets({
-                                                             m_graphColor, m_graphColorIn, m_graphColorOut,
-                                                             m_graphAxisColor, m_graphTickLabelColor,
-                                                             m_graphLabelColor, m_graphGridColor
-                                                         });
-    auto layout = new QHBoxLayout();
-    layout->addLayout(colLayout1);
-    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
-    layout->addLayout(colLayout2);
-
-    auto menu = ControlUtil::createMenuByLayout(layout, this);
-
-    m_btGraphOptions = new WideButton(QIcon(":/images/chart_bar.png"));
-    m_btGraphOptions->setMenu(menu);
-}
-
-void StatisticsPage::setupTrafUnits()
-{
-    m_traphUnits = ControlUtil::createLabel();
-
-    m_comboTrafUnit = ControlUtil::createComboBox(QStringList(), [&](int index) {
-        if (conf()->trafUnit() == index)
-            return;
-
-        conf()->setTrafUnit(index);
-
-        fortManager()->applyConfImmediateFlags();
-    });
-}
-
-void StatisticsPage::setupLogStat()
-{
-    m_cbLogStat = ControlUtil::createCheckBox(false, [&](bool checked) {
-        if (conf()->logStat() == checked)
-            return;
-
-        conf()->setLogStat(checked);
-
-        fortManager()->applyConfImmediateFlags();
-    });
-
-    m_cbLogStat->setFont(ControlUtil::fontDemiBold());
 }
 
 void StatisticsPage::setupAppListView()

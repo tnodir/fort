@@ -15,7 +15,19 @@
 #include "../../util/net/netutil.h"
 #include "../logentryblocked.h"
 
-#define IP_LIST_SIZE_MAX    64
+namespace {
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
+const auto alertColor = QColorConstants::Svg::orange;
+const auto allowColor = QColorConstants::Svg::green;
+const auto blockColor = QColorConstants::Svg::red;
+#else
+const auto alertColor = QColor{QColor::Rgb, 0xff * 0x101, 0xff * 0x101, 0xa5 * 0x101, 0x00 * 0x101};
+const auto allowColor = QColor{QColor::Rgb, 0xff * 0x101, 0x00 * 0x101, 0x80 * 0x101, 0x00 * 0x101};
+const auto blockColor = QColor{QColor::Rgb, 0xff * 0x101, 0xff * 0x101, 0x00 * 0x101, 0x00 * 0x101};
+#endif
+
+}
 
 AppListModel::AppListModel(ConfManager *confManager,
                            QObject *parent) :
@@ -60,7 +72,7 @@ void AppListModel::addLogEntry(const LogEntryBlocked &logEntry)
     const auto groupId = appGroupAt(0)->id();
 
     if (confManager()->addApp(appPath, QString(), QDateTime(),
-                              groupId, true, true, true)) {
+                              groupId, false, logEntry.blocked(), true)) {
         reset();
     }
 }
@@ -131,7 +143,7 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
             return appName;
         }
         case 1: return appGroupAt(appRow.groupIndex)->name();
-        case 2: return appStateToString(appRowStateByGroup(appRow));
+        case 2: return appStateToString(appRow);
         case 3: return appRow.endTime.isValid()
                     ? appRow.endTime : QVariant();
         case 4: return appRow.creatTime;
@@ -158,14 +170,9 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
 
             return QIcon(":/images/application-window-96.png");
         }
-        case 2: {
-            QString iconPath;
-            switch (appRow.state) {
-            case AppAlert: return QIcon(":/images/error.png");
-            case AppAllow: return QIcon(":/images/arrow_switch.png");
-            case AppBlock: return QIcon(":/images/stop.png");
-            }
-        }
+        case 2:
+            return appRow.blocked ? QIcon(":/images/stop.png")
+                                  : QIcon(":/images/arrow_switch.png");
         }
 
         break;
@@ -187,17 +194,8 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
         if (index.column() == 2) {
             const auto appRow = appRowAt(index.row());
 
-            switch (appRowStateByGroup(appRow)) {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
-            case AppAlert: return QColorConstants::Svg::orange;
-            case AppAllow: return QColorConstants::Svg::green;
-            case AppBlock: return QColorConstants::Svg::red;
-#else
-            case AppAlert: return QColor{QColor::Rgb, 0xff * 0x101, 0xff * 0x101, 0xa5 * 0x101, 0x00 * 0x101};
-            case AppAllow: return QColor{QColor::Rgb, 0xff * 0x101, 0x00 * 0x101, 0x80 * 0x101, 0x00 * 0x101};
-            case AppBlock: return QColor{QColor::Rgb, 0xff * 0x101, 0xff * 0x101, 0x00 * 0x101, 0x00 * 0x101};
-#endif
-            }
+            return appRow.alerted ? alertColor : (appBlockedByGroup(appRow)
+                                                  ? blockColor : allowColor);
         }
 
         break;
@@ -328,12 +326,11 @@ void AppListModel::updateRowCache(int row) const
     m_appRow.appPath = stmt.columnText(2);
     m_appRow.appName = stmt.columnText(3);
     m_appRow.useGroupPerm = stmt.columnBool(4);
-    const bool blocked = stmt.columnBool(5);
-    const bool alerted = stmt.columnBool(6);
+    m_appRow.blocked = stmt.columnBool(5);
+    m_appRow.alerted = stmt.columnBool(6);
     m_appRow.endTime = stmt.columnDateTime(7);
     m_appRow.creatTime = stmt.columnDateTime(8);
 
-    m_appRow.state = alerted ? AppAlert : (blocked ? AppBlock : AppAllow);
     m_appRow.row = row;
 }
 
@@ -403,25 +400,20 @@ QStringList AppListModel::appGroupNames() const
     return list;
 }
 
-AppState AppListModel::appRowStateByGroup(const AppRow &appRow) const
+bool AppListModel::appBlockedByGroup(const AppRow &appRow) const
 {
-    auto state = appRow.state;
-    if (state == AppAllow
-            && appRow.useGroupPerm
-            && !appGroupAt(appRow.groupIndex)->enabled()) {
-        state = AppBlock;
-    }
-    return state;
+    return appRow.blocked
+            || (appRow.useGroupPerm
+                && !appGroupAt(appRow.groupIndex)->enabled());
 }
 
-QString AppListModel::appStateToString(AppState state) const
+QString AppListModel::appStateToString(const AppRow &appRow) const
 {
-    switch (state) {
-    case AppAlert: return tr("Alert");
-    case AppBlock: return tr("Block");
-    case AppAllow: return tr("Allow");
-    }
+    if (appRow.alerted)
+        return tr("Alert");
 
-    Q_UNREACHABLE();
-    return QString();
+    if (appBlockedByGroup(appRow))
+        return tr("Block");
+
+    return tr("Allow");
 }

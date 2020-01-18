@@ -23,6 +23,28 @@
 #define APP_GROUP_NAME_MAX  128
 #define APP_PATH_MAX        (FORT_CONF_APP_PATH_MAX / sizeof(wchar_t))
 
+namespace {
+
+void writeConfFlags(const FirewallConf &conf, PFORT_CONF_FLAGS confFlags)
+{
+    confFlags->prov_boot = conf.provBoot();
+    confFlags->filter_enabled = conf.filterEnabled();
+    confFlags->filter_locals = conf.filterLocals();
+    confFlags->stop_traffic = conf.stopTraffic();
+    confFlags->stop_inet_traffic = conf.stopInetTraffic();
+    confFlags->allow_all_new = conf.allowAllNew();
+
+    confFlags->app_block_all = conf.appBlockAll();
+    confFlags->app_allow_all = conf.appAllowAll();
+
+    confFlags->log_blocked = conf.logBlocked();
+    confFlags->log_stat = conf.logStat();
+
+    confFlags->group_bits = conf.appGroupBits();
+}
+
+}
+
 ConfUtil::ConfUtil(QObject *parent) :
     QObject(parent)
 {
@@ -101,16 +123,7 @@ int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
     // Fill the buffer
     PFORT_CONF_FLAGS confFlags = (PFORT_CONF_FLAGS) buf.data();
 
-    confFlags->prov_boot = conf.provBoot();
-    confFlags->filter_enabled = conf.filterEnabled();
-    confFlags->filter_locals = conf.filterLocals();
-    confFlags->stop_traffic = conf.stopTraffic();
-    confFlags->stop_inet_traffic = conf.stopInetTraffic();
-    confFlags->app_block_all = conf.appBlockAll();
-    confFlags->app_allow_all = conf.appAllowAll();
-    confFlags->log_blocked = conf.logBlocked();
-    confFlags->log_stat = conf.logStat();
-    confFlags->group_bits = conf.appGroupBits();
+    writeConfFlags(conf, confFlags);
 
     return flagsSize;
 }
@@ -433,19 +446,7 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
                 &drvConfIo->conf_group.limit_2bits,
                 conf.appGroups());
 
-    drvConf->flags.prov_boot = conf.provBoot();
-    drvConf->flags.filter_enabled = conf.filterEnabled();
-    drvConf->flags.filter_locals = conf.filterLocals();
-    drvConf->flags.stop_traffic = conf.stopTraffic();
-    drvConf->flags.stop_inet_traffic = conf.stopInetTraffic();
-
-    drvConf->flags.app_block_all = conf.appBlockAll();
-    drvConf->flags.app_allow_all = conf.appAllowAll();
-
-    drvConf->flags.log_blocked = conf.logBlocked();
-    drvConf->flags.log_stat = conf.logStat();
-
-    drvConf->flags.group_bits = conf.appGroupBits();
+    writeConfFlags(conf, &drvConf->flags);
 
     FortCommon::confAppPermsMaskInit(drvConf);
 

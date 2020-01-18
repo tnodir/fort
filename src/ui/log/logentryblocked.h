@@ -12,6 +12,9 @@ public:
 
     LogEntry::LogType type() const override { return AppBlocked; }
 
+    bool blocked() const { return m_blocked; }
+    void setBlocked(bool blocked);
+
     quint8 proto() const { return m_proto; }
     void setProto(quint8 proto);
 
@@ -30,6 +33,7 @@ public:
     QString path() const;
 
 private:
+    bool m_blocked  : 1;
     quint8 m_proto = 0;
     quint16 m_port = 0;
     quint32 m_ip = 0;

@@ -21,10 +21,12 @@ void AppsColumn::setupUi()
     auto headerLayout = new QHBoxLayout();
     layout->addLayout(headerLayout);
 
+    m_icon = ControlUtil::createLabel();
     m_labelTitle = ControlUtil::createLabel();
     m_labelTitle->setFont(ControlUtil::fontDemiBold());
 
-    headerLayout->addWidget(m_labelTitle);
+    headerLayout->addWidget(m_icon);
+    headerLayout->addWidget(m_labelTitle, 1);
 
     // Text Area
     m_editText = new QPlainTextEdit();

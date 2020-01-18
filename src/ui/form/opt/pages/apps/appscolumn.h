@@ -13,6 +13,7 @@ class AppsColumn : public QWidget
 public:
     explicit AppsColumn(QWidget *parent = nullptr);
 
+    QLabel *icon() const { return m_icon; }
     QLabel *labelTitle() const { return m_labelTitle; }
     QPlainTextEdit *editText() const { return m_editText; }
 
@@ -20,6 +21,7 @@ private:
     void setupUi();
 
 private:
+    QLabel *m_icon = nullptr;
     QLabel *m_labelTitle = nullptr;
     QPlainTextEdit *m_editText = nullptr;
 };

@@ -46,6 +46,7 @@ private:
     QCheckBox *m_cbFilterLocals = nullptr;
     QCheckBox *m_cbStopTraffic = nullptr;
     QCheckBox *m_cbStopInetTraffic = nullptr;
+    QCheckBox *m_cbAllowAllNew = nullptr;
     QCheckBox *m_cbHotKeys = nullptr;
     QCheckBox *m_cbPassword = nullptr;
     QLineEdit *m_editPassword = nullptr;

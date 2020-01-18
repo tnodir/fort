@@ -165,8 +165,8 @@ fort_buffer_prepare (PFORT_BUFFER buf, UINT32 len, PCHAR *out,
 }
 
 static NTSTATUS
-fort_buffer_blocked_write (PFORT_BUFFER buf, UINT32 remote_ip,
-                           UINT16 remote_port, UCHAR ip_proto,
+fort_buffer_blocked_write (PFORT_BUFFER buf, BOOL blocked,
+                           UINT32 remote_ip, UINT16 remote_port, UCHAR ip_proto,
                            UINT32 pid, UINT32 path_len, const PVOID path,
                            PIRP *irp, ULONG_PTR *info)
 {
@@ -186,7 +186,7 @@ fort_buffer_blocked_write (PFORT_BUFFER buf, UINT32 remote_ip,
   status = fort_buffer_prepare(buf, len, &out, irp, info);
 
   if (NT_SUCCESS(status)) {
-    fort_log_blocked_write(out, remote_ip, remote_port,
+    fort_log_blocked_write(out, blocked, remote_ip, remote_port,
       ip_proto, pid, path_len, path);
   }
 

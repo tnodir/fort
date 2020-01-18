@@ -121,7 +121,7 @@ private:
 
     bool loadSettings();
     bool saveSettings(FirewallConf *newConf, bool onlyFlags = false,
-                      bool immediateFlags = false);
+                      bool isTrayMenuDirty = true);
 
     bool updateDriverConf(bool onlyFlags = false);
 
@@ -170,6 +170,7 @@ private:
     QAction *m_filterEnabledAction = nullptr;
     QAction *m_stopTrafficAction = nullptr;
     QAction *m_stopInetTrafficAction = nullptr;
+    QAction *m_allowAllNewAction = nullptr;
     QList<QAction *> m_appGroupActions;
 
     FortSettings *m_settings = nullptr;

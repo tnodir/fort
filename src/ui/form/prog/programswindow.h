@@ -52,6 +52,7 @@ private:
     void setupAppEditForm();
     void setupComboAppGroups();
     QLayout *setupHeader();
+    void setupLogOptions();
     void setupLogBlocked();
     void setupTableApps();
     void setupTableAppsHeader();
@@ -104,6 +105,7 @@ private:
     QPushButton *m_btEditOk = nullptr;
     QPushButton *m_btEditCancel = nullptr;
     QDialog *m_formAppEdit = nullptr;
+    QPushButton *m_btLogOptions = nullptr;
     QCheckBox *m_cbLogBlocked = nullptr;
     TableView *m_appListView = nullptr;
     QWidget *m_appInfoRow = nullptr;
