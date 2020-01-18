@@ -691,7 +691,7 @@ void FortManager::updateTrayMenu()
                   settings()->hotKeyStopInetTraffic(), hotKeyEnabled);
 
         m_allowAllNewAction = addAction(
-                    menu, QIcon(), tr("Allow All New Programs"),
+                    menu, QIcon(), tr("Auto-Allow All New Programs"),
                     this, SLOT(saveTrayFlags()),
                     true, conf.allowAllNew());
         addHotKey(m_allowAllNewAction,

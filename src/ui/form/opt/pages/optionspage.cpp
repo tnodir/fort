@@ -70,7 +70,7 @@ void OptionsPage::onRetranslateUi()
     m_cbFilterLocals->setToolTip(tr("Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses"));
     m_cbStopTraffic->setText(tr("Stop Traffic"));
     m_cbStopInetTraffic->setText(tr("Stop Internet Traffic"));
-    m_cbAllowAllNew->setText(tr("Allow All New Programs"));
+    m_cbAllowAllNew->setText(tr("Auto-Allow All New Programs"));
     m_cbHotKeys->setText(tr("Hot Keys"));
 
     m_cbPassword->setText(tr("Password:"));
