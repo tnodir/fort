@@ -58,6 +58,11 @@ quint32 FortCommon::userErrorCode()
     return FORT_ERROR_USER_ERROR;
 }
 
+qint64 FortCommon::systemToUnixTime(qint64 systemTime)
+{
+    return fort_system_to_unix_time(systemTime);
+}
+
 int FortCommon::bufferSize()
 {
     return FORT_BUFFER_SIZE;

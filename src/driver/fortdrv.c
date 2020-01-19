@@ -818,10 +818,7 @@ fort_callout_timer (void)
 
       KeQuerySystemTime(&system_time);
 
-      /* Convert system time to seconds since 1970 */
-      #define SECSPERDAY	86400
-      #define SECS_1601_TO_1970	((369 * 365 + 89) * (INT64) SECSPERDAY)  /* 1601 to 1970 is 369 years plus 89 leap days */
-      unix_time = system_time.QuadPart / 10000000 - SECS_1601_TO_1970;
+      unix_time = fort_system_to_unix_time(system_time.QuadPart);
     }
 
     fort_log_stat_traf_header_write(out, unix_time, proc_count);

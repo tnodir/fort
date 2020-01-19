@@ -10,6 +10,7 @@
 #include "../../conf/confmanager.h"
 #include "../../conf/firewallconf.h"
 #include "../../util/app/appinfocache.h"
+#include "../../util/app/apputil.h"
 #include "../../util/fileutil.h"
 #include "../../util/guiutil.h"
 #include "../../util/net/netutil.h"
@@ -299,7 +300,10 @@ void AppListModel::purgeApps()
         const auto appRow = appRowAt(row);
         const auto appPath = appRow.appPath;
         if (!FileUtil::fileExists(appPath)) {
-            deleteApp(appRow.appId, appPath, row);
+            AppInfo appInfo;
+            if (!AppUtil::getInfo(appPath, appInfo)) {
+                deleteApp(appRow.appId, appPath, row);
+            }
         }
     }
 }

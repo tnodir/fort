@@ -22,6 +22,8 @@ public:
 
     static quint32 userErrorCode();
 
+    static qint64 systemToUnixTime(qint64 systemTime);
+
     static int bufferSize();
 
     static quint32 confIoConfOff();

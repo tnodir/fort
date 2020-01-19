@@ -7,6 +7,9 @@
 class FileUtil
 {
 public:
+    static QString systemApp();
+    static bool isSystemApp(const QString &path);
+
     // Convert DOS device name to drive letter (A: .. Z:)
     static QString kernelNameToDrive(const QString &kernelName);
 

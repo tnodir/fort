@@ -10,6 +10,7 @@
 #include <shellapi.h>
 
 #include "../fileutil.h"
+#include "../../fortcommon.h"
 #include "appinfo.h"
 
 // Defined in qpixmap_win.cpp
@@ -122,11 +123,6 @@ bool extractVersionInfo(const QString &appPath, AppInfo &appInfo)
     return true;
 }
 
-bool isSystemApp(const QString &appPath)
-{
-    return appPath.compare("System", Qt::CaseInsensitive) == 0;
-}
-
 }
 
 bool AppUtil::getInfo(const QString &appPath, AppInfo &appInfo)
@@ -134,15 +130,18 @@ bool AppUtil::getInfo(const QString &appPath, AppInfo &appInfo)
     if (appPath.isEmpty())
         return false;
 
-    if (isSystemApp(appPath)) {
+    if (FileUtil::isSystemApp(appPath)) {
         appInfo.fileDescription = appPath;
         return true;
     }
 
+    if (!extractVersionInfo(appPath, appInfo))
+        return false;
+
     // File modification time
     appInfo.fileModTime = FileUtil::fileModTime(appPath);
 
-    return extractVersionInfo(appPath, appInfo);
+    return true;
 }
 
 QImage AppUtil::getIcon(const QString &appPath)
@@ -150,7 +149,7 @@ QImage AppUtil::getIcon(const QString &appPath)
     if (appPath.isEmpty())
         return {};
 
-    if (isSystemApp(appPath)) {
+    if (FileUtil::isSystemApp(appPath)) {
         return QImage(":/images/windows-48.png");
     }
 
