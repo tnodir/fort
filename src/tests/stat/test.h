@@ -12,7 +12,6 @@ class Test : public QObject
 private slots:
     void dbWriteRead();
     void monthStart();
-    void migrations();
 
 private:
     void debugProcNew(SqliteDb *sqliteDb);

@@ -196,11 +196,14 @@ bool ConfUtil::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
             return false;
         }
 
-        const int incRangeSize = addressRange.includeRange().size();
-        const int excRangeSize = addressRange.excludeRange().size();
+        const int incIpSize = addressRange.includeRange().ipSize();
+        const int incPairSize = addressRange.includeRange().pairSize();
 
-        if (incRangeSize > FORT_CONF_IP_MAX
-                || excRangeSize > FORT_CONF_IP_MAX) {
+        const int excIpSize = addressRange.excludeRange().ipSize();
+        const int excPairSize = addressRange.excludeRange().pairSize();
+
+        if ((incIpSize + incPairSize) > FORT_CONF_IP_MAX
+                || (excIpSize + excPairSize) > FORT_CONF_IP_MAX) {
             setErrorMessage(tr("Too many IP addresses"));
             return false;
         }
@@ -208,8 +211,10 @@ bool ConfUtil::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
         addressGroupOffsets.append(addressGroupsSize);
 
         addressGroupsSize += FORT_CONF_ADDR_DATA_OFF
-                + FORT_CONF_IP_RANGE_SIZE(incRangeSize)
-                + FORT_CONF_IP_RANGE_SIZE(excRangeSize);
+                + FORT_CONF_IP_ARR_SIZE(incIpSize)
+                + FORT_CONF_IP_RANGE_SIZE(incPairSize)
+                + FORT_CONF_IP_ARR_SIZE(excIpSize)
+                + FORT_CONF_IP_RANGE_SIZE(excPairSize);
     }
 
     return true;
@@ -530,18 +535,21 @@ void ConfUtil::writeAddressRange(char **data,
     addrGroup->include_all = addressRange.includeAll();
     addrGroup->exclude_all = addressRange.excludeAll();
 
-    addrGroup->include_n = quint32(addressRange.includeRange()
-                                   .fromArray().size());
-    addrGroup->exclude_n = quint32(addressRange.excludeRange()
-                                   .fromArray().size());
+    addrGroup->include_ip_n = quint32(addressRange.includeRange().ipSize());
+    addrGroup->include_pair_n = quint32(addressRange.includeRange().pairSize());
+
+    addrGroup->exclude_ip_n = quint32(addressRange.excludeRange().ipSize());
+    addrGroup->exclude_pair_n = quint32(addressRange.excludeRange().pairSize());
 
     *data += FORT_CONF_ADDR_DATA_OFF;
 
-    writeLongs(data, addressRange.includeRange().fromArray());
-    writeLongs(data, addressRange.includeRange().toArray());
+    writeLongs(data, addressRange.includeRange().ipArray());
+    writeLongs(data, addressRange.includeRange().pairFromArray());
+    writeLongs(data, addressRange.includeRange().pairToArray());
 
-    writeLongs(data, addressRange.excludeRange().fromArray());
-    writeLongs(data, addressRange.excludeRange().toArray());
+    writeLongs(data, addressRange.excludeRange().ipArray());
+    writeLongs(data, addressRange.excludeRange().pairFromArray());
+    writeLongs(data, addressRange.excludeRange().pairToArray());
 }
 
 void ConfUtil::writeApps(char **data, const appentry_map_t &apps,

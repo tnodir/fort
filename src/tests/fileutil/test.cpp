@@ -20,7 +20,7 @@ void Test::paths()
     QCOMPARE(FileUtil::driveToKernelName(driveC), kernelNameC);
 
     QCOMPARE(FileUtil::kernelPathToPath(kernelPath), pathBack);
-    QCOMPARE(FileUtil::pathToKernelPath(path), kernelPath);
+    QCOMPARE(FileUtil::pathToKernelPath(path, false), kernelPath);
 }
 
 void Test::process()

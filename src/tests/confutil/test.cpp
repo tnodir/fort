@@ -72,6 +72,7 @@ void Test::confWriteRead()
     QVERIFY(FortCommon::confIpInRange(data, NetUtil::textToIp4("169.254.100.100")));
     QVERIFY(FortCommon::confIpInRange(data, NetUtil::textToIp4("192.168.255.255")));
     QVERIFY(!FortCommon::confIpInRange(data, NetUtil::textToIp4("193.0.0.0")));
+    QVERIFY(FortCommon::confIpInRange(data, NetUtil::textToIp4("239.255.255.250")));
 
     QVERIFY(FortCommon::confAppBlocked(
                 data, FortCommon::confAppFind(data, "System")));

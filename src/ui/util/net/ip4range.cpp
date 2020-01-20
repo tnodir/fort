@@ -15,8 +15,9 @@ void Ip4Range::clear()
     m_errorLineNo = 0;
     m_errorMessage = QString();
 
-    m_fromArray.clear();
-    m_toArray.clear();
+    m_ipArray.clear();
+    m_pairFromArray.clear();
+    m_pairToArray.clear();
 }
 
 void Ip4Range::setErrorLineNo(int lineNo)
@@ -42,13 +43,19 @@ QString Ip4Range::errorLineAndMessage() const
                  m_errorMessage);
 }
 
-QString Ip4Range::toText()
+QString Ip4Range::toText() const
 {
     QString text;
 
-    const int n = size();
-    for (int i = 0; i < n; ++i) {
-        const Ip4Pair ip = at(i);
+    for (int i = 0, n = ipSize(); i < n; ++i) {
+        const quint32 ip = ipAt(i);
+
+        text += QString("%1\n")
+                .arg(NetUtil::ip4ToText(ip));
+    }
+
+    for (int i = 0, n = pairSize(); i < n; ++i) {
+        const Ip4Pair ip = pairAt(i);
 
         text += QString("%1-%2\n")
                 .arg(NetUtil::ip4ToText(ip.from),
@@ -63,6 +70,7 @@ bool Ip4Range::fromText(const QString &text)
     clear();
 
     ip4range_map_t ipRangeMap;
+    int pairSize = 0;
 
     int lineNo = 0;
     for (const QStringRef &line :
@@ -81,9 +89,13 @@ bool Ip4Range::fromText(const QString &text)
         }
 
         ipRangeMap.insert(from, to);
+
+        if (from != to) {
+            ++pairSize;
+        }
     }
 
-    fillRange(ipRangeMap);
+    fillRange(ipRangeMap, pairSize);
 
     setErrorLineNo(0);
 
@@ -104,7 +116,7 @@ bool Ip4Range::parseAddressMask(const QStringRef &line,
 
     const QString ip = match.captured(1);
     const QString sepStr = match.captured(2);
-    const QChar sep = sepStr.isEmpty() ? QLatin1Char('/') : sepStr.at(0);
+    const QChar sep = sepStr.isEmpty() ? QChar('/') : sepStr.at(0);
     const QString mask = match.captured(3);
 
     if (sepStr.isEmpty() != mask.isEmpty()) {
@@ -132,7 +144,7 @@ bool Ip4Range::parseAddressMask(const QStringRef &line,
         }
     } else if (sep == QLatin1Char('/')) {  // e.g. "127.0.0.0/24", "127.0.0.0"
         bool ok = true;
-        const int nbits = mask.isEmpty() ? 24 : mask.toInt(&ok);
+        const int nbits = mask.isEmpty() ? 32 : mask.toInt(&ok);
 
         if (!ok || nbits < 0 || nbits > 32) {
             setErrorMessage(tr("Bad mask"));
@@ -145,14 +157,15 @@ bool Ip4Range::parseAddressMask(const QStringRef &line,
     return true;
 }
 
-void Ip4Range::fillRange(const ip4range_map_t &ipRangeMap)
+void Ip4Range::fillRange(const ip4range_map_t &ipRangeMap, int pairSize)
 {
     ip4range_map_t::const_iterator it = ipRangeMap.constBegin();
     ip4range_map_t::const_iterator end = ipRangeMap.constEnd();
 
     const int mapSize = ipRangeMap.size();
-    m_fromArray.reserve(mapSize);
-    m_toArray.reserve(mapSize);
+    m_ipArray.reserve(mapSize - pairSize);
+    m_pairFromArray.reserve(pairSize);
+    m_pairToArray.reserve(pairSize);
 
     Ip4Pair prevIp;
     int prevIndex = -1;
@@ -163,14 +176,16 @@ void Ip4Range::fillRange(const ip4range_map_t &ipRangeMap)
         // try to merge colliding addresses
         if (prevIndex >= 0 && ip.from <= prevIp.to + 1) {
             if (ip.to > prevIp.to) {
-                m_toArray.replace(prevIndex, ip.to);
+                m_pairToArray.replace(prevIndex, ip.to);
 
                 prevIp.to = ip.to;
             }
             // else skip it
+        } else if (ip.from == ip.to) {
+            m_ipArray.append(ip.from);
         } else {
-            m_fromArray.append(ip.from);
-            m_toArray.append(ip.to);
+            m_pairFromArray.append(ip.from);
+            m_pairToArray.append(ip.to);
 
             prevIp = ip;
             ++prevIndex;

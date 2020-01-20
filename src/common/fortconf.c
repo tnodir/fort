@@ -53,6 +53,31 @@ fort_conf_ip_inrange (UINT32 ip, UINT32 count, const UINT32 *iprange)
     && ip <= iprange[count + high];
 }
 
+static BOOL
+fort_conf_ip_inarr (UINT32 ip, UINT32 count, const UINT32 *iparr)
+{
+  int low, high;
+
+  if (count == 0)
+    return FALSE;
+
+  low = 0, high = count - 1;
+
+  do {
+    const int mid = (low + high) / 2;
+    const UINT32 mid_ip = iparr[mid];
+
+    if (ip < mid_ip)
+      high = mid - 1;
+    else if (ip > mid_ip)
+      low = mid + 1;
+    else
+      return TRUE;
+  } while (low <= high);
+
+  return FALSE;
+}
+
 static const PFORT_CONF_ADDR_GROUP
 fort_conf_addr_group_ref (const PFORT_CONF conf, int addr_group_index)
 {
@@ -64,11 +89,16 @@ fort_conf_addr_group_ref (const PFORT_CONF conf, int addr_group_index)
     (addr_group_data + addr_group_offsets[addr_group_index]);
 }
 
-#define fort_conf_addr_group_include_ref(addr_group) \
+#define fort_conf_addr_group_include_ip_ref(addr_group) \
   (addr_group)->ip
+#define fort_conf_addr_group_include_pair_ref(addr_group) \
+  &(addr_group)->ip[(addr_group)->include_ip_n]
 
-#define fort_conf_addr_group_exclude_ref(addr_group) \
-  &(addr_group)->ip[(addr_group)->include_n * 2]
+#define fort_conf_addr_group_exclude_ip_ref(addr_group) \
+  &(addr_group)->ip[(addr_group)->include_ip_n + (addr_group)->include_pair_n * 2]
+#define fort_conf_addr_group_exclude_pair_ref(addr_group) \
+  &(addr_group)->ip[(addr_group)->include_ip_n + (addr_group)->include_pair_n * 2 \
+    + (addr_group)->exclude_ip_n]
 
 static BOOL
 fort_conf_ip_included (const PFORT_CONF conf, UINT32 remote_ip,
@@ -81,12 +111,16 @@ fort_conf_ip_included (const PFORT_CONF conf, UINT32 remote_ip,
   const BOOL exclude_all = addr_group->exclude_all;
 
   const BOOL ip_included = include_all ? TRUE
-    : fort_conf_ip_inrange(remote_ip, addr_group->include_n,
-                           fort_conf_addr_group_include_ref(addr_group));
+    : (fort_conf_ip_inarr(remote_ip, addr_group->include_ip_n,
+                          fort_conf_addr_group_include_ip_ref(addr_group))
+      || fort_conf_ip_inrange(remote_ip, addr_group->include_pair_n,
+                              fort_conf_addr_group_include_pair_ref(addr_group)));
 
   const BOOL ip_excluded = exclude_all ? TRUE
-    : fort_conf_ip_inrange(remote_ip, addr_group->exclude_n,
-                           fort_conf_addr_group_exclude_ref(addr_group));
+    : (fort_conf_ip_inarr(remote_ip, addr_group->exclude_ip_n,
+                          fort_conf_addr_group_exclude_ip_ref(addr_group))
+      || fort_conf_ip_inrange(remote_ip, addr_group->exclude_pair_n,
+                              fort_conf_addr_group_exclude_pair_ref(addr_group)));
 
   return include_all ? !ip_excluded
     : (exclude_all ? ip_included

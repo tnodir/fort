@@ -10,7 +10,7 @@ using Ip4Pair = struct {
 };
 
 using ip4range_map_t = QMap<quint32, quint32>;
-using ip4range_arr_t = QVector<quint32>;
+using ip4_arr_t = QVector<quint32>;
 
 class Ip4Range : public QObject
 {
@@ -27,12 +27,17 @@ public:
     QString errorMessage() const { return m_errorMessage; }
     QString errorLineAndMessage() const;
 
-    const ip4range_arr_t &fromArray() const { return m_fromArray; }
-    const ip4range_arr_t &toArray() const { return m_toArray; }
+    const ip4_arr_t &ipArray() const { return m_ipArray; }
 
-    int size() const { return m_toArray.size(); }
-    Ip4Pair at(int i) const {
-        return Ip4Pair{m_fromArray.at(i), m_toArray.at(i)};
+    const ip4_arr_t &pairFromArray() const { return m_pairFromArray; }
+    const ip4_arr_t &pairToArray() const { return m_pairToArray; }
+
+    int ipSize() const { return m_ipArray.size(); }
+    int pairSize() const { return m_pairToArray.size(); }
+
+    quint32 ipAt(int i) const { return m_ipArray.at(i); }
+    Ip4Pair pairAt(int i) const {
+        return Ip4Pair{m_pairFromArray.at(i), m_pairToArray.at(i)};
     }
 
 signals:
@@ -42,7 +47,7 @@ signals:
 public slots:
     void clear();
 
-    QString toText();
+    QString toText() const;
 
     // Parse IPv4 ranges from text
     bool fromText(const QString &text);
@@ -54,14 +59,15 @@ private:
     bool parseAddressMask(const QStringRef &line,
                           quint32 &from, quint32 &to);
 
-    void fillRange(const ip4range_map_t &ipRangeMap);
+    void fillRange(const ip4range_map_t &ipRangeMap, int pairSize);
 
 private:
     int m_errorLineNo = 0;
     QString m_errorMessage;
 
-    ip4range_arr_t m_fromArray;
-    ip4range_arr_t m_toArray;
+    ip4_arr_t m_ipArray;
+    ip4_arr_t m_pairFromArray;
+    ip4_arr_t m_pairToArray;
 };
 
 #endif // IP4RANGE_H

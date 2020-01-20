@@ -24,24 +24,28 @@ void Test::ip4Ranges()
     QCOMPARE(ip4Range.errorLineNo(), 1);
 
     QVERIFY(ip4Range.fromText("172.16.0.1/32"));
-    QCOMPARE(ip4Range.toText(), QString("172.16.0.1-172.16.0.1\n"));
+    QCOMPARE(ip4Range.toText(), QString("172.16.0.1\n"));
 
     // Simple range
     {
         QVERIFY(ip4Range.fromText(
+                    "127.0.0.1\n"
                     "172.16.0.0/20\n"
                     "192.168.0.0 - 192.168.255.255\n"
                     ));
         QCOMPARE(ip4Range.errorLineNo(), 0);
-        QCOMPARE(ip4Range.size(), 2);
+        QCOMPARE(ip4Range.pairSize(), 2);
+        QCOMPARE(ip4Range.ipSize(), 1);
 
-        const Ip4Pair &ipPair1 = ip4Range.at(0);
+        const Ip4Pair &ipPair1 = ip4Range.pairAt(0);
         QCOMPARE(ipPair1.from, NetUtil::textToIp4("172.16.0.0"));
         QCOMPARE(ipPair1.to, NetUtil::textToIp4("172.16.15.255"));
 
-        const Ip4Pair &ipPair2 = ip4Range.at(1);
+        const Ip4Pair &ipPair2 = ip4Range.pairAt(1);
         QCOMPARE(ipPair2.from, NetUtil::textToIp4("192.168.0.0"));
         QCOMPARE(ipPair2.to, NetUtil::textToIp4("192.168.255.255"));
+
+        QCOMPARE(ip4Range.ipAt(0), NetUtil::textToIp4("127.0.0.1"));
     }
 
     // Merge ranges
@@ -51,9 +55,10 @@ void Test::ip4Ranges()
                     "10.0.0.64 - 10.0.0.128\n"
                     "10.0.0.128 - 10.0.2.0\n"
                     ));
-        QCOMPARE(ip4Range.size(), 1);
+        QCOMPARE(ip4Range.ipSize(), 0);
+        QCOMPARE(ip4Range.pairSize(), 1);
 
-        const Ip4Pair &ipPair1 = ip4Range.at(0);
+        const Ip4Pair &ipPair1 = ip4Range.pairAt(0);
         QCOMPARE(ipPair1.from, NetUtil::textToIp4("10.0.0.0"));
         QCOMPARE(ipPair1.to, NetUtil::textToIp4("10.0.2.0"));
     }

@@ -2,6 +2,7 @@
 #define FORTCONF_H
 
 #define FORT_CONF_IP_MAX		(10 * 1024 * 1024)
+#define FORT_CONF_IP_ARR_SIZE(n)	((n) * sizeof(UINT32))
 #define FORT_CONF_IP_RANGE_SIZE(n)	((n) * sizeof(UINT32) * 2)
 #define FORT_CONF_GROUP_MAX		16
 #define FORT_CONF_APPS_LEN_MAX		(64 * 1024 * 1024)
@@ -30,8 +31,11 @@ typedef struct fort_conf_addr_group {
   UINT32 include_all		: 1;
   UINT32 exclude_all		: 1;
 
-  UINT32 include_n;
-  UINT32 exclude_n;
+  UINT32 include_ip_n;
+  UINT32 include_pair_n;
+
+  UINT32 exclude_ip_n;
+  UINT32 exclude_pair_n;
 
   UINT32 ip[2];
 } FORT_CONF_ADDR_GROUP, *PFORT_CONF_ADDR_GROUP;
