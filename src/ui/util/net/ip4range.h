@@ -50,14 +50,15 @@ public slots:
     QString toText() const;
 
     // Parse IPv4 ranges from text
-    bool fromText(const QString &text);
+    bool fromText(const QString &text, int emptyMask = 32);
 
 private:
     void setErrorLineNo(int lineNo);
     void setErrorMessage(const QString &errorMessage);
 
     bool parseAddressMask(const QStringRef &line,
-                          quint32 &from, quint32 &to);
+                          quint32 &from, quint32 &to,
+                          int emptyMask = 32);
 
     void fillRange(const ip4range_map_t &ipRangeMap, int pairSize);
 

@@ -28,33 +28,7 @@ is_time_in_period (FORT_TIME time, FORT_PERIOD period)
 }
 
 static BOOL
-fort_conf_ip_inrange (UINT32 ip, UINT32 count, const UINT32 *iprange)
-{
-  int low, high;
-
-  if (count == 0)
-    return FALSE;
-
-  low = 0, high = count - 1;
-
-  do {
-    const int mid = (low + high) / 2;
-    const UINT32 mid_ip = iprange[mid];
-
-    if (ip < mid_ip)
-      high = mid - 1;
-    else if (ip > mid_ip)
-      low = mid + 1;
-    else
-      return TRUE;
-  } while (low <= high);
-
-  return high >= 0 && ip >= iprange[high]
-    && ip <= iprange[count + high];
-}
-
-static BOOL
-fort_conf_ip_inarr (UINT32 ip, UINT32 count, const UINT32 *iparr)
+fort_conf_ip_find (UINT32 ip, UINT32 count, const UINT32 *iparr, BOOL is_range)
 {
   int low, high;
 
@@ -75,7 +49,23 @@ fort_conf_ip_inarr (UINT32 ip, UINT32 count, const UINT32 *iparr)
       return TRUE;
   } while (low <= high);
 
-  return FALSE;
+  if (!is_range)
+    return FALSE;
+
+  return high >= 0 && ip >= iparr[high]
+    && ip <= iparr[count + high];
+}
+
+static BOOL
+fort_conf_ip_inarr (UINT32 ip, UINT32 count, const UINT32 *iparr)
+{
+  return fort_conf_ip_find(ip, count, iparr, FALSE);
+}
+
+static BOOL
+fort_conf_ip_inrange (UINT32 ip, UINT32 count, const UINT32 *iprange)
+{
+  return fort_conf_ip_find(ip, count, iprange, TRUE);
 }
 
 static const PFORT_CONF_ADDR_GROUP

@@ -36,7 +36,7 @@ QString TaskTasix::parseBuffer(const QByteArray &buffer) const
 
     // Merge lines
     Ip4Range ip4Range;
-    if (!ip4Range.fromText(list.join('\n')))
+    if (!ip4Range.fromText(list.join('\n'), 24))
         return QString();
 
     return ip4Range.toText();
