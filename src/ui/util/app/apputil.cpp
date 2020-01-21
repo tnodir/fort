@@ -116,9 +116,9 @@ bool extractVersionInfo(const QString &appPath, AppInfo &appInfo)
         return false;
 
     // Texts
-    appInfo.productName = extractInfoText(infoData, langInfo, L"ProductName");
-    appInfo.companyName = extractInfoText(infoData, langInfo, L"CompanyName");
-    appInfo.fileDescription = extractInfoText(infoData, langInfo, L"FileDescription");
+    appInfo.productName = extractInfoText(infoData, langInfo, L"ProductName").trimmed();
+    appInfo.companyName = extractInfoText(infoData, langInfo, L"CompanyName").trimmed();
+    appInfo.fileDescription = extractInfoText(infoData, langInfo, L"FileDescription").trimmed();
 
     return true;
 }
