@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v3.1.5, 2020-01-21:
+- UI: Tray Context Menu: Fix hot keys re-activating.
+- UI: ProgramsWindow: Tweak group's state.
+- UI: ProgramsWindow: Fix purging system apps.
+- Address Ranges: Optimize IPv4 arrays.
+
 v3.1.4, 2020-01-18:
 - Add ability to "Auto-Allow All New Programs".
 - UI: ProgramsWindow: Add "Purge All" menu item.
