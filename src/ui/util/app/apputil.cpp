@@ -66,7 +66,7 @@ QString extractInfoText(LPVOID infoData, const WORD *langInfo,
     if (VerQueryValueW(infoData, verStrName,
                        (LPVOID *) &content, &len)
             && len > 1) {
-        return QString::fromWCharArray(content, int(len) - 1);
+        return QString::fromWCharArray(content).trimmed();
     }
 
     return QString();
@@ -116,9 +116,9 @@ bool extractVersionInfo(const QString &appPath, AppInfo &appInfo)
         return false;
 
     // Texts
-    appInfo.productName = extractInfoText(infoData, langInfo, L"ProductName").trimmed();
-    appInfo.companyName = extractInfoText(infoData, langInfo, L"CompanyName").trimmed();
-    appInfo.fileDescription = extractInfoText(infoData, langInfo, L"FileDescription").trimmed();
+    appInfo.productName = extractInfoText(infoData, langInfo, L"ProductName");
+    appInfo.companyName = extractInfoText(infoData, langInfo, L"CompanyName");
+    appInfo.fileDescription = extractInfoText(infoData, langInfo, L"FileDescription");
 
     return true;
 }
