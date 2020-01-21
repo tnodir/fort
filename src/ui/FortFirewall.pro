@@ -255,6 +255,20 @@ installer_build {
     PRE_TARGETDEPS += $$fortdrv32.target $$fortdrv64.target
 }
 
+# Visual Leak Detector
+visual_leak_detector {
+    VLD_PATH = D:/Utils/Dev/VisualLeakDetector
+
+    # 1) On the Project tab, under Build & Run / Build Steps / Details,
+    # append to the Additional Arguments: CONFIG+=visual_leak_detector
+    # 2) On the Project tab, under Build & Run / Run / Run Environment,
+    # append to the PATH: $$VLD_PATH/bin/Win32
+
+    INCLUDEPATH += $$VLD_PATH/include/
+    LIBS += -L"$$VLD_PATH/lib/Win32"
+    DEFINES += USE_VISUAL_LEAK_DETECTOR
+}
+
 # 3rd party integrations
 CONFIG += qcustomplot sqlite
 include(3rdparty/3rdparty.pri)

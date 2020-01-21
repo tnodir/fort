@@ -1,6 +1,10 @@
 #include <QApplication>
 #include <QMessageBox>
 
+#ifdef USE_VISUAL_LEAK_DETECTOR
+#include <vld.h>
+#endif
+
 #include "../common/version.h"
 #include "control/controlmanager.h"
 #include "control/controlworker.h"
