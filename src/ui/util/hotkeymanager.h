@@ -13,6 +13,7 @@ class HotKeyManager : public QObject
 public:
     explicit HotKeyManager(NativeEventFilter *nativeEventFilter,
                            QObject *parent = nullptr);
+    ~HotKeyManager() override;
 
     bool addAction(QAction *action, const QKeySequence &shortcut);
 
