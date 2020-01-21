@@ -645,6 +645,7 @@ void FortManager::updateTrayMenu()
     QMenu *menu = m_trayIcon->contextMenu();
     if (menu) {
         menu->deleteLater();
+        removeHotKeys();
     }
 
     menu = new QMenu(&m_window);
