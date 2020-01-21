@@ -22,10 +22,12 @@ namespace {
 const auto alertColor = QColorConstants::Svg::orange;
 const auto allowColor = QColorConstants::Svg::green;
 const auto blockColor = QColorConstants::Svg::red;
+const auto inactiveColor = QColorConstants::Svg::slategray;
 #else
 const auto alertColor = QColor{QColor::Rgb, 0xff * 0x101, 0xff * 0x101, 0xa5 * 0x101, 0x00 * 0x101};
 const auto allowColor = QColor{QColor::Rgb, 0xff * 0x101, 0x00 * 0x101, 0x80 * 0x101, 0x00 * 0x101};
 const auto blockColor = QColor{QColor::Rgb, 0xff * 0x101, 0xff * 0x101, 0x00 * 0x101, 0x00 * 0x101};
+const auto inactiveColor = {QColor::Rgb, 0xff * 0x101, 0x70 * 0x101, 0x80 * 0x101, 0x90 * 0x101};
 #endif
 
 }
@@ -144,7 +146,11 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
             return appName;
         }
         case 1: return appGroupAt(appRow.groupIndex)->name();
-        case 2: return appStateToString(appRow);
+        case 2: {
+            if (appRow.alerted) return tr("Alert");
+            if (appRow.blocked) return tr("Block");
+            return tr("Allow");
+        }
         case 3: return appRow.endTime.isValid()
                     ? appRow.endTime : QVariant();
         case 4: return appRow.creatTime;
@@ -155,25 +161,27 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
 
     // Icon
     case Qt::DecorationRole: {
-        const int row = index.row();
         const int column = index.column();
 
-        const auto appRow = appRowAt(row);
+        if (column == 0 || column == 2) {
+            const int row = index.row();
+            const auto appRow = appRowAt(row);
 
-        switch (column) {
-        case 0: {
-            const auto appPath = appRow.appPath;
-            const auto appInfo = appInfoCache()->appInfo(appPath);
-            const auto appIcon = appInfoCache()->appIcon(appInfo);
-            if (!appIcon.isNull()) {
-                return QIcon(QPixmap::fromImage(appIcon));
+            switch (column) {
+            case 0: {
+                const auto appPath = appRow.appPath;
+                const auto appInfo = appInfoCache()->appInfo(appPath);
+                const auto appIcon = appInfoCache()->appIcon(appInfo);
+                if (!appIcon.isNull()) {
+                    return QIcon(QPixmap::fromImage(appIcon));
+                }
+
+                return QIcon(":/images/application-window-96.png");
             }
-
-            return QIcon(":/images/application-window-96.png");
-        }
-        case 2:
-            return appRow.blocked ? QIcon(":/images/stop.png")
-                                  : QIcon(":/images/arrow_switch.png");
+            case 2:
+                return appRow.blocked ? QIcon(":/images/stop.png")
+                                      : QIcon(":/images/arrow_switch.png");
+            }
         }
 
         break;
@@ -181,7 +189,9 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
 
     // Font
     case Qt::FontRole: {
-        if (index.column() == 2) {
+        const int column = index.column();
+
+        if (column == 2) {
             QFont font;
             font.setWeight(QFont::DemiBold);
             return font;
@@ -192,11 +202,25 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
 
     // Foreground
     case Qt::ForegroundRole: {
-        if (index.column() == 2) {
-            const auto appRow = appRowAt(index.row());
+        const int column = index.column();
 
-            return appRow.alerted ? alertColor : (appBlockedByGroup(appRow)
-                                                  ? blockColor : allowColor);
+        if (column == 1 || column == 2) {
+            const int row = index.row();
+            const auto appRow = appRowAt(row);
+
+            switch (column) {
+            case 1: {
+                if (!appRow.useGroupPerm)
+                    return inactiveColor;
+                if (!appGroupAt(appRow.groupIndex)->enabled())
+                    return blockColor;
+                break;
+            }
+            case 2:
+                if (appRow.alerted) return alertColor;
+                if (appRow.blocked) return blockColor;
+                return allowColor;
+            }
         }
 
         break;
@@ -413,22 +437,4 @@ QStringList AppListModel::appGroupNames() const
         list.append(appGroup->name());
     }
     return list;
-}
-
-bool AppListModel::appBlockedByGroup(const AppRow &appRow) const
-{
-    return appRow.blocked
-            || (appRow.useGroupPerm
-                && !appGroupAt(appRow.groupIndex)->enabled());
-}
-
-QString AppListModel::appStateToString(const AppRow &appRow) const
-{
-    if (appRow.alerted)
-        return tr("Alert");
-
-    if (appBlockedByGroup(appRow))
-        return tr("Block");
-
-    return tr("Allow");
 }

@@ -89,9 +89,6 @@ private:
     QString sqlBase() const;
     QString sqlOrder() const;
 
-    bool appBlockedByGroup(const AppRow &appRow) const;
-    QString appStateToString(const AppRow &appRow) const;
-
 private:
     int m_sortColumn = 5;
     Qt::SortOrder m_sortOrder = Qt::DescendingOrder;
