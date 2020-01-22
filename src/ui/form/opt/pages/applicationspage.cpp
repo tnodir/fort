@@ -44,10 +44,15 @@ ApplicationsPage::ApplicationsPage(OptionsController *ctrl,
     setupAppGroup();
 }
 
-void ApplicationsPage::setAppGroup(AppGroup *v)
+AppGroup *ApplicationsPage::appGroup() const
 {
-    if (m_appGroup != v) {
-        m_appGroup = v;
+    return appGroupByIndex(appGroupIndex());
+}
+
+void ApplicationsPage::setAppGroupIndex(int v)
+{
+    if (m_appGroupIndex != v) {
+        m_appGroupIndex = v;
         emit appGroupChanged();
     }
 }
@@ -253,7 +258,7 @@ void ApplicationsPage::setupTabBar()
     m_tabBar->setTabsClosable(true);
     m_tabBar->setMovable(true);
 
-    for (const auto appGroup : conf()->appGroups()) {
+    for (const auto appGroup : appGroups()) {
         addTab(appGroup->name());
     }
 
@@ -264,7 +269,7 @@ void ApplicationsPage::setupTabBar()
             m_tabBar->removeTab(index);
         } else {
             // Reset alone tab to default one
-            setAppGroup(appGroupByIndex(0));
+            setAppGroupIndex(0);
             m_tabBar->setTabText(0, appGroup()->name());
         }
 
@@ -532,7 +537,7 @@ void ApplicationsPage::setupAppGroup()
 
     const auto refreshAppGroup = [&] {
         const int tabIndex = m_tabBar->currentIndex();
-        setAppGroup(appGroupByIndex(tabIndex));
+        setAppGroupIndex(tabIndex);
     };
 
     refreshAppGroup();
@@ -540,14 +545,19 @@ void ApplicationsPage::setupAppGroup()
     connect(m_tabBar, &QTabBar::currentChanged, this, refreshAppGroup);
 }
 
+const QList<AppGroup *> &ApplicationsPage::appGroups() const
+{
+    return conf()->appGroups();
+}
+
 int ApplicationsPage::appGroupsCount() const
 {
-    return conf()->appGroups().size();
+    return appGroups().size();
 }
 
 AppGroup *ApplicationsPage::appGroupByIndex(int index) const
 {
-    return conf()->appGroups().at(index);
+    return appGroups().at(index);
 }
 
 void ApplicationsPage::resetGroupName()

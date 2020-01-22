@@ -28,10 +28,15 @@ AddressesPage::AddressesPage(OptionsController *ctrl,
     setupAddressGroup();
 }
 
-void AddressesPage::setAddressGroup(AddressGroup *v)
+AddressGroup *AddressesPage::addressGroup() const
 {
-    if (m_addressGroup != v) {
-        m_addressGroup = v;
+    return addressGroupByIndex(addressGroupIndex());
+}
+
+void AddressesPage::setAddressGroupIndex(int v)
+{
+    if (m_addressGroupIndex != v) {
+        m_addressGroupIndex = v;
         emit addressGroupChanged();
     }
 }
@@ -197,7 +202,7 @@ void AddressesPage::setupAddressGroup()
 
     const auto refreshAddressGroup = [&] {
         const int tabIndex = m_tabBar->currentIndex();
-        setAddressGroup(addressGroupByIndex(tabIndex));
+        setAddressGroupIndex(tabIndex);
     };
 
     refreshAddressGroup();
@@ -205,7 +210,12 @@ void AddressesPage::setupAddressGroup()
     connect(m_tabBar, &QTabBar::currentChanged, this, refreshAddressGroup);
 }
 
+const QList<AddressGroup *> &AddressesPage::addressGroups() const
+{
+    return conf()->addressGroups();
+}
+
 AddressGroup *AddressesPage::addressGroupByIndex(int index) const
 {
-    return conf()->addressGroups().at(index);
+    return addressGroups().at(index);
 }

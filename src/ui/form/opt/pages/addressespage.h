@@ -14,8 +14,10 @@ public:
     explicit AddressesPage(OptionsController *ctrl = nullptr,
                            QWidget *parent = nullptr);
 
-    AddressGroup *addressGroup() const { return m_addressGroup; }
-    void setAddressGroup(AddressGroup *v);
+    AddressGroup *addressGroup() const;
+
+    int addressGroupIndex() const { return m_addressGroupIndex; }
+    void setAddressGroupIndex(int v);
 
 signals:
     void addressGroupChanged();
@@ -37,10 +39,11 @@ private:
     void updateGroup();
     void setupAddressGroup();
 
+    const QList<AddressGroup *> &addressGroups() const;
     AddressGroup *addressGroupByIndex(int index) const;
 
 private:
-    AddressGroup *m_addressGroup = nullptr;
+    int m_addressGroupIndex = -1;
 
     QTabBar *m_tabBar = nullptr;
     AddressesColumn *m_includeAddresses = nullptr;

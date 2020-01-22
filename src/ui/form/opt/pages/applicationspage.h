@@ -18,8 +18,10 @@ public:
     explicit ApplicationsPage(OptionsController *ctrl = nullptr,
                               QWidget *parent = nullptr);
 
-    AppGroup *appGroup() const { return m_appGroup; }
-    void setAppGroup(AppGroup *v);
+    AppGroup *appGroup() const;
+
+    int appGroupIndex() const { return m_appGroupIndex; }
+    void setAppGroupIndex(int v);
 
 signals:
     void appGroupChanged();
@@ -56,6 +58,7 @@ private:
     void updateGroup();
     void setupAppGroup();
 
+    const QList<AppGroup *> &appGroups() const;
     int appGroupsCount() const;
     AppGroup *appGroupByIndex(int index) const;
     void resetGroupName();
@@ -65,7 +68,7 @@ private:
     static QString formatSpeed(int kbytes);
 
 private:
-    AppGroup *m_appGroup = nullptr;
+    int m_appGroupIndex = -1;
 
     QLineEdit *m_editGroupName = nullptr;
     QPushButton *m_btAddGroup = nullptr;
