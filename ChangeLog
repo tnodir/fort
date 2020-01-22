@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.1.6, 2020-01-22:
+- UI: OptionsWindow: Fix applying changes.
+- UI: Support Visual Leak Detector.
+
 v3.1.5, 2020-01-21:
 - UI: Tray Context Menu: Fix hot keys re-activating.
 - UI: ProgramsWindow: Tweak group's state.
