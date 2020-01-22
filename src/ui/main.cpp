@@ -1,5 +1,6 @@
 #include <QApplication>
 #include <QMessageBox>
+#include <QStyleFactory>
 
 #ifdef USE_VISUAL_LEAK_DETECTOR
 #include <vld.h>
@@ -62,6 +63,8 @@ int main(int argc, char *argv[])
         return FORT_ERROR_INSTANCE;
     }
 #endif
+
+    QApplication::setStyle(QStyleFactory::create("Fusion"));
 
     registerMetaTypes();
 
