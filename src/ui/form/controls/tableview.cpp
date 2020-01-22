@@ -17,7 +17,7 @@ QVector<int> TableView::selectedRows() const
 
     auto rows = rowsSet.values();
     std::sort(rows.begin(), rows.end());
-    return rows;
+    return rows.toVector();
 }
 
 void TableView::currentChanged(const QModelIndex &current,

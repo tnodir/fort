@@ -18,17 +18,10 @@
 
 namespace {
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
-const auto alertColor = QColorConstants::Svg::orange;
-const auto allowColor = QColorConstants::Svg::green;
-const auto blockColor = QColorConstants::Svg::red;
-const auto inactiveColor = QColorConstants::Svg::slategray;
-#else
-const auto alertColor = QColor{QColor::Rgb, 0xff * 0x101, 0xff * 0x101, 0xa5 * 0x101, 0x00 * 0x101};
-const auto allowColor = QColor{QColor::Rgb, 0xff * 0x101, 0x00 * 0x101, 0x80 * 0x101, 0x00 * 0x101};
-const auto blockColor = QColor{QColor::Rgb, 0xff * 0x101, 0xff * 0x101, 0x00 * 0x101, 0x00 * 0x101};
-const auto inactiveColor = {QColor::Rgb, 0xff * 0x101, 0x70 * 0x101, 0x80 * 0x101, 0x90 * 0x101};
-#endif
+const auto alertColor = QColor("orange");
+const auto allowColor = QColor("green");
+const auto blockColor = QColor("red");
+const auto inactiveColor = QColor("slategray");
 
 }
 
