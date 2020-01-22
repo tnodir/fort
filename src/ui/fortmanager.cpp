@@ -88,6 +88,8 @@ FortManager::FortManager(FortSettings *fortSettings,
 
 FortManager::~FortManager()
 {
+    removeHotKeys();
+
     closeDriver();
     closeLogManager();
 }

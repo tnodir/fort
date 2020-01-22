@@ -14,11 +14,6 @@ HotKeyManager::HotKeyManager(NativeEventFilter *nativeEventFilter,
             this, &HotKeyManager::onHotKeyPressed);
 }
 
-HotKeyManager::~HotKeyManager()
-{
-    removeActions();
-}
-
 bool HotKeyManager::addAction(QAction *action, const QKeySequence &shortcut)
 {
     const int hotKeyId = m_actions.size();
