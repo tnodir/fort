@@ -265,8 +265,8 @@ visual_leak_detector {
     # append to the PATH: $$VLD_PATH/bin/Win32
 
     INCLUDEPATH += $$VLD_PATH/include/
-    LIBS += -L"$$VLD_PATH/lib/Win32"
-    DEFINES += USE_VISUAL_LEAK_DETECTOR
+    LIBS += -L"$$VLD_PATH/lib/Win64"
+    DEFINES += USE_VISUAL_LEAK_DETECTOR VLD_FORCE_ENABLE
 }
 
 # 3rd party integrations
