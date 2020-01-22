@@ -234,13 +234,14 @@ void FirewallConf::addAppGroup(AppGroup *appGroup, int to)
     emit appGroupsChanged();
 }
 
-void FirewallConf::addAppGroupByName(const QString &name)
+AppGroup *FirewallConf::addAppGroupByName(const QString &name)
 {
     auto appGroup = !m_removedAppGroups.isEmpty()
             ? m_removedAppGroups.takeLast()
             : new AppGroup();
     appGroup->setName(name);
     addAppGroup(appGroup);
+    return appGroup;
 }
 
 void FirewallConf::moveAppGroup(int from, int to)
@@ -279,11 +280,8 @@ void FirewallConf::removeAppGroup(int from, int to)
 
 void FirewallConf::addDefaultAppGroup()
 {
-    auto appGroup = new AppGroup();
-    appGroup->setName("Main");
+    auto appGroup = addAppGroupByName("Main");
     appGroup->setAllowText(FileUtil::appBinLocation() + "/**");
-
-    addAppGroup(appGroup);
 }
 
 void FirewallConf::clearRemovedAppGroups() const

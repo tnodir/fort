@@ -353,8 +353,7 @@ void FortManager::showOptionsWindow()
         return;
 
     if (!m_optWindow) {
-        auto newConf = confManager()->cloneConf(*conf(), this);
-        confManager()->setConfToEdit(newConf);
+        confManager()->initConfToEdit();
 
         setupOptionsWindow();
     }
@@ -491,16 +490,21 @@ bool FortManager::saveOriginConf(const QString &message)
 
 bool FortManager::saveConf(bool onlyFlags)
 {
+    Q_ASSERT(confToEdit() != nullptr);
+
     return saveSettings(confToEdit(), onlyFlags);
 }
 
 bool FortManager::applyConf(bool onlyFlags)
 {
-    Q_ASSERT(confToEdit() != nullptr);
+    if (!saveConf(onlyFlags))
+        return false;
 
-    auto newConf = confManager()->cloneConf(*confToEdit(), this);
+    Q_ASSERT(confToEdit() == nullptr);
 
-    return saveSettings(newConf, onlyFlags);
+    confManager()->initConfToEdit();
+
+    return true;
 }
 
 bool FortManager::applyConfImmediateFlags()

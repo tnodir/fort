@@ -152,7 +152,7 @@ signals:
 
 public slots:
     void addAppGroup(AppGroup *appGroup, int to = -1);
-    void addAppGroupByName(const QString &name);
+    AppGroup *addAppGroupByName(const QString &name);
     void moveAppGroup(int from, int to);
     void removeAppGroup(int from, int to);
     void addDefaultAppGroup();

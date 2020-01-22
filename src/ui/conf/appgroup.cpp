@@ -165,6 +165,7 @@ QString AppGroup::menuLabel() const
 
 void AppGroup::clear()
 {
+    m_edited = true;
     m_enabled = true;
 
     m_fragmentPacket = false;

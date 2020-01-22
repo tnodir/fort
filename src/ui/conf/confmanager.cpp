@@ -236,6 +236,12 @@ bool ConfManager::initialize()
     return true;
 }
 
+void ConfManager::initConfToEdit()
+{
+    auto newConf = cloneConf(*conf(), this);
+    setConfToEdit(newConf);
+}
+
 void ConfManager::setConfToEdit(FirewallConf *conf)
 {
     if (m_confToEdit == conf)

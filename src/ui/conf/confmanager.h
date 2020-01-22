@@ -40,7 +40,9 @@ public:
 
     bool initialize();
 
+    void initConfToEdit();
     void setConfToEdit(FirewallConf *conf);
+
     FirewallConf *cloneConf(const FirewallConf &conf,
                             QObject *parent = nullptr) const;
 
