@@ -86,6 +86,8 @@ private:
     AppListModel *m_appListModel = nullptr;
 
     QPushButton *m_btEdit = nullptr;
+    QAction *m_actAllowApp = nullptr;
+    QAction *m_actBlockApp = nullptr;
     QAction *m_actAddApp = nullptr;
     QAction *m_actEditApp = nullptr;
     QAction *m_actRemoveApp = nullptr;

@@ -100,6 +100,8 @@ void ProgramsWindow::onRestoreWindowState()
 void ProgramsWindow::onRetranslateUi()
 {
     m_btEdit->setText(tr("Edit"));
+    m_actAllowApp->setText(tr("Allow"));
+    m_actBlockApp->setText(tr("Block"));
     m_actAddApp->setText(tr("Add"));
     m_actEditApp->setText(tr("Edit"));
     m_actRemoveApp->setText(tr("Remove"));
@@ -195,6 +197,14 @@ QLayout *ProgramsWindow::setupHeader()
     // Edit Menu
     auto editMenu = new QMenu(this);
 
+    m_actAllowApp = editMenu->addAction(QIcon(":/images/arrow_switch.png"), QString());
+    m_actAllowApp->setShortcut(Qt::Key_A);
+
+    m_actBlockApp = editMenu->addAction(QIcon(":/images/stop.png"), QString());
+    m_actBlockApp->setShortcut(Qt::Key_B);
+
+    editMenu->addSeparator();
+
     m_actAddApp = editMenu->addAction(QIcon(":/images/application_add.png"), QString());
     m_actAddApp->setShortcut(Qt::Key_Plus);
 
@@ -208,6 +218,12 @@ QLayout *ProgramsWindow::setupHeader()
 
     m_actPurgeApps = editMenu->addAction(QIcon(":/images/bin_empty.png"), QString());
 
+    connect(m_actAllowApp, &QAction::triggered, [&] {
+        updateSelectedApps(false);
+    });
+    connect(m_actBlockApp, &QAction::triggered, [&] {
+        updateSelectedApps(true);
+    });
     connect(m_actAddApp, &QAction::triggered, [&] {
         updateAppEditForm(false);
     });
@@ -232,12 +248,8 @@ QLayout *ProgramsWindow::setupHeader()
     m_btAllowApp = ControlUtil::createLinkButton(":/images/arrow_switch.png");
     m_btBlockApp = ControlUtil::createLinkButton(":/images/stop.png");
 
-    connect(m_btAllowApp, &QAbstractButton::clicked, [&] {
-        updateSelectedApps(false);
-    });
-    connect(m_btBlockApp, &QAbstractButton::clicked, [&] {
-        updateSelectedApps(true);
-    });
+    connect(m_btAllowApp, &QAbstractButton::clicked, m_actAllowApp, &QAction::trigger);
+    connect(m_btBlockApp, &QAbstractButton::clicked, m_actBlockApp, &QAction::trigger);
 
     // Log Options
     setupLogOptions();
