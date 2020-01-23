@@ -45,6 +45,8 @@ cd %TARGET_PATH%
 	-no-feature-undocommand -no-feature-undogroup -no-feature-undostack -no-feature-undoview ^
 	-no-feature-whatsthis -no-feature-wizard ^
 	^
+	-no-feature-style-android -no-feature-style-mac -no-feature-style-windowsvista ^
+	^
 	-no-feature-network -no-feature-sql -no-feature-sql-odbc ^
 	-no-feature-xml -no-feature-xmlstream ^
 	^
