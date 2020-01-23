@@ -74,10 +74,15 @@ void ProgramsWindow::closeEvent(QCloseEvent *event)
 
 void ProgramsWindow::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_Escape
-            && event->modifiers() == Qt::NoModifier
-            && !event->isAutoRepeat()) {
-        ctrl()->closeWindow();
+    if (event->isAutoRepeat())
+        return;
+
+    switch (event->key()) {
+    case Qt::Key_Escape:  // Esc
+        if (event->modifiers() == Qt::NoModifier) {
+            ctrl()->closeWindow();
+        }
+        break;
     }
 }
 

@@ -36,10 +36,20 @@ void OptionsWindow::closeEvent(QCloseEvent *event)
 
 void OptionsWindow::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_Escape
-            && event->modifiers() == Qt::NoModifier
-            && !event->isAutoRepeat()) {
-        ctrl()->closeWindow();
+    if (event->isAutoRepeat())
+        return;
+
+    switch (event->key()) {
+    case Qt::Key_Escape:  // Esc
+        if (event->modifiers() == Qt::NoModifier) {
+            ctrl()->closeWindow();
+        }
+        break;
+    case Qt::Key_S:  // Ctrl+S
+        if (event->modifiers() == Qt::ControlModifier) {
+            ctrl()->applyChanges();
+        }
+        break;
     }
 }
 
