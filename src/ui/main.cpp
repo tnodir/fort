@@ -1,5 +1,6 @@
 #include <QApplication>
 #include <QMessageBox>
+#include <QStyle>
 #include <QStyleFactory>
 
 #ifdef USE_VISUAL_LEAK_DETECTOR
@@ -64,7 +65,10 @@ int main(int argc, char *argv[])
     }
 #endif
 
-    QApplication::setStyle(QStyleFactory::create("Fusion"));
+    // Style & Palette
+    const auto fusionStyle = QStyleFactory::create("Fusion");
+    QApplication::setStyle(fusionStyle);
+    QApplication::setPalette(fusionStyle->standardPalette());
 
     registerMetaTypes();
 
