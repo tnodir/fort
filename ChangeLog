@@ -1,5 +1,12 @@
 Fort Firewall ChangeLog
 
+v3.1.7, 2020-01-25:
+- UI: Use default language from Installer.
+- UI: OptionsWindow: Use Ctrl+S to apply changes.
+- UI: ProgramsWindow: Add allow/block context menu items.
+- UI: Use "Fusion" style.
+- Update SQLite to v3.31.0
+
 v3.1.6, 2020-01-22:
 - UI: OptionsWindow: Fix applying changes.
 - UI: Support Visual Leak Detector.
