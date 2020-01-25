@@ -77,6 +77,11 @@ void FortSettings::processArguments(const QStringList &args)
                 "Don't use cache on disk.");
     parser.addOption(noCacheOption);
 
+    const QCommandLineOption langOption(
+                QStringList() << "lang",
+                "Default language.", "lang", "en");
+    parser.addOption(langOption);
+
     const QCommandLineOption controlOption(
                 QStringList() << "c" << "control",
                 "Control running instance by executing the command.", "control");
@@ -96,6 +101,9 @@ void FortSettings::processArguments(const QStringList &args)
 
     // Provider Boot
     m_hasProvBoot = parser.isSet(provBootOption);
+
+    // Default Language
+    m_defaultLanguage = parser.value(langOption);
 
     // Profile Path
     m_profilePath = parser.value(profileOption);

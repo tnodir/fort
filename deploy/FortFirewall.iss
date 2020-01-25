@@ -44,11 +44,11 @@ Source: "README.portable"; DestDir: "{app}"; Check: IsTaskSelected('portable')
 
 [Icons]
 ; Start menu shortcut
-Name: "{group}\{#APP_NAME}"; Filename: "{app}\{#APP_EXE_NAME}"
+Name: "{group}\{#APP_NAME}"; Filename: "{app}\{#APP_EXE_NAME}"; WorkingDir: "{app}"; Parameters: "--lang {code:LanguageName}"
 ; Uninstaller shortcut
 Name: "{group}\{cm:UninstallProgram,{#APP_NAME}}"; Filename: "{uninstallexe}"
 ; Desktop shortcut
-Name: "{commondesktop}\{#APP_NAME}"; Filename: "{app}\{#APP_EXE_NAME}"; WorkingDir: "{app}"; Tasks: desktopicon
+Name: "{commondesktop}\{#APP_NAME}"; Filename: "{app}\{#APP_EXE_NAME}"; WorkingDir: "{app}"; Parameters: "--lang {code:LanguageName}"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\driver\scripts\reinstall.bat"; Description: "Re-install driver"; Flags: runascurrentuser
@@ -62,3 +62,9 @@ Type: filesandordirs; Name: "{app}"
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}"
+
+[Code]
+function LanguageName(Param: String): String;
+begin
+  Result := ActiveLanguage;
+end;

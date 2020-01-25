@@ -93,6 +93,8 @@ private slots:
     void saveTrayFlags();
 
 private:
+    void setupTranslationManager();
+
     void setupThreadPool();
 
     bool setupDriver();
@@ -106,9 +108,7 @@ private:
     void setupConfManager();
 
     void setupLogger();
-
     void setupTaskManager();
-    void setupTranslationManager();
 
     void setupTrayIcon();
 

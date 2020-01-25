@@ -29,14 +29,14 @@ public:
 
     QStringList naturalLabels() const;
 
-    int getLanguageByName(const QString &localeName) const;
+    int getLanguageByName(const QString &langName) const;
 
 signals:
     void languageChanged();
 
 public slots:
     bool switchLanguage(int language = 0);
-    bool switchLanguageByName(const QString &localeName);
+    bool switchLanguageByName(const QString &langName);
 
 private:
     void setupTranslation();

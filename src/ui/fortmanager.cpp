@@ -66,6 +66,7 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_taskManager(new TaskManager(this, this)),
     m_appInfoCache(new AppInfoCache(this))
 {
+    setupTranslationManager();
     setupThreadPool();
 
     setupLogger();
@@ -80,7 +81,6 @@ FortManager::FortManager(FortSettings *fortSettings,
     loadSettings();
 
     setupTaskManager();
-    setupTranslationManager();
     setupTrayIcon();
 
     connect(qApp, &QCoreApplication::aboutToQuit, this, &FortManager::closeUi);
@@ -102,6 +102,15 @@ FirewallConf *FortManager::conf() const
 FirewallConf *FortManager::confToEdit() const
 {
     return confManager()->confToEdit();
+}
+
+void FortManager::setupTranslationManager()
+{
+    TranslationManager::instance()->switchLanguageByName(
+                settings()->language());
+
+    connect(TranslationManager::instance(), &TranslationManager::languageChanged,
+            this, &FortManager::updateTrayMenu);
 }
 
 void FortManager::setupThreadPool()
@@ -201,15 +210,6 @@ void FortManager::setupLogger()
 void FortManager::setupTaskManager()
 {
     taskManager()->loadSettings();
-}
-
-void FortManager::setupTranslationManager()
-{
-    TranslationManager::instance()->switchLanguageByName(
-                settings()->language());
-
-    connect(TranslationManager::instance(), &TranslationManager::languageChanged,
-            this, &FortManager::updateTrayMenu);
 }
 
 void FortManager::setupTrayIcon()
@@ -520,8 +520,8 @@ bool FortManager::loadSettings()
 {
     QString viaVersion;
     if (!settings()->confCanMigrate(viaVersion)) {
-        showInfoBox("Please first install Fort Firewall v" + viaVersion
-                    + " and save Options from it.");
+        showInfoBox(tr("Please first install Fort Firewall v%1 and save Options from it.")
+                    .arg(viaVersion));
         abort();  //  Abort the program
     }
 

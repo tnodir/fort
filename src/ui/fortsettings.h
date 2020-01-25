@@ -62,7 +62,9 @@ public:
     bool console() const { return iniBool("base/console"); }
     void setConsole(bool on) { setIniValue("base/console", on); }
 
-    QString language() const { return iniText("base/language", "en"); }
+    QString defaultLanguage() const { return m_defaultLanguage; }
+
+    QString language() const { return iniText("base/language", defaultLanguage()); }
     void setLanguage(const QString &v) { setIniValue("base/language", v); }
 
     bool hasPassword() const { return !passwordHash().isEmpty(); }
@@ -266,6 +268,7 @@ private:
     bool m_bulkUpdating     : 1;
     bool m_bulkIniChanged   : 1;
 
+    QString m_defaultLanguage;
     QString m_profilePath;
     QString m_statPath;
     QString m_logsPath;

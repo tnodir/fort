@@ -63,11 +63,12 @@ QStringList TranslationManager::naturalLabels() const
     return list;
 }
 
-int TranslationManager::getLanguageByName(const QString &localeName) const
+int TranslationManager::getLanguageByName(const QString &langName) const
 {
     int index = 0;
     for (const QLocale &locale : m_locales) {
-        if (localeName == locale.name()) {
+        if (langName == locale.name()
+                || langName == locale.bcp47Name()) {
             return index;
         }
         ++index;
@@ -93,9 +94,9 @@ bool TranslationManager::switchLanguage(int language)
     return true;
 }
 
-bool TranslationManager::switchLanguageByName(const QString &localeName)
+bool TranslationManager::switchLanguageByName(const QString &langName)
 {
-    return switchLanguage(getLanguageByName(localeName));
+    return switchLanguage(getLanguageByName(langName));
 }
 
 void TranslationManager::uninstallAllTranslators()
