@@ -362,38 +362,7 @@ void ProgramsWindow::setupAppEditForm()
     connect(m_rbAllowApp, &QRadioButton::toggled, m_cscBlockApp, &CheckSpinCombo::setEnabled);
 
     connect(m_btEditOk, &QAbstractButton::clicked, [&] {
-        const QString appPath = m_editPath->text();
-        if (appPath.isEmpty())
-            return;
-
-        const QString appName = m_editName->text();
-        const int groupIndex = m_comboAppGroup->currentIndex();
-        const bool useGroupPerm = m_cbUseGroupPerm->isChecked();
-        const bool blocked = m_rbBlockApp->isChecked();
-
-        QDateTime endTime;
-        if (!blocked && m_cscBlockApp->checkBox()->isChecked()) {
-            const int hours = m_cscBlockApp->spinBox()->value();
-
-            endTime = QDateTime::currentDateTime()
-                    .addSecs(hours * 60 * 60);
-        }
-
-        const auto appRow = appListModel()->appRowAt(groupIndex);
-
-        const bool appNameEdited = (appName != appRow.appName);
-        const bool appEdited = (appPath != appRow.appPath
-                || groupIndex != appRow.groupIndex
-                || useGroupPerm != appRow.useGroupPerm
-                || blocked != appRow.blocked
-                || endTime != appRow.endTime);
-
-        if (!(appNameEdited || appEdited)
-                || (m_formAppId != 0
-                    ? appListModel()->updateApp(m_formAppId, appPath, appName, endTime,
-                                                groupIndex, useGroupPerm, blocked, appEdited)
-                    : appListModel()->addApp(appPath, appName, endTime, groupIndex,
-                                             useGroupPerm, blocked, appEdited))) {
+        if (saveAppEditForm()) {
             m_formAppEdit->close();
         }
     });
@@ -554,24 +523,30 @@ void ProgramsWindow::setupTableAppsChanged()
 
 void ProgramsWindow::updateAppEditForm(bool editCurrentApp)
 {
+    bool isSingleSelection = true;
+
     AppRow appRow;
     if (editCurrentApp) {
+        const auto rows = m_appListView->selectedRows();
+        isSingleSelection = (rows.size() == 1);
+
         const auto appIndex = appListCurrentIndex();
         if (appIndex < 0) return;
 
         appRow = appListModel()->appRowAt(appIndex);
-        m_formAppId = appRow.appId;
-    } else {
-        m_formAppId = 0;
     }
 
-    m_editPath->setText(appRow.appPath);
+    m_formAppIsNew = !editCurrentApp;
+
+    m_editPath->setText(isSingleSelection ? appRow.appPath : "*");
     m_editPath->setReadOnly(editCurrentApp);
     m_editPath->setClearButtonEnabled(!editCurrentApp);
     m_editPath->selectAll();
     m_editPath->setFocus();
+    m_editPath->setEnabled(isSingleSelection);
     m_btSelectFile->setEnabled(!editCurrentApp);
-    m_editName->setText(appRow.appName);
+    m_editName->setText(isSingleSelection ? appRow.appName : QString());
+    m_editName->setEnabled(isSingleSelection);
     m_comboAppGroup->setCurrentIndex(appRow.groupIndex);
     m_cbUseGroupPerm->setChecked(appRow.useGroupPerm);
     m_rbAllowApp->setChecked(!appRow.blocked);
@@ -580,6 +555,70 @@ void ProgramsWindow::updateAppEditForm(bool editCurrentApp)
     m_cscBlockApp->checkBox()->setChecked(false);
 
     m_formAppEdit->show();
+}
+
+bool ProgramsWindow::saveAppEditForm()
+{
+    QString appPath = m_editPath->text();
+    if (appPath.isEmpty())
+        return false;
+
+    QString appName = m_editName->text();
+    const int groupIndex = m_comboAppGroup->currentIndex();
+    const bool useGroupPerm = m_cbUseGroupPerm->isChecked();
+    const bool blocked = m_rbBlockApp->isChecked();
+
+    QDateTime endTime;
+    if (!blocked && m_cscBlockApp->checkBox()->isChecked()) {
+        const int hours = m_cscBlockApp->spinBox()->value();
+
+        endTime = QDateTime::currentDateTime()
+                .addSecs(hours * 60 * 60);
+    }
+
+    // Add new app
+    if (m_formAppIsNew) {
+        return appListModel()->addApp(appPath, appName, endTime, groupIndex,
+                                      useGroupPerm, blocked, true);
+    }
+
+    // Edit selected apps
+    const auto rows = m_appListView->selectedRows();
+    const bool isSingleSelection = (rows.size() == 1);
+
+    bool updateDriver = true;
+
+    if (isSingleSelection) {
+        const int appIndex = appListCurrentIndex();
+        const auto appRow = appListModel()->appRowAt(appIndex);
+
+        const bool appNameEdited = (appName != appRow.appName);
+        const bool appEdited = (appPath != appRow.appPath
+                || groupIndex != appRow.groupIndex
+                || useGroupPerm != appRow.useGroupPerm
+                || blocked != appRow.blocked
+                || endTime != appRow.endTime);
+
+        if (!(appNameEdited || appEdited))
+            return true;
+
+        updateDriver = appEdited;
+    }
+
+    for (int row : rows) {
+        const auto appRow = appListModel()->appRowAt(row);
+
+        if (!isSingleSelection) {
+            appPath = appRow.appPath;
+            appName = appRow.appName;
+        }
+
+        if (!appListModel()->updateApp(appRow.appId, appPath, appName, endTime,
+                                       groupIndex, useGroupPerm, blocked, updateDriver))
+            return false;
+    }
+
+    return true;
 }
 
 void ProgramsWindow::updateApp(int row, bool blocked)

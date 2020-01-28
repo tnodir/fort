@@ -61,6 +61,8 @@ private:
     void setupTableAppsChanged();
 
     void updateAppEditForm(bool editCurrentApp);
+    bool saveAppEditForm();
+
     void updateApp(int row, bool blocked);
     void deleteApp(int row);
 
@@ -79,7 +81,7 @@ private:
     AppInfoCache *appInfoCache() const;
 
 private:
-    qint64 m_formAppId = 0;
+    bool m_formAppIsNew = false;
 
     ProgramsController *m_ctrl = nullptr;
 
