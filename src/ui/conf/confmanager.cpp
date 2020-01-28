@@ -24,7 +24,7 @@ Q_LOGGING_CATEGORY(CLOG_CONF_MANAGER, "fort.confManager")
 #define logWarning() qCWarning(CLOG_CONF_MANAGER,)
 #define logCritical() qCCritical(CLOG_CONF_MANAGER,)
 
-#define DATABASE_USER_VERSION   5
+#define DATABASE_USER_VERSION   6
 
 namespace {
 
@@ -174,6 +174,30 @@ const char * const sqlUpdateAppResetGroup =
         "  WHERE app_group_id = ?1;"
         ;
 
+bool migrateFunc(SqliteDb *db, int version, void *ctx)
+{
+    if (version != DATABASE_USER_VERSION)
+        return true;
+
+    Q_UNUSED(ctx)
+
+    if (version == 6) {
+        // Add TAS-IX zone
+        db->execute(
+                    "INSERT INTO zone(name, enabled, zone_type, url, form_data) VALUES"
+                    "  ('Local Addresses', 1, 'local', NULL, NULL),"
+                    "  ('TAS-IX Addresses', 1, 'bgp',"
+                    "    'http://mrlg.tas-ix.uz/index.cgi',"
+                    "    'router=cisco&pass1=&query=1&arg=');"
+
+                    "INSERT INTO address_group_zone(addr_group_id, zone_id, include) VALUES"
+                    "  (1, 1, 0), (1, 2, 0);"
+                    );
+    }
+
+    return true;
+}
+
 }
 
 ConfManager::ConfManager(const QString &filePath,
@@ -224,8 +248,8 @@ bool ConfManager::initialize()
 
     m_sqliteDb->execute(sqlPragmas);
 
-    if (!m_sqliteDb->migrate(":/conf/migrations",
-                             DATABASE_USER_VERSION, true, true)) {
+    if (!m_sqliteDb->migrate(":/conf/migrations", DATABASE_USER_VERSION,
+                             true, true, &migrateFunc)) {
         logCritical() << "Migration error"
                       << m_sqliteDb->filePath();
         return false;
@@ -675,7 +699,7 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
 
         const auto vars = QVariantList()
                 << (rowExists ? addrGroup->id() : QVariant())
-                << orderIndex++
+                << orderIndex
                 << addrGroup->includeAll()
                 << addrGroup->excludeAll()
                 << addrGroup->includeText()

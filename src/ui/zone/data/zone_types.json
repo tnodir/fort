@@ -1,0 +1,16 @@
+[
+    {
+        "id": "local",
+        "title": "Local",
+        "description": "Local addresses",
+        "local": true
+    },
+    {
+        "id": "bgp",
+        "title": "BGP",
+        "description": "BGP table",
+        "sort": true,
+        "regex": "^*??([^\\s]+)",
+        "emptyNetMask": 24
+    }
+]

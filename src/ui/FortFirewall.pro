@@ -229,6 +229,11 @@ RESOURCES += \
     stat/stat-migrations.qrc \
     util/app/app-migrations.qrc
 
+# Zone
+OTHER_FILES += zone/data/*.json
+
+RESOURCES += zone/data/fort_zone_data.qrc
+
 # Shadow Build: Copy i18n/ to build path
 !equals(PWD, $${OUT_PWD}) {
     i18n.files = $$files(i18n/*.qm)

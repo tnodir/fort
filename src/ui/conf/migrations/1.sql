@@ -1,3 +1,14 @@
+CREATE TABLE zone(
+  zone_id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  enabled BOOLEAN NOT NULL,
+  zone_type TEXT NOT NULL,
+  url TEXT,
+  form_data TEXT,
+  last_run INTEGER,
+  last_success INTEGER
+);
+
 CREATE TABLE address_group(
   addr_group_id INTEGER PRIMARY KEY,
   order_index INTEGER NOT NULL,
@@ -5,6 +16,12 @@ CREATE TABLE address_group(
   exclude_all BOOLEAN NOT NULL,
   include_text TEXT NOT NULL,
   exclude_text TEXT NOT NULL
+);
+
+CREATE TABLE address_group_zone(
+  addr_group_id INTEGER NOT NULL,
+  zone_id INTEGER NOT NULL,
+  include BOOLEAN NOT NULL
 );
 
 CREATE TABLE app_group(
