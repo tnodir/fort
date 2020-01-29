@@ -4,8 +4,8 @@
 #include <QMetaEnum>
 
 #include "../util/dateutil.h"
-#include "taskzonedownloader.h"
 #include "taskupdatechecker.h"
+#include "taskzonedownloader.h"
 
 #define TASK_INFO_VERSION   1
 
@@ -52,7 +52,7 @@ QString TaskInfo::title() const
     switch (m_type) {
     case UpdateChecker:
         return tr("Update Checker");
-    case Tasix:
+    case ZoneDownloader:
         return tr("TAS-IX Addresses Downloader");
     default:
         Q_UNREACHABLE();
@@ -205,7 +205,7 @@ TaskWorker *TaskInfo::createWorker()
     switch (m_type) {
     case UpdateChecker:
         return new TaskUpdateChecker(this);
-    case Tasix:
+    case ZoneDownloader:
         return new TaskZoneDownloader(this);
     default:
         Q_UNREACHABLE();

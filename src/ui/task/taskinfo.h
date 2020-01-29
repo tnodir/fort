@@ -24,7 +24,7 @@ public:
     enum TaskType : qint16 {
         TypeNone = -1,
         UpdateChecker = 0,
-        Tasix
+        ZoneDownloader
     };
     Q_ENUM(TaskType)
 

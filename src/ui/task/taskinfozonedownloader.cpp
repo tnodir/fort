@@ -6,7 +6,7 @@
 #include "taskzonedownloader.h"
 
 TaskInfoZoneDownloader::TaskInfoZoneDownloader(QObject *parent) :
-    TaskInfo(Tasix, parent)
+    TaskInfo(ZoneDownloader, parent)
 {
 }
 
@@ -25,5 +25,5 @@ bool TaskInfoZoneDownloader::processResult(FortManager *fortManager, bool succes
 
     inetGroup->setExcludeText(worker->rangeText());
 
-    return fortManager->saveOriginConf(tr("TAS-IX addresses updated!"));
+    return fortManager->saveOriginConf(tr("Zone Addresses Updated!"));
 }

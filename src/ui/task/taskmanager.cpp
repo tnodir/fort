@@ -4,8 +4,8 @@
 #include "../fortmanager.h"
 #include "../fortsettings.h"
 #include "../util/dateutil.h"
-#include "taskinfozonedownloader.h"
 #include "taskinfoupdatechecker.h"
+#include "taskinfozonedownloader.h"
 
 TaskManager::TaskManager(FortManager *fortManager,
                          QObject *parent) :
