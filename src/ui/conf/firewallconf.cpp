@@ -1,6 +1,7 @@
 #include "firewallconf.h"
 
 #include "../util/fileutil.h"
+#include "../util/net/netutil.h"
 #include "addressgroup.h"
 #include "appgroup.h"
 
@@ -284,6 +285,12 @@ void FirewallConf::clearRemovedAppGroups() const
 {
     qDeleteAll(m_removedAppGroups);
     m_removedAppGroups.clear();
+}
+
+void FirewallConf::setupDefaultAddressGroups()
+{
+    AddressGroup *inetGroup = inetAddressGroup();
+    inetGroup->setExcludeText(NetUtil::localIpv4Networks().join('\n'));
 }
 
 void FirewallConf::setupAddressGroups()

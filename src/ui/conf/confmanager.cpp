@@ -335,6 +335,7 @@ FirewallConf *ConfManager::cloneConf(const FirewallConf &conf,
 
 void ConfManager::setupDefault(FirewallConf &conf) const
 {
+    conf.setupDefaultAddressGroups();
     conf.addDefaultAppGroup();
 }
 

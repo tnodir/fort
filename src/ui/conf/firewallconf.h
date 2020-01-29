@@ -157,6 +157,8 @@ public slots:
     void removeAppGroup(int from, int to);
     void addDefaultAppGroup();
 
+    void setupDefaultAddressGroups();
+
 private:
     void setupAddressGroups();
 

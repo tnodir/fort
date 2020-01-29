@@ -218,7 +218,7 @@ HEADERS += \
 include(../common/Common.pri)
 
 # Images
-RESOURCES += fort_images.qrc
+RESOURCES += fort-images.qrc
 
 # Database Migrations
 OTHER_FILES += \
@@ -232,9 +232,9 @@ RESOURCES += \
     util/app/app-migrations.qrc
 
 # Zone
-OTHER_FILES += zone/data/*.json
+OTHER_FILES += conf/zone/*.json
 
-RESOURCES += zone/data/fort_zone_data.qrc
+RESOURCES += conf/zone/fort-conf-zone.qrc
 
 # Shadow Build: Copy i18n/ to build path
 !equals(PWD, $${OUT_PWD}) {
