@@ -5,7 +5,8 @@
 
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QLabel)
-QT_FORWARD_DECLARE_CLASS(QPlainTextEdit)
+
+QT_FORWARD_DECLARE_CLASS(PlainTextEdit)
 
 class AddressesColumn : public QWidget
 {
@@ -16,7 +17,7 @@ public:
 
     QLabel *labelTitle() const { return m_labelTitle; }
     QCheckBox *cbUseAll() const { return m_cbUseAll; }
-    QPlainTextEdit *editIpText() const { return m_editIpText; }
+    PlainTextEdit *editIpText() const { return m_editIpText; }
 
 private:
     void setupUi();
@@ -24,7 +25,7 @@ private:
 private:
     QLabel *m_labelTitle = nullptr;
     QCheckBox *m_cbUseAll = nullptr;
-    QPlainTextEdit *m_editIpText = nullptr;
+    PlainTextEdit *m_editIpText = nullptr;
 };
 
 #endif // ADDRESSESCOLUMN_H

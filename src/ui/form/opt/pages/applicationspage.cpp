@@ -18,6 +18,7 @@
 #include "../../controls/checkspincombo.h"
 #include "../../controls/checktimeperiod.h"
 #include "../../controls/controlutil.h"
+#include "../../controls/plaintextedit.h"
 #include "../../controls/tabbar.h"
 #include "../../controls/textarea2splitter.h"
 #include "../../controls/textarea2splitterhandle.h"
@@ -527,8 +528,8 @@ void ApplicationsPage::updateGroup()
     m_ctpGroupPeriod->timeEdit2()->setTime(CheckTimePeriod::toTime(
                                                appGroup()->periodTo()));
 
-    m_blockApps->editText()->setPlainText(appGroup()->blockText());
-    m_allowApps->editText()->setPlainText(appGroup()->allowText());
+    m_blockApps->editText()->setText(appGroup()->blockText());
+    m_allowApps->editText()->setText(appGroup()->allowText());
 }
 
 void ApplicationsPage::setupAppGroup()

@@ -7,6 +7,7 @@
 #include <QVBoxLayout>
 
 #include "../../../controls/controlutil.h"
+#include "../../../controls/plaintextedit.h"
 
 AddressesColumn::AddressesColumn(QWidget *parent) :
     QWidget(parent)
@@ -33,7 +34,7 @@ void AddressesColumn::setupUi()
     headerLayout->addWidget(m_cbUseAll);
 
     // Text Area
-    m_editIpText = new QPlainTextEdit();
+    m_editIpText = new PlainTextEdit();
     m_editIpText->setTabChangesFocus(true);
     layout->addWidget(m_editIpText);
 

@@ -4,7 +4,8 @@
 #include <QWidget>
 
 QT_FORWARD_DECLARE_CLASS(QLabel)
-QT_FORWARD_DECLARE_CLASS(QPlainTextEdit)
+
+QT_FORWARD_DECLARE_CLASS(PlainTextEdit)
 
 class AppsColumn : public QWidget
 {
@@ -15,7 +16,7 @@ public:
 
     QLabel *icon() const { return m_icon; }
     QLabel *labelTitle() const { return m_labelTitle; }
-    QPlainTextEdit *editText() const { return m_editText; }
+    PlainTextEdit *editText() const { return m_editText; }
 
 private:
     void setupUi();
@@ -23,7 +24,7 @@ private:
 private:
     QLabel *m_icon = nullptr;
     QLabel *m_labelTitle = nullptr;
-    QPlainTextEdit *m_editText = nullptr;
+    PlainTextEdit *m_editText = nullptr;
 };
 
 #endif // APPSCOLUMN_H

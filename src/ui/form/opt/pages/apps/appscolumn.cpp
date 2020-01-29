@@ -1,10 +1,10 @@
 #include "appscolumn.h"
 
 #include <QLabel>
-#include <QPlainTextEdit>
 #include <QVBoxLayout>
 
 #include "../../../controls/controlutil.h"
+#include "../../../controls/plaintextedit.h"
 
 AppsColumn::AppsColumn(QWidget *parent) :
     QWidget(parent)
@@ -29,7 +29,7 @@ void AppsColumn::setupUi()
     headerLayout->addWidget(m_labelTitle, 1);
 
     // Text Area
-    m_editText = new QPlainTextEdit();
+    m_editText = new PlainTextEdit();
     m_editText->setTabChangesFocus(true);
     layout->addWidget(m_editText);
 

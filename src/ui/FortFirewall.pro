@@ -25,6 +25,7 @@ SOURCES += \
     form/controls/labelspin.cpp \
     form/controls/labelspincombo.cpp \
     form/controls/listview.cpp \
+    form/controls/plaintextedit.cpp \
     form/controls/spincombo.cpp \
     form/controls/tabbar.cpp \
     form/controls/tableview.cpp \
@@ -127,6 +128,7 @@ HEADERS += \
     form/controls/labelspin.h \
     form/controls/labelspincombo.h \
     form/controls/listview.h \
+    form/controls/plaintextedit.h \
     form/controls/spincombo.h \
     form/controls/tabbar.h \
     form/controls/tableview.h \

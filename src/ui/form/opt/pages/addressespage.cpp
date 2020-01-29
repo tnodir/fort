@@ -14,6 +14,7 @@
 #include "../../../fortmanager.h"
 #include "../../../fortsettings.h"
 #include "../../../util/net/netutil.h"
+#include "../../controls/plaintextedit.h"
 #include "../../controls/textarea2splitter.h"
 #include "../../controls/textarea2splitterhandle.h"
 #include "../optionscontroller.h"
@@ -76,7 +77,6 @@ void AddressesPage::retranslateAddressesPlaceholderText()
     const auto placeholderText = tr("# Examples:") + '\n'
             + NetUtil::localIpv4Networks().join('\n');
 
-    m_includeAddresses->editIpText()->setPlaceholderText(placeholderText);
     m_excludeAddresses->editIpText()->setPlaceholderText(placeholderText);
 }
 
@@ -190,10 +190,10 @@ void AddressesPage::setupSplitter()
 void AddressesPage::updateGroup()
 {
     m_includeAddresses->cbUseAll()->setChecked(addressGroup()->includeAll());
-    m_includeAddresses->editIpText()->setPlainText(addressGroup()->includeText());
+    m_includeAddresses->editIpText()->setText(addressGroup()->includeText());
 
     m_excludeAddresses->cbUseAll()->setChecked(addressGroup()->excludeAll());
-    m_excludeAddresses->editIpText()->setPlainText(addressGroup()->excludeText());
+    m_excludeAddresses->editIpText()->setText(addressGroup()->excludeText());
 }
 
 void AddressesPage::setupAddressGroup()
