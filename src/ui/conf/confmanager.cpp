@@ -174,26 +174,68 @@ const char * const sqlUpdateAppResetGroup =
         "  WHERE app_group_id = ?1;"
         ;
 
-bool migrateFunc(SqliteDb *db, int version, void *ctx)
+bool saveAddressGroup(SqliteDb *db, AddressGroup *addrGroup, int orderIndex)
 {
-    if (version != DATABASE_USER_VERSION)
+    const bool rowExists = (addrGroup->id() != 0);
+    if (!addrGroup->edited() && rowExists)
         return true;
 
-    Q_UNUSED(ctx)
+    const auto vars = QVariantList()
+            << (rowExists ? addrGroup->id() : QVariant())
+            << orderIndex
+            << addrGroup->includeAll()
+            << addrGroup->excludeAll()
+            << addrGroup->includeText()
+            << addrGroup->excludeText()
+               ;
 
-    if (version == 6) {
-        // Add TAS-IX zone
-        db->execute(
-                    "INSERT INTO zone(name, enabled, zone_type, url, form_data) VALUES"
-                    "  ('Local Addresses', 1, 'local', NULL, NULL),"
-                    "  ('TAS-IX Addresses', 1, 'bgp',"
-                    "    'http://mrlg.tas-ix.uz/index.cgi',"
-                    "    'router=cisco&pass1=&query=1&arg=');"
+    const char *sql = rowExists ? sqlUpdateAddressGroup : sqlInsertAddressGroup;
 
-                    "INSERT INTO address_group_zone(addr_group_id, zone_id, include) VALUES"
-                    "  (1, 1, 0), (1, 2, 0);"
-                    );
+    bool ok;
+    db->executeEx(sql, vars, 0, &ok);
+    if (!ok) return false;
+
+    if (!rowExists) {
+        addrGroup->setId(db->lastInsertRowid());
     }
+    addrGroup->setEdited(false);
+
+    return true;
+}
+
+bool saveAppGroup(SqliteDb *db, AppGroup *appGroup, int orderIndex)
+{
+    const bool rowExists = (appGroup->id() != 0);
+    if (!appGroup->edited() && rowExists)
+        return true;
+
+    const auto vars = QVariantList()
+            << (rowExists ? appGroup->id() : QVariant())
+            << orderIndex
+            << appGroup->enabled()
+            << appGroup->fragmentPacket()
+            << appGroup->periodEnabled()
+            << appGroup->limitInEnabled()
+            << appGroup->limitOutEnabled()
+            << appGroup->speedLimitIn()
+            << appGroup->speedLimitOut()
+            << appGroup->name()
+            << appGroup->blockText()
+            << appGroup->allowText()
+            << appGroup->periodFrom()
+            << appGroup->periodTo()
+               ;
+
+    const char *sql = rowExists ? sqlUpdateAppGroup : sqlInsertAppGroup;
+
+    bool ok;
+    db->executeEx(sql, vars, 0, &ok);
+    if (!ok) return false;
+
+    if (!rowExists) {
+        appGroup->setId(db->lastInsertRowid());
+    }
+    appGroup->setEdited(false);
 
     return true;
 }
@@ -234,7 +276,7 @@ FortSettings *ConfManager::settings() const
 
 void ConfManager::showErrorMessage(const QString &errorMessage)
 {
-    fortManager()->showErrorBox(errorMessage);
+    fortManager()->showErrorBox(errorMessage, tr("Configuration Error"));
 }
 
 bool ConfManager::initialize()
@@ -248,8 +290,8 @@ bool ConfManager::initialize()
 
     m_sqliteDb->execute(sqlPragmas);
 
-    if (!m_sqliteDb->migrate(":/conf/migrations", DATABASE_USER_VERSION,
-                             true, true, &migrateFunc)) {
+    if (!m_sqliteDb->migrate(":/conf/migrations",
+                             DATABASE_USER_VERSION, true, true)) {
         logCritical() << "Migration error"
                       << m_sqliteDb->filePath();
         return false;
@@ -293,13 +335,12 @@ FirewallConf *ConfManager::cloneConf(const FirewallConf &conf,
 
 void ConfManager::setupDefault(FirewallConf &conf) const
 {
-    conf.setupDefaultAddressGroups();
     conf.addDefaultAppGroup();
 }
 
 bool ConfManager::load(FirewallConf &conf)
 {
-    bool isNewConf = true;
+    bool isNewConf = false;
 
     if (!loadFromDb(conf, isNewConf)) {
         showErrorMessage("Load Settings: " + m_sqliteDb->errorMessage());
@@ -684,75 +725,25 @@ bool ConfManager::loadFromDb(FirewallConf &conf, bool &isNew)
 
 bool ConfManager::saveToDb(const FirewallConf &conf)
 {
-    bool ok = true;
+    bool ok = false;
 
     m_sqliteDb->beginTransaction();
 
     // Save Address Groups
     int orderIndex = -1;
     for (AddressGroup *addrGroup : conf.addressGroups()) {
-        ++orderIndex;
-
-        const bool rowExists = (addrGroup->id() != 0);
-        if (!addrGroup->edited() && rowExists)
-            continue;
-
-        const auto vars = QVariantList()
-                << (rowExists ? addrGroup->id() : QVariant())
-                << orderIndex
-                << addrGroup->includeAll()
-                << addrGroup->excludeAll()
-                << addrGroup->includeText()
-                << addrGroup->excludeText()
-                   ;
-
-        const char *sql = rowExists ? sqlUpdateAddressGroup : sqlInsertAddressGroup;
-
-        m_sqliteDb->executeEx(sql, vars, 0, &ok);
-        if (!ok) goto end;
-
-        if (!rowExists) {
-            addrGroup->setId(m_sqliteDb->lastInsertRowid());
-        }
-        addrGroup->setEdited(false);
+        if (!saveAddressGroup(m_sqliteDb, addrGroup, ++orderIndex))
+            goto end;
     }
 
     // Save App Groups
     orderIndex = -1;
     for (AppGroup *appGroup : conf.appGroups()) {
-        ++orderIndex;
-
-        const bool rowExists = (appGroup->id() != 0);
-        if (!appGroup->edited() && rowExists)
-            continue;
-
-        const auto vars = QVariantList()
-                << (rowExists ? appGroup->id() : QVariant())
-                << orderIndex
-                << appGroup->enabled()
-                << appGroup->fragmentPacket()
-                << appGroup->periodEnabled()
-                << appGroup->limitInEnabled()
-                << appGroup->limitOutEnabled()
-                << appGroup->speedLimitIn()
-                << appGroup->speedLimitOut()
-                << appGroup->name()
-                << appGroup->blockText()
-                << appGroup->allowText()
-                << appGroup->periodFrom()
-                << appGroup->periodTo()
-                   ;
-
-        const char *sql = rowExists ? sqlUpdateAppGroup : sqlInsertAppGroup;
-
-        m_sqliteDb->executeEx(sql, vars, 0, &ok);
-        if (!ok) goto end;
-
-        if (!rowExists) {
-            appGroup->setId(m_sqliteDb->lastInsertRowid());
-        }
-        appGroup->setEdited(false);
+        if (!saveAppGroup(m_sqliteDb, appGroup, ++orderIndex))
+            goto end;
     }
+
+    ok = true;
 
     // Remove App Groups
     {

@@ -3,7 +3,6 @@
 #include <QCheckBox>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QPlainTextEdit>
 #include <QVBoxLayout>
 
 #include "../../../controls/controlutil.h"

@@ -280,9 +280,11 @@ bool SqliteDb::migrate(const QString &sqlDir, int version,
         return false;
     }
 
+    const bool isNewDb = (userVersion == 0);
+
     // Re-create the DB
     QString tempFilePath;
-    if (recreate && userVersion != 0) {
+    if (recreate && !isNewDb) {
         close();
 
         tempFilePath = m_filePath + ".temp";
@@ -330,7 +332,7 @@ bool SqliteDb::migrate(const QString &sqlDir, int version,
         }
 
         if (success && migrateFunc != nullptr) {
-            success = migrateFunc(this, userVersion, migrateContext);
+            success = migrateFunc(this, userVersion, isNewDb, migrateContext);
         }
 
         if (success) {

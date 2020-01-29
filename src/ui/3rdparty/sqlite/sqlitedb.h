@@ -11,7 +11,7 @@ QT_FORWARD_DECLARE_STRUCT(sqlite3)
 QT_FORWARD_DECLARE_CLASS(SqliteDb)
 QT_FORWARD_DECLARE_CLASS(SqliteStmt)
 
-using SQLITEDB_MIGRATE_FUNC = bool (*)(SqliteDb *db, int version, void *context);
+using SQLITEDB_MIGRATE_FUNC = bool (*)(SqliteDb *db, int version, bool isNewDb, void *context);
 
 class SqliteDb
 {

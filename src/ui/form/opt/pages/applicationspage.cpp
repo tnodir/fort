@@ -264,15 +264,11 @@ void ApplicationsPage::setupTabBar()
     }
 
     connect(m_tabBar, &QTabBar::tabCloseRequested, [&](int index) {
-        conf()->removeAppGroup(index, index);
+        if (m_tabBar->count() <= 1)
+            return;
 
-        if (m_tabBar->count() > 1) {
-            m_tabBar->removeTab(index);
-        } else {
-            // Reset alone tab to default one
-            setAppGroupIndex(0);
-            m_tabBar->setTabText(0, appGroup()->name());
-        }
+        conf()->removeAppGroup(index, index);
+        m_tabBar->removeTab(index);
 
         ctrl()->setConfEdited(true);
     });
