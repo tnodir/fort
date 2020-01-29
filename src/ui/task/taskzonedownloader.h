@@ -12,7 +12,7 @@ public:
 
     QString rangeText() const { return m_rangeText; }
 
-    static QStringList parseAddressesBuffer(const QByteArray &buffer);
+    static QStringList parseAddresses(const QByteArray &buffer);
 
 protected:
     void setupDownloader() override;

@@ -164,6 +164,7 @@ void TaskInfo::run()
             this, &TaskInfo::handleFinished);
 
     setTaskWorker(taskWorker);
+    setupTaskWorker();
 
     setRunning(true);
     emit workStarted();

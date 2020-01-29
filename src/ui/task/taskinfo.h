@@ -92,6 +92,8 @@ public slots:
 protected slots:
     void handleFinished(bool success);
 
+    virtual void setupTaskWorker() {}
+
 private:
     TaskWorker *createWorker();
 

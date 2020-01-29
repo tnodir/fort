@@ -29,7 +29,7 @@ void TaskZoneDownloader::downloadFinished(bool success)
 
 QString TaskZoneDownloader::parseBuffer(const QByteArray &buffer) const
 {
-    const QStringList list = parseAddressesBuffer(buffer);
+    const QStringList list = parseAddresses(buffer);
 
     if (list.isEmpty())
         return QString();
@@ -42,7 +42,7 @@ QString TaskZoneDownloader::parseBuffer(const QByteArray &buffer) const
     return ip4Range.toText();
 }
 
-QStringList TaskZoneDownloader::parseAddressesBuffer(const QByteArray &buffer)
+QStringList TaskZoneDownloader::parseAddresses(const QByteArray &buffer)
 {
     QStringList list;
 

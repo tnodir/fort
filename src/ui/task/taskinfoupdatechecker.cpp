@@ -68,12 +68,17 @@ void TaskInfoUpdateChecker::setData(const QByteArray &data)
     emit versionChanged();
 }
 
+TaskUpdateChecker *TaskInfoUpdateChecker::updateChecker() const
+{
+    return static_cast<TaskUpdateChecker *>(taskWorker());
+}
+
 bool TaskInfoUpdateChecker::processResult(FortManager *fortManager, bool success)
 {
     if (!success)
         return false;
 
-    const auto worker = static_cast<TaskUpdateChecker *>(taskWorker());
+    const auto worker = updateChecker();
 
     if (m_version == worker->version())
         return false;

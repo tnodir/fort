@@ -3,6 +3,8 @@
 
 #include "taskinfo.h"
 
+QT_FORWARD_DECLARE_CLASS(TaskUpdateChecker)
+
 class TaskInfoUpdateChecker : public TaskInfo
 {
     Q_OBJECT
@@ -20,6 +22,8 @@ public:
 
     QByteArray data() const override;
     void setData(const QByteArray &data) override;
+
+    TaskUpdateChecker *updateChecker() const;
 
 signals:
     void versionChanged();
