@@ -1,15 +1,15 @@
-#include "tasktasix.h"
+#include "taskzonedownloader.h"
 
 #include "../util/net/ip4range.h"
 #include "../util/net/netdownloader.h"
 #include "../util/net/netutil.h"
 
-TaskTasix::TaskTasix(QObject *parent) :
+TaskZoneDownloader::TaskZoneDownloader(QObject *parent) :
     TaskDownloader(parent)
 {
 }
 
-void TaskTasix::setupDownloader()
+void TaskZoneDownloader::setupDownloader()
 {
     downloader()->setUrl("http://mrlg.tas-ix.uz/index.cgi");
     downloader()->setData("router=cisco&pass1=&query=1&arg=");
@@ -17,7 +17,7 @@ void TaskTasix::setupDownloader()
     m_rangeText = QString();
 }
 
-void TaskTasix::downloadFinished(bool success)
+void TaskZoneDownloader::downloadFinished(bool success)
 {
     if (success) {
         m_rangeText = parseBuffer(downloader()->buffer());
@@ -27,7 +27,7 @@ void TaskTasix::downloadFinished(bool success)
     abort(success);
 }
 
-QString TaskTasix::parseBuffer(const QByteArray &buffer) const
+QString TaskZoneDownloader::parseBuffer(const QByteArray &buffer) const
 {
     const QStringList list = parseCustomBuffer(buffer);
 
@@ -42,7 +42,7 @@ QString TaskTasix::parseBuffer(const QByteArray &buffer) const
     return ip4Range.toText();
 }
 
-QStringList TaskTasix::parseTasixBuffer(const QByteArray &buffer)
+QStringList TaskZoneDownloader::parseTasixBuffer(const QByteArray &buffer)
 {
     QStringList list;
 

@@ -4,7 +4,7 @@
 #include "../fortmanager.h"
 #include "../fortsettings.h"
 #include "../util/dateutil.h"
-#include "taskinfotasix.h"
+#include "taskinfozonedownloader.h"
 #include "taskinfoupdatechecker.h"
 
 TaskManager::TaskManager(FortManager *fortManager,
@@ -34,7 +34,7 @@ void TaskManager::setupTasks()
     m_taskInfoUpdateChecker = new TaskInfoUpdateChecker(this);
 
     appendTaskInfo(m_taskInfoUpdateChecker);
-    appendTaskInfo(new TaskInfoTasix(this));
+    appendTaskInfo(new TaskInfoZoneDownloader(this));
 }
 
 void TaskManager::appendTaskInfo(TaskInfo *taskInfo)

@@ -73,14 +73,14 @@ bool TaskInfoUpdateChecker::processResult(FortManager *fortManager, bool success
     if (!success)
         return false;
 
-    const auto updateChecker = static_cast<TaskUpdateChecker *>(taskWorker());
+    const auto worker = static_cast<TaskUpdateChecker *>(taskWorker());
 
-    if (m_version == updateChecker->version())
+    if (m_version == worker->version())
         return false;
 
-    m_version = updateChecker->version();
-    m_downloadUrl = updateChecker->downloadUrl();
-    m_releaseText = updateChecker->releaseText();
+    m_version = worker->version();
+    m_downloadUrl = worker->downloadUrl();
+    m_releaseText = worker->releaseText();
 
     emit versionChanged();
 

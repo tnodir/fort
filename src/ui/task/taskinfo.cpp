@@ -4,7 +4,7 @@
 #include <QMetaEnum>
 
 #include "../util/dateutil.h"
-#include "tasktasix.h"
+#include "taskzonedownloader.h"
 #include "taskupdatechecker.h"
 
 #define TASK_INFO_VERSION   1
@@ -206,7 +206,7 @@ TaskWorker *TaskInfo::createWorker()
     case UpdateChecker:
         return new TaskUpdateChecker(this);
     case Tasix:
-        return new TaskTasix(this);
+        return new TaskZoneDownloader(this);
     default:
         Q_UNREACHABLE();
         return nullptr;

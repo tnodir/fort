@@ -1,14 +1,14 @@
-#ifndef TASKTASIX_H
-#define TASKTASIX_H
+#ifndef TASKZONEDOWNLOADER_H
+#define TASKZONEDOWNLOADER_H
 
 #include "taskdownloader.h"
 
-class TaskTasix : public TaskDownloader
+class TaskZoneDownloader : public TaskDownloader
 {
     Q_OBJECT
 
 public:
-    explicit TaskTasix(QObject *parent = nullptr);
+    explicit TaskZoneDownloader(QObject *parent = nullptr);
 
     QString rangeText() const { return m_rangeText; }
 
@@ -30,4 +30,4 @@ private:
     QString m_rangeText;
 };
 
-#endif // TASKTASIX_H
+#endif // TASKZONEDOWNLOADER_H

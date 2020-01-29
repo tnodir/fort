@@ -68,13 +68,13 @@ SOURCES += \
     stat/statsql.cpp \
     task/taskdownloader.cpp \
     task/taskinfo.cpp \
-    task/taskinfotasix.cpp \
     task/taskinfoupdatechecker.cpp \
+    task/taskinfozonedownloader.cpp \
     task/tasklistmodel.cpp \
     task/taskmanager.cpp \
-    task/tasktasix.cpp \
     task/taskupdatechecker.cpp \
     task/taskworker.cpp \
+    task/taskzonedownloader.cpp \
     translationmanager.cpp \
     util/app/appinfo.cpp \
     util/app/appinfocache.cpp \
@@ -170,13 +170,13 @@ HEADERS += \
     stat/statsql.h \
     task/taskdownloader.h \
     task/taskinfo.h \
-    task/taskinfotasix.h \
     task/taskinfoupdatechecker.h \
+    task/taskinfozonedownloader.h \
     task/tasklistmodel.h \
     task/taskmanager.h \
-    task/tasktasix.h \
     task/taskupdatechecker.h \
     task/taskworker.h \
+    task/taskzonedownloader.h \
     translationmanager.h \
     util/app/appinfo.h \
     util/app/appinfocache.h \
