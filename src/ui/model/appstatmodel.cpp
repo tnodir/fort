@@ -2,12 +2,12 @@
 
 #include <QIcon>
 
-#include "../../stat/statmanager.h"
-#include "../../util/app/appinfo.h"
-#include "../../util/app/appinfocache.h"
-#include "../../util/fileutil.h"
-#include "../logentryprocnew.h"
-#include "../logentrystattraf.h"
+#include "../log/logentryprocnew.h"
+#include "../log/logentrystattraf.h"
+#include "../stat/statmanager.h"
+#include "../util/app/appinfo.h"
+#include "../util/app/appinfocache.h"
+#include "../util/fileutil.h"
 #include "traflistmodel.h"
 
 AppStatModel::AppStatModel(StatManager *statManager,

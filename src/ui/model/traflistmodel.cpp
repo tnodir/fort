@@ -2,10 +2,10 @@
 
 #include <QLocale>
 
-#include "../../stat/statmanager.h"
-#include "../../stat/statsql.h"
-#include "../../util/dateutil.h"
-#include "../../util/net/netutil.h"
+#include "../stat/statmanager.h"
+#include "../stat/statsql.h"
+#include "../util/dateutil.h"
+#include "../util/net/netutil.h"
 
 TrafListModel::TrafListModel(StatManager *statManager,
                              QObject *parent) :

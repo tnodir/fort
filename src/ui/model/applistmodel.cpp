@@ -6,15 +6,15 @@
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
-#include "../../conf/appgroup.h"
-#include "../../conf/confmanager.h"
-#include "../../conf/firewallconf.h"
-#include "../../util/app/appinfocache.h"
-#include "../../util/app/apputil.h"
-#include "../../util/fileutil.h"
-#include "../../util/guiutil.h"
-#include "../../util/net/netutil.h"
-#include "../logentryblocked.h"
+#include "../conf/appgroup.h"
+#include "../conf/confmanager.h"
+#include "../conf/firewallconf.h"
+#include "../log/logentryblocked.h"
+#include "../util/app/appinfocache.h"
+#include "../util/app/apputil.h"
+#include "../util/fileutil.h"
+#include "../util/guiutil.h"
+#include "../util/net/netutil.h"
 
 namespace {
 
@@ -27,7 +27,7 @@ const auto inactiveColor = QColor("slategray");
 
 AppListModel::AppListModel(ConfManager *confManager,
                            QObject *parent) :
-    TableItemModel(parent),
+    TableSqlModel(parent),
     m_confManager(confManager)
 {
 }
@@ -51,7 +51,10 @@ void AppListModel::setAppInfoCache(AppInfoCache *v)
 
 void AppListModel::initialize()
 {
-    connect(confManager(), &ConfManager::confSaved, this, &AppListModel::reset);
+    setSortColumn(5);
+    setSortOrder(Qt::DescendingOrder);
+
+    connect(confManager(), &ConfManager::confSaved, this, &AppListModel::refresh);
     connect(confManager(), &ConfManager::appEndTimesUpdated, this, &AppListModel::refresh);
 }
 
@@ -71,17 +74,6 @@ void AppListModel::addLogEntry(const LogEntryBlocked &logEntry)
                               groupId, false, logEntry.blocked(), true)) {
         reset();
     }
-}
-
-int AppListModel::rowCount(const QModelIndex &parent) const
-{
-    Q_UNUSED(parent)
-
-    if (m_appCount < 0) {
-        m_appCount = sqliteDb()->executeEx(sqlCount().toLatin1()).toInt();
-    }
-
-    return m_appCount;
 }
 
 int AppListModel::columnCount(const QModelIndex &parent) const
@@ -234,16 +226,6 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-void AppListModel::sort(int column, Qt::SortOrder order)
-{
-    if (m_sortColumn != column || m_sortOrder != order) {
-        m_sortColumn = column;
-        m_sortOrder = order;
-
-        reset();
-    }
-}
-
 const AppRow &AppListModel::appRowAt(int row) const
 {
     updateRowCache(row);
@@ -253,11 +235,11 @@ const AppRow &AppListModel::appRowAt(int row) const
 
 bool AppListModel::addApp(const QString &appPath, const QString &appName,
                           const QDateTime &endTime, int groupIndex,
-                          bool useGroupPerm, bool blocked, bool updateDriver)
+                          bool useGroupPerm, bool blocked)
 {
     const auto groupId = appGroupAt(groupIndex)->id();
 
-    if (updateDriver && !confManager()->updateDriverUpdateApp(
+    if (!confManager()->updateDriverUpdateApp(
                 appPath, groupIndex, useGroupPerm, blocked, true))
         return false;
 
@@ -325,33 +307,12 @@ void AppListModel::purgeApps()
     }
 }
 
-void AppListModel::reset()
+bool AppListModel::updateTableRow(int row) const
 {
-    invalidateRowCache();
-    TableItemModel::reset();
-}
-
-void AppListModel::refresh()
-{
-    invalidateRowCache();
-    TableItemModel::refresh();
-}
-
-void AppListModel::invalidateRowCache()
-{
-    m_appCount = -1;
-    m_appRow.invalidate();
-}
-
-void AppListModel::updateRowCache(int row) const
-{
-    if (m_appRow.isValid(row))
-        return;
-
     SqliteStmt stmt;
     if (!(sqliteDb()->prepare(stmt, sql().toLatin1(), {row})
           && stmt.step() == SqliteStmt::StepRow))
-        return;
+        return false;
 
     m_appRow.appId = stmt.columnInt64(0);
     m_appRow.groupIndex = stmt.columnInt(1);
@@ -363,18 +324,7 @@ void AppListModel::updateRowCache(int row) const
     m_appRow.endTime = stmt.columnDateTime(7);
     m_appRow.creatTime = stmt.columnDateTime(8);
 
-    m_appRow.row = row;
-}
-
-QString AppListModel::sqlCount() const
-{
-    return "SELECT count(*) FROM (" + sqlBase() + ");";
-}
-
-QString AppListModel::sql() const
-{
-    return sqlBase() + sqlOrder() + " LIMIT 1 OFFSET ?1;"
-            ;
+    return true;
 }
 
 QString AppListModel::sqlBase() const
@@ -396,21 +346,18 @@ QString AppListModel::sqlBase() const
             ;
 }
 
-QString AppListModel::sqlOrder() const
+QString AppListModel::sqlOrderColumn() const
 {
-    const QString orderStr = (m_sortOrder == Qt::AscendingOrder)
-            ? "ASC" : "DESC";
-
     QString columnsStr = "1";
-    switch (m_sortColumn) {
-    case 0: columnsStr = "4 " + orderStr + ", 3"; break;  // Program
+    switch (sortColumn()) {
+    case 0: columnsStr = "4 " + sqlOrderAsc() + ", 3"; break;  // Program
     case 1: columnsStr = "2"; break;  // Group
-    case 2: columnsStr = "6 " + orderStr + ", 7"; break;  // State
+    case 2: columnsStr = "6 " + sqlOrderAsc() + ", 7"; break;  // State
     case 3: columnsStr = "8"; break;  // End Time
     case 4: columnsStr = "1"; break;  // Creation Time
     }
 
-    return QString(" ORDER BY %1 %2").arg(columnsStr, orderStr);
+    return columnsStr;
 }
 
 const AppGroup *AppListModel::appGroupAt(int index) const

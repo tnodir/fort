@@ -20,7 +20,7 @@
 #include "../../conf/confmanager.h"
 #include "../../fortmanager.h"
 #include "../../fortsettings.h"
-#include "../../log/model/applistmodel.h"
+#include "../../model/applistmodel.h"
 #include "../../util/app/appinfocache.h"
 #include "../../util/guiutil.h"
 #include "../../util/osutil.h"
@@ -579,7 +579,7 @@ bool ProgramsWindow::saveAppEditForm()
     // Add new app
     if (m_formAppIsNew) {
         return appListModel()->addApp(appPath, appName, endTime, groupIndex,
-                                      useGroupPerm, blocked, true);
+                                      useGroupPerm, blocked);
     }
 
     // Edit selected apps
@@ -599,8 +599,12 @@ bool ProgramsWindow::saveAppEditForm()
                 || blocked != appRow.blocked
                 || endTime != appRow.endTime);
 
-        if (!(appNameEdited || appEdited))
+        if (!appEdited) {
+            if (appNameEdited) {
+                return appListModel()->updateAppName(appRow.appId, appName);
+            }
             return true;
+        }
 
         updateDriver = appEdited;
     }

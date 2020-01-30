@@ -5,12 +5,12 @@
 
 #include "../driver/driverworker.h"
 #include "../fortcommon.h"
+#include "../model/applistmodel.h"
+#include "../model/appstatmodel.h"
 #include "logbuffer.h"
 #include "logentryblocked.h"
 #include "logentryprocnew.h"
 #include "logentrystattraf.h"
-#include "model/applistmodel.h"
-#include "model/appstatmodel.h"
 
 LogManager::LogManager(ConfManager *confManager,
                        StatManager *statManager,

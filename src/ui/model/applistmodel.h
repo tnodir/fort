@@ -3,7 +3,7 @@
 
 #include <QDateTime>
 
-#include "../util/model/tableitemmodel.h"
+#include "../util/model/tablesqlmodel.h"
 
 QT_FORWARD_DECLARE_CLASS(AppGroup)
 QT_FORWARD_DECLARE_CLASS(AppInfoCache)
@@ -12,12 +12,7 @@ QT_FORWARD_DECLARE_CLASS(FirewallConf)
 QT_FORWARD_DECLARE_CLASS(LogEntryBlocked)
 QT_FORWARD_DECLARE_CLASS(SqliteDb)
 
-struct AppRow {
-    bool isValid(int row) const { return row == this->row; }
-    void invalidate() { row = -1; }
-
-    int row = -1;
-
+struct AppRow : TableRow {
     bool useGroupPerm = true;
     bool blocked = false;
     bool alerted = false;
@@ -33,7 +28,7 @@ struct AppRow {
     QDateTime creatTime;
 };
 
-class AppListModel : public TableItemModel
+class AppListModel : public TableSqlModel
 {
     Q_OBJECT
 
@@ -43,7 +38,7 @@ public:
 
     ConfManager *confManager() const { return m_confManager; }
     FirewallConf *conf() const;
-    SqliteDb *sqliteDb() const;
+    SqliteDb *sqliteDb() const override;
 
     AppInfoCache *appInfoCache() const { return m_appInfoCache; }
     void setAppInfoCache(AppInfoCache *v);
@@ -52,20 +47,17 @@ public:
 
     void addLogEntry(const LogEntryBlocked &logEntry);
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-    void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
-
     const AppRow &appRowAt(int row) const;
 
     bool addApp(const QString &appPath, const QString &appName,
                 const QDateTime &endTime, int groupIndex, bool useGroupPerm,
-                bool blocked, bool updateDriver = true);
+                bool blocked);
     bool updateApp(qint64 appId, const QString &appPath, const QString &appName,
                    const QDateTime &endTime, int groupIndex, bool useGroupPerm,
                    bool blocked, bool updateDriver = true);
@@ -76,25 +68,14 @@ public:
     const AppGroup *appGroupAt(int index) const;
     QStringList appGroupNames() const;
 
-public slots:
-    void reset();
-    void refresh();
+protected:
+    bool updateTableRow(int row) const override;
+    TableRow &tableRow() const override { return m_appRow; }
+
+    QString sqlBase() const override;
+    QString sqlOrderColumn() const override;
 
 private:
-    void invalidateRowCache();
-    void updateRowCache(int row) const;
-
-    QString sqlCount() const;
-    QString sql() const;
-    QString sqlBase() const;
-    QString sqlOrder() const;
-
-private:
-    int m_sortColumn = 5;
-    Qt::SortOrder m_sortOrder = Qt::DescendingOrder;
-
-    mutable int m_appCount = -1;
-
     ConfManager *m_confManager = nullptr;
     AppInfoCache *m_appInfoCache = nullptr;
 

@@ -1,7 +1,7 @@
 #ifndef IPLISTMODEL_H
 #define IPLISTMODEL_H
 
-#include "../../util/model/stringlistmodel.h"
+#include "../util/model/stringlistmodel.h"
 
 class IpListModel : public StringListModel
 {

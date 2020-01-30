@@ -57,12 +57,13 @@ SOURCES += \
     log/logentryprocnew.cpp \
     log/logentrystattraf.cpp \
     log/logmanager.cpp \
-    log/model/applistmodel.cpp \
-    log/model/appstatmodel.cpp \
-    log/model/iplistmodel.cpp \
-    log/model/traflistmodel.cpp \
     main.cpp \
     mainwindow.cpp \
+    model/applistmodel.cpp \
+    model/appstatmodel.cpp \
+    model/iplistmodel.cpp \
+    model/traflistmodel.cpp \
+    model/zonelistmodel.cpp \
     stat/quotamanager.cpp \
     stat/statmanager.cpp \
     stat/statsql.cpp \
@@ -93,6 +94,7 @@ SOURCES += \
     util/logger.cpp \
     util/model/stringlistmodel.cpp \
     util/model/tableitemmodel.cpp \
+    util/model/tablesqlmodel.cpp \
     util/nativeeventfilter.cpp \
     util/net/hostinfo.cpp \
     util/net/hostinfocache.cpp \
@@ -160,11 +162,12 @@ HEADERS += \
     log/logentryprocnew.h \
     log/logentrystattraf.h \
     log/logmanager.h \
-    log/model/applistmodel.h \
-    log/model/appstatmodel.h \
-    log/model/iplistmodel.h \
-    log/model/traflistmodel.h \
     mainwindow.h \
+    model/applistmodel.h \
+    model/appstatmodel.h \
+    model/iplistmodel.h \
+    model/traflistmodel.h \
+    model/zonelistmodel.h \
     stat/quotamanager.h \
     stat/statmanager.h \
     stat/statsql.h \
@@ -196,6 +199,7 @@ HEADERS += \
     util/logger.h \
     util/model/stringlistmodel.h \
     util/model/tableitemmodel.h \
+    util/model/tablesqlmodel.h \
     util/nativeeventfilter.h \
     util/net/hostinfo.h \
     util/net/hostinfocache.h \
