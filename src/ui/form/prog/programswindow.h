@@ -46,8 +46,6 @@ private:
 
     void retranslateAppBlockInHours();
 
-    void setupAppListModel();
-
     void setupUi();
     void setupAppEditForm();
     void setupComboAppGroups();
@@ -77,15 +75,13 @@ private:
     FortSettings *settings() const;
     ConfManager *confManager() const;
     FirewallConf *conf() const;
-    AppListModel *appListModel() const { return m_appListModel; }
+    AppListModel *appListModel() const;
     AppInfoCache *appInfoCache() const;
 
 private:
     bool m_formAppIsNew = false;
 
     ProgramsController *m_ctrl = nullptr;
-
-    AppListModel *m_appListModel = nullptr;
 
     QPushButton *m_btEdit = nullptr;
     QAction *m_actAllowApp = nullptr;

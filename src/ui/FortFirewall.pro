@@ -48,6 +48,8 @@ SOURCES += \
     form/opt/pages/statisticspage.cpp \
     form/prog/programscontroller.cpp \
     form/prog/programswindow.cpp \
+    form/zone/zonescontroller.cpp \
+    form/zone/zoneswindow.cpp \
     fortcommon.cpp \
     fortmanager.cpp \
     fortsettings.cpp \
@@ -153,6 +155,8 @@ HEADERS += \
     form/opt/pages/statisticspage.h \
     form/prog/programscontroller.h \
     form/prog/programswindow.h \
+    form/zone/zonescontroller.h \
+    form/zone/zoneswindow.h \
     fortcommon.h \
     fortmanager.h \
     fortsettings.h \

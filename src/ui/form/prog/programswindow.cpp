@@ -43,11 +43,8 @@ const ValuesList appBlockInHourValues = {
 ProgramsWindow::ProgramsWindow(FortManager *fortManager,
                                QWidget *parent) :
     WidgetWindow(parent),
-    m_ctrl(new ProgramsController(fortManager, this)),
-    m_appListModel(ctrl()->appListModel())
+    m_ctrl(new ProgramsController(fortManager, this))
 {
-    setupAppListModel();
-
     setupUi();
     setupController();
 }
@@ -149,11 +146,6 @@ void ProgramsWindow::retranslateAppBlockInHours()
 
     m_cscBlockApp->setNames(list);
     m_cscBlockApp->spinBox()->setSuffix(tr(" hours"));
-}
-
-void ProgramsWindow::setupAppListModel()
-{
-    appListModel()->initialize();
 }
 
 void ProgramsWindow::setupUi()
@@ -684,6 +676,11 @@ ConfManager *ProgramsWindow::confManager() const
 FirewallConf *ProgramsWindow::conf() const
 {
     return ctrl()->conf();
+}
+
+AppListModel *ProgramsWindow::appListModel() const
+{
+    return fortManager()->appListModel();
 }
 
 AppInfoCache *ProgramsWindow::appInfoCache() const

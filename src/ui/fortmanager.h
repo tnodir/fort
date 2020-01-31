@@ -9,6 +9,8 @@
 QT_FORWARD_DECLARE_CLASS(QSystemTrayIcon)
 
 QT_FORWARD_DECLARE_CLASS(AppInfoCache)
+QT_FORWARD_DECLARE_CLASS(AppListModel)
+QT_FORWARD_DECLARE_CLASS(AppStatModel)
 QT_FORWARD_DECLARE_CLASS(ConfManager)
 QT_FORWARD_DECLARE_CLASS(DriverManager)
 QT_FORWARD_DECLARE_CLASS(EnvManager)
@@ -24,6 +26,8 @@ QT_FORWARD_DECLARE_CLASS(QuotaManager)
 QT_FORWARD_DECLARE_CLASS(StatManager)
 QT_FORWARD_DECLARE_CLASS(TaskManager)
 QT_FORWARD_DECLARE_CLASS(WidgetWindowStateWatcher)
+QT_FORWARD_DECLARE_CLASS(ZoneListModel)
+QT_FORWARD_DECLARE_CLASS(ZonesWindow)
 
 class FortManager : public QObject
 {
@@ -44,6 +48,9 @@ public:
     EnvManager *envManager() const { return m_envManager; }
     LogManager *logManager() const { return m_logManager; }
     TaskManager *taskManager() const { return m_taskManager; }
+    AppListModel *appListModel() const { return m_appListModel; }
+    AppStatModel *appStatModel() const { return m_appStatModel; }
+    ZoneListModel *zoneListModel() const { return m_zoneListModel; }
 
 signals:
     void afterSaveProgWindowState();
@@ -51,6 +58,9 @@ signals:
 
     void afterSaveOptWindowState();
     void afterRestoreOptWindowState();
+
+    void afterSaveZoneWindowState();
+    void afterRestoreZoneWindowState();
 
 public slots:
     void installDriver();
@@ -67,6 +77,9 @@ public slots:
 
     void showOptionsWindow();
     void closeOptionsWindow();
+
+    void showZonesWindow();
+    void closeZonesWindow();
 
     void showGraphWindow();
     void closeGraphWindow(bool storeVisibility = false);
@@ -100,6 +113,8 @@ private:
     bool setupDriver();
     void closeDriver();
 
+    void setupModels();
+
     void setupLogManager();
     void closeLogManager();
 
@@ -116,6 +131,7 @@ private:
 
     bool setupProgramsWindow();
     bool setupOptionsWindow();
+    bool setupZonesWindow();
 
     void closeUi();
 
@@ -133,6 +149,9 @@ private:
 
     void saveOptWindowState();
     void restoreOptWindowState();
+
+    void saveZoneWindowState();
+    void restoreZoneWindowState();
 
     void saveGraphWindowState(bool visible);
     void restoreGraphWindowState();
@@ -163,6 +182,9 @@ private:
     OptionsWindow *m_optWindow = nullptr;
     WidgetWindowStateWatcher *m_optWindowState = nullptr;
 
+    ZonesWindow *m_zoneWindow = nullptr;
+    WidgetWindowStateWatcher *m_zoneWindowState = nullptr;
+
     GraphWindow *m_graphWindow = nullptr;
     WidgetWindowStateWatcher *m_graphWindowState = nullptr;
 
@@ -184,6 +206,10 @@ private:
     HotKeyManager *m_hotKeyManager = nullptr;
     TaskManager *m_taskManager = nullptr;
     AppInfoCache *m_appInfoCache = nullptr;
+
+    AppListModel *m_appListModel = nullptr;
+    AppStatModel *m_appStatModel = nullptr;
+    ZoneListModel *m_zoneListModel = nullptr;
 };
 
 #endif // FORTMANAGER_H

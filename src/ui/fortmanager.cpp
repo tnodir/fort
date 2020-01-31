@@ -18,12 +18,14 @@
 #include "form/graph/graphwindow.h"
 #include "form/opt/optionswindow.h"
 #include "form/prog/programswindow.h"
+#include "form/zone/zoneswindow.h"
 #include "fortsettings.h"
 #include "log/logmanager.h"
 #include "model/applistmodel.h"
 #include "model/appstatmodel.h"
 #include "model/iplistmodel.h"
 #include "model/traflistmodel.h"
+#include "model/zonelistmodel.h"
 #include "stat/quotamanager.h"
 #include "stat/statmanager.h"
 #include "task/taskinfo.h"
@@ -51,6 +53,7 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_trayIcon(new QSystemTrayIcon(this)),
     m_progWindowState(new WidgetWindowStateWatcher(this)),
     m_optWindowState(new WidgetWindowStateWatcher(this)),
+    m_zoneWindowState(new WidgetWindowStateWatcher(this)),
     m_graphWindowState(new WidgetWindowStateWatcher(this)),
     m_settings(fortSettings),
     m_quotaManager(new QuotaManager(fortSettings, this)),
@@ -59,12 +62,14 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_driverManager(new DriverManager(this)),
     m_envManager(new EnvManager(this)),
     m_confManager(new ConfManager(fortSettings->confFilePath(), this, this)),
-    m_logManager(new LogManager(m_confManager, m_statManager,
-                                m_driverManager->driverWorker(), this)),
+    m_logManager(new LogManager(this, this)),
     m_nativeEventFilter(new NativeEventFilter(this)),
     m_hotKeyManager(new HotKeyManager(m_nativeEventFilter, this)),
     m_taskManager(new TaskManager(this, this)),
-    m_appInfoCache(new AppInfoCache(this))
+    m_appInfoCache(new AppInfoCache(this)),
+    m_appListModel(new AppListModel(m_confManager, this)),
+    m_appStatModel(new AppStatModel(m_statManager, this)),
+    m_zoneListModel(new ZoneListModel(m_confManager, this))
 {
     setupTranslationManager();
     setupThreadPool();
@@ -74,6 +79,8 @@ FortManager::FortManager(FortSettings *fortSettings,
     setupEnvManager();
     setupStatManager();
     setupConfManager();
+
+    setupModels();
 
     setupLogManager();
     setupDriver();
@@ -158,11 +165,19 @@ void FortManager::closeDriver()
     driverManager()->closeDevice();
 }
 
+void FortManager::setupModels()
+{
+    appListModel()->setAppInfoCache(m_appInfoCache);
+    appListModel()->initialize();
+
+    appStatModel()->setAppInfoCache(m_appInfoCache);
+    appStatModel()->initialize();
+
+    zoneListModel()->initialize();
+}
+
 void FortManager::setupLogManager()
 {
-    logManager()->appListModel()->setAppInfoCache(m_appInfoCache);
-    logManager()->appStatModel()->setAppInfoCache(m_appInfoCache);
-
     logManager()->initialize();
 }
 
@@ -282,11 +297,21 @@ bool FortManager::setupOptionsWindow()
     return true;
 }
 
+bool FortManager::setupZonesWindow()
+{
+    m_zoneWindow = new ZonesWindow(this);
+
+    m_zoneWindowState->install(m_zoneWindow);
+
+    return true;
+}
+
 void FortManager::closeUi()
 {
     closeGraphWindow(true);
     closeOptionsWindow();
     closeProgramsWindow();
+    closeZonesWindow();
 }
 
 void FortManager::launch()
@@ -378,6 +403,36 @@ void FortManager::closeOptionsWindow()
     m_optWindow = nullptr;
 
     confManager()->setConfToEdit(nullptr);
+}
+
+void FortManager::showZonesWindow()
+{
+    if (!(m_zoneWindow && m_zoneWindow->isVisible())
+            && !checkPassword())
+        return;
+
+    if (!m_zoneWindow) {
+        setupZonesWindow();
+    }
+
+    m_zoneWindow->show();
+    m_zoneWindow->raise();
+    m_zoneWindow->activateWindow();
+
+    restoreZoneWindowState();
+}
+
+void FortManager::closeZonesWindow()
+{
+    if (!m_zoneWindow)
+        return;
+
+    saveZoneWindowState();
+
+    m_zoneWindow->hide();
+
+    m_zoneWindow->deleteLater();
+    m_zoneWindow = nullptr;
 }
 
 void FortManager::showGraphWindow()
@@ -619,6 +674,23 @@ void FortManager::restoreOptWindowState()
     emit afterRestoreOptWindowState();
 }
 
+void FortManager::saveZoneWindowState()
+{
+    settings()->setZoneWindowGeometry(m_zoneWindowState->geometry());
+    settings()->setZoneWindowMaximized(m_zoneWindowState->maximized());
+
+    emit afterSaveZoneWindowState();
+}
+
+void FortManager::restoreZoneWindowState()
+{
+    m_zoneWindowState->restore(m_zoneWindow, QSize(1024, 768),
+                               settings()->zoneWindowGeometry(),
+                               settings()->zoneWindowMaximized());
+
+    emit afterRestoreZoneWindowState();
+}
+
 void FortManager::saveGraphWindowState(bool visible)
 {
     settings()->setGraphWindowVisible(visible);
@@ -663,6 +735,11 @@ void FortManager::updateTrayMenu()
                 menu, QIcon(":/images/cog.png"), tr("Options"),
                 this, SLOT(showOptionsWindow()));
     addHotKey(optionsAction, settings()->hotKeyOptions(), hotKeyEnabled);
+
+    QAction *zonesAction = addAction(
+                menu, QIcon(":/images/map.png"), tr("Zones"),
+                this, SLOT(showZonesWindow()));
+    addHotKey(zonesAction, settings()->hotKeyZones(), hotKeyEnabled);
 
     m_graphWindowAction = addAction(
                 menu, QIcon(":/images/chart_bar.png"), tr("Traffic Graph"),

@@ -3,8 +3,10 @@
 #include <QCoreApplication>
 #include <QDebug>
 
+#include "../driver/drivermanager.h"
 #include "../driver/driverworker.h"
 #include "../fortcommon.h"
+#include "../fortmanager.h"
 #include "../model/applistmodel.h"
 #include "../model/appstatmodel.h"
 #include "logbuffer.h"
@@ -12,15 +14,26 @@
 #include "logentryprocnew.h"
 #include "logentrystattraf.h"
 
-LogManager::LogManager(ConfManager *confManager,
-                       StatManager *statManager,
-                       DriverWorker *driverWorker,
+LogManager::LogManager(FortManager *fortManager,
                        QObject *parent) :
     QObject(parent),
-    m_appListModel(new AppListModel(confManager, this)),
-    m_appStatModel(new AppStatModel(statManager, this)),
-    m_driverWorker(driverWorker)
+    m_fortManager(fortManager)
 {
+}
+
+AppListModel *LogManager::appListModel() const
+{
+    return fortManager()->appListModel();
+}
+
+AppStatModel *LogManager::appStatModel() const
+{
+    return fortManager()->appStatModel();
+}
+
+DriverWorker *LogManager::driverWorker() const
+{
+    return fortManager()->driverManager()->driverWorker();
 }
 
 void LogManager::setActive(bool active)
@@ -48,9 +61,7 @@ void LogManager::setErrorMessage(const QString &errorMessage)
 
 void LogManager::initialize()
 {
-    m_appStatModel->initialize();
-
-    connect(m_driverWorker, &DriverWorker::readLogResult,
+    connect(driverWorker(), &DriverWorker::readLogResult,
             this, &LogManager::processLogBuffer, Qt::QueuedConnection);
 }
 
@@ -58,21 +69,21 @@ void LogManager::close()
 {
     QCoreApplication::sendPostedEvents(this);
 
-    disconnect(m_driverWorker);
+    disconnect(driverWorker());
 }
 
 void LogManager::readLogAsync()
 {
     LogBuffer *logBuffer = getFreeBuffer();
 
-    if (!m_driverWorker->readLogAsync(logBuffer)) {
+    if (!driverWorker()->readLogAsync(logBuffer)) {
         addFreeBuffer(logBuffer);
     }
 }
 
 void LogManager::cancelAsyncIo()
 {
-    m_driverWorker->cancelAsyncIo();
+    driverWorker()->cancelAsyncIo();
 }
 
 LogBuffer *LogManager::getFreeBuffer()
@@ -114,19 +125,19 @@ void LogManager::readLogEntries(LogBuffer *logBuffer)
         case LogEntry::AppBlocked: {
             LogEntryBlocked blockedEntry;
             logBuffer->readEntryBlocked(&blockedEntry);
-            m_appListModel->addLogEntry(blockedEntry);
+            appListModel()->addLogEntry(blockedEntry);
             break;
         }
         case LogEntry::ProcNew: {
             LogEntryProcNew procNewEntry;
             logBuffer->readEntryProcNew(&procNewEntry);
-            m_appStatModel->handleProcNew(procNewEntry);
+            appStatModel()->handleProcNew(procNewEntry);
             break;
         }
         case LogEntry::StatTraf: {
             LogEntryStatTraf statTrafEntry;
             logBuffer->readEntryStatTraf(&statTrafEntry);
-            m_appStatModel->handleStatTraf(statTrafEntry);
+            appStatModel()->handleStatTraf(statTrafEntry);
             break;
         }
         default:

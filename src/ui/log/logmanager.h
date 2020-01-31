@@ -5,8 +5,7 @@
 
 QT_FORWARD_DECLARE_CLASS(AppListModel)
 QT_FORWARD_DECLARE_CLASS(AppStatModel)
-QT_FORWARD_DECLARE_CLASS(ConfManager)
-QT_FORWARD_DECLARE_CLASS(StatManager)
+QT_FORWARD_DECLARE_CLASS(FortManager)
 QT_FORWARD_DECLARE_CLASS(DriverWorker)
 QT_FORWARD_DECLARE_CLASS(LogBuffer)
 QT_FORWARD_DECLARE_CLASS(LogEntry)
@@ -14,18 +13,15 @@ QT_FORWARD_DECLARE_CLASS(LogEntry)
 class LogManager : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(AppListModel *appListModel READ appListModel CONSTANT)
-    Q_PROPERTY(AppStatModel *appStatModel READ appStatModel CONSTANT)
-    Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
 
 public:
-    explicit LogManager(ConfManager *confManager,
-                        StatManager *statManager,
-                        DriverWorker *driverWorker,
+    explicit LogManager(FortManager *fortManager,
                         QObject *parent = nullptr);
 
-    AppListModel *appListModel() const { return m_appListModel; }
-    AppStatModel *appStatModel() const { return m_appStatModel; }
+    FortManager *fortManager() const { return m_fortManager; }
+    DriverWorker *driverWorker() const;
+    AppListModel *appListModel() const;
+    AppStatModel *appStatModel() const;
 
     void setActive(bool active);
 
@@ -58,10 +54,8 @@ private:
 private:
     bool m_active = false;
 
-    AppListModel *m_appListModel = nullptr;
-    AppStatModel *m_appStatModel = nullptr;
+    FortManager *m_fortManager = nullptr;
 
-    DriverWorker *m_driverWorker = nullptr;
     QList<LogBuffer *> m_freeBuffers;
 
     QString m_errorMessage;

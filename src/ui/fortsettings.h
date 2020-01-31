@@ -110,6 +110,12 @@ public:
     QByteArray optWindowStatSplit() const { return iniByteArray("optWindow/statSplit"); }
     void setOptWindowStatSplit(const QByteArray &v) { setIniValue("optWindow/statSplit", v); }
 
+    QRect zoneWindowGeometry() const { return iniValue("zoneWindow/geometry").toRect(); }
+    void setZoneWindowGeometry(const QRect &v) { setIniValue("zoneWindow/geometry", v); }
+
+    bool zoneWindowMaximized() const { return iniBool("zoneWindow/maximized"); }
+    void setZoneWindowMaximized(bool on) { setIniValue("zoneWindow/maximized", on); }
+
     bool graphWindowVisible() const { return iniBool("graphWindow/visible"); }
     void setGraphWindowVisible(bool on) { setIniValue("graphWindow/visible", on); }
 
@@ -172,6 +178,7 @@ public:
 
     QString hotKeyPrograms() const { return iniText("hotKey/programs"); }
     QString hotKeyOptions() const { return iniText("hotKey/options"); }
+    QString hotKeyZones() const { return iniText("hotKey/zones"); }
     QString hotKeyGraph() const { return iniText("hotKey/graph"); }
     QString hotKeyFilter() const { return iniText("hotKey/filter", "Ctrl+Alt+Shift+F"); }
     QString hotKeyStopTraffic() const { return iniText("hotKey/stopTraffic"); }
