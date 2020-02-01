@@ -53,6 +53,8 @@ public:
     ZoneListModel *zoneListModel() const { return m_zoneListModel; }
 
 signals:
+    void optWindowChanged();
+
     void afterSaveProgWindowState();
     void afterRestoreProgWindowState();
 
@@ -135,9 +137,8 @@ private:
 
     void closeUi();
 
-    bool loadSettings();
-    bool saveSettings(FirewallConf *newConf, bool onlyFlags = false,
-                      bool isTrayMenuDirty = true);
+    bool loadConf();
+    bool saveConf(FirewallConf *newConf, bool onlyFlags = false);
 
     bool updateDriverConf(bool onlyFlags = false);
 
@@ -156,8 +157,10 @@ private:
     void saveGraphWindowState(bool visible);
     void restoreGraphWindowState();
 
-    void updateLogger();
-    void updateTrayMenu();
+    void updateTrayMenu(bool onlyFlags = false);
+    void createTrayMenu();
+    void updateTrayMenuFlags();
+    void retranslateTrayMenu();
 
     void addHotKey(QAction *action, const QString &shortcutText,
                    bool hotKeyEnabled);
@@ -188,11 +191,15 @@ private:
     GraphWindow *m_graphWindow = nullptr;
     WidgetWindowStateWatcher *m_graphWindowState = nullptr;
 
+    QAction *m_programsAction = nullptr;
+    QAction *m_optionsAction = nullptr;
+    QAction *m_zonesAction = nullptr;
     QAction *m_graphWindowAction = nullptr;
     QAction *m_filterEnabledAction = nullptr;
     QAction *m_stopTrafficAction = nullptr;
     QAction *m_stopInetTrafficAction = nullptr;
     QAction *m_allowAllNewAction = nullptr;
+    QAction *m_quitAction = nullptr;
     QList<QAction *> m_appGroupActions;
 
     FortSettings *m_settings = nullptr;

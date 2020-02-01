@@ -41,5 +41,7 @@ void HotKeyManager::onHotKeyPressed(int hotKeyId)
         return;
 
     QAction *action = m_actions.at(hotKeyId);
-    action->trigger();
+    if (action->isEnabled()) {
+        action->trigger();
+    }
 }

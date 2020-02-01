@@ -76,7 +76,6 @@ public:
                                bool remove = false);
 
 signals:
-    void isEditingChanged();
     void confSaved(bool onlyFlags);
     void appEndTimesUpdated();
 

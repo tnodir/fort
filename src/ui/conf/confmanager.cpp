@@ -319,8 +319,6 @@ void ConfManager::setConfToEdit(FirewallConf *conf)
     }
 
     m_confToEdit = conf;
-
-    emit isEditingChanged();
 }
 
 FirewallConf *ConfManager::cloneConf(const FirewallConf &conf,
@@ -376,8 +374,6 @@ bool ConfManager::save(FirewallConf &newConf, bool onlyFlags)
             setConfToEdit(nullptr);
         }
     }
-
-    emit confSaved(onlyFlags);
 
     return true;
 }

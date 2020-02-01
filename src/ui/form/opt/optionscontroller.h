@@ -3,6 +3,7 @@
 
 #include <QObject>
 
+QT_FORWARD_DECLARE_CLASS(ConfManager)
 QT_FORWARD_DECLARE_CLASS(DriverManager)
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
 QT_FORWARD_DECLARE_CLASS(FortManager)
@@ -37,6 +38,7 @@ public:
 
     FortManager *fortManager() const { return m_fortManager; }
     FortSettings *settings() const;
+    ConfManager *confManager() const;
     FirewallConf *conf() const;
     TaskManager *taskManager() const;
     DriverManager *driverManager() const;

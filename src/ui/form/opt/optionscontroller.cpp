@@ -1,5 +1,6 @@
 #include "optionscontroller.h"
 
+#include "../../conf/confmanager.h"
 #include "../../fortmanager.h"
 #include "../../fortsettings.h"
 #include "../../translationmanager.h"
@@ -62,6 +63,11 @@ FortSettings *OptionsController::settings() const
     return fortManager()->settings();
 }
 
+ConfManager *OptionsController::confManager() const
+{
+    return fortManager()->confManager();
+}
+
 FirewallConf *OptionsController::conf() const
 {
     return fortManager()->confToEdit();
@@ -94,8 +100,9 @@ void OptionsController::save(bool closeOnSuccess)
     emit aboutToSave();
 
     bool confSaved = true;
+    bool confFlagsOnly = true;
     if (confFlagsEdited() || confEdited()) {
-        const bool confFlagsOnly = confFlagsEdited() && !confEdited();
+        confFlagsOnly = confFlagsEdited() && !confEdited();
         confSaved = closeOnSuccess
                 ? fortManager()->saveConf(confFlagsOnly)
                 : fortManager()->applyConf(confFlagsOnly);
@@ -113,5 +120,7 @@ void OptionsController::save(bool closeOnSuccess)
         } else {
             resetEdited();
         }
+
+        emit confManager()->confSaved(confFlagsOnly);
     }
 }
