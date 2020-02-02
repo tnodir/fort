@@ -3,6 +3,11 @@
 
 #include "../../util/window/widgetwindow.h"
 
+QT_FORWARD_DECLARE_CLASS(QCheckBox)
+QT_FORWARD_DECLARE_CLASS(QLabel)
+QT_FORWARD_DECLARE_CLASS(QLineEdit)
+QT_FORWARD_DECLARE_CLASS(QPushButton)
+
 QT_FORWARD_DECLARE_CLASS(ConfManager)
 QT_FORWARD_DECLARE_CLASS(FortManager)
 QT_FORWARD_DECLARE_CLASS(TableView)
@@ -25,14 +30,25 @@ protected slots:
 
     void onRetranslateUi();
 
-protected:
-    void closeEvent(QCloseEvent *event) override;
-    void keyPressEvent(QKeyEvent *event) override;
-
 private:
     void setupController();
 
     void setupUi();
+    void setupZoneEditForm();
+    void setupComboZoneTypes();
+    QLayout *setupHeader();
+    void setupTableZones();
+    void setupTableZonesHeader();
+    void setupTableZonesChanged();
+
+    void updateZoneEditForm(bool editCurrentZone);
+    bool saveZoneEditForm();
+
+    void updateZone(int row, bool enabled);
+    void deleteZone(int row);
+
+    int zoneListCurrentIndex() const;
+    QString zoneListCurrentPath() const;
 
     ZonesController *ctrl() const { return m_ctrl; }
     FortManager *fortManager() const;
@@ -43,6 +59,24 @@ private:
     bool m_formAppIsNew = false;
 
     ZonesController *m_ctrl = nullptr;
+
+    QPushButton *m_btEdit = nullptr;
+    QAction *m_actAddZone = nullptr;
+    QAction *m_actEditZone = nullptr;
+    QAction *m_actRemoveZone = nullptr;
+    QCheckBox *m_cbEnabled = nullptr;
+    QLabel *m_labelZoneName = nullptr;
+    QLineEdit *m_editZoneName = nullptr;
+    QLabel *m_labelZoneType = nullptr;
+    QLineEdit *m_editZoneType = nullptr;
+    QLabel *m_labelUrl = nullptr;
+    QLineEdit *m_editUrl = nullptr;
+    QLabel *m_labelFormData = nullptr;
+    QLineEdit *m_editFormData = nullptr;
+    QPushButton *m_btEditOk = nullptr;
+    QPushButton *m_btEditCancel = nullptr;
+    QDialog *m_formZoneEdit = nullptr;
+    TableView *m_zoneListView = nullptr;
 };
 
 #endif // ZONESWINDOW_H

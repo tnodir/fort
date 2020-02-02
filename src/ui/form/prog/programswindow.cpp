@@ -2,7 +2,6 @@
 
 #include <QCheckBox>
 #include <QComboBox>
-#include <QCloseEvent>
 #include <QDialog>
 #include <QFormLayout>
 #include <QHeaderView>
@@ -53,34 +52,15 @@ void ProgramsWindow::setupController()
 {
     connect(ctrl(), &ProgramsController::retranslateUi, this, &ProgramsWindow::onRetranslateUi);
 
+    connect(this, &ProgramsWindow::aboutToClose,
+            fortManager(), &FortManager::closeProgramsWindow);
+
     connect(fortManager(), &FortManager::afterSaveProgWindowState,
             this, &ProgramsWindow::onSaveWindowState);
     connect(fortManager(), &FortManager::afterRestoreProgWindowState,
             this, &ProgramsWindow::onRestoreWindowState);
 
     emit ctrl()->retranslateUi();
-}
-
-void ProgramsWindow::closeEvent(QCloseEvent *event)
-{
-    if (isVisible()) {
-        event->ignore();
-        ctrl()->closeWindow();
-    }
-}
-
-void ProgramsWindow::keyPressEvent(QKeyEvent *event)
-{
-    if (event->isAutoRepeat())
-        return;
-
-    switch (event->key()) {
-    case Qt::Key_Escape:  // Esc
-        if (event->modifiers() == Qt::NoModifier) {
-            ctrl()->closeWindow();
-        }
-        break;
-    }
 }
 
 void ProgramsWindow::onSaveWindowState()

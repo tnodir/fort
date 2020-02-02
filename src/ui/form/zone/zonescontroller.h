@@ -24,9 +24,6 @@ public:
 signals:
     void retranslateUi();
 
-public slots:
-    void closeWindow();
-
 private:
     FortManager *m_fortManager = nullptr;
 };

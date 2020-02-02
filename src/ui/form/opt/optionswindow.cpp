@@ -1,6 +1,5 @@
 #include "optionswindow.h"
 
-#include <QCloseEvent>
 #include <QKeyEvent>
 #include <QVBoxLayout>
 
@@ -21,30 +20,23 @@ void OptionsWindow::setupController()
 {
     ctrl()->initialize();
 
-    connect(ctrl(), &OptionsController::retranslateUi, this, &OptionsWindow::onRetranslateUi);
+    connect(this, &OptionsWindow::aboutToClose,
+            ctrl(), &OptionsController::closeWindow);
+
+    connect(ctrl(), &OptionsController::retranslateUi,
+            this, &OptionsWindow::onRetranslateUi);
 
     emit ctrl()->retranslateUi();
 }
 
-void OptionsWindow::closeEvent(QCloseEvent *event)
-{
-    if (isVisible()) {
-        event->ignore();
-        ctrl()->closeWindow();
-    }
-}
-
 void OptionsWindow::keyPressEvent(QKeyEvent *event)
 {
+    WidgetWindow::keyPressEvent(event);
+
     if (event->isAutoRepeat())
         return;
 
     switch (event->key()) {
-    case Qt::Key_Escape:  // Esc
-        if (event->modifiers() == Qt::NoModifier) {
-            ctrl()->closeWindow();
-        }
-        break;
     case Qt::Key_S:  // Ctrl+S
         if (event->modifiers() == Qt::ControlModifier) {
             ctrl()->applyChanges();

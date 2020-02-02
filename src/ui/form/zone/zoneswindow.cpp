@@ -1,6 +1,5 @@
 #include "zoneswindow.h"
 
-#include <QCloseEvent>
 #include <QVBoxLayout>
 
 #include "../../conf/confmanager.h"
@@ -22,34 +21,15 @@ void ZonesWindow::setupController()
 {
     connect(ctrl(), &ZonesController::retranslateUi, this, &ZonesWindow::onRetranslateUi);
 
+    connect(this, &ZonesWindow::aboutToClose,
+            fortManager(), &FortManager::closeZonesWindow);
+
     connect(fortManager(), &FortManager::afterSaveProgWindowState,
             this, &ZonesWindow::onSaveWindowState);
     connect(fortManager(), &FortManager::afterRestoreProgWindowState,
             this, &ZonesWindow::onRestoreWindowState);
 
     emit ctrl()->retranslateUi();
-}
-
-void ZonesWindow::closeEvent(QCloseEvent *event)
-{
-    if (isVisible()) {
-        event->ignore();
-        ctrl()->closeWindow();
-    }
-}
-
-void ZonesWindow::keyPressEvent(QKeyEvent *event)
-{
-    if (event->isAutoRepeat())
-        return;
-
-    switch (event->key()) {
-    case Qt::Key_Escape:  // Esc
-        if (event->modifiers() == Qt::NoModifier) {
-            ctrl()->closeWindow();
-        }
-        break;
-    }
 }
 
 void ZonesWindow::onSaveWindowState()

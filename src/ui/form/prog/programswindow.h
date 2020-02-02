@@ -37,10 +37,6 @@ protected slots:
 
     void onRetranslateUi();
 
-protected:
-    void closeEvent(QCloseEvent *event) override;
-    void keyPressEvent(QKeyEvent *event) override;
-
 private:
     void setupController();
 

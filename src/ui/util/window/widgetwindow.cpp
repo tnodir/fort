@@ -42,6 +42,22 @@ void WidgetWindow::closeEvent(QCloseEvent *event)
     QWidget::closeEvent(event);
 }
 
+void WidgetWindow::keyPressEvent(QKeyEvent *event)
+{
+    QWidget::keyPressEvent(event);
+
+    if (event->isAutoRepeat())
+        return;
+
+    switch (event->key()) {
+    case Qt::Key_Escape:  // Esc
+        if (event->modifiers() == Qt::NoModifier) {
+            close();
+        }
+        break;
+    }
+}
+
 void WidgetWindow::changeEvent(QEvent *event)
 {
     QWidget::changeEvent(event);

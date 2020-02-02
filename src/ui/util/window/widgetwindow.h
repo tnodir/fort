@@ -26,6 +26,7 @@ protected:
     void hideEvent(QHideEvent *event) override;
 
     void closeEvent(QCloseEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
 
     void changeEvent(QEvent *event) override;
 };

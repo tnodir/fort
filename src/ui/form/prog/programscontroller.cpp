@@ -38,8 +38,3 @@ TranslationManager *ProgramsController::translationManager() const
 {
     return TranslationManager::instance();
 }
-
-void ProgramsController::closeWindow()
-{
-    fortManager()->closeProgramsWindow();
-}

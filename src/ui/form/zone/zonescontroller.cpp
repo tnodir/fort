@@ -27,8 +27,3 @@ TranslationManager *ZonesController::translationManager() const
 {
     return TranslationManager::instance();
 }
-
-void ZonesController::closeWindow()
-{
-    fortManager()->closeZonesWindow();
-}
