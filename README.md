@@ -8,9 +8,8 @@ Fort is a simple firewall for Windows 7+.
 
   - Filter by network addresses, application groups
   - Application group speed limits
-  - Stores hourly, daily, monthly and yearly statistics
+  - Stores traffic statistics
   - Graphical display of bandwidth
-  - No alert popups
   - Based on Windows Filtering Platform (WFP)
 
 ## Supported OS versions
