@@ -35,9 +35,13 @@ QString TaskZoneDownloader::parseBuffer(const QByteArray &buffer) const
     if (list.isEmpty())
         return QString();
 
+    const auto text = list.join('\n');
+    if (!sort())
+        return text;
+
     // Merge lines
     Ip4Range ip4Range;
-    if (!ip4Range.fromText(list.join('\n'), 24))
+    if (!ip4Range.fromText(text, emptyNetMask()))
         return QString();
 
     return ip4Range.toText();
@@ -50,7 +54,7 @@ QStringList TaskZoneDownloader::parseAddresses(const QByteArray &buffer) const
     // Parse lines
     const QString text = QString::fromLatin1(buffer);
 
-    QRegularExpression re(pattern());
+    const QRegularExpression re(pattern());
 
     for (const QStringRef &line : text.splitRef(
                  '\n', QString::SkipEmptyParts)) {

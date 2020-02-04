@@ -1,7 +1,7 @@
 #include "test.h"
 
 #include "commontest.h"
-#include "task/tasktasix.h"
+#include "task/taskzonedownloader.h"
 #include "util/fileutil.h"
 #include "util/net/ip4range.h"
 #include "util/net/netutil.h"
@@ -69,8 +69,13 @@ void Test::taskTasix()
     const QByteArray buf = FileUtil::readFileData(STR(PWD) "/data/tasix-mrlg.html");
     QVERIFY(!buf.isEmpty());
 
-    const QStringList list = TaskTasix::parseTasixBuffer(buf);
-    QVERIFY(!list.isEmpty());
+    TaskZoneDownloader tasix;
+    tasix.setSort(true);
+    tasix.setEmptyNetMask(24);
+    tasix.setPattern("^\\*\\D{2,5}(\\S+)");
 
-    //QVERIFY(FileUtil::writeFile(QString(STR(PWD) "/data/tasix-mrlg.out"), list.join('\n')));
+    const QString text = tasix.parseBuffer(buf);
+    QVERIFY(!text.isEmpty());
+
+    //QVERIFY(FileUtil::writeFile(QString(STR(PWD) "/data/tasix-mrlg.out"), text));
 }

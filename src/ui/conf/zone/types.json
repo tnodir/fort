@@ -4,7 +4,7 @@
         "title": "BGP",
         "description": "BGP table",
         "sort": true,
-        "pattern": "^*??([^\\s]+)",
+        "pattern": "^\\*\\D{2,5}(\\S+)",
         "emptyNetMask": 24
     }
 ]

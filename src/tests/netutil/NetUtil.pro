@@ -5,7 +5,7 @@ SOURCES += \
     $$UIPATH/conf/appgroup.cpp \
     $$UIPATH/conf/firewallconf.cpp \
     $$UIPATH/task/taskdownloader.cpp \
-    $$UIPATH/task/tasktasix.cpp \
+    $$UIPATH/task/taskzonedownloader.cpp \
     $$UIPATH/task/taskworker.cpp \
     $$UIPATH/util/dateutil.cpp \
     $$UIPATH/util/fileutil.cpp \
@@ -20,7 +20,7 @@ HEADERS += \
     $$UIPATH/conf/appgroup.h \
     $$UIPATH/conf/firewallconf.h \
     $$UIPATH/task/taskdownloader.h \
-    $$UIPATH/task/tasktasix.h \
+    $$UIPATH/task/taskzonedownloader.h \
     $$UIPATH/task/taskworker.h \
     $$UIPATH/util/dateutil.h \
     $$UIPATH/util/fileutil.h \

@@ -27,12 +27,11 @@ public:
 
     QString rangeText() const { return m_rangeText; }
 
+    QString parseBuffer(const QByteArray &buffer) const;
     QStringList parseAddresses(const QByteArray &buffer) const;
 
 protected:
     void setupDownloader() override;
-
-    QString parseBuffer(const QByteArray &buffer) const;
 
 protected slots:
     void downloadFinished(bool success) override;
