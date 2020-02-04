@@ -112,6 +112,7 @@ SOURCES += \
     util/osutil.cpp \
     util/processinfo.cpp \
     util/stringutil.cpp \
+    util/textareautil.cpp \
     util/window/basewindowstatewatcher.cpp \
     util/window/widgetwindow.cpp \
     util/window/widgetwindowstatewatcher.cpp \
@@ -223,6 +224,7 @@ HEADERS += \
     util/osutil.h \
     util/processinfo.h \
     util/stringutil.h \
+    util/textareautil.h \
     util/window/basewindowstatewatcher.h \
     util/window/widgetwindow.h \
     util/window/widgetwindowstatewatcher.h \

@@ -15,6 +15,7 @@
 #include "../../../conf/firewallconf.h"
 #include "../../../fortsettings.h"
 #include "../../../util/net/netutil.h"
+#include "../../../util/textareautil.h"
 #include "../../controls/checkspincombo.h"
 #include "../../controls/checktimeperiod.h"
 #include "../../controls/controlutil.h"
@@ -94,7 +95,7 @@ void ApplicationsPage::onRetranslateUi()
     m_splitter->handle()->btInterchangeAll()->setToolTip(tr("Interchange All Lines"));
     m_splitter->handle()->btMoveSelectedFrom1To2()->setToolTip(tr("Move Selected Lines to 'Allow'"));
     m_splitter->handle()->btMoveSelectedFrom2To1()->setToolTip(tr("Move Selected Lines to 'Block'"));
-    m_splitter->handle()->btSelectFile()->setToolTip(tr("Select File"));
+    m_btSelectFile->setToolTip(tr("Select File"));
 
     retranslateAppsPlaceholderText();
 }
@@ -152,6 +153,9 @@ void ApplicationsPage::setupUi()
     // Splitter
     setupSplitter();
     layout->addWidget(m_splitter, 1);
+
+    // Splitter Buttons
+    setupSplitterButtons();
 
     this->setLayout(layout);
 }
@@ -493,7 +497,6 @@ void ApplicationsPage::setupAllowApps()
 void ApplicationsPage::setupSplitter()
 {
     m_splitter = new TextArea2Splitter();
-    m_splitter->setSelectFileEnabled(true);
 
     Q_ASSERT(!m_splitter->handle());
 
@@ -504,6 +507,24 @@ void ApplicationsPage::setupSplitter()
 
     m_splitter->handle()->setTextArea1(m_blockApps->editText());
     m_splitter->handle()->setTextArea2(m_allowApps->editText());
+}
+
+void ApplicationsPage::setupSplitterButtons()
+{
+    m_btSelectFile = ControlUtil::createSplitterButton(
+                ":/images/folder_explore.png", [&] {
+        const auto filePaths = ControlUtil::getOpenFileNames(
+                    m_btSelectFile->text(),
+                    tr("Programs (*.exe);;All files (*.*)"));
+
+        if (!filePaths.isEmpty()) {
+            auto area = m_splitter->handle()->currentTextArea();
+            TextAreaUtil::appendText(area, filePaths.join('\n'));
+        }
+    });
+
+    const auto layout = m_splitter->handle()->buttonsLayout();
+    layout->addWidget(m_btSelectFile, 0, Qt::AlignHCenter);
 }
 
 void ApplicationsPage::updateGroup()

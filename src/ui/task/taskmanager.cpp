@@ -31,10 +31,10 @@ ConfManager *TaskManager::confManager() const
 
 void TaskManager::setupTasks()
 {
-    m_taskInfoUpdateChecker = new TaskInfoUpdateChecker(this);
+    m_taskInfoUpdateChecker = new TaskInfoUpdateChecker(fortManager(), this);
 
     appendTaskInfo(m_taskInfoUpdateChecker);
-    appendTaskInfo(new TaskInfoZoneDownloader(this));
+    appendTaskInfo(new TaskInfoZoneDownloader(fortManager(), this));
 }
 
 void TaskManager::appendTaskInfo(TaskInfo *taskInfo)
@@ -84,7 +84,7 @@ void TaskManager::handleTaskFinished(bool success)
 {
     auto taskInfo = qobject_cast<TaskInfo *>(sender());
 
-    taskInfo->processResult(m_fortManager, success);
+    taskInfo->processResult(success);
 
     saveSettings();
 

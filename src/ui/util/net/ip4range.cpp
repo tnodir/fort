@@ -108,7 +108,7 @@ bool Ip4Range::parseAddressMask(const QStringRef &line,
                                 int emptyNetMask)
 {
     const QRegularExpression re(R"(([\d.]+)\s*([/-]?)\s*(\S*))");
-    const QRegularExpressionMatch match = re.match(line);
+    const auto match = re.match(line);
 
     if (!match.hasMatch()) {
         setErrorMessage(tr("Bad format"));

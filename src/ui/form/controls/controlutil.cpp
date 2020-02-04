@@ -67,6 +67,17 @@ QPushButton *ControlUtil::createLinkButton(const QString &iconPath,
     return c;
 }
 
+QPushButton *ControlUtil::createSplitterButton(const QString &iconPath,
+                                               const std::function<void ()> &onClicked)
+{
+    auto c = createButton(iconPath, onClicked);
+    c->setFixedSize(32, 32);
+    c->setFlat(true);
+    c->setCursor(Qt::PointingHandCursor);
+    c->setFocusPolicy(Qt::NoFocus);
+    return c;
+}
+
 QLabel *ControlUtil::createLabel(const QString &text)
 {
     auto c = new QLabel(text);

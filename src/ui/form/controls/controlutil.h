@@ -30,6 +30,8 @@ public:
     static QPushButton *createLinkButton(const QString &iconPath,
                                          const QString &linkPath = QString(),
                                          const QString &toolTip = QString());
+    static QPushButton *createSplitterButton(const QString &iconPath,
+                                             const std::function<void ()> &onClicked);
     static QLabel *createLabel(const QString &text = QString());
     static QLineEdit *createLineLabel();
     static QMenu *createMenuByLayout(QBoxLayout *layout, QWidget *parent);

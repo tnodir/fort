@@ -15,7 +15,7 @@ public:
     QString title() const;
     QString description() const;
     bool sort() const;
-    QString regex() const;
+    QString pattern() const;
     int emptyNetMask() const;
 };
 

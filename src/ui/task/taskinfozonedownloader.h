@@ -3,22 +3,32 @@
 
 #include "taskinfo.h"
 
+QT_FORWARD_DECLARE_CLASS(FortManager)
 QT_FORWARD_DECLARE_CLASS(TaskZoneDownloader)
+QT_FORWARD_DECLARE_CLASS(ZoneListModel)
 
 class TaskInfoZoneDownloader : public TaskInfo
 {
     Q_OBJECT
 
 public:
-    explicit TaskInfoZoneDownloader(QObject *parent = nullptr);
+    explicit TaskInfoZoneDownloader(FortManager *fortManager,
+                                    QObject *parent = nullptr);
 
     TaskZoneDownloader *zoneDownloader() const;
+    ZoneListModel *zoneListModel() const;
 
 public slots:
-    bool processResult(FortManager *fortManager, bool success) override;
+    bool processResult(bool success) override;
 
 protected slots:
     void setupTaskWorker() override;
+
+    void handleFinished(bool success) override;
+
+private:
+    bool m_success = false;
+    int m_zoneIndex = 0;
 };
 
 #endif // TASKINFOZONEDOWNLOADER_H

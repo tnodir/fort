@@ -36,11 +36,14 @@ private:
     void setupExcludeAddresses();
     void setupAddressesUseAllEnabled();
     void setupSplitter();
+    void setupSplitterButtons();
     void updateGroup();
     void setupAddressGroup();
 
     const QList<AddressGroup *> &addressGroups() const;
     AddressGroup *addressGroupByIndex(int index) const;
+
+    static QString localNetworks();
 
 private:
     int m_addressGroupIndex = -1;
@@ -49,6 +52,7 @@ private:
     AddressesColumn *m_includeAddresses = nullptr;
     AddressesColumn *m_excludeAddresses = nullptr;
     TextArea2Splitter *m_splitter = nullptr;
+    QPushButton *m_btAddLocals = nullptr;
 };
 
 #endif // ADDRESSESPAGE_H

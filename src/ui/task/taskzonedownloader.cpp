@@ -1,8 +1,9 @@
 #include "taskzonedownloader.h"
 
+#include <QRegularExpression>
+
 #include "../util/net/ip4range.h"
 #include "../util/net/netdownloader.h"
-#include "../util/net/netutil.h"
 
 TaskZoneDownloader::TaskZoneDownloader(QObject *parent) :
     TaskDownloader(parent)
@@ -11,8 +12,8 @@ TaskZoneDownloader::TaskZoneDownloader(QObject *parent) :
 
 void TaskZoneDownloader::setupDownloader()
 {
-    downloader()->setUrl("http://mrlg.tas-ix.uz/index.cgi");
-    downloader()->setData("router=cisco&pass1=&query=1&arg=");
+    downloader()->setUrl(url());
+    downloader()->setData(formData().toUtf8());
 
     m_rangeText = QString();
 }
@@ -42,34 +43,26 @@ QString TaskZoneDownloader::parseBuffer(const QByteArray &buffer) const
     return ip4Range.toText();
 }
 
-QStringList TaskZoneDownloader::parseAddresses(const QByteArray &buffer)
+QStringList TaskZoneDownloader::parseAddresses(const QByteArray &buffer) const
 {
     QStringList list;
 
     // Parse lines
     const QString text = QString::fromLatin1(buffer);
 
+    QRegularExpression re(pattern());
+
     for (const QStringRef &line : text.splitRef(
                  '\n', QString::SkipEmptyParts)) {
-        if (!line.startsWith('*'))
+        const auto match = re.match(line);
+        if (!match.hasMatch())
             continue;
 
-        QStringRef addrStr = line.mid(3, 18);
-        const int lastSpacePos = addrStr.lastIndexOf(' ');
-        if (lastSpacePos > 0) {
-            addrStr = addrStr.left(lastSpacePos);
-        }
-
-        addrStr = addrStr.trimmed();
-        if (addrStr.isEmpty())
+        const QString ip = match.captured(1);
+        if (ip.isEmpty())
             continue;
 
-        list.append(addrStr.toString());
-    }
-
-    // Include local networks
-    if (!list.isEmpty()) {
-        list.append(NetUtil::localIpv4Networks());
+        list.append(ip);
     }
 
     return list;

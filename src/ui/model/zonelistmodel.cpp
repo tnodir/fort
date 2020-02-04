@@ -140,6 +140,11 @@ void ZoneListModel::deleteZone(qint64 zoneId, int row)
     endRemoveRows();
 }
 
+QVariant ZoneListModel::zoneTypeByCode(const QString &typeCode) const
+{
+    return m_zoneTypesMap.value(typeCode);
+}
+
 QVariant ZoneListModel::zoneSourceByCode(const QString &sourceCode) const
 {
     return m_zoneSourcesMap.value(sourceCode);

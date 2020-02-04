@@ -28,7 +28,8 @@ public:
     };
     Q_ENUM(TaskType)
 
-    explicit TaskInfo(TaskInfo::TaskType type, QObject *parent = nullptr);
+    explicit TaskInfo(TaskInfo::TaskType type, FortManager *fortManager,
+                      QObject *parent = nullptr);
     ~TaskInfo() override;
     CLASS_DELETE_COPY_MOVE(TaskInfo)
 
@@ -36,6 +37,8 @@ public:
 
     bool enabled() const { return m_enabled; }
     void setEnabled(bool enabled);
+
+    bool aborted() const { return m_aborted; }
 
     bool running() const { return m_running; }
     void setRunning(bool running);
@@ -65,6 +68,8 @@ public:
     TaskWorker *taskWorker() const { return m_taskWorker; }
     void setTaskWorker(TaskWorker *taskWorker);
 
+    FortManager *fortManager() const { return m_fortManager; }
+
     void rawData(QByteArray &data) const;
     void setRawData(const QByteArray &data);
 
@@ -87,12 +92,13 @@ public slots:
     void run();
     void abort();
 
-    virtual bool processResult(FortManager *fortManager, bool success) = 0;
+    virtual bool processResult(bool success) = 0;
 
 protected slots:
-    void handleFinished(bool success);
+    virtual void setupTaskWorker();
+    virtual void runTaskWorker();
 
-    virtual void setupTaskWorker() {}
+    virtual void handleFinished(bool success);
 
 private:
     TaskWorker *createWorker();
@@ -112,6 +118,8 @@ private:
     QDateTime m_lastSuccess;
 
     TaskWorker *m_taskWorker = nullptr;
+
+    FortManager *m_fortManager = nullptr;
 };
 
 #endif // TASKINFO_H

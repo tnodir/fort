@@ -14,6 +14,8 @@
 #include "../../../fortmanager.h"
 #include "../../../fortsettings.h"
 #include "../../../util/net/netutil.h"
+#include "../../../util/textareautil.h"
+#include "../../controls/controlutil.h"
 #include "../../controls/plaintextedit.h"
 #include "../../controls/textarea2splitter.h"
 #include "../../controls/textarea2splitterhandle.h"
@@ -68,14 +70,14 @@ void AddressesPage::onRetranslateUi()
     m_splitter->handle()->btInterchangeAll()->setToolTip(tr("Interchange All Lines"));
     m_splitter->handle()->btMoveSelectedFrom1To2()->setToolTip(tr("Move Selected Lines to 'Exclude'"));
     m_splitter->handle()->btMoveSelectedFrom2To1()->setToolTip(tr("Move Selected Lines to 'Include'"));
+    m_btAddLocals->setToolTip(tr("Add Local Networks"));
 
     retranslateAddressesPlaceholderText();
 }
 
 void AddressesPage::retranslateAddressesPlaceholderText()
 {
-    const auto placeholderText = tr("# Examples:") + '\n'
-            + NetUtil::localIpv4Networks().join('\n');
+    const auto placeholderText = tr("# Examples:") + '\n' + localNetworks();
 
     m_excludeAddresses->editIpText()->setPlaceholderText(placeholderText);
 }
@@ -101,6 +103,9 @@ void AddressesPage::setupUi()
     // Splitter
     setupSplitter();
     layout->addWidget(m_splitter, 1);
+
+    // Splitter Buttons
+    setupSplitterButtons();
 
     this->setLayout(layout);
 }
@@ -187,6 +192,18 @@ void AddressesPage::setupSplitter()
     m_splitter->handle()->setTextArea2(m_excludeAddresses->editIpText());
 }
 
+void AddressesPage::setupSplitterButtons()
+{
+    m_btAddLocals = ControlUtil::createSplitterButton(
+                ":/images/drive_network.png", [&] {
+        auto area = m_splitter->handle()->currentTextArea();
+        TextAreaUtil::appendText(area, localNetworks());
+    });
+
+    const auto layout = m_splitter->handle()->buttonsLayout();
+    layout->addWidget(m_btAddLocals, 0, Qt::AlignHCenter);
+}
+
 void AddressesPage::updateGroup()
 {
     m_includeAddresses->cbUseAll()->setChecked(addressGroup()->includeAll());
@@ -218,4 +235,9 @@ const QList<AddressGroup *> &AddressesPage::addressGroups() const
 AddressGroup *AddressesPage::addressGroupByIndex(int index) const
 {
     return addressGroups().at(index);
+}
+
+QString AddressesPage::localNetworks()
+{
+    return NetUtil::localIpv4Networks().join('\n');
 }

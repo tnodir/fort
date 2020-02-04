@@ -55,6 +55,7 @@ private:
     void setupBlockApps();
     void setupAllowApps();
     void setupSplitter();
+    void setupSplitterButtons();
     void updateGroup();
     void setupAppGroup();
 
@@ -85,6 +86,7 @@ private:
     AppsColumn *m_blockApps = nullptr;
     AppsColumn *m_allowApps = nullptr;
     TextArea2Splitter *m_splitter = nullptr;
+    QPushButton *m_btSelectFile = nullptr;
 };
 
 #endif // APPLICATIONSPAGE_H

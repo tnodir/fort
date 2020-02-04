@@ -8,8 +8,9 @@
 
 #define TASK_INFO_VERSION   2
 
-TaskInfoUpdateChecker::TaskInfoUpdateChecker(QObject *parent) :
-    TaskInfo(UpdateChecker, parent)
+TaskInfoUpdateChecker::TaskInfoUpdateChecker(FortManager *fortManager,
+                                             QObject *parent) :
+    TaskInfo(UpdateChecker, fortManager,parent)
 {
 }
 
@@ -73,7 +74,7 @@ TaskUpdateChecker *TaskInfoUpdateChecker::updateChecker() const
     return static_cast<TaskUpdateChecker *>(taskWorker());
 }
 
-bool TaskInfoUpdateChecker::processResult(FortManager *fortManager, bool success)
+bool TaskInfoUpdateChecker::processResult(bool success)
 {
     if (!success)
         return false;
@@ -90,8 +91,8 @@ bool TaskInfoUpdateChecker::processResult(FortManager *fortManager, bool success
     emit versionChanged();
 
     if (isNewVersion()) {
-        fortManager->showTrayMessage(tr("New version v%1 available!")
-                                     .arg(m_version));
+        fortManager()->showTrayMessage(tr("New version v%1 available!")
+                                       .arg(m_version));
     }
 
     return true;

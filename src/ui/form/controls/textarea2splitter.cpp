@@ -20,7 +20,6 @@ TextArea2SplitterHandle *TextArea2Splitter::handle() const
 
 QSplitterHandle *TextArea2Splitter::createHandle()
 {
-    auto handle = new TextArea2SplitterHandle(
-                selectFileEnabled(), orientation(), this);
+    auto handle = new TextArea2SplitterHandle(orientation(), this);
     return handle;
 }

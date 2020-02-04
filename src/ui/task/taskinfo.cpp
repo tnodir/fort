@@ -9,12 +9,13 @@
 
 #define TASK_INFO_VERSION   1
 
-TaskInfo::TaskInfo(TaskType type, QObject *parent) :
+TaskInfo::TaskInfo(TaskType type, FortManager *fortManager, QObject *parent) :
     QObject(parent),
     m_enabled(false),
     m_running(false),
     m_aborted(false),
-    m_type(type)
+    m_type(type),
+    m_fortManager(fortManager)
 {
 }
 
@@ -154,41 +155,55 @@ TaskInfo::TaskType TaskInfo::stringToType(const QString &name)
 
 void TaskInfo::run()
 {
-    if (m_taskWorker) return;
+    if (taskWorker()) return;
 
-    m_aborted = false;
+    setRunning(true);
+    emit workStarted();
 
+    setupTaskWorker();
+    runTaskWorker();
+}
+
+void TaskInfo::setupTaskWorker()
+{
     TaskWorker *taskWorker = createWorker();
 
     connect(taskWorker, &TaskWorker::finished,
             this, &TaskInfo::handleFinished);
 
     setTaskWorker(taskWorker);
-    setupTaskWorker();
 
-    setRunning(true);
-    emit workStarted();
+    m_aborted = false;
+}
 
-    taskWorker->run();
+void TaskInfo::runTaskWorker()
+{
+    if (taskWorker() == nullptr)
+        return;
+
+    taskWorker()->run();
 }
 
 void TaskInfo::abort()
 {
-    if (!m_taskWorker || m_aborted)
+    if (aborted())
         return;
 
     // to avoid recursive call on worker.abort() -> handleFinished(false) -> abort()
     m_aborted = true;
 
-    m_taskWorker->abort();
-    m_taskWorker->deleteLater();
+    if (taskWorker() != nullptr) {
+        taskWorker()->abort();
+        taskWorker()->deleteLater();
 
-    setTaskWorker(nullptr);
+        setTaskWorker(nullptr);
+    }
 }
 
 void TaskInfo::handleFinished(bool success)
 {
-    if (!m_taskWorker) return;
+    if (!running())
+        return;
 
     setLastRun(DateUtil::now());
     if (success) {

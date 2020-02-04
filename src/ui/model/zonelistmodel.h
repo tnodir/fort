@@ -56,6 +56,8 @@ public:
     bool updateZoneName(qint64 zoneId, const QString &zoneName);
     void deleteZone(qint64 zoneId, int row);
 
+    QVariant zoneTypeByCode(const QString &typeCode) const;
+
     QVariant zoneSourceByCode(const QString &sourceCode) const;
     const QVariantList &zoneSources() const { return m_zoneSources; }
 

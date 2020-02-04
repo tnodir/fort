@@ -12,9 +12,6 @@ class TextArea2Splitter : public QSplitter
 public:
     explicit TextArea2Splitter(QWidget *parent = nullptr);
 
-    bool selectFileEnabled() const { return m_selectFileEnabled; }
-    void setSelectFileEnabled(bool v) { m_selectFileEnabled = v; }
-
     TextArea2SplitterHandle *handle() const;
 
 protected:
@@ -22,9 +19,6 @@ protected:
 
 private:
     void setupUi();
-
-private:
-    bool m_selectFileEnabled = false;
 };
 
 #endif // TEXTAREA2SPLITTER_H

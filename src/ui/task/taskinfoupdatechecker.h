@@ -3,6 +3,7 @@
 
 #include "taskinfo.h"
 
+QT_FORWARD_DECLARE_CLASS(FortManager)
 QT_FORWARD_DECLARE_CLASS(TaskUpdateChecker)
 
 class TaskInfoUpdateChecker : public TaskInfo
@@ -13,7 +14,8 @@ class TaskInfoUpdateChecker : public TaskInfo
     Q_PROPERTY(QString releaseText READ releaseText NOTIFY versionChanged)
 
 public:
-    explicit TaskInfoUpdateChecker(QObject *parent = nullptr);
+    explicit TaskInfoUpdateChecker(FortManager *fortManager,
+                                   QObject *parent = nullptr);
 
     bool isNewVersion() const;
     QString version() const { return m_version; }
@@ -29,7 +31,7 @@ signals:
     void versionChanged();
 
 public slots:
-    bool processResult(FortManager *fortManager, bool success) override;
+    bool processResult(bool success) override;
 
 private:
     QString m_version;

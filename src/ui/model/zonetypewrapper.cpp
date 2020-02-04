@@ -35,9 +35,9 @@ bool ZoneTypeWrapper::sort() const
     return valueBool("sort");
 }
 
-QString ZoneTypeWrapper::regex() const
+QString ZoneTypeWrapper::pattern() const
 {
-    return valueText("regex");
+    return valueText("pattern");
 }
 
 int ZoneTypeWrapper::emptyNetMask() const

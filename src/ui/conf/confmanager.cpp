@@ -113,8 +113,11 @@ const char * const sqlUpdateTask =
         ;
 
 const char * const sqlSelectApps =
-        "SELECT g.order_index as group_index,"
-        "    t.path, t.use_group_perm, t.blocked,"
+        "SELECT"
+        "    g.order_index as group_index,"
+        "    t.path,"
+        "    t.use_group_perm,"
+        "    t.blocked,"
         "    (alert.app_id IS NOT NULL) as alerted"
         "  FROM app t"
         "    JOIN app_group g ON g.app_group_id = t.app_group_id"
@@ -554,7 +557,7 @@ bool ConfManager::updateAppName(qint64 appId, const QString &appName)
 bool ConfManager::walkApps(std::function<walkAppsCallback> func)
 {
     SqliteStmt stmt;
-    if (!stmt.prepare(m_sqliteDb->db(), sqlSelectApps))
+    if (!sqliteDb()->prepare(stmt, sqlSelectApps))
         return false;
 
     while (stmt.step() == SqliteStmt::StepRow) {
