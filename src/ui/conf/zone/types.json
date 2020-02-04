@@ -1,6 +1,6 @@
 [
     {
-        "id": "bgp",
+        "code": "bgp",
         "title": "BGP",
         "description": "BGP table",
         "sort": true,

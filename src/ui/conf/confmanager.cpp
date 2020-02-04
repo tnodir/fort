@@ -174,6 +174,28 @@ const char * const sqlUpdateAppResetGroup =
         "  WHERE app_group_id = ?1;"
         ;
 
+const char * const sqlInsertZone =
+        "INSERT INTO zone(name, enabled, custom_url, source_code, url, form_data)"
+        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6);"
+        ;
+
+const char * const sqlDeleteZone =
+        "DELETE FROM zone WHERE zone_id = ?1;"
+        ;
+
+const char * const sqlUpdateZone =
+        "UPDATE zone"
+        "  SET name = ?2, enabled = ?3, custom_url = ?4,"
+        "    source_code = ?5, url = ?6, form_data = ?7"
+        "  WHERE zone_id = ?1;"
+        ;
+
+const char * const sqlUpdateZoneName =
+        "UPDATE zone"
+        "  SET name = ?2"
+        "  WHERE zone_id = ?1;"
+        ;
+
 bool saveAddressGroup(SqliteDb *db, AddressGroup *addrGroup, int orderIndex)
 {
     const bool rowExists = (addrGroup->id() != 0);
@@ -590,6 +612,84 @@ void ConfManager::checkAppEndTimes()
     } else {
         updateAppEndTimes();
     }
+}
+
+bool ConfManager::addZone(const QString &zoneName, const QString &sourceCode,
+                          const QString &url, const QString &formData,
+                          bool enabled, bool customUrl)
+{
+    bool ok = false;
+
+    const auto vars = QVariantList()
+            << zoneName
+            << enabled
+            << customUrl
+            << sourceCode
+            << url
+            << formData
+               ;
+
+    m_sqliteDb->executeEx(sqlInsertZone, vars, 0, &ok);
+    if (!ok) {
+        showErrorMessage(m_sqliteDb->errorMessage());
+    }
+
+    return ok;
+}
+
+bool ConfManager::deleteZone(qint64 zoneId)
+{
+    bool ok = false;
+
+    const auto vars = QVariantList() << zoneId;
+
+    m_sqliteDb->executeEx(sqlDeleteZone, vars, 0, &ok);
+    if (!ok) {
+        showErrorMessage(m_sqliteDb->errorMessage());
+    }
+
+    return ok;
+}
+
+bool ConfManager::updateZone(qint64 zoneId, const QString &zoneName,
+                             const QString &sourceCode, const QString &url,
+                             const QString &formData, bool enabled, bool customUrl)
+{
+    bool ok = false;
+
+    const auto vars = QVariantList()
+            << zoneId
+            << zoneName
+            << enabled
+            << customUrl
+            << sourceCode
+            << url
+            << formData
+               ;
+
+    m_sqliteDb->executeEx(sqlUpdateZone, vars, 0, &ok);
+    if (!ok) {
+        showErrorMessage(m_sqliteDb->errorMessage());
+    }
+
+    return ok;
+}
+
+bool ConfManager::updateZoneName(qint64 zoneId, const QString &zoneName)
+{
+    bool ok = false;
+
+    const auto vars = QVariantList()
+            << zoneId
+            << zoneName
+               ;
+
+    m_sqliteDb->executeEx(sqlUpdateZoneName, vars, 0, &ok);
+    if (!ok) {
+        showErrorMessage(m_sqliteDb->errorMessage());
+    }
+
+    return ok;
 }
 
 bool ConfManager::validateDriver()

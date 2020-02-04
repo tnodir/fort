@@ -1,12 +1,13 @@
 #include "taskupdatechecker.h"
 
 #include <QDateTime>
-#include <QJsonDocument>
+#include <QDebug>
 #include <QVariant>
 
 #include "../../common/version.h"
 #include "../util/net/netdownloader.h"
 #include "../util/net/netutil.h"
+#include "../util/json/jsonutil.h"
 
 TaskUpdateChecker::TaskUpdateChecker(QObject *parent) :
     TaskDownloader(parent)
@@ -29,15 +30,12 @@ void TaskUpdateChecker::downloadFinished(bool success)
 
 bool TaskUpdateChecker::parseBuffer(const QByteArray &buffer)
 {
-    QJsonParseError jsonParseError{};
-    const QJsonDocument jsonDoc = QJsonDocument::fromJson(
-                buffer, &jsonParseError);
-    if (jsonParseError.error != QJsonParseError::NoError) {
-        // TODO: jsonParseError.errorString()
+    QString errorString;
+    const auto map = JsonUtil::jsonToVariant(buffer, errorString).toMap();
+    if (!errorString.isEmpty()) {
+        qWarning() << "Update Checker: JSON error:" << errorString;
         return false;
     }
-
-    const QVariantMap map = jsonDoc.toVariant().toMap();
 
     // Version (eg. "v1.4.0")
     const QString tagName = map["tag_name"].toString();

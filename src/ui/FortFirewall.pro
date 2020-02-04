@@ -66,6 +66,8 @@ SOURCES += \
     model/iplistmodel.cpp \
     model/traflistmodel.cpp \
     model/zonelistmodel.cpp \
+    model/zonesourcewrapper.cpp \
+    model/zonetypewrapper.cpp \
     stat/quotamanager.cpp \
     stat/statmanager.cpp \
     stat/statsql.cpp \
@@ -93,6 +95,8 @@ SOURCES += \
     util/fileutil.cpp \
     util/guiutil.cpp \
     util/hotkeymanager.cpp \
+    util/json/jsonutil.cpp \
+    util/json/mapwrapper.cpp \
     util/logger.cpp \
     util/model/stringlistmodel.cpp \
     util/model/tableitemmodel.cpp \
@@ -172,6 +176,8 @@ HEADERS += \
     model/iplistmodel.h \
     model/traflistmodel.h \
     model/zonelistmodel.h \
+    model/zonesourcewrapper.h \
+    model/zonetypewrapper.h \
     stat/quotamanager.h \
     stat/statmanager.h \
     stat/statsql.h \
@@ -200,6 +206,8 @@ HEADERS += \
     util/fileutil.h \
     util/guiutil.h \
     util/hotkeymanager.h \
+    util/json/jsonutil.h \
+    util/json/mapwrapper.h \
     util/logger.h \
     util/model/stringlistmodel.h \
     util/model/tableitemmodel.h \
@@ -242,7 +250,7 @@ RESOURCES += \
 # Zone
 OTHER_FILES += conf/zone/*.json
 
-RESOURCES += conf/zone/fort-conf-zone.qrc
+RESOURCES += conf/conf-zone.qrc
 
 # Shadow Build: Copy i18n/ to build path
 !equals(PWD, $${OUT_PWD}) {

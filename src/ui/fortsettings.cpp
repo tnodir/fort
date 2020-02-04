@@ -2,7 +2,6 @@
 
 #include <QCommandLineParser>
 #include <QCoreApplication>
-#include <QJsonDocument>
 #include <QSettings>
 
 #include "conf/addressgroup.h"

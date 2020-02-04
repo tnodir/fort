@@ -3,21 +3,17 @@
 
 #include <QObject>
 
-class StringUtil : public QObject
+class StringUtil
 {
-    Q_OBJECT
-
 public:
-    explicit StringUtil(QObject *parent = nullptr);
+    static QString capitalize(const QString &text);
 
-    Q_INVOKABLE static QString capitalize(const QString &text);
+    static QString cryptoHash(const QString &text);
 
-    Q_INVOKABLE static QString cryptoHash(const QString &text);
-
-    Q_INVOKABLE static int lineStart(const QString &text, int pos,
-                                     int badPos = -1);
-    Q_INVOKABLE static int lineEnd(const QString &text, int pos,
-                                   int badPos = -1);
+    static int lineStart(const QString &text, int pos,
+                         int badPos = -1);
+    static int lineEnd(const QString &text, int pos,
+                       int badPos = -1);
 };
 
 #endif // STRINGUTIL_H

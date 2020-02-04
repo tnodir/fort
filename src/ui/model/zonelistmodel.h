@@ -7,14 +7,16 @@
 
 QT_FORWARD_DECLARE_CLASS(ConfManager)
 QT_FORWARD_DECLARE_CLASS(SqliteDb)
+QT_FORWARD_DECLARE_CLASS(ZoneSourceWrapper)
 
 struct ZoneRow : TableRow {
     bool enabled = true;
+    bool customUrl = false;
 
     qint64 zoneId = 0;
 
     QString zoneName;
-    QString zoneType;
+    QString sourceCode;
 
     QString url;
     QString formData;
@@ -44,13 +46,18 @@ public:
 
     const ZoneRow &zoneRowAt(int row) const;
 
-    bool addZone(const QString &zoneName, const QString &zoneType,
+    bool addZone(const QString &zoneName, const QString &sourceCode,
                  const QString &url, const QString &formData,
-                 bool enabled);
-    bool updateZone(qint64 zoneId, const QString &zoneName, const QString &zoneType,
-                    const QString &url, const QString &formData,
-                    bool enabled, bool updateDriver = true);
+                 bool enabled, bool customUrl);
+    bool updateZone(qint64 zoneId, const QString &zoneName,
+                    const QString &sourceCode, const QString &url,
+                    const QString &formData, bool enabled, bool customUrl,
+                    bool updateDriver = true);
+    bool updateZoneName(qint64 zoneId, const QString &zoneName);
     void deleteZone(qint64 zoneId, int row);
+
+    QVariant zoneSourceByCode(const QString &sourceCode) const;
+    const QVariantList &zoneSources() const { return m_zoneSources; }
 
 protected:
     bool updateTableRow(int row) const override;
@@ -59,9 +66,20 @@ protected:
     QString sqlBase() const override;
 
 private:
+    void initZoneTypes();
+    void initZoneSources();
+    void initZoneSourceNames();
+
+private:
     ConfManager *m_confManager = nullptr;
 
     mutable ZoneRow m_zoneRow;
+
+    QVariantList m_zoneTypes;
+    QVariantHash m_zoneTypesMap;
+
+    QVariantList m_zoneSources;
+    QVariantHash m_zoneSourcesMap;
 };
 
 #endif // ZONELISTMODEL_H

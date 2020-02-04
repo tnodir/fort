@@ -1,6 +1,0 @@
-<!DOCTYPE RCC><RCC version="1.0">
-<qresource>
-    <file>zone-types.json</file>
-    <file>zone-urls.json</file>
-</qresource>
-</RCC>

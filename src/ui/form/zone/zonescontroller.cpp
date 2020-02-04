@@ -13,6 +13,11 @@ ZonesController::ZonesController(FortManager *fortManager,
             this, &ZonesController::retranslateUi);
 }
 
+FortSettings *ZonesController::settings() const
+{
+    return fortManager()->settings();
+}
+
 ConfManager *ZonesController::confManager() const
 {
     return fortManager()->confManager();

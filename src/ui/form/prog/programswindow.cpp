@@ -5,7 +5,6 @@
 #include <QDialog>
 #include <QFormLayout>
 #include <QHeaderView>
-#include <QKeyEvent>
 #include <QLabel>
 #include <QLineEdit>
 #include <QMenu>
@@ -150,7 +149,7 @@ void ProgramsWindow::setupUi()
     setupAppInfoVersion();
     layout->addWidget(m_appInfoRow);
 
-    // Actions on app table's current changed
+    // Actions on apps table's current changed
     setupTableAppsChanged();
 
     this->setLayout(layout);
@@ -165,80 +164,6 @@ void ProgramsWindow::setupUi()
     // Size
     this->resize(1024, 768);
     this->setMinimumSize(500, 400);
-}
-
-QLayout *ProgramsWindow::setupHeader()
-{
-    auto layout = new QHBoxLayout();
-
-    // Edit Menu
-    auto editMenu = new QMenu(this);
-
-    m_actAllowApp = editMenu->addAction(QIcon(":/images/arrow_switch.png"), QString());
-    m_actAllowApp->setShortcut(Qt::Key_A);
-
-    m_actBlockApp = editMenu->addAction(QIcon(":/images/stop.png"), QString());
-    m_actBlockApp->setShortcut(Qt::Key_B);
-
-    editMenu->addSeparator();
-
-    m_actAddApp = editMenu->addAction(QIcon(":/images/application_add.png"), QString());
-    m_actAddApp->setShortcut(Qt::Key_Plus);
-
-    m_actEditApp = editMenu->addAction(QIcon(":/images/application_edit.png"), QString());
-    m_actEditApp->setShortcut(Qt::Key_Enter);
-
-    m_actRemoveApp = editMenu->addAction(QIcon(":/images/application_delete.png"), QString());
-    m_actRemoveApp->setShortcut(Qt::Key_Delete);
-
-    editMenu->addSeparator();
-
-    m_actPurgeApps = editMenu->addAction(QIcon(":/images/bin_empty.png"), QString());
-
-    connect(m_actAllowApp, &QAction::triggered, [&] {
-        updateSelectedApps(false);
-    });
-    connect(m_actBlockApp, &QAction::triggered, [&] {
-        updateSelectedApps(true);
-    });
-    connect(m_actAddApp, &QAction::triggered, [&] {
-        updateAppEditForm(false);
-    });
-    connect(m_actEditApp, &QAction::triggered, [&] {
-        updateAppEditForm(true);
-    });
-    connect(m_actRemoveApp, &QAction::triggered, [&] {
-        if (fortManager()->showQuestionBox(tr("Are you sure to remove selected program(s)?"))) {
-            deleteSelectedApps();
-        }
-    });
-    connect(m_actPurgeApps, &QAction::triggered, [&] {
-        if (fortManager()->showQuestionBox(tr("Are you sure to remove all non-existent programs?"))) {
-            appListModel()->purgeApps();
-        }
-    });
-
-    m_btEdit = new WideButton(QIcon(":/images/application_edit.png"));
-    m_btEdit->setMenu(editMenu);
-
-    // Allow/Block
-    m_btAllowApp = ControlUtil::createLinkButton(":/images/arrow_switch.png");
-    m_btBlockApp = ControlUtil::createLinkButton(":/images/stop.png");
-
-    connect(m_btAllowApp, &QAbstractButton::clicked, m_actAllowApp, &QAction::trigger);
-    connect(m_btBlockApp, &QAbstractButton::clicked, m_actBlockApp, &QAction::trigger);
-
-    // Log Options
-    setupLogOptions();
-
-    layout->addWidget(m_btEdit);
-    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
-    layout->addWidget(m_btAllowApp);
-    layout->addWidget(m_btBlockApp);
-    layout->addStretch();
-    layout->addWidget(m_btLogOptions);
-
-    return layout;
 }
 
 void ProgramsWindow::setupAppEditForm()
@@ -356,6 +281,80 @@ void ProgramsWindow::setupComboAppGroups()
     refreshComboAppGroups();
 
     connect(confManager(), &ConfManager::confSaved, this, refreshComboAppGroups);
+}
+
+QLayout *ProgramsWindow::setupHeader()
+{
+    auto layout = new QHBoxLayout();
+
+    // Edit Menu
+    auto editMenu = new QMenu(this);
+
+    m_actAllowApp = editMenu->addAction(QIcon(":/images/arrow_switch.png"), QString());
+    m_actAllowApp->setShortcut(Qt::Key_A);
+
+    m_actBlockApp = editMenu->addAction(QIcon(":/images/stop.png"), QString());
+    m_actBlockApp->setShortcut(Qt::Key_B);
+
+    editMenu->addSeparator();
+
+    m_actAddApp = editMenu->addAction(QIcon(":/images/application_add.png"), QString());
+    m_actAddApp->setShortcut(Qt::Key_Plus);
+
+    m_actEditApp = editMenu->addAction(QIcon(":/images/application_edit.png"), QString());
+    m_actEditApp->setShortcut(Qt::Key_Enter);
+
+    m_actRemoveApp = editMenu->addAction(QIcon(":/images/application_delete.png"), QString());
+    m_actRemoveApp->setShortcut(Qt::Key_Delete);
+
+    editMenu->addSeparator();
+
+    m_actPurgeApps = editMenu->addAction(QIcon(":/images/bin_empty.png"), QString());
+
+    connect(m_actAllowApp, &QAction::triggered, [&] {
+        updateSelectedApps(false);
+    });
+    connect(m_actBlockApp, &QAction::triggered, [&] {
+        updateSelectedApps(true);
+    });
+    connect(m_actAddApp, &QAction::triggered, [&] {
+        updateAppEditForm(false);
+    });
+    connect(m_actEditApp, &QAction::triggered, [&] {
+        updateAppEditForm(true);
+    });
+    connect(m_actRemoveApp, &QAction::triggered, [&] {
+        if (fortManager()->showQuestionBox(tr("Are you sure to remove selected program(s)?"))) {
+            deleteSelectedApps();
+        }
+    });
+    connect(m_actPurgeApps, &QAction::triggered, [&] {
+        if (fortManager()->showQuestionBox(tr("Are you sure to remove all non-existent programs?"))) {
+            appListModel()->purgeApps();
+        }
+    });
+
+    m_btEdit = new WideButton(QIcon(":/images/application_edit.png"));
+    m_btEdit->setMenu(editMenu);
+
+    // Allow/Block
+    m_btAllowApp = ControlUtil::createLinkButton(":/images/arrow_switch.png");
+    m_btBlockApp = ControlUtil::createLinkButton(":/images/stop.png");
+
+    connect(m_btAllowApp, &QAbstractButton::clicked, m_actAllowApp, &QAction::trigger);
+    connect(m_btBlockApp, &QAbstractButton::clicked, m_actBlockApp, &QAction::trigger);
+
+    // Log Options
+    setupLogOptions();
+
+    layout->addWidget(m_btEdit);
+    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
+    layout->addWidget(m_btAllowApp);
+    layout->addWidget(m_btBlockApp);
+    layout->addStretch();
+    layout->addWidget(m_btLogOptions);
+
+    return layout;
 }
 
 void ProgramsWindow::setupLogOptions()

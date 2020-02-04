@@ -33,8 +33,6 @@ public:
     FortSettings *settings() const;
     SqliteDb *sqliteDb() const { return m_sqliteDb; }
 
-    bool isEditing() const { return confToEdit() != nullptr; }
-
     FirewallConf *conf() const { return m_conf; }
     FirewallConf *confToEdit() const { return m_confToEdit; }
 
@@ -66,6 +64,15 @@ public:
     int appEndsCount();
     void updateAppEndTimes();
     void checkAppEndTimes();
+
+    bool addZone(const QString &zoneName, const QString &sourceCode,
+                 const QString &url, const QString &formData,
+                 bool enabled, bool customUrl);
+    bool deleteZone(qint64 zoneId);
+    bool updateZone(qint64 zoneId, const QString &zoneName,
+                    const QString &sourceCode, const QString &url,
+                    const QString &formData, bool enabled, bool customUrl);
+    bool updateZoneName(qint64 zoneId, const QString &zoneName);
 
     bool validateDriver();
     bool updateDriverConf(bool onlyFlags = false);

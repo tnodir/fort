@@ -237,11 +237,11 @@ bool AppListModel::addApp(const QString &appPath, const QString &appName,
                           const QDateTime &endTime, int groupIndex,
                           bool useGroupPerm, bool blocked)
 {
-    const auto groupId = appGroupAt(groupIndex)->id();
-
     if (!confManager()->updateDriverUpdateApp(
                 appPath, groupIndex, useGroupPerm, blocked, true))
         return false;
+
+    const auto groupId = appGroupAt(groupIndex)->id();
 
     if (confManager()->addApp(appPath, appName, endTime, groupId,
                               useGroupPerm, blocked)) {
@@ -256,11 +256,11 @@ bool AppListModel::updateApp(qint64 appId, const QString &appPath, const QString
                              const QDateTime &endTime, int groupIndex,
                              bool useGroupPerm, bool blocked, bool updateDriver)
 {
-    const auto groupId = appGroupAt(groupIndex)->id();
-
     if (updateDriver && !confManager()->updateDriverUpdateApp(
                 appPath, groupIndex, useGroupPerm, blocked, false))
         return false;
+
+    const auto groupId = appGroupAt(groupIndex)->id();
 
     if (confManager()->updateApp(appId, appName, endTime, groupId,
                                  useGroupPerm, blocked)) {
@@ -277,6 +277,7 @@ bool AppListModel::updateAppName(qint64 appId, const QString &appName)
         refresh();
         return true;
     }
+
     return false;
 }
 

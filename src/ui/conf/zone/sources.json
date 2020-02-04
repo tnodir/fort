@@ -1,6 +1,8 @@
 [
     {
+        "code": "tasix",
         "title": "TAS-IX Addresses",
+        "zoneType": "bgp",
         "url": "http://mrlg.tas-ix.uz/index.cgi",
         "formData": "router=cisco&pass1=&query=1&arg="
     }

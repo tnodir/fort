@@ -2,11 +2,6 @@
 
 #include <QCryptographicHash>
 
-StringUtil::StringUtil(QObject *parent) :
-    QObject(parent)
-{
-}
-
 QString StringUtil::capitalize(const QString &text)
 {
     const QChar firstChar = text.at(0);

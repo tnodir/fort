@@ -1,8 +1,9 @@
 CREATE TABLE zone(
   zone_id INTEGER PRIMARY KEY,
-  name TEXT NOT NULL,
   enabled BOOLEAN NOT NULL,
-  zone_type TEXT NOT NULL,
+  custom_url BOOLEAN NOT NULL,
+  name TEXT NOT NULL,
+  source_code TEXT NOT NULL,
   url TEXT,
   form_data TEXT,
   last_run INTEGER,

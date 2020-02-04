@@ -4,12 +4,14 @@
 #include "../../util/window/widgetwindow.h"
 
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
+QT_FORWARD_DECLARE_CLASS(QComboBox)
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QLineEdit)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 
 QT_FORWARD_DECLARE_CLASS(ConfManager)
 QT_FORWARD_DECLARE_CLASS(FortManager)
+QT_FORWARD_DECLARE_CLASS(FortSettings)
 QT_FORWARD_DECLARE_CLASS(TableView)
 QT_FORWARD_DECLARE_CLASS(ZoneListModel)
 QT_FORWARD_DECLARE_CLASS(ZonesController)
@@ -35,7 +37,7 @@ private:
 
     void setupUi();
     void setupZoneEditForm();
-    void setupComboZoneTypes();
+    void setupComboSources();
     QLayout *setupHeader();
     void setupTableZones();
     void setupTableZonesHeader();
@@ -47,16 +49,19 @@ private:
     void updateZone(int row, bool enabled);
     void deleteZone(int row);
 
+    void updateSelectedZone(bool enabled);
+    void deleteSelectedZone();
+
     int zoneListCurrentIndex() const;
-    QString zoneListCurrentPath() const;
 
     ZonesController *ctrl() const { return m_ctrl; }
     FortManager *fortManager() const;
+    FortSettings *settings() const;
     ConfManager *confManager() const;
     ZoneListModel *zoneListModel() const;
 
 private:
-    bool m_formAppIsNew = false;
+    bool m_formZoneIsNew = false;
 
     ZonesController *m_ctrl = nullptr;
 
@@ -64,11 +69,12 @@ private:
     QAction *m_actAddZone = nullptr;
     QAction *m_actEditZone = nullptr;
     QAction *m_actRemoveZone = nullptr;
-    QCheckBox *m_cbEnabled = nullptr;
     QLabel *m_labelZoneName = nullptr;
     QLineEdit *m_editZoneName = nullptr;
-    QLabel *m_labelZoneType = nullptr;
-    QLineEdit *m_editZoneType = nullptr;
+    QLabel *m_labelSource = nullptr;
+    QCheckBox *m_cbEnabled = nullptr;
+    QCheckBox *m_cbCustomUrl = nullptr;
+    QComboBox *m_comboSources = nullptr;
     QLabel *m_labelUrl = nullptr;
     QLineEdit *m_editUrl = nullptr;
     QLabel *m_labelFormData = nullptr;

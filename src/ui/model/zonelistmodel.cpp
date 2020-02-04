@@ -1,9 +1,15 @@
 #include "zonelistmodel.h"
 
+#include <QJsonDocument>
+
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
 #include "../conf/confmanager.h"
+#include "../util/fileutil.h"
+#include "../util/json/jsonutil.h"
+#include "zonesourcewrapper.h"
+#include "zonetypewrapper.h"
 
 ZoneListModel::ZoneListModel(ConfManager *confManager,
                              QObject *parent) :
@@ -19,6 +25,8 @@ SqliteDb *ZoneListModel::sqliteDb() const
 
 void ZoneListModel::initialize()
 {
+    initZoneTypes();
+    initZoneSources();
 }
 
 int ZoneListModel::columnCount(const QModelIndex &parent) const
@@ -33,7 +41,7 @@ QVariant ZoneListModel::headerData(int section, Qt::Orientation orientation, int
         case Qt::DisplayRole: {
             switch (section) {
             case 0: return tr("Zone");
-            case 1: return tr("Type");
+            case 1: return tr("Source");
             case 2: return tr("Last Run");
             case 3: return tr("Last Success");
             }
@@ -60,7 +68,11 @@ QVariant ZoneListModel::data(const QModelIndex &index, int role) const
 
         switch (column) {
         case 0: return zoneRow.zoneName;
-        case 1: return zoneRow.zoneType;
+        case 1: {
+            const auto zoneSource = ZoneSourceWrapper(
+                        zoneSourceByCode(zoneRow.sourceCode));
+            return zoneSource.title();
+        }
         case 2: return zoneRow.lastRun;
         case 3: return zoneRow.lastSuccess;
         }
@@ -79,18 +91,58 @@ const ZoneRow &ZoneListModel::zoneRowAt(int row) const
     return m_zoneRow;
 }
 
-bool ZoneListModel::addZone(const QString &zoneName, const QString &zoneType, const QString &url, const QString &formData, bool enabled)
+bool ZoneListModel::addZone(const QString &zoneName, const QString &sourceCode,
+                            const QString &url, const QString &formData,
+                            bool enabled, bool customUrl)
 {
+    if (confManager()->addZone(zoneName, sourceCode,
+                               url, formData, enabled, customUrl)) {
+        reset();
+        return true;
+    }
+
     return false;
 }
 
-bool ZoneListModel::updateZone(qint64 zoneId, const QString &zoneName, const QString &zoneType, const QString &url, const QString &formData, bool enabled, bool updateDriver)
+bool ZoneListModel::updateZone(qint64 zoneId, const QString &zoneName,
+                               const QString &sourceCode, const QString &url,
+                               const QString &formData, bool enabled, bool customUrl,
+                               bool updateDriver)
 {
+    if (confManager()->updateZone(zoneId, zoneName, sourceCode,
+                                  url, formData, enabled, customUrl)) {
+        refresh();
+        return true;
+    }
+
+    return false;
+}
+
+bool ZoneListModel::updateZoneName(qint64 zoneId, const QString &zoneName)
+{
+    if (confManager()->updateZoneName(zoneId, zoneName)) {
+        refresh();
+        return true;
+    }
+
     return false;
 }
 
 void ZoneListModel::deleteZone(qint64 zoneId, int row)
 {
+    beginRemoveRows(QModelIndex(), row, row);
+
+    if (confManager()->deleteZone(zoneId)) {
+        invalidateRowCache();
+        removeRow(row);
+    }
+
+    endRemoveRows();
+}
+
+QVariant ZoneListModel::zoneSourceByCode(const QString &sourceCode) const
+{
+    return m_zoneSourcesMap.value(sourceCode);
 }
 
 bool ZoneListModel::updateTableRow(int row) const
@@ -101,13 +153,14 @@ bool ZoneListModel::updateTableRow(int row) const
         return false;
 
     m_zoneRow.zoneId = stmt.columnInt64(0);
-    m_zoneRow.enabled = stmt.columnInt(1);
-    m_zoneRow.zoneName = stmt.columnText(2);
-    m_zoneRow.zoneType = stmt.columnText(3);
-    m_zoneRow.url = stmt.columnBool(4);
-    m_zoneRow.formData = stmt.columnBool(5);
-    m_zoneRow.lastRun = stmt.columnDateTime(6);
-    m_zoneRow.lastSuccess = stmt.columnDateTime(7);
+    m_zoneRow.enabled = stmt.columnBool(1);
+    m_zoneRow.customUrl = stmt.columnBool(2);
+    m_zoneRow.zoneName = stmt.columnText(3);
+    m_zoneRow.sourceCode = stmt.columnText(4);
+    m_zoneRow.url = stmt.columnText(5);
+    m_zoneRow.formData = stmt.columnText(6);
+    m_zoneRow.lastRun = stmt.columnDateTime(7);
+    m_zoneRow.lastSuccess = stmt.columnDateTime(8);
 
     return true;
 }
@@ -118,12 +171,57 @@ QString ZoneListModel::sqlBase() const
             "SELECT"
             "    zone_id,"
             "    enabled,"
+            "    custom_url,"
             "    name,"
-            "    zone_type,"
+            "    source_code,"
             "    url,"
             "    form_data,"
             "    last_run,"
             "    last_success"
             "  FROM zone"
             ;
+}
+
+void ZoneListModel::initZoneTypes()
+{
+    const auto data = FileUtil::readFileData(":/zone/types.json");
+    if (data.isEmpty())
+        return;
+
+    QString errorString;
+    const auto zoneTypes = JsonUtil::jsonToVariant(data, errorString).toList();
+    if (!errorString.isEmpty()) {
+        qWarning() << "Zone Types: JSON error:" << errorString;
+        return;
+    }
+
+    int index = 0;
+    for (auto &typeVar : zoneTypes) {
+        ZoneTypeWrapper zoneType(typeVar);
+        zoneType.setIndex(index++);
+        m_zoneTypesMap.insert(zoneType.code(), typeVar);
+        m_zoneTypes.append(typeVar);
+    }
+}
+
+void ZoneListModel::initZoneSources()
+{
+    const auto data = FileUtil::readFileData(":/zone/sources.json");
+    if (data.isEmpty())
+        return;
+
+    QString errorString;
+    const auto zoneSources = JsonUtil::jsonToVariant(data, errorString).toList();
+    if (!errorString.isEmpty()) {
+        qWarning() << "Zone Sources: JSON error:" << errorString;
+        return;
+    }
+
+    int index = 0;
+    for (auto &sourceVar : zoneSources) {
+        ZoneSourceWrapper zoneSource(sourceVar);
+        zoneSource.setIndex(index++);
+        m_zoneSourcesMap.insert(zoneSource.code(), sourceVar);
+        m_zoneSources.append(sourceVar);
+    }
 }

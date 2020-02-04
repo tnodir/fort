@@ -116,6 +116,12 @@ public:
     bool zoneWindowMaximized() const { return iniBool("zoneWindow/maximized"); }
     void setZoneWindowMaximized(bool on) { setIniValue("zoneWindow/maximized", on); }
 
+    int zonesHeaderVersion() const { return iniInt("zoneWindow/zonesHeaderVersion"); }
+    void setZonesHeaderVersion(int v) { setIniValue("zoneWindow/zonesHeaderVersion", v); }
+
+    QByteArray zonesHeader() const { return iniByteArray("zoneWindow/zonesHeader"); }
+    void setZonesHeader(const QByteArray &v) { setIniValue("zoneWindow/zonesHeader", v); }
+
     bool graphWindowVisible() const { return iniBool("graphWindow/visible"); }
     void setGraphWindowVisible(bool on) { setIniValue("graphWindow/visible", on); }
 

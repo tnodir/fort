@@ -34,6 +34,9 @@
     <file>images/folder_user.png</file>
     <file>images/link.png</file>
     <file>images/map.png</file>
+    <file>images/map_add.png</file>
+    <file>images/map_delete.png</file>
+    <file>images/map_edit.png</file>
     <file>images/page_copy.png</file>
     <file>images/plugin.png</file>
     <file>images/plugin_disabled.png</file>
