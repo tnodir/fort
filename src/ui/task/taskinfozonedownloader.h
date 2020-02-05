@@ -26,6 +26,11 @@ protected slots:
 
     void handleFinished(bool success) override;
 
+    void processSubResult(bool success);
+
+private:
+    QString cachePath() const;
+
 private:
     bool m_success = false;
     int m_zoneIndex = 0;

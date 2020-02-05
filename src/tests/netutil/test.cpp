@@ -74,8 +74,10 @@ void Test::taskTasix()
     tasix.setEmptyNetMask(24);
     tasix.setPattern("^\\*\\D{2,5}(\\S+)");
 
-    const QString text = tasix.parseBuffer(buf);
-    QVERIFY(!text.isEmpty());
+    QString checksum;
+    const auto text = QString::fromLatin1(buf);
+    const auto list = tasix.parseAddresses(text, checksum);
+    QVERIFY(!list.isEmpty());
 
-    //QVERIFY(FileUtil::writeFile(QString(STR(PWD) "/data/tasix-mrlg.out"), text));
+    //QVERIFY(tasix.saveAddresses(list, QString(STR(PWD) "/data/tasix-mrlg.out"), true));
 }

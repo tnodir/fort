@@ -49,8 +49,10 @@ public slots:
 
     QString toText() const;
 
-    // Parse IPv4 ranges from text
-    bool fromText(const QString &text, int emptyNetMask = 32);
+    // Parse IPv4 ranges
+    bool fromText(const QString &text);
+    bool fromList(const QVector<QStringRef> &list, int emptyNetMask = 32,
+                  bool sort = true);
 
 private:
     void setErrorLineNo(int lineNo);

@@ -1,7 +1,10 @@
 #include "taskzonedownloader.h"
 
+#include <QCryptographicHash>
 #include <QRegularExpression>
 
+#include "../util/conf/confutil.h"
+#include "../util/fileutil.h"
 #include "../util/net/ip4range.h"
 #include "../util/net/netdownloader.h"
 
@@ -14,60 +17,73 @@ void TaskZoneDownloader::setupDownloader()
 {
     downloader()->setUrl(url());
     downloader()->setData(formData().toUtf8());
-
-    m_rangeText = QString();
 }
 
 void TaskZoneDownloader::downloadFinished(bool success)
 {
     if (success) {
-        m_rangeText = parseBuffer(downloader()->buffer());
-        success = !m_rangeText.isEmpty();
+        success = false;
+
+        QString checksum;
+        const auto text = QString::fromLatin1(downloader()->buffer());
+        const auto list = parseAddresses(text, checksum);
+        if (!list.isEmpty()
+                && this->checksum() != checksum) {
+            setChecksum(checksum);
+
+            success = saveAddresses(list, cacheFilePath());
+        }
     }
 
     abort(success);
 }
 
-QString TaskZoneDownloader::parseBuffer(const QByteArray &buffer) const
+QVector<QStringRef> TaskZoneDownloader::parseAddresses(const QString &text,
+                                                       QString &checksum) const
 {
-    const QStringList list = parseAddresses(buffer);
-
-    if (list.isEmpty())
-        return QString();
-
-    const auto text = list.join('\n');
-    if (!sort())
-        return text;
-
-    // Merge lines
-    Ip4Range ip4Range;
-    if (!ip4Range.fromText(text, emptyNetMask()))
-        return QString();
-
-    return ip4Range.toText();
-}
-
-QStringList TaskZoneDownloader::parseAddresses(const QByteArray &buffer) const
-{
-    QStringList list;
+    QVector<QStringRef> list;
+    QCryptographicHash cryptoHash(QCryptographicHash::Sha256);
 
     // Parse lines
-    const QString text = QString::fromLatin1(buffer);
-
     const QRegularExpression re(pattern());
 
-    for (const QStringRef &line : text.splitRef(
-                 '\n', QString::SkipEmptyParts)) {
+    for (const auto line : text.splitRef('\n', QString::SkipEmptyParts)) {
         const auto match = re.match(line);
         if (!match.hasMatch())
             continue;
 
-        const QString ip = match.captured(1);
-        if (ip.isEmpty())
-            continue;
-
+        const auto ip = line.mid(match.capturedStart(1),
+                                 match.capturedLength(1));
         list.append(ip);
+
+        cryptoHash.addData(ip.toLatin1());
     }
 
+    checksum = QString::fromLatin1(cryptoHash.result().toHex());
+
     return list;
+}
+
+bool TaskZoneDownloader::saveAddresses(const QVector<QStringRef> &list,
+                                       const QString &filePath,
+                                       bool isOutputText) const
+{
+    Ip4Range ip4Range;
+    if (!ip4Range.fromList(list, emptyNetMask(), sort()))
+        return false;
+
+    QByteArray data;
+
+    if (isOutputText) {
+        data = ip4Range.toText().toLatin1();
+    } else {
+        //ConfUtil::write();
+    }
+
+    return FileUtil::writeFileData(filePath, data);
+}
+
+QString TaskZoneDownloader::cacheFilePath() const
+{
+    return cachePath() + '-' + QString::number(zoneId()) + ".bin";
 }

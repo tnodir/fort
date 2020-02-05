@@ -1,8 +1,7 @@
 #include "taskinfozonedownloader.h"
 
-#include "../conf/addressgroup.h"
-#include "../conf/firewallconf.h"
 #include "../fortmanager.h"
+#include "../fortsettings.h"
 #include "../model/zonelistmodel.h"
 #include "../model/zonesourcewrapper.h"
 #include "../model/zonetypewrapper.h"
@@ -29,16 +28,6 @@ bool TaskInfoZoneDownloader::processResult(bool success)
     if (!success)
         return false;
 
-    const auto worker = zoneDownloader();
-
-    FirewallConf *conf = fortManager()->conf();
-    AddressGroup *inetGroup = conf->inetAddressGroup();
-
-    if (inetGroup->excludeText() == worker->rangeText())
-        return false;
-
-    inetGroup->setExcludeText(worker->rangeText());
-
     return fortManager()->saveOriginConf(tr("Zone Addresses Updated!"));
 }
 
@@ -63,15 +52,21 @@ void TaskInfoZoneDownloader::setupTaskWorker()
 
     worker->setSort(zoneType.sort());
     worker->setEmptyNetMask(zoneType.emptyNetMask());
+    worker->setZoneId(zoneRow.zoneId);
     worker->setUrl(zoneRow.customUrl ? zoneRow.url
                                      : zoneSource.url());
     worker->setFormData(zoneRow.customUrl ? zoneRow.formData
                                           : zoneSource.formData());
     worker->setPattern(zoneType.pattern());
+    worker->setChecksum(zoneRow.checksum);
+    worker->setCachePath(cachePath());
+    worker->setLastSuccess(zoneRow.lastSuccess);
 }
 
 void TaskInfoZoneDownloader::handleFinished(bool success)
 {
+    processSubResult(success);
+
     if (success) {
         m_success = true;
     }
@@ -80,4 +75,25 @@ void TaskInfoZoneDownloader::handleFinished(bool success)
 
     setupTaskWorker();
     runTaskWorker();
+}
+
+void TaskInfoZoneDownloader::processSubResult(bool success)
+{
+    if (aborted() && !success)
+        return;
+
+    auto worker = zoneDownloader();
+
+    const auto zoneId = worker->zoneId();
+    const auto checksum = worker->checksum();
+
+    const auto now = QDateTime::currentDateTime();
+    const auto lastSuccess = success ? now : worker->lastSuccess();
+
+    zoneListModel()->updateZoneResult(zoneId, checksum, now, lastSuccess);
+}
+
+QString TaskInfoZoneDownloader::cachePath() const
+{
+    return fortManager()->settings()->cachePath() + "zones/";
 }

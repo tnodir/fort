@@ -199,6 +199,12 @@ const char * const sqlUpdateZoneName =
         "  WHERE zone_id = ?1;"
         ;
 
+const char * const sqlUpdateZoneResult =
+        "UPDATE zone"
+        "  SET checksum = ?2, last_run = ?3, last_success = ?4"
+        "  WHERE zone_id = ?1;"
+        ;
+
 bool saveAddressGroup(SqliteDb *db, AddressGroup *addrGroup, int orderIndex)
 {
     const bool rowExists = (addrGroup->id() != 0);
@@ -688,6 +694,27 @@ bool ConfManager::updateZoneName(qint64 zoneId, const QString &zoneName)
                ;
 
     m_sqliteDb->executeEx(sqlUpdateZoneName, vars, 0, &ok);
+    if (!ok) {
+        showErrorMessage(m_sqliteDb->errorMessage());
+    }
+
+    return ok;
+}
+
+bool ConfManager::updateZoneResult(qint64 zoneId, const QString &checksum,
+                                   const QDateTime &lastRun,
+                                   const QDateTime &lastSuccess)
+{
+    bool ok = false;
+
+    const auto vars = QVariantList()
+            << zoneId
+            << checksum
+            << lastRun
+            << lastSuccess
+               ;
+
+    m_sqliteDb->executeEx(sqlUpdateZoneResult, vars, 0, &ok);
     if (!ok) {
         showErrorMessage(m_sqliteDb->errorMessage());
     }

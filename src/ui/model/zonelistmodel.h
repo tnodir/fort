@@ -21,6 +21,8 @@ struct ZoneRow : TableRow {
     QString url;
     QString formData;
 
+    QString checksum;
+
     QDateTime lastRun;
     QDateTime lastSuccess;
 };
@@ -54,6 +56,9 @@ public:
                     const QString &formData, bool enabled, bool customUrl,
                     bool updateDriver = true);
     bool updateZoneName(qint64 zoneId, const QString &zoneName);
+    bool updateZoneResult(qint64 zoneId, const QString &checksum,
+                          const QDateTime &lastRun,
+                          const QDateTime &lastSuccess);
     void deleteZone(qint64 zoneId, int row);
 
     QVariant zoneTypeByCode(const QString &typeCode) const;

@@ -128,6 +128,18 @@ bool ZoneListModel::updateZoneName(qint64 zoneId, const QString &zoneName)
     return false;
 }
 
+bool ZoneListModel::updateZoneResult(qint64 zoneId, const QString &checksum,
+                                     const QDateTime &lastRun,
+                                     const QDateTime &lastSuccess)
+{
+    if (confManager()->updateZoneResult(zoneId, checksum, lastRun, lastSuccess)) {
+        refresh();
+        return true;
+    }
+
+    return false;
+}
+
 void ZoneListModel::deleteZone(qint64 zoneId, int row)
 {
     beginRemoveRows(QModelIndex(), row, row);
@@ -164,8 +176,9 @@ bool ZoneListModel::updateTableRow(int row) const
     m_zoneRow.sourceCode = stmt.columnText(4);
     m_zoneRow.url = stmt.columnText(5);
     m_zoneRow.formData = stmt.columnText(6);
-    m_zoneRow.lastRun = stmt.columnDateTime(7);
-    m_zoneRow.lastSuccess = stmt.columnDateTime(8);
+    m_zoneRow.checksum = stmt.columnText(7);
+    m_zoneRow.lastRun = stmt.columnDateTime(8);
+    m_zoneRow.lastSuccess = stmt.columnDateTime(9);
 
     return true;
 }
@@ -181,6 +194,7 @@ QString ZoneListModel::sqlBase() const
             "    source_code,"
             "    url,"
             "    form_data,"
+            "    checksum,"
             "    last_run,"
             "    last_success"
             "  FROM zone"

@@ -65,19 +65,26 @@ QString Ip4Range::toText() const
     return text;
 }
 
-bool Ip4Range::fromText(const QString &text, int emptyNetMask)
+bool Ip4Range::fromText(const QString &text)
 {
+    const auto list = text.splitRef(QLatin1Char('\n'));
+    return fromList(list);
+}
+
+bool Ip4Range::fromList(const QVector<QStringRef> &list, int emptyNetMask, bool sort)
+{
+    Q_UNUSED(sort)  // TODO
+
     clear();
 
     ip4range_map_t ipRangeMap;
     int pairSize = 0;
 
     int lineNo = 0;
-    for (const QStringRef &line :
-             text.splitRef(QLatin1Char('\n'))) {
+    for (const auto line : list) {
         ++lineNo;
 
-        const QStringRef lineTrimmed = line.trimmed();
+        const auto lineTrimmed = line.trimmed();
         if (lineTrimmed.isEmpty()
                 || lineTrimmed.startsWith('#'))  // commented line
             continue;
@@ -115,10 +122,10 @@ bool Ip4Range::parseAddressMask(const QStringRef &line,
         return false;
     }
 
-    const QString ip = match.captured(1);
-    const QString sepStr = match.captured(2);
-    const QChar sep = sepStr.isEmpty() ? QChar('/') : sepStr.at(0);
-    const QString mask = match.captured(3);
+    const auto ip = match.captured(1);
+    const auto sepStr = match.capturedRef(2);
+    const auto sep = sepStr.isEmpty() ? QChar('/') : sepStr.at(0);
+    const auto mask = match.captured(3);
 
     if (sepStr.isEmpty() != mask.isEmpty()) {
         setErrorMessage(tr("Bad mask"));

@@ -27,6 +27,13 @@ typedef struct fort_conf_flags {
   UINT32 group_bits		: 16;
 } FORT_CONF_FLAGS, *PFORT_CONF_FLAGS;
 
+typedef struct fort_conf_addr_list {
+  UINT32 ip_n;
+  UINT32 pair_n;
+
+  UINT32 ip[2];
+} FORT_CONF_ADDR_LIST, *PFORT_CONF_ADDR_LIST;
+
 typedef struct fort_conf_addr_group {
   UINT32 include_all		: 1;
   UINT32 exclude_all		: 1;
