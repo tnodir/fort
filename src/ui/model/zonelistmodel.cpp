@@ -36,17 +36,13 @@ int ZoneListModel::columnCount(const QModelIndex &parent) const
 
 QVariant ZoneListModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (orientation == Qt::Horizontal) {
-        switch (role) {
-        case Qt::DisplayRole: {
-            switch (section) {
-            case 0: return tr("Zone");
-            case 1: return tr("Source");
-            case 2: return tr("Last Run");
-            case 3: return tr("Last Success");
-            }
-            break;
-        }
+    if (orientation == Qt::Horizontal
+            && role == Qt::DisplayRole) {
+        switch (section) {
+        case 0: return tr("Zone");
+        case 1: return tr("Source");
+        case 2: return tr("Last Run");
+        case 3: return tr("Last Success");
         }
     }
     return QVariant();
@@ -79,9 +75,43 @@ QVariant ZoneListModel::data(const QModelIndex &index, int role) const
 
         break;
     }
+
+    case Qt::CheckStateRole:
+        if (index.column() == 0) {
+            const auto zoneRow = zoneRowAt(index.row());
+            return zoneRow.enabled;
+        }
+        break;
     }
 
     return QVariant();
+}
+
+bool ZoneListModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    Q_UNUSED(value)
+
+    if (!index.isValid())
+        return false;
+
+    switch (role) {
+    case Qt::CheckStateRole:
+        const auto zoneRow = zoneRowAt(index.row());
+        return updateZoneEnabled(zoneRow.zoneId, !zoneRow.enabled);
+    }
+
+    return false;
+}
+
+Qt::ItemFlags ZoneListModel::flags(const QModelIndex &index) const
+{
+    if (!index.isValid())
+        return Qt::NoItemFlags;
+
+    const int column = index.column();
+
+    return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemNeverHasChildren
+            | (column == 0 ? Qt::ItemIsUserCheckable : Qt::NoItemFlags);
 }
 
 const ZoneRow &ZoneListModel::zoneRowAt(int row) const
@@ -121,6 +151,16 @@ bool ZoneListModel::updateZone(qint64 zoneId, const QString &zoneName,
 bool ZoneListModel::updateZoneName(qint64 zoneId, const QString &zoneName)
 {
     if (confManager()->updateZoneName(zoneId, zoneName)) {
+        refresh();
+        return true;
+    }
+
+    return false;
+}
+
+bool ZoneListModel::updateZoneEnabled(qint64 zoneId, bool enabled)
+{
+    if (confManager()->updateZoneEnabled(zoneId, enabled)) {
         refresh();
         return true;
     }

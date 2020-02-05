@@ -199,6 +199,12 @@ const char * const sqlUpdateZoneName =
         "  WHERE zone_id = ?1;"
         ;
 
+const char * const sqlUpdateZoneEnabled =
+        "UPDATE zone"
+        "  SET enabled = ?2"
+        "  WHERE zone_id = ?1;"
+        ;
+
 const char * const sqlUpdateZoneResult =
         "UPDATE zone"
         "  SET checksum = ?2, last_run = ?3, last_success = ?4"
@@ -694,6 +700,23 @@ bool ConfManager::updateZoneName(qint64 zoneId, const QString &zoneName)
                ;
 
     m_sqliteDb->executeEx(sqlUpdateZoneName, vars, 0, &ok);
+    if (!ok) {
+        showErrorMessage(m_sqliteDb->errorMessage());
+    }
+
+    return ok;
+}
+
+bool ConfManager::updateZoneEnabled(qint64 zoneId, bool enabled)
+{
+    bool ok = false;
+
+    const auto vars = QVariantList()
+            << zoneId
+            << enabled
+               ;
+
+    m_sqliteDb->executeEx(sqlUpdateZoneEnabled, vars, 0, &ok);
     if (!ok) {
         showErrorMessage(m_sqliteDb->errorMessage());
     }

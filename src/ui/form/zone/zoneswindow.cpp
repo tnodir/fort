@@ -280,8 +280,8 @@ void ZonesWindow::setupTableZonesHeader()
     header->setSectionResizeMode(2, QHeaderView::Stretch);
     header->setSectionResizeMode(3, QHeaderView::Stretch);
 
-    header->resizeSection(0, 500);
-    header->resizeSection(1, 140);
+    header->resizeSection(0, 350);
+    header->resizeSection(1, 290);
 }
 
 void ZonesWindow::setupTableZonesChanged()

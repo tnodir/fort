@@ -45,6 +45,9 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
+
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
 
     const ZoneRow &zoneRowAt(int row) const;
 
@@ -56,6 +59,7 @@ public:
                     const QString &formData, bool enabled, bool customUrl,
                     bool updateDriver = true);
     bool updateZoneName(qint64 zoneId, const QString &zoneName);
+    bool updateZoneEnabled(qint64 zoneId, bool enabled);
     bool updateZoneResult(qint64 zoneId, const QString &checksum,
                           const QDateTime &lastRun,
                           const QDateTime &lastSuccess);

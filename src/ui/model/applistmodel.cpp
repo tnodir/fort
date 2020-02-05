@@ -84,18 +84,14 @@ int AppListModel::columnCount(const QModelIndex &parent) const
 QVariant AppListModel::headerData(int section, Qt::Orientation orientation,
                                   int role) const
 {
-    if (orientation == Qt::Horizontal) {
-        switch (role) {
-        case Qt::DisplayRole: {
-            switch (section) {
-            case 0: return tr("Program");
-            case 1: return tr("Group");
-            case 2: return tr("State");
-            case 3: return tr("End Time");
-            case 4: return tr("Creation Time");
-            }
-            break;
-        }
+    if (orientation == Qt::Horizontal
+            && role == Qt::DisplayRole) {
+        switch (section) {
+        case 0: return tr("Program");
+        case 1: return tr("Group");
+        case 2: return tr("State");
+        case 3: return tr("End Time");
+        case 4: return tr("Creation Time");
         }
     }
     return QVariant();

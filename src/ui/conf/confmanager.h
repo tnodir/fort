@@ -73,6 +73,7 @@ public:
                     const QString &sourceCode, const QString &url,
                     const QString &formData, bool enabled, bool customUrl);
     bool updateZoneName(qint64 zoneId, const QString &zoneName);
+    bool updateZoneEnabled(qint64 zoneId, bool enabled);
     bool updateZoneResult(qint64 zoneId, const QString &checksum,
                           const QDateTime &lastRun,
                           const QDateTime &lastSuccess);
