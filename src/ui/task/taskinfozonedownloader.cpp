@@ -1,10 +1,13 @@
 #include "taskinfozonedownloader.h"
 
+#include <QDir>
+
 #include "../fortmanager.h"
 #include "../fortsettings.h"
 #include "../model/zonelistmodel.h"
 #include "../model/zonesourcewrapper.h"
 #include "../model/zonetypewrapper.h"
+#include "../util/fileutil.h"
 #include "taskzonedownloader.h"
 
 TaskInfoZoneDownloader::TaskInfoZoneDownloader(FortManager *fortManager,
@@ -27,6 +30,8 @@ bool TaskInfoZoneDownloader::processResult(bool success)
 {
     if (!success)
         return false;
+
+    removeOrphanCacheFiles();
 
     fortManager()->showTrayMessage(tr("Zone Addresses Updated!"));
     return true;
@@ -63,6 +68,8 @@ void TaskInfoZoneDownloader::setupTaskWorker()
     worker->setChecksum(zoneRow.checksum);
     worker->setCachePath(cachePath());
     worker->setLastSuccess(zoneRow.lastSuccess);
+
+    m_zoneIdSet.insert(zoneRow.zoneId);
 }
 
 void TaskInfoZoneDownloader::handleFinished(bool success)
@@ -93,6 +100,16 @@ void TaskInfoZoneDownloader::processSubResult(bool success)
     const auto lastSuccess = success ? now : worker->lastSuccess();
 
     zoneListModel()->updateZoneResult(zoneId, checksum, now, lastSuccess);
+}
+
+void TaskInfoZoneDownloader::removeOrphanCacheFiles()
+{
+    for (const auto fi : QDir(cachePath()).entryInfoList(QDir::Files)) {
+        const auto zoneId = fi.baseName().toLongLong();
+        if (zoneId != 0 && !m_zoneIdSet.contains(zoneId)) {
+            FileUtil::removeFile(fi.filePath());
+        }
+    }
 }
 
 QString TaskInfoZoneDownloader::cachePath() const

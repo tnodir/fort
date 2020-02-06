@@ -71,13 +71,15 @@ bool TaskZoneDownloader::storeAddresses(const QVector<QStringRef> &list) const
     if (!ip4Range.fromList(list, emptyNetMask(), sort()))
         return false;
 
-    QByteArray data;
+    FileUtil::removeFile(cacheFileTextPath());
+    FileUtil::removeFile(cacheFileBinPath());
 
     if (storeText()) {
         const auto text = ip4Range.toText();
         FileUtil::writeFile(cacheFileTextPath(), text);
     }
 
+    QByteArray data;
     //ConfUtil::write();
 
     return FileUtil::writeFileData(cacheFileBinPath(), data);

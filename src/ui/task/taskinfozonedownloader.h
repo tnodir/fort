@@ -1,6 +1,8 @@
 #ifndef TASKINFOZONEDOWNLOADER_H
 #define TASKINFOZONEDOWNLOADER_H
 
+#include <QSet>
+
 #include "taskinfo.h"
 
 QT_FORWARD_DECLARE_CLASS(FortManager)
@@ -29,11 +31,15 @@ protected slots:
     void processSubResult(bool success);
 
 private:
+    void removeOrphanCacheFiles();
+
     QString cachePath() const;
 
 private:
     bool m_success = false;
     int m_zoneIndex = 0;
+
+    QSet<qint64> m_zoneIdSet;
 };
 
 #endif // TASKINFOZONEDOWNLOADER_H
