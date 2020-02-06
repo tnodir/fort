@@ -211,6 +211,21 @@ const char * const sqlUpdateZoneResult =
         "  WHERE zone_id = ?1;"
         ;
 
+bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
+{
+    Q_UNUSED(ctx)
+
+    if (isNewDb)
+        return true;
+
+    // COMPAT: Zones
+    if (version == 6) {
+        db->execute("UPDATE task SET name = 'ZoneDownloader' WHERE name = 'Tasix';");
+    }
+
+    return true;
+}
+
 bool saveAddressGroup(SqliteDb *db, AddressGroup *addrGroup, int orderIndex)
 {
     const bool rowExists = (addrGroup->id() != 0);
@@ -327,8 +342,8 @@ bool ConfManager::initialize()
 
     m_sqliteDb->execute(sqlPragmas);
 
-    if (!m_sqliteDb->migrate(":/conf/migrations",
-                             DATABASE_USER_VERSION, true, true)) {
+    if (!m_sqliteDb->migrate(":/conf/migrations", DATABASE_USER_VERSION,
+                             true, true, &migrateFunc)) {
         logCritical() << "Migration error"
                       << m_sqliteDb->filePath();
         return false;

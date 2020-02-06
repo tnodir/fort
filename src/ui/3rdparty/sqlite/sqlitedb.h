@@ -72,7 +72,9 @@ public:
                  SQLITEDB_MIGRATE_FUNC migrateFunc = nullptr,
                  void *migrateContext = nullptr);
 
-    bool importDb(const QString &sourceFilePath);
+    bool importDb(const QString &sourceFilePath,
+                  SQLITEDB_MIGRATE_FUNC migrateFunc,
+                  void *migrateContext);
 
 private:
     sqlite3 *m_db;

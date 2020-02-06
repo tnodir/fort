@@ -280,7 +280,7 @@ bool SqliteDb::migrate(const QString &sqlDir, int version,
         return false;
     }
 
-    const bool isNewDb = (userVersion == 0);
+    bool isNewDb = (userVersion == 0);
 
     // Re-create the DB
     QString tempFilePath;
@@ -297,6 +297,7 @@ bool SqliteDb::migrate(const QString &sqlDir, int version,
         }
 
         userVersion = 0;
+        isNewDb = true;
     }
 
     // Run migration SQL scripts
@@ -352,7 +353,7 @@ bool SqliteDb::migrate(const QString &sqlDir, int version,
     if (recreate && !tempFilePath.isEmpty()) {
         // Re-import the DB
         if (success && importOldData) {
-            success = importDb(tempFilePath);
+            success = importDb(tempFilePath, migrateFunc, migrateContext);
         }
 
         // Remove the old DB
@@ -366,7 +367,9 @@ bool SqliteDb::migrate(const QString &sqlDir, int version,
     return success;
 }
 
-bool SqliteDb::importDb(const QString &sourceFilePath)
+bool SqliteDb::importDb(const QString &sourceFilePath,
+                        SQLITEDB_MIGRATE_FUNC migrateFunc,
+                        void *migrateContext)
 {
     const QLatin1String srcSchema("src");
     const QLatin1String dstSchema("main");
@@ -417,6 +420,10 @@ bool SqliteDb::importDb(const QString &sourceFilePath)
             success = false;
             break;
         }
+    }
+
+    if (success && migrateFunc != nullptr) {
+        success = migrateFunc(this, userVersion(), false, migrateContext);
     }
 
     endTransaction(success);
