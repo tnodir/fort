@@ -14,6 +14,7 @@ QVector<int> TableView::selectedRows() const
     for (const auto index : selectedIndexes()) {
         rowsSet.insert(index.row());
     }
+    rowsSet.insert(currentIndex().row());
 
     auto rows = rowsSet.values();
     std::sort(rows.begin(), rows.end());

@@ -499,11 +499,11 @@ void ProgramsWindow::updateAppEditForm(bool editCurrentApp)
     AppRow appRow;
     if (editCurrentApp) {
         const auto rows = m_appListView->selectedRows();
+        if (rows.isEmpty()) return;
+
         isSingleSelection = (rows.size() == 1);
 
         const auto appIndex = appListCurrentIndex();
-        if (appIndex < 0) return;
-
         appRow = appListModel()->appRowAt(appIndex);
     }
 
