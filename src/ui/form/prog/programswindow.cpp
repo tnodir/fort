@@ -30,7 +30,7 @@
 
 namespace {
 
-#define APPS_HEADER_VERSION 2
+#define APPS_HEADER_VERSION 3
 
 const ValuesList appBlockInHourValues = {
     3, 1, 6, 12, 24, 24 * 7, 24 * 30
@@ -412,11 +412,13 @@ void ProgramsWindow::setupTableAppsHeader()
     header->setSectionResizeMode(0, QHeaderView::Interactive);
     header->setSectionResizeMode(1, QHeaderView::Interactive);
     header->setSectionResizeMode(2, QHeaderView::Interactive);
-    header->setSectionResizeMode(3, QHeaderView::Stretch);
+    header->setSectionResizeMode(3, QHeaderView::Fixed);
     header->setSectionResizeMode(4, QHeaderView::Stretch);
 
-    header->resizeSection(0, 540);
+    header->resizeSection(0, 600);
+    header->resizeSection(1, 120);
     header->resizeSection(2, 100);
+    header->resizeSection(3, 30);
 
     header->setSectionsClickable(true);
     header->setSortIndicatorShown(true);

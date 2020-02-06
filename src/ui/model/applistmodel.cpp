@@ -90,7 +90,7 @@ QVariant AppListModel::headerData(int section, Qt::Orientation orientation,
         case 0: return tr("Program");
         case 1: return tr("Group");
         case 2: return tr("State");
-        case 3: return tr("End Time");
+        case 3: return tr("End");
         case 4: return tr("Creation Time");
         }
     }
@@ -132,8 +132,8 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
             if (appRow.blocked) return tr("Block");
             return tr("Allow");
         }
-        case 3: return appRow.endTime.isValid()
-                    ? appRow.endTime : QVariant();
+        case 3: return (role == Qt::DisplayRole || appRow.endTime.isNull())
+                    ? QVariant() : appRow.endTime;
         case 4: return appRow.creatTime;
         }
 
@@ -144,7 +144,7 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
     case Qt::DecorationRole: {
         const int column = index.column();
 
-        if (column == 0 || column == 2) {
+        if (column == 0 || column == 2 || column == 3) {
             const int row = index.row();
             const auto appRow = appRowAt(row);
 
@@ -162,6 +162,9 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
             case 2:
                 return appRow.blocked ? QIcon(":/images/stop.png")
                                       : QIcon(":/images/arrow_switch.png");
+            case 3:
+                return appRow.endTime.isNull() ? QVariant()
+                                               : QIcon(":/images/clock_stop.png");
             }
         }
 

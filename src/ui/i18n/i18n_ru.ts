@@ -88,8 +88,8 @@
     </message>
     <message>
         <location filename="../model/applistmodel.cpp" line="93"/>
-        <source>End Time</source>
-        <translation>Время окончания</translation>
+        <source>End</source>
+        <translation>Кон.</translation>
     </message>
     <message>
         <location filename="../model/applistmodel.cpp" line="94"/>
@@ -246,12 +246,12 @@
 <context>
     <name>ConfManager</name>
     <message>
-        <location filename="../conf/confmanager.cpp" line="316"/>
+        <location filename="../conf/confmanager.cpp" line="332"/>
         <source>Configuration Error</source>
         <translation>Ошибка конфигурации</translation>
     </message>
     <message>
-        <location filename="../conf/confmanager.cpp" line="808"/>
+        <location filename="../conf/confmanager.cpp" line="827"/>
         <source>Application &apos;%1&apos; already exists</source>
         <translation>Приложение &apos;%1&apos; уже существует</translation>
     </message>
@@ -1119,7 +1119,7 @@
 <context>
     <name>TaskInfoZoneDownloader</name>
     <message>
-        <location filename="../task/taskinfozonedownloader.cpp" line="31"/>
+        <location filename="../task/taskinfozonedownloader.cpp" line="36"/>
         <source>Zone Addresses Updated!</source>
         <translation>Адреса зон обновлены!</translation>
     </message>
@@ -1228,41 +1228,46 @@
     </message>
     <message>
         <location filename="../form/zone/zoneswindow.cpp" line="81"/>
+        <source>Store Text</source>
+        <translation>Сохранять текст</translation>
+    </message>
+    <message>
+        <location filename="../form/zone/zoneswindow.cpp" line="82"/>
         <source>Custom URL</source>
         <translation>Нестандартная ссылка</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="82"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="83"/>
         <source>URL:</source>
         <translation>Ссылка:</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="83"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="84"/>
         <source>Form Data:</source>
         <translation>Данные формы:</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="84"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="85"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="85"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="86"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="87"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="88"/>
         <source>Edit Zone</source>
         <translation>Редактирование зоны</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="91"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="92"/>
         <source>Zones</source>
         <translation>Зоны</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="245"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="251"/>
         <source>Are you sure to remove selected zone?</source>
         <translation>Удалить выбранную зону?</translation>
     </message>
