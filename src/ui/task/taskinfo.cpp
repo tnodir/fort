@@ -54,7 +54,7 @@ QString TaskInfo::title() const
     case UpdateChecker:
         return tr("Update Checker");
     case ZoneDownloader:
-        return tr("TAS-IX Addresses Downloader");
+        return tr("Zones Downloader");
     default:
         Q_UNREACHABLE();
         return QString();
