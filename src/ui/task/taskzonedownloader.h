@@ -12,6 +12,9 @@ class TaskZoneDownloader : public TaskDownloader
 public:
     explicit TaskZoneDownloader(QObject *parent = nullptr);
 
+    bool storeText() const { return m_storeText; }
+    void setStoreText(bool v) { m_storeText = v; }
+
     bool sort() const { return m_sort; }
     void setSort(bool v) { m_sort = v; }
 
@@ -41,11 +44,11 @@ public:
 
     QVector<QStringRef> parseAddresses(const QString &text,
                                        QString &checksum) const;
-    bool saveAddresses(const QVector<QStringRef> &list,
-                       const QString &filePath,
-                       bool isOutputText = false) const;
+    bool storeAddresses(const QVector<QStringRef> &list) const;
 
-    QString cacheFilePath() const;
+    QString cacheFileBasePath() const;
+    QString cacheFileBinPath() const;
+    QString cacheFileTextPath() const;
 
 protected:
     void setupDownloader() override;
@@ -54,6 +57,7 @@ protected slots:
     void downloadFinished(bool success) override;
 
 private:
+    bool m_storeText = false;
     bool m_sort = false;
 
     int m_emptyNetMask = 32;

@@ -70,6 +70,7 @@ void Test::taskTasix()
     QVERIFY(!buf.isEmpty());
 
     TaskZoneDownloader tasix;
+    tasix.setZoneId(1);
     tasix.setSort(true);
     tasix.setEmptyNetMask(24);
     tasix.setPattern("^\\*\\D{2,5}(\\S+)");
@@ -79,5 +80,8 @@ void Test::taskTasix()
     const auto list = tasix.parseAddresses(text, checksum);
     QVERIFY(!list.isEmpty());
 
-    //QVERIFY(tasix.saveAddresses(list, QString(STR(PWD) "/data/tasix-mrlg.out"), true));
+    tasix.setStoreText(true);
+    tasix.setCachePath(QLatin1String(STR(PWD) "/data/tasix-mrlg/"));
+
+    //QVERIFY(tasix.storeAddresses(list));
 }

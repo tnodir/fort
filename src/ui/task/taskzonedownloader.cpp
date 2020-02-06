@@ -27,11 +27,12 @@ void TaskZoneDownloader::downloadFinished(bool success)
         QString checksum;
         const auto text = QString::fromLatin1(downloader()->buffer());
         const auto list = parseAddresses(text, checksum);
-        if (!list.isEmpty()
-                && this->checksum() != checksum) {
-            setChecksum(checksum);
 
-            success = saveAddresses(list, cacheFilePath());
+        if (!list.isEmpty()
+                && (this->checksum() != checksum
+                    || !FileUtil::fileExists(cacheFileBinPath()))) {
+            setChecksum(checksum);
+            success = storeAddresses(list);
         }
     }
 
@@ -64,9 +65,7 @@ QVector<QStringRef> TaskZoneDownloader::parseAddresses(const QString &text,
     return list;
 }
 
-bool TaskZoneDownloader::saveAddresses(const QVector<QStringRef> &list,
-                                       const QString &filePath,
-                                       bool isOutputText) const
+bool TaskZoneDownloader::storeAddresses(const QVector<QStringRef> &list) const
 {
     Ip4Range ip4Range;
     if (!ip4Range.fromList(list, emptyNetMask(), sort()))
@@ -74,16 +73,27 @@ bool TaskZoneDownloader::saveAddresses(const QVector<QStringRef> &list,
 
     QByteArray data;
 
-    if (isOutputText) {
-        data = ip4Range.toText().toLatin1();
-    } else {
-        //ConfUtil::write();
+    if (storeText()) {
+        const auto text = ip4Range.toText();
+        FileUtil::writeFile(cacheFileTextPath(), text);
     }
 
-    return FileUtil::writeFileData(filePath, data);
+    //ConfUtil::write();
+
+    return FileUtil::writeFileData(cacheFileBinPath(), data);
 }
 
-QString TaskZoneDownloader::cacheFilePath() const
+QString TaskZoneDownloader::cacheFileBasePath() const
 {
-    return cachePath() + '-' + QString::number(zoneId()) + ".bin";
+    return cachePath() + QString::number(zoneId());
+}
+
+QString TaskZoneDownloader::cacheFileBinPath() const
+{
+    return cacheFileBasePath() + ".bin";
+}
+
+QString TaskZoneDownloader::cacheFileTextPath() const
+{
+    return cacheFileBasePath() + ".txt";
 }

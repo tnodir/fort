@@ -117,6 +117,11 @@ bool FileUtil::makePath(const QString &path)
     return QDir().mkpath(path);
 }
 
+bool FileUtil::makePathForFile(const QString &filePath)
+{
+    return QFileInfo(filePath).dir().mkpath(".");
+}
+
 bool FileUtil::fileExists(const QString &filePath)
 {
     return QFileInfo::exists(filePath);
@@ -165,6 +170,8 @@ bool FileUtil::writeFile(const QString &filePath, const QString &text)
 
 bool FileUtil::writeFileData(const QString &filePath, const QByteArray &data)
 {
+    makePathForFile(filePath);  // create destination directory
+
     QFile file(filePath);
     if (!file.open(QFile::WriteOnly | QFile::Truncate))
         return false;

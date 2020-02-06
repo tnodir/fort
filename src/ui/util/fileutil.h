@@ -29,6 +29,7 @@ public:
     static QString toNativeSeparators(const QString &path);
 
     static bool makePath(const QString &path);
+    static bool makePathForFile(const QString &filePath);
     static bool fileExists(const QString &filePath);
     static bool removeFile(const QString &filePath);
     static bool renameFile(const QString &oldFilePath, const QString &newFilePath);

@@ -11,6 +11,7 @@ QT_FORWARD_DECLARE_CLASS(ZoneSourceWrapper)
 
 struct ZoneRow : TableRow {
     bool enabled = true;
+    bool storeText = false;
     bool customUrl = false;
 
     qint64 zoneId = 0;
@@ -53,11 +54,11 @@ public:
 
     bool addZone(const QString &zoneName, const QString &sourceCode,
                  const QString &url, const QString &formData,
-                 bool enabled, bool customUrl);
+                 bool enabled, bool storeText, bool customUrl);
     bool updateZone(qint64 zoneId, const QString &zoneName,
                     const QString &sourceCode, const QString &url,
-                    const QString &formData, bool enabled, bool customUrl,
-                    bool updateDriver = true);
+                    const QString &formData, bool enabled, bool storeText,
+                    bool customUrl, bool updateDriver = true);
     bool updateZoneName(qint64 zoneId, const QString &zoneName);
     bool updateZoneEnabled(qint64 zoneId, bool enabled);
     bool updateZoneResult(qint64 zoneId, const QString &checksum,

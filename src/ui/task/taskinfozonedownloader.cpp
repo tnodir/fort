@@ -28,7 +28,8 @@ bool TaskInfoZoneDownloader::processResult(bool success)
     if (!success)
         return false;
 
-    return fortManager()->saveOriginConf(tr("Zone Addresses Updated!"));
+    fortManager()->showTrayMessage(tr("Zone Addresses Updated!"));
+    return true;
 }
 
 void TaskInfoZoneDownloader::setupTaskWorker()
@@ -50,6 +51,7 @@ void TaskInfoZoneDownloader::setupTaskWorker()
     const auto zoneType = ZoneTypeWrapper(
                 zoneListModel()->zoneTypeByCode(zoneSource.zoneType()));
 
+    worker->setStoreText(zoneRow.storeText);
     worker->setSort(zoneType.sort());
     worker->setEmptyNetMask(zoneType.emptyNetMask());
     worker->setZoneId(zoneRow.zoneId);

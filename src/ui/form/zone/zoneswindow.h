@@ -73,6 +73,7 @@ private:
     QLineEdit *m_editZoneName = nullptr;
     QLabel *m_labelSource = nullptr;
     QCheckBox *m_cbEnabled = nullptr;
+    QCheckBox *m_cbStoreText = nullptr;
     QCheckBox *m_cbCustomUrl = nullptr;
     QComboBox *m_comboSources = nullptr;
     QLabel *m_labelUrl = nullptr;

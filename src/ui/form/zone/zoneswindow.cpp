@@ -78,6 +78,7 @@ void ZonesWindow::onRetranslateUi()
     m_labelZoneName->setText(tr("Zone Name:"));
     m_labelSource->setText(tr("Source:"));
     m_cbEnabled->setText(tr("Enabled"));
+    m_cbStoreText->setText(tr("Store Text"));
     m_cbCustomUrl->setText(tr("Custom URL"));
     m_labelUrl->setText(tr("URL:"));
     m_labelFormData->setText(tr("Form Data:"));
@@ -145,6 +146,11 @@ void ZonesWindow::setupZoneEditForm()
     m_cbEnabled = new QCheckBox();
 
     formLayout->addRow(QString(), m_cbEnabled);
+
+    // Store Text
+    m_cbStoreText = new QCheckBox();
+
+    formLayout->addRow(QString(), m_cbStoreText);
 
     // Custom URL
     m_cbCustomUrl = new QCheckBox();
@@ -318,6 +324,7 @@ void ZonesWindow::updateZoneEditForm(bool editCurrentZone)
     m_editZoneName->setFocus();
     m_comboSources->setCurrentIndex(zoneSource.index());
     m_cbEnabled->setChecked(zoneRow.enabled);
+    m_cbStoreText->setChecked(zoneRow.storeText);
     m_cbCustomUrl->setChecked(zoneRow.customUrl);
     m_editUrl->setText(zoneRow.url);
     m_editFormData->setText(zoneRow.formData);
@@ -329,6 +336,7 @@ bool ZonesWindow::saveZoneEditForm()
 {
     const auto zoneName = m_editZoneName->text();
     const bool enabled = m_cbEnabled->isChecked();
+    const bool storeText = m_cbStoreText->isChecked();
     const bool customUrl = m_cbCustomUrl->isChecked();
     const auto url = m_editUrl->text();
     const auto formData = m_editFormData->text();
@@ -348,7 +356,7 @@ bool ZonesWindow::saveZoneEditForm()
     // Add new zone
     if (m_formZoneIsNew) {
         return zoneListModel()->addZone(zoneName, sourceCode, url, formData,
-                                        enabled, customUrl);
+                                        enabled, storeText, customUrl);
     }
 
     // Edit selected zone
@@ -358,6 +366,7 @@ bool ZonesWindow::saveZoneEditForm()
     const bool zoneNameEdited = (zoneName != zoneRow.zoneName);
     const bool zoneEdited = (sourceCode != zoneRow.sourceCode
             || enabled != zoneRow.enabled
+            || storeText != zoneRow.storeText
             || customUrl != zoneRow.customUrl
             || url != zoneRow.url
             || formData != zoneRow.formData);
@@ -370,8 +379,8 @@ bool ZonesWindow::saveZoneEditForm()
     }
 
     return zoneListModel()->updateZone(zoneRow.zoneId, zoneName, sourceCode,
-                                       url, formData, enabled, customUrl,
-                                       zoneEdited);
+                                       url, formData, enabled, storeText,
+                                       customUrl, zoneEdited);
 }
 
 void ZonesWindow::updateZone(int row, bool enabled)
@@ -380,7 +389,7 @@ void ZonesWindow::updateZone(int row, bool enabled)
 
     zoneListModel()->updateZone(zoneRow.zoneId, zoneRow.zoneName,
                                 zoneRow.sourceCode, zoneRow.url, zoneRow.formData,
-                                enabled, zoneRow.customUrl);
+                                enabled, zoneRow.storeText, zoneRow.customUrl);
 }
 
 void ZonesWindow::deleteZone(int row)
