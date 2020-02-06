@@ -132,58 +132,54 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
       || !fort_conf_ip_is_inet(&conf_ref->conf, remote_ip))
     goto permit;
 
-  if (conf_flags.stop_inet_traffic)
+  if (conf_flags.stop_inet_traffic
+      || !fort_conf_ip_inet_included(&conf_ref->conf, remote_ip))
     goto block;
 
   process_id = (UINT32) inMetaValues->processId;
   path_len = inMetaValues->processPath->size - sizeof(WCHAR);  /* chop terminating zero */
   path = inMetaValues->processPath->data;
 
-  app_flags.v = 0;
+  app_flags = fort_conf_app_find(&conf_ref->conf, path, path_len, fort_conf_exe_find);
 
-  if (fort_conf_ip_inet_included(&conf_ref->conf, remote_ip)) {
-    app_flags = fort_conf_app_find(&conf_ref->conf, path, path_len, fort_conf_exe_find);
+  if (app_flags.v == 0 ? conf_flags.allow_all_new
+      : !fort_conf_app_blocked(&conf_ref->conf, app_flags)) {
+    if (conf_flags.log_stat) {
+      const UINT64 flow_id = inMetaValues->flowHandle;
 
-    if (app_flags.v == 0 ? conf_flags.allow_all_new
-        : !fort_conf_app_blocked(&conf_ref->conf, app_flags)) {
-      if (conf_flags.log_stat) {
-        const UINT64 flow_id = inMetaValues->flowHandle;
+      const IPPROTO ip_proto = (IPPROTO) inFixedValues->incomingValue[
+        ipProtoField].value.uint8;
+      const BOOL is_tcp = (ip_proto == IPPROTO_TCP);
 
-        const IPPROTO ip_proto = (IPPROTO) inFixedValues->incomingValue[
-          ipProtoField].value.uint8;
-        const BOOL is_tcp = (ip_proto == IPPROTO_TCP);
+      const UCHAR group_index = app_flags.group_index;
+      const BOOL is_reauth = (flags & FWP_CONDITION_FLAG_IS_REAUTHORIZE);
 
-        const UCHAR group_index = app_flags.group_index;
-        const BOOL is_reauth = (flags & FWP_CONDITION_FLAG_IS_REAUTHORIZE);
+      BOOL is_new_proc = FALSE;
+      NTSTATUS status;
 
-        BOOL is_new_proc = FALSE;
-        NTSTATUS status;
+      status = fort_flow_associate(&g_device->stat, flow_id, process_id,
+        group_index, is_tcp, is_reauth, &is_new_proc);
 
-        status = fort_flow_associate(&g_device->stat, flow_id, process_id,
-          group_index, is_tcp, is_reauth, &is_new_proc);
+      if (!NT_SUCCESS(status)) {
+        if (status == FORT_STATUS_FLOW_BLOCK)
+          goto block;
 
-        if (!NT_SUCCESS(status)) {
-          if (status == FORT_STATUS_FLOW_BLOCK)
-            goto block;
-
-          DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                     "FORT: Classify v4: Flow assoc. error: %x\n", status);
-        } else if (is_new_proc) {
-          fort_buffer_proc_new_write(&g_device->buffer,
-            process_id, path_len, path, &irp, &info);
-        }
+        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                   "FORT: Classify v4: Flow assoc. error: %x\n", status);
+      } else if (is_new_proc) {
+        fort_buffer_proc_new_write(&g_device->buffer,
+          process_id, path_len, path, &irp, &info);
       }
-
-      if (app_flags.v == 0)
-        goto log_blocked;
-      else
-        goto permit;
     }
+
+    if (app_flags.v != 0)
+      goto permit;
   }
 
   if (app_flags.v == 0 && conf_flags.log_blocked) {
- log_blocked:
-    app_flags.blocked = !conf_flags.allow_all_new;
+    const BOOL blocked = !conf_flags.allow_all_new;
+
+    app_flags.blocked = (UCHAR) blocked;
     app_flags.alerted = 1;
     app_flags.is_new = 1;
 
@@ -193,12 +189,12 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
       const IPPROTO ip_proto = (IPPROTO) inFixedValues->incomingValue[
         ipProtoField].value.uint8;
 
-      fort_buffer_blocked_write(&g_device->buffer, app_flags.blocked,
+      fort_buffer_blocked_write(&g_device->buffer, blocked,
         remote_ip, remote_port, ip_proto,
         process_id, path_len, path, &irp, &info);
     }
 
-    if (!app_flags.blocked)
+    if (!blocked)
       goto permit;
   }
 
