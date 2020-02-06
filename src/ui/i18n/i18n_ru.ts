@@ -88,8 +88,8 @@
     </message>
     <message>
         <location filename="../model/applistmodel.cpp" line="93"/>
-        <source>End</source>
-        <translation>Кон.</translation>
+        <source>Bl.</source>
+        <translation>Бл.</translation>
     </message>
     <message>
         <location filename="../model/applistmodel.cpp" line="94"/>

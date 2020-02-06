@@ -90,7 +90,7 @@ QVariant AppListModel::headerData(int section, Qt::Orientation orientation,
         case 0: return tr("Program");
         case 1: return tr("Group");
         case 2: return tr("State");
-        case 3: return tr("End");
+        case 3: return tr("Bl.");
         case 4: return tr("Creation Time");
         }
     }
