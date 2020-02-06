@@ -70,6 +70,8 @@ void ZonesWindow::onRestoreWindowState()
 
 void ZonesWindow::onRetranslateUi()
 {
+    this->unsetLocale();
+
     m_btEdit->setText(tr("Edit"));
     m_actAddZone->setText(tr("Add"));
     m_actEditZone->setText(tr("Edit"));

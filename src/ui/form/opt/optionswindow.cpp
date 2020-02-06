@@ -47,6 +47,8 @@ void OptionsWindow::keyPressEvent(QKeyEvent *event)
 
 void OptionsWindow::onRetranslateUi()
 {
+    this->unsetLocale();
+
     this->setWindowTitle(tr("Options"));
 }
 

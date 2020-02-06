@@ -80,6 +80,8 @@ void ProgramsWindow::onRestoreWindowState()
 
 void ProgramsWindow::onRetranslateUi()
 {
+    this->unsetLocale();
+
     m_btEdit->setText(tr("Edit"));
     m_actAllowApp->setText(tr("Allow"));
     m_actBlockApp->setText(tr("Block"));
