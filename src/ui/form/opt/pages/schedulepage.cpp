@@ -9,6 +9,7 @@
 #include <QTableView>
 #include <QVBoxLayout>
 
+#include "../../../fortmanager.h"
 #include "../../../task/taskinfo.h"
 #include "../../../task/tasklistmodel.h"
 #include "../../../task/taskmanager.h"
@@ -115,6 +116,13 @@ void SchedulePage::setupTableTasks()
     m_tableTasks->setSelectionBehavior(QAbstractItemView::SelectItems);
 
     m_tableTasks->setModel(taskListModel());
+
+    connect(m_tableTasks, &TableView::doubleClicked, [&](const QModelIndex &index) {
+        const auto taskInfo = taskListModel()->taskInfoAt(index.row());
+        if (taskInfo->type() == TaskInfo::ZoneDownloader) {
+            fortManager()->showZonesWindow();
+        }
+    });
 }
 
 void SchedulePage::setupTableTasksHeader()

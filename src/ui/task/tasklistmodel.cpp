@@ -221,26 +221,26 @@ void TaskListModel::setTaskIntervalHours(const QModelIndex &index, int v)
     emit dataEdited();
 }
 
-TaskRow *TaskListModel::addTaskRow(int index)
+TaskRow *TaskListModel::addTaskRow(int row)
 {
     auto taskRow = new TaskRow();
-    m_taskRows.replace(index, taskRow);
+    m_taskRows.replace(row, taskRow);
 
-    auto taskInfo = taskInfoAt(index);
+    auto taskInfo = taskInfoAt(row);
     taskRow->enabled = taskInfo->enabled();
     taskRow->intervalHours = taskInfo->intervalHours();
 
     return taskRow;
 }
 
-TaskInfo *TaskListModel::taskInfoAt(int index) const
+TaskInfo *TaskListModel::taskInfoAt(int row) const
 {
-    return taskInfosList().at(index);
+    return taskInfosList().at(row);
 }
 
-TaskRow *TaskListModel::taskRowAt(int index) const
+TaskRow *TaskListModel::taskRowAt(int row) const
 {
-    return m_taskRows.at(index);
+    return m_taskRows.at(row);
 }
 
 QString TaskListModel::formatDateTime(const QDateTime &dateTime)

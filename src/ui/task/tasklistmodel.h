@@ -32,7 +32,7 @@ public:
     TaskManager *taskManager() const { return m_taskManager; }
 
     const QList<TaskInfo *> &taskInfosList() const;
-    TaskInfo *taskInfoAt(int index) const;
+    TaskInfo *taskInfoAt(int row) const;
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -62,9 +62,9 @@ private:
     int taskIntervalHours(int index) const;
     void setTaskIntervalHours(const QModelIndex &index, int v);
 
-    TaskRow *addTaskRow(int index);
+    TaskRow *addTaskRow(int row);
 
-    TaskRow *taskRowAt(int index) const;
+    TaskRow *taskRowAt(int row) const;
 
     static QString formatDateTime(const QDateTime &dateTime);
 
