@@ -7,7 +7,8 @@ CREATE TABLE zone(
   source_code TEXT NOT NULL,
   url TEXT,
   form_data TEXT,
-  checksum TEXT,
+  text_checksum TEXT,
+  bin_checksum TEXT,
   last_run INTEGER,
   last_success INTEGER
 );

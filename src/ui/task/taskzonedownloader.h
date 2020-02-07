@@ -33,8 +33,11 @@ public:
     QString pattern() const { return m_pattern; }
     void setPattern(const QString &v) { m_pattern = v; }
 
-    QString checksum() const { return m_checksum; }
-    void setChecksum(const QString &v) { m_checksum = v; }
+    QString textChecksum() const { return m_textChecksum; }
+    void setTextChecksum(const QString &v) { m_textChecksum = v; }
+
+    QString binChecksum() const { return m_binChecksum; }
+    void setBinChecksum(const QString &v) { m_binChecksum = v; }
 
     QString cachePath() const { return m_cachePath; }
     void setCachePath(const QString &v) { m_cachePath = v; }
@@ -43,8 +46,9 @@ public:
     void setLastSuccess(const QDateTime &v) { m_lastSuccess = v; }
 
     QVector<QStringRef> parseAddresses(const QString &text,
-                                       QString &checksum) const;
-    bool storeAddresses(const QVector<QStringRef> &list) const;
+                                       QString &textChecksum) const;
+    bool storeAddresses(const QVector<QStringRef> &list,
+                        QString &binChecksum) const;
 
     QString cacheFileBasePath() const;
     QString cacheFileBinPath() const;
@@ -69,7 +73,9 @@ private:
 
     QString m_pattern;
 
-    QString m_checksum;
+    QString m_textChecksum;
+    QString m_binChecksum;
+
     QString m_cachePath;
 
     QDateTime m_lastSuccess;

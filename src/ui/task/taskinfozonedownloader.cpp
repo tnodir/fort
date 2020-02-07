@@ -65,7 +65,7 @@ void TaskInfoZoneDownloader::setupTaskWorker()
     worker->setFormData(zoneRow.customUrl ? zoneRow.formData
                                           : zoneSource.formData());
     worker->setPattern(zoneType.pattern());
-    worker->setChecksum(zoneRow.checksum);
+    worker->setTextChecksum(zoneRow.textChecksum);
     worker->setCachePath(cachePath());
     worker->setLastSuccess(zoneRow.lastSuccess);
 
@@ -94,12 +94,14 @@ void TaskInfoZoneDownloader::processSubResult(bool success)
     auto worker = zoneDownloader();
 
     const auto zoneId = worker->zoneId();
-    const auto checksum = worker->checksum();
+    const auto textChecksum = worker->textChecksum();
+    const auto binChecksum = worker->binChecksum();
 
     const auto now = QDateTime::currentDateTime();
     const auto lastSuccess = success ? now : worker->lastSuccess();
 
-    zoneListModel()->updateZoneResult(zoneId, checksum, now, lastSuccess);
+    zoneListModel()->updateZoneResult(zoneId, textChecksum, binChecksum,
+                                      now, lastSuccess);
 }
 
 void TaskInfoZoneDownloader::removeOrphanCacheFiles()

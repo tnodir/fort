@@ -24,15 +24,18 @@ void TaskZoneDownloader::downloadFinished(bool success)
     if (success) {
         success = false;
 
-        QString checksum;
+        QString textChecksum;
         const auto text = QString::fromLatin1(downloader()->buffer());
-        const auto list = parseAddresses(text, checksum);
+        const auto list = parseAddresses(text, textChecksum);
 
         if (!list.isEmpty()
-                && (this->checksum() != checksum
+                && (this->textChecksum() != textChecksum
                     || !FileUtil::fileExists(cacheFileBinPath()))) {
-            setChecksum(checksum);
-            success = storeAddresses(list);
+            setTextChecksum(textChecksum);
+
+            QString binChecksum;
+            success = storeAddresses(list, binChecksum);
+            setBinChecksum(binChecksum);
         }
     }
 
@@ -58,6 +61,7 @@ QVector<QStringRef> TaskZoneDownloader::parseAddresses(const QString &text,
         list.append(ip);
 
         cryptoHash.addData(ip.toLatin1());
+        cryptoHash.addData("\n");
     }
 
     checksum = QString::fromLatin1(cryptoHash.result().toHex());
@@ -65,7 +69,8 @@ QVector<QStringRef> TaskZoneDownloader::parseAddresses(const QString &text,
     return list;
 }
 
-bool TaskZoneDownloader::storeAddresses(const QVector<QStringRef> &list) const
+bool TaskZoneDownloader::storeAddresses(const QVector<QStringRef> &list,
+                                        QString &binChecksum) const
 {
     Ip4Range ip4Range;
     if (!ip4Range.fromList(list, emptyNetMask(), sort()))

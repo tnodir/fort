@@ -75,7 +75,8 @@ public:
                     bool storeText, bool customUrl);
     bool updateZoneName(qint64 zoneId, const QString &zoneName);
     bool updateZoneEnabled(qint64 zoneId, bool enabled);
-    bool updateZoneResult(qint64 zoneId, const QString &checksum,
+    bool updateZoneResult(qint64 zoneId, const QString &textChecksum,
+                          const QString &binChecksum,
                           const QDateTime &lastRun,
                           const QDateTime &lastSuccess);
 

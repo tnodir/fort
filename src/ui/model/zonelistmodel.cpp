@@ -170,11 +170,13 @@ bool ZoneListModel::updateZoneEnabled(qint64 zoneId, bool enabled)
     return false;
 }
 
-bool ZoneListModel::updateZoneResult(qint64 zoneId, const QString &checksum,
+bool ZoneListModel::updateZoneResult(qint64 zoneId, const QString &textChecksum,
+                                     const QString &binChecksum,
                                      const QDateTime &lastRun,
                                      const QDateTime &lastSuccess)
 {
-    if (confManager()->updateZoneResult(zoneId, checksum, lastRun, lastSuccess)) {
+    if (confManager()->updateZoneResult(zoneId, textChecksum, binChecksum,
+                                        lastRun, lastSuccess)) {
         refresh();
         return true;
     }
@@ -219,9 +221,10 @@ bool ZoneListModel::updateTableRow(int row) const
     m_zoneRow.sourceCode = stmt.columnText(5);
     m_zoneRow.url = stmt.columnText(6);
     m_zoneRow.formData = stmt.columnText(7);
-    m_zoneRow.checksum = stmt.columnText(8);
-    m_zoneRow.lastRun = stmt.columnDateTime(9);
-    m_zoneRow.lastSuccess = stmt.columnDateTime(10);
+    m_zoneRow.textChecksum = stmt.columnText(8);
+    m_zoneRow.binChecksum = stmt.columnText(9);
+    m_zoneRow.lastRun = stmt.columnDateTime(10);
+    m_zoneRow.lastSuccess = stmt.columnDateTime(11);
 
     return true;
 }
@@ -238,7 +241,8 @@ QString ZoneListModel::sqlBase() const
             "    source_code,"
             "    url,"
             "    form_data,"
-            "    checksum,"
+            "    text_checksum,"
+            "    bin_checksum,"
             "    last_run,"
             "    last_success"
             "  FROM zone"
