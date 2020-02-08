@@ -336,15 +336,19 @@ void ZonesWindow::updateZoneEditForm(bool editCurrentZone)
 
 bool ZonesWindow::saveZoneEditForm()
 {
+    const auto zoneSource = ZoneSourceWrapper(m_comboSources->currentData());
+    const auto sourceCode = zoneSource.code();
+
+    if (zoneSource.url().isEmpty()) {
+        m_cbCustomUrl->setChecked(true);
+    }
+
     const auto zoneName = m_editZoneName->text();
     const bool enabled = m_cbEnabled->isChecked();
     const bool storeText = m_cbStoreText->isChecked();
     const bool customUrl = m_cbCustomUrl->isChecked();
     const auto url = m_editUrl->text();
     const auto formData = m_editFormData->text();
-
-    const auto zoneSource = ZoneSourceWrapper(m_comboSources->currentData());
-    const auto sourceCode = zoneSource.code();
 
     // Check custom url
     if (customUrl && url.isEmpty()) {

@@ -77,6 +77,7 @@ public:
     bool updateZoneEnabled(qint64 zoneId, bool enabled);
     bool updateZoneResult(qint64 zoneId, const QString &textChecksum,
                           const QString &binChecksum,
+                          const QDateTime &sourceModTime,
                           const QDateTime &lastRun,
                           const QDateTime &lastSuccess);
 

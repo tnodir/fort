@@ -2,6 +2,7 @@
 
 #include <QCryptographicHash>
 #include <QRegularExpression>
+#include <QUrl>
 
 #include "../util/conf/confutil.h"
 #include "../util/fileutil.h"
@@ -15,6 +16,12 @@ TaskZoneDownloader::TaskZoneDownloader(QObject *parent) :
 
 void TaskZoneDownloader::setupDownloader()
 {
+    if (QUrl::fromUserInput(url()).isLocalFile()) {
+        // Load addresses from local file
+        loadLocalFile();
+        return;
+    }
+
     downloader()->setUrl(url());
     downloader()->setData(formData().toUtf8());
 }
@@ -40,6 +47,20 @@ void TaskZoneDownloader::downloadFinished(bool success)
     }
 
     abort(success);
+}
+
+void TaskZoneDownloader::loadLocalFile()
+{
+    bool success = false;
+
+    if (sourceModTime() != FileUtil::fileModTime(url())
+            || !FileUtil::fileExists(cacheFileBinPath())) {
+        const auto buffer = FileUtil::readFileData(url());
+        downloader()->setBuffer(buffer);
+        success = true;
+    }
+
+    downloadFinished(success);
 }
 
 QVector<QStringRef> TaskZoneDownloader::parseAddresses(const QString &text,

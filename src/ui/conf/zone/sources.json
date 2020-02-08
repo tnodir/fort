@@ -5,5 +5,12 @@
         "zoneType": "bgp",
         "url": "http://mrlg.tas-ix.uz/index.cgi",
         "formData": "router=cisco&pass1=&query=1&arg="
+    },
+    {
+        "code": "file",
+        "title": "Addresses from Local File",
+        "zoneType": "file",
+        "url": "",
+        "formData": ""
     }
 ]

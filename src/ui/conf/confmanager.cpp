@@ -209,7 +209,7 @@ const char * const sqlUpdateZoneEnabled =
 const char * const sqlUpdateZoneResult =
         "UPDATE zone"
         "  SET text_checksum = ?2, bin_checksum = ?3,"
-        "    last_run = ?4, last_success = ?5"
+        "    source_modtime = ?4, last_run = ?5, last_success = ?6"
         "  WHERE zone_id = ?1;"
         ;
 
@@ -746,6 +746,7 @@ bool ConfManager::updateZoneEnabled(qint64 zoneId, bool enabled)
 
 bool ConfManager::updateZoneResult(qint64 zoneId, const QString &textChecksum,
                                    const QString &binChecksum,
+                                   const QDateTime &sourceModTime,
                                    const QDateTime &lastRun,
                                    const QDateTime &lastSuccess)
 {
@@ -755,6 +756,7 @@ bool ConfManager::updateZoneResult(qint64 zoneId, const QString &textChecksum,
             << zoneId
             << textChecksum
             << binChecksum
+            << sourceModTime
             << lastRun
             << lastSuccess
                ;

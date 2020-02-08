@@ -9,6 +9,7 @@ CREATE TABLE zone(
   form_data TEXT,
   text_checksum TEXT,
   bin_checksum TEXT,
+  source_modtime INTEGER,
   last_run INTEGER,
   last_success INTEGER
 );

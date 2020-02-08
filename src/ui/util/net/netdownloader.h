@@ -14,6 +14,7 @@ public:
     void setData(const QByteArray &data) { m_data = data; }
 
     QByteArray buffer() const { return m_buffer; }
+    void setBuffer(const QByteArray &buffer) { m_buffer = buffer; }
 
 signals:
     void finished(bool success);

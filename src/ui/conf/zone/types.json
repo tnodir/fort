@@ -6,5 +6,13 @@
         "sort": true,
         "pattern": "^\\*\\D{2,5}(\\S+)",
         "emptyNetMask": 24
+    },
+    {
+        "code": "file",
+        "title": "File",
+        "description": "Local File",
+        "sort": true,
+        "pattern": "^\\D*(\\S+)",
+        "emptyNetMask": 32
     }
 ]

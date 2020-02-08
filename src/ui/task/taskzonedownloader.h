@@ -42,6 +42,9 @@ public:
     QString cachePath() const { return m_cachePath; }
     void setCachePath(const QString &v) { m_cachePath = v; }
 
+    QDateTime sourceModTime() const { return m_sourceModTime; }
+    void setSourceModTime(const QDateTime &v) { m_sourceModTime = v; }
+
     QDateTime lastSuccess() const { return m_lastSuccess; }
     void setLastSuccess(const QDateTime &v) { m_lastSuccess = v; }
 
@@ -61,6 +64,9 @@ protected slots:
     void downloadFinished(bool success) override;
 
 private:
+    void loadLocalFile();
+
+private:
     bool m_storeText = false;
     bool m_sort = false;
 
@@ -78,6 +84,7 @@ private:
 
     QString m_cachePath;
 
+    QDateTime m_sourceModTime;
     QDateTime m_lastSuccess;
 };
 

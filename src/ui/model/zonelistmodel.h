@@ -25,6 +25,7 @@ struct ZoneRow : TableRow {
     QString textChecksum;
     QString binChecksum;
 
+    QDateTime sourceModTime;
     QDateTime lastRun;
     QDateTime lastSuccess;
 };
@@ -64,6 +65,7 @@ public:
     bool updateZoneEnabled(qint64 zoneId, bool enabled);
     bool updateZoneResult(qint64 zoneId, const QString &textChecksum,
                           const QString &binChecksum,
+                          const QDateTime &sourceModTime,
                           const QDateTime &lastRun,
                           const QDateTime &lastSuccess);
     void deleteZone(qint64 zoneId, int row);

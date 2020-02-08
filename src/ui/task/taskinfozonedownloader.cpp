@@ -40,7 +40,9 @@ bool TaskInfoZoneDownloader::processResult(bool success)
 void TaskInfoZoneDownloader::setupTaskWorker()
 {
     const int rowCount = zoneListModel()->rowCount();
-    if (m_zoneIndex >= rowCount || aborted()) {
+    if (m_zoneIndex >= rowCount) {
+        m_zoneIndex = 0;
+
         TaskInfo::handleFinished(m_success);
         return;
     }
@@ -67,6 +69,7 @@ void TaskInfoZoneDownloader::setupTaskWorker()
     worker->setPattern(zoneType.pattern());
     worker->setTextChecksum(zoneRow.textChecksum);
     worker->setCachePath(cachePath());
+    worker->setSourceModTime(zoneRow.sourceModTime);
     worker->setLastSuccess(zoneRow.lastSuccess);
 
     m_zoneIdSet.insert(zoneRow.zoneId);
@@ -80,7 +83,11 @@ void TaskInfoZoneDownloader::handleFinished(bool success)
         m_success = true;
     }
 
-    ++m_zoneIndex;
+    if (aborted()) {
+        m_zoneIndex = INT_MAX;
+    } else {
+        ++m_zoneIndex;
+    }
 
     setupTaskWorker();
     runTaskWorker();
@@ -97,11 +104,12 @@ void TaskInfoZoneDownloader::processSubResult(bool success)
     const auto textChecksum = worker->textChecksum();
     const auto binChecksum = worker->binChecksum();
 
+    const auto sourceModTime = worker->sourceModTime();
     const auto now = QDateTime::currentDateTime();
     const auto lastSuccess = success ? now : worker->lastSuccess();
 
     zoneListModel()->updateZoneResult(zoneId, textChecksum, binChecksum,
-                                      now, lastSuccess);
+                                      sourceModTime, now, lastSuccess);
 }
 
 void TaskInfoZoneDownloader::removeOrphanCacheFiles()
