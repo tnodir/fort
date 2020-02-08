@@ -46,6 +46,7 @@ public slots:
                       bool blocked, bool alerted, bool isNew,
                       const QString &appPath, QByteArray &buf);
     int writeVersion(QByteArray &buf);
+    int writeZone(const Ip4Range &ip4Range, QByteArray &buf);
 
 private:
     void setErrorMessage(const QString &errorMessage);
@@ -107,6 +108,8 @@ private:
                                    const addrranges_arr_t &addressRanges);
     static void writeAddressRange(char **data,
                                   const AddressRange &addressRange);
+    static void writeAddressList(char **data,
+                                 const Ip4Range &ip4Range);
 
     static void writeApps(char **data, const appentry_map_t &apps,
                           bool useHeader = false);

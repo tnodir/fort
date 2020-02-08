@@ -17,6 +17,9 @@ public:
     bool excludeAll() const { return m_excludeAll; }
     void setExcludeAll(bool excludeAll) { m_excludeAll = excludeAll; }
 
+    bool includeIsEmpty() const { return includeRange().isEmpty(); }
+    bool excludeIsEmpty() const { return excludeRange().isEmpty(); }
+
     Ip4Range &includeRange() { return m_includeRange; }
     Ip4Range &excludeRange() { return m_excludeRange; }
 

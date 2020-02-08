@@ -35,6 +35,8 @@ public:
     int ipSize() const { return m_ipArray.size(); }
     int pairSize() const { return m_pairToArray.size(); }
 
+    bool isEmpty() const { return ipSize() == 0 && pairSize() == 0; }
+
     quint32 ipAt(int i) const { return m_ipArray.at(i); }
     Ip4Pair pairAt(int i) const {
         return Ip4Pair{m_pairFromArray.at(i), m_pairToArray.at(i)};

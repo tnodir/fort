@@ -3,7 +3,7 @@
 
 #define FORT_CONF_IP_MAX		(10 * 1024 * 1024)
 #define FORT_CONF_IP_ARR_SIZE(n)	((n) * sizeof(UINT32))
-#define FORT_CONF_IP_RANGE_SIZE(n)	((n) * sizeof(UINT32) * 2)
+#define FORT_CONF_IP_RANGE_SIZE(n)	(FORT_CONF_IP_ARR_SIZE(n) * 2)
 #define FORT_CONF_GROUP_MAX		16
 #define FORT_CONF_APPS_LEN_MAX		(64 * 1024 * 1024)
 #define FORT_CONF_APP_PATH_MAX		(2 * 1024)
@@ -31,20 +31,18 @@ typedef struct fort_conf_addr_list {
   UINT32 ip_n;
   UINT32 pair_n;
 
-  UINT32 ip[2];
+  UINT32 ip[1];
 } FORT_CONF_ADDR_LIST, *PFORT_CONF_ADDR_LIST;
 
 typedef struct fort_conf_addr_group {
   UINT32 include_all		: 1;
   UINT32 exclude_all		: 1;
+  UINT32 include_is_empty	: 1;
+  UINT32 exclude_is_empty	: 1;
 
-  UINT32 include_ip_n;
-  UINT32 include_pair_n;
+  UINT32 exclude_off;
 
-  UINT32 exclude_ip_n;
-  UINT32 exclude_pair_n;
-
-  UINT32 ip[2];
+  char data[4];
 } FORT_CONF_ADDR_GROUP, *PFORT_CONF_ADDR_GROUP;
 
 typedef struct fort_traf {
@@ -152,7 +150,11 @@ typedef struct fort_conf_io {
 
 #define FORT_CONF_DATA_OFF		offsetof(FORT_CONF, data)
 #define FORT_CONF_IO_CONF_OFF		offsetof(FORT_CONF_IO, conf)
-#define FORT_CONF_ADDR_DATA_OFF		offsetof(FORT_CONF_ADDR_GROUP, ip)
+#define FORT_CONF_ADDR_LIST_OFF		offsetof(FORT_CONF_ADDR_LIST, ip)
+#define FORT_CONF_ADDR_GROUP_OFF	offsetof(FORT_CONF_ADDR_GROUP, data)
+
+#define FORT_CONF_ADDR_LIST_SIZE(ip_n, pair_n) \
+  (FORT_CONF_ADDR_LIST_OFF + FORT_CONF_IP_ARR_SIZE(ip_n) + FORT_CONF_IP_RANGE_SIZE(pair_n))
 
 typedef FORT_APP_FLAGS fort_conf_app_exe_find_func(
     const PFORT_CONF conf, const char *path, UINT32 path_len);

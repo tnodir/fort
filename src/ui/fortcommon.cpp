@@ -162,24 +162,16 @@ bool FortCommon::confIpInRange(const void *drvConf, quint32 ip,
     const PFORT_CONF_ADDR_GROUP addr_group = fort_conf_addr_group_ref(
       conf, addrGroupIndex);
 
-    const UINT32 ip_count = included ? addr_group->include_ip_n
-                                     : addr_group->exclude_ip_n;
+    const bool is_empty = included ? addr_group->include_is_empty
+                                   : addr_group->exclude_is_empty;
+    if (is_empty)
+        return false;
 
-    const UINT32 *iparr = included
-            ? fort_conf_addr_group_include_ip_ref(addr_group)
-            : fort_conf_addr_group_exclude_ip_ref(addr_group);
+    const PFORT_CONF_ADDR_LIST addr_list = included
+            ? fort_conf_addr_group_include_list_ref(addr_group)
+            : fort_conf_addr_group_exclude_list_ref(addr_group);
 
-    if (fort_conf_ip_inarr(ip, ip_count, iparr))
-        return true;
-
-    const UINT32 pair_count = included ? addr_group->include_pair_n
-                                       : addr_group->exclude_pair_n;
-
-    const UINT32 *iprange = included
-            ? fort_conf_addr_group_include_pair_ref(addr_group)
-            : fort_conf_addr_group_exclude_pair_ref(addr_group);
-
-    return fort_conf_ip_inrange(ip, pair_count, iprange);
+    return fort_conf_ip_inlist(ip, addr_list);
 }
 
 quint16 FortCommon::confAppFind(const void *drvConf,

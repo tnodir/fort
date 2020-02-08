@@ -79,13 +79,21 @@ bool TaskZoneDownloader::storeAddresses(const QVector<QStringRef> &list,
     FileUtil::removeFile(cacheFileTextPath());
     FileUtil::removeFile(cacheFileBinPath());
 
+    // Store text file
     if (storeText()) {
         const auto text = ip4Range.toText();
         FileUtil::writeFile(cacheFileTextPath(), text);
     }
 
+    // Store binary file
     QByteArray data;
-    //ConfUtil::write();
+
+    ConfUtil confUtil;
+    confUtil.writeZone(ip4Range, data);
+
+    data = qCompress(data);
+
+    binChecksum = QCryptographicHash::hash(data, QCryptographicHash::Sha256);
 
     return FileUtil::writeFileData(cacheFileBinPath(), data);
 }
