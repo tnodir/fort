@@ -89,8 +89,11 @@ bool TaskZoneDownloader::storeAddresses(const QVector<QStringRef> &list,
     QByteArray data;
 
     ConfUtil confUtil;
-    confUtil.writeZone(ip4Range, data);
+    const int bufSize = confUtil.writeZone(ip4Range, data);
+    if (bufSize == 0)
+        return false;
 
+    data.resize(bufSize);
     data = qCompress(data);
 
     binChecksum = QCryptographicHash::hash(data, QCryptographicHash::Sha256);

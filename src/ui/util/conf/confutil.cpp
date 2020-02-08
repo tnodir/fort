@@ -25,6 +25,11 @@
 
 namespace {
 
+void bufferReserve(QByteArray &buf, int size)
+{
+    buf.reserve(size + 1);  // + internal terminating zero
+}
+
 void writeConfFlags(const FirewallConf &conf, PFORT_CONF_FLAGS confFlags)
 {
     confFlags->prov_boot = conf.provBoot();
@@ -104,7 +109,7 @@ int ConfUtil::write(const FirewallConf &conf,
             + FORT_CONF_STR_DATA_SIZE(prefixAppsSize)
             + FORT_CONF_STR_DATA_SIZE(exeAppsSize);
 
-    buf.reserve(confIoSize);
+    bufferReserve(buf, confIoSize);
 
     writeData(buf.data(), conf,
               addressRanges, addressGroupOffsets,
@@ -118,7 +123,7 @@ int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
 {
     const int flagsSize = sizeof(FORT_CONF_FLAGS);
 
-    buf.reserve(flagsSize);
+    bufferReserve(buf, flagsSize);
 
     // Fill the buffer
     PFORT_CONF_FLAGS confFlags = (PFORT_CONF_FLAGS) buf.data();
@@ -140,7 +145,7 @@ int ConfUtil::writeAppEntry(int groupIndex, bool useGroupPerm,
                 exeAppsMap, exeAppsSize))
         return 0;
 
-    buf.reserve(int(exeAppsSize));
+    bufferReserve(buf, exeAppsSize);
 
     // Fill the buffer
     char *data = (char *) buf.data();
@@ -154,7 +159,7 @@ int ConfUtil::writeVersion(QByteArray &buf)
 {
     const int verSize = sizeof(FORT_CONF_VERSION);
 
-    buf.reserve(verSize);
+    bufferReserve(buf, verSize);
 
     // Fill the buffer
     PFORT_CONF_VERSION confVer = (PFORT_CONF_VERSION) buf.data();
@@ -169,7 +174,7 @@ int ConfUtil::writeZone(const Ip4Range &ip4Range, QByteArray &buf)
     const int addrSize = FORT_CONF_ADDR_LIST_SIZE(
                 ip4Range.ipSize(), ip4Range.pairSize());
 
-    buf.reserve(addrSize);
+    bufferReserve(buf, addrSize);
 
     // Fill the buffer
     char *data = (char *) buf.data();
