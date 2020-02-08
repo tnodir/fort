@@ -13,6 +13,6 @@ WideButton::WideButton(const QIcon &icon, const QString &text, QWidget *parent) 
 QSize WideButton::minimumSizeHint() const
 {
     auto size = QPushButton::minimumSizeHint();
-    size.setWidth(size.width() + 13);
+    size.setWidth(size.width() + 6);
     return size;
 }
