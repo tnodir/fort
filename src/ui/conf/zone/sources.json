@@ -9,8 +9,15 @@
     {
         "code": "file",
         "title": "Addresses from Local File",
-        "zoneType": "file",
+        "zoneType": "gen",
         "url": "",
+        "formData": ""
+    },
+    {
+        "code": "firehol_level1",
+        "title": "FireHOL Level-1 (attacks)",
+        "zoneType": "gen",
+        "url": "https://iplists.firehol.org/files/firehol_level1.netset",
         "formData": ""
     }
 ]

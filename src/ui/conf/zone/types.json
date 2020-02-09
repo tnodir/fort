@@ -8,9 +8,9 @@
         "emptyNetMask": 24
     },
     {
-        "code": "file",
-        "title": "File",
-        "description": "Local File",
+        "code": "gen",
+        "title": "Generic",
+        "description": "Generic list",
         "sort": true,
         "pattern": "^\\D*(\\S+)",
         "emptyNetMask": 32
