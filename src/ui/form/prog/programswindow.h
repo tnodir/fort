@@ -5,6 +5,7 @@
 
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QComboBox)
+QT_FORWARD_DECLARE_CLASS(QDateTimeEdit)
 QT_FORWARD_DECLARE_CLASS(QDialog)
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QLineEdit)
@@ -45,6 +46,7 @@ private:
     void setupUi();
     void setupAppEditForm();
     void setupComboAppGroups();
+    QLayout *setupCheckDateTimeEdit();
     QLayout *setupHeader();
     void setupLogOptions();
     void setupLogBlocked();
@@ -98,7 +100,10 @@ private:
     QCheckBox *m_cbUseGroupPerm = nullptr;
     QRadioButton *m_rbAllowApp = nullptr;
     QRadioButton *m_rbBlockApp = nullptr;
-    CheckSpinCombo *m_cscBlockApp = nullptr;
+    CheckSpinCombo *m_cscBlockAppIn = nullptr;
+    QCheckBox *m_cbBlockAppAt = nullptr;
+    QDateTimeEdit *m_dteBlockAppAt = nullptr;
+    QCheckBox *m_cbBlockAppNone = nullptr;
     QPushButton *m_btEditOk = nullptr;
     QPushButton *m_btEditCancel = nullptr;
     QDialog *m_formAppEdit = nullptr;

@@ -77,6 +77,9 @@ void ZonesWindow::onRetranslateUi()
     m_actEditZone->setText(tr("Edit"));
     m_actRemoveZone->setText(tr("Remove"));
 
+    m_formZoneEdit->unsetLocale();
+    m_formZoneEdit->setWindowTitle(tr("Edit Zone"));
+
     m_labelZoneName->setText(tr("Zone Name:"));
     m_labelSource->setText(tr("Source:"));
     m_cbEnabled->setText(tr("Enabled"));
@@ -86,8 +89,6 @@ void ZonesWindow::onRetranslateUi()
     m_labelFormData->setText(tr("Form Data:"));
     m_btEditOk->setText(tr("OK"));
     m_btEditCancel->setText(tr("Cancel"));
-
-    m_formZoneEdit->setWindowTitle(tr("Edit Zone"));
 
     zoneListModel()->refresh();
 

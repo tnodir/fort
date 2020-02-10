@@ -1,7 +1,9 @@
 #include "programswindow.h"
 
+#include <QButtonGroup>
 #include <QCheckBox>
 #include <QComboBox>
+#include <QDateTimeEdit>
 #include <QDialog>
 #include <QFormLayout>
 #include <QHeaderView>
@@ -93,6 +95,9 @@ void ProgramsWindow::onRetranslateUi()
     m_btAllowApp->setText(tr("Allow"));
     m_btBlockApp->setText(tr("Block"));
 
+    m_formAppEdit->unsetLocale();
+    m_formAppEdit->setWindowTitle(tr("Edit Program"));
+
     m_labelEditPath->setText(tr("Program Path:"));
     m_btSelectFile->setToolTip(tr("Select File"));
     m_labelEditName->setText(tr("Program Name:"));
@@ -100,12 +105,14 @@ void ProgramsWindow::onRetranslateUi()
     m_cbUseGroupPerm->setText(tr("Use Application Group's Enabled State"));
     m_rbAllowApp->setText(tr("Allow"));
     m_rbBlockApp->setText(tr("Block"));
-    m_cscBlockApp->checkBox()->setText(tr("Block In:"));
+    m_cscBlockAppIn->checkBox()->setText(tr("Block In:"));
     retranslateAppBlockInHours();
+    m_cbBlockAppAt->setText(tr("Block At:"));
+    m_dteBlockAppAt->unsetLocale();
+    m_cbBlockAppNone->setText(tr("Forever"));
+
     m_btEditOk->setText(tr("OK"));
     m_btEditCancel->setText(tr("Cancel"));
-
-    m_formAppEdit->setWindowTitle(tr("Edit Program"));
 
     m_btLogOptions->setText(tr("Options"));
     m_cbLogBlocked->setText(tr("Show New Programs"));
@@ -125,8 +132,8 @@ void ProgramsWindow::retranslateAppBlockInHours()
         tr("12 hours"), tr("Day"), tr("Week"), tr("Month")
     };
 
-    m_cscBlockApp->setNames(list);
-    m_cscBlockApp->spinBox()->setSuffix(tr(" hours"));
+    m_cscBlockAppIn->setNames(list);
+    m_cscBlockAppIn->spinBox()->setSuffix(tr(" hours"));
 }
 
 void ProgramsWindow::setupUi()
@@ -217,10 +224,23 @@ void ProgramsWindow::setupAppEditForm()
     allowLayout->addWidget(m_rbBlockApp, 1, Qt::AlignLeft);
 
     // Block after N hours
-    m_cscBlockApp = new CheckSpinCombo();
-    m_cscBlockApp->spinBox()->setRange(1, 24 * 30 * 12);  // ~Year
-    m_cscBlockApp->setValues(appBlockInHourValues);
-    m_cscBlockApp->setNamesByValues();
+    m_cscBlockAppIn = new CheckSpinCombo();
+    m_cscBlockAppIn->spinBox()->setRange(1, 24 * 30 * 12);  // ~Year
+    m_cscBlockAppIn->setValues(appBlockInHourValues);
+    m_cscBlockAppIn->setNamesByValues();
+
+    // Block at specified date & time
+    auto blockAtLayout = setupCheckDateTimeEdit();
+
+    // Allow Forever
+    m_cbBlockAppNone = new QCheckBox();
+
+    // Eclusive End Time CheckBoxes Group
+    auto group = new QButtonGroup(this);
+    group->setExclusive(true);
+    group->addButton(m_cscBlockAppIn->checkBox());
+    group->addButton(m_cbBlockAppAt);
+    group->addButton(m_cbBlockAppNone);
 
     // OK/Cancel
     auto buttonsLayout = new QHBoxLayout();
@@ -238,7 +258,9 @@ void ProgramsWindow::setupAppEditForm()
     layout->addLayout(formLayout);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(allowLayout);
-    layout->addWidget(m_cscBlockApp);
+    layout->addWidget(m_cscBlockAppIn);
+    layout->addLayout(blockAtLayout);
+    layout->addWidget(m_cbBlockAppNone);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(buttonsLayout);
 
@@ -258,7 +280,12 @@ void ProgramsWindow::setupAppEditForm()
         }
     });
 
-    connect(m_rbAllowApp, &QRadioButton::toggled, m_cscBlockApp, &CheckSpinCombo::setEnabled);
+    connect(m_rbAllowApp, &QRadioButton::toggled, [&](bool checked) {
+        m_cbBlockAppNone->setEnabled(checked);
+        m_cscBlockAppIn->setEnabled(checked);
+        m_cbBlockAppAt->setEnabled(checked);
+        m_dteBlockAppAt->setEnabled(checked);
+    });
 
     connect(m_btEditOk, &QAbstractButton::clicked, [&] {
         if (saveAppEditForm()) {
@@ -283,6 +310,21 @@ void ProgramsWindow::setupComboAppGroups()
     refreshComboAppGroups();
 
     connect(confManager(), &ConfManager::confSaved, this, refreshComboAppGroups);
+}
+
+QLayout *ProgramsWindow::setupCheckDateTimeEdit()
+{
+    m_cbBlockAppAt = new QCheckBox();
+
+    m_dteBlockAppAt = new QDateTimeEdit();
+    m_dteBlockAppAt->setCalendarPopup(true);
+
+    auto layout = new QHBoxLayout();
+    layout->setMargin(0);
+    layout->addWidget(m_cbBlockAppAt, 1);
+    layout->addWidget(m_dteBlockAppAt);
+
+    return layout;
 }
 
 QLayout *ProgramsWindow::setupHeader()
@@ -526,8 +568,12 @@ void ProgramsWindow::updateAppEditForm(bool editCurrentApp)
     m_cbUseGroupPerm->setChecked(appRow.useGroupPerm);
     m_rbAllowApp->setChecked(!appRow.blocked);
     m_rbBlockApp->setChecked(appRow.blocked);
-    m_cscBlockApp->setEnabled(!appRow.blocked);
-    m_cscBlockApp->checkBox()->setChecked(false);
+    m_cscBlockAppIn->checkBox()->setChecked(false);
+    m_cscBlockAppIn->spinBox()->setValue(1);
+    m_cbBlockAppAt->setChecked(!appRow.endTime.isNull());
+    m_dteBlockAppAt->setDateTime(appRow.endTime);
+    m_dteBlockAppAt->setMinimumDateTime(QDateTime::currentDateTime());
+    m_cbBlockAppNone->setChecked(appRow.endTime.isNull());
 
     m_formAppEdit->show();
 }
@@ -544,11 +590,15 @@ bool ProgramsWindow::saveAppEditForm()
     const bool blocked = m_rbBlockApp->isChecked();
 
     QDateTime endTime;
-    if (!blocked && m_cscBlockApp->checkBox()->isChecked()) {
-        const int hours = m_cscBlockApp->spinBox()->value();
+    if (!blocked) {
+        if (m_cscBlockAppIn->checkBox()->isChecked()) {
+            const int hours = m_cscBlockAppIn->spinBox()->value();
 
-        endTime = QDateTime::currentDateTime()
-                .addSecs(hours * 60 * 60);
+            endTime = QDateTime::currentDateTime()
+                    .addSecs(hours * 60 * 60);
+        } else if (m_cbBlockAppAt->isChecked()) {
+            endTime = m_dteBlockAppAt->dateTime();
+        }
     }
 
     // Add new app
