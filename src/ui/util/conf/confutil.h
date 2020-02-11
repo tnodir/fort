@@ -32,6 +32,8 @@ class ConfUtil : public QObject
 public:
     explicit ConfUtil(QObject *parent = nullptr);
 
+    static int zoneMaxCount();
+
     QString errorMessage() const { return m_errorMessage; }
 
 signals:

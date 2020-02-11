@@ -4,6 +4,7 @@
 #define FORT_CONF_IP_MAX		(10 * 1024 * 1024)
 #define FORT_CONF_IP_ARR_SIZE(n)	((n) * sizeof(UINT32))
 #define FORT_CONF_IP_RANGE_SIZE(n)	(FORT_CONF_IP_ARR_SIZE(n) * 2)
+#define FORT_CONF_ZONE_MAX		32
 #define FORT_CONF_GROUP_MAX		16
 #define FORT_CONF_APPS_LEN_MAX		(64 * 1024 * 1024)
 #define FORT_CONF_APP_PATH_MAX		(2 * 1024)

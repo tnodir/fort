@@ -39,7 +39,7 @@ private:
     bool m_success = false;
     int m_zoneIndex = 0;
 
-    QSet<qint64> m_zoneIdSet;
+    QSet<int> m_zoneIdSet;
 };
 
 #endif // TASKINFOZONEDOWNLOADER_H

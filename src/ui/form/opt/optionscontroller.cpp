@@ -88,6 +88,11 @@ TranslationManager *OptionsController::translationManager() const
     return TranslationManager::instance();
 }
 
+ZoneListModel *OptionsController::zoneListModel() const
+{
+    return fortManager()->zoneListModel();
+}
+
 void OptionsController::closeWindow()
 {
     fortManager()->closeOptionsWindow();

@@ -13,6 +13,7 @@
 #include "../../../conf/firewallconf.h"
 #include "../../../fortmanager.h"
 #include "../../../fortsettings.h"
+#include "../../../model/zonelistmodel.h"
 #include "../../../util/net/netutil.h"
 #include "../../../util/textareautil.h"
 #include "../../controls/controlutil.h"
@@ -61,9 +62,11 @@ void AddressesPage::onRetranslateUi()
 
     m_includeAddresses->labelTitle()->setText(tr("Include"));
     m_includeAddresses->cbUseAll()->setText(tr("Include All"));
+    m_includeAddresses->retranslateUi();
 
     m_excludeAddresses->labelTitle()->setText(tr("Exclude"));
     m_excludeAddresses->cbUseAll()->setText(tr("Exclude All"));
+    m_excludeAddresses->retranslateUi();
 
     m_splitter->handle()->btMoveAllFrom1To2()->setToolTip(tr("Move All Lines to 'Exclude'"));
     m_splitter->handle()->btMoveAllFrom2To1()->setToolTip(tr("Move All Lines to 'Include'"));
@@ -207,9 +210,11 @@ void AddressesPage::setupSplitterButtons()
 void AddressesPage::updateGroup()
 {
     m_includeAddresses->cbUseAll()->setChecked(addressGroup()->includeAll());
+    m_includeAddresses->labelZones()->setText(zonesText(true));
     m_includeAddresses->editIpText()->setText(addressGroup()->includeText());
 
     m_excludeAddresses->cbUseAll()->setChecked(addressGroup()->excludeAll());
+    m_excludeAddresses->labelZones()->setText(zonesText(false));
     m_excludeAddresses->editIpText()->setText(addressGroup()->excludeText());
 }
 
@@ -235,6 +240,21 @@ const QList<AddressGroup *> &AddressesPage::addressGroups() const
 AddressGroup *AddressesPage::addressGroupByIndex(int index) const
 {
     return addressGroups().at(index);
+}
+
+QString AddressesPage::zonesText(bool include) const
+{
+    const auto zoneIds = zoneListModel()->addressGroupZones(
+                addressGroup()->id(), include);
+    if (zoneIds.isEmpty())
+        return QString();
+
+    QStringList list;
+    for (const int zoneId : zoneIds) {
+        const auto zoneName = zoneListModel()->zoneNameById(zoneId);
+        list.append(zoneName);
+    }
+    return list.join(", ");
 }
 
 QString AddressesPage::localNetworks()

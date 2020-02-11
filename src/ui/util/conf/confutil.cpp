@@ -55,6 +55,11 @@ ConfUtil::ConfUtil(QObject *parent) :
 {
 }
 
+int ConfUtil::zoneMaxCount()
+{
+    return FORT_CONF_ZONE_MAX;
+}
+
 void ConfUtil::setErrorMessage(const QString &errorMessage)
 {
     if (m_errorMessage != errorMessage) {

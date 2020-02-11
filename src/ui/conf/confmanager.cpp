@@ -178,13 +178,21 @@ const char * const sqlUpdateAppResetGroup =
         ;
 
 const char * const sqlInsertZone =
-        "INSERT INTO zone(name, enabled, store_text, custom_url,"
+        "INSERT INTO zone(zone_id, name, enabled, store_text, custom_url,"
         "    source_code, url, form_data)"
-        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7);"
+        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8);"
+        ;
+
+const char * const sqlSelectZoneIds =
+        "SELECT zone_id FROM zone ORDER BY zone_id;"
         ;
 
 const char * const sqlDeleteZone =
         "DELETE FROM zone WHERE zone_id = ?1;"
+        ;
+
+const char * const sqlDeleteAddressGroupZone =
+        "DELETE FROM address_group_zone WHERE zone_id = ?1;"
         ;
 
 const char * const sqlUpdateZone =
@@ -333,6 +341,22 @@ void ConfManager::showErrorMessage(const QString &errorMessage)
     fortManager()->showErrorBox(errorMessage, tr("Configuration Error"));
 }
 
+bool ConfManager::checkResult(bool ok, bool commit)
+{
+    const auto errorMessage = ok ? QString()
+                                 : m_sqliteDb->errorMessage();
+
+    if (commit) {
+        m_sqliteDb->endTransaction(ok);
+    }
+
+    if (!ok) {
+        showErrorMessage(errorMessage);
+    }
+
+    return ok;
+}
+
 bool ConfManager::initialize()
 {
     if (!m_sqliteDb->open()) {
@@ -454,13 +478,7 @@ bool ConfManager::saveTasks(const QList<TaskInfo *> &taskInfos)
         }
     }
 
-    if (!ok) {
-        showErrorMessage(m_sqliteDb->errorMessage());
-    }
-
-    m_sqliteDb->endTransaction(ok);
-
-    return ok;
+    return checkResult(ok, true);
 }
 
 bool ConfManager::addApp(const QString &appPath, const QString &appName,
@@ -495,11 +513,7 @@ bool ConfManager::addApp(const QString &appPath, const QString &appName,
     }
 
 end:
-    if (!ok) {
-        showErrorMessage(m_sqliteDb->errorMessage());
-    }
-
-    m_sqliteDb->endTransaction(ok);
+    checkResult(ok, true);
 
     if (ok && !endTime.isNull()) {
         m_appEndTimer.start();
@@ -522,13 +536,7 @@ bool ConfManager::deleteApp(qint64 appId)
     m_sqliteDb->executeEx(sqlDeleteAppAlert, vars, 0, &ok);
 
 end:
-    if (!ok) {
-        showErrorMessage(m_sqliteDb->errorMessage());
-    }
-
-    m_sqliteDb->endTransaction(ok);
-
-    return ok;
+    return checkResult(ok, true);
 }
 
 bool ConfManager::updateApp(qint64 appId, const QString &appName, const QDateTime &endTime,
@@ -553,11 +561,7 @@ bool ConfManager::updateApp(qint64 appId, const QString &appName, const QDateTim
     m_sqliteDb->executeEx(sqlDeleteAppAlert, {appId}, 0, &ok);
 
 end:
-    if (!ok) {
-        showErrorMessage(m_sqliteDb->errorMessage());
-    }
-
-    m_sqliteDb->endTransaction(ok);
+    checkResult(ok, true);
 
     if (ok && !endTime.isNull()) {
         m_appEndTimer.start();
@@ -576,11 +580,8 @@ bool ConfManager::updateAppName(qint64 appId, const QString &appName)
                ;
 
     m_sqliteDb->executeEx(sqlUpdateAppName, vars, 0, &ok);
-    if (!ok) {
-        showErrorMessage(m_sqliteDb->errorMessage());
-    }
 
-    return ok;
+    return checkResult(ok);
 }
 
 bool ConfManager::walkApps(std::function<walkAppsCallback> func)
@@ -648,11 +649,15 @@ void ConfManager::checkAppEndTimes()
 
 bool ConfManager::addZone(const QString &zoneName, const QString &sourceCode,
                           const QString &url, const QString &formData,
-                          bool enabled, bool storeText, bool customUrl)
+                          bool enabled, bool storeText, bool customUrl,
+                          int &zoneId)
 {
     bool ok = false;
 
+    zoneId = getFreeZoneId();
+
     const auto vars = QVariantList()
+            << zoneId
             << zoneName
             << enabled
             << storeText
@@ -663,28 +668,45 @@ bool ConfManager::addZone(const QString &zoneName, const QString &sourceCode,
                ;
 
     m_sqliteDb->executeEx(sqlInsertZone, vars, 0, &ok);
-    if (!ok) {
-        showErrorMessage(m_sqliteDb->errorMessage());
-    }
 
-    return ok;
+    return checkResult(ok);
 }
 
-bool ConfManager::deleteZone(qint64 zoneId)
+int ConfManager::getFreeZoneId()
+{
+    int zoneId = 1;
+
+    SqliteStmt stmt;
+    if (stmt.prepare(m_sqliteDb->db(), sqlSelectZoneIds)) {
+        while (stmt.step() == SqliteStmt::StepRow) {
+            const int id = stmt.columnInt(0);
+            if (id > zoneId) break;
+
+            zoneId = id + 1;
+        }
+    }
+
+    return zoneId;
+}
+
+bool ConfManager::deleteZone(int zoneId)
 {
     bool ok = false;
+
+    m_sqliteDb->beginTransaction();
 
     const auto vars = QVariantList() << zoneId;
 
     m_sqliteDb->executeEx(sqlDeleteZone, vars, 0, &ok);
-    if (!ok) {
-        showErrorMessage(m_sqliteDb->errorMessage());
-    }
+    if (!ok) goto end;
 
-    return ok;
+    m_sqliteDb->executeEx(sqlDeleteAddressGroupZone, vars, 0, &ok);
+
+end:
+    return checkResult(ok, true);
 }
 
-bool ConfManager::updateZone(qint64 zoneId, const QString &zoneName,
+bool ConfManager::updateZone(int zoneId, const QString &zoneName,
                              const QString &sourceCode, const QString &url,
                              const QString &formData, bool enabled,
                              bool storeText, bool customUrl)
@@ -703,14 +725,11 @@ bool ConfManager::updateZone(qint64 zoneId, const QString &zoneName,
                ;
 
     m_sqliteDb->executeEx(sqlUpdateZone, vars, 0, &ok);
-    if (!ok) {
-        showErrorMessage(m_sqliteDb->errorMessage());
-    }
 
-    return ok;
+    return checkResult(ok);
 }
 
-bool ConfManager::updateZoneName(qint64 zoneId, const QString &zoneName)
+bool ConfManager::updateZoneName(int zoneId, const QString &zoneName)
 {
     bool ok = false;
 
@@ -720,14 +739,11 @@ bool ConfManager::updateZoneName(qint64 zoneId, const QString &zoneName)
                ;
 
     m_sqliteDb->executeEx(sqlUpdateZoneName, vars, 0, &ok);
-    if (!ok) {
-        showErrorMessage(m_sqliteDb->errorMessage());
-    }
 
-    return ok;
+    return checkResult(ok);
 }
 
-bool ConfManager::updateZoneEnabled(qint64 zoneId, bool enabled)
+bool ConfManager::updateZoneEnabled(int zoneId, bool enabled)
 {
     bool ok = false;
 
@@ -737,14 +753,11 @@ bool ConfManager::updateZoneEnabled(qint64 zoneId, bool enabled)
                ;
 
     m_sqliteDb->executeEx(sqlUpdateZoneEnabled, vars, 0, &ok);
-    if (!ok) {
-        showErrorMessage(m_sqliteDb->errorMessage());
-    }
 
-    return ok;
+    return checkResult(ok);
 }
 
-bool ConfManager::updateZoneResult(qint64 zoneId, const QString &textChecksum,
+bool ConfManager::updateZoneResult(int zoneId, const QString &textChecksum,
                                    const QString &binChecksum,
                                    const QDateTime &sourceModTime,
                                    const QDateTime &lastRun,
@@ -762,11 +775,8 @@ bool ConfManager::updateZoneResult(qint64 zoneId, const QString &textChecksum,
                ;
 
     m_sqliteDb->executeEx(sqlUpdateZoneResult, vars, 0, &ok);
-    if (!ok) {
-        showErrorMessage(m_sqliteDb->errorMessage());
-    }
 
-    return ok;
+    return checkResult(ok);
 }
 
 bool ConfManager::validateDriver()
@@ -939,13 +949,7 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
     }
 
  end:
-    if (!ok) {
-        showErrorMessage(m_sqliteDb->errorMessage());
-    }
-
-    m_sqliteDb->endTransaction(ok);
-
-    return ok;
+    return checkResult(ok, true);
 }
 
 bool ConfManager::loadTask(TaskInfo *taskInfo)

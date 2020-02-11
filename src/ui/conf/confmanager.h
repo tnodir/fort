@@ -67,15 +67,17 @@ public:
 
     bool addZone(const QString &zoneName, const QString &sourceCode,
                  const QString &url, const QString &formData,
-                 bool enabled, bool storeText, bool customUrl);
-    bool deleteZone(qint64 zoneId);
-    bool updateZone(qint64 zoneId, const QString &zoneName,
+                 bool enabled, bool storeText, bool customUrl,
+                 int &zoneId);
+    int getFreeZoneId();
+    bool deleteZone(int zoneId);
+    bool updateZone(int zoneId, const QString &zoneName,
                     const QString &sourceCode, const QString &url,
                     const QString &formData, bool enabled,
                     bool storeText, bool customUrl);
-    bool updateZoneName(qint64 zoneId, const QString &zoneName);
-    bool updateZoneEnabled(qint64 zoneId, bool enabled);
-    bool updateZoneResult(qint64 zoneId, const QString &textChecksum,
+    bool updateZoneName(int zoneId, const QString &zoneName);
+    bool updateZoneEnabled(int zoneId, bool enabled);
+    bool updateZoneResult(int zoneId, const QString &textChecksum,
                           const QString &binChecksum,
                           const QDateTime &sourceModTime,
                           const QDateTime &lastRun,
@@ -95,6 +97,7 @@ signals:
 
 private:
     void showErrorMessage(const QString &errorMessage);
+    bool checkResult(bool ok, bool commit = false);
 
     void setupDefault(FirewallConf &conf) const;
 

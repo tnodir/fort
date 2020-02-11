@@ -26,6 +26,7 @@ CREATE TABLE address_group(
 CREATE TABLE address_group_zone(
   addr_group_id INTEGER NOT NULL,
   zone_id INTEGER NOT NULL,
+  order_index INTEGER NOT NULL,
   include BOOLEAN NOT NULL
 );
 

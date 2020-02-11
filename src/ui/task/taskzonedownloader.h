@@ -21,8 +21,8 @@ public:
     int emptyNetMask() const { return m_emptyNetMask; }
     void setEmptyNetMask(int v) { m_emptyNetMask = v; }
 
-    qint64 zoneId() const { return m_zoneId; }
-    void setZoneId(qint64 v) { m_zoneId = v; }
+    int zoneId() const { return m_zoneId; }
+    void setZoneId(int v) { m_zoneId = v; }
 
     QString url() const { return m_url; }
     void setUrl(const QString &v) { m_url = v; }
@@ -72,7 +72,7 @@ private:
 
     int m_emptyNetMask = 32;
 
-    qint64 m_zoneId = 0;
+    int m_zoneId = 0;
 
     QString m_url;
     QString m_formData;

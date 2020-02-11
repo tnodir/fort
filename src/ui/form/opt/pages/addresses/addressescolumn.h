@@ -5,6 +5,7 @@
 
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QLabel)
+QT_FORWARD_DECLARE_CLASS(QPushButton)
 
 QT_FORWARD_DECLARE_CLASS(PlainTextEdit)
 
@@ -17,14 +18,22 @@ public:
 
     QLabel *labelTitle() const { return m_labelTitle; }
     QCheckBox *cbUseAll() const { return m_cbUseAll; }
+    QPushButton *btSelectZones() const { return m_btSelectZones; }
+    QLabel *labelZones() const { return m_labelZones; }
     PlainTextEdit *editIpText() const { return m_editIpText; }
+
+public slots:
+    void retranslateUi();
 
 private:
     void setupUi();
+    QLayout *setupZonesRow();
 
 private:
     QLabel *m_labelTitle = nullptr;
     QCheckBox *m_cbUseAll = nullptr;
+    QPushButton *m_btSelectZones = nullptr;
+    QLabel *m_labelZones = nullptr;
     PlainTextEdit *m_editIpText = nullptr;
 };
 

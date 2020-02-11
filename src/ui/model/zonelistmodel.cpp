@@ -6,6 +6,7 @@
 #include <sqlite/sqlitestmt.h>
 
 #include "../conf/confmanager.h"
+#include "../util/conf/confutil.h"
 #include "../util/fileutil.h"
 #include "../util/json/jsonutil.h"
 #include "zonesourcewrapper.h"
@@ -125,10 +126,11 @@ const ZoneRow &ZoneListModel::zoneRowAt(int row) const
 
 bool ZoneListModel::addZone(const QString &zoneName, const QString &sourceCode,
                             const QString &url, const QString &formData,
-                            bool enabled, bool storeText, bool customUrl)
+                            bool enabled, bool storeText, bool customUrl,
+                            int &zoneId)
 {
     if (confManager()->addZone(zoneName, sourceCode, url, formData,
-                               enabled, storeText, customUrl)) {
+                               enabled, storeText, customUrl, zoneId)) {
         reset();
         return true;
     }
@@ -136,7 +138,7 @@ bool ZoneListModel::addZone(const QString &zoneName, const QString &sourceCode,
     return false;
 }
 
-bool ZoneListModel::updateZone(qint64 zoneId, const QString &zoneName,
+bool ZoneListModel::updateZone(int zoneId, const QString &zoneName,
                                const QString &sourceCode, const QString &url,
                                const QString &formData, bool enabled, bool storeText,
                                bool customUrl, bool updateDriver)
@@ -150,7 +152,7 @@ bool ZoneListModel::updateZone(qint64 zoneId, const QString &zoneName,
     return false;
 }
 
-bool ZoneListModel::updateZoneName(qint64 zoneId, const QString &zoneName)
+bool ZoneListModel::updateZoneName(int zoneId, const QString &zoneName)
 {
     if (confManager()->updateZoneName(zoneId, zoneName)) {
         refresh();
@@ -160,7 +162,7 @@ bool ZoneListModel::updateZoneName(qint64 zoneId, const QString &zoneName)
     return false;
 }
 
-bool ZoneListModel::updateZoneEnabled(qint64 zoneId, bool enabled)
+bool ZoneListModel::updateZoneEnabled(int zoneId, bool enabled)
 {
     if (confManager()->updateZoneEnabled(zoneId, enabled)) {
         refresh();
@@ -170,7 +172,7 @@ bool ZoneListModel::updateZoneEnabled(qint64 zoneId, bool enabled)
     return false;
 }
 
-bool ZoneListModel::updateZoneResult(qint64 zoneId, const QString &textChecksum,
+bool ZoneListModel::updateZoneResult(int zoneId, const QString &textChecksum,
                                      const QString &binChecksum,
                                      const QDateTime &sourceModTime,
                                      const QDateTime &lastRun,
@@ -185,7 +187,7 @@ bool ZoneListModel::updateZoneResult(qint64 zoneId, const QString &textChecksum,
     return false;
 }
 
-void ZoneListModel::deleteZone(qint64 zoneId, int row)
+void ZoneListModel::deleteZone(int zoneId, int row)
 {
     beginRemoveRows(QModelIndex(), row, row);
 
@@ -195,6 +197,41 @@ void ZoneListModel::deleteZone(qint64 zoneId, int row)
     }
 
     endRemoveRows();
+}
+
+QVector<int> ZoneListModel::addressGroupZones(qint64 addrGroupId, bool include)
+{
+    static const char * const sql =
+            "SELECT zone_id"
+            "  FROM address_group_zone"
+            "  WHERE addr_group_id = ?1 AND include = ?2"
+            "  ORDER BY order_index;"
+            ;
+
+    QVector<int> list;
+    SqliteStmt stmt;
+    if (sqliteDb()->prepare(stmt, sql, {addrGroupId, include})) {
+        while (stmt.step() == SqliteStmt::StepRow) {
+            const int id = stmt.columnInt(0);
+            list.append(id);
+        }
+    }
+    return list;
+}
+
+QString ZoneListModel::zoneNameById(int zoneId)
+{
+    static const char * const sql =
+            "SELECT name FROM zone"
+            "  WHERE zone_id = ?1;"
+            ;
+
+    SqliteStmt stmt;
+    if (sqliteDb()->prepare(stmt, sql, {zoneId})
+            && stmt.step() == SqliteStmt::StepRow) {
+        return stmt.columnText(0);
+    }
+    return QString();
 }
 
 QVariant ZoneListModel::zoneTypeByCode(const QString &typeCode) const
@@ -214,7 +251,7 @@ bool ZoneListModel::updateTableRow(int row) const
           && stmt.step() == SqliteStmt::StepRow))
         return false;
 
-    m_zoneRow.zoneId = stmt.columnInt64(0);
+    m_zoneRow.zoneId = stmt.columnInt(0);
     m_zoneRow.enabled = stmt.columnBool(1);
     m_zoneRow.storeText = stmt.columnBool(2);
     m_zoneRow.customUrl = stmt.columnBool(3);

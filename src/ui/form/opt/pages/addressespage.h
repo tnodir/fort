@@ -10,6 +10,7 @@ QT_FORWARD_DECLARE_CLASS(TextArea2Splitter)
 class AddressesPage : public BasePage
 {
     Q_OBJECT
+
 public:
     explicit AddressesPage(OptionsController *ctrl = nullptr,
                            QWidget *parent = nullptr);
@@ -42,6 +43,8 @@ private:
 
     const QList<AddressGroup *> &addressGroups() const;
     AddressGroup *addressGroupByIndex(int index) const;
+
+    QString zonesText(bool include) const;
 
     static QString localNetworks();
 

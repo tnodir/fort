@@ -3,6 +3,7 @@
 #include <QCheckBox>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QPushButton>
 #include <QVBoxLayout>
 
 #include "../../../controls/controlutil.h"
@@ -12,6 +13,12 @@ AddressesColumn::AddressesColumn(QWidget *parent) :
     QWidget(parent)
 {
     setupUi();
+}
+
+void AddressesColumn::retranslateUi()
+{
+    m_btSelectZones->setText(tr("Zones:"));
+    m_btSelectZones->setToolTip(tr("Select Zones"));
 }
 
 void AddressesColumn::setupUi()
@@ -32,10 +39,35 @@ void AddressesColumn::setupUi()
     headerLayout->addStretch();
     headerLayout->addWidget(m_cbUseAll);
 
+    // Zones Row
+    auto zonesLayout = setupZonesRow();
+    layout->addLayout(zonesLayout);
+
     // Text Area
     m_editIpText = new PlainTextEdit();
     m_editIpText->setTabChangesFocus(true);
     layout->addWidget(m_editIpText);
 
     this->setLayout(layout);
+}
+
+QLayout *AddressesColumn::setupZonesRow()
+{
+    auto layout = new QHBoxLayout();
+    layout->setMargin(0);
+    layout->setSpacing(0);
+
+    m_btSelectZones = ControlUtil::createLinkButton(":/images/map_magnify.png");
+    layout->addWidget(m_btSelectZones);
+
+    m_labelZones = ControlUtil::createLabel();
+    m_labelZones->setWordWrap(true);
+
+    auto font = ControlUtil::fontDemiBold();
+    font.setItalic(true);
+    m_labelZones->setFont(font);
+
+    layout->addWidget(m_labelZones, 1);
+
+    return layout;
 }

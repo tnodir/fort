@@ -42,6 +42,7 @@ private:
     void setupTableZones();
     void setupTableZonesHeader();
     void setupTableZonesChanged();
+    void setupZoneListModelChanged();
 
     void updateZoneEditForm(bool editCurrentZone);
     bool saveZoneEditForm();

@@ -117,7 +117,9 @@ bool TaskZoneDownloader::storeAddresses(const QVector<QStringRef> &list,
     data.resize(bufSize);
     data = qCompress(data);
 
-    binChecksum = QCryptographicHash::hash(data, QCryptographicHash::Sha256);
+    const auto binChecksumData = QCryptographicHash::hash(
+                data, QCryptographicHash::Sha256);
+    binChecksum = QString::fromLatin1(binChecksumData.toHex());
 
     return FileUtil::writeFileData(cacheFileBinPath(), data);
 }

@@ -20,6 +20,7 @@ QT_FORWARD_DECLARE_CLASS(FortSettings)
 QT_FORWARD_DECLARE_CLASS(OptionsController)
 QT_FORWARD_DECLARE_CLASS(TaskManager)
 QT_FORWARD_DECLARE_CLASS(TranslationManager)
+QT_FORWARD_DECLARE_CLASS(ZoneListModel)
 
 class BasePage : public QFrame
 {
@@ -37,6 +38,7 @@ protected:
     DriverManager *driverManager() const;
     TranslationManager *translationManager() const;
     TaskManager *taskManager() const;
+    ZoneListModel *zoneListModel() const;
 
 protected slots:
     virtual void onEditResetted() {}

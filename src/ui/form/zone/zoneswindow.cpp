@@ -115,6 +115,9 @@ void ZonesWindow::setupUi()
     // Actions on zones table's current changed
     setupTableZonesChanged();
 
+    // Actions on zone list model's changed
+    setupZoneListModelChanged();
+
     this->setLayout(layout);
 
     // Font
@@ -307,6 +310,18 @@ void ZonesWindow::setupTableZonesChanged()
     connect(m_zoneListView, &TableView::currentIndexChanged, this, refreshTableZonesChanged);
 }
 
+void ZonesWindow::setupZoneListModelChanged()
+{
+    const auto refreshAddZone = [&] {
+        m_actAddZone->setEnabled(zoneListModel()->rowCount() < 32);
+    };
+
+    refreshAddZone();
+
+    connect(zoneListModel(), &ZoneListModel::modelReset, this, refreshAddZone);
+    connect(zoneListModel(), &ZoneListModel::rowsRemoved, this, refreshAddZone);
+}
+
 void ZonesWindow::updateZoneEditForm(bool editCurrentZone)
 {
     ZoneRow zoneRow;
@@ -351,6 +366,12 @@ bool ZonesWindow::saveZoneEditForm()
     const auto url = m_editUrl->text();
     const auto formData = m_editFormData->text();
 
+    // Check zone name
+    if (zoneName.isEmpty()) {
+        m_editZoneName->setFocus();
+        return false;
+    }
+
     // Check custom url
     if (customUrl && url.isEmpty()) {
         m_editUrl->setText(zoneSource.url());
@@ -362,8 +383,13 @@ bool ZonesWindow::saveZoneEditForm()
 
     // Add new zone
     if (m_formZoneIsNew) {
-        return zoneListModel()->addZone(zoneName, sourceCode, url, formData,
-                                        enabled, storeText, customUrl);
+        int zoneId;
+        if (zoneListModel()->addZone(zoneName, sourceCode, url, formData,
+                                     enabled, storeText, customUrl, zoneId)) {
+            m_zoneListView->selectRow(zoneId - 1);
+            return true;
+        }
+        return false;
     }
 
     // Edit selected zone

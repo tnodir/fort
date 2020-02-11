@@ -115,7 +115,7 @@ void TaskInfoZoneDownloader::processSubResult(bool success)
 void TaskInfoZoneDownloader::removeOrphanCacheFiles()
 {
     for (const auto fi : QDir(cachePath()).entryInfoList(QDir::Files)) {
-        const auto zoneId = fi.baseName().toLongLong();
+        const auto zoneId = fi.baseName().toInt();
         if (zoneId != 0 && !m_zoneIdSet.contains(zoneId)) {
             FileUtil::removeFile(fi.filePath());
         }

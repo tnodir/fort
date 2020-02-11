@@ -14,7 +14,7 @@ struct ZoneRow : TableRow {
     bool storeText = false;
     bool customUrl = false;
 
-    qint64 zoneId = 0;
+    int zoneId = 0;
 
     QString zoneName;
     QString sourceCode;
@@ -56,19 +56,24 @@ public:
 
     bool addZone(const QString &zoneName, const QString &sourceCode,
                  const QString &url, const QString &formData,
-                 bool enabled, bool storeText, bool customUrl);
-    bool updateZone(qint64 zoneId, const QString &zoneName,
+                 bool enabled, bool storeText, bool customUrl,
+                 int &zoneId);
+    bool updateZone(int zoneId, const QString &zoneName,
                     const QString &sourceCode, const QString &url,
                     const QString &formData, bool enabled, bool storeText,
                     bool customUrl, bool updateDriver = true);
-    bool updateZoneName(qint64 zoneId, const QString &zoneName);
-    bool updateZoneEnabled(qint64 zoneId, bool enabled);
-    bool updateZoneResult(qint64 zoneId, const QString &textChecksum,
+    bool updateZoneName(int zoneId, const QString &zoneName);
+    bool updateZoneEnabled(int zoneId, bool enabled);
+    bool updateZoneResult(int zoneId, const QString &textChecksum,
                           const QString &binChecksum,
                           const QDateTime &sourceModTime,
                           const QDateTime &lastRun,
                           const QDateTime &lastSuccess);
-    void deleteZone(qint64 zoneId, int row);
+    void deleteZone(int zoneId, int row);
+
+    QVector<int> addressGroupZones(qint64 addrGroupId, bool include);
+
+    QString zoneNameById(int zoneId);
 
     QVariant zoneTypeByCode(const QString &typeCode) const;
 

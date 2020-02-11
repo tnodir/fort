@@ -44,6 +44,11 @@ TaskManager *BasePage::taskManager() const
     return ctrl()->taskManager();
 }
 
+ZoneListModel *BasePage::zoneListModel() const
+{
+    return ctrl()->zoneListModel();
+}
+
 void BasePage::setupController()
 {
     Q_ASSERT(ctrl());
