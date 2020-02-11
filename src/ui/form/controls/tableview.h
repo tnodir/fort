@@ -18,6 +18,9 @@ public:
 signals:
     void currentIndexChanged(const QModelIndex &index);
 
+public slots:
+    void selectCell(int row, int column = 0);
+
 protected:
     void currentChanged(const QModelIndex &current,
                         const QModelIndex &previous) override;

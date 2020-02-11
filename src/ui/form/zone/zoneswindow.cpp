@@ -17,6 +17,7 @@
 #include "../../model/zonelistmodel.h"
 #include "../../model/zonesourcewrapper.h"
 #include "../../util/guiutil.h"
+#include "../../util/conf/confutil.h"
 #include "../controls/controlutil.h"
 #include "../controls/tableview.h"
 #include "../controls/widebutton.h"
@@ -313,7 +314,7 @@ void ZonesWindow::setupTableZonesChanged()
 void ZonesWindow::setupZoneListModelChanged()
 {
     const auto refreshAddZone = [&] {
-        m_actAddZone->setEnabled(zoneListModel()->rowCount() < 32);
+        m_actAddZone->setEnabled(zoneListModel()->rowCount() < ConfUtil::zoneMaxCount());
     };
 
     refreshAddZone();
@@ -386,7 +387,7 @@ bool ZonesWindow::saveZoneEditForm()
         int zoneId;
         if (zoneListModel()->addZone(zoneName, sourceCode, url, formData,
                                      enabled, storeText, customUrl, zoneId)) {
-            m_zoneListView->selectRow(zoneId - 1);
+            m_zoneListView->selectCell(zoneId - 1);
             return true;
         }
         return false;

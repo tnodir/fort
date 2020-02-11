@@ -21,6 +21,13 @@ QVector<int> TableView::selectedRows() const
     return rows.toVector();
 }
 
+void TableView::selectCell(int row, int column)
+{
+    const auto index = model()->index(row, column);
+    this->setCurrentIndex(index);
+    this->scrollTo(index);
+}
+
 void TableView::currentChanged(const QModelIndex &current,
                                const QModelIndex &previous)
 {
