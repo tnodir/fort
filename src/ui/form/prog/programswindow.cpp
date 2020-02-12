@@ -526,6 +526,8 @@ void ProgramsWindow::setupTableAppsChanged()
     const auto refreshTableAppsChanged = [&] {
         const int appIndex = appListCurrentIndex();
         const bool appSelected = (appIndex >= 0);
+        m_actAllowApp->setEnabled(appSelected);
+        m_actBlockApp->setEnabled(appSelected);
         m_actEditApp->setEnabled(appSelected);
         m_actRemoveApp->setEnabled(appSelected);
         m_btAllowApp->setEnabled(appSelected);

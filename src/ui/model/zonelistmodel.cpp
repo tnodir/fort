@@ -64,7 +64,7 @@ QVariant ZoneListModel::data(const QModelIndex &index, int role) const
         const auto zoneRow = zoneRowAt(row);
 
         switch (column) {
-        case 0: return QString("(%1) %2")
+        case 0: return QString("%1) %2")
                     .arg(QString::number(m_zoneRow.zoneId),
                          zoneRow.zoneName);
         case 1: {

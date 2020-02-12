@@ -1,18 +1,18 @@
 [
     {
-        "code": "bgp",
-        "title": "BGP",
-        "description": "BGP table",
-        "sort": true,
-        "pattern": "^\\*\\D{2,5}(\\S+)",
-        "emptyNetMask": 24
-    },
-    {
         "code": "gen",
         "title": "Generic",
         "description": "Generic list",
         "sort": true,
         "pattern": "^\\D*(\\S+)",
         "emptyNetMask": 32
+    },
+    {
+        "code": "bgp",
+        "title": "BGP",
+        "description": "BGP table",
+        "sort": true,
+        "pattern": "^\\*\\D{2,5}(\\S+)",
+        "emptyNetMask": 24
     }
 ]
