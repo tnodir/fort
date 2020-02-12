@@ -303,7 +303,7 @@ void ZoneListModel::initZoneTypes()
     }
 
     int index = 0;
-    for (auto &typeVar : zoneTypes) {
+    for (const auto &typeVar : zoneTypes) {
         ZoneTypeWrapper zoneType(typeVar);
         zoneType.setIndex(index++);
         m_zoneTypesMap.insert(zoneType.code(), zoneType.map());
@@ -325,7 +325,7 @@ void ZoneListModel::initZoneSources()
     }
 
     int index = 0;
-    for (auto &sourceVar : zoneSources) {
+    for (const auto &sourceVar : zoneSources) {
         ZoneSourceWrapper zoneSource(sourceVar);
         zoneSource.setIndex(index++);
         m_zoneSourcesMap.insert(zoneSource.code(), zoneSource.map());
