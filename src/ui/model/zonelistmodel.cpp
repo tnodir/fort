@@ -306,8 +306,8 @@ void ZoneListModel::initZoneTypes()
     for (auto &typeVar : zoneTypes) {
         ZoneTypeWrapper zoneType(typeVar);
         zoneType.setIndex(index++);
-        m_zoneTypesMap.insert(zoneType.code(), typeVar);
-        m_zoneTypes.append(typeVar);
+        m_zoneTypesMap.insert(zoneType.code(), zoneType.map());
+        m_zoneTypes.append(zoneType.map());
     }
 }
 
@@ -328,7 +328,7 @@ void ZoneListModel::initZoneSources()
     for (auto &sourceVar : zoneSources) {
         ZoneSourceWrapper zoneSource(sourceVar);
         zoneSource.setIndex(index++);
-        m_zoneSourcesMap.insert(zoneSource.code(), sourceVar);
-        m_zoneSources.append(sourceVar);
+        m_zoneSourcesMap.insert(zoneSource.code(), zoneSource.map());
+        m_zoneSources.append(zoneSource.map());
     }
 }
