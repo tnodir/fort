@@ -71,14 +71,15 @@ public:
                           const QDateTime &lastSuccess);
     void deleteZone(int zoneId, int row);
 
-    QVector<int> addressGroupZones(qint64 addrGroupId, bool include);
-
     QString zoneNameById(int zoneId);
 
     QVariant zoneTypeByCode(const QString &typeCode) const;
 
     QVariant zoneSourceByCode(const QString &sourceCode) const;
     const QVariantList &zoneSources() const { return m_zoneSources; }
+
+signals:
+    void zoneRemoved(int zoneId);
 
 protected:
     bool updateTableRow(int row) const override;

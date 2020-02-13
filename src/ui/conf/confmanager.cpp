@@ -41,6 +41,13 @@ const char * const sqlSelectAddressGroups =
         "  ORDER BY order_index;"
         ;
 
+const char * const sqlSelectAddressGroupZones =
+        "SELECT include, zone_id"
+        "  FROM address_group_zone"
+        "  WHERE addr_group_id = ?1"
+        "  ORDER BY include, zone_id;"
+        ;
+
 const char * const sqlSelectAppGroups =
         "SELECT app_group_id, enabled,"
         "    fragment_packet, period_enabled,"
@@ -64,6 +71,16 @@ const char * const sqlUpdateAddressGroup =
         "    include_all = ?3, exclude_all = ?4,"
         "    include_text = ?5, exclude_text = ?6"
         "  WHERE addr_group_id = ?1;"
+        ;
+
+const char * const sqlDeleteAddressGroupZones =
+        "DELETE FROM address_group_zone"
+        "  WHERE addr_group_id = ?1;"
+        ;
+
+const char * const sqlInsertAddressGroupZone =
+        "INSERT INTO address_group_zone(addr_group_id, zone_id, include)"
+        "  VALUES(?1, ?2, ?3);"
         ;
 
 const char * const sqlInsertAppGroup =
@@ -236,6 +253,86 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
     return true;
 }
 
+bool loadAddressGroupZones(SqliteDb *db, AddressGroup *addrGroup)
+{
+    SqliteStmt stmt;
+    if (!db->prepare(stmt, sqlSelectAddressGroupZones, {addrGroup->id()}))
+        return false;
+
+    while (stmt.step() == SqliteStmt::StepRow) {
+        const bool include = stmt.columnBool(0);
+        const int zoneId = stmt.columnInt(1);
+
+        if (include) {
+            addrGroup->addIncludeZone(zoneId);
+        } else {
+            addrGroup->addExcludeZone(zoneId);
+        }
+    }
+
+    return true;
+}
+
+bool saveAddressGroupZones(SqliteDb *db, AddressGroup *addrGroup)
+{
+    const auto addrGroupId = addrGroup->id();
+
+    bool ok;
+    db->executeEx(sqlDeleteAddressGroupZones, {addrGroupId}, 0, &ok);
+    if (!ok) return false;
+
+    SqliteStmt stmt;
+    if (!db->prepare(stmt, sqlInsertAddressGroupZone))
+        return false;
+
+    const auto addAddressGroupZone = [&](int zoneId, bool include) -> bool {
+            return stmt.bindVars({addrGroupId, zoneId, include})
+                    && stmt.step() == SqliteStmt::StepDone
+                    && stmt.reset();
+    };
+
+    for (const int zoneId : addrGroup->includeZones()) {
+        if (!addAddressGroupZone(zoneId, true))
+            return false;
+    }
+    for (const int zoneId : addrGroup->excludeZones()) {
+        if (!addAddressGroupZone(zoneId, false))
+            return false;
+    }
+
+    return true;
+}
+
+bool loadAddressGroups(SqliteDb *db, const QList<AddressGroup *> &addressGroups,
+                       int &index)
+{
+    SqliteStmt stmt;
+    if (!db->prepare(stmt, sqlSelectAddressGroups))
+        return false;
+
+    index = 0;
+    while (stmt.step() == SqliteStmt::StepRow) {
+        auto addrGroup = addressGroups.at(index);
+        Q_ASSERT(addrGroup != nullptr);
+
+        addrGroup->setId(stmt.columnInt64(0));
+        addrGroup->setIncludeAll(stmt.columnBool(1));
+        addrGroup->setExcludeAll(stmt.columnBool(2));
+        addrGroup->setIncludeText(stmt.columnText(3));
+        addrGroup->setExcludeText(stmt.columnText(4));
+
+        if (!loadAddressGroupZones(db, addrGroup))
+            return false;
+
+        addrGroup->setEdited(false);
+
+        if (++index > 1)
+            break;
+    }
+
+    return true;
+}
+
 bool saveAddressGroup(SqliteDb *db, AddressGroup *addrGroup, int orderIndex)
 {
     const bool rowExists = (addrGroup->id() != 0);
@@ -260,7 +357,41 @@ bool saveAddressGroup(SqliteDb *db, AddressGroup *addrGroup, int orderIndex)
     if (!rowExists) {
         addrGroup->setId(db->lastInsertRowid());
     }
+
+    if (!saveAddressGroupZones(db, addrGroup))
+        return false;
+
     addrGroup->setEdited(false);
+
+    return true;
+}
+
+bool loadAppGroups(SqliteDb *db, FirewallConf &conf)
+{
+    SqliteStmt stmt;
+    if (!db->prepare(stmt, sqlSelectAppGroups))
+        return false;
+
+    while (stmt.step() == SqliteStmt::StepRow) {
+        auto appGroup = new AppGroup();
+
+        appGroup->setId(stmt.columnInt64(0));
+        appGroup->setEnabled(stmt.columnBool(1));
+        appGroup->setFragmentPacket(stmt.columnInt(2));
+        appGroup->setPeriodEnabled(stmt.columnBool(3));
+        appGroup->setLimitInEnabled(stmt.columnBool(4));
+        appGroup->setLimitOutEnabled(stmt.columnBool(5));
+        appGroup->setSpeedLimitIn(quint32(stmt.columnInt(6)));
+        appGroup->setSpeedLimitOut(quint32(stmt.columnInt(7)));
+        appGroup->setName(stmt.columnText(8));
+        appGroup->setBlockText(stmt.columnText(9));
+        appGroup->setAllowText(stmt.columnText(10));
+        appGroup->setPeriodFrom(stmt.columnText(11));
+        appGroup->setPeriodTo(stmt.columnText(12));
+        appGroup->setEdited(false);
+
+        conf.addAppGroup(appGroup);
+    }
 
     return true;
 }
@@ -851,26 +982,11 @@ bool ConfManager::loadFromDb(FirewallConf &conf, bool &isNew)
 {
     // Load Address Groups
     {
-        SqliteStmt stmt;
-        if (!stmt.prepare(m_sqliteDb->db(), sqlSelectAddressGroups))
+        int count = 0;
+        if (!loadAddressGroups(m_sqliteDb, conf.addressGroups(), count))
             return false;
 
-        int index = 0;
-        while (stmt.step() == SqliteStmt::StepRow) {
-            auto addrGroup = conf.addressGroups().at(index);
-            Q_ASSERT(addrGroup != nullptr);
-
-            addrGroup->setId(stmt.columnInt64(0));
-            addrGroup->setIncludeAll(stmt.columnBool(1));
-            addrGroup->setExcludeAll(stmt.columnBool(2));
-            addrGroup->setIncludeText(stmt.columnText(3));
-            addrGroup->setExcludeText(stmt.columnText(4));
-
-            if (++index > 1)
-                break;
-        }
-
-        if (index == 0) {
+        if (count == 0) {
             isNew = true;
             return true;
         }
@@ -878,31 +994,8 @@ bool ConfManager::loadFromDb(FirewallConf &conf, bool &isNew)
     }
 
     // Load App Groups
-    {
-        SqliteStmt stmt;
-        if (!stmt.prepare(m_sqliteDb->db(), sqlSelectAppGroups))
-            return false;
-
-        while (stmt.step() == SqliteStmt::StepRow) {
-            auto appGroup = new AppGroup();
-
-            appGroup->setId(stmt.columnInt64(0));
-            appGroup->setEnabled(stmt.columnBool(1));
-            appGroup->setFragmentPacket(stmt.columnInt(2));
-            appGroup->setPeriodEnabled(stmt.columnBool(3));
-            appGroup->setLimitInEnabled(stmt.columnBool(4));
-            appGroup->setLimitOutEnabled(stmt.columnBool(5));
-            appGroup->setSpeedLimitIn(quint32(stmt.columnInt(6)));
-            appGroup->setSpeedLimitOut(quint32(stmt.columnInt(7)));
-            appGroup->setName(stmt.columnText(8));
-            appGroup->setBlockText(stmt.columnText(9));
-            appGroup->setAllowText(stmt.columnText(10));
-            appGroup->setPeriodFrom(stmt.columnText(11));
-            appGroup->setPeriodTo(stmt.columnText(12));
-
-            conf.addAppGroup(appGroup);
-        }
-    }
+    if (!loadAppGroups(m_sqliteDb, conf))
+        return false;
 
     return true;
 }

@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QVariant>
+#include <QVector>
 
 class AddressGroup : public QObject
 {
@@ -33,6 +34,15 @@ public:
     QString excludeText() const { return m_excludeText; }
     void setExcludeText(const QString &excludeText);
 
+    const QVector<int> &includeZones() const { return m_includeZones; }
+    const QVector<int> &excludeZones() const { return m_excludeZones; }
+
+    void addIncludeZone(int zoneId, bool sorting = false);
+    void removeIncludeZone(int zoneId);
+
+    void addExcludeZone(int zoneId, bool sorting = false);
+    void removeExcludeZone(int zoneId);
+
     void copy(const AddressGroup &o);
 
 signals:
@@ -41,7 +51,9 @@ signals:
     void includeTextChanged();
     void excludeTextChanged();
 
-public slots:
+private:
+    void addZone(QVector<int> &zones, int zoneId, bool sorting);
+    void removeZone(QVector<int> &zones, int zoneId);
 
 private:
     bool m_edited       : 1;
@@ -53,6 +65,9 @@ private:
 
     QString m_includeText;
     QString m_excludeText;
+
+    QVector<int> m_includeZones;
+    QVector<int> m_excludeZones;
 };
 
 #endif // ADDRESSGROUP_H

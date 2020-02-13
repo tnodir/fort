@@ -192,31 +192,12 @@ void ZoneListModel::deleteZone(int zoneId, int row)
     beginRemoveRows(QModelIndex(), row, row);
 
     if (confManager()->deleteZone(zoneId)) {
+        emit zoneRemoved(zoneId);
         invalidateRowCache();
         removeRow(row);
     }
 
     endRemoveRows();
-}
-
-QVector<int> ZoneListModel::addressGroupZones(qint64 addrGroupId, bool include)
-{
-    static const char * const sql =
-            "SELECT zone_id"
-            "  FROM address_group_zone"
-            "  WHERE addr_group_id = ?1 AND include = ?2"
-            "  ORDER BY order_index;"
-            ;
-
-    QVector<int> list;
-    SqliteStmt stmt;
-    if (sqliteDb()->prepare(stmt, sql, {addrGroupId, include})) {
-        while (stmt.step() == SqliteStmt::StepRow) {
-            const int id = stmt.columnInt(0);
-            list.append(id);
-        }
-    }
-    return list;
 }
 
 QString ZoneListModel::zoneNameById(int zoneId)

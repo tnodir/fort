@@ -40,9 +40,17 @@ private:
     void setupSplitterButtons();
     void updateGroup();
     void setupAddressGroup();
+    void clearZonesMenu();
+    void createZonesMenu();
+    void updateZonesMenu(bool include);
+    void updateZonesText(bool include);
+    void updateZonesTextAll();
+    void setupZones();
 
     const QList<AddressGroup *> &addressGroups() const;
     AddressGroup *addressGroupByIndex(int index) const;
+
+    const QVector<int> &addressGroupZones(bool include) const;
 
     QString zonesText(bool include) const;
 
@@ -56,6 +64,7 @@ private:
     AddressesColumn *m_excludeAddresses = nullptr;
     TextArea2Splitter *m_splitter = nullptr;
     QPushButton *m_btAddLocals = nullptr;
+    QMenu *m_menuZones = nullptr;
 };
 
 #endif // ADDRESSESPAGE_H

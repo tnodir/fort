@@ -45,6 +45,7 @@ void TableSqlModel::invalidateRowCache()
 {
     m_rowCount = -1;
     tableRow().invalidate();
+    emit modelChanged();
 }
 
 void TableSqlModel::updateRowCache(int row) const

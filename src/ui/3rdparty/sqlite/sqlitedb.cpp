@@ -143,7 +143,7 @@ bool SqliteDb::prepare(SqliteStmt &stmt, const char *sql,
                        const QVariantList &vars)
 {
     return stmt.prepare(db(), sql)
-            && stmt.bindVars(vars);
+            && (vars.isEmpty() || stmt.bindVars(vars));
 }
 
 qint64 SqliteDb::lastInsertRowid() const

@@ -7,6 +7,7 @@
 #include <QVBoxLayout>
 
 #include "../../../controls/controlutil.h"
+#include "../../../controls/widebutton.h"
 #include "../../../controls/plaintextedit.h"
 
 AddressesColumn::AddressesColumn(QWidget *parent) :
@@ -17,7 +18,7 @@ AddressesColumn::AddressesColumn(QWidget *parent) :
 
 void AddressesColumn::retranslateUi()
 {
-    m_btSelectZones->setText(tr("Zones:"));
+    m_btSelectZones->setText(tr("Zones"));
     m_btSelectZones->setToolTip(tr("Select Zones"));
 }
 
@@ -55,9 +56,8 @@ QLayout *AddressesColumn::setupZonesRow()
 {
     auto layout = new QHBoxLayout();
     layout->setMargin(0);
-    layout->setSpacing(0);
 
-    m_btSelectZones = ControlUtil::createLinkButton(":/images/map_magnify.png");
+    m_btSelectZones = new WideButton(QIcon(":/images/map_magnify.png"));
     layout->addWidget(m_btSelectZones);
 
     m_labelZones = ControlUtil::createLabel();

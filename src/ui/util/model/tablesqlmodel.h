@@ -25,6 +25,9 @@ public:
 
     void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
 
+signals:
+    void modelChanged();
+
 public slots:
     void reset();
     void refresh();

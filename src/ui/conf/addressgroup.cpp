@@ -48,6 +48,44 @@ void AddressGroup::setExcludeText(const QString &excludeText)
     }
 }
 
+void AddressGroup::addIncludeZone(int zoneId, bool sorting)
+{
+    addZone(m_includeZones, zoneId, sorting);
+}
+
+void AddressGroup::removeIncludeZone(int zoneId)
+{
+    removeZone(m_includeZones, zoneId);
+}
+
+void AddressGroup::addExcludeZone(int zoneId, bool sorting)
+{
+    addZone(m_excludeZones, zoneId, sorting);
+}
+
+void AddressGroup::removeExcludeZone(int zoneId)
+{
+    removeZone(m_excludeZones, zoneId);
+}
+
+void AddressGroup::addZone(QVector<int> &zones, int zoneId, bool sorting)
+{
+    zones.append(zoneId);
+
+    if (sorting) {
+        std::sort(zones.begin(), zones.end());
+    }
+
+    setEdited(true);
+}
+
+void AddressGroup::removeZone(QVector<int> &zones, int zoneId)
+{
+    zones.removeOne(zoneId);
+
+    setEdited(true);
+}
+
 void AddressGroup::copy(const AddressGroup &o)
 {
     m_edited = o.edited();
@@ -59,4 +97,7 @@ void AddressGroup::copy(const AddressGroup &o)
 
     m_includeText = o.includeText();
     m_excludeText = o.excludeText();
+
+    m_includeZones = o.includeZones();
+    m_excludeZones = o.excludeZones();
 }
