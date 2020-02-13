@@ -379,5 +379,5 @@ QString AddressesPage::zonesText(bool include) const
 
 QString AddressesPage::localNetworks()
 {
-    return NetUtil::localIpv4Networks().join('\n');
+    return NetUtil::localIpv4Networks().join('\n') + '\n';
 }

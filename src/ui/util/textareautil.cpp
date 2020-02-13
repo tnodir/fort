@@ -37,11 +37,14 @@ void TextAreaUtil::appendText(QPlainTextEdit *area, const QString &text)
 
     // Append the text to area
     const auto areaOldText = area->toPlainText();
-    const int areaOldLen = areaOldText.size();
+    int areaOldLen = areaOldText.size();
 
     const int lineEnd = StringUtil::lineEnd(areaOldText, areaOldLen - 1);
     if (lineEnd < 0) {
         area->appendPlainText(text);
+        if (areaOldLen != 0) {
+            ++areaOldLen;  // trailing new line
+        }
     } else {
         moveCursor(area, lineEnd + 1);
         area->insertPlainText(text);
