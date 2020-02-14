@@ -142,8 +142,6 @@ typedef struct fort_conf_version {
 } FORT_CONF_VERSION, *PFORT_CONF_VERSION;
 
 typedef struct fort_conf_io {
-  UINT16 driver_version;
-
   FORT_CONF_GROUP conf_group;
 
   FORT_CONF conf;

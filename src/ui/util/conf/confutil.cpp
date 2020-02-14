@@ -464,8 +464,6 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     writeApps(&data, exeAppsMap);
 #undef CONF_DATA_OFFSET
 
-    drvConfIo->driver_version = DRIVER_VERSION;
-
     writeFragmentBits(&drvConfIo->conf_group.fragment_bits,
                       conf);
 

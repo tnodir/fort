@@ -905,7 +905,8 @@ static NTSTATUS
 fort_device_cleanup (PDEVICE_OBJECT device, PIRP irp)
 {
   /* Device closed */
-  fort_device_flag_set(&g_device->conf, FORT_DEVICE_IS_OPENED, FALSE);
+  fort_device_flag_set(&g_device->conf,
+    (FORT_DEVICE_IS_OPENED | FORT_DEVICE_IS_VALIDATED), FALSE);
 
   /* Clear conf */
   {
@@ -949,14 +950,20 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
   irp_stack = IoGetCurrentIrpStackLocation(irp);
   control_code = irp_stack->Parameters.DeviceIoControl.IoControlCode;
 
+  if (control_code != FORT_IOCTL_VALIDATE
+      && !fort_device_flag(&g_device->conf, FORT_DEVICE_IS_VALIDATED))
+    goto end;
+
   switch (control_code) {
   case FORT_IOCTL_VALIDATE: {
     const PFORT_CONF_VERSION conf_ver = irp->AssociatedIrp.SystemBuffer;
     const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
 
     if (len == sizeof(FORT_CONF_VERSION)) {
-      status = (conf_ver->driver_version == DRIVER_VERSION)
-        ? STATUS_SUCCESS : STATUS_UNSUCCESSFUL;
+      if (conf_ver->driver_version == DRIVER_VERSION) {
+        fort_device_flag_set(&g_device->conf, FORT_DEVICE_IS_VALIDATED, TRUE);
+        status = STATUS_SUCCESS;
+      }
     }
     break;
   }
@@ -964,8 +971,7 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
     const PFORT_CONF_IO conf_io = irp->AssociatedIrp.SystemBuffer;
     const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
 
-    if (len > sizeof(FORT_CONF_IO)
-        && conf_io->driver_version == DRIVER_VERSION) {
+    if (len > sizeof(FORT_CONF_IO)) {
       const PFORT_CONF conf = &conf_io->conf;
       PFORT_CONF_REF conf_ref = fort_conf_ref_new(
         conf, len - FORT_CONF_IO_CONF_OFF);
@@ -1055,6 +1061,7 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
   default: break;
   }
 
+ end:
   if (!NT_SUCCESS(status) && status != FORT_STATUS_USER_ERROR) {
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                "FORT: Device Control: Error: %x\n", status);

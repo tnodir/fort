@@ -39,8 +39,9 @@ typedef struct fort_conf_ref {
 
 #define FORT_DEVICE_PROV_BOOT		0x01
 #define FORT_DEVICE_IS_OPENED		0x02
-#define FORT_DEVICE_POWER_OFF		0x04
-#define FORT_DEVICE_FILTER_TRANSPORT	0x08
+#define FORT_DEVICE_IS_VALIDATED	0x04
+#define FORT_DEVICE_POWER_OFF		0x08
+#define FORT_DEVICE_FILTER_TRANSPORT	0x10
 
 typedef struct fort_device_conf {
   UCHAR volatile flags;
