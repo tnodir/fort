@@ -28,20 +28,23 @@ public:
     qint64 id() const { return m_id; }
     void setId(qint64 id) { m_id = id; }
 
+    quint32 includeZones() const { return m_includeZones; }
+    void setIncludeZones(quint32 v) { m_includeZones = v; }
+
+    quint32 excludeZones() const { return m_excludeZones; }
+    void setExcludeZones(quint32 v) { m_excludeZones = v; }
+
+    void addIncludeZone(int zoneId);
+    void removeIncludeZone(int zoneId);
+
+    void addExcludeZone(int zoneId);
+    void removeExcludeZone(int zoneId);
+
     QString includeText() const { return m_includeText; }
     void setIncludeText(const QString &includeText);
 
     QString excludeText() const { return m_excludeText; }
     void setExcludeText(const QString &excludeText);
-
-    const QVector<int> &includeZones() const { return m_includeZones; }
-    const QVector<int> &excludeZones() const { return m_excludeZones; }
-
-    void addIncludeZone(int zoneId, bool sorting = false);
-    void removeIncludeZone(int zoneId);
-
-    void addExcludeZone(int zoneId, bool sorting = false);
-    void removeExcludeZone(int zoneId);
 
     void copy(const AddressGroup &o);
 
@@ -52,8 +55,8 @@ signals:
     void excludeTextChanged();
 
 private:
-    void addZone(QVector<int> &zones, int zoneId, bool sorting);
-    void removeZone(QVector<int> &zones, int zoneId);
+    void addZone(quint32 &zones, int zoneId);
+    void removeZone(quint32 &zones, int zoneId);
 
 private:
     bool m_edited       : 1;
@@ -63,11 +66,11 @@ private:
 
     qint64 m_id = 0;
 
+    quint32 m_includeZones = 0;
+    quint32 m_excludeZones = 0;
+
     QString m_includeText;
     QString m_excludeText;
-
-    QVector<int> m_includeZones;
-    QVector<int> m_excludeZones;
 };
 
 #endif // ADDRESSGROUP_H

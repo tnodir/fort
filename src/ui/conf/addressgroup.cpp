@@ -8,6 +8,40 @@ AddressGroup::AddressGroup(QObject *parent) :
 {
 }
 
+void AddressGroup::addIncludeZone(int zoneId)
+{
+    addZone(m_includeZones, zoneId);
+}
+
+void AddressGroup::removeIncludeZone(int zoneId)
+{
+    removeZone(m_includeZones, zoneId);
+}
+
+void AddressGroup::addExcludeZone(int zoneId)
+{
+    addZone(m_excludeZones, zoneId);
+}
+
+void AddressGroup::removeExcludeZone(int zoneId)
+{
+    removeZone(m_excludeZones, zoneId);
+}
+
+void AddressGroup::addZone(quint32 &zones, int zoneId)
+{
+    zones |= (quint32(1) << (zoneId - 1));
+
+    setEdited(true);
+}
+
+void AddressGroup::removeZone(quint32 &zones, int zoneId)
+{
+    zones &= ~(quint32(1) << (zoneId - 1));
+
+    setEdited(true);
+}
+
 void AddressGroup::setIncludeAll(bool includeAll)
 {
     if (m_includeAll != includeAll) {
@@ -48,44 +82,6 @@ void AddressGroup::setExcludeText(const QString &excludeText)
     }
 }
 
-void AddressGroup::addIncludeZone(int zoneId, bool sorting)
-{
-    addZone(m_includeZones, zoneId, sorting);
-}
-
-void AddressGroup::removeIncludeZone(int zoneId)
-{
-    removeZone(m_includeZones, zoneId);
-}
-
-void AddressGroup::addExcludeZone(int zoneId, bool sorting)
-{
-    addZone(m_excludeZones, zoneId, sorting);
-}
-
-void AddressGroup::removeExcludeZone(int zoneId)
-{
-    removeZone(m_excludeZones, zoneId);
-}
-
-void AddressGroup::addZone(QVector<int> &zones, int zoneId, bool sorting)
-{
-    zones.append(zoneId);
-
-    if (sorting) {
-        std::sort(zones.begin(), zones.end());
-    }
-
-    setEdited(true);
-}
-
-void AddressGroup::removeZone(QVector<int> &zones, int zoneId)
-{
-    zones.removeOne(zoneId);
-
-    setEdited(true);
-}
-
 void AddressGroup::copy(const AddressGroup &o)
 {
     m_edited = o.edited();
@@ -95,9 +91,9 @@ void AddressGroup::copy(const AddressGroup &o)
 
     m_id = o.id();
 
-    m_includeText = o.includeText();
-    m_excludeText = o.excludeText();
-
     m_includeZones = o.includeZones();
     m_excludeZones = o.excludeZones();
+
+    m_includeText = o.includeText();
+    m_excludeText = o.excludeText();
 }

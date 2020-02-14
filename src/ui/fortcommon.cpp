@@ -232,6 +232,11 @@ bool FortCommon::isTimeInPeriod(quint8 hour, quint8 minute,
     return is_time_in_period(time, period);
 }
 
+int FortCommon::bitScanForward(quint32 mask)
+{
+    return bit_scan_forward(mask);
+}
+
 void FortCommon::provUnregister()
 {
     fort_prov_unregister(nullptr);

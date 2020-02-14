@@ -19,14 +19,10 @@ CREATE TABLE address_group(
   order_index INTEGER NOT NULL,
   include_all BOOLEAN NOT NULL,
   exclude_all BOOLEAN NOT NULL,
+  include_zones INTEGER NOT NULL DEFAULT 0,
+  exclude_zones INTEGER NOT NULL DEFAULT 0,
   include_text TEXT NOT NULL,
   exclude_text TEXT NOT NULL
-);
-
-CREATE TABLE address_group_zone(
-  addr_group_id INTEGER NOT NULL,
-  zone_id INTEGER NOT NULL,
-  include BOOLEAN NOT NULL
 );
 
 CREATE TABLE app_group(

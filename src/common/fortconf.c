@@ -16,6 +16,13 @@ fort_memcmp (const char *p1, const char *p2, size_t len)
 }
 #endif
 
+static int
+bit_scan_forward (unsigned long mask)
+{
+    unsigned long index;
+    return _BitScanForward(&index, mask) ? index : -1;
+}
+
 static BOOL
 is_time_in_period (FORT_TIME time, FORT_PERIOD period)
 {

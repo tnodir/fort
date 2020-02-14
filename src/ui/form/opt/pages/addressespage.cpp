@@ -12,6 +12,7 @@
 
 #include "../../../conf/addressgroup.h"
 #include "../../../conf/firewallconf.h"
+#include "../../../fortcommon.h"
 #include "../../../fortmanager.h"
 #include "../../../fortsettings.h"
 #include "../../../model/zonelistmodel.h"
@@ -251,9 +252,9 @@ void AddressesPage::createZonesMenu()
 
         if (checked) {
             if (include) {
-                addrGroup->addIncludeZone(zoneId, true);
+                addrGroup->addIncludeZone(zoneId);
             } else {
-                addrGroup->addExcludeZone(zoneId, true);
+                addrGroup->addExcludeZone(zoneId);
             }
         } else {
             if (include) {
@@ -269,14 +270,12 @@ void AddressesPage::createZonesMenu()
     };
 
     const int zoneCount = zoneListModel()->rowCount();
-    for (int zoneId = 1; zoneId <= zoneCount; ++zoneId) {
-        const auto zoneName = zoneListModel()->zoneNameById(zoneId);
-        if (zoneName.isEmpty())
-            continue;
+    for (int row = 0; row < zoneCount; ++row) {
+        const auto zoneRow = zoneListModel()->zoneRowAt(row);
 
-        auto action = new QAction(zoneName, m_menuZones);
+        auto action = new QAction(zoneRow.zoneName, m_menuZones);
         action->setCheckable(true);
-        action->setData(zoneId);
+        action->setData(zoneRow.zoneId);
 
         connect(action, &QAction::triggered, this, onZoneActionTriggered);
 
@@ -294,11 +293,12 @@ void AddressesPage::updateZonesMenu(bool include)
     if (actions.isEmpty())
         return;
 
-    const auto zoneIds = addressGroupZones(include);
+    const quint32 zonesMask = addressGroupZones(include);
 
     for (auto action : actions) {
         const int zoneId = action->data().toInt();
-        const bool checked = zoneIds.contains(zoneId);
+        const quint32 zoneMask = (quint32(1) << (zoneId - 1));
+        const bool checked = (zonesMask & zoneMask) != 0;
 
         action->setChecked(checked);
     }
@@ -357,7 +357,7 @@ AddressGroup *AddressesPage::addressGroupByIndex(int index) const
     return addressGroups().at(index);
 }
 
-const QVector<int> &AddressesPage::addressGroupZones(bool include) const
+quint32 AddressesPage::addressGroupZones(bool include) const
 {
     return include ? addressGroup()->includeZones()
                    : addressGroup()->excludeZones();
@@ -365,15 +365,19 @@ const QVector<int> &AddressesPage::addressGroupZones(bool include) const
 
 QString AddressesPage::zonesText(bool include) const
 {
-    const auto zoneIds = addressGroupZones(include);
-    if (zoneIds.isEmpty())
-        return QString();
-
     QStringList list;
-    for (const int zoneId : zoneIds) {
+
+    quint32 zonesMask = addressGroupZones(include);
+    while (zonesMask != 0) {
+        const int zoneIndex = FortCommon::bitScanForward(zonesMask);
+        const int zoneId = zoneIndex + 1;
         const auto zoneName = zoneListModel()->zoneNameById(zoneId);
+
         list.append(zoneName);
+
+        zonesMask ^= (quint32(1) << zoneIndex);
     }
+
     return list.join(", ");
 }
 

@@ -36,16 +36,10 @@ const char * const sqlPragmas =
 
 const char * const sqlSelectAddressGroups =
         "SELECT addr_group_id, include_all, exclude_all,"
+        "    include_zones, exclude_zones,"
         "    include_text, exclude_text"
         "  FROM address_group"
         "  ORDER BY order_index;"
-        ;
-
-const char * const sqlSelectAddressGroupZones =
-        "SELECT include, zone_id"
-        "  FROM address_group_zone"
-        "  WHERE addr_group_id = ?1"
-        "  ORDER BY include, zone_id;"
         ;
 
 const char * const sqlSelectAppGroups =
@@ -61,26 +55,19 @@ const char * const sqlSelectAppGroups =
 
 const char * const sqlInsertAddressGroup =
         "INSERT INTO address_group(addr_group_id, order_index,"
-        "    include_all, exclude_all, include_text, exclude_text)"
-        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6);"
+        "    include_all, exclude_all,"
+        "    include_zones, exclude_zones,"
+        "    include_text, exclude_text)"
+        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8);"
         ;
 
 const char * const sqlUpdateAddressGroup =
         "UPDATE address_group"
         "  SET order_index = ?2,"
         "    include_all = ?3, exclude_all = ?4,"
-        "    include_text = ?5, exclude_text = ?6"
+        "    include_zones = ?5, exclude_zones = ?6,"
+        "    include_text = ?7, exclude_text = ?8"
         "  WHERE addr_group_id = ?1;"
-        ;
-
-const char * const sqlDeleteAddressGroupZones =
-        "DELETE FROM address_group_zone"
-        "  WHERE addr_group_id = ?1;"
-        ;
-
-const char * const sqlInsertAddressGroupZone =
-        "INSERT INTO address_group_zone(addr_group_id, zone_id, include)"
-        "  VALUES(?1, ?2, ?3);"
         ;
 
 const char * const sqlInsertAppGroup =
@@ -209,7 +196,9 @@ const char * const sqlDeleteZone =
         ;
 
 const char * const sqlDeleteAddressGroupZone =
-        "DELETE FROM address_group_zone WHERE zone_id = ?1;"
+        "UPDATE address_group"
+        "  SET include_zones = include_zones & ?1,"
+        "    exclude_zones = exclude_zones & ?1;"
         ;
 
 const char * const sqlUpdateZone =
@@ -253,56 +242,6 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
     return true;
 }
 
-bool loadAddressGroupZones(SqliteDb *db, AddressGroup *addrGroup)
-{
-    SqliteStmt stmt;
-    if (!db->prepare(stmt, sqlSelectAddressGroupZones, {addrGroup->id()}))
-        return false;
-
-    while (stmt.step() == SqliteStmt::StepRow) {
-        const bool include = stmt.columnBool(0);
-        const int zoneId = stmt.columnInt(1);
-
-        if (include) {
-            addrGroup->addIncludeZone(zoneId);
-        } else {
-            addrGroup->addExcludeZone(zoneId);
-        }
-    }
-
-    return true;
-}
-
-bool saveAddressGroupZones(SqliteDb *db, AddressGroup *addrGroup)
-{
-    const auto addrGroupId = addrGroup->id();
-
-    bool ok;
-    db->executeEx(sqlDeleteAddressGroupZones, {addrGroupId}, 0, &ok);
-    if (!ok) return false;
-
-    SqliteStmt stmt;
-    if (!db->prepare(stmt, sqlInsertAddressGroupZone))
-        return false;
-
-    const auto addAddressGroupZone = [&](int zoneId, bool include) -> bool {
-            return stmt.bindVars({addrGroupId, zoneId, include})
-                    && stmt.step() == SqliteStmt::StepDone
-                    && stmt.reset();
-    };
-
-    for (const int zoneId : addrGroup->includeZones()) {
-        if (!addAddressGroupZone(zoneId, true))
-            return false;
-    }
-    for (const int zoneId : addrGroup->excludeZones()) {
-        if (!addAddressGroupZone(zoneId, false))
-            return false;
-    }
-
-    return true;
-}
-
 bool loadAddressGroups(SqliteDb *db, const QList<AddressGroup *> &addressGroups,
                        int &index)
 {
@@ -318,11 +257,10 @@ bool loadAddressGroups(SqliteDb *db, const QList<AddressGroup *> &addressGroups,
         addrGroup->setId(stmt.columnInt64(0));
         addrGroup->setIncludeAll(stmt.columnBool(1));
         addrGroup->setExcludeAll(stmt.columnBool(2));
-        addrGroup->setIncludeText(stmt.columnText(3));
-        addrGroup->setExcludeText(stmt.columnText(4));
-
-        if (!loadAddressGroupZones(db, addrGroup))
-            return false;
+        addrGroup->setIncludeZones(quint32(stmt.columnInt64(3)));
+        addrGroup->setExcludeZones(quint32(stmt.columnInt64(4)));
+        addrGroup->setIncludeText(stmt.columnText(5));
+        addrGroup->setExcludeText(stmt.columnText(6));
 
         addrGroup->setEdited(false);
 
@@ -344,6 +282,8 @@ bool saveAddressGroup(SqliteDb *db, AddressGroup *addrGroup, int orderIndex)
             << orderIndex
             << addrGroup->includeAll()
             << addrGroup->excludeAll()
+            << qint64(addrGroup->includeZones())
+            << qint64(addrGroup->excludeZones())
             << addrGroup->includeText()
             << addrGroup->excludeText()
                ;
@@ -357,9 +297,6 @@ bool saveAddressGroup(SqliteDb *db, AddressGroup *addrGroup, int orderIndex)
     if (!rowExists) {
         addrGroup->setId(db->lastInsertRowid());
     }
-
-    if (!saveAddressGroupZones(db, addrGroup))
-        return false;
 
     addrGroup->setEdited(false);
 
@@ -826,12 +763,14 @@ bool ConfManager::deleteZone(int zoneId)
 
     m_sqliteDb->beginTransaction();
 
-    const auto vars = QVariantList() << zoneId;
-
-    m_sqliteDb->executeEx(sqlDeleteZone, vars, 0, &ok);
+    m_sqliteDb->executeEx(sqlDeleteZone, {zoneId}, 0, &ok);
     if (!ok) goto end;
 
-    m_sqliteDb->executeEx(sqlDeleteAddressGroupZone, vars, 0, &ok);
+    // Delete the Zone frpm Address Groups
+    {
+        const qint64 zoneUnMask = ~(quint32(1) << (zoneId - 1));
+        m_sqliteDb->executeEx(sqlDeleteAddressGroupZone, {zoneUnMask}, 0, &ok);
+    }
 
 end:
     return checkResult(ok, true);

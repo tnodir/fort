@@ -2,6 +2,7 @@
 #define JSONUTIL_H
 
 #include <QObject>
+#include <QVariant>
 
 class JsonUtil
 {

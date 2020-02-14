@@ -70,6 +70,8 @@ public:
                                quint8 fromHour, quint8 fromMinute,
                                quint8 toHour, quint8 toMinute);
 
+    static int bitScanForward(quint32 mask);
+
     static void provUnregister();
 };
 

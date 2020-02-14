@@ -50,7 +50,7 @@ private:
     const QList<AddressGroup *> &addressGroups() const;
     AddressGroup *addressGroupByIndex(int index) const;
 
-    const QVector<int> &addressGroupZones(bool include) const;
+    quint32 addressGroupZones(bool include) const;
 
     QString zonesText(bool include) const;
 

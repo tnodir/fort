@@ -1,5 +1,6 @@
 #include "zonelistmodel.h"
 
+#include <QDebug>
 #include <QJsonDocument>
 
 #include <sqlite/sqlitedb.h>
