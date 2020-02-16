@@ -41,10 +41,27 @@ typedef struct fort_conf_addr_group {
   UINT32 include_is_empty	: 1;
   UINT32 exclude_is_empty	: 1;
 
+  UINT32 include_zones;
+  UINT32 exclude_zones;
+
   UINT32 exclude_off;
 
   char data[4];
 } FORT_CONF_ADDR_GROUP, *PFORT_CONF_ADDR_GROUP;
+
+typedef struct fort_conf_zones {
+  UINT32 mask;
+  UINT32 enabled_mask;
+
+  UINT32 addr_off[FORT_CONF_ZONE_MAX];
+
+  char data[4];
+} FORT_CONF_ZONES, *PFORT_CONF_ZONES;
+
+typedef struct fort_conf_zone_flag {
+  UCHAR zone_id;
+  UCHAR enabled;
+} FORT_CONF_ZONE_FLAG, *PFORT_CONF_ZONE_FLAG;
 
 typedef struct fort_traf {
   union {
@@ -151,11 +168,15 @@ typedef struct fort_conf_io {
 #define FORT_CONF_IO_CONF_OFF		offsetof(FORT_CONF_IO, conf)
 #define FORT_CONF_ADDR_LIST_OFF		offsetof(FORT_CONF_ADDR_LIST, ip)
 #define FORT_CONF_ADDR_GROUP_OFF	offsetof(FORT_CONF_ADDR_GROUP, data)
+#define FORT_CONF_ZONES_DATA_OFF	offsetof(FORT_CONF_ZONES, data)
 
 #define FORT_CONF_ADDR_LIST_SIZE(ip_n, pair_n) \
   (FORT_CONF_ADDR_LIST_OFF + FORT_CONF_IP_ARR_SIZE(ip_n) + FORT_CONF_IP_RANGE_SIZE(pair_n))
 
 typedef FORT_APP_FLAGS fort_conf_app_exe_find_func(
     const PFORT_CONF conf, const char *path, UINT32 path_len);
+
+typedef BOOL fort_conf_zones_ip_included_func(
+    void *ctx, UINT32 zones_mask, UINT32 remote_ip);
 
 #endif FORTCONF_H

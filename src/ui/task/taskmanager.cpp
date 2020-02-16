@@ -15,6 +15,7 @@ TaskManager::TaskManager(FortManager *fortManager,
     setupTasks();
 
     m_timer.setSingleShot(true);
+    m_timer.start(5 * 1000);  // 5 seconds
 
     connect(&m_timer, &QTimer::timeout, this, &TaskManager::runExpiredTasks);
 }
@@ -29,12 +30,20 @@ ConfManager *TaskManager::confManager() const
     return fortManager()->confManager();
 }
 
+TaskInfoUpdateChecker *TaskManager::taskInfoUpdateChecker() const
+{
+    return static_cast<TaskInfoUpdateChecker *>(m_taskInfos.at(0));
+}
+
+TaskInfoZoneDownloader *TaskManager::taskInfoZoneDownloader() const
+{
+    return static_cast<TaskInfoZoneDownloader *>(m_taskInfos.at(1));
+}
+
 void TaskManager::setupTasks()
 {
-    m_taskInfoUpdateChecker = new TaskInfoUpdateChecker(fortManager(), this);
-
-    appendTaskInfo(m_taskInfoUpdateChecker);
-    appendTaskInfo(new TaskInfoZoneDownloader(fortManager(), this));
+    appendTaskInfo(new TaskInfoUpdateChecker(*this));
+    appendTaskInfo(new TaskInfoZoneDownloader(*this));
 }
 
 void TaskManager::appendTaskInfo(TaskInfo *taskInfo)
@@ -47,30 +56,14 @@ void TaskManager::appendTaskInfo(TaskInfo *taskInfo)
 
 void TaskManager::loadSettings()
 {
-    if (!confManager()->loadTasks(m_taskInfos)) {
-        const TasksMap tasksMap = settings()->tasks();
-        if (!tasksMap.isEmpty()) {
-            for (TaskInfo *taskInfo : m_taskInfos) {
-                const QByteArray taskData = tasksMap.value(taskInfo->name());
-                if (!taskData.isNull()) {
-                    taskInfo->setRawData(taskData);
-                }
-            }
-        }
-    }
-
-    runExpiredTasks();
+    confManager()->loadTasks(m_taskInfos);
 }
 
 bool TaskManager::saveSettings()
 {
     runExpiredTasks();
 
-    if (!confManager()->saveTasks(m_taskInfos))
-        return false;
-
-    settings()->removeTasks();
-    return true;
+    return confManager()->saveTasks(m_taskInfos);
 }
 
 void TaskManager::handleTaskStarted()

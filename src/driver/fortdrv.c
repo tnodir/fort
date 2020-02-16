@@ -129,11 +129,13 @@ fort_callout_classify_v4 (const FWPS_INCOMING_VALUES0 *inFixedValues,
     goto block;
 
   if (!conf_flags.filter_enabled
-      || !fort_conf_ip_is_inet(&conf_ref->conf, remote_ip))
+      || !fort_conf_ip_is_inet(&conf_ref->conf, fort_conf_zones_ip_included,
+                               &g_device->conf, remote_ip))
     goto permit;
 
   if (conf_flags.stop_inet_traffic
-      || !fort_conf_ip_inet_included(&conf_ref->conf, remote_ip))
+      || !fort_conf_ip_inet_included(&conf_ref->conf, fort_conf_zones_ip_included,
+                                     &g_device->conf, remote_ip))
     goto block;
 
   process_id = (UINT32) inMetaValues->processId;
@@ -913,6 +915,8 @@ fort_device_cleanup (PDEVICE_OBJECT device, PIRP irp)
     const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(
       &g_device->conf, NULL);
 
+    fort_conf_zones_set(&g_device->conf, NULL);
+
     fort_callout_force_reauth(old_conf_flags, FORT_DEFER_FLUSH_ALL);
   }
 
@@ -1053,8 +1057,42 @@ fort_device_control (PDEVICE_OBJECT device, PIRP irp)
 
         fort_conf_ref_put(&g_device->conf, conf_ref);
 
-        fort_worker_reauth();
+        if (NT_SUCCESS(status)) {
+          fort_worker_reauth();
+        }
       }
+    }
+    break;
+  }
+  case FORT_IOCTL_SETZONES: {
+    const PFORT_CONF_ZONES zones = irp->AssociatedIrp.SystemBuffer;
+    const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
+
+    if (len >= FORT_CONF_ZONES_DATA_OFF) {
+      PFORT_CONF_ZONES conf_zones = fort_conf_zones_new(zones, len);
+
+      if (conf_zones == NULL) {
+        status = STATUS_INSUFFICIENT_RESOURCES;
+      } else {
+        fort_conf_zones_set(&g_device->conf, conf_zones);
+
+        fort_worker_reauth();
+
+        status = STATUS_SUCCESS;
+      }
+    }
+    break;
+  }
+  case FORT_IOCTL_SETZONEFLAG: {
+    const PFORT_CONF_ZONE_FLAG zone_flag = irp->AssociatedIrp.SystemBuffer;
+    const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
+
+    if (len == sizeof(FORT_CONF_ZONE_FLAG)) {
+      fort_conf_zone_flag_set(&g_device->conf, zone_flag);
+
+      fort_worker_reauth();
+
+      status = STATUS_SUCCESS;
     }
     break;
   }

@@ -2,6 +2,7 @@
 
 #include <QRegularExpression>
 
+#define BOOL    quint8
 #define UCHAR   quint8
 #define UINT16  quint16
 #define UINT32  quint32
@@ -24,11 +25,6 @@
 #define APP_PATH_MAX        (FORT_CONF_APP_PATH_MAX / sizeof(wchar_t))
 
 namespace {
-
-void bufferReserve(QByteArray &buf, int size)
-{
-    buf.reserve(size + 1);  // + internal terminating zero
-}
 
 void writeConfFlags(const FirewallConf &conf, PFORT_CONF_FLAGS confFlags)
 {
@@ -114,7 +110,7 @@ int ConfUtil::write(const FirewallConf &conf,
             + FORT_CONF_STR_DATA_SIZE(prefixAppsSize)
             + FORT_CONF_STR_DATA_SIZE(exeAppsSize);
 
-    bufferReserve(buf, confIoSize);
+    buf.reserve(confIoSize);
 
     writeData(buf.data(), conf,
               addressRanges, addressGroupOffsets,
@@ -128,7 +124,7 @@ int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
 {
     const int flagsSize = sizeof(FORT_CONF_FLAGS);
 
-    bufferReserve(buf, flagsSize);
+    buf.reserve(flagsSize);
 
     // Fill the buffer
     PFORT_CONF_FLAGS confFlags = (PFORT_CONF_FLAGS) buf.data();
@@ -150,7 +146,7 @@ int ConfUtil::writeAppEntry(int groupIndex, bool useGroupPerm,
                 exeAppsMap, exeAppsSize))
         return 0;
 
-    bufferReserve(buf, exeAppsSize);
+    buf.reserve(exeAppsSize);
 
     // Fill the buffer
     char *data = (char *) buf.data();
@@ -164,7 +160,7 @@ int ConfUtil::writeVersion(QByteArray &buf)
 {
     const int verSize = sizeof(FORT_CONF_VERSION);
 
-    bufferReserve(buf, verSize);
+    buf.reserve(verSize);
 
     // Fill the buffer
     PFORT_CONF_VERSION confVer = (PFORT_CONF_VERSION) buf.data();
@@ -179,7 +175,7 @@ int ConfUtil::writeZone(const Ip4Range &ip4Range, QByteArray &buf)
     const int addrSize = FORT_CONF_ADDR_LIST_SIZE(
                 ip4Range.ipSize(), ip4Range.pairSize());
 
-    bufferReserve(buf, addrSize);
+    buf.reserve(addrSize);
 
     // Fill the buffer
     char *data = (char *) buf.data();
@@ -187,6 +183,54 @@ int ConfUtil::writeZone(const Ip4Range &ip4Range, QByteArray &buf)
     writeAddressList(&data, ip4Range);
 
     return addrSize;
+}
+
+int ConfUtil::writeZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
+                         const QList<QByteArray> &zonesData, QByteArray &buf)
+{
+    const int zonesSize = FORT_CONF_ZONES_DATA_OFF + dataSize;
+
+    buf.reserve(zonesSize);
+
+    // Fill the buffer
+    PFORT_CONF_ZONES confZones = (PFORT_CONF_ZONES) buf.data();
+    char *data = confZones->data;
+
+    memset(confZones, 0, sizeof(FORT_CONF_ZONES_DATA_OFF));
+
+    confZones->mask = zonesMask;
+    confZones->enabled_mask = enabledMask;
+
+    for (const auto &zoneData : zonesData) {
+        Q_ASSERT(!zoneData.isEmpty());
+
+        const int zoneIndex = FortCommon::bitScanForward(zonesMask);
+        const quint32 zoneMask = (quint32(1) << zoneIndex);
+
+#define CONF_DATA_OFFSET quint32(data - confZones->data)
+        confZones->addr_off[zoneIndex] = CONF_DATA_OFFSET;
+        writeArray(&data, zoneData);
+#undef CONF_DATA_OFFSET
+
+        zonesMask ^= zoneMask;
+    }
+
+    return zonesSize;
+}
+
+int ConfUtil::writeZoneFlag(int zoneId, bool enabled, QByteArray &buf)
+{
+    const int flagSize = sizeof(FORT_CONF_ZONE_FLAG);
+
+    buf.reserve(flagSize);
+
+    // Fill the buffer
+    PFORT_CONF_ZONE_FLAG confZoneFlag = (PFORT_CONF_ZONE_FLAG) buf.data();
+
+    confZoneFlag->zone_id = zoneId;
+    confZoneFlag->enabled = enabled;
+
+    return flagSize;
 }
 
 bool ConfUtil::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
@@ -204,6 +248,8 @@ bool ConfUtil::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
         AddressRange &addressRange = addressRanges[i];
         addressRange.setIncludeAll(addressGroup->includeAll());
         addressRange.setExcludeAll(addressGroup->excludeAll());
+        addressRange.setIncludeZones(addressGroup->includeZones());
+        addressRange.setExcludeZones(addressGroup->excludeZones());
 
         if (!addressRange.includeRange()
                 .fromText(addressGroup->includeText())) {
@@ -556,6 +602,9 @@ void ConfUtil::writeAddressRange(char **data,
     addrGroup->include_all = addressRange.includeAll();
     addrGroup->exclude_all = addressRange.excludeAll();
 
+    addrGroup->include_zones = addressRange.includeZones();
+    addrGroup->exclude_zones = addressRange.excludeZones();
+
     addrGroup->include_is_empty = addressRange.includeRange().isEmpty();
     addrGroup->exclude_is_empty = addressRange.excludeRange().isEmpty();
 
@@ -643,6 +692,15 @@ void ConfUtil::writeNumbers(char **data, void const *src,
 }
 
 void ConfUtil::writeChars(char **data, const chars_arr_t &array)
+{
+    const size_t arraySize = size_t(array.size());
+
+    memcpy(*data, array.constData(), arraySize);
+
+    *data += FORT_CONF_STR_DATA_SIZE(arraySize);
+}
+
+void ConfUtil::writeArray(char **data, const QByteArray &array)
 {
     const size_t arraySize = size_t(array.size());
 

@@ -106,8 +106,9 @@ fort_conf_addr_group_ref (const PFORT_CONF conf, int addr_group_index)
   ((PFORT_CONF_ADDR_LIST) ((addr_group)->data + (addr_group)->exclude_off))
 
 static BOOL
-fort_conf_ip_included (const PFORT_CONF conf, UINT32 remote_ip,
-                       int addr_group_index)
+fort_conf_ip_included (const PFORT_CONF conf,
+                       fort_conf_zones_ip_included_func zone_func,
+                       void *ctx, UINT32 remote_ip, int addr_group_index)
 {
   const PFORT_CONF_ADDR_GROUP addr_group = fort_conf_addr_group_ref(
     conf, addr_group_index);
@@ -116,23 +117,25 @@ fort_conf_ip_included (const PFORT_CONF conf, UINT32 remote_ip,
   const BOOL exclude_all = addr_group->exclude_all;
 
   const BOOL ip_included = include_all ? TRUE
-    : (!addr_group->include_is_empty
-      && fort_conf_ip_inlist(remote_ip, fort_conf_addr_group_include_list_ref(addr_group)));
+    : ((!addr_group->include_is_empty
+        && fort_conf_ip_inlist(remote_ip, fort_conf_addr_group_include_list_ref(addr_group)))
+      || (zone_func != NULL && zone_func(ctx, addr_group->include_zones, remote_ip)));
 
   const BOOL ip_excluded = exclude_all ? TRUE
-    : (!addr_group->exclude_is_empty
-      && fort_conf_ip_inlist(remote_ip, fort_conf_addr_group_exclude_list_ref(addr_group)));
+    : ((!addr_group->exclude_is_empty
+        && fort_conf_ip_inlist(remote_ip, fort_conf_addr_group_exclude_list_ref(addr_group)))
+      || (zone_func != NULL && zone_func(ctx, addr_group->exclude_zones, remote_ip)));
 
   return include_all ? !ip_excluded
     : (exclude_all ? ip_included
     : (ip_included && !ip_excluded));
 }
 
-#define fort_conf_ip_is_inet(conf, remote_ip) \
-  fort_conf_ip_included((conf), (remote_ip), 0)
+#define fort_conf_ip_is_inet(conf, zones_func, ctx, remote_ip) \
+  fort_conf_ip_included((conf), (zones_func), (ctx), (remote_ip), 0)
 
-#define fort_conf_ip_inet_included(conf, remote_ip) \
-  fort_conf_ip_included((conf), (remote_ip), 1)
+#define fort_conf_ip_inet_included(conf, zones_func, ctx, remote_ip) \
+  fort_conf_ip_included((conf), (zones_func), (ctx), (remote_ip), 1)
 
 static BOOL
 fort_conf_app_exe_equal (PFORT_APP_ENTRY app_entry,

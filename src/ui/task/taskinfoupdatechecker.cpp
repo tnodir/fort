@@ -8,9 +8,8 @@
 
 #define TASK_INFO_VERSION   2
 
-TaskInfoUpdateChecker::TaskInfoUpdateChecker(FortManager *fortManager,
-                                             QObject *parent) :
-    TaskInfo(UpdateChecker, fortManager,parent)
+TaskInfoUpdateChecker::TaskInfoUpdateChecker(TaskManager &taskManager) :
+    TaskInfo(UpdateChecker, taskManager)
 {
 }
 

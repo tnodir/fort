@@ -30,6 +30,7 @@
 #include "stat/statmanager.h"
 #include "task/taskinfo.h"
 #include "task/taskinfoupdatechecker.h"
+#include "task/taskinfozonedownloader.h"
 #include "task/taskmanager.h"
 #include "translationmanager.h"
 #include "util/app/appinfocache.h"
@@ -84,10 +85,10 @@ FortManager::FortManager(FortSettings *fortSettings,
 
     setupLogManager();
     setupDriver();
+    setupTaskManager();
 
     loadConf();
 
-    setupTaskManager();
     setupTrayIcon();
 
     connect(qApp, &QCoreApplication::aboutToQuit, this, &FortManager::closeUi);
@@ -223,6 +224,11 @@ void FortManager::setupLogger()
 void FortManager::setupTaskManager()
 {
     taskManager()->loadSettings();
+
+    connect(taskManager()->taskInfoZoneDownloader(), &TaskInfoZoneDownloader::zonesUpdated,
+            confManager(), &ConfManager::updateDriverZones);
+
+    taskManager()->taskInfoZoneDownloader()->loadZones();
 }
 
 void FortManager::setupTrayIcon()

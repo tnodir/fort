@@ -90,6 +90,9 @@ public:
                                int groupIndex, bool useGroupPerm,
                                bool blocked, bool isNew = false,
                                bool remove = false);
+    void updateDriverZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
+                           const QList<QByteArray> &zonesData);
+    bool updateDriverZoneFlag(int zoneId, bool enabled);
 
 signals:
     void confSaved(bool onlyFlags);

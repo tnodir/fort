@@ -20,6 +20,12 @@ public:
     bool includeIsEmpty() const { return includeRange().isEmpty(); }
     bool excludeIsEmpty() const { return excludeRange().isEmpty(); }
 
+    quint32 includeZones() const { return m_includeZones; }
+    void setIncludeZones(quint32 v) { m_includeZones = v; }
+
+    quint32 excludeZones() const { return m_excludeZones; }
+    void setExcludeZones(quint32 v) { m_excludeZones = v; }
+
     Ip4Range &includeRange() { return m_includeRange; }
     Ip4Range &excludeRange() { return m_excludeRange; }
 
@@ -29,6 +35,9 @@ public:
 private:
     bool m_includeAll   : 1;
     bool m_excludeAll   : 1;
+
+    quint32 m_includeZones = 0;
+    quint32 m_excludeZones = 0;
 
     Ip4Range m_includeRange;
     Ip4Range m_excludeRange;

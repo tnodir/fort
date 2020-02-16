@@ -7,6 +7,7 @@
 #include "../util/classhelpers.h"
 
 QT_FORWARD_DECLARE_CLASS(FortManager)
+QT_FORWARD_DECLARE_CLASS(TaskManager)
 QT_FORWARD_DECLARE_CLASS(TaskWorker)
 
 class TaskInfo : public QObject
@@ -28,10 +29,13 @@ public:
     };
     Q_ENUM(TaskType)
 
-    explicit TaskInfo(TaskInfo::TaskType type, FortManager *fortManager,
-                      QObject *parent = nullptr);
+    explicit TaskInfo(TaskInfo::TaskType type,
+                      TaskManager &taskManager);
     ~TaskInfo() override;
     CLASS_DELETE_COPY_MOVE(TaskInfo)
+
+    TaskManager *taskManager() const;
+    FortManager *fortManager() const;
 
     QString name() const { return typeToString(type()); }
 
@@ -67,8 +71,6 @@ public:
 
     TaskWorker *taskWorker() const { return m_taskWorker; }
     void setTaskWorker(TaskWorker *taskWorker);
-
-    FortManager *fortManager() const { return m_fortManager; }
 
     void rawData(QByteArray &data) const;
     void setRawData(const QByteArray &data);
@@ -118,8 +120,6 @@ private:
     QDateTime m_lastSuccess;
 
     TaskWorker *m_taskWorker = nullptr;
-
-    FortManager *m_fortManager = nullptr;
 };
 
 #endif // TASKINFO_H

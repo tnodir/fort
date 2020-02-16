@@ -14,8 +14,7 @@ class TaskInfoUpdateChecker : public TaskInfo
     Q_PROPERTY(QString releaseText READ releaseText NOTIFY versionChanged)
 
 public:
-    explicit TaskInfoUpdateChecker(FortManager *fortManager,
-                                   QObject *parent = nullptr);
+    explicit TaskInfoUpdateChecker(TaskManager &taskManager);
 
     bool isNewVersion() const;
     QString version() const { return m_version; }

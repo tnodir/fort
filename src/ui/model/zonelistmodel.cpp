@@ -144,6 +144,9 @@ bool ZoneListModel::updateZone(int zoneId, const QString &zoneName,
                                const QString &formData, bool enabled, bool storeText,
                                bool customUrl, bool updateDriver)
 {
+    if (updateDriver && !confManager()->updateDriverZoneFlag(zoneId, enabled))
+        return false;
+
     if (confManager()->updateZone(zoneId, zoneName, sourceCode, url, formData,
                                   enabled, storeText, customUrl)) {
         refresh();
@@ -165,6 +168,9 @@ bool ZoneListModel::updateZoneName(int zoneId, const QString &zoneName)
 
 bool ZoneListModel::updateZoneEnabled(int zoneId, bool enabled)
 {
+    if (!confManager()->updateDriverZoneFlag(zoneId, enabled))
+        return false;
+
     if (confManager()->updateZoneEnabled(zoneId, enabled)) {
         refresh();
         return true;

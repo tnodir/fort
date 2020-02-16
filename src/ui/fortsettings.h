@@ -11,8 +11,6 @@
 
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
 
-using TasksMap = QHash<QString, QByteArray>;
-
 class FortSettings : public QObject
 {
     Q_OBJECT
@@ -195,11 +193,6 @@ public:
 
     bool startWithWindows() const;
     void setStartWithWindows(bool start);
-
-    QString tasksKey() const { return "tasks"; }
-    TasksMap tasks() const;
-    bool setTasks(const TasksMap &map);
-    void removeTasks();
 
     QString profilePath() const { return m_profilePath; }
 

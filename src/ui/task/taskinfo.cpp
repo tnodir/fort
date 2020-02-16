@@ -4,24 +4,34 @@
 #include <QMetaEnum>
 
 #include "../util/dateutil.h"
+#include "taskmanager.h"
 #include "taskupdatechecker.h"
 #include "taskzonedownloader.h"
 
 #define TASK_INFO_VERSION   1
 
-TaskInfo::TaskInfo(TaskType type, FortManager *fortManager, QObject *parent) :
-    QObject(parent),
+TaskInfo::TaskInfo(TaskType type, TaskManager &taskManager) :
+    QObject(&taskManager),
     m_enabled(false),
     m_running(false),
     m_aborted(false),
-    m_type(type),
-    m_fortManager(fortManager)
+    m_type(type)
 {
 }
 
 TaskInfo::~TaskInfo()
 {
     abort();
+}
+
+TaskManager *TaskInfo::taskManager() const
+{
+    return qobject_cast<TaskManager *>(parent());
+}
+
+FortManager *TaskInfo::fortManager() const
+{
+    return taskManager()->fortManager();
 }
 
 void TaskInfo::setEnabled(bool enabled)

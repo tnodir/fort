@@ -2,69 +2,82 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ru_RU">
 <context>
+    <name>AddressesColumn</name>
+    <message>
+        <location filename="../form/opt/pages/addresses/addressescolumn.cpp" line="21"/>
+        <source>Zones</source>
+        <translation>Зоны</translation>
+    </message>
+    <message>
+        <location filename="../form/opt/pages/addresses/addressescolumn.cpp" line="22"/>
+        <source>Select Zones</source>
+        <translation>Выбрать Зоны</translation>
+    </message>
+</context>
+<context>
     <name>AddressesPage</name>
     <message>
-        <location filename="../form/opt/pages/addressespage.cpp" line="59"/>
+        <location filename="../form/opt/pages/addressespage.cpp" line="63"/>
         <source>Internet Addresses</source>
         <translation>Адреса Интернета</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/addressespage.cpp" line="60"/>
+        <location filename="../form/opt/pages/addressespage.cpp" line="64"/>
         <source>Allowed Internet Addresses</source>
         <translation>Разрешённые адреса Интернета</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/addressespage.cpp" line="62"/>
+        <location filename="../form/opt/pages/addressespage.cpp" line="66"/>
         <source>Include</source>
         <translation>Включить</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/addressespage.cpp" line="63"/>
+        <location filename="../form/opt/pages/addressespage.cpp" line="67"/>
         <source>Include All</source>
         <translation>Включить все</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/addressespage.cpp" line="65"/>
+        <location filename="../form/opt/pages/addressespage.cpp" line="70"/>
         <source>Exclude</source>
         <translation>Исключить</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/addressespage.cpp" line="66"/>
+        <location filename="../form/opt/pages/addressespage.cpp" line="71"/>
         <source>Exclude All</source>
         <translation>Исключить все</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/addressespage.cpp" line="68"/>
+        <location filename="../form/opt/pages/addressespage.cpp" line="74"/>
         <source>Move All Lines to &apos;Exclude&apos;</source>
         <translation>Перенести все строки в &apos;Исключить&apos;</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/addressespage.cpp" line="69"/>
+        <location filename="../form/opt/pages/addressespage.cpp" line="75"/>
         <source>Move All Lines to &apos;Include&apos;</source>
         <translation>Перенести все строки во &apos;Включить&apos;</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/addressespage.cpp" line="70"/>
+        <location filename="../form/opt/pages/addressespage.cpp" line="76"/>
         <source>Interchange All Lines</source>
         <translation>Обменять все строки</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/addressespage.cpp" line="71"/>
+        <location filename="../form/opt/pages/addressespage.cpp" line="77"/>
         <source>Move Selected Lines to &apos;Exclude&apos;</source>
         <translation>Перенести выделенные строки в &apos;Исключить&apos;</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/addressespage.cpp" line="72"/>
+        <location filename="../form/opt/pages/addressespage.cpp" line="78"/>
         <source>Move Selected Lines to &apos;Include&apos;</source>
         <translation>Перенести выделенные строки во &apos;Включить&apos;</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/addressespage.cpp" line="73"/>
+        <location filename="../form/opt/pages/addressespage.cpp" line="79"/>
         <source>Add Local Networks</source>
         <translation>Добавить локальные сети</translation>
     </message>
     <message>
-        <location filename="../form/opt/pages/addressespage.cpp" line="80"/>
+        <location filename="../form/opt/pages/addressespage.cpp" line="86"/>
         <source># Examples:</source>
         <translation># Примеры:</translation>
     </message>
@@ -246,12 +259,12 @@
 <context>
     <name>ConfManager</name>
     <message>
-        <location filename="../conf/confmanager.cpp" line="333"/>
+        <location filename="../conf/confmanager.cpp" line="409"/>
         <source>Configuration Error</source>
         <translation>Ошибка конфигурации</translation>
     </message>
     <message>
-        <location filename="../conf/confmanager.cpp" line="832"/>
+        <location filename="../conf/confmanager.cpp" line="912"/>
         <source>Application &apos;%1&apos; already exists</source>
         <translation>Приложение &apos;%1&apos; уже существует</translation>
     </message>
@@ -259,42 +272,42 @@
 <context>
     <name>ConfUtil</name>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="205"/>
+        <location filename="../util/conf/confutil.cpp" line="256"/>
         <source>Bad Include IP address: %1</source>
         <translation>Некорректный IP адрес для включения: %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="213"/>
+        <location filename="../util/conf/confutil.cpp" line="264"/>
         <source>Bad Exclude IP address: %1</source>
         <translation>Некорректный IP адрес для исключения: %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="227"/>
+        <location filename="../util/conf/confutil.cpp" line="278"/>
         <source>Too many IP addresses</source>
         <translation>Слишком много IP адресов</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="254"/>
+        <location filename="../util/conf/confutil.cpp" line="305"/>
         <source>Number of Application Groups must be between 1 and %1</source>
         <translation>Количество групп приложений должно быть от 1 до %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="98"/>
+        <location filename="../util/conf/confutil.cpp" line="99"/>
         <source>Too many application paths</source>
         <translation>Слишком много путей приложений</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="266"/>
+        <location filename="../util/conf/confutil.cpp" line="317"/>
         <source>Length of Application Group&apos;s Name must be &lt; %1</source>
         <translation>Длина наименования группы приложения должна быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="367"/>
+        <location filename="../util/conf/confutil.cpp" line="418"/>
         <source>Application &apos;%1&apos; already exists</source>
         <translation>Приложение &apos;%1&apos; уже существует</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="375"/>
+        <location filename="../util/conf/confutil.cpp" line="426"/>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Длина пути приложения должна быть &lt; %1</translation>
     </message>
@@ -310,63 +323,63 @@
 <context>
     <name>FortManager</name>
     <message>
-        <location filename="../fortmanager.cpp" line="530"/>
+        <location filename="../fortmanager.cpp" line="536"/>
         <source>Password input</source>
         <translation>Ввод пароля</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="530"/>
+        <location filename="../fortmanager.cpp" line="536"/>
         <source>Please enter the password</source>
         <translation>Наберите пароль пожалуйста</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="599"/>
+        <location filename="../fortmanager.cpp" line="605"/>
         <source>Please first install Fort Firewall v%1 and save Options from it.</source>
         <translation>Сперва установите Fort Firewall v%1 и сохраните Опции пожалуйста.</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="849"/>
+        <location filename="../fortmanager.cpp" line="855"/>
         <source>Programs</source>
         <translation>Программы</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="850"/>
+        <location filename="../fortmanager.cpp" line="856"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="851"/>
+        <location filename="../fortmanager.cpp" line="857"/>
         <source>Zones</source>
         <translation>Зоны</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="852"/>
+        <location filename="../fortmanager.cpp" line="858"/>
         <source>Traffic Graph</source>
         <translation>График трафика</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="854"/>
+        <location filename="../fortmanager.cpp" line="860"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="855"/>
+        <location filename="../fortmanager.cpp" line="861"/>
         <source>Stop Traffic</source>
         <translation>Остановить трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="856"/>
+        <location filename="../fortmanager.cpp" line="862"/>
         <source>Stop Internet Traffic</source>
         <translation>Остановить Интернет трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="857"/>
+        <location filename="../fortmanager.cpp" line="863"/>
         <source>Auto-Allow All New Programs</source>
         <translation>Авто-разрешение всех новых программ</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="816"/>
-        <location filename="../fortmanager.cpp" line="859"/>
+        <location filename="../fortmanager.cpp" line="822"/>
+        <location filename="../fortmanager.cpp" line="865"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -1108,12 +1121,12 @@
 <context>
     <name>TaskInfo</name>
     <message>
-        <location filename="../task/taskinfo.cpp" line="55"/>
+        <location filename="../task/taskinfo.cpp" line="65"/>
         <source>Update Checker</source>
         <translation>Проверка обновлений</translation>
     </message>
     <message>
-        <location filename="../task/taskinfo.cpp" line="57"/>
+        <location filename="../task/taskinfo.cpp" line="67"/>
         <source>Zones Downloader</source>
         <translation>Скачивание зон</translation>
     </message>
@@ -1121,7 +1134,7 @@
 <context>
     <name>TaskInfoUpdateChecker</name>
     <message>
-        <location filename="../task/taskinfoupdatechecker.cpp" line="94"/>
+        <location filename="../task/taskinfoupdatechecker.cpp" line="93"/>
         <source>New version v%1 available!</source>
         <translation>Новая версия v% доступна!</translation>
     </message>
@@ -1129,9 +1142,9 @@
 <context>
     <name>TaskInfoZoneDownloader</name>
     <message>
-        <location filename="../task/taskinfozonedownloader.cpp" line="36"/>
-        <source>Zone Addresses Updated!</source>
-        <translation>Адреса зон обновлены!</translation>
+        <location filename="../task/taskinfozonedownloader.cpp" line="35"/>
+        <source>Zone Addresses Updated: %1.</source>
+        <translation>Адреса Зон обновлены: %1.</translation>
     </message>
 </context>
 <context>
@@ -1183,22 +1196,22 @@
 <context>
     <name>ZoneListModel</name>
     <message>
-        <location filename="../model/zonelistmodel.cpp" line="42"/>
+        <location filename="../model/zonelistmodel.cpp" line="44"/>
         <source>Zone</source>
         <translation>Зона</translation>
     </message>
     <message>
-        <location filename="../model/zonelistmodel.cpp" line="43"/>
+        <location filename="../model/zonelistmodel.cpp" line="45"/>
         <source>Source</source>
         <translation>Источник</translation>
     </message>
     <message>
-        <location filename="../model/zonelistmodel.cpp" line="44"/>
+        <location filename="../model/zonelistmodel.cpp" line="46"/>
         <source>Last Run</source>
         <translation>Последний запуск</translation>
     </message>
     <message>
-        <location filename="../model/zonelistmodel.cpp" line="45"/>
+        <location filename="../model/zonelistmodel.cpp" line="47"/>
         <source>Last Success</source>
         <translation>Успешный запуск</translation>
     </message>
@@ -1206,78 +1219,78 @@
 <context>
     <name>ZonesWindow</name>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="75"/>
-        <location filename="../form/zone/zoneswindow.cpp" line="77"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="76"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="78"/>
         <source>Edit</source>
         <translation>Изменить</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="76"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="77"/>
         <source>Add</source>
         <translation>Добавить</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="78"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="79"/>
         <source>Remove</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="83"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="84"/>
         <source>Zone Name:</source>
         <translation>Наименование зоны:</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="84"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="85"/>
         <source>Source:</source>
         <translation>Источник:</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="85"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="86"/>
         <source>Enabled</source>
         <translation>Включено</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="86"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="87"/>
         <source>Store Text</source>
         <translation>Сохранять текст</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="87"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="88"/>
         <source>Custom URL</source>
         <translation>Нестандартная ссылка</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="88"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="89"/>
         <source>URL:</source>
         <translation>Ссылка:</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="89"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="90"/>
         <source>Form Data:</source>
         <translation>Данные формы:</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="90"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="91"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="91"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="92"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="81"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="82"/>
         <source>Edit Zone</source>
         <translation>Редактирование зоны</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="95"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="96"/>
         <source>Zones</source>
         <translation>Зоны</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="254"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="258"/>
         <source>Are you sure to remove selected zone?</source>
         <translation>Удалить выбранную зону?</translation>
     </message>

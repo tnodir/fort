@@ -9,12 +9,11 @@ QT_FORWARD_DECLARE_CLASS(FortManager)
 QT_FORWARD_DECLARE_CLASS(FortSettings)
 QT_FORWARD_DECLARE_CLASS(TaskInfo)
 QT_FORWARD_DECLARE_CLASS(TaskInfoUpdateChecker)
+QT_FORWARD_DECLARE_CLASS(TaskInfoZoneDownloader)
 
 class TaskManager : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(TaskInfoUpdateChecker *taskInfoUpdateChecker READ taskInfoUpdateChecker CONSTANT)
-    Q_CLASSINFO("DefaultProperty", "taskInfos")
 
 public:
     explicit TaskManager(FortManager *fortManager,
@@ -24,7 +23,8 @@ public:
     FortSettings *settings() const;
     ConfManager *confManager() const;
 
-    TaskInfoUpdateChecker *taskInfoUpdateChecker() const { return m_taskInfoUpdateChecker; }
+    TaskInfoUpdateChecker *taskInfoUpdateChecker() const;
+    TaskInfoZoneDownloader *taskInfoZoneDownloader() const;
 
     const QList<TaskInfo *> &taskInfosList() const { return m_taskInfos; }
 
@@ -52,7 +52,6 @@ private:
 private:
     FortManager *m_fortManager = nullptr;
 
-    TaskInfoUpdateChecker *m_taskInfoUpdateChecker = nullptr;
     QList<TaskInfo *> m_taskInfos;
 
     QTimer m_timer;

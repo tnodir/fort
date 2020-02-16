@@ -97,6 +97,13 @@ bool DriverManager::writeApp(QByteArray &buf, int size, bool remove)
                      buf, size);
 }
 
+bool DriverManager::writeZones(QByteArray &buf, int size, bool onlyFlags)
+{
+    return writeData(onlyFlags ? FortCommon::ioctlSetZoneFlag()
+                               : FortCommon::ioctlSetZones(),
+                     buf, size);
+}
+
 bool DriverManager::writeData(quint32 code, QByteArray &buf, int size)
 {
     if (!isDeviceOpened())

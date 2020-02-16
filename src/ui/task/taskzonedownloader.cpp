@@ -10,7 +10,10 @@
 #include "../util/net/netdownloader.h"
 
 TaskZoneDownloader::TaskZoneDownloader(QObject *parent) :
-    TaskDownloader(parent)
+    TaskDownloader(parent),
+    m_zoneEnabled(false),
+    m_storeText(false),
+    m_sort(false)
 {
 }
 
@@ -40,9 +43,7 @@ void TaskZoneDownloader::downloadFinished(bool success)
                     || !FileUtil::fileExists(cacheFileBinPath()))) {
             setTextChecksum(textChecksum);
 
-            QString binChecksum;
-            success = storeAddresses(list, binChecksum);
-            setBinChecksum(binChecksum);
+            success = storeAddresses(list);
         }
     }
 
@@ -90,8 +91,7 @@ QVector<QStringRef> TaskZoneDownloader::parseAddresses(const QString &text,
     return list;
 }
 
-bool TaskZoneDownloader::storeAddresses(const QVector<QStringRef> &list,
-                                        QString &binChecksum) const
+bool TaskZoneDownloader::storeAddresses(const QVector<QStringRef> &list)
 {
     Ip4Range ip4Range;
     if (!ip4Range.fromList(list, emptyNetMask(), sort()))
@@ -107,21 +107,41 @@ bool TaskZoneDownloader::storeAddresses(const QVector<QStringRef> &list,
     }
 
     // Store binary file
-    QByteArray data;
-
     ConfUtil confUtil;
-    const int bufSize = confUtil.writeZone(ip4Range, data);
+    const int bufSize = confUtil.writeZone(ip4Range, m_zoneData);
     if (bufSize == 0)
         return false;
 
-    data.resize(bufSize);
-    data = qCompress(data);
+    m_zoneData.resize(bufSize);
+
+    const auto binData = qCompress(m_zoneData);
 
     const auto binChecksumData = QCryptographicHash::hash(
-                data, QCryptographicHash::Sha256);
-    binChecksum = QString::fromLatin1(binChecksumData.toHex());
+                binData, QCryptographicHash::Sha256);
 
-    return FileUtil::writeFileData(cacheFileBinPath(), data);
+    m_binChecksum = QString::fromLatin1(binChecksumData.toHex());
+
+    return FileUtil::writeFileData(cacheFileBinPath(), binData);
+}
+
+bool TaskZoneDownloader::loadAddresses()
+{
+    if (!FileUtil::fileExists(cacheFileBinPath()))
+        return false;
+
+    const auto binData = FileUtil::readFileData(cacheFileBinPath());
+
+    const auto binChecksumData = QCryptographicHash::hash(
+                binData, QCryptographicHash::Sha256);
+
+    if (m_binChecksum != QString::fromLatin1(binChecksumData.toHex())) {
+        FileUtil::removeFile(cacheFileBinPath());
+        return false;
+    }
+
+    m_zoneData = qUncompress(binData);
+
+    return true;
 }
 
 QString TaskZoneDownloader::cacheFileBasePath() const

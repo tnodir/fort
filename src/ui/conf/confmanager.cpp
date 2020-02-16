@@ -917,6 +917,46 @@ bool ConfManager::updateDriverUpdateApp(const QString &appPath,
     return true;
 }
 
+void ConfManager::updateDriverZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
+                                    const QList<QByteArray> &zonesData)
+{
+    ConfUtil confUtil;
+    QByteArray buf;
+
+    const int entrySize = confUtil.writeZones(zonesMask, enabledMask, dataSize,
+                                              zonesData, buf);
+
+    if (entrySize == 0) {
+        showErrorMessage(confUtil.errorMessage());
+        return;
+    }
+
+    if (!driverManager()->writeZones(buf, entrySize)) {
+        showErrorMessage(driverManager()->errorMessage());
+        return;
+    }
+}
+
+bool ConfManager::updateDriverZoneFlag(int zoneId, bool enabled)
+{
+    ConfUtil confUtil;
+    QByteArray buf;
+
+    const int entrySize = confUtil.writeZoneFlag(zoneId, enabled, buf);
+
+    if (entrySize == 0) {
+        showErrorMessage(confUtil.errorMessage());
+        return false;
+    }
+
+    if (!driverManager()->writeZones(buf, entrySize, true)) {
+        showErrorMessage(driverManager()->errorMessage());
+        return false;
+    }
+
+    return true;
+}
+
 bool ConfManager::loadFromDb(FirewallConf &conf, bool &isNew)
 {
     // Load Address Groups

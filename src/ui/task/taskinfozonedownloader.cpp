@@ -10,9 +10,8 @@
 #include "../util/fileutil.h"
 #include "taskzonedownloader.h"
 
-TaskInfoZoneDownloader::TaskInfoZoneDownloader(FortManager *fortManager,
-                                               QObject *parent) :
-    TaskInfo(ZoneDownloader, fortManager, parent)
+TaskInfoZoneDownloader::TaskInfoZoneDownloader(TaskManager &taskManager) :
+    TaskInfo(ZoneDownloader, taskManager)
 {
 }
 
@@ -33,15 +32,42 @@ bool TaskInfoZoneDownloader::processResult(bool success)
 
     removeOrphanCacheFiles();
 
-    fortManager()->showTrayMessage(tr("Zone Addresses Updated!"));
+    fortManager()->showTrayMessage(tr("Zone Addresses Updated: %1.")
+                                   .arg(m_zoneNames.join(", ")));
     return true;
+}
+
+void TaskInfoZoneDownloader::loadZones()
+{
+    TaskZoneDownloader worker;
+
+    const int rowCount = zoneListModel()->rowCount();
+    for (m_zoneIndex = 0; m_zoneIndex < rowCount; ++m_zoneIndex) {
+        setupTaskWorkerByZone(&worker);
+        addSubResult(&worker, false);
+    }
+
+    removeOrphanCacheFiles();
+
+    emitZonesUpdated();
 }
 
 void TaskInfoZoneDownloader::setupTaskWorker()
 {
+    m_success = false;
+    m_zoneIndex = 0;
+    m_zonesMask = 0;
+
+    clearSubResults();
+
+    setupNextTaskWorker();
+}
+
+void TaskInfoZoneDownloader::setupNextTaskWorker()
+{
     const int rowCount = zoneListModel()->rowCount();
     if (m_zoneIndex >= rowCount) {
-        m_zoneIndex = 0;
+        emitZonesUpdated();
 
         TaskInfo::handleFinished(m_success);
         return;
@@ -52,16 +78,23 @@ void TaskInfoZoneDownloader::setupTaskWorker()
     TaskInfo::setupTaskWorker();
     auto worker = zoneDownloader();
 
+    setupTaskWorkerByZone(worker);
+}
+
+void TaskInfoZoneDownloader::setupTaskWorkerByZone(TaskZoneDownloader *worker)
+{
     const auto zoneRow = zoneListModel()->zoneRowAt(m_zoneIndex);
     const auto zoneSource = ZoneSourceWrapper(
                 zoneListModel()->zoneSourceByCode(zoneRow.sourceCode));
     const auto zoneType = ZoneTypeWrapper(
                 zoneListModel()->zoneTypeByCode(zoneSource.zoneType()));
 
+    worker->setZoneEnabled(zoneRow.enabled);
     worker->setStoreText(zoneRow.storeText);
     worker->setSort(zoneType.sort());
     worker->setEmptyNetMask(zoneType.emptyNetMask());
     worker->setZoneId(zoneRow.zoneId);
+    worker->setZoneName(zoneRow.zoneName);
     worker->setUrl(zoneRow.customUrl ? zoneRow.url
                                      : zoneSource.url());
     worker->setFormData(zoneRow.customUrl ? zoneRow.formData
@@ -72,7 +105,7 @@ void TaskInfoZoneDownloader::setupTaskWorker()
     worker->setSourceModTime(zoneRow.sourceModTime);
     worker->setLastSuccess(zoneRow.lastSuccess);
 
-    m_zoneIdSet.insert(zoneRow.zoneId);
+    insertZoneId(m_zonesMask, zoneRow.zoneId);
 }
 
 void TaskInfoZoneDownloader::handleFinished(bool success)
@@ -89,7 +122,7 @@ void TaskInfoZoneDownloader::handleFinished(bool success)
         ++m_zoneIndex;
     }
 
-    setupTaskWorker();
+    setupNextTaskWorker();
     runTaskWorker();
 }
 
@@ -110,13 +143,63 @@ void TaskInfoZoneDownloader::processSubResult(bool success)
 
     zoneListModel()->updateZoneResult(zoneId, textChecksum, binChecksum,
                                       sourceModTime, now, lastSuccess);
+
+    addSubResult(worker, success);
+}
+
+void TaskInfoZoneDownloader::clearSubResults()
+{
+    m_dataZonesMask = 0;
+    m_enabledMask = 0;
+    m_dataSize = 0;
+    m_zonesData.clear();
+}
+
+void TaskInfoZoneDownloader::addSubResult(TaskZoneDownloader *worker, bool success)
+{
+    if (success) {
+        m_zoneNames.append(worker->zoneName());
+    } else if (!worker->loadAddresses()) {
+        return;
+    }
+
+    const auto zoneData = worker->zoneData();
+    const int size = zoneData.size();
+
+    if (size == 0) return;
+
+    m_dataSize += size;
+    m_zonesData.append(zoneData);
+
+    insertZoneId(m_dataZonesMask, worker->zoneId());
+
+    if (worker->zoneEnabled()) {
+        insertZoneId(m_enabledMask, worker->zoneId());
+    }
+}
+
+void TaskInfoZoneDownloader::emitZonesUpdated()
+{
+    emit zonesUpdated(m_dataZonesMask, m_enabledMask, m_dataSize, m_zonesData);
+
+    clearSubResults();
+}
+
+void TaskInfoZoneDownloader::insertZoneId(quint32 &zonesMask, int zoneId)
+{
+    zonesMask |= (quint32(1) << (zoneId - 1));
+}
+
+bool TaskInfoZoneDownloader::containsZoneId(quint32 &zonesMask, int zoneId) const
+{
+    return (zonesMask & (quint32(1) << (zoneId - 1))) != 0;
 }
 
 void TaskInfoZoneDownloader::removeOrphanCacheFiles()
 {
     for (const auto fi : QDir(cachePath()).entryInfoList(QDir::Files)) {
         const auto zoneId = fi.baseName().toInt();
-        if (zoneId != 0 && !m_zoneIdSet.contains(zoneId)) {
+        if (zoneId != 0 && !containsZoneId(m_zonesMask, zoneId)) {
             FileUtil::removeFile(fi.filePath());
         }
     }

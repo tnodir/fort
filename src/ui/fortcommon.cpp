@@ -53,6 +53,16 @@ quint32 FortCommon::ioctlDelApp()
     return FORT_IOCTL_DELAPP;
 }
 
+quint32 FortCommon::ioctlSetZones()
+{
+    return FORT_IOCTL_SETZONES;
+}
+
+quint32 FortCommon::ioctlSetZoneFlag()
+{
+    return FORT_IOCTL_SETZONEFLAG;
+}
+
 quint32 FortCommon::userErrorCode()
 {
     return FORT_ERROR_USER_ERROR;

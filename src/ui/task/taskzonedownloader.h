@@ -12,6 +12,9 @@ class TaskZoneDownloader : public TaskDownloader
 public:
     explicit TaskZoneDownloader(QObject *parent = nullptr);
 
+    bool zoneEnabled() const { return m_zoneEnabled; }
+    void setZoneEnabled(bool v) { m_zoneEnabled = v; }
+
     bool storeText() const { return m_storeText; }
     void setStoreText(bool v) { m_storeText = v; }
 
@@ -23,6 +26,9 @@ public:
 
     int zoneId() const { return m_zoneId; }
     void setZoneId(int v) { m_zoneId = v; }
+
+    QString zoneName() const { return m_zoneName; }
+    void setZoneName(const QString &v) { m_zoneName = v; }
 
     QString url() const { return m_url; }
     void setUrl(const QString &v) { m_url = v; }
@@ -48,10 +54,13 @@ public:
     QDateTime lastSuccess() const { return m_lastSuccess; }
     void setLastSuccess(const QDateTime &v) { m_lastSuccess = v; }
 
+    const QByteArray &zoneData() const { return m_zoneData; }
+
     QVector<QStringRef> parseAddresses(const QString &text,
                                        QString &textChecksum) const;
-    bool storeAddresses(const QVector<QStringRef> &list,
-                        QString &binChecksum) const;
+
+    bool storeAddresses(const QVector<QStringRef> &list);
+    bool loadAddresses();
 
     QString cacheFileBasePath() const;
     QString cacheFileBinPath() const;
@@ -67,12 +76,15 @@ private:
     void loadLocalFile();
 
 private:
-    bool m_storeText = false;
-    bool m_sort = false;
+    bool m_zoneEnabled  : 1;
+    bool m_storeText    : 1;
+    bool m_sort         : 1;
 
     int m_emptyNetMask = 32;
 
     int m_zoneId = 0;
+
+    QString m_zoneName;
 
     QString m_url;
     QString m_formData;
@@ -86,6 +98,8 @@ private:
 
     QDateTime m_sourceModTime;
     QDateTime m_lastSuccess;
+
+    QByteArray m_zoneData;
 };
 
 #endif // TASKZONEDOWNLOADER_H

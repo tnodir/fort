@@ -49,6 +49,9 @@ public slots:
                       const QString &appPath, QByteArray &buf);
     int writeVersion(QByteArray &buf);
     int writeZone(const Ip4Range &ip4Range, QByteArray &buf);
+    int writeZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
+                   const QList<QByteArray> &zonesData, QByteArray &buf);
+    int writeZoneFlag(int zoneId, bool enabled, QByteArray &buf);
 
 private:
     void setErrorMessage(const QString &errorMessage);
@@ -121,6 +124,7 @@ private:
     static void writeNumbers(char **data, void const *src,
                              int elemCount, uint elemSize);
     static void writeChars(char **data, const chars_arr_t &array);
+    static void writeArray(char **data, const QByteArray &array);
 
 private:
     QString m_errorMessage;

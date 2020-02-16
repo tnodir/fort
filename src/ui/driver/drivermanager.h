@@ -42,6 +42,7 @@ public slots:
 
     bool writeConf(QByteArray &buf, int size, bool onlyFlags = false);
     bool writeApp(QByteArray &buf, int size, bool remove = false);
+    bool writeZones(QByteArray &buf, int size, bool onlyFlags = false);
 
 private:
     void setErrorMessage(const QString &errorMessage);

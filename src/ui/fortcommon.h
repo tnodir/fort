@@ -19,6 +19,8 @@ public:
     static quint32 ioctlGetLog();
     static quint32 ioctlAddApp();
     static quint32 ioctlDelApp();
+    static quint32 ioctlSetZones();
+    static quint32 ioctlSetZoneFlag();
 
     static quint32 userErrorCode();
 
