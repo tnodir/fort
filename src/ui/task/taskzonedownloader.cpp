@@ -1,6 +1,7 @@
 #include "taskzonedownloader.h"
 
 #include <QCryptographicHash>
+#include <QDebug>
 #include <QRegularExpression>
 #include <QUrl>
 
@@ -74,6 +75,10 @@ QVector<QStringRef> TaskZoneDownloader::parseAddresses(const QString &text,
     const QRegularExpression re(pattern());
 
     for (const auto line : text.splitRef('\n', QString::SkipEmptyParts)) {
+        if (line.startsWith('#')
+                || line.startsWith(';'))  // commented line
+            continue;
+
         const auto match = re.match(line);
         if (!match.hasMatch())
             continue;
@@ -94,8 +99,11 @@ QVector<QStringRef> TaskZoneDownloader::parseAddresses(const QString &text,
 bool TaskZoneDownloader::storeAddresses(const QVector<QStringRef> &list)
 {
     Ip4Range ip4Range;
-    if (!ip4Range.fromList(list, emptyNetMask(), sort()))
+    if (!ip4Range.fromList(list, emptyNetMask(), sort())) {
+        qWarning() << "TaskZoneDownloader:" << zoneName()
+                   << ":" << ip4Range.errorLineAndMessage();
         return false;
+    }
 
     FileUtil::removeFile(cacheFileTextPath());
     FileUtil::removeFile(cacheFileBinPath());
@@ -119,7 +127,7 @@ bool TaskZoneDownloader::storeAddresses(const QVector<QStringRef> &list)
     const auto binChecksumData = QCryptographicHash::hash(
                 binData, QCryptographicHash::Sha256);
 
-    m_binChecksum = QString::fromLatin1(binChecksumData.toHex());
+    setBinChecksum(QString::fromLatin1(binChecksumData.toHex()));
 
     return FileUtil::writeFileData(cacheFileBinPath(), binData);
 }
@@ -134,7 +142,7 @@ bool TaskZoneDownloader::loadAddresses()
     const auto binChecksumData = QCryptographicHash::hash(
                 binData, QCryptographicHash::Sha256);
 
-    if (m_binChecksum != QString::fromLatin1(binChecksumData.toHex())) {
+    if (binChecksum() != QString::fromLatin1(binChecksumData.toHex())) {
         FileUtil::removeFile(cacheFileBinPath());
         return false;
     }

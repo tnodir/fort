@@ -57,6 +57,7 @@ void TaskInfoZoneDownloader::setupTaskWorker()
     m_success = false;
     m_zoneIndex = 0;
     m_zonesMask = 0;
+    m_zoneNames.clear();
 
     clearSubResults();
 
@@ -101,6 +102,7 @@ void TaskInfoZoneDownloader::setupTaskWorkerByZone(TaskZoneDownloader *worker)
                                           : zoneSource.formData());
     worker->setPattern(zoneType.pattern());
     worker->setTextChecksum(zoneRow.textChecksum);
+    worker->setBinChecksum(zoneRow.binChecksum);
     worker->setCachePath(cachePath());
     worker->setSourceModTime(zoneRow.sourceModTime);
     worker->setLastSuccess(zoneRow.lastSuccess);
