@@ -264,7 +264,7 @@
         <translation>Ошибка конфигурации</translation>
     </message>
     <message>
-        <location filename="../conf/confmanager.cpp" line="912"/>
+        <location filename="../conf/confmanager.cpp" line="916"/>
         <source>Application &apos;%1&apos; already exists</source>
         <translation>Приложение &apos;%1&apos; уже существует</translation>
     </message>
@@ -323,63 +323,63 @@
 <context>
     <name>FortManager</name>
     <message>
-        <location filename="../fortmanager.cpp" line="536"/>
+        <location filename="../fortmanager.cpp" line="553"/>
         <source>Password input</source>
         <translation>Ввод пароля</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="536"/>
+        <location filename="../fortmanager.cpp" line="553"/>
         <source>Please enter the password</source>
         <translation>Наберите пароль пожалуйста</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="605"/>
+        <location filename="../fortmanager.cpp" line="622"/>
         <source>Please first install Fort Firewall v%1 and save Options from it.</source>
         <translation>Сперва установите Fort Firewall v%1 и сохраните Опции пожалуйста.</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="855"/>
+        <location filename="../fortmanager.cpp" line="882"/>
         <source>Programs</source>
         <translation>Программы</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="856"/>
+        <location filename="../fortmanager.cpp" line="883"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="857"/>
+        <location filename="../fortmanager.cpp" line="884"/>
         <source>Zones</source>
         <translation>Зоны</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="858"/>
+        <location filename="../fortmanager.cpp" line="885"/>
         <source>Traffic Graph</source>
         <translation>График трафика</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="860"/>
+        <location filename="../fortmanager.cpp" line="887"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="861"/>
+        <location filename="../fortmanager.cpp" line="888"/>
         <source>Stop Traffic</source>
         <translation>Остановить трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="862"/>
+        <location filename="../fortmanager.cpp" line="889"/>
         <source>Stop Internet Traffic</source>
         <translation>Остановить Интернет трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="863"/>
+        <location filename="../fortmanager.cpp" line="890"/>
         <source>Auto-Allow All New Programs</source>
         <translation>Авто-разрешение всех новых программ</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="822"/>
-        <location filename="../fortmanager.cpp" line="865"/>
+        <location filename="../fortmanager.cpp" line="849"/>
+        <location filename="../fortmanager.cpp" line="892"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -762,8 +762,8 @@
     </message>
     <message>
         <location filename="../form/prog/programswindow.cpp" line="136"/>
-        <source> hours</source>
-        <translation> час.</translation>
+        <source> hour(s)</source>
+        <translation> час(ов)</translation>
     </message>
     <message>
         <location filename="../form/prog/programswindow.cpp" line="125"/>
@@ -853,8 +853,8 @@
     </message>
     <message>
         <location filename="../form/opt/pages/schedulepage.cpp" line="82"/>
-        <source> hours</source>
-        <translation> час.</translation>
+        <source> hour(s)</source>
+        <translation> час(ов)</translation>
     </message>
 </context>
 <context>
@@ -907,7 +907,7 @@
     <message>
         <location filename="../form/opt/pages/statisticspage.cpp" line="138"/>
         <location filename="../form/opt/pages/statisticspage.cpp" line="140"/>
-        <source> days</source>
+        <source> day(s)</source>
         <translation> дней</translation>
     </message>
     <message>
@@ -922,8 +922,8 @@
     </message>
     <message>
         <location filename="../form/opt/pages/statisticspage.cpp" line="142"/>
-        <source> months</source>
-        <translation> месяцев</translation>
+        <source> month(s)</source>
+        <translation> месяц(ев)</translation>
     </message>
     <message>
         <location filename="../form/opt/pages/statisticspage.cpp" line="143"/>
@@ -1142,7 +1142,7 @@
 <context>
     <name>TaskInfoZoneDownloader</name>
     <message>
-        <location filename="../task/taskinfozonedownloader.cpp" line="35"/>
+        <location filename="../task/taskinfozonedownloader.cpp" line="33"/>
         <source>Zone Addresses Updated: %1.</source>
         <translation>Адреса Зон обновлены: %1.</translation>
     </message>

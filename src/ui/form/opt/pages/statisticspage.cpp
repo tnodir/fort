@@ -135,11 +135,11 @@ void StatisticsPage::onRetranslateUi()
     m_ctpActivePeriod->checkBox()->setText(tr("Active time period:"));
     m_lscMonthStart->label()->setText(tr("Month starts on:"));
     m_lscTrafHourKeepDays->label()->setText(tr("Keep data for 'Hourly':"));
-    m_lscTrafHourKeepDays->spinBox()->setSuffix(tr(" days"));
+    m_lscTrafHourKeepDays->spinBox()->setSuffix(tr(" day(s)"));
     m_lscTrafDayKeepDays->label()->setText(tr("Keep data for 'Daily':"));
-    m_lscTrafDayKeepDays->spinBox()->setSuffix(tr(" days"));
+    m_lscTrafDayKeepDays->spinBox()->setSuffix(tr(" day(s)"));
     m_lscTrafMonthKeepMonths->label()->setText(tr("Keep data for 'Monthly':"));
-    m_lscTrafMonthKeepMonths->spinBox()->setSuffix(tr(" months"));
+    m_lscTrafMonthKeepMonths->spinBox()->setSuffix(tr(" month(s)"));
     m_lscQuotaDayMb->label()->setText(tr("Day's Quota:"));
     m_lscQuotaMonthMb->label()->setText(tr("Month's Quota:"));
 

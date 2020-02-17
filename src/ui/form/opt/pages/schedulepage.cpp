@@ -79,7 +79,7 @@ void SchedulePage::retranslateTaskDetails()
     };
 
     m_cscTaskInterval->setNames(list);
-    m_cscTaskInterval->spinBox()->setSuffix(tr(" hours"));
+    m_cscTaskInterval->spinBox()->setSuffix(tr(" hour(s)"));
 }
 
 void SchedulePage::setupTaskListModel()

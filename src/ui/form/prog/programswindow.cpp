@@ -133,7 +133,7 @@ void ProgramsWindow::retranslateAppBlockInHours()
     };
 
     m_cscBlockAppIn->setNames(list);
-    m_cscBlockAppIn->spinBox()->setSuffix(tr(" hours"));
+    m_cscBlockAppIn->spinBox()->setSuffix(tr(" hour(s)"));
 }
 
 void ProgramsWindow::setupUi()
