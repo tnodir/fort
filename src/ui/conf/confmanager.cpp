@@ -587,6 +587,10 @@ end:
         m_appEndTimer.start();
     }
 
+    if (ok && alerted) {
+        emit alertedAppAdded();
+    }
+
     return ok;
 }
 

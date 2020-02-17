@@ -164,6 +164,8 @@ private:
     void saveGraphWindowState(bool visible);
     void restoreGraphWindowState();
 
+    void updateTrayIcon(bool alerted = false);
+
     void updateTrayMenu(bool onlyFlags = false);
     void createTrayMenu();
     void updateTrayMenuFlags();

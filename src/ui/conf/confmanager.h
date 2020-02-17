@@ -97,6 +97,7 @@ public:
 signals:
     void confSaved(bool onlyFlags);
     void appEndTimesUpdated();
+    void alertedAppAdded();
 
 private:
     void showErrorMessage(const QString &errorMessage);

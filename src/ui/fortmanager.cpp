@@ -208,6 +208,10 @@ void FortManager::setupStatManager()
 void FortManager::setupConfManager()
 {
     confManager()->initialize();
+
+    connect(confManager(), &ConfManager::alertedAppAdded, this, [&] {
+        updateTrayIcon(true);
+    });
 }
 
 void FortManager::setupLogger()
@@ -234,7 +238,6 @@ void FortManager::setupTaskManager()
 void FortManager::setupTrayIcon()
 {
     m_trayIcon->setToolTip(QGuiApplication::applicationDisplayName());
-    m_trayIcon->setIcon(QIcon(":/images/sheild-96.png"));
 
     connect(m_trayIcon, &QSystemTrayIcon::activated, this,
             [this](QSystemTrayIcon::ActivationReason reason) {
@@ -276,6 +279,7 @@ void FortManager::setupTrayIcon()
     connect(this, &FortManager::optWindowChanged,
             this, &FortManager::updateTrayMenuFlags);
 
+    updateTrayIcon();
     updateTrayMenu();
 }
 
@@ -300,6 +304,10 @@ bool FortManager::setupProgramsWindow()
     m_progWindow = new ProgramsWindow(this);
 
     m_progWindowState->install(m_progWindow);
+
+    connect(m_progWindow, &ProgramsWindow::activationChanged, this, [&] {
+        updateTrayIcon(false);
+    });
 
     return true;
 }
@@ -734,6 +742,16 @@ void FortManager::restoreGraphWindowState()
     m_graphWindowState->restore(m_graphWindow, QSize(400, 300),
                                 settings()->graphWindowGeometry(),
                                 settings()->graphWindowMaximized());
+}
+
+void FortManager::updateTrayIcon(bool alerted)
+{
+    const auto icon = alerted
+            ? GuiUtil::overlayIcon(":/images/sheild-96.png",
+                                   ":/images/error.png")
+            : QIcon(":/images/sheild-96.png");
+
+    m_trayIcon->setIcon(icon);
 }
 
 void FortManager::updateTrayMenu(bool onlyFlags)

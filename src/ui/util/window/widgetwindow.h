@@ -11,6 +11,8 @@ public:
     explicit WidgetWindow(QWidget *parent = nullptr);
 
 signals:
+    void activationChanged();
+
     void positionChanged();
     void sizeChanged();
 
