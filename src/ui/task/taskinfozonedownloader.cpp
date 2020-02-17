@@ -30,8 +30,6 @@ bool TaskInfoZoneDownloader::processResult(bool success)
     if (!success)
         return false;
 
-    removeOrphanCacheFiles();
-
     fortManager()->showTrayMessage(tr("Zone Addresses Updated: %1.")
                                    .arg(m_zoneNames.join(", ")));
     return true;
@@ -46,8 +44,6 @@ void TaskInfoZoneDownloader::loadZones()
         setupTaskWorkerByZone(&worker);
         addSubResult(&worker, false);
     }
-
-    removeOrphanCacheFiles();
 
     emitZonesUpdated();
 }
@@ -183,6 +179,8 @@ void TaskInfoZoneDownloader::addSubResult(TaskZoneDownloader *worker, bool succe
 void TaskInfoZoneDownloader::emitZonesUpdated()
 {
     emit zonesUpdated(m_dataZonesMask, m_enabledMask, m_dataSize, m_zonesData);
+
+    removeOrphanCacheFiles();
 
     clearSubResults();
 }
