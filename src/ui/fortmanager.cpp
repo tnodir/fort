@@ -270,7 +270,7 @@ void FortManager::setupTrayIcon()
             showZonesWindow();
             break;
         default:
-            showProgramsWindow();
+            showOptionsWindow();
         }
     });
 
