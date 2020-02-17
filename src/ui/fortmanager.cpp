@@ -261,8 +261,15 @@ void FortManager::setupTrayIcon()
         }
     });
 
-    connect(m_trayIcon, &QSystemTrayIcon::messageClicked,
-            this, &FortManager::showProgramsWindow);
+    connect(m_trayIcon, &QSystemTrayIcon::messageClicked, this, [&] {
+        switch (m_lastMessageType) {
+        case MessageZones:
+            showZonesWindow();
+            break;
+        default:
+            showProgramsWindow();
+        }
+    });
 
     connect(confManager(), &ConfManager::confSaved,
             this, &FortManager::updateTrayMenu);
@@ -337,8 +344,10 @@ void FortManager::showTrayIcon()
     m_trayIcon->show();
 }
 
-void FortManager::showTrayMessage(const QString &message)
+void FortManager::showTrayMessage(const QString &message,
+                                  FortManager::TrayMessageType type)
 {
+    m_lastMessageType = type;
     m_trayIcon->showMessage(QGuiApplication::applicationDisplayName(), message);
 }
 

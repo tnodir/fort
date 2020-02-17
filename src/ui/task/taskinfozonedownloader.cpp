@@ -31,7 +31,8 @@ bool TaskInfoZoneDownloader::processResult(bool success)
         return false;
 
     fortManager()->showTrayMessage(tr("Zone Addresses Updated: %1.")
-                                   .arg(m_zoneNames.join(", ")));
+                                   .arg(m_zoneNames.join(", ")),
+                                   FortManager::MessageZones);
     return true;
 }
 

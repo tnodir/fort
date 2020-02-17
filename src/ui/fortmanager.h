@@ -34,6 +34,12 @@ class FortManager : public QObject
     Q_OBJECT
 
 public:
+    enum TrayMessageType {
+        MessageOptions,
+        MessageZones
+    };
+    Q_ENUM(TrayMessageType)
+
     explicit FortManager(FortSettings *settings,
                          QObject *parent = nullptr);
     ~FortManager() override;
@@ -71,7 +77,8 @@ public slots:
     void launch();
 
     void showTrayIcon();
-    void showTrayMessage(const QString &message);
+    void showTrayMessage(const QString &message,
+                         FortManager::TrayMessageType type = MessageOptions);
     void showTrayMenu(QMouseEvent *event);
 
     void showProgramsWindow();
@@ -175,6 +182,8 @@ private:
 
 private:
     MainWindow m_window;  // dummy window for tray icon
+
+    TrayMessageType m_lastMessageType = MessageOptions;
 
     bool m_trayTriggered = false;
     QSystemTrayIcon *m_trayIcon = nullptr;
