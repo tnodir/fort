@@ -13,6 +13,7 @@ QT_FORWARD_DECLARE_CLASS(ConfManager)
 QT_FORWARD_DECLARE_CLASS(FortManager)
 QT_FORWARD_DECLARE_CLASS(FortSettings)
 QT_FORWARD_DECLARE_CLASS(TableView)
+QT_FORWARD_DECLARE_CLASS(TaskManager)
 QT_FORWARD_DECLARE_CLASS(ZoneListModel)
 QT_FORWARD_DECLARE_CLASS(ZonesController)
 
@@ -59,6 +60,7 @@ private:
     FortManager *fortManager() const;
     FortSettings *settings() const;
     ConfManager *confManager() const;
+    TaskManager *taskManager() const;
     ZoneListModel *zoneListModel() const;
 
 private:
@@ -70,11 +72,11 @@ private:
     QAction *m_actAddZone = nullptr;
     QAction *m_actEditZone = nullptr;
     QAction *m_actRemoveZone = nullptr;
+    QPushButton *m_btSaveAsText = nullptr;
     QLabel *m_labelZoneName = nullptr;
     QLineEdit *m_editZoneName = nullptr;
     QLabel *m_labelSource = nullptr;
     QCheckBox *m_cbEnabled = nullptr;
-    QCheckBox *m_cbStoreText = nullptr;
     QCheckBox *m_cbCustomUrl = nullptr;
     QComboBox *m_comboSources = nullptr;
     QLabel *m_labelUrl = nullptr;

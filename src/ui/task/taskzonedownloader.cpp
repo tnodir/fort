@@ -13,7 +13,6 @@
 TaskZoneDownloader::TaskZoneDownloader(QObject *parent) :
     TaskDownloader(parent),
     m_zoneEnabled(false),
-    m_storeText(false),
     m_sort(false)
 {
 }
@@ -105,14 +104,7 @@ bool TaskZoneDownloader::storeAddresses(const QVector<QStringRef> &list)
         return false;
     }
 
-    FileUtil::removeFile(cacheFileTextPath());
     FileUtil::removeFile(cacheFileBinPath());
-
-    // Store text file
-    if (storeText()) {
-        const auto text = ip4Range.toText();
-        FileUtil::writeFile(cacheFileTextPath(), text);
-    }
 
     // Store binary file
     ConfUtil confUtil;
@@ -152,6 +144,22 @@ bool TaskZoneDownloader::loadAddresses()
     return true;
 }
 
+bool TaskZoneDownloader::saveAddressesAsText(const QString &filePath)
+{
+    QString text;
+
+    if (loadAddresses() && !zoneData().isEmpty()) {
+        ConfUtil confUtil;
+        Ip4Range ip4Range;
+        if (!confUtil.loadZone(m_zoneData, ip4Range))
+            return false;
+
+        text = ip4Range.toText();
+    }
+
+    return FileUtil::writeFile(filePath, text);
+}
+
 QString TaskZoneDownloader::cacheFileBasePath() const
 {
     return cachePath() + QString::number(zoneId());
@@ -160,9 +168,4 @@ QString TaskZoneDownloader::cacheFileBasePath() const
 QString TaskZoneDownloader::cacheFileBinPath() const
 {
     return cacheFileBasePath() + ".bin";
-}
-
-QString TaskZoneDownloader::cacheFileTextPath() const
-{
-    return cacheFileBasePath() + ".txt";
 }

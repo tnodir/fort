@@ -45,6 +45,8 @@ public:
                                    const QString &filter = QString());
     static QStringList getOpenFileNames(const QString &title = QString(),
                                         const QString &filter = QString());
+    static QString getSaveFileName(const QString &title = QString(),
+                                   const QString &filter = QString());
 
     static QColor getColor(const QColor &initial = Qt::white,
                            const QString &title = QString());

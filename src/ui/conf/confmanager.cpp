@@ -24,7 +24,7 @@ Q_LOGGING_CATEGORY(CLOG_CONF_MANAGER, "fort.confManager")
 #define logWarning() qCWarning(CLOG_CONF_MANAGER,)
 #define logCritical() qCCritical(CLOG_CONF_MANAGER,)
 
-#define DATABASE_USER_VERSION   6
+#define DATABASE_USER_VERSION   7
 
 namespace {
 
@@ -182,9 +182,9 @@ const char * const sqlUpdateAppResetGroup =
         ;
 
 const char * const sqlInsertZone =
-        "INSERT INTO zone(zone_id, name, enabled, store_text, custom_url,"
+        "INSERT INTO zone(zone_id, name, enabled, custom_url,"
         "    source_code, url, form_data)"
-        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8);"
+        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7);"
         ;
 
 const char * const sqlSelectZoneIds =
@@ -203,8 +203,8 @@ const char * const sqlDeleteAddressGroupZone =
 
 const char * const sqlUpdateZone =
         "UPDATE zone"
-        "  SET name = ?2, enabled = ?3, store_text = ?4, custom_url = ?5,"
-        "    source_code = ?6, url = ?7, form_data = ?8"
+        "  SET name = ?2, enabled = ?3, custom_url = ?4,"
+        "    source_code = ?5, url = ?6, form_data = ?7"
         "  WHERE zone_id = ?1;"
         ;
 
@@ -721,8 +721,7 @@ void ConfManager::checkAppEndTimes()
 
 bool ConfManager::addZone(const QString &zoneName, const QString &sourceCode,
                           const QString &url, const QString &formData,
-                          bool enabled, bool storeText, bool customUrl,
-                          int &zoneId)
+                          bool enabled, bool customUrl, int &zoneId)
 {
     bool ok = false;
 
@@ -732,7 +731,6 @@ bool ConfManager::addZone(const QString &zoneName, const QString &sourceCode,
             << zoneId
             << zoneName
             << enabled
-            << storeText
             << customUrl
             << sourceCode
             << url
@@ -782,8 +780,7 @@ end:
 
 bool ConfManager::updateZone(int zoneId, const QString &zoneName,
                              const QString &sourceCode, const QString &url,
-                             const QString &formData, bool enabled,
-                             bool storeText, bool customUrl)
+                             const QString &formData, bool enabled, bool customUrl)
 {
     bool ok = false;
 
@@ -791,7 +788,6 @@ bool ConfManager::updateZone(int zoneId, const QString &zoneName,
             << zoneId
             << zoneName
             << enabled
-            << storeText
             << customUrl
             << sourceCode
             << url

@@ -127,11 +127,10 @@ const ZoneRow &ZoneListModel::zoneRowAt(int row) const
 
 bool ZoneListModel::addZone(const QString &zoneName, const QString &sourceCode,
                             const QString &url, const QString &formData,
-                            bool enabled, bool storeText, bool customUrl,
-                            int &zoneId)
+                            bool enabled, bool customUrl, int &zoneId)
 {
     if (confManager()->addZone(zoneName, sourceCode, url, formData,
-                               enabled, storeText, customUrl, zoneId)) {
+                               enabled, customUrl, zoneId)) {
         reset();
         return true;
     }
@@ -141,14 +140,14 @@ bool ZoneListModel::addZone(const QString &zoneName, const QString &sourceCode,
 
 bool ZoneListModel::updateZone(int zoneId, const QString &zoneName,
                                const QString &sourceCode, const QString &url,
-                               const QString &formData, bool enabled, bool storeText,
+                               const QString &formData, bool enabled,
                                bool customUrl, bool updateDriver)
 {
     if (updateDriver && !confManager()->updateDriverZoneFlag(zoneId, enabled))
         return false;
 
     if (confManager()->updateZone(zoneId, zoneName, sourceCode, url, formData,
-                                  enabled, storeText, customUrl)) {
+                                  enabled, customUrl)) {
         refresh();
         return true;
     }
@@ -241,17 +240,16 @@ bool ZoneListModel::updateTableRow(int row) const
 
     m_zoneRow.zoneId = stmt.columnInt(0);
     m_zoneRow.enabled = stmt.columnBool(1);
-    m_zoneRow.storeText = stmt.columnBool(2);
-    m_zoneRow.customUrl = stmt.columnBool(3);
-    m_zoneRow.zoneName = stmt.columnText(4);
-    m_zoneRow.sourceCode = stmt.columnText(5);
-    m_zoneRow.url = stmt.columnText(6);
-    m_zoneRow.formData = stmt.columnText(7);
-    m_zoneRow.textChecksum = stmt.columnText(8);
-    m_zoneRow.binChecksum = stmt.columnText(9);
-    m_zoneRow.sourceModTime = stmt.columnDateTime(10);
-    m_zoneRow.lastRun = stmt.columnDateTime(11);
-    m_zoneRow.lastSuccess = stmt.columnDateTime(12);
+    m_zoneRow.customUrl = stmt.columnBool(2);
+    m_zoneRow.zoneName = stmt.columnText(3);
+    m_zoneRow.sourceCode = stmt.columnText(4);
+    m_zoneRow.url = stmt.columnText(5);
+    m_zoneRow.formData = stmt.columnText(6);
+    m_zoneRow.textChecksum = stmt.columnText(7);
+    m_zoneRow.binChecksum = stmt.columnText(8);
+    m_zoneRow.sourceModTime = stmt.columnDateTime(9);
+    m_zoneRow.lastRun = stmt.columnDateTime(10);
+    m_zoneRow.lastSuccess = stmt.columnDateTime(11);
 
     return true;
 }
@@ -262,7 +260,6 @@ QString ZoneListModel::sqlBase() const
             "SELECT"
             "    zone_id,"
             "    enabled,"
-            "    store_text,"
             "    custom_url,"
             "    name,"
             "    source_code,"

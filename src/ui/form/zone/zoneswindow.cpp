@@ -16,6 +16,8 @@
 #include "../../fortsettings.h"
 #include "../../model/zonelistmodel.h"
 #include "../../model/zonesourcewrapper.h"
+#include "../../task/taskmanager.h"
+#include "../../task/taskinfozonedownloader.h"
 #include "../../util/guiutil.h"
 #include "../../util/conf/confutil.h"
 #include "../controls/controlutil.h"
@@ -77,6 +79,7 @@ void ZonesWindow::onRetranslateUi()
     m_actAddZone->setText(tr("Add"));
     m_actEditZone->setText(tr("Edit"));
     m_actRemoveZone->setText(tr("Remove"));
+    m_btSaveAsText->setText(tr("Save As Text"));
 
     m_formZoneEdit->unsetLocale();
     m_formZoneEdit->setWindowTitle(tr("Edit Zone"));
@@ -84,7 +87,6 @@ void ZonesWindow::onRetranslateUi()
     m_labelZoneName->setText(tr("Zone Name:"));
     m_labelSource->setText(tr("Source:"));
     m_cbEnabled->setText(tr("Enabled"));
-    m_cbStoreText->setText(tr("Store Text"));
     m_cbCustomUrl->setText(tr("Custom URL"));
     m_labelUrl->setText(tr("URL:"));
     m_labelFormData->setText(tr("Form Data:"));
@@ -153,11 +155,6 @@ void ZonesWindow::setupZoneEditForm()
     m_cbEnabled = new QCheckBox();
 
     formLayout->addRow(QString(), m_cbEnabled);
-
-    // Store Text
-    m_cbStoreText = new QCheckBox();
-
-    formLayout->addRow(QString(), m_cbStoreText);
 
     // Custom URL
     m_cbCustomUrl = new QCheckBox();
@@ -263,7 +260,24 @@ QLayout *ZonesWindow::setupHeader()
     m_btEdit = new WideButton(QIcon(":/images/map_edit.png"));
     m_btEdit->setMenu(editMenu);
 
+    // Save As Text
+    m_btSaveAsText = ControlUtil::createButton(":/images/database_save.png", [&] {
+        const auto filePath = ControlUtil::getSaveFileName(
+                    m_btSaveAsText->text(),
+                    tr("Text files (*.txt);;All files (*.*)"));
+
+        if (!filePath.isEmpty()) {
+            const int zoneIndex = zoneListCurrentIndex();
+
+            if (!taskManager()->taskInfoZoneDownloader()
+                    ->saveZoneAsText(filePath, zoneIndex)) {
+                fortManager()->showErrorBox(tr("Cannot save Zone addresses as text file"));
+            }
+        }
+    });
+
     layout->addWidget(m_btEdit);
+    layout->addWidget(m_btSaveAsText);
     layout->addStretch();
 
     return layout;
@@ -304,6 +318,7 @@ void ZonesWindow::setupTableZonesChanged()
         const bool zoneSelected = (zoneIndex >= 0);
         m_actEditZone->setEnabled(zoneSelected);
         m_actRemoveZone->setEnabled(zoneSelected);
+        m_btSaveAsText->setEnabled(zoneSelected);
     };
 
     refreshTableZonesChanged();
@@ -343,7 +358,6 @@ void ZonesWindow::updateZoneEditForm(bool editCurrentZone)
     m_editZoneName->setFocus();
     m_comboSources->setCurrentIndex(zoneSource.index());
     m_cbEnabled->setChecked(zoneRow.enabled);
-    m_cbStoreText->setChecked(zoneRow.storeText);
     m_cbCustomUrl->setChecked(zoneRow.customUrl);
     m_editUrl->setText(zoneRow.url);
     m_editFormData->setText(zoneRow.formData);
@@ -362,7 +376,6 @@ bool ZonesWindow::saveZoneEditForm()
 
     const auto zoneName = m_editZoneName->text();
     const bool enabled = m_cbEnabled->isChecked();
-    const bool storeText = m_cbStoreText->isChecked();
     const bool customUrl = m_cbCustomUrl->isChecked();
     const auto url = m_editUrl->text();
     const auto formData = m_editFormData->text();
@@ -386,7 +399,7 @@ bool ZonesWindow::saveZoneEditForm()
     if (m_formZoneIsNew) {
         int zoneId;
         if (zoneListModel()->addZone(zoneName, sourceCode, url, formData,
-                                     enabled, storeText, customUrl, zoneId)) {
+                                     enabled, customUrl, zoneId)) {
             m_zoneListView->selectCell(zoneId - 1);
             return true;
         }
@@ -400,7 +413,6 @@ bool ZonesWindow::saveZoneEditForm()
     const bool zoneNameEdited = (zoneName != zoneRow.zoneName);
     const bool zoneEdited = (sourceCode != zoneRow.sourceCode
             || enabled != zoneRow.enabled
-            || storeText != zoneRow.storeText
             || customUrl != zoneRow.customUrl
             || url != zoneRow.url
             || formData != zoneRow.formData);
@@ -413,7 +425,7 @@ bool ZonesWindow::saveZoneEditForm()
     }
 
     return zoneListModel()->updateZone(zoneRow.zoneId, zoneName, sourceCode,
-                                       url, formData, enabled, storeText,
+                                       url, formData, enabled,
                                        customUrl, zoneEdited);
 }
 
@@ -423,7 +435,7 @@ void ZonesWindow::updateZone(int row, bool enabled)
 
     zoneListModel()->updateZone(zoneRow.zoneId, zoneRow.zoneName,
                                 zoneRow.sourceCode, zoneRow.url, zoneRow.formData,
-                                enabled, zoneRow.storeText, zoneRow.customUrl);
+                                enabled, zoneRow.customUrl);
 }
 
 void ZonesWindow::deleteZone(int row)
@@ -460,6 +472,11 @@ FortSettings *ZonesWindow::settings() const
 ConfManager *ZonesWindow::confManager() const
 {
     return ctrl()->confManager();
+}
+
+TaskManager *ZonesWindow::taskManager() const
+{
+    return fortManager()->taskManager();
 }
 
 ZoneListModel *ZonesWindow::zoneListModel() const

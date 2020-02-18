@@ -67,14 +67,12 @@ public:
 
     bool addZone(const QString &zoneName, const QString &sourceCode,
                  const QString &url, const QString &formData,
-                 bool enabled, bool storeText, bool customUrl,
-                 int &zoneId);
+                 bool enabled, bool customUrl, int &zoneId);
     int getFreeZoneId();
     bool deleteZone(int zoneId);
     bool updateZone(int zoneId, const QString &zoneName,
                     const QString &sourceCode, const QString &url,
-                    const QString &formData, bool enabled,
-                    bool storeText, bool customUrl);
+                    const QString &formData, bool enabled, bool customUrl);
     bool updateZoneName(int zoneId, const QString &zoneName);
     bool updateZoneEnabled(int zoneId, bool enabled);
     bool updateZoneResult(int zoneId, const QString &textChecksum,

@@ -233,6 +233,29 @@ int ConfUtil::writeZoneFlag(int zoneId, bool enabled, QByteArray &buf)
     return flagSize;
 }
 
+bool ConfUtil::loadZone(const QByteArray &buf, Ip4Range &ip4Range)
+{
+    const uint bufSize = buf.size();
+    if (bufSize < FORT_CONF_ADDR_LIST_OFF)
+        return false;
+
+    PFORT_CONF_ADDR_LIST addr_list = (PFORT_CONF_ADDR_LIST) buf.data();
+    char *data = (char *) addr_list->ip;
+
+    if (bufSize < FORT_CONF_ADDR_LIST_SIZE(addr_list->ip_n, addr_list->pair_n))
+        return false;
+
+    ip4Range.ipArray().resize(addr_list->ip_n);
+    ip4Range.pairFromArray().resize(addr_list->pair_n);
+    ip4Range.pairToArray().resize(addr_list->pair_n);
+
+    loadLongs(&data, ip4Range.ipArray());
+    loadLongs(&data, ip4Range.pairFromArray());
+    loadLongs(&data, ip4Range.pairToArray());
+
+    return true;
+}
+
 bool ConfUtil::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
                                   addrranges_arr_t &addressRanges,
                                   longs_arr_t &addressGroupOffsets,
@@ -673,16 +696,16 @@ void ConfUtil::writeApps(char **data, const appentry_map_t &apps,
 
 void ConfUtil::writeShorts(char **data, const shorts_arr_t &array)
 {
-    writeNumbers(data, array.constData(), array.size(), sizeof(quint16));
+    writeData(data, array.constData(), array.size(), sizeof(quint16));
 }
 
 void ConfUtil::writeLongs(char **data, const longs_arr_t &array)
 {
-    writeNumbers(data, array.constData(), array.size(), sizeof(quint32));
+    writeData(data, array.constData(), array.size(), sizeof(quint32));
 }
 
-void ConfUtil::writeNumbers(char **data, void const *src,
-                            int elemCount, uint elemSize)
+void ConfUtil::writeData(char **data, void const *src,
+                         int elemCount, uint elemSize)
 {
     const size_t arraySize = size_t(elemCount) * elemSize;
 
@@ -706,5 +729,19 @@ void ConfUtil::writeArray(char **data, const QByteArray &array)
 
     memcpy(*data, array.constData(), arraySize);
 
-    *data += FORT_CONF_STR_DATA_SIZE(arraySize);
+    *data += arraySize;
+}
+
+void ConfUtil::loadLongs(char **data, longs_arr_t &array)
+{
+    loadData(data, array.data(), array.size(), sizeof(quint32));
+}
+
+void ConfUtil::loadData(char **data, void *dst, int elemCount, uint elemSize)
+{
+    const size_t arraySize = size_t(elemCount) * elemSize;
+
+    memcpy(dst, *data, arraySize);
+
+    *data += arraySize;
 }

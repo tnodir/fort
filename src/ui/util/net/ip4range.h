@@ -28,9 +28,13 @@ public:
     QString errorLineAndMessage() const;
 
     const ip4_arr_t &ipArray() const { return m_ipArray; }
+    ip4_arr_t &ipArray() { return m_ipArray; }
 
     const ip4_arr_t &pairFromArray() const { return m_pairFromArray; }
+    ip4_arr_t &pairFromArray() { return m_pairFromArray; }
+
     const ip4_arr_t &pairToArray() const { return m_pairToArray; }
+    ip4_arr_t &pairToArray() { return m_pairToArray; }
 
     int ipSize() const { return m_ipArray.size(); }
     int pairSize() const { return m_pairToArray.size(); }

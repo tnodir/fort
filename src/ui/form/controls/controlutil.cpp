@@ -157,6 +157,13 @@ QStringList ControlUtil::getOpenFileNames(const QString &title,
                 nullptr, QFileDialog::ReadOnly);
 }
 
+QString ControlUtil::getSaveFileName(const QString &title, const QString &filter)
+{
+    return QFileDialog::getSaveFileName(
+                nullptr, title, QString(), filter,
+                nullptr, QFileDialog::ReadOnly);
+}
+
 QColor ControlUtil::getColor(const QColor &initial,
                              const QString &title)
 {

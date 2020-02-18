@@ -27,6 +27,7 @@ public slots:
     bool processResult(bool success) override;
 
     void loadZones();
+    bool saveZoneAsText(const QString &filePath, int zoneIndex);
 
 protected slots:
     void setupTaskWorker() override;

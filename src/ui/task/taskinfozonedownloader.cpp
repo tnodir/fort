@@ -49,6 +49,18 @@ void TaskInfoZoneDownloader::loadZones()
     emitZonesUpdated();
 }
 
+bool TaskInfoZoneDownloader::saveZoneAsText(const QString &filePath,
+                                            int zoneIndex)
+{
+    TaskZoneDownloader worker;
+
+    m_zoneIndex = zoneIndex;
+
+    setupTaskWorkerByZone(&worker);
+
+    return worker.saveAddressesAsText(filePath);
+}
+
 void TaskInfoZoneDownloader::setupTaskWorker()
 {
     m_success = false;
@@ -88,7 +100,6 @@ void TaskInfoZoneDownloader::setupTaskWorkerByZone(TaskZoneDownloader *worker)
                 zoneListModel()->zoneTypeByCode(zoneSource.zoneType()));
 
     worker->setZoneEnabled(zoneRow.enabled);
-    worker->setStoreText(zoneRow.storeText);
     worker->setSort(zoneType.sort());
     worker->setEmptyNetMask(zoneType.emptyNetMask());
     worker->setZoneId(zoneRow.zoneId);

@@ -15,9 +15,6 @@ public:
     bool zoneEnabled() const { return m_zoneEnabled; }
     void setZoneEnabled(bool v) { m_zoneEnabled = v; }
 
-    bool storeText() const { return m_storeText; }
-    void setStoreText(bool v) { m_storeText = v; }
-
     bool sort() const { return m_sort; }
     void setSort(bool v) { m_sort = v; }
 
@@ -62,9 +59,10 @@ public:
     bool storeAddresses(const QVector<QStringRef> &list);
     bool loadAddresses();
 
+    bool saveAddressesAsText(const QString &filePath);
+
     QString cacheFileBasePath() const;
     QString cacheFileBinPath() const;
-    QString cacheFileTextPath() const;
 
 protected:
     void setupDownloader() override;
@@ -77,7 +75,6 @@ private:
 
 private:
     bool m_zoneEnabled  : 1;
-    bool m_storeText    : 1;
     bool m_sort         : 1;
 
     int m_emptyNetMask = 32;

@@ -53,6 +53,8 @@ public slots:
                    const QList<QByteArray> &zonesData, QByteArray &buf);
     int writeZoneFlag(int zoneId, bool enabled, QByteArray &buf);
 
+    bool loadZone(const QByteArray &buf, Ip4Range &ip4Range);
+
 private:
     void setErrorMessage(const QString &errorMessage);
 
@@ -121,10 +123,14 @@ private:
 
     static void writeShorts(char **data, const shorts_arr_t &array);
     static void writeLongs(char **data, const longs_arr_t &array);
-    static void writeNumbers(char **data, void const *src,
-                             int elemCount, uint elemSize);
+    static void writeData(char **data, void const *src,
+                          int elemCount, uint elemSize);
     static void writeChars(char **data, const chars_arr_t &array);
     static void writeArray(char **data, const QByteArray &array);
+
+    static void loadLongs(char **data, longs_arr_t &array);
+    static void loadData(char **data, void *dst,
+                         int elemCount, uint elemSize);
 
 private:
     QString m_errorMessage;
