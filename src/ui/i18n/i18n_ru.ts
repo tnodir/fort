@@ -1128,7 +1128,7 @@
     <message>
         <location filename="../task/taskinfo.cpp" line="67"/>
         <source>Zones Downloader</source>
-        <translation>Скачивание зон</translation>
+        <translation>Загрузка Зон</translation>
     </message>
 </context>
 <context>
