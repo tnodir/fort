@@ -264,7 +264,7 @@
         <translation>Ошибка конфигурации</translation>
     </message>
     <message>
-        <location filename="../conf/confmanager.cpp" line="916"/>
+        <location filename="../conf/confmanager.cpp" line="912"/>
         <source>Application &apos;%1&apos; already exists</source>
         <translation>Приложение &apos;%1&apos; уже существует</translation>
     </message>
@@ -272,22 +272,22 @@
 <context>
     <name>ConfUtil</name>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="256"/>
+        <location filename="../util/conf/confutil.cpp" line="279"/>
         <source>Bad Include IP address: %1</source>
         <translation>Некорректный IP адрес для включения: %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="264"/>
+        <location filename="../util/conf/confutil.cpp" line="287"/>
         <source>Bad Exclude IP address: %1</source>
         <translation>Некорректный IP адрес для исключения: %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="278"/>
+        <location filename="../util/conf/confutil.cpp" line="301"/>
         <source>Too many IP addresses</source>
         <translation>Слишком много IP адресов</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="305"/>
+        <location filename="../util/conf/confutil.cpp" line="328"/>
         <source>Number of Application Groups must be between 1 and %1</source>
         <translation>Количество групп приложений должно быть от 1 до %1</translation>
     </message>
@@ -297,17 +297,17 @@
         <translation>Слишком много путей приложений</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="317"/>
+        <location filename="../util/conf/confutil.cpp" line="340"/>
         <source>Length of Application Group&apos;s Name must be &lt; %1</source>
         <translation>Длина наименования группы приложения должна быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="418"/>
+        <location filename="../util/conf/confutil.cpp" line="441"/>
         <source>Application &apos;%1&apos; already exists</source>
         <translation>Приложение &apos;%1&apos; уже существует</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="426"/>
+        <location filename="../util/conf/confutil.cpp" line="449"/>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Длина пути приложения должна быть &lt; %1</translation>
     </message>
@@ -1219,78 +1219,88 @@
 <context>
     <name>ZonesWindow</name>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="76"/>
         <location filename="../form/zone/zoneswindow.cpp" line="78"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="80"/>
         <source>Edit</source>
         <translation>Изменить</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="77"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="79"/>
         <source>Add</source>
         <translation>Добавить</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="79"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="81"/>
         <source>Remove</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="84"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="82"/>
+        <source>Save As Text</source>
+        <translation>Сохранить как текст</translation>
+    </message>
+    <message>
+        <location filename="../form/zone/zoneswindow.cpp" line="87"/>
         <source>Zone Name:</source>
         <translation>Наименование зоны:</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="85"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="88"/>
         <source>Source:</source>
         <translation>Источник:</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="86"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="89"/>
         <source>Enabled</source>
         <translation>Включено</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="87"/>
-        <source>Store Text</source>
-        <translation>Сохранять текст</translation>
+        <location filename="../form/zone/zoneswindow.cpp" line="267"/>
+        <source>Text files (*.txt);;All files (*.*)</source>
+        <translation>Текстовые файлы (*.txt);;Все файлы (*.*)</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="88"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="274"/>
+        <source>Cannot save Zone addresses as text file</source>
+        <translation>Не удалось сохранить адреса Зоны в текстовый файл</translation>
+    </message>
+    <message>
+        <location filename="../form/zone/zoneswindow.cpp" line="90"/>
         <source>Custom URL</source>
         <translation>Нестандартная ссылка</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="89"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="91"/>
         <source>URL:</source>
         <translation>Ссылка:</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="90"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="92"/>
         <source>Form Data:</source>
         <translation>Данные формы:</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="91"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="93"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="92"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="94"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="82"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="85"/>
         <source>Edit Zone</source>
         <translation>Редактирование зоны</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="96"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="98"/>
         <source>Zones</source>
         <translation>Зоны</translation>
     </message>
     <message>
-        <location filename="../form/zone/zoneswindow.cpp" line="258"/>
+        <location filename="../form/zone/zoneswindow.cpp" line="255"/>
         <source>Are you sure to remove selected zone?</source>
         <translation>Удалить выбранную зону?</translation>
     </message>
