@@ -92,7 +92,7 @@ void TextAreaUtil::moveSelectedLines(QPlainTextEdit *srcArea, QPlainTextEdit *ds
 
     auto srcCursor = srcArea->textCursor();
 
-    // Adgust to last line, when cursor at the end
+    // Adjust to last line, when cursor at the end
     if (!srcCursor.hasSelection()
             && srcCursor.atEnd()
             && !srcCursor.atStart()) {
