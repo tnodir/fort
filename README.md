@@ -7,6 +7,7 @@ Fort is a simple firewall for Windows 7+.
 ## Features
 
   - Filter by network addresses, application groups
+  - Support wildcards in program path names
   - Application group speed limits
   - Stores traffic statistics
   - Graphical display of bandwidth
