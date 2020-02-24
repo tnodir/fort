@@ -80,8 +80,5 @@ void Test::taskTasix()
     const auto list = tasix.parseAddresses(text, checksum);
     QVERIFY(!list.isEmpty());
 
-    tasix.setStoreText(true);
-    tasix.setCachePath(QLatin1String(STR(PWD) "/data/tasix-mrlg/"));
-
-    //QVERIFY(tasix.storeAddresses(list));
+    //QVERIFY(tasix.saveAddressesAsText(QLatin1String(STR(PWD) "/data/tasix-mrlg/ip.txt")));
 }
