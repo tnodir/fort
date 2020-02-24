@@ -75,8 +75,7 @@ bool DriverWorker::waitLogBuffer()
     return true;
 }
 
-void DriverWorker::emitReadLogResult(bool success,
-                                     const QString &errorMessage)
+void DriverWorker::emitReadLogResult(bool success, quint32 errorCode)
 {
     QMutexLocker locker(&m_mutex);
 
@@ -85,7 +84,7 @@ void DriverWorker::emitReadLogResult(bool success,
     LogBuffer *logBuffer = m_logBuffer;
     m_logBuffer = nullptr;
 
-    emit readLogResult(logBuffer, success, errorMessage);
+    emit readLogResult(logBuffer, success, errorCode);
 
     if (m_cancelled) {
         m_waitCondition.wakeOne();
@@ -104,13 +103,13 @@ void DriverWorker::readLog()
                 FortCommon::ioctlGetLog(), nullptr, 0,
                 array.data(), array.size(), &nr);
 
-    QString errorMessage;
+    quint32 errorCode = 0;
 
     if (success) {
         m_logBuffer->reset(nr);
     } else if (!m_cancelled) {
-        errorMessage = OsUtil::errorMessage();
+        errorCode = OsUtil::lastErrorCode();
     }
 
-    emitReadLogResult(success, errorMessage);
+    emitReadLogResult(success, errorCode);
 }

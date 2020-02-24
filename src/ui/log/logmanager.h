@@ -38,7 +38,7 @@ public slots:
 
 private slots:
     void processLogBuffer(LogBuffer *logBuffer, bool success,
-                          const QString &errorMessage);
+                          quint32 errorCode);
 
 private:
     void setErrorMessage(const QString &errorMessage);

@@ -9,6 +9,7 @@
 #include "../fortmanager.h"
 #include "../model/applistmodel.h"
 #include "../model/appstatmodel.h"
+#include "../util/osutil.h"
 #include "logbuffer.h"
 #include "logentryblocked.h"
 #include "logentryprocnew.h"
@@ -100,7 +101,7 @@ void LogManager::addFreeBuffer(LogBuffer *logBuffer)
 }
 
 void LogManager::processLogBuffer(LogBuffer *logBuffer, bool success,
-                                  const QString &errorMessage)
+                                  quint32 errorCode)
 {
     if (m_active) {
         readLogAsync();
@@ -110,6 +111,7 @@ void LogManager::processLogBuffer(LogBuffer *logBuffer, bool success,
         readLogEntries(logBuffer);
         logBuffer->reset();
     } else {
+        const auto errorMessage = OsUtil::errorMessage(errorCode);
         setErrorMessage(errorMessage);
     }
 

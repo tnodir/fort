@@ -19,8 +19,7 @@ public:
     void run() override;
 
 signals:
-    void readLogResult(LogBuffer *logBuffer, bool success,
-                       const QString &errorMessage);
+    void readLogResult(LogBuffer *logBuffer, bool success, quint32 errorCode);
 
 public slots:
     bool readLogAsync(LogBuffer *logBuffer);
@@ -29,8 +28,7 @@ public slots:
 
 private:
     bool waitLogBuffer();
-    void emitReadLogResult(bool success,
-                           const QString &errorMessage = QString());
+    void emitReadLogResult(bool success, quint32 errorCode = 0);
 
     void readLog();
 
