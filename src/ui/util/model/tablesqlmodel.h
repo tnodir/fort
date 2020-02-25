@@ -53,7 +53,7 @@ protected:
     void setSortOrder(Qt::SortOrder v) { m_sortOrder = v; }
 
 private:
-    int m_sortColumn = 0;
+    int m_sortColumn = -1;
     Qt::SortOrder m_sortOrder = Qt::AscendingOrder;
 
     mutable int m_rowCount = -1;

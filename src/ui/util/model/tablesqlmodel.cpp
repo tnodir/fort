@@ -70,7 +70,7 @@ QString TableSqlModel::sql() const
 
 QString TableSqlModel::sqlOrder() const
 {
-    if (sortColumn() == 0)
+    if (sortColumn() == -1)
         return QString();
 
     return QString(" ORDER BY %1 %2").arg(sqlOrderColumn(), sqlOrderAsc());

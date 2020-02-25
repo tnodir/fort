@@ -51,7 +51,7 @@ void AppListModel::setAppInfoCache(AppInfoCache *v)
 
 void AppListModel::initialize()
 {
-    setSortColumn(5);
+    setSortColumn(4);
     setSortOrder(Qt::DescendingOrder);
 
     connect(confManager(), &ConfManager::confSaved, this, &AppListModel::refresh);
@@ -348,13 +348,13 @@ QString AppListModel::sqlBase() const
 
 QString AppListModel::sqlOrderColumn() const
 {
-    QString columnsStr = "1";
+    QString columnsStr;
     switch (sortColumn()) {
     case 0: columnsStr = "4 " + sqlOrderAsc() + ", 3"; break;  // Program
     case 1: columnsStr = "2"; break;  // Group
     case 2: columnsStr = "6 " + sqlOrderAsc() + ", 7"; break;  // State
     case 3: columnsStr = "8"; break;  // End Time
-    case 4: columnsStr = "1"; break;  // Creation Time
+    default: columnsStr = "1"; break;  // Creation Time
     }
 
     return columnsStr;
