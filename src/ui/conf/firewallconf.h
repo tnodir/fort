@@ -37,8 +37,6 @@ class FirewallConf : public QObject
     Q_PROPERTY(int trafUnit READ trafUnit WRITE setTrafUnit NOTIFY trafUnitChanged)
     Q_PROPERTY(quint32 quotaDayMb READ quotaDayMb WRITE setQuotaDayMb NOTIFY quotaDayMbChanged)
     Q_PROPERTY(quint32 quotaMonthMb READ quotaMonthMb WRITE setQuotaMonthMb NOTIFY quotaMonthMbChanged)
-    Q_PROPERTY(AddressGroup *inetAddressGroup READ inetAddressGroup NOTIFY addressGroupsChanged)
-    Q_CLASSINFO("DefaultProperty", "appGroups")
 
 public:
     explicit FirewallConf(QObject *parent = nullptr);
