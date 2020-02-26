@@ -768,10 +768,10 @@ bool ConfManager::deleteZone(int zoneId)
     m_sqliteDb->executeEx(sqlDeleteZone, {zoneId}, 0, &ok);
     if (!ok) goto end;
 
-    // Delete the Zone frpm Address Groups
+    // Delete the Zone from Address Groups
     {
-        const qint64 zoneUnMask = ~(quint32(1) << (zoneId - 1));
-        m_sqliteDb->executeEx(sqlDeleteAddressGroupZone, {zoneUnMask}, 0, &ok);
+        const quint32 zoneUnMask = ~(quint32(1) << (zoneId - 1));
+        m_sqliteDb->executeEx(sqlDeleteAddressGroupZone, {qint64(zoneUnMask)}, 0, &ok);
     }
 
 end:
