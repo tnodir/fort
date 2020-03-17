@@ -52,6 +52,7 @@
 #include <QtCore/QSharedPointer>
 #include <QtCore/QTimer>
 #include <QtGui/QPainter>
+#include <QtGui/QPainterPath>
 #include <QtGui/QPaintEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
