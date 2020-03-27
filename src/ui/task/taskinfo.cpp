@@ -188,7 +188,7 @@ void TaskInfo::setupTaskWorker()
 
 void TaskInfo::runTaskWorker()
 {
-    if (taskWorker() == nullptr)
+    if (aborted() || taskWorker() == nullptr)
         return;
 
     taskWorker()->run();

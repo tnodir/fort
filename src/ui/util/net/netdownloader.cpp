@@ -6,7 +6,9 @@
 #define DOWNLOAD_MAXSIZE  (64 * 1024)
 
 NetDownloader::NetDownloader(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    m_started(false),
+    m_aborted(false)
 {
     setupProcess();
 }
@@ -36,6 +38,8 @@ void NetDownloader::start()
     args.append(m_url);
 
     m_started = true;
+    m_aborted = false;
+
     m_buffer.clear();
 
     m_process.start("curl", args, QIODevice::ReadOnly);
@@ -47,9 +51,11 @@ void NetDownloader::start()
 
 void NetDownloader::abort(bool success)
 {
-    if (!m_started) return;
+    if (!m_started || m_aborted)
+        return;
 
     m_started = false;
+    m_aborted = true;
 
     m_process.kill();
     m_process.waitForFinished();
@@ -70,6 +76,8 @@ void NetDownloader::processReadyRead()
 
 void NetDownloader::processError(QProcess::ProcessError error)
 {
+    if (m_aborted) return;
+
     qWarning() << "NetDownloader: Cannot run `curl`:" << error;
 
     abort();
