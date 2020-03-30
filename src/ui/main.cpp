@@ -27,7 +27,6 @@ static void registerMetaTypes(void)
 
 int main(int argc, char *argv[])
 {
-    QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
 
     QApplication::setQuitOnLastWindowClosed(false);
