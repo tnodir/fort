@@ -257,8 +257,10 @@ void FortManager::setupTrayIcon()
                 showOptionsWindow();
             }
             break;
-        case QSystemTrayIcon::Unknown:
         case QSystemTrayIcon::Context:
+            m_trayTriggered = true;
+            break;
+        case QSystemTrayIcon::Unknown:
         case QSystemTrayIcon::MiddleClick:
             break;
         }
