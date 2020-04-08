@@ -10,7 +10,7 @@
 md %TARGET_PATH%
 cd %TARGET_PATH%
 
-../../../qt/configure -developer-build -optimize-size -opensource -confirm-license -no-opengl ^
+../../../qt/configure -release -optimize-size -opensource -confirm-license -no-opengl ^
 	-no-compile-examples -nomake examples -nomake tests -nomake tools -mp -ltcg ^
 	-skip qt3d -skip qtactiveqt -skip qtandroidextras -skip qtcanvas3d ^
 	-skip qtcharts -skip qtconnectivity -skip qtdatavis3d ^
@@ -19,15 +19,14 @@ cd %TARGET_PATH%
 	-skip qtlocation -skip qtmacextras -skip qtnetworkauth ^
 	-skip qtmultimedia -skip qtpim -skip qtpurchasing -skip qtqa ^
 	-skip qtquickcontrols -skip qtquickcontrols2 ^
-	-skip qtremoteobjects -skip qtrepotools -skip qtscript ^
+	-skip qtremoteobjects -skip qtrepotools ^
 	-skip qtscxml -skip qtsensors -skip qtserialbus -skip qtserialport -skip qtspeech ^
 	-skip qtsvg -skip qtsystems -skip qttools -skip qtvirtualkeyboard ^
 	-skip qtwayland -skip qtwebchannel -skip qtwebengine -skip qtwebglplugin ^
 	-skip qtwebsockets -skip qtwebview ^
 	-skip qtwinextras -skip qtx11extras -skip qtxmlpatterns ^
 	^
-	-no-feature-bearermanagement -no-feature-big_codecs ^
-	-no-feature-columnview -no-feature-commandlinkbutton ^
+	-no-feature-big_codecs -no-feature-columnview -no-feature-commandlinkbutton ^
 	-no-feature-concatenatetablesproxymodel ^
 	-no-feature-concurrent -no-feature-cups -no-feature-datawidgetmapper ^
 	-no-feature-dial -no-feature-dockwidget ^
@@ -35,8 +34,7 @@ cd %TARGET_PATH%
 	-no-feature-fontdialog -no-feature-hijricalendar -no-feature-identityproxymodel ^
 	-no-feature-imageformat_jpeg -no-feature-imageformat_ppm ^
 	-no-feature-islamiccivilcalendar -no-feature-jalalicalendar ^
-	-no-feature-itemmodeltester ^
-	-no-feature-lcdnumber -no-feature-listwidget ^
+	-no-feature-itemmodeltester -no-feature-lcdnumber -no-feature-listwidget ^
 	-no-feature-mdiarea -no-feature-movie -no-feature-pdf -no-feature-picture ^
 	-no-feature-printer -no-feature-printpreviewdialog -no-feature-printpreviewwidget ^
 	-no-feature-raster-64bit -no-feature-splashscreen ^
