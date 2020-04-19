@@ -15,7 +15,7 @@ AppsColumn::AppsColumn(QWidget *parent) :
 void AppsColumn::setupUi()
 {
     auto layout = new QVBoxLayout();
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
 
     // Header
     auto headerLayout = new QHBoxLayout();

@@ -43,7 +43,7 @@ QHBoxLayout *SpinCombo::boxLayout() const
 void SpinCombo::setupUi()
 {
     auto layout = new QHBoxLayout();
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
 
     setupSpin();
     setupCombo();

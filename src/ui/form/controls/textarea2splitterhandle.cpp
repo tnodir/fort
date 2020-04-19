@@ -50,7 +50,7 @@ void TextArea2SplitterHandle::setupUi()
             ? QBoxLayout::TopToBottom : QBoxLayout::LeftToRight;
 
     auto layout = new QBoxLayout(direction);
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
 
     m_btMoveAllFrom1To2 = ControlUtil::createSplitterButton(":/images/control_fastforward.png", [&] {
         TextAreaUtil::moveAllLines(textArea1(), textArea2());
@@ -69,7 +69,7 @@ void TextArea2SplitterHandle::setupUi()
     });
 
     m_buttonsLayout = new QBoxLayout(direction);
-    m_buttonsLayout->setMargin(0);
+    m_buttonsLayout->setContentsMargins(0, 0, 0, 0);
     m_buttonsLayout->setSpacing(10);
 
     m_buttonsLayout->addWidget(m_btMoveAllFrom1To2, 0, Qt::AlignHCenter);

@@ -20,7 +20,7 @@ QHBoxLayout *LabelSpin::boxLayout() const
 void LabelSpin::setupUi()
 {
     auto layout = new QHBoxLayout();
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
 
     m_label = ControlUtil::createLabel();
 

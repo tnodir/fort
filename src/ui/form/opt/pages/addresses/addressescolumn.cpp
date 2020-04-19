@@ -25,7 +25,7 @@ void AddressesColumn::retranslateUi()
 void AddressesColumn::setupUi()
 {
     auto layout = new QVBoxLayout();
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
 
     // Header
     auto headerLayout = new QHBoxLayout();
@@ -55,7 +55,7 @@ void AddressesColumn::setupUi()
 QLayout *AddressesColumn::setupZonesRow()
 {
     auto layout = new QHBoxLayout();
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
 
     m_btSelectZones = new WideButton(QIcon(":/images/map_magnify.png"));
     layout->addWidget(m_btSelectZones);

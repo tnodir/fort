@@ -16,7 +16,7 @@ CheckTimePeriod::CheckTimePeriod(QWidget *parent) :
 void CheckTimePeriod::setupUi()
 {
     auto layout = new QHBoxLayout();
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
 
     m_checkBox = new QCheckBox();
 

@@ -258,7 +258,7 @@ void StatisticsPage::setupUi()
 
     // Tab Bar
     auto trafLayout = new QVBoxLayout();
-    trafLayout->setMargin(0);
+    trafLayout->setContentsMargins(0, 0, 0, 0);
 
     setupTabBar();
     trafLayout->addWidget(m_tabBar);
@@ -676,7 +676,7 @@ void StatisticsPage::setupTableTrafHeader()
 void StatisticsPage::setupAppInfoRow()
 {
     auto layout = new QHBoxLayout();
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
 
     m_btAppCopyPath = ControlUtil::createLinkButton(":/images/page_copy.png");
     m_btAppOpenFolder = ControlUtil::createLinkButton(":/images/folder_go.png");

@@ -320,7 +320,7 @@ QLayout *ProgramsWindow::setupCheckDateTimeEdit()
     m_dteBlockAppAt->setCalendarPopup(true);
 
     auto layout = new QHBoxLayout();
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
     layout->addWidget(m_cbBlockAppAt, 1);
     layout->addWidget(m_dteBlockAppAt);
 
@@ -470,7 +470,7 @@ void ProgramsWindow::setupTableAppsHeader()
 void ProgramsWindow::setupAppInfoRow()
 {
     auto layout = new QHBoxLayout();
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
 
     m_btAppCopyPath = ControlUtil::createLinkButton(":/images/page_copy.png");
     m_btAppOpenFolder = ControlUtil::createLinkButton(":/images/folder_go.png");

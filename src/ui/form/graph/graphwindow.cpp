@@ -120,7 +120,7 @@ void GraphWindow::setupUi()
 
     // Widget Layout
     auto mainLayout = new QVBoxLayout(this);
-    mainLayout->setMargin(0);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
     mainLayout->addWidget(m_plot);
     setLayout(mainLayout);
 }

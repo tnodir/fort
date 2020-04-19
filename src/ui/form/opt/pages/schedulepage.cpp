@@ -149,7 +149,7 @@ void SchedulePage::setupTaskDetails()
     m_taskDetailsRow = new QWidget();
 
     auto layout = new QHBoxLayout();
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
     m_taskDetailsRow->setLayout(layout);
 
     setupTaskInterval();
