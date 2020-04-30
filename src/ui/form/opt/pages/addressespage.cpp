@@ -304,6 +304,14 @@ void AddressesPage::updateZonesMenu(bool include)
     }
 }
 
+void AddressesPage::updateZonesMenuEnabled()
+{
+    const bool isZoneExist = (zoneListModel()->rowCount() != 0);
+
+    m_includeAddresses->btSelectZones()->setEnabled(isZoneExist);
+    m_excludeAddresses->btSelectZones()->setEnabled(isZoneExist);
+}
+
 void AddressesPage::updateZonesText(bool include)
 {
     if (include) {
@@ -334,6 +342,7 @@ void AddressesPage::setupZones()
 
     m_includeAddresses->btSelectZones()->setMenu(m_menuZones);
     m_excludeAddresses->btSelectZones()->setMenu(m_menuZones);
+    updateZonesMenuEnabled();
 
     connect(zoneListModel(), &ZoneListModel::zoneRemoved, this, [&](int zoneId) {
         for (auto addrGroup : addressGroups()) {
@@ -343,6 +352,7 @@ void AddressesPage::setupZones()
     });
     connect(zoneListModel(), &ZoneListModel::modelChanged, this, [&] {
         clearZonesMenu();
+        updateZonesMenuEnabled();
         updateZonesTextAll();
     });
 }

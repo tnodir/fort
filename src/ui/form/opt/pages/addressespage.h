@@ -43,6 +43,7 @@ private:
     void clearZonesMenu();
     void createZonesMenu();
     void updateZonesMenu(bool include);
+    void updateZonesMenuEnabled();
     void updateZonesText(bool include);
     void updateZonesTextAll();
     void setupZones();
