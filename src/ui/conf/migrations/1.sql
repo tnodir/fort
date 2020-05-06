@@ -18,8 +18,8 @@ CREATE TABLE address_group(
   order_index INTEGER NOT NULL,
   include_all BOOLEAN NOT NULL,
   exclude_all BOOLEAN NOT NULL,
-  include_zones INTEGER NOT NULL DEFAULT 0,
-  exclude_zones INTEGER NOT NULL DEFAULT 0,
+  include_zones INTEGER NOT NULL DEFAULT 0,  -- zone indexes bit mask
+  exclude_zones INTEGER NOT NULL DEFAULT 0,  -- zone indexes bit mask
   include_text TEXT NOT NULL,
   exclude_text TEXT NOT NULL
 );
