@@ -384,7 +384,9 @@ bool SqliteDb::importDb(const QString &sourceFilePath,
 
     beginTransaction();
 
-    for (const auto &tableName : tableNames(srcSchema)) {
+    const auto srcTableNames = tableNames(srcSchema);
+
+    for (const auto &tableName : srcTableNames) {
         const auto dstColumns = columnNames(tableName, dstSchema);
         if (dstColumns.isEmpty())
             continue;  // new schema doesn't contain old table

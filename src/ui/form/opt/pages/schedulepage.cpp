@@ -84,7 +84,7 @@ void SchedulePage::retranslateTaskDetails()
 
 void SchedulePage::setupTaskListModel()
 {
-    connect(m_taskListModel, &TaskListModel::dataEdited, [&] {
+    connect(m_taskListModel, &TaskListModel::dataEdited, this, [&] {
         setScheduleEdited(true);
     });
 }
@@ -117,7 +117,7 @@ void SchedulePage::setupTableTasks()
 
     m_tableTasks->setModel(taskListModel());
 
-    connect(m_tableTasks, &TableView::doubleClicked, [&](const QModelIndex &index) {
+    connect(m_tableTasks, &TableView::doubleClicked, this, [&](const QModelIndex &index) {
         const auto taskInfo = taskListModel()->taskInfoAt(index.row());
         if (taskInfo->type() == TaskInfo::ZoneDownloader) {
             fortManager()->showZonesWindow();
@@ -173,13 +173,13 @@ void SchedulePage::setupTaskInterval()
     m_cscTaskInterval->spinBox()->setRange(1, 24 * 30 * 12);  // ~Year
     m_cscTaskInterval->setValues(taskIntervalHourValues);
 
-    connect(m_cscTaskInterval->checkBox(), &QCheckBox::toggled, [&](bool checked) {
+    connect(m_cscTaskInterval->checkBox(), &QCheckBox::toggled, this, [&](bool checked) {
         const int taskIndex = currentTaskIndex();
         const auto index = taskListModel()->index(taskIndex, 0);
 
         taskListModel()->setData(index, checked, TaskListModel::RoleEnabled);
     });
-    connect(m_cscTaskInterval->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), [&](int value) {
+    connect(m_cscTaskInterval->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this, [&](int value) {
         const int taskIndex = currentTaskIndex();
         const auto index = taskListModel()->index(taskIndex, 1);
 

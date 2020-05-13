@@ -267,7 +267,7 @@ void ApplicationsPage::setupTabBar()
         addTab(appGroup->name());
     }
 
-    connect(m_tabBar, &QTabBar::tabCloseRequested, [&](int index) {
+    connect(m_tabBar, &QTabBar::tabCloseRequested, this, [&](int index) {
         if (m_tabBar->count() <= 1)
             return;
 
@@ -276,7 +276,7 @@ void ApplicationsPage::setupTabBar()
 
         ctrl()->setConfEdited(true);
     });
-    connect(m_tabBar, &QTabBar::tabMoved, [&](int from, int to) {
+    connect(m_tabBar, &QTabBar::tabMoved, this, [&](int from, int to) {
         conf()->moveAppGroup(from, to);
         ctrl()->setConfEdited(true);
     });
@@ -324,7 +324,7 @@ void ApplicationsPage::setupGroupPeriod()
 {
     m_ctpGroupPeriod = new CheckTimePeriod();
 
-    connect(m_ctpGroupPeriod->checkBox(), &QCheckBox::toggled, [&](bool checked) {
+    connect(m_ctpGroupPeriod->checkBox(), &QCheckBox::toggled, this, [&](bool checked) {
         if (appGroup()->periodEnabled() == checked)
             return;
 
@@ -332,7 +332,7 @@ void ApplicationsPage::setupGroupPeriod()
 
         ctrl()->setConfEdited(true);
     });
-    connect(m_ctpGroupPeriod->timeEdit1(), &QTimeEdit::userTimeChanged, [&](const QTime &time) {
+    connect(m_ctpGroupPeriod->timeEdit1(), &QTimeEdit::userTimeChanged, this, [&](const QTime &time) {
         const auto timeStr = CheckTimePeriod::fromTime(time);
 
         if (appGroup()->periodFrom() == timeStr)
@@ -342,7 +342,7 @@ void ApplicationsPage::setupGroupPeriod()
 
         ctrl()->setConfEdited(true);
     });
-    connect(m_ctpGroupPeriod->timeEdit2(), &QTimeEdit::userTimeChanged, [&](const QTime &time) {
+    connect(m_ctpGroupPeriod->timeEdit2(), &QTimeEdit::userTimeChanged, this, [&](const QTime &time) {
         const auto timeStr = CheckTimePeriod::fromTime(time);
 
         if (appGroup()->periodTo() == timeStr)
@@ -389,7 +389,7 @@ void ApplicationsPage::setupGroupLimitIn()
 {
     m_cscLimitIn = createGroupLimit();
 
-    connect(m_cscLimitIn->checkBox(), &QCheckBox::toggled, [&](bool checked) {
+    connect(m_cscLimitIn->checkBox(), &QCheckBox::toggled, this, [&](bool checked) {
         if (appGroup()->limitInEnabled() == checked)
             return;
 
@@ -397,7 +397,7 @@ void ApplicationsPage::setupGroupLimitIn()
 
         ctrl()->setConfEdited(true);
     });
-    connect(m_cscLimitIn->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), [&](int value) {
+    connect(m_cscLimitIn->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this, [&](int value) {
         const auto kbytes = quint32(value);
 
         if (appGroup()->speedLimitIn() == kbytes)
@@ -413,7 +413,7 @@ void ApplicationsPage::setupGroupLimitOut()
 {
     m_cscLimitOut = createGroupLimit();
 
-    connect(m_cscLimitOut->checkBox(), &QCheckBox::toggled, [&](bool checked) {
+    connect(m_cscLimitOut->checkBox(), &QCheckBox::toggled, this, [&](bool checked) {
         if (appGroup()->limitOutEnabled() == checked)
             return;
 
@@ -421,7 +421,7 @@ void ApplicationsPage::setupGroupLimitOut()
 
         ctrl()->setConfEdited(true);
     });
-    connect(m_cscLimitOut->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), [&](int value) {
+    connect(m_cscLimitOut->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this, [&](int value) {
         const auto kbytes = quint32(value);
 
         if (appGroup()->speedLimitOut() == kbytes)
@@ -465,7 +465,7 @@ void ApplicationsPage::setupBlockApps()
     m_blockApps = new AppsColumn();
     m_blockApps->icon()->setPixmap(QPixmap(":/images/stop.png"));
 
-    connect(m_blockApps->editText(), &QPlainTextEdit::textChanged, [&] {
+    connect(m_blockApps->editText(), &QPlainTextEdit::textChanged, this, [&] {
         const auto text = m_blockApps->editText()->toPlainText();
 
         if (appGroup()->blockText() == text)
@@ -482,7 +482,7 @@ void ApplicationsPage::setupAllowApps()
     m_allowApps = new AppsColumn();
     m_allowApps->icon()->setPixmap(QPixmap(":/images/arrow_switch.png"));
 
-    connect(m_allowApps->editText(), &QPlainTextEdit::textChanged, [&] {
+    connect(m_allowApps->editText(), &QPlainTextEdit::textChanged, this, [&] {
         const auto text = m_allowApps->editText()->toPlainText();
 
         if (appGroup()->allowText() == text)

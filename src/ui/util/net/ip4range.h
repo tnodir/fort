@@ -46,19 +46,19 @@ public:
         return Ip4Pair{m_pairFromArray.at(i), m_pairToArray.at(i)};
     }
 
-signals:
-    void errorLineNoChanged();
-    void errorMessageChanged();
-
-public slots:
-    void clear();
-
     QString toText() const;
 
     // Parse IPv4 ranges
     bool fromText(const QString &text);
     bool fromList(const QVector<QStringRef> &list, int emptyNetMask = 32,
                   bool sort = true);
+
+signals:
+    void errorLineNoChanged();
+    void errorMessageChanged();
+
+public slots:
+    void clear();
 
 private:
     void setErrorLineNo(int lineNo);

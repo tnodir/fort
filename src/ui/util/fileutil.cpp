@@ -25,7 +25,9 @@ QString FileUtil::kernelNameToDrive(const QString &kernelName)
 {
     const QString kernelNameLower = kernelName.toLower();
 
-    for (const QFileInfo &fi : QDir::drives()) {
+    const auto drives = QDir::drives();
+
+    for (const QFileInfo &fi : drives) {
         const QString driveName = fi.path().left(2);
         const QString driveKernelName = driveToKernelName(driveName);
 

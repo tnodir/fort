@@ -401,8 +401,9 @@ bool ConfUtil::parseAppsText(int groupIndex, bool blocked, const QString &text,
                              quint32 &prefixAppsSize,
                              quint32 &exeAppsSize)
 {
-    for (const QStringRef &line :
-             text.splitRef(QLatin1Char('\n'))) {
+    const auto lines = text.splitRef(QLatin1Char('\n'));
+
+    for (const QStringRef &line : lines) {
         const QStringRef lineTrimmed = line.trimmed();
         if (lineTrimmed.isEmpty()
                 || lineTrimmed.startsWith('#'))  // commented line

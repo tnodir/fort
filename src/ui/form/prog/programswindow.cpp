@@ -270,7 +270,7 @@ void ProgramsWindow::setupAppEditForm()
     m_formAppEdit->setLayout(layout);
     m_formAppEdit->setMinimumWidth(500);
 
-    connect(m_btSelectFile, &QAbstractButton::clicked, [&] {
+    connect(m_btSelectFile, &QAbstractButton::clicked, this, [&] {
         const auto filePath = ControlUtil::getOpenFileName(
                     m_labelEditPath->text(),
                     tr("Programs (*.exe);;All files (*.*)"));
@@ -280,14 +280,14 @@ void ProgramsWindow::setupAppEditForm()
         }
     });
 
-    connect(m_rbAllowApp, &QRadioButton::toggled, [&](bool checked) {
+    connect(m_rbAllowApp, &QRadioButton::toggled, this, [&](bool checked) {
         m_cbBlockAppNone->setEnabled(checked);
         m_cscBlockAppIn->setEnabled(checked);
         m_cbBlockAppAt->setEnabled(checked);
         m_dteBlockAppAt->setEnabled(checked);
     });
 
-    connect(m_btEditOk, &QAbstractButton::clicked, [&] {
+    connect(m_btEditOk, &QAbstractButton::clicked, this, [&] {
         if (saveAppEditForm()) {
             m_formAppEdit->close();
         }
@@ -355,24 +355,24 @@ QLayout *ProgramsWindow::setupHeader()
 
     m_actPurgeApps = editMenu->addAction(QIcon(":/images/bin_empty.png"), QString());
 
-    connect(m_actAllowApp, &QAction::triggered, [&] {
+    connect(m_actAllowApp, &QAction::triggered, this, [&] {
         updateSelectedApps(false);
     });
-    connect(m_actBlockApp, &QAction::triggered, [&] {
+    connect(m_actBlockApp, &QAction::triggered, this, [&] {
         updateSelectedApps(true);
     });
-    connect(m_actAddApp, &QAction::triggered, [&] {
+    connect(m_actAddApp, &QAction::triggered, this, [&] {
         updateAppEditForm(false);
     });
-    connect(m_actEditApp, &QAction::triggered, [&] {
+    connect(m_actEditApp, &QAction::triggered, this, [&] {
         updateAppEditForm(true);
     });
-    connect(m_actRemoveApp, &QAction::triggered, [&] {
+    connect(m_actRemoveApp, &QAction::triggered, this, [&] {
         if (fortManager()->showQuestionBox(tr("Are you sure to remove selected program(s)?"))) {
             deleteSelectedApps();
         }
     });
-    connect(m_actPurgeApps, &QAction::triggered, [&] {
+    connect(m_actPurgeApps, &QAction::triggered, this, [&] {
         if (fortManager()->showQuestionBox(tr("Are you sure to remove all non-existent programs?"))) {
             appListModel()->purgeApps();
         }
@@ -482,10 +482,10 @@ void ProgramsWindow::setupAppInfoRow()
 
     m_labelAppCompanyName = ControlUtil::createLabel();
 
-    connect(m_btAppCopyPath, &QAbstractButton::clicked, [&] {
+    connect(m_btAppCopyPath, &QAbstractButton::clicked, this, [&] {
         GuiUtil::setClipboardData(appListCurrentPath());
     });
-    connect(m_btAppOpenFolder, &QAbstractButton::clicked, [&] {
+    connect(m_btAppOpenFolder, &QAbstractButton::clicked, this, [&] {
         OsUtil::openFolder(appListCurrentPath());
     });
 

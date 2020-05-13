@@ -11,7 +11,8 @@ TableView::TableView(QWidget *parent) :
 QVector<int> TableView::selectedRows() const
 {
     QSet<int> rowsSet;
-    for (const auto index : selectedIndexes()) {
+    const auto indexes = selectedIndexes();
+    for (const auto index : indexes) {
         rowsSet.insert(index.row());
     }
     rowsSet.insert(currentIndex().row());

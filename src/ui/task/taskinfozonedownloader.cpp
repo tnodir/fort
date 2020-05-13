@@ -209,7 +209,8 @@ bool TaskInfoZoneDownloader::containsZoneId(quint32 &zonesMask, int zoneId) cons
 
 void TaskInfoZoneDownloader::removeOrphanCacheFiles()
 {
-    for (const auto fi : QDir(cachePath()).entryInfoList(QDir::Files)) {
+    const auto fileInfos = QDir(cachePath()).entryInfoList(QDir::Files);
+    for (const auto &fi : fileInfos) {
         const auto zoneId = fi.baseName().toInt();
         if (zoneId != 0 && !containsZoneId(m_zonesMask, zoneId)) {
             FileUtil::removeFile(fi.filePath());

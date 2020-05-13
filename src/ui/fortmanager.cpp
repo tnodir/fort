@@ -471,7 +471,7 @@ void FortManager::showGraphWindow()
 
         m_graphWindowState->install(m_graphWindow);
 
-        connect(m_graphWindow, &GraphWindow::aboutToClose, [this] {
+        connect(m_graphWindow, &GraphWindow::aboutToClose, this, [this] {
             closeGraphWindow();
         });
 
@@ -871,7 +871,7 @@ void FortManager::updateTrayMenuFlags()
     m_allowAllNewAction->setChecked(conf()->allowAllNew());
 
     int appGroupIndex = 0;
-    for (QAction *action : m_appGroupActions) {
+    for (QAction *action : qAsConst(m_appGroupActions)) {
         const auto appGroup = conf()->appGroups().at(appGroupIndex++);
 
         action->setEnabled(editEnabled);

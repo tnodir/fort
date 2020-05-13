@@ -73,7 +73,9 @@ QVector<QStringRef> TaskZoneDownloader::parseAddresses(const QString &text,
     // Parse lines
     const QRegularExpression re(pattern());
 
-    for (const auto line : text.splitRef('\n', QString::SkipEmptyParts)) {
+    const auto lines = text.splitRef('\n', QString::SkipEmptyParts);
+
+    for (const auto &line : lines) {
         if (line.startsWith('#')
                 || line.startsWith(';'))  // commented line
             continue;

@@ -212,6 +212,9 @@ public:
 
     QString appUpdatesUrl() const { return APP_UPDATES_URL; }
 
+    bool confMigrated() const;
+    bool confCanMigrate(QString &viaVersion) const;
+
 signals:
     void iniChanged();
     void startWithWindowsChanged();
@@ -220,9 +223,6 @@ signals:
 public slots:
     void readConfIni(FirewallConf &conf) const;
     bool writeConfIni(const FirewallConf &conf);
-
-    bool confMigrated() const;
-    bool confCanMigrate(QString &viaVersion) const;
 
     void bulkUpdateBegin();
     void bulkUpdateEnd();

@@ -38,8 +38,10 @@ void TranslationManager::setupTranslation()
 
     m_locales.append(QLocale(QLocale::English, QLocale::UnitedStates));
 
-    for (const QFileInfo &fileInfo : QDir(i18nDir())
-             .entryInfoList(QStringList() << ("*" TRANSLATION_FILE_SUFFIX))) {
+    const auto i18nFileInfos = QDir(i18nDir())
+            .entryInfoList(QStringList() << ("*" TRANSLATION_FILE_SUFFIX));
+
+    for (const QFileInfo &fileInfo : i18nFileInfos) {
         const QString localeName = fileInfo.completeBaseName().mid(prefixLen);
         const QLocale locale(localeName);
 

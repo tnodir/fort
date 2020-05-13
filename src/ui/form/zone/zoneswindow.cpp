@@ -198,12 +198,12 @@ void ZonesWindow::setupZoneEditForm()
     m_formZoneEdit->setLayout(layout);
     m_formZoneEdit->setMinimumWidth(500);
 
-    connect(m_cbCustomUrl, &QCheckBox::toggled, [&](bool checked) {
+    connect(m_cbCustomUrl, &QCheckBox::toggled, this, [&](bool checked) {
         m_editUrl->setEnabled(checked);
         m_editFormData->setEnabled(checked);
     });
 
-    connect(m_btEditOk, &QAbstractButton::clicked, [&] {
+    connect(m_btEditOk, &QAbstractButton::clicked, this, [&] {
         if (saveZoneEditForm()) {
             m_formZoneEdit->close();
         }
@@ -245,13 +245,13 @@ QLayout *ZonesWindow::setupHeader()
     m_actRemoveZone = editMenu->addAction(QIcon(":/images/map_delete.png"), QString());
     m_actRemoveZone->setShortcut(Qt::Key_Delete);
 
-    connect(m_actAddZone, &QAction::triggered, [&] {
+    connect(m_actAddZone, &QAction::triggered, this, [&] {
         updateZoneEditForm(false);
     });
-    connect(m_actEditZone, &QAction::triggered, [&] {
+    connect(m_actEditZone, &QAction::triggered, this, [&] {
         updateZoneEditForm(true);
     });
-    connect(m_actRemoveZone, &QAction::triggered, [&] {
+    connect(m_actRemoveZone, &QAction::triggered, this, [&] {
         if (fortManager()->showQuestionBox(tr("Are you sure to remove selected zone?"))) {
             deleteSelectedZone();
         }

@@ -52,7 +52,7 @@ void NativeEventFilter::unregisterHotKey(int hotKeyId)
 
 void NativeEventFilter::unregisterHotKeys()
 {
-    for (const int hotKeyId : m_keyIdMap) {
+    for (const int hotKeyId : qAsConst(m_keyIdMap)) {
         UnregisterHotKey(nullptr, hotKeyId);
     }
 

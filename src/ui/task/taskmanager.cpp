@@ -89,7 +89,7 @@ void TaskManager::runExpiredTasks()
     const QDateTime now = DateUtil::now();
     bool enabledTaskExists = false;
 
-    for (TaskInfo *taskInfo : m_taskInfos) {
+    for (TaskInfo *taskInfo : qAsConst(m_taskInfos)) {
         if (!taskInfo->enabled())
             continue;
 

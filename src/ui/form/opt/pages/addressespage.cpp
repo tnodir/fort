@@ -120,7 +120,7 @@ void AddressesPage::setupIncludeAddresses()
 {
     m_includeAddresses = new AddressesColumn();
 
-    connect(m_includeAddresses->cbUseAll(), &QCheckBox::toggled, [&](bool checked) {
+    connect(m_includeAddresses->cbUseAll(), &QCheckBox::toggled, this, [&](bool checked) {
         if (addressGroup()->includeAll() == checked)
             return;
 
@@ -128,7 +128,7 @@ void AddressesPage::setupIncludeAddresses()
 
         ctrl()->setConfFlagsEdited(true);
     });
-    connect(m_includeAddresses->editIpText(), &QPlainTextEdit::textChanged, [&] {
+    connect(m_includeAddresses->editIpText(), &QPlainTextEdit::textChanged, this, [&] {
         const auto ipText = m_includeAddresses->editIpText()->toPlainText();
 
         if (addressGroup()->includeText() == ipText)
@@ -144,7 +144,7 @@ void AddressesPage::setupExcludeAddresses()
 {
     m_excludeAddresses = new AddressesColumn();
 
-    connect(m_excludeAddresses->cbUseAll(), &QCheckBox::toggled, [&](bool checked) {
+    connect(m_excludeAddresses->cbUseAll(), &QCheckBox::toggled, this, [&](bool checked) {
         if (addressGroup()->excludeAll() == checked)
             return;
 
@@ -152,7 +152,7 @@ void AddressesPage::setupExcludeAddresses()
 
         ctrl()->setConfFlagsEdited(true);
     });
-    connect(m_excludeAddresses->editIpText(), &QPlainTextEdit::textChanged, [&] {
+    connect(m_excludeAddresses->editIpText(), &QPlainTextEdit::textChanged, this, [&] {
         const auto ipText = m_excludeAddresses->editIpText()->toPlainText();
 
         if (addressGroup()->excludeText() == ipText)

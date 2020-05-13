@@ -320,19 +320,19 @@ void StatisticsPage::setupClearMenu()
     m_actResetTotal = menu->addAction(QString());
     m_actClearAll = menu->addAction(QString());
 
-    connect(m_actRemoveApp, &QAction::triggered, [&] {
+    connect(m_actRemoveApp, &QAction::triggered, this, [&] {
         if (!fortManager()->showQuestionBox(tr("Are you sure to remove statistics for selected application?")))
             return;
 
         appStatModel()->remove(appListCurrentIndex());
     });
-    connect(m_actResetTotal, &QAction::triggered, [&] {
+    connect(m_actResetTotal, &QAction::triggered, this, [&] {
         if (!fortManager()->showQuestionBox(tr("Are you sure to reset total statistics?")))
             return;
 
         trafListModel()->resetAppTotals();
     });
-    connect(m_actClearAll, &QAction::triggered, [&] {
+    connect(m_actClearAll, &QAction::triggered, this, [&] {
         if (!fortManager()->showQuestionBox(tr("Are you sure to clear all statistics?")))
             return;
 
@@ -469,7 +469,7 @@ void StatisticsPage::setupActivePeriod()
 {
     m_ctpActivePeriod = new CheckTimePeriod();
 
-    connect(m_ctpActivePeriod->checkBox(), &QCheckBox::toggled, [&](bool checked) {
+    connect(m_ctpActivePeriod->checkBox(), &QCheckBox::toggled, this, [&](bool checked) {
         if (conf()->activePeriodEnabled() == checked)
             return;
 
@@ -477,7 +477,7 @@ void StatisticsPage::setupActivePeriod()
 
         ctrl()->setConfFlagsEdited(true);
     });
-    connect(m_ctpActivePeriod->timeEdit1(), &QTimeEdit::userTimeChanged, [&](const QTime &time) {
+    connect(m_ctpActivePeriod->timeEdit1(), &QTimeEdit::userTimeChanged, this, [&](const QTime &time) {
         const auto timeStr = CheckTimePeriod::fromTime(time);
 
         if (conf()->activePeriodFrom() == timeStr)
@@ -487,7 +487,7 @@ void StatisticsPage::setupActivePeriod()
 
         ctrl()->setConfFlagsEdited(true);
     });
-    connect(m_ctpActivePeriod->timeEdit2(), &QTimeEdit::userTimeChanged, [&](const QTime &time) {
+    connect(m_ctpActivePeriod->timeEdit2(), &QTimeEdit::userTimeChanged, this, [&](const QTime &time) {
         const auto timeStr = CheckTimePeriod::fromTime(time);
 
         if (conf()->activePeriodTo() == timeStr)
@@ -514,7 +514,7 @@ void StatisticsPage::setupMonthStart()
         m_lscMonthStart->setNamesByValues();
     }
 
-    connect(m_lscMonthStart->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), [&](int value) {
+    connect(m_lscMonthStart->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this, [&](int value) {
         if (conf()->monthStart() == value)
             return;
 
@@ -529,7 +529,7 @@ void StatisticsPage::setupTrafHourKeepDays()
     m_lscTrafHourKeepDays = createSpinCombo(-1, 9999);
     m_lscTrafHourKeepDays->setValues(trafKeepDayValues);
 
-    connect(m_lscTrafHourKeepDays->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), [&](int value) {
+    connect(m_lscTrafHourKeepDays->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this, [&](int value) {
         if (conf()->trafHourKeepDays() == value)
             return;
 
@@ -544,7 +544,7 @@ void StatisticsPage::setupTrafDayKeepDays()
     m_lscTrafDayKeepDays = createSpinCombo(-1, 9999);
     m_lscTrafDayKeepDays->setValues(trafKeepDayValues);
 
-    connect(m_lscTrafDayKeepDays->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), [&](int value) {
+    connect(m_lscTrafDayKeepDays->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this, [&](int value) {
         if (conf()->trafDayKeepDays() == value)
             return;
 
@@ -559,7 +559,7 @@ void StatisticsPage::setupTrafMonthKeepMonths()
     m_lscTrafMonthKeepMonths = createSpinCombo(-1, 9999);
     m_lscTrafMonthKeepMonths->setValues(trafKeepMonthValues);
 
-    connect(m_lscTrafMonthKeepMonths->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), [&](int value) {
+    connect(m_lscTrafMonthKeepMonths->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this, [&](int value) {
         if (conf()->trafMonthKeepMonths() == value)
             return;
 
@@ -574,7 +574,7 @@ void StatisticsPage::setupQuotaDayMb()
     m_lscQuotaDayMb = createSpinCombo(0, 1024 * 1024, " MiB");
     m_lscQuotaDayMb->setValues(quotaValues);
 
-    connect(m_lscQuotaDayMb->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), [&](int value) {
+    connect(m_lscQuotaDayMb->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this, [&](int value) {
         const quint32 mbytes = quint32(value);
 
         if (conf()->quotaDayMb() == mbytes)
@@ -591,7 +591,7 @@ void StatisticsPage::setupQuotaMonthMb()
     m_lscQuotaMonthMb = createSpinCombo(0, 1024 * 1024, " MiB");
     m_lscQuotaMonthMb->setValues(quotaValues);
 
-    connect(m_lscQuotaMonthMb->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), [&](int value) {
+    connect(m_lscQuotaMonthMb->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this, [&](int value) {
         const quint32 mbytes = quint32(value);
 
         if (conf()->quotaMonthMb() == mbytes)
@@ -688,10 +688,10 @@ void StatisticsPage::setupAppInfoRow()
 
     m_labelAppCompanyName = ControlUtil::createLabel();
 
-    connect(m_btAppCopyPath, &QAbstractButton::clicked, [&] {
+    connect(m_btAppCopyPath, &QAbstractButton::clicked, this, [&] {
         GuiUtil::setClipboardData(appListCurrentPath());
     });
-    connect(m_btAppOpenFolder, &QAbstractButton::clicked, [&] {
+    connect(m_btAppOpenFolder, &QAbstractButton::clicked, this, [&] {
         OsUtil::openFolder(appListCurrentPath());
     });
 

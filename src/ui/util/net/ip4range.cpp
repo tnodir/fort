@@ -81,7 +81,7 @@ bool Ip4Range::fromList(const QVector<QStringRef> &list, int emptyNetMask, bool 
     int pairSize = 0;
 
     int lineNo = 0;
-    for (const auto line : list) {
+    for (const auto &line : list) {
         ++lineNo;
 
         const auto lineTrimmed = line.trimmed();
@@ -89,7 +89,7 @@ bool Ip4Range::fromList(const QVector<QStringRef> &list, int emptyNetMask, bool 
                 || lineTrimmed.startsWith('#'))  // commented line
             continue;
 
-        quint32 from, to;
+        quint32 from = 0, to = 0;
         if (!parseAddressMask(lineTrimmed, from, to, emptyNetMask)) {
             setErrorLineNo(lineNo);
             return false;

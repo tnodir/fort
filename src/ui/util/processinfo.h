@@ -28,12 +28,9 @@ public:
                 && m_handle != PROC_INVALID_HANDLE;
     }
 
-    static quint32 currentPid();
-
-signals:
-
-public slots:
     QString path(bool isKernelPath = false) const;
+
+    static quint32 currentPid();
 
 private:
     void openProcess();
