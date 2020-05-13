@@ -1104,8 +1104,10 @@ void QCPLayer::setMode(QCPLayer::LayerMode mode)
   if (mMode != mode)
   {
     mMode = mode;
-    if (!mPaintBuffer.isNull())
-      mPaintBuffer.data()->setInvalidated();
+    if (!mPaintBuffer.isNull()) {
+      auto paintBufferRef = mPaintBuffer.toStrongRef();
+      paintBufferRef.data()->setInvalidated();
+    }
   }
 }
 
@@ -1142,14 +1144,15 @@ void QCPLayer::drawToPaintBuffer()
 {
   if (!mPaintBuffer.isNull())
   {
-    if (QCPPainter *painter = mPaintBuffer.data()->startPainting())
+    auto paintBufferRef = mPaintBuffer.toStrongRef();
+    if (QCPPainter *painter = paintBufferRef.data()->startPainting())
     {
       if (painter->isActive())
         draw(painter);
       else
         qDebug() << Q_FUNC_INFO << "paint buffer returned inactive painter";
       delete painter;
-      mPaintBuffer.data()->donePainting();
+      paintBufferRef.data()->donePainting();
     } else
       qDebug() << Q_FUNC_INFO << "paint buffer returned zero painter";
   } else
@@ -1175,9 +1178,10 @@ void QCPLayer::replot()
   {
     if (!mPaintBuffer.isNull())
     {
-      mPaintBuffer.data()->clear(Qt::transparent);
+      auto paintBufferRef = mPaintBuffer.toStrongRef();
+      paintBufferRef.data()->clear(Qt::transparent);
       drawToPaintBuffer();
-      mPaintBuffer.data()->setInvalidated(false);
+      paintBufferRef.data()->setInvalidated(false);
       mParentPlot->update();
     } else
       qDebug() << Q_FUNC_INFO << "no valid paint buffer associated with this layer";
@@ -1203,8 +1207,10 @@ void QCPLayer::addChild(QCPLayerable *layerable, bool prepend)
       mChildren.prepend(layerable);
     else
       mChildren.append(layerable);
-    if (!mPaintBuffer.isNull())
-      mPaintBuffer.data()->setInvalidated();
+    if (!mPaintBuffer.isNull()) {
+      auto paintBufferRef = mPaintBuffer.toStrongRef();
+      paintBufferRef.data()->setInvalidated();
+    }
   } else
     qDebug() << Q_FUNC_INFO << "layerable is already child of this layer" << reinterpret_cast<quintptr>(layerable);
 }
@@ -1222,8 +1228,10 @@ void QCPLayer::removeChild(QCPLayerable *layerable)
 {
   if (mChildren.removeOne(layerable))
   {
-    if (!mPaintBuffer.isNull())
-      mPaintBuffer.data()->setInvalidated();
+    if (!mPaintBuffer.isNull()) {
+      auto paintBufferRef = mPaintBuffer.toStrongRef();
+      paintBufferRef.data()->setInvalidated();
+    }
   } else
     qDebug() << Q_FUNC_INFO << "layerable is not child of this layer" << reinterpret_cast<quintptr>(layerable);
 }
@@ -8932,9 +8940,9 @@ void QCPAxis::wheelEvent(QWheelEvent *event)
     return;
   }
   
-  const double wheelSteps = event->delta()/120.0; // a single step delta is +/-120 usually
+  const double wheelSteps = (orientation() == Qt::Horizontal ? event->angleDelta().x() : event->angleDelta().y()) / 120; // a single step delta is +/-120 usually
   const double factor = qPow(mAxisRect->rangeZoomFactor(orientation()), wheelSteps);
-  scaleRange(factor, pixelToCoord(orientation() == Qt::Horizontal ? event->pos().x() : event->pos().y()));
+  scaleRange(factor, pixelToCoord(orientation() == Qt::Horizontal ? event->position().x() : event->position().y()));
   mParentPlot->replot();
 }
 
@@ -14968,7 +14976,7 @@ void QCustomPlot::wheelEvent(QWheelEvent *event)
 {
   emit mouseWheel(event);
   // forward event to layerable under cursor:
-  QList<QCPLayerable*> candidates = layerableListAt(event->pos(), false);
+  QList<QCPLayerable*> candidates = layerableListAt(event->position(), false);
   for (int i=0; i<candidates.size(); ++i)
   {
     event->accept(); // default impl of QCPLayerable's mouse events ignore the event, in that case propagate to next candidate in list
@@ -15302,7 +15310,7 @@ void QCustomPlot::processRectSelection(QRect rect, QMouseEvent *event)
   
   if (mInteractions.testFlag(QCP::iSelectPlottables))
   {
-    QMap<int, QPair<QCPAbstractPlottable*, QCPDataSelection> > potentialSelections; // map key is number of selected data points, so we have selections sorted by size
+    QMultiMap<int, QPair<QCPAbstractPlottable*, QCPDataSelection> > potentialSelections; // map key is number of selected data points, so we have selections sorted by size
     QRectF rectF(rect.normalized());
     if (QCPAxisRect *affectedAxisRect = axisRectAt(rectF.topLeft()))
     {
@@ -17932,23 +17940,24 @@ void QCPAxisRect::wheelEvent(QWheelEvent *event)
     if (mRangeZoom != 0)
     {
       double factor;
-      double wheelSteps = event->delta()/120.0; // a single step delta is +/-120 usually
       if (mRangeZoom.testFlag(Qt::Horizontal))
       {
+        const double wheelSteps = event->angleDelta().x() / 120; // a single step delta is +/-120 usually
         factor = qPow(mRangeZoomFactorHorz, wheelSteps);
         for (int i=0; i<mRangeZoomHorzAxis.size(); ++i)
         {
           if (!mRangeZoomHorzAxis.at(i).isNull())
-            mRangeZoomHorzAxis.at(i)->scaleRange(factor, mRangeZoomHorzAxis.at(i)->pixelToCoord(event->pos().x()));
+            mRangeZoomHorzAxis.at(i)->scaleRange(factor, mRangeZoomHorzAxis.at(i)->pixelToCoord(event->position().x()));
         }
       }
       if (mRangeZoom.testFlag(Qt::Vertical))
       {
+        const double wheelSteps = event->angleDelta().y() / 120; // a single step delta is +/-120 usually
         factor = qPow(mRangeZoomFactorVert, wheelSteps);
         for (int i=0; i<mRangeZoomVertAxis.size(); ++i)
         {
           if (!mRangeZoomVertAxis.at(i).isNull())
-            mRangeZoomVertAxis.at(i)->scaleRange(factor, mRangeZoomVertAxis.at(i)->pixelToCoord(event->pos().y()));
+            mRangeZoomVertAxis.at(i)->scaleRange(factor, mRangeZoomVertAxis.at(i)->pixelToCoord(event->position().y()));
         }
       }
       mParentPlot->replot();
