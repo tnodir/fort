@@ -53,12 +53,13 @@ bool SqliteStmt::bindNull(int index)
 
 bool SqliteStmt::bindText(int index, const QString &text)
 {
-    const int bytesCount = text.size() * int(sizeof(wchar_t));
+    const auto textUtf8 = text.toUtf8();
+    const int bytesCount = textUtf8.size();
 
-    m_bindObjects.insert(index, text);
+    m_bindObjects.insert(index, textUtf8);
 
-    return sqlite3_bind_text16(m_stmt, index, text.utf16(),
-                               bytesCount, SQLITE_STATIC) == SQLITE_OK;
+    return sqlite3_bind_text(m_stmt, index, textUtf8.data(),
+                             bytesCount, SQLITE_STATIC) == SQLITE_OK;
 }
 
 bool SqliteStmt::bindDateTime(int index, const QDateTime &dateTime)
@@ -188,8 +189,8 @@ int SqliteStmt::columnCount()
 
 QString SqliteStmt::columnName(int column)
 {
-    const auto name = sqlite3_column_name16(m_stmt, column);
-    return QString::fromWCharArray((const wchar_t *) name);
+    const char *name = sqlite3_column_name(m_stmt, column);
+    return QString::fromUtf8(name);
 }
 
 qint32 SqliteStmt::columnInt(int column)
@@ -214,16 +215,16 @@ bool SqliteStmt::columnBool(int column)
 
 QString SqliteStmt::columnText(int column)
 {
-    const ushort *p = static_cast<const ushort *>(
-                sqlite3_column_text16(m_stmt, column));
+    const char *p = reinterpret_cast<const char *>(
+                sqlite3_column_text(m_stmt, column));
     if (p == nullptr || *p == '\0')
         return QString();
 
-    const int bytesCount = sqlite3_column_bytes16(m_stmt, column);
+    const int bytesCount = sqlite3_column_bytes(m_stmt, column);
     if (bytesCount == 0)
         return QString();
 
-    return QString::fromUtf16(p, bytesCount / int(sizeof(wchar_t)));
+    return QString::fromUtf8(p, bytesCount);
 }
 
 QDateTime SqliteStmt::columnDateTime(int column)

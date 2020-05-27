@@ -32,7 +32,6 @@ public:
     bool detach(const QString &schemaName);
 
     bool execute(const char *sql);
-    bool execute16(const ushort *sql);
     bool executeStr(const QString &sql);
 
     QVariant executeEx(const char *sql,

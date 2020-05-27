@@ -61,7 +61,9 @@ bool SqliteDb::open(const QString &filePath)
         m_filePath = filePath;
     }
 
-    return sqlite3_open16(m_filePath.utf16(), &m_db) == SQLITE_OK;
+    const auto filePathUtf8 = m_filePath.toUtf8();
+
+    return sqlite3_open(filePathUtf8.data(), &m_db) == SQLITE_OK;
 }
 
 void SqliteDb::close()
@@ -91,20 +93,11 @@ bool SqliteDb::execute(const char *sql)
     return sqlite3_exec(m_db, sql, nullptr, nullptr, nullptr) == SQLITE_OK;
 }
 
-bool SqliteDb::execute16(const ushort *sql)
-{
-    sqlite3_stmt *stmt = nullptr;
-    int res = sqlite3_prepare16_v2(db(), sql, -1, &stmt, nullptr);
-    if (stmt != nullptr) {
-        res = sqlite3_step(stmt);
-        sqlite3_finalize(stmt);
-    }
-    return res;
-}
-
 bool SqliteDb::executeStr(const QString &sql)
 {
-    return execute16(sql.utf16());
+    const auto sqlUtf8 = sql.toUtf8();
+
+    return execute(sqlUtf8.data());
 }
 
 QVariant SqliteDb::executeEx(const char *sql,
