@@ -1,5 +1,14 @@
 Fort Firewall ChangeLog
 
+v3.2.1, 2020-06-03:
+- UI: Tray: Fix left & right mouse button clicks collision.
+- UI: Show OptionsWindow on tray message click by default.
+- UI: AddressesPage: Disable Zones button when empty.
+- UI: ZonesWindow: Add "Save As Text" button.
+- UI: ProgramsWindow: Fix sorting.
+- UI: TaskZoneDownloader: Avoid warnings on abort.
+- Update SQLite to v3.32.1
+
 v3.2.0, 2020-02-17:
 - Add Zones (to download block lists).
 - UI: AddressesPage: Use Zones.
