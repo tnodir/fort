@@ -123,7 +123,7 @@ bool Ip4Range::parseAddressMask(const QStringRef &line,
     }
 
     const auto ip = match.captured(1);
-    const auto sepStr = match.capturedRef(2);
+    const auto sepStr = match.capturedView(2);
     const auto sep = sepStr.isEmpty() ? QChar('/') : sepStr.at(0);
     const auto mask = match.captured(3);
 

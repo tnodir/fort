@@ -488,7 +488,7 @@ QString ConfUtil::parseAppPath(const QStringRef &line,
     const auto wildMatch = wildMatcher.match(path);
     if (wildMatch.hasMatch()) {
         if (wildMatch.capturedStart() == path.size() - 2
-                && wildMatch.capturedRef().at(0) == '*'
+                && wildMatch.capturedView().at(0) == '*'
                 && path.endsWith('*')) {
             path.chop(2);
             isPrefix = true;
