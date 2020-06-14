@@ -73,7 +73,13 @@ QVector<QStringRef> TaskZoneDownloader::parseAddresses(const QString &text,
     // Parse lines
     const QRegularExpression re(pattern());
 
-    const auto lines = text.splitRef('\n', Qt::SkipEmptyParts);
+    const auto lines = text.splitRef('\n',
+                                 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+                                     QString::SkipEmptyParts
+                                 #else
+                                     Qt::SkipEmptyParts
+                                 #endif
+                                     );
 
     for (const auto &line : lines) {
         if (line.startsWith('#')
