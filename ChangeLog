@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.2.2, 2020-06-15:
+- UI: App. paths of Programs window overwrite paths from Options window.
+- Update SQLite to v3.32.2
+
 v3.2.1, 2020-06-03:
 - UI: Tray: Fix left & right mouse button clicks collision.
 - UI: Show OptionsWindow on tray message click by default.
