@@ -8942,7 +8942,7 @@ void QCPAxis::wheelEvent(QWheelEvent *event)
   
   const double wheelSteps = (orientation() == Qt::Horizontal ? event->angleDelta().x() : event->angleDelta().y()) / 120; // a single step delta is +/-120 usually
   const double factor = qPow(mAxisRect->rangeZoomFactor(orientation()), wheelSteps);
-  const QPoint pos =
+  const auto pos =
     #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
       event->pos()
     #else
@@ -14983,7 +14983,7 @@ void QCustomPlot::wheelEvent(QWheelEvent *event)
 {
   emit mouseWheel(event);
   // forward event to layerable under cursor:
-  const QPoint pos =
+  const auto pos =
     #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
       event->pos()
     #else
@@ -17954,7 +17954,7 @@ void QCPAxisRect::wheelEvent(QWheelEvent *event)
     if (mRangeZoom != 0)
     {
       double factor;
-      const QPoint pos =
+      const auto pos =
         #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
           event->pos()
         #else
