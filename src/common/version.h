@@ -2,10 +2,10 @@
 #define VERSION_H
 
 #define APP_VERSION_MAJOR	3
-#define APP_VERSION_MINOR	3
-#define APP_VERSION_PATCH	0
-#define APP_VERSION_STR		"3.3.0"
-#define APP_VERSION		0x030300
+#define APP_VERSION_MINOR	2
+#define APP_VERSION_PATCH	2
+#define APP_VERSION_STR		"3.2.2"
+#define APP_VERSION		0x030202
 
 #define APP_NAME		"Fort Firewall"
 #define APP_PUBLISHER		"Nodir Temirkhodjaev"
