@@ -389,7 +389,7 @@ bool ConfUtil::parseExeApps(ConfAppsWalker *confAppsWalker,
                                     const QString &appPath) -> bool {
         return addApp(groupIndex, useGroupPerm,
                       blocked, alerted, true, appPath,
-                      exeAppsMap, exeAppsSize, false);
+                      exeAppsMap, exeAppsSize);
     });
 }
 
@@ -423,7 +423,7 @@ bool ConfUtil::parseAppsText(int groupIndex, bool blocked, const QString &text,
                                               : exeAppsSize;
 
         if (!addApp(groupIndex, true, blocked, false, true,
-                    appPath, appsMap, appsSize))
+                    appPath, appsMap, appsSize, false))
             return false;
     }
 
@@ -433,17 +433,13 @@ bool ConfUtil::parseAppsText(int groupIndex, bool blocked, const QString &text,
 bool ConfUtil::addApp(int groupIndex, bool useGroupPerm,
                       bool blocked, bool alerted, bool isNew,
                       const QString &appPath, appentry_map_t &appsMap,
-                      quint32 &appsSize, bool canCollide)
+                      quint32 &appsSize, bool canOverwrite)
 {
     const QString kernelPath = FileUtil::pathToKernelPath(appPath);
 
     if (appsMap.contains(kernelPath)) {
-        if (!canCollide) {
-            setErrorMessage(tr("Application '%1' already exists")
-                            .arg(appPath));
-            return false;
-        }
-        return true;
+        if (!canOverwrite)
+            return true;
     }
 
     if (kernelPath.size() > int(APP_PATH_MAX)) {

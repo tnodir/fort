@@ -50,6 +50,7 @@ public:
     bool loadTasks(const QList<TaskInfo *> &taskInfos);
     bool saveTasks(const QList<TaskInfo *> &taskInfos);
 
+    bool appPathExists(const QString &appPath);
     bool addApp(const QString &appPath, const QString &appName,
                 const QDateTime &endTime,
                 qint64 groupId, bool useGroupPerm,
@@ -86,8 +87,7 @@ public:
     bool updateDriverDeleteApp(const QString &appPath);
     bool updateDriverUpdateApp(const QString &appPath,
                                int groupIndex, bool useGroupPerm,
-                               bool blocked, bool isNew = false,
-                               bool remove = false);
+                               bool blocked, bool remove = false);
     void updateDriverZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
                            const QList<QByteArray> &zonesData);
     bool updateDriverZoneFlag(int zoneId, bool enabled);

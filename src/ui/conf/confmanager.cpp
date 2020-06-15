@@ -143,6 +143,10 @@ const char * const sqlSelectEndedApps =
         "  WHERE end_time <= ?1 AND blocked = 0;"
         ;
 
+const char * const sqlSelectAppPathExists =
+        "SELECT 1 FROM app WHERE path = ?1;"
+        ;
+
 const char * const sqlInsertApp =
         "INSERT INTO app(app_group_id, path, name, use_group_perm, blocked,"
         "    creat_time, end_time)"
@@ -549,6 +553,11 @@ bool ConfManager::saveTasks(const QList<TaskInfo *> &taskInfos)
     return checkResult(ok, true);
 }
 
+bool ConfManager::appPathExists(const QString &appPath)
+{
+    return sqliteDb()->executeEx(sqlSelectAppPathExists, {appPath}).toBool();
+}
+
 bool ConfManager::addApp(const QString &appPath, const QString &appName,
                          const QDateTime &endTime,
                          qint64 groupId, bool useGroupPerm,
@@ -887,18 +896,18 @@ bool ConfManager::updateDriverConf(bool onlyFlags)
 
 bool ConfManager::updateDriverDeleteApp(const QString &appPath)
 {
-    return updateDriverUpdateApp(appPath, 0, false, false, false, true);
+    return updateDriverUpdateApp(appPath, 0, false, false, true);
 }
 
 bool ConfManager::updateDriverUpdateApp(const QString &appPath,
                                         int groupIndex, bool useGroupPerm,
-                                        bool blocked, bool isNew, bool remove)
+                                        bool blocked, bool remove)
 {
     ConfUtil confUtil;
     QByteArray buf;
 
     const int entrySize = confUtil.writeAppEntry(
-                groupIndex, useGroupPerm, blocked, false, isNew,
+                groupIndex, useGroupPerm, blocked, false, false,
                 appPath, buf);
 
     if (entrySize == 0) {
@@ -907,10 +916,7 @@ bool ConfManager::updateDriverUpdateApp(const QString &appPath,
     }
 
     if (!driverManager()->writeApp(buf, entrySize, remove)) {
-        const auto errorMessage = driverManager()->isDeviceError()
-                ? driverManager()->errorMessage()
-                : tr("Application '%1' already exists").arg(appPath);
-        showErrorMessage(errorMessage);
+        showErrorMessage(driverManager()->errorMessage());
         return false;
     }
 

@@ -90,7 +90,7 @@ private:
     bool addApp(int groupIndex, bool useGroupPerm,
                 bool blocked, bool alerted, bool isNew,
                 const QString &appPath, appentry_map_t &appsMap,
-                quint32 &appsSize, bool canCollide = true);
+                quint32 &appsSize, bool canOverwrite = true);
 
     static QString parseAppPath(const QStringRef &line,
                                 bool &isWild, bool &isPrefix);

@@ -68,6 +68,9 @@ void AppListModel::addLogEntry(const LogEntryBlocked &logEntry)
             + ':' + QString::number(logEntry.port());
 #endif
 
+    if (confManager()->appPathExists(appPath))
+        return;  // already added by user
+
     const auto groupId = appGroupAt(0)->id();
 
     if (confManager()->addApp(appPath, QString(), QDateTime(),
@@ -237,7 +240,7 @@ bool AppListModel::addApp(const QString &appPath, const QString &appName,
                           bool useGroupPerm, bool blocked)
 {
     if (!confManager()->updateDriverUpdateApp(
-                appPath, groupIndex, useGroupPerm, blocked, true))
+                appPath, groupIndex, useGroupPerm, blocked))
         return false;
 
     const auto groupId = appGroupAt(groupIndex)->id();
@@ -256,7 +259,7 @@ bool AppListModel::updateApp(qint64 appId, const QString &appPath, const QString
                              bool useGroupPerm, bool blocked, bool updateDriver)
 {
     if (updateDriver && !confManager()->updateDriverUpdateApp(
-                appPath, groupIndex, useGroupPerm, blocked, false))
+                appPath, groupIndex, useGroupPerm, blocked))
         return false;
 
     const auto groupId = appGroupAt(groupIndex)->id();

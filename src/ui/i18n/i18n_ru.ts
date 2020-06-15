@@ -85,42 +85,42 @@
 <context>
     <name>AppListModel</name>
     <message>
-        <location filename="../model/applistmodel.cpp" line="90"/>
+        <location filename="../model/applistmodel.cpp" line="93"/>
         <source>Program</source>
         <translation>Программа</translation>
     </message>
     <message>
-        <location filename="../model/applistmodel.cpp" line="91"/>
+        <location filename="../model/applistmodel.cpp" line="94"/>
         <source>Group</source>
         <translation>Группа</translation>
     </message>
     <message>
-        <location filename="../model/applistmodel.cpp" line="92"/>
+        <location filename="../model/applistmodel.cpp" line="95"/>
         <source>State</source>
         <translation>Состояние</translation>
     </message>
     <message>
-        <location filename="../model/applistmodel.cpp" line="93"/>
+        <location filename="../model/applistmodel.cpp" line="96"/>
         <source>Bl.</source>
         <translation>Бл.</translation>
     </message>
     <message>
-        <location filename="../model/applistmodel.cpp" line="94"/>
+        <location filename="../model/applistmodel.cpp" line="97"/>
         <source>Creation Time</source>
         <translation>Время создания</translation>
     </message>
     <message>
-        <location filename="../model/applistmodel.cpp" line="131"/>
+        <location filename="../model/applistmodel.cpp" line="134"/>
         <source>Alert</source>
         <translation>Оповещение</translation>
     </message>
     <message>
-        <location filename="../model/applistmodel.cpp" line="132"/>
+        <location filename="../model/applistmodel.cpp" line="135"/>
         <source>Block</source>
         <translation>Блокировать</translation>
     </message>
     <message>
-        <location filename="../model/applistmodel.cpp" line="133"/>
+        <location filename="../model/applistmodel.cpp" line="136"/>
         <source>Allow</source>
         <translation>Разрешить</translation>
     </message>
@@ -259,14 +259,9 @@
 <context>
     <name>ConfManager</name>
     <message>
-        <location filename="../conf/confmanager.cpp" line="409"/>
+        <location filename="../conf/confmanager.cpp" line="413"/>
         <source>Configuration Error</source>
         <translation>Ошибка конфигурации</translation>
-    </message>
-    <message>
-        <location filename="../conf/confmanager.cpp" line="912"/>
-        <source>Application &apos;%1&apos; already exists</source>
-        <translation>Приложение &apos;%1&apos; уже существует</translation>
     </message>
 </context>
 <context>
@@ -302,12 +297,7 @@
         <translation>Длина наименования группы приложения должна быть &lt; %1</translation>
     </message>
     <message>
-        <location filename="../util/conf/confutil.cpp" line="441"/>
-        <source>Application &apos;%1&apos; already exists</source>
-        <translation>Приложение &apos;%1&apos; уже существует</translation>
-    </message>
-    <message>
-        <location filename="../util/conf/confutil.cpp" line="449"/>
+        <location filename="../util/conf/confutil.cpp" line="446"/>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Длина пути приложения должна быть &lt; %1</translation>
     </message>
@@ -323,63 +313,63 @@
 <context>
     <name>FortManager</name>
     <message>
-        <location filename="../fortmanager.cpp" line="553"/>
+        <location filename="../fortmanager.cpp" line="555"/>
         <source>Password input</source>
         <translation>Ввод пароля</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="553"/>
+        <location filename="../fortmanager.cpp" line="555"/>
         <source>Please enter the password</source>
         <translation>Наберите пароль пожалуйста</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="622"/>
+        <location filename="../fortmanager.cpp" line="624"/>
         <source>Please first install Fort Firewall v%1 and save Options from it.</source>
         <translation>Сперва установите Fort Firewall v%1 и сохраните Опции пожалуйста.</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="882"/>
+        <location filename="../fortmanager.cpp" line="886"/>
         <source>Programs</source>
         <translation>Программы</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="883"/>
+        <location filename="../fortmanager.cpp" line="887"/>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="884"/>
+        <location filename="../fortmanager.cpp" line="888"/>
         <source>Zones</source>
         <translation>Зоны</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="885"/>
+        <location filename="../fortmanager.cpp" line="889"/>
         <source>Traffic Graph</source>
         <translation>График трафика</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="887"/>
+        <location filename="../fortmanager.cpp" line="891"/>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="888"/>
+        <location filename="../fortmanager.cpp" line="892"/>
         <source>Stop Traffic</source>
         <translation>Остановить трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="889"/>
+        <location filename="../fortmanager.cpp" line="893"/>
         <source>Stop Internet Traffic</source>
         <translation>Остановить Интернет трафик</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="890"/>
+        <location filename="../fortmanager.cpp" line="894"/>
         <source>Auto-Allow All New Programs</source>
         <translation>Авто-разрешение всех новых программ</translation>
     </message>
     <message>
-        <location filename="../fortmanager.cpp" line="849"/>
-        <location filename="../fortmanager.cpp" line="892"/>
+        <location filename="../fortmanager.cpp" line="853"/>
+        <location filename="../fortmanager.cpp" line="896"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>

@@ -637,7 +637,9 @@ bool FortManager::saveConf(FirewallConf *newConf, bool onlyFlags)
     if (!confManager()->save(*newConf, onlyFlags))
         return false;
 
-    return updateDriverConf(onlyFlags);
+    updateDriverConf(onlyFlags);
+
+    return true;
 }
 
 bool FortManager::updateDriverConf(bool onlyFlags)
