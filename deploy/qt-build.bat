@@ -26,7 +26,7 @@ cd %TARGET_PATH%
 	-skip qtwebsockets -skip qtwebview ^
 	-skip qtwinextras -skip qtx11extras -skip qtxmlpatterns ^
 	^
-	-no-feature-big_codecs -no-feature-columnview -no-feature-commandlinkbutton ^
+	-no-feature-columnview -no-feature-commandlinkbutton ^
 	-no-feature-concatenatetablesproxymodel ^
 	-no-feature-concurrent -no-feature-cups -no-feature-datawidgetmapper ^
 	-no-feature-dial -no-feature-dockwidget ^
