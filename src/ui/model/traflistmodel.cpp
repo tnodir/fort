@@ -31,7 +31,7 @@ void TrafListModel::setAppId(qint64 appId)
 
 int TrafListModel::rowCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent)
+    Q_UNUSED(parent);
 
     return m_trafCount;
 }

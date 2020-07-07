@@ -67,7 +67,7 @@ public:
     void setLastSuccess(const QDateTime &lastSuccess);
 
     virtual QByteArray data() const { return QByteArray(); }
-    virtual void setData(const QByteArray &data) { Q_UNUSED(data) }
+    virtual void setData(const QByteArray &data) { Q_UNUSED(data); }
 
     TaskWorker *taskWorker() const { return m_taskWorker; }
     void setTaskWorker(TaskWorker *taskWorker);

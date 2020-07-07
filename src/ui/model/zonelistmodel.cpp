@@ -93,7 +93,7 @@ QVariant ZoneListModel::data(const QModelIndex &index, int role) const
 
 bool ZoneListModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    Q_UNUSED(value)
+    Q_UNUSED(value);
 
     if (!index.isValid())
         return false;

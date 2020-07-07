@@ -1482,9 +1482,9 @@ bool QCPLayerable::realVisibility() const
 */
 double QCPLayerable::selectTest(const QPointF &pos, bool onlySelectable, QVariant *details) const
 {
-  Q_UNUSED(pos)
-  Q_UNUSED(onlySelectable)
-  Q_UNUSED(details)
+  Q_UNUSED(pos);
+  Q_UNUSED(onlySelectable);
+  Q_UNUSED(details);
   return -1.0;
 }
 
@@ -1603,7 +1603,7 @@ void QCPLayerable::applyAntialiasingHint(QCPPainter *painter, bool localAntialia
 */
 void QCPLayerable::parentPlotInitialized(QCustomPlot *parentPlot)
 {
-   Q_UNUSED(parentPlot)
+   Q_UNUSED(parentPlot);
 }
 
 /*! \internal
@@ -1669,10 +1669,10 @@ QRect QCPLayerable::clipRect() const
 */
 void QCPLayerable::selectEvent(QMouseEvent *event, bool additive, const QVariant &details, bool *selectionStateChanged)
 {
-  Q_UNUSED(event)
-  Q_UNUSED(additive)
-  Q_UNUSED(details)
-  Q_UNUSED(selectionStateChanged)
+  Q_UNUSED(event);
+  Q_UNUSED(additive);
+  Q_UNUSED(details);
+  Q_UNUSED(selectionStateChanged);
 }
 
 /*! \internal
@@ -1689,7 +1689,7 @@ void QCPLayerable::selectEvent(QMouseEvent *event, bool additive, const QVariant
 */
 void QCPLayerable::deselectEvent(bool *selectionStateChanged)
 {
-  Q_UNUSED(selectionStateChanged)
+  Q_UNUSED(selectionStateChanged);
 }
 
 /*!
@@ -1719,7 +1719,7 @@ void QCPLayerable::deselectEvent(bool *selectionStateChanged)
 */
 void QCPLayerable::mousePressEvent(QMouseEvent *event, const QVariant &details)
 {
-  Q_UNUSED(details)
+  Q_UNUSED(details);
   event->ignore();
 }
 
@@ -1737,7 +1737,7 @@ void QCPLayerable::mousePressEvent(QMouseEvent *event, const QVariant &details)
 */
 void QCPLayerable::mouseMoveEvent(QMouseEvent *event, const QPointF &startPos)
 {
-  Q_UNUSED(startPos)
+  Q_UNUSED(startPos);
   event->ignore();
 }
 
@@ -1755,7 +1755,7 @@ void QCPLayerable::mouseMoveEvent(QMouseEvent *event, const QPointF &startPos)
 */
 void QCPLayerable::mouseReleaseEvent(QMouseEvent *event, const QPointF &startPos)
 {
-  Q_UNUSED(startPos)
+  Q_UNUSED(startPos);
   event->ignore();
 }
 
@@ -1787,7 +1787,7 @@ void QCPLayerable::mouseReleaseEvent(QMouseEvent *event, const QPointF &startPos
 */
 void QCPLayerable::mouseDoubleClickEvent(QMouseEvent *event, const QVariant &details)
 {
-  Q_UNUSED(details)
+  Q_UNUSED(details);
   event->ignore();
 }
 
@@ -3490,7 +3490,7 @@ QSize QCPLayoutElement::maximumOuterSizeHint() const
 */
 QList<QCPLayoutElement*> QCPLayoutElement::elements(bool recursive) const
 {
-  Q_UNUSED(recursive)
+  Q_UNUSED(recursive);
   return QList<QCPLayoutElement*>();
 }
 
@@ -3507,7 +3507,7 @@ QList<QCPLayoutElement*> QCPLayoutElement::elements(bool recursive) const
 */
 double QCPLayoutElement::selectTest(const QPointF &pos, bool onlySelectable, QVariant *details) const
 {
-  Q_UNUSED(details)
+  Q_UNUSED(details);
   
   if (onlySelectable)
     return -1;
@@ -5071,7 +5071,7 @@ bool QCPLayoutInset::take(QCPLayoutElement *element)
 */
 double QCPLayoutInset::selectTest(const QPointF &pos, bool onlySelectable, QVariant *details) const
 {
-  Q_UNUSED(details)
+  Q_UNUSED(details);
   if (onlySelectable)
     return -1;
   
@@ -6050,8 +6050,8 @@ int QCPAxisTickerDateTime::getSubTickCount(double tickStep)
 */
 QString QCPAxisTickerDateTime::getTickLabel(double tick, const QLocale &locale, QChar formatChar, int precision)
 {
-  Q_UNUSED(precision)
-  Q_UNUSED(formatChar)
+  Q_UNUSED(precision);
+  Q_UNUSED(formatChar);
   return locale.toString(keyToDateTime(tick).toTimeSpec(mDateTimeSpec), mDateTimeFormat);
 }
 
@@ -6362,9 +6362,9 @@ int QCPAxisTickerTime::getSubTickCount(double tickStep)
 */
 QString QCPAxisTickerTime::getTickLabel(double tick, const QLocale &locale, QChar formatChar, int precision)
 {
-  Q_UNUSED(precision)
-  Q_UNUSED(formatChar)
-  Q_UNUSED(locale)
+  Q_UNUSED(precision);
+  Q_UNUSED(formatChar);
+  Q_UNUSED(locale);
   bool negative = tick < 0;
   if (negative) tick *= -1;
   double values[tuDays+1]; // contains the msec/sec/min/... value with its respective modulo (e.g. minute 0..59)
@@ -6663,7 +6663,7 @@ void QCPAxisTickerText::addTicks(const QVector<double> &positions, const QVector
 double QCPAxisTickerText::getTickStep(const QCPRange &range)
 {
   // text axis ticker has manual tick positions, so doesn't need this method
-  Q_UNUSED(range)
+  Q_UNUSED(range);
   return 1.0;
 }
 
@@ -6674,7 +6674,7 @@ double QCPAxisTickerText::getTickStep(const QCPRange &range)
 */
 int QCPAxisTickerText::getSubTickCount(double tickStep)
 {
-  Q_UNUSED(tickStep)
+  Q_UNUSED(tickStep);
   return mSubTickCount;
 }
 
@@ -6686,9 +6686,9 @@ int QCPAxisTickerText::getSubTickCount(double tickStep)
 */
 QString QCPAxisTickerText::getTickLabel(double tick, const QLocale &locale, QChar formatChar, int precision)
 {
-  Q_UNUSED(locale)
-  Q_UNUSED(formatChar)
-  Q_UNUSED(precision)
+  Q_UNUSED(locale);
+  Q_UNUSED(formatChar);
+  Q_UNUSED(precision);
   return mTicks.value(tick);
 }
 
@@ -6701,7 +6701,7 @@ QString QCPAxisTickerText::getTickLabel(double tick, const QLocale &locale, QCha
 */
 QVector<double> QCPAxisTickerText::createTickVector(double tickStep, const QCPRange &range)
 {
-  Q_UNUSED(tickStep)
+  Q_UNUSED(tickStep);
   QVector<double> result;
   if (mTicks.isEmpty())
     return result;
@@ -7085,7 +7085,7 @@ void QCPAxisTickerLog::setSubTickCount(int subTicks)
 double QCPAxisTickerLog::getTickStep(const QCPRange &range)
 {
   // Logarithmic axis ticker has unequal tick spacing, so doesn't need this method
-  Q_UNUSED(range)
+  Q_UNUSED(range);
   return 1.0;
 }
 
@@ -7098,7 +7098,7 @@ double QCPAxisTickerLog::getTickStep(const QCPRange &range)
 */
 int QCPAxisTickerLog::getSubTickCount(double tickStep)
 {
-  Q_UNUSED(tickStep)
+  Q_UNUSED(tickStep);
   return mSubTickCount;
 }
 
@@ -7113,7 +7113,7 @@ int QCPAxisTickerLog::getSubTickCount(double tickStep)
 */
 QVector<double> QCPAxisTickerLog::createTickVector(double tickStep, const QCPRange &range)
 {
-  Q_UNUSED(tickStep)
+  Q_UNUSED(tickStep);
   QVector<double> result;
   if (range.lower > 0 && range.upper > 0) // positive range
   {
@@ -8795,7 +8795,7 @@ QCPAxis::AxisType QCPAxis::opposite(QCPAxis::AxisType type)
 /* inherits documentation from base class */
 void QCPAxis::selectEvent(QMouseEvent *event, bool additive, const QVariant &details, bool *selectionStateChanged)
 {
-  Q_UNUSED(event)
+  Q_UNUSED(event);
   SelectablePart part = details.value<SelectablePart>();
   if (mSelectableParts.testFlag(part))
   {
@@ -8832,7 +8832,7 @@ void QCPAxis::deselectEvent(bool *selectionStateChanged)
 */
 void QCPAxis::mousePressEvent(QMouseEvent *event, const QVariant &details)
 {
-  Q_UNUSED(details)
+  Q_UNUSED(details);
   if (!mParentPlot->interactions().testFlag(QCP::iRangeDrag) ||
       !mAxisRect->rangeDrag().testFlag(orientation()) ||
       !mAxisRect->rangeDragAxes(orientation()).contains(this))
@@ -8904,8 +8904,8 @@ void QCPAxis::mouseMoveEvent(QMouseEvent *event, const QPointF &startPos)
 */
 void QCPAxis::mouseReleaseEvent(QMouseEvent *event, const QPointF &startPos)
 {
-  Q_UNUSED(event)
-  Q_UNUSED(startPos)
+  Q_UNUSED(event);
+  Q_UNUSED(startPos);
   mDragging = false;
   if (mParentPlot->noAntialiasingOnDrag())
   {
@@ -10471,8 +10471,8 @@ void QCPSelectionDecorator::copyFrom(const QCPSelectionDecorator *other)
 */
 void QCPSelectionDecorator::drawDecoration(QCPPainter *painter, QCPDataSelection selection)
 {
-  Q_UNUSED(painter)
-  Q_UNUSED(selection)
+  Q_UNUSED(painter);
+  Q_UNUSED(selection);
 }
 
 /*! \internal
@@ -11249,7 +11249,7 @@ void QCPAbstractPlottable::applyScattersAntialiasingHint(QCPPainter *painter) co
 /* inherits documentation from base class */
 void QCPAbstractPlottable::selectEvent(QMouseEvent *event, bool additive, const QVariant &details, bool *selectionStateChanged)
 {
-  Q_UNUSED(event)
+  Q_UNUSED(event);
   
   if (mSelectable != QCP::stNone)
   {
@@ -12531,8 +12531,8 @@ QCPItemAnchor *QCPAbstractItem::createAnchor(const QString &name, int anchorId)
 /* inherits documentation from base class */
 void QCPAbstractItem::selectEvent(QMouseEvent *event, bool additive, const QVariant &details, bool *selectionStateChanged)
 {
-  Q_UNUSED(event)
-  Q_UNUSED(details)
+  Q_UNUSED(event);
+  Q_UNUSED(details);
   if (mSelectable)
   {
     bool selBefore = mSelected;
@@ -13373,7 +13373,7 @@ void QCustomPlot::setOpenGl(bool enabled, int multisampling)
   mPaintBuffers.clear();
   setupPaintBuffers();
 #else
-  Q_UNUSED(enabled)
+  Q_UNUSED(enabled);
   qDebug() << Q_FUNC_INFO << "QCustomPlot can't use OpenGL because QCUSTOMPLOT_USE_OPENGL was not defined during compilation (add 'DEFINES += QCUSTOMPLOT_USE_OPENGL' to your qmake .pro file)";
 #endif
 }
@@ -14529,12 +14529,12 @@ bool QCustomPlot::savePdf(const QString &fileName, int width, int height, QCP::E
 {
   bool success = false;
 #ifdef QT_NO_PRINTER
-  Q_UNUSED(fileName)
-  Q_UNUSED(exportPen)
-  Q_UNUSED(width)
-  Q_UNUSED(height)
-  Q_UNUSED(pdfCreator)
-  Q_UNUSED(pdfTitle)
+  Q_UNUSED(fileName);
+  Q_UNUSED(exportPen);
+  Q_UNUSED(width);
+  Q_UNUSED(height);
+  Q_UNUSED(pdfCreator);
+  Q_UNUSED(pdfTitle);
   qDebug() << Q_FUNC_INFO << "Qt was built without printer support (QT_NO_PRINTER). PDF not created.";
 #else
   int newWidth, newHeight;
@@ -14779,7 +14779,7 @@ void QCustomPlot::paintEvent(QPaintEvent *event)
 */
 void QCustomPlot::resizeEvent(QResizeEvent *event)
 {
-  Q_UNUSED(event)
+  Q_UNUSED(event);
   // resize and repaint the buffer:
   setViewport(rect());
   replot(rpQueuedRefresh); // queued refresh is important here, to prevent painting issues in some contexts (e.g. MDI subwindow)
@@ -15405,7 +15405,7 @@ void QCustomPlot::processRectSelection(QRect rect, QMouseEvent *event)
 */
 void QCustomPlot::processRectZoom(QRect rect, QMouseEvent *event)
 {
-  Q_UNUSED(event)
+  Q_UNUSED(event);
   if (QCPAxisRect *axisRect = axisRectAt(rect.topLeft()))
   {
     QList<QCPAxis*> affectedAxes = QList<QCPAxis*>() << axisRect->rangeZoomAxes(Qt::Horizontal) << axisRect->rangeZoomAxes(Qt::Vertical);
@@ -17830,7 +17830,7 @@ void QCPAxisRect::layoutChanged()
 */
 void QCPAxisRect::mousePressEvent(QMouseEvent *event, const QVariant &details)
 {
-  Q_UNUSED(details)
+  Q_UNUSED(details);
   if (event->buttons() & Qt::LeftButton)
   {
     mDragging = true;
@@ -17862,7 +17862,7 @@ void QCPAxisRect::mousePressEvent(QMouseEvent *event, const QVariant &details)
 */
 void QCPAxisRect::mouseMoveEvent(QMouseEvent *event, const QPointF &startPos)
 {
-  Q_UNUSED(startPos)
+  Q_UNUSED(startPos);
   // Mouse range dragging interaction:
   if (mDragging && mParentPlot->interactions().testFlag(QCP::iRangeDrag))
   {
@@ -17922,8 +17922,8 @@ void QCPAxisRect::mouseMoveEvent(QMouseEvent *event, const QPointF &startPos)
 /* inherits documentation from base class */
 void QCPAxisRect::mouseReleaseEvent(QMouseEvent *event, const QPointF &startPos)
 {
-  Q_UNUSED(event)
-  Q_UNUSED(startPos)
+  Q_UNUSED(event);
+  Q_UNUSED(startPos);
   mDragging = false;
   if (mParentPlot->noAntialiasingOnDrag())
   {
@@ -18123,7 +18123,7 @@ void QCPAbstractLegendItem::setSelected(bool selected)
 /* inherits documentation from base class */
 double QCPAbstractLegendItem::selectTest(const QPointF &pos, bool onlySelectable, QVariant *details) const
 {
-  Q_UNUSED(details)
+  Q_UNUSED(details);
   if (!mParentPlot) return -1;
   if (onlySelectable && (!mSelectable || !mParentLegend->selectableParts().testFlag(QCPLegend::spItems)))
     return -1;
@@ -18149,8 +18149,8 @@ QRect QCPAbstractLegendItem::clipRect() const
 /* inherits documentation from base class */
 void QCPAbstractLegendItem::selectEvent(QMouseEvent *event, bool additive, const QVariant &details, bool *selectionStateChanged)
 {
-  Q_UNUSED(event)
-  Q_UNUSED(details)
+  Q_UNUSED(event);
+  Q_UNUSED(details);
   if (mSelectable && mParentLegend->selectableParts().testFlag(QCPLegend::spItems))
   {
     bool selBefore = mSelected;
@@ -18859,7 +18859,7 @@ double QCPLegend::selectTest(const QPointF &pos, bool onlySelectable, QVariant *
 /* inherits documentation from base class */
 void QCPLegend::selectEvent(QMouseEvent *event, bool additive, const QVariant &details, bool *selectionStateChanged)
 {
-  Q_UNUSED(event)
+  Q_UNUSED(event);
   mSelectedParts = selectedParts(); // in case item selection has changed
   if (details.value<SelectablePart>() == spLegendBox && mSelectableParts.testFlag(spLegendBox))
   {
@@ -19206,8 +19206,8 @@ QSize QCPTextElement::maximumOuterSizeHint() const
 /* inherits documentation from base class */
 void QCPTextElement::selectEvent(QMouseEvent *event, bool additive, const QVariant &details, bool *selectionStateChanged)
 {
-  Q_UNUSED(event)
-  Q_UNUSED(details)
+  Q_UNUSED(event);
+  Q_UNUSED(details);
   if (mSelectable)
   {
     bool selBefore = mSelected;
@@ -19241,7 +19241,7 @@ void QCPTextElement::deselectEvent(bool *selectionStateChanged)
 */
 double QCPTextElement::selectTest(const QPointF &pos, bool onlySelectable, QVariant *details) const
 {
-  Q_UNUSED(details)
+  Q_UNUSED(details);
   if (onlySelectable && !mSelectable)
     return -1;
   
@@ -19259,7 +19259,7 @@ double QCPTextElement::selectTest(const QPointF &pos, bool onlySelectable, QVari
 */
 void QCPTextElement::mousePressEvent(QMouseEvent *event, const QVariant &details)
 {
-  Q_UNUSED(details)
+  Q_UNUSED(details);
   event->accept();
 }
 
@@ -19282,7 +19282,7 @@ void QCPTextElement::mouseReleaseEvent(QMouseEvent *event, const QPointF &startP
 */
 void QCPTextElement::mouseDoubleClickEvent(QMouseEvent *event, const QVariant &details)
 {
-  Q_UNUSED(details)
+  Q_UNUSED(details);
   emit doubleClicked(event);
 }
 
@@ -23946,7 +23946,7 @@ QCPDataSelection QCPBars::selectTestRect(const QRectF &rect, bool onlySelectable
 */
 double QCPBars::selectTest(const QPointF &pos, bool onlySelectable, QVariant *details) const
 {
-  Q_UNUSED(details)
+  Q_UNUSED(details);
   if ((onlySelectable && mSelectable == QCP::stNone) || mDataContainer->isEmpty())
     return -1;
   if (!mKeyAxis || !mValueAxis)
@@ -24778,7 +24778,7 @@ QCPDataSelection QCPStatisticalBox::selectTestRect(const QRectF &rect, bool only
 */
 double QCPStatisticalBox::selectTest(const QPointF &pos, bool onlySelectable, QVariant *details) const
 {
-  Q_UNUSED(details)
+  Q_UNUSED(details);
   if ((onlySelectable && mSelectable == QCP::stNone) || mDataContainer->isEmpty())
     return -1;
   if (!mKeyAxis || !mValueAxis)
@@ -25904,7 +25904,7 @@ void QCPColorMap::updateLegendIcon(Qt::TransformationMode transformMode, const Q
 /* inherits documentation from base class */
 double QCPColorMap::selectTest(const QPointF &pos, bool onlySelectable, QVariant *details) const
 {
-  Q_UNUSED(details)
+  Q_UNUSED(details);
   if ((onlySelectable && mSelectable == QCP::stNone) || mMapData->isEmpty())
     return -1;
   if (!mKeyAxis || !mValueAxis)
@@ -26575,7 +26575,7 @@ QCPDataSelection QCPFinancial::selectTestRect(const QRectF &rect, bool onlySelec
 */
 double QCPFinancial::selectTest(const QPointF &pos, bool onlySelectable, QVariant *details) const
 {
-  Q_UNUSED(details)
+  Q_UNUSED(details);
   if ((onlySelectable && mSelectable == QCP::stNone) || mDataContainer->isEmpty())
     return -1;
   if (!mKeyAxis || !mValueAxis)
@@ -28149,7 +28149,7 @@ void QCPItemStraightLine::setSelectedPen(const QPen &pen)
 /* inherits documentation from base class */
 double QCPItemStraightLine::selectTest(const QPointF &pos, bool onlySelectable, QVariant *details) const
 {
-  Q_UNUSED(details)
+  Q_UNUSED(details);
   if (onlySelectable && !mSelectable)
     return -1;
   
@@ -28358,7 +28358,7 @@ void QCPItemLine::setTail(const QCPLineEnding &tail)
 /* inherits documentation from base class */
 double QCPItemLine::selectTest(const QPointF &pos, bool onlySelectable, QVariant *details) const
 {
-  Q_UNUSED(details)
+  Q_UNUSED(details);
   if (onlySelectable && !mSelectable)
     return -1;
   
@@ -28600,7 +28600,7 @@ void QCPItemCurve::setTail(const QCPLineEnding &tail)
 /* inherits documentation from base class */
 double QCPItemCurve::selectTest(const QPointF &pos, bool onlySelectable, QVariant *details) const
 {
-  Q_UNUSED(details)
+  Q_UNUSED(details);
   if (onlySelectable && !mSelectable)
     return -1;
   
@@ -28759,7 +28759,7 @@ void QCPItemRect::setSelectedBrush(const QBrush &brush)
 /* inherits documentation from base class */
 double QCPItemRect::selectTest(const QPointF &pos, bool onlySelectable, QVariant *details) const
 {
-  Q_UNUSED(details)
+  Q_UNUSED(details);
   if (onlySelectable && !mSelectable)
     return -1;
   
@@ -29020,7 +29020,7 @@ void QCPItemText::setPadding(const QMargins &padding)
 /* inherits documentation from base class */
 double QCPItemText::selectTest(const QPointF &pos, bool onlySelectable, QVariant *details) const
 {
-  Q_UNUSED(details)
+  Q_UNUSED(details);
   if (onlySelectable && !mSelectable)
     return -1;
   
@@ -29267,7 +29267,7 @@ void QCPItemEllipse::setSelectedBrush(const QBrush &brush)
 /* inherits documentation from base class */
 double QCPItemEllipse::selectTest(const QPointF &pos, bool onlySelectable, QVariant *details) const
 {
-  Q_UNUSED(details)
+  Q_UNUSED(details);
   if (onlySelectable && !mSelectable)
     return -1;
   
@@ -29461,7 +29461,7 @@ void QCPItemPixmap::setSelectedPen(const QPen &pen)
 /* inherits documentation from base class */
 double QCPItemPixmap::selectTest(const QPointF &pos, bool onlySelectable, QVariant *details) const
 {
-  Q_UNUSED(details)
+  Q_UNUSED(details);
   if (onlySelectable && !mSelectable)
     return -1;
   
@@ -29817,7 +29817,7 @@ void QCPItemTracer::setInterpolating(bool enabled)
 /* inherits documentation from base class */
 double QCPItemTracer::selectTest(const QPointF &pos, bool onlySelectable, QVariant *details) const
 {
-  Q_UNUSED(details)
+  Q_UNUSED(details);
   if (onlySelectable && !mSelectable)
     return -1;
 
@@ -30104,7 +30104,7 @@ void QCPItemBracket::setStyle(QCPItemBracket::BracketStyle style)
 /* inherits documentation from base class */
 double QCPItemBracket::selectTest(const QPointF &pos, bool onlySelectable, QVariant *details) const
 {
-  Q_UNUSED(details)
+  Q_UNUSED(details);
   if (onlySelectable && !mSelectable)
     return -1;
   

@@ -7,7 +7,7 @@ StringListModel::StringListModel(QObject *parent) :
 
 int StringListModel::rowCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent)
+    Q_UNUSED(parent);
 
     return m_list.size();
 }

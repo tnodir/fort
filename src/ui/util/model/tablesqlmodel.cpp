@@ -10,7 +10,7 @@ TableSqlModel::TableSqlModel(QObject *parent) :
 
 int TableSqlModel::rowCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent)
+    Q_UNUSED(parent);
 
     if (m_rowCount < 0) {
         m_rowCount = sqliteDb()->executeEx(sqlCount().toLatin1()).toInt();

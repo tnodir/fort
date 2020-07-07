@@ -1275,8 +1275,8 @@ protected:
   virtual void layoutChanged();
 
   // reimplemented virtual methods:
-  virtual void applyDefaultAntialiasingHint(QCPPainter *painter) const Q_DECL_OVERRIDE { Q_UNUSED(painter) }
-  virtual void draw(QCPPainter *painter) Q_DECL_OVERRIDE { Q_UNUSED(painter) }
+  virtual void applyDefaultAntialiasingHint(QCPPainter *painter) const Q_DECL_OVERRIDE { Q_UNUSED(painter); }
+  virtual void draw(QCPPainter *painter) Q_DECL_OVERRIDE { Q_UNUSED(painter); }
   virtual void parentPlotInitialized(QCustomPlot *parentPlot) Q_DECL_OVERRIDE;
 
 private:

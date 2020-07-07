@@ -233,7 +233,7 @@ const char * const sqlUpdateZoneResult =
 
 bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 {
-    Q_UNUSED(ctx)
+    Q_UNUSED(ctx);
 
     if (isNewDb)
         return true;

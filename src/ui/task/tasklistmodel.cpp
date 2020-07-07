@@ -26,7 +26,7 @@ const QList<TaskInfo *> &TaskListModel::taskInfosList() const
 
 int TaskListModel::rowCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent)
+    Q_UNUSED(parent);
 
     return taskInfosList().size();
 }
@@ -94,7 +94,7 @@ QVariant TaskListModel::data(const QModelIndex &index, int role) const
 
 bool TaskListModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    Q_UNUSED(value)
+    Q_UNUSED(value);
 
     if (!index.isValid())
         return false;

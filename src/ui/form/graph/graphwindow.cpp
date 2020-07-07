@@ -162,14 +162,14 @@ void GraphWindow::onMouseDragMove(QMouseEvent *event)
 
 void GraphWindow::onMouseDragEnd(QMouseEvent *event)
 {
-    Q_UNUSED(event)
+    Q_UNUSED(event);
 
     QGuiApplication::restoreOverrideCursor();
 }
 
 void GraphWindow::enterEvent(QEvent *event)
 {
-    Q_UNUSED(event)
+    Q_UNUSED(event);
 
     if (m_fortSettings->graphWindowHideOnHover()) {
         hide();
@@ -182,7 +182,7 @@ void GraphWindow::enterEvent(QEvent *event)
 
 void GraphWindow::leaveEvent(QEvent *event)
 {
-    Q_UNUSED(event)
+    Q_UNUSED(event);
 
     setWindowOpacityPercent(m_fortSettings->graphWindowOpacity());
 }

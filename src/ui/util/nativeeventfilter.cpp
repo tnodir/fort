@@ -89,8 +89,8 @@ bool NativeEventFilter::nativeEventFilter(const QByteArray &eventType,
                                           void *message, long *result)
 #endif
 {
-    Q_UNUSED(eventType)
-    Q_UNUSED(result)
+    Q_UNUSED(eventType);
+    Q_UNUSED(result);
 
     const MSG *msg = static_cast<MSG *>(message);
 

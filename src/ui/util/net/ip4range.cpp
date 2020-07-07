@@ -73,7 +73,7 @@ bool Ip4Range::fromText(const QString &text)
 
 bool Ip4Range::fromList(const QVector<QStringRef> &list, int emptyNetMask, bool sort)
 {
-    Q_UNUSED(sort)  // TODO
+    Q_UNUSED(sort);  // TODO
 
     clear();
 

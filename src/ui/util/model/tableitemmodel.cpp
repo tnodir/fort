@@ -13,14 +13,14 @@ QModelIndex TableItemModel::index(int row, int column, const QModelIndex &parent
 
 QModelIndex TableItemModel::parent(const QModelIndex &child) const
 {
-    Q_UNUSED(child)
+    Q_UNUSED(child);
 
     return {};
 }
 
 QModelIndex TableItemModel::sibling(int row, int column, const QModelIndex &index) const
 {
-    Q_UNUSED(index)
+    Q_UNUSED(index);
 
     return this->index(row, column);
 }
