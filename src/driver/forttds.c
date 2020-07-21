@@ -2,8 +2,6 @@
 
 #define FORT_TOMMY_POOL_TAG	'TwfF'
 
-#include <assert.h>
-
 #define fort_mem_alloc(size, tag)	ExAllocatePoolWithTag(NonPagedPool, (size), (tag))
 #define fort_mem_free(p, tag)		ExFreePoolWithTag((p), (tag))
 
@@ -37,7 +35,7 @@ fort_tommy_realloc (PVOID p, SIZE_T new_size)
   UNUSED(p);
   UNUSED(new_size);
 
-  assert(FALSE);  /* not used - not implemented */
+  NT_ASSERT(FALSE);  /* not used - not implemented */
 
   return NULL;
 }
@@ -47,7 +45,8 @@ fort_tommy_realloc (PVOID p, SIZE_T new_size)
 #define tommy_calloc	fort_tommy_calloc
 #define tommy_realloc	fort_tommy_realloc
 
-#define TOMMY_API static
+#define TOMMY_API	static
+#define tommy_assert	NT_ASSERT
 
 #include "..\3rdparty\tommyds\tommyarrayof.c"
 #include "..\3rdparty\tommyds\tommylist.c"

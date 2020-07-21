@@ -93,7 +93,7 @@ tommy_inline void* tommy_arrayof_ref(tommy_arrayof* array, tommy_size_t pos)
 	unsigned char* ptr;
 	tommy_uint_t bsr;
 
-	assert(pos < array->count);
+	tommy_assert(pos < array->count);
 
 	/* get the highest bit set, in case of all 0, return 0 */
 	bsr = tommy_ilog2(pos | 1);

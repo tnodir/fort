@@ -126,6 +126,13 @@ typedef tommy_uint32_t tommy_uint_t;
 #endif
 
 /** \internal
+ * Definition of the assert().
+ */
+#if !defined(tommy_assert)
+#define tommy_assert assert
+#endif
+
+/** \internal
  * Definition of the inline keyword if available.
  */
 #if !defined(tommy_inline)

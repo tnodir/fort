@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
-    <Configuration>Release</Configuration>
+    <Configuration Condition="'$(Configuration)'==''">Release</Configuration>
     <Platform Condition="'$(Platform)'==''">Win32</Platform>
     <DefineConstants Condition="'$(Configuration)'=='Release'">$(DefineConstants);NDEBUG</DefineConstants>
   </PropertyGroup>
