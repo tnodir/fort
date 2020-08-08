@@ -1757,12 +1757,11 @@ public:
   // non-virtual methods:
   void clear();
   void addTick(double position, const QString &label);
-  void addTicks(const QMap<double, QString> &ticks);
   void addTicks(const QVector<double> &positions, const QVector<QString> &labels);
 
 protected:
   // property members:
-  QMultiMap<double, QString> mTicks;
+  QMap<double, QString> mTicks;
   int mSubTickCount;
 
   // reimplemented virtual methods:
