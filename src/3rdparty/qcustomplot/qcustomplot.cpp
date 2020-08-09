@@ -35,7 +35,7 @@
 
 /*! \class QCPVector2D
   \brief Represents two doubles as a mathematical 2D vector
-  
+
   This class acts as a replacement for QVector2D with the advantage of double precision instead of
   single, and some convenience methods tailored for the QCustomPlot library.
 */
@@ -43,63 +43,63 @@
 /* start documentation of inline functions */
 
 /*! \fn void QCPVector2D::setX(double x)
-  
+
   Sets the x coordinate of this vector to \a x.
-  
+
   \see setY
 */
 
 /*! \fn void QCPVector2D::setY(double y)
-  
+
   Sets the y coordinate of this vector to \a y.
-  
+
   \see setX
 */
 
 /*! \fn double QCPVector2D::length() const
-  
+
   Returns the length of this vector.
-  
+
   \see lengthSquared
 */
 
 /*! \fn double QCPVector2D::lengthSquared() const
-  
+
   Returns the squared length of this vector. In some situations, e.g. when just trying to find the
   shortest vector of a group, this is faster than calculating \ref length, because it avoids
   calculation of a square root.
-  
+
   \see length
 */
 
 /*! \fn QPoint QCPVector2D::toPoint() const
-  
+
   Returns a QPoint which has the x and y coordinates of this vector, truncating any floating point
   information.
-  
+
   \see toPointF
 */
 
 /*! \fn QPointF QCPVector2D::toPointF() const
-  
+
   Returns a QPointF which has the x and y coordinates of this vector.
-  
+
   \see toPoint
 */
 
 /*! \fn bool QCPVector2D::isNull() const
-  
+
   Returns whether this vector is null. A vector is null if \c qIsNull returns true for both x and y
   coordinates, i.e. if both are binary equal to 0.
 */
 
 /*! \fn QCPVector2D QCPVector2D::perpendicular() const
-  
+
   Returns a vector perpendicular to this vector, with the same length.
 */
 
 /*! \fn double QCPVector2D::dot() const
-  
+
   Returns the dot/scalar product of this vector with the specified vector \a vec.
 */
 
@@ -146,7 +146,7 @@ QCPVector2D::QCPVector2D(const QPointF &point) :
 
 /*!
   Normalizes this vector. After this operation, the length of the vector is equal to 1.
-  
+
   \see normalized, length, lengthSquared
 */
 void QCPVector2D::normalize()
@@ -158,7 +158,7 @@ void QCPVector2D::normalize()
 
 /*!
   Returns a normalized version of this vector. The length of the returned vector is equal to 1.
-  
+
   \see normalize, length, lengthSquared
 */
 QCPVector2D QCPVector2D::normalized() const
@@ -169,10 +169,10 @@ QCPVector2D QCPVector2D::normalized() const
 }
 
 /*! \overload
-  
+
   Returns the squared shortest distance of this vector (interpreted as a point) to the finite line
   segment given by \a start and \a end.
-  
+
   \see distanceToStraightLine
 */
 double QCPVector2D::distanceSquaredToLine(const QCPVector2D &start, const QCPVector2D &end) const
@@ -193,10 +193,10 @@ double QCPVector2D::distanceSquaredToLine(const QCPVector2D &start, const QCPVec
 }
 
 /*! \overload
-  
+
   Returns the squared shortest distance of this vector (interpreted as a point) to the finite line
   segment given by \a line.
-  
+
   \see distanceToStraightLine
 */
 double QCPVector2D::distanceSquaredToLine(const QLineF &line) const
@@ -207,7 +207,7 @@ double QCPVector2D::distanceSquaredToLine(const QLineF &line) const
 /*!
   Returns the shortest distance of this vector (interpreted as a point) to the infinite straight
   line given by a \a base point and a \a direction vector.
-  
+
   \see distanceSquaredToLine
 */
 double QCPVector2D::distanceToStraightLine(const QCPVector2D &base, const QCPVector2D &direction) const
@@ -268,11 +268,11 @@ QCPVector2D &QCPVector2D::operator-=(const QCPVector2D &vector)
 
 /*! \class QCPPainter
   \brief QPainter subclass used internally
-  
+
   This QPainter subclass is used to provide some extended functionality e.g. for tweaking position
   consistency between antialiased and non-antialiased painting. Further it provides workarounds
   for QPainter quirks.
-  
+
   \warning This class intentionally hides non-virtual functions of QPainter, e.g. setPen, save and
   restore. So while it is possible to pass a QCPPainter instance to a function that expects a
   QPainter pointer, some of the workarounds and tweaks will be unavailable to the function (because
@@ -294,7 +294,7 @@ QCPPainter::QCPPainter() :
 /*!
   Creates a new QCPPainter instance on the specified paint \a device and sets default values. Just
   like the analogous QPainter constructor, begins painting on \a device immediately.
-  
+
   Like \ref begin, this method sets QPainter::NonCosmeticDefaultPen in Qt versions before Qt5.
 */
 QCPPainter::QCPPainter(QPaintDevice *device) :
@@ -311,7 +311,7 @@ QCPPainter::QCPPainter(QPaintDevice *device) :
 /*!
   Sets the pen of the painter and applies certain fixes to it, depending on the mode of this
   QCPPainter.
-  
+
   \note this function hides the non-virtual base class implementation.
 */
 void QCPPainter::setPen(const QPen &pen)
@@ -322,10 +322,10 @@ void QCPPainter::setPen(const QPen &pen)
 }
 
 /*! \overload
-  
+
   Sets the pen (by color) of the painter and applies certain fixes to it, depending on the mode of
   this QCPPainter.
-  
+
   \note this function hides the non-virtual base class implementation.
 */
 void QCPPainter::setPen(const QColor &color)
@@ -336,10 +336,10 @@ void QCPPainter::setPen(const QColor &color)
 }
 
 /*! \overload
-  
+
   Sets the pen (by style) of the painter and applies certain fixes to it, depending on the mode of
   this QCPPainter.
-  
+
   \note this function hides the non-virtual base class implementation.
 */
 void QCPPainter::setPen(Qt::PenStyle penStyle)
@@ -350,11 +350,11 @@ void QCPPainter::setPen(Qt::PenStyle penStyle)
 }
 
 /*! \overload
-  
+
   Works around a Qt bug introduced with Qt 4.8 which makes drawing QLineF unpredictable when
   antialiasing is disabled. Thus when antialiasing is disabled, it rounds the \a line to
   integer coordinates and then passes it to the original drawLine.
-  
+
   \note this function hides the non-virtual base class implementation.
 */
 void QCPPainter::drawLine(const QLineF &line)
@@ -401,10 +401,10 @@ void QCPPainter::setModes(QCPPainter::PainterModes modes)
   device. This is necessary to get cosmetic pen consistency across Qt versions, because since Qt5,
   all pens are non-cosmetic by default, and in Qt4 this render hint must be set to get that
   behaviour.
-  
+
   The Constructor \ref QCPPainter(QPaintDevice *device) which directly starts painting also sets
   the render hint as appropriate.
-  
+
   \note this function hides the non-virtual base class implementation.
 */
 bool QCPPainter::begin(QPaintDevice *device)
@@ -15330,7 +15330,7 @@ void QCustomPlot::processRectSelection(QRect rect, QMouseEvent *event)
         if (!potentialSelections.isEmpty())
         {
           auto it = potentialSelections.begin();
-          auto last = potentialSelections.end(); --last;
+          auto last = --potentialSelections.end();
           while (it != last) // erase all except last element
             it = potentialSelections.erase(it);
         }
