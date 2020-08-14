@@ -15330,7 +15330,7 @@ void QCustomPlot::processRectSelection(QRect rect, QMouseEvent *event)
         if (!potentialSelections.isEmpty())
         {
           auto it = potentialSelections.begin();
-          auto last = --potentialSelections.end();
+          const auto last = std::prev(potentialSelections.end());
           while (it != last) // erase all except last element
             it = potentialSelections.erase(it);
         }
@@ -16337,7 +16337,7 @@ void QCPColorGradient::updateColorBuffer()
       } else // position is in between stops (or on an intermediate stop), interpolate color
       {
         QMap<double, QColor>::const_iterator high = it;
-        QMap<double, QColor>::const_iterator low = --it;
+        QMap<double, QColor>::const_iterator low = std::prev(it);
         double t = (position-low.key())/(high.key()-low.key()); // interpolation factor 0..1
         switch (mColorInterpolation)
         {
