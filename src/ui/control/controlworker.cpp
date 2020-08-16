@@ -102,7 +102,7 @@ bool ControlWorker::writeDataStream(const QString &scriptPath,
 {
     QByteArray data;
 
-    QDataStream stream(&data, QIODevice::WriteOnly);
+    QDataStream stream(&data, QDataStream::WriteOnly);
     stream << scriptPath << args;
 
     return writeData(data);
