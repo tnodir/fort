@@ -110,7 +110,13 @@ void TaskInfo::setTaskWorker(TaskWorker *taskWorker)
 
 void TaskInfo::rawData(QByteArray &data) const
 {
-    QDataStream stream(&data, QDataStream::WriteOnly);
+    QDataStream stream(&data,
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+            QIODevice::WriteOnly
+#else
+            QDataStream::WriteOnly
+#endif
+            );
 
     // Store data
     const quint16 infoVersion = TASK_INFO_VERSION;
