@@ -18,8 +18,7 @@ void OsUtil::openFolder(const QString &filePath)
 {
     const QString nativePath = QDir::toNativeSeparators(filePath);
 
-    QProcess::execute(QString("explorer.exe /select,%1")
-                      .arg(nativePath));
+    QProcess::execute("explorer.exe", { "/select,", nativePath });
 }
 
 bool OsUtil::createGlobalMutex(const char *name)
