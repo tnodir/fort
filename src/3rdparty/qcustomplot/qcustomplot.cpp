@@ -6622,6 +6622,21 @@ void QCPAxisTickerText::addTick(double position, const QString &label)
 
 /*! \overload
 
+  Adds the provided \a ticks to the ones already existing. The map key of \a ticks corresponds to
+  the axis coordinate, and the map value is the string that will appear as tick label.
+
+  An alternative to manipulate ticks is to directly access the internal storage with the \ref ticks
+  getter.
+
+  \see addTick, setTicks, clear
+*/
+void QCPAxisTickerText::addTicks(const QMap<double, QString> &ticks)
+{
+  mTicks.insert(ticks);
+}
+
+/*! \overload
+
   Adds the provided ticks to the ones already existing. The entries of \a positions correspond to
   the axis coordinates, and the entries of \a labels are the respective strings that will appear as
   tick labels.
