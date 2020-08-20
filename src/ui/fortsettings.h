@@ -20,24 +20,42 @@ class FortSettings : public QObject
     Q_PROPERTY(QString passwordHash READ passwordHash WRITE setPasswordHash NOTIFY iniChanged)
     Q_PROPERTY(int appVersion READ appVersion CONSTANT)
     Q_PROPERTY(int iniVersion READ iniVersion WRITE setIniVersion NOTIFY iniChanged)
-    Q_PROPERTY(QByteArray optWindowAddrSplit READ optWindowAddrSplit WRITE setOptWindowAddrSplit NOTIFY iniChanged)
-    Q_PROPERTY(QByteArray optWindowAppsSplit READ optWindowAppsSplit WRITE setOptWindowAppsSplit NOTIFY iniChanged)
-    Q_PROPERTY(bool graphWindowVisible READ graphWindowVisible WRITE setGraphWindowVisible NOTIFY iniChanged)
-    Q_PROPERTY(bool graphWindowAlwaysOnTop READ graphWindowAlwaysOnTop WRITE setGraphWindowAlwaysOnTop NOTIFY iniChanged)
-    Q_PROPERTY(bool graphWindowFrameless READ graphWindowFrameless WRITE setGraphWindowFrameless NOTIFY iniChanged)
-    Q_PROPERTY(bool graphWindowClickThrough READ graphWindowClickThrough WRITE setGraphWindowClickThrough NOTIFY iniChanged)
-    Q_PROPERTY(bool graphWindowHideOnHover READ graphWindowHideOnHover WRITE setGraphWindowHideOnHover NOTIFY iniChanged)
-    Q_PROPERTY(int graphWindowOpacity READ graphWindowOpacity WRITE setGraphWindowOpacity NOTIFY iniChanged)
-    Q_PROPERTY(int graphWindowHoverOpacity READ graphWindowHoverOpacity WRITE setGraphWindowHoverOpacity NOTIFY iniChanged)
-    Q_PROPERTY(int graphWindowMaxSeconds READ graphWindowMaxSeconds WRITE setGraphWindowMaxSeconds NOTIFY iniChanged)
-    Q_PROPERTY(QColor graphWindowColor READ graphWindowColor WRITE setGraphWindowColor NOTIFY iniChanged)
-    Q_PROPERTY(QColor graphWindowColorIn READ graphWindowColorIn WRITE setGraphWindowColorIn NOTIFY iniChanged)
-    Q_PROPERTY(QColor graphWindowColorOut READ graphWindowColorOut WRITE setGraphWindowColorOut NOTIFY iniChanged)
-    Q_PROPERTY(QColor graphWindowAxisColor READ graphWindowAxisColor WRITE setGraphWindowAxisColor NOTIFY iniChanged)
-    Q_PROPERTY(QColor graphWindowTickLabelColor READ graphWindowTickLabelColor WRITE setGraphWindowTickLabelColor NOTIFY iniChanged)
-    Q_PROPERTY(QColor graphWindowLabelColor READ graphWindowLabelColor WRITE setGraphWindowLabelColor NOTIFY iniChanged)
-    Q_PROPERTY(QColor graphWindowGridColor READ graphWindowGridColor WRITE setGraphWindowGridColor NOTIFY iniChanged)
-    Q_PROPERTY(bool startWithWindows READ startWithWindows WRITE setStartWithWindows NOTIFY startWithWindowsChanged)
+    Q_PROPERTY(QByteArray optWindowAddrSplit READ optWindowAddrSplit WRITE setOptWindowAddrSplit
+                    NOTIFY iniChanged)
+    Q_PROPERTY(QByteArray optWindowAppsSplit READ optWindowAppsSplit WRITE setOptWindowAppsSplit
+                    NOTIFY iniChanged)
+    Q_PROPERTY(bool graphWindowVisible READ graphWindowVisible WRITE setGraphWindowVisible NOTIFY
+                    iniChanged)
+    Q_PROPERTY(bool graphWindowAlwaysOnTop READ graphWindowAlwaysOnTop WRITE
+                    setGraphWindowAlwaysOnTop NOTIFY iniChanged)
+    Q_PROPERTY(bool graphWindowFrameless READ graphWindowFrameless WRITE setGraphWindowFrameless
+                    NOTIFY iniChanged)
+    Q_PROPERTY(bool graphWindowClickThrough READ graphWindowClickThrough WRITE
+                    setGraphWindowClickThrough NOTIFY iniChanged)
+    Q_PROPERTY(bool graphWindowHideOnHover READ graphWindowHideOnHover WRITE
+                    setGraphWindowHideOnHover NOTIFY iniChanged)
+    Q_PROPERTY(int graphWindowOpacity READ graphWindowOpacity WRITE setGraphWindowOpacity NOTIFY
+                    iniChanged)
+    Q_PROPERTY(int graphWindowHoverOpacity READ graphWindowHoverOpacity WRITE
+                    setGraphWindowHoverOpacity NOTIFY iniChanged)
+    Q_PROPERTY(int graphWindowMaxSeconds READ graphWindowMaxSeconds WRITE setGraphWindowMaxSeconds
+                    NOTIFY iniChanged)
+    Q_PROPERTY(QColor graphWindowColor READ graphWindowColor WRITE setGraphWindowColor NOTIFY
+                    iniChanged)
+    Q_PROPERTY(QColor graphWindowColorIn READ graphWindowColorIn WRITE setGraphWindowColorIn NOTIFY
+                    iniChanged)
+    Q_PROPERTY(QColor graphWindowColorOut READ graphWindowColorOut WRITE setGraphWindowColorOut
+                    NOTIFY iniChanged)
+    Q_PROPERTY(QColor graphWindowAxisColor READ graphWindowAxisColor WRITE setGraphWindowAxisColor
+                    NOTIFY iniChanged)
+    Q_PROPERTY(QColor graphWindowTickLabelColor READ graphWindowTickLabelColor WRITE
+                    setGraphWindowTickLabelColor NOTIFY iniChanged)
+    Q_PROPERTY(QColor graphWindowLabelColor READ graphWindowLabelColor WRITE
+                    setGraphWindowLabelColor NOTIFY iniChanged)
+    Q_PROPERTY(QColor graphWindowGridColor READ graphWindowGridColor WRITE setGraphWindowGridColor
+                    NOTIFY iniChanged)
+    Q_PROPERTY(bool startWithWindows READ startWithWindows WRITE setStartWithWindows NOTIFY
+                    startWithWindowsChanged)
     Q_PROPERTY(bool hotKeyEnabled READ hotKeyEnabled WRITE setHotKeyEnabled NOTIFY iniChanged)
     Q_PROPERTY(QString profilePath READ profilePath CONSTANT)
     Q_PROPERTY(QString statPath READ statPath CONSTANT)
@@ -47,8 +65,7 @@ class FortSettings : public QObject
     Q_PROPERTY(QString appUpdatesUrl READ appUpdatesUrl CONSTANT)
 
 public:
-    explicit FortSettings(const QStringList &args,
-                          QObject *parent = nullptr);
+    explicit FortSettings(const QStringList &args, QObject *parent = nullptr);
 
     bool isPortable() const { return m_isPortable; }
     bool noCache() const { return m_noCache; }
@@ -153,22 +170,43 @@ public:
     QColor graphWindowColor() const { return iniColor("graphWindow/color", QColor(255, 255, 255)); }
     void setGraphWindowColor(const QColor &v) { setIniColor("graphWindow/color", v); }
 
-    QColor graphWindowColorIn() const { return iniColor("graphWindow/colorIn", QColor(52, 196, 84)); }
+    QColor graphWindowColorIn() const
+    {
+        return iniColor("graphWindow/colorIn", QColor(52, 196, 84));
+    }
     void setGraphWindowColorIn(const QColor &v) { setIniColor("graphWindow/colorIn", v); }
 
-    QColor graphWindowColorOut() const { return iniColor("graphWindow/colorOut", QColor(235, 71, 63)); }
+    QColor graphWindowColorOut() const
+    {
+        return iniColor("graphWindow/colorOut", QColor(235, 71, 63));
+    }
     void setGraphWindowColorOut(const QColor &v) { setIniColor("graphWindow/colorOut", v); }
 
-    QColor graphWindowAxisColor() const { return iniColor("graphWindow/axisColor", QColor(0, 0, 0)); }
+    QColor graphWindowAxisColor() const
+    {
+        return iniColor("graphWindow/axisColor", QColor(0, 0, 0));
+    }
     void setGraphWindowAxisColor(const QColor &v) { setIniColor("graphWindow/axisColor", v); }
 
-    QColor graphWindowTickLabelColor() const { return iniColor("graphWindow/tickLabelColor", QColor(0, 0, 0)); }
-    void setGraphWindowTickLabelColor(const QColor &v) { setIniColor("graphWindow/tickLabelColor", v); }
+    QColor graphWindowTickLabelColor() const
+    {
+        return iniColor("graphWindow/tickLabelColor", QColor(0, 0, 0));
+    }
+    void setGraphWindowTickLabelColor(const QColor &v)
+    {
+        setIniColor("graphWindow/tickLabelColor", v);
+    }
 
-    QColor graphWindowLabelColor() const { return iniColor("graphWindow/labelColor", QColor(0, 0, 0)); }
+    QColor graphWindowLabelColor() const
+    {
+        return iniColor("graphWindow/labelColor", QColor(0, 0, 0));
+    }
     void setGraphWindowLabelColor(const QColor &v) { setIniColor("graphWindow/labelColor", v); }
 
-    QColor graphWindowGridColor() const { return iniColor("graphWindow/gridColor", QColor(200, 200, 200)); }
+    QColor graphWindowGridColor() const
+    {
+        return iniColor("graphWindow/gridColor", QColor(200, 200, 200));
+    }
     void setGraphWindowGridColor(const QColor &v) { setIniColor("graphWindow/gridColor", v); }
 
     qint32 quotaDayAlerted() const { return iniInt("quota/dayAlerted"); }
@@ -188,7 +226,10 @@ public:
     QString hotKeyStopTraffic() const { return iniText("hotKey/stopTraffic"); }
     QString hotKeyStopInetTraffic() const { return iniText("hotKey/stopInetTraffic"); }
     QString hotKeyAllowAllNew() const { return iniText("hotKey/allowAllNew"); }
-    QString hotKeyAppGroupModifiers() const { return iniText("hotKey/appGroupModifiers", "Ctrl+Alt+Shift"); }
+    QString hotKeyAppGroupModifiers() const
+    {
+        return iniText("hotKey/appGroupModifiers", "Ctrl+Alt+Shift");
+    }
     QString hotKeyQuit() const { return iniText("hotKey/quit"); }
 
     bool startWithWindows() const;
@@ -246,13 +287,12 @@ private:
     QByteArray iniByteArray(const QString &key) const;
 
     QColor iniColor(const QString &key, const QColor &defaultValue = QColor()) const;
-    void setIniColor(const QString &key, const QColor &value,
-                     const QColor &defaultValue = QColor());
+    void setIniColor(
+            const QString &key, const QColor &value, const QColor &defaultValue = QColor());
 
-    QVariant iniValue(const QString &key,
-                      const QVariant &defaultValue = QVariant()) const;
-    void setIniValue(const QString &key, const QVariant &value,
-                     const QVariant &defaultValue = QVariant());
+    QVariant iniValue(const QString &key, const QVariant &defaultValue = QVariant()) const;
+    void setIniValue(
+            const QString &key, const QVariant &value, const QVariant &defaultValue = QVariant());
 
     QVariant cacheValue(const QString &key) const;
     void setCacheValue(const QString &key, const QVariant &value) const;
@@ -266,13 +306,13 @@ private:
     static QString startupShortcutPath();
 
 private:
-    bool m_iniExists        : 1;
-    bool m_isPortable       : 1;
-    bool m_noCache          : 1;
-    bool m_hasProvBoot      : 1;
+    bool m_iniExists : 1;
+    bool m_isPortable : 1;
+    bool m_noCache : 1;
+    bool m_hasProvBoot : 1;
 
-    bool m_bulkUpdating     : 1;
-    bool m_bulkIniChanged   : 1;
+    bool m_bulkUpdating : 1;
+    bool m_bulkIniChanged : 1;
 
     QString m_defaultLanguage;
     QString m_profilePath;

@@ -28,8 +28,7 @@ public slots:
     void clear();
 
 private slots:
-    void handleFinishedLookup(const QString &address,
-                              const QString &hostName);
+    void handleFinishedLookup(const QString &address, const QString &hostName);
 
 private:
     void emitCacheChanged();

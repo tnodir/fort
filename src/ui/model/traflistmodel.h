@@ -5,7 +5,8 @@
 
 QT_FORWARD_DECLARE_CLASS(StatManager)
 
-struct TrafficRow {
+struct TrafficRow
+{
     bool isValid(int row) const { return row == this->row; }
     void invalidate() { row = -1; }
 
@@ -20,26 +21,13 @@ class TrafListModel : public TableItemModel
     Q_OBJECT
 
 public:
-    enum TrafUnit {
-        UnitAdaptive = 0,
-        UnitBytes,
-        UnitKB,
-        UnitMB,
-        UnitGB,
-        UnitTB
-    };
+    enum TrafUnit { UnitAdaptive = 0, UnitBytes, UnitKB, UnitMB, UnitGB, UnitTB };
     Q_ENUM(TrafUnit)
 
-    enum TrafType {
-        TrafHourly = 0,
-        TrafDaily,
-        TrafMonthly,
-        TrafTotal
-    };
+    enum TrafType { TrafHourly = 0, TrafDaily, TrafMonthly, TrafTotal };
     Q_ENUM(TrafType)
 
-    explicit TrafListModel(StatManager *statManager,
-                           QObject *parent = nullptr);
+    explicit TrafListModel(StatManager *statManager, QObject *parent = nullptr);
 
     TrafListModel::TrafUnit unit() const { return m_unit; }
     void setUnit(TrafListModel::TrafUnit unit);
@@ -53,8 +41,8 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    QVariant headerData(int section, Qt::Orientation orientation,
-                        int role = Qt::DisplayRole) const override;
+    QVariant headerData(
+            int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
 public slots:
@@ -74,8 +62,7 @@ private:
 
     qint32 getTrafTime(int row) const;
 
-    static qint32 getTrafCount(TrafType type, qint32 minTrafTime,
-                               qint32 maxTrafTime);
+    static qint32 getTrafCount(TrafType type, qint32 minTrafTime, qint32 maxTrafTime);
     static qint32 getMaxTrafTime(TrafType type);
 
     static const char *getSqlMinTrafTime(TrafType type, qint64 appId);

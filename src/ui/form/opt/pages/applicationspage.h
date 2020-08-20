@@ -15,8 +15,7 @@ class ApplicationsPage : public BasePage
     Q_OBJECT
 
 public:
-    explicit ApplicationsPage(OptionsController *ctrl = nullptr,
-                              QWidget *parent = nullptr);
+    explicit ApplicationsPage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
     AppGroup *appGroup() const;
 

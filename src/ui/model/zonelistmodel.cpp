@@ -13,10 +13,8 @@
 #include "zonesourcewrapper.h"
 #include "zonetypewrapper.h"
 
-ZoneListModel::ZoneListModel(ConfManager *confManager,
-                             QObject *parent) :
-    TableSqlModel(parent),
-    m_confManager(confManager)
+ZoneListModel::ZoneListModel(ConfManager *confManager, QObject *parent) :
+    TableSqlModel(parent), m_confManager(confManager)
 {
 }
 
@@ -38,13 +36,16 @@ int ZoneListModel::columnCount(const QModelIndex &parent) const
 
 QVariant ZoneListModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (orientation == Qt::Horizontal
-            && role == Qt::DisplayRole) {
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         switch (section) {
-        case 0: return tr("Zone");
-        case 1: return tr("Source");
-        case 2: return tr("Last Run");
-        case 3: return tr("Last Success");
+        case 0:
+            return tr("Zone");
+        case 1:
+            return tr("Source");
+        case 2:
+            return tr("Last Run");
+        case 3:
+            return tr("Last Success");
         }
     }
     return QVariant();
@@ -65,16 +66,16 @@ QVariant ZoneListModel::data(const QModelIndex &index, int role) const
         const auto zoneRow = zoneRowAt(row);
 
         switch (column) {
-        case 0: return QString("%1) %2")
-                    .arg(QString::number(m_zoneRow.zoneId),
-                         zoneRow.zoneName);
+        case 0:
+            return QString("%1) %2").arg(QString::number(m_zoneRow.zoneId), zoneRow.zoneName);
         case 1: {
-            const auto zoneSource = ZoneSourceWrapper(
-                        zoneSourceByCode(zoneRow.sourceCode));
+            const auto zoneSource = ZoneSourceWrapper(zoneSourceByCode(zoneRow.sourceCode));
             return zoneSource.title();
         }
-        case 2: return zoneRow.lastRun;
-        case 3: return zoneRow.lastSuccess;
+        case 2:
+            return zoneRow.lastRun;
+        case 3:
+            return zoneRow.lastSuccess;
         }
 
         break;
@@ -125,12 +126,10 @@ const ZoneRow &ZoneListModel::zoneRowAt(int row) const
     return m_zoneRow;
 }
 
-bool ZoneListModel::addZone(const QString &zoneName, const QString &sourceCode,
-                            const QString &url, const QString &formData,
-                            bool enabled, bool customUrl, int &zoneId)
+bool ZoneListModel::addZone(const QString &zoneName, const QString &sourceCode, const QString &url,
+        const QString &formData, bool enabled, bool customUrl, int &zoneId)
 {
-    if (confManager()->addZone(zoneName, sourceCode, url, formData,
-                               enabled, customUrl, zoneId)) {
+    if (confManager()->addZone(zoneName, sourceCode, url, formData, enabled, customUrl, zoneId)) {
         reset();
         return true;
     }
@@ -138,16 +137,15 @@ bool ZoneListModel::addZone(const QString &zoneName, const QString &sourceCode,
     return false;
 }
 
-bool ZoneListModel::updateZone(int zoneId, const QString &zoneName,
-                               const QString &sourceCode, const QString &url,
-                               const QString &formData, bool enabled,
-                               bool customUrl, bool updateDriver)
+bool ZoneListModel::updateZone(int zoneId, const QString &zoneName, const QString &sourceCode,
+        const QString &url, const QString &formData, bool enabled, bool customUrl,
+        bool updateDriver)
 {
     if (updateDriver && !confManager()->updateDriverZoneFlag(zoneId, enabled))
         return false;
 
-    if (confManager()->updateZone(zoneId, zoneName, sourceCode, url, formData,
-                                  enabled, customUrl)) {
+    if (confManager()->updateZone(
+                zoneId, zoneName, sourceCode, url, formData, enabled, customUrl)) {
         refresh();
         return true;
     }
@@ -179,13 +177,11 @@ bool ZoneListModel::updateZoneEnabled(int zoneId, bool enabled)
 }
 
 bool ZoneListModel::updateZoneResult(int zoneId, const QString &textChecksum,
-                                     const QString &binChecksum,
-                                     const QDateTime &sourceModTime,
-                                     const QDateTime &lastRun,
-                                     const QDateTime &lastSuccess)
+        const QString &binChecksum, const QDateTime &sourceModTime, const QDateTime &lastRun,
+        const QDateTime &lastSuccess)
 {
-    if (confManager()->updateZoneResult(zoneId, textChecksum, binChecksum,
-                                        sourceModTime, lastRun, lastSuccess)) {
+    if (confManager()->updateZoneResult(
+                zoneId, textChecksum, binChecksum, sourceModTime, lastRun, lastSuccess)) {
         refresh();
         return true;
     }
@@ -208,14 +204,11 @@ void ZoneListModel::deleteZone(int zoneId, int row)
 
 QString ZoneListModel::zoneNameById(int zoneId)
 {
-    static const char * const sql =
-            "SELECT name FROM zone"
-            "  WHERE zone_id = ?1;"
-            ;
+    static const char *const sql = "SELECT name FROM zone"
+                                   "  WHERE zone_id = ?1;";
 
     SqliteStmt stmt;
-    if (sqliteDb()->prepare(stmt, sql, {zoneId})
-            && stmt.step() == SqliteStmt::StepRow) {
+    if (sqliteDb()->prepare(stmt, sql, { zoneId }) && stmt.step() == SqliteStmt::StepRow) {
         return stmt.columnText(0);
     }
     return QString();
@@ -234,8 +227,8 @@ QVariant ZoneListModel::zoneSourceByCode(const QString &sourceCode) const
 bool ZoneListModel::updateTableRow(int row) const
 {
     SqliteStmt stmt;
-    if (!(sqliteDb()->prepare(stmt, sql().toLatin1(), {row})
-          && stmt.step() == SqliteStmt::StepRow))
+    if (!(sqliteDb()->prepare(stmt, sql().toLatin1(), { row })
+                && stmt.step() == SqliteStmt::StepRow))
         return false;
 
     m_zoneRow.zoneId = stmt.columnInt(0);
@@ -256,22 +249,20 @@ bool ZoneListModel::updateTableRow(int row) const
 
 QString ZoneListModel::sqlBase() const
 {
-    return
-            "SELECT"
-            "    zone_id,"
-            "    enabled,"
-            "    custom_url,"
-            "    name,"
-            "    source_code,"
-            "    url,"
-            "    form_data,"
-            "    text_checksum,"
-            "    bin_checksum,"
-            "    source_modtime,"
-            "    last_run,"
-            "    last_success"
-            "  FROM zone"
-            ;
+    return "SELECT"
+           "    zone_id,"
+           "    enabled,"
+           "    custom_url,"
+           "    name,"
+           "    source_code,"
+           "    url,"
+           "    form_data,"
+           "    text_checksum,"
+           "    bin_checksum,"
+           "    source_modtime,"
+           "    last_run,"
+           "    last_success"
+           "  FROM zone";
 }
 
 void ZoneListModel::initZoneTypes()

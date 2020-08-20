@@ -17,8 +17,7 @@ class OptionsController : public QObject
     Q_OBJECT
 
 public:
-    explicit OptionsController(FortManager *fortManager,
-                               QObject *parent = nullptr);
+    explicit OptionsController(FortManager *fortManager, QObject *parent = nullptr);
 
     bool confFlagsEdited() const { return m_confFlagsEdited; }
     void setConfFlagsEdited(bool v);
@@ -29,9 +28,7 @@ public:
     bool othersEdited() const { return m_othersEdited; }
     void setOthersEdited(bool v);
 
-    bool anyEdited() const {
-        return confFlagsEdited() || confEdited() || othersEdited();
-    }
+    bool anyEdited() const { return confFlagsEdited() || confEdited() || othersEdited(); }
 
     void resetEdited();
 
@@ -65,9 +62,9 @@ private:
     void save(bool closeOnSuccess);
 
 private:
-    bool m_confFlagsEdited  : 1;
-    bool m_confEdited       : 1;
-    bool m_othersEdited     : 1;
+    bool m_confFlagsEdited : 1;
+    bool m_confEdited : 1;
+    bool m_othersEdited : 1;
 
     FortManager *m_fortManager = nullptr;
 };

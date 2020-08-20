@@ -3,18 +3,15 @@
 #include "hostinfomanager.h"
 
 HostInfoCache::HostInfoCache(QObject *parent) :
-    QObject(parent),
-    m_manager(new HostInfoManager(this)),
-    m_cache(1000)
+    QObject(parent), m_manager(new HostInfoManager(this)), m_cache(1000)
 {
-    connect(m_manager, &HostInfoManager::lookupFinished,
-            this, &HostInfoCache::handleFinishedLookup);
+    connect(m_manager, &HostInfoManager::lookupFinished, this,
+            &HostInfoCache::handleFinishedLookup);
 
     m_triggerTimer.setSingleShot(true);
     m_triggerTimer.setInterval(200);
 
-    connect(&m_triggerTimer, &QTimer::timeout,
-            this, &HostInfoCache::cacheChanged);
+    connect(&m_triggerTimer, &QTimer::timeout, this, &HostInfoCache::cacheChanged);
 }
 
 QString HostInfoCache::hostName(const QString &address)
@@ -39,8 +36,7 @@ void HostInfoCache::clear()
     emitCacheChanged();
 }
 
-void HostInfoCache::handleFinishedLookup(const QString &address,
-                                         const QString &hostName)
+void HostInfoCache::handleFinishedLookup(const QString &address, const QString &hostName)
 {
     HostInfo *hostInfo = m_cache.object(address);
     if (hostInfo == nullptr)

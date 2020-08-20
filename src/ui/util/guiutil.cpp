@@ -22,9 +22,8 @@ void GuiUtil::setClipboardData(const QVariant &data)
     }
 }
 
-QIcon GuiUtil::overlayIcon(const QString &basePath,
-                           const QString &overlayPath,
-                           Qt::Alignment alignment)
+QIcon GuiUtil::overlayIcon(
+        const QString &basePath, const QString &overlayPath, Qt::Alignment alignment)
 {
     constexpr int baseWidth = 32;
     constexpr int overlayWidth = 16;

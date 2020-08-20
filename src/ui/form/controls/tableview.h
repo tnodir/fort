@@ -22,8 +22,7 @@ public slots:
     void selectCell(int row, int column = 0);
 
 protected:
-    void currentChanged(const QModelIndex &current,
-                        const QModelIndex &previous) override;
+    void currentChanged(const QModelIndex &current, const QModelIndex &previous) override;
 
     void contextMenuEvent(QContextMenuEvent *event) override;
 

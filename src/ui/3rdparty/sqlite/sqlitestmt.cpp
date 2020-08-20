@@ -6,21 +6,16 @@
 
 #include <sqlite3.h>
 
-SqliteStmt::SqliteStmt() :
-    m_stmt(nullptr)
-{
-}
+SqliteStmt::SqliteStmt() { }
 
 SqliteStmt::~SqliteStmt()
 {
     finalize();
 }
 
-bool SqliteStmt::prepare(sqlite3 *db, const char *sql,
-                         SqliteStmt::PrepareFlags flags)
+bool SqliteStmt::prepare(sqlite3 *db, const char *sql, SqliteStmt::PrepareFlags flags)
 {
-    return sqlite3_prepare_v3(db, sql, -1, flags,
-                              &m_stmt, nullptr) == SQLITE_OK;
+    return sqlite3_prepare_v3(db, sql, -1, flags, &m_stmt, nullptr) == SQLITE_OK;
 }
 
 void SqliteStmt::finalize()
@@ -58,14 +53,13 @@ bool SqliteStmt::bindText(int index, const QString &text)
 
     m_bindObjects.insert(index, textUtf8);
 
-    return sqlite3_bind_text(m_stmt, index, textUtf8.data(),
-                             bytesCount, SQLITE_STATIC) == SQLITE_OK;
+    return sqlite3_bind_text(m_stmt, index, textUtf8.data(), bytesCount, SQLITE_STATIC)
+            == SQLITE_OK;
 }
 
 bool SqliteStmt::bindDateTime(int index, const QDateTime &dateTime)
 {
-    const auto msecs = dateTime.isNull() ? 0
-                                         : dateTime.toMSecsSinceEpoch();
+    const auto msecs = dateTime.isNull() ? 0 : dateTime.toMSecsSinceEpoch();
     return bindInt64(index, msecs);
 }
 
@@ -75,8 +69,8 @@ bool SqliteStmt::bindBlob(int index, const QByteArray &data)
 
     m_bindObjects.insert(index, data);
 
-    return sqlite3_bind_blob(m_stmt, index, data.constData(),
-                             bytesCount, SQLITE_STATIC) == SQLITE_OK;
+    return sqlite3_bind_blob(m_stmt, index, data.constData(), bytesCount, SQLITE_STATIC)
+            == SQLITE_OK;
 }
 
 bool SqliteStmt::bindVar(int index, const QVariant &v)
@@ -215,8 +209,7 @@ bool SqliteStmt::columnBool(int column)
 
 QString SqliteStmt::columnText(int column)
 {
-    const char *p = reinterpret_cast<const char *>(
-                sqlite3_column_text(m_stmt, column));
+    const char *p = reinterpret_cast<const char *>(sqlite3_column_text(m_stmt, column));
     if (p == nullptr || *p == '\0')
         return QString();
 
@@ -230,14 +223,12 @@ QString SqliteStmt::columnText(int column)
 QDateTime SqliteStmt::columnDateTime(int column)
 {
     const auto msecs = columnInt64(column);
-    return (msecs == 0) ? QDateTime()
-                        : QDateTime::fromMSecsSinceEpoch(msecs);
+    return (msecs == 0) ? QDateTime() : QDateTime::fromMSecsSinceEpoch(msecs);
 }
 
 QByteArray SqliteStmt::columnBlob(int column)
 {
-    const char *p = static_cast<const char *>(
-                sqlite3_column_blob(m_stmt, column));
+    const char *p = static_cast<const char *>(sqlite3_column_blob(m_stmt, column));
     if (p == nullptr)
         return QByteArray();
 

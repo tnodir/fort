@@ -5,8 +5,7 @@
 
 #include "controlutil.h"
 
-LabelSpinCombo::LabelSpinCombo(QWidget *parent) :
-    SpinCombo(parent)
+LabelSpinCombo::LabelSpinCombo(QWidget *parent) : SpinCombo(parent)
 {
     setupUi();
 }

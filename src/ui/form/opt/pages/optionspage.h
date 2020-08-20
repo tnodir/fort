@@ -8,8 +8,7 @@ class OptionsPage : public BasePage
     Q_OBJECT
 
 public:
-    explicit OptionsPage(OptionsController *ctrl = nullptr,
-                         QWidget *parent = nullptr);
+    explicit OptionsPage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
     bool iniEdited() const { return m_iniEdited; }
     void setIniEdited(bool v);

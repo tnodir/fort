@@ -16,8 +16,7 @@ class TaskManager : public QObject
     Q_OBJECT
 
 public:
-    explicit TaskManager(FortManager *fortManager,
-                         QObject *parent = nullptr);
+    explicit TaskManager(FortManager *fortManager, QObject *parent = nullptr);
 
     FortManager *fortManager() const { return m_fortManager; }
     FortSettings *settings() const;

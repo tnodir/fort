@@ -3,11 +3,9 @@
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 
-#define PROC_PATH_MAX    65536
+#define PROC_PATH_MAX 65536
 
-ProcessInfo::ProcessInfo(quint32 pid, QObject *parent) :
-    QObject(parent),
-    m_pid(pid)
+ProcessInfo::ProcessInfo(quint32 pid, QObject *parent) : QObject(parent), m_pid(pid)
 {
     openProcess();
 }

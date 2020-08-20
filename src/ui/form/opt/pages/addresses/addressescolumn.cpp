@@ -9,8 +9,7 @@
 #include "../../../controls/controlutil.h"
 #include "../../../controls/plaintextedit.h"
 
-AddressesColumn::AddressesColumn(QWidget *parent) :
-    QWidget(parent)
+AddressesColumn::AddressesColumn(QWidget *parent) : QWidget(parent)
 {
     setupUi();
 }

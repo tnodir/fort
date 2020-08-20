@@ -8,10 +8,7 @@ namespace {
 const unsigned long WORKER_TIMEOUT_MSEC = 15000;
 }
 
-WorkerManager::WorkerManager(QObject *parent) :
-    QObject(parent)
-{
-}
+WorkerManager::WorkerManager(QObject *parent) : QObject(parent) { }
 
 WorkerManager::~WorkerManager()
 {
@@ -22,12 +19,10 @@ void WorkerManager::setupWorker()
 {
     const int workersCount = m_workers.size();
 
-    if (workersCount != 0
-            && (workersCount >= maxWorkersCount()
-                || m_jobQueue.isEmpty()))
+    if (workersCount != 0 && (workersCount >= maxWorkersCount() || m_jobQueue.isEmpty()))
         return;
 
-    WorkerObject *worker = createWorker();  // autoDelete = true
+    WorkerObject *worker = createWorker(); // autoDelete = true
     m_workers.append(worker);
 
     QThreadPool::globalInstance()->start(worker);
@@ -86,7 +81,7 @@ WorkerJob *WorkerManager::dequeueJob()
 
     while (!m_aborted && m_jobQueue.isEmpty()) {
         if (!m_waitCondition.wait(&m_mutex, WORKER_TIMEOUT_MSEC))
-            break;  // timed out
+            break; // timed out
     }
 
     if (m_aborted || m_jobQueue.isEmpty())

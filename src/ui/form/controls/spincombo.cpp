@@ -4,8 +4,7 @@
 #include <QHBoxLayout>
 #include <QSpinBox>
 
-SpinCombo::SpinCombo(QWidget *parent) :
-    QWidget(parent)
+SpinCombo::SpinCombo(QWidget *parent) : QWidget(parent)
 {
     setupUi();
 }
@@ -60,8 +59,8 @@ void SpinCombo::setupSpin()
     m_spinBox->setMinimumWidth(110);
     m_spinBox->setRange(0, 9999);
 
-    connect(m_spinBox, QOverload<int>::of(&QSpinBox::valueChanged),
-            this, &SpinCombo::updateComboBoxIndex);
+    connect(m_spinBox, QOverload<int>::of(&QSpinBox::valueChanged), this,
+            &SpinCombo::updateComboBoxIndex);
 }
 
 void SpinCombo::setupCombo()
@@ -69,8 +68,8 @@ void SpinCombo::setupCombo()
     m_comboBox = new QComboBox();
     m_comboBox->setMinimumWidth(120);
 
-    connect(m_comboBox, QOverload<int>::of(&QComboBox::activated),
-            this, &SpinCombo::updateSpinBoxValue);
+    connect(m_comboBox, QOverload<int>::of(&QComboBox::activated), this,
+            &SpinCombo::updateSpinBoxValue);
 
     connect(this, &SpinCombo::namesChanged, [&] {
         m_comboBox->clear();

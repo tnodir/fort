@@ -2,10 +2,7 @@
 
 #include <QWindow>
 
-WindowStateWatcher::WindowStateWatcher(QObject *parent) :
-    BaseWindowStateWatcher(parent)
-{
-}
+WindowStateWatcher::WindowStateWatcher(QObject *parent) : BaseWindowStateWatcher(parent) { }
 
 void WindowStateWatcher::install(QWindow *window)
 {
@@ -56,8 +53,8 @@ void WindowStateWatcher::handleWindowVisibilityChange(QWindow *window)
     handleVisibilityChange(window->visibility());
 }
 
-void WindowStateWatcher::restore(QWindow *window, const QSize &defaultSize,
-                                 const QRect &rect, bool maximized)
+void WindowStateWatcher::restore(
+        QWindow *window, const QSize &defaultSize, const QRect &rect, bool maximized)
 {
     if (rect.isNull()) {
         window->resize(defaultSize);

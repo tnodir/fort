@@ -5,16 +5,15 @@
 #include "../../fortsettings.h"
 #include "../../translationmanager.h"
 
-OptionsController::OptionsController(FortManager *fortManager,
-                                     QObject *parent) :
+OptionsController::OptionsController(FortManager *fortManager, QObject *parent) :
     QObject(parent),
     m_confFlagsEdited(false),
     m_confEdited(false),
     m_othersEdited(false),
     m_fortManager(fortManager)
 {
-    connect(translationManager(), &TranslationManager::languageChanged,
-            this, &OptionsController::retranslateUi);
+    connect(translationManager(), &TranslationManager::languageChanged, this,
+            &OptionsController::retranslateUi);
 }
 
 void OptionsController::setConfFlagsEdited(bool v)
@@ -108,9 +107,8 @@ void OptionsController::save(bool closeOnSuccess)
     bool confFlagsOnly = true;
     if (confFlagsEdited() || confEdited()) {
         confFlagsOnly = confFlagsEdited() && !confEdited();
-        confSaved = closeOnSuccess
-                ? fortManager()->saveConf(confFlagsOnly)
-                : fortManager()->applyConf(confFlagsOnly);
+        confSaved = closeOnSuccess ? fortManager()->saveConf(confFlagsOnly)
+                                   : fortManager()->applyConf(confFlagsOnly);
     }
 
     if (confSaved && othersEdited()) {

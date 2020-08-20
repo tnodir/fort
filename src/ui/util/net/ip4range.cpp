@@ -6,10 +6,7 @@
 #include "../stringutil.h"
 #include "netutil.h"
 
-Ip4Range::Ip4Range(QObject *parent) :
-    QObject(parent)
-{
-}
+Ip4Range::Ip4Range(QObject *parent) : QObject(parent) { }
 
 void Ip4Range::clear()
 {
@@ -39,9 +36,7 @@ void Ip4Range::setErrorMessage(const QString &errorMessage)
 
 QString Ip4Range::errorLineAndMessage() const
 {
-    return tr("Error at line %1: %2")
-            .arg(QString::number(m_errorLineNo),
-                 m_errorMessage);
+    return tr("Error at line %1: %2").arg(QString::number(m_errorLineNo), m_errorMessage);
 }
 
 QString Ip4Range::toText() const
@@ -51,16 +46,13 @@ QString Ip4Range::toText() const
     for (int i = 0, n = ipSize(); i < n; ++i) {
         const quint32 ip = ipAt(i);
 
-        text += QString("%1\n")
-                .arg(NetUtil::ip4ToText(ip));
+        text += QString("%1\n").arg(NetUtil::ip4ToText(ip));
     }
 
     for (int i = 0, n = pairSize(); i < n; ++i) {
         const Ip4Pair ip = pairAt(i);
 
-        text += QString("%1-%2\n")
-                .arg(NetUtil::ip4ToText(ip.from),
-                     NetUtil::ip4ToText(ip.to));
+        text += QString("%1-%2\n").arg(NetUtil::ip4ToText(ip.from), NetUtil::ip4ToText(ip.to));
     }
 
     return text;
@@ -74,7 +66,7 @@ bool Ip4Range::fromText(const QString &text)
 
 bool Ip4Range::fromList(const StringViewList &list, int emptyNetMask, bool sort)
 {
-    Q_UNUSED(sort);  // TODO
+    Q_UNUSED(sort); // TODO
 
     clear();
 
@@ -86,8 +78,7 @@ bool Ip4Range::fromList(const StringViewList &list, int emptyNetMask, bool sort)
         ++lineNo;
 
         const auto lineTrimmed = line.trimmed();
-        if (lineTrimmed.isEmpty()
-                || lineTrimmed.startsWith('#'))  // commented line
+        if (lineTrimmed.isEmpty() || lineTrimmed.startsWith('#')) // commented line
             continue;
 
         quint32 from = 0, to = 0;
@@ -111,9 +102,7 @@ bool Ip4Range::fromList(const StringViewList &list, int emptyNetMask, bool sort)
 }
 
 // Parse "127.0.0.0-127.255.255.255" or "127.0.0.0/24" or "127.0.0.0"
-bool Ip4Range::parseAddressMask(const StringView line,
-                                quint32 &from, quint32 &to,
-                                int emptyNetMask)
+bool Ip4Range::parseAddressMask(const StringView line, quint32 &from, quint32 &to, int emptyNetMask)
 {
     const QRegularExpression re(R"(([\d.]+)\s*([/-]?)\s*(\S*))");
     const auto match = re.match(line);
@@ -141,7 +130,7 @@ bool Ip4Range::parseAddressMask(const StringView line,
         return false;
     }
 
-    if (sep == QLatin1Char('-')) {  // e.g. "127.0.0.0-127.255.255.255"
+    if (sep == QLatin1Char('-')) { // e.g. "127.0.0.0-127.255.255.255"
         to = NetUtil::textToIp4(mask, &ok);
         if (!ok) {
             setErrorMessage(tr("Bad second IP address"));
@@ -151,7 +140,7 @@ bool Ip4Range::parseAddressMask(const StringView line,
             setErrorMessage(tr("Bad range"));
             return false;
         }
-    } else if (sep == QLatin1Char('/')) {  // e.g. "127.0.0.0/24", "127.0.0.0"
+    } else if (sep == QLatin1Char('/')) { // e.g. "127.0.0.0/24", "127.0.0.0"
         bool ok = true;
         const int nbits = mask.isEmpty() ? emptyNetMask : mask.toInt(&ok);
 
@@ -180,7 +169,7 @@ void Ip4Range::fillRange(const ip4range_map_t &ipRangeMap, int pairSize)
     int prevIndex = -1;
 
     for (; it != end; ++it) {
-        Ip4Pair ip{it.key(), it.value()};
+        Ip4Pair ip { it.key(), it.value() };
 
         // try to merge colliding addresses
         if (prevIndex >= 0 && ip.from <= prevIp.to + 1) {

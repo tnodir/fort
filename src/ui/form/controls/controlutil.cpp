@@ -12,8 +12,8 @@
 #include <QToolButton>
 #include <QWidgetAction>
 
-QCheckBox *ControlUtil::createCheckBox(bool checked,
-                                       const std::function<void (bool checked)> &onToggled)
+QCheckBox *ControlUtil::createCheckBox(
+        bool checked, const std::function<void(bool checked)> &onToggled)
 {
     auto c = new QCheckBox();
     c->setChecked(checked);
@@ -23,8 +23,8 @@ QCheckBox *ControlUtil::createCheckBox(bool checked,
     return c;
 }
 
-QComboBox *ControlUtil::createComboBox(const QStringList &texts,
-                                       const std::function<void (int index)> &onActivated)
+QComboBox *ControlUtil::createComboBox(
+        const QStringList &texts, const std::function<void(int index)> &onActivated)
 {
     auto c = new QComboBox();
     c->addItems(texts);
@@ -34,8 +34,8 @@ QComboBox *ControlUtil::createComboBox(const QStringList &texts,
     return c;
 }
 
-QPushButton *ControlUtil::createButton(const QString &iconPath,
-                                       const std::function<void ()> &onClicked)
+QPushButton *ControlUtil::createButton(
+        const QString &iconPath, const std::function<void()> &onClicked)
 {
     auto c = new QPushButton(QIcon(iconPath), QString());
 
@@ -44,8 +44,8 @@ QPushButton *ControlUtil::createButton(const QString &iconPath,
     return c;
 }
 
-QToolButton *ControlUtil::createToolButton(const QString &iconPath,
-                                           const std::function<void ()> &onClicked)
+QToolButton *ControlUtil::createToolButton(
+        const QString &iconPath, const std::function<void()> &onClicked)
 {
     auto c = new QToolButton();
     c->setIcon(QIcon(iconPath));
@@ -55,9 +55,8 @@ QToolButton *ControlUtil::createToolButton(const QString &iconPath,
     return c;
 }
 
-QPushButton *ControlUtil::createLinkButton(const QString &iconPath,
-                                           const QString &linkPath,
-                                           const QString &toolTip)
+QPushButton *ControlUtil::createLinkButton(
+        const QString &iconPath, const QString &linkPath, const QString &toolTip)
 {
     auto c = new QPushButton(QIcon(iconPath), QString());
     c->setFlat(true);
@@ -67,8 +66,8 @@ QPushButton *ControlUtil::createLinkButton(const QString &iconPath,
     return c;
 }
 
-QPushButton *ControlUtil::createSplitterButton(const QString &iconPath,
-                                               const std::function<void ()> &onClicked)
+QPushButton *ControlUtil::createSplitterButton(
+        const QString &iconPath, const std::function<void()> &onClicked)
 {
     auto c = createButton(iconPath, onClicked);
     c->setFixedSize(32, 32);
@@ -111,11 +110,10 @@ QMenu *ControlUtil::createMenuByLayout(QBoxLayout *layout, QWidget *parent)
     return menu;
 }
 
-QBoxLayout *ControlUtil::createLayoutByWidgets(const QList<QWidget *> &widgets,
-                                               Qt::Orientation o)
+QBoxLayout *ControlUtil::createLayoutByWidgets(const QList<QWidget *> &widgets, Qt::Orientation o)
 {
-    auto layout = new QBoxLayout(o == Qt::Vertical ? QBoxLayout::TopToBottom
-                                                   : QBoxLayout::LeftToRight);
+    auto layout =
+            new QBoxLayout(o == Qt::Vertical ? QBoxLayout::TopToBottom : QBoxLayout::LeftToRight);
     for (auto w : widgets) {
         if (!w) {
             layout->addStretch();
@@ -145,27 +143,22 @@ QFont ControlUtil::fontDemiBold()
 QString ControlUtil::getOpenFileName(const QString &title, const QString &filter)
 {
     return QFileDialog::getOpenFileName(
-                nullptr, title, QString(), filter,
-                nullptr, QFileDialog::ReadOnly);
+            nullptr, title, QString(), filter, nullptr, QFileDialog::ReadOnly);
 }
 
-QStringList ControlUtil::getOpenFileNames(const QString &title,
-                                          const QString &filter)
+QStringList ControlUtil::getOpenFileNames(const QString &title, const QString &filter)
 {
     return QFileDialog::getOpenFileNames(
-                nullptr, title, QString(), filter,
-                nullptr, QFileDialog::ReadOnly);
+            nullptr, title, QString(), filter, nullptr, QFileDialog::ReadOnly);
 }
 
 QString ControlUtil::getSaveFileName(const QString &title, const QString &filter)
 {
     return QFileDialog::getSaveFileName(
-                nullptr, title, QString(), filter,
-                nullptr, QFileDialog::ReadOnly);
+            nullptr, title, QString(), filter, nullptr, QFileDialog::ReadOnly);
 }
 
-QColor ControlUtil::getColor(const QColor &initial,
-                             const QString &title)
+QColor ControlUtil::getColor(const QColor &initial, const QString &title)
 {
     return QColorDialog::getColor(initial, nullptr, title);
 }

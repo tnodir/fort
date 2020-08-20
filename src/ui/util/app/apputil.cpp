@@ -45,8 +45,7 @@ QPixmap extractShellIcon(const QString &appPath)
     SHFILEINFOW info;
     ZeroMemory(&info, sizeof(SHFILEINFOW));
 
-    const HRESULT hr = SHGetFileInfoW(appPathW, 0, &info,
-                                      sizeof(SHFILEINFOW), flags);
+    const HRESULT hr = SHGetFileInfoW(appPathW, 0, &info, sizeof(SHFILEINFOW), flags);
     if (hr != 0) {
         pixmap = pixmapFromImageList(SHIL_EXTRALARGE, info);
     }
@@ -54,18 +53,14 @@ QPixmap extractShellIcon(const QString &appPath)
     return pixmap;
 }
 
-QString extractInfoText(LPVOID infoData, const WORD *langInfo,
-                        const WCHAR *name)
+QString extractInfoText(LPVOID infoData, const WORD *langInfo, const WCHAR *name)
 {
     WCHAR verStrName[128];
-    wsprintfW(verStrName, L"\\StringFileInfo\\%04x%04x\\%s",
-              langInfo[0], langInfo[1], name);
+    wsprintfW(verStrName, L"\\StringFileInfo\\%04x%04x\\%s", langInfo[0], langInfo[1], name);
 
     WCHAR *content;
     UINT len;
-    if (VerQueryValueW(infoData, verStrName,
-                       (LPVOID *) &content, &len)
-            && len > 1) {
+    if (VerQueryValueW(infoData, verStrName, (LPVOID *) &content, &len) && len > 1) {
         return QString::fromWCharArray(content).trimmed();
     }
 
@@ -100,9 +95,10 @@ bool extractVersionInfo(const QString &appPath, AppInfo &appInfo)
         const DWORD secondRight = HIWORD(ffi->dwProductVersionLS);
         const DWORD rightMost = LOWORD(ffi->dwProductVersionLS);
 
-        appInfo.productVersion = QString("%1.%2.%3.%4").arg(
-                    QString::number(leftMost), QString::number(secondLeft),
-                    QString::number(secondRight), QString::number(rightMost));
+        appInfo.productVersion =
+                QString("%1.%2.%3.%4")
+                        .arg(QString::number(leftMost), QString::number(secondLeft),
+                                QString::number(secondRight), QString::number(rightMost));
 
         if (rightMost == 0) {
             appInfo.productVersion.chop(2);
@@ -111,8 +107,8 @@ bool extractVersionInfo(const QString &appPath, AppInfo &appInfo)
 
     // Language info
     WORD *langInfo;
-    if (!VerQueryValueA(infoData, "\\VarFileInfo\\Translation",
-                        (LPVOID *) &langInfo, (PUINT) &dummy))
+    if (!VerQueryValueA(
+                infoData, "\\VarFileInfo\\Translation", (LPVOID *) &langInfo, (PUINT) &dummy))
         return false;
 
     // Texts
@@ -153,8 +149,7 @@ QImage AppUtil::getIcon(const QString &appPath)
         return QImage(":/images/windows-48.png");
     }
 
-    return extractShellIcon(appPath)
-            .toImage();
+    return extractShellIcon(appPath).toImage();
 }
 
 void AppUtil::initThread()

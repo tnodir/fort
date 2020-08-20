@@ -2,11 +2,11 @@
 
 #include <QRegularExpression>
 
-#define BOOL    quint8
-#define UCHAR   quint8
-#define UINT16  quint16
-#define UINT32  quint32
-#define UINT64  quint64
+#define BOOL   quint8
+#define UCHAR  quint8
+#define UINT16 quint16
+#define UINT32 quint32
+#define UINT64 quint64
 
 #include "../../common/fortconf.h"
 #include "../../common/version.h"
@@ -21,9 +21,9 @@
 #include "../net/ip4range.h"
 #include "../stringutil.h"
 
-#define APP_GROUP_MAX       FORT_CONF_GROUP_MAX
-#define APP_GROUP_NAME_MAX  128
-#define APP_PATH_MAX        (FORT_CONF_APP_PATH_MAX / sizeof(wchar_t))
+#define APP_GROUP_MAX      FORT_CONF_GROUP_MAX
+#define APP_GROUP_NAME_MAX 128
+#define APP_PATH_MAX       (FORT_CONF_APP_PATH_MAX / sizeof(wchar_t))
 
 namespace {
 
@@ -47,10 +47,7 @@ void writeConfFlags(const FirewallConf &conf, PFORT_CONF_FLAGS confFlags)
 
 }
 
-ConfUtil::ConfUtil(QObject *parent) :
-    QObject(parent)
-{
-}
+ConfUtil::ConfUtil(QObject *parent) : QObject(parent) { }
 
 int ConfUtil::zoneMaxCount()
 {
@@ -65,16 +62,15 @@ void ConfUtil::setErrorMessage(const QString &errorMessage)
     }
 }
 
-int ConfUtil::write(const FirewallConf &conf,
-                    ConfAppsWalker *confAppsWalker,
-                    EnvManager &envManager, QByteArray &buf)
+int ConfUtil::write(const FirewallConf &conf, ConfAppsWalker *confAppsWalker,
+        EnvManager &envManager, QByteArray &buf)
 {
     quint32 addressGroupsSize = 0;
     longs_arr_t addressGroupOffsets;
     addrranges_arr_t addressRanges(conf.addressGroups().size());
 
-    if (!parseAddressGroups(conf.addressGroups(), addressRanges,
-                            addressGroupOffsets, addressGroupsSize))
+    if (!parseAddressGroups(
+                conf.addressGroups(), addressRanges, addressGroupOffsets, addressGroupsSize))
         return 0;
 
     quint8 appPeriodsCount = 0;
@@ -88,10 +84,8 @@ int ConfUtil::write(const FirewallConf &conf,
     quint32 prefixAppsSize = 0;
     quint32 exeAppsSize = 0;
 
-    if (!parseAppGroups(envManager, conf.appGroups(),
-                        appPeriods, appPeriodsCount,
-                        wildAppsMap, prefixAppsMap, exeAppsMap,
-                        wildAppsSize, prefixAppsSize, exeAppsSize)
+    if (!parseAppGroups(envManager, conf.appGroups(), appPeriods, appPeriodsCount, wildAppsMap,
+                prefixAppsMap, exeAppsMap, wildAppsSize, prefixAppsSize, exeAppsSize)
             || !parseExeApps(confAppsWalker, exeAppsMap, exeAppsSize))
         return 0;
 
@@ -102,21 +96,16 @@ int ConfUtil::write(const FirewallConf &conf,
     }
 
     // Fill the buffer
-    const int confIoSize = FORT_CONF_IO_CONF_OFF + FORT_CONF_DATA_OFF
-            + addressGroupsSize
-            + FORT_CONF_STR_DATA_SIZE(conf.appGroups().size()
-                                      * sizeof(FORT_PERIOD))  // appPeriods
+    const int confIoSize = FORT_CONF_IO_CONF_OFF + FORT_CONF_DATA_OFF + addressGroupsSize
+            + FORT_CONF_STR_DATA_SIZE(conf.appGroups().size() * sizeof(FORT_PERIOD)) // appPeriods
             + FORT_CONF_STR_DATA_SIZE(wildAppsSize)
             + FORT_CONF_STR_HEADER_SIZE(prefixAppsMap.size())
-            + FORT_CONF_STR_DATA_SIZE(prefixAppsSize)
-            + FORT_CONF_STR_DATA_SIZE(exeAppsSize);
+            + FORT_CONF_STR_DATA_SIZE(prefixAppsSize) + FORT_CONF_STR_DATA_SIZE(exeAppsSize);
 
     buf.reserve(confIoSize);
 
-    writeData(buf.data(), conf,
-              addressRanges, addressGroupOffsets,
-              appPeriods, appPeriodsCount,
-              wildAppsMap, prefixAppsMap, exeAppsMap);
+    writeData(buf.data(), conf, addressRanges, addressGroupOffsets, appPeriods, appPeriodsCount,
+            wildAppsMap, prefixAppsMap, exeAppsMap);
 
     return confIoSize;
 }
@@ -135,16 +124,14 @@ int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
     return flagsSize;
 }
 
-int ConfUtil::writeAppEntry(int groupIndex, bool useGroupPerm,
-                            bool blocked, bool alerted, bool isNew,
-                            const QString &appPath, QByteArray &buf)
+int ConfUtil::writeAppEntry(int groupIndex, bool useGroupPerm, bool blocked, bool alerted,
+        bool isNew, const QString &appPath, QByteArray &buf)
 {
     appentry_map_t exeAppsMap;
     quint32 exeAppsSize = 0;
 
-    if (!addApp(groupIndex, useGroupPerm,
-                blocked, alerted, isNew, appPath,
-                exeAppsMap, exeAppsSize))
+    if (!addApp(groupIndex, useGroupPerm, blocked, alerted, isNew, appPath, exeAppsMap,
+                exeAppsSize))
         return 0;
 
     buf.reserve(exeAppsSize);
@@ -173,8 +160,7 @@ int ConfUtil::writeVersion(QByteArray &buf)
 
 int ConfUtil::writeZone(const Ip4Range &ip4Range, QByteArray &buf)
 {
-    const int addrSize = FORT_CONF_ADDR_LIST_SIZE(
-                ip4Range.ipSize(), ip4Range.pairSize());
+    const int addrSize = FORT_CONF_ADDR_LIST_SIZE(ip4Range.ipSize(), ip4Range.pairSize());
 
     buf.reserve(addrSize);
 
@@ -187,7 +173,7 @@ int ConfUtil::writeZone(const Ip4Range &ip4Range, QByteArray &buf)
 }
 
 int ConfUtil::writeZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
-                         const QList<QByteArray> &zonesData, QByteArray &buf)
+        const QList<QByteArray> &zonesData, QByteArray &buf)
 {
     const int zonesSize = FORT_CONF_ZONES_DATA_OFF + dataSize;
 
@@ -258,13 +244,12 @@ bool ConfUtil::loadZone(const QByteArray &buf, Ip4Range &ip4Range)
 }
 
 bool ConfUtil::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
-                                  addrranges_arr_t &addressRanges,
-                                  longs_arr_t &addressGroupOffsets,
-                                  quint32 &addressGroupsSize)
+        addrranges_arr_t &addressRanges, longs_arr_t &addressGroupOffsets,
+        quint32 &addressGroupsSize)
 {
     const int groupsCount = addressGroups.size();
 
-    addressGroupsSize = quint32(groupsCount) * sizeof(quint32);  // offsets
+    addressGroupsSize = quint32(groupsCount) * sizeof(quint32); // offsets
 
     for (int i = 0; i < groupsCount; ++i) {
         AddressGroup *addressGroup = addressGroups.at(i);
@@ -275,19 +260,15 @@ bool ConfUtil::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
         addressRange.setIncludeZones(addressGroup->includeZones());
         addressRange.setExcludeZones(addressGroup->excludeZones());
 
-        if (!addressRange.includeRange()
-                .fromText(addressGroup->includeText())) {
+        if (!addressRange.includeRange().fromText(addressGroup->includeText())) {
             setErrorMessage(tr("Bad Include IP address: %1")
-                            .arg(addressRange.includeRange()
-                                 .errorLineAndMessage()));
+                                    .arg(addressRange.includeRange().errorLineAndMessage()));
             return false;
         }
 
-        if (!addressRange.excludeRange()
-                .fromText(addressGroup->excludeText())) {
+        if (!addressRange.excludeRange().fromText(addressGroup->excludeText())) {
             setErrorMessage(tr("Bad Exclude IP address: %1")
-                            .arg(addressRange.excludeRange()
-                                 .errorLineAndMessage()));
+                                    .arg(addressRange.excludeRange().errorLineAndMessage()));
             return false;
         }
 
@@ -313,45 +294,37 @@ bool ConfUtil::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
     return true;
 }
 
-bool ConfUtil::parseAppGroups(EnvManager &envManager,
-                              const QList<AppGroup *> &appGroups,
-                              chars_arr_t &appPeriods,
-                              quint8 &appPeriodsCount,
-                              appentry_map_t &wildAppsMap,
-                              appentry_map_t &prefixAppsMap,
-                              appentry_map_t &exeAppsMap,
-                              quint32 &wildAppsSize,
-                              quint32 &prefixAppsSize,
-                              quint32 &exeAppsSize)
+bool ConfUtil::parseAppGroups(EnvManager &envManager, const QList<AppGroup *> &appGroups,
+        chars_arr_t &appPeriods, quint8 &appPeriodsCount, appentry_map_t &wildAppsMap,
+        appentry_map_t &prefixAppsMap, appentry_map_t &exeAppsMap, quint32 &wildAppsSize,
+        quint32 &prefixAppsSize, quint32 &exeAppsSize)
 {
     const int groupsCount = appGroups.size();
     if (groupsCount < 1 || groupsCount > APP_GROUP_MAX) {
-        setErrorMessage(tr("Number of Application Groups must be between 1 and %1")
-                        .arg(APP_GROUP_MAX));
+        setErrorMessage(
+                tr("Number of Application Groups must be between 1 and %1").arg(APP_GROUP_MAX));
         return false;
     }
 
-    envManager.clearCache();  // evaluate env vars on each save to GC
+    envManager.clearCache(); // evaluate env vars on each save to GC
 
     for (int i = 0; i < groupsCount; ++i) {
         const AppGroup *appGroup = appGroups.at(i);
 
         const QString name = appGroup->name();
         if (name.size() > APP_GROUP_NAME_MAX) {
-            setErrorMessage(tr("Length of Application Group's Name must be < %1")
-                            .arg(APP_GROUP_NAME_MAX));
+            setErrorMessage(
+                    tr("Length of Application Group's Name must be < %1").arg(APP_GROUP_NAME_MAX));
             return false;
         }
 
         const auto blockText = envManager.expandString(appGroup->blockText());
         const auto allowText = envManager.expandString(appGroup->allowText());
 
-        if (!parseAppsText(i, true, blockText,
-                       wildAppsMap, prefixAppsMap, exeAppsMap,
-                       wildAppsSize, prefixAppsSize, exeAppsSize)
-                || !parseAppsText(i, false, allowText,
-                              wildAppsMap, prefixAppsMap, exeAppsMap,
-                              wildAppsSize, prefixAppsSize, exeAppsSize))
+        if (!parseAppsText(i, true, blockText, wildAppsMap, prefixAppsMap, exeAppsMap, wildAppsSize,
+                    prefixAppsSize, exeAppsSize)
+                || !parseAppsText(i, false, allowText, wildAppsMap, prefixAppsMap, exeAppsMap,
+                        wildAppsSize, prefixAppsSize, exeAppsSize))
             return false;
 
         // Enabled Period
@@ -363,8 +336,7 @@ bool ConfUtil::parseAppGroups(EnvManager &envManager,
                 DateUtil::parseTime(appGroup->periodFrom(), fromHour, fromMinute);
                 DateUtil::parseTime(appGroup->periodTo(), toHour, toMinute);
 
-                if (fromHour != 0 || fromMinute != 0
-                        || toHour != 0 || toMinute != 0) {
+                if (fromHour != 0 || fromMinute != 0 || toHour != 0 || toMinute != 0) {
                     ++appPeriodsCount;
                 }
             }
@@ -378,36 +350,28 @@ bool ConfUtil::parseAppGroups(EnvManager &envManager,
     return true;
 }
 
-bool ConfUtil::parseExeApps(ConfAppsWalker *confAppsWalker,
-                            appentry_map_t &exeAppsMap,
-                            quint32 &exeAppsSize)
+bool ConfUtil::parseExeApps(
+        ConfAppsWalker *confAppsWalker, appentry_map_t &exeAppsMap, quint32 &exeAppsSize)
 {
     if (Q_UNLIKELY(confAppsWalker == nullptr))
         return true;
 
-    return confAppsWalker->walkApps([&](int groupIndex, bool useGroupPerm,
-                                    bool blocked, bool alerted,
-                                    const QString &appPath) -> bool {
-        return addApp(groupIndex, useGroupPerm,
-                      blocked, alerted, true, appPath,
-                      exeAppsMap, exeAppsSize);
+    return confAppsWalker->walkApps([&](int groupIndex, bool useGroupPerm, bool blocked,
+                                            bool alerted, const QString &appPath) -> bool {
+        return addApp(
+                groupIndex, useGroupPerm, blocked, alerted, true, appPath, exeAppsMap, exeAppsSize);
     });
 }
 
 bool ConfUtil::parseAppsText(int groupIndex, bool blocked, const QString &text,
-                             appentry_map_t &wildAppsMap,
-                             appentry_map_t &prefixAppsMap,
-                             appentry_map_t &exeAppsMap,
-                             quint32 &wildAppsSize,
-                             quint32 &prefixAppsSize,
-                             quint32 &exeAppsSize)
+        appentry_map_t &wildAppsMap, appentry_map_t &prefixAppsMap, appentry_map_t &exeAppsMap,
+        quint32 &wildAppsSize, quint32 &prefixAppsSize, quint32 &exeAppsSize)
 {
     const auto lines = StringUtil::splitView(text, QLatin1Char('\n'));
 
     for (const auto &line : lines) {
         const auto lineTrimmed = line.trimmed();
-        if (lineTrimmed.isEmpty()
-                || lineTrimmed.startsWith('#'))  // commented line
+        if (lineTrimmed.isEmpty() || lineTrimmed.startsWith('#')) // commented line
             continue;
 
         bool isWild = false;
@@ -416,25 +380,18 @@ bool ConfUtil::parseAppsText(int groupIndex, bool blocked, const QString &text,
         if (appPath.isEmpty())
             continue;
 
-        appentry_map_t &appsMap = isWild ? wildAppsMap
-                                         : isPrefix ? prefixAppsMap
-                                                    : exeAppsMap;
-        quint32 &appsSize = isWild ? wildAppsSize
-                                   : isPrefix ? prefixAppsSize
-                                              : exeAppsSize;
+        appentry_map_t &appsMap = isWild ? wildAppsMap : isPrefix ? prefixAppsMap : exeAppsMap;
+        quint32 &appsSize = isWild ? wildAppsSize : isPrefix ? prefixAppsSize : exeAppsSize;
 
-        if (!addApp(groupIndex, true, blocked, false, true,
-                    appPath, appsMap, appsSize, false))
+        if (!addApp(groupIndex, true, blocked, false, true, appPath, appsMap, appsSize, false))
             return false;
     }
 
     return true;
 }
 
-bool ConfUtil::addApp(int groupIndex, bool useGroupPerm,
-                      bool blocked, bool alerted, bool isNew,
-                      const QString &appPath, appentry_map_t &appsMap,
-                      quint32 &appsSize, bool canOverwrite)
+bool ConfUtil::addApp(int groupIndex, bool useGroupPerm, bool blocked, bool alerted, bool isNew,
+        const QString &appPath, appentry_map_t &appsMap, quint32 &appsSize, bool canOverwrite)
 {
     const QString kernelPath = FileUtil::pathToKernelPath(appPath);
 
@@ -444,8 +401,7 @@ bool ConfUtil::addApp(int groupIndex, bool useGroupPerm,
     }
 
     if (kernelPath.size() > int(APP_PATH_MAX)) {
-        setErrorMessage(tr("Length of Application's Path must be < %1")
-                        .arg(APP_PATH_MAX));
+        setErrorMessage(tr("Length of Application's Path must be < %1").arg(APP_PATH_MAX));
         return false;
     }
 
@@ -469,8 +425,7 @@ bool ConfUtil::addApp(int groupIndex, bool useGroupPerm,
     return true;
 }
 
-QString ConfUtil::parseAppPath(const StringView line,
-                               bool &isWild, bool &isPrefix)
+QString ConfUtil::parseAppPath(const StringView line, bool &isWild, bool &isPrefix)
 {
     static const QRegularExpression wildMatcher("([*?[])");
 
@@ -484,8 +439,7 @@ QString ConfUtil::parseAppPath(const StringView line,
 
     const auto wildMatch = wildMatcher.match(path);
     if (wildMatch.hasMatch()) {
-        if (wildMatch.capturedStart() == path.size() - 2
-                && wildMatch.capturedView().at(0) == '*'
+        if (wildMatch.capturedStart() == path.size() - 2 && wildMatch.capturedView().at(0) == '*'
                 && path.endsWith('*')) {
             path.chop(2);
             isPrefix = true;
@@ -498,13 +452,9 @@ QString ConfUtil::parseAppPath(const StringView line,
 }
 
 void ConfUtil::writeData(char *output, const FirewallConf &conf,
-                         const addrranges_arr_t &addressRanges,
-                         const longs_arr_t &addressGroupOffsets,
-                         const chars_arr_t &appPeriods,
-                         quint8 appPeriodsCount,
-                         const appentry_map_t &wildAppsMap,
-                         const appentry_map_t &prefixAppsMap,
-                         const appentry_map_t &exeAppsMap)
+        const addrranges_arr_t &addressRanges, const longs_arr_t &addressGroupOffsets,
+        const chars_arr_t &appPeriods, quint8 appPeriodsCount, const appentry_map_t &wildAppsMap,
+        const appentry_map_t &prefixAppsMap, const appentry_map_t &exeAppsMap)
 {
     PFORT_CONF_IO drvConfIo = (PFORT_CONF_IO) output;
     PFORT_CONF drvConf = &drvConfIo->conf;
@@ -531,13 +481,10 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     writeApps(&data, exeAppsMap);
 #undef CONF_DATA_OFFSET
 
-    writeFragmentBits(&drvConfIo->conf_group.fragment_bits,
-                      conf);
+    writeFragmentBits(&drvConfIo->conf_group.fragment_bits, conf);
 
-    writeLimits(drvConfIo->conf_group.limits,
-                &drvConfIo->conf_group.limit_bits,
-                &drvConfIo->conf_group.limit_2bits,
-                conf.appGroups());
+    writeLimits(drvConfIo->conf_group.limits, &drvConfIo->conf_group.limit_bits,
+            &drvConfIo->conf_group.limit_2bits, conf.appGroups());
 
     writeConfFlags(conf, &drvConf->flags);
 
@@ -558,8 +505,7 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     drvConf->exe_apps_off = exeAppsOff;
 }
 
-void ConfUtil::writeFragmentBits(quint16 *fragmentBits,
-                                 const FirewallConf &conf)
+void ConfUtil::writeFragmentBits(quint16 *fragmentBits, const FirewallConf &conf)
 {
     *fragmentBits = 0;
     int i = 0;
@@ -571,9 +517,8 @@ void ConfUtil::writeFragmentBits(quint16 *fragmentBits,
     }
 }
 
-void ConfUtil::writeLimits(struct fort_traf *limits,
-                           quint16 *limitBits, quint32 *limit2Bits,
-                           const QList<AppGroup *> &appGroups)
+void ConfUtil::writeLimits(struct fort_traf *limits, quint16 *limitBits, quint32 *limit2Bits,
+        const QList<AppGroup *> &appGroups)
 {
     PFORT_TRAF limit = &limits[0];
 
@@ -603,8 +548,7 @@ void ConfUtil::writeLimits(struct fort_traf *limits,
     }
 }
 
-void ConfUtil::writeAddressRanges(char **data,
-                                  const addrranges_arr_t &addressRanges)
+void ConfUtil::writeAddressRanges(char **data, const addrranges_arr_t &addressRanges)
 {
     const int rangesCount = addressRanges.size();
 
@@ -615,8 +559,7 @@ void ConfUtil::writeAddressRanges(char **data,
     }
 }
 
-void ConfUtil::writeAddressRange(char **data,
-                                 const AddressRange &addressRange)
+void ConfUtil::writeAddressRange(char **data, const AddressRange &addressRange)
 {
     PFORT_CONF_ADDR_GROUP addrGroup = PFORT_CONF_ADDR_GROUP(*data);
 
@@ -652,12 +595,10 @@ void ConfUtil::writeAddressList(char **data, const Ip4Range &ip4Range)
     writeLongs(data, ip4Range.pairToArray());
 }
 
-void ConfUtil::writeApps(char **data, const appentry_map_t &apps,
-                         bool useHeader)
+void ConfUtil::writeApps(char **data, const appentry_map_t &apps, bool useHeader)
 {
     quint32 *offp = (quint32 *) *data;
-    const quint32 offTableSize = useHeader
-            ? FORT_CONF_STR_HEADER_SIZE(apps.size()) : 0;
+    const quint32 offTableSize = useHeader ? FORT_CONF_STR_HEADER_SIZE(apps.size()) : 0;
     char *p = *data + offTableSize;
     quint32 off = 0;
 
@@ -702,8 +643,7 @@ void ConfUtil::writeLongs(char **data, const longs_arr_t &array)
     writeData(data, array.constData(), array.size(), sizeof(quint32));
 }
 
-void ConfUtil::writeData(char **data, void const *src,
-                         int elemCount, uint elemSize)
+void ConfUtil::writeData(char **data, void const *src, int elemCount, uint elemSize)
 {
     const size_t arraySize = size_t(elemCount) * elemSize;
 

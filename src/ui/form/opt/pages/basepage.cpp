@@ -6,10 +6,7 @@
 #include "../../../fortmanager.h"
 #include "../optionscontroller.h"
 
-BasePage::BasePage(OptionsController *ctrl,
-                   QWidget *parent) :
-    QFrame(parent),
-    m_ctrl(ctrl)
+BasePage::BasePage(OptionsController *ctrl, QWidget *parent) : QFrame(parent), m_ctrl(ctrl)
 {
     setupController();
 }
@@ -57,8 +54,10 @@ void BasePage::setupController()
     connect(ctrl(), &OptionsController::aboutToSave, this, &BasePage::onAboutToSave);
     connect(ctrl(), &OptionsController::saved, this, &BasePage::onSaved);
 
-    connect(fortManager(), &FortManager::afterSaveOptWindowState, this, &BasePage::onSaveWindowState);
-    connect(fortManager(), &FortManager::afterRestoreOptWindowState, this, &BasePage::onRestoreWindowState);
+    connect(fortManager(), &FortManager::afterSaveOptWindowState, this,
+            &BasePage::onSaveWindowState);
+    connect(fortManager(), &FortManager::afterRestoreOptWindowState, this,
+            &BasePage::onRestoreWindowState);
 
     connect(ctrl(), &OptionsController::retranslateUi, this, &BasePage::onRetranslateUi);
 }

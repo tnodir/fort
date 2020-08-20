@@ -32,8 +32,8 @@ private:
     void setupProcess();
 
 private:
-    bool m_started  : 1;
-    bool m_aborted  : 1;
+    bool m_started : 1;
+    bool m_aborted : 1;
 
     QString m_url;
     QByteArray m_data;

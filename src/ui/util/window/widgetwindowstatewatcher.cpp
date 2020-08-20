@@ -2,19 +2,17 @@
 
 #include "widgetwindow.h"
 
-WidgetWindowStateWatcher::WidgetWindowStateWatcher(QObject *parent) :
-    BaseWindowStateWatcher(parent)
+WidgetWindowStateWatcher::WidgetWindowStateWatcher(QObject *parent) : BaseWindowStateWatcher(parent)
 {
 }
 
 void WidgetWindowStateWatcher::install(WidgetWindow *window)
 {
-    connect(window, &WidgetWindow::positionChanged,
-            this, &WidgetWindowStateWatcher::onPositionChanged);
-    connect(window, &WidgetWindow::sizeChanged,
-            this, &WidgetWindowStateWatcher::onSizeChanged);
-    connect(window, &WidgetWindow::visibilityChanged,
-            this, &WidgetWindowStateWatcher::onVisibilityChanged);
+    connect(window, &WidgetWindow::positionChanged, this,
+            &WidgetWindowStateWatcher::onPositionChanged);
+    connect(window, &WidgetWindow::sizeChanged, this, &WidgetWindowStateWatcher::onSizeChanged);
+    connect(window, &WidgetWindow::visibilityChanged, this,
+            &WidgetWindowStateWatcher::onVisibilityChanged);
 }
 
 void WidgetWindowStateWatcher::onPositionChanged()
@@ -57,8 +55,8 @@ void WidgetWindowStateWatcher::handleWindowVisibilityChange(WidgetWindow *window
     handleVisibilityChange(getVisibility(window));
 }
 
-void WidgetWindowStateWatcher::restore(WidgetWindow *window, const QSize &defaultSize,
-                                       const QRect &rect, bool maximized)
+void WidgetWindowStateWatcher::restore(
+        WidgetWindow *window, const QSize &defaultSize, const QRect &rect, bool maximized)
 {
     if (rect.isNull()) {
         window->resize(defaultSize);
@@ -80,13 +78,16 @@ QWindow::Visibility WidgetWindowStateWatcher::getVisibility(WidgetWindow *window
         return QWindow::Hidden;
 
     const int state(int(window->windowState())
-                    & int(Qt::WindowMinimized | Qt::WindowMaximized
-                          | Qt::WindowFullScreen));
+            & int(Qt::WindowMinimized | Qt::WindowMaximized | Qt::WindowFullScreen));
 
     switch (state) {
-    case Qt::WindowMinimized: return QWindow::Minimized;
-    case Qt::WindowMaximized: return QWindow::Maximized;
-    case Qt::WindowFullScreen: return QWindow::FullScreen;
-    default: return QWindow::Windowed;
+    case Qt::WindowMinimized:
+        return QWindow::Minimized;
+    case Qt::WindowMaximized:
+        return QWindow::Maximized;
+    case Qt::WindowFullScreen:
+        return QWindow::FullScreen;
+    default:
+        return QWindow::Windowed;
     }
 }

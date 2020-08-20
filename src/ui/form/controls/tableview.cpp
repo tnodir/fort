@@ -3,10 +3,7 @@
 #include <QContextMenuEvent>
 #include <QMenu>
 
-TableView::TableView(QWidget *parent) :
-    QTableView(parent)
-{
-}
+TableView::TableView(QWidget *parent) : QTableView(parent) { }
 
 QVector<int> TableView::selectedRows() const
 {
@@ -29,8 +26,7 @@ void TableView::selectCell(int row, int column)
     this->scrollTo(index);
 }
 
-void TableView::currentChanged(const QModelIndex &current,
-                               const QModelIndex &previous)
+void TableView::currentChanged(const QModelIndex &current, const QModelIndex &previous)
 {
     QTableView::currentChanged(current, previous);
 

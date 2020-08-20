@@ -24,8 +24,7 @@ class ZonesWindow : public WidgetWindow
     Q_OBJECT
 
 public:
-    explicit ZonesWindow(FortManager *fortManager,
-                         QWidget *parent = nullptr);
+    explicit ZonesWindow(FortManager *fortManager, QWidget *parent = nullptr);
 
 protected slots:
     void onSaveWindowState();

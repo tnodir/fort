@@ -13,17 +13,16 @@ QT_FORWARD_DECLARE_CLASS(QuotaManager)
 QT_FORWARD_DECLARE_CLASS(SqliteDb)
 QT_FORWARD_DECLARE_CLASS(SqliteStmt)
 
-#define INVALID_APP_INDEX       qint16(-1)
-#define INVALID_APP_ID          qint64(-1)
+#define INVALID_APP_INDEX qint16(-1)
+#define INVALID_APP_ID    qint64(-1)
 
 class StatManager : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit StatManager(const QString &filePath,
-                         QuotaManager *quotaManager,
-                         QObject *parent = nullptr);
+    explicit StatManager(
+            const QString &filePath, QuotaManager *quotaManager, QObject *parent = nullptr);
     ~StatManager() override;
     CLASS_DELETE_COPY_MOVE(StatManager)
 
@@ -35,8 +34,7 @@ public:
     bool initialize();
 
     void logProcNew(quint32 pid, const QString &appPath);
-    void logStatTraf(quint16 procCount, qint64 unixTime,
-                     const quint32 *procTrafBytes);
+    void logStatTraf(quint16 procCount, qint64 unixTime, const quint32 *procTrafBytes);
 
     void getAppList(QStringList &list, QVector<qint64> &appIds);
 
@@ -46,9 +44,8 @@ public:
 
     qint32 getTrafficTime(const char *sql, qint64 appId = 0);
 
-    void getTraffic(const char *sql, qint32 trafTime,
-                    qint64 &inBytes, qint64 &outBytes,
-                    qint64 appId = 0);
+    void getTraffic(
+            const char *sql, qint32 trafTime, qint64 &inBytes, qint64 &outBytes, qint64 appId = 0);
 
 signals:
     void appCreated(qint64 appId, const QString &appPath);
@@ -77,13 +74,10 @@ private:
     qint64 getAppId(const QString &appPath);
     qint64 createAppId(const QString &appPath, qint64 unixTime);
 
-    void updateTrafficList(const QStmtList &insertStmtList,
-                           const QStmtList &updateStmtList,
-                           quint32 inBytes, quint32 outBytes,
-                           qint64 appId = 0);
+    void updateTrafficList(const QStmtList &insertStmtList, const QStmtList &updateStmtList,
+            quint32 inBytes, quint32 outBytes, qint64 appId = 0);
 
-    bool updateTraffic(SqliteStmt *stmt, quint32 inBytes,
-                       quint32 outBytes, qint64 appId = 0);
+    bool updateTraffic(SqliteStmt *stmt, quint32 inBytes, quint32 outBytes, qint64 appId = 0);
 
     void stepStmtList(const QStmtList &stmtList);
 
@@ -93,8 +87,8 @@ private:
     SqliteStmt *getSqliteStmt(const char *sql);
 
 private:
-    bool m_isActivePeriodSet    : 1;
-    bool m_isActivePeriod       : 1;
+    bool m_isActivePeriodSet : 1;
+    bool m_isActivePeriod : 1;
 
     quint8 activePeriodFromHour = 0;
     quint8 activePeriodFromMinute = 0;

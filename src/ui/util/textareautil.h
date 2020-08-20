@@ -9,8 +9,8 @@ QT_FORWARD_DECLARE_CLASS(QPlainTextEdit)
 class TextAreaUtil
 {
 public:
-    static void moveCursor(QPlainTextEdit *area, int pos,
-                           QTextCursor::MoveMode mode = QTextCursor::MoveAnchor);
+    static void moveCursor(
+            QPlainTextEdit *area, int pos, QTextCursor::MoveMode mode = QTextCursor::MoveAnchor);
 
     static void selectText(QPlainTextEdit *area, int start, int end);
     static QString selectedText(QPlainTextEdit *area);

@@ -10,18 +10,18 @@ class TableItemModel : public QAbstractItemModel
 public:
     explicit TableItemModel(QObject *parent = nullptr);
 
-    QModelIndex index(int row, int column,
-                      const QModelIndex &parent = QModelIndex()) const override;
+    QModelIndex index(
+            int row, int column, const QModelIndex &parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex &child) const override;
 
-    QModelIndex sibling(int row, int column,
-                        const QModelIndex &index) const override;
+    QModelIndex sibling(int row, int column, const QModelIndex &index) const override;
     bool hasChildren(const QModelIndex &parent = QModelIndex()) const override;
 
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
 public slots:
-    void reset() {
+    void reset()
+    {
         beginResetModel();
         endResetModel();
     }

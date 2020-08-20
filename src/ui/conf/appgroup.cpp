@@ -139,25 +139,21 @@ QString AppGroup::menuLabel() const
     QString text = name();
 
     if (fragmentPacket()) {
-        text += QLatin1Char(' ')
-                + QChar(0x00F7);  // ÷
+        text += QLatin1Char(' ') + QChar(0x00F7); // ÷
     }
 
     if (enabledSpeedLimitIn() != 0) {
-        text += QLatin1Char(' ')
-                + QChar(0x2193)  // ↓
+        text += QLatin1Char(' ') + QChar(0x2193) // ↓
                 + NetUtil::formatSpeed(speedLimitIn() * 1024);
     }
 
     if (enabledSpeedLimitOut() != 0) {
-        text += QLatin1Char(' ')
-                + QChar(0x2191)  // ↑
+        text += QLatin1Char(' ') + QChar(0x2191) // ↑
                 + NetUtil::formatSpeed(speedLimitOut() * 1024);
     }
 
     if (periodEnabled()) {
-        text += QLatin1Char(' ')
-                + DateUtil::formatPeriod(periodFrom(), periodTo());
+        text += QLatin1Char(' ') + DateUtil::formatPeriod(periodFrom(), periodTo());
     }
 
     return text;

@@ -12,8 +12,7 @@ class WidgetWindowStateWatcher : public BaseWindowStateWatcher
 public:
     explicit WidgetWindowStateWatcher(QObject *parent = nullptr);
 
-    void restore(WidgetWindow *window, const QSize &defaultSize,
-                 const QRect &rect, bool maximized);
+    void restore(WidgetWindow *window, const QSize &defaultSize, const QRect &rect, bool maximized);
 
 public slots:
     void install(WidgetWindow *window);

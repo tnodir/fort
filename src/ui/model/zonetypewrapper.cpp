@@ -1,9 +1,6 @@
 #include "zonetypewrapper.h"
 
-ZoneTypeWrapper::ZoneTypeWrapper(const QVariant &var) :
-    MapWrapper(var)
-{
-}
+ZoneTypeWrapper::ZoneTypeWrapper(const QVariant &var) : MapWrapper(var) { }
 
 int ZoneTypeWrapper::index() const
 {

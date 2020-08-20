@@ -16,10 +16,10 @@
 Q_DECLARE_LOGGING_CATEGORY(CLOG_STAT_MANAGER)
 Q_LOGGING_CATEGORY(CLOG_STAT_MANAGER, "fort.statManager")
 
-#define logWarning() qCWarning(CLOG_STAT_MANAGER,)
-#define logCritical() qCCritical(CLOG_STAT_MANAGER,)
+#define logWarning()  qCWarning(CLOG_STAT_MANAGER, )
+#define logCritical() qCCritical(CLOG_STAT_MANAGER, )
 
-#define DATABASE_USER_VERSION   2
+#define DATABASE_USER_VERSION 2
 
 #define ACTIVE_PERIOD_CHECK_SECS (60 * OS_TICKS_PER_SECOND)
 
@@ -57,9 +57,7 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 
 }
 
-StatManager::StatManager(const QString &filePath,
-                         QuotaManager *quotaManager,
-                         QObject *parent) :
+StatManager::StatManager(const QString &filePath, QuotaManager *quotaManager, QObject *parent) :
     QObject(parent),
     m_isActivePeriodSet(false),
     m_isActivePeriod(false),
@@ -92,15 +90,14 @@ bool StatManager::initialize()
     m_lastTrafHour = m_lastTrafDay = m_lastTrafMonth = 0;
 
     if (!m_sqliteDb->open()) {
-        logCritical() << "File open error:" << m_sqliteDb->filePath()
-                      << m_sqliteDb->errorMessage();
+        logCritical() << "File open error:" << m_sqliteDb->filePath() << m_sqliteDb->errorMessage();
         return false;
     }
 
     m_sqliteDb->execute(StatSql::sqlPragmas);
 
-    if (!m_sqliteDb->migrate(":/stat/migrations", DATABASE_USER_VERSION,
-                             true, true, &migrateFunc)) {
+    if (!m_sqliteDb->migrate(
+                ":/stat/migrations", DATABASE_USER_VERSION, true, true, &migrateFunc)) {
         logCritical() << "Migration error" << m_sqliteDb->filePath();
         return false;
     }
@@ -112,25 +109,24 @@ void StatManager::initializeActivePeriod()
 {
     m_isActivePeriodSet = false;
 
-    if (!m_conf) return;
+    if (!m_conf)
+        return;
 
-    DateUtil::parseTime(m_conf->activePeriodFrom(),
-                        activePeriodFromHour, activePeriodFromMinute);
-    DateUtil::parseTime(m_conf->activePeriodTo(),
-                        activePeriodToHour, activePeriodToMinute);
+    DateUtil::parseTime(m_conf->activePeriodFrom(), activePeriodFromHour, activePeriodFromMinute);
+    DateUtil::parseTime(m_conf->activePeriodTo(), activePeriodToHour, activePeriodToMinute);
 }
 
 void StatManager::initializeQuota()
 {
-    if (!m_conf) return;
+    if (!m_conf)
+        return;
 
     m_quotaManager->setQuotaDayBytes(qint64(m_conf->quotaDayMb()) * 1024 * 1024);
     m_quotaManager->setQuotaMonthBytes(qint64(m_conf->quotaMonthMb()) * 1024 * 1024);
 
     const qint64 unixTime = DateUtil::getUnixTime();
     const qint32 trafDay = DateUtil::getUnixDay(unixTime);
-    const qint32 trafMonth = DateUtil::getUnixMonth(
-                unixTime, m_conf->monthStart());
+    const qint32 trafMonth = DateUtil::getUnixMonth(unixTime, m_conf->monthStart());
 
     qint64 inBytes, outBytes;
 
@@ -251,8 +247,7 @@ void StatManager::logProcNew(quint32 pid, const QString &appPath)
     m_appIndexes.insert(pid, procIndex);
 }
 
-void StatManager::logStatTraf(quint16 procCount, qint64 unixTime,
-                              const quint32 *procTrafBytes)
+void StatManager::logStatTraf(quint16 procCount, qint64 unixTime, const quint32 *procTrafBytes)
 {
     if (!m_conf || !m_conf->logStat())
         return;
@@ -260,18 +255,15 @@ void StatManager::logStatTraf(quint16 procCount, qint64 unixTime,
     const qint32 trafHour = DateUtil::getUnixHour(unixTime);
     const bool isNewHour = (trafHour != m_lastTrafHour);
 
-    const qint32 trafDay = isNewHour ? DateUtil::getUnixDay(unixTime)
-                                     : m_lastTrafDay;
+    const qint32 trafDay = isNewHour ? DateUtil::getUnixDay(unixTime) : m_lastTrafDay;
     const bool isNewDay = (trafDay != m_lastTrafDay);
 
-    const qint32 trafMonth = isNewDay
-            ? DateUtil::getUnixMonth(unixTime, m_conf->monthStart())
-            : m_lastTrafMonth;
+    const qint32 trafMonth =
+            isNewDay ? DateUtil::getUnixMonth(unixTime, m_conf->monthStart()) : m_lastTrafMonth;
     const bool isNewMonth = (trafMonth != m_lastTrafMonth);
 
     // Initialize quotas traffic bytes
-    m_quotaManager->clear(isNewDay && m_lastTrafDay,
-                          isNewMonth && m_lastTrafMonth);
+    m_quotaManager->clear(isNewDay && m_lastTrafDay, isNewMonth && m_lastTrafMonth);
 
     m_lastTrafHour = trafHour;
     m_lastTrafDay = trafDay;
@@ -285,8 +277,7 @@ void StatManager::logStatTraf(quint16 procCount, qint64 unixTime,
 
     // Active period
     const qint32 currentTick = OsUtil::getTickCount();
-    if (!m_isActivePeriodSet
-            || qAbs(currentTick - m_lastTick) >= ACTIVE_PERIOD_CHECK_SECS) {
+    if (!m_isActivePeriodSet || qAbs(currentTick - m_lastTick) >= ACTIVE_PERIOD_CHECK_SECS) {
         m_lastTick = currentTick;
 
         m_isActivePeriodSet = true;
@@ -295,10 +286,9 @@ void StatManager::logStatTraf(quint16 procCount, qint64 unixTime,
         if (m_conf->activePeriodEnabled()) {
             const QTime now = QTime::currentTime();
 
-            m_isActivePeriod = FortCommon::isTimeInPeriod(
-                        quint8(now.hour()), quint8(now.minute()),
-                        activePeriodFromHour, activePeriodFromMinute,
-                        activePeriodToHour, activePeriodToMinute);
+            m_isActivePeriod = FortCommon::isTimeInPeriod(quint8(now.hour()), quint8(now.minute()),
+                    activePeriodFromHour, activePeriodFromMinute, activePeriodToHour,
+                    activePeriodToMinute);
         }
     }
 
@@ -339,8 +329,8 @@ void StatManager::logStatTraf(quint16 procCount, qint64 unixTime,
         const int procIndex = m_appIndexes.value(pid, INVALID_APP_INDEX);
         if (Q_UNLIKELY(procIndex == INVALID_APP_INDEX)) {
             logCritical() << "UI & Driver's states mismatch! Expected processes:"
-                          << m_appIndexes.keys() << "Got:" << procCount
-                          << "(" << i << pid << inactive << ")";
+                          << m_appIndexes.keys() << "Got:" << procCount << "(" << i << pid
+                          << inactive << ")";
             abort();
         }
 
@@ -355,8 +345,7 @@ void StatManager::logStatTraf(quint16 procCount, qint64 unixTime,
 
             if (m_isActivePeriod) {
                 // Update or insert app bytes
-                updateTrafficList(insertTrafAppStmts, updateTrafAppStmts,
-                                  inBytes, outBytes, appId);
+                updateTrafficList(insertTrafAppStmts, updateTrafAppStmts, inBytes, outBytes, appId);
             }
 
             // Update sum traffic bytes
@@ -371,8 +360,7 @@ void StatManager::logStatTraf(quint16 procCount, qint64 unixTime,
 
     if (m_isActivePeriod) {
         // Update or insert total bytes
-        updateTrafficList(insertTrafStmts, updateTrafStmts,
-                          sumInBytes, sumOutBytes);
+        updateTrafficList(insertTrafStmts, updateTrafStmts, sumInBytes, sumOutBytes);
 
         // Update quota traffic bytes
         m_quotaManager->addTraf(sumInBytes);
@@ -387,9 +375,8 @@ void StatManager::logStatTraf(quint16 procCount, qint64 unixTime,
         if (trafHourKeepDays >= 0) {
             const qint32 oldTrafHour = trafHour - 24 * trafHourKeepDays;
 
-            deleteTrafStmts
-                    << getTrafficStmt(StatSql::sqlDeleteTrafAppHour, oldTrafHour)
-                    << getTrafficStmt(StatSql::sqlDeleteTrafHour, oldTrafHour);
+            deleteTrafStmts << getTrafficStmt(StatSql::sqlDeleteTrafAppHour, oldTrafHour)
+                            << getTrafficStmt(StatSql::sqlDeleteTrafHour, oldTrafHour);
         }
 
         // Traffic Day
@@ -397,20 +384,17 @@ void StatManager::logStatTraf(quint16 procCount, qint64 unixTime,
         if (trafDayKeepDays >= 0) {
             const qint32 oldTrafDay = trafHour - 24 * trafDayKeepDays;
 
-            deleteTrafStmts
-                    << getTrafficStmt(StatSql::sqlDeleteTrafAppDay, oldTrafDay)
-                    << getTrafficStmt(StatSql::sqlDeleteTrafDay, oldTrafDay);
+            deleteTrafStmts << getTrafficStmt(StatSql::sqlDeleteTrafAppDay, oldTrafDay)
+                            << getTrafficStmt(StatSql::sqlDeleteTrafDay, oldTrafDay);
         }
 
         // Traffic Month
         const int trafMonthKeepMonths = m_conf->trafMonthKeepMonths();
         if (trafMonthKeepMonths >= 0) {
-            const qint32 oldTrafMonth = DateUtil::addUnixMonths(
-                        trafHour, -trafMonthKeepMonths);
+            const qint32 oldTrafMonth = DateUtil::addUnixMonths(trafHour, -trafMonthKeepMonths);
 
-            deleteTrafStmts
-                    << getTrafficStmt(StatSql::sqlDeleteTrafAppMonth, oldTrafMonth)
-                    << getTrafficStmt(StatSql::sqlDeleteTrafMonth, oldTrafMonth);
+            deleteTrafStmts << getTrafficStmt(StatSql::sqlDeleteTrafAppMonth, oldTrafMonth)
+                            << getTrafficStmt(StatSql::sqlDeleteTrafMonth, oldTrafMonth);
         }
 
         stepStmtList(deleteTrafStmts);
@@ -504,25 +488,21 @@ void StatManager::getAppList(QStringList &list, QVector<qint64> &appIds)
 }
 
 void StatManager::updateTrafficList(const QStmtList &insertStmtList,
-                                    const QStmtList &updateStmtList,
-                                    quint32 inBytes, quint32 outBytes,
-                                    qint64 appId)
+        const QStmtList &updateStmtList, quint32 inBytes, quint32 outBytes, qint64 appId)
 {
     int i = 0;
     for (SqliteStmt *stmtUpdate : updateStmtList) {
         if (!updateTraffic(stmtUpdate, inBytes, outBytes, appId)) {
             SqliteStmt *stmtInsert = insertStmtList.at(i);
             if (!updateTraffic(stmtInsert, inBytes, outBytes, appId)) {
-                logCritical() << "Update traffic error:"
-                              << m_sqliteDb->errorMessage();
+                logCritical() << "Update traffic error:" << m_sqliteDb->errorMessage();
             }
         }
         ++i;
     }
 }
 
-bool StatManager::updateTraffic(SqliteStmt *stmt, quint32 inBytes,
-                                quint32 outBytes, qint64 appId)
+bool StatManager::updateTraffic(SqliteStmt *stmt, quint32 inBytes, quint32 outBytes, qint64 appId)
 {
     stmt->bindInt64(2, inBytes);
     stmt->bindInt64(3, outBytes);
@@ -535,8 +515,7 @@ bool StatManager::updateTraffic(SqliteStmt *stmt, quint32 inBytes,
 
     stmt->reset();
 
-    return res == SqliteStmt::StepDone
-            && m_sqliteDb->changes() != 0;
+    return res == SqliteStmt::StepDone && m_sqliteDb->changes() != 0;
 }
 
 void StatManager::stepStmtList(const QStmtList &stmtList)
@@ -565,9 +544,8 @@ qint32 StatManager::getTrafficTime(const char *sql, qint64 appId)
     return trafTime;
 }
 
-void StatManager::getTraffic(const char *sql, qint32 trafTime,
-                             qint64 &inBytes, qint64 &outBytes,
-                             qint64 appId)
+void StatManager::getTraffic(
+        const char *sql, qint32 trafTime, qint64 &inBytes, qint64 &outBytes, qint64 appId)
 {
     SqliteStmt *stmt = getSqliteStmt(sql);
 

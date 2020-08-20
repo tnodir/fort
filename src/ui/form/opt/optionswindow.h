@@ -12,8 +12,7 @@ class OptionsWindow : public WidgetWindow
     Q_OBJECT
 
 public:
-    explicit OptionsWindow(FortManager *fortManager,
-                           QWidget *parent = nullptr);
+    explicit OptionsWindow(FortManager *fortManager, QWidget *parent = nullptr);
 
 protected slots:
     void onRetranslateUi();

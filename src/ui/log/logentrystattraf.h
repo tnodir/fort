@@ -6,8 +6,7 @@
 class LogEntryStatTraf : public LogEntry
 {
 public:
-    explicit LogEntryStatTraf(quint16 procCount = 0,
-                              const quint32 *procTrafBytes = nullptr);
+    explicit LogEntryStatTraf(quint16 procCount = 0, const quint32 *procTrafBytes = nullptr);
 
     LogEntry::LogType type() const override { return StatTraf; }
 

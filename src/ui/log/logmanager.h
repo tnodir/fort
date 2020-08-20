@@ -15,8 +15,7 @@ class LogManager : public QObject
     Q_OBJECT
 
 public:
-    explicit LogManager(FortManager *fortManager,
-                        QObject *parent = nullptr);
+    explicit LogManager(FortManager *fortManager, QObject *parent = nullptr);
 
     FortManager *fortManager() const { return m_fortManager; }
     DriverWorker *driverWorker() const;
@@ -37,8 +36,7 @@ public slots:
     void close();
 
 private slots:
-    void processLogBuffer(LogBuffer *logBuffer, bool success,
-                          quint32 errorCode);
+    void processLogBuffer(LogBuffer *logBuffer, bool success, quint32 errorCode);
 
 private:
     void setErrorMessage(const QString &errorMessage);

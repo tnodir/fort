@@ -11,8 +11,7 @@ class HotKeyManager : public QObject
     Q_OBJECT
 
 public:
-    explicit HotKeyManager(NativeEventFilter *nativeEventFilter,
-                           QObject *parent = nullptr);
+    explicit HotKeyManager(NativeEventFilter *nativeEventFilter, QObject *parent = nullptr);
 
     bool addAction(QAction *action, const QKeySequence &shortcut);
 

@@ -15,14 +15,12 @@ QString StringUtil::cryptoHash(const QString &text)
         return QString();
 
     const QByteArray data = text.toUtf8();
-    const QByteArray hash = QCryptographicHash::hash(
-                data, QCryptographicHash::Sha1);
+    const QByteArray hash = QCryptographicHash::hash(data, QCryptographicHash::Sha1);
 
     return QString::fromLatin1(hash.toHex());
 }
 
-int StringUtil::lineStart(const QString &text, int pos,
-                          int badPos)
+int StringUtil::lineStart(const QString &text, int pos, int badPos)
 {
     const int startPos = text.lastIndexOf(QLatin1Char('\n'), pos);
     return (startPos != -1) ? startPos : badPos;
@@ -34,8 +32,7 @@ int StringUtil::lineEnd(const QString &text, int pos, int badPos)
     return (endPos != -1) ? endPos : badPos;
 }
 
-StringViewList StringUtil::splitView(const QString &text, QLatin1Char sep,
-                                     bool skipEmptyParts)
+StringViewList StringUtil::splitView(const QString &text, QLatin1Char sep, bool skipEmptyParts)
 {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     const auto behavior = skipEmptyParts ? QString::SkipEmptyParts : QString::KeepEmptyParts;

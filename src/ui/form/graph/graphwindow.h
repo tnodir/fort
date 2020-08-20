@@ -14,8 +14,7 @@ class GraphWindow : public WidgetWindow
     Q_OBJECT
 
 public:
-    explicit GraphWindow(FortSettings *fortSettings,
-                         QWidget *parent = nullptr);
+    explicit GraphWindow(FortSettings *fortSettings, QWidget *parent = nullptr);
 
 signals:
     void mouseRightClick(QMouseEvent *event);
@@ -41,8 +40,7 @@ private:
     void setupUi();
     void setupTimer();
 
-    void addData(QCPBars *graph, qint64 rangeLower,
-                 qint64 unixTime, quint32 bytes);
+    void addData(QCPBars *graph, qint64 rangeLower, qint64 unixTime, quint32 bytes);
 
     void updateWindowTitleSpeed();
     void setWindowOpacityPercent(int percent);

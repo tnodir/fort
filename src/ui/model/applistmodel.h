@@ -12,7 +12,8 @@ QT_FORWARD_DECLARE_CLASS(FirewallConf)
 QT_FORWARD_DECLARE_CLASS(LogEntryBlocked)
 QT_FORWARD_DECLARE_CLASS(SqliteDb)
 
-struct AppRow : TableRow {
+struct AppRow : TableRow
+{
     bool useGroupPerm = true;
     bool blocked = false;
     bool alerted = false;
@@ -33,8 +34,7 @@ class AppListModel : public TableSqlModel
     Q_OBJECT
 
 public:
-    explicit AppListModel(ConfManager *confManager,
-                          QObject *parent = nullptr);
+    explicit AppListModel(ConfManager *confManager, QObject *parent = nullptr);
 
     ConfManager *confManager() const { return m_confManager; }
     FirewallConf *conf() const;
@@ -49,18 +49,17 @@ public:
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    QVariant headerData(int section, Qt::Orientation orientation,
-                        int role = Qt::DisplayRole) const override;
+    QVariant headerData(
+            int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     const AppRow &appRowAt(int row) const;
 
-    bool addApp(const QString &appPath, const QString &appName,
-                const QDateTime &endTime, int groupIndex, bool useGroupPerm,
-                bool blocked);
+    bool addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
+            int groupIndex, bool useGroupPerm, bool blocked);
     bool updateApp(qint64 appId, const QString &appPath, const QString &appName,
-                   const QDateTime &endTime, int groupIndex, bool useGroupPerm,
-                   bool blocked, bool updateDriver = true);
+            const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool blocked,
+            bool updateDriver = true);
     bool updateAppName(qint64 appId, const QString &appName);
     void deleteApp(qint64 appId, const QString &appPath, int row);
     void purgeApps();

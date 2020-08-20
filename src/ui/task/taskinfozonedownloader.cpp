@@ -30,9 +30,8 @@ bool TaskInfoZoneDownloader::processResult(bool success)
     if (!success)
         return false;
 
-    fortManager()->showTrayMessage(tr("Zone Addresses Updated: %1.")
-                                   .arg(m_zoneNames.join(", ")),
-                                   FortManager::MessageZones);
+    fortManager()->showTrayMessage(tr("Zone Addresses Updated: %1.").arg(m_zoneNames.join(", ")),
+            FortManager::MessageZones);
     return true;
 }
 
@@ -49,8 +48,7 @@ void TaskInfoZoneDownloader::loadZones()
     emitZonesUpdated();
 }
 
-bool TaskInfoZoneDownloader::saveZoneAsText(const QString &filePath,
-                                            int zoneIndex)
+bool TaskInfoZoneDownloader::saveZoneAsText(const QString &filePath, int zoneIndex)
 {
     TaskZoneDownloader worker;
 
@@ -94,20 +92,17 @@ void TaskInfoZoneDownloader::setupNextTaskWorker()
 void TaskInfoZoneDownloader::setupTaskWorkerByZone(TaskZoneDownloader *worker)
 {
     const auto zoneRow = zoneListModel()->zoneRowAt(m_zoneIndex);
-    const auto zoneSource = ZoneSourceWrapper(
-                zoneListModel()->zoneSourceByCode(zoneRow.sourceCode));
-    const auto zoneType = ZoneTypeWrapper(
-                zoneListModel()->zoneTypeByCode(zoneSource.zoneType()));
+    const auto zoneSource =
+            ZoneSourceWrapper(zoneListModel()->zoneSourceByCode(zoneRow.sourceCode));
+    const auto zoneType = ZoneTypeWrapper(zoneListModel()->zoneTypeByCode(zoneSource.zoneType()));
 
     worker->setZoneEnabled(zoneRow.enabled);
     worker->setSort(zoneType.sort());
     worker->setEmptyNetMask(zoneType.emptyNetMask());
     worker->setZoneId(zoneRow.zoneId);
     worker->setZoneName(zoneRow.zoneName);
-    worker->setUrl(zoneRow.customUrl ? zoneRow.url
-                                     : zoneSource.url());
-    worker->setFormData(zoneRow.customUrl ? zoneRow.formData
-                                          : zoneSource.formData());
+    worker->setUrl(zoneRow.customUrl ? zoneRow.url : zoneSource.url());
+    worker->setFormData(zoneRow.customUrl ? zoneRow.formData : zoneSource.formData());
     worker->setPattern(zoneType.pattern());
     worker->setTextChecksum(zoneRow.textChecksum);
     worker->setBinChecksum(zoneRow.binChecksum);
@@ -151,8 +146,8 @@ void TaskInfoZoneDownloader::processSubResult(bool success)
     const auto now = QDateTime::currentDateTime();
     const auto lastSuccess = success ? now : worker->lastSuccess();
 
-    zoneListModel()->updateZoneResult(zoneId, textChecksum, binChecksum,
-                                      sourceModTime, now, lastSuccess);
+    zoneListModel()->updateZoneResult(
+            zoneId, textChecksum, binChecksum, sourceModTime, now, lastSuccess);
 
     addSubResult(worker, success);
 }
@@ -176,7 +171,8 @@ void TaskInfoZoneDownloader::addSubResult(TaskZoneDownloader *worker, bool succe
     const auto zoneData = worker->zoneData();
     const int size = zoneData.size();
 
-    if (size == 0) return;
+    if (size == 0)
+        return;
 
     m_dataSize += size;
     m_zonesData.append(zoneData);

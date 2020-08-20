@@ -2,10 +2,7 @@
 
 #include <QWindowStateChangeEvent>
 
-WidgetWindow::WidgetWindow(QWidget *parent) :
-    QWidget(parent)
-{
-}
+WidgetWindow::WidgetWindow(QWidget *parent) : QWidget(parent) { }
 
 void WidgetWindow::moveEvent(QMoveEvent *event)
 {
@@ -50,7 +47,7 @@ void WidgetWindow::keyPressEvent(QKeyEvent *event)
         return;
 
     switch (event->key()) {
-    case Qt::Key_Escape:  // Esc
+    case Qt::Key_Escape: // Esc
         if (event->modifiers() == Qt::NoModifier) {
             close();
         }

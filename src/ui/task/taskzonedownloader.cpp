@@ -12,9 +12,7 @@
 #include "../util/stringutil.h"
 
 TaskZoneDownloader::TaskZoneDownloader(QObject *parent) :
-    TaskDownloader(parent),
-    m_zoneEnabled(false),
-    m_sort(false)
+    TaskDownloader(parent), m_zoneEnabled(false), m_sort(false)
 {
 }
 
@@ -41,7 +39,7 @@ void TaskZoneDownloader::downloadFinished(bool success)
 
         if (!list.isEmpty()
                 && (this->textChecksum() != textChecksum
-                    || !FileUtil::fileExists(cacheFileBinPath()))) {
+                        || !FileUtil::fileExists(cacheFileBinPath()))) {
             setTextChecksum(textChecksum);
 
             success = storeAddresses(list);
@@ -65,8 +63,7 @@ void TaskZoneDownloader::loadLocalFile()
     downloadFinished(success);
 }
 
-StringViewList TaskZoneDownloader::parseAddresses(const QString &text,
-                                                  QString &checksum) const
+StringViewList TaskZoneDownloader::parseAddresses(const QString &text, QString &checksum) const
 {
     StringViewList list;
     QCryptographicHash cryptoHash(QCryptographicHash::Sha256);
@@ -77,16 +74,14 @@ StringViewList TaskZoneDownloader::parseAddresses(const QString &text,
     const auto lines = StringUtil::splitView(text, QLatin1Char('\n'), true);
 
     for (const auto &line : lines) {
-        if (line.startsWith('#')
-                || line.startsWith(';'))  // commented line
+        if (line.startsWith('#') || line.startsWith(';')) // commented line
             continue;
 
         const auto match = re.match(line);
         if (!match.hasMatch())
             continue;
 
-        const auto ip = line.mid(match.capturedStart(1),
-                                 match.capturedLength(1));
+        const auto ip = line.mid(match.capturedStart(1), match.capturedLength(1));
         list.append(ip);
 
         cryptoHash.addData(ip.toLatin1());
@@ -102,8 +97,7 @@ bool TaskZoneDownloader::storeAddresses(const StringViewList &list)
 {
     Ip4Range ip4Range;
     if (!ip4Range.fromList(list, emptyNetMask(), sort())) {
-        qWarning() << "TaskZoneDownloader:" << zoneName()
-                   << ":" << ip4Range.errorLineAndMessage();
+        qWarning() << "TaskZoneDownloader:" << zoneName() << ":" << ip4Range.errorLineAndMessage();
         return false;
     }
 
@@ -119,8 +113,7 @@ bool TaskZoneDownloader::storeAddresses(const StringViewList &list)
 
     const auto binData = qCompress(m_zoneData);
 
-    const auto binChecksumData = QCryptographicHash::hash(
-                binData, QCryptographicHash::Sha256);
+    const auto binChecksumData = QCryptographicHash::hash(binData, QCryptographicHash::Sha256);
 
     setBinChecksum(QString::fromLatin1(binChecksumData.toHex()));
 
@@ -134,8 +127,7 @@ bool TaskZoneDownloader::loadAddresses()
 
     const auto binData = FileUtil::readFileData(cacheFileBinPath());
 
-    const auto binChecksumData = QCryptographicHash::hash(
-                binData, QCryptographicHash::Sha256);
+    const auto binChecksumData = QCryptographicHash::hash(binData, QCryptographicHash::Sha256);
 
     if (binChecksum() != QString::fromLatin1(binChecksumData.toHex())) {
         FileUtil::removeFile(cacheFileBinPath());

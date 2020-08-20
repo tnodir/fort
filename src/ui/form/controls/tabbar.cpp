@@ -1,9 +1,6 @@
 #include "tabbar.h"
 
-TabBar::TabBar(QWidget *parent) :
-    QTabBar(parent)
-{
-}
+TabBar::TabBar(QWidget *parent) : QTabBar(parent) { }
 
 QSize TabBar::tabSizeHint(int index) const
 {

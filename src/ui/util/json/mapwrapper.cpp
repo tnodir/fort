@@ -1,9 +1,6 @@
 #include "mapwrapper.h"
 
-MapWrapper::MapWrapper(const QVariant &var) :
-    m_map(var.toMap())
-{
-}
+MapWrapper::MapWrapper(const QVariant &var) : m_map(var.toMap()) { }
 
 int MapWrapper::valueInt(const QString &key) const
 {

@@ -9,10 +9,8 @@
 #include "axistickerspeed.h"
 #include "graphplot.h"
 
-GraphWindow::GraphWindow(FortSettings *fortSettings,
-                         QWidget *parent) :
-    WidgetWindow(parent),
-    m_fortSettings(fortSettings)
+GraphWindow::GraphWindow(FortSettings *fortSettings, QWidget *parent) :
+    WidgetWindow(parent), m_fortSettings(fortSettings)
 {
     setupUi();
     setupTimer();
@@ -27,18 +25,14 @@ void GraphWindow::updateWindowFlags()
 {
     const bool visible = isVisible();
 
-    setWindowFlags(Qt::Tool
-                   | Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint
-                   | (m_fortSettings->graphWindowAlwaysOnTop()
-                      ? Qt::WindowStaysOnTopHint : Qt::Widget)
-                   | (m_fortSettings->graphWindowFrameless()
-                      ? Qt::FramelessWindowHint : Qt::Widget)
-                   | (m_fortSettings->graphWindowClickThrough()
-                      ? Qt::WindowTransparentForInput : Qt::Widget)
-                   );
+    setWindowFlags(Qt::Tool | Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint
+            | (m_fortSettings->graphWindowAlwaysOnTop() ? Qt::WindowStaysOnTopHint : Qt::Widget)
+            | (m_fortSettings->graphWindowFrameless() ? Qt::FramelessWindowHint : Qt::Widget)
+            | (m_fortSettings->graphWindowClickThrough() ? Qt::WindowTransparentForInput
+                                                         : Qt::Widget));
 
     if (visible) {
-        show();  // setWindowFlags() hides the window
+        show(); // setWindowFlags() hides the window
     }
 }
 
@@ -59,8 +53,7 @@ void GraphWindow::updateColors()
     yAxis->setTickLabelColor(m_fortSettings->graphWindowTickLabelColor());
     yAxis->setLabelColor(m_fortSettings->graphWindowLabelColor());
 
-    yAxis->grid()->setPen(adjustPen(yAxis->grid()->pen(),
-                                    m_fortSettings->graphWindowGridColor()));
+    yAxis->grid()->setPen(adjustPen(yAxis->grid()->pen(), m_fortSettings->graphWindowGridColor()));
 
     // Graph Inbound
     m_graphIn->setPen(QPen(m_fortSettings->graphWindowColorIn()));
@@ -130,7 +123,7 @@ void GraphWindow::setupTimer()
     connect(&m_hoverTimer, &QTimer::timeout, this, &GraphWindow::checkHoverLeave);
     connect(&m_updateTimer, &QTimer::timeout, this, &GraphWindow::addEmptyTraffic);
 
-    m_updateTimer.start(1000);  // 1 second
+    m_updateTimer.start(1000); // 1 second
 }
 
 void GraphWindow::onMouseDoubleClick(QMouseEvent *event)
@@ -210,9 +203,7 @@ void GraphWindow::addTraffic(qint64 unixTime, quint32 inBytes, quint32 outBytes)
     addData(m_graphIn, rangeLower, unixTime, inBytes);
     addData(m_graphOut, rangeLower, unixTime, outBytes);
 
-    m_plot->xAxis->setRange(unixTime,
-                            qFloor(m_plot->axisRect()->width() / 4),
-                            Qt::AlignRight);
+    m_plot->xAxis->setRange(unixTime, qFloor(m_plot->axisRect()->width() / 4), Qt::AlignRight);
 
     m_graphIn->rescaleValueAxis(false, true);
     m_graphOut->rescaleValueAxis(true, true);
@@ -234,8 +225,7 @@ void GraphWindow::addEmptyTraffic()
     addTraffic(DateUtil::getUnixTime(), 0, 0);
 }
 
-void GraphWindow::addData(QCPBars *graph, qint64 rangeLower,
-                          qint64 unixTime, quint32 bytes)
+void GraphWindow::addData(QCPBars *graph, qint64 rangeLower, qint64 unixTime, quint32 bytes)
 {
     auto data = graph->data();
 
@@ -255,8 +245,7 @@ void GraphWindow::addData(QCPBars *graph, qint64 rangeLower,
             bytes += quint32(hi->mainValue());
 
             data->removeAfter(unixTime);
-        }
-        else if (unixTime < hi->mainKey()) {
+        } else if (unixTime < hi->mainKey()) {
             data->clear();
         }
     }
@@ -270,17 +259,14 @@ void GraphWindow::updateWindowTitleSpeed()
     if (windowFlags() & Qt::FramelessWindowHint)
         return;
 
-    const auto inBytes = m_graphIn->data()->isEmpty()
-            ? 0 : (m_graphIn->data()->constEnd() - 1)->mainValue();
-    const auto outBytes = m_graphOut->data()->isEmpty()
-            ? 0 : (m_graphOut->data()->constEnd() - 1)->mainValue();
+    const auto inBytes =
+            m_graphIn->data()->isEmpty() ? 0 : (m_graphIn->data()->constEnd() - 1)->mainValue();
+    const auto outBytes =
+            m_graphOut->data()->isEmpty() ? 0 : (m_graphOut->data()->constEnd() - 1)->mainValue();
 
-    setWindowTitle(QChar(0x2193)  // ↓
-                   + NetUtil::formatSpeed(quint32(inBytes))
-                   + QLatin1Char(' ')
-                   + QChar(0x2191)  // ↑
-                   + NetUtil::formatSpeed(quint32(outBytes))
-                   );
+    setWindowTitle(QChar(0x2193) // ↓
+            + NetUtil::formatSpeed(quint32(inBytes)) + QLatin1Char(' ') + QChar(0x2191) // ↑
+            + NetUtil::formatSpeed(quint32(outBytes)));
 }
 
 void GraphWindow::setWindowOpacityPercent(int percent)

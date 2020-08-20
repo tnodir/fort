@@ -4,12 +4,9 @@
 #include <QSharedMemory>
 #include <QSystemSemaphore>
 
-ControlWorker::ControlWorker(QSystemSemaphore *semaphore,
-                             QSharedMemory *sharedMemory,
-                             QObject *parent) :
-    QObject(parent),
-    m_semaphore(semaphore),
-    m_sharedMemory(sharedMemory)
+ControlWorker::ControlWorker(
+        QSystemSemaphore *semaphore, QSharedMemory *sharedMemory, QObject *parent) :
+    QObject(parent), m_semaphore(semaphore), m_sharedMemory(sharedMemory)
 {
 }
 
@@ -37,8 +34,7 @@ void ControlWorker::abort()
     }
 }
 
-bool ControlWorker::post(const QString &command,
-                         const QStringList &args)
+bool ControlWorker::post(const QString &command, const QStringList &args)
 {
     m_sharedMemory->lock();
 
@@ -97,8 +93,7 @@ QByteArray ControlWorker::readData() const
     return QByteArray::fromRawData(reinterpret_cast<const char *>(p), dataSize);
 }
 
-bool ControlWorker::writeDataStream(const QString &scriptPath,
-                                    const QStringList &args)
+bool ControlWorker::writeDataStream(const QString &scriptPath, const QStringList &args)
 {
     QByteArray data;
 
@@ -108,14 +103,13 @@ bool ControlWorker::writeDataStream(const QString &scriptPath,
 #else
             QDataStream::WriteOnly
 #endif
-            );
+    );
     stream << scriptPath << args;
 
     return writeData(data);
 }
 
-bool ControlWorker::readDataStream(QString &scriptPath,
-                                   QStringList &args) const
+bool ControlWorker::readDataStream(QString &scriptPath, QStringList &args) const
 {
     const QByteArray data = readData();
 

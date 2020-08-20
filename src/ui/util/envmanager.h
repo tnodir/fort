@@ -25,8 +25,7 @@ public slots:
     void onEnvironmentChanged();
 
 private:
-    QString expandStringRecursive(const QString &text,
-                                  quint16 callLevel = 0);
+    QString expandStringRecursive(const QString &text, quint16 callLevel = 0);
 
     static QVariant readEnvVar(const QString &key);
     static QVariant readRegVar(const QString &key, const char *envPath);

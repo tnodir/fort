@@ -15,8 +15,7 @@ class SchedulePage : public BasePage
     Q_OBJECT
 
 public:
-    explicit SchedulePage(OptionsController *ctrl = nullptr,
-                          QWidget *parent = nullptr);
+    explicit SchedulePage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
     bool scheduleEdited() const { return m_scheduleEdited; }
     void setScheduleEdited(bool v);

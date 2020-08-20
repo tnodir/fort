@@ -7,10 +7,8 @@
 #include "optionscontroller.h"
 #include "pages/mainpage.h"
 
-OptionsWindow::OptionsWindow(FortManager *fortManager,
-                             QWidget *parent) :
-    WidgetWindow(parent),
-    m_ctrl(new OptionsController(fortManager, this))
+OptionsWindow::OptionsWindow(FortManager *fortManager, QWidget *parent) :
+    WidgetWindow(parent), m_ctrl(new OptionsController(fortManager, this))
 {
     setupUi();
     setupController();
@@ -20,11 +18,9 @@ void OptionsWindow::setupController()
 {
     ctrl()->initialize();
 
-    connect(this, &OptionsWindow::aboutToClose,
-            ctrl(), &OptionsController::closeWindow);
+    connect(this, &OptionsWindow::aboutToClose, ctrl(), &OptionsController::closeWindow);
 
-    connect(ctrl(), &OptionsController::retranslateUi,
-            this, &OptionsWindow::onRetranslateUi);
+    connect(ctrl(), &OptionsController::retranslateUi, this, &OptionsWindow::onRetranslateUi);
 
     emit ctrl()->retranslateUi();
 }
@@ -37,7 +33,7 @@ void OptionsWindow::keyPressEvent(QKeyEvent *event)
         return;
 
     switch (event->key()) {
-    case Qt::Key_S:  // Ctrl+S
+    case Qt::Key_S: // Ctrl+S
         if (event->modifiers() == Qt::ControlModifier) {
             ctrl()->applyChanges();
         }
@@ -66,8 +62,7 @@ void OptionsWindow::setupUi()
     this->setFont(QFont("Tahoma", 9));
 
     // Icon
-    this->setWindowIcon(GuiUtil::overlayIcon(":/images/sheild-96.png",
-                                             ":/images/cog.png"));
+    this->setWindowIcon(GuiUtil::overlayIcon(":/images/sheild-96.png", ":/images/cog.png"));
 
     // Size
     this->resize(1024, 768);

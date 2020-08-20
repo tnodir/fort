@@ -14,8 +14,7 @@ class AppStatModel : public StringListModel
     Q_OBJECT
 
 public:
-    explicit AppStatModel(StatManager *statManager,
-                          QObject *parent = nullptr);
+    explicit AppStatModel(StatManager *statManager, QObject *parent = nullptr);
 
     void initialize();
 

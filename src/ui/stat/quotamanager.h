@@ -10,8 +10,7 @@ class QuotaManager : public QObject
     Q_OBJECT
 
 public:
-    explicit QuotaManager(FortSettings *fortSettings,
-                          QObject *parent = nullptr);
+    explicit QuotaManager(FortSettings *fortSettings, QObject *parent = nullptr);
 
     void setQuotaDayBytes(qint64 bytes);
     void setQuotaMonthBytes(qint64 bytes);
@@ -26,8 +25,7 @@ public:
     void checkQuotaMonth(qint32 trafMonth);
 
 signals:
-    void alert(const QString &text,
-               const QString &title = tr("Quota Alert"));
+    void alert(const QString &text, const QString &title = tr("Quota Alert"));
 
 public slots:
 

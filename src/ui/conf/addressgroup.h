@@ -59,10 +59,10 @@ private:
     void removeZone(quint32 &zones, int zoneId);
 
 private:
-    bool m_edited       : 1;
+    bool m_edited : 1;
 
-    bool m_includeAll   : 1;
-    bool m_excludeAll   : 1;
+    bool m_includeAll : 1;
+    bool m_excludeAll : 1;
 
     qint64 m_id = 0;
 

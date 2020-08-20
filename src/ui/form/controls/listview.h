@@ -14,8 +14,7 @@ signals:
     void currentIndexChanged(const QModelIndex &index);
 
 protected:
-    void currentChanged(const QModelIndex &current,
-                        const QModelIndex &previous) override;
+    void currentChanged(const QModelIndex &current, const QModelIndex &previous) override;
 };
 
 #endif // LISTVIEW_H

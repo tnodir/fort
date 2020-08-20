@@ -15,8 +15,7 @@ class ProgramsController : public QObject
     Q_OBJECT
 
 public:
-    explicit ProgramsController(FortManager *fortManager,
-                                QObject *parent = nullptr);
+    explicit ProgramsController(FortManager *fortManager, QObject *parent = nullptr);
 
     FortManager *fortManager() const { return m_fortManager; }
     FortSettings *settings() const;

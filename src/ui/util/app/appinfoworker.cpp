@@ -7,10 +7,7 @@
 #include "appinfojob.h"
 #include "apputil.h"
 
-AppInfoWorker::AppInfoWorker(AppInfoManager *manager) :
-    WorkerObject(manager)
-{
-}
+AppInfoWorker::AppInfoWorker(AppInfoManager *manager) : WorkerObject(manager) { }
 
 AppInfoManager *AppInfoWorker::manager() const
 {

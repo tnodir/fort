@@ -4,7 +4,7 @@
 
 QVariant JsonUtil::jsonToVariant(const QByteArray &data, QString &errorString)
 {
-    QJsonParseError jsonParseError{};
+    QJsonParseError jsonParseError {};
     const QJsonDocument jsonDoc = QJsonDocument::fromJson(data, &jsonParseError);
     if (jsonParseError.error != QJsonParseError::NoError) {
         errorString = jsonParseError.errorString();

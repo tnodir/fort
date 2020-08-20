@@ -13,7 +13,7 @@
 DriverManager::DriverManager(QObject *parent) :
     QObject(parent),
     m_device(new Device(this)),
-    m_driverWorker(new DriverWorker(m_device))  // autoDelete = true
+    m_driverWorker(new DriverWorker(m_device)) // autoDelete = true
 {
     setupWorker();
 }
@@ -25,8 +25,7 @@ DriverManager::~DriverManager()
 
 QString DriverManager::errorMessage() const
 {
-    return (m_errorCode == 0) ? QString()
-                              : OsUtil::errorMessage(m_errorCode);
+    return (m_errorCode == 0) ? QString() : OsUtil::errorMessage(m_errorCode);
 }
 
 void DriverManager::updateError(bool success)
@@ -37,8 +36,7 @@ void DriverManager::updateError(bool success)
 
 bool DriverManager::isDeviceError() const
 {
-    return m_errorCode != 0
-            && m_errorCode != FortCommon::userErrorCode();
+    return m_errorCode != 0 && m_errorCode != FortCommon::userErrorCode();
 }
 
 void DriverManager::setupWorker()
@@ -78,30 +76,24 @@ bool DriverManager::closeDevice()
 
 bool DriverManager::validate(QByteArray &buf, int size)
 {
-    return writeData(FortCommon::ioctlValidate(),
-                     buf, size);
+    return writeData(FortCommon::ioctlValidate(), buf, size);
 }
 
-bool DriverManager::writeConf(QByteArray &buf, int size,
-                              bool onlyFlags)
+bool DriverManager::writeConf(QByteArray &buf, int size, bool onlyFlags)
 {
-    return writeData(onlyFlags ? FortCommon::ioctlSetFlags()
-                               : FortCommon::ioctlSetConf(),
-                     buf, size);
+    return writeData(
+            onlyFlags ? FortCommon::ioctlSetFlags() : FortCommon::ioctlSetConf(), buf, size);
 }
 
 bool DriverManager::writeApp(QByteArray &buf, int size, bool remove)
 {
-    return writeData(remove ? FortCommon::ioctlDelApp()
-                            : FortCommon::ioctlAddApp(),
-                     buf, size);
+    return writeData(remove ? FortCommon::ioctlDelApp() : FortCommon::ioctlAddApp(), buf, size);
 }
 
 bool DriverManager::writeZones(QByteArray &buf, int size, bool onlyFlags)
 {
-    return writeData(onlyFlags ? FortCommon::ioctlSetZoneFlag()
-                               : FortCommon::ioctlSetZones(),
-                     buf, size);
+    return writeData(
+            onlyFlags ? FortCommon::ioctlSetZoneFlag() : FortCommon::ioctlSetZones(), buf, size);
 }
 
 bool DriverManager::writeData(quint32 code, QByteArray &buf, int size)
@@ -130,8 +122,7 @@ void DriverManager::uninstallDriver()
 
 void DriverManager::executeCommand(const QString &fileName)
 {
-    const QString binPath = FileUtil::toNativeSeparators(
-                FileUtil::appBinLocation());
+    const QString binPath = FileUtil::toNativeSeparators(FileUtil::appBinLocation());
 
     const QString cmdPath = qEnvironmentVariable("COMSPEC");
     const QString scriptPath = binPath + R"(\driver\scripts\execute-cmd.bat)";

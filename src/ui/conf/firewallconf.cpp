@@ -236,9 +236,7 @@ void FirewallConf::addAppGroup(AppGroup *appGroup, int to)
 
 AppGroup *FirewallConf::addAppGroupByName(const QString &name)
 {
-    auto appGroup = !m_removedAppGroups.isEmpty()
-            ? m_removedAppGroups.takeLast()
-            : new AppGroup();
+    auto appGroup = !m_removedAppGroups.isEmpty() ? m_removedAppGroups.takeLast() : new AppGroup();
     appGroup->setName(name);
     addAppGroup(appGroup);
     return appGroup;

@@ -13,22 +13,21 @@ class SqliteStmt
 {
 public:
     enum PrepareFlags {
-        PrepareDefault      = 0x00,
-        PreparePersistent   = 0x01  // SQLITE_PREPARE_PERSISTENT
+        PrepareDefault = 0x00,
+        PreparePersistent = 0x01 // SQLITE_PREPARE_PERSISTENT
     };
 
     enum StepResult {
-        StepError   = -1,
-        StepRow     = 100,  // SQLITE_ROW
-        StepDone    = 101   // SQLITE_DONE
+        StepError = -1,
+        StepRow = 100, // SQLITE_ROW
+        StepDone = 101 // SQLITE_DONE
     };
 
     explicit SqliteStmt();
     ~SqliteStmt();
     CLASS_DEFAULT_COPY_MOVE(SqliteStmt)
 
-    bool prepare(struct sqlite3 *db, const char *sql,
-                 PrepareFlags flags = PrepareDefault);
+    bool prepare(struct sqlite3 *db, const char *sql, PrepareFlags flags = PrepareDefault);
     void finalize();
 
     bool bindInt(int index, qint32 number);
@@ -62,7 +61,7 @@ public:
     QVariant columnVar(int column = 0);
 
 private:
-    sqlite3_stmt *m_stmt;
+    sqlite3_stmt *m_stmt = nullptr;
 
     QHash<int, QVariant> m_bindObjects;
 };

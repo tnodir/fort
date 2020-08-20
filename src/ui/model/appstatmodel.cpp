@@ -10,14 +10,12 @@
 #include "../util/fileutil.h"
 #include "traflistmodel.h"
 
-AppStatModel::AppStatModel(StatManager *statManager,
-                           QObject *parent) :
+AppStatModel::AppStatModel(StatManager *statManager, QObject *parent) :
     StringListModel(parent),
     m_statManager(statManager),
     m_trafListModel(new TrafListModel(statManager, this))
 {
-    connect(m_statManager, &StatManager::appCreated,
-            this, &AppStatModel::handleCreatedApp);
+    connect(m_statManager, &StatManager::appCreated, this, &AppStatModel::handleCreatedApp);
 }
 
 void AppStatModel::setAppInfoCache(AppInfoCache *v)
@@ -62,10 +60,10 @@ void AppStatModel::remove(int row)
 void AppStatModel::updateList()
 {
     QStringList list;
-    list.append(QString());  // All
+    list.append(QString()); // All
 
     m_appIds.clear();
-    m_appIds.append(0);  // All
+    m_appIds.append(0); // All
 
     m_statManager->getAppList(list, m_appIds);
 
@@ -80,27 +78,23 @@ void AppStatModel::handleCreatedApp(qint64 appId, const QString &appPath)
 
 void AppStatModel::handleProcNew(const LogEntryProcNew &procNewEntry)
 {
-    m_statManager->logProcNew(procNewEntry.pid(),
-                              procNewEntry.path());
+    m_statManager->logProcNew(procNewEntry.pid(), procNewEntry.path());
 }
 
 void AppStatModel::handleStatTraf(const LogEntryStatTraf &statTrafEntry)
 {
-    m_statManager->logStatTraf(statTrafEntry.procCount(),
-                               statTrafEntry.unixTime(),
-                               statTrafEntry.procTrafBytes());
+    m_statManager->logStatTraf(
+            statTrafEntry.procCount(), statTrafEntry.unixTime(), statTrafEntry.procTrafBytes());
 }
 
 qint64 AppStatModel::appIdByRow(int row) const
 {
-    return (row < 0 || row >= m_appIds.size())
-            ? 0 : m_appIds.at(row);
+    return (row < 0 || row >= m_appIds.size()) ? 0 : m_appIds.at(row);
 }
 
 QString AppStatModel::appPathByRow(int row) const
 {
-    return (row <= 0 || row >= list().size())
-            ? QString() : list().at(row);
+    return (row <= 0 || row >= list().size()) ? QString() : list().at(row);
 }
 
 Qt::ItemFlags AppStatModel::flags(const QModelIndex &index) const

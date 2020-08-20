@@ -1,9 +1,7 @@
 #include "graphplot.h"
 
 GraphPlot::GraphPlot(QWidget *parent) :
-    QCustomPlot(parent),
-    m_mousePressed(false),
-    m_mouseDragging(false)
+    QCustomPlot(parent), m_mousePressed(false), m_mouseDragging(false)
 {
 }
 
@@ -45,8 +43,7 @@ void GraphPlot::mouseReleaseEvent(QMouseEvent *event)
     if (m_mouseDragging) {
         m_mouseDragging = false;
         emit mouseDragEnd(event);
-    }
-    else if (event->button() == Qt::RightButton) {
+    } else if (event->button() == Qt::RightButton) {
         emit mouseRightClick(event);
     }
 }

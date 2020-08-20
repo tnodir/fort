@@ -9,8 +9,7 @@
 #include "util/dateutil.h"
 #include "util/fileutil.h"
 
-FortSettings::FortSettings(const QStringList &args,
-                           QObject *parent) :
+FortSettings::FortSettings(const QStringList &args, QObject *parent) :
     QObject(parent),
     m_iniExists(false),
     m_isPortable(false),
@@ -46,44 +45,38 @@ void FortSettings::processArguments(const QStringList &args)
 {
     QCommandLineParser parser;
 
-    const QCommandLineOption provBootOption(
-                QStringList() << "b" << "boot",
-                "Unblock access to network when Fort Firewall is not running.", "boot");
+    const QCommandLineOption provBootOption(QStringList() << "b"
+                                                          << "boot",
+            "Unblock access to network when Fort Firewall is not running.", "boot");
     parser.addOption(provBootOption);
 
-    const QCommandLineOption profileOption(
-                QStringList() << "p" << "profile",
-                "Directory to store settings.", "profile");
+    const QCommandLineOption profileOption(QStringList() << "p"
+                                                         << "profile",
+            "Directory to store settings.", "profile");
     parser.addOption(profileOption);
 
-    const QCommandLineOption statOption(
-                QStringList() << "s" << "stat",
-                "Directory to store statistics.", "stat");
+    const QCommandLineOption statOption(QStringList() << "s"
+                                                      << "stat",
+            "Directory to store statistics.", "stat");
     parser.addOption(statOption);
 
     const QCommandLineOption logsOption(
-                QStringList() << "logs",
-                "Directory to store logs.", "logs");
+            QStringList() << "logs", "Directory to store logs.", "logs");
     parser.addOption(logsOption);
 
     const QCommandLineOption cacheOption(
-                QStringList() << "cache",
-                "Directory to store cache.", "cache");
+            QStringList() << "cache", "Directory to store cache.", "cache");
     parser.addOption(cacheOption);
 
-    const QCommandLineOption noCacheOption(
-                QStringList() << "no-cache",
-                "Don't use cache on disk.");
+    const QCommandLineOption noCacheOption(QStringList() << "no-cache", "Don't use cache on disk.");
     parser.addOption(noCacheOption);
 
-    const QCommandLineOption langOption(
-                QStringList() << "lang",
-                "Default language.", "lang", "en");
+    const QCommandLineOption langOption(QStringList() << "lang", "Default language.", "lang", "en");
     parser.addOption(langOption);
 
-    const QCommandLineOption controlOption(
-                QStringList() << "c" << "control",
-                "Control running instance by executing the command.", "control");
+    const QCommandLineOption controlOption(QStringList() << "c"
+                                                         << "control",
+            "Control running instance by executing the command.", "control");
     parser.addOption(controlOption);
 
     parser.addVersionOption();
@@ -92,8 +85,7 @@ void FortSettings::processArguments(const QStringList &args)
     parser.process(args);
 
     // Portable Mode
-    m_isPortable = FileUtil::fileExists(FileUtil::appBinLocation()
-                                        + "/README.portable");
+    m_isPortable = FileUtil::fileExists(FileUtil::appBinLocation() + "/README.portable");
 
     // No Cache
     m_noCache = parser.isSet(noCacheOption);
@@ -107,20 +99,17 @@ void FortSettings::processArguments(const QStringList &args)
     // Profile Path
     m_profilePath = parser.value(profileOption);
     if (m_profilePath.isEmpty()) {
-        m_profilePath = m_isPortable
-                ? FileUtil::appBinLocation() + "/Data"
-                : FileUtil::appConfigLocation();
+        m_profilePath =
+                m_isPortable ? FileUtil::appBinLocation() + "/Data" : FileUtil::appConfigLocation();
     }
-    m_profilePath = FileUtil::pathSlash(
-                FileUtil::absolutePath(m_profilePath));
+    m_profilePath = FileUtil::pathSlash(FileUtil::absolutePath(m_profilePath));
 
     // Statistics Path
     m_statPath = parser.value(statOption);
     if (m_statPath.isEmpty()) {
         m_statPath = m_profilePath;
     } else {
-        m_statPath = FileUtil::pathSlash(
-                    FileUtil::absolutePath(m_statPath));
+        m_statPath = FileUtil::pathSlash(FileUtil::absolutePath(m_statPath));
     }
 
     // Logs Path
@@ -128,8 +117,7 @@ void FortSettings::processArguments(const QStringList &args)
     if (m_logsPath.isEmpty()) {
         m_logsPath = m_profilePath + "logs/";
     } else {
-        m_logsPath = FileUtil::pathSlash(
-                    FileUtil::absolutePath(m_logsPath));
+        m_logsPath = FileUtil::pathSlash(FileUtil::absolutePath(m_logsPath));
     }
 
     // Cache Path
@@ -137,8 +125,7 @@ void FortSettings::processArguments(const QStringList &args)
     if (m_cachePath.isEmpty()) {
         m_cachePath = m_profilePath + "cache/";
     } else {
-        m_cachePath = FileUtil::pathSlash(
-                    FileUtil::absolutePath(m_cachePath));
+        m_cachePath = FileUtil::pathSlash(FileUtil::absolutePath(m_cachePath));
     }
 
     // Control command
@@ -368,18 +355,15 @@ QColor FortSettings::iniColor(const QString &key, const QColor &defaultValue) co
     if (text.at(0).isDigit())
         return QColor::fromRgba(text.toUInt());
 
-    return {text};
+    return { text };
 }
 
-void FortSettings::setIniColor(const QString &key, const QColor &value,
-                               const QColor &defaultValue)
+void FortSettings::setIniColor(const QString &key, const QColor &value, const QColor &defaultValue)
 {
-    setIniValue(key, value.name(),
-                defaultValue.isValid() ? defaultValue.name() : QString());
+    setIniValue(key, value.name(), defaultValue.isValid() ? defaultValue.name() : QString());
 }
 
-QVariant FortSettings::iniValue(const QString &key,
-                                const QVariant &defaultValue) const
+QVariant FortSettings::iniValue(const QString &key, const QVariant &defaultValue) const
 {
     if (key.isEmpty())
         return QVariant();
@@ -398,8 +382,8 @@ QVariant FortSettings::iniValue(const QString &key,
     return value;
 }
 
-void FortSettings::setIniValue(const QString &key, const QVariant &value,
-                               const QVariant &defaultValue)
+void FortSettings::setIniValue(
+        const QString &key, const QVariant &value, const QVariant &defaultValue)
 {
     const QVariant oldValue = iniValue(key, defaultValue);
     if (oldValue == value)
@@ -474,7 +458,6 @@ bool FortSettings::iniSync()
 
 QString FortSettings::startupShortcutPath()
 {
-    return FileUtil::applicationsLocation() + QLatin1Char('\\')
-            + "Startup" + QLatin1Char('\\')
+    return FileUtil::applicationsLocation() + QLatin1Char('\\') + "Startup" + QLatin1Char('\\')
             + qApp->applicationName() + ".lnk";
 }

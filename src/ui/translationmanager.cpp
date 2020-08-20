@@ -7,11 +7,10 @@
 #include "util/fileutil.h"
 #include "util/stringutil.h"
 
-#define TRANSLATION_FILE_PREFIX     "i18n_"
-#define TRANSLATION_FILE_SUFFIX     ".qm"
+#define TRANSLATION_FILE_PREFIX "i18n_"
+#define TRANSLATION_FILE_SUFFIX ".qm"
 
-TranslationManager::TranslationManager(QObject *parent) :
-    QObject(parent)
+TranslationManager::TranslationManager(QObject *parent) : QObject(parent)
 {
     setupTranslation();
 }
@@ -38,8 +37,8 @@ void TranslationManager::setupTranslation()
 
     m_locales.append(QLocale(QLocale::English, QLocale::UnitedStates));
 
-    const auto i18nFileInfos = QDir(i18nDir())
-            .entryInfoList(QStringList() << ("*" TRANSLATION_FILE_SUFFIX));
+    const auto i18nFileInfos =
+            QDir(i18nDir()).entryInfoList(QStringList() << ("*" TRANSLATION_FILE_SUFFIX));
 
     for (const QFileInfo &fileInfo : i18nFileInfos) {
         const QString localeName = fileInfo.completeBaseName().mid(prefixLen);
@@ -59,8 +58,7 @@ QStringList TranslationManager::naturalLabels() const
     list.reserve(m_locales.size());
 
     for (const QLocale &locale : m_locales) {
-        list.append(StringUtil::capitalize(
-                        locale.nativeLanguageName()));
+        list.append(StringUtil::capitalize(locale.nativeLanguageName()));
     }
     return list;
 }
@@ -69,8 +67,7 @@ int TranslationManager::getLanguageByName(const QString &langName) const
 {
     int index = 0;
     for (const QLocale &locale : m_locales) {
-        if (langName == locale.name()
-                || langName == locale.bcp47Name()) {
+        if (langName == locale.name() || langName == locale.bcp47Name()) {
             return index;
         }
         ++index;

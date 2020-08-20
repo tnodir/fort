@@ -1,9 +1,6 @@
 #include "stringlistmodel.h"
 
-StringListModel::StringListModel(QObject *parent) :
-    QAbstractListModel(parent)
-{
-}
+StringListModel::StringListModel(QObject *parent) : QAbstractListModel(parent) { }
 
 int StringListModel::rowCount(const QModelIndex &parent) const
 {
@@ -14,8 +11,7 @@ int StringListModel::rowCount(const QModelIndex &parent) const
 
 QVariant StringListModel::data(const QModelIndex &index, int role) const
 {
-    if ((role == Qt::DisplayRole || role == Qt::ToolTipRole)
-            && index.isValid()) {
+    if ((role == Qt::DisplayRole || role == Qt::ToolTipRole) && index.isValid()) {
         return m_list.at(index.row());
     }
     return QVariant();

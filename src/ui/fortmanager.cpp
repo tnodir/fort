@@ -48,8 +48,7 @@
 #include "util/stringutil.h"
 #include "util/window/widgetwindowstatewatcher.h"
 
-FortManager::FortManager(FortSettings *fortSettings,
-                         QObject *parent) :
+FortManager::FortManager(FortSettings *fortSettings, QObject *parent) :
     QObject(parent),
     m_trayIcon(new QSystemTrayIcon(this)),
     m_progWindowState(new WidgetWindowStateWatcher(this)),
@@ -58,8 +57,7 @@ FortManager::FortManager(FortSettings *fortSettings,
     m_graphWindowState(new WidgetWindowStateWatcher(this)),
     m_settings(fortSettings),
     m_quotaManager(new QuotaManager(fortSettings, this)),
-    m_statManager(new StatManager(fortSettings->statFilePath(),
-                                  m_quotaManager, this)),
+    m_statManager(new StatManager(fortSettings->statFilePath(), m_quotaManager, this)),
     m_driverManager(new DriverManager(this)),
     m_envManager(new EnvManager(this)),
     m_confManager(new ConfManager(fortSettings->confFilePath(), this, this)),
@@ -114,17 +112,15 @@ FirewallConf *FortManager::confToEdit() const
 
 void FortManager::setupTranslationManager()
 {
-    TranslationManager::instance()->switchLanguageByName(
-                settings()->language());
+    TranslationManager::instance()->switchLanguageByName(settings()->language());
 
-    connect(TranslationManager::instance(), &TranslationManager::languageChanged,
-            this, &FortManager::retranslateTrayMenu);
+    connect(TranslationManager::instance(), &TranslationManager::languageChanged, this,
+            &FortManager::retranslateTrayMenu);
 }
 
 void FortManager::setupThreadPool()
 {
-    QThreadPool::globalInstance()->setMaxThreadCount(
-                qMax(8, QThread::idealThreadCount() * 2));
+    QThreadPool::globalInstance()->setMaxThreadCount(qMax(8, QThread::idealThreadCount() * 2));
 }
 
 void FortManager::installDriver()
@@ -189,29 +185,24 @@ void FortManager::closeLogManager()
 
 void FortManager::setupEnvManager()
 {
-    connect(m_nativeEventFilter, &NativeEventFilter::environmentChanged,
-            envManager(), &EnvManager::onEnvironmentChanged);
+    connect(m_nativeEventFilter, &NativeEventFilter::environmentChanged, envManager(),
+            &EnvManager::onEnvironmentChanged);
 
-    connect(envManager(), &EnvManager::environmentUpdated, this, [&] {
-        updateDriverConf();
-    });
+    connect(envManager(), &EnvManager::environmentUpdated, this, [&] { updateDriverConf(); });
 }
 
 void FortManager::setupStatManager()
 {
     m_statManager->initialize();
 
-    connect(m_quotaManager, &QuotaManager::alert,
-            this, &FortManager::showInfoBox);
+    connect(m_quotaManager, &QuotaManager::alert, this, &FortManager::showInfoBox);
 }
 
 void FortManager::setupConfManager()
 {
     confManager()->initialize();
 
-    connect(confManager(), &ConfManager::alertedAppAdded, this, [&] {
-        updateTrayIcon(true);
-    });
+    connect(confManager(), &ConfManager::alertedAppAdded, this, [&] { updateTrayIcon(true); });
 }
 
 void FortManager::setupLogger()
@@ -241,30 +232,30 @@ void FortManager::setupTrayIcon()
 
     connect(m_trayIcon, &QSystemTrayIcon::activated, this,
             [this](QSystemTrayIcon::ActivationReason reason) {
-        switch (reason) {
-        case QSystemTrayIcon::Trigger:
-            m_trayTriggered = false;
-            QTimer::singleShot(QApplication::doubleClickInterval(), this, [this] {
-                if (!m_trayTriggered) {
+                switch (reason) {
+                case QSystemTrayIcon::Trigger:
+                    m_trayTriggered = false;
+                    QTimer::singleShot(QApplication::doubleClickInterval(), this, [this] {
+                        if (!m_trayTriggered) {
+                            m_trayTriggered = true;
+                            showProgramsWindow();
+                        }
+                    });
+                    break;
+                case QSystemTrayIcon::DoubleClick:
+                    if (!m_trayTriggered) {
+                        m_trayTriggered = true;
+                        showOptionsWindow();
+                    }
+                    break;
+                case QSystemTrayIcon::Context:
                     m_trayTriggered = true;
-                    showProgramsWindow();
+                    break;
+                case QSystemTrayIcon::Unknown:
+                case QSystemTrayIcon::MiddleClick:
+                    break;
                 }
             });
-            break;
-        case QSystemTrayIcon::DoubleClick:
-            if (!m_trayTriggered) {
-                m_trayTriggered = true;
-                showOptionsWindow();
-            }
-            break;
-        case QSystemTrayIcon::Context:
-            m_trayTriggered = true;
-            break;
-        case QSystemTrayIcon::Unknown:
-        case QSystemTrayIcon::MiddleClick:
-            break;
-        }
-    });
 
     connect(m_trayIcon, &QSystemTrayIcon::messageClicked, this, [&] {
         switch (m_lastMessageType) {
@@ -276,10 +267,8 @@ void FortManager::setupTrayIcon()
         }
     });
 
-    connect(confManager(), &ConfManager::confSaved,
-            this, &FortManager::updateTrayMenu);
-    connect(this, &FortManager::optWindowChanged,
-            this, &FortManager::updateTrayMenuFlags);
+    connect(confManager(), &ConfManager::confSaved, this, &FortManager::updateTrayMenu);
+    connect(this, &FortManager::optWindowChanged, this, &FortManager::updateTrayMenuFlags);
 
     updateTrayIcon();
     updateTrayMenu();
@@ -307,9 +296,7 @@ bool FortManager::setupProgramsWindow()
 
     m_progWindowState->install(m_progWindow);
 
-    connect(m_progWindow, &ProgramsWindow::activationChanged, this, [&] {
-        updateTrayIcon(false);
-    });
+    connect(m_progWindow, &ProgramsWindow::activationChanged, this, [&] { updateTrayIcon(false); });
 
     return true;
 }
@@ -354,8 +341,7 @@ void FortManager::showTrayIcon()
     m_trayIcon->show();
 }
 
-void FortManager::showTrayMessage(const QString &message,
-                                  FortManager::TrayMessageType type)
+void FortManager::showTrayMessage(const QString &message, FortManager::TrayMessageType type)
 {
     m_lastMessageType = type;
     m_trayIcon->showMessage(QGuiApplication::applicationDisplayName(), message);
@@ -364,15 +350,15 @@ void FortManager::showTrayMessage(const QString &message,
 void FortManager::showTrayMenu(QMouseEvent *event)
 {
     QMenu *menu = m_trayIcon->contextMenu();
-    if (!menu) return;
+    if (!menu)
+        return;
 
     menu->popup(event->globalPos());
 }
 
 void FortManager::showProgramsWindow()
 {
-    if (!(m_progWindow && m_progWindow->isVisible())
-            && !checkPassword())
+    if (!(m_progWindow && m_progWindow->isVisible()) && !checkPassword())
         return;
 
     if (!m_progWindow) {
@@ -400,8 +386,7 @@ void FortManager::closeProgramsWindow()
 
 void FortManager::showOptionsWindow()
 {
-    if (!(m_optWindow && m_optWindow->isVisible())
-            && !checkPassword())
+    if (!(m_optWindow && m_optWindow->isVisible()) && !checkPassword())
         return;
 
     if (!m_optWindow) {
@@ -437,8 +422,7 @@ void FortManager::closeOptionsWindow()
 
 void FortManager::showZonesWindow()
 {
-    if (!(m_zoneWindow && m_zoneWindow->isVisible())
-            && !checkPassword())
+    if (!(m_zoneWindow && m_zoneWindow->isVisible()) && !checkPassword())
         return;
 
     if (!m_zoneWindow) {
@@ -471,15 +455,11 @@ void FortManager::showGraphWindow()
 
         m_graphWindowState->install(m_graphWindow);
 
-        connect(m_graphWindow, &GraphWindow::aboutToClose, this, [this] {
-            closeGraphWindow();
-        });
+        connect(m_graphWindow, &GraphWindow::aboutToClose, this, [this] { closeGraphWindow(); });
 
-        connect(m_graphWindow, &GraphWindow::mouseRightClick,
-                this, &FortManager::showTrayMenu);
+        connect(m_graphWindow, &GraphWindow::mouseRightClick, this, &FortManager::showTrayMenu);
 
-        connect(m_statManager, &StatManager::trafficAdded,
-                m_graphWindow, &GraphWindow::addTraffic);
+        connect(m_statManager, &StatManager::trafficAdded, m_graphWindow, &GraphWindow::addTraffic);
     }
 
     m_graphWindow->show();
@@ -552,29 +532,24 @@ bool FortManager::checkPassword()
     g_passwordDialogOpened = true;
 
     const QString password = QInputDialog::getText(
-                &m_window, tr("Password input"), tr("Please enter the password"),
-                QLineEdit::Password);
+            &m_window, tr("Password input"), tr("Please enter the password"), QLineEdit::Password);
 
     g_passwordDialogOpened = false;
 
-    return !password.isEmpty()
-            && StringUtil::cryptoHash(password) == passwordHash;
+    return !password.isEmpty() && StringUtil::cryptoHash(password) == passwordHash;
 }
 
-void FortManager::showErrorBox(const QString &text,
-                               const QString &title)
+void FortManager::showErrorBox(const QString &text, const QString &title)
 {
     QMessageBox::warning(&m_window, title, text);
 }
 
-void FortManager::showInfoBox(const QString &text,
-                              const QString &title)
+void FortManager::showInfoBox(const QString &text, const QString &title)
 {
     QMessageBox::information(&m_window, title, text);
 }
 
-bool FortManager::showQuestionBox(const QString &text,
-                                  const QString &title)
+bool FortManager::showQuestionBox(const QString &text, const QString &title)
 {
     return QMessageBox::question(&m_window, title, text) == QMessageBox::Yes;
 }
@@ -622,8 +597,8 @@ bool FortManager::loadConf()
     QString viaVersion;
     if (!settings()->confCanMigrate(viaVersion)) {
         showInfoBox(tr("Please first install Fort Firewall v%1 and save Options from it.")
-                    .arg(viaVersion));
-        abort();  //  Abort the program
+                            .arg(viaVersion));
+        abort(); //  Abort the program
     }
 
     if (!confManager()->load(*conf()))
@@ -693,9 +668,8 @@ void FortManager::saveProgWindowState()
 
 void FortManager::restoreProgWindowState()
 {
-    m_progWindowState->restore(m_progWindow, QSize(1024, 768),
-                               settings()->progWindowGeometry(),
-                               settings()->progWindowMaximized());
+    m_progWindowState->restore(m_progWindow, QSize(1024, 768), settings()->progWindowGeometry(),
+            settings()->progWindowMaximized());
 
     emit afterRestoreProgWindowState();
 }
@@ -710,9 +684,8 @@ void FortManager::saveOptWindowState()
 
 void FortManager::restoreOptWindowState()
 {
-    m_optWindowState->restore(m_optWindow, QSize(1024, 768),
-                              settings()->optWindowGeometry(),
-                              settings()->optWindowMaximized());
+    m_optWindowState->restore(m_optWindow, QSize(1024, 768), settings()->optWindowGeometry(),
+            settings()->optWindowMaximized());
 
     emit afterRestoreOptWindowState();
 }
@@ -727,9 +700,8 @@ void FortManager::saveZoneWindowState()
 
 void FortManager::restoreZoneWindowState()
 {
-    m_zoneWindowState->restore(m_zoneWindow, QSize(1024, 768),
-                               settings()->zoneWindowGeometry(),
-                               settings()->zoneWindowMaximized());
+    m_zoneWindowState->restore(m_zoneWindow, QSize(1024, 768), settings()->zoneWindowGeometry(),
+            settings()->zoneWindowMaximized());
 
     emit afterRestoreZoneWindowState();
 }
@@ -743,17 +715,14 @@ void FortManager::saveGraphWindowState(bool visible)
 
 void FortManager::restoreGraphWindowState()
 {
-    m_graphWindowState->restore(m_graphWindow, QSize(400, 300),
-                                settings()->graphWindowGeometry(),
-                                settings()->graphWindowMaximized());
+    m_graphWindowState->restore(m_graphWindow, QSize(400, 300), settings()->graphWindowGeometry(),
+            settings()->graphWindowMaximized());
 }
 
 void FortManager::updateTrayIcon(bool alerted)
 {
-    const auto icon = alerted
-            ? GuiUtil::overlayIcon(":/images/sheild-96.png",
-                                   ":/images/error.png")
-            : QIcon(":/images/sheild-96.png");
+    const auto icon = alerted ? GuiUtil::overlayIcon(":/images/sheild-96.png", ":/images/error.png")
+                              : QIcon(":/images/sheild-96.png");
 
     m_trayIcon->setIcon(icon);
 }
@@ -782,66 +751,47 @@ void FortManager::createTrayMenu()
 
     QMenu *menu = new QMenu(&m_window);
 
-    m_programsAction = addAction(
-                menu, QIcon(":/images/application_cascade.png"), QString(),
-                this, SLOT(showProgramsWindow()));
+    m_programsAction = addAction(menu, QIcon(":/images/application_cascade.png"), QString(), this,
+            SLOT(showProgramsWindow()));
     addHotKey(m_programsAction, settings()->hotKeyPrograms(), hotKeyEnabled);
 
-    m_optionsAction = addAction(
-                menu, QIcon(":/images/cog.png"), QString(),
-                this, SLOT(showOptionsWindow()));
+    m_optionsAction =
+            addAction(menu, QIcon(":/images/cog.png"), QString(), this, SLOT(showOptionsWindow()));
     addHotKey(m_optionsAction, settings()->hotKeyOptions(), hotKeyEnabled);
 
-    m_zonesAction = addAction(
-                menu, QIcon(":/images/map.png"), QString(),
-                this, SLOT(showZonesWindow()));
+    m_zonesAction =
+            addAction(menu, QIcon(":/images/map.png"), QString(), this, SLOT(showZonesWindow()));
     addHotKey(m_zonesAction, settings()->hotKeyZones(), hotKeyEnabled);
 
-    m_graphWindowAction = addAction(
-                menu, QIcon(":/images/chart_bar.png"), QString(),
-                this, SLOT(switchGraphWindow()), true,
-                (m_graphWindow != nullptr));
-    addHotKey(m_graphWindowAction, settings()->hotKeyGraph(),
-              conf()->logStat());
+    m_graphWindowAction = addAction(menu, QIcon(":/images/chart_bar.png"), QString(), this,
+            SLOT(switchGraphWindow()), true, (m_graphWindow != nullptr));
+    addHotKey(m_graphWindowAction, settings()->hotKeyGraph(), conf()->logStat());
 
     menu->addSeparator();
 
-    m_filterEnabledAction = addAction(
-                menu, QIcon(), QString(),
-                this, SLOT(saveTrayFlags()), true);
-    addHotKey(m_filterEnabledAction,
-              settings()->hotKeyFilter(), hotKeyEnabled);
+    m_filterEnabledAction = addAction(menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
+    addHotKey(m_filterEnabledAction, settings()->hotKeyFilter(), hotKeyEnabled);
 
-    m_stopTrafficAction = addAction(
-                menu, QIcon(), QString(),
-                this, SLOT(saveTrayFlags()), true);
-    addHotKey(m_stopTrafficAction,
-              settings()->hotKeyStopTraffic(), hotKeyEnabled);
+    m_stopTrafficAction = addAction(menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
+    addHotKey(m_stopTrafficAction, settings()->hotKeyStopTraffic(), hotKeyEnabled);
 
-    m_stopInetTrafficAction = addAction(
-                menu, QIcon(), QString(),
-                this, SLOT(saveTrayFlags()), true);
-    addHotKey(m_stopInetTrafficAction,
-              settings()->hotKeyStopInetTraffic(), hotKeyEnabled);
+    m_stopInetTrafficAction =
+            addAction(menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
+    addHotKey(m_stopInetTrafficAction, settings()->hotKeyStopInetTraffic(), hotKeyEnabled);
 
-    m_allowAllNewAction = addAction(
-                menu, QIcon(), QString(),
-                this, SLOT(saveTrayFlags()), true);
-    addHotKey(m_allowAllNewAction,
-              settings()->hotKeyAllowAllNew(), hotKeyEnabled);
+    m_allowAllNewAction = addAction(menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
+    addHotKey(m_allowAllNewAction, settings()->hotKeyAllowAllNew(), hotKeyEnabled);
 
     menu->addSeparator();
 
     m_appGroupActions.clear();
     int appGroupIndex = 0;
     for (const AppGroup *appGroup : conf()->appGroups()) {
-        QAction *a = addAction(
-                    menu, QIcon(":/images/application_double.png"),
-                    appGroup->menuLabel(), this, SLOT(saveTrayFlags()), true);
+        QAction *a = addAction(menu, QIcon(":/images/application_double.png"),
+                appGroup->menuLabel(), this, SLOT(saveTrayFlags()), true);
 
         const QString shortcutText =
-                settings()->hotKeyAppGroupModifiers()
-                + "+F" + QString::number(++appGroupIndex);
+                settings()->hotKeyAppGroupModifiers() + "+F" + QString::number(++appGroupIndex);
 
         addHotKey(a, shortcutText, hotKeyEnabled);
 
@@ -849,9 +799,7 @@ void FortManager::createTrayMenu()
     }
 
     menu->addSeparator();
-    m_quitAction = addAction(
-                menu, QIcon(":/images/cross.png"), tr("Quit"),
-                this, SLOT(exit()));
+    m_quitAction = addAction(menu, QIcon(":/images/cross.png"), tr("Quit"), this, SLOT(exit()));
     addHotKey(m_quitAction, settings()->hotKeyQuit(), hotKeyEnabled);
 
     m_trayIcon->setContextMenu(menu);
@@ -896,8 +844,7 @@ void FortManager::retranslateTrayMenu()
     m_quitAction->setText(tr("Quit"));
 }
 
-void FortManager::addHotKey(QAction *action, const QString &shortcutText,
-                            bool hotKeyEnabled)
+void FortManager::addHotKey(QAction *action, const QString &shortcutText, bool hotKeyEnabled)
 {
     if (hotKeyEnabled && !shortcutText.isEmpty()) {
         const QKeySequence shortcut = QKeySequence::fromString(shortcutText);
@@ -911,10 +858,8 @@ void FortManager::removeHotKeys()
     m_hotKeyManager->removeActions();
 }
 
-QAction *FortManager::addAction(QWidget *widget,
-                                const QIcon &icon, const QString &text,
-                                const QObject *receiver, const char *member,
-                                bool checkable, bool checked)
+QAction *FortManager::addAction(QWidget *widget, const QIcon &icon, const QString &text,
+        const QObject *receiver, const char *member, bool checkable, bool checked)
 {
     auto action = new QAction(icon, text, widget);
 
@@ -930,8 +875,8 @@ QAction *FortManager::addAction(QWidget *widget,
     return action;
 }
 
-void FortManager::setActionCheckable(QAction *action, bool checked,
-                                     const QObject *receiver, const char *member)
+void FortManager::setActionCheckable(
+        QAction *action, bool checked, const QObject *receiver, const char *member)
 {
     action->setCheckable(true);
     action->setChecked(checked);

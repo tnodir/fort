@@ -6,8 +6,7 @@
 class LogEntryProcNew : public LogEntry
 {
 public:
-    explicit LogEntryProcNew(quint32 pid = 0,
-                             const QString &kernelPath = QString());
+    explicit LogEntryProcNew(quint32 pid = 0, const QString &kernelPath = QString());
 
     LogEntry::LogType type() const override { return ProcNew; }
 

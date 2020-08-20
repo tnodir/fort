@@ -14,23 +14,20 @@ class TaskInfo : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
-    Q_PROPERTY(int intervalHours READ intervalHours WRITE setIntervalHours NOTIFY intervalHoursChanged)
+    Q_PROPERTY(
+            int intervalHours READ intervalHours WRITE setIntervalHours NOTIFY intervalHoursChanged)
     Q_PROPERTY(QString title READ title CONSTANT)
     Q_PROPERTY(TaskInfo::TaskType type READ type WRITE setType NOTIFY typeChanged)
     Q_PROPERTY(QDateTime lastRun READ lastRun WRITE setLastRun NOTIFY lastRunChanged)
-    Q_PROPERTY(QDateTime lastSuccess READ lastSuccess WRITE setLastSuccess NOTIFY lastSuccessChanged)
+    Q_PROPERTY(
+            QDateTime lastSuccess READ lastSuccess WRITE setLastSuccess NOTIFY lastSuccessChanged)
     Q_PROPERTY(bool running READ running NOTIFY taskWorkerChanged)
 
 public:
-    enum TaskType : qint16 {
-        TypeNone = -1,
-        UpdateChecker = 0,
-        ZoneDownloader
-    };
+    enum TaskType : qint16 { TypeNone = -1, UpdateChecker = 0, ZoneDownloader };
     Q_ENUM(TaskType)
 
-    explicit TaskInfo(TaskInfo::TaskType type,
-                      TaskManager &taskManager);
+    explicit TaskInfo(TaskInfo::TaskType type, TaskManager &taskManager);
     ~TaskInfo() override;
     CLASS_DELETE_COPY_MOVE(TaskInfo)
 
@@ -106,9 +103,9 @@ private:
     TaskWorker *createWorker();
 
 private:
-    bool m_enabled   : 1;
-    bool m_running   : 1;
-    bool m_aborted   : 1;  // transient
+    bool m_enabled : 1;
+    bool m_running : 1;
+    bool m_aborted : 1; // transient
 
     quint16 m_intervalHours = 24;
 

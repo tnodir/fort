@@ -5,13 +5,11 @@
 #include "../../log/logmanager.h"
 #include "../../translationmanager.h"
 
-ProgramsController::ProgramsController(FortManager *fortManager,
-                                       QObject *parent) :
-    QObject(parent),
-    m_fortManager(fortManager)
+ProgramsController::ProgramsController(FortManager *fortManager, QObject *parent) :
+    QObject(parent), m_fortManager(fortManager)
 {
-    connect(translationManager(), &TranslationManager::languageChanged,
-            this, &ProgramsController::retranslateUi);
+    connect(translationManager(), &TranslationManager::languageChanged, this,
+            &ProgramsController::retranslateUi);
 }
 
 FortSettings *ProgramsController::settings() const

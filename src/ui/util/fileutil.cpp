@@ -41,14 +41,12 @@ QString FileUtil::kernelNameToDrive(const QString &kernelName)
 // Convert "C:" to "\\Device\\HarddiskVolume1"
 QString FileUtil::driveToKernelName(const QString &drive)
 {
-    char driveName[3] = {drive.at(0).toLatin1(), ':', '\0'};
+    char driveName[3] = { drive.at(0).toLatin1(), ':', '\0' };
 
     char buf[MAX_PATH];
-    const int len = QueryDosDeviceA((LPCSTR) driveName,
-                                    buf, MAX_PATH);
+    const int len = QueryDosDeviceA((LPCSTR) driveName, buf, MAX_PATH);
 
-    return (len > 0) ? QString::fromLatin1(buf)
-                     : QString();
+    return (len > 0) ? QString::fromLatin1(buf) : QString();
 }
 
 // Convert "\\Device\\HarddiskVolume1\\path" to "C:\\path"
@@ -84,8 +82,7 @@ QString FileUtil::pathToKernelPath(const QString &path, bool lower)
                 if (isSystemApp(path))
                     return systemApp();
             }
-        } else if ((char1 == '?' || char1 == '*')
-                   && path.at(1) == ':') {
+        } else if ((char1 == '?' || char1 == '*') && path.at(1) == ':') {
             // Replace "?:\\" with "\\Device\\*\\"
             kernelPath = "\\Device\\*" + path.mid(2);
         }
@@ -172,14 +169,13 @@ bool FileUtil::writeFile(const QString &filePath, const QString &text)
 
 bool FileUtil::writeFileData(const QString &filePath, const QByteArray &data)
 {
-    makePathForFile(filePath);  // create destination directory
+    makePathForFile(filePath); // create destination directory
 
     QFile file(filePath);
     if (!file.open(QFile::WriteOnly | QFile::Truncate))
         return false;
 
-    return file.write(data) == data.size()
-            && file.flush();
+    return file.write(data) == data.size() && file.flush();
 }
 
 QDateTime FileUtil::fileModTime(const QString &filePath)

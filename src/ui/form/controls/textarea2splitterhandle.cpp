@@ -10,8 +10,7 @@
 #include "../controls/controlutil.h"
 #include "textarea2splitter.h"
 
-TextArea2SplitterHandle::TextArea2SplitterHandle(Qt::Orientation o,
-                                                 QSplitter *parent) :
+TextArea2SplitterHandle::TextArea2SplitterHandle(Qt::Orientation o, QSplitter *parent) :
     QSplitterHandle(o, parent)
 {
     setupUi();
@@ -38,35 +37,30 @@ void TextArea2SplitterHandle::paintEvent(QPaintEvent *)
     QStyleOption opt(0);
     opt.rect = rect;
     opt.palette = palette();
-    opt.state = (orientation() == Qt::Horizontal
-                 ? QStyle::State_Horizontal : QStyle::State_None)
+    opt.state = (orientation() == Qt::Horizontal ? QStyle::State_Horizontal : QStyle::State_None)
             | (isEnabled() ? QStyle::State_Enabled : QStyle::State_None);
     parentWidget()->style()->drawControl(QStyle::CE_Splitter, &opt, &p, splitter());
 }
 
 void TextArea2SplitterHandle::setupUi()
 {
-    const auto direction = (orientation() == Qt::Horizontal)
-            ? QBoxLayout::TopToBottom : QBoxLayout::LeftToRight;
+    const auto direction =
+            (orientation() == Qt::Horizontal) ? QBoxLayout::TopToBottom : QBoxLayout::LeftToRight;
 
     auto layout = new QBoxLayout(direction);
     layout->setContentsMargins(0, 0, 0, 0);
 
-    m_btMoveAllFrom1To2 = ControlUtil::createSplitterButton(":/images/control_fastforward.png", [&] {
-        TextAreaUtil::moveAllLines(textArea1(), textArea2());
-    });
-    m_btMoveSelectedFrom1To2 = ControlUtil::createSplitterButton(":/images/control_play.png", [&] {
-        TextAreaUtil::moveSelectedLines(textArea1(), textArea2());
-    });
-    m_btInterchangeAll = ControlUtil::createSplitterButton(":/images/control_repeat.png", [&] {
-        TextAreaUtil::interchangeAllLines(textArea1(), textArea2());
-    });
-    m_btMoveSelectedFrom2To1 = ControlUtil::createSplitterButton(":/images/control_play_backward.png", [&] {
-        TextAreaUtil::moveSelectedLines(textArea2(), textArea1());
-    });
-    m_btMoveAllFrom2To1 = ControlUtil::createSplitterButton(":/images/control_rewind.png", [&] {
-        TextAreaUtil::moveAllLines(textArea2(), textArea1());
-    });
+    m_btMoveAllFrom1To2 = ControlUtil::createSplitterButton(":/images/control_fastforward.png",
+            [&] { TextAreaUtil::moveAllLines(textArea1(), textArea2()); });
+    m_btMoveSelectedFrom1To2 = ControlUtil::createSplitterButton(":/images/control_play.png",
+            [&] { TextAreaUtil::moveSelectedLines(textArea1(), textArea2()); });
+    m_btInterchangeAll = ControlUtil::createSplitterButton(":/images/control_repeat.png",
+            [&] { TextAreaUtil::interchangeAllLines(textArea1(), textArea2()); });
+    m_btMoveSelectedFrom2To1 =
+            ControlUtil::createSplitterButton(":/images/control_play_backward.png",
+                    [&] { TextAreaUtil::moveSelectedLines(textArea2(), textArea1()); });
+    m_btMoveAllFrom2To1 = ControlUtil::createSplitterButton(":/images/control_rewind.png",
+            [&] { TextAreaUtil::moveAllLines(textArea2(), textArea1()); });
 
     m_buttonsLayout = new QBoxLayout(direction);
     m_buttonsLayout->setContentsMargins(0, 0, 0, 0);

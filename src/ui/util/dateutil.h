@@ -35,8 +35,7 @@ public:
     Q_INVOKABLE static QString formatTime(quint8 hour, quint8 minute);
     static QString reformatTime(const QString &time);
 
-    static void parseTime(const QString &time,
-                          quint8 &hour, quint8 &minute);
+    static void parseTime(const QString &time, quint8 &hour, quint8 &minute);
 
     Q_INVOKABLE static quint8 parseTimeHour(const QString &period);
     Q_INVOKABLE static quint8 parseTimeMinute(const QString &period);

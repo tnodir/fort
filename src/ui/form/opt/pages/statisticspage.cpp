@@ -36,24 +36,15 @@
 
 namespace {
 
-const ValuesList trafKeepDayValues = {
-    60, -1, 90, 180, 365, 365 * 3
-};
-const ValuesList trafKeepMonthValues = {
-    2, -1, 3, 6, 12, 36
-};
-const ValuesList quotaValues = {
-    10, 0, 100, 500, 1024, 8 * 1024, 10 * 1024, 30 * 1024,
-    50 * 1024, 100 * 1024
-};
+const ValuesList trafKeepDayValues = { 60, -1, 90, 180, 365, 365 * 3 };
+const ValuesList trafKeepMonthValues = { 2, -1, 3, 6, 12, 36 };
+const ValuesList quotaValues = { 10, 0, 100, 500, 1024, 8 * 1024, 10 * 1024, 30 * 1024, 50 * 1024,
+    100 * 1024 };
 
 }
 
-StatisticsPage::StatisticsPage(OptionsController *ctrl,
-                               QWidget *parent) :
-    BasePage(ctrl, parent),
-    m_graphEdited(false),
-    m_pageUpdating(false)
+StatisticsPage::StatisticsPage(OptionsController *ctrl, QWidget *parent) :
+    BasePage(ctrl, parent), m_graphEdited(false), m_pageUpdating(false)
 {
     setupTrafListModel();
 
@@ -89,7 +80,8 @@ void StatisticsPage::onEditResetted()
 
 void StatisticsPage::onSaved()
 {
-    if (!graphEdited()) return;
+    if (!graphEdited())
+        return;
 
     settings()->setGraphWindowAlwaysOnTop(m_cbGraphAlwaysOnTop->isChecked());
     settings()->setGraphWindowFrameless(m_cbGraphFrameless->isChecked());
@@ -175,10 +167,8 @@ void StatisticsPage::onRetranslateUi()
 
 void StatisticsPage::retranslateTrafKeepDayNames()
 {
-    const QStringList list = {
-        tr("Custom"), tr("Forever"), tr("3 months"),
-        tr("6 months"), tr("1 year"), tr("3 years")
-    };
+    const QStringList list = { tr("Custom"), tr("Forever"), tr("3 months"), tr("6 months"),
+        tr("1 year"), tr("3 years") };
 
     m_lscTrafHourKeepDays->setNames(list);
     m_lscTrafDayKeepDays->setNames(list);
@@ -186,10 +176,8 @@ void StatisticsPage::retranslateTrafKeepDayNames()
 
 void StatisticsPage::retranslateTrafKeepMonthNames()
 {
-    const QStringList list = {
-        tr("Custom"), tr("Forever"), tr("3 months"),
-        tr("6 months"), tr("1 year"), tr("3 years")
-    };
+    const QStringList list = { tr("Custom"), tr("Forever"), tr("3 months"), tr("6 months"),
+        tr("1 year"), tr("3 years") };
 
     m_lscTrafMonthKeepMonths->setNames(list);
 }
@@ -214,9 +202,7 @@ void StatisticsPage::retranslateQuotaNames()
 
 void StatisticsPage::retranslateTrafUnitNames()
 {
-    const QStringList list = {
-        tr("Adaptive"), tr("Bytes"), "KiB", "MiB", "GiB", "TiB"
-    };
+    const QStringList list = { tr("Adaptive"), tr("Bytes"), "KiB", "MiB", "GiB", "TiB" };
 
     m_comboTrafUnit->clear();
     m_comboTrafUnit->addItems(list);
@@ -226,9 +212,7 @@ void StatisticsPage::retranslateTrafUnitNames()
 
 void StatisticsPage::retranslateTabBar()
 {
-    const QStringList list = {
-        tr("Hourly"), tr("Daily"), tr("Monthly"), tr("Total")
-    };
+    const QStringList list = { tr("Hourly"), tr("Daily"), tr("Monthly"), tr("Total") };
 
     int index = 0;
     for (const auto &v : list) {
@@ -288,9 +272,8 @@ QLayout *StatisticsPage::setupHeader()
 {
     auto layout = new QHBoxLayout();
 
-    m_btRefresh = ControlUtil::createButton(":/images/arrow_refresh.png", [&] {
-        trafListModel()->reset();
-    });
+    m_btRefresh = ControlUtil::createButton(
+            ":/images/arrow_refresh.png", [&] { trafListModel()->reset(); });
 
     setupClearMenu();
     setupTrafUnits();
@@ -320,7 +303,8 @@ void StatisticsPage::setupClearMenu()
     m_actClearAll = menu->addAction(QString());
 
     connect(m_actRemoveApp, &QAction::triggered, this, [&] {
-        if (!fortManager()->showQuestionBox(tr("Are you sure to remove statistics for selected application?")))
+        if (!fortManager()->showQuestionBox(
+                    tr("Are you sure to remove statistics for selected application?")))
             return;
 
         appStatModel()->remove(appListCurrentIndex());
@@ -400,18 +384,12 @@ void StatisticsPage::setupGraphOptionsMenu()
     connect(m_graphGridColor, &LabelColor::colorChanged, onChanged);
 
     // Menu
-    auto colLayout1 = ControlUtil::createLayoutByWidgets({
-                                                             m_cbGraphAlwaysOnTop, m_cbGraphFrameless,
-                                                             m_cbGraphClickThrough, m_cbGraphHideOnHover,
-                                                             ControlUtil::createSeparator(),
-                                                             m_graphOpacity, m_graphHoverOpacity,
-                                                             m_graphMaxSeconds, nullptr
-                                                         });
-    auto colLayout2 = ControlUtil::createLayoutByWidgets({
-                                                             m_graphColor, m_graphColorIn, m_graphColorOut,
-                                                             m_graphAxisColor, m_graphTickLabelColor,
-                                                             m_graphLabelColor, m_graphGridColor
-                                                         });
+    auto colLayout1 = ControlUtil::createLayoutByWidgets({ m_cbGraphAlwaysOnTop, m_cbGraphFrameless,
+            m_cbGraphClickThrough, m_cbGraphHideOnHover, ControlUtil::createSeparator(),
+            m_graphOpacity, m_graphHoverOpacity, m_graphMaxSeconds, nullptr });
+    auto colLayout2 =
+            ControlUtil::createLayoutByWidgets({ m_graphColor, m_graphColorIn, m_graphColorOut,
+                    m_graphAxisColor, m_graphTickLabelColor, m_graphLabelColor, m_graphGridColor });
     auto layout = new QHBoxLayout();
     layout->addLayout(colLayout1);
     layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
@@ -435,13 +413,10 @@ void StatisticsPage::setupTrafOptionsMenu()
     setupQuotaMonthMb();
 
     // Menu
-    const QList<QWidget *> menuWidgets = {
-        m_cbLogStat, m_ctpActivePeriod, m_lscMonthStart,
-        ControlUtil::createSeparator(),
-        m_lscTrafHourKeepDays, m_lscTrafDayKeepDays, m_lscTrafMonthKeepMonths,
-        ControlUtil::createSeparator(),
-        m_lscQuotaDayMb, m_lscQuotaMonthMb
-    };
+    const QList<QWidget *> menuWidgets = { m_cbLogStat, m_ctpActivePeriod, m_lscMonthStart,
+        ControlUtil::createSeparator(), m_lscTrafHourKeepDays, m_lscTrafDayKeepDays,
+        m_lscTrafMonthKeepMonths, ControlUtil::createSeparator(), m_lscQuotaDayMb,
+        m_lscQuotaMonthMb };
     auto layout = ControlUtil::createLayoutByWidgets(menuWidgets);
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
@@ -476,26 +451,28 @@ void StatisticsPage::setupActivePeriod()
 
         ctrl()->setConfFlagsEdited(true);
     });
-    connect(m_ctpActivePeriod->timeEdit1(), &QTimeEdit::userTimeChanged, this, [&](const QTime &time) {
-        const auto timeStr = CheckTimePeriod::fromTime(time);
+    connect(m_ctpActivePeriod->timeEdit1(), &QTimeEdit::userTimeChanged, this,
+            [&](const QTime &time) {
+                const auto timeStr = CheckTimePeriod::fromTime(time);
 
-        if (conf()->activePeriodFrom() == timeStr)
-            return;
+                if (conf()->activePeriodFrom() == timeStr)
+                    return;
 
-        conf()->setActivePeriodFrom(timeStr);
+                conf()->setActivePeriodFrom(timeStr);
 
-        ctrl()->setConfFlagsEdited(true);
-    });
-    connect(m_ctpActivePeriod->timeEdit2(), &QTimeEdit::userTimeChanged, this, [&](const QTime &time) {
-        const auto timeStr = CheckTimePeriod::fromTime(time);
+                ctrl()->setConfFlagsEdited(true);
+            });
+    connect(m_ctpActivePeriod->timeEdit2(), &QTimeEdit::userTimeChanged, this,
+            [&](const QTime &time) {
+                const auto timeStr = CheckTimePeriod::fromTime(time);
 
-        if (conf()->activePeriodTo() == timeStr)
-            return;
+                if (conf()->activePeriodTo() == timeStr)
+                    return;
 
-        conf()->setActivePeriodTo(timeStr);
+                conf()->setActivePeriodTo(timeStr);
 
-        ctrl()->setConfFlagsEdited(true);
-    });
+                ctrl()->setConfFlagsEdited(true);
+            });
 }
 
 void StatisticsPage::setupMonthStart()
@@ -513,14 +490,15 @@ void StatisticsPage::setupMonthStart()
         m_lscMonthStart->setNamesByValues();
     }
 
-    connect(m_lscMonthStart->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this, [&](int value) {
-        if (conf()->monthStart() == value)
-            return;
+    connect(m_lscMonthStart->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
+            [&](int value) {
+                if (conf()->monthStart() == value)
+                    return;
 
-        conf()->setMonthStart(value);
+                conf()->setMonthStart(value);
 
-        ctrl()->setConfFlagsEdited(true);
-    });
+                ctrl()->setConfFlagsEdited(true);
+            });
 }
 
 void StatisticsPage::setupTrafHourKeepDays()
@@ -528,14 +506,15 @@ void StatisticsPage::setupTrafHourKeepDays()
     m_lscTrafHourKeepDays = createSpinCombo(-1, 9999);
     m_lscTrafHourKeepDays->setValues(trafKeepDayValues);
 
-    connect(m_lscTrafHourKeepDays->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this, [&](int value) {
-        if (conf()->trafHourKeepDays() == value)
-            return;
+    connect(m_lscTrafHourKeepDays->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
+            [&](int value) {
+                if (conf()->trafHourKeepDays() == value)
+                    return;
 
-        conf()->setTrafHourKeepDays(value);
+                conf()->setTrafHourKeepDays(value);
 
-        ctrl()->setConfFlagsEdited(true);
-    });
+                ctrl()->setConfFlagsEdited(true);
+            });
 }
 
 void StatisticsPage::setupTrafDayKeepDays()
@@ -543,14 +522,15 @@ void StatisticsPage::setupTrafDayKeepDays()
     m_lscTrafDayKeepDays = createSpinCombo(-1, 9999);
     m_lscTrafDayKeepDays->setValues(trafKeepDayValues);
 
-    connect(m_lscTrafDayKeepDays->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this, [&](int value) {
-        if (conf()->trafDayKeepDays() == value)
-            return;
+    connect(m_lscTrafDayKeepDays->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
+            [&](int value) {
+                if (conf()->trafDayKeepDays() == value)
+                    return;
 
-        conf()->setTrafDayKeepDays(value);
+                conf()->setTrafDayKeepDays(value);
 
-        ctrl()->setConfFlagsEdited(true);
-    });
+                ctrl()->setConfFlagsEdited(true);
+            });
 }
 
 void StatisticsPage::setupTrafMonthKeepMonths()
@@ -558,14 +538,15 @@ void StatisticsPage::setupTrafMonthKeepMonths()
     m_lscTrafMonthKeepMonths = createSpinCombo(-1, 9999);
     m_lscTrafMonthKeepMonths->setValues(trafKeepMonthValues);
 
-    connect(m_lscTrafMonthKeepMonths->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this, [&](int value) {
-        if (conf()->trafMonthKeepMonths() == value)
-            return;
+    connect(m_lscTrafMonthKeepMonths->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
+            [&](int value) {
+                if (conf()->trafMonthKeepMonths() == value)
+                    return;
 
-        conf()->setTrafMonthKeepMonths(value);
+                conf()->setTrafMonthKeepMonths(value);
 
-        ctrl()->setConfFlagsEdited(true);
-    });
+                ctrl()->setConfFlagsEdited(true);
+            });
 }
 
 void StatisticsPage::setupQuotaDayMb()
@@ -573,16 +554,17 @@ void StatisticsPage::setupQuotaDayMb()
     m_lscQuotaDayMb = createSpinCombo(0, 1024 * 1024, " MiB");
     m_lscQuotaDayMb->setValues(quotaValues);
 
-    connect(m_lscQuotaDayMb->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this, [&](int value) {
-        const quint32 mbytes = quint32(value);
+    connect(m_lscQuotaDayMb->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
+            [&](int value) {
+                const quint32 mbytes = quint32(value);
 
-        if (conf()->quotaDayMb() == mbytes)
-            return;
+                if (conf()->quotaDayMb() == mbytes)
+                    return;
 
-        conf()->setQuotaDayMb(mbytes);
+                conf()->setQuotaDayMb(mbytes);
 
-        ctrl()->setConfFlagsEdited(true);
-    });
+                ctrl()->setConfFlagsEdited(true);
+            });
 }
 
 void StatisticsPage::setupQuotaMonthMb()
@@ -590,16 +572,17 @@ void StatisticsPage::setupQuotaMonthMb()
     m_lscQuotaMonthMb = createSpinCombo(0, 1024 * 1024, " MiB");
     m_lscQuotaMonthMb->setValues(quotaValues);
 
-    connect(m_lscQuotaMonthMb->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this, [&](int value) {
-        const quint32 mbytes = quint32(value);
+    connect(m_lscQuotaMonthMb->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
+            [&](int value) {
+                const quint32 mbytes = quint32(value);
 
-        if (conf()->quotaMonthMb() == mbytes)
-            return;
+                if (conf()->quotaMonthMb() == mbytes)
+                    return;
 
-        conf()->setQuotaMonthMb(mbytes);
+                conf()->setQuotaMonthMb(mbytes);
 
-        ctrl()->setConfFlagsEdited(true);
-    });
+                ctrl()->setConfFlagsEdited(true);
+            });
 }
 
 void StatisticsPage::setupAppListView()
@@ -619,7 +602,7 @@ void StatisticsPage::setupTabBar()
     m_tabBar = new QTabBar();
     m_tabBar->setShape(QTabBar::TriangularNorth);
 
-    for (int n = 4; --n >= 0; ) {
+    for (int n = 4; --n >= 0;) {
         m_tabBar->addTab(QString());
     }
 }
@@ -687,12 +670,10 @@ void StatisticsPage::setupAppInfoRow()
 
     m_labelAppCompanyName = ControlUtil::createLabel();
 
-    connect(m_btAppCopyPath, &QAbstractButton::clicked, this, [&] {
-        GuiUtil::setClipboardData(appListCurrentPath());
-    });
-    connect(m_btAppOpenFolder, &QAbstractButton::clicked, this, [&] {
-        OsUtil::openFolder(appListCurrentPath());
-    });
+    connect(m_btAppCopyPath, &QAbstractButton::clicked, this,
+            [&] { GuiUtil::setClipboardData(appListCurrentPath()); });
+    connect(m_btAppOpenFolder, &QAbstractButton::clicked, this,
+            [&] { OsUtil::openFolder(appListCurrentPath()); });
 
     layout->addWidget(m_btAppCopyPath);
     layout->addWidget(m_btAppOpenFolder);
@@ -744,10 +725,8 @@ void StatisticsPage::updatePage()
     m_pageUpdating = true;
 
     m_ctpActivePeriod->checkBox()->setChecked(conf()->activePeriodEnabled());
-    m_ctpActivePeriod->timeEdit1()->setTime(CheckTimePeriod::toTime(
-                                                conf()->activePeriodFrom()));
-    m_ctpActivePeriod->timeEdit2()->setTime(CheckTimePeriod::toTime(
-                                                conf()->activePeriodTo()));
+    m_ctpActivePeriod->timeEdit1()->setTime(CheckTimePeriod::toTime(conf()->activePeriodFrom()));
+    m_ctpActivePeriod->timeEdit2()->setTime(CheckTimePeriod::toTime(conf()->activePeriodTo()));
 
     m_lscMonthStart->spinBox()->setValue(conf()->monthStart());
     m_lscTrafHourKeepDays->spinBox()->setValue(conf()->trafHourKeepDays());
@@ -795,8 +774,7 @@ QString StatisticsPage::appListCurrentPath() const
     return appStatModel()->appPathByRow(appListCurrentIndex());
 }
 
-LabelSpinCombo *StatisticsPage::createSpinCombo(int min, int max,
-                                                const QString &suffix)
+LabelSpinCombo *StatisticsPage::createSpinCombo(int min, int max, const QString &suffix)
 {
     auto c = new LabelSpinCombo();
     c->spinBox()->setRange(min, max);

@@ -34,14 +34,10 @@ class FortManager : public QObject
     Q_OBJECT
 
 public:
-    enum TrayMessageType {
-        MessageOptions,
-        MessageZones
-    };
+    enum TrayMessageType { MessageOptions, MessageZones };
     Q_ENUM(TrayMessageType)
 
-    explicit FortManager(FortSettings *settings,
-                         QObject *parent = nullptr);
+    explicit FortManager(FortSettings *settings, QObject *parent = nullptr);
     ~FortManager() override;
     CLASS_DELETE_COPY_MOVE(FortManager)
 
@@ -77,8 +73,8 @@ public slots:
     void launch();
 
     void showTrayIcon();
-    void showTrayMessage(const QString &message,
-                         FortManager::TrayMessageType type = MessageOptions);
+    void showTrayMessage(
+            const QString &message, FortManager::TrayMessageType type = MessageOptions);
     void showTrayMenu(QMouseEvent *event);
 
     void showProgramsWindow();
@@ -99,12 +95,9 @@ public slots:
 
     bool checkPassword();
 
-    void showErrorBox(const QString &text,
-                      const QString &title = QString());
-    void showInfoBox(const QString &text,
-                     const QString &title = QString());
-    bool showQuestionBox(const QString &text,
-                         const QString &title = QString());
+    void showErrorBox(const QString &text, const QString &title = QString());
+    void showInfoBox(const QString &text, const QString &title = QString());
+    bool showQuestionBox(const QString &text, const QString &title = QString());
 
     bool saveOriginConf(const QString &message);
     bool saveConf(bool onlyFlags = false);
@@ -171,19 +164,17 @@ private:
     void updateTrayMenuFlags();
     void retranslateTrayMenu();
 
-    void addHotKey(QAction *action, const QString &shortcutText,
-                   bool hotKeyEnabled);
+    void addHotKey(QAction *action, const QString &shortcutText, bool hotKeyEnabled);
     void removeHotKeys();
 
-    static QAction *addAction(QWidget *widget,
-                              const QIcon &icon, const QString &text,
-                              const QObject *receiver = nullptr, const char *member = nullptr,
-                              bool checkable = false, bool checked = false);
+    static QAction *addAction(QWidget *widget, const QIcon &icon, const QString &text,
+            const QObject *receiver = nullptr, const char *member = nullptr, bool checkable = false,
+            bool checked = false);
     static void setActionCheckable(QAction *action, bool checked = false,
-                                   const QObject *receiver = nullptr, const char *member = nullptr);
+            const QObject *receiver = nullptr, const char *member = nullptr);
 
 private:
-    MainWindow m_window;  // dummy window for tray icon
+    MainWindow m_window; // dummy window for tray icon
 
     TrayMessageType m_lastMessageType = MessageOptions;
 

@@ -4,8 +4,7 @@
 
 #include "stringutil.h"
 
-void TextAreaUtil::moveCursor(QPlainTextEdit *area, int pos,
-                              QTextCursor::MoveMode mode)
+void TextAreaUtil::moveCursor(QPlainTextEdit *area, int pos, QTextCursor::MoveMode mode)
 {
     QTextCursor c = area->textCursor();
     c.setPosition(pos, mode);
@@ -43,7 +42,7 @@ void TextAreaUtil::appendText(QPlainTextEdit *area, const QString &text)
     if (lineEnd < 0) {
         area->appendPlainText(text);
         if (areaOldLen != 0) {
-            ++areaOldLen;  // trailing new line
+            ++areaOldLen; // trailing new line
         }
     } else {
         moveCursor(area, lineEnd + 1);
@@ -93,9 +92,7 @@ void TextAreaUtil::moveSelectedLines(QPlainTextEdit *srcArea, QPlainTextEdit *ds
     auto srcCursor = srcArea->textCursor();
 
     // Adjust to last line, when cursor at the end
-    if (!srcCursor.hasSelection()
-            && srcCursor.atEnd()
-            && !srcCursor.atStart()) {
+    if (!srcCursor.hasSelection() && srcCursor.atEnd() && !srcCursor.atStart()) {
         srcCursor.setPosition(srcTextEnd - 1);
     }
 
@@ -105,8 +102,7 @@ void TextAreaUtil::moveSelectedLines(QPlainTextEdit *srcArea, QPlainTextEdit *ds
     const int srcSelEnd = srcCursor.selectionEnd();
     const int srcEnd = StringUtil::lineEnd(srcText, srcSelEnd, srcTextEnd) + 1;
 
-    if (srcStart >= srcEnd
-            && --srcStart < 0)  // try to select empty line
+    if (srcStart >= srcEnd && --srcStart < 0) // try to select empty line
         return;
 
     // Cut the text from srcArea

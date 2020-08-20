@@ -17,19 +17,14 @@ public:
     CLASS_DELETE_COPY_MOVE(NativeEventFilter)
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    bool nativeEventFilter(const QByteArray &eventType,
-                           void *message, qintptr *result) override;
+    bool nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result) override;
 #else
-    bool nativeEventFilter(const QByteArray &eventType,
-                           void *message, long *result) override;
+    bool nativeEventFilter(const QByteArray &eventType, void *message, long *result) override;
 #endif
 
-    bool registerHotKey(int hotKeyId,
-                        Qt::Key keyCode,
-                        Qt::KeyboardModifiers modifiers,
-                        bool autoRepeat = false);
-    bool registerHotKey(int hotKeyId, int key,
-                        bool autoRepeat = false);
+    bool registerHotKey(int hotKeyId, Qt::Key keyCode, Qt::KeyboardModifiers modifiers,
+            bool autoRepeat = false);
+    bool registerHotKey(int hotKeyId, int key, bool autoRepeat = false);
 
     void unregisterHotKey(int hotKeyId);
     void unregisterHotKeys();
@@ -46,11 +41,10 @@ private:
     int getKeyId(quint32 nativeMod, quint32 nativeKey) const;
 
     static quint32 nativeKeyCode(Qt::Key keyCode);
-    static quint32 nativeModifiers(Qt::KeyboardModifiers modifiers,
-                                   bool autoRepeat = false);
+    static quint32 nativeModifiers(Qt::KeyboardModifiers modifiers, bool autoRepeat = false);
 
 private:
-    QHash <quint32, int> m_keyIdMap;
+    QHash<quint32, int> m_keyIdMap;
 };
 
 #endif // NATIVEEVENTFILTER_H

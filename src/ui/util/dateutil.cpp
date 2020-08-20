@@ -4,10 +4,7 @@
 
 #include "../fortcompat.h"
 
-DateUtil::DateUtil(QObject *parent) :
-    QObject(parent)
-{
-}
+DateUtil::DateUtil(QObject *parent) : QObject(parent) { }
 
 QDateTime DateUtil::now()
 {
@@ -54,9 +51,8 @@ qint32 DateUtil::addUnixMonths(qint32 unixHour, int months)
 {
     const qint64 unixTime = DateUtil::toUnixTime(unixHour);
 
-    return getUnixHour(QDateTime::fromSecsSinceEpoch(unixTime)
-                       .addMonths(months)
-                       .toSecsSinceEpoch());
+    return getUnixHour(
+            QDateTime::fromSecsSinceEpoch(unixTime).addMonths(months).toSecsSinceEpoch());
 }
 
 QString DateUtil::formatTime(qint64 unixTime)
@@ -87,8 +83,7 @@ QString DateUtil::formatDateTime(qint64 unixTime, const QString &format)
 
 QString DateUtil::formatPeriod(const QString &from, const QString &to)
 {
-    return QString::fromLatin1("[%1-%2)")
-            .arg(from, to);
+    return QString::fromLatin1("[%1-%2)").arg(from, to);
 }
 
 QString DateUtil::formatTime(quint8 hour, quint8 minute)
@@ -110,8 +105,7 @@ QString DateUtil::reformatTime(const QString &time)
     return formatTime(hour, minute);
 }
 
-void DateUtil::parseTime(const QString &time,
-                         quint8 &hour, quint8 &minute)
+void DateUtil::parseTime(const QString &time, quint8 &hour, quint8 &minute)
 {
     hour = parseTimeHour(time);
     minute = parseTimeMinute(time);

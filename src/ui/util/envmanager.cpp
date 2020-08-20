@@ -3,10 +3,7 @@
 #include <QRegularExpression>
 #include <QSettings>
 
-EnvManager::EnvManager(QObject *parent) :
-    QObject(parent)
-{
-}
+EnvManager::EnvManager(QObject *parent) : QObject(parent) { }
 
 QString EnvManager::expandString(const QString &text)
 {
@@ -41,7 +38,7 @@ QString EnvManager::expandStringRecursive(const QString &text, quint16 callLevel
 
     constexpr int maxCallLevel = 9;
     if (callLevel >= maxCallLevel)
-        return QString();  // avoid infinite cycling
+        return QString(); // avoid infinite cycling
 
     QString res = text;
 
@@ -58,7 +55,7 @@ QString EnvManager::expandStringRecursive(const QString &text, quint16 callLevel
         res.replace('%' + subKey + '%', value);
     }
 
-    res.replace("%%", "%");  // normalize escaped symbol
+    res.replace("%%", "%"); // normalize escaped symbol
 
     return res;
 }
@@ -84,9 +81,10 @@ QVariant EnvManager::readEnvVar(const QString &key)
     if (!userVar.isNull())
         return userVar;
 
-    const auto sysVar = readRegVar(key, "HKEY_LOCAL_MACHINE\\SYSTEM"
-                                       "\\CurrentControlSet\\Control"
-                                       "\\Session Manager\\Environment");
+    const auto sysVar = readRegVar(key,
+            "HKEY_LOCAL_MACHINE\\SYSTEM"
+            "\\CurrentControlSet\\Control"
+            "\\Session Manager\\Environment");
     if (!sysVar.isNull())
         return sysVar;
 

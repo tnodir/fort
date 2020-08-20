@@ -2,10 +2,8 @@
 
 #include "../fortsettings.h"
 
-QuotaManager::QuotaManager(FortSettings *fortSettings,
-                           QObject *parent) :
-    QObject(parent),
-    m_fortSettings(fortSettings)
+QuotaManager::QuotaManager(FortSettings *fortSettings, QObject *parent) :
+    QObject(parent), m_fortSettings(fortSettings)
 {
 }
 

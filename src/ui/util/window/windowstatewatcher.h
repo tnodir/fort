@@ -10,8 +10,7 @@ class WindowStateWatcher : public BaseWindowStateWatcher
 public:
     explicit WindowStateWatcher(QObject *parent = nullptr);
 
-    void restore(QWindow *window, const QSize &defaultSize,
-                 const QRect &rect, bool maximized);
+    void restore(QWindow *window, const QSize &defaultSize, const QRect &rect, bool maximized);
 
 public slots:
     void install(QWindow *window);

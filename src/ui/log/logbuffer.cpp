@@ -7,8 +7,7 @@
 
 LogBuffer::LogBuffer(int bufferSize, QObject *parent) :
     QObject(parent),
-    m_array(bufferSize ? bufferSize : FortCommon::bufferSize(),
-            Qt::Initialization::Uninitialized)
+    m_array(bufferSize ? bufferSize : FortCommon::bufferSize(), Qt::Initialization::Uninitialized)
 {
 }
 
@@ -59,10 +58,8 @@ void LogBuffer::writeEntryBlocked(const LogEntryBlocked *logEntry)
 
     char *output = this->output();
 
-    FortCommon::logBlockedHeaderWrite(output, logEntry->blocked(),
-                                      logEntry->ip(), logEntry->port(),
-                                      logEntry->proto(), logEntry->pid(),
-                                      pathLen);
+    FortCommon::logBlockedHeaderWrite(output, logEntry->blocked(), logEntry->ip(), logEntry->port(),
+            logEntry->proto(), logEntry->pid(), pathLen);
     output += FortCommon::logBlockedHeaderSize();
 
     if (pathLen) {
@@ -82,14 +79,12 @@ void LogBuffer::readEntryBlocked(LogEntryBlocked *logEntry)
     quint8 proto;
     quint16 port;
     quint32 ip, pid, pathLen;
-    FortCommon::logBlockedHeaderRead(input, &blocked, &ip, &port, &proto,
-                                     &pid, &pathLen);
+    FortCommon::logBlockedHeaderRead(input, &blocked, &ip, &port, &proto, &pid, &pathLen);
 
     QString path;
     if (pathLen) {
         input += FortCommon::logBlockedHeaderSize();
-        path = QString::fromWCharArray((const wchar_t *) input,
-                                       pathLen / int(sizeof(wchar_t)));
+        path = QString::fromWCharArray((const wchar_t *) input, pathLen / int(sizeof(wchar_t)));
     }
 
     logEntry->setBlocked(blocked);
@@ -135,8 +130,7 @@ void LogBuffer::readEntryProcNew(LogEntryProcNew *logEntry)
     QString path;
     if (pathLen) {
         input += FortCommon::logProcNewHeaderSize();
-        path = QString::fromWCharArray((const wchar_t *) input,
-                                       pathLen / int(sizeof(wchar_t)));
+        path = QString::fromWCharArray((const wchar_t *) input, pathLen / int(sizeof(wchar_t)));
     }
 
     logEntry->setPid(pid);

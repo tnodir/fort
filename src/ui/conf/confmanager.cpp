@@ -21,215 +21,157 @@
 Q_DECLARE_LOGGING_CATEGORY(CLOG_CONF_MANAGER)
 Q_LOGGING_CATEGORY(CLOG_CONF_MANAGER, "fort.confManager")
 
-#define logWarning() qCWarning(CLOG_CONF_MANAGER,)
-#define logCritical() qCCritical(CLOG_CONF_MANAGER,)
+#define logWarning()  qCWarning(CLOG_CONF_MANAGER, )
+#define logCritical() qCCritical(CLOG_CONF_MANAGER, )
 
-#define DATABASE_USER_VERSION   7
+#define DATABASE_USER_VERSION 7
 
 namespace {
 
-const char * const sqlPragmas =
-        "PRAGMA journal_mode = WAL;"
-        "PRAGMA locking_mode = EXCLUSIVE;"
-        "PRAGMA synchronous = NORMAL;"
-        ;
+const char *const sqlPragmas = "PRAGMA journal_mode = WAL;"
+                               "PRAGMA locking_mode = EXCLUSIVE;"
+                               "PRAGMA synchronous = NORMAL;";
 
-const char * const sqlSelectAddressGroups =
-        "SELECT addr_group_id, include_all, exclude_all,"
-        "    include_zones, exclude_zones,"
-        "    include_text, exclude_text"
-        "  FROM address_group"
-        "  ORDER BY order_index;"
-        ;
+const char *const sqlSelectAddressGroups = "SELECT addr_group_id, include_all, exclude_all,"
+                                           "    include_zones, exclude_zones,"
+                                           "    include_text, exclude_text"
+                                           "  FROM address_group"
+                                           "  ORDER BY order_index;";
 
-const char * const sqlSelectAppGroups =
-        "SELECT app_group_id, enabled,"
-        "    fragment_packet, period_enabled,"
-        "    limit_in_enabled, limit_out_enabled,"
-        "    speed_limit_in, speed_limit_out,"
-        "    name, block_text, allow_text,"
-        "    period_from, period_to"
-        "  FROM app_group"
-        "  ORDER BY order_index;"
-        ;
+const char *const sqlSelectAppGroups = "SELECT app_group_id, enabled,"
+                                       "    fragment_packet, period_enabled,"
+                                       "    limit_in_enabled, limit_out_enabled,"
+                                       "    speed_limit_in, speed_limit_out,"
+                                       "    name, block_text, allow_text,"
+                                       "    period_from, period_to"
+                                       "  FROM app_group"
+                                       "  ORDER BY order_index;";
 
-const char * const sqlInsertAddressGroup =
-        "INSERT INTO address_group(addr_group_id, order_index,"
-        "    include_all, exclude_all,"
-        "    include_zones, exclude_zones,"
-        "    include_text, exclude_text)"
-        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8);"
-        ;
+const char *const sqlInsertAddressGroup = "INSERT INTO address_group(addr_group_id, order_index,"
+                                          "    include_all, exclude_all,"
+                                          "    include_zones, exclude_zones,"
+                                          "    include_text, exclude_text)"
+                                          "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8);";
 
-const char * const sqlUpdateAddressGroup =
-        "UPDATE address_group"
-        "  SET order_index = ?2,"
-        "    include_all = ?3, exclude_all = ?4,"
-        "    include_zones = ?5, exclude_zones = ?6,"
-        "    include_text = ?7, exclude_text = ?8"
-        "  WHERE addr_group_id = ?1;"
-        ;
+const char *const sqlUpdateAddressGroup = "UPDATE address_group"
+                                          "  SET order_index = ?2,"
+                                          "    include_all = ?3, exclude_all = ?4,"
+                                          "    include_zones = ?5, exclude_zones = ?6,"
+                                          "    include_text = ?7, exclude_text = ?8"
+                                          "  WHERE addr_group_id = ?1;";
 
-const char * const sqlInsertAppGroup =
+const char *const sqlInsertAppGroup =
         "INSERT INTO app_group(app_group_id, order_index, enabled,"
         "    fragment_packet, period_enabled,"
         "    limit_in_enabled, limit_out_enabled,"
         "    speed_limit_in, speed_limit_out,"
         "    name, block_text, allow_text,"
         "    period_from, period_to)"
-        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14);"
-        ;
+        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14);";
 
-const char * const sqlUpdateAppGroup =
-        "UPDATE app_group"
-        "  SET order_index = ?2, enabled = ?3,"
-        "    fragment_packet = ?4, period_enabled = ?5,"
-        "    limit_in_enabled = ?6, limit_out_enabled = ?7,"
-        "    speed_limit_in = ?8, speed_limit_out = ?9,"
-        "    name = ?10, block_text = ?11, allow_text = ?12,"
-        "    period_from = ?13, period_to = ?14"
-        "  WHERE app_group_id = ?1;"
-        ;
+const char *const sqlUpdateAppGroup = "UPDATE app_group"
+                                      "  SET order_index = ?2, enabled = ?3,"
+                                      "    fragment_packet = ?4, period_enabled = ?5,"
+                                      "    limit_in_enabled = ?6, limit_out_enabled = ?7,"
+                                      "    speed_limit_in = ?8, speed_limit_out = ?9,"
+                                      "    name = ?10, block_text = ?11, allow_text = ?12,"
+                                      "    period_from = ?13, period_to = ?14"
+                                      "  WHERE app_group_id = ?1;";
 
-const char * const sqlDeleteAppGroup =
-        "DELETE FROM app_group"
-        "  WHERE app_group_id = ?1;"
-        ;
+const char *const sqlDeleteAppGroup = "DELETE FROM app_group"
+                                      "  WHERE app_group_id = ?1;";
 
-const char * const sqlSelectTaskByName =
-        "SELECT task_id, enabled, interval_hours,"
-        "    last_run, last_success, data"
-        "  FROM task"
-        "  WHERE name = ?1;"
-        ;
+const char *const sqlSelectTaskByName = "SELECT task_id, enabled, interval_hours,"
+                                        "    last_run, last_success, data"
+                                        "  FROM task"
+                                        "  WHERE name = ?1;";
 
-const char * const sqlInsertTask =
-        "INSERT INTO task(task_id, name, enabled, interval_hours,"
-        "    last_run, last_success, data)"
-        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7);"
-        ;
+const char *const sqlInsertTask = "INSERT INTO task(task_id, name, enabled, interval_hours,"
+                                  "    last_run, last_success, data)"
+                                  "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7);";
 
-const char * const sqlUpdateTask =
-        "UPDATE task"
-        "  SET name = ?2, enabled = ?3, interval_hours = ?4,"
-        "    last_run = ?5, last_success = ?6, data = ?7"
-        "  WHERE task_id = ?1;"
-        ;
+const char *const sqlUpdateTask = "UPDATE task"
+                                  "  SET name = ?2, enabled = ?3, interval_hours = ?4,"
+                                  "    last_run = ?5, last_success = ?6, data = ?7"
+                                  "  WHERE task_id = ?1;";
 
-const char * const sqlSelectApps =
-        "SELECT"
-        "    g.order_index as group_index,"
-        "    t.path,"
-        "    t.use_group_perm,"
-        "    t.blocked,"
-        "    (alert.app_id IS NOT NULL) as alerted"
-        "  FROM app t"
-        "    JOIN app_group g ON g.app_group_id = t.app_group_id"
-        "    LEFT JOIN app_alert alert ON alert.app_id = t.app_id;"
-        ;
+const char *const sqlSelectApps = "SELECT"
+                                  "    g.order_index as group_index,"
+                                  "    t.path,"
+                                  "    t.use_group_perm,"
+                                  "    t.blocked,"
+                                  "    (alert.app_id IS NOT NULL) as alerted"
+                                  "  FROM app t"
+                                  "    JOIN app_group g ON g.app_group_id = t.app_group_id"
+                                  "    LEFT JOIN app_alert alert ON alert.app_id = t.app_id;";
 
-const char * const sqlSelectEndAppsCount =
-        "SELECT COUNT(*) FROM app"
-        "  WHERE end_time IS NOT NULL AND end_time != 0"
-        "    AND blocked = 0;"
-        ;
+const char *const sqlSelectEndAppsCount = "SELECT COUNT(*) FROM app"
+                                          "  WHERE end_time IS NOT NULL AND end_time != 0"
+                                          "    AND blocked = 0;";
 
-const char * const sqlSelectEndedApps =
-        "SELECT t.app_id, t.app_group_id,"
-        "    g.order_index as group_index,"
-        "    t.path, t.name, t.use_group_perm"
-        "  FROM app t"
-        "    JOIN app_group g ON g.app_group_id = t.app_group_id"
-        "  WHERE end_time <= ?1 AND blocked = 0;"
-        ;
+const char *const sqlSelectEndedApps = "SELECT t.app_id, t.app_group_id,"
+                                       "    g.order_index as group_index,"
+                                       "    t.path, t.name, t.use_group_perm"
+                                       "  FROM app t"
+                                       "    JOIN app_group g ON g.app_group_id = t.app_group_id"
+                                       "  WHERE end_time <= ?1 AND blocked = 0;";
 
-const char * const sqlSelectAppPathExists =
-        "SELECT 1 FROM app WHERE path = ?1;"
-        ;
+const char *const sqlSelectAppPathExists = "SELECT 1 FROM app WHERE path = ?1;";
 
-const char * const sqlInsertApp =
+const char *const sqlInsertApp =
         "INSERT INTO app(app_group_id, path, name, use_group_perm, blocked,"
         "    creat_time, end_time)"
-        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7);"
-        ;
+        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7);";
 
-const char * const sqlInsertAppAlert =
-        "INSERT INTO app_alert(app_id)"
-        "  VALUES(?1);"
-        ;
+const char *const sqlInsertAppAlert = "INSERT INTO app_alert(app_id)"
+                                      "  VALUES(?1);";
 
-const char * const sqlDeleteApp =
-        "DELETE FROM app WHERE app_id = ?1;"
-        ;
+const char *const sqlDeleteApp = "DELETE FROM app WHERE app_id = ?1;";
 
-const char * const sqlDeleteAppAlert =
-        "DELETE FROM app_alert WHERE app_id = ?1;"
-        ;
+const char *const sqlDeleteAppAlert = "DELETE FROM app_alert WHERE app_id = ?1;";
 
-const char * const sqlUpdateApp =
-        "UPDATE app"
-        "  SET app_group_id = ?2, name = ?3, use_group_perm = ?4,"
-        "    blocked = ?5, end_time = ?6"
-        "  WHERE app_id = ?1;"
-        ;
+const char *const sqlUpdateApp = "UPDATE app"
+                                 "  SET app_group_id = ?2, name = ?3, use_group_perm = ?4,"
+                                 "    blocked = ?5, end_time = ?6"
+                                 "  WHERE app_id = ?1;";
 
-const char * const sqlUpdateAppName =
-        "UPDATE app"
-        "  SET name = ?2"
-        "  WHERE app_id = ?1;"
-        ;
+const char *const sqlUpdateAppName = "UPDATE app"
+                                     "  SET name = ?2"
+                                     "  WHERE app_id = ?1;";
 
-const char * const sqlUpdateAppResetGroup =
-        "UPDATE app"
-        "  SET app_group_id = ?2"
-        "  WHERE app_group_id = ?1;"
-        ;
+const char *const sqlUpdateAppResetGroup = "UPDATE app"
+                                           "  SET app_group_id = ?2"
+                                           "  WHERE app_group_id = ?1;";
 
-const char * const sqlInsertZone =
-        "INSERT INTO zone(zone_id, name, enabled, custom_url,"
-        "    source_code, url, form_data)"
-        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7);"
-        ;
+const char *const sqlInsertZone = "INSERT INTO zone(zone_id, name, enabled, custom_url,"
+                                  "    source_code, url, form_data)"
+                                  "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7);";
 
-const char * const sqlSelectZoneIds =
-        "SELECT zone_id FROM zone ORDER BY zone_id;"
-        ;
+const char *const sqlSelectZoneIds = "SELECT zone_id FROM zone ORDER BY zone_id;";
 
-const char * const sqlDeleteZone =
-        "DELETE FROM zone WHERE zone_id = ?1;"
-        ;
+const char *const sqlDeleteZone = "DELETE FROM zone WHERE zone_id = ?1;";
 
-const char * const sqlDeleteAddressGroupZone =
-        "UPDATE address_group"
-        "  SET include_zones = include_zones & ?1,"
-        "    exclude_zones = exclude_zones & ?1;"
-        ;
+const char *const sqlDeleteAddressGroupZone = "UPDATE address_group"
+                                              "  SET include_zones = include_zones & ?1,"
+                                              "    exclude_zones = exclude_zones & ?1;";
 
-const char * const sqlUpdateZone =
-        "UPDATE zone"
-        "  SET name = ?2, enabled = ?3, custom_url = ?4,"
-        "    source_code = ?5, url = ?6, form_data = ?7"
-        "  WHERE zone_id = ?1;"
-        ;
+const char *const sqlUpdateZone = "UPDATE zone"
+                                  "  SET name = ?2, enabled = ?3, custom_url = ?4,"
+                                  "    source_code = ?5, url = ?6, form_data = ?7"
+                                  "  WHERE zone_id = ?1;";
 
-const char * const sqlUpdateZoneName =
-        "UPDATE zone"
-        "  SET name = ?2"
-        "  WHERE zone_id = ?1;"
-        ;
+const char *const sqlUpdateZoneName = "UPDATE zone"
+                                      "  SET name = ?2"
+                                      "  WHERE zone_id = ?1;";
 
-const char * const sqlUpdateZoneEnabled =
-        "UPDATE zone"
-        "  SET enabled = ?2"
-        "  WHERE zone_id = ?1;"
-        ;
+const char *const sqlUpdateZoneEnabled = "UPDATE zone"
+                                         "  SET enabled = ?2"
+                                         "  WHERE zone_id = ?1;";
 
-const char * const sqlUpdateZoneResult =
-        "UPDATE zone"
-        "  SET text_checksum = ?2, bin_checksum = ?3,"
-        "    source_modtime = ?4, last_run = ?5, last_success = ?6"
-        "  WHERE zone_id = ?1;"
-        ;
+const char *const sqlUpdateZoneResult = "UPDATE zone"
+                                        "  SET text_checksum = ?2, bin_checksum = ?3,"
+                                        "    source_modtime = ?4, last_run = ?5, last_success = ?6"
+                                        "  WHERE zone_id = ?1;";
 
 bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 {
@@ -246,8 +188,7 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
     return true;
 }
 
-bool loadAddressGroups(SqliteDb *db, const QList<AddressGroup *> &addressGroups,
-                       int &index)
+bool loadAddressGroups(SqliteDb *db, const QList<AddressGroup *> &addressGroups, int &index)
 {
     SqliteStmt stmt;
     if (!db->prepare(stmt, sqlSelectAddressGroups))
@@ -282,21 +223,17 @@ bool saveAddressGroup(SqliteDb *db, AddressGroup *addrGroup, int orderIndex)
         return true;
 
     const auto vars = QVariantList()
-            << (rowExists ? addrGroup->id() : QVariant())
-            << orderIndex
-            << addrGroup->includeAll()
-            << addrGroup->excludeAll()
-            << qint64(addrGroup->includeZones())
-            << qint64(addrGroup->excludeZones())
-            << addrGroup->includeText()
-            << addrGroup->excludeText()
-               ;
+            << (rowExists ? addrGroup->id() : QVariant()) << orderIndex << addrGroup->includeAll()
+            << addrGroup->excludeAll() << qint64(addrGroup->includeZones())
+            << qint64(addrGroup->excludeZones()) << addrGroup->includeText()
+            << addrGroup->excludeText();
 
     const char *sql = rowExists ? sqlUpdateAddressGroup : sqlInsertAddressGroup;
 
     bool ok;
     db->executeEx(sql, vars, 0, &ok);
-    if (!ok) return false;
+    if (!ok)
+        return false;
 
     if (!rowExists) {
         addrGroup->setId(db->lastInsertRowid());
@@ -344,27 +281,18 @@ bool saveAppGroup(SqliteDb *db, AppGroup *appGroup, int orderIndex)
         return true;
 
     const auto vars = QVariantList()
-            << (rowExists ? appGroup->id() : QVariant())
-            << orderIndex
-            << appGroup->enabled()
-            << appGroup->fragmentPacket()
-            << appGroup->periodEnabled()
-            << appGroup->limitInEnabled()
-            << appGroup->limitOutEnabled()
-            << appGroup->speedLimitIn()
-            << appGroup->speedLimitOut()
-            << appGroup->name()
-            << appGroup->blockText()
-            << appGroup->allowText()
-            << appGroup->periodFrom()
-            << appGroup->periodTo()
-               ;
+            << (rowExists ? appGroup->id() : QVariant()) << orderIndex << appGroup->enabled()
+            << appGroup->fragmentPacket() << appGroup->periodEnabled() << appGroup->limitInEnabled()
+            << appGroup->limitOutEnabled() << appGroup->speedLimitIn() << appGroup->speedLimitOut()
+            << appGroup->name() << appGroup->blockText() << appGroup->allowText()
+            << appGroup->periodFrom() << appGroup->periodTo();
 
     const char *sql = rowExists ? sqlUpdateAppGroup : sqlInsertAppGroup;
 
     bool ok;
     db->executeEx(sql, vars, 0, &ok);
-    if (!ok) return false;
+    if (!ok)
+        return false;
 
     if (!rowExists) {
         appGroup->setId(db->lastInsertRowid());
@@ -376,15 +304,13 @@ bool saveAppGroup(SqliteDb *db, AppGroup *appGroup, int orderIndex)
 
 }
 
-ConfManager::ConfManager(const QString &filePath,
-                         FortManager *fortManager,
-                         QObject *parent) :
+ConfManager::ConfManager(const QString &filePath, FortManager *fortManager, QObject *parent) :
     QObject(parent),
     m_fortManager(fortManager),
     m_sqliteDb(new SqliteDb(filePath)),
     m_conf(new FirewallConf(this))
 {
-    m_appEndTimer.setInterval(5 * 60 * 1000);  // 5 minutes
+    m_appEndTimer.setInterval(5 * 60 * 1000); // 5 minutes
     connect(&m_appEndTimer, &QTimer::timeout, this, &ConfManager::checkAppEndTimes);
 }
 
@@ -415,8 +341,7 @@ void ConfManager::showErrorMessage(const QString &errorMessage)
 
 bool ConfManager::checkResult(bool ok, bool commit)
 {
-    const auto errorMessage = ok ? QString()
-                                 : m_sqliteDb->errorMessage();
+    const auto errorMessage = ok ? QString() : m_sqliteDb->errorMessage();
 
     if (commit) {
         m_sqliteDb->endTransaction(ok);
@@ -432,18 +357,15 @@ bool ConfManager::checkResult(bool ok, bool commit)
 bool ConfManager::initialize()
 {
     if (!m_sqliteDb->open()) {
-        logCritical() << "File open error:"
-                      << m_sqliteDb->filePath()
-                      << m_sqliteDb->errorMessage();
+        logCritical() << "File open error:" << m_sqliteDb->filePath() << m_sqliteDb->errorMessage();
         return false;
     }
 
     m_sqliteDb->execute(sqlPragmas);
 
-    if (!m_sqliteDb->migrate(":/conf/migrations", DATABASE_USER_VERSION,
-                             true, true, &migrateFunc)) {
-        logCritical() << "Migration error"
-                      << m_sqliteDb->filePath();
+    if (!m_sqliteDb->migrate(
+                ":/conf/migrations", DATABASE_USER_VERSION, true, true, &migrateFunc)) {
+        logCritical() << "Migration error" << m_sqliteDb->filePath();
         return false;
     }
 
@@ -463,16 +385,14 @@ void ConfManager::setConfToEdit(FirewallConf *conf)
     if (m_confToEdit == conf)
         return;
 
-    if (m_confToEdit != nullptr
-            && m_confToEdit != m_conf) {
+    if (m_confToEdit != nullptr && m_confToEdit != m_conf) {
         m_confToEdit->deleteLater();
     }
 
     m_confToEdit = conf;
 }
 
-FirewallConf *ConfManager::cloneConf(const FirewallConf &conf,
-                                     QObject *parent) const
+FirewallConf *ConfManager::cloneConf(const FirewallConf &conf, QObject *parent) const
 {
     auto newConf = new FirewallConf(parent);
 
@@ -555,37 +475,30 @@ bool ConfManager::saveTasks(const QList<TaskInfo *> &taskInfos)
 
 bool ConfManager::appPathExists(const QString &appPath)
 {
-    return sqliteDb()->executeEx(sqlSelectAppPathExists, {appPath}).toBool();
+    return sqliteDb()->executeEx(sqlSelectAppPathExists, { appPath }).toBool();
 }
 
-bool ConfManager::addApp(const QString &appPath, const QString &appName,
-                         const QDateTime &endTime,
-                         qint64 groupId, bool useGroupPerm,
-                         bool blocked, bool alerted)
+bool ConfManager::addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
+        qint64 groupId, bool useGroupPerm, bool blocked, bool alerted)
 {
     bool ok = false;
 
     m_sqliteDb->beginTransaction();
 
     const auto vars = QVariantList()
-            << groupId
-            << appPath
-            << appName
-            << useGroupPerm
-            << blocked
-            << QDateTime::currentDateTime()
-            << (!endTime.isNull() ? endTime : QVariant())
-               ;
+            << groupId << appPath << appName << useGroupPerm << blocked
+            << QDateTime::currentDateTime() << (!endTime.isNull() ? endTime : QVariant());
 
     m_sqliteDb->executeEx(sqlInsertApp, vars, 0, &ok);
-    if (!ok) goto end;
+    if (!ok)
+        goto end;
 
     // Alert
     {
         const qint64 appId = m_sqliteDb->lastInsertRowid();
 
         if (alerted) {
-            m_sqliteDb->executeEx(sqlInsertAppAlert, {appId}, 0, &ok);
+            m_sqliteDb->executeEx(sqlInsertAppAlert, { appId }, 0, &ok);
         }
     }
 
@@ -612,7 +525,8 @@ bool ConfManager::deleteApp(qint64 appId)
     const auto vars = QVariantList() << appId;
 
     m_sqliteDb->executeEx(sqlDeleteApp, vars, 0, &ok);
-    if (!ok) goto end;
+    if (!ok)
+        goto end;
 
     m_sqliteDb->executeEx(sqlDeleteAppAlert, vars, 0, &ok);
 
@@ -621,25 +535,20 @@ end:
 }
 
 bool ConfManager::updateApp(qint64 appId, const QString &appName, const QDateTime &endTime,
-                            qint64 groupId, bool useGroupPerm, bool blocked)
+        qint64 groupId, bool useGroupPerm, bool blocked)
 {
     bool ok = false;
 
     m_sqliteDb->beginTransaction();
 
-    const auto vars = QVariantList()
-            << appId
-            << groupId
-            << appName
-            << useGroupPerm
-            << blocked
-            << (!endTime.isNull() ? endTime : QVariant())
-               ;
+    const auto vars = QVariantList() << appId << groupId << appName << useGroupPerm << blocked
+                                     << (!endTime.isNull() ? endTime : QVariant());
 
     m_sqliteDb->executeEx(sqlUpdateApp, vars, 0, &ok);
-    if (!ok) goto end;
+    if (!ok)
+        goto end;
 
-    m_sqliteDb->executeEx(sqlDeleteAppAlert, {appId}, 0, &ok);
+    m_sqliteDb->executeEx(sqlDeleteAppAlert, { appId }, 0, &ok);
 
 end:
     checkResult(ok, true);
@@ -655,10 +564,7 @@ bool ConfManager::updateAppName(qint64 appId, const QString &appName)
 {
     bool ok = false;
 
-    const auto vars = QVariantList()
-            << appId
-            << appName
-               ;
+    const auto vars = QVariantList() << appId << appName;
 
     m_sqliteDb->executeEx(sqlUpdateAppName, vars, 0, &ok);
 
@@ -728,23 +634,15 @@ void ConfManager::checkAppEndTimes()
     }
 }
 
-bool ConfManager::addZone(const QString &zoneName, const QString &sourceCode,
-                          const QString &url, const QString &formData,
-                          bool enabled, bool customUrl, int &zoneId)
+bool ConfManager::addZone(const QString &zoneName, const QString &sourceCode, const QString &url,
+        const QString &formData, bool enabled, bool customUrl, int &zoneId)
 {
     bool ok = false;
 
     zoneId = getFreeZoneId();
 
     const auto vars = QVariantList()
-            << zoneId
-            << zoneName
-            << enabled
-            << customUrl
-            << sourceCode
-            << url
-            << formData
-               ;
+            << zoneId << zoneName << enabled << customUrl << sourceCode << url << formData;
 
     m_sqliteDb->executeEx(sqlInsertZone, vars, 0, &ok);
 
@@ -759,7 +657,8 @@ int ConfManager::getFreeZoneId()
     if (stmt.prepare(m_sqliteDb->db(), sqlSelectZoneIds)) {
         while (stmt.step() == SqliteStmt::StepRow) {
             const int id = stmt.columnInt(0);
-            if (id > zoneId) break;
+            if (id > zoneId)
+                break;
 
             zoneId = id + 1;
         }
@@ -774,34 +673,27 @@ bool ConfManager::deleteZone(int zoneId)
 
     m_sqliteDb->beginTransaction();
 
-    m_sqliteDb->executeEx(sqlDeleteZone, {zoneId}, 0, &ok);
-    if (!ok) goto end;
+    m_sqliteDb->executeEx(sqlDeleteZone, { zoneId }, 0, &ok);
+    if (!ok)
+        goto end;
 
     // Delete the Zone from Address Groups
     {
         const quint32 zoneUnMask = ~(quint32(1) << (zoneId - 1));
-        m_sqliteDb->executeEx(sqlDeleteAddressGroupZone, {qint64(zoneUnMask)}, 0, &ok);
+        m_sqliteDb->executeEx(sqlDeleteAddressGroupZone, { qint64(zoneUnMask) }, 0, &ok);
     }
 
 end:
     return checkResult(ok, true);
 }
 
-bool ConfManager::updateZone(int zoneId, const QString &zoneName,
-                             const QString &sourceCode, const QString &url,
-                             const QString &formData, bool enabled, bool customUrl)
+bool ConfManager::updateZone(int zoneId, const QString &zoneName, const QString &sourceCode,
+        const QString &url, const QString &formData, bool enabled, bool customUrl)
 {
     bool ok = false;
 
     const auto vars = QVariantList()
-            << zoneId
-            << zoneName
-            << enabled
-            << customUrl
-            << sourceCode
-            << url
-            << formData
-               ;
+            << zoneId << zoneName << enabled << customUrl << sourceCode << url << formData;
 
     m_sqliteDb->executeEx(sqlUpdateZone, vars, 0, &ok);
 
@@ -812,10 +704,7 @@ bool ConfManager::updateZoneName(int zoneId, const QString &zoneName)
 {
     bool ok = false;
 
-    const auto vars = QVariantList()
-            << zoneId
-            << zoneName
-               ;
+    const auto vars = QVariantList() << zoneId << zoneName;
 
     m_sqliteDb->executeEx(sqlUpdateZoneName, vars, 0, &ok);
 
@@ -826,10 +715,7 @@ bool ConfManager::updateZoneEnabled(int zoneId, bool enabled)
 {
     bool ok = false;
 
-    const auto vars = QVariantList()
-            << zoneId
-            << enabled
-               ;
+    const auto vars = QVariantList() << zoneId << enabled;
 
     m_sqliteDb->executeEx(sqlUpdateZoneEnabled, vars, 0, &ok);
 
@@ -837,21 +723,13 @@ bool ConfManager::updateZoneEnabled(int zoneId, bool enabled)
 }
 
 bool ConfManager::updateZoneResult(int zoneId, const QString &textChecksum,
-                                   const QString &binChecksum,
-                                   const QDateTime &sourceModTime,
-                                   const QDateTime &lastRun,
-                                   const QDateTime &lastSuccess)
+        const QString &binChecksum, const QDateTime &sourceModTime, const QDateTime &lastRun,
+        const QDateTime &lastSuccess)
 {
     bool ok = false;
 
     const auto vars = QVariantList()
-            << zoneId
-            << textChecksum
-            << binChecksum
-            << sourceModTime
-            << lastRun
-            << lastSuccess
-               ;
+            << zoneId << textChecksum << binChecksum << sourceModTime << lastRun << lastSuccess;
 
     m_sqliteDb->executeEx(sqlUpdateZoneResult, vars, 0, &ok);
 
@@ -877,9 +755,8 @@ bool ConfManager::updateDriverConf(bool onlyFlags)
     ConfUtil confUtil;
     QByteArray buf;
 
-    const int confSize = onlyFlags
-            ? confUtil.writeFlags(*conf(), buf)
-            : confUtil.write(*conf(), this, *envManager(), buf);
+    const int confSize = onlyFlags ? confUtil.writeFlags(*conf(), buf)
+                                   : confUtil.write(*conf(), this, *envManager(), buf);
 
     if (confSize == 0) {
         showErrorMessage(confUtil.errorMessage());
@@ -899,16 +776,14 @@ bool ConfManager::updateDriverDeleteApp(const QString &appPath)
     return updateDriverUpdateApp(appPath, 0, false, false, true);
 }
 
-bool ConfManager::updateDriverUpdateApp(const QString &appPath,
-                                        int groupIndex, bool useGroupPerm,
-                                        bool blocked, bool remove)
+bool ConfManager::updateDriverUpdateApp(
+        const QString &appPath, int groupIndex, bool useGroupPerm, bool blocked, bool remove)
 {
     ConfUtil confUtil;
     QByteArray buf;
 
-    const int entrySize = confUtil.writeAppEntry(
-                groupIndex, useGroupPerm, blocked, false, false,
-                appPath, buf);
+    const int entrySize =
+            confUtil.writeAppEntry(groupIndex, useGroupPerm, blocked, false, false, appPath, buf);
 
     if (entrySize == 0) {
         showErrorMessage(confUtil.errorMessage());
@@ -924,13 +799,12 @@ bool ConfManager::updateDriverUpdateApp(const QString &appPath,
 }
 
 void ConfManager::updateDriverZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
-                                    const QList<QByteArray> &zonesData)
+        const QList<QByteArray> &zonesData)
 {
     ConfUtil confUtil;
     QByteArray buf;
 
-    const int entrySize = confUtil.writeZones(zonesMask, enabledMask, dataSize,
-                                              zonesData, buf);
+    const int entrySize = confUtil.writeZones(zonesMask, enabledMask, dataSize, zonesData, buf);
 
     if (entrySize == 0) {
         showErrorMessage(confUtil.errorMessage());
@@ -1014,19 +888,19 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
 
         for (AppGroup *appGroup : conf.removedAppGroupsList()) {
             m_sqliteDb->executeEx(sqlUpdateAppResetGroup,
-                                  QVariantList() << appGroup->id()
-                                  << defaultAppGroupId, 0, &ok);
-            if (!ok) goto end;
+                    QVariantList() << appGroup->id() << defaultAppGroupId, 0, &ok);
+            if (!ok)
+                goto end;
 
-            m_sqliteDb->executeEx(sqlDeleteAppGroup,
-                                  QVariantList() << appGroup->id(), 0, &ok);
-            if (!ok) goto end;
+            m_sqliteDb->executeEx(sqlDeleteAppGroup, QVariantList() << appGroup->id(), 0, &ok);
+            if (!ok)
+                goto end;
         }
 
         conf.clearRemovedAppGroups();
     }
 
- end:
+end:
     return checkResult(ok, true);
 }
 
@@ -1056,14 +930,9 @@ bool ConfManager::saveTask(TaskInfo *taskInfo)
     const bool rowExists = (taskInfo->id() != 0);
 
     const auto vars = QVariantList()
-            << (rowExists ? taskInfo->id() : QVariant())
-            << taskInfo->name()
-            << taskInfo->enabled()
-            << taskInfo->intervalHours()
-            << taskInfo->lastRun()
-            << taskInfo->lastSuccess()
-            << taskInfo->data()
-               ;
+            << (rowExists ? taskInfo->id() : QVariant()) << taskInfo->name() << taskInfo->enabled()
+            << taskInfo->intervalHours() << taskInfo->lastRun() << taskInfo->lastSuccess()
+            << taskInfo->data();
 
     const char *sql = rowExists ? sqlUpdateTask : sqlInsertTask;
 

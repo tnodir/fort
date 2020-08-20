@@ -16,8 +16,7 @@ class MainPage : public BasePage
     Q_OBJECT
 
 public:
-    explicit MainPage(OptionsController *ctrl = nullptr,
-                      QWidget *parent = nullptr);
+    explicit MainPage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
 protected slots:
     void onRetranslateUi() override;

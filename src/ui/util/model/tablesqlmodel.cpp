@@ -3,10 +3,7 @@
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
-TableSqlModel::TableSqlModel(QObject *parent) :
-    TableItemModel(parent)
-{
-}
+TableSqlModel::TableSqlModel(QObject *parent) : TableItemModel(parent) { }
 
 int TableSqlModel::rowCount(const QModelIndex &parent) const
 {

@@ -12,15 +12,14 @@
 Q_DECLARE_LOGGING_CATEGORY(CLOG_SQLITEDB)
 Q_LOGGING_CATEGORY(CLOG_SQLITEDB, "fort.sqlitedb")
 
-#define dbWarning() qCWarning(CLOG_SQLITEDB,)
-#define dbCritical() qCCritical(CLOG_SQLITEDB,)
+#define dbWarning()  qCWarning(CLOG_SQLITEDB, )
+#define dbCritical() qCCritical(CLOG_SQLITEDB, )
 
 namespace {
 
 bool removeDbFile(const QString &filePath)
 {
-    if (!filePath.startsWith(QLatin1Char(':'))
-            && QFile::exists(filePath)
+    if (!filePath.startsWith(QLatin1Char(':')) && QFile::exists(filePath)
             && !QFile::remove(filePath)) {
         dbCritical() << "Cannot remove file:" << filePath;
         return false;
@@ -41,9 +40,7 @@ bool renameDbFile(const QString &filePath, const QString &newFilePath)
 
 }
 
-SqliteDb::SqliteDb(const QString &filePath) :
-    m_db(nullptr),
-    m_filePath(filePath)
+SqliteDb::SqliteDb(const QString &filePath) : m_filePath(filePath)
 {
     sqlite3_initialize();
 }
@@ -77,14 +74,14 @@ void SqliteDb::close()
 bool SqliteDb::attach(const QString &schemaName, const QString &filePath)
 {
     bool ok = false;
-    executeEx("ATTACH DATABASE ?1 AS ?2;", {filePath, schemaName}, 0, &ok);
+    executeEx("ATTACH DATABASE ?1 AS ?2;", { filePath, schemaName }, 0, &ok);
     return ok;
 }
 
 bool SqliteDb::detach(const QString &schemaName)
 {
     bool ok = false;
-    executeEx("DETACH DATABASE ?1;", {schemaName}, 0, &ok);
+    executeEx("DETACH DATABASE ?1;", { schemaName }, 0, &ok);
     return ok;
 }
 
@@ -100,10 +97,7 @@ bool SqliteDb::executeStr(const QString &sql)
     return execute(sqlUtf8.data());
 }
 
-QVariant SqliteDb::executeEx(const char *sql,
-                             const QVariantList &vars,
-                             int resultCount,
-                             bool *ok)
+QVariant SqliteDb::executeEx(const char *sql, const QVariantList &vars, int resultCount, bool *ok)
 {
     QVariantList list;
 
@@ -128,15 +122,12 @@ QVariant SqliteDb::executeEx(const char *sql,
     }
 
     const int listSize = list.size();
-    return (listSize == 0) ? QVariant()
-                           : (listSize == 1 ? list.at(0) : list);
+    return (listSize == 0) ? QVariant() : (listSize == 1 ? list.at(0) : list);
 }
 
-bool SqliteDb::prepare(SqliteStmt &stmt, const char *sql,
-                       const QVariantList &vars)
+bool SqliteDb::prepare(SqliteStmt &stmt, const char *sql, const QVariantList &vars)
 {
-    return stmt.prepare(db(), sql)
-            && (vars.isEmpty() || stmt.bindVars(vars));
+    return stmt.prepare(db(), sql) && (vars.isEmpty() || stmt.bindVars(vars));
 }
 
 qint64 SqliteDb::lastInsertRowid() const
@@ -156,8 +147,7 @@ bool SqliteDb::beginTransaction()
 
 bool SqliteDb::endTransaction(bool ok)
 {
-    return ok ? commitTransaction()
-              : rollbackTransaction();
+    return ok ? commitTransaction() : rollbackTransaction();
 }
 
 bool SqliteDb::commitTransaction()
@@ -172,23 +162,19 @@ bool SqliteDb::rollbackTransaction()
 
 bool SqliteDb::beginSavepoint(const char *name)
 {
-    return (name == nullptr)
-            ? execute("SAVEPOINT _;")
-            : executeStr(QString("SAVEPOINT %1;").arg(name));
+    return (name == nullptr) ? execute("SAVEPOINT _;")
+                             : executeStr(QString("SAVEPOINT %1;").arg(name));
 }
 
 bool SqliteDb::releaseSavepoint(const char *name)
 {
-    return (name == nullptr)
-            ? execute("RELEASE _;")
-            : executeStr(QString("RELEASE %1;").arg(name));
+    return (name == nullptr) ? execute("RELEASE _;") : executeStr(QString("RELEASE %1;").arg(name));
 }
 
 bool SqliteDb::rollbackSavepoint(const char *name)
 {
-    return (name == nullptr)
-            ? execute("ROLLBACK TO _;")
-            : executeStr(QString("ROLLBACK TO %1;").arg(name));
+    return (name == nullptr) ? execute("ROLLBACK TO _;")
+                             : executeStr(QString("ROLLBACK TO %1;").arg(name));
 }
 
 QString SqliteDb::errorMessage() const
@@ -209,11 +195,9 @@ bool SqliteDb::setUserVersion(int v)
     return executeStr(sql);
 }
 
-QString SqliteDb::entityName(const QString &schemaName,
-                             const QString &objectName)
+QString SqliteDb::entityName(const QString &schemaName, const QString &objectName)
 {
-    return schemaName.isEmpty() ? objectName
-                                : schemaName + '.' + objectName;
+    return schemaName.isEmpty() ? objectName : schemaName + '.' + objectName;
 }
 
 QStringList SqliteDb::tableNames(const QString &schemaName)
@@ -221,10 +205,9 @@ QStringList SqliteDb::tableNames(const QString &schemaName)
     QStringList list;
 
     const auto masterTable = entityName(schemaName, "sqlite_master");
-    const auto sql = QString(
-                "SELECT name FROM %1"
-                "  WHERE type = 'table' AND name NOT LIKE 'sqlite_%';"
-                ).arg(masterTable);
+    const auto sql = QString("SELECT name FROM %1"
+                             "  WHERE type = 'table' AND name NOT LIKE 'sqlite_%';")
+                             .arg(masterTable);
 
     SqliteStmt stmt;
     if (stmt.prepare(db(), sql.toLatin1())) {
@@ -236,15 +219,12 @@ QStringList SqliteDb::tableNames(const QString &schemaName)
     return list;
 }
 
-QStringList SqliteDb::columnNames(const QString &tableName,
-                                  const QString &schemaName)
+QStringList SqliteDb::columnNames(const QString &tableName, const QString &schemaName)
 {
     QStringList list;
 
     const auto schemaTableName = entityName(schemaName, tableName);
-    const auto sql = QString(
-                "SELECT * FROM %1 WHERE 0 = 1 LIMIT 1;"
-                ).arg(schemaTableName);
+    const auto sql = QString("SELECT * FROM %1 WHERE 0 = 1 LIMIT 1;").arg(schemaTableName);
 
     SqliteStmt stmt;
     if (stmt.prepare(db(), sql.toLatin1())) {
@@ -257,10 +237,8 @@ QStringList SqliteDb::columnNames(const QString &tableName,
     return list;
 }
 
-bool SqliteDb::migrate(const QString &sqlDir, int version,
-                       bool recreate, bool importOldData,
-                       SQLITEDB_MIGRATE_FUNC migrateFunc,
-                       void *migrateContext)
+bool SqliteDb::migrate(const QString &sqlDir, int version, bool recreate, bool importOldData,
+        SQLITEDB_MIGRATE_FUNC migrateFunc, void *migrateContext)
 {
     // Check version
     int userVersion = this->userVersion();
@@ -268,8 +246,7 @@ bool SqliteDb::migrate(const QString &sqlDir, int version,
         return true;
 
     if (userVersion > version) {
-        dbWarning() << "Cannot open new DB" << userVersion
-                    << "from old application" << version;
+        dbWarning() << "Cannot open new DB" << userVersion << "from old application" << version;
         return false;
     }
 
@@ -282,8 +259,7 @@ bool SqliteDb::migrate(const QString &sqlDir, int version,
 
         tempFilePath = m_filePath + ".temp";
 
-        if (!(renameDbFile(m_filePath, tempFilePath)
-              && open(m_filePath))) {
+        if (!(renameDbFile(m_filePath, tempFilePath) && open(m_filePath))) {
             dbWarning() << "Cannot re-create the DB" << m_filePath;
             renameDbFile(tempFilePath, m_filePath);
             return false;
@@ -309,8 +285,7 @@ bool SqliteDb::migrate(const QString &sqlDir, int version,
         QFile file(filePath);
         if (file.exists()) {
             if (!file.open(QFile::ReadOnly | QFile::Text)) {
-                dbWarning() << "Cannot open migration file" << filePath
-                            << file.errorString();
+                dbWarning() << "Cannot open migration file" << filePath << file.errorString();
                 success = false;
                 break;
             }
@@ -360,9 +335,8 @@ bool SqliteDb::migrate(const QString &sqlDir, int version,
     return success;
 }
 
-bool SqliteDb::importDb(const QString &sourceFilePath,
-                        SQLITEDB_MIGRATE_FUNC migrateFunc,
-                        void *migrateContext)
+bool SqliteDb::importDb(
+        const QString &sourceFilePath, SQLITEDB_MIGRATE_FUNC migrateFunc, void *migrateContext)
 {
     const QLatin1String srcSchema("src");
     const QLatin1String dstSchema("main");
@@ -381,12 +355,14 @@ bool SqliteDb::importDb(const QString &sourceFilePath,
 
     for (const auto &tableName : srcTableNames) {
         const auto dstColumns = columnNames(tableName, dstSchema);
-        if (dstColumns.isEmpty())
-            continue;  // new schema doesn't contain old table
+        if (dstColumns.isEmpty()) {
+            continue; // new schema doesn't contain old table
+        }
 
         const auto srcColumns = columnNames(tableName, srcSchema);
-        if (srcColumns.isEmpty())
-            continue;  // empty old table
+        if (srcColumns.isEmpty()) {
+            continue; // empty old table
+        }
 
         // Intersect column names
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
@@ -407,9 +383,8 @@ bool SqliteDb::importDb(const QString &sourceFilePath,
 
         // Insert
         const auto sql = QString("INSERT INTO %1 (%3) SELECT %3 FROM %2;")
-                .arg(entityName(dstSchema, tableName),
-                     entityName(srcSchema, tableName),
-                     columnNames);
+                                 .arg(entityName(dstSchema, tableName),
+                                         entityName(srcSchema, tableName), columnNames);
 
         if (!execute(sql.toLatin1())) {
             success = false;

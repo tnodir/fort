@@ -12,7 +12,7 @@ public:
     virtual ~WorkerJob() = default;
     CLASS_DEFAULT_COPY_MOVE(WorkerJob)
 
-    virtual void doJob() {}
+    virtual void doJob() { }
 
 public:
     QString text;

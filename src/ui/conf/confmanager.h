@@ -21,9 +21,8 @@ class ConfManager : public QObject, public ConfAppsWalker
     Q_OBJECT
 
 public:
-    explicit ConfManager(const QString &filePath,
-                         FortManager *fortManager,
-                         QObject *parent = nullptr);
+    explicit ConfManager(
+            const QString &filePath, FortManager *fortManager, QObject *parent = nullptr);
     ~ConfManager() override;
     CLASS_DELETE_COPY_MOVE(ConfManager)
 
@@ -41,8 +40,7 @@ public:
     void initConfToEdit();
     void setConfToEdit(FirewallConf *conf);
 
-    FirewallConf *cloneConf(const FirewallConf &conf,
-                            QObject *parent = nullptr) const;
+    FirewallConf *cloneConf(const FirewallConf &conf, QObject *parent = nullptr) const;
 
     bool load(FirewallConf &conf);
     bool save(FirewallConf &newConf, bool onlyFlags = false);
@@ -51,13 +49,11 @@ public:
     bool saveTasks(const QList<TaskInfo *> &taskInfos);
 
     bool appPathExists(const QString &appPath);
-    bool addApp(const QString &appPath, const QString &appName,
-                const QDateTime &endTime,
-                qint64 groupId, bool useGroupPerm,
-                bool blocked, bool alerted = false);
+    bool addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
+            qint64 groupId, bool useGroupPerm, bool blocked, bool alerted = false);
     bool deleteApp(qint64 appId);
-    bool updateApp(qint64 appId, const QString &appName, const QDateTime &endTime,
-                   qint64 groupId, bool useGroupPerm, bool blocked);
+    bool updateApp(qint64 appId, const QString &appName, const QDateTime &endTime, qint64 groupId,
+            bool useGroupPerm, bool blocked);
     bool updateAppName(qint64 appId, const QString &appName);
 
     bool walkApps(std::function<walkAppsCallback> func) override;
@@ -66,30 +62,24 @@ public:
     void updateAppEndTimes();
     void checkAppEndTimes();
 
-    bool addZone(const QString &zoneName, const QString &sourceCode,
-                 const QString &url, const QString &formData,
-                 bool enabled, bool customUrl, int &zoneId);
+    bool addZone(const QString &zoneName, const QString &sourceCode, const QString &url,
+            const QString &formData, bool enabled, bool customUrl, int &zoneId);
     int getFreeZoneId();
     bool deleteZone(int zoneId);
-    bool updateZone(int zoneId, const QString &zoneName,
-                    const QString &sourceCode, const QString &url,
-                    const QString &formData, bool enabled, bool customUrl);
+    bool updateZone(int zoneId, const QString &zoneName, const QString &sourceCode,
+            const QString &url, const QString &formData, bool enabled, bool customUrl);
     bool updateZoneName(int zoneId, const QString &zoneName);
     bool updateZoneEnabled(int zoneId, bool enabled);
-    bool updateZoneResult(int zoneId, const QString &textChecksum,
-                          const QString &binChecksum,
-                          const QDateTime &sourceModTime,
-                          const QDateTime &lastRun,
-                          const QDateTime &lastSuccess);
+    bool updateZoneResult(int zoneId, const QString &textChecksum, const QString &binChecksum,
+            const QDateTime &sourceModTime, const QDateTime &lastRun, const QDateTime &lastSuccess);
 
     bool validateDriver();
     bool updateDriverConf(bool onlyFlags = false);
     bool updateDriverDeleteApp(const QString &appPath);
-    bool updateDriverUpdateApp(const QString &appPath,
-                               int groupIndex, bool useGroupPerm,
-                               bool blocked, bool remove = false);
+    bool updateDriverUpdateApp(const QString &appPath, int groupIndex, bool useGroupPerm,
+            bool blocked, bool remove = false);
     void updateDriverZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
-                           const QList<QByteArray> &zonesData);
+            const QList<QByteArray> &zonesData);
     bool updateDriverZoneFlag(int zoneId, bool enabled);
 
 signals:

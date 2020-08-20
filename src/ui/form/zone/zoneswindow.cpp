@@ -30,10 +30,8 @@ namespace {
 
 }
 
-ZonesWindow::ZonesWindow(FortManager *fortManager,
-                         QWidget *parent) :
-    WidgetWindow(parent),
-    m_ctrl(new ZonesController(fortManager, this))
+ZonesWindow::ZonesWindow(FortManager *fortManager, QWidget *parent) :
+    WidgetWindow(parent), m_ctrl(new ZonesController(fortManager, this))
 {
     setupUi();
     setupController();
@@ -43,13 +41,12 @@ void ZonesWindow::setupController()
 {
     connect(ctrl(), &ZonesController::retranslateUi, this, &ZonesWindow::onRetranslateUi);
 
-    connect(this, &ZonesWindow::aboutToClose,
-            fortManager(), &FortManager::closeZonesWindow);
+    connect(this, &ZonesWindow::aboutToClose, fortManager(), &FortManager::closeZonesWindow);
 
-    connect(fortManager(), &FortManager::afterSaveProgWindowState,
-            this, &ZonesWindow::onSaveWindowState);
-    connect(fortManager(), &FortManager::afterRestoreProgWindowState,
-            this, &ZonesWindow::onRestoreWindowState);
+    connect(fortManager(), &FortManager::afterSaveProgWindowState, this,
+            &ZonesWindow::onSaveWindowState);
+    connect(fortManager(), &FortManager::afterRestoreProgWindowState, this,
+            &ZonesWindow::onRestoreWindowState);
 
     emit ctrl()->retranslateUi();
 }
@@ -126,8 +123,7 @@ void ZonesWindow::setupUi()
     this->setFont(QFont("Tahoma", 9));
 
     // Icon
-    this->setWindowIcon(GuiUtil::overlayIcon(":/images/sheild-96.png",
-                                             ":/images/map.png"));
+    this->setWindowIcon(GuiUtil::overlayIcon(":/images/sheild-96.png", ":/images/map.png"));
 
     // Size
     this->resize(1024, 768);
@@ -215,7 +211,8 @@ void ZonesWindow::setupComboSources()
     m_comboSources = new QComboBox();
 
     const auto refreshComboZoneTypes = [&](bool onlyFlags = false) {
-        if (onlyFlags) return;
+        if (onlyFlags)
+            return;
 
         m_comboSources->clear();
         for (const auto &sourceVar : zoneListModel()->zoneSources()) {
@@ -244,12 +241,8 @@ QLayout *ZonesWindow::setupHeader()
     m_actRemoveZone = editMenu->addAction(QIcon(":/images/map_delete.png"), QString());
     m_actRemoveZone->setShortcut(Qt::Key_Delete);
 
-    connect(m_actAddZone, &QAction::triggered, this, [&] {
-        updateZoneEditForm(false);
-    });
-    connect(m_actEditZone, &QAction::triggered, this, [&] {
-        updateZoneEditForm(true);
-    });
+    connect(m_actAddZone, &QAction::triggered, this, [&] { updateZoneEditForm(false); });
+    connect(m_actEditZone, &QAction::triggered, this, [&] { updateZoneEditForm(true); });
     connect(m_actRemoveZone, &QAction::triggered, this, [&] {
         if (fortManager()->showQuestionBox(tr("Are you sure to remove selected zone?"))) {
             deleteSelectedZone();
@@ -262,14 +255,12 @@ QLayout *ZonesWindow::setupHeader()
     // Save As Text
     m_btSaveAsText = ControlUtil::createButton(":/images/database_save.png", [&] {
         const auto filePath = ControlUtil::getSaveFileName(
-                    m_btSaveAsText->text(),
-                    tr("Text files (*.txt);;All files (*.*)"));
+                m_btSaveAsText->text(), tr("Text files (*.txt);;All files (*.*)"));
 
         if (!filePath.isEmpty()) {
             const int zoneIndex = zoneListCurrentIndex();
 
-            if (!taskManager()->taskInfoZoneDownloader()
-                    ->saveZoneAsText(filePath, zoneIndex)) {
+            if (!taskManager()->taskInfoZoneDownloader()->saveZoneAsText(filePath, zoneIndex)) {
                 fortManager()->showErrorBox(tr("Cannot save Zone addresses as text file"));
             }
         }
@@ -342,13 +333,14 @@ void ZonesWindow::updateZoneEditForm(bool editCurrentZone)
     ZoneRow zoneRow;
     if (editCurrentZone) {
         const auto zoneIndex = zoneListCurrentIndex();
-        if (zoneIndex < 0) return;
+        if (zoneIndex < 0)
+            return;
 
         zoneRow = zoneListModel()->zoneRowAt(zoneIndex);
     }
 
-    const auto zoneSource = ZoneSourceWrapper(
-                zoneListModel()->zoneSourceByCode(zoneRow.sourceCode));
+    const auto zoneSource =
+            ZoneSourceWrapper(zoneListModel()->zoneSourceByCode(zoneRow.sourceCode));
 
     m_formZoneIsNew = !editCurrentZone;
 
@@ -397,8 +389,8 @@ bool ZonesWindow::saveZoneEditForm()
     // Add new zone
     if (m_formZoneIsNew) {
         int zoneId;
-        if (zoneListModel()->addZone(zoneName, sourceCode, url, formData,
-                                     enabled, customUrl, zoneId)) {
+        if (zoneListModel()->addZone(
+                    zoneName, sourceCode, url, formData, enabled, customUrl, zoneId)) {
             m_zoneListView->selectCell(zoneId - 1);
             return true;
         }
@@ -410,10 +402,8 @@ bool ZonesWindow::saveZoneEditForm()
     const auto zoneRow = zoneListModel()->zoneRowAt(zoneIndex);
 
     const bool zoneNameEdited = (zoneName != zoneRow.zoneName);
-    const bool zoneEdited = (sourceCode != zoneRow.sourceCode
-            || enabled != zoneRow.enabled
-            || customUrl != zoneRow.customUrl
-            || url != zoneRow.url
+    const bool zoneEdited = (sourceCode != zoneRow.sourceCode || enabled != zoneRow.enabled
+            || customUrl != zoneRow.customUrl || url != zoneRow.url
             || formData != zoneRow.formData);
 
     if (!zoneEdited) {
@@ -423,18 +413,16 @@ bool ZonesWindow::saveZoneEditForm()
         return true;
     }
 
-    return zoneListModel()->updateZone(zoneRow.zoneId, zoneName, sourceCode,
-                                       url, formData, enabled,
-                                       customUrl, zoneEdited);
+    return zoneListModel()->updateZone(
+            zoneRow.zoneId, zoneName, sourceCode, url, formData, enabled, customUrl, zoneEdited);
 }
 
 void ZonesWindow::updateZone(int row, bool enabled)
 {
     const auto zoneRow = zoneListModel()->zoneRowAt(row);
 
-    zoneListModel()->updateZone(zoneRow.zoneId, zoneRow.zoneName,
-                                zoneRow.sourceCode, zoneRow.url, zoneRow.formData,
-                                enabled, zoneRow.customUrl);
+    zoneListModel()->updateZone(zoneRow.zoneId, zoneRow.zoneName, zoneRow.sourceCode, zoneRow.url,
+            zoneRow.formData, enabled, zoneRow.customUrl);
 }
 
 void ZonesWindow::deleteZone(int row)

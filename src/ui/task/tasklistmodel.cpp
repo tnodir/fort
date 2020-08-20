@@ -3,10 +3,8 @@
 #include "taskinfo.h"
 #include "taskmanager.h"
 
-TaskListModel::TaskListModel(TaskManager *taskManager,
-                             QObject *parent) :
-    TableItemModel(parent),
-    m_taskManager(taskManager)
+TaskListModel::TaskListModel(TaskManager *taskManager, QObject *parent) :
+    TableItemModel(parent), m_taskManager(taskManager)
 {
     setupTaskRows();
 
@@ -38,13 +36,16 @@ int TaskListModel::columnCount(const QModelIndex &parent) const
 
 QVariant TaskListModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (orientation == Qt::Horizontal
-            && role == Qt::DisplayRole) {
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         switch (section) {
-        case 0: return tr("Name");
-        case 1: return tr("Interval, hours");
-        case 2: return tr("Last Run");
-        case 3: return tr("Last Success");
+        case 0:
+            return tr("Name");
+        case 1:
+            return tr("Interval, hours");
+        case 2:
+            return tr("Last Run");
+        case 3:
+            return tr("Last Success");
         }
     }
     return QVariant();
@@ -56,18 +57,21 @@ QVariant TaskListModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     switch (role) {
-    case Qt::DisplayRole:
-    {
+    case Qt::DisplayRole: {
         const int row = index.row();
         const int column = index.column();
 
         const auto taskInfo = taskInfoAt(row);
 
         switch (column) {
-        case 0: return taskInfo->title();
-        case 1: return taskIntervalHours(row);
-        case 2: return formatDateTime(taskInfo->lastRun());
-        case 3: return formatDateTime(taskInfo->lastSuccess());
+        case 0:
+            return taskInfo->title();
+        case 1:
+            return taskIntervalHours(row);
+        case 2:
+            return formatDateTime(taskInfo->lastRun());
+        case 3:
+            return formatDateTime(taskInfo->lastSuccess());
         }
 
         break;
@@ -139,7 +143,8 @@ void TaskListModel::saveChanges()
     const int taskCount = taskInfosList().size();
     for (int i = 0; i < taskCount; ++i) {
         const auto taskRow = taskRowAt(i);
-        if (!taskRow) continue;
+        if (!taskRow)
+            continue;
 
         auto taskInfo = taskInfoAt(i);
         taskInfo->setEnabled(taskRow->enabled);
@@ -189,7 +194,7 @@ void TaskListModel::setTaskEnabled(const QModelIndex &index, bool v)
 
     taskRow->enabled = v;
 
-    emit dataChanged(index, index, {Qt::CheckStateRole});
+    emit dataChanged(index, index, { Qt::CheckStateRole });
     emit dataEdited();
 }
 
@@ -217,7 +222,7 @@ void TaskListModel::setTaskIntervalHours(const QModelIndex &index, int v)
 
     taskRow->intervalHours = v;
 
-    emit dataChanged(index, index, {Qt::DisplayRole});
+    emit dataChanged(index, index, { Qt::DisplayRole });
     emit dataEdited();
 }
 

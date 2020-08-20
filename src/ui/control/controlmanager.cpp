@@ -13,17 +13,15 @@
 Q_DECLARE_LOGGING_CATEGORY(CLOG_CONTROL_MANAGER)
 Q_LOGGING_CATEGORY(CLOG_CONTROL_MANAGER, "fort.controlManager")
 
-#define logWarning() qCWarning(CLOG_CONTROL_MANAGER,)
-#define logCritical() qCCritical(CLOG_CONTROL_MANAGER,)
+#define logWarning()  qCWarning(CLOG_CONTROL_MANAGER, )
+#define logCritical() qCCritical(CLOG_CONTROL_MANAGER, )
 
-ControlManager::ControlManager(const QString &globalName,
-                               const QString &command,
-                               QObject *parent) :
+ControlManager::ControlManager(const QString &globalName, const QString &command, QObject *parent) :
     QObject(parent),
     m_isClient(!command.isEmpty()),
     m_command(command),
     m_semaphore(globalName + QLatin1String("_ControlSemaphore"), 0,
-                isClient() ? QSystemSemaphore::Open : QSystemSemaphore::Create),
+            isClient() ? QSystemSemaphore::Open : QSystemSemaphore::Create),
     m_sharedMemory(globalName + QLatin1String("_ControlSharedMemory"))
 {
 }
@@ -39,8 +37,7 @@ bool ControlManager::listen(FortManager *fortManager)
         return true;
 
     if (!m_sharedMemory.create(4096)) {
-        logWarning() << "Shared Memory create error:"
-                     << m_sharedMemory.errorString();
+        logWarning() << "Shared Memory create error:" << m_sharedMemory.errorString();
         return false;
     }
 
@@ -56,8 +53,7 @@ bool ControlManager::listen(FortManager *fortManager)
 bool ControlManager::post(const QStringList &args)
 {
     if (!m_sharedMemory.attach()) {
-        logWarning() << "Shared Memory attach error:"
-                     << m_sharedMemory.errorString();
+        logWarning() << "Shared Memory attach error:" << m_sharedMemory.errorString();
         return false;
     }
 
@@ -66,19 +62,16 @@ bool ControlManager::post(const QStringList &args)
     return worker.post(m_command, args);
 }
 
-void ControlManager::processRequest(const QString &command,
-                                    const QStringList &args)
+void ControlManager::processRequest(const QString &command, const QStringList &args)
 {
     QString errorMessage;
     if (!processCommand(command, args, errorMessage)) {
-        logWarning() << "Bad control command" << errorMessage
-                     << ':' << command << args;
+        logWarning() << "Bad control command" << errorMessage << ':' << command << args;
     }
 }
 
-bool ControlManager::processCommand(const QString &command,
-                                    const QStringList &args,
-                                    QString &errorMessage)
+bool ControlManager::processCommand(
+        const QString &command, const QStringList &args, QString &errorMessage)
 {
     const int argsSize = args.size();
 
@@ -124,15 +117,15 @@ void ControlManager::setupWorker()
     m_worker = new ControlWorker(&m_semaphore, &m_sharedMemory, this);
     m_worker->setAutoDelete(false);
 
-    connect(m_worker, &ControlWorker::requestReady,
-            this, &ControlManager::processRequest);
+    connect(m_worker, &ControlWorker::requestReady, this, &ControlManager::processRequest);
 
     QThreadPool::globalInstance()->start(m_worker);
 }
 
 void ControlManager::abort()
 {
-    if (!m_worker) return;
+    if (!m_worker)
+        return;
 
     m_worker->disconnect(this);
 

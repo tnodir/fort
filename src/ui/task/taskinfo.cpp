@@ -8,14 +8,10 @@
 #include "taskupdatechecker.h"
 #include "taskzonedownloader.h"
 
-#define TASK_INFO_VERSION   1
+#define TASK_INFO_VERSION 1
 
 TaskInfo::TaskInfo(TaskType type, TaskManager &taskManager) :
-    QObject(&taskManager),
-    m_enabled(false),
-    m_running(false),
-    m_aborted(false),
-    m_type(type)
+    QObject(&taskManager), m_enabled(false), m_running(false), m_aborted(false), m_type(type)
 {
 }
 
@@ -116,19 +112,14 @@ void TaskInfo::rawData(QByteArray &data) const
 #else
             QDataStream::WriteOnly
 #endif
-            );
+    );
 
     // Store data
     const quint16 infoVersion = TASK_INFO_VERSION;
     const quint8 enabled = m_enabled;
     const quint16 intervalHours = m_intervalHours;
 
-    stream
-            << infoVersion
-            << enabled
-            << intervalHours
-            << m_lastRun
-            << m_lastSuccess;
+    stream << infoVersion << enabled << intervalHours << m_lastRun << m_lastSuccess;
 }
 
 void TaskInfo::setRawData(const QByteArray &data)
@@ -146,11 +137,7 @@ void TaskInfo::setRawData(const QByteArray &data)
     quint8 enabled;
     quint16 intervalHours;
 
-    stream
-            >> enabled
-            >> intervalHours
-            >> m_lastRun
-            >> m_lastSuccess;
+    stream >> enabled >> intervalHours >> m_lastRun >> m_lastSuccess;
 
     m_enabled = enabled;
     m_intervalHours = intervalHours;
@@ -165,13 +152,13 @@ QString TaskInfo::typeToString(TaskInfo::TaskType type)
 TaskInfo::TaskType TaskInfo::stringToType(const QString &name)
 {
     const QMetaEnum typeEnum = QMetaEnum::fromType<TaskType>();
-    return static_cast<TaskInfo::TaskType>(
-                typeEnum.keyToValue(name.toLatin1()));
+    return static_cast<TaskInfo::TaskType>(typeEnum.keyToValue(name.toLatin1()));
 }
 
 void TaskInfo::run()
 {
-    if (taskWorker()) return;
+    if (taskWorker())
+        return;
 
     setRunning(true);
     emit workStarted();
@@ -184,8 +171,7 @@ void TaskInfo::setupTaskWorker()
 {
     TaskWorker *taskWorker = createWorker();
 
-    connect(taskWorker, &TaskWorker::finished,
-            this, &TaskInfo::handleFinished);
+    connect(taskWorker, &TaskWorker::finished, this, &TaskInfo::handleFinished);
 
     setTaskWorker(taskWorker);
 

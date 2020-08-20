@@ -7,8 +7,8 @@
 
 using phandle_t = void *;
 
-#define PROC_INVALID_PID        quint32(-1)
-#define PROC_INVALID_HANDLE     nullptr
+#define PROC_INVALID_PID    quint32(-1)
+#define PROC_INVALID_HANDLE nullptr
 
 class ProcessInfo : public QObject
 {
@@ -16,17 +16,13 @@ class ProcessInfo : public QObject
     Q_PROPERTY(quint32 pid READ pid CONSTANT)
 
 public:
-    explicit ProcessInfo(quint32 pid = PROC_INVALID_PID,
-                         QObject *parent = nullptr);
+    explicit ProcessInfo(quint32 pid = PROC_INVALID_PID, QObject *parent = nullptr);
     ~ProcessInfo() override;
     CLASS_DELETE_COPY_MOVE(ProcessInfo)
 
     quint32 pid() const { return m_pid; }
 
-    bool isValid() const {
-        return m_pid != PROC_INVALID_PID
-                && m_handle != PROC_INVALID_HANDLE;
-    }
+    bool isValid() const { return m_pid != PROC_INVALID_PID && m_handle != PROC_INVALID_HANDLE; }
 
     QString path(bool isKernelPath = false) const;
 

@@ -28,8 +28,7 @@ class BasePage : public QFrame
     Q_OBJECT
 
 public:
-    explicit BasePage(OptionsController *ctrl,
-                      QWidget *parent = nullptr);
+    explicit BasePage(OptionsController *ctrl, QWidget *parent = nullptr);
 
 protected:
     OptionsController *ctrl() const { return m_ctrl; }
@@ -42,14 +41,14 @@ protected:
     ZoneListModel *zoneListModel() const;
 
 protected slots:
-    virtual void onEditResetted() {}
-    virtual void onAboutToSave() {}
-    virtual void onSaved() {}
+    virtual void onEditResetted() { }
+    virtual void onAboutToSave() { }
+    virtual void onSaved() { }
 
-    virtual void onSaveWindowState() {}
-    virtual void onRestoreWindowState() {}
+    virtual void onSaveWindowState() { }
+    virtual void onRestoreWindowState() { }
 
-    virtual void onRetranslateUi() {}
+    virtual void onRetranslateUi() { }
 
     bool openUrlExternally(const QUrl &url);
     void onLinkClicked();

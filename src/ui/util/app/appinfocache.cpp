@@ -4,9 +4,7 @@
 
 #include "appinfomanager.h"
 
-AppInfoCache::AppInfoCache(QObject *parent) :
-    QObject(parent),
-    m_cache(1000)
+AppInfoCache::AppInfoCache(QObject *parent) : QObject(parent), m_cache(1000)
 {
     m_triggerTimer.setSingleShot(true);
     m_triggerTimer.setInterval(200);
@@ -20,8 +18,7 @@ void AppInfoCache::setManager(AppInfoManager *manager)
 
     m_manager = manager;
 
-    connect(m_manager, &AppInfoManager::lookupFinished,
-            this, &AppInfoCache::handleFinishedLookup);
+    connect(m_manager, &AppInfoManager::lookupFinished, this, &AppInfoCache::handleFinishedLookup);
 }
 
 QImage AppInfoCache::appIcon(const AppInfo &info) const
@@ -53,8 +50,7 @@ AppInfo AppInfoCache::appInfo(const QString &appPath)
     return *appInfo;
 }
 
-void AppInfoCache::handleFinishedLookup(const QString &appPath,
-                                        const AppInfo info)
+void AppInfoCache::handleFinishedLookup(const QString &appPath, const AppInfo info)
 {
     AppInfo *appInfo = m_cache.object(appPath);
     if (appInfo == nullptr)

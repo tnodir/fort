@@ -6,8 +6,7 @@
 
 #include "controlutil.h"
 
-LabelColor::LabelColor(QWidget *parent) :
-    QWidget(parent)
+LabelColor::LabelColor(QWidget *parent) : QWidget(parent)
 {
     setupUi();
 }
@@ -22,8 +21,7 @@ void LabelColor::setColor(const QColor &v)
 
 void LabelColor::selectColor()
 {
-    const auto title = tr("Select color for %1")
-            .arg(label()->text());
+    const auto title = tr("Select color for %1").arg(label()->text());
     const auto selectedColor = ControlUtil::getColor(color(), title);
     if (selectedColor.isValid()) {
         setColor(selectedColor);
@@ -53,8 +51,7 @@ void LabelColor::setupButton()
     connect(button(), &QPushButton::clicked, this, &LabelColor::selectColor);
 
     connect(this, &LabelColor::colorChanged, [&] {
-        const auto qss = QString("background-color: %1")
-                .arg(color().name());
+        const auto qss = QString("background-color: %1").arg(color().name());
         button()->setStyleSheet(qss);
     });
 }

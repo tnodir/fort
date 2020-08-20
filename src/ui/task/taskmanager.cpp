@@ -7,15 +7,13 @@
 #include "taskinfoupdatechecker.h"
 #include "taskinfozonedownloader.h"
 
-TaskManager::TaskManager(FortManager *fortManager,
-                         QObject *parent) :
-    QObject(parent),
-    m_fortManager(fortManager)
+TaskManager::TaskManager(FortManager *fortManager, QObject *parent) :
+    QObject(parent), m_fortManager(fortManager)
 {
     setupTasks();
 
     m_timer.setSingleShot(true);
-    m_timer.start(5 * 1000);  // 5 seconds
+    m_timer.start(5 * 1000); // 5 seconds
 
     connect(&m_timer, &QTimer::timeout, this, &TaskManager::runExpiredTasks);
 }
@@ -101,7 +99,7 @@ void TaskManager::runExpiredTasks()
     }
 
     if (enabledTaskExists) {
-        m_timer.start(60 * 60 * 1000);  // 1 hour
+        m_timer.start(60 * 60 * 1000); // 1 hour
     } else {
         m_timer.stop();
     }

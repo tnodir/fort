@@ -9,7 +9,8 @@ QT_FORWARD_DECLARE_CLASS(ConfManager)
 QT_FORWARD_DECLARE_CLASS(SqliteDb)
 QT_FORWARD_DECLARE_CLASS(ZoneSourceWrapper)
 
-struct ZoneRow : TableRow {
+struct ZoneRow : TableRow
+{
     bool enabled = true;
     bool customUrl = false;
 
@@ -34,8 +35,7 @@ class ZoneListModel : public TableSqlModel
     Q_OBJECT
 
 public:
-    explicit ZoneListModel(ConfManager *confManager,
-                           QObject *parent = nullptr);
+    explicit ZoneListModel(ConfManager *confManager, QObject *parent = nullptr);
 
     ConfManager *confManager() const { return m_confManager; }
     SqliteDb *sqliteDb() const override;
@@ -44,8 +44,8 @@ public:
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    QVariant headerData(int section, Qt::Orientation orientation,
-                        int role = Qt::DisplayRole) const override;
+    QVariant headerData(
+            int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
@@ -53,20 +53,15 @@ public:
 
     const ZoneRow &zoneRowAt(int row) const;
 
-    bool addZone(const QString &zoneName, const QString &sourceCode,
-                 const QString &url, const QString &formData,
-                 bool enabled, bool customUrl, int &zoneId);
-    bool updateZone(int zoneId, const QString &zoneName,
-                    const QString &sourceCode, const QString &url,
-                    const QString &formData, bool enabled,
-                    bool customUrl, bool updateDriver = true);
+    bool addZone(const QString &zoneName, const QString &sourceCode, const QString &url,
+            const QString &formData, bool enabled, bool customUrl, int &zoneId);
+    bool updateZone(int zoneId, const QString &zoneName, const QString &sourceCode,
+            const QString &url, const QString &formData, bool enabled, bool customUrl,
+            bool updateDriver = true);
     bool updateZoneName(int zoneId, const QString &zoneName);
     bool updateZoneEnabled(int zoneId, bool enabled);
-    bool updateZoneResult(int zoneId, const QString &textChecksum,
-                          const QString &binChecksum,
-                          const QDateTime &sourceModTime,
-                          const QDateTime &lastRun,
-                          const QDateTime &lastSuccess);
+    bool updateZoneResult(int zoneId, const QString &textChecksum, const QString &binChecksum,
+            const QDateTime &sourceModTime, const QDateTime &lastRun, const QDateTime &lastSuccess);
     void deleteZone(int zoneId, int row);
 
     QString zoneNameById(int zoneId);

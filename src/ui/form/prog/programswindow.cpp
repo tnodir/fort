@@ -33,16 +33,12 @@ namespace {
 
 #define APPS_HEADER_VERSION 3
 
-const ValuesList appBlockInHourValues = {
-    3, 1, 6, 12, 24, 24 * 7, 24 * 30
-};
+const ValuesList appBlockInHourValues = { 3, 1, 6, 12, 24, 24 * 7, 24 * 30 };
 
 }
 
-ProgramsWindow::ProgramsWindow(FortManager *fortManager,
-                               QWidget *parent) :
-    WidgetWindow(parent),
-    m_ctrl(new ProgramsController(fortManager, this))
+ProgramsWindow::ProgramsWindow(FortManager *fortManager, QWidget *parent) :
+    WidgetWindow(parent), m_ctrl(new ProgramsController(fortManager, this))
 {
     setupUi();
     setupController();
@@ -52,13 +48,12 @@ void ProgramsWindow::setupController()
 {
     connect(ctrl(), &ProgramsController::retranslateUi, this, &ProgramsWindow::onRetranslateUi);
 
-    connect(this, &ProgramsWindow::aboutToClose,
-            fortManager(), &FortManager::closeProgramsWindow);
+    connect(this, &ProgramsWindow::aboutToClose, fortManager(), &FortManager::closeProgramsWindow);
 
-    connect(fortManager(), &FortManager::afterSaveProgWindowState,
-            this, &ProgramsWindow::onSaveWindowState);
-    connect(fortManager(), &FortManager::afterRestoreProgWindowState,
-            this, &ProgramsWindow::onRestoreWindowState);
+    connect(fortManager(), &FortManager::afterSaveProgWindowState, this,
+            &ProgramsWindow::onSaveWindowState);
+    connect(fortManager(), &FortManager::afterRestoreProgWindowState, this,
+            &ProgramsWindow::onRestoreWindowState);
 
     emit ctrl()->retranslateUi();
 }
@@ -126,10 +121,8 @@ void ProgramsWindow::onRetranslateUi()
 
 void ProgramsWindow::retranslateAppBlockInHours()
 {
-    const QStringList list = {
-        tr("Custom"), tr("1 hour"), tr("6 hours"),
-        tr("12 hours"), tr("Day"), tr("Week"), tr("Month")
-    };
+    const QStringList list = { tr("Custom"), tr("1 hour"), tr("6 hours"), tr("12 hours"), tr("Day"),
+        tr("Week"), tr("Month") };
 
     m_cscBlockAppIn->setNames(list);
     m_cscBlockAppIn->spinBox()->setSuffix(tr(" hour(s)"));
@@ -166,8 +159,8 @@ void ProgramsWindow::setupUi()
     this->setFont(QFont("Tahoma", 9));
 
     // Icon
-    this->setWindowIcon(GuiUtil::overlayIcon(":/images/sheild-96.png",
-                                             ":/images/application_cascade.png"));
+    this->setWindowIcon(
+            GuiUtil::overlayIcon(":/images/sheild-96.png", ":/images/application_cascade.png"));
 
     // Size
     this->resize(1024, 768);
@@ -224,7 +217,7 @@ void ProgramsWindow::setupAppEditForm()
 
     // Block after N hours
     m_cscBlockAppIn = new CheckSpinCombo();
-    m_cscBlockAppIn->spinBox()->setRange(1, 24 * 30 * 12);  // ~Year
+    m_cscBlockAppIn->spinBox()->setRange(1, 24 * 30 * 12); // ~Year
     m_cscBlockAppIn->setValues(appBlockInHourValues);
     m_cscBlockAppIn->setNamesByValues();
 
@@ -271,8 +264,7 @@ void ProgramsWindow::setupAppEditForm()
 
     connect(m_btSelectFile, &QAbstractButton::clicked, this, [&] {
         const auto filePath = ControlUtil::getOpenFileName(
-                    m_labelEditPath->text(),
-                    tr("Programs (*.exe);;All files (*.*)"));
+                m_labelEditPath->text(), tr("Programs (*.exe);;All files (*.*)"));
 
         if (!filePath.isEmpty()) {
             m_editPath->setText(filePath);
@@ -299,7 +291,8 @@ void ProgramsWindow::setupComboAppGroups()
     m_comboAppGroup = new QComboBox();
 
     const auto refreshComboAppGroups = [&](bool onlyFlags = false) {
-        if (onlyFlags) return;
+        if (onlyFlags)
+            return;
 
         m_comboAppGroup->clear();
         m_comboAppGroup->addItems(appListModel()->appGroupNames());
@@ -354,25 +347,18 @@ QLayout *ProgramsWindow::setupHeader()
 
     m_actPurgeApps = editMenu->addAction(QIcon(":/images/bin_empty.png"), QString());
 
-    connect(m_actAllowApp, &QAction::triggered, this, [&] {
-        updateSelectedApps(false);
-    });
-    connect(m_actBlockApp, &QAction::triggered, this, [&] {
-        updateSelectedApps(true);
-    });
-    connect(m_actAddApp, &QAction::triggered, this, [&] {
-        updateAppEditForm(false);
-    });
-    connect(m_actEditApp, &QAction::triggered, this, [&] {
-        updateAppEditForm(true);
-    });
+    connect(m_actAllowApp, &QAction::triggered, this, [&] { updateSelectedApps(false); });
+    connect(m_actBlockApp, &QAction::triggered, this, [&] { updateSelectedApps(true); });
+    connect(m_actAddApp, &QAction::triggered, this, [&] { updateAppEditForm(false); });
+    connect(m_actEditApp, &QAction::triggered, this, [&] { updateAppEditForm(true); });
     connect(m_actRemoveApp, &QAction::triggered, this, [&] {
         if (fortManager()->showQuestionBox(tr("Are you sure to remove selected program(s)?"))) {
             deleteSelectedApps();
         }
     });
     connect(m_actPurgeApps, &QAction::triggered, this, [&] {
-        if (fortManager()->showQuestionBox(tr("Are you sure to remove all non-existent programs?"))) {
+        if (fortManager()->showQuestionBox(
+                    tr("Are you sure to remove all non-existent programs?"))) {
             appListModel()->purgeApps();
         }
     });
@@ -405,9 +391,7 @@ void ProgramsWindow::setupLogOptions()
     setupLogBlocked();
 
     // Menu
-    const QList<QWidget *> menuWidgets = {
-        m_cbLogBlocked
-    };
+    const QList<QWidget *> menuWidgets = { m_cbLogBlocked };
     auto layout = ControlUtil::createLayoutByWidgets(menuWidgets);
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
@@ -481,12 +465,10 @@ void ProgramsWindow::setupAppInfoRow()
 
     m_labelAppCompanyName = ControlUtil::createLabel();
 
-    connect(m_btAppCopyPath, &QAbstractButton::clicked, this, [&] {
-        GuiUtil::setClipboardData(appListCurrentPath());
-    });
-    connect(m_btAppOpenFolder, &QAbstractButton::clicked, this, [&] {
-        OsUtil::openFolder(appListCurrentPath());
-    });
+    connect(m_btAppCopyPath, &QAbstractButton::clicked, this,
+            [&] { GuiUtil::setClipboardData(appListCurrentPath()); });
+    connect(m_btAppOpenFolder, &QAbstractButton::clicked, this,
+            [&] { OsUtil::openFolder(appListCurrentPath()); });
 
     layout->addWidget(m_btAppCopyPath);
     layout->addWidget(m_btAppOpenFolder);
@@ -546,7 +528,8 @@ void ProgramsWindow::updateAppEditForm(bool editCurrentApp)
     AppRow appRow;
     if (editCurrentApp) {
         const auto rows = m_appListView->selectedRows();
-        if (rows.isEmpty()) return;
+        if (rows.isEmpty())
+            return;
 
         isSingleSelection = (rows.size() == 1);
 
@@ -595,8 +578,7 @@ bool ProgramsWindow::saveAppEditForm()
         if (m_cscBlockAppIn->checkBox()->isChecked()) {
             const int hours = m_cscBlockAppIn->spinBox()->value();
 
-            endTime = QDateTime::currentDateTime()
-                    .addSecs(hours * 60 * 60);
+            endTime = QDateTime::currentDateTime().addSecs(hours * 60 * 60);
         } else if (m_cbBlockAppAt->isChecked()) {
             endTime = m_dteBlockAppAt->dateTime();
         }
@@ -604,8 +586,7 @@ bool ProgramsWindow::saveAppEditForm()
 
     // Add new app
     if (m_formAppIsNew) {
-        return appListModel()->addApp(appPath, appName, endTime, groupIndex,
-                                      useGroupPerm, blocked);
+        return appListModel()->addApp(appPath, appName, endTime, groupIndex, useGroupPerm, blocked);
     }
 
     // Edit selected apps
@@ -619,10 +600,8 @@ bool ProgramsWindow::saveAppEditForm()
         const auto appRow = appListModel()->appRowAt(appIndex);
 
         const bool appNameEdited = (appName != appRow.appName);
-        const bool appEdited = (appPath != appRow.appPath
-                || groupIndex != appRow.groupIndex
-                || useGroupPerm != appRow.useGroupPerm
-                || blocked != appRow.blocked
+        const bool appEdited = (appPath != appRow.appPath || groupIndex != appRow.groupIndex
+                || useGroupPerm != appRow.useGroupPerm || blocked != appRow.blocked
                 || endTime != appRow.endTime);
 
         if (!appEdited) {
@@ -643,8 +622,8 @@ bool ProgramsWindow::saveAppEditForm()
             appName = appRow.appName;
         }
 
-        if (!appListModel()->updateApp(appRow.appId, appPath, appName, endTime,
-                                       groupIndex, useGroupPerm, blocked, updateDriver))
+        if (!appListModel()->updateApp(appRow.appId, appPath, appName, endTime, groupIndex,
+                    useGroupPerm, blocked, updateDriver))
             return false;
     }
 
@@ -654,9 +633,8 @@ bool ProgramsWindow::saveAppEditForm()
 void ProgramsWindow::updateApp(int row, bool blocked)
 {
     const auto appRow = appListModel()->appRowAt(row);
-    appListModel()->updateApp(appRow.appId, appRow.appPath, appRow.appName,
-                              QDateTime(), appRow.groupIndex,
-                              appRow.useGroupPerm, blocked);
+    appListModel()->updateApp(appRow.appId, appRow.appPath, appRow.appName, QDateTime(),
+            appRow.groupIndex, appRow.useGroupPerm, blocked);
 }
 
 void ProgramsWindow::deleteApp(int row)
@@ -668,7 +646,7 @@ void ProgramsWindow::deleteApp(int row)
 void ProgramsWindow::updateSelectedApps(bool blocked)
 {
     const auto rows = m_appListView->selectedRows();
-    for (int i = rows.size(); --i >= 0; ) {
+    for (int i = rows.size(); --i >= 0;) {
         updateApp(rows.at(i), blocked);
     }
 }
@@ -676,7 +654,7 @@ void ProgramsWindow::updateSelectedApps(bool blocked)
 void ProgramsWindow::deleteSelectedApps()
 {
     const auto rows = m_appListView->selectedRows();
-    for (int i = rows.size(); --i >= 0; ) {
+    for (int i = rows.size(); --i >= 0;) {
         deleteApp(rows.at(i));
     }
 }

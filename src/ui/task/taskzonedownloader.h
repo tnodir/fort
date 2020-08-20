@@ -54,8 +54,7 @@ public:
 
     const QByteArray &zoneData() const { return m_zoneData; }
 
-    StringViewList parseAddresses(const QString &text,
-                                  QString &textChecksum) const;
+    StringViewList parseAddresses(const QString &text, QString &textChecksum) const;
 
     bool storeAddresses(const StringViewList &list);
     bool loadAddresses();
@@ -75,8 +74,8 @@ private:
     void loadLocalFile();
 
 private:
-    bool m_zoneEnabled  : 1;
-    bool m_sort         : 1;
+    bool m_zoneEnabled : 1;
+    bool m_sort : 1;
 
     int m_emptyNetMask = 32;
 

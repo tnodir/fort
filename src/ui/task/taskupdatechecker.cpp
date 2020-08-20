@@ -9,10 +9,7 @@
 #include "../util/net/netutil.h"
 #include "../util/json/jsonutil.h"
 
-TaskUpdateChecker::TaskUpdateChecker(QObject *parent) :
-    TaskDownloader(parent)
-{
-}
+TaskUpdateChecker::TaskUpdateChecker(QObject *parent) : TaskDownloader(parent) { }
 
 void TaskUpdateChecker::setupDownloader()
 {
@@ -52,10 +49,10 @@ bool TaskUpdateChecker::parseBuffer(const QByteArray &buffer)
     if (assets.isEmpty())
         return false;
 
-    m_releaseName = map["name"].toString();  // eg. "Fort Firewall v1.4.0"
-    m_publishedAt = map["published_at"].toString();  // eg. "2017-12-17T02:27:19Z"
+    m_releaseName = map["name"].toString(); // eg. "Fort Firewall v1.4.0"
+    m_publishedAt = map["published_at"].toString(); // eg. "2017-12-17T02:27:19Z"
 
-    m_releaseNotes = map["body"].toString();  // ChangeLog
+    m_releaseNotes = map["body"].toString(); // ChangeLog
 
     // Cut release text from dashes
     const int releaseDashesPos = m_releaseNotes.indexOf("\n---");
@@ -77,13 +74,9 @@ bool TaskUpdateChecker::parseBuffer(const QByteArray &buffer)
 
 QString TaskUpdateChecker::releaseText() const
 {
-    const QDateTime publishedTime = QDateTime::fromString(
-                m_publishedAt, Qt::ISODate);
+    const QDateTime publishedTime = QDateTime::fromString(m_publishedAt, Qt::ISODate);
 
-    return "[" + m_releaseName + "](" + APP_UPDATES_URL
-            + "/tag/v" + m_version + ") (*"
+    return "[" + m_releaseName + "](" + APP_UPDATES_URL + "/tag/v" + m_version + ") (*"
             + publishedTime.toString("dd-MMM-yyyy hh:mm") + "*, "
-            + NetUtil::formatDataSize(m_downloadSize)
-            + ")\n\n*Release Notes:*\n"
-            + m_releaseNotes;
+            + NetUtil::formatDataSize(m_downloadSize) + ")\n\n*Release Notes:*\n" + m_releaseNotes;
 }

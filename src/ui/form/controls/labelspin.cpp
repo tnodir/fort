@@ -6,8 +6,7 @@
 
 #include "controlutil.h"
 
-LabelSpin::LabelSpin(QWidget *parent) :
-    QWidget(parent)
+LabelSpin::LabelSpin(QWidget *parent) : QWidget(parent)
 {
     setupUi();
 }

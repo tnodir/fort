@@ -26,8 +26,7 @@ public:
     bool loadInfoFromDb(const QString &appPath, AppInfo &appInfo);
     QImage loadIconFromDb(qint64 iconId);
 
-    bool saveToDb(const QString &appPath, AppInfo &appInfo,
-                  const QImage &appIcon);
+    bool saveToDb(const QString &appPath, AppInfo &appInfo, const QImage &appIcon);
 
     void deleteAppInfo(const QString &appPath, const AppInfo &appInfo);
     void deleteOldApps(int limitCount = 0);
@@ -44,8 +43,7 @@ protected:
     WorkerObject *createWorker() override;
 
 private:
-    bool deleteAppsAndIcons(const QStringList &appPaths,
-                            const QHash<qint64, int> &iconIds);
+    bool deleteAppsAndIcons(const QStringList &appPaths, const QHash<qint64, int> &iconIds);
 
 private:
     SqliteDb *m_sqliteDb = nullptr;

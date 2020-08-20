@@ -23,8 +23,7 @@ void OsUtil::openFolder(const QString &filePath)
 
 bool OsUtil::createGlobalMutex(const char *name)
 {
-    return CreateMutexA(nullptr, FALSE, name)
-            && GetLastError() != ERROR_ALREADY_EXISTS;
+    return CreateMutexA(nullptr, FALSE, name) && GetLastError() != ERROR_ALREADY_EXISTS;
 }
 
 quint32 OsUtil::lastErrorCode()
@@ -36,11 +35,9 @@ QString OsUtil::errorMessage(quint32 errorCode)
 {
     LPWSTR buf = nullptr;
 
-    FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER
-                   | FORMAT_MESSAGE_FROM_SYSTEM
-                   | FORMAT_MESSAGE_IGNORE_INSERTS,
-                   nullptr, errorCode, 0,
-                   (LPWSTR) &buf, 0, nullptr);
+    FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM
+                    | FORMAT_MESSAGE_IGNORE_INSERTS,
+            nullptr, errorCode, 0, (LPWSTR) &buf, 0, nullptr);
 
     if (!buf) {
         return QString("System Error %1").arg(errorCode);

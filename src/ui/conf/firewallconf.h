@@ -7,36 +7,46 @@
 QT_FORWARD_DECLARE_CLASS(AddressGroup)
 QT_FORWARD_DECLARE_CLASS(AppGroup)
 
-#define DEFAULT_APP_GROUP_BITS          0xFFFF
-#define DEFAULT_MONTH_START             1
-#define DEFAULT_TRAF_HOUR_KEEP_DAYS     90  // ~3 months
-#define DEFAULT_TRAF_DAY_KEEP_DAYS      365  // ~1 year
-#define DEFAULT_TRAF_MONTH_KEEP_MONTHS  36  // ~3 years
+#define DEFAULT_APP_GROUP_BITS         0xFFFF
+#define DEFAULT_MONTH_START            1
+#define DEFAULT_TRAF_HOUR_KEEP_DAYS    90 // ~3 months
+#define DEFAULT_TRAF_DAY_KEEP_DAYS     365 // ~1 year
+#define DEFAULT_TRAF_MONTH_KEEP_MONTHS 36 // ~3 years
 
 class FirewallConf : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool provBoot READ provBoot WRITE setProvBoot NOTIFY provBootChanged)
-    Q_PROPERTY(bool filterEnabled READ filterEnabled WRITE setFilterEnabled NOTIFY filterEnabledChanged)
+    Q_PROPERTY(bool filterEnabled READ filterEnabled WRITE setFilterEnabled NOTIFY
+                    filterEnabledChanged)
     Q_PROPERTY(bool filterLocals READ filterLocals WRITE setFilterLocals NOTIFY filterLocalsChanged)
     Q_PROPERTY(bool stopTraffic READ stopTraffic WRITE setStopTraffic NOTIFY stopTrafficChanged)
-    Q_PROPERTY(bool stopInetTraffic READ stopInetTraffic WRITE setStopInetTraffic NOTIFY stopInetTrafficChanged)
+    Q_PROPERTY(bool stopInetTraffic READ stopInetTraffic WRITE setStopInetTraffic NOTIFY
+                    stopInetTrafficChanged)
     Q_PROPERTY(bool allowAllNew READ allowAllNew WRITE setAllowAllNew NOTIFY tempAllowAllChanged)
-    Q_PROPERTY(bool resolveAddress READ resolveAddress WRITE setResolveAddress NOTIFY resolveAddressChanged)
+    Q_PROPERTY(bool resolveAddress READ resolveAddress WRITE setResolveAddress NOTIFY
+                    resolveAddressChanged)
     Q_PROPERTY(bool logBlocked READ logBlocked WRITE setLogBlocked NOTIFY logBlockedChanged)
     Q_PROPERTY(bool logStat READ logStat WRITE setLogStat NOTIFY logStatChanged)
     Q_PROPERTY(bool appBlockAll READ appBlockAll WRITE setAppBlockAll NOTIFY appBlockAllChanged)
     Q_PROPERTY(bool appAllowAll READ appAllowAll WRITE setAppAllowAll NOTIFY appAllowAllChanged)
-    Q_PROPERTY(bool activePeriodEnabled READ activePeriodEnabled WRITE setActivePeriodEnabled NOTIFY activePeriodEnabledChanged)
-    Q_PROPERTY(QString activePeriodFrom READ activePeriodFrom WRITE setActivePeriodFrom NOTIFY activePeriodFromChanged)
-    Q_PROPERTY(QString activePeriodTo READ activePeriodTo WRITE setActivePeriodTo NOTIFY activePeriodToChanged)
+    Q_PROPERTY(bool activePeriodEnabled READ activePeriodEnabled WRITE setActivePeriodEnabled NOTIFY
+                    activePeriodEnabledChanged)
+    Q_PROPERTY(QString activePeriodFrom READ activePeriodFrom WRITE setActivePeriodFrom NOTIFY
+                    activePeriodFromChanged)
+    Q_PROPERTY(QString activePeriodTo READ activePeriodTo WRITE setActivePeriodTo NOTIFY
+                    activePeriodToChanged)
     Q_PROPERTY(int monthStart READ monthStart WRITE setMonthStart NOTIFY monthStartChanged)
-    Q_PROPERTY(int trafHourKeepDays READ trafHourKeepDays WRITE setTrafHourKeepDays NOTIFY trafHourKeepDaysChanged)
-    Q_PROPERTY(int trafDayKeepDays READ trafDayKeepDays WRITE setTrafDayKeepDays NOTIFY trafDayKeepDaysChanged)
-    Q_PROPERTY(int trafMonthKeepMonths READ trafMonthKeepMonths WRITE setTrafMonthKeepMonths NOTIFY trafMonthKeepMonthsChanged)
+    Q_PROPERTY(int trafHourKeepDays READ trafHourKeepDays WRITE setTrafHourKeepDays NOTIFY
+                    trafHourKeepDaysChanged)
+    Q_PROPERTY(int trafDayKeepDays READ trafDayKeepDays WRITE setTrafDayKeepDays NOTIFY
+                    trafDayKeepDaysChanged)
+    Q_PROPERTY(int trafMonthKeepMonths READ trafMonthKeepMonths WRITE setTrafMonthKeepMonths NOTIFY
+                    trafMonthKeepMonthsChanged)
     Q_PROPERTY(int trafUnit READ trafUnit WRITE setTrafUnit NOTIFY trafUnitChanged)
     Q_PROPERTY(quint32 quotaDayMb READ quotaDayMb WRITE setQuotaDayMb NOTIFY quotaDayMbChanged)
-    Q_PROPERTY(quint32 quotaMonthMb READ quotaMonthMb WRITE setQuotaMonthMb NOTIFY quotaMonthMbChanged)
+    Q_PROPERTY(
+            quint32 quotaMonthMb READ quotaMonthMb WRITE setQuotaMonthMb NOTIFY quotaMonthMbChanged)
 
 public:
     explicit FirewallConf(QObject *parent = nullptr);
@@ -161,20 +171,20 @@ private:
     void setupAddressGroups();
 
 private:
-    bool m_provBoot         : 1;
-    bool m_filterEnabled    : 1;
-    bool m_filterLocals     : 1;
-    bool m_stopTraffic      : 1;
-    bool m_stopInetTraffic  : 1;
-    bool m_allowAllNew      : 1;
+    bool m_provBoot : 1;
+    bool m_filterEnabled : 1;
+    bool m_filterLocals : 1;
+    bool m_stopTraffic : 1;
+    bool m_stopInetTraffic : 1;
+    bool m_allowAllNew : 1;
 
-    bool m_resolveAddress   : 1;
+    bool m_resolveAddress : 1;
 
-    bool m_logBlocked       : 1;
-    bool m_logStat          : 1;
+    bool m_logBlocked : 1;
+    bool m_logStat : 1;
 
-    bool m_appBlockAll      : 1;
-    bool m_appAllowAll      : 1;
+    bool m_appBlockAll : 1;
+    bool m_appAllowAll : 1;
 
     bool m_activePeriodEnabled : 1;
 

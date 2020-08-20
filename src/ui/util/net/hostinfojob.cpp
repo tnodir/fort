@@ -2,10 +2,7 @@
 
 #include "netutil.h"
 
-HostInfoJob::HostInfoJob(const QString &address) :
-    WorkerJob(address)
-{
-}
+HostInfoJob::HostInfoJob(const QString &address) : WorkerJob(address) { }
 
 void HostInfoJob::doJob()
 {

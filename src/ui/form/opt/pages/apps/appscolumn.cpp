@@ -6,8 +6,7 @@
 #include "../../../controls/controlutil.h"
 #include "../../../controls/plaintextedit.h"
 
-AppsColumn::AppsColumn(QWidget *parent) :
-    QWidget(parent)
+AppsColumn::AppsColumn(QWidget *parent) : QWidget(parent)
 {
     setupUi();
 }

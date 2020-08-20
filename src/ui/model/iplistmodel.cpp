@@ -1,9 +1,6 @@
 #include "iplistmodel.h"
 
-IpListModel::IpListModel(QObject *parent) :
-    StringListModel(parent)
-{
-}
+IpListModel::IpListModel(QObject *parent) : StringListModel(parent) { }
 
 void IpListModel::setAppPath(const QString &appPath)
 {

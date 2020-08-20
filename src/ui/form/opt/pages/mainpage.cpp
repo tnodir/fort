@@ -8,7 +8,6 @@
 
 #include "../../../fortsettings.h"
 #include "../../controls/controlutil.h"
-#include "../../controls/widebutton.h"
 #include "../optionscontroller.h"
 #include "addressespage.h"
 #include "applicationspage.h"
@@ -16,9 +15,7 @@
 #include "schedulepage.h"
 #include "statisticspage.h"
 
-MainPage::MainPage(OptionsController *ctrl,
-                   QWidget *parent) :
-    BasePage(ctrl, parent)
+MainPage::MainPage(OptionsController *ctrl, QWidget *parent) : BasePage(ctrl, parent)
 {
     setupUi();
 }
@@ -74,9 +71,12 @@ QLayout *MainPage::setupDialogButtons()
     auto buttonsLayout = new QHBoxLayout();
 
     m_btLogs = ControlUtil::createLinkButton(":/images/folder_error.png", settings()->logsPath());
-    m_btProfile = ControlUtil::createLinkButton(":/images/folder_user.png", settings()->profilePath());
-    m_btStat = ControlUtil::createLinkButton(":/images/folder_database.png", settings()->statPath());
-    m_btReleases = ControlUtil::createLinkButton(":/images/server_go.png", settings()->appUpdatesUrl());
+    m_btProfile =
+            ControlUtil::createLinkButton(":/images/folder_user.png", settings()->profilePath());
+    m_btStat =
+            ControlUtil::createLinkButton(":/images/folder_database.png", settings()->statPath());
+    m_btReleases =
+            ControlUtil::createLinkButton(":/images/server_go.png", settings()->appUpdatesUrl());
 
     connect(m_btLogs, &QAbstractButton::clicked, this, &MainPage::onLinkClicked);
     connect(m_btProfile, &QAbstractButton::clicked, this, &MainPage::onLinkClicked);

@@ -4,7 +4,7 @@
 #include <QStyleFactory>
 
 #ifdef USE_VISUAL_LEAK_DETECTOR
-#include <vld.h>
+#    include <vld.h>
 #endif
 
 #include "../common/version.h"
@@ -47,21 +47,18 @@ int main(int argc, char *argv[])
     }
 
 #ifdef USE_CONTROL_COMMANDS
-    ControlManager controlManager(QApplication::applicationName(),
-                                  fortSettings.controlCommand());
+    ControlManager controlManager(QApplication::applicationName(), fortSettings.controlCommand());
 
     // Send control request to running instance
     if (controlManager.isClient()) {
-        return controlManager.post(fortSettings.args())
-                ? 0 : FORT_ERROR_CONTROL;
+        return controlManager.post(fortSettings.args()) ? 0 : FORT_ERROR_CONTROL;
     }
 #endif
 
 #ifdef APP_SINGLE_INSTANCE
     // Check running instance
     if (!OsUtil::createGlobalMutex(APP_NAME)) {
-        QMessageBox::critical(nullptr, QString(),
-                              "Application is already running!");
+        QMessageBox::critical(nullptr, QString(), "Application is already running!");
         return FORT_ERROR_INSTANCE;
     }
 #endif

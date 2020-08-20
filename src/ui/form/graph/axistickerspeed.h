@@ -12,8 +12,8 @@ public:
 
 protected:
     double getTickStep(const QCPRange &range) override;
-    QString getTickLabel(double tick, const QLocale &locale,
-                         QChar formatChar, int precision) override;
+    QString getTickLabel(
+            double tick, const QLocale &locale, QChar formatChar, int precision) override;
 };
 
 #endif // AXISTICKERSPEED_H

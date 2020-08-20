@@ -25,9 +25,7 @@
 #include "../optionscontroller.h"
 #include "addresses/addressescolumn.h"
 
-AddressesPage::AddressesPage(OptionsController *ctrl,
-                             QWidget *parent) :
-    BasePage(ctrl, parent)
+AddressesPage::AddressesPage(OptionsController *ctrl, QWidget *parent) : BasePage(ctrl, parent)
 {
     setupUi();
 
@@ -74,8 +72,10 @@ void AddressesPage::onRetranslateUi()
     m_splitter->handle()->btMoveAllFrom1To2()->setToolTip(tr("Move All Lines to 'Exclude'"));
     m_splitter->handle()->btMoveAllFrom2To1()->setToolTip(tr("Move All Lines to 'Include'"));
     m_splitter->handle()->btInterchangeAll()->setToolTip(tr("Interchange All Lines"));
-    m_splitter->handle()->btMoveSelectedFrom1To2()->setToolTip(tr("Move Selected Lines to 'Exclude'"));
-    m_splitter->handle()->btMoveSelectedFrom2To1()->setToolTip(tr("Move Selected Lines to 'Include'"));
+    m_splitter->handle()->btMoveSelectedFrom1To2()->setToolTip(
+            tr("Move Selected Lines to 'Exclude'"));
+    m_splitter->handle()->btMoveSelectedFrom2To1()->setToolTip(
+            tr("Move Selected Lines to 'Include'"));
     m_btAddLocals->setToolTip(tr("Add Local Networks"));
 
     retranslateAddressesPlaceholderText();
@@ -200,8 +200,7 @@ void AddressesPage::setupSplitter()
 
 void AddressesPage::setupSplitterButtons()
 {
-    m_btAddLocals = ControlUtil::createSplitterButton(
-                ":/images/drive_network.png", [&] {
+    m_btAddLocals = ControlUtil::createSplitterButton(":/images/drive_network.png", [&] {
         auto area = m_splitter->handle()->currentTextArea();
         TextAreaUtil::appendText(area, localNetworks());
     });
@@ -369,8 +368,7 @@ AddressGroup *AddressesPage::addressGroupByIndex(int index) const
 
 quint32 AddressesPage::addressGroupZones(bool include) const
 {
-    return include ? addressGroup()->includeZones()
-                   : addressGroup()->excludeZones();
+    return include ? addressGroup()->includeZones() : addressGroup()->excludeZones();
 }
 
 QString AddressesPage::zonesText(bool include) const

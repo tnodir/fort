@@ -13,84 +13,58 @@
 Q_DECLARE_LOGGING_CATEGORY(CLOG_APPINFOCACHE)
 Q_LOGGING_CATEGORY(CLOG_APPINFOCACHE, "fort.appInfoWorker")
 
-#define logWarning() qCWarning(CLOG_APPINFOCACHE,)
-#define logCritical() qCCritical(CLOG_APPINFOCACHE,)
+#define logWarning()  qCWarning(CLOG_APPINFOCACHE, )
+#define logCritical() qCCritical(CLOG_APPINFOCACHE, )
 
-#define DATABASE_USER_VERSION   3
+#define DATABASE_USER_VERSION 3
 
-#define APP_CACHE_MAX_COUNT     2000
+#define APP_CACHE_MAX_COUNT 2000
 
 namespace {
 
-const char * const sqlPragmas =
-        "PRAGMA journal_mode = WAL;"
-        "PRAGMA locking_mode = EXCLUSIVE;"
-        "PRAGMA synchronous = NORMAL;"
-        ;
+const char *const sqlPragmas = "PRAGMA journal_mode = WAL;"
+                               "PRAGMA locking_mode = EXCLUSIVE;"
+                               "PRAGMA synchronous = NORMAL;";
 
-const char * const sqlSelectAppInfo =
-        "SELECT file_descr, company_name,"
-        "    product_name, product_ver, file_mod_time, icon_id"
-        "  FROM app WHERE path = ?1;"
-        ;
+const char *const sqlSelectAppInfo = "SELECT file_descr, company_name,"
+                                     "    product_name, product_ver, file_mod_time, icon_id"
+                                     "  FROM app WHERE path = ?1;";
 
-const char * const sqlUpdateAppAccessTime =
-        "UPDATE app"
-        "  SET access_time = datetime('now')"
-        "  WHERE path = ?1;"
-        ;
+const char *const sqlUpdateAppAccessTime = "UPDATE app"
+                                           "  SET access_time = datetime('now')"
+                                           "  WHERE path = ?1;";
 
-const char * const sqlSelectIconImage =
-        "SELECT image FROM icon WHERE icon_id = ?1;"
-        ;
+const char *const sqlSelectIconImage = "SELECT image FROM icon WHERE icon_id = ?1;";
 
-const char * const sqlSelectIconIdByHash =
-        "SELECT icon_id FROM icon WHERE hash = ?1;"
-        ;
+const char *const sqlSelectIconIdByHash = "SELECT icon_id FROM icon WHERE hash = ?1;";
 
-const char * const sqlInsertIcon =
-        "INSERT INTO icon(ref_count, hash, image)"
-        "  VALUES(1, ?1, ?2);"
-        ;
+const char *const sqlInsertIcon = "INSERT INTO icon(ref_count, hash, image)"
+                                  "  VALUES(1, ?1, ?2);";
 
-const char * const sqlUpdateIconRefCount =
-        "UPDATE icon"
-        "  SET ref_count = ref_count + ?2"
-        "  WHERE icon_id = ?1;"
-        ;
+const char *const sqlUpdateIconRefCount = "UPDATE icon"
+                                          "  SET ref_count = ref_count + ?2"
+                                          "  WHERE icon_id = ?1;";
 
-const char * const sqlInsertAppInfo =
-        "INSERT INTO app(path, file_descr, company_name,"
-        "    product_name, product_ver, file_mod_time,"
-        "    icon_id, access_time)"
-        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, datetime('now'));"
-        ;
+const char *const sqlInsertAppInfo = "INSERT INTO app(path, file_descr, company_name,"
+                                     "    product_name, product_ver, file_mod_time,"
+                                     "    icon_id, access_time)"
+                                     "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, datetime('now'));";
 
-const char * const sqlSelectAppCount =
-        "SELECT count(*) FROM app;"
-        ;
+const char *const sqlSelectAppCount = "SELECT count(*) FROM app;";
 
-const char * const sqlSelectAppOlds =
-        "SELECT path, icon_id"
-        "  FROM app"
-        "  ORDER BY access_time DESC"
-        "  LIMIT ?1;"
-        ;
+const char *const sqlSelectAppOlds = "SELECT path, icon_id"
+                                     "  FROM app"
+                                     "  ORDER BY access_time DESC"
+                                     "  LIMIT ?1;";
 
-const char * const sqlDeleteIconIfNotUsed =
-        "DELETE FROM icon"
-        "  WHERE icon_id = ?1 AND ref_count = 0;"
-        ;
+const char *const sqlDeleteIconIfNotUsed = "DELETE FROM icon"
+                                           "  WHERE icon_id = ?1 AND ref_count = 0;";
 
-const char * const sqlDeleteApp =
-        "DELETE FROM app WHERE path = ?1;"
-        ;
+const char *const sqlDeleteApp = "DELETE FROM app WHERE path = ?1;";
 
 }
 
-AppInfoManager::AppInfoManager(QObject *parent) :
-    WorkerManager(parent),
-    m_sqliteDb(new SqliteDb())
+AppInfoManager::AppInfoManager(QObject *parent) : WorkerManager(parent), m_sqliteDb(new SqliteDb())
 {
     setMaxWorkersCount(1);
 }
@@ -103,16 +77,13 @@ AppInfoManager::~AppInfoManager()
 void AppInfoManager::setupDb(const QString &filePath)
 {
     if (!m_sqliteDb->open(filePath)) {
-        logCritical() << "File open error:"
-                      << filePath
-                      << m_sqliteDb->errorMessage();
+        logCritical() << "File open error:" << filePath << m_sqliteDb->errorMessage();
         return;
     }
 
     m_sqliteDb->execute(sqlPragmas);
 
-    if (!m_sqliteDb->migrate(":/appinfocache/migrations",
-                             DATABASE_USER_VERSION, true)) {
+    if (!m_sqliteDb->migrate(":/appinfocache/migrations", DATABASE_USER_VERSION, true)) {
         logCritical() << "Migration error" << filePath;
         return;
     }
@@ -174,8 +145,7 @@ bool AppInfoManager::loadInfoFromDb(const QString &appPath, AppInfo &appInfo)
     appInfo.iconId = stmt.columnInt64(5);
 
     // Update last access time
-    m_sqliteDb->executeEx(sqlUpdateAppAccessTime,
-                          QVariantList() << appPath);
+    m_sqliteDb->executeEx(sqlUpdateAppAccessTime, QVariantList() << appPath);
 
     return true;
 }
@@ -187,14 +157,12 @@ QImage AppInfoManager::loadIconFromDb(qint64 iconId)
 
     QMutexLocker locker(&m_mutex);
 
-    const QVariant icon = m_sqliteDb->executeEx(
-                sqlSelectIconImage, QVariantList() << iconId);
+    const QVariant icon = m_sqliteDb->executeEx(sqlSelectIconImage, QVariantList() << iconId);
 
     return icon.value<QImage>();
 }
 
-bool AppInfoManager::saveToDb(const QString &appPath, AppInfo &appInfo,
-                              const QImage &appIcon)
+bool AppInfoManager::saveToDb(const QString &appPath, AppInfo &appInfo, const QImage &appIcon)
 {
     QMutexLocker locker(&m_mutex);
 
@@ -205,36 +173,24 @@ bool AppInfoManager::saveToDb(const QString &appPath, AppInfo &appInfo,
     // Save icon image
     QVariant iconId;
     {
-        const uint iconHash = qHashBits(appIcon.constBits(),
-                                        size_t(appIcon.sizeInBytes()));
+        const uint iconHash = qHashBits(appIcon.constBits(), size_t(appIcon.sizeInBytes()));
 
-        iconId = m_sqliteDb->executeEx(sqlSelectIconIdByHash,
-                                       QVariantList() << iconHash);
+        iconId = m_sqliteDb->executeEx(sqlSelectIconIdByHash, QVariantList() << iconHash);
         if (iconId.isNull()) {
-            m_sqliteDb->executeEx(sqlInsertIcon,
-                                  QVariantList() << iconHash << appIcon,
-                                  0, &ok);
+            m_sqliteDb->executeEx(sqlInsertIcon, QVariantList() << iconHash << appIcon, 0, &ok);
             if (ok) {
                 iconId = m_sqliteDb->lastInsertRowid();
             }
         } else {
-            m_sqliteDb->executeEx(sqlUpdateIconRefCount,
-                                  QVariantList() << iconId << +1,
-                                  0, &ok);
+            m_sqliteDb->executeEx(sqlUpdateIconRefCount, QVariantList() << iconId << +1, 0, &ok);
         }
     }
 
     // Save version info
     if (ok) {
         const QVariantList vars = QVariantList()
-                << appPath
-                << appInfo.fileDescription
-                << appInfo.companyName
-                << appInfo.productName
-                << appInfo.productVersion
-                << appInfo.fileModTime
-                << iconId
-                   ;
+                << appPath << appInfo.fileDescription << appInfo.companyName << appInfo.productName
+                << appInfo.productVersion << appInfo.fileModTime << iconId;
 
         m_sqliteDb->executeEx(sqlInsertAppInfo, vars, 0, &ok);
     }
@@ -280,8 +236,7 @@ void AppInfoManager::deleteOldApps(int limitCount)
     // Get old app info list
     {
         SqliteStmt stmt;
-        if (stmt.prepare(m_sqliteDb->db(), sqlSelectAppOlds,
-                         SqliteStmt::PreparePersistent)) {
+        if (stmt.prepare(m_sqliteDb->db(), sqlSelectAppOlds, SqliteStmt::PreparePersistent)) {
             if (limitCount != 0) {
                 stmt.bindInt(1, limitCount);
             }
@@ -303,8 +258,8 @@ void AppInfoManager::deleteOldApps(int limitCount)
     }
 }
 
-bool AppInfoManager::deleteAppsAndIcons(const QStringList &appPaths,
-                                        const QHash<qint64, int> &iconIds)
+bool AppInfoManager::deleteAppsAndIcons(
+        const QStringList &appPaths, const QHash<qint64, int> &iconIds)
 {
     bool ok = false;
 
@@ -316,25 +271,23 @@ bool AppInfoManager::deleteAppsAndIcons(const QStringList &appPaths,
         const qint64 iconId = iconIt.key();
         const int count = iconIt.value();
 
-        m_sqliteDb->executeEx(sqlUpdateIconRefCount,
-                              QVariantList() << iconId << -count,
-                              0, &ok);
-        if (!ok) goto end;
+        m_sqliteDb->executeEx(sqlUpdateIconRefCount, QVariantList() << iconId << -count, 0, &ok);
+        if (!ok)
+            goto end;
 
-        m_sqliteDb->executeEx(sqlDeleteIconIfNotUsed,
-                              QVariantList() << iconId,
-                              0, &ok);
-        if (!ok) goto end;
+        m_sqliteDb->executeEx(sqlDeleteIconIfNotUsed, QVariantList() << iconId, 0, &ok);
+        if (!ok)
+            goto end;
     }
 
     // Delete old app infos
     for (const QString &path : appPaths) {
-        m_sqliteDb->executeEx(sqlDeleteApp, QVariantList() << path,
-                              0, &ok);
-        if (!ok) goto end;
+        m_sqliteDb->executeEx(sqlDeleteApp, QVariantList() << path, 0, &ok);
+        if (!ok)
+            goto end;
     }
 
- end:
+end:
     m_sqliteDb->endTransaction(ok);
 
     return ok;

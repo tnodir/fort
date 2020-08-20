@@ -9,11 +9,11 @@ class LogEntry
 {
 public:
     enum LogType {
-        TypeNone    = -1,
+        TypeNone = -1,
         // synchronize with FORT_LOG_FLAG_*
-        AppBlocked  = 0x01000000,
-        ProcNew     = 0x02000000,
-        StatTraf    = 0x04000000
+        AppBlocked = 0x01000000,
+        ProcNew = 0x02000000,
+        StatTraf = 0x04000000
     };
 
     explicit LogEntry() = default;

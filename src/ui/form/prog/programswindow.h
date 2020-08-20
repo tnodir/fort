@@ -29,8 +29,7 @@ class ProgramsWindow : public WidgetWindow
     Q_OBJECT
 
 public:
-    explicit ProgramsWindow(FortManager *fortManager,
-                            QWidget *parent = nullptr);
+    explicit ProgramsWindow(FortManager *fortManager, QWidget *parent = nullptr);
 
 protected slots:
     void onSaveWindowState();

@@ -14,8 +14,7 @@ class TextArea2SplitterHandle : public QSplitterHandle
     Q_OBJECT
 
 public:
-    explicit TextArea2SplitterHandle(Qt::Orientation o,
-                                     QSplitter *parent);
+    explicit TextArea2SplitterHandle(Qt::Orientation o, QSplitter *parent);
 
     QPlainTextEdit *textArea1() const { return m_textArea1; }
     void setTextArea1(QPlainTextEdit *v) { m_textArea1 = v; }

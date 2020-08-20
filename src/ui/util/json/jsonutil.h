@@ -7,8 +7,7 @@
 class JsonUtil
 {
 public:
-    static QVariant jsonToVariant(const QByteArray &data,
-                                  QString &errorString);
+    static QVariant jsonToVariant(const QByteArray &data, QString &errorString);
 };
 
 #endif // JSONUTIL_H

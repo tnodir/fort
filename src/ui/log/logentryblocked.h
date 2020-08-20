@@ -6,9 +6,8 @@
 class LogEntryBlocked : public LogEntry
 {
 public:
-    explicit LogEntryBlocked(quint32 ip = 0, quint16 port = 0,
-                             quint8 proto = 0, quint32 pid = 0,
-                             const QString &kernelPath = QString());
+    explicit LogEntryBlocked(quint32 ip = 0, quint16 port = 0, quint8 proto = 0, quint32 pid = 0,
+            const QString &kernelPath = QString());
 
     LogEntry::LogType type() const override { return AppBlocked; }
 
@@ -33,7 +32,7 @@ public:
     QString path() const;
 
 private:
-    bool m_blocked  : 1;
+    bool m_blocked : 1;
     quint8 m_proto = 0;
     quint16 m_port = 0;
     quint32 m_ip = 0;

@@ -2,12 +2,11 @@
 
 #include "hostinfojob.h"
 
-HostInfoManager::HostInfoManager(QObject *parent) :
-    WorkerManager(parent)
+HostInfoManager::HostInfoManager(QObject *parent) : WorkerManager(parent)
 {
     setMaxWorkersCount(2);
 
-    QSysInfo::machineHostName();  // Initialize ws2_32.dll
+    QSysInfo::machineHostName(); // Initialize ws2_32.dll
 }
 
 void HostInfoManager::lookupHost(const QString &address)

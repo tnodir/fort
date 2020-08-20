@@ -5,7 +5,8 @@
 
 QT_FORWARD_DECLARE_CLASS(SqliteDb)
 
-struct TableRow {
+struct TableRow
+{
     bool isValid(int row) const { return row == this->row; }
     void invalidate() { row = -1; }
 

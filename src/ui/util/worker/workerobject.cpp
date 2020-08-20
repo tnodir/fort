@@ -3,14 +3,11 @@
 #include "workerjob.h"
 #include "workermanager.h"
 
-WorkerObject::WorkerObject(WorkerManager *manager) :
-    m_manager(manager)
-{
-}
+WorkerObject::WorkerObject(WorkerManager *manager) : m_manager(manager) { }
 
 void WorkerObject::run()
 {
-    for (; ; ) {
+    for (;;) {
         WorkerJob *job = manager()->dequeueJob();
         if (job == nullptr)
             break;

@@ -20,16 +20,12 @@
 
 namespace {
 
-const ValuesList taskIntervalHourValues = {
-    3, 1, 6, 12, 24, 24 * 7, 24 * 30
-};
+const ValuesList taskIntervalHourValues = { 3, 1, 6, 12, 24, 24 * 7, 24 * 30 };
 
 }
 
-SchedulePage::SchedulePage(OptionsController *ctrl,
-                           QWidget *parent) :
-    BasePage(ctrl, parent),
-    m_taskListModel(new TaskListModel(taskManager(), this))
+SchedulePage::SchedulePage(OptionsController *ctrl, QWidget *parent) :
+    BasePage(ctrl, parent), m_taskListModel(new TaskListModel(taskManager(), this))
 {
     setupTaskListModel();
 
@@ -56,7 +52,8 @@ void SchedulePage::onEditResetted()
 
 void SchedulePage::onSaved()
 {
-    if (!scheduleEdited()) return;
+    if (!scheduleEdited())
+        return;
 
     m_taskListModel->saveChanges();
 }
@@ -73,10 +70,8 @@ void SchedulePage::onRetranslateUi()
 
 void SchedulePage::retranslateTaskDetails()
 {
-    const QStringList list = {
-        tr("Custom"), tr("Hourly"), tr("Each 6 hours"),
-        tr("Each 12 hours"), tr("Daily"), tr("Weekly"), tr("Monthly")
-    };
+    const QStringList list = { tr("Custom"), tr("Hourly"), tr("Each 6 hours"), tr("Each 12 hours"),
+        tr("Daily"), tr("Weekly"), tr("Monthly") };
 
     m_cscTaskInterval->setNames(list);
     m_cscTaskInterval->spinBox()->setSuffix(tr(" hour(s)"));
@@ -84,9 +79,7 @@ void SchedulePage::retranslateTaskDetails()
 
 void SchedulePage::setupTaskListModel()
 {
-    connect(m_taskListModel, &TaskListModel::dataEdited, this, [&] {
-        setScheduleEdited(true);
-    });
+    connect(m_taskListModel, &TaskListModel::dataEdited, this, [&] { setScheduleEdited(true); });
 }
 
 void SchedulePage::setupUi()
@@ -154,12 +147,9 @@ void SchedulePage::setupTaskDetails()
 
     setupTaskInterval();
 
-    m_btTaskRun = ControlUtil::createButton(":/images/run.png", [&] {
-        currentTaskInfo()->run();
-    });
-    m_btTaskAbort = ControlUtil::createButton(":/images/cancel.png", [&] {
-        currentTaskInfo()->abort();
-    });
+    m_btTaskRun = ControlUtil::createButton(":/images/run.png", [&] { currentTaskInfo()->run(); });
+    m_btTaskAbort =
+            ControlUtil::createButton(":/images/cancel.png", [&] { currentTaskInfo()->abort(); });
 
     layout->addWidget(m_cscTaskInterval, 1);
     layout->addWidget(m_btTaskRun);
@@ -170,7 +160,7 @@ void SchedulePage::setupTaskInterval()
 {
     m_cscTaskInterval = new CheckSpinCombo();
     m_cscTaskInterval->checkBox()->setFont(ControlUtil::fontDemiBold());
-    m_cscTaskInterval->spinBox()->setRange(1, 24 * 30 * 12);  // ~Year
+    m_cscTaskInterval->spinBox()->setRange(1, 24 * 30 * 12); // ~Year
     m_cscTaskInterval->setValues(taskIntervalHourValues);
 
     connect(m_cscTaskInterval->checkBox(), &QCheckBox::toggled, this, [&](bool checked) {
@@ -179,12 +169,13 @@ void SchedulePage::setupTaskInterval()
 
         taskListModel()->setData(index, checked, TaskListModel::RoleEnabled);
     });
-    connect(m_cscTaskInterval->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this, [&](int value) {
-        const int taskIndex = currentTaskIndex();
-        const auto index = taskListModel()->index(taskIndex, 1);
+    connect(m_cscTaskInterval->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
+            [&](int value) {
+                const int taskIndex = currentTaskIndex();
+                const auto index = taskListModel()->index(taskIndex, 1);
 
-        taskListModel()->setData(index, value, TaskListModel::RoleIntervalHours);
-    });
+                taskListModel()->setData(index, value, TaskListModel::RoleIntervalHours);
+            });
 }
 
 void SchedulePage::setupTableTasksChanged()
@@ -193,20 +184,17 @@ void SchedulePage::setupTableTasksChanged()
         const int taskIndex = currentTaskIndex();
         const bool taskSelected = taskIndex >= 0;
 
-        setCurrentTaskInfo(taskSelected
-                           ? taskListModel()->taskInfoAt(taskIndex)
-                           : nullptr);
+        setCurrentTaskInfo(taskSelected ? taskListModel()->taskInfoAt(taskIndex) : nullptr);
         m_taskDetailsRow->setEnabled(taskSelected);
 
         if (taskSelected) {
             const auto index = taskListModel()->index(taskIndex, 0);
 
             m_cscTaskInterval->checkBox()->setChecked(
-                        taskListModel()->data(index, TaskListModel::RoleEnabled).toBool());
-            m_cscTaskInterval->checkBox()->setText(
-                        taskListModel()->data(index).toString());
+                    taskListModel()->data(index, TaskListModel::RoleEnabled).toBool());
+            m_cscTaskInterval->checkBox()->setText(taskListModel()->data(index).toString());
             m_cscTaskInterval->spinBox()->setValue(
-                        taskListModel()->data(index, TaskListModel::RoleIntervalHours).toInt());
+                    taskListModel()->data(index, TaskListModel::RoleIntervalHours).toInt());
 
             const bool running = currentTaskInfo()->running();
             m_btTaskRun->setEnabled(!running);

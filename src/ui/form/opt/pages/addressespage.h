@@ -12,8 +12,7 @@ class AddressesPage : public BasePage
     Q_OBJECT
 
 public:
-    explicit AddressesPage(OptionsController *ctrl = nullptr,
-                           QWidget *parent = nullptr);
+    explicit AddressesPage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
     AddressGroup *addressGroup() const;
 

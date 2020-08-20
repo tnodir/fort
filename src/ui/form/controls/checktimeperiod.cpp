@@ -7,8 +7,7 @@
 
 #include "controlutil.h"
 
-CheckTimePeriod::CheckTimePeriod(QWidget *parent) :
-    QWidget(parent)
+CheckTimePeriod::CheckTimePeriod(QWidget *parent) : QWidget(parent)
 {
     setupUi();
 }

@@ -15,10 +15,8 @@
 #include "logentryprocnew.h"
 #include "logentrystattraf.h"
 
-LogManager::LogManager(FortManager *fortManager,
-                       QObject *parent) :
-    QObject(parent),
-    m_fortManager(fortManager)
+LogManager::LogManager(FortManager *fortManager, QObject *parent) :
+    QObject(parent), m_fortManager(fortManager)
 {
 }
 
@@ -62,8 +60,8 @@ void LogManager::setErrorMessage(const QString &errorMessage)
 
 void LogManager::initialize()
 {
-    connect(driverWorker(), &DriverWorker::readLogResult,
-            this, &LogManager::processLogBuffer, Qt::QueuedConnection);
+    connect(driverWorker(), &DriverWorker::readLogResult, this, &LogManager::processLogBuffer,
+            Qt::QueuedConnection);
 }
 
 void LogManager::close()
@@ -100,8 +98,7 @@ void LogManager::addFreeBuffer(LogBuffer *logBuffer)
     m_freeBuffers.append(logBuffer);
 }
 
-void LogManager::processLogBuffer(LogBuffer *logBuffer, bool success,
-                                  quint32 errorCode)
+void LogManager::processLogBuffer(LogBuffer *logBuffer, bool success, quint32 errorCode)
 {
     if (m_active) {
         readLogAsync();
@@ -120,7 +117,7 @@ void LogManager::processLogBuffer(LogBuffer *logBuffer, bool success,
 
 void LogManager::readLogEntries(LogBuffer *logBuffer)
 {
-    for (; ; ) {
+    for (;;) {
         const auto logType = logBuffer->peekEntryType();
 
         switch (logType) {

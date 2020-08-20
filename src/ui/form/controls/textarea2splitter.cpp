@@ -2,8 +2,7 @@
 
 #include "textarea2splitterhandle.h"
 
-TextArea2Splitter::TextArea2Splitter(QWidget *parent) :
-    QSplitter(parent)
+TextArea2Splitter::TextArea2Splitter(QWidget *parent) : QSplitter(parent)
 {
     setupUi();
 }

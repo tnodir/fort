@@ -33,8 +33,8 @@ public:
     const Ip4Range &excludeRange() const { return m_excludeRange; }
 
 private:
-    bool m_includeAll   : 1;
-    bool m_excludeAll   : 1;
+    bool m_includeAll : 1;
+    bool m_excludeAll : 1;
 
     quint32 m_includeZones = 0;
     quint32 m_excludeZones = 0;

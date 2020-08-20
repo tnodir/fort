@@ -3,8 +3,7 @@
 #include <QCheckBox>
 #include <QHBoxLayout>
 
-CheckSpinCombo::CheckSpinCombo(QWidget *parent) :
-    SpinCombo(parent)
+CheckSpinCombo::CheckSpinCombo(QWidget *parent) : SpinCombo(parent)
 {
     setupUi();
 }

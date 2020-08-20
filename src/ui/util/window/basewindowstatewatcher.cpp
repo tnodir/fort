@@ -1,15 +1,13 @@
 #include "basewindowstatewatcher.h"
 
 BaseWindowStateWatcher::BaseWindowStateWatcher(QObject *parent) :
-    QObject(parent),
-    m_visible(false),
-    m_maximized(false)
+    QObject(parent), m_visible(false), m_maximized(false)
 {
 }
 
 QRect BaseWindowStateWatcher::geometry() const
 {
-    return {m_pos, m_size};
+    return { m_pos, m_size };
 }
 
 void BaseWindowStateWatcher::setGeometry(const QRect &rect)
@@ -29,8 +27,7 @@ void BaseWindowStateWatcher::uninstall(QObject *window)
     disconnect(window);
 }
 
-void BaseWindowStateWatcher::handlePositionChange(const QPoint &pos,
-                                                  QWindow::Visibility visibility)
+void BaseWindowStateWatcher::handlePositionChange(const QPoint &pos, QWindow::Visibility visibility)
 {
     if (visibility != QWindow::Windowed)
         return;
@@ -41,8 +38,7 @@ void BaseWindowStateWatcher::handlePositionChange(const QPoint &pos,
     }
 }
 
-void BaseWindowStateWatcher::handleSizeChange(const QSize &size,
-                                              QWindow::Visibility visibility)
+void BaseWindowStateWatcher::handleSizeChange(const QSize &size, QWindow::Visibility visibility)
 {
     if (visibility != QWindow::Windowed)
         return;
@@ -64,7 +60,8 @@ void BaseWindowStateWatcher::handleVisibilityChange(QWindow::Visibility visibili
         m_pos = m_posPrev;
         m_size = m_sizePrev;
         break;
-    default: break;
+    default:
+        break;
     }
 
     m_visible = (visibility != QWindow::Hidden);

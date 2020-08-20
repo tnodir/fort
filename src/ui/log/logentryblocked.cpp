@@ -1,14 +1,8 @@
 #include "logentryblocked.h"
 
-LogEntryBlocked::LogEntryBlocked(quint32 ip, quint16 port,
-                                 quint8 proto, quint32 pid,
-                                 const QString &kernelPath) :
-    m_blocked(true),
-    m_proto(proto),
-    m_port(port),
-    m_ip(ip),
-    m_pid(pid),
-    m_kernelPath(kernelPath)
+LogEntryBlocked::LogEntryBlocked(
+        quint32 ip, quint16 port, quint8 proto, quint32 pid, const QString &kernelPath) :
+    m_blocked(true), m_proto(proto), m_port(port), m_ip(ip), m_pid(pid), m_kernelPath(kernelPath)
 {
 }
 

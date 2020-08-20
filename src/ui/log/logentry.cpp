@@ -5,7 +5,5 @@
 
 QString LogEntry::getAppPath(const QString &kernelPath, quint32 pid)
 {
-    return kernelPath.isEmpty()
-            ? OsUtil::pidToPath(pid)
-            : FileUtil::kernelPathToPath(kernelPath);
+    return kernelPath.isEmpty() ? OsUtil::pidToPath(pid) : FileUtil::kernelPathToPath(kernelPath);
 }

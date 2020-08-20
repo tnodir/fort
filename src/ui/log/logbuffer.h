@@ -15,8 +15,7 @@ class LogBuffer : public QObject
     Q_OBJECT
 
 public:
-    explicit LogBuffer(int bufferSize = 0,
-                       QObject *parent = nullptr);
+    explicit LogBuffer(int bufferSize = 0, QObject *parent = nullptr);
 
     int top() const { return m_top; }
     int offset() const { return m_offset; }

@@ -20,9 +20,7 @@
 #include "../../controls/controlutil.h"
 #include "../optionscontroller.h"
 
-OptionsPage::OptionsPage(OptionsController *ctrl,
-                         QWidget *parent) :
-    BasePage(ctrl, parent)
+OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) : BasePage(ctrl, parent)
 {
     setupUi();
 }
@@ -45,7 +43,8 @@ void OptionsPage::onEditResetted()
 
 void OptionsPage::onSaved()
 {
-    if (!iniEdited()) return;
+    if (!iniEdited())
+        return;
 
     settings()->setStartWithWindows(m_cbStart->isChecked());
     settings()->setHotKeyEnabled(m_cbHotKeys->isChecked());
@@ -67,7 +66,8 @@ void OptionsPage::onRetranslateUi()
     m_cbProvBoot->setText(tr("Stop traffic when Fort Firewall is not running"));
     m_cbFilterEnabled->setText(tr("Filter Enabled"));
     m_cbFilterLocals->setText(tr("Filter Local Addresses"));
-    m_cbFilterLocals->setToolTip(tr("Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses"));
+    m_cbFilterLocals->setToolTip(
+            tr("Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses"));
     m_cbStopTraffic->setText(tr("Stop Traffic"));
     m_cbStopInetTraffic->setText(tr("Stop Internet Traffic"));
     m_cbAllowAllNew->setText(tr("Auto-Allow All New Programs"));
@@ -88,16 +88,13 @@ void OptionsPage::onRetranslateUi()
 void OptionsPage::retranslateEditPassword()
 {
     m_editPassword->setPlaceholderText(
-                settings()->hasPassword() ? tr("Installed")
-                                          : tr("Not Installed"));
+            settings()->hasPassword() ? tr("Installed") : tr("Not Installed"));
 }
 
 void OptionsPage::retranslateDriverMessage()
 {
     const auto text = driverManager()->isDeviceOpened()
-            ? (driverManager()->isDeviceError()
-               ? driverManager()->errorMessage()
-               : tr("Installed"))
+            ? (driverManager()->isDeviceError() ? driverManager()->errorMessage() : tr("Installed"))
             : tr("Not Installed");
 
     m_labelDriverMessage->setText(text);
@@ -109,9 +106,8 @@ void OptionsPage::setupUi()
     auto colLayout1 = new QVBoxLayout();
     colLayout1->setSpacing(10);
 
-    m_cbStart = ControlUtil::createCheckBox(settings()->startWithWindows(), [&](bool) {
-        setIniEdited(true);
-    });
+    m_cbStart = ControlUtil::createCheckBox(
+            settings()->startWithWindows(), [&](bool) { setIniEdited(true); });
     m_cbProvBoot = ControlUtil::createCheckBox(conf()->provBoot(), [&](bool checked) {
         conf()->setProvBoot(checked);
         ctrl()->setConfFlagsEdited(true);
@@ -136,9 +132,8 @@ void OptionsPage::setupUi()
         conf()->setAllowAllNew(checked);
         ctrl()->setConfFlagsEdited(true);
     });
-    m_cbHotKeys = ControlUtil::createCheckBox(settings()->hotKeyEnabled(), [&](bool) {
-        setIniEdited(true);
-    });
+    m_cbHotKeys = ControlUtil::createCheckBox(
+            settings()->hotKeyEnabled(), [&](bool) { setIniEdited(true); });
 
     m_gbStartup = new QGroupBox(this);
     auto startupLayout = new QVBoxLayout();
@@ -228,8 +223,7 @@ void OptionsPage::setupEditPassword()
     m_editPassword->setFixedWidth(200);
 
     const auto refreshEditPassword = [&] {
-        m_editPassword->setReadOnly(settings()->hasPassword()
-                                    || !m_cbPassword->isChecked());
+        m_editPassword->setReadOnly(settings()->hasPassword() || !m_cbPassword->isChecked());
 
         retranslateEditPassword();
     };
@@ -242,11 +236,12 @@ void OptionsPage::setupEditPassword()
 
 void OptionsPage::setupComboLanguage()
 {
-    m_comboLanguage = ControlUtil::createComboBox(translationManager()->naturalLabels(), [&](int index) {
-        if (translationManager()->switchLanguage(index)) {
-            settings()->setLanguage(translationManager()->localeName());
-        }
-    });
+    m_comboLanguage =
+            ControlUtil::createComboBox(translationManager()->naturalLabels(), [&](int index) {
+                if (translationManager()->switchLanguage(index)) {
+                    settings()->setLanguage(translationManager()->localeName());
+                }
+            });
     m_comboLanguage->setFixedWidth(200);
 
     const auto refreshComboLanguage = [&] {
@@ -310,9 +305,8 @@ void OptionsPage::setupDriverIcon()
 
     const auto refreshDriverIcon = [&] {
         const auto iconPath = driverManager()->isDeviceOpened()
-                ? (driverManager()->isDeviceError()
-                   ? ":/images/plugin_error.png"
-                   : ":/images/plugin.png")
+                ? (driverManager()->isDeviceError() ? ":/images/plugin_error.png"
+                                                    : ":/images/plugin.png")
                 : ":/images/plugin_disabled.png";
 
         m_iconDriver->setPixmap(QPixmap(iconPath));
@@ -321,7 +315,8 @@ void OptionsPage::setupDriverIcon()
     refreshDriverIcon();
 
     connect(driverManager(), &DriverManager::isDeviceOpenedChanged, this, refreshDriverIcon);
-    connect(driverManager(), &DriverManager::errorMessageChanged, this, &OptionsPage::retranslateDriverMessage);
+    connect(driverManager(), &DriverManager::errorMessageChanged, this,
+            &OptionsPage::retranslateDriverMessage);
 }
 
 void OptionsPage::setupNewVersionBox()
@@ -361,6 +356,6 @@ void OptionsPage::setupNewVersionUpdate()
 
     refreshNewVersion();
 
-    connect(taskManager()->taskInfoUpdateChecker(), &TaskInfoUpdateChecker::versionChanged,
-            this, refreshNewVersion);
+    connect(taskManager()->taskInfoUpdateChecker(), &TaskInfoUpdateChecker::versionChanged, this,
+            refreshNewVersion);
 }

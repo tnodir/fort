@@ -5,8 +5,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 
-NativeEventFilter::NativeEventFilter(QObject *parent) :
-    QObject(parent)
+NativeEventFilter::NativeEventFilter(QObject *parent) : QObject(parent)
 {
     qApp->installNativeEventFilter(this);
 }
@@ -16,10 +15,8 @@ NativeEventFilter::~NativeEventFilter()
     qApp->removeNativeEventFilter(this);
 }
 
-bool NativeEventFilter::registerHotKey(int hotKeyId,
-                                       Qt::Key keyCode,
-                                       Qt::KeyboardModifiers modifiers,
-                                       bool autoRepeat)
+bool NativeEventFilter::registerHotKey(
+        int hotKeyId, Qt::Key keyCode, Qt::KeyboardModifiers modifiers, bool autoRepeat)
 {
     Q_ASSERT(uint(hotKeyId) <= 0xBFFF);
 
@@ -34,13 +31,10 @@ bool NativeEventFilter::registerHotKey(int hotKeyId,
     return true;
 }
 
-bool NativeEventFilter::registerHotKey(int hotKeyId, int key,
-                                       bool autoRepeat)
+bool NativeEventFilter::registerHotKey(int hotKeyId, int key, bool autoRepeat)
 {
-    return registerHotKey(hotKeyId,
-                          Qt::Key(key & ~Qt::KeyboardModifierMask),
-                          Qt::KeyboardModifiers(key & Qt::KeyboardModifierMask),
-                          autoRepeat);
+    return registerHotKey(hotKeyId, Qt::Key(key & ~Qt::KeyboardModifierMask),
+            Qt::KeyboardModifiers(key & Qt::KeyboardModifierMask), autoRepeat);
 }
 
 void NativeEventFilter::unregisterHotKey(int hotKeyId)
@@ -59,8 +53,7 @@ void NativeEventFilter::unregisterHotKeys()
     m_keyIdMap.clear();
 }
 
-void NativeEventFilter::setKeyId(int hotKeyId, quint32 nativeMod,
-                                 quint32 nativeKey)
+void NativeEventFilter::setKeyId(int hotKeyId, quint32 nativeMod, quint32 nativeKey)
 {
     const quint32 nativeKeyMod = nativeMod | (nativeKey << 16);
 
@@ -82,11 +75,10 @@ int NativeEventFilter::getKeyId(quint32 nativeMod, quint32 nativeKey) const
 }
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-bool NativeEventFilter::nativeEventFilter(const QByteArray &eventType,
-                                          void *message, qintptr *result)
+bool NativeEventFilter::nativeEventFilter(
+        const QByteArray &eventType, void *message, qintptr *result)
 #else
-bool NativeEventFilter::nativeEventFilter(const QByteArray &eventType,
-                                          void *message, long *result)
+bool NativeEventFilter::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
 #endif
 {
     Q_UNUSED(eventType);
@@ -123,8 +115,7 @@ quint32 NativeEventFilter::nativeKeyCode(Qt::Key keyCode)
             return LOBYTE(vk);
     }
 
-    switch (keyCode)
-    {
+    switch (keyCode) {
     case Qt::Key_Escape:
         return VK_ESCAPE;
     case Qt::Key_Tab:
@@ -285,13 +276,10 @@ quint32 NativeEventFilter::nativeKeyCode(Qt::Key keyCode)
     }
 }
 
-quint32 NativeEventFilter::nativeModifiers(Qt::KeyboardModifiers modifiers,
-                                           bool autoRepeat)
+quint32 NativeEventFilter::nativeModifiers(Qt::KeyboardModifiers modifiers, bool autoRepeat)
 {
-    return (autoRepeat ? MOD_NOREPEAT : 0)
-            | ((modifiers & Qt::ShiftModifier) ? MOD_SHIFT : 0)
+    return (autoRepeat ? MOD_NOREPEAT : 0) | ((modifiers & Qt::ShiftModifier) ? MOD_SHIFT : 0)
             | ((modifiers & Qt::ControlModifier) ? MOD_CONTROL : 0)
             | ((modifiers & Qt::AltModifier) ? MOD_ALT : 0)
-            | ((modifiers & Qt::MetaModifier) ? MOD_WIN : 0)
-            ;
+            | ((modifiers & Qt::MetaModifier) ? MOD_WIN : 0);
 }

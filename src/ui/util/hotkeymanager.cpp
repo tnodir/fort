@@ -5,13 +5,11 @@
 
 #include "nativeeventfilter.h"
 
-HotKeyManager::HotKeyManager(NativeEventFilter *nativeEventFilter,
-                             QObject *parent) :
-    QObject(parent),
-    m_nativeEventFilter(nativeEventFilter)
+HotKeyManager::HotKeyManager(NativeEventFilter *nativeEventFilter, QObject *parent) :
+    QObject(parent), m_nativeEventFilter(nativeEventFilter)
 {
-    connect(m_nativeEventFilter, &NativeEventFilter::hotKeyPressed,
-            this, &HotKeyManager::onHotKeyPressed);
+    connect(m_nativeEventFilter, &NativeEventFilter::hotKeyPressed, this,
+            &HotKeyManager::onHotKeyPressed);
 }
 
 bool HotKeyManager::addAction(QAction *action, const QKeySequence &shortcut)

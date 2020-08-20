@@ -14,8 +14,7 @@ class ZonesController : public QObject
     Q_OBJECT
 
 public:
-    explicit ZonesController(FortManager *fortManager,
-                             QObject *parent = nullptr);
+    explicit ZonesController(FortManager *fortManager, QObject *parent = nullptr);
 
     FortManager *fortManager() const { return m_fortManager; }
     FortSettings *settings() const;

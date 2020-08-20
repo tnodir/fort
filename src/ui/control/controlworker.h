@@ -13,18 +13,15 @@ class ControlWorker : public QObject, public QRunnable
     Q_OBJECT
 
 public:
-    explicit ControlWorker(QSystemSemaphore *semaphore,
-                           QSharedMemory *sharedMemory,
-                           QObject *parent = nullptr);
+    explicit ControlWorker(
+            QSystemSemaphore *semaphore, QSharedMemory *sharedMemory, QObject *parent = nullptr);
 
     void run() override;
 
-    bool post(const QString &command,
-              const QStringList &args);
+    bool post(const QString &command, const QStringList &args);
 
 signals:
-    void requestReady(const QString &command,
-                      const QStringList &args);
+    void requestReady(const QString &command, const QStringList &args);
 
 public slots:
     void abort();
@@ -35,10 +32,8 @@ private:
     bool writeData(const QByteArray &data);
     QByteArray readData() const;
 
-    bool writeDataStream(const QString &command,
-                         const QStringList &args);
-    bool readDataStream(QString &command,
-                        QStringList &args) const;
+    bool writeDataStream(const QString &command, const QStringList &args);
+    bool readDataStream(QString &command, QStringList &args) const;
 
 private:
     volatile bool m_aborted = false;

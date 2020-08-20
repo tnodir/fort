@@ -8,12 +8,18 @@ class AppGroup : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
-    Q_PROPERTY(bool fragmentPacket READ fragmentPacket WRITE setFragmentPacket NOTIFY fragmentPacketChanged)
-    Q_PROPERTY(bool periodEnabled READ periodEnabled WRITE setPeriodEnabled NOTIFY periodEnabledChanged)
-    Q_PROPERTY(bool limitInEnabled READ limitInEnabled WRITE setLimitInEnabled NOTIFY limitInEnabledChanged)
-    Q_PROPERTY(bool limitOutEnabled READ limitOutEnabled WRITE setLimitOutEnabled NOTIFY limitOutEnabledChanged)
-    Q_PROPERTY(quint32 speedLimitIn READ speedLimitIn WRITE setSpeedLimitIn NOTIFY speedLimitInChanged)
-    Q_PROPERTY(quint32 speedLimitOut READ speedLimitOut WRITE setSpeedLimitOut NOTIFY speedLimitOutChanged)
+    Q_PROPERTY(bool fragmentPacket READ fragmentPacket WRITE setFragmentPacket NOTIFY
+                    fragmentPacketChanged)
+    Q_PROPERTY(bool periodEnabled READ periodEnabled WRITE setPeriodEnabled NOTIFY
+                    periodEnabledChanged)
+    Q_PROPERTY(bool limitInEnabled READ limitInEnabled WRITE setLimitInEnabled NOTIFY
+                    limitInEnabledChanged)
+    Q_PROPERTY(bool limitOutEnabled READ limitOutEnabled WRITE setLimitOutEnabled NOTIFY
+                    limitOutEnabledChanged)
+    Q_PROPERTY(
+            quint32 speedLimitIn READ speedLimitIn WRITE setSpeedLimitIn NOTIFY speedLimitInChanged)
+    Q_PROPERTY(quint32 speedLimitOut READ speedLimitOut WRITE setSpeedLimitOut NOTIFY
+                    speedLimitOutChanged)
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(QString blockText READ blockText WRITE setBlockText NOTIFY blockTextChanged)
     Q_PROPERTY(QString allowText READ allowText WRITE setAllowText NOTIFY allowTextChanged)
@@ -47,12 +53,8 @@ public:
     quint32 speedLimitOut() const { return m_speedLimitOut; }
     void setSpeedLimitOut(quint32 limit);
 
-    quint32 enabledSpeedLimitIn() const {
-        return limitInEnabled() ? speedLimitIn() : 0;
-    }
-    quint32 enabledSpeedLimitOut() const {
-        return limitOutEnabled() ? speedLimitOut() : 0;
-    }
+    quint32 enabledSpeedLimitIn() const { return limitInEnabled() ? speedLimitIn() : 0; }
+    quint32 enabledSpeedLimitOut() const { return limitOutEnabled() ? speedLimitOut() : 0; }
 
     qint64 id() const { return m_id; }
     void setId(qint64 id) { m_id = id; }
@@ -94,15 +96,15 @@ signals:
 public slots:
 
 private:
-    bool m_edited           : 1;
-    bool m_enabled          : 1;
+    bool m_edited : 1;
+    bool m_enabled : 1;
 
-    bool m_fragmentPacket   : 1;
+    bool m_fragmentPacket : 1;
 
-    bool m_periodEnabled    : 1;
+    bool m_periodEnabled : 1;
 
-    bool m_limitInEnabled   : 1;
-    bool m_limitOutEnabled  : 1;
+    bool m_limitInEnabled : 1;
+    bool m_limitOutEnabled : 1;
 
     // KiBytes per sec.
     quint32 m_speedLimitIn = 0;

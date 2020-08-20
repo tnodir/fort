@@ -29,8 +29,7 @@ public slots:
     AppInfo appInfo(const QString &appPath);
 
 private slots:
-    void handleFinishedLookup(const QString &appPath,
-                              const AppInfo info);
+    void handleFinishedLookup(const QString &appPath, const AppInfo info);
 
 private:
     void emitCacheChanged();

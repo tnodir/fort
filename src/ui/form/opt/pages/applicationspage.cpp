@@ -28,16 +28,13 @@
 
 namespace {
 
-const ValuesList speedLimitValues = {
-    10, 0, 20, 30, 50, 75, 100, 150, 200, 300, 500, 900,
-    1024, qRound(1.5 * 1024), 2 * 1024, 3 * 1024, 5 * 1024, qRound(7.5 * 1024),
-    10 * 1024, 15 * 1024, 20 * 1024, 30 * 1024, 50 * 1024
-};
+const ValuesList speedLimitValues = { 10, 0, 20, 30, 50, 75, 100, 150, 200, 300, 500, 900, 1024,
+    qRound(1.5 * 1024), 2 * 1024, 3 * 1024, 5 * 1024, qRound(7.5 * 1024), 10 * 1024, 15 * 1024,
+    20 * 1024, 30 * 1024, 50 * 1024 };
 
 }
 
-ApplicationsPage::ApplicationsPage(OptionsController *ctrl,
-                                   QWidget *parent) :
+ApplicationsPage::ApplicationsPage(OptionsController *ctrl, QWidget *parent) :
     BasePage(ctrl, parent)
 {
     setupUi();
@@ -92,8 +89,10 @@ void ApplicationsPage::onRetranslateUi()
     m_splitter->handle()->btMoveAllFrom1To2()->setToolTip(tr("Move All Lines to 'Allow'"));
     m_splitter->handle()->btMoveAllFrom2To1()->setToolTip(tr("Move All Lines to 'Block'"));
     m_splitter->handle()->btInterchangeAll()->setToolTip(tr("Interchange All Lines"));
-    m_splitter->handle()->btMoveSelectedFrom1To2()->setToolTip(tr("Move Selected Lines to 'Allow'"));
-    m_splitter->handle()->btMoveSelectedFrom2To1()->setToolTip(tr("Move Selected Lines to 'Block'"));
+    m_splitter->handle()->btMoveSelectedFrom1To2()->setToolTip(
+            tr("Move Selected Lines to 'Allow'"));
+    m_splitter->handle()->btMoveSelectedFrom2To1()->setToolTip(
+            tr("Move Selected Lines to 'Block'"));
     m_btSelectFile->setToolTip(tr("Select File"));
 
     retranslateAppsPlaceholderText();
@@ -120,11 +119,9 @@ void ApplicationsPage::retranslateGroupLimits()
 void ApplicationsPage::retranslateAppsPlaceholderText()
 {
     const auto placeholderText = tr("# Examples:") + '\n'
-            + QLatin1String(
-                "System\n"
-                "C:\\Program Files (x86)\\Microsoft\\Skype for Desktop\\Skype.exe\n")
-            + '\n' + tr("# All programs in the sub-path:")
-            + QLatin1String("\nC:\\Git\\**");
+            + QLatin1String("System\n"
+                            "C:\\Program Files (x86)\\Microsoft\\Skype for Desktop\\Skype.exe\n")
+            + '\n' + tr("# All programs in the sub-path:") + QLatin1String("\nC:\\Git\\**");
 
     m_allowApps->editText()->setPlaceholderText(placeholderText);
 }
@@ -200,9 +197,7 @@ void ApplicationsPage::setupAddGroup()
         ctrl()->setConfEdited(true);
     });
 
-    const auto refreshAddGroup = [&] {
-        m_btAddGroup->setEnabled(appGroupsCount() < 16);
-    };
+    const auto refreshAddGroup = [&] { m_btAddGroup->setEnabled(appGroupsCount() < 16); };
 
     refreshAddGroup();
 
@@ -331,26 +326,28 @@ void ApplicationsPage::setupGroupPeriod()
 
         ctrl()->setConfEdited(true);
     });
-    connect(m_ctpGroupPeriod->timeEdit1(), &QTimeEdit::userTimeChanged, this, [&](const QTime &time) {
-        const auto timeStr = CheckTimePeriod::fromTime(time);
+    connect(m_ctpGroupPeriod->timeEdit1(), &QTimeEdit::userTimeChanged, this,
+            [&](const QTime &time) {
+                const auto timeStr = CheckTimePeriod::fromTime(time);
 
-        if (appGroup()->periodFrom() == timeStr)
-            return;
+                if (appGroup()->periodFrom() == timeStr)
+                    return;
 
-        appGroup()->setPeriodFrom(timeStr);
+                appGroup()->setPeriodFrom(timeStr);
 
-        ctrl()->setConfEdited(true);
-    });
-    connect(m_ctpGroupPeriod->timeEdit2(), &QTimeEdit::userTimeChanged, this, [&](const QTime &time) {
-        const auto timeStr = CheckTimePeriod::fromTime(time);
+                ctrl()->setConfEdited(true);
+            });
+    connect(m_ctpGroupPeriod->timeEdit2(), &QTimeEdit::userTimeChanged, this,
+            [&](const QTime &time) {
+                const auto timeStr = CheckTimePeriod::fromTime(time);
 
-        if (appGroup()->periodTo() == timeStr)
-            return;
+                if (appGroup()->periodTo() == timeStr)
+                    return;
 
-        appGroup()->setPeriodTo(timeStr);
+                appGroup()->setPeriodTo(timeStr);
 
-        ctrl()->setConfEdited(true);
-    });
+                ctrl()->setConfEdited(true);
+            });
 }
 
 void ApplicationsPage::setupGroupPeriodEnabled()
@@ -371,11 +368,8 @@ void ApplicationsPage::setupGroupOptions()
     setupGroupFragmentPacket();
 
     // Menu
-    const QList<QWidget *> menuWidgets = {
-        m_cscLimitIn, m_cscLimitOut,
-        ControlUtil::createSeparator(),
-        m_cbFragmentPacket
-    };
+    const QList<QWidget *> menuWidgets = { m_cscLimitIn, m_cscLimitOut,
+        ControlUtil::createSeparator(), m_cbFragmentPacket };
     auto layout = ControlUtil::createLayoutByWidgets(menuWidgets);
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
@@ -396,16 +390,17 @@ void ApplicationsPage::setupGroupLimitIn()
 
         ctrl()->setConfEdited(true);
     });
-    connect(m_cscLimitIn->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this, [&](int value) {
-        const auto kbytes = quint32(value);
+    connect(m_cscLimitIn->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
+            [&](int value) {
+                const auto kbytes = quint32(value);
 
-        if (appGroup()->speedLimitIn() == kbytes)
-            return;
+                if (appGroup()->speedLimitIn() == kbytes)
+                    return;
 
-        appGroup()->setSpeedLimitIn(kbytes);
+                appGroup()->setSpeedLimitIn(kbytes);
 
-        ctrl()->setConfEdited(true);
-    });
+                ctrl()->setConfEdited(true);
+            });
 }
 
 void ApplicationsPage::setupGroupLimitOut()
@@ -420,16 +415,17 @@ void ApplicationsPage::setupGroupLimitOut()
 
         ctrl()->setConfEdited(true);
     });
-    connect(m_cscLimitOut->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this, [&](int value) {
-        const auto kbytes = quint32(value);
+    connect(m_cscLimitOut->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
+            [&](int value) {
+                const auto kbytes = quint32(value);
 
-        if (appGroup()->speedLimitOut() == kbytes)
-            return;
+                if (appGroup()->speedLimitOut() == kbytes)
+                    return;
 
-        appGroup()->setSpeedLimitOut(kbytes);
+                appGroup()->setSpeedLimitOut(kbytes);
 
-        ctrl()->setConfEdited(true);
-    });
+                ctrl()->setConfEdited(true);
+            });
 }
 
 void ApplicationsPage::setupGroupFragmentPacket()
@@ -510,11 +506,9 @@ void ApplicationsPage::setupSplitter()
 
 void ApplicationsPage::setupSplitterButtons()
 {
-    m_btSelectFile = ControlUtil::createSplitterButton(
-                ":/images/folder_explore.png", [&] {
+    m_btSelectFile = ControlUtil::createSplitterButton(":/images/folder_explore.png", [&] {
         const auto filePaths = ControlUtil::getOpenFileNames(
-                    m_btSelectFile->text(),
-                    tr("Programs (*.exe);;All files (*.*)"));
+                m_btSelectFile->text(), tr("Programs (*.exe);;All files (*.*)"));
 
         if (!filePaths.isEmpty()) {
             auto area = m_splitter->handle()->currentTextArea();
@@ -539,10 +533,8 @@ void ApplicationsPage::updateGroup()
     m_cbGroupEnabled->setChecked(appGroup()->enabled());
 
     m_ctpGroupPeriod->checkBox()->setChecked(appGroup()->periodEnabled());
-    m_ctpGroupPeriod->timeEdit1()->setTime(CheckTimePeriod::toTime(
-                                               appGroup()->periodFrom()));
-    m_ctpGroupPeriod->timeEdit2()->setTime(CheckTimePeriod::toTime(
-                                               appGroup()->periodTo()));
+    m_ctpGroupPeriod->timeEdit1()->setTime(CheckTimePeriod::toTime(appGroup()->periodFrom()));
+    m_ctpGroupPeriod->timeEdit2()->setTime(CheckTimePeriod::toTime(appGroup()->periodTo()));
 
     m_blockApps->editText()->setText(appGroup()->blockText());
     m_allowApps->editText()->setText(appGroup()->allowText());

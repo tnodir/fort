@@ -20,8 +20,7 @@ class StatisticsPage : public BasePage
     Q_OBJECT
 
 public:
-    explicit StatisticsPage(OptionsController *ctrl = nullptr,
-                            QWidget *parent = nullptr);
+    explicit StatisticsPage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
     bool graphEdited() const { return m_graphEdited; }
     void setGraphEdited(bool v);
@@ -75,15 +74,13 @@ private:
     int appListCurrentIndex() const;
     QString appListCurrentPath() const;
 
-    static LabelSpinCombo *createSpinCombo(int min, int max,
-                                           const QString &suffix = QString());
-    static LabelSpin *createSpin(int min, int max,
-                                 const QString &suffix = QString());
+    static LabelSpinCombo *createSpinCombo(int min, int max, const QString &suffix = QString());
+    static LabelSpin *createSpin(int min, int max, const QString &suffix = QString());
 
     static QString formatQuota(int mbytes);
 
 private:
-    bool m_graphEdited  : 1;
+    bool m_graphEdited : 1;
     bool m_pageUpdating : 1;
 
     TrafListModel *m_trafListModel = nullptr;

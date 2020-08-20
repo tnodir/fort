@@ -1,6 +1,6 @@
 #include "fortcommon.h"
 
-#define _WIN32_WINNT    0x0601
+#define _WIN32_WINNT 0x0601
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 #include <winioctl.h>
@@ -13,10 +13,7 @@
 #include "../common/fortlog.c"
 #include "../common/fortprov.c"
 
-FortCommon::FortCommon(QObject *parent) :
-    QObject(parent)
-{
-}
+FortCommon::FortCommon(QObject *parent) : QObject(parent) { }
 
 QString FortCommon::deviceName()
 {
@@ -123,37 +120,29 @@ quint32 FortCommon::logType(const char *input)
     return fort_log_type(input);
 }
 
-void FortCommon::logBlockedHeaderWrite(char *output, bool blocked,
-                                       quint32 remoteIp, quint16 remotePort,
-                                       quint8 ipProto, quint32 pid, quint32 pathLen)
+void FortCommon::logBlockedHeaderWrite(char *output, bool blocked, quint32 remoteIp,
+        quint16 remotePort, quint8 ipProto, quint32 pid, quint32 pathLen)
 {
-    fort_log_blocked_header_write(output, blocked, remoteIp, remotePort,
-                                  ipProto, pid, pathLen);
+    fort_log_blocked_header_write(output, blocked, remoteIp, remotePort, ipProto, pid, pathLen);
 }
 
-void FortCommon::logBlockedHeaderRead(const char *input, int *blocked,
-                                      quint32 *remoteIp, quint16 *remotePort,
-                                      quint8 *ipProto, quint32 *pid, quint32 *pathLen)
+void FortCommon::logBlockedHeaderRead(const char *input, int *blocked, quint32 *remoteIp,
+        quint16 *remotePort, quint8 *ipProto, quint32 *pid, quint32 *pathLen)
 {
-    fort_log_blocked_header_read(input, blocked, remoteIp, remotePort,
-                                 ipProto, pid, pathLen);
+    fort_log_blocked_header_read(input, blocked, remoteIp, remotePort, ipProto, pid, pathLen);
 }
 
-void FortCommon::logProcNewHeaderWrite(char *output,
-                                       quint32 pid, quint32 pathLen)
+void FortCommon::logProcNewHeaderWrite(char *output, quint32 pid, quint32 pathLen)
 {
     fort_log_proc_new_header_write(output, pid, pathLen);
 }
 
-void FortCommon::logProcNewHeaderRead(const char *input,
-                                      quint32 *pid, quint32 *pathLen)
+void FortCommon::logProcNewHeaderRead(const char *input, quint32 *pid, quint32 *pathLen)
 {
     fort_log_proc_new_header_read(input, pid, pathLen);
 }
 
-void FortCommon::logStatTrafHeaderRead(const char *input,
-                                       qint64 *unixTime,
-                                       quint16 *procCount)
+void FortCommon::logStatTrafHeaderRead(const char *input, qint64 *unixTime, quint16 *procCount)
 {
     fort_log_stat_traf_header_read(input, unixTime, procCount);
 }
@@ -165,15 +154,12 @@ void FortCommon::confAppPermsMaskInit(void *drvConf)
     fort_conf_app_perms_mask_init(conf, conf->flags.group_bits);
 }
 
-bool FortCommon::confIpInRange(const void *drvConf, quint32 ip,
-                               bool included, int addrGroupIndex)
+bool FortCommon::confIpInRange(const void *drvConf, quint32 ip, bool included, int addrGroupIndex)
 {
     const PFORT_CONF conf = (const PFORT_CONF) drvConf;
-    const PFORT_CONF_ADDR_GROUP addr_group = fort_conf_addr_group_ref(
-      conf, addrGroupIndex);
+    const PFORT_CONF_ADDR_GROUP addr_group = fort_conf_addr_group_ref(conf, addrGroupIndex);
 
-    const bool is_empty = included ? addr_group->include_is_empty
-                                   : addr_group->exclude_is_empty;
+    const bool is_empty = included ? addr_group->include_is_empty : addr_group->exclude_is_empty;
     if (is_empty)
         return false;
 
@@ -184,8 +170,7 @@ bool FortCommon::confIpInRange(const void *drvConf, quint32 ip,
     return fort_conf_ip_inlist(ip, addr_list);
 }
 
-quint16 FortCommon::confAppFind(const void *drvConf,
-                                const QString &kernelPath)
+quint16 FortCommon::confAppFind(const void *drvConf, const QString &kernelPath)
 {
     const PFORT_CONF conf = (const PFORT_CONF) drvConf;
     const QString kernelPathLower = kernelPath.toLower();
@@ -193,15 +178,14 @@ quint16 FortCommon::confAppFind(const void *drvConf,
     const wchar_t *p = (const wchar_t *) kernelPathLower.utf16();
 
     const FORT_APP_FLAGS app_flags =
-            fort_conf_app_find(conf, (const char *) p, len,
-                               fort_conf_app_exe_find);
+            fort_conf_app_find(conf, (const char *) p, len, fort_conf_app_exe_find);
 
     return app_flags.v;
 }
 
 quint8 FortCommon::confAppGroupIndex(quint16 appFlags)
 {
-    const FORT_APP_FLAGS app_flags = {appFlags};
+    const FORT_APP_FLAGS app_flags = { appFlags };
 
     return app_flags.group_index;
 }
@@ -210,11 +194,10 @@ bool FortCommon::confAppBlocked(const void *drvConf, quint16 appFlags)
 {
     const PFORT_CONF conf = (const PFORT_CONF) drvConf;
 
-    return fort_conf_app_blocked(conf, {appFlags});
+    return fort_conf_app_blocked(conf, { appFlags });
 }
 
-quint16 FortCommon::confAppPeriodBits(const void *drvConf,
-                                      quint8 hour, quint8 minute)
+quint16 FortCommon::confAppPeriodBits(const void *drvConf, quint8 hour, quint8 minute)
 {
     const PFORT_CONF conf = (const PFORT_CONF) drvConf;
 
@@ -225,9 +208,8 @@ quint16 FortCommon::confAppPeriodBits(const void *drvConf,
     return fort_conf_app_period_bits(conf, time, nullptr);
 }
 
-bool FortCommon::isTimeInPeriod(quint8 hour, quint8 minute,
-                                quint8 fromHour, quint8 fromMinute,
-                                quint8 toHour, quint8 toMinute)
+bool FortCommon::isTimeInPeriod(quint8 hour, quint8 minute, quint8 fromHour, quint8 fromMinute,
+        quint8 toHour, quint8 toMinute)
 {
     FORT_TIME time;
     time.hour = hour;

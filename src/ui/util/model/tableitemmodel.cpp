@@ -1,14 +1,10 @@
 #include "tableitemmodel.h"
 
-TableItemModel::TableItemModel(QObject *parent) :
-    QAbstractItemModel(parent)
-{
-}
+TableItemModel::TableItemModel(QObject *parent) : QAbstractItemModel(parent) { }
 
 QModelIndex TableItemModel::index(int row, int column, const QModelIndex &parent) const
 {
-    return hasIndex(row, column, parent)
-            ? createIndex(row, column) : QModelIndex();
+    return hasIndex(row, column, parent) ? createIndex(row, column) : QModelIndex();
 }
 
 QModelIndex TableItemModel::parent(const QModelIndex &child) const
