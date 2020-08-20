@@ -163,6 +163,7 @@ HEADERS += \
     form/zone/zonescontroller.h \
     form/zone/zoneswindow.h \
     fortcommon.h \
+    fortcompat.h \
     fortmanager.h \
     fortsettings.h \
     log/logbuffer.h \

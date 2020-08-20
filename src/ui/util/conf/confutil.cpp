@@ -19,6 +19,7 @@
 #include "../envmanager.h"
 #include "../fileutil.h"
 #include "../net/ip4range.h"
+#include "../stringutil.h"
 
 #define APP_GROUP_MAX       FORT_CONF_GROUP_MAX
 #define APP_GROUP_NAME_MAX  128
@@ -401,10 +402,10 @@ bool ConfUtil::parseAppsText(int groupIndex, bool blocked, const QString &text,
                              quint32 &prefixAppsSize,
                              quint32 &exeAppsSize)
 {
-    const auto lines = text.splitRef(QLatin1Char('\n'));
+    const auto lines = StringUtil::splitView(text, QLatin1Char('\n'));
 
-    for (const QStringRef &line : lines) {
-        const QStringRef lineTrimmed = line.trimmed();
+    for (const auto &line : lines) {
+        const auto lineTrimmed = line.trimmed();
         if (lineTrimmed.isEmpty()
                 || lineTrimmed.startsWith('#'))  // commented line
             continue;
@@ -468,12 +469,12 @@ bool ConfUtil::addApp(int groupIndex, bool useGroupPerm,
     return true;
 }
 
-QString ConfUtil::parseAppPath(const QStringRef &line,
+QString ConfUtil::parseAppPath(const StringView line,
                                bool &isWild, bool &isPrefix)
 {
     static const QRegularExpression wildMatcher("([*?[])");
 
-    QStringRef path = line;
+    auto path = line;
     if (path.startsWith('"') && path.endsWith('"')) {
         path = path.mid(1, path.size() - 2);
     }

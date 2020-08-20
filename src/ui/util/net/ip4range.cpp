@@ -3,6 +3,7 @@
 #include <QHash>
 #include <QRegularExpression>
 
+#include "../stringutil.h"
 #include "netutil.h"
 
 Ip4Range::Ip4Range(QObject *parent) :
@@ -67,11 +68,11 @@ QString Ip4Range::toText() const
 
 bool Ip4Range::fromText(const QString &text)
 {
-    const auto list = text.splitRef(QLatin1Char('\n'));
+    const auto list = StringUtil::splitView(text, QLatin1Char('\n'));
     return fromList(list);
 }
 
-bool Ip4Range::fromList(const QVector<QStringRef> &list, int emptyNetMask, bool sort)
+bool Ip4Range::fromList(const StringViewList &list, int emptyNetMask, bool sort)
 {
     Q_UNUSED(sort);  // TODO
 
@@ -110,7 +111,7 @@ bool Ip4Range::fromList(const QVector<QStringRef> &list, int emptyNetMask, bool 
 }
 
 // Parse "127.0.0.0-127.255.255.255" or "127.0.0.0/24" or "127.0.0.0"
-bool Ip4Range::parseAddressMask(const QStringRef &line,
+bool Ip4Range::parseAddressMask(const StringView line,
                                 quint32 &from, quint32 &to,
                                 int emptyNetMask)
 {

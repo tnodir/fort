@@ -3,6 +3,7 @@
 
 #include <QDateTime>
 
+#include "../fortcompat.h"
 #include "taskdownloader.h"
 
 class TaskZoneDownloader : public TaskDownloader
@@ -53,10 +54,10 @@ public:
 
     const QByteArray &zoneData() const { return m_zoneData; }
 
-    QVector<QStringRef> parseAddresses(const QString &text,
-                                       QString &textChecksum) const;
+    StringViewList parseAddresses(const QString &text,
+                                  QString &textChecksum) const;
 
-    bool storeAddresses(const QVector<QStringRef> &list);
+    bool storeAddresses(const StringViewList &list);
     bool loadAddresses();
 
     bool saveAddressesAsText(const QString &filePath);

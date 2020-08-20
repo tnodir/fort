@@ -6632,7 +6632,11 @@ void QCPAxisTickerText::addTick(double position, const QString &label)
 */
 void QCPAxisTickerText::addTicks(const QMap<double, QString> &ticks)
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+  mTicks.unite(ticks);
+#else
   mTicks.insert(ticks);
+#endif
 }
 
 /*! \overload

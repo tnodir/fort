@@ -2,6 +2,8 @@
 
 #include <QLocale>
 
+#include "../fortcompat.h"
+
 DateUtil::DateUtil(QObject *parent) :
     QObject(parent)
 {
@@ -117,10 +119,10 @@ void DateUtil::parseTime(const QString &time,
 
 quint8 DateUtil::parseTimeHour(const QString &period)
 {
-    return quint8(period.leftRef(2).toUInt());
+    return quint8(toStringView(period).left(2).toUInt());
 }
 
 quint8 DateUtil::parseTimeMinute(const QString &period)
 {
-    return quint8(period.rightRef(2).toUInt());
+    return quint8(toStringView(period).right(2).toUInt());
 }

@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include "../fortcompat.h"
+
 class StringUtil
 {
 public:
@@ -14,6 +16,9 @@ public:
                          int badPos = -1);
     static int lineEnd(const QString &text, int pos,
                        int badPos = -1);
+
+    static StringViewList splitView(const QString &text, QLatin1Char sep,
+                                    bool skipEmptyParts = false);
 };
 
 #endif // STRINGUTIL_H

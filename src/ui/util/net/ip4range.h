@@ -5,6 +5,8 @@
 #include <QObject>
 #include <QVector>
 
+#include "../../fortcompat.h"
+
 using Ip4Pair = struct {
     quint32 from, to;
 };
@@ -50,7 +52,7 @@ public:
 
     // Parse IPv4 ranges
     bool fromText(const QString &text);
-    bool fromList(const QVector<QStringRef> &list, int emptyNetMask = 32,
+    bool fromList(const StringViewList &list, int emptyNetMask = 32,
                   bool sort = true);
 
 signals:
@@ -64,7 +66,7 @@ private:
     void setErrorLineNo(int lineNo);
     void setErrorMessage(const QString &errorMessage);
 
-    bool parseAddressMask(const QStringRef &line,
+    bool parseAddressMask(const StringView line,
                           quint32 &from, quint32 &to,
                           int emptyNetMask = 32);
 

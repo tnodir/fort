@@ -9,6 +9,7 @@
 #include "../util/fileutil.h"
 #include "../util/net/ip4range.h"
 #include "../util/net/netdownloader.h"
+#include "../util/stringutil.h"
 
 TaskZoneDownloader::TaskZoneDownloader(QObject *parent) :
     TaskDownloader(parent),
@@ -64,22 +65,16 @@ void TaskZoneDownloader::loadLocalFile()
     downloadFinished(success);
 }
 
-QVector<QStringRef> TaskZoneDownloader::parseAddresses(const QString &text,
-                                                       QString &checksum) const
+StringViewList TaskZoneDownloader::parseAddresses(const QString &text,
+                                                  QString &checksum) const
 {
-    QVector<QStringRef> list;
+    StringViewList list;
     QCryptographicHash cryptoHash(QCryptographicHash::Sha256);
 
     // Parse lines
     const QRegularExpression re(pattern());
 
-    const auto lines = text.splitRef('\n',
-                                 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-                                     QString::SkipEmptyParts
-                                 #else
-                                     Qt::SkipEmptyParts
-                                 #endif
-                                     );
+    const auto lines = StringUtil::splitView(text, QLatin1Char('\n'), true);
 
     for (const auto &line : lines) {
         if (line.startsWith('#')
@@ -103,7 +98,7 @@ QVector<QStringRef> TaskZoneDownloader::parseAddresses(const QString &text,
     return list;
 }
 
-bool TaskZoneDownloader::storeAddresses(const QVector<QStringRef> &list)
+bool TaskZoneDownloader::storeAddresses(const StringViewList &list)
 {
     Ip4Range ip4Range;
     if (!ip4Range.fromList(list, emptyNetMask(), sort())) {

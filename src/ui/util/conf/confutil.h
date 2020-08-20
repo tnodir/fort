@@ -92,7 +92,7 @@ private:
                 const QString &appPath, appentry_map_t &appsMap,
                 quint32 &appsSize, bool canOverwrite = true);
 
-    static QString parseAppPath(const QStringRef &line,
+    static QString parseAppPath(const StringView line,
                                 bool &isWild, bool &isPrefix);
 
     static void writeData(char *output, const FirewallConf &conf,

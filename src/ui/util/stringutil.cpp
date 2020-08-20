@@ -33,3 +33,15 @@ int StringUtil::lineEnd(const QString &text, int pos, int badPos)
     const int endPos = text.indexOf(QLatin1Char('\n'), pos);
     return (endPos != -1) ? endPos : badPos;
 }
+
+StringViewList StringUtil::splitView(const QString &text, QLatin1Char sep,
+                                     bool skipEmptyParts)
+{
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    const auto behavior = skipEmptyParts ? QString::SkipEmptyParts : QString::KeepEmptyParts;
+    return text.splitRef(sep, behavior);
+#else
+    const auto behavior = skipEmptyParts ? Qt::SkipEmptyParts : Qt::KeepEmptyParts;
+    return QStringView(text).split(sep, behavior);
+#endif
+}
