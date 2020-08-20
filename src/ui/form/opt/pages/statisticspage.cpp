@@ -32,7 +32,6 @@
 #include "../../controls/labelspin.h"
 #include "../../controls/labelspincombo.h"
 #include "../../controls/listview.h"
-#include "../../controls/widebutton.h"
 #include "../optionscontroller.h"
 
 namespace {
@@ -340,7 +339,7 @@ void StatisticsPage::setupClearMenu()
         appStatModel()->clear();
     });
 
-    m_btClear = new WideButton(QIcon(":/images/bin_empty.png"));
+    m_btClear = new QPushButton(QIcon(":/images/bin_empty.png"), QString());
     m_btClear->setMenu(menu);
 }
 
@@ -420,7 +419,7 @@ void StatisticsPage::setupGraphOptionsMenu()
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
-    m_btGraphOptions = new WideButton(QIcon(":/images/chart_bar.png"));
+    m_btGraphOptions = new QPushButton(QIcon(":/images/chart_bar.png"), QString());
     m_btGraphOptions->setMenu(menu);
 }
 
@@ -447,7 +446,7 @@ void StatisticsPage::setupTrafOptionsMenu()
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
-    m_btTrafOptions = new WideButton(QIcon(":/images/database_save.png"));
+    m_btTrafOptions = new QPushButton(QIcon(":/images/database_save.png"), QString());
     m_btTrafOptions->setMenu(menu);
 }
 

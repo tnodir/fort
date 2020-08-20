@@ -22,7 +22,6 @@
 #include "../../util/conf/confutil.h"
 #include "../controls/controlutil.h"
 #include "../controls/tableview.h"
-#include "../controls/widebutton.h"
 #include "zonescontroller.h"
 
 namespace {
@@ -257,7 +256,7 @@ QLayout *ZonesWindow::setupHeader()
         }
     });
 
-    m_btEdit = new WideButton(QIcon(":/images/map_edit.png"));
+    m_btEdit = new QPushButton(QIcon(":/images/map_edit.png"), QString());
     m_btEdit->setMenu(editMenu);
 
     // Save As Text

@@ -27,7 +27,6 @@
 #include "../controls/checkspincombo.h"
 #include "../controls/controlutil.h"
 #include "../controls/tableview.h"
-#include "../controls/widebutton.h"
 #include "programscontroller.h"
 
 namespace {
@@ -378,7 +377,7 @@ QLayout *ProgramsWindow::setupHeader()
         }
     });
 
-    m_btEdit = new WideButton(QIcon(":/images/application_edit.png"));
+    m_btEdit = new QPushButton(QIcon(":/images/application_edit.png"), QString());
     m_btEdit->setMenu(editMenu);
 
     // Allow/Block
@@ -413,7 +412,7 @@ void ProgramsWindow::setupLogOptions()
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
-    m_btLogOptions = new WideButton(QIcon(":/images/application_key.png"));
+    m_btLogOptions = new QPushButton(QIcon(":/images/application_key.png"), QString());
     m_btLogOptions->setMenu(menu);
 }
 

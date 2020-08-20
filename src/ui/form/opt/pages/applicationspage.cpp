@@ -23,7 +23,6 @@
 #include "../../controls/tabbar.h"
 #include "../../controls/textarea2splitter.h"
 #include "../../controls/textarea2splitterhandle.h"
-#include "../../controls/widebutton.h"
 #include "../optionscontroller.h"
 #include "apps/appscolumn.h"
 
@@ -381,7 +380,7 @@ void ApplicationsPage::setupGroupOptions()
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
-    m_btGroupOptions = new WideButton(QIcon(":/images/application_key.png"));
+    m_btGroupOptions = new QPushButton(QIcon(":/images/application_key.png"), QString());
     m_btGroupOptions->setMenu(menu);
 }
 
