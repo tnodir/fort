@@ -38,8 +38,7 @@ cd %TARGET_PATH%
 	-no-feature-mdiarea -no-feature-movie -no-feature-pdf -no-feature-picture ^
 	-no-feature-printer -no-feature-printpreviewdialog -no-feature-printpreviewwidget ^
 	-no-feature-raster-64bit -no-feature-splashscreen ^
-	-no-feature-sqlmodel -no-feature-statemachine ^
-	-no-feature-textbrowser -no-feature-textodfwriter ^
+	-no-feature-sqlmodel -no-feature-textbrowser -no-feature-textodfwriter ^
 	-no-feature-undocommand -no-feature-undogroup -no-feature-undostack -no-feature-undoview ^
 	-no-feature-whatsthis -no-feature-wizard ^
 	^
