@@ -119,6 +119,7 @@ void TranslationManager::installTranslator(int language, const QLocale &locale)
     QTranslator *translator = m_translators.at(language);
     if (!translator) {
         translator = loadTranslator(language, locale);
+        m_translators.replace(language, translator);
     }
     if (translator) {
         QCoreApplication::installTranslator(translator);
@@ -132,9 +133,10 @@ QTranslator *TranslationManager::loadTranslator(int language, const QLocale &loc
 
     // Load .qm file
     auto translator = new QTranslator(this);
-    translator->load(TRANSLATION_FILE_PREFIX + locale.name(), i18nDir());
-
-    m_translators.replace(language, translator);
+    if (!translator->load(TRANSLATION_FILE_PREFIX + locale.name(), i18nDir())) {
+        delete translator;
+        return nullptr;
+    }
 
     return translator;
 }
