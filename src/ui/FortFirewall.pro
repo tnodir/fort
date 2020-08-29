@@ -121,6 +121,7 @@ SOURCES += \
     util/worker/workerobject.cpp
 
 HEADERS += \
+    ../version.h \
     conf/addressgroup.h \
     conf/appgroup.h \
     conf/confmanager.h \
@@ -232,7 +233,8 @@ HEADERS += \
     util/worker/workermanager.h \
     util/worker/workerobject.h
 
-include(../common/Common.pri)
+# Driver integration
+include(../driver/Driver.pri)
 
 # Images
 RESOURCES += fort-images.qrc
@@ -264,20 +266,6 @@ RESOURCES += conf/conf-zone.qrc
 LIBS += -lfwpuclnt -lkernel32 -luser32 -luuid -lversion -lws2_32
 RC_FILE = FortFirewall.rc
 OTHER_FILES += $${RC_FILE}
-
-# Kernel Driver
-installer_build {
-    BUILDCMD = MSBuild $$PWD/../driver/fortdrv.vcxproj /p:OutDir=./;IntDir=$$OUT_PWD/driver/
-
-    fortdrv32.target = $$PWD/../driver/fortfw32.sys
-    fortdrv32.commands = $$BUILDCMD /p:Platform=Win32
-
-    fortdrv64.target = $$PWD/../driver/fortfw64.sys
-    fortdrv64.commands = $$BUILDCMD /p:Platform=x64
-
-    QMAKE_EXTRA_TARGETS += fortdrv32 fortdrv64
-    PRE_TARGETDEPS += $$fortdrv32.target $$fortdrv64.target
-}
 
 # Visual Leak Detector
 visual_leak_detector {

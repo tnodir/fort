@@ -1,5 +1,5 @@
 
-#include AddBackslash(SourcePath) + "..\src\common\version.h"
+#include AddBackslash(SourcePath) + "..\src\version.h"
 
 #define APP_EXE_NAME	"FortFirewall.exe"
 

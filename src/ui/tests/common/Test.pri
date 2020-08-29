@@ -6,7 +6,7 @@ CONFIG -= app_bundle
 TARGET = test
 TEMPLATE = app
 
-UIPATH = $$PWD/../../ui
+UIPATH = $$PWD/../..
 INCLUDEPATH += $$UIPATH
 
 INCLUDEPATH += $$PWD
@@ -18,6 +18,9 @@ SOURCES += \
 HEADERS += \
     $$PWD/commontest.h \
     test.h
+
+# Driver integration
+include(../../../driver/Driver.pri)
 
 # Windows
 LIBS += -lfwpuclnt -lkernel32 -luser32 -luuid -lws2_32

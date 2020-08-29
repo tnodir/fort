@@ -12,7 +12,9 @@
 #include <stddef.h>
 #include <ntrxdef.h>
 
-#include "../common/common.h"
+#include "../version.h"
+#include "common/common.h"
+#include "common/fortdev.h"
 #include "fortdrv.h"
 
 #define FORT_DEVICE_POOL_TAG	'DwfF'

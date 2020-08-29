@@ -7,7 +7,7 @@
 #include <QRect>
 #include <QSettings>
 
-#include "../common/version.h"
+#include "../version.h"
 
 QT_FORWARD_DECLARE_CLASS(FirewallConf)
 

@@ -7,7 +7,7 @@
 #    include <vld.h>
 #endif
 
-#include "../common/version.h"
+#include "../version.h"
 #include "control/controlmanager.h"
 #include "control/controlworker.h"
 #include "driver/drivermanager.h"

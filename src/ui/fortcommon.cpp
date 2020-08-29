@@ -6,12 +6,13 @@
 #include <winioctl.h>
 #include <fwpmu.h>
 
-#include "../common/common.h"
-#include "../common/fortconf.h"
+#include <common/common.h>
+#include <common/fortconf.h>
+#include <common/fortdev.h>
 
-#include "../common/fortconf.c"
-#include "../common/fortlog.c"
-#include "../common/fortprov.c"
+#include <common/fortconf.c>
+#include <common/fortlog.c>
+#include <common/fortprov.c>
 
 FortCommon::FortCommon(QObject *parent) : QObject(parent) { }
 

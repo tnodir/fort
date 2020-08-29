@@ -8,13 +8,14 @@
 #define UINT32 quint32
 #define UINT64 quint64
 
-#include "../../common/fortconf.h"
-#include "../../common/version.h"
+#include <common/fortconf.h>
+
 #include "../../conf/addressgroup.h"
 #include "../../conf/appgroup.h"
 #include "../../conf/firewallconf.h"
 #include "../../fortcommon.h"
 #include "../../util/conf/confappswalker.h"
+#include "../../version.h"
 #include "../dateutil.h"
 #include "../envmanager.h"
 #include "../fileutil.h"

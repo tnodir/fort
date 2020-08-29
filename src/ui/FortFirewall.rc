@@ -1,7 +1,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-#include "../common/version.h"
+#include "../version.h"
 
 #define VER_FILEVERSION             APP_VERSION_MAJOR,APP_VERSION_MINOR,APP_VERSION_PATCH,0
 #define VER_FILEVERSION_STR         APP_VERSION_STR
