@@ -3,44 +3,44 @@ include(../common/Test.pri)
 QT += gui
 
 SOURCES += \
-    $$UIPATH/conf/addressgroup.cpp \
-    $$UIPATH/conf/appgroup.cpp \
-    $$UIPATH/conf/firewallconf.cpp \
-    $$UIPATH/fortcommon.cpp \
-    $$UIPATH/fortsettings.cpp \
-    $$UIPATH/stat/quotamanager.cpp \
-    $$UIPATH/stat/statmanager.cpp \
-    $$UIPATH/stat/statsql.cpp \
-    $$UIPATH/util/dateutil.cpp \
-    $$UIPATH/util/fileutil.cpp \
-    $$UIPATH/util/net/netutil.cpp \
-    $$UIPATH/util/osutil.cpp \
-    $$UIPATH/util/processinfo.cpp \
-    $$UIPATH/util/stringutil.cpp
+    $$UI_PWD/conf/addressgroup.cpp \
+    $$UI_PWD/conf/appgroup.cpp \
+    $$UI_PWD/conf/firewallconf.cpp \
+    $$UI_PWD/fortcommon.cpp \
+    $$UI_PWD/fortsettings.cpp \
+    $$UI_PWD/stat/quotamanager.cpp \
+    $$UI_PWD/stat/statmanager.cpp \
+    $$UI_PWD/stat/statsql.cpp \
+    $$UI_PWD/util/dateutil.cpp \
+    $$UI_PWD/util/fileutil.cpp \
+    $$UI_PWD/util/net/netutil.cpp \
+    $$UI_PWD/util/osutil.cpp \
+    $$UI_PWD/util/processinfo.cpp \
+    $$UI_PWD/util/stringutil.cpp
 
 HEADERS += \
-    $$UIPATH/conf/addressgroup.h \
-    $$UIPATH/conf/appgroup.h \
-    $$UIPATH/conf/firewallconf.h \
-    $$UIPATH/fortcommon.h \
-    $$UIPATH/fortcompat.h \
-    $$UIPATH/fortsettings.h \
-    $$UIPATH/stat/quotamanager.h \
-    $$UIPATH/stat/statmanager.h \
-    $$UIPATH/stat/statsql.h \
-    $$UIPATH/util/dateutil.h \
-    $$UIPATH/util/fileutil.h \
-    $$UIPATH/util/net/netutil.h \
-    $$UIPATH/util/osutil.h \
-    $$UIPATH/util/processinfo.h \
-    $$UIPATH/util/stringutil.h
+    $$UI_PWD/conf/addressgroup.h \
+    $$UI_PWD/conf/appgroup.h \
+    $$UI_PWD/conf/firewallconf.h \
+    $$UI_PWD/fortcommon.h \
+    $$UI_PWD/fortcompat.h \
+    $$UI_PWD/fortsettings.h \
+    $$UI_PWD/stat/quotamanager.h \
+    $$UI_PWD/stat/statmanager.h \
+    $$UI_PWD/stat/statsql.h \
+    $$UI_PWD/util/dateutil.h \
+    $$UI_PWD/util/fileutil.h \
+    $$UI_PWD/util/net/netutil.h \
+    $$UI_PWD/util/osutil.h \
+    $$UI_PWD/util/processinfo.h \
+    $$UI_PWD/util/stringutil.h
 
 # Test Data
 RESOURCES += data.qrc
 
 # Stat Migrations
-RESOURCES += $$UIPATH/stat/stat-migrations.qrc
+RESOURCES += $$UI_PWD/stat/stat-migrations.qrc
 
 # 3rd party integrations
 CONFIG += sqlite
-include($$UIPATH/3rdparty/3rdparty.pri)
+include($$UI_PWD/3rdparty/3rdparty.pri)

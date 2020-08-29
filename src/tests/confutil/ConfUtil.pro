@@ -1,35 +1,35 @@
 include(../common/Test.pri)
 
 SOURCES += \
-    $$UIPATH/conf/addressgroup.cpp \
-    $$UIPATH/conf/appgroup.cpp \
-    $$UIPATH/conf/firewallconf.cpp \
-    $$UIPATH/fortcommon.cpp \
-    $$UIPATH/util/conf/addressrange.cpp \
-    $$UIPATH/util/conf/confutil.cpp \
-    $$UIPATH/util/dateutil.cpp \
-    $$UIPATH/util/envmanager.cpp \
-    $$UIPATH/util/fileutil.cpp \
-    $$UIPATH/util/net/ip4range.cpp \
-    $$UIPATH/util/net/netutil.cpp \
-    $$UIPATH/util/osutil.cpp \
-    $$UIPATH/util/processinfo.cpp \
-    $$UIPATH/util/stringutil.cpp
+    $$UI_PWD/conf/addressgroup.cpp \
+    $$UI_PWD/conf/appgroup.cpp \
+    $$UI_PWD/conf/firewallconf.cpp \
+    $$UI_PWD/fortcommon.cpp \
+    $$UI_PWD/util/conf/addressrange.cpp \
+    $$UI_PWD/util/conf/confutil.cpp \
+    $$UI_PWD/util/dateutil.cpp \
+    $$UI_PWD/util/envmanager.cpp \
+    $$UI_PWD/util/fileutil.cpp \
+    $$UI_PWD/util/net/ip4range.cpp \
+    $$UI_PWD/util/net/netutil.cpp \
+    $$UI_PWD/util/osutil.cpp \
+    $$UI_PWD/util/processinfo.cpp \
+    $$UI_PWD/util/stringutil.cpp
 
 HEADERS += \
-    $$UIPATH/conf/addressgroup.h \
-    $$UIPATH/conf/appgroup.h \
-    $$UIPATH/conf/firewallconf.h \
-    $$UIPATH/fortcommon.h \
-    $$UIPATH/fortcompat.h \
-    $$UIPATH/util/conf/addressrange.h \
-    $$UIPATH/util/conf/confappswalker.h \
-    $$UIPATH/util/conf/confutil.h \
-    $$UIPATH/util/dateutil.h \
-    $$UIPATH/util/envmanager.h \
-    $$UIPATH/util/fileutil.h \
-    $$UIPATH/util/net/ip4range.h \
-    $$UIPATH/util/net/netutil.h \
-    $$UIPATH/util/osutil.h \
-    $$UIPATH/util/processinfo.h \
-    $$UIPATH/util/stringutil.h
+    $$UI_PWD/conf/addressgroup.h \
+    $$UI_PWD/conf/appgroup.h \
+    $$UI_PWD/conf/firewallconf.h \
+    $$UI_PWD/fortcommon.h \
+    $$UI_PWD/fortcompat.h \
+    $$UI_PWD/util/conf/addressrange.h \
+    $$UI_PWD/util/conf/confappswalker.h \
+    $$UI_PWD/util/conf/confutil.h \
+    $$UI_PWD/util/dateutil.h \
+    $$UI_PWD/util/envmanager.h \
+    $$UI_PWD/util/fileutil.h \
+    $$UI_PWD/util/net/ip4range.h \
+    $$UI_PWD/util/net/netutil.h \
+    $$UI_PWD/util/osutil.h \
+    $$UI_PWD/util/processinfo.h \
+    $$UI_PWD/util/stringutil.h

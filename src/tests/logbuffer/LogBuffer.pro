@@ -1,30 +1,30 @@
 include(../common/Test.pri)
 
 SOURCES += \
-    $$UIPATH/fortcommon.cpp \
-    $$UIPATH/log/logbuffer.cpp \
-    $$UIPATH/log/logentry.cpp \
-    $$UIPATH/log/logentryblocked.cpp \
-    $$UIPATH/log/logentryprocnew.cpp \
-    $$UIPATH/log/logentrystattraf.cpp \
-    $$UIPATH/util/dateutil.cpp \
-    $$UIPATH/util/fileutil.cpp \
-    $$UIPATH/util/net/netutil.cpp \
-    $$UIPATH/util/osutil.cpp \
-    $$UIPATH/util/processinfo.cpp \
-    $$UIPATH/util/stringutil.cpp
+    $$UI_PWD/fortcommon.cpp \
+    $$UI_PWD/log/logbuffer.cpp \
+    $$UI_PWD/log/logentry.cpp \
+    $$UI_PWD/log/logentryblocked.cpp \
+    $$UI_PWD/log/logentryprocnew.cpp \
+    $$UI_PWD/log/logentrystattraf.cpp \
+    $$UI_PWD/util/dateutil.cpp \
+    $$UI_PWD/util/fileutil.cpp \
+    $$UI_PWD/util/net/netutil.cpp \
+    $$UI_PWD/util/osutil.cpp \
+    $$UI_PWD/util/processinfo.cpp \
+    $$UI_PWD/util/stringutil.cpp
 
 HEADERS += \
-    $$UIPATH/fortcommon.h \
-    $$UIPATH/fortcompat.h \
-    $$UIPATH/log/logbuffer.h \
-    $$UIPATH/log/logentry.h \
-    $$UIPATH/log/logentryblocked.h \
-    $$UIPATH/log/logentryprocnew.h \
-    $$UIPATH/log/logentrystattraf.h \
-    $$UIPATH/util/dateutil.h \
-    $$UIPATH/util/fileutil.h \
-    $$UIPATH/util/net/netutil.h \
-    $$UIPATH/util/osutil.h \
-    $$UIPATH/util/processinfo.h \
-    $$UIPATH/util/stringutil.h
+    $$UI_PWD/fortcommon.h \
+    $$UI_PWD/fortcompat.h \
+    $$UI_PWD/log/logbuffer.h \
+    $$UI_PWD/log/logentry.h \
+    $$UI_PWD/log/logentryblocked.h \
+    $$UI_PWD/log/logentryprocnew.h \
+    $$UI_PWD/log/logentrystattraf.h \
+    $$UI_PWD/util/dateutil.h \
+    $$UI_PWD/util/fileutil.h \
+    $$UI_PWD/util/net/netutil.h \
+    $$UI_PWD/util/osutil.h \
+    $$UI_PWD/util/processinfo.h \
+    $$UI_PWD/util/stringutil.h
