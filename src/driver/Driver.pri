@@ -1,10 +1,5 @@
 INCLUDEPATH += $$PWD
 
-SOURCES += \
-    $$PWD/common/fortconf.c \
-    $$PWD/common/fortlog.c \
-    $$PWD/common/fortprov.c
-
 HEADERS += \
     $$PWD/common/common.h \
     $$PWD/common/fortconf.h \

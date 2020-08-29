@@ -136,7 +136,7 @@ void Test::debugStatTrafStep(SqliteDb *sqliteDb, const char *name,
 void Test::monthStart()
 {
     const QDate d1(2018, 1, 8);
-    const QDateTime dt1(d1);
+    const QDateTime dt1(d1, QTime());
 
     const qint32 unixHour = DateUtil::getUnixMonth(dt1.toSecsSinceEpoch(), 10);
 

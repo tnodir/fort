@@ -15,13 +15,15 @@ SOURCES += \
     $$UIPATH/util/fileutil.cpp \
     $$UIPATH/util/net/netutil.cpp \
     $$UIPATH/util/osutil.cpp \
-    $$UIPATH/util/processinfo.cpp
+    $$UIPATH/util/processinfo.cpp \
+    $$UIPATH/util/stringutil.cpp
 
 HEADERS += \
     $$UIPATH/conf/addressgroup.h \
     $$UIPATH/conf/appgroup.h \
     $$UIPATH/conf/firewallconf.h \
     $$UIPATH/fortcommon.h \
+    $$UIPATH/fortcompat.h \
     $$UIPATH/fortsettings.h \
     $$UIPATH/stat/quotamanager.h \
     $$UIPATH/stat/statmanager.h \
@@ -30,7 +32,8 @@ HEADERS += \
     $$UIPATH/util/fileutil.h \
     $$UIPATH/util/net/netutil.h \
     $$UIPATH/util/osutil.h \
-    $$UIPATH/util/processinfo.h
+    $$UIPATH/util/processinfo.h \
+    $$UIPATH/util/stringutil.h
 
 # Test Data
 RESOURCES += data.qrc

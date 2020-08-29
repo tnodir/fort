@@ -11,10 +11,12 @@ SOURCES += \
     $$UIPATH/util/fileutil.cpp \
     $$UIPATH/util/net/netutil.cpp \
     $$UIPATH/util/osutil.cpp \
-    $$UIPATH/util/processinfo.cpp
+    $$UIPATH/util/processinfo.cpp \
+    $$UIPATH/util/stringutil.cpp
 
 HEADERS += \
     $$UIPATH/fortcommon.h \
+    $$UIPATH/fortcompat.h \
     $$UIPATH/log/logbuffer.h \
     $$UIPATH/log/logentry.h \
     $$UIPATH/log/logentryblocked.h \
@@ -24,4 +26,5 @@ HEADERS += \
     $$UIPATH/util/fileutil.h \
     $$UIPATH/util/net/netutil.h \
     $$UIPATH/util/osutil.h \
-    $$UIPATH/util/processinfo.h
+    $$UIPATH/util/processinfo.h \
+    $$UIPATH/util/stringutil.h
