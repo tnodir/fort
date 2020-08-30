@@ -1,4 +1,10 @@
-include(../common/Test.pri)
+include(../Common/Common.pri)
+
+HEADERS += \
+    tst_logreader.h \
+
+SOURCES += \
+    tst_main.cpp
 
 SOURCES += \
     $$UI_PWD/conf/addressgroup.cpp \

@@ -1,4 +1,12 @@
-include(../common/Test.pri)
+include(../Common/Common.pri)
+
+HEADERS += \
+    tst_confutil.h \
+    tst_fileutil.h \
+    tst_netutil.h
+
+SOURCES += \
+    tst_main.cpp
 
 SOURCES += \
     $$UI_PWD/conf/addressgroup.cpp \
@@ -30,6 +38,7 @@ HEADERS += \
     $$UI_PWD/task/taskzonedownloader.h \
     $$UI_PWD/task/taskworker.h \
     $$UI_PWD/util/conf/addressrange.h \
+    $$UI_PWD/util/conf/confappswalker.h \
     $$UI_PWD/util/conf/confutil.h \
     $$UI_PWD/util/dateutil.h \
     $$UI_PWD/util/envmanager.h \
@@ -41,5 +50,5 @@ HEADERS += \
     $$UI_PWD/util/processinfo.h \
     $$UI_PWD/util/stringutil.h
 
-DEFINES += \
-    PWD='"$$PWD"'
+# Test Data
+RESOURCES += data.qrc

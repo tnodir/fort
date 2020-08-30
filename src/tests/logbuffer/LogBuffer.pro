@@ -1,4 +1,10 @@
-include(../common/Test.pri)
+include(../Common/Common.pri)
+
+HEADERS += \
+    tst_logbuffer.h \
+
+SOURCES += \
+    tst_main.cpp
 
 SOURCES += \
     $$UI_PWD/fortcommon.cpp \

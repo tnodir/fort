@@ -1,9 +1,7 @@
 TEMPLATE = subdirs
 
 SUBDIRS = \
-    confutil \
-    fileutil \
-    logbuffer \
-    logreader \
-    netutil \
-    stat
+    LogBuffer \
+    LogReader \
+    Stat \
+    Util

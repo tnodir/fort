@@ -146,7 +146,7 @@ bool TaskZoneDownloader::saveAddressesAsText(const QString &filePath)
     if (loadAddresses() && !zoneData().isEmpty()) {
         ConfUtil confUtil;
         Ip4Range ip4Range;
-        if (!confUtil.loadZone(m_zoneData, ip4Range))
+        if (!confUtil.loadZone(zoneData(), ip4Range))
             return false;
 
         text = ip4Range.toText();
