@@ -1,7 +1,7 @@
 TEMPLATE = subdirs
 
 SUBDIRS = \
-    LogBuffer \
-    LogReader \
-    Stat \
-    Util
+    LogBufferTest \
+    LogReaderTest \
+    StatTest \
+    UtilTest

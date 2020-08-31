@@ -1,6 +1,6 @@
 param (
     [string]$TargetPath = ".\build",
-    [string]$BuildPath = "..\src\build-ui",
+    [string]$BuildPath = "..\build\ui",
     [string]$RootPath = "..",
     [string]$QtPath = ".\build-qt\qtbase"
 )
