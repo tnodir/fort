@@ -1,6 +1,5 @@
 
 DEFINES += \
-    #QCUSTOMPLOT_USE_OPENGL \
     QT_NO_PRINTER
 
 QCUSTOMPLOT_DIR = $$PWD/../../../3rdparty/qcustomplot
