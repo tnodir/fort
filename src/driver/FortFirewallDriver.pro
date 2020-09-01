@@ -1,17 +1,21 @@
 include(Driver.pri)
 
+QT = core
+SOURCES += dummy.c
+
 OTHER_FILES += \
     $$PWD/scripts/*.bat
 
 # Kernel Driver
-installer_build {
-    BUILDCMD = MSBuild $$PWD/fortdrv.vcxproj /p:OutDir=./;IntDir=$$OUT_PWD/driver/
+{
+    OUT_DIR = $$PWD/../../deploy/build/driver
+    BUILDCMD = $$PWD/msvcbuild.bat
 
-    fortdrv32.target = $$PWD/fortfw32.sys
-    fortdrv32.commands = $$BUILDCMD /p:Platform=Win32
+    fortdrv32.target = $$OUT_DIR/fortfw32.sys
+    fortdrv32.commands = $$BUILDCMD Win32
 
-    fortdrv64.target = $$PWD/fortfw64.sys
-    fortdrv64.commands = $$BUILDCMD /p:Platform=x64
+    fortdrv64.target = $$OUT_DIR/fortfw64.sys
+    fortdrv64.commands = $$BUILDCMD x64
 
     QMAKE_EXTRA_TARGETS += fortdrv32 fortdrv64
     PRE_TARGETDEPS += $$fortdrv32.target $$fortdrv64.target
