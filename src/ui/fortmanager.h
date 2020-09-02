@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "mainwindow.h"
+#include "form/controls/mainwindow.h"
 #include "util/classhelpers.h"
 
 QT_FORWARD_DECLARE_CLASS(QSystemTrayIcon)

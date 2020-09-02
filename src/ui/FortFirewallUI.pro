@@ -25,6 +25,7 @@ SOURCES += \
     form/controls/labelspin.cpp \
     form/controls/labelspincombo.cpp \
     form/controls/listview.cpp \
+    form/controls/mainwindow.cpp \
     form/controls/plaintextedit.cpp \
     form/controls/spincombo.cpp \
     form/controls/tabbar.cpp \
@@ -59,7 +60,6 @@ SOURCES += \
     log/logentrystattraf.cpp \
     log/logmanager.cpp \
     main.cpp \
-    mainwindow.cpp \
     model/applistmodel.cpp \
     model/appstatmodel.cpp \
     model/iplistmodel.cpp \
@@ -137,6 +137,7 @@ HEADERS += \
     form/controls/labelspin.h \
     form/controls/labelspincombo.h \
     form/controls/listview.h \
+    form/controls/mainwindow.h \
     form/controls/plaintextedit.h \
     form/controls/spincombo.h \
     form/controls/tabbar.h \
@@ -171,7 +172,6 @@ HEADERS += \
     log/logentryprocnew.h \
     log/logentrystattraf.h \
     log/logmanager.h \
-    mainwindow.h \
     model/applistmodel.h \
     model/appstatmodel.h \
     model/iplistmodel.h \
