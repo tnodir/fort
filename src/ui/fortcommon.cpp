@@ -1,18 +1,9 @@
 #include "fortcommon.h"
 
-#define _WIN32_WINNT 0x0601
-#define WIN32_LEAN_AND_MEAN
-#include <qt_windows.h>
-#include <winioctl.h>
-#include <fwpmu.h>
-
-#include <common/common.h>
 #include <common/fortconf.h>
 #include <common/fortdev.h>
-
-#include <common/fortconf.c>
-#include <common/fortlog.c>
-#include <common/fortprov.c>
+#include <common/fortlog.h>
+#include <common/fortprov.h>
 
 FortCommon::FortCommon(QObject *parent) : QObject(parent) { }
 

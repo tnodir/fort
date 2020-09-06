@@ -2,12 +2,6 @@
 
 #include <QRegularExpression>
 
-#define BOOL   quint8
-#define UCHAR  quint8
-#define UINT16 quint16
-#define UINT32 quint32
-#define UINT64 quint64
-
 #include <common/fortconf.h>
 
 #include "../../conf/addressgroup.h"

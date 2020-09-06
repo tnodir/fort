@@ -12,42 +12,35 @@
 **  and to ignore the '/'.
 */
 
-#define WM_NOMATCH 1
-#define WM_MATCH 0
-#define WM_ABORT_ALL -1
-#define WM_ABORT_TO_STARSTAR -2
-
+#include "wildmatch.h"
 
 typedef unsigned char uchar;
 
-typedef WCHAR wm_char;
-
 #define ISASCII(c) ((c) < 128)
 
-#define WM_STRCHR(str,c) ((const WCHAR *) wcschr((const WCHAR *) (str),(c)))
+#define WM_STRCHR(str, c) ((const WCHAR *) wcschr((const WCHAR *) (str), (c)))
 
-#define DIR_SEP	'\\'
+#define DIR_SEP '\\'
 
 /* What character marks an inverted character class? */
-#define NEGATE_CLASS	'!'
-#define NEGATE_CLASS2	'^'
+#define NEGATE_CLASS  '!'
+#define NEGATE_CLASS2 '^'
 
-
-#define GIT_SPACE 0x01
-#define GIT_DIGIT 0x02
-#define GIT_ALPHA 0x04
-#define GIT_GLOB_SPECIAL 0x08
-#define GIT_REGEX_SPECIAL 0x10
+#define GIT_SPACE          0x01
+#define GIT_DIGIT          0x02
+#define GIT_ALPHA          0x04
+#define GIT_GLOB_SPECIAL   0x08
+#define GIT_REGEX_SPECIAL  0x10
 #define GIT_PATHSPEC_MAGIC 0x20
-#define GIT_CNTRL 0x40
-#define GIT_PUNCT 0x80
+#define GIT_CNTRL          0x40
+#define GIT_PUNCT          0x80
 
 enum {
     S = GIT_SPACE,
     A = GIT_ALPHA,
     D = GIT_DIGIT,
-    G = GIT_GLOB_SPECIAL,	/* *, ?, [ */
-    R = GIT_REGEX_SPECIAL,	/* $, (, ), +, ., ^, {, | */
+    G = GIT_GLOB_SPECIAL, /* *, ?, [ */
+    R = GIT_REGEX_SPECIAL, /* $, (, ), +, ., ^, {, | */
     P = GIT_PATHSPEC_MAGIC, /* other non-alnum, except for ] and } */
     X = GIT_CNTRL,
     U = GIT_PUNCT,
@@ -55,28 +48,27 @@ enum {
 };
 
 const uchar sane_ctype[256] = {
-    X, X, X, X, X, X, X, X, X, Z, Z, X, X, Z, X, X,		/*   0.. 15 */
-    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X,		/*  16.. 31 */
-    S, P, P, P, R, P, P, P, R, R, G, R, P, P, R, P,		/*  32.. 47 */
-    D, D, D, D, D, D, D, D, D, D, P, P, P, P, P, G,		/*  48.. 63 */
-    P, A, A, A, A, A, A, A, A, A, A, A, A, A, A, A,		/*  64.. 79 */
-    A, A, A, A, A, A, A, A, A, A, A, G, P, U, R, P,		/*  80.. 95 */
-    P, A, A, A, A, A, A, A, A, A, A, A, A, A, A, A,		/*  96..111 */
-    A, A, A, A, A, A, A, A, A, A, A, R, R, U, P, X,		/* 112..127 */
+    X, X, X, X, X, X, X, X, X, Z, Z, X, X, Z, X, X, /*   0.. 15 */
+    X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, /*  16.. 31 */
+    S, P, P, P, R, P, P, P, R, R, G, R, P, P, R, P, /*  32.. 47 */
+    D, D, D, D, D, D, D, D, D, D, P, P, P, P, P, G, /*  48.. 63 */
+    P, A, A, A, A, A, A, A, A, A, A, A, A, A, A, A, /*  64.. 79 */
+    A, A, A, A, A, A, A, A, A, A, A, G, P, U, R, P, /*  80.. 95 */
+    P, A, A, A, A, A, A, A, A, A, A, A, A, A, A, A, /*  96..111 */
+    A, A, A, A, A, A, A, A, A, A, A, R, R, U, P, X, /* 112..127 */
     /* Nothing in the 128.. range */
 };
 
-#define sane_istest(x,mask) ((sane_ctype[(uchar)(x)] & (mask)) != 0)
-#define is_glob_special(x) (ISASCII(x) && sane_istest(x,GIT_GLOB_SPECIAL))
-
+#define sane_istest(x, mask) ((sane_ctype[(uchar)(x)] & (mask)) != 0)
+#define is_glob_special(x)   (ISASCII(x) && sane_istest(x, GIT_GLOB_SPECIAL))
 
 /* Match the "pattern" against the "text" string. */
-static int wildmatch(const wm_char *pattern, const wm_char *text)
+FORT_API int wildmatch(const wm_char *pattern, const wm_char *text)
 {
     const wm_char *p = pattern;
     wm_char p_ch;
 
-    for ( ; (p_ch = *p) != '\0'; text++, p++) {
+    for (; (p_ch = *p) != '\0'; text++, p++) {
         int matched, match_slash, negated;
         wm_char t_ch, prev_ch;
 
@@ -96,9 +88,8 @@ static int wildmatch(const wm_char *pattern, const wm_char *text)
         case '*':
             if (*++p == '*') {
                 const wm_char *prev_p = p - 2;
-                while (*++p == '*') {}
-                if ((prev_p < pattern || *prev_p == DIR_SEP)
-                        && (*p == '\0' || *p == DIR_SEP)) {
+                while (*++p == '*') { }
+                if ((prev_p < pattern || *prev_p == DIR_SEP) && (*p == '\0' || *p == DIR_SEP)) {
                     /*
                      * Assuming we already match 'foo/' and are at
                      * <star star slash>, just assume it matches
@@ -108,8 +99,7 @@ static int wildmatch(const wm_char *pattern, const wm_char *text)
                      * otherwise it breaks C comment syntax) match
                      * both foo/bar and foo/a/bar.
                      */
-                    if (p[0] == DIR_SEP
-                            && wildmatch(p + 1, text) == WM_MATCH)
+                    if (p[0] == DIR_SEP && wildmatch(p + 1, text) == WM_MATCH)
                         return WM_MATCH;
                     match_slash = 1;
                 } else {
@@ -151,8 +141,7 @@ static int wildmatch(const wm_char *pattern, const wm_char *text)
                  */
                 if (!is_glob_special(*p)) {
                     p_ch = *p;
-                    while ((t_ch = *text) != '\0'
-                           && (match_slash || t_ch != DIR_SEP)) {
+                    while ((t_ch = *text) != '\0' && (match_slash || t_ch != DIR_SEP)) {
                         if (t_ch == p_ch)
                             break;
                         text++;

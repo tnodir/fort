@@ -16,6 +16,4 @@
 #define fort_request_complete(irp, status) \
   fort_request_complete_info((irp), (status), 0)
 
-#define UNUSED(p)	((void) (p))
-
-#endif FORTDRV_H
+#endif // FORTDRV_H

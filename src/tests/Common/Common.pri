@@ -12,8 +12,5 @@ UI_PWD = $$PWD/../../ui
 # Driver integration
 include($$UI_PWD/../driver/Driver.pri)
 
-# Windows
-LIBS += -lfwpuclnt -lkernel32 -luser32 -luuid -lws2_32
-
 INCLUDEPATH += $$PWD
 INCLUDEPATH += $$UI_PWD
