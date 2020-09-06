@@ -3,7 +3,7 @@
 #include "fortlog.h"
 
 FORT_API void fort_log_blocked_header_write(char *p, BOOL blocked, UINT32 remote_ip,
-    UINT16 remote_port, UCHAR ip_proto, UINT32 pid, UINT32 path_len)
+        UINT16 remote_port, UCHAR ip_proto, UINT32 pid, UINT32 path_len)
 {
     UINT32 *up = (UINT32 *) p;
 
@@ -14,7 +14,7 @@ FORT_API void fort_log_blocked_header_write(char *p, BOOL blocked, UINT32 remote
 }
 
 FORT_API void fort_log_blocked_write(char *p, BOOL blocked, UINT32 remote_ip, UINT16 remote_port,
-    UCHAR ip_proto, UINT32 pid, UINT32 path_len, const char *path)
+        UCHAR ip_proto, UINT32 pid, UINT32 path_len, const char *path)
 {
     fort_log_blocked_header_write(p, blocked, remote_ip, remote_port, ip_proto, pid, path_len);
 
@@ -24,7 +24,7 @@ FORT_API void fort_log_blocked_write(char *p, BOOL blocked, UINT32 remote_ip, UI
 }
 
 FORT_API void fort_log_blocked_header_read(const char *p, BOOL *blocked, UINT32 *remote_ip,
-    UINT16 *remote_port, UCHAR *ip_proto, UINT32 *pid, UINT32 *path_len)
+        UINT16 *remote_port, UCHAR *ip_proto, UINT32 *pid, UINT32 *path_len)
 {
     const UINT32 *up = (const UINT32 *) p;
 

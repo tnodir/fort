@@ -154,15 +154,15 @@ FORT_API DWORD fort_prov_register(HANDLE transEngine, BOOL is_boot)
     ifilter4.action.calloutKey = FORT_GUID_CALLOUT_ACCEPT_V4;
 
     if ((status = FwpmProviderAdd0(engine, &provider, NULL))
-        || (status = FwpmCalloutAdd0(engine, &ocallout4, NULL, NULL))
-        || (status = FwpmCalloutAdd0(engine, &icallout4, NULL, NULL))
-        || (status = FwpmCalloutAdd0(engine, &scallout4, NULL, NULL))
-        || (status = FwpmCalloutAdd0(engine, &dcallout4, NULL, NULL))
-        || (status = FwpmCalloutAdd0(engine, &itcallout4, NULL, NULL))
-        || (status = FwpmCalloutAdd0(engine, &otcallout4, NULL, NULL))
-        || (status = FwpmSubLayerAdd0(engine, &sublayer, NULL))
-        || (status = FwpmFilterAdd0(engine, &ofilter4, NULL, NULL))
-        || (status = FwpmFilterAdd0(engine, &ifilter4, NULL, NULL))) {
+            || (status = FwpmCalloutAdd0(engine, &ocallout4, NULL, NULL))
+            || (status = FwpmCalloutAdd0(engine, &icallout4, NULL, NULL))
+            || (status = FwpmCalloutAdd0(engine, &scallout4, NULL, NULL))
+            || (status = FwpmCalloutAdd0(engine, &dcallout4, NULL, NULL))
+            || (status = FwpmCalloutAdd0(engine, &itcallout4, NULL, NULL))
+            || (status = FwpmCalloutAdd0(engine, &otcallout4, NULL, NULL))
+            || (status = FwpmSubLayerAdd0(engine, &sublayer, NULL))
+            || (status = FwpmFilterAdd0(engine, &ofilter4, NULL, NULL))
+            || (status = FwpmFilterAdd0(engine, &ifilter4, NULL, NULL))) {
         fort_prov_trans_abort(engine);
     }
 
@@ -184,7 +184,7 @@ FORT_API DWORD fort_prov_flow_register(HANDLE transEngine, BOOL filter_transport
     FWPM_FILTER0 itfilter4, otfilter4;
     HANDLE engine = transEngine;
     const UINT32 filter_flags = FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED
-        | FWP_CALLOUT_FLAG_ALLOW_MID_STREAM_INSPECTION;
+            | FWP_CALLOUT_FLAG_ALLOW_MID_STREAM_INSPECTION;
     DWORD status;
 
     if (!transEngine) {
@@ -235,10 +235,10 @@ FORT_API DWORD fort_prov_flow_register(HANDLE transEngine, BOOL filter_transport
     otfilter4.action.calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V4;
 
     if ((status = FwpmFilterAdd0(engine, &sfilter4, NULL, NULL))
-        || (status = FwpmFilterAdd0(engine, &dfilter4, NULL, NULL))
-        || (filter_transport
-            && ((status = FwpmFilterAdd0(engine, &itfilter4, NULL, NULL))
-                || (status = FwpmFilterAdd0(engine, &otfilter4, NULL, NULL))))) {
+            || (status = FwpmFilterAdd0(engine, &dfilter4, NULL, NULL))
+            || (filter_transport
+                    && ((status = FwpmFilterAdd0(engine, &itfilter4, NULL, NULL))
+                            || (status = FwpmFilterAdd0(engine, &otfilter4, NULL, NULL))))) {
         fort_prov_trans_abort(engine);
     }
 

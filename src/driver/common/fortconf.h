@@ -197,7 +197,7 @@ typedef struct fort_conf_io
     (FORT_CONF_ADDR_LIST_OFF + FORT_CONF_IP_ARR_SIZE(ip_n) + FORT_CONF_IP_RANGE_SIZE(pair_n))
 
 typedef FORT_APP_FLAGS fort_conf_app_exe_find_func(
-    const PFORT_CONF conf, const char *path, UINT32 path_len);
+        const PFORT_CONF conf, const char *path, UINT32 path_len);
 
 typedef BOOL fort_conf_zones_ip_included_func(void *ctx, UINT32 zones_mask, UINT32 remote_ip);
 
@@ -212,22 +212,23 @@ FORT_API BOOL is_time_in_period(FORT_TIME time, FORT_PERIOD period);
 FORT_API BOOL fort_conf_ip_inlist(UINT32 ip, const PFORT_CONF_ADDR_LIST addr_list);
 
 FORT_API PFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(
-    const PFORT_CONF conf, int addr_group_index);
+        const PFORT_CONF conf, int addr_group_index);
 
 #define fort_conf_addr_group_include_list_ref(addr_group) ((PFORT_CONF_ADDR_LIST)(addr_group)->data)
 #define fort_conf_addr_group_exclude_list_ref(addr_group)                                          \
     ((PFORT_CONF_ADDR_LIST)((addr_group)->data + (addr_group)->exclude_off))
 
 FORT_API BOOL fort_conf_ip_included(const PFORT_CONF conf,
-    fort_conf_zones_ip_included_func zone_func, void *ctx, UINT32 remote_ip, int addr_group_index);
+        fort_conf_zones_ip_included_func zone_func, void *ctx, UINT32 remote_ip,
+        int addr_group_index);
 
 FORT_API BOOL fort_conf_app_exe_equal(PFORT_APP_ENTRY app_entry, const char *path, UINT32 path_len);
 
 FORT_API FORT_APP_FLAGS fort_conf_app_exe_find(
-    const PFORT_CONF conf, const char *path, UINT32 path_len);
+        const PFORT_CONF conf, const char *path, UINT32 path_len);
 
 FORT_API FORT_APP_FLAGS fort_conf_app_find(const PFORT_CONF conf, const char *path, UINT32 path_len,
-    fort_conf_app_exe_find_func *exe_find_func);
+        fort_conf_app_exe_find_func *exe_find_func);
 
 FORT_API BOOL fort_conf_app_blocked(const PFORT_CONF conf, FORT_APP_FLAGS app_flags);
 

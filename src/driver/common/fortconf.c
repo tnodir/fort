@@ -71,7 +71,7 @@ static BOOL fort_conf_ip_inrange(UINT32 ip, UINT32 count, const UINT32 *iprange)
 FORT_API BOOL fort_conf_ip_inlist(UINT32 ip, const PFORT_CONF_ADDR_LIST addr_list)
 {
     return fort_conf_ip_inarr(ip, addr_list->ip_n, fort_conf_addr_list_ip_ref(addr_list))
-        || fort_conf_ip_inrange(ip, addr_list->pair_n, fort_conf_addr_list_pair_ref(addr_list));
+            || fort_conf_ip_inrange(ip, addr_list->pair_n, fort_conf_addr_list_pair_ref(addr_list));
 }
 
 FORT_API PFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(const PFORT_CONF conf, int addr_group_index)
@@ -83,7 +83,8 @@ FORT_API PFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(const PFORT_CONF conf, i
 }
 
 FORT_API BOOL fort_conf_ip_included(const PFORT_CONF conf,
-    fort_conf_zones_ip_included_func zone_func, void *ctx, UINT32 remote_ip, int addr_group_index)
+        fort_conf_zones_ip_included_func zone_func, void *ctx, UINT32 remote_ip,
+        int addr_group_index)
 {
     const PFORT_CONF_ADDR_GROUP addr_group = fort_conf_addr_group_ref(conf, addr_group_index);
 
@@ -91,16 +92,18 @@ FORT_API BOOL fort_conf_ip_included(const PFORT_CONF conf,
     const BOOL exclude_all = addr_group->exclude_all;
 
     const BOOL ip_included = include_all
-        ? TRUE
-        : ((!addr_group->include_is_empty
-               && fort_conf_ip_inlist(remote_ip, fort_conf_addr_group_include_list_ref(addr_group)))
-            || (zone_func != NULL && zone_func(ctx, addr_group->include_zones, remote_ip)));
+            ? TRUE
+            : ((!addr_group->include_is_empty
+                       && fort_conf_ip_inlist(
+                               remote_ip, fort_conf_addr_group_include_list_ref(addr_group)))
+                    || (zone_func != NULL && zone_func(ctx, addr_group->include_zones, remote_ip)));
 
     const BOOL ip_excluded = exclude_all
-        ? TRUE
-        : ((!addr_group->exclude_is_empty
-               && fort_conf_ip_inlist(remote_ip, fort_conf_addr_group_exclude_list_ref(addr_group)))
-            || (zone_func != NULL && zone_func(ctx, addr_group->exclude_zones, remote_ip)));
+            ? TRUE
+            : ((!addr_group->exclude_is_empty
+                       && fort_conf_ip_inlist(
+                               remote_ip, fort_conf_addr_group_exclude_list_ref(addr_group)))
+                    || (zone_func != NULL && zone_func(ctx, addr_group->exclude_zones, remote_ip)));
 
     return include_all ? !ip_excluded : (exclude_all ? ip_included : (ip_included && !ip_excluded));
 }
@@ -123,7 +126,7 @@ FORT_API BOOL fort_conf_app_exe_equal(PFORT_APP_ENTRY app_entry, const char *pat
 }
 
 FORT_API FORT_APP_FLAGS fort_conf_app_exe_find(
-    const PFORT_CONF conf, const char *path, UINT32 path_len)
+        const PFORT_CONF conf, const char *path, UINT32 path_len)
 {
     FORT_APP_FLAGS app_flags;
     const char *data;
@@ -166,7 +169,7 @@ static int fort_conf_app_prefix_cmp(PFORT_APP_ENTRY app_entry, const char *path,
 }
 
 static FORT_APP_FLAGS fort_conf_app_prefix_find(
-    const PFORT_CONF conf, const char *path, UINT32 path_len)
+        const PFORT_CONF conf, const char *path, UINT32 path_len)
 {
     FORT_APP_FLAGS app_flags;
     const char *data;
@@ -241,7 +244,7 @@ end:
 }
 
 FORT_API FORT_APP_FLAGS fort_conf_app_find(const PFORT_CONF conf, const char *path, UINT32 path_len,
-    fort_conf_app_exe_find_func *exe_find_func)
+        fort_conf_app_exe_find_func *exe_find_func)
 {
     FORT_APP_FLAGS app_flags;
 
@@ -273,9 +276,9 @@ FORT_API BOOL fort_conf_app_blocked(const PFORT_CONF conf, FORT_APP_FLAGS app_fl
         const BOOL allow_all = conf->flags.app_allow_all;
 
         const BOOL app_blocked =
-            block_all ? TRUE : (app_found && (app_perm & conf->app_perms_block_mask));
+                block_all ? TRUE : (app_found && (app_perm & conf->app_perms_block_mask));
         const BOOL app_allowed =
-            allow_all ? TRUE : (app_found && (app_perm & conf->app_perms_allow_mask));
+                allow_all ? TRUE : (app_found && (app_perm & conf->app_perms_allow_mask));
 
         return block_all ? !app_allowed : (allow_all ? app_blocked : (app_blocked && !app_allowed));
     }
@@ -323,12 +326,13 @@ FORT_API UINT16 fort_conf_app_period_bits(const PFORT_CONF conf, FORT_TIME time,
 FORT_API void fort_conf_app_perms_mask_init(PFORT_CONF conf, UINT32 group_bits)
 {
     UINT32 perms_mask = (group_bits & 0x0001) | ((group_bits & 0x0002) << 1)
-        | ((group_bits & 0x0004) << 2) | ((group_bits & 0x0008) << 3) | ((group_bits & 0x0010) << 4)
-        | ((group_bits & 0x0020) << 5) | ((group_bits & 0x0040) << 6) | ((group_bits & 0x0080) << 7)
-        | ((group_bits & 0x0100) << 8) | ((group_bits & 0x0200) << 9)
-        | ((group_bits & 0x0400) << 10) | ((group_bits & 0x0800) << 11)
-        | ((group_bits & 0x1000) << 12) | ((group_bits & 0x2000) << 13)
-        | ((group_bits & 0x4000) << 14) | ((group_bits & 0x8000) << 15);
+            | ((group_bits & 0x0004) << 2) | ((group_bits & 0x0008) << 3)
+            | ((group_bits & 0x0010) << 4) | ((group_bits & 0x0020) << 5)
+            | ((group_bits & 0x0040) << 6) | ((group_bits & 0x0080) << 7)
+            | ((group_bits & 0x0100) << 8) | ((group_bits & 0x0200) << 9)
+            | ((group_bits & 0x0400) << 10) | ((group_bits & 0x0800) << 11)
+            | ((group_bits & 0x1000) << 12) | ((group_bits & 0x2000) << 13)
+            | ((group_bits & 0x4000) << 14) | ((group_bits & 0x8000) << 15);
 
     perms_mask |= perms_mask << 1;
 

@@ -46,13 +46,13 @@ extern "C" {
 #endif
 
 FORT_API void fort_log_blocked_header_write(char *p, BOOL blocked, UINT32 remote_ip,
-    UINT16 remote_port, UCHAR ip_proto, UINT32 pid, UINT32 path_len);
+        UINT16 remote_port, UCHAR ip_proto, UINT32 pid, UINT32 path_len);
 
 FORT_API void fort_log_blocked_write(char *p, BOOL blocked, UINT32 remote_ip, UINT16 remote_port,
-    UCHAR ip_proto, UINT32 pid, UINT32 path_len, const char *path);
+        UCHAR ip_proto, UINT32 pid, UINT32 path_len, const char *path);
 
 FORT_API void fort_log_blocked_header_read(const char *p, BOOL *blocked, UINT32 *remote_ip,
-    UINT16 *remote_port, UCHAR *ip_proto, UINT32 *pid, UINT32 *path_len);
+        UINT16 *remote_port, UCHAR *ip_proto, UINT32 *pid, UINT32 *path_len);
 
 FORT_API void fort_log_proc_new_header_write(char *p, UINT32 pid, UINT32 path_len);
 
