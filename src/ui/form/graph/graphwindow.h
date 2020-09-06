@@ -48,7 +48,13 @@ private:
     static QPen adjustPen(const QPen &pen, const QColor &color);
 
 protected:
-    void enterEvent(QEvent *event) override;
+    void enterEvent(
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+            QEvent *event
+#else
+            QEnterEvent *event
+#endif
+            ) override;
     void leaveEvent(QEvent *event) override;
 
 private:
