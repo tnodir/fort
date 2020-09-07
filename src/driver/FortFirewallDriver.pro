@@ -2,10 +2,6 @@ include(Driver.pri)
 
 QT = core
 
-#DEFINES += FORT_DRIVER
-
-#INCLUDEPATH += "C:/Program Files (x86)/Windows Kits/8.1/Include/km"
-
 SOURCES += \
     dummy.c \
     fortbuf.c \

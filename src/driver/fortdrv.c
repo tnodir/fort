@@ -3,7 +3,10 @@
 #include "fortdrv.h"
 
 #include "../version.h"
+
+#include "common/fortconf.h"
 #include "common/fortdev.h"
+#include "common/fortprov.h"
 
 #include "fortbuf.h"
 #include "fortcnf.h"

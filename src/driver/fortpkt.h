@@ -3,6 +3,7 @@
 
 #include "fortdrv.h"
 
+#include "common/fortconf.h"
 #include "forttds.h"
 
 #define FORT_DEFER_FLUSH_ALL 0xFFFFFFFF

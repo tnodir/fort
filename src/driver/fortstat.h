@@ -3,6 +3,7 @@
 
 #include "fortdrv.h"
 
+#include "common/fortconf.h"
 #include "forttds.h"
 
 #define FORT_STATUS_FLOW_BLOCK STATUS_NOT_SAME_DEVICE

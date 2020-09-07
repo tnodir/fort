@@ -3,6 +3,7 @@
 
 #include "fortdrv.h"
 
+#include "common/fortconf.h"
 #include "forttds.h"
 #include "forttlsf.h"
 
