@@ -1,6 +1,26 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#if defined(FORT_DRIVER)
+#    define NDIS_WDM 1
+#    define NDIS630  1
+
+#    define WIN9X_COMPAT_SPINLOCK /* XXX: Support Windows 7: KeInitializeSpinLock() */
+#    define POOL_NX_OPTIN         1 /* Enhanced protection of NX pool */
+
+#    include <wdm.h>
+#    include <fwpmk.h>
+#    include <fwpsk.h>
+#    include <stddef.h>
+#    include <ntrxdef.h>
+#else
+#    define _WIN32_WINNT 0x0601
+#    define WIN32_LEAN_AND_MEAN
+#    include <windows.h>
+#    include <winioctl.h>
+#    include <fwpmu.h>
+#endif
+
 #if !defined(FORT_API)
 #    if defined(FORT_AMALG)
 #        define FORT_API static
@@ -23,11 +43,5 @@
 #define SECS_1601_TO_1970                                                                          \
     ((369 * 365 + 89) * (INT64) SECSPERDAY) /* 1601 to 1970 is 369 years plus 89 leap days */
 #define fort_system_to_unix_time(system_time) ((system_time) / 10000000 - SECS_1601_TO_1970)
-
-#if !defined(FORT_DRIVER)
-#    define _WIN32_WINNT 0x0601
-#    define WIN32_LEAN_AND_MEAN
-#    include <windows.h>
-#endif
 
 #endif // COMMON_H

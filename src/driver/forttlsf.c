@@ -1,7 +1,5 @@
 /* Fort Firewall TLSF */
 
-#define TLSF_API	static
-#define tlsf_assert	NT_ASSERT
-#define tlsf_printf
+#include "forttlsf.h"
 
-#include "..\3rdparty\tlsf\tlsf.c"
+#include "../3rdparty/tlsf/tlsf.c"

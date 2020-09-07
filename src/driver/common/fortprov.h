@@ -3,8 +3,6 @@
 
 #include "common.h"
 
-#include <fwpmu.h>
-
 #define fort_prov_open(engine)         FwpmEngineOpen0(NULL, RPC_C_AUTHN_WINNT, NULL, NULL, (engine))
 #define fort_prov_close(engine)        FwpmEngineClose0(engine)
 #define fort_prov_trans_begin(engine)  FwpmTransactionBegin0((engine), 0)

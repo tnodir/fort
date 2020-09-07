@@ -66,7 +66,7 @@
     <FilesToPackage Include="$(TargetPath)" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="fortdrv.c" />
+    <ClCompile Include="fortdrv_amalg.c" />
     <ResourceCompile Include="fortdrv.rc" />
   </ItemGroup>
   <ItemGroup>

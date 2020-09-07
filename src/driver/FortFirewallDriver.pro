@@ -1,10 +1,36 @@
 include(Driver.pri)
 
 QT = core
-SOURCES += dummy.c
+
+#DEFINES += FORT_DRIVER
+
+#INCLUDEPATH += "C:/Program Files (x86)/Windows Kits/8.1/Include/km"
+
+SOURCES += \
+    dummy.c \
+    fortbuf.c \
+    fortcnf.c \
+    fortdrv.c \
+    fortpkt.c \
+    fortstat.c \
+    forttds.c \
+    forttlsf.c \
+    forttmr.c \
+    fortwrk.c
+
+HEADERS += \
+    fortbuf.h \
+    fortcnf.h \
+    fortdrv.h \
+    fortpkt.h \
+    fortstat.h \
+    forttds.h \
+    forttlsf.h \
+    forttmr.h \
+    fortwrk.h
 
 OTHER_FILES += \
-    $$PWD/scripts/*.bat
+    scripts/*.bat
 
 # Kernel Driver
 {
