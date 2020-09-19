@@ -31,7 +31,7 @@ typedef struct fort_conf_ref
 
 typedef struct fort_device_conf
 {
-    UCHAR volatile flags;
+    CHAR volatile flags;
 
     FORT_CONF_FLAGS volatile conf_flags;
     PFORT_CONF_REF volatile ref;

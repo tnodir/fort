@@ -143,7 +143,7 @@ static NTSTATUS fort_conf_ref_exe_add_path_locked(PFORT_CONF_REF conf_ref, const
             fort_conf_ref_exe_find_node(conf_ref, path, path_len, path_hash);
 
     if (node == NULL) {
-        const UINT16 entry_size = FORT_CONF_APP_ENTRY_SIZE(path_len);
+        const UINT16 entry_size = (UINT16) FORT_CONF_APP_ENTRY_SIZE(path_len);
         PFORT_APP_ENTRY entry = fort_conf_pool_malloc(conf_ref, entry_size);
 
         if (entry == NULL)
