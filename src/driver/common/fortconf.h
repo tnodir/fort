@@ -215,12 +215,19 @@ FORT_API PFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(
         const PFORT_CONF conf, int addr_group_index);
 
 #define fort_conf_addr_group_include_list_ref(addr_group) ((PFORT_CONF_ADDR_LIST)(addr_group)->data)
+
 #define fort_conf_addr_group_exclude_list_ref(addr_group)                                          \
     ((PFORT_CONF_ADDR_LIST)((addr_group)->data + (addr_group)->exclude_off))
 
 FORT_API BOOL fort_conf_ip_included(const PFORT_CONF conf,
         fort_conf_zones_ip_included_func zone_func, void *ctx, UINT32 remote_ip,
         int addr_group_index);
+
+#define fort_conf_ip_is_inet(conf, zone_func, ctx, remote_ip)                                      \
+    fort_conf_ip_included((conf), (zone_func), (ctx), (remote_ip), 0)
+
+#define fort_conf_ip_inet_included(conf, zone_func, ctx, remote_ip)                                \
+    fort_conf_ip_included((conf), (zone_func), (ctx), (remote_ip), 1)
 
 FORT_API BOOL fort_conf_app_exe_equal(PFORT_APP_ENTRY app_entry, const char *path, UINT32 path_len);
 

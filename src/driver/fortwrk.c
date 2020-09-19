@@ -2,8 +2,6 @@
 
 #include "fortwrk.h"
 
-#define FORT_WORKER_REAUTH 0x01
-
 static void fort_worker_callback(PVOID device, PVOID context, PIO_WORKITEM item)
 {
     PFORT_WORKER worker = (PFORT_WORKER) context;

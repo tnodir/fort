@@ -12,7 +12,11 @@ SOURCES += \
     forttds.c \
     forttlsf.c \
     forttmr.c \
-    fortwrk.c
+    fortwrk.c \
+    wdm/um_fwpmk.c \
+    wdm/um_fwpsk.c \
+    wdm/um_ndis.c \
+    wdm/um_wdm.c
 
 HEADERS += \
     fortbuf.h \
@@ -23,10 +27,17 @@ HEADERS += \
     forttds.h \
     forttlsf.h \
     forttmr.h \
-    fortwrk.h
+    fortwrk.h \
+    wdm/um_fwpmk.h \
+    wdm/um_fwpsk.h \
+    wdm/um_ndis.h \
+    wdm/um_wdm.h
 
 OTHER_FILES += \
     scripts/*.bat
+
+# Windows
+LIBS *= -lntdll
 
 # Kernel Driver
 {

@@ -36,7 +36,7 @@ static NTSTATUS fort_packet_inject_in(PFORT_DEFER defer, PFORT_PACKET pkt,
     if (NT_SUCCESS(status)) {
         status = FwpsInjectTransportReceiveAsync0(defer->transport_injection4_id, NULL, NULL, 0,
                 AF_INET, pkt_in->compartmentId, pkt_in->interfaceIndex, pkt_in->subInterfaceIndex,
-                *clonedNetBufList, complete_func, pkt);
+                *clonedNetBufList, (FWPS_INJECT_COMPLETE0) complete_func, pkt);
     }
 
     return status;
@@ -60,7 +60,7 @@ static NTSTATUS fort_packet_inject_out(PFORT_DEFER defer, PFORT_PACKET pkt,
 
         status = FwpsInjectTransportSendAsync0(defer->transport_injection4_id, NULL,
                 pkt_out->endpointHandle, 0, &send_args, AF_INET, pkt_out->compartmentId,
-                *clonedNetBufList, complete_func, pkt);
+                *clonedNetBufList, (FWPS_INJECT_COMPLETE0) complete_func, pkt);
     }
 
     return status;
@@ -85,7 +85,7 @@ static NTSTATUS fort_packet_inject_stream(PFORT_DEFER defer, PFORT_PACKET pkt,
     if (NT_SUCCESS(status)) {
         status = FwpsStreamInjectAsync0(defer->stream_injection4_id, NULL, 0, pkt_stream->flow_id,
                 pkt_stream->calloutId, pkt_stream->layerId, pkt_stream->streamFlags,
-                *clonedNetBufList, pkt->dataSize, complete_func, pkt);
+                *clonedNetBufList, pkt->dataSize, (FWPS_INJECT_COMPLETE0) complete_func, pkt);
     }
 
     return status;
@@ -429,7 +429,7 @@ static void fort_defer_packet_inject(PFORT_DEFER defer, PFORT_PACKET pkt,
         PNET_BUFFER_LIST clonedNetBufList = NULL;
         NTSTATUS status;
 
-        FORT_INJECT_FUNC inject_func = pkt->is_stream
+        const FORT_INJECT_FUNC inject_func = pkt->is_stream
                 ? &fort_packet_inject_stream
                 : (pkt->inbound ? &fort_packet_inject_in : &fort_packet_inject_out);
 

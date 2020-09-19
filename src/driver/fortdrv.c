@@ -122,13 +122,15 @@ static void fort_callout_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
         goto block;
 
     if (!conf_flags.filter_enabled
-            || !fort_conf_ip_is_inet(
-                    &conf_ref->conf, fort_conf_zones_ip_included, &g_device->conf, remote_ip))
+            || !fort_conf_ip_is_inet(&conf_ref->conf,
+                    (fort_conf_zones_ip_included_func *) fort_conf_zones_ip_included,
+                    &g_device->conf, remote_ip))
         goto permit;
 
     if (conf_flags.stop_inet_traffic
-            || !fort_conf_ip_inet_included(
-                    &conf_ref->conf, fort_conf_zones_ip_included, &g_device->conf, remote_ip))
+            || !fort_conf_ip_inet_included(&conf_ref->conf,
+                    (fort_conf_zones_ip_included_func *) fort_conf_zones_ip_included,
+                    &g_device->conf, remote_ip))
         goto block;
 
     process_id = (UINT32) inMetaValues->processId;
@@ -206,7 +208,7 @@ end:
     }
 }
 
-static void fort_callout_connect_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
+static void NTAPI fort_callout_connect_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, void *layerData,
         const FWPS_FILTER0 *filter, const UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
@@ -219,7 +221,7 @@ static void fort_callout_connect_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
             FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_PROTOCOL);
 }
 
-static void fort_callout_accept_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
+static void NTAPI fort_callout_accept_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, void *layerData,
         const FWPS_FILTER0 *filter, const UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
@@ -243,7 +245,7 @@ static NTSTATUS NTAPI fort_callout_notify(
     return STATUS_SUCCESS;
 }
 
-static void fort_packet_inject_complete(
+static void NTAPI fort_packet_inject_complete(
         PFORT_PACKET pkt, PNET_BUFFER_LIST clonedNetBufList, BOOLEAN dispatchLevel)
 {
     fort_defer_packet_free(&g_device->defer, pkt, clonedNetBufList, dispatchLevel);
@@ -257,6 +259,8 @@ static void fort_callout_defer_packet_flush(UINT32 list_bits, BOOL dispatchLevel
 
 static void fort_callout_defer_stream_flush(UINT64 flow_id, BOOL dispatchLevel)
 {
+    UNUSED(dispatchLevel);
+
     fort_defer_stream_flush(&g_device->defer, fort_packet_inject_complete, flow_id, FALSE);
 }
 
@@ -272,10 +276,12 @@ static void fort_callout_flow_classify_v4(const FWPS_INCOMING_METADATA_VALUES0 *
 {
     const UINT32 headerSize = inbound ? inMetaValues->transportHeaderSize : 0;
 
+    UNUSED(classifyOut);
+
     fort_flow_classify(&g_device->stat, flowContext, headerSize + dataSize, is_tcp, inbound);
 }
 
-static void fort_callout_stream_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
+static void NTAPI fort_callout_stream_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, FWPS_STREAM_CALLOUT_IO_PACKET0 *packet,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
@@ -349,7 +355,7 @@ drop:
     return;
 }
 
-static void fort_callout_datagram_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
+static void NTAPI fort_callout_datagram_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const PNET_BUFFER_LIST netBufList,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
@@ -366,7 +372,7 @@ static void fort_callout_datagram_classify_v4(const FWPS_INCOMING_VALUES0 *inFix
     fort_callout_classify_permit(filter, classifyOut);
 }
 
-static void fort_callout_flow_delete_v4(UINT16 layerId, UINT32 calloutId, UINT64 flowContext)
+static void NTAPI fort_callout_flow_delete_v4(UINT16 layerId, UINT32 calloutId, UINT64 flowContext)
 {
     UNUSED(layerId);
     UNUSED(calloutId);
@@ -374,7 +380,7 @@ static void fort_callout_flow_delete_v4(UINT16 layerId, UINT32 calloutId, UINT64
     fort_flow_delete(&g_device->stat, flowContext);
 }
 
-static void fort_callout_transport_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
+static void NTAPI fort_callout_transport_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PNET_BUFFER_LIST netBufList,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut,
         BOOL inbound)
@@ -466,7 +472,7 @@ drop:
     return;
 }
 
-static void fort_callout_in_transport_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
+static void NTAPI fort_callout_in_transport_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const PNET_BUFFER_LIST netBufList,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
@@ -474,7 +480,7 @@ static void fort_callout_in_transport_classify_v4(const FWPS_INCOMING_VALUES0 *i
             inFixedValues, inMetaValues, netBufList, filter, flowContext, classifyOut, TRUE);
 }
 
-static void fort_callout_out_transport_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
+static void NTAPI fort_callout_out_transport_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const PNET_BUFFER_LIST netBufList,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
@@ -482,7 +488,7 @@ static void fort_callout_out_transport_classify_v4(const FWPS_INCOMING_VALUES0 *
             inFixedValues, inMetaValues, netBufList, filter, flowContext, classifyOut, FALSE);
 }
 
-static void fort_callout_delete_v4(UINT16 layerId, UINT32 calloutId, UINT64 flowContext)
+static void NTAPI fort_callout_delete_v4(UINT16 layerId, UINT32 calloutId, UINT64 flowContext)
 {
     UNUSED(layerId);
     UNUSED(calloutId);
@@ -496,11 +502,11 @@ static NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 
     RtlZeroMemory(&c, sizeof(FWPS_CALLOUT0));
 
-    c.notifyFn = fort_callout_notify;
+    c.notifyFn = (FWPS_CALLOUT_NOTIFY_FN0) fort_callout_notify;
 
     /* IPv4 connect callout */
     c.calloutKey = FORT_GUID_CALLOUT_CONNECT_V4;
-    c.classifyFn = fort_callout_connect_v4;
+    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_connect_v4;
 
     status = FwpsCalloutRegister0(device, &c, &g_device->connect4_id);
     if (!NT_SUCCESS(status)) {
@@ -511,7 +517,7 @@ static NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 
     /* IPv4 accept callout */
     c.calloutKey = FORT_GUID_CALLOUT_ACCEPT_V4;
-    c.classifyFn = fort_callout_accept_v4;
+    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_accept_v4;
 
     status = FwpsCalloutRegister0(device, &c, &g_device->accept4_id);
     if (!NT_SUCCESS(status)) {
@@ -522,7 +528,7 @@ static NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 
     /* IPv4 stream callout */
     c.calloutKey = FORT_GUID_CALLOUT_STREAM_V4;
-    c.classifyFn = fort_callout_stream_classify_v4;
+    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_stream_classify_v4;
 
     c.flowDeleteFn = fort_callout_flow_delete_v4;
     c.flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW;
@@ -536,7 +542,7 @@ static NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 
     /* IPv4 datagram callout */
     c.calloutKey = FORT_GUID_CALLOUT_DATAGRAM_V4;
-    c.classifyFn = fort_callout_datagram_classify_v4;
+    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_datagram_classify_v4;
 
     /* reuse c.flowDeleteFn & c.flags */
 
@@ -549,7 +555,7 @@ static NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 
     /* IPv4 inbound transport callout */
     c.calloutKey = FORT_GUID_CALLOUT_IN_TRANSPORT_V4;
-    c.classifyFn = fort_callout_in_transport_classify_v4;
+    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_in_transport_classify_v4;
 
     c.flowDeleteFn = fort_callout_delete_v4;
     /* reuse c.flags */
@@ -563,7 +569,7 @@ static NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 
     /* IPv4 outbound transport callout */
     c.calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V4;
-    c.classifyFn = fort_callout_out_transport_classify_v4;
+    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_out_transport_classify_v4;
 
     /* reuse c.flowDeleteFn & c.flags */
 
@@ -834,6 +840,8 @@ static NTSTATUS fort_device_close(PDEVICE_OBJECT device, PIRP irp)
 
 static NTSTATUS fort_device_cleanup(PDEVICE_OBJECT device, PIRP irp)
 {
+    UNUSED(device);
+
     /* Device closed */
     fort_device_flag_set(
             &g_device->conf, (FORT_DEVICE_IS_OPENED | FORT_DEVICE_IS_VALIDATED), FALSE);
@@ -876,10 +884,12 @@ static NTSTATUS fort_device_control(PDEVICE_OBJECT device, PIRP irp)
     ULONG control_code;
     NTSTATUS status = STATUS_UNSUCCESSFUL;
 
+    UNUSED(device);
+
     irp_stack = IoGetCurrentIrpStackLocation(irp);
     control_code = irp_stack->Parameters.DeviceIoControl.IoControlCode;
 
-    if (control_code != FORT_IOCTL_VALIDATE
+    if (control_code != (ULONG) FORT_IOCTL_VALIDATE
             && !fort_device_flag(&g_device->conf, FORT_DEVICE_IS_VALIDATED))
         goto end;
 
@@ -971,7 +981,7 @@ static NTSTATUS fort_device_control(PDEVICE_OBJECT device, PIRP irp)
             if (conf_ref == NULL) {
                 status = STATUS_INSUFFICIENT_RESOURCES;
             } else {
-                if (control_code == FORT_IOCTL_ADDAPP) {
+                if (control_code == (ULONG) FORT_IOCTL_ADDAPP) {
                     status = fort_conf_ref_exe_add_entry(conf_ref, app_entry, FALSE);
                 } else {
                     fort_conf_ref_exe_del_entry(conf_ref, app_entry);

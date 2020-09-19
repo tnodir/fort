@@ -108,12 +108,6 @@ FORT_API BOOL fort_conf_ip_included(const PFORT_CONF conf,
     return include_all ? !ip_excluded : (exclude_all ? ip_included : (ip_included && !ip_excluded));
 }
 
-#define fort_conf_ip_is_inet(conf, zones_func, ctx, remote_ip)                                     \
-    fort_conf_ip_included((conf), (zones_func), (ctx), (remote_ip), 0)
-
-#define fort_conf_ip_inet_included(conf, zones_func, ctx, remote_ip)                               \
-    fort_conf_ip_included((conf), (zones_func), (ctx), (remote_ip), 1)
-
 FORT_API BOOL fort_conf_app_exe_equal(PFORT_APP_ENTRY app_entry, const char *path, UINT32 path_len)
 {
     const char *app_path = (const char *) (app_entry + 1);
