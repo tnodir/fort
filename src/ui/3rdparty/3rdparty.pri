@@ -1,9 +1,9 @@
+include($$PWD/3rdparty-include.pri)
+
 qcustomplot {
-    include (qcustomplot/qcustomplot.pri)
+    include($$PWD/qcustomplot/qcustomplot.pri)
 }
 
 sqlite {
-    include (sqlite/sqlite.pri)
+    include($$PWD/sqlite/sqlite.pri)
 }
-
-INCLUDEPATH += $$PWD

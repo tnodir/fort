@@ -1,15 +1,4 @@
-isEmpty(GOOGLETEST_DIR): GOOGLETEST_DIR=$$(GOOGLETEST_DIR)
-
-GTEST_PATH = $$GOOGLETEST_DIR/googletest
-GMOCK_PATH = $$GOOGLETEST_DIR/googlemock
-
-DEFINES += GTEST_LANG_CXX11
-
-INCLUDEPATH *= \
-    $$GTEST_PATH \
-    $$GTEST_PATH/include \
-    $$GMOCK_PATH \
-    $$GMOCK_PATH/include
+include($$PWD/GoogleTest-include.pri)
 
 HEADERS += \
     $$PWD/googletest.h

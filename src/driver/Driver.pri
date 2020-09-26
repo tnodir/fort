@@ -1,4 +1,4 @@
-INCLUDEPATH += $$PWD
+include($$PWD/Driver-include.pri)
 
 SOURCES += \
     $$PWD/common/fortconf.c \
@@ -13,6 +13,3 @@ HEADERS += \
     $$PWD/common/fortlog.h \
     $$PWD/common/fortprov.h \
     $$PWD/common/wildmatch.h
-
-# Windows
-LIBS *= -lfwpuclnt -lkernel32 -luser32 -luuid -lversion -lws2_32
