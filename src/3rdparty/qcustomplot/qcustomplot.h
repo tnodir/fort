@@ -4628,6 +4628,8 @@ public:
   void setBackground(const QBrush &brush);
   void setBackgroundScaled(bool scaled);
   void setBackgroundScaledMode(Qt::AspectRatioMode mode);
+  void setRangeDragEnabled(bool enabled);
+  void setRangeZoomEnabled(bool enabled);
   void setRangeDrag(Qt::Orientations orientations);
   void setRangeZoom(Qt::Orientations orientations);
   void setRangeDragAxes(QCPAxis *horizontal, QCPAxis *vertical);
@@ -4682,6 +4684,8 @@ protected:
   bool mBackgroundScaled;
   Qt::AspectRatioMode mBackgroundScaledMode;
   QCPLayoutInset *mInsetLayout;
+  bool mRangeDragEnabled : 1;
+  bool mRangeZoomEnabled : 1;
   Qt::Orientations mRangeDrag, mRangeZoom;
   QList<QPointer<QCPAxis> > mRangeDragHorzAxis, mRangeDragVertAxis;
   QList<QPointer<QCPAxis> > mRangeZoomHorzAxis, mRangeZoomVertAxis;

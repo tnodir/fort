@@ -16850,6 +16850,8 @@ QCPAxisRect::QCPAxisRect(QCustomPlot *parentPlot, bool setupDefaultAxes) :
   mBackgroundScaled(true),
   mBackgroundScaledMode(Qt::KeepAspectRatioByExpanding),
   mInsetLayout(new QCPLayoutInset),
+  mRangeDragEnabled(true),
+  mRangeZoomEnabled(true),
   mRangeDrag(Qt::Horizontal|Qt::Vertical),
   mRangeZoom(Qt::Horizontal|Qt::Vertical),
   mRangeZoomFactorHorz(0.85),
@@ -17501,6 +17503,16 @@ double QCPAxisRect::rangeZoomFactor(Qt::Orientation orientation)
   return (orientation == Qt::Horizontal ? mRangeZoomFactorHorz : mRangeZoomFactorVert);
 }
 
+void QCPAxisRect::setRangeDragEnabled(bool enabled)
+{
+  mRangeDragEnabled = enabled;
+}
+
+void QCPAxisRect::setRangeZoomEnabled(bool enabled)
+{
+  mRangeZoomEnabled = enabled;
+}
+
 /*!
   Sets which axis orientation may be range dragged by the user with mouse interaction.
   What orientation corresponds to which specific axis can be set with
@@ -17870,7 +17882,7 @@ void QCPAxisRect::mouseMoveEvent(QMouseEvent *event, const QPointF &startPos)
 {
   Q_UNUSED(startPos);
   // Mouse range dragging interaction:
-  if (mDragging && mParentPlot->interactions().testFlag(QCP::iRangeDrag))
+  if (mDragging && mRangeDragEnabled && mParentPlot->interactions().testFlag(QCP::iRangeDrag))
   {
 
     if (mRangeDrag.testFlag(Qt::Horizontal))
@@ -17915,12 +17927,10 @@ void QCPAxisRect::mouseMoveEvent(QMouseEvent *event, const QPointF &startPos)
       }
     }
 
-    if (mRangeDrag != 0) // if either vertical or horizontal drag was enabled, do a replot
-    {
-      if (mParentPlot->noAntialiasingOnDrag())
-        mParentPlot->setNotAntialiasedElements(QCP::aeAll);
-      mParentPlot->replot(QCustomPlot::rpQueuedReplot);
-    }
+    // if either vertical or horizontal drag was enabled, do a replot
+    if (mParentPlot->noAntialiasingOnDrag())
+      mParentPlot->setNotAntialiasedElements(QCP::aeAll);
+    mParentPlot->replot(QCustomPlot::rpQueuedReplot);
 
   }
 }
@@ -17955,7 +17965,7 @@ void QCPAxisRect::mouseReleaseEvent(QMouseEvent *event, const QPointF &startPos)
 void QCPAxisRect::wheelEvent(QWheelEvent *event)
 {
   // Mouse range zooming interaction:
-  if (mParentPlot->interactions().testFlag(QCP::iRangeZoom))
+  if (mRangeZoomEnabled && mParentPlot->interactions().testFlag(QCP::iRangeZoom))
   {
     if (mRangeZoom != 0)
     {
@@ -19621,10 +19631,10 @@ void QCPColorScale::setRangeDrag(bool enabled)
     return;
   }
 
+  mAxisRect.data()->setRangeDragEnabled(enabled);
+
   if (enabled)
     mAxisRect.data()->setRangeDrag(QCPAxis::orientation(mType));
-  else
-    mAxisRect.data()->setRangeDrag(0);
 }
 
 /*!
@@ -19641,10 +19651,10 @@ void QCPColorScale::setRangeZoom(bool enabled)
     return;
   }
 
+  mAxisRect.data()->setRangeZoomEnabled(enabled);
+
   if (enabled)
     mAxisRect.data()->setRangeZoom(QCPAxis::orientation(mType));
-  else
-    mAxisRect.data()->setRangeZoom(0);
 }
 
 /*!
