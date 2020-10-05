@@ -64,7 +64,7 @@ bool Ip4Range::fromText(const QString &text)
     return fromList(list);
 }
 
-bool Ip4Range::fromList(const StringViewList &list, int emptyNetMask, bool sort)
+bool Ip4Range::fromList(const SplitViewResult &list, int emptyNetMask, bool sort)
 {
     Q_UNUSED(sort); // TODO
 

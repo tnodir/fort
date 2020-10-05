@@ -54,9 +54,9 @@ public:
 
     const QByteArray &zoneData() const { return m_zoneData; }
 
-    StringViewList parseAddresses(const QString &text, QString &textChecksum) const;
+    SplitViewResult parseAddresses(const QString &text, QString &textChecksum) const;
 
-    bool storeAddresses(const StringViewList &list);
+    bool storeAddresses(const SplitViewResult &list);
     bool loadAddresses();
 
     bool saveAddressesAsText(const QString &filePath);

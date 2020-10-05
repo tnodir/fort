@@ -51,7 +51,7 @@ public:
 
     // Parse IPv4 ranges
     bool fromText(const QString &text);
-    bool fromList(const StringViewList &list, int emptyNetMask = 32, bool sort = true);
+    bool fromList(const SplitViewResult &list, int emptyNetMask = 32, bool sort = true);
 
 signals:
     void errorLineNoChanged();

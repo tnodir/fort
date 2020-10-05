@@ -63,9 +63,9 @@ void TaskZoneDownloader::loadLocalFile()
     downloadFinished(success);
 }
 
-StringViewList TaskZoneDownloader::parseAddresses(const QString &text, QString &checksum) const
+SplitViewResult TaskZoneDownloader::parseAddresses(const QString &text, QString &checksum) const
 {
-    StringViewList list;
+    SplitViewResult list;
     QCryptographicHash cryptoHash(QCryptographicHash::Sha256);
 
     // Parse lines
@@ -93,7 +93,7 @@ StringViewList TaskZoneDownloader::parseAddresses(const QString &text, QString &
     return list;
 }
 
-bool TaskZoneDownloader::storeAddresses(const StringViewList &list)
+bool TaskZoneDownloader::storeAddresses(const SplitViewResult &list)
 {
     Ip4Range ip4Range;
     if (!ip4Range.fromList(list, emptyNetMask(), sort())) {

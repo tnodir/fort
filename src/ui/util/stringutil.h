@@ -15,7 +15,7 @@ public:
     static int lineStart(const QString &text, int pos, int badPos = -1);
     static int lineEnd(const QString &text, int pos, int badPos = -1);
 
-    static StringViewList splitView(
+    static SplitViewResult splitView(
             const QString &text, QLatin1Char sep, bool skipEmptyParts = false);
 };
 

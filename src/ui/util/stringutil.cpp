@@ -32,7 +32,7 @@ int StringUtil::lineEnd(const QString &text, int pos, int badPos)
     return (endPos != -1) ? endPos : badPos;
 }
 
-StringViewList StringUtil::splitView(const QString &text, QLatin1Char sep, bool skipEmptyParts)
+SplitViewResult StringUtil::splitView(const QString &text, QLatin1Char sep, bool skipEmptyParts)
 {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     const auto behavior = skipEmptyParts ? QString::SkipEmptyParts : QString::KeepEmptyParts;
