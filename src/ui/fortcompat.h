@@ -6,11 +6,13 @@
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 using StringView = QStringRef;
-using SplitViewResult = QVector<QStringRef>;
+using StringViewList = QVector<QStringRef>;
+using TokenizeViewResult = StringViewList;
 #    define toStringView(str) (QStringRef(&str))
 #else
 using StringView = QStringView;
-using SplitViewResult = QList<QStringView>;
+using StringViewList = QList<QStringView>;
+using TokenizeViewResult = QStringTokenizer<QStringView, QChar>;
 #    define toStringView(str) (QStringView(str))
 #endif
 

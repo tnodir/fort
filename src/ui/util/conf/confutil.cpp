@@ -362,7 +362,7 @@ bool ConfUtil::parseAppsText(int groupIndex, bool blocked, const QString &text,
         appentry_map_t &wildAppsMap, appentry_map_t &prefixAppsMap, appentry_map_t &exeAppsMap,
         quint32 &wildAppsSize, quint32 &prefixAppsSize, quint32 &exeAppsSize)
 {
-    const auto lines = StringUtil::splitView(text, QLatin1Char('\n'));
+    const auto lines = StringUtil::tokenizeView(text, QLatin1Char('\n'));
 
     for (const auto &line : lines) {
         const auto lineTrimmed = line.trimmed();

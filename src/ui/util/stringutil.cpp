@@ -32,7 +32,7 @@ int StringUtil::lineEnd(const QString &text, int pos, int badPos)
     return (endPos != -1) ? endPos : badPos;
 }
 
-SplitViewResult StringUtil::splitView(const QString &text, QLatin1Char sep, bool skipEmptyParts)
+StringViewList StringUtil::splitView(const QString &text, QLatin1Char sep, bool skipEmptyParts)
 {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     const auto behavior = skipEmptyParts ? QString::SkipEmptyParts : QString::KeepEmptyParts;
@@ -40,5 +40,16 @@ SplitViewResult StringUtil::splitView(const QString &text, QLatin1Char sep, bool
 #else
     const auto behavior = skipEmptyParts ? Qt::SkipEmptyParts : Qt::KeepEmptyParts;
     return QStringView(text).split(sep, behavior);
+#endif
+}
+
+TokenizeViewResult StringUtil::tokenizeView(
+        const QString &text, QLatin1Char sep, bool skipEmptyParts)
+{
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    return splitView(text, sep, skipEmptyParts);
+#else
+    const auto behavior = skipEmptyParts ? Qt::SkipEmptyParts : Qt::KeepEmptyParts;
+    return QStringView(text).tokenize(sep, behavior);
 #endif
 }

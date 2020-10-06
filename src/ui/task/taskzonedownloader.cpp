@@ -63,15 +63,15 @@ void TaskZoneDownloader::loadLocalFile()
     downloadFinished(success);
 }
 
-SplitViewResult TaskZoneDownloader::parseAddresses(const QString &text, QString &checksum) const
+StringViewList TaskZoneDownloader::parseAddresses(const QString &text, QString &checksum) const
 {
-    SplitViewResult list;
+    StringViewList list;
     QCryptographicHash cryptoHash(QCryptographicHash::Sha256);
 
     // Parse lines
     const QRegularExpression re(pattern());
 
-    const auto lines = StringUtil::splitView(text, QLatin1Char('\n'), true);
+    const auto lines = StringUtil::tokenizeView(text, QLatin1Char('\n'), true);
 
     for (const auto &line : lines) {
         if (line.startsWith('#') || line.startsWith(';')) // commented line
@@ -93,7 +93,7 @@ SplitViewResult TaskZoneDownloader::parseAddresses(const QString &text, QString 
     return list;
 }
 
-bool TaskZoneDownloader::storeAddresses(const SplitViewResult &list)
+bool TaskZoneDownloader::storeAddresses(const StringViewList &list)
 {
     Ip4Range ip4Range;
     if (!ip4Range.fromList(list, emptyNetMask(), sort())) {

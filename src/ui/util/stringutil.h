@@ -15,7 +15,9 @@ public:
     static int lineStart(const QString &text, int pos, int badPos = -1);
     static int lineEnd(const QString &text, int pos, int badPos = -1);
 
-    static SplitViewResult splitView(
+    static StringViewList splitView(
+            const QString &text, QLatin1Char sep, bool skipEmptyParts = false);
+    static TokenizeViewResult tokenizeView(
             const QString &text, QLatin1Char sep, bool skipEmptyParts = false);
 };
 
