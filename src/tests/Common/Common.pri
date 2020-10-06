@@ -1,7 +1,7 @@
 
 QT += testlib
 
-CONFIG += c++11 console
+CONFIG += c++17 console
 CONFIG -= app_bundle
 
 TEMPLATE = app

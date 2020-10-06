@@ -1,7 +1,7 @@
 
 QT += gui
 
-CONFIG += c++11 console
+CONFIG += c++17 console
 CONFIG -= app_bundle
 CONFIG -= debug_and_release
 
