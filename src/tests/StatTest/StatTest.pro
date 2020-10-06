@@ -10,3 +10,6 @@ SOURCES += \
 
 # Test Data
 RESOURCES += data.qrc
+
+# Stat Migrations
+RESOURCES += $$UI_PWD/stat/stat-migrations.qrc

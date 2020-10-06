@@ -82,6 +82,3 @@ include($$PWD/GoogleTest.pri)
 # 3rd party integrations
 CONFIG += sqlite
 include($$UI_PWD/3rdparty/3rdparty.pri)
-
-# Stat Migrations
-RESOURCES += $$UI_PWD/stat/stat-migrations.qrc

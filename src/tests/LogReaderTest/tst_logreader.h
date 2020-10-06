@@ -21,7 +21,7 @@
 #include <util/osutil.h>
 #include <util/processinfo.h>
 
-class LogBufferTest : public Test
+class LogReaderTest : public Test
 {
     // Test interface
 protected:
@@ -29,9 +29,9 @@ protected:
     void TearDown();
 };
 
-void LogBufferTest::SetUp() { }
+void LogReaderTest::SetUp() { }
 
-void LogBufferTest::TearDown() { }
+void LogReaderTest::TearDown() { }
 
 namespace {
 
@@ -104,7 +104,7 @@ void printLogs(LogBuffer &buf)
 
 }
 
-TEST_F(LogBufferTest, LogRead)
+TEST_F(LogReaderTest, LogRead)
 {
     Device device;
     ASSERT_TRUE(device.open(FortCommon::deviceName()));
