@@ -279,10 +279,9 @@ bool SqliteDb::migrate(const QString &sqlDir, const char *sqlPragmas, int versio
     bool isNewDb = (userVersion == 0);
 
     // Re-create the DB
-    QString oldEncoding;
     QString tempFilePath;
     if (recreate && !isNewDb) {
-        oldEncoding = this->encoding();
+        const QString oldEncoding = this->encoding();
         close();
 
         tempFilePath = m_filePath + ".temp";
@@ -294,6 +293,7 @@ bool SqliteDb::migrate(const QString &sqlDir, const char *sqlPragmas, int versio
         }
 
         execute(sqlPragmas);
+        setEncoding(oldEncoding);
 
         userVersion = 0;
         isNewDb = true;
@@ -304,10 +304,6 @@ bool SqliteDb::migrate(const QString &sqlDir, const char *sqlPragmas, int versio
     bool success = true;
 
     beginTransaction();
-
-    if (!oldEncoding.isEmpty()) {
-        setEncoding(oldEncoding);
-    }
 
     while (userVersion < version) {
         ++userVersion;
