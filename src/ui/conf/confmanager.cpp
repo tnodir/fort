@@ -28,10 +28,6 @@ Q_LOGGING_CATEGORY(CLOG_CONF_MANAGER, "fort.confManager")
 
 namespace {
 
-const char *const sqlPragmas = "PRAGMA journal_mode = WAL;"
-                               "PRAGMA locking_mode = EXCLUSIVE;"
-                               "PRAGMA synchronous = NORMAL;";
-
 const char *const sqlSelectAddressGroups = "SELECT addr_group_id, include_all, exclude_all,"
                                            "    include_zones, exclude_zones,"
                                            "    include_text, exclude_text"
@@ -361,10 +357,8 @@ bool ConfManager::initialize()
         return false;
     }
 
-    m_sqliteDb->execute(sqlPragmas);
-
     if (!m_sqliteDb->migrate(
-                ":/conf/migrations", DATABASE_USER_VERSION, true, true, &migrateFunc)) {
+                ":/conf/migrations", nullptr, DATABASE_USER_VERSION, true, true, &migrateFunc)) {
         logCritical() << "Migration error" << m_sqliteDb->filePath();
         return false;
     }

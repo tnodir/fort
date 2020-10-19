@@ -50,16 +50,20 @@ public:
     bool releaseSavepoint(const char *name = nullptr);
     bool rollbackSavepoint(const char *name = nullptr);
 
+    int errorCode() const;
     QString errorMessage() const;
 
     int userVersion();
     bool setUserVersion(int v);
 
+    QString encoding();
+    bool setEncoding(const QString &v);
+
     static QString entityName(const QString &schemaName, const QString &objectName);
     QStringList tableNames(const QString &schemaName = QString());
     QStringList columnNames(const QString &tableName, const QString &schemaName = QString());
 
-    bool migrate(const QString &sqlDir, int version, bool recreate = false,
+    bool migrate(const QString &sqlDir, const char *sqlPragmas, int version, bool recreate = false,
             bool importOldData = false, SQLITEDB_MIGRATE_FUNC migrateFunc = nullptr,
             void *migrateContext = nullptr);
 

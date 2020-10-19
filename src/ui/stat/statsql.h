@@ -4,8 +4,6 @@
 class StatSql
 {
 public:
-    static const char *const sqlPragmas;
-
     static const char *const sqlSelectAppId;
     static const char *const sqlInsertAppId;
     static const char *const sqlDeleteAppId;

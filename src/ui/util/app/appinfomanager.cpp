@@ -22,10 +22,6 @@ Q_LOGGING_CATEGORY(CLOG_APPINFOCACHE, "fort.appInfoWorker")
 
 namespace {
 
-const char *const sqlPragmas = "PRAGMA journal_mode = WAL;"
-                               "PRAGMA locking_mode = EXCLUSIVE;"
-                               "PRAGMA synchronous = NORMAL;";
-
 const char *const sqlSelectAppInfo = "SELECT file_descr, company_name,"
                                      "    product_name, product_ver, file_mod_time, icon_id"
                                      "  FROM app WHERE path = ?1;";
@@ -81,9 +77,7 @@ void AppInfoManager::setupDb(const QString &filePath)
         return;
     }
 
-    m_sqliteDb->execute(sqlPragmas);
-
-    if (!m_sqliteDb->migrate(":/appinfocache/migrations", DATABASE_USER_VERSION, true)) {
+    if (!m_sqliteDb->migrate(":/appinfocache/migrations", nullptr, DATABASE_USER_VERSION, true)) {
         logCritical() << "Migration error" << filePath;
         return;
     }

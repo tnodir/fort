@@ -17,6 +17,11 @@ Q_LOGGING_CATEGORY(CLOG_SQLITEDB, "fort.sqlitedb")
 
 namespace {
 
+const char *const defaultSqlPragmas = "PRAGMA journal_mode = WAL;"
+                                      "PRAGMA locking_mode = EXCLUSIVE;"
+                                      "PRAGMA synchronous = NORMAL;"
+                                      "PRAGMA encoding = 'UTF-8';";
+
 bool removeDbFile(const QString &filePath)
 {
     if (!filePath.startsWith(QLatin1Char(':')) && QFile::exists(filePath)
@@ -177,6 +182,11 @@ bool SqliteDb::rollbackSavepoint(const char *name)
                              : executeStr(QString("ROLLBACK TO %1;").arg(name));
 }
 
+int SqliteDb::errorCode() const
+{
+    return sqlite3_errcode(m_db);
+}
+
 QString SqliteDb::errorMessage() const
 {
     const char *text = sqlite3_errmsg(m_db);
@@ -192,6 +202,17 @@ int SqliteDb::userVersion()
 bool SqliteDb::setUserVersion(int v)
 {
     const auto sql = QString("PRAGMA user_version = %1;").arg(v);
+    return executeStr(sql);
+}
+
+QString SqliteDb::encoding()
+{
+    return executeEx("PRAGMA encoding;").toString();
+}
+
+bool SqliteDb::setEncoding(const QString &v)
+{
+    const auto sql = QString("PRAGMA encoding = '%1';").arg(v);
     return executeStr(sql);
 }
 
@@ -237,9 +258,14 @@ QStringList SqliteDb::columnNames(const QString &tableName, const QString &schem
     return list;
 }
 
-bool SqliteDb::migrate(const QString &sqlDir, int version, bool recreate, bool importOldData,
-        SQLITEDB_MIGRATE_FUNC migrateFunc, void *migrateContext)
+bool SqliteDb::migrate(const QString &sqlDir, const char *sqlPragmas, int version, bool recreate,
+        bool importOldData, SQLITEDB_MIGRATE_FUNC migrateFunc, void *migrateContext)
 {
+    if (!sqlPragmas) {
+        sqlPragmas = defaultSqlPragmas;
+    }
+    execute(sqlPragmas);
+
     // Check version
     int userVersion = this->userVersion();
     if (userVersion == version)
@@ -253,8 +279,10 @@ bool SqliteDb::migrate(const QString &sqlDir, int version, bool recreate, bool i
     bool isNewDb = (userVersion == 0);
 
     // Re-create the DB
+    QString oldEncoding;
     QString tempFilePath;
     if (recreate && !isNewDb) {
+        oldEncoding = this->encoding();
         close();
 
         tempFilePath = m_filePath + ".temp";
@@ -265,6 +293,8 @@ bool SqliteDb::migrate(const QString &sqlDir, int version, bool recreate, bool i
             return false;
         }
 
+        execute(sqlPragmas);
+
         userVersion = 0;
         isNewDb = true;
     }
@@ -274,6 +304,10 @@ bool SqliteDb::migrate(const QString &sqlDir, int version, bool recreate, bool i
     bool success = true;
 
     beginTransaction();
+
+    if (!oldEncoding.isEmpty()) {
+        setEncoding(oldEncoding);
+    }
 
     while (userVersion < version) {
         ++userVersion;
@@ -327,8 +361,6 @@ bool SqliteDb::migrate(const QString &sqlDir, int version, bool recreate, bool i
         // Remove the old DB
         if (success) {
             removeDbFile(tempFilePath);
-        } else {
-            renameDbFile(tempFilePath, m_filePath);
         }
     }
 
@@ -342,7 +374,7 @@ bool SqliteDb::importDb(
     const QLatin1String dstSchema("main");
 
     if (!attach(srcSchema, sourceFilePath)) {
-        dbWarning() << "Cannot attach the DB" << sourceFilePath;
+        dbWarning() << "Cannot attach the DB" << sourceFilePath << "Error:" << errorMessage();
         return false;
     }
 
@@ -365,7 +397,7 @@ bool SqliteDb::importDb(
         }
 
         // Intersect column names
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
         auto columnsSet = QSet<QString>(srcColumns.constBegin(), srcColumns.constEnd());
         const auto dstColumnsSet = QSet<QString>(dstColumns.constBegin(), dstColumns.constEnd());
 #else
@@ -374,7 +406,7 @@ bool SqliteDb::importDb(
 #endif
         columnsSet.intersect(dstColumnsSet);
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
         const QStringList columns(columnsSet.constBegin(), columnsSet.constEnd());
 #else
         const QStringList columns(columnsSet.toList());

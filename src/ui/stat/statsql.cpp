@@ -1,9 +1,5 @@
 #include "statsql.h"
 
-const char *const StatSql::sqlPragmas = "PRAGMA journal_mode = WAL;"
-                                        "PRAGMA locking_mode = EXCLUSIVE;"
-                                        "PRAGMA synchronous = NORMAL;";
-
 const char *const StatSql::sqlSelectAppId = "SELECT app_id FROM app WHERE path = ?1;";
 
 const char *const StatSql::sqlInsertAppId =
