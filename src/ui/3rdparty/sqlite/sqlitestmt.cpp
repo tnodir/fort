@@ -75,27 +75,34 @@ bool SqliteStmt::bindBlob(int index, const QByteArray &data)
 
 bool SqliteStmt::bindVar(int index, const QVariant &v)
 {
-    const qint16 vType = v.type();
+    const qint16 vType =
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+            v.type();
+#else
+            v.metaType().id();
+#endif
 
     switch (vType) {
-    case QVariant::Invalid:
+    case QMetaType::UnknownType:
+    case QMetaType::Void:
+    case QMetaType::Nullptr:
         return bindNull(index);
-    case QVariant::Bool:
-    case QVariant::Int:
-    case QVariant::UInt:
+    case QMetaType::Bool:
+    case QMetaType::Int:
+    case QMetaType::UInt:
         return bindInt(index, v.toInt());
-    case QVariant::LongLong:
-    case QVariant::ULongLong:
+    case QMetaType::LongLong:
+    case QMetaType::ULongLong:
         return bindInt64(index, v.toLongLong());
-    case QVariant::Double:
+    case QMetaType::Double:
         return bindDouble(index, v.toDouble());
-    case QVariant::String: {
+    case QMetaType::QString: {
         return bindText(index, v.toString());
     }
-    case QVariant::DateTime: {
+    case QMetaType::QDateTime: {
         return bindDateTime(index, v.toDateTime());
     }
-    case QVariant::ByteArray: {
+    case QMetaType::QByteArray: {
         return bindBlob(index, v.toByteArray());
     }
     default: {
@@ -108,7 +115,7 @@ bool SqliteStmt::bindVar(int index, const QVariant &v)
         // Write content
         {
             switch (vType) {
-            case QVariant::Image: {
+            case QMetaType::QImage: {
                 QByteArray bufData;
 
                 QBuffer buf(&bufData);
@@ -259,7 +266,7 @@ QVariant SqliteStmt::columnVar(int column)
         // Load content
         {
             switch (vType) {
-            case QVariant::Image: {
+            case QMetaType::QImage: {
                 QByteArray bufData;
                 stream >> bufData;
 
