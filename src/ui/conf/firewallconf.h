@@ -12,6 +12,7 @@ QT_FORWARD_DECLARE_CLASS(AppGroup)
 #define DEFAULT_TRAF_HOUR_KEEP_DAYS    90 // ~3 months
 #define DEFAULT_TRAF_DAY_KEEP_DAYS     365 // ~1 year
 #define DEFAULT_TRAF_MONTH_KEEP_MONTHS 36 // ~3 years
+#define DEFAULT_LOG_IP_KEEP_COUNT      10000
 
 class FirewallConf : public QObject
 {
@@ -23,11 +24,13 @@ class FirewallConf : public QObject
     Q_PROPERTY(bool stopTraffic READ stopTraffic WRITE setStopTraffic NOTIFY stopTrafficChanged)
     Q_PROPERTY(bool stopInetTraffic READ stopInetTraffic WRITE setStopInetTraffic NOTIFY
                     stopInetTrafficChanged)
-    Q_PROPERTY(bool allowAllNew READ allowAllNew WRITE setAllowAllNew NOTIFY tempAllowAllChanged)
+    Q_PROPERTY(bool allowAllNew READ allowAllNew WRITE setAllowAllNew NOTIFY allowAllNewChanged)
     Q_PROPERTY(bool resolveAddress READ resolveAddress WRITE setResolveAddress NOTIFY
                     resolveAddressChanged)
     Q_PROPERTY(bool logBlocked READ logBlocked WRITE setLogBlocked NOTIFY logBlockedChanged)
     Q_PROPERTY(bool logStat READ logStat WRITE setLogStat NOTIFY logStatChanged)
+    Q_PROPERTY(bool logAllowedIp READ logAllowedIp WRITE setLogAllowedIp NOTIFY logAllowedIpChanged)
+    Q_PROPERTY(bool logBlockedIp READ logBlockedIp WRITE setLogBlockedIp NOTIFY logBlockedIpChanged)
     Q_PROPERTY(bool appBlockAll READ appBlockAll WRITE setAppBlockAll NOTIFY appBlockAllChanged)
     Q_PROPERTY(bool appAllowAll READ appAllowAll WRITE setAppAllowAll NOTIFY appAllowAllChanged)
     Q_PROPERTY(bool activePeriodEnabled READ activePeriodEnabled WRITE setActivePeriodEnabled NOTIFY
@@ -44,6 +47,10 @@ class FirewallConf : public QObject
     Q_PROPERTY(int trafMonthKeepMonths READ trafMonthKeepMonths WRITE setTrafMonthKeepMonths NOTIFY
                     trafMonthKeepMonthsChanged)
     Q_PROPERTY(int trafUnit READ trafUnit WRITE setTrafUnit NOTIFY trafUnitChanged)
+    Q_PROPERTY(int allowedIpKeepCount READ allowedIpKeepCount WRITE setAllowedIpKeepCount NOTIFY
+                    allowedIpKeepCountChanged)
+    Q_PROPERTY(int blockedIpKeepCount READ blockedIpKeepCount WRITE setBlockedIpKeepCount NOTIFY
+                    blockedIpKeepCountChanged)
     Q_PROPERTY(quint32 quotaDayMb READ quotaDayMb WRITE setQuotaDayMb NOTIFY quotaDayMbChanged)
     Q_PROPERTY(
             quint32 quotaMonthMb READ quotaMonthMb WRITE setQuotaMonthMb NOTIFY quotaMonthMbChanged)
@@ -78,6 +85,12 @@ public:
     bool logStat() const { return m_logStat; }
     void setLogStat(bool logStat);
 
+    bool logAllowedIp() const { return m_logAllowedIp; }
+    void setLogAllowedIp(bool logAllowedIp);
+
+    bool logBlockedIp() const { return m_logBlockedIp; }
+    void setLogBlockedIp(bool logBlockedIp);
+
     bool appBlockAll() const { return m_appBlockAll; }
     void setAppBlockAll(bool appBlockAll);
 
@@ -107,6 +120,12 @@ public:
 
     int trafUnit() const { return m_trafUnit; }
     void setTrafUnit(int trafUnit);
+
+    int allowedIpKeepCount() const { return m_allowedIpKeepCount; }
+    void setAllowedIpKeepCount(int allowedIpKeepCount);
+
+    int blockedIpKeepCount() const { return m_blockedIpKeepCount; }
+    void setBlockedIpKeepCount(int blockedIpKeepCount);
 
     quint32 quotaDayMb() const { return m_quotaDayMb; }
     void setQuotaDayMb(quint32 quotaDayMb);
@@ -139,10 +158,12 @@ signals:
     void filterLocalsChanged();
     void stopTrafficChanged();
     void stopInetTrafficChanged();
+    void allowAllNewChanged();
     void resolveAddressChanged();
     void logBlockedChanged();
-    void tempAllowAllChanged();
     void logStatChanged();
+    void logAllowedIpChanged();
+    void logBlockedIpChanged();
     void appBlockAllChanged();
     void appAllowAllChanged();
     void activePeriodEnabledChanged();
@@ -153,6 +174,8 @@ signals:
     void trafDayKeepDaysChanged();
     void trafMonthKeepMonthsChanged();
     void trafUnitChanged();
+    void allowedIpKeepCountChanged();
+    void blockedIpKeepCountChanged();
     void quotaDayMbChanged();
     void quotaMonthMbChanged();
     void addressGroupsChanged();
@@ -183,6 +206,9 @@ private:
     bool m_logBlocked : 1;
     bool m_logStat : 1;
 
+    bool m_logAllowedIp : 1;
+    bool m_logBlockedIp : 1;
+
     bool m_appBlockAll : 1;
     bool m_appAllowAll : 1;
 
@@ -195,6 +221,9 @@ private:
     int m_trafMonthKeepMonths = DEFAULT_TRAF_MONTH_KEEP_MONTHS;
 
     int m_trafUnit = 0;
+
+    int m_allowedIpKeepCount = DEFAULT_LOG_IP_KEEP_COUNT;
+    int m_blockedIpKeepCount = DEFAULT_LOG_IP_KEEP_COUNT;
 
     quint32 m_quotaDayMb = 0;
     quint32 m_quotaMonthMb = 0;

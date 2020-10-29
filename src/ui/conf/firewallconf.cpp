@@ -16,6 +16,8 @@ FirewallConf::FirewallConf(QObject *parent) :
     m_resolveAddress(false),
     m_logBlocked(false),
     m_logStat(false),
+    m_logAllowedIp(false),
+    m_logBlockedIp(false),
     m_appBlockAll(true),
     m_appAllowAll(false),
     m_activePeriodEnabled(false)
@@ -67,7 +69,7 @@ void FirewallConf::setAllowAllNew(bool allowAllNew)
 {
     if (m_allowAllNew != allowAllNew) {
         m_allowAllNew = allowAllNew;
-        emit tempAllowAllChanged();
+        emit allowAllNewChanged();
     }
 }
 
@@ -92,6 +94,22 @@ void FirewallConf::setLogStat(bool logStat)
     if (m_logStat != logStat) {
         m_logStat = logStat;
         emit logStatChanged();
+    }
+}
+
+void FirewallConf::setLogAllowedIp(bool logAllowedIp)
+{
+    if (m_logAllowedIp != logAllowedIp) {
+        m_logAllowedIp = logAllowedIp;
+        emit logAllowedIpChanged();
+    }
+}
+
+void FirewallConf::setLogBlockedIp(bool logBlockedIp)
+{
+    if (m_logBlockedIp != logBlockedIp) {
+        m_logBlockedIp = logBlockedIp;
+        emit logBlockedIpChanged();
     }
 }
 
@@ -172,6 +190,22 @@ void FirewallConf::setTrafUnit(int trafUnit)
     if (m_trafUnit != trafUnit) {
         m_trafUnit = trafUnit;
         emit trafUnitChanged();
+    }
+}
+
+void FirewallConf::setAllowedIpKeepCount(int allowedIpKeepCount)
+{
+    if (m_allowedIpKeepCount != allowedIpKeepCount) {
+        m_allowedIpKeepCount = allowedIpKeepCount;
+        emit allowedIpKeepCountChanged();
+    }
+}
+
+void FirewallConf::setBlockedIpKeepCount(int blockedIpKeepCount)
+{
+    if (m_blockedIpKeepCount != blockedIpKeepCount) {
+        m_blockedIpKeepCount = blockedIpKeepCount;
+        emit blockedIpKeepCountChanged();
     }
 }
 
@@ -318,6 +352,9 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     setTrafDayKeepDays(o.trafDayKeepDays());
     setTrafMonthKeepMonths(o.trafMonthKeepMonths());
 
+    setAllowedIpKeepCount(o.allowedIpKeepCount());
+    setBlockedIpKeepCount(o.blockedIpKeepCount());
+
     setQuotaDayMb(o.quotaDayMb());
     setQuotaMonthMb(o.quotaMonthMb());
 
@@ -329,6 +366,8 @@ void FirewallConf::copyImmediateFlags(const FirewallConf &o)
     setResolveAddress(o.resolveAddress());
     setLogBlocked(o.logBlocked());
     setLogStat(o.logStat());
+    setLogAllowedIp(o.logAllowedIp());
+    setLogBlockedIp(o.logBlockedIp());
     setTrafUnit(o.trafUnit());
 }
 

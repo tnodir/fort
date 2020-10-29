@@ -48,3 +48,34 @@ CREATE TABLE traffic_month(
   in_bytes INTEGER NOT NULL,
   out_bytes INTEGER NOT NULL
 ) WITHOUT ROWID;
+
+CREATE TABLE conn_app(
+  conn_id INTEGER PRIMARY KEY,
+  app_id INTEGER NOT NULL,
+  conn_time INTEGER NOT NULL,
+  inbound BOOLEAN NOT NULL,
+  proto INTEGER NOT NULL,
+  src_port INTEGER NOT NULL,
+  dst_port INTEGER NOT NULL,
+  src_ip INTEGER NOT NULL,
+  dst_ip INTEGER NOT NULL
+);
+
+CREATE UNIQUE INDEX uk_conn_app_app_id ON conn_app(app_id);
+
+CREATE TABLE conn_block_app(
+  conn_id INTEGER PRIMARY KEY,
+  block_reason INTEGER NOT NULL
+) WITHOUT ROWID;
+
+CREATE TABLE conn_traffic_app(
+  conn_id INTEGER PRIMARY KEY,
+  end_time INTEGER NOT NULL,
+  in_bytes INTEGER NOT NULL,
+  out_bytes INTEGER NOT NULL
+) WITHOUT ROWID;
+
+CREATE TABLE conn_flow_app(
+  conn_id INTEGER PRIMARY KEY,
+  flow_id INTEGER NOT NULL
+) WITHOUT ROWID;

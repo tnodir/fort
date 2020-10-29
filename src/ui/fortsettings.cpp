@@ -182,6 +182,8 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     conf.setResolveAddress(iniBool("resolveAddress"));
     conf.setLogBlocked(iniBool("logBlocked", true));
     conf.setLogStat(iniBool("logStat", true));
+    conf.setLogAllowedIp(iniBool("logAllowedIp", false));
+    conf.setLogBlockedIp(iniBool("logBlockedIp", false));
     conf.setAppBlockAll(iniBool("appBlockAll", true));
     conf.setAppAllowAll(iniBool("appAllowAll"));
     conf.setAppGroupBits(iniUInt("appGroupBits", DEFAULT_APP_GROUP_BITS));
@@ -196,6 +198,8 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     conf.setTrafDayKeepDays(iniInt("trafDayKeepDays", DEFAULT_TRAF_DAY_KEEP_DAYS));
     conf.setTrafMonthKeepMonths(iniInt("trafMonthKeepMonths", DEFAULT_TRAF_MONTH_KEEP_MONTHS));
     conf.setTrafUnit(iniInt("trafUnit"));
+    conf.setAllowedIpKeepCount(iniInt("allowedIpKeepCount", DEFAULT_LOG_IP_KEEP_COUNT));
+    conf.setBlockedIpKeepCount(iniInt("blockedIpKeepCount", DEFAULT_LOG_IP_KEEP_COUNT));
     m_ini->endGroup();
 
     m_ini->beginGroup("quota");
@@ -216,6 +220,8 @@ bool FortSettings::writeConfIni(const FirewallConf &conf)
     setIniValue("resolveAddress", conf.resolveAddress());
     setIniValue("logBlocked", conf.logBlocked());
     setIniValue("logStat", conf.logStat());
+    setIniValue("logAllowedIp", conf.logAllowedIp());
+    setIniValue("logBlockedIp", conf.logBlockedIp());
     setIniValue("appBlockAll", conf.appBlockAll());
     setIniValue("appAllowAll", conf.appAllowAll());
     setIniValue("appGroupBits", conf.appGroupBits(), DEFAULT_APP_GROUP_BITS);
@@ -230,6 +236,8 @@ bool FortSettings::writeConfIni(const FirewallConf &conf)
     setIniValue("trafDayKeepDays", conf.trafDayKeepDays(), DEFAULT_TRAF_DAY_KEEP_DAYS);
     setIniValue("trafMonthKeepMonths", conf.trafMonthKeepMonths(), DEFAULT_TRAF_MONTH_KEEP_MONTHS);
     setIniValue("trafUnit", conf.trafUnit());
+    setIniValue("allowedIpKeepCount", conf.allowedIpKeepCount());
+    setIniValue("blockedIpKeepCount", conf.blockedIpKeepCount());
     m_ini->endGroup();
 
     m_ini->beginGroup("quota");

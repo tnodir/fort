@@ -38,6 +38,8 @@ namespace {
 
 const ValuesList trafKeepDayValues = { 60, -1, 90, 180, 365, 365 * 3 };
 const ValuesList trafKeepMonthValues = { 2, -1, 3, 6, 12, 36 };
+const ValuesList logIpKeepCountValues = { 1000, -1, 1000, 5000, 10000, 50000, 100000, 500000,
+    1000000, 5000000, 10000000 };
 const ValuesList quotaValues = { 10, 0, 100, 500, 1024, 8 * 1024, 10 * 1024, 30 * 1024, 50 * 1024,
     100 * 1024 };
 
@@ -123,19 +125,29 @@ void StatisticsPage::onRetranslateUi()
     m_actClearAll->setText(tr("Clear All"));
 
     m_btTrafOptions->setText(tr("Options"));
+    m_cbLogStat->setText(tr("Collect Traffic Statistics"));
     m_ctpActivePeriod->checkBox()->setText(tr("Active time period:"));
     m_lscMonthStart->label()->setText(tr("Month starts on:"));
+
     m_lscTrafHourKeepDays->label()->setText(tr("Keep data for 'Hourly':"));
     m_lscTrafHourKeepDays->spinBox()->setSuffix(tr(" day(s)"));
     m_lscTrafDayKeepDays->label()->setText(tr("Keep data for 'Daily':"));
     m_lscTrafDayKeepDays->spinBox()->setSuffix(tr(" day(s)"));
     m_lscTrafMonthKeepMonths->label()->setText(tr("Keep data for 'Monthly':"));
     m_lscTrafMonthKeepMonths->spinBox()->setSuffix(tr(" month(s)"));
+
+    m_cbLogBlockedIp->setText(tr("Collect blocked connections"));
+    m_lscBlockedIpKeepCount->label()->setText(tr("Keep count for 'Blocked connections':"));
+
+    m_cbLogAllowedIp->setText(tr("Collect connection statistics"));
+    m_lscAllowedIpKeepCount->label()->setText(tr("Keep count for 'Allowed connections':"));
+
     m_lscQuotaDayMb->label()->setText(tr("Day's Quota:"));
     m_lscQuotaMonthMb->label()->setText(tr("Month's Quota:"));
 
     retranslateTrafKeepDayNames();
     retranslateTrafKeepMonthNames();
+    retranslateIpKeepCountNames();
     retranslateQuotaNames();
 
     m_btGraphOptions->setText(tr("Graph"));
@@ -156,8 +168,6 @@ void StatisticsPage::onRetranslateUi()
 
     m_traphUnits->setText(tr("Units:"));
     retranslateTrafUnitNames();
-
-    m_cbLogStat->setText(tr("Collect Traffic Statistics"));
 
     retranslateTabBar();
 
@@ -180,6 +190,15 @@ void StatisticsPage::retranslateTrafKeepMonthNames()
         tr("1 year"), tr("3 years") };
 
     m_lscTrafMonthKeepMonths->setNames(list);
+}
+
+void StatisticsPage::retranslateIpKeepCountNames()
+{
+    const QStringList list = { "Custom", tr("Forever"), "1K", "5K", "10K", "50K", "100K", "500K",
+        "1M", "5M", "10M" };
+
+    m_lscAllowedIpKeepCount->setNames(list);
+    m_lscBlockedIpKeepCount->setNames(list);
 }
 
 void StatisticsPage::retranslateQuotaNames()
@@ -409,13 +428,19 @@ void StatisticsPage::setupTrafOptionsMenu()
     setupTrafHourKeepDays();
     setupTrafDayKeepDays();
     setupTrafMonthKeepMonths();
+    setupLogAllowedIp();
+    setupAllowedIpKeepCount();
+    setupLogBlockedIp();
+    setupBlockedIpKeepCount();
     setupQuotaDayMb();
     setupQuotaMonthMb();
 
     // Menu
     const QList<QWidget *> menuWidgets = { m_cbLogStat, m_ctpActivePeriod, m_lscMonthStart,
         ControlUtil::createSeparator(), m_lscTrafHourKeepDays, m_lscTrafDayKeepDays,
-        m_lscTrafMonthKeepMonths, ControlUtil::createSeparator(), m_lscQuotaDayMb,
+        m_lscTrafMonthKeepMonths, ControlUtil::createSeparator(), m_cbLogAllowedIp,
+        m_lscAllowedIpKeepCount, ControlUtil::createSeparator(), m_cbLogBlockedIp,
+        m_lscBlockedIpKeepCount, ControlUtil::createSeparator(), m_lscQuotaDayMb,
         m_lscQuotaMonthMb };
     auto layout = ControlUtil::createLayoutByWidgets(menuWidgets);
 
@@ -544,6 +569,64 @@ void StatisticsPage::setupTrafMonthKeepMonths()
                     return;
 
                 conf()->setTrafMonthKeepMonths(value);
+
+                ctrl()->setConfFlagsEdited(true);
+            });
+}
+
+void StatisticsPage::setupLogAllowedIp()
+{
+    m_cbLogAllowedIp = ControlUtil::createCheckBox(conf()->logAllowedIp(), [&](bool checked) {
+        if (conf()->logAllowedIp() == checked)
+            return;
+
+        conf()->setLogAllowedIp(checked);
+
+        fortManager()->applyConfImmediateFlags();
+    });
+}
+
+void StatisticsPage::setupAllowedIpKeepCount()
+{
+    m_lscAllowedIpKeepCount = new LabelSpinCombo();
+    m_lscAllowedIpKeepCount->spinBox()->setRange(-1, 999999999);
+    m_lscAllowedIpKeepCount->setValues(logIpKeepCountValues);
+
+    connect(m_lscAllowedIpKeepCount->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
+            [&](int value) {
+                if (conf()->allowedIpKeepCount() == value)
+                    return;
+
+                conf()->setAllowedIpKeepCount(value);
+
+                ctrl()->setConfFlagsEdited(true);
+            });
+}
+
+void StatisticsPage::setupLogBlockedIp()
+{
+    m_cbLogBlockedIp = ControlUtil::createCheckBox(conf()->logBlockedIp(), [&](bool checked) {
+        if (conf()->logBlockedIp() == checked)
+            return;
+
+        conf()->setLogBlockedIp(checked);
+
+        fortManager()->applyConfImmediateFlags();
+    });
+}
+
+void StatisticsPage::setupBlockedIpKeepCount()
+{
+    m_lscBlockedIpKeepCount = new LabelSpinCombo();
+    m_lscBlockedIpKeepCount->spinBox()->setRange(-1, 999999999);
+    m_lscBlockedIpKeepCount->setValues(logIpKeepCountValues);
+
+    connect(m_lscBlockedIpKeepCount->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
+            [&](int value) {
+                if (conf()->blockedIpKeepCount() == value)
+                    return;
+
+                conf()->setBlockedIpKeepCount(value);
 
                 ctrl()->setConfFlagsEdited(true);
             });
@@ -724,6 +807,8 @@ void StatisticsPage::updatePage()
 {
     m_pageUpdating = true;
 
+    m_cbLogStat->setChecked(conf()->logStat());
+
     m_ctpActivePeriod->checkBox()->setChecked(conf()->activePeriodEnabled());
     m_ctpActivePeriod->timeEdit1()->setTime(CheckTimePeriod::toTime(conf()->activePeriodFrom()));
     m_ctpActivePeriod->timeEdit2()->setTime(CheckTimePeriod::toTime(conf()->activePeriodTo()));
@@ -732,6 +817,12 @@ void StatisticsPage::updatePage()
     m_lscTrafHourKeepDays->spinBox()->setValue(conf()->trafHourKeepDays());
     m_lscTrafDayKeepDays->spinBox()->setValue(conf()->trafDayKeepDays());
     m_lscTrafMonthKeepMonths->spinBox()->setValue(conf()->trafMonthKeepMonths());
+
+    m_cbLogAllowedIp->setChecked(conf()->logAllowedIp());
+    m_lscAllowedIpKeepCount->spinBox()->setValue(conf()->allowedIpKeepCount());
+    m_cbLogBlockedIp->setChecked(conf()->logBlockedIp());
+    m_lscBlockedIpKeepCount->spinBox()->setValue(conf()->blockedIpKeepCount());
+
     m_lscQuotaDayMb->spinBox()->setValue(int(conf()->quotaDayMb()));
     m_lscQuotaMonthMb->spinBox()->setValue(int(conf()->quotaMonthMb()));
 
@@ -753,8 +844,6 @@ void StatisticsPage::updatePage()
     m_graphGridColor->setColor(settings()->graphWindowGridColor());
 
     updateTrafUnit();
-
-    m_cbLogStat->setChecked(conf()->logStat());
 
     m_pageUpdating = false;
 }
