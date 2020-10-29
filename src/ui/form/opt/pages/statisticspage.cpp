@@ -194,8 +194,8 @@ void StatisticsPage::retranslateTrafKeepMonthNames()
 
 void StatisticsPage::retranslateIpKeepCountNames()
 {
-    const QStringList list = { "Custom", tr("Forever"), "1K", "5K", "10K", "50K", "100K", "500K",
-        "1M", "5M", "10M" };
+    const QStringList list = { tr("Custom"), tr("Forever"), "1K", "5K", "10K", "50K", "100K",
+        "500K", "1M", "5M", "10M" };
 
     m_lscAllowedIpKeepCount->setNames(list);
     m_lscBlockedIpKeepCount->setNames(list);
