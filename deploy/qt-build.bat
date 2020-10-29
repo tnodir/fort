@@ -10,7 +10,7 @@
 md %TARGET_PATH%
 cd %TARGET_PATH%
 
-../../../qt/configure -release -optimize-size -opensource -confirm-license -no-opengl ^
+../../../qt/configure -release -optimize-size -qmake -opensource -confirm-license -no-opengl ^
 	-nomake examples -nomake tests -nomake tools -mp -ltcg ^
 	-skip qt3d -skip qtactiveqt -skip qtandroidextras -skip qtcanvas3d ^
 	-skip qtcharts -skip qtconnectivity -skip qtdatavis3d ^
