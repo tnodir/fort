@@ -52,6 +52,8 @@ Name: "{commondesktop}\{#APP_NAME}"; Filename: "{app}\{#APP_EXE_NAME}"; WorkingD
 
 [Run]
 Filename: "{app}\driver\scripts\reinstall.bat"; Description: "Re-install driver"; Flags: runascurrentuser
+Filename: "https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads"; \
+  Description: "Latest Visual C++ x86 redistributable"; Flags: unchecked shellexec postinstall
 
 [UninstallRun]
 Filename: "{app}\driver\scripts\uninstall.bat"; Flags: runascurrentuser
