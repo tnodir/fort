@@ -24,7 +24,7 @@ FORT_API void fort_worker_queue(PFORT_WORKER worker, UCHAR work_id, FORT_WORKER_
     }
 
     if (id_bits == 0) {
-        IoQueueWorkItemEx(worker->item, &fort_worker_callback, DelayedWorkQueue, worker);
+        IoQueueWorkItemEx(worker->item, fort_worker_callback, DelayedWorkQueue, worker);
     }
 }
 

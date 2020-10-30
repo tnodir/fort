@@ -20,7 +20,7 @@ FORT_API void fort_timer_open(
     timer->period = period;
     timer->callback = callback;
 
-    KeInitializeDpc(&timer->dpc, &fort_timer_callback, timer);
+    KeInitializeDpc(&timer->dpc, fort_timer_callback, timer);
     KeInitializeTimer(&timer->id);
 }
 
