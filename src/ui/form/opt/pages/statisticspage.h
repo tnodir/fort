@@ -62,7 +62,6 @@ private:
     void setupTrafMonthKeepMonths();
     void setupLogAllowedIp();
     void setupAllowedIpKeepCount();
-    void setupLogBlockedIp();
     void setupBlockedIpKeepCount();
     void setupQuotaDayMb();
     void setupQuotaMonthMb();
@@ -121,7 +120,6 @@ private:
     LabelSpinCombo *m_lscTrafMonthKeepMonths = nullptr;
     LabelSpinCombo *m_lscQuotaDayMb = nullptr;
     LabelSpinCombo *m_lscQuotaMonthMb = nullptr;
-    QCheckBox *m_cbLogBlockedIp = nullptr;
     LabelSpinCombo *m_lscBlockedIpKeepCount = nullptr;
     QCheckBox *m_cbLogAllowedIp = nullptr;
     LabelSpinCombo *m_lscAllowedIpKeepCount = nullptr;

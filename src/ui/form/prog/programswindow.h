@@ -49,6 +49,7 @@ private:
     QLayout *setupHeader();
     void setupLogOptions();
     void setupLogBlocked();
+    void setupLogBlockedIp();
     void setupTableApps();
     void setupTableAppsHeader();
     void setupAppInfoRow();
@@ -108,6 +109,7 @@ private:
     QDialog *m_formAppEdit = nullptr;
     QPushButton *m_btLogOptions = nullptr;
     QCheckBox *m_cbLogBlocked = nullptr;
+    QCheckBox *m_cbLogBlockedIp = nullptr;
     TableView *m_appListView = nullptr;
     QWidget *m_appInfoRow = nullptr;
     QPushButton *m_btAppCopyPath = nullptr;
