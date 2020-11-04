@@ -79,7 +79,7 @@ bool SqliteStmt::bindVar(int index, const QVariant &v)
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
             v.type();
 #else
-            v.metaType().id();
+            v.typeId();
 #endif
 
     switch (vType) {
