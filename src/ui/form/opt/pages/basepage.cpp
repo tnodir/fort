@@ -1,9 +1,9 @@
 #include "basepage.h"
 
 #include <QAbstractButton>
-#include <QDesktopServices>
 
 #include "../../../fortmanager.h"
+#include "../../../util/osutil.h"
 #include "../optionscontroller.h"
 
 BasePage::BasePage(OptionsController *ctrl, QWidget *parent) : QFrame(parent), m_ctrl(ctrl)
@@ -62,15 +62,10 @@ void BasePage::setupController()
     connect(ctrl(), &OptionsController::retranslateUi, this, &BasePage::onRetranslateUi);
 }
 
-bool BasePage::openUrlExternally(const QUrl &url)
-{
-    return QDesktopServices::openUrl(url);
-}
-
 void BasePage::onLinkClicked()
 {
     auto button = qobject_cast<QAbstractButton *>(sender());
     if (button) {
-        openUrlExternally(QUrl::fromLocalFile(button->windowFilePath()));
+        OsUtil::openUrlOrFolder(button->windowFilePath());
     }
 }

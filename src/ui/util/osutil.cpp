@@ -1,7 +1,9 @@
 #include "osutil.h"
 
+#include <QDesktopServices>
 #include <QDir>
 #include <QProcess>
+#include <QUrl>
 
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
@@ -14,11 +16,26 @@ QString OsUtil::pidToPath(quint32 pid, bool isKernelPath)
     return pi.path(isKernelPath);
 }
 
+void OsUtil::openUrlExternally(const QUrl &url)
+{
+    QDesktopServices::openUrl(url);
+}
+
 void OsUtil::openFolder(const QString &filePath)
 {
     const QString nativePath = QDir::toNativeSeparators(filePath);
 
     QProcess::execute("explorer.exe", { "/select,", nativePath });
+}
+
+void OsUtil::openUrlOrFolder(const QString &path)
+{
+    const QUrl url = QUrl::fromUserInput(path);
+    if (url.isLocalFile()) {
+        OsUtil::openFolder(path);
+    } else {
+        openUrlExternally(path);
+    }
 }
 
 bool OsUtil::createGlobalMutex(const char *name)
@@ -43,7 +60,7 @@ QString OsUtil::errorMessage(quint32 errorCode)
         return QString("System Error %1").arg(errorCode);
     }
 
-    const QString text = QString::fromUtf16((const ushort *) buf).trimmed();
+    const QString text = QString::fromUtf16((const char16_t *) buf).trimmed();
     LocalFree(buf);
     return text;
 }

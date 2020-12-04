@@ -50,7 +50,6 @@ protected slots:
 
     virtual void onRetranslateUi() { }
 
-    bool openUrlExternally(const QUrl &url);
     void onLinkClicked();
 
 private:

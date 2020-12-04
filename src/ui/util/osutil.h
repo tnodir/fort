@@ -10,7 +10,9 @@ class OsUtil
 public:
     static QString pidToPath(quint32 pid, bool isKernelPath = false);
 
+    static void openUrlExternally(const QUrl &url);
     static void openFolder(const QString &filePath);
+    static void openUrlOrFolder(const QString &path);
 
     static bool createGlobalMutex(const char *name);
 
