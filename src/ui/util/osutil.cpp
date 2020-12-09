@@ -16,26 +16,31 @@ QString OsUtil::pidToPath(quint32 pid, bool isKernelPath)
     return pi.path(isKernelPath);
 }
 
-void OsUtil::openUrlExternally(const QUrl &url)
+bool OsUtil::openUrlExternally(const QUrl &url)
 {
-    QDesktopServices::openUrl(url);
+    return QDesktopServices::openUrl(url);
 }
 
-void OsUtil::openFolder(const QString &filePath)
+bool OsUtil::openFolder(const QString &filePath)
 {
     const QString nativePath = QDir::toNativeSeparators(filePath);
 
-    QProcess::execute("explorer.exe", { "/select,", nativePath });
+    return QProcess::execute("explorer.exe", { "/select,", nativePath }) == 0;
 }
 
-void OsUtil::openUrlOrFolder(const QString &path)
+bool OsUtil::openUrlOrFolder(const QString &path)
 {
     const QUrl url = QUrl::fromUserInput(path);
+
     if (url.isLocalFile()) {
-        OsUtil::openFolder(path);
-    } else {
-        openUrlExternally(path);
+        const QFileInfo fi(path);
+        if (!fi.isDir()) {
+            return OsUtil::openFolder(path);
+        }
+        // else open the folder's content
     }
+
+    return openUrlExternally(url);
 }
 
 bool OsUtil::createGlobalMutex(const char *name)
