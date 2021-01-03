@@ -30,12 +30,11 @@ FORT_API BOOL is_time_in_period(FORT_TIME time, FORT_PERIOD period)
 
 static BOOL fort_conf_ip_find(UINT32 ip, UINT32 count, const UINT32 *iparr, BOOL is_range)
 {
-    int low, high;
-
     if (count == 0)
         return FALSE;
 
-    low = 0, high = count - 1;
+    int low = 0;
+    int high = count - 1;
 
     do {
         const int mid = (low + high) / 2;
@@ -123,15 +122,13 @@ FORT_API FORT_APP_FLAGS fort_conf_app_exe_find(
         const PFORT_CONF conf, const char *path, UINT32 path_len)
 {
     FORT_APP_FLAGS app_flags;
-    const char *data;
-    const char *app_entries;
     UINT16 count = conf->exe_apps_n;
 
     if (count == 0)
         goto not_found;
 
-    data = conf->data;
-    app_entries = (const char *) (data + conf->exe_apps_off);
+    const char *data = conf->data;
+    const char *app_entries = (const char *) (data + conf->exe_apps_off);
 
     do {
         const PFORT_APP_ENTRY app_entry = (const PFORT_APP_ENTRY) app_entries;
@@ -166,20 +163,17 @@ static FORT_APP_FLAGS fort_conf_app_prefix_find(
         const PFORT_CONF conf, const char *path, UINT32 path_len)
 {
     FORT_APP_FLAGS app_flags;
-    const char *data;
-    const UINT32 *app_offsets;
-    const char *app_entries;
     const UINT16 count = conf->prefix_apps_n;
-    int low, high;
 
     if (count == 0)
         goto not_found;
 
-    data = conf->data;
-    app_offsets = (const UINT32 *) (data + conf->prefix_apps_off);
+    const char *data = conf->data;
+    const UINT32 *app_offsets = (const UINT32 *) (data + conf->prefix_apps_off);
 
-    app_entries = (const char *) (app_offsets + count + 1);
-    low = 0, high = count - 1;
+    const char *app_entries = (const char *) (app_offsets + count + 1);
+    int low = 0;
+    int high = count - 1;
 
     do {
         const int mid = (low + high) / 2;
@@ -207,15 +201,13 @@ end:
 static FORT_APP_FLAGS fort_conf_app_wild_find(const PFORT_CONF conf, const char *path)
 {
     FORT_APP_FLAGS app_flags;
-    const char *data;
-    const char *app_entries;
     UINT16 count = conf->wild_apps_n;
 
     if (count == 0)
         goto not_found;
 
-    data = conf->data;
-    app_entries = (const char *) (data + conf->wild_apps_off);
+    const char *data = conf->data;
+    const char *app_entries = (const char *) (data + conf->wild_apps_off);
 
     do {
         const PFORT_APP_ENTRY app_entry = (const PFORT_APP_ENTRY) app_entries;
@@ -280,21 +272,17 @@ FORT_API BOOL fort_conf_app_blocked(const PFORT_CONF conf, FORT_APP_FLAGS app_fl
 
 FORT_API UINT16 fort_conf_app_period_bits(const PFORT_CONF conf, FORT_TIME time, int *periods_n)
 {
-    const char *data;
-    PFORT_PERIOD app_periods;
-    UINT16 period_bits;
     UINT8 count = conf->app_periods_n;
-    int n, i;
 
     if (count == 0)
         return 0;
 
-    data = conf->data;
-    app_periods = (const PFORT_PERIOD)(data + conf->app_periods_off);
-    period_bits = (UINT16) conf->flags.group_bits;
-    n = 0;
+    const char *data = conf->data;
+    PFORT_PERIOD app_periods = (const PFORT_PERIOD)(data + conf->app_periods_off);
+    UINT16 period_bits = (UINT16) conf->flags.group_bits;
+    int n = 0;
 
-    for (i = 0; i < FORT_CONF_GROUP_MAX; ++i) {
+    for (int i = 0; i < FORT_CONF_GROUP_MAX; ++i) {
         const UINT16 bit = (1 << i);
         const FORT_PERIOD period = *app_periods++;
 

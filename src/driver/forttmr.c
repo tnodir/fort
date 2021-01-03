@@ -45,6 +45,7 @@ FORT_API void fort_timer_update(PFORT_TIMER timer, BOOL run)
     if (run) {
         const ULONG period = timer->period;
         const ULONG delay = timer->coalescable ? 500 : 0;
+
         LARGE_INTEGER due;
         due.QuadPart = period * -10000; /* ms -> us */
 

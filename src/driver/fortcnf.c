@@ -232,9 +232,8 @@ static void fort_conf_ref_exe_fill(PFORT_CONF_REF conf_ref, const PFORT_CONF con
     const char *app_entries = (const char *) (conf->data + conf->exe_apps_off);
 
     const int count = conf->exe_apps_n;
-    int i;
 
-    for (i = 0; i < count; ++i) {
+    for (int i = 0; i < count; ++i) {
         const PFORT_APP_ENTRY entry = (const PFORT_APP_ENTRY) app_entries;
 
         fort_conf_ref_exe_add_entry(conf_ref, entry, TRUE);
@@ -356,11 +355,10 @@ FORT_API PFORT_CONF_REF fort_conf_ref_take(PFORT_DEVICE_CONF device_conf)
 
 FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_REF conf_ref)
 {
-    PFORT_CONF_REF old_conf_ref;
     FORT_CONF_FLAGS old_conf_flags;
     KLOCK_QUEUE_HANDLE lock_queue;
 
-    old_conf_ref = fort_conf_ref_take(device_conf);
+    const PFORT_CONF_REF old_conf_ref = fort_conf_ref_take(device_conf);
 
     KeAcquireInStackQueuedSpinLock(&device_conf->ref_lock, &lock_queue);
     {
@@ -430,7 +428,6 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_flags_set(
 
 FORT_API BOOL fort_conf_ref_period_update(PFORT_DEVICE_CONF device_conf, BOOL force, int *periods_n)
 {
-    PFORT_CONF_REF conf_ref;
     FORT_TIME time;
     BOOL res = FALSE;
 
@@ -447,7 +444,7 @@ FORT_API BOOL fort_conf_ref_period_update(PFORT_DEVICE_CONF device_conf, BOOL fo
         time.minute = (UCHAR) tf.Minute;
     }
 
-    conf_ref = fort_conf_ref_take(device_conf);
+    PFORT_CONF_REF conf_ref = fort_conf_ref_take(device_conf);
 
     if (conf_ref != NULL) {
         PFORT_CONF conf = &conf_ref->conf;

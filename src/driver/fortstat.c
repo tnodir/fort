@@ -299,7 +299,6 @@ FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, UINT64 flow_id, UINT32 pr
 {
     const tommy_key_t proc_hash = fort_stat_proc_hash(process_id);
     KLOCK_QUEUE_HANDLE lock_queue;
-    PFORT_STAT_PROC proc;
     NTSTATUS status;
 
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
@@ -309,7 +308,7 @@ FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, UINT64 flow_id, UINT32 pr
         goto end;
     }
 
-    proc = fort_stat_proc_get(stat, process_id, proc_hash);
+    PFORT_STAT_PROC proc = fort_stat_proc_get(stat, process_id, proc_hash);
 
     if (proc == NULL) {
         if (is_reauth) {
@@ -367,14 +366,13 @@ FORT_API void fort_flow_classify(
 {
     KLOCK_QUEUE_HANDLE lock_queue;
     PFORT_FLOW flow = (PFORT_FLOW) flowContext;
-    FORT_FLOW_OPT opt;
 
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
     if (!stat->log_stat)
         goto end;
 
-    opt = flow->opt;
+    FORT_FLOW_OPT opt = flow->opt;
 
     if (opt.proc_index != FORT_PROC_BAD_INDEX) {
         PFORT_STAT_PROC proc = tommy_arrayof_ref(&stat->procs, opt.proc_index);
@@ -395,12 +393,11 @@ FORT_API void fort_flow_classify(
             const UINT32 limit_bytes = inbound ? group_limit->in_bytes : group_limit->out_bytes;
 
             const UINT16 list_index = group_index * 2 + (inbound ? 0 : 1);
-            BOOL defer_flow;
 
             /* Add traffic to app. group */
             *group_bytes += data_len;
 
-            defer_flow = (*group_bytes >= limit_bytes);
+            const BOOL defer_flow = (*group_bytes >= limit_bytes);
 
             /* Defer ACK */
             {
@@ -431,9 +428,7 @@ FORT_API void fort_stat_dpc_end(PKLOCK_QUEUE_HANDLE lock_queue)
 
 FORT_API void fort_stat_dpc_traf_flush(PFORT_STAT stat, UINT16 proc_count, PCHAR out)
 {
-    PFORT_STAT_PROC proc;
-
-    proc = stat->proc_active;
+    PFORT_STAT_PROC proc = stat->proc_active;
 
     while (proc != NULL && proc_count-- != 0) {
         PFORT_STAT_PROC proc_next = proc->next_active;
@@ -472,10 +467,9 @@ FORT_API UINT32 fort_stat_dpc_group_flush(PFORT_STAT stat)
 {
     UINT32 defer_flush_bits = 0;
     UINT32 flush_bits = stat->group_flush_bits;
-    int i;
 
     /* Handle process group's bytes */
-    for (i = 0; flush_bits != 0; ++i) {
+    for (int i = 0; flush_bits != 0; ++i) {
         PFORT_STAT_GROUP group;
         PFORT_TRAF group_limit;
         FORT_TRAF traf;

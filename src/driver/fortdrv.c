@@ -83,20 +83,11 @@ static void fort_callout_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
         FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int remoteIpField, int remotePortField,
         int ipProtoField)
 {
-    PFORT_CONF_REF conf_ref;
-    PVOID path;
-    FORT_CONF_FLAGS conf_flags;
-    FORT_APP_FLAGS app_flags;
-    UINT32 flags;
-    UINT32 remote_ip;
-    UINT32 process_id;
-    UINT32 path_len;
-
     PIRP irp = NULL;
     ULONG_PTR info;
 
-    flags = inFixedValues->incomingValue[flagsField].value.uint32;
-    remote_ip = inFixedValues->incomingValue[remoteIpField].value.uint32;
+    const UINT32 flags = inFixedValues->incomingValue[flagsField].value.uint32;
+    const UINT32 remote_ip = inFixedValues->incomingValue[remoteIpField].value.uint32;
 
     if (!g_device->conf.conf_flags.filter_locals
             && ((flags & FWP_CONDITION_FLAG_IS_LOOPBACK)
@@ -105,7 +96,7 @@ static void fort_callout_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
         return;
     }
 
-    conf_ref = fort_conf_ref_take(&g_device->conf);
+    PFORT_CONF_REF conf_ref = fort_conf_ref_take(&g_device->conf);
 
     if (conf_ref == NULL) {
         if (fort_device_flag(&g_device->conf, FORT_DEVICE_PROV_BOOT)) {
@@ -116,7 +107,7 @@ static void fort_callout_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
         return;
     }
 
-    conf_flags = conf_ref->conf.flags;
+    const FORT_CONF_FLAGS conf_flags = conf_ref->conf.flags;
 
     if (conf_flags.stop_traffic)
         goto block;
@@ -133,11 +124,13 @@ static void fort_callout_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
                     &g_device->conf, remote_ip))
         goto block;
 
-    process_id = (UINT32) inMetaValues->processId;
-    path_len = inMetaValues->processPath->size - sizeof(WCHAR); /* chop terminating zero */
-    path = inMetaValues->processPath->data;
+    const UINT32 process_id = (UINT32) inMetaValues->processId;
+    const UINT32 path_len =
+            inMetaValues->processPath->size - sizeof(WCHAR); /* chop terminating zero */
+    const PVOID path = inMetaValues->processPath->data;
 
-    app_flags = fort_conf_app_find(&conf_ref->conf, path, path_len, fort_conf_exe_find);
+    FORT_APP_FLAGS app_flags =
+            fort_conf_app_find(&conf_ref->conf, path, path_len, fort_conf_exe_find);
 
     if (app_flags.v == 0 ? conf_flags.allow_all_new
                          : !fort_conf_app_blocked(&conf_ref->conf, app_flags)) {
@@ -620,9 +613,6 @@ static NTSTATUS fort_callout_force_reauth(
         const FORT_CONF_FLAGS old_conf_flags, UINT32 defer_flush_bits)
 {
     PFORT_STAT stat = &g_device->stat;
-    FORT_CONF_FLAGS conf_flags;
-
-    HANDLE engine;
     NTSTATUS status;
 
     fort_timer_update(&g_device->log_timer, FALSE);
@@ -636,7 +626,7 @@ static NTSTATUS fort_callout_force_reauth(
         fort_timer_update(&g_device->app_timer, (periods_n != 0));
     }
 
-    conf_flags = g_device->conf.conf_flags;
+    const FORT_CONF_FLAGS conf_flags = g_device->conf.conf_flags;
 
     /* Handle log_stat */
     if (old_conf_flags.log_stat != conf_flags.log_stat) {
@@ -652,6 +642,7 @@ static NTSTATUS fort_callout_force_reauth(
     }
 
     /* Open provider */
+    HANDLE engine;
     if ((status = fort_prov_open(&engine)))
         goto end;
 
@@ -725,8 +716,6 @@ static void fort_callout_timer(void)
     PIRP irp = NULL;
     ULONG_PTR info;
 
-    UINT32 defer_flush_bits;
-
     /* Lock buffer */
     fort_buffer_dpc_begin(buf, &buf_lock_queue);
 
@@ -773,7 +762,7 @@ static void fort_callout_timer(void)
     }
 
     /* Flush process group statistics */
-    defer_flush_bits = fort_stat_dpc_group_flush(stat);
+    const UINT32 defer_flush_bits = fort_stat_dpc_group_flush(stat);
 
     /* Unlock stat */
     fort_stat_dpc_end(&stat_lock_queue);
@@ -886,15 +875,13 @@ static void fort_device_cancel_pending(PDEVICE_OBJECT device, PIRP irp)
 
 static NTSTATUS fort_device_control(PDEVICE_OBJECT device, PIRP irp)
 {
-    PIO_STACK_LOCATION irp_stack;
     ULONG_PTR info = 0;
-    ULONG control_code;
     NTSTATUS status = STATUS_UNSUCCESSFUL;
 
     UNUSED(device);
 
-    irp_stack = IoGetCurrentIrpStackLocation(irp);
-    control_code = irp_stack->Parameters.DeviceIoControl.IoControlCode;
+    const PIO_STACK_LOCATION irp_stack = IoGetCurrentIrpStackLocation(irp);
+    const ULONG control_code = irp_stack->Parameters.DeviceIoControl.IoControlCode;
 
     if (control_code != (ULONG) FORT_IOCTL_VALIDATE
             && !fort_device_flag(&g_device->conf, FORT_DEVICE_IS_VALIDATED))
@@ -1053,14 +1040,12 @@ end:
 
 static void fort_power_callback(PVOID context, PVOID event, PVOID specifics)
 {
-    BOOL power_off;
-
     UNUSED(context);
 
     if (event != (PVOID) PO_CB_SYSTEM_STATE_LOCK)
         return;
 
-    power_off = (specifics == NULL);
+    const BOOL power_off = (specifics == NULL);
 
     fort_device_flag_set(&g_device->conf, FORT_DEVICE_POWER_OFF, power_off);
 
@@ -1144,8 +1129,6 @@ static void fort_systime_callback_unregister(void)
 
 static void fort_driver_unload(PDRIVER_OBJECT driver)
 {
-    UNICODE_STRING device_link;
-
     if (g_device != NULL) {
         fort_callout_defer_flush();
 
@@ -1167,8 +1150,13 @@ static void fort_driver_unload(PDRIVER_OBJECT driver)
         fort_callout_remove();
     }
 
-    RtlInitUnicodeString(&device_link, DOS_DEVICE_NAME);
-    IoDeleteSymbolicLink(&device_link);
+    /* Delete Device Link */
+    {
+        UNICODE_STRING device_link;
+
+        RtlInitUnicodeString(&device_link, DOS_DEVICE_NAME);
+        IoDeleteSymbolicLink(&device_link);
+    }
 
     IoDeleteDevice(driver->DeviceObject);
 }
