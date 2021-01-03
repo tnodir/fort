@@ -4,6 +4,7 @@
 #include "logentryblocked.h"
 #include "logentryprocnew.h"
 #include "logentrystattraf.h"
+#include "logentrytime.h"
 
 LogBuffer::LogBuffer(int bufferSize, QObject *parent) :
     QObject(parent),
@@ -60,9 +61,9 @@ void LogBuffer::writeEntryBlocked(const LogEntryBlocked *logEntry)
 
     FortCommon::logBlockedHeaderWrite(output, logEntry->blocked(), logEntry->ip(), logEntry->port(),
             logEntry->proto(), logEntry->pid(), pathLen);
-    output += FortCommon::logBlockedHeaderSize();
 
     if (pathLen) {
+        output += FortCommon::logBlockedHeaderSize();
         path.toWCharArray((wchar_t *) output);
     }
 
@@ -109,9 +110,9 @@ void LogBuffer::writeEntryProcNew(const LogEntryProcNew *logEntry)
     char *output = this->output();
 
     FortCommon::logProcNewHeaderWrite(output, logEntry->pid(), pathLen);
-    output += FortCommon::logProcNewHeaderSize();
 
-    if (pathLen) {
+    if (pathLen != 0) {
+        output += FortCommon::logProcNewHeaderSize();
         path.toWCharArray((wchar_t *) output);
     }
 
@@ -146,12 +147,10 @@ void LogBuffer::readEntryStatTraf(LogEntryStatTraf *logEntry)
 
     const char *input = this->input();
 
-    qint64 unixTime;
     quint16 procCount;
-    FortCommon::logStatTrafHeaderRead(input, &unixTime, &procCount);
+    FortCommon::logStatTrafHeaderRead(input, &procCount);
 
     logEntry->setProcCount(procCount);
-    logEntry->setUnixTime(unixTime);
 
     if (procCount != 0) {
         input += FortCommon::logStatHeaderSize();
@@ -159,5 +158,32 @@ void LogBuffer::readEntryStatTraf(LogEntryStatTraf *logEntry)
     }
 
     const int entrySize = int(FortCommon::logStatSize(procCount));
+    m_offset += entrySize;
+}
+
+void LogBuffer::writeEntryTime(const LogEntryTime *logEntry)
+{
+    const int entrySize = int(FortCommon::logTimeSize());
+    prepareFor(entrySize);
+
+    char *output = this->output();
+
+    FortCommon::logTimeWrite(output, logEntry->unixTime());
+
+    m_top += entrySize;
+}
+
+void LogBuffer::readEntryTime(LogEntryTime *logEntry)
+{
+    Q_ASSERT(m_offset < m_top);
+
+    const char *input = this->input();
+
+    qint64 unixTime;
+    FortCommon::logTimeRead(input, &unixTime);
+
+    logEntry->setUnixTime(unixTime);
+
+    const int entrySize = int(FortCommon::logTimeSize());
     m_offset += entrySize;
 }

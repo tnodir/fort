@@ -40,6 +40,8 @@ public:
     static quint32 logStatTrafSize(quint16 procCount);
     static quint32 logStatSize(quint16 procCount);
 
+    static quint32 logTimeSize();
+
     static quint32 logType(const char *input);
 
     static void logBlockedHeaderWrite(char *output, bool blocked, quint32 remoteIp,
@@ -50,7 +52,10 @@ public:
     static void logProcNewHeaderWrite(char *output, quint32 pid, quint32 pathLen);
     static void logProcNewHeaderRead(const char *input, quint32 *pid, quint32 *pathLen);
 
-    static void logStatTrafHeaderRead(const char *input, qint64 *unixTime, quint16 *procCount);
+    static void logStatTrafHeaderRead(const char *input, quint16 *procCount);
+
+    static void logTimeWrite(char *output, qint64 unixTime);
+    static void logTimeRead(const char *input, qint64 *unixTime);
 
     static void confAppPermsMaskInit(void *drvConf);
     static bool confIpInRange(

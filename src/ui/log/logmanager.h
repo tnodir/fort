@@ -41,6 +41,9 @@ private slots:
 private:
     void setErrorMessage(const QString &errorMessage);
 
+    qint64 currentUnixTime() const;
+    void setCurrentUnixTime(qint64 unixTime);
+
     void readLogAsync();
     void cancelAsyncIo();
 
@@ -57,6 +60,8 @@ private:
     QList<LogBuffer *> m_freeBuffers;
 
     QString m_errorMessage;
+
+    qint64 m_currentUnixTime = 0;
 };
 
 #endif // LOGMANAGER_H

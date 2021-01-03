@@ -22,6 +22,7 @@ SOURCES += \
     $$UI_PWD/log/logentryblocked.cpp \
     $$UI_PWD/log/logentryprocnew.cpp \
     $$UI_PWD/log/logentrystattraf.cpp \
+    $$UI_PWD/log/logentrytime.cpp \
     $$UI_PWD/stat/quotamanager.cpp \
     $$UI_PWD/stat/statmanager.cpp \
     $$UI_PWD/stat/statsql.cpp \
@@ -53,6 +54,7 @@ HEADERS += \
     $$UI_PWD/log/logentryblocked.h \
     $$UI_PWD/log/logentryprocnew.h \
     $$UI_PWD/log/logentrystattraf.h \
+    $$UI_PWD/log/logentrytime.h \
     $$UI_PWD/stat/quotamanager.h \
     $$UI_PWD/stat/statmanager.h \
     $$UI_PWD/stat/statsql.h \

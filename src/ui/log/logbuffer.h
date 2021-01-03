@@ -9,6 +9,7 @@
 QT_FORWARD_DECLARE_CLASS(LogEntryBlocked)
 QT_FORWARD_DECLARE_CLASS(LogEntryProcNew)
 QT_FORWARD_DECLARE_CLASS(LogEntryStatTraf)
+QT_FORWARD_DECLARE_CLASS(LogEntryTime)
 
 class LogBuffer : public QObject
 {
@@ -31,6 +32,9 @@ public:
     void readEntryProcNew(LogEntryProcNew *logEntry);
 
     void readEntryStatTraf(LogEntryStatTraf *logEntry);
+
+    void writeEntryTime(const LogEntryTime *logEntry);
+    void readEntryTime(LogEntryTime *logEntry);
 
 public slots:
     void reset(int top = 0);

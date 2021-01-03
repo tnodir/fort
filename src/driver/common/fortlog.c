@@ -61,18 +61,32 @@ FORT_API void fort_log_proc_new_header_read(const char *p, UINT32 *pid, UINT32 *
     *pid = *up;
 }
 
-FORT_API void fort_log_stat_traf_header_write(char *p, INT64 unix_time, UINT16 proc_count)
+FORT_API void fort_log_stat_traf_header_write(char *p, UINT16 proc_count)
 {
     UINT32 *up = (UINT32 *) p;
 
-    *up++ = FORT_LOG_FLAG_STAT_TRAF | proc_count;
-    *((INT64 *) up) = unix_time;
+    *up = FORT_LOG_FLAG_STAT_TRAF | proc_count;
 }
 
-FORT_API void fort_log_stat_traf_header_read(const char *p, INT64 *unix_time, UINT16 *proc_count)
+FORT_API void fort_log_stat_traf_header_read(const char *p, UINT16 *proc_count)
 {
     const UINT32 *up = (const UINT32 *) p;
 
-    *proc_count = (UINT16) *up++;
+    *proc_count = (UINT16) *up;
+}
+
+FORT_API void fort_log_time_write(char *p, INT64 unix_time)
+{
+    UINT32 *up = (UINT32 *) p;
+
+    *up++ = FORT_LOG_FLAG_TIME;
+    *((INT64 *) up) = unix_time;
+}
+
+FORT_API void fort_log_time_read(const char *p, INT64 *unix_time)
+{
+    const UINT32 *up = (const UINT32 *) p;
+
+    up++;
     *unix_time = *((INT64 *) up);
 }

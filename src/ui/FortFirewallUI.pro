@@ -58,6 +58,7 @@ SOURCES += \
     log/logentryblocked.cpp \
     log/logentryprocnew.cpp \
     log/logentrystattraf.cpp \
+    log/logentrytime.cpp \
     log/logmanager.cpp \
     main.cpp \
     model/applistmodel.cpp \
@@ -171,6 +172,7 @@ HEADERS += \
     log/logentryblocked.h \
     log/logentryprocnew.h \
     log/logentrystattraf.h \
+    log/logentrytime.h \
     log/logmanager.h \
     model/applistmodel.h \
     model/appstatmodel.h \

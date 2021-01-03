@@ -115,6 +115,8 @@ typedef struct fort_stat
 
     FORT_STAT_GROUP groups[FORT_CONF_GROUP_MAX];
 
+    LARGE_INTEGER system_time;
+
     KSPIN_LOCK lock;
 } FORT_STAT, *PFORT_STAT;
 

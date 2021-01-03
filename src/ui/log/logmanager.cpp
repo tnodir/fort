@@ -9,11 +9,13 @@
 #include "../fortmanager.h"
 #include "../model/applistmodel.h"
 #include "../model/appstatmodel.h"
+#include "../util/dateutil.h"
 #include "../util/osutil.h"
 #include "logbuffer.h"
 #include "logentryblocked.h"
 #include "logentryprocnew.h"
 #include "logentrystattraf.h"
+#include "logentrytime.h"
 
 LogManager::LogManager(FortManager *fortManager, QObject *parent) :
     QObject(parent), m_fortManager(fortManager)
@@ -56,6 +58,16 @@ void LogManager::setErrorMessage(const QString &errorMessage)
         m_errorMessage = errorMessage;
         emit errorMessageChanged();
     }
+}
+
+qint64 LogManager::currentUnixTime() const
+{
+    return m_currentUnixTime != 0 ? m_currentUnixTime : DateUtil::getUnixTime();
+}
+
+void LogManager::setCurrentUnixTime(qint64 unixTime)
+{
+    m_currentUnixTime = unixTime;
 }
 
 void LogManager::initialize()
@@ -136,12 +148,18 @@ void LogManager::readLogEntries(LogBuffer *logBuffer)
         case LogEntry::StatTraf: {
             LogEntryStatTraf statTrafEntry;
             logBuffer->readEntryStatTraf(&statTrafEntry);
-            appStatModel()->handleStatTraf(statTrafEntry);
+            appStatModel()->handleStatTraf(statTrafEntry, currentUnixTime());
+            break;
+        }
+        case LogEntry::Time: {
+            LogEntryTime timeEntry;
+            logBuffer->readEntryTime(&timeEntry);
+            setCurrentUnixTime(timeEntry.unixTime());
             break;
         }
         default:
             if (logBuffer->offset() < logBuffer->top()) {
-                qCritical() << "Unknown Log entry!" << logType;
+                qCritical() << "Unknown Log entry:" << logType;
             }
             return;
         }

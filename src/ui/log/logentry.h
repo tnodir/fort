@@ -13,7 +13,8 @@ public:
         // synchronize with FORT_LOG_FLAG_*
         AppBlocked = 0x01000000,
         ProcNew = 0x02000000,
-        StatTraf = 0x04000000
+        StatTraf = 0x04000000,
+        Time = 0x08000000
     };
 
     explicit LogEntry() = default;

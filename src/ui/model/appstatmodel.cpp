@@ -81,10 +81,9 @@ void AppStatModel::handleProcNew(const LogEntryProcNew &procNewEntry)
     m_statManager->logProcNew(procNewEntry.pid(), procNewEntry.path());
 }
 
-void AppStatModel::handleStatTraf(const LogEntryStatTraf &statTrafEntry)
+void AppStatModel::handleStatTraf(const LogEntryStatTraf &statTrafEntry, qint64 unixTime)
 {
-    m_statManager->logStatTraf(
-            statTrafEntry.procCount(), statTrafEntry.unixTime(), statTrafEntry.procTrafBytes());
+    m_statManager->logStatTraf(statTrafEntry.procCount(), unixTime, statTrafEntry.procTrafBytes());
 }
 
 qint64 AppStatModel::appIdByRow(int row) const

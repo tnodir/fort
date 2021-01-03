@@ -107,6 +107,11 @@ quint32 FortCommon::logStatSize(quint16 procCount)
     return FORT_LOG_STAT_SIZE(procCount);
 }
 
+quint32 FortCommon::logTimeSize()
+{
+    return FORT_LOG_TIME_SIZE;
+}
+
 quint32 FortCommon::logType(const char *input)
 {
     return fort_log_type(input);
@@ -134,9 +139,19 @@ void FortCommon::logProcNewHeaderRead(const char *input, quint32 *pid, quint32 *
     fort_log_proc_new_header_read(input, pid, pathLen);
 }
 
-void FortCommon::logStatTrafHeaderRead(const char *input, qint64 *unixTime, quint16 *procCount)
+void FortCommon::logStatTrafHeaderRead(const char *input, quint16 *procCount)
 {
-    fort_log_stat_traf_header_read(input, unixTime, procCount);
+    fort_log_stat_traf_header_read(input, procCount);
+}
+
+void FortCommon::logTimeWrite(char *output, qint64 unixTime)
+{
+    fort_log_time_write(output, unixTime);
+}
+
+void FortCommon::logTimeRead(const char *input, qint64 *unixTime)
+{
+    fort_log_time_read(input, unixTime);
 }
 
 void FortCommon::confAppPermsMaskInit(void *drvConf)

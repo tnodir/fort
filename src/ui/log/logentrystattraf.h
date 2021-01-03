@@ -13,15 +13,11 @@ public:
     quint16 procCount() const { return m_procCount; }
     void setProcCount(quint16 procCount);
 
-    qint64 unixTime() const { return m_unixTime; }
-    void setUnixTime(qint64 unixTime);
-
     const quint32 *procTrafBytes() const { return m_procTrafBytes; }
     void setProcTrafBytes(const quint32 *procTrafBytes);
 
 private:
     quint16 m_procCount = 0;
-    qint64 m_unixTime = 0;
     const quint32 *m_procTrafBytes = nullptr;
 };
 

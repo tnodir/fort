@@ -733,13 +733,29 @@ static void fort_callout_timer(void)
     /* Lock stat */
     fort_stat_dpc_begin(stat, &stat_lock_queue);
 
+    /* Get current Unix time */
+    {
+        LARGE_INTEGER system_time;
+        PCHAR out;
+
+        KeQuerySystemTime(&system_time);
+
+        if (stat->system_time.QuadPart != system_time.QuadPart
+                && NT_SUCCESS(fort_buffer_prepare(buf, FORT_LOG_TIME_SIZE, &out, &irp, &info))) {
+            const INT64 unix_time = fort_system_to_unix_time(system_time.QuadPart);
+
+            stat->system_time = system_time;
+
+            fort_log_time_write(out, unix_time);
+        }
+    }
+
     /* Flush traffic statistics */
     while (stat->proc_active_count != 0) {
         const UINT16 proc_count = (stat->proc_active_count < FORT_LOG_STAT_BUFFER_PROC_COUNT)
                 ? stat->proc_active_count
                 : FORT_LOG_STAT_BUFFER_PROC_COUNT;
         const UINT32 len = FORT_LOG_STAT_SIZE(proc_count);
-        INT64 unix_time;
         PCHAR out;
         NTSTATUS status;
 
@@ -750,16 +766,7 @@ static void fort_callout_timer(void)
             break;
         }
 
-        /* Get current Unix time */
-        {
-            LARGE_INTEGER system_time;
-
-            KeQuerySystemTime(&system_time);
-
-            unix_time = fort_system_to_unix_time(system_time.QuadPart);
-        }
-
-        fort_log_stat_traf_header_write(out, unix_time, proc_count);
+        fort_log_stat_traf_header_write(out, proc_count);
         out += FORT_LOG_STAT_HEADER_SIZE;
 
         fort_stat_dpc_traf_flush(stat, proc_count, out);
