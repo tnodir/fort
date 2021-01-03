@@ -1,7 +1,10 @@
 
-#include AddBackslash(SourcePath) + "..\src\version.h"
+#define SRC_PATH	AddBackslash(SourcePath) + "..\src"
+
+#include SRC_PATH + "\version.h"
 
 #define APP_EXE_NAME	"FortFirewall.exe"
+#define APP_ICO_NAME	"FortFirewall.ico"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -25,7 +28,8 @@ AllowNoIcons=yes
 OutputBaseFilename=FortFirewall-{#APP_VERSION_STR}
 Uninstallable=not IsTaskSelected('portable')
 UninstallFilesDir={app}\uninst
-;UninstallDisplayIcon={app}\{#APP_EXE_NAME}
+UninstallDisplayIcon={uninstallexe}
+SetupIconFile={#SRC_PATH}\ui\{#APP_ICO_NAME}
 ArchitecturesInstallIn64BitMode=x64
 Compression=lzma2/ultra
 SolidCompression=yes
