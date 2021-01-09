@@ -30,6 +30,8 @@ public:
     bool prepare(struct sqlite3 *db, const char *sql, PrepareFlags flags = PrepareDefault);
     void finalize();
 
+    QString expandedSql();
+
     bool bindInt(int index, qint32 number);
     bool bindInt64(int index, qint64 number);
     bool bindDouble(int index, double number);

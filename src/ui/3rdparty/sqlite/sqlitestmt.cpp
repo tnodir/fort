@@ -26,6 +26,14 @@ void SqliteStmt::finalize()
     }
 }
 
+QString SqliteStmt::expandedSql()
+{
+    char *sql = sqlite3_expanded_sql(m_stmt);
+    const auto sqlStr = QString::fromUtf8(sql);
+    sqlite3_free(sql);
+    return sqlStr;
+}
+
 bool SqliteStmt::bindInt(int index, qint32 number)
 {
     return sqlite3_bind_int(m_stmt, index, number) == SQLITE_OK;

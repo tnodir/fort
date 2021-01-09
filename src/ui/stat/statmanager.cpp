@@ -493,7 +493,8 @@ void StatManager::updateTrafficList(const QStmtList &insertStmtList,
         if (!updateTraffic(stmtUpdate, inBytes, outBytes, appId)) {
             SqliteStmt *stmtInsert = insertStmtList.at(i);
             if (!updateTraffic(stmtInsert, inBytes, outBytes, appId)) {
-                logCritical() << "Update traffic error:" << m_sqliteDb->errorMessage();
+                logCritical() << "Update traffic error:" << m_sqliteDb->errorMessage() << Qt::endl
+                              << stmtInsert->expandedSql();
             }
         }
         ++i;
@@ -510,10 +511,10 @@ bool StatManager::updateTraffic(SqliteStmt *stmt, quint32 inBytes, quint32 outBy
     }
 
     const SqliteStmt::StepResult res = stmt->step();
-
+    const bool ok = res == SqliteStmt::StepDone && m_sqliteDb->changes() != 0;
     stmt->reset();
 
-    return res == SqliteStmt::StepDone && m_sqliteDb->changes() != 0;
+    return ok;
 }
 
 void StatManager::stepStmtList(const QStmtList &stmtList)
