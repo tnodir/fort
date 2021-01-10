@@ -128,7 +128,7 @@
 <context>
     <name>AppStatModel</name>
     <message>
-        <location filename="../model/appstatmodel.cpp" line="117"/>
+        <location filename="../model/appstatmodel.cpp" line="116"/>
         <source>All</source>
         <translation>Все</translation>
     </message>
@@ -364,8 +364,8 @@
     </message>
     <message>
         <location filename="../fortmanager.cpp" line="842"/>
-        <source>Auto-Allow All New Programs</source>
-        <translation>Авто-разрешение всех новых программ</translation>
+        <source>Auto-Allow New Programs</source>
+        <translation>Авто-разрешение новых программ</translation>
     </message>
     <message>
         <location filename="../fortmanager.cpp" line="802"/>
@@ -539,8 +539,8 @@
     </message>
     <message>
         <location filename="../form/opt/pages/optionspage.cpp" line="73"/>
-        <source>Auto-Allow All New Programs</source>
-        <translation>Авто-разрешение всех новых программ</translation>
+        <source>Auto-Allow New Programs</source>
+        <translation>Авто-разрешение новых программ</translation>
     </message>
     <message>
         <location filename="../form/opt/pages/optionspage.cpp" line="74"/>

@@ -839,7 +839,7 @@ void FortManager::retranslateTrayMenu()
     m_filterEnabledAction->setText(tr("Filter Enabled"));
     m_stopTrafficAction->setText(tr("Stop Traffic"));
     m_stopInetTrafficAction->setText(tr("Stop Internet Traffic"));
-    m_allowAllNewAction->setText(tr("Auto-Allow All New Programs"));
+    m_allowAllNewAction->setText(tr("Auto-Allow New Programs"));
 
     m_quitAction->setText(tr("Quit"));
 }
