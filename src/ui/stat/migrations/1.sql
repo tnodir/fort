@@ -54,6 +54,7 @@ CREATE TABLE conn_app(
   app_id INTEGER NOT NULL,
   conn_time INTEGER NOT NULL,
   inbound BOOLEAN NOT NULL,
+  blocked BOOLEAN NOT NULL,
   proto INTEGER NOT NULL,
   src_port INTEGER NOT NULL,
   dst_port INTEGER NOT NULL,
