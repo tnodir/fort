@@ -10,7 +10,7 @@
 #include "sqlitestmt.h"
 
 Q_DECLARE_LOGGING_CATEGORY(CLOG_SQLITEDB)
-Q_LOGGING_CATEGORY(CLOG_SQLITEDB, "fort.sqlitedb")
+Q_LOGGING_CATEGORY(CLOG_SQLITEDB, "db")
 
 #define dbWarning()  qCWarning(CLOG_SQLITEDB, )
 #define dbCritical() qCCritical(CLOG_SQLITEDB, )

@@ -14,7 +14,7 @@
 #include "statsql.h"
 
 Q_DECLARE_LOGGING_CATEGORY(CLOG_STAT_MANAGER)
-Q_LOGGING_CATEGORY(CLOG_STAT_MANAGER, "fort.statManager")
+Q_LOGGING_CATEGORY(CLOG_STAT_MANAGER, "stat")
 
 #define logWarning()  qCWarning(CLOG_STAT_MANAGER, )
 #define logCritical() qCCritical(CLOG_STAT_MANAGER, )

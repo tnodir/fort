@@ -11,7 +11,7 @@
 #include "fortsettings.h"
 
 Q_DECLARE_LOGGING_CATEGORY(CLOG_CONTROL_MANAGER)
-Q_LOGGING_CATEGORY(CLOG_CONTROL_MANAGER, "fort.controlManager")
+Q_LOGGING_CATEGORY(CLOG_CONTROL_MANAGER, "control")
 
 #define logWarning()  qCWarning(CLOG_CONTROL_MANAGER, )
 #define logCritical() qCCritical(CLOG_CONTROL_MANAGER, )

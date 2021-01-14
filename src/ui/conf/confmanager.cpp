@@ -19,7 +19,7 @@
 #include "firewallconf.h"
 
 Q_DECLARE_LOGGING_CATEGORY(CLOG_CONF_MANAGER)
-Q_LOGGING_CATEGORY(CLOG_CONF_MANAGER, "fort.confManager")
+Q_LOGGING_CATEGORY(CLOG_CONF_MANAGER, "conf")
 
 #define logWarning()  qCWarning(CLOG_CONF_MANAGER, )
 #define logCritical() qCCritical(CLOG_CONF_MANAGER, )

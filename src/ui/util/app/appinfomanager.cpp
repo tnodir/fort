@@ -10,11 +10,11 @@
 #include "appinfoworker.h"
 #include "apputil.h"
 
-Q_DECLARE_LOGGING_CATEGORY(CLOG_APPINFOCACHE)
-Q_LOGGING_CATEGORY(CLOG_APPINFOCACHE, "fort.appInfoWorker")
+Q_DECLARE_LOGGING_CATEGORY(CLOG_APPINFO_MANAGER)
+Q_LOGGING_CATEGORY(CLOG_APPINFO_MANAGER, "appInfo")
 
-#define logWarning()  qCWarning(CLOG_APPINFOCACHE, )
-#define logCritical() qCCritical(CLOG_APPINFOCACHE, )
+#define logWarning()  qCWarning(CLOG_APPINFO_MANAGER, )
+#define logCritical() qCCritical(CLOG_APPINFO_MANAGER, )
 
 #define DATABASE_USER_VERSION 3
 
