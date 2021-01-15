@@ -494,7 +494,8 @@ void StatManager::updateTrafficList(const QStmtList &insertStmtList,
             SqliteStmt *stmtInsert = insertStmtList.at(i);
             if (!updateTraffic(stmtInsert, inBytes, outBytes, appId)) {
                 logCritical() << "Update traffic error:" << m_sqliteDb->errorMessage() << Qt::endl
-                              << stmtInsert->expandedSql();
+                              << "inBytes:" << inBytes << "outBytes:" << outBytes
+                              << "appId:" << appId << "index:" << i;
             }
         }
         ++i;
