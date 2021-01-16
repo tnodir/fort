@@ -332,7 +332,7 @@ void StatManager::logStatTraf(quint16 procCount, qint64 unixTime, const quint32 
             abort();
         }
 
-        if (inBytes || outBytes) {
+        if (inBytes != 0 || outBytes != 0) {
             qint64 appId = m_appIds.at(procIndex);
 
             // Was the app cleared?
@@ -493,7 +493,7 @@ void StatManager::updateTrafficList(const QStmtList &insertStmtList,
         if (!updateTraffic(stmtUpdate, inBytes, outBytes, appId)) {
             SqliteStmt *stmtInsert = insertStmtList.at(i);
             if (!updateTraffic(stmtInsert, inBytes, outBytes, appId)) {
-                logCritical() << "Update traffic error:" << m_sqliteDb->errorMessage() << Qt::endl
+                logCritical() << "Update traffic error:" << m_sqliteDb->errorMessage()
                               << "inBytes:" << inBytes << "outBytes:" << outBytes
                               << "appId:" << appId << "index:" << i;
             }
