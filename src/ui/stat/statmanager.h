@@ -13,9 +13,6 @@ QT_FORWARD_DECLARE_CLASS(QuotaManager)
 QT_FORWARD_DECLARE_CLASS(SqliteDb)
 QT_FORWARD_DECLARE_CLASS(SqliteStmt)
 
-#define INVALID_APP_INDEX qint16(-1)
-#define INVALID_APP_ID    qint64(-1)
-
 class StatManager : public QObject
 {
     Q_OBJECT
@@ -38,7 +35,7 @@ public:
 
     void getAppList(QStringList &list, QVector<qint64> &appIds);
 
-    void deleteApp(qint64 appId);
+    void deleteApp(qint64 appId, const QString &appPath);
 
     void resetAppTotals();
 
@@ -63,16 +60,17 @@ private:
 
     void clearStmts();
 
-    void replaceAppPathAt(int index, const QString &appPath);
-    void replaceAppIdAt(int index, qint64 appId);
-    void clearAppId(qint64 appId);
-    void clearAppIds();
-
     void logClear();
-    void logClearApp(quint32 pid, int index);
+    void logClearApp(quint32 pid);
+
+    void addCachedAppId(const QString &appPath, qint64 appId);
+    qint64 getCachedAppId(const QString &appPath) const;
+    void clearCachedAppId(const QString &appPath);
+    void clearAppIdCache();
 
     qint64 getAppId(const QString &appPath);
     qint64 createAppId(const QString &appPath, qint64 unixTime);
+    qint64 getOrCreateAppId(const QString &appPath, qint64 unixTime = 0);
 
     void updateTrafficList(const QStmtList &insertStmtList, const QStmtList &updateStmtList,
             quint32 inBytes, quint32 outBytes, qint64 appId = 0);
@@ -95,8 +93,6 @@ private:
     quint8 activePeriodToHour = 0;
     quint8 activePeriodToMinute = 0;
 
-    qint16 m_appFreeIndex = INVALID_APP_INDEX;
-
     qint32 m_lastTrafHour = 0;
     qint32 m_lastTrafDay = 0;
     qint32 m_lastTrafMonth = 0;
@@ -109,10 +105,8 @@ private:
 
     QHash<const char *, SqliteStmt *> m_sqliteStmts;
 
-    QVector<qint16> m_appFreeIndexes;
-    QHash<quint32, int> m_appIndexes;
-    QStringList m_appPaths;
-    QVector<qint64> m_appIds;
+    QHash<quint32, QString> m_appPidPathMap; // pid -> appPath
+    QHash<QString, qint64> m_appPathIdCache; // appPath -> appId
 };
 
 #endif // STATMANAGER_H

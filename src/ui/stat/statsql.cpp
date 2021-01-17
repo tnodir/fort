@@ -8,7 +8,7 @@ const char *const StatSql::sqlInsertAppId =
 
 const char *const StatSql::sqlDeleteAppId = "DELETE FROM app WHERE app_id = ?1;";
 
-const char *const StatSql::sqlSelectAppPaths = "SELECT app_id, path FROM app ORDER BY creat_time;";
+const char *const StatSql::sqlSelectAppPaths = "SELECT app_id, path FROM app ORDER BY app_id;";
 
 const char *const StatSql::sqlInsertTrafAppHour =
         "INSERT INTO traffic_app_hour(app_id, traf_time, in_bytes, out_bytes)"

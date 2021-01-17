@@ -42,13 +42,16 @@ void AppStatModel::clear()
 void AppStatModel::remove(int row)
 {
     row = adjustRow(row);
-    Q_ASSERT(row > 0);
+
+    if (Q_UNLIKELY(row < 0 || row >= m_appIds.size()))
+        return;
 
     beginRemoveRows(QModelIndex(), row, row);
 
     const qint64 appId = m_appIds.at(row);
+    const QString appPath = list().at(row);
 
-    m_statManager->deleteApp(appId);
+    m_statManager->deleteApp(appId, appPath);
 
     m_appIds.remove(row);
 

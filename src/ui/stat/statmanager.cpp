@@ -23,6 +23,8 @@ Q_LOGGING_CATEGORY(CLOG_STAT_MANAGER, "stat")
 
 #define ACTIVE_PERIOD_CHECK_SECS (60 * OS_TICKS_PER_SECOND)
 
+#define INVALID_APP_ID qint64(-1)
+
 namespace {
 
 bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
@@ -137,7 +139,7 @@ void StatManager::initializeQuota()
 
 void StatManager::clear()
 {
-    clearAppIds();
+    clearAppIdCache();
     clearStmts();
 
     m_sqliteDb->close();
@@ -155,94 +157,42 @@ void StatManager::clearStmts()
     m_sqliteStmts.clear();
 }
 
-void StatManager::replaceAppPathAt(int index, const QString &appPath)
-{
-    m_appPaths.replace(index, appPath);
-}
-
-void StatManager::replaceAppIdAt(int index, qint64 appId)
-{
-    m_appIds.replace(index, appId);
-}
-
-void StatManager::clearAppId(qint64 appId)
-{
-    const int index = m_appIds.indexOf(appId);
-
-    if (index >= 0) {
-        replaceAppIdAt(index, INVALID_APP_ID);
-    }
-}
-
-void StatManager::clearAppIds()
-{
-    int index = m_appIds.size();
-
-    while (--index >= 0) {
-        replaceAppIdAt(index, INVALID_APP_ID);
-    }
-}
-
 void StatManager::logClear()
 {
-    m_appFreeIndex = INVALID_APP_INDEX;
-    m_appFreeIndexes.clear();
-    m_appIndexes.clear();
-    m_appPaths.clear();
-    m_appIds.clear();
+    m_appPidPathMap.clear();
 }
 
-void StatManager::logClearApp(quint32 pid, int index)
+void StatManager::logClearApp(quint32 pid)
 {
-    m_appIndexes.remove(pid);
+    m_appPidPathMap.remove(pid);
+}
 
-    if (index == m_appFreeIndexes.size() - 1) {
-        // Chop last index
-        m_appFreeIndexes.removeLast();
-        m_appPaths.removeLast();
-        m_appIds.removeLast();
-    } else {
-        // Reuse index later
-        m_appFreeIndexes[index] = m_appFreeIndex;
-        m_appFreeIndex = qint16(index);
+void StatManager::addCachedAppId(const QString &appPath, qint64 appId)
+{
+    m_appPathIdCache.insert(appPath, appId);
+}
 
-        replaceAppPathAt(index, QString());
-        replaceAppIdAt(index, INVALID_APP_ID);
-    }
+qint64 StatManager::getCachedAppId(const QString &appPath) const
+{
+    return m_appPathIdCache.value(appPath, INVALID_APP_ID);
+}
+
+void StatManager::clearCachedAppId(const QString &appPath)
+{
+    m_appPathIdCache.remove(appPath);
+}
+
+void StatManager::clearAppIdCache()
+{
+    m_appPathIdCache.clear();
 }
 
 void StatManager::logProcNew(quint32 pid, const QString &appPath)
 {
-    Q_ASSERT(!m_appIndexes.contains(pid));
+    Q_ASSERT(!m_appPidPathMap.contains(pid));
+    m_appPidPathMap.insert(pid, appPath);
 
-    // Get appId
-    m_sqliteDb->beginTransaction();
-
-    qint64 appId = getAppId(appPath);
-    if (appId == INVALID_APP_ID) {
-        const qint64 unixTime = DateUtil::getUnixTime();
-        appId = createAppId(appPath, unixTime);
-    }
-
-    m_sqliteDb->commitTransaction();
-
-    // Add process
-    qint16 procIndex = m_appFreeIndex;
-    if (procIndex != INVALID_APP_INDEX) {
-        m_appFreeIndex = m_appFreeIndexes[procIndex];
-        m_appFreeIndexes[procIndex] = INVALID_APP_INDEX;
-
-        replaceAppPathAt(procIndex, appPath);
-        replaceAppIdAt(procIndex, appId);
-    } else {
-        procIndex = qint16(m_appFreeIndexes.size());
-        m_appFreeIndexes.append(INVALID_APP_INDEX);
-
-        m_appPaths.append(appPath);
-        m_appIds.append(appId);
-    }
-
-    m_appIndexes.insert(pid, procIndex);
+    getOrCreateAppId(appPath);
 }
 
 void StatManager::logStatTraf(quint16 procCount, qint64 unixTime, const quint32 *procTrafBytes)
@@ -315,31 +265,29 @@ void StatManager::logStatTraf(quint16 procCount, qint64 unixTime, const quint32 
             << getTrafficStmt(StatSql::sqlUpdateTrafMonth, trafMonth);
 
     for (int i = 0; i < procCount; ++i) {
-        quint32 pid = *procTrafBytes++;
-        const bool inactive = (pid & 1) != 0;
+        const quint32 pidFlag = *procTrafBytes++;
+        const bool inactive = (pidFlag & 1) != 0;
+        const quint32 pid = pidFlag & ~quint32(1);
+
         const quint32 inBytes = *procTrafBytes++;
         const quint32 outBytes = *procTrafBytes++;
 
+        const QString appPath = m_appPidPathMap.value(pid);
+
         if (inactive) {
-            pid ^= 1;
+            logClearApp(pid);
         }
 
-        const int procIndex = m_appIndexes.value(pid, INVALID_APP_INDEX);
-        if (Q_UNLIKELY(procIndex == INVALID_APP_INDEX)) {
+        if (Q_UNLIKELY(appPath.isEmpty())) {
             logCritical() << "UI & Driver's states mismatch! Expected processes:"
-                          << m_appIndexes.keys() << "Got:" << procCount << "(" << i << pid
+                          << m_appPidPathMap.keys() << "Got:" << procCount << "(" << i << pid
                           << inactive << ")";
-            abort();
+            continue;
         }
 
         if (inBytes != 0 || outBytes != 0) {
-            qint64 appId = m_appIds.at(procIndex);
-
-            // Was the app cleared?
-            if (appId == INVALID_APP_ID) {
-                appId = createAppId(m_appPaths.at(procIndex), unixTime);
-                replaceAppIdAt(procIndex, appId);
-            }
+            const qint64 appId = getOrCreateAppId(appPath, unixTime);
+            Q_ASSERT(appId != INVALID_APP_ID);
 
             if (m_isActivePeriod) {
                 // Update or insert app bytes
@@ -349,10 +297,6 @@ void StatManager::logStatTraf(quint16 procCount, qint64 unixTime, const quint32 
             // Update sum traffic bytes
             sumInBytes += inBytes;
             sumOutBytes += outBytes;
-        }
-
-        if (inactive) {
-            logClearApp(pid, procIndex);
         }
     }
 
@@ -410,9 +354,9 @@ void StatManager::logStatTraf(quint16 procCount, qint64 unixTime, const quint32 
     emit trafficAdded(unixTime, sumInBytes, sumOutBytes);
 }
 
-void StatManager::deleteApp(qint64 appId)
+void StatManager::deleteApp(qint64 appId, const QString &appPath)
 {
-    clearAppId(appId);
+    clearCachedAppId(appPath);
 
     // Delete Statements
     const QStmtList deleteAppStmts = QStmtList()
@@ -471,6 +415,23 @@ qint64 StatManager::createAppId(const QString &appPath, qint64 unixTime)
     }
     stmt->reset();
 
+    return appId;
+}
+
+qint64 StatManager::getOrCreateAppId(const QString &appPath, qint64 unixTime)
+{
+    qint64 appId = getCachedAppId(appPath);
+    if (appId == INVALID_APP_ID) {
+        appId = getAppId(appPath);
+        if (appId == INVALID_APP_ID) {
+            if (unixTime == 0) {
+                unixTime = DateUtil::getUnixTime();
+            }
+            appId = createAppId(appPath, unixTime);
+        }
+
+        addCachedAppId(appPath, appId);
+    }
     return appId;
 }
 
