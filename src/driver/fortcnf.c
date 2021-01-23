@@ -28,6 +28,22 @@ typedef struct fort_conf_exe_node
     tommy_key_t path_hash;
 } FORT_CONF_EXE_NODE, *PFORT_CONF_EXE_NODE;
 
+static FORT_TIME fort_current_time(void)
+{
+    TIME_FIELDS tf;
+    LARGE_INTEGER system_time, local_time;
+
+    KeQuerySystemTime(&system_time);
+    ExSystemTimeToLocalTime(&system_time, &local_time);
+    RtlTimeToTimeFields(&local_time, &tf);
+
+    FORT_TIME time;
+    time.hour = (UCHAR) tf.Hour;
+    time.minute = (UCHAR) tf.Minute;
+
+    return time;
+}
+
 FORT_API void fort_device_conf_open(PFORT_DEVICE_CONF device_conf)
 {
     KeInitializeSpinLock(&device_conf->ref_lock);
@@ -344,7 +360,7 @@ FORT_API PFORT_CONF_REF fort_conf_ref_take(PFORT_DEVICE_CONF device_conf)
     KeAcquireInStackQueuedSpinLock(&device_conf->ref_lock, &lock_queue);
     {
         conf_ref = device_conf->ref;
-        if (conf_ref) {
+        if (conf_ref != NULL) {
             ++conf_ref->refcount;
         }
     }
@@ -360,33 +376,34 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_
 
     const PFORT_CONF_REF old_conf_ref = fort_conf_ref_take(device_conf);
 
+    if (old_conf_ref != NULL) {
+        old_conf_flags = old_conf_ref->conf.flags;
+    } else {
+        RtlZeroMemory(&old_conf_flags, sizeof(FORT_CONF_FLAGS));
+        old_conf_flags.prov_boot = fort_device_flag(device_conf, FORT_DEVICE_PROV_BOOT) != 0;
+    }
+
     KeAcquireInStackQueuedSpinLock(&device_conf->ref_lock, &lock_queue);
     {
-        device_conf->ref = conf_ref;
+        FORT_CONF_FLAGS conf_flags;
 
-        if (old_conf_ref == NULL) {
-            RtlZeroMemory(&old_conf_flags, sizeof(FORT_CONF_FLAGS));
-            old_conf_flags.prov_boot = fort_device_flag(device_conf, FORT_DEVICE_PROV_BOOT) != 0;
-        }
+        device_conf->ref = conf_ref;
 
         if (conf_ref != NULL) {
             PFORT_CONF conf = &conf_ref->conf;
-            const PFORT_CONF_FLAGS conf_flags = &conf->flags;
 
-            fort_device_flag_set(device_conf, FORT_DEVICE_PROV_BOOT, conf_flags->prov_boot);
-
-            device_conf->conf_flags = *conf_flags;
+            conf_flags = conf->flags;
+            fort_device_flag_set(device_conf, FORT_DEVICE_PROV_BOOT, conf_flags.prov_boot);
         } else {
-            RtlZeroMemory((void *) &device_conf->conf_flags, sizeof(FORT_CONF_FLAGS));
-
-            device_conf->conf_flags.prov_boot =
-                    fort_device_flag(device_conf, FORT_DEVICE_PROV_BOOT) != 0;
+            RtlZeroMemory((void *) &conf_flags, sizeof(FORT_CONF_FLAGS));
+            conf_flags.prov_boot = fort_device_flag(device_conf, FORT_DEVICE_PROV_BOOT) != 0;
         }
+
+        device_conf->conf_flags = conf_flags;
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
     if (old_conf_ref != NULL) {
-        old_conf_flags = old_conf_ref->conf.flags;
         fort_conf_ref_put(device_conf, old_conf_ref);
     }
 
@@ -428,41 +445,28 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_flags_set(
 
 FORT_API BOOL fort_conf_ref_period_update(PFORT_DEVICE_CONF device_conf, BOOL force, int *periods_n)
 {
-    FORT_TIME time;
-    BOOL res = FALSE;
-
-    /* Get current time */
-    {
-        TIME_FIELDS tf;
-        LARGE_INTEGER system_time, local_time;
-
-        KeQuerySystemTime(&system_time);
-        ExSystemTimeToLocalTime(&system_time, &local_time);
-        RtlTimeToTimeFields(&local_time, &tf);
-
-        time.hour = (UCHAR) tf.Hour;
-        time.minute = (UCHAR) tf.Minute;
-    }
-
     PFORT_CONF_REF conf_ref = fort_conf_ref_take(device_conf);
 
-    if (conf_ref != NULL) {
-        PFORT_CONF conf = &conf_ref->conf;
+    if (conf_ref == NULL)
+        return FALSE;
 
-        if (conf->app_periods_n != 0) {
-            const UINT16 period_bits = fort_conf_app_period_bits(conf, time, periods_n);
+    BOOL res = FALSE;
+    PFORT_CONF conf = &conf_ref->conf;
 
-            if (force || device_conf->conf_flags.group_bits != period_bits) {
-                device_conf->conf_flags.group_bits = period_bits;
+    if (conf->app_periods_n != 0) {
+        const FORT_TIME time = fort_current_time();
+        const UINT16 period_bits = fort_conf_app_period_bits(conf, time, periods_n);
 
-                fort_conf_app_perms_mask_init(conf, period_bits);
+        if (force || device_conf->conf_flags.group_bits != period_bits) {
+            device_conf->conf_flags.group_bits = period_bits;
 
-                res = TRUE;
-            }
+            fort_conf_app_perms_mask_init(conf, period_bits);
+
+            res = TRUE;
         }
-
-        fort_conf_ref_put(device_conf, conf_ref);
     }
+
+    fort_conf_ref_put(device_conf, conf_ref);
 
     return res;
 }

@@ -649,13 +649,14 @@ static NTSTATUS fort_callout_force_reauth(
     fort_prov_trans_begin(engine);
 
     /* Check provider filters */
+    BOOL prov_recreated = FALSE;
     if (old_conf_flags.prov_boot != conf_flags.prov_boot) {
         fort_prov_unregister(engine);
 
         if ((status = fort_prov_register(engine, conf_flags.prov_boot)))
             goto cleanup;
 
-        goto stat_prov;
+        prov_recreated = TRUE;
     }
 
     /* Check flow filter */
@@ -667,13 +668,12 @@ static NTSTATUS fort_callout_force_reauth(
                 fort_device_flag(&g_device->conf, FORT_DEVICE_FILTER_TRANSPORT) != 0;
         const BOOL filter_transport = (conf_flags.group_bits & filter_bits) != 0;
 
-        if (old_conf_flags.log_stat != conf_flags.log_stat
+        if (prov_recreated || old_conf_flags.log_stat != conf_flags.log_stat
                 || old_filter_transport != filter_transport) {
             fort_device_flag_set(&g_device->conf, FORT_DEVICE_FILTER_TRANSPORT, filter_transport);
 
             fort_prov_flow_unregister(engine);
 
-        stat_prov:
             if (conf_flags.log_stat) {
                 if ((status = fort_prov_flow_register(engine, filter_transport)))
                     goto cleanup;
