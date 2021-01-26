@@ -238,10 +238,10 @@ void ProgramsWindow::setupAppEditForm()
     // OK/Cancel
     auto buttonsLayout = new QHBoxLayout();
 
-    m_btEditOk = new QPushButton(QIcon(":/images/tick.png"), QString());
+    m_btEditOk = new QPushButton();
     m_btEditOk->setDefault(true);
 
-    m_btEditCancel = new QPushButton(QIcon(":/images/cancel.png"), QString());
+    m_btEditCancel = new QPushButton();
 
     buttonsLayout->addWidget(m_btEditOk, 1, Qt::AlignRight);
     buttonsLayout->addWidget(m_btEditCancel);

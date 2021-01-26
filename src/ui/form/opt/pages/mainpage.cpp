@@ -90,9 +90,9 @@ QLayout *MainPage::setupDialogButtons()
 
     buttonsLayout->addStretch();
 
-    m_btOk = new QPushButton(QIcon(":/images/tick.png"), QString());
-    m_btApply = new QPushButton(QIcon(":/images/accept.png"), QString());
-    m_btCancel = new QPushButton(QIcon(":/images/cancel.png"), QString());
+    m_btOk = new QPushButton();
+    m_btApply = new QPushButton();
+    m_btCancel = new QPushButton();
 
     connect(m_btOk, &QAbstractButton::clicked, ctrl(), &OptionsController::saveChanges);
     connect(m_btApply, &QAbstractButton::clicked, ctrl(), &OptionsController::applyChanges);

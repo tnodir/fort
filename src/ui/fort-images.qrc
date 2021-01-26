@@ -1,6 +1,5 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
-    <file>images/accept.png</file>
     <file>images/application.png</file>
     <file>images/application-window-96.png</file>
     <file>images/application_add.png</file>
@@ -50,7 +49,6 @@
     <file>images/shield.png</file>
     <file>images/sheild-96.png</file>
     <file>images/stop.png</file>
-    <file>images/tick.png</file>
     <file>images/windows-48.png</file>
     <file>images/world.png</file>
     <file>images/world_link.png</file>
