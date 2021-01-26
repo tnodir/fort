@@ -4,7 +4,7 @@
 #include <QImage>
 #include <QObject>
 
-QT_FORWARD_DECLARE_CLASS(AppInfo)
+class AppInfo;
 
 class AppUtil
 {

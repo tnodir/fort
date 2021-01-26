@@ -9,13 +9,13 @@ QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QLineEdit)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 
-QT_FORWARD_DECLARE_CLASS(ConfManager)
-QT_FORWARD_DECLARE_CLASS(FortManager)
-QT_FORWARD_DECLARE_CLASS(FortSettings)
-QT_FORWARD_DECLARE_CLASS(TableView)
-QT_FORWARD_DECLARE_CLASS(TaskManager)
-QT_FORWARD_DECLARE_CLASS(ZoneListModel)
-QT_FORWARD_DECLARE_CLASS(ZonesController)
+class ConfManager;
+class FortManager;
+class FortSettings;
+class TableView;
+class TaskManager;
+class ZoneListModel;
+class ZonesController;
 
 QT_FORWARD_DECLARE_STRUCT(ZoneRow)
 

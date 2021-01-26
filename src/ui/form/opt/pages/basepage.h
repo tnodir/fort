@@ -14,14 +14,14 @@ QT_FORWARD_DECLARE_CLASS(QMenu)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QTabBar)
 
-QT_FORWARD_DECLARE_CLASS(DriverManager)
-QT_FORWARD_DECLARE_CLASS(FirewallConf)
-QT_FORWARD_DECLARE_CLASS(FortManager)
-QT_FORWARD_DECLARE_CLASS(FortSettings)
-QT_FORWARD_DECLARE_CLASS(OptionsController)
-QT_FORWARD_DECLARE_CLASS(TaskManager)
-QT_FORWARD_DECLARE_CLASS(TranslationManager)
-QT_FORWARD_DECLARE_CLASS(ZoneListModel)
+class DriverManager;
+class FirewallConf;
+class FortManager;
+class FortSettings;
+class OptionsController;
+class TaskManager;
+class TranslationManager;
+class ZoneListModel;
 
 class BasePage : public QFrame
 {

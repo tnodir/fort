@@ -5,10 +5,10 @@
 
 QT_FORWARD_DECLARE_CLASS(QTableView)
 
-QT_FORWARD_DECLARE_CLASS(CheckSpinCombo)
-QT_FORWARD_DECLARE_CLASS(TableView)
-QT_FORWARD_DECLARE_CLASS(TaskInfo)
-QT_FORWARD_DECLARE_CLASS(TaskListModel)
+class CheckSpinCombo;
+class TableView;
+class TaskInfo;
+class TaskListModel;
 
 class SchedulePage : public BasePage
 {

@@ -6,10 +6,10 @@
 
 #include "logentry.h"
 
-QT_FORWARD_DECLARE_CLASS(LogEntryBlocked)
-QT_FORWARD_DECLARE_CLASS(LogEntryProcNew)
-QT_FORWARD_DECLARE_CLASS(LogEntryStatTraf)
-QT_FORWARD_DECLARE_CLASS(LogEntryTime)
+class LogEntryBlocked;
+class LogEntryProcNew;
+class LogEntryStatTraf;
+class LogEntryTime;
 
 class LogBuffer : public QObject
 {

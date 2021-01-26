@@ -6,14 +6,14 @@
 QT_FORWARD_DECLARE_CLASS(QSplitter)
 QT_FORWARD_DECLARE_CLASS(QTableView)
 
-QT_FORWARD_DECLARE_CLASS(AppInfoCache)
-QT_FORWARD_DECLARE_CLASS(AppStatModel)
-QT_FORWARD_DECLARE_CLASS(CheckTimePeriod)
-QT_FORWARD_DECLARE_CLASS(LabelColor)
-QT_FORWARD_DECLARE_CLASS(LabelSpin)
-QT_FORWARD_DECLARE_CLASS(LabelSpinCombo)
-QT_FORWARD_DECLARE_CLASS(ListView)
-QT_FORWARD_DECLARE_CLASS(TrafListModel)
+class AppInfoCache;
+class AppStatModel;
+class CheckTimePeriod;
+class LabelColor;
+class LabelSpin;
+class LabelSpinCombo;
+class ListView;
+class TrafListModel;
 
 class StatisticsPage : public BasePage
 {

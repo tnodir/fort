@@ -7,7 +7,7 @@
 #include "../worker/workermanager.h"
 #include "appinfo.h"
 
-QT_FORWARD_DECLARE_CLASS(SqliteDb)
+class SqliteDb;
 
 class AppInfoManager : public WorkerManager
 {

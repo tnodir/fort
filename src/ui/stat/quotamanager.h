@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-QT_FORWARD_DECLARE_CLASS(FortSettings)
+class FortSettings;
 
 class QuotaManager : public QObject
 {

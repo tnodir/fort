@@ -7,7 +7,7 @@ QT_FORWARD_DECLARE_CLASS(QBoxLayout)
 QT_FORWARD_DECLARE_CLASS(QPlainTextEdit)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 
-QT_FORWARD_DECLARE_CLASS(TextArea2Splitter)
+class TextArea2Splitter;
 
 class TextArea2SplitterHandle : public QSplitterHandle
 {

@@ -7,8 +7,8 @@
 
 #include "../util/classhelpers.h"
 
-QT_FORWARD_DECLARE_CLASS(ControlWorker)
-QT_FORWARD_DECLARE_CLASS(FortManager)
+class ControlWorker;
+class FortManager;
 
 class ControlManager : public QObject
 {

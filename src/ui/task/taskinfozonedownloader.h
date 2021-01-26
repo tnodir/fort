@@ -5,9 +5,9 @@
 
 #include "taskinfo.h"
 
-QT_FORWARD_DECLARE_CLASS(FortManager)
-QT_FORWARD_DECLARE_CLASS(TaskZoneDownloader)
-QT_FORWARD_DECLARE_CLASS(ZoneListModel)
+class FortManager;
+class TaskZoneDownloader;
+class ZoneListModel;
 
 class TaskInfoZoneDownloader : public TaskInfo
 {

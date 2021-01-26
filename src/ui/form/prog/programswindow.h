@@ -12,15 +12,15 @@ QT_FORWARD_DECLARE_CLASS(QLineEdit)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QRadioButton)
 
-QT_FORWARD_DECLARE_CLASS(AppInfoCache)
-QT_FORWARD_DECLARE_CLASS(AppListModel)
-QT_FORWARD_DECLARE_CLASS(CheckSpinCombo)
-QT_FORWARD_DECLARE_CLASS(ConfManager)
-QT_FORWARD_DECLARE_CLASS(FirewallConf)
-QT_FORWARD_DECLARE_CLASS(FortManager)
-QT_FORWARD_DECLARE_CLASS(FortSettings)
-QT_FORWARD_DECLARE_CLASS(ProgramsController)
-QT_FORWARD_DECLARE_CLASS(TableView)
+class AppInfoCache;
+class AppListModel;
+class CheckSpinCombo;
+class ConfManager;
+class FirewallConf;
+class FortManager;
+class FortSettings;
+class ProgramsController;
+class TableView;
 
 QT_FORWARD_DECLARE_STRUCT(AppRow)
 

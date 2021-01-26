@@ -4,7 +4,7 @@
 #include <QAction>
 #include <QList>
 
-QT_FORWARD_DECLARE_CLASS(NativeEventFilter)
+class NativeEventFilter;
 
 class HotKeyManager : public QObject
 {

@@ -7,8 +7,8 @@
 
 #include "appinfo.h"
 
-QT_FORWARD_DECLARE_CLASS(AppIconProvider)
-QT_FORWARD_DECLARE_CLASS(AppInfoManager)
+class AppIconProvider;
+class AppInfoManager;
 
 class AppInfoCache : public QObject
 {

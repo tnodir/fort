@@ -8,26 +8,26 @@
 
 QT_FORWARD_DECLARE_CLASS(QSystemTrayIcon)
 
-QT_FORWARD_DECLARE_CLASS(AppInfoCache)
-QT_FORWARD_DECLARE_CLASS(AppListModel)
-QT_FORWARD_DECLARE_CLASS(AppStatModel)
-QT_FORWARD_DECLARE_CLASS(ConfManager)
-QT_FORWARD_DECLARE_CLASS(DriverManager)
-QT_FORWARD_DECLARE_CLASS(EnvManager)
-QT_FORWARD_DECLARE_CLASS(FirewallConf)
-QT_FORWARD_DECLARE_CLASS(FortSettings)
-QT_FORWARD_DECLARE_CLASS(GraphWindow)
-QT_FORWARD_DECLARE_CLASS(HotKeyManager)
-QT_FORWARD_DECLARE_CLASS(LogManager)
-QT_FORWARD_DECLARE_CLASS(NativeEventFilter)
-QT_FORWARD_DECLARE_CLASS(OptionsWindow)
-QT_FORWARD_DECLARE_CLASS(ProgramsWindow)
-QT_FORWARD_DECLARE_CLASS(QuotaManager)
-QT_FORWARD_DECLARE_CLASS(StatManager)
-QT_FORWARD_DECLARE_CLASS(TaskManager)
-QT_FORWARD_DECLARE_CLASS(WidgetWindowStateWatcher)
-QT_FORWARD_DECLARE_CLASS(ZoneListModel)
-QT_FORWARD_DECLARE_CLASS(ZonesWindow)
+class AppInfoCache;
+class AppListModel;
+class AppStatModel;
+class ConfManager;
+class DriverManager;
+class EnvManager;
+class FirewallConf;
+class FortSettings;
+class GraphWindow;
+class HotKeyManager;
+class LogManager;
+class NativeEventFilter;
+class OptionsWindow;
+class ProgramsWindow;
+class QuotaManager;
+class StatManager;
+class TaskManager;
+class WidgetWindowStateWatcher;
+class ZoneListModel;
+class ZonesWindow;
 
 class FortManager : public QObject
 {

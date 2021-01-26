@@ -5,9 +5,9 @@
 
 #include "../util/model/tablesqlmodel.h"
 
-QT_FORWARD_DECLARE_CLASS(ConfManager)
-QT_FORWARD_DECLARE_CLASS(SqliteDb)
-QT_FORWARD_DECLARE_CLASS(ZoneSourceWrapper)
+class ConfManager;
+class SqliteDb;
+class ZoneSourceWrapper;
 
 struct ZoneRow : TableRow
 {

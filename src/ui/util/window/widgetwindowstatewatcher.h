@@ -3,7 +3,7 @@
 
 #include "basewindowstatewatcher.h"
 
-QT_FORWARD_DECLARE_CLASS(WidgetWindow)
+class WidgetWindow;
 
 class WidgetWindowStateWatcher : public BaseWindowStateWatcher
 {

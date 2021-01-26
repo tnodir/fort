@@ -3,8 +3,8 @@
 
 #include "taskinfo.h"
 
-QT_FORWARD_DECLARE_CLASS(FortManager)
-QT_FORWARD_DECLARE_CLASS(TaskUpdateChecker)
+class FortManager;
+class TaskUpdateChecker;
 
 class TaskInfoUpdateChecker : public TaskInfo
 {

@@ -9,11 +9,11 @@
 
 #include "addressrange.h"
 
-QT_FORWARD_DECLARE_CLASS(AddressGroup)
-QT_FORWARD_DECLARE_CLASS(AppGroup)
-QT_FORWARD_DECLARE_CLASS(ConfAppsWalker)
-QT_FORWARD_DECLARE_CLASS(EnvManager)
-QT_FORWARD_DECLARE_CLASS(FirewallConf)
+class AddressGroup;
+class AppGroup;
+class ConfAppsWalker;
+class EnvManager;
+class FirewallConf;
 
 QT_FORWARD_DECLARE_STRUCT(fort_traf)
 

@@ -3,12 +3,12 @@
 
 #include "basepage.h"
 
-QT_FORWARD_DECLARE_CLASS(AppGroup)
-QT_FORWARD_DECLARE_CLASS(AppsColumn)
-QT_FORWARD_DECLARE_CLASS(CheckSpinCombo)
-QT_FORWARD_DECLARE_CLASS(CheckTimePeriod)
-QT_FORWARD_DECLARE_CLASS(TabBar)
-QT_FORWARD_DECLARE_CLASS(TextArea2Splitter)
+class AppGroup;
+class AppsColumn;
+class CheckSpinCombo;
+class CheckTimePeriod;
+class TabBar;
+class TextArea2Splitter;
 
 class ApplicationsPage : public BasePage
 {

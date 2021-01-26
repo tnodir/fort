@@ -7,14 +7,14 @@
 #include "../util/classhelpers.h"
 #include "../util/conf/confappswalker.h"
 
-QT_FORWARD_DECLARE_CLASS(DriverManager)
-QT_FORWARD_DECLARE_CLASS(EnvManager)
-QT_FORWARD_DECLARE_CLASS(FirewallConf)
-QT_FORWARD_DECLARE_CLASS(FortManager)
-QT_FORWARD_DECLARE_CLASS(FortSettings)
-QT_FORWARD_DECLARE_CLASS(SqliteDb)
-QT_FORWARD_DECLARE_CLASS(SqliteStmt)
-QT_FORWARD_DECLARE_CLASS(TaskInfo)
+class DriverManager;
+class EnvManager;
+class FirewallConf;
+class FortManager;
+class FortSettings;
+class SqliteDb;
+class SqliteStmt;
+class TaskInfo;
 
 class ConfManager : public QObject, public ConfAppsWalker
 {

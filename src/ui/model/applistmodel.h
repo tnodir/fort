@@ -5,12 +5,12 @@
 
 #include "../util/model/tablesqlmodel.h"
 
-QT_FORWARD_DECLARE_CLASS(AppGroup)
-QT_FORWARD_DECLARE_CLASS(AppInfoCache)
-QT_FORWARD_DECLARE_CLASS(ConfManager)
-QT_FORWARD_DECLARE_CLASS(FirewallConf)
-QT_FORWARD_DECLARE_CLASS(LogEntryBlocked)
-QT_FORWARD_DECLARE_CLASS(SqliteDb)
+class AppGroup;
+class AppInfoCache;
+class ConfManager;
+class FirewallConf;
+class LogEntryBlocked;
+class SqliteDb;
 
 struct AppRow : TableRow
 {

@@ -10,8 +10,8 @@
 
 #include "../classhelpers.h"
 
-QT_FORWARD_DECLARE_CLASS(WorkerJob)
-QT_FORWARD_DECLARE_CLASS(WorkerObject)
+class WorkerJob;
+class WorkerObject;
 
 class WorkerManager : public QObject
 {

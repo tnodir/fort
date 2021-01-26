@@ -4,8 +4,8 @@
 #include <QObject>
 #include <QRunnable>
 
-QT_FORWARD_DECLARE_CLASS(WorkerJob)
-QT_FORWARD_DECLARE_CLASS(WorkerManager)
+class WorkerJob;
+class WorkerManager;
 
 class WorkerObject : public QRunnable
 {

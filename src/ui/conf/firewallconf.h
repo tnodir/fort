@@ -4,8 +4,8 @@
 #include <QObject>
 #include <QVariant>
 
-QT_FORWARD_DECLARE_CLASS(AddressGroup)
-QT_FORWARD_DECLARE_CLASS(AppGroup)
+class AddressGroup;
+class AppGroup;
 
 #define DEFAULT_APP_GROUP_BITS         0xFFFF
 #define DEFAULT_MONTH_START            1

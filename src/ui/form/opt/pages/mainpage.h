@@ -5,11 +5,11 @@
 
 QT_FORWARD_DECLARE_CLASS(QTabWidget)
 
-QT_FORWARD_DECLARE_CLASS(AddressesPage)
-QT_FORWARD_DECLARE_CLASS(ApplicationsPage)
-QT_FORWARD_DECLARE_CLASS(OptionsPage)
-QT_FORWARD_DECLARE_CLASS(SchedulePage)
-QT_FORWARD_DECLARE_CLASS(StatisticsPage)
+class AddressesPage;
+class ApplicationsPage;
+class OptionsPage;
+class SchedulePage;
+class StatisticsPage;
 
 class MainPage : public BasePage
 {

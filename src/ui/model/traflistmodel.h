@@ -3,7 +3,7 @@
 
 #include "../util/model/tableitemmodel.h"
 
-QT_FORWARD_DECLARE_CLASS(StatManager)
+class StatManager;
 
 struct TrafficRow
 {

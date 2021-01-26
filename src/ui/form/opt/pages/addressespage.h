@@ -3,9 +3,9 @@
 
 #include "basepage.h"
 
-QT_FORWARD_DECLARE_CLASS(AddressGroup)
-QT_FORWARD_DECLARE_CLASS(AddressesColumn)
-QT_FORWARD_DECLARE_CLASS(TextArea2Splitter)
+class AddressGroup;
+class AddressesColumn;
+class TextArea2Splitter;
 
 class AddressesPage : public BasePage
 {

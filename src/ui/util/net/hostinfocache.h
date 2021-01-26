@@ -7,7 +7,7 @@
 
 #include "hostinfo.h"
 
-QT_FORWARD_DECLARE_CLASS(HostInfoManager)
+class HostInfoManager;
 
 class HostInfoCache : public QObject
 {

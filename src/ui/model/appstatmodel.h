@@ -3,11 +3,11 @@
 
 #include "../util/model/stringlistmodel.h"
 
-QT_FORWARD_DECLARE_CLASS(AppInfoCache)
-QT_FORWARD_DECLARE_CLASS(LogEntryProcNew)
-QT_FORWARD_DECLARE_CLASS(LogEntryStatTraf)
-QT_FORWARD_DECLARE_CLASS(StatManager)
-QT_FORWARD_DECLARE_CLASS(TrafListModel)
+class AppInfoCache;
+class LogEntryProcNew;
+class LogEntryStatTraf;
+class StatManager;
+class TrafListModel;
 
 class AppStatModel : public StringListModel
 {

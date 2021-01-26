@@ -3,9 +3,9 @@
 
 #include "../../util/window/widgetwindow.h"
 
-QT_FORWARD_DECLARE_CLASS(FortManager)
-QT_FORWARD_DECLARE_CLASS(MainPage)
-QT_FORWARD_DECLARE_CLASS(OptionsController)
+class FortManager;
+class MainPage;
+class OptionsController;
 
 class OptionsWindow : public WidgetWindow
 {

@@ -5,11 +5,11 @@
 
 #include "../util/classhelpers.h"
 
-QT_FORWARD_DECLARE_CLASS(ConfManager)
-QT_FORWARD_DECLARE_CLASS(Device)
-QT_FORWARD_DECLARE_CLASS(DriverWorker)
-QT_FORWARD_DECLARE_CLASS(EnvManager)
-QT_FORWARD_DECLARE_CLASS(FirewallConf)
+class ConfManager;
+class Device;
+class DriverWorker;
+class EnvManager;
+class FirewallConf;
 
 class DriverManager : public QObject
 {

@@ -6,9 +6,9 @@
 
 #include "../util/classhelpers.h"
 
-QT_FORWARD_DECLARE_CLASS(FortManager)
-QT_FORWARD_DECLARE_CLASS(TaskManager)
-QT_FORWARD_DECLARE_CLASS(TaskWorker)
+class FortManager;
+class TaskManager;
+class TaskWorker;
 
 class TaskInfo : public QObject
 {

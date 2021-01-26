@@ -3,7 +3,7 @@
 
 #include <QSplitter>
 
-QT_FORWARD_DECLARE_CLASS(TextArea2SplitterHandle)
+class TextArea2SplitterHandle;
 
 class TextArea2Splitter : public QSplitter
 {

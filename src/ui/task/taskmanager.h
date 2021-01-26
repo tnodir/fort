@@ -4,12 +4,12 @@
 #include <QObject>
 #include <QTimer>
 
-QT_FORWARD_DECLARE_CLASS(ConfManager)
-QT_FORWARD_DECLARE_CLASS(FortManager)
-QT_FORWARD_DECLARE_CLASS(FortSettings)
-QT_FORWARD_DECLARE_CLASS(TaskInfo)
-QT_FORWARD_DECLARE_CLASS(TaskInfoUpdateChecker)
-QT_FORWARD_DECLARE_CLASS(TaskInfoZoneDownloader)
+class ConfManager;
+class FortManager;
+class FortSettings;
+class TaskInfo;
+class TaskInfoUpdateChecker;
+class TaskInfoZoneDownloader;
 
 class TaskManager : public QObject
 {

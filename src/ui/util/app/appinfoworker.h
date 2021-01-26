@@ -3,8 +3,8 @@
 
 #include "../worker/workerobject.h"
 
-QT_FORWARD_DECLARE_CLASS(AppInfo)
-QT_FORWARD_DECLARE_CLASS(AppInfoManager)
+class AppInfo;
+class AppInfoManager;
 
 class AppInfoWorker : public WorkerObject
 {

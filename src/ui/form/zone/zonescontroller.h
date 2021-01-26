@@ -3,11 +3,11 @@
 
 #include <QObject>
 
-QT_FORWARD_DECLARE_CLASS(ZoneListModel)
-QT_FORWARD_DECLARE_CLASS(ConfManager)
-QT_FORWARD_DECLARE_CLASS(FortManager)
-QT_FORWARD_DECLARE_CLASS(FortSettings)
-QT_FORWARD_DECLARE_CLASS(TranslationManager)
+class ZoneListModel;
+class ConfManager;
+class FortManager;
+class FortSettings;
+class TranslationManager;
 
 class ZonesController : public QObject
 {

@@ -6,10 +6,10 @@
 
 #include "../../util/classhelpers.h"
 
-QT_FORWARD_DECLARE_STRUCT(sqlite3)
+struct sqlite3;
 
-QT_FORWARD_DECLARE_CLASS(SqliteDb)
-QT_FORWARD_DECLARE_CLASS(SqliteStmt)
+class SqliteDb;
+class SqliteStmt;
 
 using SQLITEDB_MIGRATE_FUNC = bool (*)(SqliteDb *db, int version, bool isNewDb, void *context);
 

@@ -5,9 +5,9 @@
 
 #include "../../util/window/widgetwindow.h"
 
-QT_FORWARD_DECLARE_CLASS(FortSettings)
-QT_FORWARD_DECLARE_CLASS(GraphPlot)
-QT_FORWARD_DECLARE_CLASS(QCPBars)
+class FortSettings;
+class GraphPlot;
+class QCPBars;
 
 class GraphWindow : public WidgetWindow
 {

@@ -5,8 +5,8 @@
 
 #include "../util/model/tableitemmodel.h"
 
-QT_FORWARD_DECLARE_CLASS(TaskInfo)
-QT_FORWARD_DECLARE_CLASS(TaskManager)
+class TaskInfo;
+class TaskManager;
 
 struct TaskRow
 {

@@ -3,12 +3,12 @@
 
 #include <QObject>
 
-QT_FORWARD_DECLARE_CLASS(AppListModel)
-QT_FORWARD_DECLARE_CLASS(ConfManager)
-QT_FORWARD_DECLARE_CLASS(FirewallConf)
-QT_FORWARD_DECLARE_CLASS(FortManager)
-QT_FORWARD_DECLARE_CLASS(FortSettings)
-QT_FORWARD_DECLARE_CLASS(TranslationManager)
+class AppListModel;
+class ConfManager;
+class FirewallConf;
+class FortManager;
+class FortSettings;
+class TranslationManager;
 
 class ProgramsController : public QObject
 {

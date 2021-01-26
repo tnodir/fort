@@ -3,7 +3,7 @@
 
 #include "taskworker.h"
 
-QT_FORWARD_DECLARE_CLASS(NetDownloader)
+class NetDownloader;
 
 class TaskDownloader : public TaskWorker
 {

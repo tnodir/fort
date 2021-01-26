@@ -3,7 +3,7 @@
 
 #include "tableitemmodel.h"
 
-QT_FORWARD_DECLARE_CLASS(SqliteDb)
+class SqliteDb;
 
 struct TableRow
 {

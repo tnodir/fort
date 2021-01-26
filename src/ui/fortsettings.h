@@ -9,7 +9,7 @@
 
 #include "../version.h"
 
-QT_FORWARD_DECLARE_CLASS(FirewallConf)
+class FirewallConf;
 
 class FortSettings : public QObject
 {

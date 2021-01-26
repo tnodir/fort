@@ -5,7 +5,7 @@
 
 QT_FORWARD_DECLARE_CLASS(QLabel)
 
-QT_FORWARD_DECLARE_CLASS(PlainTextEdit)
+class PlainTextEdit;
 
 class AppsColumn : public QWidget
 {
