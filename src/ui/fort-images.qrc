@@ -4,7 +4,6 @@
     <file>images/application_cascade.png</file>
     <file>images/application_double.png</file>
     <file>images/application_error.png</file>
-    <file>images/cancel.png</file>
     <file>images/chart_bar.png</file>
     <file>images/chart_line.png</file>
     <file>images/clock.png</file>
@@ -28,7 +27,6 @@
     <file>images/map_edit.png</file>
     <file>images/map_magnify.png</file>
     <file>images/page_copy.png</file>
-    <file>images/run.png</file>
     <file>images/server_compressed.png</file>
     <file>images/server_go.png</file>
     <file>images/shield.png</file>

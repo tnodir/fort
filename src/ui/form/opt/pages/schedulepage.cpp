@@ -147,9 +147,10 @@ void SchedulePage::setupTaskDetails()
 
     setupTaskInterval();
 
-    m_btTaskRun = ControlUtil::createButton(":/images/run.png", [&] { currentTaskInfo()->run(); });
-    m_btTaskAbort =
-            ControlUtil::createButton(":/images/cancel.png", [&] { currentTaskInfo()->abort(); });
+    m_btTaskRun =
+            ControlUtil::createButton(":/icons/sign-sync.png", [&] { currentTaskInfo()->run(); });
+    m_btTaskAbort = ControlUtil::createButton(
+            ":/icons/sign-error.png", [&] { currentTaskInfo()->abort(); });
 
     layout->addWidget(m_cscTaskInterval, 1);
     layout->addWidget(m_btTaskRun);
