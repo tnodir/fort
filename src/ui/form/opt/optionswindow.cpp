@@ -62,7 +62,7 @@ void OptionsWindow::setupUi()
     this->setFont(QFont("Tahoma", 9));
 
     // Icon
-    this->setWindowIcon(GuiUtil::overlayIcon(":/images/sheild-96.png", ":/images/cog.png"));
+    this->setWindowIcon(GuiUtil::overlayIcon(":/images/sheild-96.png", ":/icons/cog.png"));
 
     // Size
     this->resize(1024, 768);

@@ -756,7 +756,7 @@ void FortManager::createTrayMenu()
     addHotKey(m_programsAction, settings()->hotKeyPrograms(), hotKeyEnabled);
 
     m_optionsAction =
-            addAction(menu, QIcon(":/images/cog.png"), QString(), this, SLOT(showOptionsWindow()));
+            addAction(menu, QIcon(":/icons/cog.png"), QString(), this, SLOT(showOptionsWindow()));
     addHotKey(m_optionsAction, settings()->hotKeyOptions(), hotKeyEnabled);
 
     m_zonesAction =

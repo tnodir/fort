@@ -53,7 +53,7 @@ void MainPage::setupUi()
     m_statisticsPage = new StatisticsPage(ctrl());
     m_schedulePage = new SchedulePage(ctrl());
 
-    m_tabBar->addTab(m_optionsPage, QIcon(":/images/cog.png"), QString());
+    m_tabBar->addTab(m_optionsPage, QIcon(":/icons/cog.png"), QString());
     m_tabBar->addTab(m_addressesPage, QIcon(":/images/link.png"), QString());
     m_tabBar->addTab(m_applicationsPage, QIcon(":/images/application_double.png"), QString());
     m_tabBar->addTab(m_statisticsPage, QIcon(":/images/chart_line.png"), QString());

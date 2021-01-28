@@ -399,7 +399,7 @@ void ProgramsWindow::setupLogOptions()
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
-    m_btLogOptions = new QPushButton(QIcon(":/images/application_key.png"), QString());
+    m_btLogOptions = new QPushButton(QIcon(":/icons/wrench.png"), QString());
     m_btLogOptions->setMenu(menu);
 }
 

@@ -377,7 +377,7 @@ void ApplicationsPage::setupGroupOptions()
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
-    m_btGroupOptions = new QPushButton(QIcon(":/images/application_key.png"), QString());
+    m_btGroupOptions = new QPushButton(QIcon(":/icons/wrench.png"), QString());
     m_btGroupOptions->setMenu(menu);
 }
 
