@@ -171,7 +171,7 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
                 return appRow.blocked ? QIcon(":/icons/sign-ban.png")
                                       : QIcon(":/icons/sign-check.png");
             case 3:
-                return appRow.endTime.isNull() ? QVariant() : QIcon(":/images/clock_stop.png");
+                return appRow.endTime.isNull() ? QVariant() : QIcon(":/icons/clock.png");
             }
         }
 

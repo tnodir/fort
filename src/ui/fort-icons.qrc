@@ -1,5 +1,6 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
+    <file>icons/clock.png</file>
     <file>icons/cog.png</file>
     <file>icons/file-link.png</file>
     <file>icons/floppy.png</file>
