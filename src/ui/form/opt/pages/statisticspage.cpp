@@ -442,7 +442,7 @@ void StatisticsPage::setupTrafOptionsMenu()
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
-    m_btTrafOptions = new QPushButton(QIcon(":/images/database_save.png"), QString());
+    m_btTrafOptions = new QPushButton(QIcon(":/icons/wrench.png"), QString());
     m_btTrafOptions->setMenu(menu);
 }
 

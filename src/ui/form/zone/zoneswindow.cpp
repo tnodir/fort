@@ -253,7 +253,7 @@ QLayout *ZonesWindow::setupHeader()
     m_btEdit->setMenu(editMenu);
 
     // Save As Text
-    m_btSaveAsText = ControlUtil::createButton(":/images/database_save.png", [&] {
+    m_btSaveAsText = ControlUtil::createButton(":/icons/floppy.png", [&] {
         const auto filePath = ControlUtil::getSaveFileName(
                 m_btSaveAsText->text(), tr("Text files (*.txt);;All files (*.*)"));
 
