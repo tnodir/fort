@@ -177,7 +177,7 @@ void ProgramsWindow::setupAppEditForm()
 
     m_editPath = new QLineEdit();
 
-    m_btSelectFile = ControlUtil::createLinkButton(":/images/folder_explore.png");
+    m_btSelectFile = ControlUtil::createLinkButton(":/icons/folder.png");
 
     pathLayout->addWidget(m_editPath);
     pathLayout->addWidget(m_btSelectFile);
