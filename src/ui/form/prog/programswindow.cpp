@@ -335,13 +335,13 @@ QLayout *ProgramsWindow::setupHeader()
 
     editMenu->addSeparator();
 
-    m_actAddApp = editMenu->addAction(QIcon(":/images/application_add.png"), QString());
+    m_actAddApp = editMenu->addAction(QIcon(":/icons/sign-add.png"), QString());
     m_actAddApp->setShortcut(Qt::Key_Plus);
 
-    m_actEditApp = editMenu->addAction(QIcon(":/images/application_edit.png"), QString());
+    m_actEditApp = editMenu->addAction(QIcon(":/icons/pencil.png"), QString());
     m_actEditApp->setShortcut(Qt::Key_Enter);
 
-    m_actRemoveApp = editMenu->addAction(QIcon(":/images/application_delete.png"), QString());
+    m_actRemoveApp = editMenu->addAction(QIcon(":/icons/sign-delete.png"), QString());
     m_actRemoveApp->setShortcut(Qt::Key_Delete);
 
     editMenu->addSeparator();
@@ -364,7 +364,7 @@ QLayout *ProgramsWindow::setupHeader()
         }
     });
 
-    m_btEdit = new QPushButton(QIcon(":/images/application_edit.png"), QString());
+    m_btEdit = new QPushButton(QIcon(":/icons/pencil.png"), QString());
     m_btEdit->setMenu(editMenu);
 
     // Allow/Block

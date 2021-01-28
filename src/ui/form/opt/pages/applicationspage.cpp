@@ -181,7 +181,7 @@ QLayout *ApplicationsPage::setupHeader()
 
 void ApplicationsPage::setupAddGroup()
 {
-    m_btAddGroup = ControlUtil::createButton(":/images/application_add.png", [&] {
+    m_btAddGroup = ControlUtil::createButton(":/icons/sign-add.png", [&] {
         const auto text = m_editGroupName->text();
         if (text.isEmpty()) {
             m_editGroupName->setFocus();
@@ -206,7 +206,7 @@ void ApplicationsPage::setupAddGroup()
 
 void ApplicationsPage::setupRenameGroup()
 {
-    m_btRenameGroup = ControlUtil::createButton(":/images/application_edit.png", [&] {
+    m_btRenameGroup = ControlUtil::createButton(":/icons/pencil.png", [&] {
         const auto text = m_editGroupName->text();
         if (text.isEmpty()) {
             m_editGroupName->setFocus();

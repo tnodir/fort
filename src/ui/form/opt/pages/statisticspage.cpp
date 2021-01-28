@@ -289,8 +289,8 @@ QLayout *StatisticsPage::setupHeader()
 {
     auto layout = new QHBoxLayout();
 
-    m_btRefresh = ControlUtil::createButton(
-            ":/images/arrow_refresh.png", [&] { trafListModel()->reset(); });
+    m_btRefresh =
+            ControlUtil::createButton(":/icons/sign-sync.png", [&] { trafListModel()->reset(); });
 
     setupClearMenu();
     setupTrafUnits();
@@ -313,7 +313,7 @@ void StatisticsPage::setupClearMenu()
 {
     auto menu = new QMenu(this);
 
-    m_actRemoveApp = menu->addAction(QIcon(":/images/application_delete.png"), QString());
+    m_actRemoveApp = menu->addAction(QIcon(":/icons/sign-delete.png"), QString());
     m_actRemoveApp->setShortcut(Qt::Key_Delete);
 
     m_actResetTotal = menu->addAction(QString());
