@@ -282,7 +282,6 @@ void ApplicationsPage::setupTabBar()
 int ApplicationsPage::addTab(const QString &text)
 {
     const int tabIndex = m_tabBar->addTab(text);
-    m_tabBar->setTabIcon(tabIndex, QIcon(":/images/application_double.png"));
     return tabIndex;
 }
 

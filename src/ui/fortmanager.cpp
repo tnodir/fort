@@ -752,8 +752,8 @@ void FortManager::createTrayMenu()
 
     QMenu *menu = new QMenu(&m_window);
 
-    m_programsAction = addAction(menu, QIcon(":/images/application_cascade.png"), QString(), this,
-            SLOT(showProgramsWindow()));
+    m_programsAction = addAction(
+            menu, QIcon(":/icons/window-system.png"), QString(), this, SLOT(showProgramsWindow()));
     addHotKey(m_programsAction, settings()->hotKeyPrograms(), hotKeyEnabled);
 
     m_optionsAction =
@@ -788,8 +788,8 @@ void FortManager::createTrayMenu()
     m_appGroupActions.clear();
     int appGroupIndex = 0;
     for (const AppGroup *appGroup : conf()->appGroups()) {
-        QAction *a = addAction(menu, QIcon(":/images/application_double.png"),
-                appGroup->menuLabel(), this, SLOT(saveTrayFlags()), true);
+        QAction *a =
+                addAction(menu, QIcon(), appGroup->menuLabel(), this, SLOT(saveTrayFlags()), true);
 
         const QString shortcutText =
                 settings()->hotKeyAppGroupModifiers() + "+F" + QString::number(++appGroupIndex);

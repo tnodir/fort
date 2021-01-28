@@ -1,9 +1,6 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
     <file>images/application-window-96.png</file>
-    <file>images/application_cascade.png</file>
-    <file>images/application_double.png</file>
-    <file>images/application_error.png</file>
     <file>images/chart_bar.png</file>
     <file>images/chart_line.png</file>
     <file>images/clock.png</file>
