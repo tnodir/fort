@@ -1,6 +1,9 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
+    <file>icons/puzzle.png</file>
     <file>icons/sign-ban.png</file>
     <file>icons/sign-check.png</file>
+    <file>icons/sign-error.png</file>
+    <file>icons/sign-warning.png</file>
 </qresource>
 </RCC>

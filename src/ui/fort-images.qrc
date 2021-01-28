@@ -1,6 +1,5 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
-    <file>images/application.png</file>
     <file>images/application-window-96.png</file>
     <file>images/application_add.png</file>
     <file>images/application_cascade.png</file>
@@ -39,9 +38,6 @@
     <file>images/map_edit.png</file>
     <file>images/map_magnify.png</file>
     <file>images/page_copy.png</file>
-    <file>images/plugin.png</file>
-    <file>images/plugin_disabled.png</file>
-    <file>images/plugin_error.png</file>
     <file>images/run.png</file>
     <file>images/server_compressed.png</file>
     <file>images/server_go.png</file>

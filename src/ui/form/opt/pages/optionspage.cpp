@@ -302,14 +302,13 @@ void OptionsPage::setupDriverBox()
 void OptionsPage::setupDriverIcon()
 {
     m_iconDriver = ControlUtil::createLabel();
+    m_iconDriver->setScaledContents(true);
+    m_iconDriver->setMaximumSize(16, 16);
 
     const auto refreshDriverIcon = [&] {
-        const auto iconPath = driverManager()->isDeviceOpened()
-                ? (driverManager()->isDeviceError() ? ":/images/plugin_error.png"
-                                                    : ":/images/plugin.png")
-                : ":/images/plugin_disabled.png";
-
-        m_iconDriver->setPixmap(QPixmap(iconPath));
+        m_iconDriver->setEnabled(driverManager()->isDeviceOpened());
+        m_iconDriver->setPixmap(QPixmap(driverManager()->isDeviceError() ? ":/icons/sign-error.png"
+                                                                         : ":/icons/puzzle.png"));
     };
 
     refreshDriverIcon();
