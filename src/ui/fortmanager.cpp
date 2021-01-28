@@ -799,7 +799,7 @@ void FortManager::createTrayMenu()
     }
 
     menu->addSeparator();
-    m_quitAction = addAction(menu, QIcon(":/images/cross.png"), tr("Quit"), this, SLOT(exit()));
+    m_quitAction = addAction(menu, QIcon(), tr("Quit"), this, SLOT(exit()));
     addHotKey(m_quitAction, settings()->hotKeyQuit(), hotKeyEnabled);
 
     m_trayIcon->setContextMenu(menu);
