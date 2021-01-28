@@ -123,7 +123,8 @@ void ZonesWindow::setupUi()
     this->setFont(QFont("Tahoma", 9));
 
     // Icon
-    this->setWindowIcon(GuiUtil::overlayIcon(":/images/sheild-96.png", ":/images/map.png"));
+    this->setWindowIcon(
+            GuiUtil::overlayIcon(":/images/sheild-96.png", ":/icons/map-map-marker.png"));
 
     // Size
     this->resize(1024, 768);
@@ -232,13 +233,13 @@ QLayout *ZonesWindow::setupHeader()
     // Edit Menu
     auto editMenu = new QMenu(this);
 
-    m_actAddZone = editMenu->addAction(QIcon(":/images/map_add.png"), QString());
+    m_actAddZone = editMenu->addAction(QIcon(":/icons/sign-add.png"), QString());
     m_actAddZone->setShortcut(Qt::Key_Plus);
 
-    m_actEditZone = editMenu->addAction(QIcon(":/images/map_edit.png"), QString());
+    m_actEditZone = editMenu->addAction(QIcon(":/icons/pencil.png"), QString());
     m_actEditZone->setShortcut(Qt::Key_Enter);
 
-    m_actRemoveZone = editMenu->addAction(QIcon(":/images/map_delete.png"), QString());
+    m_actRemoveZone = editMenu->addAction(QIcon(":/icons/sign-delete.png"), QString());
     m_actRemoveZone->setShortcut(Qt::Key_Delete);
 
     connect(m_actAddZone, &QAction::triggered, this, [&] { updateZoneEditForm(false); });
@@ -249,7 +250,7 @@ QLayout *ZonesWindow::setupHeader()
         }
     });
 
-    m_btEdit = new QPushButton(QIcon(":/images/map_edit.png"), QString());
+    m_btEdit = new QPushButton(QIcon(":/icons/pencil.png"), QString());
     m_btEdit->setMenu(editMenu);
 
     // Save As Text

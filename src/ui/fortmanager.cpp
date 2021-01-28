@@ -760,8 +760,8 @@ void FortManager::createTrayMenu()
             addAction(menu, QIcon(":/icons/cog.png"), QString(), this, SLOT(showOptionsWindow()));
     addHotKey(m_optionsAction, settings()->hotKeyOptions(), hotKeyEnabled);
 
-    m_zonesAction =
-            addAction(menu, QIcon(":/images/map.png"), QString(), this, SLOT(showZonesWindow()));
+    m_zonesAction = addAction(
+            menu, QIcon(":/icons/map-map-marker.png"), QString(), this, SLOT(showZonesWindow()));
     addHotKey(m_zonesAction, settings()->hotKeyZones(), hotKeyEnabled);
 
     m_graphWindowAction = addAction(menu, QIcon(":/images/chart_bar.png"), QString(), this,
