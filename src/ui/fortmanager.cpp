@@ -721,8 +721,9 @@ void FortManager::restoreGraphWindowState()
 
 void FortManager::updateTrayIcon(bool alerted)
 {
-    const auto icon = alerted ? GuiUtil::overlayIcon(":/images/sheild-96.png", ":/images/error.png")
-                              : QIcon(":/images/sheild-96.png");
+    const auto icon = alerted
+            ? GuiUtil::overlayIcon(":/images/sheild-96.png", ":/icons/sign-warning.png")
+            : QIcon(":/images/sheild-96.png");
 
     m_trayIcon->setIcon(icon);
 }
