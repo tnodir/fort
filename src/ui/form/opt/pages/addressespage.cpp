@@ -97,8 +97,8 @@ void AddressesPage::setupUi()
     m_tabBar->setShape(QTabBar::TriangularNorth);
     layout->addWidget(m_tabBar);
 
-    m_tabBar->addTab(QIcon(":/images/world.png"), QString());
-    m_tabBar->addTab(QIcon(":/images/world_link.png"), QString());
+    m_tabBar->addTab(QIcon(":/icons/globe.png"), QString());
+    m_tabBar->addTab(QIcon(":/icons/funnel.png"), QString());
 
     // Address Columns
     setupIncludeAddresses();
