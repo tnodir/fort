@@ -238,8 +238,8 @@ HEADERS += \
 # Driver integration
 include(../driver/Driver.pri)
 
-# Images
-RESOURCES += fort-images.qrc
+# Icons & Images
+RESOURCES += fort-icons.qrc fort-images.qrc
 
 # Database Migrations
 OTHER_FILES += \

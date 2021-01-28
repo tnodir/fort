@@ -18,9 +18,13 @@ void AppsColumn::setupUi()
 
     // Header
     auto headerLayout = new QHBoxLayout();
+    headerLayout->setSpacing(2);
     layout->addLayout(headerLayout);
 
     m_icon = ControlUtil::createLabel();
+    m_icon->setScaledContents(true);
+    m_icon->setMaximumSize(16, 16);
+
     m_labelTitle = ControlUtil::createLabel();
     m_labelTitle->setFont(ControlUtil::fontDemiBold());
 

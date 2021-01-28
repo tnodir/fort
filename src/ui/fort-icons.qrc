@@ -1,0 +1,6 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>icons/sign-ban.png</file>
+    <file>icons/sign-check.png</file>
+</qresource>
+</RCC>

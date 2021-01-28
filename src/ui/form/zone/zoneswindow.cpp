@@ -276,7 +276,6 @@ QLayout *ZonesWindow::setupHeader()
 void ZonesWindow::setupTableZones()
 {
     m_zoneListView = new TableView();
-    m_zoneListView->setIconSize(QSize(24, 24));
     m_zoneListView->setAlternatingRowColors(true);
     m_zoneListView->setSelectionMode(QAbstractItemView::SingleSelection);
     m_zoneListView->setSelectionBehavior(QAbstractItemView::SelectItems);

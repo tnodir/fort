@@ -207,11 +207,11 @@ void ProgramsWindow::setupAppEditForm()
     allowLayout->setSpacing(20);
 
     m_rbAllowApp = new QRadioButton();
-    m_rbAllowApp->setIcon(QIcon(":/images/arrow_switch.png"));
+    m_rbAllowApp->setIcon(QIcon(":/icons/sign-check.png"));
     m_rbAllowApp->setChecked(true);
 
     m_rbBlockApp = new QRadioButton();
-    m_rbBlockApp->setIcon(QIcon(":/images/stop.png"));
+    m_rbBlockApp->setIcon(QIcon(":/icons/sign-ban.png"));
 
     allowLayout->addWidget(m_rbAllowApp, 1, Qt::AlignRight);
     allowLayout->addWidget(m_rbBlockApp, 1, Qt::AlignLeft);
@@ -327,10 +327,10 @@ QLayout *ProgramsWindow::setupHeader()
     // Edit Menu
     auto editMenu = new QMenu(this);
 
-    m_actAllowApp = editMenu->addAction(QIcon(":/images/arrow_switch.png"), QString());
+    m_actAllowApp = editMenu->addAction(QIcon(":/icons/sign-check.png"), QString());
     m_actAllowApp->setShortcut(Qt::Key_A);
 
-    m_actBlockApp = editMenu->addAction(QIcon(":/images/stop.png"), QString());
+    m_actBlockApp = editMenu->addAction(QIcon(":/icons/sign-ban.png"), QString());
     m_actBlockApp->setShortcut(Qt::Key_B);
 
     editMenu->addSeparator();
@@ -368,8 +368,8 @@ QLayout *ProgramsWindow::setupHeader()
     m_btEdit->setMenu(editMenu);
 
     // Allow/Block
-    m_btAllowApp = ControlUtil::createLinkButton(":/images/arrow_switch.png");
-    m_btBlockApp = ControlUtil::createLinkButton(":/images/stop.png");
+    m_btAllowApp = ControlUtil::createLinkButton(":/icons/sign-check.png");
+    m_btBlockApp = ControlUtil::createLinkButton(":/icons/sign-ban.png");
 
     connect(m_btAllowApp, &QAbstractButton::clicked, m_actAllowApp, &QAction::trigger);
     connect(m_btBlockApp, &QAbstractButton::clicked, m_actBlockApp, &QAction::trigger);
@@ -432,7 +432,6 @@ void ProgramsWindow::setupLogBlockedIp()
 void ProgramsWindow::setupTableApps()
 {
     m_appListView = new TableView();
-    m_appListView->setIconSize(QSize(24, 24));
     m_appListView->setAlternatingRowColors(true);
     m_appListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_appListView->setSelectionBehavior(QAbstractItemView::SelectItems);

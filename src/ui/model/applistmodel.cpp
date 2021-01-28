@@ -168,8 +168,8 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
                 return QIcon(":/images/application-window-96.png");
             }
             case 2:
-                return appRow.blocked ? QIcon(":/images/stop.png")
-                                      : QIcon(":/images/arrow_switch.png");
+                return appRow.blocked ? QIcon(":/icons/sign-ban.png")
+                                      : QIcon(":/icons/sign-check.png");
             case 3:
                 return appRow.endTime.isNull() ? QVariant() : QIcon(":/images/clock_stop.png");
             }
@@ -223,7 +223,7 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
     case Qt::TextAlignmentRole: {
         const int column = index.column();
 
-        if (column >= 1 && column <= 2) {
+        if (column == 1) {
             return int(Qt::AlignHCenter | Qt::AlignVCenter);
         }
 

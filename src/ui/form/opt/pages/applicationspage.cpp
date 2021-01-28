@@ -229,10 +229,13 @@ void ApplicationsPage::setupBlockAllowAll()
         conf()->setAppBlockAll(checked);
         ctrl()->setConfFlagsEdited(true);
     });
+    m_cbBlockAll->setIcon(QIcon(":/icons/sign-ban.png"));
+
     m_cbAllowAll = ControlUtil::createCheckBox(conf()->appAllowAll(), [&](bool checked) {
         conf()->setAppAllowAll(checked);
         ctrl()->setConfFlagsEdited(true);
     });
+    m_cbAllowAll->setIcon(QIcon(":/icons/sign-check.png"));
 
     const auto refreshBlockAllowAllEnabled = [&] {
         const bool blockAll = m_cbBlockAll->isChecked();
@@ -458,7 +461,7 @@ void ApplicationsPage::setupGroupOptionsEnabled()
 void ApplicationsPage::setupBlockApps()
 {
     m_blockApps = new AppsColumn();
-    m_blockApps->icon()->setPixmap(QPixmap(":/images/stop.png"));
+    m_blockApps->icon()->setPixmap(QPixmap(":/icons/sign-ban.png"));
 
     connect(m_blockApps->editText(), &QPlainTextEdit::textChanged, this, [&] {
         const auto text = m_blockApps->editText()->toPlainText();
@@ -475,7 +478,7 @@ void ApplicationsPage::setupBlockApps()
 void ApplicationsPage::setupAllowApps()
 {
     m_allowApps = new AppsColumn();
-    m_allowApps->icon()->setPixmap(QPixmap(":/images/arrow_switch.png"));
+    m_allowApps->icon()->setPixmap(QPixmap(":/icons/sign-check.png"));
 
     connect(m_allowApps->editText(), &QPlainTextEdit::textChanged, this, [&] {
         const auto text = m_allowApps->editText()->toPlainText();
