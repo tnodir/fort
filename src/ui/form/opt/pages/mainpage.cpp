@@ -70,13 +70,11 @@ QLayout *MainPage::setupDialogButtons()
 {
     auto buttonsLayout = new QHBoxLayout();
 
-    m_btLogs = ControlUtil::createLinkButton(":/images/folder_error.png", settings()->logsPath());
+    m_btLogs = ControlUtil::createLinkButton(":/icons/folder-open.png", settings()->logsPath());
     m_btProfile =
-            ControlUtil::createLinkButton(":/images/folder_user.png", settings()->profilePath());
-    m_btStat =
-            ControlUtil::createLinkButton(":/images/folder_database.png", settings()->statPath());
-    m_btReleases =
-            ControlUtil::createLinkButton(":/images/server_go.png", settings()->appUpdatesUrl());
+            ControlUtil::createLinkButton(":/icons/folder-open.png", settings()->profilePath());
+    m_btStat = ControlUtil::createLinkButton(":/icons/folder-open.png", settings()->statPath());
+    m_btReleases = ControlUtil::createLinkButton(":/icons/github.png", settings()->appUpdatesUrl());
 
     connect(m_btLogs, &QAbstractButton::clicked, this, &MainPage::onLinkClicked);
     connect(m_btProfile, &QAbstractButton::clicked, this, &MainPage::onLinkClicked);

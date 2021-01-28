@@ -727,8 +727,8 @@ void StatisticsPage::setupAppInfoRow()
     auto layout = new QHBoxLayout();
     layout->setContentsMargins(0, 0, 0, 0);
 
-    m_btAppCopyPath = ControlUtil::createLinkButton(":/icons/file-link.png");
-    m_btAppOpenFolder = ControlUtil::createLinkButton(":/icons/folder.png");
+    m_btAppCopyPath = ControlUtil::createLinkButton(":/icons/copy.png");
+    m_btAppOpenFolder = ControlUtil::createLinkButton(":/icons/folder-open.png");
 
     m_lineAppPath = ControlUtil::createLineLabel();
 

@@ -508,7 +508,7 @@ void ApplicationsPage::setupSplitter()
 
 void ApplicationsPage::setupSplitterButtons()
 {
-    m_btSelectFile = ControlUtil::createSplitterButton(":/icons/folder.png", [&] {
+    m_btSelectFile = ControlUtil::createSplitterButton(":/icons/folder-open.png", [&] {
         const auto filePaths = ControlUtil::getOpenFileNames(
                 m_btSelectFile->text(), tr("Programs (*.exe);;All files (*.*)"));
 
