@@ -1,5 +1,10 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
+    <file>icons/arrow-curve.png</file>
+    <file>icons/arrow-curve-180.png</file>
+    <file>icons/arrow-join.png</file>
+    <file>icons/arrow-join-180.png</file>
+    <file>icons/arrow-retweet.png</file>
     <file>icons/clock.png</file>
     <file>icons/cog.png</file>
     <file>icons/database.png</file>
@@ -8,6 +13,7 @@
     <file>icons/folder.png</file>
     <file>icons/funnel.png</file>
     <file>icons/globe.png</file>
+    <file>icons/home.png</file>
     <file>icons/map-map-marker.png</file>
     <file>icons/map-marker.png</file>
     <file>icons/monitor.png</file>

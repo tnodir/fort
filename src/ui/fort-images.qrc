@@ -2,12 +2,6 @@
 <qresource>
     <file>images/application-window-96.png</file>
     <file>images/computer-96.png</file>
-    <file>images/control_fastforward.png</file>
-    <file>images/control_play.png</file>
-    <file>images/control_play_backward.png</file>
-    <file>images/control_repeat.png</file>
-    <file>images/control_rewind.png</file>
-    <file>images/drive_network.png</file>
     <file>images/folder_database.png</file>
     <file>images/folder_error.png</file>
     <file>images/folder_explore.png</file>

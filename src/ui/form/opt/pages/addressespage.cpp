@@ -200,7 +200,7 @@ void AddressesPage::setupSplitter()
 
 void AddressesPage::setupSplitterButtons()
 {
-    m_btAddLocals = ControlUtil::createSplitterButton(":/images/drive_network.png", [&] {
+    m_btAddLocals = ControlUtil::createSplitterButton(":/icons/home.png", [&] {
         auto area = m_splitter->handle()->currentTextArea();
         TextAreaUtil::appendText(area, localNetworks());
     });

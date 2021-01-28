@@ -50,16 +50,15 @@ void TextArea2SplitterHandle::setupUi()
     auto layout = new QBoxLayout(direction);
     layout->setContentsMargins(0, 0, 0, 0);
 
-    m_btMoveAllFrom1To2 = ControlUtil::createSplitterButton(":/images/control_fastforward.png",
+    m_btMoveAllFrom1To2 = ControlUtil::createSplitterButton(":/icons/arrow-join.png",
             [&] { TextAreaUtil::moveAllLines(textArea1(), textArea2()); });
-    m_btMoveSelectedFrom1To2 = ControlUtil::createSplitterButton(":/images/control_play.png",
+    m_btMoveSelectedFrom1To2 = ControlUtil::createSplitterButton(":/icons/arrow-curve.png",
             [&] { TextAreaUtil::moveSelectedLines(textArea1(), textArea2()); });
-    m_btInterchangeAll = ControlUtil::createSplitterButton(":/images/control_repeat.png",
+    m_btInterchangeAll = ControlUtil::createSplitterButton(":/icons/arrow-retweet.png",
             [&] { TextAreaUtil::interchangeAllLines(textArea1(), textArea2()); });
-    m_btMoveSelectedFrom2To1 =
-            ControlUtil::createSplitterButton(":/images/control_play_backward.png",
-                    [&] { TextAreaUtil::moveSelectedLines(textArea2(), textArea1()); });
-    m_btMoveAllFrom2To1 = ControlUtil::createSplitterButton(":/images/control_rewind.png",
+    m_btMoveSelectedFrom2To1 = ControlUtil::createSplitterButton(":/icons/arrow-curve-180.png",
+            [&] { TextAreaUtil::moveSelectedLines(textArea2(), textArea1()); });
+    m_btMoveAllFrom2To1 = ControlUtil::createSplitterButton(":/icons/arrow-join-180.png",
             [&] { TextAreaUtil::moveAllLines(textArea2(), textArea1()); });
 
     m_buttonsLayout = new QBoxLayout(direction);
