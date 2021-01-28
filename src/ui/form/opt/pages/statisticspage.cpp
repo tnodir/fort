@@ -340,7 +340,7 @@ void StatisticsPage::setupClearMenu()
         appStatModel()->clear();
     });
 
-    m_btClear = new QPushButton(QIcon(":/images/bin_empty.png"), QString());
+    m_btClear = new QPushButton(QIcon(":/icons/trashcan-full.png"), QString());
     m_btClear->setMenu(menu);
 }
 

@@ -10,6 +10,7 @@
     <file>icons/sign-error.png</file>
     <file>icons/sign-sync.png</file>
     <file>icons/sign-warning.png</file>
+    <file>icons/trashcan-full.png</file>
     <file>icons/wrench.png</file>
 </qresource>
 </RCC>
