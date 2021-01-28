@@ -469,8 +469,8 @@ void ProgramsWindow::setupAppInfoRow()
     auto layout = new QHBoxLayout();
     layout->setContentsMargins(0, 0, 0, 0);
 
-    m_btAppCopyPath = ControlUtil::createLinkButton(":/images/page_copy.png");
-    m_btAppOpenFolder = ControlUtil::createLinkButton(":/images/folder_go.png");
+    m_btAppCopyPath = ControlUtil::createLinkButton(":/icons/file-link.png");
+    m_btAppOpenFolder = ControlUtil::createLinkButton(":/icons/folder.png");
 
     m_lineAppPath = ControlUtil::createLineLabel();
 
