@@ -55,7 +55,7 @@ void MainPage::setupUi()
 
     m_tabBar->addTab(m_optionsPage, QIcon(":/icons/cog.png"), QString());
     m_tabBar->addTab(m_addressesPage, QIcon(":/icons/map-marker.png"), QString());
-    m_tabBar->addTab(m_applicationsPage, QIcon(":/icons/window-system.png"), QString());
+    m_tabBar->addTab(m_applicationsPage, QIcon(":/icons/window.png"), QString());
     m_tabBar->addTab(m_statisticsPage, QIcon(":/icons/database.png"), QString());
     m_tabBar->addTab(m_schedulePage, QIcon(":/icons/clock.png"), QString());
 

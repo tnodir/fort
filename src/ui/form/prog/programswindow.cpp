@@ -161,7 +161,7 @@ void ProgramsWindow::setupUi()
 
     // Icon
     this->setWindowIcon(
-            GuiUtil::overlayIcon(":/images/sheild-96.png", ":/icons/window-system.png"));
+            GuiUtil::overlayIcon(":/images/sheild-96.png", ":/icons/window.png"));
 
     // Size
     this->resize(1024, 768);

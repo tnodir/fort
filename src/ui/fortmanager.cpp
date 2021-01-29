@@ -753,7 +753,7 @@ void FortManager::createTrayMenu()
     QMenu *menu = new QMenu(&m_window);
 
     m_programsAction = addAction(
-            menu, QIcon(":/icons/window-system.png"), QString(), this, SLOT(showProgramsWindow()));
+            menu, QIcon(":/icons/window.png"), QString(), this, SLOT(showProgramsWindow()));
     addHotKey(m_programsAction, settings()->hotKeyPrograms(), hotKeyEnabled);
 
     m_optionsAction =
