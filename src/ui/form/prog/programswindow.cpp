@@ -346,7 +346,7 @@ QLayout *ProgramsWindow::setupHeader()
 
     editMenu->addSeparator();
 
-    m_actPurgeApps = editMenu->addAction(QIcon(":/icons/trashcan-full.png"), QString());
+    m_actPurgeApps = editMenu->addAction(QIcon(":/icons/trash.png"), QString());
 
     connect(m_actAllowApp, &QAction::triggered, this, [&] { updateSelectedApps(false); });
     connect(m_actBlockApp, &QAction::triggered, this, [&] { updateSelectedApps(true); });
