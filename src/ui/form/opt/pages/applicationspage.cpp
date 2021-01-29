@@ -254,7 +254,7 @@ void ApplicationsPage::setupBlockAllowAll()
 void ApplicationsPage::setupTabBar()
 {
     m_tabBar = new TabBar();
-    m_tabBar->setTabMinimumWidth(120);
+    m_tabBar->setTabMinimumWidth(100);
     m_tabBar->setShape(QTabBar::TriangularNorth);
     m_tabBar->setExpanding(false);
     m_tabBar->setTabsClosable(true);
