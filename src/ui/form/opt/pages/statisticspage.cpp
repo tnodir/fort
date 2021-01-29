@@ -414,7 +414,7 @@ void StatisticsPage::setupGraphOptionsMenu()
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
-    m_btGraphOptions = new QPushButton(QIcon(":/icons/monitor.png"), QString());
+    m_btGraphOptions = new QPushButton(QIcon(":/icons/line-graph.png"), QString());
     m_btGraphOptions->setMenu(menu);
 }
 

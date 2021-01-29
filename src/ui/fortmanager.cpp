@@ -764,7 +764,7 @@ void FortManager::createTrayMenu()
             menu, QIcon(":/icons/map-map-marker.png"), QString(), this, SLOT(showZonesWindow()));
     addHotKey(m_zonesAction, settings()->hotKeyZones(), hotKeyEnabled);
 
-    m_graphWindowAction = addAction(menu, QIcon(":/icons/monitor.png"), QString(), this,
+    m_graphWindowAction = addAction(menu, QIcon(":/icons/line-graph.png"), QString(), this,
             SLOT(switchGraphWindow()), true, (m_graphWindow != nullptr));
     addHotKey(m_graphWindowAction, settings()->hotKeyGraph(), conf()->logStat());
 
