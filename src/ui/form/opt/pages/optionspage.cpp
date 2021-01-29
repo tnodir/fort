@@ -336,7 +336,7 @@ void OptionsPage::setupNewVersionBox()
     colLayout->addWidget(m_labelNewVersion, 0, Qt::AlignHCenter);
 
     // Button
-    m_btNewVersion = ControlUtil::createLinkButton(":/icons/gift.png");
+    m_btNewVersion = ControlUtil::createLinkButton(":/icons/download.png");
 
     connect(m_btNewVersion, &QAbstractButton::clicked, this, &OptionsPage::onLinkClicked);
 
