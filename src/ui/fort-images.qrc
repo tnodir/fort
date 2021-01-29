@@ -2,7 +2,6 @@
 <qresource>
     <file>images/application-window-96.png</file>
     <file>images/computer-96.png</file>
-    <file>images/shield.png</file>
     <file>images/sheild-96.png</file>
     <file>images/windows-48.png</file>
 </qresource>
