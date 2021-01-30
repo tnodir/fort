@@ -16,13 +16,14 @@
 #include <QVBoxLayout>
 
 #include "../../conf/appgroup.h"
-#include "../../conf/firewallconf.h"
 #include "../../conf/confmanager.h"
+#include "../../conf/firewallconf.h"
 #include "../../fortmanager.h"
 #include "../../fortsettings.h"
 #include "../../model/applistmodel.h"
 #include "../../util/app/appinfocache.h"
 #include "../../util/guiutil.h"
+#include "../../util/iconcache.h"
 #include "../../util/osutil.h"
 #include "../controls/checkspincombo.h"
 #include "../controls/controlutil.h"
@@ -160,8 +161,7 @@ void ProgramsWindow::setupUi()
     this->setFont(QFont("Tahoma", 9));
 
     // Icon
-    this->setWindowIcon(
-            GuiUtil::overlayIcon(":/images/sheild-96.png", ":/icons/window.png"));
+    this->setWindowIcon(GuiUtil::overlayIcon(":/images/sheild-96.png", ":/icons/window.png"));
 
     // Size
     this->resize(1024, 768);
@@ -207,11 +207,11 @@ void ProgramsWindow::setupAppEditForm()
     allowLayout->setSpacing(20);
 
     m_rbAllowApp = new QRadioButton();
-    m_rbAllowApp->setIcon(QIcon(":/icons/sign-check.png"));
+    m_rbAllowApp->setIcon(IconCache::icon(":/icons/sign-check.png"));
     m_rbAllowApp->setChecked(true);
 
     m_rbBlockApp = new QRadioButton();
-    m_rbBlockApp->setIcon(QIcon(":/icons/sign-ban.png"));
+    m_rbBlockApp->setIcon(IconCache::icon(":/icons/sign-ban.png"));
 
     allowLayout->addWidget(m_rbAllowApp, 1, Qt::AlignRight);
     allowLayout->addWidget(m_rbBlockApp, 1, Qt::AlignLeft);
@@ -327,26 +327,26 @@ QLayout *ProgramsWindow::setupHeader()
     // Edit Menu
     auto editMenu = new QMenu(this);
 
-    m_actAllowApp = editMenu->addAction(QIcon(":/icons/sign-check.png"), QString());
+    m_actAllowApp = editMenu->addAction(IconCache::icon(":/icons/sign-check.png"), QString());
     m_actAllowApp->setShortcut(Qt::Key_A);
 
-    m_actBlockApp = editMenu->addAction(QIcon(":/icons/sign-ban.png"), QString());
+    m_actBlockApp = editMenu->addAction(IconCache::icon(":/icons/sign-ban.png"), QString());
     m_actBlockApp->setShortcut(Qt::Key_B);
 
     editMenu->addSeparator();
 
-    m_actAddApp = editMenu->addAction(QIcon(":/icons/sign-add.png"), QString());
+    m_actAddApp = editMenu->addAction(IconCache::icon(":/icons/sign-add.png"), QString());
     m_actAddApp->setShortcut(Qt::Key_Plus);
 
-    m_actEditApp = editMenu->addAction(QIcon(":/icons/pencil.png"), QString());
+    m_actEditApp = editMenu->addAction(IconCache::icon(":/icons/pencil.png"), QString());
     m_actEditApp->setShortcut(Qt::Key_Enter);
 
-    m_actRemoveApp = editMenu->addAction(QIcon(":/icons/sign-delete.png"), QString());
+    m_actRemoveApp = editMenu->addAction(IconCache::icon(":/icons/sign-delete.png"), QString());
     m_actRemoveApp->setShortcut(Qt::Key_Delete);
 
     editMenu->addSeparator();
 
-    m_actPurgeApps = editMenu->addAction(QIcon(":/icons/trash.png"), QString());
+    m_actPurgeApps = editMenu->addAction(IconCache::icon(":/icons/trash.png"), QString());
 
     connect(m_actAllowApp, &QAction::triggered, this, [&] { updateSelectedApps(false); });
     connect(m_actBlockApp, &QAction::triggered, this, [&] { updateSelectedApps(true); });
@@ -364,7 +364,7 @@ QLayout *ProgramsWindow::setupHeader()
         }
     });
 
-    m_btEdit = new QPushButton(QIcon(":/icons/pencil.png"), QString());
+    m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
     m_btEdit->setMenu(editMenu);
 
     // Allow/Block
@@ -399,7 +399,7 @@ void ProgramsWindow::setupLogOptions()
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
-    m_btLogOptions = new QPushButton(QIcon(":/icons/wrench.png"), QString());
+    m_btLogOptions = ControlUtil::createButton(":/icons/wrench.png");
     m_btLogOptions->setMenu(menu);
 }
 

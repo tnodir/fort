@@ -20,7 +20,8 @@ public:
     AppInfoManager *manager() const { return m_manager; }
     void setManager(AppInfoManager *manager);
 
-    QImage appIcon(const AppInfo &info) const;
+    QImage appImage(const AppInfo &info) const;
+    QIcon appIcon(const QString &appPath, const QString &nullIconPath = QString());
 
 signals:
     void cacheChanged();

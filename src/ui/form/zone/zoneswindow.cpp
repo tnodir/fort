@@ -16,10 +16,11 @@
 #include "../../fortsettings.h"
 #include "../../model/zonelistmodel.h"
 #include "../../model/zonesourcewrapper.h"
-#include "../../task/taskmanager.h"
 #include "../../task/taskinfozonedownloader.h"
-#include "../../util/guiutil.h"
+#include "../../task/taskmanager.h"
 #include "../../util/conf/confutil.h"
+#include "../../util/guiutil.h"
+#include "../../util/iconcache.h"
 #include "../controls/controlutil.h"
 #include "../controls/tableview.h"
 #include "zonescontroller.h"
@@ -233,13 +234,13 @@ QLayout *ZonesWindow::setupHeader()
     // Edit Menu
     auto editMenu = new QMenu(this);
 
-    m_actAddZone = editMenu->addAction(QIcon(":/icons/sign-add.png"), QString());
+    m_actAddZone = editMenu->addAction(IconCache::icon(":/icons/sign-add.png"), QString());
     m_actAddZone->setShortcut(Qt::Key_Plus);
 
-    m_actEditZone = editMenu->addAction(QIcon(":/icons/pencil.png"), QString());
+    m_actEditZone = editMenu->addAction(IconCache::icon(":/icons/pencil.png"), QString());
     m_actEditZone->setShortcut(Qt::Key_Enter);
 
-    m_actRemoveZone = editMenu->addAction(QIcon(":/icons/sign-delete.png"), QString());
+    m_actRemoveZone = editMenu->addAction(IconCache::icon(":/icons/sign-delete.png"), QString());
     m_actRemoveZone->setShortcut(Qt::Key_Delete);
 
     connect(m_actAddZone, &QAction::triggered, this, [&] { updateZoneEditForm(false); });
@@ -250,7 +251,7 @@ QLayout *ZonesWindow::setupHeader()
         }
     });
 
-    m_btEdit = new QPushButton(QIcon(":/icons/pencil.png"), QString());
+    m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
     m_btEdit->setMenu(editMenu);
 
     // Save As Text

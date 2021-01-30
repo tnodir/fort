@@ -12,6 +12,8 @@
 #include <QToolButton>
 #include <QWidgetAction>
 
+#include "../../util/iconcache.h"
+
 QCheckBox *ControlUtil::createCheckBox(
         bool checked, const std::function<void(bool checked)> &onToggled)
 {
@@ -34,10 +36,17 @@ QComboBox *ControlUtil::createComboBox(
     return c;
 }
 
+QPushButton *ControlUtil::createButton(const QString &iconPath, const QString &text)
+{
+    auto c = new QPushButton(IconCache::icon(iconPath), text);
+
+    return c;
+}
+
 QPushButton *ControlUtil::createButton(
         const QString &iconPath, const std::function<void()> &onClicked)
 {
-    auto c = new QPushButton(QIcon(iconPath), QString());
+    auto c = new QPushButton(IconCache::icon(iconPath), QString());
 
     c->connect(c, &QPushButton::clicked, onClicked);
 
@@ -48,7 +57,7 @@ QToolButton *ControlUtil::createToolButton(
         const QString &iconPath, const std::function<void()> &onClicked)
 {
     auto c = new QToolButton();
-    c->setIcon(QIcon(iconPath));
+    c->setIcon(IconCache::icon(iconPath));
 
     c->connect(c, &QToolButton::clicked, onClicked);
 
@@ -58,7 +67,7 @@ QToolButton *ControlUtil::createToolButton(
 QPushButton *ControlUtil::createLinkButton(
         const QString &iconPath, const QString &linkPath, const QString &toolTip)
 {
-    auto c = new QPushButton(QIcon(iconPath), QString());
+    auto c = new QPushButton(IconCache::icon(iconPath), QString());
     c->setFlat(true);
     c->setCursor(Qt::PointingHandCursor);
     c->setWindowFilePath(linkPath);

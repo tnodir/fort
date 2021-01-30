@@ -6,6 +6,8 @@
 #include <QPainter>
 #include <QPixmap>
 
+#include "iconcache.h"
+
 void GuiUtil::setClipboardData(const QVariant &data)
 {
     QClipboard *clipboard = QGuiApplication::clipboard();
@@ -25,16 +27,20 @@ void GuiUtil::setClipboardData(const QVariant &data)
 QIcon GuiUtil::overlayIcon(
         const QString &basePath, const QString &overlayPath, Qt::Alignment alignment)
 {
+    const auto key = QString("%1|%2|%3").arg(basePath, overlayPath, QString::number(alignment, 16));
+
+    QPixmap pixmap;
+    if (IconCache::find(key, &pixmap))
+        return pixmap;
+
     constexpr int baseWidth = 32;
     constexpr int overlayWidth = 16;
     constexpr int deltaWidth = baseWidth - overlayWidth;
 
-    QPixmap base(basePath);
-    if (base.width() > baseWidth) {
-        base = base.scaled(baseWidth, baseWidth);
+    pixmap = IconCache::file(basePath);
+    if (pixmap.width() > baseWidth) {
+        pixmap = pixmap.scaled(baseWidth, baseWidth);
     }
-
-    QPixmap overlay(overlayPath);
 
     const int dx = (alignment & Qt::AlignRight) ? deltaWidth : 0;
     const int dy = (alignment & Qt::AlignBottom) ? deltaWidth : 0;
@@ -43,9 +49,12 @@ QIcon GuiUtil::overlayIcon(
 
     // Paint the overlay
     {
-        QPainter p(&base);
+        const QPixmap overlay = IconCache::file(overlayPath);
+        QPainter p(&pixmap);
         p.drawPixmap(rect, overlay);
     }
 
-    return base;
+    IconCache::insert(key, pixmap);
+
+    return pixmap;
 }

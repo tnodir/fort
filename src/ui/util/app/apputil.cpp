@@ -9,8 +9,9 @@
 #include <objbase.h>
 #include <shellapi.h>
 
-#include "../fileutil.h"
 #include "../../fortcommon.h"
+#include "../fileutil.h"
+#include "../iconcache.h"
 #include "appinfo.h"
 
 // Defined in qpixmap_win.cpp
@@ -146,7 +147,8 @@ QImage AppUtil::getIcon(const QString &appPath)
         return {};
 
     if (FileUtil::isSystemApp(appPath)) {
-        return QImage(":/images/windows-48.png");
+        const auto pixmap = IconCache::file(":/images/windows-48.png");
+        return pixmap.toImage();
     }
 
     return extractShellIcon(appPath).toImage();

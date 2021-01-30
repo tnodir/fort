@@ -55,7 +55,7 @@ QLayout *AddressesColumn::setupZonesRow()
     auto layout = new QHBoxLayout();
     layout->setContentsMargins(0, 0, 0, 0);
 
-    m_btSelectZones = new QPushButton(QIcon(":/icons/map-map-marker.png"), QString());
+    m_btSelectZones = ControlUtil::createButton(":/icons/map-map-marker.png");
     layout->addWidget(m_btSelectZones);
 
     m_labelZones = ControlUtil::createLabel();

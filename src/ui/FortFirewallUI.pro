@@ -95,6 +95,7 @@ SOURCES += \
     util/fileutil.cpp \
     util/guiutil.cpp \
     util/hotkeymanager.cpp \
+    util/iconcache.cpp \
     util/json/jsonutil.cpp \
     util/json/mapwrapper.cpp \
     util/logger.cpp \
@@ -209,6 +210,7 @@ HEADERS += \
     util/fileutil.h \
     util/guiutil.h \
     util/hotkeymanager.h \
+    util/iconcache.h \
     util/json/jsonutil.h \
     util/json/mapwrapper.h \
     util/logger.h \

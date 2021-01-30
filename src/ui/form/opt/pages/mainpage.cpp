@@ -7,6 +7,7 @@
 #include <QVBoxLayout>
 
 #include "../../../fortsettings.h"
+#include "../../../util/iconcache.h"
 #include "../../controls/controlutil.h"
 #include "../optionscontroller.h"
 #include "addressespage.h"
@@ -53,11 +54,11 @@ void MainPage::setupUi()
     m_statisticsPage = new StatisticsPage(ctrl());
     m_schedulePage = new SchedulePage(ctrl());
 
-    m_tabBar->addTab(m_optionsPage, QIcon(":/icons/cog.png"), QString());
-    m_tabBar->addTab(m_addressesPage, QIcon(":/icons/map-marker.png"), QString());
-    m_tabBar->addTab(m_applicationsPage, QIcon(":/icons/window.png"), QString());
-    m_tabBar->addTab(m_statisticsPage, QIcon(":/icons/database.png"), QString());
-    m_tabBar->addTab(m_schedulePage, QIcon(":/icons/clock.png"), QString());
+    m_tabBar->addTab(m_optionsPage, IconCache::icon(":/icons/cog.png"), QString());
+    m_tabBar->addTab(m_addressesPage, IconCache::icon(":/icons/map-marker.png"), QString());
+    m_tabBar->addTab(m_applicationsPage, IconCache::icon(":/icons/window.png"), QString());
+    m_tabBar->addTab(m_statisticsPage, IconCache::icon(":/icons/database.png"), QString());
+    m_tabBar->addTab(m_schedulePage, IconCache::icon(":/icons/clock.png"), QString());
 
     // Dialog butons
     auto buttonsLayout = setupDialogButtons();

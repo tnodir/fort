@@ -16,6 +16,7 @@
 #include "../../../task/taskinfoupdatechecker.h"
 #include "../../../task/taskmanager.h"
 #include "../../../translationmanager.h"
+#include "../../../util/iconcache.h"
 #include "../../../util/stringutil.h"
 #include "../../controls/controlutil.h"
 #include "../optionscontroller.h"
@@ -307,8 +308,9 @@ void OptionsPage::setupDriverIcon()
 
     const auto refreshDriverIcon = [&] {
         m_iconDriver->setEnabled(driverManager()->isDeviceOpened());
-        m_iconDriver->setPixmap(QPixmap(driverManager()->isDeviceError() ? ":/icons/sign-error.png"
-                                                                         : ":/icons/puzzle.png"));
+        m_iconDriver->setPixmap(
+                IconCache::file(driverManager()->isDeviceError() ? ":/icons/sign-error.png"
+                                                                 : ":/icons/puzzle.png"));
     };
 
     refreshDriverIcon();

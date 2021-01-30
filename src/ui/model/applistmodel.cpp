@@ -13,6 +13,7 @@
 #include "../util/app/appinfocache.h"
 #include "../util/app/apputil.h"
 #include "../util/fileutil.h"
+#include "../util/iconcache.h"
 #include "../util/guiutil.h"
 #include "../util/net/netutil.h"
 
@@ -157,21 +158,14 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
             const auto appRow = appRowAt(row);
 
             switch (column) {
-            case 0: {
-                const auto appPath = appRow.appPath;
-                const auto appInfo = appInfoCache()->appInfo(appPath);
-                const auto appIcon = appInfoCache()->appIcon(appInfo);
-                if (!appIcon.isNull()) {
-                    return QIcon(QPixmap::fromImage(appIcon));
-                }
-
-                return QIcon(":/images/application-window-96.png");
-            }
+            case 0:
+                return appInfoCache()->appIcon(
+                        appRow.appPath, ":/images/application-window-96.png");
             case 2:
-                return appRow.blocked ? QIcon(":/icons/sign-ban.png")
-                                      : QIcon(":/icons/sign-check.png");
+                return appRow.blocked ? IconCache::icon(":/icons/sign-ban.png")
+                                      : IconCache::icon(":/icons/sign-check.png");
             case 3:
-                return appRow.endTime.isNull() ? QVariant() : QIcon(":/icons/clock.png");
+                return appRow.endTime.isNull() ? QVariant() : IconCache::icon(":/icons/clock.png");
             }
         }
 

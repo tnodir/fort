@@ -16,6 +16,7 @@
 #include "../../../fortmanager.h"
 #include "../../../fortsettings.h"
 #include "../../../model/zonelistmodel.h"
+#include "../../../util/iconcache.h"
 #include "../../../util/net/netutil.h"
 #include "../../../util/textareautil.h"
 #include "../../controls/controlutil.h"
@@ -97,8 +98,8 @@ void AddressesPage::setupUi()
     m_tabBar->setShape(QTabBar::TriangularNorth);
     layout->addWidget(m_tabBar);
 
-    m_tabBar->addTab(QIcon(":/icons/globe.png"), QString());
-    m_tabBar->addTab(QIcon(":/icons/funnel.png"), QString());
+    m_tabBar->addTab(IconCache::icon(":/icons/globe.png"), QString());
+    m_tabBar->addTab(IconCache::icon(":/icons/funnel.png"), QString());
 
     // Address Columns
     setupIncludeAddresses();

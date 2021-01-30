@@ -1,7 +1,9 @@
 #include "appinfocache.h"
 
+#include <QIcon>
 #include <QImage>
 
+#include "../iconcache.h"
 #include "appinfomanager.h"
 
 AppInfoCache::AppInfoCache(QObject *parent) : QObject(parent), m_cache(1000)
@@ -21,9 +23,28 @@ void AppInfoCache::setManager(AppInfoManager *manager)
     connect(m_manager, &AppInfoManager::lookupFinished, this, &AppInfoCache::handleFinishedLookup);
 }
 
-QImage AppInfoCache::appIcon(const AppInfo &info) const
+QImage AppInfoCache::appImage(const AppInfo &info) const
 {
     return manager()->loadIconFromDb(info.iconId);
+}
+
+QIcon AppInfoCache::appIcon(const QString &appPath, const QString &nullIconPath)
+{
+    QPixmap pixmap;
+    if (IconCache::find(appPath, &pixmap))
+        return pixmap;
+
+    const auto info = appInfo(appPath);
+    const auto image = appImage(info);
+    if (!image.isNull()) {
+        pixmap = QPixmap::fromImage(image);
+    } else if (!nullIconPath.isEmpty()) {
+        pixmap = IconCache::file(nullIconPath);
+    }
+
+    IconCache::insert(appPath, pixmap);
+
+    return pixmap;
 }
 
 AppInfo AppInfoCache::appInfo(const QString &appPath)
@@ -57,6 +78,8 @@ void AppInfoCache::handleFinishedLookup(const QString &appPath, const AppInfo in
         return;
 
     *appInfo = info;
+
+    IconCache::remove(appPath); // invalidate cached icon
 
     emitCacheChanged();
 }

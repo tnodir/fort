@@ -24,6 +24,7 @@
 #include "../../../model/traflistmodel.h"
 #include "../../../util/app/appinfocache.h"
 #include "../../../util/guiutil.h"
+#include "../../../util/iconcache.h"
 #include "../../../util/net/netutil.h"
 #include "../../../util/osutil.h"
 #include "../../controls/checktimeperiod.h"
@@ -313,7 +314,7 @@ void StatisticsPage::setupClearMenu()
 {
     auto menu = new QMenu(this);
 
-    m_actRemoveApp = menu->addAction(QIcon(":/icons/sign-delete.png"), QString());
+    m_actRemoveApp = menu->addAction(IconCache::icon(":/icons/sign-delete.png"), QString());
     m_actRemoveApp->setShortcut(Qt::Key_Delete);
 
     m_actResetTotal = menu->addAction(QString());
@@ -340,7 +341,7 @@ void StatisticsPage::setupClearMenu()
         appStatModel()->clear();
     });
 
-    m_btClear = new QPushButton(QIcon(":/icons/trash.png"), QString());
+    m_btClear = ControlUtil::createButton(":/icons/trash.png");
     m_btClear->setMenu(menu);
 }
 
@@ -414,7 +415,7 @@ void StatisticsPage::setupGraphOptionsMenu()
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
-    m_btGraphOptions = new QPushButton(QIcon(":/icons/line-graph.png"), QString());
+    m_btGraphOptions = ControlUtil::createButton(":/icons/line-graph.png");
     m_btGraphOptions->setMenu(menu);
 }
 
@@ -442,7 +443,7 @@ void StatisticsPage::setupTrafOptionsMenu()
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
-    m_btTrafOptions = new QPushButton(QIcon(":/icons/wrench.png"), QString());
+    m_btTrafOptions = ControlUtil::createButton(":/icons/wrench.png");
     m_btTrafOptions->setMenu(menu);
 }
 

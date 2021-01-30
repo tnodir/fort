@@ -40,6 +40,7 @@
 #include "util/fileutil.h"
 #include "util/guiutil.h"
 #include "util/hotkeymanager.h"
+#include "util/iconcache.h"
 #include "util/logger.h"
 #include "util/nativeeventfilter.h"
 #include "util/net/hostinfocache.h"
@@ -723,7 +724,7 @@ void FortManager::updateTrayIcon(bool alerted)
 {
     const auto icon = alerted
             ? GuiUtil::overlayIcon(":/images/sheild-96.png", ":/icons/sign-warning.png")
-            : QIcon(":/images/sheild-96.png");
+            : IconCache::icon(":/images/sheild-96.png");
 
     m_trayIcon->setIcon(icon);
 }
@@ -752,20 +753,20 @@ void FortManager::createTrayMenu()
 
     QMenu *menu = new QMenu(&m_window);
 
-    m_programsAction = addAction(
-            menu, QIcon(":/icons/window.png"), QString(), this, SLOT(showProgramsWindow()));
+    m_programsAction = addAction(menu, IconCache::icon(":/icons/window.png"), QString(), this,
+            SLOT(showProgramsWindow()));
     addHotKey(m_programsAction, settings()->hotKeyPrograms(), hotKeyEnabled);
 
-    m_optionsAction =
-            addAction(menu, QIcon(":/icons/cog.png"), QString(), this, SLOT(showOptionsWindow()));
+    m_optionsAction = addAction(
+            menu, IconCache::icon(":/icons/cog.png"), QString(), this, SLOT(showOptionsWindow()));
     addHotKey(m_optionsAction, settings()->hotKeyOptions(), hotKeyEnabled);
 
-    m_zonesAction = addAction(
-            menu, QIcon(":/icons/map-map-marker.png"), QString(), this, SLOT(showZonesWindow()));
+    m_zonesAction = addAction(menu, IconCache::icon(":/icons/map-map-marker.png"), QString(), this,
+            SLOT(showZonesWindow()));
     addHotKey(m_zonesAction, settings()->hotKeyZones(), hotKeyEnabled);
 
-    m_graphWindowAction = addAction(menu, QIcon(":/icons/line-graph.png"), QString(), this,
-            SLOT(switchGraphWindow()), true, (m_graphWindow != nullptr));
+    m_graphWindowAction = addAction(menu, IconCache::icon(":/icons/line-graph.png"), QString(),
+            this, SLOT(switchGraphWindow()), true, (m_graphWindow != nullptr));
     addHotKey(m_graphWindowAction, settings()->hotKeyGraph(), conf()->logStat());
 
     menu->addSeparator();

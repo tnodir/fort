@@ -14,6 +14,7 @@
 #include "../../../conf/appgroup.h"
 #include "../../../conf/firewallconf.h"
 #include "../../../fortsettings.h"
+#include "../../../util/iconcache.h"
 #include "../../../util/net/netutil.h"
 #include "../../../util/textareautil.h"
 #include "../../controls/checkspincombo.h"
@@ -229,13 +230,13 @@ void ApplicationsPage::setupBlockAllowAll()
         conf()->setAppBlockAll(checked);
         ctrl()->setConfFlagsEdited(true);
     });
-    m_cbBlockAll->setIcon(QIcon(":/icons/sign-ban.png"));
+    m_cbBlockAll->setIcon(IconCache::icon(":/icons/sign-ban.png"));
 
     m_cbAllowAll = ControlUtil::createCheckBox(conf()->appAllowAll(), [&](bool checked) {
         conf()->setAppAllowAll(checked);
         ctrl()->setConfFlagsEdited(true);
     });
-    m_cbAllowAll->setIcon(QIcon(":/icons/sign-check.png"));
+    m_cbAllowAll->setIcon(IconCache::icon(":/icons/sign-check.png"));
 
     const auto refreshBlockAllowAllEnabled = [&] {
         const bool blockAll = m_cbBlockAll->isChecked();
@@ -376,7 +377,7 @@ void ApplicationsPage::setupGroupOptions()
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
-    m_btGroupOptions = new QPushButton(QIcon(":/icons/wrench.png"), QString());
+    m_btGroupOptions = ControlUtil::createButton(":/icons/wrench.png");
     m_btGroupOptions->setMenu(menu);
 }
 
@@ -460,7 +461,7 @@ void ApplicationsPage::setupGroupOptionsEnabled()
 void ApplicationsPage::setupBlockApps()
 {
     m_blockApps = new AppsColumn();
-    m_blockApps->icon()->setPixmap(QPixmap(":/icons/sign-ban.png"));
+    m_blockApps->icon()->setPixmap(IconCache::file(":/icons/sign-ban.png"));
 
     connect(m_blockApps->editText(), &QPlainTextEdit::textChanged, this, [&] {
         const auto text = m_blockApps->editText()->toPlainText();
@@ -477,7 +478,7 @@ void ApplicationsPage::setupBlockApps()
 void ApplicationsPage::setupAllowApps()
 {
     m_allowApps = new AppsColumn();
-    m_allowApps->icon()->setPixmap(QPixmap(":/icons/sign-check.png"));
+    m_allowApps->icon()->setPixmap(IconCache::file(":/icons/sign-check.png"));
 
     connect(m_allowApps->editText(), &QPlainTextEdit::textChanged, this, [&] {
         const auto text = m_allowApps->editText()->toPlainText();

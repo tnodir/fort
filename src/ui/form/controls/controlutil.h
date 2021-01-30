@@ -23,6 +23,7 @@ public:
             bool checked, const std::function<void(bool checked)> &onToggled);
     static QComboBox *createComboBox(
             const QStringList &texts, const std::function<void(int index)> &onActivated);
+    static QPushButton *createButton(const QString &iconPath, const QString &text = QString());
     static QPushButton *createButton(
             const QString &iconPath, const std::function<void()> &onClicked);
     static QToolButton *createToolButton(
