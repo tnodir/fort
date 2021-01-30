@@ -83,12 +83,7 @@ bool SqliteStmt::bindBlob(int index, const QByteArray &data)
 
 bool SqliteStmt::bindVar(int index, const QVariant &v)
 {
-    const qint16 vType =
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-            v.type();
-#else
-            v.typeId();
-#endif
+    const qint16 vType = v.userType();
 
     switch (vType) {
     case QMetaType::UnknownType:

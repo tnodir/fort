@@ -10,11 +10,11 @@ void GuiUtil::setClipboardData(const QVariant &data)
 {
     QClipboard *clipboard = QGuiApplication::clipboard();
 
-    switch (data.type()) {
-    case QVariant::Pixmap:
+    switch (data.userType()) {
+    case QMetaType::QPixmap:
         clipboard->setPixmap(data.value<QPixmap>());
         break;
-    case QVariant::Image:
+    case QMetaType::QImage:
         clipboard->setImage(data.value<QImage>());
         break;
     default:
