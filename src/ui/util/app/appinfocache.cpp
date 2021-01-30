@@ -8,9 +8,6 @@
 
 AppInfoCache::AppInfoCache(QObject *parent) : QObject(parent), m_cache(1000)
 {
-    m_triggerTimer.setSingleShot(true);
-    m_triggerTimer.setInterval(200);
-
     connect(&m_triggerTimer, &QTimer::timeout, this, &AppInfoCache::cacheChanged);
 }
 
@@ -86,7 +83,5 @@ void AppInfoCache::handleFinishedLookup(const QString &appPath, const AppInfo in
 
 void AppInfoCache::emitCacheChanged()
 {
-    if (!m_triggerTimer.isActive()) {
-        m_triggerTimer.start();
-    }
+    m_triggerTimer.startTrigger();
 }

@@ -3,8 +3,8 @@
 
 #include <QCache>
 #include <QObject>
-#include <QTimer>
 
+#include "../triggertimer.h"
 #include "appinfo.h"
 
 class AppIconProvider;
@@ -40,7 +40,7 @@ private:
 
     QCache<QString, AppInfo> m_cache;
 
-    QTimer m_triggerTimer;
+    TriggerTimer m_triggerTimer;
 };
 
 #endif // APPINFOCACHE_H

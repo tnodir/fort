@@ -3,8 +3,8 @@
 
 #include <QCache>
 #include <QObject>
-#include <QTimer>
 
+#include "../triggertimer.h"
 #include "hostinfo.h"
 
 class HostInfoManager;
@@ -38,7 +38,7 @@ private:
 
     QCache<QString, HostInfo> m_cache;
 
-    QTimer m_triggerTimer;
+    TriggerTimer m_triggerTimer;
 };
 
 #endif // HOSTINFOCACHE_H

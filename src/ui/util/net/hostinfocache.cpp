@@ -8,9 +8,6 @@ HostInfoCache::HostInfoCache(QObject *parent) :
     connect(m_manager, &HostInfoManager::lookupFinished, this,
             &HostInfoCache::handleFinishedLookup);
 
-    m_triggerTimer.setSingleShot(true);
-    m_triggerTimer.setInterval(200);
-
     connect(&m_triggerTimer, &QTimer::timeout, this, &HostInfoCache::cacheChanged);
 }
 
@@ -49,7 +46,5 @@ void HostInfoCache::handleFinishedLookup(const QString &address, const QString &
 
 void HostInfoCache::emitCacheChanged()
 {
-    if (!m_triggerTimer.isActive()) {
-        m_triggerTimer.start();
-    }
+    m_triggerTimer.startTrigger();
 }
