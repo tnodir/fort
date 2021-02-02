@@ -18,7 +18,7 @@ GraphWindow::GraphWindow(FortSettings *fortSettings, QWidget *parent) :
     updateWindowFlags();
     updateColors();
 
-    setMinimumSize(QSize(9, 9));
+    setMinimumSize(QSize(30, 10));
 }
 
 void GraphWindow::updateWindowFlags()
@@ -140,9 +140,12 @@ void GraphWindow::onMouseDoubleClick(QMouseEvent *event)
 
 void GraphWindow::onMouseDragBegin(QMouseEvent *event)
 {
-    m_mousePressOffset = event->globalPosition().toPoint() - pos();
+    m_mousePressPoint = event->globalPosition().toPoint();
+    m_posOnMousePress = this->pos();
+    m_sizeOnMousePress = this->size();
+    m_mouseDragResize = (event->buttons() & Qt::RightButton) != 0;
 
-    QGuiApplication::setOverrideCursor(Qt::SizeAllCursor);
+    QGuiApplication::setOverrideCursor(m_mouseDragResize ? Qt::SizeFDiagCursor : Qt::SizeAllCursor);
 }
 
 void GraphWindow::onMouseDragMove(QMouseEvent *event)
@@ -150,7 +153,14 @@ void GraphWindow::onMouseDragMove(QMouseEvent *event)
     if (isMaximized() || isFullScreen())
         return;
 
-    move(event->globalPosition().toPoint() - m_mousePressOffset);
+    const QPoint offset = event->globalPosition().toPoint() - m_mousePressPoint;
+
+    if (m_mouseDragResize) {
+        resize(qMax(m_sizeOnMousePress.width() + offset.x(), minimumSize().width()),
+                qMax(m_sizeOnMousePress.height() + offset.y(), minimumSize().height()));
+    } else {
+        move(m_posOnMousePress + offset);
+    }
 }
 
 void GraphWindow::onMouseDragEnd(QMouseEvent *event)

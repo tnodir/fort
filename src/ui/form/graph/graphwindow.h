@@ -60,6 +60,8 @@ protected:
     void leaveEvent(QEvent *event) override;
 
 private:
+    bool m_mouseDragResize = false;
+
     qint64 m_lastUnixTime = 0;
 
     FortSettings *m_fortSettings = nullptr;
@@ -68,7 +70,9 @@ private:
     QCPBars *m_graphIn = nullptr;
     QCPBars *m_graphOut = nullptr;
 
-    QPoint m_mousePressOffset;
+    QPoint m_mousePressPoint;
+    QPoint m_posOnMousePress;
+    QSize m_sizeOnMousePress;
 
     QTimer m_updateTimer;
     QTimer m_hoverTimer;
