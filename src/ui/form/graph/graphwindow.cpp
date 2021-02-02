@@ -18,7 +18,7 @@ GraphWindow::GraphWindow(FortSettings *fortSettings, QWidget *parent) :
     updateWindowFlags();
     updateColors();
 
-    setMinimumSize(QSize(100, 50));
+    setMinimumSize(QSize(9, 9));
 }
 
 void GraphWindow::updateWindowFlags()
@@ -155,9 +155,11 @@ void GraphWindow::onMouseDragMove(QMouseEvent *event)
 
 void GraphWindow::onMouseDragEnd(QMouseEvent *event)
 {
-    Q_UNUSED(event);
-
     QGuiApplication::restoreOverrideCursor();
+
+    if (event->modifiers() == Qt::NoModifier) {
+        checkWindowEdges();
+    }
 }
 
 void GraphWindow::enterEvent(
@@ -278,6 +280,43 @@ void GraphWindow::updateWindowTitleSpeed()
 void GraphWindow::setWindowOpacityPercent(int percent)
 {
     setWindowOpacity(qreal(qBound(1, percent, 100)) / 100.0);
+}
+
+void GraphWindow::checkWindowEdges()
+{
+    constexpr int stickyDistance = 30;
+
+    const auto screen = this->screen();
+    if (!screen)
+        return;
+
+    const QRect sg = screen->geometry();
+    const QRect wg = this->frameGeometry();
+    QPoint diff(0, 0);
+
+    const int leftDiff = sg.x() - wg.x();
+    if (qAbs(leftDiff) < stickyDistance) {
+        diff.setX(leftDiff);
+    } else {
+        const int rightDiff = sg.width() - wg.right();
+        if (qAbs(rightDiff) < stickyDistance) {
+            diff.setX(rightDiff);
+        }
+    }
+
+    const int topDiff = sg.y() - wg.y();
+    if (qAbs(topDiff) < stickyDistance) {
+        diff.setY(topDiff);
+    } else {
+        const int bottomDiff = sg.height() - wg.bottom();
+        if (qAbs(bottomDiff) < stickyDistance) {
+            diff.setY(bottomDiff);
+        }
+    }
+
+    if (diff.x() != 0 || diff.y() != 0) {
+        this->move(wg.x() + diff.x(), wg.y() + diff.y());
+    }
 }
 
 QPen GraphWindow::adjustPen(const QPen &pen, const QColor &color)

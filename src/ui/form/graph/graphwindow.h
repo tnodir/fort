@@ -45,6 +45,8 @@ private:
     void updateWindowTitleSpeed();
     void setWindowOpacityPercent(int percent);
 
+    void checkWindowEdges();
+
     static QPen adjustPen(const QPen &pen, const QColor &color);
 
 protected:
