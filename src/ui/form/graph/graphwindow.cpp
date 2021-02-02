@@ -140,7 +140,7 @@ void GraphWindow::onMouseDoubleClick(QMouseEvent *event)
 
 void GraphWindow::onMouseDragBegin(QMouseEvent *event)
 {
-    m_mousePressOffset = event->globalPos() - pos();
+    m_mousePressOffset = event->globalPosition().toPoint() - pos();
 
     QGuiApplication::setOverrideCursor(Qt::SizeAllCursor);
 }
@@ -150,7 +150,7 @@ void GraphWindow::onMouseDragMove(QMouseEvent *event)
     if (isMaximized() || isFullScreen())
         return;
 
-    move(event->globalPos() - m_mousePressOffset);
+    move(event->globalPosition().toPoint() - m_mousePressOffset);
 }
 
 void GraphWindow::onMouseDragEnd(QMouseEvent *event)
