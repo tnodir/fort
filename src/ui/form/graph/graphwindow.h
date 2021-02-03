@@ -36,6 +36,8 @@ private:
     void onMouseDragMove(QMouseEvent *event);
     void onMouseDragEnd(QMouseEvent *event);
 
+    void cancelMousePressAndDragging();
+
 private:
     void setupUi();
     void setupTimer();
@@ -58,6 +60,8 @@ protected:
 #endif
             ) override;
     void leaveEvent(QEvent *event) override;
+
+    void keyPressEvent(QKeyEvent *event) override;
 
 private:
     bool m_mouseDragResize = false;

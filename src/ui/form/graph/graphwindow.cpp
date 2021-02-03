@@ -172,6 +172,22 @@ void GraphWindow::onMouseDragEnd(QMouseEvent *event)
     }
 }
 
+void GraphWindow::cancelMousePressAndDragging()
+{
+    if (!m_plot->mousePressed())
+        return;
+
+    if (m_plot->mouseDragging()) {
+        QGuiApplication::restoreOverrideCursor();
+
+        // Restore original position & size
+        move(m_posOnMousePress);
+        resize(m_sizeOnMousePress);
+    }
+
+    m_plot->cancelMousePressAndDragging();
+}
+
 void GraphWindow::enterEvent(
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         QEvent *event
@@ -196,6 +212,22 @@ void GraphWindow::leaveEvent(QEvent *event)
     Q_UNUSED(event);
 
     setWindowOpacityPercent(m_fortSettings->graphWindowOpacity());
+}
+
+void GraphWindow::keyPressEvent(QKeyEvent *event)
+{
+    QWidget::keyPressEvent(event);
+
+    if (event->isAutoRepeat())
+        return;
+
+    switch (event->key()) {
+    case Qt::Key_Escape: // Esc
+        if (event->modifiers() == Qt::NoModifier) {
+            cancelMousePressAndDragging();
+        }
+        break;
+    }
 }
 
 void GraphWindow::checkHoverLeave()

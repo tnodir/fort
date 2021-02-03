@@ -5,6 +5,12 @@ GraphPlot::GraphPlot(QWidget *parent) :
 {
 }
 
+void GraphPlot::cancelMousePressAndDragging()
+{
+    m_mousePressed = false;
+    m_mouseDragging = false;
+}
+
 void GraphPlot::resizeEvent(QResizeEvent *event)
 {
     QCustomPlot::resizeEvent(event);
@@ -37,6 +43,9 @@ void GraphPlot::mouseMoveEvent(QMouseEvent *event)
 void GraphPlot::mouseReleaseEvent(QMouseEvent *event)
 {
     QCustomPlot::mouseReleaseEvent(event);
+
+    if (!m_mousePressed)
+        return;
 
     m_mousePressed = false;
 

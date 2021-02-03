@@ -10,6 +10,11 @@ class GraphPlot : public QCustomPlot
 public:
     explicit GraphPlot(QWidget *parent = nullptr);
 
+    bool mousePressed() const { return m_mousePressed; }
+    bool mouseDragging() const { return m_mouseDragging; }
+
+    void cancelMousePressAndDragging();
+
 signals:
     void resized(QResizeEvent *event);
     void mouseRightClick(QMouseEvent *event);
