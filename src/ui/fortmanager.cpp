@@ -542,17 +542,17 @@ bool FortManager::checkPassword()
 
 void FortManager::showErrorBox(const QString &text, const QString &title)
 {
-    QMessageBox::warning(&m_window, title, text);
+    QMessageBox::warning(focusWidget(), title, text);
 }
 
 void FortManager::showInfoBox(const QString &text, const QString &title)
 {
-    QMessageBox::information(&m_window, title, text);
+    QMessageBox::information(focusWidget(), title, text);
 }
 
 bool FortManager::showQuestionBox(const QString &text, const QString &title)
 {
-    return QMessageBox::question(&m_window, title, text) == QMessageBox::Yes;
+    return QMessageBox::question(focusWidget(), title, text) == QMessageBox::Yes;
 }
 
 bool FortManager::saveOriginConf(const QString &message)
@@ -858,6 +858,12 @@ void FortManager::addHotKey(QAction *action, const QString &shortcutText, bool h
 void FortManager::removeHotKeys()
 {
     m_hotKeyManager->removeActions();
+}
+
+QWidget *FortManager::focusWidget()
+{
+    auto w = QApplication::focusWidget();
+    return w ? w : &m_window;
 }
 
 QAction *FortManager::addAction(QWidget *widget, const QIcon &icon, const QString &text,

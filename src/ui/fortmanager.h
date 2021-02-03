@@ -167,6 +167,8 @@ private:
     void addHotKey(QAction *action, const QString &shortcutText, bool hotKeyEnabled);
     void removeHotKeys();
 
+    QWidget *focusWidget();
+
     static QAction *addAction(QWidget *widget, const QIcon &icon, const QString &text,
             const QObject *receiver = nullptr, const char *member = nullptr, bool checkable = false,
             bool checked = false);
