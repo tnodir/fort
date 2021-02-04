@@ -37,8 +37,8 @@
 
 namespace {
 
-const ValuesList trafKeepDayValues = { 60, -1, 90, 180, 365, 365 * 3 };
-const ValuesList trafKeepMonthValues = { 2, -1, 3, 6, 12, 36 };
+const ValuesList trafKeepDayValues = { 60, -1, 90, 180, 365, 365 * 3, 365 * 5, 365 * 10 };
+const ValuesList trafKeepMonthValues = { 2, -1, 3, 6, 12, 12 * 3, 12 * 5, 12 * 10 };
 const ValuesList logIpKeepCountValues = { 1000, -1, 1000, 5000, 10000, 50000, 100000, 500000,
     1000000, 5000000, 10000000 };
 const ValuesList quotaValues = { 10, 0, 100, 500, 1024, 8 * 1024, 10 * 1024, 30 * 1024, 50 * 1024,
@@ -177,7 +177,7 @@ void StatisticsPage::onRetranslateUi()
 void StatisticsPage::retranslateTrafKeepDayNames()
 {
     const QStringList list = { tr("Custom"), tr("Forever"), tr("3 months"), tr("6 months"),
-        tr("1 year"), tr("3 years") };
+        tr("1 year"), tr("3 years"), tr("5 years"), tr("10 years") };
 
     m_lscTrafHourKeepDays->setNames(list);
     m_lscTrafDayKeepDays->setNames(list);
@@ -186,7 +186,7 @@ void StatisticsPage::retranslateTrafKeepDayNames()
 void StatisticsPage::retranslateTrafKeepMonthNames()
 {
     const QStringList list = { tr("Custom"), tr("Forever"), tr("3 months"), tr("6 months"),
-        tr("1 year"), tr("3 years") };
+        tr("1 year"), tr("3 years"), tr("5 years"), tr("10 years") };
 
     m_lscTrafMonthKeepMonths->setNames(list);
 }
