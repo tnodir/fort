@@ -41,8 +41,8 @@ protected slots:
 private:
     void retranslateTrafKeepDayNames();
     void retranslateTrafKeepMonthNames();
-    void retranslateIpKeepCountNames();
     void retranslateQuotaNames();
+    void retranslateIpKeepCountNames();
     void retranslateTrafUnitNames();
     void retranslateTabBar();
 
@@ -60,11 +60,11 @@ private:
     void setupTrafHourKeepDays();
     void setupTrafDayKeepDays();
     void setupTrafMonthKeepMonths();
+    void setupQuotaDayMb();
+    void setupQuotaMonthMb();
     void setupLogAllowedIp();
     void setupAllowedIpKeepCount();
     void setupBlockedIpKeepCount();
-    void setupQuotaDayMb();
-    void setupQuotaMonthMb();
     void setupAppListView();
     void setupTabBar();
     void setupTableTraf();
@@ -120,9 +120,9 @@ private:
     LabelSpinCombo *m_lscTrafMonthKeepMonths = nullptr;
     LabelSpinCombo *m_lscQuotaDayMb = nullptr;
     LabelSpinCombo *m_lscQuotaMonthMb = nullptr;
-    LabelSpinCombo *m_lscBlockedIpKeepCount = nullptr;
     QCheckBox *m_cbLogAllowedIp = nullptr;
     LabelSpinCombo *m_lscAllowedIpKeepCount = nullptr;
+    LabelSpinCombo *m_lscBlockedIpKeepCount = nullptr;
     QSplitter *m_splitter = nullptr;
     ListView *m_appListView = nullptr;
     QTabBar *m_tabBar = nullptr;

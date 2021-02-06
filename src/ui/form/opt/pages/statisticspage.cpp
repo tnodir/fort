@@ -137,17 +137,17 @@ void StatisticsPage::onRetranslateUi()
     m_lscTrafMonthKeepMonths->label()->setText(tr("Keep data for 'Monthly':"));
     m_lscTrafMonthKeepMonths->spinBox()->setSuffix(tr(" month(s)"));
 
+    m_lscQuotaDayMb->label()->setText(tr("Day's Quota:"));
+    m_lscQuotaMonthMb->label()->setText(tr("Month's Quota:"));
+
     m_cbLogAllowedIp->setText(tr("Collect connection statistics"));
     m_lscAllowedIpKeepCount->label()->setText(tr("Keep count for 'Allowed connections':"));
     m_lscBlockedIpKeepCount->label()->setText(tr("Keep count for 'Blocked connections':"));
 
-    m_lscQuotaDayMb->label()->setText(tr("Day's Quota:"));
-    m_lscQuotaMonthMb->label()->setText(tr("Month's Quota:"));
-
     retranslateTrafKeepDayNames();
     retranslateTrafKeepMonthNames();
-    retranslateIpKeepCountNames();
     retranslateQuotaNames();
+    retranslateIpKeepCountNames();
 
     m_btGraphOptions->setText(tr("Graph"));
     m_cbGraphAlwaysOnTop->setText(tr("Always on top"));
@@ -191,15 +191,6 @@ void StatisticsPage::retranslateTrafKeepMonthNames()
     m_lscTrafMonthKeepMonths->setNames(list);
 }
 
-void StatisticsPage::retranslateIpKeepCountNames()
-{
-    const QStringList list = { tr("Custom"), tr("Forever"), "1K", "5K", "10K", "50K", "100K",
-        "500K", "1M", "5M", "10M" };
-
-    m_lscAllowedIpKeepCount->setNames(list);
-    m_lscBlockedIpKeepCount->setNames(list);
-}
-
 void StatisticsPage::retranslateQuotaNames()
 {
     QStringList list;
@@ -216,6 +207,15 @@ void StatisticsPage::retranslateQuotaNames()
 
     m_lscQuotaDayMb->setNames(list);
     m_lscQuotaMonthMb->setNames(list);
+}
+
+void StatisticsPage::retranslateIpKeepCountNames()
+{
+    const QStringList list = { tr("Custom"), tr("Forever"), "1K", "5K", "10K", "50K", "100K",
+        "500K", "1M", "5M", "10M" };
+
+    m_lscAllowedIpKeepCount->setNames(list);
+    m_lscBlockedIpKeepCount->setNames(list);
 }
 
 void StatisticsPage::retranslateTrafUnitNames()
@@ -427,18 +427,18 @@ void StatisticsPage::setupTrafOptionsMenu()
     setupTrafHourKeepDays();
     setupTrafDayKeepDays();
     setupTrafMonthKeepMonths();
+    setupQuotaDayMb();
+    setupQuotaMonthMb();
     setupLogAllowedIp();
     setupAllowedIpKeepCount();
     setupBlockedIpKeepCount();
-    setupQuotaDayMb();
-    setupQuotaMonthMb();
 
     // Menu
     const QList<QWidget *> menuWidgets = { m_cbLogStat, m_ctpActivePeriod, m_lscMonthStart,
         ControlUtil::createSeparator(), m_lscTrafHourKeepDays, m_lscTrafDayKeepDays,
-        m_lscTrafMonthKeepMonths, ControlUtil::createSeparator(), m_cbLogAllowedIp,
-        m_lscAllowedIpKeepCount, m_lscBlockedIpKeepCount, ControlUtil::createSeparator(),
-        m_lscQuotaDayMb, m_lscQuotaMonthMb };
+        m_lscTrafMonthKeepMonths, ControlUtil::createSeparator(), m_lscQuotaDayMb,
+        m_lscQuotaMonthMb, ControlUtil::createSeparator(), m_cbLogAllowedIp,
+        m_lscAllowedIpKeepCount, m_lscBlockedIpKeepCount };
     auto layout = ControlUtil::createLayoutByWidgets(menuWidgets);
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
@@ -571,6 +571,42 @@ void StatisticsPage::setupTrafMonthKeepMonths()
             });
 }
 
+void StatisticsPage::setupQuotaDayMb()
+{
+    m_lscQuotaDayMb = createSpinCombo(0, 1024 * 1024, " MiB");
+    m_lscQuotaDayMb->setValues(quotaValues);
+
+    connect(m_lscQuotaDayMb->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
+            [&](int value) {
+                const quint32 mbytes = quint32(value);
+
+                if (conf()->quotaDayMb() == mbytes)
+                    return;
+
+                conf()->setQuotaDayMb(mbytes);
+
+                ctrl()->setConfFlagsEdited(true);
+            });
+}
+
+void StatisticsPage::setupQuotaMonthMb()
+{
+    m_lscQuotaMonthMb = createSpinCombo(0, 1024 * 1024, " MiB");
+    m_lscQuotaMonthMb->setValues(quotaValues);
+
+    connect(m_lscQuotaMonthMb->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
+            [&](int value) {
+                const quint32 mbytes = quint32(value);
+
+                if (conf()->quotaMonthMb() == mbytes)
+                    return;
+
+                conf()->setQuotaMonthMb(mbytes);
+
+                ctrl()->setConfFlagsEdited(true);
+            });
+}
+
 void StatisticsPage::setupLogAllowedIp()
 {
     m_cbLogAllowedIp = ControlUtil::createCheckBox(conf()->logAllowedIp(), [&](bool checked) {
@@ -612,42 +648,6 @@ void StatisticsPage::setupBlockedIpKeepCount()
                     return;
 
                 conf()->setBlockedIpKeepCount(value);
-
-                ctrl()->setConfFlagsEdited(true);
-            });
-}
-
-void StatisticsPage::setupQuotaDayMb()
-{
-    m_lscQuotaDayMb = createSpinCombo(0, 1024 * 1024, " MiB");
-    m_lscQuotaDayMb->setValues(quotaValues);
-
-    connect(m_lscQuotaDayMb->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
-            [&](int value) {
-                const quint32 mbytes = quint32(value);
-
-                if (conf()->quotaDayMb() == mbytes)
-                    return;
-
-                conf()->setQuotaDayMb(mbytes);
-
-                ctrl()->setConfFlagsEdited(true);
-            });
-}
-
-void StatisticsPage::setupQuotaMonthMb()
-{
-    m_lscQuotaMonthMb = createSpinCombo(0, 1024 * 1024, " MiB");
-    m_lscQuotaMonthMb->setValues(quotaValues);
-
-    connect(m_lscQuotaMonthMb->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
-            [&](int value) {
-                const quint32 mbytes = quint32(value);
-
-                if (conf()->quotaMonthMb() == mbytes)
-                    return;
-
-                conf()->setQuotaMonthMb(mbytes);
 
                 ctrl()->setConfFlagsEdited(true);
             });
@@ -803,12 +803,12 @@ void StatisticsPage::updatePage()
     m_lscTrafDayKeepDays->spinBox()->setValue(conf()->trafDayKeepDays());
     m_lscTrafMonthKeepMonths->spinBox()->setValue(conf()->trafMonthKeepMonths());
 
+    m_lscQuotaDayMb->spinBox()->setValue(int(conf()->quotaDayMb()));
+    m_lscQuotaMonthMb->spinBox()->setValue(int(conf()->quotaMonthMb()));
+
     m_cbLogAllowedIp->setChecked(conf()->logAllowedIp());
     m_lscAllowedIpKeepCount->spinBox()->setValue(conf()->allowedIpKeepCount());
     m_lscBlockedIpKeepCount->spinBox()->setValue(conf()->blockedIpKeepCount());
-
-    m_lscQuotaDayMb->spinBox()->setValue(int(conf()->quotaDayMb()));
-    m_lscQuotaMonthMb->spinBox()->setValue(int(conf()->quotaMonthMb()));
 
     m_cbGraphAlwaysOnTop->setChecked(settings()->graphWindowAlwaysOnTop());
     m_cbGraphFrameless->setChecked(settings()->graphWindowFrameless());

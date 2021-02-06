@@ -7,6 +7,7 @@ AppGroup::AppGroup(QObject *parent) :
     QObject(parent),
     m_edited(false),
     m_enabled(true),
+    m_logConn(true),
     m_fragmentPacket(false),
     m_periodEnabled(false),
     m_limitInEnabled(false),
@@ -24,10 +25,20 @@ void AppGroup::setEnabled(bool enabled)
     }
 }
 
-void AppGroup::setFragmentPacket(bool enabled)
+void AppGroup::setLogConn(bool on)
 {
-    if (bool(m_fragmentPacket) != enabled) {
-        m_fragmentPacket = enabled;
+    if (bool(m_logConn) != on) {
+        m_logConn = on;
+        emit logConnChanged();
+
+        setEdited(true);
+    }
+}
+
+void AppGroup::setFragmentPacket(bool on)
+{
+    if (bool(m_fragmentPacket) != on) {
+        m_fragmentPacket = on;
         emit fragmentPacketChanged();
 
         setEdited(true);
@@ -164,6 +175,7 @@ void AppGroup::clear()
     m_edited = true;
     m_enabled = true;
 
+    m_logConn = true;
     m_fragmentPacket = false;
     m_periodEnabled = false;
 
@@ -189,6 +201,7 @@ void AppGroup::copy(const AppGroup &o)
     m_edited = o.edited();
 
     m_enabled = o.enabled();
+    m_logConn = o.logConn();
     m_fragmentPacket = o.fragmentPacket();
 
     m_periodEnabled = o.periodEnabled();

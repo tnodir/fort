@@ -24,7 +24,7 @@ Q_LOGGING_CATEGORY(CLOG_CONF_MANAGER, "conf")
 #define logWarning()  qCWarning(CLOG_CONF_MANAGER, )
 #define logCritical() qCCritical(CLOG_CONF_MANAGER, )
 
-#define DATABASE_USER_VERSION 7
+#define DATABASE_USER_VERSION 8
 
 namespace {
 
@@ -34,7 +34,7 @@ const char *const sqlSelectAddressGroups = "SELECT addr_group_id, include_all, e
                                            "  FROM address_group"
                                            "  ORDER BY order_index;";
 
-const char *const sqlSelectAppGroups = "SELECT app_group_id, enabled,"
+const char *const sqlSelectAppGroups = "SELECT app_group_id, enabled, log_conn,"
                                        "    fragment_packet, period_enabled,"
                                        "    limit_in_enabled, limit_out_enabled,"
                                        "    speed_limit_in, speed_limit_out,"
@@ -57,21 +57,21 @@ const char *const sqlUpdateAddressGroup = "UPDATE address_group"
                                           "  WHERE addr_group_id = ?1;";
 
 const char *const sqlInsertAppGroup =
-        "INSERT INTO app_group(app_group_id, order_index, enabled,"
+        "INSERT INTO app_group(app_group_id, order_index, enabled, log_conn,"
         "    fragment_packet, period_enabled,"
         "    limit_in_enabled, limit_out_enabled,"
         "    speed_limit_in, speed_limit_out,"
         "    name, block_text, allow_text,"
         "    period_from, period_to)"
-        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14);";
+        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15);";
 
 const char *const sqlUpdateAppGroup = "UPDATE app_group"
-                                      "  SET order_index = ?2, enabled = ?3,"
-                                      "    fragment_packet = ?4, period_enabled = ?5,"
-                                      "    limit_in_enabled = ?6, limit_out_enabled = ?7,"
-                                      "    speed_limit_in = ?8, speed_limit_out = ?9,"
-                                      "    name = ?10, block_text = ?11, allow_text = ?12,"
-                                      "    period_from = ?13, period_to = ?14"
+                                      "  SET order_index = ?2, enabled = ?3, log_conn = ?4,"
+                                      "    fragment_packet = ?5, period_enabled = ?6,"
+                                      "    limit_in_enabled = ?7, limit_out_enabled = ?8,"
+                                      "    speed_limit_in = ?9, speed_limit_out = ?10,"
+                                      "    name = ?11, block_text = ?12, allow_text = ?13,"
+                                      "    period_from = ?14, period_to = ?15"
                                       "  WHERE app_group_id = ?1;";
 
 const char *const sqlDeleteAppGroup = "DELETE FROM app_group"
@@ -251,17 +251,18 @@ bool loadAppGroups(SqliteDb *db, FirewallConf &conf)
 
         appGroup->setId(stmt.columnInt64(0));
         appGroup->setEnabled(stmt.columnBool(1));
-        appGroup->setFragmentPacket(stmt.columnInt(2));
-        appGroup->setPeriodEnabled(stmt.columnBool(3));
-        appGroup->setLimitInEnabled(stmt.columnBool(4));
-        appGroup->setLimitOutEnabled(stmt.columnBool(5));
-        appGroup->setSpeedLimitIn(quint32(stmt.columnInt(6)));
-        appGroup->setSpeedLimitOut(quint32(stmt.columnInt(7)));
-        appGroup->setName(stmt.columnText(8));
-        appGroup->setBlockText(stmt.columnText(9));
-        appGroup->setAllowText(stmt.columnText(10));
-        appGroup->setPeriodFrom(stmt.columnText(11));
-        appGroup->setPeriodTo(stmt.columnText(12));
+        appGroup->setLogConn(stmt.columnBool(2));
+        appGroup->setFragmentPacket(stmt.columnBool(3));
+        appGroup->setPeriodEnabled(stmt.columnBool(4));
+        appGroup->setLimitInEnabled(stmt.columnBool(5));
+        appGroup->setLimitOutEnabled(stmt.columnBool(6));
+        appGroup->setSpeedLimitIn(quint32(stmt.columnInt(7)));
+        appGroup->setSpeedLimitOut(quint32(stmt.columnInt(8)));
+        appGroup->setName(stmt.columnText(9));
+        appGroup->setBlockText(stmt.columnText(10));
+        appGroup->setAllowText(stmt.columnText(11));
+        appGroup->setPeriodFrom(stmt.columnText(12));
+        appGroup->setPeriodTo(stmt.columnText(13));
         appGroup->setEdited(false);
 
         conf.addAppGroup(appGroup);
@@ -278,10 +279,10 @@ bool saveAppGroup(SqliteDb *db, AppGroup *appGroup, int orderIndex)
 
     const auto vars = QVariantList()
             << (rowExists ? appGroup->id() : QVariant()) << orderIndex << appGroup->enabled()
-            << appGroup->fragmentPacket() << appGroup->periodEnabled() << appGroup->limitInEnabled()
-            << appGroup->limitOutEnabled() << appGroup->speedLimitIn() << appGroup->speedLimitOut()
-            << appGroup->name() << appGroup->blockText() << appGroup->allowText()
-            << appGroup->periodFrom() << appGroup->periodTo();
+            << appGroup->logConn() << appGroup->fragmentPacket() << appGroup->periodEnabled()
+            << appGroup->limitInEnabled() << appGroup->limitOutEnabled() << appGroup->speedLimitIn()
+            << appGroup->speedLimitOut() << appGroup->name() << appGroup->blockText()
+            << appGroup->allowText() << appGroup->periodFrom() << appGroup->periodTo();
 
     const char *sql = rowExists ? sqlUpdateAppGroup : sqlInsertAppGroup;
 

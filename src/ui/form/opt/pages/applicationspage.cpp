@@ -79,6 +79,8 @@ void ApplicationsPage::onRetranslateUi()
     m_cscLimitIn->checkBox()->setText(tr("Download speed limit:"));
     m_cscLimitOut->checkBox()->setText(tr("Upload speed limit:"));
     retranslateGroupLimits();
+
+    m_cbLogConn->setText(tr("Collect connection statistics"));
     m_cbFragmentPacket->setText(tr("Fragment first TCP packet"));
 
     m_cbGroupEnabled->setText(tr("Enabled"));
@@ -368,11 +370,12 @@ void ApplicationsPage::setupGroupOptions()
 {
     setupGroupLimitIn();
     setupGroupLimitOut();
+    setupGroupLogConn();
     setupGroupFragmentPacket();
 
     // Menu
     const QList<QWidget *> menuWidgets = { m_cscLimitIn, m_cscLimitOut,
-        ControlUtil::createSeparator(), m_cbFragmentPacket };
+        ControlUtil::createSeparator(), m_cbLogConn, m_cbFragmentPacket };
     auto layout = ControlUtil::createLayoutByWidgets(menuWidgets);
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
@@ -431,6 +434,18 @@ void ApplicationsPage::setupGroupLimitOut()
             });
 }
 
+void ApplicationsPage::setupGroupLogConn()
+{
+    m_cbLogConn = ControlUtil::createCheckBox(false, [&](bool checked) {
+        if (appGroup()->logConn() == checked)
+            return;
+
+        appGroup()->setLogConn(checked);
+
+        ctrl()->setConfEdited(true);
+    });
+}
+
 void ApplicationsPage::setupGroupFragmentPacket()
 {
     m_cbFragmentPacket = ControlUtil::createCheckBox(false, [&](bool checked) {
@@ -450,6 +465,7 @@ void ApplicationsPage::setupGroupOptionsEnabled()
 
         m_cscLimitIn->setEnabled(logStat);
         m_cscLimitOut->setEnabled(logStat);
+        m_cbLogConn->setEnabled(logStat);
         m_cbFragmentPacket->setEnabled(logStat);
     };
 
@@ -531,6 +547,7 @@ void ApplicationsPage::updateGroup()
     m_cscLimitOut->checkBox()->setChecked(appGroup()->limitOutEnabled());
     m_cscLimitOut->spinBox()->setValue(int(appGroup()->speedLimitOut()));
 
+    m_cbLogConn->setChecked(appGroup()->logConn());
     m_cbFragmentPacket->setChecked(appGroup()->fragmentPacket());
 
     m_cbGroupEnabled->setChecked(appGroup()->enabled());

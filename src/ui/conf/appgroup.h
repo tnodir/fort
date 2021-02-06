@@ -8,6 +8,7 @@ class AppGroup : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
+    Q_PROPERTY(bool logConn READ logConn WRITE setLogConn NOTIFY logConnChanged)
     Q_PROPERTY(bool fragmentPacket READ fragmentPacket WRITE setFragmentPacket NOTIFY
                     fragmentPacketChanged)
     Q_PROPERTY(bool periodEnabled READ periodEnabled WRITE setPeriodEnabled NOTIFY
@@ -35,8 +36,11 @@ public:
     bool enabled() const { return m_enabled; }
     void setEnabled(bool enabled);
 
+    bool logConn() const { return m_logConn; }
+    void setLogConn(bool on);
+
     bool fragmentPacket() const { return m_fragmentPacket; }
-    void setFragmentPacket(bool enabled);
+    void setFragmentPacket(bool on);
 
     bool periodEnabled() const { return m_periodEnabled; }
     void setPeriodEnabled(bool enabled);
@@ -81,6 +85,7 @@ public:
 
 signals:
     void enabledChanged();
+    void logConnChanged();
     void fragmentPacketChanged();
     void periodEnabledChanged();
     void limitInEnabledChanged();
@@ -99,6 +104,7 @@ private:
     bool m_edited : 1;
     bool m_enabled : 1;
 
+    bool m_logConn : 1;
     bool m_fragmentPacket : 1;
 
     bool m_periodEnabled : 1;

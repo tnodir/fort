@@ -49,6 +49,7 @@ private:
     void setupGroupOptions();
     void setupGroupLimitIn();
     void setupGroupLimitOut();
+    void setupGroupLogConn();
     void setupGroupFragmentPacket();
     void setupGroupOptionsEnabled();
     void setupBlockApps();
@@ -81,6 +82,7 @@ private:
     QPushButton *m_btGroupOptions = nullptr;
     CheckSpinCombo *m_cscLimitIn = nullptr;
     CheckSpinCombo *m_cscLimitOut = nullptr;
+    QCheckBox *m_cbLogConn = nullptr;
     QCheckBox *m_cbFragmentPacket = nullptr;
     AppsColumn *m_blockApps = nullptr;
     AppsColumn *m_allowApps = nullptr;

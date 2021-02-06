@@ -28,6 +28,7 @@ CREATE TABLE app_group(
   app_group_id INTEGER PRIMARY KEY,
   order_index INTEGER NOT NULL,
   enabled BOOLEAN NOT NULL,
+  log_conn BOOLEAN NOT NULL DEFAULT 1,
   fragment_packet BOOLEAN NOT NULL,
   period_enabled BOOLEAN NOT NULL,
   limit_in_enabled BOOLEAN NOT NULL,
