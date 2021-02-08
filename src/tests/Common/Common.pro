@@ -75,6 +75,9 @@ HEADERS += \
     $$UI_PWD/util/processinfo.h \
     $$UI_PWD/util/stringutil.h
 
+# Version
+include($$UI_PWD/../version/Version.pri)
+
 # Driver integration
 include($$UI_PWD/../driver/Driver.pri)
 

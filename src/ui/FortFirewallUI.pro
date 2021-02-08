@@ -124,7 +124,6 @@ SOURCES += \
     util/worker/workerobject.cpp
 
 HEADERS += \
-    ../version.h \
     conf/addressgroup.h \
     conf/appgroup.h \
     conf/confmanager.h \
@@ -238,6 +237,9 @@ HEADERS += \
     util/worker/workerjob.h \
     util/worker/workermanager.h \
     util/worker/workerobject.h
+
+# Version
+include(../version/Version.pri)
 
 # Driver integration
 include(../driver/Driver.pri)

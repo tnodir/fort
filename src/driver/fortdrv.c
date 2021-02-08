@@ -1,8 +1,8 @@
 /* Fort Firewall Driver */
 
-#include "fortdrv.h"
+#include "../version/fort_version.h"
 
-#include "../version.h"
+#include "fortdrv.h"
 
 #include "common/fortconf.h"
 #include "common/fortdev.h"

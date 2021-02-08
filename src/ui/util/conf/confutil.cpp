@@ -3,13 +3,13 @@
 #include <QRegularExpression>
 
 #include <common/fortconf.h>
+#include <fort_version.h>
 
 #include "../../conf/addressgroup.h"
 #include "../../conf/appgroup.h"
 #include "../../conf/firewallconf.h"
 #include "../../fortcommon.h"
 #include "../../util/conf/confappswalker.h"
-#include "../../version.h"
 #include "../dateutil.h"
 #include "../envmanager.h"
 #include "../fileutil.h"

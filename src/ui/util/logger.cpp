@@ -3,7 +3,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 
-#include "../../version.h"
+#include <fort_version.h>
+
 #include "dateutil.h"
 
 #define LOGGER_FILE_PREFIX   "log_fort_"

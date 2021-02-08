@@ -2,7 +2,8 @@
 
 #include <QDataStream>
 
-#include "../../version.h"
+#include <fort_version.h>
+
 #include "../fortmanager.h"
 #include "taskupdatechecker.h"
 

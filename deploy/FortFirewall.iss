@@ -1,7 +1,7 @@
 
 #define SRC_PATH	AddBackslash(SourcePath) + "..\src"
 
-#include SRC_PATH + "\version.h"
+#include SRC_PATH + "\version\fort-version.h"
 
 #define APP_EXE_NAME	"FortFirewall.exe"
 #define APP_ICO_NAME	"FortFirewall.ico"

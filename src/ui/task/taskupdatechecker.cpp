@@ -4,7 +4,8 @@
 #include <QDebug>
 #include <QVariant>
 
-#include "../../version.h"
+#include <fort_version.h>
+
 #include "../util/net/netdownloader.h"
 #include "../util/net/netutil.h"
 #include "../util/json/jsonutil.h"

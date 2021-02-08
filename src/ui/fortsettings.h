@@ -7,8 +7,6 @@
 #include <QRect>
 #include <QSettings>
 
-#include "../version.h"
-
 class FirewallConf;
 
 class FortSettings : public QObject
@@ -18,6 +16,7 @@ class FortSettings : public QObject
     Q_PROPERTY(QString language READ language WRITE setLanguage NOTIFY iniChanged)
     Q_PROPERTY(bool hasPassword READ hasPassword NOTIFY iniChanged)
     Q_PROPERTY(QString passwordHash READ passwordHash WRITE setPasswordHash NOTIFY iniChanged)
+    Q_PROPERTY(QString appUpdatesUrl READ appUpdatesUrl CONSTANT)
     Q_PROPERTY(int appVersion READ appVersion CONSTANT)
     Q_PROPERTY(int iniVersion READ iniVersion WRITE setIniVersion NOTIFY iniChanged)
     Q_PROPERTY(QByteArray optWindowAddrSplit READ optWindowAddrSplit WRITE setOptWindowAddrSplit
@@ -62,7 +61,6 @@ class FortSettings : public QObject
     Q_PROPERTY(QString logsPath READ logsPath CONSTANT)
     Q_PROPERTY(QString cachePath READ cachePath CONSTANT)
     Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
-    Q_PROPERTY(QString appUpdatesUrl READ appUpdatesUrl CONSTANT)
 
 public:
     explicit FortSettings(const QStringList &args, QObject *parent = nullptr);
@@ -87,7 +85,8 @@ public:
     QString passwordHash() const { return iniText("base/passwordHash"); }
     void setPasswordHash(const QString &v) { setIniValue("base/passwordHash", v); }
 
-    int appVersion() const { return APP_VERSION; }
+    QString appUpdatesUrl() const;
+    int appVersion() const;
 
     int iniVersion() const { return iniInt("base/version", appVersion()); }
     void setIniVersion(int v) { setIniValue("base/version", v); }
@@ -250,8 +249,6 @@ public:
     QStringList args() const { return m_args; }
 
     QString errorMessage() const { return m_errorMessage; }
-
-    QString appUpdatesUrl() const { return APP_UPDATES_URL; }
 
     bool confMigrated() const;
     bool confCanMigrate(QString &viaVersion) const;

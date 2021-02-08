@@ -4,6 +4,8 @@
 #include <QCoreApplication>
 #include <QSettings>
 
+#include <fort_version.h>
+
 #include "conf/addressgroup.h"
 #include "conf/firewallconf.h"
 #include "util/dateutil.h"
@@ -20,6 +22,16 @@ FortSettings::FortSettings(const QStringList &args, QObject *parent) :
 {
     processArguments(args);
     setupIni();
+}
+
+QString FortSettings::appUpdatesUrl() const
+{
+    return APP_UPDATES_URL;
+}
+
+int FortSettings::appVersion() const
+{
+    return APP_VERSION;
 }
 
 bool FortSettings::startWithWindows() const
