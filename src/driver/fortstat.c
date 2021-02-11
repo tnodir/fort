@@ -188,8 +188,8 @@ static NTSTATUS fort_flow_add(PFORT_STAT stat, UINT64 flow_id, UCHAR group_index
 
     if (flow == NULL) {
         if (is_reauth) {
-            return FORT_STATUS_FLOW_BLOCK; /* Block existing flow after reauth. to be able to use
-                                              flow-context */
+            /* Block existing flow after reauth. to be able to associate a flow-context */
+            return FORT_STATUS_FLOW_BLOCK;
         }
 
         if (stat->flow_free != NULL) {
@@ -312,8 +312,8 @@ FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, UINT64 flow_id, UINT32 pr
 
     if (proc == NULL) {
         if (is_reauth) {
-            status = FORT_STATUS_FLOW_BLOCK; /* Block existing flow after reauth. to be able to use
-                                                flow-context */
+            /* Block existing flow after reauth. to be able to associate a flow-context */
+            status = FORT_STATUS_FLOW_BLOCK;
             goto end;
         }
 

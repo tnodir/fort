@@ -7,6 +7,7 @@
 #include "logentry.h"
 
 class LogEntryBlocked;
+class LogEntryBlockedIp;
 class LogEntryProcNew;
 class LogEntryStatTraf;
 class LogEntryTime;
@@ -27,6 +28,9 @@ public:
 
     void writeEntryBlocked(const LogEntryBlocked *logEntry);
     void readEntryBlocked(LogEntryBlocked *logEntry);
+
+    void writeEntryBlockedIp(const LogEntryBlockedIp *logEntry);
+    void readEntryBlockedIp(LogEntryBlockedIp *logEntry);
 
     void writeEntryProcNew(const LogEntryProcNew *logEntry);
     void readEntryProcNew(LogEntryProcNew *logEntry);

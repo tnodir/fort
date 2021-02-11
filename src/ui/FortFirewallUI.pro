@@ -56,6 +56,7 @@ SOURCES += \
     log/logbuffer.cpp \
     log/logentry.cpp \
     log/logentryblocked.cpp \
+    log/logentryblockedip.cpp \
     log/logentryprocnew.cpp \
     log/logentrystattraf.cpp \
     log/logentrytime.cpp \
@@ -63,7 +64,7 @@ SOURCES += \
     main.cpp \
     model/applistmodel.cpp \
     model/appstatmodel.cpp \
-    model/iplistmodel.cpp \
+    model/connlistmodel.cpp \
     model/traflistmodel.cpp \
     model/zonelistmodel.cpp \
     model/zonesourcewrapper.cpp \
@@ -171,13 +172,14 @@ HEADERS += \
     log/logbuffer.h \
     log/logentry.h \
     log/logentryblocked.h \
+    log/logentryblockedip.h \
     log/logentryprocnew.h \
     log/logentrystattraf.h \
     log/logentrytime.h \
     log/logmanager.h \
     model/applistmodel.h \
     model/appstatmodel.h \
-    model/iplistmodel.h \
+    model/connlistmodel.h \
     model/traflistmodel.h \
     model/zonelistmodel.h \
     model/zonesourcewrapper.h \

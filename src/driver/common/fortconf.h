@@ -242,7 +242,8 @@ FORT_API FORT_APP_FLAGS fort_conf_app_exe_find(
 FORT_API FORT_APP_FLAGS fort_conf_app_find(const PFORT_CONF conf, const char *path, UINT32 path_len,
         fort_conf_app_exe_find_func *exe_find_func);
 
-FORT_API BOOL fort_conf_app_blocked(const PFORT_CONF conf, FORT_APP_FLAGS app_flags);
+FORT_API BOOL fort_conf_app_blocked(
+        const PFORT_CONF conf, FORT_APP_FLAGS app_flags, UCHAR *block_reason);
 
 FORT_API UINT16 fort_conf_app_period_bits(const PFORT_CONF conf, FORT_TIME time, int *periods_n);
 

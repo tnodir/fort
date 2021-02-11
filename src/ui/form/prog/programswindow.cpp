@@ -110,7 +110,7 @@ void ProgramsWindow::onRetranslateUi()
     m_btEditCancel->setText(tr("Cancel"));
 
     m_btLogOptions->setText(tr("Options"));
-    m_cbLogBlocked->setText(tr("Process New Programs"));
+    m_cbLogBlocked->setText(tr("Collect New Blocked Programs"));
     m_cbLogBlockedIp->setText(tr("Collect blocked connections"));
 
     appListModel()->refresh();

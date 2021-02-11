@@ -45,7 +45,7 @@ public:
 
     void initialize();
 
-    void addLogEntry(const LogEntryBlocked &logEntry);
+    void handleLogBlocked(const LogEntryBlocked &logEntry);
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 

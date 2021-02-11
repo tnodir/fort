@@ -57,7 +57,7 @@ void AppListModel::initialize()
     connect(confManager(), &ConfManager::appEndTimesUpdated, this, &AppListModel::refresh);
 }
 
-void AppListModel::addLogEntry(const LogEntryBlocked &logEntry)
+void AppListModel::handleLogBlocked(const LogEntryBlocked &logEntry)
 {
     const QString appPath = logEntry.path();
 

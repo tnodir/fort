@@ -248,11 +248,13 @@ end:
     return app_flags;
 }
 
-FORT_API BOOL fort_conf_app_blocked(const PFORT_CONF conf, FORT_APP_FLAGS app_flags)
+FORT_API BOOL fort_conf_app_blocked(
+        const PFORT_CONF conf, FORT_APP_FLAGS app_flags, UCHAR *block_reason)
 {
     const BOOL app_found = (app_flags.v != 0);
 
     if (app_found && !app_flags.use_group_perm) {
+        *block_reason = FORT_BLOCK_REASON_PROGRAM;
         return app_flags.blocked;
     } else {
         const UINT32 app_perm_val = app_flags.blocked ? 2 : 1;
@@ -265,6 +267,9 @@ FORT_API BOOL fort_conf_app_blocked(const PFORT_CONF conf, FORT_APP_FLAGS app_fl
                 block_all ? TRUE : (app_found && (app_perm & conf->app_perms_block_mask));
         const BOOL app_allowed =
                 allow_all ? TRUE : (app_found && (app_perm & conf->app_perms_allow_mask));
+
+        *block_reason =
+                app_found ? FORT_BLOCK_REASON_APP_GROUP_FOUND : FORT_BLOCK_REASON_APP_GROUP_DEFAULT;
 
         return block_all ? !app_allowed : (allow_all ? app_blocked : (app_blocked && !app_allowed));
     }

@@ -136,9 +136,8 @@ FORT_API NTSTATUS fort_buffer_prepare(
     return STATUS_SUCCESS;
 }
 
-FORT_API NTSTATUS fort_buffer_blocked_write(PFORT_BUFFER buf, BOOL blocked, UINT32 remote_ip,
-        UINT16 remote_port, UCHAR ip_proto, UINT32 pid, UINT32 path_len, const PVOID path,
-        PIRP *irp, ULONG_PTR *info)
+FORT_API NTSTATUS fort_buffer_blocked_write(PFORT_BUFFER buf, BOOL blocked, UINT32 pid,
+        UINT32 path_len, const PVOID path, PIRP *irp, ULONG_PTR *info)
 {
     KLOCK_QUEUE_HANDLE lock_queue;
     NTSTATUS status;
@@ -155,8 +154,35 @@ FORT_API NTSTATUS fort_buffer_blocked_write(PFORT_BUFFER buf, BOOL blocked, UINT
         status = fort_buffer_prepare(buf, len, &out, irp, info);
 
         if (NT_SUCCESS(status)) {
-            fort_log_blocked_write(
-                    out, blocked, remote_ip, remote_port, ip_proto, pid, path_len, path);
+            fort_log_blocked_write(out, blocked, pid, path_len, path);
+        }
+    }
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    return status;
+}
+
+NTSTATUS fort_buffer_blocked_ip_write(PFORT_BUFFER buf, UCHAR block_reason, UCHAR ip_proto,
+        UINT16 local_port, UINT16 remote_port, UINT32 local_ip, UINT32 remote_ip, UINT32 pid,
+        UINT32 path_len, const PVOID path, PIRP *irp, ULONG_PTR *info)
+{
+    KLOCK_QUEUE_HANDLE lock_queue;
+    NTSTATUS status;
+
+    if (path_len > FORT_LOG_PATH_MAX) {
+        path_len = 0; /* drop too long path */
+    }
+
+    const UINT32 len = FORT_LOG_BLOCKED_IP_SIZE(path_len);
+
+    KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
+    {
+        PCHAR out;
+        status = fort_buffer_prepare(buf, len, &out, irp, info);
+
+        if (NT_SUCCESS(status)) {
+            fort_log_blocked_ip_write(out, block_reason, ip_proto, local_port, remote_port,
+                    local_ip, remote_ip, pid, path_len, path);
         }
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);

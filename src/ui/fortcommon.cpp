@@ -82,6 +82,16 @@ quint32 FortCommon::logBlockedSize(quint32 pathLen)
     return FORT_LOG_BLOCKED_SIZE(pathLen);
 }
 
+quint32 FortCommon::logBlockedIpHeaderSize()
+{
+    return FORT_LOG_BLOCKED_IP_HEADER_SIZE;
+}
+
+quint32 FortCommon::logBlockedIpSize(quint32 pathLen)
+{
+    return FORT_LOG_BLOCKED_IP_SIZE(pathLen);
+}
+
 quint32 FortCommon::logProcNewHeaderSize()
 {
     return FORT_LOG_PROC_NEW_HEADER_SIZE;
@@ -117,16 +127,31 @@ quint32 FortCommon::logType(const char *input)
     return fort_log_type(input);
 }
 
-void FortCommon::logBlockedHeaderWrite(char *output, bool blocked, quint32 remoteIp,
-        quint16 remotePort, quint8 ipProto, quint32 pid, quint32 pathLen)
+void FortCommon::logBlockedHeaderWrite(char *output, bool blocked, quint32 pid, quint32 pathLen)
 {
-    fort_log_blocked_header_write(output, blocked, remoteIp, remotePort, ipProto, pid, pathLen);
+    fort_log_blocked_header_write(output, blocked, pid, pathLen);
 }
 
-void FortCommon::logBlockedHeaderRead(const char *input, int *blocked, quint32 *remoteIp,
-        quint16 *remotePort, quint8 *ipProto, quint32 *pid, quint32 *pathLen)
+void FortCommon::logBlockedHeaderRead(
+        const char *input, int *blocked, quint32 *pid, quint32 *pathLen)
 {
-    fort_log_blocked_header_read(input, blocked, remoteIp, remotePort, ipProto, pid, pathLen);
+    fort_log_blocked_header_read(input, blocked, pid, pathLen);
+}
+
+void FortCommon::logBlockedIpHeaderWrite(char *output, quint8 blockReason, quint8 ipProto,
+        quint16 localPort, quint16 remotePort, quint32 localIp, quint32 remoteIp, quint32 pid,
+        quint32 pathLen)
+{
+    fort_log_blocked_ip_header_write(
+            output, blockReason, ipProto, localPort, remotePort, localIp, remoteIp, pid, pathLen);
+}
+
+void FortCommon::logBlockedIpHeaderRead(const char *input, quint8 *blockReason, quint8 *ipProto,
+        quint16 *localPort, quint16 *remotePort, quint32 *localIp, quint32 *remoteIp, quint32 *pid,
+        quint32 *pathLen)
+{
+    fort_log_blocked_ip_header_read(
+            input, blockReason, ipProto, localPort, remotePort, localIp, remoteIp, pid, pathLen);
 }
 
 void FortCommon::logProcNewHeaderWrite(char *output, quint32 pid, quint32 pathLen)
@@ -197,11 +222,11 @@ quint8 FortCommon::confAppGroupIndex(quint16 appFlags)
     return app_flags.group_index;
 }
 
-bool FortCommon::confAppBlocked(const void *drvConf, quint16 appFlags)
+bool FortCommon::confAppBlocked(const void *drvConf, quint16 appFlags, quint8 *blockReason)
 {
     const PFORT_CONF conf = (const PFORT_CONF) drvConf;
 
-    return fort_conf_app_blocked(conf, { appFlags });
+    return fort_conf_app_blocked(conf, { appFlags }, blockReason);
 }
 
 quint16 FortCommon::confAppPeriodBits(const void *drvConf, quint8 hour, quint8 minute)

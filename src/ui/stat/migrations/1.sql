@@ -52,14 +52,15 @@ CREATE TABLE traffic_month(
 CREATE TABLE conn_app(
   conn_id INTEGER PRIMARY KEY,
   app_id INTEGER NOT NULL,
+  process_id INTEGER NOT NULL,
   conn_time INTEGER NOT NULL,
   inbound BOOLEAN NOT NULL,
   blocked BOOLEAN NOT NULL,
   proto INTEGER NOT NULL,
-  src_port INTEGER NOT NULL,
-  dst_port INTEGER NOT NULL,
-  src_ip INTEGER NOT NULL,
-  dst_ip INTEGER NOT NULL
+  local_port INTEGER NOT NULL,
+  remote_port INTEGER NOT NULL,
+  local_ip INTEGER NOT NULL,
+  remote_ip INTEGER NOT NULL
 );
 
 CREATE UNIQUE INDEX uk_conn_app_app_id ON conn_app(app_id);

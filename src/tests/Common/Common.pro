@@ -20,6 +20,7 @@ SOURCES += \
     $$UI_PWD/log/logbuffer.cpp \
     $$UI_PWD/log/logentry.cpp \
     $$UI_PWD/log/logentryblocked.cpp \
+    $$UI_PWD/log/logentryblockedip.cpp \
     $$UI_PWD/log/logentryprocnew.cpp \
     $$UI_PWD/log/logentrystattraf.cpp \
     $$UI_PWD/log/logentrytime.cpp \
@@ -52,6 +53,7 @@ HEADERS += \
     $$UI_PWD/log/logbuffer.h \
     $$UI_PWD/log/logentry.h \
     $$UI_PWD/log/logentryblocked.h \
+    $$UI_PWD/log/logentryblockedip.h \
     $$UI_PWD/log/logentryprocnew.h \
     $$UI_PWD/log/logentrystattraf.h \
     $$UI_PWD/log/logentrytime.h \

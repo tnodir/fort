@@ -13,6 +13,7 @@
 #include "../util/osutil.h"
 #include "logbuffer.h"
 #include "logentryblocked.h"
+#include "logentryblockedip.h"
 #include "logentryprocnew.h"
 #include "logentrystattraf.h"
 #include "logentrytime.h"
@@ -136,19 +137,25 @@ void LogManager::readLogEntries(LogBuffer *logBuffer)
         case LogEntry::AppBlocked: {
             LogEntryBlocked blockedEntry;
             logBuffer->readEntryBlocked(&blockedEntry);
-            appListModel()->addLogEntry(blockedEntry);
+            appListModel()->handleLogBlocked(blockedEntry);
+            break;
+        }
+        case LogEntry::AppBlockedIp: {
+            LogEntryBlockedIp blockedIpEntry;
+            logBuffer->readEntryBlockedIp(&blockedIpEntry);
+            // connListModel()->handleLogBlockedIp(blockedIpEntry);
             break;
         }
         case LogEntry::ProcNew: {
             LogEntryProcNew procNewEntry;
             logBuffer->readEntryProcNew(&procNewEntry);
-            appStatModel()->handleProcNew(procNewEntry);
+            appStatModel()->handleLogProcNew(procNewEntry);
             break;
         }
         case LogEntry::StatTraf: {
             LogEntryStatTraf statTrafEntry;
             logBuffer->readEntryStatTraf(&statTrafEntry);
-            appStatModel()->handleStatTraf(statTrafEntry, currentUnixTime());
+            appStatModel()->handleLogStatTraf(statTrafEntry, currentUnixTime());
             break;
         }
         case LogEntry::Time: {

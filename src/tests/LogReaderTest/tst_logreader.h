@@ -11,7 +11,8 @@
 #include <conf/firewallconf.h>
 #include <fortcommon.h>
 #include <log/logbuffer.h>
-#include <log/logentryblocked.h>
+#include <log/logentryblockedip.h>
+#include <log/logentrytime.h>
 #include <util/conf/confappswalker.h>
 #include <util/conf/confutil.h>
 #include <util/device.h>
@@ -52,7 +53,7 @@ void setConf(Device &device)
     FirewallConf conf;
 
     conf.setProvBoot(true);
-    conf.setLogBlocked(true);
+    conf.setLogBlockedIp(true);
 
     // Address Groups
     AddressGroup *inetGroup = conf.inetAddressGroup();
@@ -84,21 +85,19 @@ void printLogs(LogBuffer &buf)
         if (logType == LogEntry::TypeNone)
             break;
 
-        ASSERT_EQ(logType, LogEntry::AppBlocked);
-
-        LogEntryBlocked entry;
-
-        buf.readEntryBlocked(&entry);
-
-        const quint32 pid = entry.pid();
-        QString kernelPath = entry.kernelPath();
-
-        if (kernelPath.isEmpty()) {
-            ProcessInfo pi(pid);
-            kernelPath = pi.path(true);
+        if (logType == LogEntry::Time) {
+            LogEntryTime entry;
+            buf.readEntryTime(&entry);
+            continue;
         }
 
-        qDebug() << pid << kernelPath << NetUtil::ip4ToText(entry.ip());
+        ASSERT_EQ(logType, LogEntry::AppBlockedIp);
+
+        LogEntryBlockedIp entry;
+        buf.readEntryBlockedIp(&entry);
+
+        qDebug() << entry.pid() << entry.kernelPath() << entry.path()
+                 << NetUtil::ip4ToText(entry.remoteIp()) << entry.remotePort();
     }
 }
 

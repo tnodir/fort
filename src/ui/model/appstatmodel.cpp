@@ -80,12 +80,12 @@ void AppStatModel::handleCreatedApp(qint64 appId, const QString &appPath)
     insert(appPath);
 }
 
-void AppStatModel::handleProcNew(const LogEntryProcNew &procNewEntry)
+void AppStatModel::handleLogProcNew(const LogEntryProcNew &procNewEntry)
 {
     m_statManager->logProcNew(procNewEntry.pid(), procNewEntry.path());
 }
 
-void AppStatModel::handleStatTraf(const LogEntryStatTraf &statTrafEntry, qint64 unixTime)
+void AppStatModel::handleLogStatTraf(const LogEntryStatTraf &statTrafEntry, qint64 unixTime)
 {
     m_statManager->logStatTraf(statTrafEntry.procCount(), unixTime, statTrafEntry.procTrafBytes());
 }

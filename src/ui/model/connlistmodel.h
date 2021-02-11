@@ -1,14 +1,14 @@
-#ifndef IPLISTMODEL_H
-#define IPLISTMODEL_H
+#ifndef CONNLISTMODEL_H
+#define CONNLISTMODEL_H
 
 #include "../util/model/stringlistmodel.h"
 
-class IpListModel : public StringListModel
+class ConnListModel : public StringListModel
 {
     Q_OBJECT
 
 public:
-    explicit IpListModel(QObject *parent = nullptr);
+    explicit ConnListModel(QObject *parent = nullptr);
 
     QString appPath() const { return m_appPath; }
     void setAppPath(const QString &appPath);
@@ -22,4 +22,4 @@ private:
     QString m_appPath;
 };
 
-#endif // IPLISTMODEL_H
+#endif // CONNLISTMODEL_H

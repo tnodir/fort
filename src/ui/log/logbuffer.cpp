@@ -2,6 +2,7 @@
 
 #include "fortcommon.h"
 #include "logentryblocked.h"
+#include "logentryblockedip.h"
 #include "logentryprocnew.h"
 #include "logentrystattraf.h"
 #include "logentrytime.h"
@@ -59,8 +60,7 @@ void LogBuffer::writeEntryBlocked(const LogEntryBlocked *logEntry)
 
     char *output = this->output();
 
-    FortCommon::logBlockedHeaderWrite(output, logEntry->blocked(), logEntry->ip(), logEntry->port(),
-            logEntry->proto(), logEntry->pid(), pathLen);
+    FortCommon::logBlockedHeaderWrite(output, logEntry->blocked(), logEntry->pid(), pathLen);
 
     if (pathLen) {
         output += FortCommon::logBlockedHeaderSize();
@@ -77,10 +77,8 @@ void LogBuffer::readEntryBlocked(LogEntryBlocked *logEntry)
     const char *input = this->input();
 
     int blocked;
-    quint8 proto;
-    quint16 port;
-    quint32 ip, pid, pathLen;
-    FortCommon::logBlockedHeaderRead(input, &blocked, &ip, &port, &proto, &pid, &pathLen);
+    quint32 pid, pathLen;
+    FortCommon::logBlockedHeaderRead(input, &blocked, &pid, &pathLen);
 
     QString path;
     if (pathLen) {
@@ -89,13 +87,66 @@ void LogBuffer::readEntryBlocked(LogEntryBlocked *logEntry)
     }
 
     logEntry->setBlocked(blocked);
-    logEntry->setIp(ip);
-    logEntry->setPort(port);
-    logEntry->setProto(proto);
     logEntry->setPid(pid);
     logEntry->setKernelPath(path);
 
     const int entrySize = int(FortCommon::logBlockedSize(pathLen));
+    m_offset += entrySize;
+}
+
+void LogBuffer::writeEntryBlockedIp(const LogEntryBlockedIp *logEntry)
+{
+    const QString path = logEntry->kernelPath();
+    const quint32 pathLen = quint32(path.size()) * sizeof(wchar_t);
+
+    const int entrySize = int(FortCommon::logBlockedIpSize(pathLen));
+    prepareFor(entrySize);
+
+    char *output = this->output();
+
+    FortCommon::logBlockedIpHeaderWrite(output, logEntry->blockReason(), logEntry->proto(),
+            logEntry->localPort(), logEntry->remotePort(), logEntry->localIp(),
+            logEntry->remoteIp(), logEntry->pid(), pathLen);
+
+    if (pathLen) {
+        output += FortCommon::logBlockedIpHeaderSize();
+        path.toWCharArray((wchar_t *) output);
+    }
+
+    m_top += entrySize;
+}
+
+void LogBuffer::readEntryBlockedIp(LogEntryBlockedIp *logEntry)
+{
+    Q_ASSERT(m_offset < m_top);
+
+    const char *input = this->input();
+
+    quint8 blockReason;
+    quint8 proto;
+    quint16 localPort;
+    quint16 remotePort;
+    quint32 localIp, remoteIp;
+    quint32 pid, pathLen;
+    FortCommon::logBlockedIpHeaderRead(input, &blockReason, &proto, &localPort, &remotePort,
+            &localIp, &remoteIp, &pid, &pathLen);
+
+    QString path;
+    if (pathLen) {
+        input += FortCommon::logBlockedIpHeaderSize();
+        path = QString::fromWCharArray((const wchar_t *) input, pathLen / int(sizeof(wchar_t)));
+    }
+
+    logEntry->setBlockReason(blockReason);
+    logEntry->setLocalIp(localIp);
+    logEntry->setRemoteIp(remoteIp);
+    logEntry->setLocalPort(localPort);
+    logEntry->setRemotePort(remotePort);
+    logEntry->setProto(proto);
+    logEntry->setPid(pid);
+    logEntry->setKernelPath(path);
+
+    const int entrySize = int(FortCommon::logBlockedIpSize(pathLen));
     m_offset += entrySize;
 }
 

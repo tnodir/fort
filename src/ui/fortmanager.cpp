@@ -23,7 +23,7 @@
 #include "log/logmanager.h"
 #include "model/applistmodel.h"
 #include "model/appstatmodel.h"
-#include "model/iplistmodel.h"
+#include "model/connlistmodel.h"
 #include "model/traflistmodel.h"
 #include "model/zonelistmodel.h"
 #include "stat/quotamanager.h"

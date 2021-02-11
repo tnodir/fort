@@ -8,6 +8,7 @@
 #include <conf/appgroup.h>
 #include <conf/firewallconf.h>
 #include <fortcommon.h>
+#include <log/logentryblockedip.h>
 #include <util/conf/confappswalker.h>
 #include <util/conf/confutil.h>
 #include <util/envmanager.h>
@@ -81,29 +82,41 @@ TEST_F(ConfUtilTest, ConfWriteRead)
     ASSERT_FALSE(FortCommon::confIpInRange(data, NetUtil::textToIp4("193.0.0.0")));
     ASSERT_TRUE(FortCommon::confIpInRange(data, NetUtil::textToIp4("239.255.255.250")));
 
-    ASSERT_TRUE(FortCommon::confAppBlocked(data, FortCommon::confAppFind(data, "System")));
-    ASSERT_FALSE(FortCommon::confAppBlocked(data,
-            FortCommon::confAppFind(data,
-                    FileUtil::pathToKernelPath("C:\\Program Files\\Skype\\Phone\\Skype.exe"))));
-    ASSERT_FALSE(FortCommon::confAppBlocked(data,
-            FortCommon::confAppFind(
-                    data, FileUtil::pathToKernelPath("C:\\Utils\\Dev\\Git\\git.exe"))));
-    ASSERT_FALSE(FortCommon::confAppBlocked(data,
-            FortCommon::confAppFind(
-                    data, FileUtil::pathToKernelPath("D:\\Utils\\Dev\\Git\\bin\\git.exe"))));
+    quint8 blockReason = LogEntryBlockedIp::ReasonNone;
+
+    ASSERT_TRUE(FortCommon::confAppBlocked(
+            data, FortCommon::confAppFind(data, "System"), &blockReason));
+    ASSERT_EQ(blockReason, LogEntryBlockedIp::ReasonAppGroupDefault);
+
     ASSERT_FALSE(FortCommon::confAppBlocked(data,
             FortCommon::confAppFind(
-                    data, FileUtil::pathToKernelPath("D:\\My\\Programs\\Test.exe"))));
+                    data, FileUtil::pathToKernelPath("C:\\Program Files\\Skype\\Phone\\Skype.exe")),
+            &blockReason));
+    ASSERT_FALSE(FortCommon::confAppBlocked(data,
+            FortCommon::confAppFind(
+                    data, FileUtil::pathToKernelPath("C:\\Utils\\Dev\\Git\\git.exe")),
+            &blockReason));
+    ASSERT_FALSE(FortCommon::confAppBlocked(data,
+            FortCommon::confAppFind(
+                    data, FileUtil::pathToKernelPath("D:\\Utils\\Dev\\Git\\bin\\git.exe")),
+            &blockReason));
+    ASSERT_FALSE(FortCommon::confAppBlocked(data,
+            FortCommon::confAppFind(data, FileUtil::pathToKernelPath("D:\\My\\Programs\\Test.exe")),
+            &blockReason));
+
     ASSERT_TRUE(FortCommon::confAppBlocked(data,
             FortCommon::confAppFind(
-                    data, FileUtil::pathToKernelPath("C:\\Program Files\\Test.exe"))));
+                    data, FileUtil::pathToKernelPath("C:\\Program Files\\Test.exe")),
+            &blockReason));
+    ASSERT_EQ(blockReason, LogEntryBlockedIp::ReasonAppGroupDefault);
 
     ASSERT_EQ(FortCommon::confAppPeriodBits(data, 0, 0), 0x01);
     ASSERT_EQ(FortCommon::confAppPeriodBits(data, 12, 0), 0);
 
     const quint16 firefoxFlags = FortCommon::confAppFind(
             data, FileUtil::pathToKernelPath("C:\\Utils\\Firefox\\Bin\\firefox.exe"));
-    ASSERT_TRUE(FortCommon::confAppBlocked(data, firefoxFlags));
+    ASSERT_TRUE(FortCommon::confAppBlocked(data, firefoxFlags, &blockReason));
+    ASSERT_EQ(blockReason, LogEntryBlockedIp::ReasonAppGroupFound);
     ASSERT_EQ(int(FortCommon::confAppGroupIndex(firefoxFlags)), 1);
 }
 

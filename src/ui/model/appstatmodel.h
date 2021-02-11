@@ -23,8 +23,8 @@ public:
     AppInfoCache *appInfoCache() const { return m_appInfoCache; }
     void setAppInfoCache(AppInfoCache *v);
 
-    void handleProcNew(const LogEntryProcNew &procNewEntry);
-    void handleStatTraf(const LogEntryStatTraf &statTrafEntry, qint64 unixTime);
+    void handleLogProcNew(const LogEntryProcNew &procNewEntry);
+    void handleLogStatTraf(const LogEntryStatTraf &statTrafEntry, qint64 unixTime);
 
     qint64 appIdByRow(int row) const;
     QString appPathByRow(int row) const;
