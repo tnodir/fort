@@ -519,7 +519,7 @@ void FortManager::updateGraphWindow()
 
 void FortManager::showConnectionsWindow()
 {
-    if (!(m_connWindow && m_connWindow->isVisible()))
+    if (!(m_connWindow && m_connWindow->isVisible()) && !checkPassword())
         return;
 
     if (!m_connWindow) {

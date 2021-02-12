@@ -64,6 +64,8 @@ void ConnectionsWindow::onRetranslateUi()
 {
     this->unsetLocale();
 
+    m_btLogOptions->setText(tr("Options"));
+    m_cbLogAllowedIp->setText(tr("Collect allowed connections"));
     m_cbLogBlockedIp->setText(tr("Collect blocked connections"));
 
     connListModel()->refresh();
@@ -113,17 +115,29 @@ QLayout *ConnectionsWindow::setupHeader()
 
 void ConnectionsWindow::setupLogOptions()
 {
+    setupLogAllowedIp();
     setupLogBlockedIp();
 
     // Menu
-    const QList<QWidget *> menuWidgets = { /*m_cbLogBlocked,*/ ControlUtil::createSeparator(),
-        m_cbLogBlockedIp };
+    const QList<QWidget *> menuWidgets = { m_cbLogAllowedIp, m_cbLogBlockedIp };
     auto layout = ControlUtil::createLayoutByWidgets(menuWidgets);
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
     m_btLogOptions = ControlUtil::createButton(":/icons/wrench.png");
     m_btLogOptions->setMenu(menu);
+}
+
+void ConnectionsWindow::setupLogAllowedIp()
+{
+    m_cbLogAllowedIp = ControlUtil::createCheckBox(conf()->logAllowedIp(), [&](bool checked) {
+        if (conf()->logAllowedIp() == checked)
+            return;
+
+        conf()->setLogAllowedIp(checked);
+
+        fortManager()->applyConfImmediateFlags();
+    });
 }
 
 void ConnectionsWindow::setupLogBlockedIp()

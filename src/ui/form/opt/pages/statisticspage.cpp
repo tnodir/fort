@@ -139,7 +139,6 @@ void StatisticsPage::onRetranslateUi()
     m_lscQuotaDayMb->label()->setText(tr("Day's Quota:"));
     m_lscQuotaMonthMb->label()->setText(tr("Month's Quota:"));
 
-    m_cbLogAllowedIp->setText(tr("Collect connection statistics"));
     m_lscAllowedIpKeepCount->label()->setText(tr("Keep count for 'Allowed connections':"));
     m_lscBlockedIpKeepCount->label()->setText(tr("Keep count for 'Blocked connections':"));
 
@@ -428,7 +427,6 @@ void StatisticsPage::setupTrafOptionsMenu()
     setupTrafMonthKeepMonths();
     setupQuotaDayMb();
     setupQuotaMonthMb();
-    setupLogAllowedIp();
     setupAllowedIpKeepCount();
     setupBlockedIpKeepCount();
 
@@ -436,8 +434,8 @@ void StatisticsPage::setupTrafOptionsMenu()
     const QList<QWidget *> menuWidgets = { m_cbLogStat, m_ctpActivePeriod, m_lscMonthStart,
         ControlUtil::createSeparator(), m_lscTrafHourKeepDays, m_lscTrafDayKeepDays,
         m_lscTrafMonthKeepMonths, ControlUtil::createSeparator(), m_lscQuotaDayMb,
-        m_lscQuotaMonthMb, ControlUtil::createSeparator(), m_cbLogAllowedIp,
-        m_lscAllowedIpKeepCount, m_lscBlockedIpKeepCount };
+        m_lscQuotaMonthMb, ControlUtil::createSeparator(), m_lscAllowedIpKeepCount,
+        m_lscBlockedIpKeepCount };
     auto layout = ControlUtil::createLayoutByWidgets(menuWidgets);
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
@@ -604,18 +602,6 @@ void StatisticsPage::setupQuotaMonthMb()
 
                 ctrl()->setConfFlagsEdited(true);
             });
-}
-
-void StatisticsPage::setupLogAllowedIp()
-{
-    m_cbLogAllowedIp = ControlUtil::createCheckBox(conf()->logAllowedIp(), [&](bool checked) {
-        if (conf()->logAllowedIp() == checked)
-            return;
-
-        conf()->setLogAllowedIp(checked);
-
-        fortManager()->applyConfImmediateFlags();
-    });
 }
 
 void StatisticsPage::setupAllowedIpKeepCount()
@@ -805,7 +791,6 @@ void StatisticsPage::updatePage()
     m_lscQuotaDayMb->spinBox()->setValue(int(conf()->quotaDayMb()));
     m_lscQuotaMonthMb->spinBox()->setValue(int(conf()->quotaMonthMb()));
 
-    m_cbLogAllowedIp->setChecked(conf()->logAllowedIp());
     m_lscAllowedIpKeepCount->spinBox()->setValue(conf()->allowedIpKeepCount());
     m_lscBlockedIpKeepCount->spinBox()->setValue(conf()->blockedIpKeepCount());
 

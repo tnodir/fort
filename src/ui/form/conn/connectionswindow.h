@@ -32,6 +32,7 @@ private:
     void setupUi();
     QLayout *setupHeader();
     void setupLogOptions();
+    void setupLogAllowedIp();
     void setupLogBlockedIp();
     void setupTableConnList();
     void setupTableConnListHeader();
@@ -46,6 +47,7 @@ private:
     ConnectionsController *m_ctrl = nullptr;
 
     QPushButton *m_btLogOptions = nullptr;
+    QCheckBox *m_cbLogAllowedIp = nullptr;
     QCheckBox *m_cbLogBlockedIp = nullptr;
     TableView *m_connListView = nullptr;
 };
