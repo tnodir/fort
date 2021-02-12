@@ -19,7 +19,6 @@
 #include "../../../conf/firewallconf.h"
 #include "../../../fortmanager.h"
 #include "../../../fortsettings.h"
-#include "../../../log/logmanager.h"
 #include "../../../model/appstatmodel.h"
 #include "../../../model/traflistmodel.h"
 #include "../../../util/app/appinfocache.h"
@@ -68,7 +67,7 @@ void StatisticsPage::setGraphEdited(bool v)
 
 AppStatModel *StatisticsPage::appStatModel() const
 {
-    return fortManager()->logManager()->appStatModel();
+    return fortManager()->appStatModel();
 }
 
 AppInfoCache *StatisticsPage::appInfoCache() const

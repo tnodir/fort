@@ -9,6 +9,7 @@
 #include "../fortmanager.h"
 #include "../model/applistmodel.h"
 #include "../model/appstatmodel.h"
+#include "../model/connlistmodel.h"
 #include "../util/dateutil.h"
 #include "../util/osutil.h"
 #include "logbuffer.h"
@@ -31,6 +32,11 @@ AppListModel *LogManager::appListModel() const
 AppStatModel *LogManager::appStatModel() const
 {
     return fortManager()->appStatModel();
+}
+
+ConnListModel *LogManager::connListModel() const
+{
+    return fortManager()->connListModel();
 }
 
 DriverWorker *LogManager::driverWorker() const
@@ -143,7 +149,7 @@ void LogManager::readLogEntries(LogBuffer *logBuffer)
         case LogEntry::AppBlockedIp: {
             LogEntryBlockedIp blockedIpEntry;
             logBuffer->readEntryBlockedIp(&blockedIpEntry);
-            // connListModel()->handleLogBlockedIp(blockedIpEntry);
+            connListModel()->handleLogBlockedIp(blockedIpEntry);
             break;
         }
         case LogEntry::ProcNew: {

@@ -17,8 +17,6 @@ class TaskManager;
 class ZoneListModel;
 class ZonesController;
 
-QT_FORWARD_DECLARE_STRUCT(ZoneRow)
-
 class ZonesWindow : public WidgetWindow
 {
     Q_OBJECT

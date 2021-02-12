@@ -2,7 +2,6 @@
 
 #include "../../conf/confmanager.h"
 #include "../../fortmanager.h"
-#include "../../log/logmanager.h"
 #include "../../translationmanager.h"
 
 ProgramsController::ProgramsController(FortManager *fortManager, QObject *parent) :
@@ -29,7 +28,7 @@ FirewallConf *ProgramsController::conf() const
 
 AppListModel *ProgramsController::appListModel() const
 {
-    return fortManager()->logManager()->appListModel();
+    return fortManager()->appListModel();
 }
 
 TranslationManager *ProgramsController::translationManager() const

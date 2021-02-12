@@ -208,6 +208,18 @@ public:
     }
     void setGraphWindowGridColor(const QColor &v) { setIniColor("graphWindow/gridColor", v); }
 
+    QRect connWindowGeometry() const { return iniValue("connWindow/geometry").toRect(); }
+    void setConnWindowGeometry(const QRect &v) { setIniValue("connWindow/geometry", v); }
+
+    bool connWindowMaximized() const { return iniBool("connWindow/maximized"); }
+    void setConnWindowMaximized(bool on) { setIniValue("connWindow/maximized", on); }
+
+    int connListHeaderVersion() const { return iniInt("connWindow/connListHeaderVersion"); }
+    void setConnListHeaderVersion(int v) { setIniValue("connWindow/connListHeaderVersion", v); }
+
+    QByteArray connListHeader() const { return iniByteArray("connWindow/connListHeader"); }
+    void setConnListHeader(const QByteArray &v) { setIniValue("connWindow/connListHeader", v); }
+
     qint32 quotaDayAlerted() const { return iniInt("quota/dayAlerted"); }
     void setQuotaDayAlerted(qint32 v) { setIniValue("quota/dayAlerted", v); }
 
@@ -221,6 +233,7 @@ public:
     QString hotKeyOptions() const { return iniText("hotKey/options"); }
     QString hotKeyZones() const { return iniText("hotKey/zones"); }
     QString hotKeyGraph() const { return iniText("hotKey/graph"); }
+    QString hotKeyConnections() const { return iniText("hotKey/connections"); }
     QString hotKeyFilter() const { return iniText("hotKey/filter", "Ctrl+Alt+Shift+F"); }
     QString hotKeyStopTraffic() const { return iniText("hotKey/stopTraffic"); }
     QString hotKeyStopInetTraffic() const { return iniText("hotKey/stopInetTraffic"); }

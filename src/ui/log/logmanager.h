@@ -5,6 +5,7 @@
 
 class AppListModel;
 class AppStatModel;
+class ConnListModel;
 class FortManager;
 class DriverWorker;
 class LogBuffer;
@@ -21,6 +22,7 @@ public:
     DriverWorker *driverWorker() const;
     AppListModel *appListModel() const;
     AppStatModel *appStatModel() const;
+    ConnListModel *connListModel() const;
 
     void setActive(bool active);
 

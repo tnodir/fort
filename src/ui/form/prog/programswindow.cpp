@@ -111,7 +111,6 @@ void ProgramsWindow::onRetranslateUi()
 
     m_btLogOptions->setText(tr("Options"));
     m_cbLogBlocked->setText(tr("Collect New Blocked Programs"));
-    m_cbLogBlockedIp->setText(tr("Collect blocked connections"));
 
     appListModel()->refresh();
 
@@ -390,11 +389,9 @@ QLayout *ProgramsWindow::setupHeader()
 void ProgramsWindow::setupLogOptions()
 {
     setupLogBlocked();
-    setupLogBlockedIp();
 
     // Menu
-    const QList<QWidget *> menuWidgets = { m_cbLogBlocked, ControlUtil::createSeparator(),
-        m_cbLogBlockedIp };
+    const QList<QWidget *> menuWidgets = { m_cbLogBlocked };
     auto layout = ControlUtil::createLayoutByWidgets(menuWidgets);
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
@@ -415,18 +412,6 @@ void ProgramsWindow::setupLogBlocked()
     });
 
     m_cbLogBlocked->setFont(ControlUtil::fontDemiBold());
-}
-
-void ProgramsWindow::setupLogBlockedIp()
-{
-    m_cbLogBlockedIp = ControlUtil::createCheckBox(conf()->logBlockedIp(), [&](bool checked) {
-        if (conf()->logBlockedIp() == checked)
-            return;
-
-        conf()->setLogBlockedIp(checked);
-
-        fortManager()->applyConfImmediateFlags();
-    });
 }
 
 void ProgramsWindow::setupTableApps()

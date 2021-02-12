@@ -12,6 +12,8 @@ class AppInfoCache;
 class AppListModel;
 class AppStatModel;
 class ConfManager;
+class ConnListModel;
+class ConnectionsWindow;
 class DriverManager;
 class EnvManager;
 class FirewallConf;
@@ -52,6 +54,7 @@ public:
     TaskManager *taskManager() const { return m_taskManager; }
     AppListModel *appListModel() const { return m_appListModel; }
     AppStatModel *appStatModel() const { return m_appStatModel; }
+    ConnListModel *connListModel() const { return m_connListModel; }
     ZoneListModel *zoneListModel() const { return m_zoneListModel; }
 
 signals:
@@ -65,6 +68,9 @@ signals:
 
     void afterSaveZoneWindowState();
     void afterRestoreZoneWindowState();
+
+    void afterSaveConnWindowState();
+    void afterRestoreConnWindowState();
 
 public slots:
     void installDriver();
@@ -90,6 +96,9 @@ public slots:
     void closeGraphWindow(bool storeVisibility = false);
     void switchGraphWindow();
     void updateGraphWindow();
+
+    void showConnectionsWindow();
+    void closeConnectionsWindow();
 
     void exit(int retcode = 0);
 
@@ -134,6 +143,7 @@ private:
     bool setupProgramsWindow();
     bool setupOptionsWindow();
     bool setupZonesWindow();
+    bool setupConnectionsWindow();
 
     void closeUi();
 
@@ -156,6 +166,9 @@ private:
 
     void saveGraphWindowState(bool visible);
     void restoreGraphWindowState();
+
+    void saveConnWindowState();
+    void restoreConnWindowState();
 
     void updateTrayIcon(bool alerted = false);
 
@@ -195,10 +208,14 @@ private:
     GraphWindow *m_graphWindow = nullptr;
     WidgetWindowStateWatcher *m_graphWindowState = nullptr;
 
+    ConnectionsWindow *m_connWindow = nullptr;
+    WidgetWindowStateWatcher *m_connWindowState = nullptr;
+
     QAction *m_programsAction = nullptr;
     QAction *m_optionsAction = nullptr;
     QAction *m_zonesAction = nullptr;
     QAction *m_graphWindowAction = nullptr;
+    QAction *m_connectionsAction = nullptr;
     QAction *m_filterEnabledAction = nullptr;
     QAction *m_stopTrafficAction = nullptr;
     QAction *m_stopInetTrafficAction = nullptr;
@@ -220,6 +237,7 @@ private:
 
     AppListModel *m_appListModel = nullptr;
     AppStatModel *m_appStatModel = nullptr;
+    ConnListModel *m_connListModel = nullptr;
     ZoneListModel *m_zoneListModel = nullptr;
 };
 

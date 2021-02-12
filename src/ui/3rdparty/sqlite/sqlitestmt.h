@@ -7,7 +7,7 @@
 
 #include "../../util/classhelpers.h"
 
-QT_FORWARD_DECLARE_STRUCT(sqlite3_stmt)
+struct sqlite3_stmt;
 
 class SqliteStmt
 {

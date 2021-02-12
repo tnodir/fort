@@ -15,6 +15,7 @@
 #include "conf/confmanager.h"
 #include "conf/firewallconf.h"
 #include "driver/drivermanager.h"
+#include "form/conn/connectionswindow.h"
 #include "form/graph/graphwindow.h"
 #include "form/opt/optionswindow.h"
 #include "form/prog/programswindow.h"
@@ -56,6 +57,7 @@ FortManager::FortManager(FortSettings *fortSettings, QObject *parent) :
     m_optWindowState(new WidgetWindowStateWatcher(this)),
     m_zoneWindowState(new WidgetWindowStateWatcher(this)),
     m_graphWindowState(new WidgetWindowStateWatcher(this)),
+    m_connWindowState(new WidgetWindowStateWatcher(this)),
     m_settings(fortSettings),
     m_quotaManager(new QuotaManager(fortSettings, this)),
     m_statManager(new StatManager(fortSettings->statFilePath(), m_quotaManager, this)),
@@ -69,6 +71,7 @@ FortManager::FortManager(FortSettings *fortSettings, QObject *parent) :
     m_appInfoCache(new AppInfoCache(this)),
     m_appListModel(new AppListModel(m_confManager, this)),
     m_appStatModel(new AppStatModel(m_statManager, this)),
+    m_connListModel(new ConnListModel(m_confManager, this)),
     m_zoneListModel(new ZoneListModel(m_confManager, this))
 {
     setupTranslationManager();
@@ -320,12 +323,22 @@ bool FortManager::setupZonesWindow()
     return true;
 }
 
+bool FortManager::setupConnectionsWindow()
+{
+    m_connWindow = new ConnectionsWindow(this);
+
+    m_connWindowState->install(m_connWindow);
+
+    return true;
+}
+
 void FortManager::closeUi()
 {
     closeGraphWindow(true);
     closeOptionsWindow();
     closeProgramsWindow();
     closeZonesWindow();
+    closeConnectionsWindow();
 }
 
 void FortManager::launch()
@@ -502,6 +515,34 @@ void FortManager::updateGraphWindow()
 
     m_graphWindow->updateColors();
     m_graphWindow->updateWindowFlags();
+}
+
+void FortManager::showConnectionsWindow()
+{
+    if (!(m_connWindow && m_connWindow->isVisible()))
+        return;
+
+    if (!m_connWindow) {
+        setupConnectionsWindow();
+        restoreConnWindowState();
+    }
+
+    m_connWindow->show();
+    m_connWindow->raise();
+    m_connWindow->activateWindow();
+}
+
+void FortManager::closeConnectionsWindow()
+{
+    if (!m_connWindow)
+        return;
+
+    saveConnWindowState();
+
+    m_connWindow->hide();
+
+    m_connWindow->deleteLater();
+    m_connWindow = nullptr;
 }
 
 void FortManager::exit(int retcode)
@@ -720,6 +761,22 @@ void FortManager::restoreGraphWindowState()
             settings()->graphWindowMaximized());
 }
 
+void FortManager::saveConnWindowState()
+{
+    settings()->setConnWindowGeometry(m_connWindowState->geometry());
+    settings()->setConnWindowMaximized(m_connWindowState->maximized());
+
+    emit afterSaveConnWindowState();
+}
+
+void FortManager::restoreConnWindowState()
+{
+    m_connWindowState->restore(m_connWindow, QSize(1024, 768), settings()->connWindowGeometry(),
+            settings()->connWindowMaximized());
+
+    emit afterRestoreConnWindowState();
+}
+
 void FortManager::updateTrayIcon(bool alerted)
 {
     const auto icon = alerted
@@ -768,6 +825,10 @@ void FortManager::createTrayMenu()
     m_graphWindowAction = addAction(menu, IconCache::icon(":/icons/line-graph.png"), QString(),
             this, SLOT(switchGraphWindow()), true, (m_graphWindow != nullptr));
     addHotKey(m_graphWindowAction, settings()->hotKeyGraph(), conf()->logStat());
+
+    m_connectionsAction = addAction(menu, IconCache::icon(":/icons/connect.png"), QString(), this,
+            SLOT(showConnectionsWindow()));
+    addHotKey(m_connectionsAction, settings()->hotKeyConnections(), hotKeyEnabled);
 
     menu->addSeparator();
 
@@ -837,6 +898,7 @@ void FortManager::retranslateTrayMenu()
     m_optionsAction->setText(tr("Options"));
     m_zonesAction->setText(tr("Zones"));
     m_graphWindowAction->setText(tr("Traffic Graph"));
+    m_connectionsAction->setText(tr("Connections"));
 
     m_filterEnabledAction->setText(tr("Filter Enabled"));
     m_stopTrafficAction->setText(tr("Stop Traffic"));

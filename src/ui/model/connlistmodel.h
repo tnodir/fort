@@ -3,22 +3,27 @@
 
 #include "../util/model/stringlistmodel.h"
 
+class ConfManager;
+class LogEntryBlockedIp;
+
 class ConnListModel : public StringListModel
 {
     Q_OBJECT
 
 public:
-    explicit ConnListModel(QObject *parent = nullptr);
+    explicit ConnListModel(ConfManager *confManager, QObject *parent = nullptr);
 
     QString appPath() const { return m_appPath; }
     void setAppPath(const QString &appPath);
 
-signals:
+    void handleLogBlockedIp(const LogEntryBlockedIp &logEntry);
 
 public slots:
     void clear() override;
 
 private:
+    ConfManager *m_confManager = nullptr;
+
     QString m_appPath;
 };
 

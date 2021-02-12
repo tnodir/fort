@@ -61,12 +61,6 @@ void AppListModel::handleLogBlocked(const LogEntryBlocked &logEntry)
 {
     const QString appPath = logEntry.path();
 
-#if 0
-    const QString ipText = NetUtil::ip4ToText(logEntry.ip())
-            + ", " + NetUtil::protocolName(logEntry.proto())
-            + ':' + QString::number(logEntry.port());
-#endif
-
     if (confManager()->appPathExists(appPath))
         return; // already added by user
 
