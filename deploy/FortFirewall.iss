@@ -60,8 +60,8 @@ Filename: "https://support.microsoft.com/en-us/help/2977003/the-latest-supported
   Description: "Latest Visual C++ x86 redistributable"; Flags: unchecked shellexec postinstall
 
 [UninstallRun]
-Filename: "{app}\driver\scripts\uninstall.bat"; Flags: runascurrentuser
-Filename: "{app}\{#APP_EXE_NAME}"; Parameters: "-b=0"; Flags: runascurrentuser
+Filename: "{app}\driver\scripts\uninstall.bat"; RunOnceId: "DelDriver"; Flags: runascurrentuser
+Filename: "{app}\{#APP_EXE_NAME}"; Parameters: "-b=0"; RunOnceId: "DelProvider"; Flags: runascurrentuser
 
 [InstallDelete]
 Type: filesandordirs; Name: "{app}"
