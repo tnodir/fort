@@ -43,9 +43,9 @@ FORT_API NTSTATUS fort_buffer_prepare(
 FORT_API NTSTATUS fort_buffer_blocked_write(PFORT_BUFFER buf, BOOL blocked, UINT32 pid,
         UINT32 path_len, const PVOID path, PIRP *irp, ULONG_PTR *info);
 
-FORT_API NTSTATUS fort_buffer_blocked_ip_write(PFORT_BUFFER buf, UCHAR block_reason, UCHAR ip_proto,
-        UINT16 local_port, UINT16 remote_port, UINT32 local_ip, UINT32 remote_ip, UINT32 pid,
-        UINT32 path_len, const PVOID path, PIRP *irp, ULONG_PTR *info);
+FORT_API NTSTATUS fort_buffer_blocked_ip_write(PFORT_BUFFER buf, BOOL inbound, UCHAR block_reason,
+        UCHAR ip_proto, UINT16 local_port, UINT16 remote_port, UINT32 local_ip, UINT32 remote_ip,
+        UINT32 pid, UINT32 path_len, const PVOID path, PIRP *irp, ULONG_PTR *info);
 
 FORT_API NTSTATUS fort_buffer_proc_new_write(PFORT_BUFFER buf, UINT32 pid, UINT32 path_len,
         const PVOID path, PIRP *irp, ULONG_PTR *info);

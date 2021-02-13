@@ -1,11 +1,11 @@
 #include "logentryblockedip.h"
 
-LogEntryBlockedIp::LogEntryBlockedIp(quint8 blockReason, quint8 proto, quint16 localPort,
+LogEntryBlockedIp::LogEntryBlockedIp(quint8 blockReason, quint8 ipProto, quint16 localPort,
         quint16 remotePort, quint32 localIp, quint32 remoteIp, quint32 pid,
         const QString &kernelPath) :
     LogEntryBlocked(pid, kernelPath),
     m_blockReason(blockReason),
-    m_proto(proto),
+    m_ipProto(ipProto),
     m_localPort(localPort),
     m_remotePort(remotePort),
     m_localIp(localIp),
@@ -13,14 +13,19 @@ LogEntryBlockedIp::LogEntryBlockedIp(quint8 blockReason, quint8 proto, quint16 l
 {
 }
 
+void LogEntryBlockedIp::setInbound(bool inbound)
+{
+    m_inbound = inbound;
+}
+
 void LogEntryBlockedIp::setBlockReason(quint8 blockReason)
 {
     m_blockReason = blockReason;
 }
 
-void LogEntryBlockedIp::setProto(quint8 proto)
+void LogEntryBlockedIp::setIpProto(quint8 proto)
 {
-    m_proto = proto;
+    m_ipProto = proto;
 }
 
 void LogEntryBlockedIp::setLocalPort(quint16 port)

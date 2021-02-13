@@ -71,8 +71,8 @@ FortManager::FortManager(FortSettings *fortSettings, QObject *parent) :
     m_appInfoCache(new AppInfoCache(this)),
     m_appListModel(new AppListModel(m_confManager, this)),
     m_appStatModel(new AppStatModel(m_statManager, this)),
-    m_connListModel(new ConnListModel(m_confManager, this)),
-    m_zoneListModel(new ZoneListModel(m_confManager, this))
+    m_zoneListModel(new ZoneListModel(m_confManager, this)),
+    m_connListModel(new ConnListModel(m_statManager, this))
 {
     setupTranslationManager();
     setupThreadPool();

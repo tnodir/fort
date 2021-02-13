@@ -1,30 +1,38 @@
 #ifndef CONNLISTMODEL_H
 #define CONNLISTMODEL_H
 
-#include "../util/model/stringlistmodel.h"
+#include "../util/model/tableitemmodel.h"
 
-class ConfManager;
 class LogEntryBlockedIp;
+class StatManager;
 
-class ConnListModel : public StringListModel
+struct ConnRow : CacheRow
+{
+    qint32 trafTime = 0;
+};
+
+class ConnListModel : public TableItemModel
 {
     Q_OBJECT
 
 public:
-    explicit ConnListModel(ConfManager *confManager, QObject *parent = nullptr);
-
-    QString appPath() const { return m_appPath; }
-    void setAppPath(const QString &appPath);
+    explicit ConnListModel(StatManager *statManager, QObject *parent = nullptr);
 
     void handleLogBlockedIp(const LogEntryBlockedIp &logEntry);
 
-public slots:
-    void clear() override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+
+    QVariant headerData(
+            int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
 private:
-    ConfManager *m_confManager = nullptr;
+    StatManager *m_statManager = nullptr;
 
-    QString m_appPath;
+    int m_connCount = 0;
+
+    mutable ConnRow m_rowCache;
 };
 
 #endif // CONNLISTMODEL_H

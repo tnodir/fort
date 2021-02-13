@@ -104,8 +104,8 @@ void LogBuffer::writeEntryBlockedIp(const LogEntryBlockedIp *logEntry)
 
     char *output = this->output();
 
-    FortCommon::logBlockedIpHeaderWrite(output, logEntry->blockReason(), logEntry->proto(),
-            logEntry->localPort(), logEntry->remotePort(), logEntry->localIp(),
+    FortCommon::logBlockedIpHeaderWrite(output, logEntry->inbound(), logEntry->blockReason(),
+            logEntry->ipProto(), logEntry->localPort(), logEntry->remotePort(), logEntry->localIp(),
             logEntry->remoteIp(), logEntry->pid(), pathLen);
 
     if (pathLen) {
@@ -122,14 +122,15 @@ void LogBuffer::readEntryBlockedIp(LogEntryBlockedIp *logEntry)
 
     const char *input = this->input();
 
+    int inbound;
     quint8 blockReason;
     quint8 proto;
     quint16 localPort;
     quint16 remotePort;
     quint32 localIp, remoteIp;
     quint32 pid, pathLen;
-    FortCommon::logBlockedIpHeaderRead(input, &blockReason, &proto, &localPort, &remotePort,
-            &localIp, &remoteIp, &pid, &pathLen);
+    FortCommon::logBlockedIpHeaderRead(input, &inbound, &blockReason, &proto, &localPort,
+            &remotePort, &localIp, &remoteIp, &pid, &pathLen);
 
     QString path;
     if (pathLen) {
@@ -137,12 +138,13 @@ void LogBuffer::readEntryBlockedIp(LogEntryBlockedIp *logEntry)
         path = QString::fromWCharArray((const wchar_t *) input, pathLen / int(sizeof(wchar_t)));
     }
 
+    logEntry->setInbound(inbound != 0);
     logEntry->setBlockReason(blockReason);
     logEntry->setLocalIp(localIp);
     logEntry->setRemoteIp(remoteIp);
     logEntry->setLocalPort(localPort);
     logEntry->setRemotePort(remotePort);
-    logEntry->setProto(proto);
+    logEntry->setIpProto(proto);
     logEntry->setPid(pid);
     logEntry->setKernelPath(path);
 

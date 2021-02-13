@@ -3,6 +3,14 @@
 
 #include <QAbstractItemModel>
 
+struct CacheRow
+{
+    bool isValid(int row) const { return row == this->row; }
+    void invalidate() { row = -1; }
+
+    int row = -1;
+};
+
 class TableItemModel : public QAbstractItemModel
 {
     Q_OBJECT
@@ -20,11 +28,7 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
 public slots:
-    void reset()
-    {
-        beginResetModel();
-        endResetModel();
-    }
+    void reset();
     void refresh();
 };
 

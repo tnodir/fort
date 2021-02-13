@@ -114,7 +114,7 @@ void TrafListModel::resetTraf()
 
     m_trafCount = getTrafCount(m_type, m_minTrafTime, m_maxTrafTime);
 
-    invalidateRowCache();
+    m_rowCache.invalidate();
 
     endResetModel();
 }
@@ -125,14 +125,9 @@ void TrafListModel::reset()
         resetTraf();
     } else {
         beginResetModel();
-        invalidateRowCache();
+        m_rowCache.invalidate();
         endResetModel();
     }
-}
-
-void TrafListModel::invalidateRowCache()
-{
-    m_rowCache.invalidate();
 }
 
 void TrafListModel::updateRowCache(int row) const

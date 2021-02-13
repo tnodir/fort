@@ -56,7 +56,7 @@ CREATE TABLE conn_app(
   conn_time INTEGER NOT NULL,
   inbound BOOLEAN NOT NULL,
   blocked BOOLEAN NOT NULL,
-  proto INTEGER NOT NULL,
+  ip_proto INTEGER NOT NULL,
   local_port INTEGER NOT NULL,
   remote_port INTEGER NOT NULL,
   local_ip INTEGER NOT NULL,

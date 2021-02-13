@@ -34,6 +34,12 @@ Qt::ItemFlags TableItemModel::flags(const QModelIndex &index) const
     return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemNeverHasChildren;
 }
 
+void TableItemModel::reset()
+{
+    beginResetModel();
+    endResetModel();
+}
+
 void TableItemModel::refresh()
 {
     const auto firstCell = index(0, 0);

@@ -2,21 +2,16 @@
 
 #include "../log/logentryblockedip.h"
 
-ConnListModel::ConnListModel(ConfManager *confManager, QObject *parent) :
-    StringListModel(parent), m_confManager(confManager)
+ConnListModel::ConnListModel(StatManager *statManager, QObject *parent) :
+    TableItemModel(parent), m_statManager(statManager)
 {
-}
-
-void ConnListModel::setAppPath(const QString &appPath)
-{
-    m_appPath = appPath;
 }
 
 void ConnListModel::handleLogBlockedIp(const LogEntryBlockedIp &logEntry)
 {
+#if 0
     const QString appPath = logEntry.path();
 
-#if 0
     const QString ipText = NetUtil::ip4ToText(logEntry.ip())
             + ", " + NetUtil::protocolName(logEntry.proto())
             + ':' + QString::number(logEntry.port());
@@ -28,9 +23,57 @@ void ConnListModel::handleLogBlockedIp(const LogEntryBlockedIp &logEntry)
 #endif
 }
 
-void ConnListModel::clear()
+int ConnListModel::rowCount(const QModelIndex &parent) const
 {
-    m_appPath = QString();
+    Q_UNUSED(parent);
 
-    StringListModel::clear();
+    return m_connCount;
+}
+
+int ConnListModel::columnCount(const QModelIndex &parent) const
+{
+    return parent.isValid() ? 0 : 4;
+}
+
+QVariant ConnListModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+        switch (section) {
+        case 0:
+            return tr("Date");
+        case 1:
+            return tr("Download");
+        case 2:
+            return tr("Upload");
+        case 3:
+            return tr("Sum");
+        }
+    }
+    return QVariant();
+}
+
+QVariant ConnListModel::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid())
+        return QVariant();
+
+    if (role == Qt::DisplayRole) {
+//        const int row = index.row();
+//        const int column = index.column();
+
+//        updateRowCache(row);
+
+//        switch (column) {
+//        case 0:
+//            return formatTrafTime(m_rowCache.trafTime);
+//        case 1:
+//            return formatTrafUnit(m_rowCache.inBytes);
+//        case 2:
+//            return formatTrafUnit(m_rowCache.outBytes);
+//        case 3:
+//            return formatTrafUnit(m_rowCache.inBytes + m_rowCache.outBytes);
+//        }
+    }
+
+    return QVariant();
 }

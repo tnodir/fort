@@ -81,7 +81,7 @@ static void fort_callout_classify_continue(FWPS_CLASSIFY_OUT0 *classifyOut)
 static void fort_callout_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const FWPS_FILTER0 *filter,
         FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField, int remoteIpField,
-        int localPortField, int remotePortField, int ipProtoField)
+        int localPortField, int remotePortField, int ipProtoField, BOOL inbound)
 {
     PIRP irp = NULL;
     ULONG_PTR info;
@@ -195,7 +195,7 @@ block_log:
         const UINT16 remote_port = inFixedValues->incomingValue[remotePortField].value.uint16;
         const IPPROTO ip_proto = (IPPROTO) inFixedValues->incomingValue[ipProtoField].value.uint8;
 
-        fort_buffer_blocked_ip_write(&g_device->buffer, block_reason, ip_proto, local_port,
+        fort_buffer_blocked_ip_write(&g_device->buffer, inbound, block_reason, ip_proto, local_port,
                 remote_port, local_ip, remote_ip, process_id, path_len, path, &irp, &info);
     }
 
@@ -226,7 +226,7 @@ static void NTAPI fort_callout_connect_v4(const FWPS_INCOMING_VALUES0 *inFixedVa
             FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_REMOTE_ADDRESS,
             FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_LOCAL_PORT,
             FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_REMOTE_PORT,
-            FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_PROTOCOL);
+            FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_PROTOCOL, FALSE);
 }
 
 static void NTAPI fort_callout_accept_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
@@ -242,7 +242,7 @@ static void NTAPI fort_callout_accept_v4(const FWPS_INCOMING_VALUES0 *inFixedVal
             FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_REMOTE_ADDRESS,
             FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_LOCAL_PORT,
             FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_REMOTE_PORT,
-            FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_PROTOCOL);
+            FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_PROTOCOL, TRUE);
 }
 
 static NTSTATUS NTAPI fort_callout_notify(

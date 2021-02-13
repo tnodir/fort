@@ -13,6 +13,7 @@
 #define FORT_LOG_FLAG_STAT_TRAF     0x02000000
 #define FORT_LOG_FLAG_TIME          0x04000000
 #define FORT_LOG_FLAG_BLOCKED_ALLOW 0x10000000
+#define FORT_LOG_FLAG_IP_INBOUND    0x10000000
 #define FORT_LOG_FLAG_TYPE_MASK     0x0FF00000
 #define FORT_LOG_FLAG_OPT_MASK      0xF0000000
 #define FORT_LOG_FLAG_EX_MASK       (FORT_LOG_FLAG_TYPE_MASK | FORT_LOG_FLAG_OPT_MASK)
@@ -64,17 +65,17 @@ FORT_API void fort_log_blocked_write(
 FORT_API void fort_log_blocked_header_read(
         const char *p, BOOL *blocked, UINT32 *pid, UINT32 *path_len);
 
-FORT_API void fort_log_blocked_ip_header_write(char *p, UCHAR block_reason, UCHAR ip_proto,
-        UINT16 local_port, UINT16 remote_port, UINT32 local_ip, UINT32 remote_ip, UINT32 pid,
-        UINT32 path_len);
+FORT_API void fort_log_blocked_ip_header_write(char *p, BOOL inbound, UCHAR block_reason,
+        UCHAR ip_proto, UINT16 local_port, UINT16 remote_port, UINT32 local_ip, UINT32 remote_ip,
+        UINT32 pid, UINT32 path_len);
 
-FORT_API void fort_log_blocked_ip_write(char *p, UCHAR block_reason, UCHAR ip_proto,
+FORT_API void fort_log_blocked_ip_write(char *p, BOOL inbound, UCHAR block_reason, UCHAR ip_proto,
         UINT16 local_port, UINT16 remote_port, UINT32 local_ip, UINT32 remote_ip, UINT32 pid,
         UINT32 path_len, const char *path);
 
-FORT_API void fort_log_blocked_ip_header_read(const char *p, UCHAR *block_reason, UCHAR *ip_proto,
-        UINT16 *local_port, UINT16 *remote_port, UINT32 *local_ip, UINT32 *remote_ip, UINT32 *pid,
-        UINT32 *path_len);
+FORT_API void fort_log_blocked_ip_header_read(const char *p, BOOL *inbound, UCHAR *block_reason,
+        UCHAR *ip_proto, UINT16 *local_port, UINT16 *remote_port, UINT32 *local_ip,
+        UINT32 *remote_ip, UINT32 *pid, UINT32 *path_len);
 
 FORT_API void fort_log_proc_new_header_write(char *p, UINT32 pid, UINT32 path_len);
 

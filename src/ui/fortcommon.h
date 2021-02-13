@@ -51,12 +51,12 @@ public:
     static void logBlockedHeaderRead(
             const char *input, int *blocked, quint32 *pid, quint32 *pathLen);
 
-    static void logBlockedIpHeaderWrite(char *output, quint8 blockReason, quint8 ipProto,
-            quint16 localPort, quint16 remotePort, quint32 localIp, quint32 remoteIp, quint32 pid,
-            quint32 pathLen);
-    static void logBlockedIpHeaderRead(const char *input, quint8 *blockReason, quint8 *ipProto,
-            quint16 *localPort, quint16 *remotePort, quint32 *localIp, quint32 *remoteIp,
-            quint32 *pid, quint32 *pathLen);
+    static void logBlockedIpHeaderWrite(char *output, int inbound, quint8 blockReason,
+            quint8 ipProto, quint16 localPort, quint16 remotePort, quint32 localIp,
+            quint32 remoteIp, quint32 pid, quint32 pathLen);
+    static void logBlockedIpHeaderRead(const char *input, int *inbound, quint8 *blockReason,
+            quint8 *ipProto, quint16 *localPort, quint16 *remotePort, quint32 *localIp,
+            quint32 *remoteIp, quint32 *pid, quint32 *pathLen);
 
     static void logProcNewHeaderWrite(char *output, quint32 pid, quint32 pathLen);
     static void logProcNewHeaderRead(const char *input, quint32 *pid, quint32 *pathLen);

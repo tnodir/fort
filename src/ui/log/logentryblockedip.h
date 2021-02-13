@@ -17,17 +17,20 @@ public:
         ReasonAppGroupDefault
     };
 
-    explicit LogEntryBlockedIp(quint8 blockReason = 0, quint8 proto = 0, quint16 localPort = 0,
+    explicit LogEntryBlockedIp(quint8 blockReason = 0, quint8 ipProto = 0, quint16 localPort = 0,
             quint16 remotePort = 0, quint32 localIp = 0, quint32 remoteIp = 0, quint32 pid = 0,
             const QString &kernelPath = QString());
 
     LogEntry::LogType type() const override { return AppBlockedIp; }
 
+    bool inbound() const { return m_inbound; }
+    void setInbound(bool inbound);
+
     quint8 blockReason() const { return m_blockReason; }
     void setBlockReason(quint8 blockReason);
 
-    quint8 proto() const { return m_proto; }
-    void setProto(quint8 proto);
+    quint8 ipProto() const { return m_ipProto; }
+    void setIpProto(quint8 proto);
 
     quint16 localPort() const { return m_localPort; }
     void setLocalPort(quint16 port);
@@ -42,8 +45,9 @@ public:
     void setRemoteIp(quint32 ip);
 
 private:
+    bool m_inbound = false;
     quint8 m_blockReason = 0;
-    quint8 m_proto = 0;
+    quint8 m_ipProto = 0;
     quint16 m_localPort = 0;
     quint16 m_remotePort = 0;
     quint32 m_localIp = 0;

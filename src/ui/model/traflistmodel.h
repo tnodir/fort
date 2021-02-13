@@ -5,12 +5,8 @@
 
 class StatManager;
 
-struct TrafficRow
+struct TrafficRow : CacheRow
 {
-    bool isValid(int row) const { return row == this->row; }
-    void invalidate() { row = -1; }
-
-    int row = -1;
     qint32 trafTime = 0;
     qint64 inBytes = 0;
     qint64 outBytes = 0;
@@ -54,7 +50,6 @@ public slots:
     void reset();
 
 private:
-    void invalidateRowCache();
     void updateRowCache(int row) const;
 
     QString formatTrafUnit(qint64 bytes) const;

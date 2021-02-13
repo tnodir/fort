@@ -138,20 +138,20 @@ void FortCommon::logBlockedHeaderRead(
     fort_log_blocked_header_read(input, blocked, pid, pathLen);
 }
 
-void FortCommon::logBlockedIpHeaderWrite(char *output, quint8 blockReason, quint8 ipProto,
-        quint16 localPort, quint16 remotePort, quint32 localIp, quint32 remoteIp, quint32 pid,
-        quint32 pathLen)
+void FortCommon::logBlockedIpHeaderWrite(char *output, int inbound, quint8 blockReason,
+        quint8 ipProto, quint16 localPort, quint16 remotePort, quint32 localIp, quint32 remoteIp,
+        quint32 pid, quint32 pathLen)
 {
-    fort_log_blocked_ip_header_write(
-            output, blockReason, ipProto, localPort, remotePort, localIp, remoteIp, pid, pathLen);
+    fort_log_blocked_ip_header_write(output, inbound, blockReason, ipProto, localPort, remotePort,
+            localIp, remoteIp, pid, pathLen);
 }
 
-void FortCommon::logBlockedIpHeaderRead(const char *input, quint8 *blockReason, quint8 *ipProto,
-        quint16 *localPort, quint16 *remotePort, quint32 *localIp, quint32 *remoteIp, quint32 *pid,
-        quint32 *pathLen)
+void FortCommon::logBlockedIpHeaderRead(const char *input, int *inbound, quint8 *blockReason,
+        quint8 *ipProto, quint16 *localPort, quint16 *remotePort, quint32 *localIp,
+        quint32 *remoteIp, quint32 *pid, quint32 *pathLen)
 {
-    fort_log_blocked_ip_header_read(
-            input, blockReason, ipProto, localPort, remotePort, localIp, remoteIp, pid, pathLen);
+    fort_log_blocked_ip_header_read(input, inbound, blockReason, ipProto, localPort, remotePort,
+            localIp, remoteIp, pid, pathLen);
 }
 
 void FortCommon::logProcNewHeaderWrite(char *output, quint32 pid, quint32 pathLen)

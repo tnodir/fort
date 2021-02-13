@@ -54,8 +54,8 @@ public:
     TaskManager *taskManager() const { return m_taskManager; }
     AppListModel *appListModel() const { return m_appListModel; }
     AppStatModel *appStatModel() const { return m_appStatModel; }
-    ConnListModel *connListModel() const { return m_connListModel; }
     ZoneListModel *zoneListModel() const { return m_zoneListModel; }
+    ConnListModel *connListModel() const { return m_connListModel; }
 
 signals:
     void optWindowChanged();
@@ -237,8 +237,8 @@ private:
 
     AppListModel *m_appListModel = nullptr;
     AppStatModel *m_appStatModel = nullptr;
-    ConnListModel *m_connListModel = nullptr;
     ZoneListModel *m_zoneListModel = nullptr;
+    ConnListModel *m_connListModel = nullptr;
 };
 
 #endif // FORTMANAGER_H

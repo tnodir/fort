@@ -38,8 +38,8 @@ namespace {
 
 const ValuesList trafKeepDayValues = { 60, -1, 90, 180, 365, 365 * 3, 365 * 5, 365 * 10 };
 const ValuesList trafKeepMonthValues = { 2, -1, 3, 6, 12, 12 * 3, 12 * 5, 12 * 10 };
-const ValuesList logIpKeepCountValues = { 1000, -1, 1000, 5000, 10000, 50000, 100000, 500000,
-    1000000, 5000000, 10000000 };
+const ValuesList logIpKeepCountValues = { 3000, 1000, 5000, 10000, 50000, 100000, 500000, 1000000,
+    5000000, 10000000 };
 const ValuesList quotaValues = { 10, 0, 100, 500, 1024, 8 * 1024, 10 * 1024, 30 * 1024, 50 * 1024,
     100 * 1024 };
 
@@ -209,8 +209,8 @@ void StatisticsPage::retranslateQuotaNames()
 
 void StatisticsPage::retranslateIpKeepCountNames()
 {
-    const QStringList list = { tr("Custom"), tr("Forever"), "1K", "5K", "10K", "50K", "100K",
-        "500K", "1M", "5M", "10M" };
+    const QStringList list = { tr("Custom"), "1K", "5K", "10K", "50K", "100K", "500K", "1M", "5M",
+        "10M" };
 
     m_lscAllowedIpKeepCount->setNames(list);
     m_lscBlockedIpKeepCount->setNames(list);
@@ -607,7 +607,7 @@ void StatisticsPage::setupQuotaMonthMb()
 void StatisticsPage::setupAllowedIpKeepCount()
 {
     m_lscAllowedIpKeepCount = new LabelSpinCombo();
-    m_lscAllowedIpKeepCount->spinBox()->setRange(-1, 999999999);
+    m_lscAllowedIpKeepCount->spinBox()->setRange(0, 999999999);
     m_lscAllowedIpKeepCount->setValues(logIpKeepCountValues);
 
     connect(m_lscAllowedIpKeepCount->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
@@ -624,7 +624,7 @@ void StatisticsPage::setupAllowedIpKeepCount()
 void StatisticsPage::setupBlockedIpKeepCount()
 {
     m_lscBlockedIpKeepCount = new LabelSpinCombo();
-    m_lscBlockedIpKeepCount->spinBox()->setRange(-1, 999999999);
+    m_lscBlockedIpKeepCount->spinBox()->setRange(0, 999999999);
     m_lscBlockedIpKeepCount->setValues(logIpKeepCountValues);
 
     connect(m_lscBlockedIpKeepCount->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,

@@ -71,38 +71,42 @@ TEST_F(LogBufferTest, BlockedIpWriteRead)
 
     LogBuffer buf(entrySize * testCount);
 
-    const quint8 blockReason = 7;
-    const quint8 proto = 6;
-    const quint16 localPort = 5;
-    const quint16 remotePort = 4;
-    const quint32 localIp = 3;
-    const quint32 remoteIp = 2;
-    const quint32 pid = 1;
-    LogEntryBlockedIp entry(
-            blockReason, proto, localPort, remotePort, localIp, remoteIp, pid, path);
+    LogEntryBlockedIp entry;
+    entry.setKernelPath(path);
 
     // Write
     for (int i = 0; i < testCount; ++i) {
+        int v = i;
+        entry.setInbound((v & 1) != 0);
+        entry.setBlockReason(++v);
+        entry.setIpProto(++v);
+        entry.setLocalPort(++v);
+        entry.setRemotePort(++v);
+        entry.setLocalIp(++v);
+        entry.setRemoteIp(++v);
+        entry.setPid(++v);
+
         buf.writeEntryBlockedIp(&entry);
     }
 
     // Read
-    int readCount = 0;
+    int index = 0;
     while (buf.peekEntryType() == LogEntry::AppBlockedIp) {
         buf.readEntryBlockedIp(&entry);
 
+        int v = index++;
         ASSERT_EQ(entry.type(), LogEntry::AppBlockedIp);
-        ASSERT_EQ(entry.proto(), proto);
-        ASSERT_EQ(entry.localPort(), localPort);
-        ASSERT_EQ(entry.remotePort(), remotePort);
-        ASSERT_EQ(entry.localIp(), localIp);
-        ASSERT_EQ(entry.remoteIp(), remoteIp);
-        ASSERT_EQ(entry.pid(), pid);
+        ASSERT_EQ(entry.inbound(), (v & 1) != 0);
+        ASSERT_EQ(entry.blockReason(), ++v);
+        ASSERT_EQ(entry.ipProto(), ++v);
+        ASSERT_EQ(entry.localPort(), ++v);
+        ASSERT_EQ(entry.remotePort(), ++v);
+        ASSERT_EQ(entry.localIp(), ++v);
+        ASSERT_EQ(entry.remoteIp(), ++v);
+        ASSERT_EQ(entry.pid(), ++v);
         ASSERT_EQ(entry.kernelPath(), path);
-
-        ++readCount;
     }
-    ASSERT_EQ(readCount, testCount);
+    ASSERT_EQ(index, testCount);
 }
 
 TEST_F(LogBufferTest, TimeWriteRead)
