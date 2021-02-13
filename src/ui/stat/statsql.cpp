@@ -8,7 +8,9 @@ const char *const StatSql::sqlInsertAppId =
 
 const char *const StatSql::sqlDeleteAppId = "DELETE FROM app WHERE app_id = ?1;";
 
-const char *const StatSql::sqlSelectAppPaths = "SELECT app_id, path FROM app ORDER BY app_id;";
+const char *const StatSql::sqlSelectTrafAppPaths = "SELECT app_id, path"
+                                                   "  FROM app JOIN traffic_app USING(app_id)"
+                                                   "  ORDER BY app_id;";
 
 const char *const StatSql::sqlInsertTrafAppHour =
         "INSERT INTO traffic_app_hour(app_id, traf_time, in_bytes, out_bytes)"
@@ -20,6 +22,10 @@ const char *const StatSql::sqlInsertTrafAppDay =
 
 const char *const StatSql::sqlInsertTrafAppMonth =
         "INSERT INTO traffic_app_month(app_id, traf_time, in_bytes, out_bytes)"
+        "  VALUES(?4, ?1, ?2, ?3);";
+
+const char *const StatSql::sqlInsertTrafAppTotal =
+        "INSERT INTO traffic_app(app_id, traf_time, in_bytes, out_bytes)"
         "  VALUES(?4, ?1, ?2, ?3);";
 
 const char *const StatSql::sqlInsertTrafHour =
@@ -49,7 +55,7 @@ const char *const StatSql::sqlUpdateTrafAppMonth = "UPDATE traffic_app_month"
                                                    "    out_bytes = out_bytes + ?3"
                                                    "  WHERE app_id = ?4 and traf_time = ?1;";
 
-const char *const StatSql::sqlUpdateTrafAppTotal = "UPDATE app"
+const char *const StatSql::sqlUpdateTrafAppTotal = "UPDATE traffic_app"
                                                    "  SET in_bytes = in_bytes + ?2,"
                                                    "    out_bytes = out_bytes + ?3"
                                                    "  WHERE app_id = ?4 and 0 != ?1;";
@@ -79,7 +85,7 @@ const char *const StatSql::sqlSelectMinTrafAppMonth = "SELECT min(traf_time) FRO
                                                       "  WHERE app_id = ?1;";
 
 const char *const StatSql::sqlSelectMinTrafAppTotal =
-        "SELECT traf_time FROM app WHERE app_id = ?1;";
+        "SELECT traf_time FROM traffic_app WHERE app_id = ?1;";
 
 const char *const StatSql::sqlSelectMinTrafHour = "SELECT min(traf_time) FROM traffic_hour;";
 
@@ -87,7 +93,7 @@ const char *const StatSql::sqlSelectMinTrafDay = "SELECT min(traf_time) FROM tra
 
 const char *const StatSql::sqlSelectMinTrafMonth = "SELECT min(traf_time) FROM traffic_app_month;";
 
-const char *const StatSql::sqlSelectMinTrafTotal = "SELECT min(traf_time) FROM app;";
+const char *const StatSql::sqlSelectMinTrafTotal = "SELECT min(traf_time) FROM traffic_app;";
 
 const char *const StatSql::sqlSelectTrafAppHour = "SELECT in_bytes, out_bytes"
                                                   "  FROM traffic_app_hour"
@@ -102,7 +108,7 @@ const char *const StatSql::sqlSelectTrafAppMonth = "SELECT in_bytes, out_bytes"
                                                    "  WHERE app_id = ?2 and traf_time = ?1;";
 
 const char *const StatSql::sqlSelectTrafAppTotal = "SELECT in_bytes, out_bytes"
-                                                   "  FROM app"
+                                                   "  FROM traffic_app"
                                                    "  WHERE app_id = ?2 and 0 != ?1;";
 
 const char *const StatSql::sqlSelectTrafHour = "SELECT in_bytes, out_bytes"
@@ -115,19 +121,16 @@ const char *const StatSql::sqlSelectTrafMonth = "SELECT in_bytes, out_bytes"
                                                 "  FROM traffic_month WHERE traf_time = ?1;";
 
 const char *const StatSql::sqlSelectTrafTotal = "SELECT sum(in_bytes), sum(out_bytes)"
-                                                "  FROM app WHERE 0 != ?1;";
+                                                "  FROM traffic_app WHERE 0 != ?1;";
 
 const char *const StatSql::sqlDeleteTrafAppHour = "DELETE FROM traffic_app_hour"
-                                                  "  WHERE traf_time < ?1"
-                                                  "    and app_id in (SELECT app_id FROM app);";
+                                                  "  WHERE traf_time < ?1;";
 
 const char *const StatSql::sqlDeleteTrafAppDay = "DELETE FROM traffic_app_day"
-                                                 "  WHERE traf_time < ?1"
-                                                 "    and app_id in (SELECT app_id FROM app);";
+                                                 "  WHERE traf_time < ?1;";
 
 const char *const StatSql::sqlDeleteTrafAppMonth = "DELETE FROM traffic_app_month"
-                                                   "  WHERE traf_time < ?1"
-                                                   "    and app_id in (SELECT app_id FROM app);";
+                                                   "  WHERE traf_time < ?1;";
 
 const char *const StatSql::sqlDeleteTrafHour = "DELETE FROM traffic_hour WHERE traf_time < ?1;";
 
@@ -145,4 +148,5 @@ const char *const StatSql::sqlDeleteAppTrafMonth = "DELETE FROM traffic_app_mont
                                                    "  WHERE app_id = ?1;";
 
 const char *const StatSql::sqlResetAppTrafTotals =
-        "UPDATE app SET traf_time = ?1, in_bytes = 0, out_bytes = 0;";
+        "UPDATE traffic_app"
+        "  SET traf_time = ?1, in_bytes = 0, out_bytes = 0;";

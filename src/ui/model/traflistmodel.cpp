@@ -91,7 +91,7 @@ void TrafListModel::clear()
 
 void TrafListModel::resetAppTotals()
 {
-    m_statManager->resetAppTotals();
+    m_statManager->resetAppTrafTotals();
 
     resetTraf();
 }

@@ -9,7 +9,7 @@ CREATE TABLE app(
   access_time DATETIME
 ) WITHOUT ROWID;
 
-CREATE INDEX idx_app_access_time ON app(access_time);
+CREATE INDEX app_access_time_idx ON app(access_time);
 
 CREATE TABLE icon(
   icon_id INTEGER PRIMARY KEY,
@@ -18,4 +18,4 @@ CREATE TABLE icon(
   image BLOB NOT NULL
 );
 
-CREATE INDEX idx_icon_hash ON icon(hash);
+CREATE INDEX icon_hash_idx ON icon(hash);

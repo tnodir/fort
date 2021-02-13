@@ -33,11 +33,11 @@ public:
     void logProcNew(quint32 pid, const QString &appPath);
     void logStatTraf(quint16 procCount, qint64 unixTime, const quint32 *procTrafBytes);
 
-    void getAppList(QStringList &list, QVector<qint64> &appIds);
+    void getTrafficAppList(QStringList &list, QVector<qint64> &appIds);
 
     void deleteApp(qint64 appId, const QString &appPath);
 
-    void resetAppTotals();
+    void resetAppTrafTotals();
 
     qint32 getTrafficTime(const char *sql, qint64 appId = 0);
 

@@ -19,7 +19,7 @@ Q_LOGGING_CATEGORY(CLOG_STAT_MANAGER, "stat")
 #define logWarning()  qCWarning(CLOG_STAT_MANAGER, )
 #define logCritical() qCCritical(CLOG_STAT_MANAGER, )
 
-#define DATABASE_USER_VERSION 2
+#define DATABASE_USER_VERSION 3
 
 #define ACTIVE_PERIOD_CHECK_SECS (60 * OS_TICKS_PER_SECOND)
 
@@ -29,30 +29,19 @@ namespace {
 
 bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 {
-    Q_UNUSED(db);
-    Q_UNUSED(version);
-    Q_UNUSED(isNewDb);
     Q_UNUSED(ctx);
 
-#if 0
-    if (version == 2) {
-        // Fix statistics dates to use UTC
-        const qint64 unixTime = DateUtil::getUnixTime();
-        const QDate date = QDateTime::fromSecsSinceEpoch(unixTime).date();
+    if (version == 3 && !isNewDb) {
+        // Move apps' total traffic to separate table
+        const QString srcSchema = SqliteDb::migrateOldSchemaName();
+        const QString dstSchema = SqliteDb::migrateNewSchemaName();
 
-        const qint32 unixDay = DateUtil::getUnixDay(unixTime);
-        const qint32 localDay = DateUtil::getUnixHour(
-                    QDateTime(date).toSecsSinceEpoch());
-
-        if (unixDay != localDay) {
-            const QVariantList vars = QVariantList() << (unixDay - localDay);
-            db->executeEx("UPDATE traffic_app_day SET traf_time = traf_time + ?1;", vars);
-            db->executeEx("UPDATE traffic_day SET traf_time = traf_time + ?1;", vars);
-            db->executeEx("UPDATE traffic_app_month SET traf_time = traf_time + ?1;", vars);
-            db->executeEx("UPDATE traffic_month SET traf_time = traf_time + ?1;", vars);
-        }
+        const auto sql = QString("INSERT INTO %1 (%3) SELECT %3 FROM %2;")
+                                 .arg(SqliteDb::entityName(dstSchema, "traffic_app"),
+                                         SqliteDb::entityName(srcSchema, "app"),
+                                         "app_id, traf_time, in_bytes, out_bytes");
+        db->executeStr(sql);
     }
-#endif
 
     return true;
 }
@@ -245,7 +234,7 @@ void StatManager::logStatTraf(quint16 procCount, qint64 unixTime, const quint32 
             << getTrafficStmt(StatSql::sqlInsertTrafAppHour, trafHour)
             << getTrafficStmt(StatSql::sqlInsertTrafAppDay, trafDay)
             << getTrafficStmt(StatSql::sqlInsertTrafAppMonth, trafMonth)
-            << getTrafficStmt(StatSql::sqlUpdateTrafAppTotal, -1);
+            << getTrafficStmt(StatSql::sqlInsertTrafAppTotal, -1);
 
     const QStmtList insertTrafStmts = QStmtList()
             << getTrafficStmt(StatSql::sqlInsertTrafHour, trafHour)
@@ -368,7 +357,7 @@ void StatManager::deleteApp(qint64 appId, const QString &appPath)
     stepStmtList(deleteAppStmts);
 }
 
-void StatManager::resetAppTotals()
+void StatManager::resetAppTrafTotals()
 {
     m_sqliteDb->beginTransaction();
 
@@ -435,9 +424,9 @@ qint64 StatManager::getOrCreateAppId(const QString &appPath, qint64 unixTime)
     return appId;
 }
 
-void StatManager::getAppList(QStringList &list, QVector<qint64> &appIds)
+void StatManager::getTrafficAppList(QStringList &list, QVector<qint64> &appIds)
 {
-    SqliteStmt *stmt = getSqliteStmt(StatSql::sqlSelectAppPaths);
+    SqliteStmt *stmt = getSqliteStmt(StatSql::sqlSelectTrafAppPaths);
 
     while (stmt->step() == SqliteStmt::StepRow) {
         appIds.append(stmt->columnInt64(0));

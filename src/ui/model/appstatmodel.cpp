@@ -69,7 +69,7 @@ void AppStatModel::updateList()
     m_appIds.clear();
     m_appIds.append(0); // All
 
-    m_statManager->getAppList(list, m_appIds);
+    m_statManager->getTrafficAppList(list, m_appIds);
 
     setList(list);
 }

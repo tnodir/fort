@@ -53,10 +53,10 @@ CREATE TABLE app(
   end_time INTEGER
 );
 
-CREATE INDEX idx_app_app_group_id ON app(app_group_id);
-CREATE UNIQUE INDEX uk_app_path ON app(path);
-CREATE INDEX idx_app_name ON app(name);
-CREATE INDEX idx_app_end_time ON app(end_time);
+CREATE INDEX app_app_group_id_idx ON app(app_group_id);
+CREATE UNIQUE INDEX app_path_uk ON app(path);
+CREATE INDEX app_name_idx ON app(name);
+CREATE INDEX app_end_time_idx ON app(end_time);
 
 CREATE TABLE app_alert(
   app_id INTEGER PRIMARY KEY

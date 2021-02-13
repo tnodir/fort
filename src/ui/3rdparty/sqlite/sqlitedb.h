@@ -59,6 +59,8 @@ public:
     QString encoding();
     bool setEncoding(const QString &v);
 
+    static QString migrateOldSchemaName();
+    static QString migrateNewSchemaName();
     static QString entityName(const QString &schemaName, const QString &objectName);
     QStringList tableNames(const QString &schemaName = QString());
     QStringList columnNames(const QString &tableName, const QString &schemaName = QString());

@@ -1,11 +1,15 @@
 CREATE TABLE app(
   app_id INTEGER PRIMARY KEY,
   path TEXT UNIQUE NOT NULL,
-  creat_time INTEGER NOT NULL,
+  creat_time INTEGER NOT NULL
+);
+
+CREATE TABLE traffic_app(
+  app_id INTEGER PRIMARY KEY,
   traf_time INTEGER NOT NULL,
   in_bytes INTEGER NOT NULL,
   out_bytes INTEGER NOT NULL
-);
+) WITHOUT ROWID;
 
 CREATE TABLE traffic_app_hour(
   app_id INTEGER NOT NULL,
@@ -49,7 +53,7 @@ CREATE TABLE traffic_month(
   out_bytes INTEGER NOT NULL
 ) WITHOUT ROWID;
 
-CREATE TABLE conn_app(
+CREATE TABLE conn(
   conn_id INTEGER PRIMARY KEY,
   app_id INTEGER NOT NULL,
   process_id INTEGER NOT NULL,
@@ -63,21 +67,21 @@ CREATE TABLE conn_app(
   remote_ip INTEGER NOT NULL
 );
 
-CREATE UNIQUE INDEX uk_conn_app_app_id ON conn_app(app_id);
+CREATE INDEX conn_app_id_idx ON conn(app_id);
 
-CREATE TABLE conn_block_app(
+CREATE TABLE conn_block(
   conn_id INTEGER PRIMARY KEY,
   block_reason INTEGER NOT NULL
 ) WITHOUT ROWID;
 
-CREATE TABLE conn_traffic_app(
+CREATE TABLE conn_traffic(
   conn_id INTEGER PRIMARY KEY,
   end_time INTEGER NOT NULL,
   in_bytes INTEGER NOT NULL,
   out_bytes INTEGER NOT NULL
 ) WITHOUT ROWID;
 
-CREATE TABLE conn_flow_app(
+CREATE TABLE conn_flow(
   conn_id INTEGER PRIMARY KEY,
   flow_id INTEGER NOT NULL
 ) WITHOUT ROWID;
