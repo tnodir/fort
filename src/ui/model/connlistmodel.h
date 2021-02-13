@@ -18,7 +18,7 @@ class ConnListModel : public TableItemModel
 public:
     explicit ConnListModel(StatManager *statManager, QObject *parent = nullptr);
 
-    void handleLogBlockedIp(const LogEntryBlockedIp &logEntry);
+    void handleLogBlockedIp(const LogEntryBlockedIp &entry, qint64 unixTime);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;

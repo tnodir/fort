@@ -30,12 +30,15 @@ public:
 
     bool initialize();
 
-    void logProcNew(quint32 pid, const QString &appPath);
-    void logStatTraf(quint16 procCount, qint64 unixTime, const quint32 *procTrafBytes);
+    bool logProcNew(quint32 pid, const QString &appPath, qint64 unixTime = 0);
+    bool logStatTraf(quint16 procCount, const quint32 *procTrafBytes, qint64 unixTime);
 
-    void getTrafficAppList(QStringList &list, QVector<qint64> &appIds);
+    bool logBlockedIp(bool inbound, quint8 blockReason, quint8 ipProto, quint16 localPort,
+            quint16 remotePort, quint32 localIp, quint32 remoteIp, quint32 pid, qint64 unixTime);
 
-    void deleteApp(qint64 appId, const QString &appPath);
+    void getStatAppList(QStringList &list, QVector<qint64> &appIds);
+
+    void deleteStatApp(qint64 appId, const QString &appPath);
 
     void resetAppTrafTotals();
 

@@ -6,9 +6,9 @@ class StatSql
 public:
     static const char *const sqlSelectAppId;
     static const char *const sqlInsertAppId;
-    static const char *const sqlDeleteAppId;
+    static const char *const sqlDeleteStatAppId;
 
-    static const char *const sqlSelectTrafAppPaths;
+    static const char *const sqlSelectStatAppPaths;
 
     static const char *const sqlInsertTrafAppHour;
     static const char *const sqlInsertTrafAppDay;
@@ -60,6 +60,7 @@ public:
     static const char *const sqlDeleteAppTrafHour;
     static const char *const sqlDeleteAppTrafDay;
     static const char *const sqlDeleteAppTrafMonth;
+    static const char *const sqlDeleteAppTrafTotal;
 
     static const char *const sqlResetAppTrafTotals;
 };

@@ -6,9 +6,11 @@ const char *const StatSql::sqlInsertAppId =
         "INSERT INTO app(path, creat_time, traf_time, in_bytes, out_bytes)"
         "  VALUES(?1, ?2, ?3, 0, 0);";
 
-const char *const StatSql::sqlDeleteAppId = "DELETE FROM app WHERE app_id = ?1;";
+const char *const StatSql::sqlDeleteStatAppId =
+        "DELETE FROM app WHERE app_id = ?1"
+        "  and (SELECT 1 FROM conn WHERE app_id = ?1 LIMIT 1) is null;";
 
-const char *const StatSql::sqlSelectTrafAppPaths = "SELECT app_id, path"
+const char *const StatSql::sqlSelectStatAppPaths = "SELECT app_id, path"
                                                    "  FROM app JOIN traffic_app USING(app_id)"
                                                    "  ORDER BY app_id;";
 
@@ -145,6 +147,9 @@ const char *const StatSql::sqlDeleteAppTrafDay = "DELETE FROM traffic_app_day"
                                                  "  WHERE app_id = ?1;";
 
 const char *const StatSql::sqlDeleteAppTrafMonth = "DELETE FROM traffic_app_month"
+                                                   "  WHERE app_id = ?1;";
+
+const char *const StatSql::sqlDeleteAppTrafTotal = "DELETE FROM traffic_app"
                                                    "  WHERE app_id = ?1;";
 
 const char *const StatSql::sqlResetAppTrafTotals =

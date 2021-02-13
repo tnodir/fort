@@ -118,8 +118,8 @@ TEST_F(StatTest, DbWriteRead)
     {
         const quint32 trafBytes[procCount * 3] = { 10, 100, 200, 20, 300, 400, 30, 500, 600 };
 
-        statManager.logStatTraf(procCount, 0, trafBytes);
-        statManager.logStatTraf(procCount, 0, trafBytes);
+        statManager.logStatTraf(procCount, trafBytes, 0);
+        statManager.logStatTraf(procCount, trafBytes, 0);
     }
 
     qDebug() << "elapsed>" << timer.restart() << "msec";
@@ -128,7 +128,7 @@ TEST_F(StatTest, DbWriteRead)
     {
         const quint32 trafBytes[procCount * 3] = { 11, 10, 20, 21, 30, 40, 31, 50, 60 };
 
-        statManager.logStatTraf(procCount, 0, trafBytes);
+        statManager.logStatTraf(procCount, trafBytes, 0);
     }
 
     qDebug() << "elapsed>" << timer.elapsed() << "msec";

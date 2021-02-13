@@ -1,5 +1,6 @@
 #include "connlistmodel.h"
 
+#include "../stat/statmanager.h"
 #include "../log/logentryblockedip.h"
 
 ConnListModel::ConnListModel(StatManager *statManager, QObject *parent) :
@@ -7,20 +8,17 @@ ConnListModel::ConnListModel(StatManager *statManager, QObject *parent) :
 {
 }
 
-void ConnListModel::handleLogBlockedIp(const LogEntryBlockedIp &logEntry)
+void ConnListModel::handleLogBlockedIp(const LogEntryBlockedIp &entry, qint64 unixTime)
 {
-#if 0
-    const QString appPath = logEntry.path();
+    //    const QString ipText = NetUtil::ip4ToText(logEntry.ip()) + ", "
+    //            + NetUtil::protocolName(logEntry.proto()) + ':' +
+    //            QString::number(logEntry.port());
 
-    const QString ipText = NetUtil::ip4ToText(logEntry.ip())
-            + ", " + NetUtil::protocolName(logEntry.proto())
-            + ':' + QString::number(logEntry.port());
-
-    if (confManager()->addApp(
-                appPath, QString(), QDateTime(), groupId, false, logEntry.blocked(), true)) {
+    if (m_statManager->logBlockedIp(entry.inbound(), entry.blockReason(), entry.ipProto(),
+                entry.localPort(), entry.remotePort(), entry.localIp(), entry.remoteIp(),
+                entry.pid(), unixTime)) {
         reset();
     }
-#endif
 }
 
 int ConnListModel::rowCount(const QModelIndex &parent) const

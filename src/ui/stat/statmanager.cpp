@@ -176,18 +176,18 @@ void StatManager::clearAppIdCache()
     m_appPathIdCache.clear();
 }
 
-void StatManager::logProcNew(quint32 pid, const QString &appPath)
+bool StatManager::logProcNew(quint32 pid, const QString &appPath, qint64 unixTime)
 {
     Q_ASSERT(!m_appPidPathMap.contains(pid));
     m_appPidPathMap.insert(pid, appPath);
 
-    getOrCreateAppId(appPath);
+    return getOrCreateAppId(appPath, unixTime) != INVALID_APP_ID;
 }
 
-void StatManager::logStatTraf(quint16 procCount, qint64 unixTime, const quint32 *procTrafBytes)
+bool StatManager::logStatTraf(quint16 procCount, const quint32 *procTrafBytes, qint64 unixTime)
 {
     if (!m_conf || !m_conf->logStat())
-        return;
+        return false;
 
     const qint32 trafHour = DateUtil::getUnixHour(unixTime);
     const bool isNewHour = (trafHour != m_lastTrafHour);
@@ -341,26 +341,43 @@ void StatManager::logStatTraf(quint16 procCount, qint64 unixTime, const quint32 
 
     // Notify about sum traffic bytes
     emit trafficAdded(unixTime, sumInBytes, sumOutBytes);
+
+    return true;
 }
 
-void StatManager::deleteApp(qint64 appId, const QString &appPath)
+bool StatManager::logBlockedIp(bool inbound, quint8 blockReason, quint8 ipProto, quint16 localPort,
+        quint16 remotePort, quint32 localIp, quint32 remoteIp, quint32 pid, qint64 unixTime)
 {
-    clearCachedAppId(appPath);
+    return true;
+}
 
+void StatManager::deleteStatApp(qint64 appId, const QString &appPath)
+{
     // Delete Statements
     const QStmtList deleteAppStmts = QStmtList()
             << getAppStmt(StatSql::sqlDeleteAppTrafHour, appId)
             << getAppStmt(StatSql::sqlDeleteAppTrafDay, appId)
             << getAppStmt(StatSql::sqlDeleteAppTrafMonth, appId)
-            << getAppStmt(StatSql::sqlDeleteAppId, appId);
+            << getAppStmt(StatSql::sqlDeleteAppTrafTotal, appId);
+
+    m_sqliteDb->beginTransaction();
 
     stepStmtList(deleteAppStmts);
+
+    // Delete AppId
+    {
+        SqliteStmt *stmt = getAppStmt(StatSql::sqlDeleteStatAppId, appId);
+        if (stmt->step() == SqliteStmt::StepDone && m_sqliteDb->changes() != 0) {
+            clearCachedAppId(appPath);
+        }
+        stmt->reset();
+    }
+
+    m_sqliteDb->commitTransaction();
 }
 
 void StatManager::resetAppTrafTotals()
 {
-    m_sqliteDb->beginTransaction();
-
     SqliteStmt *stmt = getSqliteStmt(StatSql::sqlResetAppTrafTotals);
     const qint64 unixTime = DateUtil::getUnixTime();
 
@@ -368,8 +385,6 @@ void StatManager::resetAppTrafTotals()
 
     stmt->step();
     stmt->reset();
-
-    m_sqliteDb->commitTransaction();
 }
 
 qint64 StatManager::getAppId(const QString &appPath)
@@ -424,9 +439,9 @@ qint64 StatManager::getOrCreateAppId(const QString &appPath, qint64 unixTime)
     return appId;
 }
 
-void StatManager::getTrafficAppList(QStringList &list, QVector<qint64> &appIds)
+void StatManager::getStatAppList(QStringList &list, QVector<qint64> &appIds)
 {
-    SqliteStmt *stmt = getSqliteStmt(StatSql::sqlSelectTrafAppPaths);
+    SqliteStmt *stmt = getSqliteStmt(StatSql::sqlSelectStatAppPaths);
 
     while (stmt->step() == SqliteStmt::StepRow) {
         appIds.append(stmt->columnInt64(0));

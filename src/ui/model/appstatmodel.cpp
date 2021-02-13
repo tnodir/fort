@@ -52,7 +52,7 @@ void AppStatModel::remove(int row)
     const qint64 appId = m_appIds.at(row);
     const QString appPath = list().at(row);
 
-    m_statManager->deleteApp(appId, appPath);
+    m_statManager->deleteStatApp(appId, appPath);
 
     m_appIds.remove(row);
 
@@ -69,7 +69,7 @@ void AppStatModel::updateList()
     m_appIds.clear();
     m_appIds.append(0); // All
 
-    m_statManager->getTrafficAppList(list, m_appIds);
+    m_statManager->getStatAppList(list, m_appIds);
 
     setList(list);
 }
@@ -80,14 +80,14 @@ void AppStatModel::handleCreatedApp(qint64 appId, const QString &appPath)
     insert(appPath);
 }
 
-void AppStatModel::handleLogProcNew(const LogEntryProcNew &procNewEntry)
+void AppStatModel::handleLogProcNew(const LogEntryProcNew &entry, qint64 unixTime)
 {
-    m_statManager->logProcNew(procNewEntry.pid(), procNewEntry.path());
+    m_statManager->logProcNew(entry.pid(), entry.path(), unixTime);
 }
 
-void AppStatModel::handleLogStatTraf(const LogEntryStatTraf &statTrafEntry, qint64 unixTime)
+void AppStatModel::handleLogStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
 {
-    m_statManager->logStatTraf(statTrafEntry.procCount(), unixTime, statTrafEntry.procTrafBytes());
+    m_statManager->logStatTraf(entry.procCount(), entry.procTrafBytes(), unixTime);
 }
 
 qint64 AppStatModel::appIdByRow(int row) const

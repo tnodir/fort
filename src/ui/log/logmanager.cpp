@@ -149,13 +149,13 @@ void LogManager::readLogEntries(LogBuffer *logBuffer)
         case LogEntry::AppBlockedIp: {
             LogEntryBlockedIp blockedIpEntry;
             logBuffer->readEntryBlockedIp(&blockedIpEntry);
-            connListModel()->handleLogBlockedIp(blockedIpEntry);
+            connListModel()->handleLogBlockedIp(blockedIpEntry, currentUnixTime());
             break;
         }
         case LogEntry::ProcNew: {
             LogEntryProcNew procNewEntry;
             logBuffer->readEntryProcNew(&procNewEntry);
-            appStatModel()->handleLogProcNew(procNewEntry);
+            appStatModel()->handleLogProcNew(procNewEntry, currentUnixTime());
             break;
         }
         case LogEntry::StatTraf: {
