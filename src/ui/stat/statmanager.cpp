@@ -33,8 +33,8 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 
     if (version == 3 && !isNewDb) {
         // Move apps' total traffic to separate table
-        const QString srcSchema = SqliteDb::migrateOldSchemaName();
-        const QString dstSchema = SqliteDb::migrateNewSchemaName();
+        const QString srcSchema = SqliteDb::migrationOldSchemaName();
+        const QString dstSchema = SqliteDb::migrationNewSchemaName();
 
         const auto sql = QString("INSERT INTO %1 (%3) SELECT %3 FROM %2;")
                                  .arg(SqliteDb::entityName(dstSchema, "traffic_app"),

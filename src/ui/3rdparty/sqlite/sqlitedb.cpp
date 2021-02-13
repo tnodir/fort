@@ -216,12 +216,12 @@ bool SqliteDb::setEncoding(const QString &v)
     return executeStr(sql);
 }
 
-QString SqliteDb::migrateOldSchemaName()
+QString SqliteDb::migrationOldSchemaName()
 {
     return QLatin1String("old");
 }
 
-QString SqliteDb::migrateNewSchemaName()
+QString SqliteDb::migrationNewSchemaName()
 {
     return QLatin1String("main");
 }
@@ -376,8 +376,8 @@ bool SqliteDb::migrate(const QString &sqlDir, const char *sqlPragmas, int versio
 bool SqliteDb::importDb(
         const QString &sourceFilePath, SQLITEDB_MIGRATE_FUNC migrateFunc, void *migrateContext)
 {
-    const QString srcSchema = migrateOldSchemaName();
-    const QString dstSchema = migrateNewSchemaName();
+    const QString srcSchema = migrationOldSchemaName();
+    const QString dstSchema = migrationNewSchemaName();
 
     if (!attach(srcSchema, sourceFilePath)) {
         dbWarning() << "Cannot attach the DB" << sourceFilePath << "Error:" << errorMessage();
