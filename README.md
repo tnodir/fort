@@ -55,7 +55,7 @@ Filtered apps will be shown in the "Blocked" tab.
 4) If "Stop Internet Traffic" is turned on, then _**BLOCK**_
 5) If **address** is not from "Allowed Internet Addresses", then _**BLOCK**_
 6) If **app path** is allowed, then _**PERMIT**_
-7) If "Show Blocked Applications" is turned on, then log about blocked event and _**BLOCK**_
+7) Log about blocked event and _**BLOCK**_
 
 ## Code Quality Monitor
 
