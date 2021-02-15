@@ -56,8 +56,8 @@ CREATE TABLE traffic_month(
 CREATE TABLE conn(
   conn_id INTEGER PRIMARY KEY,
   app_id INTEGER NOT NULL,
-  process_id INTEGER NOT NULL,
   conn_time INTEGER NOT NULL,
+  process_id INTEGER NOT NULL,
   inbound BOOLEAN NOT NULL,
   blocked BOOLEAN NOT NULL,
   ip_proto INTEGER NOT NULL,

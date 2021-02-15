@@ -10,13 +10,13 @@ ConnListModel::ConnListModel(StatManager *statManager, QObject *parent) :
 
 void ConnListModel::handleLogBlockedIp(const LogEntryBlockedIp &entry, qint64 unixTime)
 {
-    //    const QString ipText = NetUtil::ip4ToText(logEntry.ip()) + ", "
-    //            + NetUtil::protocolName(logEntry.proto()) + ':' +
-    //            QString::number(logEntry.port());
+    // const QString ipText = NetUtil::ip4ToText(logEntry.ip()) + ", "
+    //        + NetUtil::protocolName(logEntry.proto()) + ':' +
+    //        QString::number(logEntry.port());
 
     if (m_statManager->logBlockedIp(entry.inbound(), entry.blockReason(), entry.ipProto(),
                 entry.localPort(), entry.remotePort(), entry.localIp(), entry.remoteIp(),
-                entry.pid(), unixTime)) {
+                entry.pid(), entry.path(), unixTime)) {
         reset();
     }
 }

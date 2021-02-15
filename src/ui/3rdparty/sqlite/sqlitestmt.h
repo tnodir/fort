@@ -47,7 +47,7 @@ public:
 
     bool isBusy();
 
-    StepResult step();
+    SqliteStmt::StepResult step();
 
     int dataCount();
     int columnCount();

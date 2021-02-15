@@ -34,7 +34,8 @@ public:
     bool logStatTraf(quint16 procCount, const quint32 *procTrafBytes, qint64 unixTime);
 
     bool logBlockedIp(bool inbound, quint8 blockReason, quint8 ipProto, quint16 localPort,
-            quint16 remotePort, quint32 localIp, quint32 remoteIp, quint32 pid, qint64 unixTime);
+            quint16 remotePort, quint32 localIp, quint32 remoteIp, quint32 pid,
+            const QString &appPath, qint64 unixTime);
 
     void getStatAppList(QStringList &list, QVector<qint64> &appIds);
 
@@ -72,18 +73,23 @@ private:
     void clearAppIdCache();
 
     qint64 getAppId(const QString &appPath);
-    qint64 createAppId(const QString &appPath, qint64 unixTime);
-    qint64 getOrCreateAppId(const QString &appPath, qint64 unixTime = 0);
+    qint64 createAppId(const QString &appPath, qint64 unixTime, bool blocked = false);
+    qint64 getOrCreateAppId(const QString &appPath, qint64 unixTime = 0, bool blocked = false);
 
     void updateTrafficList(const QStmtList &insertStmtList, const QStmtList &updateStmtList,
             quint32 inBytes, quint32 outBytes, qint64 appId = 0);
 
     bool updateTraffic(SqliteStmt *stmt, quint32 inBytes, quint32 outBytes, qint64 appId = 0);
 
+    qint64 createConn(bool inbound, quint8 ipProto, quint16 localPort, quint16 remotePort,
+            quint32 localIp, quint32 remoteIp, quint32 pid, qint64 unixTime, qint64 appId);
+    bool createConnBlock(qint64 connId, quint8 blockReason);
+    void removeOldConnBlock(int keepCount);
+
     void stepStmtList(const QStmtList &stmtList);
 
     SqliteStmt *getTrafficStmt(const char *sql, qint32 trafTime);
-    SqliteStmt *getAppStmt(const char *sql, qint64 appId);
+    SqliteStmt *getIdStmt(const char *sql, qint64 id);
 
     SqliteStmt *getSqliteStmt(const char *sql);
 
@@ -100,6 +106,8 @@ private:
     qint32 m_lastTrafDay = 0;
     qint32 m_lastTrafMonth = 0;
     qint32 m_lastTick = 0;
+
+    int m_connBlockInc = 999999999; // to trigger on first check
 
     QuotaManager *m_quotaManager = nullptr;
     const FirewallConf *m_conf = nullptr;

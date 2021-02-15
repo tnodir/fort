@@ -2,9 +2,7 @@
 
 const char *const StatSql::sqlSelectAppId = "SELECT app_id FROM app WHERE path = ?1;";
 
-const char *const StatSql::sqlInsertAppId =
-        "INSERT INTO app(path, creat_time, traf_time, in_bytes, out_bytes)"
-        "  VALUES(?1, ?2, ?3, 0, 0);";
+const char *const StatSql::sqlInsertAppId = "INSERT INTO app(path, creat_time) VALUES(?1, ?2);";
 
 const char *const StatSql::sqlDeleteStatAppId =
         "DELETE FROM app WHERE app_id = ?1"
@@ -155,3 +153,32 @@ const char *const StatSql::sqlDeleteAppTrafTotal = "DELETE FROM traffic_app"
 const char *const StatSql::sqlResetAppTrafTotals =
         "UPDATE traffic_app"
         "  SET traf_time = ?1, in_bytes = 0, out_bytes = 0;";
+
+const char *const StatSql::sqlInsertConn =
+        "INSERT INTO conn(app_id, conn_time, process_id, inbound, blocked,"
+        "    ip_proto, local_port, remote_port, local_ip, remote_ip)"
+        "  VALUES(?1, ?2, ?3, ?4, 1, ?5, ?6, ?7, ?8, ?9);";
+
+const char *const StatSql::sqlInsertConnBlock = "INSERT INTO conn_block(conn_id, block_reason)"
+                                                "  VALUES(?1, ?2);";
+
+const char *const StatSql::sqlSelectOldConnBlockId = "SELECT conn_id FROM conn_block"
+                                                     "  ORDER BY conn_id DESC"
+                                                     "  LIMIT 1 OFFSET ?1;";
+
+const char *const StatSql::sqlSelectOldConnAppPathList =
+        "SELECT path FROM app WHERE app_id in ("
+        "  SELECT app_id FROM conn"
+        "    LEFT JOIN traffic_app ta USING(app_id)"
+        "    WHERE conn_id <= ?1 and ta.app_id is null"
+        ");";
+
+const char *const StatSql::sqlDeleteConnAppId = "DELETE FROM app WHERE app_id in ("
+                                                "  SELECT app_id FROM conn"
+                                                "    LEFT JOIN traffic_app ta USING(app_id)"
+                                                "    WHERE conn_id <= ?1 and ta.app_id is null"
+                                                ");";
+
+const char *const StatSql::sqlDeleteOldConn = "DELETE FROM conn WHERE conn_id <= ?1;";
+
+const char *const StatSql::sqlDeleteOldConnBlock = "DELETE FROM conn_block WHERE conn_id <= ?1;";
