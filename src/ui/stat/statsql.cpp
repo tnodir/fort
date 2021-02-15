@@ -124,13 +124,13 @@ const char *const StatSql::sqlSelectTrafTotal = "SELECT sum(in_bytes), sum(out_b
                                                 "  FROM traffic_app WHERE 0 != ?1;";
 
 const char *const StatSql::sqlDeleteTrafAppHour = "DELETE FROM traffic_app_hour"
-                                                  "  WHERE traf_time < ?1;";
+                                                  "  WHERE traf_time < ?1 and app_id > 0;";
 
 const char *const StatSql::sqlDeleteTrafAppDay = "DELETE FROM traffic_app_day"
-                                                 "  WHERE traf_time < ?1;";
+                                                 "  WHERE traf_time < ?1 and app_id > 0;";
 
 const char *const StatSql::sqlDeleteTrafAppMonth = "DELETE FROM traffic_app_month"
-                                                   "  WHERE traf_time < ?1;";
+                                                   "  WHERE traf_time < ?1 and app_id > 0;";
 
 const char *const StatSql::sqlDeleteTrafHour = "DELETE FROM traffic_hour WHERE traf_time < ?1;";
 
