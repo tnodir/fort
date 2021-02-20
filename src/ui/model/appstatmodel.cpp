@@ -136,7 +136,7 @@ QVariant AppStatModel::data(const QModelIndex &index, int role) const
         }
 
         const auto appPath = list().at(row);
-        return appInfoCache()->appIcon(appPath, ":/images/application-window-96.png");
+        return appInfoCache()->appIcon(appPath);
     }
 
     return StringListModel::data(index, role);

@@ -118,7 +118,7 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
                 appName = !appInfo.fileDescription.isEmpty() ? appInfo.fileDescription
                                                              : FileUtil::fileName(appRow.appPath);
 
-                if (appInfo.iconId != 0) {
+                if (appInfo.isValid()) {
                     confManager()->updateAppName(appRow.appId, appName);
                 }
             }
@@ -153,8 +153,7 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
 
             switch (column) {
             case 0:
-                return appInfoCache()->appIcon(
-                        appRow.appPath, ":/images/application-window-96.png");
+                return appInfoCache()->appIcon(appRow.appPath);
             case 2:
                 return appRow.blocked ? IconCache::icon(":/icons/sign-ban.png")
                                       : IconCache::icon(":/icons/sign-check.png");

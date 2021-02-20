@@ -15,6 +15,8 @@ class AppInfo
 public:
     bool isFileModified(const QString &appPath) const;
 
+    bool isValid() const { return iconId != 0; }
+
 public:
     qint64 iconId = 0;
 

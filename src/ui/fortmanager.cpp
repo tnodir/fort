@@ -175,6 +175,8 @@ void FortManager::setupModels()
     appStatModel()->initialize();
 
     zoneListModel()->initialize();
+
+    connListModel()->setAppInfoCache(m_appInfoCache);
 }
 
 void FortManager::setupLogManager()

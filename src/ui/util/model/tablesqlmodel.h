@@ -5,14 +5,6 @@
 
 class SqliteDb;
 
-struct TableRow
-{
-    bool isValid(int row) const { return row == this->row; }
-    void invalidate() { row = -1; }
-
-    int row = -1;
-};
-
 class TableSqlModel : public TableItemModel
 {
     Q_OBJECT

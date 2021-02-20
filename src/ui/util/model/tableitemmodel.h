@@ -3,7 +3,7 @@
 
 #include <QAbstractItemModel>
 
-struct CacheRow
+struct TableRow
 {
     bool isValid(int row) const { return row == this->row; }
     void invalidate() { row = -1; }

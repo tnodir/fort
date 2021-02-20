@@ -213,7 +213,7 @@ void AppInfoManager::deleteAppInfo(const QString &appPath, const AppInfo &appInf
 
     appPaths.append(appPath);
 
-    if (appInfo.iconId != 0) {
+    if (appInfo.isValid()) {
         iconIds.insert(appInfo.iconId, 1);
     }
 

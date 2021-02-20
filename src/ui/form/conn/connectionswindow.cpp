@@ -96,7 +96,7 @@ void ConnectionsWindow::setupUi()
     this->setWindowIcon(GuiUtil::overlayIcon(":/images/sheild-96.png", ":/icons/connect.png"));
 
     // Size
-    this->resize(1024, 768);
+    this->resize(1300, 768);
     this->setMinimumSize(500, 400);
 }
 
@@ -159,7 +159,7 @@ void ConnectionsWindow::setupTableConnList()
     m_connListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_connListView->setSelectionBehavior(QAbstractItemView::SelectItems);
 
-    m_connListView->setSortingEnabled(true);
+    // m_connListView->setSortingEnabled(true);
     m_connListView->setModel(connListModel());
 }
 
@@ -170,17 +170,21 @@ void ConnectionsWindow::setupTableConnListHeader()
     header->setSectionResizeMode(0, QHeaderView::Interactive);
     header->setSectionResizeMode(1, QHeaderView::Interactive);
     header->setSectionResizeMode(2, QHeaderView::Interactive);
-    header->setSectionResizeMode(3, QHeaderView::Fixed);
-    header->setSectionResizeMode(4, QHeaderView::Stretch);
+    header->setSectionResizeMode(3, QHeaderView::Interactive);
+    header->setSectionResizeMode(4, QHeaderView::Interactive);
+    header->setSectionResizeMode(5, QHeaderView::Fixed);
+    header->setSectionResizeMode(6, QHeaderView::Stretch);
 
     header->resizeSection(0, 600);
-    header->resizeSection(1, 120);
-    header->resizeSection(2, 100);
-    header->resizeSection(3, 30);
+    header->resizeSection(1, 80);
+    header->resizeSection(2, 80);
+    header->resizeSection(3, 180);
+    header->resizeSection(4, 180);
+    header->resizeSection(5, 80);
 
-    header->setSectionsClickable(true);
-    header->setSortIndicatorShown(true);
-    header->setSortIndicator(4, Qt::DescendingOrder);
+    // header->setSectionsClickable(true);
+    // header->setSortIndicatorShown(true);
+    // header->setSortIndicator(4, Qt::DescendingOrder);
 }
 
 FortManager *ConnectionsWindow::fortManager() const

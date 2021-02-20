@@ -125,12 +125,14 @@ QString NetUtil::protocolName(quint8 ipProto)
     switch (ipProto) {
     case IPPROTO_ICMP:
         return "ICMP";
+    case IPPROTO_IGMP:
+        return "IGMP";
     case IPPROTO_TCP:
         return "TCP";
     case IPPROTO_UDP:
         return "UDP";
     case IPPROTO_ICMPV6:
-        return "IPv6-ICMP";
+        return "ICMPv6";
     default:
         return QString("0x%1").arg(ipProto, 0, 16);
     }

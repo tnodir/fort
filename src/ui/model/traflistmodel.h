@@ -5,7 +5,7 @@
 
 class StatManager;
 
-struct TrafficRow : CacheRow
+struct TrafficRow : TableRow
 {
     qint32 trafTime = 0;
     qint64 inBytes = 0;
