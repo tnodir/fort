@@ -6,6 +6,8 @@
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 
+class AppInfoCache;
+class AppInfoRow;
 class ConnListModel;
 class ConnectionsController;
 class FirewallConf;
@@ -36,12 +38,17 @@ private:
     void setupLogBlockedIp();
     void setupTableConnList();
     void setupTableConnListHeader();
+    void setupAppInfoRow();
+
+    int connListCurrentIndex() const;
+    QString connListCurrentPath() const;
 
     ConnectionsController *ctrl() const { return m_ctrl; }
     FortManager *fortManager() const;
     FortSettings *settings() const;
     FirewallConf *conf() const;
     ConnListModel *connListModel() const;
+    AppInfoCache *appInfoCache() const;
 
 private:
     ConnectionsController *m_ctrl = nullptr;
@@ -50,6 +57,7 @@ private:
     QCheckBox *m_cbLogAllowedIp = nullptr;
     QCheckBox *m_cbLogBlockedIp = nullptr;
     TableView *m_connListView = nullptr;
+    AppInfoRow *m_appInfoRow = nullptr;
 };
 
 #endif // CONNECTIONSWINDOW_H

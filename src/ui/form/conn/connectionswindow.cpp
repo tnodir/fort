@@ -9,8 +9,10 @@
 #include "../../fortmanager.h"
 #include "../../fortsettings.h"
 #include "../../model/connlistmodel.h"
+#include "../../util/app/appinfocache.h"
 #include "../../util/guiutil.h"
 #include "../../util/iconcache.h"
+#include "../controls/appinforow.h"
 #include "../controls/controlutil.h"
 #include "../controls/tableview.h"
 #include "connectionscontroller.h"
@@ -86,6 +88,10 @@ void ConnectionsWindow::setupUi()
     setupTableConnList();
     setupTableConnListHeader();
     layout->addWidget(m_connListView, 1);
+
+    // App Info Row
+    setupAppInfoRow();
+    layout->addWidget(m_appInfoRow);
 
     this->setLayout(layout);
 
@@ -187,6 +193,31 @@ void ConnectionsWindow::setupTableConnListHeader()
     // header->setSortIndicator(4, Qt::DescendingOrder);
 }
 
+void ConnectionsWindow::setupAppInfoRow()
+{
+    m_appInfoRow = new AppInfoRow();
+
+    const auto refreshAppInfoVersion = [&] {
+        m_appInfoRow->refreshAppInfoVersion(connListCurrentPath(), appInfoCache());
+    };
+
+    refreshAppInfoVersion();
+
+    connect(m_connListView, &TableView::currentIndexChanged, this, refreshAppInfoVersion);
+    connect(appInfoCache(), &AppInfoCache::cacheChanged, this, refreshAppInfoVersion);
+}
+
+int ConnectionsWindow::connListCurrentIndex() const
+{
+    return m_connListView->currentIndex().row();
+}
+
+QString ConnectionsWindow::connListCurrentPath() const
+{
+    const auto connRow = connListModel()->connRowAt(connListCurrentIndex());
+    return connRow.appPath;
+}
+
 FortManager *ConnectionsWindow::fortManager() const
 {
     return ctrl()->fortManager();
@@ -205,4 +236,9 @@ FirewallConf *ConnectionsWindow::conf() const
 ConnListModel *ConnectionsWindow::connListModel() const
 {
     return fortManager()->connListModel();
+}
+
+AppInfoCache *ConnectionsWindow::appInfoCache() const
+{
+    return connListModel()->appInfoCache();
 }

@@ -20,6 +20,7 @@ SOURCES += \
     driver/driverworker.cpp \
     form/conn/connectionscontroller.cpp \
     form/conn/connectionswindow.cpp \
+    form/controls/appinforow.cpp \
     form/controls/checkspincombo.cpp \
     form/controls/checktimeperiod.cpp \
     form/controls/controlutil.cpp \
@@ -137,6 +138,7 @@ HEADERS += \
     driver/driverworker.h \
     form/conn/connectionscontroller.h \
     form/conn/connectionswindow.h \
+    form/controls/appinforow.h \
     form/controls/checkspincombo.h \
     form/controls/checktimeperiod.h \
     form/controls/controlutil.h \

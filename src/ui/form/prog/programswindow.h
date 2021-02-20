@@ -13,6 +13,7 @@ QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QRadioButton)
 
 class AppInfoCache;
+class AppInfoRow;
 class AppListModel;
 class CheckSpinCombo;
 class ConfManager;
@@ -50,7 +51,6 @@ private:
     void setupTableApps();
     void setupTableAppsHeader();
     void setupAppInfoRow();
-    void setupAppInfoVersion();
     void setupTableAppsChanged();
 
     void updateAppEditForm(bool editCurrentApp);
@@ -107,12 +107,7 @@ private:
     QPushButton *m_btLogOptions = nullptr;
     QCheckBox *m_cbLogBlocked = nullptr;
     TableView *m_appListView = nullptr;
-    QWidget *m_appInfoRow = nullptr;
-    QPushButton *m_btAppCopyPath = nullptr;
-    QPushButton *m_btAppOpenFolder = nullptr;
-    QLineEdit *m_lineAppPath = nullptr;
-    QLabel *m_labelAppProductName = nullptr;
-    QLabel *m_labelAppCompanyName = nullptr;
+    AppInfoRow *m_appInfoRow = nullptr;
 };
 
 #endif // PROGRAMSWINDOW_H

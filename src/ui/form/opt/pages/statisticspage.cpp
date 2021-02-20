@@ -22,10 +22,9 @@
 #include "../../../model/appstatmodel.h"
 #include "../../../model/traflistmodel.h"
 #include "../../../util/app/appinfocache.h"
-#include "../../../util/guiutil.h"
 #include "../../../util/iconcache.h"
 #include "../../../util/net/netutil.h"
-#include "../../../util/osutil.h"
+#include "../../controls/appinforow.h"
 #include "../../controls/checktimeperiod.h"
 #include "../../controls/controlutil.h"
 #include "../../controls/labelcolor.h"
@@ -168,8 +167,7 @@ void StatisticsPage::onRetranslateUi()
 
     retranslateTabBar();
 
-    m_btAppCopyPath->setToolTip(tr("Copy Path"));
-    m_btAppOpenFolder->setToolTip(tr("Open Folder"));
+    m_appInfoRow->retranslateUi();
 }
 
 void StatisticsPage::retranslateTrafKeepDayNames()
@@ -275,7 +273,6 @@ void StatisticsPage::setupUi()
 
     // App Info Row
     setupAppInfoRow();
-    setupAppInfoVersion();
     layout->addWidget(m_appInfoRow);
 
     // Actions on app list view's current changed
@@ -710,48 +707,10 @@ void StatisticsPage::setupTableTrafHeader()
 
 void StatisticsPage::setupAppInfoRow()
 {
-    auto layout = new QHBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
+    m_appInfoRow = new AppInfoRow();
 
-    m_btAppCopyPath = ControlUtil::createLinkButton(":/icons/copy.png");
-    m_btAppOpenFolder = ControlUtil::createLinkButton(":/icons/folder-open.png");
-
-    m_lineAppPath = ControlUtil::createLineLabel();
-
-    m_labelAppProductName = ControlUtil::createLabel();
-    m_labelAppProductName->setFont(ControlUtil::fontDemiBold());
-
-    m_labelAppCompanyName = ControlUtil::createLabel();
-
-    connect(m_btAppCopyPath, &QAbstractButton::clicked, this,
-            [&] { GuiUtil::setClipboardData(appListCurrentPath()); });
-    connect(m_btAppOpenFolder, &QAbstractButton::clicked, this,
-            [&] { OsUtil::openFolder(appListCurrentPath()); });
-
-    layout->addWidget(m_btAppCopyPath);
-    layout->addWidget(m_btAppOpenFolder);
-    layout->addWidget(m_lineAppPath, 1);
-    layout->addWidget(m_labelAppProductName);
-    layout->addWidget(m_labelAppCompanyName);
-
-    m_appInfoRow = new QWidget();
-    m_appInfoRow->setLayout(layout);
-}
-
-void StatisticsPage::setupAppInfoVersion()
-{
     const auto refreshAppInfoVersion = [&] {
-        const auto appPath = appListCurrentPath();
-        const auto appInfo = appInfoCache()->appInfo(appPath);
-
-        m_lineAppPath->setText(appPath);
-        m_lineAppPath->setToolTip(appPath);
-
-        m_labelAppProductName->setVisible(!appInfo.productName.isEmpty());
-        m_labelAppProductName->setText(appInfo.productName + " v" + appInfo.productVersion);
-
-        m_labelAppCompanyName->setVisible(!appInfo.companyName.isEmpty());
-        m_labelAppCompanyName->setText(appInfo.companyName);
+        m_appInfoRow->refreshAppInfoVersion(appListCurrentPath(), appInfoCache());
     };
 
     refreshAppInfoVersion();

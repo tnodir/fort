@@ -7,6 +7,7 @@ QT_FORWARD_DECLARE_CLASS(QSplitter)
 QT_FORWARD_DECLARE_CLASS(QTableView)
 
 class AppInfoCache;
+class AppInfoRow;
 class AppStatModel;
 class CheckTimePeriod;
 class LabelColor;
@@ -69,7 +70,6 @@ private:
     void setupTableTraf();
     void setupTableTrafHeader();
     void setupAppInfoRow();
-    void setupAppInfoVersion();
     void setupAppListViewChanged();
     void updatePage();
     void updateTrafUnit();
@@ -125,12 +125,7 @@ private:
     ListView *m_appListView = nullptr;
     QTabBar *m_tabBar = nullptr;
     QTableView *m_tableTraf = nullptr;
-    QWidget *m_appInfoRow = nullptr;
-    QPushButton *m_btAppCopyPath = nullptr;
-    QPushButton *m_btAppOpenFolder = nullptr;
-    QLineEdit *m_lineAppPath = nullptr;
-    QLabel *m_labelAppProductName = nullptr;
-    QLabel *m_labelAppCompanyName = nullptr;
+    AppInfoRow *m_appInfoRow = nullptr;
 };
 
 #endif // STATISTICSPAGE_H
