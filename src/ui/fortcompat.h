@@ -16,4 +16,10 @@ using TokenizeViewResult = QStringTokenizer<QStringView, QChar>;
 #    define toStringView(str) (QStringView(str))
 #endif
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#    define mouseEventGlobalPos(event) (event)->globalPos()
+#else
+#    define mouseEventGlobalPos(event) (event)->globalPosition().toPoint()
+#endif
+
 #endif // FORTCOMPAT_H

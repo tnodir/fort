@@ -1,8 +1,10 @@
 #include "graphwindow.h"
 
 #include <QGuiApplication>
+#include <QScreen>
 #include <QVBoxLayout>
 
+#include "../../fortcompat.h"
 #include "../../fortsettings.h"
 #include "../../util/dateutil.h"
 #include "../../util/net/netutil.h"
@@ -140,7 +142,7 @@ void GraphWindow::onMouseDoubleClick(QMouseEvent *event)
 
 void GraphWindow::onMouseDragBegin(QMouseEvent *event)
 {
-    m_mousePressPoint = event->globalPosition().toPoint();
+    m_mousePressPoint = mouseEventGlobalPos(event);
     m_posOnMousePress = this->pos();
     m_sizeOnMousePress = this->size();
     m_mouseDragResize = (event->buttons() & Qt::RightButton) != 0;
@@ -153,7 +155,7 @@ void GraphWindow::onMouseDragMove(QMouseEvent *event)
     if (isMaximized() || isFullScreen())
         return;
 
-    const QPoint offset = event->globalPosition().toPoint() - m_mousePressPoint;
+    const QPoint offset = mouseEventGlobalPos(event) - m_mousePressPoint;
 
     if (m_mouseDragResize) {
         resize(qMax(m_sizeOnMousePress.width() + offset.x(), minimumSize().width()),

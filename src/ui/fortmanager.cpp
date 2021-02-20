@@ -367,7 +367,7 @@ void FortManager::showTrayMenu(QMouseEvent *event)
     if (!menu)
         return;
 
-    menu->popup(event->globalPosition().toPoint());
+    menu->popup(mouseEventGlobalPos(event));
 }
 
 void FortManager::showProgramsWindow()
