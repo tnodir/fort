@@ -65,6 +65,5 @@ void OptionsWindow::setupUi()
     this->setWindowIcon(GuiUtil::overlayIcon(":/images/sheild-96.png", ":/icons/cog.png"));
 
     // Size
-    this->resize(1024, 768);
     this->setMinimumSize(800, 500);
 }

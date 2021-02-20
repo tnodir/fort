@@ -55,9 +55,9 @@ QVariant ConnListModel::headerData(int section, Qt::Orientation orientation, int
         case 2:
             return tr("Protocol");
         case 3:
-            return tr("Local IP:Port");
+            return tr("Local IP and Port");
         case 4:
-            return tr("Remote IP:Port");
+            return tr("Remote IP and Port");
         case 5:
             return tr("Dir.");
         case 6:

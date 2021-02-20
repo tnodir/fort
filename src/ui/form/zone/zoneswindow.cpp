@@ -128,7 +128,6 @@ void ZonesWindow::setupUi()
             GuiUtil::overlayIcon(":/images/sheild-96.png", ":/icons/map-map-marker.png"));
 
     // Size
-    this->resize(1024, 768);
     this->setMinimumSize(500, 400);
 }
 
