@@ -74,6 +74,7 @@ void ConnectionsWindow::onRetranslateUi()
     m_btLogOptions->setText(tr("Options"));
     m_cbLogAllowedIp->setText(tr("Collect allowed connections"));
     m_cbLogBlockedIp->setText(tr("Collect blocked connections"));
+    m_cbAutoScroll->setText(tr("Auto Scroll"));
 
     connListModel()->refresh();
 
@@ -153,9 +154,11 @@ void ConnectionsWindow::setupLogOptions()
 {
     setupLogAllowedIp();
     setupLogBlockedIp();
+    setupAutoScroll();
 
     // Menu
-    const QList<QWidget *> menuWidgets = { m_cbLogAllowedIp, m_cbLogBlockedIp };
+    const QList<QWidget *> menuWidgets = { m_cbLogAllowedIp, m_cbLogBlockedIp,
+        ControlUtil::createSeparator(), m_cbAutoScroll };
     auto layout = ControlUtil::createLayoutByWidgets(menuWidgets);
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
@@ -186,6 +189,31 @@ void ConnectionsWindow::setupLogBlockedIp()
 
         fortManager()->applyConfImmediateFlags();
     });
+}
+
+void ConnectionsWindow::setupAutoScroll()
+{
+    const auto syncAutoScroll = [&] {
+        if (settings()->connAutoScroll()) {
+            connect(connListModel(), &QAbstractItemModel::rowsInserted, m_connListView,
+                    &QAbstractItemView::scrollToBottom);
+        } else {
+            disconnect(connListModel(), &QAbstractItemModel::rowsInserted, m_connListView,
+                    &QAbstractItemView::scrollToBottom);
+        }
+    };
+
+    syncAutoScroll();
+
+    m_cbAutoScroll = ControlUtil::createCheckBox(
+            settings()->connAutoScroll(), [&, syncAutoScroll](bool checked) {
+                if (settings()->connAutoScroll() == checked)
+                    return;
+
+                settings()->setConnAutoScroll(checked);
+
+                syncAutoScroll();
+            });
 }
 
 void ConnectionsWindow::setupTableConnList()

@@ -363,11 +363,6 @@ bool StatManager::logBlockedIp(bool inbound, quint8 blockReason, quint8 ipProto,
         ok = (connId > 0);
         if (ok) {
             ok = createConnBlock(connId, blockReason);
-            constexpr int connBlockIncMax = 100;
-            if (ok && ++m_connBlockInc > connBlockIncMax) {
-                m_connBlockInc = 0;
-                deleteOldConnBlock(m_conf->blockedIpKeepCount());
-            }
         }
     }
 
@@ -387,6 +382,18 @@ void StatManager::deleteStatApp(qint64 appId)
                     getIdStmt(StatSql::sqlDeleteAppTrafTotal, appId) });
 
     m_sqliteDb->commitTransaction();
+}
+
+bool StatManager::deleteOldConnBlock()
+{
+    const int keepCount = m_conf->blockedIpKeepCount();
+    const qint64 connId =
+            m_sqliteDb->executeEx(StatSql::sqlSelectOldConnBlock, { keepCount }).toLongLong();
+    if (connId > 0) {
+        deleteRangeConnBlock(1, connId);
+        return true;
+    }
+    return false;
 }
 
 bool StatManager::deleteConn(qint64 connId, bool blocked)
@@ -560,15 +567,6 @@ bool StatManager::createConnBlock(qint64 connId, quint8 blockReason)
     stmt->reset();
 
     return ok;
-}
-
-void StatManager::deleteOldConnBlock(int keepCount)
-{
-    const qint64 connId =
-            m_sqliteDb->executeEx(StatSql::sqlSelectOldConnBlock, { keepCount }).toLongLong();
-    if (connId > 0) {
-        deleteRangeConnBlock(1, connId);
-    }
 }
 
 void StatManager::deleteRangeConnBlock(qint64 connIdFrom, qint64 connIdTo)

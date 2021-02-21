@@ -36,6 +36,7 @@ private:
     void setupLogOptions();
     void setupLogAllowedIp();
     void setupLogBlockedIp();
+    void setupAutoScroll();
     void setupTableConnList();
     void setupTableConnListHeader();
     void setupAppInfoRow();
@@ -64,6 +65,7 @@ private:
     QPushButton *m_btLogOptions = nullptr;
     QCheckBox *m_cbLogAllowedIp = nullptr;
     QCheckBox *m_cbLogBlockedIp = nullptr;
+    QCheckBox *m_cbAutoScroll = nullptr;
     TableView *m_connListView = nullptr;
     AppInfoRow *m_appInfoRow = nullptr;
 };

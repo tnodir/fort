@@ -220,6 +220,9 @@ public:
     QByteArray connListHeader() const { return iniByteArray("connWindow/connListHeader"); }
     void setConnListHeader(const QByteArray &v) { setIniValue("connWindow/connListHeader", v); }
 
+    bool connAutoScroll() const { return iniBool("connWindow/autoScroll"); }
+    void setConnAutoScroll(bool on) { setIniValue("connWindow/autoScroll", on); }
+
     qint32 quotaDayAlerted() const { return iniInt("quota/dayAlerted"); }
     void setQuotaDayAlerted(qint32 v) { setIniValue("quota/dayAlerted", v); }
 

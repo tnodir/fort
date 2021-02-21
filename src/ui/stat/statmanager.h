@@ -41,6 +41,7 @@ public:
 
     void deleteStatApp(qint64 appId);
 
+    bool deleteOldConnBlock();
     bool deleteConn(qint64 connId, bool blocked);
     void deleteConns();
 
@@ -87,7 +88,6 @@ private:
     qint64 createConn(bool inbound, quint8 ipProto, quint16 localPort, quint16 remotePort,
             quint32 localIp, quint32 remoteIp, quint32 pid, qint64 unixTime, qint64 appId);
     bool createConnBlock(qint64 connId, quint8 blockReason);
-    void deleteOldConnBlock(int keepCount);
     void deleteRangeConnBlock(qint64 connIdFrom, qint64 connIdTo);
 
     void deleteAppStmtList(SqliteStmt *stmtAppPaths, const QStmtList &stmtList);
@@ -113,8 +113,6 @@ private:
     qint32 m_lastTrafDay = 0;
     qint32 m_lastTrafMonth = 0;
     qint32 m_lastTick = 0;
-
-    int m_connBlockInc = 999999999; // to trigger on first check
 
     QuotaManager *m_quotaManager = nullptr;
     const FirewallConf *m_conf = nullptr;

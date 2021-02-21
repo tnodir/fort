@@ -72,6 +72,8 @@ protected:
     QString sqlBase() const override;
 
 private:
+    int m_connBlockInc = 999999999; // to trigger on first check
+
     StatManager *m_statManager = nullptr;
     AppInfoCache *m_appInfoCache = nullptr;
 

@@ -32,10 +32,25 @@ void ConnListModel::setAppInfoCache(AppInfoCache *v)
 
 void ConnListModel::handleLogBlockedIp(const LogEntryBlockedIp &entry, qint64 unixTime)
 {
+    const int row = rowCount();
+
+    beginInsertRows(QModelIndex(), row, row);
+
     if (statManager()->logBlockedIp(entry.inbound(), entry.blockReason(), entry.ipProto(),
                 entry.localPort(), entry.remotePort(), entry.localIp(), entry.remoteIp(),
                 entry.pid(), entry.path(), unixTime)) {
-        reset();
+        invalidateRowCache();
+        ++m_connBlockInc;
+    }
+
+    endInsertRows();
+
+    constexpr int connBlockIncMax = 100;
+    if (m_connBlockInc >= connBlockIncMax) {
+        m_connBlockInc = 0;
+        if (statManager()->deleteOldConnBlock()) {
+            reset();
+        }
     }
 }
 
@@ -144,7 +159,6 @@ void ConnListModel::deleteConn(qint64 connId, bool blocked, int row)
 
     if (statManager()->deleteConn(connId, blocked)) {
         invalidateRowCache();
-        removeRow(row);
     }
 
     endRemoveRows();
