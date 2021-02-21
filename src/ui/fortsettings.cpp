@@ -191,7 +191,6 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     conf.setStopTraffic(iniBool("stopTraffic"));
     conf.setStopInetTraffic(iniBool("stopInetTraffic"));
     conf.setAllowAllNew(iniBool("allowAllNew"));
-    conf.setResolveAddress(iniBool("resolveAddress"));
     conf.setLogBlocked(iniBool("logBlocked", true));
     conf.setLogStat(iniBool("logStat", true));
     conf.setLogAllowedIp(iniBool("logAllowedIp", false));
@@ -229,7 +228,6 @@ bool FortSettings::writeConfIni(const FirewallConf &conf)
     setIniValue("stopTraffic", conf.stopTraffic());
     setIniValue("stopInetTraffic", conf.stopInetTraffic());
     setIniValue("allowAllNew", conf.allowAllNew());
-    setIniValue("resolveAddress", conf.resolveAddress());
     setIniValue("logBlocked", conf.logBlocked());
     setIniValue("logStat", conf.logStat());
     setIniValue("logAllowedIp", conf.logAllowedIp());

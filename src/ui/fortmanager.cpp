@@ -69,6 +69,7 @@ FortManager::FortManager(FortSettings *fortSettings, QObject *parent) :
     m_hotKeyManager(new HotKeyManager(m_nativeEventFilter, this)),
     m_taskManager(new TaskManager(this, this)),
     m_appInfoCache(new AppInfoCache(this)),
+    m_hostInfoCache(new HostInfoCache(this)),
     m_appListModel(new AppListModel(m_confManager, this)),
     m_appStatModel(new AppStatModel(m_statManager, this)),
     m_zoneListModel(new ZoneListModel(m_confManager, this)),
@@ -177,6 +178,7 @@ void FortManager::setupModels()
     zoneListModel()->initialize();
 
     connListModel()->setAppInfoCache(m_appInfoCache);
+    connListModel()->setHostInfoCache(m_hostInfoCache);
 }
 
 void FortManager::setupLogManager()

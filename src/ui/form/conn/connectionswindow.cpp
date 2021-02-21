@@ -31,6 +31,7 @@ ConnectionsWindow::ConnectionsWindow(FortManager *fortManager, QWidget *parent) 
     setupController();
 
     syncAutoScroll();
+    syncShowHostNames();
 }
 
 void ConnectionsWindow::setupController()
@@ -76,7 +77,8 @@ void ConnectionsWindow::onRetranslateUi()
     m_btLogOptions->setText(tr("Options"));
     m_cbLogAllowedIp->setText(tr("Collect allowed connections"));
     m_cbLogBlockedIp->setText(tr("Collect blocked connections"));
-    m_cbAutoScroll->setText(tr("Auto Scroll"));
+    m_cbAutoScroll->setText(tr("Auto scroll"));
+    m_cbShowHostNames->setText(tr("Show host names"));
 
     connListModel()->refresh();
 
@@ -157,10 +159,11 @@ void ConnectionsWindow::setupLogOptions()
     setupLogAllowedIp();
     setupLogBlockedIp();
     setupAutoScroll();
+    setupShowHostNames();
 
     // Menu
     const QList<QWidget *> menuWidgets = { m_cbLogAllowedIp, m_cbLogBlockedIp,
-        ControlUtil::createSeparator(), m_cbAutoScroll };
+        ControlUtil::createSeparator(), m_cbAutoScroll, m_cbShowHostNames };
     auto layout = ControlUtil::createLayoutByWidgets(menuWidgets);
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
@@ -203,6 +206,19 @@ void ConnectionsWindow::setupAutoScroll()
 
         syncAutoScroll();
     });
+}
+
+void ConnectionsWindow::setupShowHostNames()
+{
+    m_cbShowHostNames =
+            ControlUtil::createCheckBox(settings()->connShowHostNames(), [&](bool checked) {
+                if (settings()->connShowHostNames() == checked)
+                    return;
+
+                settings()->setConnShowHostNames(checked);
+
+                syncShowHostNames();
+            });
 }
 
 void ConnectionsWindow::setupTableConnList()
@@ -281,6 +297,11 @@ void ConnectionsWindow::syncAutoScroll()
         disconnect(connListModel(), &QAbstractItemModel::rowsInserted, m_connListView,
                 &QAbstractItemView::scrollToBottom);
     }
+}
+
+void ConnectionsWindow::syncShowHostNames()
+{
+    connListModel()->setResolveAddress(settings()->connShowHostNames());
 }
 
 void ConnectionsWindow::deleteConn(int row)

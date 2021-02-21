@@ -223,6 +223,9 @@ public:
     bool connAutoScroll() const { return iniBool("connWindow/autoScroll"); }
     void setConnAutoScroll(bool on) { setIniValue("connWindow/autoScroll", on); }
 
+    bool connShowHostNames() const { return iniBool("connWindow/showHostNames"); }
+    void setConnShowHostNames(bool on) { setIniValue("connWindow/showHostNames", on); }
+
     qint32 quotaDayAlerted() const { return iniInt("quota/dayAlerted"); }
     void setQuotaDayAlerted(qint32 v) { setIniValue("quota/dayAlerted", v); }
 

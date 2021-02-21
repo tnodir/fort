@@ -11,11 +11,20 @@
 #include "../util/app/appinfocache.h"
 #include "../util/fileutil.h"
 #include "../util/iconcache.h"
+#include "../util/net/hostinfocache.h"
 #include "../util/net/netutil.h"
 
 ConnListModel::ConnListModel(StatManager *statManager, QObject *parent) :
     TableSqlModel(parent), m_statManager(statManager)
 {
+}
+
+void ConnListModel::setResolveAddress(bool v)
+{
+    if (m_resolveAddress != v) {
+        m_resolveAddress = v;
+        refresh();
+    }
 }
 
 SqliteDb *ConnListModel::sqliteDb() const
@@ -28,6 +37,13 @@ void ConnListModel::setAppInfoCache(AppInfoCache *v)
     m_appInfoCache = v;
 
     connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &ConnListModel::refresh);
+}
+
+void ConnListModel::setHostInfoCache(HostInfoCache *v)
+{
+    m_hostInfoCache = v;
+
+    connect(hostInfoCache(), &HostInfoCache::cacheChanged, this, &ConnListModel::refresh);
 }
 
 void ConnListModel::handleLogBlockedIp(const LogEntryBlockedIp &entry, qint64 unixTime)
@@ -109,9 +125,9 @@ QVariant ConnListModel::data(const QModelIndex &index, int role) const
         case 2:
             return NetUtil::protocolName(connRow.ipProto);
         case 3:
-            return NetUtil::ip4ToText(connRow.localIp) + ':' + QString::number(connRow.localPort);
+            return formatIpPort(connRow.localIp, connRow.localPort);
         case 4:
-            return NetUtil::ip4ToText(connRow.remoteIp) + ':' + QString::number(connRow.remotePort);
+            return formatIpPort(connRow.remoteIp, connRow.remotePort);
         case 5: {
             if (role == Qt::ToolTipRole) {
                 if (connRow.blocked) {
@@ -183,6 +199,8 @@ void ConnListModel::clear()
 {
     statManager()->deleteConns();
     reset();
+
+    hostInfoCache()->clear();
 }
 
 bool ConnListModel::updateTableRow(int row) const
@@ -225,4 +243,16 @@ QString ConnListModel::sqlBase() const
            "    a.path"
            "  FROM conn t"
            "    JOIN app a ON a.app_id = t.app_id";
+}
+
+QString ConnListModel::formatIpPort(quint32 ip, quint16 port) const
+{
+    QString address = NetUtil::ip4ToText(ip);
+    if (resolveAddress()) {
+        const QString hostName = hostInfoCache()->hostName(address);
+        if (!hostName.isEmpty()) {
+            address = hostName;
+        }
+    }
+    return address + ':' + QString::number(port);
 }

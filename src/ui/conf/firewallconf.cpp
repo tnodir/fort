@@ -13,7 +13,6 @@ FirewallConf::FirewallConf(QObject *parent) :
     m_stopTraffic(false),
     m_stopInetTraffic(false),
     m_allowAllNew(false),
-    m_resolveAddress(false),
     m_logBlocked(false),
     m_logStat(false),
     m_logAllowedIp(false),
@@ -70,14 +69,6 @@ void FirewallConf::setAllowAllNew(bool allowAllNew)
     if (m_allowAllNew != allowAllNew) {
         m_allowAllNew = allowAllNew;
         emit allowAllNewChanged();
-    }
-}
-
-void FirewallConf::setResolveAddress(bool resolveAddress)
-{
-    if (m_resolveAddress != resolveAddress) {
-        m_resolveAddress = resolveAddress;
-        emit resolveAddressChanged();
     }
 }
 
@@ -363,7 +354,6 @@ void FirewallConf::copyFlags(const FirewallConf &o)
 
 void FirewallConf::copyImmediateFlags(const FirewallConf &o)
 {
-    setResolveAddress(o.resolveAddress());
     setLogBlocked(o.logBlocked());
     setLogStat(o.logStat());
     setLogAllowedIp(o.logAllowedIp());

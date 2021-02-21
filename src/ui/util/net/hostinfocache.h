@@ -12,12 +12,9 @@ class HostInfoManager;
 class HostInfoCache : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool hostTrigger READ hostTrigger NOTIFY cacheChanged)
 
 public:
     explicit HostInfoCache(QObject *parent = nullptr);
-
-    bool hostTrigger() const { return true; }
 
 signals:
     void cacheChanged();

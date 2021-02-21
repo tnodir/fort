@@ -25,8 +25,6 @@ class FirewallConf : public QObject
     Q_PROPERTY(bool stopInetTraffic READ stopInetTraffic WRITE setStopInetTraffic NOTIFY
                     stopInetTrafficChanged)
     Q_PROPERTY(bool allowAllNew READ allowAllNew WRITE setAllowAllNew NOTIFY allowAllNewChanged)
-    Q_PROPERTY(bool resolveAddress READ resolveAddress WRITE setResolveAddress NOTIFY
-                    resolveAddressChanged)
     Q_PROPERTY(bool logBlocked READ logBlocked WRITE setLogBlocked NOTIFY logBlockedChanged)
     Q_PROPERTY(bool logStat READ logStat WRITE setLogStat NOTIFY logStatChanged)
     Q_PROPERTY(bool logAllowedIp READ logAllowedIp WRITE setLogAllowedIp NOTIFY logAllowedIpChanged)
@@ -75,9 +73,6 @@ public:
 
     bool allowAllNew() const { return m_allowAllNew; }
     void setAllowAllNew(bool allowAllNew);
-
-    bool resolveAddress() const { return m_resolveAddress; }
-    void setResolveAddress(bool resolveAddress);
 
     bool logBlocked() const { return m_logBlocked; }
     void setLogBlocked(bool logBlocked);
@@ -159,7 +154,6 @@ signals:
     void stopTrafficChanged();
     void stopInetTrafficChanged();
     void allowAllNewChanged();
-    void resolveAddressChanged();
     void logBlockedChanged();
     void logStatChanged();
     void logAllowedIpChanged();
@@ -200,8 +194,6 @@ private:
     bool m_stopTraffic : 1;
     bool m_stopInetTraffic : 1;
     bool m_allowAllNew : 1;
-
-    bool m_resolveAddress : 1;
 
     bool m_logBlocked : 1;
     bool m_logStat : 1;

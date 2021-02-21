@@ -37,12 +37,14 @@ private:
     void setupLogAllowedIp();
     void setupLogBlockedIp();
     void setupAutoScroll();
+    void setupShowHostNames();
     void setupTableConnList();
     void setupTableConnListHeader();
     void setupAppInfoRow();
     void setupTableConnsChanged();
 
     void syncAutoScroll();
+    void syncShowHostNames();
 
     void deleteConn(int row);
 
@@ -68,6 +70,7 @@ private:
     QCheckBox *m_cbLogAllowedIp = nullptr;
     QCheckBox *m_cbLogBlockedIp = nullptr;
     QCheckBox *m_cbAutoScroll = nullptr;
+    QCheckBox *m_cbShowHostNames = nullptr;
     TableView *m_connListView = nullptr;
     AppInfoRow *m_appInfoRow = nullptr;
 };

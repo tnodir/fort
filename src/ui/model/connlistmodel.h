@@ -6,6 +6,7 @@
 #include "../util/model/tablesqlmodel.h"
 
 class AppInfoCache;
+class HostInfoCache;
 class LogEntryBlockedIp;
 class StatManager;
 
@@ -42,11 +43,17 @@ class ConnListModel : public TableSqlModel
 public:
     explicit ConnListModel(StatManager *statManager, QObject *parent = nullptr);
 
+    bool resolveAddress() const { return m_resolveAddress; }
+    void setResolveAddress(bool v);
+
     StatManager *statManager() const { return m_statManager; }
     SqliteDb *sqliteDb() const override;
 
     AppInfoCache *appInfoCache() const { return m_appInfoCache; }
     void setAppInfoCache(AppInfoCache *v);
+
+    HostInfoCache *hostInfoCache() const { return m_hostInfoCache; }
+    void setHostInfoCache(HostInfoCache *v);
 
     void handleLogBlockedIp(const LogEntryBlockedIp &entry, qint64 unixTime);
 
@@ -72,10 +79,16 @@ protected:
     QString sqlBase() const override;
 
 private:
+    QString formatIpPort(quint32 ip, quint16 port) const;
+
+private:
+    bool m_resolveAddress = false;
+
     int m_connBlockInc = 999999999; // to trigger on first check
 
     StatManager *m_statManager = nullptr;
     AppInfoCache *m_appInfoCache = nullptr;
+    HostInfoCache *m_hostInfoCache = nullptr;
 
     mutable ConnRow m_connRow;
 };

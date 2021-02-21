@@ -19,6 +19,7 @@ class EnvManager;
 class FirewallConf;
 class FortSettings;
 class GraphWindow;
+class HostInfoCache;
 class HotKeyManager;
 class LogManager;
 class NativeEventFilter;
@@ -234,6 +235,7 @@ private:
     HotKeyManager *m_hotKeyManager = nullptr;
     TaskManager *m_taskManager = nullptr;
     AppInfoCache *m_appInfoCache = nullptr;
+    HostInfoCache *m_hostInfoCache = nullptr;
 
     AppListModel *m_appListModel = nullptr;
     AppStatModel *m_appStatModel = nullptr;
