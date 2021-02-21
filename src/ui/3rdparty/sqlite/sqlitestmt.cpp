@@ -236,6 +236,12 @@ QDateTime SqliteStmt::columnDateTime(int column)
     return (msecs == 0) ? QDateTime() : QDateTime::fromMSecsSinceEpoch(msecs);
 }
 
+QDateTime SqliteStmt::columnUnixTime(int column)
+{
+    const auto secs = columnInt64(column);
+    return (secs == 0) ? QDateTime() : QDateTime::fromSecsSinceEpoch(secs);
+}
+
 QByteArray SqliteStmt::columnBlob(int column)
 {
     const char *p = static_cast<const char *>(sqlite3_column_blob(m_stmt, column));

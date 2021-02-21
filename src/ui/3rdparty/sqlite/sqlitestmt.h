@@ -59,6 +59,7 @@ public:
     bool columnBool(int column = 0);
     QString columnText(int column = 0);
     QDateTime columnDateTime(int column = 0);
+    QDateTime columnUnixTime(int column = 0);
     QByteArray columnBlob(int column = 0);
     QVariant columnVar(int column = 0);
 

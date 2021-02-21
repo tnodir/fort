@@ -164,7 +164,7 @@ bool ConnListModel::updateTableRow(int row) const
 
     m_connRow.connId = stmt.columnInt64(0);
     m_connRow.appId = stmt.columnInt64(1);
-    m_connRow.connTime = stmt.columnDateTime(2);
+    m_connRow.connTime = stmt.columnUnixTime(2);
     m_connRow.pid = stmt.columnInt(3);
     m_connRow.inbound = stmt.columnBool(4);
     m_connRow.blocked = stmt.columnBool(5);
