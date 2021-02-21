@@ -42,6 +42,8 @@ private:
     void setupAppInfoRow();
     void setupTableConnsChanged();
 
+    void syncAutoScroll();
+
     void deleteConn(int row);
 
     void deleteSelectedConns();

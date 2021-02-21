@@ -29,6 +29,8 @@ ConnectionsWindow::ConnectionsWindow(FortManager *fortManager, QWidget *parent) 
 {
     setupUi();
     setupController();
+
+    syncAutoScroll();
 }
 
 void ConnectionsWindow::setupController()
@@ -193,27 +195,14 @@ void ConnectionsWindow::setupLogBlockedIp()
 
 void ConnectionsWindow::setupAutoScroll()
 {
-    const auto syncAutoScroll = [&] {
-        if (settings()->connAutoScroll()) {
-            connect(connListModel(), &QAbstractItemModel::rowsInserted, m_connListView,
-                    &QAbstractItemView::scrollToBottom);
-        } else {
-            disconnect(connListModel(), &QAbstractItemModel::rowsInserted, m_connListView,
-                    &QAbstractItemView::scrollToBottom);
-        }
-    };
+    m_cbAutoScroll = ControlUtil::createCheckBox(settings()->connAutoScroll(), [&](bool checked) {
+        if (settings()->connAutoScroll() == checked)
+            return;
 
-    syncAutoScroll();
+        settings()->setConnAutoScroll(checked);
 
-    m_cbAutoScroll = ControlUtil::createCheckBox(
-            settings()->connAutoScroll(), [&, syncAutoScroll](bool checked) {
-                if (settings()->connAutoScroll() == checked)
-                    return;
-
-                settings()->setConnAutoScroll(checked);
-
-                syncAutoScroll();
-            });
+        syncAutoScroll();
+    });
 }
 
 void ConnectionsWindow::setupTableConnList()
@@ -279,6 +268,19 @@ void ConnectionsWindow::setupTableConnsChanged()
     refreshTableConnsChanged();
 
     connect(m_connListView, &TableView::currentIndexChanged, this, refreshTableConnsChanged);
+}
+
+void ConnectionsWindow::syncAutoScroll()
+{
+    if (settings()->connAutoScroll()) {
+        connect(connListModel(), &QAbstractItemModel::rowsInserted, m_connListView,
+                &QAbstractItemView::scrollToBottom);
+
+        m_connListView->scrollToBottom();
+    } else {
+        disconnect(connListModel(), &QAbstractItemModel::rowsInserted, m_connListView,
+                &QAbstractItemView::scrollToBottom);
+    }
 }
 
 void ConnectionsWindow::deleteConn(int row)
