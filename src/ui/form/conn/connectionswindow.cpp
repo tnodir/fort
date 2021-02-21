@@ -182,6 +182,8 @@ void ConnectionsWindow::setupLogAllowedIp()
 
         fortManager()->applyConfImmediateFlags();
     });
+
+    m_cbLogAllowedIp->setVisible(false); // TODO
 }
 
 void ConnectionsWindow::setupLogBlockedIp()

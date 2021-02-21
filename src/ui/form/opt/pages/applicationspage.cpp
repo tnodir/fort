@@ -444,6 +444,8 @@ void ApplicationsPage::setupGroupLogConn()
 
         ctrl()->setConfEdited(true);
     });
+
+    m_cbLogConn->setVisible(false); // TODO
 }
 
 void ApplicationsPage::setupGroupFragmentPacket()
