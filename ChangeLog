@@ -1,5 +1,14 @@
 Fort Firewall ChangeLog
 
+v3.3.0, 2021-02-22:
+- UI: Add Connections Window.
+- UI: Connections: Show block reason in tool-tip.
+- UI: Update icons.
+- UI: Traffic Graph: Stick to screen edges after dragging.
+- UI: Traffic Graph: Resize by dragging with right mouse button.
+- Driver: Log "inbound" state of blocked connection.
+- Update SQLite to v3.34.1
+
 v3.2.2, 2020-06-15:
 - UI: App. paths of Programs window overwrite paths from Options window.
 - Update SQLite to v3.32.2
