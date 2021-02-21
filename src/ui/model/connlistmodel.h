@@ -30,6 +30,11 @@ struct ConnRow : TableRow
     QDateTime connTime;
 };
 
+struct ConnRowBlock
+{
+    quint8 blockReason = 0;
+};
+
 class ConnListModel : public TableSqlModel
 {
     Q_OBJECT
@@ -54,6 +59,8 @@ public:
     void deleteConn(qint64 connId, bool blocked, int row);
 
     const ConnRow &connRowAt(int row) const;
+
+    ConnRowBlock getConnRowBlock(qint64 connId) const;
 
 public slots:
     void clear();

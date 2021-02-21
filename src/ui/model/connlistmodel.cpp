@@ -46,7 +46,7 @@ int ConnListModel::columnCount(const QModelIndex &parent) const
 
 QVariant ConnListModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+    if (orientation == Qt::Horizontal && (role == Qt::DisplayRole || role == Qt::ToolTipRole)) {
         switch (section) {
         case 0:
             return tr("Program");
@@ -59,7 +59,7 @@ QVariant ConnListModel::headerData(int section, Qt::Orientation orientation, int
         case 4:
             return tr("Remote IP and Port");
         case 5:
-            return tr("Dir.");
+            return (role == Qt::DisplayRole) ? tr("Dir.") : tr("Direction");
         case 6:
             return tr("Time");
         }
@@ -97,8 +97,16 @@ QVariant ConnListModel::data(const QModelIndex &index, int role) const
             return NetUtil::ip4ToText(connRow.localIp) + ':' + QString::number(connRow.localPort);
         case 4:
             return NetUtil::ip4ToText(connRow.remoteIp) + ':' + QString::number(connRow.remotePort);
-        case 5:
+        case 5: {
+            if (role == Qt::ToolTipRole) {
+                if (connRow.blocked) {
+                    // Show block reason in tool-tip
+                    const auto connBlock = getConnRowBlock(connRow.connId);
+                    return LogEntryBlockedIp::reasonToString(connBlock.blockReason);
+                }
+            }
             return connRow.inbound ? tr("In") : tr("Out");
+        }
         case 6:
             return connRow.connTime;
         }
@@ -147,6 +155,14 @@ const ConnRow &ConnListModel::connRowAt(int row) const
     updateRowCache(row);
 
     return m_connRow;
+}
+
+ConnRowBlock ConnListModel::getConnRowBlock(qint64 connId) const
+{
+    static const char *const sql = "SELECT block_reason FROM conn_block"
+                                   "  WHERE conn_id = ?1";
+
+    return { quint8(sqliteDb()->executeEx(sql, { connId }).toInt()) };
 }
 
 void ConnListModel::clear()

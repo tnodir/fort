@@ -44,6 +44,8 @@ public:
     quint32 remoteIp() const { return m_remoteIp; }
     void setRemoteIp(quint32 ip);
 
+    static QString reasonToString(quint8 blockReason);
+
 private:
     bool m_inbound = false;
     quint8 m_blockReason = 0;

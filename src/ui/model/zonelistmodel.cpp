@@ -36,7 +36,7 @@ int ZoneListModel::columnCount(const QModelIndex &parent) const
 
 QVariant ZoneListModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+    if (orientation == Qt::Horizontal && (role == Qt::DisplayRole || role == Qt::ToolTipRole)) {
         switch (section) {
         case 0:
             return tr("Zone");
