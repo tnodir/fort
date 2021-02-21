@@ -82,7 +82,7 @@ QVariant ConnListModel::headerData(int section, Qt::Orientation orientation, int
         case 0:
             return tr("Program");
         case 1:
-            return tr("Process ID");
+            return (role == Qt::DisplayRole) ? tr("Proc. ID") : tr("Process ID");
         case 2:
             return tr("Protocol");
         case 3:

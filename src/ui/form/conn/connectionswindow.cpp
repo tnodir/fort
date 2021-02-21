@@ -246,8 +246,8 @@ void ConnectionsWindow::setupTableConnListHeader()
     header->setSectionResizeMode(5, QHeaderView::Fixed);
     header->setSectionResizeMode(6, QHeaderView::Stretch);
 
-    header->resizeSection(0, 420);
-    header->resizeSection(1, 65);
+    header->resizeSection(0, 430);
+    header->resizeSection(1, 50);
     header->resizeSection(2, 60);
     header->resizeSection(3, 140);
     header->resizeSection(4, 140);
