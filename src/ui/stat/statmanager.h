@@ -39,7 +39,10 @@ public:
 
     void getStatAppList(QStringList &list, QVector<qint64> &appIds);
 
-    void deleteStatApp(qint64 appId, const QString &appPath);
+    void deleteStatApp(qint64 appId);
+
+    bool deleteConn(qint64 connId, bool blocked);
+    void deleteConns();
 
     void resetAppTrafTotals();
 
@@ -84,12 +87,16 @@ private:
     qint64 createConn(bool inbound, quint8 ipProto, quint16 localPort, quint16 remotePort,
             quint32 localIp, quint32 remoteIp, quint32 pid, qint64 unixTime, qint64 appId);
     bool createConnBlock(qint64 connId, quint8 blockReason);
-    void removeOldConnBlock(int keepCount);
+    void deleteOldConnBlock(int keepCount);
+    void deleteRangeConnBlock(qint64 connIdFrom, qint64 connIdTo);
+
+    void deleteAppStmtList(SqliteStmt *stmtAppPaths, const QStmtList &stmtList);
 
     void stepStmtList(const QStmtList &stmtList);
 
     SqliteStmt *getTrafficStmt(const char *sql, qint32 trafTime);
     SqliteStmt *getIdStmt(const char *sql, qint64 id);
+    SqliteStmt *getId2Stmt(const char *sql, qint64 id1, qint64 id2);
 
     SqliteStmt *getSqliteStmt(const char *sql);
 

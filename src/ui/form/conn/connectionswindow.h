@@ -39,6 +39,11 @@ private:
     void setupTableConnList();
     void setupTableConnListHeader();
     void setupAppInfoRow();
+    void setupTableConnsChanged();
+
+    void deleteConn(int row);
+
+    void deleteSelectedConns();
 
     int connListCurrentIndex() const;
     QString connListCurrentPath() const;
@@ -53,6 +58,9 @@ private:
 private:
     ConnectionsController *m_ctrl = nullptr;
 
+    QPushButton *m_btEdit = nullptr;
+    QAction *m_actRemoveConn = nullptr;
+    QAction *m_actClearConns = nullptr;
     QPushButton *m_btLogOptions = nullptr;
     QCheckBox *m_cbLogAllowedIp = nullptr;
     QCheckBox *m_cbLogBlockedIp = nullptr;

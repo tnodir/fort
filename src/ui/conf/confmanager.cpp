@@ -485,19 +485,12 @@ bool ConfManager::addApp(const QString &appPath, const QString &appName, const Q
             << QDateTime::currentDateTime() << (!endTime.isNull() ? endTime : QVariant());
 
     m_sqliteDb->executeEx(sqlInsertApp, vars, 0, &ok);
-    if (!ok)
-        goto end;
-
-    // Alert
-    {
+    if (ok && alerted) {
+        // Alert
         const qint64 appId = m_sqliteDb->lastInsertRowid();
-
-        if (alerted) {
-            m_sqliteDb->executeEx(sqlInsertAppAlert, { appId }, 0, &ok);
-        }
+        m_sqliteDb->executeEx(sqlInsertAppAlert, { appId }, 0, &ok);
     }
 
-end:
     checkResult(ok, true);
 
     if (ok && !endTime.isNull()) {
@@ -520,12 +513,10 @@ bool ConfManager::deleteApp(qint64 appId)
     const auto vars = QVariantList() << appId;
 
     m_sqliteDb->executeEx(sqlDeleteApp, vars, 0, &ok);
-    if (!ok)
-        goto end;
+    if (ok) {
+        m_sqliteDb->executeEx(sqlDeleteAppAlert, vars, 0, &ok);
+    }
 
-    m_sqliteDb->executeEx(sqlDeleteAppAlert, vars, 0, &ok);
-
-end:
     return checkResult(ok, true);
 }
 
@@ -540,12 +531,10 @@ bool ConfManager::updateApp(qint64 appId, const QString &appName, const QDateTim
                                      << (!endTime.isNull() ? endTime : QVariant());
 
     m_sqliteDb->executeEx(sqlUpdateApp, vars, 0, &ok);
-    if (!ok)
-        goto end;
+    if (ok) {
+        m_sqliteDb->executeEx(sqlDeleteAppAlert, { appId }, 0, &ok);
+    }
 
-    m_sqliteDb->executeEx(sqlDeleteAppAlert, { appId }, 0, &ok);
-
-end:
     checkResult(ok, true);
 
     if (ok && !endTime.isNull()) {
@@ -669,16 +658,12 @@ bool ConfManager::deleteZone(int zoneId)
     m_sqliteDb->beginTransaction();
 
     m_sqliteDb->executeEx(sqlDeleteZone, { zoneId }, 0, &ok);
-    if (!ok)
-        goto end;
-
-    // Delete the Zone from Address Groups
-    {
+    if (ok) {
+        // Delete the Zone from Address Groups
         const quint32 zoneUnMask = ~(quint32(1) << (zoneId - 1));
         m_sqliteDb->executeEx(sqlDeleteAddressGroupZone, { qint64(zoneUnMask) }, 0, &ok);
     }
 
-end:
     return checkResult(ok, true);
 }
 

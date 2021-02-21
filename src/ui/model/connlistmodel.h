@@ -51,7 +51,12 @@ public:
             int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
+    void deleteConn(qint64 connId, bool blocked, int row);
+
     const ConnRow &connRowAt(int row) const;
+
+public slots:
+    void clear();
 
 protected:
     bool updateTableRow(int row) const override;

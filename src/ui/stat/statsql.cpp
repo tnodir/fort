@@ -4,6 +4,10 @@ const char *const StatSql::sqlSelectAppId = "SELECT app_id FROM app WHERE path =
 
 const char *const StatSql::sqlInsertAppId = "INSERT INTO app(path, creat_time) VALUES(?1, ?2);";
 
+const char *const StatSql::sqlSelectDeletedStatAppPaths =
+        "SELECT path FROM app WHERE app_id = ?1"
+        "  and (SELECT 1 FROM conn WHERE app_id = ?1 LIMIT 1) is null;";
+
 const char *const StatSql::sqlDeleteStatAppId =
         "DELETE FROM app WHERE app_id = ?1"
         "  and (SELECT 1 FROM conn WHERE app_id = ?1 LIMIT 1) is null;";
@@ -162,23 +166,37 @@ const char *const StatSql::sqlInsertConn =
 const char *const StatSql::sqlInsertConnBlock = "INSERT INTO conn_block(conn_id, block_reason)"
                                                 "  VALUES(?1, ?2);";
 
-const char *const StatSql::sqlSelectOldConnBlockId = "SELECT conn_id FROM conn_block"
-                                                     "  ORDER BY conn_id DESC"
-                                                     "  LIMIT 1 OFFSET ?1;";
+const char *const StatSql::sqlSelectOldConnBlock = "SELECT conn_id FROM conn_block"
+                                                   "  ORDER BY conn_id DESC"
+                                                   "  LIMIT 1 OFFSET ?1;";
 
-const char *const StatSql::sqlSelectOldConnAppPathList =
+const char *const StatSql::sqlSelectDeletedRangeConnAppPaths =
         "SELECT path FROM app WHERE app_id in ("
+        "  SELECT app_id FROM conn t"
+        "    LEFT JOIN traffic_app ta USING(app_id)"
+        "    WHERE conn_id between ?1 and ?2 and ta.app_id is null"
+        ") and (SELECT 1 FROM conn c WHERE c.conn_id not between ?1 and ?2"
+        "  and c.app_id = app.app_id LIMIT 1) is null;";
+
+const char *const StatSql::sqlDeleteRangeConnAppId =
+        "DELETE FROM app WHERE app_id in ("
         "  SELECT app_id FROM conn"
         "    LEFT JOIN traffic_app ta USING(app_id)"
-        "    WHERE conn_id <= ?1 and ta.app_id is null"
-        ");";
+        "    WHERE conn_id between ?1 and ?2 and ta.app_id is null"
+        ") and (SELECT 1 FROM conn c WHERE c.conn_id not between ?1 and ?2"
+        "  and c.app_id = app.app_id LIMIT 1) is null;";
 
-const char *const StatSql::sqlDeleteConnAppId = "DELETE FROM app WHERE app_id in ("
-                                                "  SELECT app_id FROM conn"
-                                                "    LEFT JOIN traffic_app ta USING(app_id)"
-                                                "    WHERE conn_id <= ?1 and ta.app_id is null"
-                                                ");";
+const char *const StatSql::sqlDeleteRangeConn = "DELETE FROM conn WHERE conn_id between ?1 and ?2;";
 
-const char *const StatSql::sqlDeleteOldConn = "DELETE FROM conn WHERE conn_id <= ?1;";
+const char *const StatSql::sqlDeleteRangeConnBlock =
+        "DELETE FROM conn_block WHERE conn_id between ?1 and ?2;";
 
-const char *const StatSql::sqlDeleteOldConnBlock = "DELETE FROM conn_block WHERE conn_id <= ?1;";
+const char *const StatSql::sqlSelectDeletedAllConnAppPaths =
+        "SELECT path FROM app WHERE app_id not in (SELECT app_id FROM traffic_app);";
+
+const char *const StatSql::sqlDeleteAllConnAppId =
+        "DELETE FROM app WHERE app_id not in (SELECT app_id FROM traffic_app);";
+
+const char *const StatSql::sqlDeleteAllConn = "DELETE FROM conn;";
+
+const char *const StatSql::sqlDeleteAllConnBlock = "DELETE FROM conn_block;";

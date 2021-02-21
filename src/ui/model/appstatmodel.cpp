@@ -50,9 +50,8 @@ void AppStatModel::remove(int row)
     beginRemoveRows(QModelIndex(), row, row);
 
     const qint64 appId = m_appIds.at(row);
-    const QString appPath = list().at(row);
 
-    m_statManager->deleteStatApp(appId, appPath);
+    m_statManager->deleteStatApp(appId);
 
     m_appIds.remove(row);
 

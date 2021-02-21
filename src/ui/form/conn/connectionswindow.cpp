@@ -2,6 +2,7 @@
 
 #include <QCheckBox>
 #include <QHeaderView>
+#include <QMenu>
 #include <QPushButton>
 #include <QVBoxLayout>
 
@@ -66,6 +67,10 @@ void ConnectionsWindow::onRetranslateUi()
 {
     this->unsetLocale();
 
+    m_btEdit->setText(tr("Edit"));
+    m_actRemoveConn->setText(tr("Remove"));
+    m_actClearConns->setText(tr("Clear All"));
+
     m_btLogOptions->setText(tr("Options"));
     m_cbLogAllowedIp->setText(tr("Collect allowed connections"));
     m_cbLogBlockedIp->setText(tr("Collect blocked connections"));
@@ -93,6 +98,9 @@ void ConnectionsWindow::setupUi()
     setupAppInfoRow();
     layout->addWidget(m_appInfoRow);
 
+    // Actions on conns table's current changed
+    setupTableConnsChanged();
+
     this->setLayout(layout);
 
     // Font
@@ -109,9 +117,32 @@ QLayout *ConnectionsWindow::setupHeader()
 {
     auto layout = new QHBoxLayout();
 
+    // Edit Menu
+    auto editMenu = new QMenu(this);
+
+    m_actRemoveConn = editMenu->addAction(IconCache::icon(":/icons/sign-delete.png"), QString());
+    m_actRemoveConn->setShortcut(Qt::Key_Delete);
+
+    m_actClearConns = editMenu->addAction(IconCache::icon(":/icons/trash.png"), QString());
+
+    connect(m_actRemoveConn, &QAction::triggered, this, [&] {
+        if (fortManager()->showQuestionBox(tr("Are you sure to remove selected connection(s)?"))) {
+            deleteSelectedConns();
+        }
+    });
+    connect(m_actClearConns, &QAction::triggered, this, [&] {
+        if (fortManager()->showQuestionBox(tr("Are you sure to remove all connections?"))) {
+            connListModel()->clear();
+        }
+    });
+
+    m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
+    m_btEdit->setMenu(editMenu);
+
     // Log Options
     setupLogOptions();
 
+    layout->addWidget(m_btEdit);
     layout->addStretch();
     layout->addWidget(m_btLogOptions);
 
@@ -166,6 +197,8 @@ void ConnectionsWindow::setupTableConnList()
 
     // m_connListView->setSortingEnabled(true);
     m_connListView->setModel(connListModel());
+
+    m_connListView->setMenu(m_btEdit->menu());
 }
 
 void ConnectionsWindow::setupTableConnListHeader()
@@ -204,6 +237,34 @@ void ConnectionsWindow::setupAppInfoRow()
 
     connect(m_connListView, &TableView::currentIndexChanged, this, refreshAppInfoVersion);
     connect(appInfoCache(), &AppInfoCache::cacheChanged, this, refreshAppInfoVersion);
+}
+
+void ConnectionsWindow::setupTableConnsChanged()
+{
+    const auto refreshTableConnsChanged = [&] {
+        const int connIndex = connListCurrentIndex();
+        const bool connSelected = (connIndex >= 0);
+        m_actRemoveConn->setEnabled(connSelected);
+        m_appInfoRow->setVisible(connSelected);
+    };
+
+    refreshTableConnsChanged();
+
+    connect(m_connListView, &TableView::currentIndexChanged, this, refreshTableConnsChanged);
+}
+
+void ConnectionsWindow::deleteConn(int row)
+{
+    const auto connRow = connListModel()->connRowAt(row);
+    connListModel()->deleteConn(connRow.connId, connRow.blocked, row);
+}
+
+void ConnectionsWindow::deleteSelectedConns()
+{
+    const auto rows = m_connListView->selectedRows();
+    for (int i = rows.size(); --i >= 0;) {
+        deleteConn(rows.at(i));
+    }
 }
 
 int ConnectionsWindow::connListCurrentIndex() const

@@ -130,11 +130,29 @@ QVariant ConnListModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
+void ConnListModel::deleteConn(qint64 connId, bool blocked, int row)
+{
+    beginRemoveRows(QModelIndex(), row, row);
+
+    if (statManager()->deleteConn(connId, blocked)) {
+        invalidateRowCache();
+        removeRow(row);
+    }
+
+    endRemoveRows();
+}
+
 const ConnRow &ConnListModel::connRowAt(int row) const
 {
     updateRowCache(row);
 
     return m_connRow;
+}
+
+void ConnListModel::clear()
+{
+    statManager()->deleteConns();
+    reset();
 }
 
 bool ConnListModel::updateTableRow(int row) const

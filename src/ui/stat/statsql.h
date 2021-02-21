@@ -6,6 +6,8 @@ class StatSql
 public:
     static const char *const sqlSelectAppId;
     static const char *const sqlInsertAppId;
+
+    static const char *const sqlSelectDeletedStatAppPaths;
     static const char *const sqlDeleteStatAppId;
 
     static const char *const sqlSelectStatAppPaths;
@@ -67,12 +69,17 @@ public:
     static const char *const sqlInsertConn;
     static const char *const sqlInsertConnBlock;
 
-    static const char *const sqlSelectOldConnBlockId;
-    static const char *const sqlSelectOldConnAppPathList;
+    static const char *const sqlSelectOldConnBlock;
 
-    static const char *const sqlDeleteConnAppId;
-    static const char *const sqlDeleteOldConn;
-    static const char *const sqlDeleteOldConnBlock;
+    static const char *const sqlSelectDeletedRangeConnAppPaths;
+    static const char *const sqlDeleteRangeConnAppId;
+    static const char *const sqlDeleteRangeConn;
+    static const char *const sqlDeleteRangeConnBlock;
+
+    static const char *const sqlSelectDeletedAllConnAppPaths;
+    static const char *const sqlDeleteAllConnAppId;
+    static const char *const sqlDeleteAllConn;
+    static const char *const sqlDeleteAllConnBlock;
 };
 
 #endif // STATSQL_H
