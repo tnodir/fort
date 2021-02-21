@@ -52,7 +52,7 @@ QString LogEntryBlockedIp::reasonToString(quint8 blockReason)
 {
     switch (blockReason) {
     case ReasonIpInet:
-        return QObject::tr("Not allowed Internet address");
+        return QObject::tr("Blocked Internet address");
     case ReasonReauth:
         return QObject::tr("Old connection closed on startup");
     case ReasonProgram:
