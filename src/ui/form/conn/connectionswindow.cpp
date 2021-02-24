@@ -71,6 +71,7 @@ void ConnectionsWindow::onRetranslateUi()
     this->unsetLocale();
 
     m_btEdit->setText(tr("Edit"));
+    m_actCopy->setText(tr("Copy"));
     m_actRemoveConn->setText(tr("Remove"));
     m_actClearConns->setText(tr("Clear All"));
 
@@ -125,11 +126,17 @@ QLayout *ConnectionsWindow::setupHeader()
     // Edit Menu
     auto editMenu = new QMenu(this);
 
+    m_actCopy = editMenu->addAction(IconCache::icon(":/icons/copy.png"), QString());
+    m_actCopy->setShortcut(Qt::Key_Copy);
+
     m_actRemoveConn = editMenu->addAction(IconCache::icon(":/icons/sign-delete.png"), QString());
     m_actRemoveConn->setShortcut(Qt::Key_Delete);
 
     m_actClearConns = editMenu->addAction(IconCache::icon(":/icons/trash.png"), QString());
 
+    connect(m_actCopy, &QAction::triggered, this, [&] {
+        GuiUtil::setClipboardData(m_connListView->selectedText());
+    });
     connect(m_actRemoveConn, &QAction::triggered, this, [&] {
         if (fortManager()->showQuestionBox(tr("Are you sure to remove selected connection(s)?"))) {
             deleteSelectedConns();
@@ -279,6 +286,7 @@ void ConnectionsWindow::setupTableConnsChanged()
     const auto refreshTableConnsChanged = [&] {
         const int connIndex = connListCurrentIndex();
         const bool connSelected = (connIndex >= 0);
+        m_actCopy->setEnabled(connSelected);
         m_actRemoveConn->setEnabled(connSelected);
         m_appInfoRow->setVisible(connSelected);
     };

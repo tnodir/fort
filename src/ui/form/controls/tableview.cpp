@@ -19,6 +19,46 @@ QVector<int> TableView::selectedRows() const
     return rows.toVector();
 }
 
+QModelIndexList TableView::sortedSelectedIndexes() const
+{
+    auto indexes = selectedIndexes();
+    std::sort(indexes.begin(), indexes.end());
+    return indexes;
+}
+
+QString TableView::selectedText() const
+{
+    QString text;
+
+    int prevRow = -1;
+    int prevColumn = -1;
+
+    const auto indexes = sortedSelectedIndexes();
+    for (const auto index : indexes) {
+        const int row = index.row();
+        if (prevRow != row) {
+            if (prevRow != -1) {
+                text.append('\n');
+            }
+            prevRow = row;
+            prevColumn = -1;
+        }
+
+        const int column = index.column();
+        if (prevColumn != column) {
+            if (prevColumn != -1) {
+                text.append('\t');
+            }
+            prevColumn = column;
+        }
+
+        const QString s = model()->data(index).toString();
+        text.append(s);
+    }
+
+    return text;
+}
+
 void TableView::selectCell(int row, int column)
 {
     const auto index = model()->index(row, column);

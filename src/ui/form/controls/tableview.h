@@ -14,6 +14,9 @@ public:
     void setMenu(QMenu *menu) { m_menu = menu; }
 
     QVector<int> selectedRows() const;
+    QModelIndexList sortedSelectedIndexes() const;
+
+    QString selectedText() const;
 
 signals:
     void currentIndexChanged(const QModelIndex &index);

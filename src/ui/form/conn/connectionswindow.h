@@ -64,6 +64,7 @@ private:
     ConnectionsController *m_ctrl = nullptr;
 
     QPushButton *m_btEdit = nullptr;
+    QAction *m_actCopy = nullptr;
     QAction *m_actRemoveConn = nullptr;
     QAction *m_actClearConns = nullptr;
     QPushButton *m_btLogOptions = nullptr;
