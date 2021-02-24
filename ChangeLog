@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.3.1, 2021-02-24:
+- UI: Add French translation.
+- UI: Connections: Add ability to copy selected cells' text.
+
 v3.3.0, 2021-02-22:
 - UI: Add Connections Window.
 - UI: Connections: Show block reason in tool-tip.
