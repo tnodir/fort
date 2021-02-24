@@ -83,6 +83,8 @@ void ConnectionsWindow::onRetranslateUi()
 
     connListModel()->refresh();
 
+    m_appInfoRow->retranslateUi();
+
     this->setWindowTitle(tr("Connections"));
 }
 
