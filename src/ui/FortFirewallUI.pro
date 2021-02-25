@@ -47,6 +47,7 @@ SOURCES += \
     form/opt/pages/basepage.cpp \
     form/opt/pages/mainpage.cpp \
     form/opt/pages/optionspage.cpp \
+    form/opt/pages/rulespage.cpp \
     form/opt/pages/schedulepage.cpp \
     form/opt/pages/statisticspage.cpp \
     form/prog/programscontroller.cpp \
@@ -165,6 +166,7 @@ HEADERS += \
     form/opt/pages/basepage.h \
     form/opt/pages/mainpage.h \
     form/opt/pages/optionspage.h \
+    form/opt/pages/rulespage.h \
     form/opt/pages/schedulepage.h \
     form/opt/pages/statisticspage.h \
     form/prog/programscontroller.h \

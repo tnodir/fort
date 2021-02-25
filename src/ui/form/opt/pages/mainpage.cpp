@@ -13,6 +13,7 @@
 #include "addressespage.h"
 #include "applicationspage.h"
 #include "optionspage.h"
+#include "rulespage.h"
 #include "schedulepage.h"
 #include "statisticspage.h"
 
@@ -25,9 +26,10 @@ void MainPage::onRetranslateUi()
 {
     m_tabBar->setTabText(0, tr("Options"));
     m_tabBar->setTabText(1, tr("IPv4 Addresses"));
-    m_tabBar->setTabText(2, tr("Application Groups"));
-    m_tabBar->setTabText(3, tr("Statistics"));
-    m_tabBar->setTabText(4, tr("Schedule"));
+    m_tabBar->setTabText(2, tr("Network Rules"));
+    m_tabBar->setTabText(3, tr("Application Groups"));
+    m_tabBar->setTabText(4, tr("Statistics"));
+    m_tabBar->setTabText(5, tr("Schedule"));
 
     m_btLogs->setText(tr("Logs"));
     m_btProfile->setText(tr("Profile"));
@@ -50,12 +52,14 @@ void MainPage::setupUi()
 
     m_optionsPage = new OptionsPage(ctrl());
     m_addressesPage = new AddressesPage(ctrl());
+    m_rulesPage = new RulesPage(ctrl());
     m_applicationsPage = new ApplicationsPage(ctrl());
     m_statisticsPage = new StatisticsPage(ctrl());
     m_schedulePage = new SchedulePage(ctrl());
 
     m_tabBar->addTab(m_optionsPage, IconCache::icon(":/icons/cog.png"), QString());
     m_tabBar->addTab(m_addressesPage, IconCache::icon(":/icons/map-marker.png"), QString());
+    m_tabBar->addTab(m_rulesPage, IconCache::icon(":/icons/task-list.png"), QString());
     m_tabBar->addTab(m_applicationsPage, IconCache::icon(":/icons/window.png"), QString());
     m_tabBar->addTab(m_statisticsPage, IconCache::icon(":/icons/database.png"), QString());
     m_tabBar->addTab(m_schedulePage, IconCache::icon(":/icons/clock.png"), QString());

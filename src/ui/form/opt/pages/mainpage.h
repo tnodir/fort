@@ -8,6 +8,7 @@ QT_FORWARD_DECLARE_CLASS(QTabWidget)
 class AddressesPage;
 class ApplicationsPage;
 class OptionsPage;
+class RulesPage;
 class SchedulePage;
 class StatisticsPage;
 
@@ -40,6 +41,7 @@ private:
 
     OptionsPage *m_optionsPage = nullptr;
     AddressesPage *m_addressesPage = nullptr;
+    RulesPage *m_rulesPage = nullptr;
     ApplicationsPage *m_applicationsPage = nullptr;
     StatisticsPage *m_statisticsPage = nullptr;
     SchedulePage *m_schedulePage = nullptr;
