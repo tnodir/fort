@@ -24,21 +24,11 @@
     <Platform Condition="'$(Platform)'==''">Win32</Platform>
     <DefineConstants Condition="'$(Configuration)'=='Release'">$(DefineConstants);NDEBUG</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(_NT_TARGET_VERSION)'==''">
-    <!-- Set _NT_TARGET_VERSION to the default if it is null, so that a numeric comparison is not made on a null property -->
-    <_NT_TARGET_VERSION>0x603</_NT_TARGET_VERSION>
-    <_NT_TARGET_VERSION_WINV63>0x0603</_NT_TARGET_VERSION_WINV63>
-    <_NT_TARGET_VERSION_WIN8>0x0602</_NT_TARGET_VERSION_WIN8>
-    <_NT_TARGET_VERSION_WIN7>0x0601</_NT_TARGET_VERSION_WIN7>
-    <_NT_TARGET_VERSION_VISTA>0x0600</_NT_TARGET_VERSION_VISTA>
-    <_NT_TARGET_VERSION_LONGHORN>0x0600</_NT_TARGET_VERSION_LONGHORN>
-    <_NT_TARGET_VERSION_NT4>0x0400</_NT_TARGET_VERSION_NT4>
-  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration-Common">
     <TargetVersion>WindowsV6.3</TargetVersion>
     <KernelBufferOverflowLib>$(DDK_LIB_PATH)\BufferOverflowK.lib</KernelBufferOverflowLib>
-    <PlatformToolset>WindowsKernelModeDriver8.1</PlatformToolset>
+    <PlatformToolset>WindowsKernelModeDriver10.0</PlatformToolset>
     <ConfigurationType>Driver</ConfigurationType>
     <DriverType>WDM</DriverType>
   </PropertyGroup>

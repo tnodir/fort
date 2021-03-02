@@ -15,3 +15,6 @@ MSBuild fortdrv.vcxproj /p:OutDir=%OutDir%\;IntDir=%IntDir%\;Platform=%PLAT%
 @rem DumpBin /SYMBOLS %IntDir%\fortdrv.obj > symbols.txt
 
 @rd /S /Q %IntDir%
+
+@rd /S /Q %OutDir%\fortdrv
+@del /Q %OutDir%\fortfw*.cer %OutDir%\fortfw*.pdb
