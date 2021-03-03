@@ -15,6 +15,7 @@ FirewallConf::FirewallConf(QObject *parent) :
     m_allowAllNew(false),
     m_logBlocked(false),
     m_logStat(false),
+    m_logStatNoFilter(false),
     m_logAllowedIp(false),
     m_logBlockedIp(false),
     m_appBlockAll(true),
@@ -85,6 +86,14 @@ void FirewallConf::setLogStat(bool logStat)
     if (m_logStat != logStat) {
         m_logStat = logStat;
         emit logStatChanged();
+    }
+}
+
+void FirewallConf::setLogStatNoFilter(bool logStatNoFilter)
+{
+    if (m_logStatNoFilter != logStatNoFilter) {
+        m_logStatNoFilter = logStatNoFilter;
+        emit logStatNoFilterChanged();
     }
 }
 
@@ -356,6 +365,7 @@ void FirewallConf::copyImmediateFlags(const FirewallConf &o)
 {
     setLogBlocked(o.logBlocked());
     setLogStat(o.logStat());
+    setLogStatNoFilter(o.logStatNoFilter());
     setLogAllowedIp(o.logAllowedIp());
     setLogBlockedIp(o.logBlockedIp());
     setTrafUnit(o.trafUnit());

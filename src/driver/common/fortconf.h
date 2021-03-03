@@ -29,6 +29,7 @@ typedef struct fort_conf_flags
     UINT32 app_allow_all : 1;
     UINT32 log_blocked : 1;
     UINT32 log_stat : 1;
+    UINT32 log_stat_no_filter : 1;
     UINT32 log_allowed_ip : 1;
     UINT32 log_blocked_ip : 1;
 

@@ -125,6 +125,7 @@ void StatisticsPage::onRetranslateUi()
 
     m_btTrafOptions->setText(tr("Options"));
     m_cbLogStat->setText(tr("Collect Traffic Statistics"));
+    m_cbLogStatNoFilter->setText(tr("Collect Traffic, when Filter Disabled"));
     m_ctpActivePeriod->checkBox()->setText(tr("Active time period:"));
     m_lscMonthStart->label()->setText(tr("Month starts on:"));
 
@@ -417,6 +418,7 @@ void StatisticsPage::setupGraphOptionsMenu()
 void StatisticsPage::setupTrafOptionsMenu()
 {
     setupLogStat();
+    setupLogStatNoFilter();
     setupActivePeriod();
     setupMonthStart();
     setupTrafHourKeepDays();
@@ -428,10 +430,10 @@ void StatisticsPage::setupTrafOptionsMenu()
     setupBlockedIpKeepCount();
 
     // Menu
-    const QList<QWidget *> menuWidgets = { m_cbLogStat, m_ctpActivePeriod, m_lscMonthStart,
-        ControlUtil::createSeparator(), m_lscTrafHourKeepDays, m_lscTrafDayKeepDays,
-        m_lscTrafMonthKeepMonths, ControlUtil::createSeparator(), m_lscQuotaDayMb,
-        m_lscQuotaMonthMb, ControlUtil::createSeparator(), m_lscAllowedIpKeepCount,
+    const QList<QWidget *> menuWidgets = { m_cbLogStat, m_cbLogStatNoFilter, m_ctpActivePeriod,
+        m_lscMonthStart, ControlUtil::createSeparator(), m_lscTrafHourKeepDays,
+        m_lscTrafDayKeepDays, m_lscTrafMonthKeepMonths, ControlUtil::createSeparator(),
+        m_lscQuotaDayMb, m_lscQuotaMonthMb, ControlUtil::createSeparator(), m_lscAllowedIpKeepCount,
         m_lscBlockedIpKeepCount };
     auto layout = ControlUtil::createLayoutByWidgets(menuWidgets);
 
@@ -453,6 +455,18 @@ void StatisticsPage::setupLogStat()
     });
 
     m_cbLogStat->setFont(ControlUtil::fontDemiBold());
+}
+
+void StatisticsPage::setupLogStatNoFilter()
+{
+    m_cbLogStatNoFilter = ControlUtil::createCheckBox(false, [&](bool checked) {
+        if (conf()->logStatNoFilter() == checked)
+            return;
+
+        conf()->setLogStatNoFilter(checked);
+
+        fortManager()->applyConfImmediateFlags();
+    });
 }
 
 void StatisticsPage::setupActivePeriod()
@@ -737,6 +751,7 @@ void StatisticsPage::updatePage()
     m_pageUpdating = true;
 
     m_cbLogStat->setChecked(conf()->logStat());
+    m_cbLogStatNoFilter->setChecked(conf()->logStatNoFilter());
 
     m_ctpActivePeriod->checkBox()->setChecked(conf()->activePeriodEnabled());
     m_ctpActivePeriod->timeEdit1()->setTime(CheckTimePeriod::toTime(conf()->activePeriodFrom()));

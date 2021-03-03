@@ -230,6 +230,7 @@ bool FortSettings::writeConfIni(const FirewallConf &conf)
     setIniValue("allowAllNew", conf.allowAllNew());
     setIniValue("logBlocked", conf.logBlocked());
     setIniValue("logStat", conf.logStat());
+    setIniValue("logStatNoFilter", conf.logStatNoFilter());
     setIniValue("logAllowedIp", conf.logAllowedIp());
     setIniValue("logBlockedIp", conf.logBlockedIp());
     setIniValue("appBlockAll", conf.appBlockAll());

@@ -27,6 +27,8 @@ class FirewallConf : public QObject
     Q_PROPERTY(bool allowAllNew READ allowAllNew WRITE setAllowAllNew NOTIFY allowAllNewChanged)
     Q_PROPERTY(bool logBlocked READ logBlocked WRITE setLogBlocked NOTIFY logBlockedChanged)
     Q_PROPERTY(bool logStat READ logStat WRITE setLogStat NOTIFY logStatChanged)
+    Q_PROPERTY(bool logStatNoFilter READ logStatNoFilter WRITE setLogStatNoFilter NOTIFY
+                    logStatNoFilterChanged)
     Q_PROPERTY(bool logAllowedIp READ logAllowedIp WRITE setLogAllowedIp NOTIFY logAllowedIpChanged)
     Q_PROPERTY(bool logBlockedIp READ logBlockedIp WRITE setLogBlockedIp NOTIFY logBlockedIpChanged)
     Q_PROPERTY(bool appBlockAll READ appBlockAll WRITE setAppBlockAll NOTIFY appBlockAllChanged)
@@ -79,6 +81,9 @@ public:
 
     bool logStat() const { return m_logStat; }
     void setLogStat(bool logStat);
+
+    bool logStatNoFilter() const { return m_logStatNoFilter; }
+    void setLogStatNoFilter(bool logStatNoFilter);
 
     bool logAllowedIp() const { return m_logAllowedIp; }
     void setLogAllowedIp(bool logAllowedIp);
@@ -156,6 +161,7 @@ signals:
     void allowAllNewChanged();
     void logBlockedChanged();
     void logStatChanged();
+    void logStatNoFilterChanged();
     void logAllowedIpChanged();
     void logBlockedIpChanged();
     void appBlockAllChanged();
@@ -197,6 +203,7 @@ private:
 
     bool m_logBlocked : 1;
     bool m_logStat : 1;
+    bool m_logStatNoFilter : 1;
 
     bool m_logAllowedIp : 1;
     bool m_logBlockedIp : 1;

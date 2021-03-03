@@ -56,6 +56,7 @@ private:
     void setupGraphOptionsMenu();
     void setupTrafOptionsMenu();
     void setupLogStat();
+    void setupLogStatNoFilter();
     void setupActivePeriod();
     void setupMonthStart();
     void setupTrafHourKeepDays();
@@ -112,6 +113,7 @@ private:
     LabelColor *m_graphGridColor = nullptr;
     QPushButton *m_btTrafOptions = nullptr;
     QCheckBox *m_cbLogStat = nullptr;
+    QCheckBox *m_cbLogStatNoFilter = nullptr;
     CheckTimePeriod *m_ctpActivePeriod = nullptr;
     LabelSpinCombo *m_lscMonthStart = nullptr;
     LabelSpinCombo *m_lscTrafHourKeepDays = nullptr;

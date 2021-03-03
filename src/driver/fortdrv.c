@@ -112,13 +112,22 @@ static void fort_callout_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
     if (conf_flags.stop_traffic)
         goto block;
 
-    if (!conf_flags.filter_enabled
-            || !fort_conf_ip_is_inet(&conf_ref->conf,
-                    (fort_conf_zones_ip_included_func *) fort_conf_zones_ip_included,
-                    &g_device->conf, remote_ip))
+    UCHAR block_reason = FORT_BLOCK_REASON_UNKNOWN;
+    BOOL blocked = TRUE;
+
+    if (!conf_flags.filter_enabled) {
+        if (conf_flags.log_stat && conf_flags.log_stat_no_filter) {
+            blocked = FALSE;
+        } else
+            goto permit;
+    }
+
+    if (!fort_conf_ip_is_inet(&conf_ref->conf,
+                (fort_conf_zones_ip_included_func *) fort_conf_zones_ip_included, &g_device->conf,
+                remote_ip))
         goto permit;
 
-    if (conf_flags.stop_inet_traffic)
+    if (blocked && conf_flags.stop_inet_traffic)
         goto block;
 
     const UINT32 process_id = (UINT32) inMetaValues->processId;
@@ -126,12 +135,10 @@ static void fort_callout_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
             inMetaValues->processPath->size - sizeof(WCHAR); /* chop terminating zero */
     const PVOID path = inMetaValues->processPath->data;
 
-    UCHAR block_reason = FORT_BLOCK_REASON_UNKNOWN;
-    BOOL blocked = TRUE;
-
-    if (!fort_conf_ip_inet_included(&conf_ref->conf,
-                (fort_conf_zones_ip_included_func *) fort_conf_zones_ip_included, &g_device->conf,
-                remote_ip)) {
+    if (blocked
+            && !fort_conf_ip_inet_included(&conf_ref->conf,
+                    (fort_conf_zones_ip_included_func *) fort_conf_zones_ip_included,
+                    &g_device->conf, remote_ip)) {
         block_reason = FORT_BLOCK_REASON_IP_INET;
         goto block_log;
     }
@@ -139,7 +146,7 @@ static void fort_callout_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
     FORT_APP_FLAGS app_flags =
             fort_conf_app_find(&conf_ref->conf, path, path_len, fort_conf_exe_find);
 
-    if ((app_flags.v == 0 && conf_flags.allow_all_new)
+    if (!blocked || (app_flags.v == 0 && conf_flags.allow_all_new)
             || !fort_conf_app_blocked(&conf_ref->conf, app_flags, &block_reason)) {
         if (conf_flags.log_stat) {
             const UINT64 flow_id = inMetaValues->flowHandle;
@@ -174,7 +181,8 @@ static void fort_callout_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
         blocked = FALSE;
     }
 
-    if (app_flags.v == 0 && (conf_flags.allow_all_new || conf_flags.log_blocked)) {
+    if (app_flags.v == 0 && (conf_flags.allow_all_new || conf_flags.log_blocked)
+            && conf_flags.filter_enabled) {
         app_flags.blocked = (UCHAR) blocked;
         app_flags.alerted = 1;
         app_flags.is_new = 1;

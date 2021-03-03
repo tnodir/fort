@@ -36,6 +36,7 @@ void writeConfFlags(const FirewallConf &conf, PFORT_CONF_FLAGS confFlags)
 
     confFlags->log_blocked = conf.logBlocked();
     confFlags->log_stat = conf.logStat();
+    confFlags->log_stat_no_filter = conf.logStatNoFilter();
 
     confFlags->log_allowed_ip = conf.logAllowedIp();
     confFlags->log_blocked_ip = conf.logBlockedIp();
