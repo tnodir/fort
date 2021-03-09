@@ -50,12 +50,13 @@ Filtered apps will be shown in the "Blocked" tab.
 
 #### Filtering steps:
 1) If **address** is 127.* or 255.255.255.255 and "Filter Local Addresses" is turned off, then _**PERMIT**_
-2) If "Stop Traffic" is turned on, then _**BLOCK**_
-3) If "Filter Enabled" is turned off or **address** is not from "Internet Addresses", then _**PERMIT**_
-4) If "Stop Internet Traffic" is turned on, then _**BLOCK**_
-5) If **address** is not from "Allowed Internet Addresses", then _**BLOCK**_
-6) If **app path** is allowed, then _**PERMIT**_
-7) Log about blocked event and _**BLOCK**_
+2) If "Filter Enabled" is turned off, then _**PERMIT**_
+3) If "Stop Traffic" is turned on, then _**BLOCK**_
+4) If **address** is not from "Internet Addresses", then _**PERMIT**_
+5) If "Stop Internet Traffic" is turned on, then _**BLOCK**_
+6) If **address** is not from "Allowed Internet Addresses", then _**BLOCK**_
+7) If **app path** is allowed, then _**PERMIT**_
+8) Log about blocked event and _**BLOCK**_
 
 ## Code Quality Monitor
 
