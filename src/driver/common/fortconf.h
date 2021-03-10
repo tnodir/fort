@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-#define FORT_CONF_IP_MAX             (10 * 1024 * 1024)
+#define FORT_CONF_IP_MAX             (2 * 1024 * 1024)
 #define FORT_CONF_IP_ARR_SIZE(n)     ((n) * sizeof(UINT32))
 #define FORT_CONF_IP_RANGE_SIZE(n)   (FORT_CONF_IP_ARR_SIZE(n) * 2)
 #define FORT_CONF_ZONE_MAX           32
