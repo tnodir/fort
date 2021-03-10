@@ -11,7 +11,9 @@
 #define FORT_CONF_POOL_DATA_OFF offsetof(FORT_CONF_POOL, data)
 
 #define fort_conf_pool_size(size)                                                                  \
-    ((size) < FORT_CONF_POOL_SIZE_MIN ? FORT_CONF_POOL_SIZE : 2 * (size))
+    ((size) < FORT_CONF_POOL_SIZE_MIN                                                              \
+                    ? FORT_CONF_POOL_SIZE                                                          \
+                    : ((size) < (FORT_CONF_POOL_SIZE_MAX / 2) ? 2 * (size) : (size)))
 
 /* Synchronize with tommy_node! */
 typedef struct fort_conf_pool
