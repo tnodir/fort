@@ -24,6 +24,61 @@ CREATE TABLE address_group(
   exclude_text TEXT NOT NULL
 );
 
+CREATE TABLE rule(
+  rule_id INTEGER PRIMARY KEY,
+  enabled BOOLEAN NOT NULL,
+  block BOOLEAN NOT NULL,
+  name TEXT NOT NULL,
+  rule_flags INTEGER NOT NULL,  -- inbound/outbound, etc
+  ip_proto INTEGER NOT NULL,
+  local_port TEXT NOT NULL,
+  remote_port TEXT NOT NULL,
+  local_ip TEXT NOT NULL,
+  remote_ip TEXT NOT NULL,
+  remote_zone_id INTEGER,
+  extra TEXT  -- TCP flags, ICMP types, etc
+);
+
+CREATE TABLE global_rule(
+  global_rule_id INTEGER PRIMARY KEY,
+  type INTEGER NOT NULL,
+  rule_id INTEGER NOT NULL,
+  order_index INTEGER NOT NULL
+);
+
+CREATE TABLE policy(
+  policy_id INTEGER PRIMARY KEY,
+  enabled BOOLEAN NOT NULL,
+  block BOOLEAN NOT NULL,
+  name TEXT NOT NULL
+);
+
+CREATE TABLE policy_set(
+  policy_set_id INTEGER PRIMARY KEY,
+  policy_id INTEGER NOT NULL,
+  sub_policy_id INTEGER NOT NULL,
+  order_index INTEGER NOT NULL
+);
+
+CREATE TABLE policy_rule(
+  policy_rule_id INTEGER PRIMARY KEY,
+  policy_id INTEGER NOT NULL,
+  rule_id INTEGER NOT NULL,
+  order_index INTEGER NOT NULL
+);
+
+CREATE TABLE policy_menu(
+  policy_menu_id INTEGER PRIMARY KEY,
+  exclusive BOOLEAN NOT NULL,
+  name TEXT NOT NULL
+);
+
+CREATE TABLE policy_menu_set(
+  policy_menu_set_id INTEGER PRIMARY KEY,
+  policy_menu_id INTEGER NOT NULL,
+  policy_id INTEGER NOT NULL
+);
+
 CREATE TABLE app_group(
   app_group_id INTEGER PRIMARY KEY,
   order_index INTEGER NOT NULL,
@@ -39,7 +94,8 @@ CREATE TABLE app_group(
   block_text TEXT NOT NULL,
   allow_text TEXT NOT NULL,
   period_from TEXT NOT NULL,
-  period_to TEXT NOT NULL
+  period_to TEXT NOT NULL,
+  policy_id INTEGER
 );
 
 CREATE TABLE app(
@@ -50,7 +106,8 @@ CREATE TABLE app(
   use_group_perm BOOLEAN NOT NULL DEFAULT 1,
   blocked BOOLEAN NOT NULL,
   creat_time INTEGER NOT NULL,
-  end_time INTEGER
+  end_time INTEGER,
+  policy_id INTEGER
 );
 
 CREATE INDEX app_app_group_id_idx ON app(app_group_id);
