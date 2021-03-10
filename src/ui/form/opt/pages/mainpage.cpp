@@ -64,6 +64,8 @@ void MainPage::setupUi()
     m_tabBar->addTab(m_statisticsPage, IconCache::icon(":/icons/database.png"), QString());
     m_tabBar->addTab(m_schedulePage, IconCache::icon(":/icons/clock.png"), QString());
 
+    m_tabBar->setTabVisible(2, false); // TODO: Impl. Network Rules
+
     // Dialog butons
     auto buttonsLayout = setupDialogButtons();
     layout->addLayout(buttonsLayout);
