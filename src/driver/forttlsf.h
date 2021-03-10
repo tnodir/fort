@@ -8,6 +8,8 @@
 #define tlsf_assert NT_ASSERT
 #define tlsf_printf
 
+#define TLSF_MAX_POOL_SIZE (8 * 1024 * 1024)
+
 #include "../3rdparty/tlsf/tlsf.h"
 
 #endif // FORTTLSF_H

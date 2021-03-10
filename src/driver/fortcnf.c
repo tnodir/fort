@@ -5,8 +5,15 @@
 #define FORT_ZONES_POOL_TAG 'ZwfF'
 
 #define FORT_CONF_POOL_SIZE     (64 * 1024)
-#define FORT_CONF_POOL_SIZE_MIN (FORT_CONF_POOL_SIZE - 256)
+#define FORT_CONF_POOL_OVERHEAD 256
+#define FORT_CONF_POOL_SIZE_MIN (FORT_CONF_POOL_SIZE - FORT_CONF_POOL_OVERHEAD)
+#define FORT_CONF_POOL_SIZE_MAX (TLSF_MAX_POOL_SIZE - FORT_CONF_POOL_OVERHEAD)
 #define FORT_CONF_POOL_DATA_OFF offsetof(FORT_CONF_POOL, data)
+
+#define fort_pool_size(size)                                                                       \
+    ((size) >= FORT_CONF_POOL_SIZE_MIN)                                                            \
+            ? (size) *2                                                                            \
+            : ((size) > FORT_CONF_POOL_SIZE_MAX ? FORT_CONF_POOL_SIZE_MAX : FORT_CONF_POOL_SIZE)
 
 /* Synchronize with tommy_node! */
 typedef struct fort_conf_pool
@@ -67,7 +74,7 @@ FORT_API UCHAR fort_device_flag(PFORT_DEVICE_CONF device_conf, UCHAR flag)
 
 static void fort_conf_pool_init(PFORT_CONF_REF conf_ref, UINT32 size)
 {
-    const UINT32 pool_size = (size >= FORT_CONF_POOL_SIZE_MIN) ? size * 2 : FORT_CONF_POOL_SIZE;
+    const UINT32 pool_size = fort_pool_size(size);
 
     tommy_node *pool = tommy_malloc(pool_size);
     if (pool == NULL)
@@ -99,7 +106,7 @@ static void *fort_conf_pool_malloc(PFORT_CONF_REF conf_ref, UINT32 size)
 
     p = tlsf_malloc(conf_ref->tlsf, size);
     if (p == NULL) {
-        const UINT32 pool_size = (size >= FORT_CONF_POOL_SIZE_MIN) ? size * 2 : FORT_CONF_POOL_SIZE;
+        const UINT32 pool_size = fort_pool_size(size);
 
         pool = tommy_malloc(pool_size);
         if (pool == NULL)
