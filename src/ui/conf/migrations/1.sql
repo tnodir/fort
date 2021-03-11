@@ -39,13 +39,6 @@ CREATE TABLE rule(
   extra TEXT  -- TCP flags, ICMP types, etc
 );
 
-CREATE TABLE global_rule(
-  global_rule_id INTEGER PRIMARY KEY,
-  type INTEGER NOT NULL,
-  rule_id INTEGER NOT NULL,
-  order_index INTEGER NOT NULL
-);
-
 CREATE TABLE policy(
   policy_id INTEGER PRIMARY KEY,
   enabled BOOLEAN NOT NULL,
@@ -77,6 +70,13 @@ CREATE TABLE policy_menu_set(
   policy_menu_set_id INTEGER PRIMARY KEY,
   policy_menu_id INTEGER NOT NULL,
   policy_id INTEGER NOT NULL
+);
+
+CREATE TABLE global_policy(
+  global_policy_id INTEGER PRIMARY KEY,
+  type INTEGER NOT NULL,
+  policy_id INTEGER NOT NULL,
+  order_index INTEGER NOT NULL
 );
 
 CREATE TABLE app_group(
