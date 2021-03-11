@@ -323,6 +323,7 @@ void OptionsPage::setupDriverIcon()
 void OptionsPage::setupNewVersionBox()
 {
     m_gbNewVersion = new QGroupBox(this);
+    m_gbNewVersion->setMinimumWidth(380);
 
     auto colLayout = new QVBoxLayout();
     colLayout->setSpacing(10);
@@ -335,7 +336,7 @@ void OptionsPage::setupNewVersionBox()
 #endif
     m_labelNewVersion->setWordWrap(true);
     m_labelNewVersion->setOpenExternalLinks(true);
-    colLayout->addWidget(m_labelNewVersion, 0, Qt::AlignHCenter);
+    colLayout->addWidget(m_labelNewVersion);
 
     // Button
     m_btNewVersion = ControlUtil::createLinkButton(":/icons/download.png");
