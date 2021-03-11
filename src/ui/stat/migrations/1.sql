@@ -1,8 +1,10 @@
 CREATE TABLE app(
   app_id INTEGER PRIMARY KEY,
-  path TEXT UNIQUE NOT NULL,
+  path TEXT NOT NULL,
   creat_time INTEGER NOT NULL
 );
+
+CREATE UNIQUE INDEX app_path_uk ON app(path);
 
 CREATE TABLE traffic_app(
   app_id INTEGER PRIMARY KEY,
