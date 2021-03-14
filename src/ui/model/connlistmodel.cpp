@@ -239,7 +239,7 @@ bool ConnListModel::updateTableRow(int row) const
 
 int ConnListModel::doSqlCount() const
 {
-    return int(rowIdMax() - rowIdMin()) + 1;
+    return rowIdMax() <= 0 ? 0 : int(rowIdMax() - rowIdMin()) + 1;
 }
 
 QString ConnListModel::sqlBase() const

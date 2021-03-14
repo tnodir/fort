@@ -432,6 +432,8 @@ void StatManager::deleteConnAll()
                               getSqliteStmt(StatSql::sqlDeleteAllConnBlock) },
             getSqliteStmt(StatSql::sqlSelectDeletedAllConnAppList));
 
+    m_connBlockIdMin = m_connBlockIdMax = 0;
+
     m_sqliteDb->commitTransaction();
 }
 
@@ -584,6 +586,9 @@ void StatManager::deleteRangeConnBlock(qint64 rowIdFrom, qint64 rowIdTo)
             getId2Stmt(StatSql::sqlSelectDeletedRangeConnBlockAppList, rowIdFrom, rowIdTo));
 
     m_connBlockIdMin = rowIdTo + 1;
+    if (m_connBlockIdMin >= m_connBlockIdMax) {
+        m_connBlockIdMin = m_connBlockIdMax = 0;
+    }
 }
 
 void StatManager::deleteAppStmtList(const StatManager::QStmtList &stmtList, SqliteStmt *stmtAppList)
