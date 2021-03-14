@@ -62,7 +62,7 @@ int TableSqlModel::doSqlCount() const
 
 QString TableSqlModel::sqlCount() const
 {
-    return "SELECT count(*) FROM (" + sqlBase() + ");";
+    return "SELECT COUNT(*) FROM (" + sqlBase() + ");";
 }
 
 QString TableSqlModel::sql() const
