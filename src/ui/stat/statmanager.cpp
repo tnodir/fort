@@ -19,7 +19,7 @@ Q_LOGGING_CATEGORY(CLOG_STAT_MANAGER, "stat")
 #define logWarning()  qCWarning(CLOG_STAT_MANAGER, )
 #define logCritical() qCCritical(CLOG_STAT_MANAGER, )
 
-#define DATABASE_USER_VERSION 3
+#define DATABASE_USER_VERSION 4
 
 #define ACTIVE_PERIOD_CHECK_SECS (60 * OS_TICKS_PER_SECOND)
 
@@ -91,7 +91,18 @@ bool StatManager::initialize()
         return false;
     }
 
+    initializeConnBlockId();
+
     return true;
+}
+
+void StatManager::initializeConnBlockId()
+{
+    const auto vars = m_sqliteDb->executeEx(StatSql::sqlSelectMinMaxConnBlockId, {}, 2).toList();
+    if (vars.size() == 2) {
+        m_connBlockIdMin = vars.at(0).toLongLong();
+        m_connBlockIdMax = vars.at(1).toLongLong();
+    }
 }
 
 void StatManager::initializeActivePeriod()
@@ -328,7 +339,7 @@ bool StatManager::logStatTraf(quint16 procCount, const quint32 *procTrafBytes, q
                             << getTrafficStmt(StatSql::sqlDeleteTrafMonth, oldTrafMonth);
         }
 
-        stepStmtList(deleteTrafStmts);
+        doStmtList(deleteTrafStmts);
     }
 
     m_sqliteDb->commitTransaction();
@@ -363,6 +374,9 @@ bool StatManager::logBlockedIp(bool inbound, quint8 blockReason, quint8 ipProto,
         ok = (connId > 0);
         if (ok) {
             ok = createConnBlock(connId, blockReason);
+            if (ok) {
+                m_connBlockIdMax++;
+            }
         }
     }
 
@@ -374,12 +388,11 @@ void StatManager::deleteStatApp(qint64 appId)
 {
     m_sqliteDb->beginTransaction();
 
-    deleteAppStmtList(getIdStmt(StatSql::sqlSelectDeletedStatAppPaths, appId),
-            { getIdStmt(StatSql::sqlDeleteStatAppId, appId),
-                    getIdStmt(StatSql::sqlDeleteAppTrafHour, appId),
-                    getIdStmt(StatSql::sqlDeleteAppTrafDay, appId),
-                    getIdStmt(StatSql::sqlDeleteAppTrafMonth, appId),
-                    getIdStmt(StatSql::sqlDeleteAppTrafTotal, appId) });
+    deleteAppStmtList({ getIdStmt(StatSql::sqlDeleteAppTrafHour, appId),
+                              getIdStmt(StatSql::sqlDeleteAppTrafDay, appId),
+                              getIdStmt(StatSql::sqlDeleteAppTrafMonth, appId),
+                              getIdStmt(StatSql::sqlDeleteAppTrafTotal, appId) },
+            getIdStmt(StatSql::sqlSelectDeletedStatAppList, appId));
 
     m_sqliteDb->commitTransaction();
 }
@@ -387,23 +400,23 @@ void StatManager::deleteStatApp(qint64 appId)
 bool StatManager::deleteOldConnBlock()
 {
     const int keepCount = m_conf->blockedIpKeepCount();
-    const qint64 connId =
-            m_sqliteDb->executeEx(StatSql::sqlSelectOldConnBlock, { keepCount }).toLongLong();
-    if (connId > 0) {
-        deleteRangeConnBlock(1, connId);
-        return true;
-    }
-    return false;
+    const int totalCount = m_connBlockIdMax - m_connBlockIdMin + 1;
+    const int oldCount = totalCount - keepCount;
+    if (oldCount <= 0)
+        return false;
+
+    deleteRangeConnBlock(m_connBlockIdMin, m_connBlockIdMin + oldCount);
+    return true;
 }
 
-bool StatManager::deleteConn(qint64 connId, bool blocked)
+bool StatManager::deleteConn(qint64 rowIdTo, bool blocked)
 {
     m_sqliteDb->beginTransaction();
 
     if (blocked) {
-        deleteRangeConnBlock(connId, connId);
+        deleteRangeConnBlock(m_connBlockIdMin, rowIdTo);
     } else {
-        // TODO: deleteRangeConnTraf(connId, connId);
+        // TODO: deleteRangeConnTraf(m_connTrafIdMin, rowIdTo);
     }
 
     m_sqliteDb->commitTransaction();
@@ -411,14 +424,13 @@ bool StatManager::deleteConn(qint64 connId, bool blocked)
     return true;
 }
 
-void StatManager::deleteConns()
+void StatManager::deleteConnAll()
 {
     m_sqliteDb->beginTransaction();
 
-    deleteAppStmtList(getSqliteStmt(StatSql::sqlSelectDeletedAllConnAppPaths),
-            { getSqliteStmt(StatSql::sqlDeleteAllConnAppId),
-                    getSqliteStmt(StatSql::sqlDeleteAllConn),
-                    getSqliteStmt(StatSql::sqlDeleteAllConnBlock) });
+    deleteAppStmtList({ getSqliteStmt(StatSql::sqlDeleteAllConn),
+                              getSqliteStmt(StatSql::sqlDeleteAllConnBlock) },
+            getSqliteStmt(StatSql::sqlSelectDeletedAllConnAppList));
 
     m_sqliteDb->commitTransaction();
 }
@@ -451,23 +463,22 @@ qint64 StatManager::getAppId(const QString &appPath)
 
 qint64 StatManager::createAppId(const QString &appPath, qint64 unixTime, bool blocked)
 {
-    qint64 appId = INVALID_APP_ID;
-
     SqliteStmt *stmt = getSqliteStmt(StatSql::sqlInsertAppId);
 
     stmt->bindText(1, appPath);
     stmt->bindInt64(2, unixTime);
 
-    if (stmt->step() == SqliteStmt::StepDone) {
-        appId = m_sqliteDb->lastInsertRowid();
+    if (m_sqliteDb->done(stmt)) {
+        const qint64 appId = m_sqliteDb->lastInsertRowid();
 
         if (!blocked) {
             emit appCreated(appId, appPath);
         }
-    }
-    stmt->reset();
 
-    return appId;
+        return appId;
+    }
+
+    return INVALID_APP_ID;
 }
 
 qint64 StatManager::getOrCreateAppId(const QString &appPath, qint64 unixTime, bool blocked)
@@ -487,9 +498,16 @@ qint64 StatManager::getOrCreateAppId(const QString &appPath, qint64 unixTime, bo
     return appId;
 }
 
+bool StatManager::deleteAppId(qint64 appId)
+{
+    SqliteStmt *stmt = getIdStmt(StatSql::sqlDeleteAppId, appId);
+
+    return m_sqliteDb->done(stmt);
+}
+
 void StatManager::getStatAppList(QStringList &list, QVector<qint64> &appIds)
 {
-    SqliteStmt *stmt = getSqliteStmt(StatSql::sqlSelectStatAppPaths);
+    SqliteStmt *stmt = getSqliteStmt(StatSql::sqlSelectStatAppList);
 
     while (stmt->step() == SqliteStmt::StepRow) {
         appIds.append(stmt->columnInt64(0));
@@ -524,18 +542,12 @@ bool StatManager::updateTraffic(SqliteStmt *stmt, quint32 inBytes, quint32 outBy
         stmt->bindInt64(4, appId);
     }
 
-    const SqliteStmt::StepResult res = stmt->step();
-    const bool ok = res == SqliteStmt::StepDone && m_sqliteDb->changes() != 0;
-    stmt->reset();
-
-    return ok;
+    return m_sqliteDb->done(stmt);
 }
 
 qint64 StatManager::createConn(bool inbound, quint8 ipProto, quint16 localPort, quint16 remotePort,
         quint32 localIp, quint32 remoteIp, quint32 pid, qint64 unixTime, qint64 appId)
 {
-    qint64 connId = 0;
-
     SqliteStmt *stmt = getSqliteStmt(StatSql::sqlInsertConn);
 
     stmt->bindInt64(1, appId);
@@ -548,12 +560,11 @@ qint64 StatManager::createConn(bool inbound, quint8 ipProto, quint16 localPort, 
     stmt->bindInt(8, localIp);
     stmt->bindInt(9, remoteIp);
 
-    if (stmt->step() == SqliteStmt::StepDone) {
-        connId = m_sqliteDb->lastInsertRowid();
+    if (m_sqliteDb->done(stmt)) {
+        return m_sqliteDb->lastInsertRowid();
     }
-    stmt->reset();
 
-    return connId;
+    return 0;
 }
 
 bool StatManager::createConnBlock(qint64 connId, quint8 blockReason)
@@ -563,37 +574,37 @@ bool StatManager::createConnBlock(qint64 connId, quint8 blockReason)
     stmt->bindInt64(1, connId);
     stmt->bindInt(2, blockReason);
 
-    const bool ok = (stmt->step() == SqliteStmt::StepDone);
-    stmt->reset();
-
-    return ok;
+    return m_sqliteDb->done(stmt);
 }
 
-void StatManager::deleteRangeConnBlock(qint64 connIdFrom, qint64 connIdTo)
+void StatManager::deleteRangeConnBlock(qint64 rowIdFrom, qint64 rowIdTo)
 {
-    deleteAppStmtList(getId2Stmt(StatSql::sqlSelectDeletedRangeConnAppPaths, connIdFrom, connIdTo),
-            { getId2Stmt(StatSql::sqlDeleteRangeConnAppId, connIdFrom, connIdTo),
-                    getId2Stmt(StatSql::sqlDeleteRangeConn, connIdFrom, connIdTo),
-                    getId2Stmt(StatSql::sqlDeleteRangeConnBlock, connIdFrom, connIdTo) });
+    deleteAppStmtList({ getId2Stmt(StatSql::sqlDeleteRangeConnForBlock, rowIdFrom, rowIdTo),
+                              getId2Stmt(StatSql::sqlDeleteRangeConnBlock, rowIdFrom, rowIdTo) },
+            getId2Stmt(StatSql::sqlSelectDeletedRangeConnBlockAppList, rowIdFrom, rowIdTo));
+
+    m_connBlockIdMin = rowIdTo + 1;
 }
 
-void StatManager::deleteAppStmtList(
-        SqliteStmt *stmtAppPaths, const StatManager::QStmtList &stmtList)
+void StatManager::deleteAppStmtList(const StatManager::QStmtList &stmtList, SqliteStmt *stmtAppList)
 {
+    // Delete Statements
+    doStmtList(stmtList);
+
     // Delete Cached AppIds
     {
-        while (stmtAppPaths->step() == SqliteStmt::StepRow) {
-            const QString appPath = stmtAppPaths->columnText(0);
+        while (stmtAppList->step() == SqliteStmt::StepRow) {
+            const qint64 appId = stmtAppList->columnInt64(0);
+            const QString appPath = stmtAppList->columnText(1);
+
+            deleteAppId(appId);
             clearCachedAppId(appPath);
         }
-        stmtAppPaths->reset();
+        stmtAppList->reset();
     }
-
-    // Delete Statements
-    stepStmtList(stmtList);
 }
 
-void StatManager::stepStmtList(const QStmtList &stmtList)
+void StatManager::doStmtList(const QStmtList &stmtList)
 {
     for (SqliteStmt *stmt : stmtList) {
         stmt->step();

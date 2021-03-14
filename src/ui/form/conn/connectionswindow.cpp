@@ -136,12 +136,12 @@ QLayout *ConnectionsWindow::setupHeader()
 
     m_actClearConns = editMenu->addAction(IconCache::icon(":/icons/trash.png"), QString());
 
-    connect(m_actCopy, &QAction::triggered, this, [&] {
-        GuiUtil::setClipboardData(m_connListView->selectedText());
-    });
+    connect(m_actCopy, &QAction::triggered, this,
+            [&] { GuiUtil::setClipboardData(m_connListView->selectedText()); });
     connect(m_actRemoveConn, &QAction::triggered, this, [&] {
-        if (fortManager()->showQuestionBox(tr("Are you sure to remove selected connection(s)?"))) {
-            deleteSelectedConns();
+        if (fortManager()->showQuestionBox(
+                    tr("Are you sure to remove connections till this row?"))) {
+            deleteConn(m_connListView->currentRow());
         }
     });
     connect(m_actClearConns, &QAction::triggered, this, [&] {
@@ -239,7 +239,9 @@ void ConnectionsWindow::setupTableConnList()
     m_connListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_connListView->setSelectionBehavior(QAbstractItemView::SelectItems);
 
-    // m_connListView->setSortingEnabled(true);
+    // TODO: Add ability to select the allowed/blocked mode from UI
+    connListModel()->setBlockedMode(true);
+
     m_connListView->setModel(connListModel());
 
     m_connListView->setMenu(m_btEdit->menu());
@@ -319,20 +321,12 @@ void ConnectionsWindow::syncShowHostNames()
 void ConnectionsWindow::deleteConn(int row)
 {
     const auto connRow = connListModel()->connRowAt(row);
-    connListModel()->deleteConn(connRow.connId, connRow.blocked, row);
-}
-
-void ConnectionsWindow::deleteSelectedConns()
-{
-    const auto rows = m_connListView->selectedRows();
-    for (int i = rows.size(); --i >= 0;) {
-        deleteConn(rows.at(i));
-    }
+    connListModel()->deleteConn(connRow.rowId, connRow.blocked, row);
 }
 
 int ConnectionsWindow::connListCurrentIndex() const
 {
-    return m_connListView->currentIndex().row();
+    return m_connListView->currentRow();
 }
 
 QString ConnectionsWindow::connListCurrentPath() const

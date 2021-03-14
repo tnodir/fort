@@ -5,6 +5,11 @@
 
 TableView::TableView(QWidget *parent) : QTableView(parent) { }
 
+int TableView::currentRow() const
+{
+    return currentIndex().row();
+}
+
 QVector<int> TableView::selectedRows() const
 {
     QSet<int> rowsSet;
@@ -12,7 +17,7 @@ QVector<int> TableView::selectedRows() const
     for (const auto index : indexes) {
         rowsSet.insert(index.row());
     }
-    rowsSet.insert(currentIndex().row());
+    rowsSet.insert(currentRow());
 
     auto rows = rowsSet.values();
     std::sort(rows.begin(), rows.end());

@@ -23,6 +23,12 @@ public:
     ~StatManager() override;
     CLASS_DELETE_COPY_MOVE(StatManager)
 
+    qint64 connBlockIdMin() const { return m_connBlockIdMin; }
+    qint64 connBlockIdMax() const { return m_connBlockIdMax; }
+
+    qint64 connTrafIdMin() const { return m_connTrafIdMin; }
+    qint64 connTrafIdMax() const { return m_connTrafIdMax; }
+
     const FirewallConf *firewallConf() const { return m_conf; }
     void setFirewallConf(const FirewallConf *conf);
 
@@ -42,8 +48,8 @@ public:
     void deleteStatApp(qint64 appId);
 
     bool deleteOldConnBlock();
-    bool deleteConn(qint64 connId, bool blocked);
-    void deleteConns();
+    bool deleteConn(qint64 rowIdTo, bool blocked);
+    void deleteConnAll();
 
     void resetAppTrafTotals();
 
@@ -63,6 +69,7 @@ public slots:
 private:
     using QStmtList = QList<SqliteStmt *>;
 
+    void initializeConnBlockId();
     void initializeActivePeriod();
     void initializeQuota();
 
@@ -79,6 +86,7 @@ private:
     qint64 getAppId(const QString &appPath);
     qint64 createAppId(const QString &appPath, qint64 unixTime, bool blocked = false);
     qint64 getOrCreateAppId(const QString &appPath, qint64 unixTime = 0, bool blocked = false);
+    bool deleteAppId(qint64 appId);
 
     void updateTrafficList(const QStmtList &insertStmtList, const QStmtList &updateStmtList,
             quint32 inBytes, quint32 outBytes, qint64 appId = 0);
@@ -88,11 +96,11 @@ private:
     qint64 createConn(bool inbound, quint8 ipProto, quint16 localPort, quint16 remotePort,
             quint32 localIp, quint32 remoteIp, quint32 pid, qint64 unixTime, qint64 appId);
     bool createConnBlock(qint64 connId, quint8 blockReason);
-    void deleteRangeConnBlock(qint64 connIdFrom, qint64 connIdTo);
+    void deleteRangeConnBlock(qint64 rowIdFrom, qint64 rowIdTo);
 
-    void deleteAppStmtList(SqliteStmt *stmtAppPaths, const QStmtList &stmtList);
+    void deleteAppStmtList(const QStmtList &stmtList, SqliteStmt *stmtAppList);
 
-    void stepStmtList(const QStmtList &stmtList);
+    void doStmtList(const QStmtList &stmtList);
 
     SqliteStmt *getTrafficStmt(const char *sql, qint32 trafTime);
     SqliteStmt *getIdStmt(const char *sql, qint64 id);
@@ -113,6 +121,12 @@ private:
     qint32 m_lastTrafDay = 0;
     qint32 m_lastTrafMonth = 0;
     qint32 m_lastTick = 0;
+
+    qint64 m_connBlockIdMin = 0;
+    qint64 m_connBlockIdMax = 0;
+
+    qint64 m_connTrafIdMin = 0;
+    qint64 m_connTrafIdMax = 0;
 
     QuotaManager *m_quotaManager = nullptr;
     const FirewallConf *m_conf = nullptr;

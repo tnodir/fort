@@ -10,6 +10,8 @@ class ListView : public QListView
 public:
     explicit ListView(QWidget *parent = nullptr);
 
+    int currentRow() const;
+
 signals:
     void currentIndexChanged(const QModelIndex &index);
 

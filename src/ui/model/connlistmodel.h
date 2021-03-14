@@ -23,6 +23,7 @@ struct ConnRow : TableRow
 
     quint32 pid = 0;
 
+    qint64 rowId = 0;
     qint64 connId = 0;
     qint64 appId = 0;
 
@@ -42,6 +43,9 @@ class ConnListModel : public TableSqlModel
 
 public:
     explicit ConnListModel(StatManager *statManager, QObject *parent = nullptr);
+
+    bool blockedMode() const { return m_blockedMode; }
+    void setBlockedMode(bool v);
 
     bool resolveAddress() const { return m_resolveAddress; }
     void setResolveAddress(bool v);
@@ -63,11 +67,11 @@ public:
             int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-    void deleteConn(qint64 connId, bool blocked, int row);
+    void deleteConn(qint64 rowIdTo, bool blocked, int row);
 
     const ConnRow &connRowAt(int row) const;
 
-    ConnRowBlock getConnRowBlock(qint64 connId) const;
+    ConnRowBlock getConnRowBlock(qint64 rowId) const;
 
 public slots:
     void clear();
@@ -76,12 +80,19 @@ protected:
     bool updateTableRow(int row) const override;
     TableRow &tableRow() const override { return m_connRow; }
 
+    int doSqlCount() const override;
     QString sqlBase() const override;
+    QString sqlWhere() const override;
+    QString sqlLimitOffset() const override;
 
 private:
+    qint64 rowIdMin() const;
+    qint64 rowIdMax() const;
+
     QString formatIpPort(quint32 ip, quint16 port) const;
 
 private:
+    bool m_blockedMode = false;
     bool m_resolveAddress = false;
 
     int m_connBlockInc = 999999999; // to trigger on first check

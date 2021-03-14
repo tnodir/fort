@@ -135,6 +135,14 @@ bool SqliteDb::prepare(SqliteStmt &stmt, const char *sql, const QVariantList &va
     return stmt.prepare(db(), sql) && (vars.isEmpty() || stmt.bindVars(vars));
 }
 
+bool SqliteDb::done(SqliteStmt *stmt)
+{
+    const SqliteStmt::StepResult res = stmt->step();
+    const bool ok = (res == SqliteStmt::StepDone && changes() != 0);
+    stmt->reset();
+    return ok;
+}
+
 qint64 SqliteDb::lastInsertRowid() const
 {
     return sqlite3_last_insert_rowid(m_db);

@@ -352,7 +352,7 @@ QString AppListModel::sqlOrderColumn() const
         columnsStr = "8";
         break;
     default: // Creation Time
-        columnsStr = "1";
+        columnsStr = "1"; // App ID
         break;
     }
 

@@ -6,11 +6,9 @@ class StatSql
 public:
     static const char *const sqlSelectAppId;
     static const char *const sqlInsertAppId;
+    static const char *const sqlDeleteAppId;
 
-    static const char *const sqlSelectDeletedStatAppPaths;
-    static const char *const sqlDeleteStatAppId;
-
-    static const char *const sqlSelectStatAppPaths;
+    static const char *const sqlSelectStatAppList;
 
     static const char *const sqlInsertTrafAppHour;
     static const char *const sqlInsertTrafAppDay;
@@ -64,22 +62,22 @@ public:
     static const char *const sqlDeleteAppTrafMonth;
     static const char *const sqlDeleteAppTrafTotal;
 
+    static const char *const sqlSelectDeletedStatAppList;
+
     static const char *const sqlResetAppTrafTotals;
 
     static const char *const sqlInsertConn;
     static const char *const sqlInsertConnBlock;
 
-    static const char *const sqlSelectOldConnBlock;
+    static const char *const sqlSelectMinMaxConnBlockId;
 
-    static const char *const sqlSelectDeletedRangeConnAppPaths;
-    static const char *const sqlDeleteRangeConnAppId;
-    static const char *const sqlDeleteRangeConn;
+    static const char *const sqlDeleteRangeConnForBlock;
     static const char *const sqlDeleteRangeConnBlock;
+    static const char *const sqlSelectDeletedRangeConnBlockAppList;
 
-    static const char *const sqlSelectDeletedAllConnAppPaths;
-    static const char *const sqlDeleteAllConnAppId;
     static const char *const sqlDeleteAllConn;
     static const char *const sqlDeleteAllConnBlock;
+    static const char *const sqlSelectDeletedAllConnAppList;
 };
 
 #endif // STATSQL_H

@@ -213,5 +213,5 @@ void SchedulePage::setupTableTasksChanged()
 
 int SchedulePage::currentTaskIndex() const
 {
-    return m_tableTasks->currentIndex().row();
+    return m_tableTasks->currentRow();
 }

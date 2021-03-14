@@ -443,7 +443,7 @@ void ZonesWindow::deleteSelectedZone()
 
 int ZonesWindow::zoneListCurrentIndex() const
 {
-    return m_zoneListView->currentIndex().row();
+    return m_zoneListView->currentRow();
 }
 
 FortManager *ZonesWindow::fortManager() const

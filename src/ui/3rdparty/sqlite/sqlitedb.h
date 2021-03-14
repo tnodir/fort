@@ -37,6 +37,7 @@ public:
             int resultCount = 1, bool *ok = nullptr);
 
     bool prepare(SqliteStmt &stmt, const char *sql, const QVariantList &vars = QVariantList());
+    bool done(SqliteStmt *stmt);
 
     qint64 lastInsertRowid() const;
     int changes() const;

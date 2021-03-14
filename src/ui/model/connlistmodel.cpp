@@ -19,6 +19,14 @@ ConnListModel::ConnListModel(StatManager *statManager, QObject *parent) :
 {
 }
 
+void ConnListModel::setBlockedMode(bool v)
+{
+    if (m_blockedMode != v) {
+        m_blockedMode = v;
+        reset();
+    }
+}
+
 void ConnListModel::setResolveAddress(bool v)
 {
     if (m_resolveAddress != v) {
@@ -132,8 +140,8 @@ QVariant ConnListModel::data(const QModelIndex &index, int role) const
             if (role == Qt::ToolTipRole) {
                 if (connRow.blocked) {
                     // Show block reason in tool-tip
-                    const auto connBlock = getConnRowBlock(connRow.connId);
-                    return LogEntryBlockedIp::reasonToString(connBlock.blockReason);
+                    const auto blockRow = getConnRowBlock(connRow.rowId);
+                    return LogEntryBlockedIp::reasonToString(blockRow.blockReason);
                 }
             }
             return connRow.inbound ? tr("In") : tr("Out");
@@ -169,11 +177,11 @@ QVariant ConnListModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-void ConnListModel::deleteConn(qint64 connId, bool blocked, int row)
+void ConnListModel::deleteConn(qint64 rowIdTo, bool blocked, int row)
 {
-    beginRemoveRows(QModelIndex(), row, row);
+    beginRemoveRows(QModelIndex(), 0, row);
 
-    if (statManager()->deleteConn(connId, blocked)) {
+    if (statManager()->deleteConn(rowIdTo, blocked)) {
         invalidateRowCache();
     }
 
@@ -187,17 +195,17 @@ const ConnRow &ConnListModel::connRowAt(int row) const
     return m_connRow;
 }
 
-ConnRowBlock ConnListModel::getConnRowBlock(qint64 connId) const
+ConnRowBlock ConnListModel::getConnRowBlock(qint64 rowId) const
 {
     static const char *const sql = "SELECT block_reason FROM conn_block"
-                                   "  WHERE conn_id = ?1";
+                                   "  WHERE conn_block_id = ?1";
 
-    return { quint8(sqliteDb()->executeEx(sql, { connId }).toInt()) };
+    return { quint8(sqliteDb()->executeEx(sql, { rowId }).toInt()) };
 }
 
 void ConnListModel::clear()
 {
-    statManager()->deleteConns();
+    statManager()->deleteConnAll();
     reset();
 
     hostInfoCache()->clear();
@@ -205,11 +213,14 @@ void ConnListModel::clear()
 
 bool ConnListModel::updateTableRow(int row) const
 {
+    const qint64 rowId = rowIdMin() + row;
+
     SqliteStmt stmt;
-    if (!(sqliteDb()->prepare(stmt, sql().toLatin1(), { row })
+    if (!(sqliteDb()->prepare(stmt, sql().toLatin1(), { rowId })
                 && stmt.step() == SqliteStmt::StepRow))
         return false;
 
+    m_connRow.rowId = rowId;
     m_connRow.connId = stmt.columnInt64(0);
     m_connRow.appId = stmt.columnInt64(1);
     m_connRow.connTime = stmt.columnUnixTime(2);
@@ -226,23 +237,50 @@ bool ConnListModel::updateTableRow(int row) const
     return true;
 }
 
+int ConnListModel::doSqlCount() const
+{
+    return int(rowIdMax() - rowIdMin()) + 1;
+}
+
 QString ConnListModel::sqlBase() const
 {
-    return "SELECT"
-           "    t.conn_id,"
-           "    t.app_id,"
-           "    t.conn_time,"
-           "    t.process_id,"
-           "    t.inbound,"
-           "    t.blocked,"
-           "    t.ip_proto,"
-           "    t.local_port,"
-           "    t.remote_port,"
-           "    t.local_ip,"
-           "    t.remote_ip,"
-           "    a.path"
-           "  FROM conn t"
-           "    JOIN app a ON a.app_id = t.app_id";
+    return QString::fromLatin1("SELECT"
+                               "    t.conn_id,"
+                               "    t.app_id,"
+                               "    t.conn_time,"
+                               "    t.process_id,"
+                               "    t.inbound,"
+                               "    t.blocked,"
+                               "    t.ip_proto,"
+                               "    t.local_port,"
+                               "    t.remote_port,"
+                               "    t.local_ip,"
+                               "    t.remote_ip,"
+                               "    a.path"
+                               "  FROM conn t"
+                               "    JOIN %1 c ON c.conn_id = t.conn_id"
+                               "    JOIN app a ON a.app_id = t.app_id")
+            .arg(blockedMode() ? "conn_block" : "conn_traffic");
+}
+
+QString ConnListModel::sqlWhere() const
+{
+    return " WHERE c.id = ?1";
+}
+
+QString ConnListModel::sqlLimitOffset() const
+{
+    return QString();
+}
+
+qint64 ConnListModel::rowIdMin() const
+{
+    return blockedMode() ? statManager()->connBlockIdMin() : statManager()->connTrafIdMin();
+}
+
+qint64 ConnListModel::rowIdMax() const
+{
+    return blockedMode() ? statManager()->connBlockIdMax() : statManager()->connTrafIdMax();
 }
 
 QString ConnListModel::formatIpPort(quint32 ip, quint16 port) const

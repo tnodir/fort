@@ -797,7 +797,7 @@ void StatisticsPage::updateTrafUnit()
 
 int StatisticsPage::appListCurrentIndex() const
 {
-    return m_appListView->currentIndex().row();
+    return m_appListView->currentRow();
 }
 
 QString StatisticsPage::appListCurrentPath() const

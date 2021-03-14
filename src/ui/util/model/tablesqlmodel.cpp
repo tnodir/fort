@@ -10,7 +10,7 @@ int TableSqlModel::rowCount(const QModelIndex &parent) const
     Q_UNUSED(parent);
 
     if (m_rowCount < 0) {
-        m_rowCount = sqliteDb()->executeEx(sqlCount().toLatin1()).toInt();
+        m_rowCount = doSqlCount();
     }
 
     return m_rowCount;
@@ -55,6 +55,11 @@ void TableSqlModel::updateRowCache(int row) const
     }
 }
 
+int TableSqlModel::doSqlCount() const
+{
+    return sqliteDb()->executeEx(sqlCount().toLatin1()).toInt();
+}
+
 QString TableSqlModel::sqlCount() const
 {
     return "SELECT count(*) FROM (" + sqlBase() + ");";
@@ -62,7 +67,7 @@ QString TableSqlModel::sqlCount() const
 
 QString TableSqlModel::sql() const
 {
-    return sqlBase() + sqlOrder() + " LIMIT 1 OFFSET ?1;";
+    return sqlBase() + sqlWhere() + sqlOrder() + sqlLimitOffset() + ';';
 }
 
 QString TableSqlModel::sqlOrder() const
@@ -81,4 +86,14 @@ QString TableSqlModel::sqlOrderAsc() const
 QString TableSqlModel::sqlOrderColumn() const
 {
     return QString::number(sortColumn());
+}
+
+QString TableSqlModel::sqlWhere() const
+{
+    return QString();
+}
+
+QString TableSqlModel::sqlLimitOffset() const
+{
+    return " LIMIT 1 OFFSET ?1";
 }

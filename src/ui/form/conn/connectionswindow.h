@@ -48,8 +48,6 @@ private:
 
     void deleteConn(int row);
 
-    void deleteSelectedConns();
-
     int connListCurrentIndex() const;
     QString connListCurrentPath() const;
 

@@ -13,6 +13,7 @@ public:
     QMenu *menu() const { return m_menu; }
     void setMenu(QMenu *menu) { m_menu = menu; }
 
+    int currentRow() const;
     QVector<int> selectedRows() const;
     QModelIndexList sortedSelectedIndexes() const;
 

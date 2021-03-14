@@ -619,7 +619,7 @@ void ProgramsWindow::deleteSelectedApps()
 
 int ProgramsWindow::appListCurrentIndex() const
 {
-    return m_appListView->currentIndex().row();
+    return m_appListView->currentRow();
 }
 
 QString ProgramsWindow::appListCurrentPath() const

@@ -72,16 +72,22 @@ CREATE TABLE conn(
 CREATE INDEX conn_app_id_idx ON conn(app_id);
 
 CREATE TABLE conn_block(
-  conn_id INTEGER PRIMARY KEY,
+  id INTEGER PRIMARY KEY,
+  conn_id INTEGER NOT NULL,
   block_reason INTEGER NOT NULL
-) WITHOUT ROWID;
+);
+
+CREATE UNIQUE INDEX conn_block_conn_id_uk ON conn_block(conn_id);
 
 CREATE TABLE conn_traffic(
-  conn_id INTEGER PRIMARY KEY,
+  id INTEGER PRIMARY KEY,
+  conn_id INTEGER NOT NULL,
   end_time INTEGER NOT NULL,
   in_bytes INTEGER NOT NULL,
   out_bytes INTEGER NOT NULL
-) WITHOUT ROWID;
+);
+
+CREATE UNIQUE INDEX conn_traffic_conn_id_uk ON conn_traffic(conn_id);
 
 CREATE TABLE conn_flow(
   conn_id INTEGER PRIMARY KEY,

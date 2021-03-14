@@ -32,12 +32,16 @@ protected:
     virtual bool updateTableRow(int row) const = 0;
     virtual TableRow &tableRow() const = 0;
 
+    virtual int doSqlCount() const;
+
     virtual QString sqlCount() const;
     virtual QString sql() const;
     virtual QString sqlBase() const = 0;
     virtual QString sqlOrder() const;
     virtual QString sqlOrderAsc() const;
     virtual QString sqlOrderColumn() const;
+    virtual QString sqlWhere() const;
+    virtual QString sqlLimitOffset() const;
 
     int sortColumn() const { return m_sortColumn; }
     void setSortColumn(int v) { m_sortColumn = v; }
