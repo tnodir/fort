@@ -197,8 +197,7 @@ const ConnRow &ConnListModel::connRowAt(int row) const
 
 ConnRowBlock ConnListModel::getConnRowBlock(qint64 rowId) const
 {
-    static const char *const sql = "SELECT block_reason FROM conn_block"
-                                   "  WHERE conn_block_id = ?1";
+    static const char *const sql = "SELECT block_reason FROM conn_block WHERE id = ?1";
 
     return { quint8(sqliteDb()->executeEx(sql, { rowId }).toInt()) };
 }

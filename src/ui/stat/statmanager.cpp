@@ -375,7 +375,11 @@ bool StatManager::logBlockedIp(bool inbound, quint8 blockReason, quint8 ipProto,
         if (ok) {
             ok = createConnBlock(connId, blockReason);
             if (ok) {
-                m_connBlockIdMax++;
+                if (m_connBlockIdMax > 0) {
+                    m_connBlockIdMax++;
+                } else {
+                    m_connBlockIdMin = m_connBlockIdMax = 1;
+                }
             }
         }
     }
