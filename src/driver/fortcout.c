@@ -34,6 +34,95 @@ static void fort_callout_classify_continue(FWPS_CLASSIFY_OUT0 *classifyOut)
     classifyOut->actionType = FWP_ACTION_CONTINUE;
 }
 
+static BOOL fort_callout_classify_v4_blocked(const FWPS_INCOMING_VALUES0 *inFixedValues,
+        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const FWPS_FILTER0 *filter,
+        FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField, int remoteIpField,
+        int localPortField, int remotePortField, int ipProtoField, BOOL inbound,
+        UINT32 classify_flags, UINT32 remote_ip, FORT_CONF_FLAGS conf_flags, UINT32 process_id,
+        UINT32 path_len, PVOID path, PFORT_CONF_REF conf_ref, UCHAR *block_reason, PIRP *irp,
+        ULONG_PTR *info)
+{
+    BOOL blocked = TRUE;
+
+    if (conf_flags.filter_enabled) {
+        if (conf_flags.stop_traffic)
+            return TRUE; /* block all */
+
+        if (!fort_conf_ip_is_inet(&conf_ref->conf,
+                    (fort_conf_zones_ip_included_func *) fort_conf_zones_ip_included,
+                    &fort_device()->conf, remote_ip))
+            return FALSE; /* allow LocalNetwork */
+
+        if (conf_flags.stop_inet_traffic)
+            return TRUE; /* block Internet */
+
+        if (!fort_conf_ip_inet_included(&conf_ref->conf,
+                    (fort_conf_zones_ip_included_func *) fort_conf_zones_ip_included,
+                    &fort_device()->conf, remote_ip)) {
+            *block_reason = FORT_BLOCK_REASON_IP_INET;
+            return TRUE; /* block address */
+        }
+    } else {
+        if (!(conf_flags.log_stat && conf_flags.log_stat_no_filter))
+            return FALSE; /* allow (Filter Disabled) */
+
+        blocked = FALSE;
+    }
+
+    FORT_APP_FLAGS app_flags =
+            fort_conf_app_find(&conf_ref->conf, path, path_len, fort_conf_exe_find);
+
+    if (!blocked /* collect traffic, when Filter Disabled */
+            || (app_flags.v == 0 && conf_flags.allow_all_new) /* collect new Blocked Programs */
+            || !fort_conf_app_blocked(&conf_ref->conf, app_flags, block_reason)) {
+        if (conf_flags.log_stat) {
+            const UINT64 flow_id = inMetaValues->flowHandle;
+
+            const IPPROTO ip_proto =
+                    (IPPROTO) inFixedValues->incomingValue[ipProtoField].value.uint8;
+            const BOOL is_tcp = (ip_proto == IPPROTO_TCP);
+
+            const UCHAR group_index = app_flags.group_index;
+            const BOOL is_reauth = (classify_flags & FWP_CONDITION_FLAG_IS_REAUTHORIZE);
+
+            BOOL is_new_proc = FALSE;
+            NTSTATUS status;
+
+            status = fort_flow_associate(&fort_device()->stat, flow_id, process_id, group_index,
+                    is_tcp, is_reauth, &is_new_proc);
+
+            if (!NT_SUCCESS(status)) {
+                if (status == FORT_STATUS_FLOW_BLOCK) {
+                    *block_reason = FORT_BLOCK_REASON_REAUTH;
+                    return TRUE; /* block (Reauth) */
+                }
+
+                DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                        "FORT: Classify v4: Flow assoc. error: %x\n", status);
+            } else if (is_new_proc) {
+                fort_buffer_proc_new_write(
+                        &fort_device()->buffer, process_id, path_len, path, irp, info);
+            }
+        }
+
+        blocked = FALSE; /* allow */
+    }
+
+    if (app_flags.v == 0 && (conf_flags.allow_all_new || conf_flags.log_blocked)
+            && conf_flags.filter_enabled) {
+        app_flags.blocked = (UCHAR) blocked;
+        app_flags.alerted = 1;
+        app_flags.is_new = 1;
+
+        if (NT_SUCCESS(fort_conf_ref_exe_add_path(conf_ref, path, path_len, app_flags))) {
+            fort_buffer_blocked_write(
+                    &fort_device()->buffer, blocked, process_id, path_len, path, irp, info);
+        }
+    }
+
+    return blocked;
+}
+
 static void fort_callout_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const FWPS_FILTER0 *filter,
         FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField, int remoteIpField,
@@ -42,11 +131,11 @@ static void fort_callout_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
     PIRP irp = NULL;
     ULONG_PTR info;
 
-    const UINT32 flags = inFixedValues->incomingValue[flagsField].value.uint32;
+    const UINT32 classify_flags = inFixedValues->incomingValue[flagsField].value.uint32;
     const UINT32 remote_ip = inFixedValues->incomingValue[remoteIpField].value.uint32;
 
     if (!fort_device()->conf.conf_flags.filter_locals
-            && ((flags & FWP_CONDITION_FLAG_IS_LOOPBACK)
+            && ((classify_flags & FWP_CONDITION_FLAG_IS_LOOPBACK)
                     || remote_ip == 0xFFFFFFFF)) { /* Local broadcast */
         fort_callout_classify_permit(filter, classifyOut);
         return;
@@ -71,87 +160,11 @@ static void fort_callout_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
     const PVOID path = inMetaValues->processPath->data;
 
     UCHAR block_reason = FORT_BLOCK_REASON_UNKNOWN;
-    BOOL blocked = TRUE;
+    const BOOL blocked = fort_callout_classify_v4_blocked(inFixedValues, inMetaValues, filter,
+            classifyOut, flagsField, localIpField, remoteIpField, localPortField, remotePortField,
+            ipProtoField, inbound, classify_flags, remote_ip, conf_flags, process_id, path_len,
+            path, conf_ref, &block_reason, &irp, &info);
 
-    if (conf_flags.filter_enabled) {
-        if (conf_flags.stop_traffic)
-            goto end;
-
-        if (!fort_conf_ip_is_inet(&conf_ref->conf,
-                    (fort_conf_zones_ip_included_func *) fort_conf_zones_ip_included,
-                    &fort_device()->conf, remote_ip)) {
-            blocked = FALSE; /* permit (LAN) */
-            goto end;
-        }
-
-        if (conf_flags.stop_inet_traffic)
-            goto end;
-
-        if (!fort_conf_ip_inet_included(&conf_ref->conf,
-                    (fort_conf_zones_ip_included_func *) fort_conf_zones_ip_included,
-                    &fort_device()->conf, remote_ip)) {
-            block_reason = FORT_BLOCK_REASON_IP_INET;
-            goto end;
-        }
-    } else {
-        blocked = FALSE; /* permit (Filter Disabled) */
-        if (!(conf_flags.log_stat && conf_flags.log_stat_no_filter))
-            goto end;
-    }
-
-    FORT_APP_FLAGS app_flags =
-            fort_conf_app_find(&conf_ref->conf, path, path_len, fort_conf_exe_find);
-
-    if (!blocked /* collect traffic, when Filter Disabled */
-            || (app_flags.v == 0 && conf_flags.allow_all_new) /* collect new Blocked Programs */
-            || !fort_conf_app_blocked(&conf_ref->conf, app_flags, &block_reason)) {
-        if (conf_flags.log_stat) {
-            const UINT64 flow_id = inMetaValues->flowHandle;
-
-            const IPPROTO ip_proto =
-                    (IPPROTO) inFixedValues->incomingValue[ipProtoField].value.uint8;
-            const BOOL is_tcp = (ip_proto == IPPROTO_TCP);
-
-            const UCHAR group_index = app_flags.group_index;
-            const BOOL is_reauth = (flags & FWP_CONDITION_FLAG_IS_REAUTHORIZE);
-
-            BOOL is_new_proc = FALSE;
-            NTSTATUS status;
-
-            status = fort_flow_associate(&fort_device()->stat, flow_id, process_id, group_index,
-                    is_tcp, is_reauth, &is_new_proc);
-
-            if (!NT_SUCCESS(status)) {
-                if (status == FORT_STATUS_FLOW_BLOCK) {
-                    block_reason = FORT_BLOCK_REASON_REAUTH;
-                    blocked = TRUE;
-                    goto end;
-                }
-
-                DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                        "FORT: Classify v4: Flow assoc. error: %x\n", status);
-            } else if (is_new_proc) {
-                fort_buffer_proc_new_write(
-                        &fort_device()->buffer, process_id, path_len, path, &irp, &info);
-            }
-        }
-
-        blocked = FALSE; /* permit */
-    }
-
-    if (app_flags.v == 0 && (conf_flags.allow_all_new || conf_flags.log_blocked)
-            && conf_flags.filter_enabled) {
-        app_flags.blocked = (UCHAR) blocked;
-        app_flags.alerted = 1;
-        app_flags.is_new = 1;
-
-        if (NT_SUCCESS(fort_conf_ref_exe_add_path(conf_ref, path, path_len, app_flags))) {
-            fort_buffer_blocked_write(
-                    &fort_device()->buffer, blocked, process_id, path_len, path, &irp, &info);
-        }
-    }
-
-end:
     if (blocked) {
         /* Log the blocked connection */
         if (block_reason != FORT_BLOCK_REASON_UNKNOWN && conf_flags.log_blocked_ip) {
