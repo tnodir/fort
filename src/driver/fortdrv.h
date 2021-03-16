@@ -14,4 +14,13 @@
 #define fort_mem_alloc(size, tag) ExAllocatePoolWithTag(NonPagedPool, (size), (tag))
 #define fort_mem_free(p, tag)     ExFreePoolWithTag((p), (tag))
 
+#define fort_request_complete_info(irp, status, info)                                              \
+    do {                                                                                           \
+        (irp)->IoStatus.Status = (status);                                                         \
+        (irp)->IoStatus.Information = (info);                                                      \
+        IoCompleteRequest((irp), IO_NO_INCREMENT);                                                 \
+    } while (0)
+
+#define fort_request_complete(irp, status) fort_request_complete_info((irp), (status), 0)
+
 #endif // FORTDRV_H

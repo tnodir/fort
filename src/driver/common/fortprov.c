@@ -1,6 +1,6 @@
 /* Fort Firewall Driver Provider (Un)Registration */
 
-#include "fortdev.h"
+#include "fortdef.h"
 #include "fortprov.h"
 
 FORT_API void fort_prov_unregister(HANDLE transEngine)

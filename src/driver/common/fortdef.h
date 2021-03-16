@@ -1,5 +1,5 @@
-#ifndef FORTDEV_H
-#define FORTDEV_H
+#ifndef FORTDEF_H
+#define FORTDEF_H
 
 #include "common.h"
 
@@ -72,7 +72,9 @@ DEFINE_GUID(FORT_GUID_FILTER_REAUTH_IN, 0xc2d858f8, 0x2951, 0x4eed, 0x8d, 0xa1, 
 DEFINE_GUID(FORT_GUID_FILTER_REAUTH_OUT, 0x749709ce, 0x9686, 0x4056, 0xb8, 0x9a, 0x7a, 0x58, 0x52,
         0xdf, 0xc8, 0x98);
 
-#define FORT_DEVICE_NAME "\\\\.\\fortfw"
+#define FORT_DEVICE_NAME     "\\\\.\\fortfw"
+#define FORT_NT_DEVICE_NAME  L"\\Device\\fortfw"
+#define FORT_DOS_DEVICE_NAME L"\\DosDevices\\fortfw"
 
 #define FORT_DEVICE_TYPE 0xD000
 #define FORT_IOCTL_BASE  0xD00
@@ -88,4 +90,4 @@ DEFINE_GUID(FORT_GUID_FILTER_REAUTH_OUT, 0x749709ce, 0x9686, 0x4056, 0xb8, 0x9a,
 #define FORT_IOCTL_SETZONES    FORT_CTL_CODE(6, FILE_WRITE_DATA)
 #define FORT_IOCTL_SETZONEFLAG FORT_CTL_CODE(7, FILE_WRITE_DATA)
 
-#endif // FORTDEV_H
+#endif // FORTDEF_H

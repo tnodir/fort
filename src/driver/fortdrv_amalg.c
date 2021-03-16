@@ -16,4 +16,6 @@
 #include "fortstat.c"
 #include "forttmr.c"
 #include "fortwrk.c"
+#include "fortcout.c"
+#include "fortdev.c"
 #include "fortdrv.c"

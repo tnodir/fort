@@ -9,7 +9,7 @@ SOURCES += \
 HEADERS += \
     $$PWD/common/common.h \
     $$PWD/common/fortconf.h \
-    $$PWD/common/fortdev.h \
+    $$PWD/common/fortdef.h \
     $$PWD/common/fortlog.h \
     $$PWD/common/fortprov.h \
     $$PWD/common/wildmatch.h

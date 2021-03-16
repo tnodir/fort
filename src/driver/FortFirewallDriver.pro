@@ -6,6 +6,8 @@ SOURCES += \
     dummy.c \
     fortbuf.c \
     fortcnf.c \
+    fortcout.c \
+    fortdev.c \
     fortdrv.c \
     fortpkt.c \
     fortstat.c \
@@ -21,6 +23,8 @@ SOURCES += \
 HEADERS += \
     fortbuf.h \
     fortcnf.h \
+    fortcout.h \
+    fortdev.h \
     fortdrv.h \
     fortpkt.h \
     fortstat.h \

@@ -1,7 +1,7 @@
 #include "fortcommon.h"
 
 #include <common/fortconf.h>
-#include <common/fortdev.h>
+#include <common/fortdef.h>
 #include <common/fortlog.h>
 #include <common/fortprov.h>
 
