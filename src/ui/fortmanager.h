@@ -178,6 +178,9 @@ private:
     void updateTrayMenuFlags();
     void retranslateTrayMenu();
 
+    void onTrayActivated(int reason);
+    void onTrayMessageClicked();
+
     void addHotKey(QAction *action, const QString &shortcutText, bool hotKeyEnabled);
     void removeHotKeys();
 

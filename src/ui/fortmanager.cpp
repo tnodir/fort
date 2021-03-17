@@ -238,42 +238,8 @@ void FortManager::setupTrayIcon()
 {
     m_trayIcon->setToolTip(QGuiApplication::applicationDisplayName());
 
-    connect(m_trayIcon, &QSystemTrayIcon::activated, this,
-            [this](QSystemTrayIcon::ActivationReason reason) {
-                switch (reason) {
-                case QSystemTrayIcon::Trigger:
-                    m_trayTriggered = false;
-                    QTimer::singleShot(QApplication::doubleClickInterval(), this, [this] {
-                        if (!m_trayTriggered) {
-                            m_trayTriggered = true;
-                            showProgramsWindow();
-                        }
-                    });
-                    break;
-                case QSystemTrayIcon::DoubleClick:
-                    if (!m_trayTriggered) {
-                        m_trayTriggered = true;
-                        showOptionsWindow();
-                    }
-                    break;
-                case QSystemTrayIcon::Context:
-                    m_trayTriggered = true;
-                    break;
-                case QSystemTrayIcon::Unknown:
-                case QSystemTrayIcon::MiddleClick:
-                    break;
-                }
-            });
-
-    connect(m_trayIcon, &QSystemTrayIcon::messageClicked, this, [&] {
-        switch (m_lastMessageType) {
-        case MessageZones:
-            showZonesWindow();
-            break;
-        default:
-            showOptionsWindow();
-        }
-    });
+    connect(m_trayIcon, &QSystemTrayIcon::activated, this, &FortManager::onTrayActivated);
+    connect(m_trayIcon, &QSystemTrayIcon::messageClicked, this, &FortManager::onTrayMessageClicked);
 
     connect(confManager(), &ConfManager::confSaved, this, &FortManager::updateTrayMenu);
     connect(this, &FortManager::optWindowChanged, this, &FortManager::updateTrayMenuFlags);
@@ -910,6 +876,43 @@ void FortManager::retranslateTrayMenu()
     m_allowAllNewAction->setText(tr("Auto-Allow New Programs"));
 
     m_quitAction->setText(tr("Quit"));
+}
+
+void FortManager::onTrayActivated(int reason)
+{
+    switch (reason) {
+    case QSystemTrayIcon::Trigger:
+        m_trayTriggered = false;
+        QTimer::singleShot(QApplication::doubleClickInterval(), this, [this] {
+            if (!m_trayTriggered) {
+                m_trayTriggered = true;
+                showProgramsWindow();
+            }
+        });
+        break;
+    case QSystemTrayIcon::DoubleClick:
+        if (!m_trayTriggered) {
+            m_trayTriggered = true;
+            showOptionsWindow();
+        }
+        break;
+    case QSystemTrayIcon::MiddleClick:
+        showConnectionsWindow();
+        break;
+    default:
+        break;
+    }
+}
+
+void FortManager::onTrayMessageClicked()
+{
+    switch (m_lastMessageType) {
+    case MessageZones:
+        showZonesWindow();
+        break;
+    default:
+        showOptionsWindow();
+    }
 }
 
 void FortManager::addHotKey(QAction *action, const QString &shortcutText, bool hotKeyEnabled)
