@@ -110,167 +110,194 @@ static void fort_device_cancel_pending(PDEVICE_OBJECT device, PIRP irp)
     fort_request_complete_info(irp, status, info);
 }
 
+static NTSTATUS fort_device_control_validate(const PFORT_CONF_VERSION conf_ver, ULONG len)
+{
+    if (len == sizeof(FORT_CONF_VERSION)) {
+        if (conf_ver->driver_version == DRIVER_VERSION) {
+            fort_device_flag_set(&g_device->conf, FORT_DEVICE_IS_VALIDATED, TRUE);
+            return STATUS_SUCCESS;
+        }
+    }
+
+    return STATUS_UNSUCCESSFUL;
+}
+
+static NTSTATUS fort_device_control_setconf(const PFORT_CONF_IO conf_io, ULONG len)
+{
+    if (len > sizeof(FORT_CONF_IO)) {
+        const PFORT_CONF conf = &conf_io->conf;
+        PFORT_CONF_REF conf_ref = fort_conf_ref_new(conf, len - FORT_CONF_IO_CONF_OFF);
+
+        if (conf_ref == NULL) {
+            return STATUS_INSUFFICIENT_RESOURCES;
+        } else {
+            PFORT_STAT stat = &g_device->stat;
+
+            const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(&g_device->conf, conf_ref);
+
+            const UINT32 defer_flush_bits =
+                    (stat->conf_group.limit_2bits ^ conf_io->conf_group.limit_2bits);
+
+            fort_stat_conf_update(stat, conf_io);
+
+            return fort_callout_force_reauth(old_conf_flags, defer_flush_bits);
+        }
+    }
+
+    return STATUS_UNSUCCESSFUL;
+}
+
+static NTSTATUS fort_device_control_setflags(const PFORT_CONF_FLAGS conf_flags, ULONG len)
+{
+    if (len == sizeof(FORT_CONF_FLAGS)) {
+        const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_flags_set(&g_device->conf, conf_flags);
+
+        const UINT32 defer_flush_bits =
+                (old_conf_flags.group_bits != conf_flags->group_bits ? FORT_DEFER_FLUSH_ALL : 0);
+
+        return fort_callout_force_reauth(old_conf_flags, defer_flush_bits);
+    }
+
+    return STATUS_UNSUCCESSFUL;
+}
+
+static NTSTATUS fort_device_control_getlog(PVOID out, ULONG out_len, PIRP irp, ULONG_PTR *info)
+{
+    if (out_len < FORT_BUFFER_SIZE) {
+        return STATUS_BUFFER_TOO_SMALL;
+    } else {
+        const NTSTATUS status = fort_buffer_xmove(&g_device->buffer, irp, out, out_len, info);
+
+        if (status == STATUS_PENDING) {
+            KIRQL cirq;
+
+            IoMarkIrpPending(irp);
+
+            IoAcquireCancelSpinLock(&cirq);
+            IoSetCancelRoutine(irp, fort_device_cancel_pending);
+            IoReleaseCancelSpinLock(cirq);
+
+            return STATUS_PENDING;
+        }
+        return status;
+    }
+
+    return STATUS_UNSUCCESSFUL;
+}
+
+static NTSTATUS fort_device_control_app(const PFORT_APP_ENTRY app_entry, ULONG len, BOOL is_adding)
+{
+    if (len > sizeof(FORT_APP_ENTRY) && len >= (sizeof(FORT_APP_ENTRY) + app_entry->path_len)) {
+        PFORT_CONF_REF conf_ref = fort_conf_ref_take(&g_device->conf);
+
+        if (conf_ref == NULL) {
+            return STATUS_INSUFFICIENT_RESOURCES;
+        } else {
+            NTSTATUS status;
+
+            if (is_adding) {
+                status = fort_conf_ref_exe_add_entry(conf_ref, app_entry, FALSE);
+            } else {
+                fort_conf_ref_exe_del_entry(conf_ref, app_entry);
+                status = STATUS_SUCCESS;
+            }
+
+            fort_conf_ref_put(&g_device->conf, conf_ref);
+
+            if (NT_SUCCESS(status)) {
+                fort_worker_reauth();
+            }
+
+            return status;
+        }
+    }
+
+    return STATUS_UNSUCCESSFUL;
+}
+
+static NTSTATUS fort_device_control_setzones(const PFORT_CONF_ZONES zones, ULONG len)
+{
+    if (len >= FORT_CONF_ZONES_DATA_OFF) {
+        PFORT_CONF_ZONES conf_zones = fort_conf_zones_new(zones, len);
+
+        if (conf_zones == NULL) {
+            return STATUS_INSUFFICIENT_RESOURCES;
+        } else {
+            fort_conf_zones_set(&g_device->conf, conf_zones);
+
+            fort_worker_reauth();
+
+            return STATUS_SUCCESS;
+        }
+    }
+
+    return STATUS_UNSUCCESSFUL;
+}
+
+static NTSTATUS fort_device_control_setzoneflag(const PFORT_CONF_ZONE_FLAG zone_flag, ULONG len)
+{
+    if (len == sizeof(FORT_CONF_ZONE_FLAG)) {
+        fort_conf_zone_flag_set(&g_device->conf, zone_flag);
+
+        fort_worker_reauth();
+
+        return STATUS_SUCCESS;
+    }
+
+    return STATUS_UNSUCCESSFUL;
+}
+
+static NTSTATUS fort_device_control_process(
+        const PIO_STACK_LOCATION irp_stack, PIRP irp, ULONG_PTR *info)
+{
+    const int control_code = irp_stack->Parameters.DeviceIoControl.IoControlCode;
+
+    if (control_code != FORT_IOCTL_VALIDATE
+            && !fort_device_flag(&g_device->conf, FORT_DEVICE_IS_VALIDATED))
+        return STATUS_INVALID_PARAMETER;
+
+    PVOID buffer = irp->AssociatedIrp.SystemBuffer;
+    const ULONG in_len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
+    const ULONG out_len = irp_stack->Parameters.DeviceIoControl.OutputBufferLength;
+
+    switch (control_code) {
+    case FORT_IOCTL_VALIDATE:
+        return fort_device_control_validate(buffer, in_len);
+    case FORT_IOCTL_SETCONF:
+        return fort_device_control_setconf(buffer, in_len);
+    case FORT_IOCTL_SETFLAGS:
+        return fort_device_control_setflags(buffer, in_len);
+    case FORT_IOCTL_GETLOG:
+        return fort_device_control_getlog(buffer, out_len, irp, info);
+    case FORT_IOCTL_ADDAPP:
+    case FORT_IOCTL_DELAPP:
+        return fort_device_control_app(buffer, in_len, (control_code == FORT_IOCTL_ADDAPP));
+    case FORT_IOCTL_SETZONES:
+        return fort_device_control_setzones(buffer, in_len);
+    case FORT_IOCTL_SETZONEFLAG:
+        return fort_device_control_setzoneflag(buffer, in_len);
+    default:
+        return STATUS_UNSUCCESSFUL;
+    }
+}
+
 FORT_API NTSTATUS fort_device_control(PDEVICE_OBJECT device, PIRP irp)
 {
     ULONG_PTR info = 0;
-    NTSTATUS status = STATUS_UNSUCCESSFUL;
 
     UNUSED(device);
 
     const PIO_STACK_LOCATION irp_stack = IoGetCurrentIrpStackLocation(irp);
-    const ULONG control_code = irp_stack->Parameters.DeviceIoControl.IoControlCode;
+    const NTSTATUS status = fort_device_control_process(irp_stack, irp, &info);
 
-    if (control_code != (ULONG) FORT_IOCTL_VALIDATE
-            && !fort_device_flag(&g_device->conf, FORT_DEVICE_IS_VALIDATED))
-        goto end;
-
-    switch (control_code) {
-    case FORT_IOCTL_VALIDATE: {
-        const PFORT_CONF_VERSION conf_ver = irp->AssociatedIrp.SystemBuffer;
-        const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
-
-        if (len == sizeof(FORT_CONF_VERSION)) {
-            if (conf_ver->driver_version == DRIVER_VERSION) {
-                fort_device_flag_set(&g_device->conf, FORT_DEVICE_IS_VALIDATED, TRUE);
-                status = STATUS_SUCCESS;
-            }
-        }
-        break;
-    }
-    case FORT_IOCTL_SETCONF: {
-        const PFORT_CONF_IO conf_io = irp->AssociatedIrp.SystemBuffer;
-        const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
-
-        if (len > sizeof(FORT_CONF_IO)) {
-            const PFORT_CONF conf = &conf_io->conf;
-            PFORT_CONF_REF conf_ref = fort_conf_ref_new(conf, len - FORT_CONF_IO_CONF_OFF);
-
-            if (conf_ref == NULL) {
-                status = STATUS_INSUFFICIENT_RESOURCES;
-            } else {
-                PFORT_STAT stat = &g_device->stat;
-
-                const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(&g_device->conf, conf_ref);
-
-                const UINT32 defer_flush_bits =
-                        (stat->conf_group.limit_2bits ^ conf_io->conf_group.limit_2bits);
-
-                fort_stat_conf_update(stat, conf_io);
-
-                status = fort_callout_force_reauth(old_conf_flags, defer_flush_bits);
-            }
-        }
-        break;
-    }
-    case FORT_IOCTL_SETFLAGS: {
-        const PFORT_CONF_FLAGS conf_flags = irp->AssociatedIrp.SystemBuffer;
-        const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
-
-        if (len == sizeof(FORT_CONF_FLAGS)) {
-            const FORT_CONF_FLAGS old_conf_flags =
-                    fort_conf_ref_flags_set(&g_device->conf, conf_flags);
-
-            const UINT32 defer_flush_bits =
-                    (old_conf_flags.group_bits != conf_flags->group_bits ? FORT_DEFER_FLUSH_ALL
-                                                                         : 0);
-
-            status = fort_callout_force_reauth(old_conf_flags, defer_flush_bits);
-        }
-        break;
-    }
-    case FORT_IOCTL_GETLOG: {
-        PVOID out = irp->AssociatedIrp.SystemBuffer;
-        const ULONG out_len = irp_stack->Parameters.DeviceIoControl.OutputBufferLength;
-
-        if (out_len < FORT_BUFFER_SIZE) {
-            status = STATUS_BUFFER_TOO_SMALL;
-        } else {
-            status = fort_buffer_xmove(&g_device->buffer, irp, out, out_len, &info);
-
-            if (status == STATUS_PENDING) {
-                KIRQL cirq;
-
-                IoMarkIrpPending(irp);
-
-                IoAcquireCancelSpinLock(&cirq);
-                IoSetCancelRoutine(irp, fort_device_cancel_pending);
-                IoReleaseCancelSpinLock(cirq);
-
-                return STATUS_PENDING;
-            }
-        }
-        break;
-    }
-    case FORT_IOCTL_ADDAPP:
-    case FORT_IOCTL_DELAPP: {
-        const PFORT_APP_ENTRY app_entry = irp->AssociatedIrp.SystemBuffer;
-        const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
-
-        if (len > sizeof(FORT_APP_ENTRY) && len >= (sizeof(FORT_APP_ENTRY) + app_entry->path_len)) {
-            PFORT_CONF_REF conf_ref = fort_conf_ref_take(&g_device->conf);
-
-            if (conf_ref == NULL) {
-                status = STATUS_INSUFFICIENT_RESOURCES;
-            } else {
-                if (control_code == (ULONG) FORT_IOCTL_ADDAPP) {
-                    status = fort_conf_ref_exe_add_entry(conf_ref, app_entry, FALSE);
-                } else {
-                    fort_conf_ref_exe_del_entry(conf_ref, app_entry);
-                    status = STATUS_SUCCESS;
-                }
-
-                fort_conf_ref_put(&g_device->conf, conf_ref);
-
-                if (NT_SUCCESS(status)) {
-                    fort_worker_reauth();
-                }
-            }
-        }
-        break;
-    }
-    case FORT_IOCTL_SETZONES: {
-        const PFORT_CONF_ZONES zones = irp->AssociatedIrp.SystemBuffer;
-        const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
-
-        if (len >= FORT_CONF_ZONES_DATA_OFF) {
-            PFORT_CONF_ZONES conf_zones = fort_conf_zones_new(zones, len);
-
-            if (conf_zones == NULL) {
-                status = STATUS_INSUFFICIENT_RESOURCES;
-            } else {
-                fort_conf_zones_set(&g_device->conf, conf_zones);
-
-                fort_worker_reauth();
-
-                status = STATUS_SUCCESS;
-            }
-        }
-        break;
-    }
-    case FORT_IOCTL_SETZONEFLAG: {
-        const PFORT_CONF_ZONE_FLAG zone_flag = irp->AssociatedIrp.SystemBuffer;
-        const ULONG len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
-
-        if (len == sizeof(FORT_CONF_ZONE_FLAG)) {
-            fort_conf_zone_flag_set(&g_device->conf, zone_flag);
-
-            fort_worker_reauth();
-
-            status = STATUS_SUCCESS;
-        }
-        break;
-    }
-    default:
-        break;
-    }
-
-end:
     if (!NT_SUCCESS(status) && status != FORT_STATUS_USER_ERROR) {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Device Control: Error: %x\n",
                 status);
     }
 
-    fort_request_complete_info(irp, status, info);
+    if (status != STATUS_PENDING) {
+        fort_request_complete_info(irp, status, info);
+    }
 
     return status;
 }
