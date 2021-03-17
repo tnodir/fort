@@ -399,32 +399,32 @@ static void NTAPI fort_callout_transport_classify_v4(const FWPS_INCOMING_VALUES0
          */
         const UINT32 headerOffset = inbound ? 0 : sizeof(TCP_HEADER);
 
-/* Ignore TCP RST-packets */
 #if 0
-    const BOOL ignore_tcp_rst = inbound && fort_device()->conf_flags.ignore_tcp_rst;
+        /* Ignore TCP RST-packets */
+        const BOOL ignore_tcp_rst = inbound && fort_device()->conf_flags.ignore_tcp_rst;
 
-    if (ignore_tcp_rst) {
-      TCP_HEADER buf;
-      PTCP_HEADER tcpHeader;
-      UINT32 tcpFlags;
+        if (ignore_tcp_rst) {
+            TCP_HEADER buf;
+            PTCP_HEADER tcpHeader;
+            UINT32 tcpFlags;
 
-      if (headerOffset != 0) {
-        NdisRetreatNetBufferDataStart(netBuf, headerOffset, 0, NULL);
-      }
+            if (headerOffset != 0) {
+                NdisRetreatNetBufferDataStart(netBuf, headerOffset, 0, NULL);
+            }
 
-      tcpHeader = NdisGetDataBuffer(netBuf, sizeof(TCP_HEADER), &buf, 1, 0);
-      tcpFlags = tcpHeader ? tcpHeader->flags : 0;
+            tcpHeader = NdisGetDataBuffer(netBuf, sizeof(TCP_HEADER), &buf, 1, 0);
+            tcpFlags = tcpHeader ? tcpHeader->flags : 0;
 
-      if (headerOffset != 0) {
-        NdisAdvanceNetBufferDataStart(netBuf, headerOffset, FALSE, NULL);
-      }
+            if (headerOffset != 0) {
+                NdisAdvanceNetBufferDataStart(netBuf, headerOffset, FALSE, NULL);
+            }
 
-      if (tcpHeader == NULL)
-        goto permit;
+            if (tcpHeader == NULL)
+                goto permit;
 
-      if (tcpFlags & TCP_FLAG_RST)
-        goto block;
-    }
+            if (tcpFlags & TCP_FLAG_RST)
+                goto block;
+        }
 #endif
 
         /* Defer TCP Pure (zero length) ACK-packets */

@@ -390,6 +390,9 @@ FORT_API NDIS_STATUS NdisRetreatNetBufferDataStart(PNET_BUFFER netBuffer, ULONG 
 FORT_API VOID NdisAdvanceNetBufferDataStart(PNET_BUFFER netBuffer, ULONG dataOffsetDelta,
         BOOLEAN freeMdl, NET_BUFFER_FREE_MDL_HANDLER freeMdlHandler);
 
+FORT_API PVOID NdisGetDataBuffer(PNET_BUFFER netBuffer, ULONG bytesNeeded, PVOID storage,
+        UINT alignMultiple, UINT alignOffset);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

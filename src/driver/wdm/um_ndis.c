@@ -1,7 +1,5 @@
 #include "um_ndis.h"
 
-// PNET_BUFFER_LIST;
-
 NDIS_STATUS NdisRetreatNetBufferDataStart(PNET_BUFFER netBuffer, ULONG dataOffsetDelta,
         ULONG dataBackFill, NET_BUFFER_ALLOCATE_MDL_HANDLER allocateMdlHandler)
 {
@@ -19,4 +17,15 @@ void NdisAdvanceNetBufferDataStart(PNET_BUFFER netBuffer, ULONG dataOffsetDelta,
     UNUSED(dataOffsetDelta);
     UNUSED(freeMdl);
     UNUSED(freeMdlHandler);
+}
+
+PVOID NdisGetDataBuffer(PNET_BUFFER netBuffer, ULONG bytesNeeded, PVOID storage, UINT alignMultiple,
+        UINT alignOffset)
+{
+    UNUSED(netBuffer);
+    UNUSED(bytesNeeded);
+    UNUSED(storage);
+    UNUSED(alignMultiple);
+    UNUSED(alignOffset);
+    return NULL;
 }
