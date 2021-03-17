@@ -5,7 +5,9 @@
 #include "fortdev.h"
 
 #include "common/fortdef.h"
+#include "common/fortprov.h"
 
+#include "fortcb.h"
 #include "fortcout.h"
 
 static PFORT_DEVICE g_device = NULL;
@@ -15,7 +17,7 @@ FORT_API PFORT_DEVICE fort_device()
     return g_device;
 }
 
-FORT_API void fort_device_set(PFORT_DEVICE device)
+static void fort_device_set(PFORT_DEVICE device)
 {
     g_device = device;
 }
@@ -300,4 +302,81 @@ FORT_API NTSTATUS fort_device_control(PDEVICE_OBJECT device, PIRP irp)
     }
 
     return status;
+}
+
+FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device_obj)
+{
+    NTSTATUS status = STATUS_UNSUCCESSFUL;
+
+    fort_device_set(device_obj->DeviceExtension);
+
+    RtlZeroMemory(fort_device(), sizeof(FORT_DEVICE));
+
+    fort_device_conf_open(&fort_device()->conf);
+    fort_buffer_open(&fort_device()->buffer);
+    fort_stat_open(&fort_device()->stat);
+    fort_defer_open(&fort_device()->defer);
+    fort_timer_open(&fort_device()->log_timer, 500, FALSE, &fort_callout_timer);
+    fort_timer_open(&fort_device()->app_timer, 60000, TRUE, &fort_app_period_timer);
+
+    /* Unregister old filters provider */
+    {
+        fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_PROV_BOOT, fort_prov_is_boot());
+
+        fort_prov_unregister(0);
+    }
+
+    /* Install callouts */
+    status = fort_callout_install(device_obj);
+
+    /* Register worker */
+    if (NT_SUCCESS(status)) {
+        status = fort_worker_register(device_obj, &fort_device()->worker);
+    }
+
+    /* Register filters provider */
+    if (NT_SUCCESS(status)) {
+        const BOOL prov_boot = fort_device_flag(&fort_device()->conf, FORT_DEVICE_PROV_BOOT);
+
+        status = fort_prov_register(0, prov_boot);
+    }
+
+    /* Register power state change callback */
+    if (NT_SUCCESS(status)) {
+        status = fort_callback_power_register();
+    }
+
+    /* Register system time change callback */
+    if (NT_SUCCESS(status)) {
+        status = fort_callback_systime_register();
+    }
+
+    return status;
+}
+
+FORT_API void fort_device_unload()
+{
+    if (fort_device() == NULL)
+        return;
+
+    fort_callout_defer_flush();
+
+    fort_timer_close(&fort_device()->app_timer);
+    fort_timer_close(&fort_device()->log_timer);
+    fort_defer_close(&fort_device()->defer);
+    fort_stat_close(&fort_device()->stat);
+    fort_buffer_close(&fort_device()->buffer);
+
+    fort_worker_unregister(&fort_device()->worker);
+
+    fort_callback_power_unregister();
+    fort_callback_systime_unregister();
+
+    if (!fort_device_flag(&fort_device()->conf, FORT_DEVICE_PROV_BOOT)) {
+        fort_prov_unregister(0);
+    }
+
+    fort_callout_remove();
+
+    fort_device_set(NULL);
 }

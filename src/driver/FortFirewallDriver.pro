@@ -5,6 +5,7 @@ QT = core
 SOURCES += \
     dummy.c \
     fortbuf.c \
+    fortcb.c \
     fortcnf.c \
     fortcout.c \
     fortdev.c \
@@ -22,6 +23,7 @@ SOURCES += \
 
 HEADERS += \
     fortbuf.h \
+    fortcb.h \
     fortcnf.h \
     fortcout.h \
     fortdev.h \

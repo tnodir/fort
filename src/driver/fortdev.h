@@ -36,8 +36,6 @@ extern "C" {
 
 FORT_API PFORT_DEVICE fort_device();
 
-FORT_API void fort_device_set(PFORT_DEVICE device);
-
 FORT_API void fort_app_period_timer(void);
 
 FORT_API NTSTATUS fort_device_create(PDEVICE_OBJECT device, PIRP irp);
@@ -47,6 +45,10 @@ FORT_API NTSTATUS fort_device_close(PDEVICE_OBJECT device, PIRP irp);
 FORT_API NTSTATUS fort_device_cleanup(PDEVICE_OBJECT device, PIRP irp);
 
 FORT_API NTSTATUS fort_device_control(PDEVICE_OBJECT device, PIRP irp);
+
+FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device);
+
+FORT_API void fort_device_unload();
 
 #ifdef __cplusplus
 } // extern "C"
