@@ -6,21 +6,6 @@
 
 #include "fortdev.h"
 
-static void fort_driver_unload(PDRIVER_OBJECT driver)
-{
-    fort_device_unload();
-
-    /* Delete Device Link */
-    {
-        UNICODE_STRING device_link;
-
-        RtlInitUnicodeString(&device_link, FORT_DOS_DEVICE_NAME);
-        IoDeleteSymbolicLink(&device_link);
-    }
-
-    IoDeleteDevice(driver->DeviceObject);
-}
-
 static NTSTATUS fort_bfe_wait(void)
 {
     LARGE_INTEGER delay;
@@ -36,6 +21,21 @@ static NTSTATUS fort_bfe_wait(void)
     } while (--count >= 0);
 
     return STATUS_INSUFFICIENT_RESOURCES;
+}
+
+static void fort_driver_unload(PDRIVER_OBJECT driver)
+{
+    fort_device_unload();
+
+    /* Delete Device Link */
+    {
+        UNICODE_STRING device_link;
+
+        RtlInitUnicodeString(&device_link, FORT_DOS_DEVICE_NAME);
+        IoDeleteSymbolicLink(&device_link);
+    }
+
+    IoDeleteDevice(driver->DeviceObject);
 }
 
 NTSTATUS
