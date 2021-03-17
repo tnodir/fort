@@ -8,6 +8,37 @@
 #include "fortdev.h"
 #include "fortcout.h"
 
+static NTSTATUS fort_callback_register(
+        PCWSTR sourcePath, PCALLBACK_OBJECT *cb_obj, PVOID *cb_reg, PCALLBACK_FUNCTION cb_func)
+{
+    OBJECT_ATTRIBUTES obj_attr;
+    UNICODE_STRING obj_name;
+    NTSTATUS status;
+
+    RtlInitUnicodeString(&obj_name, sourcePath);
+
+    InitializeObjectAttributes(&obj_attr, &obj_name, OBJ_CASE_INSENSITIVE, NULL, NULL);
+
+    status = ExCreateCallback(cb_obj, &obj_attr, FALSE, TRUE);
+
+    if (NT_SUCCESS(status)) {
+        *cb_reg = ExRegisterCallback(*cb_obj, cb_func, NULL);
+    }
+
+    return status;
+}
+
+static void fort_callback_unregister(PCALLBACK_OBJECT cb_obj, PVOID cb_reg)
+{
+    if (cb_reg != NULL) {
+        ExUnregisterCallback(cb_reg);
+    }
+
+    if (cb_obj != NULL) {
+        ObDereferenceObject(cb_obj);
+    }
+}
+
 static void fort_power_callback(PVOID context, PVOID event, PVOID specifics)
 {
     UNUSED(context);
@@ -26,33 +57,13 @@ static void fort_power_callback(PVOID context, PVOID event, PVOID specifics)
 
 static NTSTATUS fort_power_callback_register(void)
 {
-    OBJECT_ATTRIBUTES obj_attr;
-    UNICODE_STRING obj_name;
-    NTSTATUS status;
-
-    RtlInitUnicodeString(&obj_name, L"\\Callback\\PowerState");
-
-    InitializeObjectAttributes(&obj_attr, &obj_name, OBJ_CASE_INSENSITIVE, NULL, NULL);
-
-    status = ExCreateCallback(&fort_device()->power_cb_obj, &obj_attr, FALSE, TRUE);
-
-    if (NT_SUCCESS(status)) {
-        fort_device()->power_cb_reg =
-                ExRegisterCallback(fort_device()->power_cb_obj, fort_power_callback, NULL);
-    }
-
-    return status;
+    return fort_callback_register(L"\\Callback\\PowerState", &fort_device()->power_cb_obj,
+            &fort_device()->power_cb_reg, fort_power_callback);
 }
 
 static void fort_power_callback_unregister(void)
 {
-    if (fort_device()->power_cb_reg != NULL) {
-        ExUnregisterCallback(fort_device()->power_cb_reg);
-    }
-
-    if (fort_device()->power_cb_obj != NULL) {
-        ObDereferenceObject(fort_device()->power_cb_obj);
-    }
+    fort_callback_unregister(fort_device()->power_cb_obj, fort_device()->power_cb_reg);
 }
 
 static void fort_systime_callback(PVOID context, PVOID event, PVOID specifics)
@@ -68,33 +79,13 @@ static void fort_systime_callback(PVOID context, PVOID event, PVOID specifics)
 
 static NTSTATUS fort_systime_callback_register(void)
 {
-    OBJECT_ATTRIBUTES obj_attr;
-    UNICODE_STRING obj_name;
-    NTSTATUS status;
-
-    RtlInitUnicodeString(&obj_name, L"\\Callback\\SetSystemTime");
-
-    InitializeObjectAttributes(&obj_attr, &obj_name, OBJ_CASE_INSENSITIVE, NULL, NULL);
-
-    status = ExCreateCallback(&fort_device()->systime_cb_obj, &obj_attr, FALSE, TRUE);
-
-    if (NT_SUCCESS(status)) {
-        fort_device()->systime_cb_reg =
-                ExRegisterCallback(fort_device()->systime_cb_obj, fort_systime_callback, NULL);
-    }
-
-    return status;
+    return fort_callback_register(L"\\Callback\\SetSystemTime", &fort_device()->systime_cb_obj,
+            &fort_device()->systime_cb_reg, fort_systime_callback);
 }
 
 static void fort_systime_callback_unregister(void)
 {
-    if (fort_device()->systime_cb_reg != NULL) {
-        ExUnregisterCallback(fort_device()->systime_cb_reg);
-    }
-
-    if (fort_device()->systime_cb_obj != NULL) {
-        ObDereferenceObject(fort_device()->systime_cb_obj);
-    }
+    fort_callback_unregister(fort_device()->systime_cb_obj, fort_device()->systime_cb_reg);
 }
 
 static void fort_driver_unload(PDRIVER_OBJECT driver)
