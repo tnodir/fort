@@ -60,9 +60,7 @@ void ConnListModel::handleLogBlockedIp(const LogEntryBlockedIp &entry, qint64 un
 
     beginInsertRows(QModelIndex(), row, row);
 
-    if (statManager()->logBlockedIp(entry.inbound(), entry.blockReason(), entry.ipProto(),
-                entry.localPort(), entry.remotePort(), entry.localIp(), entry.remoteIp(),
-                entry.pid(), entry.path(), unixTime)) {
+    if (statManager()->logBlockedIp(entry, unixTime)) {
         invalidateRowCache();
         ++m_connBlockInc;
     }

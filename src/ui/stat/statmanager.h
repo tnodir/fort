@@ -9,6 +9,7 @@
 #include "../util/classhelpers.h"
 
 class FirewallConf;
+class LogEntryBlockedIp;
 class QuotaManager;
 class SqliteDb;
 class SqliteStmt;
@@ -39,9 +40,7 @@ public:
     bool logProcNew(quint32 pid, const QString &appPath, qint64 unixTime = 0);
     bool logStatTraf(quint16 procCount, const quint32 *procTrafBytes, qint64 unixTime);
 
-    bool logBlockedIp(bool inbound, quint8 blockReason, quint8 ipProto, quint16 localPort,
-            quint16 remotePort, quint32 localIp, quint32 remoteIp, quint32 pid,
-            const QString &appPath, qint64 unixTime);
+    bool logBlockedIp(const LogEntryBlockedIp &entry, qint64 unixTime);
 
     void getStatAppList(QStringList &list, QVector<qint64> &appIds);
 
@@ -93,8 +92,7 @@ private:
 
     bool updateTraffic(SqliteStmt *stmt, quint32 inBytes, quint32 outBytes, qint64 appId = 0);
 
-    qint64 createConn(bool inbound, quint8 ipProto, quint16 localPort, quint16 remotePort,
-            quint32 localIp, quint32 remoteIp, quint32 pid, qint64 unixTime, qint64 appId);
+    qint64 createConn(const LogEntryBlockedIp &entry, qint64 unixTime, qint64 appId);
     bool createConnBlock(qint64 connId, quint8 blockReason);
     void deleteRangeConnBlock(qint64 rowIdFrom, qint64 rowIdTo);
 

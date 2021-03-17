@@ -7,6 +7,7 @@
 
 #include "../conf/firewallconf.h"
 #include "../fortcommon.h"
+#include "../log/logentryblockedip.h"
 #include "../util/dateutil.h"
 #include "../util/fileutil.h"
 #include "../util/osutil.h"
@@ -356,9 +357,7 @@ bool StatManager::logStatTraf(quint16 procCount, const quint32 *procTrafBytes, q
     return true;
 }
 
-bool StatManager::logBlockedIp(bool inbound, quint8 blockReason, quint8 ipProto, quint16 localPort,
-        quint16 remotePort, quint32 localIp, quint32 remoteIp, quint32 pid, const QString &appPath,
-        qint64 unixTime)
+bool StatManager::logBlockedIp(const LogEntryBlockedIp &entry, qint64 unixTime)
 {
     if (!m_conf || !m_conf->logBlockedIp())
         return false;
@@ -366,14 +365,13 @@ bool StatManager::logBlockedIp(bool inbound, quint8 blockReason, quint8 ipProto,
     bool ok;
     m_sqliteDb->beginTransaction();
 
-    const qint64 appId = getOrCreateAppId(appPath, unixTime, true);
+    const qint64 appId = getOrCreateAppId(entry.path(), unixTime, true);
     ok = (appId != INVALID_APP_ID);
     if (ok) {
-        const qint64 connId = createConn(
-                inbound, ipProto, localPort, remotePort, localIp, remoteIp, pid, unixTime, appId);
+        const qint64 connId = createConn(entry, unixTime, appId);
         ok = (connId > 0);
         if (ok) {
-            ok = createConnBlock(connId, blockReason);
+            ok = createConnBlock(connId, entry.blockReason());
             if (ok) {
                 if (m_connBlockIdMax > 0) {
                     m_connBlockIdMax++;
@@ -551,20 +549,19 @@ bool StatManager::updateTraffic(SqliteStmt *stmt, quint32 inBytes, quint32 outBy
     return m_sqliteDb->done(stmt);
 }
 
-qint64 StatManager::createConn(bool inbound, quint8 ipProto, quint16 localPort, quint16 remotePort,
-        quint32 localIp, quint32 remoteIp, quint32 pid, qint64 unixTime, qint64 appId)
+qint64 StatManager::createConn(const LogEntryBlockedIp &entry, qint64 unixTime, qint64 appId)
 {
     SqliteStmt *stmt = getSqliteStmt(StatSql::sqlInsertConn);
 
     stmt->bindInt64(1, appId);
     stmt->bindInt64(2, unixTime);
-    stmt->bindInt(3, pid);
-    stmt->bindInt(4, inbound);
-    stmt->bindInt(5, ipProto);
-    stmt->bindInt(6, localPort);
-    stmt->bindInt(7, remotePort);
-    stmt->bindInt(8, localIp);
-    stmt->bindInt(9, remoteIp);
+    stmt->bindInt(3, entry.pid());
+    stmt->bindInt(4, entry.inbound());
+    stmt->bindInt(5, entry.ipProto());
+    stmt->bindInt(6, entry.localPort());
+    stmt->bindInt(7, entry.remotePort());
+    stmt->bindInt(8, entry.localIp());
+    stmt->bindInt(9, entry.remoteIp());
 
     if (m_sqliteDb->done(stmt)) {
         return m_sqliteDb->lastInsertRowid();
