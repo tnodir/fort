@@ -311,36 +311,7 @@ bool StatManager::logStatTraf(quint16 procCount, const quint32 *procTrafBytes, q
 
     // Delete old data
     if (isNewDay) {
-        QStmtList deleteTrafStmts;
-
-        // Traffic Hour
-        const int trafHourKeepDays = m_conf->trafHourKeepDays();
-        if (trafHourKeepDays >= 0) {
-            const qint32 oldTrafHour = trafHour - 24 * trafHourKeepDays;
-
-            deleteTrafStmts << getTrafficStmt(StatSql::sqlDeleteTrafAppHour, oldTrafHour)
-                            << getTrafficStmt(StatSql::sqlDeleteTrafHour, oldTrafHour);
-        }
-
-        // Traffic Day
-        const int trafDayKeepDays = m_conf->trafDayKeepDays();
-        if (trafDayKeepDays >= 0) {
-            const qint32 oldTrafDay = trafHour - 24 * trafDayKeepDays;
-
-            deleteTrafStmts << getTrafficStmt(StatSql::sqlDeleteTrafAppDay, oldTrafDay)
-                            << getTrafficStmt(StatSql::sqlDeleteTrafDay, oldTrafDay);
-        }
-
-        // Traffic Month
-        const int trafMonthKeepMonths = m_conf->trafMonthKeepMonths();
-        if (trafMonthKeepMonths >= 0) {
-            const qint32 oldTrafMonth = DateUtil::addUnixMonths(trafHour, -trafMonthKeepMonths);
-
-            deleteTrafStmts << getTrafficStmt(StatSql::sqlDeleteTrafAppMonth, oldTrafMonth)
-                            << getTrafficStmt(StatSql::sqlDeleteTrafMonth, oldTrafMonth);
-        }
-
-        doStmtList(deleteTrafStmts);
+        deleteOldTraffic(trafHour);
     }
 
     m_sqliteDb->commitTransaction();
@@ -507,6 +478,40 @@ bool StatManager::deleteAppId(qint64 appId)
     SqliteStmt *stmt = getIdStmt(StatSql::sqlDeleteAppId, appId);
 
     return m_sqliteDb->done(stmt);
+}
+
+void StatManager::deleteOldTraffic(qint32 trafHour)
+{
+    QStmtList deleteTrafStmts;
+
+    // Traffic Hour
+    const int trafHourKeepDays = m_conf->trafHourKeepDays();
+    if (trafHourKeepDays >= 0) {
+        const qint32 oldTrafHour = trafHour - 24 * trafHourKeepDays;
+
+        deleteTrafStmts << getTrafficStmt(StatSql::sqlDeleteTrafAppHour, oldTrafHour)
+                        << getTrafficStmt(StatSql::sqlDeleteTrafHour, oldTrafHour);
+    }
+
+    // Traffic Day
+    const int trafDayKeepDays = m_conf->trafDayKeepDays();
+    if (trafDayKeepDays >= 0) {
+        const qint32 oldTrafDay = trafHour - 24 * trafDayKeepDays;
+
+        deleteTrafStmts << getTrafficStmt(StatSql::sqlDeleteTrafAppDay, oldTrafDay)
+                        << getTrafficStmt(StatSql::sqlDeleteTrafDay, oldTrafDay);
+    }
+
+    // Traffic Month
+    const int trafMonthKeepMonths = m_conf->trafMonthKeepMonths();
+    if (trafMonthKeepMonths >= 0) {
+        const qint32 oldTrafMonth = DateUtil::addUnixMonths(trafHour, -trafMonthKeepMonths);
+
+        deleteTrafStmts << getTrafficStmt(StatSql::sqlDeleteTrafAppMonth, oldTrafMonth)
+                        << getTrafficStmt(StatSql::sqlDeleteTrafMonth, oldTrafMonth);
+    }
+
+    doStmtList(deleteTrafStmts);
 }
 
 void StatManager::getStatAppList(QStringList &list, QVector<qint64> &appIds)

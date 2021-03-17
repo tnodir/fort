@@ -87,6 +87,8 @@ private:
     qint64 getOrCreateAppId(const QString &appPath, qint64 unixTime = 0, bool blocked = false);
     bool deleteAppId(qint64 appId);
 
+    void deleteOldTraffic(qint32 trafHour);
+
     void updateTrafficList(const QStmtList &insertStmtList, const QStmtList &updateStmtList,
             quint32 inBytes, quint32 outBytes, qint64 appId = 0);
 
