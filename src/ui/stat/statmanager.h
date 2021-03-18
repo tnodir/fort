@@ -94,8 +94,10 @@ private:
 
     bool updateTraffic(SqliteStmt *stmt, quint32 inBytes, quint32 outBytes, qint64 appId = 0);
 
-    qint64 createConn(const LogEntryBlockedIp &entry, qint64 unixTime, qint64 appId);
-    bool createConnBlock(qint64 connId, quint8 blockReason);
+    qint64 insertConn(const LogEntryBlockedIp &entry, qint64 unixTime, qint64 appId);
+    qint64 insertConnBlock(qint64 connId, quint8 blockReason);
+
+    bool createConnBlock(const LogEntryBlockedIp &entry, qint64 unixTime, qint64 appId);
     void deleteRangeConnBlock(qint64 rowIdFrom, qint64 rowIdTo);
 
     void deleteAppStmtList(const QStmtList &stmtList, SqliteStmt *stmtAppList);

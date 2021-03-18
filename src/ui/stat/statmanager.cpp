@@ -339,18 +339,7 @@ bool StatManager::logBlockedIp(const LogEntryBlockedIp &entry, qint64 unixTime)
     const qint64 appId = getOrCreateAppId(entry.path(), unixTime, true);
     ok = (appId != INVALID_APP_ID);
     if (ok) {
-        const qint64 connId = createConn(entry, unixTime, appId);
-        ok = (connId > 0);
-        if (ok) {
-            ok = createConnBlock(connId, entry.blockReason());
-            if (ok) {
-                if (m_connBlockIdMax > 0) {
-                    m_connBlockIdMax++;
-                } else {
-                    m_connBlockIdMin = m_connBlockIdMax = 1;
-                }
-            }
-        }
+        ok = createConnBlock(entry, unixTime, appId);
     }
 
     m_sqliteDb->endTransaction(ok);
@@ -554,7 +543,7 @@ bool StatManager::updateTraffic(SqliteStmt *stmt, quint32 inBytes, quint32 outBy
     return m_sqliteDb->done(stmt);
 }
 
-qint64 StatManager::createConn(const LogEntryBlockedIp &entry, qint64 unixTime, qint64 appId)
+qint64 StatManager::insertConn(const LogEntryBlockedIp &entry, qint64 unixTime, qint64 appId)
 {
     SqliteStmt *stmt = getSqliteStmt(StatSql::sqlInsertConn);
 
@@ -575,14 +564,37 @@ qint64 StatManager::createConn(const LogEntryBlockedIp &entry, qint64 unixTime, 
     return 0;
 }
 
-bool StatManager::createConnBlock(qint64 connId, quint8 blockReason)
+qint64 StatManager::insertConnBlock(qint64 connId, quint8 blockReason)
 {
     SqliteStmt *stmt = getSqliteStmt(StatSql::sqlInsertConnBlock);
 
     stmt->bindInt64(1, connId);
     stmt->bindInt(2, blockReason);
 
-    return m_sqliteDb->done(stmt);
+    if (m_sqliteDb->done(stmt)) {
+        return m_sqliteDb->lastInsertRowid();
+    }
+
+    return 0;
+}
+
+bool StatManager::createConnBlock(const LogEntryBlockedIp &entry, qint64 unixTime, qint64 appId)
+{
+    const qint64 connId = insertConn(entry, unixTime, appId);
+    if (connId <= 0)
+        return false;
+
+    const qint64 connBlockId = insertConnBlock(connId, entry.blockReason());
+    if (connBlockId <= 0)
+        return false;
+
+    if (m_connBlockIdMax > 0) {
+        m_connBlockIdMax++;
+    } else {
+        m_connBlockIdMin = m_connBlockIdMax = 1;
+    }
+
+    return true;
 }
 
 void StatManager::deleteRangeConnBlock(qint64 rowIdFrom, qint64 rowIdTo)
