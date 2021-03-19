@@ -13,6 +13,8 @@
 extern "C" {
 #endif
 
+FORT_API DWORD fort_prov_trans_close(HANDLE transEngine, DWORD status);
+
 FORT_API void fort_prov_unregister(HANDLE transEngine);
 
 FORT_API void fort_prov_flow_unregister(HANDLE transEngine);
