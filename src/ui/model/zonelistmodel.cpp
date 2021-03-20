@@ -59,34 +59,45 @@ QVariant ZoneListModel::data(const QModelIndex &index, int role) const
     switch (role) {
     // Label
     case Qt::DisplayRole:
-    case Qt::ToolTipRole: {
-        const int row = index.row();
-        const int column = index.column();
+    case Qt::ToolTipRole:
+        return dataDisplay(index);
 
-        const auto zoneRow = zoneRowAt(row);
-
-        switch (column) {
-        case 0:
-            return QString("%1) %2").arg(QString::number(m_zoneRow.zoneId), zoneRow.zoneName);
-        case 1: {
-            const auto zoneSource = ZoneSourceWrapper(zoneSourceByCode(zoneRow.sourceCode));
-            return zoneSource.title();
-        }
-        case 2:
-            return zoneRow.lastRun;
-        case 3:
-            return zoneRow.lastSuccess;
-        }
-
-        break;
+    // Enabled
+    case Qt::CheckStateRole:
+        return dataDisplay(index);
     }
 
-    case Qt::CheckStateRole:
-        if (index.column() == 0) {
-            const auto zoneRow = zoneRowAt(index.row());
-            return zoneRow.enabled;
-        }
-        break;
+    return QVariant();
+}
+
+QVariant ZoneListModel::dataDisplay(const QModelIndex &index) const
+{
+    const int row = index.row();
+    const int column = index.column();
+
+    const auto zoneRow = zoneRowAt(row);
+
+    switch (column) {
+    case 0:
+        return QString("%1) %2").arg(QString::number(m_zoneRow.zoneId), zoneRow.zoneName);
+    case 1: {
+        const auto zoneSource = ZoneSourceWrapper(zoneSourceByCode(zoneRow.sourceCode));
+        return zoneSource.title();
+    }
+    case 2:
+        return zoneRow.lastRun;
+    case 3:
+        return zoneRow.lastSuccess;
+    }
+
+    return QVariant();
+}
+
+QVariant ZoneListModel::dataCheckState(const QModelIndex &index) const
+{
+    if (index.column() == 0) {
+        const auto zoneRow = zoneRowAt(index.row());
+        return zoneRow.enabled;
     }
 
     return QVariant();

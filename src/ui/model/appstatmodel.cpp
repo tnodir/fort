@@ -113,30 +113,38 @@ QVariant AppStatModel::data(const QModelIndex &index, int role) const
         QVariant();
 
     // Label
-    if (role == Qt::DisplayRole || role == Qt::ToolTipRole) {
-        const int row = index.row();
-        if (row == 0)
-            return tr("All");
-
-        const auto appPath = list().at(row);
-        const auto appInfo = appInfoCache()->appInfo(appPath);
-        if (!appInfo.fileDescription.isEmpty()) {
-            return appInfo.fileDescription;
-        }
-
-        return FileUtil::fileName(appPath);
-    }
+    if (role == Qt::DisplayRole || role == Qt::ToolTipRole)
+        return dataDisplay(index);
 
     // Icon
-    if (role == Qt::DecorationRole) {
-        const int row = index.row();
-        if (row == 0) {
-            return IconCache::icon(":/images/computer-96.png");
-        }
-
-        const auto appPath = list().at(row);
-        return appInfoCache()->appIcon(appPath);
-    }
+    if (role == Qt::DecorationRole)
+        return dataDecoration(index);
 
     return StringListModel::data(index, role);
+}
+
+QVariant AppStatModel::dataDisplay(const QModelIndex &index) const
+{
+    const int row = index.row();
+    if (row == 0)
+        return tr("All");
+
+    const auto appPath = list().at(row);
+    const auto appInfo = appInfoCache()->appInfo(appPath);
+    if (!appInfo.fileDescription.isEmpty()) {
+        return appInfo.fileDescription;
+    }
+
+    return FileUtil::fileName(appPath);
+}
+
+QVariant AppStatModel::dataDecoration(const QModelIndex &index) const
+{
+    const int row = index.row();
+    if (row == 0) {
+        return IconCache::icon(":/images/computer-96.png");
+    }
+
+    const auto appPath = list().at(row);
+    return appInfoCache()->appIcon(appPath);
 }

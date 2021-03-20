@@ -57,32 +57,13 @@ QVariant TaskListModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     switch (role) {
-    case Qt::DisplayRole: {
-        const int row = index.row();
-        const int column = index.column();
-
-        const auto taskInfo = taskInfoAt(row);
-
-        switch (column) {
-        case 0:
-            return taskInfo->title();
-        case 1:
-            return taskIntervalHours(row);
-        case 2:
-            return formatDateTime(taskInfo->lastRun());
-        case 3:
-            return formatDateTime(taskInfo->lastSuccess());
-        }
-
-        break;
-    }
+    case Qt::DisplayRole:
+    case Qt::ToolTipRole:
+        return dataDisplay(index);
 
     case Qt::CheckStateRole:
     case RoleEnabled:
-        if (index.column() == 0) {
-            return taskEnabled(index.row());
-        }
-        break;
+        return dataCheckState(index);
 
     case RoleIntervalHours:
         return taskIntervalHours(index.row());
@@ -91,6 +72,36 @@ QVariant TaskListModel::data(const QModelIndex &index, int role) const
         const auto taskInfo = taskInfoAt(index.row());
         return taskInfo->running();
     }
+    }
+
+    return QVariant();
+}
+
+QVariant TaskListModel::dataDisplay(const QModelIndex &index) const
+{
+    const int row = index.row();
+    const int column = index.column();
+
+    const auto taskInfo = taskInfoAt(row);
+
+    switch (column) {
+    case 0:
+        return taskInfo->title();
+    case 1:
+        return taskIntervalHours(row);
+    case 2:
+        return formatDateTime(taskInfo->lastRun());
+    case 3:
+        return formatDateTime(taskInfo->lastSuccess());
+    }
+
+    return QVariant();
+}
+
+QVariant TaskListModel::dataCheckState(const QModelIndex &index) const
+{
+    if (index.column() == 0) {
+        return taskEnabled(index.row());
     }
 
     return QVariant();

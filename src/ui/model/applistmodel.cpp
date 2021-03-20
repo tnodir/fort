@@ -104,118 +104,137 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
     switch (role) {
     // Label
     case Qt::DisplayRole:
-    case Qt::ToolTipRole: {
-        const int row = index.row();
-        const int column = index.column();
+    case Qt::ToolTipRole:
+        return dataDisplay(index, role);
 
+    // Icon
+    case Qt::DecorationRole:
+        return dataDecoration(index);
+
+    // Font
+    case Qt::FontRole:
+        return dataFont(index);
+
+    // Foreground
+    case Qt::ForegroundRole:
+        return dataForeground(index);
+
+    // Text Alignment
+    case Qt::TextAlignmentRole:
+        return dataTextAlignment(index);
+    }
+
+    return QVariant();
+}
+
+QVariant AppListModel::dataDisplay(const QModelIndex &index, int role) const
+{
+    const int row = index.row();
+    const int column = index.column();
+
+    const auto appRow = appRowAt(row);
+
+    switch (column) {
+    case 0: {
+        auto appName = appRow.appName;
+        if (appName.isEmpty()) {
+            const auto appInfo = appInfoCache()->appInfo(appRow.appPath);
+            appName = !appInfo.fileDescription.isEmpty() ? appInfo.fileDescription
+                                                         : FileUtil::fileName(appRow.appPath);
+
+            if (appInfo.isValid()) {
+                confManager()->updateAppName(appRow.appId, appName);
+            }
+        }
+        return appName;
+    }
+    case 1:
+        return appGroupAt(appRow.groupIndex)->name();
+    case 2: {
+        if (appRow.alerted)
+            return tr("Alert");
+        if (appRow.blocked)
+            return tr("Block");
+        return tr("Allow");
+    }
+    case 3:
+        return (role == Qt::DisplayRole || appRow.endTime.isNull()) ? QVariant() : appRow.endTime;
+    case 4:
+        return appRow.creatTime;
+    }
+
+    return QVariant();
+}
+
+QVariant AppListModel::dataDecoration(const QModelIndex &index) const
+{
+    const int column = index.column();
+
+    if (column == 0 || column == 2 || column == 3) {
+        const int row = index.row();
         const auto appRow = appRowAt(row);
 
         switch (column) {
-        case 0: {
-            auto appName = appRow.appName;
-            if (appName.isEmpty()) {
-                const auto appInfo = appInfoCache()->appInfo(appRow.appPath);
-                appName = !appInfo.fileDescription.isEmpty() ? appInfo.fileDescription
-                                                             : FileUtil::fileName(appRow.appPath);
-
-                if (appInfo.isValid()) {
-                    confManager()->updateAppName(appRow.appId, appName);
-                }
-            }
-            return appName;
-        }
-        case 1:
-            return appGroupAt(appRow.groupIndex)->name();
-        case 2: {
-            if (appRow.alerted)
-                return tr("Alert");
-            if (appRow.blocked)
-                return tr("Block");
-            return tr("Allow");
-        }
+        case 0:
+            return appInfoCache()->appIcon(appRow.appPath);
+        case 2:
+            return appRow.blocked ? IconCache::icon(":/icons/sign-ban.png")
+                                  : IconCache::icon(":/icons/sign-check.png");
         case 3:
-            return (role == Qt::DisplayRole || appRow.endTime.isNull()) ? QVariant()
-                                                                        : appRow.endTime;
-        case 4:
-            return appRow.creatTime;
+            return appRow.endTime.isNull() ? QVariant() : IconCache::icon(":/icons/clock.png");
         }
-
-        break;
     }
 
-    // Icon
-    case Qt::DecorationRole: {
-        const int column = index.column();
+    return QVariant();
+}
 
-        if (column == 0 || column == 2 || column == 3) {
-            const int row = index.row();
-            const auto appRow = appRowAt(row);
+QVariant AppListModel::dataFont(const QModelIndex &index) const
+{
+    const int column = index.column();
 
-            switch (column) {
-            case 0:
-                return appInfoCache()->appIcon(appRow.appPath);
-            case 2:
-                return appRow.blocked ? IconCache::icon(":/icons/sign-ban.png")
-                                      : IconCache::icon(":/icons/sign-check.png");
-            case 3:
-                return appRow.endTime.isNull() ? QVariant() : IconCache::icon(":/icons/clock.png");
-            }
-        }
-
-        break;
+    if (column == 2) {
+        QFont font;
+        font.setWeight(QFont::DemiBold);
+        return font;
     }
 
-    // Font
-    case Qt::FontRole: {
-        const int column = index.column();
+    return QVariant();
+}
 
-        if (column == 2) {
-            QFont font;
-            font.setWeight(QFont::DemiBold);
-            return font;
+QVariant AppListModel::dataForeground(const QModelIndex &index) const
+{
+    const int column = index.column();
+
+    if (column == 1 || column == 2) {
+        const int row = index.row();
+        const auto appRow = appRowAt(row);
+
+        switch (column) {
+        case 1: {
+            if (!appRow.useGroupPerm)
+                return inactiveColor;
+            if (!appGroupAt(appRow.groupIndex)->enabled())
+                return blockColor;
+            break;
         }
-
-        break;
+        case 2:
+            if (appRow.alerted)
+                return alertColor;
+            if (appRow.blocked)
+                return blockColor;
+            return allowColor;
+        }
     }
 
-    // Foreground
-    case Qt::ForegroundRole: {
-        const int column = index.column();
+    return QVariant();
+}
 
-        if (column == 1 || column == 2) {
-            const int row = index.row();
-            const auto appRow = appRowAt(row);
+QVariant AppListModel::dataTextAlignment(const QModelIndex &index) const
+{
+    const int column = index.column();
 
-            switch (column) {
-            case 1: {
-                if (!appRow.useGroupPerm)
-                    return inactiveColor;
-                if (!appGroupAt(appRow.groupIndex)->enabled())
-                    return blockColor;
-                break;
-            }
-            case 2:
-                if (appRow.alerted)
-                    return alertColor;
-                if (appRow.blocked)
-                    return blockColor;
-                return allowColor;
-            }
-        }
-
-        break;
-    }
-
-    // Text Alignment
-    case Qt::TextAlignmentRole: {
-        const int column = index.column();
-
-        if (column == 1) {
-            return int(Qt::AlignHCenter | Qt::AlignVCenter);
-        }
-
-        break;
-    }
+    if (column == 1) {
+        return int(Qt::AlignHCenter | Qt::AlignVCenter);
     }
 
     return QVariant();

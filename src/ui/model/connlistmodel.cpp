@@ -104,6 +104,25 @@ QVariant ConnListModel::headerData(int section, Qt::Orientation orientation, int
     return QVariant();
 }
 
+QVariant ConnListModel::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid())
+        return QVariant();
+
+    switch (role) {
+    // Label
+    case Qt::DisplayRole:
+    case Qt::ToolTipRole:
+        return dataDisplay(index, role);
+
+    // Icon
+    case Qt::DecorationRole:
+        return dataDecoration(index);
+    }
+
+    return QVariant();
+}
+
 QVariant ConnListModel::dataDisplay(const QModelIndex &index, int role) const
 {
     const int row = index.row();
@@ -159,25 +178,6 @@ QVariant ConnListModel::dataDecoration(const QModelIndex &index) const
             return connRow.blocked ? IconCache::icon(":/icons/sign-ban.png")
                                    : IconCache::icon(":/icons/sign-check.png");
         }
-    }
-
-    return QVariant();
-}
-
-QVariant ConnListModel::data(const QModelIndex &index, int role) const
-{
-    if (!index.isValid())
-        return QVariant();
-
-    switch (role) {
-    // Label
-    case Qt::DisplayRole:
-    case Qt::ToolTipRole:
-        return dataDisplay(index, role);
-
-    // Icon
-    case Qt::DecorationRole:
-        return dataDecoration(index);
     }
 
     return QVariant();

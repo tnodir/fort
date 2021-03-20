@@ -61,7 +61,7 @@ QVariant TrafListModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    if (role == Qt::DisplayRole) {
+    if (role == Qt::DisplayRole || role == Qt::ToolTipRole) {
         const int row = index.row();
         const int column = index.column();
 

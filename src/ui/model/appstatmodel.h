@@ -44,6 +44,9 @@ private slots:
 private:
     void updateList();
 
+    QVariant dataDisplay(const QModelIndex &index) const;
+    QVariant dataDecoration(const QModelIndex &index) const;
+
 private:
     StatManager *m_statManager = nullptr;
     TrafListModel *m_trafListModel = nullptr;

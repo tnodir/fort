@@ -81,6 +81,9 @@ protected:
     QString sqlBase() const override;
 
 private:
+    QVariant dataDisplay(const QModelIndex &index) const;
+    QVariant dataCheckState(const QModelIndex &index) const;
+
     void initZoneTypes();
     void initZoneSources();
     void initZoneSourceNames();

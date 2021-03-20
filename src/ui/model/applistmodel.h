@@ -75,6 +75,13 @@ protected:
     QString sqlOrderColumn() const override;
 
 private:
+    QVariant dataDisplay(const QModelIndex &index, int role) const;
+    QVariant dataDecoration(const QModelIndex &index) const;
+    QVariant dataFont(const QModelIndex &index) const;
+    QVariant dataForeground(const QModelIndex &index) const;
+    QVariant dataTextAlignment(const QModelIndex &index) const;
+
+private:
     ConfManager *m_confManager = nullptr;
     AppInfoCache *m_appInfoCache = nullptr;
 

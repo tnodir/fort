@@ -49,6 +49,9 @@ public slots:
     void saveChanges();
 
 private:
+    QVariant dataDisplay(const QModelIndex &index) const;
+    QVariant dataCheckState(const QModelIndex &index) const;
+
     void setupTaskRows();
     void clearTaskRows();
 
