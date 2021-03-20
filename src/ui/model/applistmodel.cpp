@@ -135,19 +135,8 @@ QVariant AppListModel::dataDisplay(const QModelIndex &index, int role) const
     const auto appRow = appRowAt(row);
 
     switch (column) {
-    case 0: {
-        auto appName = appRow.appName;
-        if (appName.isEmpty()) {
-            const auto appInfo = appInfoCache()->appInfo(appRow.appPath);
-            appName = !appInfo.fileDescription.isEmpty() ? appInfo.fileDescription
-                                                         : FileUtil::fileName(appRow.appPath);
-
-            if (appInfo.isValid()) {
-                confManager()->updateAppName(appRow.appId, appName);
-            }
-        }
-        return appName;
-    }
+    case 0:
+        return getAppName(appRow);
     case 1:
         return appGroupAt(appRow.groupIndex)->name();
     case 2: {
@@ -238,6 +227,21 @@ QVariant AppListModel::dataTextAlignment(const QModelIndex &index) const
     }
 
     return QVariant();
+}
+
+QString AppListModel::getAppName(const AppRow &appRow) const
+{
+    auto appName = appRow.appName;
+    if (appName.isEmpty()) {
+        const auto appInfo = appInfoCache()->appInfo(appRow.appPath);
+        appName = !appInfo.fileDescription.isEmpty() ? appInfo.fileDescription
+                                                     : FileUtil::fileName(appRow.appPath);
+
+        if (appInfo.isValid()) {
+            confManager()->updateAppName(appRow.appId, appName);
+        }
+    }
+    return appName;
 }
 
 const AppRow &AppListModel::appRowAt(int row) const

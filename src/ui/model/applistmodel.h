@@ -81,6 +81,8 @@ private:
     QVariant dataForeground(const QModelIndex &index) const;
     QVariant dataTextAlignment(const QModelIndex &index) const;
 
+    QString getAppName(const AppRow &appRow) const;
+
 private:
     ConfManager *m_confManager = nullptr;
     AppInfoCache *m_appInfoCache = nullptr;
