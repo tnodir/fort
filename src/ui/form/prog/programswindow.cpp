@@ -166,70 +166,13 @@ void ProgramsWindow::setupUi()
 
 void ProgramsWindow::setupAppEditForm()
 {
-    auto formLayout = new QFormLayout();
-
-    // App Path
-    auto pathLayout = new QHBoxLayout();
-
-    m_editPath = new QLineEdit();
-
-    m_btSelectFile = ControlUtil::createLinkButton(":/icons/folder-open.png");
-
-    pathLayout->addWidget(m_editPath);
-    pathLayout->addWidget(m_btSelectFile);
-
-    formLayout->addRow("Program Path:", pathLayout);
-    m_labelEditPath = qobject_cast<QLabel *>(formLayout->labelForField(pathLayout));
-
-    // App Name
-    m_editName = new QLineEdit();
-
-    formLayout->addRow("Program Name:", m_editName);
-    m_labelEditName = qobject_cast<QLabel *>(formLayout->labelForField(m_editName));
-
-    // App Group
-    setupComboAppGroups();
-
-    formLayout->addRow("Application Group:", m_comboAppGroup);
-    m_labelAppGroup = qobject_cast<QLabel *>(formLayout->labelForField(m_comboAppGroup));
-
-    // Use Group Perm.
-    m_cbUseGroupPerm = new QCheckBox();
-
-    formLayout->addRow(QString(), m_cbUseGroupPerm);
+    auto formLayout = setupAppEditFormAppLayout();
 
     // Allow/Block
-    auto allowLayout = new QHBoxLayout();
-    allowLayout->setSpacing(20);
-
-    m_rbAllowApp = new QRadioButton();
-    m_rbAllowApp->setIcon(IconCache::icon(":/icons/sign-check.png"));
-    m_rbAllowApp->setChecked(true);
-
-    m_rbBlockApp = new QRadioButton();
-    m_rbBlockApp->setIcon(IconCache::icon(":/icons/sign-ban.png"));
-
-    allowLayout->addWidget(m_rbAllowApp, 1, Qt::AlignRight);
-    allowLayout->addWidget(m_rbBlockApp, 1, Qt::AlignLeft);
-
-    // Block after N hours
-    m_cscBlockAppIn = new CheckSpinCombo();
-    m_cscBlockAppIn->spinBox()->setRange(1, 24 * 30 * 12); // ~Year
-    m_cscBlockAppIn->setValues(appBlockInHourValues);
-    m_cscBlockAppIn->setNamesByValues();
+    auto allowLayout = setupAppEditFormAllowLayout();
 
     // Block at specified date & time
     auto blockAtLayout = setupCheckDateTimeEdit();
-
-    // Allow Forever
-    m_cbBlockAppNone = new QCheckBox();
-
-    // Eclusive End Time CheckBoxes Group
-    auto group = new QButtonGroup(this);
-    group->setExclusive(true);
-    group->addButton(m_cscBlockAppIn->checkBox());
-    group->addButton(m_cbBlockAppAt);
-    group->addButton(m_cbBlockAppNone);
 
     // OK/Cancel
     auto buttonsLayout = new QHBoxLayout();
@@ -283,6 +226,43 @@ void ProgramsWindow::setupAppEditForm()
     connect(m_btEditCancel, &QAbstractButton::clicked, m_formAppEdit, &QWidget::close);
 }
 
+QLayout *ProgramsWindow::setupAppEditFormAppLayout()
+{
+    auto formLayout = new QFormLayout();
+
+    // App Path
+    auto pathLayout = new QHBoxLayout();
+
+    m_editPath = new QLineEdit();
+
+    m_btSelectFile = ControlUtil::createLinkButton(":/icons/folder-open.png");
+
+    pathLayout->addWidget(m_editPath);
+    pathLayout->addWidget(m_btSelectFile);
+
+    formLayout->addRow("Program Path:", pathLayout);
+    m_labelEditPath = qobject_cast<QLabel *>(formLayout->labelForField(pathLayout));
+
+    // App Name
+    m_editName = new QLineEdit();
+
+    formLayout->addRow("Program Name:", m_editName);
+    m_labelEditName = qobject_cast<QLabel *>(formLayout->labelForField(m_editName));
+
+    // App Group
+    setupComboAppGroups();
+
+    formLayout->addRow("Application Group:", m_comboAppGroup);
+    m_labelAppGroup = qobject_cast<QLabel *>(formLayout->labelForField(m_comboAppGroup));
+
+    // Use Group Perm.
+    m_cbUseGroupPerm = new QCheckBox();
+
+    formLayout->addRow(QString(), m_cbUseGroupPerm);
+
+    return formLayout;
+}
+
 void ProgramsWindow::setupComboAppGroups()
 {
     m_comboAppGroup = new QComboBox();
@@ -299,6 +279,40 @@ void ProgramsWindow::setupComboAppGroups()
     refreshComboAppGroups();
 
     connect(confManager(), &ConfManager::confSaved, this, refreshComboAppGroups);
+}
+
+QLayout *ProgramsWindow::setupAppEditFormAllowLayout()
+{
+    auto allowLayout = new QHBoxLayout();
+    allowLayout->setSpacing(20);
+
+    m_rbAllowApp = new QRadioButton();
+    m_rbAllowApp->setIcon(IconCache::icon(":/icons/sign-check.png"));
+    m_rbAllowApp->setChecked(true);
+
+    m_rbBlockApp = new QRadioButton();
+    m_rbBlockApp->setIcon(IconCache::icon(":/icons/sign-ban.png"));
+
+    allowLayout->addWidget(m_rbAllowApp, 1, Qt::AlignRight);
+    allowLayout->addWidget(m_rbBlockApp, 1, Qt::AlignLeft);
+
+    // Block after N hours
+    m_cscBlockAppIn = new CheckSpinCombo();
+    m_cscBlockAppIn->spinBox()->setRange(1, 24 * 30 * 12); // ~Year
+    m_cscBlockAppIn->setValues(appBlockInHourValues);
+    m_cscBlockAppIn->setNamesByValues();
+
+    // Allow Forever
+    m_cbBlockAppNone = new QCheckBox();
+
+    // Eclusive End Time CheckBoxes Group
+    auto group = new QButtonGroup(this);
+    group->setExclusive(true);
+    group->addButton(m_cscBlockAppIn->checkBox());
+    group->addButton(m_cbBlockAppAt);
+    group->addButton(m_cbBlockAppNone);
+
+    return allowLayout;
 }
 
 QLayout *ProgramsWindow::setupCheckDateTimeEdit()

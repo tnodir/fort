@@ -43,7 +43,9 @@ private:
 
     void setupUi();
     void setupAppEditForm();
+    QLayout *setupAppEditFormAppLayout();
     void setupComboAppGroups();
+    QLayout *setupAppEditFormAllowLayout();
     QLayout *setupCheckDateTimeEdit();
     QLayout *setupHeader();
     void setupLogOptions();
