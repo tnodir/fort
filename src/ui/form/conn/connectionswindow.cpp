@@ -192,7 +192,7 @@ void ConnectionsWindow::setupLogAllowedIp()
         fortManager()->applyConfImmediateFlags();
     });
 
-    m_cbLogAllowedIp->setVisible(false); // TODO
+    m_cbLogAllowedIp->setVisible(false); // TODO: Collect allowed connections
 }
 
 void ConnectionsWindow::setupLogBlockedIp()
@@ -239,7 +239,7 @@ void ConnectionsWindow::setupTableConnList()
     m_connListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_connListView->setSelectionBehavior(QAbstractItemView::SelectItems);
 
-    // TODO: Add ability to select the allowed/blocked mode from UI
+    // TODO: Select the allowed/blocked mode from UI
     connListModel()->setBlockedMode(true);
 
     m_connListView->setModel(connListModel());

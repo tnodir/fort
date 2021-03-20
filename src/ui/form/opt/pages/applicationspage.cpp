@@ -445,7 +445,7 @@ void ApplicationsPage::setupGroupLogConn()
         ctrl()->setConfEdited(true);
     });
 
-    m_cbLogConn->setVisible(false); // TODO
+    m_cbLogConn->setVisible(false); // TODO: Collect allowed connections
 }
 
 void ApplicationsPage::setupGroupFragmentPacket()

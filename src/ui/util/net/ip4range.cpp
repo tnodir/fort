@@ -66,7 +66,7 @@ bool Ip4Range::fromText(const QString &text)
 
 bool Ip4Range::fromList(const StringViewList &list, int emptyNetMask, bool sort)
 {
-    Q_UNUSED(sort); // TODO
+    Q_UNUSED(sort); // TODO: Sort parsed IPv4 addresses
 
     clear();
 

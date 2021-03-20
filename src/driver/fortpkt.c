@@ -111,7 +111,8 @@ static PFORT_PACKET fort_defer_packet_get(PFORT_DEFER defer)
         const tommy_size_t size = tommy_arrayof_size(&defer->packets);
 
         /* TODO: tommy_arrayof_grow(): check calloc()'s result for NULL */
-        tommy_arrayof_grow(&defer->packets, size + 1);
+        if (tommy_arrayof_grow(&defer->packets, size + 1), 0)
+            return NULL;
 
         pkt = tommy_arrayof_ref(&defer->packets, size);
     }
