@@ -124,8 +124,10 @@ FORT_API FORT_APP_FLAGS fort_conf_app_exe_find(
     FORT_APP_FLAGS app_flags;
     UINT16 count = conf->exe_apps_n;
 
+    app_flags.v = 0;
+
     if (count == 0)
-        goto not_found;
+        return app_flags;
 
     const char *data = conf->data;
     const char *app_entries = (const char *) (data + conf->exe_apps_off);
@@ -135,16 +137,12 @@ FORT_API FORT_APP_FLAGS fort_conf_app_exe_find(
 
         if (fort_conf_app_exe_equal(app_entry, path, path_len)) {
             app_flags = app_entry->flags;
-            goto end;
+            break;
         }
 
         app_entries += FORT_CONF_APP_ENTRY_SIZE(app_entry->path_len);
     } while (--count != 0);
 
-not_found:
-    app_flags.v = 0;
-
-end:
     return app_flags;
 }
 
@@ -165,8 +163,10 @@ static FORT_APP_FLAGS fort_conf_app_prefix_find(
     FORT_APP_FLAGS app_flags;
     const UINT16 count = conf->prefix_apps_n;
 
+    app_flags.v = 0;
+
     if (count == 0)
-        goto not_found;
+        return app_flags;
 
     const char *data = conf->data;
     const UINT32 *app_offsets = (const UINT32 *) (data + conf->prefix_apps_off);
@@ -187,14 +187,10 @@ static FORT_APP_FLAGS fort_conf_app_prefix_find(
             low = mid + 1;
         else {
             app_flags = app_entry->flags;
-            goto end;
+            break;
         }
     } while (low <= high);
 
-not_found:
-    app_flags.v = 0;
-
-end:
     return app_flags;
 }
 
@@ -203,8 +199,10 @@ static FORT_APP_FLAGS fort_conf_app_wild_find(const PFORT_CONF conf, const char 
     FORT_APP_FLAGS app_flags;
     UINT16 count = conf->wild_apps_n;
 
+    app_flags.v = 0;
+
     if (count == 0)
-        goto not_found;
+        return app_flags;
 
     const char *data = conf->data;
     const char *app_entries = (const char *) (data + conf->wild_apps_off);
@@ -216,16 +214,12 @@ static FORT_APP_FLAGS fort_conf_app_wild_find(const PFORT_CONF conf, const char 
 
         if (res == WM_MATCH) {
             app_flags = app_entry->flags;
-            goto end;
+            break;
         }
 
         app_entries += FORT_CONF_APP_ENTRY_SIZE(app_entry->path_len);
     } while (--count != 0);
 
-not_found:
-    app_flags.v = 0;
-
-end:
     return app_flags;
 }
 
@@ -236,16 +230,13 @@ FORT_API FORT_APP_FLAGS fort_conf_app_find(const PFORT_CONF conf, const char *pa
 
     app_flags = exe_find_func(conf, path, path_len);
     if (app_flags.v != 0)
-        goto end;
+        return app_flags;
 
     app_flags = fort_conf_app_prefix_find(conf, path, path_len);
     if (app_flags.v != 0)
-        goto end;
+        return app_flags;
 
-    app_flags = fort_conf_app_wild_find(conf, path);
-
-end:
-    return app_flags;
+    return fort_conf_app_wild_find(conf, path);
 }
 
 FORT_API BOOL fort_conf_app_blocked(
