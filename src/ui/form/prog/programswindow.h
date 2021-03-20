@@ -57,6 +57,8 @@ private:
 
     void updateAppEditForm(bool editCurrentApp);
     bool saveAppEditForm();
+    bool saveAppEditFormMulti(const QString &appPath, const QString &appName,
+            const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool blocked);
 
     void updateApp(int row, bool blocked);
     void deleteApp(int row);

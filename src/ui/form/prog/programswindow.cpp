@@ -562,6 +562,12 @@ bool ProgramsWindow::saveAppEditForm()
     }
 
     // Edit selected apps
+    return saveAppEditFormMulti(appPath, appName, endTime, groupIndex, useGroupPerm, blocked);
+}
+
+bool ProgramsWindow::saveAppEditFormMulti(const QString &appPath, const QString &appName,
+        const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool blocked)
+{
     const auto rows = m_appListView->selectedRows();
     const bool isSingleSelection = (rows.size() == 1);
 
@@ -589,12 +595,10 @@ bool ProgramsWindow::saveAppEditForm()
     for (int row : rows) {
         const auto appRow = appListModel()->appRowAt(row);
 
-        if (!isSingleSelection) {
-            appPath = appRow.appPath;
-            appName = appRow.appName;
-        }
+        const auto rowAppPath = isSingleSelection ? appPath : appRow.appPath;
+        const auto rowAppName = isSingleSelection ? appName : appRow.appName;
 
-        if (!appListModel()->updateApp(appRow.appId, appPath, appName, endTime, groupIndex,
+        if (!appListModel()->updateApp(appRow.appId, rowAppPath, rowAppName, endTime, groupIndex,
                     useGroupPerm, blocked, updateDriver))
             return false;
     }
