@@ -96,6 +96,8 @@ private:
     bool loadFromDb(FirewallConf &conf, bool &isNew);
     bool saveToDb(const FirewallConf &conf);
 
+    bool removeAppGroupsInDb(const FirewallConf &conf);
+
     bool loadTask(TaskInfo *taskInfo);
     bool saveTask(TaskInfo *taskInfo);
 

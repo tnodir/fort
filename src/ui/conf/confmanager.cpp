@@ -859,29 +859,34 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
             goto end;
     }
 
-    ok = true;
-
     // Remove App Groups
-    {
-        Q_ASSERT(!conf.appGroups().isEmpty());
-        const auto defaultAppGroupId = conf.appGroups().at(0)->id();
-
-        for (AppGroup *appGroup : conf.removedAppGroupsList()) {
-            m_sqliteDb->executeEx(sqlUpdateAppResetGroup,
-                    QVariantList() << appGroup->id() << defaultAppGroupId, 0, &ok);
-            if (!ok)
-                goto end;
-
-            m_sqliteDb->executeEx(sqlDeleteAppGroup, QVariantList() << appGroup->id(), 0, &ok);
-            if (!ok)
-                goto end;
-        }
-
-        conf.clearRemovedAppGroups();
-    }
+    ok = removeAppGroupsInDb(conf);
 
 end:
     return checkResult(ok, true);
+}
+
+bool ConfManager::removeAppGroupsInDb(const FirewallConf &conf)
+{
+    Q_ASSERT(!conf.appGroups().isEmpty());
+    const auto defaultAppGroupId = conf.appGroups().at(0)->id();
+
+    for (AppGroup *appGroup : conf.removedAppGroupsList()) {
+        bool ok;
+
+        m_sqliteDb->executeEx(sqlUpdateAppResetGroup,
+                QVariantList() << appGroup->id() << defaultAppGroupId, 0, &ok);
+        if (!ok)
+            return false;
+
+        m_sqliteDb->executeEx(sqlDeleteAppGroup, QVariantList() << appGroup->id(), 0, &ok);
+        if (!ok)
+            return false;
+    }
+
+    conf.clearRemovedAppGroups();
+
+    return true;
 }
 
 bool ConfManager::loadTask(TaskInfo *taskInfo)
