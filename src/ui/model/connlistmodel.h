@@ -86,6 +86,9 @@ protected:
     QString sqlLimitOffset() const override;
 
 private:
+    QVariant dataDisplay(const QModelIndex &index, int role) const;
+    QVariant dataDecoration(const QModelIndex &index) const;
+
     qint64 rowIdMin() const;
     qint64 rowIdMax() const;
 

@@ -104,6 +104,66 @@ QVariant ConnListModel::headerData(int section, Qt::Orientation orientation, int
     return QVariant();
 }
 
+QVariant ConnListModel::dataDisplay(const QModelIndex &index, int role) const
+{
+    const int row = index.row();
+    const int column = index.column();
+
+    const auto connRow = connRowAt(row);
+
+    switch (column) {
+    case 0: {
+        const auto appInfo = appInfoCache()->appInfo(connRow.appPath);
+        const auto appName = !appInfo.fileDescription.isEmpty()
+                ? appInfo.fileDescription
+                : FileUtil::fileName(connRow.appPath);
+        return appName;
+    }
+    case 1:
+        return connRow.pid;
+    case 2:
+        return NetUtil::protocolName(connRow.ipProto);
+    case 3:
+        return formatIpPort(connRow.localIp, connRow.localPort);
+    case 4:
+        return formatIpPort(connRow.remoteIp, connRow.remotePort);
+    case 5: {
+        if (role == Qt::ToolTipRole) {
+            if (connRow.blocked) {
+                // Show block reason in tool-tip
+                const auto blockRow = getConnRowBlock(connRow.rowId);
+                return LogEntryBlockedIp::reasonToString(blockRow.blockReason);
+            }
+        }
+        return connRow.inbound ? tr("In") : tr("Out");
+    }
+    case 6:
+        return connRow.connTime;
+    }
+
+    return QVariant();
+}
+
+QVariant ConnListModel::dataDecoration(const QModelIndex &index) const
+{
+    const int column = index.column();
+
+    if (column == 0 || column == 5) {
+        const int row = index.row();
+        const auto connRow = connRowAt(row);
+
+        switch (column) {
+        case 0:
+            return appInfoCache()->appIcon(connRow.appPath);
+        case 5:
+            return connRow.blocked ? IconCache::icon(":/icons/sign-ban.png")
+                                   : IconCache::icon(":/icons/sign-check.png");
+        }
+    }
+
+    return QVariant();
+}
+
 QVariant ConnListModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
@@ -112,64 +172,12 @@ QVariant ConnListModel::data(const QModelIndex &index, int role) const
     switch (role) {
     // Label
     case Qt::DisplayRole:
-    case Qt::ToolTipRole: {
-        const int row = index.row();
-        const int column = index.column();
-
-        const auto connRow = connRowAt(row);
-
-        switch (column) {
-        case 0: {
-            const auto appInfo = appInfoCache()->appInfo(connRow.appPath);
-            const auto appName = !appInfo.fileDescription.isEmpty()
-                    ? appInfo.fileDescription
-                    : FileUtil::fileName(connRow.appPath);
-            return appName;
-        }
-        case 1:
-            return connRow.pid;
-        case 2:
-            return NetUtil::protocolName(connRow.ipProto);
-        case 3:
-            return formatIpPort(connRow.localIp, connRow.localPort);
-        case 4:
-            return formatIpPort(connRow.remoteIp, connRow.remotePort);
-        case 5: {
-            if (role == Qt::ToolTipRole) {
-                if (connRow.blocked) {
-                    // Show block reason in tool-tip
-                    const auto blockRow = getConnRowBlock(connRow.rowId);
-                    return LogEntryBlockedIp::reasonToString(blockRow.blockReason);
-                }
-            }
-            return connRow.inbound ? tr("In") : tr("Out");
-        }
-        case 6:
-            return connRow.connTime;
-        }
-
-        break;
-    }
+    case Qt::ToolTipRole:
+        return dataDisplay(index, role);
 
     // Icon
-    case Qt::DecorationRole: {
-        const int column = index.column();
-
-        if (column == 0 || column == 5) {
-            const int row = index.row();
-            const auto connRow = connRowAt(row);
-
-            switch (column) {
-            case 0:
-                return appInfoCache()->appIcon(connRow.appPath);
-            case 5:
-                return connRow.blocked ? IconCache::icon(":/icons/sign-ban.png")
-                                       : IconCache::icon(":/icons/sign-check.png");
-            }
-        }
-
-        break;
-    }
+    case Qt::DecorationRole:
+        return dataDecoration(index);
     }
 
     return QVariant();
