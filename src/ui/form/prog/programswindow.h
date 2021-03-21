@@ -47,6 +47,7 @@ private:
     void setupComboAppGroups();
     QLayout *setupAppEditFormAllowLayout();
     QLayout *setupCheckDateTimeEdit();
+    void setupAllowEclusiveGroup();
     QLayout *setupHeader();
     void setupLogOptions();
     void setupLogBlocked();

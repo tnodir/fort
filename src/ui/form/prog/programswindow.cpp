@@ -174,6 +174,9 @@ void ProgramsWindow::setupAppEditForm()
     // Block at specified date & time
     auto blockAtLayout = setupCheckDateTimeEdit();
 
+    // Eclusive End Time CheckBoxes Group
+    setupAllowEclusiveGroup();
+
     // OK/Cancel
     auto buttonsLayout = new QHBoxLayout();
 
@@ -305,13 +308,6 @@ QLayout *ProgramsWindow::setupAppEditFormAllowLayout()
     // Allow Forever
     m_cbBlockAppNone = new QCheckBox();
 
-    // Eclusive End Time CheckBoxes Group
-    auto group = new QButtonGroup(this);
-    group->setExclusive(true);
-    group->addButton(m_cscBlockAppIn->checkBox());
-    group->addButton(m_cbBlockAppAt);
-    group->addButton(m_cbBlockAppNone);
-
     return allowLayout;
 }
 
@@ -328,6 +324,15 @@ QLayout *ProgramsWindow::setupCheckDateTimeEdit()
     layout->addWidget(m_dteBlockAppAt);
 
     return layout;
+}
+
+void ProgramsWindow::setupAllowEclusiveGroup()
+{
+    auto group = new QButtonGroup(this);
+    group->setExclusive(true);
+    group->addButton(m_cscBlockAppIn->checkBox());
+    group->addButton(m_cbBlockAppAt);
+    group->addButton(m_cbBlockAppNone);
 }
 
 QLayout *ProgramsWindow::setupHeader()
