@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
 #endif
 
+    // QApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::Round);
     QApplication::setQuitOnLastWindowClosed(false);
 
     QApplication app(argc, argv);
