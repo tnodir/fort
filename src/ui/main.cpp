@@ -21,11 +21,6 @@
 #define FORT_ERROR_INSTANCE 1
 #define FORT_ERROR_CONTROL  2
 
-static void registerMetaTypes(void)
-{
-    qRegisterMetaType<AppInfo>("AppInfo");
-}
-
 int main(int argc, char *argv[])
 {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -68,8 +63,6 @@ int main(int argc, char *argv[])
     const auto fusionStyle = QStyleFactory::create("Fusion");
     QApplication::setStyle(fusionStyle);
     QApplication::setPalette(fusionStyle->standardPalette());
-
-    registerMetaTypes();
 
     FortManager fortManager(&fortSettings);
     fortManager.launch();
