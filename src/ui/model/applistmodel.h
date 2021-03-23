@@ -54,6 +54,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     const AppRow &appRowAt(int row) const;
+    AppRow appRowByPath(const QString &appPath) const;
 
     bool addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
             int groupIndex, bool useGroupPerm, bool blocked);
@@ -82,6 +83,8 @@ private:
     QVariant dataTextAlignment(const QModelIndex &index) const;
 
     QString getAppName(const AppRow &appRow) const;
+
+    bool updateAppRow(const QString &sql, const QVariantList &vars, AppRow &appRow) const;
 
 private:
     ConfManager *m_confManager = nullptr;

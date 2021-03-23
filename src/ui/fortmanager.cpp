@@ -368,6 +368,12 @@ void FortManager::closeProgramsWindow()
     m_progWindow = nullptr;
 }
 
+bool FortManager::showProgramEditForm(const QString &appPath)
+{
+    showProgramsWindow();
+    return m_progWindow->openAppEditFormByPath(appPath);
+}
+
 void FortManager::showOptionsWindow()
 {
     if (!(m_optWindow && m_optWindow->isVisible()) && !checkPassword())

@@ -244,11 +244,40 @@ QString AppListModel::getAppName(const AppRow &appRow) const
     return appName;
 }
 
+bool AppListModel::updateAppRow(const QString &sql, const QVariantList &vars, AppRow &appRow) const
+{
+    SqliteStmt stmt;
+    if (!(sqliteDb()->prepare(stmt, sql, vars) && stmt.step() == SqliteStmt::StepRow))
+        return false;
+
+    appRow.appId = stmt.columnInt64(0);
+    appRow.groupIndex = stmt.columnInt(1);
+    appRow.appPath = stmt.columnText(2);
+    appRow.appName = stmt.columnText(3);
+    appRow.useGroupPerm = stmt.columnBool(4);
+    appRow.blocked = stmt.columnBool(5);
+    appRow.alerted = stmt.columnBool(6);
+    appRow.endTime = stmt.columnDateTime(7);
+    appRow.creatTime = stmt.columnDateTime(8);
+
+    return true;
+}
+
 const AppRow &AppListModel::appRowAt(int row) const
 {
     updateRowCache(row);
 
     return m_appRow;
+}
+
+AppRow AppListModel::appRowByPath(const QString &appPath) const
+{
+    AppRow appRow;
+    appRow.appPath = appPath;
+
+    updateAppRow(sqlBase() + " WHERE path = ?1;", { appPath }, appRow);
+
+    return appRow;
 }
 
 bool AppListModel::addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
@@ -323,22 +352,7 @@ void AppListModel::purgeApps()
 
 bool AppListModel::updateTableRow(int row) const
 {
-    SqliteStmt stmt;
-    if (!(sqliteDb()->prepare(stmt, sql().toLatin1(), { row })
-                && stmt.step() == SqliteStmt::StepRow))
-        return false;
-
-    m_appRow.appId = stmt.columnInt64(0);
-    m_appRow.groupIndex = stmt.columnInt(1);
-    m_appRow.appPath = stmt.columnText(2);
-    m_appRow.appName = stmt.columnText(3);
-    m_appRow.useGroupPerm = stmt.columnBool(4);
-    m_appRow.blocked = stmt.columnBool(5);
-    m_appRow.alerted = stmt.columnBool(6);
-    m_appRow.endTime = stmt.columnDateTime(7);
-    m_appRow.creatTime = stmt.columnDateTime(8);
-
-    return true;
+    return updateAppRow(sql(), { row }, m_appRow);
 }
 
 QString AppListModel::sqlBase() const

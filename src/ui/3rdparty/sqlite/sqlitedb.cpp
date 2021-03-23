@@ -135,6 +135,12 @@ bool SqliteDb::prepare(SqliteStmt &stmt, const char *sql, const QVariantList &va
     return stmt.prepare(db(), sql) && (vars.isEmpty() || stmt.bindVars(vars));
 }
 
+bool SqliteDb::prepare(SqliteStmt &stmt, const QString &sql, const QVariantList &vars)
+{
+    const auto sqlData = sql.toUtf8();
+    return prepare(stmt, sqlData.constData(), vars);
+}
+
 bool SqliteDb::done(SqliteStmt *stmt)
 {
     const SqliteStmt::StepResult res = stmt->step();

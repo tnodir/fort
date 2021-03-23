@@ -221,8 +221,7 @@ bool ConnListModel::updateTableRow(int row) const
     const qint64 rowId = rowIdMin() + row;
 
     SqliteStmt stmt;
-    if (!(sqliteDb()->prepare(stmt, sql().toLatin1(), { rowId })
-                && stmt.step() == SqliteStmt::StepRow))
+    if (!(sqliteDb()->prepare(stmt, sql(), { rowId }) && stmt.step() == SqliteStmt::StepRow))
         return false;
 
     m_connRow.rowId = rowId;

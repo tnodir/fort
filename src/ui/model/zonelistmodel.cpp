@@ -238,8 +238,7 @@ QVariant ZoneListModel::zoneSourceByCode(const QString &sourceCode) const
 bool ZoneListModel::updateTableRow(int row) const
 {
     SqliteStmt stmt;
-    if (!(sqliteDb()->prepare(stmt, sql().toLatin1(), { row })
-                && stmt.step() == SqliteStmt::StepRow))
+    if (!(sqliteDb()->prepare(stmt, sql(), { row }) && stmt.step() == SqliteStmt::StepRow))
         return false;
 
     m_zoneRow.zoneId = stmt.columnInt(0);

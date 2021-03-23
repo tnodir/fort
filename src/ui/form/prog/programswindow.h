@@ -23,12 +23,16 @@ class FortSettings;
 class ProgramsController;
 class TableView;
 
+struct AppRow;
+
 class ProgramsWindow : public WidgetWindow
 {
     Q_OBJECT
 
 public:
     explicit ProgramsWindow(FortManager *fortManager, QWidget *parent = nullptr);
+
+    bool openAppEditFormByPath(const QString &appPath);
 
 protected slots:
     void onSaveWindowState();
@@ -57,6 +61,8 @@ private:
     void setupTableAppsChanged();
 
     void updateAppEditForm(bool editCurrentApp);
+    void openAppEditFormByRow(const AppRow &appRow, bool editCurrentApp, bool isSingleSelection);
+
     bool saveAppEditForm();
     bool saveAppEditFormMulti(const QString &appPath, const QString &appName,
             const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool blocked);

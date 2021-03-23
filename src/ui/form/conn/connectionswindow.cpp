@@ -72,6 +72,7 @@ void ConnectionsWindow::onRetranslateUi()
 
     m_btEdit->setText(tr("Edit"));
     m_actCopy->setText(tr("Copy"));
+    m_actAddProgram->setText(tr("Add Program"));
     m_actRemoveConn->setText(tr("Remove"));
     m_actClearConns->setText(tr("Clear All"));
 
@@ -131,6 +132,9 @@ QLayout *ConnectionsWindow::setupHeader()
     m_actCopy = editMenu->addAction(IconCache::icon(":/icons/copy.png"), QString());
     m_actCopy->setShortcut(Qt::Key_Copy);
 
+    m_actAddProgram = editMenu->addAction(IconCache::icon(":/icons/window.png"), QString());
+    m_actAddProgram->setShortcut(Qt::Key_Insert);
+
     m_actRemoveConn = editMenu->addAction(IconCache::icon(":/icons/sign-delete.png"), QString());
     m_actRemoveConn->setShortcut(Qt::Key_Delete);
 
@@ -138,6 +142,15 @@ QLayout *ConnectionsWindow::setupHeader()
 
     connect(m_actCopy, &QAction::triggered, this,
             [&] { GuiUtil::setClipboardData(m_connListView->selectedText()); });
+    connect(m_actAddProgram, &QAction::triggered, this, [&] {
+        const auto connIndex = connListCurrentIndex();
+        const auto connRow = connListModel()->connRowAt(connIndex);
+
+        if (!fortManager()->showProgramEditForm(connRow.appPath)) {
+            fortManager()->showErrorBox(
+                    tr("Please close already opened Edit Program window and try again."));
+        }
+    });
     connect(m_actRemoveConn, &QAction::triggered, this, [&] {
         if (fortManager()->showQuestionBox(
                     tr("Are you sure to remove connections till this row?"))) {
@@ -291,6 +304,7 @@ void ConnectionsWindow::setupTableConnsChanged()
         const int connIndex = connListCurrentIndex();
         const bool connSelected = (connIndex >= 0);
         m_actCopy->setEnabled(connSelected);
+        m_actAddProgram->setEnabled(connSelected);
         m_actRemoveConn->setEnabled(connSelected);
         m_appInfoRow->setVisible(connSelected);
     };

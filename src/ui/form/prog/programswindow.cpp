@@ -498,6 +498,17 @@ void ProgramsWindow::setupTableAppsChanged()
     connect(m_appListView, &TableView::currentIndexChanged, this, refreshTableAppsChanged);
 }
 
+bool ProgramsWindow::openAppEditFormByPath(const QString &appPath)
+{
+    if (m_formAppEdit->isVisible())
+        return false;
+
+    const auto appRow = appListModel()->appRowByPath(appPath);
+
+    openAppEditFormByRow(appRow, false, true);
+    return true;
+}
+
 void ProgramsWindow::updateAppEditForm(bool editCurrentApp)
 {
     bool isSingleSelection = true;
@@ -514,6 +525,12 @@ void ProgramsWindow::updateAppEditForm(bool editCurrentApp)
         appRow = appListModel()->appRowAt(appIndex);
     }
 
+    openAppEditFormByRow(appRow, editCurrentApp, isSingleSelection);
+}
+
+void ProgramsWindow::openAppEditFormByRow(
+        const AppRow &appRow, bool editCurrentApp, bool isSingleSelection)
+{
     m_formAppIsNew = !editCurrentApp;
 
     m_editPath->setText(isSingleSelection ? appRow.appPath : "*");
