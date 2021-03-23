@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.3.4, 2021-03-23:
+- UI: Connections: Add "Add Program" button.
+- UI: Update translations.
+
 v3.3.3, 2021-03-21:
 - UI: Tray: Show Connections window on mouse middle click.
 - UI: Connections: Fix state after rows deleting.
