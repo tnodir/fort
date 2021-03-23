@@ -61,7 +61,7 @@ void AppListModel::handleLogBlocked(const LogEntryBlocked &logEntry)
 {
     const QString appPath = logEntry.path();
 
-    if (confManager()->appPathExists(appPath))
+    if (confManager()->appIdByPath(appPath) > 0)
         return; // already added by user
 
     const auto groupId = appGroupAt(0)->id();

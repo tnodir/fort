@@ -48,7 +48,7 @@ public:
     bool loadTasks(const QList<TaskInfo *> &taskInfos);
     bool saveTasks(const QList<TaskInfo *> &taskInfos);
 
-    bool appPathExists(const QString &appPath);
+    qint64 appIdByPath(const QString &appPath);
     bool addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
             qint64 groupId, bool useGroupPerm, bool blocked, bool alerted = false);
     bool deleteApp(qint64 appId);

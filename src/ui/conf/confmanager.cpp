@@ -112,12 +112,15 @@ const char *const sqlSelectEndedApps = "SELECT t.app_id, t.app_group_id,"
                                        "    JOIN app_group g ON g.app_group_id = t.app_group_id"
                                        "  WHERE end_time <= ?1 AND blocked = 0;";
 
-const char *const sqlSelectAppPathExists = "SELECT 1 FROM app WHERE path = ?1;";
+const char *const sqlSelectAppIdByPath = "SELECT app_id FROM app WHERE path = ?1;";
 
-const char *const sqlInsertApp =
+const char *const sqlUpsertApp =
         "INSERT INTO app(app_group_id, path, name, use_group_perm, blocked,"
         "    creat_time, end_time)"
-        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7);";
+        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7)"
+        "  ON CONFLICT(path) DO UPDATE"
+        "  SET app_group_id = ?1, path = ?2, name = ?3, use_group_perm = ?4, blocked = ?5,"
+        "    creat_time = ?6, end_time = ?7;";
 
 const char *const sqlInsertAppAlert = "INSERT INTO app_alert(app_id)"
                                       "  VALUES(?1);";
@@ -468,9 +471,9 @@ bool ConfManager::saveTasks(const QList<TaskInfo *> &taskInfos)
     return checkResult(ok, true);
 }
 
-bool ConfManager::appPathExists(const QString &appPath)
+qint64 ConfManager::appIdByPath(const QString &appPath)
 {
-    return sqliteDb()->executeEx(sqlSelectAppPathExists, { appPath }).toBool();
+    return sqliteDb()->executeEx(sqlSelectAppIdByPath, { appPath }).toLongLong();
 }
 
 bool ConfManager::addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
@@ -484,10 +487,11 @@ bool ConfManager::addApp(const QString &appPath, const QString &appName, const Q
             << groupId << appPath << appName << useGroupPerm << blocked
             << QDateTime::currentDateTime() << (!endTime.isNull() ? endTime : QVariant());
 
-    m_sqliteDb->executeEx(sqlInsertApp, vars, 0, &ok);
+    m_sqliteDb->executeEx(sqlUpsertApp, vars, 0, &ok);
     if (ok && alerted) {
         // Alert
-        const qint64 appId = m_sqliteDb->lastInsertRowid();
+        const qint64 appId =
+                m_sqliteDb->changes() != 0 ? m_sqliteDb->lastInsertRowid() : appIdByPath(appPath);
         m_sqliteDb->executeEx(sqlInsertAppAlert, { appId }, 0, &ok);
     }
 
