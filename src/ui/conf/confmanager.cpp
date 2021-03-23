@@ -119,7 +119,7 @@ const char *const sqlUpsertApp =
         "    creat_time, end_time)"
         "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7)"
         "  ON CONFLICT(path) DO UPDATE"
-        "  SET app_group_id = ?1, path = ?2, name = ?3, use_group_perm = ?4, blocked = ?5,"
+        "  SET app_group_id = ?1, name = ?3, use_group_perm = ?4, blocked = ?5,"
         "    creat_time = ?6, end_time = ?7;";
 
 const char *const sqlInsertAppAlert = "INSERT INTO app_alert(app_id)"
