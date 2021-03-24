@@ -87,7 +87,7 @@ public slots:
     void showProgramsWindow();
     void closeProgramsWindow();
 
-    bool showProgramEditForm(const QString &appPath);
+    void showProgramEditForm(const QString &appPath);
 
     void showOptionsWindow();
     void closeOptionsWindow();

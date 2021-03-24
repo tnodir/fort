@@ -62,6 +62,7 @@ private:
 
     void updateAppEditForm(bool editCurrentApp);
     void openAppEditFormByRow(const AppRow &appRow, bool editCurrentApp, bool isSingleSelection);
+    void activateAppEditForm();
 
     bool saveAppEditForm();
     bool saveAppEditFormMulti(const QString &appPath, const QString &appName,

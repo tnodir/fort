@@ -368,10 +368,12 @@ void FortManager::closeProgramsWindow()
     m_progWindow = nullptr;
 }
 
-bool FortManager::showProgramEditForm(const QString &appPath)
+void FortManager::showProgramEditForm(const QString &appPath)
 {
     showProgramsWindow();
-    return m_progWindow->openAppEditFormByPath(appPath);
+    if (!m_progWindow->openAppEditFormByPath(appPath)) {
+        showErrorBox(tr("Please close already opened Edit Program window and try again."));
+    }
 }
 
 void FortManager::showOptionsWindow()

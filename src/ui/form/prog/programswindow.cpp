@@ -500,8 +500,10 @@ void ProgramsWindow::setupTableAppsChanged()
 
 bool ProgramsWindow::openAppEditFormByPath(const QString &appPath)
 {
-    if (m_formAppEdit->isVisible())
+    if (m_formAppEdit->isVisible()) {
+        activateAppEditForm();
         return false;
+    }
 
     const auto appRow = appListModel()->appRowByPath(appPath);
 
@@ -536,8 +538,6 @@ void ProgramsWindow::openAppEditFormByRow(
     m_editPath->setText(isSingleSelection ? appRow.appPath : "*");
     m_editPath->setReadOnly(editCurrentApp);
     m_editPath->setClearButtonEnabled(!editCurrentApp);
-    m_editPath->selectAll();
-    m_editPath->setFocus();
     m_editPath->setEnabled(isSingleSelection);
     m_btSelectFile->setEnabled(!editCurrentApp);
     m_editName->setText(isSingleSelection ? appRow.appName : QString());
@@ -554,6 +554,15 @@ void ProgramsWindow::openAppEditFormByRow(
     m_cbBlockAppNone->setChecked(appRow.endTime.isNull());
 
     m_formAppEdit->show();
+
+    activateAppEditForm();
+}
+
+void ProgramsWindow::activateAppEditForm()
+{
+    m_formAppEdit->activateWindow();
+    m_editPath->selectAll();
+    m_editPath->setFocus();
 }
 
 bool ProgramsWindow::saveAppEditForm()

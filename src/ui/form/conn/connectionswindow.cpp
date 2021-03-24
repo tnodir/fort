@@ -146,10 +146,7 @@ QLayout *ConnectionsWindow::setupHeader()
         const auto connIndex = connListCurrentIndex();
         const auto connRow = connListModel()->connRowAt(connIndex);
 
-        if (!fortManager()->showProgramEditForm(connRow.appPath)) {
-            fortManager()->showErrorBox(
-                    tr("Please close already opened Edit Program window and try again."));
-        }
+        fortManager()->showProgramEditForm(connRow.appPath);
     });
     connect(m_actRemoveConn, &QAction::triggered, this, [&] {
         if (fortManager()->showQuestionBox(
