@@ -371,6 +371,9 @@ void FortManager::closeProgramsWindow()
 void FortManager::showProgramEditForm(const QString &appPath)
 {
     showProgramsWindow();
+    if (!(m_progWindow && m_progWindow->isVisible()))
+        return; // May be not opened due to password checking
+
     if (!m_progWindow->openAppEditFormByPath(appPath)) {
         showErrorBox(tr("Please close already opened Edit Program window and try again."));
     }
