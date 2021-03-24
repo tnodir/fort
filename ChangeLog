@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.3.5, 2021-03-24:
+- Installer: Add "Add to Explorer's Context Menu" option.
+- UI: Update French translation.
+
 v3.3.4, 2021-03-23:
 - UI: Connections: Add "Add Program" button.
 - UI: Update translations.
