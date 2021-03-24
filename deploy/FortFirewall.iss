@@ -6,6 +6,8 @@
 #define APP_EXE_NAME	"FortFirewall.exe"
 #define APP_ICO_NAME	"FortFirewall.ico"
 
+#define APP_EXE		StringChange("{app}\%exe%", "%exe%", APP_EXE_NAME)
+
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
@@ -40,19 +42,32 @@ Name: ru; MessagesFile: "compiler:Languages\Russian.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; Flags: unchecked
+Name: "explorer"; Description: "Add to Explorer's Context Menu"; Flags: unchecked
 Name: "portable"; Description: "Portable"; Flags: unchecked
 
 [Files]
 Source: "build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "README.portable"; DestDir: "{app}"; Check: IsTaskSelected('portable')
 
+[Registry]
+; Explorer's Context Menu
+#define REG_SHELL_MENU	"SystemFileAssociations\.exe\Shell\Fort Firewall"
+Root: HKCR; Subkey: "{#REG_SHELL_MENU}"; Flags: deletekey uninsdeletekey
+Root: HKCR; Subkey: "{#REG_SHELL_MENU}"; ValueType: string; ValueName: "icon"; ValueData: "{#APP_EXE}"; \
+  Check: IsTaskSelected('explorer')
+Root: HKCR; Subkey: "{#REG_SHELL_MENU}"; ValueType: string; ValueName: "MUIVerb"; ValueData: "Fort Firewall ..."; \
+  Check: IsTaskSelected('explorer')
+Root: HKCR; Subkey: "{#REG_SHELL_MENU}\command"; ValueType: string; ValueData: """{#APP_EXE}"" -c prog add ""%1"""; \
+  Check: IsTaskSelected('explorer')
+
 [Icons]
 ; Start menu shortcut
-Name: "{group}\{#APP_NAME}"; Filename: "{app}\{#APP_EXE_NAME}"; WorkingDir: "{app}"; Parameters: "--lang {code:LanguageName}"
+Name: "{group}\{#APP_NAME}"; Filename: "{#APP_EXE}"; WorkingDir: "{app}"; Parameters: "--lang {code:LanguageName}"
 ; Uninstaller shortcut
 Name: "{group}\{cm:UninstallProgram,{#APP_NAME}}"; Filename: "{uninstallexe}"
 ; Desktop shortcut
-Name: "{commondesktop}\{#APP_NAME}"; Filename: "{app}\{#APP_EXE_NAME}"; WorkingDir: "{app}"; Parameters: "--lang {code:LanguageName}"; Tasks: desktopicon
+Name: "{commondesktop}\{#APP_NAME}"; Filename: "{#APP_EXE}"; WorkingDir: "{app}"; \
+  Parameters: "--lang {code:LanguageName}"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\driver\scripts\reinstall.bat"; Description: "Re-install driver"; Flags: runascurrentuser
@@ -61,7 +76,7 @@ Filename: "https://support.microsoft.com/en-us/help/2977003/the-latest-supported
 
 [UninstallRun]
 Filename: "{app}\driver\scripts\uninstall.bat"; RunOnceId: "DelDriver"; Flags: runascurrentuser
-Filename: "{app}\{#APP_EXE_NAME}"; Parameters: "-b=0"; RunOnceId: "DelProvider"; Flags: runascurrentuser
+Filename: "{#APP_EXE}"; Parameters: "-b=0"; RunOnceId: "DelProvider"; Flags: runascurrentuser
 
 [InstallDelete]
 Type: filesandordirs; Name: "{app}"

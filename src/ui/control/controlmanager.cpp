@@ -75,8 +75,8 @@ bool ControlManager::processCommand(
 {
     const int argsSize = args.size();
 
-    if (command == QLatin1String("ini")) {
-        if (argsSize < 3) {
+    if (command == "ini") {
+        if (argsSize < 2) {
             errorMessage = "ini <property> <value>";
             return false;
         }
@@ -84,8 +84,8 @@ bool ControlManager::processCommand(
         auto settings = m_fortManager->settings();
 
         settings->setProperty(args.at(0).toLatin1(), QVariant(args.at(1)));
-    } else if (command == QLatin1String("conf")) {
-        if (argsSize < 3) {
+    } else if (command == "conf") {
+        if (argsSize < 2) {
             errorMessage = "conf <property> <value>";
             return false;
         }
@@ -94,7 +94,7 @@ bool ControlManager::processCommand(
 
         const auto confPropName = args.at(0);
 
-        if (confPropName == QLatin1String("appGroup")) {
+        if (confPropName == "appGroup") {
             if (argsSize < 4) {
                 errorMessage = "conf appGroup <group-name> <property> <value>";
                 return false;
@@ -107,6 +107,22 @@ bool ControlManager::processCommand(
         }
 
         m_fortManager->saveOriginConf(tr("Control command executed"));
+    } else if (command == "prog") {
+        if (argsSize < 1) {
+            errorMessage = "prog <command>";
+            return false;
+        }
+
+        const auto progCommand = args.at(0);
+
+        if (progCommand == "add") {
+            if (argsSize < 2) {
+                errorMessage = "prog add <app-path>";
+                return false;
+            }
+
+            m_fortManager->showProgramEditForm(args.at(1));
+        }
     }
 
     return true;
