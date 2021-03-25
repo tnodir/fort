@@ -103,17 +103,6 @@ void OptionsPage::retranslateDriverMessage()
 
 void OptionsPage::setupUi()
 {
-    // Main Layout
-    auto mainLayout = setupMainLayout();
-
-    // Scroll Area
-    auto scrollLayout = ControlUtil::createScrollLayout(mainLayout);
-
-    this->setLayout(scrollLayout);
-}
-
-QLayout *OptionsPage::setupMainLayout()
-{
     // Column #1
     auto colLayout1 = setupColumn1();
 
@@ -127,7 +116,7 @@ QLayout *OptionsPage::setupMainLayout()
     layout->addLayout(colLayout2);
     layout->addStretch();
 
-    return layout;
+    this->setLayout(layout);
 }
 
 QLayout *OptionsPage::setupColumn1()

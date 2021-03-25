@@ -24,7 +24,6 @@ private:
     void retranslateDriverMessage();
 
     void setupUi();
-    QLayout *setupMainLayout();
     QLayout *setupColumn1();
     void setupStartupBox();
     void setupTrafficBox();

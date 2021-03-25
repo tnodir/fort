@@ -148,21 +148,28 @@ QLayout *ControlUtil::createScrollLayout(QLayout *content, bool isBgTransparent)
     auto scrollAreaContent = new QWidget();
     scrollAreaContent->setLayout(content);
 
-    auto scrollArea = new QScrollArea();
-    scrollArea->setContentsMargins(0, 0, 0, 0);
-    scrollArea->setWidgetResizable(true);
-    scrollArea->setWidget(scrollAreaContent);
-
-    if (isBgTransparent) {
-        scrollArea->setStyleSheet("QScrollArea { background: transparent; }");
-        scrollAreaContent->setStyleSheet(".QWidget { background: transparent; }");
-    }
+    auto scrollArea = wrapToScrollArea(scrollAreaContent, isBgTransparent);
 
     auto layout = new QHBoxLayout();
     layout->setContentsMargins(0, 0, 0, 0);
     layout->addWidget(scrollArea);
 
     return layout;
+}
+
+QWidget *ControlUtil::wrapToScrollArea(QWidget *content, bool isBgTransparent)
+{
+    auto c = new QScrollArea();
+    c->setContentsMargins(0, 0, 0, 0);
+    c->setWidgetResizable(true);
+    c->setWidget(content);
+
+    if (isBgTransparent) {
+        c->setStyleSheet("QScrollArea { background: transparent; }");
+        content->setAutoFillBackground(false);
+    }
+
+    return c;
 }
 
 QFont ControlUtil::fontDemiBold()

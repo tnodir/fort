@@ -39,7 +39,9 @@ public:
     static QBoxLayout *createLayoutByWidgets(
             const QList<QWidget *> &widgets, Qt::Orientation o = Qt::Vertical);
     static QFrame *createSeparator(Qt::Orientation o = Qt::Horizontal);
+
     static QLayout *createScrollLayout(QLayout *content, bool isBgTransparent = true);
+    static QWidget *wrapToScrollArea(QWidget *content, bool isBgTransparent = true);
 
     static QFont fontDemiBold();
 

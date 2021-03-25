@@ -2,6 +2,7 @@
 
 #include <QIcon>
 #include <QPushButton>
+#include <QScrollArea>
 #include <QTabWidget>
 #include <QUrl>
 #include <QVBoxLayout>
@@ -61,19 +62,19 @@ void MainPage::setupTabBar()
 {
     m_tabBar = new QTabWidget();
 
-    m_optionsPage = new OptionsPage(ctrl());
-    m_addressesPage = new AddressesPage(ctrl());
-    m_rulesPage = new RulesPage(ctrl());
-    m_applicationsPage = new ApplicationsPage(ctrl());
-    m_statisticsPage = new StatisticsPage(ctrl());
-    m_schedulePage = new SchedulePage(ctrl());
+    auto optionsPage = ControlUtil::wrapToScrollArea(new OptionsPage(ctrl()));
+    auto addressesPage = new AddressesPage(ctrl());
+    auto rulesPage = new RulesPage(ctrl());
+    auto applicationsPage = new ApplicationsPage(ctrl());
+    auto statisticsPage = new StatisticsPage(ctrl());
+    auto schedulePage = new SchedulePage(ctrl());
 
-    m_tabBar->addTab(m_optionsPage, IconCache::icon(":/icons/cog.png"), QString());
-    m_tabBar->addTab(m_addressesPage, IconCache::icon(":/icons/map-marker.png"), QString());
-    m_tabBar->addTab(m_rulesPage, IconCache::icon(":/icons/task-list.png"), QString());
-    m_tabBar->addTab(m_applicationsPage, IconCache::icon(":/icons/window.png"), QString());
-    m_tabBar->addTab(m_statisticsPage, IconCache::icon(":/icons/database.png"), QString());
-    m_tabBar->addTab(m_schedulePage, IconCache::icon(":/icons/clock.png"), QString());
+    m_tabBar->addTab(optionsPage, IconCache::icon(":/icons/cog.png"), QString());
+    m_tabBar->addTab(addressesPage, IconCache::icon(":/icons/map-marker.png"), QString());
+    m_tabBar->addTab(rulesPage, IconCache::icon(":/icons/task-list.png"), QString());
+    m_tabBar->addTab(applicationsPage, IconCache::icon(":/icons/window.png"), QString());
+    m_tabBar->addTab(statisticsPage, IconCache::icon(":/icons/database.png"), QString());
+    m_tabBar->addTab(schedulePage, IconCache::icon(":/icons/clock.png"), QString());
 
     m_tabBar->setTabVisible(2, false); // TODO: Impl. Network Rules
 }
