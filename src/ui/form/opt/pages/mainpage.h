@@ -24,6 +24,7 @@ protected slots:
 
 private:
     void setupUi();
+    void setupTabBar();
     QLayout *setupDialogButtons();
     void setupOkApplyButtons();
 

@@ -24,8 +24,16 @@ private:
     void retranslateDriverMessage();
 
     void setupUi();
+    QLayout *setupMainLayout();
+    QLayout *setupColumn1();
+    void setupStartupBox();
+    void setupTrafficBox();
+    void setupGlobalBox();
+    QLayout *setupPasswordLayout();
     void setupEditPassword();
+    QLayout *setupLangLayout();
     void setupComboLanguage();
+    QLayout *setupColumn2();
     void setupDriverBox();
     void setupDriverIcon();
     void setupNewVersionBox();

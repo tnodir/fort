@@ -103,16 +103,76 @@ void OptionsPage::retranslateDriverMessage()
 
 void OptionsPage::setupUi()
 {
-    // Column #1
-    auto colLayout1 = new QVBoxLayout();
-    colLayout1->setSpacing(10);
+    // Main Layout
+    auto mainLayout = setupMainLayout();
 
+    // Scroll Area
+    auto scrollLayout = ControlUtil::createScrollLayout(mainLayout);
+
+    this->setLayout(scrollLayout);
+}
+
+QLayout *OptionsPage::setupMainLayout()
+{
+    // Column #1
+    auto colLayout1 = setupColumn1();
+
+    // Column #2
+    auto colLayout2 = setupColumn2();
+
+    // Main layout
+    auto layout = new QHBoxLayout();
+    layout->addLayout(colLayout1);
+    layout->addStretch();
+    layout->addLayout(colLayout2);
+    layout->addStretch();
+
+    return layout;
+}
+
+QLayout *OptionsPage::setupColumn1()
+{
+    auto layout = new QVBoxLayout();
+    layout->setSpacing(10);
+
+    m_cbHotKeys = ControlUtil::createCheckBox(
+            settings()->hotKeyEnabled(), [&](bool) { setIniEdited(true); });
+
+    // Startup Group Box
+    setupStartupBox();
+    layout->addWidget(m_gbStartup);
+
+    // Traffic Group Box
+    setupTrafficBox();
+    layout->addWidget(m_gbTraffic);
+
+    // Global Group Box
+    setupGlobalBox();
+    layout->addWidget(m_gbGlobal);
+
+    layout->addStretch();
+
+    return layout;
+}
+
+void OptionsPage::setupStartupBox()
+{
     m_cbStart = ControlUtil::createCheckBox(
             settings()->startWithWindows(), [&](bool) { setIniEdited(true); });
     m_cbProvBoot = ControlUtil::createCheckBox(conf()->provBoot(), [&](bool checked) {
         conf()->setProvBoot(checked);
         ctrl()->setConfFlagsEdited(true);
     });
+
+    m_gbStartup = new QGroupBox(this);
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_cbStart);
+    layout->addWidget(m_cbProvBoot);
+    m_gbStartup->setLayout(layout);
+}
+
+void OptionsPage::setupTrafficBox()
+{
     m_cbFilterEnabled = ControlUtil::createCheckBox(conf()->filterEnabled(), [&](bool checked) {
         conf()->setFilterEnabled(checked);
         ctrl()->setConfFlagsEdited(true);
@@ -133,29 +193,40 @@ void OptionsPage::setupUi()
         conf()->setAllowAllNew(checked);
         ctrl()->setConfFlagsEdited(true);
     });
+
+    m_gbTraffic = new QGroupBox(this);
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_cbFilterEnabled);
+    layout->addWidget(m_cbFilterLocals);
+    layout->addWidget(m_cbStopTraffic);
+    layout->addWidget(m_cbStopInetTraffic);
+    layout->addWidget(m_cbAllowAllNew);
+    m_gbTraffic->setLayout(layout);
+}
+
+void OptionsPage::setupGlobalBox()
+{
     m_cbHotKeys = ControlUtil::createCheckBox(
             settings()->hotKeyEnabled(), [&](bool) { setIniEdited(true); });
 
-    m_gbStartup = new QGroupBox(this);
-    auto startupLayout = new QVBoxLayout();
-    startupLayout->addWidget(m_cbStart);
-    startupLayout->addWidget(m_cbProvBoot);
-    m_gbStartup->setLayout(startupLayout);
-    colLayout1->addWidget(m_gbStartup);
-
-    m_gbTraffic = new QGroupBox(this);
-    auto trafficLayout = new QVBoxLayout();
-    trafficLayout->addWidget(m_cbFilterEnabled);
-    trafficLayout->addWidget(m_cbFilterLocals);
-    trafficLayout->addWidget(m_cbStopTraffic);
-    trafficLayout->addWidget(m_cbStopInetTraffic);
-    trafficLayout->addWidget(m_cbAllowAllNew);
-    m_gbTraffic->setLayout(trafficLayout);
-    colLayout1->addWidget(m_gbTraffic);
-
     // Password Row
-    auto passwordLayout = new QHBoxLayout();
-    passwordLayout->setSpacing(6);
+    auto passwordLayout = setupPasswordLayout();
+
+    // Language Row
+    auto langLayout = setupLangLayout();
+
+    m_gbGlobal = new QGroupBox(this);
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_cbHotKeys);
+    layout->addLayout(passwordLayout);
+    layout->addLayout(langLayout);
+    m_gbGlobal->setLayout(layout);
+}
+
+QLayout *OptionsPage::setupPasswordLayout()
+{
+    auto layout = new QHBoxLayout();
+    layout->setSpacing(6);
 
     m_cbPassword = ControlUtil::createCheckBox(settings()->hasPassword(), [&](bool checked) {
         if (checked) {
@@ -169,51 +240,10 @@ void OptionsPage::setupUi()
 
     setupEditPassword();
 
-    passwordLayout->addWidget(m_cbPassword);
-    passwordLayout->addWidget(m_editPassword);
+    layout->addWidget(m_cbPassword);
+    layout->addWidget(m_editPassword);
 
-    // Language Row
-    auto langLayout = new QHBoxLayout();
-    langLayout->setSpacing(10);
-
-    m_labelLanguage = ControlUtil::createLabel();
-
-    setupComboLanguage();
-
-    langLayout->addWidget(m_labelLanguage);
-    langLayout->addWidget(m_comboLanguage);
-
-    m_gbGlobal = new QGroupBox(this);
-    auto globalLayout = new QVBoxLayout();
-    globalLayout->addWidget(m_cbHotKeys);
-    globalLayout->addLayout(passwordLayout);
-    globalLayout->addLayout(langLayout);
-    m_gbGlobal->setLayout(globalLayout);
-    colLayout1->addWidget(m_gbGlobal);
-
-    colLayout1->addStretch();
-
-    // Column #2
-    auto colLayout2 = new QVBoxLayout();
-    colLayout2->setSpacing(10);
-
-    setupDriverBox();
-
-    setupNewVersionBox();
-    setupNewVersionUpdate();
-
-    colLayout2->addWidget(m_gbDriver);
-    colLayout2->addWidget(m_gbNewVersion);
-    colLayout2->addStretch();
-
-    // Main layout
-    auto layout = new QHBoxLayout();
-    layout->addLayout(colLayout1);
-    layout->addStretch();
-    layout->addLayout(colLayout2);
-    layout->addStretch();
-
-    this->setLayout(layout);
+    return layout;
 }
 
 void OptionsPage::setupEditPassword()
@@ -235,6 +265,21 @@ void OptionsPage::setupEditPassword()
     connect(m_cbPassword, &QCheckBox::toggled, this, refreshEditPassword);
 }
 
+QLayout *OptionsPage::setupLangLayout()
+{
+    auto layout = new QHBoxLayout();
+    layout->setSpacing(10);
+
+    m_labelLanguage = ControlUtil::createLabel();
+
+    setupComboLanguage();
+
+    layout->addWidget(m_labelLanguage);
+    layout->addWidget(m_comboLanguage);
+
+    return layout;
+}
+
 void OptionsPage::setupComboLanguage()
 {
     m_comboLanguage =
@@ -252,6 +297,23 @@ void OptionsPage::setupComboLanguage()
     refreshComboLanguage();
 
     connect(translationManager(), &TranslationManager::languageChanged, this, refreshComboLanguage);
+}
+
+QLayout *OptionsPage::setupColumn2()
+{
+    auto layout = new QVBoxLayout();
+    layout->setSpacing(10);
+
+    setupDriverBox();
+
+    setupNewVersionBox();
+    setupNewVersionUpdate();
+
+    layout->addWidget(m_gbDriver);
+    layout->addWidget(m_gbNewVersion);
+    layout->addStretch();
+
+    return layout;
 }
 
 void OptionsPage::setupDriverBox()

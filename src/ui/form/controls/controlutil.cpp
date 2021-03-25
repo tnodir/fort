@@ -9,6 +9,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QScrollArea>
 #include <QToolButton>
 #include <QWidgetAction>
 
@@ -140,6 +141,28 @@ QFrame *ControlUtil::createSeparator(Qt::Orientation o)
     c->setFrameShape(o == Qt::Horizontal ? QFrame::HLine : QFrame::VLine);
     c->setFrameShadow(QFrame::Sunken);
     return c;
+}
+
+QLayout *ControlUtil::createScrollLayout(QLayout *content, bool isBgTransparent)
+{
+    auto scrollAreaContent = new QWidget();
+    scrollAreaContent->setLayout(content);
+
+    auto scrollArea = new QScrollArea();
+    scrollArea->setContentsMargins(0, 0, 0, 0);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setWidget(scrollAreaContent);
+
+    if (isBgTransparent) {
+        scrollArea->setStyleSheet("QScrollArea { background: transparent; }");
+        scrollAreaContent->setStyleSheet(".QWidget { background: transparent; }");
+    }
+
+    auto layout = new QHBoxLayout();
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->addWidget(scrollArea);
+
+    return layout;
 }
 
 QFont ControlUtil::fontDemiBold()

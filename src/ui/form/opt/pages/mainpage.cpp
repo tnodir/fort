@@ -47,8 +47,19 @@ void MainPage::setupUi()
     layout->setContentsMargins(6, 6, 6, 6);
 
     // Main Tab Bar
-    m_tabBar = new QTabWidget();
+    setupTabBar();
     layout->addWidget(m_tabBar);
+
+    // Dialog butons
+    auto buttonsLayout = setupDialogButtons();
+    layout->addLayout(buttonsLayout);
+
+    this->setLayout(layout);
+}
+
+void MainPage::setupTabBar()
+{
+    m_tabBar = new QTabWidget();
 
     m_optionsPage = new OptionsPage(ctrl());
     m_addressesPage = new AddressesPage(ctrl());
@@ -65,12 +76,6 @@ void MainPage::setupUi()
     m_tabBar->addTab(m_schedulePage, IconCache::icon(":/icons/clock.png"), QString());
 
     m_tabBar->setTabVisible(2, false); // TODO: Impl. Network Rules
-
-    // Dialog butons
-    auto buttonsLayout = setupDialogButtons();
-    layout->addLayout(buttonsLayout);
-
-    this->setLayout(layout);
 }
 
 QLayout *MainPage::setupDialogButtons()
