@@ -91,7 +91,7 @@ public:
             const QString &sourceFilePath, SQLITEDB_MIGRATE_FUNC migrateFunc, void *migrateContext);
 
 private:
-    quint32 m_openFlags = 0;
+    quint32 m_openFlags = OpenDefault;
     sqlite3 *m_db = nullptr;
     QString m_filePath;
 };

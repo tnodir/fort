@@ -60,8 +60,6 @@ void MainPage::setupUi()
 
 void MainPage::setupTabBar()
 {
-    m_tabBar = new QTabWidget();
-
     auto optionsPage = ControlUtil::wrapToScrollArea(new OptionsPage(ctrl()));
     auto addressesPage = new AddressesPage(ctrl());
     auto rulesPage = new RulesPage(ctrl());
@@ -69,6 +67,7 @@ void MainPage::setupTabBar()
     auto statisticsPage = new StatisticsPage(ctrl());
     auto schedulePage = new SchedulePage(ctrl());
 
+    m_tabBar = new QTabWidget();
     m_tabBar->addTab(optionsPage, IconCache::icon(":/icons/cog.png"), QString());
     m_tabBar->addTab(addressesPage, IconCache::icon(":/icons/map-marker.png"), QString());
     m_tabBar->addTab(rulesPage, IconCache::icon(":/icons/task-list.png"), QString());
