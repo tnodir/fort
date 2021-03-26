@@ -47,18 +47,16 @@ Name: "portable"; Description: "Portable"; Flags: unchecked
 
 [Files]
 Source: "build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "README.portable"; DestDir: "{app}"; Check: IsTaskSelected('portable')
+Source: "FortFirewall.exe.example.ini"; DestDir: "{app}"
+Source: "README.portable"; DestDir: "{app}"; Tasks: portable
 
 [Registry]
 ; Explorer's Context Menu
 #define REG_SHELL_MENU	"SystemFileAssociations\.exe\Shell\Fort Firewall"
 Root: HKCR; Subkey: "{#REG_SHELL_MENU}"; Flags: deletekey uninsdeletekey
-Root: HKCR; Subkey: "{#REG_SHELL_MENU}"; ValueType: string; ValueName: "icon"; ValueData: "{#APP_EXE}"; \
-  Check: IsTaskSelected('explorer')
-Root: HKCR; Subkey: "{#REG_SHELL_MENU}"; ValueType: string; ValueName: "MUIVerb"; ValueData: "Fort Firewall ..."; \
-  Check: IsTaskSelected('explorer')
-Root: HKCR; Subkey: "{#REG_SHELL_MENU}\command"; ValueType: string; ValueData: """{#APP_EXE}"" -c prog add ""%1"""; \
-  Check: IsTaskSelected('explorer')
+Root: HKCR; Subkey: "{#REG_SHELL_MENU}"; ValueType: string; ValueName: "icon"; ValueData: "{#APP_EXE}"; Tasks: explorer
+Root: HKCR; Subkey: "{#REG_SHELL_MENU}"; ValueType: string; ValueName: "MUIVerb"; ValueData: "Fort Firewall ..."; Tasks: explorer
+Root: HKCR; Subkey: "{#REG_SHELL_MENU}\command"; ValueType: string; ValueData: """{#APP_EXE}"" -c prog add ""%1"""; Tasks: explorer
 
 [Icons]
 ; Start menu shortcut
@@ -79,7 +77,12 @@ Filename: "{app}\driver\scripts\uninstall.bat"; RunOnceId: "DelDriver"; Flags: r
 Filename: "{#APP_EXE}"; Parameters: "-b=0"; RunOnceId: "DelProvider"; Flags: runascurrentuser
 
 [InstallDelete]
-Type: filesandordirs; Name: "{app}"
+Type: filesandordirs; Name: "{app}\driver"
+Type: filesandordirs; Name: "{app}\i18n"
+Type: filesandordirs; Name: "{app}\plugins"
+Type: files; Name: "{app}\curl*.*"
+Type: files; Name: "{app}\qt*.*"
+Type: files; Name: "{app}\README*.*"
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}"

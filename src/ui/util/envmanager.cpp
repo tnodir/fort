@@ -3,7 +3,12 @@
 #include <QRegularExpression>
 #include <QSettings>
 
-EnvManager::EnvManager(QObject *parent) : QObject(parent) { }
+#include "fileutil.h"
+
+EnvManager::EnvManager(QObject *parent) : QObject(parent)
+{
+    setCachedEnvVar("FORTHOME", FileUtil::appBinLocation());
+}
 
 QString EnvManager::expandString(const QString &text)
 {

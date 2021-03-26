@@ -90,7 +90,9 @@ void debugStatTraf(SqliteDb *sqliteDb)
 TEST_F(StatTest, DbWriteRead)
 {
     QStringList args("test");
-    FortSettings fortSettings(args);
+    FortSettings fortSettings;
+    fortSettings.initialize(args);
+
     QuotaManager quotaManager(&fortSettings);
     StatManager statManager(":memory:", &quotaManager);
 

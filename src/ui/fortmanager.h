@@ -40,7 +40,7 @@ public:
     enum TrayMessageType { MessageOptions, MessageZones };
     Q_ENUM(TrayMessageType)
 
-    explicit FortManager(FortSettings *settings, QObject *parent = nullptr);
+    explicit FortManager(FortSettings *settings, EnvManager *envManager, QObject *parent = nullptr);
     ~FortManager() override;
     CLASS_DELETE_COPY_MOVE(FortManager)
 
@@ -48,9 +48,9 @@ public:
     FirewallConf *confToEdit() const;
 
     FortSettings *settings() const { return m_settings; }
+    EnvManager *envManager() const { return m_envManager; }
     ConfManager *confManager() const { return m_confManager; }
     DriverManager *driverManager() const { return m_driverManager; }
-    EnvManager *envManager() const { return m_envManager; }
     LogManager *logManager() const { return m_logManager; }
     TaskManager *taskManager() const { return m_taskManager; }
     AppListModel *appListModel() const { return m_appListModel; }
@@ -230,10 +230,10 @@ private:
     QList<QAction *> m_appGroupActions;
 
     FortSettings *m_settings = nullptr;
+    EnvManager *m_envManager = nullptr;
     QuotaManager *m_quotaManager = nullptr;
     StatManager *m_statManager = nullptr;
     DriverManager *m_driverManager = nullptr;
-    EnvManager *m_envManager = nullptr;
     ConfManager *m_confManager = nullptr;
     LogManager *m_logManager = nullptr;
     NativeEventFilter *m_nativeEventFilter = nullptr;

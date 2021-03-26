@@ -10,12 +10,10 @@
 #include <fort_version.h>
 
 #include "control/controlmanager.h"
-#include "control/controlworker.h"
-#include "driver/drivermanager.h"
 #include "fortcommon.h"
 #include "fortmanager.h"
 #include "fortsettings.h"
-#include "util/app/appinfo.h"
+#include "util/envmanager.h"
 #include "util/osutil.h"
 
 #define FORT_ERROR_INSTANCE 1
@@ -23,11 +21,15 @@
 
 int main(int argc, char *argv[])
 {
+    FortSettings fortSettings;
+
+    // Process global settings required before QApplication costruction
+    fortSettings.setupGlobal();
+
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
 #endif
 
-    // QApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::Round);
     QApplication::setQuitOnLastWindowClosed(false);
 
     QApplication app(argc, argv);
@@ -35,7 +37,10 @@ int main(int argc, char *argv[])
     QApplication::setApplicationVersion(APP_VERSION_STR);
     QApplication::setApplicationDisplayName(APP_NAME " v" APP_VERSION_STR);
 
-    FortSettings fortSettings(QCoreApplication::arguments());
+    EnvManager envManager;
+
+    // Initialize with command line arguments
+    fortSettings.initialize(QCoreApplication::arguments(), &envManager);
 
     // Unregister booted provider and exit
     if (fortSettings.hasProvBoot()) {
@@ -65,7 +70,7 @@ int main(int argc, char *argv[])
     QApplication::setStyle(fusionStyle);
     QApplication::setPalette(fusionStyle->standardPalette());
 
-    FortManager fortManager(&fortSettings);
+    FortManager fortManager(&fortSettings, &envManager);
     fortManager.launch();
 
 #ifdef USE_CONTROL_COMMANDS

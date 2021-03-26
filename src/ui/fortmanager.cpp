@@ -50,7 +50,7 @@
 #include "util/stringutil.h"
 #include "util/window/widgetwindowstatewatcher.h"
 
-FortManager::FortManager(FortSettings *fortSettings, QObject *parent) :
+FortManager::FortManager(FortSettings *fortSettings, EnvManager *envManager, QObject *parent) :
     QObject(parent),
     m_trayIcon(new QSystemTrayIcon(this)),
     m_progWindowState(new WidgetWindowStateWatcher(this)),
@@ -59,10 +59,10 @@ FortManager::FortManager(FortSettings *fortSettings, QObject *parent) :
     m_graphWindowState(new WidgetWindowStateWatcher(this)),
     m_connWindowState(new WidgetWindowStateWatcher(this)),
     m_settings(fortSettings),
+    m_envManager(envManager),
     m_quotaManager(new QuotaManager(fortSettings, this)),
     m_statManager(new StatManager(fortSettings->statFilePath(), m_quotaManager, this)),
     m_driverManager(new DriverManager(this)),
-    m_envManager(new EnvManager(this)),
     m_confManager(new ConfManager(fortSettings->confFilePath(), this, this)),
     m_logManager(new LogManager(this, this)),
     m_nativeEventFilter(new NativeEventFilter(this)),

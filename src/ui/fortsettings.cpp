@@ -9,9 +9,20 @@
 #include "conf/addressgroup.h"
 #include "conf/firewallconf.h"
 #include "util/dateutil.h"
+#include "util/envmanager.h"
 #include "util/fileutil.h"
 
-FortSettings::FortSettings(const QStringList &args, QObject *parent) :
+namespace {
+
+QString expandPath(const QString &path, EnvManager *envManager = nullptr)
+{
+    const auto expPath = envManager ? envManager->expandString(path) : path;
+    return FileUtil::pathSlash(FileUtil::absolutePath(expPath));
+}
+
+}
+
+FortSettings::FortSettings(QObject *parent) :
     QObject(parent),
     m_iniExists(false),
     m_isPortable(false),
@@ -20,8 +31,6 @@ FortSettings::FortSettings(const QStringList &args, QObject *parent) :
     m_bulkUpdating(false),
     m_bulkIniChanged(false)
 {
-    processArguments(args);
-    setupIni();
 }
 
 QString FortSettings::appUpdatesUrl() const
@@ -53,7 +62,32 @@ void FortSettings::setStartWithWindows(bool start)
     emit startWithWindowsChanged();
 }
 
-void FortSettings::processArguments(const QStringList &args)
+void FortSettings::setupGlobal()
+{
+    // Use global settings from program's working directory.
+    const QSettings settings("FortFirewall.exe.ini", QSettings::IniFormat);
+
+    // High-DPI scale factor rounding policy
+    const auto dpiPolicy = settings.value("global/dpiPolicy").toString();
+    if (!dpiPolicy.isEmpty()) {
+        qputenv("QT_SCALE_FACTOR_ROUNDING_POLICY", dpiPolicy.toLatin1());
+    }
+
+    m_noCache = settings.value("global/noCache").toBool();
+    m_defaultLanguage = settings.value("global/defaultLanguage").toString();
+    m_profilePath = settings.value("global/profileDir").toString();
+    m_statPath = settings.value("global/statDir").toString();
+    m_logsPath = settings.value("global/logsDir").toString();
+    m_cachePath = settings.value("global/cacheDir").toString();
+}
+
+void FortSettings::initialize(const QStringList &args, EnvManager *envManager)
+{
+    processArguments(args, envManager);
+    setupIni();
+}
+
+void FortSettings::processArguments(const QStringList &args, EnvManager *envManager)
 {
     QCommandLineParser parser;
 
@@ -100,44 +134,56 @@ void FortSettings::processArguments(const QStringList &args)
     m_isPortable = FileUtil::fileExists(FileUtil::appBinLocation() + "/README.portable");
 
     // No Cache
-    m_noCache = parser.isSet(noCacheOption);
+    if (parser.isSet(noCacheOption)) {
+        m_noCache = true;
+    }
 
     // Provider Boot
     m_hasProvBoot = parser.isSet(provBootOption);
 
     // Default Language
-    m_defaultLanguage = parser.value(langOption);
+    if (parser.isSet(langOption)) {
+        m_defaultLanguage = parser.value(langOption);
+    }
 
     // Profile Path
-    m_profilePath = parser.value(profileOption);
+    if (parser.isSet(profileOption)) {
+        m_profilePath = parser.value(profileOption);
+    }
     if (m_profilePath.isEmpty()) {
         m_profilePath =
                 m_isPortable ? FileUtil::appBinLocation() + "/Data" : FileUtil::appConfigLocation();
     }
-    m_profilePath = FileUtil::pathSlash(FileUtil::absolutePath(m_profilePath));
+    m_profilePath = expandPath(m_profilePath, envManager);
 
     // Statistics Path
-    m_statPath = parser.value(statOption);
+    if (parser.isSet(statOption)) {
+        m_statPath = parser.value(statOption);
+    }
     if (m_statPath.isEmpty()) {
         m_statPath = m_profilePath;
     } else {
-        m_statPath = FileUtil::pathSlash(FileUtil::absolutePath(m_statPath));
+        m_statPath = expandPath(m_statPath, envManager);
     }
 
     // Logs Path
-    m_logsPath = parser.value(logsOption);
+    if (parser.isSet(logsOption)) {
+        m_logsPath = parser.value(logsOption);
+    }
     if (m_logsPath.isEmpty()) {
         m_logsPath = m_profilePath + "logs/";
     } else {
-        m_logsPath = FileUtil::pathSlash(FileUtil::absolutePath(m_logsPath));
+        m_logsPath = expandPath(m_logsPath, envManager);
     }
 
     // Cache Path
-    m_cachePath = parser.value(cacheOption);
+    if (parser.isSet(cacheOption)) {
+        m_cachePath = parser.value(cacheOption);
+    }
     if (m_cachePath.isEmpty()) {
         m_cachePath = m_profilePath + "cache/";
     } else {
-        m_cachePath = FileUtil::pathSlash(FileUtil::absolutePath(m_cachePath));
+        m_cachePath = expandPath(m_cachePath, envManager);
     }
 
     // Control command

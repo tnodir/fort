@@ -7,6 +7,7 @@
 #include <QRect>
 #include <QSettings>
 
+class EnvManager;
 class FirewallConf;
 
 class FortSettings : public QObject
@@ -63,7 +64,7 @@ class FortSettings : public QObject
     Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
 
 public:
-    explicit FortSettings(const QStringList &args, QObject *parent = nullptr);
+    explicit FortSettings(QObject *parent = nullptr);
 
     bool isPortable() const { return m_isPortable; }
     bool noCache() const { return m_noCache; }
@@ -278,6 +279,9 @@ signals:
     void errorMessageChanged();
 
 public slots:
+    void setupGlobal();
+    void initialize(const QStringList &args, EnvManager *envManager = nullptr);
+
     void readConfIni(FirewallConf &conf) const;
     bool writeConfIni(const FirewallConf &conf);
 
@@ -285,7 +289,7 @@ public slots:
     void bulkUpdateEnd();
 
 private:
-    void processArguments(const QStringList &args);
+    void processArguments(const QStringList &args, EnvManager *envManager);
     void setupIni();
 
     void setErrorMessage(const QString &errorMessage);
