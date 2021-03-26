@@ -58,15 +58,8 @@ SqliteDb::~SqliteDb()
     sqlite3_shutdown();
 }
 
-bool SqliteDb::open(const QString &filePath, quint32 openFlags)
+bool SqliteDb::open()
 {
-    if (!filePath.isEmpty()) {
-        m_filePath = filePath;
-    }
-    if (openFlags != OpenVoid) {
-        m_openFlags = openFlags;
-    }
-
     const auto filePathUtf8 = m_filePath.toUtf8();
 
     return sqlite3_open_v2(filePathUtf8.data(), &m_db, m_openFlags, nullptr) == SQLITE_OK;
@@ -314,7 +307,7 @@ bool SqliteDb::migrate(const QString &sqlDir, const char *sqlPragmas, int versio
 
         tempFilePath = m_filePath + ".temp";
 
-        if (!(renameDbFile(m_filePath, tempFilePath) && open(m_filePath))) {
+        if (!(renameDbFile(m_filePath, tempFilePath) && open())) {
             dbWarning() << "Cannot re-create the DB" << m_filePath;
             renameDbFile(tempFilePath, m_filePath);
             return false;

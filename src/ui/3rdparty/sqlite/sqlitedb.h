@@ -17,8 +17,6 @@ class SqliteDb
 {
 public:
     enum OpenFlag {
-        OpenVoid = -1,
-        OpenDefault = 0,
         OpenReadOnly = 0x00000001, // SQLITE_OPEN_READONLY
         OpenReadWrite = 0x00000002, // SQLITE_OPEN_READWRITE
         OpenCreate = 0x00000004, // SQLITE_OPEN_CREATE
@@ -29,6 +27,7 @@ public:
         OpenSharedCache = 0x00020000, // SQLITE_OPEN_SHAREDCACHE
         OpenPrivateCache = 0x00040000, // SQLITE_OPEN_PRIVATECACHE
         OpenNoFollow = 0x01000000, // SQLITE_OPEN_NOFOLLOW
+        OpenDefault = (OpenReadWrite | OpenCreate | OpenNoMutex)
     };
 
     explicit SqliteDb(const QString &filePath = QString(), quint32 openFlags = OpenDefault);
@@ -38,9 +37,12 @@ public:
     struct sqlite3 *db() const { return m_db; }
 
     quint32 openFlags() const { return m_openFlags; }
-    QString filePath() const { return m_filePath; }
+    void setOpenFlags(quint32 v) { m_openFlags = v; }
 
-    bool open(const QString &filePath = QString(), quint32 openFlags = OpenVoid);
+    QString filePath() const { return m_filePath; }
+    void setFilePath(const QString &v) { m_filePath = v; }
+
+    bool open();
     void close();
 
     bool attach(const QString &schemaName, const QString &filePath = QString());

@@ -307,7 +307,7 @@ bool saveAppGroup(SqliteDb *db, AppGroup *appGroup, int orderIndex)
 ConfManager::ConfManager(const QString &filePath, FortManager *fortManager, QObject *parent) :
     QObject(parent),
     m_fortManager(fortManager),
-    m_sqliteDb(new SqliteDb(filePath, SqliteDb::OpenNoMutex)),
+    m_sqliteDb(new SqliteDb(filePath)),
     m_conf(new FirewallConf(this))
 {
     m_appEndTimer.setInterval(5 * 60 * 1000); // 5 minutes

@@ -72,7 +72,8 @@ AppInfoManager::~AppInfoManager()
 
 void AppInfoManager::setupDb(const QString &filePath)
 {
-    if (!m_sqliteDb->open(filePath, SqliteDb::OpenNoMutex)) {
+    m_sqliteDb->setFilePath(filePath);
+    if (!m_sqliteDb->open()) {
         logCritical() << "File open error:" << filePath << m_sqliteDb->errorMessage();
         return;
     }

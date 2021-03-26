@@ -54,7 +54,7 @@ StatManager::StatManager(const QString &filePath, QuotaManager *quotaManager, QO
     m_isActivePeriodSet(false),
     m_isActivePeriod(false),
     m_quotaManager(quotaManager),
-    m_sqliteDb(new SqliteDb(filePath, SqliteDb::OpenNoMutex))
+    m_sqliteDb(new SqliteDb(filePath))
 {
 }
 
