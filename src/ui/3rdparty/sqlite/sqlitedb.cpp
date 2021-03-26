@@ -45,7 +45,8 @@ bool renameDbFile(const QString &filePath, const QString &newFilePath)
 
 }
 
-SqliteDb::SqliteDb(const QString &filePath) : m_filePath(filePath)
+SqliteDb::SqliteDb(const QString &filePath, quint32 openFlags) :
+    m_openFlags(openFlags), m_filePath(filePath)
 {
     sqlite3_initialize();
 }
@@ -57,15 +58,18 @@ SqliteDb::~SqliteDb()
     sqlite3_shutdown();
 }
 
-bool SqliteDb::open(const QString &filePath)
+bool SqliteDb::open(const QString &filePath, quint32 openFlags)
 {
     if (!filePath.isEmpty()) {
         m_filePath = filePath;
     }
+    if (openFlags != OpenVoid) {
+        m_openFlags = openFlags;
+    }
 
     const auto filePathUtf8 = m_filePath.toUtf8();
 
-    return sqlite3_open(filePathUtf8.data(), &m_db) == SQLITE_OK;
+    return sqlite3_open_v2(filePathUtf8.data(), &m_db, m_openFlags, nullptr) == SQLITE_OK;
 }
 
 void SqliteDb::close()

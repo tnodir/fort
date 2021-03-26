@@ -16,15 +16,31 @@ using SQLITEDB_MIGRATE_FUNC = bool (*)(SqliteDb *db, int version, bool isNewDb, 
 class SqliteDb
 {
 public:
-    explicit SqliteDb(const QString &filePath = QString());
+    enum OpenFlag {
+        OpenVoid = -1,
+        OpenDefault = 0,
+        OpenReadOnly = 0x00000001, // SQLITE_OPEN_READONLY
+        OpenReadWrite = 0x00000002, // SQLITE_OPEN_READWRITE
+        OpenCreate = 0x00000004, // SQLITE_OPEN_CREATE
+        OpenUri = 0x00000040, // SQLITE_OPEN_URI
+        OpenMemory = 0x00000080, // SQLITE_OPEN_MEMORY
+        OpenNoMutex = 0x00008000, // SQLITE_OPEN_NOMUTEX
+        OpenFullMutex = 0x00010000, // SQLITE_OPEN_FULLMUTEX
+        OpenSharedCache = 0x00020000, // SQLITE_OPEN_SHAREDCACHE
+        OpenPrivateCache = 0x00040000, // SQLITE_OPEN_PRIVATECACHE
+        OpenNoFollow = 0x01000000, // SQLITE_OPEN_NOFOLLOW
+    };
+
+    explicit SqliteDb(const QString &filePath = QString(), quint32 openFlags = OpenDefault);
     ~SqliteDb();
     CLASS_DEFAULT_COPY_MOVE(SqliteDb)
 
     struct sqlite3 *db() const { return m_db; }
 
+    quint32 openFlags() const { return m_openFlags; }
     QString filePath() const { return m_filePath; }
 
-    bool open(const QString &filePath = QString());
+    bool open(const QString &filePath = QString(), quint32 openFlags = OpenVoid);
     void close();
 
     bool attach(const QString &schemaName, const QString &filePath = QString());
@@ -75,6 +91,7 @@ public:
             const QString &sourceFilePath, SQLITEDB_MIGRATE_FUNC migrateFunc, void *migrateContext);
 
 private:
+    quint32 m_openFlags = 0;
     sqlite3 *m_db = nullptr;
     QString m_filePath;
 };
