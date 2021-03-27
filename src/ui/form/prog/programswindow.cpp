@@ -196,6 +196,7 @@ void ProgramsWindow::setupAppEditForm()
     layout->addWidget(m_cscBlockAppIn);
     layout->addLayout(blockAtLayout);
     layout->addWidget(m_cbBlockAppNone);
+    layout->addStretch();
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(buttonsLayout);
 
