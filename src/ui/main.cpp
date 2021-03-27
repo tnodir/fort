@@ -21,6 +21,12 @@
 
 int main(int argc, char *argv[])
 {
+    // Uninstall: Unregister booted provider and exit
+    if (argc > 1 && !strcmp(argv[1], "-u")) {
+        FortCommon::provUnregister();
+        return 0;
+    }
+
     FortSettings fortSettings;
 
     // Process global settings required before QApplication costruction
@@ -41,12 +47,6 @@ int main(int argc, char *argv[])
 
     // Initialize with command line arguments
     fortSettings.initialize(QCoreApplication::arguments(), &envManager);
-
-    // Unregister booted provider and exit
-    if (fortSettings.hasProvBoot()) {
-        FortCommon::provUnregister();
-        return 0;
-    }
 
 #ifdef USE_CONTROL_COMMANDS
     ControlManager controlManager(QApplication::applicationName(), fortSettings.controlCommand());

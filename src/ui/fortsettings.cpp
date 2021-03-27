@@ -27,7 +27,6 @@ FortSettings::FortSettings(QObject *parent) :
     m_iniExists(false),
     m_isPortable(false),
     m_noCache(false),
-    m_hasProvBoot(false),
     m_bulkUpdating(false),
     m_bulkIniChanged(false)
 {
@@ -91,11 +90,6 @@ void FortSettings::processArguments(const QStringList &args, EnvManager *envMana
 {
     QCommandLineParser parser;
 
-    const QCommandLineOption provBootOption(QStringList() << "b"
-                                                          << "boot",
-            "Unblock access to network when Fort Firewall is not running.", "boot");
-    parser.addOption(provBootOption);
-
     const QCommandLineOption profileOption(QStringList() << "p"
                                                          << "profile",
             "Directory to store settings.", "profile");
@@ -137,9 +131,6 @@ void FortSettings::processArguments(const QStringList &args, EnvManager *envMana
     if (parser.isSet(noCacheOption)) {
         m_noCache = true;
     }
-
-    // Provider Boot
-    m_hasProvBoot = parser.isSet(provBootOption);
 
     // Default Language
     if (parser.isSet(langOption)) {

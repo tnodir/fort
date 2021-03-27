@@ -68,7 +68,6 @@ public:
 
     bool isPortable() const { return m_isPortable; }
     bool noCache() const { return m_noCache; }
-    bool hasProvBoot() const { return m_hasProvBoot; }
 
     bool debug() const { return iniBool("base/debug"); }
     void setDebug(bool on) { setIniValue("base/debug", on); }
@@ -329,7 +328,6 @@ private:
     bool m_iniExists : 1;
     bool m_isPortable : 1;
     bool m_noCache : 1;
-    bool m_hasProvBoot : 1;
 
     bool m_bulkUpdating : 1;
     bool m_bulkIniChanged : 1;

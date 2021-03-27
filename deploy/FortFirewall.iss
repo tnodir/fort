@@ -74,7 +74,7 @@ Filename: "https://support.microsoft.com/en-us/help/2977003/the-latest-supported
 
 [UninstallRun]
 Filename: "{app}\driver\scripts\uninstall.bat"; RunOnceId: "DelDriver"; Flags: runascurrentuser
-Filename: "{#APP_EXE}"; Parameters: "-b=0"; RunOnceId: "DelProvider"; Flags: runascurrentuser
+Filename: "{#APP_EXE}"; Parameters: "-u"; RunOnceId: "DelProvider"; Flags: runascurrentuser
 
 [InstallDelete]
 Type: filesandordirs; Name: "{app}\driver"
