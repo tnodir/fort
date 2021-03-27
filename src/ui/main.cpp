@@ -27,9 +27,8 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    FortSettings fortSettings;
-
     // Process global settings required before QApplication costruction
+    FortSettings fortSettings;
     fortSettings.setupGlobal();
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -45,7 +44,7 @@ int main(int argc, char *argv[])
 
     EnvManager envManager;
 
-    // Initialize with command line arguments
+    // Initialize settings from command line arguments
     fortSettings.initialize(QCoreApplication::arguments(), &envManager);
 
 #ifdef USE_CONTROL_COMMANDS

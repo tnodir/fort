@@ -66,7 +66,6 @@ class FortSettings : public QObject
 public:
     explicit FortSettings(QObject *parent = nullptr);
 
-    bool isPortable() const { return m_isPortable; }
     bool noCache() const { return m_noCache; }
 
     bool debug() const { return iniBool("base/debug"); }
@@ -326,7 +325,6 @@ private:
 
 private:
     bool m_iniExists : 1;
-    bool m_isPortable : 1;
     bool m_noCache : 1;
 
     bool m_bulkUpdating : 1;

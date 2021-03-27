@@ -14,10 +14,15 @@
 
 namespace {
 
+QString pathSlash(const QString &path)
+{
+    return FileUtil::pathSlash(FileUtil::absolutePath(path));
+}
+
 QString expandPath(const QString &path, EnvManager *envManager = nullptr)
 {
     const auto expPath = envManager ? envManager->expandString(path) : path;
-    return FileUtil::pathSlash(FileUtil::absolutePath(expPath));
+    return pathSlash(expPath);
 }
 
 }
@@ -25,7 +30,6 @@ QString expandPath(const QString &path, EnvManager *envManager = nullptr)
 FortSettings::FortSettings(QObject *parent) :
     QObject(parent),
     m_iniExists(false),
-    m_isPortable(false),
     m_noCache(false),
     m_bulkUpdating(false),
     m_bulkIniChanged(false)
@@ -124,9 +128,6 @@ void FortSettings::processArguments(const QStringList &args, EnvManager *envMana
 
     parser.process(args);
 
-    // Portable Mode
-    m_isPortable = FileUtil::fileExists(FileUtil::appBinLocation() + "/README.portable");
-
     // No Cache
     if (parser.isSet(noCacheOption)) {
         m_noCache = true;
@@ -142,10 +143,14 @@ void FortSettings::processArguments(const QStringList &args, EnvManager *envMana
         m_profilePath = parser.value(profileOption);
     }
     if (m_profilePath.isEmpty()) {
+        const auto appBinLocation = FileUtil::appBinLocation();
+        const bool isPortable = FileUtil::fileExists(appBinLocation + "/README.portable");
+
         m_profilePath =
-                m_isPortable ? FileUtil::appBinLocation() + "/Data" : FileUtil::appConfigLocation();
+                pathSlash(isPortable ? appBinLocation + "/Data" : FileUtil::appConfigLocation());
+    } else {
+        m_profilePath = expandPath(m_profilePath, envManager);
     }
-    m_profilePath = expandPath(m_profilePath, envManager);
 
     // Statistics Path
     if (parser.isSet(statOption)) {
