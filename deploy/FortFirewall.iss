@@ -52,7 +52,9 @@ Source: "README.portable"; DestDir: "{app}"; Tasks: portable
 
 [Registry]
 ; Explorer's Context Menu
-#define REG_SHELL_MENU	"SystemFileAssociations\.exe\Shell\Fort Firewall"
+#define REG_SHELL	"SystemFileAssociations\.exe\Shell"
+#define REG_SHELL_MENU	REG_SHELL + "\Fort Firewall"
+Root: HKCR; Subkey: "{#REG_SHELL}"; Flags: uninsdeletekeyifempty; Tasks: explorer
 Root: HKCR; Subkey: "{#REG_SHELL_MENU}"; Flags: deletekey uninsdeletekey
 Root: HKCR; Subkey: "{#REG_SHELL_MENU}"; ValueType: string; ValueName: "icon"; ValueData: "{#APP_EXE}"; Tasks: explorer
 Root: HKCR; Subkey: "{#REG_SHELL_MENU}"; ValueType: string; ValueName: "MUIVerb"; ValueData: "Fort Firewall ..."; Tasks: explorer
@@ -83,9 +85,6 @@ Type: filesandordirs; Name: "{app}\plugins"
 Type: files; Name: "{app}\curl*.*"
 Type: files; Name: "{app}\qt*.*"
 Type: files; Name: "{app}\README*.*"
-
-[UninstallDelete]
-Type: filesandordirs; Name: "{app}"
 
 [Code]
 function LanguageName(Param: String): String;
