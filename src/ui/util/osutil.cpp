@@ -74,3 +74,19 @@ qint32 OsUtil::getTickCount()
 {
     return qint32(GetTickCount());
 }
+
+bool OsUtil::isUserAdmin()
+{
+    SID_IDENTIFIER_AUTHORITY idAuth = SECURITY_NT_AUTHORITY;
+    PSID adminGroup;
+    BOOL ok = AllocateAndInitializeSid(&idAuth, 2, SECURITY_BUILTIN_DOMAIN_RID,
+            DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0, &adminGroup);
+    if (ok) {
+        if (!CheckTokenMembership(nullptr, adminGroup, &ok)) {
+            ok = false;
+        }
+        FreeSid(adminGroup);
+    }
+
+    return ok;
+}

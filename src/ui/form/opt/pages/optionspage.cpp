@@ -50,9 +50,13 @@ void OptionsPage::onSaved()
     settings()->setStartWithWindows(m_cbStart->isChecked());
     settings()->setHotKeyEnabled(m_cbHotKeys->isChecked());
 
-    const auto password = m_editPassword->text();
-    settings()->setPasswordHash(StringUtil::cryptoHash(password));
-    m_editPassword->setText(QString());
+    if (m_cbPassword->isChecked() != settings()->hasPassword()) {
+        const auto password = m_editPassword->text();
+        settings()->setPasswordHash(StringUtil::cryptoHash(password));
+        m_editPassword->clear();
+    }
+
+    settings()->setPasswordSkipAdmin(m_cbPasswordSkipAdmin->isChecked());
 }
 
 void OptionsPage::onRetranslateUi()
@@ -76,6 +80,7 @@ void OptionsPage::onRetranslateUi()
 
     m_cbPassword->setText(tr("Password:"));
     retranslateEditPassword();
+    m_cbPasswordSkipAdmin->setText(tr("Skip password check for administrators"));
 
     m_labelLanguage->setText(tr("Language:"));
 
@@ -208,6 +213,7 @@ void OptionsPage::setupGlobalBox()
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbHotKeys);
     layout->addLayout(passwordLayout);
+    layout->addWidget(m_cbPasswordSkipAdmin);
     layout->addLayout(langLayout);
     m_gbGlobal->setLayout(layout);
 }
@@ -218,14 +224,15 @@ QLayout *OptionsPage::setupPasswordLayout()
     layout->setSpacing(6);
 
     m_cbPassword = ControlUtil::createCheckBox(settings()->hasPassword(), [&](bool checked) {
+        m_editPassword->clear();
         if (checked) {
             m_editPassword->setFocus();
-        } else {
-            m_editPassword->setText(QString());
         }
 
         setIniEdited(true);
     });
+    m_cbPasswordSkipAdmin = ControlUtil::createCheckBox(
+            settings()->passwordSkipAdmin(), [&](bool) { setIniEdited(true); });
 
     setupEditPassword();
 
@@ -244,8 +251,9 @@ void OptionsPage::setupEditPassword()
 
     const auto refreshEditPassword = [&] {
         m_editPassword->setReadOnly(settings()->hasPassword() || !m_cbPassword->isChecked());
-
         retranslateEditPassword();
+
+        m_cbPasswordSkipAdmin->setEnabled(m_cbPassword->isChecked());
     };
 
     refreshEditPassword();

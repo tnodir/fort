@@ -20,6 +20,8 @@ public:
     static QString errorMessage(quint32 errorCode = lastErrorCode());
 
     static qint32 getTickCount();
+
+    static bool isUserAdmin();
 };
 
 #endif // OSUTIL_H

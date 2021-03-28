@@ -540,8 +540,7 @@ bool FortManager::checkPassword()
 {
     static bool g_passwordDialogOpened = false;
 
-    const QString passwordHash = settings()->passwordHash();
-    if (passwordHash.isEmpty())
+    if (!isPasswordRequired())
         return true;
 
     if (g_passwordDialogOpened) {
@@ -559,7 +558,13 @@ bool FortManager::checkPassword()
 
     g_passwordDialogOpened = false;
 
-    return !password.isEmpty() && StringUtil::cryptoHash(password) == passwordHash;
+    return !password.isEmpty() && StringUtil::cryptoHash(password) == settings()->passwordHash();
+}
+
+bool FortManager::isPasswordRequired()
+{
+    return settings()->hasPassword()
+            && (!settings()->passwordSkipAdmin() || !OsUtil::isUserAdmin());
 }
 
 void FortManager::showErrorBox(const QString &text, const QString &title)
@@ -851,8 +856,7 @@ void FortManager::createTrayMenu()
 
 void FortManager::updateTrayMenuFlags()
 {
-    const bool hasPassword = settings()->hasPassword();
-    const bool editEnabled = (!hasPassword && m_optWindow == nullptr);
+    const bool editEnabled = (!isPasswordRequired() && m_optWindow == nullptr);
 
     m_filterEnabledAction->setEnabled(editEnabled);
     m_stopTrafficAction->setEnabled(editEnabled);

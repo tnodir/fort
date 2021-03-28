@@ -106,6 +106,7 @@ public slots:
     void exit(int retcode = 0);
 
     bool checkPassword();
+    bool isPasswordRequired();
 
     void showErrorBox(const QString &text, const QString &title = QString());
     void showInfoBox(const QString &text, const QString &title = QString());
