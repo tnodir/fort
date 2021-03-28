@@ -30,15 +30,11 @@ void LabelColor::selectColor()
 
 void LabelColor::setupUi()
 {
-    auto layout = new QHBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
-
     m_label = ControlUtil::createLabel();
 
     setupButton();
 
-    layout->addWidget(m_label, 1);
-    layout->addWidget(m_button);
+    auto layout = ControlUtil::createRowLayout(m_label, m_button);
 
     this->setLayout(layout);
 }

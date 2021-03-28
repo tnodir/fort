@@ -319,12 +319,7 @@ QLayout *ProgramsWindow::setupCheckDateTimeEdit()
     m_dteBlockAppAt = new QDateTimeEdit();
     m_dteBlockAppAt->setCalendarPopup(true);
 
-    auto layout = new QHBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->addWidget(m_cbBlockAppAt, 1);
-    layout->addWidget(m_dteBlockAppAt);
-
-    return layout;
+    return ControlUtil::createRowLayout(m_cbBlockAppAt, m_dteBlockAppAt);
 }
 
 void ProgramsWindow::setupAllowEclusiveGroup()

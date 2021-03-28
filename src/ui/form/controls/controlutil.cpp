@@ -143,6 +143,15 @@ QFrame *ControlUtil::createSeparator(Qt::Orientation o)
     return c;
 }
 
+QLayout *ControlUtil::createRowLayout(QWidget *w1, QWidget *w2, int stretch1)
+{
+    auto layout = new QHBoxLayout();
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->addWidget(w1, stretch1);
+    layout->addWidget(w2);
+    return layout;
+}
+
 QLayout *ControlUtil::createScrollLayout(QLayout *content, bool isBgTransparent)
 {
     auto scrollAreaContent = new QWidget();

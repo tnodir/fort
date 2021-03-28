@@ -18,15 +18,11 @@ QHBoxLayout *LabelSpin::boxLayout() const
 
 void LabelSpin::setupUi()
 {
-    auto layout = new QHBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
-
     m_label = ControlUtil::createLabel();
 
     setupSpin();
 
-    layout->addWidget(m_label, 1);
-    layout->addWidget(m_spinBox);
+    auto layout = ControlUtil::createRowLayout(m_label, m_spinBox);
 
     this->setLayout(layout);
 }

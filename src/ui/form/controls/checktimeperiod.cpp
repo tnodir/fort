@@ -14,16 +14,12 @@ CheckTimePeriod::CheckTimePeriod(QWidget *parent) : QWidget(parent)
 
 void CheckTimePeriod::setupUi()
 {
-    auto layout = new QHBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
-
     m_checkBox = new QCheckBox();
 
     m_timeEdit1 = createTimeEdit();
     m_timeEdit2 = createTimeEdit();
 
-    layout->addWidget(m_checkBox, 1);
-    layout->addWidget(m_timeEdit1);
+    auto layout = ControlUtil::createRowLayout(m_checkBox, m_timeEdit1);
     layout->addWidget(ControlUtil::createLabel("–"));
     layout->addWidget(m_timeEdit2);
 

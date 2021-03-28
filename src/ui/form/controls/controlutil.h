@@ -40,6 +40,8 @@ public:
             const QList<QWidget *> &widgets, Qt::Orientation o = Qt::Vertical);
     static QFrame *createSeparator(Qt::Orientation o = Qt::Horizontal);
 
+    static QLayout *createRowLayout(QWidget *w1, QWidget *w2, int stretch1 = 1);
+
     static QLayout *createScrollLayout(QLayout *content, bool isBgTransparent = true);
     static QWidget *wrapToScrollArea(QWidget *content, bool isBgTransparent = true);
 

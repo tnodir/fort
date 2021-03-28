@@ -4,6 +4,8 @@
 #include <QHBoxLayout>
 #include <QSpinBox>
 
+#include "controlutil.h"
+
 SpinCombo::SpinCombo(QWidget *parent) : QWidget(parent)
 {
     setupUi();
@@ -41,14 +43,10 @@ QHBoxLayout *SpinCombo::boxLayout() const
 
 void SpinCombo::setupUi()
 {
-    auto layout = new QHBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
-
     setupSpin();
     setupCombo();
 
-    layout->addWidget(m_spinBox);
-    layout->addWidget(m_comboBox);
+    auto layout = ControlUtil::createRowLayout(m_spinBox, m_comboBox, 0);
 
     this->setLayout(layout);
 }

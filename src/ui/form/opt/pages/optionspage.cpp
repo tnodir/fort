@@ -264,17 +264,11 @@ void OptionsPage::setupEditPassword()
 
 QLayout *OptionsPage::setupLangLayout()
 {
-    auto layout = new QHBoxLayout();
-    layout->setSpacing(10);
-
     m_labelLanguage = ControlUtil::createLabel();
 
     setupComboLanguage();
 
-    layout->addWidget(m_labelLanguage);
-    layout->addWidget(m_comboLanguage);
-
-    return layout;
+    return ControlUtil::createRowLayout(m_labelLanguage, m_comboLanguage);
 }
 
 void OptionsPage::setupComboLanguage()
