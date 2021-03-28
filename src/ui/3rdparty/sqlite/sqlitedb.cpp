@@ -18,7 +18,7 @@ Q_LOGGING_CATEGORY(CLOG_SQLITEDB, "db")
 namespace {
 
 const char *const defaultSqlPragmas = "PRAGMA journal_mode = WAL;"
-                                      "PRAGMA locking_mode = EXCLUSIVE;"
+                                      "PRAGMA locking_mode = NORMAL;"
                                       "PRAGMA synchronous = NORMAL;"
                                       "PRAGMA encoding = 'UTF-8';";
 
