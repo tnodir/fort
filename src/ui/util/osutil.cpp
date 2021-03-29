@@ -79,14 +79,14 @@ bool OsUtil::isUserAdmin()
 {
     SID_IDENTIFIER_AUTHORITY idAuth = SECURITY_NT_AUTHORITY;
     PSID adminGroup;
-    BOOL ok = AllocateAndInitializeSid(&idAuth, 2, SECURITY_BUILTIN_DOMAIN_RID,
+    BOOL res = AllocateAndInitializeSid(&idAuth, 2, SECURITY_BUILTIN_DOMAIN_RID,
             DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0, &adminGroup);
-    if (ok) {
-        if (!CheckTokenMembership(nullptr, adminGroup, &ok)) {
-            ok = false;
+    if (res) {
+        if (!CheckTokenMembership(nullptr, adminGroup, &res)) {
+            res = false;
         }
         FreeSid(adminGroup);
     }
 
-    return ok;
+    return res;
 }

@@ -13,6 +13,9 @@ public:
     bool iniEdited() const { return m_iniEdited; }
     void setIniEdited(bool v);
 
+    bool startModeEdited() const { return m_startModeEdited; }
+    void setStartModeEdited(bool v);
+
 protected slots:
     void onEditResetted() override;
     void onSaved() override;
@@ -20,12 +23,14 @@ protected slots:
     void onRetranslateUi() override;
 
 private:
+    void retranslateComboStartMode();
     void retranslateEditPassword();
     void retranslateDriverMessage();
 
     void setupUi();
     QLayout *setupColumn1();
     void setupStartupBox();
+    QLayout *setupStartModeLayout();
     void setupTrafficBox();
     void setupGlobalBox();
     QLayout *setupPasswordLayout();
@@ -39,14 +44,16 @@ private:
     void setupNewVersionUpdate();
 
 private:
-    bool m_iniEdited = false;
+    bool m_iniEdited : 1;
+    bool m_startModeEdited : 1;
 
     QGroupBox *m_gbStartup = nullptr;
     QGroupBox *m_gbTraffic = nullptr;
     QGroupBox *m_gbGlobal = nullptr;
     QGroupBox *m_gbDriver = nullptr;
     QGroupBox *m_gbNewVersion = nullptr;
-    QCheckBox *m_cbStart = nullptr;
+    QLabel *m_labelStartMode = nullptr;
+    QComboBox *m_comboStartMode = nullptr;
     QCheckBox *m_cbProvBoot = nullptr;
     QCheckBox *m_cbFilterEnabled = nullptr;
     QCheckBox *m_cbFilterLocals = nullptr;

@@ -13,55 +13,6 @@ class FirewallConf;
 class FortSettings : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool debug READ debug WRITE setDebug NOTIFY iniChanged)
-    Q_PROPERTY(QString language READ language WRITE setLanguage NOTIFY iniChanged)
-    Q_PROPERTY(bool hasPassword READ hasPassword NOTIFY iniChanged)
-    Q_PROPERTY(QString passwordHash READ passwordHash WRITE setPasswordHash NOTIFY iniChanged)
-    Q_PROPERTY(QString appUpdatesUrl READ appUpdatesUrl CONSTANT)
-    Q_PROPERTY(int appVersion READ appVersion CONSTANT)
-    Q_PROPERTY(int iniVersion READ iniVersion WRITE setIniVersion NOTIFY iniChanged)
-    Q_PROPERTY(QByteArray optWindowAddrSplit READ optWindowAddrSplit WRITE setOptWindowAddrSplit
-                    NOTIFY iniChanged)
-    Q_PROPERTY(QByteArray optWindowAppsSplit READ optWindowAppsSplit WRITE setOptWindowAppsSplit
-                    NOTIFY iniChanged)
-    Q_PROPERTY(bool graphWindowVisible READ graphWindowVisible WRITE setGraphWindowVisible NOTIFY
-                    iniChanged)
-    Q_PROPERTY(bool graphWindowAlwaysOnTop READ graphWindowAlwaysOnTop WRITE
-                    setGraphWindowAlwaysOnTop NOTIFY iniChanged)
-    Q_PROPERTY(bool graphWindowFrameless READ graphWindowFrameless WRITE setGraphWindowFrameless
-                    NOTIFY iniChanged)
-    Q_PROPERTY(bool graphWindowClickThrough READ graphWindowClickThrough WRITE
-                    setGraphWindowClickThrough NOTIFY iniChanged)
-    Q_PROPERTY(bool graphWindowHideOnHover READ graphWindowHideOnHover WRITE
-                    setGraphWindowHideOnHover NOTIFY iniChanged)
-    Q_PROPERTY(int graphWindowOpacity READ graphWindowOpacity WRITE setGraphWindowOpacity NOTIFY
-                    iniChanged)
-    Q_PROPERTY(int graphWindowHoverOpacity READ graphWindowHoverOpacity WRITE
-                    setGraphWindowHoverOpacity NOTIFY iniChanged)
-    Q_PROPERTY(int graphWindowMaxSeconds READ graphWindowMaxSeconds WRITE setGraphWindowMaxSeconds
-                    NOTIFY iniChanged)
-    Q_PROPERTY(QColor graphWindowColor READ graphWindowColor WRITE setGraphWindowColor NOTIFY
-                    iniChanged)
-    Q_PROPERTY(QColor graphWindowColorIn READ graphWindowColorIn WRITE setGraphWindowColorIn NOTIFY
-                    iniChanged)
-    Q_PROPERTY(QColor graphWindowColorOut READ graphWindowColorOut WRITE setGraphWindowColorOut
-                    NOTIFY iniChanged)
-    Q_PROPERTY(QColor graphWindowAxisColor READ graphWindowAxisColor WRITE setGraphWindowAxisColor
-                    NOTIFY iniChanged)
-    Q_PROPERTY(QColor graphWindowTickLabelColor READ graphWindowTickLabelColor WRITE
-                    setGraphWindowTickLabelColor NOTIFY iniChanged)
-    Q_PROPERTY(QColor graphWindowLabelColor READ graphWindowLabelColor WRITE
-                    setGraphWindowLabelColor NOTIFY iniChanged)
-    Q_PROPERTY(QColor graphWindowGridColor READ graphWindowGridColor WRITE setGraphWindowGridColor
-                    NOTIFY iniChanged)
-    Q_PROPERTY(bool startWithWindows READ startWithWindows WRITE setStartWithWindows NOTIFY
-                    startWithWindowsChanged)
-    Q_PROPERTY(bool hotKeyEnabled READ hotKeyEnabled WRITE setHotKeyEnabled NOTIFY iniChanged)
-    Q_PROPERTY(QString profilePath READ profilePath CONSTANT)
-    Q_PROPERTY(QString statPath READ statPath CONSTANT)
-    Q_PROPERTY(QString logsPath READ logsPath CONSTANT)
-    Q_PROPERTY(QString cachePath READ cachePath CONSTANT)
-    Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
 
 public:
     explicit FortSettings(QObject *parent = nullptr);
@@ -252,9 +203,6 @@ public:
     }
     QString hotKeyQuit() const { return iniText("hotKey/quit"); }
 
-    bool startWithWindows() const;
-    void setStartWithWindows(bool start);
-
     QString profilePath() const { return m_profilePath; }
 
     QString statPath() const { return m_statPath; }
@@ -276,7 +224,6 @@ public:
 
 signals:
     void iniChanged();
-    void startWithWindowsChanged();
     void errorMessageChanged();
 
 public slots:

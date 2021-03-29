@@ -46,25 +46,6 @@ int FortSettings::appVersion() const
     return APP_VERSION;
 }
 
-bool FortSettings::startWithWindows() const
-{
-    return FileUtil::fileExists(startupShortcutPath());
-}
-
-void FortSettings::setStartWithWindows(bool start)
-{
-    if (start == startWithWindows())
-        return;
-
-    const QString linkPath = startupShortcutPath();
-    if (start) {
-        FileUtil::linkFile(qApp->applicationFilePath(), linkPath);
-    } else {
-        FileUtil::removeFile(linkPath);
-    }
-    emit startWithWindowsChanged();
-}
-
 void FortSettings::setupGlobal()
 {
     // Use global settings from program's working directory.
@@ -515,10 +496,4 @@ bool FortSettings::iniSync()
     m_ini->sync();
 
     return m_ini->status() == QSettings::NoError;
-}
-
-QString FortSettings::startupShortcutPath()
-{
-    return FileUtil::applicationsLocation() + QLatin1Char('\\') + "Startup" + QLatin1Char('\\')
-            + qApp->applicationName() + ".lnk";
 }

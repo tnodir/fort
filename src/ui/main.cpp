@@ -15,15 +15,17 @@
 #include "fortsettings.h"
 #include "util/envmanager.h"
 #include "util/osutil.h"
+#include "util/startuputil.h"
 
 #define FORT_ERROR_INSTANCE 1
 #define FORT_ERROR_CONTROL  2
 
 int main(int argc, char *argv[])
 {
-    // Uninstall: Unregister booted provider and exit
+    // Uninstall: Unregister booted provider, startup entries and exit
     if (argc > 1 && !strcmp(argv[1], "-u")) {
         FortCommon::provUnregister();
+        StartupUtil::setStartupMode(StartupUtil::StartupDisabled);
         return 0;
     }
 

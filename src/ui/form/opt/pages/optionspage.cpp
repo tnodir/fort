@@ -7,6 +7,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QStandardItemModel>
 #include <QVBoxLayout>
 
 #include "../../../conf/firewallconf.h"
@@ -17,11 +18,14 @@
 #include "../../../task/taskmanager.h"
 #include "../../../translationmanager.h"
 #include "../../../util/iconcache.h"
+#include "../../../util/startuputil.h"
 #include "../../../util/stringutil.h"
+#include "../../../util/osutil.h"
 #include "../../controls/controlutil.h"
 #include "../optionscontroller.h"
 
-OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) : BasePage(ctrl, parent)
+OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) :
+    BasePage(ctrl, parent), m_iniEdited(false), m_startModeEdited(false)
 {
     setupUi();
 }
@@ -37,17 +41,33 @@ void OptionsPage::setIniEdited(bool v)
     }
 }
 
+void OptionsPage::setStartModeEdited(bool v)
+{
+    if (m_startModeEdited != v) {
+        m_startModeEdited = v;
+
+        if (startModeEdited()) {
+            ctrl()->setOthersEdited(true);
+        }
+    }
+}
+
 void OptionsPage::onEditResetted()
 {
     setIniEdited(false);
+    setStartModeEdited(false);
 }
 
 void OptionsPage::onSaved()
 {
+    if (startModeEdited()) {
+        StartupUtil::setStartupMode(
+                static_cast<StartupUtil::StartupMode>(m_comboStartMode->currentIndex()));
+    }
+
     if (!iniEdited())
         return;
 
-    settings()->setStartWithWindows(m_cbStart->isChecked());
     settings()->setHotKeyEnabled(m_cbHotKeys->isChecked());
 
     if (m_cbPassword->isChecked() != settings()->hasPassword()) {
@@ -67,7 +87,9 @@ void OptionsPage::onRetranslateUi()
     m_gbDriver->setTitle(tr("Driver"));
     m_gbNewVersion->setTitle(tr("New Version"));
 
-    m_cbStart->setText(tr("Start with Windows"));
+    m_labelStartMode->setText(tr("Startup mode:"));
+    retranslateComboStartMode();
+
     m_cbProvBoot->setText(tr("Stop traffic when Fort Firewall is not running"));
     m_cbFilterEnabled->setText(tr("Filter Enabled"));
     m_cbFilterLocals->setText(tr("Filter Local Addresses"));
@@ -89,6 +111,36 @@ void OptionsPage::onRetranslateUi()
     m_btRemoveDriver->setText(tr("Remove"));
 
     m_btNewVersion->setText(tr("Download"));
+}
+
+void OptionsPage::retranslateComboStartMode()
+{
+    const QStringList list = { tr("Disabled"), tr("For current user"), tr("For all users"),
+        tr("For all users in background") };
+
+    const int currentIndex = m_comboStartMode->currentIndex();
+
+    m_comboStartMode->clear();
+    m_comboStartMode->addItems(list);
+
+    m_comboStartMode->setCurrentIndex(
+            currentIndex < 0 ? StartupUtil::getStartupMode() : currentIndex);
+
+    // Disable some items if user is not an administrator
+    if (OsUtil::isUserAdmin())
+        return;
+
+    auto comboModel = qobject_cast<QStandardItemModel *>(m_comboStartMode->model());
+    if (!comboModel)
+        return;
+
+    const int itemCount = comboModel->rowCount();
+    for (int i = (currentIndex > 1 ? 0 : 2); i < itemCount; ++i) {
+        auto item = comboModel->item(i);
+        if (item) {
+            item->setEnabled(false);
+        }
+    }
 }
 
 void OptionsPage::retranslateEditPassword()
@@ -151,18 +203,30 @@ QLayout *OptionsPage::setupColumn1()
 
 void OptionsPage::setupStartupBox()
 {
-    m_cbStart = ControlUtil::createCheckBox(
-            settings()->startWithWindows(), [&](bool) { setIniEdited(true); });
+    auto startModeLayout = setupStartModeLayout();
+
     m_cbProvBoot = ControlUtil::createCheckBox(conf()->provBoot(), [&](bool checked) {
         conf()->setProvBoot(checked);
         ctrl()->setConfFlagsEdited(true);
     });
 
-    m_gbStartup = new QGroupBox(this);
     auto layout = new QVBoxLayout();
-    layout->addWidget(m_cbStart);
+    layout->addLayout(startModeLayout);
     layout->addWidget(m_cbProvBoot);
+
+    m_gbStartup = new QGroupBox(this);
     m_gbStartup->setLayout(layout);
+}
+
+QLayout *OptionsPage::setupStartModeLayout()
+{
+    m_labelStartMode = ControlUtil::createLabel();
+
+    m_comboStartMode =
+            ControlUtil::createComboBox(QStringList(), [&](int) { setStartModeEdited(true); });
+    m_comboStartMode->setFixedWidth(200);
+
+    return ControlUtil::createRowLayout(m_labelStartMode, m_comboStartMode);
 }
 
 void OptionsPage::setupTrafficBox()
@@ -188,13 +252,14 @@ void OptionsPage::setupTrafficBox()
         ctrl()->setConfFlagsEdited(true);
     });
 
-    m_gbTraffic = new QGroupBox(this);
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbFilterEnabled);
     layout->addWidget(m_cbFilterLocals);
     layout->addWidget(m_cbStopTraffic);
     layout->addWidget(m_cbStopInetTraffic);
     layout->addWidget(m_cbAllowAllNew);
+
+    m_gbTraffic = new QGroupBox(this);
     m_gbTraffic->setLayout(layout);
 }
 
@@ -209,12 +274,13 @@ void OptionsPage::setupGlobalBox()
     // Language Row
     auto langLayout = setupLangLayout();
 
-    m_gbGlobal = new QGroupBox(this);
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbHotKeys);
     layout->addLayout(passwordLayout);
     layout->addWidget(m_cbPasswordSkipAdmin);
     layout->addLayout(langLayout);
+
+    m_gbGlobal = new QGroupBox(this);
     m_gbGlobal->setLayout(layout);
 }
 
@@ -309,11 +375,8 @@ QLayout *OptionsPage::setupColumn2()
 
 void OptionsPage::setupDriverBox()
 {
-    m_gbDriver = new QGroupBox(this);
-
     auto colLayout = new QVBoxLayout();
     colLayout->setSpacing(10);
-    m_gbDriver->setLayout(colLayout);
 
     // Label Row
     auto labelLayout = new QHBoxLayout();
@@ -351,6 +414,9 @@ void OptionsPage::setupDriverBox()
     buttonsLayout->addWidget(m_btInstallDriver);
     buttonsLayout->addWidget(m_btRemoveDriver);
     buttonsLayout->addStretch();
+
+    m_gbDriver = new QGroupBox(this);
+    m_gbDriver->setLayout(colLayout);
 }
 
 void OptionsPage::setupDriverIcon()
@@ -375,12 +441,8 @@ void OptionsPage::setupDriverIcon()
 
 void OptionsPage::setupNewVersionBox()
 {
-    m_gbNewVersion = new QGroupBox(this);
-    m_gbNewVersion->setMinimumWidth(380);
-
     auto colLayout = new QVBoxLayout();
     colLayout->setSpacing(10);
-    m_gbNewVersion->setLayout(colLayout);
 
     // Label
     m_labelNewVersion = ControlUtil::createLabel();
@@ -397,6 +459,10 @@ void OptionsPage::setupNewVersionBox()
     connect(m_btNewVersion, &QAbstractButton::clicked, this, &OptionsPage::onLinkClicked);
 
     colLayout->addWidget(m_btNewVersion, 0, Qt::AlignHCenter);
+
+    m_gbNewVersion = new QGroupBox(this);
+    m_gbNewVersion->setMinimumWidth(380);
+    m_gbNewVersion->setLayout(colLayout);
 }
 
 void OptionsPage::setupNewVersionUpdate()
