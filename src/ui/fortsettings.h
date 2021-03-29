@@ -18,6 +18,7 @@ public:
     explicit FortSettings(QObject *parent = nullptr);
 
     bool noCache() const { return m_noCache; }
+    bool isService() const { return m_isService; }
 
     bool debug() const { return iniBool("base/debug"); }
     void setDebug(bool on) { setIniValue("base/debug", on); }
@@ -276,6 +277,7 @@ private:
 private:
     bool m_iniExists : 1;
     bool m_noCache : 1;
+    bool m_isService : 1;
 
     bool m_bulkUpdating : 1;
     bool m_bulkIniChanged : 1;

@@ -118,13 +118,14 @@ void OptionsPage::retranslateComboStartMode()
     const QStringList list = { tr("Disabled"), tr("For current user"), tr("For all users"),
         tr("For all users in background") };
 
-    const int currentIndex = m_comboStartMode->currentIndex();
+    const int currentIndex = m_comboStartMode->currentIndex() >= 0
+            ? m_comboStartMode->currentIndex()
+            : StartupUtil::getStartupMode();
 
     m_comboStartMode->clear();
     m_comboStartMode->addItems(list);
 
-    m_comboStartMode->setCurrentIndex(
-            currentIndex < 0 ? StartupUtil::getStartupMode() : currentIndex);
+    m_comboStartMode->setCurrentIndex(currentIndex);
 
     // Disable some items if user is not an administrator
     if (OsUtil::isUserAdmin())

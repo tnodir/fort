@@ -31,6 +31,7 @@ FortSettings::FortSettings(QObject *parent) :
     QObject(parent),
     m_iniExists(false),
     m_noCache(false),
+    m_isService(false),
     m_bulkUpdating(false),
     m_bulkIniChanged(false)
 {
@@ -99,6 +100,10 @@ void FortSettings::processArguments(const QStringList &args, EnvManager *envMana
     const QCommandLineOption langOption(QStringList() << "lang", "Default language.", "lang", "en");
     parser.addOption(langOption);
 
+    const QCommandLineOption serviceOption(
+            QStringList() << "service", "Is running as a service?", "service");
+    parser.addOption(serviceOption);
+
     const QCommandLineOption controlOption(QStringList() << "c"
                                                          << "control",
             "Control running instance by executing the command.", "control");
@@ -117,6 +122,11 @@ void FortSettings::processArguments(const QStringList &args, EnvManager *envMana
     // Default Language
     if (parser.isSet(langOption)) {
         m_defaultLanguage = parser.value(langOption);
+    }
+
+    // Is service
+    if (parser.isSet(serviceOption)) {
+        m_isService = true;
     }
 
     // Profile Path

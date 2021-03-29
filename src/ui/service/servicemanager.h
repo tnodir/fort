@@ -3,14 +3,9 @@
 
 #include <QObject>
 
-class ServiceManager : public QObject
+class ServiceManager
 {
-    Q_OBJECT
-
 public:
-    explicit ServiceManager(QObject *parent = nullptr);
-
-    static bool isServiceInstalled();
 };
 
 #endif // SERVICEMANAGER_H
