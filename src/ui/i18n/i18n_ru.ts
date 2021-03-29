@@ -541,10 +541,6 @@
         <translation>Новая версия</translation>
     </message>
     <message>
-        <source>Start with Windows</source>
-        <translation>Запускать вместе с Windows</translation>
-    </message>
-    <message>
         <source>Stop traffic when Fort Firewall is not running</source>
         <translation>Остановить трафик, когда Fort Firewall не запущен</translation>
     </message>
@@ -611,6 +607,30 @@
     <message>
         <source>Are you sure to remove the Driver?</source>
         <translation>Удалить драйвер?</translation>
+    </message>
+    <message>
+        <source>Startup mode:</source>
+        <translation>Авто-запуск:</translation>
+    </message>
+    <message>
+        <source>Skip password check for administrators</source>
+        <translation>Не проверять пароль у администраторов</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Отключен</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>Для текущего пользователя</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>Для всех пользователей</translation>
+    </message>
+    <message>
+        <source>For all users in background</source>
+        <translation>Для всех пользователей в фоне</translation>
     </message>
 </context>
 <context>

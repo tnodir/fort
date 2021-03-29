@@ -605,12 +605,32 @@
         <translation>Autorisation auto de nouveaux programmes</translation>
     </message>
     <message>
-        <source>Start with Windows</source>
-        <translation>Démarrer avec Windows</translation>
-    </message>
-    <message>
         <source>Not Installed</source>
         <translation>Non installé</translation>
+    </message>
+    <message>
+        <source>Startup mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Skip password check for administrators</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation type="unfinished">Désactivé</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>For all users in background</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
