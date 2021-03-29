@@ -24,8 +24,8 @@ int main(int argc, char *argv[])
 {
     // Uninstall: Unregister booted provider, startup entries and exit
     if (argc > 1 && !strcmp(argv[1], "-u")) {
-        FortCommon::provUnregister();
         StartupUtil::setStartupMode(StartupUtil::StartupDisabled);
+        FortCommon::provUnregister();
         return 0;
     }
 
