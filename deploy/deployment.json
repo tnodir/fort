@@ -4,6 +4,7 @@
 			"common": [
 				"${QTPATH}/bin/Qt6Core.dll",
 				"${QTPATH}/bin/Qt6Gui.dll",
+				"${QTPATH}/bin/Qt6Network.dll",
 				"${QTPATH}/bin/Qt6Widgets.dll"
 			],
 			"fort": [

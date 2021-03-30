@@ -43,7 +43,13 @@ cd %TARGET_PATH%
 	^
 	-no-feature-style-android -no-feature-style-mac -no-feature-style-windowsvista ^
 	^
-	-no-feature-mimetype-database -no-feature-network -no-feature-sql -no-feature-sql-odbc ^
+	-no-feature-mimetype-database -no-feature-sql -no-feature-sql-odbc ^
+	^
+	-no-feature-getifaddrs -no-feature-ipv6ifname -no-feature-libproxy ^
+	-no-feature-openssl -no-feature-schannel -no-feature-ssl -no-feature-sctp ^
+	-no-feature-system-proxies -no-feature-http -no-feature-udpsocket ^
+	-no-feature-networkproxy -no-feature-socks5 -no-feature-networkdiskcache ^
+	-no-feature-dnslookup -no-feature-sspi -no-feature-networklistmanager ^
 	^
 	-no-feature-gif -no-feature-jpeg ^
 	-no-feature-dbus -no-feature-vulkan -no-feature-vkgen
