@@ -368,15 +368,17 @@ void FortManager::closeProgramsWindow()
     m_progWindow = nullptr;
 }
 
-void FortManager::showProgramEditForm(const QString &appPath)
+bool FortManager::showProgramEditForm(const QString &appPath)
 {
     showProgramsWindow();
     if (!(m_progWindow && m_progWindow->isVisible()))
-        return; // May be not opened due to password checking
+        return false; // May be not opened due to password checking
 
     if (!m_progWindow->openAppEditFormByPath(appPath)) {
         showErrorBox(tr("Please close already opened Edit Program window and try again."));
+        return false;
     }
+    return true;
 }
 
 void FortManager::showOptionsWindow()
@@ -582,9 +584,9 @@ bool FortManager::showQuestionBox(const QString &text, const QString &title)
     return QMessageBox::question(focusWidget(), title, text) == QMessageBox::Yes;
 }
 
-bool FortManager::saveOriginConf(const QString &message)
+bool FortManager::saveOriginConf(const QString &message, bool onlyFlags)
 {
-    if (!saveConf(conf()))
+    if (!saveConf(conf(), onlyFlags))
         return false;
 
     closeOptionsWindow();

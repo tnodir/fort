@@ -17,7 +17,6 @@ class AppGroup;
 class FirewallConf : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool provBoot READ provBoot WRITE setProvBoot NOTIFY provBootChanged)
     Q_PROPERTY(bool filterEnabled READ filterEnabled WRITE setFilterEnabled NOTIFY
                     filterEnabledChanged)
     Q_PROPERTY(bool filterLocals READ filterLocals WRITE setFilterLocals NOTIFY filterLocalsChanged)
@@ -35,25 +34,6 @@ class FirewallConf : public QObject
     Q_PROPERTY(bool appAllowAll READ appAllowAll WRITE setAppAllowAll NOTIFY appAllowAllChanged)
     Q_PROPERTY(bool activePeriodEnabled READ activePeriodEnabled WRITE setActivePeriodEnabled NOTIFY
                     activePeriodEnabledChanged)
-    Q_PROPERTY(QString activePeriodFrom READ activePeriodFrom WRITE setActivePeriodFrom NOTIFY
-                    activePeriodFromChanged)
-    Q_PROPERTY(QString activePeriodTo READ activePeriodTo WRITE setActivePeriodTo NOTIFY
-                    activePeriodToChanged)
-    Q_PROPERTY(int monthStart READ monthStart WRITE setMonthStart NOTIFY monthStartChanged)
-    Q_PROPERTY(int trafHourKeepDays READ trafHourKeepDays WRITE setTrafHourKeepDays NOTIFY
-                    trafHourKeepDaysChanged)
-    Q_PROPERTY(int trafDayKeepDays READ trafDayKeepDays WRITE setTrafDayKeepDays NOTIFY
-                    trafDayKeepDaysChanged)
-    Q_PROPERTY(int trafMonthKeepMonths READ trafMonthKeepMonths WRITE setTrafMonthKeepMonths NOTIFY
-                    trafMonthKeepMonthsChanged)
-    Q_PROPERTY(int trafUnit READ trafUnit WRITE setTrafUnit NOTIFY trafUnitChanged)
-    Q_PROPERTY(int allowedIpKeepCount READ allowedIpKeepCount WRITE setAllowedIpKeepCount NOTIFY
-                    allowedIpKeepCountChanged)
-    Q_PROPERTY(int blockedIpKeepCount READ blockedIpKeepCount WRITE setBlockedIpKeepCount NOTIFY
-                    blockedIpKeepCountChanged)
-    Q_PROPERTY(quint32 quotaDayMb READ quotaDayMb WRITE setQuotaDayMb NOTIFY quotaDayMbChanged)
-    Q_PROPERTY(
-            quint32 quotaMonthMb READ quotaMonthMb WRITE setQuotaMonthMb NOTIFY quotaMonthMbChanged)
 
 public:
     explicit FirewallConf(QObject *parent = nullptr);

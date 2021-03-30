@@ -73,24 +73,17 @@ void ControlManager::processRequest(const QString &command, const QStringList &a
 bool ControlManager::processCommand(
         const QString &command, const QStringList &args, QString &errorMessage)
 {
+    bool ok = false;
     const int argsSize = args.size();
 
-    if (command == "ini") {
-        if (argsSize < 2) {
-            errorMessage = "ini <property> <value>";
-            return false;
-        }
-
-        auto settings = m_fortManager->settings();
-
-        settings->setProperty(args.at(0).toLatin1(), QVariant(args.at(1)));
-    } else if (command == "conf") {
+    if (command == "conf") {
         if (argsSize < 2) {
             errorMessage = "conf <property> <value>";
             return false;
         }
 
         auto conf = m_fortManager->conf();
+        bool onlyFlags = true;
 
         const auto confPropName = args.at(0);
 
@@ -101,12 +94,17 @@ bool ControlManager::processCommand(
             }
 
             auto appGroup = conf->appGroupByName(args.at(1));
-            appGroup->setProperty(args.at(2).toLatin1(), QVariant(args.at(3)));
+            const auto groupPropName = args.at(2);
+            onlyFlags = (groupPropName == "enabled");
+
+            ok = appGroup->setProperty(groupPropName.toLatin1(), QVariant(args.at(3)));
         } else {
-            conf->setProperty(confPropName.toLatin1(), QVariant(args.at(1)));
+            ok = conf->setProperty(confPropName.toLatin1(), QVariant(args.at(1)));
         }
 
-        m_fortManager->saveOriginConf(tr("Control command executed"));
+        if (ok) {
+            m_fortManager->saveOriginConf(tr("Control command executed"), onlyFlags);
+        }
     } else if (command == "prog") {
         if (argsSize < 1) {
             errorMessage = "prog <command>";
@@ -121,11 +119,14 @@ bool ControlManager::processCommand(
                 return false;
             }
 
-            m_fortManager->showProgramEditForm(args.at(1));
+            ok = m_fortManager->showProgramEditForm(args.at(1));
         }
     }
 
-    return true;
+    if (!ok) {
+        errorMessage = "Invalid command";
+    }
+    return ok;
 }
 
 void ControlManager::setupWorker()

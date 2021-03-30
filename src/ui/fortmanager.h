@@ -87,7 +87,7 @@ public slots:
     void showProgramsWindow();
     void closeProgramsWindow();
 
-    void showProgramEditForm(const QString &appPath);
+    bool showProgramEditForm(const QString &appPath);
 
     void showOptionsWindow();
     void closeOptionsWindow();
@@ -112,7 +112,7 @@ public slots:
     void showInfoBox(const QString &text, const QString &title = QString());
     bool showQuestionBox(const QString &text, const QString &title = QString());
 
-    bool saveOriginConf(const QString &message);
+    bool saveOriginConf(const QString &message, bool onlyFlags = false);
     bool saveConf(bool onlyFlags = false);
     bool applyConf(bool onlyFlags = false);
     bool applyConfImmediateFlags();

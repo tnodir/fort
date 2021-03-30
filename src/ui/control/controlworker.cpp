@@ -51,17 +51,17 @@ bool ControlWorker::post(const QString &command, const QStringList &args)
 
 void ControlWorker::processRequest()
 {
-    QString scriptPath;
+    QString command;
     QStringList args;
 
     m_sharedMemory->lock();
 
-    const bool res = readDataStream(scriptPath, args);
+    const bool res = readDataStream(command, args);
 
     m_sharedMemory->unlock();
 
     if (res) {
-        emit requestReady(scriptPath, args);
+        emit requestReady(command, args);
     }
 }
 
@@ -93,7 +93,7 @@ QByteArray ControlWorker::readData() const
     return QByteArray::fromRawData(reinterpret_cast<const char *>(p), dataSize);
 }
 
-bool ControlWorker::writeDataStream(const QString &scriptPath, const QStringList &args)
+bool ControlWorker::writeDataStream(const QString &command, const QStringList &args)
 {
     QByteArray data;
 
@@ -104,12 +104,12 @@ bool ControlWorker::writeDataStream(const QString &scriptPath, const QStringList
             QDataStream::WriteOnly
 #endif
     );
-    stream << scriptPath << args;
+    stream << command << args;
 
     return writeData(data);
 }
 
-bool ControlWorker::readDataStream(QString &scriptPath, QStringList &args) const
+bool ControlWorker::readDataStream(QString &command, QStringList &args) const
 {
     const QByteArray data = readData();
 
@@ -117,7 +117,7 @@ bool ControlWorker::readDataStream(QString &scriptPath, QStringList &args) const
         return false;
 
     QDataStream stream(data);
-    stream >> scriptPath >> args;
+    stream >> command >> args;
 
     return true;
 }

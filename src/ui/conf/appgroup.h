@@ -21,11 +21,6 @@ class AppGroup : public QObject
             quint32 speedLimitIn READ speedLimitIn WRITE setSpeedLimitIn NOTIFY speedLimitInChanged)
     Q_PROPERTY(quint32 speedLimitOut READ speedLimitOut WRITE setSpeedLimitOut NOTIFY
                     speedLimitOutChanged)
-    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
-    Q_PROPERTY(QString blockText READ blockText WRITE setBlockText NOTIFY blockTextChanged)
-    Q_PROPERTY(QString allowText READ allowText WRITE setAllowText NOTIFY allowTextChanged)
-    Q_PROPERTY(QString periodFrom READ periodFrom WRITE setPeriodFrom NOTIFY periodFromChanged)
-    Q_PROPERTY(QString periodTo READ periodTo WRITE setPeriodTo NOTIFY periodToChanged)
 
 public:
     explicit AppGroup(QObject *parent = nullptr);
