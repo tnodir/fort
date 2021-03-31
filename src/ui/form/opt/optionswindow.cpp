@@ -20,6 +20,7 @@ void OptionsWindow::setupController()
 
     connect(this, &OptionsWindow::aboutToClose, ctrl(), &OptionsController::closeWindow);
 
+    connect(ctrl(), &OptionsController::editedChanged, this, &QWidget::setWindowModified);
     connect(ctrl(), &OptionsController::retranslateUi, this, &OptionsWindow::onRetranslateUi);
 
     emit ctrl()->retranslateUi();
@@ -45,7 +46,7 @@ void OptionsWindow::onRetranslateUi()
 {
     this->unsetLocale();
 
-    this->setWindowTitle(tr("Options"));
+    this->setWindowTitle(tr("Options") + "[*]");
 }
 
 void OptionsWindow::setupUi()

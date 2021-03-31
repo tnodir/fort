@@ -20,7 +20,7 @@ void OptionsController::setConfFlagsEdited(bool v)
 {
     if (m_confFlagsEdited != v) {
         m_confFlagsEdited = v;
-        emit editedChanged();
+        emitEditedChanged();
     }
 }
 
@@ -28,7 +28,7 @@ void OptionsController::setConfEdited(bool v)
 {
     if (m_confEdited != v) {
         m_confEdited = v;
-        emit editedChanged();
+        emitEditedChanged();
     }
 }
 
@@ -36,7 +36,7 @@ void OptionsController::setOthersEdited(bool v)
 {
     if (m_othersEdited != v) {
         m_othersEdited = v;
-        emit editedChanged();
+        emitEditedChanged();
     }
 }
 
@@ -126,4 +126,9 @@ void OptionsController::save(bool closeOnSuccess)
 
         emit confManager()->confSaved(confFlagsOnly);
     }
+}
+
+void OptionsController::emitEditedChanged()
+{
+    emit editedChanged(anyEdited());
 }

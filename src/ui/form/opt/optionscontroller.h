@@ -44,7 +44,7 @@ public:
     ZoneListModel *zoneListModel() const;
 
 signals:
-    void editedChanged();
+    void editedChanged(bool anyEdited);
     void editResetted();
 
     void aboutToSave();
@@ -60,6 +60,8 @@ public slots:
 
 private:
     void save(bool closeOnSuccess);
+
+    void emitEditedChanged();
 
 private:
     bool m_confFlagsEdited : 1;

@@ -119,13 +119,12 @@ QLayout *MainPage::setupDialogButtons()
 
 void MainPage::setupOkApplyButtons()
 {
-    const auto refreshOkApplyButtons = [&] {
-        const bool anyEdited = ctrl()->anyEdited();
+    const auto refreshOkApplyButtons = [&](bool anyEdited) {
         m_btOk->setEnabled(anyEdited);
         m_btApply->setEnabled(anyEdited);
     };
 
-    refreshOkApplyButtons();
+    refreshOkApplyButtons(false);
 
     connect(ctrl(), &OptionsController::editedChanged, this, refreshOkApplyButtons);
 }
