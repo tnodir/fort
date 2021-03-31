@@ -13,7 +13,7 @@
 
 namespace {
 
-const char *const serviceName = "FortFirewallSvc";
+const char *const serviceName = APP_BASE "Svc";
 
 const char *const regCurUserRun =
         R"(HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Run)";

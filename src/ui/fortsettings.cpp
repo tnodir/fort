@@ -51,7 +51,7 @@ int FortSettings::appVersion() const
 void FortSettings::setupGlobal()
 {
     // Use global settings from program's working directory.
-    const QSettings settings("FortFirewall.exe.ini", QSettings::IniFormat);
+    const QSettings settings(APP_BASE ".exe.ini", QSettings::IniFormat);
 
     // High-DPI scale factor rounding policy
     const auto dpiPolicy = settings.value("global/dpiPolicy").toString();
@@ -186,7 +186,7 @@ void FortSettings::processArguments(const QStringList &args, EnvManager *envMana
 
 void FortSettings::setupIni()
 {
-    const QString iniPath(profilePath() + "FortFirewall.ini");
+    const QString iniPath(profilePath() + (APP_BASE ".ini"));
 
     FileUtil::makePath(profilePath());
     FileUtil::makePath(statPath());
@@ -211,12 +211,12 @@ void FortSettings::setErrorMessage(const QString &errorMessage)
 
 QString FortSettings::statFilePath() const
 {
-    return statPath() + QLatin1String("FortFirewall.stat");
+    return statPath() + (APP_BASE ".stat");
 }
 
 QString FortSettings::confFilePath() const
 {
-    return profilePath() + QLatin1String("FortFirewall.config");
+    return profilePath() + (APP_BASE ".config");
 }
 
 void FortSettings::readConfIni(FirewallConf &conf) const

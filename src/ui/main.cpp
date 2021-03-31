@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
 
 #ifdef APP_SINGLE_INSTANCE
     // Check running instance
-    if (!OsUtil::createGlobalMutex(APP_NAME)) {
+    if (!OsUtil::createGlobalMutex(APP_BASE)) {
         QMessageBox::critical(nullptr, QString(), "Application is already running!");
         return FORT_ERROR_INSTANCE;
     }

@@ -3,8 +3,8 @@
 
 #include SRC_PATH + "\version\fort_version.h"
 
-#define APP_EXE_NAME	"FortFirewall.exe"
-#define APP_ICO_NAME	"FortFirewall.ico"
+#define APP_EXE_NAME	APP_BASE + ".exe"
+#define APP_ICO_NAME	APP_BASE + ".ico"
 
 #define APP_EXE		StringChange("{app}\%exe%", "%exe%", APP_EXE_NAME)
 
@@ -12,7 +12,8 @@
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppMutex={#APP_NAME}
+SetupMutex=Global\Setup{#APP_BASE}
+AppMutex={#APP_NAME},{#APP_BASE},Global\{#APP_BASE}
 AppName={#APP_NAME}
 AppVersion={#APP_VERSION_STR}
 VersionInfoVersion={#APP_VERSION_STR}
@@ -27,7 +28,7 @@ DefaultDirName={pf32}\{#APP_NAME}
 AlwaysShowDirOnReadyPage=yes
 AlwaysShowGroupOnReadyPage=yes
 AllowNoIcons=yes
-OutputBaseFilename=FortFirewall-{#APP_VERSION_STR}
+OutputBaseFilename={#APP_BASE}-{#APP_VERSION_STR}
 Uninstallable=not IsTaskSelected('portable')
 UninstallFilesDir={app}\uninst
 UninstallDisplayIcon={uninstallexe}
@@ -47,7 +48,7 @@ Name: "portable"; Description: "Portable"; Flags: unchecked
 
 [Files]
 Source: "build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "FortFirewall.exe.example.ini"; DestDir: "{app}"
+Source: "{#APP_EXE_NAME}.example.ini"; DestDir: "{app}"
 Source: "README.portable"; DestDir: "{app}"; Tasks: portable
 
 [Registry]
