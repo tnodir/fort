@@ -32,6 +32,7 @@ FortSettings::FortSettings(QObject *parent) :
     m_iniExists(false),
     m_noCache(false),
     m_isService(false),
+    m_isWindowControl(false),
     m_bulkUpdating(false),
     m_bulkIniChanged(false)
 {
@@ -81,28 +82,30 @@ void FortSettings::processArguments(const QStringList &args, EnvManager *envMana
             "Directory to store settings.", "profile");
     parser.addOption(profileOption);
 
-    const QCommandLineOption statOption(QStringList() << "s"
-                                                      << "stat",
-            "Directory to store statistics.", "stat");
+    const QCommandLineOption statOption("stat", "Directory to store statistics.", "stat");
     parser.addOption(statOption);
 
-    const QCommandLineOption logsOption(
-            QStringList() << "logs", "Directory to store logs.", "logs");
+    const QCommandLineOption logsOption("logs", "Directory to store logs.", "logs");
     parser.addOption(logsOption);
 
-    const QCommandLineOption cacheOption(
-            QStringList() << "cache", "Directory to store cache.", "cache");
+    const QCommandLineOption cacheOption("cache", "Directory to store cache.", "cache");
     parser.addOption(cacheOption);
 
-    const QCommandLineOption noCacheOption(QStringList() << "no-cache", "Don't use cache on disk.");
+    const QCommandLineOption uninstallOption("u", "Uninstall booted provider and startup entries.");
+    parser.addOption(uninstallOption);
+
+    const QCommandLineOption noCacheOption("no-cache", "Don't use cache on disk.");
     parser.addOption(noCacheOption);
 
-    const QCommandLineOption langOption(QStringList() << "lang", "Default language.", "lang", "en");
+    const QCommandLineOption langOption("lang", "Default language.", "lang", "en");
     parser.addOption(langOption);
 
-    const QCommandLineOption serviceOption(
-            QStringList() << "service", "Is running as a service?", "service");
+    const QCommandLineOption serviceOption("service", "Is running as a service?");
     parser.addOption(serviceOption);
+
+    const QCommandLineOption windowControlOption(
+            "w", "Control running instance's window by sending the command.");
+    parser.addOption(windowControlOption);
 
     const QCommandLineOption controlOption(QStringList() << "c"
                                                          << "control",
@@ -174,6 +177,7 @@ void FortSettings::processArguments(const QStringList &args, EnvManager *envMana
     }
 
     // Control command
+    m_isWindowControl = parser.isSet(windowControlOption);
     m_controlCommand = parser.value(controlOption);
 
     // Other Arguments

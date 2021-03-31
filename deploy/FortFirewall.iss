@@ -58,7 +58,7 @@ Root: HKCR; Subkey: "{#REG_SHELL}"; Flags: uninsdeletekeyifempty; Tasks: explore
 Root: HKCR; Subkey: "{#REG_SHELL_MENU}"; Flags: deletekey uninsdeletekey
 Root: HKCR; Subkey: "{#REG_SHELL_MENU}"; ValueType: string; ValueName: "icon"; ValueData: "{#APP_EXE}"; Tasks: explorer
 Root: HKCR; Subkey: "{#REG_SHELL_MENU}"; ValueType: string; ValueName: "MUIVerb"; ValueData: "Fort Firewall ..."; Tasks: explorer
-Root: HKCR; Subkey: "{#REG_SHELL_MENU}\command"; ValueType: string; ValueData: """{#APP_EXE}"" -c prog add ""%1"""; Tasks: explorer
+Root: HKCR; Subkey: "{#REG_SHELL_MENU}\command"; ValueType: string; ValueData: """{#APP_EXE}"" -w -c prog add ""%1"""; Tasks: explorer
 
 [Icons]
 ; Start menu shortcut

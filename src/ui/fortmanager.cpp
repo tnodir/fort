@@ -16,6 +16,7 @@
 #include "conf/firewallconf.h"
 #include "driver/drivermanager.h"
 #include "form/conn/connectionswindow.h"
+#include "form/controls/mainwindow.h"
 #include "form/graph/graphwindow.h"
 #include "form/opt/optionswindow.h"
 #include "form/prog/programswindow.h"
@@ -50,20 +51,21 @@
 #include "util/stringutil.h"
 #include "util/window/widgetwindowstatewatcher.h"
 
-FortManager::FortManager(FortSettings *fortSettings, EnvManager *envManager, QObject *parent) :
+FortManager::FortManager(FortSettings *settings, EnvManager *envManager, QObject *parent) :
     QObject(parent),
+    m_mainWindow(new MainWindow()),
     m_trayIcon(new QSystemTrayIcon(this)),
     m_progWindowState(new WidgetWindowStateWatcher(this)),
     m_optWindowState(new WidgetWindowStateWatcher(this)),
     m_zoneWindowState(new WidgetWindowStateWatcher(this)),
     m_graphWindowState(new WidgetWindowStateWatcher(this)),
     m_connWindowState(new WidgetWindowStateWatcher(this)),
-    m_settings(fortSettings),
+    m_settings(settings),
     m_envManager(envManager),
-    m_quotaManager(new QuotaManager(fortSettings, this)),
-    m_statManager(new StatManager(fortSettings->statFilePath(), m_quotaManager, this)),
+    m_quotaManager(new QuotaManager(settings, this)),
+    m_statManager(new StatManager(settings->statFilePath(), m_quotaManager, this)),
     m_driverManager(new DriverManager(this)),
-    m_confManager(new ConfManager(fortSettings->confFilePath(), this, this)),
+    m_confManager(new ConfManager(settings->confFilePath(), this, this)),
     m_logManager(new LogManager(this, this)),
     m_nativeEventFilter(new NativeEventFilter(this)),
     m_hotKeyManager(new HotKeyManager(m_nativeEventFilter, this)),
@@ -103,6 +105,8 @@ FortManager::~FortManager()
 
     closeDriver();
     closeLogManager();
+
+    delete m_mainWindow;
 }
 
 FirewallConf *FortManager::conf() const
@@ -555,8 +559,8 @@ bool FortManager::checkPassword()
 
     g_passwordDialogOpened = true;
 
-    const QString password = QInputDialog::getText(
-            &m_window, tr("Password input"), tr("Please enter the password"), QLineEdit::Password);
+    const QString password = QInputDialog::getText(m_mainWindow, tr("Password input"),
+            tr("Please enter the password"), QLineEdit::Password);
 
     g_passwordDialogOpened = false;
 
@@ -796,7 +800,7 @@ void FortManager::createTrayMenu()
 {
     const bool hotKeyEnabled = settings()->hotKeyEnabled();
 
-    QMenu *menu = new QMenu(&m_window);
+    QMenu *menu = new QMenu(m_mainWindow);
 
     m_programsAction = addAction(menu, IconCache::icon(":/icons/window.png"), QString(), this,
             SLOT(showProgramsWindow()));
@@ -949,7 +953,7 @@ void FortManager::removeHotKeys()
 QWidget *FortManager::focusWidget()
 {
     auto w = QApplication::focusWidget();
-    return w ? w : &m_window;
+    return w ? w : m_mainWindow;
 }
 
 QAction *FortManager::addAction(QWidget *widget, const QIcon &icon, const QString &text,

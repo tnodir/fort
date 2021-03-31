@@ -9,28 +9,27 @@
 
 class ControlWorker;
 class FortManager;
+class FortSettings;
 
 class ControlManager : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit ControlManager(
-            const QString &globalName, const QString &command, QObject *parent = nullptr);
+    explicit ControlManager(FortSettings *settings, QObject *parent = nullptr);
     ~ControlManager() override;
     CLASS_DELETE_COPY_MOVE(ControlManager)
 
-    bool isClient() const { return m_isClient; }
+    bool isClient() const;
 
     bool listen(FortManager *fortManager);
-    bool post(const QStringList &args);
+    bool post();
 
-signals:
-
-public slots:
+    FortSettings *settings() const { return m_settings; }
+    FortManager *fortManager() const { return m_fortManager; }
 
 private slots:
-    void processRequest(const QString &command, const QStringList &args);
+    bool processRequest(const QString &command, const QStringList &args);
 
 private:
     bool processCommand(const QString &command, const QStringList &args, QString &errorMessage);
@@ -40,12 +39,9 @@ private:
     void abort();
 
 private:
-    bool m_isClient = false;
-
+    FortSettings *m_settings = nullptr;
     FortManager *m_fortManager = nullptr;
     ControlWorker *m_worker = nullptr;
-
-    QString m_command;
 
     QSystemSemaphore m_semaphore;
     QSharedMemory m_sharedMemory;

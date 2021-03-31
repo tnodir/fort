@@ -3,9 +3,10 @@
 
 #include <QObject>
 
-#include "form/controls/mainwindow.h"
 #include "util/classhelpers.h"
 
+QT_FORWARD_DECLARE_CLASS(QAction)
+QT_FORWARD_DECLARE_CLASS(QMouseEvent)
 QT_FORWARD_DECLARE_CLASS(QSystemTrayIcon)
 
 class AppInfoCache;
@@ -22,6 +23,7 @@ class GraphWindow;
 class HostInfoCache;
 class HotKeyManager;
 class LogManager;
+class MainWindow;
 class NativeEventFilter;
 class OptionsWindow;
 class ProgramsWindow;
@@ -196,11 +198,12 @@ private:
             const QObject *receiver = nullptr, const char *member = nullptr);
 
 private:
-    MainWindow m_window; // dummy window for tray icon
+    bool m_trayTriggered = false;
 
     TrayMessageType m_lastMessageType = MessageOptions;
 
-    bool m_trayTriggered = false;
+    MainWindow *m_mainWindow = nullptr; // dummy window for tray icon
+
     QSystemTrayIcon *m_trayIcon = nullptr;
 
     ProgramsWindow *m_progWindow = nullptr;

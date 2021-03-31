@@ -1,5 +1,6 @@
 #include "controlmanager.h"
 
+#include <QApplication>
 #include <QLoggingCategory>
 #include <QThreadPool>
 
@@ -16,19 +17,23 @@ Q_LOGGING_CATEGORY(CLOG_CONTROL_MANAGER, "control")
 #define logWarning()  qCWarning(CLOG_CONTROL_MANAGER, )
 #define logCritical() qCCritical(CLOG_CONTROL_MANAGER, )
 
-ControlManager::ControlManager(const QString &globalName, const QString &command, QObject *parent) :
+ControlManager::ControlManager(FortSettings *settings, QObject *parent) :
     QObject(parent),
-    m_isClient(!command.isEmpty()),
-    m_command(command),
-    m_semaphore(globalName + QLatin1String("_ControlSemaphore"), 0,
+    m_settings(settings),
+    m_semaphore(QApplication::applicationName() + QLatin1String("_ControlSemaphore"), 0,
             isClient() ? QSystemSemaphore::Open : QSystemSemaphore::Create),
-    m_sharedMemory(globalName + QLatin1String("_ControlSharedMemory"))
+    m_sharedMemory(QApplication::applicationName() + QLatin1String("_ControlSharedMemory"))
 {
 }
 
 ControlManager::~ControlManager()
 {
     abort();
+}
+
+bool ControlManager::isClient() const
+{
+    return !settings()->controlCommand().isEmpty();
 }
 
 bool ControlManager::listen(FortManager *fortManager)
@@ -50,8 +55,12 @@ bool ControlManager::listen(FortManager *fortManager)
     return true;
 }
 
-bool ControlManager::post(const QStringList &args)
+bool ControlManager::post()
 {
+    if (settings()->isWindowControl()) {
+        // TODO
+    }
+
     if (!m_sharedMemory.attach()) {
         logWarning() << "Shared Memory attach error:" << m_sharedMemory.errorString();
         return false;
@@ -59,15 +68,17 @@ bool ControlManager::post(const QStringList &args)
 
     ControlWorker worker(&m_semaphore, &m_sharedMemory);
 
-    return worker.post(m_command, args);
+    return worker.post(settings()->controlCommand(), settings()->args());
 }
 
-void ControlManager::processRequest(const QString &command, const QStringList &args)
+bool ControlManager::processRequest(const QString &command, const QStringList &args)
 {
     QString errorMessage;
     if (!processCommand(command, args, errorMessage)) {
         logWarning() << "Bad control command" << errorMessage << ':' << command << args;
+        return false;
     }
+    return true;
 }
 
 bool ControlManager::processCommand(
@@ -82,7 +93,7 @@ bool ControlManager::processCommand(
             return false;
         }
 
-        auto conf = m_fortManager->conf();
+        auto conf = fortManager()->conf();
         bool onlyFlags = true;
 
         const auto confPropName = args.at(0);
@@ -103,7 +114,7 @@ bool ControlManager::processCommand(
         }
 
         if (ok) {
-            m_fortManager->saveOriginConf(tr("Control command executed"), onlyFlags);
+            fortManager()->saveOriginConf(tr("Control command executed"), onlyFlags);
         }
     } else if (command == "prog") {
         if (argsSize < 1) {
@@ -119,7 +130,7 @@ bool ControlManager::processCommand(
                 return false;
             }
 
-            ok = m_fortManager->showProgramEditForm(args.at(1));
+            ok = fortManager()->showProgramEditForm(args.at(1));
         }
     }
 

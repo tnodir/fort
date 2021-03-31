@@ -50,11 +50,11 @@ int main(int argc, char *argv[])
     fortSettings.initialize(QCoreApplication::arguments(), &envManager);
 
 #ifdef USE_CONTROL_COMMANDS
-    ControlManager controlManager(QApplication::applicationName(), fortSettings.controlCommand());
+    ControlManager controlManager(&fortSettings);
 
     // Send control request to running instance
     if (controlManager.isClient()) {
-        return controlManager.post(fortSettings.args()) ? 0 : FORT_ERROR_CONTROL;
+        return controlManager.post() ? 0 : FORT_ERROR_CONTROL;
     }
 #endif
 
