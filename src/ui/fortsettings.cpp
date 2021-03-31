@@ -11,6 +11,7 @@
 #include "util/dateutil.h"
 #include "util/envmanager.h"
 #include "util/fileutil.h"
+#include "util/startuputil.h"
 
 namespace {
 
@@ -32,6 +33,7 @@ FortSettings::FortSettings(QObject *parent) :
     m_iniExists(false),
     m_noCache(false),
     m_isService(false),
+    m_hasService(false),
     m_isWindowControl(false),
     m_bulkUpdating(false),
     m_bulkIniChanged(false)
@@ -128,9 +130,7 @@ void FortSettings::processArguments(const QStringList &args, EnvManager *envMana
     }
 
     // Is service
-    if (parser.isSet(serviceOption)) {
-        m_isService = true;
-    }
+    m_isService = parser.isSet(serviceOption);
 
     // Profile Path
     if (parser.isSet(profileOption)) {
@@ -140,8 +140,10 @@ void FortSettings::processArguments(const QStringList &args, EnvManager *envMana
         const auto appBinLocation = FileUtil::appBinLocation();
         const bool isPortable = FileUtil::fileExists(appBinLocation + "/README.portable");
 
-        m_profilePath =
-                pathSlash(isPortable ? appBinLocation + "/Data" : FileUtil::appConfigLocation());
+        m_profilePath = pathSlash(isPortable
+                        ? appBinLocation + "/Data"
+                        : (hasService() ? expandPath("%ProgramData%\\" APP_NAME, envManager)
+                                        : FileUtil::appConfigLocation()));
     } else {
         m_profilePath = expandPath(m_profilePath, envManager);
     }

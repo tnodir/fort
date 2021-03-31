@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
 
     // Process global settings required before QApplication costruction
     FortSettings fortSettings;
+    fortSettings.setHasService(StartupUtil::isServiceInstalled());
     fortSettings.setupGlobal();
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)

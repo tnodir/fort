@@ -17,10 +17,6 @@ class FortSettings : public QObject
 public:
     explicit FortSettings(QObject *parent = nullptr);
 
-    bool noCache() const { return m_noCache; }
-    bool isService() const { return m_isService; }
-    bool isWindowControl() const { return m_isWindowControl; }
-
     bool debug() const { return iniBool("base/debug"); }
     void setDebug(bool on) { setIniValue("base/debug", on); }
 
@@ -205,6 +201,11 @@ public:
     }
     QString hotKeyQuit() const { return iniText("hotKey/quit"); }
 
+    bool noCache() const { return m_noCache; }
+    bool isService() const { return m_isService; }
+    bool hasService() const { return m_hasService; }
+    void setHasService(bool v) { m_hasService = v; }
+
     QString profilePath() const { return m_profilePath; }
 
     QString statPath() const { return m_statPath; }
@@ -215,6 +216,7 @@ public:
 
     QString confFilePath() const;
 
+    bool isWindowControl() const { return m_isWindowControl; }
     QString controlCommand() const { return m_controlCommand; }
 
     QStringList args() const { return m_args; }
@@ -279,6 +281,7 @@ private:
     bool m_iniExists : 1;
     bool m_noCache : 1;
     bool m_isService : 1;
+    bool m_hasService : 1;
     bool m_isWindowControl : 1;
 
     bool m_bulkUpdating : 1;
