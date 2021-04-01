@@ -13,14 +13,15 @@
 
 namespace {
 
-const char *const serviceName = APP_BASE "Svc";
+const wchar_t *const serviceName = L"" APP_BASE "Svc";
+const wchar_t *const serviceDisplay = L"" APP_NAME;
 
 const char *const regCurUserRun =
         R"(HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Run)";
 const char *const regAllUsersRun =
         R"(HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run)";
 
-QString appFilePath()
+QString wrappedAppFilePath()
 {
     const auto filePath = QCoreApplication::applicationFilePath().replace('/', '\\');
     return QString("\"%1\"").arg(filePath);
@@ -45,7 +46,7 @@ bool isAutorunForAllUsers()
 void setAutorunForUser(const char *key)
 {
     QSettings reg(key, QSettings::Registry64Format);
-    reg.setValue(APP_NAME, appFilePath());
+    reg.setValue(APP_NAME, wrappedAppFilePath());
 }
 
 void setAutorunForCurrentUser()
@@ -74,14 +75,39 @@ void removeAutorunForAllUsers()
     removeAutorunForUser(regAllUsersRun);
 }
 
+#if 0
+// (Failed) Experiment to auto-run the interactive program with elevated privileges without UAC prompt.
+
+const char *const schTaskName = APP_BASE "Task";
+
+bool isAutorunAsAdminForAllUsers()
+{
+    return QProcess::execute("schtasks.exe", { "/query", "/tn", schTaskName, "/nh" }) == 0;
+}
+
+void setAutorunAsAdminForAllUsers()
+{
+    const auto command =
+            QLatin1String("cmd.exe /c start \"") + APP_NAME + "\" " + wrappedAppFilePath();
+    QProcess::execute("schtasks.exe",
+            { "/create", "/tn", schTaskName, "/sc", "ONLOGON", "/tr", command, "/rl", "HIGHEST",
+                    /*"/ru", "SYSTEM",*/ "/f" });
+}
+
+void removeAutorunAsAdminForAllUsers()
+{
+    QProcess::execute("schtasks.exe", { "/delete", "/tn", schTaskName, "/f" });
+}
+#endif
+
 }
 
 bool StartupUtil::isServiceInstalled()
 {
     bool res = false;
-    const SC_HANDLE mngr = OpenSCManagerA(nullptr, nullptr, SC_MANAGER_CONNECT);
+    const SC_HANDLE mngr = OpenSCManagerW(nullptr, nullptr, SC_MANAGER_CONNECT);
     if (mngr) {
-        const SC_HANDLE svc = OpenServiceA(mngr, serviceName, SERVICE_INTERROGATE);
+        const SC_HANDLE svc = OpenServiceW(mngr, serviceName, SERVICE_INTERROGATE);
         if (svc) {
             res = true;
             CloseServiceHandle(svc);
@@ -96,10 +122,10 @@ bool StartupUtil::installService()
     bool res = false;
     const SC_HANDLE mngr = OpenSCManager(NULL, NULL, SC_MANAGER_CREATE_SERVICE);
     if (mngr) {
-        const auto command = appFilePath() + " --service";
-        const SC_HANDLE svc = CreateServiceA(mngr, serviceName, APP_NAME, SERVICE_ALL_ACCESS,
+        const auto command = wrappedAppFilePath() + " --service";
+        const SC_HANDLE svc = CreateServiceW(mngr, serviceName, serviceDisplay, SERVICE_ALL_ACCESS,
                 SERVICE_WIN32_OWN_PROCESS, SERVICE_AUTO_START, SERVICE_ERROR_NORMAL,
-                command.toLatin1(), 0, 0, 0, 0, 0);
+                (LPCWSTR) command.utf16(), 0, 0, 0, 0, 0);
         if (svc) {
             res = true;
             CloseServiceHandle(svc);
@@ -114,7 +140,7 @@ bool StartupUtil::uninstallService()
     bool res = false;
     const SC_HANDLE mngr = OpenSCManager(NULL, NULL, SC_MANAGER_CREATE_SERVICE);
     if (mngr) {
-        const SC_HANDLE svc = OpenServiceA(mngr, serviceName, SERVICE_ALL_ACCESS | DELETE);
+        const SC_HANDLE svc = OpenServiceW(mngr, serviceName, SERVICE_ALL_ACCESS | DELETE);
         if (svc) {
             int n = 2; /* count of attempts to stop the service */
             do {
