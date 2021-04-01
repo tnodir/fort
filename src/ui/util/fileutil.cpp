@@ -184,6 +184,14 @@ QDateTime FileUtil::fileModTime(const QString &filePath)
     return fi.lastModified();
 }
 
+QString FileUtil::nativeAppFilePath()
+{
+    constexpr int maxPathSize = 4096;
+    wchar_t path[maxPathSize];
+    const int n = GetModuleFileNameW(nullptr, path, maxPathSize);
+    return (n > 0 && n < maxPathSize) ? QString::fromUtf16((const char16_t *) path) : QString();
+}
+
 QString FileUtil::appBinLocation()
 {
     return QCoreApplication::applicationDirPath();

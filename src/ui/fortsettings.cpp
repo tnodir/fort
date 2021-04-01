@@ -52,8 +52,8 @@ int FortSettings::appVersion() const
 
 void FortSettings::setupGlobal()
 {
-    // Use global settings from program's working directory.
-    const QSettings settings(APP_BASE ".exe.ini", QSettings::IniFormat);
+    // Use global settings from program's binary directory
+    const QSettings settings(FileUtil::nativeAppFilePath() + ".ini", QSettings::IniFormat);
 
     // High-DPI scale factor rounding policy
     const auto dpiPolicy = settings.value("global/dpiPolicy").toString();

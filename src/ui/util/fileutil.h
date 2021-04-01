@@ -16,10 +16,10 @@ public:
     // Convert drive letter (A: .. Z:) to DOS device name
     static QString driveToKernelName(const QString &drive);
 
-    // Convert Native path to Win32 path
+    // Convert Native kernel path to Win32 path
     static QString kernelPathToPath(const QString &kernelPath);
 
-    // Convert Win32 path to Native path
+    // Convert Win32 path to Native kernel path
     static QString pathToKernelPath(const QString &path, bool lower = true);
 
     static QString fileName(const QString &path);
@@ -44,6 +44,7 @@ public:
 
     static QDateTime fileModTime(const QString &filePath);
 
+    static QString nativeAppFilePath();
     static QString appBinLocation();
     static QString appCacheLocation();
     static QString appConfigLocation();
