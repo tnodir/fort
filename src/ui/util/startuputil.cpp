@@ -165,7 +165,7 @@ StartupUtil::StartupMode StartupUtil::getStartupMode()
             : (isAutorunForCurrentUser() ? StartupCurrentUser : StartupDisabled);
 }
 
-void StartupUtil::setStartupMode(StartupMode mode)
+void StartupUtil::setStartupMode(int mode)
 {
     removeAutorunForCurrentUser();
     removeAutorunForAllUsers();
@@ -184,4 +184,9 @@ void StartupUtil::setStartupMode(StartupMode mode)
         installService();
         break;
     }
+}
+
+bool StartupUtil::isServiceMode(int mode)
+{
+    return mode == StartupAllUsers || mode == StartupAllUsersBackground;
 }

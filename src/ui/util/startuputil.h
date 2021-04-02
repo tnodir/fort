@@ -18,7 +18,9 @@ public:
     static bool uninstallService();
 
     static StartupMode getStartupMode();
-    static void setStartupMode(StartupMode mode);
+    static void setStartupMode(int mode);
+
+    static bool isServiceMode(int mode);
 };
 
 #endif // STARTUPUTIL_H

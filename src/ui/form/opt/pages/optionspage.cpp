@@ -25,7 +25,7 @@
 #include "../optionscontroller.h"
 
 OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) :
-    BasePage(ctrl, parent), m_iniEdited(false), m_startModeEdited(false)
+    BasePage(ctrl, parent), m_iniEdited(false), m_currentStartMode(0)
 {
     setupUi();
 }
@@ -41,28 +41,23 @@ void OptionsPage::setIniEdited(bool v)
     }
 }
 
-void OptionsPage::setStartModeEdited(bool v)
-{
-    if (m_startModeEdited != v) {
-        m_startModeEdited = v;
-
-        if (startModeEdited()) {
-            ctrl()->setOthersEdited(true);
-        }
-    }
-}
-
 void OptionsPage::onEditResetted()
 {
     setIniEdited(false);
-    setStartModeEdited(false);
 }
 
 void OptionsPage::onSaved()
 {
-    if (startModeEdited()) {
-        StartupUtil::setStartupMode(
-                static_cast<StartupUtil::StartupMode>(m_comboStartMode->currentIndex()));
+    if (m_currentStartMode != m_comboStartMode->currentIndex()) {
+        const bool wasServiceMode = StartupUtil::isServiceMode(m_currentStartMode);
+
+        m_currentStartMode = m_comboStartMode->currentIndex();
+        StartupUtil::setStartupMode(m_currentStartMode);
+
+        const bool isServiceMode = StartupUtil::isServiceMode(m_currentStartMode);
+        if (isServiceMode != wasServiceMode) {
+            // TODO: Restart required
+        }
     }
 
     if (!iniEdited())
@@ -118,9 +113,10 @@ void OptionsPage::retranslateComboStartMode()
     const QStringList list = { tr("Disabled"), tr("For current user"), tr("For all users"),
         tr("For all users in background") };
 
-    const int currentIndex = m_comboStartMode->currentIndex() >= 0
-            ? m_comboStartMode->currentIndex()
-            : StartupUtil::getStartupMode();
+    int currentIndex = m_comboStartMode->currentIndex();
+    if (m_comboStartMode->currentIndex() < 0) {
+        currentIndex = m_currentStartMode = StartupUtil::getStartupMode();
+    }
 
     m_comboStartMode->clear();
     m_comboStartMode->addItems(list);
@@ -136,7 +132,9 @@ void OptionsPage::retranslateComboStartMode()
         return;
 
     const int itemCount = comboModel->rowCount();
-    for (int i = (currentIndex > 1 ? 0 : 2); i < itemCount; ++i) {
+    const bool isServiceMode = StartupUtil::isServiceMode(currentIndex);
+    for (int i = (isServiceMode ? StartupUtil::StartupDisabled : StartupUtil::StartupAllUsers);
+            i < itemCount; ++i) {
         auto item = comboModel->item(i);
         if (item) {
             item->setEnabled(false);
@@ -224,7 +222,7 @@ QLayout *OptionsPage::setupStartModeLayout()
     m_labelStartMode = ControlUtil::createLabel();
 
     m_comboStartMode =
-            ControlUtil::createComboBox(QStringList(), [&](int) { setStartModeEdited(true); });
+            ControlUtil::createComboBox(QStringList(), [&](int) { ctrl()->setOthersEdited(true); });
     m_comboStartMode->setFixedWidth(200);
 
     return ControlUtil::createRowLayout(m_labelStartMode, m_comboStartMode);

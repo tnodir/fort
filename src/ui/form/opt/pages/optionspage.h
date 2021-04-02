@@ -13,9 +13,6 @@ public:
     bool iniEdited() const { return m_iniEdited; }
     void setIniEdited(bool v);
 
-    bool startModeEdited() const { return m_startModeEdited; }
-    void setStartModeEdited(bool v);
-
 protected slots:
     void onEditResetted() override;
     void onSaved() override;
@@ -44,8 +41,8 @@ private:
     void setupNewVersionUpdate();
 
 private:
-    bool m_iniEdited : 1;
-    bool m_startModeEdited : 1;
+    uint m_iniEdited : 1;
+    uint m_currentStartMode : 4;
 
     QGroupBox *m_gbStartup = nullptr;
     QGroupBox *m_gbTraffic = nullptr;
