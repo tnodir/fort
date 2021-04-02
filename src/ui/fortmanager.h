@@ -113,6 +113,8 @@ public slots:
     void showErrorBox(const QString &text, const QString &title = QString());
     void showInfoBox(const QString &text, const QString &title = QString());
     bool showQuestionBox(const QString &text, const QString &title = QString());
+    bool showYesNoBox(const QString &text, const QString &yesText, const QString &noText,
+            const QString &title = QString());
 
     bool saveOriginConf(const QString &message, bool onlyFlags = false);
     bool saveConf(bool onlyFlags = false);

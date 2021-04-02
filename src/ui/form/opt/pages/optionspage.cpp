@@ -56,7 +56,8 @@ void OptionsPage::onSaved()
 
         const bool isServiceMode = StartupUtil::isServiceMode(m_currentStartMode);
         if (isServiceMode != wasServiceMode) {
-            // TODO: Restart required
+            QMetaObject::invokeMethod(
+                    this, &OptionsPage::processRestartRequired, Qt::QueuedConnection);
         }
     }
 
@@ -478,4 +479,12 @@ void OptionsPage::setupNewVersionUpdate()
 
     connect(taskManager()->taskInfoUpdateChecker(), &TaskInfoUpdateChecker::versionChanged, this,
             refreshNewVersion);
+}
+
+void OptionsPage::processRestartRequired()
+{
+    if (!fortManager()->showYesNoBox(tr("Restart Required"), tr("Restart Now"), tr("Later")))
+        return;
+
+    // TODO: Restart the app with args
 }

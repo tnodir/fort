@@ -588,6 +588,16 @@ bool FortManager::showQuestionBox(const QString &text, const QString &title)
     return QMessageBox::question(focusWidget(), title, text) == QMessageBox::Yes;
 }
 
+bool FortManager::showYesNoBox(
+        const QString &text, const QString &yesText, const QString &noText, const QString &title)
+{
+    QMessageBox box(QMessageBox::Information, title, text, QMessageBox::NoButton, focusWidget());
+    box.addButton(yesText, QMessageBox::YesRole);
+    box.addButton(noText, QMessageBox::NoRole);
+
+    return box.exec() == QMessageBox::Yes;
+}
+
 bool FortManager::saveOriginConf(const QString &message, bool onlyFlags)
 {
     if (!saveConf(conf(), onlyFlags))
