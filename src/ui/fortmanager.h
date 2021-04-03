@@ -109,6 +109,8 @@ public slots:
     void showConnectionsWindow();
     void closeConnectionsWindow();
 
+    void processRestartRequired();
+
     void exit(int retcode = 0);
 
     bool checkPassword();

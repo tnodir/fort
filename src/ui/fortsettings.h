@@ -15,7 +15,7 @@ class FortSettings : public QObject
     Q_OBJECT
 
 public:
-    explicit FortSettings(int argc = 0, char *argv[] = nullptr, QObject *parent = nullptr);
+    explicit FortSettings(QObject *parent = nullptr);
 
     bool debug() const { return iniBool("base/debug"); }
     void setDebug(bool on) { setIniValue("base/debug", on); }
@@ -219,7 +219,9 @@ public:
     bool isWindowControl() const { return m_isWindowControl; }
     QString controlCommand() const { return m_controlCommand; }
 
-    QStringList args() const { return m_args; }
+    const QStringList &args() const { return m_args; }
+
+    const QStringList &appArguments() const { return m_appArguments; }
 
     QString errorMessage() const { return m_errorMessage; }
 
@@ -287,9 +289,6 @@ private:
     bool m_bulkUpdating : 1;
     bool m_bulkIniChanged : 1;
 
-    int m_argc = 0;
-    char **m_argv = nullptr;
-
     QString m_defaultLanguage;
     QString m_profilePath;
     QString m_statPath;
@@ -297,6 +296,8 @@ private:
     QString m_cachePath;
     QString m_controlCommand;
     QStringList m_args;
+
+    QStringList m_appArguments;
 
     QString m_errorMessage;
 

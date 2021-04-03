@@ -40,8 +40,6 @@ private:
     void setupNewVersionBox();
     void setupNewVersionUpdate();
 
-    void processRestartRequired();
-
 private:
     uint m_iniEdited : 1;
     uint m_currentStartMode : 4;

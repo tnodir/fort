@@ -5,6 +5,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QMouseEvent>
+#include <QProcess>
 #include <QStyle>
 #include <QStyleFactory>
 #include <QSystemTrayIcon>
@@ -557,6 +558,19 @@ void FortManager::closeConnectionsWindow()
     m_connWindow = nullptr;
 }
 
+void FortManager::processRestartRequired()
+{
+    if (!showYesNoBox(tr("Restart Required"), tr("Restart Now"), tr("Later")))
+        return;
+
+    const QString appFilePath = QCoreApplication::applicationFilePath();
+    const QStringList args = settings()->appArguments();
+
+    connect(this, &QObject::destroyed, [=] { QProcess::startDetached(appFilePath, args); });
+
+    exit(0);
+}
+
 void FortManager::exit(int retcode)
 {
     if (!checkPassword())
@@ -620,7 +634,7 @@ bool FortManager::showYesNoBox(
     box.addButton(yesText, QMessageBox::YesRole);
     box.addButton(noText, QMessageBox::NoRole);
 
-    return box.exec() == QMessageBox::Yes;
+    return box.exec() == 0;
 }
 
 bool FortManager::saveOriginConf(const QString &message, bool onlyFlags)
