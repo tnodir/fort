@@ -15,7 +15,7 @@ class FortSettings : public QObject
     Q_OBJECT
 
 public:
-    explicit FortSettings(QObject *parent = nullptr);
+    explicit FortSettings(int argc = 0, char *argv[] = nullptr, QObject *parent = nullptr);
 
     bool debug() const { return iniBool("base/debug"); }
     void setDebug(bool on) { setIniValue("base/debug", on); }
@@ -286,6 +286,9 @@ private:
 
     bool m_bulkUpdating : 1;
     bool m_bulkIniChanged : 1;
+
+    int m_argc = 0;
+    char **m_argv = nullptr;
 
     QString m_defaultLanguage;
     QString m_profilePath;

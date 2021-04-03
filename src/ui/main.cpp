@@ -1,7 +1,5 @@
 #include <QApplication>
 #include <QMessageBox>
-#include <QStyle>
-#include <QStyleFactory>
 
 #ifdef USE_VISUAL_LEAK_DETECTOR
 #    include <vld.h>
@@ -30,7 +28,7 @@ int main(int argc, char *argv[])
     }
 
     // Process global settings required before QApplication costruction
-    FortSettings fortSettings;
+    FortSettings fortSettings(argc, argv);
     fortSettings.setHasService(StartupUtil::isServiceInstalled());
     fortSettings.setupGlobal();
 
@@ -50,37 +48,25 @@ int main(int argc, char *argv[])
     // Initialize settings from command line arguments
     fortSettings.initialize(QCoreApplication::arguments(), &envManager);
 
-#ifdef USE_CONTROL_COMMANDS
     ControlManager controlManager(&fortSettings);
 
-    // Send control request to running instance
+    // Send control command to running instance
     if (controlManager.isClient()) {
         return controlManager.post() ? 0 : FORT_ERROR_CONTROL;
     }
-#endif
-
-#ifdef APP_SINGLE_INSTANCE
-    // Check running instance
-    if (!OsUtil::createGlobalMutex(APP_BASE)) {
-        QMessageBox::critical(nullptr, QString(), "Application is already running!");
-        return FORT_ERROR_INSTANCE;
-    }
-#endif
-
-    // Style & Palette
-    const auto fusionStyle = QStyleFactory::create("Fusion");
-    QApplication::setStyle(fusionStyle);
-    QApplication::setPalette(fusionStyle->standardPalette());
 
     FortManager fortManager(&fortSettings, &envManager);
-    fortManager.launch();
 
-#ifdef USE_CONTROL_COMMANDS
-    // Process control requests from clients
-    if (!controlManager.listen(&fortManager)) {
+    // Check running instance
+    if (!fortManager.checkRunningInstance())
+        return FORT_ERROR_INSTANCE;
+
+    fortManager.initialize();
+    fortManager.show();
+
+    // Process control commands from clients
+    if (!controlManager.listen(&fortManager))
         return FORT_ERROR_CONTROL;
-    }
-#endif
 
     return QApplication::exec();
 }

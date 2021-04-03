@@ -14,7 +14,8 @@ public:
     static bool openFolder(const QString &filePath);
     static bool openUrlOrFolder(const QString &path);
 
-    static bool createGlobalMutex(const char *name);
+    static void *createMutex(const char *name, bool &isSingleInstance);
+    static void closeMutex(void *mutexHandle);
 
     static quint32 lastErrorCode();
     static QString errorMessage(quint32 errorCode = lastErrorCode());

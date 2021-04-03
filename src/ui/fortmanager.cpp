@@ -5,10 +5,14 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QMouseEvent>
+#include <QStyle>
+#include <QStyleFactory>
 #include <QSystemTrayIcon>
 #include <QThreadPool>
 #include <QTimer>
 #include <QWindow>
+
+#include <fort_version.h>
 
 #include "conf/addressgroup.h"
 #include "conf/appgroup.h"
@@ -52,31 +56,62 @@
 #include "util/window/widgetwindowstatewatcher.h"
 
 FortManager::FortManager(FortSettings *settings, EnvManager *envManager, QObject *parent) :
-    QObject(parent),
-    m_mainWindow(new MainWindow()),
-    m_trayIcon(new QSystemTrayIcon(this)),
-    m_progWindowState(new WidgetWindowStateWatcher(this)),
-    m_optWindowState(new WidgetWindowStateWatcher(this)),
-    m_zoneWindowState(new WidgetWindowStateWatcher(this)),
-    m_graphWindowState(new WidgetWindowStateWatcher(this)),
-    m_connWindowState(new WidgetWindowStateWatcher(this)),
-    m_settings(settings),
-    m_envManager(envManager),
-    m_quotaManager(new QuotaManager(settings, this)),
-    m_statManager(new StatManager(settings->statFilePath(), m_quotaManager, this)),
-    m_driverManager(new DriverManager(this)),
-    m_confManager(new ConfManager(settings->confFilePath(), this, this)),
-    m_logManager(new LogManager(this, this)),
-    m_nativeEventFilter(new NativeEventFilter(this)),
-    m_hotKeyManager(new HotKeyManager(m_nativeEventFilter, this)),
-    m_taskManager(new TaskManager(this, this)),
-    m_appInfoCache(new AppInfoCache(this)),
-    m_hostInfoCache(new HostInfoCache(this)),
-    m_appListModel(new AppListModel(m_confManager, this)),
-    m_appStatModel(new AppStatModel(m_statManager, this)),
-    m_zoneListModel(new ZoneListModel(m_confManager, this)),
-    m_connListModel(new ConnListModel(m_statManager, this))
+    QObject(parent), m_settings(settings), m_envManager(envManager)
 {
+}
+
+FortManager::~FortManager()
+{
+    removeHotKeys();
+
+    closeDriver();
+    closeLogManager();
+
+    delete m_mainWindow;
+
+    OsUtil::closeMutex(m_instanceMutex);
+}
+
+bool FortManager::checkRunningInstance()
+{
+    bool isSingleInstance;
+    m_instanceMutex = OsUtil::createMutex(APP_BASE, isSingleInstance);
+
+    if (!isSingleInstance) {
+        showErrorBox(tr("Application is already running!"));
+    }
+    return isSingleInstance;
+}
+
+void FortManager::initialize()
+{
+    // Create instances
+    {
+        m_mainWindow = new MainWindow();
+        m_trayIcon = new QSystemTrayIcon(this);
+        m_progWindowState = new WidgetWindowStateWatcher(this);
+        m_optWindowState = new WidgetWindowStateWatcher(this);
+        m_zoneWindowState = new WidgetWindowStateWatcher(this);
+        m_graphWindowState = new WidgetWindowStateWatcher(this);
+        m_connWindowState = new WidgetWindowStateWatcher(this);
+        m_quotaManager = new QuotaManager(settings(), this);
+        m_statManager = new StatManager(settings()->statFilePath(), m_quotaManager, this);
+        m_driverManager = new DriverManager(this);
+        m_confManager = new ConfManager(settings()->confFilePath(), this, this);
+        m_logManager = new LogManager(this, this);
+        m_nativeEventFilter = new NativeEventFilter(this);
+        m_hotKeyManager = new HotKeyManager(m_nativeEventFilter, this);
+        m_taskManager = new TaskManager(this, this);
+        m_appInfoCache = new AppInfoCache(this);
+        m_hostInfoCache = new HostInfoCache(this);
+        m_appListModel = new AppListModel(m_confManager, this);
+        m_appStatModel = new AppStatModel(m_statManager, this);
+        m_zoneListModel = new ZoneListModel(m_confManager, this);
+        m_connListModel = new ConnListModel(m_statManager, this);
+    }
+
+    setupAppStyle();
+
     setupTranslationManager();
     setupThreadPool();
 
@@ -97,16 +132,6 @@ FortManager::FortManager(FortSettings *settings, EnvManager *envManager, QObject
     setupTrayIcon();
 
     connect(qApp, &QCoreApplication::aboutToQuit, this, &FortManager::closeUi);
-}
-
-FortManager::~FortManager()
-{
-    removeHotKeys();
-
-    closeDriver();
-    closeLogManager();
-
-    delete m_mainWindow;
 }
 
 FirewallConf *FortManager::conf() const
@@ -315,7 +340,7 @@ void FortManager::closeUi()
     closeConnectionsWindow();
 }
 
-void FortManager::launch()
+void FortManager::show()
 {
     showTrayIcon();
 
@@ -700,6 +725,14 @@ void FortManager::saveTrayFlags()
     }
 
     saveConf(conf(), true);
+}
+
+void FortManager::setupAppStyle()
+{
+    // Style & Palette
+    const auto fusionStyle = QStyleFactory::create("Fusion");
+    QApplication::setStyle(fusionStyle);
+    QApplication::setPalette(fusionStyle->standardPalette());
 }
 
 void FortManager::saveProgWindowState()

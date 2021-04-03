@@ -46,6 +46,10 @@ public:
     ~FortManager() override;
     CLASS_DELETE_COPY_MOVE(FortManager)
 
+    bool checkRunningInstance();
+
+    void initialize();
+
     FirewallConf *conf() const;
     FirewallConf *confToEdit() const;
 
@@ -79,7 +83,7 @@ public slots:
     void installDriver();
     void removeDriver();
 
-    void launch();
+    void show();
 
     void showTrayIcon();
     void showTrayMessage(
@@ -125,6 +129,8 @@ private slots:
     void saveTrayFlags();
 
 private:
+    void setupAppStyle();
+
     void setupTranslationManager();
 
     void setupThreadPool();
@@ -203,6 +209,8 @@ private:
     bool m_trayTriggered = false;
 
     TrayMessageType m_lastMessageType = MessageOptions;
+
+    void *m_instanceMutex = nullptr;
 
     MainWindow *m_mainWindow = nullptr; // dummy window for tray icon
 

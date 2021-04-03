@@ -43,9 +43,16 @@ bool OsUtil::openUrlOrFolder(const QString &path)
     return openUrlExternally(url);
 }
 
-bool OsUtil::createGlobalMutex(const char *name)
+void *OsUtil::createMutex(const char *name, bool &isSingleInstance)
 {
-    return CreateMutexA(nullptr, FALSE, name) && GetLastError() != ERROR_ALREADY_EXISTS;
+    void *h = CreateMutexA(nullptr, FALSE, name);
+    isSingleInstance = h && GetLastError() != ERROR_ALREADY_EXISTS;
+    return h;
+}
+
+void OsUtil::closeMutex(void *mutexHandle)
+{
+    CloseHandle(mutexHandle);
 }
 
 quint32 OsUtil::lastErrorCode()

@@ -28,7 +28,7 @@ QString expandPath(const QString &path, EnvManager *envManager = nullptr)
 
 }
 
-FortSettings::FortSettings(QObject *parent) :
+FortSettings::FortSettings(int argc, char *argv[], QObject *parent) :
     QObject(parent),
     m_iniExists(false),
     m_noCache(false),
@@ -36,7 +36,9 @@ FortSettings::FortSettings(QObject *parent) :
     m_hasService(false),
     m_isWindowControl(false),
     m_bulkUpdating(false),
-    m_bulkIniChanged(false)
+    m_bulkIniChanged(false),
+    m_argc(argc),
+    m_argv(argv)
 {
 }
 
