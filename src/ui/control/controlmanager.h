@@ -6,8 +6,11 @@
 #include <QSystemSemaphore>
 
 #include "../util/classhelpers.h"
+#include "control.h"
 
-class ControlWorker;
+QT_FORWARD_DECLARE_CLASS(QLocalServer)
+QT_FORWARD_DECLARE_CLASS(QLocalSocket)
+
 class FortManager;
 class FortSettings;
 
@@ -23,28 +26,28 @@ public:
     bool isClient() const;
 
     bool listen(FortManager *fortManager);
-    bool post();
+    bool postCommand();
 
     FortSettings *settings() const { return m_settings; }
     FortManager *fortManager() const { return m_fortManager; }
 
 private slots:
-    bool processRequest(const QString &command, const QStringList &args);
+    void onNewConnection();
+
+    bool processRequest(Control::Command command, const QStringList &args);
 
 private:
-    bool processCommand(const QString &command, const QStringList &args, QString &errorMessage);
-
-    void setupWorker();
+    bool processCommand(Control::Command command, const QStringList &args, QString &errorMessage);
 
     void abort();
+
+    static QString getServerName(bool isService);
 
 private:
     FortSettings *m_settings = nullptr;
     FortManager *m_fortManager = nullptr;
-    ControlWorker *m_worker = nullptr;
 
-    QSystemSemaphore m_semaphore;
-    QSharedMemory m_sharedMemory;
+    QLocalServer *m_server = nullptr;
 };
 
 #endif // CONTROLMANAGER_H

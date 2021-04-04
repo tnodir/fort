@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 
     // Send control command to running instance
     if (controlManager.isClient()) {
-        return controlManager.post() ? 0 : FORT_ERROR_CONTROL;
+        return controlManager.postCommand() ? 0 : FORT_ERROR_CONTROL;
     }
 
     FortManager fortManager(&fortSettings, &envManager);

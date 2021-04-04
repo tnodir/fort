@@ -1,8 +1,11 @@
 #include "controlmanager.h"
 
 #include <QApplication>
+#include <QLocalServer>
+#include <QLocalSocket>
 #include <QLoggingCategory>
-#include <QThreadPool>
+
+#include <fort_version.h>
 
 #include "../conf/appgroup.h"
 #include "../conf/firewallconf.h"
@@ -18,11 +21,7 @@ Q_LOGGING_CATEGORY(CLOG_CONTROL_MANAGER, "control")
 #define logCritical() qCCritical(CLOG_CONTROL_MANAGER, )
 
 ControlManager::ControlManager(FortSettings *settings, QObject *parent) :
-    QObject(parent),
-    m_settings(settings),
-    m_semaphore(QApplication::applicationName() + QLatin1String("_ControlSemaphore"), 0,
-            isClient() ? QSystemSemaphore::Open : QSystemSemaphore::Create),
-    m_sharedMemory(QApplication::applicationName() + QLatin1String("_ControlSharedMemory"))
+    QObject(parent), m_settings(settings)
 {
 }
 
@@ -38,40 +37,63 @@ bool ControlManager::isClient() const
 
 bool ControlManager::listen(FortManager *fortManager)
 {
-    if (m_sharedMemory.size() > 0)
-        return true;
+    m_fortManager = fortManager;
 
-    if (!m_sharedMemory.create(4096)) {
-        logWarning() << "Shared Memory create error:" << m_sharedMemory.errorString();
+    Q_ASSERT(!m_server);
+    m_server = new QLocalServer(this);
+
+    if (!m_server->listen(getServerName(settings()->isService()))) {
+        logWarning() << "Local Server create error:" << m_server->errorString();
         return false;
     }
 
-    m_fortManager = fortManager;
-
-    if (!m_worker) {
-        setupWorker();
-    }
+    connect(m_server, &QLocalServer::newConnection, this, &ControlManager::onNewConnection);
 
     return true;
 }
 
-bool ControlManager::post()
+bool ControlManager::postCommand()
 {
-    if (settings()->isWindowControl()) {
-        // TODO
-    }
-
-    if (!m_sharedMemory.attach()) {
-        logWarning() << "Shared Memory attach error:" << m_sharedMemory.errorString();
+    Control::Command command;
+    if (settings()->controlCommand() == "conf") {
+        command = Control::CommandConf;
+    } else if (settings()->controlCommand() == "prog") {
+        command = Control::CommandProg;
+    } else {
+        logWarning() << "Unknown control command:" << settings()->controlCommand();
         return false;
     }
 
-    ControlWorker worker(&m_semaphore, &m_sharedMemory);
+    const QString serverName =
+            getServerName(!settings()->isWindowControl() && settings()->hasService());
 
-    return worker.post(settings()->controlCommand(), settings()->args());
+    QLocalSocket socket;
+
+    // Connect to server
+    socket.connectToServer(serverName);
+    if (!socket.waitForConnected(1000)) {
+        logWarning() << "Connect to server error:" << socket.errorString();
+        return false;
+    }
+
+    // Send data
+    ControlWorker worker(&socket);
+    const bool ok = worker.postCommand(command, settings()->args());
+
+    return ok;
 }
 
-bool ControlManager::processRequest(const QString &command, const QStringList &args)
+void ControlManager::onNewConnection()
+{
+    while (QLocalSocket *socket = m_server->nextPendingConnection()) {
+        auto worker = new ControlWorker(socket, this);
+        worker->setupForAsync();
+
+        connect(worker, &ControlWorker::requestReady, this, &ControlManager::processRequest);
+    }
+}
+
+bool ControlManager::processRequest(Control::Command command, const QStringList &args)
 {
     QString errorMessage;
     if (!processCommand(command, args, errorMessage)) {
@@ -82,12 +104,12 @@ bool ControlManager::processRequest(const QString &command, const QStringList &a
 }
 
 bool ControlManager::processCommand(
-        const QString &command, const QStringList &args, QString &errorMessage)
+        Control::Command command, const QStringList &args, QString &errorMessage)
 {
     bool ok = false;
     const int argsSize = args.size();
 
-    if (command == "conf") {
+    if (command == Control::CommandConf) {
         if (argsSize < 2) {
             errorMessage = "conf <property> <value>";
             return false;
@@ -116,7 +138,7 @@ bool ControlManager::processCommand(
         if (ok) {
             fortManager()->saveOriginConf(tr("Control command executed"), onlyFlags);
         }
-    } else if (command == "prog") {
+    } else if (command == Control::CommandProg) {
         if (argsSize < 1) {
             errorMessage = "prog <command>";
             return false;
@@ -140,24 +162,12 @@ bool ControlManager::processCommand(
     return ok;
 }
 
-void ControlManager::setupWorker()
-{
-    m_worker = new ControlWorker(&m_semaphore, &m_sharedMemory, this);
-    m_worker->setAutoDelete(false);
-
-    connect(m_worker, &ControlWorker::requestReady, this, &ControlManager::processRequest);
-
-    QThreadPool::globalInstance()->start(m_worker);
-}
-
 void ControlManager::abort()
 {
-    if (!m_worker)
-        return;
+    m_server->close();
+}
 
-    m_worker->disconnect(this);
-
-    m_worker->abort();
-    m_worker->deleteLater();
-    m_worker = nullptr;
+QString ControlManager::getServerName(bool isService)
+{
+    return QLatin1String(APP_BASE) + (isService ? "Svc" : QString()) + "Pipe";
 }

@@ -1,4 +1,4 @@
-QT += core gui widgets
+QT += core gui network widgets
 
 CONFIG += c++17
 
@@ -135,6 +135,7 @@ HEADERS += \
     conf/appgroup.h \
     conf/confmanager.h \
     conf/firewallconf.h \
+    control/control.h \
     control/controlmanager.h \
     control/controlworker.h \
     driver/drivermanager.h \

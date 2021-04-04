@@ -1,102 +1,122 @@
 #include "controlworker.h"
 
 #include <QDataStream>
-#include <QSharedMemory>
-#include <QSystemSemaphore>
+#include <QLocalSocket>
 
-ControlWorker::ControlWorker(
-        QSystemSemaphore *semaphore, QSharedMemory *sharedMemory, QObject *parent) :
-    QObject(parent), m_semaphore(semaphore), m_sharedMemory(sharedMemory)
+namespace {
+
+constexpr int commandMaxArgs = 7;
+constexpr int commandArgMaxSize = 256;
+
+}
+
+ControlWorker::ControlWorker(QLocalSocket *socket, QObject *parent) :
+    QObject(parent), m_socket(socket)
 {
 }
 
-void ControlWorker::run()
+void ControlWorker::setupForAsync()
 {
-    QMutexLocker locker(&m_mutex);
+    socket()->setParent(this);
 
-    while (!m_aborted && m_semaphore->acquire()) {
-        processRequest();
-    }
+    connect(socket(), &QLocalSocket::disconnected, this, &QObject::deleteLater);
+    connect(socket(), &QLocalSocket::readyRead, this, &ControlWorker::processRequest);
 }
 
 void ControlWorker::abort()
 {
-    m_aborted = true;
-
-    m_semaphore->release();
-
-    // Wait thread finishing
-    {
-        QMutexLocker locker(&m_mutex);
-
-        m_semaphore = nullptr;
-        m_sharedMemory = nullptr;
-    }
+    socket()->abort();
+    socket()->close();
 }
 
-bool ControlWorker::post(const QString &command, const QStringList &args)
+bool ControlWorker::postCommand(Control::Command command, const QStringList &args)
 {
-    m_sharedMemory->lock();
+    QByteArray data;
+    if (!buildArgsData(data, args))
+        return false;
 
-    const bool res = writeDataStream(command, args);
+    writeDataHeader(command, data.size());
+    writeData(data);
 
-    m_sharedMemory->unlock();
-
-    if (res) {
-        m_semaphore->release();
-    }
-
-    return res;
+    return socket()->waitForBytesWritten(1000);
 }
 
 void ControlWorker::processRequest()
 {
-    QString command;
-    QStringList args;
-
-    m_sharedMemory->lock();
-
-    const bool res = readDataStream(command, args);
-
-    m_sharedMemory->unlock();
-
-    if (res) {
-        emit requestReady(command, args);
+    if (!readRequest()) {
+        abort();
+        clearRequest();
     }
 }
 
-bool ControlWorker::writeData(const QByteArray &data)
+void ControlWorker::clearRequest()
 {
-    const int dataSize = data.size();
+    m_requestCommand = Control::CommandNone;
+    m_requestDataSize = 0;
+    m_requestData.clear();
+}
 
-    if (dataSize < 0 || int(sizeof(int)) + dataSize > m_sharedMemory->size())
+bool ControlWorker::readRequest()
+{
+    if (m_requestCommand == Control::CommandNone
+            && !readDataHeader(m_requestCommand, m_requestDataSize))
         return false;
 
-    int *p = static_cast<int *>(m_sharedMemory->data());
-    *p++ = dataSize;
+    if (m_requestDataSize > 0) {
+        if (socket()->bytesAvailable() == 0)
+            return true; // need more data
 
-    if (dataSize != 0) {
-        memcpy(p, data.constData(), size_t(dataSize));
+        const QByteArray data = readData(m_requestDataSize);
+        if (data.isEmpty())
+            return false;
+
+        m_requestData += data;
+        m_requestDataSize -= data.size();
+
+        if (m_requestDataSize > 0)
+            return true; // need more data
     }
+
+    QStringList args;
+    if (!m_requestData.isEmpty() && !parseArgsData(m_requestData, args))
+        return false;
+
+    emit requestReady(m_requestCommand, args);
+    clearRequest();
 
     return true;
 }
 
-QByteArray ControlWorker::readData() const
+void ControlWorker::writeDataHeader(Control::Command command, int dataSize)
 {
-    const int *p = static_cast<const int *>(m_sharedMemory->constData());
-    const int dataSize = *p++;
-
-    if (dataSize < 0 || int(sizeof(int)) + dataSize > m_sharedMemory->size())
-        return QByteArray();
-
-    return QByteArray::fromRawData(reinterpret_cast<const char *>(p), dataSize);
+    const quint32 dataHeader = (quint32(command) << 24) | dataSize;
+    socket()->write((const char *) &dataHeader, sizeof(quint32));
 }
 
-bool ControlWorker::writeDataStream(const QString &command, const QStringList &args)
+bool ControlWorker::readDataHeader(Control::Command &command, int &dataSize)
 {
-    QByteArray data;
+    quint32 dataHeader = 0;
+    if (socket()->read((char *) &dataHeader, sizeof(quint32)) != sizeof(quint32))
+        return false;
 
+    command = static_cast<Control::Command>(dataHeader >> 24);
+    dataSize = dataHeader & 0xFFFFFF;
+
+    return true;
+}
+
+void ControlWorker::writeData(const QByteArray &data)
+{
+    socket()->write(data);
+}
+
+QByteArray ControlWorker::readData(int dataSize)
+{
+    return socket()->read(dataSize);
+}
+
+bool ControlWorker::buildArgsData(QByteArray &data, const QStringList &args)
+{
     QDataStream stream(&data,
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
             QIODevice::WriteOnly
@@ -104,20 +124,40 @@ bool ControlWorker::writeDataStream(const QString &command, const QStringList &a
             QDataStream::WriteOnly
 #endif
     );
-    stream << command << args;
 
-    return writeData(data);
-}
-
-bool ControlWorker::readDataStream(QString &command, QStringList &args) const
-{
-    const QByteArray data = readData();
-
-    if (data.isEmpty())
+    const int argsSize = args.size();
+    if (argsSize > commandMaxArgs)
         return false;
 
+    stream << qint8(argsSize);
+
+    for (const auto &arg : args) {
+        if (arg.size() > commandArgMaxSize)
+            return false;
+
+        stream << arg;
+    }
+
+    return true;
+}
+
+bool ControlWorker::parseArgsData(const QByteArray &data, QStringList &args)
+{
     QDataStream stream(data);
-    stream >> command >> args;
+
+    qint8 argsSize;
+    stream >> argsSize;
+    if (argsSize > commandMaxArgs)
+        return false;
+
+    while (--argsSize >= 0) {
+        QString arg;
+        stream >> arg;
+        if (arg.size() > commandArgMaxSize)
+            return false;
+
+        args.append(arg);
+    }
 
     return true;
 }

@@ -1,47 +1,53 @@
 #ifndef CONTROLWORKER_H
 #define CONTROLWORKER_H
 
-#include <QMutex>
 #include <QObject>
-#include <QRunnable>
 
-QT_FORWARD_DECLARE_CLASS(QSharedMemory)
-QT_FORWARD_DECLARE_CLASS(QSystemSemaphore)
+#include "control.h"
 
-class ControlWorker : public QObject, public QRunnable
+QT_FORWARD_DECLARE_CLASS(QLocalSocket)
+
+class ControlWorker : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit ControlWorker(
-            QSystemSemaphore *semaphore, QSharedMemory *sharedMemory, QObject *parent = nullptr);
+    explicit ControlWorker(QLocalSocket *socket, QObject *parent = nullptr);
 
-    void run() override;
+    QLocalSocket *socket() const { return m_socket; }
 
-    bool post(const QString &command, const QStringList &args);
+    void setupForAsync();
+
+    bool postCommand(Control::Command command, const QStringList &args);
 
 signals:
-    void requestReady(const QString &command, const QStringList &args);
+    void requestReady(Control::Command command, const QStringList &args);
 
 public slots:
     void abort();
 
-private:
+private slots:
     void processRequest();
 
-    bool writeData(const QByteArray &data);
-    QByteArray readData() const;
+private:
+    void clearRequest();
+    bool readRequest();
 
-    bool writeDataStream(const QString &command, const QStringList &args);
-    bool readDataStream(QString &command, QStringList &args) const;
+    void writeDataHeader(Control::Command command, int dataSize);
+    bool readDataHeader(Control::Command &command, int &dataSize);
+
+    void writeData(const QByteArray &data);
+    QByteArray readData(int dataSize);
+
+    static bool buildArgsData(QByteArray &data, const QStringList &args);
+    static bool parseArgsData(const QByteArray &data, QStringList &args);
 
 private:
-    volatile bool m_aborted = false;
+    Control::Command m_requestCommand = Control::CommandNone;
+    int m_requestDataSize = 0;
+    QByteArray m_requestData;
 
-    QSystemSemaphore *m_semaphore = nullptr;
-    QSharedMemory *m_sharedMemory = nullptr;
-
-    QMutex m_mutex;
+    QLocalSocket *m_socket = nullptr;
 };
 
 #endif // CONTROLWORKER_H
