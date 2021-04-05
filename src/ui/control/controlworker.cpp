@@ -6,7 +6,23 @@
 namespace {
 
 constexpr int commandMaxArgs = 7;
-constexpr int commandArgMaxSize = 256;
+constexpr int commandArgMaxSize = 4 * 1024;
+constexpr int dataMaxSize = 4 * 1024 * 1024;
+
+struct DataHeader
+{
+    DataHeader(Control::Command command = Control::CommandNone, int dataSize = 0) :
+        m_command(command), m_dataSize(dataSize)
+    {
+    }
+
+    Control::Command command() const { return static_cast<Control::Command>(m_command); }
+    int dataSize() const { return m_dataSize; }
+
+private:
+    quint32 m_command : 8;
+    quint32 m_dataSize : 24;
+};
 
 }
 
@@ -89,18 +105,21 @@ bool ControlWorker::readRequest()
 
 void ControlWorker::writeDataHeader(Control::Command command, int dataSize)
 {
-    const quint32 dataHeader = (quint32(command) << 24) | dataSize;
-    socket()->write((const char *) &dataHeader, sizeof(quint32));
+    DataHeader dataHeader(command, dataSize);
+    socket()->write((const char *) &dataHeader, sizeof(DataHeader));
 }
 
 bool ControlWorker::readDataHeader(Control::Command &command, int &dataSize)
 {
-    quint32 dataHeader = 0;
-    if (socket()->read((char *) &dataHeader, sizeof(quint32)) != sizeof(quint32))
+    DataHeader dataHeader;
+    if (socket()->read((char *) &dataHeader, sizeof(DataHeader)) != sizeof(DataHeader))
         return false;
 
-    command = static_cast<Control::Command>(dataHeader >> 24);
-    dataSize = dataHeader & 0xFFFFFF;
+    command = dataHeader.command();
+    dataSize = dataHeader.dataSize();
+
+    if (dataSize > dataMaxSize)
+        return false;
 
     return true;
 }
@@ -125,11 +144,11 @@ bool ControlWorker::buildArgsData(QByteArray &data, const QStringList &args)
 #endif
     );
 
-    const int argsSize = args.size();
-    if (argsSize > commandMaxArgs)
+    const int argsCount = args.count();
+    if (argsCount > commandMaxArgs)
         return false;
 
-    stream << qint8(argsSize);
+    stream << qint8(argsCount);
 
     for (const auto &arg : args) {
         if (arg.size() > commandArgMaxSize)
@@ -145,12 +164,12 @@ bool ControlWorker::parseArgsData(const QByteArray &data, QStringList &args)
 {
     QDataStream stream(data);
 
-    qint8 argsSize;
-    stream >> argsSize;
-    if (argsSize > commandMaxArgs)
+    qint8 argsCount;
+    stream >> argsCount;
+    if (argsCount > commandMaxArgs)
         return false;
 
-    while (--argsSize >= 0) {
+    while (--argsCount >= 0) {
         QString arg;
         stream >> arg;
         if (arg.size() > commandArgMaxSize)
