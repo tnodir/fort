@@ -11,6 +11,7 @@
 #include "fortcommon.h"
 #include "fortmanager.h"
 #include "fortsettings.h"
+#include "service/servicemanager.h"
 #include "util/envmanager.h"
 #include "util/osutil.h"
 #include "util/startuputil.h"
@@ -28,9 +29,9 @@ int main(int argc, char *argv[])
     }
 
     // Process global settings required before QApplication costruction
-    FortSettings fortSettings;
-    fortSettings.setHasService(StartupUtil::isServiceInstalled());
-    fortSettings.setupGlobal();
+    FortSettings settings;
+    settings.setHasService(StartupUtil::isServiceInstalled());
+    settings.setupGlobal();
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
@@ -46,23 +47,28 @@ int main(int argc, char *argv[])
     EnvManager envManager;
 
     // Initialize settings from command line arguments
-    fortSettings.initialize(QCoreApplication::arguments(), &envManager);
+    settings.initialize(QCoreApplication::arguments(), &envManager);
 
-    ControlManager controlManager(&fortSettings);
+    ControlManager controlManager(&settings);
 
     // Send control command to running instance
     if (controlManager.isClient()) {
         return controlManager.postCommand() ? 0 : FORT_ERROR_CONTROL;
     }
 
-    FortManager fortManager(&fortSettings, &envManager);
+    FortManager fortManager(&settings, &envManager);
 
     // Check running instance
     if (!fortManager.checkRunningInstance())
         return FORT_ERROR_INSTANCE;
 
     fortManager.initialize();
-    fortManager.show();
+
+    if (settings.isService()) {
+        // TODO: ServiceManager::initialize();
+    } else {
+        fortManager.show();
+    }
 
     // Process control commands from clients
     if (!controlManager.listen(&fortManager))

@@ -53,6 +53,7 @@
 #include "util/net/hostinfocache.h"
 #include "util/net/netutil.h"
 #include "util/osutil.h"
+#include "util/startuputil.h"
 #include "util/stringutil.h"
 #include "util/window/widgetwindowstatewatcher.h"
 
@@ -566,7 +567,10 @@ void FortManager::processRestartRequired()
     const QString appFilePath = QCoreApplication::applicationFilePath();
     const QStringList args = settings()->appArguments();
 
-    connect(this, &QObject::destroyed, [=] { QProcess::startDetached(appFilePath, args); });
+    connect(this, &QObject::destroyed, [=] {
+        StartupUtil::startService(); // Try to start the (maybe installed) service
+        QProcess::startDetached(appFilePath, args);
+    });
 
     exit(0);
 }

@@ -13,9 +13,11 @@ public:
         StartupAllUsersBackground
     };
 
-    static bool isServiceInstalled();
     static bool installService();
     static bool uninstallService();
+
+    static bool isServiceInstalled();
+    static bool startService();
 
     static StartupMode getStartupMode();
     static void setStartupMode(int mode);

@@ -75,46 +75,6 @@ void removeAutorunForAllUsers()
     removeAutorunForUser(regAllUsersRun);
 }
 
-#if 0
-// (Failed) Experiment to auto-run the interactive program with elevated privileges without UAC prompt.
-
-const char *const schTaskName = APP_BASE "Task";
-
-bool isAutorunAsAdminForAllUsers()
-{
-    return QProcess::execute("schtasks.exe", { "/query", "/tn", schTaskName, "/nh" }) == 0;
-}
-
-void setAutorunAsAdminForAllUsers()
-{
-    const auto command =
-            QLatin1String("cmd.exe /c start \"") + APP_NAME + "\" " + wrappedAppFilePath();
-    QProcess::execute("schtasks.exe",
-            { "/create", "/tn", schTaskName, "/sc", "ONLOGON", "/tr", command, "/rl", "HIGHEST",
-                    /*"/ru", "SYSTEM",*/ "/f" });
-}
-
-void removeAutorunAsAdminForAllUsers()
-{
-    QProcess::execute("schtasks.exe", { "/delete", "/tn", schTaskName, "/f" });
-}
-#endif
-
-}
-
-bool StartupUtil::isServiceInstalled()
-{
-    bool res = false;
-    const SC_HANDLE mngr = OpenSCManagerW(nullptr, nullptr, SC_MANAGER_CONNECT);
-    if (mngr) {
-        const SC_HANDLE svc = OpenServiceW(mngr, serviceName, SERVICE_INTERROGATE);
-        if (svc) {
-            res = true;
-            CloseServiceHandle(svc);
-        }
-        CloseServiceHandle(mngr);
-    }
-    return res;
 }
 
 bool StartupUtil::installService()
@@ -138,7 +98,7 @@ bool StartupUtil::installService()
 bool StartupUtil::uninstallService()
 {
     bool res = false;
-    const SC_HANDLE mngr = OpenSCManager(NULL, NULL, SC_MANAGER_CREATE_SERVICE);
+    const SC_HANDLE mngr = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
     if (mngr) {
         const SC_HANDLE svc = OpenServiceW(mngr, serviceName, SERVICE_ALL_ACCESS | DELETE);
         if (svc) {
@@ -151,6 +111,36 @@ bool StartupUtil::uninstallService()
                 QThread::msleep(1000);
             } while (--n > 0);
             res = DeleteService(svc);
+            CloseServiceHandle(svc);
+        }
+        CloseServiceHandle(mngr);
+    }
+    return res;
+}
+
+bool StartupUtil::isServiceInstalled()
+{
+    bool res = false;
+    const SC_HANDLE mngr = OpenSCManagerW(nullptr, nullptr, SC_MANAGER_CONNECT);
+    if (mngr) {
+        const SC_HANDLE svc = OpenServiceW(mngr, serviceName, SERVICE_INTERROGATE);
+        if (svc) {
+            res = true;
+            CloseServiceHandle(svc);
+        }
+        CloseServiceHandle(mngr);
+    }
+    return res;
+}
+
+bool StartupUtil::startService()
+{
+    bool res = false;
+    const SC_HANDLE mngr = OpenSCManagerW(nullptr, nullptr, SC_MANAGER_ALL_ACCESS);
+    if (mngr) {
+        const SC_HANDLE svc = OpenServiceW(mngr, serviceName, SERVICE_ALL_ACCESS);
+        if (svc) {
+            res = StartServiceW(svc, 0, nullptr);
             CloseServiceHandle(svc);
         }
         CloseServiceHandle(mngr);
