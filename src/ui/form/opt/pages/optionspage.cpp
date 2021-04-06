@@ -151,9 +151,9 @@ void OptionsPage::retranslateEditPassword()
 
 void OptionsPage::retranslateDriverMessage()
 {
-    const auto text = driverManager()->isDeviceOpened()
-            ? (driverManager()->isDeviceError() ? driverManager()->errorMessage() : tr("Installed"))
-            : tr("Not Installed");
+    const auto text = driverManager()->isDeviceError()
+            ? driverManager()->errorMessage()
+            : (driverManager()->isDeviceOpened() ? tr("Installed") : tr("Not Installed"));
 
     m_labelDriverMessage->setText(text);
 }
@@ -427,9 +427,7 @@ void OptionsPage::setupDriverIcon()
 
     const auto refreshDriverIcon = [&] {
         m_iconDriver->setEnabled(driverManager()->isDeviceOpened());
-        m_iconDriver->setPixmap(
-                IconCache::file(driverManager()->isDeviceError() ? ":/icons/sign-error.png"
-                                                                 : ":/icons/puzzle.png"));
+        m_iconDriver->setPixmap(IconCache::file(":/icons/puzzle.png"));
     };
 
     refreshDriverIcon();
