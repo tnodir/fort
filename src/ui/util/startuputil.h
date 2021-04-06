@@ -13,6 +13,9 @@ public:
         StartupAllUsersBackground
     };
 
+    static const wchar_t *const serviceName;
+    static const wchar_t *const serviceDisplay;
+
     static bool installService();
     static bool uninstallService();
 

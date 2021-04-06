@@ -111,7 +111,7 @@ public slots:
 
     void processRestartRequired();
 
-    void exit(int retcode = 0);
+    void quitByCheckPassword();
 
     bool checkPassword();
     bool isPasswordRequired();

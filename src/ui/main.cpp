@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
     fortManager.initialize();
 
     if (settings.isService()) {
-        // TODO: ServiceManager::initialize();
+        ServiceManager::runService();
     } else {
         fortManager.show();
     }

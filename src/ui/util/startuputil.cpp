@@ -9,12 +9,7 @@
 
 #include <fort_version.h>
 
-#include "../service/servicemanager.h"
-
 namespace {
-
-const wchar_t *const serviceName = L"" APP_BASE "Svc";
-const wchar_t *const serviceDisplay = L"" APP_NAME;
 
 const char *const regCurUserRun =
         R"(HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Run)";
@@ -76,6 +71,9 @@ void removeAutorunForAllUsers()
 }
 
 }
+
+const wchar_t *const StartupUtil::serviceName = L"" APP_BASE "Svc";
+const wchar_t *const StartupUtil::serviceDisplay = L"" APP_NAME;
 
 bool StartupUtil::installService()
 {

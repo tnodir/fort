@@ -6,6 +6,7 @@
 class ServiceManager
 {
 public:
+    static void runService();
 };
 
 #endif // SERVICEMANAGER_H

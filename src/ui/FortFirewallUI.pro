@@ -74,6 +74,7 @@ SOURCES += \
     model/zonesourcewrapper.cpp \
     model/zonetypewrapper.cpp \
     service/servicemanager.cpp \
+    service/serviceworker.cpp \
     stat/quotamanager.cpp \
     stat/statmanager.cpp \
     stat/statsql.cpp \
@@ -196,6 +197,7 @@ HEADERS += \
     model/zonesourcewrapper.h \
     model/zonetypewrapper.h \
     service/servicemanager.h \
+    service/serviceworker.h \
     stat/quotamanager.h \
     stat/statmanager.h \
     stat/statsql.h \

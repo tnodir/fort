@@ -572,17 +572,17 @@ void FortManager::processRestartRequired()
         QProcess::startDetached(appFilePath, args);
     });
 
-    exit(0);
+    QCoreApplication::quit();
 }
 
-void FortManager::exit(int retcode)
+void FortManager::quitByCheckPassword()
 {
     if (!checkPassword())
         return;
 
     closeUi();
 
-    QCoreApplication::exit(retcode);
+    QCoreApplication::quit();
 }
 
 bool FortManager::checkPassword()
@@ -915,7 +915,7 @@ void FortManager::createTrayMenu()
     }
 
     menu->addSeparator();
-    m_quitAction = addAction(menu, QIcon(), tr("Quit"), this, SLOT(exit()));
+    m_quitAction = addAction(menu, QIcon(), tr("Quit"), this, SLOT(quitByCheckPassword()));
     addHotKey(m_quitAction, settings()->hotKeyQuit(), hotKeyEnabled);
 
     m_trayIcon->setContextMenu(menu);
