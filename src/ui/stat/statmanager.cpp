@@ -705,7 +705,7 @@ SqliteStmt *StatManager::getSqliteStmt(const char *sql)
 {
     SqliteStmt *stmt = m_sqliteStmts.value(sql);
 
-    if (stmt == nullptr) {
+    if (!stmt) {
         stmt = new SqliteStmt();
         stmt->prepare(m_sqliteDb->db(), sql, SqliteStmt::PreparePersistent);
 

@@ -97,7 +97,7 @@ bool NativeEventFilter::nativeEventFilter(const QByteArray &eventType, void *mes
     }
     case WM_SETTINGCHANGE: {
         const auto src = reinterpret_cast<const wchar_t *>(msg->lParam);
-        if (src != nullptr && wcscmp(src, L"Environment") == 0) {
+        if (src && wcscmp(src, L"Environment") == 0) {
             emit environmentChanged();
         }
         break;

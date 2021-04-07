@@ -12,14 +12,14 @@ void TaskDownloader::run()
 
     setupDownloader();
 
-    if (m_downloader != nullptr) {
+    if (m_downloader) {
         m_downloader->start();
     }
 }
 
 void TaskDownloader::abort(bool success)
 {
-    if (m_downloader == nullptr)
+    if (!m_downloader)
         return;
 
     m_downloader->disconnect(this); // to avoid recursive call on abort()

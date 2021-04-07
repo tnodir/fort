@@ -15,7 +15,7 @@ QString HostInfoCache::hostName(const QString &address)
 {
     HostInfo *hostInfo = m_cache.object(address);
 
-    if (hostInfo == nullptr) {
+    if (!hostInfo) {
         hostInfo = new HostInfo();
 
         m_cache.insert(address, hostInfo, 1);
@@ -36,7 +36,7 @@ void HostInfoCache::clear()
 void HostInfoCache::handleFinishedLookup(const QString &address, const QString &hostName)
 {
     HostInfo *hostInfo = m_cache.object(address);
-    if (hostInfo == nullptr)
+    if (!hostInfo)
         return;
 
     hostInfo->hostName = hostName;

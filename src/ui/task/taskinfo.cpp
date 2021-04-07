@@ -180,7 +180,7 @@ void TaskInfo::setupTaskWorker()
 
 void TaskInfo::runTaskWorker()
 {
-    if (aborted() || taskWorker() == nullptr)
+    if (aborted() || !taskWorker())
         return;
 
     taskWorker()->run();
@@ -194,7 +194,7 @@ void TaskInfo::abort()
     // to avoid recursive call on worker.abort() -> handleFinished(false) -> abort()
     m_aborted = true;
 
-    if (taskWorker() != nullptr) {
+    if (taskWorker()) {
         taskWorker()->abort();
         taskWorker()->deleteLater();
 

@@ -13,7 +13,7 @@ AppInfoCache::AppInfoCache(QObject *parent) : QObject(parent), m_cache(1000)
 
 void AppInfoCache::setManager(AppInfoManager *manager)
 {
-    Q_ASSERT(manager != nullptr);
+    Q_ASSERT(manager);
 
     m_manager = manager;
 
@@ -53,7 +53,7 @@ AppInfo AppInfoCache::appInfo(const QString &appPath)
     AppInfo *appInfo = m_cache.object(appPath);
     bool lookupRequired = false;
 
-    if (appInfo == nullptr) {
+    if (!appInfo) {
         appInfo = new AppInfo();
 
         m_cache.insert(appPath, appInfo, 1);
@@ -62,7 +62,7 @@ AppInfo AppInfoCache::appInfo(const QString &appPath)
         lookupRequired = appInfo->isFileModified(appPath);
     }
 
-    if (lookupRequired && m_manager != nullptr) {
+    if (lookupRequired && m_manager) {
         m_manager->lookupAppInfo(appPath);
     }
 
@@ -72,7 +72,7 @@ AppInfo AppInfoCache::appInfo(const QString &appPath)
 void AppInfoCache::handleFinishedLookup(const QString &appPath, const AppInfo info)
 {
     AppInfo *appInfo = m_cache.object(appPath);
-    if (appInfo == nullptr)
+    if (!appInfo)
         return;
 
     *appInfo = info;

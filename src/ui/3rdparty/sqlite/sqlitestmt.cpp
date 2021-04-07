@@ -20,7 +20,7 @@ bool SqliteStmt::prepare(sqlite3 *db, const char *sql, SqliteStmt::PrepareFlags 
 
 void SqliteStmt::finalize()
 {
-    if (m_stmt != nullptr) {
+    if (m_stmt) {
         sqlite3_finalize(m_stmt);
         m_stmt = nullptr;
     }
@@ -220,7 +220,7 @@ bool SqliteStmt::columnBool(int column)
 QString SqliteStmt::columnText(int column)
 {
     const char *p = reinterpret_cast<const char *>(sqlite3_column_text(m_stmt, column));
-    if (p == nullptr || *p == '\0')
+    if (!p || *p == '\0')
         return QString();
 
     const int bytesCount = sqlite3_column_bytes(m_stmt, column);
@@ -245,7 +245,7 @@ QDateTime SqliteStmt::columnUnixTime(int column)
 QByteArray SqliteStmt::columnBlob(int column)
 {
     const char *p = static_cast<const char *>(sqlite3_column_blob(m_stmt, column));
-    if (p == nullptr)
+    if (!p)
         return QByteArray();
 
     const int bytesCount = sqlite3_column_bytes(m_stmt, column);

@@ -196,7 +196,7 @@ bool loadAddressGroups(SqliteDb *db, const QList<AddressGroup *> &addressGroups,
     index = 0;
     while (stmt.step() == SqliteStmt::StepRow) {
         auto addrGroup = addressGroups.at(index);
-        Q_ASSERT(addrGroup != nullptr);
+        Q_ASSERT(addrGroup);
 
         addrGroup->setId(stmt.columnInt64(0));
         addrGroup->setIncludeAll(stmt.columnBool(1));
@@ -383,7 +383,7 @@ void ConfManager::setConfToEdit(FirewallConf *conf)
     if (m_confToEdit == conf)
         return;
 
-    if (m_confToEdit != nullptr && m_confToEdit != m_conf) {
+    if (m_confToEdit && m_confToEdit != m_conf) {
         m_confToEdit->deleteLater();
     }
 

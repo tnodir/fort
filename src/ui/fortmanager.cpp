@@ -594,7 +594,7 @@ bool FortManager::checkPassword()
 
     if (g_passwordDialogOpened) {
         auto dialog = qApp->activeModalWidget();
-        if (dialog != nullptr) {
+        if (dialog) {
             dialog->activateWindow();
         }
         return false;
@@ -653,7 +653,7 @@ bool FortManager::saveOriginConf(const QString &message, bool onlyFlags)
 
 bool FortManager::saveConf(bool onlyFlags)
 {
-    Q_ASSERT(confToEdit() != nullptr);
+    Q_ASSERT(confToEdit());
 
     return saveConf(confToEdit(), onlyFlags);
 }
@@ -663,7 +663,7 @@ bool FortManager::applyConf(bool onlyFlags)
     if (!saveConf(onlyFlags))
         return false;
 
-    Q_ASSERT(confToEdit() == nullptr);
+    Q_ASSERT(!confToEdit());
 
     confManager()->initConfToEdit();
 
@@ -672,7 +672,7 @@ bool FortManager::applyConf(bool onlyFlags)
 
 bool FortManager::applyConfImmediateFlags()
 {
-    if (confToEdit() != nullptr) {
+    if (confToEdit()) {
         conf()->copyImmediateFlags(*confToEdit());
     }
 
@@ -842,14 +842,14 @@ void FortManager::updateTrayIcon(bool alerted)
 void FortManager::updateTrayMenu(bool onlyFlags)
 {
     QMenu *oldMenu = m_trayIcon->contextMenu();
-    if (oldMenu != nullptr && !onlyFlags) {
+    if (oldMenu && !onlyFlags) {
         oldMenu->deleteLater();
         oldMenu = nullptr;
 
         removeHotKeys();
     }
 
-    if (oldMenu == nullptr) {
+    if (!oldMenu) {
         createTrayMenu();
         retranslateTrayMenu();
     }
@@ -923,7 +923,7 @@ void FortManager::createTrayMenu()
 
 void FortManager::updateTrayMenuFlags()
 {
-    const bool editEnabled = (!isPasswordRequired() && m_optWindow == nullptr);
+    const bool editEnabled = (!isPasswordRequired() && !m_optWindow);
 
     m_filterEnabledAction->setEnabled(editEnabled);
     m_stopTrafficAction->setEnabled(editEnabled);

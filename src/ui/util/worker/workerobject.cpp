@@ -9,7 +9,7 @@ void WorkerObject::run()
 {
     for (;;) {
         WorkerJob *job = manager()->dequeueJob();
-        if (job == nullptr)
+        if (!job)
             break;
 
         doJob(job);

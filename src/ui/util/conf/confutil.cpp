@@ -352,7 +352,7 @@ bool ConfUtil::parseAppGroups(EnvManager &envManager, const QList<AppGroup *> &a
 bool ConfUtil::parseExeApps(
         ConfAppsWalker *confAppsWalker, appentry_map_t &exeAppsMap, quint32 &exeAppsSize)
 {
-    if (Q_UNLIKELY(confAppsWalker == nullptr))
+    if (Q_UNLIKELY(!confAppsWalker))
         return true;
 
     return confAppsWalker->walkApps([&](int groupIndex, bool useGroupPerm, bool blocked,

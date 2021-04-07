@@ -67,7 +67,7 @@ bool SqliteDb::open()
 
 void SqliteDb::close()
 {
-    if (m_db != nullptr) {
+    if (m_db) {
         sqlite3_close(m_db);
         m_db = nullptr;
     }
@@ -119,7 +119,7 @@ QVariant SqliteDb::executeEx(const char *sql, const QVariantList &vars, int resu
         }
     }
 
-    if (ok != nullptr) {
+    if (ok) {
         *ok = success;
     }
 
@@ -178,19 +178,19 @@ bool SqliteDb::rollbackTransaction()
 
 bool SqliteDb::beginSavepoint(const char *name)
 {
-    return (name == nullptr) ? execute("SAVEPOINT _;")
-                             : executeStr(QString("SAVEPOINT %1;").arg(name));
+    return !name ? execute("SAVEPOINT _;")
+                 : executeStr(QString("SAVEPOINT %1;").arg(name));
 }
 
 bool SqliteDb::releaseSavepoint(const char *name)
 {
-    return (name == nullptr) ? execute("RELEASE _;") : executeStr(QString("RELEASE %1;").arg(name));
+    return !name ? execute("RELEASE _;") : executeStr(QString("RELEASE %1;").arg(name));
 }
 
 bool SqliteDb::rollbackSavepoint(const char *name)
 {
-    return (name == nullptr) ? execute("ROLLBACK TO _;")
-                             : executeStr(QString("ROLLBACK TO %1;").arg(name));
+    return !name ? execute("ROLLBACK TO _;")
+                 : executeStr(QString("ROLLBACK TO %1;").arg(name));
 }
 
 int SqliteDb::errorCode() const
@@ -351,7 +351,7 @@ bool SqliteDb::migrate(const QString &sqlDir, const char *sqlPragmas, int versio
             success = execute(data.constData());
         }
 
-        if (success && migrateFunc != nullptr) {
+        if (success && migrateFunc) {
             success = migrateFunc(this, userVersion, isNewDb, migrateContext);
         }
 
@@ -441,7 +441,7 @@ bool SqliteDb::importDb(
         }
     }
 
-    if (success && migrateFunc != nullptr) {
+    if (success && migrateFunc) {
         success = migrateFunc(this, userVersion(), false, migrateContext);
     }
 
