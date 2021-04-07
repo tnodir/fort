@@ -951,6 +951,9 @@ void FortManager::updateTrayMenuFlags()
 
 void FortManager::retranslateTrayMenu()
 {
+    if (!m_trayIcon)
+        return;
+
     m_programsAction->setText(tr("Programs"));
     m_optionsAction->setText(tr("Options"));
     m_zonesAction->setText(tr("Zones"));
