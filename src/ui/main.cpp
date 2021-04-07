@@ -1,5 +1,7 @@
 #include <QApplication>
 #include <QMessageBox>
+#include <QStyle>
+#include <QStyleFactory>
 
 #ifdef USE_VISUAL_LEAK_DETECTOR
 #    include <vld.h>
@@ -18,6 +20,13 @@
 
 #define FORT_ERROR_INSTANCE 1
 #define FORT_ERROR_CONTROL  2
+
+static void setupAppStyle()
+{
+    const auto fusionStyle = QStyleFactory::create("Fusion");
+    QApplication::setStyle(fusionStyle);
+    QApplication::setPalette(fusionStyle->standardPalette());
+}
 
 int main(int argc, char *argv[])
 {
@@ -67,6 +76,8 @@ int main(int argc, char *argv[])
     if (settings.isService()) {
         ServiceManager::runService();
     } else {
+        setupAppStyle(); // Style & Palette
+
         fortManager.show();
     }
 

@@ -131,8 +131,6 @@ private slots:
     void saveTrayFlags();
 
 private:
-    void setupAppStyle();
-
     void setupTranslationManager();
 
     void setupThreadPool();

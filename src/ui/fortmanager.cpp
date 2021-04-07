@@ -6,8 +6,6 @@
 #include <QMessageBox>
 #include <QMouseEvent>
 #include <QProcess>
-#include <QStyle>
-#include <QStyleFactory>
 #include <QSystemTrayIcon>
 #include <QThreadPool>
 #include <QTimer>
@@ -111,8 +109,6 @@ void FortManager::initialize()
         m_zoneListModel = new ZoneListModel(m_confManager, this);
         m_connListModel = new ConnListModel(m_statManager, this);
     }
-
-    setupAppStyle();
 
     setupTranslationManager();
     setupThreadPool();
@@ -743,14 +739,6 @@ void FortManager::saveTrayFlags()
     }
 
     saveConf(conf(), true);
-}
-
-void FortManager::setupAppStyle()
-{
-    // Style & Palette
-    const auto fusionStyle = QStyleFactory::create("Fusion");
-    QApplication::setStyle(fusionStyle);
-    QApplication::setPalette(fusionStyle->standardPalette());
 }
 
 void FortManager::saveProgWindowState()
