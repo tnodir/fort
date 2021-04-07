@@ -87,23 +87,18 @@ void FortManager::initialize()
 {
     // Create instances
     {
-        m_mainWindow = new MainWindow();
-        m_trayIcon = new QSystemTrayIcon(this);
-        m_progWindowState = new WidgetWindowStateWatcher(this);
-        m_optWindowState = new WidgetWindowStateWatcher(this);
-        m_zoneWindowState = new WidgetWindowStateWatcher(this);
-        m_graphWindowState = new WidgetWindowStateWatcher(this);
-        m_connWindowState = new WidgetWindowStateWatcher(this);
+        m_nativeEventFilter = new NativeEventFilter(this);
+
         m_quotaManager = new QuotaManager(settings(), this);
         m_statManager = new StatManager(settings()->statFilePath(), m_quotaManager, this);
         m_driverManager = new DriverManager(this);
         m_confManager = new ConfManager(settings()->confFilePath(), this, this);
         m_logManager = new LogManager(this, this);
-        m_nativeEventFilter = new NativeEventFilter(this);
-        m_hotKeyManager = new HotKeyManager(m_nativeEventFilter, this);
         m_taskManager = new TaskManager(this, this);
+
         m_appInfoCache = new AppInfoCache(this);
         m_hostInfoCache = new HostInfoCache(this);
+
         m_appListModel = new AppListModel(m_confManager, this);
         m_appStatModel = new AppStatModel(m_statManager, this);
         m_zoneListModel = new ZoneListModel(m_confManager, this);
@@ -126,8 +121,6 @@ void FortManager::initialize()
     setupTaskManager();
 
     loadConf();
-
-    setupTrayIcon();
 
     connect(qApp, &QCoreApplication::aboutToQuit, this, &FortManager::closeUi);
 }
@@ -236,8 +229,6 @@ void FortManager::setupStatManager()
 void FortManager::setupConfManager()
 {
     confManager()->initialize();
-
-    connect(confManager(), &ConfManager::alertedAppAdded, this, [&] { updateTrayIcon(true); });
 }
 
 void FortManager::setupLogger()
@@ -261,18 +252,31 @@ void FortManager::setupTaskManager()
     taskManager()->taskInfoZoneDownloader()->loadZones();
 }
 
+void FortManager::setupMainWindow()
+{
+    m_mainWindow = new MainWindow();
+}
+
 void FortManager::setupTrayIcon()
 {
+    m_trayIcon = new QSystemTrayIcon(this);
     m_trayIcon->setToolTip(QGuiApplication::applicationDisplayName());
 
     connect(m_trayIcon, &QSystemTrayIcon::activated, this, &FortManager::onTrayActivated);
     connect(m_trayIcon, &QSystemTrayIcon::messageClicked, this, &FortManager::onTrayMessageClicked);
 
-    connect(confManager(), &ConfManager::confSaved, this, &FortManager::updateTrayMenu);
     connect(this, &FortManager::optWindowChanged, this, &FortManager::updateTrayMenuFlags);
+
+    connect(confManager(), &ConfManager::confSaved, this, &FortManager::updateTrayMenu);
+    connect(confManager(), &ConfManager::alertedAppAdded, this, [&] { updateTrayIcon(true); });
 
     updateTrayIcon();
     updateTrayMenu();
+}
+
+void FortManager::setupHotKeyManager()
+{
+    m_hotKeyManager = new HotKeyManager(m_nativeEventFilter, this);
 }
 
 void FortManager::setupAppInfoCache()
@@ -291,42 +295,51 @@ void FortManager::setupAppInfoCache()
     m_appInfoCache->setManager(manager);
 }
 
-bool FortManager::setupProgramsWindow()
+void FortManager::setupProgramsWindow()
 {
     m_progWindow = new ProgramsWindow(this);
 
+    m_progWindowState = new WidgetWindowStateWatcher(this);
     m_progWindowState->install(m_progWindow);
 
     connect(m_progWindow, &ProgramsWindow::activationChanged, this, [&] { updateTrayIcon(false); });
-
-    return true;
 }
 
-bool FortManager::setupOptionsWindow()
+void FortManager::setupOptionsWindow()
 {
     m_optWindow = new OptionsWindow(this);
 
+    m_optWindowState = new WidgetWindowStateWatcher(this);
     m_optWindowState->install(m_optWindow);
-
-    return true;
 }
 
-bool FortManager::setupZonesWindow()
+void FortManager::setupZonesWindow()
 {
     m_zoneWindow = new ZonesWindow(this);
 
+    m_zoneWindowState = new WidgetWindowStateWatcher(this);
     m_zoneWindowState->install(m_zoneWindow);
-
-    return true;
 }
 
-bool FortManager::setupConnectionsWindow()
+void FortManager::setupGraphWindow()
+{
+    m_graphWindow = new GraphWindow(settings());
+
+    m_graphWindowState = new WidgetWindowStateWatcher(this);
+    m_graphWindowState->install(m_graphWindow);
+
+    connect(m_graphWindow, &GraphWindow::aboutToClose, this, [&] { closeGraphWindow(); });
+    connect(m_graphWindow, &GraphWindow::mouseRightClick, this, &FortManager::showTrayMenu);
+
+    connect(m_statManager, &StatManager::trafficAdded, m_graphWindow, &GraphWindow::addTraffic);
+}
+
+void FortManager::setupConnectionsWindow()
 {
     m_connWindow = new ConnectionsWindow(this);
 
+    m_connWindowState = new WidgetWindowStateWatcher(this);
     m_connWindowState->install(m_connWindow);
-
-    return true;
 }
 
 void FortManager::closeUi()
@@ -349,11 +362,20 @@ void FortManager::show()
 
 void FortManager::showTrayIcon()
 {
+    if (!m_trayIcon) {
+        setupMainWindow();
+        setupTrayIcon();
+        setupHotKeyManager();
+    }
+
     m_trayIcon->show();
 }
 
 void FortManager::showTrayMessage(const QString &message, FortManager::TrayMessageType type)
 {
+    if (!m_trayIcon)
+        return;
+
     m_lastMessageType = type;
     m_trayIcon->showMessage(QGuiApplication::applicationDisplayName(), message);
 }
@@ -475,15 +497,7 @@ void FortManager::closeZonesWindow()
 void FortManager::showGraphWindow()
 {
     if (!m_graphWindow) {
-        m_graphWindow = new GraphWindow(settings());
-
-        m_graphWindowState->install(m_graphWindow);
-
-        connect(m_graphWindow, &GraphWindow::aboutToClose, this, [this] { closeGraphWindow(); });
-
-        connect(m_graphWindow, &GraphWindow::mouseRightClick, this, &FortManager::showTrayMenu);
-
-        connect(m_statManager, &StatManager::trafficAdded, m_graphWindow, &GraphWindow::addTraffic);
+        setupGraphWindow();
     }
 
     m_graphWindow->show();
@@ -820,6 +834,9 @@ void FortManager::restoreConnWindowState()
 
 void FortManager::updateTrayIcon(bool alerted)
 {
+    if (!m_trayIcon)
+        return;
+
     const auto icon = alerted
             ? GuiUtil::overlayIcon(":/images/sheild-96.png", ":/icons/sign-warning.png")
             : IconCache::icon(":/images/sheild-96.png");
@@ -996,7 +1013,9 @@ void FortManager::addHotKey(QAction *action, const QString &shortcutText, bool h
 
 void FortManager::removeHotKeys()
 {
-    m_hotKeyManager->removeActions();
+    if (m_hotKeyManager) {
+        m_hotKeyManager->removeActions();
+    }
 }
 
 QWidget *FortManager::focusWidget()

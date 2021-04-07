@@ -150,14 +150,17 @@ private:
     void setupLogger();
     void setupTaskManager();
 
+    void setupMainWindow();
     void setupTrayIcon();
+    void setupHotKeyManager();
 
     void setupAppInfoCache();
 
-    bool setupProgramsWindow();
-    bool setupOptionsWindow();
-    bool setupZonesWindow();
-    bool setupConnectionsWindow();
+    void setupProgramsWindow();
+    void setupOptionsWindow();
+    void setupZonesWindow();
+    void setupGraphWindow();
+    void setupConnectionsWindow();
 
     void closeUi();
 
@@ -231,6 +234,9 @@ private:
     ConnectionsWindow *m_connWindow = nullptr;
     WidgetWindowStateWatcher *m_connWindowState = nullptr;
 
+    NativeEventFilter *m_nativeEventFilter = nullptr;
+    HotKeyManager *m_hotKeyManager = nullptr;
+
     QAction *m_programsAction = nullptr;
     QAction *m_optionsAction = nullptr;
     QAction *m_zonesAction = nullptr;
@@ -250,9 +256,8 @@ private:
     DriverManager *m_driverManager = nullptr;
     ConfManager *m_confManager = nullptr;
     LogManager *m_logManager = nullptr;
-    NativeEventFilter *m_nativeEventFilter = nullptr;
-    HotKeyManager *m_hotKeyManager = nullptr;
     TaskManager *m_taskManager = nullptr;
+
     AppInfoCache *m_appInfoCache = nullptr;
     HostInfoCache *m_hostInfoCache = nullptr;
 
