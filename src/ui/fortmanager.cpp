@@ -105,7 +105,6 @@ void FortManager::initialize()
         m_connListModel = new ConnListModel(m_statManager, this);
     }
 
-    setupTranslationManager();
     setupThreadPool();
 
     setupLogger();
@@ -138,9 +137,6 @@ FirewallConf *FortManager::confToEdit() const
 void FortManager::setupTranslationManager()
 {
     TranslationManager::instance()->switchLanguageByName(settings()->language());
-
-    connect(TranslationManager::instance(), &TranslationManager::languageChanged, this,
-            &FortManager::retranslateTrayMenu);
 }
 
 void FortManager::setupThreadPool()
@@ -270,6 +266,9 @@ void FortManager::setupTrayIcon()
     connect(confManager(), &ConfManager::confSaved, this, &FortManager::updateTrayMenu);
     connect(confManager(), &ConfManager::alertedAppAdded, this, [&] { updateTrayIcon(true); });
 
+    connect(TranslationManager::instance(), &TranslationManager::languageChanged, this,
+            &FortManager::retranslateTrayMenu);
+
     updateTrayIcon();
     updateTrayMenu();
 }
@@ -363,6 +362,7 @@ void FortManager::show()
 void FortManager::showTrayIcon()
 {
     if (!m_trayIcon) {
+        setupTranslationManager();
         setupMainWindow();
         setupTrayIcon();
         setupHotKeyManager();
@@ -951,9 +951,6 @@ void FortManager::updateTrayMenuFlags()
 
 void FortManager::retranslateTrayMenu()
 {
-    if (!m_trayIcon)
-        return;
-
     m_programsAction->setText(tr("Programs"));
     m_optionsAction->setText(tr("Options"));
     m_zonesAction->setText(tr("Zones"));
