@@ -16,7 +16,14 @@ bool HotKeyManager::addAction(QAction *action, const QKeySequence &shortcut)
 {
     const int hotKeyId = m_actions.size();
 
-    if (!m_nativeEventFilter->registerHotKey(hotKeyId, shortcut[0]))
+    const auto keyCombination = shortcut[0];
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    const int key = keyCombination;
+#else
+    const int key = keyCombination.toCombined();
+#endif
+
+    if (!m_nativeEventFilter->registerHotKey(hotKeyId, key))
         return false;
 
     action->setText(action->text() + '\t' + shortcut.toString());

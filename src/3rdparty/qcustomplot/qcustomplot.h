@@ -164,7 +164,9 @@ class QCP { // when in moc-run, make it look like a class, so we get Q_GADGET, Q
   Q_ENUMS(SelectionRectMode)
   Q_ENUMS(SelectionType)
 public:
+#endif
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 2, 0)
 extern const QMetaObject staticMetaObject; // in moc-run we create a static meta object for QCP "fake" object. This line is the link to it via QCP::staticMetaObject in normal operation as namespace
 #endif
 

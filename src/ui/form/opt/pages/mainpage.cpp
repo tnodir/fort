@@ -75,7 +75,9 @@ void MainPage::setupTabBar()
     m_tabBar->addTab(statisticsPage, IconCache::icon(":/icons/database.png"), QString());
     m_tabBar->addTab(schedulePage, IconCache::icon(":/icons/clock.png"), QString());
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     m_tabBar->setTabVisible(2, false); // TODO: Impl. Network Rules
+#endif
 }
 
 QLayout *MainPage::setupDialogButtons()
