@@ -72,7 +72,7 @@ void OptionsPage::onSaved()
         m_editPassword->clear();
     }
 
-    settings()->setPasswordSkipAdmin(m_cbPasswordSkipAdmin->isChecked());
+    settings()->setPasswordCheckOnce(m_cbPasswordCheckOnce->isChecked());
 }
 
 void OptionsPage::onRetranslateUi()
@@ -98,7 +98,7 @@ void OptionsPage::onRetranslateUi()
 
     m_cbPassword->setText(tr("Password:"));
     retranslateEditPassword();
-    m_cbPasswordSkipAdmin->setText(tr("Skip password check for administrators"));
+    m_cbPasswordCheckOnce->setText(tr("Check password only once"));
 
     m_labelLanguage->setText(tr("Language:"));
 
@@ -277,7 +277,7 @@ void OptionsPage::setupGlobalBox()
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbHotKeys);
     layout->addLayout(passwordLayout);
-    layout->addWidget(m_cbPasswordSkipAdmin);
+    layout->addWidget(m_cbPasswordCheckOnce);
     layout->addLayout(langLayout);
 
     m_gbGlobal = new QGroupBox(this);
@@ -297,8 +297,8 @@ QLayout *OptionsPage::setupPasswordLayout()
 
         setIniEdited(true);
     });
-    m_cbPasswordSkipAdmin = ControlUtil::createCheckBox(
-            settings()->passwordSkipAdmin(), [&](bool) { setIniEdited(true); });
+    m_cbPasswordCheckOnce = ControlUtil::createCheckBox(
+            settings()->passwordCheckOnce(), [&](bool) { setIniEdited(true); });
 
     setupEditPassword();
 
@@ -319,7 +319,7 @@ void OptionsPage::setupEditPassword()
         m_editPassword->setReadOnly(settings()->hasPassword() || !m_cbPassword->isChecked());
         retranslateEditPassword();
 
-        m_cbPasswordSkipAdmin->setEnabled(m_cbPassword->isChecked());
+        m_cbPasswordCheckOnce->setEnabled(m_cbPassword->isChecked());
     };
 
     refreshEditPassword();

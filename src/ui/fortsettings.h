@@ -33,8 +33,8 @@ public:
     QString passwordHash() const { return iniText("base/passwordHash"); }
     void setPasswordHash(const QString &v) { setIniValue("base/passwordHash", v); }
 
-    bool passwordSkipAdmin() const { return iniBool("base/passwordSkipAdmin"); }
-    void setPasswordSkipAdmin(bool on) { setIniValue("base/passwordSkipAdmin", on); }
+    bool passwordCheckOnce() const { return iniBool("base/passwordCheckOnce"); }
+    void setPasswordCheckOnce(bool on) { setIniValue("base/passwordCheckOnce", on); }
 
     QString appUpdatesUrl() const;
     int appVersion() const;

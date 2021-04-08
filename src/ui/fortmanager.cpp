@@ -56,7 +56,11 @@
 #include "util/window/widgetwindowstatewatcher.h"
 
 FortManager::FortManager(FortSettings *settings, EnvManager *envManager, QObject *parent) :
-    QObject(parent), m_settings(settings), m_envManager(envManager)
+    QObject(parent),
+    m_trayTriggered(false),
+    m_passwordChecked(false),
+    m_settings(settings),
+    m_envManager(envManager)
 {
 }
 
@@ -617,13 +621,14 @@ bool FortManager::checkPassword()
 
     g_passwordDialogOpened = false;
 
-    return !password.isEmpty() && StringUtil::cryptoHash(password) == settings()->passwordHash();
+    m_passwordChecked =
+            !password.isEmpty() && StringUtil::cryptoHash(password) == settings()->passwordHash();
+    return m_passwordChecked;
 }
 
 bool FortManager::isPasswordRequired()
 {
-    return settings()->hasPassword()
-            && (!settings()->passwordSkipAdmin() || !OsUtil::isUserAdmin());
+    return settings()->hasPassword() && !(settings()->passwordCheckOnce() && m_passwordChecked);
 }
 
 void FortManager::showErrorBox(const QString &text, const QString &title)

@@ -60,7 +60,7 @@ private:
     QCheckBox *m_cbHotKeys = nullptr;
     QCheckBox *m_cbPassword = nullptr;
     QLineEdit *m_editPassword = nullptr;
-    QCheckBox *m_cbPasswordSkipAdmin = nullptr;
+    QCheckBox *m_cbPasswordCheckOnce = nullptr;
     QLabel *m_labelLanguage = nullptr;
     QComboBox *m_comboLanguage = nullptr;
     QLabel *m_iconDriver = nullptr;

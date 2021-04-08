@@ -209,7 +209,8 @@ private:
             const QObject *receiver = nullptr, const char *member = nullptr);
 
 private:
-    bool m_trayTriggered = false;
+    bool m_trayTriggered : 1;
+    bool m_passwordChecked : 1;
 
     TrayMessageType m_lastMessageType = MessageOptions;
 
