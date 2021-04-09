@@ -13,18 +13,24 @@ class HotKeyManager : public QObject
 public:
     explicit HotKeyManager(NativeEventFilter *nativeEventFilter, QObject *parent = nullptr);
 
+    bool enabled() const { return m_enabled; }
+    void setEnabled(bool v);
+
     bool addAction(QAction *action, const QKeySequence &shortcut);
 
     void removeActions();
-
-signals:
-
-public slots:
 
 private slots:
     void onHotKeyPressed(int hotKeyId);
 
 private:
+    void updateActions();
+
+    void registerHotKey(QAction *action) const;
+
+private:
+    bool m_enabled = false;
+
     NativeEventFilter *m_nativeEventFilter = nullptr;
 
     QList<QAction *> m_actions;

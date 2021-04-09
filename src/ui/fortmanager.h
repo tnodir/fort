@@ -138,10 +138,15 @@ private:
     bool setupDriver();
     void closeDriver();
 
+    void setupAppInfoCache();
+    void setupHostInfoCache();
     void setupModels();
 
     void setupLogManager();
     void closeLogManager();
+
+    void setupEventFilter();
+    void closeEventFilter();
 
     void setupEnvManager();
     void setupStatManager();
@@ -151,10 +156,8 @@ private:
     void setupTaskManager();
 
     void setupMainWindow();
-    void setupTrayIcon();
     void setupHotKeyManager();
-
-    void setupAppInfoCache();
+    void setupTrayIcon();
 
     void setupProgramsWindow();
     void setupOptionsWindow();
@@ -197,7 +200,8 @@ private:
     void onTrayActivated(int reason);
     void onTrayMessageClicked();
 
-    void addHotKey(QAction *action, const QString &shortcutText, bool hotKeyEnabled);
+    void addHotKey(QAction *action, const QString &shortcutText);
+    void updateHotKeys();
     void removeHotKeys();
 
     QWidget *focusWidget();

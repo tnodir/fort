@@ -66,7 +66,7 @@ FortManager::FortManager(FortSettings *settings, EnvManager *envManager, QObject
 
 FortManager::~FortManager()
 {
-    removeHotKeys();
+    closeEventFilter();
 
     closeDriver();
     closeLogManager();
@@ -91,32 +91,24 @@ void FortManager::initialize()
 {
     // Create instances
     {
-        m_nativeEventFilter = new NativeEventFilter(this);
-
         m_quotaManager = new QuotaManager(settings(), this);
         m_statManager = new StatManager(settings()->statFilePath(), m_quotaManager, this);
         m_driverManager = new DriverManager(this);
         m_confManager = new ConfManager(settings()->confFilePath(), this, this);
         m_logManager = new LogManager(this, this);
         m_taskManager = new TaskManager(this, this);
-
-        m_appInfoCache = new AppInfoCache(this);
-        m_hostInfoCache = new HostInfoCache(this);
-
-        m_appListModel = new AppListModel(m_confManager, this);
-        m_appStatModel = new AppStatModel(m_statManager, this);
-        m_zoneListModel = new ZoneListModel(m_confManager, this);
-        m_connListModel = new ConnListModel(m_statManager, this);
     }
 
     setupThreadPool();
 
     setupLogger();
-    setupAppInfoCache();
+    setupEventFilter();
     setupEnvManager();
     setupStatManager();
     setupConfManager();
 
+    setupAppInfoCache();
+    setupHostInfoCache();
     setupModels();
 
     setupLogManager();
@@ -187,16 +179,42 @@ void FortManager::closeDriver()
     driverManager()->closeDevice();
 }
 
+void FortManager::setupAppInfoCache()
+{
+    QString dbPath;
+    if (settings()->noCache()) {
+        dbPath = ":memory:";
+    } else {
+        const QString cachePath = settings()->cachePath();
+        dbPath = cachePath + "appinfocache.db";
+    }
+
+    AppInfoManager *manager = new AppInfoManager(this);
+    manager->setupDb(dbPath);
+
+    m_appInfoCache = new AppInfoCache(this);
+    m_appInfoCache->setManager(manager);
+}
+
+void FortManager::setupHostInfoCache()
+{
+    m_hostInfoCache = new HostInfoCache(this);
+}
+
 void FortManager::setupModels()
 {
+    m_appListModel = new AppListModel(m_confManager, this);
     appListModel()->setAppInfoCache(m_appInfoCache);
     appListModel()->initialize();
 
+    m_appStatModel = new AppStatModel(m_statManager, this);
     appStatModel()->setAppInfoCache(m_appInfoCache);
     appStatModel()->initialize();
 
+    m_zoneListModel = new ZoneListModel(m_confManager, this);
     zoneListModel()->initialize();
 
+    m_connListModel = new ConnListModel(m_statManager, this);
     connListModel()->setAppInfoCache(m_appInfoCache);
     connListModel()->setHostInfoCache(m_hostInfoCache);
 }
@@ -209,6 +227,17 @@ void FortManager::setupLogManager()
 void FortManager::closeLogManager()
 {
     logManager()->close();
+}
+
+void FortManager::setupEventFilter()
+{
+    m_nativeEventFilter = new NativeEventFilter(this);
+}
+
+void FortManager::closeEventFilter()
+{
+    m_nativeEventFilter->unregisterHotKeys();
+    m_nativeEventFilter->unregisterSessionNotification();
 }
 
 void FortManager::setupEnvManager()
@@ -257,6 +286,11 @@ void FortManager::setupMainWindow()
     m_mainWindow = new MainWindow();
 }
 
+void FortManager::setupHotKeyManager()
+{
+    m_hotKeyManager = new HotKeyManager(m_nativeEventFilter, this);
+}
+
 void FortManager::setupTrayIcon()
 {
     m_trayIcon = new QSystemTrayIcon(this);
@@ -275,27 +309,6 @@ void FortManager::setupTrayIcon()
 
     updateTrayIcon();
     updateTrayMenu();
-}
-
-void FortManager::setupHotKeyManager()
-{
-    m_hotKeyManager = new HotKeyManager(m_nativeEventFilter, this);
-}
-
-void FortManager::setupAppInfoCache()
-{
-    QString dbPath;
-    if (settings()->noCache()) {
-        dbPath = ":memory:";
-    } else {
-        const QString cachePath = settings()->cachePath();
-        dbPath = cachePath + "appinfocache.db";
-    }
-
-    AppInfoManager *manager = new AppInfoManager(this);
-    manager->setupDb(dbPath);
-
-    m_appInfoCache->setManager(manager);
 }
 
 void FortManager::setupProgramsWindow()
@@ -368,8 +381,8 @@ void FortManager::showTrayIcon()
     if (!m_trayIcon) {
         setupTranslationManager();
         setupMainWindow();
-        setupTrayIcon();
         setupHotKeyManager();
+        setupTrayIcon();
     }
 
     m_trayIcon->show();
@@ -864,48 +877,47 @@ void FortManager::updateTrayMenu(bool onlyFlags)
     }
 
     updateTrayMenuFlags();
+    updateHotKeys();
 }
 
 void FortManager::createTrayMenu()
 {
-    const bool hotKeyEnabled = settings()->hotKeyEnabled();
-
     QMenu *menu = new QMenu(m_mainWindow);
 
     m_programsAction = addAction(menu, IconCache::icon(":/icons/window.png"), QString(), this,
             SLOT(showProgramsWindow()));
-    addHotKey(m_programsAction, settings()->hotKeyPrograms(), hotKeyEnabled);
+    addHotKey(m_programsAction, settings()->hotKeyPrograms());
 
     m_optionsAction = addAction(
             menu, IconCache::icon(":/icons/cog.png"), QString(), this, SLOT(showOptionsWindow()));
-    addHotKey(m_optionsAction, settings()->hotKeyOptions(), hotKeyEnabled);
+    addHotKey(m_optionsAction, settings()->hotKeyOptions());
 
     m_zonesAction = addAction(menu, IconCache::icon(":/icons/map-map-marker.png"), QString(), this,
             SLOT(showZonesWindow()));
-    addHotKey(m_zonesAction, settings()->hotKeyZones(), hotKeyEnabled);
+    addHotKey(m_zonesAction, settings()->hotKeyZones());
 
     m_graphWindowAction = addAction(menu, IconCache::icon(":/icons/line-graph.png"), QString(),
             this, SLOT(switchGraphWindow()), true, (m_graphWindow != nullptr));
-    addHotKey(m_graphWindowAction, settings()->hotKeyGraph(), conf()->logStat());
+    addHotKey(m_graphWindowAction, settings()->hotKeyGraph());
 
     m_connectionsAction = addAction(menu, IconCache::icon(":/icons/connect.png"), QString(), this,
             SLOT(showConnectionsWindow()));
-    addHotKey(m_connectionsAction, settings()->hotKeyConnections(), hotKeyEnabled);
+    addHotKey(m_connectionsAction, settings()->hotKeyConnections());
 
     menu->addSeparator();
 
     m_filterEnabledAction = addAction(menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
-    addHotKey(m_filterEnabledAction, settings()->hotKeyFilter(), hotKeyEnabled);
+    addHotKey(m_filterEnabledAction, settings()->hotKeyFilter());
 
     m_stopTrafficAction = addAction(menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
-    addHotKey(m_stopTrafficAction, settings()->hotKeyStopTraffic(), hotKeyEnabled);
+    addHotKey(m_stopTrafficAction, settings()->hotKeyStopTraffic());
 
     m_stopInetTrafficAction =
             addAction(menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
-    addHotKey(m_stopInetTrafficAction, settings()->hotKeyStopInetTraffic(), hotKeyEnabled);
+    addHotKey(m_stopInetTrafficAction, settings()->hotKeyStopInetTraffic());
 
     m_allowAllNewAction = addAction(menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
-    addHotKey(m_allowAllNewAction, settings()->hotKeyAllowAllNew(), hotKeyEnabled);
+    addHotKey(m_allowAllNewAction, settings()->hotKeyAllowAllNew());
 
     menu->addSeparator();
 
@@ -918,14 +930,14 @@ void FortManager::createTrayMenu()
         const QString shortcutText =
                 settings()->hotKeyAppGroupModifiers() + "+F" + QString::number(++appGroupIndex);
 
-        addHotKey(a, shortcutText, hotKeyEnabled);
+        addHotKey(a, shortcutText);
 
         m_appGroupActions.append(a);
     }
 
     menu->addSeparator();
     m_quitAction = addAction(menu, QIcon(), tr("Quit"), this, SLOT(quitByCheckPassword()));
-    addHotKey(m_quitAction, settings()->hotKeyQuit(), hotKeyEnabled);
+    addHotKey(m_quitAction, settings()->hotKeyQuit());
 
     m_trayIcon->setContextMenu(menu);
 }
@@ -1006,20 +1018,23 @@ void FortManager::onTrayMessageClicked()
     }
 }
 
-void FortManager::addHotKey(QAction *action, const QString &shortcutText, bool hotKeyEnabled)
+void FortManager::addHotKey(QAction *action, const QString &shortcutText)
 {
-    if (hotKeyEnabled && !shortcutText.isEmpty()) {
-        const QKeySequence shortcut = QKeySequence::fromString(shortcutText);
+    if (shortcutText.isEmpty())
+        return;
 
-        m_hotKeyManager->addAction(action, shortcut);
-    }
+    const QKeySequence shortcut = QKeySequence::fromString(shortcutText);
+    m_hotKeyManager->addAction(action, shortcut);
+}
+
+void FortManager::updateHotKeys()
+{
+    m_hotKeyManager->setEnabled(settings()->hotKeyEnabled());
 }
 
 void FortManager::removeHotKeys()
 {
-    if (m_hotKeyManager) {
-        m_hotKeyManager->removeActions();
-    }
+    m_hotKeyManager->removeActions();
 }
 
 QWidget *FortManager::focusWidget()
