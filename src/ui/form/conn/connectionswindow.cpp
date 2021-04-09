@@ -138,7 +138,7 @@ QLayout *ConnectionsWindow::setupHeader()
     m_actRemoveConn = editMenu->addAction(IconCache::icon(":/icons/sign-delete.png"), QString());
     m_actRemoveConn->setShortcut(Qt::Key_Delete);
 
-    m_actClearConns = editMenu->addAction(IconCache::icon(":/icons/trash.png"), QString());
+    m_actClearConns = editMenu->addAction(IconCache::icon(":/icons/trashcan-full.png"), QString());
 
     connect(m_actCopy, &QAction::triggered, this,
             [&] { GuiUtil::setClipboardData(m_connListView->selectedText()); });

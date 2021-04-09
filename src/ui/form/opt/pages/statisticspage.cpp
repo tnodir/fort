@@ -337,7 +337,7 @@ void StatisticsPage::setupClearMenu()
         appStatModel()->clear();
     });
 
-    m_btClear = ControlUtil::createButton(":/icons/trash.png");
+    m_btClear = ControlUtil::createButton(":/icons/trashcan-full.png");
     m_btClear->setMenu(menu);
 }
 

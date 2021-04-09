@@ -35,6 +35,7 @@ SOURCES += \
     form/controls/tableview.cpp \
     form/controls/textarea2splitter.cpp \
     form/controls/textarea2splitterhandle.cpp \
+    form/dialog/passworddialog.cpp \
     form/graph/axistickerspeed.cpp \
     form/graph/graphplot.cpp \
     form/graph/graphwindow.cpp \
@@ -158,6 +159,7 @@ HEADERS += \
     form/controls/tableview.h \
     form/controls/textarea2splitter.h \
     form/controls/textarea2splitterhandle.h \
+    form/dialog/passworddialog.h \
     form/graph/axistickerspeed.h \
     form/graph/graphplot.h \
     form/graph/graphwindow.h \

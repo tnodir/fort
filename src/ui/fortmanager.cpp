@@ -1,7 +1,6 @@
 #include "fortmanager.h"
 
 #include <QApplication>
-#include <QInputDialog>
 #include <QMenu>
 #include <QMessageBox>
 #include <QMouseEvent>
@@ -20,6 +19,7 @@
 #include "driver/drivermanager.h"
 #include "form/conn/connectionswindow.h"
 #include "form/controls/mainwindow.h"
+#include "form/dialog/passworddialog.h"
 #include "form/graph/graphwindow.h"
 #include "form/opt/optionswindow.h"
 #include "form/prog/programswindow.h"
@@ -616,8 +616,7 @@ bool FortManager::checkPassword()
 
     g_passwordDialogOpened = true;
 
-    const QString password = QInputDialog::getText(m_mainWindow, tr("Password input"),
-            tr("Please enter the password"), QLineEdit::Password);
+    const QString password = PasswordDialog::getPassword(m_mainWindow);
 
     g_passwordDialogOpened = false;
 
@@ -650,10 +649,10 @@ bool FortManager::showYesNoBox(
         const QString &text, const QString &yesText, const QString &noText, const QString &title)
 {
     QMessageBox box(QMessageBox::Information, title, text, QMessageBox::NoButton, focusWidget());
-    box.addButton(yesText, QMessageBox::YesRole);
     box.addButton(noText, QMessageBox::NoRole);
+    box.addButton(yesText, QMessageBox::YesRole);
 
-    return box.exec() == 0;
+    return box.exec() == 1;
 }
 
 bool FortManager::saveOriginConf(const QString &message, bool onlyFlags)
