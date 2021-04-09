@@ -178,8 +178,7 @@ bool SqliteDb::rollbackTransaction()
 
 bool SqliteDb::beginSavepoint(const char *name)
 {
-    return !name ? execute("SAVEPOINT _;")
-                 : executeStr(QString("SAVEPOINT %1;").arg(name));
+    return !name ? execute("SAVEPOINT _;") : executeStr(QString("SAVEPOINT %1;").arg(name));
 }
 
 bool SqliteDb::releaseSavepoint(const char *name)
@@ -189,8 +188,7 @@ bool SqliteDb::releaseSavepoint(const char *name)
 
 bool SqliteDb::rollbackSavepoint(const char *name)
 {
-    return !name ? execute("ROLLBACK TO _;")
-                 : executeStr(QString("ROLLBACK TO %1;").arg(name));
+    return !name ? execute("ROLLBACK TO _;") : executeStr(QString("ROLLBACK TO %1;").arg(name));
 }
 
 int SqliteDb::errorCode() const

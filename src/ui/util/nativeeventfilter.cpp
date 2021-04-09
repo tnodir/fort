@@ -93,15 +93,13 @@ bool NativeEventFilter::nativeEventFilter(const QByteArray &eventType, void *mes
         if (hotKeyId >= 0) {
             emit hotKeyPressed(hotKeyId);
         }
-        break;
-    }
+    } break;
     case WM_SETTINGCHANGE: {
         const auto src = reinterpret_cast<const wchar_t *>(msg->lParam);
         if (src && wcscmp(src, L"Environment") == 0) {
             emit environmentChanged();
         }
-        break;
-    }
+    } break;
     }
 
     return false;

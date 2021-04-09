@@ -129,8 +129,7 @@ bool SqliteStmt::bindVar(int index, const QVariant &v)
 
                 buf.close();
                 stream << bufData;
-                break;
-            }
+            } break;
             default:
                 Q_UNREACHABLE();
             }
@@ -287,8 +286,7 @@ QVariant SqliteStmt::columnVar(int column)
                 Q_UNREACHABLE();
             }
         }
-        break;
-    }
+    } break;
     case SQLITE_NULL:
         break;
     default:

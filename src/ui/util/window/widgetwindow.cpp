@@ -69,8 +69,7 @@ void WidgetWindow::changeEvent(QEvent *event)
         if (e->oldState() != this->windowState()) {
             emit visibilityChanged();
         }
-        break;
-    }
+    } break;
     default:
         break;
     }

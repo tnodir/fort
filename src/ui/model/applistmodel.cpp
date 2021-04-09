@@ -204,8 +204,7 @@ QVariant AppListModel::dataForeground(const QModelIndex &index) const
                 return inactiveColor;
             if (!appGroupAt(appRow.groupIndex)->enabled())
                 return blockColor;
-            break;
-        }
+        } break;
         case 2:
             if (appRow.alerted)
                 return alertColor;

@@ -144,32 +144,27 @@ void LogManager::readLogEntries(LogBuffer *logBuffer)
             LogEntryBlocked blockedEntry;
             logBuffer->readEntryBlocked(&blockedEntry);
             appListModel()->handleLogBlocked(blockedEntry);
-            break;
-        }
+        } break;
         case LogEntry::AppBlockedIp: {
             LogEntryBlockedIp blockedIpEntry;
             logBuffer->readEntryBlockedIp(&blockedIpEntry);
             connListModel()->handleLogBlockedIp(blockedIpEntry, currentUnixTime());
-            break;
-        }
+        } break;
         case LogEntry::ProcNew: {
             LogEntryProcNew procNewEntry;
             logBuffer->readEntryProcNew(&procNewEntry);
             appStatModel()->handleLogProcNew(procNewEntry, currentUnixTime());
-            break;
-        }
+        } break;
         case LogEntry::StatTraf: {
             LogEntryStatTraf statTrafEntry;
             logBuffer->readEntryStatTraf(&statTrafEntry);
             appStatModel()->handleLogStatTraf(statTrafEntry, currentUnixTime());
-            break;
-        }
+        } break;
         case LogEntry::Time: {
             LogEntryTime timeEntry;
             logBuffer->readEntryTime(&timeEntry);
             setCurrentUnixTime(timeEntry.unixTime());
-            break;
-        }
+        } break;
         default:
             if (logBuffer->offset() < logBuffer->top()) {
                 qCritical() << "Unknown Log entry:" << logType;
