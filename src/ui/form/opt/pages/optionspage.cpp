@@ -70,9 +70,11 @@ void OptionsPage::onSaved()
         const auto password = m_editPassword->text();
         settings()->setPasswordHash(StringUtil::cryptoHash(password));
         m_editPassword->clear();
-    }
 
-    settings()->setPasswordCheckOnce(m_cbPasswordCheckOnce->isChecked());
+        if (password.isEmpty() && m_btPasswordLock->isVisible()) {
+            m_btPasswordLock->click(); // Reset unlocked password
+        }
+    }
 }
 
 void OptionsPage::onRetranslateUi()
@@ -98,7 +100,7 @@ void OptionsPage::onRetranslateUi()
 
     m_cbPassword->setText(tr("Password:"));
     retranslateEditPassword();
-    m_cbPasswordCheckOnce->setText(tr("Check password only once"));
+    m_btPasswordLock->setText(tr("Lock the password"));
 
     m_labelLanguage->setText(tr("Language:"));
 
@@ -277,7 +279,7 @@ void OptionsPage::setupGlobalBox()
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbHotKeys);
     layout->addLayout(passwordLayout);
-    layout->addWidget(m_cbPasswordCheckOnce);
+    layout->addWidget(m_btPasswordLock);
     layout->addLayout(langLayout);
 
     m_gbGlobal = new QGroupBox(this);
@@ -297,8 +299,11 @@ QLayout *OptionsPage::setupPasswordLayout()
 
         setIniEdited(true);
     });
-    m_cbPasswordCheckOnce = ControlUtil::createCheckBox(
-            settings()->passwordCheckOnce(), [&](bool) { setIniEdited(true); });
+
+    m_btPasswordLock = ControlUtil::createFlatButton(":/icons/lock-open.png", [&] {
+        settings()->resetCheckedPassword();
+        m_btPasswordLock->hide();
+    });
 
     setupEditPassword();
 
@@ -316,10 +321,12 @@ void OptionsPage::setupEditPassword()
     m_editPassword->setFixedWidth(200);
 
     const auto refreshEditPassword = [&] {
-        m_editPassword->setReadOnly(settings()->hasPassword() || !m_cbPassword->isChecked());
+        const bool hasPassword = settings()->hasPassword();
+
+        m_editPassword->setReadOnly(hasPassword || !m_cbPassword->isChecked());
         retranslateEditPassword();
 
-        m_cbPasswordCheckOnce->setEnabled(m_cbPassword->isChecked());
+        m_btPasswordLock->setVisible(hasPassword && !settings()->isPasswordRequired());
     };
 
     refreshEditPassword();

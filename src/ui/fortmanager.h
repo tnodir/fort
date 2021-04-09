@@ -114,7 +114,6 @@ public slots:
     void quitByCheckPassword();
 
     bool checkPassword();
-    bool isPasswordRequired();
 
     void showErrorBox(const QString &text, const QString &title = QString());
     void showInfoBox(const QString &text, const QString &title = QString());
@@ -146,8 +145,6 @@ private:
     void closeLogManager();
 
     void setupEventFilter();
-    void closeEventFilter();
-
     void setupEnvManager();
     void setupStatManager();
     void setupConfManager();
@@ -156,6 +153,8 @@ private:
     void setupTaskManager();
 
     void setupMainWindow();
+    void closeMainWindow();
+
     void setupHotKeyManager();
     void setupTrayIcon();
 
@@ -214,7 +213,6 @@ private:
 
 private:
     bool m_trayTriggered : 1;
-    bool m_passwordChecked : 1;
 
     TrayMessageType m_lastMessageType = MessageOptions;
 

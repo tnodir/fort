@@ -56,22 +56,16 @@
 #include "util/window/widgetwindowstatewatcher.h"
 
 FortManager::FortManager(FortSettings *settings, EnvManager *envManager, QObject *parent) :
-    QObject(parent),
-    m_trayTriggered(false),
-    m_passwordChecked(false),
-    m_settings(settings),
-    m_envManager(envManager)
+    QObject(parent), m_trayTriggered(false), m_settings(settings), m_envManager(envManager)
 {
 }
 
 FortManager::~FortManager()
 {
-    closeEventFilter();
+    closeMainWindow();
 
     closeDriver();
     closeLogManager();
-
-    delete m_mainWindow;
 
     OsUtil::closeMutex(m_instanceMutex);
 }
@@ -234,12 +228,6 @@ void FortManager::setupEventFilter()
     m_nativeEventFilter = new NativeEventFilter(this);
 }
 
-void FortManager::closeEventFilter()
-{
-    m_nativeEventFilter->unregisterHotKeys();
-    m_nativeEventFilter->unregisterSessionNotification();
-}
-
 void FortManager::setupEnvManager()
 {
     connect(m_nativeEventFilter, &NativeEventFilter::environmentChanged, envManager(),
@@ -284,6 +272,22 @@ void FortManager::setupTaskManager()
 void FortManager::setupMainWindow()
 {
     m_mainWindow = new MainWindow();
+
+    m_nativeEventFilter->registerSessionNotification(m_mainWindow->winId());
+
+    connect(m_nativeEventFilter, &NativeEventFilter::sessionLocked, this,
+            [&] { settings()->resetCheckedPassword(PasswordDialog::UnlockTillSessionLock); });
+}
+
+void FortManager::closeMainWindow()
+{
+    if (!m_mainWindow)
+        return;
+
+    m_nativeEventFilter->unregisterHotKeys();
+    m_nativeEventFilter->unregisterSessionNotification(m_mainWindow->winId());
+
+    delete m_mainWindow;
 }
 
 void FortManager::setupHotKeyManager()
@@ -616,7 +620,7 @@ bool FortManager::checkPassword()
 {
     static bool g_passwordDialogOpened = false;
 
-    if (!isPasswordRequired())
+    if (!settings()->isPasswordRequired())
         return true;
 
     if (g_passwordDialogOpened) {
@@ -629,18 +633,18 @@ bool FortManager::checkPassword()
 
     g_passwordDialogOpened = true;
 
-    const QString password = PasswordDialog::getPassword(m_mainWindow);
+    QString password;
+    PasswordDialog::UnlockType unlocked = PasswordDialog::UnlockDisabled;
+    const bool ok = PasswordDialog::getPassword(password, unlocked, m_mainWindow);
 
     g_passwordDialogOpened = false;
 
-    m_passwordChecked =
-            !password.isEmpty() && StringUtil::cryptoHash(password) == settings()->passwordHash();
-    return m_passwordChecked;
-}
+    const bool checked = ok && !password.isEmpty()
+            && StringUtil::cryptoHash(password) == settings()->passwordHash();
 
-bool FortManager::isPasswordRequired()
-{
-    return settings()->hasPassword() && !(settings()->passwordCheckOnce() && m_passwordChecked);
+    settings()->setPasswordChecked(checked, checked ? unlocked : PasswordDialog::UnlockDisabled);
+
+    return checked;
 }
 
 void FortManager::showErrorBox(const QString &text, const QString &title)
@@ -944,7 +948,7 @@ void FortManager::createTrayMenu()
 
 void FortManager::updateTrayMenuFlags()
 {
-    const bool editEnabled = (!isPasswordRequired() && !m_optWindow);
+    const bool editEnabled = (!settings()->isPasswordRequired() && !m_optWindow);
 
     m_filterEnabledAction->setEnabled(editEnabled);
     m_stopTrafficAction->setEnabled(editEnabled);

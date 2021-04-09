@@ -33,9 +33,6 @@ public:
     QString passwordHash() const { return iniText("base/passwordHash"); }
     void setPasswordHash(const QString &v) { setIniValue("base/passwordHash", v); }
 
-    bool passwordCheckOnce() const { return iniBool("base/passwordCheckOnce"); }
-    void setPasswordCheckOnce(bool on) { setIniValue("base/passwordCheckOnce", on); }
-
     QString appUpdatesUrl() const;
     int appVersion() const;
 
@@ -225,6 +222,13 @@ public:
 
     QString errorMessage() const { return m_errorMessage; }
 
+    bool passwordChecked() const { return m_passwordChecked; }
+    bool passwordUnlocked() const { return m_passwordUnlocked; }
+    void setPasswordChecked(bool checked, bool unlocked);
+
+    void resetCheckedPassword(int unlocked = 0);
+    bool isPasswordRequired();
+
     bool confMigrated() const;
     bool confCanMigrate(QString &viaVersion) const;
 
@@ -280,14 +284,17 @@ private:
     static QString startupShortcutPath();
 
 private:
-    bool m_iniExists : 1;
-    bool m_noCache : 1;
-    bool m_isService : 1;
-    bool m_hasService : 1;
-    bool m_isWindowControl : 1;
+    uint m_iniExists : 1;
+    uint m_noCache : 1;
+    uint m_isService : 1;
+    uint m_hasService : 1;
+    uint m_isWindowControl : 1;
 
-    bool m_bulkUpdating : 1;
-    bool m_bulkIniChanged : 1;
+    uint m_passwordChecked : 1;
+    uint m_passwordUnlocked : 3;
+
+    uint m_bulkUpdating : 1;
+    uint m_bulkIniChanged : 1;
 
     QString m_defaultLanguage;
     QString m_profilePath;

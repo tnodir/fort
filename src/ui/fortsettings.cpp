@@ -35,6 +35,8 @@ FortSettings::FortSettings(QObject *parent) :
     m_isService(false),
     m_hasService(false),
     m_isWindowControl(false),
+    m_passwordChecked(false),
+    m_passwordUnlocked(0),
     m_bulkUpdating(false),
     m_bulkIniChanged(false)
 {
@@ -221,6 +223,30 @@ QString FortSettings::statFilePath() const
 QString FortSettings::confFilePath() const
 {
     return profilePath() + (APP_BASE ".config");
+}
+
+void FortSettings::setPasswordChecked(bool checked, bool unlocked)
+{
+    if (m_passwordChecked == checked)
+        return;
+
+    m_passwordChecked = checked;
+    m_passwordUnlocked = unlocked;
+
+    emit iniChanged();
+}
+
+void FortSettings::resetCheckedPassword(int unlocked)
+{
+    if (unlocked != 0 && unlocked != m_passwordUnlocked)
+        return;
+
+    setPasswordChecked(false, 0);
+}
+
+bool FortSettings::isPasswordRequired()
+{
+    return hasPassword() && !(m_passwordUnlocked != 0 && m_passwordChecked);
 }
 
 void FortSettings::readConfIni(FirewallConf &conf) const

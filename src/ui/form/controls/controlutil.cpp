@@ -76,14 +76,21 @@ QPushButton *ControlUtil::createLinkButton(
     return c;
 }
 
-QPushButton *ControlUtil::createSplitterButton(
+QPushButton *ControlUtil::createFlatButton(
         const QString &iconPath, const std::function<void()> &onClicked)
 {
     auto c = createButton(iconPath, onClicked);
-    c->setFixedSize(32, 32);
     c->setFlat(true);
     c->setCursor(Qt::PointingHandCursor);
     c->setFocusPolicy(Qt::NoFocus);
+    return c;
+}
+
+QPushButton *ControlUtil::createSplitterButton(
+        const QString &iconPath, const std::function<void()> &onClicked)
+{
+    auto c = createFlatButton(iconPath, onClicked);
+    c->setFixedSize(32, 32);
     return c;
 }
 

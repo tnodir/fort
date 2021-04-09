@@ -1,5 +1,6 @@
 #include "passworddialog.h"
 
+#include <QComboBox>
 #include <QDialogButtonBox>
 #include <QHBoxLayout>
 #include <QLabel>
@@ -19,10 +20,22 @@ void PasswordDialog::retranslateUi()
 {
     m_labelPassword->setText(tr("Please enter the password:"));
 
+    m_labelUnlock->setText(tr("Unlock till:"));
+    retranslateComboUnlock();
+
     m_buttonBox->button(QDialogButtonBox::Ok)->setText(tr("OK"));
     m_buttonBox->button(QDialogButtonBox::Cancel)->setText(tr("Cancel"));
 
     this->setWindowTitle(tr("Password input"));
+}
+
+void PasswordDialog::retranslateComboUnlock()
+{
+    const QStringList list = { tr("Disabled"), tr("Session lockout"), tr("Program exit") };
+
+    m_comboUnlock->clear();
+    m_comboUnlock->addItems(list);
+    m_comboUnlock->setCurrentIndex(0);
 }
 
 void PasswordDialog::setupUi()
@@ -33,9 +46,13 @@ void PasswordDialog::setupUi()
     // Button Box
     setupButtonBox();
 
+    // Unlock Row
+    auto unlockLayout = setupUnlockLayout();
+
     // Main layout
     auto layout = new QVBoxLayout();
     layout->addLayout(passwordLayout);
+    layout->addLayout(unlockLayout);
     layout->addStretch();
     layout->addWidget(ControlUtil::createSeparator());
     layout->addWidget(m_buttonBox);
@@ -64,6 +81,22 @@ QLayout *PasswordDialog::setupPasswordLayout()
     return layout;
 }
 
+QLayout *PasswordDialog::setupUnlockLayout()
+{
+    auto layout = new QHBoxLayout();
+    layout->setSpacing(6);
+
+    m_labelUnlock = ControlUtil::createLabel();
+
+    m_comboUnlock = new QComboBox();
+    m_comboUnlock->setMinimumWidth(150);
+
+    layout->addWidget(m_labelUnlock);
+    layout->addWidget(m_comboUnlock);
+
+    return layout;
+}
+
 void PasswordDialog::setupButtonBox()
 {
     m_buttonBox =
@@ -72,8 +105,13 @@ void PasswordDialog::setupButtonBox()
     QObject::connect(m_buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
-QString PasswordDialog::getPassword(QWidget *parent)
+bool PasswordDialog::getPassword(QString &password, UnlockType &unlock, QWidget *parent)
 {
     PasswordDialog dialog(parent);
-    return dialog.exec() == 1 ? dialog.m_editPassword->text() : QString();
+    if (dialog.exec() == 0)
+        return false;
+
+    password = dialog.m_editPassword->text();
+    unlock = static_cast<UnlockType>(dialog.m_comboUnlock->currentIndex());
+    return true;
 }

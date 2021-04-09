@@ -4,6 +4,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
+#include <wtsapi32.h>
 
 NativeEventFilter::NativeEventFilter(QObject *parent) : QObject(parent)
 {
@@ -56,6 +57,16 @@ void NativeEventFilter::unregisterHotKeys()
     m_keyIdMap.clear();
 }
 
+bool NativeEventFilter::registerSessionNotification(quintptr winId)
+{
+    return WTSRegisterSessionNotification((HWND) winId, NOTIFY_FOR_THIS_SESSION);
+}
+
+void NativeEventFilter::unregisterSessionNotification(quintptr winId)
+{
+    WTSUnRegisterSessionNotification((HWND) winId);
+}
+
 void NativeEventFilter::setKeyId(int hotKeyId, quint32 nativeMod, quint32 nativeKey)
 {
     const quint32 nativeKeyMod = nativeMod | (nativeKey << 16);
@@ -101,6 +112,11 @@ bool NativeEventFilter::nativeEventFilter(const QByteArray &eventType, void *mes
         const auto src = reinterpret_cast<const wchar_t *>(msg->lParam);
         if (src && wcscmp(src, L"Environment") == 0) {
             emit environmentChanged();
+        }
+    } break;
+    case WM_WTSSESSION_CHANGE: {
+        if (msg->wParam == WTS_SESSION_LOCK) {
+            emit sessionLocked();
         }
     } break;
     }

@@ -29,9 +29,13 @@ public:
     void unregisterHotKey(int hotKeyId);
     void unregisterHotKeys();
 
+    bool registerSessionNotification(quintptr winId);
+    void unregisterSessionNotification(quintptr winId);
+
 signals:
     void hotKeyPressed(int hotKeyId);
     void environmentChanged();
+    void sessionLocked();
 
 public slots:
 
