@@ -222,6 +222,9 @@ public:
 
     QString errorMessage() const { return m_errorMessage; }
 
+    bool passwordChecked() const { return m_passwordChecked; }
+    int passwordUnlockType() const { return m_passwordUnlockType; }
+
     bool isPasswordRequired();
     void setPasswordChecked(bool checked, int unlockType);
     void resetCheckedPassword(int unlockType = 0);

@@ -18,10 +18,11 @@
 #include "../../../task/taskmanager.h"
 #include "../../../translationmanager.h"
 #include "../../../util/iconcache.h"
+#include "../../../util/osutil.h"
 #include "../../../util/startuputil.h"
 #include "../../../util/stringutil.h"
-#include "../../../util/osutil.h"
 #include "../../controls/controlutil.h"
+#include "../../dialog/passworddialog.h"
 #include "../optionscontroller.h"
 
 OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) :
@@ -100,7 +101,9 @@ void OptionsPage::onRetranslateUi()
 
     m_cbPassword->setText(tr("Password:"));
     retranslateEditPassword();
-    m_btPasswordLock->setText(tr("Lock the password"));
+    m_btPasswordLock->setText(
+            tr("Lock the password (unlocked till \"%1\")")
+                    .arg(PasswordDialog::unlockTypeStrings().at(settings()->passwordUnlockType())));
 
     m_labelLanguage->setText(tr("Language:"));
 
@@ -279,7 +282,7 @@ void OptionsPage::setupGlobalBox()
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbHotKeys);
     layout->addLayout(passwordLayout);
-    layout->addWidget(m_btPasswordLock);
+    layout->addWidget(m_btPasswordLock, 0, Qt::AlignCenter);
     layout->addLayout(langLayout);
 
     m_gbGlobal = new QGroupBox(this);

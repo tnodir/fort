@@ -23,6 +23,8 @@ public:
 
     static bool getPassword(QString &password, UnlockType &unlockType, QWidget *parent = nullptr);
 
+    static QStringList unlockTypeStrings();
+
 private:
     void retranslateUi();
     void retranslateComboUnlock();

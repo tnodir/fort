@@ -83,6 +83,7 @@ QPushButton *ControlUtil::createFlatButton(
     c->setFlat(true);
     c->setCursor(Qt::PointingHandCursor);
     c->setFocusPolicy(Qt::NoFocus);
+    c->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     return c;
 }
 

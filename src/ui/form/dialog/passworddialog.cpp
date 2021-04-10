@@ -31,10 +31,8 @@ void PasswordDialog::retranslateUi()
 
 void PasswordDialog::retranslateComboUnlock()
 {
-    const QStringList list = { tr("Disabled"), tr("Session lockout"), tr("Program exit") };
-
     m_comboUnlock->clear();
-    m_comboUnlock->addItems(list);
+    m_comboUnlock->addItems(unlockTypeStrings());
     m_comboUnlock->setCurrentIndex(0);
 }
 
@@ -115,4 +113,9 @@ bool PasswordDialog::getPassword(QString &password, UnlockType &unlockType, QWid
     unlockType = static_cast<UnlockType>(dialog.m_comboUnlock->currentIndex());
 
     return true;
+}
+
+QStringList PasswordDialog::unlockTypeStrings()
+{
+    return { tr("Disabled"), tr("Session lockout"), tr("Program exit") };
 }
