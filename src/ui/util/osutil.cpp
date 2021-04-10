@@ -97,3 +97,8 @@ bool OsUtil::isUserAdmin()
 
     return res;
 }
+
+bool OsUtil::beep(BeepType type)
+{
+    return MessageBeep(type);
+}

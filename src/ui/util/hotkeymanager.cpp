@@ -4,6 +4,7 @@
 #include <QKeySequence>
 
 #include "nativeeventfilter.h"
+#include "osutil.h"
 
 HotKeyManager::HotKeyManager(NativeEventFilter *nativeEventFilter, QObject *parent) :
     QObject(parent), m_nativeEventFilter(nativeEventFilter)
@@ -62,6 +63,7 @@ void HotKeyManager::onHotKeyPressed(int hotKeyId)
     QAction *action = m_actions.at(hotKeyId);
     if (action->isEnabled()) {
         action->trigger();
+        OsUtil::beep();
     }
 }
 
