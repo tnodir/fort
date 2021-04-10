@@ -105,13 +105,14 @@ void PasswordDialog::setupButtonBox()
     QObject::connect(m_buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
-bool PasswordDialog::getPassword(QString &password, UnlockType &unlock, QWidget *parent)
+bool PasswordDialog::getPassword(QString &password, UnlockType &unlockType, QWidget *parent)
 {
     PasswordDialog dialog(parent);
     if (dialog.exec() == 0)
         return false;
 
     password = dialog.m_editPassword->text();
-    unlock = static_cast<UnlockType>(dialog.m_comboUnlock->currentIndex());
+    unlockType = static_cast<UnlockType>(dialog.m_comboUnlock->currentIndex());
+
     return true;
 }

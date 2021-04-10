@@ -304,6 +304,7 @@ void FortManager::setupTrayIcon()
     connect(m_trayIcon, &QSystemTrayIcon::messageClicked, this, &FortManager::onTrayMessageClicked);
 
     connect(this, &FortManager::optWindowChanged, this, &FortManager::updateTrayMenuFlags);
+    connect(settings(), &FortSettings::passwordUnlocked, this, &FortManager::updateTrayMenuFlags);
 
     connect(confManager(), &ConfManager::confSaved, this, &FortManager::updateTrayMenu);
     connect(confManager(), &ConfManager::alertedAppAdded, this, [&] { updateTrayIcon(true); });
@@ -634,15 +635,15 @@ bool FortManager::checkPassword()
     g_passwordDialogOpened = true;
 
     QString password;
-    PasswordDialog::UnlockType unlocked = PasswordDialog::UnlockDisabled;
-    const bool ok = PasswordDialog::getPassword(password, unlocked, m_mainWindow);
+    PasswordDialog::UnlockType unlockType = PasswordDialog::UnlockDisabled;
+    const bool ok = PasswordDialog::getPassword(password, unlockType, m_mainWindow);
 
     g_passwordDialogOpened = false;
 
     const bool checked = ok && !password.isEmpty()
             && StringUtil::cryptoHash(password) == settings()->passwordHash();
 
-    settings()->setPasswordChecked(checked, checked ? unlocked : PasswordDialog::UnlockDisabled);
+    settings()->setPasswordChecked(checked, checked ? unlockType : PasswordDialog::UnlockDisabled);
 
     return checked;
 }

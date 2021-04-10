@@ -21,7 +21,7 @@ public:
 
     explicit PasswordDialog(QWidget *parent = nullptr);
 
-    static bool getPassword(QString &password, UnlockType &unlock, QWidget *parent = nullptr);
+    static bool getPassword(QString &password, UnlockType &unlockType, QWidget *parent = nullptr);
 
 private:
     void retranslateUi();

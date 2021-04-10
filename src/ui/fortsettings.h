@@ -222,12 +222,9 @@ public:
 
     QString errorMessage() const { return m_errorMessage; }
 
-    bool passwordChecked() const { return m_passwordChecked; }
-    bool passwordUnlocked() const { return m_passwordUnlocked; }
-    void setPasswordChecked(bool checked, bool unlocked);
-
-    void resetCheckedPassword(int unlocked = 0);
     bool isPasswordRequired();
+    void setPasswordChecked(bool checked, int unlockType);
+    void resetCheckedPassword(int unlockType = 0);
 
     bool confMigrated() const;
     bool confCanMigrate(QString &viaVersion) const;
@@ -235,6 +232,7 @@ public:
 signals:
     void iniChanged();
     void errorMessageChanged();
+    void passwordUnlocked();
 
 public slots:
     void setupGlobal();
@@ -291,7 +289,7 @@ private:
     uint m_isWindowControl : 1;
 
     uint m_passwordChecked : 1;
-    uint m_passwordUnlocked : 3;
+    uint m_passwordUnlockType : 3;
 
     uint m_bulkUpdating : 1;
     uint m_bulkIniChanged : 1;
