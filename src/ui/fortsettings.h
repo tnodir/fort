@@ -232,7 +232,7 @@ public:
 signals:
     void iniChanged();
     void errorMessageChanged();
-    void passwordUnlocked();
+    void passwordUnlockChanged();
 
 public slots:
     void setupGlobal();

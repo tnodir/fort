@@ -304,7 +304,8 @@ void FortManager::setupTrayIcon()
     connect(m_trayIcon, &QSystemTrayIcon::messageClicked, this, &FortManager::onTrayMessageClicked);
 
     connect(this, &FortManager::optWindowChanged, this, &FortManager::updateTrayMenuFlags);
-    connect(settings(), &FortSettings::passwordUnlocked, this, &FortManager::updateTrayMenuFlags);
+    connect(settings(), &FortSettings::passwordUnlockChanged, this,
+            &FortManager::updateTrayMenuFlags);
 
     connect(confManager(), &ConfManager::confSaved, this, &FortManager::updateTrayMenu);
     connect(confManager(), &ConfManager::alertedAppAdded, this, [&] { updateTrayIcon(true); });
