@@ -132,7 +132,9 @@ void FortSettings::processArguments(const QStringList &args, EnvManager *envMana
     }
 
     // Is service
-    m_isService = parser.isSet(serviceOption);
+    if (parser.isSet(serviceOption)) {
+        m_isService = m_hasService = true;
+    }
 
     // Profile Path
     if (parser.isSet(profileOption)) {
