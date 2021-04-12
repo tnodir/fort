@@ -106,6 +106,11 @@ void PasswordDialog::setupButtonBox()
 bool PasswordDialog::getPassword(QString &password, UnlockType &unlockType, QWidget *parent)
 {
     PasswordDialog dialog(parent);
+
+    dialog.show();
+    dialog.raise();
+    dialog.activateWindow();
+
     if (dialog.exec() == 0)
         return false;
 
