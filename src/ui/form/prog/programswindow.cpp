@@ -47,14 +47,14 @@ ProgramsWindow::ProgramsWindow(FortManager *fortManager, QWidget *parent) :
 
 void ProgramsWindow::setupController()
 {
-    connect(ctrl(), &ProgramsController::retranslateUi, this, &ProgramsWindow::onRetranslateUi);
-
     connect(this, &ProgramsWindow::aboutToClose, fortManager(), &FortManager::closeProgramsWindow);
 
     connect(fortManager(), &FortManager::afterSaveProgWindowState, this,
             &ProgramsWindow::onSaveWindowState);
     connect(fortManager(), &FortManager::afterRestoreProgWindowState, this,
             &ProgramsWindow::onRestoreWindowState);
+
+    connect(ctrl(), &ProgramsController::retranslateUi, this, &ProgramsWindow::onRetranslateUi);
 
     emit ctrl()->retranslateUi();
 }

@@ -200,7 +200,9 @@ void ApplicationsPage::setupAddGroup()
         ctrl()->setConfEdited(true);
     });
 
-    const auto refreshAddGroup = [&] { m_btAddGroup->setEnabled(appGroupsCount() < 16); };
+    const auto refreshAddGroup = [&] {
+        m_btAddGroup->setEnabled(appGroupsCount() < MAX_APP_GROUP_COUNT);
+    };
 
     refreshAddGroup();
 

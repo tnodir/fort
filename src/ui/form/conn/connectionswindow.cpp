@@ -36,9 +36,6 @@ ConnectionsWindow::ConnectionsWindow(FortManager *fortManager, QWidget *parent) 
 
 void ConnectionsWindow::setupController()
 {
-    connect(ctrl(), &ConnectionsController::retranslateUi, this,
-            &ConnectionsWindow::onRetranslateUi);
-
     connect(this, &ConnectionsWindow::aboutToClose, fortManager(),
             &FortManager::closeConnectionsWindow);
 
@@ -46,6 +43,9 @@ void ConnectionsWindow::setupController()
             &ConnectionsWindow::onSaveWindowState);
     connect(fortManager(), &FortManager::afterRestoreConnWindowState, this,
             &ConnectionsWindow::onRestoreWindowState);
+
+    connect(ctrl(), &ConnectionsController::retranslateUi, this,
+            &ConnectionsWindow::onRetranslateUi);
 
     emit ctrl()->retranslateUi();
 }

@@ -53,6 +53,8 @@ SOURCES += \
     form/opt/pages/statisticspage.cpp \
     form/prog/programscontroller.cpp \
     form/prog/programswindow.cpp \
+    form/tray/traycontroller.cpp \
+    form/tray/trayicon.cpp \
     form/zone/zonescontroller.cpp \
     form/zone/zoneswindow.cpp \
     fortcommon.cpp \
@@ -177,6 +179,8 @@ HEADERS += \
     form/opt/pages/statisticspage.h \
     form/prog/programscontroller.h \
     form/prog/programswindow.h \
+    form/tray/traycontroller.h \
+    form/tray/trayicon.h \
     form/zone/zonescontroller.h \
     form/zone/zoneswindow.h \
     fortcommon.h \

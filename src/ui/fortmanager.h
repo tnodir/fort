@@ -5,10 +5,6 @@
 
 #include "util/classhelpers.h"
 
-QT_FORWARD_DECLARE_CLASS(QAction)
-QT_FORWARD_DECLARE_CLASS(QMouseEvent)
-QT_FORWARD_DECLARE_CLASS(QSystemTrayIcon)
-
 class AppInfoCache;
 class AppListModel;
 class AppStatModel;
@@ -30,6 +26,7 @@ class ProgramsWindow;
 class QuotaManager;
 class StatManager;
 class TaskManager;
+class TrayIcon;
 class WidgetWindowStateWatcher;
 class ZoneListModel;
 class ZonesWindow;
@@ -50,6 +47,15 @@ public:
 
     void initialize();
 
+    MainWindow *mainWindow() const { return m_mainWindow; }
+    HotKeyManager *hotKeyManager() const { return m_hotKeyManager; }
+
+    ProgramsWindow *progWindow() const { return m_progWindow; }
+    OptionsWindow *optWindow() const { return m_optWindow; }
+    ZonesWindow *zoneWindow() const { return m_zoneWindow; }
+    GraphWindow *graphWindow() const { return m_graphWindow; }
+    ConnectionsWindow *connWindow() const { return m_connWindow; }
+
     FirewallConf *conf() const;
     FirewallConf *confToEdit() const;
 
@@ -65,7 +71,8 @@ public:
     ConnListModel *connListModel() const { return m_connListModel; }
 
 signals:
-    void optWindowChanged();
+    void optWindowChanged(bool visible);
+    void graphWindowChanged(bool visible);
 
     void afterSaveProgWindowState();
     void afterRestoreProgWindowState();
@@ -88,7 +95,6 @@ public slots:
     void showTrayIcon();
     void showTrayMessage(
             const QString &message, FortManager::TrayMessageType type = MessageOptions);
-    void showTrayMenu(QMouseEvent *event);
 
     void showProgramsWindow();
     void closeProgramsWindow();
@@ -125,9 +131,6 @@ public slots:
     bool saveConf(bool onlyFlags = false);
     bool applyConf(bool onlyFlags = false);
     bool applyConfImmediateFlags();
-
-private slots:
-    void saveTrayFlags();
 
 private:
     void setupTranslationManager();
@@ -189,27 +192,10 @@ private:
     void saveConnWindowState();
     void restoreConnWindowState();
 
-    void updateTrayIcon(bool alerted = false);
-
-    void updateTrayMenu(bool onlyFlags = false);
-    void createTrayMenu();
-    void updateTrayMenuFlags();
-    void retranslateTrayMenu();
-
     void onTrayActivated(int reason);
     void onTrayMessageClicked();
 
-    void addHotKey(QAction *action, const QString &shortcutText);
-    void updateHotKeys();
-    void removeHotKeys();
-
-    QWidget *focusWidget();
-
-    static QAction *addAction(QWidget *widget, const QIcon &icon, const QString &text,
-            const QObject *receiver = nullptr, const char *member = nullptr, bool checkable = false,
-            bool checked = false);
-    static void setActionCheckable(QAction *action, bool checked = false,
-            const QObject *receiver = nullptr, const char *member = nullptr);
+    QWidget *focusWidget() const;
 
 private:
     bool m_trayTriggered : 1;
@@ -220,7 +206,10 @@ private:
 
     MainWindow *m_mainWindow = nullptr; // dummy window for tray icon
 
-    QSystemTrayIcon *m_trayIcon = nullptr;
+    NativeEventFilter *m_nativeEventFilter = nullptr;
+    HotKeyManager *m_hotKeyManager = nullptr;
+
+    TrayIcon *m_trayIcon = nullptr;
 
     ProgramsWindow *m_progWindow = nullptr;
     WidgetWindowStateWatcher *m_progWindowState = nullptr;
@@ -236,21 +225,6 @@ private:
 
     ConnectionsWindow *m_connWindow = nullptr;
     WidgetWindowStateWatcher *m_connWindowState = nullptr;
-
-    NativeEventFilter *m_nativeEventFilter = nullptr;
-    HotKeyManager *m_hotKeyManager = nullptr;
-
-    QAction *m_programsAction = nullptr;
-    QAction *m_optionsAction = nullptr;
-    QAction *m_zonesAction = nullptr;
-    QAction *m_graphWindowAction = nullptr;
-    QAction *m_connectionsAction = nullptr;
-    QAction *m_filterEnabledAction = nullptr;
-    QAction *m_stopTrafficAction = nullptr;
-    QAction *m_stopInetTrafficAction = nullptr;
-    QAction *m_allowAllNewAction = nullptr;
-    QAction *m_quitAction = nullptr;
-    QList<QAction *> m_appGroupActions;
 
     FortSettings *m_settings = nullptr;
     EnvManager *m_envManager = nullptr;

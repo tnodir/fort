@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QVariant>
 
+#define MAX_APP_GROUP_COUNT 16
+
 class AppGroup : public QObject
 {
     Q_OBJECT
