@@ -434,10 +434,10 @@ void OptionsPage::setupDriverIcon()
     m_iconDriver = ControlUtil::createLabel();
     m_iconDriver->setScaledContents(true);
     m_iconDriver->setMaximumSize(16, 16);
+    m_iconDriver->setPixmap(IconCache::file(":/icons/puzzle.png"));
 
     const auto refreshDriverIcon = [&] {
         m_iconDriver->setEnabled(driverManager()->isDeviceOpened());
-        m_iconDriver->setPixmap(IconCache::file(":/icons/puzzle.png"));
     };
 
     refreshDriverIcon();

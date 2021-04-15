@@ -104,8 +104,6 @@ void FortManager::initialize()
     setupTaskManager();
 
     loadConf();
-
-    connect(qApp, &QCoreApplication::aboutToQuit, this, &FortManager::closeUi);
 }
 
 FirewallConf *FortManager::conf() const
@@ -299,6 +297,8 @@ void FortManager::setupTrayIcon()
     connect(confManager(), &ConfManager::confSaved, m_trayIcon, &TrayIcon::updateTrayMenu);
     connect(confManager(), &ConfManager::alertedAppAdded, m_trayIcon,
             [&] { m_trayIcon->updateTrayIcon(true); });
+
+    connect(qApp, &QCoreApplication::aboutToQuit, this, &FortManager::closeUi);
 }
 
 void FortManager::setupProgramsWindow()
