@@ -93,6 +93,7 @@ public slots:
     void show();
 
     void showTrayIcon();
+    void closeTrayIcon();
     void showTrayMessage(
             const QString &message, FortManager::TrayMessageType type = MessageOptions);
 

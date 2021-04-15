@@ -356,6 +356,7 @@ void FortManager::closeUi()
     closeProgramsWindow();
     closeZonesWindow();
     closeConnectionsWindow();
+    closeTrayIcon();
 }
 
 void FortManager::show()
@@ -377,6 +378,11 @@ void FortManager::showTrayIcon()
     }
 
     m_trayIcon->show();
+}
+
+void FortManager::closeTrayIcon()
+{
+    m_trayIcon->hide();
 }
 
 void FortManager::showTrayMessage(const QString &message, FortManager::TrayMessageType type)
