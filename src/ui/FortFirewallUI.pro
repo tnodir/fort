@@ -76,8 +76,6 @@ SOURCES += \
     model/zonelistmodel.cpp \
     model/zonesourcewrapper.cpp \
     model/zonetypewrapper.cpp \
-    service/servicemanager.cpp \
-    service/serviceworker.cpp \
     stat/quotamanager.cpp \
     stat/statmanager.cpp \
     stat/statsql.cpp \
@@ -122,6 +120,7 @@ SOURCES += \
     util/net/netutil.cpp \
     util/osutil.cpp \
     util/processinfo.cpp \
+    util/serviceworker.cpp \
     util/startuputil.cpp \
     util/stringutil.cpp \
     util/textareautil.cpp \
@@ -202,8 +201,6 @@ HEADERS += \
     model/zonelistmodel.h \
     model/zonesourcewrapper.h \
     model/zonetypewrapper.h \
-    service/servicemanager.h \
-    service/serviceworker.h \
     stat/quotamanager.h \
     stat/statmanager.h \
     stat/statsql.h \
@@ -249,6 +246,7 @@ HEADERS += \
     util/net/netutil.h \
     util/osutil.h \
     util/processinfo.h \
+    util/serviceworker.h \
     util/startuputil.h \
     util/stringutil.h \
     util/textareautil.h \

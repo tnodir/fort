@@ -13,9 +13,9 @@
 #include "fortcommon.h"
 #include "fortmanager.h"
 #include "fortsettings.h"
-#include "service/servicemanager.h"
 #include "util/envmanager.h"
 #include "util/osutil.h"
+#include "util/serviceworker.h"
 #include "util/startuputil.h"
 
 #define FORT_ERROR_INSTANCE 1
@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
     fortManager.initialize();
 
     if (settings.isService()) {
-        ServiceManager::runService();
+        ServiceWorker::run();
     } else {
         setupAppStyle(); // Style & Palette
 
