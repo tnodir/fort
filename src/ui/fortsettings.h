@@ -248,7 +248,8 @@ public slots:
     void bulkUpdateEnd();
 
 private:
-    void processArguments(const QStringList &args, EnvManager *envManager);
+    void processArguments(const QStringList &args);
+    void setupPaths(EnvManager *envManager);
     QString defaultProfilePath() const;
 
     void setupIni();

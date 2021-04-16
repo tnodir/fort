@@ -73,11 +73,12 @@ void FortSettings::setupGlobal()
 
 void FortSettings::initialize(const QStringList &args, EnvManager *envManager)
 {
-    processArguments(args, envManager);
+    processArguments(args);
+    setupPaths(envManager);
     setupIni();
 }
 
-void FortSettings::processArguments(const QStringList &args, EnvManager *envManager)
+void FortSettings::processArguments(const QStringList &args)
 {
     QCommandLineParser parser;
 
@@ -140,37 +141,20 @@ void FortSettings::processArguments(const QStringList &args, EnvManager *envMana
     if (parser.isSet(profileOption)) {
         m_profilePath = parser.value(profileOption);
     }
-    m_profilePath =
-            expandPath(m_profilePath.isEmpty() ? defaultProfilePath() : m_profilePath, envManager);
 
     // Statistics Path
     if (parser.isSet(statOption)) {
         m_statPath = parser.value(statOption);
-    }
-    if (m_statPath.isEmpty()) {
-        m_statPath = m_profilePath;
-    } else {
-        m_statPath = expandPath(m_statPath, envManager);
     }
 
     // Logs Path
     if (parser.isSet(logsOption)) {
         m_logsPath = parser.value(logsOption);
     }
-    if (m_logsPath.isEmpty()) {
-        m_logsPath = m_profilePath + "logs/";
-    } else {
-        m_logsPath = expandPath(m_logsPath, envManager);
-    }
 
     // Cache Path
     if (parser.isSet(cacheOption)) {
         m_cachePath = parser.value(cacheOption);
-    }
-    if (m_cachePath.isEmpty()) {
-        m_cachePath = m_profilePath + "cache/";
-    } else {
-        m_cachePath = expandPath(m_cachePath, envManager);
     }
 
     // Control command
@@ -181,6 +165,34 @@ void FortSettings::processArguments(const QStringList &args, EnvManager *envMana
     m_args = parser.positionalArguments();
 
     m_appArguments = args.mid(1);
+}
+
+void FortSettings::setupPaths(EnvManager *envManager)
+{
+    // Profile Path
+    m_profilePath =
+            expandPath(m_profilePath.isEmpty() ? defaultProfilePath() : m_profilePath, envManager);
+
+    // Statistics Path
+    if (m_statPath.isEmpty()) {
+        m_statPath = m_profilePath;
+    } else {
+        m_statPath = expandPath(m_statPath, envManager);
+    }
+
+    // Logs Path
+    if (m_logsPath.isEmpty()) {
+        m_logsPath = m_profilePath + "logs/";
+    } else {
+        m_logsPath = expandPath(m_logsPath, envManager);
+    }
+
+    // Cache Path
+    if (m_cachePath.isEmpty()) {
+        m_cachePath = m_profilePath + "cache/";
+    } else {
+        m_cachePath = expandPath(m_cachePath, envManager);
+    }
 }
 
 QString FortSettings::defaultProfilePath() const
