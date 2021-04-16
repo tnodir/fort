@@ -140,17 +140,8 @@ void FortSettings::processArguments(const QStringList &args, EnvManager *envMana
     if (parser.isSet(profileOption)) {
         m_profilePath = parser.value(profileOption);
     }
-    if (m_profilePath.isEmpty()) {
-        const auto appBinLocation = FileUtil::appBinLocation();
-        const bool isPortable = FileUtil::fileExists(appBinLocation + "/README.portable");
-
-        m_profilePath = pathSlash(isPortable
-                        ? appBinLocation + "/Data"
-                        : (hasService() ? expandPath("%ProgramData%\\" APP_NAME, envManager)
-                                        : FileUtil::appConfigLocation()));
-    } else {
-        m_profilePath = expandPath(m_profilePath, envManager);
-    }
+    m_profilePath =
+            expandPath(m_profilePath.isEmpty() ? defaultProfilePath() : m_profilePath, envManager);
 
     // Statistics Path
     if (parser.isSet(statOption)) {
@@ -190,6 +181,16 @@ void FortSettings::processArguments(const QStringList &args, EnvManager *envMana
     m_args = parser.positionalArguments();
 
     m_appArguments = args.mid(1);
+}
+
+QString FortSettings::defaultProfilePath() const
+{
+    const auto appBinLocation = FileUtil::appBinLocation();
+    const bool isPortable = FileUtil::fileExists(appBinLocation + "/README.portable");
+
+    return isPortable ? appBinLocation + "/Data"
+                      : (hasService() ? QLatin1String("%ProgramData%\\") + APP_NAME
+                                      : FileUtil::appConfigLocation());
 }
 
 void FortSettings::setupIni()

@@ -249,6 +249,8 @@ public slots:
 
 private:
     void processArguments(const QStringList &args, EnvManager *envManager);
+    QString defaultProfilePath() const;
+
     void setupIni();
 
     void setErrorMessage(const QString &errorMessage);
@@ -281,8 +283,6 @@ private:
     QStringList iniChildKeys(const QString &prefix) const;
 
     bool iniSync();
-
-    static QString startupShortcutPath();
 
 private:
     uint m_iniExists : 1;
