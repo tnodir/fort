@@ -120,7 +120,8 @@ const char *const sqlUpsertApp =
         "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7)"
         "  ON CONFLICT(path) DO UPDATE"
         "  SET app_group_id = ?1, name = ?3, use_group_perm = ?4, blocked = ?5,"
-        "    creat_time = ?6, end_time = ?7;";
+        "    creat_time = ?6, end_time = ?7"
+        "  RETURNING app_id;";
 
 const char *const sqlInsertAppAlert = "INSERT INTO app_alert(app_id)"
                                       "  VALUES(?1);";
@@ -507,22 +508,24 @@ bool ConfManager::addApp(const QString &appPath, const QString &appName, const Q
             << groupId << appPath << appName << useGroupPerm << blocked
             << QDateTime::currentDateTime() << (!endTime.isNull() ? endTime : QVariant());
 
-    m_sqliteDb->executeEx(sqlUpsertApp, vars, 0, &ok);
+    const auto appIdVar = m_sqliteDb->executeEx(sqlUpsertApp, vars, 1, &ok);
+
     if (ok && alerted) {
         // Alert
-        const qint64 appId =
-                m_sqliteDb->changes() != 0 ? m_sqliteDb->lastInsertRowid() : appIdByPath(appPath);
+        const qint64 appId = appIdVar.toLongLong();
         m_sqliteDb->executeEx(sqlInsertAppAlert, { appId }, 0, &ok);
     }
 
     checkResult(ok, true);
 
-    if (ok && !endTime.isNull()) {
-        m_appEndTimer.start();
-    }
+    if (ok) {
+        if (!endTime.isNull()) {
+            m_appEndTimer.start();
+        }
 
-    if (ok && alerted) {
-        emit alertedAppAdded();
+        if (alerted) {
+            emit alertedAppAdded();
+        }
     }
 
     return ok;
