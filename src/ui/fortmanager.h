@@ -199,6 +199,7 @@ private:
     QWidget *focusWidget() const;
 
 private:
+    bool m_initialized : 1;
     bool m_trayTriggered : 1;
 
     TrayMessageType m_lastMessageType = MessageOptions;

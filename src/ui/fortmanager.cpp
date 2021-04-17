@@ -50,16 +50,22 @@
 #include "util/window/widgetwindowstatewatcher.h"
 
 FortManager::FortManager(FortSettings *settings, EnvManager *envManager, QObject *parent) :
-    QObject(parent), m_trayTriggered(false), m_settings(settings), m_envManager(envManager)
+    QObject(parent),
+    m_initialized(false),
+    m_trayTriggered(false),
+    m_settings(settings),
+    m_envManager(envManager)
 {
 }
 
 FortManager::~FortManager()
 {
-    closeMainWindow();
+    if (m_initialized) {
+        closeMainWindow();
 
-    closeDriver();
-    closeLogManager();
+        closeDriver();
+        closeLogManager();
+    }
 
     OsUtil::closeMutex(m_instanceMutex);
 }
@@ -77,6 +83,8 @@ bool FortManager::checkRunningInstance()
 
 void FortManager::initialize()
 {
+    m_initialized = true;
+
     // Create instances
     {
         m_quotaManager = new QuotaManager(settings(), this);

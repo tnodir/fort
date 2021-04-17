@@ -164,7 +164,9 @@ bool ControlManager::processCommand(
 
 void ControlManager::abort()
 {
-    m_server->close();
+    if (m_server) {
+        m_server->close();
+    }
 }
 
 QString ControlManager::getServerName(bool isService)
