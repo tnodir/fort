@@ -29,8 +29,6 @@
 #include "model/zonelistmodel.h"
 #include "stat/quotamanager.h"
 #include "stat/statmanager.h"
-#include "task/taskinfo.h"
-#include "task/taskinfoupdatechecker.h"
 #include "task/taskinfozonedownloader.h"
 #include "task/taskmanager.h"
 #include "translationmanager.h"
@@ -43,7 +41,6 @@
 #include "util/logger.h"
 #include "util/nativeeventfilter.h"
 #include "util/net/hostinfocache.h"
-#include "util/net/netutil.h"
 #include "util/osutil.h"
 #include "util/startuputil.h"
 #include "util/stringutil.h"
@@ -609,10 +606,7 @@ bool FortManager::checkPassword()
         return true;
 
     if (g_passwordDialogOpened) {
-        auto dialog = qApp->activeModalWidget();
-        if (dialog) {
-            dialog->activateWindow();
-        }
+        activateModalWidget();
         return false;
     }
 
@@ -789,4 +783,12 @@ QWidget *FortManager::focusWidget() const
 {
     auto w = QApplication::focusWidget();
     return w ? w : m_mainWindow;
+}
+
+void FortManager::activateModalWidget()
+{
+    auto w = qApp->activeModalWidget();
+    if (w) {
+        w->activateWindow();
+    }
 }

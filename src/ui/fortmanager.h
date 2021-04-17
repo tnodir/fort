@@ -170,6 +170,7 @@ private:
     void onTrayMessageClicked();
 
     QWidget *focusWidget() const;
+    static void activateModalWidget();
 
 private:
     bool m_initialized : 1;
