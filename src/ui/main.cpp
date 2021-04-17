@@ -10,7 +10,7 @@
 #include <fort_version.h>
 
 #include "control/controlmanager.h"
-#include "fortcommon.h"
+#include "driver/drivercommon.h"
 #include "fortmanager.h"
 #include "fortsettings.h"
 #include "util/envmanager.h"
@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     // Uninstall: Unregister booted provider, startup entries and exit
     if (argc > 1 && !strcmp(argv[1], "-u")) {
         StartupUtil::setStartupMode(StartupUtil::StartupDisabled);
-        FortCommon::provUnregister();
+        DriverCommon::provUnregister();
         return 0;
     }
 

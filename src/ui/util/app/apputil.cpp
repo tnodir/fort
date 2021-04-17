@@ -9,7 +9,6 @@
 #include <objbase.h>
 #include <shellapi.h>
 
-#include "../../fortcommon.h"
 #include "../fileutil.h"
 #include "../iconcache.h"
 #include "appinfo.h"

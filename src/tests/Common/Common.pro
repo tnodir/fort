@@ -15,7 +15,7 @@ SOURCES += \
     $$UI_PWD/conf/addressgroup.cpp \
     $$UI_PWD/conf/appgroup.cpp \
     $$UI_PWD/conf/firewallconf.cpp \
-    $$UI_PWD/fortcommon.cpp \
+    $$UI_PWD/driver/drivercommon.cpp \
     $$UI_PWD/fortsettings.cpp \
     $$UI_PWD/log/logbuffer.cpp \
     $$UI_PWD/log/logentry.cpp \
@@ -47,6 +47,7 @@ HEADERS += \
     $$UI_PWD/conf/addressgroup.h \
     $$UI_PWD/conf/appgroup.h \
     $$UI_PWD/conf/firewallconf.h \
+    $$UI_PWD/driver/drivercommon.h \
     $$UI_PWD/fortcommon.h \
     $$UI_PWD/fortcompat.h \
     $$UI_PWD/fortsettings.h \

@@ -1,6 +1,6 @@
 #include "driverworker.h"
 
-#include "../fortcommon.h"
+#include "../driver/drivercommon.h"
 #include "../log/logbuffer.h"
 #include "../util/device.h"
 #include "../util/osutil.h"
@@ -96,8 +96,8 @@ void DriverWorker::readLog()
     QByteArray &array = m_logBuffer->array();
     int nr;
 
-    const bool success =
-            m_device->ioctl(FortCommon::ioctlGetLog(), nullptr, 0, array.data(), array.size(), &nr);
+    const bool success = m_device->ioctl(
+            DriverCommon::ioctlGetLog(), nullptr, 0, array.data(), array.size(), &nr);
 
     quint32 errorCode = 0;
 

@@ -4,7 +4,7 @@
 
 #include <googletest.h>
 
-#include <fortcommon.h>
+#include <driver/drivercommon.h>
 #include <log/logbuffer.h>
 #include <log/logentryblocked.h>
 #include <log/logentryblockedip.h>
@@ -30,7 +30,7 @@ TEST_F(LogBufferTest, BlockedWriteRead)
     const int pathSize = path.size();
     ASSERT_EQ(pathSize, 8);
 
-    const int entrySize = FortCommon::logBlockedHeaderSize() + pathSize * sizeof(wchar_t);
+    const int entrySize = DriverCommon::logBlockedHeaderSize() + pathSize * sizeof(wchar_t);
 
     const int testCount = 3;
 
@@ -65,7 +65,7 @@ TEST_F(LogBufferTest, BlockedIpWriteRead)
     const int pathSize = path.size();
     ASSERT_EQ(pathSize, 8);
 
-    const int entrySize = FortCommon::logBlockedIpHeaderSize() + pathSize * sizeof(wchar_t);
+    const int entrySize = DriverCommon::logBlockedIpHeaderSize() + pathSize * sizeof(wchar_t);
 
     const int testCount = 3;
 
@@ -111,7 +111,7 @@ TEST_F(LogBufferTest, BlockedIpWriteRead)
 
 TEST_F(LogBufferTest, TimeWriteRead)
 {
-    const int entrySize = FortCommon::logTimeSize();
+    const int entrySize = DriverCommon::logTimeSize();
 
     LogBuffer buf(entrySize);
 

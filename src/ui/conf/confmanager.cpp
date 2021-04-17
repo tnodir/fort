@@ -5,8 +5,8 @@
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
+#include "../driver/drivercommon.h"
 #include "../driver/drivermanager.h"
-#include "../fortcommon.h"
 #include "../fortmanager.h"
 #include "../fortsettings.h"
 #include "../task/taskinfo.h"

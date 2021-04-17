@@ -9,7 +9,7 @@
 #include <conf/addressgroup.h>
 #include <conf/appgroup.h>
 #include <conf/firewallconf.h>
-#include <fortcommon.h>
+#include <driver/drivercommon.h>
 #include <log/logbuffer.h>
 #include <log/logentryblockedip.h>
 #include <log/logentrytime.h>
@@ -44,7 +44,7 @@ void validateDriver(Device &device)
     const int verSize = confUtil.writeVersion(buf);
     ASSERT_NE(verSize, 0);
 
-    ASSERT_TRUE(device.ioctl(FortCommon::ioctlValidate(), buf.data(), verSize));
+    ASSERT_TRUE(device.ioctl(DriverCommon::ioctlValidate(), buf.data(), verSize));
 }
 
 void setConf(Device &device)
@@ -75,7 +75,7 @@ void setConf(Device &device)
     const int confIoSize = confUtil.write(conf, nullptr, envManager, buf);
     ASSERT_NE(confIoSize, 0);
 
-    ASSERT_TRUE(device.ioctl(FortCommon::ioctlSetConf(), buf.data(), confIoSize));
+    ASSERT_TRUE(device.ioctl(DriverCommon::ioctlSetConf(), buf.data(), confIoSize));
 }
 
 void printLogs(LogBuffer &buf)
@@ -106,18 +106,18 @@ void printLogs(LogBuffer &buf)
 TEST_F(LogReaderTest, LogRead)
 {
     Device device;
-    ASSERT_TRUE(device.open(FortCommon::deviceName()));
+    ASSERT_TRUE(device.open(DriverCommon::deviceName()));
 
     validateDriver(device);
     setConf(device);
 
-    LogBuffer buf(FortCommon::bufferSize());
+    LogBuffer buf(DriverCommon::bufferSize());
 
     for (;;) {
         int nr;
         QByteArray &array = buf.array();
         ASSERT_TRUE(device.ioctl(
-                FortCommon::ioctlGetLog(), nullptr, 0, array.data(), array.size(), &nr));
+                DriverCommon::ioctlGetLog(), nullptr, 0, array.data(), array.size(), &nr));
         buf.reset(nr);
         printLogs(buf);
     }

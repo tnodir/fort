@@ -3,9 +3,9 @@
 #include <QCoreApplication>
 #include <QDebug>
 
+#include "../driver/drivercommon.h"
 #include "../driver/drivermanager.h"
 #include "../driver/driverworker.h"
-#include "../fortcommon.h"
 #include "../fortmanager.h"
 #include "../model/applistmodel.h"
 #include "../model/appstatmodel.h"
@@ -107,7 +107,7 @@ void LogManager::cancelAsyncIo()
 LogBuffer *LogManager::getFreeBuffer()
 {
     if (m_freeBuffers.isEmpty())
-        return new LogBuffer(FortCommon::bufferSize(), this);
+        return new LogBuffer(DriverCommon::bufferSize(), this);
 
     return m_freeBuffers.takeLast();
 }

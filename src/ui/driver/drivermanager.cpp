@@ -4,7 +4,7 @@
 #include <QThreadPool>
 
 #include "../conf/firewallconf.h"
-#include "../fortcommon.h"
+#include "../driver/drivercommon.h"
 #include "../util/device.h"
 #include "../util/fileutil.h"
 #include "../util/osutil.h"
@@ -36,7 +36,7 @@ void DriverManager::updateError(bool success)
 
 bool DriverManager::isDeviceError() const
 {
-    return m_errorCode != 0 && m_errorCode != FortCommon::userErrorCode();
+    return m_errorCode != 0 && m_errorCode != DriverCommon::userErrorCode();
 }
 
 void DriverManager::setupWorker()
@@ -56,7 +56,7 @@ bool DriverManager::isDeviceOpened() const
 
 bool DriverManager::openDevice()
 {
-    const bool res = m_device->open(FortCommon::deviceName());
+    const bool res = m_device->open(DriverCommon::deviceName());
 
     updateError(res);
 
@@ -76,24 +76,24 @@ bool DriverManager::closeDevice()
 
 bool DriverManager::validate(QByteArray &buf, int size)
 {
-    return writeData(FortCommon::ioctlValidate(), buf, size);
+    return writeData(DriverCommon::ioctlValidate(), buf, size);
 }
 
 bool DriverManager::writeConf(QByteArray &buf, int size, bool onlyFlags)
 {
     return writeData(
-            onlyFlags ? FortCommon::ioctlSetFlags() : FortCommon::ioctlSetConf(), buf, size);
+            onlyFlags ? DriverCommon::ioctlSetFlags() : DriverCommon::ioctlSetConf(), buf, size);
 }
 
 bool DriverManager::writeApp(QByteArray &buf, int size, bool remove)
 {
-    return writeData(remove ? FortCommon::ioctlDelApp() : FortCommon::ioctlAddApp(), buf, size);
+    return writeData(remove ? DriverCommon::ioctlDelApp() : DriverCommon::ioctlAddApp(), buf, size);
 }
 
 bool DriverManager::writeZones(QByteArray &buf, int size, bool onlyFlags)
 {
-    return writeData(
-            onlyFlags ? FortCommon::ioctlSetZoneFlag() : FortCommon::ioctlSetZones(), buf, size);
+    return writeData(onlyFlags ? DriverCommon::ioctlSetZoneFlag() : DriverCommon::ioctlSetZones(),
+            buf, size);
 }
 
 bool DriverManager::writeData(quint32 code, QByteArray &buf, int size)

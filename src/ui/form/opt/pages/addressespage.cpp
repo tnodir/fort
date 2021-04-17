@@ -12,7 +12,7 @@
 
 #include "../../../conf/addressgroup.h"
 #include "../../../conf/firewallconf.h"
-#include "../../../fortcommon.h"
+#include "../../../driver/drivercommon.h"
 #include "../../../fortmanager.h"
 #include "../../../fortsettings.h"
 #include "../../../model/zonelistmodel.h"
@@ -378,7 +378,7 @@ QString AddressesPage::zonesText(bool include) const
 
     quint32 zonesMask = addressGroupZones(include);
     while (zonesMask != 0) {
-        const int zoneIndex = FortCommon::bitScanForward(zonesMask);
+        const int zoneIndex = DriverCommon::bitScanForward(zonesMask);
         const int zoneId = zoneIndex + 1;
         const auto zoneName = zoneListModel()->zoneNameById(zoneId);
 

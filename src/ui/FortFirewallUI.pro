@@ -16,6 +16,7 @@ SOURCES += \
     conf/firewallconf.cpp \
     control/controlmanager.cpp \
     control/controlworker.cpp \
+    driver/drivercommon.cpp \
     driver/drivermanager.cpp \
     driver/driverworker.cpp \
     form/conn/connectionscontroller.cpp \
@@ -57,7 +58,6 @@ SOURCES += \
     form/tray/trayicon.cpp \
     form/zone/zonescontroller.cpp \
     form/zone/zoneswindow.cpp \
-    fortcommon.cpp \
     fortmanager.cpp \
     fortsettings.cpp \
     log/logbuffer.cpp \
@@ -141,6 +141,7 @@ HEADERS += \
     control/control.h \
     control/controlmanager.h \
     control/controlworker.h \
+    driver/drivercommon.h \
     driver/drivermanager.h \
     driver/driverworker.h \
     form/conn/connectionscontroller.h \
@@ -182,7 +183,6 @@ HEADERS += \
     form/tray/trayicon.h \
     form/zone/zonescontroller.h \
     form/zone/zoneswindow.h \
-    fortcommon.h \
     fortcompat.h \
     fortmanager.h \
     fortsettings.h \

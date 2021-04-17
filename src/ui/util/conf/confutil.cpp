@@ -8,7 +8,7 @@
 #include "../../conf/addressgroup.h"
 #include "../../conf/appgroup.h"
 #include "../../conf/firewallconf.h"
-#include "../../fortcommon.h"
+#include "../../driver/drivercommon.h"
 #include "../../util/conf/confappswalker.h"
 #include "../dateutil.h"
 #include "../envmanager.h"
@@ -190,7 +190,7 @@ int ConfUtil::writeZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSiz
     for (const auto &zoneData : zonesData) {
         Q_ASSERT(!zoneData.isEmpty());
 
-        const int zoneIndex = FortCommon::bitScanForward(zonesMask);
+        const int zoneIndex = DriverCommon::bitScanForward(zonesMask);
         const quint32 zoneMask = (quint32(1) << zoneIndex);
 
 #define CONF_DATA_OFFSET quint32(data - confZones->data)
@@ -487,7 +487,7 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
 
     writeConfFlags(conf, &drvConf->flags);
 
-    FortCommon::confAppPermsMaskInit(drvConf);
+    DriverCommon::confAppPermsMaskInit(drvConf);
 
     drvConf->app_periods_n = appPeriodsCount;
 

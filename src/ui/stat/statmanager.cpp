@@ -6,7 +6,7 @@
 #include <sqlite/sqlitestmt.h>
 
 #include "../conf/firewallconf.h"
-#include "../fortcommon.h"
+#include "../driver/drivercommon.h"
 #include "../log/logentryblockedip.h"
 #include "../util/dateutil.h"
 #include "../util/fileutil.h"
@@ -235,7 +235,7 @@ bool StatManager::logStatTraf(quint16 procCount, const quint32 *procTrafBytes, q
         if (m_conf->activePeriodEnabled()) {
             const QTime now = QTime::currentTime();
 
-            m_isActivePeriod = FortCommon::isTimeInPeriod(quint8(now.hour()), quint8(now.minute()),
+            m_isActivePeriod = DriverCommon::isTimeInPeriod(quint8(now.hour()), quint8(now.minute()),
                     activePeriodFromHour, activePeriodFromMinute, activePeriodToHour,
                     activePeriodToMinute);
         }
