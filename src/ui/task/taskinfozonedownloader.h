@@ -5,7 +5,6 @@
 
 #include "taskinfo.h"
 
-class FortManager;
 class TaskZoneDownloader;
 class ZoneListModel;
 

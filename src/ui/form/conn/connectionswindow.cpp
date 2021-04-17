@@ -34,6 +34,31 @@ ConnectionsWindow::ConnectionsWindow(FortManager *fortManager, QWidget *parent) 
     syncShowHostNames();
 }
 
+FortManager *ConnectionsWindow::fortManager() const
+{
+    return ctrl()->fortManager();
+}
+
+FortSettings *ConnectionsWindow::settings() const
+{
+    return ctrl()->settings();
+}
+
+FirewallConf *ConnectionsWindow::conf() const
+{
+    return ctrl()->conf();
+}
+
+ConnListModel *ConnectionsWindow::connListModel() const
+{
+    return fortManager()->connListModel();
+}
+
+AppInfoCache *ConnectionsWindow::appInfoCache() const
+{
+    return connListModel()->appInfoCache();
+}
+
 void ConnectionsWindow::setupController()
 {
     connect(this, &ConnectionsWindow::aboutToClose, fortManager(),
@@ -344,29 +369,4 @@ QString ConnectionsWindow::connListCurrentPath() const
 {
     const auto connRow = connListModel()->connRowAt(connListCurrentIndex());
     return connRow.appPath;
-}
-
-FortManager *ConnectionsWindow::fortManager() const
-{
-    return ctrl()->fortManager();
-}
-
-FortSettings *ConnectionsWindow::settings() const
-{
-    return ctrl()->settings();
-}
-
-FirewallConf *ConnectionsWindow::conf() const
-{
-    return ctrl()->conf();
-}
-
-ConnListModel *ConnectionsWindow::connListModel() const
-{
-    return fortManager()->connListModel();
-}
-
-AppInfoCache *ConnectionsWindow::appInfoCache() const
-{
-    return connListModel()->appInfoCache();
 }

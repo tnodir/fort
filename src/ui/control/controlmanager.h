@@ -23,13 +23,13 @@ public:
     ~ControlManager() override;
     CLASS_DELETE_COPY_MOVE(ControlManager)
 
+    FortSettings *settings() const { return m_settings; }
+    FortManager *fortManager() const { return m_fortManager; }
+
     bool isClient() const;
 
     bool listen(FortManager *fortManager);
     bool postCommand();
-
-    FortSettings *settings() const { return m_settings; }
-    FortManager *fortManager() const { return m_fortManager; }
 
 private slots:
     void onNewConnection();

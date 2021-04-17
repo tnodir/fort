@@ -16,6 +16,41 @@ OptionsController::OptionsController(FortManager *fortManager, QObject *parent) 
             &OptionsController::retranslateUi);
 }
 
+FortSettings *OptionsController::settings() const
+{
+    return fortManager()->settings();
+}
+
+ConfManager *OptionsController::confManager() const
+{
+    return fortManager()->confManager();
+}
+
+FirewallConf *OptionsController::conf() const
+{
+    return fortManager()->confToEdit();
+}
+
+TaskManager *OptionsController::taskManager() const
+{
+    return fortManager()->taskManager();
+}
+
+DriverManager *OptionsController::driverManager() const
+{
+    return fortManager()->driverManager();
+}
+
+TranslationManager *OptionsController::translationManager() const
+{
+    return TranslationManager::instance();
+}
+
+ZoneListModel *OptionsController::zoneListModel() const
+{
+    return fortManager()->zoneListModel();
+}
+
 void OptionsController::setConfFlagsEdited(bool v)
 {
     if (m_confFlagsEdited != v) {
@@ -55,41 +90,6 @@ void OptionsController::initialize()
     if (settings()->confMigrated()) {
         setConfEdited(true);
     }
-}
-
-FortSettings *OptionsController::settings() const
-{
-    return fortManager()->settings();
-}
-
-ConfManager *OptionsController::confManager() const
-{
-    return fortManager()->confManager();
-}
-
-FirewallConf *OptionsController::conf() const
-{
-    return fortManager()->confToEdit();
-}
-
-TaskManager *OptionsController::taskManager() const
-{
-    return fortManager()->taskManager();
-}
-
-DriverManager *OptionsController::driverManager() const
-{
-    return fortManager()->driverManager();
-}
-
-TranslationManager *OptionsController::translationManager() const
-{
-    return TranslationManager::instance();
-}
-
-ZoneListModel *OptionsController::zoneListModel() const
-{
-    return fortManager()->zoneListModel();
 }
 
 void OptionsController::closeWindow()

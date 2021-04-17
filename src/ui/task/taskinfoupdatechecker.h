@@ -3,7 +3,6 @@
 
 #include "taskinfo.h"
 
-class FortManager;
 class TaskUpdateChecker;
 
 class TaskInfoUpdateChecker : public TaskInfo

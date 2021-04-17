@@ -45,6 +45,36 @@ ProgramsWindow::ProgramsWindow(FortManager *fortManager, QWidget *parent) :
     setupController();
 }
 
+FortManager *ProgramsWindow::fortManager() const
+{
+    return ctrl()->fortManager();
+}
+
+FortSettings *ProgramsWindow::settings() const
+{
+    return ctrl()->settings();
+}
+
+ConfManager *ProgramsWindow::confManager() const
+{
+    return ctrl()->confManager();
+}
+
+FirewallConf *ProgramsWindow::conf() const
+{
+    return ctrl()->conf();
+}
+
+AppListModel *ProgramsWindow::appListModel() const
+{
+    return fortManager()->appListModel();
+}
+
+AppInfoCache *ProgramsWindow::appInfoCache() const
+{
+    return appListModel()->appInfoCache();
+}
+
 void ProgramsWindow::setupController()
 {
     connect(this, &ProgramsWindow::aboutToClose, fortManager(), &FortManager::closeProgramsWindow);
@@ -671,34 +701,4 @@ QString ProgramsWindow::appListCurrentPath() const
 {
     const auto appRow = appListModel()->appRowAt(appListCurrentIndex());
     return appRow.appPath;
-}
-
-FortManager *ProgramsWindow::fortManager() const
-{
-    return ctrl()->fortManager();
-}
-
-FortSettings *ProgramsWindow::settings() const
-{
-    return ctrl()->settings();
-}
-
-ConfManager *ProgramsWindow::confManager() const
-{
-    return ctrl()->confManager();
-}
-
-FirewallConf *ProgramsWindow::conf() const
-{
-    return ctrl()->conf();
-}
-
-AppListModel *ProgramsWindow::appListModel() const
-{
-    return fortManager()->appListModel();
-}
-
-AppInfoCache *ProgramsWindow::appInfoCache() const
-{
-    return appListModel()->appInfoCache();
 }

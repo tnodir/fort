@@ -24,6 +24,13 @@ class ZonesWindow : public WidgetWindow
 public:
     explicit ZonesWindow(FortManager *fortManager, QWidget *parent = nullptr);
 
+    ZonesController *ctrl() const { return m_ctrl; }
+    FortManager *fortManager() const;
+    FortSettings *settings() const;
+    ConfManager *confManager() const;
+    TaskManager *taskManager() const;
+    ZoneListModel *zoneListModel() const;
+
 protected slots:
     void onSaveWindowState();
     void onRestoreWindowState();
@@ -52,13 +59,6 @@ private:
     void deleteSelectedZone();
 
     int zoneListCurrentIndex() const;
-
-    ZonesController *ctrl() const { return m_ctrl; }
-    FortManager *fortManager() const;
-    FortSettings *settings() const;
-    ConfManager *confManager() const;
-    TaskManager *taskManager() const;
-    ZoneListModel *zoneListModel() const;
 
 private:
     bool m_formZoneIsNew = false;

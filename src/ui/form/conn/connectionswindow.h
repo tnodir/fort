@@ -22,6 +22,13 @@ class ConnectionsWindow : public WidgetWindow
 public:
     explicit ConnectionsWindow(FortManager *fortManager, QWidget *parent = nullptr);
 
+    ConnectionsController *ctrl() const { return m_ctrl; }
+    FortManager *fortManager() const;
+    FortSettings *settings() const;
+    FirewallConf *conf() const;
+    ConnListModel *connListModel() const;
+    AppInfoCache *appInfoCache() const;
+
 protected slots:
     void onSaveWindowState();
     void onRestoreWindowState();
@@ -50,13 +57,6 @@ private:
 
     int connListCurrentIndex() const;
     QString connListCurrentPath() const;
-
-    ConnectionsController *ctrl() const { return m_ctrl; }
-    FortManager *fortManager() const;
-    FortSettings *settings() const;
-    FirewallConf *conf() const;
-    ConnListModel *connListModel() const;
-    AppInfoCache *appInfoCache() const;
 
 private:
     ConnectionsController *m_ctrl = nullptr;

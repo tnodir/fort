@@ -712,7 +712,7 @@ bool FortManager::loadConf()
     if (!settings()->confCanMigrate(viaVersion)) {
         showInfoBox(tr("Please first install Fort Firewall v%1 and save Options from it.")
                             .arg(viaVersion));
-        abort(); //  Abort the program
+        abort(); // Abort the program
     }
 
     if (!confManager()->load(*conf()))

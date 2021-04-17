@@ -32,6 +32,14 @@ class ProgramsWindow : public WidgetWindow
 public:
     explicit ProgramsWindow(FortManager *fortManager, QWidget *parent = nullptr);
 
+    ProgramsController *ctrl() const { return m_ctrl; }
+    FortManager *fortManager() const;
+    FortSettings *settings() const;
+    ConfManager *confManager() const;
+    FirewallConf *conf() const;
+    AppListModel *appListModel() const;
+    AppInfoCache *appInfoCache() const;
+
     bool openAppEditFormByPath(const QString &appPath);
 
 protected slots:
@@ -76,14 +84,6 @@ private:
 
     int appListCurrentIndex() const;
     QString appListCurrentPath() const;
-
-    ProgramsController *ctrl() const { return m_ctrl; }
-    FortManager *fortManager() const;
-    FortSettings *settings() const;
-    ConfManager *confManager() const;
-    FirewallConf *conf() const;
-    AppListModel *appListModel() const;
-    AppInfoCache *appInfoCache() const;
 
 private:
     bool m_formAppIsNew = false;

@@ -19,6 +19,12 @@ class TrayIcon : public QSystemTrayIcon
 public:
     explicit TrayIcon(FortManager *fortManager, QObject *parent = nullptr);
 
+    TrayController *ctrl() const { return m_ctrl; }
+    FortManager *fortManager() const;
+    FortSettings *settings() const;
+    FirewallConf *conf() const;
+    HotKeyManager *hotKeyManager() const;
+
 public slots:
     void updateTrayIcon(bool alerted = false);
 
@@ -44,12 +50,6 @@ private:
     void addHotKey(QAction *action, const QString &shortcutText);
     void updateHotKeys();
     void removeHotKeys();
-
-    TrayController *ctrl() const { return m_ctrl; }
-    FortManager *fortManager() const;
-    FortSettings *settings() const;
-    FirewallConf *conf() const;
-    HotKeyManager *hotKeyManager() const;
 
 private:
     QAction *m_programsAction = nullptr;

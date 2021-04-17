@@ -38,6 +38,31 @@ ZonesWindow::ZonesWindow(FortManager *fortManager, QWidget *parent) :
     setupController();
 }
 
+FortManager *ZonesWindow::fortManager() const
+{
+    return ctrl()->fortManager();
+}
+
+FortSettings *ZonesWindow::settings() const
+{
+    return ctrl()->settings();
+}
+
+ConfManager *ZonesWindow::confManager() const
+{
+    return ctrl()->confManager();
+}
+
+TaskManager *ZonesWindow::taskManager() const
+{
+    return fortManager()->taskManager();
+}
+
+ZoneListModel *ZonesWindow::zoneListModel() const
+{
+    return fortManager()->zoneListModel();
+}
+
 void ZonesWindow::setupController()
 {
     connect(ctrl(), &ZonesController::retranslateUi, this, &ZonesWindow::onRetranslateUi);
@@ -444,29 +469,4 @@ void ZonesWindow::deleteSelectedZone()
 int ZonesWindow::zoneListCurrentIndex() const
 {
     return m_zoneListView->currentRow();
-}
-
-FortManager *ZonesWindow::fortManager() const
-{
-    return ctrl()->fortManager();
-}
-
-FortSettings *ZonesWindow::settings() const
-{
-    return ctrl()->settings();
-}
-
-ConfManager *ZonesWindow::confManager() const
-{
-    return ctrl()->confManager();
-}
-
-TaskManager *ZonesWindow::taskManager() const
-{
-    return fortManager()->taskManager();
-}
-
-ZoneListModel *ZonesWindow::zoneListModel() const
-{
-    return fortManager()->zoneListModel();
 }

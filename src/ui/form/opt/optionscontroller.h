@@ -19,6 +19,15 @@ class OptionsController : public QObject
 public:
     explicit OptionsController(FortManager *fortManager, QObject *parent = nullptr);
 
+    FortManager *fortManager() const { return m_fortManager; }
+    FortSettings *settings() const;
+    ConfManager *confManager() const;
+    FirewallConf *conf() const;
+    TaskManager *taskManager() const;
+    DriverManager *driverManager() const;
+    TranslationManager *translationManager() const;
+    ZoneListModel *zoneListModel() const;
+
     bool confFlagsEdited() const { return m_confFlagsEdited; }
     void setConfFlagsEdited(bool v);
 
@@ -33,15 +42,6 @@ public:
     void resetEdited();
 
     void initialize();
-
-    FortManager *fortManager() const { return m_fortManager; }
-    FortSettings *settings() const;
-    ConfManager *confManager() const;
-    FirewallConf *conf() const;
-    TaskManager *taskManager() const;
-    DriverManager *driverManager() const;
-    TranslationManager *translationManager() const;
-    ZoneListModel *zoneListModel() const;
 
 signals:
     void editedChanged(bool anyEdited);

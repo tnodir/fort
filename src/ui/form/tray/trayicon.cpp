@@ -57,6 +57,26 @@ TrayIcon::TrayIcon(FortManager *fortManager, QObject *parent) :
     setupController();
 }
 
+FortManager *TrayIcon::fortManager() const
+{
+    return ctrl()->fortManager();
+}
+
+FortSettings *TrayIcon::settings() const
+{
+    return ctrl()->settings();
+}
+
+FirewallConf *TrayIcon::conf() const
+{
+    return ctrl()->conf();
+}
+
+HotKeyManager *TrayIcon::hotKeyManager() const
+{
+    return ctrl()->hotKeyManager();
+}
+
 void TrayIcon::updateTrayIcon(bool alerted)
 {
     const auto icon = alerted
@@ -272,24 +292,4 @@ void TrayIcon::updateHotKeys()
 void TrayIcon::removeHotKeys()
 {
     hotKeyManager()->removeActions();
-}
-
-FortManager *TrayIcon::fortManager() const
-{
-    return ctrl()->fortManager();
-}
-
-FortSettings *TrayIcon::settings() const
-{
-    return ctrl()->settings();
-}
-
-FirewallConf *TrayIcon::conf() const
-{
-    return ctrl()->conf();
-}
-
-HotKeyManager *TrayIcon::hotKeyManager() const
-{
-    return ctrl()->hotKeyManager();
 }
