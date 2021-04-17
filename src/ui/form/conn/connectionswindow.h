@@ -14,6 +14,7 @@ class FirewallConf;
 class FortManager;
 class FortSettings;
 class TableView;
+class WidgetWindowStateWatcher;
 
 class ConnectionsWindow : public WidgetWindow
 {
@@ -29,14 +30,15 @@ public:
     ConnListModel *connListModel() const;
     AppInfoCache *appInfoCache() const;
 
-protected slots:
-    void onSaveWindowState();
-    void onRestoreWindowState();
+    void saveWindowState();
+    void restoreWindowState();
 
+protected slots:
     void onRetranslateUi();
 
 private:
     void setupController();
+    void setupStateWatcher();
 
     void setupUi();
     QLayout *setupHeader();
@@ -60,6 +62,7 @@ private:
 
 private:
     ConnectionsController *m_ctrl = nullptr;
+    WidgetWindowStateWatcher *m_stateWatcher = nullptr;
 
     QPushButton *m_btEdit = nullptr;
     QAction *m_actCopy = nullptr;

@@ -16,6 +16,7 @@ class TableView;
 class TaskManager;
 class ZoneListModel;
 class ZonesController;
+class WidgetWindowStateWatcher;
 
 class ZonesWindow : public WidgetWindow
 {
@@ -31,14 +32,15 @@ public:
     TaskManager *taskManager() const;
     ZoneListModel *zoneListModel() const;
 
-protected slots:
-    void onSaveWindowState();
-    void onRestoreWindowState();
+    void saveWindowState();
+    void restoreWindowState();
 
+protected slots:
     void onRetranslateUi();
 
 private:
     void setupController();
+    void setupStateWatcher();
 
     void setupUi();
     void setupZoneEditForm();
@@ -64,6 +66,7 @@ private:
     bool m_formZoneIsNew = false;
 
     ZonesController *m_ctrl = nullptr;
+    WidgetWindowStateWatcher *m_stateWatcher = nullptr;
 
     QPushButton *m_btEdit = nullptr;
     QAction *m_actAddZone = nullptr;

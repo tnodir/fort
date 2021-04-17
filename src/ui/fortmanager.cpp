@@ -47,7 +47,6 @@
 #include "util/osutil.h"
 #include "util/startuputil.h"
 #include "util/stringutil.h"
-#include "util/window/widgetwindowstatewatcher.h"
 
 FortManager::FortManager(FortSettings *settings, EnvManager *envManager, QObject *parent) :
     QObject(parent),
@@ -312,10 +311,9 @@ void FortManager::setupTrayIcon()
 void FortManager::setupProgramsWindow()
 {
     m_progWindow = new ProgramsWindow(this);
+    m_progWindow->restoreWindowState();
 
-    m_progWindowState = new WidgetWindowStateWatcher(this);
-    m_progWindowState->install(m_progWindow);
-
+    connect(m_progWindow, &ProgramsWindow::aboutToClose, this, &FortManager::closeProgramsWindow);
     connect(m_progWindow, &ProgramsWindow::activationChanged, m_trayIcon,
             [&] { m_trayIcon->updateTrayIcon(false); });
 }
@@ -323,25 +321,23 @@ void FortManager::setupProgramsWindow()
 void FortManager::setupOptionsWindow()
 {
     m_optWindow = new OptionsWindow(this);
+    m_optWindow->restoreWindowState();
 
-    m_optWindowState = new WidgetWindowStateWatcher(this);
-    m_optWindowState->install(m_optWindow);
+    connect(m_optWindow, &OptionsWindow::aboutToClose, this, &FortManager::closeOptionsWindow);
 }
 
 void FortManager::setupZonesWindow()
 {
     m_zoneWindow = new ZonesWindow(this);
+    m_zoneWindow->restoreWindowState();
 
-    m_zoneWindowState = new WidgetWindowStateWatcher(this);
-    m_zoneWindowState->install(m_zoneWindow);
+    connect(m_zoneWindow, &ZonesWindow::aboutToClose, this, &FortManager::closeZonesWindow);
 }
 
 void FortManager::setupGraphWindow()
 {
     m_graphWindow = new GraphWindow(settings());
-
-    m_graphWindowState = new WidgetWindowStateWatcher(this);
-    m_graphWindowState->install(m_graphWindow);
+    m_graphWindow->restoreWindowState();
 
     connect(m_graphWindow, &GraphWindow::aboutToClose, this, [&] { closeGraphWindow(); });
     connect(m_graphWindow, &GraphWindow::mouseRightClick, m_trayIcon, &TrayIcon::showTrayMenu);
@@ -352,9 +348,10 @@ void FortManager::setupGraphWindow()
 void FortManager::setupConnectionsWindow()
 {
     m_connWindow = new ConnectionsWindow(this);
+    m_connWindow->restoreWindowState();
 
-    m_connWindowState = new WidgetWindowStateWatcher(this);
-    m_connWindowState->install(m_connWindow);
+    connect(m_connWindow, &ConnectionsWindow::aboutToClose, this,
+            &FortManager::closeConnectionsWindow);
 }
 
 void FortManager::closeUi()
@@ -409,7 +406,6 @@ void FortManager::showProgramsWindow()
 
     if (!m_progWindow) {
         setupProgramsWindow();
-        restoreProgWindowState();
     }
 
     m_progWindow->show();
@@ -422,8 +418,7 @@ void FortManager::closeProgramsWindow()
     if (!m_progWindow)
         return;
 
-    saveProgWindowState();
-
+    m_progWindow->saveWindowState();
     m_progWindow->hide();
 
     m_progWindow->deleteLater();
@@ -452,7 +447,6 @@ void FortManager::showOptionsWindow()
         confManager()->initConfToEdit();
 
         setupOptionsWindow();
-        restoreOptWindowState();
 
         emit optWindowChanged(true);
     }
@@ -467,8 +461,7 @@ void FortManager::closeOptionsWindow()
     if (!m_optWindow)
         return;
 
-    saveOptWindowState();
-
+    m_optWindow->saveWindowState();
     m_optWindow->hide();
 
     m_optWindow->deleteLater();
@@ -495,7 +488,6 @@ void FortManager::showZonesWindow()
 
     if (!m_zoneWindow) {
         setupZonesWindow();
-        restoreZoneWindowState();
     }
 
     m_zoneWindow->show();
@@ -508,8 +500,7 @@ void FortManager::closeZonesWindow()
     if (!m_zoneWindow)
         return;
 
-    saveZoneWindowState();
-
+    m_zoneWindow->saveWindowState();
     m_zoneWindow->hide();
 
     m_zoneWindow->deleteLater();
@@ -525,19 +516,14 @@ void FortManager::showGraphWindow()
     m_graphWindow->show();
 
     emit graphWindowChanged(true);
-
-    restoreGraphWindowState();
 }
 
-void FortManager::closeGraphWindow(bool storeVisibility)
+void FortManager::closeGraphWindow(bool wasVisible)
 {
     if (!m_graphWindow)
         return;
 
-    saveGraphWindowState(storeVisibility);
-
-    m_graphWindowState->uninstall(m_graphWindow);
-
+    m_graphWindow->saveWindowState(wasVisible);
     m_graphWindow->hide();
 
     m_graphWindow->deleteLater();
@@ -570,7 +556,6 @@ void FortManager::showConnectionsWindow()
 
     if (!m_connWindow) {
         setupConnectionsWindow();
-        restoreConnWindowState();
     }
 
     m_connWindow->show();
@@ -583,8 +568,7 @@ void FortManager::closeConnectionsWindow()
     if (!m_connWindow)
         return;
 
-    saveConnWindowState();
-
+    m_connWindow->saveWindowState();
     m_connWindow->hide();
 
     m_connWindow->deleteLater();
@@ -762,83 +746,6 @@ void FortManager::updateLogManager(bool active)
 void FortManager::updateStatManager(FirewallConf *conf)
 {
     m_statManager->setFirewallConf(conf);
-}
-
-void FortManager::saveProgWindowState()
-{
-    settings()->setProgWindowGeometry(m_progWindowState->geometry());
-    settings()->setProgWindowMaximized(m_progWindowState->maximized());
-
-    emit afterSaveProgWindowState();
-}
-
-void FortManager::restoreProgWindowState()
-{
-    m_progWindowState->restore(m_progWindow, QSize(1024, 768), settings()->progWindowGeometry(),
-            settings()->progWindowMaximized());
-
-    emit afterRestoreProgWindowState();
-}
-
-void FortManager::saveOptWindowState()
-{
-    settings()->setOptWindowGeometry(m_optWindowState->geometry());
-    settings()->setOptWindowMaximized(m_optWindowState->maximized());
-
-    emit afterSaveOptWindowState();
-}
-
-void FortManager::restoreOptWindowState()
-{
-    m_optWindowState->restore(m_optWindow, QSize(1024, 768), settings()->optWindowGeometry(),
-            settings()->optWindowMaximized());
-
-    emit afterRestoreOptWindowState();
-}
-
-void FortManager::saveZoneWindowState()
-{
-    settings()->setZoneWindowGeometry(m_zoneWindowState->geometry());
-    settings()->setZoneWindowMaximized(m_zoneWindowState->maximized());
-
-    emit afterSaveZoneWindowState();
-}
-
-void FortManager::restoreZoneWindowState()
-{
-    m_zoneWindowState->restore(m_zoneWindow, QSize(1024, 768), settings()->zoneWindowGeometry(),
-            settings()->zoneWindowMaximized());
-
-    emit afterRestoreZoneWindowState();
-}
-
-void FortManager::saveGraphWindowState(bool visible)
-{
-    settings()->setGraphWindowVisible(visible);
-    settings()->setGraphWindowGeometry(m_graphWindowState->geometry());
-    settings()->setGraphWindowMaximized(m_graphWindowState->maximized());
-}
-
-void FortManager::restoreGraphWindowState()
-{
-    m_graphWindowState->restore(m_graphWindow, QSize(400, 300), settings()->graphWindowGeometry(),
-            settings()->graphWindowMaximized());
-}
-
-void FortManager::saveConnWindowState()
-{
-    settings()->setConnWindowGeometry(m_connWindowState->geometry());
-    settings()->setConnWindowMaximized(m_connWindowState->maximized());
-
-    emit afterSaveConnWindowState();
-}
-
-void FortManager::restoreConnWindowState()
-{
-    m_connWindowState->restore(m_connWindow, QSize(1024, 768), settings()->connWindowGeometry(),
-            settings()->connWindowMaximized());
-
-    emit afterRestoreConnWindowState();
 }
 
 void FortManager::onTrayActivated(int reason)

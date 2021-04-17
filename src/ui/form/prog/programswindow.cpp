@@ -24,6 +24,7 @@
 #include "../../util/app/appinfocache.h"
 #include "../../util/guiutil.h"
 #include "../../util/iconcache.h"
+#include "../../util/window/widgetwindowstatewatcher.h"
 #include "../controls/appinforow.h"
 #include "../controls/checkspincombo.h"
 #include "../controls/controlutil.h"
@@ -39,10 +40,13 @@ const ValuesList appBlockInHourValues = { 3, 1, 6, 12, 24, 24 * 7, 24 * 30 };
 }
 
 ProgramsWindow::ProgramsWindow(FortManager *fortManager, QWidget *parent) :
-    WidgetWindow(parent), m_ctrl(new ProgramsController(fortManager, this))
+    WidgetWindow(parent),
+    m_ctrl(new ProgramsController(fortManager, this)),
+    m_stateWatcher(new WidgetWindowStateWatcher(this))
 {
     setupUi();
     setupController();
+    setupStateWatcher();
 }
 
 FortManager *ProgramsWindow::fortManager() const
@@ -75,34 +79,37 @@ AppInfoCache *ProgramsWindow::appInfoCache() const
     return appListModel()->appInfoCache();
 }
 
-void ProgramsWindow::setupController()
+void ProgramsWindow::saveWindowState()
 {
-    connect(this, &ProgramsWindow::aboutToClose, fortManager(), &FortManager::closeProgramsWindow);
+    settings()->setProgWindowGeometry(m_stateWatcher->geometry());
+    settings()->setProgWindowMaximized(m_stateWatcher->maximized());
 
-    connect(fortManager(), &FortManager::afterSaveProgWindowState, this,
-            &ProgramsWindow::onSaveWindowState);
-    connect(fortManager(), &FortManager::afterRestoreProgWindowState, this,
-            &ProgramsWindow::onRestoreWindowState);
-
-    connect(ctrl(), &ProgramsController::retranslateUi, this, &ProgramsWindow::onRetranslateUi);
-
-    emit ctrl()->retranslateUi();
-}
-
-void ProgramsWindow::onSaveWindowState()
-{
     auto header = m_appListView->horizontalHeader();
     settings()->setProgAppsHeader(header->saveState());
     settings()->setProgAppsHeaderVersion(APPS_HEADER_VERSION);
 }
 
-void ProgramsWindow::onRestoreWindowState()
+void ProgramsWindow::restoreWindowState()
 {
-    if (settings()->progAppsHeaderVersion() != APPS_HEADER_VERSION)
-        return;
+    m_stateWatcher->restore(this, QSize(1024, 768), settings()->progWindowGeometry(),
+            settings()->progWindowMaximized());
 
-    auto header = m_appListView->horizontalHeader();
-    header->restoreState(settings()->progAppsHeader());
+    if (settings()->progAppsHeaderVersion() == APPS_HEADER_VERSION) {
+        auto header = m_appListView->horizontalHeader();
+        header->restoreState(settings()->progAppsHeader());
+    }
+}
+
+void ProgramsWindow::setupController()
+{
+    connect(ctrl(), &ProgramsController::retranslateUi, this, &ProgramsWindow::onRetranslateUi);
+
+    emit ctrl()->retranslateUi();
+}
+
+void ProgramsWindow::setupStateWatcher()
+{
+    m_stateWatcher->install(this);
 }
 
 void ProgramsWindow::onRetranslateUi()

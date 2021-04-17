@@ -8,6 +8,7 @@
 class FortSettings;
 class GraphPlot;
 class QCPBars;
+class WidgetWindowStateWatcher;
 
 class GraphWindow : public WidgetWindow
 {
@@ -15,6 +16,11 @@ class GraphWindow : public WidgetWindow
 
 public:
     explicit GraphWindow(FortSettings *fortSettings, QWidget *parent = nullptr);
+
+    FortSettings *settings() const;
+
+    void saveWindowState(bool wasVisible);
+    void restoreWindowState();
 
 signals:
     void mouseRightClick(QMouseEvent *event);
@@ -39,6 +45,8 @@ private:
     void cancelMousePressAndDragging();
 
 private:
+    void setupStateWatcher();
+
     void setupUi();
     void setupTimer();
 
@@ -63,12 +71,12 @@ protected:
 
     void keyPressEvent(QKeyEvent *event) override;
 
-    FortSettings *settings() const;
-
 private:
     bool m_mouseDragResize = false;
 
     qint64 m_lastUnixTime = 0;
+
+    WidgetWindowStateWatcher *m_stateWatcher = nullptr;
 
     FortSettings *m_settings = nullptr;
 

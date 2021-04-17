@@ -21,6 +21,7 @@
 #include "../../util/conf/confutil.h"
 #include "../../util/guiutil.h"
 #include "../../util/iconcache.h"
+#include "../../util/window/widgetwindowstatewatcher.h"
 #include "../controls/controlutil.h"
 #include "../controls/tableview.h"
 #include "zonescontroller.h"
@@ -32,10 +33,13 @@ namespace {
 }
 
 ZonesWindow::ZonesWindow(FortManager *fortManager, QWidget *parent) :
-    WidgetWindow(parent), m_ctrl(new ZonesController(fortManager, this))
+    WidgetWindow(parent),
+    m_ctrl(new ZonesController(fortManager, this)),
+    m_stateWatcher(new WidgetWindowStateWatcher(this))
 {
     setupUi();
     setupController();
+    setupStateWatcher();
 }
 
 FortManager *ZonesWindow::fortManager() const
@@ -63,34 +67,37 @@ ZoneListModel *ZonesWindow::zoneListModel() const
     return fortManager()->zoneListModel();
 }
 
-void ZonesWindow::setupController()
+void ZonesWindow::saveWindowState()
 {
-    connect(ctrl(), &ZonesController::retranslateUi, this, &ZonesWindow::onRetranslateUi);
+    settings()->setZoneWindowGeometry(m_stateWatcher->geometry());
+    settings()->setZoneWindowMaximized(m_stateWatcher->maximized());
 
-    connect(this, &ZonesWindow::aboutToClose, fortManager(), &FortManager::closeZonesWindow);
-
-    connect(fortManager(), &FortManager::afterSaveProgWindowState, this,
-            &ZonesWindow::onSaveWindowState);
-    connect(fortManager(), &FortManager::afterRestoreProgWindowState, this,
-            &ZonesWindow::onRestoreWindowState);
-
-    emit ctrl()->retranslateUi();
-}
-
-void ZonesWindow::onSaveWindowState()
-{
     auto header = m_zoneListView->horizontalHeader();
     settings()->setZonesHeader(header->saveState());
     settings()->setZonesHeaderVersion(ZONES_HEADER_VERSION);
 }
 
-void ZonesWindow::onRestoreWindowState()
+void ZonesWindow::restoreWindowState()
 {
-    if (settings()->zonesHeaderVersion() != ZONES_HEADER_VERSION)
-        return;
+    m_stateWatcher->restore(this, QSize(1024, 768), settings()->zoneWindowGeometry(),
+            settings()->zoneWindowMaximized());
 
-    auto header = m_zoneListView->horizontalHeader();
-    header->restoreState(settings()->zonesHeader());
+    if (settings()->zonesHeaderVersion() == ZONES_HEADER_VERSION) {
+        auto header = m_zoneListView->horizontalHeader();
+        header->restoreState(settings()->zonesHeader());
+    }
+}
+
+void ZonesWindow::setupController()
+{
+    connect(ctrl(), &ZonesController::retranslateUi, this, &ZonesWindow::onRetranslateUi);
+
+    emit ctrl()->retranslateUi();
+}
+
+void ZonesWindow::setupStateWatcher()
+{
+    m_stateWatcher->install(this);
 }
 
 void ZonesWindow::onRetranslateUi()

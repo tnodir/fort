@@ -50,6 +50,9 @@ signals:
     void aboutToSave();
     void saved();
 
+    void afterSaveWindowState();
+    void afterRestoreWindowState();
+
     void retranslateUi();
 
 public slots:

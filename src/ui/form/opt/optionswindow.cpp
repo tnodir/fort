@@ -3,27 +3,56 @@
 #include <QKeyEvent>
 #include <QVBoxLayout>
 
+#include "../../fortsettings.h"
 #include "../../util/guiutil.h"
+#include "../../util/window/widgetwindowstatewatcher.h"
 #include "optionscontroller.h"
 #include "pages/mainpage.h"
 
 OptionsWindow::OptionsWindow(FortManager *fortManager, QWidget *parent) :
-    WidgetWindow(parent), m_ctrl(new OptionsController(fortManager, this))
+    WidgetWindow(parent),
+    m_ctrl(new OptionsController(fortManager, this)),
+    m_stateWatcher(new WidgetWindowStateWatcher(this))
 {
     setupUi();
     setupController();
+    setupStateWatcher();
+}
+
+FortSettings *OptionsWindow::settings() const
+{
+    return ctrl()->settings();
+}
+
+void OptionsWindow::saveWindowState()
+{
+    settings()->setOptWindowGeometry(m_stateWatcher->geometry());
+    settings()->setOptWindowMaximized(m_stateWatcher->maximized());
+
+    emit ctrl()->afterSaveWindowState();
+}
+
+void OptionsWindow::restoreWindowState()
+{
+    m_stateWatcher->restore(this, QSize(1024, 768), settings()->optWindowGeometry(),
+            settings()->optWindowMaximized());
+
+    emit ctrl()->afterRestoreWindowState();
 }
 
 void OptionsWindow::setupController()
 {
     ctrl()->initialize();
 
-    connect(this, &OptionsWindow::aboutToClose, ctrl(), &OptionsController::closeWindow);
-
     connect(ctrl(), &OptionsController::editedChanged, this, &QWidget::setWindowModified);
     connect(ctrl(), &OptionsController::retranslateUi, this, &OptionsWindow::onRetranslateUi);
 
     emit ctrl()->retranslateUi();
+}
+
+void OptionsWindow::setupStateWatcher()
+{
+    m_stateWatcher->install(this);
 }
 
 void OptionsWindow::keyPressEvent(QKeyEvent *event)

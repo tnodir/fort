@@ -22,6 +22,7 @@ class FortManager;
 class FortSettings;
 class ProgramsController;
 class TableView;
+class WidgetWindowStateWatcher;
 
 struct AppRow;
 
@@ -40,16 +41,17 @@ public:
     AppListModel *appListModel() const;
     AppInfoCache *appInfoCache() const;
 
+    void saveWindowState();
+    void restoreWindowState();
+
     bool openAppEditFormByPath(const QString &appPath);
 
 protected slots:
-    void onSaveWindowState();
-    void onRestoreWindowState();
-
     void onRetranslateUi();
 
 private:
     void setupController();
+    void setupStateWatcher();
 
     void retranslateAppBlockInHours();
 
@@ -89,6 +91,7 @@ private:
     bool m_formAppIsNew = false;
 
     ProgramsController *m_ctrl = nullptr;
+    WidgetWindowStateWatcher *m_stateWatcher = nullptr;
 
     QPushButton *m_btEdit = nullptr;
     QAction *m_actAllowApp = nullptr;

@@ -4,8 +4,10 @@
 #include "../../util/window/widgetwindow.h"
 
 class FortManager;
+class FortSettings;
 class MainPage;
 class OptionsController;
+class WidgetWindowStateWatcher;
 
 class OptionsWindow : public WidgetWindow
 {
@@ -13,6 +15,12 @@ class OptionsWindow : public WidgetWindow
 
 public:
     explicit OptionsWindow(FortManager *fortManager, QWidget *parent = nullptr);
+
+    OptionsController *ctrl() const { return m_ctrl; }
+    FortSettings *settings() const;
+
+    void saveWindowState();
+    void restoreWindowState();
 
 protected slots:
     void onRetranslateUi();
@@ -22,13 +30,13 @@ protected:
 
 private:
     void setupController();
+    void setupStateWatcher();
 
     void setupUi();
 
-    OptionsController *ctrl() const { return m_ctrl; }
-
 private:
     OptionsController *m_ctrl = nullptr;
+    WidgetWindowStateWatcher *m_stateWatcher = nullptr;
 
     MainPage *m_mainPage = nullptr;
 };

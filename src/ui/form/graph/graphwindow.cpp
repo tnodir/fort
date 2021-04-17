@@ -8,19 +8,42 @@
 #include "../../fortsettings.h"
 #include "../../util/dateutil.h"
 #include "../../util/net/netutil.h"
+#include "../../util/window/widgetwindowstatewatcher.h"
 #include "axistickerspeed.h"
 #include "graphplot.h"
 
 GraphWindow::GraphWindow(FortSettings *fortSettings, QWidget *parent) :
-    WidgetWindow(parent), m_settings(fortSettings)
+    WidgetWindow(parent),
+    m_stateWatcher(new WidgetWindowStateWatcher(this)),
+    m_settings(fortSettings)
 {
     setupUi();
     setupTimer();
+    setupStateWatcher();
 
     updateWindowFlags();
     updateColors();
 
     setMinimumSize(QSize(30, 10));
+}
+
+FortSettings *GraphWindow::settings() const
+{
+    return m_settings;
+}
+
+void GraphWindow::saveWindowState(bool wasVisible)
+{
+    settings()->setGraphWindowGeometry(m_stateWatcher->geometry());
+    settings()->setGraphWindowMaximized(m_stateWatcher->maximized());
+
+    settings()->setGraphWindowVisible(wasVisible);
+}
+
+void GraphWindow::restoreWindowState()
+{
+    m_stateWatcher->restore(this, QSize(400, 300), settings()->graphWindowGeometry(),
+            settings()->graphWindowMaximized());
 }
 
 void GraphWindow::updateWindowFlags()
@@ -61,6 +84,11 @@ void GraphWindow::updateColors()
 
     // Graph Outbound
     m_graphOut->setPen(QPen(settings()->graphWindowColorOut()));
+}
+
+void GraphWindow::setupStateWatcher()
+{
+    m_stateWatcher->install(this);
 }
 
 void GraphWindow::setupUi()
@@ -229,11 +257,6 @@ void GraphWindow::keyPressEvent(QKeyEvent *event)
         }
         break;
     }
-}
-
-FortSettings *GraphWindow::settings() const
-{
-    return m_settings;
 }
 
 void GraphWindow::checkHoverLeave()

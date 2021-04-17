@@ -13,6 +13,7 @@
 #include "../../util/app/appinfocache.h"
 #include "../../util/guiutil.h"
 #include "../../util/iconcache.h"
+#include "../../util/window/widgetwindowstatewatcher.h"
 #include "../controls/appinforow.h"
 #include "../controls/controlutil.h"
 #include "../controls/tableview.h"
@@ -25,10 +26,13 @@ namespace {
 }
 
 ConnectionsWindow::ConnectionsWindow(FortManager *fortManager, QWidget *parent) :
-    WidgetWindow(parent), m_ctrl(new ConnectionsController(fortManager, this))
+    WidgetWindow(parent),
+    m_ctrl(new ConnectionsController(fortManager, this)),
+    m_stateWatcher(new WidgetWindowStateWatcher(this))
 {
     setupUi();
     setupController();
+    setupStateWatcher();
 
     syncAutoScroll();
     syncShowHostNames();
@@ -59,36 +63,38 @@ AppInfoCache *ConnectionsWindow::appInfoCache() const
     return connListModel()->appInfoCache();
 }
 
+void ConnectionsWindow::saveWindowState()
+{
+    settings()->setConnWindowGeometry(m_stateWatcher->geometry());
+    settings()->setConnWindowMaximized(m_stateWatcher->maximized());
+
+    auto header = m_connListView->horizontalHeader();
+    settings()->setConnListHeader(header->saveState());
+    settings()->setConnListHeaderVersion(CONN_LIST_HEADER_VERSION);
+}
+
+void ConnectionsWindow::restoreWindowState()
+{
+    m_stateWatcher->restore(this, QSize(1024, 768), settings()->connWindowGeometry(),
+            settings()->connWindowMaximized());
+
+    if (settings()->connListHeaderVersion() == CONN_LIST_HEADER_VERSION) {
+        auto header = m_connListView->horizontalHeader();
+        header->restoreState(settings()->connListHeader());
+    }
+}
+
 void ConnectionsWindow::setupController()
 {
-    connect(this, &ConnectionsWindow::aboutToClose, fortManager(),
-            &FortManager::closeConnectionsWindow);
-
-    connect(fortManager(), &FortManager::afterSaveConnWindowState, this,
-            &ConnectionsWindow::onSaveWindowState);
-    connect(fortManager(), &FortManager::afterRestoreConnWindowState, this,
-            &ConnectionsWindow::onRestoreWindowState);
-
     connect(ctrl(), &ConnectionsController::retranslateUi, this,
             &ConnectionsWindow::onRetranslateUi);
 
     emit ctrl()->retranslateUi();
 }
 
-void ConnectionsWindow::onSaveWindowState()
+void ConnectionsWindow::setupStateWatcher()
 {
-    auto header = m_connListView->horizontalHeader();
-    settings()->setConnListHeader(header->saveState());
-    settings()->setConnListHeaderVersion(CONN_LIST_HEADER_VERSION);
-}
-
-void ConnectionsWindow::onRestoreWindowState()
-{
-    if (settings()->connListHeaderVersion() != CONN_LIST_HEADER_VERSION)
-        return;
-
-    auto header = m_connListView->horizontalHeader();
-    header->restoreState(settings()->connListHeader());
+    m_stateWatcher->install(this);
 }
 
 void ConnectionsWindow::onRetranslateUi()

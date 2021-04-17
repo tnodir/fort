@@ -27,7 +27,6 @@ class QuotaManager;
 class StatManager;
 class TaskManager;
 class TrayIcon;
-class WidgetWindowStateWatcher;
 class ZoneListModel;
 class ZonesWindow;
 
@@ -42,10 +41,6 @@ public:
     explicit FortManager(FortSettings *settings, EnvManager *envManager, QObject *parent = nullptr);
     ~FortManager() override;
     CLASS_DELETE_COPY_MOVE(FortManager)
-
-    bool checkRunningInstance();
-
-    void initialize();
 
     MainWindow *mainWindow() const { return m_mainWindow; }
     HotKeyManager *hotKeyManager() const { return m_hotKeyManager; }
@@ -70,21 +65,13 @@ public:
     ZoneListModel *zoneListModel() const { return m_zoneListModel; }
     ConnListModel *connListModel() const { return m_connListModel; }
 
+    bool checkRunningInstance();
+
+    void initialize();
+
 signals:
     void optWindowChanged(bool visible);
     void graphWindowChanged(bool visible);
-
-    void afterSaveProgWindowState();
-    void afterRestoreProgWindowState();
-
-    void afterSaveOptWindowState();
-    void afterRestoreOptWindowState();
-
-    void afterSaveZoneWindowState();
-    void afterRestoreZoneWindowState();
-
-    void afterSaveConnWindowState();
-    void afterRestoreConnWindowState();
 
 public slots:
     void installDriver();
@@ -110,7 +97,7 @@ public slots:
     void closeZonesWindow();
 
     void showGraphWindow();
-    void closeGraphWindow(bool storeVisibility = false);
+    void closeGraphWindow(bool wasVisible = false);
     void switchGraphWindow();
     void updateGraphWindow();
 
@@ -179,21 +166,6 @@ private:
     void updateLogManager(bool active);
     void updateStatManager(FirewallConf *conf);
 
-    void saveProgWindowState();
-    void restoreProgWindowState();
-
-    void saveOptWindowState();
-    void restoreOptWindowState();
-
-    void saveZoneWindowState();
-    void restoreZoneWindowState();
-
-    void saveGraphWindowState(bool visible);
-    void restoreGraphWindowState();
-
-    void saveConnWindowState();
-    void restoreConnWindowState();
-
     void onTrayActivated(int reason);
     void onTrayMessageClicked();
 
@@ -215,19 +187,10 @@ private:
     TrayIcon *m_trayIcon = nullptr;
 
     ProgramsWindow *m_progWindow = nullptr;
-    WidgetWindowStateWatcher *m_progWindowState = nullptr;
-
     OptionsWindow *m_optWindow = nullptr;
-    WidgetWindowStateWatcher *m_optWindowState = nullptr;
-
     ZonesWindow *m_zoneWindow = nullptr;
-    WidgetWindowStateWatcher *m_zoneWindowState = nullptr;
-
     GraphWindow *m_graphWindow = nullptr;
-    WidgetWindowStateWatcher *m_graphWindowState = nullptr;
-
     ConnectionsWindow *m_connWindow = nullptr;
-    WidgetWindowStateWatcher *m_connWindowState = nullptr;
 
     FortSettings *m_settings = nullptr;
     EnvManager *m_envManager = nullptr;

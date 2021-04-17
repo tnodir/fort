@@ -54,9 +54,8 @@ void BasePage::setupController()
     connect(ctrl(), &OptionsController::aboutToSave, this, &BasePage::onAboutToSave);
     connect(ctrl(), &OptionsController::saved, this, &BasePage::onSaved);
 
-    connect(fortManager(), &FortManager::afterSaveOptWindowState, this,
-            &BasePage::onSaveWindowState);
-    connect(fortManager(), &FortManager::afterRestoreOptWindowState, this,
+    connect(ctrl(), &OptionsController::afterSaveWindowState, this, &BasePage::onSaveWindowState);
+    connect(ctrl(), &OptionsController::afterRestoreWindowState, this,
             &BasePage::onRestoreWindowState);
 
     connect(ctrl(), &OptionsController::retranslateUi, this, &BasePage::onRetranslateUi);
