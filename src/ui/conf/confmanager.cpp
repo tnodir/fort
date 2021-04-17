@@ -243,6 +243,16 @@ bool saveAddressGroup(SqliteDb *db, AddressGroup *addrGroup, int orderIndex)
     return true;
 }
 
+bool saveAddressGroups(SqliteDb *db, const FirewallConf &conf)
+{
+    int orderIndex = 0;
+    for (AddressGroup *addrGroup : conf.addressGroups()) {
+        if (!saveAddressGroup(db, addrGroup, orderIndex++))
+            return false;
+    }
+    return true;
+}
+
 bool loadAppGroups(SqliteDb *db, FirewallConf &conf)
 {
     SqliteStmt stmt;
@@ -299,6 +309,16 @@ bool saveAppGroup(SqliteDb *db, AppGroup *appGroup, int orderIndex)
     }
     appGroup->setEdited(false);
 
+    return true;
+}
+
+bool saveAppGroups(SqliteDb *db, const FirewallConf &conf)
+{
+    int orderIndex = 0;
+    for (AppGroup *appGroup : conf.appGroups()) {
+        if (!saveAppGroup(db, appGroup, orderIndex++))
+            return false;
+    }
     return true;
 }
 
@@ -845,28 +865,12 @@ bool ConfManager::loadFromDb(FirewallConf &conf, bool &isNew)
 
 bool ConfManager::saveToDb(const FirewallConf &conf)
 {
-    bool ok = false;
-
     m_sqliteDb->beginTransaction();
 
-    // Save Address Groups
-    int orderIndex = -1;
-    for (AddressGroup *addrGroup : conf.addressGroups()) {
-        if (!saveAddressGroup(m_sqliteDb, addrGroup, ++orderIndex))
-            goto end;
-    }
+    const bool ok = saveAddressGroups(m_sqliteDb, conf) // Save Address Groups
+            && saveAppGroups(m_sqliteDb, conf) // Save App Groups
+            && removeAppGroupsInDb(conf); // Remove App Groups
 
-    // Save App Groups
-    orderIndex = -1;
-    for (AppGroup *appGroup : conf.appGroups()) {
-        if (!saveAppGroup(m_sqliteDb, appGroup, ++orderIndex))
-            goto end;
-    }
-
-    // Remove App Groups
-    ok = removeAppGroupsInDb(conf);
-
-end:
     return checkResult(ok, true);
 }
 
