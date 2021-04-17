@@ -63,12 +63,14 @@ protected:
 
     void keyPressEvent(QKeyEvent *event) override;
 
+    FortSettings *settings() const;
+
 private:
     bool m_mouseDragResize = false;
 
     qint64 m_lastUnixTime = 0;
 
-    FortSettings *m_fortSettings = nullptr;
+    FortSettings *m_settings = nullptr;
 
     GraphPlot *m_plot = nullptr;
     QCPBars *m_graphIn = nullptr;

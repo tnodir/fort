@@ -12,7 +12,7 @@
 #include "graphplot.h"
 
 GraphWindow::GraphWindow(FortSettings *fortSettings, QWidget *parent) :
-    WidgetWindow(parent), m_fortSettings(fortSettings)
+    WidgetWindow(parent), m_settings(fortSettings)
 {
     setupUi();
     setupTimer();
@@ -28,10 +28,9 @@ void GraphWindow::updateWindowFlags()
     const bool visible = isVisible();
 
     setWindowFlags(Qt::Tool | Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint
-            | (m_fortSettings->graphWindowAlwaysOnTop() ? Qt::WindowStaysOnTopHint : Qt::Widget)
-            | (m_fortSettings->graphWindowFrameless() ? Qt::FramelessWindowHint : Qt::Widget)
-            | (m_fortSettings->graphWindowClickThrough() ? Qt::WindowTransparentForInput
-                                                         : Qt::Widget));
+            | (settings()->graphWindowAlwaysOnTop() ? Qt::WindowStaysOnTopHint : Qt::Widget)
+            | (settings()->graphWindowFrameless() ? Qt::FramelessWindowHint : Qt::Widget)
+            | (settings()->graphWindowClickThrough() ? Qt::WindowTransparentForInput : Qt::Widget));
 
     if (visible) {
         show(); // setWindowFlags() hides the window
@@ -40,28 +39,28 @@ void GraphWindow::updateWindowFlags()
 
 void GraphWindow::updateColors()
 {
-    setWindowOpacityPercent(m_fortSettings->graphWindowOpacity());
+    setWindowOpacityPercent(settings()->graphWindowOpacity());
 
-    m_plot->setBackground(QBrush(m_fortSettings->graphWindowColor()));
+    m_plot->setBackground(QBrush(settings()->graphWindowColor()));
 
     // Axis
     auto yAxis = m_plot->yAxis;
 
-    const QColor axisColor = m_fortSettings->graphWindowAxisColor();
+    const QColor axisColor = settings()->graphWindowAxisColor();
     yAxis->setBasePen(adjustPen(yAxis->basePen(), axisColor));
     yAxis->setTickPen(adjustPen(yAxis->tickPen(), axisColor));
     yAxis->setSubTickPen(adjustPen(yAxis->subTickPen(), axisColor));
 
-    yAxis->setTickLabelColor(m_fortSettings->graphWindowTickLabelColor());
-    yAxis->setLabelColor(m_fortSettings->graphWindowLabelColor());
+    yAxis->setTickLabelColor(settings()->graphWindowTickLabelColor());
+    yAxis->setLabelColor(settings()->graphWindowLabelColor());
 
-    yAxis->grid()->setPen(adjustPen(yAxis->grid()->pen(), m_fortSettings->graphWindowGridColor()));
+    yAxis->grid()->setPen(adjustPen(yAxis->grid()->pen(), settings()->graphWindowGridColor()));
 
     // Graph Inbound
-    m_graphIn->setPen(QPen(m_fortSettings->graphWindowColorIn()));
+    m_graphIn->setPen(QPen(settings()->graphWindowColorIn()));
 
     // Graph Outbound
-    m_graphOut->setPen(QPen(m_fortSettings->graphWindowColorOut()));
+    m_graphOut->setPen(QPen(settings()->graphWindowColorOut()));
 }
 
 void GraphWindow::setupUi()
@@ -200,20 +199,20 @@ void GraphWindow::enterEvent(
 {
     Q_UNUSED(event);
 
-    if (m_fortSettings->graphWindowHideOnHover()) {
+    if (settings()->graphWindowHideOnHover()) {
         hide();
         m_hoverTimer.start(200);
         return;
     }
 
-    setWindowOpacityPercent(m_fortSettings->graphWindowHoverOpacity());
+    setWindowOpacityPercent(settings()->graphWindowHoverOpacity());
 }
 
 void GraphWindow::leaveEvent(QEvent *event)
 {
     Q_UNUSED(event);
 
-    setWindowOpacityPercent(m_fortSettings->graphWindowOpacity());
+    setWindowOpacityPercent(settings()->graphWindowOpacity());
 }
 
 void GraphWindow::keyPressEvent(QKeyEvent *event)
@@ -230,6 +229,11 @@ void GraphWindow::keyPressEvent(QKeyEvent *event)
         }
         break;
     }
+}
+
+FortSettings *GraphWindow::settings() const
+{
+    return m_settings;
 }
 
 void GraphWindow::checkHoverLeave()
@@ -250,7 +254,7 @@ void GraphWindow::addTraffic(qint64 unixTime, quint32 inBytes, quint32 outBytes)
         updateWindowTitleSpeed();
     }
 
-    const qint64 rangeLower = unixTime - m_fortSettings->graphWindowMaxSeconds();
+    const qint64 rangeLower = unixTime - settings()->graphWindowMaxSeconds();
 
     addData(m_graphIn, rangeLower, unixTime, inBytes);
     addData(m_graphOut, rangeLower, unixTime, outBytes);
