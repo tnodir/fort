@@ -479,6 +479,15 @@ void FortManager::closeOptionsWindow()
     emit optWindowChanged(false);
 }
 
+void FortManager::reloadOptionsWindow()
+{
+    if (!m_optWindow)
+        return;
+
+    closeOptionsWindow();
+    showOptionsWindow();
+}
+
 void FortManager::showZonesWindow()
 {
     if (!(m_zoneWindow && m_zoneWindow->isVisible()) && !checkPassword())
@@ -669,7 +678,7 @@ bool FortManager::saveOriginConf(const QString &message, bool onlyFlags)
     if (!saveConf(conf(), onlyFlags))
         return false;
 
-    closeOptionsWindow();
+    reloadOptionsWindow(); // unsaved changes are lost
 
     if (!message.isEmpty()) {
         showTrayMessage(message);

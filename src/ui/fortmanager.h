@@ -104,6 +104,7 @@ public slots:
 
     void showOptionsWindow();
     void closeOptionsWindow();
+    void reloadOptionsWindow();
 
     void showZonesWindow();
     void closeZonesWindow();
