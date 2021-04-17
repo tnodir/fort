@@ -511,11 +511,11 @@ void FortManager::showGraphWindow()
 {
     if (!m_graphWindow) {
         setupGraphWindow();
+
+        emit graphWindowChanged(true);
     }
 
     m_graphWindow->show();
-
-    emit graphWindowChanged(true);
 }
 
 void FortManager::closeGraphWindow(bool wasVisible)
