@@ -48,7 +48,6 @@ HEADERS += \
     $$UI_PWD/conf/appgroup.h \
     $$UI_PWD/conf/firewallconf.h \
     $$UI_PWD/driver/drivercommon.h \
-    $$UI_PWD/fortcommon.h \
     $$UI_PWD/fortcompat.h \
     $$UI_PWD/fortsettings.h \
     $$UI_PWD/log/logbuffer.h \
