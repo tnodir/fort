@@ -69,12 +69,12 @@ void StatManager::setConf(const FirewallConf *conf)
 {
     m_conf = conf;
 
-    initializeByConf();
+    setupByConf();
 }
 
 bool StatManager::initialize()
 {
-    m_lastTrafHour = m_lastTrafDay = m_lastTrafMonth = 0;
+    m_trafHour = m_trafDay = m_trafMonth = 0;
 
     if (!m_sqliteDb->open()) {
         logCritical() << "File open error:" << m_sqliteDb->filePath() << m_sqliteDb->errorMessage();
@@ -87,12 +87,12 @@ bool StatManager::initialize()
         return false;
     }
 
-    initializeConnBlockId();
+    setupConnBlockId();
 
     return true;
 }
 
-void StatManager::initializeConnBlockId()
+void StatManager::setupConnBlockId()
 {
     const auto vars = m_sqliteDb->executeEx(StatSql::sqlSelectMinMaxConnBlockId, {}, 2).toList();
     if (vars.size() == 2) {
@@ -101,7 +101,7 @@ void StatManager::initializeConnBlockId()
     }
 }
 
-void StatManager::initializeByConf()
+void StatManager::setupByConf()
 {
     if (!conf() || !conf()->logStat()) {
         logClear();
@@ -110,12 +110,12 @@ void StatManager::initializeByConf()
     m_isActivePeriodSet = false;
 
     if (conf()) {
-        initializeActivePeriod();
-        initializeQuota();
+        setupActivePeriod();
+        setupQuota();
     }
 }
 
-void StatManager::initializeActivePeriod()
+void StatManager::setupActivePeriod()
 {
     DateUtil::parseTime(
             conf()->activePeriodFrom(), m_activePeriodFromHour, m_activePeriodFromMinute);
@@ -126,8 +126,8 @@ void StatManager::updateActivePeriod()
 {
     const qint32 currentTick = OsUtil::getTickCount();
 
-    if (!m_isActivePeriodSet || qAbs(currentTick - m_lastTick) >= ACTIVE_PERIOD_CHECK_SECS) {
-        m_lastTick = currentTick;
+    if (!m_isActivePeriodSet || qAbs(currentTick - m_tick) >= ACTIVE_PERIOD_CHECK_SECS) {
+        m_tick = currentTick;
 
         m_isActivePeriodSet = true;
         m_isActivePeriod = true;
@@ -142,7 +142,7 @@ void StatManager::updateActivePeriod()
     }
 }
 
-void StatManager::initializeQuota()
+void StatManager::setupQuota()
 {
     m_quotaManager->setQuotaDayBytes(qint64(conf()->quotaDayMb()) * 1024 * 1024);
     m_quotaManager->setQuotaMonthBytes(qint64(conf()->quotaMonthMb()) * 1024 * 1024);
@@ -160,12 +160,42 @@ void StatManager::initializeQuota()
     m_quotaManager->setTrafMonthBytes(inBytes);
 }
 
-void StatManager::checkQuotas(qint32 trafDay, qint32 trafMonth)
+void StatManager::clearQuotas(bool isNewDay, bool isNewMonth)
+{
+    m_quotaManager->clear(isNewDay && m_trafDay != 0, isNewMonth && m_trafMonth != 0);
+}
+
+void StatManager::checkQuotas(quint32 inBytes)
 {
     if (m_isActivePeriod) {
-        m_quotaManager->checkQuotaDay(trafDay);
-        m_quotaManager->checkQuotaMonth(trafMonth);
+        // Update quota traffic bytes
+        m_quotaManager->addTraf(inBytes);
+
+        m_quotaManager->checkQuotaDay(m_trafDay);
+        m_quotaManager->checkQuotaMonth(m_trafMonth);
     }
+}
+
+bool StatManager::updateTrafDay(qint64 unixTime)
+{
+    const qint32 trafHour = DateUtil::getUnixHour(unixTime);
+    const bool isNewHour = (trafHour != m_trafHour);
+
+    const qint32 trafDay = isNewHour ? DateUtil::getUnixDay(unixTime) : m_trafDay;
+    const bool isNewDay = (trafDay != m_trafDay);
+
+    const qint32 trafMonth =
+            isNewDay ? DateUtil::getUnixMonth(unixTime, conf()->monthStart()) : m_trafMonth;
+    const bool isNewMonth = (trafMonth != m_trafMonth);
+
+    // Initialize quotas traffic bytes
+    clearQuotas(isNewDay, isNewMonth);
+
+    m_trafHour = trafHour;
+    m_trafDay = trafDay;
+    m_trafMonth = trafMonth;
+
+    return isNewDay;
 }
 
 void StatManager::clear()
@@ -231,109 +261,64 @@ bool StatManager::logStatTraf(quint16 procCount, const quint32 *procTrafBytes, q
     if (!conf() || !conf()->logStat())
         return false;
 
-    const qint32 trafHour = DateUtil::getUnixHour(unixTime);
-    const bool isNewHour = (trafHour != m_lastTrafHour);
+    // Active period
+    updateActivePeriod();
 
-    const qint32 trafDay = isNewHour ? DateUtil::getUnixDay(unixTime) : m_lastTrafDay;
-    const bool isNewDay = (trafDay != m_lastTrafDay);
-
-    const qint32 trafMonth =
-            isNewDay ? DateUtil::getUnixMonth(unixTime, conf()->monthStart()) : m_lastTrafMonth;
-    const bool isNewMonth = (trafMonth != m_lastTrafMonth);
-
-    // Initialize quotas traffic bytes
-    m_quotaManager->clear(isNewDay && m_lastTrafDay, isNewMonth && m_lastTrafMonth);
-
-    m_lastTrafHour = trafHour;
-    m_lastTrafDay = trafDay;
-    m_lastTrafMonth = trafMonth;
+    const bool isNewDay = updateTrafDay(unixTime);
 
     m_sqliteDb->beginTransaction();
+
+    // Delete old data
+    if (isNewDay) {
+        deleteOldTraffic(m_trafHour);
+    }
 
     // Sum traffic bytes
     quint32 sumInBytes = 0;
     quint32 sumOutBytes = 0;
 
-    // Active period
-    updateActivePeriod();
-
     // Insert Statements
     const QStmtList insertTrafAppStmts = QStmtList()
-            << getTrafficStmt(StatSql::sqlInsertTrafAppHour, trafHour)
-            << getTrafficStmt(StatSql::sqlInsertTrafAppDay, trafDay)
-            << getTrafficStmt(StatSql::sqlInsertTrafAppMonth, trafMonth)
-            << getTrafficStmt(StatSql::sqlInsertTrafAppTotal, trafHour);
+            << getTrafficStmt(StatSql::sqlInsertTrafAppHour, m_trafHour)
+            << getTrafficStmt(StatSql::sqlInsertTrafAppDay, m_trafDay)
+            << getTrafficStmt(StatSql::sqlInsertTrafAppMonth, m_trafMonth)
+            << getTrafficStmt(StatSql::sqlInsertTrafAppTotal, m_trafHour);
 
     const QStmtList insertTrafStmts = QStmtList()
-            << getTrafficStmt(StatSql::sqlInsertTrafHour, trafHour)
-            << getTrafficStmt(StatSql::sqlInsertTrafDay, trafDay)
-            << getTrafficStmt(StatSql::sqlInsertTrafMonth, trafMonth);
+            << getTrafficStmt(StatSql::sqlInsertTrafHour, m_trafHour)
+            << getTrafficStmt(StatSql::sqlInsertTrafDay, m_trafDay)
+            << getTrafficStmt(StatSql::sqlInsertTrafMonth, m_trafMonth);
 
     // Update Statements
     const QStmtList updateTrafAppStmts = QStmtList()
-            << getTrafficStmt(StatSql::sqlUpdateTrafAppHour, trafHour)
-            << getTrafficStmt(StatSql::sqlUpdateTrafAppDay, trafDay)
-            << getTrafficStmt(StatSql::sqlUpdateTrafAppMonth, trafMonth)
+            << getTrafficStmt(StatSql::sqlUpdateTrafAppHour, m_trafHour)
+            << getTrafficStmt(StatSql::sqlUpdateTrafAppDay, m_trafDay)
+            << getTrafficStmt(StatSql::sqlUpdateTrafAppMonth, m_trafMonth)
             << getTrafficStmt(StatSql::sqlUpdateTrafAppTotal, -1);
 
     const QStmtList updateTrafStmts = QStmtList()
-            << getTrafficStmt(StatSql::sqlUpdateTrafHour, trafHour)
-            << getTrafficStmt(StatSql::sqlUpdateTrafDay, trafDay)
-            << getTrafficStmt(StatSql::sqlUpdateTrafMonth, trafMonth);
+            << getTrafficStmt(StatSql::sqlUpdateTrafHour, m_trafHour)
+            << getTrafficStmt(StatSql::sqlUpdateTrafDay, m_trafDay)
+            << getTrafficStmt(StatSql::sqlUpdateTrafMonth, m_trafMonth);
 
     for (int i = 0; i < procCount; ++i) {
         const quint32 pidFlag = *procTrafBytes++;
-        const bool inactive = (pidFlag & 1) != 0;
-        const quint32 pid = pidFlag & ~quint32(1);
-
         const quint32 inBytes = *procTrafBytes++;
         const quint32 outBytes = *procTrafBytes++;
 
-        const QString appPath = m_appPidPathMap.value(pid);
-
-        if (inactive) {
-            logClearApp(pid);
-        }
-
-        if (Q_UNLIKELY(appPath.isEmpty())) {
-            logCritical() << "UI & Driver's states mismatch! Expected processes:"
-                          << m_appPidPathMap.keys() << "Got:" << procCount << "(" << i << pid
-                          << inactive << ")";
-            continue;
-        }
-
-        if (inBytes != 0 || outBytes != 0) {
-            const qint64 appId = getOrCreateAppId(appPath, unixTime);
-            Q_ASSERT(appId != INVALID_APP_ID);
-
-            if (m_isActivePeriod) {
-                // Update or insert app bytes
-                updateTrafficList(insertTrafAppStmts, updateTrafAppStmts, inBytes, outBytes, appId);
-            }
-
-            // Update sum traffic bytes
-            sumInBytes += inBytes;
-            sumOutBytes += outBytes;
-        }
+        logTrafBytes(insertTrafAppStmts, updateTrafAppStmts, sumInBytes, sumOutBytes, pidFlag,
+                inBytes, outBytes, unixTime);
     }
 
     if (m_isActivePeriod) {
         // Update or insert total bytes
         updateTrafficList(insertTrafStmts, updateTrafStmts, sumInBytes, sumOutBytes);
-
-        // Update quota traffic bytes
-        m_quotaManager->addTraf(sumInBytes);
-    }
-
-    // Delete old data
-    if (isNewDay) {
-        deleteOldTraffic(trafHour);
     }
 
     m_sqliteDb->commitTransaction();
 
     // Check quotas
-    checkQuotas(trafDay, trafMonth);
+    checkQuotas(sumInBytes);
 
     // Notify about sum traffic bytes
     emit trafficAdded(unixTime, sumInBytes, sumOutBytes);
@@ -525,6 +510,41 @@ void StatManager::getStatAppList(QStringList &list, QVector<qint64> &appIds)
         list.append(stmt->columnText(1));
     }
     stmt->reset();
+}
+
+void StatManager::logTrafBytes(const QStmtList &insertStmtList, const QStmtList &updateStmtList,
+        quint32 &sumInBytes, quint32 &sumOutBytes, quint32 pidFlag, quint32 inBytes,
+        quint32 outBytes, qint64 unixTime)
+{
+    const bool inactive = (pidFlag & 1) != 0;
+    const quint32 pid = pidFlag & ~quint32(1);
+
+    const QString appPath = m_appPidPathMap.value(pid);
+
+    if (Q_UNLIKELY(appPath.isEmpty())) {
+        logCritical() << "UI & Driver's states mismatch! Expected processes:"
+                      << m_appPidPathMap.keys() << "Got:" << pid << inactive;
+        return;
+    }
+
+    if (inactive) {
+        logClearApp(pid);
+    }
+
+    if (inBytes == 0 && outBytes == 0)
+        return;
+
+    const qint64 appId = getOrCreateAppId(appPath, unixTime);
+    Q_ASSERT(appId != INVALID_APP_ID);
+
+    if (m_isActivePeriod) {
+        // Update or insert app bytes
+        updateTrafficList(insertStmtList, updateStmtList, inBytes, outBytes, appId);
+    }
+
+    // Update sum traffic bytes
+    sumInBytes += inBytes;
+    sumOutBytes += outBytes;
 }
 
 void StatManager::updateTrafficList(const QStmtList &insertStmtList,

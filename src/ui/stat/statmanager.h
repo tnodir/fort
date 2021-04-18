@@ -68,12 +68,18 @@ public slots:
 private:
     using QStmtList = QList<SqliteStmt *>;
 
-    void initializeConnBlockId();
-    void initializeByConf();
-    void initializeActivePeriod();
+    void setupConnBlockId();
+
+    void setupByConf();
+
+    void setupActivePeriod();
     void updateActivePeriod();
-    void initializeQuota();
-    void checkQuotas(qint32 trafDay, qint32 trafMonth);
+
+    void setupQuota();
+    void clearQuotas(bool isNewDay, bool isNewMonth);
+    void checkQuotas(quint32 inBytes);
+
+    bool updateTrafDay(qint64 unixTime);
 
     void clearStmts();
 
@@ -91,6 +97,10 @@ private:
     bool deleteAppId(qint64 appId);
 
     void deleteOldTraffic(qint32 trafHour);
+
+    void logTrafBytes(const QStmtList &insertStmtList, const QStmtList &updateStmtList,
+            quint32 &sumInBytes, quint32 &sumOutBytes, quint32 pidFlag, quint32 inBytes,
+            quint32 outBytes, qint64 unixTime);
 
     void updateTrafficList(const QStmtList &insertStmtList, const QStmtList &updateStmtList,
             quint32 inBytes, quint32 outBytes, qint64 appId = 0);
@@ -122,10 +132,10 @@ private:
     quint8 m_activePeriodToHour = 0;
     quint8 m_activePeriodToMinute = 0;
 
-    qint32 m_lastTrafHour = 0;
-    qint32 m_lastTrafDay = 0;
-    qint32 m_lastTrafMonth = 0;
-    qint32 m_lastTick = 0;
+    qint32 m_trafHour = 0;
+    qint32 m_trafDay = 0;
+    qint32 m_trafMonth = 0;
+    qint32 m_tick = 0;
 
     qint64 m_connBlockIdMin = 0;
     qint64 m_connBlockIdMax = 0;
