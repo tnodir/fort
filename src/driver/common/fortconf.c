@@ -90,21 +90,28 @@ FORT_API BOOL fort_conf_ip_included(const PFORT_CONF conf,
     const BOOL include_all = addr_group->include_all;
     const BOOL exclude_all = addr_group->exclude_all;
 
-    const BOOL ip_included = include_all
-            ? TRUE
-            : ((!addr_group->include_is_empty
-                       && fort_conf_ip_inlist(
-                               remote_ip, fort_conf_addr_group_include_list_ref(addr_group)))
-                    || (zone_func != NULL && zone_func(ctx, addr_group->include_zones, remote_ip)));
-
+    /* Include All */
     const BOOL ip_excluded = exclude_all
             ? TRUE
             : ((!addr_group->exclude_is_empty
                        && fort_conf_ip_inlist(
                                remote_ip, fort_conf_addr_group_exclude_list_ref(addr_group)))
                     || (zone_func != NULL && zone_func(ctx, addr_group->exclude_zones, remote_ip)));
+    if (include_all)
+        return !ip_excluded;
 
-    return include_all ? !ip_excluded : (exclude_all ? ip_included : (ip_included && !ip_excluded));
+    /* Exclude All */
+    const BOOL ip_included = include_all
+            ? TRUE
+            : ((!addr_group->include_is_empty
+                       && fort_conf_ip_inlist(
+                               remote_ip, fort_conf_addr_group_include_list_ref(addr_group)))
+                    || (zone_func != NULL && zone_func(ctx, addr_group->include_zones, remote_ip)));
+    if (exclude_all)
+        return ip_included;
+
+    /* Include or Exclude */
+    return ip_included && !ip_excluded;
 }
 
 FORT_API BOOL fort_conf_app_exe_equal(PFORT_APP_ENTRY app_entry, const char *path, UINT32 path_len)
