@@ -635,25 +635,11 @@ bool ProgramsWindow::saveAppEditFormMulti(const QString &appPath, const QString 
     const auto rows = m_appListView->selectedRows();
     const bool isSingleSelection = (rows.size() == 1);
 
-    bool updateDriver = true;
-
     if (isSingleSelection) {
-        const int appIndex = appListCurrentIndex();
-        const auto appRow = appListModel()->appRowAt(appIndex);
-
-        const bool appNameEdited = (appName != appRow.appName);
-        const bool appEdited = (appPath != appRow.appPath || groupIndex != appRow.groupIndex
-                || useGroupPerm != appRow.useGroupPerm || blocked != appRow.blocked
-                || endTime != appRow.endTime);
-
-        if (!appEdited) {
-            if (appNameEdited) {
-                return appListModel()->updateAppName(appRow.appId, appName);
-            }
-            return true;
-        }
-
-        updateDriver = appEdited;
+        bool ok;
+        if (!saveAppEditFormCheckEdited(
+                    appPath, appName, endTime, groupIndex, useGroupPerm, blocked, ok))
+            return ok;
     }
 
     for (int row : rows) {
@@ -663,11 +649,29 @@ bool ProgramsWindow::saveAppEditFormMulti(const QString &appPath, const QString 
         const auto rowAppName = isSingleSelection ? appName : appRow.appName;
 
         if (!appListModel()->updateApp(appRow.appId, rowAppPath, rowAppName, endTime, groupIndex,
-                    useGroupPerm, blocked, updateDriver))
+                    useGroupPerm, blocked))
             return false;
     }
 
     return true;
+}
+
+bool ProgramsWindow::saveAppEditFormCheckEdited(const QString &appPath, const QString &appName,
+        const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool blocked, bool &ok)
+{
+    const int appIndex = appListCurrentIndex();
+    const auto appRow = appListModel()->appRowAt(appIndex);
+
+    const bool appNameEdited = (appName != appRow.appName);
+    const bool appEdited = (appPath != appRow.appPath || groupIndex != appRow.groupIndex
+            || useGroupPerm != appRow.useGroupPerm || blocked != appRow.blocked
+            || endTime != appRow.endTime);
+
+    if (appEdited)
+        return true;
+
+    ok = !appNameEdited || appListModel()->updateAppName(appRow.appId, appName);
+    return false;
 }
 
 void ProgramsWindow::updateApp(int row, bool blocked)
