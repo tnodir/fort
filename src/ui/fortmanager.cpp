@@ -739,7 +739,7 @@ void FortManager::updateLogManager(bool active)
 
 void FortManager::updateStatManager(FirewallConf *conf)
 {
-    m_statManager->setFirewallConf(conf);
+    m_statManager->setConf(conf);
 }
 
 void FortManager::onTrayActivated(int reason)

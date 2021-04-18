@@ -65,16 +65,11 @@ StatManager::~StatManager()
     delete m_sqliteDb;
 }
 
-void StatManager::setFirewallConf(const FirewallConf *conf)
+void StatManager::setConf(const FirewallConf *conf)
 {
     m_conf = conf;
 
-    if (!m_conf || !m_conf->logStat()) {
-        logClear();
-    }
-
-    initializeActivePeriod();
-    initializeQuota();
+    initializeByConf();
 }
 
 bool StatManager::initialize()
@@ -106,28 +101,55 @@ void StatManager::initializeConnBlockId()
     }
 }
 
-void StatManager::initializeActivePeriod()
+void StatManager::initializeByConf()
 {
+    if (!conf() || !conf()->logStat()) {
+        logClear();
+    }
+
     m_isActivePeriodSet = false;
 
-    if (!m_conf)
-        return;
+    if (conf()) {
+        initializeActivePeriod();
+        initializeQuota();
+    }
+}
 
-    DateUtil::parseTime(m_conf->activePeriodFrom(), activePeriodFromHour, activePeriodFromMinute);
-    DateUtil::parseTime(m_conf->activePeriodTo(), activePeriodToHour, activePeriodToMinute);
+void StatManager::initializeActivePeriod()
+{
+    DateUtil::parseTime(
+            conf()->activePeriodFrom(), m_activePeriodFromHour, m_activePeriodFromMinute);
+    DateUtil::parseTime(conf()->activePeriodTo(), m_activePeriodToHour, m_activePeriodToMinute);
+}
+
+void StatManager::updateActivePeriod()
+{
+    const qint32 currentTick = OsUtil::getTickCount();
+
+    if (!m_isActivePeriodSet || qAbs(currentTick - m_lastTick) >= ACTIVE_PERIOD_CHECK_SECS) {
+        m_lastTick = currentTick;
+
+        m_isActivePeriodSet = true;
+        m_isActivePeriod = true;
+
+        if (conf()->activePeriodEnabled()) {
+            const QTime now = QTime::currentTime();
+
+            m_isActivePeriod = DriverCommon::isTimeInPeriod(quint8(now.hour()),
+                    quint8(now.minute()), m_activePeriodFromHour, m_activePeriodFromMinute,
+                    m_activePeriodToHour, m_activePeriodToMinute);
+        }
+    }
 }
 
 void StatManager::initializeQuota()
 {
-    if (!m_conf)
-        return;
-
-    m_quotaManager->setQuotaDayBytes(qint64(m_conf->quotaDayMb()) * 1024 * 1024);
-    m_quotaManager->setQuotaMonthBytes(qint64(m_conf->quotaMonthMb()) * 1024 * 1024);
+    m_quotaManager->setQuotaDayBytes(qint64(conf()->quotaDayMb()) * 1024 * 1024);
+    m_quotaManager->setQuotaMonthBytes(qint64(conf()->quotaMonthMb()) * 1024 * 1024);
 
     const qint64 unixTime = DateUtil::getUnixTime();
     const qint32 trafDay = DateUtil::getUnixDay(unixTime);
-    const qint32 trafMonth = DateUtil::getUnixMonth(unixTime, m_conf->monthStart());
+    const qint32 trafMonth = DateUtil::getUnixMonth(unixTime, conf()->monthStart());
 
     qint64 inBytes, outBytes;
 
@@ -136,6 +158,14 @@ void StatManager::initializeQuota()
 
     getTraffic(StatSql::sqlSelectTrafMonth, trafMonth, inBytes, outBytes);
     m_quotaManager->setTrafMonthBytes(inBytes);
+}
+
+void StatManager::checkQuotas(qint32 trafDay, qint32 trafMonth)
+{
+    if (m_isActivePeriod) {
+        m_quotaManager->checkQuotaDay(trafDay);
+        m_quotaManager->checkQuotaMonth(trafMonth);
+    }
 }
 
 void StatManager::clear()
@@ -198,7 +228,7 @@ bool StatManager::logProcNew(quint32 pid, const QString &appPath, qint64 unixTim
 
 bool StatManager::logStatTraf(quint16 procCount, const quint32 *procTrafBytes, qint64 unixTime)
 {
-    if (!m_conf || !m_conf->logStat())
+    if (!conf() || !conf()->logStat())
         return false;
 
     const qint32 trafHour = DateUtil::getUnixHour(unixTime);
@@ -208,7 +238,7 @@ bool StatManager::logStatTraf(quint16 procCount, const quint32 *procTrafBytes, q
     const bool isNewDay = (trafDay != m_lastTrafDay);
 
     const qint32 trafMonth =
-            isNewDay ? DateUtil::getUnixMonth(unixTime, m_conf->monthStart()) : m_lastTrafMonth;
+            isNewDay ? DateUtil::getUnixMonth(unixTime, conf()->monthStart()) : m_lastTrafMonth;
     const bool isNewMonth = (trafMonth != m_lastTrafMonth);
 
     // Initialize quotas traffic bytes
@@ -225,21 +255,7 @@ bool StatManager::logStatTraf(quint16 procCount, const quint32 *procTrafBytes, q
     quint32 sumOutBytes = 0;
 
     // Active period
-    const qint32 currentTick = OsUtil::getTickCount();
-    if (!m_isActivePeriodSet || qAbs(currentTick - m_lastTick) >= ACTIVE_PERIOD_CHECK_SECS) {
-        m_lastTick = currentTick;
-
-        m_isActivePeriodSet = true;
-        m_isActivePeriod = true;
-
-        if (m_conf->activePeriodEnabled()) {
-            const QTime now = QTime::currentTime();
-
-            m_isActivePeriod = DriverCommon::isTimeInPeriod(quint8(now.hour()), quint8(now.minute()),
-                    activePeriodFromHour, activePeriodFromMinute, activePeriodToHour,
-                    activePeriodToMinute);
-        }
-    }
+    updateActivePeriod();
 
     // Insert Statements
     const QStmtList insertTrafAppStmts = QStmtList()
@@ -317,10 +333,7 @@ bool StatManager::logStatTraf(quint16 procCount, const quint32 *procTrafBytes, q
     m_sqliteDb->commitTransaction();
 
     // Check quotas
-    if (m_isActivePeriod) {
-        m_quotaManager->checkQuotaDay(trafDay);
-        m_quotaManager->checkQuotaMonth(trafMonth);
-    }
+    checkQuotas(trafDay, trafMonth);
 
     // Notify about sum traffic bytes
     emit trafficAdded(unixTime, sumInBytes, sumOutBytes);
@@ -330,7 +343,7 @@ bool StatManager::logStatTraf(quint16 procCount, const quint32 *procTrafBytes, q
 
 bool StatManager::logBlockedIp(const LogEntryBlockedIp &entry, qint64 unixTime)
 {
-    if (!m_conf || !m_conf->logBlockedIp())
+    if (!conf() || !conf()->logBlockedIp())
         return false;
 
     bool ok;
@@ -361,7 +374,7 @@ void StatManager::deleteStatApp(qint64 appId)
 
 bool StatManager::deleteOldConnBlock()
 {
-    const int keepCount = m_conf->blockedIpKeepCount();
+    const int keepCount = conf()->blockedIpKeepCount();
     const int totalCount = m_connBlockIdMax - m_connBlockIdMin + 1;
     const int oldCount = totalCount - keepCount;
     if (oldCount <= 0)
@@ -474,7 +487,7 @@ void StatManager::deleteOldTraffic(qint32 trafHour)
     QStmtList deleteTrafStmts;
 
     // Traffic Hour
-    const int trafHourKeepDays = m_conf->trafHourKeepDays();
+    const int trafHourKeepDays = conf()->trafHourKeepDays();
     if (trafHourKeepDays >= 0) {
         const qint32 oldTrafHour = trafHour - 24 * trafHourKeepDays;
 
@@ -483,7 +496,7 @@ void StatManager::deleteOldTraffic(qint32 trafHour)
     }
 
     // Traffic Day
-    const int trafDayKeepDays = m_conf->trafDayKeepDays();
+    const int trafDayKeepDays = conf()->trafDayKeepDays();
     if (trafDayKeepDays >= 0) {
         const qint32 oldTrafDay = trafHour - 24 * trafDayKeepDays;
 
@@ -492,7 +505,7 @@ void StatManager::deleteOldTraffic(qint32 trafHour)
     }
 
     // Traffic Month
-    const int trafMonthKeepMonths = m_conf->trafMonthKeepMonths();
+    const int trafMonthKeepMonths = conf()->trafMonthKeepMonths();
     if (trafMonthKeepMonths >= 0) {
         const qint32 oldTrafMonth = DateUtil::addUnixMonths(trafHour, -trafMonthKeepMonths);
 

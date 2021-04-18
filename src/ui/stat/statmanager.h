@@ -30,8 +30,8 @@ public:
     qint64 connTrafIdMin() const { return m_connTrafIdMin; }
     qint64 connTrafIdMax() const { return m_connTrafIdMax; }
 
-    const FirewallConf *firewallConf() const { return m_conf; }
-    void setFirewallConf(const FirewallConf *conf);
+    const FirewallConf *conf() const { return m_conf; }
+    void setConf(const FirewallConf *conf);
 
     SqliteDb *sqliteDb() const { return m_sqliteDb; }
 
@@ -69,8 +69,11 @@ private:
     using QStmtList = QList<SqliteStmt *>;
 
     void initializeConnBlockId();
+    void initializeByConf();
     void initializeActivePeriod();
+    void updateActivePeriod();
     void initializeQuota();
+    void checkQuotas(qint32 trafDay, qint32 trafMonth);
 
     void clearStmts();
 
@@ -114,10 +117,10 @@ private:
     bool m_isActivePeriodSet : 1;
     bool m_isActivePeriod : 1;
 
-    quint8 activePeriodFromHour = 0;
-    quint8 activePeriodFromMinute = 0;
-    quint8 activePeriodToHour = 0;
-    quint8 activePeriodToMinute = 0;
+    quint8 m_activePeriodFromHour = 0;
+    quint8 m_activePeriodFromMinute = 0;
+    quint8 m_activePeriodToHour = 0;
+    quint8 m_activePeriodToMinute = 0;
 
     qint32 m_lastTrafHour = 0;
     qint32 m_lastTrafDay = 0;
