@@ -3,15 +3,15 @@
 #include "fortdef.h"
 #include "fortprov.h"
 
-FORT_API DWORD fort_prov_trans_close(HANDLE transEngine, DWORD status)
+FORT_API DWORD fort_prov_trans_close(HANDLE engine, DWORD status)
 {
     if (NT_SUCCESS(status)) {
-        status = fort_prov_trans_commit(transEngine);
+        status = fort_prov_trans_commit(engine);
     } else {
-        fort_prov_trans_abort(transEngine);
+        fort_prov_trans_abort(engine);
     }
 
-    fort_prov_close(transEngine);
+    fort_prov_close(engine);
 
     return status;
 }
@@ -222,7 +222,7 @@ FORT_API DWORD fort_prov_register(HANDLE transEngine, BOOL is_boot)
     status = fort_prov_register_callouts(engine, is_boot);
 
     if (!transEngine) {
-        status = fort_prov_trans_close(transEngine, status);
+        status = fort_prov_trans_close(engine, status);
     }
 
     return status;
@@ -304,7 +304,7 @@ FORT_API DWORD fort_prov_flow_register(HANDLE transEngine, BOOL filter_transport
     status = fort_prov_flow_register_callouts(engine, filter_transport);
 
     if (!transEngine) {
-        status = fort_prov_trans_close(transEngine, status);
+        status = fort_prov_trans_close(engine, status);
     }
 
     return status;
@@ -359,7 +359,7 @@ FORT_API DWORD fort_prov_reauth(HANDLE transEngine)
     }
 
     if (!transEngine) {
-        status = fort_prov_trans_close(transEngine, status);
+        status = fort_prov_trans_close(engine, status);
     }
 
     return status;
