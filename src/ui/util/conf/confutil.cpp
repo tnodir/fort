@@ -327,23 +327,7 @@ bool ConfUtil::parseAppGroups(EnvManager &envManager, const QList<AppGroup *> &a
             return false;
 
         // Enabled Period
-        {
-            quint8 fromHour = 0, fromMinute = 0;
-            quint8 toHour = 0, toMinute = 0;
-
-            if (appGroup->periodEnabled()) {
-                DateUtil::parseTime(appGroup->periodFrom(), fromHour, fromMinute);
-                DateUtil::parseTime(appGroup->periodTo(), toHour, toMinute);
-
-                if (fromHour != 0 || fromMinute != 0 || toHour != 0 || toMinute != 0) {
-                    ++appPeriodsCount;
-                }
-            }
-            appPeriods.append(qint8(fromHour));
-            appPeriods.append(qint8(fromMinute));
-            appPeriods.append(qint8(toHour));
-            appPeriods.append(qint8(toMinute));
-        }
+        parseAppPeriod(appGroup, appPeriods, appPeriodsCount);
     }
 
     return true;
@@ -387,6 +371,27 @@ bool ConfUtil::parseAppsText(int groupIndex, bool blocked, const QString &text,
     }
 
     return true;
+}
+
+void ConfUtil::parseAppPeriod(
+        const AppGroup *appGroup, chars_arr_t &appPeriods, quint8 &appPeriodsCount)
+{
+    quint8 fromHour = 0, fromMinute = 0;
+    quint8 toHour = 0, toMinute = 0;
+
+    if (appGroup->periodEnabled()) {
+        DateUtil::parseTime(appGroup->periodFrom(), fromHour, fromMinute);
+        DateUtil::parseTime(appGroup->periodTo(), toHour, toMinute);
+
+        if (fromHour != 0 || fromMinute != 0 || toHour != 0 || toMinute != 0) {
+            ++appPeriodsCount;
+        }
+    }
+
+    appPeriods.append(qint8(fromHour));
+    appPeriods.append(qint8(fromMinute));
+    appPeriods.append(qint8(toHour));
+    appPeriods.append(qint8(toMinute));
 }
 
 bool ConfUtil::addApp(int groupIndex, bool useGroupPerm, bool blocked, bool alerted, bool isNew,

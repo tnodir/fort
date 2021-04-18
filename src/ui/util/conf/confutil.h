@@ -73,6 +73,9 @@ private:
             appentry_map_t &wildAppsMap, appentry_map_t &prefixAppsMap, appentry_map_t &exeAppsMap,
             quint32 &wildAppsSize, quint32 &prefixAppsSize, quint32 &exeAppsSize);
 
+    static void parseAppPeriod(
+            const AppGroup *appGroup, chars_arr_t &appPeriods, quint8 &appPeriodsCount);
+
     bool addApp(int groupIndex, bool useGroupPerm, bool blocked, bool alerted, bool isNew,
             const QString &appPath, appentry_map_t &appsMap, quint32 &appsSize,
             bool canOverwrite = true);
