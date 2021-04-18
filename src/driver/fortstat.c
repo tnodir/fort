@@ -179,6 +179,33 @@ static void fort_flow_free(PFORT_STAT stat, PFORT_FLOW flow)
     stat->flow_free = flow;
 }
 
+static PFORT_FLOW fort_flow_new(
+        PFORT_STAT stat, UINT64 flow_id, const tommy_key_t flow_hash, BOOL is_tcp)
+{
+    PFORT_FLOW flow;
+
+    if (stat->flow_free != NULL) {
+        flow = stat->flow_free;
+        stat->flow_free = flow->next;
+    } else {
+        const tommy_size_t size = tommy_arrayof_size(&stat->flows);
+
+        /* TODO: tommy_arrayof_grow(): check calloc()'s result for NULL */
+        if (tommy_arrayof_grow(&stat->flows, size + 1), 0)
+            return NULL;
+
+        flow = tommy_arrayof_ref(&stat->flows, size);
+    }
+
+    tommy_hashdyn_insert(&stat->flows_map, (tommy_hashdyn_node *) flow, 0, flow_hash);
+
+    flow->flow_id = flow_id;
+
+    fort_flow_context_set(stat, flow, is_tcp);
+
+    return flow;
+}
+
 static NTSTATUS fort_flow_add(PFORT_STAT stat, UINT64 flow_id, UCHAR group_index, UINT16 proc_index,
         UCHAR fragment, UCHAR speed_limit, BOOL is_tcp, BOOL is_reauth)
 {
@@ -192,24 +219,9 @@ static NTSTATUS fort_flow_add(PFORT_STAT stat, UINT64 flow_id, UCHAR group_index
             return FORT_STATUS_FLOW_BLOCK;
         }
 
-        if (stat->flow_free != NULL) {
-            flow = stat->flow_free;
-            stat->flow_free = flow->next;
-        } else {
-            const tommy_size_t size = tommy_arrayof_size(&stat->flows);
-
-            /* TODO: tommy_arrayof_grow(): check calloc()'s result for NULL */
-            if (tommy_arrayof_grow(&stat->flows, size + 1), 0)
-                return STATUS_INSUFFICIENT_RESOURCES;
-
-            flow = tommy_arrayof_ref(&stat->flows, size);
-        }
-
-        tommy_hashdyn_insert(&stat->flows_map, (tommy_hashdyn_node *) flow, 0, flow_hash);
-
-        flow->flow_id = flow_id;
-
-        fort_flow_context_set(stat, flow, is_tcp);
+        flow = fort_flow_new(stat, flow_id, flow_hash, is_tcp);
+        if (flow == NULL)
+            return STATUS_INSUFFICIENT_RESOURCES;
 
         is_new_flow = TRUE;
     } else {
