@@ -463,6 +463,28 @@ FORT_API void fort_stat_dpc_traf_flush(PFORT_STAT stat, UINT16 proc_count, PCHAR
     stat->proc_active = proc;
 }
 
+static void fort_stat_group_flush_limit_bytes(UINT32 *defer_flush_bits, UINT32 *flush_bit,
+        UINT32 *traf_bytes, UINT32 limit_bytes, int group_index, int flush_index, int defer_offset)
+{
+    if ((*flush_bit & flush_index) == 0) {
+        *traf_bytes = 0;
+        return;
+    }
+
+    if (limit_bytes == 0 || *traf_bytes <= limit_bytes) {
+        *traf_bytes = 0;
+    } else {
+        *traf_bytes -= limit_bytes;
+    }
+
+    if (*traf_bytes < limit_bytes) {
+        /* Flush counterpart ACK-s (i.e. flush outbound ACK-s for inbound and vice versa) */
+        *defer_flush_bits |= (1 << (group_index * 2 + defer_offset));
+    } else {
+        *flush_bit ^= flush_index;
+    }
+}
+
 FORT_API UINT32 fort_stat_dpc_group_flush(PFORT_STAT stat)
 {
     UINT32 defer_flush_bits = 0;
@@ -485,42 +507,12 @@ FORT_API UINT32 fort_stat_dpc_group_flush(PFORT_STAT stat)
         traf = group->traf;
 
         // Inbound
-        if (flush_bit & 1) {
-            const UINT32 limit_bytes = group_limit->in_bytes;
-
-            if (limit_bytes == 0 || traf.in_bytes <= limit_bytes) {
-                traf.in_bytes = 0;
-            } else {
-                traf.in_bytes -= limit_bytes;
-            }
-
-            if (traf.in_bytes < limit_bytes) {
-                defer_flush_bits |= (1 << (i * 2 + 1)); // Flush outbound ACK-s
-            } else {
-                flush_bit ^= 1;
-            }
-        } else {
-            traf.in_bytes = 0;
-        }
+        fort_stat_group_flush_limit_bytes(
+                &defer_flush_bits, &flush_bit, &traf.in_bytes, group_limit->in_bytes, i, 1, 1);
 
         // Outbound
-        if (flush_bit & 2) {
-            const UINT32 limit_bytes = group_limit->out_bytes;
-
-            if (limit_bytes == 0 || traf.out_bytes <= limit_bytes) {
-                traf.out_bytes = 0;
-            } else {
-                traf.out_bytes -= limit_bytes;
-            }
-
-            if (traf.out_bytes < limit_bytes) {
-                defer_flush_bits |= (1 << (i * 2)); // Flush inbound ACK-s
-            } else {
-                flush_bit ^= 2;
-            }
-        } else {
-            traf.out_bytes = 0;
-        }
+        fort_stat_group_flush_limit_bytes(
+                &defer_flush_bits, &flush_bit, &traf.out_bytes, group_limit->out_bytes, i, 2, 0);
 
         // Adjust flushed bytes
         group->traf = traf;
