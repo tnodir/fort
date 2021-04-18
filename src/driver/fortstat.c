@@ -361,6 +361,37 @@ FORT_API void fort_flow_delete(PFORT_STAT stat, UINT64 flowContext)
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
+static void fort_flow_speed_limit(PFORT_STAT stat, PFORT_FLOW flow, const FORT_FLOW_OPT opt,
+        UINT32 data_len, BOOL is_tcp, BOOL inbound)
+{
+    if (!is_tcp)
+        return; /* TODO: Shape UDP traffic */
+
+    const UCHAR group_index = opt.group_index;
+
+    PFORT_STAT_GROUP group = &stat->groups[group_index];
+    UINT32 *group_bytes = inbound ? &group->traf.in_bytes : &group->traf.out_bytes;
+
+    const PFORT_TRAF group_limit = &stat->conf_group.limits[group_index];
+    const UINT32 limit_bytes = inbound ? group_limit->in_bytes : group_limit->out_bytes;
+
+    const UINT16 list_index = group_index * 2 + (inbound ? 0 : 1);
+
+    /* Add traffic to app. group */
+    *group_bytes += data_len;
+
+    const BOOL defer_flow = (*group_bytes >= limit_bytes);
+
+    /* Defer ACK */
+    {
+        const UCHAR defer_flag = inbound ? FORT_FLOW_DEFER_OUT : FORT_FLOW_DEFER_IN;
+
+        fort_flow_flags_set(flow, defer_flag, defer_flow);
+    }
+
+    stat->group_flush_bits |= (1 << list_index);
+}
+
 FORT_API void fort_flow_classify(
         PFORT_STAT stat, UINT64 flowContext, UINT32 data_len, BOOL is_tcp, BOOL inbound)
 {
@@ -369,50 +400,27 @@ FORT_API void fort_flow_classify(
 
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
-    if (!stat->log_stat)
-        goto end;
+    if (stat->log_stat) {
+        const FORT_FLOW_OPT opt = flow->opt;
 
-    FORT_FLOW_OPT opt = flow->opt;
+        if (opt.proc_index != FORT_PROC_BAD_INDEX) {
+            PFORT_STAT_PROC proc = tommy_arrayof_ref(&stat->procs, opt.proc_index);
+            UINT32 *proc_bytes = inbound ? &proc->traf.in_bytes : &proc->traf.out_bytes;
 
-    if (opt.proc_index != FORT_PROC_BAD_INDEX) {
-        PFORT_STAT_PROC proc = tommy_arrayof_ref(&stat->procs, opt.proc_index);
-        UINT32 *proc_bytes = inbound ? &proc->traf.in_bytes : &proc->traf.out_bytes;
+            /* Add traffic to process */
+            *proc_bytes += data_len;
 
-        /* Add traffic to process */
-        *proc_bytes += data_len;
+            const UCHAR flow_speed_limit =
+                    inbound ? FORT_FLOW_SPEED_LIMIT_IN : FORT_FLOW_SPEED_LIMIT_OUT;
 
-        if (is_tcp
-                && (fort_flow_flags(flow)
-                        & (inbound ? FORT_FLOW_SPEED_LIMIT_IN : FORT_FLOW_SPEED_LIMIT_OUT))) {
-            const UCHAR group_index = opt.group_index;
-
-            PFORT_STAT_GROUP group = &stat->groups[group_index];
-            UINT32 *group_bytes = inbound ? &group->traf.in_bytes : &group->traf.out_bytes;
-
-            const PFORT_TRAF group_limit = &stat->conf_group.limits[group_index];
-            const UINT32 limit_bytes = inbound ? group_limit->in_bytes : group_limit->out_bytes;
-
-            const UINT16 list_index = group_index * 2 + (inbound ? 0 : 1);
-
-            /* Add traffic to app. group */
-            *group_bytes += data_len;
-
-            const BOOL defer_flow = (*group_bytes >= limit_bytes);
-
-            /* Defer ACK */
-            {
-                const UCHAR defer_flag = inbound ? FORT_FLOW_DEFER_OUT : FORT_FLOW_DEFER_IN;
-
-                fort_flow_flags_set(flow, defer_flag, defer_flow);
+            if ((fort_flow_flags(flow) & flow_speed_limit) != 0) {
+                fort_flow_speed_limit(stat, flow, opt, data_len, is_tcp, inbound);
             }
 
-            stat->group_flush_bits |= (1 << list_index);
+            fort_stat_proc_active_add(stat, proc);
         }
-
-        fort_stat_proc_active_add(stat, proc);
     }
 
-end:
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 

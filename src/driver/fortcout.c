@@ -383,9 +383,10 @@ static void NTAPI fort_callout_transport_classify_v4(const FWPS_INCOMING_VALUES0
         const UCHAR flow_flags = fort_flow_flags(flow);
 
         const UCHAR defer_flag = inbound ? FORT_FLOW_DEFER_IN : FORT_FLOW_DEFER_OUT;
-        const UCHAR speed_limit = inbound ? FORT_FLOW_SPEED_LIMIT_OUT : FORT_FLOW_SPEED_LIMIT_IN;
+        const UCHAR ack_speed_limit =
+                inbound ? FORT_FLOW_SPEED_LIMIT_OUT : FORT_FLOW_SPEED_LIMIT_IN;
 
-        const UCHAR speed_defer_flags = speed_limit | defer_flag;
+        const UCHAR speed_defer_flags = ack_speed_limit | defer_flag;
         const BOOL defer_flow = (flow_flags & speed_defer_flags) == speed_defer_flags
                 && !fort_device_flag(&fort_device()->conf, FORT_DEVICE_POWER_OFF);
 
