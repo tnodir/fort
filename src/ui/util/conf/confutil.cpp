@@ -363,8 +363,8 @@ bool ConfUtil::parseAppsText(int groupIndex, bool blocked, const QString &text,
         if (appPath.isEmpty())
             continue;
 
-        appentry_map_t &appsMap = isWild ? wildAppsMap : isPrefix ? prefixAppsMap : exeAppsMap;
-        quint32 &appsSize = isWild ? wildAppsSize : isPrefix ? prefixAppsSize : exeAppsSize;
+        appentry_map_t &appsMap = isWild ? wildAppsMap : (isPrefix ? prefixAppsMap : exeAppsMap);
+        quint32 &appsSize = isWild ? wildAppsSize : (isPrefix ? prefixAppsSize : exeAppsSize);
 
         if (!addApp(groupIndex, true, blocked, false, true, appPath, appsMap, appsSize, false))
             return false;

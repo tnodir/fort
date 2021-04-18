@@ -80,20 +80,28 @@ int AppListModel::columnCount(const QModelIndex &parent) const
 QVariant AppListModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && (role == Qt::DisplayRole || role == Qt::ToolTipRole)) {
-        switch (section) {
-        case 0:
-            return tr("Program");
-        case 1:
-            return tr("Group");
-        case 2:
-            return tr("State");
-        case 3:
-            return (role == Qt::DisplayRole) ? tr("Bl.") : tr("Block scheduled");
-        case 4:
-            return tr("Creation Time");
-        }
+        return headerDataDisplay(section, role);
     }
     return QVariant();
+}
+
+QVariant AppListModel::headerDataDisplay(int section, int role) const
+{
+    switch (section) {
+    case 0:
+        return tr("Program");
+    case 1:
+        return tr("Group");
+    case 2:
+        return tr("State");
+    case 3:
+        return (role == Qt::DisplayRole) ? tr("Bl.") : tr("Block scheduled");
+    case 4:
+        return tr("Creation Time");
+    default:
+        Q_UNREACHABLE();
+        return QVariant();
+    }
 }
 
 QVariant AppListModel::data(const QModelIndex &index, int role) const
@@ -139,19 +147,22 @@ QVariant AppListModel::dataDisplay(const QModelIndex &index, int role) const
         return getAppName(appRow);
     case 1:
         return appGroupAt(appRow.groupIndex)->name();
-    case 2: {
-        if (appRow.alerted)
-            return tr("Alert");
-        if (appRow.blocked)
-            return tr("Block");
-        return tr("Allow");
-    }
+    case 2:
+        return appStateText(appRow);
     case 3:
-        return (role == Qt::DisplayRole || appRow.endTime.isNull()) ? QVariant() : appRow.endTime;
+        return dataDisplayEndTime(appRow, role);
     case 4:
         return appRow.creatTime;
     }
 
+    return QVariant();
+}
+
+QVariant AppListModel::dataDisplayEndTime(const AppRow &appRow, int role) const
+{
+    if (role == Qt::ToolTipRole && !appRow.endTime.isNull()) {
+        return appRow.endTime;
+    }
     return QVariant();
 }
 
@@ -167,10 +178,9 @@ QVariant AppListModel::dataDecoration(const QModelIndex &index) const
         case 0:
             return appInfoCache()->appIcon(appRow.appPath);
         case 2:
-            return appRow.blocked ? IconCache::icon(":/icons/sign-ban.png")
-                                  : IconCache::icon(":/icons/sign-check.png");
+            return appStateIcon(appRow);
         case 3:
-            return appRow.endTime.isNull() ? QVariant() : IconCache::icon(":/icons/clock.png");
+            return appEndTimeIcon(appRow);
         }
     }
 
@@ -199,18 +209,10 @@ QVariant AppListModel::dataForeground(const QModelIndex &index) const
         const auto appRow = appRowAt(row);
 
         switch (column) {
-        case 1: {
-            if (!appRow.useGroupPerm)
-                return inactiveColor;
-            if (!appGroupAt(appRow.groupIndex)->enabled())
-                return blockColor;
-        } break;
+        case 1:
+            return appGroupColor(appRow);
         case 2:
-            if (appRow.alerted)
-                return alertColor;
-            if (appRow.blocked)
-                return blockColor;
-            return allowColor;
+            return appStateColor(appRow);
         }
     }
 
@@ -241,6 +243,43 @@ QString AppListModel::getAppName(const AppRow &appRow) const
         }
     }
     return appName;
+}
+
+QString AppListModel::appStateText(const AppRow &appRow)
+{
+    if (appRow.alerted)
+        return tr("Alert");
+    if (appRow.blocked)
+        return tr("Block");
+    return tr("Allow");
+}
+
+QColor AppListModel::appGroupColor(const AppRow &appRow) const
+{
+    if (!appRow.useGroupPerm)
+        return inactiveColor;
+    if (!appGroupAt(appRow.groupIndex)->enabled())
+        return blockColor;
+    return {};
+}
+
+QColor AppListModel::appStateColor(const AppRow &appRow)
+{
+    if (appRow.alerted)
+        return alertColor;
+    if (appRow.blocked)
+        return blockColor;
+    return allowColor;
+}
+
+QIcon AppListModel::appStateIcon(const AppRow &appRow)
+{
+    return IconCache::icon(appRow.blocked ? ":/icons/sign-ban.png" : ":/icons/sign-check.png");
+}
+
+QIcon AppListModel::appEndTimeIcon(const AppRow &appRow)
+{
+    return appRow.endTime.isNull() ? QIcon() : IconCache::icon(":/icons/clock.png");
 }
 
 bool AppListModel::updateAppRow(const QString &sql, const QVariantList &vars, AppRow &appRow) const
