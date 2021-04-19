@@ -46,7 +46,11 @@ void debugStatTrafStep(SqliteDb *sqliteDb, const char *name, const char *sql)
 {
     SqliteStmt stmt;
 
-    ASSERT_TRUE(stmt.prepare(sqliteDb->db(), sql));
+    if (!stmt.prepare(sqliteDb->db(), sql)) {
+        qWarning() << "SqliteStmt prepare error" << sql << sqliteDb->errorMessage();
+        Q_UNREACHABLE();
+        return;
+    }
 
     qDebug() << '>' << name << '<';
     while (stmt.step() == SqliteStmt::StepRow) {
@@ -82,7 +86,7 @@ void debugStatTraf(SqliteDb *sqliteDb)
 
     debugStatTrafStep(sqliteDb, "traffic_app_total",
             "SELECT app_id, traf_time, in_bytes, out_bytes"
-            "  FROM app;");
+            "  FROM traffic_app;");
 }
 
 }
