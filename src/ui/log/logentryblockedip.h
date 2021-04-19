@@ -6,7 +6,7 @@
 class LogEntryBlockedIp : public LogEntryBlocked
 {
 public:
-    enum LogBlockReason {
+    enum LogBlockReason : qint8 {
         ReasonNone = -1,
         // synchronize with FORT_BLOCK_REASON_*
         ReasonUnknown = 0,

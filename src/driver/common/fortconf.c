@@ -247,7 +247,7 @@ FORT_API FORT_APP_FLAGS fort_conf_app_find(const PFORT_CONF conf, const char *pa
 }
 
 FORT_API BOOL fort_conf_app_blocked(
-        const PFORT_CONF conf, FORT_APP_FLAGS app_flags, UCHAR *block_reason)
+        const PFORT_CONF conf, FORT_APP_FLAGS app_flags, INT8 *block_reason)
 {
     const BOOL app_found = (app_flags.v != 0);
 
@@ -262,23 +262,27 @@ FORT_API BOOL fort_conf_app_blocked(
     const UINT32 app_perm_val = app_flags.blocked ? 2 : 1;
     const UINT32 app_perm = app_perm_val << (app_flags.group_index * 2);
 
-    const BOOL block_all = conf->flags.app_block_all;
-    const BOOL allow_all = conf->flags.app_allow_all;
-
     /* Block All */
-    const BOOL app_allowed =
-            allow_all ? TRUE : (app_found && (app_perm & conf->app_perms_allow_mask));
-    if (block_all)
-        return !app_allowed;
+    if (conf->flags.app_block_all) {
+        /* Block, if it is not explicitly allowed */
+        return !app_found || (app_perm & conf->app_perms_allow_mask) == 0;
+    }
 
     /* Allow All */
-    const BOOL app_blocked =
-            block_all ? TRUE : (app_found && (app_perm & conf->app_perms_block_mask));
-    if (allow_all)
-        return app_blocked;
+    if (conf->flags.app_allow_all) {
+        /* Block, if it is explicitly blocked */
+        return app_found && (app_perm & conf->app_perms_block_mask) != 0;
+    }
 
     /* Block or Allow */
-    return app_blocked && !app_allowed;
+    if (!app_found) {
+        *block_reason = FORT_BLOCK_REASON_NONE; /* Don't block or allow */
+        return FALSE; /* Implicitly allow */
+    }
+
+    /* Block, if it is explicitly blocked and not allowed */
+    return (app_perm & conf->app_perms_block_mask) != 0
+            && (app_perm & conf->app_perms_allow_mask) == 0;
 }
 
 FORT_API UINT16 fort_conf_app_period_bits(const PFORT_CONF conf, FORT_TIME time, int *periods_n)

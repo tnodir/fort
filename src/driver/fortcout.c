@@ -39,7 +39,7 @@ static BOOL fort_callout_classify_v4_blocked(const FWPS_INCOMING_VALUES0 *inFixe
         FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField, int remoteIpField,
         int localPortField, int remotePortField, int ipProtoField, BOOL inbound,
         UINT32 classify_flags, UINT32 remote_ip, FORT_CONF_FLAGS conf_flags, UINT32 process_id,
-        UINT32 path_len, PVOID path, PFORT_CONF_REF conf_ref, UCHAR *block_reason, PIRP *irp,
+        UINT32 path_len, PVOID path, PFORT_CONF_REF conf_ref, INT8 *block_reason, PIRP *irp,
         ULONG_PTR *info)
 {
     BOOL blocked = TRUE;
@@ -159,7 +159,7 @@ static void fort_callout_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
             inMetaValues->processPath->size - sizeof(WCHAR); /* chop terminating zero */
     const PVOID path = inMetaValues->processPath->data;
 
-    UCHAR block_reason = FORT_BLOCK_REASON_UNKNOWN;
+    INT8 block_reason = FORT_BLOCK_REASON_UNKNOWN;
     const BOOL blocked = fort_callout_classify_v4_blocked(inFixedValues, inMetaValues, filter,
             classifyOut, flagsField, localIpField, remoteIpField, localPortField, remotePortField,
             ipProtoField, inbound, classify_flags, remote_ip, conf_flags, process_id, path_len,
@@ -182,8 +182,13 @@ static void fort_callout_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
         /* Block the connection */
         fort_callout_classify_block(classifyOut);
     } else {
-        /* Allow the connection */
-        fort_callout_classify_permit(filter, classifyOut);
+        if (block_reason == FORT_BLOCK_REASON_NONE) {
+            /* Continue the search */
+            fort_callout_classify_continue(classifyOut);
+        } else {
+            /* Allow the connection */
+            fort_callout_classify_permit(filter, classifyOut);
+        }
     }
 
     fort_conf_ref_put(&fort_device()->conf, conf_ref);

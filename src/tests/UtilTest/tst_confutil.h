@@ -82,7 +82,7 @@ TEST_F(ConfUtilTest, ConfWriteRead)
     ASSERT_FALSE(DriverCommon::confIpInRange(data, NetUtil::textToIp4("193.0.0.0")));
     ASSERT_TRUE(DriverCommon::confIpInRange(data, NetUtil::textToIp4("239.255.255.250")));
 
-    quint8 blockReason = LogEntryBlockedIp::ReasonNone;
+    qint8 blockReason = LogEntryBlockedIp::ReasonUnknown;
 
     ASSERT_TRUE(DriverCommon::confAppBlocked(
             data, DriverCommon::confAppFind(data, "System"), &blockReason));

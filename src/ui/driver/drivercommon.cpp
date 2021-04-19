@@ -221,7 +221,7 @@ quint8 confAppGroupIndex(quint16 appFlags)
     return app_flags.group_index;
 }
 
-bool confAppBlocked(const void *drvConf, quint16 appFlags, quint8 *blockReason)
+bool confAppBlocked(const void *drvConf, quint16 appFlags, qint8 *blockReason)
 {
     const PFORT_CONF conf = (const PFORT_CONF) drvConf;
 
