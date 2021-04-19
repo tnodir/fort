@@ -81,7 +81,7 @@ FORT_API PFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(const PFORT_CONF conf, i
     return (PFORT_CONF_ADDR_GROUP)(addr_group_data + addr_group_offsets[addr_group_index]);
 }
 
-static BOOL fort_conf_ip_list_check(const PFORT_CONF_ADDR_LIST addr_list,
+static BOOL fort_conf_ip_included_check(const PFORT_CONF_ADDR_LIST addr_list,
         fort_conf_zones_ip_included_func zone_func, void *ctx, UINT32 remote_ip, UINT32 zones_mask,
         BOOL list_is_empty)
 {
@@ -101,16 +101,18 @@ FORT_API BOOL fort_conf_ip_included(const PFORT_CONF conf,
     /* Include All */
     const BOOL ip_excluded = exclude_all
             ? TRUE
-            : fort_conf_ip_list_check(fort_conf_addr_group_exclude_list_ref(addr_group), zone_func,
-                    ctx, remote_ip, addr_group->exclude_zones, addr_group->exclude_is_empty);
+            : fort_conf_ip_included_check(fort_conf_addr_group_exclude_list_ref(addr_group),
+                    zone_func, ctx, remote_ip, addr_group->exclude_zones,
+                    addr_group->exclude_is_empty);
     if (include_all)
         return !ip_excluded;
 
     /* Exclude All */
     const BOOL ip_included = include_all
             ? TRUE
-            : fort_conf_ip_list_check(fort_conf_addr_group_include_list_ref(addr_group), zone_func,
-                    ctx, remote_ip, addr_group->include_zones, addr_group->include_is_empty);
+            : fort_conf_ip_included_check(fort_conf_addr_group_include_list_ref(addr_group),
+                    zone_func, ctx, remote_ip, addr_group->include_zones,
+                    addr_group->include_is_empty);
     if (exclude_all)
         return ip_included;
 
@@ -250,29 +252,17 @@ FORT_API FORT_APP_FLAGS fort_conf_app_find(const PFORT_CONF conf, const char *pa
     return fort_conf_app_wild_find(conf, path);
 }
 
-FORT_API BOOL fort_conf_app_blocked(
-        const PFORT_CONF conf, FORT_APP_FLAGS app_flags, INT8 *block_reason)
+static BOOL fort_conf_app_blocked_check(const PFORT_CONF conf, INT8 *block_reason, BOOL app_found,
+        BOOL app_allowed, BOOL app_blocked)
 {
-    const BOOL app_found = (app_flags.v != 0);
-
-    if (app_found && !app_flags.use_group_perm) {
-        *block_reason = FORT_BLOCK_REASON_PROGRAM;
-        return app_flags.blocked;
-    }
-
     *block_reason =
             app_found ? FORT_BLOCK_REASON_APP_GROUP_FOUND : FORT_BLOCK_REASON_APP_GROUP_DEFAULT;
 
-    const UINT32 app_perm_val = app_flags.blocked ? 2 : 1;
-    const UINT32 app_perm = app_perm_val << (app_flags.group_index * 2);
-
     /* Block All */
-    const BOOL app_allowed = app_found && (app_perm & conf->app_perms_allow_mask) != 0;
     if (conf->flags.app_block_all)
         return !app_allowed; /* Block, if it is not explicitly allowed */
 
     /* Allow All */
-    const BOOL app_blocked = app_found && (app_perm & conf->app_perms_block_mask) != 0;
     if (conf->flags.app_allow_all)
         return app_blocked; /* Block, if it is explicitly blocked */
 
@@ -284,6 +274,25 @@ FORT_API BOOL fort_conf_app_blocked(
 
     /* Block, if it is explicitly blocked and not allowed */
     return app_blocked && !app_allowed;
+}
+
+FORT_API BOOL fort_conf_app_blocked(
+        const PFORT_CONF conf, FORT_APP_FLAGS app_flags, INT8 *block_reason)
+{
+    const BOOL app_found = (app_flags.v != 0);
+
+    if (app_found && !app_flags.use_group_perm) {
+        *block_reason = FORT_BLOCK_REASON_PROGRAM;
+        return app_flags.blocked;
+    }
+
+    const UINT32 app_perm_val = app_flags.blocked ? 2 : 1;
+    const UINT32 app_perm = app_perm_val << (app_flags.group_index * 2);
+
+    const BOOL app_allowed = app_found && (app_perm & conf->app_perms_allow_mask) != 0;
+    const BOOL app_blocked = app_found && (app_perm & conf->app_perms_block_mask) != 0;
+
+    return fort_conf_app_blocked_check(conf, block_reason, app_found, app_allowed, app_blocked);
 }
 
 FORT_API UINT16 fort_conf_app_period_bits(const PFORT_CONF conf, FORT_TIME time, int *periods_n)
