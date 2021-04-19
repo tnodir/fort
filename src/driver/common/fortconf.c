@@ -267,16 +267,14 @@ FORT_API BOOL fort_conf_app_blocked(
     const UINT32 app_perm = app_perm_val << (app_flags.group_index * 2);
 
     /* Block All */
-    if (conf->flags.app_block_all) {
-        /* Block, if it is not explicitly allowed */
-        return !app_found || (app_perm & conf->app_perms_allow_mask) == 0;
-    }
+    const BOOL app_allowed = app_found && (app_perm & conf->app_perms_allow_mask) != 0;
+    if (conf->flags.app_block_all)
+        return !app_allowed; /* Block, if it is not explicitly allowed */
 
     /* Allow All */
-    if (conf->flags.app_allow_all) {
-        /* Block, if it is explicitly blocked */
-        return app_found && (app_perm & conf->app_perms_block_mask) != 0;
-    }
+    const BOOL app_blocked = app_found && (app_perm & conf->app_perms_block_mask) != 0;
+    if (conf->flags.app_allow_all)
+        return app_blocked; /* Block, if it is explicitly blocked */
 
     /* Block or Allow */
     if (!app_found) {
@@ -285,8 +283,7 @@ FORT_API BOOL fort_conf_app_blocked(
     }
 
     /* Block, if it is explicitly blocked and not allowed */
-    return (app_perm & conf->app_perms_block_mask) != 0
-            && (app_perm & conf->app_perms_allow_mask) == 0;
+    return app_blocked && !app_allowed;
 }
 
 FORT_API UINT16 fort_conf_app_period_bits(const PFORT_CONF conf, FORT_TIME time, int *periods_n)
