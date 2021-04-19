@@ -81,6 +81,14 @@ FORT_API PFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(const PFORT_CONF conf, i
     return (PFORT_CONF_ADDR_GROUP)(addr_group_data + addr_group_offsets[addr_group_index]);
 }
 
+static BOOL fort_conf_ip_list_check(const PFORT_CONF_ADDR_LIST addr_list,
+        fort_conf_zones_ip_included_func zone_func, void *ctx, UINT32 remote_ip, UINT32 zones_mask,
+        BOOL list_is_empty)
+{
+    return (!list_is_empty && fort_conf_ip_inlist(remote_ip, addr_list))
+            || (zone_func != NULL && zone_func(ctx, zones_mask, remote_ip));
+}
+
 FORT_API BOOL fort_conf_ip_included(const PFORT_CONF conf,
         fort_conf_zones_ip_included_func zone_func, void *ctx, UINT32 remote_ip,
         int addr_group_index)
@@ -93,20 +101,16 @@ FORT_API BOOL fort_conf_ip_included(const PFORT_CONF conf,
     /* Include All */
     const BOOL ip_excluded = exclude_all
             ? TRUE
-            : ((!addr_group->exclude_is_empty
-                       && fort_conf_ip_inlist(
-                               remote_ip, fort_conf_addr_group_exclude_list_ref(addr_group)))
-                    || (zone_func != NULL && zone_func(ctx, addr_group->exclude_zones, remote_ip)));
+            : fort_conf_ip_list_check(fort_conf_addr_group_exclude_list_ref(addr_group), zone_func,
+                    ctx, remote_ip, addr_group->exclude_zones, addr_group->exclude_is_empty);
     if (include_all)
         return !ip_excluded;
 
     /* Exclude All */
     const BOOL ip_included = include_all
             ? TRUE
-            : ((!addr_group->include_is_empty
-                       && fort_conf_ip_inlist(
-                               remote_ip, fort_conf_addr_group_include_list_ref(addr_group)))
-                    || (zone_func != NULL && zone_func(ctx, addr_group->include_zones, remote_ip)));
+            : fort_conf_ip_list_check(fort_conf_addr_group_include_list_ref(addr_group), zone_func,
+                    ctx, remote_ip, addr_group->include_zones, addr_group->include_is_empty);
     if (exclude_all)
         return ip_included;
 
