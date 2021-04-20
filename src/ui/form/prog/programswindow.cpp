@@ -566,13 +566,15 @@ void ProgramsWindow::updateAppEditForm(bool editCurrentApp)
 void ProgramsWindow::openAppEditFormByRow(
         const AppRow &appRow, bool editCurrentApp, bool isSingleSelection)
 {
+    const bool isPathEditable = !(isSingleSelection && appRow.appId > 0);
+
     m_formAppIsNew = !editCurrentApp;
 
     m_editPath->setText(isSingleSelection ? appRow.appPath : "*");
-    m_editPath->setReadOnly(editCurrentApp);
-    m_editPath->setClearButtonEnabled(!editCurrentApp);
+    m_editPath->setReadOnly(!isPathEditable);
+    m_editPath->setClearButtonEnabled(isPathEditable);
     m_editPath->setEnabled(isSingleSelection);
-    m_btSelectFile->setEnabled(!editCurrentApp);
+    m_btSelectFile->setEnabled(isPathEditable);
     m_editName->setText(isSingleSelection ? appRow.appName : QString());
     m_editName->setEnabled(isSingleSelection);
     m_comboAppGroup->setCurrentIndex(appRow.groupIndex);
