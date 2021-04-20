@@ -90,7 +90,7 @@ private:
     QString appListCurrentPath() const;
 
 private:
-    bool m_formAppIsNew = false;
+    bool m_formAppForSelected = false;
 
     ProgramsController *m_ctrl = nullptr;
     WidgetWindowStateWatcher *m_stateWatcher = nullptr;

@@ -568,7 +568,7 @@ void ProgramsWindow::openAppEditFormByRow(
 {
     const bool isPathEditable = !(isSingleSelection && appRow.appId > 0);
 
-    m_formAppIsNew = !editCurrentApp;
+    m_formAppForSelected = editCurrentApp;
 
     m_editPath->setText(isSingleSelection ? appRow.appPath : "*");
     m_editPath->setReadOnly(!isPathEditable);
@@ -622,8 +622,8 @@ bool ProgramsWindow::saveAppEditForm()
         }
     }
 
-    // Add new app
-    if (m_formAppIsNew) {
+    // Add new app or edit non-selected app
+    if (!m_formAppForSelected) {
         return appListModel()->addApp(appPath, appName, endTime, groupIndex, useGroupPerm, blocked);
     }
 
