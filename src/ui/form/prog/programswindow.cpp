@@ -127,6 +127,7 @@ void ProgramsWindow::onRetranslateUi()
 
     m_btAllowApp->setText(tr("Allow"));
     m_btBlockApp->setText(tr("Block"));
+    m_btRemoveApp->setText(tr("Remove"));
 
     m_formAppEdit->unsetLocale();
     m_formAppEdit->setWindowTitle(tr("Edit Program"));
@@ -451,12 +452,14 @@ QLayout *ProgramsWindow::setupHeader()
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
     m_btEdit->setMenu(editMenu);
 
-    // Allow/Block
+    // Toolbar buttons
     m_btAllowApp = ControlUtil::createLinkButton(":/icons/sign-check.png");
     m_btBlockApp = ControlUtil::createLinkButton(":/icons/sign-ban.png");
+    m_btRemoveApp = ControlUtil::createLinkButton(":/icons/sign-delete.png");
 
     connect(m_btAllowApp, &QAbstractButton::clicked, m_actAllowApp, &QAction::trigger);
     connect(m_btBlockApp, &QAbstractButton::clicked, m_actBlockApp, &QAction::trigger);
+    connect(m_btRemoveApp, &QAbstractButton::clicked, m_actRemoveApp, &QAction::trigger);
 
     // Log Options
     setupLogOptions();
@@ -465,6 +468,8 @@ QLayout *ProgramsWindow::setupHeader()
     layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
     layout->addWidget(m_btAllowApp);
     layout->addWidget(m_btBlockApp);
+    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
+    layout->addWidget(m_btRemoveApp);
     layout->addStretch();
     layout->addWidget(m_btLogOptions);
 
@@ -559,6 +564,7 @@ void ProgramsWindow::setupTableAppsChanged()
         m_actRemoveApp->setEnabled(appSelected);
         m_btAllowApp->setEnabled(appSelected);
         m_btBlockApp->setEnabled(appSelected);
+        m_btRemoveApp->setEnabled(appSelected);
         m_appInfoRow->setVisible(appSelected);
     };
 
