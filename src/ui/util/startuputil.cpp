@@ -9,12 +9,20 @@
 
 #include <fort_version.h>
 
+#include "fileutil.h"
+
 namespace {
 
 const char *const regCurUserRun =
         R"(HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Run)";
 const char *const regAllUsersRun =
         R"(HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run)";
+
+QString startupShortcutPath()
+{
+    return FileUtil::applicationsLocation() + QLatin1Char('\\') + "Startup" + QLatin1Char('\\')
+            + qApp->applicationName() + ".lnk";
+}
 
 QString wrappedAppFilePath()
 {
@@ -155,6 +163,10 @@ StartupUtil::StartupMode StartupUtil::getStartupMode()
 
 void StartupUtil::setStartupMode(int mode)
 {
+    // COMPAT: Remove link from Programs -> Startup
+    // TODO: Remove after v4.1.0 (via v4.0.0)
+    FileUtil::removeFile(startupShortcutPath());
+
     removeAutorunForCurrentUser();
     removeAutorunForAllUsers();
     uninstallService();
