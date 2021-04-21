@@ -51,6 +51,7 @@ public:
     void deleteConnAll();
 
     void resetAppTrafTotals();
+    bool hasAppTraf(qint64 appId);
 
     qint32 getTrafficTime(const char *sql, qint64 appId = 0);
 
@@ -92,7 +93,7 @@ private:
     void clearAppIdCache();
 
     qint64 getAppId(const QString &appPath);
-    qint64 createAppId(const QString &appPath, qint64 unixTime, bool blocked = false);
+    qint64 createAppId(const QString &appPath, qint64 unixTime);
     qint64 getOrCreateAppId(const QString &appPath, qint64 unixTime = 0, bool blocked = false);
     bool deleteAppId(qint64 appId);
 

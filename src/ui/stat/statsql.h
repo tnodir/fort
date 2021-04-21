@@ -8,6 +8,7 @@ public:
     static const char *const sqlInsertAppId;
     static const char *const sqlDeleteAppId;
 
+    static const char *const sqlSelectStatAppExists;
     static const char *const sqlSelectStatAppList;
 
     static const char *const sqlInsertTrafAppHour;

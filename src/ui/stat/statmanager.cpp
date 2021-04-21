@@ -408,6 +408,17 @@ void StatManager::resetAppTrafTotals()
     stmt->reset();
 }
 
+bool StatManager::hasAppTraf(qint64 appId)
+{
+    SqliteStmt *stmt = getSqliteStmt(StatSql::sqlSelectStatAppExists);
+
+    stmt->bindInt64(1, appId);
+    const bool res = (stmt->step() == SqliteStmt::StepRow);
+    stmt->reset();
+
+    return res;
+}
+
 qint64 StatManager::getAppId(const QString &appPath)
 {
     qint64 appId = INVALID_APP_ID;
@@ -423,7 +434,7 @@ qint64 StatManager::getAppId(const QString &appPath)
     return appId;
 }
 
-qint64 StatManager::createAppId(const QString &appPath, qint64 unixTime, bool blocked)
+qint64 StatManager::createAppId(const QString &appPath, qint64 unixTime)
 {
     SqliteStmt *stmt = getSqliteStmt(StatSql::sqlInsertAppId);
 
@@ -431,13 +442,7 @@ qint64 StatManager::createAppId(const QString &appPath, qint64 unixTime, bool bl
     stmt->bindInt64(2, unixTime);
 
     if (m_sqliteDb->done(stmt)) {
-        const qint64 appId = m_sqliteDb->lastInsertRowid();
-
-        if (!blocked) {
-            emit appCreated(appId, appPath);
-        }
-
-        return appId;
+        return m_sqliteDb->lastInsertRowid();
     }
 
     return INVALID_APP_ID;
@@ -452,7 +457,13 @@ qint64 StatManager::getOrCreateAppId(const QString &appPath, qint64 unixTime, bo
             if (unixTime == 0) {
                 unixTime = DateUtil::getUnixTime();
             }
-            appId = createAppId(appPath, unixTime, blocked);
+            appId = createAppId(appPath, unixTime);
+        }
+
+        Q_ASSERT(appId != INVALID_APP_ID);
+
+        if (!blocked && !hasAppTraf(appId)) {
+            emit appCreated(appId, appPath);
         }
 
         addCachedAppId(appPath, appId);
