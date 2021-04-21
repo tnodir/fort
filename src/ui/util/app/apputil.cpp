@@ -126,6 +126,8 @@ bool AppUtil::getInfo(const QString &appPath, AppInfo &appInfo)
     if (appPath.isEmpty())
         return false;
 
+    appInfo.fileDescription = FileUtil::fileName(appPath);
+
     if (FileUtil::isSystemApp(appPath)) {
         appInfo.fileDescription = appPath;
         return true;

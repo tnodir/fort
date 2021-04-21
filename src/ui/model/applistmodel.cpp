@@ -65,9 +65,10 @@ void AppListModel::handleLogBlocked(const LogEntryBlocked &logEntry)
         return; // already added by user
 
     const auto groupId = appGroupAt(0)->id();
+    const auto appName = appInfoCache()->appName(appPath);
 
     if (confManager()->addApp(
-                appPath, QString(), QDateTime(), groupId, false, logEntry.blocked(), true)) {
+                appPath, appName, QDateTime(), groupId, false, logEntry.blocked(), true)) {
         reset();
     }
 }
@@ -144,7 +145,7 @@ QVariant AppListModel::dataDisplay(const QModelIndex &index, int role) const
 
     switch (column) {
     case 0:
-        return appNameText(appRow);
+        return appRow.appName;
     case 1:
         return appGroupAt(appRow.groupIndex)->name();
     case 2:
@@ -228,15 +229,6 @@ QVariant AppListModel::dataTextAlignment(const QModelIndex &index) const
     }
 
     return QVariant();
-}
-
-QString AppListModel::appNameText(const AppRow &appRow) const
-{
-    const auto appName = appRow.appName;
-    if (!appName.isEmpty())
-        return appName;
-
-    return FileUtil::fileName(appRow.appPath);
 }
 
 QString AppListModel::appStateText(const AppRow &appRow)

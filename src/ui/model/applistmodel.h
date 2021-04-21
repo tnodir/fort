@@ -85,7 +85,6 @@ private:
     QVariant dataForeground(const QModelIndex &index) const;
     QVariant dataTextAlignment(const QModelIndex &index) const;
 
-    QString appNameText(const AppRow &appRow) const;
     static QString appStateText(const AppRow &appRow);
 
     QColor appGroupColor(const AppRow &appRow) const;

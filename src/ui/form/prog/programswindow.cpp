@@ -22,7 +22,6 @@
 #include "../../fortsettings.h"
 #include "../../model/applistmodel.h"
 #include "../../util/app/appinfocache.h"
-#include "../../util/fileutil.h"
 #include "../../util/guiutil.h"
 #include "../../util/iconcache.h"
 #include "../../util/window/widgetwindowstatewatcher.h"
@@ -317,16 +316,11 @@ QLayout *ProgramsWindow::setupAppEditFormAppNameLayout()
         if (appPath.isEmpty())
             return;
 
-        const auto appInfo = appInfoCache()->appInfo(appPath);
-        const auto appName =
-                appInfo.isValid() ? appInfo.fileDescription : FileUtil::fileName(appPath);
-
+        const QString appName = appInfoCache()->appName(appPath);
         m_editName->setText(appName);
     };
 
     m_btGetName = ControlUtil::createFlatButton(":/icons/sign-sync.png", updateAppName);
-
-    connect(appInfoCache(), &AppInfoCache::cacheChanged, this, updateAppName);
 
     layout->addWidget(m_editName);
     layout->addWidget(m_btGetName);

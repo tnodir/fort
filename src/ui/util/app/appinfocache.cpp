@@ -25,6 +25,15 @@ QImage AppInfoCache::appImage(const AppInfo &info) const
     return manager()->loadIconFromDb(info.iconId);
 }
 
+QString AppInfoCache::appName(const QString &appPath)
+{
+    AppInfo appInfo = this->appInfo(appPath);
+    if (!appInfo.isValid()) {
+        manager()->loadInfoFromFs(appPath, appInfo);
+    }
+    return appInfo.fileDescription;
+}
+
 QIcon AppInfoCache::appIcon(const QString &appPath, const QString &nullIconPath)
 {
     QPixmap pixmap;

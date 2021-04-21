@@ -9,7 +9,6 @@
 #include "../log/logentryblockedip.h"
 #include "../stat/statmanager.h"
 #include "../util/app/appinfocache.h"
-#include "../util/fileutil.h"
 #include "../util/iconcache.h"
 #include "../util/net/hostinfocache.h"
 #include "../util/net/netutil.h"
@@ -131,13 +130,8 @@ QVariant ConnListModel::dataDisplay(const QModelIndex &index, int role) const
     const auto connRow = connRowAt(row);
 
     switch (column) {
-    case 0: {
-        const auto appInfo = appInfoCache()->appInfo(connRow.appPath);
-        const auto appName = !appInfo.fileDescription.isEmpty()
-                ? appInfo.fileDescription
-                : FileUtil::fileName(connRow.appPath);
-        return appName;
-    }
+    case 0:
+        return appInfoCache()->appName(connRow.appPath);
     case 1:
         return connRow.pid;
     case 2:

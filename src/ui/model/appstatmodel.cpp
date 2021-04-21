@@ -130,12 +130,7 @@ QVariant AppStatModel::dataDisplay(const QModelIndex &index) const
         return tr("All");
 
     const auto appPath = list().at(row);
-    const auto appInfo = appInfoCache()->appInfo(appPath);
-    if (!appInfo.fileDescription.isEmpty()) {
-        return appInfo.fileDescription;
-    }
-
-    return FileUtil::fileName(appPath);
+    return appInfoCache()->appName(appPath);
 }
 
 QVariant AppStatModel::dataDecoration(const QModelIndex &index) const

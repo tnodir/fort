@@ -21,13 +21,13 @@ public:
     void setManager(AppInfoManager *manager);
 
     QImage appImage(const AppInfo &info) const;
+    QString appName(const QString &appPath);
     QIcon appIcon(const QString &appPath, const QString &nullIconPath = QString());
+
+    AppInfo appInfo(const QString &appPath);
 
 signals:
     void cacheChanged();
-
-public slots:
-    AppInfo appInfo(const QString &appPath);
 
 private slots:
     void handleFinishedLookup(const QString &appPath, const AppInfo info);
