@@ -30,5 +30,5 @@ QPixmap IconCache::file(const QString &filePath)
 
 QIcon IconCache::icon(const QString &filePath)
 {
-    return QIcon(file(filePath));
+    return filePath.isEmpty() ? QIcon() : QIcon(file(filePath));
 }

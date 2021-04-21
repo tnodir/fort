@@ -22,6 +22,7 @@
 #include "../../fortsettings.h"
 #include "../../model/applistmodel.h"
 #include "../../util/app/appinfocache.h"
+#include "../../util/fileutil.h"
 #include "../../util/guiutil.h"
 #include "../../util/iconcache.h"
 #include "../../util/window/widgetwindowstatewatcher.h"
@@ -133,6 +134,7 @@ void ProgramsWindow::onRetranslateUi()
     m_labelEditPath->setText(tr("Program Path:"));
     m_btSelectFile->setToolTip(tr("Select File"));
     m_labelEditName->setText(tr("Program Name:"));
+    m_btGetName->setToolTip(tr("Get Program Name"));
     m_labelAppGroup->setText(tr("Application Group:"));
     m_cbUseGroupPerm->setText(tr("Use Application Group's Enabled State"));
     m_rbAllowApp->setText(tr("Allow"));
@@ -203,6 +205,13 @@ void ProgramsWindow::setupUi()
 
 void ProgramsWindow::setupAppEditForm()
 {
+    // Dialog
+    m_formAppEdit = new QDialog(this);
+    m_formAppEdit->setWindowModality(Qt::WindowModal);
+    m_formAppEdit->setSizeGripEnabled(true);
+    m_formAppEdit->setMinimumWidth(500);
+
+    // Form Layout
     auto formLayout = setupAppEditFormAppLayout();
 
     // Allow/Block
@@ -217,10 +226,15 @@ void ProgramsWindow::setupAppEditForm()
     // OK/Cancel
     auto buttonsLayout = new QHBoxLayout();
 
-    m_btEditOk = new QPushButton();
+    m_btEditOk = ControlUtil::createButton(QString(), [&] {
+        if (saveAppEditForm()) {
+            m_formAppEdit->close();
+        }
+    });
     m_btEditOk->setDefault(true);
 
     m_btEditCancel = new QPushButton();
+    connect(m_btEditCancel, &QAbstractButton::clicked, m_formAppEdit, &QWidget::close);
 
     buttonsLayout->addWidget(m_btEditOk, 1, Qt::AlignRight);
     buttonsLayout->addWidget(m_btEditCancel);
@@ -237,13 +251,46 @@ void ProgramsWindow::setupAppEditForm()
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(buttonsLayout);
 
-    m_formAppEdit = new QDialog(this);
-    m_formAppEdit->setWindowModality(Qt::WindowModal);
-    m_formAppEdit->setSizeGripEnabled(true);
     m_formAppEdit->setLayout(layout);
-    m_formAppEdit->setMinimumWidth(500);
+}
 
-    connect(m_btSelectFile, &QAbstractButton::clicked, this, [&] {
+QLayout *ProgramsWindow::setupAppEditFormAppLayout()
+{
+    auto layout = new QFormLayout();
+
+    // App Path
+    auto pathLayout = setupAppEditFormAppPathLayout();
+
+    layout->addRow("Program Path:", pathLayout);
+    m_labelEditPath = qobject_cast<QLabel *>(layout->labelForField(pathLayout));
+
+    // App Name
+    auto nameLayout = setupAppEditFormAppNameLayout();
+
+    layout->addRow("Program Name:", nameLayout);
+    m_labelEditName = qobject_cast<QLabel *>(layout->labelForField(nameLayout));
+
+    // App Group
+    setupComboAppGroups();
+
+    layout->addRow("Application Group:", m_comboAppGroup);
+    m_labelAppGroup = qobject_cast<QLabel *>(layout->labelForField(m_comboAppGroup));
+
+    // Use Group Perm.
+    m_cbUseGroupPerm = new QCheckBox();
+
+    layout->addRow(QString(), m_cbUseGroupPerm);
+
+    return layout;
+}
+
+QLayout *ProgramsWindow::setupAppEditFormAppPathLayout()
+{
+    auto layout = new QHBoxLayout();
+
+    m_editPath = new QLineEdit();
+
+    m_btSelectFile = ControlUtil::createFlatButton(":/icons/folder-open.png", [&] {
         const auto filePath = ControlUtil::getOpenFileName(
                 m_labelEditPath->text(), tr("Programs (*.exe);;All files (*.*)"));
 
@@ -252,56 +299,38 @@ void ProgramsWindow::setupAppEditForm()
         }
     });
 
-    connect(m_rbAllowApp, &QRadioButton::toggled, this, [&](bool checked) {
-        m_cbBlockAppNone->setEnabled(checked);
-        m_cscBlockAppIn->setEnabled(checked);
-        m_cbBlockAppAt->setEnabled(checked);
-        m_dteBlockAppAt->setEnabled(checked);
-    });
+    layout->addWidget(m_editPath);
+    layout->addWidget(m_btSelectFile);
 
-    connect(m_btEditOk, &QAbstractButton::clicked, this, [&] {
-        if (saveAppEditForm()) {
-            m_formAppEdit->close();
-        }
-    });
-    connect(m_btEditCancel, &QAbstractButton::clicked, m_formAppEdit, &QWidget::close);
+    return layout;
 }
 
-QLayout *ProgramsWindow::setupAppEditFormAppLayout()
+QLayout *ProgramsWindow::setupAppEditFormAppNameLayout()
 {
-    auto formLayout = new QFormLayout();
+    auto layout = new QHBoxLayout();
 
-    // App Path
-    auto pathLayout = new QHBoxLayout();
-
-    m_editPath = new QLineEdit();
-
-    m_btSelectFile = ControlUtil::createLinkButton(":/icons/folder-open.png");
-
-    pathLayout->addWidget(m_editPath);
-    pathLayout->addWidget(m_btSelectFile);
-
-    formLayout->addRow("Program Path:", pathLayout);
-    m_labelEditPath = qobject_cast<QLabel *>(formLayout->labelForField(pathLayout));
-
-    // App Name
     m_editName = new QLineEdit();
 
-    formLayout->addRow("Program Name:", m_editName);
-    m_labelEditName = qobject_cast<QLabel *>(formLayout->labelForField(m_editName));
+    const auto updateAppName = [&] {
+        const auto appPath = m_editPath->text();
+        if (appPath.isEmpty())
+            return;
 
-    // App Group
-    setupComboAppGroups();
+        const auto appInfo = appInfoCache()->appInfo(appPath);
+        const auto appName =
+                appInfo.isValid() ? appInfo.fileDescription : FileUtil::fileName(appPath);
 
-    formLayout->addRow("Application Group:", m_comboAppGroup);
-    m_labelAppGroup = qobject_cast<QLabel *>(formLayout->labelForField(m_comboAppGroup));
+        m_editName->setText(appName);
+    };
 
-    // Use Group Perm.
-    m_cbUseGroupPerm = new QCheckBox();
+    m_btGetName = ControlUtil::createFlatButton(":/icons/sign-sync.png", updateAppName);
 
-    formLayout->addRow(QString(), m_cbUseGroupPerm);
+    connect(appInfoCache(), &AppInfoCache::cacheChanged, this, updateAppName);
 
-    return formLayout;
+    layout->addWidget(m_editName);
+    layout->addWidget(m_btGetName);
+
+    return layout;
 }
 
 void ProgramsWindow::setupComboAppGroups()
@@ -345,6 +374,13 @@ QLayout *ProgramsWindow::setupAppEditFormAllowLayout()
 
     // Allow Forever
     m_cbBlockAppNone = new QCheckBox();
+
+    connect(m_rbAllowApp, &QRadioButton::toggled, this, [&](bool checked) {
+        m_cbBlockAppNone->setEnabled(checked);
+        m_cscBlockAppIn->setEnabled(checked);
+        m_cbBlockAppAt->setEnabled(checked);
+        m_dteBlockAppAt->setEnabled(checked);
+    });
 
     return allowLayout;
 }
@@ -566,7 +602,7 @@ void ProgramsWindow::updateAppEditForm(bool editCurrentApp)
 void ProgramsWindow::openAppEditFormByRow(
         const AppRow &appRow, bool editCurrentApp, bool isSingleSelection)
 {
-    const bool isPathEditable = !(isSingleSelection && appRow.appId > 0);
+    const bool isPathEditable = isSingleSelection && appRow.appId == 0;
 
     m_formAppForSelected = editCurrentApp;
 
@@ -577,6 +613,8 @@ void ProgramsWindow::openAppEditFormByRow(
     m_btSelectFile->setEnabled(isPathEditable);
     m_editName->setText(isSingleSelection ? appRow.appName : QString());
     m_editName->setEnabled(isSingleSelection);
+    m_editName->setClearButtonEnabled(isSingleSelection);
+    m_btGetName->setEnabled(isSingleSelection);
     m_comboAppGroup->setCurrentIndex(appRow.groupIndex);
     m_cbUseGroupPerm->setChecked(appRow.useGroupPerm);
     m_rbAllowApp->setChecked(!appRow.blocked);
@@ -587,6 +625,10 @@ void ProgramsWindow::openAppEditFormByRow(
     m_dteBlockAppAt->setDateTime(appRow.endTime);
     m_dteBlockAppAt->setMinimumDateTime(QDateTime::currentDateTime());
     m_cbBlockAppNone->setChecked(appRow.endTime.isNull());
+
+    if (isSingleSelection && appRow.appName.isEmpty()) {
+        m_btGetName->click(); // Auto-fill name
+    }
 
     m_formAppEdit->show();
 
@@ -602,11 +644,18 @@ void ProgramsWindow::activateAppEditForm()
 
 bool ProgramsWindow::saveAppEditForm()
 {
-    QString appPath = m_editPath->text();
-    if (appPath.isEmpty())
+    const QString appPath = m_editPath->text();
+    if (appPath.isEmpty()) {
+        m_editPath->setFocus();
         return false;
+    }
 
-    QString appName = m_editName->text();
+    const QString appName = m_editName->text();
+    if (appName.isEmpty()) {
+        m_editName->setFocus();
+        return false;
+    }
+
     const int groupIndex = m_comboAppGroup->currentIndex();
     const bool useGroupPerm = m_cbUseGroupPerm->isChecked();
     const bool blocked = m_rbBlockApp->isChecked();
