@@ -1,5 +1,16 @@
 Fort Firewall ChangeLog
 
+v3.3.6, 2021-04-21:
+- UI: Use global settings from working directory. (See FortFirewall.exe.example.ini)
+- UI: Options: Add "Startup mode" option.
+- UI: Programs: Improve "Edit Program" form.
+- UI: Statistics: Fix "Collect traffic, when Filter Disabled" init.
+- UI: PasswordDialog: Add ability to unlock the password.
+- UI: Statistics: Fix app list updating (when app is already blocked).
+- UI: Update translations.
+- Driver: Continue filter search, when not blocked or allowed.
+- Update SQLite v3.35.5
+
 v3.3.5, 2021-03-24:
 - Installer: Add "Add to Explorer's Context Menu" option.
 - UI: Update French translation.
