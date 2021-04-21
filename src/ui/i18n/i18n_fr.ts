@@ -377,60 +377,28 @@
 <context>
     <name>FortManager</name>
     <message>
-        <source>Quit</source>
-        <translation>Quitter</translation>
-    </message>
-    <message>
-        <source>Zones</source>
-        <translation>Zones</translation>
-    </message>
-    <message>
-        <source>Stop Internet Traffic</source>
-        <translation>Arrêter le trafic Internet</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Options</translation>
-    </message>
-    <message>
-        <source>Programs</source>
-        <translation>Programmes</translation>
-    </message>
-    <message>
         <source>Please first install Fort Firewall v%1 and save Options from it.</source>
         <translation>Veuillez d&apos;abord installer Fort Firewall v%1 et enregistrer les options depuis celui-ci.</translation>
     </message>
     <message>
-        <source>Connections</source>
-        <translation>Connexions</translation>
-    </message>
-    <message>
-        <source>Filter Enabled</source>
-        <translation>Filtre activé</translation>
-    </message>
-    <message>
-        <source>Stop Traffic</source>
-        <translation>Arrêter le trafic</translation>
-    </message>
-    <message>
-        <source>Please enter the password</source>
-        <translation>Veuillez saisir le mot de passe</translation>
-    </message>
-    <message>
-        <source>Password input</source>
-        <translation>Saisie du mot de passe</translation>
-    </message>
-    <message>
-        <source>Traffic Graph</source>
-        <translation>Graphique du trafic</translation>
-    </message>
-    <message>
-        <source>Auto-Allow New Programs</source>
-        <translation>Autorisation auto des nouveaux programmes</translation>
-    </message>
-    <message>
         <source>Please close already opened Edit Program window and try again.</source>
         <translation>Veuillez fermer la fenêtre d&apos;édition du programme déjà ouverte et réessayer.</translation>
+    </message>
+    <message>
+        <source>Application is already running!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart Required</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart Now</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Later</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -613,12 +581,8 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Skip password check for administrators</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Disabled</source>
-        <translation type="unfinished">Désactivé</translation>
+        <translation>Désactivé</translation>
     </message>
     <message>
         <source>For current user</source>
@@ -632,12 +596,51 @@
         <source>For all users in background</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Lock the password (unlocked till &quot;%1&quot;)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
     <message>
         <source>Options</source>
         <translation>Options</translation>
+    </message>
+</context>
+<context>
+    <name>PasswordDialog</name>
+    <message>
+        <source>Please enter the password:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unlock till:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuler</translation>
+    </message>
+    <message>
+        <source>Password input</source>
+        <translation>Saisie du mot de passe</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Désactivé</translation>
+    </message>
+    <message>
+        <source>Session lockout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Program exit</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -765,6 +768,10 @@
     <message>
         <source> hour(s)</source>
         <translation> heure(s)</translation>
+    </message>
+    <message>
+        <source>Get Program Name</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1128,6 +1135,49 @@
     <message>
         <source>Download</source>
         <translation>Télécharger</translation>
+    </message>
+</context>
+<context>
+    <name>TrayIcon</name>
+    <message>
+        <source>Programs</source>
+        <translation>Programmes</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>Options</translation>
+    </message>
+    <message>
+        <source>Zones</source>
+        <translation>Zones</translation>
+    </message>
+    <message>
+        <source>Traffic Graph</source>
+        <translation>Graphique du trafic</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Connexions</translation>
+    </message>
+    <message>
+        <source>Filter Enabled</source>
+        <translation>Filtre activé</translation>
+    </message>
+    <message>
+        <source>Stop Traffic</source>
+        <translation>Arrêter le trafic</translation>
+    </message>
+    <message>
+        <source>Stop Internet Traffic</source>
+        <translation>Arrêter le trafic Internet</translation>
+    </message>
+    <message>
+        <source>Auto-Allow New Programs</source>
+        <translation>Autorisation auto des nouveaux programmes</translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation>Quitter</translation>
     </message>
 </context>
 <context>

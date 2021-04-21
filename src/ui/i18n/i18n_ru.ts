@@ -381,56 +381,24 @@
         <translation>Закройте уже открытое окно Редактирования Программы и пробуйте снова.</translation>
     </message>
     <message>
-        <source>Password input</source>
-        <translation>Ввод пароля</translation>
-    </message>
-    <message>
-        <source>Please enter the password</source>
-        <translation>Наберите пароль пожалуйста</translation>
-    </message>
-    <message>
         <source>Please first install Fort Firewall v%1 and save Options from it.</source>
         <translation>Сперва установите Fort Firewall v%1 и сохраните Опции пожалуйста.</translation>
     </message>
     <message>
-        <source>Programs</source>
-        <translation>Программы</translation>
+        <source>Application is already running!</source>
+        <translation>Приложение уже запущено!</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Опции</translation>
+        <source>Restart Required</source>
+        <translation>Требуется перезапуск</translation>
     </message>
     <message>
-        <source>Zones</source>
-        <translation>Зоны</translation>
+        <source>Restart Now</source>
+        <translation>Перезапустить сейчас</translation>
     </message>
     <message>
-        <source>Traffic Graph</source>
-        <translation>График трафика</translation>
-    </message>
-    <message>
-        <source>Connections</source>
-        <translation>Соединения</translation>
-    </message>
-    <message>
-        <source>Filter Enabled</source>
-        <translation>Фильтр включен</translation>
-    </message>
-    <message>
-        <source>Stop Traffic</source>
-        <translation>Остановить трафик</translation>
-    </message>
-    <message>
-        <source>Stop Internet Traffic</source>
-        <translation>Остановить Интернет трафик</translation>
-    </message>
-    <message>
-        <source>Auto-Allow New Programs</source>
-        <translation>Авто-разрешение новых программ</translation>
-    </message>
-    <message>
-        <source>Quit</source>
-        <translation>Выйти</translation>
+        <source>Later</source>
+        <translation>Отложить</translation>
     </message>
 </context>
 <context>
@@ -613,10 +581,6 @@
         <translation>Авто-запуск:</translation>
     </message>
     <message>
-        <source>Skip password check for administrators</source>
-        <translation>Не проверять пароль у администраторов</translation>
-    </message>
-    <message>
         <source>Disabled</source>
         <translation>Отключен</translation>
     </message>
@@ -632,12 +596,51 @@
         <source>For all users in background</source>
         <translation>Для всех пользователей в фоне</translation>
     </message>
+    <message>
+        <source>Lock the password (unlocked till &quot;%1&quot;)</source>
+        <translation>Заблокировать пароль (разблокировано до &quot;%1&quot;)</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
     <message>
         <source>Options</source>
         <translation>Опции</translation>
+    </message>
+</context>
+<context>
+    <name>PasswordDialog</name>
+    <message>
+        <source>Please enter the password:</source>
+        <translation>Введите пароль:</translation>
+    </message>
+    <message>
+        <source>Unlock till:</source>
+        <translation>Разблокировать до:</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Отмена</translation>
+    </message>
+    <message>
+        <source>Password input</source>
+        <translation>Ввод пароля</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Отключено</translation>
+    </message>
+    <message>
+        <source>Session lockout</source>
+        <translation>Блокировка сессии</translation>
+    </message>
+    <message>
+        <source>Program exit</source>
+        <translation>Выход из приложения</translation>
     </message>
 </context>
 <context>
@@ -765,6 +768,10 @@
     <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Программы (*.exe);;Все файлы (*.*)</translation>
+    </message>
+    <message>
+        <source>Get Program Name</source>
+        <translation>Получить наименование программы</translation>
     </message>
 </context>
 <context>
@@ -1128,6 +1135,49 @@
     <message>
         <source>Sum</source>
         <translation>Сумма</translation>
+    </message>
+</context>
+<context>
+    <name>TrayIcon</name>
+    <message>
+        <source>Programs</source>
+        <translation>Программы</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>Опции</translation>
+    </message>
+    <message>
+        <source>Zones</source>
+        <translation>Зоны</translation>
+    </message>
+    <message>
+        <source>Traffic Graph</source>
+        <translation>График трафика</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Соединения</translation>
+    </message>
+    <message>
+        <source>Filter Enabled</source>
+        <translation>Фильтр включен</translation>
+    </message>
+    <message>
+        <source>Stop Traffic</source>
+        <translation>Остановить трафик</translation>
+    </message>
+    <message>
+        <source>Stop Internet Traffic</source>
+        <translation>Остановить Интернет трафик</translation>
+    </message>
+    <message>
+        <source>Auto-Allow New Programs</source>
+        <translation>Авто-разрешение новых программ</translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation>Выйти</translation>
     </message>
 </context>
 <context>
