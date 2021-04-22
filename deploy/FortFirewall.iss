@@ -77,8 +77,10 @@ Name: "{commondesktop}\{#APP_NAME}"; Filename: "{#APP_EXE}"; WorkingDir: "{app}"
 [Run]
 Filename: "{app}\driver\scripts\reinstall.bat"; Description: "Re-install driver"; Flags: runascurrentuser
 Filename: "sc.exe"; Parameters: "start {#APP_SVC_NAME}"; Description: "Start service"; Flags: runascurrentuser nowait
+
 Filename: "https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads"; \
-  Description: "Visual C++ x86 redistributable"; Flags: shellexec postinstall
+  Description: "Install the latest Visual C++ x86 redistributable!"; Flags: shellexec postinstall; \
+  Check: not VCRedist86Exists()
 
 [UninstallRun]
 Filename: "{#APP_EXE}"; Parameters: "-u"; RunOnceId: "DelProvider"; Flags: runascurrentuser
@@ -104,4 +106,9 @@ end;
 function LanguageName(Param: String): String;
 begin
   Result := ActiveLanguage;
+end;
+
+function VCRedist86Exists(): Boolean;
+begin
+  Result := FileExists(ExpandConstant('{syswow64}\vcruntime140.dll'));
 end;
