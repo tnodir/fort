@@ -46,20 +46,20 @@ bool isAutorunForAllUsers()
     return isAutorunForUser(regAllUsersRun);
 }
 
-void setAutorunForUser(const char *key)
+void setAutorunForUser(const char *key, const QString &command)
 {
     QSettings reg(key, QSettings::Registry64Format);
-    reg.setValue(APP_NAME, wrappedAppFilePath());
+    reg.setValue(APP_NAME, command);
 }
 
-void setAutorunForCurrentUser()
+void setAutorunForCurrentUser(const QString &command)
 {
-    setAutorunForUser(regCurUserRun);
+    setAutorunForUser(regCurUserRun, command);
 }
 
-void setAutorunForAllUsers()
+void setAutorunForAllUsers(const QString &command)
 {
-    setAutorunForUser(regAllUsersRun);
+    setAutorunForUser(regAllUsersRun, command);
 }
 
 void removeAutorunForUser(const char *key)
@@ -78,17 +78,12 @@ void removeAutorunForAllUsers()
     removeAutorunForUser(regAllUsersRun);
 }
 
-}
-
-const wchar_t *const StartupUtil::serviceName = L"" APP_BASE "Svc";
-const wchar_t *const StartupUtil::serviceDisplay = L"" APP_NAME;
-
-bool StartupUtil::installService()
+bool installService(
+        const wchar_t *serviceName, const wchar_t *serviceDisplay, const QString &command)
 {
     bool res = false;
     const SC_HANDLE mngr = OpenSCManager(NULL, NULL, SC_MANAGER_CREATE_SERVICE);
     if (mngr) {
-        const auto command = wrappedAppFilePath() + " --service";
         const SC_HANDLE svc = CreateServiceW(mngr, serviceName, serviceDisplay, SERVICE_ALL_ACCESS,
                 SERVICE_WIN32_OWN_PROCESS, SERVICE_AUTO_START, SERVICE_ERROR_NORMAL,
                 (LPCWSTR) command.utf16(), 0, 0, 0, 0, 0);
@@ -101,7 +96,7 @@ bool StartupUtil::installService()
     return res;
 }
 
-bool StartupUtil::uninstallService()
+bool uninstallService(const wchar_t *serviceName)
 {
     bool res = false;
     const SC_HANDLE mngr = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
@@ -123,6 +118,11 @@ bool StartupUtil::uninstallService()
     }
     return res;
 }
+
+}
+
+const wchar_t *const StartupUtil::serviceName = L"" APP_BASE "Svc";
+const wchar_t *const StartupUtil::serviceDisplay = L"" APP_NAME;
 
 bool StartupUtil::isServiceInstalled()
 {
@@ -161,7 +161,7 @@ StartupUtil::StartupMode StartupUtil::getStartupMode()
             : (isAutorunForCurrentUser() ? StartupCurrentUser : StartupDisabled);
 }
 
-void StartupUtil::setStartupMode(int mode)
+void StartupUtil::setStartupMode(int mode, const QString &defaultLanguage)
 {
     // COMPAT: Remove link from Programs -> Startup
     // TODO: Remove after v4.1.0 (via v4.0.0)
@@ -169,19 +169,23 @@ void StartupUtil::setStartupMode(int mode)
 
     removeAutorunForCurrentUser();
     removeAutorunForAllUsers();
-    uninstallService();
+    uninstallService(serviceName);
+
+    if (mode == StartupDisabled)
+        return;
+
+    const QString command = wrappedAppFilePath()
+            + (defaultLanguage.isEmpty() ? QString() : " --lang " + defaultLanguage);
 
     switch (mode) {
-    case StartupDisabled:
-        break;
     case StartupCurrentUser:
-        setAutorunForCurrentUser();
+        setAutorunForCurrentUser(command);
         break;
     case StartupAllUsers:
-        setAutorunForAllUsers();
+        setAutorunForAllUsers(command);
         Q_FALLTHROUGH();
     case StartupAllUsersBackground:
-        installService();
+        installService(serviceName, serviceDisplay, command + " --service");
         break;
     }
 }

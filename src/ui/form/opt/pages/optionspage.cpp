@@ -53,7 +53,7 @@ void OptionsPage::onSaved()
         const bool wasServiceMode = StartupUtil::isServiceMode(m_currentStartMode);
 
         m_currentStartMode = m_comboStartMode->currentIndex();
-        StartupUtil::setStartupMode(m_currentStartMode);
+        StartupUtil::setStartupMode(m_currentStartMode, settings()->defaultLanguage());
 
         const bool isServiceMode = StartupUtil::isServiceMode(m_currentStartMode);
         if (isServiceMode != wasServiceMode) {

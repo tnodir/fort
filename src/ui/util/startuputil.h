@@ -16,14 +16,11 @@ public:
     static const wchar_t *const serviceName;
     static const wchar_t *const serviceDisplay;
 
-    static bool installService();
-    static bool uninstallService();
-
     static bool isServiceInstalled();
     static bool startService();
 
     static StartupMode getStartupMode();
-    static void setStartupMode(int mode);
+    static void setStartupMode(int mode, const QString &defaultLanguage = QString());
 
     static bool isServiceMode(int mode);
 };
