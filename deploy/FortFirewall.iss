@@ -42,10 +42,12 @@ SolidCompression=yes
 [Languages]
 Name: en; MessagesFile: "compiler:Default.isl"
 Name: ru; MessagesFile: "compiler:Languages\Russian.isl"
+Name: fr; MessagesFile: "compiler:Languages\French.isl"
+Name: ko; MessagesFile: "compiler:Languages\Korean.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; Flags: unchecked
-Name: "explorer"; Description: "Add to Explorer's Context Menu"; Flags: unchecked
+Name: "explorer"; Description: "File Explorer integration"; Flags: unchecked
 Name: "portable"; Description: "Portable"; Flags: unchecked
 
 [Files]
@@ -76,7 +78,7 @@ Name: "{commondesktop}\{#APP_NAME}"; Filename: "{#APP_EXE}"; WorkingDir: "{app}"
 Filename: "{app}\driver\scripts\reinstall.bat"; Description: "Re-install driver"; Flags: runascurrentuser
 Filename: "sc.exe"; Parameters: "start {#APP_SVC_NAME}"; Description: "Start service"; Flags: runascurrentuser nowait
 Filename: "https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads"; \
-  Description: "Latest Visual C++ x86 redistributable"; Flags: unchecked shellexec postinstall
+  Description: "Visual C++ x86 redistributable"; Flags: shellexec postinstall
 
 [UninstallRun]
 Filename: "{#APP_EXE}"; Parameters: "-u"; RunOnceId: "DelProvider"; Flags: runascurrentuser
