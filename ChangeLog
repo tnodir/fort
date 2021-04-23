@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v3.3.7, 2021-04-23:
+- UI: Programs: Fix multi selected apps editing.
+- UI: Add Korean translation.
+- Installer: Add French and Korean translations.
+- Installer: Check that VC Redist x86 exists.
+
 v3.3.6, 2021-04-21:
 - UI: Use global settings from working directory. (See FortFirewall.exe.example.ini)
 - UI: Options: Add "Startup mode" option.
