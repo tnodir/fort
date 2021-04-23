@@ -644,27 +644,7 @@
     </message>
 </context>
 <context>
-    <name>ProgramsWindow</name>
-    <message>
-        <source>Add</source>
-        <translation>Добавить</translation>
-    </message>
-    <message>
-        <source>Edit</source>
-        <translation>Изменить</translation>
-    </message>
-    <message>
-        <source>Purge All</source>
-        <translation>Прочистить всё</translation>
-    </message>
-    <message>
-        <source>Allow</source>
-        <translation>Разрешить</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Блокировать</translation>
-    </message>
+    <name>ProgramEditDialog</name>
     <message>
         <source>Program Path:</source>
         <translation>Путь программы:</translation>
@@ -678,12 +658,24 @@
         <translation>Наименование программы:</translation>
     </message>
     <message>
+        <source>Get Program Name</source>
+        <translation>Получить наименование программы</translation>
+    </message>
+    <message>
         <source>Application Group:</source>
         <translation>Группа приложений:</translation>
     </message>
     <message>
         <source>Use Application Group&apos;s Enabled State</source>
         <translation>Использовать вкл. состояние Группы приложения</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>Разрешить</translation>
+    </message>
+    <message>
+        <source>Block</source>
+        <translation>Блокировать</translation>
     </message>
     <message>
         <source>Block In:</source>
@@ -708,18 +700,6 @@
     <message>
         <source>Edit Program</source>
         <translation>Редактирование программы</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Опции</translation>
-    </message>
-    <message>
-        <source>Collect New Blocked Programs</source>
-        <translation>Собирать новые блокированные программы</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove selected program(s)?</source>
-        <translation>Удалить выбранные программы?</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -754,6 +734,45 @@
         <translation> час(ов)</translation>
     </message>
     <message>
+        <source>Programs (*.exe);;All files (*.*)</source>
+        <translation>Программы (*.exe);;Все файлы (*.*)</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramsWindow</name>
+    <message>
+        <source>Add</source>
+        <translation>Добавить</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Изменить</translation>
+    </message>
+    <message>
+        <source>Purge All</source>
+        <translation>Прочистить всё</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>Разрешить</translation>
+    </message>
+    <message>
+        <source>Block</source>
+        <translation>Блокировать</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>Опции</translation>
+    </message>
+    <message>
+        <source>Collect New Blocked Programs</source>
+        <translation>Собирать новые блокированные программы</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected program(s)?</source>
+        <translation>Удалить выбранные программы?</translation>
+    </message>
+    <message>
         <source>Programs</source>
         <translation>Программы</translation>
     </message>
@@ -764,14 +783,6 @@
     <message>
         <source>Are you sure to remove all non-existent programs?</source>
         <translation>Удалить все несуществующие программы?</translation>
-    </message>
-    <message>
-        <source>Programs (*.exe);;All files (*.*)</source>
-        <translation>Программы (*.exe);;Все файлы (*.*)</translation>
-    </message>
-    <message>
-        <source>Get Program Name</source>
-        <translation>Получить наименование программы</translation>
     </message>
 </context>
 <context>

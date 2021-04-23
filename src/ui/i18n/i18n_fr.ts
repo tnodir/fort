@@ -386,19 +386,19 @@
     </message>
     <message>
         <source>Application is already running!</source>
-        <translation type="unfinished"></translation>
+        <translation>L&apos;application est déjà en cours d&apos;exécution!</translation>
     </message>
     <message>
         <source>Restart Required</source>
-        <translation type="unfinished"></translation>
+        <translation>Redémarrage requis</translation>
     </message>
     <message>
         <source>Restart Now</source>
-        <translation type="unfinished"></translation>
+        <translation>Redémarrer maintenant</translation>
     </message>
     <message>
         <source>Later</source>
-        <translation type="unfinished"></translation>
+        <translation>Plus tard</translation>
     </message>
 </context>
 <context>
@@ -578,7 +578,7 @@
     </message>
     <message>
         <source>Startup mode:</source>
-        <translation type="unfinished"></translation>
+        <translation>Mode de démarrage:</translation>
     </message>
     <message>
         <source>Disabled</source>
@@ -586,19 +586,19 @@
     </message>
     <message>
         <source>For current user</source>
-        <translation type="unfinished"></translation>
+        <translation>Pour l&apos;utilisateur actuel</translation>
     </message>
     <message>
         <source>For all users</source>
-        <translation type="unfinished"></translation>
+        <translation>Pour tout utilisateurs</translation>
     </message>
     <message>
         <source>For all users in background</source>
-        <translation type="unfinished"></translation>
+        <translation>Pour tout utilisateurs en arrière-plan</translation>
     </message>
     <message>
         <source>Lock the password (unlocked till &quot;%1&quot;)</source>
-        <translation type="unfinished"></translation>
+        <translation>Verrouiller mot de passe (déverrouillé jusqu&apos;à &quot;%1&quot;)</translation>
     </message>
 </context>
 <context>
@@ -612,11 +612,11 @@
     <name>PasswordDialog</name>
     <message>
         <source>Please enter the password:</source>
-        <translation type="unfinished"></translation>
+        <translation>Veuillez saisir le mot de passe:</translation>
     </message>
     <message>
         <source>Unlock till:</source>
-        <translation type="unfinished"></translation>
+        <translation>Déverrouiller pour:</translation>
     </message>
     <message>
         <source>OK</source>
@@ -636,34 +636,38 @@
     </message>
     <message>
         <source>Session lockout</source>
-        <translation type="unfinished"></translation>
+        <translation>Verrouillage de session</translation>
     </message>
     <message>
         <source>Program exit</source>
-        <translation type="unfinished"></translation>
+        <translation>Quitter le programme</translation>
     </message>
 </context>
 <context>
-    <name>ProgramsWindow</name>
+    <name>ProgramEditDialog</name>
     <message>
-        <source>OK</source>
-        <translation>OK</translation>
+        <source>Program Path:</source>
+        <translation>Chemin du programme:</translation>
     </message>
     <message>
-        <source>Add</source>
-        <translation>Ajouter</translation>
+        <source>Select File</source>
+        <translation>Sélectionner fichier</translation>
     </message>
     <message>
-        <source>Day</source>
-        <translation>Jour</translation>
+        <source>Program Name:</source>
+        <translation>Nom du programme:</translation>
     </message>
     <message>
-        <source>Edit</source>
-        <translation>Éditer</translation>
+        <source>Get Program Name</source>
+        <translation>Obtenir nom du programme</translation>
     </message>
     <message>
-        <source>Week</source>
-        <translation>Semaine</translation>
+        <source>Application Group:</source>
+        <translation>Groupe d&apos;applications:</translation>
+    </message>
+    <message>
+        <source>Use Application Group&apos;s Enabled State</source>
+        <translation>Utiliser l&apos;état activé du groupe d&apos;applications</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -674,8 +678,83 @@
         <translation>Bloquer</translation>
     </message>
     <message>
+        <source>Block In:</source>
+        <translation>Bloquer dans:</translation>
+    </message>
+    <message>
+        <source>Block At:</source>
+        <translation>Bloquer à une heure spécifiée:</translation>
+    </message>
+    <message>
+        <source>Forever</source>
+        <translation>Pour toujours</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuler</translation>
+    </message>
+    <message>
+        <source>Edit Program</source>
+        <translation>Éditer Programme</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Personnaliser</translation>
+    </message>
+    <message>
+        <source>1 hour</source>
+        <translation>1 heure</translation>
+    </message>
+    <message>
+        <source>6 hours</source>
+        <translation>6 heures</translation>
+    </message>
+    <message>
+        <source>12 hours</source>
+        <translation>12 heures</translation>
+    </message>
+    <message>
+        <source>Day</source>
+        <translation>Jour</translation>
+    </message>
+    <message>
+        <source>Week</source>
+        <translation>Semaine</translation>
+    </message>
+    <message>
         <source>Month</source>
         <translation>Mois</translation>
+    </message>
+    <message>
+        <source> hour(s)</source>
+        <translation> heure(s)</translation>
+    </message>
+    <message>
+        <source>Programs (*.exe);;All files (*.*)</source>
+        <translation>Programmes (*.exe);;Tous les fichiers (*.*)</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramsWindow</name>
+    <message>
+        <source>Add</source>
+        <translation>Ajouter</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Éditer</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>Autoriser</translation>
+    </message>
+    <message>
+        <source>Block</source>
+        <translation>Bloquer</translation>
     </message>
     <message>
         <source>Collect New Blocked Programs</source>
@@ -686,36 +765,8 @@
         <translation>Êtes-vous sûr de supprimer tous les programmes inexistants?</translation>
     </message>
     <message>
-        <source>1 hour</source>
-        <translation>1 heure</translation>
-    </message>
-    <message>
-        <source>Edit Program</source>
-        <translation>Éditer Programme</translation>
-    </message>
-    <message>
-        <source>12 hours</source>
-        <translation>12 heures</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annuler</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>Personnaliser</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>Retirer</translation>
-    </message>
-    <message>
-        <source>Block At:</source>
-        <translation>Bloquer à une heure spécifiée:</translation>
-    </message>
-    <message>
-        <source>Block In:</source>
-        <translation>Bloquer dans:</translation>
     </message>
     <message>
         <source>Are you sure to remove selected program(s)?</source>
@@ -726,52 +777,12 @@
         <translation>Options</translation>
     </message>
     <message>
-        <source>6 hours</source>
-        <translation>6 heures</translation>
-    </message>
-    <message>
-        <source>Program Path:</source>
-        <translation>Chemin du programme:</translation>
-    </message>
-    <message>
         <source>Purge All</source>
         <translation>Purger tout</translation>
     </message>
     <message>
-        <source>Program Name:</source>
-        <translation>Nom du programme:</translation>
-    </message>
-    <message>
         <source>Programs</source>
         <translation>Programmes</translation>
-    </message>
-    <message>
-        <source>Application Group:</source>
-        <translation>Groupe d&apos;applications:</translation>
-    </message>
-    <message>
-        <source>Select File</source>
-        <translation>Sélectionner fichier</translation>
-    </message>
-    <message>
-        <source>Programs (*.exe);;All files (*.*)</source>
-        <translation>Programmes (*.exe);;Tous les fichiers (*.*)</translation>
-    </message>
-    <message>
-        <source>Forever</source>
-        <translation>Pour toujours</translation>
-    </message>
-    <message>
-        <source>Use Application Group&apos;s Enabled State</source>
-        <translation>Utiliser l&apos;état activé du groupe d&apos;applications</translation>
-    </message>
-    <message>
-        <source> hour(s)</source>
-        <translation> heure(s)</translation>
-    </message>
-    <message>
-        <source>Get Program Name</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

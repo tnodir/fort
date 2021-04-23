@@ -644,26 +644,30 @@
     </message>
 </context>
 <context>
-    <name>ProgramsWindow</name>
+    <name>ProgramEditDialog</name>
     <message>
-        <source>OK</source>
-        <translation>확인</translation>
+        <source>Program Path:</source>
+        <translation>프로그램 경로:</translation>
     </message>
     <message>
-        <source>Add</source>
-        <translation>추가</translation>
+        <source>Select File</source>
+        <translation>파일 선택</translation>
     </message>
     <message>
-        <source>Day</source>
-        <translation>일</translation>
+        <source>Program Name:</source>
+        <translation>프로그램 이름:</translation>
     </message>
     <message>
-        <source>Edit</source>
-        <translation>편집</translation>
+        <source>Get Program Name</source>
+        <translation>프로그램 이름 가져오기</translation>
     </message>
     <message>
-        <source>Week</source>
-        <translation>주</translation>
+        <source>Application Group:</source>
+        <translation>응용 프로그램 그룹:</translation>
+    </message>
+    <message>
+        <source>Use Application Group&apos;s Enabled State</source>
+        <translation>응용 프로그램 그룹의 활성화 상태 사용</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -674,8 +678,83 @@
         <translation>차단</translation>
     </message>
     <message>
+        <source>Block In:</source>
+        <translation>다음 시간 후 차단:</translation>
+    </message>
+    <message>
+        <source>Block At:</source>
+        <translation>다음 시각에 차단:</translation>
+    </message>
+    <message>
+        <source>Forever</source>
+        <translation>영구</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>확인</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>취소</translation>
+    </message>
+    <message>
+        <source>Edit Program</source>
+        <translation>프로그램 편집</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>사용자 지정</translation>
+    </message>
+    <message>
+        <source>1 hour</source>
+        <translation>1 시간</translation>
+    </message>
+    <message>
+        <source>6 hours</source>
+        <translation>6 시간</translation>
+    </message>
+    <message>
+        <source>12 hours</source>
+        <translation>12 시간</translation>
+    </message>
+    <message>
+        <source>Day</source>
+        <translation>일</translation>
+    </message>
+    <message>
+        <source>Week</source>
+        <translation>주</translation>
+    </message>
+    <message>
         <source>Month</source>
         <translation>달</translation>
+    </message>
+    <message>
+        <source> hour(s)</source>
+        <translation> 시간</translation>
+    </message>
+    <message>
+        <source>Programs (*.exe);;All files (*.*)</source>
+        <translation>프로그램 (*.exe);;모든 파일 (*.*)</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramsWindow</name>
+    <message>
+        <source>Add</source>
+        <translation>추가</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>편집</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>허용</translation>
+    </message>
+    <message>
+        <source>Block</source>
+        <translation>차단</translation>
     </message>
     <message>
         <source>Collect New Blocked Programs</source>
@@ -686,36 +765,8 @@
         <translation>존재하지 않는 프로그램을 모두 제거하시겠습니까?</translation>
     </message>
     <message>
-        <source>1 hour</source>
-        <translation>1 시간</translation>
-    </message>
-    <message>
-        <source>Edit Program</source>
-        <translation>프로그램 편집</translation>
-    </message>
-    <message>
-        <source>12 hours</source>
-        <translation>12 시간</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>취소</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>사용자 지정</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>제거</translation>
-    </message>
-    <message>
-        <source>Block At:</source>
-        <translation>다음 시각에 차단:</translation>
-    </message>
-    <message>
-        <source>Block In:</source>
-        <translation>다음 시간 후 차단:</translation>
     </message>
     <message>
         <source>Are you sure to remove selected program(s)?</source>
@@ -726,52 +777,12 @@
         <translation>옵션</translation>
     </message>
     <message>
-        <source>6 hours</source>
-        <translation>6 시간</translation>
-    </message>
-    <message>
-        <source>Program Path:</source>
-        <translation>프로그램 경로:</translation>
-    </message>
-    <message>
         <source>Purge All</source>
         <translation>모두 제거</translation>
     </message>
     <message>
-        <source>Program Name:</source>
-        <translation>프로그램 이름:</translation>
-    </message>
-    <message>
         <source>Programs</source>
         <translation>프로그램</translation>
-    </message>
-    <message>
-        <source>Application Group:</source>
-        <translation>응용 프로그램 그룹:</translation>
-    </message>
-    <message>
-        <source>Select File</source>
-        <translation>파일 선택</translation>
-    </message>
-    <message>
-        <source>Programs (*.exe);;All files (*.*)</source>
-        <translation>프로그램 (*.exe);;모든 파일 (*.*)</translation>
-    </message>
-    <message>
-        <source>Forever</source>
-        <translation>영구</translation>
-    </message>
-    <message>
-        <source>Use Application Group&apos;s Enabled State</source>
-        <translation>응용 프로그램 그룹의 활성화 상태 사용</translation>
-    </message>
-    <message>
-        <source> hour(s)</source>
-        <translation> 시간</translation>
-    </message>
-    <message>
-        <source>Get Program Name</source>
-        <translation>프로그램 이름 가져오기</translation>
     </message>
 </context>
 <context>
