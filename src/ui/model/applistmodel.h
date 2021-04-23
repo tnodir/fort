@@ -54,13 +54,13 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     const AppRow &appRowAt(int row) const;
+    AppRow appRowById(qint64 appId) const;
     AppRow appRowByPath(const QString &appPath) const;
 
     bool addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
             int groupIndex, bool useGroupPerm, bool blocked);
     bool updateApp(qint64 appId, const QString &appPath, const QString &appName,
-            const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool blocked,
-            bool updateDriver = true);
+            const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool blocked);
     bool updateAppName(qint64 appId, const QString &appName);
     void deleteApp(qint64 appId, const QString &appPath, int row);
     void purgeApps();

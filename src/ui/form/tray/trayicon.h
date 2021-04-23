@@ -33,14 +33,12 @@ public slots:
     void updateTrayMenuFlags();
 
 protected slots:
-    void retranslateTrayMenu();
-
-    void onRetranslateUi();
-
     void saveTrayFlags();
 
 private:
     void setupController();
+
+    void retranslateUi();
 
     void setupUi();
     void setupTrayMenu();

@@ -86,10 +86,9 @@ void ConnectionsWindow::restoreWindowState()
 
 void ConnectionsWindow::setupController()
 {
-    connect(ctrl(), &ConnectionsController::retranslateUi, this,
-            &ConnectionsWindow::onRetranslateUi);
+    connect(ctrl(), &ConnectionsController::retranslateUi, this, &ConnectionsWindow::retranslateUi);
 
-    emit ctrl()->retranslateUi();
+    retranslateUi();
 }
 
 void ConnectionsWindow::setupStateWatcher()
@@ -97,7 +96,7 @@ void ConnectionsWindow::setupStateWatcher()
     m_stateWatcher->install(this);
 }
 
-void ConnectionsWindow::onRetranslateUi()
+void ConnectionsWindow::retranslateUi()
 {
     this->unsetLocale();
 

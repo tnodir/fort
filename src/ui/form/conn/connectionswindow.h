@@ -33,12 +33,11 @@ public:
     void saveWindowState();
     void restoreWindowState();
 
-protected slots:
-    void onRetranslateUi();
-
 private:
     void setupController();
     void setupStateWatcher();
+
+    void retranslateUi();
 
     void setupUi();
     QLayout *setupHeader();

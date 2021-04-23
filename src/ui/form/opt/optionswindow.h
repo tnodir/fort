@@ -22,15 +22,14 @@ public:
     void saveWindowState();
     void restoreWindowState();
 
-protected slots:
-    void onRetranslateUi();
-
 protected:
     void keyPressEvent(QKeyEvent *event) override;
 
 private:
     void setupController();
     void setupStateWatcher();
+
+    void retranslateUi();
 
     void setupUi();
 

@@ -131,7 +131,20 @@ void TrayIcon::updateTrayMenuFlags()
     }
 }
 
-void TrayIcon::retranslateTrayMenu()
+void TrayIcon::setupController()
+{
+    connect(fortManager(), &FortManager::optWindowChanged, this, &TrayIcon::updateTrayMenuFlags);
+    connect(fortManager(), &FortManager::graphWindowChanged, m_graphWindowAction,
+            &QAction::setChecked);
+
+    connect(settings(), &FortSettings::passwordUnlockChanged, this, &TrayIcon::updateTrayMenuFlags);
+
+    connect(ctrl(), &TrayController::retranslateUi, this, &TrayIcon::retranslateUi);
+
+    retranslateUi();
+}
+
+void TrayIcon::retranslateUi()
 {
     m_programsAction->setText(tr("Programs"));
     m_optionsAction->setText(tr("Options"));
@@ -145,24 +158,6 @@ void TrayIcon::retranslateTrayMenu()
     m_allowAllNewAction->setText(tr("Auto-Allow New Programs"));
 
     m_quitAction->setText(tr("Quit"));
-}
-
-void TrayIcon::onRetranslateUi()
-{
-    retranslateTrayMenu();
-}
-
-void TrayIcon::setupController()
-{
-    connect(fortManager(), &FortManager::optWindowChanged, this, &TrayIcon::updateTrayMenuFlags);
-    connect(fortManager(), &FortManager::graphWindowChanged, m_graphWindowAction,
-            &QAction::setChecked);
-
-    connect(settings(), &FortSettings::passwordUnlockChanged, this, &TrayIcon::updateTrayMenuFlags);
-
-    connect(ctrl(), &TrayController::retranslateUi, this, &TrayIcon::onRetranslateUi);
-
-    emit ctrl()->retranslateUi();
 }
 
 void TrayIcon::setupUi()

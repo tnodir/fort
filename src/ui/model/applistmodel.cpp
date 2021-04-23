@@ -294,13 +294,19 @@ const AppRow &AppListModel::appRowAt(int row) const
     return m_appRow;
 }
 
+AppRow AppListModel::appRowById(qint64 appId) const
+{
+    AppRow appRow;
+    updateAppRow(sqlBase() + " WHERE t.app_id = ?1;", { appId }, appRow);
+    return appRow;
+}
+
 AppRow AppListModel::appRowByPath(const QString &appPath) const
 {
     AppRow appRow;
-    appRow.appPath = appPath;
-
-    updateAppRow(sqlBase() + " WHERE path = ?1;", { appPath }, appRow);
-
+    if (!updateAppRow(sqlBase() + " WHERE t.path = ?1;", { appPath }, appRow)) {
+        appRow.appPath = appPath;
+    }
     return appRow;
 }
 
@@ -321,11 +327,9 @@ bool AppListModel::addApp(const QString &appPath, const QString &appName, const 
 }
 
 bool AppListModel::updateApp(qint64 appId, const QString &appPath, const QString &appName,
-        const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool blocked,
-        bool updateDriver)
+        const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool blocked)
 {
-    if (updateDriver
-            && !confManager()->updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, blocked))
+    if (!confManager()->updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, blocked))
         return false;
 
     const auto groupId = appGroupAt(groupIndex)->id();

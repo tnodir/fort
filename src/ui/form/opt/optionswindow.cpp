@@ -45,7 +45,7 @@ void OptionsWindow::setupController()
     ctrl()->initialize();
 
     connect(ctrl(), &OptionsController::editedChanged, this, &QWidget::setWindowModified);
-    connect(ctrl(), &OptionsController::retranslateUi, this, &OptionsWindow::onRetranslateUi);
+    connect(ctrl(), &OptionsController::retranslateUi, this, &OptionsWindow::retranslateUi);
 
     emit ctrl()->retranslateUi();
 }
@@ -71,7 +71,7 @@ void OptionsWindow::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void OptionsWindow::onRetranslateUi()
+void OptionsWindow::retranslateUi()
 {
     this->unsetLocale();
 

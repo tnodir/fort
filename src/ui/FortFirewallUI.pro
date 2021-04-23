@@ -52,6 +52,7 @@ SOURCES += \
     form/opt/pages/rulespage.cpp \
     form/opt/pages/schedulepage.cpp \
     form/opt/pages/statisticspage.cpp \
+    form/prog/programeditdialog.cpp \
     form/prog/programscontroller.cpp \
     form/prog/programswindow.cpp \
     form/tray/traycontroller.cpp \
@@ -177,6 +178,7 @@ HEADERS += \
     form/opt/pages/rulespage.h \
     form/opt/pages/schedulepage.h \
     form/opt/pages/statisticspage.h \
+    form/prog/programeditdialog.h \
     form/prog/programscontroller.h \
     form/prog/programswindow.h \
     form/tray/traycontroller.h \
