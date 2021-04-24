@@ -102,8 +102,8 @@ SOURCES += \
     util/app/appinfocache.cpp \
     util/app/appinfojob.cpp \
     util/app/appinfomanager.cpp \
+    util/app/appinfoutil.cpp \
     util/app/appinfoworker.cpp \
-    util/app/apputil.cpp \
     util/conf/addressrange.cpp \
     util/conf/confutil.cpp \
     util/dateutil.cpp \
@@ -236,8 +236,8 @@ HEADERS += \
     util/app/appinfocache.h \
     util/app/appinfojob.h \
     util/app/appinfomanager.h \
+    util/app/appinfoutil.h \
     util/app/appinfoworker.h \
-    util/app/apputil.h \
     util/conf/addressrange.h \
     util/conf/confappswalker.h \
     util/conf/confutil.h \

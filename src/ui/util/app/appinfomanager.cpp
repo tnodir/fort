@@ -7,8 +7,8 @@
 #include <sqlite/sqlitestmt.h>
 
 #include "appinfojob.h"
+#include "appinfoutil.h"
 #include "appinfoworker.h"
-#include "apputil.h"
 
 Q_DECLARE_LOGGING_CATEGORY(CLOG_APPINFO_MANAGER)
 Q_LOGGING_CATEGORY(CLOG_APPINFO_MANAGER, "appInfo")
@@ -97,7 +97,7 @@ void AppInfoManager::lookupAppInfo(const QString &appPath)
 void AppInfoManager::handleWorkerResult(WorkerJob *workerJob)
 {
     if (!aborted()) {
-        auto job = static_cast<AppInfoJob *>(workerJob);
+        const auto job = static_cast<AppInfoJob *>(workerJob);
 
         emit lookupFinished(job->appPath(), job->appInfo);
     }
@@ -107,12 +107,12 @@ void AppInfoManager::handleWorkerResult(WorkerJob *workerJob)
 
 bool AppInfoManager::loadInfoFromFs(const QString &appPath, AppInfo &appInfo)
 {
-    return AppUtil::getInfo(appPath, appInfo);
+    return AppInfoUtil::getInfo(appPath, appInfo);
 }
 
 QImage AppInfoManager::loadIconFromFs(const QString &appPath)
 {
-    return AppUtil::getIcon(appPath);
+    return AppInfoUtil::getIcon(appPath);
 }
 
 bool AppInfoManager::loadInfoFromDb(const QString &appPath, AppInfo &appInfo)

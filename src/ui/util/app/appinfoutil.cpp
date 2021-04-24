@@ -1,4 +1,4 @@
-#include "apputil.h"
+#include "appinfoutil.h"
 
 #include <QDir>
 #include <QPixmap>
@@ -121,7 +121,9 @@ bool extractVersionInfo(const QString &appPath, AppInfo &appInfo)
 
 }
 
-bool AppUtil::getInfo(const QString &appPath, AppInfo &appInfo)
+namespace AppInfoUtil {
+
+bool getInfo(const QString &appPath, AppInfo &appInfo)
 {
     if (appPath.isEmpty())
         return false;
@@ -142,7 +144,7 @@ bool AppUtil::getInfo(const QString &appPath, AppInfo &appInfo)
     return true;
 }
 
-QImage AppUtil::getIcon(const QString &appPath)
+QImage getIcon(const QString &appPath)
 {
     if (appPath.isEmpty())
         return {};
@@ -155,12 +157,14 @@ QImage AppUtil::getIcon(const QString &appPath)
     return extractShellIcon(appPath).toImage();
 }
 
-void AppUtil::initThread()
+void initThread()
 {
     CoInitialize(nullptr);
 }
 
-void AppUtil::doneThread()
+void doneThread()
 {
     CoUninitialize();
+}
+
 }

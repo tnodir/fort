@@ -5,7 +5,7 @@
 #include "appinfo.h"
 #include "appinfomanager.h"
 #include "appinfojob.h"
-#include "apputil.h"
+#include "appinfoutil.h"
 
 AppInfoWorker::AppInfoWorker(AppInfoManager *manager) : WorkerObject(manager) { }
 
@@ -16,11 +16,11 @@ AppInfoManager *AppInfoWorker::manager() const
 
 void AppInfoWorker::run()
 {
-    AppUtil::initThread();
+    AppInfoUtil::initThread();
 
     WorkerObject::run();
 
-    AppUtil::doneThread();
+    AppInfoUtil::doneThread();
 }
 
 void AppInfoWorker::doJob(WorkerJob *workerJob)

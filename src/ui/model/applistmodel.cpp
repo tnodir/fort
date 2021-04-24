@@ -11,7 +11,7 @@
 #include "../conf/firewallconf.h"
 #include "../log/logentryblocked.h"
 #include "../util/app/appinfocache.h"
-#include "../util/app/apputil.h"
+#include "../util/app/appinfoutil.h"
 #include "../util/fileutil.h"
 #include "../util/iconcache.h"
 #include "../util/guiutil.h"
@@ -374,7 +374,7 @@ void AppListModel::purgeApps()
         const auto appPath = appRow.appPath;
         if (!FileUtil::fileExists(appPath)) {
             AppInfo appInfo;
-            if (!AppUtil::getInfo(appPath, appInfo)) {
+            if (!AppInfoUtil::getInfo(appPath, appInfo)) {
                 deleteApp(appRow.appId, appPath, row);
             }
         }

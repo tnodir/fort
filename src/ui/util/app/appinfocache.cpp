@@ -78,7 +78,7 @@ AppInfo AppInfoCache::appInfo(const QString &appPath)
     return *appInfo;
 }
 
-void AppInfoCache::handleFinishedLookup(const QString &appPath, const AppInfo info)
+void AppInfoCache::handleFinishedLookup(const QString &appPath, const AppInfo &info)
 {
     AppInfo *appInfo = m_cache.object(appPath);
     if (!appInfo)

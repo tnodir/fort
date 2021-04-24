@@ -1,7 +1,7 @@
 #include "appinfo.h"
 
 #include "../fileutil.h"
-#include "apputil.h"
+#include "appinfoutil.h"
 
 bool AppInfo::isFileModified(const QString &appPath) const
 {

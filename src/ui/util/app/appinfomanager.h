@@ -35,7 +35,7 @@ public:
     void deleteOldApps(int limitCount = 0);
 
 signals:
-    void lookupFinished(const QString &appPath, const AppInfo appInfo);
+    void lookupFinished(const QString &appPath, const AppInfo &appInfo);
 
 public slots:
     void lookupAppInfo(const QString &appPath);

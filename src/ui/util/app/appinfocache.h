@@ -30,7 +30,7 @@ signals:
     void cacheChanged();
 
 private slots:
-    void handleFinishedLookup(const QString &appPath, const AppInfo info);
+    void handleFinishedLookup(const QString &appPath, const AppInfo &info);
 
 private:
     void emitCacheChanged();
