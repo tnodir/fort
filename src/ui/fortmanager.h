@@ -151,6 +151,7 @@ private:
     void setupLogManager();
     void closeLogManager();
 
+    void setupLogger();
     void setupEventFilter();
     void setupEnvManager();
 
@@ -159,12 +160,11 @@ private:
     void setupConfManager();
     void setupAppInfoManager();
 
-    void setupLogger();
-    void setupTaskManager();
-
     void setupAppInfoCache();
     void setupHostInfoCache();
     void setupModels();
+
+    void setupTaskManager();
 
     void setupMainWindow();
     void closeMainWindow();

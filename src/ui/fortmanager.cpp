@@ -104,11 +104,12 @@ void FortManager::initialize()
 
     setupLogManager();
     setupDriver();
-    setupTaskManager();
 
     setupAppInfoCache();
     setupHostInfoCache();
     setupModels();
+
+    setupTaskManager();
 
     loadConf();
 }
@@ -218,6 +219,17 @@ void FortManager::closeLogManager()
     logManager()->close();
 }
 
+void FortManager::setupLogger()
+{
+    Logger *logger = Logger::instance();
+
+    logger->setPath(settings()->logsPath());
+    logger->setActive(true);
+
+    logger->setDebug(settings()->debug());
+    logger->setConsole(settings()->console());
+}
+
 void FortManager::setupEventFilter()
 {
     m_nativeEventFilter = new NativeEventFilter(this);
@@ -253,25 +265,6 @@ void FortManager::setupAppInfoManager()
     appInfoManager()->initialize();
 }
 
-void FortManager::setupLogger()
-{
-    Logger *logger = Logger::instance();
-
-    logger->setPath(settings()->logsPath());
-    logger->setActive(true);
-
-    logger->setDebug(settings()->debug());
-    logger->setConsole(settings()->console());
-}
-
-void FortManager::setupTaskManager()
-{
-    connect(taskManager()->taskInfoZoneDownloader(), &TaskInfoZoneDownloader::zonesUpdated,
-            confManager(), &ConfManager::updateDriverZones);
-
-    taskManager()->initialize();
-}
-
 void FortManager::setupAppInfoCache()
 {
     m_appInfoCache = new AppInfoCache(this);
@@ -299,6 +292,14 @@ void FortManager::setupModels()
     m_connListModel = new ConnListModel(statManager(), this);
     connListModel()->setAppInfoCache(appInfoCache());
     connListModel()->setHostInfoCache(hostInfoCache());
+}
+
+void FortManager::setupTaskManager()
+{
+    connect(taskManager()->taskInfoZoneDownloader(), &TaskInfoZoneDownloader::zonesUpdated,
+            confManager(), &ConfManager::updateDriverZones);
+
+    taskManager()->initialize();
 }
 
 void FortManager::setupMainWindow()
