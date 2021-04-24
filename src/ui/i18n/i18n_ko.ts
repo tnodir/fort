@@ -400,6 +400,10 @@
         <source>Later</source>
         <translation>나중에</translation>
     </message>
+    <message>
+        <source>Quota Alert</source>
+        <translation>할당량 경보</translation>
+    </message>
 </context>
 <context>
     <name>Ip4Range</name>
@@ -814,10 +818,6 @@
 </context>
 <context>
     <name>QuotaManager</name>
-    <message>
-        <source>Quota Alert</source>
-        <translation>할당량 경보</translation>
-    </message>
     <message>
         <source>Day traffic quota exceeded!</source>
         <translation>일간 트래픽 할당량을 초과했습니다!</translation>

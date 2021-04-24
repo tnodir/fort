@@ -247,7 +247,9 @@ void FortManager::setupQuotaManager()
 {
     quotaManager()->initialize();
 
-    connect(quotaManager(), &QuotaManager::alert, this, &FortManager::showInfoBox);
+    connect(quotaManager(), &QuotaManager::alert, this, [&](qint8 alertType) {
+        showInfoBox(QuotaManager::alertTypeText(alertType), tr("Quota Alert"));
+    });
 }
 
 void FortManager::setupStatManager()

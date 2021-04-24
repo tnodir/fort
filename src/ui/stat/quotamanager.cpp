@@ -75,7 +75,7 @@ void QuotaManager::checkQuotaDay(qint32 trafDay)
     if (m_trafDayBytes > m_quotaDayBytes) {
         setQuotaDayAlerted(trafDay);
 
-        emit alert(tr("Day traffic quota exceeded!"));
+        emit alert(AlertDay);
     }
 }
 
@@ -94,8 +94,21 @@ void QuotaManager::checkQuotaMonth(qint32 trafMonth)
     if (m_trafMonthBytes > m_quotaMonthBytes) {
         setQuotaMonthAlerted(trafMonth);
 
-        emit alert(tr("Month traffic quota exceeded!"));
+        emit alert(AlertMonth);
     }
+}
+
+QString QuotaManager::alertTypeText(qint8 alertType)
+{
+    switch (alertType) {
+    case AlertDay:
+        return tr("Day traffic quota exceeded!");
+    case AlertMonth:
+        return tr("Month traffic quota exceeded!");
+    default:
+        Q_UNREACHABLE();
+        return QString();
+    };
 }
 
 qint32 QuotaManager::quotaDayAlerted() const

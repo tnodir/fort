@@ -400,6 +400,10 @@
         <source>Later</source>
         <translation>Отложить</translation>
     </message>
+    <message>
+        <source>Quota Alert</source>
+        <translation>Предупреждение о квоте трафика</translation>
+    </message>
 </context>
 <context>
     <name>Ip4Range</name>
@@ -821,10 +825,6 @@
     <message>
         <source>Month traffic quota exceeded!</source>
         <translation>Квота трафика на месяц исчерпана!</translation>
-    </message>
-    <message>
-        <source>Quota Alert</source>
-        <translation>Предупреждение о квоте трафика</translation>
     </message>
 </context>
 <context>

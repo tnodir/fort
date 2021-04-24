@@ -19,9 +19,6 @@ public:
     void initialize() override;
 
 private:
-    void setupRpc();
-
-private:
     FortManager *m_fortManager = nullptr;
 };
 

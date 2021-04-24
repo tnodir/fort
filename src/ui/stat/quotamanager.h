@@ -10,6 +10,8 @@ class QuotaManager : public QObject
     Q_OBJECT
 
 public:
+    enum AlertType : qint8 { AlertDay = 1, AlertMonth };
+
     explicit QuotaManager(FortSettings *settings, QObject *parent = nullptr);
 
     void setQuotaDayBytes(qint64 bytes);
@@ -28,8 +30,10 @@ public:
 
     virtual void initialize() { }
 
+    static QString alertTypeText(qint8 alertType);
+
 signals:
-    void alert(const QString &text, const QString &title = tr("Quota Alert"));
+    void alert(qint8 alertType);
 
 private:
     qint32 quotaDayAlerted() const;

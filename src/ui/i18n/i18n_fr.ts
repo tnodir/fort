@@ -400,6 +400,10 @@
         <source>Later</source>
         <translation>Plus tard</translation>
     </message>
+    <message>
+        <source>Quota Alert</source>
+        <translation>Alerte de quota</translation>
+    </message>
 </context>
 <context>
     <name>Ip4Range</name>
@@ -814,10 +818,6 @@
 </context>
 <context>
     <name>QuotaManager</name>
-    <message>
-        <source>Quota Alert</source>
-        <translation>Alerte de quota</translation>
-    </message>
     <message>
         <source>Day traffic quota exceeded!</source>
         <translation>Quota de trafic journalier dépassé!</translation>
