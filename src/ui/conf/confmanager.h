@@ -21,8 +21,8 @@ class ConfManager : public QObject, public ConfAppsWalker
     Q_OBJECT
 
 public:
-    explicit ConfManager(
-            const QString &filePath, FortManager *fortManager, QObject *parent = nullptr);
+    explicit ConfManager(const QString &filePath, FortManager *fortManager,
+            QObject *parent = nullptr, quint32 openFlags = 0);
     ~ConfManager() override;
     CLASS_DELETE_COPY_MOVE(ConfManager)
 
@@ -86,6 +86,9 @@ signals:
     void confSaved(bool onlyFlags);
     void appEndTimesUpdated();
     void alertedAppAdded();
+
+protected:
+    virtual void initAppEndTimer();
 
 private:
     void showErrorMessage(const QString &errorMessage);

@@ -46,7 +46,7 @@ bool renameDbFile(const QString &filePath, const QString &newFilePath)
 }
 
 SqliteDb::SqliteDb(const QString &filePath, quint32 openFlags) :
-    m_openFlags(openFlags), m_filePath(filePath)
+    m_openFlags(openFlags != 0 ? openFlags : OpenDefaultReadWrite), m_filePath(filePath)
 {
     sqlite3_initialize();
 }

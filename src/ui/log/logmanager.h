@@ -24,18 +24,18 @@ public:
     AppStatModel *appStatModel() const;
     ConnListModel *connListModel() const;
 
-    void setActive(bool active);
+    virtual void setActive(bool active);
 
     QString errorMessage() const { return m_errorMessage; }
 
-    void initialize();
+    virtual void initialize();
 
 signals:
     void activeChanged();
     void errorMessageChanged();
 
 public slots:
-    void close();
+    virtual void close();
 
 private slots:
     void processLogBuffer(LogBuffer *logBuffer, bool success, quint32 errorCode);

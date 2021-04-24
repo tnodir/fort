@@ -60,26 +60,26 @@ const char *const sqlDeleteApp = "DELETE FROM app WHERE path = ?1;";
 
 }
 
-AppInfoManager::AppInfoManager(QObject *parent) : WorkerManager(parent), m_sqliteDb(new SqliteDb())
+AppInfoManager::AppInfoManager(const QString &filePath, QObject *parent, quint32 openFlags) :
+    WorkerManager(parent), m_sqliteDb(new SqliteDb(filePath, openFlags))
 {
     setMaxWorkersCount(1);
 }
 
 AppInfoManager::~AppInfoManager()
 {
-    delete m_sqliteDb;
+    delete sqliteDb();
 }
 
-void AppInfoManager::setupDb(const QString &filePath)
+void AppInfoManager::initialize()
 {
-    m_sqliteDb->setFilePath(filePath);
-    if (!m_sqliteDb->open()) {
-        logCritical() << "File open error:" << filePath << m_sqliteDb->errorMessage();
+    if (!sqliteDb()->open()) {
+        logCritical() << "File open error:" << sqliteDb()->filePath() << sqliteDb()->errorMessage();
         return;
     }
 
-    if (!m_sqliteDb->migrate(":/appinfocache/migrations", nullptr, DATABASE_USER_VERSION, true)) {
-        logCritical() << "Migration error" << filePath;
+    if (!sqliteDb()->migrate(":/appinfocache/migrations", nullptr, DATABASE_USER_VERSION, true)) {
+        logCritical() << "Migration error" << sqliteDb()->filePath();
         return;
     }
 }
@@ -124,7 +124,7 @@ bool AppInfoManager::loadInfoFromDb(const QString &appPath, AppInfo &appInfo)
 
     // Load version info
     SqliteStmt stmt;
-    if (!stmt.prepare(m_sqliteDb->db(), sqlSelectAppInfo))
+    if (!stmt.prepare(sqliteDb()->db(), sqlSelectAppInfo))
         return false;
 
     stmt.bindText(1, appPath);
@@ -140,7 +140,7 @@ bool AppInfoManager::loadInfoFromDb(const QString &appPath, AppInfo &appInfo)
     appInfo.iconId = stmt.columnInt64(5);
 
     // Update last access time
-    m_sqliteDb->executeEx(sqlUpdateAppAccessTime, QVariantList() << appPath);
+    sqliteDb()->executeEx(sqlUpdateAppAccessTime, QVariantList() << appPath);
 
     return true;
 }
@@ -152,7 +152,7 @@ QImage AppInfoManager::loadIconFromDb(qint64 iconId)
 
     QMutexLocker locker(&m_mutex);
 
-    const QVariant icon = m_sqliteDb->executeEx(sqlSelectIconImage, QVariantList() << iconId);
+    const QVariant icon = sqliteDb()->executeEx(sqlSelectIconImage, QVariantList() << iconId);
 
     return icon.value<QImage>();
 }
@@ -163,21 +163,21 @@ bool AppInfoManager::saveToDb(const QString &appPath, AppInfo &appInfo, const QI
 
     bool ok = true;
 
-    m_sqliteDb->beginTransaction();
+    sqliteDb()->beginTransaction();
 
     // Save icon image
     QVariant iconId;
     {
         const uint iconHash = qHashBits(appIcon.constBits(), size_t(appIcon.sizeInBytes()));
 
-        iconId = m_sqliteDb->executeEx(sqlSelectIconIdByHash, QVariantList() << iconHash);
+        iconId = sqliteDb()->executeEx(sqlSelectIconIdByHash, QVariantList() << iconHash);
         if (iconId.isNull()) {
-            m_sqliteDb->executeEx(sqlInsertIcon, QVariantList() << iconHash << appIcon, 0, &ok);
+            sqliteDb()->executeEx(sqlInsertIcon, QVariantList() << iconHash << appIcon, 0, &ok);
             if (ok) {
-                iconId = m_sqliteDb->lastInsertRowid();
+                iconId = sqliteDb()->lastInsertRowid();
             }
         } else {
-            m_sqliteDb->executeEx(sqlUpdateIconRefCount, QVariantList() << iconId << +1, 0, &ok);
+            sqliteDb()->executeEx(sqlUpdateIconRefCount, QVariantList() << iconId << +1, 0, &ok);
         }
     }
 
@@ -187,16 +187,16 @@ bool AppInfoManager::saveToDb(const QString &appPath, AppInfo &appInfo, const QI
                 << appPath << appInfo.fileDescription << appInfo.companyName << appInfo.productName
                 << appInfo.productVersion << appInfo.fileModTime << iconId;
 
-        m_sqliteDb->executeEx(sqlInsertAppInfo, vars, 0, &ok);
+        sqliteDb()->executeEx(sqlInsertAppInfo, vars, 0, &ok);
     }
 
-    m_sqliteDb->endTransaction(ok);
+    sqliteDb()->endTransaction(ok);
 
     if (ok) {
         appInfo.iconId = iconId.toLongLong();
 
         // Delete excess info
-        const int appCount = m_sqliteDb->executeEx(sqlSelectAppCount).toInt();
+        const int appCount = sqliteDb()->executeEx(sqlSelectAppCount).toInt();
         const int excessCount = appCount - APP_CACHE_MAX_COUNT;
 
         if (excessCount > 0) {
@@ -231,7 +231,7 @@ void AppInfoManager::deleteOldApps(int limitCount)
     // Get old app info list
     {
         SqliteStmt stmt;
-        if (stmt.prepare(m_sqliteDb->db(), sqlSelectAppOlds, SqliteStmt::PreparePersistent)) {
+        if (stmt.prepare(sqliteDb()->db(), sqlSelectAppOlds, SqliteStmt::PreparePersistent)) {
             if (limitCount != 0) {
                 stmt.bindInt(1, limitCount);
             }
@@ -258,7 +258,7 @@ bool AppInfoManager::deleteAppsAndIcons(
 {
     bool ok = false;
 
-    m_sqliteDb->beginTransaction();
+    sqliteDb()->beginTransaction();
 
     // Delete old icons
     auto iconIt = iconIds.constBegin();
@@ -266,24 +266,24 @@ bool AppInfoManager::deleteAppsAndIcons(
         const qint64 iconId = iconIt.key();
         const int count = iconIt.value();
 
-        m_sqliteDb->executeEx(sqlUpdateIconRefCount, QVariantList() << iconId << -count, 0, &ok);
+        sqliteDb()->executeEx(sqlUpdateIconRefCount, QVariantList() << iconId << -count, 0, &ok);
         if (!ok)
             goto end;
 
-        m_sqliteDb->executeEx(sqlDeleteIconIfNotUsed, QVariantList() << iconId, 0, &ok);
+        sqliteDb()->executeEx(sqlDeleteIconIfNotUsed, QVariantList() << iconId, 0, &ok);
         if (!ok)
             goto end;
     }
 
     // Delete old app infos
     for (const QString &path : appPaths) {
-        m_sqliteDb->executeEx(sqlDeleteApp, QVariantList() << path, 0, &ok);
+        sqliteDb()->executeEx(sqlDeleteApp, QVariantList() << path, 0, &ok);
         if (!ok)
             goto end;
     }
 
 end:
-    m_sqliteDb->endTransaction(ok);
+    sqliteDb()->endTransaction(ok);
 
     return ok;
 }

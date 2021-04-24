@@ -6,11 +6,13 @@
 #include "util/classhelpers.h"
 
 class AppInfoCache;
+class AppInfoManager;
 class AppListModel;
 class AppStatModel;
 class ConfManager;
 class ConnListModel;
 class ConnectionsWindow;
+class ControlManager;
 class DriverManager;
 class EnvManager;
 class FirewallConf;
@@ -24,6 +26,7 @@ class NativeEventFilter;
 class OptionsWindow;
 class ProgramsWindow;
 class QuotaManager;
+class RpcManager;
 class StatManager;
 class TaskManager;
 class TrayIcon;
@@ -38,7 +41,8 @@ public:
     enum TrayMessageType { MessageOptions, MessageZones };
     Q_ENUM(TrayMessageType)
 
-    explicit FortManager(FortSettings *settings, EnvManager *envManager, QObject *parent = nullptr);
+    explicit FortManager(FortSettings *settings, EnvManager *envManager,
+            ControlManager *controlManager, QObject *parent = nullptr);
     ~FortManager() override;
     CLASS_DELETE_COPY_MOVE(FortManager)
 
@@ -56,10 +60,20 @@ public:
 
     FortSettings *settings() const { return m_settings; }
     EnvManager *envManager() const { return m_envManager; }
+    ControlManager *controlManager() const { return m_controlManager; }
+    RpcManager *rpcManager() const { return m_rpcManager; }
+
+    QuotaManager *quotaManager() const { return m_quotaManager; }
+    StatManager *statManager() const { return m_statManager; }
     ConfManager *confManager() const { return m_confManager; }
+    AppInfoManager *appInfoManager() const { return m_appInfoManager; }
     DriverManager *driverManager() const { return m_driverManager; }
     LogManager *logManager() const { return m_logManager; }
     TaskManager *taskManager() const { return m_taskManager; }
+
+    AppInfoCache *appInfoCache() const { return m_appInfoCache; }
+    HostInfoCache *hostInfoCache() const { return m_hostInfoCache; }
+
     AppListModel *appListModel() const { return m_appListModel; }
     AppStatModel *appStatModel() const { return m_appStatModel; }
     ZoneListModel *zoneListModel() const { return m_zoneListModel; }
@@ -126,23 +140,31 @@ private:
 
     void setupThreadPool();
 
+    void createManagers();
+
+    void setupControlManager();
+    void setupRpcManager();
+
     bool setupDriver();
     void closeDriver();
-
-    void setupAppInfoCache();
-    void setupHostInfoCache();
-    void setupModels();
 
     void setupLogManager();
     void closeLogManager();
 
     void setupEventFilter();
     void setupEnvManager();
+
+    void setupQuotaManager();
     void setupStatManager();
     void setupConfManager();
+    void setupAppInfoManager();
 
     void setupLogger();
     void setupTaskManager();
+
+    void setupAppInfoCache();
+    void setupHostInfoCache();
+    void setupModels();
 
     void setupMainWindow();
     void closeMainWindow();
@@ -195,10 +217,14 @@ private:
 
     FortSettings *m_settings = nullptr;
     EnvManager *m_envManager = nullptr;
+    ControlManager *m_controlManager = nullptr;
+    RpcManager *m_rpcManager = nullptr;
+
     QuotaManager *m_quotaManager = nullptr;
     StatManager *m_statManager = nullptr;
     DriverManager *m_driverManager = nullptr;
     ConfManager *m_confManager = nullptr;
+    AppInfoManager *m_appInfoManager = nullptr;
     LogManager *m_logManager = nullptr;
     TaskManager *m_taskManager = nullptr;
 

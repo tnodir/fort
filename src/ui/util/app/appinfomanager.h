@@ -14,11 +14,14 @@ class AppInfoManager : public WorkerManager
     Q_OBJECT
 
 public:
-    explicit AppInfoManager(QObject *parent = nullptr);
+    explicit AppInfoManager(
+            const QString &filePath, QObject *parent = nullptr, quint32 openFlags = 0);
     ~AppInfoManager() override;
     CLASS_DELETE_COPY_MOVE(AppInfoManager)
 
-    void setupDb(const QString &filePath);
+    SqliteDb *sqliteDb() const { return m_sqliteDb; }
+
+    void initialize();
 
     bool loadInfoFromFs(const QString &appPath, AppInfo &appInfo);
     QImage loadIconFromFs(const QString &appPath);

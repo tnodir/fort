@@ -325,10 +325,11 @@ bool saveAppGroups(SqliteDb *db, const FirewallConf &conf)
 
 }
 
-ConfManager::ConfManager(const QString &filePath, FortManager *fortManager, QObject *parent) :
+ConfManager::ConfManager(
+        const QString &filePath, FortManager *fortManager, QObject *parent, quint32 openFlags) :
     QObject(parent),
     m_fortManager(fortManager),
-    m_sqliteDb(new SqliteDb(filePath)),
+    m_sqliteDb(new SqliteDb(filePath, openFlags)),
     m_conf(new FirewallConf(this))
 {
     m_appEndTimer.setInterval(5 * 60 * 1000); // 5 minutes
@@ -377,20 +378,25 @@ bool ConfManager::checkResult(bool ok, bool commit)
 
 bool ConfManager::initialize()
 {
-    if (!m_sqliteDb->open()) {
+    if (!sqliteDb()->open()) {
         logCritical() << "File open error:" << m_sqliteDb->filePath() << m_sqliteDb->errorMessage();
         return false;
     }
 
-    if (!m_sqliteDb->migrate(
+    if (!sqliteDb()->migrate(
                 ":/conf/migrations", nullptr, DATABASE_USER_VERSION, true, true, &migrateFunc)) {
         logCritical() << "Migration error" << m_sqliteDb->filePath();
         return false;
     }
 
-    m_appEndTimer.start();
+    initAppEndTimer();
 
     return true;
+}
+
+void ConfManager::initAppEndTimer()
+{
+    m_appEndTimer.start();
 }
 
 void ConfManager::initConfToEdit()

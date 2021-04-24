@@ -12,10 +12,10 @@
 #include "axistickerspeed.h"
 #include "graphplot.h"
 
-GraphWindow::GraphWindow(FortSettings *fortSettings, QWidget *parent) :
+GraphWindow::GraphWindow(FortSettings *settings, QWidget *parent) :
     WidgetWindow(parent),
     m_stateWatcher(new WidgetWindowStateWatcher(this)),
-    m_settings(fortSettings)
+    m_settings(settings)
 {
     setupUi();
     setupTimer();

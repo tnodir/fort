@@ -27,6 +27,8 @@ public:
 
     const QList<TaskInfo *> &taskInfosList() const { return m_taskInfos; }
 
+    virtual void initialize();
+
 signals:
     void taskInfosChanged();
 

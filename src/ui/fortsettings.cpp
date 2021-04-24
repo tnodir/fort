@@ -230,14 +230,19 @@ void FortSettings::setErrorMessage(const QString &errorMessage)
     }
 }
 
+QString FortSettings::confFilePath() const
+{
+    return profilePath() + (APP_BASE ".config");
+}
+
 QString FortSettings::statFilePath() const
 {
     return statPath() + (APP_BASE ".stat");
 }
 
-QString FortSettings::confFilePath() const
+QString FortSettings::cacheFilePath() const
 {
-    return profilePath() + (APP_BASE ".config");
+    return noCache() ? ":memory:" : cachePath() + "appinfocache.db";
 }
 
 bool FortSettings::isPasswordRequired()

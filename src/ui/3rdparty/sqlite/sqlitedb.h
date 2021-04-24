@@ -27,10 +27,12 @@ public:
         OpenSharedCache = 0x00020000, // SQLITE_OPEN_SHAREDCACHE
         OpenPrivateCache = 0x00040000, // SQLITE_OPEN_PRIVATECACHE
         OpenNoFollow = 0x01000000, // SQLITE_OPEN_NOFOLLOW
-        OpenDefault = (OpenReadWrite | OpenCreate | OpenNoMutex)
+        OpenDefaultReadOnly = (OpenReadOnly | OpenNoMutex),
+        OpenDefaultReadWrite = (OpenReadWrite | OpenCreate | OpenNoMutex)
     };
 
-    explicit SqliteDb(const QString &filePath = QString(), quint32 openFlags = OpenDefault);
+    explicit SqliteDb(
+            const QString &filePath = QString(), quint32 openFlags = OpenDefaultReadWrite);
     ~SqliteDb();
     CLASS_DEFAULT_COPY_MOVE(SqliteDb)
 
@@ -93,7 +95,7 @@ public:
             const QString &sourceFilePath, SQLITEDB_MIGRATE_FUNC migrateFunc, void *migrateContext);
 
 private:
-    quint32 m_openFlags = OpenDefault;
+    quint32 m_openFlags = 0;
     sqlite3 *m_db = nullptr;
     QString m_filePath;
 };

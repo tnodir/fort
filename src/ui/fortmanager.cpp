@@ -9,9 +9,8 @@
 
 #include <fort_version.h>
 
-#include "conf/confmanager.h"
 #include "conf/firewallconf.h"
-#include "driver/drivermanager.h"
+#include "control/controlmanager.h"
 #include "form/conn/connectionswindow.h"
 #include "form/controls/mainwindow.h"
 #include "form/dialog/passworddialog.h"
@@ -21,16 +20,20 @@
 #include "form/tray/trayicon.h"
 #include "form/zone/zoneswindow.h"
 #include "fortsettings.h"
-#include "log/logmanager.h"
 #include "model/applistmodel.h"
 #include "model/appstatmodel.h"
 #include "model/connlistmodel.h"
 #include "model/traflistmodel.h"
 #include "model/zonelistmodel.h"
-#include "stat/quotamanager.h"
-#include "stat/statmanager.h"
+#include "rpc/appinfomanagerrpc.h"
+#include "rpc/confmanagerrpc.h"
+#include "rpc/drivermanagerrpc.h"
+#include "rpc/logmanagerrpc.h"
+#include "rpc/quotamanagerrpc.h"
+#include "rpc/rpcmanager.h"
+#include "rpc/statmanagerrpc.h"
+#include "rpc/taskmanagerrpc.h"
 #include "task/taskinfozonedownloader.h"
-#include "task/taskmanager.h"
 #include "translationmanager.h"
 #include "util/app/appinfocache.h"
 #include "util/app/appinfomanager.h"
@@ -45,12 +48,14 @@
 #include "util/startuputil.h"
 #include "util/stringutil.h"
 
-FortManager::FortManager(FortSettings *settings, EnvManager *envManager, QObject *parent) :
+FortManager::FortManager(FortSettings *settings, EnvManager *envManager,
+        ControlManager *controlManager, QObject *parent) :
     QObject(parent),
     m_initialized(false),
     m_trayTriggered(false),
     m_settings(settings),
-    m_envManager(envManager)
+    m_envManager(envManager),
+    m_controlManager(controlManager)
 {
 }
 
@@ -81,31 +86,29 @@ void FortManager::initialize()
 {
     m_initialized = true;
 
-    // Create instances
-    {
-        m_quotaManager = new QuotaManager(settings(), this);
-        m_statManager = new StatManager(settings()->statFilePath(), m_quotaManager, this);
-        m_driverManager = new DriverManager(this);
-        m_confManager = new ConfManager(settings()->confFilePath(), this, this);
-        m_logManager = new LogManager(this, this);
-        m_taskManager = new TaskManager(this, this);
-    }
-
     setupThreadPool();
+
+    createManagers();
+
+    setupControlManager();
+    setupRpcManager();
 
     setupLogger();
     setupEventFilter();
     setupEnvManager();
+
+    setupQuotaManager();
     setupStatManager();
     setupConfManager();
-
-    setupAppInfoCache();
-    setupHostInfoCache();
-    setupModels();
+    setupAppInfoManager();
 
     setupLogManager();
     setupDriver();
     setupTaskManager();
+
+    setupAppInfoCache();
+    setupHostInfoCache();
+    setupModels();
 
     loadConf();
 }
@@ -130,11 +133,47 @@ void FortManager::setupThreadPool()
     QThreadPool::globalInstance()->setMaxThreadCount(qMax(8, QThread::idealThreadCount() * 2));
 }
 
+void FortManager::createManagers()
+{
+    if (settings()->isServiceClient()) {
+        m_rpcManager = new RpcManager(this, this);
+
+        m_quotaManager = new QuotaManagerRpc(this, this);
+        m_statManager = new StatManagerRpc(settings()->statFilePath(), this, this);
+        m_driverManager = new DriverManagerRpc(this);
+        m_confManager = new ConfManagerRpc(settings()->confFilePath(), this, this);
+        m_appInfoManager = new AppInfoManagerRpc(settings()->cacheFilePath(), this);
+        m_logManager = new LogManagerRpc(this, this);
+        m_taskManager = new TaskManagerRpc(this, this);
+    } else {
+        m_quotaManager = new QuotaManager(settings(), this);
+        m_statManager = new StatManager(settings()->statFilePath(), quotaManager(), this);
+        m_driverManager = new DriverManager(this);
+        m_confManager = new ConfManager(settings()->confFilePath(), this, this);
+        m_appInfoManager = new AppInfoManager(settings()->cacheFilePath(), this);
+        m_logManager = new LogManager(this, this);
+        m_taskManager = new TaskManager(this, this);
+    }
+}
+
+void FortManager::setupControlManager()
+{
+    // Process control commands from clients
+    controlManager()->listen(this);
+}
+
+void FortManager::setupRpcManager()
+{
+    if (rpcManager()) {
+        rpcManager()->initialize();
+    }
+}
+
 void FortManager::installDriver()
 {
     closeDriver();
 
-    DriverManager::reinstallDriver();
+    driverManager()->reinstallDriver();
 
     if (setupDriver()) {
         updateDriverConf();
@@ -145,7 +184,7 @@ void FortManager::removeDriver()
 {
     closeDriver();
 
-    DriverManager::uninstallDriver();
+    driverManager()->uninstallDriver();
 }
 
 bool FortManager::setupDriver()
@@ -167,46 +206,6 @@ void FortManager::closeDriver()
     updateStatManager(nullptr);
 
     driverManager()->closeDevice();
-}
-
-void FortManager::setupAppInfoCache()
-{
-    QString dbPath;
-    if (settings()->noCache()) {
-        dbPath = ":memory:";
-    } else {
-        const QString cachePath = settings()->cachePath();
-        dbPath = cachePath + "appinfocache.db";
-    }
-
-    AppInfoManager *manager = new AppInfoManager(this);
-    manager->setupDb(dbPath);
-
-    m_appInfoCache = new AppInfoCache(this);
-    m_appInfoCache->setManager(manager);
-}
-
-void FortManager::setupHostInfoCache()
-{
-    m_hostInfoCache = new HostInfoCache(this);
-}
-
-void FortManager::setupModels()
-{
-    m_appListModel = new AppListModel(m_confManager, this);
-    appListModel()->setAppInfoCache(m_appInfoCache);
-    appListModel()->initialize();
-
-    m_appStatModel = new AppStatModel(m_statManager, this);
-    appStatModel()->setAppInfoCache(m_appInfoCache);
-    appStatModel()->initialize();
-
-    m_zoneListModel = new ZoneListModel(m_confManager, this);
-    zoneListModel()->initialize();
-
-    m_connListModel = new ConnListModel(m_statManager, this);
-    connListModel()->setAppInfoCache(m_appInfoCache);
-    connListModel()->setHostInfoCache(m_hostInfoCache);
 }
 
 void FortManager::setupLogManager()
@@ -232,16 +231,26 @@ void FortManager::setupEnvManager()
     connect(envManager(), &EnvManager::environmentUpdated, this, [&] { updateDriverConf(); });
 }
 
+void FortManager::setupQuotaManager()
+{
+    quotaManager()->initialize();
+
+    connect(quotaManager(), &QuotaManager::alert, this, &FortManager::showInfoBox);
+}
+
 void FortManager::setupStatManager()
 {
-    m_statManager->initialize();
-
-    connect(m_quotaManager, &QuotaManager::alert, this, &FortManager::showInfoBox);
+    statManager()->initialize();
 }
 
 void FortManager::setupConfManager()
 {
     confManager()->initialize();
+}
+
+void FortManager::setupAppInfoManager()
+{
+    appInfoManager()->initialize();
 }
 
 void FortManager::setupLogger()
@@ -257,12 +266,39 @@ void FortManager::setupLogger()
 
 void FortManager::setupTaskManager()
 {
-    taskManager()->loadSettings();
-
     connect(taskManager()->taskInfoZoneDownloader(), &TaskInfoZoneDownloader::zonesUpdated,
             confManager(), &ConfManager::updateDriverZones);
 
-    taskManager()->taskInfoZoneDownloader()->loadZones();
+    taskManager()->initialize();
+}
+
+void FortManager::setupAppInfoCache()
+{
+    m_appInfoCache = new AppInfoCache(this);
+    m_appInfoCache->setManager(appInfoManager());
+}
+
+void FortManager::setupHostInfoCache()
+{
+    m_hostInfoCache = new HostInfoCache(this);
+}
+
+void FortManager::setupModels()
+{
+    m_appListModel = new AppListModel(confManager(), this);
+    appListModel()->setAppInfoCache(appInfoCache());
+    appListModel()->initialize();
+
+    m_appStatModel = new AppStatModel(statManager(), this);
+    appStatModel()->setAppInfoCache(appInfoCache());
+    appStatModel()->initialize();
+
+    m_zoneListModel = new ZoneListModel(confManager(), this);
+    zoneListModel()->initialize();
+
+    m_connListModel = new ConnListModel(statManager(), this);
+    connListModel()->setAppInfoCache(appInfoCache());
+    connListModel()->setHostInfoCache(hostInfoCache());
 }
 
 void FortManager::setupMainWindow()
@@ -339,7 +375,7 @@ void FortManager::setupGraphWindow()
     connect(m_graphWindow, &GraphWindow::aboutToClose, this, [&] { closeGraphWindow(); });
     connect(m_graphWindow, &GraphWindow::mouseRightClick, m_trayIcon, &TrayIcon::showTrayMenu);
 
-    connect(m_statManager, &StatManager::trafficAdded, m_graphWindow, &GraphWindow::addTraffic);
+    connect(statManager(), &StatManager::trafficAdded, m_graphWindow, &GraphWindow::addTraffic);
 }
 
 void FortManager::setupConnectionsWindow()
@@ -739,7 +775,7 @@ void FortManager::updateLogManager(bool active)
 
 void FortManager::updateStatManager(FirewallConf *conf)
 {
-    m_statManager->setConf(conf);
+    statManager()->setConf(conf);
 }
 
 void FortManager::onTrayActivated(int reason)

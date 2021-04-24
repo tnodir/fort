@@ -25,18 +25,18 @@ public:
     QString errorMessage() const;
     bool isDeviceError() const;
 
-    bool isDeviceOpened() const;
+    virtual bool isDeviceOpened() const;
 
-    static void reinstallDriver();
-    static void uninstallDriver();
+    virtual void reinstallDriver();
+    virtual void uninstallDriver();
 
 signals:
     void errorMessageChanged();
     void isDeviceOpenedChanged();
 
 public slots:
-    bool openDevice();
-    bool closeDevice();
+    virtual bool openDevice();
+    virtual bool closeDevice();
 
     bool validate(QByteArray &buf, int size);
 
@@ -45,7 +45,6 @@ public slots:
     bool writeZones(QByteArray &buf, int size, bool onlyFlags = false);
 
 private:
-    void setErrorMessage(const QString &errorMessage);
     void updateError(bool success);
 
     void setupWorker();

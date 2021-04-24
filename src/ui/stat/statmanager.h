@@ -19,8 +19,8 @@ class StatManager : public QObject
     Q_OBJECT
 
 public:
-    explicit StatManager(
-            const QString &filePath, QuotaManager *quotaManager, QObject *parent = nullptr);
+    explicit StatManager(const QString &filePath, QuotaManager *quotaManager,
+            QObject *parent = nullptr, quint32 openFlags = 0);
     ~StatManager() override;
     CLASS_DELETE_COPY_MOVE(StatManager)
 
@@ -30,8 +30,10 @@ public:
     qint64 connTrafIdMin() const { return m_connTrafIdMin; }
     qint64 connTrafIdMax() const { return m_connTrafIdMax; }
 
+    QuotaManager *quotaManager() const { return m_quotaManager; }
+
     const FirewallConf *conf() const { return m_conf; }
-    void setConf(const FirewallConf *conf);
+    virtual void setConf(const FirewallConf *conf);
 
     SqliteDb *sqliteDb() const { return m_sqliteDb; }
 

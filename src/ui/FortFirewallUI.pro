@@ -77,6 +77,14 @@ SOURCES += \
     model/zonelistmodel.cpp \
     model/zonesourcewrapper.cpp \
     model/zonetypewrapper.cpp \
+    rpc/appinfomanagerrpc.cpp \
+    rpc/confmanagerrpc.cpp \
+    rpc/drivermanagerrpc.cpp \
+    rpc/logmanagerrpc.cpp \
+    rpc/quotamanagerrpc.cpp \
+    rpc/rpcmanager.cpp \
+    rpc/statmanagerrpc.cpp \
+    rpc/taskmanagerrpc.cpp \
     stat/quotamanager.cpp \
     stat/statmanager.cpp \
     stat/statsql.cpp \
@@ -203,6 +211,14 @@ HEADERS += \
     model/zonelistmodel.h \
     model/zonesourcewrapper.h \
     model/zonetypewrapper.h \
+    rpc/appinfomanagerrpc.h \
+    rpc/confmanagerrpc.h \
+    rpc/drivermanagerrpc.h \
+    rpc/logmanagerrpc.h \
+    rpc/quotamanagerrpc.h \
+    rpc/rpcmanager.h \
+    rpc/statmanagerrpc.h \
+    rpc/taskmanagerrpc.h \
     stat/quotamanager.h \
     stat/statmanager.h \
     stat/statsql.h \

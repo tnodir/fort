@@ -15,7 +15,7 @@ class GraphWindow : public WidgetWindow
     Q_OBJECT
 
 public:
-    explicit GraphWindow(FortSettings *fortSettings, QWidget *parent = nullptr);
+    explicit GraphWindow(FortSettings *settings, QWidget *parent = nullptr);
 
     FortSettings *settings() const;
 

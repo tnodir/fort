@@ -2,8 +2,8 @@
 
 #include "../fortsettings.h"
 
-QuotaManager::QuotaManager(FortSettings *fortSettings, QObject *parent) :
-    QObject(parent), m_fortSettings(fortSettings)
+QuotaManager::QuotaManager(FortSettings *settings, QObject *parent) :
+    QObject(parent), m_settings(settings)
 {
 }
 
@@ -100,24 +100,24 @@ void QuotaManager::checkQuotaMonth(qint32 trafMonth)
 
 qint32 QuotaManager::quotaDayAlerted() const
 {
-    return m_fortSettings->quotaDayAlerted();
+    return settings()->quotaDayAlerted();
 }
 
 void QuotaManager::setQuotaDayAlerted(qint32 v)
 {
     m_quotaDayAlerted = v;
 
-    m_fortSettings->setQuotaDayAlerted(v);
+    settings()->setQuotaDayAlerted(v);
 }
 
 qint32 QuotaManager::quotaMonthAlerted() const
 {
-    return m_fortSettings->quotaMonthAlerted();
+    return settings()->quotaMonthAlerted();
 }
 
 void QuotaManager::setQuotaMonthAlerted(qint32 v)
 {
     m_quotaMonthAlerted = v;
 
-    m_fortSettings->setQuotaMonthAlerted(v);
+    settings()->setQuotaMonthAlerted(v);
 }

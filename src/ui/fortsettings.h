@@ -203,15 +203,19 @@ public:
     bool hasService() const { return m_hasService; }
     void setHasService(bool v) { m_hasService = v; }
 
+    bool isServiceClient() const { return hasService() && !isService(); }
+
     QString profilePath() const { return m_profilePath; }
+
+    QString confFilePath() const;
 
     QString statPath() const { return m_statPath; }
     QString statFilePath() const;
 
     QString logsPath() const { return m_logsPath; }
-    QString cachePath() const { return m_cachePath; }
 
-    QString confFilePath() const;
+    QString cachePath() const { return m_cachePath; }
+    QString cacheFilePath() const;
 
     bool isWindowControl() const { return m_isWindowControl; }
     QString controlCommand() const { return m_controlCommand; }

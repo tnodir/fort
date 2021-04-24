@@ -13,8 +13,6 @@ TaskManager::TaskManager(FortManager *fortManager, QObject *parent) :
     setupTasks();
 
     m_timer.setSingleShot(true);
-    m_timer.start(5 * 1000); // 5 seconds
-
     connect(&m_timer, &QTimer::timeout, this, &TaskManager::runExpiredTasks);
 }
 
@@ -36,6 +34,15 @@ TaskInfoUpdateChecker *TaskManager::taskInfoUpdateChecker() const
 TaskInfoZoneDownloader *TaskManager::taskInfoZoneDownloader() const
 {
     return static_cast<TaskInfoZoneDownloader *>(m_taskInfos.at(1));
+}
+
+void TaskManager::initialize()
+{
+    loadSettings();
+
+    taskInfoZoneDownloader()->loadZones();
+
+    m_timer.start(5 * 1000); // 5 seconds
 }
 
 void TaskManager::setupTasks()

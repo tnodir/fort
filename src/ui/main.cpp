@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
         return controlManager.postCommand() ? 0 : FORT_ERROR_CONTROL;
     }
 
-    FortManager fortManager(&settings, &envManager);
+    FortManager fortManager(&settings, &envManager, &controlManager);
 
     // Check running instance
     if (!fortManager.checkRunningInstance())
@@ -80,10 +80,6 @@ int main(int argc, char *argv[])
 
         fortManager.show();
     }
-
-    // Process control commands from clients
-    if (!controlManager.listen(&fortManager))
-        return FORT_ERROR_CONTROL;
 
     return QApplication::exec();
 }

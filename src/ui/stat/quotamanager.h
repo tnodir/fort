@@ -10,7 +10,7 @@ class QuotaManager : public QObject
     Q_OBJECT
 
 public:
-    explicit QuotaManager(FortSettings *fortSettings, QObject *parent = nullptr);
+    explicit QuotaManager(FortSettings *settings, QObject *parent = nullptr);
 
     void setQuotaDayBytes(qint64 bytes);
     void setQuotaMonthBytes(qint64 bytes);
@@ -24,10 +24,12 @@ public:
     void checkQuotaDay(qint32 trafDay);
     void checkQuotaMonth(qint32 trafMonth);
 
+    FortSettings *settings() const { return m_settings; }
+
+    virtual void initialize() { }
+
 signals:
     void alert(const QString &text, const QString &title = tr("Quota Alert"));
-
-public slots:
 
 private:
     qint32 quotaDayAlerted() const;
@@ -46,7 +48,7 @@ private:
     qint64 m_trafDayBytes = 0;
     qint64 m_trafMonthBytes = 0;
 
-    FortSettings *m_fortSettings = nullptr;
+    FortSettings *m_settings = nullptr;
 };
 
 #endif // QUOTAMANAGER_H
