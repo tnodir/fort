@@ -22,4 +22,6 @@ public:
     QString productVersion;
 };
 
+Q_DECLARE_METATYPE(AppInfo)
+
 #endif // APPINFO_H
