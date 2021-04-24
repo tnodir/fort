@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/appinfocache">
+    <qresource prefix="/appinfo">
         <file>migrations/1.sql</file>
     </qresource>
 </RCC>
