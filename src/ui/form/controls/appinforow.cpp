@@ -5,7 +5,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 
-#include "../../util/app/appinfocache.h"
+#include "../../appinfo/appinfocache.h"
 #include "../../util/guiutil.h"
 #include "../../util/osutil.h"
 #include "controlutil.h"

@@ -4,7 +4,7 @@
 #include <QCache>
 #include <QObject>
 
-#include "../triggertimer.h"
+#include "../util/triggertimer.h"
 #include "appinfo.h"
 
 class AppIconProvider;

@@ -9,8 +9,8 @@
 #include <objbase.h>
 #include <shellapi.h>
 
-#include "../fileutil.h"
-#include "../iconcache.h"
+#include "../util/fileutil.h"
+#include "../util/iconcache.h"
 #include "appinfo.h"
 
 // Defined in qpixmap_win.cpp

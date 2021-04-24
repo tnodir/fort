@@ -16,12 +16,12 @@
 #include <QTimeEdit>
 #include <QVBoxLayout>
 
+#include "../../../appinfo/appinfocache.h"
 #include "../../../conf/firewallconf.h"
 #include "../../../fortmanager.h"
 #include "../../../fortsettings.h"
 #include "../../../model/appstatmodel.h"
 #include "../../../model/traflistmodel.h"
-#include "../../../util/app/appinfocache.h"
 #include "../../../util/iconcache.h"
 #include "../../../util/net/netutil.h"
 #include "../../controls/appinforow.h"

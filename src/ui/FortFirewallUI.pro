@@ -10,6 +10,12 @@ OBJECTS_DIR = .obj
 RCC_DIR = .rcc
 
 SOURCES += \
+    appinfo/appinfo.cpp \
+    appinfo/appinfocache.cpp \
+    appinfo/appinfojob.cpp \
+    appinfo/appinfomanager.cpp \
+    appinfo/appinfoutil.cpp \
+    appinfo/appinfoworker.cpp \
     conf/addressgroup.cpp \
     conf/appgroup.cpp \
     conf/confmanager.cpp \
@@ -98,12 +104,6 @@ SOURCES += \
     task/taskworker.cpp \
     task/taskzonedownloader.cpp \
     translationmanager.cpp \
-    util/app/appinfo.cpp \
-    util/app/appinfocache.cpp \
-    util/app/appinfojob.cpp \
-    util/app/appinfomanager.cpp \
-    util/app/appinfoutil.cpp \
-    util/app/appinfoworker.cpp \
     util/conf/addressrange.cpp \
     util/conf/confutil.cpp \
     util/dateutil.cpp \
@@ -143,6 +143,12 @@ SOURCES += \
     util/worker/workerobject.cpp
 
 HEADERS += \
+    appinfo/appinfo.h \
+    appinfo/appinfocache.h \
+    appinfo/appinfojob.h \
+    appinfo/appinfomanager.h \
+    appinfo/appinfoutil.h \
+    appinfo/appinfoworker.h \
     conf/addressgroup.h \
     conf/appgroup.h \
     conf/confmanager.h \
@@ -232,12 +238,6 @@ HEADERS += \
     task/taskworker.h \
     task/taskzonedownloader.h \
     translationmanager.h \
-    util/app/appinfo.h \
-    util/app/appinfocache.h \
-    util/app/appinfojob.h \
-    util/app/appinfomanager.h \
-    util/app/appinfoutil.h \
-    util/app/appinfoworker.h \
     util/conf/addressrange.h \
     util/conf/confappswalker.h \
     util/conf/confutil.h \
@@ -288,14 +288,14 @@ RESOURCES += fort-icons.qrc fort-images.qrc
 
 # Database Migrations
 OTHER_FILES += \
+    appinfo/migrations/*.sql \
     conf/migrations/*.sql \
-    stat/migrations/*.sql \
-    util/app/migrations/*.sql
+    stat/migrations/*.sql
 
 RESOURCES += \
+    appinfo/appinfo-migrations.qrc \
     conf/conf-migrations.qrc \
-    stat/stat-migrations.qrc \
-    util/app/app-migrations.qrc
+    stat/stat-migrations.qrc
 
 # Zone
 OTHER_FILES += conf/zone/*.json

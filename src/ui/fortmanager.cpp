@@ -9,6 +9,8 @@
 
 #include <fort_version.h>
 
+#include "appinfo/appinfocache.h"
+#include "appinfo/appinfomanager.h"
 #include "conf/firewallconf.h"
 #include "control/controlmanager.h"
 #include "form/conn/connectionswindow.h"
@@ -35,8 +37,6 @@
 #include "rpc/taskmanagerrpc.h"
 #include "task/taskinfozonedownloader.h"
 #include "translationmanager.h"
-#include "util/app/appinfocache.h"
-#include "util/app/appinfomanager.h"
 #include "util/dateutil.h"
 #include "util/envmanager.h"
 #include "util/fileutil.h"

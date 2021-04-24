@@ -11,9 +11,9 @@
 #include <QRadioButton>
 #include <QSpinBox>
 
+#include "../../appinfo/appinfocache.h"
 #include "../../conf/confmanager.h"
 #include "../../fortmanager.h"
-#include "../../util/app/appinfocache.h"
 #include "../../util/iconcache.h"
 #include "../controls/checkspincombo.h"
 #include "../controls/controlutil.h"

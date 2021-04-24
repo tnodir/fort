@@ -1,7 +1,7 @@
 #ifndef APPINFOJOB_H
 #define APPINFOJOB_H
 
-#include "../worker/workerjob.h"
+#include "../util/worker/workerjob.h"
 #include "appinfo.h"
 
 class AppInfoJob : public WorkerJob

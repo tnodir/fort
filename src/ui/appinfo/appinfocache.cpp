@@ -3,7 +3,7 @@
 #include <QIcon>
 #include <QImage>
 
-#include "../iconcache.h"
+#include "../util/iconcache.h"
 #include "appinfomanager.h"
 
 AppInfoCache::AppInfoCache(QObject *parent) : QObject(parent), m_cache(1000)

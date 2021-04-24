@@ -6,11 +6,11 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
+#include "../../appinfo/appinfocache.h"
 #include "../../conf/firewallconf.h"
 #include "../../fortmanager.h"
 #include "../../fortsettings.h"
 #include "../../model/connlistmodel.h"
-#include "../../util/app/appinfocache.h"
 #include "../../util/guiutil.h"
 #include "../../util/iconcache.h"
 #include "../../util/window/widgetwindowstatewatcher.h"

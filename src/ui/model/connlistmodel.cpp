@@ -6,9 +6,9 @@
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
+#include "../appinfo/appinfocache.h"
 #include "../log/logentryblockedip.h"
 #include "../stat/statmanager.h"
-#include "../util/app/appinfocache.h"
 #include "../util/iconcache.h"
 #include "../util/net/hostinfocache.h"
 #include "../util/net/netutil.h"

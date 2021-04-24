@@ -6,12 +6,12 @@
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
+#include "../appinfo/appinfocache.h"
+#include "../appinfo/appinfoutil.h"
 #include "../conf/appgroup.h"
 #include "../conf/confmanager.h"
 #include "../conf/firewallconf.h"
 #include "../log/logentryblocked.h"
-#include "../util/app/appinfocache.h"
-#include "../util/app/appinfoutil.h"
 #include "../util/fileutil.h"
 #include "../util/iconcache.h"
 #include "../util/guiutil.h"

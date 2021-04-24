@@ -3,8 +3,8 @@
 
 #include <QMutex>
 
-#include "../classhelpers.h"
-#include "../worker/workermanager.h"
+#include "../util/classhelpers.h"
+#include "../util/worker/workermanager.h"
 #include "appinfo.h"
 
 class SqliteDb;

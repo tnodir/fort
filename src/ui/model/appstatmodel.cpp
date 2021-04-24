@@ -2,11 +2,11 @@
 
 #include <QIcon>
 
+#include "../appinfo/appinfo.h"
+#include "../appinfo/appinfocache.h"
 #include "../log/logentryprocnew.h"
 #include "../log/logentrystattraf.h"
 #include "../stat/statmanager.h"
-#include "../util/app/appinfo.h"
-#include "../util/app/appinfocache.h"
 #include "../util/fileutil.h"
 #include "../util/iconcache.h"
 #include "traflistmodel.h"

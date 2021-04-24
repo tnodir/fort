@@ -1,7 +1,7 @@
 #ifndef APPINFOWORKER_H
 #define APPINFOWORKER_H
 
-#include "../worker/workerobject.h"
+#include "../util/worker/workerobject.h"
 
 class AppInfo;
 class AppInfoManager;
