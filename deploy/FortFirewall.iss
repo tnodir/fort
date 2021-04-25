@@ -43,6 +43,7 @@ SolidCompression=yes
 Name: en; MessagesFile: "compiler:Default.isl"
 Name: ru; MessagesFile: "compiler:Languages\Russian.isl"
 Name: fr; MessagesFile: "compiler:Languages\French.isl"
+Name: de; MessagesFile: "compiler:Languages\German.isl"
 Name: ko; MessagesFile: "compiler:Languages\Korean.isl"
 
 [Tasks]
