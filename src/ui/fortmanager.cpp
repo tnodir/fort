@@ -223,11 +223,10 @@ void FortManager::setupLogger()
 {
     Logger *logger = Logger::instance();
 
-    logger->setPath(settings()->logsPath());
-    logger->setActive(true);
-
+    logger->setIsService(settings()->isService());
     logger->setDebug(settings()->debug());
     logger->setConsole(settings()->console());
+    logger->setPath(settings()->logsPath());
 }
 
 void FortManager::setupEventFilter()

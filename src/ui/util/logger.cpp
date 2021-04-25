@@ -6,52 +6,89 @@
 #include <fort_version.h>
 
 #include "dateutil.h"
+#include "fileutil.h"
 
-#define LOGGER_FILE_PREFIX   "log_fort_"
-#define LOGGER_FILE_SUFFIX   ".txt"
 #define LOGGER_FILE_MAX_SIZE (1024 * 1024)
-#define LOGGER_KEEP_FILES    6
+#define LOGGER_KEEP_FILES    2
 
-static QtMessageHandler g_oldMessageHandler = nullptr;
+namespace {
+
+QtMessageHandler g_oldMessageHandler = nullptr;
+
+void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &message)
+{
+    Logger::LogLevel level = Logger::Info;
+
+    switch (type) {
+    case QtWarningMsg:
+        level = Logger::Warning;
+        break;
+    case QtCriticalMsg:
+    case QtFatalMsg:
+        level = Logger::Error;
+        break;
+    default:
+        break;
+    }
+
+    // Write only errors to log file
+    if (level != Logger::Info) {
+        const bool isDefaultCategory = !context.category || !strcmp(context.category, "default");
+        const QString text =
+                isDefaultCategory ? message : QLatin1String(context.category) + ": " + message;
+
+        Logger::instance()->writeLog(text, level);
+    }
+
+    // Additionally write to console if needed
+    if (Logger::instance()->console()) {
+        const HANDLE stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+        DWORD nw;
+
+        QByteArray data;
+        if (context.category) {
+            data.append(context.category);
+            data.append(": ");
+        }
+        data.append(message.toLocal8Bit());
+        data.append('\n');
+
+        WriteFile(stdoutHandle, data.constData(), DWORD(data.size()), &nw, nullptr);
+    }
+
+    if (g_oldMessageHandler) {
+        g_oldMessageHandler(type, context, message);
+    }
+}
+
+}
 
 Logger::Logger(QObject *parent) :
-    QObject(parent), m_active(false), m_debug(false), m_console(false), m_writing(false)
+    QObject(parent), m_isService(false), m_debug(false), m_console(false), m_writing(false)
 {
     g_oldMessageHandler = qInstallMessageHandler(messageHandler);
 }
 
-Logger *Logger::instance()
+void Logger::setIsService(bool v)
 {
-    static Logger *g_instanceLogger = nullptr;
-
-    if (!g_instanceLogger) {
-        g_instanceLogger = new Logger();
-    }
-    return g_instanceLogger;
+    m_isService = v;
 }
 
-void Logger::setActive(bool active)
+void Logger::setDebug(bool v)
 {
-    if (m_active != active) {
-        m_active = active;
+    if (m_debug != v) {
+        m_debug = v;
+
+        QLoggingCategory::setFilterRules(debug() ? QString() : "*.debug=false");
     }
 }
 
-void Logger::setDebug(bool debug)
+void Logger::setConsole(bool v)
 {
-    if (m_debug != debug) {
-        m_debug = debug;
+    if (m_console != v) {
+        m_console = v;
 
-        QLoggingCategory::setFilterRules(debug ? QString() : "*.debug=false");
-    }
-}
-
-void Logger::setConsole(bool console)
-{
-    if (m_console != console) {
-        m_console = console;
-
-        if (console) {
+        if (console()) {
             AllocConsole();
         } else {
             FreeConsole();
@@ -64,20 +101,53 @@ void Logger::setPath(const QString &path)
     m_dir.setPath(path);
 }
 
+Logger *Logger::instance()
+{
+    static Logger *g_instanceLogger = nullptr;
+
+    if (!g_instanceLogger) {
+        g_instanceLogger = new Logger();
+    }
+    return g_instanceLogger;
+}
+
+QString Logger::fileNamePrefix() const
+{
+    return QLatin1String("log_fort_") + (isService() ? "svc_" : QString());
+}
+
+QString Logger::fileNameSuffix() const
+{
+    return QLatin1String(".txt");
+}
+
 bool Logger::openLogFile()
 {
-    const QString fileName = QLatin1String(LOGGER_FILE_PREFIX)
-            + DateUtil::now().toString("yyyy-MM-dd_HH-mm-ss_zzz")
-            + QLatin1String(LOGGER_FILE_SUFFIX);
+    const QString fileName = fileNamePrefix() + DateUtil::now().toString("yyyy-MM-dd_HH-mm-ss_zzz")
+            + fileNameSuffix();
 
-    m_file.setFileName(m_dir.filePath(fileName));
+    if (tryOpenLogFile(m_dir, fileName))
+        return true;
 
-    if (!m_file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
-        qWarning() << "Cannot open log file: " << m_file.fileName() << m_file.errorString();
-        return false;
-    }
+    m_dir.setPath(FileUtil::pathSlash(FileUtil::appConfigLocation()) + "logs/");
+    if (tryOpenLogFile(m_dir, fileName))
+        return true;
 
-    return true;
+    m_dir.setPath(FileUtil::pathSlash(FileUtil::tempLocation()) + APP_NAME);
+    if (tryOpenLogFile(m_dir, fileName))
+        return true;
+
+    qDebug() << "Cannot open log file:" << m_file.fileName() << m_file.errorString();
+    return false;
+}
+
+bool Logger::tryOpenLogFile(const QDir &dir, const QString &fileName)
+{
+    dir.mkpath("./");
+
+    m_file.setFileName(dir.filePath(fileName));
+
+    return m_file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
 }
 
 void Logger::closeLogFile()
@@ -91,7 +161,7 @@ void Logger::writeLogLine(Logger::LogLevel level, const QString &dateString, con
 
     const QString line = dateString + ' ' + g_levelChars[int(level)] + ' ' + message + '\n';
 
-    m_file.write(line.toLatin1());
+    m_file.write(line.toUtf8());
     m_file.flush();
 }
 
@@ -133,65 +203,14 @@ void Logger::writeLogList(const QString &message, const QStringList &list, Logge
 
 void Logger::checkLogFiles()
 {
-    int count = LOGGER_KEEP_FILES;
+    const auto fileNames =
+            m_dir.entryList({ fileNamePrefix() + '*' + fileNameSuffix() }, QDir::Files, QDir::Time);
 
     // Remove old files
-    const auto fileNames = m_dir.entryList(QStringList() << (QLatin1String(LOGGER_FILE_PREFIX) + '*'
-                                                   + QLatin1String(LOGGER_FILE_SUFFIX)),
-            QDir::Files, QDir::Time);
-
+    int count = LOGGER_KEEP_FILES;
     for (const QString &fileName : fileNames) {
         if (--count < 0) {
             QFile::remove(m_dir.filePath(fileName));
         }
-    }
-}
-
-void Logger::messageHandler(
-        QtMsgType type, const QMessageLogContext &context, const QString &message)
-{
-    if (instance()->active()) {
-        LogLevel level = Info;
-
-        switch (type) {
-        case QtWarningMsg:
-            level = Warning;
-            break;
-        case QtCriticalMsg:
-        case QtFatalMsg:
-            level = Error;
-            break;
-        default:
-            break;
-        }
-
-        // Write only errors to log file
-        if (level != Info) {
-            const bool isDefaultCategory =
-                    !context.category || !strcmp(context.category, "default");
-            const QString text =
-                    isDefaultCategory ? message : QLatin1String(context.category) + ": " + message;
-
-            instance()->writeLog(text, level);
-        }
-    }
-
-    if (instance()->console()) {
-        const HANDLE stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-        DWORD nw;
-
-        QByteArray data;
-        if (context.category) {
-            data.append(context.category);
-            data.append(": ");
-        }
-        data.append(message.toLatin1());
-        data.append('\n');
-
-        WriteFile(stdoutHandle, data.constData(), DWORD(data.size()), &nw, nullptr);
-    }
-
-    if (g_oldMessageHandler) {
-        g_oldMessageHandler(type, context, message);
     }
 }

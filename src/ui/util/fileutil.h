@@ -46,9 +46,9 @@ public:
 
     static QString nativeAppFilePath();
     static QString appBinLocation();
-    static QString appCacheLocation();
     static QString appConfigLocation();
     static QString applicationsLocation();
+    static QString tempLocation();
 };
 
 #endif // FILEUTIL_H

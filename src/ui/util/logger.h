@@ -16,14 +16,14 @@ public:
     enum LogLevel { Info = 0, Warning, Error };
     Q_ENUM(LogLevel)
 
-    bool active() const { return m_active; }
-    void setActive(bool active);
+    bool isService() const { return m_isService; }
+    void setIsService(bool v);
 
     bool debug() const { return m_debug; }
-    void setDebug(bool debug);
+    void setDebug(bool v);
 
     bool console() const { return m_console; }
-    void setConsole(bool console);
+    void setConsole(bool v);
 
     void setPath(const QString &path);
 
@@ -34,21 +34,20 @@ public slots:
     void writeLogList(
             const QString &message, const QStringList &list, Logger::LogLevel level = Info);
 
-signals:
-
 private:
+    QString fileNamePrefix() const;
+    QString fileNameSuffix() const;
+
     bool openLogFile();
+    bool tryOpenLogFile(const QDir &dir, const QString &fileName);
     void closeLogFile();
 
     void writeLogLine(Logger::LogLevel level, const QString &dateString, const QString &message);
 
     void checkLogFiles();
 
-    static void messageHandler(
-            QtMsgType type, const QMessageLogContext &context, const QString &message);
-
 private:
-    bool m_active : 1;
+    bool m_isService : 1;
     bool m_debug : 1;
     bool m_console : 1;
     bool m_writing : 1;
