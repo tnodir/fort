@@ -311,6 +311,30 @@
         <source>Out</source>
         <translation>Out</translation>
     </message>
+    <message>
+        <source>Blocked Internet address</source>
+        <translation>Blockierte Internetadresse</translation>
+    </message>
+    <message>
+        <source>Old connection closed on startup</source>
+        <translation>Alte Verbindung beim Start geschlossen</translation>
+    </message>
+    <message>
+        <source>Programs logic</source>
+        <translation>Programmiert Logik</translation>
+    </message>
+    <message>
+        <source>App. Group logic</source>
+        <translation>App. Gruppenlogik</translation>
+    </message>
+    <message>
+        <source>App. Group default logic</source>
+        <translation>App. Standardlogik gruppieren</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Unbekannt</translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsWindow</name>
@@ -787,33 +811,6 @@
     <message>
         <source>Are you sure to remove all non-existent programs?</source>
         <translation>Sind Sie sicher, dass Sie alle nicht existierenden Programme entfernen möchten?</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Blocked Internet address</source>
-        <translation>Blockierte Internetadresse</translation>
-    </message>
-    <message>
-        <source>Old connection closed on startup</source>
-        <translation>Alte Verbindung beim Start geschlossen</translation>
-    </message>
-    <message>
-        <source>Programs logic</source>
-        <translation>Programmiert Logik</translation>
-    </message>
-    <message>
-        <source>App. Group logic</source>
-        <translation>App. Gruppenlogik</translation>
-    </message>
-    <message>
-        <source>App. Group default logic</source>
-        <translation>App. Standardlogik gruppieren</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>Unbekannt</translation>
     </message>
 </context>
 <context>

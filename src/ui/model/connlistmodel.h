@@ -32,7 +32,7 @@ struct ConnRow : TableRow
     QDateTime connTime;
 };
 
-struct ConnRowBlock
+struct ConnBlockRow
 {
     quint8 blockReason = 0;
 };
@@ -71,7 +71,7 @@ public:
 
     const ConnRow &connRowAt(int row) const;
 
-    ConnRowBlock getConnRowBlock(qint64 rowId) const;
+    ConnBlockRow getConnRowBlock(qint64 rowId) const;
 
 public slots:
     void clear();
@@ -88,6 +88,8 @@ protected:
 private:
     QVariant dataDisplay(const QModelIndex &index, int role) const;
     QVariant dataDecoration(const QModelIndex &index) const;
+
+    static QString blockReasonText(const ConnBlockRow &blockRow);
 
     qint64 rowIdMin() const;
     qint64 rowIdMax() const;

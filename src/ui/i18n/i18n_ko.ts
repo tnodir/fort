@@ -311,6 +311,30 @@
         <source>Local IP and Port</source>
         <translation>로컬 IP 및 포트</translation>
     </message>
+    <message>
+        <source>Blocked Internet address</source>
+        <translation>차단된 인터넷 주소</translation>
+    </message>
+    <message>
+        <source>Old connection closed on startup</source>
+        <translation>시작할 때 이전 연결이 닫힘</translation>
+    </message>
+    <message>
+        <source>Programs logic</source>
+        <translation>프로그램 로직</translation>
+    </message>
+    <message>
+        <source>App. Group logic</source>
+        <translation>앱 그룹 로직</translation>
+    </message>
+    <message>
+        <source>App. Group default logic</source>
+        <translation>앱 그룹 기본 로직</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>알 수 없음</translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsWindow</name>
@@ -787,33 +811,6 @@
     <message>
         <source>Programs</source>
         <translation>프로그램</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>App. Group logic</source>
-        <translation>앱 그룹 로직</translation>
-    </message>
-    <message>
-        <source>Blocked Internet address</source>
-        <translation>차단된 인터넷 주소</translation>
-    </message>
-    <message>
-        <source>App. Group default logic</source>
-        <translation>앱 그룹 기본 로직</translation>
-    </message>
-    <message>
-        <source>Old connection closed on startup</source>
-        <translation>시작할 때 이전 연결이 닫힘</translation>
-    </message>
-    <message>
-        <source>Programs logic</source>
-        <translation>프로그램 로직</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>알 수 없음</translation>
     </message>
 </context>
 <context>

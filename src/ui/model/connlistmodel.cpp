@@ -145,7 +145,7 @@ QVariant ConnListModel::dataDisplay(const QModelIndex &index, int role) const
             if (connRow.blocked) {
                 // Show block reason in tool-tip
                 const auto blockRow = getConnRowBlock(connRow.rowId);
-                return LogEntryBlockedIp::reasonToString(blockRow.blockReason);
+                return blockReasonText(blockRow);
             }
         }
         return connRow.inbound ? tr("In") : tr("Out");
@@ -177,6 +177,24 @@ QVariant ConnListModel::dataDecoration(const QModelIndex &index) const
     return QVariant();
 }
 
+QString ConnListModel::blockReasonText(const ConnBlockRow &blockRow)
+{
+    switch (blockRow.blockReason) {
+    case LogEntryBlockedIp::ReasonIpInet:
+        return tr("Blocked Internet address");
+    case LogEntryBlockedIp::ReasonReauth:
+        return tr("Old connection closed on startup");
+    case LogEntryBlockedIp::ReasonProgram:
+        return tr("Programs logic");
+    case LogEntryBlockedIp::ReasonAppGroupFound:
+        return tr("App. Group logic");
+    case LogEntryBlockedIp::ReasonAppGroupDefault:
+        return tr("App. Group default logic");
+    default:
+        return tr("Unknown");
+    }
+}
+
 void ConnListModel::deleteConn(qint64 rowIdTo, bool blocked, int row)
 {
     beginRemoveRows(QModelIndex(), 0, row);
@@ -195,7 +213,7 @@ const ConnRow &ConnListModel::connRowAt(int row) const
     return m_connRow;
 }
 
-ConnRowBlock ConnListModel::getConnRowBlock(qint64 rowId) const
+ConnBlockRow ConnListModel::getConnRowBlock(qint64 rowId) const
 {
     static const char *const sql = "SELECT block_reason FROM conn_block WHERE id = ?1";
 

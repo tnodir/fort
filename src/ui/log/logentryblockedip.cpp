@@ -47,21 +47,3 @@ void LogEntryBlockedIp::setRemoteIp(quint32 ip)
 {
     m_remoteIp = ip;
 }
-
-QString LogEntryBlockedIp::reasonToString(quint8 blockReason)
-{
-    switch (blockReason) {
-    case ReasonIpInet:
-        return QObject::tr("Blocked Internet address");
-    case ReasonReauth:
-        return QObject::tr("Old connection closed on startup");
-    case ReasonProgram:
-        return QObject::tr("Programs logic");
-    case ReasonAppGroupFound:
-        return QObject::tr("App. Group logic");
-    case ReasonAppGroupDefault:
-        return QObject::tr("App. Group default logic");
-    default:
-        return QObject::tr("Unknown");
-    }
-}

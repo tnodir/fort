@@ -311,6 +311,30 @@
         <source>Out</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Blocked Internet address</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Old connection closed on startup</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Programs logic</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>App. Group logic</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>App. Group default logic</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsWindow</name>
@@ -786,33 +810,6 @@
     </message>
     <message>
         <source>Are you sure to remove all non-existent programs?</source>
-        <translation></translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Blocked Internet address</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Old connection closed on startup</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Programs logic</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>App. Group logic</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>App. Group default logic</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Unknown</source>
         <translation></translation>
     </message>
 </context>

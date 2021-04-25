@@ -311,6 +311,30 @@
         <source>Local IP and Port</source>
         <translation>IP et Port Locaux</translation>
     </message>
+    <message>
+        <source>Blocked Internet address</source>
+        <translation>Adresse Internet bloquée</translation>
+    </message>
+    <message>
+        <source>Old connection closed on startup</source>
+        <translation>Ancienne connexion fermée au démarrage</translation>
+    </message>
+    <message>
+        <source>Programs logic</source>
+        <translation>Logique du programme</translation>
+    </message>
+    <message>
+        <source>App. Group logic</source>
+        <translation>App. Logique de groupe</translation>
+    </message>
+    <message>
+        <source>App. Group default logic</source>
+        <translation>App. Logique par défaut du groupe</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Inconnu</translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsWindow</name>
@@ -787,33 +811,6 @@
     <message>
         <source>Programs</source>
         <translation>Programmes</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>App. Group logic</source>
-        <translation>App. Logique de groupe</translation>
-    </message>
-    <message>
-        <source>Blocked Internet address</source>
-        <translation>Adresse Internet bloquée</translation>
-    </message>
-    <message>
-        <source>App. Group default logic</source>
-        <translation>App. Logique par défaut du groupe</translation>
-    </message>
-    <message>
-        <source>Old connection closed on startup</source>
-        <translation>Ancienne connexion fermée au démarrage</translation>
-    </message>
-    <message>
-        <source>Programs logic</source>
-        <translation>Logique du programme</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>Inconnu</translation>
     </message>
 </context>
 <context>

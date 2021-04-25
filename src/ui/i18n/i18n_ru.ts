@@ -311,6 +311,30 @@
         <source>Out</source>
         <translation>Исх.</translation>
     </message>
+    <message>
+        <source>Blocked Internet address</source>
+        <translation>Блокированный Internet адрес</translation>
+    </message>
+    <message>
+        <source>Old connection closed on startup</source>
+        <translation>Старое соединение закрыто при запуске</translation>
+    </message>
+    <message>
+        <source>Programs logic</source>
+        <translation>Логика Программ</translation>
+    </message>
+    <message>
+        <source>App. Group logic</source>
+        <translation>Логика Группы Приложения</translation>
+    </message>
+    <message>
+        <source>App. Group default logic</source>
+        <translation>Логика Группы Приложений по-умолчанию</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Неизвестно</translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsWindow</name>
@@ -787,33 +811,6 @@
     <message>
         <source>Are you sure to remove all non-existent programs?</source>
         <translation>Удалить все несуществующие программы?</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Blocked Internet address</source>
-        <translation>Блокированный Internet адрес</translation>
-    </message>
-    <message>
-        <source>Old connection closed on startup</source>
-        <translation>Старое соединение закрыто при запуске</translation>
-    </message>
-    <message>
-        <source>Programs logic</source>
-        <translation>Логика Программ</translation>
-    </message>
-    <message>
-        <source>App. Group logic</source>
-        <translation>Логика Группы Приложения</translation>
-    </message>
-    <message>
-        <source>App. Group default logic</source>
-        <translation>Логика Группы Приложений по-умолчанию</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>Неизвестно</translation>
     </message>
 </context>
 <context>
