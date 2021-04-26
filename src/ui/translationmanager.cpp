@@ -40,11 +40,14 @@ void TranslationManager::setupTranslation()
     const auto i18nFileInfos =
             QDir(i18nDir()).entryInfoList(QStringList() << ("*" TRANSLATION_FILE_SUFFIX));
 
+    int localeBit = 2;
     for (const QFileInfo &fileInfo : i18nFileInfos) {
         const QString localeName = fileInfo.completeBaseName().mid(prefixLen);
         const QLocale locale(localeName);
 
         m_locales.append(locale);
+        m_localesWithCountry |= localeName.size() > 2 ? localeBit : 0;
+        localeBit <<= 1;
     }
 
     // Translators will be loaded later when needed
@@ -57,8 +60,16 @@ QStringList TranslationManager::naturalLabels() const
     QStringList list;
     list.reserve(m_locales.size());
 
+    int localeBit = 1;
     for (const QLocale &locale : m_locales) {
-        list.append(StringUtil::capitalize(locale.nativeLanguageName()));
+        QString label = StringUtil::capitalize(locale.nativeLanguageName());
+
+        if ((m_localesWithCountry & localeBit) != 0) {
+            label += " (" + StringUtil::capitalize(locale.nativeCountryName()) + ")";
+        }
+        localeBit <<= 1;
+
+        list.append(label);
     }
     return list;
 }

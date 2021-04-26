@@ -55,6 +55,7 @@ private:
 
     QLocale m_locale;
 
+    quint32 m_localesWithCountry = 0;
     QVector<QLocale> m_locales;
     QVector<QTranslator *> m_translators;
 };
