@@ -15,4 +15,4 @@ RpcManager *ConfManagerRpc::rpcManager() const
     return fortManager()->rpcManager();
 }
 
-void ConfManagerRpc::initAppEndTimer() { }
+void ConfManagerRpc::setupAppEndTimer() { }

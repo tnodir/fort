@@ -40,8 +40,6 @@ public:
     void initConfToEdit();
     void setConfToEdit(FirewallConf *conf);
 
-    FirewallConf *cloneConf(const FirewallConf &conf, QObject *parent = nullptr) const;
-
     bool load(FirewallConf &conf);
     bool save(FirewallConf &newConf, bool onlyFlags = false);
 
@@ -88,7 +86,7 @@ signals:
     void alertedAppAdded();
 
 protected:
-    virtual void initAppEndTimer();
+    virtual void setupAppEndTimer();
 
 private:
     void showErrorMessage(const QString &errorMessage);

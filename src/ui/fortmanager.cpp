@@ -145,7 +145,7 @@ void FortManager::createManagers()
         m_statManager = new StatManagerRpc(settings()->statFilePath(), this, this);
         m_driverManager = new DriverManagerRpc(this);
         m_confManager = new ConfManagerRpc(settings()->confFilePath(), this, this);
-        m_appInfoManager = new AppInfoManagerRpc(settings()->cacheFilePath(), this);
+        m_appInfoManager = new AppInfoManagerRpc(settings()->cacheFilePath(), this, this);
         m_logManager = new LogManagerRpc(this, this);
         m_taskManager = new TaskManagerRpc(this, this);
     } else {

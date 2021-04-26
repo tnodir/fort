@@ -7,19 +7,6 @@
 #include "../rpc/appinfomanagerrpc.h"
 #include "../rpc/quotamanagerrpc.h"
 
-namespace {
-
-enum RpcObject : qint8 {
-    RpcObj_AppInfoManager = 1,
-    RpcObj_ConfManager,
-    RpcObj_DriverManager,
-    RpcObj_QuotaManager,
-    RpcObj_StatManager,
-    RpcObj_TaskManager,
-};
-
-}
-
 RpcManager::RpcManager(FortManager *fortManager, QObject *parent) :
     QObject(parent), m_fortManager(fortManager)
 {
@@ -52,7 +39,7 @@ void RpcManager::setupServerSignals()
 
 void RpcManager::setupAppInfoManagerSignals()
 {
-    constexpr qint8 rpcObj = RpcObj_AppInfoManager;
+    constexpr qint8 rpcObj = Obj_AppInfoManager;
     auto o = fortManager()->appInfoManager();
 
     connect(o, &AppInfoManager::lookupFinished, this,
@@ -63,11 +50,16 @@ void RpcManager::setupAppInfoManagerSignals()
 
 void RpcManager::setupQuotaManagerSignals()
 {
-    constexpr qint8 rpcObj = RpcObj_QuotaManager;
+    constexpr qint8 rpcObj = Obj_QuotaManager;
     auto o = fortManager()->quotaManager();
 
     connect(o, &QuotaManager::alert, this,
             [&](qint8 alertType) { invokeOnClients(rpcObj, "alert", { alertType }); });
+}
+
+void RpcManager::invokeOnServer(qint8 rpcObj, const char *member, const QVariantList &args)
+{
+    // TODO: Send RPC to Server
 }
 
 void RpcManager::invokeOnClients(qint8 rpcObj, const char *member, const QVariantList &args)

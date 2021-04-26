@@ -16,7 +16,7 @@ public:
     RpcManager *rpcManager() const;
 
 protected:
-    void initAppEndTimer() override;
+    void setupAppEndTimer() override;
 };
 
 #endif // CONFMANAGERRPC_H

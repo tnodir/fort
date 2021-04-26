@@ -38,7 +38,7 @@ signals:
     void lookupFinished(const QString &appPath, const AppInfo &appInfo);
 
 public slots:
-    void lookupAppInfo(const QString &appPath);
+    virtual void lookupAppInfo(const QString &appPath);
 
     void handleWorkerResult(WorkerJob *workerJob) override;
 

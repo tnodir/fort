@@ -389,19 +389,21 @@ bool ConfManager::initialize()
         return false;
     }
 
-    initAppEndTimer();
+    setupAppEndTimer();
 
     return true;
 }
 
-void ConfManager::initAppEndTimer()
+void ConfManager::setupAppEndTimer()
 {
     m_appEndTimer.start();
 }
 
 void ConfManager::initConfToEdit()
 {
-    auto newConf = cloneConf(*conf(), this);
+    auto newConf = new FirewallConf(this);
+    newConf->copy(*conf());
+
     setConfToEdit(newConf);
 }
 
@@ -415,15 +417,6 @@ void ConfManager::setConfToEdit(FirewallConf *conf)
     }
 
     m_confToEdit = conf;
-}
-
-FirewallConf *ConfManager::cloneConf(const FirewallConf &conf, QObject *parent) const
-{
-    auto newConf = new FirewallConf(parent);
-
-    newConf->copy(conf);
-
-    return newConf;
 }
 
 void ConfManager::setupDefault(FirewallConf &conf) const
