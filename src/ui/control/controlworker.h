@@ -2,6 +2,7 @@
 #define CONTROLWORKER_H
 
 #include <QObject>
+#include <QVariant>
 
 #include "control.h"
 
@@ -14,14 +15,19 @@ class ControlWorker : public QObject
 public:
     explicit ControlWorker(QLocalSocket *socket, QObject *parent = nullptr);
 
+    bool isServiceClient() const { return m_isServiceClient; }
+    void setIsServiceClient(bool v) { m_isServiceClient = v; }
+
     QLocalSocket *socket() const { return m_socket; }
 
     void setupForAsync();
 
-    bool postCommand(Control::Command command, const QStringList &args);
+    bool postCommand(Control::Command command, const QVariantList &args);
+
+    static QVariantList buildArgs(const QStringList &list);
 
 signals:
-    void requestReady(Control::Command command, const QStringList &args);
+    void requestReady(Control::Command command, const QVariantList &args);
 
 public slots:
     void abort();
@@ -39,10 +45,12 @@ private:
     void writeData(const QByteArray &data);
     QByteArray readData(int dataSize);
 
-    static bool buildArgsData(QByteArray &data, const QStringList &args);
-    static bool parseArgsData(const QByteArray &data, QStringList &args);
+    static bool buildArgsData(QByteArray &data, const QVariantList &args);
+    static bool parseArgsData(const QByteArray &data, QVariantList &args);
 
 private:
+    bool m_isServiceClient = false;
+
     Control::Command m_requestCommand = Control::CommandNone;
     int m_requestDataSize = 0;
     QByteArray m_requestData;

@@ -16,8 +16,6 @@ public:
     FortManager *fortManager() const { return m_fortManager; }
     RpcManager *rpcManager() const;
 
-    void initialize() override;
-
 private:
     FortManager *m_fortManager = nullptr;
 };

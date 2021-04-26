@@ -17,6 +17,7 @@
 Q_DECLARE_LOGGING_CATEGORY(CLOG_CONTROL_MANAGER)
 Q_LOGGING_CATEGORY(CLOG_CONTROL_MANAGER, "control")
 
+#define logDebug()    qCDebug(CLOG_CONTROL_MANAGER, )
 #define logWarning()  qCWarning(CLOG_CONTROL_MANAGER, )
 #define logCritical() qCCritical(CLOG_CONTROL_MANAGER, )
 
@@ -41,6 +42,7 @@ bool ControlManager::listen(FortManager *fortManager)
 
     Q_ASSERT(!m_server);
     m_server = new QLocalServer(this);
+    m_server->setMaxPendingConnections(3);
 
     if (!m_server->listen(getServerName(settings()->isService()))) {
         logWarning() << "Local Server create error:" << m_server->errorString();
@@ -78,22 +80,36 @@ bool ControlManager::postCommand()
 
     // Send data
     ControlWorker worker(&socket);
-    const bool ok = worker.postCommand(command, settings()->args());
 
-    return ok;
+    const QVariantList args = ControlWorker::buildArgs(settings()->args());
+    if (args.isEmpty())
+        return false;
+
+    return worker.postCommand(command, args);
 }
 
 void ControlManager::onNewConnection()
 {
     while (QLocalSocket *socket = m_server->nextPendingConnection()) {
+        constexpr int maxClientsCount = 9;
+        if (m_clients.size() > maxClientsCount) {
+            logDebug() << "Client dropped";
+            delete socket;
+            continue;
+        }
+
         auto worker = new ControlWorker(socket, this);
         worker->setupForAsync();
 
         connect(worker, &ControlWorker::requestReady, this, &ControlManager::processRequest);
+        connect(worker, &ControlWorker::destroyed, this,
+                [&] { m_clients.removeOne(qobject_cast<ControlWorker *>(sender())); });
+
+        m_clients.append(worker);
     }
 }
 
-bool ControlManager::processRequest(Control::Command command, const QStringList &args)
+bool ControlManager::processRequest(Control::Command command, const QVariantList &args)
 {
     QString errorMessage;
     if (!processCommand(command, args, errorMessage)) {
@@ -104,7 +120,7 @@ bool ControlManager::processRequest(Control::Command command, const QStringList 
 }
 
 bool ControlManager::processCommand(
-        Control::Command command, const QStringList &args, QString &errorMessage)
+        Control::Command command, const QVariantList &args, QString &errorMessage)
 {
     bool ok = false;
     const int argsSize = args.size();
@@ -118,7 +134,7 @@ bool ControlManager::processCommand(
         auto conf = fortManager()->conf();
         bool onlyFlags = true;
 
-        const auto confPropName = args.at(0);
+        const QString confPropName = args.at(0).toString();
 
         if (confPropName == "appGroup") {
             if (argsSize < 4) {
@@ -126,13 +142,13 @@ bool ControlManager::processCommand(
                 return false;
             }
 
-            auto appGroup = conf->appGroupByName(args.at(1));
-            const auto groupPropName = args.at(2);
+            AppGroup *appGroup = conf->appGroupByName(args.at(1).toString());
+            const QString groupPropName = args.at(2).toString();
             onlyFlags = (groupPropName == "enabled");
 
-            ok = appGroup->setProperty(groupPropName.toLatin1(), QVariant(args.at(3)));
+            ok = appGroup->setProperty(groupPropName.toLatin1(), args.at(3));
         } else {
-            ok = conf->setProperty(confPropName.toLatin1(), QVariant(args.at(1)));
+            ok = conf->setProperty(confPropName.toLatin1(), args.at(1));
         }
 
         if (ok) {
@@ -144,7 +160,7 @@ bool ControlManager::processCommand(
             return false;
         }
 
-        const auto progCommand = args.at(0);
+        const QString progCommand = args.at(0).toString();
 
         if (progCommand == "add") {
             if (argsSize < 2) {
@@ -152,7 +168,7 @@ bool ControlManager::processCommand(
                 return false;
             }
 
-            ok = fortManager()->showProgramEditForm(args.at(1));
+            ok = fortManager()->showProgramEditForm(args.at(1).toString());
         }
     }
 

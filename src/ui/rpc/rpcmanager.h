@@ -21,6 +21,13 @@ public:
     void initialize();
 
 private:
+    void setupServerSignals();
+    void setupAppInfoManagerSignals();
+    void setupQuotaManagerSignals();
+
+    void invokeOnClients(qint8 rpcObj, const char *member, const QVariantList &args);
+
+private:
     FortManager *m_fortManager = nullptr;
 };
 

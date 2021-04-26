@@ -136,9 +136,11 @@ void FortManager::setupThreadPool()
 
 void FortManager::createManagers()
 {
-    if (settings()->isServiceClient()) {
+    if (settings()->hasService()) {
         m_rpcManager = new RpcManager(this, this);
+    }
 
+    if (settings()->isServiceClient()) {
         m_quotaManager = new QuotaManagerRpc(this, this);
         m_statManager = new StatManagerRpc(settings()->statFilePath(), this, this);
         m_driverManager = new DriverManagerRpc(this);
@@ -244,8 +246,6 @@ void FortManager::setupEnvManager()
 
 void FortManager::setupQuotaManager()
 {
-    quotaManager()->initialize();
-
     connect(quotaManager(), &QuotaManager::alert, this, [&](qint8 alertType) {
         showInfoBox(QuotaManager::alertTypeText(alertType), tr("Quota Alert"));
     });

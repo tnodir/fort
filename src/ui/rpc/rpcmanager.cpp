@@ -1,7 +1,24 @@
 #include "rpcmanager.h"
 
+#include "../control/controlmanager.h"
+#include "../control/controlworker.h"
 #include "../fortmanager.h"
 #include "../fortsettings.h"
+#include "../rpc/appinfomanagerrpc.h"
+#include "../rpc/quotamanagerrpc.h"
+
+namespace {
+
+enum RpcObject : qint8 {
+    RpcObj_AppInfoManager = 1,
+    RpcObj_ConfManager,
+    RpcObj_DriverManager,
+    RpcObj_QuotaManager,
+    RpcObj_StatManager,
+    RpcObj_TaskManager,
+};
+
+}
 
 RpcManager::RpcManager(FortManager *fortManager, QObject *parent) :
     QObject(parent), m_fortManager(fortManager)
@@ -21,8 +38,45 @@ ControlManager *RpcManager::controlManager() const
 void RpcManager::initialize()
 {
     if (settings()->isService()) {
-        // TODO: Initialize RPC Server
+        setupServerSignals();
     } else {
         // TODO: Initialize RPC Client
+    }
+}
+
+void RpcManager::setupServerSignals()
+{
+    setupAppInfoManagerSignals();
+    setupQuotaManagerSignals();
+}
+
+void RpcManager::setupAppInfoManagerSignals()
+{
+    constexpr qint8 rpcObj = RpcObj_AppInfoManager;
+    auto o = fortManager()->appInfoManager();
+
+    connect(o, &AppInfoManager::lookupFinished, this,
+            [&](const QString &appPath, const AppInfo & /*appInfo*/) {
+                invokeOnClients(rpcObj, "checkLookupFinished", { appPath });
+            });
+}
+
+void RpcManager::setupQuotaManagerSignals()
+{
+    constexpr qint8 rpcObj = RpcObj_QuotaManager;
+    auto o = fortManager()->quotaManager();
+
+    connect(o, &QuotaManager::alert, this,
+            [&](qint8 alertType) { invokeOnClients(rpcObj, "alert", { alertType }); });
+}
+
+void RpcManager::invokeOnClients(qint8 rpcObj, const char *member, const QVariantList &args)
+{
+    const auto clients = controlManager()->clients();
+    for (ControlWorker *w : clients) {
+        if (!w->isServiceClient())
+            continue;
+
+        // TODO: Send RPC to Client
     }
 }

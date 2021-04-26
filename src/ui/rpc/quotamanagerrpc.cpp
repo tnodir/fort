@@ -12,8 +12,3 @@ RpcManager *QuotaManagerRpc::rpcManager() const
 {
     return fortManager()->rpcManager();
 }
-
-void QuotaManagerRpc::initialize()
-{
-    // rpcManager()->connectSignal("quotaManager", "alert", this, &QuotaManager::alert);
-}

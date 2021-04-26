@@ -2,8 +2,7 @@
 #define CONTROLMANAGER_H
 
 #include <QObject>
-#include <QSharedMemory>
-#include <QSystemSemaphore>
+#include <QVariant>
 
 #include "../util/classhelpers.h"
 #include "control.h"
@@ -11,6 +10,7 @@
 QT_FORWARD_DECLARE_CLASS(QLocalServer)
 QT_FORWARD_DECLARE_CLASS(QLocalSocket)
 
+class ControlWorker;
 class FortManager;
 class FortSettings;
 
@@ -26,6 +26,8 @@ public:
     FortSettings *settings() const { return m_settings; }
     FortManager *fortManager() const { return m_fortManager; }
 
+    const QList<ControlWorker *> &clients() const { return m_clients; }
+
     bool isClient() const;
 
     bool listen(FortManager *fortManager);
@@ -34,10 +36,10 @@ public:
 private slots:
     void onNewConnection();
 
-    bool processRequest(Control::Command command, const QStringList &args);
+    bool processRequest(Control::Command command, const QVariantList &args);
 
 private:
-    bool processCommand(Control::Command command, const QStringList &args, QString &errorMessage);
+    bool processCommand(Control::Command command, const QVariantList &args, QString &errorMessage);
 
     void abort();
 
@@ -48,6 +50,8 @@ private:
     FortManager *m_fortManager = nullptr;
 
     QLocalServer *m_server = nullptr;
+
+    QList<ControlWorker *> m_clients;
 };
 
 #endif // CONTROLMANAGER_H

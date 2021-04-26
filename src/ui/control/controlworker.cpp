@@ -45,7 +45,7 @@ void ControlWorker::abort()
     socket()->close();
 }
 
-bool ControlWorker::postCommand(Control::Command command, const QStringList &args)
+bool ControlWorker::postCommand(Control::Command command, const QVariantList &args)
 {
     QByteArray data;
     if (!buildArgsData(data, args))
@@ -93,7 +93,7 @@ bool ControlWorker::readRequest()
             return true; // need more data
     }
 
-    QStringList args;
+    QVariantList args;
     if (!m_requestData.isEmpty() && !parseArgsData(m_requestData, args))
         return false;
 
@@ -134,7 +134,7 @@ QByteArray ControlWorker::readData(int dataSize)
     return socket()->read(dataSize);
 }
 
-bool ControlWorker::buildArgsData(QByteArray &data, const QStringList &args)
+bool ControlWorker::buildArgsData(QByteArray &data, const QVariantList &args)
 {
     QDataStream stream(&data,
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -151,16 +151,13 @@ bool ControlWorker::buildArgsData(QByteArray &data, const QStringList &args)
     stream << qint8(argsCount);
 
     for (const auto &arg : args) {
-        if (arg.size() > commandArgMaxSize)
-            return false;
-
         stream << arg;
     }
 
     return true;
 }
 
-bool ControlWorker::parseArgsData(const QByteArray &data, QStringList &args)
+bool ControlWorker::parseArgsData(const QByteArray &data, QVariantList &args)
 {
     QDataStream stream(data);
 
@@ -170,13 +167,25 @@ bool ControlWorker::parseArgsData(const QByteArray &data, QStringList &args)
         return false;
 
     while (--argsCount >= 0) {
-        QString arg;
+        QVariant arg;
         stream >> arg;
-        if (arg.size() > commandArgMaxSize)
-            return false;
 
         args.append(arg);
     }
 
     return true;
+}
+
+QVariantList ControlWorker::buildArgs(const QStringList &list)
+{
+    QVariantList args;
+
+    for (const auto &s : list) {
+        if (s.size() > commandArgMaxSize)
+            return {};
+
+        args.append(s);
+    }
+
+    return args;
 }

@@ -6,3 +6,5 @@ AppInfoManagerRpc::AppInfoManagerRpc(const QString &filePath, QObject *parent) :
     AppInfoManager(filePath, parent, SqliteDb::OpenDefaultReadOnly)
 {
 }
+
+void AppInfoManagerRpc::updateAppAccessTime(const QString & /*appPath*/) { }

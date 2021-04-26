@@ -42,8 +42,12 @@ public slots:
 
     void handleWorkerResult(WorkerJob *workerJob) override;
 
+    void checkLookupFinished(const QString &appPath);
+
 protected:
     WorkerObject *createWorker() override;
+
+    virtual void updateAppAccessTime(const QString &appPath);
 
 private:
     bool deleteAppsAndIcons(const QStringList &appPaths, const QHash<qint64, int> &iconIds);

@@ -9,6 +9,9 @@ class AppInfoManagerRpc : public AppInfoManager
 
 public:
     explicit AppInfoManagerRpc(const QString &filePath, QObject *parent = nullptr);
+
+protected:
+    void updateAppAccessTime(const QString &appPath) override;
 };
 
 #endif // APPINFOMANAGERRPC_H

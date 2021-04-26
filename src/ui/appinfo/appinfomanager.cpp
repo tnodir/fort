@@ -105,6 +105,14 @@ void AppInfoManager::handleWorkerResult(WorkerJob *workerJob)
     delete workerJob;
 }
 
+void AppInfoManager::checkLookupFinished(const QString &appPath)
+{
+    AppInfo appInfo;
+    if (loadInfoFromDb(appPath, appInfo)) {
+        emit lookupFinished(appPath, appInfo);
+    }
+}
+
 bool AppInfoManager::loadInfoFromFs(const QString &appPath, AppInfo &appInfo)
 {
     return AppInfoUtil::getInfo(appPath, appInfo);
@@ -140,9 +148,14 @@ bool AppInfoManager::loadInfoFromDb(const QString &appPath, AppInfo &appInfo)
     appInfo.iconId = stmt.columnInt64(5);
 
     // Update last access time
-    sqliteDb()->executeEx(sqlUpdateAppAccessTime, QVariantList() << appPath);
+    updateAppAccessTime(appPath);
 
     return true;
+}
+
+void AppInfoManager::updateAppAccessTime(const QString &appPath)
+{
+    sqliteDb()->executeEx(sqlUpdateAppAccessTime, QVariantList() << appPath);
 }
 
 QImage AppInfoManager::loadIconFromDb(qint64 iconId)

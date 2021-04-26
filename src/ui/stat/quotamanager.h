@@ -28,8 +28,6 @@ public:
 
     FortSettings *settings() const { return m_settings; }
 
-    virtual void initialize() { }
-
     static QString alertTypeText(qint8 alertType);
 
 signals:
