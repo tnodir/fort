@@ -45,6 +45,7 @@ Name: ru; MessagesFile: "compiler:Languages\Russian.isl"
 Name: fr; MessagesFile: "compiler:Languages\French.isl"
 Name: de; MessagesFile: "compiler:Languages\German.isl"
 Name: ko; MessagesFile: "compiler:Languages\Korean.isl"
+Name: pt; MessagesFile: "compiler:Languages\Portuguese.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; Flags: unchecked
