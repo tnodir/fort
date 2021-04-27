@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.3.8, 2021-04-27:
+- UI: Add German translation.
+- UI: Add Portuguese (Brazilian) translation.
+
 v3.3.7, 2021-04-23:
 - UI: Programs: Fix multi selected apps editing.
 - UI: Add Korean translation.
