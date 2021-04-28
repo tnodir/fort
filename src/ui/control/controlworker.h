@@ -30,7 +30,8 @@ public:
     static QVariantList buildArgs(const QStringList &list);
 
 signals:
-    void requestReady(Control::Command command, const QVariantList &args);
+    void requestReady(Control::Command command, Control::RpcObject rpcObj, qint16 methodIndex,
+            const QVariantList &args);
 
 public slots:
     void abort();
@@ -45,11 +46,11 @@ private:
     bool readRequestHeader();
 
 private:
-    struct DataHeader
+    struct RequestHeader
     {
-        DataHeader(Control::Command command = Control::CommandNone,
+        RequestHeader(Control::Command command = Control::CommandNone,
                 Control::RpcObject rpcObj = Control::Rpc_None, qint16 methodIndex = 0,
-                qint32 dataSize = 0) :
+                quint32 dataSize = 0) :
             m_command(command), m_rpcObj(rpcObj), m_methodIndex(methodIndex), m_dataSize(dataSize)
         {
         }
@@ -57,7 +58,7 @@ private:
         Control::Command command() const { return m_command; }
         Control::RpcObject rpcObj() const { return m_rpcObj; }
         qint16 methodIndex() const { return m_methodIndex; }
-        qint32 dataSize() const { return m_dataSize; }
+        quint32 dataSize() const { return m_dataSize; }
 
         void clear()
         {
@@ -76,8 +77,8 @@ private:
 
     bool m_isServiceClient = false;
 
-    DataHeader m_request;
-    QByteArray m_requestData;
+    RequestHeader m_requestHeader;
+    QByteArray m_requestBuffer;
 
     QLocalSocket *m_socket = nullptr;
 };

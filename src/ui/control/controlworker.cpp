@@ -7,13 +7,7 @@ namespace {
 
 constexpr int commandMaxArgs = 7;
 constexpr int commandArgMaxSize = 4 * 1024;
-constexpr int dataMaxSize = 4 * 1024 * 1024;
-
-template<typename T>
-T *bufferAs(QByteArray &buffer, int offset = 0)
-{
-    return reinterpret_cast<T *>(buffer.data() + offset);
-}
+constexpr quint32 dataMaxSize = 1 * 1024 * 1024;
 
 bool buildArgsData(QByteArray &data, const QVariantList &args)
 {
@@ -86,14 +80,16 @@ bool ControlWorker::sendCommand(Control::Command command, Control::RpcObject rpc
         int methodIndex, const QVariantList &args)
 {
     QByteArray buffer;
-
     if (!buildArgsData(buffer, args))
         return false;
 
-    new (bufferAs<DataHeader>(buffer))
-            DataHeader(command, rpcObj, methodIndex, buffer.size() - sizeof(DataHeader));
+    RequestHeader request(command, rpcObj, methodIndex, buffer.size());
 
-    socket()->write(buffer);
+    socket()->write((const char *) &request, sizeof(RequestHeader));
+
+    if (!buffer.isEmpty()) {
+        socket()->write(buffer);
+    }
 
     return true;
 }
@@ -113,45 +109,52 @@ void ControlWorker::processRequest()
 
 void ControlWorker::clearRequest()
 {
-    m_request.clear();
-    m_requestData.clear();
+    m_requestHeader.clear();
+    m_requestBuffer.clear();
 }
 
 bool ControlWorker::readRequest()
 {
-    if (m_request.command() == Control::CommandNone && !readRequestHeader())
+    if (m_requestHeader.command() == Control::CommandNone && !readRequestHeader())
         return false;
 
-    if (m_request.dataSize() > 0) {
+    const int bytesNeeded = m_requestHeader.dataSize() - m_requestBuffer.size();
+    if (bytesNeeded > 0) {
         if (socket()->bytesAvailable() == 0)
             return true; // need more data
 
-        const QByteArray data = socket()->read(m_request.dataSize() - m_requestData.size());
+        const QByteArray data = socket()->read(bytesNeeded);
         if (data.isEmpty())
             return false;
 
-        m_requestData += data;
+        m_requestBuffer += data;
 
-        if (m_requestData.size() < m_request.dataSize())
+        if (data.size() < bytesNeeded)
             return true; // need more data
     }
 
     QVariantList args;
-    if (!m_requestData.isEmpty() && !parseArgsData(m_requestData, args))
+    if (!m_requestBuffer.isEmpty() && !parseArgsData(m_requestBuffer, args))
         return false;
 
-    emit requestReady(m_request.command(), args);
+    const Control::Command command = m_requestHeader.command();
+    const Control::RpcObject rpcObj = m_requestHeader.rpcObj();
+    const qint16 methodIndex = m_requestHeader.methodIndex();
+
     clearRequest();
+
+    emit requestReady(command, rpcObj, methodIndex, args);
 
     return true;
 }
 
 bool ControlWorker::readRequestHeader()
 {
-    if (socket()->read((char *) &m_request, sizeof(DataHeader)) != sizeof(DataHeader))
+    if (socket()->read((char *) &m_requestHeader, sizeof(RequestHeader)) != sizeof(RequestHeader))
         return false;
 
-    if (m_request.dataSize() > dataMaxSize)
+    if (m_requestHeader.command() == Control::CommandNone
+            || m_requestHeader.dataSize() > dataMaxSize)
         return false;
 
     return true;

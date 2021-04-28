@@ -9,10 +9,11 @@
 
 #include "../conf/appgroup.h"
 #include "../conf/firewallconf.h"
+#include "../fortmanager.h"
+#include "../fortsettings.h"
+#include "../rpc/rpcmanager.h"
 #include "../util/fileutil.h"
 #include "controlworker.h"
-#include "fortmanager.h"
-#include "fortsettings.h"
 
 Q_DECLARE_LOGGING_CATEGORY(CLOG_CONTROL_MANAGER)
 Q_LOGGING_CATEGORY(CLOG_CONTROL_MANAGER, "control")
@@ -29,6 +30,11 @@ ControlManager::ControlManager(FortSettings *settings, QObject *parent) :
 ControlManager::~ControlManager()
 {
     abort();
+}
+
+RpcManager *ControlManager::rpcManager() const
+{
+    return fortManager()->rpcManager();
 }
 
 bool ControlManager::isClient() const
@@ -109,73 +115,105 @@ void ControlManager::onNewConnection()
     }
 }
 
-bool ControlManager::processRequest(Control::Command command, const QVariantList &args)
+bool ControlManager::processRequest(Control::Command command, Control::RpcObject rpcObj,
+        qint16 methodIndex, const QVariantList &args)
 {
     QString errorMessage;
-    if (!processCommand(command, args, errorMessage)) {
+    if (!processCommand(command, rpcObj, methodIndex, args, errorMessage)) {
         logWarning() << "Bad control command" << errorMessage << ':' << command << args;
         return false;
     }
     return true;
 }
 
-bool ControlManager::processCommand(
-        Control::Command command, const QVariantList &args, QString &errorMessage)
+bool ControlManager::processCommand(Control::Command command, Control::RpcObject rpcObj,
+        qint16 methodIndex, const QVariantList &args, QString &errorMessage)
 {
-    bool ok = false;
-    const int argsSize = args.size();
-
-    if (command == Control::CommandConf) {
-        if (argsSize < 2) {
-            errorMessage = "conf <property> <value>";
-            return false;
-        }
-
-        auto conf = fortManager()->conf();
-        bool onlyFlags = true;
-
-        const QString confPropName = args.at(0).toString();
-
-        if (confPropName == "appGroup") {
-            if (argsSize < 4) {
-                errorMessage = "conf appGroup <group-name> <property> <value>";
-                return false;
-            }
-
-            AppGroup *appGroup = conf->appGroupByName(args.at(1).toString());
-            const QString groupPropName = args.at(2).toString();
-            onlyFlags = (groupPropName == "enabled");
-
-            ok = appGroup->setProperty(groupPropName.toLatin1(), args.at(3));
-        } else {
-            ok = conf->setProperty(confPropName.toLatin1(), args.at(1));
-        }
-
-        if (ok) {
-            fortManager()->saveOriginConf(tr("Control command executed"), onlyFlags);
-        }
-    } else if (command == Control::CommandProg) {
-        if (argsSize < 1) {
-            errorMessage = "prog <command>";
-            return false;
-        }
-
-        const QString progCommand = args.at(0).toString();
-
-        if (progCommand == "add") {
-            if (argsSize < 2) {
-                errorMessage = "prog add <app-path>";
-                return false;
-            }
-
-            ok = fortManager()->showProgramEditForm(args.at(1).toString());
-        }
+    switch (command) {
+    case Control::CommandConf:
+        if (processCommandConf(args, errorMessage))
+            return true;
+        break;
+    case Control::CommandProg:
+        if (processCommandProg(args, errorMessage))
+            return true;
+        break;
+    case Control::CommandRpc:
+        if (rpcManager()->processCommandRpc(rpcObj, methodIndex, args, errorMessage))
+            return true;
+        break;
+    default:
+        errorMessage = "Unknown command";
     }
 
-    if (!ok) {
+    if (errorMessage.isEmpty()) {
         errorMessage = "Invalid command";
     }
-    return ok;
+    return false;
+}
+
+bool ControlManager::processCommandConf(const QVariantList &args, QString &errorMessage)
+{
+    const int argsSize = args.size();
+    if (argsSize < 2) {
+        errorMessage = "conf <property> <value>";
+        return false;
+    }
+
+    auto conf = fortManager()->conf();
+    bool onlyFlags = true;
+
+    const QString confPropName = args.at(0).toString();
+
+    if (confPropName == "appGroup") {
+        if (argsSize < 4) {
+            errorMessage = "conf appGroup <group-name> <property> <value>";
+            return false;
+        }
+
+        AppGroup *appGroup = conf->appGroupByName(args.at(1).toString());
+        const QString groupPropName = args.at(2).toString();
+        onlyFlags = (groupPropName == "enabled");
+
+        if (!appGroup->setProperty(groupPropName.toLatin1(), args.at(3))) {
+            errorMessage = "Bad appGroup property";
+            return false;
+        }
+    } else {
+        if (!conf->setProperty(confPropName.toLatin1(), args.at(1))) {
+            errorMessage = "Bad conf property";
+            return false;
+        }
+    }
+
+    return fortManager()->saveOriginConf(tr("Control command executed"), onlyFlags);
+}
+
+bool ControlManager::processCommandProg(const QVariantList &args, QString &errorMessage)
+{
+    const int argsSize = args.size();
+    if (argsSize < 1) {
+        errorMessage = "prog <command>";
+        return false;
+    }
+
+    const QString progCommand = args.at(0).toString();
+
+    if (progCommand == "add") {
+        if (argsSize < 2) {
+            errorMessage = "prog add <app-path>";
+            return false;
+        }
+
+        if (!fortManager()->showProgramEditForm(args.at(1).toString())) {
+            errorMessage = "Edit Program is already opened";
+            return false;
+        }
+
+        return true;
+    }
+
+    return false;
 }
 
 void ControlManager::abort()

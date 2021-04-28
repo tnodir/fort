@@ -1,11 +1,14 @@
-#ifndef METACLASSUTIL_H
-#define METACLASSUTIL_H
+#ifndef CLASSUTIL_H
+#define CLASSUTIL_H
 
 #include <QMetaMethod>
+#include <QVariant>
 
-class MetaClassUtil
+class ClassUtil
 {
 public:
+    static bool invokeMethod(QObject *o, const QMetaMethod method, const QVariantList &args);
+
     template<typename Func>
     static int indexOfSignal(Func signal)
     {
@@ -25,4 +28,4 @@ private:
     static int getIndexOfMethod(const QMetaObject &metaObj, void **method);
 };
 
-#endif // METACLASSUTIL_H
+#endif // CLASSUTIL_H

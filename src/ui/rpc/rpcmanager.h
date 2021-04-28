@@ -2,6 +2,7 @@
 #define RPCMANAGER_H
 
 #include <QObject>
+#include <QVariant>
 
 #include "../control/control.h"
 
@@ -22,6 +23,9 @@ public:
     ControlManager *controlManager() const;
 
     void initialize();
+
+    bool processCommandRpc(Control::RpcObject rpcObj, int methodIndex, const QVariantList &args,
+            QString &errorMessage);
 
     void invokeOnServer(Control::RpcObject rpcObj, int methodIndex, const QVariantList &args);
 

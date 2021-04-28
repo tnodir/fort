@@ -10,7 +10,7 @@
 #include "../rpc/quotamanagerrpc.h"
 #include "../rpc/statmanagerrpc.h"
 #include "../rpc/taskmanagerrpc.h"
-#include "../util/metaclassutil.h"
+#include "../util/classutil.h"
 
 RpcManager::RpcManager(FortManager *fortManager, QObject *parent) :
     QObject(parent), m_fortManager(fortManager)
@@ -31,9 +31,20 @@ void RpcManager::initialize()
 {
     if (settings()->isService()) {
         setupServerSignals();
-    } else {
-        // TODO: Initialize RPC Client
     }
+}
+
+bool RpcManager::processCommandRpc(
+        Control::RpcObject rpcObj, int methodIndex, const QVariantList &args, QString &errorMessage)
+{
+    QObject *o = getRpcObject(rpcObj);
+    if (!o) {
+        errorMessage = "Bad RPC: No object";
+        return false;
+    }
+
+    const QMetaMethod method = o->metaObject()->method(methodIndex);
+    return ClassUtil::invokeMethod(o, method, args);
 }
 
 void RpcManager::setupServerSignals()
@@ -50,7 +61,7 @@ void RpcManager::setupAppInfoManagerSignals()
     connect(o, &AppInfoManager::lookupFinished, this,
             [&](const QString &appPath, const AppInfo & /*appInfo*/) {
                 static const int methodIndex =
-                        MetaClassUtil::indexOfMethod(&AppInfoManager::checkLookupFinished);
+                        ClassUtil::indexOfMethod(&AppInfoManager::checkLookupFinished);
                 invokeOnClients(rpcObj, methodIndex, { appPath });
             });
 }
@@ -61,7 +72,7 @@ void RpcManager::setupQuotaManagerSignals()
     auto o = fortManager()->quotaManager();
 
     connect(o, &QuotaManager::alert, this, [&](qint8 alertType) {
-        static const int methodIndex = MetaClassUtil::indexOfSignal(&QuotaManager::alert);
+        static const int methodIndex = ClassUtil::indexOfSignal(&QuotaManager::alert);
         invokeOnClients(rpcObj, methodIndex, { alertType });
     });
 }
@@ -100,7 +111,6 @@ QObject *RpcManager::getRpcObject(Control::RpcObject rpcObj) const
     case Control::Rpc_TaskManager:
         return fortManager()->taskManager();
     default:
-        Q_UNREACHABLE();
         return nullptr;
     }
 }
