@@ -116,6 +116,7 @@ SOURCES += \
     util/json/jsonutil.cpp \
     util/json/mapwrapper.cpp \
     util/logger.cpp \
+    util/metaclassutil.cpp \
     util/model/stringlistmodel.cpp \
     util/model/tableitemmodel.cpp \
     util/model/tablesqlmodel.cpp \
@@ -238,6 +239,7 @@ HEADERS += \
     task/taskworker.h \
     task/taskzonedownloader.h \
     translationmanager.h \
+    util/classhelpers.h \
     util/conf/addressrange.h \
     util/conf/confappswalker.h \
     util/conf/confutil.h \
@@ -251,6 +253,7 @@ HEADERS += \
     util/json/jsonutil.h \
     util/json/mapwrapper.h \
     util/logger.h \
+    util/metaclassutil.h \
     util/model/stringlistmodel.h \
     util/model/tableitemmodel.h \
     util/model/tablesqlmodel.h \

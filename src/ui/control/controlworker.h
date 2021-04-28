@@ -22,7 +22,10 @@ public:
 
     void setupForAsync();
 
-    bool postCommand(Control::Command command, const QVariantList &args);
+    bool sendCommand(Control::Command command, Control::RpcObject rpcObj, int methodIndex,
+            const QVariantList &args);
+
+    bool waitForSent(int msecs = 1000) const;
 
     static QVariantList buildArgs(const QStringList &list);
 
@@ -39,20 +42,41 @@ private:
     void clearRequest();
     bool readRequest();
 
-    void writeDataHeader(Control::Command command, int dataSize);
-    bool readDataHeader(Control::Command &command, int &dataSize);
-
-    void writeData(const QByteArray &data);
-    QByteArray readData(int dataSize);
-
-    static bool buildArgsData(QByteArray &data, const QVariantList &args);
-    static bool parseArgsData(const QByteArray &data, QVariantList &args);
+    bool readRequestHeader();
 
 private:
+    struct DataHeader
+    {
+        DataHeader(Control::Command command = Control::CommandNone,
+                Control::RpcObject rpcObj = Control::Rpc_None, qint16 methodIndex = 0,
+                qint32 dataSize = 0) :
+            m_command(command), m_rpcObj(rpcObj), m_methodIndex(methodIndex), m_dataSize(dataSize)
+        {
+        }
+
+        Control::Command command() const { return m_command; }
+        Control::RpcObject rpcObj() const { return m_rpcObj; }
+        qint16 methodIndex() const { return m_methodIndex; }
+        qint32 dataSize() const { return m_dataSize; }
+
+        void clear()
+        {
+            m_command = Control::CommandNone;
+            m_rpcObj = Control::Rpc_None;
+            m_methodIndex = 0;
+            m_dataSize = 0;
+        }
+
+    private:
+        Control::Command m_command;
+        Control::RpcObject m_rpcObj;
+        qint16 m_methodIndex;
+        quint32 m_dataSize;
+    };
+
     bool m_isServiceClient = false;
 
-    Control::Command m_requestCommand = Control::CommandNone;
-    int m_requestDataSize = 0;
+    DataHeader m_request;
     QByteArray m_requestData;
 
     QLocalSocket *m_socket = nullptr;

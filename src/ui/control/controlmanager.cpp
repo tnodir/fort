@@ -85,7 +85,7 @@ bool ControlManager::postCommand()
     if (args.isEmpty())
         return false;
 
-    return worker.postCommand(command, args);
+    return worker.sendCommand(command, Control::Rpc_None, 0, args) && worker.waitForSent();
 }
 
 void ControlManager::onNewConnection()

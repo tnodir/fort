@@ -4,6 +4,7 @@
 
 #include "../fortmanager.h"
 #include "../rpc/rpcmanager.h"
+#include "../util/metaclassutil.h"
 
 AppInfoManagerRpc::AppInfoManagerRpc(
         const QString &filePath, FortManager *fortManager, QObject *parent) :
@@ -18,7 +19,8 @@ RpcManager *AppInfoManagerRpc::rpcManager() const
 
 void AppInfoManagerRpc::lookupAppInfo(const QString &appPath)
 {
-    rpcManager()->invokeOnServer(RpcManager::Obj_AppInfoManager, "lookupAppInfo", { appPath });
+    static const int methodIndex = MetaClassUtil::indexOfMethod(&AppInfoManager::lookupAppInfo);
+    rpcManager()->invokeOnServer(Control::Rpc_AppInfoManager, methodIndex, { appPath });
 }
 
 void AppInfoManagerRpc::updateAppAccessTime(const QString & /*appPath*/) { }

@@ -9,20 +9,57 @@ constexpr int commandMaxArgs = 7;
 constexpr int commandArgMaxSize = 4 * 1024;
 constexpr int dataMaxSize = 4 * 1024 * 1024;
 
-struct DataHeader
+template<typename T>
+T *bufferAs(QByteArray &buffer, int offset = 0)
 {
-    DataHeader(Control::Command command = Control::CommandNone, int dataSize = 0) :
-        m_command(command), m_dataSize(dataSize)
-    {
+    return reinterpret_cast<T *>(buffer.data() + offset);
+}
+
+bool buildArgsData(QByteArray &data, const QVariantList &args)
+{
+    const int argsCount = args.count();
+    if (argsCount == 0)
+        return true;
+
+    if (argsCount > commandMaxArgs)
+        return false;
+
+    QDataStream stream(&data,
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+            QIODevice::WriteOnly
+#else
+            QDataStream::WriteOnly
+#endif
+    );
+
+    stream << qint8(argsCount);
+
+    for (const auto &arg : args) {
+        stream << arg;
     }
 
-    Control::Command command() const { return static_cast<Control::Command>(m_command); }
-    int dataSize() const { return m_dataSize; }
+    return true;
+}
 
-private:
-    quint32 m_command : 8;
-    quint32 m_dataSize : 24;
-};
+bool parseArgsData(const QByteArray &data, QVariantList &args)
+{
+    QDataStream stream(data);
+
+    qint8 argsCount;
+    stream >> argsCount;
+
+    if (argsCount > commandMaxArgs)
+        return false;
+
+    while (--argsCount >= 0) {
+        QVariant arg;
+        stream >> arg;
+
+        args.append(arg);
+    }
+
+    return true;
+}
 
 }
 
@@ -45,16 +82,25 @@ void ControlWorker::abort()
     socket()->close();
 }
 
-bool ControlWorker::postCommand(Control::Command command, const QVariantList &args)
+bool ControlWorker::sendCommand(Control::Command command, Control::RpcObject rpcObj,
+        int methodIndex, const QVariantList &args)
 {
-    QByteArray data;
-    if (!buildArgsData(data, args))
+    QByteArray buffer;
+
+    if (!buildArgsData(buffer, args))
         return false;
 
-    writeDataHeader(command, data.size());
-    writeData(data);
+    new (bufferAs<DataHeader>(buffer))
+            DataHeader(command, rpcObj, methodIndex, buffer.size() - sizeof(DataHeader));
 
-    return socket()->waitForBytesWritten(1000);
+    socket()->write(buffer);
+
+    return true;
+}
+
+bool ControlWorker::waitForSent(int msecs) const
+{
+    return socket()->waitForBytesWritten(msecs);
 }
 
 void ControlWorker::processRequest()
@@ -67,29 +113,26 @@ void ControlWorker::processRequest()
 
 void ControlWorker::clearRequest()
 {
-    m_requestCommand = Control::CommandNone;
-    m_requestDataSize = 0;
+    m_request.clear();
     m_requestData.clear();
 }
 
 bool ControlWorker::readRequest()
 {
-    if (m_requestCommand == Control::CommandNone
-            && !readDataHeader(m_requestCommand, m_requestDataSize))
+    if (m_request.command() == Control::CommandNone && !readRequestHeader())
         return false;
 
-    if (m_requestDataSize > 0) {
+    if (m_request.dataSize() > 0) {
         if (socket()->bytesAvailable() == 0)
             return true; // need more data
 
-        const QByteArray data = readData(m_requestDataSize);
+        const QByteArray data = socket()->read(m_request.dataSize() - m_requestData.size());
         if (data.isEmpty())
             return false;
 
         m_requestData += data;
-        m_requestDataSize -= data.size();
 
-        if (m_requestDataSize > 0)
+        if (m_requestData.size() < m_request.dataSize())
             return true; // need more data
     }
 
@@ -97,81 +140,19 @@ bool ControlWorker::readRequest()
     if (!m_requestData.isEmpty() && !parseArgsData(m_requestData, args))
         return false;
 
-    emit requestReady(m_requestCommand, args);
+    emit requestReady(m_request.command(), args);
     clearRequest();
 
     return true;
 }
 
-void ControlWorker::writeDataHeader(Control::Command command, int dataSize)
+bool ControlWorker::readRequestHeader()
 {
-    DataHeader dataHeader(command, dataSize);
-    socket()->write((const char *) &dataHeader, sizeof(DataHeader));
-}
-
-bool ControlWorker::readDataHeader(Control::Command &command, int &dataSize)
-{
-    DataHeader dataHeader;
-    if (socket()->read((char *) &dataHeader, sizeof(DataHeader)) != sizeof(DataHeader))
+    if (socket()->read((char *) &m_request, sizeof(DataHeader)) != sizeof(DataHeader))
         return false;
 
-    command = dataHeader.command();
-    dataSize = dataHeader.dataSize();
-
-    if (dataSize > dataMaxSize)
+    if (m_request.dataSize() > dataMaxSize)
         return false;
-
-    return true;
-}
-
-void ControlWorker::writeData(const QByteArray &data)
-{
-    socket()->write(data);
-}
-
-QByteArray ControlWorker::readData(int dataSize)
-{
-    return socket()->read(dataSize);
-}
-
-bool ControlWorker::buildArgsData(QByteArray &data, const QVariantList &args)
-{
-    QDataStream stream(&data,
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-            QIODevice::WriteOnly
-#else
-            QDataStream::WriteOnly
-#endif
-    );
-
-    const int argsCount = args.count();
-    if (argsCount > commandMaxArgs)
-        return false;
-
-    stream << qint8(argsCount);
-
-    for (const auto &arg : args) {
-        stream << arg;
-    }
-
-    return true;
-}
-
-bool ControlWorker::parseArgsData(const QByteArray &data, QVariantList &args)
-{
-    QDataStream stream(data);
-
-    qint8 argsCount;
-    stream >> argsCount;
-    if (argsCount > commandMaxArgs)
-        return false;
-
-    while (--argsCount >= 0) {
-        QVariant arg;
-        stream >> arg;
-
-        args.append(arg);
-    }
 
     return true;
 }
