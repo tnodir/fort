@@ -76,14 +76,13 @@ void ControlWorker::abort()
     socket()->close();
 }
 
-bool ControlWorker::sendCommand(Control::Command command, Control::RpcObject rpcObj,
-        int methodIndex, const QVariantList &args)
+bool ControlWorker::sendCommand(Control::Command command, const QVariantList &args)
 {
     QByteArray buffer;
     if (!buildArgsData(buffer, args))
         return false;
 
-    RequestHeader request(command, rpcObj, methodIndex, buffer.size());
+    RequestHeader request(command, buffer.size());
 
     socket()->write((const char *) &request, sizeof(RequestHeader));
 
@@ -138,12 +137,10 @@ bool ControlWorker::readRequest()
         return false;
 
     const Control::Command command = m_requestHeader.command();
-    const Control::RpcObject rpcObj = m_requestHeader.rpcObj();
-    const qint16 methodIndex = m_requestHeader.methodIndex();
 
     clearRequest();
 
-    emit requestReady(command, rpcObj, methodIndex, args);
+    emit requestReady(command, args);
 
     return true;
 }

@@ -10,7 +10,6 @@
 #include "../rpc/quotamanagerrpc.h"
 #include "../rpc/statmanagerrpc.h"
 #include "../rpc/taskmanagerrpc.h"
-#include "../util/classutil.h"
 
 RpcManager::RpcManager(FortManager *fortManager, QObject *parent) :
     QObject(parent), m_fortManager(fortManager)
@@ -27,23 +26,41 @@ ControlManager *RpcManager::controlManager() const
     return fortManager()->controlManager();
 }
 
+AppInfoManager *RpcManager::appInfoManager() const
+{
+    return fortManager()->appInfoManager();
+}
+
+ConfManager *RpcManager::confManager() const
+{
+    return fortManager()->confManager();
+}
+
+DriverManager *RpcManager::driverManager() const
+{
+    return fortManager()->driverManager();
+}
+
+QuotaManager *RpcManager::quotaManager() const
+{
+    return fortManager()->quotaManager();
+}
+
+StatManager *RpcManager::statManager() const
+{
+    return fortManager()->statManager();
+}
+
+TaskManager *RpcManager::taskManager() const
+{
+    return fortManager()->taskManager();
+}
+
 void RpcManager::initialize()
 {
     if (settings()->isService()) {
         setupServerSignals();
     }
-}
-
-bool RpcManager::processCommandRpc(
-        Control::RpcObject rpcObj, int methodIndex, const QVariantList &args, QString &errorMessage)
-{
-    QObject *o = getRpcObject(rpcObj);
-    if (!o) {
-        errorMessage = "Bad RPC: No object";
-        return false;
-    }
-
-    return ClassUtil::invokeMethod(o, methodIndex, args);
 }
 
 void RpcManager::setupServerSignals()
@@ -54,62 +71,62 @@ void RpcManager::setupServerSignals()
 
 void RpcManager::setupAppInfoManagerSignals()
 {
-    constexpr Control::RpcObject rpcObj = Control::Rpc_AppInfoManager;
-    auto o = fortManager()->appInfoManager();
-
-    connect(o, &AppInfoManager::lookupFinished, this,
+    connect(appInfoManager(), &AppInfoManager::lookupFinished, this,
             [&](const QString &appPath, const AppInfo & /*appInfo*/) {
-                static const int methodIndex =
-                        ClassUtil::indexOfMethod(&AppInfoManager::checkLookupFinished);
-                invokeOnClients(rpcObj, methodIndex, { appPath });
+                invokeOnClients(Control::Rpc_AppInfoManager_checkLookupFinished, { appPath });
             });
 }
 
 void RpcManager::setupQuotaManagerSignals()
 {
-    constexpr Control::RpcObject rpcObj = Control::Rpc_QuotaManager;
-    auto o = fortManager()->quotaManager();
-
-    connect(o, &QuotaManager::alert, this, [&](qint8 alertType) {
-        static const int methodIndex = ClassUtil::indexOfSignal(&QuotaManager::alert);
-        invokeOnClients(rpcObj, methodIndex, { alertType });
+    connect(quotaManager(), &QuotaManager::alert, this, [&](qint8 alertType) {
+        invokeOnClients(Control::Rpc_QuotaManager_alert, { alertType });
     });
 }
 
-void RpcManager::invokeOnServer(
-        Control::RpcObject rpcObj, int methodIndex, const QVariantList &args)
+void RpcManager::invokeOnServer(Control::Command cmd, const QVariantList &args)
 {
-    m_client->sendCommand(Control::CommandRpc, rpcObj, methodIndex, args);
+    m_client->sendCommand(cmd, args);
 }
 
-void RpcManager::invokeOnClients(
-        Control::RpcObject rpcObj, int methodIndex, const QVariantList &args)
+void RpcManager::invokeOnClients(Control::Command cmd, const QVariantList &args)
 {
     const auto clients = controlManager()->clients();
     for (ControlWorker *w : clients) {
         if (!w->isServiceClient())
             continue;
 
-        w->sendCommand(Control::CommandRpc, rpcObj, methodIndex, args);
+        w->sendCommand(cmd, args);
     }
 }
 
-QObject *RpcManager::getRpcObject(Control::RpcObject rpcObj) const
+bool RpcManager::processCommandRpc(
+        Control::Command cmd, const QVariantList &args, QString &errorMessage)
 {
-    switch (rpcObj) {
-    case Control::Rpc_AppInfoManager:
-        return fortManager()->appInfoManager();
-    case Control::Rpc_ConfManager:
-        return fortManager()->confManager();
-    case Control::Rpc_DriverManager:
-        return fortManager()->driverManager();
-    case Control::Rpc_QuotaManager:
-        return fortManager()->quotaManager();
-    case Control::Rpc_StatManager:
-        return fortManager()->statManager();
-    case Control::Rpc_TaskManager:
-        return fortManager()->taskManager();
+    switch (cmd) {
+    case Control::Rpc_AppInfoManager_lookupAppInfo:
+        appInfoManager()->lookupAppInfo(args.value(0).toString());
+        return true;
+    case Control::Rpc_AppInfoManager_checkLookupFinished:
+        appInfoManager()->checkLookupFinished(args.value(0).toString());
+        return true;
+    case Control::Rpc_ConfManager_:
+        confManager();
+        return true;
+    case Control::Rpc_DriverManager_:
+        driverManager();
+        return true;
+    case Control::Rpc_QuotaManager_alert:
+        quotaManager();
+        return true;
+    case Control::Rpc_StatManager_:
+        statManager();
+        return true;
+    case Control::Rpc_TaskManager_:
+        taskManager();
+        return true;
     default:
-        return nullptr;
+        errorMessage = "Unknown command";
+        return false;
     }
 }

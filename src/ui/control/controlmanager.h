@@ -36,17 +36,15 @@ public:
     bool postCommand();
 
 signals:
-    void rpcRequestReady(Control::RpcObject rpcObj, qint16 methodIndex, const QVariantList &args);
+    void rpcRequestReady(Control::Command command, const QVariantList &args);
 
 private slots:
     void onNewConnection();
 
-    bool processRequest(Control::Command command, Control::RpcObject rpcObj, qint16 methodIndex,
-            const QVariantList &args);
+    bool processRequest(Control::Command command, const QVariantList &args);
 
 private:
-    bool processCommand(Control::Command command, Control::RpcObject rpcObj, qint16 methodIndex,
-            const QVariantList &args, QString &errorMessage);
+    bool processCommand(Control::Command command, const QVariantList &args, QString &errorMessage);
     bool processCommandConf(const QVariantList &args, QString &errorMessage);
     bool processCommandProg(const QVariantList &args, QString &errorMessage);
 

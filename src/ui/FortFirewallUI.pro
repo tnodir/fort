@@ -104,7 +104,6 @@ SOURCES += \
     task/taskworker.cpp \
     task/taskzonedownloader.cpp \
     translationmanager.cpp \
-    util/classutil.cpp \
     util/conf/addressrange.cpp \
     util/conf/confutil.cpp \
     util/dateutil.cpp \
@@ -240,7 +239,6 @@ HEADERS += \
     task/taskzonedownloader.h \
     translationmanager.h \
     util/classhelpers.h \
-    util/classutil.h \
     util/conf/addressrange.h \
     util/conf/confappswalker.h \
     util/conf/confutil.h \

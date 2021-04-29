@@ -64,9 +64,9 @@ bool ControlManager::postCommand()
 {
     Control::Command command;
     if (settings()->controlCommand() == "conf") {
-        command = Control::CommandConf;
+        command = Control::Conf;
     } else if (settings()->controlCommand() == "prog") {
-        command = Control::CommandProg;
+        command = Control::Prog;
     } else {
         logWarning() << "Unknown control command:" << settings()->controlCommand();
         return false;
@@ -91,7 +91,7 @@ bool ControlManager::postCommand()
     if (args.isEmpty())
         return false;
 
-    return worker.sendCommand(command, Control::Rpc_None, 0, args) && worker.waitForSent();
+    return worker.sendCommand(command, args) && worker.waitForSent();
 }
 
 void ControlManager::onNewConnection()
@@ -115,35 +115,31 @@ void ControlManager::onNewConnection()
     }
 }
 
-bool ControlManager::processRequest(Control::Command command, Control::RpcObject rpcObj,
-        qint16 methodIndex, const QVariantList &args)
+bool ControlManager::processRequest(Control::Command command, const QVariantList &args)
 {
     QString errorMessage;
-    if (!processCommand(command, rpcObj, methodIndex, args, errorMessage)) {
+    if (!processCommand(command, args, errorMessage)) {
         logWarning() << "Bad control command" << errorMessage << ':' << command << args;
         return false;
     }
     return true;
 }
 
-bool ControlManager::processCommand(Control::Command command, Control::RpcObject rpcObj,
-        qint16 methodIndex, const QVariantList &args, QString &errorMessage)
+bool ControlManager::processCommand(
+        Control::Command command, const QVariantList &args, QString &errorMessage)
 {
     switch (command) {
-    case Control::CommandConf:
+    case Control::Conf:
         if (processCommandConf(args, errorMessage))
             return true;
         break;
-    case Control::CommandProg:
+    case Control::Prog:
         if (processCommandProg(args, errorMessage))
             return true;
         break;
-    case Control::CommandRpc:
-        if (rpcManager()->processCommandRpc(rpcObj, methodIndex, args, errorMessage))
-            return true;
-        break;
     default:
-        errorMessage = "Unknown command";
+        if (rpcManager()->processCommandRpc(command, args, errorMessage))
+            return true;
     }
 
     if (errorMessage.isEmpty()) {
