@@ -43,8 +43,7 @@ bool RpcManager::processCommandRpc(
         return false;
     }
 
-    const QMetaMethod method = o->metaObject()->method(methodIndex);
-    return ClassUtil::invokeMethod(o, method, args);
+    return ClassUtil::invokeMethod(o, methodIndex, args);
 }
 
 void RpcManager::setupServerSignals()
