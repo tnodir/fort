@@ -23,7 +23,7 @@ void LogBufferTest::SetUp() { }
 
 void LogBufferTest::TearDown() { }
 
-TEST_F(LogBufferTest, BlockedWriteRead)
+TEST_F(LogBufferTest, blockedWriteRead)
 {
     const QString path("C:\\test\\");
 
@@ -58,7 +58,7 @@ TEST_F(LogBufferTest, BlockedWriteRead)
     ASSERT_EQ(readCount, testCount);
 }
 
-TEST_F(LogBufferTest, BlockedIpWriteRead)
+TEST_F(LogBufferTest, blockedIpWriteRead)
 {
     const QString path("C:\\test\\");
 
@@ -109,7 +109,7 @@ TEST_F(LogBufferTest, BlockedIpWriteRead)
     ASSERT_EQ(index, testCount);
 }
 
-TEST_F(LogBufferTest, TimeWriteRead)
+TEST_F(LogBufferTest, timeWriteRead)
 {
     const int entrySize = DriverCommon::logTimeSize();
 

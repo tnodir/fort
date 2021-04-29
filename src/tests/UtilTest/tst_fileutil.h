@@ -19,7 +19,7 @@ void FileUtilTest::SetUp() { }
 
 void FileUtilTest::TearDown() { }
 
-TEST_F(FileUtilTest, Paths)
+TEST_F(FileUtilTest, paths)
 {
     const QString driveC("C:");
 
@@ -39,7 +39,7 @@ TEST_F(FileUtilTest, Paths)
     ASSERT_EQ(FileUtil::pathToKernelPath(path, false), kernelPath);
 }
 
-TEST_F(FileUtilTest, Process)
+TEST_F(FileUtilTest, process)
 {
     const ProcessInfo pi(ProcessInfo::currentPid());
 

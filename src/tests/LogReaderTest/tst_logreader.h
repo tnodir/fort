@@ -103,7 +103,7 @@ void printLogs(LogBuffer &buf)
 
 }
 
-TEST_F(LogReaderTest, LogRead)
+TEST_F(LogReaderTest, logRead)
 {
     Device device;
     ASSERT_TRUE(device.open(DriverCommon::deviceName()));

@@ -27,7 +27,7 @@ void ConfUtilTest::SetUp() { }
 
 void ConfUtilTest::TearDown() { }
 
-TEST_F(ConfUtilTest, ConfWriteRead)
+TEST_F(ConfUtilTest, confWriteRead)
 {
     EnvManager envManager;
     FirewallConf conf;
@@ -121,7 +121,7 @@ TEST_F(ConfUtilTest, ConfWriteRead)
     ASSERT_EQ(int(DriverCommon::confAppGroupIndex(firefoxFlags)), 1);
 }
 
-TEST_F(ConfUtilTest, CheckPeriod)
+TEST_F(ConfUtilTest, checkPeriod)
 {
     const quint8 h = 15, m = 35;
 
@@ -139,7 +139,7 @@ TEST_F(ConfUtilTest, CheckPeriod)
     ASSERT_TRUE(!DriverCommon::isTimeInPeriod(h, m, 15, 35, 15, 36));
 }
 
-TEST_F(ConfUtilTest, CheckEnvManager)
+TEST_F(ConfUtilTest, checkEnvManager)
 {
     EnvManager envManager;
 

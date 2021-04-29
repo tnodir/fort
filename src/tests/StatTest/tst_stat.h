@@ -91,7 +91,7 @@ void debugStatTraf(SqliteDb *sqliteDb)
 
 }
 
-TEST_F(StatTest, DbWriteRead)
+TEST_F(StatTest, dbWriteRead)
 {
     QStringList args("test");
     FortSettings fortSettings;
@@ -142,7 +142,7 @@ TEST_F(StatTest, DbWriteRead)
     debugStatTraf(statManager.sqliteDb());
 }
 
-TEST_F(StatTest, MonthStart)
+TEST_F(StatTest, monthStart)
 {
     const QDate d1(2018, 1, 8);
     const QDateTime dt1(d1, QTime());

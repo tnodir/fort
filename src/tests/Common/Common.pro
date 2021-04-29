@@ -28,8 +28,8 @@ SOURCES += \
     $$UI_PWD/stat/statmanager.cpp \
     $$UI_PWD/stat/statsql.cpp \
     $$UI_PWD/task/taskdownloader.cpp \
-    $$UI_PWD/task/taskzonedownloader.cpp \
     $$UI_PWD/task/taskworker.cpp \
+    $$UI_PWD/task/taskzonedownloader.cpp \
     $$UI_PWD/util/conf/addressrange.cpp \
     $$UI_PWD/util/conf/confutil.cpp \
     $$UI_PWD/util/dateutil.cpp \
@@ -61,8 +61,8 @@ HEADERS += \
     $$UI_PWD/stat/statmanager.h \
     $$UI_PWD/stat/statsql.h \
     $$UI_PWD/task/taskdownloader.h \
-    $$UI_PWD/task/taskzonedownloader.h \
     $$UI_PWD/task/taskworker.h \
+    $$UI_PWD/task/taskzonedownloader.h \
     $$UI_PWD/util/conf/addressrange.h \
     $$UI_PWD/util/conf/confappswalker.h \
     $$UI_PWD/util/conf/confutil.h \

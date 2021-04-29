@@ -21,14 +21,14 @@ void NetUtilTest::SetUp() { }
 
 void NetUtilTest::TearDown() { }
 
-TEST_F(NetUtilTest, Ip4Text)
+TEST_F(NetUtilTest, ip4Text)
 {
     const QString ip4Str("172.16.0.1");
 
     ASSERT_EQ(NetUtil::ip4ToText(NetUtil::textToIp4(ip4Str)), ip4Str);
 }
 
-TEST_F(NetUtilTest, Ip4Ranges)
+TEST_F(NetUtilTest, ip4Ranges)
 {
     Ip4Range ip4Range;
 
@@ -74,7 +74,7 @@ TEST_F(NetUtilTest, Ip4Ranges)
     }
 }
 
-TEST_F(NetUtilTest, TaskTasix)
+TEST_F(NetUtilTest, taskTasix)
 {
     const QByteArray buf = FileUtil::readFileData(":/data/tasix-mrlg.html");
     ASSERT_FALSE(buf.isEmpty());
