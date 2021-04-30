@@ -30,7 +30,9 @@ public:
 
     const QList<ControlWorker *> &clients() const { return m_clients; }
 
-    bool isClient() const;
+    bool isCommandClient() const;
+
+    ControlWorker *newServiceClient(QObject *parent = nullptr) const;
 
     bool listen(FortManager *fortManager);
     bool postCommand();
@@ -44,7 +46,8 @@ private slots:
     bool processRequest(Control::Command command, const QVariantList &args);
 
 private:
-    bool processCommand(Control::Command command, const QVariantList &args, QString &errorMessage);
+    bool processCommand(ControlWorker *w, Control::Command command, const QVariantList &args,
+            QString &errorMessage);
     bool processCommandConf(const QVariantList &args, QString &errorMessage);
     bool processCommandProg(const QVariantList &args, QString &errorMessage);
 

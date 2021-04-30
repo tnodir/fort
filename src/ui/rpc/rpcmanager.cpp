@@ -60,6 +60,8 @@ void RpcManager::initialize()
 {
     if (settings()->isService()) {
         setupServerSignals();
+    } else {
+        setupClient();
     }
 }
 
@@ -84,9 +86,15 @@ void RpcManager::setupQuotaManagerSignals()
     });
 }
 
+void RpcManager::setupClient()
+{
+    m_client = controlManager()->newServiceClient(this);
+    invokeOnServer(Control::Rpc_RpcManager_initClient);
+}
+
 void RpcManager::invokeOnServer(Control::Command cmd, const QVariantList &args)
 {
-    m_client->sendCommand(cmd, args);
+    client()->sendCommand(cmd, args);
 }
 
 void RpcManager::invokeOnClients(Control::Command cmd, const QVariantList &args)
@@ -101,9 +109,12 @@ void RpcManager::invokeOnClients(Control::Command cmd, const QVariantList &args)
 }
 
 bool RpcManager::processCommandRpc(
-        Control::Command cmd, const QVariantList &args, QString &errorMessage)
+        ControlWorker *w, Control::Command cmd, const QVariantList &args, QString &errorMessage)
 {
     switch (cmd) {
+    case Control::Rpc_RpcManager_initClient:
+        w->setIsServiceClient(true);
+        return true;
     case Control::Rpc_AppInfoManager_lookupAppInfo:
         appInfoManager()->lookupAppInfo(args.value(0).toString());
         return true;

@@ -58,7 +58,7 @@ bool parseArgsData(const QByteArray &data, QVariantList &args)
 }
 
 ControlWorker::ControlWorker(QLocalSocket *socket, QObject *parent) :
-    QObject(parent), m_socket(socket)
+    QObject(parent), m_isServiceClient(false), m_isPasswordChecked(false), m_socket(socket)
 {
 }
 
@@ -66,7 +66,6 @@ void ControlWorker::setupForAsync()
 {
     socket()->setParent(this);
 
-    connect(socket(), &QLocalSocket::disconnected, this, &QObject::deleteLater);
     connect(socket(), &QLocalSocket::readyRead, this, &ControlWorker::processRequest);
 }
 

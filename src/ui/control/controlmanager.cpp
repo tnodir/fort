@@ -37,9 +37,19 @@ RpcManager *ControlManager::rpcManager() const
     return fortManager()->rpcManager();
 }
 
-bool ControlManager::isClient() const
+bool ControlManager::isCommandClient() const
 {
     return !settings()->controlCommand().isEmpty();
+}
+
+ControlWorker *ControlManager::newServiceClient(QObject *parent) const
+{
+    auto socket = new QLocalSocket();
+    auto w = new ControlWorker(socket, parent);
+    w->setupForAsync();
+    w->setIsServiceClient(true);
+    socket->connectToServer(getServerName(true));
+    return w;
 }
 
 bool ControlManager::listen(FortManager *fortManager)
@@ -107,9 +117,10 @@ void ControlManager::onNewConnection()
         auto worker = new ControlWorker(socket, this);
         worker->setupForAsync();
 
-        connect(worker, &ControlWorker::requestReady, this, &ControlManager::processRequest);
+        connect(socket, &QLocalSocket::disconnected, worker, &QObject::deleteLater);
         connect(worker, &ControlWorker::destroyed, this,
                 [&] { m_clients.removeOne(qobject_cast<ControlWorker *>(sender())); });
+        connect(worker, &ControlWorker::requestReady, this, &ControlManager::processRequest);
 
         m_clients.append(worker);
     }
@@ -117,8 +128,12 @@ void ControlManager::onNewConnection()
 
 bool ControlManager::processRequest(Control::Command command, const QVariantList &args)
 {
+    ControlWorker *w = qobject_cast<ControlWorker *>(sender());
+    if (!w)
+        return false;
+
     QString errorMessage;
-    if (!processCommand(command, args, errorMessage)) {
+    if (!processCommand(w, command, args, errorMessage)) {
         logWarning() << "Bad control command" << errorMessage << ':' << command << args;
         return false;
     }
@@ -126,7 +141,7 @@ bool ControlManager::processRequest(Control::Command command, const QVariantList
 }
 
 bool ControlManager::processCommand(
-        Control::Command command, const QVariantList &args, QString &errorMessage)
+        ControlWorker *w, Control::Command command, const QVariantList &args, QString &errorMessage)
 {
     switch (command) {
     case Control::Conf:
@@ -138,7 +153,7 @@ bool ControlManager::processCommand(
             return true;
         break;
     default:
-        if (rpcManager()->processCommandRpc(command, args, errorMessage))
+        if (rpcManager()->processCommandRpc(w, command, args, errorMessage))
             return true;
     }
 

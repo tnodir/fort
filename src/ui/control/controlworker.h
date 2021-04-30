@@ -18,6 +18,9 @@ public:
     bool isServiceClient() const { return m_isServiceClient; }
     void setIsServiceClient(bool v) { m_isServiceClient = v; }
 
+    bool isPasswordChecked() const { return m_isPasswordChecked; }
+    void setIsPasswordChecked(bool v) { m_isPasswordChecked = v; }
+
     QLocalSocket *socket() const { return m_socket; }
 
     void setupForAsync();
@@ -65,7 +68,8 @@ private:
         quint32 m_dataSize : 24;
     };
 
-    bool m_isServiceClient = false;
+    bool m_isServiceClient : 1;
+    bool m_isPasswordChecked : 1;
 
     RequestHeader m_requestHeader;
     QByteArray m_requestBuffer;

@@ -33,17 +33,21 @@ public:
     QuotaManager *quotaManager() const;
     StatManager *statManager() const;
     TaskManager *taskManager() const;
+    ControlWorker *client() const { return m_client; }
 
     void initialize();
 
-    void invokeOnServer(Control::Command cmd, const QVariantList &args);
+    void invokeOnServer(Control::Command cmd, const QVariantList &args = {});
 
-    bool processCommandRpc(Control::Command cmd, const QVariantList &args, QString &errorMessage);
+    bool processCommandRpc(ControlWorker *w, Control::Command cmd, const QVariantList &args,
+            QString &errorMessage);
 
 private:
     void setupServerSignals();
     void setupAppInfoManagerSignals();
     void setupQuotaManagerSignals();
+
+    void setupClient();
 
     void invokeOnClients(Control::Command cmd, const QVariantList &args);
 

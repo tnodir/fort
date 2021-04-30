@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
     ControlManager controlManager(&settings);
 
     // Send control command to running instance
-    if (controlManager.isClient()) {
+    if (controlManager.isCommandClient()) {
         return controlManager.postCommand() ? 0 : FORT_ERROR_CONTROL;
     }
 
