@@ -92,12 +92,12 @@ void OptionsPage::saveIni(bool &restartRequired)
         }
     }
 
-    settings()->setDebug(m_cbLogDebug->isChecked());
-
-    if (settings()->console() != m_cbLogConsole->isChecked()) {
+    if (settings()->debug() != m_cbLogDebug->isChecked()
+            || settings()->console() != m_cbLogConsole->isChecked()) {
+        settings()->setDebug(m_cbLogDebug->isChecked());
+        settings()->setConsole(m_cbLogConsole->isChecked());
         restartRequired = true;
     }
-    settings()->setConsole(m_cbLogConsole->isChecked());
 }
 
 void OptionsPage::onRetranslateUi()
