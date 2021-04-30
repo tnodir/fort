@@ -628,6 +628,18 @@
         <source>Lock the password (unlocked till &quot;%1&quot;)</source>
         <translation>Заблокировать пароль (разблокировано до &quot;%1&quot;)</translation>
     </message>
+    <message>
+        <source>Logs</source>
+        <translation>Логи</translation>
+    </message>
+    <message>
+        <source>Log debug messages</source>
+        <translation>Лог дебаг сообщений</translation>
+    </message>
+    <message>
+        <source>Show log messages in console</source>
+        <translation>Логи в консоле</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

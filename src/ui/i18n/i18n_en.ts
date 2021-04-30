@@ -628,6 +628,18 @@
         <source>Are you sure to remove the Driver?</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Logs</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Log debug messages</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Show log messages in console</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

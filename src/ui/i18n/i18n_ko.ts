@@ -628,6 +628,18 @@
         <source>Lock the password (unlocked till &quot;%1&quot;)</source>
         <translation>암호 잠금 (&quot;%1&quot;까지 잠금 해제됨)</translation>
     </message>
+    <message>
+        <source>Logs</source>
+        <translation type="unfinished">로그</translation>
+    </message>
+    <message>
+        <source>Log debug messages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show log messages in console</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

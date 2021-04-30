@@ -628,6 +628,18 @@
         <source>Are you sure to remove the Driver?</source>
         <translation>Sind Sie sicher, dass Sie den Treiber entfernen möchten?</translation>
     </message>
+    <message>
+        <source>Logs</source>
+        <translation type="unfinished">Protokolle</translation>
+    </message>
+    <message>
+        <source>Log debug messages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show log messages in console</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

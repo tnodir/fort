@@ -628,6 +628,18 @@
         <source>Lock the password (unlocked till &quot;%1&quot;)</source>
         <translation>Verrouiller mot de passe (déverrouillé jusqu&apos;à &quot;%1&quot;)</translation>
     </message>
+    <message>
+        <source>Logs</source>
+        <translation type="unfinished">Journaux</translation>
+    </message>
+    <message>
+        <source>Log debug messages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show log messages in console</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
