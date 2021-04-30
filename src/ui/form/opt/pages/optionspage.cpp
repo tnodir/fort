@@ -49,6 +49,22 @@ void OptionsPage::onEditResetted()
 
 void OptionsPage::onSaved()
 {
+    bool restartRequired = false;
+
+    saveStartMode(restartRequired);
+
+    if (iniEdited()) {
+        saveIni(restartRequired);
+    }
+
+    if (restartRequired) {
+        QMetaObject::invokeMethod(
+                fortManager(), &FortManager::processRestartRequired, Qt::QueuedConnection);
+    }
+}
+
+void OptionsPage::saveStartMode(bool &restartRequired)
+{
     if (m_currentStartMode != m_comboStartMode->currentIndex()) {
         const bool wasServiceMode = StartupUtil::isServiceMode(m_currentStartMode);
 
@@ -57,14 +73,13 @@ void OptionsPage::onSaved()
 
         const bool isServiceMode = StartupUtil::isServiceMode(m_currentStartMode);
         if (isServiceMode != wasServiceMode) {
-            QMetaObject::invokeMethod(
-                    fortManager(), &FortManager::processRestartRequired, Qt::QueuedConnection);
+            restartRequired = true;
         }
     }
+}
 
-    if (!iniEdited())
-        return;
-
+void OptionsPage::saveIni(bool &restartRequired)
+{
     settings()->setHotKeyEnabled(m_cbHotKeys->isChecked());
 
     if (m_cbPassword->isChecked() != settings()->hasPassword()) {
@@ -76,6 +91,13 @@ void OptionsPage::onSaved()
             m_btPasswordLock->click(); // Reset unlocked password
         }
     }
+
+    settings()->setDebug(m_cbLogDebug->isChecked());
+
+    if (settings()->console() != m_cbLogConsole->isChecked()) {
+        restartRequired = true;
+    }
+    settings()->setConsole(m_cbLogConsole->isChecked());
 }
 
 void OptionsPage::onRetranslateUi()
@@ -83,6 +105,7 @@ void OptionsPage::onRetranslateUi()
     m_gbStartup->setTitle(tr("Startup"));
     m_gbTraffic->setTitle(tr("Traffic"));
     m_gbGlobal->setTitle(tr("Global"));
+    m_gbLogs->setTitle(tr("Logs"));
     m_gbDriver->setTitle(tr("Driver"));
     m_gbNewVersion->setTitle(tr("New Version"));
 
@@ -106,6 +129,9 @@ void OptionsPage::onRetranslateUi()
                     .arg(PasswordDialog::unlockTypeStrings().at(settings()->passwordUnlockType())));
 
     m_labelLanguage->setText(tr("Language:"));
+
+    m_cbLogDebug->setText(tr("Log debug messages"));
+    m_cbLogConsole->setText(tr("Show log messages in console"));
 
     retranslateDriverMessage();
     m_btInstallDriver->setText(tr("Install"));
@@ -189,9 +215,6 @@ QLayout *OptionsPage::setupColumn1()
     auto layout = new QVBoxLayout();
     layout->setSpacing(10);
 
-    m_cbHotKeys = ControlUtil::createCheckBox(
-            settings()->hotKeyEnabled(), [&](bool) { setIniEdited(true); });
-
     // Startup Group Box
     setupStartupBox();
     layout->addWidget(m_gbStartup);
@@ -203,6 +226,10 @@ QLayout *OptionsPage::setupColumn1()
     // Global Group Box
     setupGlobalBox();
     layout->addWidget(m_gbGlobal);
+
+    // Logs Group Box
+    setupLogsBox();
+    layout->addWidget(m_gbLogs);
 
     layout->addStretch();
 
@@ -367,6 +394,21 @@ void OptionsPage::setupComboLanguage()
     refreshComboLanguage();
 
     connect(translationManager(), &TranslationManager::languageChanged, this, refreshComboLanguage);
+}
+
+void OptionsPage::setupLogsBox()
+{
+    m_cbLogDebug =
+            ControlUtil::createCheckBox(settings()->debug(), [&](bool) { setIniEdited(true); });
+    m_cbLogConsole =
+            ControlUtil::createCheckBox(settings()->console(), [&](bool) { setIniEdited(true); });
+
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_cbLogDebug);
+    layout->addWidget(m_cbLogConsole);
+
+    m_gbLogs = new QGroupBox(this);
+    m_gbLogs->setLayout(layout);
 }
 
 QLayout *OptionsPage::setupColumn2()

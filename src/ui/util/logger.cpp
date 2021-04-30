@@ -31,17 +31,19 @@ void messageHandler(QtMsgType type, const QMessageLogContext &context, const QSt
         break;
     }
 
+    Logger *logger = Logger::instance();
+
     // Write only errors to log file
-    if (level != Logger::Info) {
+    if (logger->debug() || level != Logger::Info) {
         const bool isDefaultCategory = !context.category || !strcmp(context.category, "default");
         const QString text =
                 isDefaultCategory ? message : QLatin1String(context.category) + ": " + message;
 
-        Logger::instance()->writeLog(text, level);
+        logger->writeLog(text, level);
     }
 
     // Additionally write to console if needed
-    if (Logger::instance()->console()) {
+    if (logger->console()) {
         const HANDLE stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
         DWORD nw;
 

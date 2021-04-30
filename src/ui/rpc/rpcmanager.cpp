@@ -117,7 +117,7 @@ bool RpcManager::processCommandRpc(
         driverManager();
         return true;
     case Control::Rpc_QuotaManager_alert:
-        quotaManager();
+        emit quotaManager()->alert(args.value(0).toInt());
         return true;
     case Control::Rpc_StatManager_:
         statManager();

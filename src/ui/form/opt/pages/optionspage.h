@@ -20,6 +20,9 @@ protected slots:
     void onRetranslateUi() override;
 
 private:
+    void saveStartMode(bool &restartRequired);
+    void saveIni(bool &restartRequired);
+
     void retranslateComboStartMode();
     void retranslateEditPassword();
     void retranslateDriverMessage();
@@ -34,6 +37,7 @@ private:
     void setupEditPassword();
     QLayout *setupLangLayout();
     void setupComboLanguage();
+    void setupLogsBox();
     QLayout *setupColumn2();
     void setupDriverBox();
     void setupDriverIcon();
@@ -47,6 +51,7 @@ private:
     QGroupBox *m_gbStartup = nullptr;
     QGroupBox *m_gbTraffic = nullptr;
     QGroupBox *m_gbGlobal = nullptr;
+    QGroupBox *m_gbLogs = nullptr;
     QGroupBox *m_gbDriver = nullptr;
     QGroupBox *m_gbNewVersion = nullptr;
     QLabel *m_labelStartMode = nullptr;
@@ -63,6 +68,8 @@ private:
     QPushButton *m_btPasswordLock = nullptr;
     QLabel *m_labelLanguage = nullptr;
     QComboBox *m_comboLanguage = nullptr;
+    QCheckBox *m_cbLogDebug = nullptr;
+    QCheckBox *m_cbLogConsole = nullptr;
     QLabel *m_iconDriver = nullptr;
     QLabel *m_labelDriverMessage = nullptr;
     QPushButton *m_btInstallDriver = nullptr;
