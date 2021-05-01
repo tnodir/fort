@@ -537,12 +537,10 @@ void FortSettings::bulkUpdateEnd()
 
     m_bulkUpdating = false;
 
-    const bool doEmit = m_bulkIniChanged;
-    m_bulkIniChanged = false;
+    if (m_bulkIniChanged) {
+        m_bulkIniChanged = false;
 
-    iniSync();
-
-    if (doEmit) {
+        iniSync();
         emit iniChanged();
     }
 }

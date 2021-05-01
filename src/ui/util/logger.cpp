@@ -15,6 +15,24 @@ namespace {
 
 QtMessageHandler g_oldMessageHandler = nullptr;
 
+void writeToConsole(const QMessageLogContext &context, const QString &message)
+{
+    const HANDLE stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (!stdoutHandle || stdoutHandle == INVALID_HANDLE_VALUE)
+        return;
+
+    QByteArray data;
+    if (context.category) {
+        data.append(context.category);
+        data.append(": ");
+    }
+    data.append(message.toLocal8Bit());
+    data.append('\n');
+
+    DWORD nw;
+    WriteFile(stdoutHandle, data.constData(), DWORD(data.size()), &nw, nullptr);
+}
+
 void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &message)
 {
     Logger::LogLevel level = Logger::Info;
@@ -44,18 +62,7 @@ void messageHandler(QtMsgType type, const QMessageLogContext &context, const QSt
 
     // Additionally write to console if needed
     if (logger->console()) {
-        const HANDLE stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-        DWORD nw;
-
-        QByteArray data;
-        if (context.category) {
-            data.append(context.category);
-            data.append(": ");
-        }
-        data.append(message.toLocal8Bit());
-        data.append('\n');
-
-        WriteFile(stdoutHandle, data.constData(), DWORD(data.size()), &nw, nullptr);
+        writeToConsole(context, message);
     }
 
     if (g_oldMessageHandler) {

@@ -226,9 +226,22 @@ void FortManager::setupLogger()
     Logger *logger = Logger::instance();
 
     logger->setIsService(settings()->isService());
-    logger->setDebug(settings()->debug());
-    logger->setConsole(settings()->console());
     logger->setPath(settings()->logsPath());
+
+    updateLogger();
+
+    connect(settings(), &FortSettings::iniChanged, this, &FortManager::updateLogger);
+}
+
+void FortManager::updateLogger()
+{
+    Logger *logger = Logger::instance();
+
+    logger->setDebug(settings()->debug());
+
+    if (!settings()->isService()) {
+        logger->setConsole(settings()->console());
+    }
 }
 
 void FortManager::setupEventFilter()

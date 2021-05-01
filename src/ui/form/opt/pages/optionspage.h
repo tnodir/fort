@@ -20,8 +20,8 @@ protected slots:
     void onRetranslateUi() override;
 
 private:
-    void saveStartMode(bool &restartRequired);
-    void saveIni(bool &restartRequired);
+    void saveStartMode();
+    void saveIni();
 
     void retranslateComboStartMode();
     void retranslateEditPassword();

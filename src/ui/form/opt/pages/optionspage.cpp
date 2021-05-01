@@ -49,21 +49,14 @@ void OptionsPage::onEditResetted()
 
 void OptionsPage::onSaved()
 {
-    bool restartRequired = false;
-
-    saveStartMode(restartRequired);
+    saveStartMode();
 
     if (iniEdited()) {
-        saveIni(restartRequired);
-    }
-
-    if (restartRequired) {
-        QMetaObject::invokeMethod(
-                fortManager(), &FortManager::processRestartRequired, Qt::QueuedConnection);
+        saveIni();
     }
 }
 
-void OptionsPage::saveStartMode(bool &restartRequired)
+void OptionsPage::saveStartMode()
 {
     if (m_currentStartMode != m_comboStartMode->currentIndex()) {
         const bool wasServiceMode = StartupUtil::isServiceMode(m_currentStartMode);
@@ -73,12 +66,13 @@ void OptionsPage::saveStartMode(bool &restartRequired)
 
         const bool isServiceMode = StartupUtil::isServiceMode(m_currentStartMode);
         if (isServiceMode != wasServiceMode) {
-            restartRequired = true;
+            QMetaObject::invokeMethod(
+                    fortManager(), &FortManager::processRestartRequired, Qt::QueuedConnection);
         }
     }
 }
 
-void OptionsPage::saveIni(bool &restartRequired)
+void OptionsPage::saveIni()
 {
     settings()->setHotKeyEnabled(m_cbHotKeys->isChecked());
 
@@ -92,12 +86,8 @@ void OptionsPage::saveIni(bool &restartRequired)
         }
     }
 
-    if (settings()->debug() != m_cbLogDebug->isChecked()
-            || settings()->console() != m_cbLogConsole->isChecked()) {
-        settings()->setDebug(m_cbLogDebug->isChecked());
-        settings()->setConsole(m_cbLogConsole->isChecked());
-        restartRequired = true;
-    }
+    settings()->setDebug(m_cbLogDebug->isChecked());
+    settings()->setConsole(m_cbLogConsole->isChecked());
 }
 
 void OptionsPage::onRetranslateUi()

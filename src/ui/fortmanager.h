@@ -152,6 +152,8 @@ private:
     void closeLogManager();
 
     void setupLogger();
+    void updateLogger();
+
     void setupEventFilter();
     void setupEnvManager();
 
