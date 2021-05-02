@@ -331,44 +331,45 @@ void FirewallConf::setupAddressGroups()
     m_addressGroups.append(new AddressGroup(this));
 }
 
-void FirewallConf::copyFlags(const FirewallConf &o)
-{
-    setProvBoot(o.provBoot());
-    setFilterEnabled(o.filterEnabled());
-    setFilterLocals(o.filterLocals());
-    setStopTraffic(o.stopTraffic());
-    setStopInetTraffic(o.stopInetTraffic());
-    setAllowAllNew(o.allowAllNew());
-    setAppBlockAll(o.appBlockAll());
-    setAppAllowAll(o.appAllowAll());
-    setAppGroupBits(o.appGroupBits());
-
-    setActivePeriodEnabled(o.activePeriodEnabled());
-    setActivePeriodFrom(o.activePeriodFrom());
-    setActivePeriodTo(o.activePeriodTo());
-
-    setMonthStart(o.monthStart());
-    setTrafHourKeepDays(o.trafHourKeepDays());
-    setTrafDayKeepDays(o.trafDayKeepDays());
-    setTrafMonthKeepMonths(o.trafMonthKeepMonths());
-
-    setAllowedIpKeepCount(o.allowedIpKeepCount());
-    setBlockedIpKeepCount(o.blockedIpKeepCount());
-
-    setQuotaDayMb(o.quotaDayMb());
-    setQuotaMonthMb(o.quotaMonthMb());
-
-    copyImmediateFlags(o);
-}
-
 void FirewallConf::copyImmediateFlags(const FirewallConf &o)
 {
-    setLogBlocked(o.logBlocked());
-    setLogStat(o.logStat());
-    setLogStatNoFilter(o.logStatNoFilter());
-    setLogAllowedIp(o.logAllowedIp());
-    setLogBlockedIp(o.logBlockedIp());
-    setTrafUnit(o.trafUnit());
+    m_logBlocked = o.logBlocked();
+    m_logStat = o.logStat();
+    m_logStatNoFilter = o.logStatNoFilter();
+    m_logAllowedIp = o.logAllowedIp();
+    m_logBlockedIp = o.logBlockedIp();
+    m_trafUnit = o.trafUnit();
+}
+
+void FirewallConf::copyFlags(const FirewallConf &o)
+{
+    m_provBoot = o.provBoot();
+    m_filterEnabled = o.filterEnabled();
+    m_filterLocals = o.filterLocals();
+    m_stopTraffic = o.stopTraffic();
+    m_stopInetTraffic = o.stopInetTraffic();
+    m_allowAllNew = o.allowAllNew();
+    m_appBlockAll = o.appBlockAll();
+    m_appAllowAll = o.appAllowAll();
+
+    setAppGroupBits(o.appGroupBits());
+
+    m_activePeriodEnabled = o.activePeriodEnabled();
+    m_activePeriodFrom = o.activePeriodFrom();
+    m_activePeriodTo = o.activePeriodTo();
+
+    m_monthStart = o.monthStart();
+    m_trafHourKeepDays = o.trafHourKeepDays();
+    m_trafDayKeepDays = o.trafDayKeepDays();
+    m_trafMonthKeepMonths = o.trafMonthKeepMonths();
+
+    m_allowedIpKeepCount = o.allowedIpKeepCount();
+    m_blockedIpKeepCount = o.blockedIpKeepCount();
+
+    m_quotaDayMb = o.quotaDayMb();
+    m_quotaMonthMb = o.quotaMonthMb();
+
+    copyImmediateFlags(o);
 }
 
 void FirewallConf::copy(const FirewallConf &o)
@@ -386,4 +387,138 @@ void FirewallConf::copy(const FirewallConf &o)
         appGroup->copy(*ag);
         addAppGroup(appGroup);
     }
+}
+
+QVariant FirewallConf::immediateFlagsToVariant() const
+{
+    QVariantMap map;
+
+    map["logBlocked"] = logBlocked();
+    map["logStat"] = logStat();
+    map["logStatNoFilter"] = logStatNoFilter();
+    map["logAllowedIp"] = logAllowedIp();
+    map["logBlockedIp"] = logBlockedIp();
+    map["trafUnit"] = trafUnit();
+
+    return map;
+}
+
+QVariant FirewallConf::flagsToVariant() const
+{
+    QVariantMap map = immediateFlagsToVariant().toMap();
+
+    map["provBoot"] = provBoot();
+    map["filterEnabled"] = filterEnabled();
+    map["filterLocals"] = filterLocals();
+    map["stopTraffic"] = stopTraffic();
+    map["stopInetTraffic"] = stopInetTraffic();
+    map["allowAllNew"] = allowAllNew();
+    map["appBlockAll"] = appBlockAll();
+    map["appAllowAll"] = appAllowAll();
+
+    map["appGroupBits"] = appGroupBits();
+
+    map["activePeriodEnabled"] = activePeriodEnabled();
+    map["activePeriodFrom"] = activePeriodFrom();
+    map["activePeriodTo"] = activePeriodTo();
+
+    map["monthStart"] = monthStart();
+    map["trafHourKeepDays"] = trafHourKeepDays();
+    map["trafDayKeepDays"] = trafDayKeepDays();
+    map["trafMonthKeepMonths"] = trafMonthKeepMonths();
+
+    map["allowedIpKeepCount"] = allowedIpKeepCount();
+    map["blockedIpKeepCount"] = blockedIpKeepCount();
+
+    map["quotaDayMb"] = quotaDayMb();
+    map["quotaMonthMb"] = quotaMonthMb();
+
+    return map;
+}
+
+void FirewallConf::immediateFlagsFromVariant(const QVariant &v)
+{
+    const QVariantMap map = v.toMap();
+
+    m_logBlocked = map["logBlocked"].toBool();
+    m_logStat = map["logStat"].toBool();
+    m_logStatNoFilter = map["logStatNoFilter"].toBool();
+    m_logAllowedIp = map["logAllowedIp"].toBool();
+    m_logBlockedIp = map["logBlockedIp"].toBool();
+    m_trafUnit = map["trafUnit"].toInt();
+}
+
+void FirewallConf::flagsFromVariant(const QVariant &v)
+{
+    const QVariantMap map = v.toMap();
+
+    m_provBoot = map["provBoot"].toBool();
+    m_filterEnabled = map["filterEnabled"].toBool();
+    m_filterLocals = map["filterLocals"].toBool();
+    m_stopTraffic = map["stopTraffic"].toBool();
+    m_stopInetTraffic = map["stopInetTraffic"].toBool();
+    m_allowAllNew = map["allowAllNew"].toBool();
+    m_appBlockAll = map["appBlockAll"].toBool();
+    m_appAllowAll = map["appAllowAll"].toBool();
+
+    setAppGroupBits(map["appGroupBits"].toUInt());
+
+    m_activePeriodEnabled = map["activePeriodEnabled"].toBool();
+    m_activePeriodFrom = map["activePeriodFrom"].toString();
+    m_activePeriodTo = map["activePeriodTo"].toString();
+
+    m_monthStart = map["monthStart"].toInt();
+    m_trafHourKeepDays = map["trafHourKeepDays"].toInt();
+    m_trafDayKeepDays = map["trafDayKeepDays"].toInt();
+    m_trafMonthKeepMonths = map["trafMonthKeepMonths"].toInt();
+
+    m_allowedIpKeepCount = map["allowedIpKeepCount"].toInt();
+    m_blockedIpKeepCount = map["blockedIpKeepCount"].toInt();
+
+    m_quotaDayMb = map["quotaDayMb"].toUInt();
+    m_quotaMonthMb = map["quotaMonthMb"].toUInt();
+
+    immediateFlagsFromVariant(v);
+}
+
+QVariant FirewallConf::toVariant() const
+{
+    QVariantMap map;
+
+    QVariantList addresses;
+    for (const AddressGroup *addressGroup : addressGroups()) {
+        addresses.append(addressGroup->toVariant());
+    }
+    map["addressGroups"] = addresses;
+
+    QVariantList groups;
+    for (const AppGroup *appGroup : appGroups()) {
+        groups.append(appGroup->toVariant());
+    }
+    map["appGroups"] = groups;
+
+    map["flags"] = flagsToVariant();
+
+    return map;
+}
+
+void FirewallConf::fromVariant(const QVariant &v)
+{
+    const QVariantMap map = v.toMap();
+
+    const QVariantList addresses = map["addressGroups"].toList();
+    int addrGroupIndex = 0;
+    for (const QVariant &av : addresses) {
+        AddressGroup *addressGroup = m_addressGroups.at(addrGroupIndex++);
+        addressGroup->fromVariant(av);
+    }
+
+    const QVariantList groups = map["appGroups"].toList();
+    for (const QVariant &gv : groups) {
+        auto appGroup = new AppGroup();
+        appGroup->fromVariant(gv);
+        addAppGroup(appGroup);
+    }
+
+    flagsFromVariant(map["flags"]); // after app. groups created
 }

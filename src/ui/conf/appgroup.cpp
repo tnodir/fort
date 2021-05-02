@@ -219,3 +219,57 @@ void AppGroup::copy(const AppGroup &o)
     m_blockText = o.blockText();
     m_allowText = o.allowText();
 }
+
+QVariant AppGroup::toVariant() const
+{
+    QVariantMap map;
+
+    map["edited"] = edited();
+
+    map["enabled"] = enabled();
+    map["logConn"] = logConn();
+    map["fragmentPacket"] = fragmentPacket();
+
+    map["periodEnabled"] = periodEnabled();
+    map["periodFrom"] = periodFrom();
+    map["periodTo"] = periodTo();
+
+    map["limitInEnabled"] = limitInEnabled();
+    map["limitOutEnabled"] = limitOutEnabled();
+    map["speedLimitIn"] = speedLimitIn();
+    map["speedLimitOut"] = speedLimitOut();
+
+    map["id"] = id();
+
+    map["name"] = name();
+    map["blockText"] = blockText();
+    map["allowText"] = allowText();
+
+    return map;
+}
+
+void AppGroup::fromVariant(const QVariant &v)
+{
+    const QVariantMap map = v.toMap();
+
+    m_edited = map["edited"].toBool();
+
+    m_enabled = map["enabled"].toBool();
+    m_logConn = map["logConn"].toBool();
+    m_fragmentPacket = map["fragmentPacket"].toBool();
+
+    m_periodEnabled = map["periodEnabled"].toBool();
+    m_periodFrom = DateUtil::reformatTime(map["periodFrom"].toString());
+    m_periodTo = DateUtil::reformatTime(map["periodTo"].toString());
+
+    m_limitInEnabled = map["limitInEnabled"].toBool();
+    m_limitOutEnabled = map["limitOutEnabled"].toBool();
+    m_speedLimitIn = map["speedLimitIn"].toUInt();
+    m_speedLimitOut = map["speedLimitOut"].toUInt();
+
+    m_id = map["id"].toLongLong();
+
+    m_name = map["name"].toString();
+    m_blockText = map["blockText"].toString();
+    m_allowText = map["allowText"].toString();
+}

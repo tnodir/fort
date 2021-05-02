@@ -127,10 +127,19 @@ public:
     const QList<AppGroup *> &removedAppGroupsList() const { return m_removedAppGroups; }
     void clearRemovedAppGroups() const;
 
-    void copyFlags(const FirewallConf &o);
     void copyImmediateFlags(const FirewallConf &o);
+    void copyFlags(const FirewallConf &o);
 
     void copy(const FirewallConf &o);
+
+    QVariant immediateFlagsToVariant() const;
+    QVariant flagsToVariant() const;
+
+    void immediateFlagsFromVariant(const QVariant &v);
+    void flagsFromVariant(const QVariant &v);
+
+    QVariant toVariant() const;
+    void fromVariant(const QVariant &v);
 
 signals:
     void provBootChanged();
