@@ -14,6 +14,8 @@ enum Command : qint8 {
     Rpc_AppInfoManager_checkLookupFinished,
     Rpc_ConfManager_,
     Rpc_DriverManager_updateState,
+    Rpc_DriverManager_reinstallDriver,
+    Rpc_DriverManager_uninstallDriver,
     Rpc_QuotaManager_alert,
     Rpc_StatManager_,
     Rpc_TaskManager_,

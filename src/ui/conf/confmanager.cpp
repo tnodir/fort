@@ -748,10 +748,6 @@ bool ConfManager::validateDriver()
     QByteArray buf;
 
     const int verSize = confUtil.writeVersion(buf);
-    if (!verSize) {
-        showErrorMessage(confUtil.errorMessage());
-        return false;
-    }
 
     return driverManager()->validate(buf, verSize);
 }

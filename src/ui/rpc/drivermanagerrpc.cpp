@@ -21,9 +21,15 @@ RpcManager *DriverManagerRpc::rpcManager() const
     return fortManager()->rpcManager();
 }
 
-void DriverManagerRpc::reinstallDriver() { }
+void DriverManagerRpc::reinstallDriver()
+{
+    rpcManager()->invokeOnServer(Control::Rpc_DriverManager_reinstallDriver);
+}
 
-void DriverManagerRpc::uninstallDriver() { }
+void DriverManagerRpc::uninstallDriver()
+{
+    rpcManager()->invokeOnServer(Control::Rpc_DriverManager_uninstallDriver);
+}
 
 void DriverManagerRpc::updateState(quint32 errorCode, bool isDeviceOpened)
 {

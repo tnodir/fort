@@ -76,6 +76,10 @@ void FortSettings::initialize(const QStringList &args, EnvManager *envManager)
     processArguments(args);
     setupPaths(envManager);
     setupIni();
+
+    if (isService()) {
+        qputenv("FORT_SILENT", "1"); // For batch scripts
+    }
 }
 
 void FortSettings::processArguments(const QStringList &args)

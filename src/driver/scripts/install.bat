@@ -47,7 +47,7 @@ sc start %BASENAME%
 
 :EXIT
 @echo End execution... Error Code = %RCODE%
-@if %RCODE% neq 0 (
-    @pause
+@if "%FORT_SILENT%" equ "" (
+    @if %RCODE% neq 0 @pause
 )
 @exit /b %RCODE%

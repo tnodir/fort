@@ -142,6 +142,12 @@ bool RpcManager::processCommandRpc(
             return true;
         }
         break;
+    case Control::Rpc_DriverManager_reinstallDriver:
+        driverManager()->reinstallDriver();
+        return true;
+    case Control::Rpc_DriverManager_uninstallDriver:
+        driverManager()->uninstallDriver();
+        return true;
     case Control::Rpc_QuotaManager_alert:
         emit quotaManager()->alert(args.value(0).toInt());
         return true;
