@@ -640,6 +640,10 @@
         <source>Show log messages in console</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

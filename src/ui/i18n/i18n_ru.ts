@@ -640,6 +640,10 @@
         <source>Show log messages in console</source>
         <translation>Логи в консоле</translation>
     </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>Интеграция с Windows Explorer</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

@@ -313,27 +313,27 @@
     </message>
     <message>
         <source>Blocked Internet address</source>
-        <translation type="unfinished">Endereços de Internet Bloqueados</translation>
+        <translation>Endereços de Internet Bloqueados</translation>
     </message>
     <message>
         <source>Old connection closed on startup</source>
-        <translation type="unfinished">Conexão antiga fechada ao iniciar</translation>
+        <translation>Conexão antiga fechada ao iniciar</translation>
     </message>
     <message>
         <source>Programs logic</source>
-        <translation type="unfinished">Lógica de programa</translation>
+        <translation>Lógica de programa</translation>
     </message>
     <message>
         <source>App. Group logic</source>
-        <translation type="unfinished">App. Lógica de programa</translation>
+        <translation>App. Lógica de programa</translation>
     </message>
     <message>
         <source>App. Group default logic</source>
-        <translation type="unfinished">App. Lógica de programa padrão</translation>
+        <translation>App. Lógica de programa padrão</translation>
     </message>
     <message>
         <source>Unknown</source>
-        <translation type="unfinished">Desconhecido</translation>
+        <translation>Desconhecido</translation>
     </message>
 </context>
 <context>
@@ -630,7 +630,7 @@
     </message>
     <message>
         <source>Logs</source>
-        <translation type="unfinished">Registros</translation>
+        <translation>Registros</translation>
     </message>
     <message>
         <source>Log debug messages</source>
@@ -638,6 +638,10 @@
     </message>
     <message>
         <source>Show log messages in console</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

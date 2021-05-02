@@ -630,15 +630,19 @@
     </message>
     <message>
         <source>Logs</source>
-        <translation type="unfinished">Protokolle</translation>
+        <translation>Protokolle</translation>
     </message>
     <message>
         <source>Log debug messages</source>
-        <translation type="unfinished"></translation>
+        <translation>Debug-Meldungen protokollieren</translation>
     </message>
     <message>
         <source>Show log messages in console</source>
-        <translation type="unfinished"></translation>
+        <translation>Protokollnachrichten in der Konsole anzeigen</translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>Windows Explorer-Integration</translation>
     </message>
 </context>
 <context>

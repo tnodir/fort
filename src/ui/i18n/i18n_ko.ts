@@ -630,7 +630,7 @@
     </message>
     <message>
         <source>Logs</source>
-        <translation type="unfinished">로그</translation>
+        <translation>로그</translation>
     </message>
     <message>
         <source>Log debug messages</source>
@@ -638,6 +638,10 @@
     </message>
     <message>
         <source>Show log messages in console</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
