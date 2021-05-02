@@ -634,15 +634,15 @@
     </message>
     <message>
         <source>Log debug messages</source>
-        <translation type="unfinished"></translation>
+        <translation>Journaliser les messages de débogage</translation>
     </message>
     <message>
         <source>Show log messages in console</source>
-        <translation type="unfinished"></translation>
+        <translation>Afficher les messages du journal dans la console</translation>
     </message>
     <message>
         <source>Windows Explorer integration</source>
-        <translation type="unfinished"></translation>
+        <translation>Intégration de l&apos;Explorateur Windows</translation>
     </message>
 </context>
 <context>
