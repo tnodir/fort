@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v3.3.9, 2021-05-02:
+- UI: Options: Agg "Logs" box.
+- UI: Exit gracefully on console close.
+- Move "Windows Explorer integration" from Installer to UI.
+- UI: Update translations.
+
 v3.3.8, 2021-04-27:
 - UI: Add German translation.
 - UI: Add Portuguese (Brazilian) translation.
