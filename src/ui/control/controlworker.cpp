@@ -68,7 +68,7 @@ bool parseArgsData(const QByteArray &buffer, QVariantList &args)
 }
 
 ControlWorker::ControlWorker(QLocalSocket *socket, QObject *parent) :
-    QObject(parent), m_isServiceClient(false), m_isPasswordChecked(false), m_socket(socket)
+    QObject(parent), m_isServiceClient(false), m_isClientValidated(false), m_socket(socket)
 {
 }
 

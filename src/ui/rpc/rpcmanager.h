@@ -52,6 +52,8 @@ private:
 
     void invokeOnClients(Control::Command cmd, const QVariantList &args);
 
+    bool checkClientValidated(ControlWorker *w) const;
+
 private:
     FortManager *m_fortManager = nullptr;
 

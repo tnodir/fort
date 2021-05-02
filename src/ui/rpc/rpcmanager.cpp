@@ -119,6 +119,11 @@ void RpcManager::invokeOnClients(Control::Command cmd, const QVariantList &args)
     }
 }
 
+bool RpcManager::checkClientValidated(ControlWorker *w) const
+{
+    return !settings()->isPasswordRequired() || w->isClientValidated();
+}
+
 bool RpcManager::processCommandRpc(
         ControlWorker *w, Control::Command cmd, const QVariantList &args, QString &errorMessage)
 {
@@ -136,17 +141,19 @@ bool RpcManager::processCommandRpc(
         confManager();
         return true;
     case Control::Rpc_DriverManager_updateState:
-        if (settings()->isServiceClient()) {
-            auto dm = qobject_cast<DriverManagerRpc *>(driverManager());
+        if (auto dm = qobject_cast<DriverManagerRpc *>(driverManager())) {
             dm->updateState(args.value(0).toUInt(), args.value(1).toBool());
-            return true;
         }
-        break;
+        return true;
     case Control::Rpc_DriverManager_reinstallDriver:
-        driverManager()->reinstallDriver();
+        if (checkClientValidated(w)) {
+            fortManager()->installDriver();
+        }
         return true;
     case Control::Rpc_DriverManager_uninstallDriver:
-        driverManager()->uninstallDriver();
+        if (checkClientValidated(w)) {
+            fortManager()->removeDriver();
+        }
         return true;
     case Control::Rpc_QuotaManager_alert:
         emit quotaManager()->alert(args.value(0).toInt());

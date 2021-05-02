@@ -18,8 +18,8 @@ public:
     bool isServiceClient() const { return m_isServiceClient; }
     void setIsServiceClient(bool v) { m_isServiceClient = v; }
 
-    bool isPasswordChecked() const { return m_isPasswordChecked; }
-    void setIsPasswordChecked(bool v) { m_isPasswordChecked = v; }
+    bool isClientValidated() const { return m_isClientValidated; }
+    void setIsClientValidated(bool v) { m_isClientValidated = v; }
 
     QLocalSocket *socket() const { return m_socket; }
 
@@ -69,7 +69,7 @@ private:
     };
 
     bool m_isServiceClient : 1;
-    bool m_isPasswordChecked : 1;
+    bool m_isClientValidated : 1;
 
     RequestHeader m_requestHeader;
     QByteArray m_requestBuffer;
