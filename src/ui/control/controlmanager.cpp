@@ -59,6 +59,7 @@ bool ControlManager::listen(FortManager *fortManager)
     Q_ASSERT(!m_server);
     m_server = new QLocalServer(this);
     m_server->setMaxPendingConnections(3);
+    m_server->setSocketOptions(QLocalServer::WorldAccessOption);
 
     if (!m_server->listen(getServerName(settings()->isService()))) {
         logWarning() << "Local Server create error:" << m_server->errorString();
