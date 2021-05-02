@@ -21,6 +21,7 @@ protected slots:
 
 private:
     void saveStartMode();
+    void saveExplorerIntegration();
     void saveIni();
 
     void retranslateComboStartMode();
@@ -47,6 +48,7 @@ private:
 private:
     uint m_iniEdited : 1;
     uint m_currentStartMode : 4;
+    uint m_explorerIntegrated : 1;
 
     QGroupBox *m_gbStartup = nullptr;
     QGroupBox *m_gbTraffic = nullptr;
@@ -62,6 +64,7 @@ private:
     QCheckBox *m_cbStopTraffic = nullptr;
     QCheckBox *m_cbStopInetTraffic = nullptr;
     QCheckBox *m_cbAllowAllNew = nullptr;
+    QCheckBox *m_cbExplorerMenu = nullptr;
     QCheckBox *m_cbHotKeys = nullptr;
     QCheckBox *m_cbPassword = nullptr;
     QLineEdit *m_editPassword = nullptr;

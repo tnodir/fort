@@ -129,6 +129,7 @@ SOURCES += \
     util/net/netutil.cpp \
     util/osutil.cpp \
     util/processinfo.cpp \
+    util/regkey.cpp \
     util/serviceworker.cpp \
     util/startuputil.cpp \
     util/stringutil.cpp \
@@ -265,6 +266,7 @@ HEADERS += \
     util/net/netutil.h \
     util/osutil.h \
     util/processinfo.h \
+    util/regkey.h \
     util/serviceworker.h \
     util/startuputil.h \
     util/stringutil.h \

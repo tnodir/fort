@@ -26,7 +26,7 @@
 #include "../optionscontroller.h"
 
 OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) :
-    BasePage(ctrl, parent), m_iniEdited(false), m_currentStartMode(0)
+    BasePage(ctrl, parent), m_iniEdited(false), m_currentStartMode(0), m_explorerIntegrated(false)
 {
     setupUi();
 }
@@ -50,6 +50,7 @@ void OptionsPage::onEditResetted()
 void OptionsPage::onSaved()
 {
     saveStartMode();
+    saveExplorerIntegration();
 
     if (iniEdited()) {
         saveIni();
@@ -69,6 +70,14 @@ void OptionsPage::saveStartMode()
             QMetaObject::invokeMethod(
                     fortManager(), &FortManager::processRestartRequired, Qt::QueuedConnection);
         }
+    }
+}
+
+void OptionsPage::saveExplorerIntegration()
+{
+    if (m_explorerIntegrated != m_cbExplorerMenu->isChecked()) {
+        m_explorerIntegrated = m_cbExplorerMenu->isChecked();
+        StartupUtil::integrateExplorer(m_explorerIntegrated);
     }
 }
 
@@ -110,6 +119,8 @@ void OptionsPage::onRetranslateUi()
     m_cbStopTraffic->setText(tr("Stop Traffic"));
     m_cbStopInetTraffic->setText(tr("Stop Internet Traffic"));
     m_cbAllowAllNew->setText(tr("Auto-Allow New Programs"));
+
+    m_cbExplorerMenu->setText(tr("Windows Explorer integration"));
     m_cbHotKeys->setText(tr("Hot Keys"));
 
     m_cbPassword->setText(tr("Password:"));
@@ -290,6 +301,11 @@ void OptionsPage::setupTrafficBox()
 
 void OptionsPage::setupGlobalBox()
 {
+    m_explorerIntegrated = StartupUtil::isExplorerIntegrated();
+    m_cbExplorerMenu = ControlUtil::createCheckBox(
+            m_explorerIntegrated, [&](int) { ctrl()->setOthersEdited(true); });
+    m_cbExplorerMenu->setEnabled(OsUtil::isUserAdmin());
+
     m_cbHotKeys = ControlUtil::createCheckBox(
             settings()->hotKeyEnabled(), [&](bool) { setIniEdited(true); });
 
@@ -300,6 +316,7 @@ void OptionsPage::setupGlobalBox()
     auto langLayout = setupLangLayout();
 
     auto layout = new QVBoxLayout();
+    layout->addWidget(m_cbExplorerMenu);
     layout->addWidget(m_cbHotKeys);
     layout->addLayout(passwordLayout);
     layout->addWidget(m_btPasswordLock, 0, Qt::AlignCenter);

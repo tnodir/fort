@@ -10,13 +10,18 @@
 #include <fort_version.h>
 
 #include "fileutil.h"
+#include "regkey.h"
 
 namespace {
 
-const char *const regCurUserRun =
-        R"(HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Run)";
-const char *const regAllUsersRun =
-        R"(HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run)";
+constexpr RegKey::Root regCurUserRoot = RegKey::HKCU;
+const char *const regCurUserRun = R"(SOFTWARE\Microsoft\Windows\CurrentVersion\Run)";
+
+constexpr RegKey::Root regAllUsersRoot = RegKey::HKLM;
+const char *const regAllUsersRun = R"(SOFTWARE\Microsoft\Windows\CurrentVersion\Run)";
+
+constexpr RegKey::Root regShellRoot = RegKey::HKLM;
+const char *const regShellMenu = R"(SOFTWARE\Classes\SystemFileAssociations\.exe\Shell)";
 
 QString startupShortcutPath()
 {
@@ -26,56 +31,56 @@ QString startupShortcutPath()
 
 QString wrappedAppFilePath()
 {
-    const auto filePath = QCoreApplication::applicationFilePath().replace('/', '\\');
+    const auto filePath = FileUtil::toNativeSeparators(QCoreApplication::applicationFilePath());
     return QString("\"%1\"").arg(filePath);
 }
 
-bool isAutorunForUser(const char *key)
+bool isAutorunForUser(RegKey::Root root, const char *key)
 {
-    const QSettings reg(key, QSettings::Registry64Format);
-    return !reg.value(APP_NAME).isNull();
+    const RegKey reg(root, key, RegKey::DefaultReadOnly);
+    return reg.contains(APP_NAME);
 }
 
 bool isAutorunForCurrentUser()
 {
-    return isAutorunForUser(regCurUserRun);
+    return isAutorunForUser(regCurUserRoot, regCurUserRun);
 }
 
 bool isAutorunForAllUsers()
 {
-    return isAutorunForUser(regAllUsersRun);
+    return isAutorunForUser(regAllUsersRoot, regAllUsersRun);
 }
 
-void setAutorunForUser(const char *key, const QString &command)
+void setAutorunForUser(RegKey::Root root, const char *key, const QString &command)
 {
-    QSettings reg(key, QSettings::Registry64Format);
+    RegKey reg(root, key, RegKey::DefaultReadWrite);
     reg.setValue(APP_NAME, command);
 }
 
 void setAutorunForCurrentUser(const QString &command)
 {
-    setAutorunForUser(regCurUserRun, command);
+    setAutorunForUser(regCurUserRoot, regCurUserRun, command);
 }
 
 void setAutorunForAllUsers(const QString &command)
 {
-    setAutorunForUser(regAllUsersRun, command);
+    setAutorunForUser(regAllUsersRoot, regAllUsersRun, command);
 }
 
-void removeAutorunForUser(const char *key)
+void removeAutorunForUser(RegKey::Root root, const char *key)
 {
-    QSettings reg(key, QSettings::Registry64Format);
-    reg.remove(APP_NAME);
+    RegKey reg(root, key, RegKey::DefaultReadWrite);
+    reg.removeValue(APP_NAME);
 }
 
 void removeAutorunForCurrentUser()
 {
-    removeAutorunForUser(regCurUserRun);
+    removeAutorunForUser(regCurUserRoot, regCurUserRun);
 }
 
 void removeAutorunForAllUsers()
 {
-    removeAutorunForUser(regAllUsersRun);
+    removeAutorunForUser(regAllUsersRoot, regAllUsersRun);
 }
 
 bool installService(
@@ -193,4 +198,28 @@ void StartupUtil::setStartupMode(int mode, const QString &defaultLanguage)
 bool StartupUtil::isServiceMode(int mode)
 {
     return mode == StartupAllUsers || mode == StartupAllUsersBackground;
+}
+
+bool StartupUtil::isExplorerIntegrated()
+{
+    const RegKey regShell(regShellRoot, regShellMenu, RegKey::DefaultReadOnly);
+    const RegKey reg(regShell, APP_NAME, RegKey::DefaultReadOnly);
+    return !reg.isNull();
+}
+
+void StartupUtil::integrateExplorer(bool integrate)
+{
+    RegKey regShell(regShellRoot, regShellMenu, RegKey::DefaultReadWrite);
+    if (integrate) {
+        const QString wrappedPath = wrappedAppFilePath();
+
+        RegKey reg(regShell, APP_NAME, RegKey::DefaultCreate);
+        reg.setValue("icon", wrappedPath);
+        reg.setValue("MUIVerb", APP_NAME + QLatin1String(" ..."));
+
+        RegKey regCommand(reg, "command", RegKey::DefaultCreate);
+        regCommand.setDefaultValue(wrappedPath + " -w -c prog add \"%1\"");
+    } else {
+        regShell.removeRecursively(APP_NAME);
+    }
 }

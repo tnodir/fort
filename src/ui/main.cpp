@@ -30,10 +30,11 @@ static void setupAppStyle()
 
 int main(int argc, char *argv[])
 {
-    // Uninstall: Unregister booted provider, startup entries and exit
+    // Uninstall
     if (argc > 1 && !strcmp(argv[1], "-u")) {
-        StartupUtil::setStartupMode(StartupUtil::StartupDisabled);
-        DriverCommon::provUnregister();
+        StartupUtil::setStartupMode(StartupUtil::StartupDisabled); // Remove auto-run and service
+        StartupUtil::integrateExplorer(false); // Remove Windows Explorer integration
+        DriverCommon::provUnregister(); // Unregister booted provider
         return 0;
     }
 

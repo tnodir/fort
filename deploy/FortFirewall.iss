@@ -49,23 +49,12 @@ Name: pt; MessagesFile: "compiler:Languages\Portuguese.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; Flags: unchecked
-Name: "explorer"; Description: "File Explorer integration"; Flags: unchecked
 Name: "portable"; Description: "Portable"; Flags: unchecked
 
 [Files]
 Source: "build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#APP_EXE_NAME}.example.ini"; DestDir: "{app}"
 Source: "README.portable"; DestDir: "{app}"; Tasks: portable
-
-[Registry]
-; Explorer's Context Menu
-#define REG_SHELL	"SystemFileAssociations\.exe\Shell"
-#define REG_SHELL_MENU	REG_SHELL + "\Fort Firewall"
-Root: HKCR; Subkey: "{#REG_SHELL}"; Flags: uninsdeletekeyifempty; Tasks: explorer
-Root: HKCR; Subkey: "{#REG_SHELL_MENU}"; Flags: deletekey uninsdeletekey
-Root: HKCR; Subkey: "{#REG_SHELL_MENU}"; ValueType: string; ValueName: "icon"; ValueData: "{#APP_EXE}"; Tasks: explorer
-Root: HKCR; Subkey: "{#REG_SHELL_MENU}"; ValueType: string; ValueName: "MUIVerb"; ValueData: "Fort Firewall ..."; Tasks: explorer
-Root: HKCR; Subkey: "{#REG_SHELL_MENU}\command"; ValueType: string; ValueData: """{#APP_EXE}"" -w -c prog add ""%1"""; Tasks: explorer
 
 [Icons]
 ; Start menu shortcut

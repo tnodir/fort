@@ -23,6 +23,9 @@ public:
     static void setStartupMode(int mode, const QString &defaultLanguage = QString());
 
     static bool isServiceMode(int mode);
+
+    static bool isExplorerIntegrated();
+    static void integrateExplorer(bool integrate);
 };
 
 #endif // STARTUPUTIL_H
