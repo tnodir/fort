@@ -68,6 +68,7 @@ void RpcManager::initialize()
 void RpcManager::setupServerSignals()
 {
     setupAppInfoManagerSignals();
+    setupDriverManagerSignals();
     setupQuotaManagerSignals();
 }
 
@@ -77,6 +78,16 @@ void RpcManager::setupAppInfoManagerSignals()
             [&](const QString &appPath, const AppInfo & /*appInfo*/) {
                 invokeOnClients(Control::Rpc_AppInfoManager_checkLookupFinished, { appPath });
             });
+}
+
+void RpcManager::setupDriverManagerSignals()
+{
+    const auto updateClientStates = [&] {
+        invokeOnClients(Control::Rpc_DriverManager_updateState,
+                { driverManager()->errorCode(), driverManager()->isDeviceOpened() });
+    };
+    connect(driverManager(), &DriverManager::errorCodeChanged, this, updateClientStates);
+    connect(driverManager(), &DriverManager::isDeviceOpenedChanged, this, updateClientStates);
 }
 
 void RpcManager::setupQuotaManagerSignals()
@@ -124,9 +135,13 @@ bool RpcManager::processCommandRpc(
     case Control::Rpc_ConfManager_:
         confManager();
         return true;
-    case Control::Rpc_DriverManager_:
-        driverManager();
-        return true;
+    case Control::Rpc_DriverManager_updateState:
+        if (settings()->isServiceClient()) {
+            auto dm = qobject_cast<DriverManagerRpc *>(driverManager());
+            dm->updateState(args.value(0).toUInt(), args.value(1).toBool());
+            return true;
+        }
+        break;
     case Control::Rpc_QuotaManager_alert:
         emit quotaManager()->alert(args.value(0).toInt());
         return true;
@@ -138,6 +153,7 @@ bool RpcManager::processCommandRpc(
         return true;
     default:
         errorMessage = "Unknown command";
-        return false;
     }
+
+    return false;
 }

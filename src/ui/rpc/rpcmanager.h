@@ -45,6 +45,7 @@ public:
 private:
     void setupServerSignals();
     void setupAppInfoManagerSignals();
+    void setupDriverManagerSignals();
     void setupQuotaManagerSignals();
 
     void setupClient();

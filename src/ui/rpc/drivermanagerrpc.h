@@ -13,13 +13,16 @@ class DriverManagerRpc : public DriverManager
 public:
     explicit DriverManagerRpc(FortManager *fortManager, QObject *parent = nullptr);
 
-    bool isDeviceOpened() const override;
+    bool isDeviceOpened() const override { return m_isDeviceOpened; }
+    void setIsDeviceOpened(bool v);
 
     FortManager *fortManager() const { return m_fortManager; }
     RpcManager *rpcManager() const;
 
     void reinstallDriver() override;
     void uninstallDriver() override;
+
+    void updateState(quint32 errorCode, bool isDeviceOpened);
 
 public slots:
     bool openDevice() override;

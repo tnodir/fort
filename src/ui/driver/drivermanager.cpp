@@ -25,51 +25,60 @@ DriverManager::~DriverManager()
 
 QString DriverManager::errorMessage() const
 {
-    return (m_errorCode == 0) ? QString() : OsUtil::errorMessage(m_errorCode);
+    return (errorCode() == 0) ? QString() : OsUtil::errorMessage(errorCode());
 }
 
-void DriverManager::updateError(bool success)
+void DriverManager::setErrorCode(quint32 v)
 {
-    m_errorCode = success ? 0 : OsUtil::lastErrorCode();
-    emit errorMessageChanged();
+    if (m_errorCode != v) {
+        m_errorCode = v;
+        emit errorCodeChanged();
+    }
+}
+
+void DriverManager::updateErrorCode(bool success)
+{
+    setErrorCode(success ? 0 : OsUtil::lastErrorCode());
 }
 
 bool DriverManager::isDeviceError() const
 {
-    return m_errorCode != 0 && m_errorCode != DriverCommon::userErrorCode();
+    return errorCode() != 0 && errorCode() != DriverCommon::userErrorCode();
 }
 
 void DriverManager::setupWorker()
 {
-    QThreadPool::globalInstance()->start(m_driverWorker);
+    QThreadPool::globalInstance()->start(driverWorker());
 }
 
 void DriverManager::abortWorker()
 {
-    m_driverWorker->abort();
+    driverWorker()->abort();
 }
 
 bool DriverManager::isDeviceOpened() const
 {
-    return m_device->isOpened();
+    return device()->isOpened();
 }
 
 bool DriverManager::openDevice()
 {
-    const bool res = m_device->open(DriverCommon::deviceName());
-
-    updateError(res);
+    const bool res = device()->open(DriverCommon::deviceName());
 
     emit isDeviceOpenedChanged();
+
+    updateErrorCode(res);
 
     return res;
 }
 
 bool DriverManager::closeDevice()
 {
-    const bool res = m_device->close();
+    const bool res = device()->close();
 
     emit isDeviceOpenedChanged();
+
+    updateErrorCode(true);
 
     return res;
 }
@@ -101,11 +110,11 @@ bool DriverManager::writeData(quint32 code, QByteArray &buf, int size)
     if (!isDeviceOpened())
         return true;
 
-    m_driverWorker->cancelAsyncIo();
+    driverWorker()->cancelAsyncIo();
 
-    const bool res = m_device->ioctl(code, buf.data(), size);
+    const bool res = device()->ioctl(code, buf.data(), size);
 
-    updateError(res);
+    updateErrorCode(res);
 
     return res;
 }

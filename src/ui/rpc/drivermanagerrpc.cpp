@@ -8,9 +8,12 @@ DriverManagerRpc::DriverManagerRpc(FortManager *fortManager, QObject *parent) :
 {
 }
 
-bool DriverManagerRpc::isDeviceOpened() const
+void DriverManagerRpc::setIsDeviceOpened(bool v)
 {
-    return m_isDeviceOpened;
+    if (m_isDeviceOpened != v) {
+        m_isDeviceOpened = v;
+        emit isDeviceOpenedChanged();
+    }
 }
 
 RpcManager *DriverManagerRpc::rpcManager() const
@@ -21,6 +24,12 @@ RpcManager *DriverManagerRpc::rpcManager() const
 void DriverManagerRpc::reinstallDriver() { }
 
 void DriverManagerRpc::uninstallDriver() { }
+
+void DriverManagerRpc::updateState(quint32 errorCode, bool isDeviceOpened)
+{
+    setIsDeviceOpened(isDeviceOpened);
+    setErrorCode(errorCode);
+}
 
 bool DriverManagerRpc::openDevice()
 {

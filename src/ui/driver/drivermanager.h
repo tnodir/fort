@@ -20,8 +20,10 @@ public:
     ~DriverManager() override;
     CLASS_DELETE_COPY_MOVE(DriverManager)
 
+    Device *device() const { return m_device; }
     DriverWorker *driverWorker() const { return m_driverWorker; }
 
+    quint32 errorCode() const { return m_errorCode; }
     QString errorMessage() const;
     bool isDeviceError() const;
 
@@ -31,7 +33,7 @@ public:
     virtual void uninstallDriver();
 
 signals:
-    void errorMessageChanged();
+    void errorCodeChanged();
     void isDeviceOpenedChanged();
 
 public slots:
@@ -44,8 +46,11 @@ public slots:
     bool writeApp(QByteArray &buf, int size, bool remove = false);
     bool writeZones(QByteArray &buf, int size, bool onlyFlags = false);
 
+protected:
+    void setErrorCode(quint32 v);
+
 private:
-    void updateError(bool success);
+    void updateErrorCode(bool success);
 
     void setupWorker();
     void abortWorker();

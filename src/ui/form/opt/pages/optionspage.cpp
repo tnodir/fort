@@ -495,7 +495,7 @@ void OptionsPage::setupDriverIcon()
     refreshDriverIcon();
 
     connect(driverManager(), &DriverManager::isDeviceOpenedChanged, this, refreshDriverIcon);
-    connect(driverManager(), &DriverManager::errorMessageChanged, this,
+    connect(driverManager(), &DriverManager::errorCodeChanged, this,
             &OptionsPage::retranslateDriverMessage);
 }
 
