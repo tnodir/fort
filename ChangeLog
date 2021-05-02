@@ -1,7 +1,7 @@
 Fort Firewall ChangeLog
 
 v3.3.9, 2021-05-02:
-- UI: Options: Agg "Logs" box.
+- UI: Options: Add "Logs" box.
 - UI: Exit gracefully on console close.
 - Move "Windows Explorer integration" from Installer to UI.
 - UI: Update translations.
