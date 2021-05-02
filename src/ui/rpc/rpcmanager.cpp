@@ -68,6 +68,7 @@ void RpcManager::initialize()
 void RpcManager::setupServerSignals()
 {
     setupAppInfoManagerSignals();
+    setupConfManagerSignals();
     setupDriverManagerSignals();
     setupQuotaManagerSignals();
 }
@@ -80,11 +81,17 @@ void RpcManager::setupAppInfoManagerSignals()
             });
 }
 
+void RpcManager::setupConfManagerSignals()
+{
+    connect(confManager(), &ConfManager::confSaved, this, [&](bool onlyFlags) {
+        // TODO: invokeOnClients(Control::Rpc_ConfManager_confSaved, { onlyFlags });
+    });
+}
+
 void RpcManager::setupDriverManagerSignals()
 {
     const auto updateClientStates = [&] {
-        invokeOnClients(Control::Rpc_DriverManager_updateState,
-                { driverManager()->errorCode(), driverManager()->isDeviceOpened() });
+        invokeOnClients(Control::Rpc_DriverManager_updateState, driverManager_updateState_args());
     };
     connect(driverManager(), &DriverManager::errorCodeChanged, this, updateClientStates);
     connect(driverManager(), &DriverManager::isDeviceOpenedChanged, this, updateClientStates);
@@ -124,12 +131,24 @@ bool RpcManager::checkClientValidated(ControlWorker *w) const
     return !settings()->isPasswordRequired() || w->isClientValidated();
 }
 
+void RpcManager::initClientOnServer(ControlWorker *w) const
+{
+    w->setIsServiceClient(true);
+
+    w->sendCommand(Control::Rpc_DriverManager_updateState, driverManager_updateState_args());
+}
+
+QVariantList RpcManager::driverManager_updateState_args() const
+{
+    return { driverManager()->errorCode(), driverManager()->isDeviceOpened() };
+}
+
 bool RpcManager::processCommandRpc(
         ControlWorker *w, Control::Command cmd, const QVariantList &args, QString &errorMessage)
 {
     switch (cmd) {
     case Control::Rpc_RpcManager_initClient:
-        w->setIsServiceClient(true);
+        initClientOnServer(w);
         return true;
     case Control::Rpc_AppInfoManager_lookupAppInfo:
         appInfoManager()->lookupAppInfo(args.value(0).toString());

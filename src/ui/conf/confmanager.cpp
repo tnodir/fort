@@ -581,7 +581,7 @@ bool ConfManager::updateAppName(qint64 appId, const QString &appName)
     return checkResult(ok);
 }
 
-bool ConfManager::walkApps(std::function<walkAppsCallback> func)
+bool ConfManager::walkApps(const std::function<walkAppsCallback> &func)
 {
     SqliteStmt stmt;
     if (!sqliteDb()->prepare(stmt, sqlSelectApps))

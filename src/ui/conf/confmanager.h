@@ -54,7 +54,7 @@ public:
             bool useGroupPerm, bool blocked);
     bool updateAppName(qint64 appId, const QString &appName);
 
-    bool walkApps(std::function<walkAppsCallback> func) override;
+    bool walkApps(const std::function<walkAppsCallback> &func) override;
 
     int appEndsCount();
     void updateAppEndTimes();

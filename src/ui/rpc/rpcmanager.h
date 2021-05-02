@@ -45,6 +45,7 @@ public:
 private:
     void setupServerSignals();
     void setupAppInfoManagerSignals();
+    void setupConfManagerSignals();
     void setupDriverManagerSignals();
     void setupQuotaManagerSignals();
 
@@ -53,6 +54,9 @@ private:
     void invokeOnClients(Control::Command cmd, const QVariantList &args);
 
     bool checkClientValidated(ControlWorker *w) const;
+    void initClientOnServer(ControlWorker *w) const;
+
+    QVariantList driverManager_updateState_args() const;
 
 private:
     FortManager *m_fortManager = nullptr;
