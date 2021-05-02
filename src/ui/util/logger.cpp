@@ -1,5 +1,7 @@
 #include "logger.h"
 
+#include <QCoreApplication>
+
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 
@@ -14,6 +16,24 @@
 namespace {
 
 QtMessageHandler g_oldMessageHandler = nullptr;
+
+BOOL WINAPI consoleCtrlHandler(DWORD /*ctrlType*/)
+{
+    QCoreApplication::quit();
+    Sleep(100); // Let the process exit gracefully
+    return TRUE;
+}
+
+void showConsole(bool visible)
+{
+    if (visible) {
+        if (AllocConsole()) {
+            SetConsoleCtrlHandler(consoleCtrlHandler, TRUE);
+        }
+    } else {
+        FreeConsole();
+    }
+}
 
 void writeToConsole(const QMessageLogContext &context, const QString &message)
 {
@@ -97,11 +117,7 @@ void Logger::setConsole(bool v)
     if (m_console != v) {
         m_console = v;
 
-        if (console()) {
-            AllocConsole();
-        } else {
-            FreeConsole();
-        }
+        showConsole(console());
     }
 }
 
