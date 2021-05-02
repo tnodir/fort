@@ -495,7 +495,7 @@
     </message>
     <message>
         <source>Profile</source>
-        <translation>Profile</translation>
+        <translation>Profil</translation>
     </message>
     <message>
         <source>Releases</source>
@@ -526,7 +526,7 @@
     </message>
     <message>
         <source>Global</source>
-        <translation>Global</translation>
+        <translation>Allgemein</translation>
     </message>
     <message>
         <source>Driver</source>
