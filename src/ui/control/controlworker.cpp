@@ -9,7 +9,7 @@ constexpr int commandMaxArgs = 7;
 constexpr int commandArgMaxSize = 4 * 1024;
 constexpr quint32 dataMaxSize = 1 * 1024 * 1024;
 
-bool buildArgsData(QByteArray &data, const QVariantList &args)
+bool buildArgsData(QByteArray &buffer, const QVariantList &args)
 {
     const int argsCount = args.count();
     if (argsCount == 0)
@@ -18,25 +18,35 @@ bool buildArgsData(QByteArray &data, const QVariantList &args)
     if (argsCount > commandMaxArgs)
         return false;
 
-    QDataStream stream(&data,
+    QByteArray data;
+    {
+        QDataStream stream(&data,
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-            QIODevice::WriteOnly
+                QIODevice::WriteOnly
 #else
-            QDataStream::WriteOnly
+                QDataStream::WriteOnly
 #endif
-    );
+        );
 
-    stream << qint8(argsCount);
+        stream << qint8(argsCount);
 
-    for (const auto &arg : args) {
-        stream << arg;
+        for (const auto &arg : args) {
+            stream << arg;
+        }
     }
+
+    buffer = qCompress(data);
 
     return true;
 }
 
-bool parseArgsData(const QByteArray &data, QVariantList &args)
+bool parseArgsData(const QByteArray &buffer, QVariantList &args)
 {
+    if (buffer.isEmpty())
+        return true;
+
+    const QByteArray data = qUncompress(buffer);
+
     QDataStream stream(data);
 
     qint8 argsCount;
@@ -132,7 +142,7 @@ bool ControlWorker::readRequest()
     }
 
     QVariantList args;
-    if (!m_requestBuffer.isEmpty() && !parseArgsData(m_requestBuffer, args))
+    if (!parseArgsData(m_requestBuffer, args))
         return false;
 
     const Control::Command command = m_requestHeader.command();
