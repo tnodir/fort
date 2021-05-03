@@ -63,11 +63,8 @@ AlwaysBreakTemplateDeclarations: true
 # clang-format does not handle that.
 AllowShortFunctionsOnASingleLine: Inline
 
-# The coding style specifies some include order categories, but also tells to
-# separate categories with an empty line. It does not specify the order within
-# the categories. Since the SortInclude feature of clang-format does not
-# re-order includes separated by empty lines, the feature is not used.
-SortIncludes: false
+# Sort #includes within categories.
+SortIncludes: true
 
 # Sort each #include block separately.
 IncludeBlocks: Preserve
