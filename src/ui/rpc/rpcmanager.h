@@ -24,6 +24,8 @@ class RpcManager : public QObject
 public:
     explicit RpcManager(FortManager *fortManager, QObject *parent = nullptr);
 
+    Control::Command resultCommand() const { return m_resultCommand; }
+
     FortManager *fortManager() const { return m_fortManager; }
     FortSettings *settings() const;
     ControlManager *controlManager() const;
@@ -38,6 +40,9 @@ public:
     void initialize();
 
     void invokeOnServer(Control::Command cmd, const QVariantList &args = {});
+
+    bool waitResult();
+    void sendResult(ControlWorker *w, bool ok);
 
     bool processCommandRpc(ControlWorker *w, Control::Command cmd, const QVariantList &args,
             QString &errorMessage);
@@ -59,6 +64,8 @@ private:
     QVariantList driverManager_updateState_args() const;
 
 private:
+    Control::Command m_resultCommand = Control::CommandNone;
+
     FortManager *m_fortManager = nullptr;
 
     ControlWorker *m_client = nullptr;

@@ -99,12 +99,19 @@ bool ControlWorker::sendCommand(Control::Command command, const QVariantList &ar
         socket()->write(buffer);
     }
 
+    socket()->flush();
+
     return true;
 }
 
 bool ControlWorker::waitForSent(int msecs) const
 {
     return socket()->waitForBytesWritten(msecs);
+}
+
+bool ControlWorker::waitForRead(int msecs) const
+{
+    return socket()->waitForReadyRead(msecs);
 }
 
 void ControlWorker::processRequest()

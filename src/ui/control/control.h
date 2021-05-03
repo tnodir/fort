@@ -9,6 +9,8 @@ enum Command : qint8 {
     CommandNone = 0,
     Conf,
     Prog,
+    Rpc_Result_Ok,
+    Rpc_Result_Error,
     Rpc_RpcManager_initClient,
     Rpc_AppInfoManager_lookupAppInfo,
     Rpc_AppInfoManager_checkLookupFinished,

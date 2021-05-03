@@ -117,6 +117,23 @@ void RpcManager::invokeOnServer(Control::Command cmd, const QVariantList &args)
     client()->sendCommand(cmd, args);
 }
 
+bool RpcManager::waitResult()
+{
+    m_resultCommand = Control::CommandNone;
+
+    do {
+        if (!client()->waitForRead())
+            return false;
+    } while (m_resultCommand == Control::CommandNone);
+
+    return true;
+}
+
+void RpcManager::sendResult(ControlWorker *w, bool ok)
+{
+    w->sendCommand(ok ? Control::Rpc_Result_Ok : Control::Rpc_Result_Error);
+}
+
 void RpcManager::invokeOnClients(Control::Command cmd, const QVariantList &args)
 {
     const auto clients = controlManager()->clients();
@@ -149,6 +166,10 @@ bool RpcManager::processCommandRpc(
         ControlWorker *w, Control::Command cmd, const QVariantList &args, QString &errorMessage)
 {
     switch (cmd) {
+    case Control::Rpc_Result_Ok:
+    case Control::Rpc_Result_Error:
+        m_resultCommand = cmd;
+        return true;
     case Control::Rpc_RpcManager_initClient:
         initClientOnServer(w);
         return true;
@@ -166,7 +187,7 @@ bool RpcManager::processCommandRpc(
     case Control::Rpc_ConfManager_save: {
         const bool ok = confManager()->saveVariant(
                 args.value(0), args.value(1).toInt(), args.value(2).toBool());
-        w->sendCommand(Control::Rpc_ConfManager_saveResult, { ok });
+        sendResult(w, ok);
         return true;
     }
     case Control::Rpc_DriverManager_updateState:

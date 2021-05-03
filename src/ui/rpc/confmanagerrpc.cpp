@@ -33,8 +33,17 @@ void ConfManagerRpc::setupAppEndTimer() { }
 bool ConfManagerRpc::saveToDbIni(FirewallConf &newConf, bool onlyFlags)
 {
     rpcManager()->invokeOnServer(Control::Rpc_ConfManager_save,
-            { newConf.toVariant(onlyFlags), onlyFlags, confVersion() });
-    // TODO: get result
-    // showErrorMessage("Save Conf: Service error.");
+            { newConf.toVariant(onlyFlags), confVersion(), onlyFlags });
+
+    if (!rpcManager()->waitResult()) {
+        showErrorMessage("Save Conf: Service isn't responding.");
+        return false;
+    }
+
+    if (rpcManager()->resultCommand() != Control::Rpc_Result_Ok) {
+        showErrorMessage("Save Conf: Service error.");
+        return false;
+    }
+
     return true;
 }

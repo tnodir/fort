@@ -25,9 +25,10 @@ public:
 
     void setupForAsync();
 
-    bool sendCommand(Control::Command command, const QVariantList &args);
+    bool sendCommand(Control::Command command, const QVariantList &args = {});
 
     bool waitForSent(int msecs = 1000) const;
+    bool waitForRead(int msecs = 1000) const;
 
     static QVariantList buildArgs(const QStringList &list);
 
