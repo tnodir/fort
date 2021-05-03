@@ -403,6 +403,18 @@ QVariant FirewallConf::immediateFlagsToVariant() const
     return map;
 }
 
+void FirewallConf::immediateFlagsFromVariant(const QVariant &v)
+{
+    const QVariantMap map = v.toMap();
+
+    m_logBlocked = map["logBlocked"].toBool();
+    m_logStat = map["logStat"].toBool();
+    m_logStatNoFilter = map["logStatNoFilter"].toBool();
+    m_logAllowedIp = map["logAllowedIp"].toBool();
+    m_logBlockedIp = map["logBlockedIp"].toBool();
+    m_trafUnit = map["trafUnit"].toInt();
+}
+
 QVariant FirewallConf::flagsToVariant() const
 {
     QVariantMap map = immediateFlagsToVariant().toMap();
@@ -434,18 +446,6 @@ QVariant FirewallConf::flagsToVariant() const
     map["quotaMonthMb"] = quotaMonthMb();
 
     return map;
-}
-
-void FirewallConf::immediateFlagsFromVariant(const QVariant &v)
-{
-    const QVariantMap map = v.toMap();
-
-    m_logBlocked = map["logBlocked"].toBool();
-    m_logStat = map["logStat"].toBool();
-    m_logStatNoFilter = map["logStatNoFilter"].toBool();
-    m_logAllowedIp = map["logAllowedIp"].toBool();
-    m_logBlockedIp = map["logBlockedIp"].toBool();
-    m_trafUnit = map["trafUnit"].toInt();
 }
 
 void FirewallConf::flagsFromVariant(const QVariant &v)
@@ -481,43 +481,65 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
     immediateFlagsFromVariant(v);
 }
 
-QVariant FirewallConf::toVariant() const
+QVariant FirewallConf::addressesToVariant() const
 {
-    QVariantMap map;
-
     QVariantList addresses;
     for (const AddressGroup *addressGroup : addressGroups()) {
         addresses.append(addressGroup->toVariant());
     }
-    map["addressGroups"] = addresses;
+    return addresses;
+}
 
+void FirewallConf::addressesFromVariant(const QVariant &v)
+{
+    const QVariantList addresses = v.toList();
+    int addrGroupIndex = 0;
+    for (const QVariant &av : addresses) {
+        AddressGroup *addressGroup = m_addressGroups.at(addrGroupIndex++);
+        addressGroup->fromVariant(av);
+    }
+}
+
+QVariant FirewallConf::appGroupsToVariant() const
+{
     QVariantList groups;
     for (const AppGroup *appGroup : appGroups()) {
         groups.append(appGroup->toVariant());
     }
-    map["appGroups"] = groups;
+    return groups;
+}
+
+void FirewallConf::appGroupsFromVariant(const QVariant &v)
+{
+    const QVariantList groups = v.toList();
+    for (const QVariant &gv : groups) {
+        auto appGroup = new AppGroup();
+        appGroup->fromVariant(gv);
+        addAppGroup(appGroup);
+    }
+}
+
+QVariant FirewallConf::toVariant(bool onlyFlags) const
+{
+    QVariantMap map;
+
+    if (!onlyFlags) {
+        map["addressGroups"] = addressesToVariant();
+        map["appGroups"] = appGroupsToVariant();
+    }
 
     map["flags"] = flagsToVariant();
 
     return map;
 }
 
-void FirewallConf::fromVariant(const QVariant &v)
+void FirewallConf::fromVariant(const QVariant &v, bool onlyFlags)
 {
     const QVariantMap map = v.toMap();
 
-    const QVariantList addresses = map["addressGroups"].toList();
-    int addrGroupIndex = 0;
-    for (const QVariant &av : addresses) {
-        AddressGroup *addressGroup = m_addressGroups.at(addrGroupIndex++);
-        addressGroup->fromVariant(av);
-    }
-
-    const QVariantList groups = map["appGroups"].toList();
-    for (const QVariant &gv : groups) {
-        auto appGroup = new AppGroup();
-        appGroup->fromVariant(gv);
-        addAppGroup(appGroup);
+    if (!onlyFlags) {
+        addressesFromVariant(map["addressGroups"]);
+        appGroupsFromVariant(map["appGroups"]);
     }
 
     flagsFromVariant(map["flags"]); // after app. groups created

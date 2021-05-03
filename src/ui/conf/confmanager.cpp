@@ -413,14 +413,27 @@ void ConfManager::initConfToEdit()
 
 void ConfManager::setConfToEdit(FirewallConf *conf)
 {
-    if (m_confToEdit == conf)
+    if (confToEdit() == conf)
         return;
 
-    if (m_confToEdit && m_confToEdit != m_conf) {
-        m_confToEdit->deleteLater();
+    if (confToEdit() && confToEdit() != this->conf()) {
+        confToEdit()->deleteLater();
     }
 
     m_confToEdit = conf;
+}
+
+void ConfManager::setConf(FirewallConf *newConf)
+{
+    if (conf() == newConf)
+        return;
+
+    conf()->deleteLater();
+    m_conf = newConf;
+
+    if (confToEdit() == conf()) {
+        setConfToEdit(nullptr);
+    }
 }
 
 void ConfManager::setupDefault(FirewallConf &conf) const
@@ -455,13 +468,10 @@ bool ConfManager::save(FirewallConf &newConf, bool onlyFlags)
     if (!saveToDbIni(newConf, onlyFlags))
         return false;
 
-    if (m_conf != &newConf) {
-        m_conf->deleteLater();
-        m_conf = &newConf;
-
-        if (m_confToEdit == m_conf) {
-            setConfToEdit(nullptr);
-        }
+    if (onlyFlags) {
+        conf()->copyFlags(newConf);
+    } else {
+        setConf(&newConf);
     }
 
     return true;
@@ -477,6 +487,20 @@ bool ConfManager::saveToDbIni(FirewallConf &newConf, bool onlyFlags)
         return false;
     }
 
+    return true;
+}
+
+bool ConfManager::saveVariant(const QVariant &v, int confVersion, bool onlyFlags)
+{
+    auto conf = new FirewallConf(this);
+    conf->fromVariant(v, onlyFlags);
+
+    if (!save(*conf, onlyFlags)) {
+        delete conf;
+        return false;
+    }
+
+    setConfVersion(confVersion);
     return true;
 }
 

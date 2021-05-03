@@ -124,7 +124,7 @@ void OptionsController::save(bool closeOnSuccess)
             resetEdited();
         }
 
-        emit confManager()->confSaved(confFlagsOnly);
+        emit confManager()->confChanged(confFlagsOnly);
     }
 }
 

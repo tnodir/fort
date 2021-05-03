@@ -31,7 +31,7 @@ void DriverManagerRpc::uninstallDriver()
     rpcManager()->invokeOnServer(Control::Rpc_DriverManager_uninstallDriver);
 }
 
-void DriverManagerRpc::updateState(bool isDeviceOpened, quint32 errorCode)
+void DriverManagerRpc::updateState(quint32 errorCode, bool isDeviceOpened)
 {
     setIsDeviceOpened(isDeviceOpened);
     setErrorCode(errorCode);

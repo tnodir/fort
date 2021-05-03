@@ -15,10 +15,12 @@ public:
 
     RpcManager *rpcManager() const;
 
-    void onConfSaved(bool onlyFlags, int confVersion);
+    void onConfChanged(int confVersion, bool onlyFlags);
 
 protected:
     void setupAppEndTimer() override;
+
+    bool saveToDbIni(FirewallConf &newConf, bool onlyFlags) override;
 };
 
 #endif // CONFMANAGERRPC_H

@@ -53,7 +53,7 @@ void AppListModel::initialize()
     setSortColumn(4);
     setSortOrder(Qt::DescendingOrder);
 
-    connect(confManager(), &ConfManager::confSaved, this, &AppListModel::refresh);
+    connect(confManager(), &ConfManager::confChanged, this, &AppListModel::refresh);
     connect(confManager(), &ConfManager::appEndTimesUpdated, this, &AppListModel::refresh);
 }
 

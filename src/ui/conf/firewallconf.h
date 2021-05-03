@@ -133,13 +133,19 @@ public:
     void copy(const FirewallConf &o);
 
     QVariant immediateFlagsToVariant() const;
-    QVariant flagsToVariant() const;
-
     void immediateFlagsFromVariant(const QVariant &v);
+
+    QVariant flagsToVariant() const;
     void flagsFromVariant(const QVariant &v);
 
-    QVariant toVariant() const;
-    void fromVariant(const QVariant &v);
+    QVariant addressesToVariant() const;
+    void addressesFromVariant(const QVariant &v);
+
+    QVariant appGroupsToVariant() const;
+    void appGroupsFromVariant(const QVariant &v);
+
+    QVariant toVariant(bool onlyFlags = false) const;
+    void fromVariant(const QVariant &v, bool onlyFlags = false);
 
 signals:
     void provBootChanged();

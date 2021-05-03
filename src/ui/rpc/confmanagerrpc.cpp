@@ -2,6 +2,7 @@
 
 #include <sqlite/sqlitedb.h>
 
+#include "../conf/firewallconf.h"
 #include "../fortmanager.h"
 #include "../rpc/rpcmanager.h"
 
@@ -15,7 +16,7 @@ RpcManager *ConfManagerRpc::rpcManager() const
     return fortManager()->rpcManager();
 }
 
-void ConfManagerRpc::onConfSaved(bool onlyFlags, int confVersion)
+void ConfManagerRpc::onConfChanged(int confVersion, bool onlyFlags)
 {
     if (this->confVersion() == confVersion)
         return;
@@ -24,7 +25,16 @@ void ConfManagerRpc::onConfSaved(bool onlyFlags, int confVersion)
 
     setConfVersion(confVersion);
 
-    emit confSaved(onlyFlags);
+    emit confChanged(onlyFlags);
 }
 
 void ConfManagerRpc::setupAppEndTimer() { }
+
+bool ConfManagerRpc::saveToDbIni(FirewallConf &newConf, bool onlyFlags)
+{
+    rpcManager()->invokeOnServer(Control::Rpc_ConfManager_save,
+            { newConf.toVariant(onlyFlags), onlyFlags, confVersion() });
+    // TODO: get result
+    // showErrorMessage("Save Conf: Service error.");
+    return true;
+}

@@ -281,7 +281,7 @@ void ProgramEditDialog::setupComboAppGroups()
 
     refreshComboAppGroups();
 
-    connect(confManager(), &ConfManager::confSaved, this, refreshComboAppGroups);
+    connect(confManager(), &ConfManager::confChanged, this, refreshComboAppGroups);
 }
 
 QLayout *ProgramEditDialog::setupAllowLayout()

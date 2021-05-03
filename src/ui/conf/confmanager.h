@@ -45,6 +45,7 @@ public:
 
     bool load(FirewallConf &conf);
     bool save(FirewallConf &newConf, bool onlyFlags = false);
+    bool saveVariant(const QVariant &v, int confVersion, bool onlyFlags = false);
 
     bool loadTasks(const QList<TaskInfo *> &taskInfos);
     bool saveTasks(const QList<TaskInfo *> &taskInfos);
@@ -84,7 +85,7 @@ public:
     bool updateDriverZoneFlag(int zoneId, bool enabled);
 
 signals:
-    void confSaved(bool onlyFlags);
+    void confChanged(bool onlyFlags);
     void appEndTimesUpdated();
     void alertedAppAdded();
 
@@ -93,10 +94,12 @@ protected:
 
     virtual bool saveToDbIni(FirewallConf &newConf, bool onlyFlags);
 
-private:
     void showErrorMessage(const QString &errorMessage);
+
+private:
     bool checkResult(bool ok, bool commit = false);
 
+    void setConf(FirewallConf *newConf);
     void setupDefault(FirewallConf &conf) const;
 
     bool loadFromDb(FirewallConf &conf, bool &isNew);

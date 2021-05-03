@@ -1,5 +1,6 @@
 #include "rpcmanager.h"
 
+#include "../conf/firewallconf.h"
 #include "../control/controlmanager.h"
 #include "../control/controlworker.h"
 #include "../fortmanager.h"
@@ -83,9 +84,9 @@ void RpcManager::setupAppInfoManagerSignals()
 
 void RpcManager::setupConfManagerSignals()
 {
-    connect(confManager(), &ConfManager::confSaved, this, [&](bool onlyFlags) {
-        invokeOnClients(
-                Control::Rpc_ConfManager_onConfSaved, { onlyFlags, confManager()->confVersion() });
+    connect(confManager(), &ConfManager::confChanged, this, [&](bool onlyFlags) {
+        invokeOnClients(Control::Rpc_ConfManager_onConfChanged,
+                { confManager()->confVersion(), onlyFlags });
     });
 }
 
@@ -141,7 +142,7 @@ void RpcManager::initClientOnServer(ControlWorker *w) const
 
 QVariantList RpcManager::driverManager_updateState_args() const
 {
-    return { driverManager()->isDeviceOpened(), driverManager()->errorCode() };
+    return { driverManager()->errorCode(), driverManager()->isDeviceOpened() };
 }
 
 bool RpcManager::processCommandRpc(
@@ -157,14 +158,20 @@ bool RpcManager::processCommandRpc(
     case Control::Rpc_AppInfoManager_checkLookupFinished:
         appInfoManager()->checkLookupFinished(args.value(0).toString());
         return true;
-    case Control::Rpc_ConfManager_onConfSaved:
+    case Control::Rpc_ConfManager_onConfChanged:
         if (auto cm = qobject_cast<ConfManagerRpc *>(confManager())) {
-            cm->onConfSaved(args.value(0).toBool(), args.value(1).toInt());
+            cm->onConfChanged(args.value(0).toInt(), args.value(1).toBool());
         }
         return true;
+    case Control::Rpc_ConfManager_save: {
+        const bool ok = confManager()->saveVariant(
+                args.value(0), args.value(1).toInt(), args.value(2).toBool());
+        w->sendCommand(Control::Rpc_ConfManager_saveResult, { ok });
+        return true;
+    }
     case Control::Rpc_DriverManager_updateState:
         if (auto dm = qobject_cast<DriverManagerRpc *>(driverManager())) {
-            dm->updateState(args.value(0).toBool(), args.value(1).toUInt());
+            dm->updateState(args.value(0).toUInt(), args.value(1).toBool());
         }
         return true;
     case Control::Rpc_DriverManager_reinstallDriver:

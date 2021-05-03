@@ -350,7 +350,7 @@ void FortManager::setupTrayIcon()
     connect(m_trayIcon, &QSystemTrayIcon::activated, this, &FortManager::onTrayActivated);
     connect(m_trayIcon, &QSystemTrayIcon::messageClicked, this, &FortManager::onTrayMessageClicked);
 
-    connect(confManager(), &ConfManager::confSaved, m_trayIcon, &TrayIcon::updateTrayMenu);
+    connect(confManager(), &ConfManager::confChanged, m_trayIcon, &TrayIcon::updateTrayMenu);
     connect(confManager(), &ConfManager::alertedAppAdded, m_trayIcon,
             [&] { m_trayIcon->updateTrayIcon(true); });
 
@@ -729,9 +729,9 @@ bool FortManager::applyConf(bool onlyFlags)
     if (!saveConf(onlyFlags))
         return false;
 
-    Q_ASSERT(!confToEdit());
-
-    confManager()->initConfToEdit();
+    if (!confToEdit()) {
+        confManager()->initConfToEdit();
+    }
 
     return true;
 }
