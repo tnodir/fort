@@ -358,15 +358,19 @@ FortSettings *ConfManager::settings() const
 
 void ConfManager::showErrorMessage(const QString &errorMessage)
 {
-    fortManager()->showErrorBox(errorMessage, tr("Configuration Error"));
+    logWarning() << "Error:" << errorMessage;
+
+    if (!settings()->isService()) {
+        fortManager()->showErrorBox(errorMessage, tr("Configuration Error"));
+    }
 }
 
 bool ConfManager::checkResult(bool ok, bool commit)
 {
-    const auto errorMessage = ok ? QString() : m_sqliteDb->errorMessage();
+    const auto errorMessage = ok ? QString() : sqliteDb()->errorMessage();
 
     if (commit) {
-        m_sqliteDb->endTransaction(ok);
+        sqliteDb()->endTransaction(ok);
     }
 
     if (!ok) {
@@ -379,13 +383,13 @@ bool ConfManager::checkResult(bool ok, bool commit)
 bool ConfManager::initialize()
 {
     if (!sqliteDb()->open()) {
-        logCritical() << "File open error:" << m_sqliteDb->filePath() << m_sqliteDb->errorMessage();
+        logCritical() << "File open error:" << sqliteDb()->filePath() << sqliteDb()->errorMessage();
         return false;
     }
 
     if (!sqliteDb()->migrate(
                 ":/conf/migrations", nullptr, DATABASE_USER_VERSION, true, true, &migrateFunc)) {
-        logCritical() << "Migration error" << m_sqliteDb->filePath();
+        logCritical() << "Migration error" << sqliteDb()->filePath();
         return false;
     }
 
@@ -430,7 +434,7 @@ bool ConfManager::load(FirewallConf &conf)
     bool isNewConf = false;
 
     if (!loadFromDb(conf, isNewConf)) {
-        showErrorMessage("Load Settings: " + m_sqliteDb->errorMessage());
+        showErrorMessage("Load Settings: " + sqliteDb()->errorMessage());
         return false;
     }
 
@@ -446,13 +450,10 @@ bool ConfManager::load(FirewallConf &conf)
 
 bool ConfManager::save(FirewallConf &newConf, bool onlyFlags)
 {
-    if (!onlyFlags && !saveToDb(newConf))
-        return false;
+    ++m_confVersion; // change version on each save attempt
 
-    if (!settings()->writeConfIni(newConf)) {
-        showErrorMessage("Save Settings: " + settings()->errorMessage());
+    if (!saveToDbIni(newConf, onlyFlags))
         return false;
-    }
 
     if (m_conf != &newConf) {
         m_conf->deleteLater();
@@ -461,6 +462,19 @@ bool ConfManager::save(FirewallConf &newConf, bool onlyFlags)
         if (m_confToEdit == m_conf) {
             setConfToEdit(nullptr);
         }
+    }
+
+    return true;
+}
+
+bool ConfManager::saveToDbIni(FirewallConf &newConf, bool onlyFlags)
+{
+    if (!onlyFlags && !saveToDb(newConf))
+        return false;
+
+    if (!settings()->writeConfIni(newConf)) {
+        showErrorMessage("Save Settings: " + settings()->errorMessage());
+        return false;
     }
 
     return true;
@@ -479,7 +493,7 @@ bool ConfManager::saveTasks(const QList<TaskInfo *> &taskInfos)
 {
     bool ok = true;
 
-    m_sqliteDb->beginTransaction();
+    sqliteDb()->beginTransaction();
 
     for (TaskInfo *taskInfo : taskInfos) {
         if (!saveTask(taskInfo)) {
@@ -501,18 +515,18 @@ bool ConfManager::addApp(const QString &appPath, const QString &appName, const Q
 {
     bool ok = false;
 
-    m_sqliteDb->beginTransaction();
+    sqliteDb()->beginTransaction();
 
     const auto vars = QVariantList()
             << groupId << appPath << appName << useGroupPerm << blocked
             << QDateTime::currentDateTime() << (!endTime.isNull() ? endTime : QVariant());
 
-    const auto appIdVar = m_sqliteDb->executeEx(sqlUpsertApp, vars, 1, &ok);
+    const auto appIdVar = sqliteDb()->executeEx(sqlUpsertApp, vars, 1, &ok);
 
     if (ok && alerted) {
         // Alert
         const qint64 appId = appIdVar.toLongLong();
-        m_sqliteDb->executeEx(sqlInsertAppAlert, { appId }, 0, &ok);
+        sqliteDb()->executeEx(sqlInsertAppAlert, { appId }, 0, &ok);
     }
 
     checkResult(ok, true);
@@ -534,13 +548,13 @@ bool ConfManager::deleteApp(qint64 appId)
 {
     bool ok = false;
 
-    m_sqliteDb->beginTransaction();
+    sqliteDb()->beginTransaction();
 
     const auto vars = QVariantList() << appId;
 
-    m_sqliteDb->executeEx(sqlDeleteApp, vars, 0, &ok);
+    sqliteDb()->executeEx(sqlDeleteApp, vars, 0, &ok);
     if (ok) {
-        m_sqliteDb->executeEx(sqlDeleteAppAlert, vars, 0, &ok);
+        sqliteDb()->executeEx(sqlDeleteAppAlert, vars, 0, &ok);
     }
 
     return checkResult(ok, true);
@@ -551,14 +565,14 @@ bool ConfManager::updateApp(qint64 appId, const QString &appName, const QDateTim
 {
     bool ok = false;
 
-    m_sqliteDb->beginTransaction();
+    sqliteDb()->beginTransaction();
 
     const auto vars = QVariantList() << appId << groupId << appName << useGroupPerm << blocked
                                      << (!endTime.isNull() ? endTime : QVariant());
 
-    m_sqliteDb->executeEx(sqlUpdateApp, vars, 0, &ok);
+    sqliteDb()->executeEx(sqlUpdateApp, vars, 0, &ok);
     if (ok) {
-        m_sqliteDb->executeEx(sqlDeleteAppAlert, { appId }, 0, &ok);
+        sqliteDb()->executeEx(sqlDeleteAppAlert, { appId }, 0, &ok);
     }
 
     checkResult(ok, true);
@@ -576,7 +590,7 @@ bool ConfManager::updateAppName(qint64 appId, const QString &appName)
 
     const auto vars = QVariantList() << appId << appName;
 
-    m_sqliteDb->executeEx(sqlUpdateAppName, vars, 0, &ok);
+    sqliteDb()->executeEx(sqlUpdateAppName, vars, 0, &ok);
 
     return checkResult(ok);
 }
@@ -609,7 +623,7 @@ int ConfManager::appEndsCount()
 void ConfManager::updateAppEndTimes()
 {
     SqliteStmt stmt;
-    if (!stmt.prepare(m_sqliteDb->db(), sqlSelectEndedApps))
+    if (!stmt.prepare(sqliteDb()->db(), sqlSelectEndedApps))
         return;
 
     stmt.bindDateTime(1, QDateTime::currentDateTime());
@@ -654,7 +668,7 @@ bool ConfManager::addZone(const QString &zoneName, const QString &sourceCode, co
     const auto vars = QVariantList()
             << zoneId << zoneName << enabled << customUrl << sourceCode << url << formData;
 
-    m_sqliteDb->executeEx(sqlInsertZone, vars, 0, &ok);
+    sqliteDb()->executeEx(sqlInsertZone, vars, 0, &ok);
 
     return checkResult(ok);
 }
@@ -664,7 +678,7 @@ int ConfManager::getFreeZoneId()
     int zoneId = 1;
 
     SqliteStmt stmt;
-    if (stmt.prepare(m_sqliteDb->db(), sqlSelectZoneIds)) {
+    if (stmt.prepare(sqliteDb()->db(), sqlSelectZoneIds)) {
         while (stmt.step() == SqliteStmt::StepRow) {
             const int id = stmt.columnInt(0);
             if (id > zoneId)
@@ -681,13 +695,13 @@ bool ConfManager::deleteZone(int zoneId)
 {
     bool ok = false;
 
-    m_sqliteDb->beginTransaction();
+    sqliteDb()->beginTransaction();
 
-    m_sqliteDb->executeEx(sqlDeleteZone, { zoneId }, 0, &ok);
+    sqliteDb()->executeEx(sqlDeleteZone, { zoneId }, 0, &ok);
     if (ok) {
         // Delete the Zone from Address Groups
         const quint32 zoneUnMask = ~(quint32(1) << (zoneId - 1));
-        m_sqliteDb->executeEx(sqlDeleteAddressGroupZone, { qint64(zoneUnMask) }, 0, &ok);
+        sqliteDb()->executeEx(sqlDeleteAddressGroupZone, { qint64(zoneUnMask) }, 0, &ok);
     }
 
     return checkResult(ok, true);
@@ -701,7 +715,7 @@ bool ConfManager::updateZone(int zoneId, const QString &zoneName, const QString 
     const auto vars = QVariantList()
             << zoneId << zoneName << enabled << customUrl << sourceCode << url << formData;
 
-    m_sqliteDb->executeEx(sqlUpdateZone, vars, 0, &ok);
+    sqliteDb()->executeEx(sqlUpdateZone, vars, 0, &ok);
 
     return checkResult(ok);
 }
@@ -712,7 +726,7 @@ bool ConfManager::updateZoneName(int zoneId, const QString &zoneName)
 
     const auto vars = QVariantList() << zoneId << zoneName;
 
-    m_sqliteDb->executeEx(sqlUpdateZoneName, vars, 0, &ok);
+    sqliteDb()->executeEx(sqlUpdateZoneName, vars, 0, &ok);
 
     return checkResult(ok);
 }
@@ -723,7 +737,7 @@ bool ConfManager::updateZoneEnabled(int zoneId, bool enabled)
 
     const auto vars = QVariantList() << zoneId << enabled;
 
-    m_sqliteDb->executeEx(sqlUpdateZoneEnabled, vars, 0, &ok);
+    sqliteDb()->executeEx(sqlUpdateZoneEnabled, vars, 0, &ok);
 
     return checkResult(ok);
 }
@@ -737,7 +751,7 @@ bool ConfManager::updateZoneResult(int zoneId, const QString &textChecksum,
     const auto vars = QVariantList()
             << zoneId << textChecksum << binChecksum << sourceModTime << lastRun << lastSuccess;
 
-    m_sqliteDb->executeEx(sqlUpdateZoneResult, vars, 0, &ok);
+    sqliteDb()->executeEx(sqlUpdateZoneResult, vars, 0, &ok);
 
     return checkResult(ok);
 }
@@ -844,7 +858,7 @@ bool ConfManager::loadFromDb(FirewallConf &conf, bool &isNew)
     // Load Address Groups
     {
         int count = 0;
-        if (!loadAddressGroups(m_sqliteDb, conf.addressGroups(), count))
+        if (!loadAddressGroups(sqliteDb(), conf.addressGroups(), count))
             return false;
 
         if (count == 0) {
@@ -855,7 +869,7 @@ bool ConfManager::loadFromDb(FirewallConf &conf, bool &isNew)
     }
 
     // Load App Groups
-    if (!loadAppGroups(m_sqliteDb, conf))
+    if (!loadAppGroups(sqliteDb(), conf))
         return false;
 
     return true;
@@ -863,10 +877,10 @@ bool ConfManager::loadFromDb(FirewallConf &conf, bool &isNew)
 
 bool ConfManager::saveToDb(const FirewallConf &conf)
 {
-    m_sqliteDb->beginTransaction();
+    sqliteDb()->beginTransaction();
 
-    const bool ok = saveAddressGroups(m_sqliteDb, conf) // Save Address Groups
-            && saveAppGroups(m_sqliteDb, conf) // Save App Groups
+    const bool ok = saveAddressGroups(sqliteDb(), conf) // Save Address Groups
+            && saveAppGroups(sqliteDb(), conf) // Save App Groups
             && removeAppGroupsInDb(conf); // Remove App Groups
 
     return checkResult(ok, true);
@@ -880,12 +894,12 @@ bool ConfManager::removeAppGroupsInDb(const FirewallConf &conf)
     for (AppGroup *appGroup : conf.removedAppGroupsList()) {
         bool ok;
 
-        m_sqliteDb->executeEx(sqlUpdateAppResetGroup,
+        sqliteDb()->executeEx(sqlUpdateAppResetGroup,
                 QVariantList() << appGroup->id() << defaultAppGroupId, 0, &ok);
         if (!ok)
             return false;
 
-        m_sqliteDb->executeEx(sqlDeleteAppGroup, QVariantList() << appGroup->id(), 0, &ok);
+        sqliteDb()->executeEx(sqlDeleteAppGroup, QVariantList() << appGroup->id(), 0, &ok);
         if (!ok)
             return false;
     }
@@ -898,7 +912,7 @@ bool ConfManager::removeAppGroupsInDb(const FirewallConf &conf)
 bool ConfManager::loadTask(TaskInfo *taskInfo)
 {
     SqliteStmt stmt;
-    if (!stmt.prepare(m_sqliteDb->db(), sqlSelectTaskByName))
+    if (!stmt.prepare(sqliteDb()->db(), sqlSelectTaskByName))
         return false;
 
     stmt.bindText(1, taskInfo->name());
@@ -928,12 +942,12 @@ bool ConfManager::saveTask(TaskInfo *taskInfo)
     const char *sql = rowExists ? sqlUpdateTask : sqlInsertTask;
 
     bool ok = true;
-    m_sqliteDb->executeEx(sql, vars, 0, &ok);
+    sqliteDb()->executeEx(sql, vars, 0, &ok);
     if (!ok)
         return false;
 
     if (!rowExists) {
-        taskInfo->setId(m_sqliteDb->lastInsertRowid());
+        taskInfo->setId(sqliteDb()->lastInsertRowid());
     }
     return true;
 }

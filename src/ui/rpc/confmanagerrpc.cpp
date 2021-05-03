@@ -15,4 +15,16 @@ RpcManager *ConfManagerRpc::rpcManager() const
     return fortManager()->rpcManager();
 }
 
+void ConfManagerRpc::onConfSaved(bool onlyFlags, int confVersion)
+{
+    if (this->confVersion() == confVersion)
+        return;
+
+    // TODO: reload conf
+
+    setConfVersion(confVersion);
+
+    emit confSaved(onlyFlags);
+}
+
 void ConfManagerRpc::setupAppEndTimer() { }

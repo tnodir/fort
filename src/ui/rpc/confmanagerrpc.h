@@ -15,6 +15,8 @@ public:
 
     RpcManager *rpcManager() const;
 
+    void onConfSaved(bool onlyFlags, int confVersion);
+
 protected:
     void setupAppEndTimer() override;
 };

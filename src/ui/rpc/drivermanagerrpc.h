@@ -22,7 +22,7 @@ public:
     void reinstallDriver() override;
     void uninstallDriver() override;
 
-    void updateState(quint32 errorCode, bool isDeviceOpened);
+    void updateState(bool isDeviceOpened, quint32 errorCode);
 
 public slots:
     bool openDevice() override;

@@ -84,7 +84,8 @@ void RpcManager::setupAppInfoManagerSignals()
 void RpcManager::setupConfManagerSignals()
 {
     connect(confManager(), &ConfManager::confSaved, this, [&](bool onlyFlags) {
-        // TODO: invokeOnClients(Control::Rpc_ConfManager_confSaved, { onlyFlags });
+        invokeOnClients(
+                Control::Rpc_ConfManager_onConfSaved, { onlyFlags, confManager()->confVersion() });
     });
 }
 
@@ -140,7 +141,7 @@ void RpcManager::initClientOnServer(ControlWorker *w) const
 
 QVariantList RpcManager::driverManager_updateState_args() const
 {
-    return { driverManager()->errorCode(), driverManager()->isDeviceOpened() };
+    return { driverManager()->isDeviceOpened(), driverManager()->errorCode() };
 }
 
 bool RpcManager::processCommandRpc(
@@ -156,12 +157,14 @@ bool RpcManager::processCommandRpc(
     case Control::Rpc_AppInfoManager_checkLookupFinished:
         appInfoManager()->checkLookupFinished(args.value(0).toString());
         return true;
-    case Control::Rpc_ConfManager_:
-        confManager();
+    case Control::Rpc_ConfManager_onConfSaved:
+        if (auto cm = qobject_cast<ConfManagerRpc *>(confManager())) {
+            cm->onConfSaved(args.value(0).toBool(), args.value(1).toInt());
+        }
         return true;
     case Control::Rpc_DriverManager_updateState:
         if (auto dm = qobject_cast<DriverManagerRpc *>(driverManager())) {
-            dm->updateState(args.value(0).toUInt(), args.value(1).toBool());
+            dm->updateState(args.value(0).toBool(), args.value(1).toUInt());
         }
         return true;
     case Control::Rpc_DriverManager_reinstallDriver:

@@ -26,6 +26,9 @@ public:
     ~ConfManager() override;
     CLASS_DELETE_COPY_MOVE(ConfManager)
 
+    int confVersion() const { return m_confVersion; }
+    void setConfVersion(int v) { m_confVersion = v; }
+
     FortManager *fortManager() const { return m_fortManager; }
     DriverManager *driverManager() const;
     EnvManager *envManager() const;
@@ -88,6 +91,8 @@ signals:
 protected:
     virtual void setupAppEndTimer();
 
+    virtual bool saveToDbIni(FirewallConf &newConf, bool onlyFlags);
+
 private:
     void showErrorMessage(const QString &errorMessage);
     bool checkResult(bool ok, bool commit = false);
@@ -103,6 +108,8 @@ private:
     bool saveTask(TaskInfo *taskInfo);
 
 private:
+    int m_confVersion = 0;
+
     FortManager *m_fortManager = nullptr;
     SqliteDb *m_sqliteDb = nullptr;
 

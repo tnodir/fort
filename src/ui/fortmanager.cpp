@@ -258,9 +258,11 @@ void FortManager::setupEnvManager()
 
 void FortManager::setupQuotaManager()
 {
-    connect(quotaManager(), &QuotaManager::alert, this, [&](qint8 alertType) {
-        showInfoBox(QuotaManager::alertTypeText(alertType), tr("Quota Alert"));
-    });
+    if (!settings()->isService()) {
+        connect(quotaManager(), &QuotaManager::alert, this, [&](qint8 alertType) {
+            showInfoBox(QuotaManager::alertTypeText(alertType), tr("Quota Alert"));
+        });
+    }
 }
 
 void FortManager::setupStatManager()
