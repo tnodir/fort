@@ -198,7 +198,12 @@ bool ControlManager::processCommandConf(const QVariantList &args, QString &error
         }
     }
 
-    return fortManager()->saveOriginConf(tr("Control command executed"), onlyFlags);
+    if (!fortManager()->saveOriginConf(onlyFlags))
+        return false;
+
+    fortManager()->reloadOptionsWindow(tr("Control command executed"));
+
+    return true;
 }
 
 bool ControlManager::processCommandProg(const QVariantList &args, QString &errorMessage)

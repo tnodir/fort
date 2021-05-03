@@ -105,7 +105,7 @@ public slots:
 
     void showOptionsWindow();
     void closeOptionsWindow();
-    void reloadOptionsWindow();
+    void reloadOptionsWindow(const QString &reason);
 
     void showZonesWindow();
     void closeZonesWindow();
@@ -130,7 +130,7 @@ public slots:
     bool showYesNoBox(const QString &text, const QString &yesText, const QString &noText,
             const QString &title = QString());
 
-    bool saveOriginConf(const QString &message, bool onlyFlags = false);
+    bool saveOriginConf(bool onlyFlags = false);
     bool saveConf(bool onlyFlags = false);
     bool applyConf(bool onlyFlags = false);
     bool applyConfImmediateFlags();

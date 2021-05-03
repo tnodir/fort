@@ -521,13 +521,16 @@ void FortManager::closeOptionsWindow()
     emit optWindowChanged(false);
 }
 
-void FortManager::reloadOptionsWindow()
+void FortManager::reloadOptionsWindow(const QString &reason)
 {
     if (!m_optWindow)
         return;
 
+    // Unsaved changes are lost
     closeOptionsWindow();
     showOptionsWindow();
+
+    showTrayMessage(reason);
 }
 
 void FortManager::showZonesWindow()
@@ -703,18 +706,9 @@ bool FortManager::showYesNoBox(
     return box.exec() == 1;
 }
 
-bool FortManager::saveOriginConf(const QString &message, bool onlyFlags)
+bool FortManager::saveOriginConf(bool onlyFlags)
 {
-    if (!saveConf(conf(), onlyFlags))
-        return false;
-
-    reloadOptionsWindow(); // unsaved changes are lost
-
-    if (!message.isEmpty()) {
-        showTrayMessage(message);
-    }
-
-    return true;
+    return saveConf(conf(), onlyFlags);
 }
 
 bool FortManager::saveConf(bool onlyFlags)

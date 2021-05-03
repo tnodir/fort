@@ -92,14 +92,18 @@ signals:
 protected:
     virtual void setupAppEndTimer();
 
+    void loadFlags(FirewallConf &conf) const;
+
     virtual bool saveToDbIni(FirewallConf &newConf, bool onlyFlags);
+
+    void setConf(FirewallConf *newConf);
+    FirewallConf *createConf();
 
     void showErrorMessage(const QString &errorMessage);
 
 private:
     bool checkResult(bool ok, bool commit = false);
 
-    void setConf(FirewallConf *newConf);
     void setupDefault(FirewallConf &conf) const;
 
     bool loadFromDb(FirewallConf &conf, bool &isNew);

@@ -21,11 +21,22 @@ void ConfManagerRpc::onConfChanged(int confVersion, bool onlyFlags)
     if (this->confVersion() == confVersion)
         return;
 
-    // TODO: reload conf
+    if (onlyFlags) {
+        loadFlags(*conf());
+    } else {
+        FirewallConf *conf = createConf();
+        if (!load(*conf)) {
+            delete conf;
+            return;
+        }
+        setConf(conf);
+    }
 
     setConfVersion(confVersion);
 
     emit confChanged(onlyFlags);
+
+    fortManager()->reloadOptionsWindow(tr("Settings changed by someone else"));
 }
 
 void ConfManagerRpc::setupAppEndTimer() { }

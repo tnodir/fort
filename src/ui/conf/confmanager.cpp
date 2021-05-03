@@ -330,7 +330,7 @@ ConfManager::ConfManager(
     QObject(parent),
     m_fortManager(fortManager),
     m_sqliteDb(new SqliteDb(filePath, openFlags)),
-    m_conf(new FirewallConf(this))
+    m_conf(createConf())
 {
     m_appEndTimer.setInterval(5 * 60 * 1000); // 5 minutes
     connect(&m_appEndTimer, &QTimer::timeout, this, &ConfManager::checkAppEndTimes);
@@ -405,7 +405,7 @@ void ConfManager::setupAppEndTimer()
 
 void ConfManager::initConfToEdit()
 {
-    auto newConf = new FirewallConf(this);
+    auto newConf = createConf();
     newConf->copy(*conf());
 
     setConfToEdit(newConf);
@@ -436,6 +436,11 @@ void ConfManager::setConf(FirewallConf *newConf)
     }
 }
 
+FirewallConf *ConfManager::createConf()
+{
+    return new FirewallConf(this);
+}
+
 void ConfManager::setupDefault(FirewallConf &conf) const
 {
     conf.setupDefaultAddressGroups();
@@ -456,9 +461,14 @@ bool ConfManager::load(FirewallConf &conf)
         saveToDb(conf);
     }
 
-    settings()->readConfIni(conf);
+    loadFlags(conf);
 
     return true;
+}
+
+void ConfManager::loadFlags(FirewallConf &conf) const
+{
+    settings()->readConfIni(conf);
 }
 
 bool ConfManager::save(FirewallConf *newConf, bool onlyFlags)
@@ -492,7 +502,7 @@ bool ConfManager::saveToDbIni(FirewallConf &newConf, bool onlyFlags)
 
 bool ConfManager::saveVariant(const QVariant &v, int confVersion, bool onlyFlags)
 {
-    auto conf = new FirewallConf(this);
+    auto conf = createConf();
     conf->fromVariant(v, onlyFlags);
 
     if (!save(conf, onlyFlags)) {

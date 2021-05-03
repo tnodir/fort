@@ -267,7 +267,7 @@ void TrayIcon::saveTrayFlags()
         appGroup->setEnabled(action->isChecked());
     }
 
-    fortManager()->saveOriginConf(QString(), true);
+    fortManager()->saveOriginConf(true);
 }
 
 void TrayIcon::addHotKey(QAction *action, const QString &shortcutText)
