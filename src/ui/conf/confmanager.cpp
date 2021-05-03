@@ -461,17 +461,17 @@ bool ConfManager::load(FirewallConf &conf)
     return true;
 }
 
-bool ConfManager::save(FirewallConf &newConf, bool onlyFlags)
+bool ConfManager::save(FirewallConf *newConf, bool onlyFlags)
 {
     ++m_confVersion; // change version on each save attempt
 
-    if (!saveToDbIni(newConf, onlyFlags))
+    if (!saveToDbIni(*newConf, onlyFlags))
         return false;
 
     if (onlyFlags) {
-        conf()->copyFlags(newConf);
+        conf()->copyFlags(*newConf);
     } else {
-        setConf(&newConf);
+        setConf(newConf);
     }
 
     return true;
@@ -495,7 +495,7 @@ bool ConfManager::saveVariant(const QVariant &v, int confVersion, bool onlyFlags
     auto conf = new FirewallConf(this);
     conf->fromVariant(v, onlyFlags);
 
-    if (!save(*conf, onlyFlags)) {
+    if (!save(conf, onlyFlags)) {
         delete conf;
         return false;
     }

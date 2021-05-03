@@ -44,7 +44,7 @@ public:
     void setConfToEdit(FirewallConf *conf);
 
     bool load(FirewallConf &conf);
-    bool save(FirewallConf &newConf, bool onlyFlags = false);
+    bool save(FirewallConf *newConf, bool onlyFlags = false);
     bool saveVariant(const QVariant &v, int confVersion, bool onlyFlags = false);
 
     bool loadTasks(const QList<TaskInfo *> &taskInfos);
