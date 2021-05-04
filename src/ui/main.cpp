@@ -21,6 +21,13 @@
 #define FORT_ERROR_INSTANCE 1
 #define FORT_ERROR_CONTROL  2
 
+static void uninstall()
+{
+    StartupUtil::setStartupMode(StartupUtil::StartupDisabled); // Remove auto-run and service
+    StartupUtil::integrateExplorer(false); // Remove Windows Explorer integration
+    DriverCommon::provUnregister(); // Unregister booted provider
+}
+
 static void setupAppStyle()
 {
     const auto fusionStyle = QStyleFactory::create("Fusion");
@@ -32,9 +39,7 @@ int main(int argc, char *argv[])
 {
     // Uninstall
     if (argc > 1 && !strcmp(argv[1], "-u")) {
-        StartupUtil::setStartupMode(StartupUtil::StartupDisabled); // Remove auto-run and service
-        StartupUtil::integrateExplorer(false); // Remove Windows Explorer integration
-        DriverCommon::provUnregister(); // Unregister booted provider
+        uninstall();
         return 0;
     }
 
