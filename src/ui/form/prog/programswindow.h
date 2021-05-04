@@ -9,6 +9,7 @@ QT_FORWARD_DECLARE_CLASS(QPushButton)
 class AppInfoCache;
 class AppInfoRow;
 class AppListModel;
+class ConfManager;
 class FirewallConf;
 class FortManager;
 class FortSettings;
@@ -29,6 +30,7 @@ public:
     ProgramsController *ctrl() const { return m_ctrl; }
     FortManager *fortManager() const;
     FortSettings *settings() const;
+    ConfManager *confManager() const;
     FirewallConf *conf() const;
     AppListModel *appListModel() const;
     AppInfoCache *appInfoCache() const;

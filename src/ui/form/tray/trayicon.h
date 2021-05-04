@@ -6,6 +6,7 @@
 QT_FORWARD_DECLARE_CLASS(QAction)
 QT_FORWARD_DECLARE_CLASS(QMouseEvent)
 
+class ConfManager;
 class FirewallConf;
 class FortManager;
 class FortSettings;
@@ -22,6 +23,7 @@ public:
     TrayController *ctrl() const { return m_ctrl; }
     FortManager *fortManager() const;
     FortSettings *settings() const;
+    ConfManager *confManager() const;
     FirewallConf *conf() const;
     HotKeyManager *hotKeyManager() const;
 

@@ -13,8 +13,8 @@
 #include "../conf/firewallconf.h"
 #include "../log/logentryblocked.h"
 #include "../util/fileutil.h"
-#include "../util/iconcache.h"
 #include "../util/guiutil.h"
+#include "../util/iconcache.h"
 #include "../util/net/netutil.h"
 
 namespace {
@@ -53,7 +53,10 @@ void AppListModel::initialize()
     setSortColumn(4);
     setSortOrder(Qt::DescendingOrder);
 
-    connect(confManager(), &ConfManager::confChanged, this, &AppListModel::refresh);
+    connect(confManager(), &ConfManager::confChanged, this, [&](bool onlyFlags = false) {
+        if (!onlyFlags)
+            refresh();
+    });
     connect(confManager(), &ConfManager::appEndTimesUpdated, this, &AppListModel::refresh);
 }
 

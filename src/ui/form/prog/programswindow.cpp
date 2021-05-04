@@ -7,6 +7,7 @@
 #include <QVBoxLayout>
 
 #include "../../appinfo/appinfocache.h"
+#include "../../conf/confmanager.h"
 #include "../../conf/firewallconf.h"
 #include "../../fortmanager.h"
 #include "../../fortsettings.h"
@@ -45,6 +46,11 @@ FortManager *ProgramsWindow::fortManager() const
 FortSettings *ProgramsWindow::settings() const
 {
     return ctrl()->settings();
+}
+
+ConfManager *ProgramsWindow::confManager() const
+{
+    return ctrl()->confManager();
 }
 
 FirewallConf *ProgramsWindow::conf() const
@@ -247,7 +253,7 @@ void ProgramsWindow::setupLogBlocked()
 
         conf()->setLogBlocked(checked);
 
-        fortManager()->applyConfImmediateFlags();
+        confManager()->saveFlags(true);
     });
 
     m_cbLogBlocked->setFont(ControlUtil::fontDemiBold());

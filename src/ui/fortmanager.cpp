@@ -114,16 +114,6 @@ void FortManager::initialize()
     loadConf();
 }
 
-FirewallConf *FortManager::conf() const
-{
-    return confManager()->conf();
-}
-
-FirewallConf *FortManager::confToEdit() const
-{
-    return confManager()->confToEdit();
-}
-
 void FortManager::setupTranslationManager()
 {
     TranslationManager::instance()->switchLanguageByName(settings()->language());
@@ -273,6 +263,8 @@ void FortManager::setupStatManager()
 void FortManager::setupConfManager()
 {
     confManager()->initialize();
+
+    connect(confManager(), &ConfManager::confChanged, this, &FortManager::updateDriverConf);
 }
 
 void FortManager::setupAppInfoManager()
@@ -493,8 +485,6 @@ void FortManager::showOptionsWindow()
         return;
 
     if (!m_optWindow) {
-        confManager()->initConfToEdit();
-
         setupOptionsWindow();
 
         emit optWindowChanged(true);
@@ -515,8 +505,6 @@ void FortManager::closeOptionsWindow()
 
     m_optWindow->deleteLater();
     m_optWindow = nullptr;
-
-    confManager()->setConfToEdit(nullptr);
 
     emit optWindowChanged(false);
 }
@@ -706,40 +694,7 @@ bool FortManager::showYesNoBox(
     return box.exec() == 1;
 }
 
-bool FortManager::saveOriginConf(bool onlyFlags)
-{
-    return saveConf(conf(), onlyFlags);
-}
-
-bool FortManager::saveConf(bool onlyFlags)
-{
-    Q_ASSERT(confToEdit());
-
-    return saveConf(confToEdit(), onlyFlags);
-}
-
-bool FortManager::applyConf(bool onlyFlags)
-{
-    if (!saveConf(onlyFlags))
-        return false;
-
-    if (!confToEdit()) {
-        confManager()->initConfToEdit();
-    }
-
-    return true;
-}
-
-bool FortManager::applyConfImmediateFlags()
-{
-    if (confToEdit()) {
-        conf()->copyImmediateFlags(*confToEdit());
-    }
-
-    return saveConf(conf(), true);
-}
-
-bool FortManager::loadConf()
+void FortManager::loadConf()
 {
     QString viaVersion;
     if (!settings()->confCanMigrate(viaVersion)) {
@@ -748,20 +703,7 @@ bool FortManager::loadConf()
         abort(); // Abort the program
     }
 
-    if (!confManager()->load(*conf()))
-        return false;
-
-    return updateDriverConf();
-}
-
-bool FortManager::saveConf(FirewallConf *newConf, bool onlyFlags)
-{
-    if (!confManager()->save(newConf, onlyFlags))
-        return false;
-
-    updateDriverConf(onlyFlags);
-
-    return true;
+    confManager()->load();
 }
 
 bool FortManager::updateDriverConf(bool onlyFlags)
@@ -770,7 +712,7 @@ bool FortManager::updateDriverConf(bool onlyFlags)
 
     const bool res = confManager()->updateDriverConf(onlyFlags);
     if (res) {
-        updateStatManager(conf());
+        updateStatManager(confManager()->conf());
     }
 
     updateLogManager(true);

@@ -447,42 +447,28 @@ void ConfManager::setupDefault(FirewallConf &conf) const
     conf.addDefaultAppGroup();
 }
 
-bool ConfManager::load(FirewallConf &conf)
+bool ConfManager::load(bool onlyFlags)
 {
-    bool isNewConf = false;
+    Q_ASSERT(conf());
+    FirewallConf &conf = *this->conf();
 
-    if (!loadFromDb(conf, isNewConf)) {
-        showErrorMessage("Load Settings: " + sqliteDb()->errorMessage());
-        return false;
+    if (!onlyFlags) {
+        bool isNewConf = false;
+
+        if (!loadFromDb(conf, isNewConf)) {
+            showErrorMessage("Load Settings: " + sqliteDb()->errorMessage());
+            return false;
+        }
+
+        if (isNewConf) {
+            setupDefault(conf);
+            saveToDb(conf);
+        }
     }
 
-    if (isNewConf) {
-        setupDefault(conf);
-        saveToDb(conf);
-    }
-
-    loadFlags(conf);
-
-    return true;
-}
-
-void ConfManager::loadFlags(FirewallConf &conf) const
-{
     settings()->readConfIni(conf);
-}
 
-bool ConfManager::save(FirewallConf *newConf, bool onlyFlags)
-{
-    ++m_confVersion; // change version on each save attempt
-
-    if (!saveToDbIni(*newConf, onlyFlags))
-        return false;
-
-    if (onlyFlags) {
-        conf()->copyFlags(*newConf);
-    } else {
-        setConf(newConf);
-    }
+    emit confChanged(onlyFlags);
 
     return true;
 }
@@ -500,17 +486,51 @@ bool ConfManager::saveToDbIni(FirewallConf &newConf, bool onlyFlags)
     return true;
 }
 
+void ConfManager::applySavedConf(FirewallConf *newConf, bool onlyFlags, bool immediateFlags)
+{
+    if (conf() != newConf) {
+        if (!onlyFlags) {
+            setConf(newConf);
+        } else if (!immediateFlags) {
+            conf()->copyFlags(*newConf);
+        } else {
+            conf()->copyImmediateFlags(*newConf);
+        }
+    }
+
+    emit confChanged(onlyFlags);
+}
+
+bool ConfManager::save(FirewallConf *newConf, bool onlyFlags, bool immediateFlags)
+{
+    ++m_confVersion; // change version on each save attempt
+
+    if (!saveToDbIni(*newConf, onlyFlags))
+        return false;
+
+    applySavedConf(newConf, onlyFlags, immediateFlags);
+
+    return true;
+}
+
+bool ConfManager::saveFlags(bool immediateFlags)
+{
+    return save(conf(), true, immediateFlags);
+}
+
 bool ConfManager::saveVariant(const QVariant &v, int confVersion, bool onlyFlags)
 {
     auto conf = createConf();
     conf->fromVariant(v, onlyFlags);
 
-    if (!save(conf, onlyFlags)) {
+    if (!saveToDbIni(*conf, onlyFlags)) {
         delete conf;
         return false;
     }
 
     setConfVersion(confVersion);
+    applySavedConf(conf, onlyFlags);
+
     return true;
 }
 

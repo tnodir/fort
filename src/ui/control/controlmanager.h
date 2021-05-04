@@ -10,6 +10,7 @@
 QT_FORWARD_DECLARE_CLASS(QLocalServer)
 QT_FORWARD_DECLARE_CLASS(QLocalSocket)
 
+class ConfManager;
 class ControlWorker;
 class FortManager;
 class FortSettings;
@@ -26,6 +27,7 @@ public:
 
     FortSettings *settings() const { return m_settings; }
     FortManager *fortManager() const { return m_fortManager; }
+    ConfManager *confManager() const;
     RpcManager *rpcManager() const;
 
     const QList<ControlWorker *> &clients() const { return m_clients; }

@@ -18,6 +18,7 @@ class OptionsController : public QObject
 
 public:
     explicit OptionsController(FortManager *fortManager, QObject *parent = nullptr);
+    ~OptionsController() override;
 
     FortManager *fortManager() const { return m_fortManager; }
     FortSettings *settings() const;
@@ -47,7 +48,6 @@ signals:
     void editedChanged(bool anyEdited);
     void editResetted();
 
-    void aboutToSave();
     void saved();
 
     void afterSaveWindowState();
@@ -60,6 +60,7 @@ public slots:
 
     void saveChanges() { save(true); }
     void applyChanges() { save(false); }
+    void applyImmediateFlags();
 
 private:
     void save(bool closeOnSuccess);

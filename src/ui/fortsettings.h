@@ -224,8 +224,6 @@ public:
 
     const QStringList &appArguments() const { return m_appArguments; }
 
-    QString errorMessage() const { return m_errorMessage; }
-
     bool passwordChecked() const { return m_passwordChecked; }
     int passwordUnlockType() const { return m_passwordUnlockType; }
 
@@ -236,9 +234,10 @@ public:
     bool confMigrated() const;
     bool confCanMigrate(QString &viaVersion) const;
 
+    QString errorMessage() const;
+
 signals:
     void iniChanged();
-    void errorMessageChanged();
     void passwordUnlockChanged();
 
 public slots:
@@ -259,8 +258,6 @@ private:
     QString defaultProfilePath() const;
 
     void setupIni();
-
-    void setErrorMessage(const QString &errorMessage);
 
     void migrateIniOnStartup();
     void migrateIniOnWrite();
@@ -313,8 +310,6 @@ private:
     QStringList m_args;
 
     QStringList m_appArguments;
-
-    QString m_errorMessage;
 
     QSettings *m_ini = nullptr;
 

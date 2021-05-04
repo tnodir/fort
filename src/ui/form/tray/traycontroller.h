@@ -3,6 +3,7 @@
 
 #include <QObject>
 
+class ConfManager;
 class FirewallConf;
 class FortManager;
 class FortSettings;
@@ -18,6 +19,7 @@ public:
 
     FortManager *fortManager() const { return m_fortManager; }
     FortSettings *settings() const;
+    ConfManager *confManager() const;
     FirewallConf *conf() const;
     HotKeyManager *hotKeyManager() const;
     TranslationManager *translationManager() const;

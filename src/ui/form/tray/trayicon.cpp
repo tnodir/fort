@@ -7,6 +7,7 @@
 
 #include "../../conf/addressgroup.h"
 #include "../../conf/appgroup.h"
+#include "../../conf/confmanager.h"
 #include "../../conf/firewallconf.h"
 #include "../../fortcompat.h"
 #include "../../fortmanager.h"
@@ -65,6 +66,11 @@ FortManager *TrayIcon::fortManager() const
 FortSettings *TrayIcon::settings() const
 {
     return ctrl()->settings();
+}
+
+ConfManager *TrayIcon::confManager() const
+{
+    return ctrl()->confManager();
 }
 
 FirewallConf *TrayIcon::conf() const
@@ -267,7 +273,7 @@ void TrayIcon::saveTrayFlags()
         appGroup->setEnabled(action->isChecked());
     }
 
-    fortManager()->saveOriginConf(true);
+    confManager()->saveFlags();
 }
 
 void TrayIcon::addHotKey(QAction *action, const QString &shortcutText)

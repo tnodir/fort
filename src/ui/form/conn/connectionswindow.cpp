@@ -7,6 +7,7 @@
 #include <QVBoxLayout>
 
 #include "../../appinfo/appinfocache.h"
+#include "../../conf/confmanager.h"
 #include "../../conf/firewallconf.h"
 #include "../../fortmanager.h"
 #include "../../fortsettings.h"
@@ -46,6 +47,11 @@ FortManager *ConnectionsWindow::fortManager() const
 FortSettings *ConnectionsWindow::settings() const
 {
     return ctrl()->settings();
+}
+
+ConfManager *ConnectionsWindow::confManager() const
+{
+    return ctrl()->confManager();
 }
 
 FirewallConf *ConnectionsWindow::conf() const
@@ -229,7 +235,7 @@ void ConnectionsWindow::setupLogAllowedIp()
 
         conf()->setLogAllowedIp(checked);
 
-        fortManager()->applyConfImmediateFlags();
+        confManager()->saveFlags(true);
     });
 
     m_cbLogAllowedIp->setVisible(false); // TODO: Collect allowed connections
@@ -243,7 +249,7 @@ void ConnectionsWindow::setupLogBlockedIp()
 
         conf()->setLogBlockedIp(checked);
 
-        fortManager()->applyConfImmediateFlags();
+        confManager()->saveFlags(true);
     });
 }
 

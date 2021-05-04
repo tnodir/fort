@@ -226,14 +226,6 @@ void FortSettings::setupIni()
     migrateIniOnStartup();
 }
 
-void FortSettings::setErrorMessage(const QString &errorMessage)
-{
-    if (m_errorMessage != errorMessage) {
-        m_errorMessage = errorMessage;
-        emit errorMessageChanged();
-    }
-}
-
 QString FortSettings::confFilePath() const
 {
     return profilePath() + (APP_BASE ".config");
@@ -419,6 +411,18 @@ bool FortSettings::confCanMigrate(QString &viaVersion) const
     }
 
     return true;
+}
+
+QString FortSettings::errorMessage() const
+{
+    switch (m_ini->status()) {
+    case QSettings::AccessError:
+        return "Access Error";
+    case QSettings::FormatError:
+        return "Format Error";
+    default:
+        return "Unknown";
+    }
 }
 
 bool FortSettings::iniBool(const QString &key, bool defaultValue) const

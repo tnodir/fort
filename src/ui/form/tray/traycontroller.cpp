@@ -1,5 +1,6 @@
 #include "traycontroller.h"
 
+#include "../../conf/confmanager.h"
 #include "../../fortmanager.h"
 #include "../../translationmanager.h"
 
@@ -15,9 +16,14 @@ FortSettings *TrayController::settings() const
     return fortManager()->settings();
 }
 
+ConfManager *TrayController::confManager() const
+{
+    return fortManager()->confManager();
+}
+
 FirewallConf *TrayController::conf() const
 {
-    return fortManager()->conf();
+    return confManager()->conf();
 }
 
 HotKeyManager *TrayController::hotKeyManager() const

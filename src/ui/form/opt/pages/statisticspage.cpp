@@ -351,7 +351,7 @@ void StatisticsPage::setupTrafUnits()
 
         conf()->setTrafUnit(index);
 
-        fortManager()->applyConfImmediateFlags();
+        ctrl()->applyImmediateFlags();
     });
 }
 
@@ -451,7 +451,7 @@ void StatisticsPage::setupLogStat()
 
         conf()->setLogStat(checked);
 
-        fortManager()->applyConfImmediateFlags();
+        ctrl()->applyImmediateFlags();
     });
 
     m_cbLogStat->setFont(ControlUtil::fontDemiBold());
@@ -465,7 +465,7 @@ void StatisticsPage::setupLogStatNoFilter()
 
         conf()->setLogStatNoFilter(checked);
 
-        fortManager()->applyConfImmediateFlags();
+        ctrl()->applyImmediateFlags();
     });
 }
 

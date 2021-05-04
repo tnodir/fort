@@ -55,9 +55,6 @@ public:
     GraphWindow *graphWindow() const { return m_graphWindow; }
     ConnectionsWindow *connWindow() const { return m_connWindow; }
 
-    FirewallConf *conf() const;
-    FirewallConf *confToEdit() const;
-
     FortSettings *settings() const { return m_settings; }
     EnvManager *envManager() const { return m_envManager; }
     ControlManager *controlManager() const { return m_controlManager; }
@@ -130,11 +127,6 @@ public slots:
     bool showYesNoBox(const QString &text, const QString &yesText, const QString &noText,
             const QString &title = QString());
 
-    bool saveOriginConf(bool onlyFlags = false);
-    bool saveConf(bool onlyFlags = false);
-    bool applyConf(bool onlyFlags = false);
-    bool applyConfImmediateFlags();
-
 private:
     void setupTranslationManager();
 
@@ -182,8 +174,7 @@ private:
 
     void closeUi();
 
-    bool loadConf();
-    bool saveConf(FirewallConf *newConf, bool onlyFlags = false);
+    void loadConf();
 
     bool updateDriverConf(bool onlyFlags = false);
 

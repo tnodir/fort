@@ -42,7 +42,6 @@ protected:
 
 protected slots:
     virtual void onEditResetted() { }
-    virtual void onAboutToSave() { }
     virtual void onSaved() { }
 
     virtual void onSaveWindowState() { }

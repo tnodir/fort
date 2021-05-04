@@ -24,20 +24,12 @@ void ConfManagerRpc::onConfChanged(int confVersion, bool onlyFlags)
 
     settings()->clearCache();
 
-    if (onlyFlags) {
-        loadFlags(*conf());
-    } else {
-        FirewallConf *conf = createConf();
-        if (!load(*conf)) {
-            delete conf;
-            return;
-        }
-        setConf(conf);
+    if (!onlyFlags) {
+        setConf(createConf());
     }
+    load(onlyFlags);
 
     setConfVersion(confVersion);
-
-    emit confChanged(onlyFlags);
 
     fortManager()->reloadOptionsWindow(tr("Settings changed by someone else"));
 }

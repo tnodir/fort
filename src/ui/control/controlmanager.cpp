@@ -8,6 +8,7 @@
 #include <fort_version.h>
 
 #include "../conf/appgroup.h"
+#include "../conf/confmanager.h"
 #include "../conf/firewallconf.h"
 #include "../fortmanager.h"
 #include "../fortsettings.h"
@@ -30,6 +31,11 @@ ControlManager::ControlManager(FortSettings *settings, QObject *parent) :
 ControlManager::~ControlManager()
 {
     abort();
+}
+
+ConfManager *ControlManager::confManager() const
+{
+    return fortManager()->confManager();
 }
 
 RpcManager *ControlManager::rpcManager() const
@@ -172,7 +178,7 @@ bool ControlManager::processCommandConf(const QVariantList &args, QString &error
         return false;
     }
 
-    auto conf = fortManager()->conf();
+    auto conf = confManager()->conf();
     bool onlyFlags = true;
 
     const QString confPropName = args.at(0).toString();
@@ -198,7 +204,7 @@ bool ControlManager::processCommandConf(const QVariantList &args, QString &error
         }
     }
 
-    if (!fortManager()->saveOriginConf(onlyFlags))
+    if (!confManager()->save(conf, onlyFlags))
         return false;
 
     fortManager()->reloadOptionsWindow(tr("Control command executed"));

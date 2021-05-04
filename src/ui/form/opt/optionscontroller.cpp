@@ -1,6 +1,7 @@
 #include "optionscontroller.h"
 
 #include "../../conf/confmanager.h"
+#include "../../conf/firewallconf.h"
 #include "../../fortmanager.h"
 #include "../../fortsettings.h"
 #include "../../translationmanager.h"
@@ -12,8 +13,15 @@ OptionsController::OptionsController(FortManager *fortManager, QObject *parent) 
     m_othersEdited(false),
     m_fortManager(fortManager)
 {
+    confManager()->initConfToEdit();
+
     connect(translationManager(), &TranslationManager::languageChanged, this,
             &OptionsController::retranslateUi);
+}
+
+OptionsController::~OptionsController()
+{
+    confManager()->setConfToEdit(nullptr);
 }
 
 FortSettings *OptionsController::settings() const
@@ -28,7 +36,7 @@ ConfManager *OptionsController::confManager() const
 
 FirewallConf *OptionsController::conf() const
 {
-    return fortManager()->confToEdit();
+    return confManager()->confToEdit();
 }
 
 TaskManager *OptionsController::taskManager() const
@@ -101,31 +109,36 @@ void OptionsController::save(bool closeOnSuccess)
 {
     settings()->bulkUpdateBegin();
 
-    emit aboutToSave();
-
     bool confSaved = true;
-    bool confFlagsOnly = true;
+    bool onlyFlags = true;
     if (confFlagsEdited() || confEdited()) {
-        confFlagsOnly = confFlagsEdited() && !confEdited();
-        confSaved = closeOnSuccess ? fortManager()->saveConf(confFlagsOnly)
-                                   : fortManager()->applyConf(confFlagsOnly);
+        onlyFlags = confFlagsEdited() && !confEdited();
+        confSaved = confManager()->saveToDbIni(*conf(), onlyFlags);
     }
-
-    if (confSaved && othersEdited()) {
-        emit saved();
-    }
-
-    settings()->bulkUpdateEnd();
 
     if (confSaved) {
+        if (othersEdited()) {
+            emit saved();
+        }
+
+        confManager()->applySavedConf(conf(), onlyFlags);
+
         if (closeOnSuccess) {
             closeWindow();
         } else {
+            if (!conf()) {
+                confManager()->initConfToEdit();
+            }
             resetEdited();
         }
-
-        emit confManager()->confChanged(confFlagsOnly);
     }
+
+    settings()->bulkUpdateEnd();
+}
+
+void OptionsController::applyImmediateFlags()
+{
+    confManager()->save(conf(), true, true);
 }
 
 void OptionsController::emitEditedChanged()

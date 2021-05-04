@@ -43,8 +43,13 @@ public:
     void initConfToEdit();
     void setConfToEdit(FirewallConf *conf);
 
-    bool load(FirewallConf &conf);
-    bool save(FirewallConf *newConf, bool onlyFlags = false);
+    bool load(bool onlyFlags = false);
+
+    virtual bool saveToDbIni(FirewallConf &newConf, bool onlyFlags);
+    void applySavedConf(FirewallConf *newConf, bool onlyFlags = false, bool immediateFlags = false);
+    bool save(FirewallConf *newConf, bool onlyFlags = false, bool immediateFlags = false);
+
+    bool saveFlags(bool immediateFlags = false);
     bool saveVariant(const QVariant &v, int confVersion, bool onlyFlags = false);
 
     bool loadTasks(const QList<TaskInfo *> &taskInfos);
@@ -91,10 +96,6 @@ signals:
 
 protected:
     virtual void setupAppEndTimer();
-
-    void loadFlags(FirewallConf &conf) const;
-
-    virtual bool saveToDbIni(FirewallConf &newConf, bool onlyFlags);
 
     void setConf(FirewallConf *newConf);
     FirewallConf *createConf();
