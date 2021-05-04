@@ -371,7 +371,7 @@ void OptionsPage::setupEditPassword()
 
     refreshEditPassword();
 
-    connect(settings(), &FortSettings::iniChanged, this, refreshEditPassword);
+    connect(settings(), &FortSettings::passwordStateChanged, this, refreshEditPassword);
     connect(m_cbPassword, &QCheckBox::toggled, this, refreshEditPassword);
 }
 

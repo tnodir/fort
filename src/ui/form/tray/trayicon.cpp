@@ -143,7 +143,7 @@ void TrayIcon::setupController()
     connect(fortManager(), &FortManager::graphWindowChanged, m_graphWindowAction,
             &QAction::setChecked);
 
-    connect(settings(), &FortSettings::passwordUnlockChanged, this, &TrayIcon::updateTrayMenuFlags);
+    connect(settings(), &FortSettings::passwordStateChanged, this, &TrayIcon::updateTrayMenuFlags);
 
     connect(ctrl(), &TrayController::retranslateUi, this, &TrayIcon::retranslateUi);
 

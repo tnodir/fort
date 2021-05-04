@@ -252,13 +252,9 @@ void FortSettings::setPasswordChecked(bool checked, int unlockType)
         return;
 
     m_passwordChecked = checked;
+    m_passwordUnlockType = unlockType;
 
-    if (m_passwordUnlockType != unlockType) {
-        m_passwordUnlockType = unlockType;
-        emit passwordUnlockChanged();
-    }
-
-    emit iniChanged();
+    emit passwordStateChanged();
 }
 
 void FortSettings::resetCheckedPassword(int unlockType)

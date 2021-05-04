@@ -238,7 +238,7 @@ public:
 
 signals:
     void iniChanged();
-    void passwordUnlockChanged();
+    void passwordStateChanged();
 
 public slots:
     void setupGlobal();
