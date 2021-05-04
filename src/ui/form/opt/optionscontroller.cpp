@@ -107,29 +107,25 @@ void OptionsController::closeWindow()
 
 void OptionsController::save(bool closeOnSuccess)
 {
-    bool confSaved = true;
     bool onlyFlags = true;
     if (confFlagsEdited() || confEdited()) {
         onlyFlags = confFlagsEdited() && !confEdited();
-        confSaved = confManager()->saveToDbIni(*conf(), onlyFlags);
+        if (!confManager()->saveToDbIni(*conf(), onlyFlags))
+            return;
     }
 
-    if (confSaved) {
-        if (othersEdited()) {
-            emit saved();
-            settings()->iniSync();
-        }
+    if (othersEdited()) {
+        emit saved();
+        settings()->iniSync();
+    }
 
-        confManager()->applySavedConf(conf(), onlyFlags);
+    confManager()->applySavedConf(conf(), onlyFlags);
 
-        if (closeOnSuccess) {
-            closeWindow();
-        } else {
-            if (!conf()) {
-                confManager()->initConfToEdit();
-            }
-            resetEdited();
-        }
+    if (closeOnSuccess) {
+        closeWindow();
+    } else {
+        confManager()->initConfToEdit();
+        resetEdited();
     }
 }
 

@@ -405,6 +405,9 @@ void ConfManager::setupAppEndTimer()
 
 void ConfManager::initConfToEdit()
 {
+    if (confToEdit())
+        return;
+
     auto newConf = createConf();
     newConf->copy(*conf());
 
