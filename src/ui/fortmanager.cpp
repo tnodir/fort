@@ -219,7 +219,7 @@ void FortManager::setupLogger()
 
     updateLogger();
 
-    connect(settings(), &FortSettings::iniChanged, this, &FortManager::updateLogger);
+    connect(confManager(), &ConfManager::confChanged, this, &FortManager::updateLogger);
 }
 
 void FortManager::updateLogger()

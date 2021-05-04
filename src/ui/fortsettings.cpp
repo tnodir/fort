@@ -36,9 +36,7 @@ FortSettings::FortSettings(QObject *parent) :
     m_hasService(false),
     m_isWindowControl(false),
     m_passwordChecked(false),
-    m_passwordUnlockType(0),
-    m_bulkUpdating(false),
-    m_bulkIniChanged(false)
+    m_passwordUnlockType(0)
 {
 }
 
@@ -409,6 +407,11 @@ bool FortSettings::confCanMigrate(QString &viaVersion) const
     return true;
 }
 
+bool FortSettings::hasError() const
+{
+    return m_ini->status() != QSettings::NoError;
+}
+
 QString FortSettings::errorMessage() const
 {
     switch (m_ini->status()) {
@@ -509,12 +512,6 @@ void FortSettings::setIniValue(
 
     // Save to cache
     setCacheValue(key, value);
-
-    if (m_bulkUpdating) {
-        m_bulkIniChanged = true;
-    } else {
-        emit iniChanged();
-    }
 }
 
 QVariant FortSettings::cacheValue(const QString &key) const
@@ -530,28 +527,6 @@ void FortSettings::setCacheValue(const QString &key, const QVariant &value) cons
 void FortSettings::clearCache()
 {
     m_cache.clear();
-}
-
-void FortSettings::bulkUpdateBegin()
-{
-    Q_ASSERT(!m_bulkUpdating);
-
-    m_bulkUpdating = true;
-    m_bulkIniChanged = false;
-}
-
-void FortSettings::bulkUpdateEnd()
-{
-    Q_ASSERT(m_bulkUpdating);
-
-    m_bulkUpdating = false;
-
-    if (m_bulkIniChanged) {
-        m_bulkIniChanged = false;
-
-        iniSync();
-        emit iniChanged();
-    }
 }
 
 void FortSettings::removeIniKey(const QString &key)
@@ -570,6 +545,5 @@ QStringList FortSettings::iniChildKeys(const QString &prefix) const
 bool FortSettings::iniSync()
 {
     m_ini->sync();
-
-    return m_ini->status() == QSettings::NoError;
+    return !hasError();
 }

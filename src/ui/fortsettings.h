@@ -234,10 +234,10 @@ public:
     bool confMigrated() const;
     bool confCanMigrate(QString &viaVersion) const;
 
+    bool hasError() const;
     QString errorMessage() const;
 
 signals:
-    void iniChanged();
     void passwordStateChanged();
 
 public slots:
@@ -249,8 +249,7 @@ public slots:
 
     void clearCache();
 
-    void bulkUpdateBegin();
-    void bulkUpdateEnd();
+    bool iniSync();
 
 private:
     void processArguments(const QStringList &args);
@@ -286,8 +285,6 @@ private:
 
     QStringList iniChildKeys(const QString &prefix) const;
 
-    bool iniSync();
-
 private:
     uint m_iniExists : 1;
     uint m_noCache : 1;
@@ -297,9 +294,6 @@ private:
 
     uint m_passwordChecked : 1;
     uint m_passwordUnlockType : 3;
-
-    uint m_bulkUpdating : 1;
-    uint m_bulkIniChanged : 1;
 
     QString m_defaultLanguage;
     QString m_profilePath;

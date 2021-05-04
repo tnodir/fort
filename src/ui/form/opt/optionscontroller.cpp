@@ -107,8 +107,6 @@ void OptionsController::closeWindow()
 
 void OptionsController::save(bool closeOnSuccess)
 {
-    settings()->bulkUpdateBegin();
-
     bool confSaved = true;
     bool onlyFlags = true;
     if (confFlagsEdited() || confEdited()) {
@@ -119,6 +117,7 @@ void OptionsController::save(bool closeOnSuccess)
     if (confSaved) {
         if (othersEdited()) {
             emit saved();
+            settings()->iniSync();
         }
 
         confManager()->applySavedConf(conf(), onlyFlags);
@@ -132,8 +131,6 @@ void OptionsController::save(bool closeOnSuccess)
             resetEdited();
         }
     }
-
-    settings()->bulkUpdateEnd();
 }
 
 void OptionsController::applyImmediateFlags()
