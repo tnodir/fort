@@ -527,6 +527,11 @@ void FortSettings::setCacheValue(const QString &key, const QVariant &value) cons
     m_cache.insert(key, value);
 }
 
+void FortSettings::clearCache()
+{
+    m_cache.clear();
+}
+
 void FortSettings::bulkUpdateBegin()
 {
     Q_ASSERT(!m_bulkUpdating);

@@ -4,6 +4,7 @@
 
 #include "../conf/firewallconf.h"
 #include "../fortmanager.h"
+#include "../fortsettings.h"
 #include "../rpc/rpcmanager.h"
 
 ConfManagerRpc::ConfManagerRpc(const QString &filePath, FortManager *fortManager, QObject *parent) :
@@ -20,6 +21,8 @@ void ConfManagerRpc::onConfChanged(int confVersion, bool onlyFlags)
 {
     if (this->confVersion() == confVersion)
         return;
+
+    settings()->clearCache();
 
     if (onlyFlags) {
         loadFlags(*conf());
@@ -38,8 +41,6 @@ void ConfManagerRpc::onConfChanged(int confVersion, bool onlyFlags)
 
     fortManager()->reloadOptionsWindow(tr("Settings changed by someone else"));
 }
-
-void ConfManagerRpc::setupAppEndTimer() { }
 
 bool ConfManagerRpc::saveToDbIni(FirewallConf &newConf, bool onlyFlags)
 {

@@ -248,6 +248,8 @@ public slots:
     void readConfIni(FirewallConf &conf) const;
     bool writeConfIni(const FirewallConf &conf);
 
+    void clearCache();
+
     void bulkUpdateBegin();
     void bulkUpdateEnd();
 

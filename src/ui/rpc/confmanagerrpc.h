@@ -18,7 +18,7 @@ public:
     void onConfChanged(int confVersion, bool onlyFlags);
 
 protected:
-    void setupAppEndTimer() override;
+    void setupAppEndTimer() override { }
 
     bool saveToDbIni(FirewallConf &newConf, bool onlyFlags) override;
 };
