@@ -7,6 +7,11 @@
 
 FirewallConf::FirewallConf(QObject *parent) :
     QObject(parent),
+    m_othersEdited(false),
+    m_extEdited(false),
+    m_iniEdited(false),
+    m_flagsEdited(false),
+    m_edited(false),
     m_logDebug(false),
     m_logConsole(false),
     m_hotKeyEnabled(false),
@@ -28,60 +33,73 @@ FirewallConf::FirewallConf(QObject *parent) :
     setupAddressGroups();
 }
 
+void FirewallConf::setOthersEdited(bool v)
+{
+    m_othersEdited = v;
+}
+
+void FirewallConf::setExtEdited(bool v)
+{
+    m_extEdited = v;
+}
+
+void FirewallConf::setIniEdited(bool v)
+{
+    m_iniEdited = v;
+}
+
+void FirewallConf::setFlagsEdited(bool v)
+{
+    m_flagsEdited = v;
+}
+
+void FirewallConf::setEdited(bool v)
+{
+    m_edited = v;
+}
+
+void FirewallConf::resetEdited()
+{
+    setOthersEdited(false);
+    setExtEdited(false);
+    setIniEdited(false);
+    setFlagsEdited(false);
+    setEdited(false);
+}
+
 void FirewallConf::setProvBoot(bool provBoot)
 {
-    if (m_provBoot != provBoot) {
-        m_provBoot = provBoot;
-        emit provBootChanged();
-    }
+    m_provBoot = provBoot;
 }
 
 void FirewallConf::setFilterEnabled(bool filterEnabled)
 {
-    if (m_filterEnabled != filterEnabled) {
-        m_filterEnabled = filterEnabled;
-        emit filterEnabledChanged();
-    }
+    m_filterEnabled = filterEnabled;
 }
 
 void FirewallConf::setFilterLocals(bool filterLocals)
 {
-    if (m_filterLocals != filterLocals) {
-        m_filterLocals = filterLocals;
-        emit filterLocalsChanged();
-    }
+    m_filterLocals = filterLocals;
 }
 
 void FirewallConf::setStopTraffic(bool stopTraffic)
 {
-    if (m_stopTraffic != stopTraffic) {
-        m_stopTraffic = stopTraffic;
-        emit stopTrafficChanged();
-    }
+    m_stopTraffic = stopTraffic;
 }
 
 void FirewallConf::setStopInetTraffic(bool stopInetTraffic)
 {
-    if (m_stopInetTraffic != stopInetTraffic) {
-        m_stopInetTraffic = stopInetTraffic;
-        emit stopInetTrafficChanged();
-    }
+    m_stopInetTraffic = stopInetTraffic;
 }
 
 void FirewallConf::setAllowAllNew(bool allowAllNew)
 {
-    if (m_allowAllNew != allowAllNew) {
-        m_allowAllNew = allowAllNew;
-        emit allowAllNewChanged();
-    }
+    m_allowAllNew = allowAllNew;
 }
 
 void FirewallConf::setLogBlocked(bool logBlocked)
 {
-    if (m_logBlocked != logBlocked) {
-        m_logBlocked = logBlocked;
-        emit logBlockedChanged();
-    }
+    m_logBlocked = logBlocked;
 }
 
 void FirewallConf::setLogStat(bool logStat)
@@ -94,98 +112,62 @@ void FirewallConf::setLogStat(bool logStat)
 
 void FirewallConf::setLogStatNoFilter(bool logStatNoFilter)
 {
-    if (m_logStatNoFilter != logStatNoFilter) {
-        m_logStatNoFilter = logStatNoFilter;
-        emit logStatNoFilterChanged();
-    }
+    m_logStatNoFilter = logStatNoFilter;
 }
 
 void FirewallConf::setLogAllowedIp(bool logAllowedIp)
 {
-    if (m_logAllowedIp != logAllowedIp) {
-        m_logAllowedIp = logAllowedIp;
-        emit logAllowedIpChanged();
-    }
+    m_logAllowedIp = logAllowedIp;
 }
 
 void FirewallConf::setLogBlockedIp(bool logBlockedIp)
 {
-    if (m_logBlockedIp != logBlockedIp) {
-        m_logBlockedIp = logBlockedIp;
-        emit logBlockedIpChanged();
-    }
+    m_logBlockedIp = logBlockedIp;
 }
 
 void FirewallConf::setAppBlockAll(bool appBlockAll)
 {
-    if (m_appBlockAll != appBlockAll) {
-        m_appBlockAll = appBlockAll;
-        emit appBlockAllChanged();
-    }
+    m_appBlockAll = appBlockAll;
 }
 
 void FirewallConf::setAppAllowAll(bool appAllowAll)
 {
-    if (m_appAllowAll != appAllowAll) {
-        m_appAllowAll = appAllowAll;
-        emit appAllowAllChanged();
-    }
+    m_appAllowAll = appAllowAll;
 }
 
 void FirewallConf::setActivePeriodEnabled(bool activePeriodEnabled)
 {
-    if (m_activePeriodEnabled != activePeriodEnabled) {
-        m_activePeriodEnabled = activePeriodEnabled;
-        emit activePeriodEnabledChanged();
-    }
+    m_activePeriodEnabled = activePeriodEnabled;
 }
 
 void FirewallConf::setActivePeriodFrom(const QString &activePeriodFrom)
 {
-    if (m_activePeriodFrom != activePeriodFrom) {
-        m_activePeriodFrom = activePeriodFrom;
-        emit activePeriodFromChanged();
-    }
+    m_activePeriodFrom = activePeriodFrom;
 }
 
 void FirewallConf::setActivePeriodTo(const QString &activePeriodTo)
 {
-    if (m_activePeriodTo != activePeriodTo) {
-        m_activePeriodTo = activePeriodTo;
-        emit activePeriodToChanged();
-    }
+    m_activePeriodTo = activePeriodTo;
 }
 
 void FirewallConf::setMonthStart(int monthStart)
 {
-    if (m_monthStart != monthStart) {
-        m_monthStart = monthStart;
-        emit monthStartChanged();
-    }
+    m_monthStart = monthStart;
 }
 
 void FirewallConf::setTrafHourKeepDays(int trafHourKeepDays)
 {
-    if (m_trafHourKeepDays != trafHourKeepDays) {
-        m_trafHourKeepDays = trafHourKeepDays;
-        emit trafHourKeepDaysChanged();
-    }
+    m_trafHourKeepDays = trafHourKeepDays;
 }
 
 void FirewallConf::setTrafDayKeepDays(int trafDayKeepDays)
 {
-    if (m_trafDayKeepDays != trafDayKeepDays) {
-        m_trafDayKeepDays = trafDayKeepDays;
-        emit trafDayKeepDaysChanged();
-    }
+    m_trafDayKeepDays = trafDayKeepDays;
 }
 
 void FirewallConf::setTrafMonthKeepMonths(int trafMonthKeepMonths)
 {
-    if (m_trafMonthKeepMonths != trafMonthKeepMonths) {
-        m_trafMonthKeepMonths = trafMonthKeepMonths;
-        emit trafMonthKeepMonthsChanged();
-    }
+    m_trafMonthKeepMonths = trafMonthKeepMonths;
 }
 
 void FirewallConf::setTrafUnit(int trafUnit)
@@ -198,34 +180,22 @@ void FirewallConf::setTrafUnit(int trafUnit)
 
 void FirewallConf::setAllowedIpKeepCount(int allowedIpKeepCount)
 {
-    if (m_allowedIpKeepCount != allowedIpKeepCount) {
-        m_allowedIpKeepCount = allowedIpKeepCount;
-        emit allowedIpKeepCountChanged();
-    }
+    m_allowedIpKeepCount = allowedIpKeepCount;
 }
 
 void FirewallConf::setBlockedIpKeepCount(int blockedIpKeepCount)
 {
-    if (m_blockedIpKeepCount != blockedIpKeepCount) {
-        m_blockedIpKeepCount = blockedIpKeepCount;
-        emit blockedIpKeepCountChanged();
-    }
+    m_blockedIpKeepCount = blockedIpKeepCount;
 }
 
 void FirewallConf::setQuotaDayMb(quint32 quotaDayMb)
 {
-    if (m_quotaDayMb != quotaDayMb) {
-        m_quotaDayMb = quotaDayMb;
-        emit quotaDayMbChanged();
-    }
+    m_quotaDayMb = quotaDayMb;
 }
 
 void FirewallConf::setQuotaMonthMb(quint32 quotaMonthMb)
 {
-    if (m_quotaMonthMb != quotaMonthMb) {
-        m_quotaMonthMb = quotaMonthMb;
-        emit quotaMonthMbChanged();
-    }
+    m_quotaMonthMb = quotaMonthMb;
 }
 
 quint32 FirewallConf::appGroupBits() const
@@ -334,18 +304,14 @@ void FirewallConf::setupAddressGroups()
     m_addressGroups.append(new AddressGroup(this));
 }
 
-void FirewallConf::copyImmediateFlags(const FirewallConf &o)
-{
-    m_logBlocked = o.logBlocked();
-    m_logStat = o.logStat();
-    m_logStatNoFilter = o.logStatNoFilter();
-    m_logAllowedIp = o.logAllowedIp();
-    m_logBlockedIp = o.logBlockedIp();
-    m_trafUnit = o.trafUnit();
-}
-
 void FirewallConf::copyFlags(const FirewallConf &o)
 {
+    m_othersEdited = o.othersEdited();
+    m_extEdited = o.extEdited();
+    m_iniEdited = o.iniEdited();
+    m_flagsEdited = o.flagsEdited();
+    m_edited = o.edited();
+
     m_logDebug = o.logDebug();
     m_logConsole = o.logConsole();
     m_hotKeyEnabled = o.hotKeyEnabled();
@@ -356,6 +322,14 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     m_stopTraffic = o.stopTraffic();
     m_stopInetTraffic = o.stopInetTraffic();
     m_allowAllNew = o.allowAllNew();
+
+    m_logBlocked = o.logBlocked();
+    m_logStat = o.logStat();
+    m_logStatNoFilter = o.logStatNoFilter();
+
+    m_logAllowedIp = o.logAllowedIp();
+    m_logBlockedIp = o.logBlockedIp();
+
     m_appBlockAll = o.appBlockAll();
     m_appAllowAll = o.appAllowAll();
 
@@ -369,14 +343,13 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     m_trafHourKeepDays = o.trafHourKeepDays();
     m_trafDayKeepDays = o.trafDayKeepDays();
     m_trafMonthKeepMonths = o.trafMonthKeepMonths();
+    m_trafUnit = o.trafUnit();
 
     m_allowedIpKeepCount = o.allowedIpKeepCount();
     m_blockedIpKeepCount = o.blockedIpKeepCount();
 
     m_quotaDayMb = o.quotaDayMb();
     m_quotaMonthMb = o.quotaMonthMb();
-
-    copyImmediateFlags(o);
 }
 
 void FirewallConf::copy(const FirewallConf &o)
@@ -396,35 +369,19 @@ void FirewallConf::copy(const FirewallConf &o)
     }
 }
 
-QVariant FirewallConf::immediateFlagsToVariant() const
+QVariant FirewallConf::flagsToVariant() const
 {
     QVariantMap map;
 
-    map["logBlocked"] = logBlocked();
-    map["logStat"] = logStat();
-    map["logStatNoFilter"] = logStatNoFilter();
-    map["logAllowedIp"] = logAllowedIp();
-    map["logBlockedIp"] = logBlockedIp();
-    map["trafUnit"] = trafUnit();
+    map["othersEdited"] = othersEdited();
+    map["extEdited"] = extEdited();
+    map["iniEdited"] = iniEdited();
+    map["flagsEdited"] = flagsEdited();
+    map["edited"] = edited();
 
-    return map;
-}
-
-void FirewallConf::immediateFlagsFromVariant(const QVariant &v)
-{
-    const QVariantMap map = v.toMap();
-
-    m_logBlocked = map["logBlocked"].toBool();
-    m_logStat = map["logStat"].toBool();
-    m_logStatNoFilter = map["logStatNoFilter"].toBool();
-    m_logAllowedIp = map["logAllowedIp"].toBool();
-    m_logBlockedIp = map["logBlockedIp"].toBool();
-    m_trafUnit = map["trafUnit"].toInt();
-}
-
-QVariant FirewallConf::flagsToVariant() const
-{
-    QVariantMap map = immediateFlagsToVariant().toMap();
+    map["logDebug"] = logDebug();
+    map["logConsole"] = logConsole();
+    map["hotKeyEnabled"] = hotKeyEnabled();
 
     map["provBoot"] = provBoot();
     map["filterEnabled"] = filterEnabled();
@@ -432,6 +389,14 @@ QVariant FirewallConf::flagsToVariant() const
     map["stopTraffic"] = stopTraffic();
     map["stopInetTraffic"] = stopInetTraffic();
     map["allowAllNew"] = allowAllNew();
+
+    map["logBlocked"] = logBlocked();
+    map["logStat"] = logStat();
+    map["logStatNoFilter"] = logStatNoFilter();
+
+    map["logAllowedIp"] = logAllowedIp();
+    map["logBlockedIp"] = logBlockedIp();
+
     map["appBlockAll"] = appBlockAll();
     map["appAllowAll"] = appAllowAll();
 
@@ -445,6 +410,7 @@ QVariant FirewallConf::flagsToVariant() const
     map["trafHourKeepDays"] = trafHourKeepDays();
     map["trafDayKeepDays"] = trafDayKeepDays();
     map["trafMonthKeepMonths"] = trafMonthKeepMonths();
+    map["trafUnit"] = trafUnit();
 
     map["allowedIpKeepCount"] = allowedIpKeepCount();
     map["blockedIpKeepCount"] = blockedIpKeepCount();
@@ -459,6 +425,12 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
 {
     const QVariantMap map = v.toMap();
 
+    m_othersEdited = map["othersEdited"].toBool();
+    m_extEdited = map["extEdited"].toBool();
+    m_iniEdited = map["iniEdited"].toBool();
+    m_flagsEdited = map["flagsEdited"].toBool();
+    m_edited = map["edited"].toBool();
+
     m_logDebug = map["logDebug"].toBool();
     m_logConsole = map["logConsole"].toBool();
     m_hotKeyEnabled = map["hotKeyEnabled"].toBool();
@@ -469,6 +441,14 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
     m_stopTraffic = map["stopTraffic"].toBool();
     m_stopInetTraffic = map["stopInetTraffic"].toBool();
     m_allowAllNew = map["allowAllNew"].toBool();
+
+    m_logBlocked = map["logBlocked"].toBool();
+    m_logStat = map["logStat"].toBool();
+    m_logStatNoFilter = map["logStatNoFilter"].toBool();
+
+    m_logAllowedIp = map["logAllowedIp"].toBool();
+    m_logBlockedIp = map["logBlockedIp"].toBool();
+
     m_appBlockAll = map["appBlockAll"].toBool();
     m_appAllowAll = map["appAllowAll"].toBool();
 
@@ -482,14 +462,13 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
     m_trafHourKeepDays = map["trafHourKeepDays"].toInt();
     m_trafDayKeepDays = map["trafDayKeepDays"].toInt();
     m_trafMonthKeepMonths = map["trafMonthKeepMonths"].toInt();
+    m_trafUnit = map["trafUnit"].toInt();
 
     m_allowedIpKeepCount = map["allowedIpKeepCount"].toInt();
     m_blockedIpKeepCount = map["blockedIpKeepCount"].toInt();
 
     m_quotaDayMb = map["quotaDayMb"].toUInt();
     m_quotaMonthMb = map["quotaMonthMb"].toUInt();
-
-    immediateFlagsFromVariant(v);
 }
 
 QVariant FirewallConf::addressesToVariant() const

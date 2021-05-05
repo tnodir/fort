@@ -7,11 +7,7 @@
 #include "../../translationmanager.h"
 
 OptionsController::OptionsController(FortManager *fortManager, QObject *parent) :
-    QObject(parent),
-    m_confFlagsEdited(false),
-    m_confEdited(false),
-    m_othersEdited(false),
-    m_fortManager(fortManager)
+    QObject(parent), m_fortManager(fortManager)
 {
     confManager()->initConfToEdit();
 
@@ -59,36 +55,49 @@ ZoneListModel *OptionsController::zoneListModel() const
     return fortManager()->zoneListModel();
 }
 
-void OptionsController::setConfFlagsEdited(bool v)
+void OptionsController::setConfOthersEdited()
 {
-    if (m_confFlagsEdited != v) {
-        m_confFlagsEdited = v;
-        emitEditedChanged();
+    if (!conf()->othersEdited()) {
+        conf()->setOthersEdited(true);
+        emit editedChanged(true);
     }
 }
 
-void OptionsController::setConfEdited(bool v)
+void OptionsController::setConfExtEdited()
 {
-    if (m_confEdited != v) {
-        m_confEdited = v;
-        emitEditedChanged();
+    if (!conf()->extEdited()) {
+        conf()->setExtEdited(true);
+        emit editedChanged(true);
     }
 }
 
-void OptionsController::setOthersEdited(bool v)
+void OptionsController::setConfIniEdited()
 {
-    if (m_othersEdited != v) {
-        m_othersEdited = v;
-        emitEditedChanged();
+    if (!conf()->iniEdited()) {
+        conf()->setIniEdited(true);
+        emit editedChanged(true);
+    }
+}
+
+void OptionsController::setConfFlagsEdited()
+{
+    if (!conf()->flagsEdited()) {
+        conf()->setFlagsEdited(true);
+        emit editedChanged(true);
+    }
+}
+
+void OptionsController::setConfEdited()
+{
+    if (!conf()->edited()) {
+        conf()->setEdited(true);
+        emit editedChanged(true);
     }
 }
 
 void OptionsController::resetEdited()
 {
-    setConfFlagsEdited(false);
-    setConfEdited(false);
-    setOthersEdited(false);
-
+    emit editedChanged(false);
     emit editResetted();
 }
 
@@ -96,7 +105,7 @@ void OptionsController::initialize()
 {
     // Settings/configuration was migrated?
     if (settings()->confMigrated()) {
-        setConfEdited(true);
+        setConfEdited();
     }
 }
 
@@ -108,13 +117,13 @@ void OptionsController::closeWindow()
 void OptionsController::save(bool closeOnSuccess)
 {
     bool onlyFlags = true;
-    if (confFlagsEdited() || confEdited()) {
-        onlyFlags = confFlagsEdited() && !confEdited();
+    if (conf()->flagsEdited() || conf()->edited()) {
+        onlyFlags = !conf()->edited();
         if (!confManager()->saveConf(*conf(), onlyFlags))
             return;
     }
 
-    if (othersEdited()) {
+    if (conf()->othersEdited()) {
         emit saved();
     }
 
@@ -126,17 +135,4 @@ void OptionsController::save(bool closeOnSuccess)
         confManager()->initConfToEdit();
         resetEdited();
     }
-}
-
-void OptionsController::applyImmediateFlags()
-{
-    FirewallConf *originConf = confManager()->conf();
-    originConf->copyImmediateFlags(*conf());
-
-    confManager()->saveFlags();
-}
-
-void OptionsController::emitEditedChanged()
-{
-    emit editedChanged(anyEdited());
 }

@@ -10,11 +10,7 @@ class OptionsPage : public BasePage
 public:
     explicit OptionsPage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
-    bool iniEdited() const { return m_iniEdited; }
-    void setIniEdited(bool v);
-
 protected slots:
-    void onEditResetted() override;
     void onSaved() override;
 
     void onRetranslateUi() override;
@@ -22,7 +18,7 @@ protected slots:
 private:
     void saveStartMode();
     void saveExplorerIntegration();
-    void saveIni();
+    void savePassword();
 
     void retranslateComboStartMode();
     void retranslateEditPassword();
@@ -46,7 +42,6 @@ private:
     void setupNewVersionUpdate();
 
 private:
-    uint m_iniEdited : 1;
     uint m_currentStartMode : 4;
     uint m_explorerIntegrated : 1;
 

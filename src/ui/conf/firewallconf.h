@@ -17,26 +17,26 @@ class AppGroup;
 class FirewallConf : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool filterEnabled READ filterEnabled WRITE setFilterEnabled NOTIFY
-                    filterEnabledChanged)
-    Q_PROPERTY(bool filterLocals READ filterLocals WRITE setFilterLocals NOTIFY filterLocalsChanged)
-    Q_PROPERTY(bool stopTraffic READ stopTraffic WRITE setStopTraffic NOTIFY stopTrafficChanged)
-    Q_PROPERTY(bool stopInetTraffic READ stopInetTraffic WRITE setStopInetTraffic NOTIFY
-                    stopInetTrafficChanged)
-    Q_PROPERTY(bool allowAllNew READ allowAllNew WRITE setAllowAllNew NOTIFY allowAllNewChanged)
-    Q_PROPERTY(bool logBlocked READ logBlocked WRITE setLogBlocked NOTIFY logBlockedChanged)
-    Q_PROPERTY(bool logStat READ logStat WRITE setLogStat NOTIFY logStatChanged)
-    Q_PROPERTY(bool logStatNoFilter READ logStatNoFilter WRITE setLogStatNoFilter NOTIFY
-                    logStatNoFilterChanged)
-    Q_PROPERTY(bool logAllowedIp READ logAllowedIp WRITE setLogAllowedIp NOTIFY logAllowedIpChanged)
-    Q_PROPERTY(bool logBlockedIp READ logBlockedIp WRITE setLogBlockedIp NOTIFY logBlockedIpChanged)
-    Q_PROPERTY(bool appBlockAll READ appBlockAll WRITE setAppBlockAll NOTIFY appBlockAllChanged)
-    Q_PROPERTY(bool appAllowAll READ appAllowAll WRITE setAppAllowAll NOTIFY appAllowAllChanged)
-    Q_PROPERTY(bool activePeriodEnabled READ activePeriodEnabled WRITE setActivePeriodEnabled NOTIFY
-                    activePeriodEnabledChanged)
 
 public:
     explicit FirewallConf(QObject *parent = nullptr);
+
+    bool othersEdited() const { return m_othersEdited; }
+    void setOthersEdited(bool v);
+
+    bool extEdited() const { return m_extEdited; }
+    void setExtEdited(bool v);
+
+    bool iniEdited() const { return m_iniEdited; }
+    void setIniEdited(bool v);
+
+    bool flagsEdited() const { return m_flagsEdited; }
+    void setFlagsEdited(bool v);
+
+    bool edited() const { return m_edited; }
+    void setEdited(bool v);
+
+    void resetEdited();
 
     bool logDebug() const { return m_logDebug; }
     void setLogDebug(bool v) { m_logDebug = v; }
@@ -136,41 +136,15 @@ public:
     const QList<AppGroup *> &removedAppGroupsList() const { return m_removedAppGroups; }
     void clearRemovedAppGroups() const;
 
-    void copyImmediateFlags(const FirewallConf &o);
     void copyFlags(const FirewallConf &o);
-
     void copy(const FirewallConf &o);
 
     QVariant toVariant(bool onlyFlags = false) const;
     void fromVariant(const QVariant &v, bool onlyFlags = false);
 
 signals:
-    void provBootChanged();
-    void filterEnabledChanged();
-    void filterLocalsChanged();
-    void stopTrafficChanged();
-    void stopInetTrafficChanged();
-    void allowAllNewChanged();
-    void logBlockedChanged();
     void logStatChanged();
-    void logStatNoFilterChanged();
-    void logAllowedIpChanged();
-    void logBlockedIpChanged();
-    void appBlockAllChanged();
-    void appAllowAllChanged();
-    void activePeriodEnabledChanged();
-    void activePeriodFromChanged();
-    void activePeriodToChanged();
-    void monthStartChanged();
-    void trafHourKeepDaysChanged();
-    void trafDayKeepDaysChanged();
-    void trafMonthKeepMonthsChanged();
     void trafUnitChanged();
-    void allowedIpKeepCountChanged();
-    void blockedIpKeepCountChanged();
-    void quotaDayMbChanged();
-    void quotaMonthMbChanged();
-    void addressGroupsChanged();
     void appGroupsChanged();
 
 public slots:
@@ -185,9 +159,6 @@ public slots:
 private:
     void setupAddressGroups();
 
-    QVariant immediateFlagsToVariant() const;
-    void immediateFlagsFromVariant(const QVariant &v);
-
     QVariant flagsToVariant() const;
     void flagsFromVariant(const QVariant &v);
 
@@ -198,6 +169,12 @@ private:
     void appGroupsFromVariant(const QVariant &v);
 
 private:
+    bool m_othersEdited : 1;
+    bool m_extEdited : 1;
+    bool m_iniEdited : 1;
+    bool m_flagsEdited : 1;
+    bool m_edited : 1;
+
     bool m_logDebug : 1;
     bool m_logConsole : 1;
     bool m_hotKeyEnabled : 1;

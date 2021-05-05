@@ -38,7 +38,7 @@ void SchedulePage::setScheduleEdited(bool v)
         m_scheduleEdited = v;
 
         if (scheduleEdited()) {
-            ctrl()->setOthersEdited(true);
+            ctrl()->setConfOthersEdited();
         }
     }
 }

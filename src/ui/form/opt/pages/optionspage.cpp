@@ -26,35 +26,16 @@
 #include "../optionscontroller.h"
 
 OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) :
-    BasePage(ctrl, parent), m_iniEdited(false), m_currentStartMode(0), m_explorerIntegrated(false)
+    BasePage(ctrl, parent), m_currentStartMode(0), m_explorerIntegrated(false)
 {
     setupUi();
-}
-
-void OptionsPage::setIniEdited(bool v)
-{
-    if (m_iniEdited != v) {
-        m_iniEdited = v;
-
-        if (iniEdited()) {
-            ctrl()->setOthersEdited(true);
-        }
-    }
-}
-
-void OptionsPage::onEditResetted()
-{
-    setIniEdited(false);
 }
 
 void OptionsPage::onSaved()
 {
     saveStartMode();
     saveExplorerIntegration();
-
-    if (iniEdited()) {
-        saveIni();
-    }
+    savePassword();
 }
 
 void OptionsPage::saveStartMode()
@@ -81,7 +62,7 @@ void OptionsPage::saveExplorerIntegration()
     }
 }
 
-void OptionsPage::saveIni()
+void OptionsPage::savePassword()
 {
     if (m_cbPassword->isChecked() != settings()->hasPassword()) {
         const auto password = m_editPassword->text();
@@ -238,7 +219,7 @@ void OptionsPage::setupStartupBox()
 
     m_cbProvBoot = ControlUtil::createCheckBox(conf()->provBoot(), [&](bool checked) {
         conf()->setProvBoot(checked);
-        ctrl()->setConfFlagsEdited(true);
+        ctrl()->setConfFlagsEdited();
     });
 
     auto layout = new QVBoxLayout();
@@ -254,7 +235,7 @@ QLayout *OptionsPage::setupStartModeLayout()
     m_labelStartMode = ControlUtil::createLabel();
 
     m_comboStartMode =
-            ControlUtil::createComboBox(QStringList(), [&](int) { ctrl()->setOthersEdited(true); });
+            ControlUtil::createComboBox(QStringList(), [&](int) { ctrl()->setConfOthersEdited(); });
     m_comboStartMode->setFixedWidth(200);
 
     return ControlUtil::createRowLayout(m_labelStartMode, m_comboStartMode);
@@ -264,23 +245,23 @@ void OptionsPage::setupTrafficBox()
 {
     m_cbFilterEnabled = ControlUtil::createCheckBox(conf()->filterEnabled(), [&](bool checked) {
         conf()->setFilterEnabled(checked);
-        ctrl()->setConfFlagsEdited(true);
+        ctrl()->setConfFlagsEdited();
     });
     m_cbFilterLocals = ControlUtil::createCheckBox(conf()->filterLocals(), [&](bool checked) {
         conf()->setFilterLocals(checked);
-        ctrl()->setConfFlagsEdited(true);
+        ctrl()->setConfFlagsEdited();
     });
     m_cbStopTraffic = ControlUtil::createCheckBox(conf()->stopTraffic(), [&](bool checked) {
         conf()->setStopTraffic(checked);
-        ctrl()->setConfFlagsEdited(true);
+        ctrl()->setConfFlagsEdited();
     });
     m_cbStopInetTraffic = ControlUtil::createCheckBox(conf()->stopInetTraffic(), [&](bool checked) {
         conf()->setStopInetTraffic(checked);
-        ctrl()->setConfFlagsEdited(true);
+        ctrl()->setConfFlagsEdited();
     });
     m_cbAllowAllNew = ControlUtil::createCheckBox(conf()->allowAllNew(), [&](bool checked) {
         conf()->setAllowAllNew(checked);
-        ctrl()->setConfFlagsEdited(true);
+        ctrl()->setConfFlagsEdited();
     });
 
     auto layout = new QVBoxLayout();
@@ -298,12 +279,12 @@ void OptionsPage::setupGlobalBox()
 {
     m_explorerIntegrated = StartupUtil::isExplorerIntegrated();
     m_cbExplorerMenu = ControlUtil::createCheckBox(
-            m_explorerIntegrated, [&](int) { ctrl()->setOthersEdited(true); });
+            m_explorerIntegrated, [&](int) { ctrl()->setConfOthersEdited(); });
     m_cbExplorerMenu->setEnabled(settings()->hasService() || OsUtil::isUserAdmin());
 
     m_cbHotKeys = ControlUtil::createCheckBox(conf()->hotKeyEnabled(), [&](bool checked) {
         conf()->setHotKeyEnabled(checked);
-        ctrl()->setConfFlagsEdited(true);
+        ctrl()->setConfIniEdited();
     });
 
     // Password Row
@@ -334,7 +315,7 @@ QLayout *OptionsPage::setupPasswordLayout()
             m_editPassword->setFocus();
         }
 
-        setIniEdited(true);
+        ctrl()->setConfIniEdited();
     });
 
     m_btPasswordLock = ControlUtil::createFlatButton(":/icons/lock-open.png", [&] {
@@ -404,11 +385,11 @@ void OptionsPage::setupLogsBox()
 {
     m_cbLogDebug = ControlUtil::createCheckBox(conf()->logDebug(), [&](bool checked) {
         conf()->setLogDebug(checked);
-        ctrl()->setConfFlagsEdited(true);
+        ctrl()->setConfIniEdited();
     });
     m_cbLogConsole = ControlUtil::createCheckBox(conf()->logConsole(), [&](bool checked) {
         conf()->setLogConsole(checked);
-        ctrl()->setConfFlagsEdited(true);
+        ctrl()->setConfIniEdited();
     });
 
     auto layout = new QVBoxLayout();

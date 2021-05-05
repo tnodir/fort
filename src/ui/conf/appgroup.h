@@ -9,20 +9,6 @@
 class AppGroup : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
-    Q_PROPERTY(bool logConn READ logConn WRITE setLogConn NOTIFY logConnChanged)
-    Q_PROPERTY(bool fragmentPacket READ fragmentPacket WRITE setFragmentPacket NOTIFY
-                    fragmentPacketChanged)
-    Q_PROPERTY(bool periodEnabled READ periodEnabled WRITE setPeriodEnabled NOTIFY
-                    periodEnabledChanged)
-    Q_PROPERTY(bool limitInEnabled READ limitInEnabled WRITE setLimitInEnabled NOTIFY
-                    limitInEnabledChanged)
-    Q_PROPERTY(bool limitOutEnabled READ limitOutEnabled WRITE setLimitOutEnabled NOTIFY
-                    limitOutEnabledChanged)
-    Q_PROPERTY(
-            quint32 speedLimitIn READ speedLimitIn WRITE setSpeedLimitIn NOTIFY speedLimitInChanged)
-    Q_PROPERTY(quint32 speedLimitOut READ speedLimitOut WRITE setSpeedLimitOut NOTIFY
-                    speedLimitOutChanged)
 
 public:
     explicit AppGroup(QObject *parent = nullptr);
@@ -82,23 +68,6 @@ public:
 
     QVariant toVariant() const;
     void fromVariant(const QVariant &v);
-
-signals:
-    void enabledChanged();
-    void logConnChanged();
-    void fragmentPacketChanged();
-    void periodEnabledChanged();
-    void limitInEnabledChanged();
-    void limitOutEnabledChanged();
-    void speedLimitInChanged();
-    void speedLimitOutChanged();
-    void nameChanged();
-    void blockTextChanged();
-    void allowTextChanged();
-    void periodFromChanged();
-    void periodToChanged();
-
-public slots:
 
 private:
     bool m_edited : 1;

@@ -59,7 +59,7 @@ void StatisticsPage::setGraphEdited(bool v)
         m_graphEdited = v;
 
         if (graphEdited()) {
-            ctrl()->setOthersEdited(true);
+            ctrl()->setConfOthersEdited();
         }
     }
 }
@@ -351,7 +351,7 @@ void StatisticsPage::setupTrafUnits()
 
         conf()->setTrafUnit(index);
 
-        ctrl()->applyImmediateFlags();
+        ctrl()->setConfIniEdited();
     });
 }
 
@@ -451,7 +451,7 @@ void StatisticsPage::setupLogStat()
 
         conf()->setLogStat(checked);
 
-        ctrl()->applyImmediateFlags();
+        ctrl()->setConfFlagsEdited();
     });
 
     m_cbLogStat->setFont(ControlUtil::fontDemiBold());
@@ -465,7 +465,7 @@ void StatisticsPage::setupLogStatNoFilter()
 
         conf()->setLogStatNoFilter(checked);
 
-        ctrl()->applyImmediateFlags();
+        ctrl()->setConfFlagsEdited();
     });
 }
 
@@ -479,7 +479,7 @@ void StatisticsPage::setupActivePeriod()
 
         conf()->setActivePeriodEnabled(checked);
 
-        ctrl()->setConfFlagsEdited(true);
+        ctrl()->setConfFlagsEdited();
     });
     connect(m_ctpActivePeriod->timeEdit1(), &QTimeEdit::userTimeChanged, this,
             [&](const QTime &time) {
@@ -490,7 +490,7 @@ void StatisticsPage::setupActivePeriod()
 
                 conf()->setActivePeriodFrom(timeStr);
 
-                ctrl()->setConfFlagsEdited(true);
+                ctrl()->setConfFlagsEdited();
             });
     connect(m_ctpActivePeriod->timeEdit2(), &QTimeEdit::userTimeChanged, this,
             [&](const QTime &time) {
@@ -501,7 +501,7 @@ void StatisticsPage::setupActivePeriod()
 
                 conf()->setActivePeriodTo(timeStr);
 
-                ctrl()->setConfFlagsEdited(true);
+                ctrl()->setConfFlagsEdited();
             });
 }
 
@@ -527,7 +527,7 @@ void StatisticsPage::setupMonthStart()
 
                 conf()->setMonthStart(value);
 
-                ctrl()->setConfFlagsEdited(true);
+                ctrl()->setConfIniEdited();
             });
 }
 
@@ -543,7 +543,7 @@ void StatisticsPage::setupTrafHourKeepDays()
 
                 conf()->setTrafHourKeepDays(value);
 
-                ctrl()->setConfFlagsEdited(true);
+                ctrl()->setConfIniEdited();
             });
 }
 
@@ -559,7 +559,7 @@ void StatisticsPage::setupTrafDayKeepDays()
 
                 conf()->setTrafDayKeepDays(value);
 
-                ctrl()->setConfFlagsEdited(true);
+                ctrl()->setConfIniEdited();
             });
 }
 
@@ -575,7 +575,7 @@ void StatisticsPage::setupTrafMonthKeepMonths()
 
                 conf()->setTrafMonthKeepMonths(value);
 
-                ctrl()->setConfFlagsEdited(true);
+                ctrl()->setConfIniEdited();
             });
 }
 
@@ -593,7 +593,7 @@ void StatisticsPage::setupQuotaDayMb()
 
                 conf()->setQuotaDayMb(mbytes);
 
-                ctrl()->setConfFlagsEdited(true);
+                ctrl()->setConfIniEdited();
             });
 }
 
@@ -611,7 +611,7 @@ void StatisticsPage::setupQuotaMonthMb()
 
                 conf()->setQuotaMonthMb(mbytes);
 
-                ctrl()->setConfFlagsEdited(true);
+                ctrl()->setConfIniEdited();
             });
 }
 
@@ -628,7 +628,7 @@ void StatisticsPage::setupAllowedIpKeepCount()
 
                 conf()->setAllowedIpKeepCount(value);
 
-                ctrl()->setConfFlagsEdited(true);
+                ctrl()->setConfIniEdited();
             });
 }
 
@@ -645,7 +645,7 @@ void StatisticsPage::setupBlockedIpKeepCount()
 
                 conf()->setBlockedIpKeepCount(value);
 
-                ctrl()->setConfFlagsEdited(true);
+                ctrl()->setConfIniEdited();
             });
 }
 

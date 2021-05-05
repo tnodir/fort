@@ -29,16 +29,11 @@ public:
     TranslationManager *translationManager() const;
     ZoneListModel *zoneListModel() const;
 
-    bool confFlagsEdited() const { return m_confFlagsEdited; }
-    void setConfFlagsEdited(bool v);
-
-    bool confEdited() const { return m_confEdited; }
-    void setConfEdited(bool v);
-
-    bool othersEdited() const { return m_othersEdited; }
-    void setOthersEdited(bool v);
-
-    bool anyEdited() const { return confFlagsEdited() || confEdited() || othersEdited(); }
+    void setConfOthersEdited();
+    void setConfExtEdited();
+    void setConfIniEdited();
+    void setConfFlagsEdited();
+    void setConfEdited();
 
     void resetEdited();
 
@@ -60,18 +55,11 @@ public slots:
 
     void saveChanges() { save(true); }
     void applyChanges() { save(false); }
-    void applyImmediateFlags();
 
 private:
     void save(bool closeOnSuccess);
 
-    void emitEditedChanged();
-
 private:
-    bool m_confFlagsEdited : 1;
-    bool m_confEdited : 1;
-    bool m_othersEdited : 1;
-
     FortManager *m_fortManager = nullptr;
 };
 

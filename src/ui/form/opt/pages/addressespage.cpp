@@ -127,7 +127,7 @@ void AddressesPage::setupIncludeAddresses()
 
         addressGroup()->setIncludeAll(checked);
 
-        ctrl()->setConfFlagsEdited(true);
+        ctrl()->setConfFlagsEdited();
     });
     connect(m_includeAddresses->editIpText(), &QPlainTextEdit::textChanged, this, [&] {
         const auto ipText = m_includeAddresses->editIpText()->toPlainText();
@@ -137,7 +137,7 @@ void AddressesPage::setupIncludeAddresses()
 
         addressGroup()->setIncludeText(ipText);
 
-        ctrl()->setConfEdited(true);
+        ctrl()->setConfEdited();
     });
 }
 
@@ -151,7 +151,7 @@ void AddressesPage::setupExcludeAddresses()
 
         addressGroup()->setExcludeAll(checked);
 
-        ctrl()->setConfFlagsEdited(true);
+        ctrl()->setConfFlagsEdited();
     });
     connect(m_excludeAddresses->editIpText(), &QPlainTextEdit::textChanged, this, [&] {
         const auto ipText = m_excludeAddresses->editIpText()->toPlainText();
@@ -161,7 +161,7 @@ void AddressesPage::setupExcludeAddresses()
 
         addressGroup()->setExcludeText(ipText);
 
-        ctrl()->setConfEdited(true);
+        ctrl()->setConfEdited();
     });
 }
 
@@ -264,7 +264,7 @@ void AddressesPage::createZonesMenu()
             }
         }
 
-        ctrl()->setConfEdited(true);
+        ctrl()->setConfEdited();
 
         updateZonesText(include);
     };

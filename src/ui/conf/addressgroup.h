@@ -8,10 +8,6 @@
 class AddressGroup : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool includeAll READ includeAll WRITE setIncludeAll NOTIFY includeAllChanged)
-    Q_PROPERTY(bool excludeAll READ excludeAll WRITE setExcludeAll NOTIFY excludeAllChanged)
-    Q_PROPERTY(QString includeText READ includeText WRITE setIncludeText NOTIFY includeTextChanged)
-    Q_PROPERTY(QString excludeText READ excludeText WRITE setExcludeText NOTIFY excludeTextChanged)
 
 public:
     explicit AddressGroup(QObject *parent = nullptr);
@@ -50,12 +46,6 @@ public:
 
     QVariant toVariant() const;
     void fromVariant(const QVariant &v);
-
-signals:
-    void includeAllChanged();
-    void excludeAllChanged();
-    void includeTextChanged();
-    void excludeTextChanged();
 
 private:
     void addZone(quint32 &zones, int zoneId);

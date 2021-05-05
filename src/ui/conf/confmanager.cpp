@@ -410,6 +410,7 @@ void ConfManager::initConfToEdit()
 
     auto newConf = createConf();
     newConf->copy(*conf());
+    newConf->resetEdited();
 
     setConfToEdit(newConf);
 }
