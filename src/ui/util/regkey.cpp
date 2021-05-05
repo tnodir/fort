@@ -3,9 +3,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 
-#define PREDEFINED_BASE_HANDLE quint32(HKEY_CLASSES_ROOT)
-
-RegKey::RegKey(quint32 parentHandle, const QString &subKey, quint32 flags)
+RegKey::RegKey(RegHandle parentHandle, const QString &subKey, quint32 flags)
 {
     LPCWSTR subKeyStr = (LPCWSTR) subKey.utf16();
     const REGSAM samDesired = ((flags & ReadOnly) != 0 ? KEY_READ : KEY_ALL_ACCESS)
@@ -22,7 +20,7 @@ RegKey::RegKey(quint32 parentHandle, const QString &subKey, quint32 flags)
 }
 
 RegKey::RegKey(Root root, const QString &subKey, quint32 flags) :
-    RegKey(PREDEFINED_BASE_HANDLE + root, subKey, flags)
+    RegKey(predefinedRootHandle(root), subKey, flags)
 {
 }
 
@@ -33,7 +31,7 @@ RegKey::RegKey(const RegKey &parent, const QString &subKey, quint32 flags) :
 
 RegKey::~RegKey()
 {
-    if (!isNull() && handle() < PREDEFINED_BASE_HANDLE) {
+    if (!isNull()) {
         RegCloseKey((HKEY) handle());
     }
 }
@@ -100,4 +98,21 @@ bool RegKey::setValue(const QString &name, const QVariant &value)
 bool RegKey::contains(const QString &name) const
 {
     return !RegQueryValueEx((HKEY) handle(), (LPCWSTR) name.utf16(), 0, nullptr, nullptr, nullptr);
+}
+
+RegKey::RegHandle RegKey::predefinedRootHandle(Root root)
+{
+    switch (root) {
+    case HKCR:
+        return HKEY_CLASSES_ROOT;
+    case HKCU:
+        return HKEY_CURRENT_USER;
+    case HKLM:
+        return HKEY_LOCAL_MACHINE;
+    case HKU:
+        return HKEY_USERS;
+    }
+
+    Q_UNREACHABLE();
+    return nullptr;
 }

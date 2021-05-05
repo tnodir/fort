@@ -23,7 +23,8 @@ public:
     };
 
 protected:
-    explicit RegKey(quint32 parentHandle, const QString &subKey, quint32 flags);
+    using RegHandle = void *;
+    explicit RegKey(RegHandle parentHandle, const QString &subKey, quint32 flags);
 
 public:
     explicit RegKey(Root root, const QString &subKey = QString(), quint32 flags = DefaultReadOnly);
@@ -42,11 +43,13 @@ public:
     bool setDefaultValue(const QVariant &value) { return setValue(QString(), value); }
     bool contains(const QString &name) const;
 
-protected:
-    quint32 handle() const { return m_handle; }
+private:
+    RegHandle handle() const { return m_handle; }
+
+    static RegKey::RegHandle predefinedRootHandle(Root root);
 
 private:
-    quint32 m_handle = 0;
+    RegHandle m_handle = 0;
 };
 
 #endif // REGKEY_H
