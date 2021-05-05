@@ -510,6 +510,7 @@ void ConfManager::applySavedConf(FirewallConf *newConf)
     if (conf() != newConf) {
         if (onlyFlags) {
             conf()->copyFlags(*newConf);
+            newConf->resetEdited();
         } else {
             setConf(newConf);
         }
@@ -517,7 +518,7 @@ void ConfManager::applySavedConf(FirewallConf *newConf)
 
     emit confChanged(onlyFlags);
 
-    newConf->resetEdited();
+    conf()->resetEdited();
 }
 
 bool ConfManager::save(FirewallConf *newConf)
