@@ -84,9 +84,9 @@ void RpcManager::setupAppInfoManagerSignals()
 
 void RpcManager::setupConfManagerSignals()
 {
-    connect(confManager(), &ConfManager::confChanged, this, [&](bool onlyFlags) {
-        invokeOnClients(Control::Rpc_ConfManager_onConfChanged,
-                { confManager()->confVersion(), onlyFlags });
+    connect(confManager(), &ConfManager::confChanged, this, [&](bool /*onlyFlags*/) {
+        const QVariant confVar = confManager()->conf()->toVariant();
+        invokeOnClients(Control::Rpc_ConfManager_onConfChanged, { confVar });
     });
 }
 
@@ -181,12 +181,11 @@ bool RpcManager::processCommandRpc(
         return true;
     case Control::Rpc_ConfManager_onConfChanged:
         if (auto cm = qobject_cast<ConfManagerRpc *>(confManager())) {
-            cm->onConfChanged(args.value(0).toInt(), args.value(1).toBool());
+            cm->onConfChanged(args.value(0));
         }
         return true;
     case Control::Rpc_ConfManager_save: {
-        const bool ok = confManager()->saveVariant(
-                args.value(0), args.value(1).toInt(), args.value(2).toBool());
+        const bool ok = confManager()->saveVariant(args.value(0));
         sendResult(w, ok);
         return true;
     }

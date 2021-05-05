@@ -204,7 +204,10 @@ bool ControlManager::processCommandConf(const QVariantList &args, QString &error
         }
     }
 
-    if (!confManager()->save(conf, onlyFlags))
+    conf->setFlagsEdited(true);
+    conf->setEdited(!onlyFlags);
+
+    if (!confManager()->save(conf))
         return false;
 
     fortManager()->reloadOptionsWindow(tr("Control command executed"));

@@ -222,8 +222,11 @@ void FortManager::setupLogger()
 
 void FortManager::updateLogger()
 {
-    Logger *logger = Logger::instance();
     FirewallConf *conf = confManager()->conf();
+    if (!conf->iniEdited())
+        return;
+
+    Logger *logger = Logger::instance();
 
     logger->setDebug(conf->logDebug());
 
@@ -263,7 +266,15 @@ void FortManager::setupConfManager()
 {
     confManager()->initialize();
 
-    connect(confManager(), &ConfManager::confChanged, this, &FortManager::updateDriverConf);
+    connect(confManager(), &ConfManager::confChanged, this, [&](bool onlyFlags) {
+        if (onlyFlags) {
+            const FirewallConf *conf = confManager()->conf();
+            if (!conf->flagsEdited())
+                return;
+        }
+
+        updateDriverConf(onlyFlags);
+    });
 }
 
 void FortManager::setupAppInfoManager()

@@ -36,7 +36,8 @@ public:
     bool edited() const { return m_edited; }
     void setEdited(bool v);
 
-    void resetEdited();
+    bool anyEdited() const;
+    void resetEdited(bool v = false);
 
     bool logDebug() const { return m_logDebug; }
     void setLogDebug(bool v) { m_logDebug = v; }
@@ -125,6 +126,8 @@ public:
     quint32 appGroupBits() const;
     void setAppGroupBits(quint32 groupBits);
 
+    bool appGroupEnabled(int groupIndex) const;
+
     AddressGroup *inetAddressGroup() const { return m_addressGroups.at(0); }
 
     const QList<AddressGroup *> &addressGroups() const { return m_addressGroups; }
@@ -139,8 +142,8 @@ public:
     void copyFlags(const FirewallConf &o);
     void copy(const FirewallConf &o);
 
-    QVariant toVariant(bool onlyFlags = false) const;
-    void fromVariant(const QVariant &v, bool onlyFlags = false);
+    QVariant toVariant() const;
+    void fromVariant(const QVariant &v);
 
 signals:
     void logStatChanged();
@@ -156,8 +159,13 @@ public slots:
 
     void setupDefaultAddressGroups();
 
+    void prepareToSave();
+
 private:
     void setupAddressGroups();
+
+    void loadAppGroupBits();
+    void applyAppGroupBits();
 
     QVariant flagsToVariant() const;
     void flagsFromVariant(const QVariant &v);
@@ -211,6 +219,8 @@ private:
 
     quint32 m_quotaDayMb = 0;
     quint32 m_quotaMonthMb = 0;
+
+    quint32 m_appGroupBits = 0;
 
     QString m_activePeriodFrom;
     QString m_activePeriodTo;

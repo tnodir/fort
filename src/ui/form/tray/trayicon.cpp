@@ -130,10 +130,10 @@ void TrayIcon::updateTrayMenuFlags()
         if (!action->isVisible())
             break;
 
-        const auto appGroup = conf()->appGroups().at(appGroupIndex++);
+        const bool appGroupEnabled = conf()->appGroupEnabled(appGroupIndex++);
 
         action->setEnabled(editEnabled);
-        action->setChecked(appGroup->enabled());
+        action->setChecked(appGroupEnabled);
     }
 }
 

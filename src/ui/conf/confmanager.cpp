@@ -410,7 +410,6 @@ void ConfManager::initConfToEdit()
 
     auto newConf = createConf();
     newConf->copy(*conf());
-    newConf->resetEdited();
 
     setConfToEdit(newConf);
 }
@@ -429,9 +428,6 @@ void ConfManager::setConfToEdit(FirewallConf *conf)
 
 void ConfManager::setConf(FirewallConf *newConf)
 {
-    if (conf() == newConf)
-        return;
-
     conf()->deleteLater();
     m_conf = newConf;
 
@@ -451,12 +447,9 @@ void ConfManager::setupDefault(FirewallConf &conf) const
     conf.addDefaultAppGroup();
 }
 
-bool ConfManager::load(bool onlyFlags)
+bool ConfManager::loadConf(FirewallConf &conf)
 {
-    Q_ASSERT(conf());
-    FirewallConf &conf = *this->conf();
-
-    if (!onlyFlags) {
+    if (conf.edited()) {
         bool isNewConf = false;
 
         if (!loadFromDb(conf, isNewConf)) {
@@ -472,23 +465,48 @@ bool ConfManager::load(bool onlyFlags)
 
     settings()->readConfIni(conf);
 
-    emit confChanged(onlyFlags);
-
     return true;
 }
 
-bool ConfManager::saveConf(FirewallConf &newConf, bool onlyFlags)
+bool ConfManager::load()
 {
-    if (!onlyFlags && !saveToDb(newConf))
+    Q_ASSERT(conf());
+
+    conf()->resetEdited(true); // update all
+
+    if (!loadConf(*conf()))
         return false;
 
-    settings()->writeConfIni(newConf);
+    applySavedConf(conf());
 
     return true;
 }
 
-void ConfManager::applySavedConf(FirewallConf *newConf, bool onlyFlags)
+bool ConfManager::saveConf(FirewallConf &conf)
 {
+    conf.prepareToSave();
+
+    if (conf.edited() && !saveToDb(conf))
+        return false;
+
+    if (conf.iniEdited() || conf.flagsEdited()) {
+        settings()->writeConfIni(conf);
+    }
+
+    return true;
+}
+
+void ConfManager::applySavedConf(FirewallConf *newConf)
+{
+    const bool onlyFlags = !newConf->edited();
+
+    if (onlyFlags && !newConf->anyEdited()) {
+        if (newConf != conf()) {
+            newConf->deleteLater();
+        }
+        return;
+    }
+
     if (conf() != newConf) {
         if (onlyFlags) {
             conf()->copyFlags(*newConf);
@@ -498,37 +516,37 @@ void ConfManager::applySavedConf(FirewallConf *newConf, bool onlyFlags)
     }
 
     emit confChanged(onlyFlags);
+
+    newConf->resetEdited();
 }
 
-bool ConfManager::save(FirewallConf *newConf, bool onlyFlags)
+bool ConfManager::save(FirewallConf *newConf)
 {
-    ++m_confVersion; // change version on each save attempt
-
-    if (!saveConf(*newConf, onlyFlags))
+    if (!saveConf(*newConf))
         return false;
 
-    applySavedConf(newConf, onlyFlags);
+    applySavedConf(newConf);
 
     return true;
 }
 
 bool ConfManager::saveFlags()
 {
-    return save(conf(), true);
+    conf()->setFlagsEdited(true);
+    return save(conf());
 }
 
-bool ConfManager::saveVariant(const QVariant &v, int confVersion, bool onlyFlags)
+bool ConfManager::saveVariant(const QVariant &confVar)
 {
     auto conf = createConf();
-    conf->fromVariant(v, onlyFlags);
+    conf->fromVariant(confVar);
 
-    if (!saveConf(*conf, onlyFlags)) {
+    if (!saveConf(*conf)) {
         delete conf;
         return false;
     }
 
-    setConfVersion(confVersion);
-    applySavedConf(conf, onlyFlags);
+    applySavedConf(conf);
 
     return true;
 }

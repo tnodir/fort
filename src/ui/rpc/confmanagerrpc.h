@@ -15,12 +15,18 @@ public:
 
     RpcManager *rpcManager() const;
 
-    void onConfChanged(int confVersion, bool onlyFlags);
+    void onConfChanged(const QVariant &confVar);
 
 protected:
     void setupAppEndTimer() override { }
 
-    bool saveConf(FirewallConf &newConf, bool onlyFlags) override;
+    bool saveConf(FirewallConf &newConf) override;
+
+    bool saving() const { return m_saving; }
+    void setSaving(bool v) { m_saving = v; }
+
+private:
+    bool m_saving = false;
 };
 
 #endif // CONFMANAGERRPC_H

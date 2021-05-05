@@ -26,9 +26,6 @@ public:
     ~ConfManager() override;
     CLASS_DELETE_COPY_MOVE(ConfManager)
 
-    int confVersion() const { return m_confVersion; }
-    void setConfVersion(int v) { m_confVersion = v; }
-
     FortManager *fortManager() const { return m_fortManager; }
     DriverManager *driverManager() const;
     EnvManager *envManager() const;
@@ -43,14 +40,15 @@ public:
     void initConfToEdit();
     void setConfToEdit(FirewallConf *conf);
 
-    bool load(bool onlyFlags = false);
+    bool loadConf(FirewallConf &conf);
+    bool load();
 
-    virtual bool saveConf(FirewallConf &newConf, bool onlyFlags);
-    void applySavedConf(FirewallConf *newConf, bool onlyFlags = false);
-    bool save(FirewallConf *newConf, bool onlyFlags = false);
+    virtual bool saveConf(FirewallConf &conf);
+    void applySavedConf(FirewallConf *newConf);
+    bool save(FirewallConf *newConf);
     bool saveFlags();
 
-    bool saveVariant(const QVariant &v, int confVersion, bool onlyFlags = false);
+    bool saveVariant(const QVariant &confVar);
 
     bool loadTasks(const QList<TaskInfo *> &taskInfos);
     bool saveTasks(const QList<TaskInfo *> &taskInfos);
@@ -116,8 +114,6 @@ private:
     bool saveTask(TaskInfo *taskInfo);
 
 private:
-    int m_confVersion = 0;
-
     FortManager *m_fortManager = nullptr;
     SqliteDb *m_sqliteDb = nullptr;
 

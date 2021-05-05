@@ -17,29 +17,34 @@ RpcManager *ConfManagerRpc::rpcManager() const
     return fortManager()->rpcManager();
 }
 
-void ConfManagerRpc::onConfChanged(int confVersion, bool onlyFlags)
+void ConfManagerRpc::onConfChanged(const QVariant &confVar)
 {
-    if (this->confVersion() == confVersion)
-        return;
-
     settings()->clearCache();
 
-    if (!onlyFlags) {
-        setConf(createConf());
+    FirewallConf *newConf = createConf();
+    newConf->fromVariant(confVar);
+
+    if (newConf->edited()) {
+        setConf(newConf);
+        load();
+    } else {
+        applySavedConf(newConf);
+        delete newConf;
     }
-    load(onlyFlags);
 
-    setConfVersion(confVersion);
-
-    fortManager()->reloadOptionsWindow(tr("Settings changed by someone else"));
+    if (!saving()) {
+        fortManager()->reloadOptionsWindow(tr("Settings changed by someone else"));
+    }
 }
 
-bool ConfManagerRpc::saveConf(FirewallConf &newConf, bool onlyFlags)
+bool ConfManagerRpc::saveConf(FirewallConf &newConf)
 {
-    rpcManager()->invokeOnServer(Control::Rpc_ConfManager_save,
-            { newConf.toVariant(onlyFlags), confVersion(), onlyFlags });
+    setSaving(true);
+    rpcManager()->invokeOnServer(Control::Rpc_ConfManager_save, { newConf.toVariant() });
+    const bool timeouted = !rpcManager()->waitResult();
+    setSaving(false);
 
-    if (!rpcManager()->waitResult()) {
+    if (timeouted) {
         showErrorMessage("Save Conf: Service isn't responding.");
         return false;
     }
@@ -48,6 +53,9 @@ bool ConfManagerRpc::saveConf(FirewallConf &newConf, bool onlyFlags)
         showErrorMessage("Save Conf: Service error.");
         return false;
     }
+
+    // Already applied by onConfChanged() & applySavedConf()
+    newConf.resetEdited();
 
     return true;
 }

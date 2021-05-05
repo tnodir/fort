@@ -116,18 +116,14 @@ void OptionsController::closeWindow()
 
 void OptionsController::save(bool closeOnSuccess)
 {
-    bool onlyFlags = true;
-    if (conf()->flagsEdited() || conf()->edited()) {
-        onlyFlags = !conf()->edited();
-        if (!confManager()->saveConf(*conf(), onlyFlags))
-            return;
-    }
+    if (!confManager()->saveConf(*conf()))
+        return;
 
     if (conf()->othersEdited()) {
         emit saved();
     }
 
-    confManager()->applySavedConf(conf(), onlyFlags);
+    confManager()->applySavedConf(conf());
 
     if (closeOnSuccess) {
         closeWindow();

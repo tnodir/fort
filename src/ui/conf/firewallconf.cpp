@@ -58,13 +58,18 @@ void FirewallConf::setEdited(bool v)
     m_edited = v;
 }
 
-void FirewallConf::resetEdited()
+bool FirewallConf::anyEdited() const
 {
-    setOthersEdited(false);
-    setExtEdited(false);
-    setIniEdited(false);
-    setFlagsEdited(false);
-    setEdited(false);
+    return flagsEdited() || iniEdited() || edited() || extEdited() || othersEdited();
+}
+
+void FirewallConf::resetEdited(bool v)
+{
+    setOthersEdited(v);
+    setExtEdited(v);
+    setIniEdited(v);
+    setFlagsEdited(v);
+    setEdited(v);
 }
 
 void FirewallConf::setProvBoot(bool provBoot)
@@ -200,24 +205,17 @@ void FirewallConf::setQuotaMonthMb(quint32 quotaMonthMb)
 
 quint32 FirewallConf::appGroupBits() const
 {
-    quint32 groupBits = 0;
-    int i = 0;
-    for (const AppGroup *appGroup : appGroups()) {
-        if (appGroup->enabled()) {
-            groupBits |= (1 << i);
-        }
-        ++i;
-    }
-    return groupBits;
+    return m_appGroupBits;
 }
 
 void FirewallConf::setAppGroupBits(quint32 groupBits)
 {
-    int i = 0;
-    for (AppGroup *appGroup : appGroups()) {
-        appGroup->setEnabled(groupBits & (1 << i));
-        ++i;
-    }
+    m_appGroupBits = groupBits;
+}
+
+bool FirewallConf::appGroupEnabled(int groupIndex) const
+{
+    return (appGroupBits() & (1 << groupIndex)) != 0;
 }
 
 AppGroup *FirewallConf::appGroupByName(const QString &name) const
@@ -292,6 +290,26 @@ void FirewallConf::clearRemovedAppGroups() const
     m_removedAppGroups.clear();
 }
 
+void FirewallConf::loadAppGroupBits()
+{
+    m_appGroupBits = 0;
+    int groupIndex = 0;
+    for (const AppGroup *appGroup : appGroups()) {
+        if (appGroup->enabled()) {
+            m_appGroupBits |= (1 << groupIndex);
+        }
+        ++groupIndex;
+    }
+}
+
+void FirewallConf::applyAppGroupBits()
+{
+    int groupIndex = 0;
+    for (AppGroup *appGroup : appGroups()) {
+        appGroup->setEnabled(appGroupEnabled(groupIndex++));
+    }
+}
+
 void FirewallConf::setupDefaultAddressGroups()
 {
     AddressGroup *inetGroup = inetAddressGroup();
@@ -302,6 +320,13 @@ void FirewallConf::setupAddressGroups()
 {
     m_addressGroups.append(new AddressGroup(this));
     m_addressGroups.append(new AddressGroup(this));
+}
+
+void FirewallConf::prepareToSave()
+{
+    if (flagsEdited()) {
+        loadAppGroupBits();
+    }
 }
 
 void FirewallConf::copyFlags(const FirewallConf &o)
@@ -333,8 +358,6 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     m_appBlockAll = o.appBlockAll();
     m_appAllowAll = o.appAllowAll();
 
-    setAppGroupBits(o.appGroupBits());
-
     m_activePeriodEnabled = o.activePeriodEnabled();
     m_activePeriodFrom = o.activePeriodFrom();
     m_activePeriodTo = o.activePeriodTo();
@@ -350,12 +373,13 @@ void FirewallConf::copyFlags(const FirewallConf &o)
 
     m_quotaDayMb = o.quotaDayMb();
     m_quotaMonthMb = o.quotaMonthMb();
+
+    m_appGroupBits = o.appGroupBits();
+    applyAppGroupBits();
 }
 
 void FirewallConf::copy(const FirewallConf &o)
 {
-    copyFlags(o);
-
     int addrGroupIndex = 0;
     for (const AddressGroup *ag : o.addressGroups()) {
         AddressGroup *addressGroup = m_addressGroups.at(addrGroupIndex++);
@@ -367,6 +391,8 @@ void FirewallConf::copy(const FirewallConf &o)
         appGroup->copy(*ag);
         addAppGroup(appGroup);
     }
+
+    copyFlags(o); // after app. groups created
 }
 
 QVariant FirewallConf::flagsToVariant() const
@@ -400,8 +426,6 @@ QVariant FirewallConf::flagsToVariant() const
     map["appBlockAll"] = appBlockAll();
     map["appAllowAll"] = appAllowAll();
 
-    map["appGroupBits"] = appGroupBits();
-
     map["activePeriodEnabled"] = activePeriodEnabled();
     map["activePeriodFrom"] = activePeriodFrom();
     map["activePeriodTo"] = activePeriodTo();
@@ -417,6 +441,8 @@ QVariant FirewallConf::flagsToVariant() const
 
     map["quotaDayMb"] = quotaDayMb();
     map["quotaMonthMb"] = quotaMonthMb();
+
+    map["appGroupBits"] = appGroupBits();
 
     return map;
 }
@@ -452,8 +478,6 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
     m_appBlockAll = map["appBlockAll"].toBool();
     m_appAllowAll = map["appAllowAll"].toBool();
 
-    setAppGroupBits(map["appGroupBits"].toUInt());
-
     m_activePeriodEnabled = map["activePeriodEnabled"].toBool();
     m_activePeriodFrom = map["activePeriodFrom"].toString();
     m_activePeriodTo = map["activePeriodTo"].toString();
@@ -469,6 +493,8 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
 
     m_quotaDayMb = map["quotaDayMb"].toUInt();
     m_quotaMonthMb = map["quotaMonthMb"].toUInt();
+
+    setAppGroupBits(map["appGroupBits"].toUInt());
 }
 
 QVariant FirewallConf::addressesToVariant() const
@@ -509,11 +535,11 @@ void FirewallConf::appGroupsFromVariant(const QVariant &v)
     }
 }
 
-QVariant FirewallConf::toVariant(bool onlyFlags) const
+QVariant FirewallConf::toVariant() const
 {
     QVariantMap map;
 
-    if (!onlyFlags) {
+    if (edited()) {
         map["addressGroups"] = addressesToVariant();
         map["appGroups"] = appGroupsToVariant();
     }
@@ -523,14 +549,16 @@ QVariant FirewallConf::toVariant(bool onlyFlags) const
     return map;
 }
 
-void FirewallConf::fromVariant(const QVariant &v, bool onlyFlags)
+void FirewallConf::fromVariant(const QVariant &v)
 {
     const QVariantMap map = v.toMap();
 
-    if (!onlyFlags) {
+    flagsFromVariant(map["flags"]); // set *edited flags
+
+    if (edited()) {
         addressesFromVariant(map["addressGroups"]);
         appGroupsFromVariant(map["appGroups"]);
     }
 
-    flagsFromVariant(map["flags"]); // after app. groups created
+    applyAppGroupBits();
 }
