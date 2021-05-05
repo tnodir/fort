@@ -112,9 +112,15 @@ bool extractVersionInfo(const QString &appPath, AppInfo &appInfo)
         return false;
 
     // Texts
-    appInfo.productName = extractInfoText(infoData, langInfo, L"ProductName");
     appInfo.companyName = extractInfoText(infoData, langInfo, L"CompanyName");
-    appInfo.fileDescription = extractInfoText(infoData, langInfo, L"FileDescription");
+
+    const QString productName = extractInfoText(infoData, langInfo, L"ProductName");
+    appInfo.productName = productName;
+
+    const QString fileDescription = extractInfoText(infoData, langInfo, L"FileDescription");
+    appInfo.fileDescription = !fileDescription.isEmpty()
+            ? fileDescription
+            : (!productName.isEmpty() ? productName : FileUtil::fileName(appPath));
 
     return true;
 }
@@ -128,10 +134,8 @@ bool getInfo(const QString &appPath, AppInfo &appInfo)
     if (appPath.isEmpty())
         return false;
 
-    appInfo.fileDescription = FileUtil::fileName(appPath);
-
     if (FileUtil::isSystemApp(appPath)) {
-        appInfo.fileDescription = appPath;
+        appInfo.fileDescription = FileUtil::systemApp();
         return true;
     }
 
