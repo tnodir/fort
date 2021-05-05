@@ -245,11 +245,9 @@ public slots:
     void initialize(const QStringList &args, EnvManager *envManager = nullptr);
 
     void readConfIni(FirewallConf &conf) const;
-    bool writeConfIni(const FirewallConf &conf);
+    void writeConfIni(const FirewallConf &conf);
 
     void clearCache();
-
-    bool iniSync();
 
 private:
     void processArguments(const QStringList &args);
@@ -284,6 +282,8 @@ private:
     void removeIniKey(const QString &key);
 
     QStringList iniChildKeys(const QString &prefix) const;
+
+    void iniSync();
 
 private:
     uint m_iniExists : 1;

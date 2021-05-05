@@ -116,7 +116,6 @@ void OptionsController::save(bool closeOnSuccess)
 
     if (othersEdited()) {
         emit saved();
-        settings()->iniSync();
     }
 
     confManager()->applySavedConf(conf(), onlyFlags);

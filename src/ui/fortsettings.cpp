@@ -301,7 +301,7 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     m_ini->endGroup();
 }
 
-bool FortSettings::writeConfIni(const FirewallConf &conf)
+void FortSettings::writeConfIni(const FirewallConf &conf)
 {
     m_ini->beginGroup("confFlags");
     setIniValue("provBoot", conf.provBoot());
@@ -340,7 +340,7 @@ bool FortSettings::writeConfIni(const FirewallConf &conf)
 
     migrateIniOnWrite();
 
-    return iniSync();
+    iniSync();
 }
 
 void FortSettings::migrateIniOnStartup()
@@ -542,8 +542,7 @@ QStringList FortSettings::iniChildKeys(const QString &prefix) const
     return list;
 }
 
-bool FortSettings::iniSync()
+void FortSettings::iniSync()
 {
     m_ini->sync();
-    return !hasError();
 }

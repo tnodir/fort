@@ -481,10 +481,7 @@ bool ConfManager::saveToDbIni(FirewallConf &newConf, bool onlyFlags)
     if (!onlyFlags && !saveToDb(newConf))
         return false;
 
-    if (!settings()->writeConfIni(newConf)) {
-        showErrorMessage("Save Settings: " + settings()->errorMessage());
-        return false;
-    }
+    settings()->writeConfIni(newConf);
 
     return true;
 }
