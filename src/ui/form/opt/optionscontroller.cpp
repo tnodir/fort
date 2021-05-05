@@ -110,7 +110,7 @@ void OptionsController::save(bool closeOnSuccess)
     bool onlyFlags = true;
     if (confFlagsEdited() || confEdited()) {
         onlyFlags = confFlagsEdited() && !confEdited();
-        if (!confManager()->saveToDbIni(*conf(), onlyFlags))
+        if (!confManager()->saveConf(*conf(), onlyFlags))
             return;
     }
 
@@ -130,7 +130,10 @@ void OptionsController::save(bool closeOnSuccess)
 
 void OptionsController::applyImmediateFlags()
 {
-    confManager()->save(conf(), true, true);
+    FirewallConf *originConf = confManager()->conf();
+    originConf->copyImmediateFlags(*conf());
+
+    confManager()->saveFlags();
 }
 
 void OptionsController::emitEditedChanged()

@@ -235,7 +235,7 @@ void ConnectionsWindow::setupLogAllowedIp()
 
         conf()->setLogAllowedIp(checked);
 
-        confManager()->saveFlags(true);
+        confManager()->saveFlags();
     });
 
     m_cbLogAllowedIp->setVisible(false); // TODO: Collect allowed connections
@@ -249,7 +249,7 @@ void ConnectionsWindow::setupLogBlockedIp()
 
         conf()->setLogBlockedIp(checked);
 
-        confManager()->saveFlags(true);
+        confManager()->saveFlags();
     });
 }
 

@@ -20,7 +20,7 @@ public:
 protected:
     void setupAppEndTimer() override { }
 
-    bool saveToDbIni(FirewallConf &newConf, bool onlyFlags) override;
+    bool saveConf(FirewallConf &newConf, bool onlyFlags) override;
 };
 
 #endif // CONFMANAGERRPC_H

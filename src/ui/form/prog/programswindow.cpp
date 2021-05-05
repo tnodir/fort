@@ -253,7 +253,7 @@ void ProgramsWindow::setupLogBlocked()
 
         conf()->setLogBlocked(checked);
 
-        confManager()->saveFlags(true);
+        confManager()->saveFlags();
     });
 
     m_cbLogBlocked->setFont(ControlUtil::fontDemiBold());

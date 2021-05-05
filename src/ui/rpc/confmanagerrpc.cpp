@@ -34,7 +34,7 @@ void ConfManagerRpc::onConfChanged(int confVersion, bool onlyFlags)
     fortManager()->reloadOptionsWindow(tr("Settings changed by someone else"));
 }
 
-bool ConfManagerRpc::saveToDbIni(FirewallConf &newConf, bool onlyFlags)
+bool ConfManagerRpc::saveConf(FirewallConf &newConf, bool onlyFlags)
 {
     rpcManager()->invokeOnServer(Control::Rpc_ConfManager_save,
             { newConf.toVariant(onlyFlags), confVersion(), onlyFlags });

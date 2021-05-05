@@ -45,11 +45,11 @@ public:
 
     bool load(bool onlyFlags = false);
 
-    virtual bool saveToDbIni(FirewallConf &newConf, bool onlyFlags);
-    void applySavedConf(FirewallConf *newConf, bool onlyFlags = false, bool immediateFlags = false);
-    bool save(FirewallConf *newConf, bool onlyFlags = false, bool immediateFlags = false);
+    virtual bool saveConf(FirewallConf &newConf, bool onlyFlags);
+    void applySavedConf(FirewallConf *newConf, bool onlyFlags = false);
+    bool save(FirewallConf *newConf, bool onlyFlags = false);
+    bool saveFlags();
 
-    bool saveFlags(bool immediateFlags = false);
     bool saveVariant(const QVariant &v, int confVersion, bool onlyFlags = false);
 
     bool loadTasks(const QList<TaskInfo *> &taskInfos);
