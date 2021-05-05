@@ -178,7 +178,7 @@ bool ControlManager::processCommandConf(const QVariantList &args, QString &error
         return false;
     }
 
-    auto conf = confManager()->conf();
+    FirewallConf *conf = confManager()->conf();
     bool onlyFlags = true;
 
     const QString confPropName = args.at(0).toString();

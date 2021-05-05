@@ -265,6 +265,11 @@ void FortSettings::resetCheckedPassword(int unlockType)
 
 void FortSettings::readConfIni(FirewallConf &conf) const
 {
+    m_ini->beginGroup("base");
+    conf.setLogDebug(iniBool("debug"));
+    conf.setLogConsole(iniBool("console"));
+    m_ini->endGroup();
+
     m_ini->beginGroup("confFlags");
     conf.setProvBoot(iniBool("provBoot"));
     conf.setFilterEnabled(iniBool("filterEnabled", true));
@@ -299,10 +304,19 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     conf.setQuotaDayMb(iniUInt("quotaDayMb"));
     conf.setQuotaMonthMb(iniUInt("quotaMonthMb"));
     m_ini->endGroup();
+
+    m_ini->beginGroup("hotKey");
+    conf.setHotKeyEnabled(iniBool("enabled"));
+    m_ini->endGroup();
 }
 
 void FortSettings::writeConfIni(const FirewallConf &conf)
 {
+    m_ini->beginGroup("base");
+    setIniValue("debug", conf.logDebug());
+    setIniValue("console", conf.logConsole());
+    m_ini->endGroup();
+
     m_ini->beginGroup("confFlags");
     setIniValue("provBoot", conf.provBoot());
     setIniValue("filterEnabled", conf.filterEnabled());
@@ -336,6 +350,10 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
     m_ini->beginGroup("quota");
     setIniValue("quotaDayMb", conf.quotaDayMb());
     setIniValue("quotaMonthMb", conf.quotaMonthMb());
+    m_ini->endGroup();
+
+    m_ini->beginGroup("hotKey");
+    setIniValue("enabled", conf.hotKeyEnabled());
     m_ini->endGroup();
 
     migrateIniOnWrite();

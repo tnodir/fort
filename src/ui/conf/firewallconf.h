@@ -38,6 +38,15 @@ class FirewallConf : public QObject
 public:
     explicit FirewallConf(QObject *parent = nullptr);
 
+    bool logDebug() const { return m_logDebug; }
+    void setLogDebug(bool v) { m_logDebug = v; }
+
+    bool logConsole() const { return m_logConsole; }
+    void setLogConsole(bool v) { m_logConsole = v; }
+
+    bool hotKeyEnabled() const { return m_hotKeyEnabled; }
+    void setHotKeyEnabled(bool v) { m_hotKeyEnabled = v; }
+
     bool provBoot() const { return m_provBoot; }
     void setProvBoot(bool provBoot);
 
@@ -189,6 +198,10 @@ private:
     void appGroupsFromVariant(const QVariant &v);
 
 private:
+    bool m_logDebug : 1;
+    bool m_logConsole : 1;
+    bool m_hotKeyEnabled : 1;
+
     bool m_provBoot : 1;
     bool m_filterEnabled : 1;
     bool m_filterLocals : 1;

@@ -217,19 +217,18 @@ void FortManager::setupLogger()
     logger->setIsService(settings()->isService());
     logger->setPath(settings()->logsPath());
 
-    updateLogger();
-
     connect(confManager(), &ConfManager::confChanged, this, &FortManager::updateLogger);
 }
 
 void FortManager::updateLogger()
 {
     Logger *logger = Logger::instance();
+    FirewallConf *conf = confManager()->conf();
 
-    logger->setDebug(settings()->debug());
+    logger->setDebug(conf->logDebug());
 
     if (!settings()->isService()) {
-        logger->setConsole(settings()->console());
+        logger->setConsole(conf->logConsole());
     }
 }
 

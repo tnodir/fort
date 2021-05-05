@@ -17,12 +17,6 @@ class FortSettings : public QObject
 public:
     explicit FortSettings(QObject *parent = nullptr);
 
-    bool debug() const { return iniBool("base/debug"); }
-    void setDebug(bool on) { setIniValue("base/debug", on); }
-
-    bool console() const { return iniBool("base/console"); }
-    void setConsole(bool on) { setIniValue("base/console", on); }
-
     QString defaultLanguage() const { return m_defaultLanguage; }
 
     QString language() const { return iniText("base/language", defaultLanguage()); }
@@ -179,9 +173,6 @@ public:
 
     qint32 quotaMonthAlerted() const { return iniInt("quota/monthAlerted"); }
     void setQuotaMonthAlerted(qint32 v) { setIniValue("quota/monthAlerted", v); }
-
-    bool hotKeyEnabled() const { return iniBool("hotKey/enabled"); }
-    void setHotKeyEnabled(bool on) { setIniValue("hotKey/enabled", on); }
 
     QString hotKeyPrograms() const { return iniText("hotKey/programs"); }
     QString hotKeyOptions() const { return iniText("hotKey/options"); }

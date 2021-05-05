@@ -83,8 +83,6 @@ void OptionsPage::saveExplorerIntegration()
 
 void OptionsPage::saveIni()
 {
-    settings()->setHotKeyEnabled(m_cbHotKeys->isChecked());
-
     if (m_cbPassword->isChecked() != settings()->hasPassword()) {
         const auto password = m_editPassword->text();
         settings()->setPasswordHash(StringUtil::cryptoHash(password));
@@ -94,9 +92,6 @@ void OptionsPage::saveIni()
             m_btPasswordLock->click(); // Reset unlocked password
         }
     }
-
-    settings()->setDebug(m_cbLogDebug->isChecked());
-    settings()->setConsole(m_cbLogConsole->isChecked());
 }
 
 void OptionsPage::onRetranslateUi()
@@ -304,10 +299,12 @@ void OptionsPage::setupGlobalBox()
     m_explorerIntegrated = StartupUtil::isExplorerIntegrated();
     m_cbExplorerMenu = ControlUtil::createCheckBox(
             m_explorerIntegrated, [&](int) { ctrl()->setOthersEdited(true); });
-    m_cbExplorerMenu->setEnabled(OsUtil::isUserAdmin());
+    m_cbExplorerMenu->setEnabled(settings()->hasService() || OsUtil::isUserAdmin());
 
-    m_cbHotKeys = ControlUtil::createCheckBox(
-            settings()->hotKeyEnabled(), [&](bool) { setIniEdited(true); });
+    m_cbHotKeys = ControlUtil::createCheckBox(conf()->hotKeyEnabled(), [&](bool checked) {
+        conf()->setHotKeyEnabled(checked);
+        ctrl()->setConfFlagsEdited(true);
+    });
 
     // Password Row
     auto passwordLayout = setupPasswordLayout();
@@ -405,10 +402,14 @@ void OptionsPage::setupComboLanguage()
 
 void OptionsPage::setupLogsBox()
 {
-    m_cbLogDebug =
-            ControlUtil::createCheckBox(settings()->debug(), [&](bool) { setIniEdited(true); });
-    m_cbLogConsole =
-            ControlUtil::createCheckBox(settings()->console(), [&](bool) { setIniEdited(true); });
+    m_cbLogDebug = ControlUtil::createCheckBox(conf()->logDebug(), [&](bool checked) {
+        conf()->setLogDebug(checked);
+        ctrl()->setConfFlagsEdited(true);
+    });
+    m_cbLogConsole = ControlUtil::createCheckBox(conf()->logConsole(), [&](bool checked) {
+        conf()->setLogConsole(checked);
+        ctrl()->setConfFlagsEdited(true);
+    });
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbLogDebug);
