@@ -113,14 +113,8 @@ bool extractVersionInfo(const QString &appPath, AppInfo &appInfo)
 
     // Texts
     appInfo.companyName = extractInfoText(infoData, langInfo, L"CompanyName");
-
-    const QString productName = extractInfoText(infoData, langInfo, L"ProductName");
-    appInfo.productName = productName;
-
-    const QString fileDescription = extractInfoText(infoData, langInfo, L"FileDescription");
-    appInfo.fileDescription = !fileDescription.isEmpty()
-            ? fileDescription
-            : (!productName.isEmpty() ? productName : FileUtil::fileName(appPath));
+    appInfo.productName = extractInfoText(infoData, langInfo, L"ProductName");
+    appInfo.fileDescription = extractInfoText(infoData, langInfo, L"FileDescription");
 
     return true;
 }
@@ -139,13 +133,18 @@ bool getInfo(const QString &appPath, AppInfo &appInfo)
         return true;
     }
 
-    if (!extractVersionInfo(appPath, appInfo))
-        return false;
+    const bool ok = extractVersionInfo(appPath, appInfo);
+
+    // File description
+    if (appInfo.fileDescription.isEmpty()) {
+        appInfo.fileDescription =
+                !appInfo.productName.isEmpty() ? appInfo.productName : FileUtil::fileName(appPath);
+    }
 
     // File modification time
     appInfo.fileModTime = FileUtil::fileModTime(appPath);
 
-    return true;
+    return ok;
 }
 
 QImage getIcon(const QString &appPath)
