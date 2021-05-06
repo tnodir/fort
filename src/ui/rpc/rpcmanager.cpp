@@ -85,7 +85,7 @@ void RpcManager::setupAppInfoManagerSignals()
 void RpcManager::setupConfManagerSignals()
 {
     connect(confManager(), &ConfManager::confChanged, this, [&](bool /*onlyFlags*/) {
-        const QVariant confVar = confManager()->conf()->toVariant();
+        const QVariant confVar = confManager()->conf()->toVariant(true);
         invokeOnClients(Control::Rpc_ConfManager_onConfChanged, { confVar });
     });
 }

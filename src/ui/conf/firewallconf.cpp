@@ -535,11 +535,11 @@ void FirewallConf::appGroupsFromVariant(const QVariant &v)
     }
 }
 
-QVariant FirewallConf::toVariant() const
+QVariant FirewallConf::toVariant(bool onlyFlags) const
 {
     QVariantMap map;
 
-    if (edited()) {
+    if (!onlyFlags || edited()) {
         map["addressGroups"] = addressesToVariant();
         map["appGroups"] = appGroupsToVariant();
     }
@@ -549,13 +549,13 @@ QVariant FirewallConf::toVariant() const
     return map;
 }
 
-void FirewallConf::fromVariant(const QVariant &v)
+void FirewallConf::fromVariant(const QVariant &v, bool onlyFlags)
 {
     const QVariantMap map = v.toMap();
 
     flagsFromVariant(map["flags"]); // set *edited flags
 
-    if (edited()) {
+    if (!onlyFlags || edited()) {
         addressesFromVariant(map["addressGroups"]);
         appGroupsFromVariant(map["appGroups"]);
     }

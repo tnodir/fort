@@ -22,12 +22,14 @@ void ConfManagerRpc::onConfChanged(const QVariant &confVar)
     settings()->clearCache();
 
     FirewallConf *newConf = createConf();
-    newConf->fromVariant(confVar);
+    newConf->fromVariant(confVar, true);
 
     if (newConf->edited()) {
+        // Reload from storage
         setConf(newConf);
         load();
     } else {
+        // Apply only flags
         applySavedConf(newConf);
         delete newConf;
     }

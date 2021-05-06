@@ -502,7 +502,7 @@ void ConfManager::applySavedConf(FirewallConf *newConf)
 
     if (onlyFlags && !newConf->anyEdited()) {
         if (newConf != conf()) {
-            newConf->deleteLater();
+            newConf->deleteLater(); // RPC leftover
         }
         return;
     }

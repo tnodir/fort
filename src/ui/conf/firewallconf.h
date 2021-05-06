@@ -142,8 +142,8 @@ public:
     void copyFlags(const FirewallConf &o);
     void copy(const FirewallConf &o);
 
-    QVariant toVariant() const;
-    void fromVariant(const QVariant &v);
+    QVariant toVariant(bool onlyFlags = false) const;
+    void fromVariant(const QVariant &v, bool onlyFlags = false);
 
 signals:
     void logStatChanged();
