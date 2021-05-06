@@ -1,4 +1,8 @@
-CONFIG(release, debug|release): DEFINES *= NDEBUG
+CONFIG(release, debug|release) {
+    DEFINES *= NDEBUG
+} else {
+    DEFINES += SQLITE_DEBUG
+}
 
 DEFINES += \
     SQLITE_THREADSAFE=1 \
