@@ -165,6 +165,7 @@ QLayout *ApplicationsPage::setupHeader()
 
     m_editGroupName = new QLineEdit();
     m_editGroupName->setClearButtonEnabled(true);
+    m_editGroupName->setMaxLength(128);
     m_editGroupName->setFixedWidth(200);
 
     setupAddGroup();

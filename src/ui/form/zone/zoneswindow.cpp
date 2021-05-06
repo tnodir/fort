@@ -169,6 +169,7 @@ void ZonesWindow::setupZoneEditForm()
 
     // Zone Name
     m_editZoneName = new QLineEdit();
+    m_editZoneName->setMaxLength(256);
 
     formLayout->addRow("Zone Name:", m_editZoneName);
     m_labelZoneName = qobject_cast<QLabel *>(formLayout->labelForField(m_editZoneName));
@@ -192,6 +193,7 @@ void ZonesWindow::setupZoneEditForm()
     // URL
     m_editUrl = new QLineEdit();
     m_editUrl->setEnabled(false);
+    m_editUrl->setMaxLength(1024);
 
     formLayout->addRow("URL:", m_editUrl);
     m_labelUrl = qobject_cast<QLabel *>(formLayout->labelForField(m_editUrl));

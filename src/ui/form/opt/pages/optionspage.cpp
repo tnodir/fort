@@ -308,6 +308,7 @@ void OptionsPage::setupEditPassword()
     });
     m_editPassword->setClearButtonEnabled(true);
     m_editPassword->setEchoMode(QLineEdit::Password);
+    m_editPassword->setMaxLength(32);
     m_editPassword->setFixedWidth(200);
 }
 

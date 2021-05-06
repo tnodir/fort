@@ -226,6 +226,7 @@ QLayout *ProgramEditDialog::setupAppPathLayout()
     auto layout = new QHBoxLayout();
 
     m_editPath = new QLineEdit();
+    m_editPath->setMaxLength(1024);
 
     m_btSelectFile = ControlUtil::createFlatButton(":/icons/folder-open.png", [&] {
         const auto filePath = ControlUtil::getOpenFileName(
