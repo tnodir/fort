@@ -32,6 +32,7 @@ private:
     void setupGlobalBox();
     QLayout *setupPasswordLayout();
     void setupEditPassword();
+    void setupPasswordLock();
     QLayout *setupLangLayout();
     void setupComboLanguage();
     void setupLogsBox();
