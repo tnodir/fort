@@ -43,7 +43,7 @@ signals:
     void editedChanged(bool anyEdited);
     void editResetted();
 
-    void saved();
+    void aboutToSave();
 
     void afterSaveWindowState();
     void afterRestoreWindowState();

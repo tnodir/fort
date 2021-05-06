@@ -79,7 +79,7 @@ void StatisticsPage::onEditResetted()
     setGraphEdited(false);
 }
 
-void StatisticsPage::onSaved()
+void StatisticsPage::onAboutToSave()
 {
     if (!graphEdited())
         return;

@@ -50,7 +50,7 @@ void SchedulePage::onEditResetted()
     m_taskListModel->resetEdited();
 }
 
-void SchedulePage::onSaved()
+void SchedulePage::onAboutToSave()
 {
     if (!scheduleEdited())
         return;

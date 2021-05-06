@@ -37,6 +37,8 @@ public:
             const QString &iconPath, const std::function<void()> &onClicked);
     static QLabel *createLabel(const QString &text = QString());
     static QLineEdit *createLineLabel();
+    static QLineEdit *createLineEdit(
+            const QString &text, const std::function<void(const QString &text)> &onChanged);
     static QMenu *createMenuByLayout(QBoxLayout *layout, QWidget *parent);
     static QBoxLayout *createLayoutByWidgets(
             const QList<QWidget *> &widgets, Qt::Orientation o = Qt::Vertical);

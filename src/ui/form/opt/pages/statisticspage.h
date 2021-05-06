@@ -32,7 +32,7 @@ public:
 
 protected slots:
     void onEditResetted() override;
-    void onSaved() override;
+    void onAboutToSave() override;
 
     void onSaveWindowState() override;
     void onRestoreWindowState() override;

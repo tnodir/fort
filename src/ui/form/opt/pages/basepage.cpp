@@ -51,7 +51,7 @@ void BasePage::setupController()
     Q_ASSERT(ctrl());
 
     connect(ctrl(), &OptionsController::editResetted, this, &BasePage::onEditResetted);
-    connect(ctrl(), &OptionsController::saved, this, &BasePage::onSaved);
+    connect(ctrl(), &OptionsController::aboutToSave, this, &BasePage::onAboutToSave);
 
     connect(ctrl(), &OptionsController::afterSaveWindowState, this, &BasePage::onSaveWindowState);
     connect(ctrl(), &OptionsController::afterRestoreWindowState, this,

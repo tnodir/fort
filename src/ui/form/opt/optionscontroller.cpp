@@ -116,12 +116,10 @@ void OptionsController::closeWindow()
 
 void OptionsController::save(bool closeOnSuccess)
 {
+    emit aboutToSave();
+
     if (!confManager()->saveConf(*conf()))
         return;
-
-    if (conf()->othersEdited()) {
-        emit saved();
-    }
 
     confManager()->applySavedConf(conf());
 

@@ -11,7 +11,8 @@ public:
     explicit OptionsPage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
 protected slots:
-    void onSaved() override;
+    void onEditResetted() override;
+    void onAboutToSave() override;
 
     void onRetranslateUi() override;
 

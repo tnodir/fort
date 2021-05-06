@@ -20,7 +20,6 @@
 #include "../../../util/iconcache.h"
 #include "../../../util/osutil.h"
 #include "../../../util/startuputil.h"
-#include "../../../util/stringutil.h"
 #include "../../controls/controlutil.h"
 #include "../../dialog/passworddialog.h"
 #include "../optionscontroller.h"
@@ -30,21 +29,15 @@ OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) : BasePage(ct
     setupUi();
 }
 
-void OptionsPage::onSaved()
+void OptionsPage::onEditResetted()
 {
-    savePassword();
+    retranslateEditPassword();
 }
 
-void OptionsPage::savePassword()
+void OptionsPage::onAboutToSave()
 {
-    if (m_cbPassword->isChecked() != settings()->hasPassword()) {
-        const auto password = m_editPassword->text();
-        settings()->setPasswordHash(StringUtil::cryptoHash(password));
-        m_editPassword->clear();
-
-        if (password.isEmpty() && m_btPasswordLock->isVisible()) {
-            m_btPasswordLock->click(); // Reset unlocked password
-        }
+    if (!settings()->hasPassword() && conf()->hasPassword() && conf()->password().isEmpty()) {
+        m_cbPassword->setChecked(false);
     }
 }
 
@@ -265,6 +258,7 @@ void OptionsPage::setupGlobalBox()
 
     // Password Row
     auto passwordLayout = setupPasswordLayout();
+    setupPasswordLock();
 
     // Language Row
     auto langLayout = setupLangLayout();
@@ -285,18 +279,15 @@ QLayout *OptionsPage::setupPasswordLayout()
     auto layout = new QHBoxLayout();
     layout->setSpacing(6);
 
-    m_cbPassword = ControlUtil::createCheckBox(settings()->hasPassword(), [&](bool checked) {
-        m_editPassword->clear();
+    m_cbPassword = ControlUtil::createCheckBox(conf()->hasPassword(), [&](bool checked) {
         if (checked) {
             m_editPassword->setFocus();
+        } else {
+            m_editPassword->clear();
         }
 
+        conf()->setHasPassword(checked);
         ctrl()->setIniEdited();
-    });
-
-    m_btPasswordLock = ControlUtil::createFlatButton(":/icons/lock-open.png", [&] {
-        settings()->resetCheckedPassword();
-        m_btPasswordLock->hide();
     });
 
     setupEditPassword();
@@ -309,24 +300,32 @@ QLayout *OptionsPage::setupPasswordLayout()
 
 void OptionsPage::setupEditPassword()
 {
-    m_editPassword = new QLineEdit();
+    m_editPassword = ControlUtil::createLineEdit(QString(), [&](const QString &text) {
+        m_cbPassword->setChecked(!text.isEmpty());
+
+        conf()->setPassword(text);
+        ctrl()->setIniEdited();
+    });
     m_editPassword->setClearButtonEnabled(true);
     m_editPassword->setEchoMode(QLineEdit::Password);
     m_editPassword->setFixedWidth(200);
+}
 
-    const auto refreshEditPassword = [&] {
-        const bool hasPassword = settings()->hasPassword();
+void OptionsPage::setupPasswordLock()
+{
+    m_btPasswordLock = ControlUtil::createFlatButton(":/icons/lock-open.png", [&] {
+        settings()->resetCheckedPassword();
+        m_btPasswordLock->hide();
+    });
 
-        m_editPassword->setReadOnly(hasPassword || !m_cbPassword->isChecked());
-        retranslateEditPassword();
-
-        m_btPasswordLock->setVisible(hasPassword && !settings()->isPasswordRequired());
+    const auto refreshPasswordLock = [&] {
+        m_btPasswordLock->setVisible(
+                settings()->hasPassword() && !settings()->isPasswordRequired());
     };
 
-    refreshEditPassword();
+    refreshPasswordLock();
 
-    connect(settings(), &FortSettings::passwordStateChanged, this, refreshEditPassword);
-    connect(m_cbPassword, &QCheckBox::toggled, this, refreshEditPassword);
+    connect(settings(), &FortSettings::passwordStateChanged, this, refreshPasswordLock);
 }
 
 QLayout *OptionsPage::setupLangLayout()

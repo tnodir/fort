@@ -12,6 +12,7 @@
 #include "util/envmanager.h"
 #include "util/fileutil.h"
 #include "util/startuputil.h"
+#include "util/stringutil.h"
 
 namespace {
 
@@ -270,6 +271,9 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     conf.setLogConsole(iniBool("console"));
     m_ini->endGroup();
 
+    conf.setHasPassword(hasPassword());
+    conf.setPassword(QString());
+
     m_ini->beginGroup("confFlags");
     conf.setProvBoot(iniBool("provBoot"));
     conf.setFilterEnabled(iniBool("filterEnabled", true));
@@ -316,6 +320,13 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
     setIniValue("debug", conf.logDebug());
     setIniValue("console", conf.logConsole());
     m_ini->endGroup();
+
+    if (conf.hasPassword() != hasPassword() || !conf.password().isEmpty()) {
+        setPasswordHash(StringUtil::cryptoHash(conf.password()));
+        if (!hasPassword()) {
+            resetCheckedPassword();
+        }
+    }
 
     m_ini->beginGroup("confFlags");
     setIniValue("provBoot", conf.provBoot());

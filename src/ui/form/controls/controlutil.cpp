@@ -5,9 +5,9 @@
 #include <QColorDialog>
 #include <QComboBox>
 #include <QFileDialog>
-#include <QMenu>
 #include <QLabel>
 #include <QLineEdit>
+#include <QMenu>
 #include <QPushButton>
 #include <QScrollArea>
 #include <QToolButton>
@@ -110,6 +110,16 @@ QLineEdit *ControlUtil::createLineLabel()
     QPalette pal;
     pal.setColor(QPalette::Base, Qt::transparent);
     c->setPalette(pal);
+
+    return c;
+}
+
+QLineEdit *ControlUtil::createLineEdit(
+        const QString &text, const std::function<void(const QString &text)> &onEdited)
+{
+    auto c = new QLineEdit(text);
+
+    c->connect(c, &QLineEdit::textChanged, onEdited);
 
     return c;
 }

@@ -15,6 +15,7 @@ FirewallConf::FirewallConf(QObject *parent) :
     m_logDebug(false),
     m_logConsole(false),
     m_hotKeyEnabled(false),
+    m_hasPassword(false),
     m_startupMode(0),
     m_explorerIntegrated(false),
     m_provBoot(false),
@@ -87,6 +88,16 @@ void FirewallConf::setLogConsole(bool v)
 void FirewallConf::setHotKeyEnabled(bool v)
 {
     m_hotKeyEnabled = v;
+}
+
+void FirewallConf::setHasPassword(bool v)
+{
+    m_hasPassword = v;
+}
+
+void FirewallConf::setPassword(const QString &v)
+{
+    m_password = v;
 }
 
 void FirewallConf::setStartupMode(qint8 v)
@@ -368,6 +379,9 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     m_logConsole = o.logConsole();
     m_hotKeyEnabled = o.hotKeyEnabled();
 
+    m_hasPassword = o.hasPassword();
+    // Don't copy m_password, needed only to set hash in ini
+
     m_startupMode = o.startupMode();
     m_explorerIntegrated = o.explorerIntegrated();
 
@@ -439,6 +453,9 @@ QVariant FirewallConf::flagsToVariant() const
     map["logConsole"] = logConsole();
     map["hotKeyEnabled"] = hotKeyEnabled();
 
+    map["hasPassword"] = hasPassword();
+    map["password"] = password();
+
     map["startupMode"] = startupMode();
     map["explorerIntegrated"] = explorerIntegrated();
 
@@ -493,6 +510,9 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
     m_logDebug = map["logDebug"].toBool();
     m_logConsole = map["logConsole"].toBool();
     m_hotKeyEnabled = map["hotKeyEnabled"].toBool();
+
+    m_hasPassword = map["hasPassword"].toBool();
+    m_password = map["password"].toString();
 
     m_startupMode = map["startupMode"].toInt();
     m_explorerIntegrated = map["explorerIntegrated"].toBool();

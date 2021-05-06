@@ -48,6 +48,12 @@ public:
     bool hotKeyEnabled() const { return m_hotKeyEnabled; }
     void setHotKeyEnabled(bool v);
 
+    bool hasPassword() const { return m_hasPassword; }
+    void setHasPassword(bool v);
+
+    QString password() const { return m_password; }
+    void setPassword(const QString &v);
+
     qint8 startupMode() const { return m_startupMode; }
     void setStartupMode(qint8 v);
 
@@ -192,6 +198,7 @@ private:
     uint m_logDebug : 1;
     uint m_logConsole : 1;
     uint m_hotKeyEnabled : 1;
+    uint m_hasPassword : 1;
 
     uint m_startupMode : 3;
     uint m_explorerIntegrated : 1;
@@ -230,6 +237,8 @@ private:
     quint32 m_quotaMonthMb = 0;
 
     quint32 m_appGroupBits = 0;
+
+    QString m_password;
 
     QString m_activePeriodFrom;
     QString m_activePeriodTo;
