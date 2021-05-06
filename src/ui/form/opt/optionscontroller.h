@@ -29,11 +29,11 @@ public:
     TranslationManager *translationManager() const;
     ZoneListModel *zoneListModel() const;
 
-    void setConfOthersEdited();
-    void setConfExtEdited();
-    void setConfIniEdited();
-    void setConfFlagsEdited();
-    void setConfEdited();
+    void setOthersEdited();
+    void setExtEdited();
+    void setIniEdited();
+    void setFlagsEdited();
+    void setOptEdited();
 
     void resetEdited();
 

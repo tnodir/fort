@@ -24,7 +24,7 @@ void ConfManagerRpc::onConfChanged(const QVariant &confVar)
     FirewallConf *newConf = createConf();
     newConf->fromVariant(confVar, true);
 
-    if (newConf->edited()) {
+    if (newConf->optEdited()) {
         // Reload from storage
         setConf(newConf);
         load();
@@ -54,6 +54,10 @@ bool ConfManagerRpc::saveConf(FirewallConf &newConf)
     if (rpcManager()->resultCommand() != Control::Rpc_Result_Ok) {
         showErrorMessage("Save Conf: Service error.");
         return false;
+    }
+
+    if (newConf.extEdited()) {
+        writeClientExtFlags(newConf);
     }
 
     // Already applied by onConfChanged() & applySavedConf()

@@ -16,7 +16,6 @@ protected slots:
     void onRetranslateUi() override;
 
 private:
-    void saveStartMode();
     void saveExplorerIntegration();
     void savePassword();
 
@@ -42,9 +41,6 @@ private:
     void setupNewVersionUpdate();
 
 private:
-    uint m_currentStartMode : 4;
-    uint m_explorerIntegrated : 1;
-
     QGroupBox *m_gbStartup = nullptr;
     QGroupBox *m_gbTraffic = nullptr;
     QGroupBox *m_gbGlobal = nullptr;

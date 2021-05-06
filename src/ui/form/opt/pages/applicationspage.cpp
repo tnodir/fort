@@ -197,7 +197,7 @@ void ApplicationsPage::setupAddGroup()
         const int tabIndex = m_tabBar->addTab(text);
         m_tabBar->setCurrentIndex(tabIndex);
 
-        ctrl()->setConfEdited();
+        ctrl()->setOptEdited();
     });
 
     const auto refreshAddGroup = [&] {
@@ -224,7 +224,7 @@ void ApplicationsPage::setupRenameGroup()
         appGroup()->setName(text);
         resetGroupName();
 
-        ctrl()->setConfEdited();
+        ctrl()->setOptEdited();
     });
 }
 
@@ -232,13 +232,13 @@ void ApplicationsPage::setupBlockAllowAll()
 {
     m_cbBlockAll = ControlUtil::createCheckBox(conf()->appBlockAll(), [&](bool checked) {
         conf()->setAppBlockAll(checked);
-        ctrl()->setConfFlagsEdited();
+        ctrl()->setFlagsEdited();
     });
     m_cbBlockAll->setIcon(IconCache::icon(":/icons/sign-ban.png"));
 
     m_cbAllowAll = ControlUtil::createCheckBox(conf()->appAllowAll(), [&](bool checked) {
         conf()->setAppAllowAll(checked);
-        ctrl()->setConfFlagsEdited();
+        ctrl()->setFlagsEdited();
     });
     m_cbAllowAll->setIcon(IconCache::icon(":/icons/sign-check.png"));
 
@@ -276,11 +276,11 @@ void ApplicationsPage::setupTabBar()
         conf()->removeAppGroup(index, index);
         m_tabBar->removeTab(index);
 
-        ctrl()->setConfEdited();
+        ctrl()->setOptEdited();
     });
     connect(m_tabBar, &QTabBar::tabMoved, this, [&](int from, int to) {
         conf()->moveAppGroup(from, to);
-        ctrl()->setConfEdited();
+        ctrl()->setOptEdited();
     });
 }
 
@@ -315,7 +315,7 @@ void ApplicationsPage::setupGroupEnabled()
 
         appGroup()->setEnabled(checked);
 
-        ctrl()->setConfFlagsEdited();
+        ctrl()->setFlagsEdited();
     });
 
     m_cbGroupEnabled->setFont(ControlUtil::fontDemiBold());
@@ -331,7 +331,7 @@ void ApplicationsPage::setupGroupPeriod()
 
         appGroup()->setPeriodEnabled(checked);
 
-        ctrl()->setConfEdited();
+        ctrl()->setOptEdited();
     });
     connect(m_ctpGroupPeriod->timeEdit1(), &QTimeEdit::userTimeChanged, this,
             [&](const QTime &time) {
@@ -342,7 +342,7 @@ void ApplicationsPage::setupGroupPeriod()
 
                 appGroup()->setPeriodFrom(timeStr);
 
-                ctrl()->setConfEdited();
+                ctrl()->setOptEdited();
             });
     connect(m_ctpGroupPeriod->timeEdit2(), &QTimeEdit::userTimeChanged, this,
             [&](const QTime &time) {
@@ -353,7 +353,7 @@ void ApplicationsPage::setupGroupPeriod()
 
                 appGroup()->setPeriodTo(timeStr);
 
-                ctrl()->setConfEdited();
+                ctrl()->setOptEdited();
             });
 }
 
@@ -396,7 +396,7 @@ void ApplicationsPage::setupGroupLimitIn()
 
         appGroup()->setLimitInEnabled(checked);
 
-        ctrl()->setConfEdited();
+        ctrl()->setOptEdited();
     });
     connect(m_cscLimitIn->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
             [&](int value) {
@@ -407,7 +407,7 @@ void ApplicationsPage::setupGroupLimitIn()
 
                 appGroup()->setSpeedLimitIn(kbytes);
 
-                ctrl()->setConfEdited();
+                ctrl()->setOptEdited();
             });
 }
 
@@ -421,7 +421,7 @@ void ApplicationsPage::setupGroupLimitOut()
 
         appGroup()->setLimitOutEnabled(checked);
 
-        ctrl()->setConfEdited();
+        ctrl()->setOptEdited();
     });
     connect(m_cscLimitOut->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
             [&](int value) {
@@ -432,7 +432,7 @@ void ApplicationsPage::setupGroupLimitOut()
 
                 appGroup()->setSpeedLimitOut(kbytes);
 
-                ctrl()->setConfEdited();
+                ctrl()->setOptEdited();
             });
 }
 
@@ -444,7 +444,7 @@ void ApplicationsPage::setupGroupLogConn()
 
         appGroup()->setLogConn(checked);
 
-        ctrl()->setConfEdited();
+        ctrl()->setOptEdited();
     });
 
     m_cbLogConn->setVisible(false); // TODO: Collect allowed connections
@@ -458,7 +458,7 @@ void ApplicationsPage::setupGroupFragmentPacket()
 
         appGroup()->setFragmentPacket(checked);
 
-        ctrl()->setConfEdited();
+        ctrl()->setOptEdited();
     });
 }
 
@@ -491,7 +491,7 @@ void ApplicationsPage::setupBlockApps()
 
         appGroup()->setBlockText(text);
 
-        ctrl()->setConfEdited();
+        ctrl()->setOptEdited();
     });
 }
 
@@ -508,7 +508,7 @@ void ApplicationsPage::setupAllowApps()
 
         appGroup()->setAllowText(text);
 
-        ctrl()->setConfEdited();
+        ctrl()->setOptEdited();
     });
 }
 

@@ -100,6 +100,8 @@ protected:
 
     void showErrorMessage(const QString &errorMessage);
 
+    void writeClientExtFlags(const FirewallConf &conf);
+
 private:
     bool checkResult(bool ok, bool commit = false);
 
@@ -107,6 +109,9 @@ private:
 
     bool loadFromDb(FirewallConf &conf, bool &isNew);
     bool saveToDb(const FirewallConf &conf);
+
+    void readExtFlags(FirewallConf &conf);
+    void writeExtFlags(const FirewallConf &conf);
 
     bool removeAppGroupsInDb(const FirewallConf &conf);
 

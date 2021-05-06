@@ -55,7 +55,7 @@ ZoneListModel *OptionsController::zoneListModel() const
     return fortManager()->zoneListModel();
 }
 
-void OptionsController::setConfOthersEdited()
+void OptionsController::setOthersEdited()
 {
     if (!conf()->othersEdited()) {
         conf()->setOthersEdited(true);
@@ -63,7 +63,7 @@ void OptionsController::setConfOthersEdited()
     }
 }
 
-void OptionsController::setConfExtEdited()
+void OptionsController::setExtEdited()
 {
     if (!conf()->extEdited()) {
         conf()->setExtEdited(true);
@@ -71,7 +71,7 @@ void OptionsController::setConfExtEdited()
     }
 }
 
-void OptionsController::setConfIniEdited()
+void OptionsController::setIniEdited()
 {
     if (!conf()->iniEdited()) {
         conf()->setIniEdited(true);
@@ -79,7 +79,7 @@ void OptionsController::setConfIniEdited()
     }
 }
 
-void OptionsController::setConfFlagsEdited()
+void OptionsController::setFlagsEdited()
 {
     if (!conf()->flagsEdited()) {
         conf()->setFlagsEdited(true);
@@ -87,10 +87,10 @@ void OptionsController::setConfFlagsEdited()
     }
 }
 
-void OptionsController::setConfEdited()
+void OptionsController::setOptEdited()
 {
-    if (!conf()->edited()) {
-        conf()->setEdited(true);
+    if (!conf()->optEdited()) {
+        conf()->setOptEdited(true);
         emit editedChanged(true);
     }
 }
@@ -105,7 +105,7 @@ void OptionsController::initialize()
 {
     // Settings/configuration was migrated?
     if (settings()->confMigrated()) {
-        setConfEdited();
+        setOptEdited();
     }
 }
 

@@ -14,6 +14,7 @@
 #include "../util/dateutil.h"
 #include "../util/fileutil.h"
 #include "../util/osutil.h"
+#include "../util/startuputil.h"
 #include "addressgroup.h"
 #include "appgroup.h"
 #include "firewallconf.h"
@@ -449,7 +450,7 @@ void ConfManager::setupDefault(FirewallConf &conf) const
 
 bool ConfManager::loadConf(FirewallConf &conf)
 {
-    if (conf.edited()) {
+    if (conf.optEdited()) {
         bool isNewConf = false;
 
         if (!loadFromDb(conf, isNewConf)) {
@@ -464,6 +465,7 @@ bool ConfManager::loadConf(FirewallConf &conf)
     }
 
     settings()->readConfIni(conf);
+    readExtFlags(conf);
 
     return true;
 }
@@ -486,11 +488,19 @@ bool ConfManager::saveConf(FirewallConf &conf)
 {
     conf.prepareToSave();
 
-    if (conf.edited() && !saveToDb(conf))
+    if (conf.optEdited() && !saveToDb(conf))
         return false;
 
     if (conf.iniEdited() || conf.flagsEdited()) {
         settings()->writeConfIni(conf);
+    }
+
+    if (conf.extEdited()) {
+        writeExtFlags(conf);
+
+        if (!settings()->isService()) {
+            writeClientExtFlags(conf);
+        }
     }
 
     return true;
@@ -498,7 +508,7 @@ bool ConfManager::saveConf(FirewallConf &conf)
 
 void ConfManager::applySavedConf(FirewallConf *newConf)
 {
-    const bool onlyFlags = !newConf->edited();
+    const bool onlyFlags = !newConf->optEdited();
 
     if (onlyFlags && !newConf->anyEdited()) {
         if (newConf != conf()) {
@@ -956,6 +966,35 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
             && removeAppGroupsInDb(conf); // Remove App Groups
 
     return checkResult(ok, true);
+}
+
+void ConfManager::readExtFlags(FirewallConf &conf)
+{
+    conf.setStartupMode(StartupUtil::getStartupMode());
+    conf.setExplorerIntegrated(StartupUtil::isExplorerIntegrated());
+}
+
+void ConfManager::writeExtFlags(const FirewallConf &conf)
+{
+    // Windows Explorer integration
+    if (conf.explorerIntegrated() != StartupUtil::isExplorerIntegrated()) {
+        StartupUtil::integrateExplorer(conf.explorerIntegrated());
+    }
+}
+
+void ConfManager::writeClientExtFlags(const FirewallConf &conf)
+{
+    // Startup Mode
+    const auto oldStartupMode = StartupUtil::getStartupMode();
+    if (conf.startupMode() != oldStartupMode) {
+        StartupUtil::setStartupMode(conf.startupMode(), settings()->defaultLanguage());
+
+        if (StartupUtil::isServiceMode(oldStartupMode)
+                != StartupUtil::isServiceMode(conf.startupMode())) {
+            QMetaObject::invokeMethod(
+                    fortManager(), &FortManager::processRestartRequired, Qt::QueuedConnection);
+        }
+    }
 }
 
 bool ConfManager::removeAppGroupsInDb(const FirewallConf &conf)

@@ -33,20 +33,26 @@ public:
     bool flagsEdited() const { return m_flagsEdited; }
     void setFlagsEdited(bool v);
 
-    bool edited() const { return m_edited; }
-    void setEdited(bool v);
+    bool optEdited() const { return m_optEdited; }
+    void setOptEdited(bool v);
 
     bool anyEdited() const;
     void resetEdited(bool v = false);
 
     bool logDebug() const { return m_logDebug; }
-    void setLogDebug(bool v) { m_logDebug = v; }
+    void setLogDebug(bool v);
 
     bool logConsole() const { return m_logConsole; }
-    void setLogConsole(bool v) { m_logConsole = v; }
+    void setLogConsole(bool v);
 
     bool hotKeyEnabled() const { return m_hotKeyEnabled; }
-    void setHotKeyEnabled(bool v) { m_hotKeyEnabled = v; }
+    void setHotKeyEnabled(bool v);
+
+    qint8 startupMode() const { return m_startupMode; }
+    void setStartupMode(qint8 v);
+
+    bool explorerIntegrated() const { return m_explorerIntegrated; }
+    void setExplorerIntegrated(bool v);
 
     bool provBoot() const { return m_provBoot; }
     void setProvBoot(bool provBoot);
@@ -177,34 +183,37 @@ private:
     void appGroupsFromVariant(const QVariant &v);
 
 private:
-    bool m_othersEdited : 1;
-    bool m_extEdited : 1;
-    bool m_iniEdited : 1;
-    bool m_flagsEdited : 1;
-    bool m_edited : 1;
+    uint m_othersEdited : 1;
+    uint m_extEdited : 1;
+    uint m_iniEdited : 1;
+    uint m_flagsEdited : 1;
+    uint m_optEdited : 1;
 
-    bool m_logDebug : 1;
-    bool m_logConsole : 1;
-    bool m_hotKeyEnabled : 1;
+    uint m_logDebug : 1;
+    uint m_logConsole : 1;
+    uint m_hotKeyEnabled : 1;
 
-    bool m_provBoot : 1;
-    bool m_filterEnabled : 1;
-    bool m_filterLocals : 1;
-    bool m_stopTraffic : 1;
-    bool m_stopInetTraffic : 1;
-    bool m_allowAllNew : 1;
+    uint m_startupMode : 3;
+    uint m_explorerIntegrated : 1;
 
-    bool m_logBlocked : 1;
-    bool m_logStat : 1;
-    bool m_logStatNoFilter : 1;
+    uint m_provBoot : 1;
+    uint m_filterEnabled : 1;
+    uint m_filterLocals : 1;
+    uint m_stopTraffic : 1;
+    uint m_stopInetTraffic : 1;
+    uint m_allowAllNew : 1;
 
-    bool m_logAllowedIp : 1;
-    bool m_logBlockedIp : 1;
+    uint m_logBlocked : 1;
+    uint m_logStat : 1;
+    uint m_logStatNoFilter : 1;
 
-    bool m_appBlockAll : 1;
-    bool m_appAllowAll : 1;
+    uint m_logAllowedIp : 1;
+    uint m_logBlockedIp : 1;
 
-    bool m_activePeriodEnabled : 1;
+    uint m_appBlockAll : 1;
+    uint m_appAllowAll : 1;
+
+    uint m_activePeriodEnabled : 1;
 
     int m_monthStart = DEFAULT_MONTH_START;
 

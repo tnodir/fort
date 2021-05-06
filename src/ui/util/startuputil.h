@@ -6,7 +6,8 @@
 class StartupUtil
 {
 public:
-    enum StartupMode {
+    enum StartupMode : qint8 {
+        StartupInvalid = -1,
         StartupDisabled = 0,
         StartupCurrentUser,
         StartupAllUsers,

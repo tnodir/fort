@@ -25,41 +25,14 @@
 #include "../../dialog/passworddialog.h"
 #include "../optionscontroller.h"
 
-OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) :
-    BasePage(ctrl, parent), m_currentStartMode(0), m_explorerIntegrated(false)
+OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) : BasePage(ctrl, parent)
 {
     setupUi();
 }
 
 void OptionsPage::onSaved()
 {
-    saveStartMode();
-    saveExplorerIntegration();
     savePassword();
-}
-
-void OptionsPage::saveStartMode()
-{
-    if (m_currentStartMode != m_comboStartMode->currentIndex()) {
-        const bool wasServiceMode = StartupUtil::isServiceMode(m_currentStartMode);
-
-        m_currentStartMode = m_comboStartMode->currentIndex();
-        StartupUtil::setStartupMode(m_currentStartMode, settings()->defaultLanguage());
-
-        const bool isServiceMode = StartupUtil::isServiceMode(m_currentStartMode);
-        if (isServiceMode != wasServiceMode) {
-            QMetaObject::invokeMethod(
-                    fortManager(), &FortManager::processRestartRequired, Qt::QueuedConnection);
-        }
-    }
-}
-
-void OptionsPage::saveExplorerIntegration()
-{
-    if (m_explorerIntegrated != m_cbExplorerMenu->isChecked()) {
-        m_explorerIntegrated = m_cbExplorerMenu->isChecked();
-        StartupUtil::integrateExplorer(m_explorerIntegrated);
-    }
 }
 
 void OptionsPage::savePassword()
@@ -127,7 +100,7 @@ void OptionsPage::retranslateComboStartMode()
 
     int currentIndex = m_comboStartMode->currentIndex();
     if (m_comboStartMode->currentIndex() < 0) {
-        currentIndex = m_currentStartMode = StartupUtil::getStartupMode();
+        currentIndex = conf()->startupMode();
     }
 
     m_comboStartMode->clear();
@@ -219,7 +192,7 @@ void OptionsPage::setupStartupBox()
 
     m_cbProvBoot = ControlUtil::createCheckBox(conf()->provBoot(), [&](bool checked) {
         conf()->setProvBoot(checked);
-        ctrl()->setConfFlagsEdited();
+        ctrl()->setFlagsEdited();
     });
 
     auto layout = new QVBoxLayout();
@@ -234,8 +207,10 @@ QLayout *OptionsPage::setupStartModeLayout()
 {
     m_labelStartMode = ControlUtil::createLabel();
 
-    m_comboStartMode =
-            ControlUtil::createComboBox(QStringList(), [&](int) { ctrl()->setConfOthersEdited(); });
+    m_comboStartMode = ControlUtil::createComboBox(QStringList(), [&](int index) {
+        conf()->setStartupMode(index);
+        ctrl()->setExtEdited();
+    });
     m_comboStartMode->setFixedWidth(200);
 
     return ControlUtil::createRowLayout(m_labelStartMode, m_comboStartMode);
@@ -245,23 +220,23 @@ void OptionsPage::setupTrafficBox()
 {
     m_cbFilterEnabled = ControlUtil::createCheckBox(conf()->filterEnabled(), [&](bool checked) {
         conf()->setFilterEnabled(checked);
-        ctrl()->setConfFlagsEdited();
+        ctrl()->setFlagsEdited();
     });
     m_cbFilterLocals = ControlUtil::createCheckBox(conf()->filterLocals(), [&](bool checked) {
         conf()->setFilterLocals(checked);
-        ctrl()->setConfFlagsEdited();
+        ctrl()->setFlagsEdited();
     });
     m_cbStopTraffic = ControlUtil::createCheckBox(conf()->stopTraffic(), [&](bool checked) {
         conf()->setStopTraffic(checked);
-        ctrl()->setConfFlagsEdited();
+        ctrl()->setFlagsEdited();
     });
     m_cbStopInetTraffic = ControlUtil::createCheckBox(conf()->stopInetTraffic(), [&](bool checked) {
         conf()->setStopInetTraffic(checked);
-        ctrl()->setConfFlagsEdited();
+        ctrl()->setFlagsEdited();
     });
     m_cbAllowAllNew = ControlUtil::createCheckBox(conf()->allowAllNew(), [&](bool checked) {
         conf()->setAllowAllNew(checked);
-        ctrl()->setConfFlagsEdited();
+        ctrl()->setFlagsEdited();
     });
 
     auto layout = new QVBoxLayout();
@@ -277,14 +252,15 @@ void OptionsPage::setupTrafficBox()
 
 void OptionsPage::setupGlobalBox()
 {
-    m_explorerIntegrated = StartupUtil::isExplorerIntegrated();
-    m_cbExplorerMenu = ControlUtil::createCheckBox(
-            m_explorerIntegrated, [&](int) { ctrl()->setConfOthersEdited(); });
+    m_cbExplorerMenu = ControlUtil::createCheckBox(conf()->explorerIntegrated(), [&](bool checked) {
+        conf()->setExplorerIntegrated(checked);
+        ctrl()->setExtEdited();
+    });
     m_cbExplorerMenu->setEnabled(settings()->hasService() || OsUtil::isUserAdmin());
 
     m_cbHotKeys = ControlUtil::createCheckBox(conf()->hotKeyEnabled(), [&](bool checked) {
         conf()->setHotKeyEnabled(checked);
-        ctrl()->setConfIniEdited();
+        ctrl()->setIniEdited();
     });
 
     // Password Row
@@ -315,7 +291,7 @@ QLayout *OptionsPage::setupPasswordLayout()
             m_editPassword->setFocus();
         }
 
-        ctrl()->setConfIniEdited();
+        ctrl()->setIniEdited();
     });
 
     m_btPasswordLock = ControlUtil::createFlatButton(":/icons/lock-open.png", [&] {
@@ -385,11 +361,11 @@ void OptionsPage::setupLogsBox()
 {
     m_cbLogDebug = ControlUtil::createCheckBox(conf()->logDebug(), [&](bool checked) {
         conf()->setLogDebug(checked);
-        ctrl()->setConfIniEdited();
+        ctrl()->setIniEdited();
     });
     m_cbLogConsole = ControlUtil::createCheckBox(conf()->logConsole(), [&](bool checked) {
         conf()->setLogConsole(checked);
-        ctrl()->setConfIniEdited();
+        ctrl()->setIniEdited();
     });
 
     auto layout = new QVBoxLayout();

@@ -11,10 +11,12 @@ FirewallConf::FirewallConf(QObject *parent) :
     m_extEdited(false),
     m_iniEdited(false),
     m_flagsEdited(false),
-    m_edited(false),
+    m_optEdited(false),
     m_logDebug(false),
     m_logConsole(false),
     m_hotKeyEnabled(false),
+    m_startupMode(0),
+    m_explorerIntegrated(false),
     m_provBoot(false),
     m_filterEnabled(true),
     m_filterLocals(false),
@@ -53,14 +55,14 @@ void FirewallConf::setFlagsEdited(bool v)
     m_flagsEdited = v;
 }
 
-void FirewallConf::setEdited(bool v)
+void FirewallConf::setOptEdited(bool v)
 {
-    m_edited = v;
+    m_optEdited = v;
 }
 
 bool FirewallConf::anyEdited() const
 {
-    return flagsEdited() || iniEdited() || edited() || extEdited() || othersEdited();
+    return flagsEdited() || iniEdited() || optEdited() || extEdited() || othersEdited();
 }
 
 void FirewallConf::resetEdited(bool v)
@@ -69,7 +71,32 @@ void FirewallConf::resetEdited(bool v)
     setExtEdited(v);
     setIniEdited(v);
     setFlagsEdited(v);
-    setEdited(v);
+    setOptEdited(v);
+}
+
+void FirewallConf::setLogDebug(bool v)
+{
+    m_logDebug = v;
+}
+
+void FirewallConf::setLogConsole(bool v)
+{
+    m_logConsole = v;
+}
+
+void FirewallConf::setHotKeyEnabled(bool v)
+{
+    m_hotKeyEnabled = v;
+}
+
+void FirewallConf::setStartupMode(qint8 v)
+{
+    m_startupMode = v;
+}
+
+void FirewallConf::setExplorerIntegrated(bool v)
+{
+    m_explorerIntegrated = v;
 }
 
 void FirewallConf::setProvBoot(bool provBoot)
@@ -335,11 +362,14 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     m_extEdited = o.extEdited();
     m_iniEdited = o.iniEdited();
     m_flagsEdited = o.flagsEdited();
-    m_edited = o.edited();
+    m_optEdited = o.optEdited();
 
     m_logDebug = o.logDebug();
     m_logConsole = o.logConsole();
     m_hotKeyEnabled = o.hotKeyEnabled();
+
+    m_startupMode = o.startupMode();
+    m_explorerIntegrated = o.explorerIntegrated();
 
     m_provBoot = o.provBoot();
     m_filterEnabled = o.filterEnabled();
@@ -403,11 +433,14 @@ QVariant FirewallConf::flagsToVariant() const
     map["extEdited"] = extEdited();
     map["iniEdited"] = iniEdited();
     map["flagsEdited"] = flagsEdited();
-    map["edited"] = edited();
+    map["edited"] = optEdited();
 
     map["logDebug"] = logDebug();
     map["logConsole"] = logConsole();
     map["hotKeyEnabled"] = hotKeyEnabled();
+
+    map["startupMode"] = startupMode();
+    map["explorerIntegrated"] = explorerIntegrated();
 
     map["provBoot"] = provBoot();
     map["filterEnabled"] = filterEnabled();
@@ -455,11 +488,14 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
     m_extEdited = map["extEdited"].toBool();
     m_iniEdited = map["iniEdited"].toBool();
     m_flagsEdited = map["flagsEdited"].toBool();
-    m_edited = map["edited"].toBool();
+    m_optEdited = map["edited"].toBool();
 
     m_logDebug = map["logDebug"].toBool();
     m_logConsole = map["logConsole"].toBool();
     m_hotKeyEnabled = map["hotKeyEnabled"].toBool();
+
+    m_startupMode = map["startupMode"].toInt();
+    m_explorerIntegrated = map["explorerIntegrated"].toBool();
 
     m_provBoot = map["provBoot"].toBool();
     m_filterEnabled = map["filterEnabled"].toBool();
@@ -539,7 +575,7 @@ QVariant FirewallConf::toVariant(bool onlyFlags) const
 {
     QVariantMap map;
 
-    if (!onlyFlags || edited()) {
+    if (!onlyFlags || optEdited()) {
         map["addressGroups"] = addressesToVariant();
         map["appGroups"] = appGroupsToVariant();
     }
@@ -555,7 +591,7 @@ void FirewallConf::fromVariant(const QVariant &v, bool onlyFlags)
 
     flagsFromVariant(map["flags"]); // set *edited flags
 
-    if (!onlyFlags || edited()) {
+    if (!onlyFlags || optEdited()) {
         addressesFromVariant(map["addressGroups"]);
         appGroupsFromVariant(map["appGroups"]);
     }
