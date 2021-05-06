@@ -1,7 +1,7 @@
 /* Fort Firewall Driver Provider (Un)Registration */
 
-#include "fortdef.h"
 #include "fortprov.h"
+#include "fortdef.h"
 
 FORT_API DWORD fort_prov_trans_close(HANDLE engine, DWORD status)
 {
@@ -101,18 +101,8 @@ FORT_API BOOL fort_prov_is_boot(void)
     return is_boot;
 }
 
-static DWORD fort_prov_register_callouts(HANDLE engine, BOOL is_boot)
+static DWORD fort_prov_register_io_callouts(HANDLE engine)
 {
-    const UINT32 filter_flags = is_boot ? 0 : FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED;
-
-    FWPM_PROVIDER0 provider;
-    RtlZeroMemory(&provider, sizeof(FWPM_PROVIDER0));
-    provider.flags = is_boot ? FWPM_PROVIDER_FLAG_PERSISTENT : 0;
-    provider.providerKey = FORT_GUID_PROVIDER;
-    provider.displayData.name = (PWCHAR) L"FortProvider";
-    provider.displayData.description = (PWCHAR) L"Fort Firewall Provider";
-    provider.serviceName = (PWCHAR) L"fortfw";
-
     FWPM_CALLOUT0 ocallout4;
     RtlZeroMemory(&ocallout4, sizeof(FWPM_CALLOUT0));
     ocallout4.calloutKey = FORT_GUID_CALLOUT_CONNECT_V4;
@@ -161,6 +151,31 @@ static DWORD fort_prov_register_callouts(HANDLE engine, BOOL is_boot)
     otcallout4.providerKey = (GUID *) &FORT_GUID_PROVIDER;
     otcallout4.applicableLayer = FWPM_LAYER_OUTBOUND_TRANSPORT_V4;
 
+    DWORD status;
+    if ((status = FwpmCalloutAdd0(engine, &ocallout4, NULL, NULL))
+            || (status = FwpmCalloutAdd0(engine, &icallout4, NULL, NULL))
+            || (status = FwpmCalloutAdd0(engine, &scallout4, NULL, NULL))
+            || (status = FwpmCalloutAdd0(engine, &dcallout4, NULL, NULL))
+            || (status = FwpmCalloutAdd0(engine, &itcallout4, NULL, NULL))
+            || (status = FwpmCalloutAdd0(engine, &otcallout4, NULL, NULL))) {
+        return status;
+    }
+
+    return 0;
+}
+
+static DWORD fort_prov_register_callouts(HANDLE engine, BOOL is_boot)
+{
+    const UINT32 filter_flags = is_boot ? 0 : FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED;
+
+    FWPM_PROVIDER0 provider;
+    RtlZeroMemory(&provider, sizeof(FWPM_PROVIDER0));
+    provider.flags = is_boot ? FWPM_PROVIDER_FLAG_PERSISTENT : 0;
+    provider.providerKey = FORT_GUID_PROVIDER;
+    provider.displayData.name = (PWCHAR) L"FortProvider";
+    provider.displayData.description = (PWCHAR) L"Fort Firewall Provider";
+    provider.serviceName = (PWCHAR) L"fortfw";
+
     FWPM_SUBLAYER0 sublayer;
     RtlZeroMemory(&sublayer, sizeof(FWPM_SUBLAYER0));
     sublayer.subLayerKey = FORT_GUID_SUBLAYER;
@@ -192,12 +207,7 @@ static DWORD fort_prov_register_callouts(HANDLE engine, BOOL is_boot)
 
     DWORD status;
     if ((status = FwpmProviderAdd0(engine, &provider, NULL))
-            || (status = FwpmCalloutAdd0(engine, &ocallout4, NULL, NULL))
-            || (status = FwpmCalloutAdd0(engine, &icallout4, NULL, NULL))
-            || (status = FwpmCalloutAdd0(engine, &scallout4, NULL, NULL))
-            || (status = FwpmCalloutAdd0(engine, &dcallout4, NULL, NULL))
-            || (status = FwpmCalloutAdd0(engine, &itcallout4, NULL, NULL))
-            || (status = FwpmCalloutAdd0(engine, &otcallout4, NULL, NULL))
+            || (status = fort_prov_register_io_callouts(engine))
             || (status = FwpmSubLayerAdd0(engine, &sublayer, NULL))
             || (status = FwpmFilterAdd0(engine, &ofilter4, NULL, NULL))
             || (status = FwpmFilterAdd0(engine, &ifilter4, NULL, NULL))) {
