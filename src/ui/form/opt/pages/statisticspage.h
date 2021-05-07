@@ -23,15 +23,11 @@ class StatisticsPage : public BasePage
 public:
     explicit StatisticsPage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
-    bool graphEdited() const { return m_graphEdited; }
-    void setGraphEdited(bool v);
-
     AppStatModel *appStatModel() const;
     AppInfoCache *appInfoCache() const;
     TrafListModel *trafListModel() const { return m_trafListModel; }
 
 protected slots:
-    void onEditResetted() override;
     void onAboutToSave() override;
 
     void onSaveWindowState() override;
@@ -84,7 +80,6 @@ private:
     static QString formatQuota(int mbytes);
 
 private:
-    bool m_graphEdited : 1;
     bool m_pageUpdating : 1;
 
     TrafListModel *m_trafListModel = nullptr;

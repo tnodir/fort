@@ -48,6 +48,8 @@ public:
     bool save(FirewallConf *newConf);
     bool saveFlags();
 
+    virtual void saveIni();
+
     bool saveVariant(const QVariant &confVar);
 
     bool loadTasks(const QList<TaskInfo *> &taskInfos);

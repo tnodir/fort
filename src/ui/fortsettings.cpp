@@ -41,16 +41,6 @@ FortSettings::FortSettings(QObject *parent) :
 {
 }
 
-QString FortSettings::appUpdatesUrl() const
-{
-    return APP_UPDATES_URL;
-}
-
-int FortSettings::appVersion() const
-{
-    return APP_VERSION;
-}
-
 void FortSettings::setupGlobal()
 {
     // Use global settings from program's binary directory
@@ -240,6 +230,16 @@ QString FortSettings::cacheFilePath() const
     return noCache() ? ":memory:" : cachePath() + "appinfocache.db";
 }
 
+void FortSettings::setPassword(const QString &password)
+{
+    setPasswordHash(StringUtil::cryptoHash(password));
+}
+
+bool FortSettings::checkPassword(const QString &password) const
+{
+    return StringUtil::cryptoHash(password) == passwordHash();
+}
+
 bool FortSettings::isPasswordRequired()
 {
     return hasPassword() && !(m_passwordUnlockType != 0 && m_passwordChecked);
@@ -253,7 +253,7 @@ void FortSettings::setPasswordChecked(bool checked, int unlockType)
     m_passwordChecked = checked;
     m_passwordUnlockType = unlockType;
 
-    emit passwordStateChanged();
+    emit passwordCheckedChanged();
 }
 
 void FortSettings::resetCheckedPassword(int unlockType)
@@ -266,14 +266,6 @@ void FortSettings::resetCheckedPassword(int unlockType)
 
 void FortSettings::readConfIni(FirewallConf &conf) const
 {
-    m_ini->beginGroup("base");
-    conf.setLogDebug(iniBool("debug"));
-    conf.setLogConsole(iniBool("console"));
-    m_ini->endGroup();
-
-    conf.setHasPassword(hasPassword());
-    conf.setPassword(QString());
-
     m_ini->beginGroup("confFlags");
     conf.setProvBoot(iniBool("provBoot"));
     conf.setFilterEnabled(iniBool("filterEnabled", true));
@@ -308,64 +300,59 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     conf.setQuotaDayMb(iniUInt("quotaDayMb"));
     conf.setQuotaMonthMb(iniUInt("quotaMonthMb"));
     m_ini->endGroup();
-
-    m_ini->beginGroup("hotKey");
-    conf.setHotKeyEnabled(iniBool("enabled"));
-    m_ini->endGroup();
 }
 
 void FortSettings::writeConfIni(const FirewallConf &conf)
 {
-    m_ini->beginGroup("base");
-    setIniValue("debug", conf.logDebug());
-    setIniValue("console", conf.logConsole());
-    m_ini->endGroup();
+    if (conf.iniEdited()) {
+        conf.ini().save(this);
 
-    if (conf.hasPassword() != hasPassword() || !conf.password().isEmpty()) {
-        setPasswordHash(StringUtil::cryptoHash(conf.password()));
-        if (!hasPassword()) {
-            resetCheckedPassword();
-        }
+        m_ini->beginGroup("quota");
+        setIniValue("quotaDayMb", conf.quotaDayMb());
+        setIniValue("quotaMonthMb", conf.quotaMonthMb());
+        m_ini->endGroup();
+
+        m_ini->beginGroup("stat");
+        setIniValue("monthStart", conf.monthStart(), DEFAULT_MONTH_START);
+        setIniValue("trafHourKeepDays", conf.trafHourKeepDays(), DEFAULT_TRAF_HOUR_KEEP_DAYS);
+        setIniValue("trafDayKeepDays", conf.trafDayKeepDays(), DEFAULT_TRAF_DAY_KEEP_DAYS);
+        setIniValue(
+                "trafMonthKeepMonths", conf.trafMonthKeepMonths(), DEFAULT_TRAF_MONTH_KEEP_MONTHS);
+        setIniValue("trafUnit", conf.trafUnit());
+        setIniValue("allowedIpKeepCount", conf.allowedIpKeepCount());
+        setIniValue("blockedIpKeepCount", conf.blockedIpKeepCount());
+        m_ini->endGroup();
     }
 
-    m_ini->beginGroup("confFlags");
-    setIniValue("provBoot", conf.provBoot());
-    setIniValue("filterEnabled", conf.filterEnabled());
-    setIniValue("filterLocals", conf.filterLocals());
-    setIniValue("stopTraffic", conf.stopTraffic());
-    setIniValue("stopInetTraffic", conf.stopInetTraffic());
-    setIniValue("allowAllNew", conf.allowAllNew());
-    setIniValue("logBlocked", conf.logBlocked());
-    setIniValue("logStat", conf.logStat());
-    setIniValue("logStatNoFilter", conf.logStatNoFilter());
-    setIniValue("logAllowedIp", conf.logAllowedIp());
-    setIniValue("logBlockedIp", conf.logBlockedIp());
-    setIniValue("appBlockAll", conf.appBlockAll());
-    setIniValue("appAllowAll", conf.appAllowAll());
-    setIniValue("appGroupBits", conf.appGroupBits(), DEFAULT_APP_GROUP_BITS);
-    m_ini->endGroup();
+    if (conf.flagsEdited()) {
+        m_ini->beginGroup("confFlags");
+        setIniValue("provBoot", conf.provBoot());
+        setIniValue("filterEnabled", conf.filterEnabled());
+        setIniValue("filterLocals", conf.filterLocals());
+        setIniValue("stopTraffic", conf.stopTraffic());
+        setIniValue("stopInetTraffic", conf.stopInetTraffic());
+        setIniValue("allowAllNew", conf.allowAllNew());
+        setIniValue("logBlocked", conf.logBlocked());
+        setIniValue("logStat", conf.logStat());
+        setIniValue("logStatNoFilter", conf.logStatNoFilter());
+        setIniValue("logAllowedIp", conf.logAllowedIp());
+        setIniValue("logBlockedIp", conf.logBlockedIp());
+        setIniValue("appBlockAll", conf.appBlockAll());
+        setIniValue("appAllowAll", conf.appAllowAll());
+        setIniValue("appGroupBits", conf.appGroupBits(), DEFAULT_APP_GROUP_BITS);
+        m_ini->endGroup();
 
-    m_ini->beginGroup("stat");
-    setIniValue("activePeriodEnabled", conf.activePeriodEnabled());
-    setIniValue("activePeriodFrom", conf.activePeriodFrom());
-    setIniValue("activePeriodTo", conf.activePeriodTo());
-    setIniValue("monthStart", conf.monthStart(), DEFAULT_MONTH_START);
-    setIniValue("trafHourKeepDays", conf.trafHourKeepDays(), DEFAULT_TRAF_HOUR_KEEP_DAYS);
-    setIniValue("trafDayKeepDays", conf.trafDayKeepDays(), DEFAULT_TRAF_DAY_KEEP_DAYS);
-    setIniValue("trafMonthKeepMonths", conf.trafMonthKeepMonths(), DEFAULT_TRAF_MONTH_KEEP_MONTHS);
-    setIniValue("trafUnit", conf.trafUnit());
-    setIniValue("allowedIpKeepCount", conf.allowedIpKeepCount());
-    setIniValue("blockedIpKeepCount", conf.blockedIpKeepCount());
-    m_ini->endGroup();
+        m_ini->beginGroup("stat");
+        setIniValue("activePeriodEnabled", conf.activePeriodEnabled());
+        setIniValue("activePeriodFrom", conf.activePeriodFrom());
+        setIniValue("activePeriodTo", conf.activePeriodTo());
+        m_ini->endGroup();
+    }
 
-    m_ini->beginGroup("quota");
-    setIniValue("quotaDayMb", conf.quotaDayMb());
-    setIniValue("quotaMonthMb", conf.quotaMonthMb());
-    m_ini->endGroup();
-
-    m_ini->beginGroup("hotKey");
-    setIniValue("enabled", conf.hotKeyEnabled());
-    m_ini->endGroup();
+    if (conf.graphEdited()) {
+        m_ini->beginGroup("graphWindow");
+        m_ini->endGroup();
+    }
 
     migrateIniOnWrite();
 
@@ -493,23 +480,6 @@ QByteArray FortSettings::iniByteArray(const QString &key) const
     return iniValue(key).toByteArray();
 }
 
-QColor FortSettings::iniColor(const QString &key, const QColor &defaultValue) const
-{
-    const QString text = iniText(key);
-    if (text.isEmpty())
-        return defaultValue;
-
-    if (text.at(0).isDigit())
-        return QColor::fromRgba(text.toUInt());
-
-    return { text };
-}
-
-void FortSettings::setIniColor(const QString &key, const QColor &value, const QColor &defaultValue)
-{
-    setIniValue(key, value.name(), defaultValue.isValid() ? defaultValue.name() : QString());
-}
-
 QVariant FortSettings::iniValue(const QString &key, const QVariant &defaultValue) const
 {
     if (key.isEmpty())
@@ -574,4 +544,9 @@ QStringList FortSettings::iniChildKeys(const QString &prefix) const
 void FortSettings::iniSync()
 {
     m_ini->sync();
+}
+
+int FortSettings::appVersion()
+{
+    return APP_VERSION;
 }

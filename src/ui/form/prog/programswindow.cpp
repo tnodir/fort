@@ -58,6 +58,11 @@ FirewallConf *ProgramsWindow::conf() const
     return ctrl()->conf();
 }
 
+IniOptions *ProgramsWindow::ini() const
+{
+    return ctrl()->ini();
+}
+
 AppListModel *ProgramsWindow::appListModel() const
 {
     return fortManager()->appListModel();
@@ -70,22 +75,24 @@ AppInfoCache *ProgramsWindow::appInfoCache() const
 
 void ProgramsWindow::saveWindowState()
 {
-    settings()->setProgWindowGeometry(m_stateWatcher->geometry());
-    settings()->setProgWindowMaximized(m_stateWatcher->maximized());
+    ini()->setProgWindowGeometry(m_stateWatcher->geometry());
+    ini()->setProgWindowMaximized(m_stateWatcher->maximized());
 
     auto header = m_appListView->horizontalHeader();
-    settings()->setProgAppsHeader(header->saveState());
-    settings()->setProgAppsHeaderVersion(APPS_HEADER_VERSION);
+    ini()->setProgAppsHeader(header->saveState());
+    ini()->setProgAppsHeaderVersion(APPS_HEADER_VERSION);
+
+    confManager()->saveIni();
 }
 
 void ProgramsWindow::restoreWindowState()
 {
-    m_stateWatcher->restore(this, QSize(1024, 768), settings()->progWindowGeometry(),
-            settings()->progWindowMaximized());
+    m_stateWatcher->restore(
+            this, QSize(1024, 768), ini()->progWindowGeometry(), ini()->progWindowMaximized());
 
-    if (settings()->progAppsHeaderVersion() == APPS_HEADER_VERSION) {
+    if (ini()->progAppsHeaderVersion() == APPS_HEADER_VERSION) {
         auto header = m_appListView->horizontalHeader();
-        header->restoreState(settings()->progAppsHeader());
+        header->restoreState(ini()->progAppsHeader());
     }
 }
 

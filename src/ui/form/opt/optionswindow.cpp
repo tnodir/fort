@@ -3,7 +3,8 @@
 #include <QKeyEvent>
 #include <QVBoxLayout>
 
-#include "../../fortsettings.h"
+#include "../../conf/confmanager.h"
+#include "../../conf/firewallconf.h"
 #include "../../util/guiutil.h"
 #include "../../util/window/widgetwindowstatewatcher.h"
 #include "optionscontroller.h"
@@ -19,23 +20,30 @@ OptionsWindow::OptionsWindow(FortManager *fortManager, QWidget *parent) :
     setupStateWatcher();
 }
 
-FortSettings *OptionsWindow::settings() const
+ConfManager *OptionsWindow::confManager() const
 {
-    return ctrl()->settings();
+    return ctrl()->confManager();
+}
+
+IniOptions *OptionsWindow::ini() const
+{
+    return ctrl()->ini();
 }
 
 void OptionsWindow::saveWindowState()
 {
-    settings()->setOptWindowGeometry(m_stateWatcher->geometry());
-    settings()->setOptWindowMaximized(m_stateWatcher->maximized());
+    ini()->setOptWindowGeometry(m_stateWatcher->geometry());
+    ini()->setOptWindowMaximized(m_stateWatcher->maximized());
 
     emit ctrl()->afterSaveWindowState();
+
+    confManager()->saveIni();
 }
 
 void OptionsWindow::restoreWindowState()
 {
-    m_stateWatcher->restore(this, QSize(1024, 768), settings()->optWindowGeometry(),
-            settings()->optWindowMaximized());
+    m_stateWatcher->restore(
+            this, QSize(1024, 768), ini()->optWindowGeometry(), ini()->optWindowMaximized());
 
     emit ctrl()->afterRestoreWindowState();
 }

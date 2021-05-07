@@ -1,9 +1,10 @@
 #include "quotamanager.h"
 
-#include "../fortsettings.h"
+#include "../conf/confmanager.h"
+#include "../conf/firewallconf.h"
 
-QuotaManager::QuotaManager(FortSettings *settings, QObject *parent) :
-    QObject(parent), m_settings(settings)
+QuotaManager::QuotaManager(ConfManager *confManager, QObject *parent) :
+    QObject(parent), m_confManager(confManager)
 {
 }
 
@@ -98,6 +99,16 @@ void QuotaManager::checkQuotaMonth(qint32 trafMonth)
     }
 }
 
+FirewallConf *QuotaManager::conf() const
+{
+    return confManager()->conf();
+}
+
+IniOptions *QuotaManager::ini() const
+{
+    return &conf()->ini();
+}
+
 QString QuotaManager::alertTypeText(qint8 alertType)
 {
     switch (alertType) {
@@ -113,24 +124,26 @@ QString QuotaManager::alertTypeText(qint8 alertType)
 
 qint32 QuotaManager::quotaDayAlerted() const
 {
-    return settings()->quotaDayAlerted();
+    return ini()->quotaDayAlerted();
 }
 
 void QuotaManager::setQuotaDayAlerted(qint32 v)
 {
     m_quotaDayAlerted = v;
 
-    settings()->setQuotaDayAlerted(v);
+    ini()->setQuotaDayAlerted(v);
+    confManager()->saveIni();
 }
 
 qint32 QuotaManager::quotaMonthAlerted() const
 {
-    return settings()->quotaMonthAlerted();
+    return ini()->quotaMonthAlerted();
 }
 
 void QuotaManager::setQuotaMonthAlerted(qint32 v)
 {
     m_quotaMonthAlerted = v;
 
-    settings()->setQuotaMonthAlerted(v);
+    ini()->setQuotaMonthAlerted(v);
+    confManager()->saveIni();
 }

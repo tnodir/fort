@@ -15,6 +15,7 @@ SOURCES += \
     $$UI_PWD/conf/addressgroup.cpp \
     $$UI_PWD/conf/appgroup.cpp \
     $$UI_PWD/conf/firewallconf.cpp \
+    $$UI_PWD/conf/inioptions.cpp \
     $$UI_PWD/driver/drivercommon.cpp \
     $$UI_PWD/fortsettings.cpp \
     $$UI_PWD/log/logbuffer.cpp \
@@ -36,6 +37,7 @@ SOURCES += \
     $$UI_PWD/util/device.cpp \
     $$UI_PWD/util/envmanager.cpp \
     $$UI_PWD/util/fileutil.cpp \
+    $$UI_PWD/util/json/mapwrapper.cpp \
     $$UI_PWD/util/net/ip4range.cpp \
     $$UI_PWD/util/net/netdownloader.cpp \
     $$UI_PWD/util/net/netutil.cpp \
@@ -47,6 +49,7 @@ HEADERS += \
     $$UI_PWD/conf/addressgroup.h \
     $$UI_PWD/conf/appgroup.h \
     $$UI_PWD/conf/firewallconf.h \
+    $$UI_PWD/conf/inioptions.h \
     $$UI_PWD/driver/drivercommon.h \
     $$UI_PWD/fortcompat.h \
     $$UI_PWD/fortsettings.h \
@@ -70,6 +73,7 @@ HEADERS += \
     $$UI_PWD/util/device.h \
     $$UI_PWD/util/envmanager.h \
     $$UI_PWD/util/fileutil.h \
+    $$UI_PWD/util/json/mapwrapper.h \
     $$UI_PWD/util/net/ip4range.h \
     $$UI_PWD/util/net/netdownloader.h \
     $$UI_PWD/util/net/netutil.h \
@@ -85,6 +89,9 @@ include($$UI_PWD/../driver/Driver.pri)
 
 # GoogleTest
 include($$PWD/GoogleTest.pri)
+
+# Mocks
+include($$PWD/mocks/Mocks.pri)
 
 # 3rd party integrations
 CONFIG += sqlite

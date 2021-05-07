@@ -49,12 +49,12 @@ void AddressesPage::setAddressGroupIndex(int v)
 
 void AddressesPage::onSaveWindowState()
 {
-    settings()->setOptWindowAddrSplit(m_splitter->saveState());
+    ini()->setOptWindowAddrSplit(m_splitter->saveState());
 }
 
 void AddressesPage::onRestoreWindowState()
 {
-    m_splitter->restoreState(settings()->optWindowAddrSplit());
+    m_splitter->restoreState(ini()->optWindowAddrSplit());
 }
 
 void AddressesPage::onRetranslateUi()

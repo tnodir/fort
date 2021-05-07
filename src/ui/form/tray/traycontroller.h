@@ -8,6 +8,7 @@ class FirewallConf;
 class FortManager;
 class FortSettings;
 class HotKeyManager;
+class IniOptions;
 class TranslationManager;
 
 class TrayController : public QObject
@@ -21,6 +22,7 @@ public:
     FortSettings *settings() const;
     ConfManager *confManager() const;
     FirewallConf *conf() const;
+    IniOptions *ini() const;
     HotKeyManager *hotKeyManager() const;
     TranslationManager *translationManager() const;
 

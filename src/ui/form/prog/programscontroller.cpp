@@ -1,6 +1,7 @@
 #include "programscontroller.h"
 
 #include "../../conf/confmanager.h"
+#include "../../conf/firewallconf.h"
 #include "../../fortmanager.h"
 #include "../../translationmanager.h"
 
@@ -24,6 +25,11 @@ ConfManager *ProgramsController::confManager() const
 FirewallConf *ProgramsController::conf() const
 {
     return confManager()->conf();
+}
+
+IniOptions *ProgramsController::ini() const
+{
+    return &conf()->ini();
 }
 
 AppListModel *ProgramsController::appListModel() const

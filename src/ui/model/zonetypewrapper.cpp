@@ -9,7 +9,7 @@ int ZoneTypeWrapper::index() const
 
 void ZoneTypeWrapper::setIndex(int index)
 {
-    setValueInt("index", index);
+    setValue("index", index);
 }
 
 QString ZoneTypeWrapper::code() const

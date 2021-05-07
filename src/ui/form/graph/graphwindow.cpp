@@ -4,86 +4,57 @@
 #include <QScreen>
 #include <QVBoxLayout>
 
+#include "../../conf/confmanager.h"
+#include "../../conf/firewallconf.h"
 #include "../../fortcompat.h"
-#include "../../fortsettings.h"
 #include "../../util/dateutil.h"
 #include "../../util/net/netutil.h"
 #include "../../util/window/widgetwindowstatewatcher.h"
 #include "axistickerspeed.h"
 #include "graphplot.h"
 
-GraphWindow::GraphWindow(FortSettings *settings, QWidget *parent) :
+GraphWindow::GraphWindow(ConfManager *confManager, QWidget *parent) :
     WidgetWindow(parent),
     m_stateWatcher(new WidgetWindowStateWatcher(this)),
-    m_settings(settings)
+    m_confManager(confManager)
 {
     setupUi();
+    setupFlagsAndColors();
     setupTimer();
     setupStateWatcher();
-
-    updateWindowFlags();
-    updateColors();
 
     setMinimumSize(QSize(30, 10));
 }
 
-FortSettings *GraphWindow::settings() const
+ConfManager *GraphWindow::confManager() const
 {
-    return m_settings;
+    return m_confManager;
+}
+
+FirewallConf *GraphWindow::conf() const
+{
+    return confManager()->conf();
+}
+
+IniOptions *GraphWindow::ini() const
+{
+    return &conf()->ini();
 }
 
 void GraphWindow::saveWindowState(bool wasVisible)
 {
-    settings()->setGraphWindowGeometry(m_stateWatcher->geometry());
-    settings()->setGraphWindowMaximized(m_stateWatcher->maximized());
+    ini()->setGraphWindowGeometry(m_stateWatcher->geometry());
+    ini()->setGraphWindowMaximized(m_stateWatcher->maximized());
 
-    settings()->setGraphWindowVisible(wasVisible);
+    ini()->setGraphWindowVisible(wasVisible);
+
+    confManager()->saveIni();
 }
 
 void GraphWindow::restoreWindowState()
 {
-    m_stateWatcher->restore(this, QSize(400, 300), settings()->graphWindowGeometry(),
-            settings()->graphWindowMaximized());
-}
-
-void GraphWindow::updateWindowFlags()
-{
-    const bool visible = isVisible();
-
-    setWindowFlags(Qt::Tool | Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint
-            | (settings()->graphWindowAlwaysOnTop() ? Qt::WindowStaysOnTopHint : Qt::Widget)
-            | (settings()->graphWindowFrameless() ? Qt::FramelessWindowHint : Qt::Widget)
-            | (settings()->graphWindowClickThrough() ? Qt::WindowTransparentForInput : Qt::Widget));
-
-    if (visible) {
-        show(); // setWindowFlags() hides the window
-    }
-}
-
-void GraphWindow::updateColors()
-{
-    setWindowOpacityPercent(settings()->graphWindowOpacity());
-
-    m_plot->setBackground(QBrush(settings()->graphWindowColor()));
-
-    // Axis
-    auto yAxis = m_plot->yAxis;
-
-    const QColor axisColor = settings()->graphWindowAxisColor();
-    yAxis->setBasePen(adjustPen(yAxis->basePen(), axisColor));
-    yAxis->setTickPen(adjustPen(yAxis->tickPen(), axisColor));
-    yAxis->setSubTickPen(adjustPen(yAxis->subTickPen(), axisColor));
-
-    yAxis->setTickLabelColor(settings()->graphWindowTickLabelColor());
-    yAxis->setLabelColor(settings()->graphWindowLabelColor());
-
-    yAxis->grid()->setPen(adjustPen(yAxis->grid()->pen(), settings()->graphWindowGridColor()));
-
-    // Graph Inbound
-    m_graphIn->setPen(QPen(settings()->graphWindowColorIn()));
-
-    // Graph Outbound
-    m_graphOut->setPen(QPen(settings()->graphWindowColorOut()));
+    m_stateWatcher->restore(
+            this, QSize(400, 300), ini()->graphWindowGeometry(), ini()->graphWindowMaximized());
 }
 
 void GraphWindow::setupStateWatcher()
@@ -145,6 +116,58 @@ void GraphWindow::setupUi()
     mainLayout->setContentsMargins(0, 0, 0, 0);
     mainLayout->addWidget(m_plot);
     setLayout(mainLayout);
+}
+
+void GraphWindow::setupFlagsAndColors()
+{
+    const auto updateFlagsAndColors = [&] {
+        updateWindowFlags();
+        updateColors();
+    };
+
+    updateFlagsAndColors();
+
+    connect(confManager(), &ConfManager::confChanged, this, updateFlagsAndColors);
+}
+
+void GraphWindow::updateWindowFlags()
+{
+    const bool visible = isVisible();
+
+    setWindowFlags(Qt::Tool | Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint
+            | (ini()->graphWindowAlwaysOnTop() ? Qt::WindowStaysOnTopHint : Qt::Widget)
+            | (ini()->graphWindowFrameless() ? Qt::FramelessWindowHint : Qt::Widget)
+            | (ini()->graphWindowClickThrough() ? Qt::WindowTransparentForInput : Qt::Widget));
+
+    if (visible) {
+        show(); // setWindowFlags() hides the window
+    }
+}
+
+void GraphWindow::updateColors()
+{
+    setWindowOpacityPercent(ini()->graphWindowOpacity());
+
+    m_plot->setBackground(QBrush(ini()->graphWindowColor()));
+
+    // Axis
+    auto yAxis = m_plot->yAxis;
+
+    const QColor axisColor = ini()->graphWindowAxisColor();
+    yAxis->setBasePen(adjustPen(yAxis->basePen(), axisColor));
+    yAxis->setTickPen(adjustPen(yAxis->tickPen(), axisColor));
+    yAxis->setSubTickPen(adjustPen(yAxis->subTickPen(), axisColor));
+
+    yAxis->setTickLabelColor(ini()->graphWindowTickLabelColor());
+    yAxis->setLabelColor(ini()->graphWindowLabelColor());
+
+    yAxis->grid()->setPen(adjustPen(yAxis->grid()->pen(), ini()->graphWindowGridColor()));
+
+    // Graph Inbound
+    m_graphIn->setPen(QPen(ini()->graphWindowColorIn()));
+
+    // Graph Outbound
+    m_graphOut->setPen(QPen(ini()->graphWindowColorOut()));
 }
 
 void GraphWindow::setupTimer()
@@ -227,20 +250,20 @@ void GraphWindow::enterEvent(
 {
     Q_UNUSED(event);
 
-    if (settings()->graphWindowHideOnHover()) {
+    if (ini()->graphWindowHideOnHover()) {
         hide();
         m_hoverTimer.start(200);
         return;
     }
 
-    setWindowOpacityPercent(settings()->graphWindowHoverOpacity());
+    setWindowOpacityPercent(ini()->graphWindowHoverOpacity());
 }
 
 void GraphWindow::leaveEvent(QEvent *event)
 {
     Q_UNUSED(event);
 
-    setWindowOpacityPercent(settings()->graphWindowOpacity());
+    setWindowOpacityPercent(ini()->graphWindowOpacity());
 }
 
 void GraphWindow::keyPressEvent(QKeyEvent *event)
@@ -277,7 +300,7 @@ void GraphWindow::addTraffic(qint64 unixTime, quint32 inBytes, quint32 outBytes)
         updateWindowTitleSpeed();
     }
 
-    const qint64 rangeLower = unixTime - settings()->graphWindowMaxSeconds();
+    const qint64 rangeLower = unixTime - ini()->graphWindowMaxSeconds();
 
     addData(m_graphIn, rangeLower, unixTime, inBytes);
     addData(m_graphOut, rangeLower, unixTime, outBytes);

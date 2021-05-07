@@ -13,6 +13,7 @@ class ConfManager;
 class FirewallConf;
 class FortManager;
 class FortSettings;
+class IniOptions;
 class ProgramEditDialog;
 class ProgramsController;
 class TableView;
@@ -32,6 +33,7 @@ public:
     FortSettings *settings() const;
     ConfManager *confManager() const;
     FirewallConf *conf() const;
+    IniOptions *ini() const;
     AppListModel *appListModel() const;
     AppInfoCache *appInfoCache() const;
 

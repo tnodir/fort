@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QVariant>
 
+#include "inioptions.h"
+
 class AddressGroup;
 class AppGroup;
 
@@ -27,6 +29,9 @@ public:
     bool extEdited() const { return m_extEdited; }
     void setExtEdited(bool v);
 
+    bool graphEdited() const { return m_graphEdited; }
+    void setGraphEdited(bool v);
+
     bool iniEdited() const { return m_iniEdited; }
     void setIniEdited(bool v);
 
@@ -38,21 +43,6 @@ public:
 
     bool anyEdited() const;
     void resetEdited(bool v = false);
-
-    bool logDebug() const { return m_logDebug; }
-    void setLogDebug(bool v);
-
-    bool logConsole() const { return m_logConsole; }
-    void setLogConsole(bool v);
-
-    bool hotKeyEnabled() const { return m_hotKeyEnabled; }
-    void setHotKeyEnabled(bool v);
-
-    bool hasPassword() const { return m_hasPassword; }
-    void setHasPassword(bool v);
-
-    QString password() const { return m_password; }
-    void setPassword(const QString &v);
 
     qint8 startupMode() const { return m_startupMode; }
     void setStartupMode(qint8 v);
@@ -151,6 +141,9 @@ public:
     const QList<AppGroup *> &removedAppGroupsList() const { return m_removedAppGroups; }
     void clearRemovedAppGroups() const;
 
+    IniOptions &ini() { return m_iniOptions; }
+    const IniOptions &ini() const { return m_iniOptions; }
+
     void copyFlags(const FirewallConf &o);
     void copy(const FirewallConf &o);
 
@@ -191,14 +184,10 @@ private:
 private:
     uint m_othersEdited : 1;
     uint m_extEdited : 1;
+    uint m_graphEdited : 1;
     uint m_iniEdited : 1;
     uint m_flagsEdited : 1;
     uint m_optEdited : 1;
-
-    uint m_logDebug : 1;
-    uint m_logConsole : 1;
-    uint m_hotKeyEnabled : 1;
-    uint m_hasPassword : 1;
 
     uint m_startupMode : 3;
     uint m_explorerIntegrated : 1;
@@ -246,6 +235,8 @@ private:
     QList<AddressGroup *> m_addressGroups;
     QList<AppGroup *> m_appGroups;
     mutable QList<AppGroup *> m_removedAppGroups;
+
+    IniOptions m_iniOptions;
 };
 
 #endif // FIREWALLCONF_H

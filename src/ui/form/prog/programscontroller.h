@@ -8,6 +8,7 @@ class ConfManager;
 class FirewallConf;
 class FortManager;
 class FortSettings;
+class IniOptions;
 class TranslationManager;
 
 class ProgramsController : public QObject
@@ -21,6 +22,7 @@ public:
     FortSettings *settings() const;
     ConfManager *confManager() const;
     FirewallConf *conf() const;
+    IniOptions *ini() const;
     AppListModel *appListModel() const;
     TranslationManager *translationManager() const;
 

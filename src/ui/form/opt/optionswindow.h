@@ -3,8 +3,9 @@
 
 #include "../../util/window/widgetwindow.h"
 
+class ConfManager;
 class FortManager;
-class FortSettings;
+class IniOptions;
 class MainPage;
 class OptionsController;
 class WidgetWindowStateWatcher;
@@ -17,7 +18,8 @@ public:
     explicit OptionsWindow(FortManager *fortManager, QWidget *parent = nullptr);
 
     OptionsController *ctrl() const { return m_ctrl; }
-    FortSettings *settings() const;
+    ConfManager *confManager() const;
+    IniOptions *ini() const;
 
     void saveWindowState();
     void restoreWindowState();

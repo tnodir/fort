@@ -439,7 +439,9 @@ void ConfManager::setConf(FirewallConf *newConf)
 
 FirewallConf *ConfManager::createConf()
 {
-    return new FirewallConf(this);
+    FirewallConf *conf = new FirewallConf(this);
+    conf->ini().setSettings(settings());
+    return conf;
 }
 
 void ConfManager::setupDefault(FirewallConf &conf) const
@@ -491,9 +493,7 @@ bool ConfManager::saveConf(FirewallConf &conf)
     if (conf.optEdited() && !saveToDb(conf))
         return false;
 
-    if (conf.iniEdited() || conf.flagsEdited()) {
-        settings()->writeConfIni(conf);
-    }
+    settings()->writeConfIni(conf);
 
     if (conf.extEdited()) {
         writeExtFlags(conf);
@@ -545,6 +545,11 @@ bool ConfManager::saveFlags()
 {
     conf()->setFlagsEdited(true);
     return save(conf());
+}
+
+void ConfManager::saveIni()
+{
+    // TODO: Save changed conf()->ini()
 }
 
 bool ConfManager::saveVariant(const QVariant &confVar)

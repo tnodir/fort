@@ -4,7 +4,7 @@
 #include "../rpc/rpcmanager.h"
 
 QuotaManagerRpc::QuotaManagerRpc(FortManager *fortManager, QObject *parent) :
-    QuotaManager(fortManager->settings(), parent), m_fortManager(fortManager)
+    QuotaManager(fortManager->confManager(), parent), m_fortManager(fortManager)
 {
 }
 

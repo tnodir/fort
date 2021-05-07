@@ -23,8 +23,8 @@ public:
     TaskListModel *taskListModel() const { return m_taskListModel; }
 
 protected slots:
-    void onEditResetted() override;
     void onAboutToSave() override;
+    void onEditResetted() override;
 
     void onRetranslateUi() override;
 

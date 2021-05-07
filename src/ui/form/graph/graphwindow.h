@@ -5,7 +5,9 @@
 
 #include "../../util/window/widgetwindow.h"
 
-class FortSettings;
+class ConfManager;
+class FirewallConf;
+class IniOptions;
 class GraphPlot;
 class QCPBars;
 class WidgetWindowStateWatcher;
@@ -15,9 +17,11 @@ class GraphWindow : public WidgetWindow
     Q_OBJECT
 
 public:
-    explicit GraphWindow(FortSettings *settings, QWidget *parent = nullptr);
+    explicit GraphWindow(ConfManager *confManager, QWidget *parent = nullptr);
 
-    FortSettings *settings() const;
+    ConfManager *confManager() const;
+    FirewallConf *conf() const;
+    IniOptions *ini() const;
 
     void saveWindowState(bool wasVisible);
     void restoreWindowState();
@@ -26,9 +30,6 @@ signals:
     void mouseRightClick(QMouseEvent *event);
 
 public slots:
-    void updateWindowFlags();
-    void updateColors();
-
     void addTraffic(qint64 unixTime, quint32 inBytes, quint32 outBytes);
 
 private slots:
@@ -48,6 +49,11 @@ private:
     void setupStateWatcher();
 
     void setupUi();
+
+    void setupFlagsAndColors();
+    void updateWindowFlags();
+    void updateColors();
+
     void setupTimer();
 
     void addData(QCPBars *graph, qint64 rangeLower, qint64 unixTime, quint32 bytes);
@@ -78,7 +84,7 @@ private:
 
     WidgetWindowStateWatcher *m_stateWatcher = nullptr;
 
-    FortSettings *m_settings = nullptr;
+    ConfManager *m_confManager = nullptr;
 
     GraphPlot *m_plot = nullptr;
     QCPBars *m_graphIn = nullptr;

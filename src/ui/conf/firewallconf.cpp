@@ -9,13 +9,10 @@ FirewallConf::FirewallConf(QObject *parent) :
     QObject(parent),
     m_othersEdited(false),
     m_extEdited(false),
+    m_graphEdited(false),
     m_iniEdited(false),
     m_flagsEdited(false),
     m_optEdited(false),
-    m_logDebug(false),
-    m_logConsole(false),
-    m_hotKeyEnabled(false),
-    m_hasPassword(false),
     m_startupMode(0),
     m_explorerIntegrated(false),
     m_provBoot(false),
@@ -46,6 +43,11 @@ void FirewallConf::setExtEdited(bool v)
     m_extEdited = v;
 }
 
+void FirewallConf::setGraphEdited(bool v)
+{
+    m_graphEdited = v;
+}
+
 void FirewallConf::setIniEdited(bool v)
 {
     m_iniEdited = v;
@@ -73,31 +75,6 @@ void FirewallConf::resetEdited(bool v)
     setIniEdited(v);
     setFlagsEdited(v);
     setOptEdited(v);
-}
-
-void FirewallConf::setLogDebug(bool v)
-{
-    m_logDebug = v;
-}
-
-void FirewallConf::setLogConsole(bool v)
-{
-    m_logConsole = v;
-}
-
-void FirewallConf::setHotKeyEnabled(bool v)
-{
-    m_hotKeyEnabled = v;
-}
-
-void FirewallConf::setHasPassword(bool v)
-{
-    m_hasPassword = v;
-}
-
-void FirewallConf::setPassword(const QString &v)
-{
-    m_password = v;
 }
 
 void FirewallConf::setStartupMode(qint8 v)
@@ -371,16 +348,10 @@ void FirewallConf::copyFlags(const FirewallConf &o)
 {
     m_othersEdited = o.othersEdited();
     m_extEdited = o.extEdited();
+    m_graphEdited = o.graphEdited();
     m_iniEdited = o.iniEdited();
     m_flagsEdited = o.flagsEdited();
     m_optEdited = o.optEdited();
-
-    m_logDebug = o.logDebug();
-    m_logConsole = o.logConsole();
-    m_hotKeyEnabled = o.hotKeyEnabled();
-
-    m_hasPassword = o.hasPassword();
-    // Don't copy m_password, needed only to set hash in ini
 
     m_startupMode = o.startupMode();
     m_explorerIntegrated = o.explorerIntegrated();
@@ -447,14 +418,7 @@ QVariant FirewallConf::flagsToVariant() const
     map["extEdited"] = extEdited();
     map["iniEdited"] = iniEdited();
     map["flagsEdited"] = flagsEdited();
-    map["edited"] = optEdited();
-
-    map["logDebug"] = logDebug();
-    map["logConsole"] = logConsole();
-    map["hotKeyEnabled"] = hotKeyEnabled();
-
-    map["hasPassword"] = hasPassword();
-    map["password"] = password();
+    map["optEdited"] = optEdited();
 
     map["startupMode"] = startupMode();
     map["explorerIntegrated"] = explorerIntegrated();
@@ -503,16 +467,10 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
 
     m_othersEdited = map["othersEdited"].toBool();
     m_extEdited = map["extEdited"].toBool();
+    m_graphEdited = map["graphEdited"].toBool();
     m_iniEdited = map["iniEdited"].toBool();
     m_flagsEdited = map["flagsEdited"].toBool();
-    m_optEdited = map["edited"].toBool();
-
-    m_logDebug = map["logDebug"].toBool();
-    m_logConsole = map["logConsole"].toBool();
-    m_hotKeyEnabled = map["hotKeyEnabled"].toBool();
-
-    m_hasPassword = map["hasPassword"].toBool();
-    m_password = map["password"].toString();
+    m_optEdited = map["optEdited"].toBool();
 
     m_startupMode = map["startupMode"].toInt();
     m_explorerIntegrated = map["explorerIntegrated"].toBool();

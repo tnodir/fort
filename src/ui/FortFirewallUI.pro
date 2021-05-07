@@ -20,6 +20,7 @@ SOURCES += \
     conf/appgroup.cpp \
     conf/confmanager.cpp \
     conf/firewallconf.cpp \
+    conf/inioptions.cpp \
     control/controlmanager.cpp \
     control/controlworker.cpp \
     driver/drivercommon.cpp \
@@ -154,6 +155,7 @@ HEADERS += \
     conf/appgroup.h \
     conf/confmanager.h \
     conf/firewallconf.h \
+    conf/inioptions.h \
     control/control.h \
     control/controlmanager.h \
     control/controlworker.h \

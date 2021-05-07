@@ -8,6 +8,7 @@ class DriverManager;
 class FirewallConf;
 class FortManager;
 class FortSettings;
+class IniOptions;
 class TaskManager;
 class TranslationManager;
 class ZoneListModel;
@@ -24,6 +25,7 @@ public:
     FortSettings *settings() const;
     ConfManager *confManager() const;
     FirewallConf *conf() const;
+    IniOptions *ini() const;
     TaskManager *taskManager() const;
     DriverManager *driverManager() const;
     TranslationManager *translationManager() const;
@@ -31,6 +33,7 @@ public:
 
     void setOthersEdited();
     void setExtEdited();
+    void setGraphEdited();
     void setIniEdited();
     void setFlagsEdited();
     void setOptEdited();

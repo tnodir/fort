@@ -11,12 +11,12 @@ QT_FORWARD_DECLARE_CLASS(QPushButton)
 
 class ConfManager;
 class FortManager;
-class FortSettings;
+class IniOptions;
 class TableView;
 class TaskManager;
+class WidgetWindowStateWatcher;
 class ZoneListModel;
 class ZonesController;
-class WidgetWindowStateWatcher;
 
 class ZonesWindow : public WidgetWindow
 {
@@ -27,8 +27,8 @@ public:
 
     ZonesController *ctrl() const { return m_ctrl; }
     FortManager *fortManager() const;
-    FortSettings *settings() const;
     ConfManager *confManager() const;
+    IniOptions *ini() const;
     TaskManager *taskManager() const;
     ZoneListModel *zoneListModel() const;
 

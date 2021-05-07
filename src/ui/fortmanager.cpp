@@ -46,7 +46,6 @@
 #include "util/net/hostinfocache.h"
 #include "util/osutil.h"
 #include "util/startuputil.h"
-#include "util/stringutil.h"
 
 FortManager::FortManager(FortSettings *settings, EnvManager *envManager,
         ControlManager *controlManager, QObject *parent) :
@@ -69,6 +68,11 @@ FortManager::~FortManager()
     }
 
     OsUtil::closeMutex(m_instanceMutex);
+}
+
+FirewallConf *FortManager::conf() const
+{
+    return confManager()->conf();
 }
 
 bool FortManager::checkRunningInstance()
@@ -97,9 +101,9 @@ void FortManager::initialize()
     setupEventFilter();
     setupEnvManager();
 
+    setupConfManager();
     setupQuotaManager();
     setupStatManager();
-    setupConfManager();
     setupAppInfoManager();
 
     setupLogManager();
@@ -114,11 +118,6 @@ void FortManager::initialize()
     loadConf();
 }
 
-void FortManager::setupTranslationManager()
-{
-    TranslationManager::instance()->switchLanguageByName(settings()->language());
-}
-
 void FortManager::setupThreadPool()
 {
     QThreadPool::globalInstance()->setMaxThreadCount(qMax(8, QThread::idealThreadCount() * 2));
@@ -131,18 +130,18 @@ void FortManager::createManagers()
     }
 
     if (settings()->isServiceClient()) {
+        m_confManager = new ConfManagerRpc(settings()->confFilePath(), this, this);
         m_quotaManager = new QuotaManagerRpc(this, this);
         m_statManager = new StatManagerRpc(settings()->statFilePath(), this, this);
         m_driverManager = new DriverManagerRpc(this);
-        m_confManager = new ConfManagerRpc(settings()->confFilePath(), this, this);
         m_appInfoManager = new AppInfoManagerRpc(settings()->cacheFilePath(), this, this);
         m_logManager = new LogManagerRpc(this, this);
         m_taskManager = new TaskManagerRpc(this, this);
     } else {
-        m_quotaManager = new QuotaManager(settings(), this);
+        m_confManager = new ConfManager(settings()->confFilePath(), this, this);
+        m_quotaManager = new QuotaManager(confManager(), this);
         m_statManager = new StatManager(settings()->statFilePath(), quotaManager(), this);
         m_driverManager = new DriverManager(this);
-        m_confManager = new ConfManager(settings()->confFilePath(), this, this);
         m_appInfoManager = new AppInfoManager(settings()->cacheFilePath(), this);
         m_logManager = new LogManager(this, this);
         m_taskManager = new TaskManager(this, this);
@@ -222,16 +221,15 @@ void FortManager::setupLogger()
 
 void FortManager::updateLogger()
 {
-    FirewallConf *conf = confManager()->conf();
-    if (!conf->iniEdited())
+    if (!conf()->iniEdited())
         return;
 
     Logger *logger = Logger::instance();
 
-    logger->setDebug(conf->logDebug());
+    logger->setDebug(conf()->ini().logDebug());
 
     if (!settings()->isService()) {
-        logger->setConsole(conf->logConsole());
+        logger->setConsole(conf()->ini().logConsole());
     }
 }
 
@@ -248,6 +246,18 @@ void FortManager::setupEnvManager()
     connect(envManager(), &EnvManager::environmentUpdated, this, [&] { updateDriverConf(); });
 }
 
+void FortManager::setupConfManager()
+{
+    confManager()->initialize();
+
+    connect(confManager(), &ConfManager::confChanged, this, [&](bool onlyFlags) {
+        if (onlyFlags && !conf()->flagsEdited())
+            return;
+
+        updateDriverConf(onlyFlags);
+    });
+}
+
 void FortManager::setupQuotaManager()
 {
     if (!settings()->isService()) {
@@ -260,21 +270,6 @@ void FortManager::setupQuotaManager()
 void FortManager::setupStatManager()
 {
     statManager()->initialize();
-}
-
-void FortManager::setupConfManager()
-{
-    confManager()->initialize();
-
-    connect(confManager(), &ConfManager::confChanged, this, [&](bool onlyFlags) {
-        if (onlyFlags) {
-            const FirewallConf *conf = confManager()->conf();
-            if (!conf->flagsEdited())
-                return;
-        }
-
-        updateDriverConf(onlyFlags);
-    });
 }
 
 void FortManager::setupAppInfoManager()
@@ -317,6 +312,11 @@ void FortManager::setupTaskManager()
             confManager(), &ConfManager::updateDriverZones);
 
     taskManager()->initialize();
+}
+
+void FortManager::setupTranslationManager()
+{
+    TranslationManager::instance()->switchLanguageByName(settings()->language());
 }
 
 void FortManager::setupMainWindow()
@@ -387,7 +387,7 @@ void FortManager::setupZonesWindow()
 
 void FortManager::setupGraphWindow()
 {
-    m_graphWindow = new GraphWindow(settings());
+    m_graphWindow = new GraphWindow(confManager());
     m_graphWindow->restoreWindowState();
 
     connect(m_graphWindow, &GraphWindow::aboutToClose, this, [&] { closeGraphWindow(); });
@@ -419,7 +419,7 @@ void FortManager::show()
 {
     showTrayIcon();
 
-    if (settings()->graphWindowVisible()) {
+    if (conf()->ini().graphWindowVisible()) {
         showGraphWindow();
     }
 }
@@ -590,15 +590,6 @@ void FortManager::switchGraphWindow()
         closeGraphWindow();
 }
 
-void FortManager::updateGraphWindow()
-{
-    if (!m_graphWindow)
-        return;
-
-    m_graphWindow->updateColors();
-    m_graphWindow->updateWindowFlags();
-}
-
 void FortManager::showConnectionsWindow()
 {
     if (!(m_connWindow && m_connWindow->isVisible()) && !checkPassword())
@@ -671,8 +662,7 @@ bool FortManager::checkPassword()
 
     g_passwordDialogOpened = false;
 
-    const bool checked = ok && !password.isEmpty()
-            && StringUtil::cryptoHash(password) == settings()->passwordHash();
+    const bool checked = ok && !password.isEmpty() && settings()->checkPassword(password);
 
     settings()->setPasswordChecked(checked, checked ? unlockType : PasswordDialog::UnlockDisabled);
 
@@ -722,7 +712,7 @@ bool FortManager::updateDriverConf(bool onlyFlags)
 
     const bool res = confManager()->updateDriverConf(onlyFlags);
     if (res) {
-        updateStatManager(confManager()->conf());
+        updateStatManager(conf());
     }
 
     updateLogManager(true);

@@ -1,6 +1,7 @@
 #include "connectionscontroller.h"
 
 #include "../../conf/confmanager.h"
+#include "../../conf/firewallconf.h"
 #include "../../fortmanager.h"
 #include "../../translationmanager.h"
 
@@ -24,6 +25,11 @@ ConfManager *ConnectionsController::confManager() const
 FirewallConf *ConnectionsController::conf() const
 {
     return confManager()->conf();
+}
+
+IniOptions *ConnectionsController::ini() const
+{
+    return &conf()->ini();
 }
 
 ConnListModel *ConnectionsController::connListModel() const

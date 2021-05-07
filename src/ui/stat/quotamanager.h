@@ -3,7 +3,9 @@
 
 #include <QObject>
 
-class FortSettings;
+class ConfManager;
+class FirewallConf;
+class IniOptions;
 
 class QuotaManager : public QObject
 {
@@ -12,7 +14,7 @@ class QuotaManager : public QObject
 public:
     enum AlertType : qint8 { AlertDay = 1, AlertMonth };
 
-    explicit QuotaManager(FortSettings *settings, QObject *parent = nullptr);
+    explicit QuotaManager(ConfManager *confManager, QObject *parent = nullptr);
 
     void setQuotaDayBytes(qint64 bytes);
     void setQuotaMonthBytes(qint64 bytes);
@@ -26,19 +28,21 @@ public:
     void checkQuotaDay(qint32 trafDay);
     void checkQuotaMonth(qint32 trafMonth);
 
-    FortSettings *settings() const { return m_settings; }
+    ConfManager *confManager() const { return m_confManager; }
+    FirewallConf *conf() const;
+    IniOptions *ini() const;
 
     static QString alertTypeText(qint8 alertType);
 
 signals:
     void alert(qint8 alertType);
 
-private:
-    qint32 quotaDayAlerted() const;
-    void setQuotaDayAlerted(qint32 v);
+protected:
+    virtual qint32 quotaDayAlerted() const;
+    virtual void setQuotaDayAlerted(qint32 v);
 
-    qint32 quotaMonthAlerted() const;
-    void setQuotaMonthAlerted(qint32 v);
+    virtual qint32 quotaMonthAlerted() const;
+    virtual void setQuotaMonthAlerted(qint32 v);
 
 private:
     qint32 m_quotaDayAlerted = 0;
@@ -50,7 +54,7 @@ private:
     qint64 m_trafDayBytes = 0;
     qint64 m_trafMonthBytes = 0;
 
-    FortSettings *m_settings = nullptr;
+    ConfManager *m_confManager = nullptr;
 };
 
 #endif // QUOTAMANAGER_H

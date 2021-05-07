@@ -1,6 +1,7 @@
 #include "zonescontroller.h"
 
 #include "../../conf/confmanager.h"
+#include "../../conf/firewallconf.h"
 #include "../../fortmanager.h"
 #include "../../translationmanager.h"
 
@@ -19,6 +20,16 @@ FortSettings *ZonesController::settings() const
 ConfManager *ZonesController::confManager() const
 {
     return fortManager()->confManager();
+}
+
+FirewallConf *ZonesController::conf() const
+{
+    return confManager()->conf();
+}
+
+IniOptions *ZonesController::ini() const
+{
+    return &conf()->ini();
 }
 
 ZoneListModel *ZonesController::zoneListModel() const

@@ -60,9 +60,10 @@ public:
     ControlManager *controlManager() const { return m_controlManager; }
     RpcManager *rpcManager() const { return m_rpcManager; }
 
+    ConfManager *confManager() const { return m_confManager; }
+    FirewallConf *conf() const;
     QuotaManager *quotaManager() const { return m_quotaManager; }
     StatManager *statManager() const { return m_statManager; }
-    ConfManager *confManager() const { return m_confManager; }
     AppInfoManager *appInfoManager() const { return m_appInfoManager; }
     DriverManager *driverManager() const { return m_driverManager; }
     LogManager *logManager() const { return m_logManager; }
@@ -110,7 +111,6 @@ public slots:
     void showGraphWindow();
     void closeGraphWindow(bool wasVisible = false);
     void switchGraphWindow();
-    void updateGraphWindow();
 
     void showConnectionsWindow();
     void closeConnectionsWindow();
@@ -128,8 +128,6 @@ public slots:
             const QString &title = QString());
 
 private:
-    void setupTranslationManager();
-
     void setupThreadPool();
 
     void createManagers();
@@ -149,9 +147,9 @@ private:
     void setupEventFilter();
     void setupEnvManager();
 
+    void setupConfManager();
     void setupQuotaManager();
     void setupStatManager();
-    void setupConfManager();
     void setupAppInfoManager();
 
     void setupAppInfoCache();
@@ -159,6 +157,8 @@ private:
     void setupModels();
 
     void setupTaskManager();
+
+    void setupTranslationManager();
 
     void setupMainWindow();
     void closeMainWindow();
@@ -213,10 +213,10 @@ private:
     ControlManager *m_controlManager = nullptr;
     RpcManager *m_rpcManager = nullptr;
 
+    ConfManager *m_confManager = nullptr;
     QuotaManager *m_quotaManager = nullptr;
     StatManager *m_statManager = nullptr;
     DriverManager *m_driverManager = nullptr;
-    ConfManager *m_confManager = nullptr;
     AppInfoManager *m_appInfoManager = nullptr;
     LogManager *m_logManager = nullptr;
     TaskManager *m_taskManager = nullptr;

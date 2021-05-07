@@ -2,6 +2,7 @@
 
 #include <QAbstractButton>
 
+#include "../../../conf/firewallconf.h"
 #include "../../../fortmanager.h"
 #include "../../../util/osutil.h"
 #include "../optionscontroller.h"
@@ -24,6 +25,11 @@ FortSettings *BasePage::settings() const
 FirewallConf *BasePage::conf() const
 {
     return ctrl()->conf();
+}
+
+IniOptions *BasePage::ini() const
+{
+    return &conf()->ini();
 }
 
 DriverManager *BasePage::driverManager() const
@@ -50,8 +56,8 @@ void BasePage::setupController()
 {
     Q_ASSERT(ctrl());
 
-    connect(ctrl(), &OptionsController::editResetted, this, &BasePage::onEditResetted);
     connect(ctrl(), &OptionsController::aboutToSave, this, &BasePage::onAboutToSave);
+    connect(ctrl(), &OptionsController::editResetted, this, &BasePage::onEditResetted);
 
     connect(ctrl(), &OptionsController::afterSaveWindowState, this, &BasePage::onSaveWindowState);
     connect(ctrl(), &OptionsController::afterRestoreWindowState, this,

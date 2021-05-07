@@ -43,19 +43,19 @@ void SchedulePage::setScheduleEdited(bool v)
     }
 }
 
-void SchedulePage::onEditResetted()
-{
-    setScheduleEdited(false);
-
-    m_taskListModel->resetEdited();
-}
-
 void SchedulePage::onAboutToSave()
 {
     if (!scheduleEdited())
         return;
 
     m_taskListModel->saveChanges();
+}
+
+void SchedulePage::onEditResetted()
+{
+    setScheduleEdited(false);
+
+    m_taskListModel->resetEdited();
 }
 
 void SchedulePage::onRetranslateUi()

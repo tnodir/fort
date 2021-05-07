@@ -3,11 +3,13 @@
 
 #include <QObject>
 
-class ZoneListModel;
 class ConfManager;
+class FirewallConf;
 class FortManager;
 class FortSettings;
+class IniOptions;
 class TranslationManager;
+class ZoneListModel;
 
 class ZonesController : public QObject
 {
@@ -19,6 +21,8 @@ public:
     FortManager *fortManager() const { return m_fortManager; }
     FortSettings *settings() const;
     ConfManager *confManager() const;
+    FirewallConf *conf() const;
+    IniOptions *ini() const;
     ZoneListModel *zoneListModel() const;
     TranslationManager *translationManager() const;
 

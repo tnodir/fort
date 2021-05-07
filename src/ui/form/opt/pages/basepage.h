@@ -18,6 +18,7 @@ class DriverManager;
 class FirewallConf;
 class FortManager;
 class FortSettings;
+class IniOptions;
 class OptionsController;
 class TaskManager;
 class TranslationManager;
@@ -35,14 +36,15 @@ protected:
     FortManager *fortManager() const;
     FortSettings *settings() const;
     FirewallConf *conf() const;
+    IniOptions *ini() const;
     DriverManager *driverManager() const;
     TranslationManager *translationManager() const;
     TaskManager *taskManager() const;
     ZoneListModel *zoneListModel() const;
 
 protected slots:
-    virtual void onEditResetted() { }
     virtual void onAboutToSave() { }
+    virtual void onEditResetted() { }
 
     virtual void onSaveWindowState() { }
     virtual void onRestoreWindowState() { }

@@ -9,11 +9,15 @@
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
+#include <conf/confmanager.h>
+#include <conf/firewallconf.h>
 #include <fortsettings.h>
 #include <stat/quotamanager.h>
 #include <stat/statmanager.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
+
+#include <mocks/mockquotamanager.h>
 
 class StatTest : public Test
 {
@@ -93,11 +97,8 @@ void debugStatTraf(SqliteDb *sqliteDb)
 
 TEST_F(StatTest, dbWriteRead)
 {
-    QStringList args("test");
-    FortSettings fortSettings;
-    fortSettings.initialize(args);
+    NiceMock<MockQuotaManager> quotaManager;
 
-    QuotaManager quotaManager(&fortSettings);
     StatManager statManager(":memory:", &quotaManager);
 
     ASSERT_TRUE(statManager.initialize());

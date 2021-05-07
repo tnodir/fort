@@ -12,8 +12,8 @@
 #include <QVBoxLayout>
 
 #include "../../conf/confmanager.h"
+#include "../../conf/firewallconf.h"
 #include "../../fortmanager.h"
-#include "../../fortsettings.h"
 #include "../../model/zonelistmodel.h"
 #include "../../model/zonesourcewrapper.h"
 #include "../../task/taskinfozonedownloader.h"
@@ -47,14 +47,14 @@ FortManager *ZonesWindow::fortManager() const
     return ctrl()->fortManager();
 }
 
-FortSettings *ZonesWindow::settings() const
-{
-    return ctrl()->settings();
-}
-
 ConfManager *ZonesWindow::confManager() const
 {
     return ctrl()->confManager();
+}
+
+IniOptions *ZonesWindow::ini() const
+{
+    return ctrl()->ini();
 }
 
 TaskManager *ZonesWindow::taskManager() const
@@ -69,22 +69,24 @@ ZoneListModel *ZonesWindow::zoneListModel() const
 
 void ZonesWindow::saveWindowState()
 {
-    settings()->setZoneWindowGeometry(m_stateWatcher->geometry());
-    settings()->setZoneWindowMaximized(m_stateWatcher->maximized());
+    ini()->setZoneWindowGeometry(m_stateWatcher->geometry());
+    ini()->setZoneWindowMaximized(m_stateWatcher->maximized());
 
     auto header = m_zoneListView->horizontalHeader();
-    settings()->setZonesHeader(header->saveState());
-    settings()->setZonesHeaderVersion(ZONES_HEADER_VERSION);
+    ini()->setZonesHeader(header->saveState());
+    ini()->setZonesHeaderVersion(ZONES_HEADER_VERSION);
+
+    confManager()->saveIni();
 }
 
 void ZonesWindow::restoreWindowState()
 {
-    m_stateWatcher->restore(this, QSize(1024, 768), settings()->zoneWindowGeometry(),
-            settings()->zoneWindowMaximized());
+    m_stateWatcher->restore(
+            this, QSize(1024, 768), ini()->zoneWindowGeometry(), ini()->zoneWindowMaximized());
 
-    if (settings()->zonesHeaderVersion() == ZONES_HEADER_VERSION) {
+    if (ini()->zonesHeaderVersion() == ZONES_HEADER_VERSION) {
         auto header = m_zoneListView->horizontalHeader();
-        header->restoreState(settings()->zonesHeader());
+        header->restoreState(ini()->zonesHeader());
     }
 }
 

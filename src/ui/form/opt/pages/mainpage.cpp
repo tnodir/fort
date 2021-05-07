@@ -7,6 +7,8 @@
 #include <QUrl>
 #include <QVBoxLayout>
 
+#include <fort_version.h>
+
 #include "../../../fortsettings.h"
 #include "../../../util/iconcache.h"
 #include "../../controls/controlutil.h"
@@ -88,7 +90,7 @@ QLayout *MainPage::setupDialogButtons()
     m_btProfile =
             ControlUtil::createLinkButton(":/icons/folder-open.png", settings()->profilePath());
     m_btStat = ControlUtil::createLinkButton(":/icons/folder-open.png", settings()->statPath());
-    m_btReleases = ControlUtil::createLinkButton(":/icons/github.png", settings()->appUpdatesUrl());
+    m_btReleases = ControlUtil::createLinkButton(":/icons/github.png", APP_UPDATES_URL);
 
     connect(m_btLogs, &QAbstractButton::clicked, this, &MainPage::onLinkClicked);
     connect(m_btProfile, &QAbstractButton::clicked, this, &MainPage::onLinkClicked);

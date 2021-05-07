@@ -2,29 +2,68 @@
 
 MapWrapper::MapWrapper(const QVariant &var) : m_map(var.toMap()) { }
 
-int MapWrapper::valueInt(const QString &key) const
+MapWrapper::MapWrapper(const MapWrapper &o) : MapWrapper(o.map()) { }
+
+int MapWrapper::valueInt(const QString &key, int defaultValue) const
 {
-    return value(key).toInt();
+    return value(key, defaultValue).toInt();
 }
 
-bool MapWrapper::valueBool(const QString &key) const
+bool MapWrapper::valueBool(const QString &key, bool defaultValue) const
 {
-    return value(key).toBool();
+    return value(key, defaultValue).toBool();
 }
 
-QString MapWrapper::valueText(const QString &key) const
+uint MapWrapper::valueUInt(const QString &key, int defaultValue) const
 {
-    return value(key).toString();
+    return value(key, defaultValue).toUInt();
 }
 
-QVariant MapWrapper::value(const QString &key) const
+qreal MapWrapper::valueReal(const QString &key, qreal defaultValue) const
 {
-    return map().value(key);
+    return value(key, defaultValue).toReal();
 }
 
-void MapWrapper::setValueInt(const QString &key, int v)
+QString MapWrapper::valueText(const QString &key, const QString &defaultValue) const
 {
-    setValue(key, v);
+    return value(key, defaultValue).toString();
+}
+
+QStringList MapWrapper::valueList(const QString &key) const
+{
+    return value(key).toStringList();
+}
+
+QVariantMap MapWrapper::valueMap(const QString &key) const
+{
+    return value(key).toMap();
+}
+
+QByteArray MapWrapper::valueByteArray(const QString &key) const
+{
+    return value(key).toByteArray();
+}
+
+QColor MapWrapper::valueColor(const QString &key, const QColor &defaultValue) const
+{
+    const QString text = valueText(key);
+    if (text.isEmpty())
+        return defaultValue;
+
+    if (text.at(0).isDigit())
+        return QColor::fromRgba(text.toUInt());
+
+    return { text };
+}
+
+void MapWrapper::setColor(const QString &key, const QColor &value)
+{
+    setValue(key, value.name());
+}
+
+QVariant MapWrapper::value(const QString &key, const QVariant &defaultValue) const
+{
+    return map().value(key, defaultValue);
 }
 
 void MapWrapper::setValue(const QString &key, const QVariant &v)

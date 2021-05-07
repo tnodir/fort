@@ -35,6 +35,11 @@ FirewallConf *OptionsController::conf() const
     return confManager()->confToEdit();
 }
 
+IniOptions *OptionsController::ini() const
+{
+    return &conf()->ini();
+}
+
 TaskManager *OptionsController::taskManager() const
 {
     return fortManager()->taskManager();
@@ -67,6 +72,14 @@ void OptionsController::setExtEdited()
 {
     if (!conf()->extEdited()) {
         conf()->setExtEdited(true);
+        emit editedChanged(true);
+    }
+}
+
+void OptionsController::setGraphEdited()
+{
+    if (!conf()->graphEdited()) {
+        conf()->setGraphEdited(true);
         emit editedChanged(true);
     }
 }

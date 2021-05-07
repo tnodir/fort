@@ -45,23 +45,12 @@ const ValuesList quotaValues = { 10, 0, 100, 500, 1024, 8 * 1024, 10 * 1024, 30 
 }
 
 StatisticsPage::StatisticsPage(OptionsController *ctrl, QWidget *parent) :
-    BasePage(ctrl, parent), m_graphEdited(false), m_pageUpdating(false)
+    BasePage(ctrl, parent), m_pageUpdating(false)
 {
     setupTrafListModel();
 
     setupUi();
     updatePage();
-}
-
-void StatisticsPage::setGraphEdited(bool v)
-{
-    if (m_graphEdited != v) {
-        m_graphEdited = v;
-
-        if (graphEdited()) {
-            ctrl()->setOthersEdited();
-        }
-    }
 }
 
 AppStatModel *StatisticsPage::appStatModel() const
@@ -74,44 +63,34 @@ AppInfoCache *StatisticsPage::appInfoCache() const
     return appStatModel()->appInfoCache();
 }
 
-void StatisticsPage::onEditResetted()
-{
-    setGraphEdited(false);
-}
-
 void StatisticsPage::onAboutToSave()
 {
-    if (!graphEdited())
-        return;
+    ini()->setGraphWindowAlwaysOnTop(m_cbGraphAlwaysOnTop->isChecked());
+    ini()->setGraphWindowFrameless(m_cbGraphFrameless->isChecked());
+    ini()->setGraphWindowClickThrough(m_cbGraphClickThrough->isChecked());
+    ini()->setGraphWindowHideOnHover(m_cbGraphHideOnHover->isChecked());
 
-    settings()->setGraphWindowAlwaysOnTop(m_cbGraphAlwaysOnTop->isChecked());
-    settings()->setGraphWindowFrameless(m_cbGraphFrameless->isChecked());
-    settings()->setGraphWindowClickThrough(m_cbGraphClickThrough->isChecked());
-    settings()->setGraphWindowHideOnHover(m_cbGraphHideOnHover->isChecked());
+    ini()->setGraphWindowOpacity(m_graphOpacity->spinBox()->value());
+    ini()->setGraphWindowHoverOpacity(m_graphHoverOpacity->spinBox()->value());
+    ini()->setGraphWindowMaxSeconds(m_graphMaxSeconds->spinBox()->value());
 
-    settings()->setGraphWindowOpacity(m_graphOpacity->spinBox()->value());
-    settings()->setGraphWindowHoverOpacity(m_graphHoverOpacity->spinBox()->value());
-    settings()->setGraphWindowMaxSeconds(m_graphMaxSeconds->spinBox()->value());
-
-    settings()->setGraphWindowColor(m_graphColor->color());
-    settings()->setGraphWindowColorIn(m_graphColorIn->color());
-    settings()->setGraphWindowColorOut(m_graphColorOut->color());
-    settings()->setGraphWindowAxisColor(m_graphAxisColor->color());
-    settings()->setGraphWindowTickLabelColor(m_graphTickLabelColor->color());
-    settings()->setGraphWindowLabelColor(m_graphLabelColor->color());
-    settings()->setGraphWindowGridColor(m_graphGridColor->color());
-
-    fortManager()->updateGraphWindow();
+    ini()->setGraphWindowColor(m_graphColor->color());
+    ini()->setGraphWindowColorIn(m_graphColorIn->color());
+    ini()->setGraphWindowColorOut(m_graphColorOut->color());
+    ini()->setGraphWindowAxisColor(m_graphAxisColor->color());
+    ini()->setGraphWindowTickLabelColor(m_graphTickLabelColor->color());
+    ini()->setGraphWindowLabelColor(m_graphLabelColor->color());
+    ini()->setGraphWindowGridColor(m_graphGridColor->color());
 }
 
 void StatisticsPage::onSaveWindowState()
 {
-    settings()->setOptWindowStatSplit(m_splitter->saveState());
+    ini()->setOptWindowStatSplit(m_splitter->saveState());
 }
 
 void StatisticsPage::onRestoreWindowState()
 {
-    m_splitter->restoreState(settings()->optWindowStatSplit());
+    m_splitter->restoreState(ini()->optWindowStatSplit());
 }
 
 void StatisticsPage::onRetranslateUi()
@@ -358,6 +337,7 @@ void StatisticsPage::setupTrafUnits()
 void StatisticsPage::setupGraphOptionsMenu()
 {
     m_cbGraphAlwaysOnTop = new QCheckBox();
+    // TODO: ini()->setGraphWindowAlwaysOnTop(m_cbGraphAlwaysOnTop->isChecked());
     m_cbGraphFrameless = new QCheckBox();
     m_cbGraphClickThrough = new QCheckBox();
     m_cbGraphHideOnHover = new QCheckBox();
@@ -376,7 +356,7 @@ void StatisticsPage::setupGraphOptionsMenu()
 
     const auto onChanged = [&] {
         if (!m_pageUpdating) {
-            setGraphEdited(true);
+            ctrl()->setGraphEdited();
         }
     };
 
@@ -768,22 +748,22 @@ void StatisticsPage::updatePage()
     m_lscAllowedIpKeepCount->spinBox()->setValue(conf()->allowedIpKeepCount());
     m_lscBlockedIpKeepCount->spinBox()->setValue(conf()->blockedIpKeepCount());
 
-    m_cbGraphAlwaysOnTop->setChecked(settings()->graphWindowAlwaysOnTop());
-    m_cbGraphFrameless->setChecked(settings()->graphWindowFrameless());
-    m_cbGraphClickThrough->setChecked(settings()->graphWindowClickThrough());
-    m_cbGraphHideOnHover->setChecked(settings()->graphWindowHideOnHover());
+    m_cbGraphAlwaysOnTop->setChecked(ini()->graphWindowAlwaysOnTop());
+    m_cbGraphFrameless->setChecked(ini()->graphWindowFrameless());
+    m_cbGraphClickThrough->setChecked(ini()->graphWindowClickThrough());
+    m_cbGraphHideOnHover->setChecked(ini()->graphWindowHideOnHover());
 
-    m_graphOpacity->spinBox()->setValue(settings()->graphWindowOpacity());
-    m_graphHoverOpacity->spinBox()->setValue(settings()->graphWindowHoverOpacity());
-    m_graphMaxSeconds->spinBox()->setValue(settings()->graphWindowMaxSeconds());
+    m_graphOpacity->spinBox()->setValue(ini()->graphWindowOpacity());
+    m_graphHoverOpacity->spinBox()->setValue(ini()->graphWindowHoverOpacity());
+    m_graphMaxSeconds->spinBox()->setValue(ini()->graphWindowMaxSeconds());
 
-    m_graphColor->setColor(settings()->graphWindowColor());
-    m_graphColorIn->setColor(settings()->graphWindowColorIn());
-    m_graphColorOut->setColor(settings()->graphWindowColorOut());
-    m_graphAxisColor->setColor(settings()->graphWindowAxisColor());
-    m_graphTickLabelColor->setColor(settings()->graphWindowTickLabelColor());
-    m_graphLabelColor->setColor(settings()->graphWindowLabelColor());
-    m_graphGridColor->setColor(settings()->graphWindowGridColor());
+    m_graphColor->setColor(ini()->graphWindowColor());
+    m_graphColorIn->setColor(ini()->graphWindowColorIn());
+    m_graphColorOut->setColor(ini()->graphWindowColorOut());
+    m_graphAxisColor->setColor(ini()->graphWindowAxisColor());
+    m_graphTickLabelColor->setColor(ini()->graphWindowTickLabelColor());
+    m_graphLabelColor->setColor(ini()->graphWindowLabelColor());
+    m_graphGridColor->setColor(ini()->graphWindowGridColor());
 
     updateTrafUnit();
 

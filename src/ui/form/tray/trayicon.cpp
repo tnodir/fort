@@ -78,6 +78,11 @@ FirewallConf *TrayIcon::conf() const
     return ctrl()->conf();
 }
 
+IniOptions *TrayIcon::ini() const
+{
+    return ctrl()->ini();
+}
+
 HotKeyManager *TrayIcon::hotKeyManager() const
 {
     return ctrl()->hotKeyManager();
@@ -143,7 +148,8 @@ void TrayIcon::setupController()
     connect(fortManager(), &FortManager::graphWindowChanged, m_graphWindowAction,
             &QAction::setChecked);
 
-    connect(settings(), &FortSettings::passwordStateChanged, this, &TrayIcon::updateTrayMenuFlags);
+    connect(settings(), &FortSettings::passwordCheckedChanged, this,
+            &TrayIcon::updateTrayMenuFlags);
 
     connect(ctrl(), &TrayController::retranslateUi, this, &TrayIcon::retranslateUi);
 
@@ -184,38 +190,38 @@ void TrayIcon::setupTrayMenu()
 
     m_programsAction = addAction(menu, IconCache::icon(":/icons/window.png"), QString(),
             fortManager(), SLOT(showProgramsWindow()));
-    addHotKey(m_programsAction, settings()->hotKeyPrograms());
+    addHotKey(m_programsAction, ini()->hotKeyPrograms());
 
     m_optionsAction = addAction(menu, IconCache::icon(":/icons/cog.png"), QString(), fortManager(),
             SLOT(showOptionsWindow()));
-    addHotKey(m_optionsAction, settings()->hotKeyOptions());
+    addHotKey(m_optionsAction, ini()->hotKeyOptions());
 
     m_zonesAction = addAction(menu, IconCache::icon(":/icons/map-map-marker.png"), QString(),
             fortManager(), SLOT(showZonesWindow()));
-    addHotKey(m_zonesAction, settings()->hotKeyZones());
+    addHotKey(m_zonesAction, ini()->hotKeyZones());
 
     m_graphWindowAction = addAction(menu, IconCache::icon(":/icons/line-graph.png"), QString(),
             fortManager(), SLOT(switchGraphWindow()), true, !!fortManager()->graphWindow());
-    addHotKey(m_graphWindowAction, settings()->hotKeyGraph());
+    addHotKey(m_graphWindowAction, ini()->hotKeyGraph());
 
     m_connectionsAction = addAction(menu, IconCache::icon(":/icons/connect.png"), QString(),
             fortManager(), SLOT(showConnectionsWindow()));
-    addHotKey(m_connectionsAction, settings()->hotKeyConnections());
+    addHotKey(m_connectionsAction, ini()->hotKeyConnections());
 
     menu->addSeparator();
 
     m_filterEnabledAction = addAction(menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
-    addHotKey(m_filterEnabledAction, settings()->hotKeyFilter());
+    addHotKey(m_filterEnabledAction, ini()->hotKeyFilter());
 
     m_stopTrafficAction = addAction(menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
-    addHotKey(m_stopTrafficAction, settings()->hotKeyStopTraffic());
+    addHotKey(m_stopTrafficAction, ini()->hotKeyStopTraffic());
 
     m_stopInetTrafficAction =
             addAction(menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
-    addHotKey(m_stopInetTrafficAction, settings()->hotKeyStopInetTraffic());
+    addHotKey(m_stopInetTrafficAction, ini()->hotKeyStopInetTraffic());
 
     m_allowAllNewAction = addAction(menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
-    addHotKey(m_allowAllNewAction, settings()->hotKeyAllowAllNew());
+    addHotKey(m_allowAllNewAction, ini()->hotKeyAllowAllNew());
 
     menu->addSeparator();
 
@@ -224,7 +230,7 @@ void TrayIcon::setupTrayMenu()
 
         if (i < 12) {
             const QString shortcutText =
-                    settings()->hotKeyAppGroupModifiers() + "+F" + QString::number(i + 1);
+                    ini()->hotKeyAppGroupModifiers() + "+F" + QString::number(i + 1);
 
             addHotKey(a, shortcutText);
         }
@@ -234,7 +240,7 @@ void TrayIcon::setupTrayMenu()
 
     menu->addSeparator();
     m_quitAction = addAction(menu, QIcon(), tr("Quit"), fortManager(), SLOT(quitByCheckPassword()));
-    addHotKey(m_quitAction, settings()->hotKeyQuit());
+    addHotKey(m_quitAction, ini()->hotKeyQuit());
 
     this->setContextMenu(menu);
 }
@@ -287,7 +293,7 @@ void TrayIcon::addHotKey(QAction *action, const QString &shortcutText)
 
 void TrayIcon::updateHotKeys()
 {
-    hotKeyManager()->setEnabled(conf()->hotKeyEnabled());
+    hotKeyManager()->setEnabled(conf()->ini().hotKeyEnabled());
 }
 
 void TrayIcon::removeHotKeys()

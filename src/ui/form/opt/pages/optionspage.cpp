@@ -29,16 +29,16 @@ OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) : BasePage(ct
     setupUi();
 }
 
+void OptionsPage::onAboutToSave()
+{
+    if (!settings()->hasPassword() && ini()->hasPassword() && ini()->password().isEmpty()) {
+        m_cbPassword->setChecked(false);
+    }
+}
+
 void OptionsPage::onEditResetted()
 {
     retranslateEditPassword();
-}
-
-void OptionsPage::onAboutToSave()
-{
-    if (!settings()->hasPassword() && conf()->hasPassword() && conf()->password().isEmpty()) {
-        m_cbPassword->setChecked(false);
-    }
 }
 
 void OptionsPage::onRetranslateUi()
@@ -251,8 +251,8 @@ void OptionsPage::setupGlobalBox()
     });
     m_cbExplorerMenu->setEnabled(settings()->hasService() || OsUtil::isUserAdmin());
 
-    m_cbHotKeys = ControlUtil::createCheckBox(conf()->hotKeyEnabled(), [&](bool checked) {
-        conf()->setHotKeyEnabled(checked);
+    m_cbHotKeys = ControlUtil::createCheckBox(ini()->hotKeyEnabled(), [&](bool checked) {
+        ini()->setHotKeyEnabled(checked);
         ctrl()->setIniEdited();
     });
 
@@ -279,14 +279,14 @@ QLayout *OptionsPage::setupPasswordLayout()
     auto layout = new QHBoxLayout();
     layout->setSpacing(6);
 
-    m_cbPassword = ControlUtil::createCheckBox(conf()->hasPassword(), [&](bool checked) {
+    m_cbPassword = ControlUtil::createCheckBox(ini()->hasPassword(), [&](bool checked) {
         if (checked) {
             m_editPassword->setFocus();
         } else {
             m_editPassword->clear();
         }
 
-        conf()->setHasPassword(checked);
+        ini()->setHasPassword(checked);
         ctrl()->setIniEdited();
     });
 
@@ -303,7 +303,7 @@ void OptionsPage::setupEditPassword()
     m_editPassword = ControlUtil::createLineEdit(QString(), [&](const QString &text) {
         m_cbPassword->setChecked(!text.isEmpty());
 
-        conf()->setPassword(text);
+        ini()->setPassword(text);
         ctrl()->setIniEdited();
     });
     m_editPassword->setClearButtonEnabled(true);
@@ -326,7 +326,7 @@ void OptionsPage::setupPasswordLock()
 
     refreshPasswordLock();
 
-    connect(settings(), &FortSettings::passwordStateChanged, this, refreshPasswordLock);
+    connect(settings(), &FortSettings::passwordCheckedChanged, this, refreshPasswordLock);
 }
 
 QLayout *OptionsPage::setupLangLayout()
@@ -343,7 +343,8 @@ void OptionsPage::setupComboLanguage()
     m_comboLanguage =
             ControlUtil::createComboBox(translationManager()->naturalLabels(), [&](int index) {
                 if (translationManager()->switchLanguage(index)) {
-                    settings()->setLanguage(translationManager()->localeName());
+                    ini()->setLanguage(translationManager()->localeName());
+                    ctrl()->setIniEdited();
                 }
             });
     m_comboLanguage->setFixedWidth(200);
@@ -359,12 +360,12 @@ void OptionsPage::setupComboLanguage()
 
 void OptionsPage::setupLogsBox()
 {
-    m_cbLogDebug = ControlUtil::createCheckBox(conf()->logDebug(), [&](bool checked) {
-        conf()->setLogDebug(checked);
+    m_cbLogDebug = ControlUtil::createCheckBox(ini()->logDebug(), [&](bool checked) {
+        ini()->setLogDebug(checked);
         ctrl()->setIniEdited();
     });
-    m_cbLogConsole = ControlUtil::createCheckBox(conf()->logConsole(), [&](bool checked) {
-        conf()->setLogConsole(checked);
+    m_cbLogConsole = ControlUtil::createCheckBox(ini()->logConsole(), [&](bool checked) {
+        ini()->setLogConsole(checked);
         ctrl()->setIniEdited();
     });
 

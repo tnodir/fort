@@ -58,12 +58,12 @@ void ApplicationsPage::setAppGroupIndex(int v)
 
 void ApplicationsPage::onSaveWindowState()
 {
-    settings()->setOptWindowAppsSplit(m_splitter->saveState());
+    ini()->setOptWindowAppsSplit(m_splitter->saveState());
 }
 
 void ApplicationsPage::onRestoreWindowState()
 {
-    m_splitter->restoreState(settings()->optWindowAppsSplit());
+    m_splitter->restoreState(ini()->optWindowAppsSplit());
 }
 
 void ApplicationsPage::onRetranslateUi()
