@@ -452,8 +452,6 @@ void ConfManager::setupDefault(FirewallConf &conf) const
 
 bool ConfManager::loadConf(FirewallConf &conf)
 {
-    conf.prepareToSave();
-
     if (conf.optEdited()) {
         bool isNewConf = false;
 
@@ -505,6 +503,8 @@ bool ConfManager::saveConf(FirewallConf &conf)
         }
     }
 
+    conf.afterSaved();
+
     return true;
 }
 
@@ -545,7 +545,7 @@ bool ConfManager::save(FirewallConf *newConf)
 
 bool ConfManager::saveFlags()
 {
-    conf()->setFlagsEdited(true);
+    conf()->setFlagsEdited();
     return save(conf());
 }
 

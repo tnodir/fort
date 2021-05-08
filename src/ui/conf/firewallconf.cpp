@@ -7,12 +7,7 @@
 
 FirewallConf::FirewallConf(QObject *parent) :
     QObject(parent),
-    m_othersEdited(false),
-    m_extEdited(false),
-    m_graphEdited(false),
-    m_iniEdited(false),
-    m_flagsEdited(false),
-    m_optEdited(false),
+    m_editedFlags(0),
     m_startupMode(0),
     m_explorerIntegrated(false),
     m_provBoot(false),
@@ -33,48 +28,9 @@ FirewallConf::FirewallConf(QObject *parent) :
     setupAddressGroups();
 }
 
-void FirewallConf::setOthersEdited(bool v)
-{
-    m_othersEdited = v;
-}
-
-void FirewallConf::setExtEdited(bool v)
-{
-    m_extEdited = v;
-}
-
-void FirewallConf::setGraphEdited(bool v)
-{
-    m_graphEdited = v;
-}
-
-void FirewallConf::setIniEdited(bool v)
-{
-    m_iniEdited = v;
-}
-
-void FirewallConf::setFlagsEdited(bool v)
-{
-    m_flagsEdited = v;
-}
-
-void FirewallConf::setOptEdited(bool v)
-{
-    m_optEdited = v;
-}
-
-bool FirewallConf::anyEdited() const
-{
-    return flagsEdited() || iniEdited() || optEdited() || extEdited() || othersEdited();
-}
-
 void FirewallConf::resetEdited(bool v)
 {
-    setOthersEdited(v);
-    setExtEdited(v);
-    setIniEdited(v);
-    setFlagsEdited(v);
-    setOptEdited(v);
+    m_editedFlags = v ? AllEdited : NoneEdited;
 }
 
 void FirewallConf::setStartupMode(qint8 v)
@@ -344,14 +300,14 @@ void FirewallConf::prepareToSave()
     }
 }
 
+void FirewallConf::afterSaved()
+{
+    ini().clear();
+}
+
 void FirewallConf::copyFlags(const FirewallConf &o)
 {
-    m_othersEdited = o.othersEdited();
-    m_extEdited = o.extEdited();
-    m_graphEdited = o.graphEdited();
-    m_iniEdited = o.iniEdited();
-    m_flagsEdited = o.flagsEdited();
-    m_optEdited = o.optEdited();
+    m_editedFlags = o.editedFlags();
 
     m_startupMode = o.startupMode();
     m_explorerIntegrated = o.explorerIntegrated();
@@ -414,12 +370,6 @@ QVariant FirewallConf::flagsToVariant() const
 {
     QVariantMap map;
 
-    map["othersEdited"] = othersEdited();
-    map["extEdited"] = extEdited();
-    map["iniEdited"] = iniEdited();
-    map["flagsEdited"] = flagsEdited();
-    map["optEdited"] = optEdited();
-
     map["startupMode"] = startupMode();
     map["explorerIntegrated"] = explorerIntegrated();
 
@@ -464,13 +414,6 @@ QVariant FirewallConf::flagsToVariant() const
 void FirewallConf::flagsFromVariant(const QVariant &v)
 {
     const QVariantMap map = v.toMap();
-
-    m_othersEdited = map["othersEdited"].toBool();
-    m_extEdited = map["extEdited"].toBool();
-    m_graphEdited = map["graphEdited"].toBool();
-    m_iniEdited = map["iniEdited"].toBool();
-    m_flagsEdited = map["flagsEdited"].toBool();
-    m_optEdited = map["optEdited"].toBool();
 
     m_startupMode = map["startupMode"].toInt();
     m_explorerIntegrated = map["explorerIntegrated"].toBool();
@@ -553,12 +496,22 @@ QVariant FirewallConf::toVariant(bool onlyFlags) const
 {
     QVariantMap map;
 
+    if (onlyFlags) {
+        map["editedFlags"] = m_editedFlags;
+    }
+
     if (!onlyFlags || optEdited()) {
         map["addressGroups"] = addressesToVariant();
         map["appGroups"] = appGroupsToVariant();
     }
 
-    map["flags"] = flagsToVariant();
+    if (!onlyFlags || flagsEdited()) {
+        map["flags"] = flagsToVariant();
+    }
+
+    if (!onlyFlags || iniEdited()) {
+        map["ini"] = ini().map();
+    }
 
     return map;
 }
@@ -567,12 +520,23 @@ void FirewallConf::fromVariant(const QVariant &v, bool onlyFlags)
 {
     const QVariantMap map = v.toMap();
 
-    flagsFromVariant(map["flags"]); // set *edited flags
+    if (onlyFlags) {
+        m_editedFlags = map["editedFlags"].toUInt();
+    } else {
+        resetEdited(true);
+    }
 
-    if (!onlyFlags || optEdited()) {
+    if (optEdited()) {
         addressesFromVariant(map["addressGroups"]);
         appGroupsFromVariant(map["appGroups"]);
     }
 
-    applyAppGroupBits();
+    if (flagsEdited()) {
+        flagsFromVariant(map["flags"]);
+        applyAppGroupBits();
+    }
+
+    if (iniEdited()) {
+        ini().setMap(map["ini"].toMap());
+    }
 }

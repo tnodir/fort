@@ -11,8 +11,10 @@ public:
     explicit MapWrapper(const QVariant &var);
     explicit MapWrapper(const MapWrapper &o);
 
-    QVariantMap &map() { return m_map; }
     const QVariantMap &map() const { return m_map; }
+    void setMap(const QVariantMap &map) { m_map = map; }
+
+    void clear();
 
 protected:
     int valueInt(const QString &key, int defaultValue = 0) const;

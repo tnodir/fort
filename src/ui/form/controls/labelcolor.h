@@ -23,7 +23,7 @@ public slots:
     void selectColor();
 
 signals:
-    void colorChanged();
+    void colorChanged(const QColor &color);
 
 private:
     void setupUi();

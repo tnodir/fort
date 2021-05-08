@@ -32,29 +32,13 @@ SchedulePage::SchedulePage(OptionsController *ctrl, QWidget *parent) :
     setupUi();
 }
 
-void SchedulePage::setScheduleEdited(bool v)
-{
-    if (m_scheduleEdited != v) {
-        m_scheduleEdited = v;
-
-        if (scheduleEdited()) {
-            ctrl()->setOthersEdited();
-        }
-    }
-}
-
 void SchedulePage::onAboutToSave()
 {
-    if (!scheduleEdited())
-        return;
-
-    m_taskListModel->saveChanges();
+    // TODO: m_taskListModel->saveChanges();
 }
 
 void SchedulePage::onEditResetted()
 {
-    setScheduleEdited(false);
-
     m_taskListModel->resetEdited();
 }
 
@@ -79,7 +63,7 @@ void SchedulePage::retranslateTaskDetails()
 
 void SchedulePage::setupTaskListModel()
 {
-    connect(m_taskListModel, &TaskListModel::dataEdited, this, [&] { setScheduleEdited(true); });
+    connect(m_taskListModel, &TaskListModel::dataEdited, ctrl(), &OptionsController::setIniEdited);
 }
 
 void SchedulePage::setupUi()

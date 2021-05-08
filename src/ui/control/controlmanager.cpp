@@ -204,8 +204,10 @@ bool ControlManager::processCommandConf(const QVariantList &args, QString &error
         }
     }
 
-    conf->setFlagsEdited(true);
-    conf->setOptEdited(!onlyFlags);
+    conf->setFlagsEdited();
+    if (!onlyFlags) {
+        conf->setOptEdited();
+    }
 
     if (!confManager()->save(conf))
         return false;

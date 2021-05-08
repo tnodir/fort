@@ -21,27 +21,32 @@ class FirewallConf : public QObject
     Q_OBJECT
 
 public:
+    enum EditedFlag {
+        NoneEdited = 0,
+        OptEdited = 0x1,
+        FlagsEdited = 0x2,
+        IniEdited = 0x4,
+        ExtEdited = 0x8,
+        AllEdited = (OptEdited | FlagsEdited | IniEdited | ExtEdited)
+    };
+
     explicit FirewallConf(QObject *parent = nullptr);
 
-    bool othersEdited() const { return m_othersEdited; }
-    void setOthersEdited(bool v);
+    uint editedFlags() const { return m_editedFlags; }
 
-    bool extEdited() const { return m_extEdited; }
-    void setExtEdited(bool v);
+    bool optEdited() const { return (m_editedFlags & OptEdited) != 0; }
+    void setOptEdited() { m_editedFlags |= OptEdited; }
 
-    bool graphEdited() const { return m_graphEdited; }
-    void setGraphEdited(bool v);
+    bool flagsEdited() const { return (m_editedFlags & FlagsEdited) != 0; }
+    void setFlagsEdited() { m_editedFlags |= FlagsEdited; }
 
-    bool iniEdited() const { return m_iniEdited; }
-    void setIniEdited(bool v);
+    bool iniEdited() const { return (m_editedFlags & IniEdited) != 0; }
+    void setIniEdited() { m_editedFlags |= IniEdited; }
 
-    bool flagsEdited() const { return m_flagsEdited; }
-    void setFlagsEdited(bool v);
+    bool extEdited() const { return (m_editedFlags & ExtEdited) != 0; }
+    void setExtEdited() { m_editedFlags |= ExtEdited; }
 
-    bool optEdited() const { return m_optEdited; }
-    void setOptEdited(bool v);
-
-    bool anyEdited() const;
+    bool anyEdited() const { return m_editedFlags != NoneEdited; }
     void resetEdited(bool v = false);
 
     qint8 startupMode() const { return m_startupMode; }
@@ -165,6 +170,7 @@ public slots:
     void setupDefaultAddressGroups();
 
     void prepareToSave();
+    void afterSaved();
 
 private:
     void setupAddressGroups();
@@ -182,12 +188,7 @@ private:
     void appGroupsFromVariant(const QVariant &v);
 
 private:
-    uint m_othersEdited : 1;
-    uint m_extEdited : 1;
-    uint m_graphEdited : 1;
-    uint m_iniEdited : 1;
-    uint m_flagsEdited : 1;
-    uint m_optEdited : 1;
+    uint m_editedFlags : 4;
 
     uint m_startupMode : 3;
     uint m_explorerIntegrated : 1;

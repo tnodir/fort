@@ -4,6 +4,11 @@ MapWrapper::MapWrapper(const QVariant &var) : m_map(var.toMap()) { }
 
 MapWrapper::MapWrapper(const MapWrapper &o) : MapWrapper(o.map()) { }
 
+void MapWrapper::clear()
+{
+    m_map.clear();
+}
+
 int MapWrapper::valueInt(const QString &key, int defaultValue) const
 {
     return value(key, defaultValue).toInt();

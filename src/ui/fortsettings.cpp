@@ -304,6 +304,8 @@ void FortSettings::readConfIni(FirewallConf &conf) const
 
 void FortSettings::writeConfIni(const FirewallConf &conf)
 {
+    bool changed = false;
+
     if (conf.iniEdited()) {
         conf.ini().save(this);
 
@@ -322,6 +324,8 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
         setIniValue("allowedIpKeepCount", conf.allowedIpKeepCount());
         setIniValue("blockedIpKeepCount", conf.blockedIpKeepCount());
         m_ini->endGroup();
+
+        changed = true;
     }
 
     if (conf.flagsEdited()) {
@@ -347,16 +351,14 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
         setIniValue("activePeriodFrom", conf.activePeriodFrom());
         setIniValue("activePeriodTo", conf.activePeriodTo());
         m_ini->endGroup();
+
+        changed = true;
     }
 
-    if (conf.graphEdited()) {
-        m_ini->beginGroup("graphWindow");
-        m_ini->endGroup();
+    if (changed) {
+        migrateIniOnWrite();
+        iniSync();
     }
-
-    migrateIniOnWrite();
-
-    iniSync();
 }
 
 void FortSettings::migrateIniOnStartup()

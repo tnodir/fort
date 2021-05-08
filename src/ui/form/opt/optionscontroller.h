@@ -31,15 +31,6 @@ public:
     TranslationManager *translationManager() const;
     ZoneListModel *zoneListModel() const;
 
-    void setOthersEdited();
-    void setExtEdited();
-    void setGraphEdited();
-    void setIniEdited();
-    void setFlagsEdited();
-    void setOptEdited();
-
-    void resetEdited();
-
     void initialize();
 
 signals:
@@ -54,6 +45,13 @@ signals:
     void retranslateUi();
 
 public slots:
+    void setExtEdited();
+    void setIniEdited();
+    void setFlagsEdited();
+    void setOptEdited();
+
+    void resetEdited();
+
     void closeWindow();
 
     void saveChanges() { save(true); }

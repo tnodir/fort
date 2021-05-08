@@ -60,26 +60,10 @@ ZoneListModel *OptionsController::zoneListModel() const
     return fortManager()->zoneListModel();
 }
 
-void OptionsController::setOthersEdited()
-{
-    if (!conf()->othersEdited()) {
-        conf()->setOthersEdited(true);
-        emit editedChanged(true);
-    }
-}
-
 void OptionsController::setExtEdited()
 {
     if (!conf()->extEdited()) {
-        conf()->setExtEdited(true);
-        emit editedChanged(true);
-    }
-}
-
-void OptionsController::setGraphEdited()
-{
-    if (!conf()->graphEdited()) {
-        conf()->setGraphEdited(true);
+        conf()->setExtEdited();
         emit editedChanged(true);
     }
 }
@@ -87,7 +71,7 @@ void OptionsController::setGraphEdited()
 void OptionsController::setIniEdited()
 {
     if (!conf()->iniEdited()) {
-        conf()->setIniEdited(true);
+        conf()->setIniEdited();
         emit editedChanged(true);
     }
 }
@@ -95,7 +79,7 @@ void OptionsController::setIniEdited()
 void OptionsController::setFlagsEdited()
 {
     if (!conf()->flagsEdited()) {
-        conf()->setFlagsEdited(true);
+        conf()->setFlagsEdited();
         emit editedChanged(true);
     }
 }
@@ -103,7 +87,7 @@ void OptionsController::setFlagsEdited()
 void OptionsController::setOptEdited()
 {
     if (!conf()->optEdited()) {
-        conf()->setOptEdited(true);
+        conf()->setOptEdited();
         emit editedChanged(true);
     }
 }

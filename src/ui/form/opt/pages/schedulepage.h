@@ -17,9 +17,6 @@ class SchedulePage : public BasePage
 public:
     explicit SchedulePage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
-    bool scheduleEdited() const { return m_scheduleEdited; }
-    void setScheduleEdited(bool v);
-
     TaskListModel *taskListModel() const { return m_taskListModel; }
 
 protected slots:
@@ -46,8 +43,6 @@ private:
     void setCurrentTaskInfo(TaskInfo *v) { m_taskInfo = v; }
 
 private:
-    bool m_scheduleEdited = false;
-
     TaskListModel *m_taskListModel = nullptr;
     TaskInfo *m_taskInfo = nullptr;
 

@@ -1,7 +1,7 @@
 #ifndef TASKLISTMODEL_H
 #define TASKLISTMODEL_H
 
-#include <QList>
+#include <QVector>
 
 #include "../util/model/tableitemmodel.h"
 
@@ -10,8 +10,11 @@ class TaskManager;
 
 struct TaskRow
 {
-    bool enabled = false;
-    int intervalHours = 0;
+    explicit TaskRow() : edited(false), enabled(false), intervalHours(0) { }
+
+    quint16 edited : 1;
+    quint16 enabled : 1;
+    quint16 intervalHours;
 };
 
 class TaskListModel : public TableItemModel
@@ -23,7 +26,9 @@ public:
     Q_ENUM(Roles)
 
     explicit TaskListModel(TaskManager *taskManager, QObject *parent = nullptr);
-    ~TaskListModel() override;
+
+    bool edited() const { return m_edited; }
+    void setEdited(bool v);
 
     TaskManager *taskManager() const { return m_taskManager; }
 
@@ -44,16 +49,15 @@ signals:
     void dataEdited();
 
 public slots:
-    void resetEdited();
-
     void saveChanges();
+
+    void resetEdited();
 
 private:
     QVariant dataDisplay(const QModelIndex &index) const;
     QVariant dataCheckState(const QModelIndex &index) const;
 
     void setupTaskRows();
-    void clearTaskRows();
 
     bool taskEnabled(int index) const;
     void setTaskEnabled(const QModelIndex &index, bool v);
@@ -61,16 +65,17 @@ private:
     int taskIntervalHours(int index) const;
     void setTaskIntervalHours(const QModelIndex &index, int v);
 
-    TaskRow *addTaskRow(int row);
-
-    TaskRow *taskRowAt(int row) const;
+    TaskRow &taskRowAt(int row) { return m_taskRows[row]; }
+    const TaskRow &taskRowAt(int row) const { return m_taskRows[row]; }
 
     static QString formatDateTime(const QDateTime &dateTime);
 
 private:
+    bool m_edited = false;
+
     TaskManager *m_taskManager = nullptr;
 
-    mutable QList<TaskRow *> m_taskRows;
+    QVector<TaskRow> m_taskRows;
 };
 
 #endif // TASKLISTMODEL_H

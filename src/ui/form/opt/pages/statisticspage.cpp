@@ -45,7 +45,7 @@ const ValuesList quotaValues = { 10, 0, 100, 500, 1024, 8 * 1024, 10 * 1024, 30 
 }
 
 StatisticsPage::StatisticsPage(OptionsController *ctrl, QWidget *parent) :
-    BasePage(ctrl, parent), m_pageUpdating(false)
+    BasePage(ctrl, parent), m_isPageUpdating(false)
 {
     setupTrafListModel();
 
@@ -63,24 +63,11 @@ AppInfoCache *StatisticsPage::appInfoCache() const
     return appStatModel()->appInfoCache();
 }
 
-void StatisticsPage::onAboutToSave()
+void StatisticsPage::setIniEdited()
 {
-    ini()->setGraphWindowAlwaysOnTop(m_cbGraphAlwaysOnTop->isChecked());
-    ini()->setGraphWindowFrameless(m_cbGraphFrameless->isChecked());
-    ini()->setGraphWindowClickThrough(m_cbGraphClickThrough->isChecked());
-    ini()->setGraphWindowHideOnHover(m_cbGraphHideOnHover->isChecked());
-
-    ini()->setGraphWindowOpacity(m_graphOpacity->spinBox()->value());
-    ini()->setGraphWindowHoverOpacity(m_graphHoverOpacity->spinBox()->value());
-    ini()->setGraphWindowMaxSeconds(m_graphMaxSeconds->spinBox()->value());
-
-    ini()->setGraphWindowColor(m_graphColor->color());
-    ini()->setGraphWindowColorIn(m_graphColorIn->color());
-    ini()->setGraphWindowColorOut(m_graphColorOut->color());
-    ini()->setGraphWindowAxisColor(m_graphAxisColor->color());
-    ini()->setGraphWindowTickLabelColor(m_graphTickLabelColor->color());
-    ini()->setGraphWindowLabelColor(m_graphLabelColor->color());
-    ini()->setGraphWindowGridColor(m_graphGridColor->color());
+    if (!m_isPageUpdating) {
+        ctrl()->setIniEdited();
+    }
 }
 
 void StatisticsPage::onSaveWindowState()
@@ -330,17 +317,28 @@ void StatisticsPage::setupTrafUnits()
 
         conf()->setTrafUnit(index);
 
-        ctrl()->setIniEdited();
+        setIniEdited();
     });
 }
 
 void StatisticsPage::setupGraphOptionsMenu()
 {
-    m_cbGraphAlwaysOnTop = new QCheckBox();
-    // TODO: ini()->setGraphWindowAlwaysOnTop(m_cbGraphAlwaysOnTop->isChecked());
-    m_cbGraphFrameless = new QCheckBox();
-    m_cbGraphClickThrough = new QCheckBox();
-    m_cbGraphHideOnHover = new QCheckBox();
+    m_cbGraphAlwaysOnTop = ControlUtil::createCheckBox(false, [&](bool checked) {
+        ini()->setGraphWindowAlwaysOnTop(checked);
+        setIniEdited();
+    });
+    m_cbGraphFrameless = ControlUtil::createCheckBox(false, [&](bool checked) {
+        ini()->setGraphWindowFrameless(checked);
+        setIniEdited();
+    });
+    m_cbGraphClickThrough = ControlUtil::createCheckBox(false, [&](bool checked) {
+        ini()->setGraphWindowClickThrough(checked);
+        setIniEdited();
+    });
+    m_cbGraphHideOnHover = ControlUtil::createCheckBox(false, [&](bool checked) {
+        ini()->setGraphWindowHideOnHover(checked);
+        setIniEdited();
+    });
 
     m_graphOpacity = createSpin(0, 100, " %");
     m_graphHoverOpacity = createSpin(0, 100, " %");
@@ -354,28 +352,50 @@ void StatisticsPage::setupGraphOptionsMenu()
     m_graphLabelColor = new LabelColor();
     m_graphGridColor = new LabelColor();
 
-    const auto onChanged = [&] {
-        if (!m_pageUpdating) {
-            ctrl()->setGraphEdited();
-        }
-    };
+    connect(m_graphOpacity->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
+            [&](int v) {
+                ini()->setGraphWindowOpacity(v);
+                setIniEdited();
+            });
+    connect(m_graphHoverOpacity->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
+            [&](int v) {
+                ini()->setGraphWindowHoverOpacity(v);
+                setIniEdited();
+            });
+    connect(m_graphMaxSeconds->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
+            [&](int v) {
+                ini()->setGraphWindowMaxSeconds(v);
+                setIniEdited();
+            });
 
-    connect(m_cbGraphAlwaysOnTop, &QCheckBox::toggled, onChanged);
-    connect(m_cbGraphFrameless, &QCheckBox::toggled, onChanged);
-    connect(m_cbGraphClickThrough, &QCheckBox::toggled, onChanged);
-    connect(m_cbGraphHideOnHover, &QCheckBox::toggled, onChanged);
-
-    connect(m_graphOpacity->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), onChanged);
-    connect(m_graphHoverOpacity->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), onChanged);
-    connect(m_graphMaxSeconds->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), onChanged);
-
-    connect(m_graphColor, &LabelColor::colorChanged, onChanged);
-    connect(m_graphColorIn, &LabelColor::colorChanged, onChanged);
-    connect(m_graphColorOut, &LabelColor::colorChanged, onChanged);
-    connect(m_graphAxisColor, &LabelColor::colorChanged, onChanged);
-    connect(m_graphTickLabelColor, &LabelColor::colorChanged, onChanged);
-    connect(m_graphLabelColor, &LabelColor::colorChanged, onChanged);
-    connect(m_graphGridColor, &LabelColor::colorChanged, onChanged);
+    connect(m_graphColor, &LabelColor::colorChanged, this, [&](const QColor &color) {
+        ini()->setGraphWindowColor(color);
+        setIniEdited();
+    });
+    connect(m_graphColorIn, &LabelColor::colorChanged, this, [&](const QColor &color) {
+        ini()->setGraphWindowColorIn(color);
+        setIniEdited();
+    });
+    connect(m_graphColorOut, &LabelColor::colorChanged, this, [&](const QColor &color) {
+        ini()->setGraphWindowColorOut(color);
+        setIniEdited();
+    });
+    connect(m_graphAxisColor, &LabelColor::colorChanged, this, [&](const QColor &color) {
+        ini()->setGraphWindowAxisColor(color);
+        setIniEdited();
+    });
+    connect(m_graphTickLabelColor, &LabelColor::colorChanged, this, [&](const QColor &color) {
+        ini()->setGraphWindowTickLabelColor(color);
+        setIniEdited();
+    });
+    connect(m_graphLabelColor, &LabelColor::colorChanged, this, [&](const QColor &color) {
+        ini()->setGraphWindowLabelColor(color);
+        setIniEdited();
+    });
+    connect(m_graphGridColor, &LabelColor::colorChanged, this, [&](const QColor &color) {
+        ini()->setGraphWindowGridColor(color);
+        setIniEdited();
+    });
 
     // Menu
     auto colLayout1 = ControlUtil::createLayoutByWidgets({ m_cbGraphAlwaysOnTop, m_cbGraphFrameless,
@@ -507,7 +527,7 @@ void StatisticsPage::setupMonthStart()
 
                 conf()->setMonthStart(value);
 
-                ctrl()->setIniEdited();
+                setIniEdited();
             });
 }
 
@@ -523,7 +543,7 @@ void StatisticsPage::setupTrafHourKeepDays()
 
                 conf()->setTrafHourKeepDays(value);
 
-                ctrl()->setIniEdited();
+                setIniEdited();
             });
 }
 
@@ -539,7 +559,7 @@ void StatisticsPage::setupTrafDayKeepDays()
 
                 conf()->setTrafDayKeepDays(value);
 
-                ctrl()->setIniEdited();
+                setIniEdited();
             });
 }
 
@@ -555,7 +575,7 @@ void StatisticsPage::setupTrafMonthKeepMonths()
 
                 conf()->setTrafMonthKeepMonths(value);
 
-                ctrl()->setIniEdited();
+                setIniEdited();
             });
 }
 
@@ -573,7 +593,7 @@ void StatisticsPage::setupQuotaDayMb()
 
                 conf()->setQuotaDayMb(mbytes);
 
-                ctrl()->setIniEdited();
+                setIniEdited();
             });
 }
 
@@ -591,7 +611,7 @@ void StatisticsPage::setupQuotaMonthMb()
 
                 conf()->setQuotaMonthMb(mbytes);
 
-                ctrl()->setIniEdited();
+                setIniEdited();
             });
 }
 
@@ -608,7 +628,7 @@ void StatisticsPage::setupAllowedIpKeepCount()
 
                 conf()->setAllowedIpKeepCount(value);
 
-                ctrl()->setIniEdited();
+                setIniEdited();
             });
 }
 
@@ -625,7 +645,7 @@ void StatisticsPage::setupBlockedIpKeepCount()
 
                 conf()->setBlockedIpKeepCount(value);
 
-                ctrl()->setIniEdited();
+                setIniEdited();
             });
 }
 
@@ -728,7 +748,7 @@ void StatisticsPage::setupAppListViewChanged()
 
 void StatisticsPage::updatePage()
 {
-    m_pageUpdating = true;
+    m_isPageUpdating = true;
 
     m_cbLogStat->setChecked(conf()->logStat());
     m_cbLogStatNoFilter->setChecked(conf()->logStatNoFilter());
@@ -767,7 +787,7 @@ void StatisticsPage::updatePage()
 
     updateTrafUnit();
 
-    m_pageUpdating = false;
+    m_isPageUpdating = false;
 }
 
 void StatisticsPage::updateTrafUnit()

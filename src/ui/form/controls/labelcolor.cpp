@@ -15,7 +15,7 @@ void LabelColor::setColor(const QColor &v)
 {
     if (m_color != v) {
         m_color = v;
-        emit colorChanged();
+        emit colorChanged(m_color);
     }
 }
 

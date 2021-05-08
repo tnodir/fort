@@ -27,9 +27,9 @@ public:
     AppInfoCache *appInfoCache() const;
     TrafListModel *trafListModel() const { return m_trafListModel; }
 
-protected slots:
-    void onAboutToSave() override;
+    void setIniEdited();
 
+protected slots:
     void onSaveWindowState() override;
     void onRestoreWindowState() override;
 
@@ -80,7 +80,7 @@ private:
     static QString formatQuota(int mbytes);
 
 private:
-    bool m_pageUpdating : 1;
+    bool m_isPageUpdating : 1;
 
     TrafListModel *m_trafListModel = nullptr;
 
