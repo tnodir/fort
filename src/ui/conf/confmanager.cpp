@@ -452,6 +452,8 @@ void ConfManager::setupDefault(FirewallConf &conf) const
 
 bool ConfManager::loadConf(FirewallConf &conf)
 {
+    conf.prepareToSave();
+
     if (conf.optEdited()) {
         bool isNewConf = false;
 
