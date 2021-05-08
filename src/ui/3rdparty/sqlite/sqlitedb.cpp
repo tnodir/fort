@@ -1,5 +1,6 @@
 #include "sqlitedb.h"
 
+#include <QAtomicInt>
 #include <QDateTime>
 #include <QDir>
 #include <QLoggingCategory>
@@ -21,6 +22,8 @@ const char *const defaultSqlPragmas = "PRAGMA journal_mode = WAL;"
                                       "PRAGMA locking_mode = NORMAL;"
                                       "PRAGMA synchronous = NORMAL;"
                                       "PRAGMA encoding = 'UTF-8';";
+
+QAtomicInt g_sqliteInitCount;
 
 bool removeDbFile(const QString &filePath)
 {
@@ -48,14 +51,18 @@ bool renameDbFile(const QString &filePath, const QString &newFilePath)
 SqliteDb::SqliteDb(const QString &filePath, quint32 openFlags) :
     m_openFlags(openFlags != 0 ? openFlags : OpenDefaultReadWrite), m_filePath(filePath)
 {
-    sqlite3_initialize();
+    if (g_sqliteInitCount++ == 0) {
+        sqlite3_initialize();
+    }
 }
 
 SqliteDb::~SqliteDb()
 {
     close();
 
-    sqlite3_shutdown();
+    if (--g_sqliteInitCount == 0) {
+        sqlite3_shutdown();
+    }
 }
 
 bool SqliteDb::open()
