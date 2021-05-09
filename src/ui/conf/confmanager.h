@@ -50,9 +50,9 @@ public:
     virtual bool saveConf(FirewallConf &conf);
     void applySavedConf(FirewallConf *newConf);
     bool save(FirewallConf *newConf);
-    bool saveFlags();
 
-    virtual void saveIni();
+    bool saveFlags();
+    void saveIni();
 
     bool saveVariant(const QVariant &confVar);
 
