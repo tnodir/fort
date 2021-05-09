@@ -96,6 +96,7 @@ SOURCES += \
     stat/statmanager.cpp \
     stat/statsql.cpp \
     task/taskdownloader.cpp \
+    task/taskeditinfo.cpp \
     task/taskinfo.cpp \
     task/taskinfoupdatechecker.cpp \
     task/taskinfozonedownloader.cpp \
@@ -232,6 +233,7 @@ HEADERS += \
     stat/statmanager.h \
     stat/statsql.h \
     task/taskdownloader.h \
+    task/taskeditinfo.h \
     task/taskinfo.h \
     task/taskinfoupdatechecker.h \
     task/taskinfozonedownloader.h \

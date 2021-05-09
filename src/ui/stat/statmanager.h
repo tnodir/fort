@@ -9,6 +9,7 @@
 #include "../util/classhelpers.h"
 
 class FirewallConf;
+class IniOptions;
 class LogEntryBlockedIp;
 class QuotaManager;
 class SqliteDb;
@@ -34,6 +35,8 @@ public:
 
     const FirewallConf *conf() const { return m_conf; }
     virtual void setConf(const FirewallConf *conf);
+
+    const IniOptions *ini() const;
 
     SqliteDb *sqliteDb() const { return m_sqliteDb; }
 

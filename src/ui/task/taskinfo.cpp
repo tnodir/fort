@@ -1,14 +1,12 @@
 #include "taskinfo.h"
 
-#include <QDataStream>
 #include <QMetaEnum>
 
 #include "../util/dateutil.h"
+#include "taskeditinfo.h"
 #include "taskmanager.h"
 #include "taskupdatechecker.h"
 #include "taskzonedownloader.h"
-
-#define TASK_INFO_VERSION 1
 
 TaskInfo::TaskInfo(TaskType type, TaskManager &taskManager) :
     QObject(&taskManager), m_enabled(false), m_running(false), m_aborted(false), m_type(type)
@@ -104,43 +102,18 @@ void TaskInfo::setTaskWorker(TaskWorker *taskWorker)
     }
 }
 
-void TaskInfo::rawData(QByteArray &data) const
+QVariant TaskInfo::editToVariant() const
 {
-    QDataStream stream(&data,
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-            QIODevice::WriteOnly
-#else
-            QDataStream::WriteOnly
-#endif
-    );
-
-    // Store data
-    const quint16 infoVersion = TASK_INFO_VERSION;
-    const quint8 enabled = m_enabled;
-    const quint16 intervalHours = m_intervalHours;
-
-    stream << infoVersion << enabled << intervalHours << m_lastRun << m_lastSuccess;
+    const TaskEditInfo info(enabled(), intervalHours());
+    return info.value();
 }
 
-void TaskInfo::setRawData(const QByteArray &data)
+void TaskInfo::editFromVariant(const QVariant &v)
 {
-    QDataStream stream(data);
+    const TaskEditInfo info(v.toUInt());
 
-    // Check version
-    quint16 infoVersion;
-    stream >> infoVersion;
-
-    if (infoVersion > TASK_INFO_VERSION)
-        return;
-
-    // Load data
-    quint8 enabled;
-    quint16 intervalHours;
-
-    stream >> enabled >> intervalHours >> m_lastRun >> m_lastSuccess;
-
-    m_enabled = enabled;
-    m_intervalHours = intervalHours;
+    setEnabled(info.enabled());
+    setIntervalHours(info.intervalHours());
 }
 
 QString TaskInfo::typeToString(TaskInfo::TaskType type)

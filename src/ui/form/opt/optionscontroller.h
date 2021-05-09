@@ -52,10 +52,10 @@ public slots:
 
     void resetEdited();
 
-    void closeWindow();
-
     void saveChanges() { save(true); }
     void applyChanges() { save(false); }
+
+    void closeWindow();
 
 private:
     void save(bool closeOnSuccess);

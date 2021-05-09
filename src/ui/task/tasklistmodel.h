@@ -4,18 +4,10 @@
 #include <QVector>
 
 #include "../util/model/tableitemmodel.h"
+#include "taskeditinfo.h"
 
 class TaskInfo;
 class TaskManager;
-
-struct TaskRow
-{
-    explicit TaskRow() : edited(false), enabled(false), intervalHours(0) { }
-
-    quint16 edited : 1;
-    quint16 enabled : 1;
-    quint16 intervalHours;
-};
 
 class TaskListModel : public TableItemModel
 {
@@ -27,12 +19,9 @@ public:
 
     explicit TaskListModel(TaskManager *taskManager, QObject *parent = nullptr);
 
-    bool edited() const { return m_edited; }
-    void setEdited(bool v);
-
     TaskManager *taskManager() const { return m_taskManager; }
 
-    const QList<TaskInfo *> &taskInfosList() const;
+    const QList<TaskInfo *> &taskInfoList() const;
     TaskInfo *taskInfoAt(int row) const;
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -45,37 +34,29 @@ public:
 
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-signals:
-    void dataEdited();
+    void setupTaskRows();
 
-public slots:
-    void saveChanges();
-
-    void resetEdited();
+    QVariant toVariant() const;
 
 private:
     QVariant dataDisplay(const QModelIndex &index) const;
     QVariant dataCheckState(const QModelIndex &index) const;
 
-    void setupTaskRows();
-
-    bool taskEnabled(int index) const;
+    bool taskEnabled(int row) const;
     void setTaskEnabled(const QModelIndex &index, bool v);
 
-    int taskIntervalHours(int index) const;
+    int taskIntervalHours(int row) const;
     void setTaskIntervalHours(const QModelIndex &index, int v);
 
-    TaskRow &taskRowAt(int row) { return m_taskRows[row]; }
-    const TaskRow &taskRowAt(int row) const { return m_taskRows[row]; }
+    TaskEditInfo &taskRowAt(int row) { return m_taskRows[row]; }
+    const TaskEditInfo &taskRowAt(int row) const { return m_taskRows[row]; }
 
     static QString formatDateTime(const QDateTime &dateTime);
 
 private:
-    bool m_edited = false;
-
     TaskManager *m_taskManager = nullptr;
 
-    QVector<TaskRow> m_taskRows;
+    QVector<TaskEditInfo> m_taskRows;
 };
 
 #endif // TASKLISTMODEL_H

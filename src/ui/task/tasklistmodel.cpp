@@ -12,27 +12,21 @@ TaskListModel::TaskListModel(TaskManager *taskManager, QObject *parent) :
     connect(m_taskManager, &TaskManager::taskFinished, this, &TaskListModel::refresh);
 }
 
-void TaskListModel::setEdited(bool v)
+const QList<TaskInfo *> &TaskListModel::taskInfoList() const
 {
-    if (m_edited != v) {
-        m_edited = v;
-
-        if (edited()) {
-            emit dataEdited();
-        }
-    }
+    return taskManager()->taskInfoList();
 }
 
-const QList<TaskInfo *> &TaskListModel::taskInfosList() const
+TaskInfo *TaskListModel::taskInfoAt(int row) const
 {
-    return taskManager()->taskInfosList();
+    return taskInfoList().at(row);
 }
 
 int TaskListModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
 
-    return taskInfosList().size();
+    return taskInfoList().size();
 }
 
 int TaskListModel::columnCount(const QModelIndex &parent) const
@@ -148,91 +142,65 @@ Qt::ItemFlags TaskListModel::flags(const QModelIndex &index) const
             | (column == 0 ? Qt::ItemIsUserCheckable : Qt::NoItemFlags);
 }
 
-void TaskListModel::saveChanges()
-{
-    const int taskCount = taskInfosList().size();
-    for (int i = 0; i < taskCount; ++i) {
-        const TaskRow &taskRow = taskRowAt(i);
-        if (!taskRow.edited)
-            continue;
-
-        TaskInfo *taskInfo = taskInfoAt(i);
-        taskInfo->setEnabled(taskRow.enabled);
-        taskInfo->setIntervalHours(taskRow.intervalHours);
-    }
-
-    taskManager()->saveSettings();
-}
-
-void TaskListModel::resetEdited()
-{
-    beginResetModel();
-    setupTaskRows();
-    endResetModel();
-}
-
 void TaskListModel::setupTaskRows()
 {
-    const int taskCount = taskInfosList().size();
+    const int taskCount = taskInfoList().size();
     m_taskRows.resize(taskCount);
 
     for (int i = 0; i < taskCount; ++i) {
         const TaskInfo *taskInfo = taskInfoAt(i);
 
-        TaskRow &taskRow = taskRowAt(i);
-        taskRow.edited = false;
-        taskRow.enabled = taskInfo->enabled();
-        taskRow.intervalHours = taskInfo->intervalHours();
+        TaskEditInfo &taskRow = taskRowAt(i);
+        taskRow.setEnabled(taskInfo->enabled());
+        taskRow.setIntervalHours(taskInfo->intervalHours());
     }
-
-    setEdited(false);
 }
 
-bool TaskListModel::taskEnabled(int index) const
+QVariant TaskListModel::toVariant() const
 {
-    const auto taskRow = taskRowAt(index);
-    return taskRow.enabled;
+    QVariantList list;
+    for (const TaskInfo *task : taskInfoList()) {
+        list.append(task->editToVariant());
+    }
+    return list;
+}
+
+bool TaskListModel::taskEnabled(int row) const
+{
+    const TaskEditInfo &taskRow = taskRowAt(row);
+    return taskRow.enabled();
 }
 
 void TaskListModel::setTaskEnabled(const QModelIndex &index, bool v)
 {
     const int row = index.row();
 
-    auto taskRow = taskRowAt(row);
-    if (taskRow.enabled == v)
+    TaskEditInfo &taskRow = taskRowAt(row);
+    if (taskRow.enabled() == v)
         return;
 
-    taskRow.edited = true;
-    taskRow.enabled = v;
+    taskRow.setEnabled(v);
 
     emit dataChanged(index, index, { Qt::CheckStateRole });
-    setEdited(true);
 }
 
-int TaskListModel::taskIntervalHours(int index) const
+int TaskListModel::taskIntervalHours(int row) const
 {
-    const auto taskRow = taskRowAt(index);
-    return taskRow.intervalHours;
+    const TaskEditInfo &taskRow = taskRowAt(row);
+    return taskRow.intervalHours();
 }
 
 void TaskListModel::setTaskIntervalHours(const QModelIndex &index, int v)
 {
     const int row = index.row();
 
-    auto taskRow = taskRowAt(row);
-    if (taskRow.intervalHours == v)
+    TaskEditInfo &taskRow = taskRowAt(row);
+    if (taskRow.intervalHours() == v)
         return;
 
-    taskRow.edited = true;
-    taskRow.intervalHours = v;
+    taskRow.setIntervalHours(v);
 
     emit dataChanged(index, index, { Qt::DisplayRole });
-    setEdited(true);
-}
-
-TaskInfo *TaskListModel::taskInfoAt(int row) const
-{
-    return taskInfosList().at(row);
 }
 
 QString TaskListModel::formatDateTime(const QDateTime &dateTime)

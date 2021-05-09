@@ -233,6 +233,10 @@ QString FortSettings::cacheFilePath() const
 void FortSettings::setPassword(const QString &password)
 {
     setPasswordHash(StringUtil::cryptoHash(password));
+
+    if (!hasPassword()) {
+        resetCheckedPassword();
+    }
 }
 
 bool FortSettings::checkPassword(const QString &password) const
@@ -287,46 +291,12 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     conf.setActivePeriodEnabled(iniBool("activePeriodEnabled"));
     conf.setActivePeriodFrom(DateUtil::reformatTime(iniText("activePeriodFrom")));
     conf.setActivePeriodTo(DateUtil::reformatTime(iniText("activePeriodTo")));
-    conf.setMonthStart(iniInt("monthStart", DEFAULT_MONTH_START));
-    conf.setTrafHourKeepDays(iniInt("trafHourKeepDays", DEFAULT_TRAF_HOUR_KEEP_DAYS));
-    conf.setTrafDayKeepDays(iniInt("trafDayKeepDays", DEFAULT_TRAF_DAY_KEEP_DAYS));
-    conf.setTrafMonthKeepMonths(iniInt("trafMonthKeepMonths", DEFAULT_TRAF_MONTH_KEEP_MONTHS));
-    conf.setTrafUnit(iniInt("trafUnit"));
-    conf.setAllowedIpKeepCount(iniInt("allowedIpKeepCount", DEFAULT_LOG_IP_KEEP_COUNT));
-    conf.setBlockedIpKeepCount(iniInt("blockedIpKeepCount", DEFAULT_LOG_IP_KEEP_COUNT));
-    m_ini->endGroup();
-
-    m_ini->beginGroup("quota");
-    conf.setQuotaDayMb(iniUInt("quotaDayMb"));
-    conf.setQuotaMonthMb(iniUInt("quotaMonthMb"));
     m_ini->endGroup();
 }
 
 void FortSettings::writeConfIni(const FirewallConf &conf)
 {
     bool changed = false;
-
-    if (conf.iniEdited()) {
-        conf.ini().save(this);
-
-        m_ini->beginGroup("quota");
-        setIniValue("quotaDayMb", conf.quotaDayMb());
-        setIniValue("quotaMonthMb", conf.quotaMonthMb());
-        m_ini->endGroup();
-
-        m_ini->beginGroup("stat");
-        setIniValue("monthStart", conf.monthStart(), DEFAULT_MONTH_START);
-        setIniValue("trafHourKeepDays", conf.trafHourKeepDays(), DEFAULT_TRAF_HOUR_KEEP_DAYS);
-        setIniValue("trafDayKeepDays", conf.trafDayKeepDays(), DEFAULT_TRAF_DAY_KEEP_DAYS);
-        setIniValue(
-                "trafMonthKeepMonths", conf.trafMonthKeepMonths(), DEFAULT_TRAF_MONTH_KEEP_MONTHS);
-        setIniValue("trafUnit", conf.trafUnit());
-        setIniValue("allowedIpKeepCount", conf.allowedIpKeepCount());
-        setIniValue("blockedIpKeepCount", conf.blockedIpKeepCount());
-        m_ini->endGroup();
-
-        changed = true;
-    }
 
     if (conf.flagsEdited()) {
         m_ini->beginGroup("confFlags");
@@ -351,6 +321,18 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
         setIniValue("activePeriodFrom", conf.activePeriodFrom());
         setIniValue("activePeriodTo", conf.activePeriodTo());
         m_ini->endGroup();
+
+        changed = true;
+    }
+
+    if (conf.iniEdited()) {
+        const IniOptions &ini = conf.ini();
+        ini.save(this);
+
+        // Password
+        if (ini.hasPassword() != hasPassword() || !ini.password().isEmpty()) {
+            setPassword(ini.password());
+        }
 
         changed = true;
     }

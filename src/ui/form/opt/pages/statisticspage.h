@@ -29,6 +29,9 @@ public:
 
     void setIniEdited();
 
+signals:
+    void trafUnitChanged();
+
 protected slots:
     void onSaveWindowState() override;
     void onRestoreWindowState() override;

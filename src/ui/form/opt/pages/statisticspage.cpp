@@ -312,10 +312,11 @@ void StatisticsPage::setupTrafUnits()
     m_traphUnits = ControlUtil::createLabel();
 
     m_comboTrafUnit = ControlUtil::createComboBox(QStringList(), [&](int index) {
-        if (conf()->trafUnit() == index)
+        if (ini()->trafUnit() == index)
             return;
 
-        conf()->setTrafUnit(index);
+        ini()->setTrafUnit(index);
+        emit trafUnitChanged();
 
         setIniEdited();
     });
@@ -354,18 +355,24 @@ void StatisticsPage::setupGraphOptionsMenu()
 
     connect(m_graphOpacity->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
             [&](int v) {
-                ini()->setGraphWindowOpacity(v);
-                setIniEdited();
+                if (ini()->graphWindowOpacity() != v) {
+                    ini()->setGraphWindowOpacity(v);
+                    setIniEdited();
+                }
             });
     connect(m_graphHoverOpacity->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
             [&](int v) {
-                ini()->setGraphWindowHoverOpacity(v);
-                setIniEdited();
+                if (ini()->graphWindowHoverOpacity() != v) {
+                    ini()->setGraphWindowHoverOpacity(v);
+                    setIniEdited();
+                }
             });
     connect(m_graphMaxSeconds->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
             [&](int v) {
-                ini()->setGraphWindowMaxSeconds(v);
-                setIniEdited();
+                if (ini()->graphWindowMaxSeconds() != v) {
+                    ini()->setGraphWindowMaxSeconds(v);
+                    setIniEdited();
+                }
             });
 
     connect(m_graphColor, &LabelColor::colorChanged, this, [&](const QColor &color) {
@@ -522,12 +529,10 @@ void StatisticsPage::setupMonthStart()
 
     connect(m_lscMonthStart->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
             [&](int value) {
-                if (conf()->monthStart() == value)
-                    return;
-
-                conf()->setMonthStart(value);
-
-                setIniEdited();
+                if (ini()->monthStart() != value) {
+                    ini()->setMonthStart(value);
+                    setIniEdited();
+                }
             });
 }
 
@@ -538,12 +543,10 @@ void StatisticsPage::setupTrafHourKeepDays()
 
     connect(m_lscTrafHourKeepDays->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
             [&](int value) {
-                if (conf()->trafHourKeepDays() == value)
-                    return;
-
-                conf()->setTrafHourKeepDays(value);
-
-                setIniEdited();
+                if (ini()->trafHourKeepDays() != value) {
+                    ini()->setTrafHourKeepDays(value);
+                    setIniEdited();
+                }
             });
 }
 
@@ -554,12 +557,10 @@ void StatisticsPage::setupTrafDayKeepDays()
 
     connect(m_lscTrafDayKeepDays->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
             [&](int value) {
-                if (conf()->trafDayKeepDays() == value)
-                    return;
-
-                conf()->setTrafDayKeepDays(value);
-
-                setIniEdited();
+                if (ini()->trafDayKeepDays() != value) {
+                    ini()->setTrafDayKeepDays(value);
+                    setIniEdited();
+                }
             });
 }
 
@@ -570,12 +571,10 @@ void StatisticsPage::setupTrafMonthKeepMonths()
 
     connect(m_lscTrafMonthKeepMonths->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
             [&](int value) {
-                if (conf()->trafMonthKeepMonths() == value)
-                    return;
-
-                conf()->setTrafMonthKeepMonths(value);
-
-                setIniEdited();
+                if (ini()->trafMonthKeepMonths() != value) {
+                    ini()->setTrafMonthKeepMonths(value);
+                    setIniEdited();
+                }
             });
 }
 
@@ -587,13 +586,10 @@ void StatisticsPage::setupQuotaDayMb()
     connect(m_lscQuotaDayMb->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
             [&](int value) {
                 const quint32 mbytes = quint32(value);
-
-                if (conf()->quotaDayMb() == mbytes)
-                    return;
-
-                conf()->setQuotaDayMb(mbytes);
-
-                setIniEdited();
+                if (ini()->quotaDayMb() != mbytes) {
+                    ini()->setQuotaDayMb(mbytes);
+                    setIniEdited();
+                }
             });
 }
 
@@ -605,13 +601,10 @@ void StatisticsPage::setupQuotaMonthMb()
     connect(m_lscQuotaMonthMb->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
             [&](int value) {
                 const quint32 mbytes = quint32(value);
-
-                if (conf()->quotaMonthMb() == mbytes)
-                    return;
-
-                conf()->setQuotaMonthMb(mbytes);
-
-                setIniEdited();
+                if (ini()->quotaMonthMb() != mbytes) {
+                    ini()->setQuotaMonthMb(mbytes);
+                    setIniEdited();
+                }
             });
 }
 
@@ -623,12 +616,10 @@ void StatisticsPage::setupAllowedIpKeepCount()
 
     connect(m_lscAllowedIpKeepCount->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
             [&](int value) {
-                if (conf()->allowedIpKeepCount() == value)
-                    return;
-
-                conf()->setAllowedIpKeepCount(value);
-
-                setIniEdited();
+                if (ini()->allowedIpKeepCount() != value) {
+                    ini()->setAllowedIpKeepCount(value);
+                    setIniEdited();
+                }
             });
 }
 
@@ -640,12 +631,10 @@ void StatisticsPage::setupBlockedIpKeepCount()
 
     connect(m_lscBlockedIpKeepCount->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
             [&](int value) {
-                if (conf()->blockedIpKeepCount() == value)
-                    return;
-
-                conf()->setBlockedIpKeepCount(value);
-
-                setIniEdited();
+                if (ini()->blockedIpKeepCount() != value) {
+                    ini()->setBlockedIpKeepCount(value);
+                    setIniEdited();
+                }
             });
 }
 
@@ -691,13 +680,13 @@ void StatisticsPage::setupTableTraf()
     connect(m_appListView, &ListView::currentIndexChanged, this, resetTableTraf);
 
     const auto refreshTableTraf = [&] {
-        trafListModel()->setUnit(static_cast<TrafListModel::TrafUnit>(conf()->trafUnit()));
+        trafListModel()->setUnit(static_cast<TrafListModel::TrafUnit>(ini()->trafUnit()));
         trafListModel()->refresh();
     };
 
     refreshTableTraf();
 
-    connect(conf(), &FirewallConf::trafUnitChanged, this, refreshTableTraf);
+    connect(this, &StatisticsPage::trafUnitChanged, this, refreshTableTraf);
 }
 
 void StatisticsPage::setupTableTrafHeader()
@@ -757,16 +746,16 @@ void StatisticsPage::updatePage()
     m_ctpActivePeriod->timeEdit1()->setTime(CheckTimePeriod::toTime(conf()->activePeriodFrom()));
     m_ctpActivePeriod->timeEdit2()->setTime(CheckTimePeriod::toTime(conf()->activePeriodTo()));
 
-    m_lscMonthStart->spinBox()->setValue(conf()->monthStart());
-    m_lscTrafHourKeepDays->spinBox()->setValue(conf()->trafHourKeepDays());
-    m_lscTrafDayKeepDays->spinBox()->setValue(conf()->trafDayKeepDays());
-    m_lscTrafMonthKeepMonths->spinBox()->setValue(conf()->trafMonthKeepMonths());
+    m_lscMonthStart->spinBox()->setValue(ini()->monthStart());
+    m_lscTrafHourKeepDays->spinBox()->setValue(ini()->trafHourKeepDays());
+    m_lscTrafDayKeepDays->spinBox()->setValue(ini()->trafDayKeepDays());
+    m_lscTrafMonthKeepMonths->spinBox()->setValue(ini()->trafMonthKeepMonths());
 
-    m_lscQuotaDayMb->spinBox()->setValue(int(conf()->quotaDayMb()));
-    m_lscQuotaMonthMb->spinBox()->setValue(int(conf()->quotaMonthMb()));
+    m_lscQuotaDayMb->spinBox()->setValue(int(ini()->quotaDayMb()));
+    m_lscQuotaMonthMb->spinBox()->setValue(int(ini()->quotaMonthMb()));
 
-    m_lscAllowedIpKeepCount->spinBox()->setValue(conf()->allowedIpKeepCount());
-    m_lscBlockedIpKeepCount->spinBox()->setValue(conf()->blockedIpKeepCount());
+    m_lscAllowedIpKeepCount->spinBox()->setValue(ini()->allowedIpKeepCount());
+    m_lscBlockedIpKeepCount->spinBox()->setValue(ini()->blockedIpKeepCount());
 
     m_cbGraphAlwaysOnTop->setChecked(ini()->graphWindowAlwaysOnTop());
     m_cbGraphFrameless->setChecked(ini()->graphWindowFrameless());
@@ -792,7 +781,7 @@ void StatisticsPage::updatePage()
 
 void StatisticsPage::updateTrafUnit()
 {
-    m_comboTrafUnit->setCurrentIndex(conf()->trafUnit());
+    m_comboTrafUnit->setCurrentIndex(ini()->trafUnit());
 }
 
 int StatisticsPage::appListCurrentIndex() const

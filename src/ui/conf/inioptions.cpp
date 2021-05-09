@@ -34,11 +34,4 @@ void IniOptions::save(FortSettings *settings) const
             settings->setIniValue(key, it.value());
         }
     }
-
-    if (hasPassword() != settings->hasPassword() || !password().isEmpty()) {
-        settings->setPassword(password());
-        if (!hasPassword()) {
-            settings->resetCheckedPassword();
-        }
-    }
 }

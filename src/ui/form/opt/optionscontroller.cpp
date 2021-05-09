@@ -106,11 +106,6 @@ void OptionsController::initialize()
     }
 }
 
-void OptionsController::closeWindow()
-{
-    fortManager()->closeOptionsWindow();
-}
-
 void OptionsController::save(bool closeOnSuccess)
 {
     emit aboutToSave();
@@ -126,4 +121,9 @@ void OptionsController::save(bool closeOnSuccess)
         confManager()->initConfToEdit();
         resetEdited();
     }
+}
+
+void OptionsController::closeWindow()
+{
+    fortManager()->closeOptionsWindow();
 }

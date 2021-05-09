@@ -126,54 +126,6 @@ void FirewallConf::setActivePeriodTo(const QString &activePeriodTo)
     m_activePeriodTo = activePeriodTo;
 }
 
-void FirewallConf::setMonthStart(int monthStart)
-{
-    m_monthStart = monthStart;
-}
-
-void FirewallConf::setTrafHourKeepDays(int trafHourKeepDays)
-{
-    m_trafHourKeepDays = trafHourKeepDays;
-}
-
-void FirewallConf::setTrafDayKeepDays(int trafDayKeepDays)
-{
-    m_trafDayKeepDays = trafDayKeepDays;
-}
-
-void FirewallConf::setTrafMonthKeepMonths(int trafMonthKeepMonths)
-{
-    m_trafMonthKeepMonths = trafMonthKeepMonths;
-}
-
-void FirewallConf::setTrafUnit(int trafUnit)
-{
-    if (m_trafUnit != trafUnit) {
-        m_trafUnit = trafUnit;
-        emit trafUnitChanged();
-    }
-}
-
-void FirewallConf::setAllowedIpKeepCount(int allowedIpKeepCount)
-{
-    m_allowedIpKeepCount = allowedIpKeepCount;
-}
-
-void FirewallConf::setBlockedIpKeepCount(int blockedIpKeepCount)
-{
-    m_blockedIpKeepCount = blockedIpKeepCount;
-}
-
-void FirewallConf::setQuotaDayMb(quint32 quotaDayMb)
-{
-    m_quotaDayMb = quotaDayMb;
-}
-
-void FirewallConf::setQuotaMonthMb(quint32 quotaMonthMb)
-{
-    m_quotaMonthMb = quotaMonthMb;
-}
-
 quint32 FirewallConf::appGroupBits() const
 {
     return m_appGroupBits;
@@ -333,18 +285,6 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     m_activePeriodFrom = o.activePeriodFrom();
     m_activePeriodTo = o.activePeriodTo();
 
-    m_monthStart = o.monthStart();
-    m_trafHourKeepDays = o.trafHourKeepDays();
-    m_trafDayKeepDays = o.trafDayKeepDays();
-    m_trafMonthKeepMonths = o.trafMonthKeepMonths();
-    m_trafUnit = o.trafUnit();
-
-    m_allowedIpKeepCount = o.allowedIpKeepCount();
-    m_blockedIpKeepCount = o.blockedIpKeepCount();
-
-    m_quotaDayMb = o.quotaDayMb();
-    m_quotaMonthMb = o.quotaMonthMb();
-
     m_appGroupBits = o.appGroupBits();
     applyAppGroupBits();
 }
@@ -394,18 +334,6 @@ QVariant FirewallConf::flagsToVariant() const
     map["activePeriodFrom"] = activePeriodFrom();
     map["activePeriodTo"] = activePeriodTo();
 
-    map["monthStart"] = monthStart();
-    map["trafHourKeepDays"] = trafHourKeepDays();
-    map["trafDayKeepDays"] = trafDayKeepDays();
-    map["trafMonthKeepMonths"] = trafMonthKeepMonths();
-    map["trafUnit"] = trafUnit();
-
-    map["allowedIpKeepCount"] = allowedIpKeepCount();
-    map["blockedIpKeepCount"] = blockedIpKeepCount();
-
-    map["quotaDayMb"] = quotaDayMb();
-    map["quotaMonthMb"] = quotaMonthMb();
-
     map["appGroupBits"] = appGroupBits();
 
     return map;
@@ -438,18 +366,6 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
     m_activePeriodEnabled = map["activePeriodEnabled"].toBool();
     m_activePeriodFrom = map["activePeriodFrom"].toString();
     m_activePeriodTo = map["activePeriodTo"].toString();
-
-    m_monthStart = map["monthStart"].toInt();
-    m_trafHourKeepDays = map["trafHourKeepDays"].toInt();
-    m_trafDayKeepDays = map["trafDayKeepDays"].toInt();
-    m_trafMonthKeepMonths = map["trafMonthKeepMonths"].toInt();
-    m_trafUnit = map["trafUnit"].toInt();
-
-    m_allowedIpKeepCount = map["allowedIpKeepCount"].toInt();
-    m_blockedIpKeepCount = map["blockedIpKeepCount"].toInt();
-
-    m_quotaDayMb = map["quotaDayMb"].toUInt();
-    m_quotaMonthMb = map["quotaMonthMb"].toUInt();
 
     setAppGroupBits(map["appGroupBits"].toUInt());
 }

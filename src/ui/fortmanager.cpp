@@ -308,6 +308,11 @@ void FortManager::setupModels()
 
 void FortManager::setupTaskManager()
 {
+    connect(taskManager(), &TaskManager::taskDoubleClicked, this, [&](TaskInfo *taskInfo) {
+        if (taskInfo->type() == TaskInfo::ZoneDownloader) {
+            showZonesWindow();
+        }
+    });
     connect(taskManager()->taskInfoZoneDownloader(), &TaskInfoZoneDownloader::zonesUpdated,
             confManager(), &ConfManager::updateDriverZones);
 

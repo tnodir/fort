@@ -467,7 +467,7 @@ bool ConfManager::loadConf(FirewallConf &conf)
     }
 
     settings()->readConfIni(conf);
-    readExtFlags(conf);
+    loadExtFlags(conf);
 
     return true;
 }
@@ -495,8 +495,12 @@ bool ConfManager::saveConf(FirewallConf &conf)
 
     settings()->writeConfIni(conf);
 
+    if (conf.iniEdited()) {
+        saveOthersByIni(conf.ini());
+    }
+
     if (conf.extEdited()) {
-        writeExtFlags(conf);
+        saveExtFlags(conf);
 
         if (!settings()->isService()) {
             writeClientExtFlags(conf);
@@ -975,13 +979,17 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
     return checkResult(ok, true);
 }
 
-void ConfManager::readExtFlags(FirewallConf &conf)
+void ConfManager::saveOthersByIni(const IniOptions &ini)
+{
+}
+
+void ConfManager::loadExtFlags(FirewallConf &conf)
 {
     conf.setStartupMode(StartupUtil::getStartupMode());
     conf.setExplorerIntegrated(StartupUtil::isExplorerIntegrated());
 }
 
-void ConfManager::writeExtFlags(const FirewallConf &conf)
+void ConfManager::saveExtFlags(const FirewallConf &conf)
 {
     // Windows Explorer integration
     if (conf.explorerIntegrated() != StartupUtil::isExplorerIntegrated()) {

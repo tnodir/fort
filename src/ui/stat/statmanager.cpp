@@ -73,6 +73,11 @@ void StatManager::setConf(const FirewallConf *conf)
     setupByConf();
 }
 
+const IniOptions *StatManager::ini() const
+{
+    return &conf()->ini();
+}
+
 bool StatManager::initialize()
 {
     m_trafHour = m_trafDay = m_trafMonth = 0;
@@ -145,12 +150,12 @@ void StatManager::updateActivePeriod()
 
 void StatManager::setupQuota()
 {
-    quotaManager()->setQuotaDayBytes(qint64(conf()->quotaDayMb()) * 1024 * 1024);
-    quotaManager()->setQuotaMonthBytes(qint64(conf()->quotaMonthMb()) * 1024 * 1024);
+    quotaManager()->setQuotaDayBytes(qint64(ini()->quotaDayMb()) * 1024 * 1024);
+    quotaManager()->setQuotaMonthBytes(qint64(ini()->quotaMonthMb()) * 1024 * 1024);
 
     const qint64 unixTime = DateUtil::getUnixTime();
     const qint32 trafDay = DateUtil::getUnixDay(unixTime);
-    const qint32 trafMonth = DateUtil::getUnixMonth(unixTime, conf()->monthStart());
+    const qint32 trafMonth = DateUtil::getUnixMonth(unixTime, ini()->monthStart());
 
     qint64 inBytes, outBytes;
 
@@ -186,7 +191,7 @@ bool StatManager::updateTrafDay(qint64 unixTime)
     const bool isNewDay = (trafDay != m_trafDay);
 
     const qint32 trafMonth =
-            isNewDay ? DateUtil::getUnixMonth(unixTime, conf()->monthStart()) : m_trafMonth;
+            isNewDay ? DateUtil::getUnixMonth(unixTime, ini()->monthStart()) : m_trafMonth;
     const bool isNewMonth = (trafMonth != m_trafMonth);
 
     // Initialize quotas traffic bytes
@@ -360,7 +365,7 @@ void StatManager::deleteStatApp(qint64 appId)
 
 bool StatManager::deleteOldConnBlock()
 {
-    const int keepCount = conf()->blockedIpKeepCount();
+    const int keepCount = ini()->blockedIpKeepCount();
     const int totalCount = m_connBlockIdMax - m_connBlockIdMin + 1;
     const int oldCount = totalCount - keepCount;
     if (oldCount <= 0)
@@ -484,7 +489,7 @@ void StatManager::deleteOldTraffic(qint32 trafHour)
     QStmtList deleteTrafStmts;
 
     // Traffic Hour
-    const int trafHourKeepDays = conf()->trafHourKeepDays();
+    const int trafHourKeepDays = ini()->trafHourKeepDays();
     if (trafHourKeepDays >= 0) {
         const qint32 oldTrafHour = trafHour - 24 * trafHourKeepDays;
 
@@ -493,7 +498,7 @@ void StatManager::deleteOldTraffic(qint32 trafHour)
     }
 
     // Traffic Day
-    const int trafDayKeepDays = conf()->trafDayKeepDays();
+    const int trafDayKeepDays = ini()->trafDayKeepDays();
     if (trafDayKeepDays >= 0) {
         const qint32 oldTrafDay = trafHour - 24 * trafDayKeepDays;
 
@@ -502,7 +507,7 @@ void StatManager::deleteOldTraffic(qint32 trafHour)
     }
 
     // Traffic Month
-    const int trafMonthKeepMonths = conf()->trafMonthKeepMonths();
+    const int trafMonthKeepMonths = ini()->trafMonthKeepMonths();
     if (trafMonthKeepMonths >= 0) {
         const qint32 oldTrafMonth = DateUtil::addUnixMonths(trafHour, -trafMonthKeepMonths);
 

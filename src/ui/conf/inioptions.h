@@ -7,6 +7,13 @@
 
 class FortSettings;
 
+#define DEFAULT_APP_GROUP_BITS         0xFFFF
+#define DEFAULT_MONTH_START            1
+#define DEFAULT_TRAF_HOUR_KEEP_DAYS    90 // ~3 months
+#define DEFAULT_TRAF_DAY_KEEP_DAYS     365 // ~1 year
+#define DEFAULT_TRAF_MONTH_KEEP_MONTHS 36 // ~3 years
+#define DEFAULT_LOG_IP_KEEP_COUNT      10000
+
 class IniOptions : public MapWrapper
 {
 public:
@@ -35,6 +42,72 @@ public:
 
     QString language() const { return valueText("base/language", defaultLanguage()); }
     void setLanguage(const QString &v) { setValue("base/language", v); }
+
+    QString hotKeyPrograms() const { return valueText("hotKey/programs"); }
+    QString hotKeyOptions() const { return valueText("hotKey/options"); }
+    QString hotKeyZones() const { return valueText("hotKey/zones"); }
+    QString hotKeyGraph() const { return valueText("hotKey/graph"); }
+    QString hotKeyConnections() const { return valueText("hotKey/connections"); }
+    QString hotKeyFilter() const { return valueText("hotKey/filter", "Ctrl+Alt+Shift+F"); }
+    QString hotKeyStopTraffic() const { return valueText("hotKey/stopTraffic"); }
+    QString hotKeyStopInetTraffic() const { return valueText("hotKey/stopInetTraffic"); }
+    QString hotKeyAllowAllNew() const { return valueText("hotKey/allowAllNew"); }
+    QString hotKeyAppGroupModifiers() const
+    {
+        return valueText("hotKey/appGroupModifiers", "Ctrl+Alt+Shift");
+    }
+    QString hotKeyQuit() const { return valueText("hotKey/quit"); }
+
+    QVariant taskInfoList() const { return value("task/infoList_"); }
+    void setTaskInfoList(const QVariant &v) { setValue("task/infoList_", v); }
+
+    qint32 quotaDayAlerted() const { return valueInt("quota/dayAlerted"); }
+    void setQuotaDayAlerted(qint32 v) { setValue("quota/dayAlerted", v); }
+
+    qint32 quotaMonthAlerted() const { return valueInt("quota/monthAlerted"); }
+    void setQuotaMonthAlerted(qint32 v) { setValue("quota/monthAlerted", v); }
+
+    quint32 quotaDayMb() const { return valueUInt("quota/quotaDayMb"); }
+    void setQuotaDayMb(quint32 v) { setValue("quota/quotaDayMb", v); }
+
+    quint32 quotaMonthMb() const { return valueUInt("quota/quotaMonthMb"); }
+    void setQuotaMonthMb(quint32 v) { setValue("quota/quotaMonthMMb", v); }
+
+    int monthStart() const { return valueInt("stat/monthStart", DEFAULT_MONTH_START); }
+    void setMonthStart(int v) { setValue("stat/monthStart", v); }
+
+    int trafHourKeepDays() const
+    {
+        return valueInt("stat/trafHourKeepDays", DEFAULT_TRAF_HOUR_KEEP_DAYS);
+    }
+    void setTrafHourKeepDays(int v) { setValue("stat/trafHourKeepDays", v); }
+
+    int trafDayKeepDays() const
+    {
+        return valueInt("stat/trafDayKeepDays", DEFAULT_TRAF_DAY_KEEP_DAYS);
+    }
+    void setTrafDayKeepDays(int v) { setValue("stat/trafDayKeepDays", v); }
+
+    int trafMonthKeepMonths() const
+    {
+        return valueInt("stat/trafMonthKeepMonths", DEFAULT_TRAF_MONTH_KEEP_MONTHS);
+    }
+    void setTrafMonthKeepMonths(int v) { setValue("stat/trafMonthKeepMonths", v); }
+
+    int trafUnit() const { return valueInt("trafUnit"); }
+    void setTrafUnit(int v) { setValue("stat/trafUnit", v); }
+
+    int allowedIpKeepCount() const
+    {
+        return valueInt("stat/allowedIpKeepCount", DEFAULT_LOG_IP_KEEP_COUNT);
+    }
+    void setAllowedIpKeepCount(int v) { setValue("stat/allowedIpKeepCount", v); }
+
+    int blockedIpKeepCount() const
+    {
+        return valueInt("stat/blockedIpKeepCount", DEFAULT_LOG_IP_KEEP_COUNT);
+    }
+    void setBlockedIpKeepCount(int v) { setValue("stat/blockedIpKeepCount", v); }
 
     QRect progWindowGeometry() const { return value("progWindow/geometry").toRect(); }
     void setProgWindowGeometry(const QRect &v) { setValue("progWindow/geometry", v); }
@@ -173,27 +246,6 @@ public:
 
     bool connShowHostNames() const { return valueBool("connWindow/showHostNames"); }
     void setConnShowHostNames(bool on) { setValue("connWindow/showHostNames", on); }
-
-    qint32 quotaDayAlerted() const { return valueInt("quota/dayAlerted"); }
-    void setQuotaDayAlerted(qint32 v) { setValue("quota/dayAlerted", v); }
-
-    qint32 quotaMonthAlerted() const { return valueInt("quota/monthAlerted"); }
-    void setQuotaMonthAlerted(qint32 v) { setValue("quota/monthAlerted", v); }
-
-    QString hotKeyPrograms() const { return valueText("hotKey/programs"); }
-    QString hotKeyOptions() const { return valueText("hotKey/options"); }
-    QString hotKeyZones() const { return valueText("hotKey/zones"); }
-    QString hotKeyGraph() const { return valueText("hotKey/graph"); }
-    QString hotKeyConnections() const { return valueText("hotKey/connections"); }
-    QString hotKeyFilter() const { return valueText("hotKey/filter", "Ctrl+Alt+Shift+F"); }
-    QString hotKeyStopTraffic() const { return valueText("hotKey/stopTraffic"); }
-    QString hotKeyStopInetTraffic() const { return valueText("hotKey/stopInetTraffic"); }
-    QString hotKeyAllowAllNew() const { return valueText("hotKey/allowAllNew"); }
-    QString hotKeyAppGroupModifiers() const
-    {
-        return valueText("hotKey/appGroupModifiers", "Ctrl+Alt+Shift");
-    }
-    QString hotKeyQuit() const { return valueText("hotKey/quit"); }
 
 public slots:
     void save(FortSettings *settings) const;

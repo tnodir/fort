@@ -9,13 +9,6 @@
 class AddressGroup;
 class AppGroup;
 
-#define DEFAULT_APP_GROUP_BITS         0xFFFF
-#define DEFAULT_MONTH_START            1
-#define DEFAULT_TRAF_HOUR_KEEP_DAYS    90 // ~3 months
-#define DEFAULT_TRAF_DAY_KEEP_DAYS     365 // ~1 year
-#define DEFAULT_TRAF_MONTH_KEEP_MONTHS 36 // ~3 years
-#define DEFAULT_LOG_IP_KEEP_COUNT      10000
-
 class FirewallConf : public QObject
 {
     Q_OBJECT
@@ -103,33 +96,6 @@ public:
     QString activePeriodTo() const { return m_activePeriodTo; }
     void setActivePeriodTo(const QString &activePeriodTo);
 
-    int monthStart() const { return m_monthStart; }
-    void setMonthStart(int monthStart);
-
-    int trafHourKeepDays() const { return m_trafHourKeepDays; }
-    void setTrafHourKeepDays(int trafHourKeepDays);
-
-    int trafDayKeepDays() const { return m_trafDayKeepDays; }
-    void setTrafDayKeepDays(int trafDayKeepDays);
-
-    int trafMonthKeepMonths() const { return m_trafMonthKeepMonths; }
-    void setTrafMonthKeepMonths(int trafMonthKeepMonths);
-
-    int trafUnit() const { return m_trafUnit; }
-    void setTrafUnit(int trafUnit);
-
-    int allowedIpKeepCount() const { return m_allowedIpKeepCount; }
-    void setAllowedIpKeepCount(int allowedIpKeepCount);
-
-    int blockedIpKeepCount() const { return m_blockedIpKeepCount; }
-    void setBlockedIpKeepCount(int blockedIpKeepCount);
-
-    quint32 quotaDayMb() const { return m_quotaDayMb; }
-    void setQuotaDayMb(quint32 quotaDayMb);
-
-    quint32 quotaMonthMb() const { return m_quotaMonthMb; }
-    void setQuotaMonthMb(quint32 quotaMonthMb);
-
     quint32 appGroupBits() const;
     void setAppGroupBits(quint32 groupBits);
 
@@ -157,7 +123,6 @@ public:
 
 signals:
     void logStatChanged();
-    void trafUnitChanged();
     void appGroupsChanged();
 
 public slots:
@@ -212,23 +177,7 @@ private:
 
     uint m_activePeriodEnabled : 1;
 
-    int m_monthStart = DEFAULT_MONTH_START;
-
-    int m_trafHourKeepDays = DEFAULT_TRAF_HOUR_KEEP_DAYS;
-    int m_trafDayKeepDays = DEFAULT_TRAF_DAY_KEEP_DAYS;
-    int m_trafMonthKeepMonths = DEFAULT_TRAF_MONTH_KEEP_MONTHS;
-
-    int m_trafUnit = 0;
-
-    int m_allowedIpKeepCount = DEFAULT_LOG_IP_KEEP_COUNT;
-    int m_blockedIpKeepCount = DEFAULT_LOG_IP_KEEP_COUNT;
-
-    quint32 m_quotaDayMb = 0;
-    quint32 m_quotaMonthMb = 0;
-
     quint32 m_appGroupBits = 0;
-
-    QString m_password;
 
     QString m_activePeriodFrom;
     QString m_activePeriodTo;

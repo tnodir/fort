@@ -9,7 +9,7 @@
 #include <QTableView>
 #include <QVBoxLayout>
 
-#include "../../../fortmanager.h"
+#include "../../../conf/firewallconf.h"
 #include "../../../task/taskinfo.h"
 #include "../../../task/tasklistmodel.h"
 #include "../../../task/taskmanager.h"
@@ -27,24 +27,36 @@ const ValuesList taskIntervalHourValues = { 3, 1, 6, 12, 24, 24 * 7, 24 * 30 };
 SchedulePage::SchedulePage(OptionsController *ctrl, QWidget *parent) :
     BasePage(ctrl, parent), m_taskListModel(new TaskListModel(taskManager(), this))
 {
-    setupTaskListModel();
-
     setupUi();
+}
+
+void SchedulePage::setTaskEdited(bool v)
+{
+    if (m_taskEdited != v) {
+        m_taskEdited = v;
+
+        if (taskEdited()) {
+            ctrl()->setIniEdited();
+        }
+    }
 }
 
 void SchedulePage::onAboutToSave()
 {
-    // TODO: m_taskListModel->saveChanges();
+    if (taskEdited()) {
+        ini()->setTaskInfoList(taskListModel()->toVariant());
+    }
 }
 
 void SchedulePage::onEditResetted()
 {
-    m_taskListModel->resetEdited();
+    setTaskEdited(false);
+    taskListModel()->setupTaskRows();
 }
 
 void SchedulePage::onRetranslateUi()
 {
-    m_taskListModel->refresh();
+    taskListModel()->refresh();
 
     m_btTaskRun->setText(tr("Run"));
     m_btTaskAbort->setText(tr("Abort"));
@@ -59,11 +71,6 @@ void SchedulePage::retranslateTaskDetails()
 
     m_cscTaskInterval->setNames(list);
     m_cscTaskInterval->spinBox()->setSuffix(tr(" hour(s)"));
-}
-
-void SchedulePage::setupTaskListModel()
-{
-    connect(m_taskListModel, &TaskListModel::dataEdited, ctrl(), &OptionsController::setIniEdited);
 }
 
 void SchedulePage::setupUi()
@@ -96,9 +103,7 @@ void SchedulePage::setupTableTasks()
 
     connect(m_tableTasks, &TableView::doubleClicked, this, [&](const QModelIndex &index) {
         const auto taskInfo = taskListModel()->taskInfoAt(index.row());
-        if (taskInfo->type() == TaskInfo::ZoneDownloader) {
-            fortManager()->showZonesWindow();
-        }
+        emit taskManager()->taskDoubleClicked(taskInfo);
     });
 }
 
@@ -192,7 +197,10 @@ void SchedulePage::setupTableTasksChanged()
     refreshTableTasksChanged();
 
     connect(m_tableTasks, &TableView::currentIndexChanged, this, refreshTableTasksChanged);
-    connect(taskListModel(), &TaskListModel::dataChanged, this, refreshTableTasksChanged);
+    connect(taskListModel(), &TaskListModel::dataChanged, this, [&] {
+        refreshTableTasksChanged();
+        setTaskEdited(true);
+    });
 }
 
 int SchedulePage::currentTaskIndex() const

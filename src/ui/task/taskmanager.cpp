@@ -2,7 +2,6 @@
 
 #include "../conf/confmanager.h"
 #include "../fortmanager.h"
-#include "../fortsettings.h"
 #include "../util/dateutil.h"
 #include "taskinfoupdatechecker.h"
 #include "taskinfozonedownloader.h"
@@ -16,11 +15,6 @@ TaskManager::TaskManager(FortManager *fortManager, QObject *parent) :
     connect(&m_timer, &QTimer::timeout, this, &TaskManager::runExpiredTasks);
 }
 
-FortSettings *TaskManager::settings() const
-{
-    return fortManager()->settings();
-}
-
 ConfManager *TaskManager::confManager() const
 {
     return fortManager()->confManager();
@@ -28,12 +22,17 @@ ConfManager *TaskManager::confManager() const
 
 TaskInfoUpdateChecker *TaskManager::taskInfoUpdateChecker() const
 {
-    return static_cast<TaskInfoUpdateChecker *>(m_taskInfos.at(0));
+    return static_cast<TaskInfoUpdateChecker *>(taskInfoAt(0));
 }
 
 TaskInfoZoneDownloader *TaskManager::taskInfoZoneDownloader() const
 {
-    return static_cast<TaskInfoZoneDownloader *>(m_taskInfos.at(1));
+    return static_cast<TaskInfoZoneDownloader *>(taskInfoAt(1));
+}
+
+TaskInfo *TaskManager::taskInfoAt(int row) const
+{
+    return taskInfoList().at(row);
 }
 
 void TaskManager::initialize()
@@ -56,19 +55,30 @@ void TaskManager::appendTaskInfo(TaskInfo *taskInfo)
     connect(taskInfo, &TaskInfo::workStarted, this, &TaskManager::handleTaskStarted);
     connect(taskInfo, &TaskInfo::workFinished, this, &TaskManager::handleTaskFinished);
 
-    m_taskInfos.append(taskInfo);
+    m_taskInfoList.append(taskInfo);
 }
 
 void TaskManager::loadSettings()
 {
-    confManager()->loadTasks(m_taskInfos);
+    confManager()->loadTasks(taskInfoList());
 }
 
 bool TaskManager::saveSettings()
 {
-    runExpiredTasks();
+    return confManager()->saveTasks(taskInfoList());
+}
 
-    return confManager()->saveTasks(m_taskInfos);
+bool TaskManager::saveVariant(const QVariant &v)
+{
+    const QVariantList list = v.toList();
+
+    const int taskCount = taskInfoList().size();
+    for (int i = 0; i < taskCount; ++i) {
+        TaskInfo *task = taskInfoAt(i);
+        task->editFromVariant(list.value(i));
+    }
+
+    return saveSettings();
 }
 
 void TaskManager::handleTaskStarted()
@@ -94,7 +104,7 @@ void TaskManager::runExpiredTasks()
     const QDateTime now = DateUtil::now();
     bool enabledTaskExists = false;
 
-    for (TaskInfo *taskInfo : qAsConst(m_taskInfos)) {
+    for (TaskInfo *taskInfo : taskInfoList()) {
         if (!taskInfo->enabled())
             continue;
 

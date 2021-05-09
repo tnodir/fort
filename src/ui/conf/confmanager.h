@@ -12,6 +12,7 @@ class EnvManager;
 class FirewallConf;
 class FortManager;
 class FortSettings;
+class IniOptions;
 class SqliteDb;
 class SqliteStmt;
 class TaskInfo;
@@ -112,8 +113,10 @@ private:
     bool loadFromDb(FirewallConf &conf, bool &isNew);
     bool saveToDb(const FirewallConf &conf);
 
-    void readExtFlags(FirewallConf &conf);
-    void writeExtFlags(const FirewallConf &conf);
+    void saveOthersByIni(const IniOptions &ini);
+
+    void loadExtFlags(FirewallConf &conf);
+    void saveExtFlags(const FirewallConf &conf);
 
     bool removeAppGroupsInDb(const FirewallConf &conf);
 

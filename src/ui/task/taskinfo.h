@@ -69,8 +69,8 @@ public:
     TaskWorker *taskWorker() const { return m_taskWorker; }
     void setTaskWorker(TaskWorker *taskWorker);
 
-    void rawData(QByteArray &data) const;
-    void setRawData(const QByteArray &data);
+    QVariant editToVariant() const;
+    void editFromVariant(const QVariant &v);
 
     static QString typeToString(TaskInfo::TaskType type);
     static TaskInfo::TaskType stringToType(const QString &name);
