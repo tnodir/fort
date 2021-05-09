@@ -45,10 +45,9 @@ signals:
     void retranslateUi();
 
 public slots:
-    void setExtEdited();
-    void setIniEdited();
-    void setFlagsEdited();
     void setOptEdited();
+    void setFlagsEdited();
+    void setIniEdited();
 
     void resetEdited();
 

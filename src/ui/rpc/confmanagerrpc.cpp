@@ -56,8 +56,8 @@ bool ConfManagerRpc::saveConf(FirewallConf &newConf)
         return false;
     }
 
-    if (newConf.extEdited()) {
-        writeClientExtFlags(newConf);
+    if (newConf.iniEdited()) {
+        saveClientExtFlags(newConf.ini());
     }
 
     // Already applied by onConfChanged() & applySavedConf()

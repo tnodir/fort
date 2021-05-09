@@ -8,8 +8,6 @@
 FirewallConf::FirewallConf(QObject *parent) :
     QObject(parent),
     m_editedFlags(0),
-    m_startupMode(0),
-    m_explorerIntegrated(false),
     m_provBoot(false),
     m_filterEnabled(true),
     m_filterLocals(false),
@@ -31,16 +29,6 @@ FirewallConf::FirewallConf(QObject *parent) :
 void FirewallConf::resetEdited(bool v)
 {
     m_editedFlags = v ? AllEdited : NoneEdited;
-}
-
-void FirewallConf::setStartupMode(qint8 v)
-{
-    m_startupMode = v;
-}
-
-void FirewallConf::setExplorerIntegrated(bool v)
-{
-    m_explorerIntegrated = v;
 }
 
 void FirewallConf::setProvBoot(bool provBoot)
@@ -261,9 +249,6 @@ void FirewallConf::copyFlags(const FirewallConf &o)
 {
     m_editedFlags = o.editedFlags();
 
-    m_startupMode = o.startupMode();
-    m_explorerIntegrated = o.explorerIntegrated();
-
     m_provBoot = o.provBoot();
     m_filterEnabled = o.filterEnabled();
     m_filterLocals = o.filterLocals();
@@ -310,9 +295,6 @@ QVariant FirewallConf::flagsToVariant() const
 {
     QVariantMap map;
 
-    map["startupMode"] = startupMode();
-    map["explorerIntegrated"] = explorerIntegrated();
-
     map["provBoot"] = provBoot();
     map["filterEnabled"] = filterEnabled();
     map["filterLocals"] = filterLocals();
@@ -342,9 +324,6 @@ QVariant FirewallConf::flagsToVariant() const
 void FirewallConf::flagsFromVariant(const QVariant &v)
 {
     const QVariantMap map = v.toMap();
-
-    m_startupMode = map["startupMode"].toInt();
-    m_explorerIntegrated = map["explorerIntegrated"].toBool();
 
     m_provBoot = map["provBoot"].toBool();
     m_filterEnabled = map["filterEnabled"].toBool();

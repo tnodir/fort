@@ -60,18 +60,10 @@ ZoneListModel *OptionsController::zoneListModel() const
     return fortManager()->zoneListModel();
 }
 
-void OptionsController::setExtEdited()
+void OptionsController::setOptEdited()
 {
-    if (!conf()->extEdited()) {
-        conf()->setExtEdited();
-        emit editedChanged(true);
-    }
-}
-
-void OptionsController::setIniEdited()
-{
-    if (!conf()->iniEdited()) {
-        conf()->setIniEdited();
+    if (!conf()->optEdited()) {
+        conf()->setOptEdited();
         emit editedChanged(true);
     }
 }
@@ -84,10 +76,10 @@ void OptionsController::setFlagsEdited()
     }
 }
 
-void OptionsController::setOptEdited()
+void OptionsController::setIniEdited()
 {
-    if (!conf()->optEdited()) {
-        conf()->setOptEdited();
+    if (!conf()->iniEdited()) {
+        conf()->setIniEdited();
         emit editedChanged(true);
     }
 }

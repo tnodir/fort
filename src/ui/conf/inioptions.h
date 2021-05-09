@@ -38,6 +38,18 @@ public:
     QString password() const { return valueText("base/password_"); }
     void setPassword(const QString &v) { setValue("base/password_", v); }
 
+    bool startupModeSet() const { return contains("ext/startupMode_"); }
+    void cacheStartupMode(qint8 v) { setCache("ext/startupMode_", v); }
+
+    qint8 startupMode() const { return valueInt("ext/startupMode_"); }
+    void setStartupMode(qint8 v) { setValue("ext/startupMode_", v); }
+
+    bool explorerIntegratedSet() const { return contains("ext/explorerIntegrated_"); }
+    void cacheExplorerIntegrated(bool v) { setCache("ext/explorerIntegrated_", v); }
+
+    bool explorerIntegrated() const { return valueBool("ext/explorerIntegrated_"); }
+    void setExplorerIntegrated(bool v) { setValue("ext/explorerIntegrated_", v); }
+
     QString defaultLanguage() const;
 
     QString language() const { return valueText("base/language", defaultLanguage()); }
@@ -252,6 +264,7 @@ public slots:
 
 protected:
     QVariant value(const QString &key, const QVariant &defaultValue = QVariant()) const override;
+    void setCache(const QString &key, const QVariant &v) const;
 
     static bool isTransientKey(const QString &key);
 

@@ -27,10 +27,12 @@ protected:
     QByteArray valueByteArray(const QString &key) const;
 
     QColor valueColor(const QString &key, const QColor &defaultValue = QColor()) const;
-    void setColor(const QString &key, const QColor &value);
+    void setColor(const QString &key, const QColor &v);
 
     virtual QVariant value(const QString &key, const QVariant &defaultValue = QVariant()) const;
     void setValue(const QString &key, const QVariant &v);
+
+    bool contains(const QString &key) const;
 
 private:
     QVariantMap m_map;

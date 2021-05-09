@@ -412,6 +412,8 @@ void ConfManager::initConfToEdit()
     auto newConf = createConf();
     newConf->copy(*conf());
 
+    loadExtFlags(newConf->ini());
+
     setConfToEdit(newConf);
 }
 
@@ -467,7 +469,6 @@ bool ConfManager::loadConf(FirewallConf &conf)
     }
 
     settings()->readConfIni(conf);
-    loadExtFlags(conf);
 
     return true;
 }
@@ -497,14 +498,6 @@ bool ConfManager::saveConf(FirewallConf &conf)
 
     if (conf.iniEdited()) {
         saveOthersByIni(conf.ini());
-    }
-
-    if (conf.extEdited()) {
-        saveExtFlags(conf);
-
-        if (!settings()->isService()) {
-            writeClientExtFlags(conf);
-        }
     }
 
     conf.afterSaved();
@@ -981,31 +974,35 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
 
 void ConfManager::saveOthersByIni(const IniOptions &ini)
 {
-}
+    saveExtFlags(ini);
 
-void ConfManager::loadExtFlags(FirewallConf &conf)
-{
-    conf.setStartupMode(StartupUtil::getStartupMode());
-    conf.setExplorerIntegrated(StartupUtil::isExplorerIntegrated());
-}
-
-void ConfManager::saveExtFlags(const FirewallConf &conf)
-{
-    // Windows Explorer integration
-    if (conf.explorerIntegrated() != StartupUtil::isExplorerIntegrated()) {
-        StartupUtil::integrateExplorer(conf.explorerIntegrated());
+    if (!settings()->isService()) {
+        saveClientExtFlags(ini);
     }
 }
 
-void ConfManager::writeClientExtFlags(const FirewallConf &conf)
+void ConfManager::loadExtFlags(IniOptions &ini)
+{
+    ini.cacheStartupMode(StartupUtil::getStartupMode());
+    ini.cacheExplorerIntegrated(StartupUtil::isExplorerIntegrated());
+}
+
+void ConfManager::saveExtFlags(const IniOptions &ini)
+{
+    // Windows Explorer integration
+    if (ini.explorerIntegratedSet()) {
+        StartupUtil::integrateExplorer(ini.explorerIntegrated());
+    }
+}
+
+void ConfManager::saveClientExtFlags(const IniOptions &ini)
 {
     // Startup Mode
-    const auto oldStartupMode = StartupUtil::getStartupMode();
-    if (conf.startupMode() != oldStartupMode) {
-        StartupUtil::setStartupMode(conf.startupMode(), settings()->defaultLanguage());
+    if (ini.startupModeSet()) {
+        StartupUtil::setStartupMode(ini.startupMode(), settings()->defaultLanguage());
 
-        if (StartupUtil::isServiceMode(oldStartupMode)
-                != StartupUtil::isServiceMode(conf.startupMode())) {
+        if (StartupUtil::isServiceMode(StartupUtil::getStartupMode())
+                != StartupUtil::isServiceMode(ini.startupMode())) {
             QMetaObject::invokeMethod(
                     fortManager(), &FortManager::processRestartRequired, Qt::QueuedConnection);
         }

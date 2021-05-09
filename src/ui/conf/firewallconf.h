@@ -19,8 +19,7 @@ public:
         OptEdited = 0x1,
         FlagsEdited = 0x2,
         IniEdited = 0x4,
-        ExtEdited = 0x8,
-        AllEdited = (OptEdited | FlagsEdited | IniEdited | ExtEdited)
+        AllEdited = (OptEdited | FlagsEdited | IniEdited)
     };
 
     explicit FirewallConf(QObject *parent = nullptr);
@@ -36,17 +35,8 @@ public:
     bool iniEdited() const { return (m_editedFlags & IniEdited) != 0; }
     void setIniEdited() { m_editedFlags |= IniEdited; }
 
-    bool extEdited() const { return (m_editedFlags & ExtEdited) != 0; }
-    void setExtEdited() { m_editedFlags |= ExtEdited; }
-
     bool anyEdited() const { return m_editedFlags != NoneEdited; }
     void resetEdited(bool v = false);
-
-    qint8 startupMode() const { return m_startupMode; }
-    void setStartupMode(qint8 v);
-
-    bool explorerIntegrated() const { return m_explorerIntegrated; }
-    void setExplorerIntegrated(bool v);
 
     bool provBoot() const { return m_provBoot; }
     void setProvBoot(bool provBoot);
@@ -154,9 +144,6 @@ private:
 
 private:
     uint m_editedFlags : 4;
-
-    uint m_startupMode : 3;
-    uint m_explorerIntegrated : 1;
 
     uint m_provBoot : 1;
     uint m_filterEnabled : 1;

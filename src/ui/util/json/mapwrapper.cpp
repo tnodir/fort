@@ -61,9 +61,9 @@ QColor MapWrapper::valueColor(const QString &key, const QColor &defaultValue) co
     return { text };
 }
 
-void MapWrapper::setColor(const QString &key, const QColor &value)
+void MapWrapper::setColor(const QString &key, const QColor &v)
 {
-    setValue(key, value.name());
+    setValue(key, v.name());
 }
 
 QVariant MapWrapper::value(const QString &key, const QVariant &defaultValue) const
@@ -74,4 +74,9 @@ QVariant MapWrapper::value(const QString &key, const QVariant &defaultValue) con
 void MapWrapper::setValue(const QString &key, const QVariant &v)
 {
     m_map[key] = v;
+}
+
+bool MapWrapper::contains(const QString &key) const
+{
+    return map().contains(key);
 }

@@ -93,7 +93,7 @@ void OptionsPage::retranslateComboStartMode()
 
     int currentIndex = m_comboStartMode->currentIndex();
     if (m_comboStartMode->currentIndex() < 0) {
-        currentIndex = conf()->startupMode();
+        currentIndex = ini()->startupMode();
     }
 
     m_comboStartMode->clear();
@@ -201,8 +201,8 @@ QLayout *OptionsPage::setupStartModeLayout()
     m_labelStartMode = ControlUtil::createLabel();
 
     m_comboStartMode = ControlUtil::createComboBox(QStringList(), [&](int index) {
-        conf()->setStartupMode(index);
-        ctrl()->setExtEdited();
+        ini()->setStartupMode(index);
+        ctrl()->setIniEdited();
     });
     m_comboStartMode->setFixedWidth(200);
 
@@ -245,9 +245,9 @@ void OptionsPage::setupTrafficBox()
 
 void OptionsPage::setupGlobalBox()
 {
-    m_cbExplorerMenu = ControlUtil::createCheckBox(conf()->explorerIntegrated(), [&](bool checked) {
-        conf()->setExplorerIntegrated(checked);
-        ctrl()->setExtEdited();
+    m_cbExplorerMenu = ControlUtil::createCheckBox(ini()->explorerIntegrated(), [&](bool checked) {
+        ini()->setExplorerIntegrated(checked);
+        ctrl()->setIniEdited();
     });
     m_cbExplorerMenu->setEnabled(settings()->hasService() || OsUtil::isUserAdmin());
 

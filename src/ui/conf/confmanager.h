@@ -103,7 +103,7 @@ protected:
 
     void showErrorMessage(const QString &errorMessage);
 
-    void writeClientExtFlags(const FirewallConf &conf);
+    void saveClientExtFlags(const IniOptions &ini);
 
 private:
     bool checkResult(bool ok, bool commit = false);
@@ -115,8 +115,8 @@ private:
 
     void saveOthersByIni(const IniOptions &ini);
 
-    void loadExtFlags(FirewallConf &conf);
-    void saveExtFlags(const FirewallConf &conf);
+    void loadExtFlags(IniOptions &ini);
+    void saveExtFlags(const IniOptions &ini);
 
     bool removeAppGroupsInDb(const FirewallConf &conf);
 

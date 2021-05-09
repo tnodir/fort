@@ -18,6 +18,13 @@ QVariant IniOptions::value(const QString &key, const QVariant &defaultValue) con
     return settings() ? settings()->iniValue(key, defaultValue) : defaultValue;
 }
 
+void IniOptions::setCache(const QString &key, const QVariant &v) const
+{
+    Q_ASSERT(settings());
+
+    settings()->setCacheValue(key, v);
+}
+
 bool IniOptions::isTransientKey(const QString &key)
 {
     return key.endsWith('_');
