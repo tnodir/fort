@@ -325,20 +325,28 @@ void StatisticsPage::setupTrafUnits()
 void StatisticsPage::setupGraphOptionsMenu()
 {
     m_cbGraphAlwaysOnTop = ControlUtil::createCheckBox(false, [&](bool checked) {
-        ini()->setGraphWindowAlwaysOnTop(checked);
-        setIniEdited();
+        if (ini()->graphWindowAlwaysOnTop() != checked) {
+            ini()->setGraphWindowAlwaysOnTop(checked);
+            setIniEdited();
+        }
     });
     m_cbGraphFrameless = ControlUtil::createCheckBox(false, [&](bool checked) {
-        ini()->setGraphWindowFrameless(checked);
-        setIniEdited();
+        if (ini()->graphWindowFrameless() != checked) {
+            ini()->setGraphWindowFrameless(checked);
+            setIniEdited();
+        }
     });
     m_cbGraphClickThrough = ControlUtil::createCheckBox(false, [&](bool checked) {
-        ini()->setGraphWindowClickThrough(checked);
-        setIniEdited();
+        if (ini()->graphWindowClickThrough() != checked) {
+            ini()->setGraphWindowClickThrough(checked);
+            setIniEdited();
+        }
     });
     m_cbGraphHideOnHover = ControlUtil::createCheckBox(false, [&](bool checked) {
-        ini()->setGraphWindowHideOnHover(checked);
-        setIniEdited();
+        if (ini()->graphWindowHideOnHover() != checked) {
+            ini()->setGraphWindowHideOnHover(checked);
+            setIniEdited();
+        }
     });
 
     m_graphOpacity = createSpin(0, 100, " %");
@@ -375,33 +383,47 @@ void StatisticsPage::setupGraphOptionsMenu()
                 }
             });
 
-    connect(m_graphColor, &LabelColor::colorChanged, this, [&](const QColor &color) {
-        ini()->setGraphWindowColor(color);
-        setIniEdited();
+    connect(m_graphColor, &LabelColor::colorChanged, this, [&](const QColor &v) {
+        if (ini()->graphWindowColor() != v) {
+            ini()->setGraphWindowColor(v);
+            setIniEdited();
+        }
     });
-    connect(m_graphColorIn, &LabelColor::colorChanged, this, [&](const QColor &color) {
-        ini()->setGraphWindowColorIn(color);
-        setIniEdited();
+    connect(m_graphColorIn, &LabelColor::colorChanged, this, [&](const QColor &v) {
+        if (ini()->graphWindowColorIn() != v) {
+            ini()->setGraphWindowColorIn(v);
+            setIniEdited();
+        }
     });
-    connect(m_graphColorOut, &LabelColor::colorChanged, this, [&](const QColor &color) {
-        ini()->setGraphWindowColorOut(color);
-        setIniEdited();
+    connect(m_graphColorOut, &LabelColor::colorChanged, this, [&](const QColor &v) {
+        if (ini()->graphWindowColorOut() != v) {
+            ini()->setGraphWindowColorOut(v);
+            setIniEdited();
+        }
     });
-    connect(m_graphAxisColor, &LabelColor::colorChanged, this, [&](const QColor &color) {
-        ini()->setGraphWindowAxisColor(color);
-        setIniEdited();
+    connect(m_graphAxisColor, &LabelColor::colorChanged, this, [&](const QColor &v) {
+        if (ini()->graphWindowAxisColor() != v) {
+            ini()->setGraphWindowAxisColor(v);
+            setIniEdited();
+        }
     });
-    connect(m_graphTickLabelColor, &LabelColor::colorChanged, this, [&](const QColor &color) {
-        ini()->setGraphWindowTickLabelColor(color);
-        setIniEdited();
+    connect(m_graphTickLabelColor, &LabelColor::colorChanged, this, [&](const QColor &v) {
+        if (ini()->graphWindowTickLabelColor() != v) {
+            ini()->setGraphWindowTickLabelColor(v);
+            setIniEdited();
+        }
     });
-    connect(m_graphLabelColor, &LabelColor::colorChanged, this, [&](const QColor &color) {
-        ini()->setGraphWindowLabelColor(color);
-        setIniEdited();
+    connect(m_graphLabelColor, &LabelColor::colorChanged, this, [&](const QColor &v) {
+        if (ini()->graphWindowLabelColor() != v) {
+            ini()->setGraphWindowLabelColor(v);
+            setIniEdited();
+        }
     });
-    connect(m_graphGridColor, &LabelColor::colorChanged, this, [&](const QColor &color) {
-        ini()->setGraphWindowGridColor(color);
-        setIniEdited();
+    connect(m_graphGridColor, &LabelColor::colorChanged, this, [&](const QColor &v) {
+        if (ini()->graphWindowGridColor() != v) {
+            ini()->setGraphWindowGridColor(v);
+            setIniEdited();
+        }
     });
 
     // Menu
