@@ -10,6 +10,7 @@
 #include "../fortmanager.h"
 #include "../fortsettings.h"
 #include "../task/taskinfo.h"
+#include "../task/taskmanager.h"
 #include "../util/conf/confutil.h"
 #include "../util/dateutil.h"
 #include "../util/fileutil.h"
@@ -355,6 +356,11 @@ EnvManager *ConfManager::envManager() const
 FortSettings *ConfManager::settings() const
 {
     return fortManager()->settings();
+}
+
+TaskManager *ConfManager::taskManager() const
+{
+    return fortManager()->taskManager();
 }
 
 void ConfManager::showErrorMessage(const QString &errorMessage)
@@ -972,15 +978,6 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
     return checkResult(ok, true);
 }
 
-void ConfManager::saveOthersByIni(const IniOptions &ini)
-{
-    saveExtFlags(ini);
-
-    if (!settings()->isService()) {
-        saveClientExtFlags(ini);
-    }
-}
-
 void ConfManager::loadExtFlags(IniOptions &ini)
 {
     ini.cacheStartupMode(StartupUtil::getStartupMode());
@@ -1006,6 +1003,20 @@ void ConfManager::saveClientExtFlags(const IniOptions &ini)
             QMetaObject::invokeMethod(
                     fortManager(), &FortManager::processRestartRequired, Qt::QueuedConnection);
         }
+    }
+}
+
+void ConfManager::saveOthersByIni(const IniOptions &ini)
+{
+    saveExtFlags(ini);
+
+    if (!settings()->isService()) {
+        saveClientExtFlags(ini);
+    }
+
+    // Task Info List
+    if (ini.taskInfoListSet()) {
+        taskManager()->saveVariant(ini.taskInfoList());
     }
 }
 

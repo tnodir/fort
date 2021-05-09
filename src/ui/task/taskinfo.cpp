@@ -102,12 +102,6 @@ void TaskInfo::setTaskWorker(TaskWorker *taskWorker)
     }
 }
 
-QVariant TaskInfo::editToVariant() const
-{
-    const TaskEditInfo info(enabled(), intervalHours());
-    return info.value();
-}
-
 void TaskInfo::editFromVariant(const QVariant &v)
 {
     const TaskEditInfo info(v.toUInt());

@@ -159,8 +159,8 @@ void TaskListModel::setupTaskRows()
 QVariant TaskListModel::toVariant() const
 {
     QVariantList list;
-    for (const TaskInfo *task : taskInfoList()) {
-        list.append(task->editToVariant());
+    for (const TaskEditInfo &info : qAsConst(m_taskRows)) {
+        list.append(info.value());
     }
     return list;
 }

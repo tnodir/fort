@@ -16,6 +16,7 @@ class IniOptions;
 class SqliteDb;
 class SqliteStmt;
 class TaskInfo;
+class TaskManager;
 
 class ConfManager : public QObject, public ConfAppsWalker
 {
@@ -31,6 +32,8 @@ public:
     DriverManager *driverManager() const;
     EnvManager *envManager() const;
     FortSettings *settings() const;
+    TaskManager *taskManager() const;
+
     SqliteDb *sqliteDb() const { return m_sqliteDb; }
 
     FirewallConf *conf() const { return m_conf; }
@@ -113,10 +116,10 @@ private:
     bool loadFromDb(FirewallConf &conf, bool &isNew);
     bool saveToDb(const FirewallConf &conf);
 
-    void saveOthersByIni(const IniOptions &ini);
-
     void loadExtFlags(IniOptions &ini);
     void saveExtFlags(const IniOptions &ini);
+
+    void saveOthersByIni(const IniOptions &ini);
 
     bool removeAppGroupsInDb(const FirewallConf &conf);
 

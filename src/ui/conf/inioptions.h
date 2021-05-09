@@ -50,6 +50,11 @@ public:
     bool explorerIntegrated() const { return valueBool("ext/explorerIntegrated_"); }
     void setExplorerIntegrated(bool v) { setValue("ext/explorerIntegrated_", v); }
 
+    bool taskInfoListSet() const { return contains("task/infoList_"); }
+
+    QVariant taskInfoList() const { return value("task/infoList_"); }
+    void setTaskInfoList(const QVariant &v) { setValue("task/infoList_", v); }
+
     QString defaultLanguage() const;
 
     QString language() const { return valueText("base/language", defaultLanguage()); }
@@ -69,9 +74,6 @@ public:
         return valueText("hotKey/appGroupModifiers", "Ctrl+Alt+Shift");
     }
     QString hotKeyQuit() const { return valueText("hotKey/quit"); }
-
-    QVariant taskInfoList() const { return value("task/infoList_"); }
-    void setTaskInfoList(const QVariant &v) { setValue("task/infoList_", v); }
 
     qint32 quotaDayAlerted() const { return valueInt("quota/dayAlerted"); }
     void setQuotaDayAlerted(qint32 v) { setValue("quota/dayAlerted", v); }
