@@ -38,6 +38,9 @@ public:
 
     QVariant toVariant() const;
 
+signals:
+    void dataEdited();
+
 private:
     QVariant dataDisplay(const QModelIndex &index) const;
     QVariant dataCheckState(const QModelIndex &index) const;

@@ -30,14 +30,11 @@ SchedulePage::SchedulePage(OptionsController *ctrl, QWidget *parent) :
     setupUi();
 }
 
-void SchedulePage::setTaskEdited(bool v)
+void SchedulePage::setTaskEdited()
 {
-    if (m_taskEdited != v) {
-        m_taskEdited = v;
-
-        if (taskEdited()) {
-            ctrl()->setIniEdited();
-        }
+    if (!m_taskEdited) {
+        m_taskEdited = true;
+        ctrl()->setIniEdited();
     }
 }
 
@@ -50,7 +47,8 @@ void SchedulePage::onAboutToSave()
 
 void SchedulePage::onEditResetted()
 {
-    setTaskEdited(false);
+    m_taskEdited = false;
+
     taskListModel()->setupTaskRows();
 }
 
@@ -197,10 +195,9 @@ void SchedulePage::setupTableTasksChanged()
     refreshTableTasksChanged();
 
     connect(m_tableTasks, &TableView::currentIndexChanged, this, refreshTableTasksChanged);
-    connect(taskListModel(), &TaskListModel::dataChanged, this, [&] {
-        refreshTableTasksChanged();
-        setTaskEdited(true);
-    });
+    connect(taskListModel(), &TaskListModel::dataChanged, this, refreshTableTasksChanged);
+
+    connect(taskListModel(), &TaskListModel::dataEdited, this, &SchedulePage::setTaskEdited);
 }
 
 int SchedulePage::currentTaskIndex() const

@@ -18,7 +18,7 @@ public:
     explicit SchedulePage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
     bool taskEdited() const { return m_taskEdited; }
-    void setTaskEdited(bool v);
+    void setTaskEdited();
 
     TaskListModel *taskListModel() const { return m_taskListModel; }
 

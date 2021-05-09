@@ -182,6 +182,7 @@ void TaskListModel::setTaskEnabled(const QModelIndex &index, bool v)
     taskRow.setEnabled(v);
 
     emit dataChanged(index, index, { Qt::CheckStateRole });
+    emit dataEdited();
 }
 
 int TaskListModel::taskIntervalHours(int row) const
@@ -201,6 +202,7 @@ void TaskListModel::setTaskIntervalHours(const QModelIndex &index, int v)
     taskRow.setIntervalHours(v);
 
     emit dataChanged(index, index, { Qt::DisplayRole });
+    emit dataEdited();
 }
 
 QString TaskListModel::formatDateTime(const QDateTime &dateTime)
