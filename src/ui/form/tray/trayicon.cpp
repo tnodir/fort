@@ -91,8 +91,8 @@ HotKeyManager *TrayIcon::hotKeyManager() const
 void TrayIcon::updateTrayIcon(bool alerted)
 {
     const auto icon = alerted
-            ? GuiUtil::overlayIcon(":/images/sheild-96.png", ":/icons/sign-warning.png")
-            : IconCache::icon(":/images/sheild-96.png");
+            ? GuiUtil::overlayIcon(":/icons/sheild-96.png", ":/icons/sign-warning.png")
+            : IconCache::icon(":/icons/sheild-96.png");
 
     this->setIcon(icon);
 }

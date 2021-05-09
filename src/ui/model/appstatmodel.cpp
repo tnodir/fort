@@ -137,7 +137,7 @@ QVariant AppStatModel::dataDecoration(const QModelIndex &index) const
 {
     const int row = index.row();
     if (row == 0) {
-        return IconCache::icon(":/images/computer-96.png");
+        return IconCache::icon(":/icons/computer-96.png");
     }
 
     const auto appPath = list().at(row);

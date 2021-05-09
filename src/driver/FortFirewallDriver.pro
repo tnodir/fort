@@ -1,3 +1,5 @@
+include(../global.pri)
+
 include(Driver.pri)
 
 QT = core

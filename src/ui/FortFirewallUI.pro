@@ -1,13 +1,12 @@
-QT += core gui network widgets
+include(../global.pri)
 
-CONFIG += c++17
+include(FortFirewallUI-include.pri)
 
-TEMPLATE = app
-TARGET = FortFirewall
-DESTDIR = ./
-MOC_DIR = .moc
-OBJECTS_DIR = .obj
-RCC_DIR = .rcc
+CONFIG -= debug_and_release
+CONFIG += staticlib
+
+TARGET = FortFirewallUILib
+TEMPLATE = lib
 
 SOURCES += \
     appinfo/appinfo.cpp \
@@ -76,7 +75,6 @@ SOURCES += \
     log/logentrystattraf.cpp \
     log/logentrytime.cpp \
     log/logmanager.cpp \
-    main.cpp \
     model/applistmodel.cpp \
     model/appstatmodel.cpp \
     model/connlistmodel.cpp \
@@ -284,14 +282,9 @@ HEADERS += \
     util/worker/workermanager.h \
     util/worker/workerobject.h
 
-# Version
-include(../version/Version.pri)
-
-# Driver integration
-include(../driver/Driver.pri)
-
 # Icons & Images
-RESOURCES += fort-icons.qrc fort-images.qrc
+RESOURCES += \
+    fort_icons.qrc
 
 # Database Migrations
 OTHER_FILES += \
@@ -300,39 +293,18 @@ OTHER_FILES += \
     stat/migrations/*.sql
 
 RESOURCES += \
-    appinfo/appinfo-migrations.qrc \
-    conf/conf-migrations.qrc \
-    stat/stat-migrations.qrc
+    appinfo/appinfo_migrations.qrc \
+    conf/conf_migrations.qrc \
+    stat/stat_migrations.qrc
 
 # Zone
 OTHER_FILES += conf/zone/*.json
 
-RESOURCES += conf/conf-zone.qrc
+RESOURCES += \
+    conf/conf_zone.qrc
 
-# Shadow Build: Copy i18n/ to build path
-!equals(PWD, $${OUT_PWD}) {
-    i18n.files = $$files(i18n/*.qm)
-    i18n.path = $${OUT_PWD}/i18n
-    COPIES += i18n
-}
-
-# Windows
-RC_FILE = FortFirewall.rc
-OTHER_FILES += $${RC_FILE}
-
-# Visual Leak Detector
-visual_leak_detector {
-    VLD_PATH = D:/Utils/Dev/VisualLeakDetector
-
-    # 1) On the Project tab, under Build & Run / Build Steps / Details,
-    # append to the Additional Arguments: CONFIG+=visual_leak_detector
-    # 2) On the Project tab, under Build & Run / Run / Run Environment,
-    # append to the PATH: $$VLD_PATH/bin/Win32
-
-    INCLUDEPATH += $$VLD_PATH/include/
-    LIBS += -L"$$VLD_PATH/lib/Win64"
-    DEFINES += USE_VISUAL_LEAK_DETECTOR VLD_FORCE_ENABLE
-}
+# Driver integration
+include(../driver/Driver.pri)
 
 # 3rd party integrations
 CONFIG += qcustomplot sqlite

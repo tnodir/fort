@@ -159,7 +159,7 @@ void ConnectionsWindow::setupUi()
     this->setFont(QFont("Tahoma", 9));
 
     // Icon
-    this->setWindowIcon(GuiUtil::overlayIcon(":/images/sheild-96.png", ":/icons/connect.png"));
+    this->setWindowIcon(GuiUtil::overlayIcon(":/icons/sheild-96.png", ":/icons/connect.png"));
 
     // Size
     this->setMinimumSize(500, 400);

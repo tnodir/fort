@@ -153,7 +153,7 @@ QImage getIcon(const QString &appPath)
         return {};
 
     if (FileUtil::isSystemApp(appPath)) {
-        const auto pixmap = IconCache::file(":/images/windows-48.png");
+        const auto pixmap = IconCache::file(":/icons/windows-48.png");
         return pixmap.toImage();
     }
 

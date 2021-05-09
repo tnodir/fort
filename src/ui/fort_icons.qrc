@@ -1,5 +1,6 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
+    <file>icons/application-window-96.png</file>
     <file>icons/arrow-curve.png</file>
     <file>icons/arrow-curve-180.png</file>
     <file>icons/arrow-join.png</file>
@@ -7,6 +8,7 @@
     <file>icons/arrow-retweet.png</file>
     <file>icons/clock.png</file>
     <file>icons/cog.png</file>
+    <file>icons/computer-96.png</file>
     <file>icons/connect.png</file>
     <file>icons/copy.png</file>
     <file>icons/database.png</file>
@@ -24,6 +26,7 @@
     <file>icons/map-marker.png</file>
     <file>icons/pencil.png</file>
     <file>icons/puzzle.png</file>
+    <file>icons/sheild-96.png</file>
     <file>icons/sign-add.png</file>
     <file>icons/sign-ban.png</file>
     <file>icons/sign-check.png</file>
@@ -34,6 +37,7 @@
     <file>icons/task-list.png</file>
     <file>icons/trashcan-full.png</file>
     <file>icons/window.png</file>
+    <file>icons/windows-48.png</file>
     <file>icons/wrench.png</file>
 </qresource>
 </RCC>

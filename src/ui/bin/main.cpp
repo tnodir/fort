@@ -28,6 +28,16 @@ static void uninstall()
     DriverCommon::provUnregister(); // Unregister booted provider
 }
 
+static void setupResources()
+{
+    Q_INIT_RESOURCE(appinfo_migrations);
+    Q_INIT_RESOURCE(conf_migrations);
+    Q_INIT_RESOURCE(conf_zone);
+    Q_INIT_RESOURCE(stat_migrations);
+
+    Q_INIT_RESOURCE(fort_icons);
+}
+
 static void setupAppStyle()
 {
     const auto fusionStyle = QStyleFactory::create("Fusion");
@@ -70,6 +80,8 @@ int main(int argc, char *argv[])
     if (controlManager.isCommandClient()) {
         return controlManager.postCommand() ? 0 : FORT_ERROR_CONTROL;
     }
+
+    setupResources();
 
     FortManager fortManager(&settings, &envManager, &controlManager);
 
