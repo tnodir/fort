@@ -554,7 +554,11 @@ bool ConfManager::saveFlags()
 
 void ConfManager::saveIni()
 {
-    // TODO: Save changed conf()->ini()
+    conf()->setIniEdited();
+
+    saveConf(*conf());
+
+    conf()->resetEdited();
 }
 
 bool ConfManager::saveVariant(const QVariant &confVar)

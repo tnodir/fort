@@ -70,14 +70,14 @@ void StatisticsPage::setIniEdited()
     }
 }
 
-void StatisticsPage::onSaveWindowState()
+void StatisticsPage::onSaveWindowState(IniOptions *ini)
 {
-    ini()->setOptWindowStatSplit(m_splitter->saveState());
+    ini->setOptWindowStatSplit(m_splitter->saveState());
 }
 
-void StatisticsPage::onRestoreWindowState()
+void StatisticsPage::onRestoreWindowState(IniOptions *ini)
 {
-    m_splitter->restoreState(ini()->optWindowStatSplit());
+    m_splitter->restoreState(ini->optWindowStatSplit());
 }
 
 void StatisticsPage::onRetranslateUi()

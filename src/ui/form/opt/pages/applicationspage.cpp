@@ -56,14 +56,14 @@ void ApplicationsPage::setAppGroupIndex(int v)
     }
 }
 
-void ApplicationsPage::onSaveWindowState()
+void ApplicationsPage::onSaveWindowState(IniOptions *ini)
 {
-    ini()->setOptWindowAppsSplit(m_splitter->saveState());
+    ini->setOptWindowAppsSplit(m_splitter->saveState());
 }
 
-void ApplicationsPage::onRestoreWindowState()
+void ApplicationsPage::onRestoreWindowState(IniOptions *ini)
 {
-    m_splitter->restoreState(ini()->optWindowAppsSplit());
+    m_splitter->restoreState(ini->optWindowAppsSplit());
 }
 
 void ApplicationsPage::onRetranslateUi()

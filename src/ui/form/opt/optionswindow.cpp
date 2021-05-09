@@ -25,9 +25,14 @@ ConfManager *OptionsWindow::confManager() const
     return ctrl()->confManager();
 }
 
+FirewallConf *OptionsWindow::conf() const
+{
+    return confManager()->conf();
+}
+
 IniOptions *OptionsWindow::ini() const
 {
-    return ctrl()->ini();
+    return &conf()->ini();
 }
 
 void OptionsWindow::saveWindowState()
@@ -35,7 +40,7 @@ void OptionsWindow::saveWindowState()
     ini()->setOptWindowGeometry(m_stateWatcher->geometry());
     ini()->setOptWindowMaximized(m_stateWatcher->maximized());
 
-    emit ctrl()->afterSaveWindowState();
+    emit ctrl()->afterSaveWindowState(ini());
 
     confManager()->saveIni();
 }
@@ -45,7 +50,7 @@ void OptionsWindow::restoreWindowState()
     m_stateWatcher->restore(
             this, QSize(1024, 768), ini()->optWindowGeometry(), ini()->optWindowMaximized());
 
-    emit ctrl()->afterRestoreWindowState();
+    emit ctrl()->afterRestoreWindowState(ini());
 }
 
 void OptionsWindow::setupController()

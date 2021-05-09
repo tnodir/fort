@@ -11,8 +11,8 @@ public:
     explicit RulesPage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
 protected slots:
-    void onSaveWindowState() override;
-    void onRestoreWindowState() override;
+    void onSaveWindowState(IniOptions *ini) override;
+    void onRestoreWindowState(IniOptions *ini) override;
 
     void onRetranslateUi() override;
 

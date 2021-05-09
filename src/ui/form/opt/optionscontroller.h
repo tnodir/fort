@@ -39,8 +39,8 @@ signals:
 
     void aboutToSave();
 
-    void afterSaveWindowState();
-    void afterRestoreWindowState();
+    void afterSaveWindowState(IniOptions *ini);
+    void afterRestoreWindowState(IniOptions *ini);
 
     void retranslateUi();
 

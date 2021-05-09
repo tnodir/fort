@@ -47,14 +47,14 @@ void AddressesPage::setAddressGroupIndex(int v)
     }
 }
 
-void AddressesPage::onSaveWindowState()
+void AddressesPage::onSaveWindowState(IniOptions *ini)
 {
-    ini()->setOptWindowAddrSplit(m_splitter->saveState());
+    ini->setOptWindowAddrSplit(m_splitter->saveState());
 }
 
-void AddressesPage::onRestoreWindowState()
+void AddressesPage::onRestoreWindowState(IniOptions *ini)
 {
-    m_splitter->restoreState(ini()->optWindowAddrSplit());
+    m_splitter->restoreState(ini->optWindowAddrSplit());
 }
 
 void AddressesPage::onRetranslateUi()

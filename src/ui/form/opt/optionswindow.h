@@ -4,6 +4,7 @@
 #include "../../util/window/widgetwindow.h"
 
 class ConfManager;
+class FirewallConf;
 class FortManager;
 class IniOptions;
 class MainPage;
@@ -19,6 +20,7 @@ public:
 
     OptionsController *ctrl() const { return m_ctrl; }
     ConfManager *confManager() const;
+    FirewallConf *conf() const;
     IniOptions *ini() const;
 
     void saveWindowState();

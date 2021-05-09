@@ -5,18 +5,10 @@ RulesPage::RulesPage(OptionsController *ctrl, QWidget *parent) : BasePage(ctrl, 
     setupUi();
 }
 
-void RulesPage::onSaveWindowState()
-{
-}
+void RulesPage::onSaveWindowState(IniOptions * /*ini*/) { }
 
-void RulesPage::onRestoreWindowState()
-{
-}
+void RulesPage::onRestoreWindowState(IniOptions * /*ini*/) { }
 
-void RulesPage::onRetranslateUi()
-{
-}
+void RulesPage::onRetranslateUi() { }
 
-void RulesPage::setupUi()
-{
-}
+void RulesPage::setupUi() { }
