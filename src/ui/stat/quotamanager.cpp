@@ -131,8 +131,10 @@ void QuotaManager::setQuotaDayAlerted(qint32 v)
 {
     m_quotaDayAlerted = v;
 
-    ini()->setQuotaDayAlerted(v);
-    confManager()->saveIni();
+    if (ini()->quotaDayAlerted() != v) {
+        ini()->setQuotaDayAlerted(v);
+        confManager()->saveIni();
+    }
 }
 
 qint32 QuotaManager::quotaMonthAlerted() const
@@ -144,6 +146,8 @@ void QuotaManager::setQuotaMonthAlerted(qint32 v)
 {
     m_quotaMonthAlerted = v;
 
-    ini()->setQuotaMonthAlerted(v);
-    confManager()->saveIni();
+    if (ini()->quotaMonthAlerted() != v) {
+        ini()->setQuotaMonthAlerted(v);
+        confManager()->saveIni();
+    }
 }
