@@ -63,7 +63,6 @@ public:
 
     QString menuLabel() const;
 
-    void clear();
     void copy(const AppGroup &o);
 
     QVariant toVariant() const;

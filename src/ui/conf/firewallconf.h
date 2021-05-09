@@ -99,8 +99,8 @@ public:
 
     const QList<AppGroup *> &appGroups() const { return m_appGroups; }
 
-    const QList<AppGroup *> &removedAppGroupsList() const { return m_removedAppGroups; }
-    void clearRemovedAppGroups() const;
+    const QVector<qint64> &removedAppGroupIdList() const { return m_removedAppGroupIdList; }
+    void clearRemovedAppGroupIdList() const;
 
     IniOptions &ini() { return m_iniOptions; }
     const IniOptions &ini() const { return m_iniOptions; }
@@ -142,6 +142,9 @@ private:
     QVariant appGroupsToVariant() const;
     void appGroupsFromVariant(const QVariant &v);
 
+    QVariant removedAppGroupIdListToVariant() const;
+    void removedAppGroupIdListFromVariant(const QVariant &v);
+
 private:
     uint m_editedFlags : 4;
 
@@ -171,7 +174,7 @@ private:
 
     QList<AddressGroup *> m_addressGroups;
     QList<AppGroup *> m_appGroups;
-    mutable QList<AppGroup *> m_removedAppGroups;
+    mutable QVector<qint64> m_removedAppGroupIdList;
 
     IniOptions m_iniOptions;
 };

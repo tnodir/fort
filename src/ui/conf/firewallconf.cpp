@@ -152,7 +152,8 @@ void FirewallConf::addAppGroup(AppGroup *appGroup, int to)
 
 AppGroup *FirewallConf::addAppGroupByName(const QString &name)
 {
-    auto appGroup = !m_removedAppGroups.isEmpty() ? m_removedAppGroups.takeLast() : new AppGroup();
+    auto appGroup = new AppGroup();
+    appGroup->setId(m_removedAppGroupIdList.isEmpty() ? 0 : m_removedAppGroupIdList.takeLast());
     appGroup->setName(name);
     addAppGroup(appGroup);
     return appGroup;
@@ -176,12 +177,10 @@ void FirewallConf::removeAppGroup(int from, int to)
     const int hi = qMax(from, to);
     for (int i = hi; i >= lo; --i) {
         AppGroup *appGroup = m_appGroups.at(i);
-        if (appGroup->id() == 0) {
-            appGroup->deleteLater();
-        } else {
-            appGroup->clear();
-            m_removedAppGroups.append(appGroup);
+        if (appGroup->id() > 0) {
+            m_removedAppGroupIdList.append(appGroup->id());
         }
+        appGroup->deleteLater();
 
         m_appGroups.removeAt(i);
     }
@@ -195,10 +194,9 @@ void FirewallConf::addDefaultAppGroup()
     appGroup->setAllowText(FileUtil::appBinLocation() + "/**");
 }
 
-void FirewallConf::clearRemovedAppGroups() const
+void FirewallConf::clearRemovedAppGroupIdList() const
 {
-    qDeleteAll(m_removedAppGroups);
-    m_removedAppGroups.clear();
+    m_removedAppGroupIdList.clear();
 }
 
 void FirewallConf::loadAppGroupBits()
@@ -387,6 +385,23 @@ void FirewallConf::appGroupsFromVariant(const QVariant &v)
     }
 }
 
+QVariant FirewallConf::removedAppGroupIdListToVariant() const
+{
+    QVariantList list;
+    for (const qint64 id : removedAppGroupIdList()) {
+        list.append(id);
+    }
+    return list;
+}
+
+void FirewallConf::removedAppGroupIdListFromVariant(const QVariant &v)
+{
+    const QVariantList list = v.toList();
+    for (const QVariant &v : list) {
+        m_removedAppGroupIdList.append(v.toLongLong());
+    }
+}
+
 QVariant FirewallConf::toVariant(bool onlyFlags) const
 {
     QVariantMap map;
@@ -398,6 +413,7 @@ QVariant FirewallConf::toVariant(bool onlyFlags) const
     if (!onlyFlags || optEdited()) {
         map["addressGroups"] = addressesToVariant();
         map["appGroups"] = appGroupsToVariant();
+        map["removedAppGroupIdList"] = removedAppGroupIdListToVariant();
     }
 
     if (!onlyFlags || flagsEdited()) {
@@ -424,6 +440,7 @@ void FirewallConf::fromVariant(const QVariant &v, bool onlyFlags)
     if (optEdited()) {
         addressesFromVariant(map["addressGroups"]);
         appGroupsFromVariant(map["appGroups"]);
+        removedAppGroupIdListFromVariant(map["removedAppGroupIdList"]);
     }
 
     if (flagsEdited()) {

@@ -1025,20 +1025,20 @@ bool ConfManager::removeAppGroupsInDb(const FirewallConf &conf)
     Q_ASSERT(!conf.appGroups().isEmpty());
     const auto defaultAppGroupId = conf.appGroups().at(0)->id();
 
-    for (AppGroup *appGroup : conf.removedAppGroupsList()) {
+    for (const qint64 appGroupId : conf.removedAppGroupIdList()) {
         bool ok;
 
-        sqliteDb()->executeEx(sqlUpdateAppResetGroup,
-                QVariantList() << appGroup->id() << defaultAppGroupId, 0, &ok);
+        sqliteDb()->executeEx(
+                sqlUpdateAppResetGroup, QVariantList() << appGroupId << defaultAppGroupId, 0, &ok);
         if (!ok)
             return false;
 
-        sqliteDb()->executeEx(sqlDeleteAppGroup, QVariantList() << appGroup->id(), 0, &ok);
+        sqliteDb()->executeEx(sqlDeleteAppGroup, QVariantList() << appGroupId, 0, &ok);
         if (!ok)
             return false;
     }
 
-    conf.clearRemovedAppGroups();
+    conf.clearRemovedAppGroupIdList();
 
     return true;
 }
