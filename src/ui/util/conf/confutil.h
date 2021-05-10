@@ -73,14 +73,19 @@ private:
             appentry_map_t &wildAppsMap, appentry_map_t &prefixAppsMap, appentry_map_t &exeAppsMap,
             quint32 &wildAppsSize, quint32 &prefixAppsSize, quint32 &exeAppsSize);
 
-    static void parseAppPeriod(
-            const AppGroup *appGroup, chars_arr_t &appPeriods, quint8 &appPeriodsCount);
+    bool addParsedApp(int groupIndex, bool blocked, bool isWild, bool isPrefix,
+            const QString &appPath, appentry_map_t &wildAppsMap, appentry_map_t &prefixAppsMap,
+            appentry_map_t &exeAppsMap, quint32 &wildAppsSize, quint32 &prefixAppsSize,
+            quint32 &exeAppsSize);
 
     bool addApp(int groupIndex, bool useGroupPerm, bool blocked, bool alerted, bool isNew,
             const QString &appPath, appentry_map_t &appsMap, quint32 &appsSize,
             bool canOverwrite = true);
 
     static QString parseAppPath(const StringView line, bool &isWild, bool &isPrefix);
+
+    static void parseAppPeriod(
+            const AppGroup *appGroup, chars_arr_t &appPeriods, quint8 &appPeriodsCount);
 
     static void writeData(char *output, const FirewallConf &conf,
             const addrranges_arr_t &addressRanges, const longs_arr_t &addressGroupOffsets,

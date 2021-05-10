@@ -363,35 +363,23 @@ bool ConfUtil::parseAppsText(int groupIndex, bool blocked, const QString &text,
         if (appPath.isEmpty())
             continue;
 
-        appentry_map_t &appsMap = isWild ? wildAppsMap : (isPrefix ? prefixAppsMap : exeAppsMap);
-        quint32 &appsSize = isWild ? wildAppsSize : (isPrefix ? prefixAppsSize : exeAppsSize);
-
-        if (!addApp(groupIndex, true, blocked, false, true, appPath, appsMap, appsSize, false))
+        if (!addParsedApp(groupIndex, blocked, isWild, isPrefix, appPath, wildAppsMap,
+                    prefixAppsMap, exeAppsMap, wildAppsSize, prefixAppsSize, exeAppsSize))
             return false;
     }
 
     return true;
 }
 
-void ConfUtil::parseAppPeriod(
-        const AppGroup *appGroup, chars_arr_t &appPeriods, quint8 &appPeriodsCount)
+bool ConfUtil::addParsedApp(int groupIndex, bool blocked, bool isWild, bool isPrefix,
+        const QString &appPath, appentry_map_t &wildAppsMap, appentry_map_t &prefixAppsMap,
+        appentry_map_t &exeAppsMap, quint32 &wildAppsSize, quint32 &prefixAppsSize,
+        quint32 &exeAppsSize)
 {
-    quint8 fromHour = 0, fromMinute = 0;
-    quint8 toHour = 0, toMinute = 0;
+    appentry_map_t &appsMap = isWild ? wildAppsMap : (isPrefix ? prefixAppsMap : exeAppsMap);
+    quint32 &appsSize = isWild ? wildAppsSize : (isPrefix ? prefixAppsSize : exeAppsSize);
 
-    if (appGroup->periodEnabled()) {
-        DateUtil::parseTime(appGroup->periodFrom(), fromHour, fromMinute);
-        DateUtil::parseTime(appGroup->periodTo(), toHour, toMinute);
-
-        if (fromHour != 0 || fromMinute != 0 || toHour != 0 || toMinute != 0) {
-            ++appPeriodsCount;
-        }
-    }
-
-    appPeriods.append(qint8(fromHour));
-    appPeriods.append(qint8(fromMinute));
-    appPeriods.append(qint8(toHour));
-    appPeriods.append(qint8(toMinute));
+    return addApp(groupIndex, true, blocked, false, true, appPath, appsMap, appsSize, false);
 }
 
 bool ConfUtil::addApp(int groupIndex, bool useGroupPerm, bool blocked, bool alerted, bool isNew,
@@ -453,6 +441,27 @@ QString ConfUtil::parseAppPath(const StringView line, bool &isWild, bool &isPref
     }
 
     return path.toString();
+}
+
+void ConfUtil::parseAppPeriod(
+        const AppGroup *appGroup, chars_arr_t &appPeriods, quint8 &appPeriodsCount)
+{
+    quint8 fromHour = 0, fromMinute = 0;
+    quint8 toHour = 0, toMinute = 0;
+
+    if (appGroup->periodEnabled()) {
+        DateUtil::parseTime(appGroup->periodFrom(), fromHour, fromMinute);
+        DateUtil::parseTime(appGroup->periodTo(), toHour, toMinute);
+
+        if (fromHour != 0 || fromMinute != 0 || toHour != 0 || toMinute != 0) {
+            ++appPeriodsCount;
+        }
+    }
+
+    appPeriods.append(qint8(fromHour));
+    appPeriods.append(qint8(fromMinute));
+    appPeriods.append(qint8(toHour));
+    appPeriods.append(qint8(toMinute));
 }
 
 void ConfUtil::writeData(char *output, const FirewallConf &conf,
