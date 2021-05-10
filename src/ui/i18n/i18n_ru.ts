@@ -235,6 +235,13 @@
     </message>
 </context>
 <context>
+    <name>ConfManagerRpc</name>
+    <message>
+        <source>Settings changed by someone else</source>
+        <translation>Настройки изменены кем-то другим</translation>
+    </message>
+</context>
+<context>
     <name>ConfUtil</name>
     <message>
         <source>Bad Include IP address: %1</source>

@@ -235,6 +235,13 @@
     </message>
 </context>
 <context>
+    <name>ConfManagerRpc</name>
+    <message>
+        <source>Settings changed by someone else</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ConfUtil</name>
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>

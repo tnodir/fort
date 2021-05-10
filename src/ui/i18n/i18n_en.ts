@@ -235,6 +235,13 @@
     </message>
 </context>
 <context>
+    <name>ConfManagerRpc</name>
+    <message>
+        <source>Settings changed by someone else</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>ConfUtil</name>
     <message>
         <source>Too many application paths</source>

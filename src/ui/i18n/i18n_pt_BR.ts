@@ -235,6 +235,13 @@
     </message>
 </context>
 <context>
+    <name>ConfManagerRpc</name>
+    <message>
+        <source>Settings changed by someone else</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ConfUtil</name>
     <message>
         <source>Too many application paths</source>
@@ -634,15 +641,15 @@
     </message>
     <message>
         <source>Log debug messages</source>
-        <translation type="unfinished"></translation>
+        <translation>Registro de mensagens de depuração</translation>
     </message>
     <message>
         <source>Show log messages in console</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar registro de mensagens no console</translation>
     </message>
     <message>
         <source>Windows Explorer integration</source>
-        <translation type="unfinished"></translation>
+        <translation>Integração com Windows Explorer</translation>
     </message>
 </context>
 <context>
