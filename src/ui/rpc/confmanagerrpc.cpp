@@ -63,5 +63,9 @@ bool ConfManagerRpc::saveConf(FirewallConf &newConf)
     // Already applied by onConfChanged() & applySavedConf()
     newConf.resetEdited();
 
+    if (&newConf != conf()) {
+        newConf.deleteLater();
+    }
+
     return true;
 }

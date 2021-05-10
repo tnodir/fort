@@ -513,14 +513,10 @@ bool ConfManager::saveConf(FirewallConf &conf)
 
 void ConfManager::applySavedConf(FirewallConf *newConf)
 {
-    const bool onlyFlags = !newConf->optEdited();
-
-    if (onlyFlags && !newConf->anyEdited()) {
-        if (newConf != conf()) {
-            newConf->deleteLater(); // RPC leftover
-        }
+    if (!newConf->anyEdited())
         return;
-    }
+
+    const bool onlyFlags = !newConf->optEdited();
 
     if (conf() != newConf) {
         if (onlyFlags) {
