@@ -2,8 +2,8 @@
 
 #include "fortdrv.h"
 
-#include "fortdev.h"
 #include "fortcout.h"
+#include "fortdev.h"
 
 static NTSTATUS fort_callback_register(
         PCWSTR sourcePath, PCALLBACK_OBJECT *cb_obj, PVOID *cb_reg, PCALLBACK_FUNCTION cb_func)

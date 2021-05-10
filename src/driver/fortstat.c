@@ -9,8 +9,8 @@
 #define FORT_PROC_BAD_INDEX ((UINT16) -1)
 #define FORT_PROC_COUNT_MAX 0x7FFF
 
-#define fort_stat_proc_hash(process_id) tommy_inthash_u32((UINT32)(process_id))
-#define fort_flow_hash(flow_id)         tommy_inthash_u32((UINT32)(flow_id))
+#define fort_stat_proc_hash(process_id) tommy_inthash_u32((UINT32) (process_id))
+#define fort_flow_hash(flow_id)         tommy_inthash_u32((UINT32) (flow_id))
 
 #define fort_stat_group_fragment(stat, group_index)                                                \
     ((((stat)->conf_group.fragment_bits >> (group_index)) & 1) != 0 ? FORT_FLOW_FRAGMENT : 0)
@@ -306,41 +306,46 @@ FORT_API void fort_stat_conf_update(PFORT_STAT stat, PFORT_CONF_IO conf_io)
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
+static NTSTATUS fort_flow_associate_proc(PFORT_STAT stat, UINT32 process_id, BOOL is_reauth,
+        BOOL *is_new_proc, PFORT_STAT_PROC *proc)
+{
+    if (!stat->log_stat)
+        return STATUS_DEVICE_DATA_ERROR;
+
+    const tommy_key_t proc_hash = fort_stat_proc_hash(process_id);
+
+    *proc = fort_stat_proc_get(stat, process_id, proc_hash);
+
+    if (*proc == NULL) {
+        if (is_reauth) {
+            /* Block existing flow after reauth. to be able to associate a flow-context */
+            return FORT_STATUS_FLOW_BLOCK;
+        }
+
+        *proc = fort_stat_proc_add(stat, process_id);
+
+        if (*proc == NULL)
+            return STATUS_INSUFFICIENT_RESOURCES;
+
+        *is_new_proc = TRUE;
+    }
+
+    return STATUS_SUCCESS;
+}
+
 FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, UINT64 flow_id, UINT32 process_id,
         UCHAR group_index, BOOL is_tcp, BOOL is_reauth, BOOL *is_new_proc)
 {
-    const tommy_key_t proc_hash = fort_stat_proc_hash(process_id);
     KLOCK_QUEUE_HANDLE lock_queue;
     NTSTATUS status;
 
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
-    if (!stat->log_stat) {
-        status = STATUS_DEVICE_DATA_ERROR;
-        goto end;
-    }
-
-    PFORT_STAT_PROC proc = fort_stat_proc_get(stat, process_id, proc_hash);
-
-    if (proc == NULL) {
-        if (is_reauth) {
-            /* Block existing flow after reauth. to be able to associate a flow-context */
-            status = FORT_STATUS_FLOW_BLOCK;
-            goto end;
-        }
-
-        proc = fort_stat_proc_add(stat, process_id);
-
-        if (proc == NULL) {
-            status = STATUS_INSUFFICIENT_RESOURCES;
-            goto end;
-        }
-
-        *is_new_proc = TRUE;
-    }
+    PFORT_STAT_PROC proc = NULL;
+    status = fort_flow_associate_proc(stat, process_id, is_reauth, is_new_proc, &proc);
 
     /* Add flow */
-    {
+    if (NT_SUCCESS(status)) {
         const UCHAR fragment = fort_stat_group_fragment(stat, group_index);
         const UCHAR speed_limit = fort_stat_group_speed_limit(stat, group_index);
 
@@ -352,7 +357,6 @@ FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, UINT64 flow_id, UINT32 pr
         }
     }
 
-end:
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
     return status;
@@ -453,9 +457,9 @@ FORT_API void fort_stat_dpc_traf_flush(PFORT_STAT stat, UINT16 proc_count, PCHAR
     while (proc != NULL && proc_count-- != 0) {
         PFORT_STAT_PROC proc_next = proc->next_active;
         UINT32 *out_proc = (UINT32 *) out;
-        PFORT_TRAF out_traf = (PFORT_TRAF)(out_proc + 1);
+        PFORT_TRAF out_traf = (PFORT_TRAF) (out_proc + 1);
 
-        out = (PCHAR)(out_traf + 1);
+        out = (PCHAR) (out_traf + 1);
 
         /* Write bytes */
         *out_traf = proc->traf;

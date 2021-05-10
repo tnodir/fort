@@ -36,6 +36,6 @@ FORT_API PVOID fort_tommy_realloc(PVOID p, SIZE_T new_size)
 }
 
 #include "../3rdparty/tommyds/tommyarrayof.c"
-#include "../3rdparty/tommyds/tommylist.c"
 #include "../3rdparty/tommyds/tommyhash.c"
 #include "../3rdparty/tommyds/tommyhashdyn.c"
+#include "../3rdparty/tommyds/tommylist.c"

@@ -156,7 +156,7 @@ static PFORT_CONF_EXE_NODE fort_conf_ref_exe_find_node(
 
 FORT_API FORT_APP_FLAGS fort_conf_exe_find(const PFORT_CONF conf, const char *path, UINT32 path_len)
 {
-    PFORT_CONF_REF conf_ref = (PFORT_CONF_REF)((char *) conf - offsetof(FORT_CONF_REF, conf));
+    PFORT_CONF_REF conf_ref = (PFORT_CONF_REF) ((char *) conf - offsetof(FORT_CONF_REF, conf));
     const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, path_len);
     FORT_APP_FLAGS app_flags;
 
@@ -542,7 +542,7 @@ FORT_API BOOL fort_conf_zones_ip_included(
         while (zones_mask != 0) {
             const int zone_index = bit_scan_forward(zones_mask);
             PFORT_CONF_ADDR_LIST addr_list =
-                    (PFORT_CONF_ADDR_LIST)(zones->data + zones->addr_off[zone_index]);
+                    (PFORT_CONF_ADDR_LIST) (zones->data + zones->addr_off[zone_index]);
 
             if (fort_conf_ip_inlist(remote_ip, addr_list)) {
                 res = TRUE;
