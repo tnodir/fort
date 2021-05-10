@@ -785,3 +785,13 @@ void FortManager::activateModalWidget()
         w->activateWindow();
     }
 }
+
+void FortManager::setupResources()
+{
+    Q_INIT_RESOURCE(appinfo_migrations);
+    Q_INIT_RESOURCE(conf_migrations);
+    Q_INIT_RESOURCE(conf_zone);
+    Q_INIT_RESOURCE(stat_migrations);
+
+    Q_INIT_RESOURCE(fort_icons);
+}

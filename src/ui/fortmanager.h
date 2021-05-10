@@ -127,6 +127,8 @@ public slots:
     bool showYesNoBox(const QString &text, const QString &yesText, const QString &noText,
             const QString &title = QString());
 
+    static void setupResources();
+
 private:
     void setupThreadPool();
 
