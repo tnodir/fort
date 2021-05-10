@@ -14,5 +14,5 @@ TEMPLATE = app
 include($$PWD/GoogleTest-include.pri)
 
 # Link to a static library
-LIBS *= -L$$OUT_PWD/../Common
+LIBS *= -L$$builddir/tests/Common
 LIBS += -lCommonLib

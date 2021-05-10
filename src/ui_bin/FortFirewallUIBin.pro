@@ -1,6 +1,6 @@
-include(../../global.pri)
+include(../global.pri)
 
-include(../../ui/FortFirewallUI.pri)
+include(../ui/FortFirewallUI.pri)
 
 CONFIG -= debug_and_release
 

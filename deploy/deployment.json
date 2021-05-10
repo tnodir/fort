@@ -8,7 +8,7 @@
 				"${QTPATH}/bin/Qt6Widgets.dll"
 			],
 			"fort": [
-				"${BUILD}/ui/bin/FortFirewall.exe",
+				"${BUILD}/ui_bin/FortFirewall.exe",
 				"${ROOT}/ChangeLog",
 				"${ROOT}/src/ui/i18n			| *.qm			|"
 			]
