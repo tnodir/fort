@@ -72,6 +72,7 @@ void RpcManager::setupServerSignals()
     setupConfManagerSignals();
     setupDriverManagerSignals();
     setupQuotaManagerSignals();
+    setupStatManagerSignals();
     setupTaskManagerSignals();
 }
 
@@ -105,6 +106,19 @@ void RpcManager::setupQuotaManagerSignals()
     connect(quotaManager(), &QuotaManager::alert, this, [&](qint8 alertType) {
         invokeOnClients(Control::Rpc_QuotaManager_alert, { alertType });
     });
+}
+
+void RpcManager::setupStatManagerSignals()
+{
+    connect(statManager(), &StatManager::appCreated, this,
+            [&](qint64 appId, const QString &appPath) {
+                invokeOnClients(Control::Rpc_StatManager_appCreated, { appId, appPath });
+            });
+    connect(statManager(), &StatManager::trafficAdded, this,
+            [&](qint64 unixTime, quint32 inBytes, quint32 outBytes) {
+                invokeOnClients(
+                        Control::Rpc_StatManager_trafficAdded, { unixTime, inBytes, outBytes });
+            });
 }
 
 void RpcManager::setupTaskManagerSignals()
@@ -218,8 +232,16 @@ bool RpcManager::processCommandRpc(
     case Control::Rpc_QuotaManager_alert:
         emit quotaManager()->alert(args.value(0).toInt());
         return true;
-    case Control::Rpc_StatManager_:
-        statManager();
+    case Control::Rpc_StatManager_appCreated:
+        if (auto sm = qobject_cast<StatManagerRpc *>(statManager())) {
+            emit sm->appCreated(args.value(0).toLongLong(), args.value(1).toString());
+        }
+        return true;
+    case Control::Rpc_StatManager_trafficAdded:
+        if (auto sm = qobject_cast<StatManagerRpc *>(statManager())) {
+            emit sm->trafficAdded(
+                    args.value(0).toLongLong(), args.value(1).toUInt(), args.value(2).toUInt());
+        }
         return true;
     case Control::Rpc_TaskManager_taskStarted:
         if (auto tm = qobject_cast<TaskManagerRpc *>(taskManager())) {

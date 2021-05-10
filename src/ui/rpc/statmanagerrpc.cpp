@@ -14,5 +14,3 @@ RpcManager *StatManagerRpc::rpcManager() const
 {
     return fortManager()->rpcManager();
 }
-
-void StatManagerRpc::setConf(const FirewallConf * /*conf*/) { }

@@ -17,7 +17,7 @@ public:
     FortManager *fortManager() const { return m_fortManager; }
     RpcManager *rpcManager() const;
 
-    void setConf(const FirewallConf *conf) override;
+    void setConf(const FirewallConf * /*conf*/) override { }
 
 private:
     FortManager *m_fortManager = nullptr;

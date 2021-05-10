@@ -34,6 +34,8 @@ public:
     qint64 appId() const { return m_appId; }
     void setAppId(qint64 appId);
 
+    StatManager *statManager() const { return m_statManager; }
+
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 

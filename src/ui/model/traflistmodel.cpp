@@ -84,14 +84,14 @@ QVariant TrafListModel::data(const QModelIndex &index, int role) const
 
 void TrafListModel::clear()
 {
-    m_statManager->clear();
+    statManager()->clear();
 
     resetTraf();
 }
 
 void TrafListModel::resetAppTotals()
 {
-    m_statManager->resetAppTrafTotals();
+    statManager()->resetAppTrafTotals();
 
     resetTraf();
 }
@@ -102,7 +102,7 @@ void TrafListModel::resetTraf()
 
     beginResetModel();
 
-    m_minTrafTime = m_statManager->getTrafficTime(sqlMinTrafTime, m_appId);
+    m_minTrafTime = statManager()->getTrafficTime(sqlMinTrafTime, m_appId);
 
     m_maxTrafTime = getMaxTrafTime(m_type);
 
@@ -140,7 +140,7 @@ void TrafListModel::updateRowCache(int row) const
 
     const char *sqlSelectTraffic = getSqlSelectTraffic(m_type, m_appId);
 
-    m_statManager->getTraffic(sqlSelectTraffic, m_rowCache.trafTime, m_rowCache.inBytes,
+    statManager()->getTraffic(sqlSelectTraffic, m_rowCache.trafTime, m_rowCache.inBytes,
             m_rowCache.outBytes, m_appId);
 }
 
