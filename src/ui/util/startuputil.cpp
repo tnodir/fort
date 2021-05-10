@@ -23,8 +23,6 @@ const char *const regAllUsersRun = R"(SOFTWARE\Microsoft\Windows\CurrentVersion\
 constexpr RegKey::Root regShellRoot = RegKey::HKLM;
 const char *const regShellMenu = R"(SOFTWARE\Classes\SystemFileAssociations\.exe\Shell)";
 
-StartupUtil::StartupMode g_startupMode = StartupUtil::StartupInvalid;
-
 QString startupShortcutPath()
 {
     return FileUtil::applicationsLocation() + QLatin1Char('\\') + "Startup" + QLatin1Char('\\')
@@ -163,18 +161,13 @@ bool StartupUtil::startService()
 
 StartupUtil::StartupMode StartupUtil::getStartupMode()
 {
-    if (g_startupMode == StartupInvalid) {
-        g_startupMode = isServiceInstalled()
-                ? (isAutorunForAllUsers() ? StartupAllUsers : StartupAllUsersBackground)
-                : (isAutorunForCurrentUser() ? StartupCurrentUser : StartupDisabled);
-    }
-    return g_startupMode;
+    return isServiceInstalled()
+            ? (isAutorunForAllUsers() ? StartupAllUsers : StartupAllUsersBackground)
+            : (isAutorunForCurrentUser() ? StartupCurrentUser : StartupDisabled);
 }
 
 void StartupUtil::setStartupMode(int mode, const QString &defaultLanguage)
 {
-    g_startupMode = StartupInvalid;
-
     // COMPAT: Remove link from Programs -> Startup
     // TODO: Remove after v4.1.0 (via v4.0.0)
     FileUtil::removeFile(startupShortcutPath());
