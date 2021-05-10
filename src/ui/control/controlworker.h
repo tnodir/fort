@@ -50,22 +50,26 @@ private:
 private:
     struct RequestHeader
     {
-        RequestHeader(Control::Command command = Control::CommandNone, quint32 dataSize = 0) :
-            m_command(command), m_dataSize(dataSize)
+        RequestHeader(Control::Command command = Control::CommandNone, bool compressed = false,
+                quint32 dataSize = 0) :
+            m_command(command), m_compressed(compressed), m_dataSize(dataSize)
         {
         }
 
         Control::Command command() const { return static_cast<Control::Command>(m_command); }
+        bool compressed() const { return m_compressed; }
         quint32 dataSize() const { return m_dataSize; }
 
         void clear()
         {
             m_command = Control::CommandNone;
+            m_compressed = false;
             m_dataSize = 0;
         }
 
     private:
-        quint32 m_command : 8;
+        quint32 m_command : 7;
+        quint32 m_compressed : 1;
         quint32 m_dataSize : 24;
     };
 

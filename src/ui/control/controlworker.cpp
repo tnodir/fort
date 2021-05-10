@@ -9,7 +9,7 @@ constexpr int commandMaxArgs = 7;
 constexpr int commandArgMaxSize = 4 * 1024;
 constexpr quint32 dataMaxSize = 1 * 1024 * 1024;
 
-bool buildArgsData(QByteArray &buffer, const QVariantList &args)
+bool buildArgsData(QByteArray &buffer, const QVariantList &args, bool &compressed)
 {
     const int argsCount = args.count();
     if (argsCount == 0)
@@ -35,17 +35,18 @@ bool buildArgsData(QByteArray &buffer, const QVariantList &args)
         }
     }
 
-    buffer = qCompress(data);
+    compressed = (data.size() > 128);
+    buffer = compressed ? qCompress(data) : data;
 
     return true;
 }
 
-bool parseArgsData(const QByteArray &buffer, QVariantList &args)
+bool parseArgsData(const QByteArray &buffer, QVariantList &args, bool compressed)
 {
     if (buffer.isEmpty())
         return true;
 
-    const QByteArray data = qUncompress(buffer);
+    const QByteArray data = compressed ? qUncompress(buffer) : buffer;
 
     QDataStream stream(data);
 
@@ -88,10 +89,11 @@ void ControlWorker::abort()
 bool ControlWorker::sendCommand(Control::Command command, const QVariantList &args)
 {
     QByteArray buffer;
-    if (!buildArgsData(buffer, args))
+    bool compressed;
+    if (!buildArgsData(buffer, args, compressed))
         return false;
 
-    RequestHeader request(command, buffer.size());
+    RequestHeader request(command, compressed, buffer.size());
 
     socket()->write((const char *) &request, sizeof(RequestHeader));
 
@@ -149,7 +151,7 @@ bool ControlWorker::readRequest()
     }
 
     QVariantList args;
-    if (!parseArgsData(m_requestBuffer, args))
+    if (!parseArgsData(m_requestBuffer, args, m_requestHeader.compressed()))
         return false;
 
     const Control::Command command = m_requestHeader.command();
