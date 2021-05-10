@@ -14,7 +14,15 @@ public:
 
     RpcManager *rpcManager() const;
 
-    void initialize() override;
+    void onTaskStarted(qint8 taskType);
+    void onTaskFinished(qint8 taskType);
+
+public slots:
+    void runTask(qint8 taskType) override;
+    void abortTask(qint8 taskType) override;
+
+protected:
+    void setupScheduler() override { }
 };
 
 #endif // TASKMANAGERRPC_H

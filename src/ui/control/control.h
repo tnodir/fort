@@ -22,7 +22,10 @@ enum Command : qint8 {
     Rpc_DriverManager_uninstallDriver,
     Rpc_QuotaManager_alert,
     Rpc_StatManager_,
-    Rpc_TaskManager_,
+    Rpc_TaskManager_taskStarted,
+    Rpc_TaskManager_taskFinished,
+    Rpc_TaskManager_runTask,
+    Rpc_TaskManager_abortTask,
 };
 
 }

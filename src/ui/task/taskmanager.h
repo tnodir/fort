@@ -27,13 +27,13 @@ public:
     const QList<TaskInfo *> &taskInfoList() const { return m_taskInfoList; }
     TaskInfo *taskInfoAt(int row) const;
 
-    virtual void initialize();
+    void initialize();
 
 signals:
-    void taskStarted(TaskInfo *taskInfo);
-    void taskFinished(TaskInfo *taskInfo);
+    void taskStarted(qint8 taskType);
+    void taskFinished(qint8 taskType);
 
-    void taskDoubleClicked(TaskInfo *taskInfo);
+    void taskDoubleClicked(qint8 taskType);
 
 public slots:
     void loadSettings();
@@ -41,11 +41,19 @@ public slots:
 
     bool saveVariant(const QVariant &v);
 
+    virtual void runTask(qint8 taskType);
+    virtual void abortTask(qint8 taskType);
+
 private slots:
     void handleTaskStarted();
     void handleTaskFinished(bool success);
 
     void runExpiredTasks();
+
+protected:
+    virtual void setupScheduler();
+
+    TaskInfo *taskInfoByType(qint8 taskType) const;
 
 private:
     void setupTasks();

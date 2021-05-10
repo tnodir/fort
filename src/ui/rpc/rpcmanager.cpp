@@ -72,6 +72,7 @@ void RpcManager::setupServerSignals()
     setupConfManagerSignals();
     setupDriverManagerSignals();
     setupQuotaManagerSignals();
+    setupTaskManagerSignals();
 }
 
 void RpcManager::setupAppInfoManagerSignals()
@@ -103,6 +104,16 @@ void RpcManager::setupQuotaManagerSignals()
 {
     connect(quotaManager(), &QuotaManager::alert, this, [&](qint8 alertType) {
         invokeOnClients(Control::Rpc_QuotaManager_alert, { alertType });
+    });
+}
+
+void RpcManager::setupTaskManagerSignals()
+{
+    connect(taskManager(), &TaskManager::taskStarted, this, [&](qint8 taskType) {
+        invokeOnClients(Control::Rpc_TaskManager_taskStarted, { taskType });
+    });
+    connect(taskManager(), &TaskManager::taskFinished, this, [&](qint8 taskType) {
+        invokeOnClients(Control::Rpc_TaskManager_taskFinished, { taskType });
     });
 }
 
@@ -210,8 +221,21 @@ bool RpcManager::processCommandRpc(
     case Control::Rpc_StatManager_:
         statManager();
         return true;
-    case Control::Rpc_TaskManager_:
-        taskManager();
+    case Control::Rpc_TaskManager_taskStarted:
+        if (auto tm = qobject_cast<TaskManagerRpc *>(taskManager())) {
+            tm->onTaskStarted(args.value(0).toInt());
+        }
+        return true;
+    case Control::Rpc_TaskManager_taskFinished:
+        if (auto tm = qobject_cast<TaskManagerRpc *>(taskManager())) {
+            tm->onTaskFinished(args.value(0).toInt());
+        }
+        return true;
+    case Control::Rpc_TaskManager_runTask:
+        taskManager()->runTask(args.value(0).toInt());
+        return true;
+    case Control::Rpc_TaskManager_abortTask:
+        taskManager()->abortTask(args.value(0).toInt());
         return true;
     default:
         errorMessage = "Unknown command";

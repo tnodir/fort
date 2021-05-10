@@ -53,6 +53,7 @@ private:
     void setupConfManagerSignals();
     void setupDriverManagerSignals();
     void setupQuotaManagerSignals();
+    void setupTaskManagerSignals();
 
     void setupClient();
 

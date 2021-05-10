@@ -101,7 +101,7 @@ void SchedulePage::setupTableTasks()
 
     connect(m_tableTasks, &TableView::doubleClicked, this, [&](const QModelIndex &index) {
         const auto taskInfo = taskListModel()->taskInfoAt(index.row());
-        emit taskManager()->taskDoubleClicked(taskInfo);
+        emit taskManager()->taskDoubleClicked(taskInfo->type());
     });
 }
 
@@ -134,10 +134,10 @@ void SchedulePage::setupTaskDetails()
 
     setupTaskInterval();
 
-    m_btTaskRun =
-            ControlUtil::createButton(":/icons/sign-sync.png", [&] { currentTaskInfo()->run(); });
+    m_btTaskRun = ControlUtil::createButton(
+            ":/icons/sign-sync.png", [&] { taskManager()->runTask(currentTaskInfo()->type()); });
     m_btTaskAbort = ControlUtil::createButton(
-            ":/icons/sign-error.png", [&] { currentTaskInfo()->abort(); });
+            ":/icons/sign-error.png", [&] { taskManager()->abortTask(currentTaskInfo()->type()); });
 
     layout->addWidget(m_cscTaskInterval, 1);
     layout->addWidget(m_btTaskRun);

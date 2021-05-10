@@ -308,8 +308,8 @@ void FortManager::setupModels()
 
 void FortManager::setupTaskManager()
 {
-    connect(taskManager(), &TaskManager::taskDoubleClicked, this, [&](TaskInfo *taskInfo) {
-        if (taskInfo->type() == TaskInfo::ZoneDownloader) {
+    connect(taskManager(), &TaskManager::taskDoubleClicked, this, [&](qint8 taskType) {
+        if (taskType == TaskInfo::ZoneDownloader) {
             showZonesWindow();
         }
     });

@@ -39,6 +39,11 @@ void TaskManager::initialize()
 {
     loadSettings();
 
+    setupScheduler();
+}
+
+void TaskManager::setupScheduler()
+{
     taskInfoZoneDownloader()->loadZones();
 
     m_timer.start(5 * 1000); // 5 seconds
@@ -81,11 +86,27 @@ bool TaskManager::saveVariant(const QVariant &v)
     return saveSettings();
 }
 
+void TaskManager::runTask(qint8 taskType)
+{
+    auto taskInfo = taskInfoByType(taskType);
+    if (Q_LIKELY(taskInfo)) {
+        taskInfo->run();
+    }
+}
+
+void TaskManager::abortTask(qint8 taskType)
+{
+    auto taskInfo = taskInfoByType(taskType);
+    if (Q_LIKELY(taskInfo)) {
+        taskInfo->abort();
+    }
+}
+
 void TaskManager::handleTaskStarted()
 {
     auto taskInfo = qobject_cast<TaskInfo *>(sender());
 
-    emit taskStarted(taskInfo);
+    emit taskStarted(taskInfo->type());
 }
 
 void TaskManager::handleTaskFinished(bool success)
@@ -96,7 +117,7 @@ void TaskManager::handleTaskFinished(bool success)
 
     saveSettings();
 
-    emit taskFinished(taskInfo);
+    emit taskFinished(taskInfo->type());
 }
 
 void TaskManager::runExpiredTasks()
@@ -119,5 +140,18 @@ void TaskManager::runExpiredTasks()
         m_timer.start(60 * 60 * 1000); // 1 hour
     } else {
         m_timer.stop();
+    }
+}
+
+TaskInfo *TaskManager::taskInfoByType(qint8 taskType) const
+{
+    switch (taskType) {
+    case TaskInfo::UpdateChecker:
+        return taskInfoUpdateChecker();
+    case TaskInfo::ZoneDownloader:
+        return taskInfoZoneDownloader();
+    default:
+        Q_UNREACHABLE();
+        return nullptr;
     }
 }

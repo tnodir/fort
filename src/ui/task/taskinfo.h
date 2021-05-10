@@ -24,7 +24,7 @@ class TaskInfo : public QObject
     Q_PROPERTY(bool running READ running NOTIFY taskWorkerChanged)
 
 public:
-    enum TaskType : qint16 { TypeNone = -1, UpdateChecker = 0, ZoneDownloader };
+    enum TaskType : qint8 { TypeNone = -1, UpdateChecker = 0, ZoneDownloader };
     Q_ENUM(TaskType)
 
     explicit TaskInfo(TaskInfo::TaskType type, TaskManager &taskManager);
