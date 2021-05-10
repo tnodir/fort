@@ -53,6 +53,9 @@ private:
     void setupClearMenu();
     void setupTrafUnits();
     void setupGraphOptionsMenu();
+    void setupGraphCheckboxes();
+    void setupGraphOptions();
+    void setupGraphColors();
     void setupTrafOptionsMenu();
     void setupLogStat();
     void setupLogStatNoFilter();
