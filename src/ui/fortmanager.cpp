@@ -515,6 +515,7 @@ void FortManager::closeOptionsWindow()
     if (!m_optWindow)
         return;
 
+    m_optWindow->cancelChanges();
     m_optWindow->saveWindowState();
     m_optWindow->hide();
 

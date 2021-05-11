@@ -89,7 +89,7 @@ void ControlWorker::abort()
 bool ControlWorker::sendCommand(Control::Command command, const QVariantList &args)
 {
     QByteArray buffer;
-    bool compressed;
+    bool compressed = false;
     if (!buildArgsData(buffer, args, compressed))
         return false;
 

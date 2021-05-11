@@ -35,9 +35,11 @@ public:
 
 signals:
     void editedChanged(bool anyEdited);
-    void editResetted();
 
     void aboutToSave();
+    void editResetted();
+
+    void cancelChanges(IniOptions *oldIni);
 
     void afterSaveWindowState(IniOptions *ini);
     void afterRestoreWindowState(IniOptions *ini);

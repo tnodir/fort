@@ -36,6 +36,16 @@ void OptionsPage::onAboutToSave()
     }
 }
 
+void OptionsPage::onCancelChanges(IniOptions *oldIni)
+{
+    if (!conf()->iniEdited())
+        return;
+
+    if (ini()->language() != oldIni->language()) {
+        translationManager()->switchLanguageByName(oldIni->language());
+    }
+}
+
 void OptionsPage::onEditResetted()
 {
     retranslateEditPassword();

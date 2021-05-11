@@ -12,7 +12,7 @@ SOURCES += \
 
 # Shadow Build: Copy i18n/ to build path
 !equals(PWD, $${OUT_PWD}) {
-    i18n.files = $$files(i18n/*.qm)
+    i18n.files = $$files(../ui/i18n/*.qm)
     i18n.path = $${OUT_PWD}/i18n
     COPIES += i18n
 }

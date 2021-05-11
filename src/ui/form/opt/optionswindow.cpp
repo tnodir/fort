@@ -35,6 +35,13 @@ IniOptions *OptionsWindow::ini() const
     return &conf()->ini();
 }
 
+void OptionsWindow::cancelChanges()
+{
+    if (ctrl()->conf() && ctrl()->conf()->anyEdited()) {
+        emit ctrl()->cancelChanges(ini());
+    }
+}
+
 void OptionsWindow::saveWindowState()
 {
     ini()->setOptWindowGeometry(m_stateWatcher->geometry());

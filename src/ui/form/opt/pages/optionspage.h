@@ -14,6 +14,8 @@ protected slots:
     void onAboutToSave() override;
     void onEditResetted() override;
 
+    void onCancelChanges(IniOptions *oldIni) override;
+
     void onRetranslateUi() override;
 
 private:

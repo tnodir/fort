@@ -59,6 +59,8 @@ void BasePage::setupController()
     connect(ctrl(), &OptionsController::aboutToSave, this, &BasePage::onAboutToSave);
     connect(ctrl(), &OptionsController::editResetted, this, &BasePage::onEditResetted);
 
+    connect(ctrl(), &OptionsController::cancelChanges, this, &BasePage::onCancelChanges);
+
     connect(ctrl(), &OptionsController::afterSaveWindowState, this, &BasePage::onSaveWindowState);
     connect(ctrl(), &OptionsController::afterRestoreWindowState, this,
             &BasePage::onRestoreWindowState);

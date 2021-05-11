@@ -23,6 +23,8 @@ public:
     FirewallConf *conf() const;
     IniOptions *ini() const;
 
+    void cancelChanges();
+
     void saveWindowState();
     void restoreWindowState();
 
