@@ -14,12 +14,12 @@ public:
 
     RpcManager *rpcManager() const;
 
-    void setActive(bool active) override;
+    void setActive(bool /*active*/) override { }
 
-    void initialize() override;
+    void initialize() override { }
 
 public slots:
-    void close() override;
+    void close() override { }
 };
 
 #endif // LOGMANAGERRPC_H

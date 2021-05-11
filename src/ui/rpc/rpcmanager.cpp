@@ -198,43 +198,119 @@ bool RpcManager::processCommandRpc(
         m_resultCommand = cmd;
         m_resultArgs = args;
         return true;
+
     case Control::Rpc_RpcManager_initClient:
         initClientOnServer(w);
         return true;
+
+    case Control::Rpc_AppInfoManager_lookupAppInfo:
+    case Control::Rpc_AppInfoManager_checkLookupFinished:
+        return processAppInfoManagerRpc(cmd, args);
+
+    case Control::Rpc_ConfManager_save:
+        if (!checkClientValidated(w))
+            return false;
+        Q_FALLTHROUGH();
+    case Control::Rpc_ConfManager_onConfChanged:
+        return processConfManagerRpc(w, cmd, args);
+
+    case Control::Rpc_DriverManager_reinstallDriver:
+    case Control::Rpc_DriverManager_uninstallDriver:
+        if (!checkClientValidated(w))
+            return false;
+        Q_FALLTHROUGH();
+    case Control::Rpc_DriverManager_updateState:
+        return processDriverManagerRpc(cmd, args);
+
+    case Control::Rpc_QuotaManager_alert:
+        return processQuotaManagerRpc(cmd, args);
+
+    case Control::Rpc_StatManager_appCreated:
+    case Control::Rpc_StatManager_trafficAdded:
+        return processStatManagerRpc(cmd, args);
+
+    case Control::Rpc_TaskManager_runTask:
+    case Control::Rpc_TaskManager_abortTask:
+        if (!checkClientValidated(w))
+            return false;
+        Q_FALLTHROUGH();
+    case Control::Rpc_TaskManager_taskStarted:
+    case Control::Rpc_TaskManager_taskFinished:
+        return processTaskManagerRpc(cmd, args);
+
+    default:
+        errorMessage = "Unknown command";
+    }
+
+    return false;
+}
+
+bool RpcManager::processAppInfoManagerRpc(Control::Command cmd, const QVariantList &args)
+{
+    switch (cmd) {
     case Control::Rpc_AppInfoManager_lookupAppInfo:
         appInfoManager()->lookupAppInfo(args.value(0).toString());
         return true;
     case Control::Rpc_AppInfoManager_checkLookupFinished:
         appInfoManager()->checkLookupFinished(args.value(0).toString());
         return true;
-    case Control::Rpc_ConfManager_onConfChanged:
-        if (auto cm = qobject_cast<ConfManagerRpc *>(confManager())) {
-            cm->onConfChanged(args.value(0));
-        }
-        return true;
+    default:
+        return false;
+    }
+}
+
+bool RpcManager::processConfManagerRpc(
+        ControlWorker *w, Control::Command cmd, const QVariantList &args)
+{
+    switch (cmd) {
     case Control::Rpc_ConfManager_save: {
         const bool ok = confManager()->saveVariant(args.value(0));
         sendResult(w, ok);
         return true;
     }
+    case Control::Rpc_ConfManager_onConfChanged:
+        if (auto cm = qobject_cast<ConfManagerRpc *>(confManager())) {
+            cm->onConfChanged(args.value(0));
+        }
+        return true;
+    default:
+        return false;
+    }
+}
+
+bool RpcManager::processDriverManagerRpc(Control::Command cmd, const QVariantList &args)
+{
+    switch (cmd) {
+    case Control::Rpc_DriverManager_reinstallDriver:
+        fortManager()->installDriver();
+        return true;
+    case Control::Rpc_DriverManager_uninstallDriver:
+        fortManager()->removeDriver();
+        return true;
     case Control::Rpc_DriverManager_updateState:
         if (auto dm = qobject_cast<DriverManagerRpc *>(driverManager())) {
             dm->updateState(args.value(0).toUInt(), args.value(1).toBool());
         }
         return true;
-    case Control::Rpc_DriverManager_reinstallDriver:
-        if (checkClientValidated(w)) {
-            fortManager()->installDriver();
-        }
-        return true;
-    case Control::Rpc_DriverManager_uninstallDriver:
-        if (checkClientValidated(w)) {
-            fortManager()->removeDriver();
-        }
-        return true;
+    default:
+        return false;
+    }
+}
+
+bool RpcManager::processQuotaManagerRpc(Control::Command cmd, const QVariantList &args)
+{
+    switch (cmd) {
     case Control::Rpc_QuotaManager_alert:
         emit quotaManager()->alert(args.value(0).toInt());
         return true;
+    default:
+        return false;
+    }
+}
+
+bool RpcManager::processStatManagerRpc(Control::Command cmd, const QVariantList &args)
+{
+    switch (cmd) {
     case Control::Rpc_StatManager_appCreated:
         if (auto sm = qobject_cast<StatManagerRpc *>(statManager())) {
             emit sm->appCreated(args.value(0).toLongLong(), args.value(1).toString());
@@ -246,6 +322,20 @@ bool RpcManager::processCommandRpc(
                     args.value(0).toLongLong(), args.value(1).toUInt(), args.value(2).toUInt());
         }
         return true;
+    default:
+        return false;
+    }
+}
+
+bool RpcManager::processTaskManagerRpc(Control::Command cmd, const QVariantList &args)
+{
+    switch (cmd) {
+    case Control::Rpc_TaskManager_runTask:
+        taskManager()->runTask(args.value(0).toInt());
+        return true;
+    case Control::Rpc_TaskManager_abortTask:
+        taskManager()->abortTask(args.value(0).toInt());
+        return true;
     case Control::Rpc_TaskManager_taskStarted:
         if (auto tm = qobject_cast<TaskManagerRpc *>(taskManager())) {
             tm->onTaskStarted(args.value(0).toInt());
@@ -256,15 +346,7 @@ bool RpcManager::processCommandRpc(
             tm->onTaskFinished(args.value(0).toInt());
         }
         return true;
-    case Control::Rpc_TaskManager_runTask:
-        taskManager()->runTask(args.value(0).toInt());
-        return true;
-    case Control::Rpc_TaskManager_abortTask:
-        taskManager()->abortTask(args.value(0).toInt());
-        return true;
     default:
-        errorMessage = "Unknown command";
+        return false;
     }
-
-    return false;
 }

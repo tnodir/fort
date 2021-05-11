@@ -66,6 +66,13 @@ private:
 
     QVariantList driverManager_updateState_args() const;
 
+    bool processAppInfoManagerRpc(Control::Command cmd, const QVariantList &args);
+    bool processConfManagerRpc(ControlWorker *w, Control::Command cmd, const QVariantList &args);
+    bool processDriverManagerRpc(Control::Command cmd, const QVariantList &args);
+    bool processQuotaManagerRpc(Control::Command cmd, const QVariantList &args);
+    bool processStatManagerRpc(Control::Command cmd, const QVariantList &args);
+    bool processTaskManagerRpc(Control::Command cmd, const QVariantList &args);
+
 private:
     Control::Command m_resultCommand = Control::CommandNone;
     QVariantList m_resultArgs;

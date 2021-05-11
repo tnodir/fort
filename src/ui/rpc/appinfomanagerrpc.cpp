@@ -20,5 +20,3 @@ void AppInfoManagerRpc::lookupAppInfo(const QString &appPath)
 {
     rpcManager()->invokeOnServer(Control::Rpc_AppInfoManager_lookupAppInfo, { appPath });
 }
-
-void AppInfoManagerRpc::updateAppAccessTime(const QString & /*appPath*/) { }

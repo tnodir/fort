@@ -12,9 +12,3 @@ RpcManager *LogManagerRpc::rpcManager() const
 {
     return fortManager()->rpcManager();
 }
-
-void LogManagerRpc::setActive(bool /*active*/) { }
-
-void LogManagerRpc::initialize() { }
-
-void LogManagerRpc::close() { }
