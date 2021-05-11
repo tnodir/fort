@@ -3,8 +3,7 @@ include(../../global.pri)
 include(../../ui/FortFirewallUI.pri)
 
 CONFIG += console
-CONFIG -= app_bundle
-CONFIG -= debug_and_release
+CONFIG -= app_bundle debug_and_release
 
 TARGET = CommonLib
 CONFIG += staticlib
