@@ -25,6 +25,7 @@ public:
     explicit RpcManager(FortManager *fortManager, QObject *parent = nullptr);
 
     Control::Command resultCommand() const { return m_resultCommand; }
+    QVariantList resultArgs() const { return m_resultArgs; }
 
     FortManager *fortManager() const { return m_fortManager; }
     FortSettings *settings() const;
@@ -42,7 +43,7 @@ public:
     void invokeOnServer(Control::Command cmd, const QVariantList &args = {});
 
     bool waitResult();
-    void sendResult(ControlWorker *w, bool ok);
+    void sendResult(ControlWorker *w, bool ok, const QVariantList &args = {});
 
     bool processCommandRpc(ControlWorker *w, Control::Command cmd, const QVariantList &args,
             QString &errorMessage);
@@ -67,6 +68,7 @@ private:
 
 private:
     Control::Command m_resultCommand = Control::CommandNone;
+    QVariantList m_resultArgs;
 
     FortManager *m_fortManager = nullptr;
 

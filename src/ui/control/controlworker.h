@@ -50,7 +50,7 @@ private:
 
     bool readRequestHeader();
 
-private:
+protected:
     struct RequestHeader
     {
         RequestHeader(Control::Command command = Control::CommandNone, bool compressed = false,
@@ -76,6 +76,7 @@ private:
         quint32 m_dataSize : 24;
     };
 
+private:
     bool m_isServiceClient : 1;
     bool m_isClientValidated : 1;
 

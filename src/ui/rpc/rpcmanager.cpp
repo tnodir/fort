@@ -154,9 +154,9 @@ bool RpcManager::waitResult()
     return true;
 }
 
-void RpcManager::sendResult(ControlWorker *w, bool ok)
+void RpcManager::sendResult(ControlWorker *w, bool ok, const QVariantList &args)
 {
-    w->sendCommand(ok ? Control::Rpc_Result_Ok : Control::Rpc_Result_Error);
+    w->sendCommand(ok ? Control::Rpc_Result_Ok : Control::Rpc_Result_Error, args);
 }
 
 void RpcManager::invokeOnClients(Control::Command cmd, const QVariantList &args)
@@ -196,6 +196,7 @@ bool RpcManager::processCommandRpc(
     case Control::Rpc_Result_Ok:
     case Control::Rpc_Result_Error:
         m_resultCommand = cmd;
+        m_resultArgs = args;
         return true;
     case Control::Rpc_RpcManager_initClient:
         initClientOnServer(w);
