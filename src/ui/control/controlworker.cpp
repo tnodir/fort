@@ -86,24 +86,41 @@ void ControlWorker::abort()
     socket()->close();
 }
 
-bool ControlWorker::sendCommand(Control::Command command, const QVariantList &args)
+QByteArray ControlWorker::buildCommandData(Control::Command command, const QVariantList &args)
 {
-    QByteArray buffer;
+    QByteArray data;
     bool compressed = false;
-    if (!buildArgsData(buffer, args, compressed))
+    if (!buildArgsData(data, args, compressed))
+        return {};
+
+    RequestHeader request(command, compressed, data.size());
+
+    QByteArray buffer;
+    buffer.append((const char *) &request, sizeof(RequestHeader));
+    buffer.append(data);
+
+    return buffer;
+}
+
+bool ControlWorker::sendCommandData(const QByteArray &commandData)
+{
+    if (commandData.isEmpty())
         return false;
 
-    RequestHeader request(command, compressed, buffer.size());
-
-    socket()->write((const char *) &request, sizeof(RequestHeader));
-
-    if (!buffer.isEmpty()) {
-        socket()->write(buffer);
-    }
+    const int bytesSent = socket()->write(commandData);
+    if (bytesSent != commandData.size())
+        return false;
 
     socket()->flush();
 
     return true;
+}
+
+bool ControlWorker::sendCommand(Control::Command command, const QVariantList &args)
+{
+    const QByteArray buffer = buildCommandData(command, args);
+
+    return sendCommandData(buffer);
 }
 
 bool ControlWorker::waitForSent(int msecs) const

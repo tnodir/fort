@@ -25,6 +25,9 @@ public:
 
     void setupForAsync();
 
+    static QByteArray buildCommandData(Control::Command command, const QVariantList &args = {});
+    bool sendCommandData(const QByteArray &commandData);
+
     bool sendCommand(Control::Command command, const QVariantList &args = {});
 
     bool waitForSent(int msecs = 1000) const;

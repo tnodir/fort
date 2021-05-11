@@ -161,12 +161,14 @@ void RpcManager::sendResult(ControlWorker *w, bool ok)
 
 void RpcManager::invokeOnClients(Control::Command cmd, const QVariantList &args)
 {
+    const QByteArray buffer = ControlWorker::buildCommandData(cmd, args);
+
     const auto clients = controlManager()->clients();
     for (ControlWorker *w : clients) {
         if (!w->isServiceClient())
             continue;
 
-        w->sendCommand(cmd, args);
+        w->sendCommandData(buffer);
     }
 }
 
