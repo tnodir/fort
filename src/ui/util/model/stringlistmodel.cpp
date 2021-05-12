@@ -58,6 +58,12 @@ void StringListModel::replace(const QString &text, int row)
     emit dataChanged(modelIndex, modelIndex);
 }
 
+void StringListModel::reset()
+{
+    beginResetModel();
+    endResetModel();
+}
+
 void StringListModel::refresh()
 {
     const auto firstCell = index(0, 0);

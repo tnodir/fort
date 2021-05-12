@@ -26,18 +26,6 @@ void TableSqlModel::sort(int column, Qt::SortOrder order)
     }
 }
 
-void TableSqlModel::reset()
-{
-    invalidateRowCache();
-    TableItemModel::reset();
-}
-
-void TableSqlModel::refresh()
-{
-    invalidateRowCache();
-    TableItemModel::refresh();
-}
-
 void TableSqlModel::invalidateRowCache()
 {
     m_rowCount = -1;

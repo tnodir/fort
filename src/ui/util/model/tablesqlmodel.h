@@ -21,12 +21,8 @@ public:
 signals:
     void modelChanged();
 
-public slots:
-    void reset();
-    void refresh();
-
 protected:
-    void invalidateRowCache();
+    void invalidateRowCache() override;
     void updateRowCache(int row) const;
 
     virtual bool updateTableRow(int row) const = 0;

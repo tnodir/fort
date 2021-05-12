@@ -37,11 +37,14 @@ Qt::ItemFlags TableItemModel::flags(const QModelIndex &index) const
 void TableItemModel::reset()
 {
     beginResetModel();
+    invalidateRowCache();
     endResetModel();
 }
 
 void TableItemModel::refresh()
 {
+    invalidateRowCache();
+
     const auto firstCell = index(0, 0);
     const auto lastCell = index(rowCount() - 1, columnCount(firstCell) - 1);
 

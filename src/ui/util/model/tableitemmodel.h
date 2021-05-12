@@ -30,6 +30,9 @@ public:
 public slots:
     void reset();
     void refresh();
+
+protected:
+    virtual void invalidateRowCache() { }
 };
 
 #endif // TABLEITEMMODEL_H
