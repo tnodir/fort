@@ -15,6 +15,23 @@ public:
 
     RpcManager *rpcManager() const;
 
+    bool addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
+            qint64 groupId, int groupIndex, bool useGroupPerm, bool blocked,
+            bool alerted = false) override;
+    bool deleteApp(qint64 appId, const QString &appPath) override;
+    bool updateApp(qint64 appId, const QString &appPath, const QString &appName,
+            const QDateTime &endTime, qint64 groupId, int groupIndex, bool useGroupPerm,
+            bool blocked) override;
+    bool updateAppName(qint64 appId, const QString &appName) override;
+
+    bool addZone(const QString &zoneName, const QString &sourceCode, const QString &url,
+            const QString &formData, bool enabled, bool customUrl, int &zoneId) override;
+    bool deleteZone(int zoneId) override;
+    bool updateZone(int zoneId, const QString &zoneName, const QString &sourceCode,
+            const QString &url, const QString &formData, bool enabled, bool customUrl) override;
+    bool updateZoneName(int zoneId, const QString &zoneName) override;
+    bool updateZoneEnabled(int zoneId, bool enabled) override;
+
     bool updateDriverConf(bool /*onlyFlags*/ = false) override { return false; }
 
     void onConfChanged(const QVariant &confVar);
@@ -23,6 +40,9 @@ protected:
     void setupAppEndTimer() override { }
 
     bool saveConf(FirewallConf &newConf) override;
+
+private:
+    bool checkResult();
 
     bool saving() const { return m_saving; }
     void setSaving(bool v) { m_saving = v; }

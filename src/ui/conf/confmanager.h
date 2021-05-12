@@ -60,13 +60,13 @@ public:
     bool saveTasks(const QList<TaskInfo *> &taskInfos);
 
     qint64 appIdByPath(const QString &appPath);
-    bool addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
+    virtual bool addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
             qint64 groupId, int groupIndex, bool useGroupPerm, bool blocked, bool alerted = false);
-    bool deleteApp(qint64 appId, const QString &appPath);
-    bool updateApp(qint64 appId, const QString &appPath, const QString &appName,
+    virtual bool deleteApp(qint64 appId, const QString &appPath);
+    virtual bool updateApp(qint64 appId, const QString &appPath, const QString &appName,
             const QDateTime &endTime, qint64 groupId, int groupIndex, bool useGroupPerm,
             bool blocked);
-    bool updateAppName(qint64 appId, const QString &appName);
+    virtual bool updateAppName(qint64 appId, const QString &appName);
 
     bool walkApps(const std::function<walkAppsCallback> &func) override;
 
@@ -74,14 +74,14 @@ public:
     void updateAppEndTimes();
     void checkAppEndTimes();
 
-    bool addZone(const QString &zoneName, const QString &sourceCode, const QString &url,
+    virtual bool addZone(const QString &zoneName, const QString &sourceCode, const QString &url,
             const QString &formData, bool enabled, bool customUrl, int &zoneId);
     int getFreeZoneId();
-    bool deleteZone(int zoneId);
-    bool updateZone(int zoneId, const QString &zoneName, const QString &sourceCode,
+    virtual bool deleteZone(int zoneId);
+    virtual bool updateZone(int zoneId, const QString &zoneName, const QString &sourceCode,
             const QString &url, const QString &formData, bool enabled, bool customUrl);
-    bool updateZoneName(int zoneId, const QString &zoneName);
-    bool updateZoneEnabled(int zoneId, bool enabled);
+    virtual bool updateZoneName(int zoneId, const QString &zoneName);
+    virtual bool updateZoneEnabled(int zoneId, bool enabled);
     bool updateZoneResult(int zoneId, const QString &textChecksum, const QString &binChecksum,
             const QDateTime &sourceModTime, const QDateTime &lastRun, const QDateTime &lastSuccess);
 
