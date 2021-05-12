@@ -14,6 +14,7 @@ QT_FORWARD_DECLARE_CLASS(QMenu)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QTabBar)
 
+class ConfManager;
 class DriverManager;
 class FirewallConf;
 class FortManager;
@@ -35,6 +36,7 @@ protected:
     OptionsController *ctrl() const { return m_ctrl; }
     FortManager *fortManager() const;
     FortSettings *settings() const;
+    ConfManager *confManager() const;
     FirewallConf *conf() const;
     IniOptions *ini() const;
     DriverManager *driverManager() const;

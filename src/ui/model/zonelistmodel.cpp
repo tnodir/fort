@@ -25,8 +25,11 @@ SqliteDb *ZoneListModel::sqliteDb() const
 
 void ZoneListModel::initialize()
 {
-    initZoneTypes();
-    initZoneSources();
+    setupZoneTypes();
+    setupZoneSources();
+
+    connect(confManager(), &ConfManager::zoneAdded, this, &TableSqlModel::reset);
+    connect(confManager(), &ConfManager::zoneUpdated, this, &TableSqlModel::refresh);
 }
 
 int ZoneListModel::columnCount(const QModelIndex &parent) const
@@ -140,64 +143,32 @@ const ZoneRow &ZoneListModel::zoneRowAt(int row) const
 bool ZoneListModel::addZone(const QString &zoneName, const QString &sourceCode, const QString &url,
         const QString &formData, bool enabled, bool customUrl, int &zoneId)
 {
-    if (confManager()->addZone(zoneName, sourceCode, url, formData, enabled, customUrl, zoneId)) {
-        reset();
-        return true;
-    }
-
-    return false;
+    return confManager()->addZone(zoneName, sourceCode, url, formData, enabled, customUrl, zoneId);
 }
 
 bool ZoneListModel::updateZone(int zoneId, const QString &zoneName, const QString &sourceCode,
-        const QString &url, const QString &formData, bool enabled, bool customUrl,
-        bool updateDriver)
+        const QString &url, const QString &formData, bool enabled, bool customUrl)
 {
-    if (updateDriver && !confManager()->updateDriverZoneFlag(zoneId, enabled))
-        return false;
-
-    if (confManager()->updateZone(
-                zoneId, zoneName, sourceCode, url, formData, enabled, customUrl)) {
-        refresh();
-        return true;
-    }
-
-    return false;
+    return confManager()->updateZone(
+            zoneId, zoneName, sourceCode, url, formData, enabled, customUrl);
 }
 
 bool ZoneListModel::updateZoneName(int zoneId, const QString &zoneName)
 {
-    if (confManager()->updateZoneName(zoneId, zoneName)) {
-        refresh();
-        return true;
-    }
-
-    return false;
+    return confManager()->updateZoneName(zoneId, zoneName);
 }
 
 bool ZoneListModel::updateZoneEnabled(int zoneId, bool enabled)
 {
-    if (!confManager()->updateDriverZoneFlag(zoneId, enabled))
-        return false;
-
-    if (confManager()->updateZoneEnabled(zoneId, enabled)) {
-        refresh();
-        return true;
-    }
-
-    return false;
+    return confManager()->updateZoneEnabled(zoneId, enabled);
 }
 
 bool ZoneListModel::updateZoneResult(int zoneId, const QString &textChecksum,
         const QString &binChecksum, const QDateTime &sourceModTime, const QDateTime &lastRun,
         const QDateTime &lastSuccess)
 {
-    if (confManager()->updateZoneResult(
-                zoneId, textChecksum, binChecksum, sourceModTime, lastRun, lastSuccess)) {
-        refresh();
-        return true;
-    }
-
-    return false;
+    return confManager()->updateZoneResult(
+            zoneId, textChecksum, binChecksum, sourceModTime, lastRun, lastSuccess);
 }
 
 void ZoneListModel::deleteZone(int zoneId, int row)
@@ -205,7 +176,6 @@ void ZoneListModel::deleteZone(int zoneId, int row)
     beginRemoveRows(QModelIndex(), row, row);
 
     if (confManager()->deleteZone(zoneId)) {
-        emit zoneRemoved(zoneId);
         invalidateRowCache();
         removeRow(row);
     }
@@ -275,7 +245,7 @@ QString ZoneListModel::sqlBase() const
            "  FROM zone";
 }
 
-void ZoneListModel::initZoneTypes()
+void ZoneListModel::setupZoneTypes()
 {
     const auto data = FileUtil::readFileData(":/zone/types.json");
     if (data.isEmpty())
@@ -297,7 +267,7 @@ void ZoneListModel::initZoneTypes()
     }
 }
 
-void ZoneListModel::initZoneSources()
+void ZoneListModel::setupZoneSources()
 {
     const auto data = FileUtil::readFileData(":/zone/sources.json");
     if (data.isEmpty())

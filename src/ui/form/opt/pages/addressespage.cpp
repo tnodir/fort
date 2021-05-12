@@ -11,6 +11,7 @@
 #include <QVBoxLayout>
 
 #include "../../../conf/addressgroup.h"
+#include "../../../conf/confmanager.h"
 #include "../../../conf/firewallconf.h"
 #include "../../../driver/drivercommon.h"
 #include "../../../fortmanager.h"
@@ -344,7 +345,7 @@ void AddressesPage::setupZones()
     m_excludeAddresses->btSelectZones()->setMenu(m_menuZones);
     updateZonesMenuEnabled();
 
-    connect(zoneListModel(), &ZoneListModel::zoneRemoved, this, [&](int zoneId) {
+    connect(confManager(), &ConfManager::zoneRemoved, this, [&](int zoneId) {
         for (auto addrGroup : addressGroups()) {
             addrGroup->removeIncludeZone(zoneId);
             addrGroup->removeExcludeZone(zoneId);

@@ -450,7 +450,7 @@ bool ZonesWindow::saveZoneEditForm()
     }
 
     return zoneListModel()->updateZone(
-            zoneRow.zoneId, zoneName, sourceCode, url, formData, enabled, customUrl, zoneEdited);
+            zoneRow.zoneId, zoneName, sourceCode, url, formData, enabled, customUrl);
 }
 
 void ZonesWindow::updateZone(int row, bool enabled)

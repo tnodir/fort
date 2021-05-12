@@ -372,21 +372,6 @@ void ConfManager::showErrorMessage(const QString &errorMessage)
     }
 }
 
-bool ConfManager::checkResult(bool ok, bool commit)
-{
-    const auto errorMessage = ok ? QString() : sqliteDb()->errorMessage();
-
-    if (commit) {
-        sqliteDb()->endTransaction(ok);
-    }
-
-    if (!ok) {
-        showErrorMessage(errorMessage);
-    }
-
-    return ok;
-}
-
 bool ConfManager::initialize()
 {
     if (!sqliteDb()->open()) {
@@ -603,8 +588,11 @@ qint64 ConfManager::appIdByPath(const QString &appPath)
 }
 
 bool ConfManager::addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
-        qint64 groupId, bool useGroupPerm, bool blocked, bool alerted)
+        qint64 groupId, int groupIndex, bool useGroupPerm, bool blocked, bool alerted)
 {
+    if (!updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, blocked))
+        return false;
+
     bool ok = false;
 
     sqliteDb()->beginTransaction();
@@ -628,16 +616,17 @@ bool ConfManager::addApp(const QString &appPath, const QString &appName, const Q
             m_appEndTimer.start();
         }
 
-        if (alerted) {
-            emit alertedAppAdded();
-        }
+        emit appAdded(alerted);
     }
 
     return ok;
 }
 
-bool ConfManager::deleteApp(qint64 appId)
+bool ConfManager::deleteApp(qint64 appId, const QString &appPath)
 {
+    if (!updateDriverDeleteApp(appPath))
+        return false;
+
     bool ok = false;
 
     sqliteDb()->beginTransaction();
@@ -649,12 +638,21 @@ bool ConfManager::deleteApp(qint64 appId)
         sqliteDb()->executeEx(sqlDeleteAppAlert, vars, 0, &ok);
     }
 
-    return checkResult(ok, true);
+    checkResult(ok, true);
+
+    if (ok) {
+        emit appRemoved();
+    }
+
+    return ok;
 }
 
-bool ConfManager::updateApp(qint64 appId, const QString &appName, const QDateTime &endTime,
-        qint64 groupId, bool useGroupPerm, bool blocked)
+bool ConfManager::updateApp(qint64 appId, const QString &appPath, const QString &appName,
+        const QDateTime &endTime, qint64 groupId, int groupIndex, bool useGroupPerm, bool blocked)
 {
+    if (!updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, blocked))
+        return false;
+
     bool ok = false;
 
     sqliteDb()->beginTransaction();
@@ -669,8 +667,12 @@ bool ConfManager::updateApp(qint64 appId, const QString &appName, const QDateTim
 
     checkResult(ok, true);
 
-    if (ok && !endTime.isNull()) {
-        m_appEndTimer.start();
+    if (ok) {
+        if (!endTime.isNull()) {
+            m_appEndTimer.start();
+        }
+
+        emit appUpdated();
     }
 
     return ok;
@@ -684,7 +686,13 @@ bool ConfManager::updateAppName(qint64 appId, const QString &appName)
 
     sqliteDb()->executeEx(sqlUpdateAppName, vars, 0, &ok);
 
-    return checkResult(ok);
+    checkResult(ok);
+
+    if (ok) {
+        emit appUpdated();
+    }
+
+    return ok;
 }
 
 bool ConfManager::walkApps(const std::function<walkAppsCallback> &func)
@@ -730,8 +738,8 @@ void ConfManager::updateAppEndTimes()
         const QString appName = stmt.columnText(4);
         const bool useGroupPerm = stmt.columnBool(5);
 
-        if (updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, true)
-                && updateApp(appId, appName, QDateTime(), groupId, useGroupPerm, true)) {
+        if (updateApp(appId, appPath, appName, QDateTime(), groupId, groupIndex, useGroupPerm,
+                    true)) {
             isAppEndTimesUpdated = true;
         }
     }
@@ -762,7 +770,13 @@ bool ConfManager::addZone(const QString &zoneName, const QString &sourceCode, co
 
     sqliteDb()->executeEx(sqlInsertZone, vars, 0, &ok);
 
-    return checkResult(ok);
+    checkResult(ok);
+
+    if (ok) {
+        emit zoneAdded();
+    }
+
+    return ok;
 }
 
 int ConfManager::getFreeZoneId()
@@ -796,12 +810,21 @@ bool ConfManager::deleteZone(int zoneId)
         sqliteDb()->executeEx(sqlDeleteAddressGroupZone, { qint64(zoneUnMask) }, 0, &ok);
     }
 
-    return checkResult(ok, true);
+    checkResult(ok, true);
+
+    if (ok) {
+        emit zoneRemoved(zoneId);
+    }
+
+    return ok;
 }
 
 bool ConfManager::updateZone(int zoneId, const QString &zoneName, const QString &sourceCode,
         const QString &url, const QString &formData, bool enabled, bool customUrl)
 {
+    if (!updateDriverZoneFlag(zoneId, enabled))
+        return false;
+
     bool ok = false;
 
     const auto vars = QVariantList()
@@ -809,7 +832,13 @@ bool ConfManager::updateZone(int zoneId, const QString &zoneName, const QString 
 
     sqliteDb()->executeEx(sqlUpdateZone, vars, 0, &ok);
 
-    return checkResult(ok);
+    checkResult(ok);
+
+    if (ok) {
+        emit zoneUpdated();
+    }
+
+    return ok;
 }
 
 bool ConfManager::updateZoneName(int zoneId, const QString &zoneName)
@@ -820,18 +849,33 @@ bool ConfManager::updateZoneName(int zoneId, const QString &zoneName)
 
     sqliteDb()->executeEx(sqlUpdateZoneName, vars, 0, &ok);
 
-    return checkResult(ok);
+    checkResult(ok);
+
+    if (ok) {
+        emit zoneUpdated();
+    }
+
+    return ok;
 }
 
 bool ConfManager::updateZoneEnabled(int zoneId, bool enabled)
 {
+    if (!updateDriverZoneFlag(zoneId, enabled))
+        return false;
+
     bool ok = false;
 
     const auto vars = QVariantList() << zoneId << enabled;
 
     sqliteDb()->executeEx(sqlUpdateZoneEnabled, vars, 0, &ok);
 
-    return checkResult(ok);
+    checkResult(ok);
+
+    if (ok) {
+        emit zoneUpdated();
+    }
+
+    return ok;
 }
 
 bool ConfManager::updateZoneResult(int zoneId, const QString &textChecksum,
@@ -845,7 +889,13 @@ bool ConfManager::updateZoneResult(int zoneId, const QString &textChecksum,
 
     sqliteDb()->executeEx(sqlUpdateZoneResult, vars, 0, &ok);
 
-    return checkResult(ok);
+    checkResult(ok);
+
+    if (ok) {
+        emit zoneUpdated();
+    }
+
+    return ok;
 }
 
 bool ConfManager::validateDriver()
@@ -865,7 +915,6 @@ bool ConfManager::updateDriverConf(bool onlyFlags)
 
     const int confSize = onlyFlags ? confUtil.writeFlags(*conf(), buf)
                                    : confUtil.write(*conf(), this, *envManager(), buf);
-
     if (confSize == 0) {
         showErrorMessage(confUtil.errorMessage());
         return false;
@@ -1084,4 +1133,19 @@ bool ConfManager::saveTask(TaskInfo *taskInfo)
         taskInfo->setId(sqliteDb()->lastInsertRowid());
     }
     return true;
+}
+
+bool ConfManager::checkResult(bool ok, bool commit)
+{
+    const auto errorMessage = ok ? QString() : sqliteDb()->errorMessage();
+
+    if (commit) {
+        sqliteDb()->endTransaction(ok);
+    }
+
+    if (!ok) {
+        showErrorMessage(errorMessage);
+    }
+
+    return ok;
 }

@@ -61,10 +61,11 @@ public:
 
     qint64 appIdByPath(const QString &appPath);
     bool addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
-            qint64 groupId, bool useGroupPerm, bool blocked, bool alerted = false);
-    bool deleteApp(qint64 appId);
-    bool updateApp(qint64 appId, const QString &appName, const QDateTime &endTime, qint64 groupId,
-            bool useGroupPerm, bool blocked);
+            qint64 groupId, int groupIndex, bool useGroupPerm, bool blocked, bool alerted = false);
+    bool deleteApp(qint64 appId, const QString &appPath);
+    bool updateApp(qint64 appId, const QString &appPath, const QString &appName,
+            const QDateTime &endTime, qint64 groupId, int groupIndex, bool useGroupPerm,
+            bool blocked);
     bool updateAppName(qint64 appId, const QString &appName);
 
     bool walkApps(const std::function<walkAppsCallback> &func) override;
@@ -85,18 +86,21 @@ public:
             const QDateTime &sourceModTime, const QDateTime &lastRun, const QDateTime &lastSuccess);
 
     bool validateDriver();
-    bool updateDriverConf(bool onlyFlags = false);
-    bool updateDriverDeleteApp(const QString &appPath);
-    bool updateDriverUpdateApp(const QString &appPath, int groupIndex, bool useGroupPerm,
-            bool blocked, bool remove = false);
+    virtual bool updateDriverConf(bool onlyFlags = false);
     void updateDriverZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
             const QList<QByteArray> &zonesData);
-    bool updateDriverZoneFlag(int zoneId, bool enabled);
 
 signals:
     void confChanged(bool onlyFlags);
+
     void appEndTimesUpdated();
-    void alertedAppAdded();
+    void appAdded(bool alerted);
+    void appRemoved();
+    void appUpdated();
+
+    void zoneAdded();
+    void zoneRemoved(int zoneId);
+    void zoneUpdated();
 
 protected:
     virtual void setupAppEndTimer();
@@ -109,9 +113,12 @@ protected:
     void saveClientExtFlags(const IniOptions &ini);
 
 private:
-    bool checkResult(bool ok, bool commit = false);
-
     void setupDefault(FirewallConf &conf) const;
+
+    bool updateDriverDeleteApp(const QString &appPath);
+    bool updateDriverUpdateApp(const QString &appPath, int groupIndex, bool useGroupPerm,
+            bool blocked, bool remove = false);
+    bool updateDriverZoneFlag(int zoneId, bool enabled);
 
     bool loadFromDb(FirewallConf &conf, bool &isNew);
     bool saveToDb(const FirewallConf &conf);
@@ -125,6 +132,8 @@ private:
 
     bool loadTask(TaskInfo *taskInfo);
     bool saveTask(TaskInfo *taskInfo);
+
+    bool checkResult(bool ok, bool commit = false);
 
 private:
     FortManager *m_fortManager = nullptr;

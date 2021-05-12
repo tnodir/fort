@@ -58,6 +58,8 @@ void AppListModel::initialize()
             refresh();
     });
     connect(confManager(), &ConfManager::appEndTimesUpdated, this, &AppListModel::refresh);
+    connect(confManager(), &ConfManager::appAdded, this, &TableSqlModel::reset);
+    connect(confManager(), &ConfManager::appUpdated, this, &TableSqlModel::refresh);
 }
 
 void AppListModel::handleLogBlocked(const LogEntryBlocked &logEntry)
@@ -70,10 +72,7 @@ void AppListModel::handleLogBlocked(const LogEntryBlocked &logEntry)
     const auto groupId = appGroupAt(0)->id();
     const auto appName = appInfoCache()->appName(appPath);
 
-    if (confManager()->addApp(
-                appPath, appName, QDateTime(), groupId, false, logEntry.blocked(), true)) {
-        reset();
-    }
+    confManager()->addApp(appPath, appName, QDateTime(), groupId, false, logEntry.blocked(), true);
 }
 
 int AppListModel::columnCount(const QModelIndex &parent) const
@@ -316,53 +315,31 @@ AppRow AppListModel::appRowByPath(const QString &appPath) const
 bool AppListModel::addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
         int groupIndex, bool useGroupPerm, bool blocked)
 {
-    if (!confManager()->updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, blocked))
-        return false;
-
     const auto groupId = appGroupAt(groupIndex)->id();
 
-    if (confManager()->addApp(appPath, appName, endTime, groupId, useGroupPerm, blocked)) {
-        reset();
-        return true;
-    }
-
-    return false;
+    return confManager()->addApp(
+            appPath, appName, endTime, groupId, groupIndex, useGroupPerm, blocked);
 }
 
 bool AppListModel::updateApp(qint64 appId, const QString &appPath, const QString &appName,
         const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool blocked)
 {
-    if (!confManager()->updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, blocked))
-        return false;
-
     const auto groupId = appGroupAt(groupIndex)->id();
 
-    if (confManager()->updateApp(appId, appName, endTime, groupId, useGroupPerm, blocked)) {
-        refresh();
-        return true;
-    }
-
-    return false;
+    return confManager()->updateApp(
+            appId, appPath, appName, endTime, groupId, groupIndex, useGroupPerm, blocked);
 }
 
 bool AppListModel::updateAppName(qint64 appId, const QString &appName)
 {
-    if (confManager()->updateAppName(appId, appName)) {
-        refresh();
-        return true;
-    }
-
-    return false;
+    return confManager()->updateAppName(appId, appName);
 }
 
 void AppListModel::deleteApp(qint64 appId, const QString &appPath, int row)
 {
-    if (!confManager()->updateDriverDeleteApp(appPath))
-        return;
-
     beginRemoveRows(QModelIndex(), row, row);
 
-    if (confManager()->deleteApp(appId)) {
+    if (confManager()->deleteApp(appId, appPath)) {
         invalidateRowCache();
         removeRow(row);
     }

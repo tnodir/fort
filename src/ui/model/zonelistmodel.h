@@ -56,8 +56,7 @@ public:
     bool addZone(const QString &zoneName, const QString &sourceCode, const QString &url,
             const QString &formData, bool enabled, bool customUrl, int &zoneId);
     bool updateZone(int zoneId, const QString &zoneName, const QString &sourceCode,
-            const QString &url, const QString &formData, bool enabled, bool customUrl,
-            bool updateDriver = true);
+            const QString &url, const QString &formData, bool enabled, bool customUrl);
     bool updateZoneName(int zoneId, const QString &zoneName);
     bool updateZoneEnabled(int zoneId, bool enabled);
     bool updateZoneResult(int zoneId, const QString &textChecksum, const QString &binChecksum,
@@ -71,9 +70,6 @@ public:
     QVariant zoneSourceByCode(const QString &sourceCode) const;
     const QVariantList &zoneSources() const { return m_zoneSources; }
 
-signals:
-    void zoneRemoved(int zoneId);
-
 protected:
     bool updateTableRow(int row) const override;
     TableRow &tableRow() const override { return m_zoneRow; }
@@ -84,9 +80,9 @@ private:
     QVariant dataDisplay(const QModelIndex &index) const;
     QVariant dataCheckState(const QModelIndex &index) const;
 
-    void initZoneTypes();
-    void initZoneSources();
-    void initZoneSourceNames();
+    void setupZoneTypes();
+    void setupZoneSources();
+    void setupZoneSourceNames();
 
 private:
     ConfManager *m_confManager = nullptr;

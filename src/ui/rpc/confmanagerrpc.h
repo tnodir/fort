@@ -15,6 +15,8 @@ public:
 
     RpcManager *rpcManager() const;
 
+    bool updateDriverConf(bool /*onlyFlags*/ = false) override { return false; }
+
     void onConfChanged(const QVariant &confVar);
 
 protected:

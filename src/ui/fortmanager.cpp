@@ -358,8 +358,11 @@ void FortManager::setupTrayIcon()
     connect(m_trayIcon, &QSystemTrayIcon::messageClicked, this, &FortManager::onTrayMessageClicked);
 
     connect(confManager(), &ConfManager::confChanged, m_trayIcon, &TrayIcon::updateTrayMenu);
-    connect(confManager(), &ConfManager::alertedAppAdded, m_trayIcon,
-            [&] { m_trayIcon->updateTrayIcon(true); });
+    connect(confManager(), &ConfManager::appAdded, m_trayIcon, [&](bool alerted) {
+        if (alerted) {
+            m_trayIcon->updateTrayIcon(true);
+        }
+    });
 
     connect(qApp, &QCoreApplication::aboutToQuit, this, &FortManager::closeUi);
 }

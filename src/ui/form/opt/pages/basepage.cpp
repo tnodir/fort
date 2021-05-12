@@ -22,6 +22,11 @@ FortSettings *BasePage::settings() const
     return ctrl()->settings();
 }
 
+ConfManager *BasePage::confManager() const
+{
+    return ctrl()->confManager();
+}
+
 FirewallConf *BasePage::conf() const
 {
     return ctrl()->conf();
