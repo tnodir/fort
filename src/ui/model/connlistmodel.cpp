@@ -117,6 +117,10 @@ QVariant ConnListModel::data(const QModelIndex &index, int role) const
     // Icon
     case Qt::DecorationRole:
         return dataDecoration(index);
+
+    // Font
+    case Qt::FontRole:
+        return dataFont(index);
     }
 
     return QVariant();
@@ -140,21 +144,25 @@ QVariant ConnListModel::dataDisplay(const QModelIndex &index, int role) const
         return formatIpPort(connRow.localIp, connRow.localPort);
     case 4:
         return formatIpPort(connRow.remoteIp, connRow.remotePort);
-    case 5: {
-        if (role == Qt::ToolTipRole) {
-            if (connRow.blocked) {
-                // Show block reason in tool-tip
-                const auto blockRow = getConnRowBlock(connRow.rowId);
-                return blockReasonText(blockRow);
-            }
-        }
-        return connRow.inbound ? tr("In") : tr("Out");
-    }
+    case 5:
+        return dataDisplayDirection(connRow, role);
     case 6:
         return connRow.connTime;
     }
 
     return QVariant();
+}
+
+QVariant ConnListModel::dataDisplayDirection(const ConnRow &connRow, int role) const
+{
+    if (role == Qt::ToolTipRole) {
+        if (connRow.blocked) {
+            // Show block reason in tool-tip
+            const auto blockRow = getConnRowBlock(connRow.rowId);
+            return blockReasonText(blockRow);
+        }
+    }
+    return connRow.inbound ? tr("In") : tr("Out");
 }
 
 QVariant ConnListModel::dataDecoration(const QModelIndex &index) const
@@ -172,6 +180,21 @@ QVariant ConnListModel::dataDecoration(const QModelIndex &index) const
             return connRow.blocked ? IconCache::icon(":/icons/sign-ban.png")
                                    : IconCache::icon(":/icons/sign-check.png");
         }
+    }
+
+    return QVariant();
+}
+
+QVariant ConnListModel::dataFont(const QModelIndex &index) const
+{
+    const int column = index.column();
+
+    switch (column) {
+    case 6: {
+        QFont font;
+        font.setPointSize(8);
+        return font;
+    }
     }
 
     return QVariant();

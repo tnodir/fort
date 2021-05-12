@@ -1,5 +1,7 @@
 #include "tasklistmodel.h"
 
+#include <QFont>
+
 #include "taskinfo.h"
 #include "taskmanager.h"
 
@@ -61,6 +63,9 @@ QVariant TaskListModel::data(const QModelIndex &index, int role) const
     case Qt::ToolTipRole:
         return dataDisplay(index);
 
+    case Qt::FontRole:
+        return dataFont(index);
+
     case Qt::CheckStateRole:
     case RoleEnabled:
         return dataCheckState(index);
@@ -93,6 +98,22 @@ QVariant TaskListModel::dataDisplay(const QModelIndex &index) const
         return formatDateTime(taskInfo->lastRun());
     case 3:
         return formatDateTime(taskInfo->lastSuccess());
+    }
+
+    return QVariant();
+}
+
+QVariant TaskListModel::dataFont(const QModelIndex &index) const
+{
+    const int column = index.column();
+
+    switch (column) {
+    case 2:
+    case 3: {
+        QFont font;
+        font.setPointSize(8);
+        return font;
+    }
     }
 
     return QVariant();

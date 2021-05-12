@@ -194,10 +194,17 @@ QVariant AppListModel::dataFont(const QModelIndex &index) const
 {
     const int column = index.column();
 
-    if (column == 2) {
+    switch (column) {
+    case 2: {
         QFont font;
         font.setWeight(QFont::DemiBold);
         return font;
+    }
+    case 4: {
+        QFont font;
+        font.setPointSize(8);
+        return font;
+    }
     }
 
     return QVariant();

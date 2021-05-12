@@ -87,7 +87,9 @@ protected:
 
 private:
     QVariant dataDisplay(const QModelIndex &index, int role) const;
+    QVariant dataDisplayDirection(const ConnRow &connRow, int role) const;
     QVariant dataDecoration(const QModelIndex &index) const;
+    QVariant dataFont(const QModelIndex &index) const;
 
     static QString blockReasonText(const ConnBlockRow &blockRow);
 
