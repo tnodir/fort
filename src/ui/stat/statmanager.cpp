@@ -351,7 +351,7 @@ bool StatManager::logBlockedIp(const LogEntryBlockedIp &entry, qint64 unixTime)
     return ok;
 }
 
-void StatManager::deleteStatApp(qint64 appId)
+bool StatManager::deleteStatApp(qint64 appId)
 {
     sqliteDb()->beginTransaction();
 
@@ -362,6 +362,8 @@ void StatManager::deleteStatApp(qint64 appId)
             getIdStmt(StatSql::sqlSelectDeletedStatAppList, appId));
 
     sqliteDb()->commitTransaction();
+
+    return true;
 }
 
 bool StatManager::deleteOldConnBlock()
@@ -391,7 +393,7 @@ bool StatManager::deleteConn(qint64 rowIdTo, bool blocked)
     return true;
 }
 
-void StatManager::deleteConnAll()
+bool StatManager::deleteConnAll()
 {
     sqliteDb()->beginTransaction();
 
@@ -399,20 +401,21 @@ void StatManager::deleteConnAll()
                               sqliteDb()->stmt(StatSql::sqlDeleteAllConnBlock) },
             sqliteDb()->stmt(StatSql::sqlSelectDeletedAllConnAppList));
 
+    sqliteDb()->commitTransaction();
+
     m_connBlockIdMin = m_connBlockIdMax = 0;
 
-    sqliteDb()->commitTransaction();
+    return true;
 }
 
-void StatManager::resetAppTrafTotals()
+bool StatManager::resetAppTrafTotals()
 {
     SqliteStmt *stmt = sqliteDb()->stmt(StatSql::sqlResetAppTrafTotals);
     const qint64 unixTime = DateUtil::getUnixTime();
 
     stmt->bindInt(1, DateUtil::getUnixHour(unixTime));
 
-    stmt->step();
-    stmt->reset();
+    return sqliteDb()->done(stmt);
 }
 
 bool StatManager::hasAppTraf(qint64 appId)

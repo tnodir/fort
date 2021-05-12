@@ -49,13 +49,13 @@ public:
 
     void getStatAppList(QStringList &list, QVector<qint64> &appIds);
 
-    void deleteStatApp(qint64 appId);
+    virtual bool deleteStatApp(qint64 appId);
 
     bool deleteOldConnBlock();
     virtual bool deleteConn(qint64 rowIdTo, bool blocked);
-    virtual void deleteConnAll();
+    virtual bool deleteConnAll();
 
-    void resetAppTrafTotals();
+    virtual bool resetAppTrafTotals();
     bool hasAppTraf(qint64 appId);
 
     qint32 getTrafficTime(const char *sql, qint64 appId = 0);
