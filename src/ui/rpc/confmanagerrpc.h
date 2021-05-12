@@ -42,8 +42,6 @@ protected:
     bool saveConf(FirewallConf &newConf) override;
 
 private:
-    bool checkResult();
-
     bool saving() const { return m_saving; }
     void setSaving(bool v) { m_saving = v; }
 

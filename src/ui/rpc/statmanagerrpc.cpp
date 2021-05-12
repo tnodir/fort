@@ -14,3 +14,13 @@ RpcManager *StatManagerRpc::rpcManager() const
 {
     return fortManager()->rpcManager();
 }
+
+bool StatManagerRpc::clear()
+{
+    if (!rpcManager()->doOnServer(Control::Rpc_StatManager_clear))
+        return false;
+
+    // TODO: re-open the DB
+
+    return true;
+}

@@ -204,7 +204,7 @@ bool StatManager::updateTrafDay(qint64 unixTime)
     return isNewDay;
 }
 
-void StatManager::clear()
+bool StatManager::clear()
 {
     clearAppIdCache();
     clearStmts();
@@ -216,6 +216,8 @@ void StatManager::clear()
     initialize();
 
     quotaManager()->clear();
+
+    return true;
 }
 
 void StatManager::clearStmts()

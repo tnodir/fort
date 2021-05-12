@@ -40,10 +40,11 @@ public:
 
     void initialize();
 
-    void invokeOnServer(Control::Command cmd, const QVariantList &args = {});
-
     bool waitResult();
     void sendResult(ControlWorker *w, bool ok, const QVariantList &args = {});
+
+    void invokeOnServer(Control::Command cmd, const QVariantList &args = {});
+    bool doOnServer(Control::Command cmd, const QVariantList &args = {});
 
     bool processCommandRpc(ControlWorker *w, Control::Command cmd, const QVariantList &args,
             QString &errorMessage);
@@ -70,7 +71,7 @@ private:
     bool processConfManagerRpc(ControlWorker *w, Control::Command cmd, const QVariantList &args);
     bool processDriverManagerRpc(Control::Command cmd, const QVariantList &args);
     bool processQuotaManagerRpc(Control::Command cmd, const QVariantList &args);
-    bool processStatManagerRpc(Control::Command cmd, const QVariantList &args);
+    bool processStatManagerRpc(ControlWorker *w, Control::Command cmd, const QVariantList &args);
     bool processTaskManagerRpc(Control::Command cmd, const QVariantList &args);
 
 private:

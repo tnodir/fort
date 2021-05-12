@@ -155,11 +155,6 @@ void RpcManager::setupClient()
     invokeOnServer(Control::Rpc_RpcManager_initClient);
 }
 
-void RpcManager::invokeOnServer(Control::Command cmd, const QVariantList &args)
-{
-    client()->sendCommand(cmd, args);
-}
-
 bool RpcManager::waitResult()
 {
     m_resultCommand = Control::CommandNone;
@@ -175,6 +170,28 @@ bool RpcManager::waitResult()
 void RpcManager::sendResult(ControlWorker *w, bool ok, const QVariantList &args)
 {
     w->sendCommand(ok ? Control::Rpc_Result_Ok : Control::Rpc_Result_Error, args);
+}
+
+void RpcManager::invokeOnServer(Control::Command cmd, const QVariantList &args)
+{
+    client()->sendCommand(cmd, args);
+}
+
+bool RpcManager::doOnServer(Control::Command cmd, const QVariantList &args)
+{
+    invokeOnServer(cmd, args);
+
+    if (!waitResult()) {
+        fortManager()->showErrorBox("Service isn't responding.");
+        return false;
+    }
+
+    if (resultCommand() != Control::Rpc_Result_Ok) {
+        fortManager()->showErrorBox("Service error.");
+        return false;
+    }
+
+    return true;
 }
 
 void RpcManager::invokeOnClients(Control::Command cmd, const QVariantList &args)
@@ -259,9 +276,13 @@ bool RpcManager::processCommandRpc(
     case Control::Rpc_QuotaManager_alert:
         return processQuotaManagerRpc(cmd, args);
 
+    case Control::Rpc_StatManager_clear:
+        if (!checkClientValidated(w))
+            return false;
+        Q_FALLTHROUGH();
     case Control::Rpc_StatManager_appCreated:
     case Control::Rpc_StatManager_trafficAdded:
-        return processStatManagerRpc(cmd, args);
+        return processStatManagerRpc(w, cmd, args);
 
     case Control::Rpc_TaskManager_runTask:
     case Control::Rpc_TaskManager_abortTask:
@@ -410,19 +431,19 @@ bool RpcManager::processQuotaManagerRpc(Control::Command cmd, const QVariantList
     }
 }
 
-bool RpcManager::processStatManagerRpc(Control::Command cmd, const QVariantList &args)
+bool RpcManager::processStatManagerRpc(
+        ControlWorker *w, Control::Command cmd, const QVariantList &args)
 {
     switch (cmd) {
+    case Control::Rpc_StatManager_clear:
+        sendResult(w, statManager()->clear());
+        return true;
     case Control::Rpc_StatManager_appCreated:
-        if (auto sm = qobject_cast<StatManagerRpc *>(statManager())) {
-            emit sm->appCreated(args.value(0).toLongLong(), args.value(1).toString());
-        }
+        emit statManager()->appCreated(args.value(0).toLongLong(), args.value(1).toString());
         return true;
     case Control::Rpc_StatManager_trafficAdded:
-        if (auto sm = qobject_cast<StatManagerRpc *>(statManager())) {
-            emit sm->trafficAdded(
-                    args.value(0).toLongLong(), args.value(1).toUInt(), args.value(2).toUInt());
-        }
+        emit statManager()->trafficAdded(
+                args.value(0).toLongLong(), args.value(1).toUInt(), args.value(2).toUInt());
         return true;
     default:
         return false;

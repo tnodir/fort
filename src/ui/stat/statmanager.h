@@ -69,12 +69,13 @@ signals:
     void trafficAdded(qint64 unixTime, quint32 inBytes, quint32 outBytes);
 
 public slots:
-    void clear();
+    virtual bool clear();
+
+protected:
+    void setupConnBlockId();
 
 private:
     using QStmtList = QList<SqliteStmt *>;
-
-    void setupConnBlockId();
 
     void setupByConf();
 

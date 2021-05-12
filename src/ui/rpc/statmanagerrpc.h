@@ -19,6 +19,9 @@ public:
 
     void setConf(const FirewallConf * /*conf*/) override { }
 
+public slots:
+    bool clear() override;
+
 private:
     FortManager *m_fortManager = nullptr;
 };
