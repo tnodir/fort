@@ -90,6 +90,24 @@ void RpcManager::setupConfManagerSignals()
         const QVariant confVar = confManager()->conf()->toVariant(true);
         invokeOnClients(Control::Rpc_ConfManager_onConfChanged, { confVar });
     });
+
+    connect(confManager(), &ConfManager::appEndTimesUpdated, this,
+            [&] { invokeOnClients(Control::Rpc_ConfManager_onAppEndTimesUpdated); });
+    connect(confManager(), &ConfManager::appAdded, this, [&](bool alerted) {
+        invokeOnClients(Control::Rpc_ConfManager_onAppAdded, { alerted });
+    });
+    connect(confManager(), &ConfManager::appRemoved, this,
+            [&] { invokeOnClients(Control::Rpc_ConfManager_onAppRemoved); });
+    connect(confManager(), &ConfManager::appUpdated, this,
+            [&] { invokeOnClients(Control::Rpc_ConfManager_onAppUpdated); });
+
+    connect(confManager(), &ConfManager::zoneAdded, this,
+            [&] { invokeOnClients(Control::Rpc_ConfManager_onZoneAdded); });
+    connect(confManager(), &ConfManager::zoneRemoved, this, [&](int zoneId) {
+        invokeOnClients(Control::Rpc_ConfManager_onZoneRemoved, { zoneId });
+    });
+    connect(confManager(), &ConfManager::zoneUpdated, this,
+            [&] { invokeOnClients(Control::Rpc_ConfManager_onZoneUpdated); });
 }
 
 void RpcManager::setupDriverManagerSignals()
@@ -212,6 +230,13 @@ bool RpcManager::processCommandRpc(
             return false;
         Q_FALLTHROUGH();
     case Control::Rpc_ConfManager_onConfChanged:
+    case Control::Rpc_ConfManager_onAppEndTimesUpdated:
+    case Control::Rpc_ConfManager_onAppAdded:
+    case Control::Rpc_ConfManager_onAppRemoved:
+    case Control::Rpc_ConfManager_onAppUpdated:
+    case Control::Rpc_ConfManager_onZoneAdded:
+    case Control::Rpc_ConfManager_onZoneRemoved:
+    case Control::Rpc_ConfManager_onZoneUpdated:
         return processConfManagerRpc(w, cmd, args);
 
     case Control::Rpc_DriverManager_reinstallDriver:
@@ -272,6 +297,27 @@ bool RpcManager::processConfManagerRpc(
         if (auto cm = qobject_cast<ConfManagerRpc *>(confManager())) {
             cm->onConfChanged(args.value(0));
         }
+        return true;
+    case Control::Rpc_ConfManager_onAppEndTimesUpdated:
+        emit confManager()->appEndTimesUpdated();
+        return true;
+    case Control::Rpc_ConfManager_onAppAdded:
+        emit confManager()->appAdded(args.value(0).toBool());
+        return true;
+    case Control::Rpc_ConfManager_onAppRemoved:
+        emit confManager()->appRemoved();
+        return true;
+    case Control::Rpc_ConfManager_onAppUpdated:
+        emit confManager()->appUpdated();
+        return true;
+    case Control::Rpc_ConfManager_onZoneAdded:
+        emit confManager()->zoneAdded();
+        return true;
+    case Control::Rpc_ConfManager_onZoneRemoved:
+        emit confManager()->zoneRemoved(args.value(0).toInt());
+        return true;
+    case Control::Rpc_ConfManager_onZoneUpdated:
+        emit confManager()->zoneUpdated();
         return true;
     default:
         return false;

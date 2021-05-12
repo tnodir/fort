@@ -21,6 +21,13 @@ enum Command : qint8 {
     Rpc_ConfManager_save,
     Rpc_ConfManager_saveResult,
     Rpc_ConfManager_onConfChanged,
+    Rpc_ConfManager_onAppEndTimesUpdated,
+    Rpc_ConfManager_onAppAdded,
+    Rpc_ConfManager_onAppRemoved,
+    Rpc_ConfManager_onAppUpdated,
+    Rpc_ConfManager_onZoneAdded,
+    Rpc_ConfManager_onZoneRemoved,
+    Rpc_ConfManager_onZoneUpdated,
 
     Rpc_DriverManager_reinstallDriver,
     Rpc_DriverManager_uninstallDriver,

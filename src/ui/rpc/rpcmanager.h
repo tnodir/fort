@@ -59,7 +59,7 @@ private:
 
     void setupClient();
 
-    void invokeOnClients(Control::Command cmd, const QVariantList &args);
+    void invokeOnClients(Control::Command cmd, const QVariantList &args = {});
 
     bool checkClientValidated(ControlWorker *w) const;
     void initClientOnServer(ControlWorker *w) const;
