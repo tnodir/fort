@@ -74,6 +74,8 @@ bool SqliteDb::open()
 
 void SqliteDb::close()
 {
+    clearStmts();
+
     if (m_db) {
         sqlite3_close(m_db);
         m_db = nullptr;
@@ -455,4 +457,24 @@ bool SqliteDb::importDb(
     detach(srcSchema);
 
     return success;
+}
+
+SqliteStmt *SqliteDb::stmt(const char *sql)
+{
+    SqliteStmt *stmt = m_stmts.value(sql);
+
+    if (!stmt) {
+        stmt = new SqliteStmt();
+        stmt->prepare(db(), sql, SqliteStmt::PreparePersistent);
+
+        m_stmts.insert(sql, stmt);
+    }
+
+    return stmt;
+}
+
+void SqliteDb::clearStmts()
+{
+    qDeleteAll(m_stmts);
+    m_stmts.clear();
 }

@@ -44,6 +44,7 @@ enum Command : qint8 {
     Rpc_QuotaManager_alert,
 
     Rpc_StatManager_clear,
+    Rpc_StatManager_cleared,
     Rpc_StatManager_appCreated,
     Rpc_StatManager_trafficAdded,
 

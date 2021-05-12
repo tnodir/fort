@@ -52,8 +52,8 @@ public:
     void deleteStatApp(qint64 appId);
 
     bool deleteOldConnBlock();
-    bool deleteConn(qint64 rowIdTo, bool blocked);
-    void deleteConnAll();
+    virtual bool deleteConn(qint64 rowIdTo, bool blocked);
+    virtual void deleteConnAll();
 
     void resetAppTrafTotals();
     bool hasAppTraf(qint64 appId);
@@ -64,18 +64,19 @@ public:
             const char *sql, qint32 trafTime, qint64 &inBytes, qint64 &outBytes, qint64 appId = 0);
 
 signals:
-    void appCreated(qint64 appId, const QString &appPath);
+    void cleared();
 
+    void appCreated(qint64 appId, const QString &appPath);
     void trafficAdded(qint64 unixTime, quint32 inBytes, quint32 outBytes);
 
 public slots:
     virtual bool clear();
 
-protected:
-    void setupConnBlockId();
-
 private:
     using QStmtList = QList<SqliteStmt *>;
+
+    void setupAfterClear();
+    void setupConnBlockId();
 
     void setupByConf();
 
@@ -128,8 +129,6 @@ private:
     SqliteStmt *getIdStmt(const char *sql, qint64 id);
     SqliteStmt *getId2Stmt(const char *sql, qint64 id1, qint64 id2);
 
-    SqliteStmt *getSqliteStmt(const char *sql);
-
 private:
     bool m_isActivePeriodSet : 1;
     bool m_isActivePeriod : 1;
@@ -154,8 +153,6 @@ private:
     const FirewallConf *m_conf = nullptr;
 
     SqliteDb *m_sqliteDb = nullptr;
-
-    QHash<const char *, SqliteStmt *> m_sqliteStmts;
 
     QHash<quint32, QString> m_appPidPathMap; // pid -> appPath
     QHash<QString, qint64> m_appPathIdCache; // appPath -> appId

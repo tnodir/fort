@@ -79,6 +79,8 @@ public:
     static const char *const sqlDeleteAllConn;
     static const char *const sqlDeleteAllConnBlock;
     static const char *const sqlSelectDeletedAllConnAppList;
+
+    static const char *const sqlClear;
 };
 
 #endif // STATSQL_H

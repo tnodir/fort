@@ -128,6 +128,8 @@ void RpcManager::setupQuotaManagerSignals()
 
 void RpcManager::setupStatManagerSignals()
 {
+    connect(statManager(), &StatManager::cleared, this,
+            [&] { invokeOnClients(Control::Rpc_StatManager_cleared); });
     connect(statManager(), &StatManager::appCreated, this,
             [&](qint64 appId, const QString &appPath) {
                 invokeOnClients(Control::Rpc_StatManager_appCreated, { appId, appPath });
@@ -280,6 +282,7 @@ bool RpcManager::processCommandRpc(
         if (!checkClientValidated(w))
             return false;
         Q_FALLTHROUGH();
+    case Control::Rpc_StatManager_cleared:
     case Control::Rpc_StatManager_appCreated:
     case Control::Rpc_StatManager_trafficAdded:
         return processStatManagerRpc(w, cmd, args);
@@ -437,6 +440,9 @@ bool RpcManager::processStatManagerRpc(
     switch (cmd) {
     case Control::Rpc_StatManager_clear:
         sendResult(w, statManager()->clear());
+        return true;
+    case Control::Rpc_StatManager_cleared:
+        emit statManager()->cleared();
         return true;
     case Control::Rpc_StatManager_appCreated:
         emit statManager()->appCreated(args.value(0).toLongLong(), args.value(1).toString());

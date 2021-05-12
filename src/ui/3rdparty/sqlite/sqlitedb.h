@@ -1,6 +1,7 @@
 #ifndef SQLITEDB_H
 #define SQLITEDB_H
 
+#include <QHash>
 #include <QString>
 #include <QVariant>
 
@@ -94,10 +95,17 @@ public:
     bool importDb(
             const QString &sourceFilePath, SQLITEDB_MIGRATE_FUNC migrateFunc, void *migrateContext);
 
+    SqliteStmt *stmt(const char *sql);
+
+private:
+    void clearStmts();
+
 private:
     quint32 m_openFlags = 0;
     sqlite3 *m_db = nullptr;
     QString m_filePath;
+
+    QHash<const char *, SqliteStmt *> m_stmts;
 };
 
 #endif // SQLITEDB_H

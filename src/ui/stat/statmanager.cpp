@@ -61,8 +61,6 @@ StatManager::StatManager(
 
 StatManager::~StatManager()
 {
-    clearStmts();
-
     delete sqliteDb();
 }
 
@@ -80,8 +78,6 @@ const IniOptions *StatManager::ini() const
 
 bool StatManager::initialize()
 {
-    m_trafHour = m_trafDay = m_trafMonth = 0;
-
     if (!sqliteDb()->open()) {
         logCritical() << "File open error:" << sqliteDb()->filePath() << sqliteDb()->errorMessage();
         return false;
@@ -93,9 +89,18 @@ bool StatManager::initialize()
         return false;
     }
 
-    setupConnBlockId();
+    setupAfterClear();
+
+    connect(this, &StatManager::cleared, this, &StatManager::setupAfterClear);
 
     return true;
+}
+
+void StatManager::setupAfterClear()
+{
+    m_trafHour = m_trafDay = m_trafMonth = 0;
+
+    setupConnBlockId();
 }
 
 void StatManager::setupConnBlockId()
@@ -206,25 +211,19 @@ bool StatManager::updateTrafDay(qint64 unixTime)
 
 bool StatManager::clear()
 {
+    if (!sqliteDb()->execute(StatSql::sqlClear))
+        return false;
+
     clearAppIdCache();
-    clearStmts();
-
-    sqliteDb()->close();
-
-    FileUtil::removeFile(sqliteDb()->filePath());
-
-    initialize();
 
     quotaManager()->clear();
+
+    emit cleared();
 
     return true;
 }
 
-void StatManager::clearStmts()
-{
-    qDeleteAll(m_sqliteStmts);
-    m_sqliteStmts.clear();
-}
+void StatManager::clearStmts() { }
 
 void StatManager::logClear()
 {
@@ -396,9 +395,9 @@ void StatManager::deleteConnAll()
 {
     sqliteDb()->beginTransaction();
 
-    deleteAppStmtList({ getSqliteStmt(StatSql::sqlDeleteAllConn),
-                              getSqliteStmt(StatSql::sqlDeleteAllConnBlock) },
-            getSqliteStmt(StatSql::sqlSelectDeletedAllConnAppList));
+    deleteAppStmtList({ sqliteDb()->stmt(StatSql::sqlDeleteAllConn),
+                              sqliteDb()->stmt(StatSql::sqlDeleteAllConnBlock) },
+            sqliteDb()->stmt(StatSql::sqlSelectDeletedAllConnAppList));
 
     m_connBlockIdMin = m_connBlockIdMax = 0;
 
@@ -407,7 +406,7 @@ void StatManager::deleteConnAll()
 
 void StatManager::resetAppTrafTotals()
 {
-    SqliteStmt *stmt = getSqliteStmt(StatSql::sqlResetAppTrafTotals);
+    SqliteStmt *stmt = sqliteDb()->stmt(StatSql::sqlResetAppTrafTotals);
     const qint64 unixTime = DateUtil::getUnixTime();
 
     stmt->bindInt(1, DateUtil::getUnixHour(unixTime));
@@ -418,7 +417,7 @@ void StatManager::resetAppTrafTotals()
 
 bool StatManager::hasAppTraf(qint64 appId)
 {
-    SqliteStmt *stmt = getSqliteStmt(StatSql::sqlSelectStatAppExists);
+    SqliteStmt *stmt = sqliteDb()->stmt(StatSql::sqlSelectStatAppExists);
 
     stmt->bindInt64(1, appId);
     const bool res = (stmt->step() == SqliteStmt::StepRow);
@@ -431,7 +430,7 @@ qint64 StatManager::getAppId(const QString &appPath)
 {
     qint64 appId = INVALID_APP_ID;
 
-    SqliteStmt *stmt = getSqliteStmt(StatSql::sqlSelectAppId);
+    SqliteStmt *stmt = sqliteDb()->stmt(StatSql::sqlSelectAppId);
 
     stmt->bindText(1, appPath);
     if (stmt->step() == SqliteStmt::StepRow) {
@@ -444,7 +443,7 @@ qint64 StatManager::getAppId(const QString &appPath)
 
 qint64 StatManager::createAppId(const QString &appPath, qint64 unixTime)
 {
-    SqliteStmt *stmt = getSqliteStmt(StatSql::sqlInsertAppId);
+    SqliteStmt *stmt = sqliteDb()->stmt(StatSql::sqlInsertAppId);
 
     stmt->bindText(1, appPath);
     stmt->bindInt64(2, unixTime);
@@ -522,7 +521,7 @@ void StatManager::deleteOldTraffic(qint32 trafHour)
 
 void StatManager::getStatAppList(QStringList &list, QVector<qint64> &appIds)
 {
-    SqliteStmt *stmt = getSqliteStmt(StatSql::sqlSelectStatAppList);
+    SqliteStmt *stmt = sqliteDb()->stmt(StatSql::sqlSelectStatAppList);
 
     while (stmt->step() == SqliteStmt::StepRow) {
         appIds.append(stmt->columnInt64(0));
@@ -597,7 +596,7 @@ bool StatManager::updateTraffic(SqliteStmt *stmt, quint32 inBytes, quint32 outBy
 
 qint64 StatManager::insertConn(const LogEntryBlockedIp &entry, qint64 unixTime, qint64 appId)
 {
-    SqliteStmt *stmt = getSqliteStmt(StatSql::sqlInsertConn);
+    SqliteStmt *stmt = sqliteDb()->stmt(StatSql::sqlInsertConn);
 
     stmt->bindInt64(1, appId);
     stmt->bindInt64(2, unixTime);
@@ -618,7 +617,7 @@ qint64 StatManager::insertConn(const LogEntryBlockedIp &entry, qint64 unixTime, 
 
 qint64 StatManager::insertConnBlock(qint64 connId, quint8 blockReason)
 {
-    SqliteStmt *stmt = getSqliteStmt(StatSql::sqlInsertConnBlock);
+    SqliteStmt *stmt = sqliteDb()->stmt(StatSql::sqlInsertConnBlock);
 
     stmt->bindInt64(1, connId);
     stmt->bindInt(2, blockReason);
@@ -691,7 +690,7 @@ qint32 StatManager::getTrafficTime(const char *sql, qint64 appId)
 {
     qint32 trafTime = 0;
 
-    SqliteStmt *stmt = getSqliteStmt(sql);
+    SqliteStmt *stmt = sqliteDb()->stmt(sql);
 
     if (appId != 0) {
         stmt->bindInt64(1, appId);
@@ -708,7 +707,7 @@ qint32 StatManager::getTrafficTime(const char *sql, qint64 appId)
 void StatManager::getTraffic(
         const char *sql, qint32 trafTime, qint64 &inBytes, qint64 &outBytes, qint64 appId)
 {
-    SqliteStmt *stmt = getSqliteStmt(sql);
+    SqliteStmt *stmt = sqliteDb()->stmt(sql);
 
     stmt->bindInt(1, trafTime);
 
@@ -728,7 +727,7 @@ void StatManager::getTraffic(
 
 SqliteStmt *StatManager::getTrafficStmt(const char *sql, qint32 trafTime)
 {
-    SqliteStmt *stmt = getSqliteStmt(sql);
+    SqliteStmt *stmt = sqliteDb()->stmt(sql);
 
     stmt->bindInt(1, trafTime);
 
@@ -737,7 +736,7 @@ SqliteStmt *StatManager::getTrafficStmt(const char *sql, qint32 trafTime)
 
 SqliteStmt *StatManager::getIdStmt(const char *sql, qint64 id)
 {
-    SqliteStmt *stmt = getSqliteStmt(sql);
+    SqliteStmt *stmt = sqliteDb()->stmt(sql);
 
     stmt->bindInt64(1, id);
 
@@ -749,20 +748,6 @@ SqliteStmt *StatManager::getId2Stmt(const char *sql, qint64 id1, qint64 id2)
     SqliteStmt *stmt = getIdStmt(sql, id1);
 
     stmt->bindInt64(2, id2);
-
-    return stmt;
-}
-
-SqliteStmt *StatManager::getSqliteStmt(const char *sql)
-{
-    SqliteStmt *stmt = m_sqliteStmts.value(sql);
-
-    if (!stmt) {
-        stmt = new SqliteStmt();
-        stmt->prepare(sqliteDb()->db(), sql, SqliteStmt::PreparePersistent);
-
-        m_sqliteStmts.insert(sql, stmt);
-    }
 
     return stmt;
 }

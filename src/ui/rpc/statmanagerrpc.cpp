@@ -17,10 +17,5 @@ RpcManager *StatManagerRpc::rpcManager() const
 
 bool StatManagerRpc::clear()
 {
-    if (!rpcManager()->doOnServer(Control::Rpc_StatManager_clear))
-        return false;
-
-    // TODO: re-open the DB
-
-    return true;
+    return rpcManager()->doOnServer(Control::Rpc_StatManager_clear);
 }
