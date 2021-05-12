@@ -214,6 +214,8 @@ bool StatManager::clear()
     if (!sqliteDb()->execute(StatSql::sqlClear))
         return false;
 
+    sqliteDb()->execute(StatSql::sqlVacuum);
+
     clearAppIdCache();
 
     quotaManager()->clear();
@@ -400,6 +402,8 @@ bool StatManager::deleteConnAll()
     deleteAppStmtList({ sqliteDb()->stmt(StatSql::sqlDeleteAllConn),
                               sqliteDb()->stmt(StatSql::sqlDeleteAllConnBlock) },
             sqliteDb()->stmt(StatSql::sqlSelectDeletedAllConnAppList));
+
+    sqliteDb()->execute(StatSql::sqlVacuum);
 
     sqliteDb()->commitTransaction();
 

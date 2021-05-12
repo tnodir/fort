@@ -81,6 +81,7 @@ public:
     static const char *const sqlSelectDeletedAllConnAppList;
 
     static const char *const sqlClear;
+    static const char *const sqlVacuum;
 };
 
 #endif // STATSQL_H

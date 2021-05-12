@@ -203,5 +203,6 @@ const char *const StatSql::sqlClear = "DELETE FROM app;"
                                       "DELETE FROM conn;"
                                       "DELETE FROM conn_block;"
                                       "DELETE FROM conn_traffic;"
-                                      "DELETE FROM conn_flow;"
-                                      "VACUUM;";
+                                      "DELETE FROM conn_flow;";
+
+const char *const StatSql::sqlVacuum = "VACUUM;";
