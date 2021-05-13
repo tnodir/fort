@@ -96,6 +96,11 @@ bool SqliteDb::detach(const QString &schemaName)
     return ok;
 }
 
+bool SqliteDb::vacuum()
+{
+    return execute("VACUUM;");
+}
+
 bool SqliteDb::execute(const char *sql)
 {
     return sqlite3_exec(m_db, sql, nullptr, nullptr, nullptr) == SQLITE_OK;

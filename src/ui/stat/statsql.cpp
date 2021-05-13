@@ -158,6 +158,17 @@ const char *const StatSql::sqlResetAppTrafTotals =
         "UPDATE traffic_app"
         "  SET traf_time = ?1, in_bytes = 0, out_bytes = 0;";
 
+const char *const StatSql::sqlDeleteAllTraffic =
+        "DELETE FROM traffic_app;"
+        "DELETE FROM traffic_app_hour;"
+        "DELETE FROM traffic_app_day;"
+        "DELETE FROM traffic_app_month;"
+        "DELETE FROM traffic_hour;"
+        "DELETE FROM traffic_day;"
+        "DELETE FROM traffic_month;"
+        "DELETE FROM app WHERE ("
+        "  SELECT 1 FROM conn c WHERE c.app_id = app.app_id LIMIT 1) IS NULL;";
+
 const char *const StatSql::sqlInsertConn =
         "INSERT INTO conn(app_id, conn_time, process_id, inbound, blocked,"
         "    ip_proto, local_port, remote_port, local_ip, remote_ip)"
@@ -191,16 +202,3 @@ const char *const StatSql::sqlSelectDeletedAllConnAppList =
         "SELECT t.app_id, t.path FROM app t"
         "  LEFT JOIN traffic_app ta ON ta.app_id = t.app_id"
         "  WHERE ta.app_id IS NULL;";
-
-const char *const StatSql::sqlClearTraffic =
-        "DELETE FROM traffic_app;"
-        "DELETE FROM traffic_app_hour;"
-        "DELETE FROM traffic_app_day;"
-        "DELETE FROM traffic_app_month;"
-        "DELETE FROM traffic_hour;"
-        "DELETE FROM traffic_day;"
-        "DELETE FROM traffic_month;"
-        "DELETE FROM app WHERE ("
-        "  SELECT 1 FROM conn c WHERE c.app_id = app.app_id LIMIT 1) IS NULL;";
-
-const char *const StatSql::sqlVacuum = "VACUUM;";

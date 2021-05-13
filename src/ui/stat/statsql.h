@@ -66,6 +66,7 @@ public:
     static const char *const sqlSelectDeletedStatAppList;
 
     static const char *const sqlResetAppTrafTotals;
+    static const char *const sqlDeleteAllTraffic;
 
     static const char *const sqlInsertConn;
     static const char *const sqlInsertConnBlock;
@@ -79,9 +80,6 @@ public:
     static const char *const sqlDeleteAllConn;
     static const char *const sqlDeleteAllConnBlock;
     static const char *const sqlSelectDeletedAllConnAppList;
-
-    static const char *const sqlClearTraffic;
-    static const char *const sqlVacuum;
 };
 
 #endif // STATSQL_H

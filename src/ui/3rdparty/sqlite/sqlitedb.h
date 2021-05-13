@@ -51,6 +51,8 @@ public:
     bool attach(const QString &schemaName, const QString &filePath = QString());
     bool detach(const QString &schemaName);
 
+    bool vacuum();
+
     bool execute(const char *sql);
     bool executeStr(const QString &sql);
 

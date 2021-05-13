@@ -208,8 +208,8 @@ bool StatManager::updateTrafDay(qint64 unixTime)
 bool StatManager::clearTraffic()
 {
     sqliteDb()->beginTransaction();
-    sqliteDb()->execute(StatSql::sqlClearTraffic);
-    sqliteDb()->execute(StatSql::sqlVacuum);
+    sqliteDb()->execute(StatSql::sqlDeleteAllTraffic);
+    sqliteDb()->vacuum();
     sqliteDb()->commitTransaction();
 
     clearAppIdCache();
@@ -410,7 +410,7 @@ bool StatManager::deleteConnAll()
                               sqliteDb()->stmt(StatSql::sqlDeleteAllConnBlock) },
             sqliteDb()->stmt(StatSql::sqlSelectDeletedAllConnAppList));
 
-    sqliteDb()->execute(StatSql::sqlVacuum);
+    sqliteDb()->vacuum();
 
     sqliteDb()->commitTransaction();
 
