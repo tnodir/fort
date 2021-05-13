@@ -47,7 +47,7 @@ void AppStatModel::remove(int row)
     if (Q_UNLIKELY(row < 0 || row >= m_appIds.size()))
         return;
 
-    beginRemoveRows(QModelIndex(), row, row);
+    doBeginRemoveRows(row, row);
 
     const qint64 appId = m_appIds.at(row);
 
@@ -57,7 +57,7 @@ void AppStatModel::remove(int row)
 
     removeRow(row);
 
-    endRemoveRows();
+    doEndRemoveRows();
 }
 
 void AppStatModel::updateList()

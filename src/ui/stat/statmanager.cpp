@@ -348,6 +348,11 @@ bool StatManager::logBlockedIp(const LogEntryBlockedIp &entry, qint64 unixTime)
     }
 
     sqliteDb()->endTransaction(ok);
+
+    if (ok) {
+        emit connBlockAdded();
+    }
+
     return ok;
 }
 
@@ -363,6 +368,8 @@ bool StatManager::deleteStatApp(qint64 appId)
 
     sqliteDb()->commitTransaction();
 
+    emit appStatRemoved(appId);
+
     return true;
 }
 
@@ -375,6 +382,9 @@ bool StatManager::deleteOldConnBlock()
         return false;
 
     deleteRangeConnBlock(m_connBlockIdMin, m_connBlockIdMin + oldCount);
+
+    emit connRemoved();
+
     return true;
 }
 
@@ -389,6 +399,8 @@ bool StatManager::deleteConn(qint64 rowIdTo, bool blocked)
     }
 
     sqliteDb()->commitTransaction();
+
+    emit connRemoved();
 
     return true;
 }
@@ -406,6 +418,8 @@ bool StatManager::deleteConnAll()
     sqliteDb()->commitTransaction();
 
     m_connBlockIdMin = m_connBlockIdMax = 0;
+
+    emit connRemoved();
 
     return true;
 }

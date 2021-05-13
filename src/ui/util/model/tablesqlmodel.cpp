@@ -29,18 +29,8 @@ void TableSqlModel::sort(int column, Qt::SortOrder order)
 void TableSqlModel::invalidateRowCache()
 {
     m_rowCount = -1;
-    tableRow().invalidate();
+    TableItemModel::invalidateRowCache();
     emit modelChanged();
-}
-
-void TableSqlModel::updateRowCache(int row) const
-{
-    if (tableRow().isValid(row))
-        return;
-
-    if (updateTableRow(row)) {
-        tableRow().row = row;
-    }
 }
 
 int TableSqlModel::doSqlCount() const

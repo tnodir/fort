@@ -23,10 +23,6 @@ signals:
 
 protected:
     void invalidateRowCache() override;
-    void updateRowCache(int row) const;
-
-    virtual bool updateTableRow(int row) const = 0;
-    virtual TableRow &tableRow() const = 0;
 
     virtual int doSqlCount() const;
 

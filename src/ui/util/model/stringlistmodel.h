@@ -34,7 +34,15 @@ protected:
 
     int adjustRow(int row) const;
 
+    void doBeginRemoveRows(int first, int last, const QModelIndex &parent = {});
+    void doEndRemoveRows();
+
+    bool isChanging() const { return m_isChanging; }
+    void setIsChanging(bool v) { m_isChanging = v; }
+
 private:
+    bool m_isChanging = false;
+
     QStringList m_list;
 };
 

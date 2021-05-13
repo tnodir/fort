@@ -60,6 +60,9 @@ void StringListModel::replace(const QString &text, int row)
 
 void StringListModel::reset()
 {
+    if (isChanging())
+        return;
+
     beginResetModel();
     endResetModel();
 }
@@ -80,4 +83,16 @@ void StringListModel::removeRow(int row)
 int StringListModel::adjustRow(int row) const
 {
     return (row < 0) ? (m_list.size() + 1 + row) : row;
+}
+
+void StringListModel::doBeginRemoveRows(int first, int last, const QModelIndex &parent)
+{
+    QAbstractItemModel::beginRemoveRows(parent, first, last);
+    setIsChanging(true);
+}
+
+void StringListModel::doEndRemoveRows()
+{
+    setIsChanging(false);
+    QAbstractItemModel::endRemoveRows();
 }

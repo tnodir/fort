@@ -69,13 +69,13 @@ QVariant TrafListModel::data(const QModelIndex &index, int role) const
 
         switch (column) {
         case 0:
-            return formatTrafTime(m_rowCache.trafTime);
+            return formatTrafTime(m_trafRow.trafTime);
         case 1:
-            return formatTrafUnit(m_rowCache.inBytes);
+            return formatTrafUnit(m_trafRow.inBytes);
         case 2:
-            return formatTrafUnit(m_rowCache.outBytes);
+            return formatTrafUnit(m_trafRow.outBytes);
         case 3:
-            return formatTrafUnit(m_rowCache.inBytes + m_rowCache.outBytes);
+            return formatTrafUnit(m_trafRow.inBytes + m_trafRow.outBytes);
         }
     }
 
@@ -114,7 +114,7 @@ void TrafListModel::resetTraf()
 
     m_trafCount = getTrafCount(m_type, m_minTrafTime, m_maxTrafTime);
 
-    m_rowCache.invalidate();
+    invalidateRowCache();
 
     endResetModel();
 }
@@ -124,24 +124,20 @@ void TrafListModel::reset()
     if (m_isEmpty) {
         resetTraf();
     } else {
-        beginResetModel();
-        m_rowCache.invalidate();
-        endResetModel();
+        TableItemModel::reset();
     }
 }
 
-void TrafListModel::updateRowCache(int row) const
+bool TrafListModel::updateTableRow(int row) const
 {
-    if (m_rowCache.isValid(row))
-        return;
-
-    m_rowCache.row = row;
-    m_rowCache.trafTime = getTrafTime(row);
+    m_trafRow.trafTime = getTrafTime(row);
 
     const char *sqlSelectTraffic = getSqlSelectTraffic(m_type, m_appId);
 
-    statManager()->getTraffic(sqlSelectTraffic, m_rowCache.trafTime, m_rowCache.inBytes,
-            m_rowCache.outBytes, m_appId);
+    statManager()->getTraffic(
+            sqlSelectTraffic, m_trafRow.trafTime, m_trafRow.inBytes, m_trafRow.outBytes, m_appId);
+
+    return true;
 }
 
 QString TrafListModel::formatTrafUnit(qint64 bytes) const

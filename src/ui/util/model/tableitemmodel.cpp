@@ -36,6 +36,9 @@ Qt::ItemFlags TableItemModel::flags(const QModelIndex &index) const
 
 void TableItemModel::reset()
 {
+    if (isChanging())
+        return;
+
     beginResetModel();
     invalidateRowCache();
     endResetModel();
@@ -49,4 +52,45 @@ void TableItemModel::refresh()
     const auto lastCell = index(rowCount() - 1, columnCount(firstCell) - 1);
 
     emit dataChanged(firstCell, lastCell);
+}
+
+void TableItemModel::invalidateRowCache()
+{
+    tableRow().invalidate();
+}
+
+void TableItemModel::updateRowCache(int row) const
+{
+    if (tableRow().isValid(row))
+        return;
+
+    if (updateTableRow(row)) {
+        tableRow().row = row;
+    }
+}
+
+void TableItemModel::doBeginInsertRows(int first, int last, const QModelIndex &parent)
+{
+    QAbstractItemModel::beginInsertRows(parent, first, last);
+    setIsChanging(true);
+}
+
+void TableItemModel::doEndInsertRows()
+{
+    setIsChanging(false);
+    invalidateRowCache();
+    QAbstractItemModel::endInsertRows();
+}
+
+void TableItemModel::doBeginRemoveRows(int first, int last, const QModelIndex &parent)
+{
+    QAbstractItemModel::beginRemoveRows(parent, first, last);
+    setIsChanging(true);
+}
+
+void TableItemModel::doEndRemoveRows()
+{
+    setIsChanging(false);
+    invalidateRowCache();
+    QAbstractItemModel::endRemoveRows();
 }

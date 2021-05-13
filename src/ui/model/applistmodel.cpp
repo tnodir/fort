@@ -344,14 +344,11 @@ bool AppListModel::updateAppName(qint64 appId, const QString &appName)
 
 void AppListModel::deleteApp(qint64 appId, const QString &appPath, int row)
 {
-    beginRemoveRows(QModelIndex(), row, row);
+    doBeginRemoveRows(row, row);
 
-    if (confManager()->deleteApp(appId, appPath)) {
-        invalidateRowCache();
-        removeRow(row);
-    }
+    confManager()->deleteApp(appId, appPath);
 
-    endRemoveRows();
+    doEndRemoveRows();
 }
 
 void AppListModel::purgeApps()

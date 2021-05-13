@@ -51,8 +51,9 @@ public slots:
     void resetTraf();
     void reset();
 
-private:
-    void updateRowCache(int row) const;
+protected:
+    bool updateTableRow(int row) const override;
+    TableRow &tableRow() const override { return m_trafRow; }
 
     QString formatTrafUnit(qint64 bytes) const;
     QString formatTrafTime(qint32 trafTime) const;
@@ -79,7 +80,7 @@ private:
 
     StatManager *m_statManager = nullptr;
 
-    mutable TrafficRow m_rowCache;
+    mutable TrafficRow m_trafRow;
 };
 
 #endif // TRAFLISTMODEL_H

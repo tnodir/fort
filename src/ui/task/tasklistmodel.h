@@ -41,6 +41,10 @@ public:
 signals:
     void dataEdited();
 
+protected:
+    bool updateTableRow(int /*row*/) const override { return true; }
+    TableRow &tableRow() const override { return m_taskRow; }
+
 private:
     QVariant dataDisplay(const QModelIndex &index) const;
     QVariant dataFont(const QModelIndex &index) const;
@@ -61,6 +65,8 @@ private:
     TaskManager *m_taskManager = nullptr;
 
     QVector<TaskEditInfo> m_taskRows;
+
+    mutable TableRow m_taskRow;
 };
 
 #endif // TASKLISTMODEL_H

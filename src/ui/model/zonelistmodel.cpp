@@ -194,14 +194,11 @@ bool ZoneListModel::updateZoneResult(int zoneId, const QString &textChecksum,
 
 void ZoneListModel::deleteZone(int zoneId, int row)
 {
-    beginRemoveRows(QModelIndex(), row, row);
+    doBeginRemoveRows(row, row);
 
-    if (confManager()->deleteZone(zoneId)) {
-        invalidateRowCache();
-        removeRow(row);
-    }
+    confManager()->deleteZone(zoneId);
 
-    endRemoveRows();
+    doEndRemoveRows();
 }
 
 QString ZoneListModel::zoneNameById(int zoneId)

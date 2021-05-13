@@ -16,6 +16,8 @@
 ConnListModel::ConnListModel(StatManager *statManager, QObject *parent) :
     TableSqlModel(parent), m_statManager(statManager)
 {
+    connect(m_statManager, &StatManager::connBlockAdded, this, &ConnListModel::reset);
+    connect(m_statManager, &StatManager::connRemoved, this, &ConnListModel::reset);
 }
 
 void ConnListModel::setBlockedMode(bool v)
@@ -57,21 +59,18 @@ void ConnListModel::handleLogBlockedIp(const LogEntryBlockedIp &entry, qint64 un
 {
     const int row = rowCount();
 
-    beginInsertRows(QModelIndex(), row, row);
+    doBeginInsertRows(row, row);
 
     if (statManager()->logBlockedIp(entry, unixTime)) {
-        invalidateRowCache();
         ++m_connBlockInc;
     }
 
-    endInsertRows();
+    doEndInsertRows();
 
     constexpr int connBlockIncMax = 100;
     if (m_connBlockInc >= connBlockIncMax) {
         m_connBlockInc = 0;
-        if (statManager()->deleteOldConnBlock()) {
-            reset();
-        }
+        statManager()->deleteOldConnBlock();
     }
 }
 
@@ -220,13 +219,11 @@ QString ConnListModel::blockReasonText(const ConnBlockRow &blockRow)
 
 void ConnListModel::deleteConn(qint64 rowIdTo, bool blocked, int row)
 {
-    beginRemoveRows(QModelIndex(), 0, row);
+    doBeginRemoveRows(0, row);
 
-    if (statManager()->deleteConn(rowIdTo, blocked)) {
-        invalidateRowCache();
-    }
+    statManager()->deleteConn(rowIdTo, blocked);
 
-    endRemoveRows();
+    doEndRemoveRows();
 }
 
 const ConnRow &ConnListModel::connRowAt(int row) const
@@ -246,7 +243,6 @@ ConnBlockRow ConnListModel::getConnRowBlock(qint64 rowId) const
 void ConnListModel::clear()
 {
     statManager()->deleteConnAll();
-    reset();
 
     hostInfoCache()->clear();
 }

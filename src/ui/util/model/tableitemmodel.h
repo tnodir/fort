@@ -32,7 +32,23 @@ public slots:
     void refresh();
 
 protected:
-    virtual void invalidateRowCache() { }
+    virtual void invalidateRowCache();
+    void updateRowCache(int row) const;
+
+    virtual bool updateTableRow(int row) const = 0;
+    virtual TableRow &tableRow() const = 0;
+
+    void doBeginInsertRows(int first, int last, const QModelIndex &parent = {});
+    void doEndInsertRows();
+
+    void doBeginRemoveRows(int first, int last, const QModelIndex &parent = {});
+    void doEndRemoveRows();
+
+    bool isChanging() const { return m_isChanging; }
+    void setIsChanging(bool v) { m_isChanging = v; }
+
+private:
+    bool m_isChanging = false;
 };
 
 #endif // TABLEITEMMODEL_H

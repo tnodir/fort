@@ -88,13 +88,13 @@ private:
 private:
     ConfManager *m_confManager = nullptr;
 
-    mutable ZoneRow m_zoneRow;
-
     QVariantList m_zoneTypes;
     QVariantHash m_zoneTypesMap;
 
     QVariantList m_zoneSources;
     QVariantHash m_zoneSourcesMap;
+
+    mutable ZoneRow m_zoneRow;
 };
 
 #endif // ZONELISTMODEL_H
