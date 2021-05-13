@@ -29,9 +29,6 @@ public:
 
     void setIniEdited();
 
-signals:
-    void trafUnitChanged();
-
 protected slots:
     void onSaveWindowState(IniOptions *ini) override;
     void onRestoreWindowState(IniOptions *ini) override;
@@ -76,6 +73,7 @@ private:
     void setupAppListViewChanged();
     void updatePage();
     void updateTrafUnit();
+    void updateTableTrafUnit();
 
     int appListCurrentIndex() const;
     QString appListCurrentPath() const;

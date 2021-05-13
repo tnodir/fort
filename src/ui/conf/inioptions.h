@@ -108,7 +108,7 @@ public:
     }
     void setTrafMonthKeepMonths(int v) { setValue("stat/trafMonthKeepMonths", v); }
 
-    int trafUnit() const { return valueInt("trafUnit"); }
+    int trafUnit() const { return valueInt("stat/trafUnit"); }
     void setTrafUnit(int v) { setValue("stat/trafUnit", v); }
 
     int allowedIpKeepCount() const

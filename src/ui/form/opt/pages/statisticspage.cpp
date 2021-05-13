@@ -316,7 +316,7 @@ void StatisticsPage::setupTrafUnits()
             return;
 
         ini()->setTrafUnit(index);
-        emit trafUnitChanged();
+        updateTableTrafUnit();
 
         setIniEdited();
     });
@@ -713,15 +713,6 @@ void StatisticsPage::setupTableTraf()
 
     connect(m_tabBar, &QTabBar::currentChanged, this, resetTableTraf);
     connect(m_appListView, &ListView::currentIndexChanged, this, resetTableTraf);
-
-    const auto refreshTableTraf = [&] {
-        trafListModel()->setUnit(static_cast<TrafListModel::TrafUnit>(ini()->trafUnit()));
-        trafListModel()->refresh();
-    };
-
-    refreshTableTraf();
-
-    connect(this, &StatisticsPage::trafUnitChanged, this, refreshTableTraf);
 }
 
 void StatisticsPage::setupTableTrafHeader()
@@ -810,6 +801,7 @@ void StatisticsPage::updatePage()
     m_graphGridColor->setColor(ini()->graphWindowGridColor());
 
     updateTrafUnit();
+    updateTableTrafUnit();
 
     m_isPageUpdating = false;
 }
@@ -817,6 +809,16 @@ void StatisticsPage::updatePage()
 void StatisticsPage::updateTrafUnit()
 {
     m_comboTrafUnit->setCurrentIndex(ini()->trafUnit());
+}
+
+void StatisticsPage::updateTableTrafUnit()
+{
+    const auto trafUnit = static_cast<TrafListModel::TrafUnit>(ini()->trafUnit());
+
+    if (trafListModel()->unit() != trafUnit) {
+        trafListModel()->setUnit(trafUnit);
+        trafListModel()->refresh();
+    }
 }
 
 int StatisticsPage::appListCurrentIndex() const
