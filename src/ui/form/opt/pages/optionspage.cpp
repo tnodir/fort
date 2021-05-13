@@ -31,6 +31,20 @@ OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) : BasePage(ct
 
 void OptionsPage::onAboutToSave()
 {
+    // Startup Mode
+    if (m_currentStartupMode != m_comboStartMode->currentIndex()) {
+        const bool wasServiceMode = StartupUtil::isServiceMode(m_currentStartupMode);
+
+        m_currentStartupMode = m_comboStartMode->currentIndex();
+        StartupUtil::setStartupMode(m_currentStartupMode, settings()->defaultLanguage());
+
+        if (wasServiceMode != StartupUtil::isServiceMode(m_currentStartupMode)) {
+            QMetaObject::invokeMethod(
+                    fortManager(), &FortManager::processRestartRequired, Qt::QueuedConnection);
+        }
+    }
+
+    // Password
     if (!settings()->hasPassword() && ini()->hasPassword() && ini()->password().isEmpty()) {
         m_cbPassword->setChecked(false);
     }
@@ -100,7 +114,8 @@ void OptionsPage::retranslateComboStartMode()
 
     int currentIndex = m_comboStartMode->currentIndex();
     if (m_comboStartMode->currentIndex() < 0) {
-        currentIndex = ini()->startupMode();
+        m_currentStartupMode = StartupUtil::getStartupMode();
+        currentIndex = m_currentStartupMode;
     }
 
     m_comboStartMode->clear();
@@ -207,10 +222,8 @@ QLayout *OptionsPage::setupStartModeLayout()
 {
     m_labelStartMode = ControlUtil::createLabel();
 
-    m_comboStartMode = ControlUtil::createComboBox(QStringList(), [&](int index) {
-        ini()->setStartupMode(index);
-        ctrl()->setIniEdited();
-    });
+    m_comboStartMode = ControlUtil::createComboBox(
+            QStringList(), [&](int /*index*/) { ctrl()->emitEdited(); });
     m_comboStartMode->setFixedWidth(200);
 
     return ControlUtil::createRowLayout(m_labelStartMode, m_comboStartMode);

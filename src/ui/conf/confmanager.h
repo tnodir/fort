@@ -110,8 +110,6 @@ protected:
 
     void showErrorMessage(const QString &errorMessage);
 
-    void saveClientExtFlags(const IniOptions &ini);
-
 private:
     void setupDefault(FirewallConf &conf) const;
 

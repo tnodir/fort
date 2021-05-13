@@ -45,6 +45,8 @@ private:
     void setupNewVersionUpdate();
 
 private:
+    int m_currentStartupMode = 0;
+
     QGroupBox *m_gbStartup = nullptr;
     QGroupBox *m_gbTraffic = nullptr;
     QGroupBox *m_gbGlobal = nullptr;

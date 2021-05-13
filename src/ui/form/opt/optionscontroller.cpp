@@ -64,7 +64,7 @@ void OptionsController::setOptEdited()
 {
     if (!conf()->optEdited()) {
         conf()->setOptEdited();
-        emit editedChanged(true);
+        emitEdited(true);
     }
 }
 
@@ -72,7 +72,7 @@ void OptionsController::setFlagsEdited()
 {
     if (!conf()->flagsEdited()) {
         conf()->setFlagsEdited();
-        emit editedChanged(true);
+        emitEdited(true);
     }
 }
 
@@ -80,13 +80,18 @@ void OptionsController::setIniEdited()
 {
     if (!conf()->iniEdited()) {
         conf()->setIniEdited();
-        emit editedChanged(true);
+        emitEdited(true);
     }
+}
+
+void OptionsController::emitEdited(bool edited)
+{
+    emit editedChanged(edited);
 }
 
 void OptionsController::resetEdited()
 {
-    emit editedChanged(false);
+    emitEdited(false);
     emit editResetted();
 }
 
@@ -101,6 +106,11 @@ void OptionsController::initialize()
 void OptionsController::save(bool closeOnSuccess)
 {
     emit aboutToSave();
+
+    if (!conf()->anyEdited()) {
+        emitEdited(false);
+        return;
+    }
 
     if (!confManager()->saveConf(*conf()))
         return;

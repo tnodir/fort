@@ -1029,7 +1029,6 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
 
 void ConfManager::loadExtFlags(IniOptions &ini)
 {
-    ini.cacheStartupMode(StartupUtil::getStartupMode());
     ini.cacheExplorerIntegrated(StartupUtil::isExplorerIntegrated());
 }
 
@@ -1041,27 +1040,9 @@ void ConfManager::saveExtFlags(const IniOptions &ini)
     }
 }
 
-void ConfManager::saveClientExtFlags(const IniOptions &ini)
-{
-    // Startup Mode
-    if (ini.startupModeSet()) {
-        StartupUtil::setStartupMode(ini.startupMode(), settings()->defaultLanguage());
-
-        if (StartupUtil::isServiceMode(StartupUtil::getStartupMode())
-                != StartupUtil::isServiceMode(ini.startupMode())) {
-            QMetaObject::invokeMethod(
-                    fortManager(), &FortManager::processRestartRequired, Qt::QueuedConnection);
-        }
-    }
-}
-
 void ConfManager::saveOthersByIni(const IniOptions &ini)
 {
     saveExtFlags(ini);
-
-    if (!settings()->isService()) {
-        saveClientExtFlags(ini);
-    }
 
     // Task Info List
     if (ini.taskInfoListSet()) {
