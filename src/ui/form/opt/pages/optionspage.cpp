@@ -95,11 +95,8 @@ void OptionsPage::onRetranslateUi()
 
 void OptionsPage::retranslateComboStartMode()
 {
-    const QStringList list = {
-        tr("Disabled"), tr("For current user")
-        // TODO: Implement service RPC
-        //, tr("For all users"), tr("For all users in background")
-    };
+    const QStringList list = { tr("Disabled"), tr("For current user"), tr("For all users"),
+        tr("For all users in background") };
 
     int currentIndex = m_comboStartMode->currentIndex();
     if (m_comboStartMode->currentIndex() < 0) {
