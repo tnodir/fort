@@ -69,10 +69,12 @@ void AppListModel::handleLogBlocked(const LogEntryBlocked &logEntry)
     if (confManager()->appIdByPath(appPath) > 0)
         return; // already added by user
 
-    const auto groupId = appGroupAt(0)->id();
+    constexpr int groupIndex = 0;
+    const auto groupId = appGroupAt(groupIndex)->id();
     const auto appName = appInfoCache()->appName(appPath);
 
-    confManager()->addApp(appPath, appName, QDateTime(), groupId, false, logEntry.blocked(), true);
+    confManager()->addApp(
+            appPath, appName, QDateTime(), groupId, groupIndex, false, logEntry.blocked(), true);
 }
 
 int AppListModel::columnCount(const QModelIndex &parent) const
