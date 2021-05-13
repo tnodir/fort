@@ -247,75 +247,42 @@ bool RpcManager::processCommandRpc(
         initClientOnServer(w);
         return true;
 
-    case Control::Rpc_AppInfoManager_lookupAppInfo:
-    case Control::Rpc_AppInfoManager_checkLookupFinished:
+    default:
+        return processManagerRpc(w, cmd, args, errorMessage);
+    }
+}
+
+bool RpcManager::processManagerRpc(
+        ControlWorker *w, Control::Command cmd, const QVariantList &args, QString &errorMessage)
+{
+    if (commandRequiresValidation(cmd) && !checkClientValidated(w)) {
+        errorMessage = "Client is not validated";
+        return false;
+    }
+
+    switch (Control::managerByCommand(cmd)) {
+    case Control::Rpc_AppInfoManager:
         return processAppInfoManagerRpc(cmd, args);
 
-    case Control::Rpc_ConfManager_save:
-    case Control::Rpc_ConfManager_addApp:
-    case Control::Rpc_ConfManager_deleteApp:
-    case Control::Rpc_ConfManager_updateApp:
-    case Control::Rpc_ConfManager_updateAppName:
-    case Control::Rpc_ConfManager_addZone:
-    case Control::Rpc_ConfManager_deleteZone:
-    case Control::Rpc_ConfManager_updateZone:
-    case Control::Rpc_ConfManager_updateZoneName:
-    case Control::Rpc_ConfManager_updateZoneEnabled:
-        if (!checkClientValidated(w))
-            return false;
-        Q_FALLTHROUGH();
-    case Control::Rpc_ConfManager_confChanged:
-    case Control::Rpc_ConfManager_appEndTimesUpdated:
-    case Control::Rpc_ConfManager_appAdded:
-    case Control::Rpc_ConfManager_appRemoved:
-    case Control::Rpc_ConfManager_appUpdated:
-    case Control::Rpc_ConfManager_zoneAdded:
-    case Control::Rpc_ConfManager_zoneRemoved:
-    case Control::Rpc_ConfManager_zoneUpdated:
+    case Control::Rpc_ConfManager:
         return processConfManagerRpc(w, cmd, args);
 
-    case Control::Rpc_DriverManager_reinstallDriver:
-    case Control::Rpc_DriverManager_uninstallDriver:
-        if (!checkClientValidated(w))
-            return false;
-        Q_FALLTHROUGH();
-    case Control::Rpc_DriverManager_updateState:
+    case Control::Rpc_DriverManager:
         return processDriverManagerRpc(cmd, args);
 
-    case Control::Rpc_QuotaManager_alert:
+    case Control::Rpc_QuotaManager:
         return processQuotaManagerRpc(cmd, args);
 
-    case Control::Rpc_StatManager_deleteStatApp:
-    case Control::Rpc_StatManager_deleteConn:
-    case Control::Rpc_StatManager_deleteConnAll:
-    case Control::Rpc_StatManager_resetAppTrafTotals:
-    case Control::Rpc_StatManager_clearTraffic:
-        if (!checkClientValidated(w))
-            return false;
-        Q_FALLTHROUGH();
-    case Control::Rpc_StatManager_trafficCleared:
-    case Control::Rpc_StatManager_appStatRemoved:
-    case Control::Rpc_StatManager_appCreated:
-    case Control::Rpc_StatManager_trafficAdded:
-    case Control::Rpc_StatManager_connBlockAdded:
-    case Control::Rpc_StatManager_connRemoved:
-    case Control::Rpc_StatManager_appTrafTotalsResetted:
+    case Control::Rpc_StatManager:
         return processStatManagerRpc(w, cmd, args);
 
-    case Control::Rpc_TaskManager_runTask:
-    case Control::Rpc_TaskManager_abortTask:
-        if (!checkClientValidated(w))
-            return false;
-        Q_FALLTHROUGH();
-    case Control::Rpc_TaskManager_taskStarted:
-    case Control::Rpc_TaskManager_taskFinished:
+    case Control::Rpc_TaskManager:
         return processTaskManagerRpc(cmd, args);
 
     default:
         errorMessage = "Unknown command";
+        return false;
     }
-
-    return false;
 }
 
 bool RpcManager::processAppInfoManagerRpc(Control::Command cmd, const QVariantList &args)

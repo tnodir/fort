@@ -62,6 +62,20 @@ enum Command : qint8 {
     Rpc_TaskManager_taskFinished,
 };
 
+enum RpcManager : qint8 {
+    Rpc_NoneManager = 0,
+    Rpc_AppInfoManager,
+    Rpc_ConfManager,
+    Rpc_DriverManager,
+    Rpc_QuotaManager,
+    Rpc_StatManager,
+    Rpc_TaskManager,
+};
+
+RpcManager managerByCommand(Command cmd);
+
+bool commandRequiresValidation(Command cmd);
+
 }
 
 #endif // CONTROL_H

@@ -20,6 +20,7 @@ SOURCES += \
     conf/confmanager.cpp \
     conf/firewallconf.cpp \
     conf/inioptions.cpp \
+    control/control.cpp \
     control/controlmanager.cpp \
     control/controlworker.cpp \
     driver/drivercommon.cpp \
