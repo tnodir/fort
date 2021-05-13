@@ -107,19 +107,19 @@ void OptionsController::save(bool closeOnSuccess)
 {
     emit aboutToSave();
 
-    if (!conf()->anyEdited()) {
+    const bool isAnyEdited = conf()->anyEdited();
+    if (isAnyEdited) {
+        if (!confManager()->saveConf(*conf()))
+            return;
+
+        confManager()->applySavedConf(conf());
+    } else {
         emitEdited(false);
-        return;
     }
-
-    if (!confManager()->saveConf(*conf()))
-        return;
-
-    confManager()->applySavedConf(conf());
 
     if (closeOnSuccess) {
         closeWindow();
-    } else {
+    } else if (isAnyEdited) {
         confManager()->initConfToEdit();
         resetEdited();
     }

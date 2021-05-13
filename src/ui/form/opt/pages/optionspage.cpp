@@ -222,8 +222,11 @@ QLayout *OptionsPage::setupStartModeLayout()
 {
     m_labelStartMode = ControlUtil::createLabel();
 
-    m_comboStartMode = ControlUtil::createComboBox(
-            QStringList(), [&](int /*index*/) { ctrl()->emitEdited(); });
+    m_comboStartMode = ControlUtil::createComboBox(QStringList(), [&](int index) {
+        if (m_currentStartupMode != index) {
+            ctrl()->emitEdited();
+        }
+    });
     m_comboStartMode->setFixedWidth(200);
 
     return ControlUtil::createRowLayout(m_labelStartMode, m_comboStartMode);
