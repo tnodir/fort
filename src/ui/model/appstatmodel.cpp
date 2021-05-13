@@ -16,6 +16,7 @@ AppStatModel::AppStatModel(StatManager *statManager, QObject *parent) :
     m_statManager(statManager),
     m_trafListModel(new TrafListModel(statManager, this))
 {
+    connect(m_statManager, &StatManager::appStatRemoved, this, &AppStatModel::onStatAppRemoved);
     connect(m_statManager, &StatManager::appCreated, this, &AppStatModel::handleCreatedApp);
 }
 
@@ -54,7 +55,23 @@ void AppStatModel::remove(int row)
     m_statManager->deleteStatApp(appId);
 
     m_appIds.remove(row);
+    removeRow(row);
 
+    doEndRemoveRows();
+}
+
+void AppStatModel::onStatAppRemoved(qint64 appId)
+{
+    if (isChanging())
+        return;
+
+    const int row = m_appIds.indexOf(appId);
+    if (row == -1)
+        return;
+
+    doBeginRemoveRows(row, row);
+
+    m_appIds.remove(row);
     removeRow(row);
 
     doEndRemoveRows();

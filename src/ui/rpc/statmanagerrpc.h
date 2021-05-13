@@ -19,6 +19,8 @@ public:
 
     void setConf(const FirewallConf * /*conf*/) override { }
 
+    bool deleteStatApp(qint64 appId) override;
+
 public slots:
     bool clear() override;
 

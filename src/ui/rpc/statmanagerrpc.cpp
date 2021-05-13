@@ -15,6 +15,11 @@ RpcManager *StatManagerRpc::rpcManager() const
     return fortManager()->rpcManager();
 }
 
+bool StatManagerRpc::deleteStatApp(qint64 appId)
+{
+    return rpcManager()->doOnServer(Control::Rpc_StatManager_deleteStatApp, { appId });
+}
+
 bool StatManagerRpc::clear()
 {
     return rpcManager()->doOnServer(Control::Rpc_StatManager_clear);

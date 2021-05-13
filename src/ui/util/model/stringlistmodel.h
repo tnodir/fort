@@ -17,8 +17,6 @@ public:
     const QStringList &list() const { return m_list; }
     void setList(const QStringList &list);
 
-signals:
-
 public slots:
     virtual void clear();
 

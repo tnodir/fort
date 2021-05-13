@@ -128,6 +128,9 @@ void RpcManager::setupStatManagerSignals()
 {
     connect(statManager(), &StatManager::cleared, this,
             [&] { invokeOnClients(Control::Rpc_StatManager_cleared); });
+    connect(statManager(), &StatManager::appStatRemoved, this, [&](qint64 appId) {
+        invokeOnClients(Control::Rpc_StatManager_appStatRemoved, { appId });
+    });
     connect(statManager(), &StatManager::appCreated, this,
             [&](qint64 appId, const QString &appPath) {
                 invokeOnClients(Control::Rpc_StatManager_appCreated, { appId, appPath });
@@ -276,11 +279,13 @@ bool RpcManager::processCommandRpc(
     case Control::Rpc_QuotaManager_alert:
         return processQuotaManagerRpc(cmd, args);
 
+    case Control::Rpc_StatManager_deleteStatApp:
     case Control::Rpc_StatManager_clear:
         if (!checkClientValidated(w))
             return false;
         Q_FALLTHROUGH();
     case Control::Rpc_StatManager_cleared:
+    case Control::Rpc_StatManager_appStatRemoved:
     case Control::Rpc_StatManager_appCreated:
     case Control::Rpc_StatManager_trafficAdded:
         return processStatManagerRpc(w, cmd, args);
@@ -436,11 +441,17 @@ bool RpcManager::processStatManagerRpc(
         ControlWorker *w, Control::Command cmd, const QVariantList &args)
 {
     switch (cmd) {
+    case Control::Rpc_StatManager_deleteStatApp:
+        sendResult(w, statManager()->deleteStatApp(args.value(0).toLongLong()));
+        return true;
     case Control::Rpc_StatManager_clear:
         sendResult(w, statManager()->clear());
         return true;
     case Control::Rpc_StatManager_cleared:
         emit statManager()->cleared();
+        return true;
+    case Control::Rpc_StatManager_appStatRemoved:
+        emit statManager()->appStatRemoved(args.value(0).toLongLong());
         return true;
     case Control::Rpc_StatManager_appCreated:
         emit statManager()->appCreated(args.value(0).toLongLong(), args.value(1).toString());
