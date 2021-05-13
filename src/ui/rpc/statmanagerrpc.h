@@ -21,8 +21,13 @@ public:
 
     bool deleteStatApp(qint64 appId) override;
 
+    bool deleteConn(qint64 rowIdTo, bool blocked) override;
+    bool deleteConnAll() override;
+
+    bool resetAppTrafTotals() override;
+
 public slots:
-    bool clear() override;
+    bool clearTraffic() override;
 
 private:
     FortManager *m_fortManager = nullptr;

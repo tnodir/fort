@@ -126,8 +126,8 @@ void RpcManager::setupQuotaManagerSignals()
 
 void RpcManager::setupStatManagerSignals()
 {
-    connect(statManager(), &StatManager::cleared, this,
-            [&] { invokeOnClients(Control::Rpc_StatManager_cleared); });
+    connect(statManager(), &StatManager::trafficCleared, this,
+            [&] { invokeOnClients(Control::Rpc_StatManager_trafficCleared); });
     connect(statManager(), &StatManager::appStatRemoved, this, [&](qint64 appId) {
         invokeOnClients(Control::Rpc_StatManager_appStatRemoved, { appId });
     });
@@ -140,6 +140,12 @@ void RpcManager::setupStatManagerSignals()
                 invokeOnClients(
                         Control::Rpc_StatManager_trafficAdded, { unixTime, inBytes, outBytes });
             });
+    connect(statManager(), &StatManager::connBlockAdded, this,
+            [&] { invokeOnClients(Control::Rpc_StatManager_connBlockAdded); });
+    connect(statManager(), &StatManager::connRemoved, this,
+            [&] { invokeOnClients(Control::Rpc_StatManager_connRemoved); });
+    connect(statManager(), &StatManager::appTrafTotalsResetted, this,
+            [&] { invokeOnClients(Control::Rpc_StatManager_appTrafTotalsResetted); });
 }
 
 void RpcManager::setupTaskManagerSignals()
@@ -280,14 +286,20 @@ bool RpcManager::processCommandRpc(
         return processQuotaManagerRpc(cmd, args);
 
     case Control::Rpc_StatManager_deleteStatApp:
-    case Control::Rpc_StatManager_clear:
+    case Control::Rpc_StatManager_deleteConn:
+    case Control::Rpc_StatManager_deleteConnAll:
+    case Control::Rpc_StatManager_resetAppTrafTotals:
+    case Control::Rpc_StatManager_clearTraffic:
         if (!checkClientValidated(w))
             return false;
         Q_FALLTHROUGH();
-    case Control::Rpc_StatManager_cleared:
+    case Control::Rpc_StatManager_trafficCleared:
     case Control::Rpc_StatManager_appStatRemoved:
     case Control::Rpc_StatManager_appCreated:
     case Control::Rpc_StatManager_trafficAdded:
+    case Control::Rpc_StatManager_connBlockAdded:
+    case Control::Rpc_StatManager_connRemoved:
+    case Control::Rpc_StatManager_appTrafTotalsResetted:
         return processStatManagerRpc(w, cmd, args);
 
     case Control::Rpc_TaskManager_runTask:
@@ -444,11 +456,21 @@ bool RpcManager::processStatManagerRpc(
     case Control::Rpc_StatManager_deleteStatApp:
         sendResult(w, statManager()->deleteStatApp(args.value(0).toLongLong()));
         return true;
-    case Control::Rpc_StatManager_clear:
-        sendResult(w, statManager()->clear());
+    case Control::Rpc_StatManager_deleteConn:
+        sendResult(
+                w, statManager()->deleteConn(args.value(0).toLongLong(), args.value(1).toBool()));
         return true;
-    case Control::Rpc_StatManager_cleared:
-        emit statManager()->cleared();
+    case Control::Rpc_StatManager_deleteConnAll:
+        sendResult(w, statManager()->deleteConnAll());
+        return true;
+    case Control::Rpc_StatManager_resetAppTrafTotals:
+        sendResult(w, statManager()->resetAppTrafTotals());
+        return true;
+    case Control::Rpc_StatManager_clearTraffic:
+        sendResult(w, statManager()->clearTraffic());
+        return true;
+    case Control::Rpc_StatManager_trafficCleared:
+        emit statManager()->trafficCleared();
         return true;
     case Control::Rpc_StatManager_appStatRemoved:
         emit statManager()->appStatRemoved(args.value(0).toLongLong());
@@ -459,6 +481,15 @@ bool RpcManager::processStatManagerRpc(
     case Control::Rpc_StatManager_trafficAdded:
         emit statManager()->trafficAdded(
                 args.value(0).toLongLong(), args.value(1).toUInt(), args.value(2).toUInt());
+        return true;
+    case Control::Rpc_StatManager_connBlockAdded:
+        emit statManager()->connBlockAdded();
+        return true;
+    case Control::Rpc_StatManager_connRemoved:
+        emit statManager()->connRemoved();
+        return true;
+    case Control::Rpc_StatManager_appTrafTotalsResetted:
+        emit statManager()->appTrafTotalsResetted();
         return true;
     default:
         return false;

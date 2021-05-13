@@ -10,6 +10,8 @@
 TrafListModel::TrafListModel(StatManager *statManager, QObject *parent) :
     TableItemModel(parent), m_statManager(statManager)
 {
+    connect(m_statManager, &StatManager::trafficCleared, this, &TrafListModel::resetTraf);
+    connect(m_statManager, &StatManager::appTrafTotalsResetted, this, &TrafListModel::resetTraf);
 }
 
 void TrafListModel::setUnit(TrafListModel::TrafUnit unit)
@@ -84,16 +86,12 @@ QVariant TrafListModel::data(const QModelIndex &index, int role) const
 
 void TrafListModel::clear()
 {
-    statManager()->clear();
-
-    resetTraf();
+    statManager()->clearTraffic();
 }
 
 void TrafListModel::resetAppTotals()
 {
     statManager()->resetAppTrafTotals();
-
-    resetTraf();
 }
 
 void TrafListModel::resetTraf()

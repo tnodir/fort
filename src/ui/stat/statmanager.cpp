@@ -89,18 +89,14 @@ bool StatManager::initialize()
         return false;
     }
 
-    setupAfterClear();
-
-    connect(this, &StatManager::cleared, this, &StatManager::setupAfterClear);
+    setupConnBlockId();
 
     return true;
 }
 
-void StatManager::setupAfterClear()
+void StatManager::setupTrafDate()
 {
     m_trafHour = m_trafDay = m_trafMonth = 0;
-
-    setupConnBlockId();
 }
 
 void StatManager::setupConnBlockId()
@@ -209,18 +205,19 @@ bool StatManager::updateTrafDay(qint64 unixTime)
     return isNewDay;
 }
 
-bool StatManager::clear()
+bool StatManager::clearTraffic()
 {
     sqliteDb()->beginTransaction();
-    sqliteDb()->execute(StatSql::sqlClear);
+    sqliteDb()->execute(StatSql::sqlClearTraffic);
     sqliteDb()->execute(StatSql::sqlVacuum);
     sqliteDb()->commitTransaction();
 
     clearAppIdCache();
 
+    setupTrafDate();
     quotaManager()->clear();
 
-    emit cleared();
+    emit trafficCleared();
 
     return true;
 }
@@ -431,7 +428,13 @@ bool StatManager::resetAppTrafTotals()
 
     stmt->bindInt(1, DateUtil::getUnixHour(unixTime));
 
-    return sqliteDb()->done(stmt);
+    const bool ok = sqliteDb()->done(stmt);
+
+    if (ok) {
+        emit appTrafTotalsResetted();
+    }
+
+    return ok;
 }
 
 bool StatManager::hasAppTraf(qint64 appId)

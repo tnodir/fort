@@ -20,7 +20,22 @@ bool StatManagerRpc::deleteStatApp(qint64 appId)
     return rpcManager()->doOnServer(Control::Rpc_StatManager_deleteStatApp, { appId });
 }
 
-bool StatManagerRpc::clear()
+bool StatManagerRpc::deleteConn(qint64 rowIdTo, bool blocked)
 {
-    return rpcManager()->doOnServer(Control::Rpc_StatManager_clear);
+    return rpcManager()->doOnServer(Control::Rpc_StatManager_deleteConn, { rowIdTo, blocked });
+}
+
+bool StatManagerRpc::deleteConnAll()
+{
+    return rpcManager()->doOnServer(Control::Rpc_StatManager_deleteConnAll);
+}
+
+bool StatManagerRpc::resetAppTrafTotals()
+{
+    return rpcManager()->doOnServer(Control::Rpc_StatManager_resetAppTrafTotals);
+}
+
+bool StatManagerRpc::clearTraffic()
+{
+    return rpcManager()->doOnServer(Control::Rpc_StatManager_clearTraffic);
 }

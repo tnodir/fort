@@ -192,17 +192,15 @@ const char *const StatSql::sqlSelectDeletedAllConnAppList =
         "  LEFT JOIN traffic_app ta ON ta.app_id = t.app_id"
         "  WHERE ta.app_id IS NULL;";
 
-const char *const StatSql::sqlClear = "DELETE FROM app;"
-                                      "DELETE FROM traffic_app;"
-                                      "DELETE FROM traffic_app_hour;"
-                                      "DELETE FROM traffic_app_day;"
-                                      "DELETE FROM traffic_app_month;"
-                                      "DELETE FROM traffic_hour;"
-                                      "DELETE FROM traffic_day;"
-                                      "DELETE FROM traffic_month;"
-                                      "DELETE FROM conn;"
-                                      "DELETE FROM conn_block;"
-                                      "DELETE FROM conn_traffic;"
-                                      "DELETE FROM conn_flow;";
+const char *const StatSql::sqlClearTraffic =
+        "DELETE FROM traffic_app;"
+        "DELETE FROM traffic_app_hour;"
+        "DELETE FROM traffic_app_day;"
+        "DELETE FROM traffic_app_month;"
+        "DELETE FROM traffic_hour;"
+        "DELETE FROM traffic_day;"
+        "DELETE FROM traffic_month;"
+        "DELETE FROM app WHERE ("
+        "  SELECT 1 FROM conn c WHERE c.app_id = app.app_id LIMIT 1) IS NULL;";
 
 const char *const StatSql::sqlVacuum = "VACUUM;";

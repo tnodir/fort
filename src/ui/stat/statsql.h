@@ -80,7 +80,7 @@ public:
     static const char *const sqlDeleteAllConnBlock;
     static const char *const sqlSelectDeletedAllConnAppList;
 
-    static const char *const sqlClear;
+    static const char *const sqlClearTraffic;
     static const char *const sqlVacuum;
 };
 

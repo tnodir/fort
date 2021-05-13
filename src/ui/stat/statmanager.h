@@ -64,7 +64,7 @@ public:
             const char *sql, qint32 trafTime, qint64 &inBytes, qint64 &outBytes, qint64 appId = 0);
 
 signals:
-    void cleared();
+    void trafficCleared();
 
     void appStatRemoved(qint64 appId);
     void appCreated(qint64 appId, const QString &appPath);
@@ -73,13 +73,15 @@ signals:
     void connBlockAdded();
     void connRemoved();
 
+    void appTrafTotalsResetted();
+
 public slots:
-    virtual bool clear();
+    virtual bool clearTraffic();
 
 private:
     using QStmtList = QList<SqliteStmt *>;
 
-    void setupAfterClear();
+    void setupTrafDate();
     void setupConnBlockId();
 
     void setupByConf();
