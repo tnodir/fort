@@ -29,6 +29,8 @@ public:
 
     virtual bool isDeviceOpened() const;
 
+    virtual void initialize();
+
     virtual void reinstallDriver();
     virtual void uninstallDriver();
 
@@ -49,11 +51,10 @@ public slots:
 protected:
     void setErrorCode(quint32 v);
 
+    virtual void abortWorker();
+
 private:
     void updateErrorCode(bool success);
-
-    void setupWorker();
-    void abortWorker();
 
     bool writeData(quint32 code, QByteArray &buf, int size);
 

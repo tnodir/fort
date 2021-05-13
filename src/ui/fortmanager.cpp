@@ -181,6 +181,8 @@ void FortManager::removeDriver()
 
 bool FortManager::setupDriver()
 {
+    driverManager()->initialize();
+
     bool ok = driverManager()->openDevice();
 
     if (ok && !confManager()->validateDriver()) {

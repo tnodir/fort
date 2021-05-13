@@ -19,6 +19,8 @@ public:
     FortManager *fortManager() const { return m_fortManager; }
     RpcManager *rpcManager() const;
 
+    void initialize() override { }
+
     void reinstallDriver() override;
     void uninstallDriver() override;
 
@@ -27,6 +29,9 @@ public:
 public slots:
     bool openDevice() override;
     bool closeDevice() override;
+
+protected:
+    void abortWorker() override { }
 
 private:
     bool m_isDeviceOpened : 1;

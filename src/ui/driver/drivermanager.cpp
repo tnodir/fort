@@ -10,13 +10,7 @@
 #include "../util/osutil.h"
 #include "driverworker.h"
 
-DriverManager::DriverManager(QObject *parent) :
-    QObject(parent),
-    m_device(new Device(this)),
-    m_driverWorker(new DriverWorker(m_device)) // autoDelete = true
-{
-    setupWorker();
-}
+DriverManager::DriverManager(QObject *parent) : QObject(parent) { }
 
 DriverManager::~DriverManager()
 {
@@ -46,19 +40,22 @@ bool DriverManager::isDeviceError() const
     return errorCode() != 0 && errorCode() != DriverCommon::userErrorCode();
 }
 
-void DriverManager::setupWorker()
+bool DriverManager::isDeviceOpened() const
 {
+    return device()->isOpened();
+}
+
+void DriverManager::initialize()
+{
+    m_device = new Device(this);
+    m_driverWorker = new DriverWorker(device()); // autoDelete = true
+
     QThreadPool::globalInstance()->start(driverWorker());
 }
 
 void DriverManager::abortWorker()
 {
     driverWorker()->abort();
-}
-
-bool DriverManager::isDeviceOpened() const
-{
-    return device()->isOpened();
 }
 
 bool DriverManager::openDevice()
