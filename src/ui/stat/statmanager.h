@@ -89,8 +89,6 @@ private:
 
     bool updateTrafDay(qint64 unixTime);
 
-    void clearStmts();
-
     void logClear();
     void logClearApp(quint32 pid);
 

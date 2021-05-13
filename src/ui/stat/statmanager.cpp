@@ -211,10 +211,10 @@ bool StatManager::updateTrafDay(qint64 unixTime)
 
 bool StatManager::clear()
 {
-    if (!sqliteDb()->execute(StatSql::sqlClear))
-        return false;
-
+    sqliteDb()->beginTransaction();
+    sqliteDb()->execute(StatSql::sqlClear);
     sqliteDb()->execute(StatSql::sqlVacuum);
+    sqliteDb()->commitTransaction();
 
     clearAppIdCache();
 
@@ -224,8 +224,6 @@ bool StatManager::clear()
 
     return true;
 }
-
-void StatManager::clearStmts() { }
 
 void StatManager::logClear()
 {
