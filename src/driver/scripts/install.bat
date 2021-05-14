@@ -1,6 +1,6 @@
 @rem Install driver
 
-@set DISPNAME=Fort Firewall
+@set DISPNAME=Fort Firewall Driver
 
 @set ARCH=32
 @if defined PROGRAMFILES(X86) @set ARCH=64

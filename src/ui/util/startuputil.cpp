@@ -127,7 +127,7 @@ bool uninstallService(const wchar_t *serviceName)
 }
 
 const wchar_t *const StartupUtil::serviceName = L"" APP_BASE "Svc";
-const wchar_t *const StartupUtil::serviceDisplay = L"" APP_NAME;
+const wchar_t *const StartupUtil::serviceDisplay = L"" APP_NAME "Service";
 
 bool StartupUtil::isServiceInstalled()
 {
