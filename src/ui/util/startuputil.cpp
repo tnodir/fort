@@ -161,8 +161,9 @@ bool StartupUtil::startService()
 
 StartupUtil::StartupMode StartupUtil::getStartupMode()
 {
-    return isServiceInstalled()
-            ? (isAutorunForAllUsers() ? StartupAllUsers : StartupAllUsersBackground)
+    const bool isForAllUsers = isAutorunForAllUsers();
+    return (isForAllUsers || isServiceInstalled())
+            ? (isForAllUsers ? StartupAllUsers : StartupAllUsersBackground)
             : (isAutorunForCurrentUser() ? StartupCurrentUser : StartupDisabled);
 }
 

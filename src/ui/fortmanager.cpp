@@ -106,8 +106,8 @@ void FortManager::initialize()
     setupStatManager();
     setupAppInfoManager();
 
-    setupLogManager();
     setupDriver();
+    setupLogManager();
 
     setupAppInfoCache();
     setupHostInfoCache();
