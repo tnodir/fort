@@ -197,7 +197,7 @@ void Logger::writeLog(const QString &message, Logger::LogLevel level)
 
     m_writing = true;
 
-    const QString dateString = DateUtil::now().toString("yyyy-MM-dd HH:mm:ss");
+    const QString dateString = DateUtil::now().toString("yyyy-MM-dd HH:mm:ss.zzz");
 
     // Create file when required to avoid empty files
     if (!m_file.isOpen()) {
