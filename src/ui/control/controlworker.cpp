@@ -88,6 +88,11 @@ void ControlWorker::setupForAsync()
     socket()->setParent(this);
 
     connect(socket(), &QLocalSocket::disconnected, this, &ControlWorker::disconnected);
+    connect(socket(), &QLocalSocket::errorOccurred, this,
+            [&](QLocalSocket::LocalSocketError socketError) {
+                qWarning() << "Client error:" << id() << socketError << errorString();
+                abort();
+            });
     connect(socket(), &QLocalSocket::readyRead, this, &ControlWorker::processRequest);
 }
 
