@@ -79,9 +79,12 @@ bool ConfManagerRpc::updateZoneEnabled(int zoneId, bool enabled)
 
 bool ConfManagerRpc::saveConf(FirewallConf &newConf)
 {
+    newConf.prepareToSave();
+
+    const QVariant confVar = newConf.toVariant(true);
+
     setSaving(true);
-    const bool ok =
-            rpcManager()->doOnServer(Control::Rpc_ConfManager_save, { newConf.toVariant(true) });
+    const bool ok = rpcManager()->doOnServer(Control::Rpc_ConfManager_save, { confVar });
     setSaving(false);
 
     if (!ok)

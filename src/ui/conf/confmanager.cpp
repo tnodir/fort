@@ -544,11 +544,24 @@ void ConfManager::saveIni()
 
 bool ConfManager::saveVariant(const QVariant &confVar)
 {
-    auto conf = createConf();
+    const uint editedFlags = FirewallConf::editedFlagsFromVariant(confVar);
+
+    FirewallConf *conf;
+    bool isNewConf = false;
+
+    if ((editedFlags & FirewallConf::OptEdited) == 0) {
+        conf = this->conf();
+    } else {
+        conf = createConf();
+        isNewConf = true;
+    }
+
     conf->fromVariant(confVar, true);
 
     if (!saveConf(*conf)) {
-        delete conf;
+        if (isNewConf) {
+            delete conf;
+        }
         return false;
     }
 
