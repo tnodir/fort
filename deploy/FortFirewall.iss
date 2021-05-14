@@ -67,7 +67,6 @@ Name: "{commondesktop}\{#APP_NAME}"; Filename: "{#APP_EXE}"; WorkingDir: "{app}"
 
 [Run]
 Filename: "{app}\driver\scripts\reinstall.bat"; Description: "Re-install driver"; Flags: runascurrentuser
-Filename: "sc.exe"; Parameters: "start {#APP_SVC_NAME}"; Description: "Start service"; Flags: runascurrentuser nowait
 
 Filename: "https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads"; \
   Description: "Install the latest Visual C++ x86 redistributable!"; Flags: shellexec postinstall; \
@@ -86,12 +85,20 @@ Type: files; Name: "{app}\qt*.*"
 Type: files; Name: "{app}\README*.*"
 
 [Code]
-function PrepareToInstall(var NeedsRestart: Boolean): String;
+function InitializeSetup(): Boolean;
 var
   ResultCode: Integer;
 begin
-  Exec('sc.exe', ExpandConstant('stop {#APP_SVC_NAME}'), '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
-  Result := '';
+  if Exec('sc.exe', ExpandConstant('stop {#APP_SVC_NAME}'), '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+    if ResultCode = 0 then Sleep(100); // Let service to stop
+  Result := True;
+end;
+
+procedure DeinitializeSetup();
+var
+  ResultCode: Integer;
+begin
+  Exec('sc.exe', ExpandConstant('start {#APP_SVC_NAME}'), '', SW_HIDE, ewNoWait, ResultCode);
 end;
 
 function LanguageName(Param: String): String;
