@@ -545,7 +545,7 @@ void ConfManager::saveIni()
 bool ConfManager::saveVariant(const QVariant &confVar)
 {
     auto conf = createConf();
-    conf->fromVariant(confVar);
+    conf->fromVariant(confVar, true);
 
     if (!saveConf(*conf)) {
         delete conf;

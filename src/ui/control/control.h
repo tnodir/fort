@@ -1,6 +1,7 @@
 #ifndef CONTROL_H
 #define CONTROL_H
 
+#include <QDebug>
 #include <QObject>
 
 namespace Control {
@@ -75,6 +76,9 @@ enum RpcManager : qint8 {
 RpcManager managerByCommand(Command cmd);
 
 bool commandRequiresValidation(Command cmd);
+
+QDebug operator<<(QDebug debug, Command cmd);
+QDebug operator<<(QDebug debug, RpcManager rpcManager);
 
 }
 

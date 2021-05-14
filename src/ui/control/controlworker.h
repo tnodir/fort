@@ -23,6 +23,9 @@ public:
 
     QLocalSocket *socket() const { return m_socket; }
 
+    int id() const;
+    QString errorString() const;
+
     void setupForAsync();
 
     static QByteArray buildCommandData(Control::Command command, const QVariantList &args = {});
@@ -30,12 +33,13 @@ public:
 
     bool sendCommand(Control::Command command, const QVariantList &args = {});
 
-    bool waitForSent(int msecs = 1000) const;
-    bool waitForRead(int msecs = 1000) const;
+    bool waitForSent(int msecs = 700) const;
+    bool waitForRead(int msecs = 700) const;
 
     static QVariantList buildArgs(const QStringList &list);
 
 signals:
+    void disconnected();
     void requestReady(Control::Command command, const QVariantList &args);
 
 public slots:

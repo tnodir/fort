@@ -73,10 +73,21 @@ ControlWorker::ControlWorker(QLocalSocket *socket, QObject *parent) :
 {
 }
 
+int ControlWorker::id() const
+{
+    return int(socket()->socketDescriptor());
+}
+
+QString ControlWorker::errorString() const
+{
+    return socket()->errorString();
+}
+
 void ControlWorker::setupForAsync()
 {
     socket()->setParent(this);
 
+    connect(socket(), &QLocalSocket::disconnected, this, &ControlWorker::disconnected);
     connect(socket(), &QLocalSocket::readyRead, this, &ControlWorker::processRequest);
 }
 
@@ -108,8 +119,10 @@ bool ControlWorker::sendCommandData(const QByteArray &commandData)
         return false;
 
     const int bytesSent = socket()->write(commandData);
-    if (bytesSent != commandData.size())
+    if (bytesSent != commandData.size()) {
+        qWarning() << "Sent partial:" << id() << bytesSent << commandData.size();
         return false;
+    }
 
     socket()->flush();
 
@@ -135,10 +148,13 @@ bool ControlWorker::waitForRead(int msecs) const
 
 void ControlWorker::processRequest()
 {
-    if (!readRequest()) {
-        abort();
-        clearRequest();
-    }
+    do {
+        if (!readRequest()) {
+            abort();
+            clearRequest();
+            break;
+        }
+    } while (socket()->bytesAvailable() > 0);
 }
 
 void ControlWorker::clearRequest()

@@ -44,6 +44,7 @@ signals:
 
 private slots:
     void onNewConnection();
+    void onDisconnected();
 
     bool processRequest(Control::Command command, const QVariantList &args);
 

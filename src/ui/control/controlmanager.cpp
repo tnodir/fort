@@ -54,7 +54,14 @@ ControlWorker *ControlManager::newServiceClient(QObject *parent) const
     auto w = new ControlWorker(socket, parent);
     w->setupForAsync();
     w->setIsServiceClient(true);
+
+    connect(w, &ControlWorker::requestReady, this, &ControlManager::processRequest);
+
     socket->connectToServer(getServerName(true));
+    socket->waitForConnected(100);
+    if (socket->state() != QLocalSocket::ConnectedState) {
+        logWarning() << "Server connect error:" << socket->state() << socket->errorString();
+    }
     return w;
 }
 
@@ -121,27 +128,39 @@ void ControlManager::onNewConnection()
             continue;
         }
 
-        auto worker = new ControlWorker(socket, this);
-        worker->setupForAsync();
+        auto w = new ControlWorker(socket, this);
+        w->setupForAsync();
 
-        connect(socket, &QLocalSocket::disconnected, worker, &QObject::deleteLater);
-        connect(worker, &ControlWorker::destroyed, this,
-                [&] { m_clients.removeOne(qobject_cast<ControlWorker *>(sender())); });
-        connect(worker, &ControlWorker::requestReady, this, &ControlManager::processRequest);
+        connect(w, &ControlWorker::disconnected, this, &ControlManager::onDisconnected);
+        connect(w, &ControlWorker::requestReady, this, &ControlManager::processRequest);
 
-        m_clients.append(worker);
+        m_clients.append(w);
+
+        logDebug() << "Client connected:" << w->id();
     }
+}
+
+void ControlManager::onDisconnected()
+{
+    ControlWorker *w = qobject_cast<ControlWorker *>(sender());
+    if (Q_UNLIKELY(!w))
+        return;
+
+    w->deleteLater();
+    m_clients.removeOne(w);
+
+    logDebug() << "Client disconnected:" << w->id();
 }
 
 bool ControlManager::processRequest(Control::Command command, const QVariantList &args)
 {
     ControlWorker *w = qobject_cast<ControlWorker *>(sender());
-    if (!w)
+    if (Q_UNLIKELY(!w))
         return false;
 
     QString errorMessage;
     if (!processCommand(w, command, args, errorMessage)) {
-        logWarning() << "Bad control command" << errorMessage << ':' << command << args;
+        logWarning() << "Bad command" << errorMessage << ':' << command << args;
         return false;
     }
     return true;

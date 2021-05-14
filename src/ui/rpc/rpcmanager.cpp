@@ -205,14 +205,23 @@ bool RpcManager::doOnServer(Control::Command cmd, const QVariantList &args)
 
 void RpcManager::invokeOnClients(Control::Command cmd, const QVariantList &args)
 {
-    const QByteArray buffer = ControlWorker::buildCommandData(cmd, args);
-
     const auto clients = controlManager()->clients();
+    if (clients.isEmpty())
+        return;
+
+    const QByteArray buffer = ControlWorker::buildCommandData(cmd, args);
+    if (buffer.isEmpty()) {
+        qWarning() << "Bad RPC command:" << cmd << args;
+        return;
+    }
+
     for (ControlWorker *w : clients) {
         if (!w->isServiceClient())
             continue;
 
-        w->sendCommandData(buffer);
+        if (!w->sendCommandData(buffer)) {
+            qWarning() << "Send command error:" << w->id() << cmd << args << w->errorString();
+        }
     }
 }
 
