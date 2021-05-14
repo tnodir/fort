@@ -111,6 +111,8 @@ public:
     QVariant toVariant(bool onlyFlags = false) const;
     void fromVariant(const QVariant &v, bool onlyFlags = false);
 
+    static uint editedFlagsFromVariant(const QVariant &v);
+
 signals:
     void logStatChanged();
     void appGroupsChanged();

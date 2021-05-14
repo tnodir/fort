@@ -101,6 +101,10 @@ void ConfManagerRpc::onConfChanged(const QVariant &confVar)
 {
     settings()->clearCache();
 
+    const uint editedFlags = FirewallConf::editedFlagsFromVariant(confVar);
+    if ((editedFlags & (FirewallConf::OptEdited | FirewallConf::FlagsEdited)) == 0)
+        return;
+
     FirewallConf *newConf = createConf();
     newConf->fromVariant(confVar, true);
 

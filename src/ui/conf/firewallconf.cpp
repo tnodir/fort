@@ -432,7 +432,7 @@ void FirewallConf::fromVariant(const QVariant &v, bool onlyFlags)
     const QVariantMap map = v.toMap();
 
     if (onlyFlags) {
-        m_editedFlags = map["editedFlags"].toUInt();
+        m_editedFlags = editedFlagsFromVariant(v);
     } else {
         resetEdited(true);
     }
@@ -451,4 +451,10 @@ void FirewallConf::fromVariant(const QVariant &v, bool onlyFlags)
     if (iniEdited()) {
         ini().setMap(map["ini"].toMap());
     }
+}
+
+uint FirewallConf::editedFlagsFromVariant(const QVariant &v)
+{
+    const QVariantMap map = v.toMap();
+    return map["editedFlags"].toUInt();
 }
