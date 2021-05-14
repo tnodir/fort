@@ -81,7 +81,8 @@ bool ConfManagerRpc::saveConf(FirewallConf &newConf)
 {
     newConf.prepareToSave();
 
-    const QVariant confVar = newConf.toVariant(true);
+    const bool onlyFlags = !newConf.optEdited();
+    const QVariant confVar = newConf.toVariant(onlyFlags);
 
     setSaving(true);
     const bool ok = rpcManager()->doOnServer(Control::Rpc_ConfManager_save, { confVar });
