@@ -917,6 +917,11 @@ bool ConfManager::updateZoneResult(int zoneId, const QString &textChecksum,
     return ok;
 }
 
+bool ConfManager::checkPassword(const QString &password)
+{
+    return settings()->checkPassword(password);
+}
+
 bool ConfManager::validateDriver()
 {
     ConfUtil confUtil;

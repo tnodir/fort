@@ -61,7 +61,7 @@ public:
     bool checkPassword(const QString &password) const;
 
     bool isPasswordRequired();
-    void setPasswordChecked(bool checked, int unlockType);
+    void setPasswordChecked(bool checked, int unlockType = 0);
     void resetCheckedPassword(int unlockType = 0);
 
     bool confMigrated() const;

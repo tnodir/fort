@@ -77,6 +77,11 @@ bool ConfManagerRpc::updateZoneEnabled(int zoneId, bool enabled)
             Control::Rpc_ConfManager_updateZoneEnabled, { zoneId, enabled });
 }
 
+bool ConfManagerRpc::checkPassword(const QString &password)
+{
+    return rpcManager()->doOnServer(Control::Rpc_ConfManager_checkPassword, { password });
+}
+
 bool ConfManagerRpc::saveConf(FirewallConf &newConf)
 {
     Q_ASSERT(&newConf == conf() || &newConf == confToEdit()); // else newConf.deleteLater()

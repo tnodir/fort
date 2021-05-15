@@ -31,6 +31,7 @@ const char *const commandString(Command cmd)
         CASE_STRING(Rpc_ConfManager_updateZone)
         CASE_STRING(Rpc_ConfManager_updateZoneName)
         CASE_STRING(Rpc_ConfManager_updateZoneEnabled)
+        CASE_STRING(Rpc_ConfManager_checkPassword)
         CASE_STRING(Rpc_ConfManager_confChanged)
         CASE_STRING(Rpc_ConfManager_appEndTimesUpdated)
         CASE_STRING(Rpc_ConfManager_appAdded)
@@ -101,6 +102,7 @@ RpcManager managerByCommand(Command cmd)
     case Rpc_ConfManager_updateZone:
     case Rpc_ConfManager_updateZoneName:
     case Rpc_ConfManager_updateZoneEnabled:
+    case Rpc_ConfManager_checkPassword:
     case Rpc_ConfManager_confChanged:
     case Rpc_ConfManager_appEndTimesUpdated:
     case Rpc_ConfManager_appAdded:

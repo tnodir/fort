@@ -373,6 +373,12 @@ bool RpcManager::processConfManagerRpc(
                 confManager()->updateZoneEnabled(
                         args.value(0).toLongLong(), args.value(1).toBool()));
         return true;
+    case Control::Rpc_ConfManager_checkPassword: {
+        const bool ok = confManager()->checkPassword(args.value(0).toString());
+        w->setIsClientValidated(ok);
+        sendResult(w, ok);
+        return true;
+    }
     case Control::Rpc_ConfManager_confChanged:
         if (auto cm = qobject_cast<ConfManagerRpc *>(confManager())) {
             cm->onConfChanged(args.value(0));

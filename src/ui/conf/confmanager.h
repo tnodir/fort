@@ -86,6 +86,8 @@ public:
     bool updateZoneResult(int zoneId, const QString &textChecksum, const QString &binChecksum,
             const QDateTime &sourceModTime, const QDateTime &lastRun, const QDateTime &lastSuccess);
 
+    virtual bool checkPassword(const QString &password);
+
     bool validateDriver();
     virtual bool updateDriverConf(bool onlyFlags = false);
     void updateDriverZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,

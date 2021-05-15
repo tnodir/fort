@@ -674,9 +674,9 @@ bool FortManager::checkPassword()
 
     g_passwordDialogOpened = false;
 
-    const bool checked = ok && !password.isEmpty() && settings()->checkPassword(password);
+    const bool checked = ok && !password.isEmpty() && confManager()->checkPassword(password);
 
-    settings()->setPasswordChecked(checked, checked ? unlockType : PasswordDialog::UnlockDisabled);
+    settings()->setPasswordChecked(checked, unlockType);
 
     return checked;
 }

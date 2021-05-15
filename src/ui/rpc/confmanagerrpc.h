@@ -32,6 +32,8 @@ public:
     bool updateZoneName(int zoneId, const QString &zoneName) override;
     bool updateZoneEnabled(int zoneId, bool enabled) override;
 
+    bool checkPassword(const QString &password) override;
+
     bool updateDriverConf(bool /*onlyFlags*/ = false) override { return false; }
 
     void onConfChanged(const QVariant &confVar);
