@@ -30,6 +30,7 @@ DefaultDirName={pf32}\{#APP_NAME}
 AlwaysShowDirOnReadyPage=yes
 AlwaysShowGroupOnReadyPage=yes
 AllowNoIcons=yes
+OutputDir=out
 OutputBaseFilename={#APP_BASE}-{#APP_VERSION_STR}
 Uninstallable=not IsTaskSelected('portable')
 UninstallFilesDir={app}\uninst
