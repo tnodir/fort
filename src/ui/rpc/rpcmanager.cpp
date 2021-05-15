@@ -192,7 +192,7 @@ bool RpcManager::invokeOnServer(Control::Command cmd, const QVariantList &args)
 bool RpcManager::doOnServer(Control::Command cmd, const QVariantList &args)
 {
     if (!client()->isConnected()) {
-        fortManager()->showErrorBox("Service isn't available.");
+        fortManager()->showErrorBox(tr("Service isn't available."));
         return false;
     }
 
@@ -200,12 +200,12 @@ bool RpcManager::doOnServer(Control::Command cmd, const QVariantList &args)
         return false;
 
     if (!waitResult()) {
-        fortManager()->showErrorBox("Service isn't responding.");
+        fortManager()->showErrorBox(tr("Service isn't responding."));
         return false;
     }
 
     if (resultCommand() != Control::Rpc_Result_Ok) {
-        fortManager()->showErrorBox("Service error.");
+        fortManager()->showErrorBox(tr("Service error."));
         return false;
     }
 

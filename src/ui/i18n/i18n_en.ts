@@ -848,6 +848,21 @@
     </message>
 </context>
 <context>
+    <name>RpcManager</name>
+    <message>
+        <source>Service isn&apos;t available.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Service isn&apos;t responding.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Service error.</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>SchedulePage</name>
     <message>
         <source>Run</source>
