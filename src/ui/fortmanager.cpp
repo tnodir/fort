@@ -161,7 +161,7 @@ void FortManager::setupRpcManager()
     }
 }
 
-void FortManager::installDriver()
+bool FortManager::installDriver()
 {
     closeDriver();
 
@@ -170,13 +170,17 @@ void FortManager::installDriver()
     if (setupDriver()) {
         updateDriverConf();
     }
+
+    return true;
 }
 
-void FortManager::removeDriver()
+bool FortManager::removeDriver()
 {
     closeDriver();
 
     driverManager()->uninstallDriver();
+
+    return true;
 }
 
 bool FortManager::setupDriver()

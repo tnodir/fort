@@ -78,6 +78,11 @@ int ControlWorker::id() const
     return int(socket()->socketDescriptor());
 }
 
+bool ControlWorker::isConnected() const
+{
+    return socket()->state() == QLocalSocket::ConnectedState;
+}
+
 QString ControlWorker::errorString() const
 {
     return socket()->errorString();
@@ -124,7 +129,11 @@ bool ControlWorker::sendCommandData(const QByteArray &commandData)
 
     const int bytesSent = socket()->write(commandData);
     if (bytesSent != commandData.size()) {
-        qWarning() << "Sent partial:" << id() << bytesSent << commandData.size();
+        if (bytesSent < 0) {
+            qWarning() << "Send error:" << id() << errorString();
+        } else {
+            qWarning() << "Sent partial:" << id() << bytesSent << commandData.size();
+        }
         return false;
     }
 

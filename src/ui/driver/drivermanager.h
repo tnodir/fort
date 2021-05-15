@@ -31,8 +31,8 @@ public:
 
     virtual void initialize();
 
-    virtual void reinstallDriver();
-    virtual void uninstallDriver();
+    virtual bool reinstallDriver();
+    virtual bool uninstallDriver();
 
 signals:
     void errorCodeChanged();
@@ -58,7 +58,7 @@ private:
 
     bool writeData(quint32 code, QByteArray &buf, int size);
 
-    static void executeCommand(const QString &fileName);
+    static bool executeCommand(const QString &fileName);
 
 private:
     quint32 m_errorCode = 0;

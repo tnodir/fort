@@ -116,22 +116,22 @@ bool DriverManager::writeData(quint32 code, QByteArray &buf, int size)
     return res;
 }
 
-void DriverManager::reinstallDriver()
+bool DriverManager::reinstallDriver()
 {
-    executeCommand("reinstall.lnk");
+    return executeCommand("reinstall.lnk");
 }
 
-void DriverManager::uninstallDriver()
+bool DriverManager::uninstallDriver()
 {
-    executeCommand("uninstall.lnk");
+    return executeCommand("uninstall.lnk");
 }
 
-void DriverManager::executeCommand(const QString &fileName)
+bool DriverManager::executeCommand(const QString &fileName)
 {
     const QString binPath = FileUtil::toNativeSeparators(FileUtil::appBinLocation());
 
     const QString cmdPath = qEnvironmentVariable("COMSPEC");
     const QString scriptPath = binPath + R"(\driver\scripts\execute-cmd.bat)";
 
-    QProcess::execute(cmdPath, QStringList() << "/C" << scriptPath << fileName);
+    return QProcess::execute(cmdPath, QStringList() << "/C" << scriptPath << fileName) == 0;
 }

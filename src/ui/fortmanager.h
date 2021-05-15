@@ -86,8 +86,8 @@ signals:
     void graphWindowChanged(bool visible);
 
 public slots:
-    void installDriver();
-    void removeDriver();
+    bool installDriver();
+    bool removeDriver();
 
     void show();
 

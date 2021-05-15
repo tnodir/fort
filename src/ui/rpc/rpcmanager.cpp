@@ -184,14 +184,20 @@ void RpcManager::sendResult(ControlWorker *w, bool ok, const QVariantList &args)
     w->sendCommand(ok ? Control::Rpc_Result_Ok : Control::Rpc_Result_Error, args);
 }
 
-void RpcManager::invokeOnServer(Control::Command cmd, const QVariantList &args)
+bool RpcManager::invokeOnServer(Control::Command cmd, const QVariantList &args)
 {
-    client()->sendCommand(cmd, args);
+    return client()->sendCommand(cmd, args);
 }
 
 bool RpcManager::doOnServer(Control::Command cmd, const QVariantList &args)
 {
-    invokeOnServer(cmd, args);
+    if (!client()->isConnected()) {
+        fortManager()->showErrorBox("Service isn't available.");
+        return false;
+    }
+
+    if (!invokeOnServer(cmd, args))
+        return false;
 
     if (!waitResult()) {
         fortManager()->showErrorBox("Service isn't responding.");
@@ -280,7 +286,7 @@ bool RpcManager::processManagerRpc(
         return processConfManagerRpc(w, cmd, args);
 
     case Control::Rpc_DriverManager:
-        return processDriverManagerRpc(cmd, args);
+        return processDriverManagerRpc(w, cmd, args);
 
     case Control::Rpc_QuotaManager:
         return processQuotaManagerRpc(cmd, args);
@@ -398,14 +404,15 @@ bool RpcManager::processConfManagerRpc(
     }
 }
 
-bool RpcManager::processDriverManagerRpc(Control::Command cmd, const QVariantList &args)
+bool RpcManager::processDriverManagerRpc(
+        ControlWorker *w, Control::Command cmd, const QVariantList &args)
 {
     switch (cmd) {
     case Control::Rpc_DriverManager_reinstallDriver:
-        fortManager()->installDriver();
+        sendResult(w, fortManager()->installDriver());
         return true;
     case Control::Rpc_DriverManager_uninstallDriver:
-        fortManager()->removeDriver();
+        sendResult(w, fortManager()->removeDriver());
         return true;
     case Control::Rpc_DriverManager_updateState:
         if (auto dm = qobject_cast<DriverManagerRpc *>(driverManager())) {

@@ -24,7 +24,7 @@ public:
     QLocalSocket *socket() const { return m_socket; }
 
     int id() const;
-
+    bool isConnected() const;
     QString errorString() const;
 
     void setupForAsync();

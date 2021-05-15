@@ -21,8 +21,8 @@ public:
 
     void initialize() override { }
 
-    void reinstallDriver() override;
-    void uninstallDriver() override;
+    bool reinstallDriver() override;
+    bool uninstallDriver() override;
 
     void updateState(quint32 errorCode, bool isDeviceOpened);
 
