@@ -49,7 +49,7 @@ void OptionsWindow::saveWindowState()
 
     emit ctrl()->afterSaveWindowState(ini());
 
-    confManager()->saveIni();
+    confManager()->saveIniState();
 }
 
 void OptionsWindow::restoreWindowState()

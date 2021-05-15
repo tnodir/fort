@@ -82,7 +82,7 @@ void ProgramsWindow::saveWindowState()
     ini()->setProgAppsHeader(header->saveState());
     ini()->setProgAppsHeaderVersion(APPS_HEADER_VERSION);
 
-    confManager()->saveIni();
+    confManager()->saveIniState();
 }
 
 void ProgramsWindow::restoreWindowState()

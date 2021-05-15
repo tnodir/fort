@@ -48,7 +48,7 @@ void GraphWindow::saveWindowState(bool wasVisible)
 
     ini()->setGraphWindowVisible(wasVisible);
 
-    confManager()->saveIni();
+    confManager()->saveIniState();
 }
 
 void GraphWindow::restoreWindowState()

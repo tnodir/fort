@@ -7,7 +7,7 @@
 
 FirewallConf::FirewallConf(QObject *parent) :
     QObject(parent),
-    m_editedFlags(0),
+    m_editedFlags(AllEdited), // update all on load()!
     m_provBoot(false),
     m_filterEnabled(true),
     m_filterLocals(false),
@@ -407,7 +407,7 @@ QVariant FirewallConf::toVariant(bool onlyFlags) const
     QVariantMap map;
 
     if (onlyFlags) {
-        map["editedFlags"] = m_editedFlags;
+        map = editedFlagsToVariant(m_editedFlags).toMap();
     }
 
     if (!onlyFlags || optEdited()) {
@@ -421,7 +421,9 @@ QVariant FirewallConf::toVariant(bool onlyFlags) const
     }
 
     if (!onlyFlags || iniEdited()) {
-        map["ini"] = ini().map();
+        if (!ini().map().isEmpty()) {
+            map["ini"] = ini().map();
+        }
     }
 
     return map;
@@ -451,6 +453,15 @@ void FirewallConf::fromVariant(const QVariant &v, bool onlyFlags)
     if (iniEdited()) {
         ini().setMap(map["ini"].toMap());
     }
+}
+
+QVariant FirewallConf::editedFlagsToVariant(uint editedFlags)
+{
+    QVariantMap map;
+
+    map["editedFlags"] = editedFlags;
+
+    return map;
 }
 
 uint FirewallConf::editedFlagsFromVariant(const QVariant &v)

@@ -468,8 +468,6 @@ bool ConfManager::load()
 {
     Q_ASSERT(conf());
 
-    conf()->resetEdited(true); // update all
-
     if (!loadConf(*conf()))
         return false;
 
@@ -498,7 +496,7 @@ bool ConfManager::saveConf(FirewallConf &conf)
 
 void ConfManager::applySavedConf(FirewallConf *newConf)
 {
-    if (!newConf->anyEdited())
+    if (!newConf->anyEdited() || newConf->iniStateEdited())
         return;
 
     const bool onlyFlags = !newConf->optEdited();
@@ -540,6 +538,13 @@ void ConfManager::saveIni()
     saveConf(*conf());
 
     conf()->resetEdited();
+}
+
+void ConfManager::saveIniState()
+{
+    conf()->setIniStateEdited();
+
+    saveIni();
 }
 
 bool ConfManager::saveVariant(const QVariant &confVar)

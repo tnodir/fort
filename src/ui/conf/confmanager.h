@@ -53,6 +53,7 @@ public:
 
     bool saveFlags();
     void saveIni();
+    void saveIniState();
 
     bool saveVariant(const QVariant &confVar);
 

@@ -100,24 +100,20 @@ bool ConfManagerRpc::saveConf(FirewallConf &newConf)
 
 void ConfManagerRpc::onConfChanged(const QVariant &confVar)
 {
-    settings()->clearCache();
+    settings()->clearCache(); // FirewallConf::IniEdited is handled here
 
     const uint editedFlags = FirewallConf::editedFlagsFromVariant(confVar);
-    if ((editedFlags & (FirewallConf::OptEdited | FirewallConf::FlagsEdited)) == 0)
-        return;
 
-    FirewallConf *newConf = createConf();
-    newConf->fromVariant(confVar, true);
-
-    if (newConf->optEdited()) {
+    if ((editedFlags & FirewallConf::OptEdited) != 0) {
         // Reload from storage
-        setConf(newConf);
-        load();
+        setConf(createConf());
+        loadConf(*conf());
     } else {
         // Apply only flags
-        applySavedConf(newConf);
-        delete newConf;
+        conf()->fromVariant(confVar, true);
     }
+
+    applySavedConf(conf());
 
     if (!saving()) {
         fortManager()->reloadOptionsWindow(tr("Settings changed by someone else"));

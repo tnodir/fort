@@ -83,7 +83,7 @@ void ConnectionsWindow::saveWindowState()
     ini()->setConnListHeader(header->saveState());
     ini()->setConnListHeaderVersion(CONN_LIST_HEADER_VERSION);
 
-    confManager()->saveIni();
+    confManager()->saveIniState();
 }
 
 void ConnectionsWindow::restoreWindowState()

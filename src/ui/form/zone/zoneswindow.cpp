@@ -76,7 +76,7 @@ void ZonesWindow::saveWindowState()
     ini()->setZonesHeader(header->saveState());
     ini()->setZonesHeaderVersion(ZONES_HEADER_VERSION);
 
-    confManager()->saveIni();
+    confManager()->saveIniState();
 }
 
 void ZonesWindow::restoreWindowState()

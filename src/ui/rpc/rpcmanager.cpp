@@ -86,8 +86,11 @@ void RpcManager::setupAppInfoManagerSignals()
 
 void RpcManager::setupConfManagerSignals()
 {
-    connect(confManager(), &ConfManager::confChanged, this, [&](bool /*onlyFlags*/) {
-        const QVariant confVar = confManager()->conf()->toVariant(true);
+    connect(confManager(), &ConfManager::confChanged, this, [&](bool onlyFlags) {
+        const QVariant confVar = onlyFlags
+                ? confManager()->conf()->toVariant(true) // send only flags to clients
+                : FirewallConf::editedFlagsToVariant(
+                        FirewallConf::AllEdited); // clients have to reload all from storage
         invokeOnClients(Control::Rpc_ConfManager_confChanged, { confVar });
     });
 

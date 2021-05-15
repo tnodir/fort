@@ -19,6 +19,7 @@ public:
         OptEdited = 0x1,
         FlagsEdited = 0x2,
         IniEdited = 0x4,
+        IniStateEdited = 0x8,
         AllEdited = (OptEdited | FlagsEdited | IniEdited)
     };
 
@@ -34,6 +35,9 @@ public:
 
     bool iniEdited() const { return (m_editedFlags & IniEdited) != 0; }
     void setIniEdited() { m_editedFlags |= IniEdited; }
+
+    bool iniStateEdited() const { return (m_editedFlags & IniStateEdited) != 0; }
+    void setIniStateEdited() { m_editedFlags |= IniStateEdited; }
 
     bool anyEdited() const { return m_editedFlags != NoneEdited; }
     void resetEdited(bool v = false);
@@ -111,6 +115,7 @@ public:
     QVariant toVariant(bool onlyFlags = false) const;
     void fromVariant(const QVariant &v, bool onlyFlags = false);
 
+    static QVariant editedFlagsToVariant(uint editedFlags);
     static uint editedFlagsFromVariant(const QVariant &v);
 
 signals:
