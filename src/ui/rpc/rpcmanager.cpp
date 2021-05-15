@@ -211,7 +211,7 @@ void RpcManager::invokeOnClients(Control::Command cmd, const QVariantList &args)
 
     const QByteArray buffer = ControlWorker::buildCommandData(cmd, args);
     if (buffer.isEmpty()) {
-        qWarning() << "Bad RPC command:" << cmd << args;
+        qWarning() << "Bad RPC command to invoke:" << cmd << args;
         return;
     }
 

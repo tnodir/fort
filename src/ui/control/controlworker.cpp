@@ -5,7 +5,7 @@
 
 namespace {
 
-constexpr int commandMaxArgs = 7;
+constexpr int commandMaxArgs = 16;
 constexpr int commandArgMaxSize = 4 * 1024;
 constexpr quint32 dataMaxSize = 1 * 1024 * 1024;
 
@@ -120,8 +120,7 @@ QByteArray ControlWorker::buildCommandData(Control::Command command, const QVari
 
 bool ControlWorker::sendCommandData(const QByteArray &commandData)
 {
-    if (commandData.isEmpty())
-        return false;
+    Q_ASSERT(!commandData.isEmpty());
 
     const int bytesSent = socket()->write(commandData);
     if (bytesSent != commandData.size()) {
@@ -137,6 +136,10 @@ bool ControlWorker::sendCommandData(const QByteArray &commandData)
 bool ControlWorker::sendCommand(Control::Command command, const QVariantList &args)
 {
     const QByteArray buffer = buildCommandData(command, args);
+    if (buffer.isEmpty()) {
+        qWarning() << "Bad RPC command to send:" << command << args;
+        return false;
+    }
 
     return sendCommandData(buffer);
 }
@@ -195,6 +198,8 @@ bool ControlWorker::readRequest()
     const Control::Command command = m_requestHeader.command();
 
     clearRequest();
+
+    // qDebug() << "requestReady>" << id() << command << args;
 
     emit requestReady(command, args);
 
