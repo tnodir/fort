@@ -45,7 +45,6 @@
 #include "util/nativeeventfilter.h"
 #include "util/net/hostinfocache.h"
 #include "util/osutil.h"
-#include "util/startuputil.h"
 
 FortManager::FortManager(FortSettings *settings, EnvManager *envManager,
         ControlManager *controlManager, QObject *parent) :
@@ -635,10 +634,7 @@ void FortManager::processRestartRequired()
     const QString appFilePath = QCoreApplication::applicationFilePath();
     const QStringList args = settings()->appArguments();
 
-    connect(this, &QObject::destroyed, [=] {
-        StartupUtil::startService(); // Try to start the (maybe installed) service
-        QProcess::startDetached(appFilePath, args);
-    });
+    connect(qApp, &QObject::destroyed, [=] { QProcess::startDetached(appFilePath, args); });
 
     QCoreApplication::quit();
 }

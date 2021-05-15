@@ -24,6 +24,28 @@
 #include "../../dialog/passworddialog.h"
 #include "../optionscontroller.h"
 
+namespace {
+
+struct Startup
+{
+    Startup() : initialized(false), changed(false), wasServiceMode(false), mode(0) { }
+
+    void initialize()
+    {
+        if (!initialized) {
+            initialized = true;
+            mode = StartupUtil::getStartupMode();
+        }
+    }
+
+    quint8 initialized : 1;
+    quint8 changed : 1;
+    quint8 wasServiceMode : 1;
+    quint8 mode : 4;
+} g_startup;
+
+}
+
 OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) : BasePage(ctrl, parent)
 {
     setupUi();
@@ -32,21 +54,36 @@ OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) : BasePage(ct
 void OptionsPage::onAboutToSave()
 {
     // Startup Mode
-    if (m_currentStartupMode != m_comboStartMode->currentIndex()) {
-        const bool wasServiceMode = StartupUtil::isServiceMode(m_currentStartupMode);
-
-        m_currentStartupMode = m_comboStartMode->currentIndex();
-        StartupUtil::setStartupMode(m_currentStartupMode, settings()->defaultLanguage());
-
-        if (wasServiceMode != StartupUtil::isServiceMode(m_currentStartupMode)) {
-            QMetaObject::invokeMethod(
-                    fortManager(), &FortManager::processRestartRequired, Qt::QueuedConnection);
-        }
+    if (g_startup.mode != m_comboStartMode->currentIndex()) {
+        saveStartupMode(m_comboStartMode->currentIndex());
     }
 
     // Password
     if (!settings()->hasPassword() && ini()->hasPassword() && ini()->password().isEmpty()) {
         m_cbPassword->setChecked(false);
+    }
+}
+
+void OptionsPage::saveStartupMode(int mode)
+{
+    if (!g_startup.changed) {
+        g_startup.changed = true;
+        g_startup.wasServiceMode = StartupUtil::isServiceMode(g_startup.mode);
+
+        const QString defaultLanguage = settings()->defaultLanguage();
+
+        connect(fortManager(), &QObject::destroyed, [defaultLanguage] {
+            StartupUtil::setStartupMode(g_startup.mode, defaultLanguage);
+            if (StartupUtil::isServiceMode(g_startup.mode)) {
+                StartupUtil::startService(); // Try to start the (maybe installed) service
+            }
+        });
+    }
+
+    g_startup.mode = mode;
+    if (g_startup.wasServiceMode != StartupUtil::isServiceMode(g_startup.mode)) {
+        QMetaObject::invokeMethod(
+                fortManager(), &FortManager::processRestartRequired, Qt::QueuedConnection);
     }
 }
 
@@ -114,8 +151,8 @@ void OptionsPage::retranslateComboStartMode()
 
     int currentIndex = m_comboStartMode->currentIndex();
     if (m_comboStartMode->currentIndex() < 0) {
-        m_currentStartupMode = StartupUtil::getStartupMode();
-        currentIndex = m_currentStartupMode;
+        g_startup.initialize();
+        currentIndex = g_startup.mode;
     }
 
     m_comboStartMode->clear();
@@ -223,7 +260,7 @@ QLayout *OptionsPage::setupStartModeLayout()
     m_labelStartMode = ControlUtil::createLabel();
 
     m_comboStartMode = ControlUtil::createComboBox(QStringList(), [&](int index) {
-        if (m_currentStartupMode != index) {
+        if (g_startup.mode != index) {
             ctrl()->emitEdited();
         }
     });
