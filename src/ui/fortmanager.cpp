@@ -77,7 +77,8 @@ FirewallConf *FortManager::conf() const
 bool FortManager::checkRunningInstance()
 {
     bool isSingleInstance;
-    m_instanceMutex = OsUtil::createMutex(APP_BASE, isSingleInstance);
+    m_instanceMutex = OsUtil::createMutex(
+            settings()->isService() ? "Global\\" APP_BASE : APP_BASE, isSingleInstance);
 
     if (!isSingleInstance) {
         showErrorBox(tr("Application is already running!"));

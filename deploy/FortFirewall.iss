@@ -15,7 +15,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 SetupMutex=Global\{#APP_BASE}Setup
 ; TODO: Remove {#APP_NAME} from AppMutex after v4.1.0
-AppMutex={#APP_NAME},{#APP_BASE},Global\{#APP_BASE}
+AppMutex={#APP_NAME},{#APP_BASE}
 AppName={#APP_NAME}
 AppVersion={#APP_VERSION_STR}
 VersionInfoVersion={#APP_VERSION_STR}
@@ -68,6 +68,7 @@ Name: "{commondesktop}\{#APP_NAME}"; Filename: "{#APP_EXE}"; WorkingDir: "{app}"
 
 [Run]
 Filename: "{app}\driver\scripts\reinstall.bat"; Description: "Re-install driver"; Flags: runascurrentuser
+Filename: "sc.exe"; Parameters: "start {#APP_SVC_NAME}"; Description: "Start service"; Flags: runascurrentuser nowait
 
 Filename: "https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads"; \
   Description: "Install the latest Visual C++ x86 redistributable!"; Flags: shellexec postinstall; \
@@ -86,20 +87,13 @@ Type: files; Name: "{app}\qt*.*"
 Type: files; Name: "{app}\README*.*"
 
 [Code]
-function InitializeSetup(): Boolean;
+function PrepareToInstall(var NeedsRestart: Boolean): String;
 var
   ResultCode: Integer;
 begin
   if Exec('sc.exe', ExpandConstant('stop {#APP_SVC_NAME}'), '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
     if ResultCode = 0 then Sleep(100); // Let service to stop
-  Result := True;
-end;
-
-procedure DeinitializeSetup();
-var
-  ResultCode: Integer;
-begin
-  Exec('sc.exe', ExpandConstant('start {#APP_SVC_NAME}'), '', SW_HIDE, ewNoWait, ResultCode);
+  Result := '';
 end;
 
 function LanguageName(Param: String): String;
