@@ -165,14 +165,17 @@ void OptionsPage::retranslateComboStartMode()
     if (OsUtil::isUserAdmin())
         return;
 
+    if (StartupUtil::isServiceMode(currentIndex)) {
+        m_comboStartMode->setEnabled(false);
+        return;
+    }
+
     auto comboModel = qobject_cast<QStandardItemModel *>(m_comboStartMode->model());
     if (!comboModel)
         return;
 
     const int itemCount = comboModel->rowCount();
-    const bool isServiceMode = StartupUtil::isServiceMode(currentIndex);
-    for (int i = (isServiceMode ? StartupUtil::StartupDisabled : StartupUtil::StartupAllUsers);
-            i < itemCount; ++i) {
+    for (int i = StartupUtil::StartupAllUsers; i < itemCount; ++i) {
         auto item = comboModel->item(i);
         if (item) {
             item->setEnabled(false);
