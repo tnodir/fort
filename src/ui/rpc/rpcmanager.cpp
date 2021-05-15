@@ -375,7 +375,9 @@ bool RpcManager::processConfManagerRpc(
         return true;
     case Control::Rpc_ConfManager_checkPassword: {
         const bool ok = confManager()->checkPassword(args.value(0).toString());
-        w->setIsClientValidated(ok);
+        if (ok && !w->isClientValidated()) {
+            w->setIsClientValidated(true);
+        }
         sendResult(w, ok);
         return true;
     }
