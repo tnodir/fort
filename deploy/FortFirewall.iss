@@ -14,7 +14,7 @@
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 SetupMutex=Global\{#APP_BASE}Setup
-; TODO: Remove {#APP_NAME} from AppMutex after v4.1.0
+; TODO: COMPAT: Remove {#APP_NAME} from AppMutex after v4.1.0
 AppMutex={#APP_NAME},{#APP_BASE}
 AppName={#APP_NAME}
 AppVersion={#APP_VERSION_STR}

@@ -169,8 +169,8 @@ StartupUtil::StartupMode StartupUtil::getStartupMode()
 
 void StartupUtil::setStartupMode(int mode, const QString &defaultLanguage)
 {
-    // COMPAT: Remove link from Programs -> Startup
-    // TODO: Remove after v4.1.0 (via v4.0.0)
+    // Remove link from Programs -> Startup
+    // TODO: COMPAT: Remove after v4.1.0 (via v4.0.0)
     FileUtil::removeFile(startupShortcutPath());
 
     removeAutorunForCurrentUser();

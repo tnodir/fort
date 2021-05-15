@@ -186,6 +186,10 @@ void FortSettings::setupPaths(EnvManager *envManager)
     } else {
         m_cachePath = expandPath(m_cachePath, envManager);
     }
+
+    // Remove old cache file
+    // TODO: COMPAT: Remove after v4.1.0 (via v4.0.0)
+    FileUtil::removeFile(cachePath() + "appinfocache.db");
 }
 
 QString FortSettings::defaultProfilePath() const
@@ -227,7 +231,7 @@ QString FortSettings::statFilePath() const
 
 QString FortSettings::cacheFilePath() const
 {
-    return noCache() ? ":memory:" : cachePath() + "appinfocache.db";
+    return noCache() ? ":memory:" : cachePath() + "appinfo.db";
 }
 
 void FortSettings::setPassword(const QString &password)
