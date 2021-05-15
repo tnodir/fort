@@ -79,10 +79,11 @@ bool ConfManagerRpc::updateZoneEnabled(int zoneId, bool enabled)
 
 bool ConfManagerRpc::saveConf(FirewallConf &newConf)
 {
+    Q_ASSERT(&newConf == conf() || &newConf == confToEdit()); // else newConf.deleteLater()
+
     newConf.prepareToSave();
 
-    const bool onlyFlags = !newConf.optEdited();
-    const QVariant confVar = newConf.toVariant(onlyFlags);
+    const QVariant confVar = newConf.toVariant(true);
 
     setSaving(true);
     const bool ok = rpcManager()->doOnServer(Control::Rpc_ConfManager_save, { confVar });
@@ -93,10 +94,6 @@ bool ConfManagerRpc::saveConf(FirewallConf &newConf)
 
     // Already applied by onConfChanged() & applySavedConf()
     newConf.resetEdited();
-
-    if (&newConf != conf()) {
-        newConf.deleteLater();
-    }
 
     return true;
 }

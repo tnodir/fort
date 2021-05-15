@@ -553,6 +553,7 @@ bool ConfManager::saveVariant(const QVariant &confVar)
         conf = this->conf();
     } else {
         conf = createConf();
+        conf->copyFlags(*this->conf());
         isNewConf = true;
     }
 

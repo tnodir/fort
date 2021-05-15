@@ -510,6 +510,7 @@ void FortSettings::setCacheValue(const QString &key, const QVariant &value) cons
 void FortSettings::clearCache()
 {
     m_cache.clear();
+    iniSync();
 }
 
 void FortSettings::removeIniKey(const QString &key)
