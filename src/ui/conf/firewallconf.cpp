@@ -406,23 +406,26 @@ QVariant FirewallConf::toVariant(bool onlyFlags) const
 {
     QVariantMap map;
 
+    const uint flags = onlyFlags ? editedFlags() : AllEdited;
+
     if (onlyFlags) {
-        map = editedFlagsToVariant(m_editedFlags).toMap();
+        map = editedFlagsToVariant(flags).toMap();
     }
 
-    if (!onlyFlags || optEdited()) {
+    if ((flags & OptEdited) != 0) {
         map["addressGroups"] = addressesToVariant();
         map["appGroups"] = appGroupsToVariant();
         map["removedAppGroupIdList"] = removedAppGroupIdListToVariant();
     }
 
-    if (!onlyFlags || flagsEdited()) {
+    if ((flags & FlagsEdited) != 0) {
         map["flags"] = flagsToVariant();
     }
 
-    if (!onlyFlags || iniEdited()) {
-        if (!ini().map().isEmpty()) {
-            map["ini"] = ini().map();
+    if ((flags & IniEdited) != 0) {
+        const auto map = ini().map();
+        if (!map.isEmpty()) {
+            map["ini"] = map;
         }
     }
 
