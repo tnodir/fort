@@ -622,10 +622,10 @@ bool ConfManager::addApp(const QString &appPath, const QString &appName, const Q
 
     const auto appIdVar = sqliteDb()->executeEx(sqlUpsertApp, vars, 1, &ok);
 
-    if (ok && alerted) {
+    if (ok) {
         // Alert
         const qint64 appId = appIdVar.toLongLong();
-        sqliteDb()->executeEx(sqlInsertAppAlert, { appId }, 0, &ok);
+        sqliteDb()->executeEx(alerted ? sqlInsertAppAlert : sqlDeleteAppAlert, { appId });
     }
 
     checkResult(ok, true);
