@@ -54,9 +54,7 @@ OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) : BasePage(ct
 void OptionsPage::onAboutToSave()
 {
     // Startup Mode
-    if (g_startup.mode != m_comboStartMode->currentIndex()) {
-        saveStartupMode(m_comboStartMode->currentIndex());
-    }
+    saveStartupMode(m_comboStartMode->currentIndex());
 
     // Password
     if (!settings()->hasPassword() && ini()->hasPassword() && ini()->password().isEmpty()) {
@@ -66,6 +64,9 @@ void OptionsPage::onAboutToSave()
 
 void OptionsPage::saveStartupMode(int mode)
 {
+    if (g_startup.mode == mode)
+        return;
+
     if (!g_startup.changed) {
         g_startup.changed = true;
         g_startup.wasServiceMode = StartupUtil::isServiceMode(g_startup.mode);
