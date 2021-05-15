@@ -102,8 +102,6 @@ private:
     bool m_blockedMode = false;
     bool m_resolveAddress = false;
 
-    int m_connBlockInc = 999999999; // to trigger on first check
-
     StatManager *m_statManager = nullptr;
     AppInfoCache *m_appInfoCache = nullptr;
     HostInfoCache *m_hostInfoCache = nullptr;

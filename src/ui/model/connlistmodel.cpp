@@ -61,17 +61,9 @@ void ConnListModel::handleLogBlockedIp(const LogEntryBlockedIp &entry, qint64 un
 
     doBeginInsertRows(row, row);
 
-    if (statManager()->logBlockedIp(entry, unixTime)) {
-        ++m_connBlockInc;
-    }
+    statManager()->logBlockedIp(entry, unixTime);
 
     doEndInsertRows();
-
-    constexpr int connBlockIncMax = 100;
-    if (m_connBlockInc >= connBlockIncMax) {
-        m_connBlockInc = 0;
-        statManager()->deleteOldConnBlock();
-    }
 }
 
 int ConnListModel::columnCount(const QModelIndex &parent) const

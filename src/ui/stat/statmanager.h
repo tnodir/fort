@@ -51,7 +51,6 @@ public:
 
     virtual bool deleteStatApp(qint64 appId);
 
-    bool deleteOldConnBlock();
     virtual bool deleteConn(qint64 rowIdTo, bool blocked);
     virtual bool deleteConnAll();
 
@@ -78,11 +77,13 @@ signals:
 public slots:
     virtual bool clearTraffic();
 
+protected:
+    void setupConnBlockId();
+
 private:
     using QStmtList = QList<SqliteStmt *>;
 
     void setupTrafDate();
-    void setupConnBlockId();
 
     void setupByConf();
 
@@ -102,6 +103,8 @@ private:
     qint64 getCachedAppId(const QString &appPath) const;
     void clearCachedAppId(const QString &appPath);
     void clearAppIdCache();
+
+    bool deleteOldConnBlock();
 
     qint64 getAppId(const QString &appPath);
     qint64 createAppId(const QString &appPath, qint64 unixTime);
@@ -141,6 +144,8 @@ private:
     quint8 m_activePeriodFromMinute = 0;
     quint8 m_activePeriodToHour = 0;
     quint8 m_activePeriodToMinute = 0;
+
+    int m_connBlockInc = 999999999; // to trigger on first check
 
     qint32 m_trafHour = 0;
     qint32 m_trafDay = 0;

@@ -6,7 +6,8 @@
 #include "../rpc/rpcmanager.h"
 
 StatManagerRpc::StatManagerRpc(const QString &filePath, FortManager *fortManager, QObject *parent) :
-    StatManager(filePath, fortManager->quotaManager(), parent, SqliteDb::OpenDefaultReadOnly)
+    StatManager(filePath, fortManager->quotaManager(), parent, SqliteDb::OpenDefaultReadOnly),
+    m_fortManager(fortManager)
 {
 }
 
@@ -38,4 +39,16 @@ bool StatManagerRpc::resetAppTrafTotals()
 bool StatManagerRpc::clearTraffic()
 {
     return rpcManager()->doOnServer(Control::Rpc_StatManager_clearTraffic);
+}
+
+void StatManagerRpc::onConnBlockAdded()
+{
+    setupConnBlockId();
+    emit connBlockAdded();
+}
+
+void StatManagerRpc::onConnRemoved()
+{
+    setupConnBlockId();
+    emit connRemoved();
 }

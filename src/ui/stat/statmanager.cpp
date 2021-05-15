@@ -342,6 +342,12 @@ bool StatManager::logBlockedIp(const LogEntryBlockedIp &entry, qint64 unixTime)
     ok = (appId != INVALID_APP_ID);
     if (ok) {
         ok = createConnBlock(entry, unixTime, appId);
+
+        constexpr int connBlockIncMax = 100;
+        if (++m_connBlockInc >= connBlockIncMax) {
+            m_connBlockInc = 0;
+            deleteOldConnBlock();
+        }
     }
 
     sqliteDb()->endTransaction(ok);
@@ -379,8 +385,6 @@ bool StatManager::deleteOldConnBlock()
         return false;
 
     deleteRangeConnBlock(m_connBlockIdMin, m_connBlockIdMin + oldCount);
-
-    emit connRemoved();
 
     return true;
 }
