@@ -29,6 +29,10 @@ void showConsole(bool visible)
     if (visible) {
         if (AllocConsole()) {
             SetConsoleCtrlHandler(consoleCtrlHandler, TRUE);
+
+            // Disable close button of console window
+            const HMENU hMenu = GetSystemMenu(GetConsoleWindow(), false);
+            DeleteMenu(hMenu, SC_CLOSE, MF_BYCOMMAND);
         }
     } else {
         FreeConsole();
