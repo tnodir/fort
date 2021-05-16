@@ -80,7 +80,9 @@ protected:
 
 private:
     void processArguments(const QStringList &args);
+
     void setupPaths(EnvManager *envManager);
+    void createPaths();
 
 private:
     uint m_isDefaultProfilePath : 1;

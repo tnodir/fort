@@ -116,7 +116,9 @@ void FortSettings::setupGlobal()
 void FortSettings::initialize(const QStringList &args, EnvManager *envManager)
 {
     processArguments(args);
+
     setupPaths(envManager);
+    createPaths();
 
     setupIni(profilePath() + APP_BASE + ".ini");
 
@@ -251,8 +253,10 @@ void FortSettings::setupPaths(EnvManager *envManager)
     } else {
         m_userPath = expandPath(m_userPath, envManager);
     }
+}
 
-    // Create directories
+void FortSettings::createPaths()
+{
     FileUtil::makePath(profilePath());
     FileUtil::makePath(statPath());
     FileUtil::makePath(logsPath());
