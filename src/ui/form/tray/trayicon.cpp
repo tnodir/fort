@@ -122,32 +122,6 @@ void TrayIcon::updateTrayMenu(bool onlyFlags)
     updateHotKeys();
 }
 
-void TrayIcon::updateTrayMenuFlags()
-{
-    const bool editEnabled = (!settings()->isPasswordRequired() && !fortManager()->optWindow());
-
-    m_filterEnabledAction->setEnabled(editEnabled);
-    m_stopTrafficAction->setEnabled(editEnabled);
-    m_stopInetTrafficAction->setEnabled(editEnabled);
-    m_allowAllNewAction->setEnabled(editEnabled);
-
-    m_filterEnabledAction->setChecked(conf()->filterEnabled());
-    m_stopTrafficAction->setChecked(conf()->stopTraffic());
-    m_stopInetTrafficAction->setChecked(conf()->stopInetTraffic());
-    m_allowAllNewAction->setChecked(conf()->allowAllNew());
-
-    int appGroupIndex = 0;
-    for (QAction *action : qAsConst(m_appGroupActions)) {
-        if (!action->isVisible())
-            break;
-
-        const bool appGroupEnabled = conf()->appGroupEnabled(appGroupIndex++);
-
-        action->setEnabled(editEnabled);
-        action->setChecked(appGroupEnabled);
-    }
-}
-
 void TrayIcon::setupController()
 {
     connect(fortManager(), &FortManager::optWindowChanged, this, &TrayIcon::updateTrayMenuFlags);
@@ -183,9 +157,7 @@ void TrayIcon::setupUi()
     this->setToolTip(QApplication::applicationDisplayName());
 
     setupTrayMenu();
-    updateAppGroupActions();
-    updateTrayMenuFlags();
-    updateHotKeys();
+    updateTrayMenu();
 
     updateTrayIcon();
 }
@@ -249,6 +221,32 @@ void TrayIcon::setupTrayMenu()
     addHotKey(m_quitAction, iniUser()->hotKeyQuit());
 
     this->setContextMenu(menu);
+}
+
+void TrayIcon::updateTrayMenuFlags()
+{
+    const bool editEnabled = (!settings()->isPasswordRequired() && !fortManager()->optWindow());
+
+    m_filterEnabledAction->setEnabled(editEnabled);
+    m_stopTrafficAction->setEnabled(editEnabled);
+    m_stopInetTrafficAction->setEnabled(editEnabled);
+    m_allowAllNewAction->setEnabled(editEnabled);
+
+    m_filterEnabledAction->setChecked(conf()->filterEnabled());
+    m_stopTrafficAction->setChecked(conf()->stopTraffic());
+    m_stopInetTrafficAction->setChecked(conf()->stopInetTraffic());
+    m_allowAllNewAction->setChecked(conf()->allowAllNew());
+
+    int appGroupIndex = 0;
+    for (QAction *action : qAsConst(m_appGroupActions)) {
+        if (!action->isVisible())
+            break;
+
+        const bool appGroupEnabled = conf()->appGroupEnabled(appGroupIndex++);
+
+        action->setEnabled(editEnabled);
+        action->setChecked(appGroupEnabled);
+    }
 }
 
 void TrayIcon::updateAppGroupActions()

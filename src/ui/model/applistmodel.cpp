@@ -54,8 +54,9 @@ void AppListModel::initialize()
     setSortOrder(Qt::DescendingOrder);
 
     connect(confManager(), &ConfManager::confChanged, this, [&](bool onlyFlags = false) {
-        if (!onlyFlags)
+        if (!onlyFlags) {
             refresh();
+        }
     });
     connect(confManager(), &ConfManager::appEndTimesUpdated, this, &AppListModel::refresh);
     connect(confManager(), &ConfManager::appAdded, this, &TableSqlModel::reset);

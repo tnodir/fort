@@ -36,7 +36,6 @@ public slots:
 
     void showTrayMenu(QMouseEvent *event);
     void updateTrayMenu(bool onlyFlags = false);
-    void updateTrayMenuFlags();
 
 protected slots:
     void saveTrayFlags();
@@ -49,6 +48,7 @@ private:
     void setupUi();
     void setupTrayMenu();
 
+    void updateTrayMenuFlags();
     void updateAppGroupActions();
 
     void addHotKey(QAction *action, const QString &shortcutText);

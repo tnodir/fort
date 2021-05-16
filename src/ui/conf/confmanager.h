@@ -56,7 +56,7 @@ public:
 
     bool saveFlags();
     void saveIni();
-    void saveIniUser();
+    void saveIniUser(bool flagsChanged = false);
 
     bool saveVariant(const QVariant &confVar);
 
@@ -98,6 +98,7 @@ public:
 
 signals:
     void confChanged(bool onlyFlags);
+    void iniUserChanged(bool onlyFlags);
 
     void appEndTimesUpdated();
     void appAdded(bool alerted);

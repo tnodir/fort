@@ -376,6 +376,7 @@ void FortManager::setupTrayIcon()
     connect(m_trayIcon, &QSystemTrayIcon::messageClicked, this, &FortManager::onTrayMessageClicked);
 
     connect(confManager(), &ConfManager::confChanged, m_trayIcon, &TrayIcon::updateTrayMenu);
+    connect(confManager(), &ConfManager::iniUserChanged, m_trayIcon, &TrayIcon::updateTrayMenu);
     connect(confManager(), &ConfManager::appAdded, m_trayIcon, [&](bool alerted) {
         if (alerted) {
             m_trayIcon->updateTrayIcon(true);

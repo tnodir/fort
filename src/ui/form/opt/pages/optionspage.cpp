@@ -360,7 +360,7 @@ void OptionsPage::setupGlobalBox()
 
     m_cbHotKeys = ControlUtil::createCheckBox(iniUser()->hotKeyEnabled(), [&](bool checked) {
         iniUser()->setHotKeyEnabled(checked);
-        confManager()->saveIniUser();
+        confManager()->saveIniUser(true);
     });
 
     // Password Row

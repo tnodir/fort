@@ -545,10 +545,14 @@ void ConfManager::saveIni()
     conf()->resetEdited();
 }
 
-void ConfManager::saveIniUser()
+void ConfManager::saveIniUser(bool flagsChanged)
 {
     iniUser()->save();
     iniUser()->clear();
+
+    if (flagsChanged) {
+        emit iniUserChanged(true);
+    }
 }
 
 bool ConfManager::saveVariant(const QVariant &confVar)
