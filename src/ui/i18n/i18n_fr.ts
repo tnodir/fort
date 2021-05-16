@@ -612,10 +612,6 @@
         <translation>Non installé</translation>
     </message>
     <message>
-        <source>Startup mode:</source>
-        <translation>Mode de démarrage:</translation>
-    </message>
-    <message>
         <source>Disabled</source>
         <translation>Désactivé</translation>
     </message>
@@ -626,10 +622,6 @@
     <message>
         <source>For all users</source>
         <translation>Pour tout utilisateurs</translation>
-    </message>
-    <message>
-        <source>For all users in background</source>
-        <translation>Pour tout utilisateurs en arrière-plan</translation>
     </message>
     <message>
         <source>Lock the password (unlocked till &quot;%1&quot;)</source>
@@ -650,6 +642,14 @@
     <message>
         <source>Windows Explorer integration</source>
         <translation>Intégration de l&apos;Explorateur Windows</translation>
+    </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Run Fort Firewall as a Service in background</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -612,10 +612,6 @@
         <translation>Удалить драйвер?</translation>
     </message>
     <message>
-        <source>Startup mode:</source>
-        <translation>Авто-запуск:</translation>
-    </message>
-    <message>
         <source>Disabled</source>
         <translation>Отключен</translation>
     </message>
@@ -626,10 +622,6 @@
     <message>
         <source>For all users</source>
         <translation>Для всех пользователей</translation>
-    </message>
-    <message>
-        <source>For all users in background</source>
-        <translation>Для всех пользователей в фоне</translation>
     </message>
     <message>
         <source>Lock the password (unlocked till &quot;%1&quot;)</source>
@@ -650,6 +642,14 @@
     <message>
         <source>Windows Explorer integration</source>
         <translation>Интеграция с Windows Explorer</translation>
+    </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>Авто-запуск</translation>
+    </message>
+    <message>
+        <source>Run Fort Firewall as a Service in background</source>
+        <translation>Запускать Fort Firewall как Сервис в фоне</translation>
     </message>
 </context>
 <context>

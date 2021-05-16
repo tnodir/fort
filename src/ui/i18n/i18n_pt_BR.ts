@@ -544,10 +544,6 @@
         <translation>Nova Versão</translation>
     </message>
     <message>
-        <source>Startup mode:</source>
-        <translation>Modo de inicialização:</translation>
-    </message>
-    <message>
         <source>Stop traffic when Fort Firewall is not running</source>
         <translation>Parar o tráfego quando o Fort Firewall não estiver funcionando</translation>
     </message>
@@ -616,10 +612,6 @@
         <translation>Para todos os usuários</translation>
     </message>
     <message>
-        <source>For all users in background</source>
-        <translation>Para todos os usuários em segundo plano</translation>
-    </message>
-    <message>
         <source>Installed</source>
         <translation>Instalado</translation>
     </message>
@@ -650,6 +642,14 @@
     <message>
         <source>Windows Explorer integration</source>
         <translation>Integração com Windows Explorer</translation>
+    </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Run Fort Firewall as a Service in background</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -612,10 +612,6 @@
         <translation>설치 안됨</translation>
     </message>
     <message>
-        <source>Startup mode:</source>
-        <translation>시작 모드:</translation>
-    </message>
-    <message>
         <source>Disabled</source>
         <translation>비활성화됨</translation>
     </message>
@@ -626,10 +622,6 @@
     <message>
         <source>For all users</source>
         <translation>모든 사용자용</translation>
-    </message>
-    <message>
-        <source>For all users in background</source>
-        <translation>백그라운드의 모든 사용자</translation>
     </message>
     <message>
         <source>Lock the password (unlocked till &quot;%1&quot;)</source>
@@ -649,6 +641,14 @@
     </message>
     <message>
         <source>Windows Explorer integration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Run Fort Firewall as a Service in background</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

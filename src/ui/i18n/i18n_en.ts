@@ -544,10 +544,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Startup mode:</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Stop traffic when Fort Firewall is not running</source>
         <translation></translation>
     </message>
@@ -616,10 +612,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>For all users in background</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Installed</source>
         <translation></translation>
     </message>
@@ -649,6 +641,14 @@
     </message>
     <message>
         <source>Windows Explorer integration</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Run Fort Firewall as a Service in background</source>
         <translation></translation>
     </message>
 </context>
