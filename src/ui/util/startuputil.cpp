@@ -161,10 +161,10 @@ bool StartupUtil::isServiceInstalled()
 
 void StartupUtil::setServiceInstalled(bool install, const QString &defaultLanguage)
 {
-    uninstallService(serviceNameStr);
-
-    if (!install)
+    if (!install) {
+        uninstallService(serviceNameStr);
         return;
+    }
 
     const QString command = autoRunCommand(defaultLanguage) + " --service";
 

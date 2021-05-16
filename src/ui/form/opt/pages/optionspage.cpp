@@ -2,10 +2,12 @@
 
 #include <QCheckBox>
 #include <QComboBox>
+#include <QDir>
 #include <QGroupBox>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QStandardItemModel>
 #include <QVBoxLayout>
@@ -35,6 +37,22 @@ struct Startup
     quint8 wasService : 1;
     quint8 isService : 1;
 } g_startup;
+
+void moveProfile(const QString &profilePath, const QString &newProfilePath)
+{
+    if (profilePath.isEmpty() || newProfilePath.isEmpty())
+        return;
+
+    if (QMessageBox::question(nullptr, OptionsPage::tr("Move Profile"),
+                OptionsPage::tr("New profile path is \"%1\".\n"
+                                "Would you like to move profile from \"%2\" to new location?")
+                        .arg(newProfilePath, profilePath))
+            != QMessageBox::Yes)
+        return;
+
+    QDir(newProfilePath).removeRecursively();
+    QDir().rename(profilePath, newProfilePath);
+}
 
 }
 
@@ -78,12 +96,24 @@ void OptionsPage::saveService(bool isService)
 
         const QString defaultLanguage = settings()->defaultLanguage();
 
-        connect(fortManager(), &QObject::destroyed, [defaultLanguage] {
+        const bool isDefaultProfilePath = settings()->isDefaultProfilePath();
+        const QString profilePath = isDefaultProfilePath ? settings()->profilePath() : QString();
+        const QString newProfilePath = isDefaultProfilePath
+                ? FortSettings::defaultProfilePath(g_startup.isService, fortManager()->envManager())
+                : QString();
+
+        connect(fortManager(), &QObject::destroyed, [=] {
             if (g_startup.wasService == g_startup.isService)
                 return;
 
-            StartupUtil::setServiceInstalled(g_startup.isService, defaultLanguage);
+            StartupUtil::setServiceInstalled(false);
+
+            if (profilePath != newProfilePath) {
+                moveProfile(profilePath, newProfilePath);
+            }
+
             if (g_startup.isService) {
+                StartupUtil::setServiceInstalled(true, defaultLanguage);
                 StartupUtil::startService(); // Try to start the (maybe installed) service
             }
         });

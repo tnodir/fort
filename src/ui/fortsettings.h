@@ -25,6 +25,7 @@ public:
     QString passwordHash() const { return iniText("base/passwordHash"); }
     void setPasswordHash(const QString &v) { setIniValue("base/passwordHash", v); }
 
+    bool isDefaultProfilePath() const { return m_isDefaultProfilePath; }
     bool noCache() const { return m_noCache; }
     bool isService() const { return m_isService; }
     bool hasService() const { return m_hasService; }
@@ -70,6 +71,8 @@ public:
     bool hasError() const;
     QString errorMessage() const;
 
+    static QString defaultProfilePath(bool hasService, EnvManager *envManager = nullptr);
+
 signals:
     void passwordCheckedChanged();
 
@@ -85,7 +88,6 @@ public slots:
 private:
     void processArguments(const QStringList &args);
     void setupPaths(EnvManager *envManager);
-    QString defaultProfilePath() const;
 
     void setupIni();
 
@@ -118,6 +120,7 @@ private:
 
 private:
     uint m_iniExists : 1;
+    uint m_isDefaultProfilePath : 1;
     uint m_noCache : 1;
     uint m_isService : 1;
     uint m_hasService : 1;

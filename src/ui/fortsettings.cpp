@@ -32,6 +32,7 @@ QString expandPath(const QString &path, EnvManager *envManager = nullptr)
 FortSettings::FortSettings(QObject *parent) :
     QObject(parent),
     m_iniExists(false),
+    m_isDefaultProfilePath(false),
     m_noCache(false),
     m_isService(false),
     m_hasService(false),
@@ -163,8 +164,12 @@ void FortSettings::processArguments(const QStringList &args)
 void FortSettings::setupPaths(EnvManager *envManager)
 {
     // Profile Path
-    m_profilePath =
-            expandPath(m_profilePath.isEmpty() ? defaultProfilePath() : m_profilePath, envManager);
+    if (m_profilePath.isEmpty()) {
+        m_isDefaultProfilePath = true;
+        m_profilePath = defaultProfilePath(hasService(), envManager);
+    } else {
+        m_profilePath = expandPath(m_profilePath, envManager);
+    }
 
     // Statistics Path
     if (m_statPath.isEmpty()) {
@@ -192,14 +197,20 @@ void FortSettings::setupPaths(EnvManager *envManager)
     FileUtil::removeFile(cachePath() + "appinfocache.db");
 }
 
-QString FortSettings::defaultProfilePath() const
+QString FortSettings::defaultProfilePath(bool hasService, EnvManager *envManager)
 {
-    const auto appBinLocation = FileUtil::appBinLocation();
-    const bool isPortable = FileUtil::fileExists(appBinLocation + "/README.portable");
+    // Is portable?
+    {
+        const auto appBinLocation = FileUtil::appBinLocation();
+        const bool isPortable = FileUtil::fileExists(appBinLocation + "/README.portable");
+        if (isPortable)
+            return appBinLocation + "/Data/";
+    }
 
-    return isPortable ? appBinLocation + "/Data"
-                      : (hasService() ? QLatin1String("%ProgramData%\\") + APP_NAME
-                                      : FileUtil::appConfigLocation());
+    if (hasService)
+        return expandPath(QLatin1String("%ProgramData%\\") + APP_NAME, envManager);
+
+    return pathSlash(FileUtil::appConfigLocation());
 }
 
 void FortSettings::setupIni()

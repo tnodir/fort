@@ -6,6 +6,8 @@ v3.4.0, 2021-05-16:
 - UI: Smaller font size for date/time columns.
 - UI: Update translations.
 
+Attention: For a Service the default profile path is "%ProgramData%\Fort Firewall\", else it's "%LocalAppData%\Fort Firewall\".
+
 v3.3.9, 2021-05-02:
 - UI: Options: Add "Logs" box.
 - UI: Exit gracefully on console close.
