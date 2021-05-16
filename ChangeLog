@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v3.4.0, 2021-05-16:
+- UI: Options: Add "For all users" auto-run mode.
+- UI: Options: Add "Run as a Service in background" option.
+- UI: Smaller font size for date/time columns.
+- UI: Update translations.
+
 v3.3.9, 2021-05-02:
 - UI: Options: Add "Logs" box.
 - UI: Exit gracefully on console close.
