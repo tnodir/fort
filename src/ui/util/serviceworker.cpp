@@ -40,7 +40,7 @@ void WINAPI serviceMain(DWORD argc, wchar_t *argv[])
     Q_UNUSED(argc);
     Q_UNUSED(argv);
 
-    g_service.hstatus = RegisterServiceCtrlHandler(StartupUtil::serviceName, serviceCtrlHandler);
+    g_service.hstatus = RegisterServiceCtrlHandler(StartupUtil::serviceName(), serviceCtrlHandler);
     if (g_service.hstatus) {
         g_service.status.dwServiceType = SERVICE_WIN32_OWN_PROCESS;
         g_service.status.dwControlsAccepted = SERVICE_ACCEPT_STOP | SERVICE_ACCEPT_SHUTDOWN;

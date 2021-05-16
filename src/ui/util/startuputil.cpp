@@ -23,6 +23,10 @@ const char *const regAllUsersRun = R"(SOFTWARE\Microsoft\Windows\CurrentVersion\
 constexpr RegKey::Root regShellRoot = RegKey::HKLM;
 const char *const regShellMenu = R"(SOFTWARE\Classes\SystemFileAssociations\.exe\Shell)";
 
+const wchar_t *const serviceNameStr = L"" APP_BASE "Svc";
+const wchar_t *const serviceDisplayStr = L"" APP_NAME " Service";
+const wchar_t *const serviceDescriptionStr = L"Manages " APP_NAME " logic as background server.";
+
 QString startupShortcutPath()
 {
     return FileUtil::applicationsLocation() + QLatin1Char('\\') + "Startup" + QLatin1Char('\\')
@@ -83,8 +87,8 @@ void removeAutorunForAllUsers()
     removeAutorunForUser(regAllUsersRoot, regAllUsersRun);
 }
 
-bool installService(
-        const wchar_t *serviceName, const wchar_t *serviceDisplay, const QString &command)
+bool installService(const wchar_t *serviceName, const wchar_t *serviceDisplay,
+        const wchar_t *serviceDescription, const QString &command)
 {
     bool res = false;
     const SC_HANDLE mngr = OpenSCManager(NULL, NULL, SC_MANAGER_CREATE_SERVICE);
@@ -93,6 +97,9 @@ bool installService(
                 SERVICE_WIN32_OWN_PROCESS, SERVICE_AUTO_START, SERVICE_ERROR_NORMAL,
                 (LPCWSTR) command.utf16(), 0, 0, 0, 0, 0);
         if (svc) {
+            SERVICE_DESCRIPTION sd = { (LPWSTR) serviceDescription };
+            ChangeServiceConfig2(svc, SERVICE_CONFIG_DESCRIPTION, &sd);
+
             res = true;
             CloseServiceHandle(svc);
         }
@@ -126,15 +133,17 @@ bool uninstallService(const wchar_t *serviceName)
 
 }
 
-const wchar_t *const StartupUtil::serviceName = L"" APP_BASE "Svc";
-const wchar_t *const StartupUtil::serviceDisplay = L"" APP_NAME " Service";
+const wchar_t *StartupUtil::serviceName()
+{
+    return serviceNameStr;
+}
 
 bool StartupUtil::isServiceInstalled()
 {
     bool res = false;
     const SC_HANDLE mngr = OpenSCManagerW(nullptr, nullptr, SC_MANAGER_CONNECT);
     if (mngr) {
-        const SC_HANDLE svc = OpenServiceW(mngr, serviceName, SERVICE_INTERROGATE);
+        const SC_HANDLE svc = OpenServiceW(mngr, serviceNameStr, SERVICE_INTERROGATE);
         if (svc) {
             res = true;
             CloseServiceHandle(svc);
@@ -149,7 +158,7 @@ bool StartupUtil::startService()
     bool res = false;
     const SC_HANDLE mngr = OpenSCManagerW(nullptr, nullptr, SC_MANAGER_ALL_ACCESS);
     if (mngr) {
-        const SC_HANDLE svc = OpenServiceW(mngr, serviceName, SERVICE_ALL_ACCESS);
+        const SC_HANDLE svc = OpenServiceW(mngr, serviceNameStr, SERVICE_ALL_ACCESS);
         if (svc) {
             res = StartServiceW(svc, 0, nullptr);
             CloseServiceHandle(svc);
@@ -175,7 +184,7 @@ void StartupUtil::setStartupMode(int mode, const QString &defaultLanguage)
 
     removeAutorunForCurrentUser();
     removeAutorunForAllUsers();
-    uninstallService(serviceName);
+    uninstallService(serviceNameStr);
 
     if (mode == StartupDisabled)
         return;
@@ -191,7 +200,8 @@ void StartupUtil::setStartupMode(int mode, const QString &defaultLanguage)
         setAutorunForAllUsers(command);
         Q_FALLTHROUGH();
     case StartupAllUsersBackground:
-        installService(serviceName, serviceDisplay, command + " --service");
+        installService(
+                serviceNameStr, serviceDisplayStr, serviceDescriptionStr, command + " --service");
         break;
     }
 }
