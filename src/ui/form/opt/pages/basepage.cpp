@@ -4,6 +4,7 @@
 
 #include "../../../conf/firewallconf.h"
 #include "../../../fortmanager.h"
+#include "../../../user/iniuser.h"
 #include "../../../util/osutil.h"
 #include "../optionscontroller.h"
 
@@ -35,6 +36,11 @@ FirewallConf *BasePage::conf() const
 IniOptions *BasePage::ini() const
 {
     return &conf()->ini();
+}
+
+IniUser *BasePage::iniUser() const
+{
+    return ctrl()->iniUser();
 }
 
 DriverManager *BasePage::driverManager() const

@@ -32,6 +32,11 @@ IniOptions *ProgramsController::ini() const
     return &conf()->ini();
 }
 
+IniUser *ProgramsController::iniUser() const
+{
+    return confManager()->iniUser();
+}
+
 AppListModel *ProgramsController::appListModel() const
 {
     return fortManager()->appListModel();

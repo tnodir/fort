@@ -14,6 +14,7 @@
 #include "../../../conf/appgroup.h"
 #include "../../../conf/firewallconf.h"
 #include "../../../fortsettings.h"
+#include "../../../user/iniuser.h"
 #include "../../../util/iconcache.h"
 #include "../../../util/net/netutil.h"
 #include "../../../util/textareautil.h"
@@ -56,12 +57,12 @@ void ApplicationsPage::setAppGroupIndex(int v)
     }
 }
 
-void ApplicationsPage::onSaveWindowState(IniOptions *ini)
+void ApplicationsPage::onSaveWindowState(IniUser *ini)
 {
     ini->setOptWindowAppsSplit(m_splitter->saveState());
 }
 
-void ApplicationsPage::onRestoreWindowState(IniOptions *ini)
+void ApplicationsPage::onRestoreWindowState(IniUser *ini)
 {
     m_splitter->restoreState(ini->optWindowAppsSplit());
 }

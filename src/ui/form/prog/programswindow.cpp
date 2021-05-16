@@ -12,6 +12,7 @@
 #include "../../fortmanager.h"
 #include "../../fortsettings.h"
 #include "../../model/applistmodel.h"
+#include "../../user/iniuser.h"
 #include "../../util/guiutil.h"
 #include "../../util/iconcache.h"
 #include "../../util/window/widgetwindowstatewatcher.h"
@@ -63,6 +64,11 @@ IniOptions *ProgramsWindow::ini() const
     return ctrl()->ini();
 }
 
+IniUser *ProgramsWindow::iniUser() const
+{
+    return ctrl()->iniUser();
+}
+
 AppListModel *ProgramsWindow::appListModel() const
 {
     return fortManager()->appListModel();
@@ -75,24 +81,24 @@ AppInfoCache *ProgramsWindow::appInfoCache() const
 
 void ProgramsWindow::saveWindowState()
 {
-    ini()->setProgWindowGeometry(m_stateWatcher->geometry());
-    ini()->setProgWindowMaximized(m_stateWatcher->maximized());
+    iniUser()->setProgWindowGeometry(m_stateWatcher->geometry());
+    iniUser()->setProgWindowMaximized(m_stateWatcher->maximized());
 
     auto header = m_appListView->horizontalHeader();
-    ini()->setProgAppsHeader(header->saveState());
-    ini()->setProgAppsHeaderVersion(APPS_HEADER_VERSION);
+    iniUser()->setProgAppsHeader(header->saveState());
+    iniUser()->setProgAppsHeaderVersion(APPS_HEADER_VERSION);
 
-    confManager()->saveIniState();
+    confManager()->saveIniUser();
 }
 
 void ProgramsWindow::restoreWindowState()
 {
-    m_stateWatcher->restore(
-            this, QSize(1024, 768), ini()->progWindowGeometry(), ini()->progWindowMaximized());
+    m_stateWatcher->restore(this, QSize(1024, 768), iniUser()->progWindowGeometry(),
+            iniUser()->progWindowMaximized());
 
-    if (ini()->progAppsHeaderVersion() == APPS_HEADER_VERSION) {
+    if (iniUser()->progAppsHeaderVersion() == APPS_HEADER_VERSION) {
         auto header = m_appListView->horizontalHeader();
-        header->restoreState(ini()->progAppsHeader());
+        header->restoreState(iniUser()->progAppsHeader());
     }
 }
 

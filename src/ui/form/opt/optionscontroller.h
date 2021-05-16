@@ -9,6 +9,7 @@ class FirewallConf;
 class FortManager;
 class FortSettings;
 class IniOptions;
+class IniUser;
 class TaskManager;
 class TranslationManager;
 class ZoneListModel;
@@ -26,6 +27,7 @@ public:
     ConfManager *confManager() const;
     FirewallConf *conf() const;
     IniOptions *ini() const;
+    IniUser *iniUser() const;
     TaskManager *taskManager() const;
     DriverManager *driverManager() const;
     TranslationManager *translationManager() const;
@@ -41,8 +43,8 @@ signals:
 
     void cancelChanges(IniOptions *oldIni);
 
-    void afterSaveWindowState(IniOptions *ini);
-    void afterRestoreWindowState(IniOptions *ini);
+    void afterSaveWindowState(IniUser *ini);
+    void afterRestoreWindowState(IniUser *ini);
 
     void retranslateUi();
 

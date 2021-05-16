@@ -37,6 +37,7 @@
 #include "rpc/taskmanagerrpc.h"
 #include "task/taskinfozonedownloader.h"
 #include "translationmanager.h"
+#include "user/usersettings.h"
 #include "util/dateutil.h"
 #include "util/envmanager.h"
 #include "util/fileutil.h"
@@ -67,6 +68,11 @@ FortManager::~FortManager()
     }
 
     OsUtil::closeMutex(m_instanceMutex);
+}
+
+IniUser *FortManager::iniUser() const
+{
+    return &userSettings()->ini();
 }
 
 FirewallConf *FortManager::conf() const
@@ -325,9 +331,15 @@ void FortManager::setupTaskManager()
     taskManager()->initialize();
 }
 
+void FortManager::setupUserSettings()
+{
+    m_userSettings = new UserSettings(this);
+    m_userSettings->initialize(settings());
+}
+
 void FortManager::setupTranslationManager()
 {
-    TranslationManager::instance()->switchLanguageByName(settings()->language());
+    TranslationManager::instance()->switchLanguageByName(iniUser()->language());
 }
 
 void FortManager::setupMainWindow()
@@ -433,7 +445,7 @@ void FortManager::show()
 {
     showTrayIcon();
 
-    if (conf()->ini().graphWindowVisible()) {
+    if (iniUser()->graphWindowVisible()) {
         showGraphWindow();
     }
 }
@@ -441,6 +453,7 @@ void FortManager::show()
 void FortManager::showTrayIcon()
 {
     if (!m_trayIcon) {
+        setupUserSettings();
         setupTranslationManager();
         setupMainWindow();
         setupHotKeyManager();
@@ -709,7 +722,7 @@ bool FortManager::showYesNoBox(
 void FortManager::loadConf()
 {
     QString viaVersion;
-    if (!settings()->confCanMigrate(viaVersion)) {
+    if (!settings()->canMigrate(viaVersion)) {
         showInfoBox(tr("Please first install Fort Firewall v%1 and save Options from it.")
                             .arg(viaVersion));
         abort(); // Abort the program

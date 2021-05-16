@@ -15,6 +15,7 @@ class FirewallConf;
 class FortManager;
 class FortSettings;
 class IniOptions;
+class IniUser;
 class TableView;
 class WidgetWindowStateWatcher;
 
@@ -31,6 +32,7 @@ public:
     ConfManager *confManager() const;
     FirewallConf *conf() const;
     IniOptions *ini() const;
+    IniUser *iniUser() const;
     ConnListModel *connListModel() const;
     AppInfoCache *appInfoCache() const;
 

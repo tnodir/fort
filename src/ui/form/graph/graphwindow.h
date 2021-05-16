@@ -8,6 +8,7 @@
 class ConfManager;
 class FirewallConf;
 class IniOptions;
+class IniUser;
 class GraphPlot;
 class QCPBars;
 class WidgetWindowStateWatcher;
@@ -22,6 +23,7 @@ public:
     ConfManager *confManager() const;
     FirewallConf *conf() const;
     IniOptions *ini() const;
+    IniUser *iniUser() const;
 
     void saveWindowState(bool wasVisible);
     void restoreWindowState();

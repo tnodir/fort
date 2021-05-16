@@ -11,6 +11,7 @@
 #include "../fortsettings.h"
 #include "../task/taskinfo.h"
 #include "../task/taskmanager.h"
+#include "../user/iniuser.h"
 #include "../util/conf/confutil.h"
 #include "../util/dateutil.h"
 #include "../util/fileutil.h"
@@ -363,6 +364,11 @@ TaskManager *ConfManager::taskManager() const
     return fortManager()->taskManager();
 }
 
+IniUser *ConfManager::iniUser() const
+{
+    return fortManager()->iniUser();
+}
+
 void ConfManager::showErrorMessage(const QString &errorMessage)
 {
     logWarning() << "Error:" << errorMessage;
@@ -432,8 +438,7 @@ void ConfManager::setConf(FirewallConf *newConf)
 
 FirewallConf *ConfManager::createConf()
 {
-    FirewallConf *conf = new FirewallConf(this);
-    conf->ini().setSettings(settings());
+    FirewallConf *conf = new FirewallConf(settings(), this);
     return conf;
 }
 
@@ -496,7 +501,7 @@ bool ConfManager::saveConf(FirewallConf &conf)
 
 void ConfManager::applySavedConf(FirewallConf *newConf)
 {
-    if (!newConf->anyEdited() || newConf->iniStateEdited())
+    if (!newConf->anyEdited())
         return;
 
     const bool onlyFlags = !newConf->optEdited();
@@ -540,11 +545,10 @@ void ConfManager::saveIni()
     conf()->resetEdited();
 }
 
-void ConfManager::saveIniState()
+void ConfManager::saveIniUser()
 {
-    conf()->setIniStateEdited();
-
-    saveIni();
+    iniUser()->save();
+    iniUser()->clear();
 }
 
 bool ConfManager::saveVariant(const QVariant &confVar)

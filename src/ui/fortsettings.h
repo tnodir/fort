@@ -1,26 +1,17 @@
 #ifndef FORTSETTINGS_H
 #define FORTSETTINGS_H
 
-#include <QColor>
-#include <QHash>
-#include <QSettings>
+#include "util/ini/settings.h"
 
 class EnvManager;
 class FirewallConf;
 
-class FortSettings : public QObject
+class FortSettings : public Settings
 {
     Q_OBJECT
 
-    friend class IniOptions;
-
 public:
     explicit FortSettings(QObject *parent = nullptr);
-
-    int iniVersion() const { return iniInt("base/version", appVersion()); }
-    void setIniVersion(int v) { setIniValue("base/version", v); }
-
-    QString language() const { return iniText("base/language", defaultLanguage()); }
 
     QString passwordHash() const { return iniText("base/passwordHash"); }
     void setPasswordHash(const QString &v) { setIniValue("base/passwordHash", v); }
@@ -47,6 +38,8 @@ public:
     QString cachePath() const { return m_cachePath; }
     QString cacheFilePath() const;
 
+    QString userPath() const { return m_userPath; }
+
     bool isWindowControl() const { return m_isWindowControl; }
     QString controlCommand() const { return m_controlCommand; }
 
@@ -65,61 +58,31 @@ public:
     void setPasswordChecked(bool checked, int unlockType = 0);
     void resetCheckedPassword(int unlockType = 0);
 
-    bool confMigrated() const;
-    bool confCanMigrate(QString &viaVersion) const;
+    void setupGlobal();
+    void initialize(const QStringList &args, EnvManager *envManager = nullptr);
 
-    bool hasError() const;
-    QString errorMessage() const;
+    bool wasMigrated() const;
+    bool canMigrate(QString &viaVersion) const;
 
     static QString defaultProfilePath(bool hasService, EnvManager *envManager = nullptr);
+    static QString defaultConfigPath();
 
 signals:
     void passwordCheckedChanged();
 
 public slots:
-    void setupGlobal();
-    void initialize(const QStringList &args, EnvManager *envManager = nullptr);
-
     void readConfIni(FirewallConf &conf) const;
     void writeConfIni(const FirewallConf &conf);
 
-    void clearCache();
+protected:
+    void migrateIniOnStartup() override;
+    void migrateIniOnWrite() override;
 
 private:
     void processArguments(const QStringList &args);
     void setupPaths(EnvManager *envManager);
 
-    void setupIni();
-
-    void migrateIniOnStartup();
-    void migrateIniOnWrite();
-
-    bool iniBool(const QString &key, bool defaultValue = false) const;
-    int iniInt(const QString &key, int defaultValue = 0) const;
-    uint iniUInt(const QString &key, int defaultValue = 0) const;
-    qreal iniReal(const QString &key, qreal defaultValue = 0) const;
-    QString iniText(const QString &key, const QString &defaultValue = QString()) const;
-    QStringList iniList(const QString &key) const;
-    QVariantMap iniMap(const QString &key) const;
-    QByteArray iniByteArray(const QString &key) const;
-
-    QVariant iniValue(const QString &key, const QVariant &defaultValue = QVariant()) const;
-    void setIniValue(
-            const QString &key, const QVariant &value, const QVariant &defaultValue = QVariant());
-
-    QVariant cacheValue(const QString &key) const;
-    void setCacheValue(const QString &key, const QVariant &value) const;
-
-    void removeIniKey(const QString &key);
-
-    QStringList iniChildKeys(const QString &prefix) const;
-
-    void iniSync();
-
-    static int appVersion();
-
 private:
-    uint m_iniExists : 1;
     uint m_isDefaultProfilePath : 1;
     uint m_noCache : 1;
     uint m_isService : 1;
@@ -134,14 +97,11 @@ private:
     QString m_statPath;
     QString m_logsPath;
     QString m_cachePath;
+    QString m_userPath;
     QString m_controlCommand;
     QStringList m_args;
 
     QStringList m_appArguments;
-
-    QSettings *m_ini = nullptr;
-
-    mutable QHash<QString, QVariant> m_cache;
 };
 
 #endif // FORTSETTINGS_H

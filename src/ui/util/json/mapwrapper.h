@@ -30,7 +30,8 @@ protected:
     void setColor(const QString &key, const QColor &v);
 
     virtual QVariant value(const QString &key, const QVariant &defaultValue = QVariant()) const;
-    void setValue(const QString &key, const QVariant &v);
+    virtual void setValue(
+            const QString &key, const QVariant &v, const QVariant &defaultValue = QVariant());
 
     bool contains(const QString &key) const;
 

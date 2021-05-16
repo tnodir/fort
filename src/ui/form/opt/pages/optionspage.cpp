@@ -12,6 +12,7 @@
 #include <QStandardItemModel>
 #include <QVBoxLayout>
 
+#include "../../../conf/confmanager.h"
 #include "../../../conf/firewallconf.h"
 #include "../../../driver/drivermanager.h"
 #include "../../../fortmanager.h"
@@ -19,6 +20,7 @@
 #include "../../../task/taskinfoupdatechecker.h"
 #include "../../../task/taskmanager.h"
 #include "../../../translationmanager.h"
+#include "../../../user/iniuser.h"
 #include "../../../util/iconcache.h"
 #include "../../../util/osutil.h"
 #include "../../../util/startuputil.h"
@@ -121,16 +123,6 @@ void OptionsPage::saveService(bool isService)
 
     QMetaObject::invokeMethod(
             fortManager(), &FortManager::processRestartRequired, Qt::QueuedConnection);
-}
-
-void OptionsPage::onCancelChanges(IniOptions *oldIni)
-{
-    if (!conf()->iniEdited())
-        return;
-
-    if (ini()->language() != oldIni->language()) {
-        translationManager()->switchLanguageByName(oldIni->language());
-    }
 }
 
 void OptionsPage::onEditResetted()
@@ -366,9 +358,9 @@ void OptionsPage::setupGlobalBox()
     });
     m_cbExplorerMenu->setEnabled(settings()->hasService() || OsUtil::isUserAdmin());
 
-    m_cbHotKeys = ControlUtil::createCheckBox(ini()->hotKeyEnabled(), [&](bool checked) {
-        ini()->setHotKeyEnabled(checked);
-        ctrl()->setIniEdited();
+    m_cbHotKeys = ControlUtil::createCheckBox(iniUser()->hotKeyEnabled(), [&](bool checked) {
+        iniUser()->setHotKeyEnabled(checked);
+        confManager()->saveIniUser();
     });
 
     // Password Row
@@ -458,8 +450,8 @@ void OptionsPage::setupComboLanguage()
     m_comboLanguage =
             ControlUtil::createComboBox(translationManager()->naturalLabels(), [&](int index) {
                 if (translationManager()->switchLanguage(index)) {
-                    ini()->setLanguage(translationManager()->localeName());
-                    ctrl()->setIniEdited();
+                    iniUser()->setLanguage(translationManager()->localeName());
+                    confManager()->saveIniUser();
                 }
             });
     m_comboLanguage->setFixedWidth(200);

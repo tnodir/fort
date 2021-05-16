@@ -12,6 +12,7 @@
 #include "../../fortmanager.h"
 #include "../../fortsettings.h"
 #include "../../model/connlistmodel.h"
+#include "../../user/iniuser.h"
 #include "../../util/guiutil.h"
 #include "../../util/iconcache.h"
 #include "../../util/window/widgetwindowstatewatcher.h"
@@ -64,6 +65,11 @@ IniOptions *ConnectionsWindow::ini() const
     return ctrl()->ini();
 }
 
+IniUser *ConnectionsWindow::iniUser() const
+{
+    return ctrl()->iniUser();
+}
+
 ConnListModel *ConnectionsWindow::connListModel() const
 {
     return fortManager()->connListModel();
@@ -76,24 +82,24 @@ AppInfoCache *ConnectionsWindow::appInfoCache() const
 
 void ConnectionsWindow::saveWindowState()
 {
-    ini()->setConnWindowGeometry(m_stateWatcher->geometry());
-    ini()->setConnWindowMaximized(m_stateWatcher->maximized());
+    iniUser()->setConnWindowGeometry(m_stateWatcher->geometry());
+    iniUser()->setConnWindowMaximized(m_stateWatcher->maximized());
 
     auto header = m_connListView->horizontalHeader();
-    ini()->setConnListHeader(header->saveState());
-    ini()->setConnListHeaderVersion(CONN_LIST_HEADER_VERSION);
+    iniUser()->setConnListHeader(header->saveState());
+    iniUser()->setConnListHeaderVersion(CONN_LIST_HEADER_VERSION);
 
-    confManager()->saveIniState();
+    confManager()->saveIniUser();
 }
 
 void ConnectionsWindow::restoreWindowState()
 {
-    m_stateWatcher->restore(
-            this, QSize(1024, 768), ini()->connWindowGeometry(), ini()->connWindowMaximized());
+    m_stateWatcher->restore(this, QSize(1024, 768), iniUser()->connWindowGeometry(),
+            iniUser()->connWindowMaximized());
 
-    if (ini()->connListHeaderVersion() == CONN_LIST_HEADER_VERSION) {
+    if (iniUser()->connListHeaderVersion() == CONN_LIST_HEADER_VERSION) {
         auto header = m_connListView->horizontalHeader();
-        header->restoreState(ini()->connListHeader());
+        header->restoreState(iniUser()->connListHeader());
     }
 }
 
@@ -262,12 +268,12 @@ void ConnectionsWindow::setupLogBlockedIp()
 
 void ConnectionsWindow::setupAutoScroll()
 {
-    m_cbAutoScroll = ControlUtil::createCheckBox(ini()->connAutoScroll(), [&](bool checked) {
-        if (ini()->connAutoScroll() == checked)
+    m_cbAutoScroll = ControlUtil::createCheckBox(iniUser()->connAutoScroll(), [&](bool checked) {
+        if (iniUser()->connAutoScroll() == checked)
             return;
 
-        ini()->setConnAutoScroll(checked);
-        confManager()->saveIni();
+        iniUser()->setConnAutoScroll(checked);
+        confManager()->saveIniUser();
 
         syncAutoScroll();
     });
@@ -275,15 +281,16 @@ void ConnectionsWindow::setupAutoScroll()
 
 void ConnectionsWindow::setupShowHostNames()
 {
-    m_cbShowHostNames = ControlUtil::createCheckBox(ini()->connShowHostNames(), [&](bool checked) {
-        if (ini()->connShowHostNames() == checked)
-            return;
+    m_cbShowHostNames =
+            ControlUtil::createCheckBox(iniUser()->connShowHostNames(), [&](bool checked) {
+                if (iniUser()->connShowHostNames() == checked)
+                    return;
 
-        ini()->setConnShowHostNames(checked);
-        confManager()->saveIni();
+                iniUser()->setConnShowHostNames(checked);
+                confManager()->saveIniUser();
 
-        syncShowHostNames();
-    });
+                syncShowHostNames();
+            });
 }
 
 void ConnectionsWindow::setupTableConnList()
@@ -357,7 +364,7 @@ void ConnectionsWindow::setupTableConnsChanged()
 
 void ConnectionsWindow::syncAutoScroll()
 {
-    if (ini()->connAutoScroll()) {
+    if (iniUser()->connAutoScroll()) {
         connect(connListModel(), &QAbstractItemModel::rowsInserted, m_connListView,
                 &QAbstractItemView::scrollToBottom);
 
@@ -370,7 +377,7 @@ void ConnectionsWindow::syncAutoScroll()
 
 void ConnectionsWindow::syncShowHostNames()
 {
-    connListModel()->setResolveAddress(ini()->connShowHostNames());
+    connListModel()->setResolveAddress(iniUser()->connShowHostNames());
 }
 
 void ConnectionsWindow::deleteConn(int row)

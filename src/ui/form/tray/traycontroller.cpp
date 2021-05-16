@@ -32,6 +32,11 @@ IniOptions *TrayController::ini() const
     return &conf()->ini();
 }
 
+IniUser *TrayController::iniUser() const
+{
+    return confManager()->iniUser();
+}
+
 HotKeyManager *TrayController::hotKeyManager() const
 {
     return fortManager()->hotKeyManager();

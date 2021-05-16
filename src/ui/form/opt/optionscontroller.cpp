@@ -40,6 +40,11 @@ IniOptions *OptionsController::ini() const
     return &conf()->ini();
 }
 
+IniUser *OptionsController::iniUser() const
+{
+    return confManager()->iniUser();
+}
+
 TaskManager *OptionsController::taskManager() const
 {
     return fortManager()->taskManager();
@@ -98,7 +103,7 @@ void OptionsController::resetEdited()
 void OptionsController::initialize()
 {
     // Settings/configuration was migrated?
-    if (settings()->confMigrated()) {
+    if (settings()->wasMigrated()) {
         setOptEdited();
     }
 }

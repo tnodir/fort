@@ -9,6 +9,7 @@ class FirewallConf;
 class FortManager;
 class FortSettings;
 class IniOptions;
+class IniUser;
 class TranslationManager;
 
 class ConnectionsController : public QObject
@@ -23,6 +24,7 @@ public:
     ConfManager *confManager() const;
     FirewallConf *conf() const;
     IniOptions *ini() const;
+    IniUser *iniUser() const;
     ConnListModel *connListModel() const;
     TranslationManager *translationManager() const;
 

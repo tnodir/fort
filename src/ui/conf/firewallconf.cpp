@@ -1,11 +1,12 @@
 #include "firewallconf.h"
 
+#include "../fortsettings.h"
 #include "../util/fileutil.h"
 #include "../util/net/netutil.h"
 #include "addressgroup.h"
 #include "appgroup.h"
 
-FirewallConf::FirewallConf(QObject *parent) :
+FirewallConf::FirewallConf(FortSettings *settings, QObject *parent) :
     QObject(parent),
     m_editedFlags(AllEdited), // update all on load()!
     m_provBoot(false),
@@ -21,7 +22,8 @@ FirewallConf::FirewallConf(QObject *parent) :
     m_logBlockedIp(false),
     m_appBlockAll(true),
     m_appAllowAll(false),
-    m_activePeriodEnabled(false)
+    m_activePeriodEnabled(false),
+    m_ini(settings)
 {
     setupAddressGroups();
 }
@@ -423,9 +425,9 @@ QVariant FirewallConf::toVariant(bool onlyFlags) const
     }
 
     if ((flags & IniEdited) != 0) {
-        const auto map = ini().map();
-        if (!map.isEmpty()) {
-            map["ini"] = map;
+        const QVariantMap iniMap = ini().map();
+        if (!iniMap.isEmpty()) {
+            map["ini"] = iniMap;
         }
     }
 

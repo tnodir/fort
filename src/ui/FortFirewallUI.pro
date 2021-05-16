@@ -105,6 +105,8 @@ SOURCES += \
     task/taskworker.cpp \
     task/taskzonedownloader.cpp \
     translationmanager.cpp \
+    user/iniuser.cpp \
+    user/usersettings.cpp \
     util/conf/addressrange.cpp \
     util/conf/confutil.cpp \
     util/dateutil.cpp \
@@ -114,6 +116,8 @@ SOURCES += \
     util/guiutil.cpp \
     util/hotkeymanager.cpp \
     util/iconcache.cpp \
+    util/ini/mapsettings.cpp \
+    util/ini/settings.cpp \
     util/json/jsonutil.cpp \
     util/json/mapwrapper.cpp \
     util/logger.cpp \
@@ -242,6 +246,8 @@ HEADERS += \
     task/taskworker.h \
     task/taskzonedownloader.h \
     translationmanager.h \
+    user/iniuser.h \
+    user/usersettings.h \
     util/classhelpers.h \
     util/conf/addressrange.h \
     util/conf/confappswalker.h \
@@ -253,6 +259,8 @@ HEADERS += \
     util/guiutil.h \
     util/hotkeymanager.h \
     util/iconcache.h \
+    util/ini/mapsettings.h \
+    util/ini/settings.h \
     util/json/jsonutil.h \
     util/json/mapwrapper.h \
     util/logger.h \

@@ -17,6 +17,7 @@
 #include "../../../fortmanager.h"
 #include "../../../fortsettings.h"
 #include "../../../model/zonelistmodel.h"
+#include "../../../user/iniuser.h"
 #include "../../../util/iconcache.h"
 #include "../../../util/net/netutil.h"
 #include "../../../util/textareautil.h"
@@ -48,12 +49,12 @@ void AddressesPage::setAddressGroupIndex(int v)
     }
 }
 
-void AddressesPage::onSaveWindowState(IniOptions *ini)
+void AddressesPage::onSaveWindowState(IniUser *ini)
 {
     ini->setOptWindowAddrSplit(m_splitter->saveState());
 }
 
-void AddressesPage::onRestoreWindowState(IniOptions *ini)
+void AddressesPage::onRestoreWindowState(IniUser *ini)
 {
     m_splitter->restoreState(ini->optWindowAddrSplit());
 }

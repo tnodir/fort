@@ -30,8 +30,8 @@ public:
     void setIniEdited();
 
 protected slots:
-    void onSaveWindowState(IniOptions *ini) override;
-    void onRestoreWindowState(IniOptions *ini) override;
+    void onSaveWindowState(IniUser *ini) override;
+    void onRestoreWindowState(IniUser *ini) override;
 
     void onRetranslateUi() override;
 

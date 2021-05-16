@@ -32,6 +32,11 @@ IniOptions *ZonesController::ini() const
     return &conf()->ini();
 }
 
+IniUser *ZonesController::iniUser() const
+{
+    return confManager()->iniUser();
+}
+
 ZoneListModel *ZonesController::zoneListModel() const
 {
     return fortManager()->zoneListModel();

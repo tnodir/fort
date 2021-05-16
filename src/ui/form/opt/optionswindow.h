@@ -7,6 +7,7 @@ class ConfManager;
 class FirewallConf;
 class FortManager;
 class IniOptions;
+class IniUser;
 class MainPage;
 class OptionsController;
 class WidgetWindowStateWatcher;
@@ -22,6 +23,7 @@ public:
     ConfManager *confManager() const;
     FirewallConf *conf() const;
     IniOptions *ini() const;
+    IniUser *iniUser() const;
 
     void cancelChanges();
 

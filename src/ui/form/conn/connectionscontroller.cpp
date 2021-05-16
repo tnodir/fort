@@ -32,6 +32,11 @@ IniOptions *ConnectionsController::ini() const
     return &conf()->ini();
 }
 
+IniUser *ConnectionsController::iniUser() const
+{
+    return confManager()->iniUser();
+}
+
 ConnListModel *ConnectionsController::connListModel() const
 {
     return fortManager()->connListModel();

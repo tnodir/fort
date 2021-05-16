@@ -22,6 +22,7 @@
 #include "../../../fortsettings.h"
 #include "../../../model/appstatmodel.h"
 #include "../../../model/traflistmodel.h"
+#include "../../../user/iniuser.h"
 #include "../../../util/iconcache.h"
 #include "../../../util/net/netutil.h"
 #include "../../controls/appinforow.h"
@@ -70,12 +71,12 @@ void StatisticsPage::setIniEdited()
     }
 }
 
-void StatisticsPage::onSaveWindowState(IniOptions *ini)
+void StatisticsPage::onSaveWindowState(IniUser *ini)
 {
     ini->setOptWindowStatSplit(m_splitter->saveState());
 }
 
-void StatisticsPage::onRestoreWindowState(IniOptions *ini)
+void StatisticsPage::onRestoreWindowState(IniUser *ini)
 {
     m_splitter->restoreState(ini->optWindowStatSplit());
 }

@@ -20,6 +20,7 @@ class FortSettings;
 class GraphWindow;
 class HostInfoCache;
 class HotKeyManager;
+class IniUser;
 class LogManager;
 class MainWindow;
 class NativeEventFilter;
@@ -30,6 +31,7 @@ class RpcManager;
 class StatManager;
 class TaskManager;
 class TrayIcon;
+class UserSettings;
 class ZoneListModel;
 class ZonesWindow;
 
@@ -56,6 +58,8 @@ public:
     ConnectionsWindow *connWindow() const { return m_connWindow; }
 
     FortSettings *settings() const { return m_settings; }
+    UserSettings *userSettings() const { return m_userSettings; }
+    IniUser *iniUser() const;
     EnvManager *envManager() const { return m_envManager; }
     ControlManager *controlManager() const { return m_controlManager; }
     RpcManager *rpcManager() const { return m_rpcManager; }
@@ -160,6 +164,7 @@ private:
 
     void setupTaskManager();
 
+    void setupUserSettings();
     void setupTranslationManager();
 
     void setupMainWindow();
@@ -211,6 +216,7 @@ private:
     ConnectionsWindow *m_connWindow = nullptr;
 
     FortSettings *m_settings = nullptr;
+    UserSettings *m_userSettings = nullptr;
     EnvManager *m_envManager = nullptr;
     ControlManager *m_controlManager = nullptr;
     RpcManager *m_rpcManager = nullptr;

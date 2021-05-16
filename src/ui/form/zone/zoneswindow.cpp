@@ -18,6 +18,7 @@
 #include "../../model/zonesourcewrapper.h"
 #include "../../task/taskinfozonedownloader.h"
 #include "../../task/taskmanager.h"
+#include "../../user/iniuser.h"
 #include "../../util/conf/confutil.h"
 #include "../../util/guiutil.h"
 #include "../../util/iconcache.h"
@@ -57,6 +58,11 @@ IniOptions *ZonesWindow::ini() const
     return ctrl()->ini();
 }
 
+IniUser *ZonesWindow::iniUser() const
+{
+    return ctrl()->iniUser();
+}
+
 TaskManager *ZonesWindow::taskManager() const
 {
     return fortManager()->taskManager();
@@ -69,24 +75,24 @@ ZoneListModel *ZonesWindow::zoneListModel() const
 
 void ZonesWindow::saveWindowState()
 {
-    ini()->setZoneWindowGeometry(m_stateWatcher->geometry());
-    ini()->setZoneWindowMaximized(m_stateWatcher->maximized());
+    iniUser()->setZoneWindowGeometry(m_stateWatcher->geometry());
+    iniUser()->setZoneWindowMaximized(m_stateWatcher->maximized());
 
     auto header = m_zoneListView->horizontalHeader();
-    ini()->setZonesHeader(header->saveState());
-    ini()->setZonesHeaderVersion(ZONES_HEADER_VERSION);
+    iniUser()->setZonesHeader(header->saveState());
+    iniUser()->setZonesHeaderVersion(ZONES_HEADER_VERSION);
 
-    confManager()->saveIniState();
+    confManager()->saveIniUser();
 }
 
 void ZonesWindow::restoreWindowState()
 {
-    m_stateWatcher->restore(
-            this, QSize(1024, 768), ini()->zoneWindowGeometry(), ini()->zoneWindowMaximized());
+    m_stateWatcher->restore(this, QSize(1024, 768), iniUser()->zoneWindowGeometry(),
+            iniUser()->zoneWindowMaximized());
 
-    if (ini()->zonesHeaderVersion() == ZONES_HEADER_VERSION) {
+    if (iniUser()->zonesHeaderVersion() == ZONES_HEADER_VERSION) {
         auto header = m_zoneListView->horizontalHeader();
-        header->restoreState(ini()->zonesHeader());
+        header->restoreState(iniUser()->zonesHeader());
     }
 }
 

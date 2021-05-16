@@ -20,6 +20,7 @@ class FirewallConf;
 class FortManager;
 class FortSettings;
 class IniOptions;
+class IniUser;
 class OptionsController;
 class TaskManager;
 class TranslationManager;
@@ -39,6 +40,7 @@ protected:
     ConfManager *confManager() const;
     FirewallConf *conf() const;
     IniOptions *ini() const;
+    IniUser *iniUser() const;
     DriverManager *driverManager() const;
     TranslationManager *translationManager() const;
     TaskManager *taskManager() const;
@@ -50,8 +52,8 @@ protected slots:
 
     virtual void onCancelChanges(IniOptions * /*oldIni*/) { }
 
-    virtual void onSaveWindowState(IniOptions * /*ini*/) { }
-    virtual void onRestoreWindowState(IniOptions * /*ini*/) { }
+    virtual void onSaveWindowState(IniUser * /*ini*/) { }
+    virtual void onRestoreWindowState(IniUser * /*ini*/) { }
 
     virtual void onRetranslateUi() { }
 

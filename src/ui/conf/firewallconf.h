@@ -8,6 +8,7 @@
 
 class AddressGroup;
 class AppGroup;
+class FortSettings;
 
 class FirewallConf : public QObject
 {
@@ -19,11 +20,10 @@ public:
         OptEdited = 0x1,
         FlagsEdited = 0x2,
         IniEdited = 0x4,
-        IniStateEdited = 0x8,
         AllEdited = (OptEdited | FlagsEdited | IniEdited)
     };
 
-    explicit FirewallConf(QObject *parent = nullptr);
+    explicit FirewallConf(FortSettings *settings = nullptr, QObject *parent = nullptr);
 
     uint editedFlags() const { return m_editedFlags; }
 
@@ -35,9 +35,6 @@ public:
 
     bool iniEdited() const { return (m_editedFlags & IniEdited) != 0; }
     void setIniEdited() { m_editedFlags |= IniEdited; }
-
-    bool iniStateEdited() const { return (m_editedFlags & IniStateEdited) != 0; }
-    void setIniStateEdited() { m_editedFlags |= IniStateEdited; }
 
     bool anyEdited() const { return m_editedFlags != NoneEdited; }
     void resetEdited(bool v = false);
@@ -106,8 +103,8 @@ public:
     const QVector<qint64> &removedAppGroupIdList() const { return m_removedAppGroupIdList; }
     void clearRemovedAppGroupIdList() const;
 
-    IniOptions &ini() { return m_iniOptions; }
-    const IniOptions &ini() const { return m_iniOptions; }
+    IniOptions &ini() { return m_ini; }
+    const IniOptions &ini() const { return m_ini; }
 
     void copyFlags(const FirewallConf &o);
     void copy(const FirewallConf &o);
@@ -183,7 +180,7 @@ private:
     QList<AppGroup *> m_appGroups;
     mutable QVector<qint64> m_removedAppGroupIdList;
 
-    IniOptions m_iniOptions;
+    IniOptions m_ini;
 };
 
 #endif // FIREWALLCONF_H

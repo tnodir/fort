@@ -11,6 +11,7 @@ class FirewallConf;
 class FortManager;
 class FortSettings;
 class IniOptions;
+class IniUser;
 class HotKeyManager;
 class TrayController;
 
@@ -27,6 +28,7 @@ public:
     ConfManager *confManager() const;
     FirewallConf *conf() const;
     IniOptions *ini() const;
+    IniUser *iniUser() const;
     HotKeyManager *hotKeyManager() const;
 
 public slots:

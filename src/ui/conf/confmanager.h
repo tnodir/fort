@@ -13,6 +13,7 @@ class FirewallConf;
 class FortManager;
 class FortSettings;
 class IniOptions;
+class IniUser;
 class SqliteDb;
 class SqliteStmt;
 class TaskInfo;
@@ -39,6 +40,8 @@ public:
     FirewallConf *conf() const { return m_conf; }
     FirewallConf *confToEdit() const { return m_confToEdit; }
 
+    IniUser *iniUser() const;
+
     bool initialize();
 
     void initConfToEdit();
@@ -53,7 +56,7 @@ public:
 
     bool saveFlags();
     void saveIni();
-    void saveIniState();
+    void saveIniUser();
 
     bool saveVariant(const QVariant &confVar);
 

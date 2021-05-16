@@ -71,7 +71,7 @@ QVariant MapWrapper::value(const QString &key, const QVariant &defaultValue) con
     return map().value(key, defaultValue);
 }
 
-void MapWrapper::setValue(const QString &key, const QVariant &v)
+void MapWrapper::setValue(const QString &key, const QVariant &v, const QVariant & /*defaultValue*/)
 {
     m_map[key] = v;
 }

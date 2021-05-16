@@ -2,11 +2,9 @@
 
 #include <QCommandLineParser>
 #include <QCoreApplication>
-#include <QSettings>
 
 #include <fort_version.h>
 
-#include "conf/addressgroup.h"
 #include "conf/firewallconf.h"
 #include "util/dateutil.h"
 #include "util/envmanager.h"
@@ -30,8 +28,7 @@ QString expandPath(const QString &path, EnvManager *envManager = nullptr)
 }
 
 FortSettings::FortSettings(QObject *parent) :
-    QObject(parent),
-    m_iniExists(false),
+    Settings(parent),
     m_isDefaultProfilePath(false),
     m_noCache(false),
     m_isService(false),
@@ -40,6 +37,59 @@ FortSettings::FortSettings(QObject *parent) :
     m_passwordChecked(false),
     m_passwordUnlockType(0)
 {
+}
+
+QString FortSettings::confFilePath() const
+{
+    return profilePath() + APP_BASE + ".config";
+}
+
+QString FortSettings::statFilePath() const
+{
+    return statPath() + APP_BASE + ".stat";
+}
+
+QString FortSettings::cacheFilePath() const
+{
+    return noCache() ? ":memory:" : cachePath() + "appinfo.db";
+}
+
+void FortSettings::setPassword(const QString &password)
+{
+    setPasswordHash(StringUtil::cryptoHash(password));
+
+    if (!hasPassword()) {
+        resetCheckedPassword();
+    }
+}
+
+bool FortSettings::checkPassword(const QString &password) const
+{
+    return StringUtil::cryptoHash(password) == passwordHash();
+}
+
+bool FortSettings::isPasswordRequired()
+{
+    return hasPassword() && !(m_passwordUnlockType != 0 && m_passwordChecked);
+}
+
+void FortSettings::setPasswordChecked(bool checked, int unlockType)
+{
+    if (m_passwordChecked == checked && m_passwordUnlockType == unlockType)
+        return;
+
+    m_passwordChecked = checked;
+    m_passwordUnlockType = checked ? unlockType : 0;
+
+    emit passwordCheckedChanged();
+}
+
+void FortSettings::resetCheckedPassword(int unlockType)
+{
+    if (unlockType != 0 && unlockType != m_passwordUnlockType)
+        return;
+
+    setPasswordChecked(false);
 }
 
 void FortSettings::setupGlobal()
@@ -55,17 +105,20 @@ void FortSettings::setupGlobal()
 
     m_noCache = settings.value("global/noCache").toBool();
     m_defaultLanguage = settings.value("global/defaultLanguage").toString();
+
     m_profilePath = settings.value("global/profileDir").toString();
     m_statPath = settings.value("global/statDir").toString();
     m_logsPath = settings.value("global/logsDir").toString();
     m_cachePath = settings.value("global/cacheDir").toString();
+    m_userPath = settings.value("global/userDir").toString();
 }
 
 void FortSettings::initialize(const QStringList &args, EnvManager *envManager)
 {
     processArguments(args);
     setupPaths(envManager);
-    setupIni();
+
+    setupIni(profilePath() + APP_BASE + ".ini");
 
     if (isService()) {
         qputenv("FORT_SILENT", "1"); // For batch scripts
@@ -192,6 +245,22 @@ void FortSettings::setupPaths(EnvManager *envManager)
         m_cachePath = expandPath(m_cachePath, envManager);
     }
 
+    // User Settings Path
+    if (m_userPath.isEmpty()) {
+        m_userPath = defaultConfigPath();
+    } else {
+        m_userPath = expandPath(m_userPath, envManager);
+    }
+
+    // Create directories
+    FileUtil::makePath(profilePath());
+    FileUtil::makePath(statPath());
+    FileUtil::makePath(logsPath());
+    if (!noCache()) {
+        FileUtil::makePath(cachePath());
+    }
+    FileUtil::makePath(userPath());
+
     // Remove old cache file
     // TODO: COMPAT: Remove after v4.1.0 (via v4.0.0)
     FileUtil::removeFile(cachePath() + "appinfocache.db");
@@ -210,82 +279,17 @@ QString FortSettings::defaultProfilePath(bool hasService, EnvManager *envManager
     if (hasService)
         return expandPath(QLatin1String("%ProgramData%\\") + APP_NAME, envManager);
 
+    return defaultConfigPath();
+}
+
+QString FortSettings::defaultConfigPath()
+{
     return pathSlash(FileUtil::appConfigLocation());
-}
-
-void FortSettings::setupIni()
-{
-    const QString iniPath(profilePath() + (APP_BASE ".ini"));
-
-    FileUtil::makePath(profilePath());
-    FileUtil::makePath(statPath());
-    FileUtil::makePath(logsPath());
-    if (!noCache()) {
-        FileUtil::makePath(cachePath());
-    }
-
-    m_iniExists = FileUtil::fileExists(iniPath);
-    m_ini = new QSettings(iniPath, QSettings::IniFormat, this);
-
-    migrateIniOnStartup();
-}
-
-QString FortSettings::confFilePath() const
-{
-    return profilePath() + (APP_BASE ".config");
-}
-
-QString FortSettings::statFilePath() const
-{
-    return statPath() + (APP_BASE ".stat");
-}
-
-QString FortSettings::cacheFilePath() const
-{
-    return noCache() ? ":memory:" : cachePath() + "appinfo.db";
-}
-
-void FortSettings::setPassword(const QString &password)
-{
-    setPasswordHash(StringUtil::cryptoHash(password));
-
-    if (!hasPassword()) {
-        resetCheckedPassword();
-    }
-}
-
-bool FortSettings::checkPassword(const QString &password) const
-{
-    return StringUtil::cryptoHash(password) == passwordHash();
-}
-
-bool FortSettings::isPasswordRequired()
-{
-    return hasPassword() && !(m_passwordUnlockType != 0 && m_passwordChecked);
-}
-
-void FortSettings::setPasswordChecked(bool checked, int unlockType)
-{
-    if (m_passwordChecked == checked && m_passwordUnlockType == unlockType)
-        return;
-
-    m_passwordChecked = checked;
-    m_passwordUnlockType = checked ? unlockType : 0;
-
-    emit passwordCheckedChanged();
-}
-
-void FortSettings::resetCheckedPassword(int unlockType)
-{
-    if (unlockType != 0 && unlockType != m_passwordUnlockType)
-        return;
-
-    setPasswordChecked(false);
 }
 
 void FortSettings::readConfIni(FirewallConf &conf) const
 {
-    m_ini->beginGroup("confFlags");
+    ini()->beginGroup("confFlags");
     conf.setProvBoot(iniBool("provBoot"));
     conf.setFilterEnabled(iniBool("filterEnabled", true));
     conf.setFilterLocals(iniBool("filterLocals"));
@@ -300,13 +304,13 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     conf.setAppBlockAll(iniBool("appBlockAll", true));
     conf.setAppAllowAll(iniBool("appAllowAll"));
     conf.setAppGroupBits(iniUInt("appGroupBits", DEFAULT_APP_GROUP_BITS));
-    m_ini->endGroup();
+    ini()->endGroup();
 
-    m_ini->beginGroup("stat");
+    ini()->beginGroup("stat");
     conf.setActivePeriodEnabled(iniBool("activePeriodEnabled"));
     conf.setActivePeriodFrom(DateUtil::reformatTime(iniText("activePeriodFrom")));
     conf.setActivePeriodTo(DateUtil::reformatTime(iniText("activePeriodTo")));
-    m_ini->endGroup();
+    ini()->endGroup();
 }
 
 void FortSettings::writeConfIni(const FirewallConf &conf)
@@ -314,7 +318,7 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
     bool changed = false;
 
     if (conf.flagsEdited()) {
-        m_ini->beginGroup("confFlags");
+        ini()->beginGroup("confFlags");
         setIniValue("provBoot", conf.provBoot());
         setIniValue("filterEnabled", conf.filterEnabled());
         setIniValue("filterLocals", conf.filterLocals());
@@ -329,20 +333,22 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
         setIniValue("appBlockAll", conf.appBlockAll());
         setIniValue("appAllowAll", conf.appAllowAll());
         setIniValue("appGroupBits", conf.appGroupBits(), DEFAULT_APP_GROUP_BITS);
-        m_ini->endGroup();
+        ini()->endGroup();
 
-        m_ini->beginGroup("stat");
+        ini()->beginGroup("stat");
         setIniValue("activePeriodEnabled", conf.activePeriodEnabled());
         setIniValue("activePeriodFrom", conf.activePeriodFrom());
         setIniValue("activePeriodTo", conf.activePeriodTo());
-        m_ini->endGroup();
+        ini()->endGroup();
 
         changed = true;
     }
 
     if (conf.iniEdited()) {
         const IniOptions &ini = conf.ini();
-        ini.save(this);
+
+        // Save changed keys
+        ini.save();
 
         // Password
         if (ini.hasPassword() != hasPassword() || !ini.password().isEmpty()) {
@@ -367,8 +373,8 @@ void FortSettings::migrateIniOnStartup()
 #if 0
     // COMPAT: v3.0.0: Options Window
     if (version < 0x030000) {
-        setCacheValue("optWindow/geometry", m_ini->value("window/geometry"));
-        setCacheValue("optWindow/maximized", m_ini->value("window/maximized"));
+        setCacheValue("optWindow/geometry", ini()->value("window/geometry"));
+        setCacheValue("optWindow/maximized", ini()->value("window/maximized"));
         // Abandon "window/addrSplit" & "window/appsSplit"
     }
 #endif
@@ -380,19 +386,19 @@ void FortSettings::migrateIniOnWrite()
     if (version == appVersion())
         return;
 
-    setIniVersion(appVersion());
+    Settings::migrateIniOnWrite();
 
 #if 0
     // COMPAT: v3.0.0: Options Window
     if (version < 0x030000) {
         removeIniKey("window");
-        m_ini->setValue("optWindow/geometry", cacheValue("optWindow/geometry"));
-        m_ini->setValue("optWindow/maximized", cacheValue("optWindow/maximized"));
+        ini()->setValue("optWindow/geometry", cacheValue("optWindow/geometry"));
+        ini()->setValue("optWindow/maximized", cacheValue("optWindow/maximized"));
     }
 #endif
 }
 
-bool FortSettings::confMigrated() const
+bool FortSettings::wasMigrated() const
 {
     const int version = iniVersion();
     if (version == appVersion())
@@ -407,7 +413,7 @@ bool FortSettings::confMigrated() const
     return false;
 }
 
-bool FortSettings::confCanMigrate(QString &viaVersion) const
+bool FortSettings::canMigrate(QString &viaVersion) const
 {
     const int version = iniVersion();
     if (version == appVersion())
@@ -420,133 +426,4 @@ bool FortSettings::confCanMigrate(QString &viaVersion) const
     }
 
     return true;
-}
-
-bool FortSettings::hasError() const
-{
-    return m_ini->status() != QSettings::NoError;
-}
-
-QString FortSettings::errorMessage() const
-{
-    switch (m_ini->status()) {
-    case QSettings::AccessError:
-        return "Access Error";
-    case QSettings::FormatError:
-        return "Format Error";
-    default:
-        return "Unknown";
-    }
-}
-
-bool FortSettings::iniBool(const QString &key, bool defaultValue) const
-{
-    return iniValue(key, defaultValue).toBool();
-}
-
-int FortSettings::iniInt(const QString &key, int defaultValue) const
-{
-    return iniValue(key, defaultValue).toInt();
-}
-
-uint FortSettings::iniUInt(const QString &key, int defaultValue) const
-{
-    return iniValue(key, defaultValue).toUInt();
-}
-
-qreal FortSettings::iniReal(const QString &key, qreal defaultValue) const
-{
-    return iniValue(key, defaultValue).toReal();
-}
-
-QString FortSettings::iniText(const QString &key, const QString &defaultValue) const
-{
-    return iniValue(key, defaultValue).toString();
-}
-
-QStringList FortSettings::iniList(const QString &key) const
-{
-    return iniValue(key).toStringList();
-}
-
-QVariantMap FortSettings::iniMap(const QString &key) const
-{
-    return iniValue(key).toMap();
-}
-
-QByteArray FortSettings::iniByteArray(const QString &key) const
-{
-    return iniValue(key).toByteArray();
-}
-
-QVariant FortSettings::iniValue(const QString &key, const QVariant &defaultValue) const
-{
-    if (key.isEmpty())
-        return QVariant();
-
-    // Try to load from cache
-    const auto cachedValue = cacheValue(key);
-    if (!cachedValue.isNull())
-        return cachedValue;
-
-    // Load from .ini
-    const auto value = m_ini->value(key, defaultValue);
-
-    // Save to cache
-    setCacheValue(key, value);
-
-    return value;
-}
-
-void FortSettings::setIniValue(
-        const QString &key, const QVariant &value, const QVariant &defaultValue)
-{
-    const QVariant oldValue = iniValue(key, defaultValue);
-    if (oldValue == value)
-        return;
-
-    // Save to .ini
-    m_ini->setValue(key, value);
-
-    // Save to cache
-    setCacheValue(key, value);
-}
-
-QVariant FortSettings::cacheValue(const QString &key) const
-{
-    return m_cache.value(key);
-}
-
-void FortSettings::setCacheValue(const QString &key, const QVariant &value) const
-{
-    m_cache.insert(key, value);
-}
-
-void FortSettings::clearCache()
-{
-    m_cache.clear();
-    iniSync();
-}
-
-void FortSettings::removeIniKey(const QString &key)
-{
-    m_ini->remove(key);
-}
-
-QStringList FortSettings::iniChildKeys(const QString &prefix) const
-{
-    m_ini->beginGroup(prefix);
-    const QStringList list = m_ini->childKeys();
-    m_ini->endGroup();
-    return list;
-}
-
-void FortSettings::iniSync()
-{
-    m_ini->sync();
-}
-
-int FortSettings::appVersion()
-{
-    return APP_VERSION;
 }

@@ -12,6 +12,7 @@
 #include "../../fortcompat.h"
 #include "../../fortmanager.h"
 #include "../../fortsettings.h"
+#include "../../user/iniuser.h"
 #include "../../util/guiutil.h"
 #include "../../util/hotkeymanager.h"
 #include "../../util/iconcache.h"
@@ -81,6 +82,11 @@ FirewallConf *TrayIcon::conf() const
 IniOptions *TrayIcon::ini() const
 {
     return ctrl()->ini();
+}
+
+IniUser *TrayIcon::iniUser() const
+{
+    return ctrl()->iniUser();
 }
 
 HotKeyManager *TrayIcon::hotKeyManager() const
@@ -190,38 +196,38 @@ void TrayIcon::setupTrayMenu()
 
     m_programsAction = addAction(menu, IconCache::icon(":/icons/window.png"), QString(),
             fortManager(), SLOT(showProgramsWindow()));
-    addHotKey(m_programsAction, ini()->hotKeyPrograms());
+    addHotKey(m_programsAction, iniUser()->hotKeyPrograms());
 
     m_optionsAction = addAction(menu, IconCache::icon(":/icons/cog.png"), QString(), fortManager(),
             SLOT(showOptionsWindow()));
-    addHotKey(m_optionsAction, ini()->hotKeyOptions());
+    addHotKey(m_optionsAction, iniUser()->hotKeyOptions());
 
     m_zonesAction = addAction(menu, IconCache::icon(":/icons/map-map-marker.png"), QString(),
             fortManager(), SLOT(showZonesWindow()));
-    addHotKey(m_zonesAction, ini()->hotKeyZones());
+    addHotKey(m_zonesAction, iniUser()->hotKeyZones());
 
     m_graphWindowAction = addAction(menu, IconCache::icon(":/icons/line-graph.png"), QString(),
             fortManager(), SLOT(switchGraphWindow()), true, !!fortManager()->graphWindow());
-    addHotKey(m_graphWindowAction, ini()->hotKeyGraph());
+    addHotKey(m_graphWindowAction, iniUser()->hotKeyGraph());
 
     m_connectionsAction = addAction(menu, IconCache::icon(":/icons/connect.png"), QString(),
             fortManager(), SLOT(showConnectionsWindow()));
-    addHotKey(m_connectionsAction, ini()->hotKeyConnections());
+    addHotKey(m_connectionsAction, iniUser()->hotKeyConnections());
 
     menu->addSeparator();
 
     m_filterEnabledAction = addAction(menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
-    addHotKey(m_filterEnabledAction, ini()->hotKeyFilter());
+    addHotKey(m_filterEnabledAction, iniUser()->hotKeyFilter());
 
     m_stopTrafficAction = addAction(menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
-    addHotKey(m_stopTrafficAction, ini()->hotKeyStopTraffic());
+    addHotKey(m_stopTrafficAction, iniUser()->hotKeyStopTraffic());
 
     m_stopInetTrafficAction =
             addAction(menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
-    addHotKey(m_stopInetTrafficAction, ini()->hotKeyStopInetTraffic());
+    addHotKey(m_stopInetTrafficAction, iniUser()->hotKeyStopInetTraffic());
 
     m_allowAllNewAction = addAction(menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
-    addHotKey(m_allowAllNewAction, ini()->hotKeyAllowAllNew());
+    addHotKey(m_allowAllNewAction, iniUser()->hotKeyAllowAllNew());
 
     menu->addSeparator();
 
@@ -230,7 +236,7 @@ void TrayIcon::setupTrayMenu()
 
         if (i < 12) {
             const QString shortcutText =
-                    ini()->hotKeyAppGroupModifiers() + "+F" + QString::number(i + 1);
+                    iniUser()->hotKeyAppGroupModifiers() + "+F" + QString::number(i + 1);
 
             addHotKey(a, shortcutText);
         }
@@ -240,7 +246,7 @@ void TrayIcon::setupTrayMenu()
 
     menu->addSeparator();
     m_quitAction = addAction(menu, QIcon(), tr("Quit"), fortManager(), SLOT(quitByCheckPassword()));
-    addHotKey(m_quitAction, ini()->hotKeyQuit());
+    addHotKey(m_quitAction, iniUser()->hotKeyQuit());
 
     this->setContextMenu(menu);
 }
@@ -293,7 +299,7 @@ void TrayIcon::addHotKey(QAction *action, const QString &shortcutText)
 
 void TrayIcon::updateHotKeys()
 {
-    hotKeyManager()->setEnabled(conf()->ini().hotKeyEnabled());
+    hotKeyManager()->setEnabled(iniUser()->hotKeyEnabled());
 }
 
 void TrayIcon::removeHotKeys()

@@ -5,6 +5,7 @@
 
 #include "../../conf/confmanager.h"
 #include "../../conf/firewallconf.h"
+#include "../../user/iniuser.h"
 #include "../../util/guiutil.h"
 #include "../../util/window/widgetwindowstatewatcher.h"
 #include "optionscontroller.h"
@@ -35,6 +36,11 @@ IniOptions *OptionsWindow::ini() const
     return &conf()->ini();
 }
 
+IniUser *OptionsWindow::iniUser() const
+{
+    return ctrl()->iniUser();
+}
+
 void OptionsWindow::cancelChanges()
 {
     if (ctrl()->conf() && ctrl()->conf()->anyEdited()) {
@@ -44,20 +50,20 @@ void OptionsWindow::cancelChanges()
 
 void OptionsWindow::saveWindowState()
 {
-    ini()->setOptWindowGeometry(m_stateWatcher->geometry());
-    ini()->setOptWindowMaximized(m_stateWatcher->maximized());
+    iniUser()->setOptWindowGeometry(m_stateWatcher->geometry());
+    iniUser()->setOptWindowMaximized(m_stateWatcher->maximized());
 
-    emit ctrl()->afterSaveWindowState(ini());
+    emit ctrl()->afterSaveWindowState(iniUser());
 
-    confManager()->saveIniState();
+    confManager()->saveIniUser();
 }
 
 void OptionsWindow::restoreWindowState()
 {
-    m_stateWatcher->restore(
-            this, QSize(1024, 768), ini()->optWindowGeometry(), ini()->optWindowMaximized());
+    m_stateWatcher->restore(this, QSize(1024, 768), iniUser()->optWindowGeometry(),
+            iniUser()->optWindowMaximized());
 
-    emit ctrl()->afterRestoreWindowState(ini());
+    emit ctrl()->afterRestoreWindowState(iniUser());
 }
 
 void OptionsWindow::setupController()

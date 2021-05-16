@@ -7,6 +7,7 @@
 #include "../../conf/confmanager.h"
 #include "../../conf/firewallconf.h"
 #include "../../fortcompat.h"
+#include "../../user/iniuser.h"
 #include "../../util/dateutil.h"
 #include "../../util/net/netutil.h"
 #include "../../util/window/widgetwindowstatewatcher.h"
@@ -41,20 +42,25 @@ IniOptions *GraphWindow::ini() const
     return &conf()->ini();
 }
 
+IniUser *GraphWindow::iniUser() const
+{
+    return confManager()->iniUser();
+}
+
 void GraphWindow::saveWindowState(bool wasVisible)
 {
-    ini()->setGraphWindowGeometry(m_stateWatcher->geometry());
-    ini()->setGraphWindowMaximized(m_stateWatcher->maximized());
+    iniUser()->setGraphWindowGeometry(m_stateWatcher->geometry());
+    iniUser()->setGraphWindowMaximized(m_stateWatcher->maximized());
 
-    ini()->setGraphWindowVisible(wasVisible);
+    iniUser()->setGraphWindowVisible(wasVisible);
 
-    confManager()->saveIniState();
+    confManager()->saveIniUser();
 }
 
 void GraphWindow::restoreWindowState()
 {
-    m_stateWatcher->restore(
-            this, QSize(400, 300), ini()->graphWindowGeometry(), ini()->graphWindowMaximized());
+    m_stateWatcher->restore(this, QSize(400, 300), iniUser()->graphWindowGeometry(),
+            iniUser()->graphWindowMaximized());
 }
 
 void GraphWindow::setupStateWatcher()
