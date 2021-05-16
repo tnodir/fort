@@ -28,33 +28,27 @@ namespace {
 
 struct Startup
 {
-    Startup() : initialized(false), changed(false), wasServiceMode(false), mode(0) { }
-
-    void initialize()
-    {
-        if (!initialized) {
-            initialized = true;
-            mode = StartupUtil::getStartupMode();
-        }
-    }
+    Startup() : initialized(false), isServiceChanged(false), wasService(false), isService(false) { }
 
     quint8 initialized : 1;
-    quint8 changed : 1;
-    quint8 wasServiceMode : 1;
-    quint8 mode : 4;
+    quint8 isServiceChanged : 1;
+    quint8 wasService : 1;
+    quint8 isService : 1;
 } g_startup;
 
 }
 
 OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) : BasePage(ctrl, parent)
 {
+    setupStartup();
     setupUi();
 }
 
 void OptionsPage::onAboutToSave()
 {
-    // Startup Mode
-    saveStartupMode(m_comboStartMode->currentIndex());
+    // Startup
+    saveAutoRunMode(m_comboAutoRun->currentIndex());
+    saveService(m_cbService->isChecked());
 
     // Password
     if (!settings()->hasPassword() && ini()->hasPassword() && ini()->password().isEmpty()) {
@@ -62,30 +56,41 @@ void OptionsPage::onAboutToSave()
     }
 }
 
-void OptionsPage::saveStartupMode(int mode)
+void OptionsPage::saveAutoRunMode(int mode)
 {
-    if (g_startup.mode == mode)
+    if (m_currentAutoRunMode == mode)
         return;
 
-    if (!g_startup.changed) {
-        g_startup.changed = true;
-        g_startup.wasServiceMode = StartupUtil::isServiceMode(g_startup.mode);
+    m_currentAutoRunMode = mode;
+
+    StartupUtil::setAutoRunMode(mode, settings()->defaultLanguage());
+}
+
+void OptionsPage::saveService(bool isService)
+{
+    if (g_startup.isService == isService)
+        return;
+
+    g_startup.isService = isService;
+
+    if (!g_startup.isServiceChanged) {
+        g_startup.isServiceChanged = true;
 
         const QString defaultLanguage = settings()->defaultLanguage();
 
         connect(fortManager(), &QObject::destroyed, [defaultLanguage] {
-            StartupUtil::setStartupMode(g_startup.mode, defaultLanguage);
-            if (StartupUtil::isServiceMode(g_startup.mode)) {
+            if (g_startup.wasService == g_startup.isService)
+                return;
+
+            StartupUtil::setServiceInstalled(g_startup.isService, defaultLanguage);
+            if (g_startup.isService) {
                 StartupUtil::startService(); // Try to start the (maybe installed) service
             }
         });
     }
 
-    g_startup.mode = mode;
-    if (g_startup.wasServiceMode != StartupUtil::isServiceMode(g_startup.mode)) {
-        QMetaObject::invokeMethod(
-                fortManager(), &FortManager::processRestartRequired, Qt::QueuedConnection);
-    }
+    QMetaObject::invokeMethod(
+            fortManager(), &FortManager::processRestartRequired, Qt::QueuedConnection);
 }
 
 void OptionsPage::onCancelChanges(IniOptions *oldIni)
@@ -112,10 +117,12 @@ void OptionsPage::onRetranslateUi()
     m_gbDriver->setTitle(tr("Driver"));
     m_gbNewVersion->setTitle(tr("New Version"));
 
-    m_labelStartMode->setText(tr("Startup mode:"));
+    m_labelStartMode->setText(tr("Auto-run:"));
     retranslateComboStartMode();
 
+    m_cbService->setText(tr("Run Fort Firewall as a Service in background"));
     m_cbProvBoot->setText(tr("Stop traffic when Fort Firewall is not running"));
+
     m_cbFilterEnabled->setText(tr("Filter Enabled"));
     m_cbFilterLocals->setText(tr("Filter Local Addresses"));
     m_cbFilterLocals->setToolTip(
@@ -147,30 +154,29 @@ void OptionsPage::onRetranslateUi()
 
 void OptionsPage::retranslateComboStartMode()
 {
-    const QStringList list = { tr("Disabled"), tr("For current user"), tr("For all users"),
-        tr("For all users in background") };
+    const QStringList list = { tr("Disabled"), tr("For current user"), tr("For all users") };
 
-    int currentIndex = m_comboStartMode->currentIndex();
-    if (m_comboStartMode->currentIndex() < 0) {
-        g_startup.initialize();
-        currentIndex = g_startup.mode;
+    int currentIndex = m_comboAutoRun->currentIndex();
+    if (m_comboAutoRun->currentIndex() < 0) {
+        currentIndex = m_currentAutoRunMode;
     }
 
-    m_comboStartMode->clear();
-    m_comboStartMode->addItems(list);
+    m_comboAutoRun->clear();
+    m_comboAutoRun->addItems(list);
 
-    m_comboStartMode->setCurrentIndex(currentIndex);
+    m_comboAutoRun->setCurrentIndex(currentIndex);
 
     // Disable some items if user is not an administrator
     if (OsUtil::isUserAdmin())
         return;
 
-    if (StartupUtil::isServiceMode(currentIndex)) {
-        m_comboStartMode->setEnabled(false);
+    if (currentIndex >= StartupUtil::StartupAllUsers) {
+        m_comboAutoRun->setEnabled(false);
+        m_cbService->setEnabled(false);
         return;
     }
 
-    auto comboModel = qobject_cast<QStandardItemModel *>(m_comboStartMode->model());
+    auto comboModel = qobject_cast<QStandardItemModel *>(m_comboAutoRun->model());
     if (!comboModel)
         return;
 
@@ -196,6 +202,17 @@ void OptionsPage::retranslateDriverMessage()
             : (driverManager()->isDeviceOpened() ? tr("Installed") : tr("Not Installed"));
 
     m_labelDriverMessage->setText(text);
+}
+
+void OptionsPage::setupStartup()
+{
+    m_currentAutoRunMode = StartupUtil::autoRunMode();
+
+    if (g_startup.initialized)
+        return;
+
+    g_startup.initialized = true;
+    g_startup.wasService = g_startup.isService = settings()->hasService();
 }
 
 void OptionsPage::setupUi()
@@ -246,6 +263,9 @@ void OptionsPage::setupStartupBox()
 {
     auto startModeLayout = setupStartModeLayout();
 
+    m_cbService = ControlUtil::createCheckBox(
+            g_startup.isService, [&](bool /*checked*/) { ctrl()->emitEdited(); });
+
     m_cbProvBoot = ControlUtil::createCheckBox(conf()->provBoot(), [&](bool checked) {
         conf()->setProvBoot(checked);
         ctrl()->setFlagsEdited();
@@ -253,6 +273,7 @@ void OptionsPage::setupStartupBox()
 
     auto layout = new QVBoxLayout();
     layout->addLayout(startModeLayout);
+    layout->addWidget(m_cbService);
     layout->addWidget(m_cbProvBoot);
 
     m_gbStartup = new QGroupBox(this);
@@ -263,14 +284,14 @@ QLayout *OptionsPage::setupStartModeLayout()
 {
     m_labelStartMode = ControlUtil::createLabel();
 
-    m_comboStartMode = ControlUtil::createComboBox(QStringList(), [&](int index) {
-        if (g_startup.mode != index) {
+    m_comboAutoRun = ControlUtil::createComboBox(QStringList(), [&](int index) {
+        if (m_currentAutoRunMode != index) {
             ctrl()->emitEdited();
         }
     });
-    m_comboStartMode->setFixedWidth(200);
+    m_comboAutoRun->setFixedWidth(200);
 
-    return ControlUtil::createRowLayout(m_labelStartMode, m_comboStartMode);
+    return ControlUtil::createRowLayout(m_labelStartMode, m_comboAutoRun);
 }
 
 void OptionsPage::setupTrafficBox()

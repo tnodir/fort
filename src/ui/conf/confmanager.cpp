@@ -1060,7 +1060,7 @@ void ConfManager::saveExtFlags(const IniOptions &ini)
 {
     // Windows Explorer integration
     if (ini.explorerIntegratedSet()) {
-        StartupUtil::integrateExplorer(ini.explorerIntegrated());
+        StartupUtil::setExplorerIntegrated(ini.explorerIntegrated());
     }
 }
 

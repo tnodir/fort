@@ -39,6 +39,12 @@ QString wrappedAppFilePath()
     return QString("\"%1\"").arg(filePath);
 }
 
+QString autoRunCommand(const QString &defaultLanguage)
+{
+    return wrappedAppFilePath()
+            + (defaultLanguage.isEmpty() ? QString() : " --lang " + defaultLanguage);
+}
+
 bool isAutorunForUser(RegKey::Root root, const char *key)
 {
     const RegKey reg(root, key, RegKey::DefaultReadOnly);
@@ -153,6 +159,18 @@ bool StartupUtil::isServiceInstalled()
     return res;
 }
 
+void StartupUtil::setServiceInstalled(bool install, const QString &defaultLanguage)
+{
+    uninstallService(serviceNameStr);
+
+    if (!install)
+        return;
+
+    const QString command = autoRunCommand(defaultLanguage) + " --service";
+
+    installService(serviceNameStr, serviceDisplayStr, serviceDescriptionStr, command);
+}
+
 bool StartupUtil::startService()
 {
     bool res = false;
@@ -168,15 +186,13 @@ bool StartupUtil::startService()
     return res;
 }
 
-StartupUtil::StartupMode StartupUtil::getStartupMode()
+StartupUtil::AutoRunMode StartupUtil::autoRunMode()
 {
-    const bool isForAllUsers = isAutorunForAllUsers();
-    return (isForAllUsers || isServiceInstalled())
-            ? (isForAllUsers ? StartupAllUsers : StartupAllUsersBackground)
-            : (isAutorunForCurrentUser() ? StartupCurrentUser : StartupDisabled);
+    return isAutorunForCurrentUser() ? StartupCurrentUser
+                                     : (isAutorunForAllUsers() ? StartupAllUsers : StartupDisabled);
 }
 
-void StartupUtil::setStartupMode(int mode, const QString &defaultLanguage)
+void StartupUtil::setAutoRunMode(int mode, const QString &defaultLanguage)
 {
     // Remove link from Programs -> Startup
     // TODO: COMPAT: Remove after v4.1.0 (via v4.0.0)
@@ -184,13 +200,11 @@ void StartupUtil::setStartupMode(int mode, const QString &defaultLanguage)
 
     removeAutorunForCurrentUser();
     removeAutorunForAllUsers();
-    uninstallService(serviceNameStr);
 
     if (mode == StartupDisabled)
         return;
 
-    const QString command = wrappedAppFilePath()
-            + (defaultLanguage.isEmpty() ? QString() : " --lang " + defaultLanguage);
+    const QString command = autoRunCommand(defaultLanguage);
 
     switch (mode) {
     case StartupCurrentUser:
@@ -198,17 +212,10 @@ void StartupUtil::setStartupMode(int mode, const QString &defaultLanguage)
         break;
     case StartupAllUsers:
         setAutorunForAllUsers(command);
-        Q_FALLTHROUGH();
-    case StartupAllUsersBackground:
-        installService(
-                serviceNameStr, serviceDisplayStr, serviceDescriptionStr, command + " --service");
         break;
+    default:
+        Q_UNREACHABLE();
     }
-}
-
-bool StartupUtil::isServiceMode(int mode)
-{
-    return mode == StartupAllUsers || mode == StartupAllUsersBackground;
 }
 
 bool StartupUtil::isExplorerIntegrated()
@@ -218,7 +225,7 @@ bool StartupUtil::isExplorerIntegrated()
     return !reg.isNull();
 }
 
-void StartupUtil::integrateExplorer(bool integrate)
+void StartupUtil::setExplorerIntegrated(bool integrate)
 {
     RegKey regShell(regShellRoot, regShellMenu, RegKey::DefaultReadWrite);
     if (integrate) {

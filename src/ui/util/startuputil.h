@@ -6,25 +6,20 @@
 class StartupUtil
 {
 public:
-    enum StartupMode : qint8 {
-        StartupDisabled = 0,
-        StartupCurrentUser,
-        StartupAllUsers,
-        StartupAllUsersBackground
-    };
+    enum AutoRunMode : qint8 { StartupDisabled = 0, StartupCurrentUser, StartupAllUsers };
 
     static const wchar_t *serviceName();
 
     static bool isServiceInstalled();
+    static void setServiceInstalled(bool install, const QString &defaultLanguage = QString());
+
     static bool startService();
 
-    static StartupMode getStartupMode();
-    static void setStartupMode(int mode, const QString &defaultLanguage = QString());
-
-    static bool isServiceMode(int mode);
+    static AutoRunMode autoRunMode();
+    static void setAutoRunMode(int mode, const QString &defaultLanguage = QString());
 
     static bool isExplorerIntegrated();
-    static void integrateExplorer(bool integrate);
+    static void setExplorerIntegrated(bool integrate);
 };
 
 #endif // STARTUPUTIL_H

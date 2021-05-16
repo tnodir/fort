@@ -23,8 +23,9 @@
 
 static void uninstall()
 {
-    StartupUtil::setStartupMode(StartupUtil::StartupDisabled); // Remove auto-run and service
-    StartupUtil::integrateExplorer(false); // Remove Windows Explorer integration
+    StartupUtil::setAutoRunMode(StartupUtil::StartupDisabled); // Remove auto-run
+    StartupUtil::setServiceInstalled(false); // Uninstall service
+    StartupUtil::setExplorerIntegrated(false); // Remove Windows Explorer integration
     DriverCommon::provUnregister(); // Unregister booted provider
 }
 

@@ -19,11 +19,14 @@ protected slots:
     void onRetranslateUi() override;
 
 private:
-    void saveStartupMode(int mode);
+    void saveAutoRunMode(int mode);
+    void saveService(bool isService);
 
     void retranslateComboStartMode();
     void retranslateEditPassword();
     void retranslateDriverMessage();
+
+    void setupStartup();
 
     void setupUi();
     QLayout *setupColumn1();
@@ -44,6 +47,8 @@ private:
     void setupNewVersionUpdate();
 
 private:
+    qint8 m_currentAutoRunMode = 0;
+
     QGroupBox *m_gbStartup = nullptr;
     QGroupBox *m_gbTraffic = nullptr;
     QGroupBox *m_gbGlobal = nullptr;
@@ -51,7 +56,8 @@ private:
     QGroupBox *m_gbDriver = nullptr;
     QGroupBox *m_gbNewVersion = nullptr;
     QLabel *m_labelStartMode = nullptr;
-    QComboBox *m_comboStartMode = nullptr;
+    QComboBox *m_comboAutoRun = nullptr;
+    QCheckBox *m_cbService = nullptr;
     QCheckBox *m_cbProvBoot = nullptr;
     QCheckBox *m_cbFilterEnabled = nullptr;
     QCheckBox *m_cbFilterLocals = nullptr;
