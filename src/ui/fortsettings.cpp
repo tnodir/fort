@@ -264,6 +264,12 @@ void FortSettings::setupPaths(EnvManager *envManager)
     // Remove old cache file
     // TODO: COMPAT: Remove after v4.1.0 (via v4.0.0)
     FileUtil::removeFile(cachePath() + "appinfocache.db");
+
+    // Copy .ini to .user.ini
+    // TODO: COMPAT: Remove after v4.1.0 (via v4.0.0)
+    if (profilePath() != userPath()) {
+        FileUtil::copyFile(profilePath() + APP_BASE + ".ini", userPath() + APP_BASE + ".user.ini");
+    }
 }
 
 QString FortSettings::defaultProfilePath(bool hasService, EnvManager *envManager)
