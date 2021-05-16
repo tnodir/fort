@@ -267,8 +267,9 @@ void FortSettings::setupPaths(EnvManager *envManager)
 
     // Copy .ini to .user.ini
     // TODO: COMPAT: Remove after v4.1.0 (via v4.0.0)
-    if (profilePath() != userPath()) {
-        FileUtil::copyFile(profilePath() + APP_BASE + ".ini", userPath() + APP_BASE + ".user.ini");
+    const QString iniUserPath = userPath() + APP_BASE + ".user.ini";
+    if (!isService() && !FileUtil::fileExists(iniUserPath)) {
+        FileUtil::copyFile(profilePath() + APP_BASE + ".ini", iniUserPath);
     }
 }
 
