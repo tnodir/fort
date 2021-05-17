@@ -370,26 +370,11 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
     }
 
     if (changed) {
-        migrateIniOnWrite();
-        iniSync();
+        iniFlush();
     }
 }
 
-void FortSettings::migrateIniOnStartup()
-{
-    const int version = iniVersion();
-    if (version == appVersion())
-        return;
-
-#if 0
-    // COMPAT: v3.0.0: Options Window
-    if (version < 0x030000) {
-        setCacheValue("optWindow/geometry", ini()->value("window/geometry"));
-        setCacheValue("optWindow/maximized", ini()->value("window/maximized"));
-        // Abandon "window/addrSplit" & "window/appsSplit"
-    }
-#endif
-}
+void FortSettings::migrateIniOnStartup() { }
 
 void FortSettings::migrateIniOnWrite()
 {
@@ -399,14 +384,19 @@ void FortSettings::migrateIniOnWrite()
 
     Settings::migrateIniOnWrite();
 
-#if 0
-    // COMPAT: v3.0.0: Options Window
-    if (version < 0x030000) {
-        removeIniKey("window");
-        ini()->setValue("optWindow/geometry", cacheValue("optWindow/geometry"));
-        ini()->setValue("optWindow/maximized", cacheValue("optWindow/maximized"));
+    // COMPAT: v3.4.0: .ini ~> .user.ini
+    if (version < 0x030400) {
+        removeIniKey("base/language");
+        removeIniKey("hotKey");
+        removeIniKey("stat/trafUnit");
+        removeIniKey("graphWindow/visible");
+        removeIniKey("graphWindow/geometry");
+        removeIniKey("graphWindow/maximized");
+        removeIniKey("optWindow");
+        removeIniKey("progWindow");
+        removeIniKey("zoneWindow");
+        removeIniKey("connWindow");
     }
-#endif
 }
 
 bool FortSettings::wasMigrated() const

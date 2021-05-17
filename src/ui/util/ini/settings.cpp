@@ -139,6 +139,13 @@ QStringList Settings::iniChildKeys(const QString &prefix) const
     return list;
 }
 
+void Settings::iniFlush()
+{
+    migrateIniOnWrite();
+
+    iniSync();
+}
+
 void Settings::iniSync()
 {
     m_ini->sync();

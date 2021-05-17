@@ -19,6 +19,8 @@ void MapSettings::save() const
             settings()->setIniValue(key, it.value());
         }
     }
+
+    settings()->iniFlush();
 }
 
 QVariant MapSettings::value(const QString &key, const QVariant &defaultValue) const

@@ -51,6 +51,7 @@ protected:
 
     QStringList iniChildKeys(const QString &prefix) const;
 
+    void iniFlush();
     void iniSync();
 
     static int appVersion();

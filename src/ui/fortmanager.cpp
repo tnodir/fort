@@ -72,7 +72,7 @@ FortManager::~FortManager()
 
 IniUser *FortManager::iniUser() const
 {
-    return &userSettings()->ini();
+    return &userSettings()->iniUser();
 }
 
 FirewallConf *FortManager::conf() const

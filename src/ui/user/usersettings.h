@@ -13,13 +13,17 @@ class UserSettings : public Settings
 public:
     explicit UserSettings(QObject *parent = nullptr);
 
-    IniUser &ini() { return m_ini; }
-    const IniUser &ini() const { return m_ini; }
+    IniUser &iniUser() { return m_iniUser; }
+    const IniUser &iniUser() const { return m_iniUser; }
 
     void initialize(FortSettings *settings);
 
+protected:
+    void migrateIniOnStartup() override;
+    void migrateIniOnWrite() override;
+
 private:
-    IniUser m_ini;
+    IniUser m_iniUser;
 };
 
 #endif // USERSETTINGS_H
