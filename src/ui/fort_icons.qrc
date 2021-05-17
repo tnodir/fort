@@ -11,7 +11,6 @@
     <file>icons/computer-96.png</file>
     <file>icons/connect.png</file>
     <file>icons/copy.png</file>
-    <file>icons/database.png</file>
     <file>icons/download.png</file>
     <file>icons/floppy.png</file>
     <file>icons/folder-open.png</file>
@@ -20,6 +19,7 @@
     <file>icons/globe.png</file>
     <file>icons/home.png</file>
     <file>icons/key.png</file>
+    <file>icons/line-bar.png</file>
     <file>icons/line-graph.png</file>
     <file>icons/lock-open.png</file>
     <file>icons/map-map-marker.png</file>
