@@ -1,5 +1,5 @@
-#ifndef CONNECTIONSCONTROLLER_H
-#define CONNECTIONSCONTROLLER_H
+#ifndef STATISTICSCONTROLLER_H
+#define STATISTICSCONTROLLER_H
 
 #include <QObject>
 
@@ -12,12 +12,12 @@ class IniOptions;
 class IniUser;
 class TranslationManager;
 
-class ConnectionsController : public QObject
+class StatisticsController : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit ConnectionsController(FortManager *fortManager, QObject *parent = nullptr);
+    explicit StatisticsController(FortManager *fortManager, QObject *parent = nullptr);
 
     FortManager *fortManager() const { return m_fortManager; }
     FortSettings *settings() const;
@@ -35,4 +35,4 @@ private:
     FortManager *m_fortManager = nullptr;
 };
 
-#endif // CONNECTIONSCONTROLLER_H
+#endif // STATISTICSCONTROLLER_H

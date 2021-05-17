@@ -13,12 +13,12 @@
 #include "appinfo/appinfomanager.h"
 #include "conf/firewallconf.h"
 #include "control/controlmanager.h"
-#include "form/conn/connectionswindow.h"
 #include "form/controls/mainwindow.h"
 #include "form/dialog/passworddialog.h"
 #include "form/graph/graphwindow.h"
 #include "form/opt/optionswindow.h"
 #include "form/prog/programswindow.h"
+#include "form/stat/statisticswindow.h"
 #include "form/tray/trayicon.h"
 #include "form/zone/zoneswindow.h"
 #include "fortsettings.h"
@@ -423,13 +423,13 @@ void FortManager::setupGraphWindow()
     connect(statManager(), &StatManager::trafficAdded, m_graphWindow, &GraphWindow::addTraffic);
 }
 
-void FortManager::setupConnectionsWindow()
+void FortManager::setupStatisticsWindow()
 {
-    m_connWindow = new ConnectionsWindow(this);
-    m_connWindow->restoreWindowState();
+    m_statWindow = new StatisticsWindow(this);
+    m_statWindow->restoreWindowState();
 
-    connect(m_connWindow, &ConnectionsWindow::aboutToClose, this,
-            &FortManager::closeConnectionsWindow);
+    connect(m_statWindow, &StatisticsWindow::aboutToClose, this,
+            &FortManager::closeStatisticsWindow);
 }
 
 void FortManager::closeUi()
@@ -438,7 +438,7 @@ void FortManager::closeUi()
     closeOptionsWindow();
     closeProgramsWindow();
     closeZonesWindow();
-    closeConnectionsWindow();
+    closeStatisticsWindow();
     closeTrayIcon();
 }
 
@@ -560,6 +560,32 @@ void FortManager::reloadOptionsWindow(const QString &reason)
     showTrayMessage(reason);
 }
 
+void FortManager::showStatisticsWindow()
+{
+    if (!(m_statWindow && m_statWindow->isVisible()) && !checkPassword())
+        return;
+
+    if (!m_statWindow) {
+        setupStatisticsWindow();
+    }
+
+    m_statWindow->show();
+    m_statWindow->raise();
+    m_statWindow->activateWindow();
+}
+
+void FortManager::closeStatisticsWindow()
+{
+    if (!m_statWindow)
+        return;
+
+    m_statWindow->saveWindowState();
+    m_statWindow->hide();
+
+    m_statWindow->deleteLater();
+    m_statWindow = nullptr;
+}
+
 void FortManager::showZonesWindow()
 {
     if (!(m_zoneWindow && m_zoneWindow->isVisible()) && !checkPassword())
@@ -617,32 +643,6 @@ void FortManager::switchGraphWindow()
         showGraphWindow();
     else
         closeGraphWindow();
-}
-
-void FortManager::showConnectionsWindow()
-{
-    if (!(m_connWindow && m_connWindow->isVisible()) && !checkPassword())
-        return;
-
-    if (!m_connWindow) {
-        setupConnectionsWindow();
-    }
-
-    m_connWindow->show();
-    m_connWindow->raise();
-    m_connWindow->activateWindow();
-}
-
-void FortManager::closeConnectionsWindow()
-{
-    if (!m_connWindow)
-        return;
-
-    m_connWindow->saveWindowState();
-    m_connWindow->hide();
-
-    m_connWindow->deleteLater();
-    m_connWindow = nullptr;
 }
 
 void FortManager::processRestartRequired()
@@ -775,7 +775,7 @@ void FortManager::onTrayActivated(int reason)
         }
         break;
     case QSystemTrayIcon::MiddleClick:
-        showConnectionsWindow();
+        showStatisticsWindow();
         break;
     default:
         break;

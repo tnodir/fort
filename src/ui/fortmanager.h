@@ -11,7 +11,6 @@ class AppListModel;
 class AppStatModel;
 class ConfManager;
 class ConnListModel;
-class ConnectionsWindow;
 class ControlManager;
 class DriverManager;
 class EnvManager;
@@ -29,6 +28,7 @@ class ProgramsWindow;
 class QuotaManager;
 class RpcManager;
 class StatManager;
+class StatisticsWindow;
 class TaskManager;
 class TrayIcon;
 class UserSettings;
@@ -53,9 +53,9 @@ public:
 
     ProgramsWindow *progWindow() const { return m_progWindow; }
     OptionsWindow *optWindow() const { return m_optWindow; }
+    StatisticsWindow *connWindow() const { return m_statWindow; }
     ZonesWindow *zoneWindow() const { return m_zoneWindow; }
     GraphWindow *graphWindow() const { return m_graphWindow; }
-    ConnectionsWindow *connWindow() const { return m_connWindow; }
 
     FortSettings *settings() const { return m_settings; }
     UserSettings *userSettings() const { return m_userSettings; }
@@ -109,15 +109,15 @@ public slots:
     void closeOptionsWindow();
     void reloadOptionsWindow(const QString &reason);
 
+    void showStatisticsWindow();
+    void closeStatisticsWindow();
+
     void showZonesWindow();
     void closeZonesWindow();
 
     void showGraphWindow();
     void closeGraphWindow(bool wasVisible = false);
     void switchGraphWindow();
-
-    void showConnectionsWindow();
-    void closeConnectionsWindow();
 
     void processRestartRequired();
 
@@ -177,7 +177,7 @@ private:
     void setupOptionsWindow();
     void setupZonesWindow();
     void setupGraphWindow();
-    void setupConnectionsWindow();
+    void setupStatisticsWindow();
 
     void closeUi();
 
@@ -211,9 +211,9 @@ private:
 
     ProgramsWindow *m_progWindow = nullptr;
     OptionsWindow *m_optWindow = nullptr;
+    StatisticsWindow *m_statWindow = nullptr;
     ZonesWindow *m_zoneWindow = nullptr;
     GraphWindow *m_graphWindow = nullptr;
-    ConnectionsWindow *m_connWindow = nullptr;
 
     FortSettings *m_settings = nullptr;
     UserSettings *m_userSettings = nullptr;

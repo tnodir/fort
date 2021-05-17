@@ -1,4 +1,4 @@
-#include "connectionswindow.h"
+#include "statisticswindow.h"
 
 #include <QCheckBox>
 #include <QHeaderView>
@@ -19,7 +19,7 @@
 #include "../controls/appinforow.h"
 #include "../controls/controlutil.h"
 #include "../controls/tableview.h"
-#include "connectionscontroller.h"
+#include "statisticscontroller.h"
 
 namespace {
 
@@ -27,9 +27,9 @@ namespace {
 
 }
 
-ConnectionsWindow::ConnectionsWindow(FortManager *fortManager, QWidget *parent) :
+StatisticsWindow::StatisticsWindow(FortManager *fortManager, QWidget *parent) :
     WidgetWindow(parent),
-    m_ctrl(new ConnectionsController(fortManager, this)),
+    m_ctrl(new StatisticsController(fortManager, this)),
     m_stateWatcher(new WidgetWindowStateWatcher(this))
 {
     setupUi();
@@ -40,50 +40,50 @@ ConnectionsWindow::ConnectionsWindow(FortManager *fortManager, QWidget *parent) 
     syncShowHostNames();
 }
 
-FortManager *ConnectionsWindow::fortManager() const
+FortManager *StatisticsWindow::fortManager() const
 {
     return ctrl()->fortManager();
 }
 
-FortSettings *ConnectionsWindow::settings() const
+FortSettings *StatisticsWindow::settings() const
 {
     return ctrl()->settings();
 }
 
-ConfManager *ConnectionsWindow::confManager() const
+ConfManager *StatisticsWindow::confManager() const
 {
     return ctrl()->confManager();
 }
 
-FirewallConf *ConnectionsWindow::conf() const
+FirewallConf *StatisticsWindow::conf() const
 {
     return ctrl()->conf();
 }
 
-IniOptions *ConnectionsWindow::ini() const
+IniOptions *StatisticsWindow::ini() const
 {
     return ctrl()->ini();
 }
 
-IniUser *ConnectionsWindow::iniUser() const
+IniUser *StatisticsWindow::iniUser() const
 {
     return ctrl()->iniUser();
 }
 
-ConnListModel *ConnectionsWindow::connListModel() const
+ConnListModel *StatisticsWindow::connListModel() const
 {
     return fortManager()->connListModel();
 }
 
-AppInfoCache *ConnectionsWindow::appInfoCache() const
+AppInfoCache *StatisticsWindow::appInfoCache() const
 {
     return connListModel()->appInfoCache();
 }
 
-void ConnectionsWindow::saveWindowState()
+void StatisticsWindow::saveWindowState()
 {
-    iniUser()->setConnWindowGeometry(m_stateWatcher->geometry());
-    iniUser()->setConnWindowMaximized(m_stateWatcher->maximized());
+    iniUser()->setStatWindowGeometry(m_stateWatcher->geometry());
+    iniUser()->setStatWindowMaximized(m_stateWatcher->maximized());
 
     auto header = m_connListView->horizontalHeader();
     iniUser()->setConnListHeader(header->saveState());
@@ -92,10 +92,10 @@ void ConnectionsWindow::saveWindowState()
     confManager()->saveIniUser();
 }
 
-void ConnectionsWindow::restoreWindowState()
+void StatisticsWindow::restoreWindowState()
 {
-    m_stateWatcher->restore(this, QSize(1024, 768), iniUser()->connWindowGeometry(),
-            iniUser()->connWindowMaximized());
+    m_stateWatcher->restore(this, QSize(1024, 768), iniUser()->statWindowGeometry(),
+            iniUser()->statWindowMaximized());
 
     if (iniUser()->connListHeaderVersion() == CONN_LIST_HEADER_VERSION) {
         auto header = m_connListView->horizontalHeader();
@@ -103,19 +103,19 @@ void ConnectionsWindow::restoreWindowState()
     }
 }
 
-void ConnectionsWindow::setupController()
+void StatisticsWindow::setupController()
 {
-    connect(ctrl(), &ConnectionsController::retranslateUi, this, &ConnectionsWindow::retranslateUi);
+    connect(ctrl(), &StatisticsController::retranslateUi, this, &StatisticsWindow::retranslateUi);
 
     retranslateUi();
 }
 
-void ConnectionsWindow::setupStateWatcher()
+void StatisticsWindow::setupStateWatcher()
 {
     m_stateWatcher->install(this);
 }
 
-void ConnectionsWindow::retranslateUi()
+void StatisticsWindow::retranslateUi()
 {
     this->unsetLocale();
 
@@ -138,7 +138,7 @@ void ConnectionsWindow::retranslateUi()
     this->setWindowTitle(tr("Connections"));
 }
 
-void ConnectionsWindow::setupUi()
+void StatisticsWindow::setupUi()
 {
     auto layout = new QVBoxLayout();
     layout->setContentsMargins(6, 6, 6, 6);
@@ -171,7 +171,7 @@ void ConnectionsWindow::setupUi()
     this->setMinimumSize(500, 400);
 }
 
-QLayout *ConnectionsWindow::setupHeader()
+QLayout *StatisticsWindow::setupHeader()
 {
     auto layout = new QHBoxLayout();
 
@@ -222,7 +222,7 @@ QLayout *ConnectionsWindow::setupHeader()
     return layout;
 }
 
-void ConnectionsWindow::setupLogOptions()
+void StatisticsWindow::setupLogOptions()
 {
     setupLogAllowedIp();
     setupLogBlockedIp();
@@ -240,7 +240,7 @@ void ConnectionsWindow::setupLogOptions()
     m_btLogOptions->setMenu(menu);
 }
 
-void ConnectionsWindow::setupLogAllowedIp()
+void StatisticsWindow::setupLogAllowedIp()
 {
     m_cbLogAllowedIp = ControlUtil::createCheckBox(conf()->logAllowedIp(), [&](bool checked) {
         if (conf()->logAllowedIp() == checked)
@@ -254,7 +254,7 @@ void ConnectionsWindow::setupLogAllowedIp()
     m_cbLogAllowedIp->setVisible(false); // TODO: Collect allowed connections
 }
 
-void ConnectionsWindow::setupLogBlockedIp()
+void StatisticsWindow::setupLogBlockedIp()
 {
     m_cbLogBlockedIp = ControlUtil::createCheckBox(conf()->logBlockedIp(), [&](bool checked) {
         if (conf()->logBlockedIp() == checked)
@@ -266,7 +266,7 @@ void ConnectionsWindow::setupLogBlockedIp()
     });
 }
 
-void ConnectionsWindow::setupAutoScroll()
+void StatisticsWindow::setupAutoScroll()
 {
     m_cbAutoScroll = ControlUtil::createCheckBox(iniUser()->connAutoScroll(), [&](bool checked) {
         if (iniUser()->connAutoScroll() == checked)
@@ -279,7 +279,7 @@ void ConnectionsWindow::setupAutoScroll()
     });
 }
 
-void ConnectionsWindow::setupShowHostNames()
+void StatisticsWindow::setupShowHostNames()
 {
     m_cbShowHostNames =
             ControlUtil::createCheckBox(iniUser()->connShowHostNames(), [&](bool checked) {
@@ -293,7 +293,7 @@ void ConnectionsWindow::setupShowHostNames()
             });
 }
 
-void ConnectionsWindow::setupTableConnList()
+void StatisticsWindow::setupTableConnList()
 {
     m_connListView = new TableView();
     m_connListView->setAlternatingRowColors(true);
@@ -308,7 +308,7 @@ void ConnectionsWindow::setupTableConnList()
     m_connListView->setMenu(m_btEdit->menu());
 }
 
-void ConnectionsWindow::setupTableConnListHeader()
+void StatisticsWindow::setupTableConnListHeader()
 {
     auto header = m_connListView->horizontalHeader();
 
@@ -332,7 +332,7 @@ void ConnectionsWindow::setupTableConnListHeader()
     // header->setSortIndicator(4, Qt::DescendingOrder);
 }
 
-void ConnectionsWindow::setupAppInfoRow()
+void StatisticsWindow::setupAppInfoRow()
 {
     m_appInfoRow = new AppInfoRow();
 
@@ -346,7 +346,7 @@ void ConnectionsWindow::setupAppInfoRow()
     connect(appInfoCache(), &AppInfoCache::cacheChanged, this, refreshAppInfoVersion);
 }
 
-void ConnectionsWindow::setupTableConnsChanged()
+void StatisticsWindow::setupTableConnsChanged()
 {
     const auto refreshTableConnsChanged = [&] {
         const int connIndex = connListCurrentIndex();
@@ -362,7 +362,7 @@ void ConnectionsWindow::setupTableConnsChanged()
     connect(m_connListView, &TableView::currentIndexChanged, this, refreshTableConnsChanged);
 }
 
-void ConnectionsWindow::syncAutoScroll()
+void StatisticsWindow::syncAutoScroll()
 {
     if (iniUser()->connAutoScroll()) {
         connect(connListModel(), &QAbstractItemModel::rowsInserted, m_connListView,
@@ -375,23 +375,23 @@ void ConnectionsWindow::syncAutoScroll()
     }
 }
 
-void ConnectionsWindow::syncShowHostNames()
+void StatisticsWindow::syncShowHostNames()
 {
     connListModel()->setResolveAddress(iniUser()->connShowHostNames());
 }
 
-void ConnectionsWindow::deleteConn(int row)
+void StatisticsWindow::deleteConn(int row)
 {
     const auto connRow = connListModel()->connRowAt(row);
     connListModel()->deleteConn(connRow.rowId, connRow.blocked, row);
 }
 
-int ConnectionsWindow::connListCurrentIndex() const
+int StatisticsWindow::connListCurrentIndex() const
 {
     return m_connListView->currentRow();
 }
 
-QString ConnectionsWindow::connListCurrentPath() const
+QString StatisticsWindow::connListCurrentPath() const
 {
     const auto connRow = connListModel()->connRowAt(connListCurrentIndex());
     return connRow.appPath;

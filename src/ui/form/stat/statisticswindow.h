@@ -1,5 +1,5 @@
-#ifndef CONNECTIONSWINDOW_H
-#define CONNECTIONSWINDOW_H
+#ifndef STATISTICSWINDOW_H
+#define STATISTICSWINDOW_H
 
 #include "../../util/window/widgetwindow.h"
 
@@ -10,7 +10,7 @@ class AppInfoCache;
 class AppInfoRow;
 class ConfManager;
 class ConnListModel;
-class ConnectionsController;
+class StatisticsController;
 class FirewallConf;
 class FortManager;
 class FortSettings;
@@ -19,14 +19,14 @@ class IniUser;
 class TableView;
 class WidgetWindowStateWatcher;
 
-class ConnectionsWindow : public WidgetWindow
+class StatisticsWindow : public WidgetWindow
 {
     Q_OBJECT
 
 public:
-    explicit ConnectionsWindow(FortManager *fortManager, QWidget *parent = nullptr);
+    explicit StatisticsWindow(FortManager *fortManager, QWidget *parent = nullptr);
 
-    ConnectionsController *ctrl() const { return m_ctrl; }
+    StatisticsController *ctrl() const { return m_ctrl; }
     FortManager *fortManager() const;
     FortSettings *settings() const;
     ConfManager *confManager() const;
@@ -66,7 +66,7 @@ private:
     QString connListCurrentPath() const;
 
 private:
-    ConnectionsController *m_ctrl = nullptr;
+    StatisticsController *m_ctrl = nullptr;
     WidgetWindowStateWatcher *m_stateWatcher = nullptr;
 
     QPushButton *m_btEdit = nullptr;
@@ -83,4 +83,4 @@ private:
     AppInfoRow *m_appInfoRow = nullptr;
 };
 
-#endif // CONNECTIONSWINDOW_H
+#endif // STATISTICSWINDOW_H

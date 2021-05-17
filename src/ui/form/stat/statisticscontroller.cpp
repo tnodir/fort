@@ -1,48 +1,48 @@
-#include "connectionscontroller.h"
+#include "statisticscontroller.h"
 
 #include "../../conf/confmanager.h"
 #include "../../conf/firewallconf.h"
 #include "../../fortmanager.h"
 #include "../../translationmanager.h"
 
-ConnectionsController::ConnectionsController(FortManager *fortManager, QObject *parent) :
+StatisticsController::StatisticsController(FortManager *fortManager, QObject *parent) :
     QObject(parent), m_fortManager(fortManager)
 {
     connect(translationManager(), &TranslationManager::languageChanged, this,
-            &ConnectionsController::retranslateUi);
+            &StatisticsController::retranslateUi);
 }
 
-FortSettings *ConnectionsController::settings() const
+FortSettings *StatisticsController::settings() const
 {
     return fortManager()->settings();
 }
 
-ConfManager *ConnectionsController::confManager() const
+ConfManager *StatisticsController::confManager() const
 {
     return fortManager()->confManager();
 }
 
-FirewallConf *ConnectionsController::conf() const
+FirewallConf *StatisticsController::conf() const
 {
     return confManager()->conf();
 }
 
-IniOptions *ConnectionsController::ini() const
+IniOptions *StatisticsController::ini() const
 {
     return &conf()->ini();
 }
 
-IniUser *ConnectionsController::iniUser() const
+IniUser *StatisticsController::iniUser() const
 {
     return confManager()->iniUser();
 }
 
-ConnListModel *ConnectionsController::connListModel() const
+ConnListModel *StatisticsController::connListModel() const
 {
     return fortManager()->connListModel();
 }
 
-TranslationManager *ConnectionsController::translationManager() const
+TranslationManager *StatisticsController::translationManager() const
 {
     return TranslationManager::instance();
 }

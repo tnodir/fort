@@ -26,8 +26,6 @@ SOURCES += \
     driver/drivercommon.cpp \
     driver/drivermanager.cpp \
     driver/driverworker.cpp \
-    form/conn/connectionscontroller.cpp \
-    form/conn/connectionswindow.cpp \
     form/controls/appinforow.cpp \
     form/controls/checkspincombo.cpp \
     form/controls/checktimeperiod.cpp \
@@ -62,6 +60,8 @@ SOURCES += \
     form/prog/programeditdialog.cpp \
     form/prog/programscontroller.cpp \
     form/prog/programswindow.cpp \
+    form/stat/statisticscontroller.cpp \
+    form/stat/statisticswindow.cpp \
     form/tray/traycontroller.cpp \
     form/tray/trayicon.cpp \
     form/zone/zonescontroller.cpp \
@@ -166,8 +166,6 @@ HEADERS += \
     driver/drivercommon.h \
     driver/drivermanager.h \
     driver/driverworker.h \
-    form/conn/connectionscontroller.h \
-    form/conn/connectionswindow.h \
     form/controls/appinforow.h \
     form/controls/checkspincombo.h \
     form/controls/checktimeperiod.h \
@@ -202,6 +200,8 @@ HEADERS += \
     form/prog/programeditdialog.h \
     form/prog/programscontroller.h \
     form/prog/programswindow.h \
+    form/stat/statisticscontroller.h \
+    form/stat/statisticswindow.h \
     form/tray/traycontroller.h \
     form/tray/trayicon.h \
     form/zone/zonescontroller.h \
