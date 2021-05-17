@@ -268,11 +268,11 @@ void StatisticsWindow::setupLogBlockedIp()
 
 void StatisticsWindow::setupAutoScroll()
 {
-    m_cbAutoScroll = ControlUtil::createCheckBox(iniUser()->connAutoScroll(), [&](bool checked) {
-        if (iniUser()->connAutoScroll() == checked)
+    m_cbAutoScroll = ControlUtil::createCheckBox(iniUser()->statAutoScroll(), [&](bool checked) {
+        if (iniUser()->statAutoScroll() == checked)
             return;
 
-        iniUser()->setConnAutoScroll(checked);
+        iniUser()->setStatAutoScroll(checked);
         confManager()->saveIniUser();
 
         syncAutoScroll();
@@ -282,11 +282,11 @@ void StatisticsWindow::setupAutoScroll()
 void StatisticsWindow::setupShowHostNames()
 {
     m_cbShowHostNames =
-            ControlUtil::createCheckBox(iniUser()->connShowHostNames(), [&](bool checked) {
-                if (iniUser()->connShowHostNames() == checked)
+            ControlUtil::createCheckBox(iniUser()->statShowHostNames(), [&](bool checked) {
+                if (iniUser()->statShowHostNames() == checked)
                     return;
 
-                iniUser()->setConnShowHostNames(checked);
+                iniUser()->setStatShowHostNames(checked);
                 confManager()->saveIniUser();
 
                 syncShowHostNames();
@@ -364,7 +364,7 @@ void StatisticsWindow::setupTableConnsChanged()
 
 void StatisticsWindow::syncAutoScroll()
 {
-    if (iniUser()->connAutoScroll()) {
+    if (iniUser()->statAutoScroll()) {
         connect(connListModel(), &QAbstractItemModel::rowsInserted, m_connListView,
                 &QAbstractItemView::scrollToBottom);
 
@@ -377,7 +377,7 @@ void StatisticsWindow::syncAutoScroll()
 
 void StatisticsWindow::syncShowHostNames()
 {
-    connListModel()->setResolveAddress(iniUser()->connShowHostNames());
+    connListModel()->setResolveAddress(iniUser()->statShowHostNames());
 }
 
 void StatisticsWindow::deleteConn(int row)

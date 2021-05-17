@@ -19,9 +19,9 @@ public:
 
     QString hotKeyPrograms() const { return valueText("hotKey/programs"); }
     QString hotKeyOptions() const { return valueText("hotKey/options"); }
-    QString hotKeyZones() const { return valueText("hotKey/zones"); }
+    QString hotKeyStatistics() const { return valueText("hotKey/statistics"); }
     QString hotKeyGraph() const { return valueText("hotKey/graph"); }
-    QString hotKeyConnections() const { return valueText("hotKey/connections"); }
+    QString hotKeyZones() const { return valueText("hotKey/zones"); }
     QString hotKeyFilter() const { return valueText("hotKey/filter", "Ctrl+Alt+Shift+F"); }
     QString hotKeyStopTraffic() const { return valueText("hotKey/stopTraffic"); }
     QString hotKeyStopInetTraffic() const { return valueText("hotKey/stopInetTraffic"); }
@@ -86,23 +86,26 @@ public:
     bool graphWindowMaximized() const { return valueBool("graphWindow/maximized"); }
     void setGraphWindowMaximized(bool on) { setValue("graphWindow/maximized", on); }
 
-    QRect connWindowGeometry() const { return value("connWindow/geometry").toRect(); }
-    void setConnWindowGeometry(const QRect &v) { setValue("connWindow/geometry", v); }
+    QRect statWindowGeometry() const { return value("statWindow/geometry").toRect(); }
+    void setStatWindowGeometry(const QRect &v) { setValue("statWindow/geometry", v); }
 
-    bool connWindowMaximized() const { return valueBool("connWindow/maximized"); }
-    void setConnWindowMaximized(bool on) { setValue("connWindow/maximized", on); }
+    bool statWindowMaximized() const { return valueBool("statWindow/maximized"); }
+    void setStatWindowMaximized(bool on) { setValue("statWindow/maximized", on); }
 
-    int connListHeaderVersion() const { return valueInt("connWindow/connListHeaderVersion"); }
-    void setConnListHeaderVersion(int v) { setValue("connWindow/connListHeaderVersion", v); }
+    int statTrafUnit() const { return valueInt("statWindow/trafUnit"); }
+    void setStatTrafUnit(int v) { setValue("statWindow/trafUnit", v); }
 
-    QByteArray connListHeader() const { return valueByteArray("connWindow/connListHeader"); }
-    void setConnListHeader(const QByteArray &v) { setValue("connWindow/connListHeader", v); }
+    int connListHeaderVersion() const { return valueInt("statWindow/connListHeaderVersion"); }
+    void setConnListHeaderVersion(int v) { setValue("statWindow/connListHeaderVersion", v); }
 
-    bool connAutoScroll() const { return valueBool("connWindow/autoScroll"); }
-    void setConnAutoScroll(bool on) { setValue("connWindow/autoScroll", on); }
+    QByteArray connListHeader() const { return valueByteArray("statWindow/connListHeader"); }
+    void setConnListHeader(const QByteArray &v) { setValue("statWindow/connListHeader", v); }
 
-    bool connShowHostNames() const { return valueBool("connWindow/showHostNames"); }
-    void setConnShowHostNames(bool on) { setValue("connWindow/showHostNames", on); }
+    bool statAutoScroll() const { return valueBool("statWindow/autoScroll"); }
+    void setStatAutoScroll(bool on) { setValue("statWindow/autoScroll", on); }
+
+    bool statShowHostNames() const { return valueBool("statWindow/showHostNames"); }
+    void setStatShowHostNames(bool on) { setValue("statWindow/showHostNames", on); }
 
 private:
     QString m_defaultLanguage;

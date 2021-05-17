@@ -17,6 +17,7 @@
 #include <QVBoxLayout>
 
 #include "../../../appinfo/appinfocache.h"
+#include "../../../conf/confmanager.h"
 #include "../../../conf/firewallconf.h"
 #include "../../../fortmanager.h"
 #include "../../../fortsettings.h"
@@ -313,13 +314,13 @@ void StatisticsPage::setupTrafUnits()
     m_traphUnits = ControlUtil::createLabel();
 
     m_comboTrafUnit = ControlUtil::createComboBox(QStringList(), [&](int index) {
-        if (ini()->trafUnit() == index)
+        if (iniUser()->statTrafUnit() == index)
             return;
 
-        ini()->setTrafUnit(index);
+        iniUser()->setStatTrafUnit(index);
         updateTableTrafUnit();
 
-        setIniEdited();
+        confManager()->saveIniUser();
     });
 }
 
@@ -809,12 +810,12 @@ void StatisticsPage::updatePage()
 
 void StatisticsPage::updateTrafUnit()
 {
-    m_comboTrafUnit->setCurrentIndex(ini()->trafUnit());
+    m_comboTrafUnit->setCurrentIndex(iniUser()->statTrafUnit());
 }
 
 void StatisticsPage::updateTableTrafUnit()
 {
-    const auto trafUnit = static_cast<TrafListModel::TrafUnit>(ini()->trafUnit());
+    const auto trafUnit = static_cast<TrafListModel::TrafUnit>(iniUser()->statTrafUnit());
 
     if (trafListModel()->unit() != trafUnit) {
         trafListModel()->setUnit(trafUnit);
