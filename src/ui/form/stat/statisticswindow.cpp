@@ -135,7 +135,7 @@ void StatisticsWindow::retranslateUi()
 
     m_appInfoRow->retranslateUi();
 
-    this->setWindowTitle(tr("Connections"));
+    this->setWindowTitle(tr("Statistics"));
 }
 
 void StatisticsWindow::setupUi()
@@ -165,7 +165,7 @@ void StatisticsWindow::setupUi()
     this->setFont(QFont("Tahoma", 9));
 
     // Icon
-    this->setWindowIcon(GuiUtil::overlayIcon(":/icons/sheild-96.png", ":/icons/connect.png"));
+    this->setWindowIcon(GuiUtil::overlayIcon(":/icons/sheild-96.png", ":/icons/line-bar.png"));
 
     // Size
     this->setMinimumSize(500, 400);

@@ -58,9 +58,9 @@ private:
 private:
     QAction *m_programsAction = nullptr;
     QAction *m_optionsAction = nullptr;
+    QAction *m_statisticsAction = nullptr;
+    QAction *m_graphAction = nullptr;
     QAction *m_zonesAction = nullptr;
-    QAction *m_graphWindowAction = nullptr;
-    QAction *m_connectionsAction = nullptr;
     QAction *m_filterEnabledAction = nullptr;
     QAction *m_stopTrafficAction = nullptr;
     QAction *m_stopInetTrafficAction = nullptr;

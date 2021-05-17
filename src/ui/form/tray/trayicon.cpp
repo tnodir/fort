@@ -125,8 +125,7 @@ void TrayIcon::updateTrayMenu(bool onlyFlags)
 void TrayIcon::setupController()
 {
     connect(fortManager(), &FortManager::optWindowChanged, this, &TrayIcon::updateTrayMenuFlags);
-    connect(fortManager(), &FortManager::graphWindowChanged, m_graphWindowAction,
-            &QAction::setChecked);
+    connect(fortManager(), &FortManager::graphWindowChanged, m_graphAction, &QAction::setChecked);
 
     connect(settings(), &FortSettings::passwordCheckedChanged, this,
             &TrayIcon::updateTrayMenuFlags);
@@ -140,9 +139,9 @@ void TrayIcon::retranslateUi()
 {
     m_programsAction->setText(tr("Programs"));
     m_optionsAction->setText(tr("Options"));
+    m_statisticsAction->setText(tr("Statistics"));
     m_zonesAction->setText(tr("Zones"));
-    m_graphWindowAction->setText(tr("Traffic Graph"));
-    m_connectionsAction->setText(tr("Connections"));
+    m_graphAction->setText(tr("Traffic Graph"));
 
     m_filterEnabledAction->setText(tr("Filter Enabled"));
     m_stopTrafficAction->setText(tr("Stop Traffic"));
@@ -174,17 +173,17 @@ void TrayIcon::setupTrayMenu()
             SLOT(showOptionsWindow()));
     addHotKey(m_optionsAction, iniUser()->hotKeyOptions());
 
+    m_statisticsAction = addAction(menu, IconCache::icon(":/icons/line-bar.png"), QString(),
+            fortManager(), SLOT(showStatisticsWindow()));
+    addHotKey(m_statisticsAction, iniUser()->hotKeyStatistics());
+
+    m_graphAction = addAction(menu, IconCache::icon(":/icons/line-graph.png"), QString(),
+            fortManager(), SLOT(switchGraphWindow()), true, !!fortManager()->graphWindow());
+    addHotKey(m_graphAction, iniUser()->hotKeyGraph());
+
     m_zonesAction = addAction(menu, IconCache::icon(":/icons/map-map-marker.png"), QString(),
             fortManager(), SLOT(showZonesWindow()));
     addHotKey(m_zonesAction, iniUser()->hotKeyZones());
-
-    m_graphWindowAction = addAction(menu, IconCache::icon(":/icons/line-graph.png"), QString(),
-            fortManager(), SLOT(switchGraphWindow()), true, !!fortManager()->graphWindow());
-    addHotKey(m_graphWindowAction, iniUser()->hotKeyGraph());
-
-    m_connectionsAction = addAction(menu, IconCache::icon(":/icons/connect.png"), QString(),
-            fortManager(), SLOT(showConnectionsWindow()));
-    addHotKey(m_connectionsAction, iniUser()->hotKeyConnections());
 
     menu->addSeparator();
 
