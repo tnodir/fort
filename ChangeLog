@@ -5,6 +5,7 @@ v3.4.0, 2021-05-17:
 - UI: Options: Add "Run as a Service in background" option.
 - UI: Use "%LocalAppData%\Fort Firewall\FortFirewall.user.ini" for user specific settings.
 - UI: Options: Hot Keys is applied immediately now.
+- UI: Options: Move Statistics page to Statistics window as Traffic page.
 - UI: Smaller font size for date/time columns.
 
 Attention: For a Service the default profile path is "%ProgramData%\Fort Firewall\", else it's "%LocalAppData%\Fort Firewall\".
