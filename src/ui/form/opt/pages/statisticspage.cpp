@@ -20,6 +20,8 @@
 
 namespace {
 
+const ValuesList dayValues = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+    20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31 };
 const ValuesList trafKeepDayValues = { 60, -1, 90, 180, 365, 365 * 3, 365 * 5, 365 * 10 };
 const ValuesList trafKeepMonthValues = { 2, -1, 3, 6, 12, 12 * 3, 12 * 5, 12 * 10 };
 const ValuesList logIpKeepCountValues = { 3000, 1000, 5000, 10000, 50000, 100000, 500000, 1000000,
@@ -27,23 +29,30 @@ const ValuesList logIpKeepCountValues = { 3000, 1000, 5000, 10000, 50000, 100000
 const ValuesList quotaValues = { 10, 0, 100, 500, 1024, 8 * 1024, 10 * 1024, 30 * 1024, 50 * 1024,
     100 * 1024 };
 
-LabelSpinCombo *createSpinCombo(
-        int v, int min, int max, const ValuesList &values = {}, const QString &suffix = {})
+LabelSpinCombo *createSpinCombo(int v, int min, int max, const ValuesList &values,
+        const QString &suffix, const std::function<void(int value)> &onValueChanged)
 {
     auto c = new LabelSpinCombo();
     c->spinBox()->setValue(v);
     c->spinBox()->setRange(min, max);
     c->spinBox()->setSuffix(suffix);
     c->setValues(values);
+
+    c->connect(c->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), onValueChanged);
+
     return c;
 }
 
-LabelSpin *createSpin(int v, int min, int max, const QString &suffix = {})
+LabelSpin *createSpin(int v, int min, int max, const QString &suffix,
+        const std::function<void(int value)> &onValueChanged)
 {
     auto c = new LabelSpin();
     c->spinBox()->setValue(v);
     c->spinBox()->setRange(min, max);
     c->spinBox()->setSuffix(suffix);
+
+    c->connect(c->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), onValueChanged);
+
     return c;
 }
 
@@ -218,12 +227,10 @@ void StatisticsPage::setupTrafficBox()
 void StatisticsPage::setupLogStat()
 {
     m_cbLogStat = ControlUtil::createCheckBox(conf()->logStat(), [&](bool checked) {
-        if (conf()->logStat() == checked)
-            return;
-
-        conf()->setLogStat(checked);
-
-        ctrl()->setFlagsEdited();
+        if (conf()->logStat() != checked) {
+            conf()->setLogStat(checked);
+            ctrl()->setFlagsEdited();
+        }
     });
 
     m_cbLogStat->setFont(ControlUtil::fontDemiBold());
@@ -232,12 +239,10 @@ void StatisticsPage::setupLogStat()
 void StatisticsPage::setupLogStatNoFilter()
 {
     m_cbLogStatNoFilter = ControlUtil::createCheckBox(conf()->logStatNoFilter(), [&](bool checked) {
-        if (conf()->logStatNoFilter() == checked)
-            return;
-
-        conf()->setLogStatNoFilter(checked);
-
-        ctrl()->setFlagsEdited();
+        if (conf()->logStatNoFilter() != checked) {
+            conf()->setLogStatNoFilter(checked);
+            ctrl()->setFlagsEdited();
+        }
     });
 }
 
@@ -249,67 +254,46 @@ void StatisticsPage::setupActivePeriod()
     m_ctpActivePeriod->timeEdit2()->setTime(CheckTimePeriod::toTime(conf()->activePeriodTo()));
 
     connect(m_ctpActivePeriod->checkBox(), &QCheckBox::toggled, this, [&](bool checked) {
-        if (conf()->activePeriodEnabled() == checked)
-            return;
-
-        conf()->setActivePeriodEnabled(checked);
-
-        ctrl()->setFlagsEdited();
+        if (conf()->activePeriodEnabled() != checked) {
+            conf()->setActivePeriodEnabled(checked);
+            ctrl()->setFlagsEdited();
+        }
     });
     connect(m_ctpActivePeriod->timeEdit1(), &QTimeEdit::userTimeChanged, this,
             [&](const QTime &time) {
                 const auto timeStr = CheckTimePeriod::fromTime(time);
 
-                if (conf()->activePeriodFrom() == timeStr)
-                    return;
-
-                conf()->setActivePeriodFrom(timeStr);
-
-                ctrl()->setFlagsEdited();
+                if (conf()->activePeriodFrom() != timeStr) {
+                    conf()->setActivePeriodFrom(timeStr);
+                    ctrl()->setFlagsEdited();
+                }
             });
     connect(m_ctpActivePeriod->timeEdit2(), &QTimeEdit::userTimeChanged, this,
             [&](const QTime &time) {
                 const auto timeStr = CheckTimePeriod::fromTime(time);
 
-                if (conf()->activePeriodTo() == timeStr)
-                    return;
-
-                conf()->setActivePeriodTo(timeStr);
-
-                ctrl()->setFlagsEdited();
+                if (conf()->activePeriodTo() != timeStr) {
+                    conf()->setActivePeriodTo(timeStr);
+                    ctrl()->setFlagsEdited();
+                }
             });
 }
 
 void StatisticsPage::setupMonthStart()
 {
-    m_lscMonthStart = createSpinCombo(ini()->monthStart(), 1, 31);
-
-    // Days list
-    {
-        ValuesList dayValues;
-        dayValues.reserve(31);
-        for (int i = 1; i <= 31; ++i) {
-            dayValues.append(i);
+    m_lscMonthStart = createSpinCombo(ini()->monthStart(), 1, 31, dayValues, {}, [&](int value) {
+        if (ini()->monthStart() != value) {
+            ini()->setMonthStart(value);
+            ctrl()->setIniEdited();
         }
-        m_lscMonthStart->setValues(dayValues);
-        m_lscMonthStart->setNamesByValues();
-    }
-
-    connect(m_lscMonthStart->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
-            [&](int value) {
-                if (ini()->monthStart() != value) {
-                    ini()->setMonthStart(value);
-                    ctrl()->setIniEdited();
-                }
-            });
+    });
+    m_lscMonthStart->setNamesByValues();
 }
 
 void StatisticsPage::setupTrafHourKeepDays()
 {
-    m_lscTrafHourKeepDays = createSpinCombo(ini()->trafHourKeepDays(), -1, 9999, trafKeepDayValues);
-
-    connect(m_lscTrafHourKeepDays->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
-            [&](int value) {
+    m_lscTrafHourKeepDays = createSpinCombo(
+            ini()->trafHourKeepDays(), -1, 9999, trafKeepDayValues, {}, [&](int value) {
                 if (ini()->trafHourKeepDays() != value) {
                     ini()->setTrafHourKeepDays(value);
                     ctrl()->setIniEdited();
@@ -319,10 +303,8 @@ void StatisticsPage::setupTrafHourKeepDays()
 
 void StatisticsPage::setupTrafDayKeepDays()
 {
-    m_lscTrafDayKeepDays = createSpinCombo(ini()->trafDayKeepDays(), -1, 9999, trafKeepDayValues);
-
-    connect(m_lscTrafDayKeepDays->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
-            [&](int value) {
+    m_lscTrafDayKeepDays = createSpinCombo(
+            ini()->trafDayKeepDays(), -1, 9999, trafKeepDayValues, {}, [&](int value) {
                 if (ini()->trafDayKeepDays() != value) {
                     ini()->setTrafDayKeepDays(value);
                     ctrl()->setIniEdited();
@@ -332,11 +314,8 @@ void StatisticsPage::setupTrafDayKeepDays()
 
 void StatisticsPage::setupTrafMonthKeepMonths()
 {
-    m_lscTrafMonthKeepMonths =
-            createSpinCombo(ini()->trafMonthKeepMonths(), -1, 9999, trafKeepMonthValues);
-
-    connect(m_lscTrafMonthKeepMonths->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
-            [&](int value) {
+    m_lscTrafMonthKeepMonths = createSpinCombo(
+            ini()->trafMonthKeepMonths(), -1, 9999, trafKeepMonthValues, {}, [&](int value) {
                 if (ini()->trafMonthKeepMonths() != value) {
                     ini()->setTrafMonthKeepMonths(value);
                     ctrl()->setIniEdited();
@@ -346,14 +325,10 @@ void StatisticsPage::setupTrafMonthKeepMonths()
 
 void StatisticsPage::setupQuotaDayMb()
 {
-    m_lscQuotaDayMb =
-            createSpinCombo(int(ini()->quotaDayMb()), 0, 1024 * 1024, quotaValues, " MiB");
-
-    connect(m_lscQuotaDayMb->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
-            [&](int value) {
-                const quint32 mbytes = quint32(value);
-                if (ini()->quotaDayMb() != mbytes) {
-                    ini()->setQuotaDayMb(mbytes);
+    m_lscQuotaDayMb = createSpinCombo(
+            int(ini()->quotaDayMb()), 0, 1024 * 1024, quotaValues, " MiB", [&](int value) {
+                if (ini()->quotaDayMb() != value) {
+                    ini()->setQuotaDayMb(value);
                     ctrl()->setIniEdited();
                 }
             });
@@ -361,14 +336,10 @@ void StatisticsPage::setupQuotaDayMb()
 
 void StatisticsPage::setupQuotaMonthMb()
 {
-    m_lscQuotaMonthMb =
-            createSpinCombo(int(ini()->quotaMonthMb()), 0, 1024 * 1024, quotaValues, " MiB");
-
-    connect(m_lscQuotaMonthMb->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
-            [&](int value) {
-                const quint32 mbytes = quint32(value);
-                if (ini()->quotaMonthMb() != mbytes) {
-                    ini()->setQuotaMonthMb(mbytes);
+    m_lscQuotaMonthMb = createSpinCombo(
+            int(ini()->quotaMonthMb()), 0, 1024 * 1024, quotaValues, " MiB", [&](int value) {
+                if (ini()->quotaMonthMb() != value) {
+                    ini()->setQuotaMonthMb(value);
                     ctrl()->setIniEdited();
                 }
             });
@@ -376,11 +347,8 @@ void StatisticsPage::setupQuotaMonthMb()
 
 void StatisticsPage::setupAllowedIpKeepCount()
 {
-    m_lscAllowedIpKeepCount =
-            createSpinCombo(ini()->allowedIpKeepCount(), 0, 999999999, logIpKeepCountValues);
-
-    connect(m_lscAllowedIpKeepCount->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
-            [&](int value) {
+    m_lscAllowedIpKeepCount = createSpinCombo(
+            ini()->allowedIpKeepCount(), 0, 999999999, logIpKeepCountValues, {}, [&](int value) {
                 if (ini()->allowedIpKeepCount() != value) {
                     ini()->setAllowedIpKeepCount(value);
                     ctrl()->setIniEdited();
@@ -390,11 +358,8 @@ void StatisticsPage::setupAllowedIpKeepCount()
 
 void StatisticsPage::setupBlockedIpKeepCount()
 {
-    m_lscBlockedIpKeepCount =
-            createSpinCombo(ini()->blockedIpKeepCount(), 0, 999999999, logIpKeepCountValues);
-
-    connect(m_lscBlockedIpKeepCount->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
-            [&](int value) {
+    m_lscBlockedIpKeepCount = createSpinCombo(
+            ini()->blockedIpKeepCount(), 0, 999999999, logIpKeepCountValues, {}, [&](int value) {
                 if (ini()->blockedIpKeepCount() != value) {
                     ini()->setBlockedIpKeepCount(value);
                     ctrl()->setIniEdited();
@@ -474,31 +439,26 @@ void StatisticsPage::setupGraphCheckboxes()
 
 void StatisticsPage::setupGraphOptions()
 {
-    m_graphOpacity = createSpin(ini()->graphWindowOpacity(), 0, 100, " %");
-    m_graphHoverOpacity = createSpin(ini()->graphWindowHoverOpacity(), 0, 100, " %");
-    m_graphMaxSeconds = createSpin(ini()->graphWindowMaxSeconds(), 0, 9999);
+    m_graphOpacity = createSpin(ini()->graphWindowOpacity(), 0, 100, " %", [&](int v) {
+        if (ini()->graphWindowOpacity() != v) {
+            ini()->setGraphWindowOpacity(v);
+            ctrl()->setIniEdited();
+        }
+    });
 
-    connect(m_graphOpacity->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
-            [&](int v) {
-                if (ini()->graphWindowOpacity() != v) {
-                    ini()->setGraphWindowOpacity(v);
-                    ctrl()->setIniEdited();
-                }
-            });
-    connect(m_graphHoverOpacity->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
-            [&](int v) {
-                if (ini()->graphWindowHoverOpacity() != v) {
-                    ini()->setGraphWindowHoverOpacity(v);
-                    ctrl()->setIniEdited();
-                }
-            });
-    connect(m_graphMaxSeconds->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
-            [&](int v) {
-                if (ini()->graphWindowMaxSeconds() != v) {
-                    ini()->setGraphWindowMaxSeconds(v);
-                    ctrl()->setIniEdited();
-                }
-            });
+    m_graphHoverOpacity = createSpin(ini()->graphWindowHoverOpacity(), 0, 100, " %", [&](int v) {
+        if (ini()->graphWindowHoverOpacity() != v) {
+            ini()->setGraphWindowHoverOpacity(v);
+            ctrl()->setIniEdited();
+        }
+    });
+
+    m_graphMaxSeconds = createSpin(ini()->graphWindowMaxSeconds(), 0, 9999, {}, [&](int v) {
+        if (ini()->graphWindowMaxSeconds() != v) {
+            ini()->setGraphWindowMaxSeconds(v);
+            ctrl()->setIniEdited();
+        }
+    });
 }
 
 void StatisticsPage::setupGraphColors()

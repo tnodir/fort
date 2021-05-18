@@ -38,15 +38,15 @@ signals:
     void alert(qint8 alertType);
 
 protected:
-    virtual qint32 quotaDayAlerted() const;
+    virtual int quotaDayAlerted() const;
     virtual void setQuotaDayAlerted(qint32 v);
 
-    virtual qint32 quotaMonthAlerted() const;
+    virtual int quotaMonthAlerted() const;
     virtual void setQuotaMonthAlerted(qint32 v);
 
 private:
-    qint32 m_quotaDayAlerted = 0;
-    qint32 m_quotaMonthAlerted = 0;
+    int m_quotaDayAlerted = 0;
+    int m_quotaMonthAlerted = 0;
 
     qint64 m_quotaDayBytes = 0;
     qint64 m_quotaMonthBytes = 0;

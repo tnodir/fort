@@ -122,12 +122,12 @@ QString QuotaManager::alertTypeText(qint8 alertType)
     };
 }
 
-qint32 QuotaManager::quotaDayAlerted() const
+int QuotaManager::quotaDayAlerted() const
 {
     return ini()->quotaDayAlerted();
 }
 
-void QuotaManager::setQuotaDayAlerted(qint32 v)
+void QuotaManager::setQuotaDayAlerted(int v)
 {
     m_quotaDayAlerted = v;
 
@@ -137,12 +137,12 @@ void QuotaManager::setQuotaDayAlerted(qint32 v)
     }
 }
 
-qint32 QuotaManager::quotaMonthAlerted() const
+int QuotaManager::quotaMonthAlerted() const
 {
     return ini()->quotaMonthAlerted();
 }
 
-void QuotaManager::setQuotaMonthAlerted(qint32 v)
+void QuotaManager::setQuotaMonthAlerted(int v)
 {
     m_quotaMonthAlerted = v;
 

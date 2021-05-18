@@ -38,17 +38,17 @@ public:
     QVariant taskInfoList() const { return value("task/infoList_"); }
     void setTaskInfoList(const QVariant &v) { setValue("task/infoList_", v); }
 
-    qint32 quotaDayAlerted() const { return valueInt("quota/dayAlerted"); }
-    void setQuotaDayAlerted(qint32 v) { setValue("quota/dayAlerted", v); }
+    int quotaDayAlerted() const { return valueInt("quota/dayAlerted"); }
+    void setQuotaDayAlerted(int v) { setValue("quota/dayAlerted", v); }
 
-    qint32 quotaMonthAlerted() const { return valueInt("quota/monthAlerted"); }
-    void setQuotaMonthAlerted(qint32 v) { setValue("quota/monthAlerted", v); }
+    int quotaMonthAlerted() const { return valueInt("quota/monthAlerted"); }
+    void setQuotaMonthAlerted(int v) { setValue("quota/monthAlerted", v); }
 
-    quint32 quotaDayMb() const { return valueUInt("quota/quotaDayMb"); }
-    void setQuotaDayMb(quint32 v) { setValue("quota/quotaDayMb", v); }
+    int quotaDayMb() const { return valueInt("quota/quotaDayMb"); }
+    void setQuotaDayMb(int v) { setValue("quota/quotaDayMb", v); }
 
-    quint32 quotaMonthMb() const { return valueUInt("quota/quotaMonthMb"); }
-    void setQuotaMonthMb(quint32 v) { setValue("quota/quotaMonthMMb", v); }
+    int quotaMonthMb() const { return valueInt("quota/quotaMonthMb"); }
+    void setQuotaMonthMb(int v) { setValue("quota/quotaMonthMMb", v); }
 
     int monthStart() const { return valueInt("stat/monthStart", DEFAULT_MONTH_START); }
     void setMonthStart(int v) { setValue("stat/monthStart", v); }
