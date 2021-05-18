@@ -39,6 +39,7 @@ private:
     void setupTableTasksChanged();
 
     int currentTaskIndex() const;
+    void setCurrentTaskIndex(int index);
 
     TaskInfo *currentTaskInfo() const { return m_taskInfo; }
     void setCurrentTaskInfo(TaskInfo *v) { m_taskInfo = v; }

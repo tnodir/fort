@@ -85,6 +85,9 @@ void SchedulePage::setupUi()
     // Actions on tasks table's current changed
     setupTableTasksChanged();
 
+    // Select the task
+    setCurrentTaskIndex(0);
+
     layout->addWidget(m_taskDetailsRow);
     layout->addWidget(m_tableTasks, 1);
 
@@ -203,4 +206,9 @@ void SchedulePage::setupTableTasksChanged()
 int SchedulePage::currentTaskIndex() const
 {
     return m_tableTasks->currentRow();
+}
+
+void SchedulePage::setCurrentTaskIndex(int index)
+{
+    m_tableTasks->selectCell(index);
 }
