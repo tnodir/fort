@@ -25,7 +25,7 @@ const ValuesList taskIntervalHourValues = { 3, 1, 6, 12, 24, 24 * 7, 24 * 30 };
 }
 
 SchedulePage::SchedulePage(OptionsController *ctrl, QWidget *parent) :
-    BasePage(ctrl, parent), m_taskListModel(new TaskListModel(taskManager(), this))
+    OptBasePage(ctrl, parent), m_taskListModel(new TaskListModel(taskManager(), this))
 {
     setupUi();
 }

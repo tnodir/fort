@@ -1,16 +1,16 @@
-#ifndef MAINPAGE_H
-#define MAINPAGE_H
+#ifndef OPTMAINPAGE_H
+#define OPTMAINPAGE_H
 
-#include "basepage.h"
+#include "optbasepage.h"
 
 QT_FORWARD_DECLARE_CLASS(QTabWidget)
 
-class MainPage : public BasePage
+class OptMainPage : public OptBasePage
 {
     Q_OBJECT
 
 public:
-    explicit MainPage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
+    explicit OptMainPage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
 protected slots:
     void onRetranslateUi() override;
@@ -34,4 +34,4 @@ private:
     QPushButton *m_btCancel = nullptr;
 };
 
-#endif // MAINPAGE_H
+#endif // OPTMAINPAGE_H

@@ -51,15 +51,19 @@ SOURCES += \
     form/opt/pages/addressespage.cpp \
     form/opt/pages/applicationspage.cpp \
     form/opt/pages/apps/appscolumn.cpp \
-    form/opt/pages/basepage.cpp \
-    form/opt/pages/mainpage.cpp \
+    form/opt/pages/optbasepage.cpp \
     form/opt/pages/optionspage.cpp \
+    form/opt/pages/optmainpage.cpp \
     form/opt/pages/rulespage.cpp \
     form/opt/pages/schedulepage.cpp \
     form/opt/pages/statisticspage.cpp \
     form/prog/programeditdialog.cpp \
     form/prog/programscontroller.cpp \
     form/prog/programswindow.cpp \
+    form/stat/pages/connectionspage.cpp \
+    form/stat/pages/statbasepage.cpp \
+    form/stat/pages/statmainpage.cpp \
+    form/stat/pages/trafficpage.cpp \
     form/stat/statisticscontroller.cpp \
     form/stat/statisticswindow.cpp \
     form/tray/traycontroller.cpp \
@@ -191,15 +195,19 @@ HEADERS += \
     form/opt/pages/addressespage.h \
     form/opt/pages/applicationspage.h \
     form/opt/pages/apps/appscolumn.h \
-    form/opt/pages/basepage.h \
-    form/opt/pages/mainpage.h \
+    form/opt/pages/optbasepage.h \
     form/opt/pages/optionspage.h \
+    form/opt/pages/optmainpage.h \
     form/opt/pages/rulespage.h \
     form/opt/pages/schedulepage.h \
     form/opt/pages/statisticspage.h \
     form/prog/programeditdialog.h \
     form/prog/programscontroller.h \
     form/prog/programswindow.h \
+    form/stat/pages/connectionspage.h \
+    form/stat/pages/statbasepage.h \
+    form/stat/pages/statmainpage.h \
+    form/stat/pages/trafficpage.h \
     form/stat/statisticscontroller.h \
     form/stat/statisticswindow.h \
     form/tray/traycontroller.h \

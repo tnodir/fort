@@ -28,7 +28,7 @@
 #include "../optionscontroller.h"
 #include "addresses/addressescolumn.h"
 
-AddressesPage::AddressesPage(OptionsController *ctrl, QWidget *parent) : BasePage(ctrl, parent)
+AddressesPage::AddressesPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctrl, parent)
 {
     setupUi();
 

@@ -62,9 +62,6 @@ public:
     QByteArray optWindowAppsSplit() const { return valueByteArray("optWindow/appsSplit"); }
     void setOptWindowAppsSplit(const QByteArray &v) { setValue("optWindow/appsSplit", v); }
 
-    QByteArray optWindowStatSplit() const { return valueByteArray("optWindow/statSplit"); }
-    void setOptWindowStatSplit(const QByteArray &v) { setValue("optWindow/statSplit", v); }
-
     QRect zoneWindowGeometry() const { return value("zoneWindow/geometry").toRect(); }
     void setZoneWindowGeometry(const QRect &v) { setValue("zoneWindow/geometry", v); }
 
@@ -94,6 +91,9 @@ public:
 
     int statTrafUnit() const { return valueInt("statWindow/trafUnit"); }
     void setStatTrafUnit(int v) { setValue("statWindow/trafUnit", v); }
+
+    QByteArray statWindowTrafSplit() const { return valueByteArray("statWindow/trafSplit"); }
+    void setStatWindowTrafSplit(const QByteArray &v) { setValue("statWindow/trafSplit", v); }
 
     int connListHeaderVersion() const { return valueInt("statWindow/connListHeaderVersion"); }
     void setConnListHeaderVersion(int v) { setValue("statWindow/connListHeaderVersion", v); }

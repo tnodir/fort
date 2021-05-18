@@ -142,6 +142,7 @@ QBoxLayout *ControlUtil::createLayoutByWidgets(const QList<QWidget *> &widgets, 
 {
     auto layout =
             new QBoxLayout(o == Qt::Vertical ? QBoxLayout::TopToBottom : QBoxLayout::LeftToRight);
+
     for (auto w : widgets) {
         if (!w) {
             layout->addStretch();

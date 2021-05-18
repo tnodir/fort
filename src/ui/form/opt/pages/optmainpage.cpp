@@ -1,4 +1,4 @@
-#include "mainpage.h"
+#include "optmainpage.h"
 
 #include <QIcon>
 #include <QPushButton>
@@ -20,12 +20,12 @@
 #include "schedulepage.h"
 #include "statisticspage.h"
 
-MainPage::MainPage(OptionsController *ctrl, QWidget *parent) : BasePage(ctrl, parent)
+OptMainPage::OptMainPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctrl, parent)
 {
     setupUi();
 }
 
-void MainPage::onRetranslateUi()
+void OptMainPage::onRetranslateUi()
 {
     m_tabBar->setTabText(0, tr("Options"));
     m_tabBar->setTabText(1, tr("IPv4 Addresses"));
@@ -44,7 +44,7 @@ void MainPage::onRetranslateUi()
     m_btCancel->setText(tr("Cancel"));
 }
 
-void MainPage::setupUi()
+void OptMainPage::setupUi()
 {
     auto layout = new QVBoxLayout();
     layout->setContentsMargins(6, 6, 6, 6);
@@ -60,7 +60,7 @@ void MainPage::setupUi()
     this->setLayout(layout);
 }
 
-void MainPage::setupTabBar()
+void OptMainPage::setupTabBar()
 {
     auto optionsPage = ControlUtil::wrapToScrollArea(new OptionsPage(ctrl()));
     auto addressesPage = new AddressesPage(ctrl());
@@ -82,7 +82,7 @@ void MainPage::setupTabBar()
 #endif
 }
 
-QLayout *MainPage::setupDialogButtons()
+QLayout *OptMainPage::setupDialogButtons()
 {
     auto buttonsLayout = new QHBoxLayout();
 
@@ -92,10 +92,10 @@ QLayout *MainPage::setupDialogButtons()
     m_btStat = ControlUtil::createLinkButton(":/icons/folder-open.png", settings()->statPath());
     m_btReleases = ControlUtil::createLinkButton(":/icons/github.png", APP_UPDATES_URL);
 
-    connect(m_btLogs, &QAbstractButton::clicked, this, &MainPage::onLinkClicked);
-    connect(m_btProfile, &QAbstractButton::clicked, this, &MainPage::onLinkClicked);
-    connect(m_btStat, &QAbstractButton::clicked, this, &MainPage::onLinkClicked);
-    connect(m_btReleases, &QAbstractButton::clicked, this, &MainPage::onLinkClicked);
+    connect(m_btLogs, &QAbstractButton::clicked, this, &OptMainPage::onLinkClicked);
+    connect(m_btProfile, &QAbstractButton::clicked, this, &OptMainPage::onLinkClicked);
+    connect(m_btStat, &QAbstractButton::clicked, this, &OptMainPage::onLinkClicked);
+    connect(m_btReleases, &QAbstractButton::clicked, this, &OptMainPage::onLinkClicked);
 
     buttonsLayout->addWidget(m_btLogs);
     buttonsLayout->addWidget(m_btProfile);
@@ -121,7 +121,7 @@ QLayout *MainPage::setupDialogButtons()
     return buttonsLayout;
 }
 
-void MainPage::setupOkApplyButtons()
+void OptMainPage::setupOkApplyButtons()
 {
     const auto refreshOkApplyButtons = [&](bool anyEdited) {
         m_btOk->setEnabled(anyEdited);

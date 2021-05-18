@@ -9,7 +9,7 @@
 #include "../../util/guiutil.h"
 #include "../../util/window/widgetwindowstatewatcher.h"
 #include "optionscontroller.h"
-#include "pages/mainpage.h"
+#include "pages/optmainpage.h"
 
 OptionsWindow::OptionsWindow(FortManager *fortManager, QWidget *parent) :
     WidgetWindow(parent),
@@ -109,7 +109,7 @@ void OptionsWindow::setupUi()
     auto layout = new QVBoxLayout();
     layout->setContentsMargins(0, 0, 0, 0);
 
-    m_mainPage = new MainPage(ctrl());
+    m_mainPage = new OptMainPage(ctrl());
     layout->addWidget(m_mainPage);
 
     this->setLayout(layout);

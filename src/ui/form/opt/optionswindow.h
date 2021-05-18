@@ -8,7 +8,7 @@ class FirewallConf;
 class FortManager;
 class IniOptions;
 class IniUser;
-class MainPage;
+class OptMainPage;
 class OptionsController;
 class WidgetWindowStateWatcher;
 
@@ -45,7 +45,7 @@ private:
     OptionsController *m_ctrl = nullptr;
     WidgetWindowStateWatcher *m_stateWatcher = nullptr;
 
-    MainPage *m_mainPage = nullptr;
+    OptMainPage *m_mainPage = nullptr;
 };
 
 #endif // OPTIONSWINDOW_H

@@ -22,6 +22,7 @@ void UserSettings::migrateIniOnStartup()
     // COMPAT: v3.4.0: .ini ~> .user.ini
     if (version < 0x030400) {
         setCacheValue("statWindow/trafUnit", ini()->value("stat/trafUnit"));
+        setCacheValue("statWindow/trafSplit", ini()->value("optWindow/statSplit"));
         setCacheValue("statWindow/geometry", ini()->value("connWindow/geometry"));
         setCacheValue("statWindow/connListHeader", ini()->value("connWindow/connListHeader"));
         setCacheValue("statWindow/connListHeaderVersion",
@@ -62,9 +63,11 @@ void UserSettings::migrateIniOnWrite()
         removeIniKey("graphWindow/tickLabelColor");
         removeIniKey("graphWindow/labelColor");
         removeIniKey("graphWindow/gridColor");
+        removeIniKey("optWindow/statSplit");
         removeIniKey("connWindow");
-        ini()->setValue("statWindow/trafUnit", cacheValue("statWindow/trafUnit"));
         ini()->setValue("statWindow/geometry", cacheValue("statWindow/geometry"));
+        ini()->setValue("statWindow/trafUnit", cacheValue("statWindow/trafUnit"));
+        ini()->setValue("statWindow/trafSplit", cacheValue("statWindow/trafSplit"));
         ini()->setValue("statWindow/connListHeader", cacheValue("statWindow/connListHeader"));
         ini()->setValue(
                 "statWindow/connListHeaderVersion", cacheValue("statWindow/connListHeaderVersion"));

@@ -1,9 +1,9 @@
 #ifndef RULESPAGE_H
 #define RULESPAGE_H
 
-#include "basepage.h"
+#include "optbasepage.h"
 
-class RulesPage : public BasePage
+class RulesPage : public OptBasePage
 {
     Q_OBJECT
 

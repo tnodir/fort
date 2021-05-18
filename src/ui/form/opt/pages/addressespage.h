@@ -1,13 +1,13 @@
 #ifndef ADDRESSESPAGE_H
 #define ADDRESSESPAGE_H
 
-#include "basepage.h"
+#include "optbasepage.h"
 
 class AddressGroup;
 class AddressesColumn;
 class TextArea2Splitter;
 
-class AddressesPage : public BasePage
+class AddressesPage : public OptBasePage
 {
     Q_OBJECT
 

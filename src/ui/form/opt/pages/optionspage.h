@@ -1,9 +1,9 @@
 #ifndef OPTIONSPAGE_H
 #define OPTIONSPAGE_H
 
-#include "basepage.h"
+#include "optbasepage.h"
 
-class OptionsPage : public BasePage
+class OptionsPage : public OptBasePage
 {
     Q_OBJECT
 

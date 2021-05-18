@@ -1,38 +1,21 @@
 #ifndef STATISTICSPAGE_H
 #define STATISTICSPAGE_H
 
-#include "basepage.h"
+#include "optbasepage.h"
 
-QT_FORWARD_DECLARE_CLASS(QSplitter)
-QT_FORWARD_DECLARE_CLASS(QTableView)
-
-class AppInfoCache;
-class AppInfoRow;
-class AppStatModel;
 class CheckTimePeriod;
 class LabelColor;
 class LabelSpin;
 class LabelSpinCombo;
-class ListView;
-class TrafListModel;
 
-class StatisticsPage : public BasePage
+class StatisticsPage : public OptBasePage
 {
     Q_OBJECT
 
 public:
     explicit StatisticsPage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
-    AppStatModel *appStatModel() const;
-    AppInfoCache *appInfoCache() const;
-    TrafListModel *trafListModel() const { return m_trafListModel; }
-
-    void setIniEdited();
-
 protected slots:
-    void onSaveWindowState(IniUser *ini) override;
-    void onRestoreWindowState(IniUser *ini) override;
-
     void onRetranslateUi() override;
 
 private:
@@ -40,20 +23,10 @@ private:
     void retranslateTrafKeepMonthNames();
     void retranslateQuotaNames();
     void retranslateIpKeepCountNames();
-    void retranslateTrafUnitNames();
-    void retranslateTabBar();
-
-    void setupTrafListModel();
 
     void setupUi();
-    QLayout *setupHeader();
-    void setupClearMenu();
-    void setupTrafUnits();
-    void setupGraphOptionsMenu();
-    void setupGraphCheckboxes();
-    void setupGraphOptions();
-    void setupGraphColors();
-    void setupTrafOptionsMenu();
+    QLayout *setupColumn1();
+    void setupTrafficBox();
     void setupLogStat();
     void setupLogStatNoFilter();
     void setupActivePeriod();
@@ -65,37 +38,26 @@ private:
     void setupQuotaMonthMb();
     void setupAllowedIpKeepCount();
     void setupBlockedIpKeepCount();
-    void setupAppListView();
-    void setupTabBar();
-    void setupTableTraf();
-    void setupTableTrafHeader();
-    void setupAppInfoRow();
-    void setupAppListViewChanged();
-    void updatePage();
-    void updateTrafUnit();
-    void updateTableTrafUnit();
-
-    int appListCurrentIndex() const;
-    QString appListCurrentPath() const;
-
-    static LabelSpinCombo *createSpinCombo(int min, int max, const QString &suffix = QString());
-    static LabelSpin *createSpin(int min, int max, const QString &suffix = QString());
-
-    static QString formatQuota(int mbytes);
+    QLayout *setupColumn2();
+    void setupGraphBox();
+    void setupGraphCheckboxes();
+    void setupGraphOptions();
+    void setupGraphColors();
 
 private:
-    bool m_isPageUpdating : 1;
-
-    TrafListModel *m_trafListModel = nullptr;
-
-    QPushButton *m_btRefresh = nullptr;
-    QPushButton *m_btClear = nullptr;
-    QAction *m_actRemoveApp = nullptr;
-    QAction *m_actResetTotal = nullptr;
-    QAction *m_actClearAll = nullptr;
-    QLabel *m_traphUnits = nullptr;
-    QComboBox *m_comboTrafUnit = nullptr;
-    QPushButton *m_btGraphOptions = nullptr;
+    QGroupBox *m_gbTraffic = nullptr;
+    QGroupBox *m_gbGraph = nullptr;
+    QCheckBox *m_cbLogStat = nullptr;
+    QCheckBox *m_cbLogStatNoFilter = nullptr;
+    CheckTimePeriod *m_ctpActivePeriod = nullptr;
+    LabelSpinCombo *m_lscMonthStart = nullptr;
+    LabelSpinCombo *m_lscTrafHourKeepDays = nullptr;
+    LabelSpinCombo *m_lscTrafDayKeepDays = nullptr;
+    LabelSpinCombo *m_lscTrafMonthKeepMonths = nullptr;
+    LabelSpinCombo *m_lscQuotaDayMb = nullptr;
+    LabelSpinCombo *m_lscQuotaMonthMb = nullptr;
+    LabelSpinCombo *m_lscAllowedIpKeepCount = nullptr;
+    LabelSpinCombo *m_lscBlockedIpKeepCount = nullptr;
     QCheckBox *m_cbGraphAlwaysOnTop = nullptr;
     QCheckBox *m_cbGraphFrameless = nullptr;
     QCheckBox *m_cbGraphClickThrough = nullptr;
@@ -110,23 +72,6 @@ private:
     LabelColor *m_graphTickLabelColor = nullptr;
     LabelColor *m_graphLabelColor = nullptr;
     LabelColor *m_graphGridColor = nullptr;
-    QPushButton *m_btTrafOptions = nullptr;
-    QCheckBox *m_cbLogStat = nullptr;
-    QCheckBox *m_cbLogStatNoFilter = nullptr;
-    CheckTimePeriod *m_ctpActivePeriod = nullptr;
-    LabelSpinCombo *m_lscMonthStart = nullptr;
-    LabelSpinCombo *m_lscTrafHourKeepDays = nullptr;
-    LabelSpinCombo *m_lscTrafDayKeepDays = nullptr;
-    LabelSpinCombo *m_lscTrafMonthKeepMonths = nullptr;
-    LabelSpinCombo *m_lscQuotaDayMb = nullptr;
-    LabelSpinCombo *m_lscQuotaMonthMb = nullptr;
-    LabelSpinCombo *m_lscAllowedIpKeepCount = nullptr;
-    LabelSpinCombo *m_lscBlockedIpKeepCount = nullptr;
-    QSplitter *m_splitter = nullptr;
-    ListView *m_appListView = nullptr;
-    QTabBar *m_tabBar = nullptr;
-    QTableView *m_tableTraf = nullptr;
-    AppInfoRow *m_appInfoRow = nullptr;
 };
 
 #endif // STATISTICSPAGE_H

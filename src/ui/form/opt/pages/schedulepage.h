@@ -1,7 +1,7 @@
 #ifndef SCHEDULEPAGE_H
 #define SCHEDULEPAGE_H
 
-#include "basepage.h"
+#include "optbasepage.h"
 
 QT_FORWARD_DECLARE_CLASS(QTableView)
 
@@ -10,7 +10,7 @@ class TableView;
 class TaskInfo;
 class TaskListModel;
 
-class SchedulePage : public BasePage
+class SchedulePage : public OptBasePage
 {
     Q_OBJECT
 

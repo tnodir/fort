@@ -1,6 +1,6 @@
 #include "rulespage.h"
 
-RulesPage::RulesPage(OptionsController *ctrl, QWidget *parent) : BasePage(ctrl, parent)
+RulesPage::RulesPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctrl, parent)
 {
     setupUi();
 }

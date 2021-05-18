@@ -29,6 +29,9 @@ public:
     TranslationManager *translationManager() const;
 
 signals:
+    void afterSaveWindowState(IniUser *ini);
+    void afterRestoreWindowState(IniUser *ini);
+
     void retranslateUi();
 
 private:

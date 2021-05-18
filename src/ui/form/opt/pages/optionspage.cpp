@@ -58,7 +58,7 @@ void moveProfile(const QString &profilePath, const QString &newProfilePath)
 
 }
 
-OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) : BasePage(ctrl, parent)
+OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctrl, parent)
 {
     setupStartup();
     setupUi();
@@ -489,13 +489,15 @@ QLayout *OptionsPage::setupColumn2()
     auto layout = new QVBoxLayout();
     layout->setSpacing(10);
 
+    // Driver Group Box
     setupDriverBox();
+    layout->addWidget(m_gbDriver);
 
+    // New Version Group Box
     setupNewVersionBox();
     setupNewVersionUpdate();
-
-    layout->addWidget(m_gbDriver);
     layout->addWidget(m_gbNewVersion);
+
     layout->addStretch();
 
     return layout;

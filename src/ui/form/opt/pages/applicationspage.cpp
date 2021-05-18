@@ -37,7 +37,7 @@ const ValuesList speedLimitValues = { 10, 0, 20, 30, 50, 75, 100, 150, 200, 300,
 }
 
 ApplicationsPage::ApplicationsPage(OptionsController *ctrl, QWidget *parent) :
-    BasePage(ctrl, parent)
+    OptBasePage(ctrl, parent)
 {
     setupUi();
 

@@ -1,7 +1,7 @@
 #ifndef APPLICATIONSPAGE_H
 #define APPLICATIONSPAGE_H
 
-#include "basepage.h"
+#include "optbasepage.h"
 
 class AppGroup;
 class AppsColumn;
@@ -10,7 +10,7 @@ class CheckTimePeriod;
 class TabBar;
 class TextArea2Splitter;
 
-class ApplicationsPage : public BasePage
+class ApplicationsPage : public OptBasePage
 {
     Q_OBJECT
 
