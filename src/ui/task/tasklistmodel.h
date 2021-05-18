@@ -47,7 +47,6 @@ protected:
 
 private:
     QVariant dataDisplay(const QModelIndex &index) const;
-    QVariant dataFont(const QModelIndex &index) const;
     QVariant dataCheckState(const QModelIndex &index) const;
 
     bool taskEnabled(int row) const;

@@ -108,10 +108,6 @@ QVariant ConnListModel::data(const QModelIndex &index, int role) const
     // Icon
     case Qt::DecorationRole:
         return dataDecoration(index);
-
-    // Font
-    case Qt::FontRole:
-        return dataFont(index);
     }
 
     return QVariant();
@@ -171,21 +167,6 @@ QVariant ConnListModel::dataDecoration(const QModelIndex &index) const
             return connRow.blocked ? IconCache::icon(":/icons/sign-ban.png")
                                    : IconCache::icon(":/icons/sign-check.png");
         }
-    }
-
-    return QVariant();
-}
-
-QVariant ConnListModel::dataFont(const QModelIndex &index) const
-{
-    const int column = index.column();
-
-    switch (column) {
-    case 6: {
-        QFont font;
-        font.setPointSize(8);
-        return font;
-    }
     }
 
     return QVariant();

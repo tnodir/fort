@@ -1,7 +1,6 @@
 #include "zonelistmodel.h"
 
 #include <QDebug>
-#include <QFont>
 #include <QJsonDocument>
 
 #include <sqlite/sqlitedb.h>
@@ -66,10 +65,6 @@ QVariant ZoneListModel::data(const QModelIndex &index, int role) const
     case Qt::ToolTipRole:
         return dataDisplay(index);
 
-    // Font
-    case Qt::FontRole:
-        return dataFont(index);
-
     // Enabled
     case Qt::CheckStateRole:
         return dataCheckState(index);
@@ -96,22 +91,6 @@ QVariant ZoneListModel::dataDisplay(const QModelIndex &index) const
         return zoneRow.lastRun;
     case 3:
         return zoneRow.lastSuccess;
-    }
-
-    return QVariant();
-}
-
-QVariant ZoneListModel::dataFont(const QModelIndex &index) const
-{
-    const int column = index.column();
-
-    switch (column) {
-    case 2:
-    case 3: {
-        QFont font;
-        font.setPointSize(8);
-        return font;
-    }
     }
 
     return QVariant();
