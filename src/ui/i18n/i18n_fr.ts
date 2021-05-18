@@ -344,54 +344,50 @@
     </message>
 </context>
 <context>
-    <name>ConnectionsWindow</name>
-    <message>
-        <source>Copy</source>
-        <translation>Copier</translation>
-    </message>
+    <name>ConnectionsPage</name>
     <message>
         <source>Edit</source>
         <translation>Éditer</translation>
     </message>
     <message>
-        <source>Show host names</source>
-        <translation>Afficher les noms d&apos;hôte</translation>
-    </message>
-    <message>
-        <source>Collect blocked connections</source>
-        <translation>Collecter les connexions bloquées</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Retirer</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Options</translation>
+        <source>Copy</source>
+        <translation>Copier</translation>
     </message>
     <message>
         <source>Add Program</source>
         <translation>Ajouter un programme</translation>
     </message>
     <message>
-        <source>Auto scroll</source>
-        <translation>Défilement auto</translation>
-    </message>
-    <message>
-        <source>Collect allowed connections</source>
-        <translation>Collecter les connexions autorisées</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove connections till this row?</source>
-        <translation>Êtes-vous sûr de supprimer les connexions jusqu&apos;à cette ligne?</translation>
+        <source>Remove</source>
+        <translation>Retirer</translation>
     </message>
     <message>
         <source>Clear All</source>
         <translation>Effacer tout</translation>
     </message>
     <message>
-        <source>Connections</source>
-        <translation>Connexions</translation>
+        <source>Options</source>
+        <translation>Options</translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>Collecter les connexions autorisées</translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>Collecter les connexions bloquées</translation>
+    </message>
+    <message>
+        <source>Auto scroll</source>
+        <translation>Défilement auto</translation>
+    </message>
+    <message>
+        <source>Show host names</source>
+        <translation>Afficher les noms d&apos;hôte</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove connections till this row?</source>
+        <translation>Êtes-vous sûr de supprimer les connexions jusqu&apos;à cette ligne?</translation>
     </message>
     <message>
         <source>Are you sure to remove all connections?</source>
@@ -471,30 +467,14 @@
     </message>
 </context>
 <context>
-    <name>MainPage</name>
-    <message>
-        <source>OK</source>
-        <translation>OK</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>Journaux</translation>
-    </message>
-    <message>
-        <source>Apply</source>
-        <translation>Appliquer</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annuler</translation>
-    </message>
+    <name>OptMainPage</name>
     <message>
         <source>Options</source>
         <translation>Options</translation>
     </message>
     <message>
-        <source>Profile</source>
-        <translation>Profil</translation>
+        <source>IPv4 Addresses</source>
+        <translation>Adresses IPv4</translation>
     </message>
     <message>
         <source>Network Rules</source>
@@ -505,20 +485,36 @@
         <translation>Groupes d&apos;applications</translation>
     </message>
     <message>
-        <source>Schedule</source>
-        <translation>Horaire</translation>
-    </message>
-    <message>
         <source>Statistics</source>
         <translation>Statistiques</translation>
     </message>
     <message>
-        <source>IPv4 Addresses</source>
-        <translation>Adresses IPv4</translation>
+        <source>Schedule</source>
+        <translation>Horaire</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>Journaux</translation>
+    </message>
+    <message>
+        <source>Profile</source>
+        <translation>Profil</translation>
     </message>
     <message>
         <source>Releases</source>
         <translation>Communiqués</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation>Appliquer</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuler</translation>
     </message>
 </context>
 <context>
@@ -649,6 +645,15 @@
     </message>
     <message>
         <source>Run Fort Firewall as a Service in background</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Move Profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New profile path is &quot;%1&quot;.
+Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -906,22 +911,21 @@
     </message>
 </context>
 <context>
+    <name>StatMainPage</name>
+    <message>
+        <source>Traffic</source>
+        <translation>Trafic</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Connexions</translation>
+    </message>
+</context>
+<context>
     <name>StatisticsPage</name>
     <message>
         <source>Axis:</source>
         <translation>Axe:</translation>
-    </message>
-    <message>
-        <source>Bytes</source>
-        <translation>Octets</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation>Effacer</translation>
-    </message>
-    <message>
-        <source>Daily</source>
-        <translation>Quotidiennement</translation>
     </message>
     <message>
         <source>Graph</source>
@@ -930,10 +934,6 @@
     <message>
         <source>Grid:</source>
         <translation>Grille:</translation>
-    </message>
-    <message>
-        <source>Total</source>
-        <translation>Total</translation>
     </message>
     <message>
         <source>Disabled</source>
@@ -968,10 +968,6 @@
         <translation>Quota du mois:</translation>
     </message>
     <message>
-        <source>Monthly</source>
-        <translation>Mensuellement</translation>
-    </message>
-    <message>
         <source>Keep count for &apos;Blocked connections&apos;:</source>
         <translation>Tenir compte des &apos;connexions bloquées&apos;:</translation>
     </message>
@@ -980,16 +976,8 @@
         <translation>Tenir compte des &apos;connexions autorisées&apos;:</translation>
     </message>
     <message>
-        <source>Are you sure to reset total statistics?</source>
-        <translation>Êtes-vous sûr de réinitialiser les statistiques totales?</translation>
-    </message>
-    <message>
         <source>Custom</source>
         <translation>Personnalisé</translation>
-    </message>
-    <message>
-        <source>Hourly</source>
-        <translation>Toutes les heures</translation>
     </message>
     <message>
         <source>Label:</source>
@@ -1000,24 +988,12 @@
         <translation>3 années</translation>
     </message>
     <message>
-        <source>Units:</source>
-        <translation>Unités:</translation>
-    </message>
-    <message>
-        <source>Reset Total</source>
-        <translation>Réinitialisation totale</translation>
-    </message>
-    <message>
         <source> month(s)</source>
         <translation> mois</translation>
     </message>
     <message>
         <source>Opacity:</source>
         <translation>Opacité:</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Options</translation>
     </message>
     <message>
         <source> day(s)</source>
@@ -1052,18 +1028,6 @@
         <translation>Sans cadre</translation>
     </message>
     <message>
-        <source>Refresh</source>
-        <translation>Actualiser</translation>
-    </message>
-    <message>
-        <source>Adaptive</source>
-        <translation>Adaptatif</translation>
-    </message>
-    <message>
-        <source>Clear All</source>
-        <translation>Effacer tout</translation>
-    </message>
-    <message>
         <source>Upload:</source>
         <translation>Charger:</translation>
     </message>
@@ -1072,16 +1036,8 @@
         <translation>Conserver les données pour &apos;Mensuel&apos;:</translation>
     </message>
     <message>
-        <source>Are you sure to clear all statistics?</source>
-        <translation>Êtes-vous sûr de vouloir effacer toutes les statistiques?</translation>
-    </message>
-    <message>
         <source>Keep data for &apos;Hourly&apos;:</source>
         <translation>Conserver les données pour &apos;Toutes les heures&apos;:</translation>
-    </message>
-    <message>
-        <source>Remove Application</source>
-        <translation>Retirer l&apos;application</translation>
     </message>
     <message>
         <source>Forever</source>
@@ -1112,12 +1068,19 @@
         <translation>Arrière-plan:</translation>
     </message>
     <message>
-        <source>Are you sure to remove statistics for selected application?</source>
-        <translation>Êtes-vous sûr de retirer les statistiques de l&apos;application sélectionnée?</translation>
-    </message>
-    <message>
         <source>Always on top</source>
         <translation>Toujours au-dessus</translation>
+    </message>
+    <message>
+        <source>Traffic</source>
+        <translation>Trafic</translation>
+    </message>
+</context>
+<context>
+    <name>StatisticsWindow</name>
+    <message>
+        <source>Statistics</source>
+        <translation>Statistiques</translation>
     </message>
 </context>
 <context>
@@ -1184,6 +1147,69 @@
     </message>
 </context>
 <context>
+    <name>TrafficPage</name>
+    <message>
+        <source>Refresh</source>
+        <translation>Actualiser</translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation>Effacer</translation>
+    </message>
+    <message>
+        <source>Remove Application</source>
+        <translation>Retirer l&apos;application</translation>
+    </message>
+    <message>
+        <source>Reset Total</source>
+        <translation>Réinitialisation totale</translation>
+    </message>
+    <message>
+        <source>Clear All</source>
+        <translation>Effacer tout</translation>
+    </message>
+    <message>
+        <source>Units:</source>
+        <translation>Unités:</translation>
+    </message>
+    <message>
+        <source>Adaptive</source>
+        <translation>Adaptatif</translation>
+    </message>
+    <message>
+        <source>Bytes</source>
+        <translation>Octets</translation>
+    </message>
+    <message>
+        <source>Hourly</source>
+        <translation>Toutes les heures</translation>
+    </message>
+    <message>
+        <source>Daily</source>
+        <translation>Quotidiennement</translation>
+    </message>
+    <message>
+        <source>Monthly</source>
+        <translation>Mensuellement</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>Total</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove statistics for selected application?</source>
+        <translation>Êtes-vous sûr de retirer les statistiques de l&apos;application sélectionnée?</translation>
+    </message>
+    <message>
+        <source>Are you sure to reset total statistics?</source>
+        <translation>Êtes-vous sûr de réinitialiser les statistiques totales?</translation>
+    </message>
+    <message>
+        <source>Are you sure to clear all statistics?</source>
+        <translation>Êtes-vous sûr de vouloir effacer toutes les statistiques?</translation>
+    </message>
+</context>
+<context>
     <name>TrayIcon</name>
     <message>
         <source>Programs</source>
@@ -1200,10 +1226,6 @@
     <message>
         <source>Traffic Graph</source>
         <translation>Graphique du trafic</translation>
-    </message>
-    <message>
-        <source>Connections</source>
-        <translation>Connexions</translation>
     </message>
     <message>
         <source>Filter Enabled</source>
@@ -1224,6 +1246,10 @@
     <message>
         <source>Quit</source>
         <translation>Quitter</translation>
+    </message>
+    <message>
+        <source>Statistics</source>
+        <translation>Statistiques</translation>
     </message>
 </context>
 <context>

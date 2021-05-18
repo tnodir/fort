@@ -344,7 +344,7 @@
     </message>
 </context>
 <context>
-    <name>ConnectionsWindow</name>
+    <name>ConnectionsPage</name>
     <message>
         <source>Edit</source>
         <translation>Изменить</translation>
@@ -384,10 +384,6 @@
     <message>
         <source>Show host names</source>
         <translation>Показать имена хостов</translation>
-    </message>
-    <message>
-        <source>Connections</source>
-        <translation>Соединения</translation>
     </message>
     <message>
         <source>Are you sure to remove connections till this row?</source>
@@ -471,7 +467,7 @@
     </message>
 </context>
 <context>
-    <name>MainPage</name>
+    <name>OptMainPage</name>
     <message>
         <source>Options</source>
         <translation>Опции</translation>
@@ -650,6 +646,16 @@
     <message>
         <source>Run Fort Firewall as a Service in background</source>
         <translation>Запускать Fort Firewall как Сервис в фоне</translation>
+    </message>
+    <message>
+        <source>Move Profile</source>
+        <translation>Переместить профиль</translation>
+    </message>
+    <message>
+        <source>New profile path is &quot;%1&quot;.
+Would you like to move profile from &quot;%2&quot; to new location?</source>
+        <translation>Новый путь профиль: &quot;%1&quot;.
+Переместить профиль из &quot;%2&quot; в новое место?</translation>
     </message>
 </context>
 <context>
@@ -906,31 +912,18 @@
     </message>
 </context>
 <context>
+    <name>StatMainPage</name>
+    <message>
+        <source>Traffic</source>
+        <translation>Трафик</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Соединения</translation>
+    </message>
+</context>
+<context>
     <name>StatisticsPage</name>
-    <message>
-        <source>Refresh</source>
-        <translation>Обновить</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation>Очистить</translation>
-    </message>
-    <message>
-        <source>Remove Application</source>
-        <translation>Удалить приложение</translation>
-    </message>
-    <message>
-        <source>Reset Total</source>
-        <translation>Сбросить общую</translation>
-    </message>
-    <message>
-        <source>Clear All</source>
-        <translation>Очистить всё</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Опции</translation>
-    </message>
     <message>
         <source>Active time period:</source>
         <translation>Активный период:</translation>
@@ -1036,10 +1029,6 @@
         <translation>Сетка:</translation>
     </message>
     <message>
-        <source>Units:</source>
-        <translation>Единицы:</translation>
-    </message>
-    <message>
         <source>Collect Traffic Statistics</source>
         <translation>Собирать статистику трафика</translation>
     </message>
@@ -1084,40 +1073,15 @@
         <translation>Отключено</translation>
     </message>
     <message>
-        <source>Adaptive</source>
-        <translation>Адаптивный</translation>
+        <source>Traffic</source>
+        <translation>Трафик</translation>
     </message>
+</context>
+<context>
+    <name>StatisticsWindow</name>
     <message>
-        <source>Bytes</source>
-        <translation>Байты</translation>
-    </message>
-    <message>
-        <source>Hourly</source>
-        <translation>Почасовая</translation>
-    </message>
-    <message>
-        <source>Daily</source>
-        <translation>Ежедневная</translation>
-    </message>
-    <message>
-        <source>Monthly</source>
-        <translation>Ежемесячная</translation>
-    </message>
-    <message>
-        <source>Total</source>
-        <translation>Общая</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove statistics for selected application?</source>
-        <translation>Удалить статистику для выбранного приложения?</translation>
-    </message>
-    <message>
-        <source>Are you sure to reset total statistics?</source>
-        <translation>Обнулить общую статистику?</translation>
-    </message>
-    <message>
-        <source>Are you sure to clear all statistics?</source>
-        <translation>Очистить всю статистику?</translation>
+        <source>Statistics</source>
+        <translation>Статистика</translation>
     </message>
 </context>
 <context>
@@ -1184,6 +1148,69 @@
     </message>
 </context>
 <context>
+    <name>TrafficPage</name>
+    <message>
+        <source>Refresh</source>
+        <translation>Обновить</translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation>Очистить</translation>
+    </message>
+    <message>
+        <source>Remove Application</source>
+        <translation>Удалить приложение</translation>
+    </message>
+    <message>
+        <source>Reset Total</source>
+        <translation>Сбросить общую</translation>
+    </message>
+    <message>
+        <source>Clear All</source>
+        <translation>Очистить всё</translation>
+    </message>
+    <message>
+        <source>Units:</source>
+        <translation>Единицы:</translation>
+    </message>
+    <message>
+        <source>Adaptive</source>
+        <translation>Адаптивный</translation>
+    </message>
+    <message>
+        <source>Bytes</source>
+        <translation>Байты</translation>
+    </message>
+    <message>
+        <source>Hourly</source>
+        <translation>Почасовая</translation>
+    </message>
+    <message>
+        <source>Daily</source>
+        <translation>Ежедневная</translation>
+    </message>
+    <message>
+        <source>Monthly</source>
+        <translation>Ежемесячная</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>Общая</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove statistics for selected application?</source>
+        <translation>Удалить статистику для выбранного приложения?</translation>
+    </message>
+    <message>
+        <source>Are you sure to reset total statistics?</source>
+        <translation>Обнулить общую статистику?</translation>
+    </message>
+    <message>
+        <source>Are you sure to clear all statistics?</source>
+        <translation>Очистить всю статистику?</translation>
+    </message>
+</context>
+<context>
     <name>TrayIcon</name>
     <message>
         <source>Programs</source>
@@ -1200,10 +1227,6 @@
     <message>
         <source>Traffic Graph</source>
         <translation>График трафика</translation>
-    </message>
-    <message>
-        <source>Connections</source>
-        <translation>Соединения</translation>
     </message>
     <message>
         <source>Filter Enabled</source>
@@ -1224,6 +1247,10 @@
     <message>
         <source>Quit</source>
         <translation>Выйти</translation>
+    </message>
+    <message>
+        <source>Statistics</source>
+        <translation>Статистика</translation>
     </message>
 </context>
 <context>

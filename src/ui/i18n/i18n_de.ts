@@ -344,7 +344,7 @@
     </message>
 </context>
 <context>
-    <name>ConnectionsWindow</name>
+    <name>ConnectionsPage</name>
     <message>
         <source>Edit</source>
         <translation>Bearbeiten</translation>
@@ -384,10 +384,6 @@
     <message>
         <source>Show host names</source>
         <translation>Hostnamen anzeigen</translation>
-    </message>
-    <message>
-        <source>Connections</source>
-        <translation>Verbindungen</translation>
     </message>
     <message>
         <source>Are you sure to remove connections till this row?</source>
@@ -471,7 +467,7 @@
     </message>
 </context>
 <context>
-    <name>MainPage</name>
+    <name>OptMainPage</name>
     <message>
         <source>Options</source>
         <translation>Optionen</translation>
@@ -649,6 +645,15 @@
     </message>
     <message>
         <source>Run Fort Firewall as a Service in background</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Move Profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New profile path is &quot;%1&quot;.
+Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -906,31 +911,18 @@
     </message>
 </context>
 <context>
+    <name>StatMainPage</name>
+    <message>
+        <source>Traffic</source>
+        <translation>Datenverkehr</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Verbindungen</translation>
+    </message>
+</context>
+<context>
     <name>StatisticsPage</name>
-    <message>
-        <source>Refresh</source>
-        <translation>Aktualisieren</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation>Leeren</translation>
-    </message>
-    <message>
-        <source>Remove Application</source>
-        <translation>Anwendung entfernen</translation>
-    </message>
-    <message>
-        <source>Reset Total</source>
-        <translation>Gesamt zurücksetzen</translation>
-    </message>
-    <message>
-        <source>Clear All</source>
-        <translation>Alles löschen</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Optionen</translation>
-    </message>
     <message>
         <source>Collect Traffic Statistics</source>
         <translation>Datenverkehrstatistik sammeln</translation>
@@ -1044,10 +1036,6 @@
         <translation>Raster:</translation>
     </message>
     <message>
-        <source>Units:</source>
-        <translation>Einheiten:</translation>
-    </message>
-    <message>
         <source>Custom</source>
         <translation>Benutzerdefiniert</translation>
     </message>
@@ -1084,40 +1072,15 @@
         <translation>Deaktiviert</translation>
     </message>
     <message>
-        <source>Adaptive</source>
-        <translation>Adaptiv</translation>
+        <source>Traffic</source>
+        <translation>Datenverkehr</translation>
     </message>
+</context>
+<context>
+    <name>StatisticsWindow</name>
     <message>
-        <source>Bytes</source>
-        <translation>Bytes</translation>
-    </message>
-    <message>
-        <source>Hourly</source>
-        <translation>Stündlich</translation>
-    </message>
-    <message>
-        <source>Daily</source>
-        <translation>Täglich</translation>
-    </message>
-    <message>
-        <source>Monthly</source>
-        <translation>Monatlich</translation>
-    </message>
-    <message>
-        <source>Total</source>
-        <translation>Gesamt</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove statistics for selected application?</source>
-        <translation>Sind Sie sicher, die Statistiken für die ausgewählte Anwendung zu entfernen?</translation>
-    </message>
-    <message>
-        <source>Are you sure to reset total statistics?</source>
-        <translation>Sind Sie sicher, dass Sie die Gesamtstatistik zurücksetzen wollen?</translation>
-    </message>
-    <message>
-        <source>Are you sure to clear all statistics?</source>
-        <translation>Sind Sie sicher, alle Statistiken zu löschen?</translation>
+        <source>Statistics</source>
+        <translation>Statistiken</translation>
     </message>
 </context>
 <context>
@@ -1184,6 +1147,69 @@
     </message>
 </context>
 <context>
+    <name>TrafficPage</name>
+    <message>
+        <source>Refresh</source>
+        <translation>Aktualisieren</translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation>Leeren</translation>
+    </message>
+    <message>
+        <source>Remove Application</source>
+        <translation>Anwendung entfernen</translation>
+    </message>
+    <message>
+        <source>Reset Total</source>
+        <translation>Gesamt zurücksetzen</translation>
+    </message>
+    <message>
+        <source>Clear All</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Units:</source>
+        <translation>Einheiten:</translation>
+    </message>
+    <message>
+        <source>Adaptive</source>
+        <translation>Adaptiv</translation>
+    </message>
+    <message>
+        <source>Bytes</source>
+        <translation>Bytes</translation>
+    </message>
+    <message>
+        <source>Hourly</source>
+        <translation>Stündlich</translation>
+    </message>
+    <message>
+        <source>Daily</source>
+        <translation>Täglich</translation>
+    </message>
+    <message>
+        <source>Monthly</source>
+        <translation>Monatlich</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>Gesamt</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove statistics for selected application?</source>
+        <translation>Sind Sie sicher, die Statistiken für die ausgewählte Anwendung zu entfernen?</translation>
+    </message>
+    <message>
+        <source>Are you sure to reset total statistics?</source>
+        <translation>Sind Sie sicher, dass Sie die Gesamtstatistik zurücksetzen wollen?</translation>
+    </message>
+    <message>
+        <source>Are you sure to clear all statistics?</source>
+        <translation>Sind Sie sicher, alle Statistiken zu löschen?</translation>
+    </message>
+</context>
+<context>
     <name>TrayIcon</name>
     <message>
         <source>Programs</source>
@@ -1200,10 +1226,6 @@
     <message>
         <source>Traffic Graph</source>
         <translation>Datenverkehrsdiagramm</translation>
-    </message>
-    <message>
-        <source>Connections</source>
-        <translation>Verbindungen</translation>
     </message>
     <message>
         <source>Filter Enabled</source>
@@ -1224,6 +1246,10 @@
     <message>
         <source>Quit</source>
         <translation>Beenden</translation>
+    </message>
+    <message>
+        <source>Statistics</source>
+        <translation>Statistiken</translation>
     </message>
 </context>
 <context>

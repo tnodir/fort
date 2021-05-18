@@ -344,54 +344,50 @@
     </message>
 </context>
 <context>
-    <name>ConnectionsWindow</name>
-    <message>
-        <source>Copy</source>
-        <translation>복사</translation>
-    </message>
+    <name>ConnectionsPage</name>
     <message>
         <source>Edit</source>
         <translation>편집</translation>
     </message>
     <message>
-        <source>Show host names</source>
-        <translation>호스트 이름 표시</translation>
-    </message>
-    <message>
-        <source>Collect blocked connections</source>
-        <translation>차단된 연결 집계</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>제거</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>옵션</translation>
+        <source>Copy</source>
+        <translation>복사</translation>
     </message>
     <message>
         <source>Add Program</source>
         <translation>프로그램 추가</translation>
     </message>
     <message>
-        <source>Auto scroll</source>
-        <translation>자동 스크롤</translation>
-    </message>
-    <message>
-        <source>Collect allowed connections</source>
-        <translation>허용된 연결 집계</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove connections till this row?</source>
-        <translation>이 행까지 연결을 제거하시겠습니까?</translation>
+        <source>Remove</source>
+        <translation>제거</translation>
     </message>
     <message>
         <source>Clear All</source>
         <translation>모두 지우기</translation>
     </message>
     <message>
-        <source>Connections</source>
-        <translation>연결</translation>
+        <source>Options</source>
+        <translation>옵션</translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>허용된 연결 집계</translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>차단된 연결 집계</translation>
+    </message>
+    <message>
+        <source>Auto scroll</source>
+        <translation>자동 스크롤</translation>
+    </message>
+    <message>
+        <source>Show host names</source>
+        <translation>호스트 이름 표시</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove connections till this row?</source>
+        <translation>이 행까지 연결을 제거하시겠습니까?</translation>
     </message>
     <message>
         <source>Are you sure to remove all connections?</source>
@@ -471,30 +467,14 @@
     </message>
 </context>
 <context>
-    <name>MainPage</name>
-    <message>
-        <source>OK</source>
-        <translation>확인</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>로그</translation>
-    </message>
-    <message>
-        <source>Apply</source>
-        <translation>적용</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>취소</translation>
-    </message>
+    <name>OptMainPage</name>
     <message>
         <source>Options</source>
         <translation>옵션</translation>
     </message>
     <message>
-        <source>Profile</source>
-        <translation>프로필</translation>
+        <source>IPv4 Addresses</source>
+        <translation>IPv4 주소</translation>
     </message>
     <message>
         <source>Network Rules</source>
@@ -505,20 +485,36 @@
         <translation>응용 프로그램 그룹</translation>
     </message>
     <message>
-        <source>Schedule</source>
-        <translation>예약</translation>
-    </message>
-    <message>
         <source>Statistics</source>
         <translation>통계</translation>
     </message>
     <message>
-        <source>IPv4 Addresses</source>
-        <translation>IPv4 주소</translation>
+        <source>Schedule</source>
+        <translation>예약</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>로그</translation>
+    </message>
+    <message>
+        <source>Profile</source>
+        <translation>프로필</translation>
     </message>
     <message>
         <source>Releases</source>
         <translation>출시</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>확인</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation>적용</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>취소</translation>
     </message>
 </context>
 <context>
@@ -649,6 +645,15 @@
     </message>
     <message>
         <source>Run Fort Firewall as a Service in background</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Move Profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New profile path is &quot;%1&quot;.
+Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -906,22 +911,21 @@
     </message>
 </context>
 <context>
+    <name>StatMainPage</name>
+    <message>
+        <source>Traffic</source>
+        <translation>트래픽</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>연결</translation>
+    </message>
+</context>
+<context>
     <name>StatisticsPage</name>
     <message>
         <source>Axis:</source>
         <translation>축:</translation>
-    </message>
-    <message>
-        <source>Bytes</source>
-        <translation>Bytes</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation>지우기</translation>
-    </message>
-    <message>
-        <source>Daily</source>
-        <translation>매일</translation>
     </message>
     <message>
         <source>Graph</source>
@@ -930,10 +934,6 @@
     <message>
         <source>Grid:</source>
         <translation>격자:</translation>
-    </message>
-    <message>
-        <source>Total</source>
-        <translation>전체</translation>
     </message>
     <message>
         <source>Disabled</source>
@@ -968,10 +968,6 @@
         <translation>월간 할당량:</translation>
     </message>
     <message>
-        <source>Monthly</source>
-        <translation>매월</translation>
-    </message>
-    <message>
         <source>Keep count for &apos;Blocked connections&apos;:</source>
         <translation>&apos;차단된 연결&apos; 수 보관:</translation>
     </message>
@@ -980,16 +976,8 @@
         <translation>&apos;허용된 연결&apos; 수 보관:</translation>
     </message>
     <message>
-        <source>Are you sure to reset total statistics?</source>
-        <translation>총 통계를 재설정하시겠습니까?</translation>
-    </message>
-    <message>
         <source>Custom</source>
         <translation>사용자 지정</translation>
-    </message>
-    <message>
-        <source>Hourly</source>
-        <translation>매시간</translation>
     </message>
     <message>
         <source>Label:</source>
@@ -1000,24 +988,12 @@
         <translation>3 년</translation>
     </message>
     <message>
-        <source>Units:</source>
-        <translation>단위:</translation>
-    </message>
-    <message>
-        <source>Reset Total</source>
-        <translation>총계 재설정</translation>
-    </message>
-    <message>
         <source> month(s)</source>
         <translation> 달</translation>
     </message>
     <message>
         <source>Opacity:</source>
         <translation>불투명도:</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>옵션</translation>
     </message>
     <message>
         <source> day(s)</source>
@@ -1052,18 +1028,6 @@
         <translation>프레임리스</translation>
     </message>
     <message>
-        <source>Refresh</source>
-        <translation>새로 고침</translation>
-    </message>
-    <message>
-        <source>Adaptive</source>
-        <translation>적응형</translation>
-    </message>
-    <message>
-        <source>Clear All</source>
-        <translation>모두 지우기</translation>
-    </message>
-    <message>
         <source>Upload:</source>
         <translation>업로드:</translation>
     </message>
@@ -1072,16 +1036,8 @@
         <translation>&apos;매월&apos;에 대한 데이터 보관:</translation>
     </message>
     <message>
-        <source>Are you sure to clear all statistics?</source>
-        <translation>모든 통계를 삭제하시겠습니까?</translation>
-    </message>
-    <message>
         <source>Keep data for &apos;Hourly&apos;:</source>
         <translation>&apos;매시간&apos;에 대한 테이터 보관:</translation>
-    </message>
-    <message>
-        <source>Remove Application</source>
-        <translation>응용 프로그램 제거</translation>
     </message>
     <message>
         <source>Forever</source>
@@ -1112,12 +1068,19 @@
         <translation>백그라운드:</translation>
     </message>
     <message>
-        <source>Are you sure to remove statistics for selected application?</source>
-        <translation>선택한 응용 프로그램에 대한 통계을 제거하시겠습니까?</translation>
-    </message>
-    <message>
         <source>Always on top</source>
         <translation>항상 위에 표시</translation>
+    </message>
+    <message>
+        <source>Traffic</source>
+        <translation>트래픽</translation>
+    </message>
+</context>
+<context>
+    <name>StatisticsWindow</name>
+    <message>
+        <source>Statistics</source>
+        <translation>통계</translation>
     </message>
 </context>
 <context>
@@ -1184,6 +1147,69 @@
     </message>
 </context>
 <context>
+    <name>TrafficPage</name>
+    <message>
+        <source>Refresh</source>
+        <translation>새로 고침</translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation>지우기</translation>
+    </message>
+    <message>
+        <source>Remove Application</source>
+        <translation>응용 프로그램 제거</translation>
+    </message>
+    <message>
+        <source>Reset Total</source>
+        <translation>총계 재설정</translation>
+    </message>
+    <message>
+        <source>Clear All</source>
+        <translation>모두 지우기</translation>
+    </message>
+    <message>
+        <source>Units:</source>
+        <translation>단위:</translation>
+    </message>
+    <message>
+        <source>Adaptive</source>
+        <translation>적응형</translation>
+    </message>
+    <message>
+        <source>Bytes</source>
+        <translation>Bytes</translation>
+    </message>
+    <message>
+        <source>Hourly</source>
+        <translation>매시간</translation>
+    </message>
+    <message>
+        <source>Daily</source>
+        <translation>매일</translation>
+    </message>
+    <message>
+        <source>Monthly</source>
+        <translation>매월</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>전체</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove statistics for selected application?</source>
+        <translation>선택한 응용 프로그램에 대한 통계을 제거하시겠습니까?</translation>
+    </message>
+    <message>
+        <source>Are you sure to reset total statistics?</source>
+        <translation>총 통계를 재설정하시겠습니까?</translation>
+    </message>
+    <message>
+        <source>Are you sure to clear all statistics?</source>
+        <translation>모든 통계를 삭제하시겠습니까?</translation>
+    </message>
+</context>
+<context>
     <name>TrayIcon</name>
     <message>
         <source>Programs</source>
@@ -1200,10 +1226,6 @@
     <message>
         <source>Traffic Graph</source>
         <translation>트래픽 그래프</translation>
-    </message>
-    <message>
-        <source>Connections</source>
-        <translation>연결</translation>
     </message>
     <message>
         <source>Filter Enabled</source>
@@ -1224,6 +1246,10 @@
     <message>
         <source>Quit</source>
         <translation>종료</translation>
+    </message>
+    <message>
+        <source>Statistics</source>
+        <translation>통계</translation>
     </message>
 </context>
 <context>

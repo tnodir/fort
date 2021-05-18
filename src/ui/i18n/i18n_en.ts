@@ -344,7 +344,7 @@
     </message>
 </context>
 <context>
-    <name>ConnectionsWindow</name>
+    <name>ConnectionsPage</name>
     <message>
         <source>Edit</source>
         <translation></translation>
@@ -383,10 +383,6 @@
     </message>
     <message>
         <source>Show host names</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Connections</source>
         <translation></translation>
     </message>
     <message>
@@ -471,7 +467,7 @@
     </message>
 </context>
 <context>
-    <name>MainPage</name>
+    <name>OptMainPage</name>
     <message>
         <source>Options</source>
         <translation></translation>
@@ -649,6 +645,15 @@
     </message>
     <message>
         <source>Run Fort Firewall as a Service in background</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Move Profile</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>New profile path is &quot;%1&quot;.
+Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation></translation>
     </message>
 </context>
@@ -906,31 +911,18 @@
     </message>
 </context>
 <context>
+    <name>StatMainPage</name>
+    <message>
+        <source>Traffic</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>StatisticsPage</name>
-    <message>
-        <source>Refresh</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Remove Application</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Reset Total</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Clear All</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation></translation>
-    </message>
     <message>
         <source>Collect Traffic Statistics</source>
         <translation></translation>
@@ -1044,10 +1036,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Units:</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Custom</source>
         <translation></translation>
     </message>
@@ -1084,39 +1072,14 @@
         <translation></translation>
     </message>
     <message>
-        <source>Adaptive</source>
+        <source>Traffic</source>
         <translation></translation>
     </message>
+</context>
+<context>
+    <name>StatisticsWindow</name>
     <message>
-        <source>Bytes</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Hourly</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Daily</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Monthly</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Total</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Are you sure to remove statistics for selected application?</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Are you sure to reset total statistics?</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Are you sure to clear all statistics?</source>
+        <source>Statistics</source>
         <translation></translation>
     </message>
 </context>
@@ -1184,6 +1147,69 @@
     </message>
 </context>
 <context>
+    <name>TrafficPage</name>
+    <message>
+        <source>Refresh</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Remove Application</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Reset Total</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Clear All</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Units:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Adaptive</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Bytes</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Hourly</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Daily</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Monthly</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Are you sure to remove statistics for selected application?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Are you sure to reset total statistics?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Are you sure to clear all statistics?</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>TrayIcon</name>
     <message>
         <source>Programs</source>
@@ -1199,10 +1225,6 @@
     </message>
     <message>
         <source>Traffic Graph</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Connections</source>
         <translation></translation>
     </message>
     <message>
@@ -1223,6 +1245,10 @@
     </message>
     <message>
         <source>Quit</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Statistics</source>
         <translation></translation>
     </message>
 </context>
