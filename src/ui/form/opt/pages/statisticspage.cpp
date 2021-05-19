@@ -82,6 +82,7 @@ StatisticsPage::StatisticsPage(OptionsController *ctrl, QWidget *parent) : OptBa
 void StatisticsPage::onRetranslateUi()
 {
     m_gbTraffic->setTitle(tr("Traffic"));
+    m_gbConn->setTitle(tr("Connections"));
     m_gbGraph->setTitle(tr("Graph"));
 
     m_cbLogStat->setText(tr("Collect Traffic Statistics"));
@@ -99,7 +100,9 @@ void StatisticsPage::onRetranslateUi()
     m_lscQuotaDayMb->label()->setText(tr("Day's Quota:"));
     m_lscQuotaMonthMb->label()->setText(tr("Month's Quota:"));
 
+    m_cbLogAllowedIp->setText(tr("Collect allowed connections"));
     m_lscAllowedIpKeepCount->label()->setText(tr("Keep count for 'Allowed connections':"));
+    m_cbLogBlockedIp->setText(tr("Collect blocked connections"));
     m_lscBlockedIpKeepCount->label()->setText(tr("Keep count for 'Blocked connections':"));
 
     retranslateTrafKeepDayNames();
@@ -194,6 +197,10 @@ QLayout *StatisticsPage::setupColumn1()
     setupTrafficBox();
     layout->addWidget(m_gbTraffic);
 
+    // Connections Group Box
+    setupConnBox();
+    layout->addWidget(m_gbConn);
+
     layout->addStretch();
 
     return layout;
@@ -210,15 +217,12 @@ void StatisticsPage::setupTrafficBox()
     setupTrafMonthKeepMonths();
     setupQuotaDayMb();
     setupQuotaMonthMb();
-    setupAllowedIpKeepCount();
-    setupBlockedIpKeepCount();
 
     // Layout
     auto layout = ControlUtil::createLayoutByWidgets({ m_cbLogStat, m_cbLogStatNoFilter,
             m_ctpActivePeriod, m_lscMonthStart, ControlUtil::createSeparator(),
             m_lscTrafHourKeepDays, m_lscTrafDayKeepDays, m_lscTrafMonthKeepMonths,
-            ControlUtil::createSeparator(), m_lscQuotaDayMb, m_lscQuotaMonthMb,
-            ControlUtil::createSeparator(), m_lscAllowedIpKeepCount, m_lscBlockedIpKeepCount });
+            ControlUtil::createSeparator(), m_lscQuotaDayMb, m_lscQuotaMonthMb });
 
     m_gbTraffic = new QGroupBox(this);
     m_gbTraffic->setLayout(layout);
@@ -345,8 +349,31 @@ void StatisticsPage::setupQuotaMonthMb()
             });
 }
 
-void StatisticsPage::setupAllowedIpKeepCount()
+void StatisticsPage::setupConnBox()
 {
+    setupLogAllowedIp();
+    setupLogBlockedIp();
+
+    // Layout
+    auto layout = ControlUtil::createLayoutByWidgets({ // TODO: Collect allowed connections
+            // m_cbLogAllowedIp, m_lscAllowedIpKeepCount, ControlUtil::createSeparator(),
+            m_cbLogBlockedIp, m_lscBlockedIpKeepCount });
+
+    m_gbConn = new QGroupBox(this);
+    m_gbConn->setLayout(layout);
+}
+
+void StatisticsPage::setupLogAllowedIp()
+{
+    m_cbLogAllowedIp = ControlUtil::createCheckBox(conf()->logAllowedIp(), [&](bool checked) {
+        if (conf()->logAllowedIp() != checked) {
+            conf()->setLogAllowedIp(checked);
+            ctrl()->setFlagsEdited();
+        }
+    });
+
+    m_cbLogAllowedIp->setFont(ControlUtil::fontDemiBold());
+
     m_lscAllowedIpKeepCount = createSpinCombo(
             ini()->allowedIpKeepCount(), 0, 999999999, logIpKeepCountValues, {}, [&](int value) {
                 if (ini()->allowedIpKeepCount() != value) {
@@ -356,8 +383,17 @@ void StatisticsPage::setupAllowedIpKeepCount()
             });
 }
 
-void StatisticsPage::setupBlockedIpKeepCount()
+void StatisticsPage::setupLogBlockedIp()
 {
+    m_cbLogBlockedIp = ControlUtil::createCheckBox(conf()->logBlockedIp(), [&](bool checked) {
+        if (conf()->logBlockedIp() != checked) {
+            conf()->setLogBlockedIp(checked);
+            ctrl()->setFlagsEdited();
+        }
+    });
+
+    m_cbLogBlockedIp->setFont(ControlUtil::fontDemiBold());
+
     m_lscBlockedIpKeepCount = createSpinCombo(
             ini()->blockedIpKeepCount(), 0, 999999999, logIpKeepCountValues, {}, [&](int value) {
                 if (ini()->blockedIpKeepCount() != value) {

@@ -38,8 +38,6 @@ private:
     void setupUi();
     QLayout *setupHeader();
     void setupLogOptions();
-    void setupLogAllowedIp();
-    void setupLogBlockedIp();
     void setupAutoScroll();
     void setupShowHostNames();
     void setupTableConnList();
@@ -62,8 +60,6 @@ private:
     QAction *m_actRemoveConn = nullptr;
     QAction *m_actClearConns = nullptr;
     QPushButton *m_btLogOptions = nullptr;
-    QCheckBox *m_cbLogAllowedIp = nullptr;
-    QCheckBox *m_cbLogBlockedIp = nullptr;
     QCheckBox *m_cbAutoScroll = nullptr;
     QCheckBox *m_cbShowHostNames = nullptr;
     TableView *m_connListView = nullptr;

@@ -66,8 +66,6 @@ void ConnectionsPage::onRetranslateUi()
     m_actClearConns->setText(tr("Clear All"));
 
     m_btLogOptions->setText(tr("Options"));
-    m_cbLogAllowedIp->setText(tr("Collect allowed connections"));
-    m_cbLogBlockedIp->setText(tr("Collect blocked connections"));
     m_cbAutoScroll->setText(tr("Auto scroll"));
     m_cbShowHostNames->setText(tr("Show host names"));
 
@@ -153,46 +151,17 @@ QLayout *ConnectionsPage::setupHeader()
 
 void ConnectionsPage::setupLogOptions()
 {
-    setupLogAllowedIp();
-    setupLogBlockedIp();
     setupAutoScroll();
     setupShowHostNames();
 
     // Menu
-    const QList<QWidget *> menuWidgets = { m_cbLogAllowedIp, m_cbLogBlockedIp,
-        ControlUtil::createSeparator(), m_cbAutoScroll, m_cbShowHostNames };
+    const QList<QWidget *> menuWidgets = { m_cbAutoScroll, m_cbShowHostNames };
     auto layout = ControlUtil::createLayoutByWidgets(menuWidgets);
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
     m_btLogOptions = ControlUtil::createButton(":/icons/wrench.png");
     m_btLogOptions->setMenu(menu);
-}
-
-void ConnectionsPage::setupLogAllowedIp()
-{
-    m_cbLogAllowedIp = ControlUtil::createCheckBox(conf()->logAllowedIp(), [&](bool checked) {
-        if (conf()->logAllowedIp() == checked)
-            return;
-
-        conf()->setLogAllowedIp(checked);
-
-        confManager()->saveFlags();
-    });
-
-    m_cbLogAllowedIp->setVisible(false); // TODO: Collect allowed connections
-}
-
-void ConnectionsPage::setupLogBlockedIp()
-{
-    m_cbLogBlockedIp = ControlUtil::createCheckBox(conf()->logBlockedIp(), [&](bool checked) {
-        if (conf()->logBlockedIp() == checked)
-            return;
-
-        conf()->setLogBlockedIp(checked);
-
-        confManager()->saveFlags();
-    });
 }
 
 void ConnectionsPage::setupAutoScroll()

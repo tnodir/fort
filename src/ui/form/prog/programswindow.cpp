@@ -261,12 +261,10 @@ void ProgramsWindow::setupLogOptions()
 void ProgramsWindow::setupLogBlocked()
 {
     m_cbLogBlocked = ControlUtil::createCheckBox(conf()->logBlocked(), [&](bool checked) {
-        if (conf()->logBlocked() == checked)
-            return;
-
-        conf()->setLogBlocked(checked);
-
-        confManager()->saveFlags();
+        if (conf()->logBlocked() != checked) {
+            conf()->setLogBlocked(checked);
+            confManager()->saveFlags();
+        }
     });
 
     m_cbLogBlocked->setFont(ControlUtil::fontDemiBold());
