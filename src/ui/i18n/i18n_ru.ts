@@ -370,14 +370,6 @@
         <translation>Опции</translation>
     </message>
     <message>
-        <source>Collect allowed connections</source>
-        <translation>Собирать разрешённые соединения</translation>
-    </message>
-    <message>
-        <source>Collect blocked connections</source>
-        <translation>Собирать заблокированные соединения</translation>
-    </message>
-    <message>
         <source>Auto scroll</source>
         <translation>Авто промотка</translation>
     </message>
@@ -392,13 +384,6 @@
     <message>
         <source>Are you sure to remove all connections?</source>
         <translation>Удалить все соединения?</translation>
-    </message>
-</context>
-<context>
-    <name>ControlManager</name>
-    <message>
-        <source>Control command executed</source>
-        <translation>Управляющая команда выполнена</translation>
     </message>
 </context>
 <context>
@@ -918,8 +903,8 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>Трафик</translation>
     </message>
     <message>
-        <source>Connections</source>
-        <translation>Соединения</translation>
+        <source>Blocked Connections</source>
+        <translation>Блокированные соединения</translation>
     </message>
 </context>
 <context>
@@ -1075,6 +1060,18 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Traffic</source>
         <translation>Трафик</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Соединения</translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>Собирать разрешённые соединения</translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>Собирать заблокированные соединения</translation>
     </message>
 </context>
 <context>

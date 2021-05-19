@@ -370,14 +370,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Collect allowed connections</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Collect blocked connections</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Auto scroll</source>
         <translation></translation>
     </message>
@@ -391,13 +383,6 @@
     </message>
     <message>
         <source>Are you sure to remove all connections?</source>
-        <translation></translation>
-    </message>
-</context>
-<context>
-    <name>ControlManager</name>
-    <message>
-        <source>Control command executed</source>
         <translation></translation>
     </message>
 </context>
@@ -917,7 +902,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation></translation>
     </message>
     <message>
-        <source>Connections</source>
+        <source>Blocked Connections</source>
         <translation></translation>
     </message>
 </context>
@@ -1073,6 +1058,18 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Traffic</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
         <translation></translation>
     </message>
 </context>

@@ -370,14 +370,6 @@
         <translation>옵션</translation>
     </message>
     <message>
-        <source>Collect allowed connections</source>
-        <translation>허용된 연결 집계</translation>
-    </message>
-    <message>
-        <source>Collect blocked connections</source>
-        <translation>차단된 연결 집계</translation>
-    </message>
-    <message>
         <source>Auto scroll</source>
         <translation>자동 스크롤</translation>
     </message>
@@ -392,13 +384,6 @@
     <message>
         <source>Are you sure to remove all connections?</source>
         <translation>모든 연결을 제거하시겠습니까?</translation>
-    </message>
-</context>
-<context>
-    <name>ControlManager</name>
-    <message>
-        <source>Control command executed</source>
-        <translation>제어 명령 실행됨</translation>
     </message>
 </context>
 <context>
@@ -917,8 +902,8 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>트래픽</translation>
     </message>
     <message>
-        <source>Connections</source>
-        <translation>연결</translation>
+        <source>Blocked Connections</source>
+        <translation>차단 된 연결</translation>
     </message>
 </context>
 <context>
@@ -1074,6 +1059,18 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Traffic</source>
         <translation>트래픽</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>연결</translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>허용된 연결 집계</translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>차단된 연결 집계</translation>
     </message>
 </context>
 <context>

@@ -370,14 +370,6 @@
         <translation>Options</translation>
     </message>
     <message>
-        <source>Collect allowed connections</source>
-        <translation>Collecter les connexions autorisées</translation>
-    </message>
-    <message>
-        <source>Collect blocked connections</source>
-        <translation>Collecter les connexions bloquées</translation>
-    </message>
-    <message>
         <source>Auto scroll</source>
         <translation>Défilement auto</translation>
     </message>
@@ -392,13 +384,6 @@
     <message>
         <source>Are you sure to remove all connections?</source>
         <translation>Êtes-vous sûr de retirerr toutes les connexions?</translation>
-    </message>
-</context>
-<context>
-    <name>ControlManager</name>
-    <message>
-        <source>Control command executed</source>
-        <translation>Contrôle Commande exécutée</translation>
     </message>
 </context>
 <context>
@@ -917,8 +902,8 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>Trafic</translation>
     </message>
     <message>
-        <source>Connections</source>
-        <translation>Connexions</translation>
+        <source>Blocked Connections</source>
+        <translation>Connexions bloquées</translation>
     </message>
 </context>
 <context>
@@ -1074,6 +1059,18 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Traffic</source>
         <translation>Trafic</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Connexions</translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>Collecter les connexions autorisées</translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>Collecter les connexions bloquées</translation>
     </message>
 </context>
 <context>

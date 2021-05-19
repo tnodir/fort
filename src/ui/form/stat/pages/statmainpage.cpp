@@ -20,7 +20,7 @@ StatMainPage::StatMainPage(StatisticsController *ctrl, QWidget *parent) : StatBa
 void StatMainPage::onRetranslateUi()
 {
     m_tabBar->setTabText(0, tr("Traffic"));
-    m_tabBar->setTabText(1, tr("Connections"));
+    m_tabBar->setTabText(1, tr("Blocked Connections"));
 }
 
 void StatMainPage::setupUi()
