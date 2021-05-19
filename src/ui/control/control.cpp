@@ -11,7 +11,6 @@ const char *const commandString(Command cmd)
     switch (cmd) {
         CASE_STRING(CommandNone)
 
-        CASE_STRING(Conf)
         CASE_STRING(Prog)
 
         CASE_STRING(Rpc_Result_Ok)

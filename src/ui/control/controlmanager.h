@@ -51,12 +51,11 @@ private slots:
 private:
     bool processCommand(ControlWorker *w, Control::Command command, const QVariantList &args,
             QString &errorMessage);
-    bool processCommandConf(const QVariantList &args, QString &errorMessage);
     bool processCommandProg(const QVariantList &args, QString &errorMessage);
 
     void abort();
 
-    static QString getServerName(bool isService);
+    static QString getServerName(bool isService = false);
 
 private:
     FortSettings *m_settings = nullptr;

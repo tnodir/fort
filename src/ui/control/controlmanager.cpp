@@ -14,6 +14,7 @@
 #include "../fortsettings.h"
 #include "../rpc/rpcmanager.h"
 #include "../util/fileutil.h"
+#include "../util/osutil.h"
 #include "controlworker.h"
 
 Q_DECLARE_LOGGING_CATEGORY(CLOG_CONTROL_MANAGER)
@@ -57,9 +58,7 @@ ControlWorker *ControlManager::newServiceClient(QObject *parent) const
 
     connect(w, &ControlWorker::requestReady, this, &ControlManager::processRequest);
 
-    socket->connectToServer(getServerName(true));
-    socket->waitForConnected(100);
-    if (socket->state() != QLocalSocket::ConnectedState) {
+    if (!w->connectToServer(getServerName(true))) {
         logWarning() << "Server connect error:" << socket->state() << socket->errorString();
     }
     return w;
@@ -72,10 +71,11 @@ bool ControlManager::listen(FortManager *fortManager)
     Q_ASSERT(!m_server);
     m_server = new QLocalServer(this);
     m_server->setMaxPendingConnections(3);
-    m_server->setSocketOptions(QLocalServer::WorldAccessOption);
+    m_server->setSocketOptions(
+            settings()->isService() ? QLocalServer::WorldAccessOption : QLocalServer::NoOptions);
 
     if (!m_server->listen(getServerName(settings()->isService()))) {
-        logWarning() << "Local Server create error:" << m_server->errorString();
+        logWarning() << "Server listen error:" << m_server->errorString();
         return false;
     }
 
@@ -87,35 +87,28 @@ bool ControlManager::listen(FortManager *fortManager)
 bool ControlManager::postCommand()
 {
     Control::Command command;
-    if (settings()->controlCommand() == "conf") {
-        command = Control::Conf;
-    } else if (settings()->controlCommand() == "prog") {
+    if (settings()->controlCommand() == "prog") {
         command = Control::Prog;
     } else {
         logWarning() << "Unknown control command:" << settings()->controlCommand();
         return false;
     }
 
-    const QString serverName =
-            getServerName(!settings()->isWindowControl() && settings()->hasService());
-
     QLocalSocket socket;
+    ControlWorker w(&socket);
 
     // Connect to server
-    socket.connectToServer(serverName);
-    if (!socket.waitForConnected(1000)) {
+    if (!w.connectToServer(getServerName())) {
         logWarning() << "Connect to server error:" << socket.errorString();
         return false;
     }
 
     // Send data
-    ControlWorker worker(&socket);
-
     const QVariantList args = ControlWorker::buildArgs(settings()->args());
     if (args.isEmpty())
         return false;
 
-    return worker.sendCommand(command, args) && worker.waitForSent();
+    return w.sendCommand(command, args) && w.waitForSent();
 }
 
 void ControlManager::onNewConnection()
@@ -170,10 +163,6 @@ bool ControlManager::processCommand(
         ControlWorker *w, Control::Command command, const QVariantList &args, QString &errorMessage)
 {
     switch (command) {
-    case Control::Conf:
-        if (processCommandConf(args, errorMessage))
-            return true;
-        break;
     case Control::Prog:
         if (processCommandProg(args, errorMessage))
             return true;
@@ -187,53 +176,6 @@ bool ControlManager::processCommand(
         errorMessage = "Invalid command";
     }
     return false;
-}
-
-bool ControlManager::processCommandConf(const QVariantList &args, QString &errorMessage)
-{
-    const int argsSize = args.size();
-    if (argsSize < 2) {
-        errorMessage = "conf <property> <value>";
-        return false;
-    }
-
-    FirewallConf *conf = confManager()->conf();
-    bool onlyFlags = true;
-
-    const QString confPropName = args.at(0).toString();
-
-    if (confPropName == "appGroup") {
-        if (argsSize < 4) {
-            errorMessage = "conf appGroup <group-name> <property> <value>";
-            return false;
-        }
-
-        AppGroup *appGroup = conf->appGroupByName(args.at(1).toString());
-        const QString groupPropName = args.at(2).toString();
-        onlyFlags = (groupPropName == "enabled");
-
-        if (!appGroup->setProperty(groupPropName.toLatin1(), args.at(3))) {
-            errorMessage = "Bad appGroup property";
-            return false;
-        }
-    } else {
-        if (!conf->setProperty(confPropName.toLatin1(), args.at(1))) {
-            errorMessage = "Bad conf property";
-            return false;
-        }
-    }
-
-    conf->setFlagsEdited();
-    if (!onlyFlags) {
-        conf->setOptEdited();
-    }
-
-    if (!confManager()->save(conf))
-        return false;
-
-    fortManager()->reloadOptionsWindow(tr("Control command executed"));
-
-    return true;
 }
 
 bool ControlManager::processCommandProg(const QVariantList &args, QString &errorMessage)

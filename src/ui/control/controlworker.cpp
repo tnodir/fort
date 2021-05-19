@@ -101,6 +101,12 @@ void ControlWorker::setupForAsync()
     connect(socket(), &QLocalSocket::readyRead, this, &ControlWorker::processRequest);
 }
 
+bool ControlWorker::connectToServer(const QString &name)
+{
+    socket()->connectToServer(name);
+    return socket()->waitForConnected(100) && socket()->state() == QLocalSocket::ConnectedState;
+}
+
 void ControlWorker::abort()
 {
     socket()->abort();

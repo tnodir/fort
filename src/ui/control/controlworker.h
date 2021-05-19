@@ -29,6 +29,8 @@ public:
 
     void setupForAsync();
 
+    bool connectToServer(const QString &name);
+
     static QByteArray buildCommandData(Control::Command command, const QVariantList &args = {});
     bool sendCommandData(const QByteArray &commandData);
 

@@ -236,7 +236,7 @@ void StartupUtil::setExplorerIntegrated(bool integrate)
         reg.setValue("MUIVerb", APP_NAME + QLatin1String(" ..."));
 
         RegKey regCommand(reg, "command", RegKey::DefaultCreate);
-        regCommand.setDefaultValue(wrappedPath + " -w -c prog add \"%1\"");
+        regCommand.setDefaultValue(wrappedPath + " -c prog add \"%1\"");
     } else {
         regShell.removeRecursively(APP_NAME);
     }

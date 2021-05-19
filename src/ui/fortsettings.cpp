@@ -33,7 +33,6 @@ FortSettings::FortSettings(QObject *parent) :
     m_noCache(false),
     m_isService(false),
     m_hasService(false),
-    m_isWindowControl(false),
     m_passwordChecked(false),
     m_passwordUnlockType(0)
 {
@@ -157,10 +156,6 @@ void FortSettings::processArguments(const QStringList &args)
     const QCommandLineOption serviceOption("service", "Is running as a service?");
     parser.addOption(serviceOption);
 
-    const QCommandLineOption windowControlOption(
-            "w", "Control running instance's window by sending the command.");
-    parser.addOption(windowControlOption);
-
     const QCommandLineOption controlOption(QStringList() << "c"
                                                          << "control",
             "Control running instance by executing the command.", "control");
@@ -207,7 +202,6 @@ void FortSettings::processArguments(const QStringList &args)
     }
 
     // Control command
-    m_isWindowControl = parser.isSet(windowControlOption);
     m_controlCommand = parser.value(controlOption);
 
     // Other Arguments
@@ -374,7 +368,21 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
     }
 }
 
-void FortSettings::migrateIniOnStartup() { }
+void FortSettings::migrateIniOnStartup()
+{
+    const int version = iniVersion();
+    if (version == appVersion())
+        return;
+
+    // COMPAT: v3.4.0
+    if (version < 0x030400) {
+        // Windows Explorer integration: Args changed
+        if (StartupUtil::isExplorerIntegrated()) {
+            StartupUtil::setExplorerIntegrated(false);
+            StartupUtil::setExplorerIntegrated(true);
+        }
+    }
+}
 
 void FortSettings::migrateIniOnWrite()
 {

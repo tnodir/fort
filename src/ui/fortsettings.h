@@ -40,7 +40,6 @@ public:
 
     QString userPath() const { return m_userPath; }
 
-    bool isWindowControl() const { return m_isWindowControl; }
     QString controlCommand() const { return m_controlCommand; }
 
     const QStringList &args() const { return m_args; }
@@ -89,7 +88,6 @@ private:
     uint m_noCache : 1;
     uint m_isService : 1;
     uint m_hasService : 1;
-    uint m_isWindowControl : 1;
 
     uint m_passwordChecked : 1;
     uint m_passwordUnlockType : 3;

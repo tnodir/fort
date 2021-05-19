@@ -9,7 +9,6 @@ namespace Control {
 enum Command : qint8 {
     CommandNone = 0,
 
-    Conf,
     Prog,
 
     Rpc_Result_Ok,
