@@ -173,7 +173,7 @@ void TrayIcon::setupTrayMenu()
             SLOT(showOptionsWindow()));
     addHotKey(m_optionsAction, iniUser()->hotKeyOptions());
 
-    m_statisticsAction = addAction(menu, IconCache::icon(":/icons/line-bar.png"), QString(),
+    m_statisticsAction = addAction(menu, IconCache::icon(":/icons/chart-bar.png"), QString(),
             fortManager(), SLOT(showStatisticsWindow()));
     addHotKey(m_statisticsAction, iniUser()->hotKeyStatistics());
 

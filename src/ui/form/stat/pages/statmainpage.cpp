@@ -41,6 +41,6 @@ void StatMainPage::setupTabBar()
     auto connectionsPage = new ConnectionsPage(ctrl());
 
     m_tabBar = new QTabWidget();
-    m_tabBar->addTab(statisticsPage, IconCache::icon(":/icons/line-bar.png"), QString());
+    m_tabBar->addTab(statisticsPage, IconCache::icon(":/icons/chart-bar.png"), QString());
     m_tabBar->addTab(connectionsPage, IconCache::icon(":/icons/connect.png"), QString());
 }

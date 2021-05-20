@@ -74,7 +74,7 @@ void OptMainPage::setupTabBar()
     m_tabBar->addTab(addressesPage, IconCache::icon(":/icons/map-marker.png"), QString());
     m_tabBar->addTab(rulesPage, IconCache::icon(":/icons/task-list.png"), QString());
     m_tabBar->addTab(applicationsPage, IconCache::icon(":/icons/window.png"), QString());
-    m_tabBar->addTab(statisticsPage, IconCache::icon(":/icons/line-bar.png"), QString());
+    m_tabBar->addTab(statisticsPage, IconCache::icon(":/icons/chart-bar.png"), QString());
     m_tabBar->addTab(schedulePage, IconCache::icon(":/icons/clock.png"), QString());
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
