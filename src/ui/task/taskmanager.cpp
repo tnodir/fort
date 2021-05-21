@@ -44,8 +44,7 @@ void TaskManager::initialize()
 
 void TaskManager::setupScheduler()
 {
-    QMetaObject::invokeMethod(
-            taskInfoZoneDownloader(), &TaskInfoZoneDownloader::loadZones, Qt::QueuedConnection);
+    taskInfoZoneDownloader()->loadZones();
 
     m_timer.start(5 * 1000); // 5 seconds
 }
