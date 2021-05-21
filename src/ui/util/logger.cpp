@@ -121,7 +121,9 @@ void Logger::setConsole(bool v)
     if (m_console != v) {
         m_console = v;
 
-        showConsole(console());
+        if (!isService()) {
+            showConsole(console());
+        }
     }
 }
 

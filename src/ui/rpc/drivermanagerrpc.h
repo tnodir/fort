@@ -30,9 +30,6 @@ public slots:
     bool openDevice() override;
     bool closeDevice() override;
 
-protected:
-    void abortWorker() override { }
-
 private:
     bool m_isDeviceOpened : 1;
 

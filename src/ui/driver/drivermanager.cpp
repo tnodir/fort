@@ -10,7 +10,12 @@
 #include "../util/osutil.h"
 #include "driverworker.h"
 
-DriverManager::DriverManager(QObject *parent) : QObject(parent) { }
+DriverManager::DriverManager(QObject *parent, bool useDevice) : QObject(parent)
+{
+    if (useDevice) {
+        setupWorker();
+    }
+}
 
 DriverManager::~DriverManager()
 {
@@ -47,15 +52,20 @@ bool DriverManager::isDeviceOpened() const
 
 void DriverManager::initialize()
 {
+    QThreadPool::globalInstance()->start(driverWorker());
+}
+
+void DriverManager::setupWorker()
+{
     m_device = new Device(this);
     m_driverWorker = new DriverWorker(device()); // autoDelete = true
-
-    QThreadPool::globalInstance()->start(driverWorker());
 }
 
 void DriverManager::abortWorker()
 {
-    driverWorker()->abort();
+    if (driverWorker()) {
+        driverWorker()->abort();
+    }
 }
 
 bool DriverManager::openDevice()

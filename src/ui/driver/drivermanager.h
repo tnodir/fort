@@ -16,7 +16,7 @@ class DriverManager : public QObject
     Q_OBJECT
 
 public:
-    explicit DriverManager(QObject *parent = nullptr);
+    explicit DriverManager(QObject *parent = nullptr, bool useDevice = true);
     ~DriverManager() override;
     CLASS_DELETE_COPY_MOVE(DriverManager)
 
@@ -51,10 +51,11 @@ public slots:
 protected:
     void setErrorCode(quint32 v);
 
-    virtual void abortWorker();
-
 private:
     void updateErrorCode(bool success);
+
+    void setupWorker();
+    void abortWorker();
 
     bool writeData(quint32 code, QByteArray &buf, int size);
 

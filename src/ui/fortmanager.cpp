@@ -97,13 +97,13 @@ void FortManager::initialize()
     m_initialized = true;
 
     setupThreadPool();
+    setupLogger();
 
     createManagers();
 
     setupControlManager();
     setupRpcManager();
 
-    setupLogger();
     setupEventFilter();
     setupEnvManager();
 
@@ -112,8 +112,8 @@ void FortManager::initialize()
     setupStatManager();
     setupAppInfoManager();
 
-    setupDriver();
     setupLogManager();
+    setupDriver();
 
     setupAppInfoCache();
     setupHostInfoCache();
@@ -127,6 +127,25 @@ void FortManager::initialize()
 void FortManager::setupThreadPool()
 {
     QThreadPool::globalInstance()->setMaxThreadCount(qMax(8, QThread::idealThreadCount() * 2));
+}
+
+void FortManager::setupLogger()
+{
+    Logger *logger = Logger::instance();
+
+    logger->setIsService(settings()->isService());
+    logger->setPath(settings()->logsPath());
+}
+
+void FortManager::updateLogger()
+{
+    if (!conf()->iniEdited())
+        return;
+
+    Logger *logger = Logger::instance();
+
+    logger->setDebug(conf()->ini().logDebug());
+    logger->setConsole(conf()->ini().logConsole());
 }
 
 void FortManager::createManagers()
@@ -165,6 +184,16 @@ void FortManager::setupRpcManager()
     if (rpcManager()) {
         rpcManager()->initialize();
     }
+}
+
+void FortManager::setupLogManager()
+{
+    logManager()->initialize();
+}
+
+void FortManager::closeLogManager()
+{
+    logManager()->close();
 }
 
 bool FortManager::installDriver()
@@ -211,40 +240,6 @@ void FortManager::closeDriver()
     driverManager()->closeDevice();
 }
 
-void FortManager::setupLogManager()
-{
-    logManager()->initialize();
-}
-
-void FortManager::closeLogManager()
-{
-    logManager()->close();
-}
-
-void FortManager::setupLogger()
-{
-    Logger *logger = Logger::instance();
-
-    logger->setIsService(settings()->isService());
-    logger->setPath(settings()->logsPath());
-
-    connect(confManager(), &ConfManager::confChanged, this, &FortManager::updateLogger);
-}
-
-void FortManager::updateLogger()
-{
-    if (!conf()->iniEdited())
-        return;
-
-    Logger *logger = Logger::instance();
-
-    logger->setDebug(conf()->ini().logDebug());
-
-    if (!settings()->isService()) {
-        logger->setConsole(conf()->ini().logConsole());
-    }
-}
-
 void FortManager::setupEventFilter()
 {
     m_nativeEventFilter = new NativeEventFilter(this);
@@ -263,10 +258,11 @@ void FortManager::setupConfManager()
     confManager()->initialize();
 
     connect(confManager(), &ConfManager::confChanged, this, [&](bool onlyFlags) {
-        if (onlyFlags && !conf()->flagsEdited())
-            return;
+        updateLogger();
 
-        updateDriverConf(onlyFlags);
+        if (!onlyFlags || conf()->flagsEdited()) {
+            updateDriverConf(onlyFlags);
+        }
     });
 }
 

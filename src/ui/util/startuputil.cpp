@@ -26,6 +26,8 @@ const char *const regShellMenu = R"(SOFTWARE\Classes\SystemFileAssociations\.exe
 const wchar_t *const serviceNameStr = L"" APP_BASE "Svc";
 const wchar_t *const serviceDisplayStr = L"" APP_NAME " Service";
 const wchar_t *const serviceDescriptionStr = L"Manages " APP_NAME " logic as background server.";
+// Service Dependencies: Double null-terminated array of null-separated names of services
+const wchar_t *const serviceDependenciesStr = L"fortfw\0\0";
 
 QString startupShortcutPath()
 {
@@ -94,14 +96,14 @@ void removeAutorunForAllUsers()
 }
 
 bool installService(const wchar_t *serviceName, const wchar_t *serviceDisplay,
-        const wchar_t *serviceDescription, const QString &command)
+        const wchar_t *serviceDescription, const wchar_t *dependencies, const QString &command)
 {
     bool res = false;
     const SC_HANDLE mngr = OpenSCManager(NULL, NULL, SC_MANAGER_CREATE_SERVICE);
     if (mngr) {
         const SC_HANDLE svc = CreateServiceW(mngr, serviceName, serviceDisplay, SERVICE_ALL_ACCESS,
                 SERVICE_WIN32_OWN_PROCESS, SERVICE_AUTO_START, SERVICE_ERROR_NORMAL,
-                (LPCWSTR) command.utf16(), 0, 0, 0, 0, 0);
+                (LPCWSTR) command.utf16(), nullptr, 0, dependencies, nullptr, nullptr);
         if (svc) {
             SERVICE_DESCRIPTION sd = { (LPWSTR) serviceDescription };
             ChangeServiceConfig2(svc, SERVICE_CONFIG_DESCRIPTION, &sd);
@@ -168,7 +170,8 @@ void StartupUtil::setServiceInstalled(bool install, const QString &defaultLangua
 
     const QString command = autoRunCommand(defaultLanguage) + " --service";
 
-    installService(serviceNameStr, serviceDisplayStr, serviceDescriptionStr, command);
+    installService(serviceNameStr, serviceDisplayStr, serviceDescriptionStr, serviceDependenciesStr,
+            command);
 }
 
 bool StartupUtil::startService()

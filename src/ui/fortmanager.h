@@ -136,19 +136,19 @@ public slots:
 private:
     void setupThreadPool();
 
+    void setupLogger();
+    void updateLogger();
+
     void createManagers();
 
     void setupControlManager();
     void setupRpcManager();
 
-    bool setupDriver();
-    void closeDriver();
-
     void setupLogManager();
     void closeLogManager();
 
-    void setupLogger();
-    void updateLogger();
+    bool setupDriver();
+    void closeDriver();
 
     void setupEventFilter();
     void setupEnvManager();

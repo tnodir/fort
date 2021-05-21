@@ -4,7 +4,7 @@
 #include "../rpc/rpcmanager.h"
 
 DriverManagerRpc::DriverManagerRpc(FortManager *fortManager, QObject *parent) :
-    DriverManager(parent), m_isDeviceOpened(false), m_fortManager(fortManager)
+    DriverManager(parent, false), m_isDeviceOpened(false), m_fortManager(fortManager)
 {
 }
 
