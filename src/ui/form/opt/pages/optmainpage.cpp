@@ -18,6 +18,7 @@
 #include "optionspage.h"
 #include "rulespage.h"
 #include "schedulepage.h"
+#include "servicespage.h"
 #include "statisticspage.h"
 
 OptMainPage::OptMainPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctrl, parent)
@@ -31,8 +32,9 @@ void OptMainPage::onRetranslateUi()
     m_tabBar->setTabText(1, tr("IPv4 Addresses"));
     m_tabBar->setTabText(2, tr("Network Rules"));
     m_tabBar->setTabText(3, tr("Application Groups"));
-    m_tabBar->setTabText(4, tr("Statistics"));
-    m_tabBar->setTabText(5, tr("Schedule"));
+    m_tabBar->setTabText(4, tr("Services"));
+    m_tabBar->setTabText(5, tr("Statistics"));
+    m_tabBar->setTabText(6, tr("Schedule"));
 
     m_btLogs->setText(tr("Logs"));
     m_btProfile->setText(tr("Profile"));
@@ -66,6 +68,7 @@ void OptMainPage::setupTabBar()
     auto addressesPage = new AddressesPage(ctrl());
     auto rulesPage = new RulesPage(ctrl());
     auto applicationsPage = new ApplicationsPage(ctrl());
+    auto servicesPage = new ServicesPage(ctrl());
     auto statisticsPage = new StatisticsPage(ctrl());
     auto schedulePage = new SchedulePage(ctrl());
 
@@ -74,11 +77,13 @@ void OptMainPage::setupTabBar()
     m_tabBar->addTab(addressesPage, IconCache::icon(":/icons/map-marker.png"), QString());
     m_tabBar->addTab(rulesPage, IconCache::icon(":/icons/task-list.png"), QString());
     m_tabBar->addTab(applicationsPage, IconCache::icon(":/icons/window.png"), QString());
+    m_tabBar->addTab(servicesPage, IconCache::icon(":/icons/windows-48.png"), QString());
     m_tabBar->addTab(statisticsPage, IconCache::icon(":/icons/chart-bar.png"), QString());
     m_tabBar->addTab(schedulePage, IconCache::icon(":/icons/clock.png"), QString());
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     m_tabBar->setTabVisible(2, false); // TODO: Impl. Network Rules
+    // m_tabBar->setTabVisible(4, false); // TODO: Impl. Services
 #endif
 }
 

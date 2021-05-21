@@ -63,9 +63,9 @@ void ConnectionsPage::onRetranslateUi()
     m_actCopy->setText(tr("Copy"));
     m_actAddProgram->setText(tr("Add Program"));
     m_actRemoveConn->setText(tr("Remove"));
-    m_actClearConns->setText(tr("Clear All"));
+    m_actClearAll->setText(tr("Clear All"));
 
-    m_btLogOptions->setText(tr("Options"));
+    m_btOptions->setText(tr("Options"));
     m_cbAutoScroll->setText(tr("Auto scroll"));
     m_cbShowHostNames->setText(tr("Show host names"));
 
@@ -114,7 +114,7 @@ QLayout *ConnectionsPage::setupHeader()
     m_actRemoveConn = editMenu->addAction(IconCache::icon(":/icons/sign-delete.png"), QString());
     m_actRemoveConn->setShortcut(Qt::Key_Delete);
 
-    m_actClearConns = editMenu->addAction(IconCache::icon(":/icons/trashcan-full.png"), QString());
+    m_actClearAll = editMenu->addAction(IconCache::icon(":/icons/trashcan-full.png"), QString());
 
     connect(m_actCopy, &QAction::triggered, this,
             [&] { GuiUtil::setClipboardData(m_connListView->selectedText()); });
@@ -130,7 +130,7 @@ QLayout *ConnectionsPage::setupHeader()
             deleteConn(m_connListView->currentRow());
         }
     });
-    connect(m_actClearConns, &QAction::triggered, this, [&] {
+    connect(m_actClearAll, &QAction::triggered, this, [&] {
         if (fortManager()->showQuestionBox(tr("Are you sure to remove all connections?"))) {
             connListModel()->clear();
         }
@@ -139,17 +139,17 @@ QLayout *ConnectionsPage::setupHeader()
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
     m_btEdit->setMenu(editMenu);
 
-    // Log Options
-    setupLogOptions();
+    // Options
+    setupOptions();
 
     layout->addWidget(m_btEdit);
     layout->addStretch();
-    layout->addWidget(m_btLogOptions);
+    layout->addWidget(m_btOptions);
 
     return layout;
 }
 
-void ConnectionsPage::setupLogOptions()
+void ConnectionsPage::setupOptions()
 {
     setupAutoScroll();
     setupShowHostNames();
@@ -160,8 +160,8 @@ void ConnectionsPage::setupLogOptions()
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
-    m_btLogOptions = ControlUtil::createButton(":/icons/wrench.png");
-    m_btLogOptions->setMenu(menu);
+    m_btOptions = ControlUtil::createButton(":/icons/wrench.png");
+    m_btOptions->setMenu(menu);
 }
 
 void ConnectionsPage::setupAutoScroll()

@@ -56,6 +56,7 @@ SOURCES += \
     form/opt/pages/optmainpage.cpp \
     form/opt/pages/rulespage.cpp \
     form/opt/pages/schedulepage.cpp \
+    form/opt/pages/servicespage.cpp \
     form/opt/pages/statisticspage.cpp \
     form/prog/programeditdialog.cpp \
     form/prog/programscontroller.cpp \
@@ -83,6 +84,7 @@ SOURCES += \
     model/applistmodel.cpp \
     model/appstatmodel.cpp \
     model/connlistmodel.cpp \
+    model/servicelistmodel.cpp \
     model/traflistmodel.cpp \
     model/zonelistmodel.cpp \
     model/zonesourcewrapper.cpp \
@@ -200,6 +202,7 @@ HEADERS += \
     form/opt/pages/optmainpage.h \
     form/opt/pages/rulespage.h \
     form/opt/pages/schedulepage.h \
+    form/opt/pages/servicespage.h \
     form/opt/pages/statisticspage.h \
     form/prog/programeditdialog.h \
     form/prog/programscontroller.h \
@@ -228,6 +231,7 @@ HEADERS += \
     model/applistmodel.h \
     model/appstatmodel.h \
     model/connlistmodel.h \
+    model/servicelistmodel.h \
     model/traflistmodel.h \
     model/zonelistmodel.h \
     model/zonesourcewrapper.h \

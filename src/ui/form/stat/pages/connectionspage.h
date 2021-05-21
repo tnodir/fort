@@ -37,7 +37,7 @@ protected slots:
 private:
     void setupUi();
     QLayout *setupHeader();
-    void setupLogOptions();
+    void setupOptions();
     void setupAutoScroll();
     void setupShowHostNames();
     void setupTableConnList();
@@ -58,8 +58,8 @@ private:
     QAction *m_actCopy = nullptr;
     QAction *m_actAddProgram = nullptr;
     QAction *m_actRemoveConn = nullptr;
-    QAction *m_actClearConns = nullptr;
-    QPushButton *m_btLogOptions = nullptr;
+    QAction *m_actClearAll = nullptr;
+    QPushButton *m_btOptions = nullptr;
     QCheckBox *m_cbAutoScroll = nullptr;
     QCheckBox *m_cbShowHostNames = nullptr;
     TableView *m_connListView = nullptr;
