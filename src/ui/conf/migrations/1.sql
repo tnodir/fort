@@ -128,3 +128,11 @@ CREATE TABLE task(
   last_success INTEGER NOT NULL,
   data BLOB
 );
+
+CREATE TABLE service(
+  service_id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  app_group_id INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE UNIQUE INDEX service_name_uk ON service(name);

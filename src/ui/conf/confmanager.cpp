@@ -27,7 +27,7 @@ Q_LOGGING_CATEGORY(CLOG_CONF_MANAGER, "conf")
 #define logWarning()  qCWarning(CLOG_CONF_MANAGER, )
 #define logCritical() qCCritical(CLOG_CONF_MANAGER, )
 
-#define DATABASE_USER_VERSION 8
+#define DATABASE_USER_VERSION 9
 
 namespace {
 
@@ -79,6 +79,10 @@ const char *const sqlUpdateAppGroup = "UPDATE app_group"
 
 const char *const sqlDeleteAppGroup = "DELETE FROM app_group"
                                       "  WHERE app_group_id = ?1;";
+
+const char *const sqlInsertService = "INSERT INTO service(name, app_group_id) VALUES(?1, ?2);";
+
+const char *const sqlDeleteServices = "DELETE FROM service;";
 
 const char *const sqlSelectTaskByName = "SELECT task_id, enabled, interval_hours,"
                                         "    last_run, last_success, data"
@@ -323,6 +327,51 @@ bool saveAppGroups(SqliteDb *db, const FirewallConf &conf)
         if (!saveAppGroup(db, appGroup, orderIndex++))
             return false;
     }
+    return true;
+}
+
+bool removeAppGroupsInDb(SqliteDb *db, const FirewallConf &conf)
+{
+    Q_ASSERT(!conf.appGroups().isEmpty());
+    const auto defaultAppGroupId = conf.appGroups().at(0)->id();
+
+    for (const qint64 appGroupId : conf.removedAppGroupIdList()) {
+        bool ok;
+
+        db->executeEx(
+                sqlUpdateAppResetGroup, QVariantList() << appGroupId << defaultAppGroupId, 0, &ok);
+        if (!ok)
+            return false;
+
+        db->executeEx(sqlDeleteAppGroup, QVariantList() << appGroupId, 0, &ok);
+        if (!ok)
+            return false;
+    }
+
+    conf.clearRemovedAppGroupIdList();
+
+    return true;
+}
+
+bool saveServices(SqliteDb *db, const FirewallConf &conf)
+{
+#if 0
+    bool ok;
+
+    // Delete services
+    db->executeEx(sqlDeleteServices, {}, 0, &ok);
+    if (!ok)
+        return false;
+
+    // Add services
+    SqliteStmt stmt;
+    if (!db->prepare(stmt, sqlInsertService))
+        return false;
+
+    for (const auto &v : conf.servicesMap()) {
+    }
+
+#endif
     return true;
 }
 
@@ -1054,7 +1103,8 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
 
     const bool ok = saveAddressGroups(sqliteDb(), conf) // Save Address Groups
             && saveAppGroups(sqliteDb(), conf) // Save App Groups
-            && removeAppGroupsInDb(conf); // Remove App Groups
+            && removeAppGroupsInDb(sqliteDb(), conf) // Remove App Groups
+            && saveServices(sqliteDb(), conf); // Save Services
 
     return checkResult(ok, true);
 }
@@ -1080,29 +1130,6 @@ void ConfManager::saveOthersByIni(const IniOptions &ini)
     if (ini.taskInfoListSet()) {
         taskManager()->saveVariant(ini.taskInfoList());
     }
-}
-
-bool ConfManager::removeAppGroupsInDb(const FirewallConf &conf)
-{
-    Q_ASSERT(!conf.appGroups().isEmpty());
-    const auto defaultAppGroupId = conf.appGroups().at(0)->id();
-
-    for (const qint64 appGroupId : conf.removedAppGroupIdList()) {
-        bool ok;
-
-        sqliteDb()->executeEx(
-                sqlUpdateAppResetGroup, QVariantList() << appGroupId << defaultAppGroupId, 0, &ok);
-        if (!ok)
-            return false;
-
-        sqliteDb()->executeEx(sqlDeleteAppGroup, QVariantList() << appGroupId, 0, &ok);
-        if (!ok)
-            return false;
-    }
-
-    conf.clearRemovedAppGroupIdList();
-
-    return true;
 }
 
 bool ConfManager::loadTask(TaskInfo *taskInfo)

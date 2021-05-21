@@ -133,8 +133,6 @@ private:
 
     void saveOthersByIni(const IniOptions &ini);
 
-    bool removeAppGroupsInDb(const FirewallConf &conf);
-
     bool loadTask(TaskInfo *taskInfo);
     bool saveTask(TaskInfo *taskInfo);
 

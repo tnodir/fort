@@ -106,6 +106,9 @@ public:
     const QVector<qint64> &removedAppGroupIdList() const { return m_removedAppGroupIdList; }
     void clearRemovedAppGroupIdList() const;
 
+    QVariantMap servicesMap() const { return m_servicesMap; }
+    void setServicesMap(const QVariantMap &servicesMap);
+
     IniOptions &ini() { return m_ini; }
     const IniOptions &ini() const { return m_ini; }
 
@@ -182,8 +185,11 @@ private:
     QString m_activePeriodTo;
 
     QList<AddressGroup *> m_addressGroups;
+
     QList<AppGroup *> m_appGroups;
     mutable QVector<qint64> m_removedAppGroupIdList;
+
+    QVariantMap m_servicesMap;
 
     IniOptions m_ini;
 };

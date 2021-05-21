@@ -83,7 +83,7 @@ void OptMainPage::setupTabBar()
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     m_tabBar->setTabVisible(2, false); // TODO: Impl. Network Rules
-    // m_tabBar->setTabVisible(4, false); // TODO: Impl. Services
+    m_tabBar->setTabVisible(4, false); // TODO: Impl. Services
 #endif
 }
 
