@@ -76,7 +76,7 @@ void OptMainPage::setupTabBar()
     m_tabBar->addTab(optionsPage, IconCache::icon(":/icons/cog.png"), QString());
     m_tabBar->addTab(addressesPage, IconCache::icon(":/icons/map-marker.png"), QString());
     m_tabBar->addTab(rulesPage, IconCache::icon(":/icons/task-list.png"), QString());
-    m_tabBar->addTab(applicationsPage, IconCache::icon(":/icons/window.png"), QString());
+    m_tabBar->addTab(applicationsPage, IconCache::icon(":/icons/window-list.png"), QString());
     m_tabBar->addTab(servicesPage, IconCache::icon(":/icons/windows-48.png"), QString());
     m_tabBar->addTab(statisticsPage, IconCache::icon(":/icons/chart-bar.png"), QString());
     m_tabBar->addTab(schedulePage, IconCache::icon(":/icons/clock.png"), QString());

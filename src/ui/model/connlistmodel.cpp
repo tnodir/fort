@@ -144,9 +144,8 @@ QVariant ConnListModel::dataDisplayDirection(const ConnRow &connRow, int role) c
 {
     if (role == Qt::ToolTipRole) {
         if (connRow.blocked) {
-            // Show block reason in tool-tip
-            const auto blockRow = getConnRowBlock(connRow.rowId);
-            return blockReasonText(blockRow);
+            // Show block reason in a tool-tip
+            return blockReasonText(connRow);
         }
     }
     return connRow.inbound ? tr("In") : tr("Out");
@@ -164,17 +163,16 @@ QVariant ConnListModel::dataDecoration(const QModelIndex &index) const
         case 0:
             return appInfoCache()->appIcon(connRow.appPath);
         case 5:
-            return connRow.blocked ? IconCache::icon(":/icons/sign-ban.png")
-                                   : IconCache::icon(":/icons/sign-check.png");
+            return IconCache::icon(connIconPath(connRow));
         }
     }
 
     return QVariant();
 }
 
-QString ConnListModel::blockReasonText(const ConnBlockRow &blockRow)
+QString ConnListModel::blockReasonText(const ConnRow &connRow)
 {
-    switch (blockRow.blockReason) {
+    switch (connRow.blockReason) {
     case LogEntryBlockedIp::ReasonIpInet:
         return tr("Blocked Internet address");
     case LogEntryBlockedIp::ReasonReauth:
@@ -188,6 +186,27 @@ QString ConnListModel::blockReasonText(const ConnBlockRow &blockRow)
     default:
         return tr("Unknown");
     }
+}
+
+QString ConnListModel::connIconPath(const ConnRow &connRow)
+{
+    if (connRow.blocked) {
+        switch (connRow.blockReason) {
+        case LogEntryBlockedIp::ReasonIpInet:
+            return ":/icons/map-marker.png";
+        case LogEntryBlockedIp::ReasonReauth:
+            return ":/icons/sign-sync.png";
+        case LogEntryBlockedIp::ReasonProgram:
+            return ":/icons/window.png";
+        case LogEntryBlockedIp::ReasonAppGroupFound:
+            return ":/icons/window-list.png";
+        case LogEntryBlockedIp::ReasonAppGroupDefault:
+        default:
+            return ":/icons/sign-ban.png";
+        }
+    }
+
+    return ":/icons/sign-check.png";
 }
 
 void ConnListModel::deleteConn(qint64 rowIdTo, bool blocked, int row)
@@ -204,13 +223,6 @@ const ConnRow &ConnListModel::connRowAt(int row) const
     updateRowCache(row);
 
     return m_connRow;
-}
-
-ConnBlockRow ConnListModel::getConnRowBlock(qint64 rowId) const
-{
-    static const char *const sql = "SELECT block_reason FROM conn_block WHERE id = ?1";
-
-    return { quint8(sqliteDb()->executeEx(sql, { rowId }).toInt()) };
 }
 
 void ConnListModel::clear()
@@ -242,6 +254,10 @@ bool ConnListModel::updateTableRow(int row) const
     m_connRow.remoteIp = stmt.columnInt(10);
     m_connRow.appPath = stmt.columnText(11);
 
+    if (blockedMode()) {
+        m_connRow.blockReason = stmt.columnInt(12);
+    }
+
     return true;
 }
 
@@ -264,11 +280,13 @@ QString ConnListModel::sqlBase() const
                                "    t.remote_port,"
                                "    t.local_ip,"
                                "    t.remote_ip,"
-                               "    a.path"
+                               "    a.path,"
+                               "    %2"
                                "  FROM conn t"
                                "    JOIN %1 c ON c.conn_id = t.conn_id"
                                "    JOIN app a ON a.app_id = t.app_id")
-            .arg(blockedMode() ? "conn_block" : "conn_traffic");
+            .arg(blockedMode() ? "conn_block" : "conn_traffic",
+                    blockedMode() ? "c.block_reason" : "c.end_time, c.in_bytes, c.out_bytes");
 }
 
 QString ConnListModel::sqlWhere() const

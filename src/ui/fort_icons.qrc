@@ -37,6 +37,7 @@
     <file>icons/task-list.png</file>
     <file>icons/trashcan-full.png</file>
     <file>icons/window.png</file>
+    <file>icons/window-list.png</file>
     <file>icons/windows-48.png</file>
     <file>icons/wrench.png</file>
 </qresource>

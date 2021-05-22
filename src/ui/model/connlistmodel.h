@@ -15,6 +15,8 @@ struct ConnRow : TableRow
     bool inbound = false;
     bool blocked = false;
 
+    quint8 blockReason = 0;
+
     quint8 ipProto = 0;
     quint16 localPort = 0;
     quint16 remotePort = 0;
@@ -30,11 +32,6 @@ struct ConnRow : TableRow
     QString appPath;
 
     QDateTime connTime;
-};
-
-struct ConnBlockRow
-{
-    quint8 blockReason = 0;
 };
 
 class ConnListModel : public TableSqlModel
@@ -71,8 +68,6 @@ public:
 
     const ConnRow &connRowAt(int row) const;
 
-    ConnBlockRow getConnRowBlock(qint64 rowId) const;
-
 public slots:
     void clear();
 
@@ -90,7 +85,8 @@ private:
     QVariant dataDisplayDirection(const ConnRow &connRow, int role) const;
     QVariant dataDecoration(const QModelIndex &index) const;
 
-    static QString blockReasonText(const ConnBlockRow &blockRow);
+    static QString blockReasonText(const ConnRow &connRow);
+    static QString connIconPath(const ConnRow &connRow);
 
     qint64 rowIdMin() const;
     qint64 rowIdMax() const;
