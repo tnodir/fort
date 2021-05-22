@@ -1,5 +1,6 @@
 #include "drivermanagerrpc.h"
 
+#include "../control/controlworker.h"
 #include "../fortmanager.h"
 #include "../rpc/rpcmanager.h"
 
@@ -21,16 +22,6 @@ RpcManager *DriverManagerRpc::rpcManager() const
     return fortManager()->rpcManager();
 }
 
-bool DriverManagerRpc::reinstallDriver()
-{
-    return rpcManager()->doOnServer(Control::Rpc_DriverManager_reinstallDriver);
-}
-
-bool DriverManagerRpc::uninstallDriver()
-{
-    return rpcManager()->doOnServer(Control::Rpc_DriverManager_uninstallDriver);
-}
-
 void DriverManagerRpc::updateState(quint32 errorCode, bool isDeviceOpened)
 {
     setIsDeviceOpened(isDeviceOpened);
@@ -44,5 +35,9 @@ bool DriverManagerRpc::openDevice()
 
 bool DriverManagerRpc::closeDevice()
 {
+    rpcManager()->client()->abort();
+
+    updateState(0, false);
+
     return false;
 }

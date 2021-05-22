@@ -2,6 +2,7 @@
 #include <QMessageBox>
 #include <QStyle>
 #include <QStyleFactory>
+#include <QThread>
 
 #ifdef USE_VISUAL_LEAK_DETECTOR
 #    include <vld.h>
@@ -79,6 +80,11 @@ int main(int argc, char *argv[])
     // Check running instance
     if (!fortManager.checkRunningInstance())
         return FORT_ERROR_INSTANCE;
+
+    if (settings.hasService() && StartupUtil::startService()) {
+        QThread::msleep(50); // Let the service to start
+    }
+    settings.setIsUserAdmin(OsUtil::isUserAdmin());
 
     fortManager.initialize();
 

@@ -42,7 +42,8 @@ private:
     LogBuffer *m_logBuffer = nullptr;
 
     QMutex m_mutex;
-    QWaitCondition m_waitCondition;
+    QWaitCondition m_bufferWaitCondition;
+    QWaitCondition m_cancelledWaitCondition;
 };
 
 #endif // DRIVERWORKER_H

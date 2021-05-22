@@ -16,8 +16,6 @@ public:
 
     bool isOpened() const;
 
-signals:
-
 public slots:
     bool open(const QString &filePath);
     bool close();

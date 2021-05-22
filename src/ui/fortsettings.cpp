@@ -33,6 +33,7 @@ FortSettings::FortSettings(QObject *parent) :
     m_noCache(false),
     m_isService(false),
     m_hasService(false),
+    m_isUserAdmin(false),
     m_passwordChecked(false),
     m_passwordUnlockType(0)
 {
@@ -120,10 +121,6 @@ void FortSettings::initialize(const QStringList &args, EnvManager *envManager)
     createPaths();
 
     setupIni(profilePath() + APP_BASE + ".ini");
-
-    if (isService()) {
-        qputenv("FORT_SILENT", "1"); // For batch scripts
-    }
 }
 
 void FortSettings::processArguments(const QStringList &args)

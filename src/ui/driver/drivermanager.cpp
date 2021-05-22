@@ -128,12 +128,12 @@ bool DriverManager::writeData(quint32 code, QByteArray &buf, int size)
 
 bool DriverManager::reinstallDriver()
 {
-    return executeCommand("reinstall.lnk");
+    return executeCommand("reinstall.bat");
 }
 
 bool DriverManager::uninstallDriver()
 {
-    return executeCommand("uninstall.lnk");
+    return executeCommand("uninstall.bat");
 }
 
 bool DriverManager::executeCommand(const QString &fileName)
@@ -143,5 +143,5 @@ bool DriverManager::executeCommand(const QString &fileName)
     const QString cmdPath = qEnvironmentVariable("COMSPEC");
     const QString scriptPath = binPath + R"(\driver\scripts\execute-cmd.bat)";
 
-    return QProcess::execute(cmdPath, QStringList() << "/C" << scriptPath << fileName) == 0;
+    return QProcess::execute(cmdPath, { "/C", scriptPath, fileName }) == 0;
 }

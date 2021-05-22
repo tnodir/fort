@@ -46,6 +46,7 @@
 #include "util/nativeeventfilter.h"
 #include "util/net/hostinfocache.h"
 #include "util/osutil.h"
+#include "util/startuputil.h"
 
 FortManager::FortManager(FortSettings *settings, EnvManager *envManager,
         ControlManager *controlManager, QObject *parent) :
@@ -113,7 +114,7 @@ void FortManager::initialize()
     setupAppInfoManager();
 
     setupLogManager();
-    setupDriver();
+    setupDriverManager();
 
     setupAppInfoCache();
     setupHostInfoCache();
@@ -202,8 +203,15 @@ bool FortManager::installDriver()
 
     driverManager()->reinstallDriver();
 
-    if (setupDriver()) {
-        updateDriverConf();
+    if (settings()->hasService()) {
+        // Re-install the service and app restart required to continue
+        StartupUtil::setServiceInstalled(true, settings()->defaultLanguage());
+        processRestartRequired();
+    } else {
+        // Re-open the driver device and initialize it
+        if (setupDriver()) {
+            updateDriverConf();
+        }
     }
 
     return true;
@@ -218,10 +226,15 @@ bool FortManager::removeDriver()
     return true;
 }
 
-bool FortManager::setupDriver()
+void FortManager::setupDriverManager()
 {
     driverManager()->initialize();
 
+    setupDriver();
+}
+
+bool FortManager::setupDriver()
+{
     bool ok = driverManager()->openDevice();
 
     if (ok && !confManager()->validateDriver()) {

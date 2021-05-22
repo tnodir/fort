@@ -1,7 +1,5 @@
 @rem Install driver
 
-@set DISPNAME=Fort Firewall Driver
-
 @set ARCH=32
 @if defined PROGRAMFILES(X86) @set ARCH=64
 
@@ -9,6 +7,9 @@
 @set FILENAME=%BASENAME%%ARCH%.sys
 @set SRCPATH=%~dp0..\%FILENAME%
 @set DSTPATH=%SystemRoot%\System32\drivers\%BASENAME%.sys
+
+@set DRIVERSVC=%BASENAME%
+@set DISPNAME=Fort Firewall Driver
 
 
 @rem Copy driver to system storage
@@ -26,15 +27,16 @@ copy "%SRCPATH%" "%DSTPATH%"
 )
 
 
-@rem Create service
-sc create %BASENAME% binPath= "%DSTPATH%" type= kernel start= auto depend= BFE DisplayName= "%DISPNAME%"
+@rem Create the driver service
+sc create %DRIVERSVC% binPath= "%DSTPATH%" type= kernel start= auto depend= BFE DisplayName= "%DISPNAME%"
 @if ERRORLEVEL 1 (
     @echo Error: Cannot create a service
     @set RCODE=%ERRORLEVEL%
     @goto EXIT
 )
 
-sc start %BASENAME%
+@rem Start the driver service
+sc start %DRIVERSVC%
 @if ERRORLEVEL 1 (
     @echo Error: Cannot start the service
     @set RCODE=%ERRORLEVEL%
@@ -48,6 +50,6 @@ sc start %BASENAME%
 :EXIT
 @echo End execution... Error Code = %RCODE%
 @if %RCODE% neq 0 (
-    @if "%FORT_SILENT%" equ "" @pause
+    @pause
 )
 @exit /b %RCODE%

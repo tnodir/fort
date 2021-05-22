@@ -147,6 +147,7 @@ private:
     void setupLogManager();
     void closeLogManager();
 
+    void setupDriverManager();
     bool setupDriver();
     void closeDriver();
 

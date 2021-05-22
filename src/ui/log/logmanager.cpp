@@ -125,12 +125,12 @@ void LogManager::processLogBuffer(LogBuffer *logBuffer, bool success, quint32 er
 
     if (success) {
         readLogEntries(logBuffer);
-        logBuffer->reset();
     } else {
         const auto errorMessage = OsUtil::errorMessage(errorCode);
         setErrorMessage(errorMessage);
     }
 
+    logBuffer->reset();
     addFreeBuffer(logBuffer);
 }
 
@@ -167,7 +167,10 @@ void LogManager::readLogEntries(LogBuffer *logBuffer)
         } break;
         default:
             if (logBuffer->offset() < logBuffer->top()) {
-                qCritical() << "Unknown Log entry:" << logType;
+                qCritical() << "Unknown Log entry:" << logType << logBuffer->offset()
+                            << logBuffer->top()
+                            << QByteArray(logBuffer->array().constData() + logBuffer->offset(),
+                                       logBuffer->top() - logBuffer->offset());
             }
             return;
         }

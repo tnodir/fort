@@ -38,8 +38,6 @@ enum Command : qint8 {
     Rpc_ConfManager_zoneRemoved,
     Rpc_ConfManager_zoneUpdated,
 
-    Rpc_DriverManager_reinstallDriver,
-    Rpc_DriverManager_uninstallDriver,
     Rpc_DriverManager_updateState,
 
     Rpc_QuotaManager_alert,

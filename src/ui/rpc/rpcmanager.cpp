@@ -286,7 +286,7 @@ bool RpcManager::processManagerRpc(
         return processConfManagerRpc(w, cmd, args);
 
     case Control::Rpc_DriverManager:
-        return processDriverManagerRpc(w, cmd, args);
+        return processDriverManagerRpc(cmd, args);
 
     case Control::Rpc_QuotaManager:
         return processQuotaManagerRpc(cmd, args);
@@ -412,16 +412,9 @@ bool RpcManager::processConfManagerRpc(
     }
 }
 
-bool RpcManager::processDriverManagerRpc(
-        ControlWorker *w, Control::Command cmd, const QVariantList &args)
+bool RpcManager::processDriverManagerRpc(Control::Command cmd, const QVariantList &args)
 {
     switch (cmd) {
-    case Control::Rpc_DriverManager_reinstallDriver:
-        sendResult(w, fortManager()->installDriver());
-        return true;
-    case Control::Rpc_DriverManager_uninstallDriver:
-        sendResult(w, fortManager()->removeDriver());
-        return true;
     case Control::Rpc_DriverManager_updateState:
         if (auto dm = qobject_cast<DriverManagerRpc *>(driverManager())) {
             dm->updateState(args.value(0).toUInt(), args.value(1).toBool());

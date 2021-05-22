@@ -18,11 +18,16 @@ public:
 
     bool isDefaultProfilePath() const { return m_isDefaultProfilePath; }
     bool noCache() const { return m_noCache; }
+
     bool isService() const { return m_isService; }
+
     bool hasService() const { return m_hasService; }
     void setHasService(bool v) { m_hasService = v; }
 
     bool isServiceClient() const { return hasService() && !isService(); }
+
+    bool isUserAdmin() const { return m_isUserAdmin; }
+    void setIsUserAdmin(bool v) { m_isUserAdmin = v; }
 
     QString defaultLanguage() const { return m_defaultLanguage; }
 
@@ -87,6 +92,7 @@ private:
     uint m_noCache : 1;
     uint m_isService : 1;
     uint m_hasService : 1;
+    uint m_isUserAdmin : 1;
 
     uint m_passwordChecked : 1;
     uint m_passwordUnlockType : 3;

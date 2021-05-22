@@ -25,7 +25,7 @@ bool DriverWorker::readLogAsync(LogBuffer *logBuffer)
 
     m_logBuffer = logBuffer;
 
-    m_waitCondition.wakeOne();
+    m_bufferWaitCondition.wakeAll();
 
     return true;
 }
@@ -40,7 +40,7 @@ void DriverWorker::cancelAsyncIo()
         m_device->cancelIo();
 
         do {
-            m_waitCondition.wait(&m_mutex);
+            m_cancelledWaitCondition.wait(&m_mutex);
         } while (m_isLogReading);
     }
 }
@@ -52,7 +52,6 @@ void DriverWorker::abort()
 
     m_aborted = true;
 
-    cancelAsyncIo();
     readLogAsync(nullptr);
 }
 
@@ -64,7 +63,7 @@ bool DriverWorker::waitLogBuffer()
         if (m_aborted)
             return false;
 
-        m_waitCondition.wait(&m_mutex);
+        m_bufferWaitCondition.wait(&m_mutex);
     }
 
     m_isLogReading = true;
@@ -84,7 +83,7 @@ void DriverWorker::emitReadLogResult(bool success, quint32 errorCode)
     emit readLogResult(logBuffer, success, errorCode);
 
     if (m_cancelled) {
-        m_waitCondition.wakeOne();
+        m_cancelledWaitCondition.wakeAll();
     }
 }
 

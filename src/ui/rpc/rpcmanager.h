@@ -72,7 +72,7 @@ private:
 
     bool processAppInfoManagerRpc(Control::Command cmd, const QVariantList &args);
     bool processConfManagerRpc(ControlWorker *w, Control::Command cmd, const QVariantList &args);
-    bool processDriverManagerRpc(ControlWorker *w, Control::Command cmd, const QVariantList &args);
+    bool processDriverManagerRpc(Control::Command cmd, const QVariantList &args);
     bool processQuotaManagerRpc(Control::Command cmd, const QVariantList &args);
     bool processStatManagerRpc(ControlWorker *w, Control::Command cmd, const QVariantList &args);
     bool processTaskManagerRpc(Control::Command cmd, const QVariantList &args);

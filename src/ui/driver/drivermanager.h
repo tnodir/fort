@@ -31,8 +31,8 @@ public:
 
     virtual void initialize();
 
-    virtual bool reinstallDriver();
-    virtual bool uninstallDriver();
+    bool reinstallDriver();
+    bool uninstallDriver();
 
 signals:
     void errorCodeChanged();

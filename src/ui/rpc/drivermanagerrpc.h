@@ -21,9 +21,6 @@ public:
 
     void initialize() override { }
 
-    bool reinstallDriver() override;
-    bool uninstallDriver() override;
-
     void updateState(quint32 errorCode, bool isDeviceOpened);
 
 public slots:

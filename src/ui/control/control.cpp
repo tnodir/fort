@@ -40,8 +40,6 @@ const char *const commandString(Command cmd)
         CASE_STRING(Rpc_ConfManager_zoneRemoved)
         CASE_STRING(Rpc_ConfManager_zoneUpdated)
 
-        CASE_STRING(Rpc_DriverManager_reinstallDriver)
-        CASE_STRING(Rpc_DriverManager_uninstallDriver)
         CASE_STRING(Rpc_DriverManager_updateState)
 
         CASE_STRING(Rpc_QuotaManager_alert)
@@ -112,8 +110,6 @@ RpcManager managerByCommand(Command cmd)
     case Rpc_ConfManager_zoneUpdated:
         return Rpc_ConfManager;
 
-    case Rpc_DriverManager_reinstallDriver:
-    case Rpc_DriverManager_uninstallDriver:
     case Rpc_DriverManager_updateState:
         return Rpc_DriverManager;
 
@@ -161,10 +157,6 @@ bool commandRequiresValidation(Command cmd)
     case Rpc_ConfManager_updateZone:
     case Rpc_ConfManager_updateZoneName:
     case Rpc_ConfManager_updateZoneEnabled:
-        return true;
-
-    case Rpc_DriverManager_reinstallDriver:
-    case Rpc_DriverManager_uninstallDriver:
         return true;
 
     case Rpc_StatManager_deleteStatApp:

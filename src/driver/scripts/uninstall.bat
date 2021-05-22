@@ -1,19 +1,22 @@
 @rem Uninstall driver
 
-@set DISPNAME=Fort Firewall
-
 @set BASENAME=fortfw
 @set DSTPATH=%SystemRoot%\System32\drivers\%BASENAME%.sys
 
+@set DRIVERSVC=%BASENAME%
+@set FORTSVC=FortFirewallSvc
 
-@rem Close the "Services" list window
-taskkill /F /IM mmc.exe
 
-@rem Stop the service
-sc stop %BASENAME%
+@rem Stop and delete the FortFirewall service
+@sc stop %FORTSVC%
+@sc delete %FORTSVC%
 
-@rem Remove the service
-sc delete %BASENAME%
+
+@rem Stop the driver service
+sc stop %DRIVERSVC%
+
+@rem Remove the driver service
+sc delete %DRIVERSVC%
 @if ERRORLEVEL 1 (
     @echo Error: Cannot delete the service
     @set RCODE=%ERRORLEVEL%

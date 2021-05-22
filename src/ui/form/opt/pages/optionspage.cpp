@@ -116,7 +116,6 @@ void OptionsPage::saveService(bool isService)
 
             if (g_startup.isService) {
                 StartupUtil::setServiceInstalled(true, defaultLanguage);
-                StartupUtil::startService(); // Try to start the (maybe installed) service
             }
         });
     }
@@ -189,7 +188,7 @@ void OptionsPage::retranslateComboStartMode()
     m_comboAutoRun->setCurrentIndex(currentIndex);
 
     // Disable some items if user is not an administrator
-    if (OsUtil::isUserAdmin())
+    if (settings()->isUserAdmin())
         return;
 
     if (currentIndex >= StartupUtil::StartupAllUsers) {
@@ -356,7 +355,7 @@ void OptionsPage::setupGlobalBox()
         ini()->setExplorerIntegrated(checked);
         ctrl()->setIniEdited();
     });
-    m_cbExplorerMenu->setEnabled(settings()->hasService() || OsUtil::isUserAdmin());
+    m_cbExplorerMenu->setEnabled(settings()->hasService() || settings()->isUserAdmin());
 
     m_cbHotKeys = ControlUtil::createCheckBox(iniUser()->hotKeyEnabled(), [&](bool checked) {
         iniUser()->setHotKeyEnabled(checked);
@@ -540,6 +539,11 @@ void OptionsPage::setupDriverBox()
         }
     });
 
+    if (!settings()->isUserAdmin()) {
+        m_btInstallDriver->setEnabled(false);
+        m_btRemoveDriver->setEnabled(false);
+    }
+
     buttonsLayout->addStretch();
     buttonsLayout->addWidget(m_btInstallDriver);
     buttonsLayout->addWidget(m_btRemoveDriver);
@@ -556,13 +560,14 @@ void OptionsPage::setupDriverIcon()
     m_iconDriver->setMaximumSize(16, 16);
     m_iconDriver->setPixmap(IconCache::file(":/icons/puzzle.png"));
 
-    const auto refreshDriverIcon = [&] {
+    const auto refreshDriverInfo = [&] {
         m_iconDriver->setEnabled(driverManager()->isDeviceOpened());
+        retranslateDriverMessage();
     };
 
-    refreshDriverIcon();
+    refreshDriverInfo();
 
-    connect(driverManager(), &DriverManager::isDeviceOpenedChanged, this, refreshDriverIcon);
+    connect(driverManager(), &DriverManager::isDeviceOpenedChanged, this, refreshDriverInfo);
     connect(driverManager(), &DriverManager::errorCodeChanged, this,
             &OptionsPage::retranslateDriverMessage);
 }

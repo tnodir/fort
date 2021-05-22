@@ -8,4 +8,4 @@ if defined PROGRAMFILES(X86) (
     if exist %SystemRoot%\Sysnative\* set "SystemPath=%SystemRoot%\Sysnative"
 )
 
-%SystemPath%\cmd.exe /C start /W %1
+start "" /W %SystemPath%\cmd.exe /C %1
