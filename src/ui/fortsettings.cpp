@@ -243,7 +243,7 @@ void FortSettings::setupPaths(EnvManager *envManager)
 
     // User Settings Path
     if (m_userPath.isEmpty()) {
-        m_userPath = defaultConfigPath();
+        m_userPath = defaultProfilePath(false, envManager);
     } else {
         m_userPath = expandPath(m_userPath, envManager);
     }
@@ -275,7 +275,7 @@ QString FortSettings::defaultProfilePath(bool hasService, EnvManager *envManager
 {
     // Is portable?
     {
-        const auto appBinLocation = FileUtil::appBinLocation();
+        const QString appBinLocation = FileUtil::appBinLocation();
         const bool isPortable = FileUtil::fileExists(appBinLocation + "/README.portable");
         if (isPortable)
             return appBinLocation + "/Data/";
@@ -284,11 +284,6 @@ QString FortSettings::defaultProfilePath(bool hasService, EnvManager *envManager
     if (hasService)
         return expandPath(QLatin1String("%ProgramData%\\") + APP_NAME, envManager);
 
-    return defaultConfigPath();
-}
-
-QString FortSettings::defaultConfigPath()
-{
     return pathSlash(FileUtil::appConfigLocation());
 }
 

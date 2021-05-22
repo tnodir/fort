@@ -64,7 +64,6 @@ public:
     bool canMigrate(QString &viaVersion) const;
 
     static QString defaultProfilePath(bool hasService, EnvManager *envManager = nullptr);
-    static QString defaultConfigPath();
 
 signals:
     void passwordCheckedChanged();
