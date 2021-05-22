@@ -238,7 +238,7 @@
     <name>ConfManagerRpc</name>
     <message>
         <source>Settings changed by someone else</source>
-        <translation type="unfinished"></translation>
+        <translation>Paramètres modifiés par quelqu&apos;un d&apos;autre</translation>
     </message>
 </context>
 <context>
@@ -626,20 +626,21 @@
     </message>
     <message>
         <source>Auto-run:</source>
-        <translation type="unfinished"></translation>
+        <translation>Exécution automatique:</translation>
     </message>
     <message>
         <source>Run Fort Firewall as a Service in background</source>
-        <translation type="unfinished"></translation>
+        <translation>Exécutez Fort Firewall en tant que service en arrière-plan</translation>
     </message>
     <message>
         <source>Move Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Déplacer le profil</translation>
     </message>
     <message>
         <source>New profile path is &quot;%1&quot;.
 Would you like to move profile from &quot;%2&quot; to new location?</source>
-        <translation type="unfinished"></translation>
+        <translation>Nouveau chemin du profil est &quot;%1&quot;.
+Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</translation>
     </message>
 </context>
 <context>
@@ -841,15 +842,15 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <name>RpcManager</name>
     <message>
         <source>Service isn&apos;t available.</source>
-        <translation type="unfinished"></translation>
+        <translation>Le service n&apos;est pas disponible.</translation>
     </message>
     <message>
         <source>Service isn&apos;t responding.</source>
-        <translation type="unfinished"></translation>
+        <translation>Le service ne répond pas.</translation>
     </message>
     <message>
         <source>Service error.</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur de service.</translation>
     </message>
 </context>
 <context>
