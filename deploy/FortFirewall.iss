@@ -49,10 +49,10 @@ Name: ko; MessagesFile: "compiler:Languages\Korean.isl"
 Name: pt; MessagesFile: "compiler:Languages\Portuguese.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; Flags: unchecked
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"
+Name: "explorer"; Description: "Windows Explorer"
+Name: "service"; Description: "Windows Service"
 Name: "portable"; Description: "Portable"; Flags: unchecked
-Name: "service"; Description: "Windows Service"; Flags: unchecked
-Name: "explorer"; Description: "Windows Explorer"; Flags: unchecked
 
 [Files]
 Source: "build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
@@ -68,7 +68,7 @@ Name: "{commondesktop}\{#APP_NAME}"; Filename: "{#APP_EXE}"; WorkingDir: "{app}"
   Parameters: "--lang {code:LanguageName}"; Tasks: desktopicon
 
 [Run]
-; 1. Uninstall -> 2. Install Driver -> 3. Install Service
+; 1. Uninstall -> 2. Install Driver -> 3. Portable -> 4. Service
 Filename: "{#APP_EXE}"; Parameters: "-u"
 Filename: "{app}\driver\scripts\reinstall.bat"; Description: "Re-install driver"
 
