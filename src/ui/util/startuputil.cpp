@@ -117,13 +117,13 @@ bool uninstallService(const wchar_t *serviceName)
     if (mngr) {
         const SC_HANDLE svc = OpenServiceW(mngr, serviceName, SERVICE_ALL_ACCESS | DELETE);
         if (svc) {
-            int n = 2; /* count of attempts to stop the service */
+            int n = 3; /* count of attempts to stop the service */
             do {
                 SERVICE_STATUS status;
                 if (QueryServiceStatus(svc, &status) && status.dwCurrentState == SERVICE_STOPPED)
                     break;
                 ControlService(svc, SERVICE_CONTROL_STOP, &status);
-                QThread::msleep(1000);
+                QThread::msleep(n * 100);
             } while (--n > 0);
             res = DeleteService(svc);
             CloseServiceHandle(svc);
@@ -166,14 +166,17 @@ void StartupUtil::setServiceInstalled(bool install)
 
     installService(serviceNameStr, serviceDisplayStr, serviceDescriptionStr, serviceDependenciesStr,
             command);
+
+    startService();
+    QThread::msleep(100); // Let the service to start
 }
 
 bool StartupUtil::startService()
 {
     bool res = false;
-    const SC_HANDLE mngr = OpenSCManagerW(nullptr, nullptr, SC_MANAGER_ALL_ACCESS);
+    const SC_HANDLE mngr = OpenSCManagerW(nullptr, nullptr, SC_MANAGER_CONNECT);
     if (mngr) {
-        const SC_HANDLE svc = OpenServiceW(mngr, serviceNameStr, SERVICE_ALL_ACCESS);
+        const SC_HANDLE svc = OpenServiceW(mngr, serviceNameStr, SERVICE_START);
         if (svc) {
             res = StartServiceW(svc, 0, nullptr);
             CloseServiceHandle(svc);

@@ -1,5 +1,4 @@
 #include <QApplication>
-#include <QThread>
 
 #ifdef USE_VISUAL_LEAK_DETECTOR
 #    include <vld.h>
@@ -93,9 +92,6 @@ int main(int argc, char *argv[])
     if (!fortManager.checkRunningInstance())
         return FORT_ERROR_INSTANCE;
 
-    if (settings.hasService() && StartupUtil::startService()) {
-        QThread::msleep(100); // Let the service to start
-    }
     settings.setIsUserAdmin(OsUtil::isUserAdmin());
 
     fortManager.initialize();
