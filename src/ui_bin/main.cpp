@@ -40,25 +40,32 @@ void install(const char *arg)
     }
 }
 
-}
-
-int main(int argc, char *argv[])
+bool processArgs(int argc, char *argv[])
 {
     // Uninstall
     if (argc > 1 && !strcmp(argv[1], "-u")) {
         uninstall();
-        return 0;
+        return true;
     }
 
     // Install
     if (argc > 2 && !strcmp(argv[1], "-i")) {
         install(argv[2]);
-        return 0;
+        return true;
     }
+
+    return false;
+}
+
+}
+
+int main(int argc, char *argv[])
+{
+    if (processArgs(argc, argv))
+        return 0;
 
     // Process global settings required before QApplication costruction
     FortSettings settings;
-    settings.setHasService(StartupUtil::isServiceInstalled());
     settings.setupGlobal();
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -80,9 +87,8 @@ int main(int argc, char *argv[])
     ControlManager controlManager(&settings);
 
     // Send control command to running instance
-    if (controlManager.isCommandClient()) {
+    if (controlManager.isCommandClient())
         return controlManager.postCommand() ? 0 : FORT_ERROR_CONTROL;
-    }
 
     FortManager::setupResources();
 
@@ -91,8 +97,6 @@ int main(int argc, char *argv[])
     // Check running instance
     if (!fortManager.checkRunningInstance())
         return FORT_ERROR_INSTANCE;
-
-    settings.setIsUserAdmin(OsUtil::isUserAdmin());
 
     fortManager.initialize();
 

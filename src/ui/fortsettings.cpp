@@ -9,6 +9,7 @@
 #include "util/dateutil.h"
 #include "util/envmanager.h"
 #include "util/fileutil.h"
+#include "util/osutil.h"
 #include "util/startuputil.h"
 #include "util/stringutil.h"
 
@@ -102,6 +103,9 @@ void FortSettings::setupGlobal()
     if (!dpiPolicy.isEmpty()) {
         qputenv("QT_SCALE_FACTOR_ROUNDING_POLICY", dpiPolicy.toLatin1());
     }
+
+    m_hasService = StartupUtil::isServiceInstalled();
+    m_isUserAdmin = OsUtil::isUserAdmin();
 
     m_noCache = settings.value("global/noCache").toBool();
     m_defaultLanguage = settings.value("global/defaultLanguage").toString();
