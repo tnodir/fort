@@ -51,11 +51,12 @@ Name: pt; MessagesFile: "compiler:Languages\Portuguese.isl"
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; Flags: unchecked
 Name: "portable"; Description: "Portable"; Flags: unchecked
+Name: "service"; Description: "Windows Service"; Flags: unchecked
+Name: "explorer"; Description: "Windows Explorer"; Flags: unchecked
 
 [Files]
 Source: "build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#APP_EXE_NAME}.example.ini"; DestDir: "{app}"
-Source: "README.portable"; DestDir: "{app}"; Tasks: portable
 
 [Icons]
 ; Start menu shortcut
@@ -67,16 +68,24 @@ Name: "{commondesktop}\{#APP_NAME}"; Filename: "{#APP_EXE}"; WorkingDir: "{app}"
   Parameters: "--lang {code:LanguageName}"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\driver\scripts\reinstall.bat"; Description: "Re-install driver"; Flags: runascurrentuser
-Filename: "sc.exe"; Parameters: "start {#APP_SVC_NAME}"; Description: "Start service"; Flags: runascurrentuser nowait
+; 1. Uninstall -> 2. Install Driver -> 3. Install Service
+Filename: "{#APP_EXE}"; Parameters: "-u"
+Filename: "{app}\driver\scripts\reinstall.bat"; Description: "Re-install driver"
+
+Filename: "{#APP_EXE}"; Parameters: "-i portable"; Tasks: portable
+Filename: "{#APP_EXE}"; Parameters: "-i service"; Tasks: service
+Filename: "{#APP_EXE}"; Parameters: "-i explorer"; Tasks: explorer
+
+Filename: "sc.exe"; Parameters: "start {#APP_SVC_NAME}"; Description: "Start service"; \
+  Flags: nowait; Tasks: service
 
 Filename: "https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads"; \
   Description: "Install the latest Visual C++ x86 redistributable!"; Flags: shellexec postinstall; \
   Check: not VCRedist86Exists()
 
 [UninstallRun]
-Filename: "{#APP_EXE}"; Parameters: "-u"; RunOnceId: "DelProvider"; Flags: runascurrentuser
-Filename: "{app}\driver\scripts\uninstall.bat"; RunOnceId: "DelDriver"; Flags: runascurrentuser
+Filename: "{#APP_EXE}"; Parameters: "-u"; RunOnceId: "Uninstall"
+Filename: "{app}\driver\scripts\uninstall.bat"; RunOnceId: "DelDriver"
 
 [InstallDelete]
 Type: filesandordirs; Name: "{app}\driver"
@@ -92,7 +101,7 @@ var
   ResultCode: Integer;
 begin
   if Exec('sc.exe', ExpandConstant('stop {#APP_SVC_NAME}'), '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
-    if ResultCode = 0 then Sleep(100); // Let service to stop
+    if ResultCode = 0 then Sleep(100); // Let the service to stop
   Result := '';
 end;
 

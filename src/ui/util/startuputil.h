@@ -11,7 +11,7 @@ public:
     static const wchar_t *serviceName();
 
     static bool isServiceInstalled();
-    static void setServiceInstalled(bool install, const QString &defaultLanguage = QString());
+    static void setServiceInstalled(bool install);
 
     static bool startService();
 
@@ -20,6 +20,8 @@ public:
 
     static bool isExplorerIntegrated();
     static void setExplorerIntegrated(bool integrate);
+
+    static void setPortable(bool portable);
 };
 
 #endif // STARTUPUTIL_H

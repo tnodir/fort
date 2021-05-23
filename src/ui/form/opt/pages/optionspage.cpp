@@ -96,12 +96,10 @@ void OptionsPage::saveService(bool isService)
     if (!g_startup.isServiceChanged) {
         g_startup.isServiceChanged = true;
 
-        const QString defaultLanguage = settings()->defaultLanguage();
-
         const bool isDefaultProfilePath = settings()->isDefaultProfilePath();
         const QString profilePath = isDefaultProfilePath ? settings()->profilePath() : QString();
         const QString newProfilePath = isDefaultProfilePath
-                ? FortSettings::defaultProfilePath(g_startup.isService, fortManager()->envManager())
+                ? FortSettings::defaultProfilePath(g_startup.isService)
                 : QString();
 
         connect(fortManager(), &QObject::destroyed, [=] {
@@ -115,7 +113,7 @@ void OptionsPage::saveService(bool isService)
             }
 
             if (g_startup.isService) {
-                StartupUtil::setServiceInstalled(true, defaultLanguage);
+                StartupUtil::setServiceInstalled(true);
             }
         });
     }
@@ -167,7 +165,7 @@ void OptionsPage::onRetranslateUi()
     m_cbLogConsole->setText(tr("Show log messages in console"));
 
     retranslateDriverMessage();
-    m_btInstallDriver->setText(tr("Install"));
+    m_btInstallDriver->setText(tr("Reinstall"));
     m_btRemoveDriver->setText(tr("Remove"));
 
     m_btNewVersion->setText(tr("Download"));
@@ -191,9 +189,10 @@ void OptionsPage::retranslateComboStartMode()
     if (settings()->isUserAdmin())
         return;
 
+    m_cbService->setEnabled(false);
+
     if (currentIndex >= StartupUtil::StartupAllUsers) {
         m_comboAutoRun->setEnabled(false);
-        m_cbService->setEnabled(false);
         return;
     }
 
@@ -529,7 +528,7 @@ void OptionsPage::setupDriverBox()
     colLayout->addLayout(buttonsLayout);
 
     m_btInstallDriver = ControlUtil::createButton(QString(), [&] {
-        if (fortManager()->showQuestionBox(tr("Are you sure to install the Driver?"))) {
+        if (fortManager()->showQuestionBox(tr("Are you sure to reinstall the Driver?"))) {
             fortManager()->installDriver();
         }
     });
@@ -543,6 +542,7 @@ void OptionsPage::setupDriverBox()
         m_btInstallDriver->setEnabled(false);
         m_btRemoveDriver->setEnabled(false);
     }
+    m_btRemoveDriver->setVisible(!settings()->hasService());
 
     buttonsLayout->addStretch();
     buttonsLayout->addWidget(m_btInstallDriver);

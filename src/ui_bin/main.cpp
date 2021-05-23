@@ -1,7 +1,4 @@
 #include <QApplication>
-#include <QMessageBox>
-#include <QStyle>
-#include <QStyleFactory>
 #include <QThread>
 
 #ifdef USE_VISUAL_LEAK_DETECTOR
@@ -19,10 +16,12 @@
 #include "util/serviceworker.h"
 #include "util/startuputil.h"
 
+namespace {
+
 #define FORT_ERROR_INSTANCE 1
 #define FORT_ERROR_CONTROL  2
 
-static void uninstall()
+void uninstall()
 {
     StartupUtil::setAutoRunMode(StartupUtil::StartupDisabled); // Remove auto-run
     StartupUtil::setServiceInstalled(false); // Uninstall service
@@ -30,11 +29,18 @@ static void uninstall()
     DriverCommon::provUnregister(); // Unregister booted provider
 }
 
-static void setupAppStyle()
+void install(const char *arg)
 {
-    const auto fusionStyle = QStyleFactory::create("Fusion");
-    QApplication::setStyle(fusionStyle);
-    QApplication::setPalette(fusionStyle->standardPalette());
+    if (arg[0] == 'p') { // "portable"
+        StartupUtil::setPortable(true);
+    } else if (arg[0] == 's') { // "service"
+        StartupUtil::setAutoRunMode(StartupUtil::StartupAllUsers);
+        StartupUtil::setServiceInstalled(true);
+    } else if (arg[0] == 'e') { // "explorer"
+        StartupUtil::setExplorerIntegrated(true);
+    }
+}
+
 }
 
 int main(int argc, char *argv[])
@@ -42,6 +48,12 @@ int main(int argc, char *argv[])
     // Uninstall
     if (argc > 1 && !strcmp(argv[1], "-u")) {
         uninstall();
+        return 0;
+    }
+
+    // Install
+    if (argc > 2 && !strcmp(argv[1], "-i")) {
+        install(argv[2]);
         return 0;
     }
 
@@ -82,7 +94,7 @@ int main(int argc, char *argv[])
         return FORT_ERROR_INSTANCE;
 
     if (settings.hasService() && StartupUtil::startService()) {
-        QThread::msleep(50); // Let the service to start
+        QThread::msleep(100); // Let the service to start
     }
     settings.setIsUserAdmin(OsUtil::isUserAdmin());
 
@@ -91,8 +103,6 @@ int main(int argc, char *argv[])
     if (settings.isService()) {
         ServiceWorker::run();
     } else {
-        setupAppStyle(); // Style & Palette
-
         fortManager.show();
     }
 

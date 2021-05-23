@@ -303,9 +303,10 @@ HEADERS += \
     util/worker/workermanager.h \
     util/worker/workerobject.h
 
-# Icons & Images
+# Icons, README.*
 RESOURCES += \
-    fort_icons.qrc
+    fort_icons.qrc \
+    fort_readme.qrc
 
 # Database Migrations
 OTHER_FILES += \

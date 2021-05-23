@@ -37,14 +37,8 @@ QString startupShortcutPath()
 
 QString wrappedAppFilePath()
 {
-    const auto filePath = FileUtil::toNativeSeparators(QCoreApplication::applicationFilePath());
+    const auto filePath = FileUtil::toNativeSeparators(FileUtil::nativeAppFilePath());
     return QString("\"%1\"").arg(filePath);
-}
-
-QString autoRunCommand(const QString &defaultLanguage)
-{
-    return wrappedAppFilePath()
-            + (defaultLanguage.isEmpty() ? QString() : " --lang " + defaultLanguage);
 }
 
 bool isAutorunForUser(RegKey::Root root, const char *key)
@@ -161,14 +155,14 @@ bool StartupUtil::isServiceInstalled()
     return res;
 }
 
-void StartupUtil::setServiceInstalled(bool install, const QString &defaultLanguage)
+void StartupUtil::setServiceInstalled(bool install)
 {
     if (!install) {
         uninstallService(serviceNameStr);
         return;
     }
 
-    const QString command = autoRunCommand(defaultLanguage) + " --service";
+    const QString command = wrappedAppFilePath() + " --service";
 
     installService(serviceNameStr, serviceDisplayStr, serviceDescriptionStr, serviceDependenciesStr,
             command);
@@ -207,7 +201,8 @@ void StartupUtil::setAutoRunMode(int mode, const QString &defaultLanguage)
     if (mode == StartupDisabled)
         return;
 
-    const QString command = autoRunCommand(defaultLanguage);
+    const QString command = wrappedAppFilePath()
+            + (defaultLanguage.isEmpty() ? QString() : " --lang " + defaultLanguage);
 
     switch (mode) {
     case StartupCurrentUser:
@@ -242,5 +237,16 @@ void StartupUtil::setExplorerIntegrated(bool integrate)
         regCommand.setDefaultValue(wrappedPath + " -c prog add \"%1\"");
     } else {
         regShell.removeRecursively(APP_NAME);
+    }
+}
+
+void StartupUtil::setPortable(bool portable)
+{
+    const QString readmePortablePath = FileUtil::appBinLocation() + "/README.portable";
+
+    if (portable) {
+        FileUtil::copyFile(":/README.portable", readmePortablePath);
+    } else {
+        FileUtil::removeFile(readmePortablePath);
     }
 }

@@ -4,6 +4,8 @@
 #include <QMessageBox>
 #include <QMouseEvent>
 #include <QProcess>
+#include <QStyle>
+#include <QStyleFactory>
 #include <QThreadPool>
 #include <QWindow>
 
@@ -47,6 +49,17 @@
 #include "util/net/hostinfocache.h"
 #include "util/osutil.h"
 #include "util/startuputil.h"
+
+namespace {
+
+void setupAppStyle()
+{
+    const auto fusionStyle = QStyleFactory::create("Fusion");
+    QApplication::setStyle(fusionStyle);
+    QApplication::setPalette(fusionStyle->standardPalette());
+}
+
+}
 
 FortManager::FortManager(FortSettings *settings, EnvManager *envManager,
         ControlManager *controlManager, QObject *parent) :
@@ -205,7 +218,7 @@ bool FortManager::installDriver()
 
     if (settings()->hasService()) {
         // Re-install the service and app restart required to continue
-        StartupUtil::setServiceInstalled(true, settings()->defaultLanguage());
+        StartupUtil::setServiceInstalled(true);
         processRestartRequired();
     } else {
         // Re-open the driver device and initialize it
@@ -453,6 +466,8 @@ void FortManager::closeUi()
 
 void FortManager::show()
 {
+    setupAppStyle(); // Style & Palette
+
     showTrayIcon();
 
     if (iniUser()->graphWindowVisible()) {

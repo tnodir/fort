@@ -144,6 +144,9 @@ void FortSettings::processArguments(const QStringList &args)
     const QCommandLineOption uninstallOption("u", "Uninstall booted provider and startup entries.");
     parser.addOption(uninstallOption);
 
+    const QCommandLineOption installOption("i", "Install startup entries.");
+    parser.addOption(installOption);
+
     const QCommandLineOption noCacheOption("no-cache", "Don't use cache on disk.");
     parser.addOption(noCacheOption);
 
@@ -212,7 +215,7 @@ void FortSettings::setupPaths(EnvManager *envManager)
     // Profile Path
     if (m_profilePath.isEmpty()) {
         m_isDefaultProfilePath = true;
-        m_profilePath = defaultProfilePath(hasService(), envManager);
+        m_profilePath = defaultProfilePath(hasService());
     } else {
         m_profilePath = expandPath(m_profilePath, envManager);
     }
@@ -240,7 +243,7 @@ void FortSettings::setupPaths(EnvManager *envManager)
 
     // User Settings Path
     if (m_userPath.isEmpty()) {
-        m_userPath = defaultProfilePath(false, envManager);
+        m_userPath = defaultProfilePath(false);
     } else {
         m_userPath = expandPath(m_userPath, envManager);
     }
@@ -268,7 +271,7 @@ void FortSettings::createPaths()
     }
 }
 
-QString FortSettings::defaultProfilePath(bool hasService, EnvManager *envManager)
+QString FortSettings::defaultProfilePath(bool hasService)
 {
     // Is portable?
     {
@@ -278,8 +281,13 @@ QString FortSettings::defaultProfilePath(bool hasService, EnvManager *envManager
             return appBinLocation + "/Data/";
     }
 
-    if (hasService)
-        return expandPath(QLatin1String("%ProgramData%\\") + APP_NAME, envManager);
+    // Is service?
+    {
+        const QString servicePath =
+                FileUtil::expandPath(QLatin1String("%ProgramData%\\") + APP_NAME);
+        if (hasService || FileUtil::pathExists(servicePath))
+            return pathSlash(servicePath);
+    }
 
     return pathSlash(FileUtil::appConfigLocation());
 }

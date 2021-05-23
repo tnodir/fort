@@ -30,6 +30,7 @@ public:
 
     static bool makePath(const QString &path);
     static bool makePathForFile(const QString &filePath);
+    static bool pathExists(const QString &path);
     static bool fileExists(const QString &filePath);
     static bool removeFile(const QString &filePath);
     static bool renameFile(const QString &oldFilePath, const QString &newFilePath);
@@ -43,6 +44,8 @@ public:
     static bool writeFileData(const QString &filePath, const QByteArray &data);
 
     static QDateTime fileModTime(const QString &filePath);
+
+    static QString expandPath(const QString &path);
 
     static QString nativeAppFilePath();
     static QString appBinLocation();

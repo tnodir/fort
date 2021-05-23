@@ -121,6 +121,11 @@ bool FileUtil::makePathForFile(const QString &filePath)
     return QFileInfo(filePath).dir().mkpath(".");
 }
 
+bool FileUtil::pathExists(const QString &path)
+{
+    return QDir(path).exists();
+}
+
 bool FileUtil::fileExists(const QString &filePath)
 {
     return QFileInfo::exists(filePath);
@@ -184,12 +189,20 @@ QDateTime FileUtil::fileModTime(const QString &filePath)
     return fi.lastModified();
 }
 
+QString FileUtil::expandPath(const QString &path)
+{
+    constexpr int maxPathSize = 4096;
+    wchar_t buf[maxPathSize];
+    const int n = ExpandEnvironmentStringsW((LPCWSTR) path.utf16(), buf, maxPathSize);
+    return (n > 0 && n < maxPathSize) ? QString::fromUtf16((const char16_t *) buf) : QString();
+}
+
 QString FileUtil::nativeAppFilePath()
 {
     constexpr int maxPathSize = 4096;
-    wchar_t path[maxPathSize];
-    const int n = GetModuleFileNameW(nullptr, path, maxPathSize);
-    return (n > 0 && n < maxPathSize) ? QString::fromUtf16((const char16_t *) path) : QString();
+    wchar_t buf[maxPathSize];
+    const int n = GetModuleFileNameW(nullptr, buf, maxPathSize);
+    return (n > 0 && n < maxPathSize) ? QString::fromUtf16((const char16_t *) buf) : QString();
 }
 
 QString FileUtil::appBinLocation()
