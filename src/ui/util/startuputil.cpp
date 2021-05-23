@@ -225,7 +225,9 @@ bool StartupUtil::isExplorerIntegrated()
 
 void StartupUtil::setExplorerIntegrated(bool integrate)
 {
-    RegKey regShell(regShellRoot, regShellMenu, RegKey::DefaultReadWrite);
+    RegKey regShell(regShellRoot, regShellMenu,
+            integrate ? RegKey::DefaultCreate : RegKey::DefaultReadWrite);
+
     if (integrate) {
         const QString wrappedPath = wrappedAppFilePath();
 
