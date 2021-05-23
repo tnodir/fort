@@ -569,10 +569,6 @@
         <translation>Sprache:</translation>
     </message>
     <message>
-        <source>Install</source>
-        <translation>Installieren</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>Entfernen</translation>
     </message>
@@ -599,10 +595,6 @@
     <message>
         <source>Not Installed</source>
         <translation>Nicht installiert</translation>
-    </message>
-    <message>
-        <source>Are you sure to install the Driver?</source>
-        <translation>Sind Sie sicher, dass Sie den Treiber installieren wollen?</translation>
     </message>
     <message>
         <source>Are you sure to remove the Driver?</source>
@@ -640,6 +632,14 @@
         <source>New profile path is &quot;%1&quot;.
 Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reinstall</source>
+        <translation>Neu installieren</translation>
+    </message>
+    <message>
+        <source>Are you sure to reinstall the Driver?</source>
+        <translation>Sind Sie sicher, den Treiber neu zu installieren?</translation>
     </message>
 </context>
 <context>

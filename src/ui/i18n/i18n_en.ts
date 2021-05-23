@@ -569,10 +569,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Install</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation></translation>
     </message>
@@ -598,10 +594,6 @@
     </message>
     <message>
         <source>Not Installed</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Are you sure to install the Driver?</source>
         <translation></translation>
     </message>
     <message>
@@ -639,6 +631,14 @@
     <message>
         <source>New profile path is &quot;%1&quot;.
 Would you like to move profile from &quot;%2&quot; to new location?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Reinstall</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Are you sure to reinstall the Driver?</source>
         <translation></translation>
     </message>
 </context>

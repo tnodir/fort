@@ -509,10 +509,6 @@
         <translation>드라이버를 제거하시겠습니까?</translation>
     </message>
     <message>
-        <source>Install</source>
-        <translation>설치</translation>
-    </message>
-    <message>
         <source>Stop traffic when Fort Firewall is not running</source>
         <translation>Fort Firewall이 실행 중이 아닐 때 트래픽 중지</translation>
     </message>
@@ -577,10 +573,6 @@
         <translation>새 버전</translation>
     </message>
     <message>
-        <source>Are you sure to install the Driver?</source>
-        <translation>드라이버를 설치하시겠습니까?</translation>
-    </message>
-    <message>
         <source>Stop Traffic</source>
         <translation>트래픽 중지</translation>
     </message>
@@ -639,6 +631,14 @@
     <message>
         <source>New profile path is &quot;%1&quot;.
 Would you like to move profile from &quot;%2&quot; to new location?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reinstall</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to reinstall the Driver?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -509,10 +509,6 @@
         <translation>Êtes-vous sûr de vouloir supprimer le pilote?</translation>
     </message>
     <message>
-        <source>Install</source>
-        <translation>Installer</translation>
-    </message>
-    <message>
         <source>Stop traffic when Fort Firewall is not running</source>
         <translation>Arrêtez le trafic lorsque Fort Firewall ne fonctionne pas</translation>
     </message>
@@ -577,10 +573,6 @@
         <translation>Nouvelle Version</translation>
     </message>
     <message>
-        <source>Are you sure to install the Driver?</source>
-        <translation>Êtes-vous sûr d&apos;installer le pilote?</translation>
-    </message>
-    <message>
         <source>Stop Traffic</source>
         <translation>Arrêter le trafic</translation>
     </message>
@@ -641,6 +633,14 @@
 Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>Nouveau chemin du profil est &quot;%1&quot;.
 Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</translation>
+    </message>
+    <message>
+        <source>Reinstall</source>
+        <translation>Réinstaller</translation>
+    </message>
+    <message>
+        <source>Are you sure to reinstall the Driver?</source>
+        <translation>Êtes-vous sûr de réinstaller le pilote?</translation>
     </message>
 </context>
 <context>

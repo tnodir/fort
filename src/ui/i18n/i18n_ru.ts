@@ -565,10 +565,6 @@
         <translation>Язык:</translation>
     </message>
     <message>
-        <source>Install</source>
-        <translation>Установить</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>Удалить</translation>
     </message>
@@ -583,10 +579,6 @@
     <message>
         <source>Not Installed</source>
         <translation>Не установлен</translation>
-    </message>
-    <message>
-        <source>Are you sure to install the Driver?</source>
-        <translation>Установить драйвер?</translation>
     </message>
     <message>
         <source>Are you sure to remove the Driver?</source>
@@ -641,6 +633,14 @@
 Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>Новый путь профиль: &quot;%1&quot;.
 Переместить профиль из &quot;%2&quot; в новое место?</translation>
+    </message>
+    <message>
+        <source>Reinstall</source>
+        <translation>Переустановить</translation>
+    </message>
+    <message>
+        <source>Are you sure to reinstall the Driver?</source>
+        <translation>Переустановить драйвер?</translation>
     </message>
 </context>
 <context>
