@@ -11,7 +11,7 @@
 md %TARGET_PATH%
 cd %TARGET_PATH%
 
-%QT_PATH%/configure -release -optimize-size -opensource -confirm-license ^
+%QT_PATH%/configure -release -force-debug-info -optimize-size -opensource -confirm-license ^
 	-mp -no-opengl -nomake examples -nomake tests -nomake tools ^
 	^
 	-skip qt3d -skip qt5compat -skip qtactiveqt -skip qtandroidextras ^
