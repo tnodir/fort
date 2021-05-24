@@ -21,6 +21,10 @@ SOURCES += \
 RC_FILE = FortFirewall.rc
 OTHER_FILES += $${RC_FILE}
 
+# 3rd party integrations
+CONFIG += breakpad
+include(3rdparty/3rdparty.pri)
+
 # Visual Leak Detector
 # 1) On the Project tab, under Build & Run / Build Steps / Details,
 # append to the Additional Arguments: CONFIG+=visual_leak_detector

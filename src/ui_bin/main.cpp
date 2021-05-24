@@ -4,6 +4,7 @@
 #    include <vld.h>
 #endif
 
+#include <breakpad/crashhandler.h>
 #include <fort_version.h>
 
 #include "control/controlmanager.h"
@@ -11,6 +12,7 @@
 #include "fortmanager.h"
 #include "fortsettings.h"
 #include "util/envmanager.h"
+#include "util/fileutil.h"
 #include "util/osutil.h"
 #include "util/serviceworker.h"
 #include "util/startuputil.h"
@@ -57,12 +59,28 @@ bool processArgs(int argc, char *argv[])
     return false;
 }
 
+void setupCrashHandler(CrashHandler &crashHandler, const FortSettings &settings)
+{
+    const QString dumpPath = settings.logsPath();
+    const QString fileNamePrefix = "crash_fort_" + (settings.isService() ? "svc_" : QString());
+    const QString fileNameSuffix = ".dmp";
+    constexpr int CRASH_KEEP_FILES = 2;
+
+    FileUtil::removeOldFiles(dumpPath, fileNamePrefix, fileNameSuffix, CRASH_KEEP_FILES);
+
+    crashHandler.setFileNamePrefix(fileNamePrefix);
+    crashHandler.setFileNameSuffix(fileNameSuffix);
+    crashHandler.install(dumpPath);
+}
+
 }
 
 int main(int argc, char *argv[])
 {
     if (processArgs(argc, argv))
         return 0;
+
+    CrashHandler crashHandler;
 
     // Process global settings required before QApplication costruction
     FortSettings settings;
@@ -84,12 +102,16 @@ int main(int argc, char *argv[])
     // Initialize settings from command line arguments
     settings.initialize(QCoreApplication::arguments(), &envManager);
 
+    // Setup Crash Handler
+    setupCrashHandler(crashHandler, settings);
+
+    // Setup Control Manager
     ControlManager controlManager(&settings);
 
-    // Send control command to running instance
-    if (controlManager.isCommandClient())
+    if (controlManager.isCommandClient()) // Send control command to running instance
         return controlManager.postCommand() ? 0 : FORT_ERROR_CONTROL;
 
+    // Setup Fort Manager
     FortManager::setupResources();
 
     FortManager fortManager(&settings, &envManager, &controlManager);

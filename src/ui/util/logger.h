@@ -44,8 +44,6 @@ private:
 
     void writeLogLine(Logger::LogLevel level, const QString &dateString, const QString &message);
 
-    void checkLogFiles();
-
 private:
     bool m_isService : 1;
     bool m_debug : 1;

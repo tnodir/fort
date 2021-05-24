@@ -10,10 +10,10 @@
 #include "dateutil.h"
 #include "fileutil.h"
 
-#define LOGGER_FILE_MAX_SIZE (1024 * 1024)
-#define LOGGER_KEEP_FILES    2
-
 namespace {
+
+constexpr int LOGGER_FILE_MAX_SIZE = 1024 * 1024;
+constexpr int LOGGER_KEEP_FILES = 2;
 
 QtMessageHandler g_oldMessageHandler = nullptr;
 
@@ -207,7 +207,8 @@ void Logger::writeLog(const QString &message, Logger::LogLevel level)
 
     // Create file when required to avoid empty files
     if (!m_file.isOpen()) {
-        checkLogFiles();
+        FileUtil::removeOldFiles(
+                m_dir.path(), fileNamePrefix(), fileNameSuffix(), LOGGER_KEEP_FILES);
 
         if (!openLogFile()) {
             m_writing = false;
@@ -230,18 +231,4 @@ void Logger::writeLog(const QString &message, Logger::LogLevel level)
 void Logger::writeLogList(const QString &message, const QStringList &list, Logger::LogLevel level)
 {
     writeLog(message + '{' + list.join(',') + '}', level);
-}
-
-void Logger::checkLogFiles()
-{
-    const auto fileNames =
-            m_dir.entryList({ fileNamePrefix() + '*' + fileNameSuffix() }, QDir::Files, QDir::Time);
-
-    // Remove old files
-    int count = LOGGER_KEEP_FILES;
-    for (const QString &fileName : fileNames) {
-        if (--count < 0) {
-            QFile::remove(m_dir.filePath(fileName));
-        }
-    }
 }

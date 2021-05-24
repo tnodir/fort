@@ -8,20 +8,22 @@
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 
+namespace FileUtil {
+
 Q_STATIC_ASSERT(sizeof(wchar_t) == sizeof(QChar));
 
-QString FileUtil::systemApp()
+QString systemApp()
 {
     return QLatin1String("System");
 }
 
-bool FileUtil::isSystemApp(const QString &path)
+bool isSystemApp(const QString &path)
 {
     return QString::compare(path, systemApp(), Qt::CaseInsensitive) == 0;
 }
 
 // Convert "\\Device\\HarddiskVolume1" to "C:"
-QString FileUtil::kernelNameToDrive(const QString &kernelName)
+QString kernelNameToDrive(const QString &kernelName)
 {
     const QString kernelNameLower = kernelName.toLower();
 
@@ -39,7 +41,7 @@ QString FileUtil::kernelNameToDrive(const QString &kernelName)
 }
 
 // Convert "C:" to "\\Device\\HarddiskVolume1"
-QString FileUtil::driveToKernelName(const QString &drive)
+QString driveToKernelName(const QString &drive)
 {
     char driveName[3] = { drive.at(0).toLatin1(), ':', '\0' };
 
@@ -50,7 +52,7 @@ QString FileUtil::driveToKernelName(const QString &drive)
 }
 
 // Convert "\\Device\\HarddiskVolume1\\path" to "C:\\path"
-QString FileUtil::kernelPathToPath(const QString &kernelPath)
+QString kernelPathToPath(const QString &kernelPath)
 {
     const QLatin1Char sep('\\');
 
@@ -68,7 +70,7 @@ QString FileUtil::kernelPathToPath(const QString &kernelPath)
 }
 
 // Convert "C:\\path" to "\\Device\\HarddiskVolume1\\path"
-QString FileUtil::pathToKernelPath(const QString &path, bool lower)
+QString pathToKernelPath(const QString &path, bool lower)
 {
     QString kernelPath = path;
     if (path.size() > 1) {
@@ -90,75 +92,75 @@ QString FileUtil::pathToKernelPath(const QString &path, bool lower)
     return lower ? kernelPath.toLower() : kernelPath;
 }
 
-QString FileUtil::fileName(const QString &path)
+QString fileName(const QString &path)
 {
     return QFileInfo(path).fileName();
 }
 
-QString FileUtil::absolutePath(const QString &path)
+QString absolutePath(const QString &path)
 {
     return QDir(path).absolutePath();
 }
 
-QString FileUtil::pathSlash(const QString &path)
+QString pathSlash(const QString &path)
 {
     const QLatin1Char slash('/');
     return path.endsWith(slash) ? path : path + slash;
 }
 
-QString FileUtil::toNativeSeparators(const QString &path)
+QString toNativeSeparators(const QString &path)
 {
     return QDir::toNativeSeparators(path);
 }
 
-bool FileUtil::makePath(const QString &path)
+bool makePath(const QString &path)
 {
     return QDir().mkpath(path);
 }
 
-bool FileUtil::makePathForFile(const QString &filePath)
+bool makePathForFile(const QString &filePath)
 {
     return QFileInfo(filePath).dir().mkpath(".");
 }
 
-bool FileUtil::pathExists(const QString &path)
+bool pathExists(const QString &path)
 {
     return QDir(path).exists();
 }
 
-bool FileUtil::fileExists(const QString &filePath)
+bool fileExists(const QString &filePath)
 {
     return QFileInfo::exists(filePath);
 }
 
-bool FileUtil::removeFile(const QString &filePath)
+bool removeFile(const QString &filePath)
 {
     return QFile::remove(filePath);
 }
 
-bool FileUtil::renameFile(const QString &oldFilePath, const QString &newFilePath)
+bool renameFile(const QString &oldFilePath, const QString &newFilePath)
 {
     removeFile(newFilePath);
 
     return QFile::rename(oldFilePath, newFilePath);
 }
 
-bool FileUtil::copyFile(const QString &filePath, const QString &newFilePath)
+bool copyFile(const QString &filePath, const QString &newFilePath)
 {
     return QFile::copy(filePath, newFilePath);
 }
 
-bool FileUtil::linkFile(const QString &filePath, const QString &linkPath)
+bool linkFile(const QString &filePath, const QString &linkPath)
 {
     return QFile::link(filePath, linkPath);
 }
 
-QString FileUtil::readFile(const QString &filePath)
+QString readFile(const QString &filePath)
 {
     return QString::fromUtf8(readFileData(filePath));
 }
 
-QByteArray FileUtil::readFileData(const QString &filePath)
+QByteArray readFileData(const QString &filePath)
 {
     QFile file(filePath);
     if (!file.open(QFile::ReadOnly))
@@ -167,12 +169,12 @@ QByteArray FileUtil::readFileData(const QString &filePath)
     return file.readAll();
 }
 
-bool FileUtil::writeFile(const QString &filePath, const QString &text)
+bool writeFile(const QString &filePath, const QString &text)
 {
     return writeFileData(filePath, text.toUtf8());
 }
 
-bool FileUtil::writeFileData(const QString &filePath, const QByteArray &data)
+bool writeFileData(const QString &filePath, const QByteArray &data)
 {
     makePathForFile(filePath); // create destination directory
 
@@ -183,13 +185,13 @@ bool FileUtil::writeFileData(const QString &filePath, const QByteArray &data)
     return file.write(data) == data.size() && file.flush();
 }
 
-QDateTime FileUtil::fileModTime(const QString &filePath)
+QDateTime fileModTime(const QString &filePath)
 {
     QFileInfo fi(filePath);
     return fi.lastModified();
 }
 
-QString FileUtil::expandPath(const QString &path)
+QString expandPath(const QString &path)
 {
     constexpr int maxPathSize = 4096;
     wchar_t buf[maxPathSize];
@@ -197,7 +199,7 @@ QString FileUtil::expandPath(const QString &path)
     return (n > 0 && n < maxPathSize) ? QString::fromUtf16((const char16_t *) buf) : QString();
 }
 
-QString FileUtil::nativeAppFilePath()
+QString nativeAppFilePath()
 {
     constexpr int maxPathSize = 4096;
     wchar_t buf[maxPathSize];
@@ -205,22 +207,38 @@ QString FileUtil::nativeAppFilePath()
     return (n > 0 && n < maxPathSize) ? QString::fromUtf16((const char16_t *) buf) : QString();
 }
 
-QString FileUtil::appBinLocation()
+QString appBinLocation()
 {
     return QCoreApplication::applicationDirPath();
 }
 
-QString FileUtil::appConfigLocation()
+QString appConfigLocation()
 {
     return QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
 }
 
-QString FileUtil::applicationsLocation()
+QString applicationsLocation()
 {
     return QStandardPaths::writableLocation(QStandardPaths::ApplicationsLocation);
 }
 
-QString FileUtil::tempLocation()
+QString tempLocation()
 {
     return QStandardPaths::writableLocation(QStandardPaths::TempLocation);
+}
+
+void removeOldFiles(const QString &path, const QString &fileNamePrefix,
+        const QString &fileNameSuffix, int keepFiles)
+{
+    QDir dir(path);
+    const auto fileNames =
+            dir.entryList({ fileNamePrefix + '*' + fileNameSuffix }, QDir::Files, QDir::Time);
+
+    for (const QString &fileName : fileNames) {
+        if (--keepFiles < 0) {
+            dir.remove(fileName);
+        }
+    }
+}
+
 }

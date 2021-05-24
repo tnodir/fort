@@ -4,54 +4,56 @@
 #include <QDateTime>
 #include <QObject>
 
-class FileUtil
-{
-public:
-    static QString systemApp();
-    static bool isSystemApp(const QString &path);
+namespace FileUtil {
 
-    // Convert DOS device name to drive letter (A: .. Z:)
-    static QString kernelNameToDrive(const QString &kernelName);
+QString systemApp();
+bool isSystemApp(const QString &path);
 
-    // Convert drive letter (A: .. Z:) to DOS device name
-    static QString driveToKernelName(const QString &drive);
+// Convert DOS device name to drive letter (A: .. Z:)
+QString kernelNameToDrive(const QString &kernelName);
 
-    // Convert Native kernel path to Win32 path
-    static QString kernelPathToPath(const QString &kernelPath);
+// Convert drive letter (A: .. Z:) to DOS device name
+QString driveToKernelName(const QString &drive);
 
-    // Convert Win32 path to Native kernel path
-    static QString pathToKernelPath(const QString &path, bool lower = true);
+// Convert Native kernel path to Win32 path
+QString kernelPathToPath(const QString &kernelPath);
 
-    static QString fileName(const QString &path);
+// Convert Win32 path to Native kernel path
+QString pathToKernelPath(const QString &path, bool lower = true);
 
-    static QString absolutePath(const QString &path);
-    static QString pathSlash(const QString &path);
-    static QString toNativeSeparators(const QString &path);
+QString fileName(const QString &path);
 
-    static bool makePath(const QString &path);
-    static bool makePathForFile(const QString &filePath);
-    static bool pathExists(const QString &path);
-    static bool fileExists(const QString &filePath);
-    static bool removeFile(const QString &filePath);
-    static bool renameFile(const QString &oldFilePath, const QString &newFilePath);
-    static bool copyFile(const QString &filePath, const QString &newFilePath);
-    static bool linkFile(const QString &filePath, const QString &linkPath);
+QString absolutePath(const QString &path);
+QString pathSlash(const QString &path);
+QString toNativeSeparators(const QString &path);
 
-    static QString readFile(const QString &filePath);
-    static QByteArray readFileData(const QString &filePath);
+bool makePath(const QString &path);
+bool makePathForFile(const QString &filePath);
+bool pathExists(const QString &path);
+bool fileExists(const QString &filePath);
+bool removeFile(const QString &filePath);
+bool renameFile(const QString &oldFilePath, const QString &newFilePath);
+bool copyFile(const QString &filePath, const QString &newFilePath);
+bool linkFile(const QString &filePath, const QString &linkPath);
 
-    static bool writeFile(const QString &filePath, const QString &text);
-    static bool writeFileData(const QString &filePath, const QByteArray &data);
+QString readFile(const QString &filePath);
+QByteArray readFileData(const QString &filePath);
 
-    static QDateTime fileModTime(const QString &filePath);
+bool writeFile(const QString &filePath, const QString &text);
+bool writeFileData(const QString &filePath, const QByteArray &data);
 
-    static QString expandPath(const QString &path);
+QDateTime fileModTime(const QString &filePath);
 
-    static QString nativeAppFilePath();
-    static QString appBinLocation();
-    static QString appConfigLocation();
-    static QString applicationsLocation();
-    static QString tempLocation();
+QString expandPath(const QString &path);
+
+QString nativeAppFilePath();
+QString appBinLocation();
+QString appConfigLocation();
+QString applicationsLocation();
+QString tempLocation();
+
+void removeOldFiles(const QString &path, const QString &fileNamePrefix,
+        const QString &fileNameSuffix, int keepFiles);
 };
 
 #endif // FILEUTIL_H
