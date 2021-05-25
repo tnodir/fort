@@ -19,6 +19,8 @@ QtMessageHandler g_oldMessageHandler = nullptr;
 
 BOOL WINAPI consoleCtrlHandler(DWORD /*ctrlType*/)
 {
+    qDebug() << "Quit due console control";
+
     QCoreApplication::quit();
     Sleep(100); // Let the process exit gracefully
     return TRUE;

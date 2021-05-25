@@ -136,6 +136,11 @@ void FortManager::initialize()
     setupTaskManager();
 
     loadConf();
+
+    qDebug() << "Started as"
+             << (settings()->isService()                   ? "Service"
+                                : settings()->hasService() ? "Service Client"
+                                                           : "Program");
 }
 
 void FortManager::setupThreadPool()
@@ -679,6 +684,8 @@ void FortManager::processRestartRequired()
 
     connect(qApp, &QObject::destroyed, [=] { QProcess::startDetached(appFilePath, args); });
 
+    qDebug() << "Quit due required restart";
+
     QCoreApplication::quit();
 }
 
@@ -688,6 +695,8 @@ void FortManager::quitByCheckPassword()
         return;
 
     closeUi();
+
+    qDebug() << "Quit due user request";
 
     QCoreApplication::quit();
 }

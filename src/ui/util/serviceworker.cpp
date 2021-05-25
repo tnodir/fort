@@ -27,6 +27,8 @@ void WINAPI serviceCtrlHandler(DWORD code)
     switch (code) {
     case SERVICE_CONTROL_STOP:
     case SERVICE_CONTROL_SHUTDOWN:
+        qDebug() << "Quit due service control";
+
         qApp->connect(qApp, &QObject::destroyed, [] { reportServiceStatus(SERVICE_STOPPED); });
         QCoreApplication::quit(); // it's threadsafe
 
