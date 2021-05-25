@@ -1,6 +1,7 @@
 #include "serviceworker.h"
 
 #include <QCoreApplication>
+#include <QDebug>
 
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>

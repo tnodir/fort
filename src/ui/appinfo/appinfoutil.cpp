@@ -1,7 +1,6 @@
 #include "appinfoutil.h"
 
-#include <QDir>
-#include <QPixmap>
+#include <QImage>
 
 #include <comdef.h>
 #include <commctrl.h>
@@ -10,47 +9,53 @@
 #include <shellapi.h>
 
 #include "../util/fileutil.h"
-#include "../util/iconcache.h"
 #include "appinfo.h"
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#    include <QPixmap>
 // Defined in qpixmap_win.cpp
 Q_GUI_EXPORT QPixmap qt_pixmapFromWinHICON(HICON icon);
+#endif
 
 namespace {
 
-QPixmap pixmapFromImageList(int iImageList, const SHFILEINFO &info)
+QImage imageFromImageList(int iImageList, const SHFILEINFO &info)
 {
-    QPixmap result;
+    QImage result;
 
     IImageList *imageList;
     HICON hIcon;
 
     if (SUCCEEDED(SHGetImageList(iImageList, IID_IImageList, reinterpret_cast<void **>(&imageList)))
             && SUCCEEDED(imageList->GetIcon(info.iIcon, ILD_TRANSPARENT, &hIcon))) {
-        result = qt_pixmapFromWinHICON(hIcon);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+        result = qt_pixmapFromWinHICON(hIcon).toImage();
+#else
+        result = QImage::fromHICON(hIcon);
+#endif
         DestroyIcon(hIcon);
     }
 
     return result;
 }
 
-QPixmap extractShellIcon(const QString &appPath)
+QImage extractShellIcon(const QString &appPath)
 {
     const wchar_t *appPathW = (LPCWSTR) appPath.utf16();
 
     const UINT flags = SHGFI_SYSICONINDEX | SHGFI_USEFILEATTRIBUTES;
 
-    QPixmap pixmap;
+    QImage result;
 
     SHFILEINFOW info;
     ZeroMemory(&info, sizeof(SHFILEINFOW));
 
     const HRESULT hr = SHGetFileInfoW(appPathW, 0, &info, sizeof(SHFILEINFOW), flags);
     if (hr != 0) {
-        pixmap = pixmapFromImageList(SHIL_EXTRALARGE, info);
+        result = imageFromImageList(SHIL_EXTRALARGE, info);
     }
 
-    return pixmap;
+    return result;
 }
 
 QString extractInfoText(LPVOID infoData, const WORD *langInfo, const WCHAR *name)
@@ -153,11 +158,10 @@ QImage getIcon(const QString &appPath)
         return {};
 
     if (FileUtil::isSystemApp(appPath)) {
-        const auto pixmap = IconCache::file(":/icons/windows-48.png");
-        return pixmap.toImage();
+        return QImage(":/icons/windows-48.png");
     }
 
-    return extractShellIcon(appPath).toImage();
+    return extractShellIcon(appPath);
 }
 
 void initThread()
