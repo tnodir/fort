@@ -2,6 +2,14 @@
 
 ListView::ListView(QWidget *parent) : QListView(parent) { }
 
+void ListView::setModel(QAbstractItemModel *model)
+{
+    QListView::setModel(model);
+
+    connect(model, &QAbstractItemModel::modelReset, this,
+            [&] { emit currentIndexChanged(currentIndex()); });
+}
+
 int ListView::currentRow() const
 {
     return currentIndex().row();

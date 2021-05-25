@@ -10,6 +10,8 @@ class ListView : public QListView
 public:
     explicit ListView(QWidget *parent = nullptr);
 
+    void setModel(QAbstractItemModel *model) override;
+
     int currentRow() const;
 
 signals:

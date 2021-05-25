@@ -292,5 +292,5 @@ int ConnectionsPage::connListCurrentIndex() const
 QString ConnectionsPage::connListCurrentPath() const
 {
     const auto connRow = connListModel()->connRowAt(connListCurrentIndex());
-    return connRow.appPath;
+    return connRow.isNull() ? QString() : connRow.appPath;
 }

@@ -5,6 +5,14 @@
 
 TableView::TableView(QWidget *parent) : QTableView(parent) { }
 
+void TableView::setModel(QAbstractItemModel *model)
+{
+    QTableView::setModel(model);
+
+    connect(model, &QAbstractItemModel::modelReset, this,
+            [&] { emit currentIndexChanged(currentIndex()); });
+}
+
 int TableView::currentRow() const
 {
     return currentIndex().row();

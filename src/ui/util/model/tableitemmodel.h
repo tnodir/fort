@@ -6,6 +6,7 @@
 struct TableRow
 {
     bool isValid(int row) const { return row == this->row; }
+    bool isNull() const { return row == -1; }
     void invalidate() { row = -1; }
 
     int row = -1;
