@@ -22,7 +22,6 @@ RC_FILE = FortFirewall.rc
 OTHER_FILES += $${RC_FILE}
 
 # 3rd party integrations
-CONFIG += breakpad
 include(3rdparty/3rdparty.pri)
 
 # Visual Leak Detector

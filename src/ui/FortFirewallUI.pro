@@ -329,5 +329,4 @@ RESOURCES += \
 include(../driver/Driver.pri)
 
 # 3rd party integrations
-CONFIG += qcustomplot sqlite
 include(3rdparty/3rdparty.pri)
