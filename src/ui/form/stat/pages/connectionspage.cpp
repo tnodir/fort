@@ -30,6 +30,9 @@ ConnectionsPage::ConnectionsPage(StatisticsController *ctrl, QWidget *parent) :
     StatBasePage(ctrl, parent)
 {
     setupUi();
+
+    updateAutoScroll();
+    updateShowHostNames();
 }
 
 ConnListModel *ConnectionsPage::connListModel() const
@@ -173,7 +176,7 @@ void ConnectionsPage::setupAutoScroll()
         iniUser()->setStatAutoScroll(checked);
         confManager()->saveIniUser();
 
-        syncAutoScroll();
+        updateAutoScroll();
     });
 }
 
@@ -187,7 +190,7 @@ void ConnectionsPage::setupShowHostNames()
                 iniUser()->setStatShowHostNames(checked);
                 confManager()->saveIniUser();
 
-                syncShowHostNames();
+                updateShowHostNames();
             });
 }
 
@@ -260,20 +263,19 @@ void ConnectionsPage::setupTableConnsChanged()
     connect(m_connListView, &TableView::currentIndexChanged, this, refreshTableConnsChanged);
 }
 
-void ConnectionsPage::syncAutoScroll()
+void ConnectionsPage::updateAutoScroll()
 {
     if (iniUser()->statAutoScroll()) {
-        connect(connListModel(), &QAbstractItemModel::rowsInserted, m_connListView,
+        connect(connListModel(), &QAbstractItemModel::modelReset, m_connListView,
                 &QAbstractItemView::scrollToBottom);
 
         m_connListView->scrollToBottom();
     } else {
-        disconnect(connListModel(), &QAbstractItemModel::rowsInserted, m_connListView,
-                &QAbstractItemView::scrollToBottom);
+        connListModel()->disconnect(m_connListView);
     }
 }
 
-void ConnectionsPage::syncShowHostNames()
+void ConnectionsPage::updateShowHostNames()
 {
     connListModel()->setResolveAddress(iniUser()->statShowHostNames());
 }

@@ -45,8 +45,8 @@ private:
     void setupAppInfoRow();
     void setupTableConnsChanged();
 
-    void syncAutoScroll();
-    void syncShowHostNames();
+    void updateAutoScroll();
+    void updateShowHostNames();
 
     void deleteConn(int row);
 
