@@ -189,7 +189,6 @@ private:
     void updateLogManager(bool active);
     void updateStatManager(FirewallConf *conf);
 
-    void onTrayActivated(int reason);
     void onTrayMessageClicked();
 
     QWidget *focusWidget() const;
@@ -197,7 +196,6 @@ private:
 
 private:
     bool m_initialized : 1;
-    bool m_trayTriggered : 1;
 
     TrayMessageType m_lastMessageType = MessageOptions;
 

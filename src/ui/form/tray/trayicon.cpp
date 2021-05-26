@@ -53,10 +53,17 @@ QAction *addAction(QWidget *widget, const QIcon &icon, const QString &text,
 }
 
 TrayIcon::TrayIcon(FortManager *fortManager, QObject *parent) :
-    QSystemTrayIcon(parent), m_ctrl(new TrayController(fortManager, this))
+    QSystemTrayIcon(parent), m_trayTriggered(false), m_ctrl(new TrayController(fortManager, this))
 {
     setupUi();
     setupController();
+
+    connect(this, &QSystemTrayIcon::activated, this, &TrayIcon::onTrayActivated);
+}
+
+TrayIcon::~TrayIcon()
+{
+    delete m_menu;
 }
 
 FortManager *TrayIcon::fortManager() const
@@ -94,6 +101,37 @@ HotKeyManager *TrayIcon::hotKeyManager() const
     return ctrl()->hotKeyManager();
 }
 
+void TrayIcon::onTrayActivated(int reason)
+{
+    switch (reason) {
+    case QSystemTrayIcon::Trigger:
+        m_trayTriggered = true;
+        QTimer::singleShot(QApplication::doubleClickInterval(), this, [&] {
+            if (m_trayTriggered) {
+                m_trayTriggered = false;
+                emit mouseClicked();
+            }
+        });
+        break;
+    case QSystemTrayIcon::DoubleClick:
+        if (m_trayTriggered) {
+            m_trayTriggered = false;
+            emit mouseDoubleClicked();
+        }
+        break;
+    case QSystemTrayIcon::MiddleClick:
+        emit mouseMiddleClicked();
+        break;
+    case QSystemTrayIcon::Context:
+        if (!m_trayTriggered) {
+            m_menu->popup(QCursor::pos());
+        }
+        break;
+    default:
+        break;
+    }
+}
+
 void TrayIcon::updateTrayIcon(bool alerted)
 {
     const auto icon = alerted
@@ -105,11 +143,10 @@ void TrayIcon::updateTrayIcon(bool alerted)
 
 void TrayIcon::showTrayMenu(QMouseEvent *event)
 {
-    QMenu *menu = this->contextMenu();
-    if (!menu)
+    if (!m_menu)
         return;
 
-    menu->popup(mouseEventGlobalPos(event));
+    m_menu->popup(mouseEventGlobalPos(event));
 }
 
 void TrayIcon::updateTrayMenu(bool onlyFlags)
@@ -163,47 +200,48 @@ void TrayIcon::setupUi()
 
 void TrayIcon::setupTrayMenu()
 {
-    QMenu *menu = new QMenu(fortManager()->mainWindow());
+    m_menu = new QMenu(fortManager()->mainWindow());
 
-    m_programsAction = addAction(menu, IconCache::icon(":/icons/window.png"), QString(),
+    m_programsAction = addAction(m_menu, IconCache::icon(":/icons/window.png"), QString(),
             fortManager(), SLOT(showProgramsWindow()));
     addHotKey(m_programsAction, iniUser()->hotKeyPrograms());
 
-    m_optionsAction = addAction(menu, IconCache::icon(":/icons/cog.png"), QString(), fortManager(),
-            SLOT(showOptionsWindow()));
+    m_optionsAction = addAction(m_menu, IconCache::icon(":/icons/cog.png"), QString(),
+            fortManager(), SLOT(showOptionsWindow()));
     addHotKey(m_optionsAction, iniUser()->hotKeyOptions());
 
-    m_statisticsAction = addAction(menu, IconCache::icon(":/icons/chart-bar.png"), QString(),
+    m_statisticsAction = addAction(m_menu, IconCache::icon(":/icons/chart-bar.png"), QString(),
             fortManager(), SLOT(showStatisticsWindow()));
     addHotKey(m_statisticsAction, iniUser()->hotKeyStatistics());
 
-    m_graphAction = addAction(menu, IconCache::icon(":/icons/line-graph.png"), QString(),
+    m_graphAction = addAction(m_menu, IconCache::icon(":/icons/line-graph.png"), QString(),
             fortManager(), SLOT(switchGraphWindow()), true, !!fortManager()->graphWindow());
     addHotKey(m_graphAction, iniUser()->hotKeyGraph());
 
-    m_zonesAction = addAction(menu, IconCache::icon(":/icons/map-map-marker.png"), QString(),
+    m_zonesAction = addAction(m_menu, IconCache::icon(":/icons/map-map-marker.png"), QString(),
             fortManager(), SLOT(showZonesWindow()));
     addHotKey(m_zonesAction, iniUser()->hotKeyZones());
 
-    menu->addSeparator();
+    m_menu->addSeparator();
 
-    m_filterEnabledAction = addAction(menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
+    m_filterEnabledAction =
+            addAction(m_menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
     addHotKey(m_filterEnabledAction, iniUser()->hotKeyFilter());
 
-    m_stopTrafficAction = addAction(menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
+    m_stopTrafficAction = addAction(m_menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
     addHotKey(m_stopTrafficAction, iniUser()->hotKeyStopTraffic());
 
     m_stopInetTrafficAction =
-            addAction(menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
+            addAction(m_menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
     addHotKey(m_stopInetTrafficAction, iniUser()->hotKeyStopInetTraffic());
 
-    m_allowAllNewAction = addAction(menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
+    m_allowAllNewAction = addAction(m_menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
     addHotKey(m_allowAllNewAction, iniUser()->hotKeyAllowAllNew());
 
-    menu->addSeparator();
+    m_menu->addSeparator();
 
     for (int i = 0; i < MAX_APP_GROUP_COUNT; ++i) {
-        QAction *a = addAction(menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
+        QAction *a = addAction(m_menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
 
         if (i < 12) {
             const QString shortcutText =
@@ -215,11 +253,10 @@ void TrayIcon::setupTrayMenu()
         m_appGroupActions.append(a);
     }
 
-    menu->addSeparator();
-    m_quitAction = addAction(menu, QIcon(), tr("Quit"), fortManager(), SLOT(quitByCheckPassword()));
+    m_menu->addSeparator();
+    m_quitAction =
+            addAction(m_menu, QIcon(), tr("Quit"), fortManager(), SLOT(quitByCheckPassword()));
     addHotKey(m_quitAction, iniUser()->hotKeyQuit());
-
-    this->setContextMenu(menu);
 }
 
 void TrayIcon::updateTrayMenuFlags()

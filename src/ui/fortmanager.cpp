@@ -65,7 +65,6 @@ FortManager::FortManager(FortSettings *settings, EnvManager *envManager,
         ControlManager *controlManager, QObject *parent) :
     QObject(parent),
     m_initialized(false),
-    m_trayTriggered(false),
     m_settings(settings),
     m_envManager(envManager),
     m_controlManager(controlManager)
@@ -400,7 +399,9 @@ void FortManager::setupTrayIcon()
 {
     m_trayIcon = new TrayIcon(this);
 
-    connect(m_trayIcon, &QSystemTrayIcon::activated, this, &FortManager::onTrayActivated);
+    connect(m_trayIcon, &TrayIcon::mouseClicked, this, &FortManager::showProgramsWindow);
+    connect(m_trayIcon, &TrayIcon::mouseDoubleClicked, this, &FortManager::showOptionsWindow);
+    connect(m_trayIcon, &TrayIcon::mouseMiddleClicked, this, &FortManager::showStatisticsWindow);
     connect(m_trayIcon, &QSystemTrayIcon::messageClicked, this, &FortManager::onTrayMessageClicked);
 
     connect(confManager(), &ConfManager::confChanged, m_trayIcon, &TrayIcon::updateTrayMenu);
@@ -788,32 +789,6 @@ void FortManager::updateLogManager(bool active)
 void FortManager::updateStatManager(FirewallConf *conf)
 {
     statManager()->setConf(conf);
-}
-
-void FortManager::onTrayActivated(int reason)
-{
-    switch (reason) {
-    case QSystemTrayIcon::Trigger:
-        m_trayTriggered = false;
-        QTimer::singleShot(QApplication::doubleClickInterval(), this, [this] {
-            if (!m_trayTriggered) {
-                m_trayTriggered = true;
-                showProgramsWindow();
-            }
-        });
-        break;
-    case QSystemTrayIcon::DoubleClick:
-        if (!m_trayTriggered) {
-            m_trayTriggered = true;
-            showOptionsWindow();
-        }
-        break;
-    case QSystemTrayIcon::MiddleClick:
-        showStatisticsWindow();
-        break;
-    default:
-        break;
-    }
 }
 
 void FortManager::onTrayMessageClicked()

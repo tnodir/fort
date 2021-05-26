@@ -21,6 +21,7 @@ class TrayIcon : public QSystemTrayIcon
 
 public:
     explicit TrayIcon(FortManager *fortManager, QObject *parent = nullptr);
+    ~TrayIcon() override;
 
     TrayController *ctrl() const { return m_ctrl; }
     FortManager *fortManager() const;
@@ -31,6 +32,11 @@ public:
     IniUser *iniUser() const;
     HotKeyManager *hotKeyManager() const;
 
+signals:
+    void mouseClicked();
+    void mouseDoubleClicked();
+    void mouseMiddleClicked();
+
 public slots:
     void updateTrayIcon(bool alerted = false);
 
@@ -38,6 +44,8 @@ public slots:
     void updateTrayMenu(bool onlyFlags = false);
 
 protected slots:
+    void onTrayActivated(int reason);
+
     void saveTrayFlags();
 
 private:
@@ -56,6 +64,9 @@ private:
     void removeHotKeys();
 
 private:
+    bool m_trayTriggered : 1;
+
+    QMenu *m_menu = nullptr;
     QAction *m_programsAction = nullptr;
     QAction *m_optionsAction = nullptr;
     QAction *m_statisticsAction = nullptr;
