@@ -13,7 +13,7 @@
 namespace {
 
 constexpr int LOGGER_FILE_MAX_SIZE = 1024 * 1024;
-constexpr int LOGGER_KEEP_FILES = 2;
+constexpr int LOGGER_KEEP_FILES = 7;
 
 QtMessageHandler g_oldMessageHandler = nullptr;
 

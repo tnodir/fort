@@ -64,7 +64,7 @@ void setupCrashHandler(CrashHandler &crashHandler, const FortSettings &settings)
     const QString dumpPath = settings.logsPath();
     const QString fileNamePrefix = "crash_fort_" + (settings.isService() ? "svc_" : QString());
     const QString fileNameSuffix = ".dmp";
-    constexpr int CRASH_KEEP_FILES = 2;
+    constexpr int CRASH_KEEP_FILES = 7;
 
     FileUtil::removeOldFiles(dumpPath, fileNamePrefix, fileNameSuffix, CRASH_KEEP_FILES);
 
