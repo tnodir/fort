@@ -7,6 +7,7 @@
 #include <QVector>
 
 #include "../util/classhelpers.h"
+#include "../util/triggertimer.h"
 
 class FirewallConf;
 class IniOptions;
@@ -39,6 +40,8 @@ public:
     const IniOptions *ini() const;
 
     SqliteDb *sqliteDb() const { return m_sqliteDb; }
+
+    void setConnEmitInterval(int msec);
 
     bool initialize();
 
@@ -77,7 +80,6 @@ signals:
 public slots:
     virtual bool clearTraffic();
 
-protected:
     void setupConnBlockId();
 
 private:
@@ -165,6 +167,8 @@ private:
 
     QHash<quint32, QString> m_appPidPathMap; // pid -> appPath
     QHash<QString, qint64> m_appPathIdCache; // appPath -> appId
+
+    TriggerTimer m_connBlockAddedTimer;
 };
 
 #endif // STATMANAGER_H

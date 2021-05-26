@@ -71,6 +71,9 @@ public:
 public slots:
     void clear();
 
+protected slots:
+    void resetAll();
+
 protected:
     bool updateTableRow(int row) const override;
     TableRow &tableRow() const override { return m_connRow; }

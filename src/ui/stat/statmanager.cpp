@@ -57,6 +57,7 @@ StatManager::StatManager(
     m_quotaManager(quotaManager),
     m_sqliteDb(new SqliteDb(filePath, openFlags))
 {
+    connect(&m_connBlockAddedTimer, &QTimer::timeout, this, &StatManager::connBlockAdded);
 }
 
 StatManager::~StatManager()
@@ -74,6 +75,11 @@ void StatManager::setConf(const FirewallConf *conf)
 const IniOptions *StatManager::ini() const
 {
     return &conf()->ini();
+}
+
+void StatManager::setConnEmitInterval(int msec)
+{
+    m_connBlockAddedTimer.setInterval(msec);
 }
 
 bool StatManager::initialize()
@@ -102,10 +108,8 @@ void StatManager::setupTrafDate()
 void StatManager::setupConnBlockId()
 {
     const auto vars = sqliteDb()->executeEx(StatSql::sqlSelectMinMaxConnBlockId, {}, 2).toList();
-    if (vars.size() == 2) {
-        m_connBlockIdMin = vars.at(0).toLongLong();
-        m_connBlockIdMax = vars.at(1).toLongLong();
-    }
+    m_connBlockIdMin = vars.value(0).toLongLong();
+    m_connBlockIdMax = vars.value(1).toLongLong();
 }
 
 void StatManager::setupByConf()
@@ -335,25 +339,24 @@ bool StatManager::logBlockedIp(const LogEntryBlockedIp &entry, qint64 unixTime)
     if (!conf() || !conf()->logBlockedIp())
         return false;
 
-    bool ok;
+    bool ok = false;
     sqliteDb()->beginTransaction();
 
     const qint64 appId = getOrCreateAppId(entry.path(), unixTime, true);
-    ok = (appId != INVALID_APP_ID);
-    if (ok) {
+    if (appId != INVALID_APP_ID) {
         ok = createConnBlock(entry, unixTime, appId);
+    }
+
+    sqliteDb()->endTransaction();
+
+    if (ok) {
+        m_connBlockAddedTimer.startTrigger();
 
         constexpr int connBlockIncMax = 100;
         if (++m_connBlockInc >= connBlockIncMax) {
             m_connBlockInc = 0;
-            deleteOldConnBlock();
+            QMetaObject::invokeMethod(this, &StatManager::deleteOldConnBlock, Qt::QueuedConnection);
         }
-    }
-
-    sqliteDb()->endTransaction(ok);
-
-    if (ok) {
-        emit connBlockAdded();
     }
 
     return ok;
@@ -384,7 +387,9 @@ bool StatManager::deleteOldConnBlock()
     if (oldCount <= 0)
         return false;
 
-    deleteRangeConnBlock(m_connBlockIdMin, m_connBlockIdMin + oldCount);
+    deleteRangeConnBlock(m_connBlockIdMin, m_connBlockIdMin + oldCount - 1);
+
+    emit connRemoved();
 
     return true;
 }

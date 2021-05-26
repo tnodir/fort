@@ -16,8 +16,8 @@
 ConnListModel::ConnListModel(StatManager *statManager, QObject *parent) :
     TableSqlModel(parent), m_statManager(statManager)
 {
-    connect(m_statManager, &StatManager::connBlockAdded, this, &ConnListModel::reset);
-    connect(m_statManager, &StatManager::connRemoved, this, &ConnListModel::reset);
+    connect(m_statManager, &StatManager::connBlockAdded, this, &ConnListModel::resetAll);
+    connect(m_statManager, &StatManager::connRemoved, this, &ConnListModel::resetAll);
 }
 
 void ConnListModel::setBlockedMode(bool v)
@@ -227,9 +227,50 @@ const ConnRow &ConnListModel::connRowAt(int row) const
 
 void ConnListModel::clear()
 {
+    doBeginRemoveRows(0, rowCount() - 1);
+
     statManager()->deleteConnAll();
 
+    doEndRemoveRows();
+
     hostInfoCache()->clear();
+}
+
+void ConnListModel::resetAll()
+{
+    if (isChanging())
+        return;
+
+    const qint64 oldIdMin = statManager()->connBlockIdMin();
+    const qint64 oldIdMax = statManager()->connBlockIdMax();
+
+    statManager()->setupConnBlockId();
+
+    const qint64 idMin = statManager()->connBlockIdMin();
+    const qint64 idMax = statManager()->connBlockIdMax();
+
+    if (idMin == oldIdMin && idMax == oldIdMax)
+        return;
+
+    if (idMin < oldIdMin || idMax < oldIdMax) {
+        reset();
+        return;
+    }
+
+    if (idMin > oldIdMin) {
+        const int count = idMin - oldIdMin;
+        beginRemoveRows({}, 0, count - 1);
+        invalidateRowCache();
+        endRemoveRows();
+    }
+
+    if (idMax > oldIdMax) {
+        const int count = idMax - oldIdMax;
+        const int endRow = rowCount();
+        beginInsertRows({}, endRow, endRow + count - 1);
+        invalidateRowCache();
+        endInsertRows();
+    }
 }
 
 bool ConnListModel::updateTableRow(int row) const

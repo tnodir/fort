@@ -470,14 +470,10 @@ bool RpcManager::processStatManagerRpc(
                 args.value(0).toLongLong(), args.value(1).toUInt(), args.value(2).toUInt());
         return true;
     case Control::Rpc_StatManager_connBlockAdded:
-        if (auto sm = qobject_cast<StatManagerRpc *>(statManager())) {
-            sm->onConnBlockAdded();
-        }
+        emit statManager()->connBlockAdded();
         return true;
     case Control::Rpc_StatManager_connRemoved:
-        if (auto sm = qobject_cast<StatManagerRpc *>(statManager())) {
-            sm->onConnRemoved();
-        }
+        emit statManager()->connRemoved();
         return true;
     case Control::Rpc_StatManager_appTrafTotalsResetted:
         emit statManager()->appTrafTotalsResetted();

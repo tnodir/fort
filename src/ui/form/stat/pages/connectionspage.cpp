@@ -266,7 +266,7 @@ void ConnectionsPage::setupTableConnsChanged()
 void ConnectionsPage::updateAutoScroll()
 {
     if (iniUser()->statAutoScroll()) {
-        connect(connListModel(), &QAbstractItemModel::modelReset, m_connListView,
+        connect(connListModel(), &QAbstractItemModel::rowsInserted, m_connListView,
                 &QAbstractItemView::scrollToBottom);
 
         m_connListView->scrollToBottom();

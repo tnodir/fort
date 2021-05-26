@@ -308,6 +308,7 @@ void FortManager::setupQuotaManager()
 
 void FortManager::setupStatManager()
 {
+    statManager()->setConnEmitInterval(settings()->isServiceClient() ? 300 : 50);
     statManager()->initialize();
 }
 

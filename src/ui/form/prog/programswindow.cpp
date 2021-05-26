@@ -429,5 +429,5 @@ int ProgramsWindow::appListCurrentIndex() const
 QString ProgramsWindow::appListCurrentPath() const
 {
     const auto appRow = appListModel()->appRowAt(appListCurrentIndex());
-    return appRow.appPath;
+    return appRow.isNull() ? QString() : appRow.appPath;
 }

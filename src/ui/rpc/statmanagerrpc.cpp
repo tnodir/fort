@@ -40,15 +40,3 @@ bool StatManagerRpc::clearTraffic()
 {
     return rpcManager()->doOnServer(Control::Rpc_StatManager_clearTraffic);
 }
-
-void StatManagerRpc::onConnBlockAdded()
-{
-    setupConnBlockId();
-    emit connBlockAdded();
-}
-
-void StatManagerRpc::onConnRemoved()
-{
-    setupConnBlockId();
-    emit connRemoved();
-}
