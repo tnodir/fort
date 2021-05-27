@@ -23,6 +23,7 @@
 #include "form/stat/statisticswindow.h"
 #include "form/tray/trayicon.h"
 #include "form/zone/zoneswindow.h"
+#include "fortcompat.h"
 #include "fortsettings.h"
 #include "model/applistmodel.h"
 #include "model/appstatmodel.h"
@@ -402,6 +403,8 @@ void FortManager::setupTrayIcon()
     connect(m_trayIcon, &TrayIcon::mouseClicked, this, &FortManager::showProgramsWindow);
     connect(m_trayIcon, &TrayIcon::mouseDoubleClicked, this, &FortManager::showOptionsWindow);
     connect(m_trayIcon, &TrayIcon::mouseMiddleClicked, this, &FortManager::showStatisticsWindow);
+    connect(m_trayIcon, &TrayIcon::mouseRightClicked, m_trayIcon, &TrayIcon::showTrayMenu,
+            Qt::QueuedConnection);
     connect(m_trayIcon, &QSystemTrayIcon::messageClicked, this, &FortManager::onTrayMessageClicked);
 
     connect(confManager(), &ConfManager::confChanged, m_trayIcon, &TrayIcon::updateTrayMenu);
@@ -447,7 +450,8 @@ void FortManager::setupGraphWindow()
     m_graphWindow->restoreWindowState();
 
     connect(m_graphWindow, &GraphWindow::aboutToClose, this, [&] { closeGraphWindow(); });
-    connect(m_graphWindow, &GraphWindow::mouseRightClick, m_trayIcon, &TrayIcon::showTrayMenu);
+    connect(m_graphWindow, &GraphWindow::mouseRightClick, this,
+            [&](QMouseEvent *event) { m_trayIcon->showTrayMenu(mouseEventGlobalPos(event)); });
 
     connect(statManager(), &StatManager::trafficAdded, m_graphWindow, &GraphWindow::addTraffic);
 }

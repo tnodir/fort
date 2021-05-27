@@ -2,14 +2,12 @@
 
 #include <QApplication>
 #include <QMenu>
-#include <QMouseEvent>
 #include <QTimer>
 
 #include "../../conf/addressgroup.h"
 #include "../../conf/appgroup.h"
 #include "../../conf/confmanager.h"
 #include "../../conf/firewallconf.h"
-#include "../../fortcompat.h"
 #include "../../fortmanager.h"
 #include "../../fortsettings.h"
 #include "../../user/iniuser.h"
@@ -120,12 +118,12 @@ void TrayIcon::onTrayActivated(int reason)
         }
         break;
     case QSystemTrayIcon::MiddleClick:
+        m_trayTriggered = false;
         emit mouseMiddleClicked();
         break;
     case QSystemTrayIcon::Context:
-        if (!m_trayTriggered) {
-            m_menu->popup(QCursor::pos());
-        }
+        m_trayTriggered = false;
+        emit mouseRightClicked(QCursor::pos());
         break;
     default:
         break;
@@ -141,12 +139,9 @@ void TrayIcon::updateTrayIcon(bool alerted)
     this->setIcon(icon);
 }
 
-void TrayIcon::showTrayMenu(QMouseEvent *event)
+void TrayIcon::showTrayMenu(const QPoint &pos)
 {
-    if (!m_menu)
-        return;
-
-    m_menu->popup(mouseEventGlobalPos(event));
+    m_menu->popup(pos);
 }
 
 void TrayIcon::updateTrayMenu(bool onlyFlags)

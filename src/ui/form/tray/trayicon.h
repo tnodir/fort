@@ -4,7 +4,6 @@
 #include <QSystemTrayIcon>
 
 QT_FORWARD_DECLARE_CLASS(QAction)
-QT_FORWARD_DECLARE_CLASS(QMouseEvent)
 
 class ConfManager;
 class FirewallConf;
@@ -36,11 +35,12 @@ signals:
     void mouseClicked();
     void mouseDoubleClicked();
     void mouseMiddleClicked();
+    void mouseRightClicked(const QPoint &pos);
 
 public slots:
     void updateTrayIcon(bool alerted = false);
 
-    void showTrayMenu(QMouseEvent *event);
+    void showTrayMenu(const QPoint &pos);
     void updateTrayMenu(bool onlyFlags = false);
 
 protected slots:
