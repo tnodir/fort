@@ -270,7 +270,7 @@ QVariant SqliteStmt::columnVar(int column)
         stream >> vType;
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        vType = 0x1000 - 64;
+        vType -= 0x1000 - 64;
 #endif
 
         // Load content
