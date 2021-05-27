@@ -143,10 +143,8 @@ void RpcManager::setupStatManagerSignals()
                 invokeOnClients(
                         Control::Rpc_StatManager_trafficAdded, { unixTime, inBytes, outBytes });
             });
-    connect(statManager(), &StatManager::connBlockAdded, this,
-            [&] { invokeOnClients(Control::Rpc_StatManager_connBlockAdded); });
-    connect(statManager(), &StatManager::connRemoved, this,
-            [&] { invokeOnClients(Control::Rpc_StatManager_connRemoved); });
+    connect(statManager(), &StatManager::connChanged, this,
+            [&] { invokeOnClients(Control::Rpc_StatManager_connChanged); });
     connect(statManager(), &StatManager::appTrafTotalsResetted, this,
             [&] { invokeOnClients(Control::Rpc_StatManager_appTrafTotalsResetted); });
 }
@@ -469,11 +467,10 @@ bool RpcManager::processStatManagerRpc(
         emit statManager()->trafficAdded(
                 args.value(0).toLongLong(), args.value(1).toUInt(), args.value(2).toUInt());
         return true;
-    case Control::Rpc_StatManager_connBlockAdded:
-        emit statManager()->connBlockAdded();
-        return true;
-    case Control::Rpc_StatManager_connRemoved:
-        emit statManager()->connRemoved();
+    case Control::Rpc_StatManager_connChanged:
+        if (auto sm = qobject_cast<StatManagerRpc *>(statManager())) {
+            sm->onConnChanged();
+        }
         return true;
     case Control::Rpc_StatManager_appTrafTotalsResetted:
         emit statManager()->appTrafTotalsResetted();

@@ -29,6 +29,8 @@ public:
 public slots:
     bool clearTraffic() override;
 
+    void onConnChanged();
+
 private:
     FortManager *m_fortManager = nullptr;
 };

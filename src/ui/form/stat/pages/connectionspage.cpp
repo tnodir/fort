@@ -202,7 +202,7 @@ void ConnectionsPage::setupTableConnList()
     m_connListView->setSelectionBehavior(QAbstractItemView::SelectItems);
 
     // TODO: Select the allowed/blocked mode from UI
-    connListModel()->setBlockedMode(true);
+    connListModel()->setConnMode(true);
 
     m_connListView->setModel(connListModel());
 
@@ -283,7 +283,7 @@ void ConnectionsPage::updateShowHostNames()
 void ConnectionsPage::deleteConn(int row)
 {
     const auto connRow = connListModel()->connRowAt(row);
-    connListModel()->deleteConn(connRow.rowId, connRow.blocked, row);
+    connListModel()->deleteConn(connRow.rowId, connRow.blocked);
 }
 
 int ConnectionsPage::connListCurrentIndex() const

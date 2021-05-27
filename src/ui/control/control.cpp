@@ -53,8 +53,7 @@ const char *const commandString(Command cmd)
         CASE_STRING(Rpc_StatManager_appStatRemoved)
         CASE_STRING(Rpc_StatManager_appCreated)
         CASE_STRING(Rpc_StatManager_trafficAdded)
-        CASE_STRING(Rpc_StatManager_connBlockAdded)
-        CASE_STRING(Rpc_StatManager_connRemoved)
+        CASE_STRING(Rpc_StatManager_connChanged)
         CASE_STRING(Rpc_StatManager_appTrafTotalsResetted)
 
         CASE_STRING(Rpc_TaskManager_runTask)
@@ -125,8 +124,7 @@ RpcManager managerByCommand(Command cmd)
     case Rpc_StatManager_appStatRemoved:
     case Rpc_StatManager_appCreated:
     case Rpc_StatManager_trafficAdded:
-    case Rpc_StatManager_connBlockAdded:
-    case Rpc_StatManager_connRemoved:
+    case Rpc_StatManager_connChanged:
     case Rpc_StatManager_appTrafTotalsResetted:
         return Rpc_StatManager;
 

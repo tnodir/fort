@@ -39,10 +39,14 @@ class ConnListModel : public TableSqlModel
     Q_OBJECT
 
 public:
+    enum ConnMode : qint8 { ConnNone = 0, ConnBlock, ConnTraf };
+
     explicit ConnListModel(StatManager *statManager, QObject *parent = nullptr);
 
-    bool blockedMode() const { return m_blockedMode; }
-    void setBlockedMode(bool v);
+    uint connMode() const { return m_connMode; }
+    void setConnMode(uint v);
+
+    bool isConnBlock() const { return connMode() == ConnBlock; }
 
     bool resolveAddress() const { return m_resolveAddress; }
     void setResolveAddress(bool v);
@@ -64,7 +68,7 @@ public:
             int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-    void deleteConn(qint64 rowIdTo, bool blocked, int row);
+    void deleteConn(qint64 rowIdTo, bool blocked);
 
     const ConnRow &connRowAt(int row) const;
 
@@ -72,7 +76,8 @@ public slots:
     void clear();
 
 protected slots:
-    void resetAll();
+    void resetRowIdRange();
+    void updateRowIdRange();
 
 protected:
     bool updateTableRow(int row) const override;
@@ -91,14 +96,19 @@ private:
     static QString blockReasonText(const ConnRow &connRow);
     static QString connIconPath(const ConnRow &connRow);
 
-    qint64 rowIdMin() const;
-    qint64 rowIdMax() const;
+    qint64 rowIdMin() const { return m_rowIdMin; }
+    qint64 rowIdMax() const { return m_rowIdMax; }
+
+    void getRowIdRange(qint64 &rowIdMin, qint64 &rowIdMax) const;
 
     QString formatIpPort(quint32 ip, quint16 port) const;
 
 private:
-    bool m_blockedMode = false;
-    bool m_resolveAddress = false;
+    uint m_connMode : 2;
+    uint m_resolveAddress : 1;
+
+    qint64 m_rowIdMin = 0;
+    qint64 m_rowIdMax = 0;
 
     StatManager *m_statManager = nullptr;
     AppInfoCache *m_appInfoCache = nullptr;

@@ -172,15 +172,7 @@ void FortManager::createManagers()
         m_rpcManager = new RpcManager(this, this);
     }
 
-    if (settings()->isServiceClient()) {
-        m_confManager = new ConfManagerRpc(settings()->confFilePath(), this, this);
-        m_quotaManager = new QuotaManagerRpc(this, this);
-        m_statManager = new StatManagerRpc(settings()->statFilePath(), this, this);
-        m_driverManager = new DriverManagerRpc(this);
-        m_appInfoManager = new AppInfoManagerRpc(settings()->cacheFilePath(), this, this);
-        m_logManager = new LogManagerRpc(this, this);
-        m_taskManager = new TaskManagerRpc(this, this);
-    } else {
+    if (settings()->isMaster()) {
         m_confManager = new ConfManager(settings()->confFilePath(), this, this);
         m_quotaManager = new QuotaManager(confManager(), this);
         m_statManager = new StatManager(settings()->statFilePath(), quotaManager(), this);
@@ -188,6 +180,14 @@ void FortManager::createManagers()
         m_appInfoManager = new AppInfoManager(settings()->cacheFilePath(), this);
         m_logManager = new LogManager(this, this);
         m_taskManager = new TaskManager(this, this);
+    } else {
+        m_confManager = new ConfManagerRpc(settings()->confFilePath(), this, this);
+        m_quotaManager = new QuotaManagerRpc(this, this);
+        m_statManager = new StatManagerRpc(settings()->statFilePath(), this, this);
+        m_driverManager = new DriverManagerRpc(this);
+        m_appInfoManager = new AppInfoManagerRpc(settings()->cacheFilePath(), this, this);
+        m_logManager = new LogManagerRpc(this, this);
+        m_taskManager = new TaskManagerRpc(this, this);
     }
 }
 
@@ -307,7 +307,7 @@ void FortManager::setupQuotaManager()
 
 void FortManager::setupStatManager()
 {
-    statManager()->setConnEmitInterval(settings()->isServiceClient() ? 300 : 50);
+    statManager()->setConnChangedInterval(settings()->isMaster() ? 100 : 300);
     statManager()->initialize();
 }
 

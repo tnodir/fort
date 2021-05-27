@@ -14,17 +14,16 @@
 #include "../util/net/netutil.h"
 
 ConnListModel::ConnListModel(StatManager *statManager, QObject *parent) :
-    TableSqlModel(parent), m_statManager(statManager)
+    TableSqlModel(parent), m_connMode(ConnNone), m_resolveAddress(false), m_statManager(statManager)
 {
-    connect(m_statManager, &StatManager::connBlockAdded, this, &ConnListModel::resetAll);
-    connect(m_statManager, &StatManager::connRemoved, this, &ConnListModel::resetAll);
+    connect(m_statManager, &StatManager::connChanged, this, &ConnListModel::updateRowIdRange);
 }
 
-void ConnListModel::setBlockedMode(bool v)
+void ConnListModel::setConnMode(uint v)
 {
-    if (m_blockedMode != v) {
-        m_blockedMode = v;
-        reset();
+    if (m_connMode != v) {
+        m_connMode = v;
+        resetRowIdRange();
     }
 }
 
@@ -57,13 +56,7 @@ void ConnListModel::setHostInfoCache(HostInfoCache *v)
 
 void ConnListModel::handleLogBlockedIp(const LogEntryBlockedIp &entry, qint64 unixTime)
 {
-    const int row = rowCount();
-
-    doBeginInsertRows(row, row);
-
     statManager()->logBlockedIp(entry, unixTime);
-
-    doEndInsertRows();
 }
 
 int ConnListModel::columnCount(const QModelIndex &parent) const
@@ -209,13 +202,9 @@ QString ConnListModel::connIconPath(const ConnRow &connRow)
     return ":/icons/sign-check.png";
 }
 
-void ConnListModel::deleteConn(qint64 rowIdTo, bool blocked, int row)
+void ConnListModel::deleteConn(qint64 rowIdTo, bool blocked)
 {
-    doBeginRemoveRows(0, row);
-
     statManager()->deleteConn(rowIdTo, blocked);
-
-    doEndRemoveRows();
 }
 
 const ConnRow &ConnListModel::connRowAt(int row) const
@@ -227,50 +216,61 @@ const ConnRow &ConnListModel::connRowAt(int row) const
 
 void ConnListModel::clear()
 {
-    doBeginRemoveRows(0, rowCount() - 1);
-
     statManager()->deleteConnAll();
-
-    doEndRemoveRows();
 
     hostInfoCache()->clear();
 }
 
-void ConnListModel::resetAll()
+void ConnListModel::resetRowIdRange()
 {
-    if (isChanging())
+    m_rowIdMin = 0, m_rowIdMax = 0;
+    updateRowIdRange();
+}
+
+void ConnListModel::updateRowIdRange()
+{
+    if (connMode() == ConnNone)
         return;
 
-    const qint64 oldIdMin = statManager()->connBlockIdMin();
-    const qint64 oldIdMax = statManager()->connBlockIdMax();
+    const qint64 oldIdMin = rowIdMin();
+    const qint64 oldIdMax = rowIdMax();
 
-    statManager()->setupConnBlockId();
-
-    const qint64 idMin = statManager()->connBlockIdMin();
-    const qint64 idMax = statManager()->connBlockIdMax();
+    qint64 idMin, idMax;
+    getRowIdRange(idMin, idMax);
 
     if (idMin == oldIdMin && idMax == oldIdMax)
         return;
 
-    if (idMin < oldIdMin || idMax < oldIdMax) {
+    if (idMin < oldIdMin || idMax < oldIdMax || oldIdMax == 0) {
+        m_rowIdMin = idMin, m_rowIdMax = idMax;
         reset();
         return;
     }
 
     if (idMin > oldIdMin) {
-        const int count = idMin - oldIdMin;
-        beginRemoveRows({}, 0, count - 1);
+        const int removedCount = idMin - oldIdMin;
+        beginRemoveRows({}, 0, removedCount - 1);
+        m_rowIdMin = idMin;
         invalidateRowCache();
         endRemoveRows();
     }
 
     if (idMax > oldIdMax) {
-        const int count = idMax - oldIdMax;
-        const int endRow = rowCount();
-        beginInsertRows({}, endRow, endRow + count - 1);
+        const int addedCount = idMax - oldIdMax;
+        const int endRow = oldIdMax - idMin + 1;
+        beginInsertRows({}, endRow, endRow + addedCount - 1);
+        m_rowIdMax = idMax;
         invalidateRowCache();
         endInsertRows();
     }
+}
+
+void ConnListModel::getRowIdRange(qint64 &rowIdMin, qint64 &rowIdMax) const
+{
+    statManager()->updateConnBlockId();
+
+    rowIdMin = isConnBlock() ? statManager()->connBlockIdMin() : statManager()->connTrafIdMin();
+    rowIdMax = isConnBlock() ? statManager()->connBlockIdMax() : statManager()->connTrafIdMax();
 }
 
 bool ConnListModel::updateTableRow(int row) const
@@ -295,7 +295,7 @@ bool ConnListModel::updateTableRow(int row) const
     m_connRow.remoteIp = stmt.columnInt(10);
     m_connRow.appPath = stmt.columnText(11);
 
-    if (blockedMode()) {
+    if (isConnBlock()) {
         m_connRow.blockReason = stmt.columnInt(12);
     }
 
@@ -326,8 +326,8 @@ QString ConnListModel::sqlBase() const
                                "  FROM conn t"
                                "    JOIN %1 c ON c.conn_id = t.conn_id"
                                "    JOIN app a ON a.app_id = t.app_id")
-            .arg(blockedMode() ? "conn_block" : "conn_traffic",
-                    blockedMode() ? "c.block_reason" : "c.end_time, c.in_bytes, c.out_bytes");
+            .arg(isConnBlock() ? "conn_block" : "conn_traffic",
+                    isConnBlock() ? "c.block_reason" : "c.end_time, c.in_bytes, c.out_bytes");
 }
 
 QString ConnListModel::sqlWhere() const
@@ -338,16 +338,6 @@ QString ConnListModel::sqlWhere() const
 QString ConnListModel::sqlLimitOffset() const
 {
     return QString();
-}
-
-qint64 ConnListModel::rowIdMin() const
-{
-    return blockedMode() ? statManager()->connBlockIdMin() : statManager()->connTrafIdMin();
-}
-
-qint64 ConnListModel::rowIdMax() const
-{
-    return blockedMode() ? statManager()->connBlockIdMax() : statManager()->connTrafIdMax();
 }
 
 QString ConnListModel::formatIpPort(quint32 ip, quint16 port) const

@@ -41,9 +41,11 @@ public:
 
     SqliteDb *sqliteDb() const { return m_sqliteDb; }
 
-    void setConnEmitInterval(int msec);
+    void setConnChangedInterval(int msec);
 
     bool initialize();
+
+    void updateConnBlockId();
 
     bool logProcNew(quint32 pid, const QString &appPath, qint64 unixTime = 0);
     bool logStatTraf(quint16 procCount, const quint32 *procTrafBytes, qint64 unixTime);
@@ -72,15 +74,19 @@ signals:
     void appCreated(qint64 appId, const QString &appPath);
     void trafficAdded(qint64 unixTime, quint32 inBytes, quint32 outBytes);
 
-    void connBlockAdded();
-    void connRemoved();
+    void connChanged();
 
     void appTrafTotalsResetted();
 
 public slots:
     virtual bool clearTraffic();
 
-    void setupConnBlockId();
+protected:
+    bool isConnIdRangeUpdated() const { return m_isConnIdRangeUpdated; }
+    void setIsConnIdRangeUpdated(bool v) { m_isConnIdRangeUpdated = v; }
+
+private:
+    void emitConnChanged();
 
 private:
     using QStmtList = QList<SqliteStmt *>;
@@ -128,17 +134,19 @@ private:
     qint64 insertConnBlock(qint64 connId, quint8 blockReason);
 
     bool createConnBlock(const LogEntryBlockedIp &entry, qint64 unixTime, qint64 appId);
-    void deleteRangeConnBlock(qint64 rowIdFrom, qint64 rowIdTo);
+    void deleteConnBlock(qint64 rowIdTo);
 
     void deleteAppStmtList(const QStmtList &stmtList, SqliteStmt *stmtAppList);
 
     void doStmtList(const QStmtList &stmtList);
 
+    SqliteStmt *getStmt(const char *sql);
     SqliteStmt *getTrafficStmt(const char *sql, qint32 trafTime);
     SqliteStmt *getIdStmt(const char *sql, qint64 id);
-    SqliteStmt *getId2Stmt(const char *sql, qint64 id1, qint64 id2);
 
 private:
+    bool m_isConnIdRangeUpdated : 1;
+
     bool m_isActivePeriodSet : 1;
     bool m_isActivePeriod : 1;
 
@@ -168,7 +176,7 @@ private:
     QHash<quint32, QString> m_appPidPathMap; // pid -> appPath
     QHash<QString, qint64> m_appPathIdCache; // appPath -> appId
 
-    TriggerTimer m_connBlockAddedTimer;
+    TriggerTimer m_connChangedTimer;
 };
 
 #endif // STATMANAGER_H

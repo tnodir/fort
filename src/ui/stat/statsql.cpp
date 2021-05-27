@@ -179,15 +179,14 @@ const char *const StatSql::sqlInsertConnBlock = "INSERT INTO conn_block(conn_id,
 
 const char *const StatSql::sqlSelectMinMaxConnBlockId = "SELECT MIN(id), MAX(id) FROM conn_block;";
 
-const char *const StatSql::sqlDeleteRangeConnForBlock =
+const char *const StatSql::sqlDeleteConnForBlock =
         "DELETE FROM conn WHERE conn_id IN ("
-        "  SELECT conn_id FROM conn_block WHERE id BETWEEN ?1 AND ?2"
+        "  SELECT conn_id FROM conn_block WHERE id <= ?1"
         ");";
 
-const char *const StatSql::sqlDeleteRangeConnBlock =
-        "DELETE FROM conn_block WHERE id BETWEEN ?1 AND ?2;";
+const char *const StatSql::sqlDeleteConnBlock = "DELETE FROM conn_block WHERE id <= ?1;";
 
-const char *const StatSql::sqlSelectDeletedRangeConnBlockAppList =
+const char *const StatSql::sqlSelectDeletedConnBlockAppList =
         "SELECT t.app_id, t.path FROM app t"
         "  LEFT JOIN traffic_app ta ON ta.app_id = t.app_id"
         "  WHERE ta.app_id IS NULL AND ("

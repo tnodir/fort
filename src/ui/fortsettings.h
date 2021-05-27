@@ -22,7 +22,7 @@ public:
     bool isService() const { return m_isService; }
     bool hasService() const { return m_hasService; }
 
-    bool isServiceClient() const { return hasService() && !isService(); }
+    bool isMaster() const { return !hasService() || isService(); }
 
     bool isUserAdmin() const { return m_isUserAdmin; }
 

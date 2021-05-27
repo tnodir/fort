@@ -73,9 +73,9 @@ public:
 
     static const char *const sqlSelectMinMaxConnBlockId;
 
-    static const char *const sqlDeleteRangeConnForBlock;
-    static const char *const sqlDeleteRangeConnBlock;
-    static const char *const sqlSelectDeletedRangeConnBlockAppList;
+    static const char *const sqlDeleteConnForBlock;
+    static const char *const sqlDeleteConnBlock;
+    static const char *const sqlSelectDeletedConnBlockAppList;
 
     static const char *const sqlDeleteAllConn;
     static const char *const sqlDeleteAllConnBlock;

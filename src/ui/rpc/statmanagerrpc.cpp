@@ -40,3 +40,10 @@ bool StatManagerRpc::clearTraffic()
 {
     return rpcManager()->doOnServer(Control::Rpc_StatManager_clearTraffic);
 }
+
+void StatManagerRpc::onConnChanged()
+{
+    setIsConnIdRangeUpdated(false);
+
+    emit connChanged();
+}
