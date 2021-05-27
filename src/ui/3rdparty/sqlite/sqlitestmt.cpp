@@ -116,23 +116,21 @@ bool SqliteStmt::bindVar(int index, const QVariant &v)
         stream << vType;
 
         // Write content
-        {
-            switch (vType) {
-            case QMetaType::QImage: {
-                QByteArray bufData;
+        switch (vType) {
+        case QMetaType::QImage: {
+            QByteArray bufData;
 
-                QBuffer buf(&bufData);
-                buf.open(QIODevice::WriteOnly);
+            QBuffer buf(&bufData);
+            buf.open(QIODevice::WriteOnly);
 
-                const QImage image = v.value<QImage>();
-                image.save(&buf, "PNG");
+            const QImage image = v.value<QImage>();
+            image.save(&buf, "PNG");
 
-                buf.close();
-                stream << bufData;
-            } break;
-            default:
-                Q_UNREACHABLE();
-            }
+            buf.close();
+            stream << bufData;
+        } break;
+        default:
+            Q_UNREACHABLE();
         }
 
         return bindBlob(index, data);
@@ -271,20 +269,22 @@ QVariant SqliteStmt::columnVar(int column)
         qint16 vType;
         stream >> vType;
 
-        // Load content
-        {
-            switch (vType) {
-            case QMetaType::QImage: {
-                QByteArray bufData;
-                stream >> bufData;
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+        vType = 0x1000 - 64;
+#endif
 
-                QImage image;
-                image.loadFromData(bufData, "PNG");
-                return image;
-            }
-            default:
-                Q_UNREACHABLE();
-            }
+        // Load content
+        switch (vType) {
+        case QMetaType::QImage: {
+            QByteArray bufData;
+            stream >> bufData;
+
+            QImage image;
+            image.loadFromData(bufData, "PNG");
+            return image;
+        }
+        default:
+            Q_UNREACHABLE();
         }
     } break;
     case SQLITE_NULL:
