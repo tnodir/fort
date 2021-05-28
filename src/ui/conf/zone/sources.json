@@ -7,6 +7,13 @@
         "formData": ""
     },
     {
+        "code": "winspyblock",
+        "title": "WindowsSpyBlocker",
+        "zoneType": "gen",
+        "url": "https://github.com/crazy-max/WindowsSpyBlocker/blob/master/data/firewall/spy.txt",
+        "formData": ""
+    },
+    {
         "code": "firehol_level1",
         "title": "FireHOL Level-1 (attacks)",
         "zoneType": "gen",
