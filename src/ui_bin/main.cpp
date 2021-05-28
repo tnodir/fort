@@ -103,7 +103,9 @@ int main(int argc, char *argv[])
     settings.initialize(QCoreApplication::arguments(), &envManager);
 
     // Setup Crash Handler
+#ifndef QT_DEBUG
     setupCrashHandler(crashHandler, settings);
+#endif
 
     // Setup Control Manager
     ControlManager controlManager(&settings);
