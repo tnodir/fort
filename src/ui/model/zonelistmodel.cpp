@@ -34,7 +34,7 @@ void ZoneListModel::initialize()
 
 int ZoneListModel::columnCount(const QModelIndex &parent) const
 {
-    return parent.isValid() ? 0 : 4;
+    return parent.isValid() ? 0 : 5;
 }
 
 QVariant ZoneListModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -46,8 +46,10 @@ QVariant ZoneListModel::headerData(int section, Qt::Orientation orientation, int
         case 1:
             return tr("Source");
         case 2:
-            return tr("Last Run");
+            return tr("Addresses");
         case 3:
+            return tr("Last Run");
+        case 4:
             return tr("Last Success");
         }
     }
@@ -88,8 +90,10 @@ QVariant ZoneListModel::dataDisplay(const QModelIndex &index) const
         return zoneSource.title();
     }
     case 2:
-        return zoneRow.lastRun;
+        return zoneRow.addressCount;
     case 3:
+        return zoneRow.lastRun;
+    case 4:
         return zoneRow.lastSuccess;
     }
 
@@ -163,12 +167,12 @@ bool ZoneListModel::updateZoneEnabled(int zoneId, bool enabled)
     return confManager()->updateZoneEnabled(zoneId, enabled);
 }
 
-bool ZoneListModel::updateZoneResult(int zoneId, const QString &textChecksum,
+bool ZoneListModel::updateZoneResult(int zoneId, int addressCount, const QString &textChecksum,
         const QString &binChecksum, const QDateTime &sourceModTime, const QDateTime &lastRun,
         const QDateTime &lastSuccess)
 {
     return confManager()->updateZoneResult(
-            zoneId, textChecksum, binChecksum, sourceModTime, lastRun, lastSuccess);
+            zoneId, addressCount, textChecksum, binChecksum, sourceModTime, lastRun, lastSuccess);
 }
 
 void ZoneListModel::deleteZone(int zoneId, int row)
@@ -182,8 +186,7 @@ void ZoneListModel::deleteZone(int zoneId, int row)
 
 QString ZoneListModel::zoneNameById(int zoneId)
 {
-    static const char *const sql = "SELECT name FROM zone"
-                                   "  WHERE zone_id = ?1;";
+    static const char *const sql = "SELECT name FROM zone WHERE zone_id = ?1;";
 
     SqliteStmt stmt;
     if (sqliteDb()->prepare(stmt, sql, { zoneId }) && stmt.step() == SqliteStmt::StepRow) {
@@ -215,11 +218,12 @@ bool ZoneListModel::updateTableRow(int row) const
     m_zoneRow.sourceCode = stmt.columnText(4);
     m_zoneRow.url = stmt.columnText(5);
     m_zoneRow.formData = stmt.columnText(6);
-    m_zoneRow.textChecksum = stmt.columnText(7);
-    m_zoneRow.binChecksum = stmt.columnText(8);
-    m_zoneRow.sourceModTime = stmt.columnDateTime(9);
-    m_zoneRow.lastRun = stmt.columnDateTime(10);
-    m_zoneRow.lastSuccess = stmt.columnDateTime(11);
+    m_zoneRow.addressCount = stmt.columnInt(7);
+    m_zoneRow.textChecksum = stmt.columnText(8);
+    m_zoneRow.binChecksum = stmt.columnText(9);
+    m_zoneRow.sourceModTime = stmt.columnDateTime(10);
+    m_zoneRow.lastRun = stmt.columnDateTime(11);
+    m_zoneRow.lastSuccess = stmt.columnDateTime(12);
 
     return true;
 }
@@ -234,6 +238,7 @@ QString ZoneListModel::sqlBase() const
            "    source_code,"
            "    url,"
            "    form_data,"
+           "    address_count,"
            "    text_checksum,"
            "    bin_checksum,"
            "    source_modtime,"

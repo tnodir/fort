@@ -16,6 +16,8 @@ struct ZoneRow : TableRow
 
     int zoneId = 0;
 
+    int addressCount = 0;
+
     QString zoneName;
     QString sourceCode;
 
@@ -59,8 +61,9 @@ public:
             const QString &url, const QString &formData, bool enabled, bool customUrl);
     bool updateZoneName(int zoneId, const QString &zoneName);
     bool updateZoneEnabled(int zoneId, bool enabled);
-    bool updateZoneResult(int zoneId, const QString &textChecksum, const QString &binChecksum,
-            const QDateTime &sourceModTime, const QDateTime &lastRun, const QDateTime &lastSuccess);
+    bool updateZoneResult(int zoneId, int addressCount, const QString &textChecksum,
+            const QString &binChecksum, const QDateTime &sourceModTime, const QDateTime &lastRun,
+            const QDateTime &lastSuccess);
     void deleteZone(int zoneId, int row);
 
     QString zoneNameById(int zoneId);

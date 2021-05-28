@@ -25,6 +25,9 @@ public:
     int zoneId() const { return m_zoneId; }
     void setZoneId(int v) { m_zoneId = v; }
 
+    int addressCount() const { return m_addressCount; }
+    void setAddressCount(int v) { m_addressCount = v; }
+
     QString zoneName() const { return m_zoneName; }
     void setZoneName(const QString &v) { m_zoneName = v; }
 
@@ -80,6 +83,8 @@ private:
     int m_emptyNetMask = 32;
 
     int m_zoneId = 0;
+
+    int m_addressCount = 0;
 
     QString m_zoneName;
 

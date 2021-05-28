@@ -10,7 +10,7 @@
         "code": "winspyblock",
         "title": "WindowsSpyBlocker",
         "zoneType": "gen",
-        "url": "https://github.com/crazy-max/WindowsSpyBlocker/blob/master/data/firewall/spy.txt",
+        "url": "https://raw.githubusercontent.com/crazy-max/WindowsSpyBlocker/master/data/firewall/spy.txt",
         "formData": ""
     },
     {

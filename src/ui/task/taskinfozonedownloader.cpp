@@ -139,6 +139,7 @@ void TaskInfoZoneDownloader::processSubResult(bool success)
     auto worker = zoneDownloader();
 
     const auto zoneId = worker->zoneId();
+    const auto addressCount = worker->addressCount();
     const auto textChecksum = worker->textChecksum();
     const auto binChecksum = worker->binChecksum();
 
@@ -147,7 +148,7 @@ void TaskInfoZoneDownloader::processSubResult(bool success)
     const auto lastSuccess = success ? now : worker->lastSuccess();
 
     zoneListModel()->updateZoneResult(
-            zoneId, textChecksum, binChecksum, sourceModTime, now, lastSuccess);
+            zoneId, addressCount, textChecksum, binChecksum, sourceModTime, now, lastSuccess);
 
     addSubResult(worker, success);
 }

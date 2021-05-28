@@ -29,7 +29,7 @@
 
 namespace {
 
-#define ZONES_HEADER_VERSION 1
+#define ZONES_HEADER_VERSION 2
 
 }
 
@@ -335,11 +335,13 @@ void ZonesWindow::setupTableZonesHeader()
 
     header->setSectionResizeMode(0, QHeaderView::Interactive);
     header->setSectionResizeMode(1, QHeaderView::Interactive);
-    header->setSectionResizeMode(2, QHeaderView::Stretch);
+    header->setSectionResizeMode(2, QHeaderView::Interactive);
     header->setSectionResizeMode(3, QHeaderView::Stretch);
+    header->setSectionResizeMode(4, QHeaderView::Stretch);
 
-    header->resizeSection(0, 350);
-    header->resizeSection(1, 290);
+    header->resizeSection(0, 300);
+    header->resizeSection(1, 300);
+    header->resizeSection(2, 90);
 }
 
 void ZonesWindow::setupTableZonesChanged()

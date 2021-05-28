@@ -39,7 +39,9 @@ void NetDownloader::start()
 
     m_process.start("curl", args, QIODevice::ReadOnly);
 
-    if (!m_process.waitForStarted()) {
+    if (!m_process.waitForStarted(1000)) {
+        qWarning() << "NetDownloader: Cannot start `curl`:" << m_process.errorString();
+
         abort();
     }
 }
@@ -73,12 +75,17 @@ void NetDownloader::processError(QProcess::ProcessError error)
     if (m_aborted)
         return;
 
-    qWarning() << "NetDownloader: Cannot run `curl`:" << error;
+    qWarning() << "NetDownloader: Cannot run `curl`:" << error << m_process.errorString();
 
     abort();
 }
 
 void NetDownloader::processFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
-    abort(exitCode == 0 && exitStatus == QProcess::NormalExit && !m_buffer.isEmpty());
+    const bool success = (exitCode == 0 && exitStatus == QProcess::NormalExit);
+    if (!success) {
+        qWarning() << "NetDownloader: `curl` error code:" << exitCode;
+    }
+
+    abort(success && !m_buffer.isEmpty());
 }

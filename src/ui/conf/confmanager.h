@@ -86,8 +86,9 @@ public:
             const QString &url, const QString &formData, bool enabled, bool customUrl);
     virtual bool updateZoneName(int zoneId, const QString &zoneName);
     virtual bool updateZoneEnabled(int zoneId, bool enabled);
-    bool updateZoneResult(int zoneId, const QString &textChecksum, const QString &binChecksum,
-            const QDateTime &sourceModTime, const QDateTime &lastRun, const QDateTime &lastSuccess);
+    bool updateZoneResult(int zoneId, int addressCount, const QString &textChecksum,
+            const QString &binChecksum, const QDateTime &sourceModTime, const QDateTime &lastRun,
+            const QDateTime &lastSuccess);
 
     virtual bool checkPassword(const QString &password);
 

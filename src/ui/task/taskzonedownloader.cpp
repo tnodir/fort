@@ -41,8 +41,8 @@ void TaskZoneDownloader::downloadFinished(bool success)
                 && (this->textChecksum() != textChecksum
                         || !FileUtil::fileExists(cacheFileBinPath()))) {
             setTextChecksum(textChecksum);
-
             success = storeAddresses(list);
+            setAddressCount(success ? list.size() : 0);
         }
     }
 

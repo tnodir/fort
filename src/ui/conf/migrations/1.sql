@@ -6,6 +6,7 @@ CREATE TABLE zone(
   source_code TEXT NOT NULL,
   url TEXT,
   form_data TEXT,
+  address_count INTEGER,
   text_checksum TEXT,
   bin_checksum TEXT,
   source_modtime INTEGER,

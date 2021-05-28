@@ -27,7 +27,7 @@ Q_LOGGING_CATEGORY(CLOG_CONF_MANAGER, "conf")
 #define logWarning()  qCWarning(CLOG_CONF_MANAGER, )
 #define logCritical() qCCritical(CLOG_CONF_MANAGER, )
 
-#define DATABASE_USER_VERSION 9
+#define DATABASE_USER_VERSION 10
 
 namespace {
 
@@ -130,8 +130,7 @@ const char *const sqlUpsertApp =
         "    creat_time = ?6, end_time = ?7"
         "  RETURNING app_id;";
 
-const char *const sqlInsertAppAlert = "INSERT INTO app_alert(app_id)"
-                                      "  VALUES(?1);";
+const char *const sqlInsertAppAlert = "INSERT INTO app_alert(app_id) VALUES(?1);";
 
 const char *const sqlDeleteApp = "DELETE FROM app WHERE app_id = ?1;";
 
@@ -142,9 +141,7 @@ const char *const sqlUpdateApp = "UPDATE app"
                                  "    blocked = ?5, end_time = ?6"
                                  "  WHERE app_id = ?1;";
 
-const char *const sqlUpdateAppName = "UPDATE app"
-                                     "  SET name = ?2"
-                                     "  WHERE app_id = ?1;";
+const char *const sqlUpdateAppName = "UPDATE app SET name = ?2 WHERE app_id = ?1;";
 
 const char *const sqlUpdateAppResetGroup = "UPDATE app"
                                            "  SET app_group_id = ?2"
@@ -167,18 +164,15 @@ const char *const sqlUpdateZone = "UPDATE zone"
                                   "    source_code = ?5, url = ?6, form_data = ?7"
                                   "  WHERE zone_id = ?1;";
 
-const char *const sqlUpdateZoneName = "UPDATE zone"
-                                      "  SET name = ?2"
-                                      "  WHERE zone_id = ?1;";
+const char *const sqlUpdateZoneName = "UPDATE zone SET name = ?2 WHERE zone_id = ?1;";
 
-const char *const sqlUpdateZoneEnabled = "UPDATE zone"
-                                         "  SET enabled = ?2"
-                                         "  WHERE zone_id = ?1;";
+const char *const sqlUpdateZoneEnabled = "UPDATE zone SET enabled = ?2 WHERE zone_id = ?1;";
 
-const char *const sqlUpdateZoneResult = "UPDATE zone"
-                                        "  SET text_checksum = ?2, bin_checksum = ?3,"
-                                        "    source_modtime = ?4, last_run = ?5, last_success = ?6"
-                                        "  WHERE zone_id = ?1;";
+const char *const sqlUpdateZoneResult =
+        "UPDATE zone"
+        "  SET address_count = ?2, text_checksum = ?3, bin_checksum = ?4,"
+        "    source_modtime = ?5, last_run = ?6, last_success = ?7"
+        "  WHERE zone_id = ?1;";
 
 bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 {
@@ -954,14 +948,14 @@ bool ConfManager::updateZoneEnabled(int zoneId, bool enabled)
     return ok;
 }
 
-bool ConfManager::updateZoneResult(int zoneId, const QString &textChecksum,
+bool ConfManager::updateZoneResult(int zoneId, int addressCount, const QString &textChecksum,
         const QString &binChecksum, const QDateTime &sourceModTime, const QDateTime &lastRun,
         const QDateTime &lastSuccess)
 {
     bool ok = false;
 
-    const auto vars = QVariantList()
-            << zoneId << textChecksum << binChecksum << sourceModTime << lastRun << lastSuccess;
+    const auto vars = QVariantList() << zoneId << addressCount << textChecksum << binChecksum
+                                     << sourceModTime << lastRun << lastSuccess;
 
     sqliteDb()->executeEx(sqlUpdateZoneResult, vars, 0, &ok);
 
