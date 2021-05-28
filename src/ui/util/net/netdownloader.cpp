@@ -39,6 +39,8 @@ void NetDownloader::start()
 
     m_process.start("curl", args, QIODevice::ReadOnly);
 
+    qDebug() << "NetDownloader: Run `curl`:" << args;
+
     if (!m_process.waitForStarted(1000)) {
         qWarning() << "NetDownloader: Cannot start `curl`:" << m_process.errorString();
 
