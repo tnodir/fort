@@ -12,6 +12,7 @@ WorkerManager::WorkerManager(QObject *parent) : QObject(parent) { }
 
 WorkerManager::~WorkerManager()
 {
+    clear();
     abort();
 }
 

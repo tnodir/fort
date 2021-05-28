@@ -22,6 +22,8 @@ public:
     ~WorkerManager() override;
     CLASS_DELETE_COPY_MOVE(WorkerManager)
 
+    bool aborted() const { return m_aborted; }
+
     int maxWorkersCount() const { return m_maxWorkersCount; }
     void setMaxWorkersCount(int v) { m_maxWorkersCount = v; }
 
@@ -29,6 +31,7 @@ signals:
 
 public slots:
     void clear();
+    void abort();
 
     void enqueueJob(WorkerJob *job);
     WorkerJob *dequeueJob();
@@ -39,9 +42,6 @@ public slots:
 
 protected:
     virtual WorkerObject *createWorker();
-
-    bool aborted() const { return m_aborted; }
-    void abort();
 
 private:
     void setupWorker();

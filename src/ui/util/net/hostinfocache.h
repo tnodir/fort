@@ -15,6 +15,7 @@ class HostInfoCache : public QObject
 
 public:
     explicit HostInfoCache(QObject *parent = nullptr);
+    ~HostInfoCache() override;
 
 signals:
     void cacheChanged();
@@ -23,6 +24,7 @@ public slots:
     QString hostName(const QString &address);
 
     void clear();
+    void abort();
 
 private slots:
     void handleFinishedLookup(const QString &address, const QString &hostName);
