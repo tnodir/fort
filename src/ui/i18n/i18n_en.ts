@@ -1267,6 +1267,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Last Success</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Addresses</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>ZonesWindow</name>

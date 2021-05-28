@@ -1268,6 +1268,10 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
         <source>Last Success</source>
         <translation>Dernier succès</translation>
     </message>
+    <message>
+        <source>Addresses</source>
+        <translation>Adresses</translation>
+    </message>
 </context>
 <context>
     <name>ZonesWindow</name>

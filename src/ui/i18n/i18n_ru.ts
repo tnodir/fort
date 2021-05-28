@@ -1268,6 +1268,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Last Success</source>
         <translation>Успешный запуск</translation>
     </message>
+    <message>
+        <source>Addresses</source>
+        <translation>Адреса</translation>
+    </message>
 </context>
 <context>
     <name>ZonesWindow</name>
