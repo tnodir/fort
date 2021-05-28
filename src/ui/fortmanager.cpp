@@ -402,8 +402,7 @@ void FortManager::setupTrayIcon()
     connect(m_trayIcon, &TrayIcon::mouseClicked, this, &FortManager::showProgramsWindow);
     connect(m_trayIcon, &TrayIcon::mouseDoubleClicked, this, &FortManager::showOptionsWindow);
     connect(m_trayIcon, &TrayIcon::mouseMiddleClicked, this, &FortManager::showStatisticsWindow);
-    connect(m_trayIcon, &TrayIcon::mouseRightClicked, m_trayIcon, &TrayIcon::showTrayMenu,
-            Qt::QueuedConnection);
+    connect(m_trayIcon, &TrayIcon::mouseRightClicked, m_trayIcon, &TrayIcon::showTrayMenu);
     connect(m_trayIcon, &QSystemTrayIcon::messageClicked, this, &FortManager::onTrayMessageClicked);
 
     connect(confManager(), &ConfManager::confChanged, m_trayIcon, &TrayIcon::updateTrayMenu);
