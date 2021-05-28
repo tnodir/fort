@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QFileInfo>
 #include <QSignalSpy>
 
 #include <googletest.h>
@@ -83,7 +84,7 @@ TEST_F(NetUtilTest, taskTasix)
     tasix.setZoneId(1);
     tasix.setSort(true);
     tasix.setEmptyNetMask(24);
-    tasix.setPattern("^\\*\\D{2,5}(\\S+)");
+    tasix.setPattern("^\\*\\D{2,5}([\\d./-]{7,})");
 
     QString textChecksum;
     const auto text = QString::fromLatin1(buf);
@@ -97,5 +98,7 @@ TEST_F(NetUtilTest, taskTasix)
     tasix.setCachePath(cachePath);
     ASSERT_TRUE(tasix.storeAddresses(list));
 
-    ASSERT_TRUE(tasix.saveAddressesAsText(cachePath + "tasix-mrlg.txt"));
+    const QFileInfo out(cachePath + "tasix-mrlg.txt");
+    ASSERT_TRUE(tasix.saveAddressesAsText(out.filePath()));
+    ASSERT_GT(out.size(), 0);
 }
