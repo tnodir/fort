@@ -251,21 +251,20 @@ void ZonesWindow::setupZoneEditForm()
 
 void ZonesWindow::setupComboSources()
 {
-    m_comboSources = new QComboBox();
-
-    const auto refreshComboZoneTypes = [&](bool onlyFlags = false) {
-        if (onlyFlags)
-            return;
-
-        m_comboSources->clear();
-        for (const auto &sourceVar : zoneListModel()->zoneSources()) {
-            const ZoneSourceWrapper zoneSource(sourceVar);
-            m_comboSources->addItem(zoneSource.title(), sourceVar);
+    m_comboSources = ControlUtil::createComboBox(QStringList(), [&](int /*index*/) {
+        if (!m_cbCustomUrl->isChecked()) {
+            const auto zoneSource = ZoneSourceWrapper(m_comboSources->currentData());
+            m_editUrl->setText(zoneSource.url());
+            m_editFormData->setText(zoneSource.formData());
         }
-        m_comboSources->setCurrentIndex(0);
-    };
+    });
 
-    refreshComboZoneTypes();
+    m_comboSources->clear();
+    for (const auto &sourceVar : zoneListModel()->zoneSources()) {
+        const ZoneSourceWrapper zoneSource(sourceVar);
+        m_comboSources->addItem(zoneSource.title(), sourceVar);
+    }
+    m_comboSources->setCurrentIndex(0);
 }
 
 QLayout *ZonesWindow::setupHeader()
@@ -381,8 +380,7 @@ void ZonesWindow::updateZoneEditForm(bool editCurrentZone)
         zoneRow = zoneListModel()->zoneRowAt(zoneIndex);
     }
 
-    const auto zoneSource =
-            ZoneSourceWrapper(zoneListModel()->zoneSourceByCode(zoneRow.sourceCode));
+    const ZoneSourceWrapper zoneSource(zoneListModel()->zoneSourceByCode(zoneRow.sourceCode));
 
     m_formZoneIsNew = !editCurrentZone;
 
