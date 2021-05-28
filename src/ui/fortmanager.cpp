@@ -308,7 +308,6 @@ void FortManager::setupQuotaManager()
 
 void FortManager::setupStatManager()
 {
-    statManager()->setConnChangedInterval(settings()->isMaster() ? 100 : 300);
     statManager()->initialize();
 }
 

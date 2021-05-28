@@ -41,8 +41,6 @@ public:
 
     SqliteDb *sqliteDb() const { return m_sqliteDb; }
 
-    void setConnChangedInterval(int msec);
-
     bool initialize();
 
     void updateConnBlockId();

@@ -78,11 +78,6 @@ const IniOptions *StatManager::ini() const
     return &conf()->ini();
 }
 
-void StatManager::setConnChangedInterval(int msec)
-{
-    m_connChangedTimer.setInterval(msec);
-}
-
 void StatManager::emitConnChanged()
 {
     m_connChangedTimer.startTrigger();
