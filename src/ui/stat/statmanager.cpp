@@ -348,7 +348,7 @@ bool StatManager::logBlockedIp(const LogEntryBlockedIp &entry, qint64 unixTime)
     bool ok = false;
     sqliteDb()->beginTransaction();
 
-    const qint64 appId = getOrCreateAppId(entry.path(), unixTime, true);
+    const qint64 appId = getOrCreateAppId(entry.path(), unixTime);
     if (appId != INVALID_APP_ID) {
         ok = createConnBlock(entry, unixTime, appId);
     }
@@ -492,7 +492,7 @@ qint64 StatManager::createAppId(const QString &appPath, qint64 unixTime)
     return INVALID_APP_ID;
 }
 
-qint64 StatManager::getOrCreateAppId(const QString &appPath, qint64 unixTime, bool blocked)
+qint64 StatManager::getOrCreateAppId(const QString &appPath, qint64 unixTime)
 {
     qint64 appId = getCachedAppId(appPath);
     if (appId == INVALID_APP_ID) {
@@ -505,10 +505,6 @@ qint64 StatManager::getOrCreateAppId(const QString &appPath, qint64 unixTime, bo
         }
 
         Q_ASSERT(appId != INVALID_APP_ID);
-
-        if (!blocked && !hasAppTraf(appId)) {
-            emit appCreated(appId, appPath);
-        }
 
         addCachedAppId(appPath, appId);
     }
@@ -593,6 +589,10 @@ void StatManager::logTrafBytes(const QStmtList &insertStmtList, const QStmtList 
     Q_ASSERT(appId != INVALID_APP_ID);
 
     if (m_isActivePeriod) {
+        if (!hasAppTraf(appId)) {
+            emit appCreated(appId, appPath);
+        }
+
         // Update or insert app bytes
         updateTrafficList(insertStmtList, updateStmtList, inBytes, outBytes, appId);
     }
