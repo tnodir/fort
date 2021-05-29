@@ -44,7 +44,7 @@ public slots:
     void updateTrayMenu(bool onlyFlags = false);
 
 protected slots:
-    void onTrayActivated(int reason);
+    void onTrayActivated(QSystemTrayIcon::ActivationReason reason);
 
     void saveTrayFlags();
 

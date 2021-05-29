@@ -99,7 +99,7 @@ HotKeyManager *TrayIcon::hotKeyManager() const
     return ctrl()->hotKeyManager();
 }
 
-void TrayIcon::onTrayActivated(int reason)
+void TrayIcon::onTrayActivated(QSystemTrayIcon::ActivationReason reason)
 {
     switch (reason) {
     case QSystemTrayIcon::Trigger:
