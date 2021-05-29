@@ -6,6 +6,7 @@
 #include "../fortmanager.h"
 #include "../fortsettings.h"
 #include "../rpc/rpcmanager.h"
+#include "../task/taskmanager.h"
 
 ConfManagerRpc::ConfManagerRpc(const QString &filePath, FortManager *fortManager, QObject *parent) :
     ConfManager(filePath, fortManager, parent, SqliteDb::OpenDefaultReadOnly)
@@ -15,6 +16,11 @@ ConfManagerRpc::ConfManagerRpc(const QString &filePath, FortManager *fortManager
 RpcManager *ConfManagerRpc::rpcManager() const
 {
     return fortManager()->rpcManager();
+}
+
+TaskManager *ConfManagerRpc::taskManager() const
+{
+    return fortManager()->taskManager();
 }
 
 bool ConfManagerRpc::addApp(const QString &appPath, const QString &appName,
@@ -116,6 +122,10 @@ void ConfManagerRpc::onConfChanged(const QVariant &confVar)
     } else {
         // Apply only flags
         conf()->fromVariant(confVar, true);
+    }
+
+    if ((editedFlags & FirewallConf::TaskEdited) != 0) {
+        taskManager()->loadSettings();
     }
 
     applySavedConf(conf());

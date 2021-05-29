@@ -24,7 +24,7 @@ private:
             quint16 m_enabled : 1;
             quint16 m_intervalHours;
         };
-        quint32 m_value;
+        quint32 m_value = 0;
     };
 };
 

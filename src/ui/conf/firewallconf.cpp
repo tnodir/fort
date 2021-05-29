@@ -446,7 +446,7 @@ QVariant FirewallConf::toVariant(bool onlyFlags) const
         map["flags"] = flagsToVariant();
     }
 
-    if ((flags & IniEdited) != 0) {
+    if ((flags & (IniEdited | TaskEdited)) != 0) {
         const QVariantMap iniMap = ini().map();
         if (!iniMap.isEmpty()) {
             map["ini"] = iniMap;
@@ -480,7 +480,7 @@ void FirewallConf::fromVariant(const QVariant &v, bool onlyFlags)
         applyAppGroupBits();
     }
 
-    if (iniEdited()) {
+    if (iniEdited() || taskEdited()) {
         ini().setMap(map["ini"].toMap());
     }
 }

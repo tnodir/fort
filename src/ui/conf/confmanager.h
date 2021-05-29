@@ -132,7 +132,7 @@ private:
     void loadExtFlags(IniOptions &ini);
     void saveExtFlags(const IniOptions &ini);
 
-    void saveOthersByIni(const IniOptions &ini);
+    void saveTasksByIni(const IniOptions &ini);
 
     bool loadTask(TaskInfo *taskInfo);
     bool saveTask(TaskInfo *taskInfo);

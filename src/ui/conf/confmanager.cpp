@@ -534,7 +534,11 @@ bool ConfManager::saveConf(FirewallConf &conf)
     settings()->writeConfIni(conf);
 
     if (conf.iniEdited()) {
-        saveOthersByIni(conf.ini());
+        saveExtFlags(conf.ini());
+    }
+
+    if (conf.taskEdited()) {
+        saveTasksByIni(conf.ini());
     }
 
     conf.afterSaved();
@@ -605,12 +609,12 @@ bool ConfManager::saveVariant(const QVariant &confVar)
     FirewallConf *conf;
     bool isNewConf = false;
 
-    if ((editedFlags & FirewallConf::OptEdited) == 0) {
-        conf = this->conf();
-    } else {
+    if ((editedFlags & FirewallConf::OptEdited) != 0) {
         conf = createConf();
         conf->copyFlags(*this->conf());
         isNewConf = true;
+    } else {
+        conf = this->conf();
     }
 
     conf->fromVariant(confVar, true);
@@ -1116,10 +1120,8 @@ void ConfManager::saveExtFlags(const IniOptions &ini)
     }
 }
 
-void ConfManager::saveOthersByIni(const IniOptions &ini)
+void ConfManager::saveTasksByIni(const IniOptions &ini)
 {
-    saveExtFlags(ini);
-
     // Task Info List
     if (ini.taskInfoListSet()) {
         taskManager()->saveVariant(ini.taskInfoList());

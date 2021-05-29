@@ -20,7 +20,8 @@ public:
         OptEdited = 0x1,
         FlagsEdited = 0x2,
         IniEdited = 0x4,
-        AllEdited = (OptEdited | FlagsEdited | IniEdited)
+        TaskEdited = 0x8,
+        AllEdited = (OptEdited | FlagsEdited | IniEdited | TaskEdited)
     };
 
     explicit FirewallConf(FortSettings *settings = nullptr, QObject *parent = nullptr);
@@ -35,6 +36,9 @@ public:
 
     bool iniEdited() const { return (m_editedFlags & IniEdited) != 0; }
     void setIniEdited() { m_editedFlags |= IniEdited; }
+
+    bool taskEdited() const { return (m_editedFlags & TaskEdited) != 0; }
+    void setTaskEdited() { m_editedFlags |= TaskEdited; }
 
     bool anyEdited() const { return m_editedFlags != NoneEdited; }
     void resetEdited(bool v = false);

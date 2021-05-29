@@ -89,6 +89,14 @@ void OptionsController::setIniEdited()
     }
 }
 
+void OptionsController::setTaskEdited()
+{
+    if (!conf()->taskEdited()) {
+        conf()->setTaskEdited();
+        emitEdited(true);
+    }
+}
+
 void OptionsController::emitEdited(bool edited)
 {
     emit editedChanged(edited);

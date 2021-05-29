@@ -4,6 +4,7 @@
 #include "../conf/confmanager.h"
 
 class RpcManager;
+class TaskManager;
 
 class ConfManagerRpc : public ConfManager
 {
@@ -14,6 +15,7 @@ public:
             const QString &filePath, FortManager *fortManager, QObject *parent = nullptr);
 
     RpcManager *rpcManager() const;
+    TaskManager *taskManager() const;
 
     bool addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
             qint64 groupId, int groupIndex, bool useGroupPerm, bool blocked,

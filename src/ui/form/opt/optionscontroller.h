@@ -52,6 +52,7 @@ public slots:
     void setOptEdited();
     void setFlagsEdited();
     void setIniEdited();
+    void setTaskEdited();
 
     void emitEdited(bool edited = true);
     void resetEdited();
