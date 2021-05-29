@@ -114,7 +114,6 @@ bool TaskZoneDownloader::storeAddresses(const StringViewList &list)
     const auto binData = qCompress(m_zoneData);
 
     const auto binChecksumData = QCryptographicHash::hash(binData, QCryptographicHash::Sha256);
-
     setBinChecksum(QString::fromLatin1(binChecksumData.toHex()));
 
     return FileUtil::writeFileData(cacheFileBinPath(), binData);
