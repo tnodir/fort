@@ -664,7 +664,7 @@ qint64 ConfManager::appIdByPath(const QString &appPath)
 bool ConfManager::addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
         qint64 groupId, int groupIndex, bool useGroupPerm, bool blocked, bool alerted)
 {
-    if (!updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, blocked))
+    if (!alerted && !updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, blocked))
         return false;
 
     bool ok = false;

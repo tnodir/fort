@@ -27,8 +27,10 @@ bool ConfManagerRpc::addApp(const QString &appPath, const QString &appName,
         const QDateTime &endTime, qint64 groupId, int groupIndex, bool useGroupPerm, bool blocked,
         bool alerted)
 {
+    Q_ASSERT(!alerted); // Only driver can alert
+
     return rpcManager()->doOnServer(Control::Rpc_ConfManager_addApp,
-            { appPath, appName, endTime, groupId, groupIndex, useGroupPerm, blocked, alerted });
+            { appPath, appName, endTime, groupId, groupIndex, useGroupPerm, blocked });
 }
 
 bool ConfManagerRpc::deleteApp(qint64 appId, const QString &appPath)

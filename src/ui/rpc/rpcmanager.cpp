@@ -326,8 +326,7 @@ bool RpcManager::processConfManagerRpc(
         sendResult(w,
                 confManager()->addApp(args.value(0).toString(), args.value(1).toString(),
                         args.value(2).toDateTime(), args.value(3).toLongLong(),
-                        args.value(4).toInt(), args.value(5).toBool(), args.value(6).toBool(),
-                        args.value(7).toBool()));
+                        args.value(4).toInt(), args.value(5).toBool(), args.value(6).toBool()));
         return true;
     case Control::Rpc_ConfManager_deleteApp:
         sendResult(
