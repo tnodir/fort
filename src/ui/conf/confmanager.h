@@ -58,6 +58,7 @@ public:
     void saveIni();
     void saveIniUser(bool flagsChanged = false);
 
+    QVariant toPatchVariant(bool onlyFlags) const;
     bool saveVariant(const QVariant &confVar);
 
     bool loadTasks(const QList<TaskInfo *> &taskInfos);

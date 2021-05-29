@@ -63,6 +63,7 @@ private:
     void invokeOnClients(Control::Command cmd, const QVariantList &args = {});
 
     bool checkClientValidated(ControlWorker *w) const;
+    bool validateClient(ControlWorker *w, const QString &password) const;
     void initClientOnServer(ControlWorker *w) const;
 
     QVariantList driverManager_updateState_args() const;

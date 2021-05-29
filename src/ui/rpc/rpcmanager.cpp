@@ -87,10 +87,7 @@ void RpcManager::setupAppInfoManagerSignals()
 void RpcManager::setupConfManagerSignals()
 {
     connect(confManager(), &ConfManager::confChanged, this, [&](bool onlyFlags) {
-        const QVariant confVar = onlyFlags
-                ? confManager()->conf()->toVariant(true) // send only flags to clients
-                : FirewallConf::editedFlagsToVariant(
-                        FirewallConf::AllEdited); // clients have to reload all from storage
+        const QVariant confVar = confManager()->toPatchVariant(onlyFlags);
         invokeOnClients(Control::Rpc_ConfManager_confChanged, { confVar });
     });
 
@@ -237,6 +234,15 @@ bool RpcManager::checkClientValidated(ControlWorker *w) const
     return !settings()->isPasswordRequired() || w->isClientValidated();
 }
 
+bool RpcManager::validateClient(ControlWorker *w, const QString &password) const
+{
+    const bool ok = confManager()->checkPassword(password);
+    if (ok && !w->isClientValidated()) {
+        w->setIsClientValidated(true);
+    }
+    return ok;
+}
+
 void RpcManager::initClientOnServer(ControlWorker *w) const
 {
     w->setIsServiceClient(true);
@@ -370,14 +376,9 @@ bool RpcManager::processConfManagerRpc(
                 confManager()->updateZoneEnabled(
                         args.value(0).toLongLong(), args.value(1).toBool()));
         return true;
-    case Control::Rpc_ConfManager_checkPassword: {
-        const bool ok = confManager()->checkPassword(args.value(0).toString());
-        if (ok && !w->isClientValidated()) {
-            w->setIsClientValidated(true);
-        }
-        sendResult(w, ok);
+    case Control::Rpc_ConfManager_checkPassword:
+        sendResult(w, validateClient(w, args.value(0).toString()));
         return true;
-    }
     case Control::Rpc_ConfManager_confChanged:
         if (auto cm = qobject_cast<ConfManagerRpc *>(confManager())) {
             cm->onConfChanged(args.value(0));
