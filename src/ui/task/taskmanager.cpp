@@ -137,7 +137,7 @@ void TaskManager::runExpiredTasks()
     }
 
     if (enabledTaskExists) {
-        m_timer.start(60 * 60 * 1000); // 1 hour
+        m_timer.start(5 * 60 * 1000); // 5 minutes
     } else {
         m_timer.stop();
     }
