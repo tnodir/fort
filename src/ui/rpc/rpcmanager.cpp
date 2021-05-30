@@ -91,12 +91,10 @@ void RpcManager::setupConfManagerSignals()
         invokeOnClients(Control::Rpc_ConfManager_confChanged, { confVar });
     });
 
-    connect(confManager(), &ConfManager::appEndTimesUpdated, this,
-            [&] { invokeOnClients(Control::Rpc_ConfManager_appEndTimesUpdated); });
-    connect(confManager(), &ConfManager::appAdded, this,
-            [&](bool alerted) { invokeOnClients(Control::Rpc_ConfManager_appAdded, { alerted }); });
-    connect(confManager(), &ConfManager::appRemoved, this,
-            [&] { invokeOnClients(Control::Rpc_ConfManager_appRemoved); });
+    connect(confManager(), &ConfManager::appAlerted, this,
+            [&] { invokeOnClients(Control::Rpc_ConfManager_appAlerted); });
+    connect(confManager(), &ConfManager::appChanged, this,
+            [&] { invokeOnClients(Control::Rpc_ConfManager_appChanged); });
     connect(confManager(), &ConfManager::appUpdated, this,
             [&] { invokeOnClients(Control::Rpc_ConfManager_appUpdated); });
 
@@ -331,8 +329,8 @@ bool RpcManager::processConfManagerRpc(
     case Control::Rpc_ConfManager_addApp:
         sendResult(w,
                 confManager()->addApp(args.value(0).toString(), args.value(1).toString(),
-                        args.value(2).toDateTime(), args.value(3).toLongLong(),
-                        args.value(4).toInt(), args.value(5).toBool(), args.value(6).toBool()));
+                        args.value(2).toDateTime(), args.value(3).toInt(), args.value(4).toBool(),
+                        args.value(5).toBool()));
         return true;
     case Control::Rpc_ConfManager_deleteApp:
         sendResult(
@@ -384,14 +382,11 @@ bool RpcManager::processConfManagerRpc(
             cm->onConfChanged(args.value(0));
         }
         return true;
-    case Control::Rpc_ConfManager_appEndTimesUpdated:
-        emit confManager()->appEndTimesUpdated();
+    case Control::Rpc_ConfManager_appAlerted:
+        emit confManager()->appAlerted();
         return true;
-    case Control::Rpc_ConfManager_appAdded:
-        emit confManager()->appAdded(args.value(0).toBool());
-        return true;
-    case Control::Rpc_ConfManager_appRemoved:
-        emit confManager()->appRemoved();
+    case Control::Rpc_ConfManager_appChanged:
+        emit confManager()->appChanged();
         return true;
     case Control::Rpc_ConfManager_appUpdated:
         emit confManager()->appUpdated();

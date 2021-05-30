@@ -7,16 +7,16 @@
 #include <sqlite/sqlitestmt.h>
 
 #include "../appinfo/appinfocache.h"
+#include "../fortmanager.h"
 #include "../log/logentryblockedip.h"
 #include "../stat/statmanager.h"
 #include "../util/iconcache.h"
 #include "../util/net/hostinfocache.h"
 #include "../util/net/netutil.h"
 
-ConnListModel::ConnListModel(StatManager *statManager, QObject *parent) :
-    TableSqlModel(parent), m_connMode(ConnNone), m_resolveAddress(false), m_statManager(statManager)
+ConnListModel::ConnListModel(FortManager *fortManager, QObject *parent) :
+    TableSqlModel(parent), m_connMode(ConnNone), m_resolveAddress(false), m_fortManager(fortManager)
 {
-    connect(m_statManager, &StatManager::connChanged, this, &ConnListModel::updateRowIdRange);
 }
 
 void ConnListModel::setConnMode(uint v)
@@ -35,28 +35,31 @@ void ConnListModel::setResolveAddress(bool v)
     }
 }
 
+StatManager *ConnListModel::statManager() const
+{
+    return fortManager()->statManager();
+}
+
 SqliteDb *ConnListModel::sqliteDb() const
 {
     return statManager()->sqliteDb();
 }
 
-void ConnListModel::setAppInfoCache(AppInfoCache *v)
+AppInfoCache *ConnListModel::appInfoCache() const
 {
-    m_appInfoCache = v;
+    return fortManager()->appInfoCache();
+}
 
+HostInfoCache *ConnListModel::hostInfoCache() const
+{
+    return fortManager()->hostInfoCache();
+}
+
+void ConnListModel::initialize()
+{
     connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &ConnListModel::refresh);
-}
-
-void ConnListModel::setHostInfoCache(HostInfoCache *v)
-{
-    m_hostInfoCache = v;
-
     connect(hostInfoCache(), &HostInfoCache::cacheChanged, this, &ConnListModel::refresh);
-}
-
-void ConnListModel::handleLogBlockedIp(const LogEntryBlockedIp &entry, qint64 unixTime)
-{
-    statManager()->logBlockedIp(entry, unixTime);
+    connect(statManager(), &StatManager::connChanged, this, &ConnListModel::updateRowIdRange);
 }
 
 int ConnListModel::columnCount(const QModelIndex &parent) const

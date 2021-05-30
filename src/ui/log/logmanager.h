@@ -3,13 +3,12 @@
 
 #include <QObject>
 
-class AppListModel;
-class AppStatModel;
-class ConnListModel;
+class ConfManager;
 class FortManager;
 class DriverWorker;
 class LogBuffer;
 class LogEntry;
+class StatManager;
 
 class LogManager : public QObject
 {
@@ -19,10 +18,9 @@ public:
     explicit LogManager(FortManager *fortManager, QObject *parent = nullptr);
 
     FortManager *fortManager() const { return m_fortManager; }
+    ConfManager *confManager() const;
+    StatManager *statManager() const;
     DriverWorker *driverWorker() const;
-    AppListModel *appListModel() const;
-    AppStatModel *appStatModel() const;
-    ConnListModel *connListModel() const;
 
     virtual void setActive(bool active);
 

@@ -16,6 +16,7 @@ QT_FORWARD_DECLARE_CLASS(QRadioButton)
 class AppInfoCache;
 class CheckSpinCombo;
 class ConfManager;
+class FirewallConf;
 class FortManager;
 class ProgramsController;
 
@@ -29,6 +30,7 @@ public:
     ProgramsController *ctrl() const { return m_ctrl; }
     FortManager *fortManager() const;
     ConfManager *confManager() const;
+    FirewallConf *conf() const;
     AppListModel *appListModel() const;
     AppInfoCache *appInfoCache() const;
 

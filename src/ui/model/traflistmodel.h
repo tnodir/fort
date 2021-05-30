@@ -36,6 +36,8 @@ public:
 
     StatManager *statManager() const { return m_statManager; }
 
+    void initialize();
+
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 

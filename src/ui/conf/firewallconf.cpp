@@ -137,6 +137,24 @@ bool FirewallConf::appGroupEnabled(int groupIndex) const
     return (appGroupBits() & (1 << groupIndex)) != 0;
 }
 
+const AppGroup *FirewallConf::appGroupAt(int index) const
+{
+    if (index < 0 || index >= appGroups().size()) {
+        static const AppGroup g_nullAppGroup;
+        return &g_nullAppGroup;
+    }
+    return appGroups().at(index);
+}
+
+QStringList FirewallConf::appGroupNames() const
+{
+    QStringList list;
+    for (const auto &appGroup : qAsConst(appGroups())) {
+        list.append(appGroup->name());
+    }
+    return list;
+}
+
 AppGroup *FirewallConf::appGroupByName(const QString &name) const
 {
     for (AppGroup *appGroup : appGroups()) {

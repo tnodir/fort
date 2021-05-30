@@ -8,9 +8,7 @@
 class AppInfoCache;
 class AppInfoManager;
 class AppListModel;
-class AppStatModel;
 class ConfManager;
-class ConnListModel;
 class ControlManager;
 class DriverManager;
 class EnvManager;
@@ -77,9 +75,7 @@ public:
     HostInfoCache *hostInfoCache() const { return m_hostInfoCache; }
 
     AppListModel *appListModel() const { return m_appListModel; }
-    AppStatModel *appStatModel() const { return m_appStatModel; }
     ZoneListModel *zoneListModel() const { return m_zoneListModel; }
-    ConnListModel *connListModel() const { return m_connListModel; }
 
     bool checkRunningInstance();
 
@@ -232,9 +228,7 @@ private:
     HostInfoCache *m_hostInfoCache = nullptr;
 
     AppListModel *m_appListModel = nullptr;
-    AppStatModel *m_appStatModel = nullptr;
     ZoneListModel *m_zoneListModel = nullptr;
-    ConnListModel *m_connListModel = nullptr;
 };
 
 #endif // FORTMANAGER_H

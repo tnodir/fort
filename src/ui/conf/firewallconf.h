@@ -103,7 +103,10 @@ public:
 
     const QList<AddressGroup *> &addressGroups() const { return m_addressGroups; }
 
-    Q_INVOKABLE AppGroup *appGroupByName(const QString &name) const;
+    const AppGroup *appGroupAt(int index) const;
+    QStringList appGroupNames() const;
+
+    AppGroup *appGroupByName(const QString &name) const;
 
     const QList<AppGroup *> &appGroups() const { return m_appGroups; }
 

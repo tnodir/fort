@@ -43,6 +43,8 @@ public:
     quint32 enabledSpeedLimitIn() const { return limitInEnabled() ? speedLimitIn() : 0; }
     quint32 enabledSpeedLimitOut() const { return limitOutEnabled() ? speedLimitOut() : 0; }
 
+    bool isNull() const { return m_id == 0; }
+
     qint64 id() const { return m_id; }
     void setId(qint64 id) { m_id = id; }
 

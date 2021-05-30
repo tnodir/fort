@@ -12,6 +12,8 @@
 class FirewallConf;
 class IniOptions;
 class LogEntryBlockedIp;
+class LogEntryProcNew;
+class LogEntryStatTraf;
 class QuotaManager;
 class SqliteDb;
 class SqliteStmt;
@@ -45,8 +47,8 @@ public:
 
     void updateConnBlockId();
 
-    bool logProcNew(quint32 pid, const QString &appPath, qint64 unixTime = 0);
-    bool logStatTraf(quint16 procCount, const quint32 *procTrafBytes, qint64 unixTime);
+    bool logProcNew(const LogEntryProcNew &entry, qint64 unixTime = 0);
+    bool logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime = 0);
 
     bool logBlockedIp(const LogEntryBlockedIp &entry, qint64 unixTime);
 

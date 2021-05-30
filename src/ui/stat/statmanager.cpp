@@ -8,6 +8,8 @@
 #include "../conf/firewallconf.h"
 #include "../driver/drivercommon.h"
 #include "../log/logentryblockedip.h"
+#include "../log/logentryprocnew.h"
+#include "../log/logentrystattraf.h"
 #include "../util/dateutil.h"
 #include "../util/fileutil.h"
 #include "../util/osutil.h"
@@ -262,15 +264,18 @@ void StatManager::clearAppIdCache()
     m_appPathIdCache.clear();
 }
 
-bool StatManager::logProcNew(quint32 pid, const QString &appPath, qint64 unixTime)
+bool StatManager::logProcNew(const LogEntryProcNew &entry, qint64 unixTime)
 {
+    const quint32 pid = entry.pid();
+    const QString &appPath = entry.path();
+
     Q_ASSERT(!m_appPidPathMap.contains(pid));
     m_appPidPathMap.insert(pid, appPath);
 
     return getOrCreateAppId(appPath, unixTime) != INVALID_APP_ID;
 }
 
-bool StatManager::logStatTraf(quint16 procCount, const quint32 *procTrafBytes, qint64 unixTime)
+bool StatManager::logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
 {
     if (!conf() || !conf()->logStat())
         return false;
@@ -314,6 +319,9 @@ bool StatManager::logStatTraf(quint16 procCount, const quint32 *procTrafBytes, q
             << getTrafficStmt(StatSql::sqlUpdateTrafHour, m_trafHour)
             << getTrafficStmt(StatSql::sqlUpdateTrafDay, m_trafDay)
             << getTrafficStmt(StatSql::sqlUpdateTrafMonth, m_trafMonth);
+
+    const quint16 procCount = entry.procCount();
+    const quint32 *procTrafBytes = entry.procTrafBytes();
 
     for (int i = 0; i < procCount; ++i) {
         const quint32 pidFlag = *procTrafBytes++;

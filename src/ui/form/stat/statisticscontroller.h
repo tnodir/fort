@@ -4,12 +4,12 @@
 #include <QObject>
 
 class ConfManager;
-class ConnListModel;
 class FirewallConf;
 class FortManager;
 class FortSettings;
 class IniOptions;
 class IniUser;
+class StatManager;
 class TranslationManager;
 
 class StatisticsController : public QObject
@@ -25,7 +25,7 @@ public:
     FirewallConf *conf() const;
     IniOptions *ini() const;
     IniUser *iniUser() const;
-    ConnListModel *connListModel() const;
+    StatManager *statManager() const;
     TranslationManager *translationManager() const;
 
 signals:

@@ -13,6 +13,7 @@
 
 #include "../../appinfo/appinfocache.h"
 #include "../../conf/confmanager.h"
+#include "../../conf/firewallconf.h"
 #include "../../fortmanager.h"
 #include "../../util/iconcache.h"
 #include "../controls/checkspincombo.h"
@@ -42,6 +43,11 @@ ConfManager *ProgramEditDialog::confManager() const
     return ctrl()->confManager();
 }
 
+FirewallConf *ProgramEditDialog::conf() const
+{
+    return ctrl()->conf();
+}
+
 AppListModel *ProgramEditDialog::appListModel() const
 {
     return fortManager()->appListModel();
@@ -49,7 +55,7 @@ AppListModel *ProgramEditDialog::appListModel() const
 
 AppInfoCache *ProgramEditDialog::appInfoCache() const
 {
-    return appListModel()->appInfoCache();
+    return fortManager()->appInfoCache();
 }
 
 void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &appIdList)
@@ -276,7 +282,7 @@ void ProgramEditDialog::setupComboAppGroups()
             return;
 
         m_comboAppGroup->clear();
-        m_comboAppGroup->addItems(appListModel()->appGroupNames());
+        m_comboAppGroup->addItems(conf()->appGroupNames());
         m_comboAppGroup->setCurrentIndex(0);
     };
 

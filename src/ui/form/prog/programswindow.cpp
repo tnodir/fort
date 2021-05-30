@@ -402,7 +402,7 @@ void ProgramsWindow::updateApp(int row, bool blocked)
 void ProgramsWindow::deleteApp(int row)
 {
     const auto appRow = appListModel()->appRowAt(row);
-    appListModel()->deleteApp(appRow.appId, appRow.appPath, row);
+    appListModel()->deleteApp(appRow.appId, appRow.appPath);
 }
 
 void ProgramsWindow::updateSelectedApps(bool blocked)

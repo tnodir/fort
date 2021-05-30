@@ -27,17 +27,14 @@ namespace {
 }
 
 ConnectionsPage::ConnectionsPage(StatisticsController *ctrl, QWidget *parent) :
-    StatBasePage(ctrl, parent)
+    StatBasePage(ctrl, parent), m_connListModel(new ConnListModel(ctrl->fortManager(), this))
 {
     setupUi();
 
     updateAutoScroll();
     updateShowHostNames();
-}
 
-ConnListModel *ConnectionsPage::connListModel() const
-{
-    return fortManager()->connListModel();
+    connListModel()->initialize();
 }
 
 AppInfoCache *ConnectionsPage::appInfoCache() const

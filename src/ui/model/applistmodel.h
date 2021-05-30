@@ -9,7 +9,6 @@ class AppGroup;
 class AppInfoCache;
 class ConfManager;
 class FirewallConf;
-class LogEntryBlocked;
 class SqliteDb;
 
 struct AppRow : TableRow
@@ -38,14 +37,10 @@ public:
 
     ConfManager *confManager() const { return m_confManager; }
     FirewallConf *conf() const;
+    AppInfoCache *appInfoCache() const;
     SqliteDb *sqliteDb() const override;
 
-    AppInfoCache *appInfoCache() const { return m_appInfoCache; }
-    void setAppInfoCache(AppInfoCache *v);
-
     void initialize();
-
-    void handleLogBlocked(const LogEntryBlocked &logEntry);
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
@@ -62,11 +57,8 @@ public:
     bool updateApp(qint64 appId, const QString &appPath, const QString &appName,
             const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool blocked);
     bool updateAppName(qint64 appId, const QString &appName);
-    void deleteApp(qint64 appId, const QString &appPath, int row);
+    void deleteApp(qint64 appId, const QString &appPath);
     void purgeApps();
-
-    const AppGroup *appGroupAt(int index) const;
-    QStringList appGroupNames() const;
 
 protected:
     bool updateTableRow(int row) const override;
@@ -97,7 +89,6 @@ private:
 
 private:
     ConfManager *m_confManager = nullptr;
-    AppInfoCache *m_appInfoCache = nullptr;
 
     mutable AppRow m_appRow;
 };

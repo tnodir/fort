@@ -26,9 +26,6 @@
 #include "fortcompat.h"
 #include "fortsettings.h"
 #include "model/applistmodel.h"
-#include "model/appstatmodel.h"
-#include "model/connlistmodel.h"
-#include "model/traflistmodel.h"
 #include "model/zonelistmodel.h"
 #include "rpc/appinfomanagerrpc.h"
 #include "rpc/confmanagerrpc.h"
@@ -330,19 +327,10 @@ void FortManager::setupHostInfoCache()
 void FortManager::setupModels()
 {
     m_appListModel = new AppListModel(confManager(), this);
-    appListModel()->setAppInfoCache(appInfoCache());
     appListModel()->initialize();
-
-    m_appStatModel = new AppStatModel(statManager(), this);
-    appStatModel()->setAppInfoCache(appInfoCache());
-    appStatModel()->initialize();
 
     m_zoneListModel = new ZoneListModel(confManager(), this);
     zoneListModel()->initialize();
-
-    m_connListModel = new ConnListModel(statManager(), this);
-    connListModel()->setAppInfoCache(appInfoCache());
-    connListModel()->setHostInfoCache(hostInfoCache());
 }
 
 void FortManager::setupTaskManager()
@@ -407,11 +395,8 @@ void FortManager::setupTrayIcon()
 
     connect(confManager(), &ConfManager::confChanged, m_trayIcon, &TrayIcon::updateTrayMenu);
     connect(confManager(), &ConfManager::iniUserChanged, m_trayIcon, &TrayIcon::updateTrayMenu);
-    connect(confManager(), &ConfManager::appAdded, m_trayIcon, [&](bool alerted) {
-        if (alerted) {
-            m_trayIcon->updateTrayIcon(true);
-        }
-    });
+    connect(confManager(), &ConfManager::appAlerted, m_trayIcon,
+            [&] { m_trayIcon->updateTrayIcon(true); });
 
     connect(qApp, &QCoreApplication::aboutToQuit, this, &FortManager::closeUi);
 }

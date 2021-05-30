@@ -19,9 +19,9 @@ class TrafficPage : public StatBasePage
 public:
     explicit TrafficPage(StatisticsController *ctrl = nullptr, QWidget *parent = nullptr);
 
-    AppStatModel *appStatModel() const;
+    AppStatModel *appStatModel() const { return m_appStatModel; }
+    TrafListModel *trafListModel() const { return m_trafListModel; }
     AppInfoCache *appInfoCache() const;
-    TrafListModel *trafListModel() const;
 
 protected slots:
     void onSaveWindowState(IniUser *ini) override;
@@ -51,6 +51,9 @@ private:
     QString appListCurrentPath() const;
 
 private:
+    AppStatModel *m_appStatModel = nullptr;
+    TrafListModel *m_trafListModel = nullptr;
+
     QPushButton *m_btRefresh = nullptr;
     QPushButton *m_btClear = nullptr;
     QAction *m_actRemoveApp = nullptr;

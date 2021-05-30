@@ -5,10 +5,12 @@
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
+#include "../appinfo/appinfocache.h"
 #include "../driver/drivercommon.h"
 #include "../driver/drivermanager.h"
 #include "../fortmanager.h"
 #include "../fortsettings.h"
+#include "../log/logentryblocked.h"
 #include "../task/taskinfo.h"
 #include "../task/taskmanager.h"
 #include "../user/iniuser.h"
@@ -378,6 +380,10 @@ ConfManager::ConfManager(
     m_sqliteDb(new SqliteDb(filePath, openFlags)),
     m_conf(createConf())
 {
+    connect(&m_appAlertedTimer, &QTimer::timeout, this, &ConfManager::appAlerted);
+    connect(&m_appChangedTimer, &QTimer::timeout, this, &ConfManager::appChanged);
+    connect(&m_appUpdatedTimer, &QTimer::timeout, this, &ConfManager::appUpdated);
+
     m_appEndTimer.setInterval(5 * 60 * 1000); // 5 minutes
     connect(&m_appEndTimer, &QTimer::timeout, this, &ConfManager::checkAppEndTimes);
 }
@@ -405,6 +411,11 @@ FortSettings *ConfManager::settings() const
 TaskManager *ConfManager::taskManager() const
 {
     return fortManager()->taskManager();
+}
+
+AppInfoCache *ConfManager::appInfoCache() const
+{
+    return fortManager()->appInfoCache();
 }
 
 IniUser *ConfManager::iniUser() const
@@ -489,6 +500,21 @@ void ConfManager::setupDefault(FirewallConf &conf) const
 {
     conf.setupDefaultAddressGroups();
     conf.addDefaultAppGroup();
+}
+
+void ConfManager::emitAppAlerted()
+{
+    m_appAlertedTimer.startTrigger();
+}
+
+void ConfManager::emitAppChanged()
+{
+    m_appChangedTimer.startTrigger();
+}
+
+void ConfManager::emitAppUpdated()
+{
+    m_appUpdatedTimer.startTrigger();
 }
 
 bool ConfManager::loadConf(FirewallConf &conf)
@@ -663,14 +689,31 @@ bool ConfManager::saveTasks(const QList<TaskInfo *> &taskInfos)
     return checkResult(ok, true);
 }
 
+void ConfManager::logBlockedApp(const LogEntryBlocked &logEntry)
+{
+    const QString appPath = logEntry.path();
+
+    if (appIdByPath(appPath) > 0)
+        return; // already added by user
+
+    const QString appName = appInfoCache()->appName(appPath);
+    constexpr int groupIndex = 0; // "Main" app. group
+
+    addApp(appPath, appName, QDateTime(), groupIndex, false, logEntry.blocked(), true);
+}
+
 qint64 ConfManager::appIdByPath(const QString &appPath)
 {
     return sqliteDb()->executeEx(sqlSelectAppIdByPath, { appPath }).toLongLong();
 }
 
 bool ConfManager::addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
-        qint64 groupId, int groupIndex, bool useGroupPerm, bool blocked, bool alerted)
+        int groupIndex, bool useGroupPerm, bool blocked, bool alerted)
 {
+    const AppGroup *appGroup = conf()->appGroupAt(groupIndex);
+    if (appGroup->isNull())
+        return false;
+
     if (!alerted && !updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, blocked))
         return false;
 
@@ -679,7 +722,7 @@ bool ConfManager::addApp(const QString &appPath, const QString &appName, const Q
     sqliteDb()->beginTransaction();
 
     const auto vars = QVariantList()
-            << groupId << appPath << appName << useGroupPerm << blocked
+            << appGroup->id() << appPath << appName << useGroupPerm << blocked
             << QDateTime::currentDateTime() << (!endTime.isNull() ? endTime : QVariant());
 
     const auto appIdVar = sqliteDb()->executeEx(sqlUpsertApp, vars, 1, &ok);
@@ -697,7 +740,10 @@ bool ConfManager::addApp(const QString &appPath, const QString &appName, const Q
             m_appEndTimer.start();
         }
 
-        emit appAdded(alerted);
+        if (alerted) {
+            emitAppAlerted();
+        }
+        emitAppChanged();
     }
 
     return ok;
@@ -722,7 +768,7 @@ bool ConfManager::deleteApp(qint64 appId, const QString &appPath)
     checkResult(ok, true);
 
     if (ok) {
-        emit appRemoved();
+        emitAppChanged();
     }
 
     return ok;
@@ -826,7 +872,7 @@ void ConfManager::updateAppEndTimes()
     }
 
     if (isAppEndTimesUpdated) {
-        emit appEndTimesUpdated();
+        emitAppUpdated();
     }
 }
 

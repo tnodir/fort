@@ -37,9 +37,9 @@ IniUser *StatisticsController::iniUser() const
     return confManager()->iniUser();
 }
 
-ConnListModel *StatisticsController::connListModel() const
+StatManager *StatisticsController::statManager() const
 {
-    return fortManager()->connListModel();
+    return fortManager()->statManager();
 }
 
 TranslationManager *StatisticsController::translationManager() const

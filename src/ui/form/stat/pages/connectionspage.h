@@ -25,7 +25,7 @@ class ConnectionsPage : public StatBasePage
 public:
     explicit ConnectionsPage(StatisticsController *ctrl = nullptr, QWidget *parent = nullptr);
 
-    ConnListModel *connListModel() const;
+    ConnListModel *connListModel() const { return m_connListModel; }
     AppInfoCache *appInfoCache() const;
 
 protected slots:
@@ -54,6 +54,8 @@ private:
     QString connListCurrentPath() const;
 
 private:
+    ConnListModel *m_connListModel = nullptr;
+
     QPushButton *m_btEdit = nullptr;
     QAction *m_actCopy = nullptr;
     QAction *m_actAddProgram = nullptr;

@@ -6,7 +6,9 @@
 
 #include "../util/classhelpers.h"
 #include "../util/conf/confappswalker.h"
+#include "../util/triggertimer.h"
 
+class AppInfoCache;
 class DriverManager;
 class EnvManager;
 class FirewallConf;
@@ -14,6 +16,7 @@ class FortManager;
 class FortSettings;
 class IniOptions;
 class IniUser;
+class LogEntryBlocked;
 class SqliteDb;
 class SqliteStmt;
 class TaskInfo;
@@ -34,6 +37,7 @@ public:
     EnvManager *envManager() const;
     FortSettings *settings() const;
     TaskManager *taskManager() const;
+    AppInfoCache *appInfoCache() const;
 
     SqliteDb *sqliteDb() const { return m_sqliteDb; }
 
@@ -64,9 +68,11 @@ public:
     bool loadTasks(const QList<TaskInfo *> &taskInfos);
     bool saveTasks(const QList<TaskInfo *> &taskInfos);
 
+    void logBlockedApp(const LogEntryBlocked &logEntry);
+
     qint64 appIdByPath(const QString &appPath);
     virtual bool addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
-            qint64 groupId, int groupIndex, bool useGroupPerm, bool blocked, bool alerted = false);
+            int groupIndex, bool useGroupPerm, bool blocked, bool alerted = false);
     virtual bool deleteApp(qint64 appId, const QString &appPath);
     virtual bool updateApp(qint64 appId, const QString &appPath, const QString &appName,
             const QDateTime &endTime, qint64 groupId, int groupIndex, bool useGroupPerm,
@@ -102,9 +108,8 @@ signals:
     void confChanged(bool onlyFlags);
     void iniUserChanged(bool onlyFlags);
 
-    void appEndTimesUpdated();
-    void appAdded(bool alerted);
-    void appRemoved();
+    void appAlerted();
+    void appChanged();
     void appUpdated();
 
     void zoneAdded();
@@ -121,6 +126,10 @@ protected:
 
 private:
     void setupDefault(FirewallConf &conf) const;
+
+    void emitAppAlerted();
+    void emitAppChanged();
+    void emitAppUpdated();
 
     bool updateDriverDeleteApp(const QString &appPath);
     bool updateDriverUpdateApp(const QString &appPath, int groupIndex, bool useGroupPerm,
@@ -146,6 +155,10 @@ private:
 
     FirewallConf *m_conf = nullptr;
     FirewallConf *m_confToEdit = nullptr;
+
+    TriggerTimer m_appAlertedTimer;
+    TriggerTimer m_appChangedTimer;
+    TriggerTimer m_appUpdatedTimer;
 
     QTimer m_appEndTimer;
 };

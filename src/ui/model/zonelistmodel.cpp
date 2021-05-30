@@ -29,6 +29,7 @@ void ZoneListModel::initialize()
     setupZoneSources();
 
     connect(confManager(), &ConfManager::zoneAdded, this, &TableSqlModel::reset);
+    connect(confManager(), &ConfManager::zoneRemoved, this, &ZoneListModel::reset);
     connect(confManager(), &ConfManager::zoneUpdated, this, &TableSqlModel::refresh);
 }
 
@@ -177,11 +178,7 @@ bool ZoneListModel::updateZoneResult(int zoneId, int addressCount, const QString
 
 void ZoneListModel::deleteZone(int zoneId, int row)
 {
-    doBeginRemoveRows(row, row);
-
     confManager()->deleteZone(zoneId);
-
-    doEndRemoveRows();
 }
 
 QString ZoneListModel::zoneNameById(int zoneId)

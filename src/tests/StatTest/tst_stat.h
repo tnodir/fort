@@ -12,6 +12,8 @@
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <fortsettings.h>
+#include <log/logentryprocnew.h>
+#include <log/logentrystattraf.h>
 #include <stat/quotamanager.h>
 #include <stat/statmanager.h>
 #include <util/dateutil.h>
@@ -113,7 +115,8 @@ TEST_F(StatTest, dbWriteRead)
     // Add apps
     quint32 index = 0;
     for (const QString &appPath : appPaths) {
-        statManager.logProcNew(++index * 10, appPath);
+        LogEntryProcNew entry(++index * 10, appPath);
+        statManager.logProcNew(entry);
     }
 
     debugProcNew(statManager.sqliteDb());
@@ -125,8 +128,9 @@ TEST_F(StatTest, dbWriteRead)
     {
         const quint32 trafBytes[procCount * 3] = { 10, 100, 200, 20, 300, 400, 30, 500, 600 };
 
-        statManager.logStatTraf(procCount, trafBytes, 0);
-        statManager.logStatTraf(procCount, trafBytes, 0);
+        LogEntryStatTraf entry(procCount, trafBytes);
+        statManager.logStatTraf(entry);
+        statManager.logStatTraf(entry);
     }
 
     qDebug() << "elapsed>" << timer.restart() << "msec";
@@ -135,7 +139,8 @@ TEST_F(StatTest, dbWriteRead)
     {
         const quint32 trafBytes[procCount * 3] = { 11, 10, 20, 21, 30, 40, 31, 50, 60 };
 
-        statManager.logStatTraf(procCount, trafBytes, 0);
+        LogEntryStatTraf entry(procCount, trafBytes);
+        statManager.logStatTraf(entry);
     }
 
     qDebug() << "elapsed>" << timer.elapsed() << "msec";

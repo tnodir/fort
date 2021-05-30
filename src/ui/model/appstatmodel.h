@@ -4,28 +4,21 @@
 #include "../util/model/stringlistmodel.h"
 
 class AppInfoCache;
-class LogEntryBlockedIp;
-class LogEntryProcNew;
-class LogEntryStatTraf;
+class FortManager ;
 class StatManager;
-class TrafListModel;
 
 class AppStatModel : public StringListModel
 {
     Q_OBJECT
 
 public:
-    explicit AppStatModel(StatManager *statManager, QObject *parent = nullptr);
+    explicit AppStatModel(FortManager *fortManager, QObject *parent = nullptr);
+
+    FortManager *fortManager() const { return m_fortManager; }
+    StatManager *statManager() const;
+    AppInfoCache *appInfoCache() const;
 
     void initialize();
-
-    TrafListModel *trafListModel() const { return m_trafListModel; }
-
-    AppInfoCache *appInfoCache() const { return m_appInfoCache; }
-    void setAppInfoCache(AppInfoCache *v);
-
-    void handleLogProcNew(const LogEntryProcNew &entry, qint64 unixTime);
-    void handleLogStatTraf(const LogEntryStatTraf &entry, qint64 unixTime);
 
     qint64 appIdByRow(int row) const;
     QString appPathByRow(int row) const;
@@ -50,9 +43,7 @@ private:
     QVariant dataDecoration(const QModelIndex &index) const;
 
 private:
-    StatManager *m_statManager = nullptr;
-    TrafListModel *m_trafListModel = nullptr;
-    AppInfoCache *m_appInfoCache = nullptr;
+    FortManager *m_fortManager = nullptr;
 
     QVector<qint64> m_appIds;
 };

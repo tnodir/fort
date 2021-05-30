@@ -3,13 +3,12 @@
 #include <QCoreApplication>
 #include <QDebug>
 
+#include "../conf/confmanager.h"
 #include "../driver/drivercommon.h"
 #include "../driver/drivermanager.h"
 #include "../driver/driverworker.h"
 #include "../fortmanager.h"
-#include "../model/applistmodel.h"
-#include "../model/appstatmodel.h"
-#include "../model/connlistmodel.h"
+#include "../stat/statmanager.h"
 #include "../util/dateutil.h"
 #include "../util/osutil.h"
 #include "logbuffer.h"
@@ -24,19 +23,14 @@ LogManager::LogManager(FortManager *fortManager, QObject *parent) :
 {
 }
 
-AppListModel *LogManager::appListModel() const
+ConfManager *LogManager::confManager() const
 {
-    return fortManager()->appListModel();
+    return fortManager()->confManager();
 }
 
-AppStatModel *LogManager::appStatModel() const
+StatManager *LogManager::statManager() const
 {
-    return fortManager()->appStatModel();
-}
-
-ConnListModel *LogManager::connListModel() const
-{
-    return fortManager()->connListModel();
+    return fortManager()->statManager();
 }
 
 DriverWorker *LogManager::driverWorker() const
@@ -143,22 +137,22 @@ void LogManager::readLogEntries(LogBuffer *logBuffer)
         case LogEntry::AppBlocked: {
             LogEntryBlocked blockedEntry;
             logBuffer->readEntryBlocked(&blockedEntry);
-            appListModel()->handleLogBlocked(blockedEntry);
+            confManager()->logBlockedApp(blockedEntry);
         } break;
         case LogEntry::AppBlockedIp: {
             LogEntryBlockedIp blockedIpEntry;
             logBuffer->readEntryBlockedIp(&blockedIpEntry);
-            connListModel()->handleLogBlockedIp(blockedIpEntry, currentUnixTime());
+            statManager()->logBlockedIp(blockedIpEntry, currentUnixTime());
         } break;
         case LogEntry::ProcNew: {
             LogEntryProcNew procNewEntry;
             logBuffer->readEntryProcNew(&procNewEntry);
-            appStatModel()->handleLogProcNew(procNewEntry, currentUnixTime());
+            statManager()->logProcNew(procNewEntry, currentUnixTime());
         } break;
         case LogEntry::StatTraf: {
             LogEntryStatTraf statTrafEntry;
             logBuffer->readEntryStatTraf(&statTrafEntry);
-            appStatModel()->handleLogStatTraf(statTrafEntry, currentUnixTime());
+            statManager()->logStatTraf(statTrafEntry, currentUnixTime());
         } break;
         case LogEntry::Time: {
             LogEntryTime timeEntry;

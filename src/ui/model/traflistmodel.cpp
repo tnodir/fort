@@ -10,8 +10,6 @@
 TrafListModel::TrafListModel(StatManager *statManager, QObject *parent) :
     TableItemModel(parent), m_statManager(statManager)
 {
-    connect(m_statManager, &StatManager::trafficCleared, this, &TrafListModel::resetTraf);
-    connect(m_statManager, &StatManager::appTrafTotalsResetted, this, &TrafListModel::resetTraf);
 }
 
 void TrafListModel::setUnit(TrafListModel::TrafUnit unit)
@@ -27,6 +25,12 @@ void TrafListModel::setType(TrafListModel::TrafType type)
 void TrafListModel::setAppId(qint64 appId)
 {
     m_appId = appId;
+}
+
+void TrafListModel::initialize()
+{
+    connect(statManager(), &StatManager::trafficCleared, this, &TrafListModel::resetTraf);
+    connect(statManager(), &StatManager::appTrafTotalsResetted, this, &TrafListModel::resetTraf);
 }
 
 int TrafListModel::rowCount(const QModelIndex &parent) const

@@ -4,40 +4,39 @@
 
 #include "../appinfo/appinfo.h"
 #include "../appinfo/appinfocache.h"
-#include "../log/logentryprocnew.h"
-#include "../log/logentrystattraf.h"
+#include "../fortmanager.h"
 #include "../stat/statmanager.h"
 #include "../util/fileutil.h"
 #include "../util/iconcache.h"
 #include "traflistmodel.h"
 
-AppStatModel::AppStatModel(StatManager *statManager, QObject *parent) :
-    StringListModel(parent),
-    m_statManager(statManager),
-    m_trafListModel(new TrafListModel(statManager, this))
+AppStatModel::AppStatModel(FortManager *fortManager, QObject *parent) :
+    StringListModel(parent), m_fortManager(fortManager)
 {
-    connect(m_statManager, &StatManager::appStatRemoved, this, &AppStatModel::onStatAppRemoved);
-    connect(m_statManager, &StatManager::appCreated, this, &AppStatModel::handleCreatedApp);
 }
 
-void AppStatModel::setAppInfoCache(AppInfoCache *v)
+StatManager *AppStatModel::statManager() const
 {
-    m_appInfoCache = v;
+    return fortManager()->statManager();
+}
 
-    connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &AppStatModel::refresh);
+AppInfoCache *AppStatModel::appInfoCache() const
+{
+    return fortManager()->appInfoCache();
 }
 
 void AppStatModel::initialize()
 {
-    Q_ASSERT(appInfoCache());
-
     updateList();
+
+    connect(statManager(), &StatManager::appStatRemoved, this, &AppStatModel::onStatAppRemoved);
+    connect(statManager(), &StatManager::appCreated, this, &AppStatModel::handleCreatedApp);
+
+    connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &AppStatModel::refresh);
 }
 
 void AppStatModel::clear()
 {
-    m_trafListModel->clear();
-
     updateList();
 }
 
@@ -52,7 +51,7 @@ void AppStatModel::remove(int row)
 
     const qint64 appId = m_appIds.at(row);
 
-    m_statManager->deleteStatApp(appId);
+    statManager()->deleteStatApp(appId);
 
     m_appIds.remove(row);
     removeRow(row);
@@ -85,7 +84,7 @@ void AppStatModel::updateList()
     m_appIds.clear();
     m_appIds.append(0); // All
 
-    m_statManager->getStatAppList(list, m_appIds);
+    statManager()->getStatAppList(list, m_appIds);
 
     setList(list);
 }
@@ -94,16 +93,6 @@ void AppStatModel::handleCreatedApp(qint64 appId, const QString &appPath)
 {
     m_appIds.append(appId);
     insert(appPath);
-}
-
-void AppStatModel::handleLogProcNew(const LogEntryProcNew &entry, qint64 unixTime)
-{
-    m_statManager->logProcNew(entry.pid(), entry.path(), unixTime);
-}
-
-void AppStatModel::handleLogStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
-{
-    m_statManager->logStatTraf(entry.procCount(), entry.procTrafBytes(), unixTime);
 }
 
 qint64 AppStatModel::appIdByRow(int row) const

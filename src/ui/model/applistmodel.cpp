@@ -11,7 +11,6 @@
 #include "../conf/appgroup.h"
 #include "../conf/confmanager.h"
 #include "../conf/firewallconf.h"
-#include "../log/logentryblocked.h"
 #include "../util/fileutil.h"
 #include "../util/guiutil.h"
 #include "../util/iconcache.h"
@@ -36,16 +35,14 @@ FirewallConf *AppListModel::conf() const
     return confManager()->conf();
 }
 
+AppInfoCache *AppListModel::appInfoCache() const
+{
+    return confManager()->appInfoCache();
+}
+
 SqliteDb *AppListModel::sqliteDb() const
 {
     return confManager()->sqliteDb();
-}
-
-void AppListModel::setAppInfoCache(AppInfoCache *v)
-{
-    m_appInfoCache = v;
-
-    connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &AppListModel::refresh);
 }
 
 void AppListModel::initialize()
@@ -58,24 +55,10 @@ void AppListModel::initialize()
             refresh();
         }
     });
-    connect(confManager(), &ConfManager::appEndTimesUpdated, this, &AppListModel::refresh);
-    connect(confManager(), &ConfManager::appAdded, this, &TableSqlModel::reset);
+    connect(confManager(), &ConfManager::appChanged, this, &TableSqlModel::reset);
     connect(confManager(), &ConfManager::appUpdated, this, &TableSqlModel::refresh);
-}
 
-void AppListModel::handleLogBlocked(const LogEntryBlocked &logEntry)
-{
-    const QString appPath = logEntry.path();
-
-    if (confManager()->appIdByPath(appPath) > 0)
-        return; // already added by user
-
-    constexpr int groupIndex = 0;
-    const auto groupId = appGroupAt(groupIndex)->id();
-    const auto appName = appInfoCache()->appName(appPath);
-
-    confManager()->addApp(
-            appPath, appName, QDateTime(), groupId, groupIndex, false, logEntry.blocked(), true);
+    connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &AppListModel::refresh);
 }
 
 int AppListModel::columnCount(const QModelIndex &parent) const
@@ -152,7 +135,7 @@ QVariant AppListModel::dataDisplay(const QModelIndex &index, int role) const
     case 0:
         return appRow.appName;
     case 1:
-        return appGroupAt(appRow.groupIndex)->name();
+        return conf()->appGroupAt(appRow.groupIndex)->name();
     case 2:
         return appStateText(appRow);
     case 3:
@@ -249,7 +232,7 @@ QColor AppListModel::appGroupColor(const AppRow &appRow) const
 {
     if (!appRow.useGroupPerm)
         return inactiveColor;
-    if (!appGroupAt(appRow.groupIndex)->enabled())
+    if (!conf()->appGroupAt(appRow.groupIndex)->enabled())
         return blockColor;
     return {};
 }
@@ -318,16 +301,13 @@ AppRow AppListModel::appRowByPath(const QString &appPath) const
 bool AppListModel::addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
         int groupIndex, bool useGroupPerm, bool blocked)
 {
-    const auto groupId = appGroupAt(groupIndex)->id();
-
-    return confManager()->addApp(
-            appPath, appName, endTime, groupId, groupIndex, useGroupPerm, blocked);
+    return confManager()->addApp(appPath, appName, endTime, groupIndex, useGroupPerm, blocked);
 }
 
 bool AppListModel::updateApp(qint64 appId, const QString &appPath, const QString &appName,
         const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool blocked)
 {
-    const auto groupId = appGroupAt(groupIndex)->id();
+    const auto groupId = conf()->appGroupAt(groupIndex)->id();
 
     return confManager()->updateApp(
             appId, appPath, appName, endTime, groupId, groupIndex, useGroupPerm, blocked);
@@ -338,13 +318,9 @@ bool AppListModel::updateAppName(qint64 appId, const QString &appName)
     return confManager()->updateAppName(appId, appName);
 }
 
-void AppListModel::deleteApp(qint64 appId, const QString &appPath, int row)
+void AppListModel::deleteApp(qint64 appId, const QString &appPath)
 {
-    doBeginRemoveRows(row, row);
-
     confManager()->deleteApp(appId, appPath);
-
-    doEndRemoveRows();
 }
 
 void AppListModel::purgeApps()
@@ -355,7 +331,7 @@ void AppListModel::purgeApps()
         if (!FileUtil::fileExists(appPath)) {
             AppInfo appInfo;
             if (!AppInfoUtil::getInfo(appPath, appInfo)) {
-                deleteApp(appRow.appId, appPath, row);
+                deleteApp(appRow.appId, appPath);
             }
         }
     }
@@ -405,23 +381,4 @@ QString AppListModel::sqlOrderColumn() const
     }
 
     return columnsStr;
-}
-
-const AppGroup *AppListModel::appGroupAt(int index) const
-{
-    const auto appGroups = conf()->appGroups();
-    if (index < 0 || index >= appGroups.size()) {
-        static const AppGroup g_nullAppGroup;
-        return &g_nullAppGroup;
-    }
-    return appGroups.at(index);
-}
-
-QStringList AppListModel::appGroupNames() const
-{
-    QStringList list;
-    for (const auto &appGroup : conf()->appGroups()) {
-        list.append(appGroup->name());
-    }
-    return list;
 }

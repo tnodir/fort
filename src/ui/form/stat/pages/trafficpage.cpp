@@ -25,24 +25,20 @@
 #include "../../controls/listview.h"
 #include "../statisticscontroller.h"
 
-TrafficPage::TrafficPage(StatisticsController *ctrl, QWidget *parent) : StatBasePage(ctrl, parent)
+TrafficPage::TrafficPage(StatisticsController *ctrl, QWidget *parent) :
+    StatBasePage(ctrl, parent),
+    m_appStatModel(new AppStatModel(ctrl->fortManager(), this)),
+    m_trafListModel(new TrafListModel(ctrl->statManager(), this))
 {
     setupUi();
-}
 
-AppStatModel *TrafficPage::appStatModel() const
-{
-    return fortManager()->appStatModel();
+    appStatModel()->initialize();
+    trafListModel()->initialize();
 }
 
 AppInfoCache *TrafficPage::appInfoCache() const
 {
     return appStatModel()->appInfoCache();
-}
-
-TrafListModel *TrafficPage::trafListModel() const
-{
-    return appStatModel()->trafListModel();
 }
 
 void TrafficPage::onSaveWindowState(IniUser *ini)
@@ -184,6 +180,7 @@ void TrafficPage::setupClearMenu()
 
         m_appListView->clearSelection();
         appStatModel()->clear();
+        trafListModel()->clear();
     });
 
     m_btClear = ControlUtil::createButton(":/icons/trashcan-full.png");

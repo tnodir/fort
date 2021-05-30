@@ -6,6 +6,7 @@
 #include "../util/model/tablesqlmodel.h"
 
 class AppInfoCache;
+class FortManager;
 class HostInfoCache;
 class LogEntryBlockedIp;
 class StatManager;
@@ -41,7 +42,7 @@ class ConnListModel : public TableSqlModel
 public:
     enum ConnMode : qint8 { ConnNone = 0, ConnBlock, ConnTraf };
 
-    explicit ConnListModel(StatManager *statManager, QObject *parent = nullptr);
+    explicit ConnListModel(FortManager *fortManager, QObject *parent = nullptr);
 
     uint connMode() const { return m_connMode; }
     void setConnMode(uint v);
@@ -51,16 +52,13 @@ public:
     bool resolveAddress() const { return m_resolveAddress; }
     void setResolveAddress(bool v);
 
-    StatManager *statManager() const { return m_statManager; }
+    FortManager *fortManager() const { return m_fortManager; }
+    StatManager *statManager() const;
     SqliteDb *sqliteDb() const override;
+    AppInfoCache *appInfoCache() const;
+    HostInfoCache *hostInfoCache() const;
 
-    AppInfoCache *appInfoCache() const { return m_appInfoCache; }
-    void setAppInfoCache(AppInfoCache *v);
-
-    HostInfoCache *hostInfoCache() const { return m_hostInfoCache; }
-    void setHostInfoCache(HostInfoCache *v);
-
-    void handleLogBlockedIp(const LogEntryBlockedIp &entry, qint64 unixTime);
+    void initialize();
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
@@ -110,9 +108,7 @@ private:
     qint64 m_rowIdMin = 0;
     qint64 m_rowIdMax = 0;
 
-    StatManager *m_statManager = nullptr;
-    AppInfoCache *m_appInfoCache = nullptr;
-    HostInfoCache *m_hostInfoCache = nullptr;
+    FortManager *m_fortManager = nullptr;
 
     mutable ConnRow m_connRow;
 };
