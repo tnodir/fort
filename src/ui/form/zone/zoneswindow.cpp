@@ -431,7 +431,7 @@ bool ZonesWindow::saveZoneEditForm()
     // Add new zone
     if (m_formZoneIsNew) {
         int zoneId;
-        if (zoneListModel()->addZone(
+        if (confManager()->addZone(
                     zoneName, sourceCode, url, formData, enabled, customUrl, zoneId)) {
             m_zoneListView->selectCell(zoneId - 1);
             return true;
@@ -450,12 +450,12 @@ bool ZonesWindow::saveZoneEditForm()
 
     if (!zoneEdited) {
         if (zoneNameEdited) {
-            return zoneListModel()->updateZoneName(zoneRow.zoneId, zoneName);
+            return confManager()->updateZoneName(zoneRow.zoneId, zoneName);
         }
         return true;
     }
 
-    return zoneListModel()->updateZone(
+    return confManager()->updateZone(
             zoneRow.zoneId, zoneName, sourceCode, url, formData, enabled, customUrl);
 }
 
@@ -463,14 +463,14 @@ void ZonesWindow::updateZone(int row, bool enabled)
 {
     const auto zoneRow = zoneListModel()->zoneRowAt(row);
 
-    zoneListModel()->updateZone(zoneRow.zoneId, zoneRow.zoneName, zoneRow.sourceCode, zoneRow.url,
+    confManager()->updateZone(zoneRow.zoneId, zoneRow.zoneName, zoneRow.sourceCode, zoneRow.url,
             zoneRow.formData, enabled, zoneRow.customUrl);
 }
 
 void ZonesWindow::deleteZone(int row)
 {
     const auto zoneRow = zoneListModel()->zoneRowAt(row);
-    zoneListModel()->deleteZone(zoneRow.zoneId, row);
+    confManager()->deleteZone(zoneRow.zoneId);
 }
 
 void ZonesWindow::updateSelectedZone(bool enabled)

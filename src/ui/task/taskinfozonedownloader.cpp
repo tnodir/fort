@@ -2,6 +2,7 @@
 
 #include <QDir>
 
+#include "../conf/confmanager.h"
 #include "../fortmanager.h"
 #include "../fortsettings.h"
 #include "../model/zonelistmodel.h"
@@ -18,6 +19,11 @@ TaskInfoZoneDownloader::TaskInfoZoneDownloader(TaskManager &taskManager) :
 TaskZoneDownloader *TaskInfoZoneDownloader::zoneDownloader() const
 {
     return static_cast<TaskZoneDownloader *>(taskWorker());
+}
+
+ConfManager *TaskInfoZoneDownloader::confManager() const
+{
+    return fortManager()->confManager();
 }
 
 ZoneListModel *TaskInfoZoneDownloader::zoneListModel() const
@@ -148,7 +154,7 @@ void TaskInfoZoneDownloader::processSubResult(bool success)
     const auto now = QDateTime::currentDateTime();
     const auto lastSuccess = success ? now : worker->lastSuccess();
 
-    zoneListModel()->updateZoneResult(
+    confManager()->updateZoneResult(
             zoneId, addressCount, textChecksum, binChecksum, sourceModTime, now, lastSuccess);
 
     addSubResult(worker, success);

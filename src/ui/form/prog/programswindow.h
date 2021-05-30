@@ -65,14 +65,16 @@ private:
     void editSelectedPrograms();
     void openAppEditForm(const AppRow &appRow, const QVector<qint64> &appIdList = {});
 
-    void updateApp(int row, bool blocked);
     void deleteApp(int row);
 
     void updateSelectedApps(bool blocked);
     void deleteSelectedApps();
 
     int appListCurrentIndex() const;
+    AppRow appListCurrentRow() const;
     QString appListCurrentPath() const;
+
+    QVector<qint64> selectedAppIdList() const;
 
 private:
     ProgramsController *m_ctrl = nullptr;

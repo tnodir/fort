@@ -19,10 +19,11 @@ public:
 
     bool addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
             int groupIndex, bool useGroupPerm, bool blocked, bool alerted = false) override;
-    bool deleteApp(qint64 appId, const QString &appPath) override;
+    bool deleteApp(qint64 appId) override;
+    bool purgeApps() override;
     bool updateApp(qint64 appId, const QString &appPath, const QString &appName,
-            const QDateTime &endTime, qint64 groupId, int groupIndex, bool useGroupPerm,
-            bool blocked) override;
+            const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool blocked) override;
+    bool updateAppBlocked(qint64 appId, bool blocked) override;
     bool updateAppName(qint64 appId, const QString &appName) override;
 
     bool addZone(const QString &zoneName, const QString &sourceCode, const QString &url,

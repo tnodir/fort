@@ -213,7 +213,7 @@ QLayout *ProgramsWindow::setupHeader()
     connect(m_actPurgeApps, &QAction::triggered, this, [&] {
         if (fortManager()->showQuestionBox(
                     tr("Are you sure to remove all non-existent programs?"))) {
-            appListModel()->purgeApps();
+            confManager()->purgeApps();
         }
     });
 
@@ -364,24 +364,13 @@ void ProgramsWindow::addNewProgram()
 
 void ProgramsWindow::editSelectedPrograms()
 {
-    const auto rows = m_appListView->selectedRows();
-    if (rows.isEmpty())
+    const QVector<qint64> appIdList = selectedAppIdList();
+    if (appIdList.isEmpty())
         return;
 
-    bool isFirstAppRow = true;
-    AppRow firstAppRow;
-    QVector<qint64> appIdList;
+    const auto appRow = appListCurrentRow();
 
-    for (int row : rows) {
-        const auto appRow = appListModel()->appRowAt(row);
-        if (isFirstAppRow) {
-            isFirstAppRow = false;
-            firstAppRow = appRow;
-        }
-        appIdList.append(appRow.appId);
-    }
-
-    openAppEditForm(firstAppRow, appIdList);
+    openAppEditForm(appRow, appIdList);
 }
 
 void ProgramsWindow::openAppEditForm(const AppRow &appRow, const QVector<qint64> &appIdList)
@@ -392,32 +381,25 @@ void ProgramsWindow::openAppEditForm(const AppRow &appRow, const QVector<qint64>
     m_formAppEdit->activate();
 }
 
-void ProgramsWindow::updateApp(int row, bool blocked)
-{
-    const auto appRow = appListModel()->appRowAt(row);
-    appListModel()->updateApp(appRow.appId, appRow.appPath, appRow.appName, QDateTime(),
-            appRow.groupIndex, appRow.useGroupPerm, blocked);
-}
-
 void ProgramsWindow::deleteApp(int row)
 {
     const auto appRow = appListModel()->appRowAt(row);
-    appListModel()->deleteApp(appRow.appId, appRow.appPath);
+    confManager()->deleteApp(appRow.appId);
 }
 
 void ProgramsWindow::updateSelectedApps(bool blocked)
 {
-    const auto rows = m_appListView->selectedRows();
-    for (int i = rows.size(); --i >= 0;) {
-        updateApp(rows.at(i), blocked);
+    const QVector<qint64> appIdList = selectedAppIdList();
+    for (const qint64 appId : appIdList) {
+        confManager()->updateAppBlocked(appId, blocked);
     }
 }
 
 void ProgramsWindow::deleteSelectedApps()
 {
-    const auto rows = m_appListView->selectedRows();
-    for (int i = rows.size(); --i >= 0;) {
-        deleteApp(rows.at(i));
+    const QVector<qint64> appIdList = selectedAppIdList();
+    for (const qint64 appId : appIdList) {
+        confManager()->deleteApp(appId);
     }
 }
 
@@ -426,8 +408,26 @@ int ProgramsWindow::appListCurrentIndex() const
     return m_appListView->currentRow();
 }
 
+AppRow ProgramsWindow::appListCurrentRow() const
+{
+    return appListModel()->appRowAt(appListCurrentIndex());
+}
+
 QString ProgramsWindow::appListCurrentPath() const
 {
-    const auto appRow = appListModel()->appRowAt(appListCurrentIndex());
+    const auto appRow = appListCurrentRow();
     return appRow.isNull() ? QString() : appRow.appPath;
+}
+
+QVector<qint64> ProgramsWindow::selectedAppIdList() const
+{
+    QVector<qint64> list;
+
+    const auto rows = m_appListView->selectedRows();
+    for (int row : rows) {
+        const auto appRow = appListModel()->appRowAt(row);
+        list.append(appRow.appId);
+    }
+
+    return list;
 }

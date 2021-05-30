@@ -23,7 +23,9 @@ const char *const commandString(Command cmd)
         CASE_STRING(Rpc_ConfManager_save)
         CASE_STRING(Rpc_ConfManager_addApp)
         CASE_STRING(Rpc_ConfManager_deleteApp)
+        CASE_STRING(Rpc_ConfManager_purgeApps)
         CASE_STRING(Rpc_ConfManager_updateApp)
+        CASE_STRING(Rpc_ConfManager_updateAppBlocked)
         CASE_STRING(Rpc_ConfManager_updateAppName)
         CASE_STRING(Rpc_ConfManager_addZone)
         CASE_STRING(Rpc_ConfManager_deleteZone)
@@ -90,7 +92,9 @@ RpcManager managerByCommand(Command cmd)
     case Rpc_ConfManager_save:
     case Rpc_ConfManager_addApp:
     case Rpc_ConfManager_deleteApp:
+    case Rpc_ConfManager_purgeApps:
     case Rpc_ConfManager_updateApp:
+    case Rpc_ConfManager_updateAppBlocked:
     case Rpc_ConfManager_updateAppName:
     case Rpc_ConfManager_addZone:
     case Rpc_ConfManager_deleteZone:
@@ -146,7 +150,9 @@ bool commandRequiresValidation(Command cmd)
     case Rpc_ConfManager_save:
     case Rpc_ConfManager_addApp:
     case Rpc_ConfManager_deleteApp:
+    case Rpc_ConfManager_purgeApps:
     case Rpc_ConfManager_updateApp:
+    case Rpc_ConfManager_updateAppBlocked:
     case Rpc_ConfManager_updateAppName:
     case Rpc_ConfManager_addZone:
     case Rpc_ConfManager_deleteZone:

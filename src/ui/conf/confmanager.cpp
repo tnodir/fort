@@ -100,6 +100,17 @@ const char *const sqlUpdateTask = "UPDATE task"
                                   "    last_run = ?5, last_success = ?6, data = ?7"
                                   "  WHERE task_id = ?1;";
 
+const char *const sqlSelectAppPaths = "SELECT app_id, path FROM app;";
+
+const char *const sqlSelectAppById = "SELECT"
+                                     "    g.order_index as group_index,"
+                                     "    t.path,"
+                                     "    t.use_group_perm,"
+                                     "    t.blocked"
+                                     "  FROM app t"
+                                     "    JOIN app_group g ON g.app_group_id = t.app_group_id"
+                                     "    WHERE app_id = ?1;";
+
 const char *const sqlSelectApps = "SELECT"
                                   "    g.order_index as group_index,"
                                   "    t.path,"
@@ -114,8 +125,7 @@ const char *const sqlSelectEndAppsCount = "SELECT COUNT(*) FROM app"
                                           "  WHERE end_time IS NOT NULL AND end_time != 0"
                                           "    AND blocked = 0;";
 
-const char *const sqlSelectEndedApps = "SELECT t.app_id, t.app_group_id,"
-                                       "    g.order_index as group_index,"
+const char *const sqlSelectEndedApps = "SELECT t.app_id, g.order_index as group_index,"
                                        "    t.path, t.name, t.use_group_perm"
                                        "  FROM app t"
                                        "    JOIN app_group g ON g.app_group_id = t.app_group_id"
@@ -134,7 +144,7 @@ const char *const sqlUpsertApp =
 
 const char *const sqlInsertAppAlert = "INSERT INTO app_alert(app_id) VALUES(?1);";
 
-const char *const sqlDeleteApp = "DELETE FROM app WHERE app_id = ?1;";
+const char *const sqlDeleteApp = "DELETE FROM app WHERE app_id = ?1 RETURNING path;";
 
 const char *const sqlDeleteAppAlert = "DELETE FROM app_alert WHERE app_id = ?1;";
 
@@ -144,6 +154,8 @@ const char *const sqlUpdateApp = "UPDATE app"
                                  "  WHERE app_id = ?1;";
 
 const char *const sqlUpdateAppName = "UPDATE app SET name = ?2 WHERE app_id = ?1;";
+
+const char *const sqlUpdateAppBlocked = "UPDATE app SET blocked = ?2 WHERE app_id = ?1;";
 
 const char *const sqlUpdateAppResetGroup = "UPDATE app"
                                            "  SET app_group_id = ?2"
@@ -749,18 +761,15 @@ bool ConfManager::addApp(const QString &appPath, const QString &appName, const Q
     return ok;
 }
 
-bool ConfManager::deleteApp(qint64 appId, const QString &appPath)
+bool ConfManager::deleteApp(qint64 appId)
 {
-    if (!updateDriverDeleteApp(appPath))
-        return false;
-
     bool ok = false;
 
     sqliteDb()->beginTransaction();
 
     const auto vars = QVariantList() << appId;
 
-    sqliteDb()->executeEx(sqlDeleteApp, vars, 0, &ok);
+    const QString appPath = sqliteDb()->executeEx(sqlDeleteApp, vars, 1, &ok).toString();
     if (ok) {
         sqliteDb()->executeEx(sqlDeleteAppAlert, vars, 0, &ok);
     }
@@ -768,15 +777,49 @@ bool ConfManager::deleteApp(qint64 appId, const QString &appPath)
     checkResult(ok, true);
 
     if (ok) {
+        updateDriverDeleteApp(appPath);
+
         emitAppChanged();
     }
 
     return ok;
 }
 
-bool ConfManager::updateApp(qint64 appId, const QString &appPath, const QString &appName,
-        const QDateTime &endTime, qint64 groupId, int groupIndex, bool useGroupPerm, bool blocked)
+bool ConfManager::purgeApps()
 {
+    QVector<qint64> appIdList;
+
+    // Collect non-existent apps
+    {
+        SqliteStmt stmt;
+        if (!sqliteDb()->prepare(stmt, sqlSelectAppPaths))
+            return false;
+
+        while (stmt.step() == SqliteStmt::StepRow) {
+            const QString appPath = stmt.columnText(1);
+
+            if (!FileUtil::fileExists(appPath) && !FileUtil::isSystemApp(appPath)) {
+                const qint64 appId = stmt.columnInt64(0);
+                appIdList.append(appId);
+            }
+        }
+    }
+
+    // Delete apps
+    for (const qint64 appId : appIdList) {
+        deleteApp(appId);
+    }
+
+    return true;
+}
+
+bool ConfManager::updateApp(qint64 appId, const QString &appPath, const QString &appName,
+        const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool blocked)
+{
+    const AppGroup *appGroup = conf()->appGroupAt(groupIndex);
+    if (appGroup->isNull())
+        return false;
+
     if (!updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, blocked))
         return false;
 
@@ -784,8 +827,8 @@ bool ConfManager::updateApp(qint64 appId, const QString &appPath, const QString 
 
     sqliteDb()->beginTransaction();
 
-    const auto vars = QVariantList() << appId << groupId << appName << useGroupPerm << blocked
-                                     << (!endTime.isNull() ? endTime : QVariant());
+    const auto vars = QVariantList() << appId << appGroup->id() << appName << useGroupPerm
+                                     << blocked << (!endTime.isNull() ? endTime : QVariant());
 
     sqliteDb()->executeEx(sqlUpdateApp, vars, 0, &ok);
     if (ok) {
@@ -799,7 +842,35 @@ bool ConfManager::updateApp(qint64 appId, const QString &appPath, const QString 
             m_appEndTimer.start();
         }
 
-        emit appUpdated();
+        emitAppUpdated();
+    }
+
+    return ok;
+}
+
+bool ConfManager::updateAppBlocked(qint64 appId, bool blocked)
+{
+    bool changed = false;
+    if (!updateDriverUpdateAppBlocked(appId, blocked, changed))
+        return false;
+
+    bool ok = true;
+
+    sqliteDb()->beginTransaction();
+
+    const auto vars = QVariantList() << appId << blocked;
+
+    if (changed) {
+        sqliteDb()->executeEx(sqlUpdateAppBlocked, vars, 0, &ok);
+    }
+    if (ok) {
+        sqliteDb()->executeEx(sqlDeleteAppAlert, { appId }, 0, &ok);
+    }
+
+    checkResult(ok, true);
+
+    if (ok) {
+        emitAppUpdated();
     }
 
     return ok;
@@ -816,7 +887,7 @@ bool ConfManager::updateAppName(qint64 appId, const QString &appName)
     checkResult(ok);
 
     if (ok) {
-        emit appUpdated();
+        emitAppUpdated();
     }
 
     return ok;
@@ -855,24 +926,14 @@ void ConfManager::updateAppEndTimes()
 
     stmt.bindDateTime(1, QDateTime::currentDateTime());
 
-    bool isAppEndTimesUpdated = false;
-
     while (stmt.step() == SqliteStmt::StepRow) {
         const qint64 appId = stmt.columnInt64(0);
-        const qint64 groupId = stmt.columnInt64(1);
         const int groupIndex = stmt.columnInt(2);
         const QString appPath = stmt.columnText(3);
         const QString appName = stmt.columnText(4);
         const bool useGroupPerm = stmt.columnBool(5);
 
-        if (updateApp(appId, appPath, appName, QDateTime(), groupId, groupIndex, useGroupPerm,
-                    true)) {
-            isAppEndTimesUpdated = true;
-        }
-    }
-
-    if (isAppEndTimesUpdated) {
-        emitAppUpdated();
+        updateApp(appId, appPath, appName, QDateTime(), groupIndex, useGroupPerm, true);
     }
 }
 
@@ -1082,6 +1143,31 @@ bool ConfManager::updateDriverUpdateApp(
     if (!driverManager()->writeApp(buf, entrySize, remove)) {
         showErrorMessage(driverManager()->errorMessage());
         return false;
+    }
+
+    return true;
+}
+
+bool ConfManager::updateDriverUpdateAppBlocked(qint64 appId, bool blocked, bool &changed)
+{
+    SqliteStmt stmt;
+    if (!sqliteDb()->prepare(stmt, sqlSelectAppById))
+        return false;
+
+    stmt.bindInt64(1, appId);
+    if (stmt.step() != SqliteStmt::StepRow)
+        return false;
+
+    const int groupIndex = stmt.columnInt(0);
+    const QString appPath = stmt.columnText(1);
+    const bool useGroupPerm = stmt.columnBool(2);
+    const bool wasBlocked = stmt.columnBool(3);
+
+    if (blocked != wasBlocked) {
+        if (!updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, blocked))
+            return false;
+
+        changed = true;
     }
 
     return true;

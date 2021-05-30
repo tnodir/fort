@@ -55,17 +55,6 @@ public:
 
     const ZoneRow &zoneRowAt(int row) const;
 
-    bool addZone(const QString &zoneName, const QString &sourceCode, const QString &url,
-            const QString &formData, bool enabled, bool customUrl, int &zoneId);
-    bool updateZone(int zoneId, const QString &zoneName, const QString &sourceCode,
-            const QString &url, const QString &formData, bool enabled, bool customUrl);
-    bool updateZoneName(int zoneId, const QString &zoneName);
-    bool updateZoneEnabled(int zoneId, bool enabled);
-    bool updateZoneResult(int zoneId, int addressCount, const QString &textChecksum,
-            const QString &binChecksum, const QDateTime &sourceModTime, const QDateTime &lastRun,
-            const QDateTime &lastSuccess);
-    void deleteZone(int zoneId, int row);
-
     QString zoneNameById(int zoneId);
 
     QVariant zoneTypeByCode(const QString &typeCode) const;

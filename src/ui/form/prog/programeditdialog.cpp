@@ -378,7 +378,7 @@ bool ProgramEditDialog::save()
 
     // Add new app or edit non-selected app
     if (appIdsCount == 0) {
-        return appListModel()->addApp(appPath, appName, endTime, groupIndex, useGroupPerm, blocked);
+        return confManager()->addApp(appPath, appName, endTime, groupIndex, useGroupPerm, blocked);
     }
 
     // Edit selected app
@@ -398,14 +398,14 @@ bool ProgramEditDialog::saveApp(const QString &appPath, const QString &appName,
             || endTime != m_appRow.endTime);
 
     if (appEdited) {
-        return appListModel()->updateApp(
+        return confManager()->updateApp(
                 m_appRow.appId, appPath, appName, endTime, groupIndex, useGroupPerm, blocked);
     }
 
     if (appName == m_appRow.appName)
         return true;
 
-    return appListModel()->updateAppName(m_appRow.appId, appName);
+    return confManager()->updateAppName(m_appRow.appId, appName);
 }
 
 bool ProgramEditDialog::saveMulti(
@@ -414,7 +414,7 @@ bool ProgramEditDialog::saveMulti(
     for (qint64 appId : m_appIdList) {
         const auto appRow = appListModel()->appRowById(appId);
 
-        if (!appListModel()->updateApp(appId, appRow.appPath, appRow.appName, endTime, groupIndex,
+        if (!confManager()->updateApp(appId, appRow.appPath, appRow.appName, endTime, groupIndex,
                     useGroupPerm, blocked))
             return false;
     }

@@ -5,6 +5,7 @@
 
 #include "taskinfo.h"
 
+class ConfManager;
 class TaskZoneDownloader;
 class ZoneListModel;
 
@@ -16,6 +17,7 @@ public:
     explicit TaskInfoZoneDownloader(TaskManager &taskManager);
 
     TaskZoneDownloader *zoneDownloader() const;
+    ConfManager *confManager() const;
     ZoneListModel *zoneListModel() const;
 
 signals:

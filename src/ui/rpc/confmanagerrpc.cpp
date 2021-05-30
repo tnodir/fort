@@ -32,16 +32,26 @@ bool ConfManagerRpc::addApp(const QString &appPath, const QString &appName,
             { appPath, appName, endTime, groupIndex, useGroupPerm, blocked });
 }
 
-bool ConfManagerRpc::deleteApp(qint64 appId, const QString &appPath)
+bool ConfManagerRpc::deleteApp(qint64 appId)
 {
-    return rpcManager()->doOnServer(Control::Rpc_ConfManager_deleteApp, { appId, appPath });
+    return rpcManager()->doOnServer(Control::Rpc_ConfManager_deleteApp, { appId });
+}
+
+bool ConfManagerRpc::purgeApps()
+{
+    return rpcManager()->doOnServer(Control::Rpc_ConfManager_purgeApps);
 }
 
 bool ConfManagerRpc::updateApp(qint64 appId, const QString &appPath, const QString &appName,
-        const QDateTime &endTime, qint64 groupId, int groupIndex, bool useGroupPerm, bool blocked)
+        const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool blocked)
 {
     return rpcManager()->doOnServer(Control::Rpc_ConfManager_updateApp,
-            { appId, appPath, appName, endTime, groupId, groupIndex, useGroupPerm, blocked });
+            { appId, appPath, appName, endTime, groupIndex, useGroupPerm, blocked });
+}
+
+bool ConfManagerRpc::updateAppBlocked(qint64 appId, bool blocked)
+{
+    return rpcManager()->doOnServer(Control::Rpc_ConfManager_updateAppBlocked, { appId, blocked });
 }
 
 bool ConfManagerRpc::updateAppName(qint64 appId, const QString &appName)

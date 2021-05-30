@@ -121,7 +121,7 @@ bool ZoneListModel::setData(const QModelIndex &index, const QVariant &value, int
     switch (role) {
     case Qt::CheckStateRole:
         const auto zoneRow = zoneRowAt(index.row());
-        return updateZoneEnabled(zoneRow.zoneId, !zoneRow.enabled);
+        return confManager()->updateZoneEnabled(zoneRow.zoneId, !zoneRow.enabled);
     }
 
     return false;
@@ -143,42 +143,6 @@ const ZoneRow &ZoneListModel::zoneRowAt(int row) const
     updateRowCache(row);
 
     return m_zoneRow;
-}
-
-bool ZoneListModel::addZone(const QString &zoneName, const QString &sourceCode, const QString &url,
-        const QString &formData, bool enabled, bool customUrl, int &zoneId)
-{
-    return confManager()->addZone(zoneName, sourceCode, url, formData, enabled, customUrl, zoneId);
-}
-
-bool ZoneListModel::updateZone(int zoneId, const QString &zoneName, const QString &sourceCode,
-        const QString &url, const QString &formData, bool enabled, bool customUrl)
-{
-    return confManager()->updateZone(
-            zoneId, zoneName, sourceCode, url, formData, enabled, customUrl);
-}
-
-bool ZoneListModel::updateZoneName(int zoneId, const QString &zoneName)
-{
-    return confManager()->updateZoneName(zoneId, zoneName);
-}
-
-bool ZoneListModel::updateZoneEnabled(int zoneId, bool enabled)
-{
-    return confManager()->updateZoneEnabled(zoneId, enabled);
-}
-
-bool ZoneListModel::updateZoneResult(int zoneId, int addressCount, const QString &textChecksum,
-        const QString &binChecksum, const QDateTime &sourceModTime, const QDateTime &lastRun,
-        const QDateTime &lastSuccess)
-{
-    return confManager()->updateZoneResult(
-            zoneId, addressCount, textChecksum, binChecksum, sourceModTime, lastRun, lastSuccess);
-}
-
-void ZoneListModel::deleteZone(int zoneId, int row)
-{
-    confManager()->deleteZone(zoneId);
 }
 
 QString ZoneListModel::zoneNameById(int zoneId)

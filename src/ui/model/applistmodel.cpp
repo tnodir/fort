@@ -298,45 +298,6 @@ AppRow AppListModel::appRowByPath(const QString &appPath) const
     return appRow;
 }
 
-bool AppListModel::addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
-        int groupIndex, bool useGroupPerm, bool blocked)
-{
-    return confManager()->addApp(appPath, appName, endTime, groupIndex, useGroupPerm, blocked);
-}
-
-bool AppListModel::updateApp(qint64 appId, const QString &appPath, const QString &appName,
-        const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool blocked)
-{
-    const auto groupId = conf()->appGroupAt(groupIndex)->id();
-
-    return confManager()->updateApp(
-            appId, appPath, appName, endTime, groupId, groupIndex, useGroupPerm, blocked);
-}
-
-bool AppListModel::updateAppName(qint64 appId, const QString &appName)
-{
-    return confManager()->updateAppName(appId, appName);
-}
-
-void AppListModel::deleteApp(qint64 appId, const QString &appPath)
-{
-    confManager()->deleteApp(appId, appPath);
-}
-
-void AppListModel::purgeApps()
-{
-    for (int row = rowCount(); --row >= 0;) {
-        const auto appRow = appRowAt(row);
-        const auto appPath = appRow.appPath;
-        if (!FileUtil::fileExists(appPath)) {
-            AppInfo appInfo;
-            if (!AppInfoUtil::getInfo(appPath, appInfo)) {
-                deleteApp(appRow.appId, appPath);
-            }
-        }
-    }
-}
-
 bool AppListModel::updateTableRow(int row) const
 {
     return updateAppRow(sql(), { row }, m_appRow);
