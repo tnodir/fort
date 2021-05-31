@@ -130,6 +130,8 @@ QVariant AppListModel::dataDisplay(const QModelIndex &index, int role) const
     const int column = index.column();
 
     const auto appRow = appRowAt(row);
+    if (appRow.isNull())
+        return QVariant();
 
     switch (column) {
     case 0:
@@ -161,7 +163,10 @@ QVariant AppListModel::dataDecoration(const QModelIndex &index) const
 
     if (column == 0 || column == 2 || column == 3) {
         const int row = index.row();
+
         const auto appRow = appRowAt(row);
+        if (appRow.isNull())
+            return QVariant();
 
         switch (column) {
         case 0:
@@ -259,8 +264,10 @@ QIcon AppListModel::appEndTimeIcon(const AppRow &appRow)
 bool AppListModel::updateAppRow(const QString &sql, const QVariantList &vars, AppRow &appRow) const
 {
     SqliteStmt stmt;
-    if (!(sqliteDb()->prepare(stmt, sql, vars) && stmt.step() == SqliteStmt::StepRow))
+    if (!(sqliteDb()->prepare(stmt, sql, vars) && stmt.step() == SqliteStmt::StepRow)) {
+        appRow.invalidate();
         return false;
+    }
 
     appRow.appId = stmt.columnInt64(0);
     appRow.groupIndex = stmt.columnInt(1);
