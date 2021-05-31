@@ -13,6 +13,7 @@
 #include "fortsettings.h"
 #include "util/envmanager.h"
 #include "util/fileutil.h"
+#include "util/ioc/ioccontainer.h"
 #include "util/osutil.h"
 #include "util/serviceworker.h"
 #include "util/startuputil.h"
@@ -115,8 +116,15 @@ int main(int argc, char *argv[])
 
     // Setup Fort Manager
     FortManager::setupResources();
+    FortManager fortManager;
 
-    FortManager fortManager(&settings, &envManager, &controlManager);
+    // Setup IoC Container
+    IocContainer ioc;
+    ioc.pinToThread();
+    ioc.insert<FortSettings>(settings);
+    ioc.insert<EnvManager>(envManager);
+    ioc.insert<ControlManager>(controlManager);
+    ioc.insert<FortManager>(fortManager);
 
     // Check running instance
     if (!fortManager.checkRunningInstance())

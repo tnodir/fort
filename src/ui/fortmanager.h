@@ -4,6 +4,7 @@
 #include <QObject>
 
 #include "util/classhelpers.h"
+#include "util/ioc/iocobject.h"
 
 class AppInfoCache;
 class AppInfoManager;
@@ -33,7 +34,7 @@ class UserSettings;
 class ZoneListModel;
 class ZonesWindow;
 
-class FortManager : public QObject
+class FortManager : public QObject, public IocObject
 {
     Q_OBJECT
 
@@ -41,8 +42,7 @@ public:
     enum TrayMessageType { MessageOptions, MessageZones };
     Q_ENUM(TrayMessageType)
 
-    explicit FortManager(FortSettings *settings, EnvManager *envManager,
-            ControlManager *controlManager, QObject *parent = nullptr);
+    explicit FortManager(QObject *parent = nullptr);
     ~FortManager() override;
     CLASS_DELETE_COPY_MOVE(FortManager)
 
@@ -55,11 +55,12 @@ public:
     ZonesWindow *zoneWindow() const { return m_zoneWindow; }
     GraphWindow *graphWindow() const { return m_graphWindow; }
 
-    FortSettings *settings() const { return m_settings; }
+    FortSettings *settings() const;
+    EnvManager *envManager() const;
+    ControlManager *controlManager() const;
+
     UserSettings *userSettings() const { return m_userSettings; }
     IniUser *iniUser() const;
-    EnvManager *envManager() const { return m_envManager; }
-    ControlManager *controlManager() const { return m_controlManager; }
     RpcManager *rpcManager() const { return m_rpcManager; }
 
     ConfManager *confManager() const { return m_confManager; }
@@ -210,10 +211,7 @@ private:
     ZonesWindow *m_zoneWindow = nullptr;
     GraphWindow *m_graphWindow = nullptr;
 
-    FortSettings *m_settings = nullptr;
     UserSettings *m_userSettings = nullptr;
-    EnvManager *m_envManager = nullptr;
-    ControlManager *m_controlManager = nullptr;
     RpcManager *m_rpcManager = nullptr;
 
     ConfManager *m_confManager = nullptr;

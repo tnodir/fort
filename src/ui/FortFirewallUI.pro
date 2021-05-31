@@ -124,7 +124,7 @@ SOURCES += \
     util/iconcache.cpp \
     util/ini/mapsettings.cpp \
     util/ini/settings.cpp \
-    util/ioccontainer.cpp \
+    util/ioc/ioccontainer.cpp \
     util/json/jsonutil.cpp \
     util/json/mapwrapper.cpp \
     util/logger.cpp \
@@ -274,7 +274,8 @@ HEADERS += \
     util/iconcache.h \
     util/ini/mapsettings.h \
     util/ini/settings.h \
-    util/ioccontainer.h \
+    util/ioc/ioccontainer.h \
+    util/ioc/iocobject.h \
     util/json/jsonutil.h \
     util/json/mapwrapper.h \
     util/logger.h \

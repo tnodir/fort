@@ -4,7 +4,9 @@
 #include <QHash>
 #include <QObject>
 
-class EnvManager : public QObject
+#include "ioc/iocobject.h"
+
+class EnvManager : public QObject, public IocObject
 {
     Q_OBJECT
 

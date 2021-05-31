@@ -5,6 +5,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 
+#include "iocobject.h"
+
 namespace {
 
 int g_tlsIndex = -1;
@@ -18,7 +20,11 @@ IocContainer::~IocContainer()
 {
     tearDownAll();
 
-    qDeleteAll(m_objects);
+    for (IocObject *obj : qAsConst(m_objects)) {
+        if (obj && obj->autoDelete()) {
+            delete obj;
+        }
+    }
 
     if (g_tlsIndex != -1) {
         TlsFree(g_tlsIndex);
@@ -26,7 +32,7 @@ IocContainer::~IocContainer()
     }
 }
 
-void IocContainer::insertObject(int typeId, IocObject *obj)
+void IocContainer::insertObject(int typeId, IocObject *obj, bool autoDelete)
 {
     const int newSize = typeId + 1;
     if (newSize > m_objects.size()) {
@@ -34,6 +40,10 @@ void IocContainer::insertObject(int typeId, IocObject *obj)
     }
 
     m_objects[typeId] = obj;
+
+    if (obj) {
+        obj->setAutoDelete(autoDelete);
+    }
 }
 
 IocObject *IocContainer::resolveObject(int typeId) const

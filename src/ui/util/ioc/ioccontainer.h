@@ -4,18 +4,7 @@
 #include <QObject>
 #include <QVector>
 
-class IocObject
-{
-public:
-    virtual void setUp() { setWasSetUp(true); }
-    virtual void tearDown() { }
-
-    bool wasSetUp() const { return m_wasSetUp; }
-    void setWasSetUp(bool v) { m_wasSetUp = v; }
-
-private:
-    bool m_wasSetUp = false;
-};
+class IocObject;
 
 class IocContainer : public QObject
 {
@@ -41,6 +30,12 @@ public:
     void insert(T *obj)
     {
         insertObject(getTypeId<T>(), obj);
+    }
+
+    template<class T>
+    void insert(T &obj)
+    {
+        insertObject(getTypeId<T>(), &obj, false);
     }
 
     template<class T>
@@ -72,7 +67,7 @@ public:
     }
 
 private:
-    void insertObject(int typeId, IocObject *obj);
+    void insertObject(int typeId, IocObject *obj, bool autoDelete = true);
     IocObject *resolveObject(int typeId) const;
 
     static int getNextTypeId();

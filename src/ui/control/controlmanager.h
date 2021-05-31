@@ -5,6 +5,7 @@
 #include <QVariant>
 
 #include "../util/classhelpers.h"
+#include "../util/ioc/iocobject.h"
 #include "control.h"
 
 QT_FORWARD_DECLARE_CLASS(QLocalServer)
@@ -16,7 +17,7 @@ class FortManager;
 class FortSettings;
 class RpcManager;
 
-class ControlManager : public QObject
+class ControlManager : public QObject, public IocObject
 {
     Q_OBJECT
 

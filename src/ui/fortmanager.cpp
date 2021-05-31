@@ -42,6 +42,7 @@
 #include "util/envmanager.h"
 #include "util/fileutil.h"
 #include "util/hotkeymanager.h"
+#include "util/ioc/ioccontainer.h"
 #include "util/logger.h"
 #include "util/nativeeventfilter.h"
 #include "util/net/hostinfocache.h"
@@ -59,15 +60,7 @@ void setupAppStyle()
 
 }
 
-FortManager::FortManager(FortSettings *settings, EnvManager *envManager,
-        ControlManager *controlManager, QObject *parent) :
-    QObject(parent),
-    m_initialized(false),
-    m_settings(settings),
-    m_envManager(envManager),
-    m_controlManager(controlManager)
-{
-}
+FortManager::FortManager(QObject *parent) : QObject(parent), m_initialized(false) { }
 
 FortManager::~FortManager()
 {
@@ -79,6 +72,21 @@ FortManager::~FortManager()
     }
 
     OsUtil::closeMutex(m_instanceMutex);
+}
+
+FortSettings *FortManager::settings() const
+{
+    return IoC<FortSettings>();
+}
+
+EnvManager *FortManager::envManager() const
+{
+    return IoC<EnvManager>();
+}
+
+ControlManager *FortManager::controlManager() const
+{
+    return IoC<ControlManager>();
 }
 
 IniUser *FortManager::iniUser() const

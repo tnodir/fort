@@ -4,7 +4,8 @@
 
 #include <googletest.h>
 
-#include <util/ioccontainer.h>
+#include <util/ioc/ioccontainer.h>
+#include <util/ioc/iocobject.h>
 
 namespace IocTest {
 
@@ -82,6 +83,9 @@ TEST_F(IocContainerTest, insert)
 
     auto a2 = new IocTest::A2();
     container.insert<IocTest::A>(a2);
+
+    IocTest::B b;
+    container.insert<IocTest::B>(b);
 
     ASSERT_EQ(container.resolve<IocTest::A>(), a2);
     ASSERT_TRUE(container.pinToThread());
