@@ -23,7 +23,8 @@ signals:
 
 public slots:
     bool readLogAsync(LogBuffer *logBuffer);
-    void cancelAsyncIo();
+    bool cancelAsyncIo();
+    void continueAsyncIo();
     void abort();
 
 private:

@@ -18,22 +18,24 @@ bool DriverWorker::readLogAsync(LogBuffer *logBuffer)
 {
     QMutexLocker locker(&m_mutex);
 
-    if (m_logBuffer)
-        return false;
-
     m_cancelled = false;
 
-    m_logBuffer = logBuffer;
+    bool logBufferUsed = false;
+    if (!m_logBuffer) {
+        m_logBuffer = logBuffer;
+        logBufferUsed = true;
+    }
 
     m_bufferWaitCondition.wakeAll();
 
-    return true;
+    return logBufferUsed;
 }
 
-void DriverWorker::cancelAsyncIo()
+bool DriverWorker::cancelAsyncIo()
 {
     QMutexLocker locker(&m_mutex);
 
+    const bool wasCancelled = !m_cancelled;
     m_cancelled = true;
 
     if (m_isLogReading) {
@@ -42,6 +44,19 @@ void DriverWorker::cancelAsyncIo()
         do {
             m_cancelledWaitCondition.wait(&m_mutex);
         } while (m_isLogReading);
+    }
+
+    return wasCancelled;
+}
+
+void DriverWorker::continueAsyncIo()
+{
+    QMutexLocker locker(&m_mutex);
+
+    m_cancelled = false;
+
+    if (m_logBuffer) {
+        m_bufferWaitCondition.wakeAll();
     }
 }
 

@@ -117,11 +117,15 @@ bool DriverManager::writeData(quint32 code, QByteArray &buf, int size)
     if (!isDeviceOpened())
         return true;
 
-    driverWorker()->cancelAsyncIo();
+    const bool wasCancelled = driverWorker()->cancelAsyncIo();
 
     const bool res = device()->ioctl(code, buf.data(), size);
 
     updateErrorCode(res);
+
+    if (wasCancelled) {
+        driverWorker()->continueAsyncIo();
+    }
 
     return res;
 }
