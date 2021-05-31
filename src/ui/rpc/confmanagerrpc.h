@@ -18,7 +18,7 @@ public:
     TaskManager *taskManager() const;
 
     bool addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
-            int groupIndex, bool useGroupPerm, bool blocked, bool alerted = false) override;
+            int groupIndex, bool useGroupPerm, bool blocked) override;
     bool deleteApp(qint64 appId) override;
     bool purgeApps() override;
     bool updateApp(qint64 appId, const QString &appPath, const QString &appName,

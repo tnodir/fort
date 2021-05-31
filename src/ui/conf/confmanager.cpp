@@ -711,7 +711,11 @@ void ConfManager::logBlockedApp(const LogEntryBlocked &logEntry)
     const QString appName = appInfoCache()->appName(appPath);
     constexpr int groupIndex = 0; // "Main" app. group
 
-    addApp(appPath, appName, QDateTime(), groupIndex, false, logEntry.blocked(), true);
+    const bool ok = addOrUpdateApp(
+            appPath, appName, QDateTime(), groupIndex, false, logEntry.blocked(), true);
+    if (ok) {
+        emitAppAlerted();
+    }
 }
 
 qint64 ConfManager::appIdByPath(const QString &appPath)
@@ -720,45 +724,12 @@ qint64 ConfManager::appIdByPath(const QString &appPath)
 }
 
 bool ConfManager::addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
-        int groupIndex, bool useGroupPerm, bool blocked, bool alerted)
+        int groupIndex, bool useGroupPerm, bool blocked)
 {
-    const AppGroup *appGroup = conf()->appGroupAt(groupIndex);
-    if (appGroup->isNull())
+    if (!updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, blocked))
         return false;
 
-    if (!alerted && !updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, blocked))
-        return false;
-
-    bool ok = false;
-
-    sqliteDb()->beginTransaction();
-
-    const auto vars = QVariantList()
-            << appGroup->id() << appPath << appName << useGroupPerm << blocked
-            << QDateTime::currentDateTime() << (!endTime.isNull() ? endTime : QVariant());
-
-    const auto appIdVar = sqliteDb()->executeEx(sqlUpsertApp, vars, 1, &ok);
-
-    if (ok) {
-        // Alert
-        const qint64 appId = appIdVar.toLongLong();
-        sqliteDb()->executeEx(alerted ? sqlInsertAppAlert : sqlDeleteAppAlert, { appId });
-    }
-
-    checkResult(ok, true);
-
-    if (ok) {
-        if (!endTime.isNull()) {
-            m_appEndTimer.start();
-        }
-
-        if (alerted) {
-            emitAppAlerted();
-        }
-        emitAppChanged();
-    }
-
-    return ok;
+    return addOrUpdateApp(appPath, appName, endTime, groupIndex, useGroupPerm, blocked, false);
 }
 
 bool ConfManager::deleteApp(qint64 appId)
@@ -851,7 +822,7 @@ bool ConfManager::updateApp(qint64 appId, const QString &appPath, const QString 
 bool ConfManager::updateAppBlocked(qint64 appId, bool blocked)
 {
     bool changed = false;
-    if (!updateDriverUpdateAppBlocked(appId, blocked, changed))
+    if (!updateDriverAppBlocked(appId, blocked, changed))
         return false;
 
     bool ok = true;
@@ -1121,6 +1092,67 @@ bool ConfManager::updateDriverConf(bool onlyFlags)
     return true;
 }
 
+bool ConfManager::addOrUpdateApp(const QString &appPath, const QString &appName,
+        const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool blocked, bool alerted)
+{
+    const AppGroup *appGroup = conf()->appGroupAt(groupIndex);
+    if (appGroup->isNull())
+        return false;
+
+    bool ok = false;
+
+    sqliteDb()->beginTransaction();
+
+    const auto vars = QVariantList()
+            << appGroup->id() << appPath << appName << useGroupPerm << blocked
+            << QDateTime::currentDateTime() << (!endTime.isNull() ? endTime : QVariant());
+
+    const auto appIdVar = sqliteDb()->executeEx(sqlUpsertApp, vars, 1, &ok);
+
+    if (ok) {
+        // Alert
+        const qint64 appId = appIdVar.toLongLong();
+        sqliteDb()->executeEx(alerted ? sqlInsertAppAlert : sqlDeleteAppAlert, { appId });
+    }
+
+    checkResult(ok, true);
+
+    if (ok) {
+        if (!endTime.isNull()) {
+            m_appEndTimer.start();
+        }
+
+        emitAppChanged();
+    }
+
+    return ok;
+}
+
+bool ConfManager::updateDriverAppBlocked(qint64 appId, bool blocked, bool &changed)
+{
+    SqliteStmt stmt;
+    if (!sqliteDb()->prepare(stmt, sqlSelectAppById))
+        return false;
+
+    stmt.bindInt64(1, appId);
+    if (stmt.step() != SqliteStmt::StepRow)
+        return false;
+
+    const int groupIndex = stmt.columnInt(0);
+    const QString appPath = stmt.columnText(1);
+    const bool useGroupPerm = stmt.columnBool(2);
+    const bool wasBlocked = stmt.columnBool(3);
+
+    if (blocked != wasBlocked) {
+        if (!updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, blocked))
+            return false;
+
+        changed = true;
+    }
+
+    return true;
+}
+
 bool ConfManager::updateDriverDeleteApp(const QString &appPath)
 {
     return updateDriverUpdateApp(appPath, 0, false, false, true);
@@ -1143,31 +1175,6 @@ bool ConfManager::updateDriverUpdateApp(
     if (!driverManager()->writeApp(buf, entrySize, remove)) {
         showErrorMessage(driverManager()->errorMessage());
         return false;
-    }
-
-    return true;
-}
-
-bool ConfManager::updateDriverUpdateAppBlocked(qint64 appId, bool blocked, bool &changed)
-{
-    SqliteStmt stmt;
-    if (!sqliteDb()->prepare(stmt, sqlSelectAppById))
-        return false;
-
-    stmt.bindInt64(1, appId);
-    if (stmt.step() != SqliteStmt::StepRow)
-        return false;
-
-    const int groupIndex = stmt.columnInt(0);
-    const QString appPath = stmt.columnText(1);
-    const bool useGroupPerm = stmt.columnBool(2);
-    const bool wasBlocked = stmt.columnBool(3);
-
-    if (blocked != wasBlocked) {
-        if (!updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, blocked))
-            return false;
-
-        changed = true;
     }
 
     return true;

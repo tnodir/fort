@@ -24,10 +24,8 @@ TaskManager *ConfManagerRpc::taskManager() const
 }
 
 bool ConfManagerRpc::addApp(const QString &appPath, const QString &appName,
-        const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool blocked, bool alerted)
+        const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool blocked)
 {
-    Q_ASSERT(!alerted); // Only driver can alert
-
     return rpcManager()->doOnServer(Control::Rpc_ConfManager_addApp,
             { appPath, appName, endTime, groupIndex, useGroupPerm, blocked });
 }
