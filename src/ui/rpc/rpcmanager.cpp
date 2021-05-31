@@ -323,66 +323,6 @@ bool RpcManager::processConfManagerRpc(
         ControlWorker *w, Control::Command cmd, const QVariantList &args)
 {
     switch (cmd) {
-    case Control::Rpc_ConfManager_save:
-        sendResult(w, confManager()->saveVariant(args.value(0)));
-        return true;
-    case Control::Rpc_ConfManager_addApp:
-        sendResult(w,
-                confManager()->addApp(args.value(0).toString(), args.value(1).toString(),
-                        args.value(2).toDateTime(), args.value(3).toInt(), args.value(4).toBool(),
-                        args.value(5).toBool()));
-        return true;
-    case Control::Rpc_ConfManager_deleteApp:
-        sendResult(w, confManager()->deleteApp(args.value(0).toLongLong()));
-        return true;
-    case Control::Rpc_ConfManager_purgeApps:
-        sendResult(w, confManager()->purgeApps());
-        return true;
-    case Control::Rpc_ConfManager_updateApp:
-        sendResult(w,
-                confManager()->updateApp(args.value(0).toLongLong(), args.value(1).toString(),
-                        args.value(2).toString(), args.value(3).toDateTime(), args.value(4).toInt(),
-                        args.value(5).toBool(), args.value(6).toBool()));
-        return true;
-    case Control::Rpc_ConfManager_updateAppBlocked:
-        sendResult(w,
-                confManager()->updateAppBlocked(
-                        args.value(0).toLongLong(), args.value(1).toBool()));
-        return true;
-    case Control::Rpc_ConfManager_updateAppName:
-        sendResult(w,
-                confManager()->updateAppName(args.value(0).toLongLong(), args.value(1).toString()));
-        return true;
-    case Control::Rpc_ConfManager_addZone: {
-        int zoneId;
-        const bool ok = confManager()->addZone(args.value(0).toString(), args.value(1).toString(),
-                args.value(2).toString(), args.value(3).toString(), args.value(4).toBool(),
-                args.value(5).toBool(), zoneId);
-        sendResult(w, ok, { zoneId });
-        return true;
-    }
-    case Control::Rpc_ConfManager_deleteZone:
-        sendResult(w, confManager()->deleteZone(args.value(0).toLongLong()));
-        return true;
-    case Control::Rpc_ConfManager_updateZone:
-        sendResult(w,
-                confManager()->updateZone(args.value(0).toLongLong(), args.value(1).toString(),
-                        args.value(2).toString(), args.value(3).toString(),
-                        args.value(4).toString(), args.value(5).toBool(), args.value(6).toBool()));
-        return true;
-    case Control::Rpc_ConfManager_updateZoneName:
-        sendResult(w,
-                confManager()->updateZoneName(
-                        args.value(0).toLongLong(), args.value(1).toString()));
-        return true;
-    case Control::Rpc_ConfManager_updateZoneEnabled:
-        sendResult(w,
-                confManager()->updateZoneEnabled(
-                        args.value(0).toLongLong(), args.value(1).toBool()));
-        return true;
-    case Control::Rpc_ConfManager_checkPassword:
-        sendResult(w, validateClient(w, args.value(0).toString()));
-        return true;
     case Control::Rpc_ConfManager_confChanged:
         if (auto cm = qobject_cast<ConfManagerRpc *>(confManager())) {
             cm->onConfChanged(args.value(0));
@@ -406,6 +346,57 @@ bool RpcManager::processConfManagerRpc(
     case Control::Rpc_ConfManager_zoneUpdated:
         emit confManager()->zoneUpdated();
         return true;
+    default: {
+        QVariantList resArgs;
+        const bool ok = processConfManagerRpcResult(w, cmd, args, resArgs);
+        sendResult(w, ok, resArgs);
+        return true;
+    }
+    }
+}
+
+bool RpcManager::processConfManagerRpcResult(
+        ControlWorker *w, Control::Command cmd, const QVariantList &args, QVariantList &resArgs)
+{
+    switch (cmd) {
+    case Control::Rpc_ConfManager_save:
+        return confManager()->saveVariant(args.value(0));
+    case Control::Rpc_ConfManager_addApp:
+        return confManager()->addApp(args.value(0).toString(), args.value(1).toString(),
+                args.value(2).toDateTime(), args.value(3).toInt(), args.value(4).toBool(),
+                args.value(5).toBool());
+    case Control::Rpc_ConfManager_deleteApp:
+        return confManager()->deleteApp(args.value(0).toLongLong());
+    case Control::Rpc_ConfManager_purgeApps:
+        return confManager()->purgeApps();
+    case Control::Rpc_ConfManager_updateApp:
+        return confManager()->updateApp(args.value(0).toLongLong(), args.value(1).toString(),
+                args.value(2).toString(), args.value(3).toDateTime(), args.value(4).toInt(),
+                args.value(5).toBool(), args.value(6).toBool());
+    case Control::Rpc_ConfManager_updateAppBlocked:
+        return confManager()->updateAppBlocked(args.value(0).toLongLong(), args.value(1).toBool());
+    case Control::Rpc_ConfManager_updateAppName:
+        return confManager()->updateAppName(args.value(0).toLongLong(), args.value(1).toString());
+    case Control::Rpc_ConfManager_addZone: {
+        int zoneId = 0;
+        const bool ok = confManager()->addZone(args.value(0).toString(), args.value(1).toString(),
+                args.value(2).toString(), args.value(3).toString(), args.value(4).toBool(),
+                args.value(5).toBool(), zoneId);
+        resArgs = { zoneId };
+        return ok;
+    }
+    case Control::Rpc_ConfManager_deleteZone:
+        return confManager()->deleteZone(args.value(0).toLongLong());
+    case Control::Rpc_ConfManager_updateZone:
+        return confManager()->updateZone(args.value(0).toLongLong(), args.value(1).toString(),
+                args.value(2).toString(), args.value(3).toString(), args.value(4).toString(),
+                args.value(5).toBool(), args.value(6).toBool());
+    case Control::Rpc_ConfManager_updateZoneName:
+        return confManager()->updateZoneName(args.value(0).toLongLong(), args.value(1).toString());
+    case Control::Rpc_ConfManager_updateZoneEnabled:
+        return confManager()->updateZoneEnabled(args.value(0).toLongLong(), args.value(1).toBool());
+    case Control::Rpc_ConfManager_checkPassword:
+        return validateClient(w, args.value(0).toString());
     default:
         return false;
     }
