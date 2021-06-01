@@ -5,7 +5,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 
-#include "iocobject.h"
+#include "iocservice.h"
 
 namespace {
 
@@ -20,10 +20,8 @@ IocContainer::~IocContainer()
 {
     tearDownAll();
 
-    for (IocObject *obj : qAsConst(m_objects)) {
-        if (obj && obj->autoDelete()) {
-            delete obj;
-        }
+    for (int i = 0; i < m_size; ++i) {
+        autoDelete(i);
     }
 
     if (g_tlsIndex != -1) {
@@ -32,18 +30,23 @@ IocContainer::~IocContainer()
     }
 }
 
-void IocContainer::insertObject(int typeId, IocObject *obj, bool autoDelete)
+void IocContainer::setObject(int typeId, IocObject *obj, quint8 flags)
 {
     const int newSize = typeId + 1;
-    if (newSize > m_objects.size()) {
+    if (newSize > m_size) {
+        if (newSize >= IOC_MAX_SIZE) {
+            qCritical() << "IoC Container size error" << IOC_MAX_SIZE << newSize;
+            Q_UNREACHABLE();
+        }
+        m_size = newSize;
         m_objects.resize(newSize);
+        m_objectFlags.resize(newSize);
     }
 
     m_objects[typeId] = obj;
 
-    if (obj) {
-        obj->setAutoDelete(autoDelete);
-    }
+    Q_ASSERT(obj || flags == 0);
+    m_objectFlags[typeId] = flags;
 }
 
 IocObject *IocContainer::resolveObject(int typeId) const
@@ -53,29 +56,52 @@ IocObject *IocContainer::resolveObject(int typeId) const
     return obj;
 }
 
+IocService *IocContainer::resolveService(int typeId) const
+{
+    return static_cast<IocService *>(resolveObject(typeId));
+}
+
 void IocContainer::setUpAll()
 {
-    for (IocObject *obj : qAsConst(m_objects)) {
-        if (obj) {
-            setUp(obj);
-        }
+    for (int i = 0; i < m_size; ++i) {
+        setUp(i);
     }
 }
 
 void IocContainer::tearDownAll()
 {
-    for (IocObject *obj : qAsConst(m_objects)) {
-        if (obj) {
-            obj->tearDown();
-        }
+    for (int i = 0; i < m_size; ++i) {
+        tearDown(i);
     }
 }
 
-void IocContainer::setUp(IocObject *obj)
+void IocContainer::setUp(int typeId)
 {
-    if (!obj->wasSetUp()) {
-        obj->setUp();
-    }
+    const quint8 flags = m_objectFlags[typeId];
+    if ((flags & (IsService | WasSetUp)) != IsService)
+        return;
+
+    m_objectFlags[typeId] = (flags | WasSetUp);
+
+    resolveService(typeId)->setUp();
+}
+
+void IocContainer::tearDown(int typeId)
+{
+    const quint8 flags = m_objectFlags[typeId];
+    if (!(flags & IsService))
+        return;
+
+    resolveService(typeId)->tearDown();
+}
+
+void IocContainer::autoDelete(int typeId)
+{
+    const quint8 flags = m_objectFlags[typeId];
+    if ((flags & (AutoDelete | IsService)) != (AutoDelete | IsService))
+        return;
+
+    delete resolveService(typeId);
 }
 
 bool IocContainer::pinToThread()

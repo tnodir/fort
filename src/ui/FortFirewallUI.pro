@@ -275,7 +275,7 @@ HEADERS += \
     util/ini/mapsettings.h \
     util/ini/settings.h \
     util/ioc/ioccontainer.h \
-    util/ioc/iocobject.h \
+    util/ioc/iocservice.h \
     util/json/jsonutil.h \
     util/json/mapwrapper.h \
     util/logger.h \

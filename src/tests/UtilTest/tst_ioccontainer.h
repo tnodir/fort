@@ -5,16 +5,16 @@
 #include <googletest.h>
 
 #include <util/ioc/ioccontainer.h>
-#include <util/ioc/iocobject.h>
+#include <util/ioc/iocservice.h>
 
 namespace IocTest {
 
-class A : public IocObject
+class A : public IocService
 {
 public:
     void setUp() override
     {
-        IocObject::setUp();
+        IocService::setUp();
         setIsA(true);
     }
 
@@ -37,12 +37,12 @@ public:
     MOCK_METHOD1(setIsA, void(bool v));
 };
 
-class B : public IocObject
+class B : public IocService
 {
 public:
     void setUp() override
     {
-        IocObject::setUp();
+        IocService::setUp();
         IoC()->setUpDependency<A>();
     }
 };
@@ -82,10 +82,10 @@ TEST_F(IocContainerTest, insert)
     IocContainer container;
 
     auto a2 = new IocTest::A2();
-    container.insert<IocTest::A>(a2);
+    container.setService<IocTest::A>(a2);
 
     IocTest::B b;
-    container.insert<IocTest::B>(b);
+    container.setService<IocTest::B>(b);
 
     ASSERT_EQ(container.resolve<IocTest::A>(), a2);
     ASSERT_TRUE(container.pinToThread());
@@ -97,7 +97,7 @@ TEST_F(IocContainerTest, setUp)
     IocContainer container;
 
     auto a2 = new IocTest::A2();
-    container.insert<IocTest::A>(a2);
+    container.setService<IocTest::A>(a2);
 
     ASSERT_FALSE(a2->isA());
     container.setUpAll();
@@ -115,10 +115,10 @@ TEST_F(IocContainerTest, mockSetUp)
     ASSERT_TRUE(container.pinToThread());
 
     NiceMock<IocTest::MockA> mockA;
-    container.insert<IocTest::A>(&mockA);
+    container.setService<IocTest::A>(&mockA);
 
     auto b = new IocTest::B();
-    container.insert<IocTest::B>(b);
+    container.setService<IocTest::B>(b);
 
     EXPECT_CALL(mockA, setIsA(true)).Times(1);
     container.setUpAll();
@@ -127,7 +127,7 @@ TEST_F(IocContainerTest, mockSetUp)
     EXPECT_CALL(mockA, tearDown()).Times(1);
     container.tearDownAll();
 
-    const int containerSize = container.objects().size();
-    container.insert<IocTest::A>(nullptr);
-    ASSERT_EQ(container.objects().size(), containerSize);
+    const int containerSize = container.size();
+    container.remove<IocTest::A>();
+    ASSERT_EQ(container.size(), containerSize);
 }

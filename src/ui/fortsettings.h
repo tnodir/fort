@@ -2,12 +2,11 @@
 #define FORTSETTINGS_H
 
 #include "util/ini/settings.h"
-#include "util/ioc/iocobject.h"
 
 class EnvManager;
 class FirewallConf;
 
-class FortSettings : public Settings, public IocObject
+class FortSettings : public Settings
 {
     Q_OBJECT
 

@@ -4,7 +4,6 @@
 #include <QObject>
 
 #include "util/classhelpers.h"
-#include "util/ioc/iocobject.h"
 
 class AppInfoCache;
 class AppInfoManager;
@@ -34,7 +33,7 @@ class UserSettings;
 class ZoneListModel;
 class ZonesWindow;
 
-class FortManager : public QObject, public IocObject
+class FortManager : public QObject
 {
     Q_OBJECT
 

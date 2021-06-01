@@ -2,40 +2,56 @@
 #define IOCCONTAINER_H
 
 #include <QObject>
-#include <QVector>
+#include <QVarLengthArray>
 
-class IocObject;
+class IocService;
+
+using IocObject = void;
+
+constexpr int IOC_MAX_SIZE = 32;
 
 class IocContainer : public QObject
 {
     Q_OBJECT
 
 public:
+    enum IocFlag : quint8 { AutoDelete = 0x01, IsService = 0x02, WasSetUp = 0x04 };
+
     explicit IocContainer(QObject *parent = nullptr);
     ~IocContainer() override;
 
-    const QVector<IocObject *> &objects() const { return m_objects; }
+    const int size() const { return m_size; }
 
     template<class T>
-    void put(T *obj)
+    void set(T &obj)
     {
-        QObject *qObj = qobject_cast<QObject *>(obj);
-        Q_ASSERT(qObj);
-        qObj->setParent(this);
-
-        insert(obj);
+        setObject(getTypeId<T>(), &obj);
     }
 
     template<class T>
-    void insert(T *obj)
+    void set(T *obj)
     {
-        insertObject(getTypeId<T>(), obj);
+        setObject(getTypeId<T>(), obj, AutoDelete);
     }
 
     template<class T>
-    void insert(T &obj)
+    void remove()
     {
-        insertObject(getTypeId<T>(), &obj, false);
+        setObject(getTypeId<T>(), nullptr);
+    }
+
+    template<class T>
+    void setService(T &obj)
+    {
+        Q_ASSERT(static_cast<IocService *>(&obj));
+        setObject(getTypeId<T>(), &obj, IsService);
+    }
+
+    template<class T>
+    void setService(T *obj)
+    {
+        Q_ASSERT(static_cast<IocService *>(obj));
+        setObject(getTypeId<T>(), obj, AutoDelete | IsService);
     }
 
     template<class T>
@@ -50,10 +66,8 @@ public:
     template<class T>
     void setUpDependency()
     {
-        setUp(resolve<T>());
+        setUp(getTypeId<T>());
     }
-
-    void setUp(IocObject *obj);
 
     bool pinToThread();
 
@@ -62,18 +76,26 @@ public:
     template<class T>
     static int getTypeId()
     {
-        static int typeId = getNextTypeId();
+        static const int typeId = getNextTypeId();
         return typeId;
     }
 
 private:
-    void insertObject(int typeId, IocObject *obj, bool autoDelete = true);
+    void setObject(int typeId, IocObject *obj, quint8 flags = 0);
+
     IocObject *resolveObject(int typeId) const;
+    IocService *resolveService(int typeId) const;
+
+    void setUp(int typeId);
+    void tearDown(int typeId);
+    void autoDelete(int typeId);
 
     static int getNextTypeId();
 
 private:
-    QVector<IocObject *> m_objects;
+    int m_size = 0;
+    QVarLengthArray<IocObject *, IOC_MAX_SIZE> m_objects;
+    QVarLengthArray<quint8, IOC_MAX_SIZE> m_objectFlags;
 };
 
 template<class T>

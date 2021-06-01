@@ -121,10 +121,10 @@ int main(int argc, char *argv[])
     // Setup IoC Container
     IocContainer ioc;
     ioc.pinToThread();
-    ioc.insert<FortSettings>(settings);
-    ioc.insert<EnvManager>(envManager);
-    ioc.insert<ControlManager>(controlManager);
-    ioc.insert<FortManager>(fortManager);
+    ioc.set<FortSettings>(settings);
+    ioc.set<EnvManager>(envManager);
+    ioc.set<ControlManager>(controlManager);
+    ioc.set<FortManager>(fortManager);
 
     // Check running instance
     if (!fortManager.checkRunningInstance())
