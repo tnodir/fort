@@ -52,7 +52,7 @@ namespace {
 
 void setupAppStyle()
 {
-    const auto fusionStyle = QStyleFactory::create("Fusion");
+    QStyle *fusionStyle = QStyleFactory::create("Fusion");
     QApplication::setStyle(fusionStyle);
     QApplication::setPalette(fusionStyle->standardPalette());
 }
@@ -408,6 +408,9 @@ void FortManager::show()
 {
     setupAppStyle(); // Style & Palette
 
+    setupTranslationManager();
+    setupMainWindow();
+
     showTrayIcon();
 
     if (IoC<UserSettings>()->iniUser().graphWindowVisible()) {
@@ -418,8 +421,6 @@ void FortManager::show()
 void FortManager::showTrayIcon()
 {
     if (!m_trayIcon) {
-        setupTranslationManager();
-        setupMainWindow();
         setupTrayIcon();
     }
 
