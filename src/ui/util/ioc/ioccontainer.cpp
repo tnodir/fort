@@ -18,6 +18,8 @@ IocContainer::IocContainer(QObject *parent) : QObject(parent) { }
 
 IocContainer::~IocContainer()
 {
+    autoDeleteAll();
+
     if (g_tlsIndex != -1) {
         TlsFree(g_tlsIndex);
         g_tlsIndex = -1;

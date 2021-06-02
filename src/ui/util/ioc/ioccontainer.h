@@ -23,21 +23,21 @@ public:
     const int size() const { return m_size; }
 
     template<class T>
-    void set(T *obj, quint8 flags = AutoDelete)
+    void set(T *obj)
     {
-        setObject(getTypeId<T>(), obj, flags);
+        setObject(getTypeId<T>(), obj);
     }
 
     template<class T>
     void set(T &obj)
     {
-        set(&obj, 0);
+        set(&obj);
     }
 
     template<class T>
     void remove()
     {
-        set<T>(nullptr, 0);
+        set<T>(nullptr);
     }
 
     template<class T>
@@ -55,27 +55,15 @@ public:
     }
 
     template<class T>
-    T *object() const
+    inline constexpr std::enable_if_t<!std::is_base_of_v<IocService, T>, T *> resolve() const
     {
         return static_cast<T *>(resolveObject(getTypeId<T>()));
     }
 
     template<class T>
-    T *service() const
-    {
-        return static_cast<T *>(resolveService(getTypeId<T>()));
-    }
-
-    template<class T>
-    inline constexpr std::enable_if_t<!std::is_base_of_v<IocService, T>, T *> resolve() const
-    {
-        return object<T>();
-    }
-
-    template<class T>
     inline constexpr std::enable_if_t<std::is_base_of_v<IocService, T>, T *> resolve() const
     {
-        return service<T>();
+        return static_cast<T *>(resolveService(getTypeId<T>()));
     }
 
     void setUpAll();
@@ -86,7 +74,7 @@ public:
     T *setUpDependency()
     {
         setUp(getTypeId<T>());
-        return service<T>();
+        return resolve<T>();
     }
 
     bool pinToThread();

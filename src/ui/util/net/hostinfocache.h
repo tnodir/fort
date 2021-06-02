@@ -5,11 +5,12 @@
 #include <QObject>
 
 #include "../triggertimer.h"
+#include "../util/ioc/iocservice.h"
 #include "hostinfo.h"
 
 class HostInfoManager;
 
-class HostInfoCache : public QObject
+class HostInfoCache : public QObject, public IocService
 {
     Q_OBJECT
 

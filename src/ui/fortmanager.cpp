@@ -179,9 +179,9 @@ void FortManager::createManagers()
     ioc->setService<TaskManager>(taskManager);
 
     ioc->setService(new AppInfoCache());
-    ioc->set(new HostInfoCache());
+    ioc->setService(new HostInfoCache());
 
-    ioc->set(new NativeEventFilter());
+    ioc->setService(new NativeEventFilter());
     ioc->setService(new HotKeyManager());
 
     if (!settings->isService()) {
