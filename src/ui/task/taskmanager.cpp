@@ -35,14 +35,14 @@ void TaskManager::setUp()
 
     loadSettings();
 
-    setupScheduler();
+    QMetaObject::invokeMethod(this, &TaskManager::setupScheduler, Qt::QueuedConnection);
 }
 
 void TaskManager::setupScheduler()
 {
     taskInfoZoneDownloader()->loadZones();
 
-    m_timer.start(5 * 1000); // 5 seconds
+    m_timer.start(3 * 1000); // 3 seconds
 }
 
 void TaskManager::setupTasks()
