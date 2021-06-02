@@ -3,7 +3,7 @@
 #include <QRegularExpression>
 #include <QSettings>
 
-#include "fileutil.h"
+#include "../util/fileutil.h"
 
 EnvManager::EnvManager(QObject *parent) : QObject(parent)
 {

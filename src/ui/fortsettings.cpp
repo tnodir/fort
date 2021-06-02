@@ -6,8 +6,8 @@
 #include <fort_version.h>
 
 #include "conf/firewallconf.h"
+#include "manager/envmanager.h"
 #include "util/dateutil.h"
-#include "util/envmanager.h"
 #include "util/fileutil.h"
 #include "util/osutil.h"
 #include "util/startuputil.h"

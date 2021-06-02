@@ -10,21 +10,6 @@
 
 TrafListModel::TrafListModel(QObject *parent) : TableItemModel(parent) { }
 
-void TrafListModel::setUnit(TrafListModel::TrafUnit unit)
-{
-    m_unit = unit;
-}
-
-void TrafListModel::setType(TrafListModel::TrafType type)
-{
-    m_type = type;
-}
-
-void TrafListModel::setAppId(qint64 appId)
-{
-    m_appId = appId;
-}
-
 StatManager *TrafListModel::statManager() const
 {
     return IoC<StatManager>();

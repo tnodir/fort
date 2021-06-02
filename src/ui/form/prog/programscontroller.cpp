@@ -4,8 +4,8 @@
 #include "../../conf/confmanager.h"
 #include "../../conf/firewallconf.h"
 #include "../../fortmanager.h"
+#include "../../manager/translationmanager.h"
 #include "../../model/applistmodel.h"
-#include "../../translationmanager.h"
 #include "../../util/ioc/ioccontainer.h"
 
 ProgramsController::ProgramsController(QObject *parent) :

@@ -3,7 +3,7 @@
 #include "../../conf/confmanager.h"
 #include "../../conf/firewallconf.h"
 #include "../../fortmanager.h"
-#include "../../translationmanager.h"
+#include "../../manager/translationmanager.h"
 #include "../../util/ioc/ioccontainer.h"
 
 StatisticsController::StatisticsController(QObject *parent) : QObject(parent)

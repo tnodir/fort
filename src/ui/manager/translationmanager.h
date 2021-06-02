@@ -6,8 +6,8 @@
 #include <QStringList>
 #include <QVector>
 
-#include "util/classhelpers.h"
-#include "util/ioc/iocservice.h"
+#include "../util/classhelpers.h"
+#include "../util/ioc/iocservice.h"
 
 QT_FORWARD_DECLARE_CLASS(QTranslator)
 

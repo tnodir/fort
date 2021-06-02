@@ -5,8 +5,8 @@
 #include <QHash>
 #include <QObject>
 
-#include "classhelpers.h"
-#include "ioc/iocservice.h"
+#include "../util/classhelpers.h"
+#include "../util/ioc/iocservice.h"
 
 class NativeEventFilter : public QObject, public QAbstractNativeEventFilter, public IocService
 {
@@ -37,8 +37,6 @@ signals:
     void hotKeyPressed(int hotKeyId);
     void environmentChanged();
     void sessionLocked();
-
-public slots:
 
 private:
     void setKeyId(int hotKeyId, quint32 nativeMod, quint32 nativeKey);

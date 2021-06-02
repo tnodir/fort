@@ -26,13 +26,13 @@ public:
     explicit TrafListModel(QObject *parent = nullptr);
 
     TrafListModel::TrafUnit unit() const { return m_unit; }
-    void setUnit(TrafListModel::TrafUnit unit);
+    void setUnit(TrafListModel::TrafUnit unit) { m_unit = unit; }
 
     TrafListModel::TrafType type() const { return m_type; }
-    void setType(TrafListModel::TrafType type);
+    void setType(TrafListModel::TrafType type) { m_type = type; }
 
     qint64 appId() const { return m_appId; }
-    void setAppId(qint64 appId);
+    void setAppId(qint64 appId) { m_appId = appId; }
 
     StatManager *statManager() const;
 

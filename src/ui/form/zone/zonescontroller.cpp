@@ -3,9 +3,9 @@
 #include "../../conf/confmanager.h"
 #include "../../conf/firewallconf.h"
 #include "../../fortmanager.h"
+#include "../../manager/translationmanager.h"
 #include "../../model/zonelistmodel.h"
 #include "../../task/taskmanager.h"
-#include "../../translationmanager.h"
 #include "../../util/ioc/ioccontainer.h"
 
 ZonesController::ZonesController(QObject *parent) : QObject(parent)

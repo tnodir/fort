@@ -4,8 +4,8 @@
 #include "../../conf/firewallconf.h"
 #include "../../fortmanager.h"
 #include "../../fortsettings.h"
-#include "../../translationmanager.h"
-#include "../../util/hotkeymanager.h"
+#include "../../manager/hotkeymanager.h"
+#include "../../manager/translationmanager.h"
 #include "../../util/ioc/ioccontainer.h"
 
 TrayController::TrayController(QObject *parent) : QObject(parent)

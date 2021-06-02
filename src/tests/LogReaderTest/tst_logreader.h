@@ -13,10 +13,10 @@
 #include <log/logbuffer.h>
 #include <log/logentryblockedip.h>
 #include <log/logentrytime.h>
+#include <manager/envmanager.h>
 #include <util/conf/confappswalker.h>
 #include <util/conf/confutil.h>
 #include <util/device.h>
-#include <util/envmanager.h>
 #include <util/fileutil.h>
 #include <util/net/netutil.h>
 #include <util/osutil.h>

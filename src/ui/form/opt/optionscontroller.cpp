@@ -5,9 +5,9 @@
 #include "../../driver/drivermanager.h"
 #include "../../fortmanager.h"
 #include "../../fortsettings.h"
+#include "../../manager/translationmanager.h"
 #include "../../model/zonelistmodel.h"
 #include "../../task/taskmanager.h"
-#include "../../translationmanager.h"
 #include "../../util/ioc/ioccontainer.h"
 
 OptionsController::OptionsController(QObject *parent) : QObject(parent)

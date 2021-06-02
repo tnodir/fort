@@ -81,6 +81,12 @@ SOURCES += \
     log/logentrystattraf.cpp \
     log/logentrytime.cpp \
     log/logmanager.cpp \
+    manager/envmanager.cpp \
+    manager/hotkeymanager.cpp \
+    manager/logger.cpp \
+    manager/nativeeventfilter.cpp \
+    manager/serviceinfomanager.cpp \
+    manager/translationmanager.cpp \
     model/applistmodel.cpp \
     model/appstatmodel.cpp \
     model/connlistmodel.cpp \
@@ -110,28 +116,23 @@ SOURCES += \
     task/taskupdatechecker.cpp \
     task/taskworker.cpp \
     task/taskzonedownloader.cpp \
-    translationmanager.cpp \
     user/iniuser.cpp \
     user/usersettings.cpp \
     util/conf/addressrange.cpp \
     util/conf/confutil.cpp \
     util/dateutil.cpp \
     util/device.cpp \
-    util/envmanager.cpp \
     util/fileutil.cpp \
     util/guiutil.cpp \
-    util/hotkeymanager.cpp \
     util/iconcache.cpp \
     util/ini/mapsettings.cpp \
     util/ini/settings.cpp \
     util/ioc/ioccontainer.cpp \
     util/json/jsonutil.cpp \
     util/json/mapwrapper.cpp \
-    util/logger.cpp \
     util/model/stringlistmodel.cpp \
     util/model/tableitemmodel.cpp \
     util/model/tablesqlmodel.cpp \
-    util/nativeeventfilter.cpp \
     util/net/hostinfo.cpp \
     util/net/hostinfocache.cpp \
     util/net/hostinfojob.cpp \
@@ -229,6 +230,12 @@ HEADERS += \
     log/logentrystattraf.h \
     log/logentrytime.h \
     log/logmanager.h \
+    manager/envmanager.h \
+    manager/hotkeymanager.h \
+    manager/logger.h \
+    manager/nativeeventfilter.h \
+    manager/serviceinfomanager.h \
+    manager/translationmanager.h \
     model/applistmodel.h \
     model/appstatmodel.h \
     model/connlistmodel.h \
@@ -258,7 +265,6 @@ HEADERS += \
     task/taskupdatechecker.h \
     task/taskworker.h \
     task/taskzonedownloader.h \
-    translationmanager.h \
     user/iniuser.h \
     user/usersettings.h \
     util/classhelpers.h \
@@ -267,10 +273,8 @@ HEADERS += \
     util/conf/confutil.h \
     util/dateutil.h \
     util/device.h \
-    util/envmanager.h \
     util/fileutil.h \
     util/guiutil.h \
-    util/hotkeymanager.h \
     util/iconcache.h \
     util/ini/mapsettings.h \
     util/ini/settings.h \
@@ -278,11 +282,9 @@ HEADERS += \
     util/ioc/iocservice.h \
     util/json/jsonutil.h \
     util/json/mapwrapper.h \
-    util/logger.h \
     util/model/stringlistmodel.h \
     util/model/tableitemmodel.h \
     util/model/tablesqlmodel.h \
-    util/nativeeventfilter.h \
     util/net/hostinfo.h \
     util/net/hostinfocache.h \
     util/net/hostinfojob.h \

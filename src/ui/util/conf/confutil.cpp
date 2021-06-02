@@ -9,12 +9,12 @@
 #include "../../conf/appgroup.h"
 #include "../../conf/firewallconf.h"
 #include "../../driver/drivercommon.h"
-#include "../../util/conf/confappswalker.h"
+#include "../../manager/envmanager.h"
 #include "../dateutil.h"
-#include "../envmanager.h"
 #include "../fileutil.h"
 #include "../net/ip4range.h"
 #include "../stringutil.h"
+#include "confappswalker.h"
 
 #define APP_GROUP_MAX      FORT_CONF_GROUP_MAX
 #define APP_GROUP_NAME_MAX 128

@@ -7,8 +7,8 @@
 
 #include <fort_version.h>
 
-#include "dateutil.h"
-#include "fileutil.h"
+#include "../util/dateutil.h"
+#include "../util/fileutil.h"
 
 namespace {
 
