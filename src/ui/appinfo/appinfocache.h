@@ -4,21 +4,19 @@
 #include <QCache>
 #include <QObject>
 
+#include "../util/ioc/iocservice.h"
 #include "../util/triggertimer.h"
 #include "appinfo.h"
 
-class AppIconProvider;
-class AppInfoManager;
-
-class AppInfoCache : public QObject
+class AppInfoCache : public QObject, public IocService
 {
     Q_OBJECT
 
 public:
     explicit AppInfoCache(QObject *parent = nullptr);
 
-    AppInfoManager *manager() const { return m_manager; }
-    void setManager(AppInfoManager *manager);
+    void setUp() override;
+    void tearDown() override;
 
     QImage appImage(const AppInfo &info) const;
     QString appName(const QString &appPath);
@@ -36,8 +34,6 @@ private:
     void emitCacheChanged();
 
 private:
-    AppInfoManager *m_manager = nullptr;
-
     QCache<QString, AppInfo> m_cache;
 
     TriggerTimer m_triggerTimer;

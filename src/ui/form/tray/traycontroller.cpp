@@ -3,23 +3,30 @@
 #include "../../conf/confmanager.h"
 #include "../../conf/firewallconf.h"
 #include "../../fortmanager.h"
+#include "../../fortsettings.h"
 #include "../../translationmanager.h"
+#include "../../util/hotkeymanager.h"
+#include "../../util/ioc/ioccontainer.h"
 
-TrayController::TrayController(FortManager *fortManager, QObject *parent) :
-    QObject(parent), m_fortManager(fortManager)
+TrayController::TrayController(QObject *parent) : QObject(parent)
 {
     connect(translationManager(), &TranslationManager::languageChanged, this,
             &TrayController::retranslateUi);
 }
 
+FortManager *TrayController::fortManager() const
+{
+    return IoC<FortManager>();
+}
+
 FortSettings *TrayController::settings() const
 {
-    return fortManager()->settings();
+    return IoC<FortSettings>();
 }
 
 ConfManager *TrayController::confManager() const
 {
-    return fortManager()->confManager();
+    return IoC<ConfManager>();
 }
 
 FirewallConf *TrayController::conf() const
@@ -39,10 +46,10 @@ IniUser *TrayController::iniUser() const
 
 HotKeyManager *TrayController::hotKeyManager() const
 {
-    return fortManager()->hotKeyManager();
+    return IoC<HotKeyManager>();
 }
 
 TranslationManager *TrayController::translationManager() const
 {
-    return TranslationManager::instance();
+    return IoC<TranslationManager>();
 }

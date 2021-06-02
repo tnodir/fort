@@ -2,11 +2,10 @@
 #define USERSETTINGS_H
 
 #include "../util/ini/settings.h"
+#include "../util/ioc/iocservice.h"
 #include "iniuser.h"
 
-class FortSettings;
-
-class UserSettings : public Settings
+class UserSettings : public Settings, public IocService
 {
     Q_OBJECT
 
@@ -16,7 +15,7 @@ public:
     IniUser &iniUser() { return m_iniUser; }
     const IniUser &iniUser() const { return m_iniUser; }
 
-    void initialize(FortSettings *settings);
+    void setUp() override;
 
 protected:
     void migrateIniOnStartup() override;

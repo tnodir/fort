@@ -12,6 +12,7 @@
 #include "../log/logentrystattraf.h"
 #include "../util/dateutil.h"
 #include "../util/fileutil.h"
+#include "../util/ioc/ioccontainer.h"
 #include "../util/osutil.h"
 #include "quotamanager.h"
 #include "statsql.h"
@@ -51,13 +52,11 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 
 }
 
-StatManager::StatManager(
-        const QString &filePath, QuotaManager *quotaManager, QObject *parent, quint32 openFlags) :
+StatManager::StatManager(const QString &filePath, QObject *parent, quint32 openFlags) :
     QObject(parent),
     m_isConnIdRangeUpdated(false),
     m_isActivePeriodSet(false),
     m_isActivePeriod(false),
-    m_quotaManager(quotaManager),
     m_sqliteDb(new SqliteDb(filePath, openFlags))
 {
     connect(&m_connChangedTimer, &QTimer::timeout, this, &StatManager::connChanged);
@@ -85,22 +84,20 @@ void StatManager::emitConnChanged()
     m_connChangedTimer.startTrigger();
 }
 
-bool StatManager::initialize()
+void StatManager::setUp()
 {
     if (!sqliteDb()->open()) {
         logCritical() << "File open error:" << sqliteDb()->filePath() << sqliteDb()->errorMessage();
-        return false;
+        return;
     }
 
     if (!sqliteDb()->migrate(
                 ":/stat/migrations", nullptr, DATABASE_USER_VERSION, true, true, &migrateFunc)) {
         logCritical() << "Migration error" << sqliteDb()->filePath();
-        return false;
+        return;
     }
 
     updateConnBlockId();
-
-    return true;
 }
 
 void StatManager::updateConnBlockId()
@@ -163,8 +160,10 @@ void StatManager::updateActivePeriod()
 
 void StatManager::setupQuota()
 {
-    quotaManager()->setQuotaDayBytes(qint64(ini()->quotaDayMb()) * 1024 * 1024);
-    quotaManager()->setQuotaMonthBytes(qint64(ini()->quotaMonthMb()) * 1024 * 1024);
+    auto quotaManager = IoC<QuotaManager>();
+
+    quotaManager->setQuotaDayBytes(qint64(ini()->quotaDayMb()) * 1024 * 1024);
+    quotaManager->setQuotaMonthBytes(qint64(ini()->quotaMonthMb()) * 1024 * 1024);
 
     const qint64 unixTime = DateUtil::getUnixTime();
     const qint32 trafDay = DateUtil::getUnixDay(unixTime);
@@ -173,25 +172,29 @@ void StatManager::setupQuota()
     qint64 inBytes, outBytes;
 
     getTraffic(StatSql::sqlSelectTrafDay, trafDay, inBytes, outBytes);
-    quotaManager()->setTrafDayBytes(inBytes);
+    quotaManager->setTrafDayBytes(inBytes);
 
     getTraffic(StatSql::sqlSelectTrafMonth, trafMonth, inBytes, outBytes);
-    quotaManager()->setTrafMonthBytes(inBytes);
+    quotaManager->setTrafMonthBytes(inBytes);
 }
 
 void StatManager::clearQuotas(bool isNewDay, bool isNewMonth)
 {
-    quotaManager()->clear(isNewDay && m_trafDay != 0, isNewMonth && m_trafMonth != 0);
+    auto quotaManager = IoC<QuotaManager>();
+
+    quotaManager->clear(isNewDay && m_trafDay != 0, isNewMonth && m_trafMonth != 0);
 }
 
 void StatManager::checkQuotas(quint32 inBytes)
 {
     if (m_isActivePeriod) {
-        // Update quota traffic bytes
-        quotaManager()->addTraf(inBytes);
+        auto quotaManager = IoC<QuotaManager>();
 
-        quotaManager()->checkQuotaDay(m_trafDay);
-        quotaManager()->checkQuotaMonth(m_trafMonth);
+        // Update quota traffic bytes
+        quotaManager->addTraf(inBytes);
+
+        quotaManager->checkQuotaDay(m_trafDay);
+        quotaManager->checkQuotaMonth(m_trafMonth);
     }
 }
 
@@ -227,7 +230,8 @@ bool StatManager::clearTraffic()
     clearAppIdCache();
 
     setupTrafDate();
-    quotaManager()->clear();
+
+    IoC<QuotaManager>()->clear();
 
     emit trafficCleared();
 

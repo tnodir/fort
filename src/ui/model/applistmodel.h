@@ -33,9 +33,9 @@ class AppListModel : public TableSqlModel
     Q_OBJECT
 
 public:
-    explicit AppListModel(ConfManager *confManager, QObject *parent = nullptr);
+    explicit AppListModel(QObject *parent = nullptr);
 
-    ConfManager *confManager() const { return m_confManager; }
+    ConfManager *confManager() const;
     FirewallConf *conf() const;
     AppInfoCache *appInfoCache() const;
     SqliteDb *sqliteDb() const override;
@@ -80,8 +80,6 @@ private:
     bool updateAppRow(const QString &sql, const QVariantList &vars, AppRow &appRow) const;
 
 private:
-    ConfManager *m_confManager = nullptr;
-
     mutable AppRow m_appRow;
 };
 

@@ -19,10 +19,10 @@ class OptionsController : public QObject
     Q_OBJECT
 
 public:
-    explicit OptionsController(FortManager *fortManager, QObject *parent = nullptr);
+    explicit OptionsController(QObject *parent = nullptr);
     ~OptionsController() override;
 
-    FortManager *fortManager() const { return m_fortManager; }
+    FortManager *fortManager() const;
     FortSettings *settings() const;
     ConfManager *confManager() const;
     FirewallConf *conf() const;
@@ -64,9 +64,6 @@ public slots:
 
 private:
     void save(bool closeOnSuccess);
-
-private:
-    FortManager *m_fortManager = nullptr;
 };
 
 #endif // OPTIONSCONTROLLER_H

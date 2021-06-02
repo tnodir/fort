@@ -4,11 +4,11 @@
 #include <QObject>
 #include <QVarLengthArray>
 
-class IocService;
+#include "iocservice.h"
 
 using IocObject = void;
 
-constexpr int IOC_MAX_SIZE = 32;
+constexpr int IOC_DEFAULT_SIZE = 32;
 
 class IocContainer : public QObject
 {
@@ -23,50 +23,70 @@ public:
     const int size() const { return m_size; }
 
     template<class T>
-    void set(T &obj)
+    void set(T *obj, quint8 flags = AutoDelete)
     {
-        setObject(getTypeId<T>(), &obj);
+        setObject(getTypeId<T>(), obj, flags);
     }
 
     template<class T>
-    void set(T *obj)
+    void set(T &obj)
     {
-        setObject(getTypeId<T>(), obj, AutoDelete);
+        set(&obj, 0);
     }
 
     template<class T>
     void remove()
     {
-        setObject(getTypeId<T>(), nullptr);
+        set<T>(nullptr, 0);
+    }
+
+    template<class T>
+    void setService(T *obj, quint8 flags = AutoDelete | IsService)
+    {
+        auto svc = static_cast<IocService *>(obj);
+        Q_ASSERT(svc);
+        setObject(getTypeId<T>(), svc, flags);
     }
 
     template<class T>
     void setService(T &obj)
     {
-        Q_ASSERT(static_cast<IocService *>(&obj));
-        setObject(getTypeId<T>(), &obj, IsService);
+        setService(&obj, IsService);
     }
 
     template<class T>
-    void setService(T *obj)
-    {
-        Q_ASSERT(static_cast<IocService *>(obj));
-        setObject(getTypeId<T>(), obj, AutoDelete | IsService);
-    }
-
-    template<class T>
-    T *resolve() const
+    T *object() const
     {
         return static_cast<T *>(resolveObject(getTypeId<T>()));
     }
 
-    void setUpAll();
-    void tearDownAll();
+    template<class T>
+    T *service() const
+    {
+        return static_cast<T *>(resolveService(getTypeId<T>()));
+    }
 
     template<class T>
-    void setUpDependency()
+    inline constexpr std::enable_if_t<!std::is_base_of_v<IocService, T>, T *> resolve() const
+    {
+        return object<T>();
+    }
+
+    template<class T>
+    inline constexpr std::enable_if_t<std::is_base_of_v<IocService, T>, T *> resolve() const
+    {
+        return service<T>();
+    }
+
+    void setUpAll();
+    void tearDownAll();
+    void autoDeleteAll();
+
+    template<class T>
+    T *setUpDependency()
     {
         setUp(getTypeId<T>());
+        return service<T>();
     }
 
     bool pinToThread();
@@ -94,12 +114,12 @@ private:
 
 private:
     int m_size = 0;
-    QVarLengthArray<IocObject *, IOC_MAX_SIZE> m_objects;
-    QVarLengthArray<quint8, IOC_MAX_SIZE> m_objectFlags;
+    QVarLengthArray<IocObject *, IOC_DEFAULT_SIZE> m_objects;
+    QVarLengthArray<quint8, IOC_DEFAULT_SIZE> m_objectFlags;
 };
 
 template<class T>
-T *IoC()
+inline static T *IoC()
 {
     const IocContainer *container = IocContainer::getPinned();
     Q_ASSERT(container);

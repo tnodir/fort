@@ -24,7 +24,7 @@ class ZonesWindow : public WidgetWindow
     Q_OBJECT
 
 public:
-    explicit ZonesWindow(FortManager *fortManager, QWidget *parent = nullptr);
+    explicit ZonesWindow(QWidget *parent = nullptr);
 
     ZonesController *ctrl() const { return m_ctrl; }
     FortManager *fortManager() const;

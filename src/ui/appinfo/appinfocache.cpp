@@ -4,6 +4,7 @@
 #include <QImage>
 
 #include "../util/iconcache.h"
+#include "../util/ioc/ioccontainer.h"
 #include "appinfomanager.h"
 
 AppInfoCache::AppInfoCache(QObject *parent) : QObject(parent), m_cache(1000)
@@ -11,25 +12,27 @@ AppInfoCache::AppInfoCache(QObject *parent) : QObject(parent), m_cache(1000)
     connect(&m_triggerTimer, &QTimer::timeout, this, &AppInfoCache::cacheChanged);
 }
 
-void AppInfoCache::setManager(AppInfoManager *manager)
+void AppInfoCache::setUp()
 {
-    Q_ASSERT(manager);
+    connect(IoC<AppInfoManager>(), &AppInfoManager::lookupFinished, this,
+            &AppInfoCache::handleFinishedLookup);
+}
 
-    m_manager = manager;
-
-    connect(m_manager, &AppInfoManager::lookupFinished, this, &AppInfoCache::handleFinishedLookup);
+void AppInfoCache::tearDown()
+{
+    disconnect(IoC<AppInfoManager>());
 }
 
 QImage AppInfoCache::appImage(const AppInfo &info) const
 {
-    return manager()->loadIconFromDb(info.iconId);
+    return IoC<AppInfoManager>()->loadIconFromDb(info.iconId);
 }
 
 QString AppInfoCache::appName(const QString &appPath)
 {
     AppInfo appInfo = this->appInfo(appPath);
     if (!appInfo.isValid()) {
-        manager()->loadInfoFromFs(appPath, appInfo);
+        IoC<AppInfoManager>()->loadInfoFromFs(appPath, appInfo);
     }
     return appInfo.fileDescription;
 }
@@ -71,8 +74,8 @@ AppInfo AppInfoCache::appInfo(const QString &appPath)
         lookupRequired = appInfo->isFileModified(appPath);
     }
 
-    if (lookupRequired && m_manager) {
-        m_manager->lookupAppInfo(appPath);
+    if (lookupRequired) {
+        IoC<AppInfoManager>()->lookupAppInfo(appPath);
     }
 
     return *appInfo;

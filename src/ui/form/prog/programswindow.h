@@ -12,7 +12,6 @@ class AppListModel;
 class ConfManager;
 class FirewallConf;
 class FortManager;
-class FortSettings;
 class IniOptions;
 class IniUser;
 class ProgramEditDialog;
@@ -27,11 +26,10 @@ class ProgramsWindow : public WidgetWindow
     Q_OBJECT
 
 public:
-    explicit ProgramsWindow(FortManager *fortManager, QWidget *parent = nullptr);
+    explicit ProgramsWindow(QWidget *parent = nullptr);
 
     ProgramsController *ctrl() const { return m_ctrl; }
     FortManager *fortManager() const;
-    FortSettings *settings() const;
     ConfManager *confManager() const;
     FirewallConf *conf() const;
     IniOptions *ini() const;

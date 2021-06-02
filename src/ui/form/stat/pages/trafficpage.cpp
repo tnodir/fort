@@ -27,8 +27,8 @@
 
 TrafficPage::TrafficPage(StatisticsController *ctrl, QWidget *parent) :
     StatBasePage(ctrl, parent),
-    m_appStatModel(new AppStatModel(ctrl->fortManager(), this)),
-    m_trafListModel(new TrafListModel(ctrl->statManager(), this))
+    m_appStatModel(new AppStatModel(this)),
+    m_trafListModel(new TrafListModel(this))
 {
     setupUi();
 

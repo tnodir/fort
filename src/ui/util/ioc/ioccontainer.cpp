@@ -18,12 +18,6 @@ IocContainer::IocContainer(QObject *parent) : QObject(parent) { }
 
 IocContainer::~IocContainer()
 {
-    tearDownAll();
-
-    for (int i = 0; i < m_size; ++i) {
-        autoDelete(i);
-    }
-
     if (g_tlsIndex != -1) {
         TlsFree(g_tlsIndex);
         g_tlsIndex = -1;
@@ -34,10 +28,6 @@ void IocContainer::setObject(int typeId, IocObject *obj, quint8 flags)
 {
     const int newSize = typeId + 1;
     if (newSize > m_size) {
-        if (newSize >= IOC_MAX_SIZE) {
-            qCritical() << "IoC Container size error" << IOC_MAX_SIZE << newSize;
-            Q_UNREACHABLE();
-        }
         m_size = newSize;
         m_objects.resize(newSize);
         m_objectFlags.resize(newSize);
@@ -51,9 +41,7 @@ void IocContainer::setObject(int typeId, IocObject *obj, quint8 flags)
 
 IocObject *IocContainer::resolveObject(int typeId) const
 {
-    IocObject *obj = m_objects.at(typeId);
-    Q_ASSERT(obj);
-    return obj;
+    return m_objects.at(typeId);
 }
 
 IocService *IocContainer::resolveService(int typeId) const
@@ -75,6 +63,13 @@ void IocContainer::tearDownAll()
     }
 }
 
+void IocContainer::autoDeleteAll()
+{
+    for (int i = 0; i < m_size; ++i) {
+        autoDelete(i);
+    }
+}
+
 void IocContainer::setUp(int typeId)
 {
     const quint8 flags = m_objectFlags[typeId];
@@ -83,7 +78,8 @@ void IocContainer::setUp(int typeId)
 
     m_objectFlags[typeId] = (flags | WasSetUp);
 
-    resolveService(typeId)->setUp();
+    IocService *obj = resolveService(typeId);
+    obj->setUp();
 }
 
 void IocContainer::tearDown(int typeId)
@@ -92,7 +88,8 @@ void IocContainer::tearDown(int typeId)
     if (!(flags & IsService))
         return;
 
-    resolveService(typeId)->tearDown();
+    IocService *obj = resolveService(typeId);
+    obj->tearDown();
 }
 
 void IocContainer::autoDelete(int typeId)
@@ -102,6 +99,8 @@ void IocContainer::autoDelete(int typeId)
         return;
 
     delete resolveService(typeId);
+
+    setObject(typeId, nullptr);
 }
 
 bool IocContainer::pinToThread()

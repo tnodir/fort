@@ -4,12 +4,13 @@
 #include <QMutex>
 
 #include "../util/classhelpers.h"
+#include "../util/ioc/iocservice.h"
 #include "../util/worker/workermanager.h"
 #include "appinfo.h"
 
 class SqliteDb;
 
-class AppInfoManager : public WorkerManager
+class AppInfoManager : public WorkerManager, public IocService
 {
     Q_OBJECT
 
@@ -21,7 +22,7 @@ public:
 
     SqliteDb *sqliteDb() const { return m_sqliteDb; }
 
-    void initialize();
+    void setUp() override;
 
     bool loadInfoFromFs(const QString &appPath, AppInfo &appInfo);
     QImage loadIconFromFs(const QString &appPath);

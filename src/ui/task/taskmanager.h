@@ -5,21 +5,18 @@
 #include <QTimer>
 #include <QVariant>
 
-class ConfManager;
-class FortManager;
+#include "../util/ioc/iocservice.h"
+
 class TaskInfo;
 class TaskInfoUpdateChecker;
 class TaskInfoZoneDownloader;
 
-class TaskManager : public QObject
+class TaskManager : public QObject, public IocService
 {
     Q_OBJECT
 
 public:
-    explicit TaskManager(FortManager *fortManager, QObject *parent = nullptr);
-
-    FortManager *fortManager() const { return m_fortManager; }
-    ConfManager *confManager() const;
+    explicit TaskManager(QObject *parent = nullptr);
 
     TaskInfoUpdateChecker *taskInfoUpdateChecker() const;
     TaskInfoZoneDownloader *taskInfoZoneDownloader() const;
@@ -27,7 +24,7 @@ public:
     const QList<TaskInfo *> &taskInfoList() const { return m_taskInfoList; }
     TaskInfo *taskInfoAt(int row) const;
 
-    void initialize();
+    void setUp() override;
 
 signals:
     void taskStarted(qint8 taskType);
@@ -61,8 +58,6 @@ private:
     void appendTaskInfo(TaskInfo *taskInfo);
 
 private:
-    FortManager *m_fortManager = nullptr;
-
     QList<TaskInfo *> m_taskInfoList;
 
     QTimer m_timer;

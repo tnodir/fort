@@ -11,11 +11,12 @@
 #include "../log/logentryblockedip.h"
 #include "../stat/statmanager.h"
 #include "../util/iconcache.h"
+#include "../util/ioc/ioccontainer.h"
 #include "../util/net/hostinfocache.h"
 #include "../util/net/netutil.h"
 
-ConnListModel::ConnListModel(FortManager *fortManager, QObject *parent) :
-    TableSqlModel(parent), m_connMode(ConnNone), m_resolveAddress(false), m_fortManager(fortManager)
+ConnListModel::ConnListModel(QObject *parent) :
+    TableSqlModel(parent), m_connMode(ConnNone), m_resolveAddress(false)
 {
 }
 
@@ -35,9 +36,14 @@ void ConnListModel::setResolveAddress(bool v)
     }
 }
 
+FortManager *ConnListModel::fortManager() const
+{
+    return IoC<FortManager>();
+}
+
 StatManager *ConnListModel::statManager() const
 {
-    return fortManager()->statManager();
+    return IoC<StatManager>();
 }
 
 SqliteDb *ConnListModel::sqliteDb() const
@@ -47,12 +53,12 @@ SqliteDb *ConnListModel::sqliteDb() const
 
 AppInfoCache *ConnListModel::appInfoCache() const
 {
-    return fortManager()->appInfoCache();
+    return IoC<AppInfoCache>();
 }
 
 HostInfoCache *ConnListModel::hostInfoCache() const
 {
-    return fortManager()->hostInfoCache();
+    return IoC<HostInfoCache>();
 }
 
 void ConnListModel::initialize()

@@ -3,15 +3,11 @@
 #include <QAction>
 #include <QKeySequence>
 
+#include "ioc/ioccontainer.h"
 #include "nativeeventfilter.h"
 #include "osutil.h"
 
-HotKeyManager::HotKeyManager(NativeEventFilter *nativeEventFilter, QObject *parent) :
-    QObject(parent), m_nativeEventFilter(nativeEventFilter)
-{
-    connect(m_nativeEventFilter, &NativeEventFilter::hotKeyPressed, this,
-            &HotKeyManager::onHotKeyPressed);
-}
+HotKeyManager::HotKeyManager(QObject *parent) : QObject(parent) { }
 
 void HotKeyManager::setEnabled(bool v)
 {
@@ -19,6 +15,17 @@ void HotKeyManager::setEnabled(bool v)
         m_enabled = v;
         updateActions();
     }
+}
+
+void HotKeyManager::setUp()
+{
+    connect(IoC<NativeEventFilter>(), &NativeEventFilter::hotKeyPressed, this,
+            &HotKeyManager::onHotKeyPressed);
+}
+
+void HotKeyManager::tearDown()
+{
+    disconnect(IoC<NativeEventFilter>());
 }
 
 bool HotKeyManager::addAction(QAction *action, const QKeySequence &shortcut)
@@ -38,14 +45,14 @@ bool HotKeyManager::addAction(QAction *action, const QKeySequence &shortcut)
 
 void HotKeyManager::removeActions()
 {
-    m_nativeEventFilter->unregisterHotKeys();
+    IoC<NativeEventFilter>()->unregisterHotKeys();
 
     m_actions.clear();
 }
 
 void HotKeyManager::updateActions()
 {
-    m_nativeEventFilter->unregisterHotKeys();
+    IoC<NativeEventFilter>()->unregisterHotKeys();
 
     for (QAction *action : qAsConst(m_actions)) {
         action->setShortcutVisibleInContextMenu(enabled());
@@ -79,5 +86,5 @@ void HotKeyManager::registerHotKey(QAction *action) const
     const int key = keyCombination.toCombined();
 #endif
 
-    m_nativeEventFilter->registerHotKey(hotKeyId, key);
+    IoC<NativeEventFilter>()->registerHotKey(hotKeyId, key);
 }

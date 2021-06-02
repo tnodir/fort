@@ -1,18 +1,10 @@
 #include "taskmanagerrpc.h"
 
-#include "../fortmanager.h"
 #include "../rpc/rpcmanager.h"
 #include "../task/taskinfo.h"
+#include "../util/ioc/ioccontainer.h"
 
-TaskManagerRpc::TaskManagerRpc(FortManager *fortManager, QObject *parent) :
-    TaskManager(fortManager, parent)
-{
-}
-
-RpcManager *TaskManagerRpc::rpcManager() const
-{
-    return fortManager()->rpcManager();
-}
+TaskManagerRpc::TaskManagerRpc(QObject *parent) : TaskManager(parent) { }
 
 void TaskManagerRpc::onTaskStarted(qint8 taskType)
 {
@@ -40,10 +32,10 @@ void TaskManagerRpc::onTaskFinished(qint8 taskType)
 
 void TaskManagerRpc::runTask(qint8 taskType)
 {
-    rpcManager()->invokeOnServer(Control::Rpc_TaskManager_runTask, { taskType });
+    IoC<RpcManager>()->invokeOnServer(Control::Rpc_TaskManager_runTask, { taskType });
 }
 
 void TaskManagerRpc::abortTask(qint8 taskType)
 {
-    rpcManager()->invokeOnServer(Control::Rpc_TaskManager_abortTask, { taskType });
+    IoC<RpcManager>()->invokeOnServer(Control::Rpc_TaskManager_abortTask, { taskType });
 }

@@ -9,9 +9,9 @@
 #include "pages/statmainpage.h"
 #include "statisticscontroller.h"
 
-StatisticsWindow::StatisticsWindow(FortManager *fortManager, QWidget *parent) :
+StatisticsWindow::StatisticsWindow(QWidget *parent) :
     WidgetWindow(parent),
-    m_ctrl(new StatisticsController(fortManager, this)),
+    m_ctrl(new StatisticsController(this)),
     m_stateWatcher(new WidgetWindowStateWatcher(this))
 {
     setupUi();

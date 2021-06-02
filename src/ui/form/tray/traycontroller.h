@@ -17,9 +17,9 @@ class TrayController : public QObject
     Q_OBJECT
 
 public:
-    explicit TrayController(FortManager *fortManager, QObject *parent = nullptr);
+    explicit TrayController(QObject *parent = nullptr);
 
-    FortManager *fortManager() const { return m_fortManager; }
+    FortManager *fortManager() const;
     FortSettings *settings() const;
     ConfManager *confManager() const;
     FirewallConf *conf() const;
@@ -30,9 +30,6 @@ public:
 
 signals:
     void retranslateUi();
-
-private:
-    FortManager *m_fortManager = nullptr;
 };
 
 #endif // TRAYCONTROLLER_H

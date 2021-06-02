@@ -6,7 +6,6 @@
 
 #include "../util/classhelpers.h"
 
-class FortManager;
 class TaskManager;
 class TaskWorker;
 
@@ -32,7 +31,6 @@ public:
     CLASS_DELETE_COPY_MOVE(TaskInfo)
 
     TaskManager *taskManager() const;
-    FortManager *fortManager() const;
 
     QString name() const { return typeToString(type()); }
 

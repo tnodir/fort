@@ -8,7 +8,6 @@
 
 class AddressGroup;
 class AppGroup;
-class FortSettings;
 
 class FirewallConf : public QObject
 {
@@ -24,7 +23,7 @@ public:
         AllEdited = (OptEdited | FlagsEdited | IniEdited | TaskEdited)
     };
 
-    explicit FirewallConf(FortSettings *settings = nullptr, QObject *parent = nullptr);
+    explicit FirewallConf(Settings *settings = nullptr, QObject *parent = nullptr);
 
     uint editedFlags() const { return m_editedFlags; }
 

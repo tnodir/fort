@@ -4,7 +4,6 @@
 #include "../util/model/stringlistmodel.h"
 
 class AppInfoCache;
-class FortManager ;
 class StatManager;
 
 class AppStatModel : public StringListModel
@@ -12,9 +11,8 @@ class AppStatModel : public StringListModel
     Q_OBJECT
 
 public:
-    explicit AppStatModel(FortManager *fortManager, QObject *parent = nullptr);
+    explicit AppStatModel(QObject *parent = nullptr);
 
-    FortManager *fortManager() const { return m_fortManager; }
     StatManager *statManager() const;
     AppInfoCache *appInfoCache() const;
 
@@ -43,8 +41,6 @@ private:
     QVariant dataDecoration(const QModelIndex &index) const;
 
 private:
-    FortManager *m_fortManager = nullptr;
-
     QVector<qint64> m_appIds;
 };
 

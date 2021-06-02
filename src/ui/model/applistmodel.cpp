@@ -14,6 +14,7 @@
 #include "../util/fileutil.h"
 #include "../util/guiutil.h"
 #include "../util/iconcache.h"
+#include "../util/ioc/ioccontainer.h"
 #include "../util/net/netutil.h"
 
 namespace {
@@ -25,9 +26,11 @@ const auto inactiveColor = QColor("slategray");
 
 }
 
-AppListModel::AppListModel(ConfManager *confManager, QObject *parent) :
-    TableSqlModel(parent), m_confManager(confManager)
+AppListModel::AppListModel(QObject *parent) : TableSqlModel(parent) { }
+
+ConfManager *AppListModel::confManager() const
 {
+    return IoC<ConfManager>();
 }
 
 FirewallConf *AppListModel::conf() const
@@ -37,7 +40,7 @@ FirewallConf *AppListModel::conf() const
 
 AppInfoCache *AppListModel::appInfoCache() const
 {
-    return confManager()->appInfoCache();
+    return IoC<AppInfoCache>();
 }
 
 SqliteDb *AppListModel::sqliteDb() const

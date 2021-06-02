@@ -23,11 +23,6 @@ TaskManager *TaskInfo::taskManager() const
     return qobject_cast<TaskManager *>(parent());
 }
 
-FortManager *TaskInfo::fortManager() const
-{
-    return taskManager()->fortManager();
-}
-
 void TaskInfo::setEnabled(bool enabled)
 {
     if (m_enabled != enabled) {

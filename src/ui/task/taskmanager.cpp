@@ -1,23 +1,17 @@
 #include "taskmanager.h"
 
 #include "../conf/confmanager.h"
-#include "../fortmanager.h"
 #include "../util/dateutil.h"
+#include "../util/ioc/ioccontainer.h"
 #include "taskinfoupdatechecker.h"
 #include "taskinfozonedownloader.h"
 
-TaskManager::TaskManager(FortManager *fortManager, QObject *parent) :
-    QObject(parent), m_fortManager(fortManager)
+TaskManager::TaskManager(QObject *parent) : QObject(parent)
 {
     setupTasks();
 
     m_timer.setSingleShot(true);
     connect(&m_timer, &QTimer::timeout, this, &TaskManager::runExpiredTasks);
-}
-
-ConfManager *TaskManager::confManager() const
-{
-    return fortManager()->confManager();
 }
 
 TaskInfoUpdateChecker *TaskManager::taskInfoUpdateChecker() const
@@ -35,8 +29,10 @@ TaskInfo *TaskManager::taskInfoAt(int row) const
     return taskInfoList().at(row);
 }
 
-void TaskManager::initialize()
+void TaskManager::setUp()
 {
+    IoC()->setUpDependency<ConfManager>();
+
     loadSettings();
 
     setupScheduler();
@@ -65,12 +61,12 @@ void TaskManager::appendTaskInfo(TaskInfo *taskInfo)
 
 void TaskManager::loadSettings()
 {
-    confManager()->loadTasks(taskInfoList());
+    IoC<ConfManager>()->loadTasks(taskInfoList());
 }
 
 bool TaskManager::saveSettings()
 {
-    return confManager()->saveTasks(taskInfoList());
+    return IoC<ConfManager>()->saveTasks(taskInfoList());
 }
 
 bool TaskManager::saveVariant(const QVariant &v)

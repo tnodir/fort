@@ -5,12 +5,10 @@
 #include "../stat/statmanager.h"
 #include "../stat/statsql.h"
 #include "../util/dateutil.h"
+#include "../util/ioc/ioccontainer.h"
 #include "../util/net/netutil.h"
 
-TrafListModel::TrafListModel(StatManager *statManager, QObject *parent) :
-    TableItemModel(parent), m_statManager(statManager)
-{
-}
+TrafListModel::TrafListModel(QObject *parent) : TableItemModel(parent) { }
 
 void TrafListModel::setUnit(TrafListModel::TrafUnit unit)
 {
@@ -25,6 +23,11 @@ void TrafListModel::setType(TrafListModel::TrafType type)
 void TrafListModel::setAppId(qint64 appId)
 {
     m_appId = appId;
+}
+
+StatManager *TrafListModel::statManager() const
+{
+    return IoC<StatManager>();
 }
 
 void TrafListModel::initialize()

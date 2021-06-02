@@ -14,7 +14,6 @@ public:
     explicit MapSettings(const MapSettings &o);
 
     Settings *settings() const { return m_settings; }
-    void setSettings(Settings *v) { m_settings = v; }
 
 public slots:
     void save() const;

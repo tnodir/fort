@@ -50,7 +50,7 @@ bool DriverManager::isDeviceOpened() const
     return device()->isOpened();
 }
 
-void DriverManager::initialize()
+void DriverManager::setUp()
 {
     QThreadPool::globalInstance()->start(driverWorker());
 }

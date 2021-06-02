@@ -22,6 +22,7 @@
 #include "../../util/conf/confutil.h"
 #include "../../util/guiutil.h"
 #include "../../util/iconcache.h"
+#include "../../util/ioc/ioccontainer.h"
 #include "../../util/window/widgetwindowstatewatcher.h"
 #include "../controls/controlutil.h"
 #include "../controls/tableview.h"
@@ -33,9 +34,9 @@ namespace {
 
 }
 
-ZonesWindow::ZonesWindow(FortManager *fortManager, QWidget *parent) :
+ZonesWindow::ZonesWindow(QWidget *parent) :
     WidgetWindow(parent),
-    m_ctrl(new ZonesController(fortManager, this)),
+    m_ctrl(new ZonesController(this)),
     m_stateWatcher(new WidgetWindowStateWatcher(this))
 {
     setupUi();
@@ -65,7 +66,7 @@ IniUser *ZonesWindow::iniUser() const
 
 TaskManager *ZonesWindow::taskManager() const
 {
-    return fortManager()->taskManager();
+    return IoC<TaskManager>();
 }
 
 ZoneListModel *ZonesWindow::zoneListModel() const

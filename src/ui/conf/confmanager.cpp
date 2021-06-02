@@ -14,9 +14,12 @@
 #include "../task/taskinfo.h"
 #include "../task/taskmanager.h"
 #include "../user/iniuser.h"
+#include "../user/usersettings.h"
 #include "../util/conf/confutil.h"
 #include "../util/dateutil.h"
+#include "../util/envmanager.h"
 #include "../util/fileutil.h"
+#include "../util/ioc/ioccontainer.h"
 #include "../util/osutil.h"
 #include "../util/startuputil.h"
 #include "addressgroup.h"
@@ -385,12 +388,8 @@ bool saveServices(SqliteDb *db, const FirewallConf &conf)
 
 }
 
-ConfManager::ConfManager(
-        const QString &filePath, FortManager *fortManager, QObject *parent, quint32 openFlags) :
-    QObject(parent),
-    m_fortManager(fortManager),
-    m_sqliteDb(new SqliteDb(filePath, openFlags)),
-    m_conf(createConf())
+ConfManager::ConfManager(const QString &filePath, QObject *parent, quint32 openFlags) :
+    QObject(parent), m_sqliteDb(new SqliteDb(filePath, openFlags)), m_conf(createConf())
 {
     connect(&m_appAlertedTimer, &QTimer::timeout, this, &ConfManager::appAlerted);
     connect(&m_appChangedTimer, &QTimer::timeout, this, &ConfManager::appChanged);
@@ -405,61 +404,34 @@ ConfManager::~ConfManager()
     delete m_sqliteDb;
 }
 
-DriverManager *ConfManager::driverManager() const
-{
-    return fortManager()->driverManager();
-}
-
-EnvManager *ConfManager::envManager() const
-{
-    return fortManager()->envManager();
-}
-
-FortSettings *ConfManager::settings() const
-{
-    return fortManager()->settings();
-}
-
-TaskManager *ConfManager::taskManager() const
-{
-    return fortManager()->taskManager();
-}
-
-AppInfoCache *ConfManager::appInfoCache() const
-{
-    return fortManager()->appInfoCache();
-}
-
 IniUser *ConfManager::iniUser() const
 {
-    return fortManager()->iniUser();
+    return &IoC<UserSettings>()->iniUser();
 }
 
 void ConfManager::showErrorMessage(const QString &errorMessage)
 {
     logWarning() << "Error:" << errorMessage;
 
-    if (!settings()->isService()) {
-        fortManager()->showErrorBox(errorMessage, tr("Configuration Error"));
+    if (!IoC<FortSettings>()->isService()) {
+        IoC<FortManager>()->showErrorBox(errorMessage, tr("Configuration Error"));
     }
 }
 
-bool ConfManager::initialize()
+void ConfManager::setUp()
 {
     if (!sqliteDb()->open()) {
         logCritical() << "File open error:" << sqliteDb()->filePath() << sqliteDb()->errorMessage();
-        return false;
+        return;
     }
 
     if (!sqliteDb()->migrate(
                 ":/conf/migrations", nullptr, DATABASE_USER_VERSION, true, true, &migrateFunc)) {
         logCritical() << "Migration error" << sqliteDb()->filePath();
-        return false;
+        return;
     }
 
     setupAppEndTimer();
-
-    return true;
 }
 
 void ConfManager::setupAppEndTimer()
@@ -504,7 +476,7 @@ void ConfManager::setConf(FirewallConf *newConf)
 
 FirewallConf *ConfManager::createConf()
 {
-    FirewallConf *conf = new FirewallConf(settings(), this);
+    FirewallConf *conf = new FirewallConf(IoC<FortSettings>(), this);
     return conf;
 }
 
@@ -545,7 +517,7 @@ bool ConfManager::loadConf(FirewallConf &conf)
         }
     }
 
-    settings()->readConfIni(conf);
+    IoC<FortSettings>()->readConfIni(conf);
 
     return true;
 }
@@ -569,7 +541,7 @@ bool ConfManager::saveConf(FirewallConf &conf)
     if (conf.optEdited() && !saveToDb(conf))
         return false;
 
-    settings()->writeConfIni(conf);
+    IoC<FortSettings>()->writeConfIni(conf);
 
     if (conf.iniEdited()) {
         saveExtFlags(conf.ini());
@@ -708,7 +680,7 @@ void ConfManager::logBlockedApp(const LogEntryBlocked &logEntry)
     if (appIdByPath(appPath) > 0)
         return; // already added by user
 
-    const QString appName = appInfoCache()->appName(appPath);
+    const QString appName = IoC<AppInfoCache>()->appName(appPath);
     constexpr int groupIndex = 0; // "Main" app. group
 
     const bool ok = addOrUpdateApp(
@@ -1059,7 +1031,7 @@ bool ConfManager::updateZoneResult(int zoneId, int addressCount, const QString &
 
 bool ConfManager::checkPassword(const QString &password)
 {
-    return settings()->checkPassword(password);
+    return IoC<FortSettings>()->checkPassword(password);
 }
 
 bool ConfManager::validateDriver()
@@ -1069,7 +1041,8 @@ bool ConfManager::validateDriver()
 
     const int verSize = confUtil.writeVersion(buf);
 
-    return driverManager()->validate(buf, verSize);
+    auto driverManager = IoC<DriverManager>();
+    return driverManager->validate(buf, verSize);
 }
 
 bool ConfManager::updateDriverConf(bool onlyFlags)
@@ -1078,14 +1051,15 @@ bool ConfManager::updateDriverConf(bool onlyFlags)
     QByteArray buf;
 
     const int confSize = onlyFlags ? confUtil.writeFlags(*conf(), buf)
-                                   : confUtil.write(*conf(), this, *envManager(), buf);
+                                   : confUtil.write(*conf(), this, *IoC<EnvManager>(), buf);
     if (confSize == 0) {
         showErrorMessage(confUtil.errorMessage());
         return false;
     }
 
-    if (!driverManager()->writeConf(buf, confSize, onlyFlags)) {
-        showErrorMessage(driverManager()->errorMessage());
+    auto driverManager = IoC<DriverManager>();
+    if (!driverManager->writeConf(buf, confSize, onlyFlags)) {
+        showErrorMessage(driverManager->errorMessage());
         return false;
     }
 
@@ -1172,8 +1146,9 @@ bool ConfManager::updateDriverUpdateApp(
         return false;
     }
 
-    if (!driverManager()->writeApp(buf, entrySize, remove)) {
-        showErrorMessage(driverManager()->errorMessage());
+    auto driverManager = IoC<DriverManager>();
+    if (!driverManager->writeApp(buf, entrySize, remove)) {
+        showErrorMessage(driverManager->errorMessage());
         return false;
     }
 
@@ -1193,8 +1168,9 @@ void ConfManager::updateDriverZones(quint32 zonesMask, quint32 enabledMask, quin
         return;
     }
 
-    if (!driverManager()->writeZones(buf, entrySize)) {
-        showErrorMessage(driverManager()->errorMessage());
+    auto driverManager = IoC<DriverManager>();
+    if (!driverManager->writeZones(buf, entrySize)) {
+        showErrorMessage(driverManager->errorMessage());
         return;
     }
 }
@@ -1211,8 +1187,9 @@ bool ConfManager::updateDriverZoneFlag(int zoneId, bool enabled)
         return false;
     }
 
-    if (!driverManager()->writeZones(buf, entrySize, true)) {
-        showErrorMessage(driverManager()->errorMessage());
+    auto driverManager = IoC<DriverManager>();
+    if (!driverManager->writeZones(buf, entrySize, true)) {
+        showErrorMessage(driverManager->errorMessage());
         return false;
     }
 
@@ -1270,7 +1247,7 @@ void ConfManager::saveTasksByIni(const IniOptions &ini)
 {
     // Task Info List
     if (ini.taskInfoListSet()) {
-        taskManager()->saveVariant(ini.taskInfoList());
+        IoC<TaskManager>()->saveVariant(ini.taskInfoList());
     }
 }
 

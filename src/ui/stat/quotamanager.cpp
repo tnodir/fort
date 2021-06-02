@@ -2,11 +2,9 @@
 
 #include "../conf/confmanager.h"
 #include "../conf/firewallconf.h"
+#include "../util/ioc/ioccontainer.h"
 
-QuotaManager::QuotaManager(ConfManager *confManager, QObject *parent) :
-    QObject(parent), m_confManager(confManager)
-{
-}
+QuotaManager::QuotaManager(QObject *parent) : QObject(parent) { }
 
 void QuotaManager::setQuotaDayBytes(qint64 bytes)
 {
@@ -99,16 +97,6 @@ void QuotaManager::checkQuotaMonth(qint32 trafMonth)
     }
 }
 
-FirewallConf *QuotaManager::conf() const
-{
-    return confManager()->conf();
-}
-
-IniOptions *QuotaManager::ini() const
-{
-    return &conf()->ini();
-}
-
 QString QuotaManager::alertTypeText(qint8 alertType)
 {
     switch (alertType) {
@@ -124,30 +112,42 @@ QString QuotaManager::alertTypeText(qint8 alertType)
 
 int QuotaManager::quotaDayAlerted() const
 {
-    return ini()->quotaDayAlerted();
+    auto confManager = IoC<ConfManager>();
+    const IniOptions &ini = confManager->conf()->ini();
+
+    return ini.quotaDayAlerted();
 }
 
 void QuotaManager::setQuotaDayAlerted(int v)
 {
+    auto confManager = IoC<ConfManager>();
+    IniOptions &ini = confManager->conf()->ini();
+
     m_quotaDayAlerted = v;
 
-    if (ini()->quotaDayAlerted() != v) {
-        ini()->setQuotaDayAlerted(v);
-        confManager()->saveIni();
+    if (ini.quotaDayAlerted() != v) {
+        ini.setQuotaDayAlerted(v);
+        confManager->saveIni();
     }
 }
 
 int QuotaManager::quotaMonthAlerted() const
 {
-    return ini()->quotaMonthAlerted();
+    auto confManager = IoC<ConfManager>();
+    const IniOptions &ini = confManager->conf()->ini();
+
+    return ini.quotaMonthAlerted();
 }
 
 void QuotaManager::setQuotaMonthAlerted(int v)
 {
+    auto confManager = IoC<ConfManager>();
+    IniOptions &ini = confManager->conf()->ini();
+
     m_quotaMonthAlerted = v;
 
-    if (ini()->quotaMonthAlerted() != v) {
-        ini()->setQuotaMonthAlerted(v);
-        confManager()->saveIni();
+    if (ini.quotaMonthAlerted() != v) {
+        ini.setQuotaMonthAlerted(v);
+        confManager->saveIni();
     }
 }

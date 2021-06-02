@@ -11,9 +11,9 @@
 #include "optionscontroller.h"
 #include "pages/optmainpage.h"
 
-OptionsWindow::OptionsWindow(FortManager *fortManager, QWidget *parent) :
+OptionsWindow::OptionsWindow(QWidget *parent) :
     WidgetWindow(parent),
-    m_ctrl(new OptionsController(fortManager, this)),
+    m_ctrl(new OptionsController(this)),
     m_stateWatcher(new WidgetWindowStateWatcher(this))
 {
     setupUi();

@@ -42,7 +42,7 @@ class ConnListModel : public TableSqlModel
 public:
     enum ConnMode : qint8 { ConnNone = 0, ConnBlock, ConnTraf };
 
-    explicit ConnListModel(FortManager *fortManager, QObject *parent = nullptr);
+    explicit ConnListModel(QObject *parent = nullptr);
 
     uint connMode() const { return m_connMode; }
     void setConnMode(uint v);
@@ -52,7 +52,7 @@ public:
     bool resolveAddress() const { return m_resolveAddress; }
     void setResolveAddress(bool v);
 
-    FortManager *fortManager() const { return m_fortManager; }
+    FortManager *fortManager() const;
     StatManager *statManager() const;
     SqliteDb *sqliteDb() const override;
     AppInfoCache *appInfoCache() const;
@@ -107,8 +107,6 @@ private:
 
     qint64 m_rowIdMin = 0;
     qint64 m_rowIdMax = 0;
-
-    FortManager *m_fortManager = nullptr;
 
     mutable ConnRow m_connRow;
 };

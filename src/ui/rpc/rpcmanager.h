@@ -5,40 +5,23 @@
 #include <QVariant>
 
 #include "../control/control.h"
+#include "../util/ioc/iocservice.h"
 
-class AppInfoManager;
-class ConfManager;
-class ControlManager;
 class ControlWorker;
-class DriverManager;
-class FortManager;
-class FortSettings;
-class QuotaManager;
-class StatManager;
-class TaskManager;
 
-class RpcManager : public QObject
+class RpcManager : public QObject, public IocService
 {
     Q_OBJECT
 
 public:
-    explicit RpcManager(FortManager *fortManager, QObject *parent = nullptr);
+    explicit RpcManager(QObject *parent = nullptr);
 
     Control::Command resultCommand() const { return m_resultCommand; }
     QVariantList resultArgs() const { return m_resultArgs; }
 
-    FortManager *fortManager() const { return m_fortManager; }
-    FortSettings *settings() const;
-    ControlManager *controlManager() const;
-    AppInfoManager *appInfoManager() const;
-    ConfManager *confManager() const;
-    DriverManager *driverManager() const;
-    QuotaManager *quotaManager() const;
-    StatManager *statManager() const;
-    TaskManager *taskManager() const;
     ControlWorker *client() const { return m_client; }
 
-    void initialize();
+    void setUp() override;
 
     bool waitResult();
     void sendResult(ControlWorker *w, bool ok, const QVariantList &args = {});
@@ -83,8 +66,6 @@ private:
 private:
     Control::Command m_resultCommand = Control::CommandNone;
     QVariantList m_resultArgs;
-
-    FortManager *m_fortManager = nullptr;
 
     ControlWorker *m_client = nullptr;
 };

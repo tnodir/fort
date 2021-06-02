@@ -108,22 +108,23 @@ int main(int argc, char *argv[])
     setupCrashHandler(crashHandler, settings);
 #endif
 
+    // Setup IoC Container
+    IocContainer ioc;
+    ioc.pinToThread();
+    ioc.set<FortSettings>(settings);
+    ioc.set<EnvManager>(envManager);
+
     // Setup Control Manager
-    ControlManager controlManager(&settings);
+    ControlManager controlManager;
+    ioc.setService<ControlManager>(controlManager);
 
     if (controlManager.isCommandClient()) // Send control command to running instance
         return controlManager.postCommand() ? 0 : FORT_ERROR_CONTROL;
 
     // Setup Fort Manager
     FortManager::setupResources();
-    FortManager fortManager;
 
-    // Setup IoC Container
-    IocContainer ioc;
-    ioc.pinToThread();
-    ioc.set<FortSettings>(settings);
-    ioc.set<EnvManager>(envManager);
-    ioc.set<ControlManager>(controlManager);
+    FortManager fortManager;
     ioc.set<FortManager>(fortManager);
 
     // Check running instance

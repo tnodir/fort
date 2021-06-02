@@ -3,23 +3,17 @@
 
 #include "../log/logmanager.h"
 
-class RpcManager;
-
 class LogManagerRpc : public LogManager
 {
     Q_OBJECT
 
 public:
-    explicit LogManagerRpc(FortManager *fortManager, QObject *parent = nullptr);
-
-    RpcManager *rpcManager() const;
+    explicit LogManagerRpc(QObject *parent = nullptr);
 
     void setActive(bool /*active*/) override { }
 
-    void initialize() override { }
-
-public slots:
-    void close() override { }
+    void setUp() override { }
+    void tearDown() override { }
 };
 
 #endif // LOGMANAGERRPC_H

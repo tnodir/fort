@@ -4,41 +4,36 @@
 
 #include "../fortmanager.h"
 #include "../rpc/rpcmanager.h"
+#include "../util/ioc/ioccontainer.h"
 
-StatManagerRpc::StatManagerRpc(const QString &filePath, FortManager *fortManager, QObject *parent) :
-    StatManager(filePath, fortManager->quotaManager(), parent, SqliteDb::OpenDefaultReadOnly),
-    m_fortManager(fortManager)
+StatManagerRpc::StatManagerRpc(const QString &filePath, QObject *parent) :
+    StatManager(filePath, parent, SqliteDb::OpenDefaultReadOnly)
 {
-}
-
-RpcManager *StatManagerRpc::rpcManager() const
-{
-    return fortManager()->rpcManager();
 }
 
 bool StatManagerRpc::deleteStatApp(qint64 appId)
 {
-    return rpcManager()->doOnServer(Control::Rpc_StatManager_deleteStatApp, { appId });
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_StatManager_deleteStatApp, { appId });
 }
 
 bool StatManagerRpc::deleteConn(qint64 rowIdTo, bool blocked)
 {
-    return rpcManager()->doOnServer(Control::Rpc_StatManager_deleteConn, { rowIdTo, blocked });
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_StatManager_deleteConn, { rowIdTo, blocked });
 }
 
 bool StatManagerRpc::deleteConnAll()
 {
-    return rpcManager()->doOnServer(Control::Rpc_StatManager_deleteConnAll);
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_StatManager_deleteConnAll);
 }
 
 bool StatManagerRpc::resetAppTrafTotals()
 {
-    return rpcManager()->doOnServer(Control::Rpc_StatManager_resetAppTrafTotals);
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_StatManager_resetAppTrafTotals);
 }
 
 bool StatManagerRpc::clearTraffic()
 {
-    return rpcManager()->doOnServer(Control::Rpc_StatManager_clearTraffic);
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_StatManager_clearTraffic);
 }
 
 void StatManagerRpc::onConnChanged()

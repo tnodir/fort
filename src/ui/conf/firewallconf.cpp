@@ -1,12 +1,11 @@
 #include "firewallconf.h"
 
-#include "../fortsettings.h"
 #include "../util/fileutil.h"
 #include "../util/net/netutil.h"
 #include "addressgroup.h"
 #include "appgroup.h"
 
-FirewallConf::FirewallConf(FortSettings *settings, QObject *parent) :
+FirewallConf::FirewallConf(Settings *settings, QObject *parent) :
     QObject(parent),
     m_editedFlags(AllEdited), // update all on load()!
     m_provBoot(false),

@@ -1,11 +1,11 @@
 #include "drivermanagerrpc.h"
 
 #include "../control/controlworker.h"
-#include "../fortmanager.h"
 #include "../rpc/rpcmanager.h"
+#include "../util/ioc/ioccontainer.h"
 
-DriverManagerRpc::DriverManagerRpc(FortManager *fortManager, QObject *parent) :
-    DriverManager(parent, false), m_isDeviceOpened(false), m_fortManager(fortManager)
+DriverManagerRpc::DriverManagerRpc(QObject *parent) :
+    DriverManager(parent, false), m_isDeviceOpened(false)
 {
 }
 
@@ -15,11 +15,6 @@ void DriverManagerRpc::setIsDeviceOpened(bool v)
         m_isDeviceOpened = v;
         emit isDeviceOpenedChanged();
     }
-}
-
-RpcManager *DriverManagerRpc::rpcManager() const
-{
-    return fortManager()->rpcManager();
 }
 
 void DriverManagerRpc::updateState(quint32 errorCode, bool isDeviceOpened)
@@ -35,7 +30,7 @@ bool DriverManagerRpc::openDevice()
 
 bool DriverManagerRpc::closeDevice()
 {
-    rpcManager()->client()->abort();
+    IoC<RpcManager>()->client()->abort();
 
     updateState(0, false);
 

@@ -8,21 +8,19 @@
 #include "../stat/statmanager.h"
 #include "../util/fileutil.h"
 #include "../util/iconcache.h"
+#include "../util/ioc/ioccontainer.h"
 #include "traflistmodel.h"
 
-AppStatModel::AppStatModel(FortManager *fortManager, QObject *parent) :
-    StringListModel(parent), m_fortManager(fortManager)
-{
-}
+AppStatModel::AppStatModel(QObject *parent) : StringListModel(parent) { }
 
 StatManager *AppStatModel::statManager() const
 {
-    return fortManager()->statManager();
+    return IoC<StatManager>();
 }
 
 AppInfoCache *AppStatModel::appInfoCache() const
 {
-    return fortManager()->appInfoCache();
+    return IoC<AppInfoCache>();
 }
 
 void AppStatModel::initialize()

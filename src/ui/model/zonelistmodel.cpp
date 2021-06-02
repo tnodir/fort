@@ -9,13 +9,16 @@
 #include "../conf/confmanager.h"
 #include "../util/conf/confutil.h"
 #include "../util/fileutil.h"
+#include "../util/ioc/ioccontainer.h"
 #include "../util/json/jsonutil.h"
 #include "zonesourcewrapper.h"
 #include "zonetypewrapper.h"
 
-ZoneListModel::ZoneListModel(ConfManager *confManager, QObject *parent) :
-    TableSqlModel(parent), m_confManager(confManager)
+ZoneListModel::ZoneListModel(QObject *parent) : TableSqlModel(parent) { }
+
+ConfManager *ZoneListModel::confManager() const
 {
+    return IoC<ConfManager>();
 }
 
 SqliteDb *ZoneListModel::sqliteDb() const

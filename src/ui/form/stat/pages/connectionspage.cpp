@@ -27,7 +27,7 @@ namespace {
 }
 
 ConnectionsPage::ConnectionsPage(StatisticsController *ctrl, QWidget *parent) :
-    StatBasePage(ctrl, parent), m_connListModel(new ConnListModel(ctrl->fortManager(), this))
+    StatBasePage(ctrl, parent), m_connListModel(new ConnListModel(this))
 {
     setupUi();
 

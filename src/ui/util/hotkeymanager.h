@@ -4,17 +4,22 @@
 #include <QAction>
 #include <QList>
 
+#include "ioc/iocservice.h"
+
 class NativeEventFilter;
 
-class HotKeyManager : public QObject
+class HotKeyManager : public QObject, public IocService
 {
     Q_OBJECT
 
 public:
-    explicit HotKeyManager(NativeEventFilter *nativeEventFilter, QObject *parent = nullptr);
+    explicit HotKeyManager(QObject *parent = nullptr);
 
     bool enabled() const { return m_enabled; }
     void setEnabled(bool v);
+
+    void setUp() override;
+    void tearDown() override;
 
     bool addAction(QAction *action, const QKeySequence &shortcut);
 
@@ -30,8 +35,6 @@ private:
 
 private:
     bool m_enabled = false;
-
-    NativeEventFilter *m_nativeEventFilter = nullptr;
 
     QList<QAction *> m_actions;
 };

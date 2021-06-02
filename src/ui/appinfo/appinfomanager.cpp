@@ -71,7 +71,7 @@ AppInfoManager::~AppInfoManager()
     delete sqliteDb();
 }
 
-void AppInfoManager::initialize()
+void AppInfoManager::setUp()
 {
     if (!sqliteDb()->open()) {
         logCritical() << "File open error:" << sqliteDb()->filePath() << sqliteDb()->errorMessage();

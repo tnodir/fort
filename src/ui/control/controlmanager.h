@@ -5,38 +5,32 @@
 #include <QVariant>
 
 #include "../util/classhelpers.h"
+#include "../util/ioc/iocservice.h"
 #include "control.h"
 
 QT_FORWARD_DECLARE_CLASS(QLocalServer)
 QT_FORWARD_DECLARE_CLASS(QLocalSocket)
 
-class ConfManager;
 class ControlWorker;
-class FortManager;
-class FortSettings;
-class RpcManager;
 
-class ControlManager : public QObject
+class ControlManager : public QObject, public IocService
 {
     Q_OBJECT
 
 public:
-    explicit ControlManager(FortSettings *settings, QObject *parent = nullptr);
+    explicit ControlManager(QObject *parent = nullptr);
     ~ControlManager() override;
     CLASS_DELETE_COPY_MOVE(ControlManager)
 
-    FortSettings *settings() const { return m_settings; }
-    FortManager *fortManager() const { return m_fortManager; }
-    ConfManager *confManager() const;
-    RpcManager *rpcManager() const;
-
     const QList<ControlWorker *> &clients() const { return m_clients; }
+
+    void setUp() override;
 
     bool isCommandClient() const;
 
     ControlWorker *newServiceClient(QObject *parent = nullptr) const;
 
-    bool listen(FortManager *fortManager);
+    bool listen();
     bool postCommand();
 
 signals:
@@ -58,9 +52,6 @@ private:
     static QString getServerName(bool isService = false);
 
 private:
-    FortSettings *m_settings = nullptr;
-    FortManager *m_fortManager = nullptr;
-
     QLocalServer *m_server = nullptr;
 
     QList<ControlWorker *> m_clients;

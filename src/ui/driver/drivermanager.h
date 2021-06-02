@@ -4,14 +4,12 @@
 #include <QObject>
 
 #include "../util/classhelpers.h"
+#include "../util/ioc/iocservice.h"
 
-class ConfManager;
 class Device;
 class DriverWorker;
-class EnvManager;
-class FirewallConf;
 
-class DriverManager : public QObject
+class DriverManager : public QObject, public IocService
 {
     Q_OBJECT
 
@@ -29,7 +27,7 @@ public:
 
     virtual bool isDeviceOpened() const;
 
-    virtual void initialize();
+    void setUp() override;
 
     bool reinstallDriver();
     bool uninstallDriver();

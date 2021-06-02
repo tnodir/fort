@@ -14,6 +14,7 @@
 #include "../fortsettings.h"
 #include "../rpc/rpcmanager.h"
 #include "../util/fileutil.h"
+#include "../util/ioc/ioccontainer.h"
 #include "../util/osutil.h"
 #include "controlworker.h"
 
@@ -24,29 +25,22 @@ Q_LOGGING_CATEGORY(CLOG_CONTROL_MANAGER, "control")
 #define logWarning()  qCWarning(CLOG_CONTROL_MANAGER, )
 #define logCritical() qCCritical(CLOG_CONTROL_MANAGER, )
 
-ControlManager::ControlManager(FortSettings *settings, QObject *parent) :
-    QObject(parent), m_settings(settings)
-{
-}
+ControlManager::ControlManager(QObject *parent) : QObject(parent) { }
 
 ControlManager::~ControlManager()
 {
     abort();
 }
 
-ConfManager *ControlManager::confManager() const
+void ControlManager::setUp()
 {
-    return fortManager()->confManager();
-}
-
-RpcManager *ControlManager::rpcManager() const
-{
-    return fortManager()->rpcManager();
+    // Process control commands from clients
+    listen();
 }
 
 bool ControlManager::isCommandClient() const
 {
-    return !settings()->controlCommand().isEmpty();
+    return !IoC<FortSettings>()->controlCommand().isEmpty();
 }
 
 ControlWorker *ControlManager::newServiceClient(QObject *parent) const
@@ -64,17 +58,17 @@ ControlWorker *ControlManager::newServiceClient(QObject *parent) const
     return w;
 }
 
-bool ControlManager::listen(FortManager *fortManager)
+bool ControlManager::listen()
 {
-    m_fortManager = fortManager;
+    const auto settings = IoC<FortSettings>();
 
     Q_ASSERT(!m_server);
     m_server = new QLocalServer(this);
     m_server->setMaxPendingConnections(3);
     m_server->setSocketOptions(
-            settings()->isService() ? QLocalServer::WorldAccessOption : QLocalServer::NoOptions);
+            settings->isService() ? QLocalServer::WorldAccessOption : QLocalServer::NoOptions);
 
-    if (!m_server->listen(getServerName(settings()->isService()))) {
+    if (!m_server->listen(getServerName(settings->isService()))) {
         logWarning() << "Server listen error:" << m_server->errorString();
         return false;
     }
@@ -86,11 +80,13 @@ bool ControlManager::listen(FortManager *fortManager)
 
 bool ControlManager::postCommand()
 {
+    const auto settings = IoC<FortSettings>();
+
     Control::Command command;
-    if (settings()->controlCommand() == "prog") {
+    if (settings->controlCommand() == "prog") {
         command = Control::Prog;
     } else {
-        logWarning() << "Unknown control command:" << settings()->controlCommand();
+        logWarning() << "Unknown control command:" << settings->controlCommand();
         return false;
     }
 
@@ -104,7 +100,7 @@ bool ControlManager::postCommand()
     }
 
     // Send data
-    const QVariantList args = ControlWorker::buildArgs(settings()->args());
+    const QVariantList args = ControlWorker::buildArgs(settings->args());
     if (args.isEmpty())
         return false;
 
@@ -168,7 +164,7 @@ bool ControlManager::processCommand(
             return true;
         break;
     default:
-        if (rpcManager()->processCommandRpc(w, command, args, errorMessage))
+        if (IoC<RpcManager>()->processCommandRpc(w, command, args, errorMessage))
             return true;
     }
 
@@ -194,7 +190,7 @@ bool ControlManager::processCommandProg(const QVariantList &args, QString &error
             return false;
         }
 
-        if (!fortManager()->showProgramEditForm(args.at(1).toString())) {
+        if (!IoC<FortManager>()->showProgramEditForm(args.at(1).toString())) {
             errorMessage = "Edit Program is already opened";
             return false;
         }

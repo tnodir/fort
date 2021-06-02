@@ -6,10 +6,8 @@
 class ConfManager;
 class FirewallConf;
 class FortManager;
-class FortSettings;
 class IniOptions;
 class IniUser;
-class StatManager;
 class TranslationManager;
 
 class StatisticsController : public QObject
@@ -17,15 +15,13 @@ class StatisticsController : public QObject
     Q_OBJECT
 
 public:
-    explicit StatisticsController(FortManager *fortManager, QObject *parent = nullptr);
+    explicit StatisticsController(QObject *parent = nullptr);
 
-    FortManager *fortManager() const { return m_fortManager; }
-    FortSettings *settings() const;
+    FortManager *fortManager() const;
     ConfManager *confManager() const;
     FirewallConf *conf() const;
     IniOptions *ini() const;
     IniUser *iniUser() const;
-    StatManager *statManager() const;
     TranslationManager *translationManager() const;
 
 signals:
@@ -33,9 +29,6 @@ signals:
     void afterRestoreWindowState(IniUser *ini);
 
     void retranslateUi();
-
-private:
-    FortManager *m_fortManager = nullptr;
 };
 
 #endif // STATISTICSCONTROLLER_H

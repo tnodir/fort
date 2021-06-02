@@ -7,22 +7,20 @@
 #include <QVector>
 
 #include "util/classhelpers.h"
+#include "util/ioc/iocservice.h"
 
 QT_FORWARD_DECLARE_CLASS(QTranslator)
 
-class TranslationManager : public QObject
+class TranslationManager : public QObject, public IocService
 {
     Q_OBJECT
     Q_PROPERTY(int language READ language WRITE switchLanguage NOTIFY languageChanged)
     Q_PROPERTY(QStringList naturalLabels READ naturalLabels CONSTANT)
 
-protected:
+public:
     explicit TranslationManager(QObject *parent = nullptr);
     ~TranslationManager() override;
     CLASS_DELETE_COPY_MOVE(TranslationManager)
-
-public:
-    static TranslationManager *instance();
 
     int language() const { return m_language; }
     QString localeName() const { return m_locale.name(); }

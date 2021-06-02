@@ -3,23 +3,17 @@
 
 #include "../driver/drivermanager.h"
 
-class FortManager;
-class RpcManager;
-
 class DriverManagerRpc : public DriverManager
 {
     Q_OBJECT
 
 public:
-    explicit DriverManagerRpc(FortManager *fortManager, QObject *parent = nullptr);
+    explicit DriverManagerRpc(QObject *parent = nullptr);
 
     bool isDeviceOpened() const override { return m_isDeviceOpened; }
     void setIsDeviceOpened(bool v);
 
-    FortManager *fortManager() const { return m_fortManager; }
-    RpcManager *rpcManager() const;
-
-    void initialize() override { }
+    void setUp() override { }
 
     void updateState(quint32 errorCode, bool isDeviceOpened);
 
@@ -29,8 +23,6 @@ public slots:
 
 private:
     bool m_isDeviceOpened : 1;
-
-    FortManager *m_fortManager = nullptr;
 };
 
 #endif // DRIVERMANAGERRPC_H

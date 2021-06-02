@@ -3,21 +3,12 @@
 
 #include "../stat/quotamanager.h"
 
-class FortManager;
-class RpcManager;
-
 class QuotaManagerRpc : public QuotaManager
 {
     Q_OBJECT
 
 public:
-    explicit QuotaManagerRpc(FortManager *fortManager, QObject *parent = nullptr);
-
-    FortManager *fortManager() const { return m_fortManager; }
-    RpcManager *rpcManager() const;
-
-private:
-    FortManager *m_fortManager = nullptr;
+    explicit QuotaManagerRpc(QObject *parent = nullptr);
 };
 
 #endif // QUOTAMANAGERRPC_H

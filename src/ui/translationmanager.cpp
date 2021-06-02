@@ -20,16 +20,6 @@ TranslationManager::~TranslationManager()
     uninstallAllTranslators();
 }
 
-TranslationManager *TranslationManager::instance()
-{
-    static TranslationManager *g_instanceTranslationManager = nullptr;
-
-    if (!g_instanceTranslationManager) {
-        g_instanceTranslationManager = new TranslationManager();
-    }
-    return g_instanceTranslationManager;
-}
-
 void TranslationManager::setupTranslation()
 {
     // Collect locales from i18n files

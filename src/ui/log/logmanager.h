@@ -3,37 +3,28 @@
 
 #include <QObject>
 
-class ConfManager;
-class FortManager;
-class DriverWorker;
+#include "../util/ioc/iocservice.h"
+
 class LogBuffer;
 class LogEntry;
-class StatManager;
 
-class LogManager : public QObject
+class LogManager : public QObject, public IocService
 {
     Q_OBJECT
 
 public:
-    explicit LogManager(FortManager *fortManager, QObject *parent = nullptr);
-
-    FortManager *fortManager() const { return m_fortManager; }
-    ConfManager *confManager() const;
-    StatManager *statManager() const;
-    DriverWorker *driverWorker() const;
+    explicit LogManager(QObject *parent = nullptr);
 
     virtual void setActive(bool active);
 
     QString errorMessage() const { return m_errorMessage; }
 
-    virtual void initialize();
+    void setUp() override;
+    void tearDown() override;
 
 signals:
     void activeChanged();
     void errorMessageChanged();
-
-public slots:
-    virtual void close();
 
 private slots:
     void processLogBuffer(LogBuffer *logBuffer, bool success, quint32 errorCode);
@@ -54,8 +45,6 @@ private:
 
 private:
     bool m_active = false;
-
-    FortManager *m_fortManager = nullptr;
 
     QList<LogBuffer *> m_freeBuffers;
 

@@ -4,22 +4,22 @@
 #include "../../conf/firewallconf.h"
 #include "../../fortmanager.h"
 #include "../../translationmanager.h"
+#include "../../util/ioc/ioccontainer.h"
 
-StatisticsController::StatisticsController(FortManager *fortManager, QObject *parent) :
-    QObject(parent), m_fortManager(fortManager)
+StatisticsController::StatisticsController(QObject *parent) : QObject(parent)
 {
     connect(translationManager(), &TranslationManager::languageChanged, this,
             &StatisticsController::retranslateUi);
 }
 
-FortSettings *StatisticsController::settings() const
+FortManager *StatisticsController::fortManager() const
 {
-    return fortManager()->settings();
+    return IoC<FortManager>();
 }
 
 ConfManager *StatisticsController::confManager() const
 {
-    return fortManager()->confManager();
+    return IoC<ConfManager>();
 }
 
 FirewallConf *StatisticsController::conf() const
@@ -37,12 +37,7 @@ IniUser *StatisticsController::iniUser() const
     return confManager()->iniUser();
 }
 
-StatManager *StatisticsController::statManager() const
-{
-    return fortManager()->statManager();
-}
-
 TranslationManager *StatisticsController::translationManager() const
 {
-    return TranslationManager::instance();
+    return IoC<TranslationManager>();
 }

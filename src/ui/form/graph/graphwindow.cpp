@@ -9,15 +9,14 @@
 #include "../../fortcompat.h"
 #include "../../user/iniuser.h"
 #include "../../util/dateutil.h"
+#include "../../util/ioc/ioccontainer.h"
 #include "../../util/net/netutil.h"
 #include "../../util/window/widgetwindowstatewatcher.h"
 #include "axistickerspeed.h"
 #include "graphplot.h"
 
-GraphWindow::GraphWindow(ConfManager *confManager, QWidget *parent) :
-    WidgetWindow(parent),
-    m_stateWatcher(new WidgetWindowStateWatcher(this)),
-    m_confManager(confManager)
+GraphWindow::GraphWindow(QWidget *parent) :
+    WidgetWindow(parent), m_stateWatcher(new WidgetWindowStateWatcher(this))
 {
     setupUi();
     setupFlagsAndColors();
@@ -29,7 +28,7 @@ GraphWindow::GraphWindow(ConfManager *confManager, QWidget *parent) :
 
 ConfManager *GraphWindow::confManager() const
 {
-    return m_confManager;
+    return IoC<ConfManager>();
 }
 
 FirewallConf *GraphWindow::conf() const

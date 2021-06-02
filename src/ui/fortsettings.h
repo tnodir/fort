@@ -60,7 +60,7 @@ public:
     void resetCheckedPassword(int unlockType = 0);
 
     void setupGlobal();
-    void initialize(const QStringList &args, EnvManager *envManager = nullptr);
+    void initialize(const QStringList &args, EnvManager *envManager);
 
     bool wasMigrated() const;
     bool canMigrate(QString &viaVersion) const;

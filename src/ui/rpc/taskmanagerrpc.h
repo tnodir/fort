@@ -3,16 +3,12 @@
 
 #include "../task/taskmanager.h"
 
-class RpcManager;
-
 class TaskManagerRpc : public TaskManager
 {
     Q_OBJECT
 
 public:
-    explicit TaskManagerRpc(FortManager *fortManager, QObject *parent = nullptr);
-
-    RpcManager *rpcManager() const;
+    explicit TaskManagerRpc(QObject *parent = nullptr);
 
     void onTaskStarted(qint8 taskType);
     void onTaskFinished(qint8 taskType);

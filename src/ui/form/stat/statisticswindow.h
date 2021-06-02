@@ -4,7 +4,6 @@
 #include "../../util/window/widgetwindow.h"
 
 class ConfManager;
-class FortManager;
 class IniUser;
 class StatMainPage;
 class StatisticsController;
@@ -15,7 +14,7 @@ class StatisticsWindow : public WidgetWindow
     Q_OBJECT
 
 public:
-    explicit StatisticsWindow(FortManager *fortManager, QWidget *parent = nullptr);
+    explicit StatisticsWindow(QWidget *parent = nullptr);
 
     StatisticsController *ctrl() const { return m_ctrl; }
     ConfManager *confManager() const;

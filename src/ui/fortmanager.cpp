@@ -68,42 +68,18 @@ FortManager::~FortManager()
         closeMainWindow();
 
         closeDriver();
-        closeLogManager();
     }
 
+    deleteManagers();
+
     OsUtil::closeMutex(m_instanceMutex);
-}
-
-FortSettings *FortManager::settings() const
-{
-    return IoC<FortSettings>();
-}
-
-EnvManager *FortManager::envManager() const
-{
-    return IoC<EnvManager>();
-}
-
-ControlManager *FortManager::controlManager() const
-{
-    return IoC<ControlManager>();
-}
-
-IniUser *FortManager::iniUser() const
-{
-    return &userSettings()->iniUser();
-}
-
-FirewallConf *FortManager::conf() const
-{
-    return confManager()->conf();
 }
 
 bool FortManager::checkRunningInstance()
 {
     bool isSingleInstance;
     m_instanceMutex = OsUtil::createMutex(
-            settings()->isService() ? "Global\\" APP_BASE : APP_BASE, isSingleInstance);
+            IoC<FortSettings>()->isService() ? "Global\\" APP_BASE : APP_BASE, isSingleInstance);
 
     if (!isSingleInstance) {
         showErrorBox(tr("Application is already running!"));
@@ -120,32 +96,14 @@ void FortManager::initialize()
 
     createManagers();
 
-    setupControlManager();
-    setupRpcManager();
-
-    setupEventFilter();
     setupEnvManager();
-
     setupConfManager();
     setupQuotaManager();
-    setupStatManager();
-    setupAppInfoManager();
-
-    setupLogManager();
-    setupDriverManager();
-
-    setupAppInfoCache();
-    setupHostInfoCache();
+    setupTaskManager();
     setupModels();
 
-    setupTaskManager();
-
+    setupDriver();
     loadConf();
-
-    qDebug() << "Started as"
-             << (settings()->isService()                   ? "Service"
-                                : settings()->hasService() ? "Service Client"
-                                                           : "Program");
 }
 
 void FortManager::setupThreadPool()
@@ -157,76 +115,98 @@ void FortManager::setupLogger()
 {
     Logger *logger = Logger::instance();
 
-    logger->setIsService(settings()->isService());
-    logger->setPath(settings()->logsPath());
+    const auto settings = IoC<FortSettings>();
+
+    logger->setIsService(settings->isService());
+    logger->setPath(settings->logsPath());
 }
 
 void FortManager::updateLogger()
 {
-    if (!conf()->iniEdited())
+    const FirewallConf *conf = IoC<ConfManager>()->conf();
+
+    if (!conf->iniEdited())
         return;
 
     Logger *logger = Logger::instance();
 
-    logger->setDebug(conf()->ini().logDebug());
-    logger->setConsole(conf()->ini().logConsole());
+    logger->setDebug(conf->ini().logDebug());
+    logger->setConsole(conf->ini().logConsole());
 }
 
 void FortManager::createManagers()
 {
-    if (settings()->hasService()) {
-        m_rpcManager = new RpcManager(this, this);
+    IocContainer *ioc = IoC();
+
+    const auto settings = IoC<FortSettings>();
+
+    if (settings->hasService()) {
+        ioc->setService(new RpcManager());
     }
 
-    if (settings()->isMaster()) {
-        m_confManager = new ConfManager(settings()->confFilePath(), this, this);
-        m_quotaManager = new QuotaManager(confManager(), this);
-        m_statManager = new StatManager(settings()->statFilePath(), quotaManager(), this);
-        m_driverManager = new DriverManager(this);
-        m_appInfoManager = new AppInfoManager(settings()->cacheFilePath(), this);
-        m_logManager = new LogManager(this, this);
-        m_taskManager = new TaskManager(this, this);
+    ConfManager *confManager;
+    QuotaManager *quotaManager;
+    StatManager *statManager;
+    DriverManager *driverManager;
+    AppInfoManager *appInfoManager;
+    LogManager *logManager;
+    TaskManager *taskManager;
+
+    if (settings->isMaster()) {
+        confManager = new ConfManager(settings->confFilePath());
+        quotaManager = new QuotaManager();
+        statManager = new StatManager(settings->statFilePath());
+        driverManager = new DriverManager();
+        appInfoManager = new AppInfoManager(settings->cacheFilePath());
+        logManager = new LogManager();
+        taskManager = new TaskManager();
     } else {
-        m_confManager = new ConfManagerRpc(settings()->confFilePath(), this, this);
-        m_quotaManager = new QuotaManagerRpc(this, this);
-        m_statManager = new StatManagerRpc(settings()->statFilePath(), this, this);
-        m_driverManager = new DriverManagerRpc(this);
-        m_appInfoManager = new AppInfoManagerRpc(settings()->cacheFilePath(), this, this);
-        m_logManager = new LogManagerRpc(this, this);
-        m_taskManager = new TaskManagerRpc(this, this);
+        confManager = new ConfManagerRpc(settings->confFilePath());
+        quotaManager = new QuotaManagerRpc();
+        statManager = new StatManagerRpc(settings->statFilePath());
+        driverManager = new DriverManagerRpc();
+        appInfoManager = new AppInfoManagerRpc(settings->cacheFilePath());
+        logManager = new LogManagerRpc();
+        taskManager = new TaskManagerRpc();
     }
-}
 
-void FortManager::setupControlManager()
-{
-    // Process control commands from clients
-    controlManager()->listen(this);
-}
+    ioc->setService<ConfManager>(confManager);
+    ioc->setService<QuotaManager>(quotaManager);
+    ioc->setService<StatManager>(statManager);
+    ioc->setService<DriverManager>(driverManager);
+    ioc->setService<AppInfoManager>(appInfoManager);
+    ioc->setService<LogManager>(logManager);
+    ioc->setService<TaskManager>(taskManager);
 
-void FortManager::setupRpcManager()
-{
-    if (rpcManager()) {
-        rpcManager()->initialize();
+    ioc->setService(new AppInfoCache());
+    ioc->set(new HostInfoCache());
+
+    ioc->set(new NativeEventFilter());
+    ioc->setService(new HotKeyManager());
+
+    if (!settings->isService()) {
+        ioc->setService(new UserSettings());
+        ioc->setService(new TranslationManager());
     }
+
+    ioc->setUpAll();
 }
 
-void FortManager::setupLogManager()
+void FortManager::deleteManagers()
 {
-    logManager()->initialize();
-}
+    IocContainer *ioc = IoC();
 
-void FortManager::closeLogManager()
-{
-    logManager()->close();
+    ioc->tearDownAll();
+    ioc->autoDeleteAll();
 }
 
 bool FortManager::installDriver()
 {
     closeDriver();
 
-    driverManager()->reinstallDriver();
+    IoC<DriverManager>()->reinstallDriver();
 
-    if (settings()->hasService()) {
+    if (IoC<FortSettings>()->hasService()) {
         // Re-install the service and app restart required to continue
         StartupUtil::setServiceInstalled(true);
         processRestartRequired();
@@ -244,24 +224,19 @@ bool FortManager::removeDriver()
 {
     closeDriver();
 
-    driverManager()->uninstallDriver();
+    IoC<DriverManager>()->uninstallDriver();
 
     return true;
 }
 
-void FortManager::setupDriverManager()
-{
-    driverManager()->initialize();
-
-    setupDriver();
-}
-
 bool FortManager::setupDriver()
 {
-    bool ok = driverManager()->openDevice();
+    auto driverManager = IoC<DriverManager>();
 
-    if (ok && !confManager()->validateDriver()) {
-        driverManager()->closeDevice();
+    bool ok = driverManager->openDevice();
+
+    if (ok && !IoC<ConfManager>()->validateDriver()) {
+        driverManager->closeDevice();
         ok = false;
     }
 
@@ -273,30 +248,27 @@ void FortManager::closeDriver()
     updateLogManager(false);
     updateStatManager(nullptr);
 
-    driverManager()->closeDevice();
-}
+    IoC<DriverManager>()->closeDevice();
 
-void FortManager::setupEventFilter()
-{
-    m_nativeEventFilter = new NativeEventFilter(this);
+    QCoreApplication::sendPostedEvents(this);
 }
 
 void FortManager::setupEnvManager()
 {
-    connect(m_nativeEventFilter, &NativeEventFilter::environmentChanged, envManager(),
+    auto envManager = IoC<EnvManager>();
+
+    connect(IoC<NativeEventFilter>(), &NativeEventFilter::environmentChanged, envManager,
             &EnvManager::onEnvironmentChanged);
 
-    connect(envManager(), &EnvManager::environmentUpdated, this, [&] { updateDriverConf(); });
+    connect(envManager, &EnvManager::environmentUpdated, this, [&] { updateDriverConf(); });
 }
 
 void FortManager::setupConfManager()
 {
-    confManager()->initialize();
-
-    connect(confManager(), &ConfManager::confChanged, this, [&](bool onlyFlags) {
+    connect(IoC<ConfManager>(), &ConfManager::confChanged, this, [&](bool onlyFlags) {
         updateLogger();
 
-        if (!onlyFlags || conf()->flagsEdited()) {
+        if (!onlyFlags || IoC<ConfManager>()->conf()->flagsEdited()) {
             updateDriverConf(onlyFlags);
         }
     });
@@ -304,75 +276,51 @@ void FortManager::setupConfManager()
 
 void FortManager::setupQuotaManager()
 {
-    if (!settings()->isService()) {
-        connect(quotaManager(), &QuotaManager::alert, this, [&](qint8 alertType) {
+    if (!IoC<FortSettings>()->isService()) {
+        connect(IoC<QuotaManager>(), &QuotaManager::alert, this, [&](qint8 alertType) {
             showInfoBox(QuotaManager::alertTypeText(alertType), tr("Quota Alert"));
         });
     }
 }
 
-void FortManager::setupStatManager()
-{
-    statManager()->initialize();
-}
-
-void FortManager::setupAppInfoManager()
-{
-    appInfoManager()->initialize();
-}
-
-void FortManager::setupAppInfoCache()
-{
-    m_appInfoCache = new AppInfoCache(this);
-    m_appInfoCache->setManager(appInfoManager());
-}
-
-void FortManager::setupHostInfoCache()
-{
-    m_hostInfoCache = new HostInfoCache(this);
-}
-
-void FortManager::setupModels()
-{
-    m_appListModel = new AppListModel(confManager(), this);
-    appListModel()->initialize();
-
-    m_zoneListModel = new ZoneListModel(confManager(), this);
-    zoneListModel()->initialize();
-}
-
 void FortManager::setupTaskManager()
 {
-    connect(taskManager(), &TaskManager::taskDoubleClicked, this, [&](qint8 taskType) {
+    auto taskManager = IoC<TaskManager>();
+
+    connect(taskManager, &TaskManager::taskDoubleClicked, this, [&](qint8 taskType) {
         if (taskType == TaskInfo::ZoneDownloader) {
             showZonesWindow();
         }
     });
-    connect(taskManager()->taskInfoZoneDownloader(), &TaskInfoZoneDownloader::zonesUpdated,
-            confManager(), &ConfManager::updateDriverZones);
-
-    taskManager()->initialize();
+    connect(taskManager->taskInfoZoneDownloader(), &TaskInfoZoneDownloader::zonesUpdated,
+            IoC<ConfManager>(), &ConfManager::updateDriverZones);
 }
 
-void FortManager::setupUserSettings()
+void FortManager::setupModels()
 {
-    m_userSettings = new UserSettings(this);
-    m_userSettings->initialize(settings());
+    m_appListModel = new AppListModel(this);
+    appListModel()->initialize();
+
+    m_zoneListModel = new ZoneListModel(this);
+    zoneListModel()->initialize();
 }
 
 void FortManager::setupTranslationManager()
 {
-    TranslationManager::instance()->switchLanguageByName(iniUser()->language());
+    IoC<TranslationManager>()->switchLanguageByName(IoC<UserSettings>()->iniUser().language());
 }
 
 void FortManager::setupMainWindow()
 {
     m_mainWindow = new MainWindow();
 
-    m_nativeEventFilter->registerSessionNotification(m_mainWindow->winId());
+    auto nativeEventFilter = IoC<NativeEventFilter>();
 
-    connect(m_nativeEventFilter, &NativeEventFilter::sessionLocked, this,
-            [&] { settings()->resetCheckedPassword(PasswordDialog::UnlockTillSessionLock); });
+    nativeEventFilter->registerSessionNotification(m_mainWindow->winId());
+
+    connect(nativeEventFilter, &NativeEventFilter::sessionLocked, this, [&] {
+        IoC<FortSettings>()->resetCheckedPassword(PasswordDialog::UnlockTillSessionLock);
+    });
 }
 
 void FortManager::closeMainWindow()
@@ -380,15 +328,12 @@ void FortManager::closeMainWindow()
     if (!m_mainWindow)
         return;
 
-    m_nativeEventFilter->unregisterHotKeys();
-    m_nativeEventFilter->unregisterSessionNotification(m_mainWindow->winId());
+    auto nativeEventFilter = IoC<NativeEventFilter>();
+
+    nativeEventFilter->unregisterHotKeys();
+    nativeEventFilter->unregisterSessionNotification(m_mainWindow->winId());
 
     delete m_mainWindow;
-}
-
-void FortManager::setupHotKeyManager()
-{
-    m_hotKeyManager = new HotKeyManager(m_nativeEventFilter, this);
 }
 
 void FortManager::setupTrayIcon()
@@ -401,9 +346,10 @@ void FortManager::setupTrayIcon()
     connect(m_trayIcon, &TrayIcon::mouseRightClicked, m_trayIcon, &TrayIcon::showTrayMenu);
     connect(m_trayIcon, &QSystemTrayIcon::messageClicked, this, &FortManager::onTrayMessageClicked);
 
-    connect(confManager(), &ConfManager::confChanged, m_trayIcon, &TrayIcon::updateTrayMenu);
-    connect(confManager(), &ConfManager::iniUserChanged, m_trayIcon, &TrayIcon::updateTrayMenu);
-    connect(confManager(), &ConfManager::appAlerted, m_trayIcon,
+    auto confManager = IoC<ConfManager>();
+    connect(confManager, &ConfManager::confChanged, m_trayIcon, &TrayIcon::updateTrayMenu);
+    connect(confManager, &ConfManager::iniUserChanged, m_trayIcon, &TrayIcon::updateTrayMenu);
+    connect(confManager, &ConfManager::appAlerted, m_trayIcon,
             [&] { m_trayIcon->updateTrayIcon(true); });
 
     connect(qApp, &QCoreApplication::aboutToQuit, this, &FortManager::closeUi);
@@ -411,7 +357,7 @@ void FortManager::setupTrayIcon()
 
 void FortManager::setupProgramsWindow()
 {
-    m_progWindow = new ProgramsWindow(this);
+    m_progWindow = new ProgramsWindow();
     m_progWindow->restoreWindowState();
 
     connect(m_progWindow, &ProgramsWindow::aboutToClose, this, &FortManager::closeProgramsWindow);
@@ -421,7 +367,7 @@ void FortManager::setupProgramsWindow()
 
 void FortManager::setupOptionsWindow()
 {
-    m_optWindow = new OptionsWindow(this);
+    m_optWindow = new OptionsWindow();
     m_optWindow->restoreWindowState();
 
     connect(m_optWindow, &OptionsWindow::aboutToClose, this, &FortManager::closeOptionsWindow);
@@ -429,7 +375,7 @@ void FortManager::setupOptionsWindow()
 
 void FortManager::setupZonesWindow()
 {
-    m_zoneWindow = new ZonesWindow(this);
+    m_zoneWindow = new ZonesWindow();
     m_zoneWindow->restoreWindowState();
 
     connect(m_zoneWindow, &ZonesWindow::aboutToClose, this, &FortManager::closeZonesWindow);
@@ -437,19 +383,20 @@ void FortManager::setupZonesWindow()
 
 void FortManager::setupGraphWindow()
 {
-    m_graphWindow = new GraphWindow(confManager());
+    m_graphWindow = new GraphWindow();
     m_graphWindow->restoreWindowState();
 
     connect(m_graphWindow, &GraphWindow::aboutToClose, this, [&] { closeGraphWindow(); });
     connect(m_graphWindow, &GraphWindow::mouseRightClick, this,
             [&](QMouseEvent *event) { m_trayIcon->showTrayMenu(mouseEventGlobalPos(event)); });
 
-    connect(statManager(), &StatManager::trafficAdded, m_graphWindow, &GraphWindow::addTraffic);
+    connect(IoC<StatManager>(), &StatManager::trafficAdded, m_graphWindow,
+            &GraphWindow::addTraffic);
 }
 
 void FortManager::setupStatisticsWindow()
 {
-    m_statWindow = new StatisticsWindow(this);
+    m_statWindow = new StatisticsWindow();
     m_statWindow->restoreWindowState();
 
     connect(m_statWindow, &StatisticsWindow::aboutToClose, this,
@@ -472,7 +419,7 @@ void FortManager::show()
 
     showTrayIcon();
 
-    if (iniUser()->graphWindowVisible()) {
+    if (IoC<UserSettings>()->iniUser().graphWindowVisible()) {
         showGraphWindow();
     }
 }
@@ -480,10 +427,8 @@ void FortManager::show()
 void FortManager::showTrayIcon()
 {
     if (!m_trayIcon) {
-        setupUserSettings();
         setupTranslationManager();
         setupMainWindow();
-        setupHotKeyManager();
         setupTrayIcon();
     }
 
@@ -677,7 +622,7 @@ void FortManager::processRestartRequired()
         return;
 
     const QString appFilePath = QCoreApplication::applicationFilePath();
-    const QStringList args = settings()->appArguments();
+    const QStringList args = IoC<FortSettings>()->appArguments();
 
     connect(qApp, &QObject::destroyed, [=] { QProcess::startDetached(appFilePath, args); });
 
@@ -702,7 +647,9 @@ bool FortManager::checkPassword()
 {
     static bool g_passwordDialogOpened = false;
 
-    if (!settings()->isPasswordRequired())
+    const auto settings = IoC<FortSettings>();
+
+    if (!settings->isPasswordRequired())
         return true;
 
     if (g_passwordDialogOpened) {
@@ -718,9 +665,9 @@ bool FortManager::checkPassword()
 
     g_passwordDialogOpened = false;
 
-    const bool checked = ok && !password.isEmpty() && confManager()->checkPassword(password);
+    const bool checked = ok && !password.isEmpty() && IoC<ConfManager>()->checkPassword(password);
 
-    settings()->setPasswordChecked(checked, unlockType);
+    settings->setPasswordChecked(checked, unlockType);
 
     return checked;
 }
@@ -752,23 +699,32 @@ bool FortManager::showYesNoBox(
 
 void FortManager::loadConf()
 {
+    const auto settings = IoC<FortSettings>();
+
     QString viaVersion;
-    if (!settings()->canMigrate(viaVersion)) {
+    if (!settings->canMigrate(viaVersion)) {
         showInfoBox(tr("Please first install Fort Firewall v%1 and save Options from it.")
                             .arg(viaVersion));
         abort(); // Abort the program
     }
 
-    confManager()->load();
+    IoC<ConfManager>()->load();
+
+    qDebug() << "Started as"
+             << (settings->isService()                   ? "Service"
+                                : settings->hasService() ? "Service Client"
+                                                         : "Program");
 }
 
 bool FortManager::updateDriverConf(bool onlyFlags)
 {
+    auto confManager = IoC<ConfManager>();
+
     updateLogManager(false);
 
-    const bool res = confManager()->updateDriverConf(onlyFlags);
+    const bool res = confManager->updateDriverConf(onlyFlags);
     if (res) {
-        updateStatManager(conf());
+        updateStatManager(confManager->conf());
     }
 
     updateLogManager(true);
@@ -778,12 +734,12 @@ bool FortManager::updateDriverConf(bool onlyFlags)
 
 void FortManager::updateLogManager(bool active)
 {
-    logManager()->setActive(active);
+    IoC<LogManager>()->setActive(active);
 }
 
 void FortManager::updateStatManager(FirewallConf *conf)
 {
-    statManager()->setConf(conf);
+    IoC<StatManager>()->setConf(conf);
 }
 
 void FortManager::onTrayMessageClicked()

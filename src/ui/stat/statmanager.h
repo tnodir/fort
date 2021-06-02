@@ -7,6 +7,7 @@
 #include <QVector>
 
 #include "../util/classhelpers.h"
+#include "../util/ioc/iocservice.h"
 #include "../util/triggertimer.h"
 
 class FirewallConf;
@@ -14,17 +15,15 @@ class IniOptions;
 class LogEntryBlockedIp;
 class LogEntryProcNew;
 class LogEntryStatTraf;
-class QuotaManager;
 class SqliteDb;
 class SqliteStmt;
 
-class StatManager : public QObject
+class StatManager : public QObject, public IocService
 {
     Q_OBJECT
 
 public:
-    explicit StatManager(const QString &filePath, QuotaManager *quotaManager,
-            QObject *parent = nullptr, quint32 openFlags = 0);
+    explicit StatManager(const QString &filePath, QObject *parent = nullptr, quint32 openFlags = 0);
     ~StatManager() override;
     CLASS_DELETE_COPY_MOVE(StatManager)
 
@@ -34,8 +33,6 @@ public:
     qint64 connTrafIdMin() const { return m_connTrafIdMin; }
     qint64 connTrafIdMax() const { return m_connTrafIdMax; }
 
-    QuotaManager *quotaManager() const { return m_quotaManager; }
-
     const FirewallConf *conf() const { return m_conf; }
     virtual void setConf(const FirewallConf *conf);
 
@@ -43,7 +40,7 @@ public:
 
     SqliteDb *sqliteDb() const { return m_sqliteDb; }
 
-    bool initialize();
+    void setUp() override;
 
     void updateConnBlockId();
 
@@ -168,7 +165,6 @@ private:
     qint64 m_connTrafIdMin = 0;
     qint64 m_connTrafIdMax = 0;
 
-    QuotaManager *m_quotaManager = nullptr;
     const FirewallConf *m_conf = nullptr;
 
     SqliteDb *m_sqliteDb = nullptr;

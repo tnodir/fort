@@ -4,22 +4,22 @@
 #include "../../conf/firewallconf.h"
 #include "../../fortmanager.h"
 #include "../../translationmanager.h"
+#include "../../util/ioc/ioccontainer.h"
 
-ZonesController::ZonesController(FortManager *fortManager, QObject *parent) :
-    QObject(parent), m_fortManager(fortManager)
+ZonesController::ZonesController(QObject *parent) : QObject(parent)
 {
     connect(translationManager(), &TranslationManager::languageChanged, this,
             &ZonesController::retranslateUi);
 }
 
-FortSettings *ZonesController::settings() const
+FortManager *ZonesController::fortManager() const
 {
-    return fortManager()->settings();
+    return IoC<FortManager>();
 }
 
 ConfManager *ZonesController::confManager() const
 {
-    return fortManager()->confManager();
+    return IoC<ConfManager>();
 }
 
 FirewallConf *ZonesController::conf() const
@@ -44,5 +44,5 @@ ZoneListModel *ZonesController::zoneListModel() const
 
 TranslationManager *ZonesController::translationManager() const
 {
-    return TranslationManager::instance();
+    return IoC<TranslationManager>();
 }

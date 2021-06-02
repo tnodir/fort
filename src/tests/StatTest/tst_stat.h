@@ -103,7 +103,7 @@ TEST_F(StatTest, dbWriteRead)
 
     StatManager statManager(":memory:", &quotaManager);
 
-    ASSERT_TRUE(statManager.initialize());
+    statManager.setUp();
 
     const QStringList appPaths = QStringList() << "C:\\test\\test.exe"
                                                << "C:\\test\\test2.exe"

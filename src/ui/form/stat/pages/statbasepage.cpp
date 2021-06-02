@@ -18,11 +18,6 @@ FortManager *StatBasePage::fortManager() const
     return ctrl()->fortManager();
 }
 
-FortSettings *StatBasePage::settings() const
-{
-    return ctrl()->settings();
-}
-
 ConfManager *StatBasePage::confManager() const
 {
     return ctrl()->confManager();

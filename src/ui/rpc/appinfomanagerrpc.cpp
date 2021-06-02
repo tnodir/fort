@@ -2,21 +2,15 @@
 
 #include <sqlite/sqlitedb.h>
 
-#include "../fortmanager.h"
 #include "../rpc/rpcmanager.h"
+#include "../util/ioc/ioccontainer.h"
 
-AppInfoManagerRpc::AppInfoManagerRpc(
-        const QString &filePath, FortManager *fortManager, QObject *parent) :
-    AppInfoManager(filePath, parent, SqliteDb::OpenDefaultReadOnly), m_fortManager(fortManager)
+AppInfoManagerRpc::AppInfoManagerRpc(const QString &filePath, QObject *parent) :
+    AppInfoManager(filePath, parent, SqliteDb::OpenDefaultReadOnly)
 {
-}
-
-RpcManager *AppInfoManagerRpc::rpcManager() const
-{
-    return fortManager()->rpcManager();
 }
 
 void AppInfoManagerRpc::lookupAppInfo(const QString &appPath)
 {
-    rpcManager()->invokeOnServer(Control::Rpc_AppInfoManager_lookupAppInfo, { appPath });
+    IoC<RpcManager>()->invokeOnServer(Control::Rpc_AppInfoManager_lookupAppInfo, { appPath });
 }

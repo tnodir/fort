@@ -9,6 +9,7 @@
 #include "../model/zonesourcewrapper.h"
 #include "../model/zonetypewrapper.h"
 #include "../util/fileutil.h"
+#include "../util/ioc/ioccontainer.h"
 #include "taskzonedownloader.h"
 
 TaskInfoZoneDownloader::TaskInfoZoneDownloader(TaskManager &taskManager) :
@@ -21,14 +22,9 @@ TaskZoneDownloader *TaskInfoZoneDownloader::zoneDownloader() const
     return static_cast<TaskZoneDownloader *>(taskWorker());
 }
 
-ConfManager *TaskInfoZoneDownloader::confManager() const
-{
-    return fortManager()->confManager();
-}
-
 ZoneListModel *TaskInfoZoneDownloader::zoneListModel() const
 {
-    return fortManager()->zoneListModel();
+    return IoC<FortManager>()->zoneListModel();
 }
 
 bool TaskInfoZoneDownloader::processResult(bool success)
@@ -36,7 +32,8 @@ bool TaskInfoZoneDownloader::processResult(bool success)
     if (!success)
         return false;
 
-    fortManager()->showTrayMessage(tr("Zone Addresses Updated: %1.").arg(m_zoneNames.join(", ")),
+    IoC<FortManager>()->showTrayMessage(
+            tr("Zone Addresses Updated: %1.").arg(m_zoneNames.join(", ")),
             FortManager::MessageZones);
     return true;
 }
@@ -154,7 +151,7 @@ void TaskInfoZoneDownloader::processSubResult(bool success)
     const auto now = QDateTime::currentDateTime();
     const auto lastSuccess = success ? now : worker->lastSuccess();
 
-    confManager()->updateZoneResult(
+    IoC<ConfManager>()->updateZoneResult(
             zoneId, addressCount, textChecksum, binChecksum, sourceModTime, now, lastSuccess);
 
     addSubResult(worker, success);
@@ -224,5 +221,5 @@ void TaskInfoZoneDownloader::removeOrphanCacheFiles()
 
 QString TaskInfoZoneDownloader::cachePath() const
 {
-    return fortManager()->settings()->cachePath() + "zones/";
+    return IoC<FortSettings>()->cachePath() + "zones/";
 }

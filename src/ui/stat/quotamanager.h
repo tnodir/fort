@@ -3,18 +3,16 @@
 
 #include <QObject>
 
-class ConfManager;
-class FirewallConf;
-class IniOptions;
+#include "../util/ioc/iocservice.h"
 
-class QuotaManager : public QObject
+class QuotaManager : public QObject, public IocService
 {
     Q_OBJECT
 
 public:
     enum AlertType : qint8 { AlertDay = 1, AlertMonth };
 
-    explicit QuotaManager(ConfManager *confManager, QObject *parent = nullptr);
+    explicit QuotaManager(QObject *parent = nullptr);
 
     void setQuotaDayBytes(qint64 bytes);
     void setQuotaMonthBytes(qint64 bytes);
@@ -27,10 +25,6 @@ public:
 
     void checkQuotaDay(qint32 trafDay);
     void checkQuotaMonth(qint32 trafMonth);
-
-    ConfManager *confManager() const { return m_confManager; }
-    FirewallConf *conf() const;
-    IniOptions *ini() const;
 
     static QString alertTypeText(qint8 alertType);
 
@@ -53,8 +47,6 @@ private:
 
     qint64 m_trafDayBytes = 0;
     qint64 m_trafMonthBytes = 0;
-
-    ConfManager *m_confManager = nullptr;
 };
 
 #endif // QUOTAMANAGER_H

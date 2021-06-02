@@ -19,7 +19,7 @@ class TrayIcon : public QSystemTrayIcon
     Q_OBJECT
 
 public:
-    explicit TrayIcon(FortManager *fortManager, QObject *parent = nullptr);
+    explicit TrayIcon(QObject *parent = nullptr);
     ~TrayIcon() override;
 
     TrayController *ctrl() const { return m_ctrl; }
@@ -66,6 +66,8 @@ private:
 private:
     bool m_trayTriggered : 1;
 
+    TrayController *m_ctrl = nullptr;
+
     QMenu *m_menu = nullptr;
     QAction *m_programsAction = nullptr;
     QAction *m_optionsAction = nullptr;
@@ -78,8 +80,6 @@ private:
     QAction *m_allowAllNewAction = nullptr;
     QAction *m_quitAction = nullptr;
     QList<QAction *> m_appGroupActions;
-
-    TrayController *m_ctrl = nullptr;
 };
 
 #endif // TRAYICON_H

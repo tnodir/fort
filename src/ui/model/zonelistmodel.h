@@ -37,9 +37,9 @@ class ZoneListModel : public TableSqlModel
     Q_OBJECT
 
 public:
-    explicit ZoneListModel(ConfManager *confManager, QObject *parent = nullptr);
+    explicit ZoneListModel(QObject *parent = nullptr);
 
-    ConfManager *confManager() const { return m_confManager; }
+    ConfManager *confManager() const;
     SqliteDb *sqliteDb() const override;
 
     void initialize();
@@ -77,8 +77,6 @@ private:
     void setupZoneSourceNames();
 
 private:
-    ConfManager *m_confManager = nullptr;
-
     QVariantList m_zoneTypes;
     QVariantHash m_zoneTypesMap;
 

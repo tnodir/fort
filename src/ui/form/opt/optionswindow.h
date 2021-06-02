@@ -17,7 +17,7 @@ class OptionsWindow : public WidgetWindow
     Q_OBJECT
 
 public:
-    explicit OptionsWindow(FortManager *fortManager, QWidget *parent = nullptr);
+    explicit OptionsWindow(QWidget *parent = nullptr);
 
     OptionsController *ctrl() const { return m_ctrl; }
     ConfManager *confManager() const;

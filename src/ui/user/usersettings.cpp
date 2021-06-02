@@ -3,11 +3,14 @@
 #include <fort_version.h>
 
 #include "../fortsettings.h"
+#include "../util/ioc/ioccontainer.h"
 
 UserSettings::UserSettings(QObject *parent) : Settings(parent), m_iniUser(this) { }
 
-void UserSettings::initialize(FortSettings *settings)
+void UserSettings::setUp()
 {
+    auto settings = IoC<FortSettings>();
+
     setupIni(settings->userPath() + APP_BASE + ".user.ini");
 
     iniUser().setDefaultLanguage(settings->defaultLanguage());

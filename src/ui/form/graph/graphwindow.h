@@ -18,7 +18,7 @@ class GraphWindow : public WidgetWindow
     Q_OBJECT
 
 public:
-    explicit GraphWindow(ConfManager *confManager, QWidget *parent = nullptr);
+    explicit GraphWindow(QWidget *parent = nullptr);
 
     ConfManager *confManager() const;
     FirewallConf *conf() const;
@@ -85,8 +85,6 @@ private:
     qint64 m_lastUnixTime = 0;
 
     WidgetWindowStateWatcher *m_stateWatcher = nullptr;
-
-    ConfManager *m_confManager = nullptr;
 
     GraphPlot *m_plot = nullptr;
     QCPBars *m_graphIn = nullptr;

@@ -2,12 +2,14 @@
 
 #include "../../conf/confmanager.h"
 #include "../../conf/firewallconf.h"
+#include "../../driver/drivermanager.h"
 #include "../../fortmanager.h"
 #include "../../fortsettings.h"
+#include "../../task/taskmanager.h"
 #include "../../translationmanager.h"
+#include "../../util/ioc/ioccontainer.h"
 
-OptionsController::OptionsController(FortManager *fortManager, QObject *parent) :
-    QObject(parent), m_fortManager(fortManager)
+OptionsController::OptionsController(QObject *parent) : QObject(parent)
 {
     confManager()->initConfToEdit();
 
@@ -20,14 +22,19 @@ OptionsController::~OptionsController()
     confManager()->setConfToEdit(nullptr);
 }
 
+FortManager *OptionsController::fortManager() const
+{
+    return IoC<FortManager>();
+}
+
 FortSettings *OptionsController::settings() const
 {
-    return fortManager()->settings();
+    return IoC<FortSettings>();
 }
 
 ConfManager *OptionsController::confManager() const
 {
-    return fortManager()->confManager();
+    return IoC<ConfManager>();
 }
 
 FirewallConf *OptionsController::conf() const
@@ -47,17 +54,17 @@ IniUser *OptionsController::iniUser() const
 
 TaskManager *OptionsController::taskManager() const
 {
-    return fortManager()->taskManager();
+    return IoC<TaskManager>();
 }
 
 DriverManager *OptionsController::driverManager() const
 {
-    return fortManager()->driverManager();
+    return IoC<DriverManager>();
 }
 
 TranslationManager *OptionsController::translationManager() const
 {
-    return TranslationManager::instance();
+    return IoC<TranslationManager>();
 }
 
 ZoneListModel *OptionsController::zoneListModel() const

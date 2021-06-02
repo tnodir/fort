@@ -16,7 +16,6 @@ QT_FORWARD_DECLARE_CLASS(QTabBar)
 class ConfManager;
 class FirewallConf;
 class FortManager;
-class FortSettings;
 class IniUser;
 class StatisticsController;
 class TranslationManager;
@@ -31,7 +30,6 @@ public:
 protected:
     StatisticsController *ctrl() const { return m_ctrl; }
     FortManager *fortManager() const;
-    FortSettings *settings() const;
     ConfManager *confManager() const;
     FirewallConf *conf() const;
     IniUser *iniUser() const;

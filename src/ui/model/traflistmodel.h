@@ -23,7 +23,7 @@ public:
     enum TrafType { TrafHourly = 0, TrafDaily, TrafMonthly, TrafTotal };
     Q_ENUM(TrafType)
 
-    explicit TrafListModel(StatManager *statManager, QObject *parent = nullptr);
+    explicit TrafListModel(QObject *parent = nullptr);
 
     TrafListModel::TrafUnit unit() const { return m_unit; }
     void setUnit(TrafListModel::TrafUnit unit);
@@ -34,7 +34,7 @@ public:
     qint64 appId() const { return m_appId; }
     void setAppId(qint64 appId);
 
-    StatManager *statManager() const { return m_statManager; }
+    StatManager *statManager() const;
 
     void initialize();
 
@@ -79,8 +79,6 @@ private:
     qint32 m_minTrafTime = 0;
     qint32 m_maxTrafTime = 0;
     qint32 m_trafCount = 0;
-
-    StatManager *m_statManager = nullptr;
 
     mutable TrafficRow m_trafRow;
 };

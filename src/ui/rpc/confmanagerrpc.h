@@ -11,11 +11,7 @@ class ConfManagerRpc : public ConfManager
     Q_OBJECT
 
 public:
-    explicit ConfManagerRpc(
-            const QString &filePath, FortManager *fortManager, QObject *parent = nullptr);
-
-    RpcManager *rpcManager() const;
-    TaskManager *taskManager() const;
+    explicit ConfManagerRpc(const QString &filePath, QObject *parent = nullptr);
 
     bool addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
             int groupIndex, bool useGroupPerm, bool blocked) override;

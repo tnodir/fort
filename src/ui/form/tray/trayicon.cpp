@@ -50,8 +50,8 @@ QAction *addAction(QWidget *widget, const QIcon &icon, const QString &text,
 
 }
 
-TrayIcon::TrayIcon(FortManager *fortManager, QObject *parent) :
-    QSystemTrayIcon(parent), m_trayTriggered(false), m_ctrl(new TrayController(fortManager, this))
+TrayIcon::TrayIcon(QObject *parent) :
+    QSystemTrayIcon(parent), m_trayTriggered(false), m_ctrl(new TrayController(this))
 {
     setupUi();
     setupController();
@@ -195,7 +195,7 @@ void TrayIcon::setupUi()
 
 void TrayIcon::setupTrayMenu()
 {
-    m_menu = new QMenu(fortManager()->mainWindow());
+    m_menu = new QMenu();
 
     m_programsAction = addAction(m_menu, IconCache::icon(":/icons/window.png"), QString(),
             fortManager(), SLOT(showProgramsWindow()));

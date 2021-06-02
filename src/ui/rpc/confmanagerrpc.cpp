@@ -7,94 +7,90 @@
 #include "../fortsettings.h"
 #include "../rpc/rpcmanager.h"
 #include "../task/taskmanager.h"
+#include "../util/ioc/ioccontainer.h"
 
-ConfManagerRpc::ConfManagerRpc(const QString &filePath, FortManager *fortManager, QObject *parent) :
-    ConfManager(filePath, fortManager, parent, SqliteDb::OpenDefaultReadOnly)
+ConfManagerRpc::ConfManagerRpc(const QString &filePath, QObject *parent) :
+    ConfManager(filePath, parent, SqliteDb::OpenDefaultReadOnly)
 {
-}
-
-RpcManager *ConfManagerRpc::rpcManager() const
-{
-    return fortManager()->rpcManager();
-}
-
-TaskManager *ConfManagerRpc::taskManager() const
-{
-    return fortManager()->taskManager();
 }
 
 bool ConfManagerRpc::addApp(const QString &appPath, const QString &appName,
         const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool blocked)
 {
-    return rpcManager()->doOnServer(Control::Rpc_ConfManager_addApp,
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_addApp,
             { appPath, appName, endTime, groupIndex, useGroupPerm, blocked });
 }
 
 bool ConfManagerRpc::deleteApp(qint64 appId)
 {
-    return rpcManager()->doOnServer(Control::Rpc_ConfManager_deleteApp, { appId });
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_deleteApp, { appId });
 }
 
 bool ConfManagerRpc::purgeApps()
 {
-    return rpcManager()->doOnServer(Control::Rpc_ConfManager_purgeApps);
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_purgeApps);
 }
 
 bool ConfManagerRpc::updateApp(qint64 appId, const QString &appPath, const QString &appName,
         const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool blocked)
 {
-    return rpcManager()->doOnServer(Control::Rpc_ConfManager_updateApp,
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_updateApp,
             { appId, appPath, appName, endTime, groupIndex, useGroupPerm, blocked });
 }
 
 bool ConfManagerRpc::updateAppBlocked(qint64 appId, bool blocked)
 {
-    return rpcManager()->doOnServer(Control::Rpc_ConfManager_updateAppBlocked, { appId, blocked });
+    return IoC<RpcManager>()->doOnServer(
+            Control::Rpc_ConfManager_updateAppBlocked, { appId, blocked });
 }
 
 bool ConfManagerRpc::updateAppName(qint64 appId, const QString &appName)
 {
-    return rpcManager()->doOnServer(Control::Rpc_ConfManager_updateAppName, { appId, appName });
+    return IoC<RpcManager>()->doOnServer(
+            Control::Rpc_ConfManager_updateAppName, { appId, appName });
 }
 
 bool ConfManagerRpc::addZone(const QString &zoneName, const QString &sourceCode, const QString &url,
         const QString &formData, bool enabled, bool customUrl, int &zoneId)
 {
-    if (!rpcManager()->doOnServer(Control::Rpc_ConfManager_addZone,
+    auto rpcManager = IoC<RpcManager>();
+
+    if (!rpcManager->doOnServer(Control::Rpc_ConfManager_addZone,
                 { zoneName, sourceCode, url, formData, enabled, customUrl }))
         return false;
 
-    zoneId = rpcManager()->resultArgs().value(0).toInt();
+    zoneId = rpcManager->resultArgs().value(0).toInt();
 
     return true;
 }
 
 bool ConfManagerRpc::deleteZone(int zoneId)
 {
-    return rpcManager()->doOnServer(Control::Rpc_ConfManager_deleteZone, { zoneId });
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_deleteZone, { zoneId });
 }
 
 bool ConfManagerRpc::updateZone(int zoneId, const QString &zoneName, const QString &sourceCode,
         const QString &url, const QString &formData, bool enabled, bool customUrl)
 {
-    return rpcManager()->doOnServer(Control::Rpc_ConfManager_updateZone,
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_updateZone,
             { zoneId, zoneName, sourceCode, url, formData, enabled, customUrl });
 }
 
 bool ConfManagerRpc::updateZoneName(int zoneId, const QString &zoneName)
 {
-    return rpcManager()->doOnServer(Control::Rpc_ConfManager_updateZoneName, { zoneId, zoneName });
+    return IoC<RpcManager>()->doOnServer(
+            Control::Rpc_ConfManager_updateZoneName, { zoneId, zoneName });
 }
 
 bool ConfManagerRpc::updateZoneEnabled(int zoneId, bool enabled)
 {
-    return rpcManager()->doOnServer(
+    return IoC<RpcManager>()->doOnServer(
             Control::Rpc_ConfManager_updateZoneEnabled, { zoneId, enabled });
 }
 
 bool ConfManagerRpc::checkPassword(const QString &password)
 {
-    return rpcManager()->doOnServer(Control::Rpc_ConfManager_checkPassword, { password });
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_checkPassword, { password });
 }
 
 bool ConfManagerRpc::saveConf(FirewallConf &newConf)
@@ -106,7 +102,7 @@ bool ConfManagerRpc::saveConf(FirewallConf &newConf)
     const QVariant confVar = newConf.toVariant(true);
 
     setSaving(true);
-    const bool ok = rpcManager()->doOnServer(Control::Rpc_ConfManager_save, { confVar });
+    const bool ok = IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_save, { confVar });
     setSaving(false);
 
     if (!ok)
@@ -120,7 +116,7 @@ bool ConfManagerRpc::saveConf(FirewallConf &newConf)
 
 void ConfManagerRpc::onConfChanged(const QVariant &confVar)
 {
-    settings()->clearCache(); // FirewallConf::IniEdited is handled here
+    IoC<FortSettings>()->clearCache(); // FirewallConf::IniEdited is handled here
 
     const uint editedFlags = FirewallConf::editedFlagsFromVariant(confVar);
 
@@ -134,12 +130,12 @@ void ConfManagerRpc::onConfChanged(const QVariant &confVar)
     }
 
     if ((editedFlags & FirewallConf::TaskEdited) != 0) {
-        taskManager()->loadSettings();
+        IoC<TaskManager>()->loadSettings();
     }
 
     applySavedConf(conf());
 
     if (!saving()) {
-        fortManager()->reloadOptionsWindow(tr("Settings changed by someone else"));
+        IoC<FortManager>()->reloadOptionsWindow(tr("Settings changed by someone else"));
     }
 }

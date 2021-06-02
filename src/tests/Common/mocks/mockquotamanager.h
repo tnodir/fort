@@ -10,7 +10,7 @@ class MockQuotaManager : public QuotaManager
     Q_OBJECT
 
 public:
-    explicit MockQuotaManager(ConfManager *confManager = nullptr, QObject *parent = nullptr);
+    explicit MockQuotaManager(QObject *parent = nullptr);
 
 protected:
     MOCK_CONST_METHOD0(quotaDayAlerted, qint32());

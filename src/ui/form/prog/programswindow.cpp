@@ -28,9 +28,9 @@ namespace {
 
 }
 
-ProgramsWindow::ProgramsWindow(FortManager *fortManager, QWidget *parent) :
+ProgramsWindow::ProgramsWindow(QWidget *parent) :
     WidgetWindow(parent),
-    m_ctrl(new ProgramsController(fortManager, this)),
+    m_ctrl(new ProgramsController(this)),
     m_stateWatcher(new WidgetWindowStateWatcher(this))
 {
     setupUi();
@@ -42,11 +42,6 @@ ProgramsWindow::ProgramsWindow(FortManager *fortManager, QWidget *parent) :
 FortManager *ProgramsWindow::fortManager() const
 {
     return ctrl()->fortManager();
-}
-
-FortSettings *ProgramsWindow::settings() const
-{
-    return ctrl()->settings();
 }
 
 ConfManager *ProgramsWindow::confManager() const

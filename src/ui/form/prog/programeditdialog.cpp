@@ -16,6 +16,7 @@
 #include "../../conf/firewallconf.h"
 #include "../../fortmanager.h"
 #include "../../util/iconcache.h"
+#include "../../util/ioc/ioccontainer.h"
 #include "../controls/checkspincombo.h"
 #include "../controls/controlutil.h"
 #include "programscontroller.h"
@@ -55,7 +56,7 @@ AppListModel *ProgramEditDialog::appListModel() const
 
 AppInfoCache *ProgramEditDialog::appInfoCache() const
 {
-    return fortManager()->appInfoCache();
+    return IoC<AppInfoCache>();
 }
 
 void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &appIdList)

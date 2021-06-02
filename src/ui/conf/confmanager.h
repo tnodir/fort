@@ -6,38 +6,25 @@
 
 #include "../util/classhelpers.h"
 #include "../util/conf/confappswalker.h"
+#include "../util/ioc/iocservice.h"
 #include "../util/triggertimer.h"
 
-class AppInfoCache;
-class DriverManager;
-class EnvManager;
 class FirewallConf;
-class FortManager;
-class FortSettings;
 class IniOptions;
 class IniUser;
 class LogEntryBlocked;
 class SqliteDb;
 class SqliteStmt;
 class TaskInfo;
-class TaskManager;
 
-class ConfManager : public QObject, public ConfAppsWalker
+class ConfManager : public QObject, public ConfAppsWalker, public IocService
 {
     Q_OBJECT
 
 public:
-    explicit ConfManager(const QString &filePath, FortManager *fortManager,
-            QObject *parent = nullptr, quint32 openFlags = 0);
+    explicit ConfManager(const QString &filePath, QObject *parent = nullptr, quint32 openFlags = 0);
     ~ConfManager() override;
     CLASS_DELETE_COPY_MOVE(ConfManager)
-
-    FortManager *fortManager() const { return m_fortManager; }
-    DriverManager *driverManager() const;
-    EnvManager *envManager() const;
-    FortSettings *settings() const;
-    TaskManager *taskManager() const;
-    AppInfoCache *appInfoCache() const;
 
     SqliteDb *sqliteDb() const { return m_sqliteDb; }
 
@@ -46,7 +33,7 @@ public:
 
     IniUser *iniUser() const;
 
-    bool initialize();
+    void setUp() override;
 
     void initConfToEdit();
     void setConfToEdit(FirewallConf *conf);
@@ -155,7 +142,6 @@ private:
     bool checkResult(bool ok, bool commit = false);
 
 private:
-    FortManager *m_fortManager = nullptr;
     SqliteDb *m_sqliteDb = nullptr;
 
     FirewallConf *m_conf = nullptr;

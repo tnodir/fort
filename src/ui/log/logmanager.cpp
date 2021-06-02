@@ -1,15 +1,14 @@
 #include "logmanager.h"
 
-#include <QCoreApplication>
 #include <QDebug>
 
 #include "../conf/confmanager.h"
 #include "../driver/drivercommon.h"
 #include "../driver/drivermanager.h"
 #include "../driver/driverworker.h"
-#include "../fortmanager.h"
 #include "../stat/statmanager.h"
 #include "../util/dateutil.h"
+#include "../util/ioc/ioccontainer.h"
 #include "../util/osutil.h"
 #include "logbuffer.h"
 #include "logentryblocked.h"
@@ -18,25 +17,7 @@
 #include "logentrystattraf.h"
 #include "logentrytime.h"
 
-LogManager::LogManager(FortManager *fortManager, QObject *parent) :
-    QObject(parent), m_fortManager(fortManager)
-{
-}
-
-ConfManager *LogManager::confManager() const
-{
-    return fortManager()->confManager();
-}
-
-StatManager *LogManager::statManager() const
-{
-    return fortManager()->statManager();
-}
-
-DriverWorker *LogManager::driverWorker() const
-{
-    return fortManager()->driverManager()->driverWorker();
-}
+LogManager::LogManager(QObject *parent) : QObject(parent) { }
 
 void LogManager::setActive(bool active)
 {
@@ -71,31 +52,37 @@ void LogManager::setCurrentUnixTime(qint64 unixTime)
     m_currentUnixTime = unixTime;
 }
 
-void LogManager::initialize()
+void LogManager::setUp()
 {
-    connect(driverWorker(), &DriverWorker::readLogResult, this, &LogManager::processLogBuffer,
-            Qt::QueuedConnection);
+    const auto driverManager = IoC()->setUpDependency<DriverManager>();
+
+    connect(driverManager->driverWorker(), &DriverWorker::readLogResult, this,
+            &LogManager::processLogBuffer, Qt::QueuedConnection);
 }
 
-void LogManager::close()
+void LogManager::tearDown()
 {
-    QCoreApplication::sendPostedEvents(this);
+    const auto driverManager = IoC()->setUpDependency<DriverManager>();
 
-    disconnect(driverWorker());
+    disconnect(driverManager->driverWorker());
 }
 
 void LogManager::readLogAsync()
 {
+    const auto driverManager = IoC()->setUpDependency<DriverManager>();
+
     LogBuffer *logBuffer = getFreeBuffer();
 
-    if (!driverWorker()->readLogAsync(logBuffer)) {
+    if (!driverManager->driverWorker()->readLogAsync(logBuffer)) {
         addFreeBuffer(logBuffer);
     }
 }
 
 void LogManager::cancelAsyncIo()
 {
-    driverWorker()->cancelAsyncIo();
+    const auto driverManager = IoC()->setUpDependency<DriverManager>();
+
+    driverManager->driverWorker()->cancelAsyncIo();
 }
 
 LogBuffer *LogManager::getFreeBuffer()
@@ -137,22 +124,22 @@ void LogManager::readLogEntries(LogBuffer *logBuffer)
         case LogEntry::AppBlocked: {
             LogEntryBlocked blockedEntry;
             logBuffer->readEntryBlocked(&blockedEntry);
-            confManager()->logBlockedApp(blockedEntry);
+            IoC<ConfManager>()->logBlockedApp(blockedEntry);
         } break;
         case LogEntry::AppBlockedIp: {
             LogEntryBlockedIp blockedIpEntry;
             logBuffer->readEntryBlockedIp(&blockedIpEntry);
-            statManager()->logBlockedIp(blockedIpEntry, currentUnixTime());
+            IoC<StatManager>()->logBlockedIp(blockedIpEntry, currentUnixTime());
         } break;
         case LogEntry::ProcNew: {
             LogEntryProcNew procNewEntry;
             logBuffer->readEntryProcNew(&procNewEntry);
-            statManager()->logProcNew(procNewEntry, currentUnixTime());
+            IoC<StatManager>()->logProcNew(procNewEntry, currentUnixTime());
         } break;
         case LogEntry::StatTraf: {
             LogEntryStatTraf statTrafEntry;
             logBuffer->readEntryStatTraf(&statTrafEntry);
-            statManager()->logStatTraf(statTrafEntry, currentUnixTime());
+            IoC<StatManager>()->logStatTraf(statTrafEntry, currentUnixTime());
         } break;
         case LogEntry::Time: {
             LogEntryTime timeEntry;
