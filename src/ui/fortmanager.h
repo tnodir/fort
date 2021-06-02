@@ -5,7 +5,6 @@
 
 #include "util/classhelpers.h"
 
-class AppListModel;
 class FirewallConf;
 class GraphWindow;
 class MainWindow;
@@ -35,7 +34,6 @@ public:
     ZonesWindow *zoneWindow() const { return m_zoneWindow; }
     GraphWindow *graphWindow() const { return m_graphWindow; }
 
-    AppListModel *appListModel() const { return m_appListModel; }
     ZoneListModel *zoneListModel() const { return m_zoneListModel; }
 
     bool checkRunningInstance();
@@ -152,7 +150,6 @@ private:
     ZonesWindow *m_zoneWindow = nullptr;
     GraphWindow *m_graphWindow = nullptr;
 
-    AppListModel *m_appListModel = nullptr;
     ZoneListModel *m_zoneListModel = nullptr;
 };
 

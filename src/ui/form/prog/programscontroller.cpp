@@ -1,12 +1,15 @@
 #include "programscontroller.h"
 
+#include "../../appinfo/appinfocache.h"
 #include "../../conf/confmanager.h"
 #include "../../conf/firewallconf.h"
 #include "../../fortmanager.h"
+#include "../../model/applistmodel.h"
 #include "../../translationmanager.h"
 #include "../../util/ioc/ioccontainer.h"
 
-ProgramsController::ProgramsController(QObject *parent) : QObject(parent)
+ProgramsController::ProgramsController(QObject *parent) :
+    QObject(parent), m_appListModel(new AppListModel(this))
 {
     connect(translationManager(), &TranslationManager::languageChanged, this,
             &ProgramsController::retranslateUi);
@@ -37,12 +40,17 @@ IniUser *ProgramsController::iniUser() const
     return confManager()->iniUser();
 }
 
-AppListModel *ProgramsController::appListModel() const
-{
-    return fortManager()->appListModel();
-}
-
 TranslationManager *ProgramsController::translationManager() const
 {
     return IoC<TranslationManager>();
+}
+
+AppInfoCache *ProgramsController::appInfoCache() const
+{
+    return IoC<AppInfoCache>();
+}
+
+void ProgramsController::initialize()
+{
+    appListModel()->initialize();
 }

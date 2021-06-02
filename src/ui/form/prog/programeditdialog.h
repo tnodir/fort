@@ -31,8 +31,8 @@ public:
     FortManager *fortManager() const;
     ConfManager *confManager() const;
     FirewallConf *conf() const;
-    AppListModel *appListModel() const;
     AppInfoCache *appInfoCache() const;
+    AppListModel *appListModel() const;
 
     void initialize(const AppRow &appRow, const QVector<qint64> &appIdList);
 

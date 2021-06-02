@@ -64,14 +64,14 @@ IniUser *ProgramsWindow::iniUser() const
     return ctrl()->iniUser();
 }
 
-AppListModel *ProgramsWindow::appListModel() const
-{
-    return fortManager()->appListModel();
-}
-
 AppInfoCache *ProgramsWindow::appInfoCache() const
 {
-    return appListModel()->appInfoCache();
+    return ctrl()->appInfoCache();
+}
+
+AppListModel *ProgramsWindow::appListModel() const
+{
+    return ctrl()->appListModel();
 }
 
 void ProgramsWindow::saveWindowState()
@@ -99,6 +99,8 @@ void ProgramsWindow::restoreWindowState()
 
 void ProgramsWindow::setupController()
 {
+    ctrl()->initialize();
+
     connect(ctrl(), &ProgramsController::retranslateUi, this, &ProgramsWindow::retranslateUi);
 
     retranslateUi();

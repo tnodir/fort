@@ -49,14 +49,14 @@ FirewallConf *ProgramEditDialog::conf() const
     return ctrl()->conf();
 }
 
-AppListModel *ProgramEditDialog::appListModel() const
-{
-    return fortManager()->appListModel();
-}
-
 AppInfoCache *ProgramEditDialog::appInfoCache() const
 {
     return IoC<AppInfoCache>();
+}
+
+AppListModel *ProgramEditDialog::appListModel() const
+{
+    return ctrl()->appListModel();
 }
 
 void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &appIdList)

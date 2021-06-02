@@ -9,6 +9,7 @@ QT_FORWARD_DECLARE_CLASS(QPushButton)
 class AppInfoCache;
 class AppInfoRow;
 class AppListModel;
+class AppListModel;
 class ConfManager;
 class FirewallConf;
 class FortManager;
@@ -34,8 +35,8 @@ public:
     FirewallConf *conf() const;
     IniOptions *ini() const;
     IniUser *iniUser() const;
-    AppListModel *appListModel() const;
     AppInfoCache *appInfoCache() const;
+    AppListModel *appListModel() const;
 
     void saveWindowState();
     void restoreWindowState();

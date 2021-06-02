@@ -297,9 +297,6 @@ void FortManager::setupTaskManager()
 
 void FortManager::setupModels()
 {
-    m_appListModel = new AppListModel(this);
-    appListModel()->initialize();
-
     m_zoneListModel = new ZoneListModel(this);
     zoneListModel()->initialize();
 }

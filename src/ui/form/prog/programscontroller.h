@@ -3,6 +3,7 @@
 
 #include <QObject>
 
+class AppInfoCache;
 class AppListModel;
 class ConfManager;
 class FirewallConf;
@@ -23,11 +24,17 @@ public:
     FirewallConf *conf() const;
     IniOptions *ini() const;
     IniUser *iniUser() const;
-    AppListModel *appListModel() const;
     TranslationManager *translationManager() const;
+    AppInfoCache *appInfoCache() const;
+    AppListModel *appListModel() const { return m_appListModel; }
+
+    void initialize();
 
 signals:
     void retranslateUi();
+
+private:
+    AppListModel *m_appListModel = nullptr;
 };
 
 #endif // PROGRAMSCONTROLLER_H
