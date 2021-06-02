@@ -100,9 +100,10 @@ void IocContainer::autoDelete(int typeId)
     if ((flags & (AutoDelete | IsService)) != (AutoDelete | IsService))
         return;
 
-    delete resolveService(typeId);
-
+    IocService *obj = resolveService(typeId);
     setObject(typeId, nullptr);
+
+    delete obj;
 }
 
 bool IocContainer::pinToThread()
