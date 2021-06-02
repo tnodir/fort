@@ -12,7 +12,6 @@
 #include <fort_version.h>
 
 #include "appinfo/appinfocache.h"
-#include "appinfo/appinfomanager.h"
 #include "conf/firewallconf.h"
 #include "control/controlmanager.h"
 #include "form/controls/mainwindow.h"

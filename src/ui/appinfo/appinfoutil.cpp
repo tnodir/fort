@@ -1,6 +1,7 @@
 #include "appinfoutil.h"
 
 #include <QImage>
+#include <QVarLengthArray>
 
 #include <comdef.h>
 #include <commctrl.h>
@@ -83,7 +84,7 @@ bool extractVersionInfo(const QString &appPath, AppInfo &appInfo)
     if (infoSize == 0)
         return false;
 
-    QScopedArrayPointer<BYTE> infoBuf(new BYTE[infoSize]);
+    QVarLengthArray<BYTE, 4096> infoBuf(infoSize);
     LPVOID infoData = infoBuf.data();
 
     if (!GetFileVersionInfoExW(flags, appPathW, 0, infoSize, infoData))
