@@ -99,7 +99,6 @@ void FortManager::initialize()
     setupConfManager();
     setupQuotaManager();
     setupTaskManager();
-    setupModels();
 
     setupDriver();
     loadConf();
@@ -182,6 +181,8 @@ void FortManager::createManagers()
 
     ioc->setService(new NativeEventFilter());
     ioc->setService(new HotKeyManager());
+
+    ioc->setService(new ZoneListModel());
 
     if (!settings->isService()) {
         ioc->setService(new UserSettings());
@@ -293,12 +294,6 @@ void FortManager::setupTaskManager()
     });
     connect(taskManager->taskInfoZoneDownloader(), &TaskInfoZoneDownloader::zonesUpdated,
             IoC<ConfManager>(), &ConfManager::updateDriverZones);
-}
-
-void FortManager::setupModels()
-{
-    m_zoneListModel = new ZoneListModel(this);
-    zoneListModel()->initialize();
 }
 
 void FortManager::setupTranslationManager()

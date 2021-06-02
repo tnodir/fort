@@ -66,12 +66,12 @@ IniUser *ZonesWindow::iniUser() const
 
 TaskManager *ZonesWindow::taskManager() const
 {
-    return IoC<TaskManager>();
+    return ctrl()->taskManager();
 }
 
 ZoneListModel *ZonesWindow::zoneListModel() const
 {
-    return fortManager()->zoneListModel();
+    return ctrl()->zoneListModel();
 }
 
 void ZonesWindow::saveWindowState()

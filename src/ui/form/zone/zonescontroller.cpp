@@ -3,6 +3,8 @@
 #include "../../conf/confmanager.h"
 #include "../../conf/firewallconf.h"
 #include "../../fortmanager.h"
+#include "../../model/zonelistmodel.h"
+#include "../../task/taskmanager.h"
 #include "../../translationmanager.h"
 #include "../../util/ioc/ioccontainer.h"
 
@@ -37,9 +39,14 @@ IniUser *ZonesController::iniUser() const
     return confManager()->iniUser();
 }
 
+TaskManager *ZonesController::taskManager() const
+{
+    return IoC<TaskManager>();
+}
+
 ZoneListModel *ZonesController::zoneListModel() const
 {
-    return fortManager()->zoneListModel();
+    return IoC<ZoneListModel>();
 }
 
 TranslationManager *ZonesController::translationManager() const

@@ -12,7 +12,6 @@ class OptionsWindow;
 class ProgramsWindow;
 class StatisticsWindow;
 class TrayIcon;
-class ZoneListModel;
 class ZonesWindow;
 
 class FortManager : public QObject
@@ -33,8 +32,6 @@ public:
     StatisticsWindow *connWindow() const { return m_statWindow; }
     ZonesWindow *zoneWindow() const { return m_zoneWindow; }
     GraphWindow *graphWindow() const { return m_graphWindow; }
-
-    ZoneListModel *zoneListModel() const { return m_zoneListModel; }
 
     bool checkRunningInstance();
 
@@ -105,8 +102,6 @@ private:
     void setupQuotaManager();
     void setupTaskManager();
 
-    void setupModels();
-
     void setupTranslationManager();
 
     void setupMainWindow();
@@ -149,8 +144,6 @@ private:
     StatisticsWindow *m_statWindow = nullptr;
     ZonesWindow *m_zoneWindow = nullptr;
     GraphWindow *m_graphWindow = nullptr;
-
-    ZoneListModel *m_zoneListModel = nullptr;
 };
 
 #endif // FORTMANAGER_H

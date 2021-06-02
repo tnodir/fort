@@ -24,7 +24,7 @@ TaskZoneDownloader *TaskInfoZoneDownloader::zoneDownloader() const
 
 ZoneListModel *TaskInfoZoneDownloader::zoneListModel() const
 {
-    return IoC<FortManager>()->zoneListModel();
+    return IoC<ZoneListModel>();
 }
 
 bool TaskInfoZoneDownloader::processResult(bool success)

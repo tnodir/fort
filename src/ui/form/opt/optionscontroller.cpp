@@ -5,6 +5,7 @@
 #include "../../driver/drivermanager.h"
 #include "../../fortmanager.h"
 #include "../../fortsettings.h"
+#include "../../model/zonelistmodel.h"
 #include "../../task/taskmanager.h"
 #include "../../translationmanager.h"
 #include "../../util/ioc/ioccontainer.h"
@@ -69,7 +70,7 @@ TranslationManager *OptionsController::translationManager() const
 
 ZoneListModel *OptionsController::zoneListModel() const
 {
-    return fortManager()->zoneListModel();
+    return IoC<ZoneListModel>();
 }
 
 void OptionsController::setOptEdited()

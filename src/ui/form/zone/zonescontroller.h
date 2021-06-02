@@ -8,6 +8,7 @@ class FirewallConf;
 class FortManager;
 class IniOptions;
 class IniUser;
+class TaskManager;
 class TranslationManager;
 class ZoneListModel;
 
@@ -23,6 +24,7 @@ public:
     FirewallConf *conf() const;
     IniOptions *ini() const;
     IniUser *iniUser() const;
+    TaskManager *taskManager() const;
     ZoneListModel *zoneListModel() const;
     TranslationManager *translationManager() const;
 

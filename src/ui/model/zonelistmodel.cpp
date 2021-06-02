@@ -26,7 +26,7 @@ SqliteDb *ZoneListModel::sqliteDb() const
     return confManager()->sqliteDb();
 }
 
-void ZoneListModel::initialize()
+void ZoneListModel::setUp()
 {
     setupZoneTypes();
     setupZoneSources();

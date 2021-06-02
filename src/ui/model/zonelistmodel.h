@@ -3,6 +3,7 @@
 
 #include <QDateTime>
 
+#include "../util/ioc/iocservice.h"
 #include "../util/model/tablesqlmodel.h"
 
 class ConfManager;
@@ -32,7 +33,7 @@ struct ZoneRow : TableRow
     QDateTime lastSuccess;
 };
 
-class ZoneListModel : public TableSqlModel
+class ZoneListModel : public TableSqlModel, public IocService
 {
     Q_OBJECT
 
@@ -42,7 +43,7 @@ public:
     ConfManager *confManager() const;
     SqliteDb *sqliteDb() const override;
 
-    void initialize();
+    void setUp() override;
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 

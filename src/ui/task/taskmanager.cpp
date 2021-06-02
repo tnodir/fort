@@ -1,6 +1,7 @@
 #include "taskmanager.h"
 
 #include "../conf/confmanager.h"
+#include "../model/zonelistmodel.h"
 #include "../util/dateutil.h"
 #include "../util/ioc/ioccontainer.h"
 #include "taskinfoupdatechecker.h"
@@ -32,10 +33,11 @@ TaskInfo *TaskManager::taskInfoAt(int row) const
 void TaskManager::setUp()
 {
     IoC()->setUpDependency<ConfManager>();
+    IoC()->setUpDependency<ZoneListModel>();
 
     loadSettings();
 
-    QMetaObject::invokeMethod(this, &TaskManager::setupScheduler, Qt::QueuedConnection);
+    setupScheduler();
 }
 
 void TaskManager::setupScheduler()
