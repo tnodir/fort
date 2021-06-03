@@ -24,6 +24,7 @@
 #include "form/zone/zoneswindow.h"
 #include "fortcompat.h"
 #include "fortsettings.h"
+#include "hostinfo/hostinfocache.h"
 #include "manager/envmanager.h"
 #include "manager/hotkeymanager.h"
 #include "manager/logger.h"
@@ -44,7 +45,6 @@
 #include "util/dateutil.h"
 #include "util/fileutil.h"
 #include "util/ioc/ioccontainer.h"
-#include "util/net/hostinfocache.h"
 #include "util/osutil.h"
 #include "util/startuputil.h"
 

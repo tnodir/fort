@@ -18,9 +18,6 @@ using ip4_arr_t = QVector<quint32>;
 class Ip4Range : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int errorLineNo READ errorLineNo NOTIFY errorLineNoChanged)
-    Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
-    Q_PROPERTY(QString errorLineAndMessage READ errorLineAndMessage NOTIFY errorMessageChanged)
 
 public:
     explicit Ip4Range(QObject *parent = nullptr);

@@ -73,6 +73,10 @@ SOURCES += \
     form/zone/zoneswindow.cpp \
     fortmanager.cpp \
     fortsettings.cpp \
+    hostinfo/hostinfo.cpp \
+    hostinfo/hostinfocache.cpp \
+    hostinfo/hostinfojob.cpp \
+    hostinfo/hostinfomanager.cpp \
     log/logbuffer.cpp \
     log/logentry.cpp \
     log/logentryblocked.cpp \
@@ -133,10 +137,6 @@ SOURCES += \
     util/model/stringlistmodel.cpp \
     util/model/tableitemmodel.cpp \
     util/model/tablesqlmodel.cpp \
-    util/net/hostinfo.cpp \
-    util/net/hostinfocache.cpp \
-    util/net/hostinfojob.cpp \
-    util/net/hostinfomanager.cpp \
     util/net/ip4range.cpp \
     util/net/netdownloader.cpp \
     util/net/netutil.cpp \
@@ -222,6 +222,10 @@ HEADERS += \
     fortcompat.h \
     fortmanager.h \
     fortsettings.h \
+    hostinfo/hostinfo.h \
+    hostinfo/hostinfocache.h \
+    hostinfo/hostinfojob.h \
+    hostinfo/hostinfomanager.h \
     log/logbuffer.h \
     log/logentry.h \
     log/logentryblocked.h \
@@ -285,10 +289,6 @@ HEADERS += \
     util/model/stringlistmodel.h \
     util/model/tableitemmodel.h \
     util/model/tablesqlmodel.h \
-    util/net/hostinfo.h \
-    util/net/hostinfocache.h \
-    util/net/hostinfojob.h \
-    util/net/hostinfomanager.h \
     util/net/ip4range.h \
     util/net/netdownloader.h \
     util/net/netutil.h \

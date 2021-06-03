@@ -8,11 +8,11 @@
 
 #include "../appinfo/appinfocache.h"
 #include "../fortmanager.h"
+#include "../hostinfo/hostinfocache.h"
 #include "../log/logentryblockedip.h"
 #include "../stat/statmanager.h"
 #include "../util/iconcache.h"
 #include "../util/ioc/ioccontainer.h"
-#include "../util/net/hostinfocache.h"
 #include "../util/net/netutil.h"
 
 ConnListModel::ConnListModel(QObject *parent) :

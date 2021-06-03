@@ -19,8 +19,6 @@ struct sock_addr
 
 #define sock_addr_get_inp(sap) ((void *) &(sap)->u.in.sin_addr)
 
-NetUtil::NetUtil(QObject *parent) : QObject(parent) { }
-
 quint32 NetUtil::textToIp4(const QString &text, bool *ok)
 {
     quint32 ip4 = 0;
