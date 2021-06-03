@@ -31,6 +31,7 @@ public:
     GraphWindow *graphWindow() const { return m_graphWindow; }
 
     void setUp() override;
+    void tearDown() override;
 
 signals:
     void optWindowChanged(bool visible);
@@ -66,8 +67,8 @@ public slots:
     void quitByCheckPassword();
     bool checkPassword();
 
-    void showErrorBox(const QString &text, const QString &title = QString());
-    void showInfoBox(const QString &text, const QString &title = QString());
+    virtual void showErrorBox(const QString &text, const QString &title = QString());
+    virtual void showInfoBox(const QString &text, const QString &title = QString());
     bool showQuestionBox(const QString &text, const QString &title = QString());
     bool showYesNoBox(const QString &text, const QString &yesText, const QString &noText,
             const QString &title = QString());
@@ -90,10 +91,6 @@ private:
     static void activateModalWidget();
 
 private:
-    bool m_initialized : 1;
-
-    void *m_instanceMutex = nullptr;
-
     TrayMessageType m_lastMessageType = MessageOptions;
 
     TrayIcon *m_trayIcon = nullptr;

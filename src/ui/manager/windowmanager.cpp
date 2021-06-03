@@ -1,6 +1,7 @@
 #include "windowmanager.h"
 
 #include <QApplication>
+#include <QDebug>
 #include <QMessageBox>
 #include <QMouseEvent>
 #include <QStyle>
@@ -43,6 +44,11 @@ void WindowManager::setUp()
     connect(qApp, &QCoreApplication::aboutToQuit, this, &WindowManager::closeAll);
 }
 
+void WindowManager::tearDown()
+{
+    closeAll();
+}
+
 void WindowManager::setupMainWindow()
 {
     m_mainWindow = new MainWindow();
@@ -66,7 +72,8 @@ void WindowManager::closeMainWindow()
     nativeEventFilter->unregisterHotKeys();
     nativeEventFilter->unregisterSessionNotification(mainWindow()->winId());
 
-    delete mainWindow();
+    m_mainWindow->deleteLater();
+    m_mainWindow = nullptr;
 }
 
 void WindowManager::setupTrayIcon()

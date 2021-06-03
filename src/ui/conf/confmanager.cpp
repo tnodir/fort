@@ -411,11 +411,7 @@ IniUser *ConfManager::iniUser() const
 
 void ConfManager::showErrorMessage(const QString &errorMessage)
 {
-    logWarning() << "Error:" << errorMessage;
-
-    if (!IoC<FortSettings>()->isService()) {
-        IoC<WindowManager>()->showErrorBox(errorMessage, tr("Configuration Error"));
-    }
+    IoC<WindowManager>()->showErrorBox(errorMessage, tr("Configuration Error"));
 }
 
 void ConfManager::setUp()

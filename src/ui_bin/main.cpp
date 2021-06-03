@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
     ioc.set<FortManager>(fortManager);
 
     // Check running instance
-    if (!fortManager.checkRunningInstance())
+    if (!fortManager.checkRunningInstance(settings.isService()))
         return FORT_ERROR_INSTANCE;
 
     fortManager.initialize();

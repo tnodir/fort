@@ -1,6 +1,8 @@
 #include "fortmanager.h"
 
 #include <QApplication>
+#include <QDebug>
+#include <QMessageBox>
 #include <QProcess>
 #include <QThreadPool>
 
@@ -26,7 +28,7 @@
 #include "rpc/rpcmanager.h"
 #include "rpc/statmanagerrpc.h"
 #include "rpc/taskmanagerrpc.h"
-#include "rpc/windowmanagerrpc.h"
+#include "rpc/windowmanagerfake.h"
 #include "task/taskinfozonedownloader.h"
 #include "user/usersettings.h"
 #include "util/dateutil.h"
@@ -48,16 +50,20 @@ FortManager::~FortManager()
     OsUtil::closeMutex(m_instanceMutex);
 }
 
-bool FortManager::checkRunningInstance()
+bool FortManager::checkRunningInstance(bool isService)
 {
     bool isSingleInstance;
-    m_instanceMutex = OsUtil::createMutex(
-            IoC<FortSettings>()->isService() ? "Global\\" APP_BASE : APP_BASE, isSingleInstance);
+    m_instanceMutex =
+            OsUtil::createMutex(isService ? "Global\\" APP_BASE : APP_BASE, isSingleInstance);
+    if (isSingleInstance)
+        return true;
 
-    if (!isSingleInstance) {
-        IoC<WindowManager>()->showErrorBox(tr("Application is already running!"));
+    if (isService) {
+        qWarning() << "Quit due Service is already running!";
+    } else {
+        QMessageBox::warning(nullptr, QString(), tr("Application is already running!"));
     }
-    return isSingleInstance;
+    return false;
 }
 
 void FortManager::initialize()
@@ -133,7 +139,6 @@ void FortManager::createManagers()
         appInfoManager = new AppInfoManager(settings->cacheFilePath());
         logManager = new LogManager();
         taskManager = new TaskManager();
-        windowManager = new WindowManager();
     } else {
         confManager = new ConfManagerRpc(settings->confFilePath());
         quotaManager = new QuotaManagerRpc();
@@ -142,7 +147,16 @@ void FortManager::createManagers()
         appInfoManager = new AppInfoManagerRpc(settings->cacheFilePath());
         logManager = new LogManagerRpc();
         taskManager = new TaskManagerRpc();
-        windowManager = new WindowManagerRpc();
+    }
+
+    if (settings->isService()) {
+        windowManager = new WindowManagerFake();
+    } else {
+        windowManager = new WindowManager();
+
+        ioc->setService(new HotKeyManager());
+        ioc->setService(new UserSettings());
+        ioc->setService(new TranslationManager());
     }
 
     ioc->setService(confManager);
@@ -154,18 +168,10 @@ void FortManager::createManagers()
     ioc->setService(taskManager);
     ioc->setService(windowManager);
 
+    ioc->setService(new NativeEventFilter());
     ioc->setService(new AppInfoCache());
     ioc->setService(new HostInfoCache());
-
-    ioc->setService(new NativeEventFilter());
-    ioc->setService(new HotKeyManager());
-
     ioc->setService(new ZoneListModel());
-
-    if (!settings->isService()) {
-        ioc->setService(new UserSettings());
-        ioc->setService(new TranslationManager());
-    }
 
     ioc->setUpAll();
 }
@@ -254,12 +260,10 @@ void FortManager::setupConfManager()
 
 void FortManager::setupQuotaManager()
 {
-    if (!IoC<FortSettings>()->isService()) {
-        connect(IoC<QuotaManager>(), &QuotaManager::alert, this, [&](qint8 alertType) {
-            IoC<WindowManager>()->showInfoBox(
-                    QuotaManager::alertTypeText(alertType), tr("Quota Alert"));
-        });
-    }
+    connect(IoC<QuotaManager>(), &QuotaManager::alert, this, [&](qint8 alertType) {
+        IoC<WindowManager>()->showInfoBox(
+                QuotaManager::alertTypeText(alertType), tr("Quota Alert"));
+    });
 }
 
 void FortManager::setupTaskManager()
@@ -314,7 +318,7 @@ void FortManager::loadConf()
 
     QString viaVersion;
     if (!settings->canMigrate(viaVersion)) {
-        IoC<WindowManager>()->showInfoBox(
+        IoC<WindowManager>()->showErrorBox(
                 tr("Please first install Fort Firewall v%1 and save Options from it.")
                         .arg(viaVersion));
         abort(); // Abort the program

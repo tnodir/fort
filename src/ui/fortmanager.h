@@ -16,7 +16,7 @@ public:
     ~FortManager() override;
     CLASS_DELETE_COPY_MOVE(FortManager)
 
-    bool checkRunningInstance();
+    bool checkRunningInstance(bool isService);
 
     void initialize();
 
