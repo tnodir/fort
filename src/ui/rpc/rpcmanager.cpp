@@ -13,6 +13,210 @@
 #include "../rpc/taskmanagerrpc.h"
 #include "../util/ioc/ioccontainer.h"
 
+namespace {
+
+inline bool sendCommandDataToClients(
+        const QByteArray &commandData, const QList<ControlWorker *> &clients)
+{
+    bool ok = true;
+
+    for (ControlWorker *w : clients) {
+        if (!w->isServiceClient())
+            continue;
+
+        if (!w->sendCommandData(commandData)) {
+            qWarning() << "Send command error:" << w->id() << w->errorString();
+            ok = false;
+        }
+    }
+
+    return ok;
+}
+
+inline bool processConfManager_confChanged(ConfManager *confManager, const QVariantList &args)
+{
+    if (auto cm = qobject_cast<ConfManagerRpc *>(confManager)) {
+        cm->onConfChanged(args.value(0));
+    }
+    return true;
+}
+
+inline bool processConfManager_saveVariant(ConfManager *confManager, const QVariantList &args)
+{
+    return confManager->saveVariant(args.value(0));
+}
+
+inline bool processConfManager_addApp(ConfManager *confManager, const QVariantList &args)
+{
+    return confManager->addApp(args.value(0).toString(), args.value(1).toString(),
+            args.value(2).toDateTime(), args.value(3).toInt(), args.value(4).toBool(),
+            args.value(5).toBool());
+}
+
+inline bool processConfManager_deleteApp(ConfManager *confManager, const QVariantList &args)
+{
+    return confManager->deleteApp(args.value(0).toLongLong());
+}
+
+inline bool processConfManager_updateApp(ConfManager *confManager, const QVariantList &args)
+{
+    return confManager->updateApp(args.value(0).toLongLong(), args.value(1).toString(),
+            args.value(2).toString(), args.value(3).toDateTime(), args.value(4).toInt(),
+            args.value(5).toBool(), args.value(6).toBool());
+}
+
+inline bool processConfManager_updateAppBlocked(ConfManager *confManager, const QVariantList &args)
+{
+    return confManager->updateAppBlocked(args.value(0).toLongLong(), args.value(1).toBool());
+}
+
+inline bool processConfManager_updateAppName(ConfManager *confManager, const QVariantList &args)
+{
+    return confManager->updateAppName(args.value(0).toLongLong(), args.value(1).toString());
+}
+
+inline bool processConfManager_addZone(
+        ConfManager *confManager, const QVariantList &args, QVariantList &resArgs)
+{
+    int zoneId = 0;
+    const bool ok = confManager->addZone(args.value(0).toString(), args.value(1).toString(),
+            args.value(2).toString(), args.value(3).toString(), args.value(4).toBool(),
+            args.value(5).toBool(), zoneId);
+    resArgs = { zoneId };
+    return ok;
+}
+
+inline bool processConfManager_deleteZone(ConfManager *confManager, const QVariantList &args)
+{
+    return confManager->deleteZone(args.value(0).toLongLong());
+}
+
+inline bool processConfManager_updateZone(ConfManager *confManager, const QVariantList &args)
+{
+    return confManager->updateZone(args.value(0).toLongLong(), args.value(1).toString(),
+            args.value(2).toString(), args.value(3).toString(), args.value(4).toString(),
+            args.value(5).toBool(), args.value(6).toBool());
+}
+
+inline bool processConfManager_updateZoneName(ConfManager *confManager, const QVariantList &args)
+{
+    return confManager->updateZoneName(args.value(0).toLongLong(), args.value(1).toString());
+}
+
+inline bool processConfManager_updateZoneEnabled(ConfManager *confManager, const QVariantList &args)
+{
+    return confManager->updateZoneEnabled(args.value(0).toLongLong(), args.value(1).toBool());
+}
+
+inline bool processConfManagerRpcResult(ConfManager *confManager, Control::Command cmd,
+        const QVariantList &args, QVariantList &resArgs)
+{
+    switch (cmd) {
+    case Control::Rpc_ConfManager_save:
+        return processConfManager_saveVariant(confManager, args);
+    case Control::Rpc_ConfManager_addApp:
+        return processConfManager_addApp(confManager, args);
+    case Control::Rpc_ConfManager_deleteApp:
+        return processConfManager_deleteApp(confManager, args);
+    case Control::Rpc_ConfManager_purgeApps:
+        return confManager->purgeApps();
+    case Control::Rpc_ConfManager_updateApp:
+        return processConfManager_updateApp(confManager, args);
+    case Control::Rpc_ConfManager_updateAppBlocked:
+        return processConfManager_updateAppBlocked(confManager, args);
+    case Control::Rpc_ConfManager_updateAppName:
+        return processConfManager_updateAppName(confManager, args);
+    case Control::Rpc_ConfManager_addZone:
+        return processConfManager_addZone(confManager, args, resArgs);
+    case Control::Rpc_ConfManager_deleteZone:
+        return processConfManager_deleteZone(confManager, args);
+    case Control::Rpc_ConfManager_updateZone:
+        return processConfManager_updateZone(confManager, args);
+    case Control::Rpc_ConfManager_updateZoneName:
+        return processConfManager_updateZoneName(confManager, args);
+    case Control::Rpc_ConfManager_updateZoneEnabled:
+        return processConfManager_updateZoneEnabled(confManager, args);
+    default:
+        return false;
+    }
+}
+
+inline bool processStatManager_appStatRemoved(StatManager *statManager, const QVariantList &args)
+{
+    emit statManager->appStatRemoved(args.value(0).toLongLong());
+    return true;
+}
+
+inline bool processStatManager_appCreated(StatManager *statManager, const QVariantList &args)
+{
+    emit statManager->appCreated(args.value(0).toLongLong(), args.value(1).toString());
+    return true;
+}
+
+inline bool processStatManager_trafficAdded(StatManager *statManager, const QVariantList &args)
+{
+    emit statManager->trafficAdded(
+            args.value(0).toLongLong(), args.value(1).toUInt(), args.value(2).toUInt());
+    return true;
+}
+
+inline bool processStatManager_connChanged(StatManager *statManager)
+{
+    if (auto sm = qobject_cast<StatManagerRpc *>(statManager)) {
+        sm->onConnChanged();
+    }
+    return true;
+}
+
+inline bool processStatManagerRpcResult(
+        StatManager *statManager, Control::Command cmd, const QVariantList &args)
+{
+    switch (cmd) {
+    case Control::Rpc_StatManager_deleteStatApp:
+        return statManager->deleteStatApp(args.value(0).toLongLong());
+    case Control::Rpc_StatManager_deleteConn:
+        return statManager->deleteConn(args.value(0).toLongLong(), args.value(1).toBool());
+    case Control::Rpc_StatManager_deleteConnAll:
+        return statManager->deleteConnAll();
+    case Control::Rpc_StatManager_resetAppTrafTotals:
+        return statManager->resetAppTrafTotals();
+    case Control::Rpc_StatManager_clearTraffic:
+        return statManager->clearTraffic();
+    default:
+        return false;
+    }
+}
+
+inline bool processTaskManager_runTask(TaskManager *taskManager, const QVariantList &args)
+{
+    taskManager->runTask(args.value(0).toInt());
+    return true;
+}
+
+inline bool processTaskManager_abortTask(TaskManager *taskManager, const QVariantList &args)
+{
+    taskManager->abortTask(args.value(0).toInt());
+    return true;
+}
+
+inline bool processTaskManager_taskStarted(TaskManager *taskManager, const QVariantList &args)
+{
+    if (auto tm = qobject_cast<TaskManagerRpc *>(taskManager)) {
+        tm->onTaskStarted(args.value(0).toInt());
+    }
+    return true;
+}
+
+inline bool processTaskManager_taskFinished(TaskManager *taskManager, const QVariantList &args)
+{
+    if (auto tm = qobject_cast<TaskManagerRpc *>(taskManager)) {
+        tm->onTaskFinished(args.value(0).toInt());
+    }
+    return true;
+}
+
+}
+
 RpcManager::RpcManager(QObject *parent) : QObject(parent) { }
 
 void RpcManager::setUp()
@@ -188,13 +392,8 @@ void RpcManager::invokeOnClients(Control::Command cmd, const QVariantList &args)
         return;
     }
 
-    for (ControlWorker *w : clients) {
-        if (!w->isServiceClient())
-            continue;
-
-        if (!w->sendCommandData(buffer)) {
-            qWarning() << "Send command error:" << w->id() << cmd << args << w->errorString();
-        }
+    if (!sendCommandDataToClients(buffer, clients)) {
+        qWarning() << "Invoke on clients error:" << cmd << args;
     }
 }
 
@@ -300,11 +499,10 @@ bool RpcManager::processConfManagerRpc(
     auto confManager = IoC<ConfManager>();
 
     switch (cmd) {
+    case Control::Rpc_ConfManager_checkPassword:
+        return validateClient(w, args.value(0).toString());
     case Control::Rpc_ConfManager_confChanged:
-        if (auto cm = qobject_cast<ConfManagerRpc *>(confManager)) {
-            cm->onConfChanged(args.value(0));
-        }
-        return true;
+        return processConfManager_confChanged(confManager, args);
     case Control::Rpc_ConfManager_appAlerted:
         emit confManager->appAlerted();
         return true;
@@ -325,59 +523,10 @@ bool RpcManager::processConfManagerRpc(
         return true;
     default: {
         QVariantList resArgs;
-        const bool ok = processConfManagerRpcResult(w, cmd, args, resArgs);
+        const bool ok = processConfManagerRpcResult(confManager, cmd, args, resArgs);
         sendResult(w, ok, resArgs);
         return true;
     }
-    }
-}
-
-bool RpcManager::processConfManagerRpcResult(
-        ControlWorker *w, Control::Command cmd, const QVariantList &args, QVariantList &resArgs)
-{
-    auto confManager = IoC<ConfManager>();
-
-    switch (cmd) {
-    case Control::Rpc_ConfManager_save:
-        return confManager->saveVariant(args.value(0));
-    case Control::Rpc_ConfManager_addApp:
-        return confManager->addApp(args.value(0).toString(), args.value(1).toString(),
-                args.value(2).toDateTime(), args.value(3).toInt(), args.value(4).toBool(),
-                args.value(5).toBool());
-    case Control::Rpc_ConfManager_deleteApp:
-        return confManager->deleteApp(args.value(0).toLongLong());
-    case Control::Rpc_ConfManager_purgeApps:
-        return confManager->purgeApps();
-    case Control::Rpc_ConfManager_updateApp:
-        return confManager->updateApp(args.value(0).toLongLong(), args.value(1).toString(),
-                args.value(2).toString(), args.value(3).toDateTime(), args.value(4).toInt(),
-                args.value(5).toBool(), args.value(6).toBool());
-    case Control::Rpc_ConfManager_updateAppBlocked:
-        return confManager->updateAppBlocked(args.value(0).toLongLong(), args.value(1).toBool());
-    case Control::Rpc_ConfManager_updateAppName:
-        return confManager->updateAppName(args.value(0).toLongLong(), args.value(1).toString());
-    case Control::Rpc_ConfManager_addZone: {
-        int zoneId = 0;
-        const bool ok = confManager->addZone(args.value(0).toString(), args.value(1).toString(),
-                args.value(2).toString(), args.value(3).toString(), args.value(4).toBool(),
-                args.value(5).toBool(), zoneId);
-        resArgs = { zoneId };
-        return ok;
-    }
-    case Control::Rpc_ConfManager_deleteZone:
-        return confManager->deleteZone(args.value(0).toLongLong());
-    case Control::Rpc_ConfManager_updateZone:
-        return confManager->updateZone(args.value(0).toLongLong(), args.value(1).toString(),
-                args.value(2).toString(), args.value(3).toString(), args.value(4).toString(),
-                args.value(5).toBool(), args.value(6).toBool());
-    case Control::Rpc_ConfManager_updateZoneName:
-        return confManager->updateZoneName(args.value(0).toLongLong(), args.value(1).toString());
-    case Control::Rpc_ConfManager_updateZoneEnabled:
-        return confManager->updateZoneEnabled(args.value(0).toLongLong(), args.value(1).toBool());
-    case Control::Rpc_ConfManager_checkPassword:
-        return validateClient(w, args.value(0).toString());
-    default:
-        return false;
     }
 }
 
@@ -415,44 +564,25 @@ bool RpcManager::processStatManagerRpc(
     auto statManager = IoC<StatManager>();
 
     switch (cmd) {
-    case Control::Rpc_StatManager_deleteStatApp:
-        sendResult(w, statManager->deleteStatApp(args.value(0).toLongLong()));
-        return true;
-    case Control::Rpc_StatManager_deleteConn:
-        sendResult(w, statManager->deleteConn(args.value(0).toLongLong(), args.value(1).toBool()));
-        return true;
-    case Control::Rpc_StatManager_deleteConnAll:
-        sendResult(w, statManager->deleteConnAll());
-        return true;
-    case Control::Rpc_StatManager_resetAppTrafTotals:
-        sendResult(w, statManager->resetAppTrafTotals());
-        return true;
-    case Control::Rpc_StatManager_clearTraffic:
-        sendResult(w, statManager->clearTraffic());
-        return true;
     case Control::Rpc_StatManager_trafficCleared:
         emit statManager->trafficCleared();
         return true;
     case Control::Rpc_StatManager_appStatRemoved:
-        emit statManager->appStatRemoved(args.value(0).toLongLong());
-        return true;
+        return processStatManager_appStatRemoved(statManager, args);
     case Control::Rpc_StatManager_appCreated:
-        emit statManager->appCreated(args.value(0).toLongLong(), args.value(1).toString());
-        return true;
+        return processStatManager_appCreated(statManager, args);
     case Control::Rpc_StatManager_trafficAdded:
-        emit statManager->trafficAdded(
-                args.value(0).toLongLong(), args.value(1).toUInt(), args.value(2).toUInt());
-        return true;
+        return processStatManager_trafficAdded(statManager, args);
     case Control::Rpc_StatManager_connChanged:
-        if (auto sm = qobject_cast<StatManagerRpc *>(statManager)) {
-            sm->onConnChanged();
-        }
-        return true;
+        return processStatManager_connChanged(statManager);
     case Control::Rpc_StatManager_appTrafTotalsResetted:
         emit statManager->appTrafTotalsResetted();
         return true;
-    default:
-        return false;
+    default: {
+        const bool ok = processStatManagerRpcResult(statManager, cmd, args);
+        sendResult(w, ok);
+        return true;
+    }
     }
 }
 
@@ -462,21 +592,13 @@ bool RpcManager::processTaskManagerRpc(Control::Command cmd, const QVariantList 
 
     switch (cmd) {
     case Control::Rpc_TaskManager_runTask:
-        taskManager->runTask(args.value(0).toInt());
-        return true;
+        return processTaskManager_runTask(taskManager, args);
     case Control::Rpc_TaskManager_abortTask:
-        taskManager->abortTask(args.value(0).toInt());
-        return true;
+        return processTaskManager_abortTask(taskManager, args);
     case Control::Rpc_TaskManager_taskStarted:
-        if (auto tm = qobject_cast<TaskManagerRpc *>(taskManager)) {
-            tm->onTaskStarted(args.value(0).toInt());
-        }
-        return true;
+        return processTaskManager_taskStarted(taskManager, args);
     case Control::Rpc_TaskManager_taskFinished:
-        if (auto tm = qobject_cast<TaskManagerRpc *>(taskManager)) {
-            tm->onTaskFinished(args.value(0).toInt());
-        }
-        return true;
+        return processTaskManager_taskFinished(taskManager, args);
     default:
         return false;
     }
