@@ -56,16 +56,6 @@ void IocContainer::setObject(int typeId, IocObject *obj, quint8 flags)
     m_objectFlags[typeId] = flags;
 }
 
-IocObject *IocContainer::resolveObject(int typeId) const
-{
-    return m_objects.at(typeId);
-}
-
-IocService *IocContainer::resolveService(int typeId) const
-{
-    return static_cast<IocService *>(resolveObject(typeId));
-}
-
 void IocContainer::setUpAll()
 {
     for (int i = 0; i < m_size; ++i) {

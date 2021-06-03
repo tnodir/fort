@@ -91,8 +91,11 @@ public:
 private:
     void setObject(int typeId, IocObject *obj, quint8 flags = 0);
 
-    IocObject *resolveObject(int typeId) const;
-    IocService *resolveService(int typeId) const;
+    inline IocObject *resolveObject(int typeId) const { return m_objects.at(typeId); }
+    inline IocService *resolveService(int typeId) const
+    {
+        return static_cast<IocService *>(resolveObject(typeId));
+    }
 
     void setUp(int typeId);
     void tearDown(int typeId);
