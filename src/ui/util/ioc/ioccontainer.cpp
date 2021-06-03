@@ -22,6 +22,7 @@ void createTlsIndex()
     }
 }
 
+#if 0
 void deleteTlsIndex()
 {
     if (g_tlsIndex != -1) {
@@ -29,6 +30,7 @@ void deleteTlsIndex()
         g_tlsIndex = -1;
     }
 }
+#endif
 
 }
 
@@ -37,8 +39,6 @@ IocContainer::IocContainer(QObject *parent) : QObject(parent) { }
 IocContainer::~IocContainer()
 {
     autoDeleteAll();
-
-    deleteTlsIndex();
 }
 
 void IocContainer::setObject(int typeId, IocObject *obj, quint8 flags)

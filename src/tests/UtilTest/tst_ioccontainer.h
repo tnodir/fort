@@ -88,8 +88,10 @@ TEST_F(IocContainerTest, insert)
     container.setService<IocTest::B>(b);
 
     ASSERT_EQ(container.resolve<IocTest::A>(), a2);
+    ASSERT_EQ(container.resolve<IocTest::B>(), &b);
     ASSERT_TRUE(container.pinToThread());
     ASSERT_EQ(IoC<IocTest::A>(), a2);
+    ASSERT_EQ(IoC<IocTest::B>(), &b);
 }
 
 TEST_F(IocContainerTest, setUp)
