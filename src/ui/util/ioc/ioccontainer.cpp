@@ -9,8 +9,26 @@
 
 namespace {
 
-int g_tlsIndex = -1;
 int g_nextTypeId = 0;
+int g_tlsIndex = -1;
+
+void createTlsIndex()
+{
+    if (g_tlsIndex == -1) {
+        g_tlsIndex = TlsAlloc();
+        if (g_tlsIndex == -1) {
+            qWarning() << "TlsAlloc error";
+        }
+    }
+}
+
+void deleteTlsIndex()
+{
+    if (g_tlsIndex != -1) {
+        TlsFree(g_tlsIndex);
+        g_tlsIndex = -1;
+    }
+}
 
 }
 
@@ -20,10 +38,7 @@ IocContainer::~IocContainer()
 {
     autoDeleteAll();
 
-    if (g_tlsIndex != -1) {
-        TlsFree(g_tlsIndex);
-        g_tlsIndex = -1;
-    }
+    deleteTlsIndex();
 }
 
 void IocContainer::setObject(int typeId, IocObject *obj, quint8 flags)
@@ -108,12 +123,7 @@ void IocContainer::autoDelete(int typeId)
 
 bool IocContainer::pinToThread()
 {
-    if (g_tlsIndex == -1) {
-        g_tlsIndex = TlsAlloc();
-        if (g_tlsIndex == -1) {
-            qWarning() << "TlsAlloc error";
-        }
-    }
+    createTlsIndex();
 
     return TlsSetValue(g_tlsIndex, this);
 }
