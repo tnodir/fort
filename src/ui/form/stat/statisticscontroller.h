@@ -9,6 +9,7 @@ class FortManager;
 class IniOptions;
 class IniUser;
 class TranslationManager;
+class WindowManager;
 
 class StatisticsController : public QObject
 {
@@ -23,6 +24,7 @@ public:
     IniOptions *ini() const;
     IniUser *iniUser() const;
     TranslationManager *translationManager() const;
+    WindowManager *windowManager() const;
 
 signals:
     void afterSaveWindowState(IniUser *ini);

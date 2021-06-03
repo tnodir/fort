@@ -4,7 +4,7 @@
 
 #include <fort_version.h>
 
-#include "../fortmanager.h"
+#include "../manager/windowmanager.h"
 #include "../util/ioc/ioccontainer.h"
 #include "taskupdatechecker.h"
 
@@ -90,7 +90,7 @@ bool TaskInfoUpdateChecker::processResult(bool success)
     emit versionChanged();
 
     if (isNewVersion()) {
-        IoC<FortManager>()->showTrayMessage(tr("New version v%1 available!").arg(m_version));
+        IoC<WindowManager>()->showTrayMessage(tr("New version v%1 available!").arg(m_version));
     }
 
     return true;

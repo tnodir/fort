@@ -13,7 +13,7 @@
 
 #include "../../conf/confmanager.h"
 #include "../../conf/firewallconf.h"
-#include "../../fortmanager.h"
+#include "../../manager/windowmanager.h"
 #include "../../model/zonelistmodel.h"
 #include "../../model/zonesourcewrapper.h"
 #include "../../task/taskinfozonedownloader.h"
@@ -44,11 +44,6 @@ ZonesWindow::ZonesWindow(QWidget *parent) :
     setupStateWatcher();
 }
 
-FortManager *ZonesWindow::fortManager() const
-{
-    return ctrl()->fortManager();
-}
-
 ConfManager *ZonesWindow::confManager() const
 {
     return ctrl()->confManager();
@@ -62,6 +57,11 @@ IniOptions *ZonesWindow::ini() const
 IniUser *ZonesWindow::iniUser() const
 {
     return ctrl()->iniUser();
+}
+
+WindowManager *ZonesWindow::windowManager() const
+{
+    return ctrl()->windowManager();
 }
 
 TaskManager *ZonesWindow::taskManager() const
@@ -287,7 +287,7 @@ QLayout *ZonesWindow::setupHeader()
     connect(m_actAddZone, &QAction::triggered, this, [&] { updateZoneEditForm(false); });
     connect(m_actEditZone, &QAction::triggered, this, [&] { updateZoneEditForm(true); });
     connect(m_actRemoveZone, &QAction::triggered, this, [&] {
-        if (fortManager()->showQuestionBox(tr("Are you sure to remove selected zone?"))) {
+        if (windowManager()->showQuestionBox(tr("Are you sure to remove selected zone?"))) {
             deleteSelectedZone();
         }
     });
@@ -304,7 +304,7 @@ QLayout *ZonesWindow::setupHeader()
             const int zoneIndex = zoneListCurrentIndex();
 
             if (!taskManager()->taskInfoZoneDownloader()->saveZoneAsText(filePath, zoneIndex)) {
-                fortManager()->showErrorBox(tr("Cannot save Zone addresses as text file"));
+                windowManager()->showErrorBox(tr("Cannot save Zone addresses as text file"));
             }
         }
     });

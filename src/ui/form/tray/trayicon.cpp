@@ -8,9 +8,9 @@
 #include "../../conf/appgroup.h"
 #include "../../conf/confmanager.h"
 #include "../../conf/firewallconf.h"
-#include "../../fortmanager.h"
 #include "../../fortsettings.h"
 #include "../../manager/hotkeymanager.h"
+#include "../../manager/windowmanager.h"
 #include "../../user/iniuser.h"
 #include "../../util/guiutil.h"
 #include "../../util/iconcache.h"
@@ -64,11 +64,6 @@ TrayIcon::~TrayIcon()
     delete m_menu;
 }
 
-FortManager *TrayIcon::fortManager() const
-{
-    return ctrl()->fortManager();
-}
-
 FortSettings *TrayIcon::settings() const
 {
     return ctrl()->settings();
@@ -97,6 +92,11 @@ IniUser *TrayIcon::iniUser() const
 HotKeyManager *TrayIcon::hotKeyManager() const
 {
     return ctrl()->hotKeyManager();
+}
+
+WindowManager *TrayIcon::windowManager() const
+{
+    return ctrl()->windowManager();
 }
 
 void TrayIcon::onTrayActivated(QSystemTrayIcon::ActivationReason reason)
@@ -156,8 +156,10 @@ void TrayIcon::updateTrayMenu(bool onlyFlags)
 
 void TrayIcon::setupController()
 {
-    connect(fortManager(), &FortManager::optWindowChanged, this, &TrayIcon::updateTrayMenuFlags);
-    connect(fortManager(), &FortManager::graphWindowChanged, m_graphAction, &QAction::setChecked);
+    connect(windowManager(), &WindowManager::optWindowChanged, this,
+            &TrayIcon::updateTrayMenuFlags);
+    connect(windowManager(), &WindowManager::graphWindowChanged, m_graphAction,
+            &QAction::setChecked);
 
     connect(settings(), &FortSettings::passwordCheckedChanged, this,
             &TrayIcon::updateTrayMenuFlags);
@@ -198,23 +200,23 @@ void TrayIcon::setupTrayMenu()
     m_menu = new QMenu();
 
     m_programsAction = addAction(m_menu, IconCache::icon(":/icons/window.png"), QString(),
-            fortManager(), SLOT(showProgramsWindow()));
+            windowManager(), SLOT(showProgramsWindow()));
     addHotKey(m_programsAction, iniUser()->hotKeyPrograms());
 
     m_optionsAction = addAction(m_menu, IconCache::icon(":/icons/cog.png"), QString(),
-            fortManager(), SLOT(showOptionsWindow()));
+            windowManager(), SLOT(showOptionsWindow()));
     addHotKey(m_optionsAction, iniUser()->hotKeyOptions());
 
     m_statisticsAction = addAction(m_menu, IconCache::icon(":/icons/chart-bar.png"), QString(),
-            fortManager(), SLOT(showStatisticsWindow()));
+            windowManager(), SLOT(showStatisticsWindow()));
     addHotKey(m_statisticsAction, iniUser()->hotKeyStatistics());
 
     m_graphAction = addAction(m_menu, IconCache::icon(":/icons/line-graph.png"), QString(),
-            fortManager(), SLOT(switchGraphWindow()), true, !!fortManager()->graphWindow());
+            windowManager(), SLOT(switchGraphWindow()), true, !!windowManager()->graphWindow());
     addHotKey(m_graphAction, iniUser()->hotKeyGraph());
 
     m_zonesAction = addAction(m_menu, IconCache::icon(":/icons/map-map-marker.png"), QString(),
-            fortManager(), SLOT(showZonesWindow()));
+            windowManager(), SLOT(showZonesWindow()));
     addHotKey(m_zonesAction, iniUser()->hotKeyZones());
 
     m_menu->addSeparator();
@@ -250,13 +252,13 @@ void TrayIcon::setupTrayMenu()
 
     m_menu->addSeparator();
     m_quitAction =
-            addAction(m_menu, QIcon(), tr("Quit"), fortManager(), SLOT(quitByCheckPassword()));
+            addAction(m_menu, QIcon(), tr("Quit"), windowManager(), SLOT(quitByCheckPassword()));
     addHotKey(m_quitAction, iniUser()->hotKeyQuit());
 }
 
 void TrayIcon::updateTrayMenuFlags()
 {
-    const bool editEnabled = (!settings()->isPasswordRequired() && !fortManager()->optWindow());
+    const bool editEnabled = (!settings()->isPasswordRequired() && !windowManager()->optWindow());
 
     m_filterEnabledAction->setEnabled(editEnabled);
     m_stopTrafficAction->setEnabled(editEnabled);

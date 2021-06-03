@@ -38,6 +38,11 @@ TranslationManager *StatBasePage::translationManager() const
     return ctrl()->translationManager();
 }
 
+WindowManager *StatBasePage::windowManager() const
+{
+    return ctrl()->windowManager();
+}
+
 void StatBasePage::setupController()
 {
     Q_ASSERT(ctrl());

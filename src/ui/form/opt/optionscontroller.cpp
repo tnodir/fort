@@ -6,6 +6,7 @@
 #include "../../fortmanager.h"
 #include "../../fortsettings.h"
 #include "../../manager/translationmanager.h"
+#include "../../manager/windowmanager.h"
 #include "../../model/zonelistmodel.h"
 #include "../../task/taskmanager.h"
 #include "../../util/ioc/ioccontainer.h"
@@ -66,6 +67,11 @@ DriverManager *OptionsController::driverManager() const
 TranslationManager *OptionsController::translationManager() const
 {
     return IoC<TranslationManager>();
+}
+
+WindowManager *OptionsController::windowManager() const
+{
+    return IoC<WindowManager>();
 }
 
 ZoneListModel *OptionsController::zoneListModel() const
@@ -144,5 +150,5 @@ void OptionsController::save(bool closeOnSuccess)
 
 void OptionsController::closeWindow()
 {
-    fortManager()->closeOptionsWindow();
+    windowManager()->closeOptionsWindow();
 }

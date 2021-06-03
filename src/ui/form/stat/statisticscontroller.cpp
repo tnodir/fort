@@ -4,6 +4,7 @@
 #include "../../conf/firewallconf.h"
 #include "../../fortmanager.h"
 #include "../../manager/translationmanager.h"
+#include "../../manager/windowmanager.h"
 #include "../../util/ioc/ioccontainer.h"
 
 StatisticsController::StatisticsController(QObject *parent) : QObject(parent)
@@ -40,4 +41,9 @@ IniUser *StatisticsController::iniUser() const
 TranslationManager *StatisticsController::translationManager() const
 {
     return IoC<TranslationManager>();
+}
+
+WindowManager *StatisticsController::windowManager() const
+{
+    return IoC<WindowManager>();
 }

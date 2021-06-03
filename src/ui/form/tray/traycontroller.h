@@ -11,6 +11,7 @@ class HotKeyManager;
 class IniOptions;
 class IniUser;
 class TranslationManager;
+class WindowManager;
 
 class TrayController : public QObject
 {
@@ -27,6 +28,7 @@ public:
     IniUser *iniUser() const;
     HotKeyManager *hotKeyManager() const;
     TranslationManager *translationManager() const;
+    WindowManager *windowManager() const;
 
 signals:
     void retranslateUi();

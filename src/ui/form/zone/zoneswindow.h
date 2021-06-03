@@ -10,7 +10,6 @@ QT_FORWARD_DECLARE_CLASS(QLineEdit)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 
 class ConfManager;
-class FortManager;
 class IniOptions;
 class IniUser;
 class TableView;
@@ -18,6 +17,7 @@ class TaskManager;
 class WidgetWindowStateWatcher;
 class ZoneListModel;
 class ZonesController;
+class WindowManager;
 
 class ZonesWindow : public WidgetWindow
 {
@@ -27,10 +27,10 @@ public:
     explicit ZonesWindow(QWidget *parent = nullptr);
 
     ZonesController *ctrl() const { return m_ctrl; }
-    FortManager *fortManager() const;
     ConfManager *confManager() const;
     IniOptions *ini() const;
     IniUser *iniUser() const;
+    WindowManager *windowManager() const;
     TaskManager *taskManager() const;
     ZoneListModel *zoneListModel() const;
 

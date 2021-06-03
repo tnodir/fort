@@ -24,6 +24,7 @@ class IniUser;
 class OptionsController;
 class TaskManager;
 class TranslationManager;
+class WindowManager;
 class ZoneListModel;
 
 class OptBasePage : public QFrame
@@ -43,6 +44,7 @@ protected:
     IniUser *iniUser() const;
     DriverManager *driverManager() const;
     TranslationManager *translationManager() const;
+    WindowManager *windowManager() const;
     TaskManager *taskManager() const;
     ZoneListModel *zoneListModel() const;
 

@@ -6,6 +6,7 @@
 #include "../../fortsettings.h"
 #include "../../manager/hotkeymanager.h"
 #include "../../manager/translationmanager.h"
+#include "../../manager/windowmanager.h"
 #include "../../util/ioc/ioccontainer.h"
 
 TrayController::TrayController(QObject *parent) : QObject(parent)
@@ -52,4 +53,9 @@ HotKeyManager *TrayController::hotKeyManager() const
 TranslationManager *TrayController::translationManager() const
 {
     return IoC<TranslationManager>();
+}
+
+WindowManager *TrayController::windowManager() const
+{
+    return IoC<WindowManager>();
 }

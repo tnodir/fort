@@ -18,6 +18,7 @@
 #include "../../../fortmanager.h"
 #include "../../../fortsettings.h"
 #include "../../../manager/translationmanager.h"
+#include "../../../manager/windowmanager.h"
 #include "../../../task/taskinfoupdatechecker.h"
 #include "../../../task/taskmanager.h"
 #include "../../../user/iniuser.h"
@@ -528,12 +529,12 @@ void OptionsPage::setupDriverBox()
     colLayout->addLayout(buttonsLayout);
 
     m_btInstallDriver = ControlUtil::createButton(QString(), [&] {
-        if (fortManager()->showQuestionBox(tr("Are you sure to reinstall the Driver?"))) {
+        if (windowManager()->showQuestionBox(tr("Are you sure to reinstall the Driver?"))) {
             fortManager()->installDriver();
         }
     });
     m_btRemoveDriver = ControlUtil::createButton(QString(), [&] {
-        if (fortManager()->showQuestionBox(tr("Are you sure to remove the Driver?"))) {
+        if (windowManager()->showQuestionBox(tr("Are you sure to remove the Driver?"))) {
             fortManager()->removeDriver();
         }
     });

@@ -12,6 +12,7 @@ class IniOptions;
 class IniUser;
 class TaskManager;
 class TranslationManager;
+class WindowManager;
 class ZoneListModel;
 
 class OptionsController : public QObject
@@ -31,6 +32,7 @@ public:
     TaskManager *taskManager() const;
     DriverManager *driverManager() const;
     TranslationManager *translationManager() const;
+    WindowManager *windowManager() const;
     ZoneListModel *zoneListModel() const;
 
     void initialize();

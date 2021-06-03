@@ -11,6 +11,7 @@ class FortManager;
 class IniOptions;
 class IniUser;
 class TranslationManager;
+class WindowManager;
 
 class ProgramsController : public QObject
 {
@@ -25,6 +26,7 @@ public:
     IniOptions *ini() const;
     IniUser *iniUser() const;
     TranslationManager *translationManager() const;
+    WindowManager *windowManager() const;
     AppInfoCache *appInfoCache() const;
     AppListModel *appListModel() const { return m_appListModel; }
 

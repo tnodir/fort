@@ -9,8 +9,8 @@
 #include "../../../appinfo/appinfocache.h"
 #include "../../../conf/confmanager.h"
 #include "../../../conf/firewallconf.h"
-#include "../../../fortmanager.h"
 #include "../../../fortsettings.h"
+#include "../../../manager/windowmanager.h"
 #include "../../../model/connlistmodel.h"
 #include "../../../user/iniuser.h"
 #include "../../../util/guiutil.h"
@@ -122,16 +122,16 @@ QLayout *ConnectionsPage::setupHeader()
         const auto connIndex = connListCurrentIndex();
         const auto connRow = connListModel()->connRowAt(connIndex);
 
-        fortManager()->showProgramEditForm(connRow.appPath);
+        windowManager()->showProgramEditForm(connRow.appPath);
     });
     connect(m_actRemoveConn, &QAction::triggered, this, [&] {
-        if (fortManager()->showQuestionBox(
+        if (windowManager()->showQuestionBox(
                     tr("Are you sure to remove connections till this row?"))) {
             deleteConn(m_connListView->currentRow());
         }
     });
     connect(m_actClearAll, &QAction::triggered, this, [&] {
-        if (fortManager()->showQuestionBox(tr("Are you sure to remove all connections?"))) {
+        if (windowManager()->showQuestionBox(tr("Are you sure to remove all connections?"))) {
             connListModel()->clear();
         }
     });

@@ -53,6 +53,11 @@ TranslationManager *OptBasePage::translationManager() const
     return ctrl()->translationManager();
 }
 
+WindowManager *OptBasePage::windowManager() const
+{
+    return ctrl()->windowManager();
+}
+
 TaskManager *OptBasePage::taskManager() const
 {
     return ctrl()->taskManager();

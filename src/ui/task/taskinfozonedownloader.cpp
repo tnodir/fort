@@ -3,8 +3,8 @@
 #include <QDir>
 
 #include "../conf/confmanager.h"
-#include "../fortmanager.h"
 #include "../fortsettings.h"
+#include "../manager/windowmanager.h"
 #include "../model/zonelistmodel.h"
 #include "../model/zonesourcewrapper.h"
 #include "../model/zonetypewrapper.h"
@@ -32,9 +32,9 @@ bool TaskInfoZoneDownloader::processResult(bool success)
     if (!success)
         return false;
 
-    IoC<FortManager>()->showTrayMessage(
+    IoC<WindowManager>()->showTrayMessage(
             tr("Zone Addresses Updated: %1.").arg(m_zoneNames.join(", ")),
-            FortManager::MessageZones);
+            WindowManager::MessageZones);
     return true;
 }
 

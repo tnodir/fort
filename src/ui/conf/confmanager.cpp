@@ -8,10 +8,10 @@
 #include "../appinfo/appinfocache.h"
 #include "../driver/drivercommon.h"
 #include "../driver/drivermanager.h"
-#include "../fortmanager.h"
 #include "../fortsettings.h"
 #include "../log/logentryblocked.h"
 #include "../manager/envmanager.h"
+#include "../manager/windowmanager.h"
 #include "../task/taskinfo.h"
 #include "../task/taskmanager.h"
 #include "../user/iniuser.h"
@@ -414,7 +414,7 @@ void ConfManager::showErrorMessage(const QString &errorMessage)
     logWarning() << "Error:" << errorMessage;
 
     if (!IoC<FortSettings>()->isService()) {
-        IoC<FortManager>()->showErrorBox(errorMessage, tr("Configuration Error"));
+        IoC<WindowManager>()->showErrorBox(errorMessage, tr("Configuration Error"));
     }
 }
 

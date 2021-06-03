@@ -7,12 +7,12 @@ QT_FORWARD_DECLARE_CLASS(QAction)
 
 class ConfManager;
 class FirewallConf;
-class FortManager;
 class FortSettings;
+class HotKeyManager;
 class IniOptions;
 class IniUser;
-class HotKeyManager;
 class TrayController;
+class WindowManager;
 
 class TrayIcon : public QSystemTrayIcon
 {
@@ -23,13 +23,13 @@ public:
     ~TrayIcon() override;
 
     TrayController *ctrl() const { return m_ctrl; }
-    FortManager *fortManager() const;
     FortSettings *settings() const;
     ConfManager *confManager() const;
     FirewallConf *conf() const;
     IniOptions *ini() const;
     IniUser *iniUser() const;
     HotKeyManager *hotKeyManager() const;
+    WindowManager *windowManager() const;
 
 signals:
     void mouseClicked();

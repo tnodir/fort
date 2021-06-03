@@ -12,13 +12,13 @@ class AppListModel;
 class AppListModel;
 class ConfManager;
 class FirewallConf;
-class FortManager;
 class IniOptions;
 class IniUser;
 class ProgramEditDialog;
 class ProgramsController;
 class TableView;
 class WidgetWindowStateWatcher;
+class WindowManager;
 
 struct AppRow;
 
@@ -30,11 +30,11 @@ public:
     explicit ProgramsWindow(QWidget *parent = nullptr);
 
     ProgramsController *ctrl() const { return m_ctrl; }
-    FortManager *fortManager() const;
     ConfManager *confManager() const;
     FirewallConf *conf() const;
     IniOptions *ini() const;
     IniUser *iniUser() const;
+    WindowManager *windowManager() const;
     AppInfoCache *appInfoCache() const;
     AppListModel *appListModel() const;
 

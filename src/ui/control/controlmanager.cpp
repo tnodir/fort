@@ -10,8 +10,8 @@
 #include "../conf/appgroup.h"
 #include "../conf/confmanager.h"
 #include "../conf/firewallconf.h"
-#include "../fortmanager.h"
 #include "../fortsettings.h"
+#include "../manager/windowmanager.h"
 #include "../rpc/rpcmanager.h"
 #include "../util/fileutil.h"
 #include "../util/ioc/ioccontainer.h"
@@ -190,7 +190,7 @@ bool ControlManager::processCommandProg(const QVariantList &args, QString &error
             return false;
         }
 
-        if (!IoC<FortManager>()->showProgramEditForm(args.at(1).toString())) {
+        if (!IoC<WindowManager>()->showProgramEditForm(args.at(1).toString())) {
             errorMessage = "Edit Program is already opened";
             return false;
         }

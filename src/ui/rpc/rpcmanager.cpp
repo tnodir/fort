@@ -3,8 +3,8 @@
 #include "../conf/firewallconf.h"
 #include "../control/controlmanager.h"
 #include "../control/controlworker.h"
-#include "../fortmanager.h"
 #include "../fortsettings.h"
+#include "../manager/windowmanager.h"
 #include "../rpc/appinfomanagerrpc.h"
 #include "../rpc/confmanagerrpc.h"
 #include "../rpc/drivermanagerrpc.h"
@@ -156,7 +156,7 @@ bool RpcManager::invokeOnServer(Control::Command cmd, const QVariantList &args)
 bool RpcManager::doOnServer(Control::Command cmd, const QVariantList &args)
 {
     if (!client()->isConnected()) {
-        IoC<FortManager>()->showErrorBox(tr("Service isn't available."));
+        IoC<WindowManager>()->showErrorBox(tr("Service isn't available."));
         return false;
     }
 
@@ -164,12 +164,12 @@ bool RpcManager::doOnServer(Control::Command cmd, const QVariantList &args)
         return false;
 
     if (!waitResult()) {
-        IoC<FortManager>()->showErrorBox(tr("Service isn't responding."));
+        IoC<WindowManager>()->showErrorBox(tr("Service isn't responding."));
         return false;
     }
 
     if (resultCommand() != Control::Rpc_Result_Ok) {
-        IoC<FortManager>()->showErrorBox(tr("Service error."));
+        IoC<WindowManager>()->showErrorBox(tr("Service error."));
         return false;
     }
 

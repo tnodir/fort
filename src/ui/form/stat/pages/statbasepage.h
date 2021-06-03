@@ -19,6 +19,7 @@ class FortManager;
 class IniUser;
 class StatisticsController;
 class TranslationManager;
+class WindowManager;
 
 class StatBasePage : public QFrame
 {
@@ -34,6 +35,7 @@ protected:
     FirewallConf *conf() const;
     IniUser *iniUser() const;
     TranslationManager *translationManager() const;
+    WindowManager *windowManager() const;
 
 protected slots:
     virtual void onSaveWindowState(IniUser * /*ini*/) { }

@@ -9,8 +9,8 @@
 #include "../../appinfo/appinfocache.h"
 #include "../../conf/confmanager.h"
 #include "../../conf/firewallconf.h"
-#include "../../fortmanager.h"
 #include "../../fortsettings.h"
+#include "../../manager/windowmanager.h"
 #include "../../model/applistmodel.h"
 #include "../../user/iniuser.h"
 #include "../../util/guiutil.h"
@@ -39,11 +39,6 @@ ProgramsWindow::ProgramsWindow(QWidget *parent) :
     setupStateWatcher();
 }
 
-FortManager *ProgramsWindow::fortManager() const
-{
-    return ctrl()->fortManager();
-}
-
 ConfManager *ProgramsWindow::confManager() const
 {
     return ctrl()->confManager();
@@ -62,6 +57,11 @@ IniOptions *ProgramsWindow::ini() const
 IniUser *ProgramsWindow::iniUser() const
 {
     return ctrl()->iniUser();
+}
+
+WindowManager *ProgramsWindow::windowManager() const
+{
+    return ctrl()->windowManager();
 }
 
 AppInfoCache *ProgramsWindow::appInfoCache() const
@@ -203,12 +203,12 @@ QLayout *ProgramsWindow::setupHeader()
     connect(m_actAddApp, &QAction::triggered, this, &ProgramsWindow::addNewProgram);
     connect(m_actEditApp, &QAction::triggered, this, &ProgramsWindow::editSelectedPrograms);
     connect(m_actRemoveApp, &QAction::triggered, this, [&] {
-        if (fortManager()->showQuestionBox(tr("Are you sure to remove selected program(s)?"))) {
+        if (windowManager()->showQuestionBox(tr("Are you sure to remove selected program(s)?"))) {
             deleteSelectedApps();
         }
     });
     connect(m_actPurgeApps, &QAction::triggered, this, [&] {
-        if (fortManager()->showQuestionBox(
+        if (windowManager()->showQuestionBox(
                     tr("Are you sure to remove all non-existent programs?"))) {
             confManager()->purgeApps();
         }

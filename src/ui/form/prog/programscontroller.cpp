@@ -5,6 +5,7 @@
 #include "../../conf/firewallconf.h"
 #include "../../fortmanager.h"
 #include "../../manager/translationmanager.h"
+#include "../../manager/windowmanager.h"
 #include "../../model/applistmodel.h"
 #include "../../util/ioc/ioccontainer.h"
 
@@ -43,6 +44,11 @@ IniUser *ProgramsController::iniUser() const
 TranslationManager *ProgramsController::translationManager() const
 {
     return IoC<TranslationManager>();
+}
+
+WindowManager *ProgramsController::windowManager() const
+{
+    return IoC<WindowManager>();
 }
 
 AppInfoCache *ProgramsController::appInfoCache() const

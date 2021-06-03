@@ -15,7 +15,7 @@
 
 #include "../../../appinfo/appinfocache.h"
 #include "../../../conf/confmanager.h"
-#include "../../../fortmanager.h"
+#include "../../../manager/windowmanager.h"
 #include "../../../model/appstatmodel.h"
 #include "../../../model/traflistmodel.h"
 #include "../../../user/iniuser.h"
@@ -162,20 +162,20 @@ void TrafficPage::setupClearMenu()
     m_actClearAll = menu->addAction(QString());
 
     connect(m_actRemoveApp, &QAction::triggered, this, [&] {
-        if (!fortManager()->showQuestionBox(
+        if (!windowManager()->showQuestionBox(
                     tr("Are you sure to remove statistics for selected application?")))
             return;
 
         appStatModel()->remove(appListCurrentIndex());
     });
     connect(m_actResetTotal, &QAction::triggered, this, [&] {
-        if (!fortManager()->showQuestionBox(tr("Are you sure to reset total statistics?")))
+        if (!windowManager()->showQuestionBox(tr("Are you sure to reset total statistics?")))
             return;
 
         trafListModel()->resetAppTotals();
     });
     connect(m_actClearAll, &QAction::triggered, this, [&] {
-        if (!fortManager()->showQuestionBox(tr("Are you sure to clear all statistics?")))
+        if (!windowManager()->showQuestionBox(tr("Are you sure to clear all statistics?")))
             return;
 
         m_appListView->clearSelection();

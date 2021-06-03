@@ -3,8 +3,8 @@
 #include <sqlite/sqlitedb.h>
 
 #include "../conf/firewallconf.h"
-#include "../fortmanager.h"
 #include "../fortsettings.h"
+#include "../manager/windowmanager.h"
 #include "../rpc/rpcmanager.h"
 #include "../task/taskmanager.h"
 #include "../util/ioc/ioccontainer.h"
@@ -136,6 +136,6 @@ void ConfManagerRpc::onConfChanged(const QVariant &confVar)
     applySavedConf(conf());
 
     if (!saving()) {
-        IoC<FortManager>()->reloadOptionsWindow(tr("Settings changed by someone else"));
+        IoC<WindowManager>()->reloadOptionsWindow(tr("Settings changed by someone else"));
     }
 }
