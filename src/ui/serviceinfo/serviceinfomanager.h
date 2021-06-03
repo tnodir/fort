@@ -3,7 +3,9 @@
 
 #include <QObject>
 
-class ServiceInfoManager : public QObject
+#include "../util/ioc/iocservice.h"
+
+class ServiceInfoManager : public QObject, public IocService
 {
     Q_OBJECT
 

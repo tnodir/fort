@@ -89,7 +89,6 @@ SOURCES += \
     manager/hotkeymanager.cpp \
     manager/logger.cpp \
     manager/nativeeventfilter.cpp \
-    manager/serviceinfomanager.cpp \
     manager/translationmanager.cpp \
     model/applistmodel.cpp \
     model/appstatmodel.cpp \
@@ -107,6 +106,7 @@ SOURCES += \
     rpc/rpcmanager.cpp \
     rpc/statmanagerrpc.cpp \
     rpc/taskmanagerrpc.cpp \
+    serviceinfo/serviceinfomanager.cpp \
     stat/quotamanager.cpp \
     stat/statmanager.cpp \
     stat/statsql.cpp \
@@ -238,7 +238,6 @@ HEADERS += \
     manager/hotkeymanager.h \
     manager/logger.h \
     manager/nativeeventfilter.h \
-    manager/serviceinfomanager.h \
     manager/translationmanager.h \
     model/applistmodel.h \
     model/appstatmodel.h \
@@ -256,6 +255,7 @@ HEADERS += \
     rpc/rpcmanager.h \
     rpc/statmanagerrpc.h \
     rpc/taskmanagerrpc.h \
+    serviceinfo/serviceinfomanager.h \
     stat/quotamanager.h \
     stat/statmanager.h \
     stat/statsql.h \
