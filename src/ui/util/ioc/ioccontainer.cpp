@@ -2,37 +2,9 @@
 
 #include <QDebug>
 
-#define WIN32_LEAN_AND_MEAN
-#include <qt_windows.h>
-
 #include "iocservice.h"
 
-namespace {
-
-int g_nextTypeId = 0;
-int g_tlsIndex = -1;
-
-void createTlsIndex()
-{
-    if (g_tlsIndex == -1) {
-        g_tlsIndex = TlsAlloc();
-        if (g_tlsIndex == -1) {
-            qWarning() << "TlsAlloc error";
-        }
-    }
-}
-
-#if 0
-void deleteTlsIndex()
-{
-    if (g_tlsIndex != -1) {
-        TlsFree(g_tlsIndex);
-        g_tlsIndex = -1;
-    }
-}
-#endif
-
-}
+int IocContainer::g_tlsIndex = -1;
 
 IocContainer::IocContainer(QObject *parent) : QObject(parent) { }
 
@@ -118,12 +90,26 @@ bool IocContainer::pinToThread()
     return TlsSetValue(g_tlsIndex, this);
 }
 
-IocContainer *IocContainer::getPinned()
+void IocContainer::createTlsIndex()
 {
-    return static_cast<IocContainer *>(TlsGetValue(g_tlsIndex));
+    if (g_tlsIndex == -1) {
+        g_tlsIndex = TlsAlloc();
+        if (g_tlsIndex == -1) {
+            qWarning() << "TlsAlloc error";
+        }
+    }
+}
+
+void IocContainer::deleteTlsIndex()
+{
+    if (g_tlsIndex != -1) {
+        TlsFree(g_tlsIndex);
+        g_tlsIndex = -1;
+    }
 }
 
 int IocContainer::getNextTypeId()
 {
+    static int g_nextTypeId = 0;
     return g_nextTypeId++;
 }

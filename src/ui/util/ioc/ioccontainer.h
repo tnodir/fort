@@ -4,6 +4,9 @@
 #include <QObject>
 #include <QVarLengthArray>
 
+#define WIN32_LEAN_AND_MEAN
+#include <qt_windows.h>
+
 #include "iocservice.h"
 
 using IocObject = void;
@@ -79,7 +82,10 @@ public:
 
     bool pinToThread();
 
-    static IocContainer *getPinned();
+    inline static IocContainer *getPinned()
+    {
+        return static_cast<IocContainer *>(TlsGetValue(g_tlsIndex));
+    }
 
     template<class T>
     static int getTypeId()
@@ -101,10 +107,16 @@ private:
     void tearDown(int typeId);
     void autoDelete(int typeId);
 
+    static void createTlsIndex();
+    static void deleteTlsIndex();
+
     static int getNextTypeId();
 
 private:
+    static int g_tlsIndex;
+
     int m_size = 0;
+
     QVarLengthArray<IocObject *, IOC_DEFAULT_SIZE> m_objects;
     QVarLengthArray<quint8, IOC_DEFAULT_SIZE> m_objectFlags;
 };
