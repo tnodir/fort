@@ -6,7 +6,7 @@
 
 int IocContainer::g_tlsIndex = -1;
 
-IocContainer::IocContainer(QObject *parent) : QObject(parent) { }
+IocContainer::IocContainer() = default;
 
 IocContainer::~IocContainer()
 {

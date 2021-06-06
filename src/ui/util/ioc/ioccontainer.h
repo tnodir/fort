@@ -12,15 +12,13 @@ using IocObject = void;
 
 constexpr int IOC_MAX_SIZE = 32;
 
-class IocContainer : public QObject
+class IocContainer
 {
-    Q_OBJECT
-
 public:
     enum IocFlag : quint8 { AutoDelete = 0x01, IsService = 0x02, WasSetUp = 0x04 };
 
-    explicit IocContainer(QObject *parent = nullptr);
-    ~IocContainer() override;
+    explicit IocContainer();
+    ~IocContainer();
 
     const int size() const { return m_size; }
 
