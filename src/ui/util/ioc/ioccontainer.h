@@ -2,7 +2,6 @@
 #define IOCCONTAINER_H
 
 #include <QObject>
-#include <QVarLengthArray>
 
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
@@ -11,7 +10,7 @@
 
 using IocObject = void;
 
-constexpr int IOC_DEFAULT_SIZE = 32;
+constexpr int IOC_MAX_SIZE = 32;
 
 class IocContainer : public QObject
 {
@@ -97,7 +96,7 @@ public:
 private:
     void setObject(int typeId, IocObject *obj, quint8 flags = 0);
 
-    inline IocObject *resolveObject(int typeId) const { return m_objects.at(typeId); }
+    inline IocObject *resolveObject(int typeId) const { return m_objects[typeId]; }
     inline IocService *resolveService(int typeId) const
     {
         return static_cast<IocService *>(resolveObject(typeId));
@@ -117,8 +116,8 @@ private:
 
     int m_size = 0;
 
-    QVarLengthArray<IocObject *, IOC_DEFAULT_SIZE> m_objects;
-    QVarLengthArray<quint8, IOC_DEFAULT_SIZE> m_objectFlags;
+    quint8 m_objectFlags[IOC_MAX_SIZE] = {};
+    IocObject *m_objects[IOC_MAX_SIZE] = {};
 };
 
 template<class T>
