@@ -12,7 +12,7 @@ using IocObject = void;
 
 constexpr int IOC_MAX_SIZE = 32;
 
-class IocContainer
+class IocContainer final
 {
 public:
     enum IocFlag : quint8 { AutoDelete = 0x01, IsService = 0x02, WasSetUp = 0x04 };
