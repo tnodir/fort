@@ -88,6 +88,7 @@ public:
     static int getTypeId()
     {
         static const int typeId = getNextTypeId();
+        Q_ASSERT(typeId < IOC_MAX_SIZE);
         return typeId;
     }
 

@@ -17,7 +17,7 @@ void IocContainer::setObject(int typeId, IocObject *obj, quint8 flags)
 {
     const int newSize = typeId + 1;
     if (newSize > m_size) {
-        if (Q_UNLIKELY(newSize > IOC_MAX_SIZE)) {
+        if (Q_UNLIKELY(newSize >= IOC_MAX_SIZE)) {
             qCritical() << "IoC Container size error";
             Q_UNREACHABLE();
             abort();
