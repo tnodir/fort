@@ -33,6 +33,9 @@ public:
     static bool isUserAdmin();
 
     static bool beep(BeepType type = BeepSimple);
+
+    static void showConsole(bool visible);
+    static void writeToConsole(const char *category, const QString &message);
 };
 
 #endif // OSUTIL_H

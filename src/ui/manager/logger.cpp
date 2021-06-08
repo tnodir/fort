@@ -1,14 +1,10 @@
 #include "logger.h"
 
-#include <QCoreApplication>
-
-#define WIN32_LEAN_AND_MEAN
-#include <qt_windows.h>
-
 #include <fort_version.h>
 
 #include "../util/dateutil.h"
 #include "../util/fileutil.h"
+#include "../util/osutil.h"
 
 namespace {
 
@@ -16,48 +12,6 @@ constexpr int LOGGER_FILE_MAX_SIZE = 1024 * 1024;
 constexpr int LOGGER_KEEP_FILES = 7;
 
 QtMessageHandler g_oldMessageHandler = nullptr;
-
-BOOL WINAPI consoleCtrlHandler(DWORD /*ctrlType*/)
-{
-    qDebug() << "Quit due console control";
-
-    QCoreApplication::quit();
-    Sleep(100); // Let the process exit gracefully
-    return TRUE;
-}
-
-void showConsole(bool visible)
-{
-    if (visible) {
-        if (AllocConsole()) {
-            SetConsoleCtrlHandler(consoleCtrlHandler, TRUE);
-
-            // Disable close button of console window
-            const HMENU hMenu = GetSystemMenu(GetConsoleWindow(), false);
-            DeleteMenu(hMenu, SC_CLOSE, MF_BYCOMMAND);
-        }
-    } else {
-        FreeConsole();
-    }
-}
-
-void writeToConsole(const QMessageLogContext &context, const QString &message)
-{
-    const HANDLE stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-    if (!stdoutHandle || stdoutHandle == INVALID_HANDLE_VALUE)
-        return;
-
-    QByteArray data;
-    if (context.category) {
-        data.append(context.category);
-        data.append(": ");
-    }
-    data.append(message.toLocal8Bit());
-    data.append('\n');
-
-    DWORD nw;
-    WriteFile(stdoutHandle, data.constData(), DWORD(data.size()), &nw, nullptr);
-}
 
 void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &message)
 {
@@ -88,7 +42,7 @@ void messageHandler(QtMsgType type, const QMessageLogContext &context, const QSt
 
     // Additionally write to console if needed
     if (logger->console()) {
-        writeToConsole(context, message);
+        OsUtil::writeToConsole(context.category, message);
     }
 
     if (g_oldMessageHandler) {
@@ -124,7 +78,7 @@ void Logger::setConsole(bool v)
         m_console = v;
 
         if (!isService()) {
-            showConsole(console());
+            OsUtil::showConsole(console());
         }
     }
 }

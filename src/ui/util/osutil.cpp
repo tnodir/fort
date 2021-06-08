@@ -1,5 +1,6 @@
 #include "osutil.h"
 
+#include <QCoreApplication>
 #include <QDesktopServices>
 #include <QDir>
 #include <QProcess>
@@ -9,6 +10,19 @@
 #include <qt_windows.h>
 
 #include "processinfo.h"
+
+namespace {
+
+BOOL WINAPI consoleCtrlHandler(DWORD /*ctrlType*/)
+{
+    qDebug() << "Quit due console control";
+
+    QCoreApplication::quit();
+    Sleep(100); // Let the process exit gracefully
+    return TRUE;
+}
+
+}
 
 QString OsUtil::pidToPath(quint32 pid, bool isKernelPath)
 {
@@ -101,4 +115,37 @@ bool OsUtil::isUserAdmin()
 bool OsUtil::beep(BeepType type)
 {
     return MessageBeep(type);
+}
+
+void OsUtil::showConsole(bool visible)
+{
+    if (visible) {
+        if (AllocConsole()) {
+            SetConsoleCtrlHandler(consoleCtrlHandler, TRUE);
+
+            // Disable close button of console window
+            const HMENU hMenu = GetSystemMenu(GetConsoleWindow(), false);
+            DeleteMenu(hMenu, SC_CLOSE, MF_BYCOMMAND);
+        }
+    } else {
+        FreeConsole();
+    }
+}
+
+void OsUtil::writeToConsole(const char *category, const QString &message)
+{
+    const HANDLE stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (!stdoutHandle || stdoutHandle == INVALID_HANDLE_VALUE)
+        return;
+
+    QByteArray data;
+    if (category) {
+        data.append(category);
+        data.append(": ");
+    }
+    data.append(message.toLocal8Bit());
+    data.append('\n');
+
+    DWORD nw;
+    WriteFile(stdoutHandle, data.constData(), DWORD(data.size()), &nw, nullptr);
 }
