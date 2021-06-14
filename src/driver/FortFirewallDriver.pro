@@ -52,5 +52,5 @@ LIBS *= -lntdll
     BUILDCMD = $$PWD/msvcbuild.bat
 
     #QMAKE_POST_LINK += $$BUILDCMD Win32
-    QMAKE_POST_LINK += $$BUILDCMD x64
+    #QMAKE_POST_LINK += $$BUILDCMD x64
 }
