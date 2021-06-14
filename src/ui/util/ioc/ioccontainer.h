@@ -71,7 +71,7 @@ public:
     void autoDeleteAll();
 
     template<class T>
-    T *setUpDependency()
+    inline constexpr T *setUpDependency()
     {
         setUp(getTypeId<T>());
         return resolve<T>();

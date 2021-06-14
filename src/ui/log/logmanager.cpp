@@ -62,14 +62,14 @@ void LogManager::setUp()
 
 void LogManager::tearDown()
 {
-    const auto driverManager = IoC()->setUpDependency<DriverManager>();
+    const auto driverManager = IoC<DriverManager>();
 
     disconnect(driverManager->driverWorker());
 }
 
 void LogManager::readLogAsync()
 {
-    const auto driverManager = IoC()->setUpDependency<DriverManager>();
+    const auto driverManager = IoC<DriverManager>();
 
     LogBuffer *logBuffer = getFreeBuffer();
 
@@ -80,7 +80,7 @@ void LogManager::readLogAsync()
 
 void LogManager::cancelAsyncIo()
 {
-    const auto driverManager = IoC()->setUpDependency<DriverManager>();
+    const auto driverManager = IoC<DriverManager>();
 
     driverManager->driverWorker()->cancelAsyncIo();
 }
