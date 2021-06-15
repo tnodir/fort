@@ -397,10 +397,6 @@
         <translation>Alerta de Cota</translation>
     </message>
     <message>
-        <source>Please close already opened Edit Program window and try again.</source>
-        <translation>Por favor, feche a janela Editar Programa já aberta e tente novamente.</translation>
-    </message>
-    <message>
         <source>Restart Required</source>
         <translation>É Necessário Reiniciar</translation>
     </message>
@@ -1247,6 +1243,13 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Statistics</source>
         <translation>Estatísticas</translation>
+    </message>
+</context>
+<context>
+    <name>WindowManager</name>
+    <message>
+        <source>Please close already opened Edit Program window and try again.</source>
+        <translation>Por favor, feche a janela Editar Programa já aberta e tente novamente.</translation>
     </message>
 </context>
 <context>

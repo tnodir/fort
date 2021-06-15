@@ -312,11 +312,11 @@
     </message>
     <message>
         <source>In</source>
-        <translation>In</translation>
+        <translation>Eingehend</translation>
     </message>
     <message>
         <source>Out</source>
-        <translation>Out</translation>
+        <translation>Ausgehend</translation>
     </message>
     <message>
         <source>Blocked Internet address</source>
@@ -395,10 +395,6 @@
     <message>
         <source>Quota Alert</source>
         <translation>Kontingentalarm</translation>
-    </message>
-    <message>
-        <source>Please close already opened Edit Program window and try again.</source>
-        <translation>Bitte schließen Sie das bereits geöffnete Fenster Programm bearbeiten und versuchen Sie es erneut.</translation>
     </message>
     <message>
         <source>Restart Required</source>
@@ -618,20 +614,21 @@
     </message>
     <message>
         <source>Auto-run:</source>
-        <translation type="unfinished"></translation>
+        <translation>Auto-Ausführen:</translation>
     </message>
     <message>
         <source>Run Fort Firewall as a Service in background</source>
-        <translation type="unfinished"></translation>
+        <translation>Fort Firewall im Hintergrund als Dienst ausführen</translation>
     </message>
     <message>
         <source>Move Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Profil verschieben</translation>
     </message>
     <message>
         <source>New profile path is &quot;%1&quot;.
 Would you like to move profile from &quot;%2&quot; to new location?</source>
-        <translation type="unfinished"></translation>
+        <translation>Neuer Profilpfad lautet &quot;%1&quot;.
+Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</translation>
     </message>
     <message>
         <source>Reinstall</source>
@@ -841,15 +838,15 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <name>RpcManager</name>
     <message>
         <source>Service isn&apos;t available.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dienst ist nicht verfügbar.</translation>
     </message>
     <message>
         <source>Service isn&apos;t responding.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dienst antwortet nicht.</translation>
     </message>
     <message>
         <source>Service error.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dienstfehler.</translation>
     </message>
 </context>
 <context>
@@ -1163,7 +1160,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Clear All</source>
-        <translation></translation>
+        <translation>Alles leeren</translation>
     </message>
     <message>
         <source>Units:</source>
@@ -1247,6 +1244,13 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Statistics</source>
         <translation>Statistiken</translation>
+    </message>
+</context>
+<context>
+    <name>WindowManager</name>
+    <message>
+        <source>Please close already opened Edit Program window and try again.</source>
+        <translation>Bitte schließen Sie das bereits geöffnete Fenster Programm bearbeiten und versuchen Sie es erneut.</translation>
     </message>
 </context>
 <context>

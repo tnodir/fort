@@ -397,10 +397,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Please close already opened Edit Program window and try again.</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Restart Required</source>
         <translation></translation>
     </message>
@@ -1246,6 +1242,13 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Statistics</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>WindowManager</name>
+    <message>
+        <source>Please close already opened Edit Program window and try again.</source>
         <translation></translation>
     </message>
 </context>

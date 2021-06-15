@@ -393,10 +393,6 @@
         <translation>Veuillez d&apos;abord installer Fort Firewall v%1 et enregistrer les options depuis celui-ci.</translation>
     </message>
     <message>
-        <source>Please close already opened Edit Program window and try again.</source>
-        <translation>Veuillez fermer la fenêtre d&apos;édition du programme déjà ouverte et réessayer.</translation>
-    </message>
-    <message>
         <source>Application is already running!</source>
         <translation>L&apos;application est déjà en cours d&apos;exécution!</translation>
     </message>
@@ -1248,6 +1244,13 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     <message>
         <source>Statistics</source>
         <translation>Statistiques</translation>
+    </message>
+</context>
+<context>
+    <name>WindowManager</name>
+    <message>
+        <source>Please close already opened Edit Program window and try again.</source>
+        <translation>Veuillez fermer la fenêtre d&apos;édition du programme déjà ouverte et réessayer.</translation>
     </message>
 </context>
 <context>

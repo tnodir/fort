@@ -389,10 +389,6 @@
 <context>
     <name>FortManager</name>
     <message>
-        <source>Please close already opened Edit Program window and try again.</source>
-        <translation>Закройте уже открытое окно Редактирования Программы и пробуйте снова.</translation>
-    </message>
-    <message>
         <source>Please first install Fort Firewall v%1 and save Options from it.</source>
         <translation>Сперва установите Fort Firewall v%1 и сохраните Опции пожалуйста.</translation>
     </message>
@@ -1248,6 +1244,13 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Statistics</source>
         <translation>Статистика</translation>
+    </message>
+</context>
+<context>
+    <name>WindowManager</name>
+    <message>
+        <source>Please close already opened Edit Program window and try again.</source>
+        <translation>Закройте уже открытое окно Редактирования Программы и пробуйте снова.</translation>
     </message>
 </context>
 <context>

@@ -393,10 +393,6 @@
         <translation>먼저 Fort Firewall %1 버전을 설치한 다음 옵션을 저장해 주세요.</translation>
     </message>
     <message>
-        <source>Please close already opened Edit Program window and try again.</source>
-        <translation>이미 열려 있는 프로그램의 편집 창을 닫고 다시 시도하세요.</translation>
-    </message>
-    <message>
         <source>Application is already running!</source>
         <translation>프로그램이 이미 실행 중입니다!</translation>
     </message>
@@ -1247,6 +1243,13 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Statistics</source>
         <translation>통계</translation>
+    </message>
+</context>
+<context>
+    <name>WindowManager</name>
+    <message>
+        <source>Please close already opened Edit Program window and try again.</source>
+        <translation>이미 열려 있는 프로그램의 편집 창을 닫고 다시 시도하세요.</translation>
     </message>
 </context>
 <context>
