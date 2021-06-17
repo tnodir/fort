@@ -34,7 +34,7 @@ private:
     void setupThreadPool();
 
     void setupLogger();
-    void updateLogger();
+    void updateLogger(const FirewallConf *conf);
 
     void createManagers();
     void deleteManagers();
@@ -46,6 +46,8 @@ private:
     void setupConfManager();
     void setupQuotaManager();
     void setupTaskManager();
+
+    void updateServiceInfoManager(const FirewallConf *conf);
 
     void setupTranslationManager();
 

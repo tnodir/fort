@@ -3,6 +3,7 @@
 #include "../conf/appgroup.h"
 #include "../conf/confmanager.h"
 #include "../conf/firewallconf.h"
+#include "../serviceinfo/serviceinfomanager.h"
 #include "../util/ioc/ioccontainer.h"
 
 ServiceListModel::ServiceListModel(QObject *parent) : TableItemModel(parent) { }
@@ -12,16 +13,27 @@ ConfManager *ServiceListModel::confManager() const
     return IoC<ConfManager>();
 }
 
+ServiceInfoManager *ServiceListModel::serviceInfoManager() const
+{
+    return IoC<ServiceInfoManager>();
+}
+
 FirewallConf *ServiceListModel::conf() const
 {
     return confManager()->conf();
+}
+
+void ServiceListModel::initialize()
+{
+    connect(serviceInfoManager(), &ServiceInfoManager::servicesChanged, this,
+            &ServiceListModel::reset);
 }
 
 int ServiceListModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
 
-    return m_services.size();
+    return serviceInfoManager()->services().size();
 }
 
 int ServiceListModel::columnCount(const QModelIndex &parent) const
@@ -53,7 +65,7 @@ QVariant ServiceListModel::data(const QModelIndex &index, int role) const
         const int row = index.row();
         const int column = index.column();
 
-        const auto info = serviceInfoAt(row);
+        const auto info = serviceInfoManager()->serviceInfoAt(row);
 
         switch (column) {
         case 0:
@@ -71,13 +83,4 @@ QVariant ServiceListModel::data(const QModelIndex &index, int role) const
 bool ServiceListModel::updateTableRow(int /*row*/) const
 {
     return true;
-}
-
-const ServiceInfo &ServiceListModel::serviceInfoAt(int index) const
-{
-    if (index < 0 || index >= m_services.size()) {
-        static const ServiceInfo g_nullServiceInfo;
-        return g_nullServiceInfo;
-    }
-    return m_services[index];
 }

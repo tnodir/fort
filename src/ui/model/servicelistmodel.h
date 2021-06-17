@@ -7,16 +7,7 @@
 
 class ConfManager;
 class FirewallConf;
-
-struct ServiceInfo
-{
-    int groupIndex = 0;
-
-    quint64 id = 0;
-
-    QString serviceName;
-    QString displayName;
-};
+class ServiceInfoManager;
 
 class ServiceListModel : public TableItemModel
 {
@@ -26,7 +17,10 @@ public:
     explicit ServiceListModel(QObject *parent = nullptr);
 
     ConfManager *confManager() const;
+    ServiceInfoManager *serviceInfoManager() const;
     FirewallConf *conf() const;
+
+    void initialize();
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -39,11 +33,7 @@ protected:
     bool updateTableRow(int row) const override;
     TableRow &tableRow() const override { return m_serviceRow; }
 
-    const ServiceInfo &serviceInfoAt(int index) const;
-
 private:
-    QVector<ServiceInfo> m_services;
-
     mutable TableRow m_serviceRow;
 };
 

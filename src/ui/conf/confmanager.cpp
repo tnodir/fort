@@ -89,6 +89,10 @@ const char *const sqlInsertService = "INSERT INTO service(name, app_group_id) VA
 
 const char *const sqlDeleteServices = "DELETE FROM service;";
 
+const char *const sqlUpdateServiceResetGroup = "UPDATE service"
+                                               "  SET app_group_id = ?2"
+                                               "  WHERE app_group_id = ?1;";
+
 const char *const sqlSelectTaskByName = "SELECT task_id, enabled, interval_hours,"
                                         "    last_run, last_success, data"
                                         "  FROM task"
@@ -349,12 +353,10 @@ bool removeAppGroupsInDb(SqliteDb *db, const FirewallConf &conf)
     for (const qint64 appGroupId : conf.removedAppGroupIdList()) {
         bool ok;
 
-        db->executeEx(
-                sqlUpdateAppResetGroup, QVariantList() << appGroupId << defaultAppGroupId, 0, &ok);
-        if (!ok)
-            return false;
+        db->executeEx(sqlUpdateAppResetGroup, { appGroupId, defaultAppGroupId }, 0);
+        db->executeEx(sqlUpdateServiceResetGroup, { appGroupId, defaultAppGroupId }, 0);
 
-        db->executeEx(sqlDeleteAppGroup, QVariantList() << appGroupId, 0, &ok);
+        db->executeEx(sqlDeleteAppGroup, { appGroupId }, 0, &ok);
         if (!ok)
             return false;
     }

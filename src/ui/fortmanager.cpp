@@ -29,6 +29,7 @@
 #include "rpc/statmanagerrpc.h"
 #include "rpc/taskmanagerrpc.h"
 #include "rpc/windowmanagerfake.h"
+#include "serviceinfo/serviceinfomanager.h"
 #include "task/taskinfozonedownloader.h"
 #include "user/usersettings.h"
 #include "util/dateutil.h"
@@ -99,10 +100,8 @@ void FortManager::setupLogger()
     logger->setPath(settings->logsPath());
 }
 
-void FortManager::updateLogger()
+void FortManager::updateLogger(const FirewallConf *conf)
 {
-    const FirewallConf *conf = IoC<ConfManager>()->conf();
-
     if (!conf->iniEdited())
         return;
 
@@ -154,6 +153,7 @@ void FortManager::createManagers()
     } else {
         windowManager = new WindowManager();
 
+        // For UI only
         ioc->setService(new HotKeyManager());
         ioc->setService(new UserSettings());
         ioc->setService(new TranslationManager());
@@ -171,6 +171,7 @@ void FortManager::createManagers()
     ioc->setService(new NativeEventFilter());
     ioc->setService(new AppInfoCache());
     ioc->setService(new HostInfoCache());
+    ioc->setService(new ServiceInfoManager());
     ioc->setService(new ZoneListModel());
 
     ioc->setUpAll();
@@ -250,9 +251,12 @@ void FortManager::setupEnvManager()
 void FortManager::setupConfManager()
 {
     connect(IoC<ConfManager>(), &ConfManager::confChanged, this, [&](bool onlyFlags) {
-        updateLogger();
+        const FirewallConf *conf = IoC<ConfManager>()->conf();
 
-        if (!onlyFlags || IoC<ConfManager>()->conf()->flagsEdited()) {
+        updateLogger(conf);
+        updateServiceInfoManager(conf);
+
+        if (!onlyFlags || conf->flagsEdited()) {
             updateDriverConf(onlyFlags);
         }
     });
@@ -277,6 +281,14 @@ void FortManager::setupTaskManager()
     });
     connect(taskManager->taskInfoZoneDownloader(), &TaskInfoZoneDownloader::zonesUpdated,
             IoC<ConfManager>(), &ConfManager::updateDriverZones);
+}
+
+void FortManager::updateServiceInfoManager(const FirewallConf *conf)
+{
+    if (!conf->flagsEdited())
+        return;
+
+    IoC<ServiceInfoManager>()->setEnabled(conf->filterServices());
 }
 
 void FortManager::setupTranslationManager()
