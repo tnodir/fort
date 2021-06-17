@@ -1,6 +1,7 @@
 #include "osutil.h"
 
 #include <QCoreApplication>
+#include <QDebug>
 #include <QDesktopServices>
 #include <QDir>
 #include <QProcess>
