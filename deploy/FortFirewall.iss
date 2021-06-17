@@ -56,7 +56,7 @@ Name: "portable"; Description: "Portable"; Flags: unchecked
 
 [Files]
 Source: "build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "{#APP_EXE_NAME}.example.ini"; DestDir: "{app}"
+Source: "{#APP_EXE_NAME}.example.ini"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
 ; Start menu shortcut
