@@ -282,14 +282,10 @@ FORT_API NTSTATUS fort_defer_packet_add(PFORT_DEFER defer,
     if (inbound) {
         PFORT_PACKET_IN pkt_in = &pkt->in;
 
-        const int interfaceField = inbound ? FWPS_FIELD_INBOUND_TRANSPORT_V4_INTERFACE_INDEX
-                                           : FWPS_FIELD_OUTBOUND_TRANSPORT_V4_INTERFACE_INDEX;
-
-        const int subInterfaceField = inbound
-                ? FWPS_FIELD_INBOUND_TRANSPORT_V4_SUB_INTERFACE_INDEX
-                : FWPS_FIELD_OUTBOUND_TRANSPORT_V4_SUB_INTERFACE_INDEX;
-
         pkt_in->compartmentId = inMetaValues->compartmentId;
+
+        const int interfaceField = FWPS_FIELD_INBOUND_TRANSPORT_V4_INTERFACE_INDEX;
+        const int subInterfaceField = FWPS_FIELD_INBOUND_TRANSPORT_V4_SUB_INTERFACE_INDEX;
 
         pkt_in->interfaceIndex = inFixedValues->incomingValue[interfaceField].value.uint32;
         pkt_in->subInterfaceIndex = inFixedValues->incomingValue[subInterfaceField].value.uint32;
@@ -301,10 +297,9 @@ FORT_API NTSTATUS fort_defer_packet_add(PFORT_DEFER defer,
     } else {
         PFORT_PACKET_OUT pkt_out = &pkt->out;
 
-        const int remoteAddrField = inbound ? FWPS_FIELD_INBOUND_TRANSPORT_V4_IP_REMOTE_ADDRESS
-                                            : FWPS_FIELD_OUTBOUND_TRANSPORT_V4_IP_REMOTE_ADDRESS;
-
         pkt_out->compartmentId = inMetaValues->compartmentId;
+
+        const int remoteAddrField = FWPS_FIELD_OUTBOUND_TRANSPORT_V4_IP_REMOTE_ADDRESS;
 
         /* host-order -> network-order conversion */
         pkt_out->remoteAddr4 = HTONL(inFixedValues->incomingValue[remoteAddrField].value.uint32);
