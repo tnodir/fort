@@ -72,13 +72,12 @@ void AddressesPage::onRetranslateUi()
     m_excludeAddresses->cbUseAll()->setText(tr("Exclude All"));
     m_excludeAddresses->retranslateUi();
 
-    m_splitter->handle()->btMoveAllFrom1To2()->setToolTip(tr("Move All Lines to 'Exclude'"));
-    m_splitter->handle()->btMoveAllFrom2To1()->setToolTip(tr("Move All Lines to 'Include'"));
-    m_splitter->handle()->btInterchangeAll()->setToolTip(tr("Interchange All Lines"));
-    m_splitter->handle()->btMoveSelectedFrom1To2()->setToolTip(
-            tr("Move Selected Lines to 'Exclude'"));
-    m_splitter->handle()->btMoveSelectedFrom2To1()->setToolTip(
-            tr("Move Selected Lines to 'Include'"));
+    auto splitterHandle = m_splitter->handle();
+    splitterHandle->btMoveAllFrom1To2()->setToolTip(tr("Move All Lines to 'Exclude'"));
+    splitterHandle->btMoveAllFrom2To1()->setToolTip(tr("Move All Lines to 'Include'"));
+    splitterHandle->btInterchangeAll()->setToolTip(tr("Interchange All Lines"));
+    splitterHandle->btMoveSelectedFrom1To2()->setToolTip(tr("Move Selected Lines to 'Exclude'"));
+    splitterHandle->btMoveSelectedFrom2To1()->setToolTip(tr("Move Selected Lines to 'Include'"));
     m_btAddLocals->setToolTip(tr("Add Local Networks"));
 
     retranslateAddressesPlaceholderText();
@@ -195,10 +194,11 @@ void AddressesPage::setupSplitter()
     m_splitter->addWidget(m_includeAddresses);
     m_splitter->addWidget(m_excludeAddresses);
 
-    Q_ASSERT(m_splitter->handle());
+    auto splitterHandle = m_splitter->handle();
+    Q_ASSERT(splitterHandle);
 
-    m_splitter->handle()->setTextArea1(m_includeAddresses->editIpText());
-    m_splitter->handle()->setTextArea2(m_excludeAddresses->editIpText());
+    splitterHandle->setTextArea1(m_includeAddresses->editIpText());
+    splitterHandle->setTextArea2(m_excludeAddresses->editIpText());
 }
 
 void AddressesPage::setupSplitterButtons()
