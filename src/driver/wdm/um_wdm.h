@@ -16,8 +16,6 @@
 extern "C" {
 #endif
 
-typedef void *PVOID;
-
 typedef LARGE_INTEGER PHYSICAL_ADDRESS, *PPHYSICAL_ADDRESS;
 
 typedef LONG *PCALLBACK_OBJECT;
