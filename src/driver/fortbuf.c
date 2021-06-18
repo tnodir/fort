@@ -120,17 +120,13 @@ FORT_API NTSTATUS fort_buffer_prepare(
         buf->out_top = new_top;
     } else {
         PFORT_BUFFER_DATA data = fort_buffer_data_alloc(buf, len);
-        const UINT32 buf_top = data ? data->top : FORT_BUFFER_SIZE;
-        const UINT32 new_top = buf_top + len;
-
-        if (new_top > FORT_BUFFER_SIZE) {
-            DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                    "FORT: Buffer Overflow: data=%p len=%d\n", data, len);
-            return STATUS_BUFFER_TOO_SMALL; /* drop on buffer overflow */
+        if (data == NULL) {
+            DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Buffer OOM: len=%d\n", len);
+            return STATUS_INSUFFICIENT_RESOURCES;
         }
 
-        *out = data->p + buf_top;
-        data->top = new_top;
+        *out = data->p + data->top;
+        data->top += len;
     }
 
     return STATUS_SUCCESS;
