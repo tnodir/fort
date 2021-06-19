@@ -31,8 +31,10 @@ static PFORT_BUFFER_DATA fort_buffer_data_alloc(PFORT_BUFFER buf, UINT32 len)
     PFORT_BUFFER_DATA data = buf->data_tail;
 
     if (data == NULL || len > FORT_BUFFER_SIZE - data->top) {
-        PFORT_BUFFER_DATA new_data = fort_buffer_data_new(buf);
+        if (len > FORT_BUFFER_SIZE)
+            return NULL;
 
+        PFORT_BUFFER_DATA new_data = fort_buffer_data_new(buf);
         if (new_data == NULL)
             return NULL;
 
