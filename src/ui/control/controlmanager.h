@@ -47,7 +47,7 @@ private:
             QString &errorMessage);
     bool processCommandProg(const QVariantList &args, QString &errorMessage);
 
-    void abort();
+    void close();
 
     static QString getServerName(bool isService = false);
 

@@ -25,9 +25,10 @@ public slots:
     QString hostName(const QString &address);
 
     void clear();
-    void abort();
 
 private slots:
+    void close();
+
     void handleFinishedLookup(const QString &address, const QString &hostName);
 
 private:

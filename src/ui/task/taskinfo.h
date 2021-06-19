@@ -86,7 +86,7 @@ signals:
 
 public slots:
     void run();
-    void abort();
+    void abortTask();
 
     virtual bool processResult(bool success) = 0;
 

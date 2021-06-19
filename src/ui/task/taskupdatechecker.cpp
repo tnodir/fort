@@ -23,7 +23,7 @@ void TaskUpdateChecker::downloadFinished(bool success)
         success = parseBuffer(downloader()->buffer());
     }
 
-    abort(success);
+    finish(success);
 }
 
 bool TaskUpdateChecker::parseBuffer(const QByteArray &buffer)

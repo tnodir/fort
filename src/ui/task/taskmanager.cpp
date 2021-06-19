@@ -96,7 +96,7 @@ void TaskManager::abortTask(qint8 taskType)
 {
     auto taskInfo = taskInfoByType(taskType);
     if (Q_LIKELY(taskInfo)) {
-        taskInfo->abort();
+        taskInfo->abortTask();
     }
 }
 

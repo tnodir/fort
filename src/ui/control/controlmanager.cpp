@@ -29,7 +29,7 @@ ControlManager::ControlManager(QObject *parent) : QObject(parent) { }
 
 ControlManager::~ControlManager()
 {
-    abort();
+    close();
 }
 
 void ControlManager::setUp()
@@ -201,7 +201,7 @@ bool ControlManager::processCommandProg(const QVariantList &args, QString &error
     return false;
 }
 
-void ControlManager::abort()
+void ControlManager::close()
 {
     if (m_server) {
         m_server->close();

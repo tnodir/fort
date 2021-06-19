@@ -21,7 +21,7 @@ signals:
 
 public slots:
     void run() override;
-    void abort(bool success = false) override;
+    void finish(bool success = false) override;
 
 protected slots:
     virtual void downloadFinished(bool success) = 0;

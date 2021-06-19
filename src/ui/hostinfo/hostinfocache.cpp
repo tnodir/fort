@@ -14,7 +14,7 @@ HostInfoCache::HostInfoCache(QObject *parent) :
 HostInfoCache::~HostInfoCache()
 {
     clear();
-    abort();
+    close();
 }
 
 QString HostInfoCache::hostName(const QString &address)
@@ -39,9 +39,9 @@ void HostInfoCache::clear()
     emitCacheChanged();
 }
 
-void HostInfoCache::abort()
+void HostInfoCache::close()
 {
-    m_manager->abort();
+    m_manager->abortWorkers();
 }
 
 void HostInfoCache::handleFinishedLookup(const QString &address, const QString &hostName)

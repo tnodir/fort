@@ -13,7 +13,7 @@ WorkerManager::WorkerManager(QObject *parent) : QObject(parent) { }
 WorkerManager::~WorkerManager()
 {
     clear();
-    abort();
+    abortWorkers();
 }
 
 void WorkerManager::setupWorker()
@@ -52,7 +52,7 @@ void WorkerManager::clear()
     m_jobQueue.clear();
 }
 
-void WorkerManager::abort()
+void WorkerManager::abortWorkers()
 {
     QMutexLocker locker(&m_mutex);
 

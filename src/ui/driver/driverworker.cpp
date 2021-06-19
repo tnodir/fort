@@ -60,7 +60,7 @@ void DriverWorker::continueAsyncIo()
     }
 }
 
-void DriverWorker::abort()
+void DriverWorker::close()
 {
     if (m_aborted)
         return;

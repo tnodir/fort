@@ -31,7 +31,7 @@ signals:
 
 public slots:
     void clear();
-    void abort();
+    void abortWorkers();
 
     void enqueueJob(WorkerJob *job);
     WorkerJob *dequeueJob();

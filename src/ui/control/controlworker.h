@@ -46,7 +46,7 @@ signals:
     void requestReady(Control::Command command, const QVariantList &args);
 
 public slots:
-    void abort();
+    void close();
 
 private slots:
     void processRequest();

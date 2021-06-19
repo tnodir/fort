@@ -44,11 +44,11 @@ void NetDownloader::start()
     if (!m_process.waitForStarted(1000)) {
         qWarning() << "NetDownloader: Cannot start `curl`:" << m_process.errorString();
 
-        abort();
+        finish();
     }
 }
 
-void NetDownloader::abort(bool success)
+void NetDownloader::finish(bool success)
 {
     if (!m_started || m_aborted)
         return;
@@ -68,7 +68,7 @@ void NetDownloader::processReadyRead()
     m_buffer.append(data);
 
     if (m_buffer.size() > DOWNLOAD_MAXSIZE) {
-        abort(true); // try to use the partial loaded data
+        finish(true); // try to use the partial loaded data
     }
 }
 
@@ -79,7 +79,7 @@ void NetDownloader::processError(QProcess::ProcessError error)
 
     qWarning() << "NetDownloader: Cannot run `curl`:" << error << m_process.errorString();
 
-    abort();
+    finish();
 }
 
 void NetDownloader::processFinished(int exitCode, QProcess::ExitStatus exitStatus)
@@ -89,5 +89,5 @@ void NetDownloader::processFinished(int exitCode, QProcess::ExitStatus exitStatu
         qWarning() << "NetDownloader: `curl` error code:" << exitCode;
     }
 
-    abort(success && !m_buffer.isEmpty());
+    finish(success && !m_buffer.isEmpty());
 }

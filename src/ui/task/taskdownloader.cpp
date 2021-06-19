@@ -17,14 +17,14 @@ void TaskDownloader::run()
     }
 }
 
-void TaskDownloader::abort(bool success)
+void TaskDownloader::finish(bool success)
 {
     if (!m_downloader)
         return;
 
     m_downloader->disconnect(this); // to avoid recursive call on abort()
 
-    m_downloader->abort();
+    m_downloader->finish();
     m_downloader->deleteLater();
     m_downloader = nullptr;
 

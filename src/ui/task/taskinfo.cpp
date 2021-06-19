@@ -15,7 +15,7 @@ TaskInfo::TaskInfo(TaskType type, TaskManager &taskManager) :
 
 TaskInfo::~TaskInfo()
 {
-    abort();
+    abortTask();
 }
 
 TaskManager *TaskInfo::taskManager() const
@@ -148,7 +148,7 @@ void TaskInfo::runTaskWorker()
     taskWorker()->run();
 }
 
-void TaskInfo::abort()
+void TaskInfo::abortTask()
 {
     if (aborted())
         return;
@@ -157,7 +157,7 @@ void TaskInfo::abort()
     m_aborted = true;
 
     if (taskWorker()) {
-        taskWorker()->abort();
+        taskWorker()->finish();
         taskWorker()->deleteLater();
 
         setTaskWorker(nullptr);
@@ -177,7 +177,7 @@ void TaskInfo::handleFinished(bool success)
     setRunning(false);
     emit workFinished(success);
 
-    abort();
+    abortTask();
 }
 
 TaskWorker *TaskInfo::createWorker()

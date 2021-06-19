@@ -19,7 +19,7 @@ DriverManager::DriverManager(QObject *parent, bool useDevice) : QObject(parent)
 
 DriverManager::~DriverManager()
 {
-    abortWorker();
+    closeWorker();
 }
 
 QString DriverManager::errorMessage() const
@@ -61,10 +61,10 @@ void DriverManager::setupWorker()
     m_driverWorker = new DriverWorker(device()); // autoDelete = true
 }
 
-void DriverManager::abortWorker()
+void DriverManager::closeWorker()
 {
     if (driverWorker()) {
-        driverWorker()->abort();
+        driverWorker()->close();
     }
 }
 

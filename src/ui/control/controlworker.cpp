@@ -96,7 +96,7 @@ void ControlWorker::setupForAsync()
     connect(socket(), &QLocalSocket::errorOccurred, this,
             [&](QLocalSocket::LocalSocketError socketError) {
                 qWarning() << "Client error:" << id() << socketError << errorString();
-                abort();
+                close();
             });
     connect(socket(), &QLocalSocket::readyRead, this, &ControlWorker::processRequest);
 }
@@ -107,7 +107,7 @@ bool ControlWorker::connectToServer(const QString &name)
     return socket()->waitForConnected(100) && socket()->state() == QLocalSocket::ConnectedState;
 }
 
-void ControlWorker::abort()
+void ControlWorker::close()
 {
     socket()->abort();
     socket()->close();
@@ -173,7 +173,7 @@ void ControlWorker::processRequest()
 {
     do {
         if (!readRequest()) {
-            abort();
+            close();
             clearRequest();
             break;
         }

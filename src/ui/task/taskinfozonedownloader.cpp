@@ -84,7 +84,7 @@ void TaskInfoZoneDownloader::setupNextTaskWorker()
         return;
     }
 
-    abort();
+    abortTask();
 
     TaskInfo::setupTaskWorker();
     auto worker = zoneDownloader();

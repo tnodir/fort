@@ -46,7 +46,7 @@ void TaskZoneDownloader::downloadFinished(bool success)
         }
     }
 
-    abort(success);
+    finish(success);
 }
 
 void TaskZoneDownloader::loadLocalFile()

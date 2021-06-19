@@ -25,7 +25,7 @@ public slots:
     bool readLogAsync(LogBuffer *logBuffer);
     bool cancelAsyncIo();
     void continueAsyncIo();
-    void abort();
+    void close();
 
 private:
     bool waitLogBuffer();

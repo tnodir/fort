@@ -53,7 +53,7 @@ private:
     void updateErrorCode(bool success);
 
     void setupWorker();
-    void abortWorker();
+    void closeWorker();
 
     bool writeData(quint32 code, QByteArray &buf, int size);
 

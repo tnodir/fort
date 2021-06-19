@@ -21,7 +21,7 @@ signals:
 
 public slots:
     void start();
-    void abort(bool success = false);
+    void finish(bool success = false);
 
 private slots:
     void processReadyRead();

@@ -15,7 +15,7 @@ signals:
 
 public slots:
     virtual void run() = 0;
-    virtual void abort(bool success = false) = 0;
+    virtual void finish(bool success = false) = 0;
 };
 
 #endif // TASKWORKER_H
