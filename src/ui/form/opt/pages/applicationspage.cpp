@@ -90,13 +90,12 @@ void ApplicationsPage::onRetranslateUi()
     m_blockApps->labelTitle()->setText(tr("Block"));
     m_allowApps->labelTitle()->setText(tr("Allow"));
 
-    m_splitter->handle()->btMoveAllFrom1To2()->setToolTip(tr("Move All Lines to 'Allow'"));
-    m_splitter->handle()->btMoveAllFrom2To1()->setToolTip(tr("Move All Lines to 'Block'"));
-    m_splitter->handle()->btInterchangeAll()->setToolTip(tr("Interchange All Lines"));
-    m_splitter->handle()->btMoveSelectedFrom1To2()->setToolTip(
-            tr("Move Selected Lines to 'Allow'"));
-    m_splitter->handle()->btMoveSelectedFrom2To1()->setToolTip(
-            tr("Move Selected Lines to 'Block'"));
+    auto splitterHandle = m_splitter->handle();
+    splitterHandle->btMoveAllFrom1To2()->setToolTip(tr("Move All Lines to 'Allow'"));
+    splitterHandle->btMoveAllFrom2To1()->setToolTip(tr("Move All Lines to 'Block'"));
+    splitterHandle->btInterchangeAll()->setToolTip(tr("Interchange All Lines"));
+    splitterHandle->btMoveSelectedFrom1To2()->setToolTip(tr("Move Selected Lines to 'Allow'"));
+    splitterHandle->btMoveSelectedFrom2To1()->setToolTip(tr("Move Selected Lines to 'Block'"));
     m_btSelectFile->setToolTip(tr("Select File"));
 
     retranslateAppsPlaceholderText();
@@ -523,10 +522,11 @@ void ApplicationsPage::setupSplitter()
     m_splitter->addWidget(m_blockApps);
     m_splitter->addWidget(m_allowApps);
 
-    Q_ASSERT(m_splitter->handle());
+    auto splitterHandle = m_splitter->handle();
+    Q_ASSERT(splitterHandle);
 
-    m_splitter->handle()->setTextArea1(m_blockApps->editText());
-    m_splitter->handle()->setTextArea2(m_allowApps->editText());
+    splitterHandle->setTextArea1(m_blockApps->editText());
+    splitterHandle->setTextArea2(m_allowApps->editText());
 }
 
 void ApplicationsPage::setupSplitterButtons()
