@@ -64,7 +64,7 @@ StatManager::StatManager(const QString &filePath, QObject *parent, quint32 openF
 
 StatManager::~StatManager()
 {
-    delete sqliteDb();
+    delete m_sqliteDb;
 }
 
 void StatManager::setConf(const FirewallConf *conf)
