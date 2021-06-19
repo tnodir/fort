@@ -4,7 +4,7 @@
 
 #include "../fileutil.h"
 
-Settings::Settings(QObject *parent) : QObject(parent) { }
+Settings::Settings(QObject *parent) : QObject(parent), m_iniExists(false) { }
 
 void Settings::setupIni(const QString &filePath)
 {
