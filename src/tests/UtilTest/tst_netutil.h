@@ -41,6 +41,9 @@ TEST_F(NetUtilTest, ip4Ranges)
     ASSERT_TRUE(ip4Range.fromText("172.16.0.1/32"));
     ASSERT_EQ(ip4Range.toText(), QString("172.16.0.1\n"));
 
+    ASSERT_TRUE(ip4Range.fromText("172.16.0.1/0"));
+    ASSERT_EQ(ip4Range.toText(), QString("172.16.0.1-255.255.255.255\n"));
+
     // Simple range
     {
         ASSERT_TRUE(ip4Range.fromText("127.0.0.1\n"

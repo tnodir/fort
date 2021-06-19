@@ -149,7 +149,7 @@ bool Ip4Range::parseAddressMask(const StringView line, quint32 &from, quint32 &t
             return false;
         }
 
-        to = from | (nbits == 32 ? 0 : ((1 << (32 - nbits)) - 1));
+        to = nbits == 0 ? quint32(-1) : (from | (nbits == 32 ? 0 : ((1 << (32 - nbits)) - 1)));
     }
 
     return true;
