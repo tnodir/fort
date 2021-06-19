@@ -1,11 +1,15 @@
 Fort Firewall ChangeLog
 
-v3.4.0, 2021-05-18:
+v3.4.0, 2021-06-19:
 - UI: Options: Add "For all users" auto-run mode.
 - UI: Options: Add "Run as a Service in background" option.
 - UI: Use "%LocalAppData%\Fort Firewall\FortFirewall.user.ini" for user specific settings.
 - UI: Options: Hot Keys is applied immediately now.
 - UI: Options: Move Statistics page to Statistics window as Traffic page.
+- UI: Blocked Connections: Show block reason as icon.
+- UI: Zones: Add "WindowsSpyBlocker" source.
+- UI: Use Google Breakpad to generate crash minidumps.
+- UI: Update SQLite to v3.36.0
 
 Attention: For a Service the default profile path is "%ProgramData%\Fort Firewall\", else it's "%LocalAppData%\Fort Firewall\".
 
