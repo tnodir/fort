@@ -68,7 +68,7 @@ AppInfoManager::AppInfoManager(const QString &filePath, QObject *parent, quint32
 
 AppInfoManager::~AppInfoManager()
 {
-    delete sqliteDb();
+    delete m_sqliteDb;
 }
 
 void AppInfoManager::setUp()
