@@ -6,7 +6,7 @@
 
 #include <sqlite3.h>
 
-SqliteStmt::SqliteStmt() { }
+SqliteStmt::SqliteStmt() = default;
 
 SqliteStmt::~SqliteStmt()
 {
