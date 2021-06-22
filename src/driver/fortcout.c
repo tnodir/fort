@@ -492,6 +492,8 @@ static void NTAPI fort_callout_delete_v4(UINT16 layerId, UINT32 calloutId, UINT6
 
 FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 {
+    PFORT_STAT stat = &fort_device()->stat;
+
     FWPS_CALLOUT0 c;
     NTSTATUS status;
 
@@ -528,7 +530,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
     c.flowDeleteFn = fort_callout_flow_delete_v4;
     c.flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW;
 
-    status = FwpsCalloutRegister0(device, &c, &fort_device()->stat.stream4_id);
+    status = FwpsCalloutRegister0(device, &c, &stat->stream4_id);
     if (!NT_SUCCESS(status)) {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                 "FORT: Register Stream V4: Error: %x\n", status);
@@ -541,7 +543,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 
     /* reuse c.flowDeleteFn & c.flags */
 
-    status = FwpsCalloutRegister0(device, &c, &fort_device()->stat.datagram4_id);
+    status = FwpsCalloutRegister0(device, &c, &stat->datagram4_id);
     if (!NT_SUCCESS(status)) {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                 "FORT: Register Datagram V4: Error: %x\n", status);
@@ -555,7 +557,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
     c.flowDeleteFn = fort_callout_delete_v4;
     /* reuse c.flags */
 
-    status = FwpsCalloutRegister0(device, &c, &fort_device()->stat.in_transport4_id);
+    status = FwpsCalloutRegister0(device, &c, &stat->in_transport4_id);
     if (!NT_SUCCESS(status)) {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                 "FORT: Register Inbound Transport V4: Error: %x\n", status);
@@ -568,7 +570,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 
     /* reuse c.flowDeleteFn & c.flags */
 
-    status = FwpsCalloutRegister0(device, &c, &fort_device()->stat.out_transport4_id);
+    status = FwpsCalloutRegister0(device, &c, &stat->out_transport4_id);
     if (!NT_SUCCESS(status)) {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                 "FORT: Register Outbound Transport V4: Error: %x\n", status);
@@ -580,6 +582,8 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 
 FORT_API void fort_callout_remove(void)
 {
+    PFORT_STAT stat = &fort_device()->stat;
+
     if (fort_device()->connect4_id) {
         FwpsCalloutUnregisterById0(fort_device()->connect4_id);
         fort_device()->connect4_id = 0;
@@ -590,24 +594,24 @@ FORT_API void fort_callout_remove(void)
         fort_device()->accept4_id = 0;
     }
 
-    if (fort_device()->stat.stream4_id) {
-        FwpsCalloutUnregisterById0(fort_device()->stat.stream4_id);
-        fort_device()->stat.stream4_id = 0;
+    if (stat->stream4_id) {
+        FwpsCalloutUnregisterById0(stat->stream4_id);
+        stat->stream4_id = 0;
     }
 
-    if (fort_device()->stat.datagram4_id) {
-        FwpsCalloutUnregisterById0(fort_device()->stat.datagram4_id);
-        fort_device()->stat.datagram4_id = 0;
+    if (stat->datagram4_id) {
+        FwpsCalloutUnregisterById0(stat->datagram4_id);
+        stat->datagram4_id = 0;
     }
 
-    if (fort_device()->stat.in_transport4_id) {
-        FwpsCalloutUnregisterById0(fort_device()->stat.in_transport4_id);
-        fort_device()->stat.in_transport4_id = 0;
+    if (stat->in_transport4_id) {
+        FwpsCalloutUnregisterById0(stat->in_transport4_id);
+        stat->in_transport4_id = 0;
     }
 
-    if (fort_device()->stat.out_transport4_id) {
-        FwpsCalloutUnregisterById0(fort_device()->stat.out_transport4_id);
-        fort_device()->stat.out_transport4_id = 0;
+    if (stat->out_transport4_id) {
+        FwpsCalloutUnregisterById0(stat->out_transport4_id);
+        stat->out_transport4_id = 0;
     }
 }
 
