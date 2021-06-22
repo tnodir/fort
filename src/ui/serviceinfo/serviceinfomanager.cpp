@@ -10,7 +10,10 @@ QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr)
     QVector<ServiceInfo> infoList;
 
     constexpr DWORD bufferSize = 32 * 1024;
-    BYTE buffer[bufferSize];
+    union {
+        ENUM_SERVICE_STATUS_PROCESSW dummyStatus; // to align the buffer
+        BYTE buffer[bufferSize];
+    };
     DWORD bytesRemaining = 0;
     DWORD serviceCount = 0;
     DWORD resumePoint = 0;
