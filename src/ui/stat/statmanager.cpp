@@ -300,43 +300,43 @@ bool StatManager::logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
     quint32 sumInBytes = 0;
     quint32 sumOutBytes = 0;
 
-    // Insert Statements
-    const QStmtList insertTrafAppStmts = QStmtList()
-            << getTrafficStmt(StatSql::sqlInsertTrafAppHour, m_trafHour)
-            << getTrafficStmt(StatSql::sqlInsertTrafAppDay, m_trafDay)
-            << getTrafficStmt(StatSql::sqlInsertTrafAppMonth, m_trafMonth)
-            << getTrafficStmt(StatSql::sqlInsertTrafAppTotal, m_trafHour);
-
-    const QStmtList insertTrafStmts = QStmtList()
-            << getTrafficStmt(StatSql::sqlInsertTrafHour, m_trafHour)
-            << getTrafficStmt(StatSql::sqlInsertTrafDay, m_trafDay)
-            << getTrafficStmt(StatSql::sqlInsertTrafMonth, m_trafMonth);
-
-    // Update Statements
-    const QStmtList updateTrafAppStmts = QStmtList()
-            << getTrafficStmt(StatSql::sqlUpdateTrafAppHour, m_trafHour)
-            << getTrafficStmt(StatSql::sqlUpdateTrafAppDay, m_trafDay)
-            << getTrafficStmt(StatSql::sqlUpdateTrafAppMonth, m_trafMonth)
-            << getTrafficStmt(StatSql::sqlUpdateTrafAppTotal, -1);
-
-    const QStmtList updateTrafStmts = QStmtList()
-            << getTrafficStmt(StatSql::sqlUpdateTrafHour, m_trafHour)
-            << getTrafficStmt(StatSql::sqlUpdateTrafDay, m_trafDay)
-            << getTrafficStmt(StatSql::sqlUpdateTrafMonth, m_trafMonth);
-
     const quint16 procCount = entry.procCount();
-    const quint32 *procTrafBytes = entry.procTrafBytes();
+    {
+        const quint32 *procTrafBytes = entry.procTrafBytes();
 
-    for (int i = 0; i < procCount; ++i) {
-        const quint32 pidFlag = *procTrafBytes++;
-        const quint32 inBytes = *procTrafBytes++;
-        const quint32 outBytes = *procTrafBytes++;
+        const QStmtList insertTrafAppStmts = QStmtList()
+                << getTrafficStmt(StatSql::sqlInsertTrafAppHour, m_trafHour)
+                << getTrafficStmt(StatSql::sqlInsertTrafAppDay, m_trafDay)
+                << getTrafficStmt(StatSql::sqlInsertTrafAppMonth, m_trafMonth)
+                << getTrafficStmt(StatSql::sqlInsertTrafAppTotal, m_trafHour);
 
-        logTrafBytes(insertTrafAppStmts, updateTrafAppStmts, sumInBytes, sumOutBytes, pidFlag,
-                inBytes, outBytes, unixTime);
+        const QStmtList updateTrafAppStmts = QStmtList()
+                << getTrafficStmt(StatSql::sqlUpdateTrafAppHour, m_trafHour)
+                << getTrafficStmt(StatSql::sqlUpdateTrafAppDay, m_trafDay)
+                << getTrafficStmt(StatSql::sqlUpdateTrafAppMonth, m_trafMonth)
+                << getTrafficStmt(StatSql::sqlUpdateTrafAppTotal, -1);
+
+        for (int i = 0; i < procCount; ++i) {
+            const quint32 pidFlag = *procTrafBytes++;
+            const quint32 inBytes = *procTrafBytes++;
+            const quint32 outBytes = *procTrafBytes++;
+
+            logTrafBytes(insertTrafAppStmts, updateTrafAppStmts, sumInBytes, sumOutBytes, pidFlag,
+                    inBytes, outBytes, unixTime);
+        }
     }
 
     if (m_isActivePeriod) {
+        const QStmtList insertTrafStmts = QStmtList()
+                << getTrafficStmt(StatSql::sqlInsertTrafHour, m_trafHour)
+                << getTrafficStmt(StatSql::sqlInsertTrafDay, m_trafDay)
+                << getTrafficStmt(StatSql::sqlInsertTrafMonth, m_trafMonth);
+
+        const QStmtList updateTrafStmts = QStmtList()
+                << getTrafficStmt(StatSql::sqlUpdateTrafHour, m_trafHour)
+                << getTrafficStmt(StatSql::sqlUpdateTrafDay, m_trafDay)
+                << getTrafficStmt(StatSql::sqlUpdateTrafMonth, m_trafMonth);
+
         // Update or insert total bytes
         updateTrafficList(insertTrafStmts, updateTrafStmts, sumInBytes, sumOutBytes);
     }
