@@ -39,7 +39,7 @@
 
 #define FORT_LOG_STAT_HEADER_SIZE (sizeof(UINT32))
 
-#define FORT_LOG_STAT_TRAF_SIZE(proc_count) (proc_count * 3 * sizeof(UINT32))
+#define FORT_LOG_STAT_TRAF_SIZE(proc_count) ((proc_count) * sizeof(UINT32) * 3)
 
 #define FORT_LOG_STAT_SIZE(proc_count)                                                             \
     (FORT_LOG_STAT_HEADER_SIZE + FORT_LOG_STAT_TRAF_SIZE(proc_count))
