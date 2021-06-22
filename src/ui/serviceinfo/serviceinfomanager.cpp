@@ -9,23 +9,20 @@ QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr)
 {
     QVector<ServiceInfo> infoList;
 
-    constexpr DWORD bufferSize = 32 * 1024;
-    union {
-        ENUM_SERVICE_STATUS_PROCESSW dummyStatus; // to align the buffer
-        BYTE buffer[bufferSize];
-    };
+    constexpr DWORD bufferMaxSize = 32 * 1024;
+    ENUM_SERVICE_STATUS_PROCESSW buffer[bufferMaxSize / sizeof(ENUM_SERVICE_STATUS_PROCESSW)];
     DWORD bytesRemaining = 0;
     DWORD serviceCount = 0;
     DWORD resumePoint = 0;
 
     while (EnumServicesStatusExW(mngr, SC_ENUM_PROCESS_INFO, SERVICE_WIN32, SERVICE_STATE_ALL,
-            buffer, bufferSize, &bytesRemaining, &serviceCount, &resumePoint, nullptr)) {
+            (LPBYTE) buffer, sizeof(buffer), &bytesRemaining, &serviceCount, &resumePoint,
+            nullptr)) {
 
         int infoIndex = infoList.size();
         infoList.resize(infoIndex + serviceCount);
 
-        const ENUM_SERVICE_STATUS_PROCESSW *service =
-                reinterpret_cast<const ENUM_SERVICE_STATUS_PROCESS *>(buffer);
+        const ENUM_SERVICE_STATUS_PROCESSW *service = &buffer[0];
 
         for (; serviceCount > 0; --serviceCount, ++service, ++infoIndex) {
             ServiceInfo &info = infoList[infoIndex];
