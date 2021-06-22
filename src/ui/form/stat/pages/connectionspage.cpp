@@ -199,7 +199,7 @@ void ConnectionsPage::setupTableConnList()
     m_connListView->setSelectionBehavior(QAbstractItemView::SelectItems);
 
     // TODO: Select the allowed/blocked mode from UI
-    connListModel()->setConnMode(true);
+    connListModel()->setConnMode(ConnListModel::ConnBlock);
 
     m_connListView->setModel(connListModel());
 
