@@ -203,7 +203,7 @@ void TaskInfoZoneDownloader::insertZoneId(quint32 &zonesMask, int zoneId)
     zonesMask |= (quint32(1) << (zoneId - 1));
 }
 
-bool TaskInfoZoneDownloader::containsZoneId(quint32 &zonesMask, int zoneId) const
+bool TaskInfoZoneDownloader::containsZoneId(quint32 zonesMask, int zoneId) const
 {
     return (zonesMask & (quint32(1) << (zoneId - 1))) != 0;
 }

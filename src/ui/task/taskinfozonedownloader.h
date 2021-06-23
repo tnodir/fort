@@ -42,7 +42,7 @@ private:
     void addSubResult(TaskZoneDownloader *worker, bool success);
 
     void insertZoneId(quint32 &zonesMask, int zoneId);
-    bool containsZoneId(quint32 &zonesMask, int zoneId) const;
+    bool containsZoneId(quint32 zonesMask, int zoneId) const;
 
     void emitZonesUpdated();
 
