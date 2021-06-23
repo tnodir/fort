@@ -11,7 +11,7 @@ Ip4Range::Ip4Range(QObject *parent) : QObject(parent) { }
 void Ip4Range::clear()
 {
     m_errorLineNo = 0;
-    m_errorMessage = QString();
+    m_errorMessage.clear();
 
     m_ipArray.clear();
     m_pairFromArray.clear();
