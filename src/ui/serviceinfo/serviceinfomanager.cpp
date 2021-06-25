@@ -16,8 +16,9 @@ QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr)
     DWORD resumePoint = 0;
 
     while (EnumServicesStatusExW(mngr, SC_ENUM_PROCESS_INFO, SERVICE_WIN32, SERVICE_STATE_ALL,
-            (LPBYTE) buffer, sizeof(buffer), &bytesRemaining, &serviceCount, &resumePoint,
-            nullptr)) {
+                   (LPBYTE) buffer, sizeof(buffer), &bytesRemaining, &serviceCount, &resumePoint,
+                   nullptr)
+            || GetLastError() == ERROR_MORE_DATA) {
 
         int infoIndex = infoList.size();
         infoList.resize(infoIndex + serviceCount);

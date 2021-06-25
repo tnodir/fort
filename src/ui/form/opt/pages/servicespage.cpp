@@ -20,6 +20,8 @@ ServicesPage::ServicesPage(OptionsController *ctrl, QWidget *parent) :
     OptBasePage(ctrl, parent), m_serviceListModel(new ServiceListModel(this))
 {
     setupUi();
+
+    serviceListModel()->initialize();
 }
 
 ServiceInfoManager *ServicesPage::serviceInfoManager() const
@@ -132,7 +134,7 @@ void ServicesPage::setupTableServiceListHeader()
     header->setSectionResizeMode(1, QHeaderView::Stretch);
     header->setSectionResizeMode(2, QHeaderView::Interactive);
 
-    header->resizeSection(0, 100);
+    header->resizeSection(0, 250);
     header->resizeSection(1, 350);
     header->resizeSection(2, 90);
 }
