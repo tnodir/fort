@@ -7,6 +7,7 @@
 
 class ConfManager;
 class FirewallConf;
+class ServiceInfo;
 class ServiceInfoManager;
 
 class ServiceListModel : public TableItemModel
@@ -32,6 +33,10 @@ public:
 protected:
     bool updateTableRow(int row) const override;
     TableRow &tableRow() const override { return m_serviceRow; }
+
+private:
+    QVariant dataDisplay(const QModelIndex &index) const;
+    QVariant dataDisplayAppGroup(const ServiceInfo &info) const;
 
 private:
     mutable TableRow m_serviceRow;

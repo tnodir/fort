@@ -61,23 +61,38 @@ QVariant ServiceListModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    if (role == Qt::DisplayRole || role == Qt::ToolTipRole) {
-        const int row = index.row();
-        const int column = index.column();
-
-        const auto info = serviceInfoManager()->serviceInfoAt(row);
-
-        switch (column) {
-        case 0:
-            return info.serviceName;
-        case 1:
-            return info.displayName;
-        case 2:
-            return conf()->appGroupAt(info.groupIndex)->name();
-        }
+    switch (role) {
+    // Label
+    case Qt::DisplayRole:
+    case Qt::ToolTipRole:
+        return dataDisplay(index);
     }
 
     return QVariant();
+}
+
+QVariant ServiceListModel::dataDisplay(const QModelIndex &index) const
+{
+    const int row = index.row();
+    const int column = index.column();
+
+    const auto info = serviceInfoManager()->serviceInfoAt(row);
+
+    switch (column) {
+    case 0:
+        return info.serviceName;
+    case 1:
+        return info.displayName;
+    case 2:
+        return dataDisplayAppGroup(info);
+    }
+
+    return QVariant();
+}
+
+QVariant ServiceListModel::dataDisplayAppGroup(const ServiceInfo &info) const
+{
+    return (info.groupIndex < 0) ? QVariant() : conf()->appGroupAt(info.groupIndex)->name();
 }
 
 bool ServiceListModel::updateTableRow(int /*row*/) const

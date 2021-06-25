@@ -6,7 +6,7 @@
 class ServiceInfo
 {
 public:
-    int groupIndex = 0;
+    int groupIndex = -1;
 
     quint32 processId = 0;
     quint64 id = 0;
