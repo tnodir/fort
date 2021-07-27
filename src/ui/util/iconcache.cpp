@@ -9,7 +9,7 @@ namespace {
 
 void checkThread()
 {
-#ifndef QT_NO_DEBUG
+#ifdef QT_DEBUG
     static const Qt::HANDLE g_mainThreadId = QThread::currentThreadId();
 
     const Qt::HANDLE threadId = QThread::currentThreadId();
