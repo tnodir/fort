@@ -1,6 +1,6 @@
 Fort Firewall ChangeLog
 
-v3.4.0, 2021-06-19:
+v3.4.0, 2021-07-30:
 - UI: Options: Add "For all users" auto-run mode.
 - UI: Options: Add "Run as a Service in background" option.
 - UI: Use "%LocalAppData%\Fort Firewall\FortFirewall.user.ini" for user specific settings.
