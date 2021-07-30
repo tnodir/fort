@@ -6,5 +6,7 @@
 
 @set DRV_PATH=..\build\driver\fortfw%ARCH%.sys
 
-signtool.exe sign /ac "cert\Certum Trusted Network CA.crt" /n "Open Source Developer, Nodir Temirkhodjaev" /fd sha1 /t http://time.certum.pl/ %DRV_PATH%
-signtool.exe sign /as /ac "cert\Certum Trusted Network CA.crt" /n "Open Source Developer, Nodir Temirkhodjaev" /fd sha256 /tr http://time.certum.pl/ %DRV_PATH%
+@call sign-env.bat
+
+signtool.exe sign /ac "%CRT_PATH%" /n "%CRT_NAME%" /fd sha1 /t http://time.certum.pl/ %DRV_PATH%
+signtool.exe sign /as /ac "%CRT_PATH%" /n "%CRT_NAME%" /fd sha256 /tr http://time.certum.pl/ %DRV_PATH%

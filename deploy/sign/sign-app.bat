@@ -3,4 +3,6 @@
 
 @set APP_PATH=..\build\FortFirewall.exe
 
-signtool.exe sign /ac "cert\Certum Trusted Network CA.crt" /n "Open Source Developer, Nodir Temirkhodjaev" /fd sha256 /tr http://time.certum.pl/ %APP_PATH%
+@call sign-env.bat
+
+signtool.exe sign /ac "%CRT_PATH%" /n "%CRT_NAME%" /fd sha256 /tr http://time.certum.pl/ %APP_PATH%
