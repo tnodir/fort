@@ -16,11 +16,12 @@ class FirewallConf : public QObject
 public:
     enum EditedFlag {
         NoneEdited = 0,
-        OptEdited = 0x1,
-        FlagsEdited = 0x2,
-        IniEdited = 0x4,
-        TaskEdited = 0x8,
-        AllEdited = (OptEdited | FlagsEdited | IniEdited | TaskEdited)
+        OptEdited = 0x01,
+        FlagsEdited = 0x02,
+        IniEdited = 0x04,
+        ServiceEdited = 0x08,
+        TaskEdited = 0x10,
+        AllEdited = (OptEdited | FlagsEdited | IniEdited | ServiceEdited | TaskEdited)
     };
 
     explicit FirewallConf(Settings *settings = nullptr, QObject *parent = nullptr);
@@ -35,6 +36,9 @@ public:
 
     bool iniEdited() const { return (m_editedFlags & IniEdited) != 0; }
     void setIniEdited() { m_editedFlags |= IniEdited; }
+
+    bool serviceEdited() const { return (m_editedFlags & ServiceEdited) != 0; }
+    void setServiceEdited() { m_editedFlags |= ServiceEdited; }
 
     bool taskEdited() const { return (m_editedFlags & TaskEdited) != 0; }
     void setTaskEdited() { m_editedFlags |= TaskEdited; }
@@ -162,7 +166,7 @@ private:
     void removedAppGroupIdListFromVariant(const QVariant &v);
 
 private:
-    uint m_editedFlags : 4;
+    uint m_editedFlags : 8;
 
     uint m_provBoot : 1;
     uint m_filterEnabled : 1;
