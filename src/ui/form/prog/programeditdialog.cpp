@@ -96,8 +96,7 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
 
 void ProgramEditDialog::activate()
 {
-    this->raise();
-    this->activateWindow();
+    WindowManager::showWidget(this);
 
     m_editPath->selectAll();
     m_editPath->setFocus();

@@ -111,9 +111,7 @@ bool PasswordDialog::getPassword(QString &password, UnlockType &unlockType, QWid
 {
     PasswordDialog dialog(parent);
 
-    dialog.show();
-    dialog.raise();
-    dialog.activateWindow();
+    WindowManager::showWidget(&dialog);
 
     if (dialog.exec() == 0)
         return false;

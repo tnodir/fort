@@ -33,6 +33,8 @@ public:
     void setUp() override;
     void tearDown() override;
 
+    static void showWidget(QWidget *w);
+
     static QFont defaultFont();
 
 signals:

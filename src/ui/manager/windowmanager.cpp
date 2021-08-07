@@ -49,6 +49,16 @@ void WindowManager::tearDown()
     closeAll();
 }
 
+void WindowManager::showWidget(QWidget *w)
+{
+    if (w->isMinimized()) {
+        w->setWindowState(w->windowState() ^ Qt::WindowMinimized);
+    }
+    w->show();
+    w->raise();
+    w->activateWindow();
+}
+
 QFont WindowManager::defaultFont()
 {
     static QFont g_font(
@@ -198,9 +208,7 @@ void WindowManager::showProgramsWindow()
         setupProgramsWindow();
     }
 
-    m_progWindow->show();
-    m_progWindow->raise();
-    m_progWindow->activateWindow();
+    showWidget(m_progWindow);
 }
 
 void WindowManager::closeProgramsWindow()
@@ -239,9 +247,7 @@ void WindowManager::showOptionsWindow()
         emit optWindowChanged(true);
     }
 
-    m_optWindow->show();
-    m_optWindow->raise();
-    m_optWindow->activateWindow();
+    showWidget(m_optWindow);
 }
 
 void WindowManager::closeOptionsWindow()
@@ -280,9 +286,7 @@ void WindowManager::showStatisticsWindow()
         setupStatisticsWindow();
     }
 
-    m_statWindow->show();
-    m_statWindow->raise();
-    m_statWindow->activateWindow();
+    showWidget(m_statWindow);
 }
 
 void WindowManager::closeStatisticsWindow()
@@ -306,9 +310,7 @@ void WindowManager::showZonesWindow()
         setupZonesWindow();
     }
 
-    m_zoneWindow->show();
-    m_zoneWindow->raise();
-    m_zoneWindow->activateWindow();
+    showWidget(m_zoneWindow);
 }
 
 void WindowManager::closeZonesWindow()
