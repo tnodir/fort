@@ -25,6 +25,7 @@
 #include "../../controls/tabbar.h"
 #include "../../controls/textarea2splitter.h"
 #include "../../controls/textarea2splitterhandle.h"
+#include "../../dialog/dialogutil.h"
 #include "../optionscontroller.h"
 #include "apps/appscolumn.h"
 
@@ -532,7 +533,7 @@ void ApplicationsPage::setupSplitter()
 void ApplicationsPage::setupSplitterButtons()
 {
     m_btSelectFile = ControlUtil::createSplitterButton(":/icons/folder-open.png", [&] {
-        const auto filePaths = ControlUtil::getOpenFileNames(
+        const auto filePaths = DialogUtil::getOpenFileNames(
                 m_btSelectFile->text(), tr("Programs (*.exe);;All files (*.*)"));
 
         if (!filePaths.isEmpty()) {

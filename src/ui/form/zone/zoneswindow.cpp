@@ -26,6 +26,7 @@
 #include "../../util/window/widgetwindowstatewatcher.h"
 #include "../controls/controlutil.h"
 #include "../controls/tableview.h"
+#include "../dialog/dialogutil.h"
 #include "zonescontroller.h"
 
 namespace {
@@ -297,7 +298,7 @@ QLayout *ZonesWindow::setupHeader()
 
     // Save As Text
     m_btSaveAsText = ControlUtil::createButton(":/icons/floppy.png", [&] {
-        const auto filePath = ControlUtil::getSaveFileName(
+        const auto filePath = DialogUtil::getSaveFileName(
                 m_btSaveAsText->text(), tr("Text files (*.txt);;All files (*.*)"));
 
         if (!filePath.isEmpty()) {

@@ -2,9 +2,7 @@
 
 #include <QBoxLayout>
 #include <QCheckBox>
-#include <QColorDialog>
 #include <QComboBox>
-#include <QFileDialog>
 #include <QLabel>
 #include <QLineEdit>
 #include <QMenu>
@@ -205,27 +203,4 @@ QFont ControlUtil::fontDemiBold()
     QFont font;
     font.setWeight(QFont::DemiBold);
     return font;
-}
-
-QString ControlUtil::getOpenFileName(const QString &title, const QString &filter)
-{
-    return QFileDialog::getOpenFileName(
-            nullptr, title, QString(), filter, nullptr, QFileDialog::ReadOnly);
-}
-
-QStringList ControlUtil::getOpenFileNames(const QString &title, const QString &filter)
-{
-    return QFileDialog::getOpenFileNames(
-            nullptr, title, QString(), filter, nullptr, QFileDialog::ReadOnly);
-}
-
-QString ControlUtil::getSaveFileName(const QString &title, const QString &filter)
-{
-    return QFileDialog::getSaveFileName(
-            nullptr, title, QString(), filter, nullptr, QFileDialog::ReadOnly);
-}
-
-QColor ControlUtil::getColor(const QColor &initial, const QString &title)
-{
-    return QColorDialog::getColor(initial, nullptr, title);
 }

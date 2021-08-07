@@ -19,6 +19,7 @@
 #include "../../util/ioc/ioccontainer.h"
 #include "../controls/checkspincombo.h"
 #include "../controls/controlutil.h"
+#include "../dialog/dialogutil.h"
 #include "programscontroller.h"
 
 namespace {
@@ -236,7 +237,7 @@ QLayout *ProgramEditDialog::setupAppPathLayout()
     m_editPath->setMaxLength(1024);
 
     m_btSelectFile = ControlUtil::createFlatButton(":/icons/folder-open.png", [&] {
-        const auto filePath = ControlUtil::getOpenFileName(
+        const auto filePath = DialogUtil::getOpenFileName(
                 m_labelEditPath->text(), tr("Programs (*.exe);;All files (*.*)"));
 
         if (!filePath.isEmpty()) {
