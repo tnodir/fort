@@ -10,6 +10,9 @@ class OptionsPage : public OptBasePage
 public:
     explicit OptionsPage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
+    bool passwordEdited() const { return m_passwordEdited; }
+    void setPasswordEdited(bool v);
+
 protected slots:
     void onAboutToSave() override;
     void onEditResetted() override;
@@ -45,6 +48,8 @@ private:
     void setupNewVersionUpdate();
 
 private:
+    bool m_passwordEdited = false;
+
     qint8 m_currentAutoRunMode = 0;
 
     QGroupBox *m_gbStartup = nullptr;

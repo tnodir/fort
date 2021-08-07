@@ -65,6 +65,11 @@ OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) : OptBasePage
     setupUi();
 }
 
+void OptionsPage::setPasswordEdited(bool v)
+{
+    m_passwordEdited = v;
+}
+
 void OptionsPage::onAboutToSave()
 {
     // Startup
@@ -72,8 +77,12 @@ void OptionsPage::onAboutToSave()
     saveService(m_cbService->isChecked());
 
     // Password
-    if (!settings()->hasPassword() && ini()->hasPassword() && ini()->password().isEmpty()) {
-        m_cbPassword->setChecked(false);
+    if (passwordEdited()) {
+        if (!settings()->hasPassword() && ini()->hasPassword() && ini()->password().isEmpty()) {
+            m_cbPassword->setChecked(false);
+        }
+    } else if (conf()->iniEdited()) {
+        ini()->setHasPassword(settings()->hasPassword());
     }
 }
 
@@ -125,6 +134,7 @@ void OptionsPage::saveService(bool isService)
 
 void OptionsPage::onEditResetted()
 {
+    setPasswordEdited(false);
     retranslateEditPassword();
 }
 
@@ -385,13 +395,14 @@ QLayout *OptionsPage::setupPasswordLayout()
     auto layout = new QHBoxLayout();
     layout->setSpacing(6);
 
-    m_cbPassword = ControlUtil::createCheckBox(ini()->hasPassword(), [&](bool checked) {
+    m_cbPassword = ControlUtil::createCheckBox(settings()->hasPassword(), [&](bool checked) {
         if (checked) {
             m_editPassword->setFocus();
         } else {
             m_editPassword->clear();
         }
 
+        setPasswordEdited(true);
         ini()->setHasPassword(checked);
         ctrl()->setIniEdited();
     });
