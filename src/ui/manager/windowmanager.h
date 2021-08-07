@@ -69,6 +69,7 @@ public slots:
     void closeAll();
 
     void quitByCheckPassword();
+    bool widgetVisibleByCheckPassword(QWidget *w);
     bool checkPassword();
 
     virtual void showErrorBox(const QString &text, const QString &title = QString());

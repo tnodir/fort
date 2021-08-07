@@ -201,7 +201,7 @@ void WindowManager::showTrayMessage(const QString &message, WindowManager::TrayM
 
 void WindowManager::showProgramsWindow()
 {
-    if (!(m_progWindow && m_progWindow->isVisible()) && !checkPassword())
+    if (!widgetVisibleByCheckPassword(m_progWindow))
         return;
 
     if (!m_progWindow) {
@@ -238,7 +238,7 @@ bool WindowManager::showProgramEditForm(const QString &appPath)
 
 void WindowManager::showOptionsWindow()
 {
-    if (!(m_optWindow && m_optWindow->isVisible()) && !checkPassword())
+    if (!widgetVisibleByCheckPassword(m_optWindow))
         return;
 
     if (!m_optWindow) {
@@ -279,7 +279,7 @@ void WindowManager::reloadOptionsWindow(const QString &reason)
 
 void WindowManager::showStatisticsWindow()
 {
-    if (!(m_statWindow && m_statWindow->isVisible()) && !checkPassword())
+    if (!widgetVisibleByCheckPassword(m_statWindow))
         return;
 
     if (!m_statWindow) {
@@ -303,7 +303,7 @@ void WindowManager::closeStatisticsWindow()
 
 void WindowManager::showZonesWindow()
 {
-    if (!(m_zoneWindow && m_zoneWindow->isVisible()) && !checkPassword())
+    if (!widgetVisibleByCheckPassword(m_zoneWindow))
         return;
 
     if (!m_zoneWindow) {
@@ -368,6 +368,11 @@ void WindowManager::quitByCheckPassword()
     qDebug() << "Quit due user request";
 
     QCoreApplication::quit();
+}
+
+bool WindowManager::widgetVisibleByCheckPassword(QWidget *w)
+{
+    return (w && w->isVisible()) || checkPassword();
 }
 
 bool WindowManager::checkPassword()

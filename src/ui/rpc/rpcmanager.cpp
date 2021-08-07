@@ -108,8 +108,18 @@ inline bool processConfManager_updateZoneEnabled(ConfManager *confManager, const
     return confManager->updateZoneEnabled(args.value(0).toLongLong(), args.value(1).toBool());
 }
 
-inline bool processConfManagerRpcResult(ConfManager *confManager, Control::Command cmd,
-        const QVariantList &args, QVariantList &resArgs)
+inline bool processConfManager_checkPassword(
+        ConfManager *confManager, ControlWorker *w, const QVariantList &args)
+{
+    const bool ok = confManager->checkPassword(args.value(0).toString());
+    if (ok && !w->isClientValidated()) {
+        w->setIsClientValidated(true);
+    }
+    return ok;
+}
+
+inline bool processConfManagerRpcResult(ConfManager *confManager, ControlWorker *w,
+        Control::Command cmd, const QVariantList &args, QVariantList &resArgs)
 {
     switch (cmd) {
     case Control::Rpc_ConfManager_save:
@@ -136,6 +146,8 @@ inline bool processConfManagerRpcResult(ConfManager *confManager, Control::Comma
         return processConfManager_updateZoneName(confManager, args);
     case Control::Rpc_ConfManager_updateZoneEnabled:
         return processConfManager_updateZoneEnabled(confManager, args);
+    case Control::Rpc_ConfManager_checkPassword:
+        return processConfManager_checkPassword(confManager, w, args);
     default:
         return false;
     }
@@ -402,15 +414,6 @@ bool RpcManager::checkClientValidated(ControlWorker *w) const
     return !IoC<FortSettings>()->isPasswordRequired() || w->isClientValidated();
 }
 
-bool RpcManager::validateClient(ControlWorker *w, const QString &password) const
-{
-    const bool ok = IoC<ConfManager>()->checkPassword(password);
-    if (ok && !w->isClientValidated()) {
-        w->setIsClientValidated(true);
-    }
-    return ok;
-}
-
 void RpcManager::initClientOnServer(ControlWorker *w) const
 {
     w->setIsServiceClient(true);
@@ -499,8 +502,6 @@ bool RpcManager::processConfManagerRpc(
     auto confManager = IoC<ConfManager>();
 
     switch (cmd) {
-    case Control::Rpc_ConfManager_checkPassword:
-        return validateClient(w, args.value(0).toString());
     case Control::Rpc_ConfManager_confChanged:
         return processConfManager_confChanged(confManager, args);
     case Control::Rpc_ConfManager_appAlerted:
@@ -523,7 +524,7 @@ bool RpcManager::processConfManagerRpc(
         return true;
     default: {
         QVariantList resArgs;
-        const bool ok = processConfManagerRpcResult(confManager, cmd, args, resArgs);
+        const bool ok = processConfManagerRpcResult(confManager, w, cmd, args, resArgs);
         sendResult(w, ok, resArgs);
         return true;
     }
