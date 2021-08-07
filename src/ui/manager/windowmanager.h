@@ -33,6 +33,8 @@ public:
     void setUp() override;
     void tearDown() override;
 
+    static QFont defaultFont();
+
 signals:
     void optWindowChanged(bool visible);
     void graphWindowChanged(bool visible);

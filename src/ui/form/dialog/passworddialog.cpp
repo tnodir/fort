@@ -7,8 +7,9 @@
 #include <QLineEdit>
 #include <QPushButton>
 
-#include "../controls/controlutil.h"
+#include "../../manager/windowmanager.h"
 #include "../../util/guiutil.h"
+#include "../controls/controlutil.h"
 
 PasswordDialog::PasswordDialog(QWidget *parent) : QDialog(parent)
 {
@@ -56,6 +57,9 @@ void PasswordDialog::setupUi()
     layout->addWidget(m_buttonBox);
 
     this->setLayout(layout);
+
+    // Font
+    this->setFont(WindowManager::defaultFont());
 
     // Icon
     this->setWindowIcon(GuiUtil::overlayIcon(":/icons/sheild-96.png", ":/icons/key.png"));

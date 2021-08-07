@@ -3,6 +3,7 @@
 #include <QVBoxLayout>
 
 #include "../../conf/confmanager.h"
+#include "../../manager/windowmanager.h"
 #include "../../user/iniuser.h"
 #include "../../util/guiutil.h"
 #include "../../util/window/widgetwindowstatewatcher.h"
@@ -77,7 +78,7 @@ void StatisticsWindow::setupUi()
     this->setLayout(layout);
 
     // Font
-    this->setFont(QFont("Tahoma", 9));
+    this->setFont(WindowManager::defaultFont());
 
     // Icon
     this->setWindowIcon(GuiUtil::overlayIcon(":/icons/sheild-96.png", ":/icons/chart-bar.png"));

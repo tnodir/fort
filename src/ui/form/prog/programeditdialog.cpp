@@ -15,6 +15,7 @@
 #include "../../conf/confmanager.h"
 #include "../../conf/firewallconf.h"
 #include "../../fortmanager.h"
+#include "../../manager/windowmanager.h"
 #include "../../util/iconcache.h"
 #include "../../util/ioc/ioccontainer.h"
 #include "../controls/checkspincombo.h"
@@ -189,7 +190,7 @@ void ProgramEditDialog::setupUi()
     this->setLayout(layout);
 
     // Font
-    this->setFont(QFont("Tahoma", 9));
+    this->setFont(WindowManager::defaultFont());
 
     // Modality & Size Grip
     this->setWindowModality(Qt::WindowModal);

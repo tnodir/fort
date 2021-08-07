@@ -163,7 +163,7 @@ void ZonesWindow::setupUi()
     this->setLayout(layout);
 
     // Font
-    this->setFont(QFont("Tahoma", 9));
+    this->setFont(WindowManager::defaultFont());
 
     // Icon
     this->setWindowIcon(

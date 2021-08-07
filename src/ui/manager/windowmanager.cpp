@@ -49,6 +49,19 @@ void WindowManager::tearDown()
     closeAll();
 }
 
+QFont WindowManager::defaultFont()
+{
+    static QFont g_font(
+#if QT_VERSION < QT_VERSION_CHECK(6, 2, 0)
+            "Tahoma",
+#else
+            QStringList { "Tahoma" },
+#endif
+            9);
+
+    return g_font;
+}
+
 void WindowManager::setupMainWindow()
 {
     m_mainWindow = new MainWindow();
