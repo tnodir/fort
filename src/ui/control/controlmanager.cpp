@@ -210,5 +210,5 @@ void ControlManager::close()
 
 QString ControlManager::getServerName(bool isService)
 {
-    return QLatin1String(APP_BASE) + (isService ? "Svc" : QString()) + "Pipe";
+    return QLatin1String(APP_BASE) + (isService ? "Svc" : OsUtil::userName()) + "Pipe";
 }

@@ -10,6 +10,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 
+#include <lmcons.h>
+
 #include "processinfo.h"
 
 namespace {
@@ -95,6 +97,16 @@ QString OsUtil::errorMessage(quint32 errorCode)
 qint32 OsUtil::getTickCount()
 {
     return qint32(GetTickCount());
+}
+
+QString OsUtil::userName()
+{
+    wchar_t buf[UNLEN + 1];
+    DWORD len = UNLEN + 1;
+    if (GetUserNameW(buf, &len)) {
+        return QString::fromWCharArray(buf, int(len) - 1); // skip terminationg null char.
+    }
+    return QString();
 }
 
 bool OsUtil::isUserAdmin()

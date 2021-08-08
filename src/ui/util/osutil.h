@@ -30,6 +30,7 @@ public:
 
     static qint32 getTickCount();
 
+    static QString userName();
     static bool isUserAdmin();
 
     static bool beep(BeepType type = BeepSimple);
