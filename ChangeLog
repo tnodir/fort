@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.4.1, 2021-08-08:
+- UI: Fix activating a minimized window.
+- UI: Fix password checking.
+- UI: ControlManager: Named pipe name is per user name.
+
 v3.4.0, 2021-07-30:
 - UI: Options: Add "For all users" auto-run mode.
 - UI: Options: Add "Run as a Service in background" option.
