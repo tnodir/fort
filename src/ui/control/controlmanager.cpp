@@ -148,50 +148,49 @@ bool ControlManager::processRequest(Control::Command command, const QVariantList
         return false;
 
     QString errorMessage;
-    if (!processCommand(w, command, args, errorMessage)) {
+    if (!processCommand({ w, command, args, errorMessage })) {
         logWarning() << "Bad command" << errorMessage << ':' << command << args;
         return false;
     }
     return true;
 }
 
-bool ControlManager::processCommand(
-        ControlWorker *w, Control::Command command, const QVariantList &args, QString &errorMessage)
+bool ControlManager::processCommand(const ProcessCommandArgs &p)
 {
-    switch (command) {
+    switch (p.command) {
     case Control::Prog:
-        if (processCommandProg(args, errorMessage))
+        if (processCommandProg(p))
             return true;
         break;
     default:
-        if (IoC<RpcManager>()->processCommandRpc(w, command, args, errorMessage))
+        if (IoC<RpcManager>()->processCommandRpc(p))
             return true;
     }
 
-    if (errorMessage.isEmpty()) {
-        errorMessage = "Invalid command";
+    if (p.errorMessage.isEmpty()) {
+        p.errorMessage = "Invalid command";
     }
     return false;
 }
 
-bool ControlManager::processCommandProg(const QVariantList &args, QString &errorMessage)
+bool ControlManager::processCommandProg(const ProcessCommandArgs &p)
 {
-    const int argsSize = args.size();
+    const int argsSize = p.args.size();
     if (argsSize < 1) {
-        errorMessage = "prog <command>";
+        p.errorMessage = "prog <command>";
         return false;
     }
 
-    const QString progCommand = args.at(0).toString();
+    const QString progCommand = p.args.at(0).toString();
 
     if (progCommand == "add") {
         if (argsSize < 2) {
-            errorMessage = "prog add <app-path>";
+            p.errorMessage = "prog add <app-path>";
             return false;
         }
 
-        if (!IoC<WindowManager>()->showProgramEditForm(args.at(1).toString())) {
-            errorMessage = "Edit Program is already opened";
+        if (!IoC<WindowManager>()->showProgramEditForm(p.args.at(1).toString())) {
+            p.errorMessage = "Edit Program is already opened";
             return false;
         }
 

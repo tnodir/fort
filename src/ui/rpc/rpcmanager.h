@@ -7,6 +7,7 @@
 #include "../control/control.h"
 #include "../util/ioc/iocservice.h"
 
+struct ProcessCommandArgs;
 class ControlWorker;
 
 class RpcManager : public QObject, public IocService
@@ -27,10 +28,10 @@ public:
     void sendResult(ControlWorker *w, bool ok, const QVariantList &args = {});
 
     bool invokeOnServer(Control::Command cmd, const QVariantList &args = {});
-    bool doOnServer(Control::Command cmd, const QVariantList &args = {});
+    bool doOnServer(
+            Control::Command cmd, const QVariantList &args = {}, QVariantList *resArgs = nullptr);
 
-    bool processCommandRpc(ControlWorker *w, Control::Command cmd, const QVariantList &args,
-            QString &errorMessage);
+    bool processCommandRpc(const ProcessCommandArgs &p);
 
 private:
     void setupServerSignals();
@@ -50,15 +51,14 @@ private:
 
     QVariantList driverManager_updateState_args() const;
 
-    bool processManagerRpc(ControlWorker *w, Control::Command cmd, const QVariantList &args,
-            QString &errorMessage);
+    bool processManagerRpc(const ProcessCommandArgs &p);
 
-    bool processAppInfoManagerRpc(Control::Command cmd, const QVariantList &args);
-    bool processConfManagerRpc(ControlWorker *w, Control::Command cmd, const QVariantList &args);
-    bool processDriverManagerRpc(Control::Command cmd, const QVariantList &args);
-    bool processQuotaManagerRpc(Control::Command cmd, const QVariantList &args);
-    bool processStatManagerRpc(ControlWorker *w, Control::Command cmd, const QVariantList &args);
-    bool processTaskManagerRpc(Control::Command cmd, const QVariantList &args);
+    bool processAppInfoManagerRpc(const ProcessCommandArgs &p);
+    bool processConfManagerRpc(const ProcessCommandArgs &p);
+    bool processDriverManagerRpc(const ProcessCommandArgs &p);
+    bool processQuotaManagerRpc(const ProcessCommandArgs &p);
+    bool processStatManagerRpc(const ProcessCommandArgs &p);
+    bool processTaskManagerRpc(const ProcessCommandArgs &p);
 
 private:
     Control::Command m_resultCommand = Control::CommandNone;

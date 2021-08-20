@@ -13,6 +13,14 @@ QT_FORWARD_DECLARE_CLASS(QLocalSocket)
 
 class ControlWorker;
 
+struct ProcessCommandArgs
+{
+    ControlWorker *worker = nullptr;
+    Control::Command command = Control::CommandNone;
+    const QVariantList &args;
+    QString &errorMessage;
+};
+
 class ControlManager : public QObject, public IocService
 {
     Q_OBJECT
@@ -33,9 +41,6 @@ public:
     bool listen();
     bool postCommand();
 
-signals:
-    void rpcRequestReady(Control::Command command, const QVariantList &args);
-
 private slots:
     void onNewConnection();
     void onDisconnected();
@@ -43,9 +48,8 @@ private slots:
     bool processRequest(Control::Command command, const QVariantList &args);
 
 private:
-    bool processCommand(ControlWorker *w, Control::Command command, const QVariantList &args,
-            QString &errorMessage);
-    bool processCommandProg(const QVariantList &args, QString &errorMessage);
+    bool processCommand(const ProcessCommandArgs &p);
+    bool processCommandProg(const ProcessCommandArgs &p);
 
     void close();
 

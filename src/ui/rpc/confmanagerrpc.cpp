@@ -53,13 +53,13 @@ bool ConfManagerRpc::updateAppName(qint64 appId, const QString &appName)
 bool ConfManagerRpc::addZone(const QString &zoneName, const QString &sourceCode, const QString &url,
         const QString &formData, bool enabled, bool customUrl, int &zoneId)
 {
-    auto rpcManager = IoC<RpcManager>();
+    QVariantList resArgs;
 
-    if (!rpcManager->doOnServer(Control::Rpc_ConfManager_addZone,
-                { zoneName, sourceCode, url, formData, enabled, customUrl }))
+    if (!IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_addZone,
+                { zoneName, sourceCode, url, formData, enabled, customUrl }, &resArgs))
         return false;
 
-    zoneId = rpcManager->resultArgs().value(0).toInt();
+    zoneId = resArgs.value(0).toInt();
 
     return true;
 }
@@ -90,7 +90,13 @@ bool ConfManagerRpc::updateZoneEnabled(int zoneId, bool enabled)
 
 bool ConfManagerRpc::checkPassword(const QString &password)
 {
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_checkPassword, { password });
+    QVariantList resArgs;
+
+    if (!IoC<RpcManager>()->doOnServer(
+                Control::Rpc_ConfManager_checkPassword, { password }, &resArgs))
+        return false;
+
+    return resArgs.value(0).toBool();
 }
 
 bool ConfManagerRpc::saveConf(FirewallConf &newConf)

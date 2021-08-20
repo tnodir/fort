@@ -109,45 +109,46 @@ inline bool processConfManager_updateZoneEnabled(ConfManager *confManager, const
 }
 
 inline bool processConfManager_checkPassword(
-        ConfManager *confManager, ControlWorker *w, const QVariantList &args)
+        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList &resArgs)
 {
-    const bool ok = confManager->checkPassword(args.value(0).toString());
-    if (ok && !w->isClientValidated()) {
-        w->setIsClientValidated(true);
+    const bool ok = confManager->checkPassword(p.args.value(0).toString());
+    if (ok && !p.worker->isClientValidated()) {
+        p.worker->setIsClientValidated(true);
     }
-    return ok;
+    resArgs = { ok };
+    return true;
 }
 
-inline bool processConfManagerRpcResult(ConfManager *confManager, ControlWorker *w,
-        Control::Command cmd, const QVariantList &args, QVariantList &resArgs)
+inline bool processConfManagerRpcResult(
+        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList &resArgs)
 {
-    switch (cmd) {
+    switch (p.command) {
     case Control::Rpc_ConfManager_save:
-        return processConfManager_saveVariant(confManager, args);
+        return processConfManager_saveVariant(confManager, p.args);
     case Control::Rpc_ConfManager_addApp:
-        return processConfManager_addApp(confManager, args);
+        return processConfManager_addApp(confManager, p.args);
     case Control::Rpc_ConfManager_deleteApp:
-        return processConfManager_deleteApp(confManager, args);
+        return processConfManager_deleteApp(confManager, p.args);
     case Control::Rpc_ConfManager_purgeApps:
         return confManager->purgeApps();
     case Control::Rpc_ConfManager_updateApp:
-        return processConfManager_updateApp(confManager, args);
+        return processConfManager_updateApp(confManager, p.args);
     case Control::Rpc_ConfManager_updateAppBlocked:
-        return processConfManager_updateAppBlocked(confManager, args);
+        return processConfManager_updateAppBlocked(confManager, p.args);
     case Control::Rpc_ConfManager_updateAppName:
-        return processConfManager_updateAppName(confManager, args);
+        return processConfManager_updateAppName(confManager, p.args);
     case Control::Rpc_ConfManager_addZone:
-        return processConfManager_addZone(confManager, args, resArgs);
+        return processConfManager_addZone(confManager, p.args, resArgs);
     case Control::Rpc_ConfManager_deleteZone:
-        return processConfManager_deleteZone(confManager, args);
+        return processConfManager_deleteZone(confManager, p.args);
     case Control::Rpc_ConfManager_updateZone:
-        return processConfManager_updateZone(confManager, args);
+        return processConfManager_updateZone(confManager, p.args);
     case Control::Rpc_ConfManager_updateZoneName:
-        return processConfManager_updateZoneName(confManager, args);
+        return processConfManager_updateZoneName(confManager, p.args);
     case Control::Rpc_ConfManager_updateZoneEnabled:
-        return processConfManager_updateZoneEnabled(confManager, args);
+        return processConfManager_updateZoneEnabled(confManager, p.args);
     case Control::Rpc_ConfManager_checkPassword:
-        return processConfManager_checkPassword(confManager, w, args);
+        return processConfManager_checkPassword(confManager, p, resArgs);
     default:
         return false;
     }
@@ -180,14 +181,13 @@ inline bool processStatManager_connChanged(StatManager *statManager)
     return true;
 }
 
-inline bool processStatManagerRpcResult(
-        StatManager *statManager, Control::Command cmd, const QVariantList &args)
+inline bool processStatManagerRpcResult(StatManager *statManager, const ProcessCommandArgs &p)
 {
-    switch (cmd) {
+    switch (p.command) {
     case Control::Rpc_StatManager_deleteStatApp:
-        return statManager->deleteStatApp(args.value(0).toLongLong());
+        return statManager->deleteStatApp(p.args.value(0).toLongLong());
     case Control::Rpc_StatManager_deleteConn:
-        return statManager->deleteConn(args.value(0).toLongLong(), args.value(1).toBool());
+        return statManager->deleteConn(p.args.value(0).toLongLong(), p.args.value(1).toBool());
     case Control::Rpc_StatManager_deleteConnAll:
         return statManager->deleteConnAll();
     case Control::Rpc_StatManager_resetAppTrafTotals:
@@ -369,7 +369,7 @@ bool RpcManager::invokeOnServer(Control::Command cmd, const QVariantList &args)
     return client()->sendCommand(cmd, args);
 }
 
-bool RpcManager::doOnServer(Control::Command cmd, const QVariantList &args)
+bool RpcManager::doOnServer(Control::Command cmd, const QVariantList &args, QVariantList *resArgs)
 {
     if (!client()->isConnected()) {
         IoC<WindowManager>()->showErrorBox(tr("Service isn't available."));
@@ -387,6 +387,10 @@ bool RpcManager::doOnServer(Control::Command cmd, const QVariantList &args)
     if (resultCommand() != Control::Rpc_Result_Ok) {
         IoC<WindowManager>()->showErrorBox(tr("Service error."));
         return false;
+    }
+
+    if (resArgs) {
+        *resArgs = resultArgs();
     }
 
     return true;
@@ -428,82 +432,79 @@ QVariantList RpcManager::driverManager_updateState_args() const
     return { driverManager->errorCode(), driverManager->isDeviceOpened() };
 }
 
-bool RpcManager::processCommandRpc(
-        ControlWorker *w, Control::Command cmd, const QVariantList &args, QString &errorMessage)
+bool RpcManager::processCommandRpc(const ProcessCommandArgs &p)
 {
-    switch (cmd) {
+    switch (p.command) {
     case Control::Rpc_Result_Ok:
     case Control::Rpc_Result_Error:
-        m_resultCommand = cmd;
-        m_resultArgs = args;
+        m_resultCommand = p.command;
+        m_resultArgs = p.args;
         return true;
 
     case Control::Rpc_RpcManager_initClient:
-        initClientOnServer(w);
+        initClientOnServer(p.worker);
         return true;
 
     default:
-        return processManagerRpc(w, cmd, args, errorMessage);
+        return processManagerRpc(p);
     }
 }
 
-bool RpcManager::processManagerRpc(
-        ControlWorker *w, Control::Command cmd, const QVariantList &args, QString &errorMessage)
+bool RpcManager::processManagerRpc(const ProcessCommandArgs &p)
 {
-    if (commandRequiresValidation(cmd) && !checkClientValidated(w)) {
-        errorMessage = "Client is not validated";
+    if (commandRequiresValidation(p.command) && !checkClientValidated(p.worker)) {
+        p.errorMessage = "Client is not validated";
         return false;
     }
 
-    switch (Control::managerByCommand(cmd)) {
+    switch (Control::managerByCommand(p.command)) {
     case Control::Rpc_AppInfoManager:
-        return processAppInfoManagerRpc(cmd, args);
+        return processAppInfoManagerRpc(p);
 
     case Control::Rpc_ConfManager:
-        return processConfManagerRpc(w, cmd, args);
+        return processConfManagerRpc(p);
 
     case Control::Rpc_DriverManager:
-        return processDriverManagerRpc(cmd, args);
+        return processDriverManagerRpc(p);
 
     case Control::Rpc_QuotaManager:
-        return processQuotaManagerRpc(cmd, args);
+        return processQuotaManagerRpc(p);
 
     case Control::Rpc_StatManager:
-        return processStatManagerRpc(w, cmd, args);
+        return processStatManagerRpc(p);
 
     case Control::Rpc_TaskManager:
-        return processTaskManagerRpc(cmd, args);
+        return processTaskManagerRpc(p);
 
     default:
-        errorMessage = "Unknown command";
+        p.errorMessage = "Unknown command";
         return false;
     }
 }
 
-bool RpcManager::processAppInfoManagerRpc(Control::Command cmd, const QVariantList &args)
+bool RpcManager::processAppInfoManagerRpc(const ProcessCommandArgs &p)
 {
     auto appInfoManager = IoC<AppInfoManager>();
 
-    switch (cmd) {
+    switch (p.command) {
     case Control::Rpc_AppInfoManager_lookupAppInfo:
-        appInfoManager->lookupAppInfo(args.value(0).toString());
+        appInfoManager->lookupAppInfo(p.args.value(0).toString());
         return true;
     case Control::Rpc_AppInfoManager_checkLookupFinished:
-        appInfoManager->checkLookupFinished(args.value(0).toString());
+        appInfoManager->checkLookupFinished(p.args.value(0).toString());
         return true;
     default:
         return false;
     }
 }
 
-bool RpcManager::processConfManagerRpc(
-        ControlWorker *w, Control::Command cmd, const QVariantList &args)
+bool RpcManager::processConfManagerRpc(const ProcessCommandArgs &p)
 {
     auto confManager = IoC<ConfManager>();
 
-    switch (cmd) {
+    switch (p.command) {
     case Control::Rpc_ConfManager_confChanged:
-        return processConfManager_confChanged(confManager, args);
+        return processConfManager_confChanged(confManager, p.args);
     case Control::Rpc_ConfManager_appAlerted:
         emit confManager->appAlerted();
         return true;
@@ -517,28 +518,28 @@ bool RpcManager::processConfManagerRpc(
         emit confManager->zoneAdded();
         return true;
     case Control::Rpc_ConfManager_zoneRemoved:
-        emit confManager->zoneRemoved(args.value(0).toInt());
+        emit confManager->zoneRemoved(p.args.value(0).toInt());
         return true;
     case Control::Rpc_ConfManager_zoneUpdated:
         emit confManager->zoneUpdated();
         return true;
     default: {
         QVariantList resArgs;
-        const bool ok = processConfManagerRpcResult(confManager, w, cmd, args, resArgs);
-        sendResult(w, ok, resArgs);
+        const bool ok = processConfManagerRpcResult(confManager, p, resArgs);
+        sendResult(p.worker, ok, resArgs);
         return true;
     }
     }
 }
 
-bool RpcManager::processDriverManagerRpc(Control::Command cmd, const QVariantList &args)
+bool RpcManager::processDriverManagerRpc(const ProcessCommandArgs &p)
 {
     auto driverManager = IoC<DriverManager>();
 
-    switch (cmd) {
+    switch (p.command) {
     case Control::Rpc_DriverManager_updateState:
         if (auto dm = qobject_cast<DriverManagerRpc *>(driverManager)) {
-            dm->updateState(args.value(0).toUInt(), args.value(1).toBool());
+            dm->updateState(p.args.value(0).toUInt(), p.args.value(1).toBool());
         }
         return true;
     default:
@@ -546,60 +547,59 @@ bool RpcManager::processDriverManagerRpc(Control::Command cmd, const QVariantLis
     }
 }
 
-bool RpcManager::processQuotaManagerRpc(Control::Command cmd, const QVariantList &args)
+bool RpcManager::processQuotaManagerRpc(const ProcessCommandArgs &p)
 {
     auto quotaManager = IoC<QuotaManager>();
 
-    switch (cmd) {
+    switch (p.command) {
     case Control::Rpc_QuotaManager_alert:
-        emit quotaManager->alert(args.value(0).toInt());
+        emit quotaManager->alert(p.args.value(0).toInt());
         return true;
     default:
         return false;
     }
 }
 
-bool RpcManager::processStatManagerRpc(
-        ControlWorker *w, Control::Command cmd, const QVariantList &args)
+bool RpcManager::processStatManagerRpc(const ProcessCommandArgs &p)
 {
     auto statManager = IoC<StatManager>();
 
-    switch (cmd) {
+    switch (p.command) {
     case Control::Rpc_StatManager_trafficCleared:
         emit statManager->trafficCleared();
         return true;
     case Control::Rpc_StatManager_appStatRemoved:
-        return processStatManager_appStatRemoved(statManager, args);
+        return processStatManager_appStatRemoved(statManager, p.args);
     case Control::Rpc_StatManager_appCreated:
-        return processStatManager_appCreated(statManager, args);
+        return processStatManager_appCreated(statManager, p.args);
     case Control::Rpc_StatManager_trafficAdded:
-        return processStatManager_trafficAdded(statManager, args);
+        return processStatManager_trafficAdded(statManager, p.args);
     case Control::Rpc_StatManager_connChanged:
         return processStatManager_connChanged(statManager);
     case Control::Rpc_StatManager_appTrafTotalsResetted:
         emit statManager->appTrafTotalsResetted();
         return true;
     default: {
-        const bool ok = processStatManagerRpcResult(statManager, cmd, args);
-        sendResult(w, ok);
+        const bool ok = processStatManagerRpcResult(statManager, p);
+        sendResult(p.worker, ok);
         return true;
     }
     }
 }
 
-bool RpcManager::processTaskManagerRpc(Control::Command cmd, const QVariantList &args)
+bool RpcManager::processTaskManagerRpc(const ProcessCommandArgs &p)
 {
     auto taskManager = IoC<TaskManager>();
 
-    switch (cmd) {
+    switch (p.command) {
     case Control::Rpc_TaskManager_runTask:
-        return processTaskManager_runTask(taskManager, args);
+        return processTaskManager_runTask(taskManager, p.args);
     case Control::Rpc_TaskManager_abortTask:
-        return processTaskManager_abortTask(taskManager, args);
+        return processTaskManager_abortTask(taskManager, p.args);
     case Control::Rpc_TaskManager_taskStarted:
-        return processTaskManager_taskStarted(taskManager, args);
+        return processTaskManager_taskStarted(taskManager, p.args);
     case Control::Rpc_TaskManager_taskFinished:
-        return processTaskManager_taskFinished(taskManager, args);
+        return processTaskManager_taskFinished(taskManager, p.args);
     default:
         return false;
     }
