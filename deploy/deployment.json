@@ -20,7 +20,8 @@
 		},
 		"${TARGET}/plugins": {
 			"common": [
-				"${QTPATH}/plugins/platforms		| qwindows.dll		| *d.dll"
+				"${QTPATH}/plugins/platforms		| qwindows.dll		| *d.dll",
+				"${QTPATH}/plugins/tls			| schannelbackend.dll	| *dd.dll"
 			]
 		}
 	}
