@@ -1,7 +1,11 @@
 #ifndef NETDOWNLOADER_H
 #define NETDOWNLOADER_H
 
-#include <QProcess>
+#include <QObject>
+#include <QTimer>
+
+QT_FORWARD_DECLARE_CLASS(QNetworkAccessManager)
+QT_FORWARD_DECLARE_CLASS(QNetworkReply)
 
 class NetDownloader : public QObject
 {
@@ -10,7 +14,10 @@ class NetDownloader : public QObject
 public:
     explicit NetDownloader(QObject *parent = nullptr);
 
+    QString url() const { return m_url; }
     void setUrl(const QString &url) { m_url = url; }
+
+    QByteArray data() const { return m_data; }
     void setData(const QByteArray &data) { m_data = data; }
 
     QByteArray buffer() const { return m_buffer; }
@@ -23,14 +30,6 @@ public slots:
     void start();
     void finish(bool success = false);
 
-private slots:
-    void processReadyRead();
-    void processError(QProcess::ProcessError error);
-    void processFinished(int exitCode, QProcess::ExitStatus exitStatus);
-
-private:
-    void setupProcess();
-
 private:
     bool m_started : 1;
     bool m_aborted : 1;
@@ -38,9 +37,12 @@ private:
     QString m_url;
     QByteArray m_data;
 
-    QProcess m_process;
-
     QByteArray m_buffer;
+
+    QTimer m_downloadTimer;
+
+    QNetworkAccessManager *m_manager = nullptr;
+    QNetworkReply *m_reply = nullptr;
 };
 
 #endif // NETDOWNLOADER_H

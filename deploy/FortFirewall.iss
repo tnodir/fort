@@ -91,6 +91,7 @@ Filename: "{app}\driver\scripts\uninstall.bat"; RunOnceId: "DelDriver"
 Type: filesandordirs; Name: "{app}\driver"
 Type: filesandordirs; Name: "{app}\i18n"
 Type: filesandordirs; Name: "{app}\plugins"
+; TODO: COMPAT: Remove the following line after v4.1.0
 Type: files; Name: "{app}\curl*.*"
 Type: files; Name: "{app}\qt*.*"
 Type: files; Name: "{app}\README*.*"
