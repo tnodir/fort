@@ -20,7 +20,7 @@ void TaskUpdateChecker::setupDownloader()
 void TaskUpdateChecker::downloadFinished(bool success)
 {
     if (success) {
-        success = parseBuffer(downloader()->buffer());
+        success = parseBuffer(downloader()->takeBuffer());
     }
 
     finish(success);

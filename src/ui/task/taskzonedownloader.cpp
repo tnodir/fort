@@ -34,7 +34,7 @@ void TaskZoneDownloader::downloadFinished(bool success)
         success = false;
 
         QString textChecksum;
-        const auto text = QString::fromLatin1(downloader()->buffer());
+        const auto text = QString::fromLatin1(downloader()->takeBuffer());
         const auto list = parseAddresses(text, textChecksum);
 
         if (!list.isEmpty()

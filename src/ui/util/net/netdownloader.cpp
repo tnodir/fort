@@ -19,6 +19,13 @@ NetDownloader::NetDownloader(QObject *parent) :
     });
 }
 
+QByteArray NetDownloader::takeBuffer()
+{
+    const QByteArray buf = m_buffer;
+    m_buffer.clear();
+    return buf;
+}
+
 void NetDownloader::start()
 {
     qDebug() << "NetDownloader: Start:" << url() << data();

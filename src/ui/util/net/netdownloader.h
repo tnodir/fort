@@ -23,6 +23,8 @@ public:
     QByteArray buffer() const { return m_buffer; }
     void setBuffer(const QByteArray &buffer) { m_buffer = buffer; }
 
+    QByteArray takeBuffer();
+
 signals:
     void finished(bool success);
 
