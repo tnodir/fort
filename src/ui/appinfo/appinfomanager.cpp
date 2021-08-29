@@ -181,7 +181,7 @@ bool AppInfoManager::saveToDb(const QString &appPath, AppInfo &appInfo, const QI
     // Save icon image
     QVariant iconId;
     {
-        const uint iconHash = qHashBits(appIcon.constBits(), size_t(appIcon.sizeInBytes()));
+        const uint iconHash = uint(qHashBits(appIcon.constBits(), size_t(appIcon.sizeInBytes())));
 
         iconId = sqliteDb()->executeEx(sqlSelectIconIdByHash, QVariantList() << iconHash);
         if (iconId.isNull()) {
