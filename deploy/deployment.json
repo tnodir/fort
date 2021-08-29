@@ -14,7 +14,13 @@
 			]
 		},
 		"${TARGET}/driver": {
-			"fort": [
+			"driver-x32 | Win7": [
+				"${BUILD}-driver/fortfw32.sys"
+			],
+			"driver-x64": [
+				"${BUILD}-driver/fortfw64.sys"
+			],
+			"scripts": [
 				"${ROOT}/src/driver/scripts		| *.bat *.lnk		|"
 			]
 		},

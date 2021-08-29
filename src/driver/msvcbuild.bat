@@ -7,8 +7,8 @@
 @rem PLAT: x64, Win32
 @set PLAT=%1
 
-@set OutDir=..\..\deploy\build\driver
-@set IntDir=.\build-%PLAT%
+@set OutDir=..\..\build-driver
+@set IntDir=%OutDir%-%PLAT%
 
 MSBuild fortdrv.vcxproj /p:OutDir=%OutDir%\;IntDir=%IntDir%\;Platform=%PLAT%
 
