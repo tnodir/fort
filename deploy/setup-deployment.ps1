@@ -2,7 +2,8 @@ param (
     [string]$TargetPath = ".\build",
     [string]$BuildPath = "..\build",
     [string]$RootPath = "..",
-    [string]$QtPath = ".\build-qt\qtbase"
+    [string]$QtPath = ".\build-qt\qtbase",
+    [string]$Config = ""
 )
 
 echo "Setting up deployment files."
@@ -27,6 +28,18 @@ for ($i = 0; $i -lt $targetDirs.length; $i++) {
     for ($j = 0; $j -lt $sections.length; $j++) {
         $sectionName = $sections[$j]
         $sectionOptional = $sectionName -match '\?$'
+
+        if ($Config -And $sectionName.Contains('|')) {
+            $sectionParts = $sectionName.Split('|')
+
+            $sectionConf = $sectionParts[1].Trim().Split(' ')
+
+            if ($sectionConf -notcontains $Config) {
+                Write-Host -ForeGround Yellow "  $sectionName (Skipped for $Config)"
+                continue
+            }
+        }
+
         echo "  $sectionName"
 
         $files = @($jsonTargetDir."$sectionName")

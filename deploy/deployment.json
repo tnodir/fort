@@ -22,7 +22,7 @@
 			"qt": [
 				"${QTPATH}/plugins/platforms		| qwindows.dll		| *d.dll"
 			],
-			"qt-tls?": [
+			"qt-tls | Win10": [
 				"${QTPATH}/plugins/tls			| schannelbackend.dll	| *dd.dll"
 			]
 		}
