@@ -26,6 +26,7 @@ for ($i = 0; $i -lt $targetDirs.length; $i++) {
     
     for ($j = 0; $j -lt $sections.length; $j++) {
         $sectionName = $sections[$j]
+        $sectionOptional = $sectionName -match '\?$'
         echo "  $sectionName"
 
         $files = @($jsonTargetDir."$sectionName")
@@ -44,17 +45,26 @@ for ($i = 0; $i -lt $targetDirs.length; $i++) {
                 $exclude = $fileParts[2].Trim().Split(' ')
 
                 $file = $fileParts[0].Trim()
-                $dirPath = (Resolve-Path $file).path
-                $dirName = $dirPath.Split('\')[-1]
-                echo "      $file ($include | $exclude)"
 
-                Get-ChildItem -Path $dirPath\* -Include $include -Exclude $exclude | Foreach-Object {
+                if (Test-Path -Path $file) {
+                    $dirPath = (Resolve-Path $file).path
+                    $dirName = $dirPath.Split('\')[-1]
+                    echo "      $file ($include | $exclude)"
 
-                    $dest = $_.FullName -replace [regex]::Escape($dirPath),"$targetDir\$dirName"
-                    $destDir = $_.Directory.FullName -replace [regex]::Escape($dirPath),"$targetDir\$dirName"
+                    Get-ChildItem -Path $dirPath\* -Include $include -Exclude $exclude | Foreach-Object {
 
-                    New-Item "$destDir" -ItemType directory -Force | Out-Null
-                    Copy-Item -Force -path $_ -destination $dest
+                        $dest = $_.FullName -replace [regex]::Escape($dirPath),"$targetDir\$dirName"
+                        $destDir = $_.Directory.FullName -replace [regex]::Escape($dirPath),"$targetDir\$dirName"
+
+                        New-Item "$destDir" -ItemType directory -Force | Out-Null
+                        Copy-Item -Force -path $_ -destination $dest
+                    }
+                }
+                elseif ($sectionOptional) {
+                    Write-Host -ForeGround Yellow "      $file (Optional path doesn't exist)"
+                }
+                else {
+                    throw "      $file (Required path doesn't exist)"
                 }
             }
             else {

@@ -1,7 +1,7 @@
 {
 	"files": {
 		"${TARGET}": {
-			"common": [
+			"qt": [
 				"${QTPATH}/bin/Qt6Core.dll",
 				"${QTPATH}/bin/Qt6Gui.dll",
 				"${QTPATH}/bin/Qt6Network.dll",
@@ -19,8 +19,10 @@
 			]
 		},
 		"${TARGET}/plugins": {
-			"common": [
-				"${QTPATH}/plugins/platforms		| qwindows.dll		| *d.dll",
+			"qt": [
+				"${QTPATH}/plugins/platforms		| qwindows.dll		| *d.dll"
+			],
+			"qt-tls?": [
 				"${QTPATH}/plugins/tls			| schannelbackend.dll	| *dd.dll"
 			]
 		}
