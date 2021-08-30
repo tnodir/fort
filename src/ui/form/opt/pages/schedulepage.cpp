@@ -20,7 +20,7 @@
 
 namespace {
 
-const ValuesList taskIntervalHourValues = { 3, 1, 6, 12, 24, 24 * 7, 24 * 30 };
+const std::array taskIntervalHourValues = { 3, 1, 6, 12, 24, 24 * 7, 24 * 30 };
 
 }
 

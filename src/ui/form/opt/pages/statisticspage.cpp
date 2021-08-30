@@ -20,13 +20,13 @@
 
 namespace {
 
-const ValuesList dayValues = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+const std::array dayValues = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
     20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31 };
-const ValuesList trafKeepDayValues = { 60, -1, 90, 180, 365, 365 * 3, 365 * 5, 365 * 10 };
-const ValuesList trafKeepMonthValues = { 2, -1, 3, 6, 12, 12 * 3, 12 * 5, 12 * 10 };
-const ValuesList logIpKeepCountValues = { 3000, 1000, 5000, 10000, 50000, 100000, 500000, 1000000,
+const std::array trafKeepDayValues = { 60, -1, 90, 180, 365, 365 * 3, 365 * 5, 365 * 10 };
+const std::array trafKeepMonthValues = { 2, -1, 3, 6, 12, 12 * 3, 12 * 5, 12 * 10 };
+const std::array logIpKeepCountValues = { 3000, 1000, 5000, 10000, 50000, 100000, 500000, 1000000,
     5000000, 10000000 };
-const ValuesList quotaValues = { 10, 0, 100, 500, 1024, 8 * 1024, 10 * 1024, 30 * 1024, 50 * 1024,
+const std::array quotaValues = { 10, 0, 100, 500, 1024, 8 * 1024, 10 * 1024, 30 * 1024, 50 * 1024,
     100 * 1024 };
 
 LabelSpinCombo *createSpinCombo(int v, int min, int max, const ValuesList &values,
@@ -285,7 +285,8 @@ void StatisticsPage::setupActivePeriod()
 
 void StatisticsPage::setupMonthStart()
 {
-    m_lscMonthStart = createSpinCombo(ini()->monthStart(), 1, 31, dayValues, {}, [&](int value) {
+    const auto dayList = SpinCombo::makeValuesList(dayValues);
+    m_lscMonthStart = createSpinCombo(ini()->monthStart(), 1, 31, dayList, {}, [&](int value) {
         if (ini()->monthStart() != value) {
             ini()->setMonthStart(value);
             ctrl()->setIniEdited();
@@ -296,8 +297,9 @@ void StatisticsPage::setupMonthStart()
 
 void StatisticsPage::setupTrafHourKeepDays()
 {
+    const auto trafKeepDayList = SpinCombo::makeValuesList(trafKeepDayValues);
     m_lscTrafHourKeepDays = createSpinCombo(
-            ini()->trafHourKeepDays(), -1, 9999, trafKeepDayValues, {}, [&](int value) {
+            ini()->trafHourKeepDays(), -1, 9999, trafKeepDayList, {}, [&](int value) {
                 if (ini()->trafHourKeepDays() != value) {
                     ini()->setTrafHourKeepDays(value);
                     ctrl()->setIniEdited();
@@ -307,8 +309,9 @@ void StatisticsPage::setupTrafHourKeepDays()
 
 void StatisticsPage::setupTrafDayKeepDays()
 {
+    const auto trafKeepDayList = SpinCombo::makeValuesList(trafKeepDayValues);
     m_lscTrafDayKeepDays = createSpinCombo(
-            ini()->trafDayKeepDays(), -1, 9999, trafKeepDayValues, {}, [&](int value) {
+            ini()->trafDayKeepDays(), -1, 9999, trafKeepDayList, {}, [&](int value) {
                 if (ini()->trafDayKeepDays() != value) {
                     ini()->setTrafDayKeepDays(value);
                     ctrl()->setIniEdited();
@@ -318,8 +321,9 @@ void StatisticsPage::setupTrafDayKeepDays()
 
 void StatisticsPage::setupTrafMonthKeepMonths()
 {
+    const auto trafKeepMonthList = SpinCombo::makeValuesList(trafKeepMonthValues);
     m_lscTrafMonthKeepMonths = createSpinCombo(
-            ini()->trafMonthKeepMonths(), -1, 9999, trafKeepMonthValues, {}, [&](int value) {
+            ini()->trafMonthKeepMonths(), -1, 9999, trafKeepMonthList, {}, [&](int value) {
                 if (ini()->trafMonthKeepMonths() != value) {
                     ini()->setTrafMonthKeepMonths(value);
                     ctrl()->setIniEdited();
@@ -329,8 +333,9 @@ void StatisticsPage::setupTrafMonthKeepMonths()
 
 void StatisticsPage::setupQuotaDayMb()
 {
+    const auto quotaList = SpinCombo::makeValuesList(quotaValues);
     m_lscQuotaDayMb = createSpinCombo(
-            int(ini()->quotaDayMb()), 0, 1024 * 1024, quotaValues, " MiB", [&](int value) {
+            int(ini()->quotaDayMb()), 0, 1024 * 1024, quotaList, " MiB", [&](int value) {
                 if (ini()->quotaDayMb() != value) {
                     ini()->setQuotaDayMb(value);
                     ctrl()->setIniEdited();
@@ -340,8 +345,9 @@ void StatisticsPage::setupQuotaDayMb()
 
 void StatisticsPage::setupQuotaMonthMb()
 {
+    const auto quotaList = m_lscQuotaDayMb->values();
     m_lscQuotaMonthMb = createSpinCombo(
-            int(ini()->quotaMonthMb()), 0, 1024 * 1024, quotaValues, " MiB", [&](int value) {
+            int(ini()->quotaMonthMb()), 0, 1024 * 1024, quotaList, " MiB", [&](int value) {
                 if (ini()->quotaMonthMb() != value) {
                     ini()->setQuotaMonthMb(value);
                     ctrl()->setIniEdited();
@@ -374,8 +380,9 @@ void StatisticsPage::setupLogAllowedIp()
 
     m_cbLogAllowedIp->setFont(ControlUtil::fontDemiBold());
 
+    const auto logIpKeepCountList = SpinCombo::makeValuesList(logIpKeepCountValues);
     m_lscAllowedIpKeepCount = createSpinCombo(
-            ini()->allowedIpKeepCount(), 0, 999999999, logIpKeepCountValues, {}, [&](int value) {
+            ini()->allowedIpKeepCount(), 0, 999999999, logIpKeepCountList, {}, [&](int value) {
                 if (ini()->allowedIpKeepCount() != value) {
                     ini()->setAllowedIpKeepCount(value);
                     ctrl()->setIniEdited();
@@ -394,8 +401,9 @@ void StatisticsPage::setupLogBlockedIp()
 
     m_cbLogBlockedIp->setFont(ControlUtil::fontDemiBold());
 
+    const auto logIpKeepCountList = m_lscAllowedIpKeepCount->values();
     m_lscBlockedIpKeepCount = createSpinCombo(
-            ini()->blockedIpKeepCount(), 0, 999999999, logIpKeepCountValues, {}, [&](int value) {
+            ini()->blockedIpKeepCount(), 0, 999999999, logIpKeepCountList, {}, [&](int value) {
                 if (ini()->blockedIpKeepCount() != value) {
                     ini()->setBlockedIpKeepCount(value);
                     ctrl()->setIniEdited();
