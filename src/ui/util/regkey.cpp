@@ -89,7 +89,7 @@ bool RegKey::setValue(const QString &name, const QVariant &value)
     default:
         text = value.toString();
         data = (const unsigned char *) text.utf16();
-        size = sizeof(wchar_t) * (text.size() + 1); /* + terminating null character */
+        size = DWORD(sizeof(wchar_t) * (text.size() + 1)); /* + terminating null character */
     }
 
     return !RegSetValueEx((HKEY) handle(), (LPCWSTR) name.utf16(), 0, type, data, size);
