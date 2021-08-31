@@ -95,7 +95,7 @@ int ConfUtil::write(const FirewallConf &conf, ConfAppsWalker *confAppsWalker,
     }
 
     // Fill the buffer
-    const int confIoSize = FORT_CONF_IO_CONF_OFF + FORT_CONF_DATA_OFF + addressGroupsSize
+    const size_t confIoSize = FORT_CONF_IO_CONF_OFF + FORT_CONF_DATA_OFF + addressGroupsSize
             + FORT_CONF_STR_DATA_SIZE(conf.appGroups().size() * sizeof(FORT_PERIOD)) // appPeriods
             + FORT_CONF_STR_DATA_SIZE(wildAppsSize)
             + FORT_CONF_STR_HEADER_SIZE(prefixAppsMap.size())
@@ -106,7 +106,7 @@ int ConfUtil::write(const FirewallConf &conf, ConfAppsWalker *confAppsWalker,
     writeData(buf.data(), conf, addressRanges, addressGroupOffsets, appPeriods, appPeriodsCount,
             wildAppsMap, prefixAppsMap, exeAppsMap);
 
-    return confIoSize;
+    return int(confIoSize);
 }
 
 int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
@@ -616,7 +616,7 @@ void ConfUtil::writeAddressList(char **data, const Ip4Range &ip4Range)
 void ConfUtil::writeApps(char **data, const appentry_map_t &apps, bool useHeader)
 {
     quint32 *offp = (quint32 *) *data;
-    const quint32 offTableSize = useHeader ? FORT_CONF_STR_HEADER_SIZE(apps.size()) : 0;
+    const quint32 offTableSize = quint32(useHeader ? FORT_CONF_STR_HEADER_SIZE(apps.size()) : 0);
     char *p = *data + offTableSize;
     quint32 off = 0;
 
