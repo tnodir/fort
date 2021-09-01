@@ -50,6 +50,7 @@ for ($i = 0; $i -lt $targetDirs.length; $i++) {
             $file = $file -replace '\${BUILD}', "$BuildPath"
             $file = $file -replace '\${ROOT}', "$RootPath"
             $file = $file -replace '\${QTPATH}', "$QtPath"
+            $file = $file -replace '\${CONFIG}', "$Config"
 
             if ($file.Contains('|')) {
                 $fileParts = $file.Split('|')

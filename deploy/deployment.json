@@ -14,11 +14,11 @@
 			]
 		},
 		"${TARGET}/driver": {
-			"driver-x32 | Win7": [
-				"${BUILD}-driver/fortfw32.sys"
+			"driver-x32 | win7": [
+				"${BUILD}-driver-${CONFIG}/fortfw32.sys"
 			],
 			"driver-x64": [
-				"${BUILD}-driver/fortfw64.sys"
+				"${BUILD}-driver-${CONFIG}/fortfw64.sys"
 			],
 			"scripts": [
 				"${ROOT}/src/driver/scripts		| *.bat *.lnk		|"
@@ -28,8 +28,8 @@
 			"qt": [
 				"${QTPATH}/plugins/platforms		| qwindows.dll		| *d.dll"
 			],
-			"qt-tls | Win10": [
-				"${QTPATH}/plugins/tls			| schannelbackend.dll	| *dd.dll"
+			"qt-tls | win10": [
+				"${QTPATH}/plugins/tls			| qschannelbackend.dll	| *dd.dll"
 			]
 		}
 	}

@@ -23,11 +23,12 @@
     <Configuration Condition="'$(Configuration)'==''">Release</Configuration>
     <Platform Condition="'$(Platform)'==''">Win32</Platform>
     <DefineConstants Condition="'$(Configuration)'=='Release'">$(DefineConstants);NDEBUG</DefineConstants>
+    <DefineConstants Condition="'$(Config)'=='win7'">$(DefineConstants);FORT_WIN7_COMPAT</DefineConstants>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration-Common">
     <TargetVersion>WindowsV6.3</TargetVersion>
-    <KernelBufferOverflowLib>$(DDK_LIB_PATH)\BufferOverflowK.lib</KernelBufferOverflowLib>
+    <KernelBufferOverflowLib Condition="'$(Config)'=='win7'">$(DDK_LIB_PATH)\BufferOverflowK.lib</KernelBufferOverflowLib>
     <PlatformToolset>WindowsKernelModeDriver10.0</PlatformToolset>
     <ConfigurationType>Driver</ConfigurationType>
     <DriverType>WDM</DriverType>
