@@ -176,6 +176,12 @@ FORT_API ULONG DbgPrintEx(ULONG componentId, ULONG level, PCSTR format, ...);
 FORT_API PVOID ExAllocatePoolWithTag(PVOID type, SIZE_T size, ULONG tag);
 FORT_API void ExFreePoolWithTag(PVOID p, ULONG tag);
 
+typedef ULONG64 POOL_FLAGS;
+#define POOL_FLAG_UNINITIALIZED           0x0000000000000002UI64     // Don't zero-initialize allocation
+#define POOL_FLAG_NON_PAGED               0x0000000000000040UI64     // Non paged pool NX
+#define POOL_FLAG_PAGED                   0x0000000000000100UI64     // Paged pool
+FORT_API PVOID ExAllocatePool2(POOL_FLAGS flags, SIZE_T size, ULONG tag);
+
 FORT_API PIO_STACK_LOCATION IoGetCurrentIrpStackLocation(PIRP irp);
 FORT_API void IoMarkIrpPending(PIRP irp);
 FORT_API PDRIVER_CANCEL IoSetCancelRoutine(PIRP irp, PDRIVER_CANCEL routine);

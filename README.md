@@ -15,9 +15,10 @@ Fort is a simple firewall for Windows 7+.
 
 ## Supported OS versions
 
-OS              | Version                       | Architectures
-----------------|-------------------------------|--------------
-Windows         | 7 SP1+, 8.1, 10               | x86, x64
+ Asset                   | OS       | Version          | Architectures
+-------------------------|----------|------------------|--------------
+ \*-windows.\*           | Windows  | 7 SP1+, 8.1, 10  | x86, x64
+ \*-windows10-x86_64.\*  | Windows  | 10 v2004+        | x64
 
 -----
 

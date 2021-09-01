@@ -5,14 +5,19 @@
 
 /* WDM for Development in User Mode */
 #if !defined(FORT_DRIVER)
-#    include "wdm/um_wdm.h"
-#    include "wdm/um_ndis.h"
-#    include "wdm/um_fwpsk.h"
 #    include "wdm/um_fwpmk.h"
+#    include "wdm/um_fwpsk.h"
+#    include "wdm/um_ndis.h"
+#    include "wdm/um_wdm.h"
 #endif
 
-#define fort_mem_alloc(size, tag) ExAllocatePoolWithTag(NonPagedPool, (size), (tag))
-#define fort_mem_free(p, tag)     ExFreePoolWithTag((p), (tag))
+#if defined(FORT_WIN7_COMPAT)
+#    define fort_mem_alloc(size, tag) ExAllocatePoolWithTag(NonPagedPool, (size), (tag))
+#else
+#    define fort_mem_alloc(size, tag)                                                              \
+        ExAllocatePool2(POOL_FLAG_UNINITIALIZED | POOL_FLAG_NON_PAGED, (size), (tag))
+#endif
+#define fort_mem_free(p, tag) ExFreePoolWithTag((p), (tag))
 
 #define fort_request_complete_info(irp, status, info)                                              \
     do {                                                                                           \

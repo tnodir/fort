@@ -21,6 +21,13 @@ void ExFreePoolWithTag(PVOID p, ULONG tag)
     HeapFree(GetProcessHeap(), 0, p);
 }
 
+PVOID ExAllocatePool2(POOL_FLAGS flags, SIZE_T size, ULONG tag)
+{
+    UNUSED(flags);
+    UNUSED(tag);
+    return HeapAlloc(GetProcessHeap(), 0, size);
+}
+
 PIO_STACK_LOCATION IoGetCurrentIrpStackLocation(PIRP irp)
 {
     UNUSED(irp);
