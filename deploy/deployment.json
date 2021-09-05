@@ -1,12 +1,6 @@
 {
 	"files": {
 		"${TARGET}": {
-			"qt": [
-				"${QTPATH}/bin/Qt6Core.dll",
-				"${QTPATH}/bin/Qt6Gui.dll",
-				"${QTPATH}/bin/Qt6Network.dll",
-				"${QTPATH}/bin/Qt6Widgets.dll"
-			],
 			"fort": [
 				"${BUILD}/ui_bin/FortFirewall.exe",
 				"${ROOT}/ChangeLog",
@@ -14,22 +8,14 @@
 			]
 		},
 		"${TARGET}/driver": {
-			"driver-x32 | win7": [
+			"x86 | win7": [
 				"${BUILD}-driver-${CONFIG}/fortfw32.sys"
 			],
-			"driver-x64": [
+			"x86_64": [
 				"${BUILD}-driver-${CONFIG}/fortfw64.sys"
 			],
 			"scripts": [
 				"${ROOT}/src/driver/scripts		| *.bat *.lnk		|"
-			]
-		},
-		"${TARGET}/plugins": {
-			"qt": [
-				"${QTPATH}/plugins/platforms		| qwindows.dll		| *d.dll"
-			],
-			"qt-tls | win10": [
-				"${QTPATH}/plugins/tls			| qschannelbackend.dll	| *dd.dll"
 			]
 		}
 	}

@@ -1,1 +1,1 @@
-@%~dp0setup-deployment.bat -QtPath ".\build-qt\qtbase" -Config win10
+@%~dp0setup-deployment.bat -Config win10

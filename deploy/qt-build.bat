@@ -11,8 +11,11 @@
 md %TARGET_PATH%
 cd %TARGET_PATH%
 
-%QT_PATH%/configure -release -force-debug-info -optimize-size -opensource -confirm-license ^
-	-mp -no-opengl -nomake examples -nomake tests -nomake tools ^
+%QT_PATH%/configure -release -force-debug-info -optimize-size ^
+	-static -prefix "%TARGET_PATH%\static" ^
+	-opensource -confirm-license -mp -no-opengl ^
+	^
+	-nomake examples -nomake tests -nomake tools ^
 	^
 	-skip qt3d -skip qt5compat -skip qtactiveqt -skip qtandroidextras ^
 	-skip qtcanvas3d -skip qtcharts -skip qtconnectivity -skip qtdatavis3d ^
@@ -55,3 +58,4 @@ cd %TARGET_PATH%
 	-no-feature-dbus -no-feature-vulkan -no-feature-vkgen
 
 cmake --build . --parallel
+cmake --install .
