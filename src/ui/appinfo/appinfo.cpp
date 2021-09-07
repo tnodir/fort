@@ -1,8 +1,8 @@
 #include "appinfo.h"
 
-#include "../util/fileutil.h"
+#include "appinfoutil.h"
 
 bool AppInfo::isFileModified(const QString &appPath) const
 {
-    return fileModTime != FileUtil::fileModTime(appPath);
+    return fileModTime != AppInfoUtil::fileModTime(appPath);
 }

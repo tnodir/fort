@@ -6,6 +6,7 @@
 #include <sqlite/sqlitestmt.h>
 
 #include "../appinfo/appinfocache.h"
+#include "../appinfo/appinfoutil.h"
 #include "../driver/drivercommon.h"
 #include "../driver/drivermanager.h"
 #include "../fortsettings.h"
@@ -739,7 +740,7 @@ bool ConfManager::purgeApps()
         while (stmt.step() == SqliteStmt::StepRow) {
             const QString appPath = stmt.columnText(1);
 
-            if (!FileUtil::fileExists(appPath) && !FileUtil::isSystemApp(appPath)) {
+            if (!AppInfoUtil::fileExists(appPath) && !FileUtil::isSystemApp(appPath)) {
                 const qint64 appId = stmt.columnInt64(0);
                 appIdList.append(appId);
             }

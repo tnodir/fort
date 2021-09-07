@@ -6,8 +6,8 @@
 #include <QPushButton>
 
 #include "../../appinfo/appinfocache.h"
+#include "../../appinfo/appinfoutil.h"
 #include "../../util/guiutil.h"
-#include "../../util/osutil.h"
 #include "controlutil.h"
 
 AppInfoRow::AppInfoRow(QWidget *parent) : QWidget(parent)
@@ -39,7 +39,7 @@ void AppInfoRow::setupUi()
     connect(m_btAppCopyPath, &QAbstractButton::clicked, this,
             [&] { GuiUtil::setClipboardData(m_lineAppPath->text()); });
     connect(m_btAppOpenFolder, &QAbstractButton::clicked, this,
-            [&] { OsUtil::openFolder(m_lineAppPath->text()); });
+            [&] { AppInfoUtil::openFolder(m_lineAppPath->text()); });
 
     layout->addWidget(m_btAppCopyPath);
     layout->addWidget(m_btAppOpenFolder);

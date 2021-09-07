@@ -33,11 +33,6 @@ QString OsUtil::pidToPath(quint32 pid, bool isKernelPath)
     return pi.path(isKernelPath);
 }
 
-bool OsUtil::openUrlExternally(const QUrl &url)
-{
-    return QDesktopServices::openUrl(url);
-}
-
 bool OsUtil::openFolder(const QString &filePath)
 {
     const QString nativePath = QDir::toNativeSeparators(filePath);
@@ -57,7 +52,7 @@ bool OsUtil::openUrlOrFolder(const QString &path)
         // else open the folder's content
     }
 
-    return openUrlExternally(url);
+    return QDesktopServices::openUrl(url);
 }
 
 void *OsUtil::createMutex(const char *name, bool &isSingleInstance)

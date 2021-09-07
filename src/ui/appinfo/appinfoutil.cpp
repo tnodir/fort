@@ -10,6 +10,7 @@
 #include <shellapi.h>
 
 #include "../util/fileutil.h"
+#include "../util/osutil.h"
 #include "appinfo.h"
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -19,6 +20,32 @@ Q_GUI_EXPORT QPixmap qt_pixmapFromWinHICON(HICON icon);
 #endif
 
 namespace {
+
+struct Wow64FsRedirection
+{
+    BOOL disabled = false;
+    PVOID oldValue = nullptr;
+};
+
+Wow64FsRedirection disableWow64FsRedirection()
+{
+    Wow64FsRedirection v;
+#if !defined(Q_OS_WIN64)
+    v.disabled = Wow64DisableWow64FsRedirection(&v.oldValue);
+#endif
+    return v;
+}
+
+void revertWow64FsRedirection(const Wow64FsRedirection &v)
+{
+#if !defined(Q_OS_WIN64)
+    if (v.disabled) {
+        Wow64RevertWow64FsRedirection(v.oldValue);
+    }
+#else
+    Q_UNUSED(v);
+#endif
+}
 
 QImage imageFromImageList(int iImageList, const SHFILEINFO &info)
 {
@@ -139,7 +166,11 @@ bool getInfo(const QString &appPath, AppInfo &appInfo)
         return true;
     }
 
+    const auto wow64FsRedir = disableWow64FsRedirection();
+
     const bool ok = extractVersionInfo(appPath, appInfo);
+
+    revertWow64FsRedirection(wow64FsRedir);
 
     // File description
     if (appInfo.fileDescription.isEmpty()) {
@@ -162,7 +193,13 @@ QImage getIcon(const QString &appPath)
         return QImage(":/icons/windows-48.png");
     }
 
-    return extractShellIcon(appPath);
+    const auto wow64FsRedir = disableWow64FsRedirection();
+
+    const QImage result = extractShellIcon(appPath);
+
+    revertWow64FsRedirection(wow64FsRedir);
+
+    return result;
 }
 
 void initThread()
@@ -173,6 +210,39 @@ void initThread()
 void doneThread()
 {
     CoUninitialize();
+}
+
+bool fileExists(const QString &appPath)
+{
+    const auto wow64FsRedir = disableWow64FsRedirection();
+
+    const bool res = FileUtil::fileExists(appPath);
+
+    revertWow64FsRedirection(wow64FsRedir);
+
+    return res;
+}
+
+QDateTime fileModTime(const QString &appPath)
+{
+    const auto wow64FsRedir = disableWow64FsRedirection();
+
+    const QDateTime res = FileUtil::fileModTime(appPath);
+
+    revertWow64FsRedirection(wow64FsRedir);
+
+    return res;
+}
+
+bool openFolder(const QString &appPath)
+{
+    const auto wow64FsRedir = disableWow64FsRedirection();
+
+    const bool res = OsUtil::openFolder(appPath);
+
+    revertWow64FsRedirection(wow64FsRedir);
+
+    return res;
 }
 
 }

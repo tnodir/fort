@@ -18,7 +18,6 @@ class OsUtil
 public:
     static QString pidToPath(quint32 pid, bool isKernelPath = false);
 
-    static bool openUrlExternally(const QUrl &url);
     static bool openFolder(const QString &filePath);
     static bool openUrlOrFolder(const QString &path);
 

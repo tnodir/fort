@@ -14,6 +14,11 @@ QImage getIcon(const QString &appPath);
 void initThread();
 void doneThread();
 
+bool fileExists(const QString &appPath);
+QDateTime fileModTime(const QString &appPath);
+
+bool openFolder(const QString &appPath);
+
 }
 
 #endif // APPINFOUTIL_H
