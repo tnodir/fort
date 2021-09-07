@@ -27,7 +27,7 @@ struct Wow64FsRedirection
     PVOID oldValue = nullptr;
 };
 
-Wow64FsRedirection disableWow64FsRedirection()
+inline Wow64FsRedirection disableWow64FsRedirection()
 {
     Wow64FsRedirection v;
 #if !defined(Q_OS_WIN64)
@@ -36,7 +36,7 @@ Wow64FsRedirection disableWow64FsRedirection()
     return v;
 }
 
-void revertWow64FsRedirection(const Wow64FsRedirection &v)
+inline void revertWow64FsRedirection(const Wow64FsRedirection &v)
 {
 #if !defined(Q_OS_WIN64)
     if (v.disabled) {
