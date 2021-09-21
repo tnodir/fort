@@ -4,7 +4,7 @@
 #include <QDataStream>
 #include <QImage>
 
-#include <sqlite3.h>
+#include <sqlite.h>
 
 SqliteStmt::SqliteStmt() = default;
 

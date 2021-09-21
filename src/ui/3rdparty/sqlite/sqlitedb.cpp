@@ -6,7 +6,7 @@
 #include <QLoggingCategory>
 #include <QSet>
 
-#include <sqlite3.h>
+#include <sqlite.h>
 
 #include "sqlitestmt.h"
 
