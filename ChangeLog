@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.4.2, 2021-10-07:
+- UI: Use QtNetwork for downloads, instead of `curl.exe`.
+- UI: Disable WOW64 FS Redirection for 32-bit build.
+
 v3.4.1, 2021-08-08:
 - UI: Fix activating a minimized window.
 - UI: Fix password checking.
