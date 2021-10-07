@@ -1,0 +1,24 @@
+; External defines:
+; .Set PLAT=x64
+; .Set CONFIG=win10
+
+.Set CabinetFileCountThreshold=0
+.Set FolderFileCountThreshold=0
+.Set FolderSizeThreshold=0
+.Set MaxCabinetSize=0
+.Set MaxDiskFileCount=0
+.Set MaxDiskSize=0
+.Set CompressionType=MSZIP
+.Set Cabinet=on
+.Set Compress=on
+
+.Set CabinetNameTemplate=fortfw-%CONFIG%-%PLAT%.cab
+.Set DiskDirectoryTemplate= ; Output .cab files into current directory
+
+.Define DRIVER_PATH=..\..\build-driver-%CONFIG%\%PLAT%
+.Define INF_PATH=..\..\src\driver\fortfw.inf
+
+.Set DestinationDir=fortfw
+%DRIVER_PATH%\fortfw.sys
+%DRIVER_PATH%\fortfw.pdb
+%INF_PATH%

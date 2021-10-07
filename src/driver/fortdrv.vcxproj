@@ -33,12 +33,7 @@
     <PlatformToolset>WindowsKernelModeDriver10.0</PlatformToolset>
     <ConfigurationType>Driver</ConfigurationType>
     <DriverType>WDM</DriverType>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Platform-Win32">
-    <TargetName>fortfw32</TargetName>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Platform)'=='x64'" Label="Platform-x64">
-    <TargetName>fortfw64</TargetName>
+    <TargetName>fortfw</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Release'" Label="Configuration-Release">
     <UseDebugLibraries>false</UseDebugLibraries>

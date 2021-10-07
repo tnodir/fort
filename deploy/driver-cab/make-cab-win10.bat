@@ -1,0 +1,1 @@
+@%~dp0make-cab.bat x64 win10

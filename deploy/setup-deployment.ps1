@@ -14,16 +14,30 @@ $targetDirs = @($json.files.psobject.Properties.name)
 
 for ($i = 0; $i -lt $targetDirs.length; $i++) {
 
-    $targetDir = $targetDirs[$i]
-    $jsonTargetDir = $json.files."$targetDir"
+    $targetName = $targetDirs[$i]
 
-    $sections = @($jsonTargetDir.psobject.Properties.name)
-
-    $targetDir = $targetDir -replace "/",  "\"
+    $targetDir = $targetName -replace "/",  "\"
     $targetDir = $targetDir -replace '\${TARGET}',  "$TargetPath"
+
+    if ($Config -And $targetDir.Contains('|')) {
+        $targetParts = $targetDir.Split('|')
+
+        $targetConf = $targetParts[1].Trim().Split(' ')
+
+        if ($targetConf -notcontains $Config) {
+            Write-Host -ForeGround Yellow "target: $targetDir (Skipped for $Config)"
+            continue
+        }
+
+        $targetDir = $targetParts[0].Trim()
+    }
+
     echo "target: $targetDir"
 
     New-Item $targetDir -ItemType directory -Force | Out-Null
+
+    $jsonTargetName = $json.files."$targetName"
+    $sections = @($jsonTargetName.psobject.Properties.name)
     
     for ($j = 0; $j -lt $sections.length; $j++) {
         $sectionName = $sections[$j]
@@ -42,7 +56,7 @@ for ($i = 0; $i -lt $targetDirs.length; $i++) {
 
         echo "  $sectionName"
 
-        $files = @($jsonTargetDir."$sectionName")
+        $files = @($jsonTargetName."$sectionName")
 
         for ($k = 0; $k -lt $files.Length; $k++) {
             $file = $files[$k]

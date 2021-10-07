@@ -1,12 +1,12 @@
 @rem Install driver
 
-@set ARCH=32
-@if defined PROGRAMFILES(X86) @set ARCH=64
+@set ARCH=x86
+@if defined PROGRAMFILES(X86) @set ARCH=x86_64
 
 @set BASENAME=fortfw
-@set FILENAME=%BASENAME%%ARCH%.sys
-@set SRCPATH=%~dp0..\%FILENAME%
-@set DSTPATH=%SystemRoot%\System32\drivers\%BASENAME%.sys
+@set FILENAME=%BASENAME%.sys
+@set SRCPATH=%~dp0..\%ARCH%\%FILENAME%
+@set DSTPATH=%SystemRoot%\System32\drivers\%FILENAME%
 
 @set DRIVERSVC=%BASENAME%
 @set DISPNAME=Fort Firewall Driver

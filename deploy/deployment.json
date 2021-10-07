@@ -7,14 +7,18 @@
 			]
 		},
 		"${TARGET}/driver": {
-			"x86 | win7": [
-				"${BUILD}-driver-${CONFIG}/fortfw32.sys"
-			],
-			"x86_64": [
-				"${BUILD}-driver-${CONFIG}/fortfw64.sys"
-			],
 			"scripts": [
 				"${ROOT}/src/driver/scripts		| *.bat *.lnk		|"
+			]
+		},
+		"${TARGET}/driver/x86 | win7": {
+			"sys": [
+				"${BUILD}-driver-${CONFIG}/Win32/fortfw.sys"
+			]
+		},
+		"${TARGET}/driver/x86_64": {
+			"sys": [
+				"${BUILD}-driver-${CONFIG}/x64/fortfw.sys"
 			]
 		}
 	}

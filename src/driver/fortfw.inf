@@ -1,0 +1,40 @@
+[Version]
+Signature = "$WINDOWS NT$"
+Provider = %ManufacturerName%
+Class = WFP
+ClassGuid = {D7130FB9-F721-4BF7-A74A-CD9DD0230D80}
+DriverVer = 01/01/2021
+CatalogFile = fortfw.cat
+
+[DestinationDirs]
+DefaultDestDir = 12 ; %WinDir%\System32\Drivers
+
+[SourceDisksNames]
+1 = %DiskName%
+
+[SourceDisksFiles]
+fortfw.sys = 1
+
+[DefaultInstall]
+OptionDesc = %ServiceDesc%
+CopyFiles = Fort.DriverFiles
+
+[DefaultInstall.Services]
+AddService = %ServiceName%,,Fort.Service
+
+[Fort.DriverFiles]
+fortfw.sys
+
+[Fort.Service]
+DisplayName = %ServiceName%
+Description = %ServiceDesc%
+ServiceType = 1 ; SERVICE_KERNEL_DRIVER
+StartType = 2 ; SERVICE_AUTO_START
+ErrorControl = 1 ; SERVICE_ERROR_NORMAL
+ServiceBinary = %12%\fortfw.sys
+
+[Strings]
+ManufacturerName = "Nodir Temirkhodjaev"
+DiskName = "Fort Firewall Installation Disk"
+ServiceName = "FortFirewallSvc"
+ServiceDesc = "Fort Firewall Service"
