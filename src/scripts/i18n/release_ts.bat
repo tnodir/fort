@@ -1,5 +1,5 @@
 @echo off
-set QT_BIN_PATH=D:\Qt\Qt5.14.2\5.14.2\msvc2017_64\bin
+set QT_BIN_PATH=D:\Qt\Qt5.15.2\5.15.2\msvc2019_64\bin
 
 cd ..\..\ui
 
