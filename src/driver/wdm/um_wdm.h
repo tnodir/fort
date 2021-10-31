@@ -5,9 +5,9 @@
 
 #pragma warning(push)
 #pragma warning(disable : 4005) // suppress warning: C4005: macro redefinition
-#include <winternl.h>
-#include <ntstatus.h>
 #include <ifdef.h>
+#include <ntstatus.h>
+#include <winternl.h>
 #include <ws2def.h>
 #include <ws2ipdef.h>
 #pragma warning(pop)
@@ -166,6 +166,27 @@ typedef struct
     short Weekday; // range [0..6] == [Sunday..Saturday]
 } TIME_FIELDS, *PTIME_FIELDS;
 
+typedef struct _KEY_VALUE_FULL_INFORMATION
+{
+    ULONG TitleIndex;
+    ULONG Type;
+    ULONG DataOffset;
+    ULONG DataLength;
+    ULONG NameLength;
+    WCHAR Name[1]; // Variable size
+    // Data[1]; // Variable size data not declared
+} KEY_VALUE_FULL_INFORMATION, *PKEY_VALUE_FULL_INFORMATION;
+
+typedef enum _KEY_VALUE_INFORMATION_CLASS {
+    KeyValueBasicInformation,
+    KeyValueFullInformation,
+    KeyValuePartialInformation,
+    KeyValueFullInformationAlign64,
+    KeyValuePartialInformationAlign64,
+    KeyValueLayerInformation,
+    MaxKeyValueInfoClass // MaxKeyValueInfoClass should always be the last enum
+} KEY_VALUE_INFORMATION_CLASS;
+
 #define DPFLTR_IHVNETWORK_ID 0
 #define DPFLTR_ERROR_LEVEL   0
 FORT_API ULONG DbgPrintEx(ULONG componentId, ULONG level, PCSTR format, ...);
@@ -175,11 +196,13 @@ FORT_API ULONG DbgPrintEx(ULONG componentId, ULONG level, PCSTR format, ...);
 #define NonPagedPool 0
 FORT_API PVOID ExAllocatePoolWithTag(PVOID type, SIZE_T size, ULONG tag);
 FORT_API void ExFreePoolWithTag(PVOID p, ULONG tag);
+FORT_API PVOID ExAllocatePool(PVOID type, SIZE_T size);
+FORT_API void ExFreePool(PVOID p);
 
 typedef ULONG64 POOL_FLAGS;
-#define POOL_FLAG_UNINITIALIZED           0x0000000000000002UI64     // Don't zero-initialize allocation
-#define POOL_FLAG_NON_PAGED               0x0000000000000040UI64     // Non paged pool NX
-#define POOL_FLAG_PAGED                   0x0000000000000100UI64     // Paged pool
+#define POOL_FLAG_UNINITIALIZED 0x0000000000000002UI64 // Don't zero-initialize allocation
+#define POOL_FLAG_NON_PAGED     0x0000000000000040UI64 // Non paged pool NX
+#define POOL_FLAG_PAGED         0x0000000000000100UI64 // Paged pool
 FORT_API PVOID ExAllocatePool2(POOL_FLAGS flags, SIZE_T size, ULONG tag);
 
 FORT_API PIO_STACK_LOCATION IoGetCurrentIrpStackLocation(PIRP irp);
@@ -244,6 +267,14 @@ FORT_API void IoQueueWorkItemEx(
 FORT_API void KeQuerySystemTime(PLARGE_INTEGER time);
 FORT_API void ExSystemTimeToLocalTime(PLARGE_INTEGER systemTime, PLARGE_INTEGER localTime);
 FORT_API void RtlTimeToTimeFields(PLARGE_INTEGER time, PTIME_FIELDS timeFields);
+
+FORT_API NTSTATUS ZwOpenKey(
+        PHANDLE keyHandle, ACCESS_MASK desiredAccess, POBJECT_ATTRIBUTES objectAttributes);
+FORT_API NTSTATUS ZwClose(HANDLE handle);
+
+FORT_API NTSTATUS ZwQueryValueKey(HANDLE keyHandle, PUNICODE_STRING valueName,
+        KEY_VALUE_INFORMATION_CLASS keyValueInformationClass, PVOID keyValueInformation,
+        ULONG length, PULONG resultLength);
 
 #ifdef __cplusplus
 } // extern "C"
