@@ -11,7 +11,7 @@
 
 #    define POOL_NX_OPTIN 1 /* Enhanced protection of NX pool */
 
-#    include <wdm.h>
+#    include <ntddk.h>
 #    include <fwpmk.h>
 #    include <fwpsk.h>
 #    include <stddef.h>
