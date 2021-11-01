@@ -4,7 +4,9 @@
 
 #define FORT_UTIL_POOL_TAG 'UwfF'
 
-FORT_API NTSTATUS fort_reg_value(HANDLE regKey, PUNICODE_STRING valueName, PWSTR *outData)
+#define FORT_MAX_FILE_SIZE (4 * 1024 * 1024)
+
+static NTSTATUS fort_reg_value(HANDLE regKey, PUNICODE_STRING valueName, PWSTR *outData)
 {
     NTSTATUS status;
 
@@ -74,4 +76,66 @@ FORT_API NTSTATUS fort_driver_path(PDRIVER_OBJECT driver, PUNICODE_STRING regPat
 #endif
 
     return status;
+}
+
+FORT_API NTSTATUS fort_file_read(HANDLE fileHandle, ULONG poolTag, PUCHAR *outData, DWORD *outSize)
+{
+    NTSTATUS status;
+
+    // Get File Size
+    DWORD fileSize = 0;
+    {
+        IO_STATUS_BLOCK statusBlock;
+        FILE_STANDARD_INFORMATION fileInfo;
+        status = ZwQueryInformationFile(
+                fileHandle, &statusBlock, &fileInfo, sizeof(fileInfo), FileStandardInformation);
+
+        if (!NT_SUCCESS(status))
+            return status;
+
+        if (fileInfo.EndOfFile.HighPart != 0 || fileInfo.EndOfFile.LowPart <= 0
+                || fileInfo.EndOfFile.LowPart > FORT_MAX_FILE_SIZE)
+            return STATUS_FILE_NOT_SUPPORTED;
+
+        fileSize = fileInfo.EndOfFile.LowPart;
+    }
+
+    // Allocate Buffer
+    PUCHAR data = fort_mem_alloc(fileSize, poolTag);
+    if (data == NULL)
+        return STATUS_INSUFFICIENT_RESOURCES;
+
+    // Read File
+    DWORD dataSize = 0;
+    do {
+        IO_STATUS_BLOCK statusBlock;
+        status = ZwReadFile(fileHandle, NULL, NULL, NULL, &statusBlock, data + dataSize,
+                fileSize - dataSize, NULL, NULL);
+
+        if (!NT_SUCCESS(status) || statusBlock.Information == 0) {
+            fort_mem_free(data, poolTag);
+            return NT_SUCCESS(status) ? STATUS_FILE_NOT_AVAILABLE : status;
+        }
+
+        dataSize += (DWORD) statusBlock.Information;
+    } while (dataSize < fileSize);
+
+    *outData = data;
+    *outSize = dataSize;
+
+    return status;
+}
+
+FORT_API NTSTATUS fort_file_open(PCWSTR filePath, HANDLE *outHandle)
+{
+    UNICODE_STRING path;
+    RtlInitUnicodeString(&path, filePath);
+
+    OBJECT_ATTRIBUTES fileAttr;
+    InitializeObjectAttributes(
+            &fileAttr, &path, OBJ_CASE_INSENSITIVE | OBJ_KERNEL_HANDLE, NULL, NULL);
+
+    IO_STATUS_BLOCK statusBlock;
+    return ZwOpenFile(outHandle, GENERIC_READ | SYNCHRONIZE, &fileAttr, &statusBlock, 0,
+            FILE_SYNCHRONOUS_IO_NONALERT);
 }
