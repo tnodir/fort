@@ -2,9 +2,20 @@
 
 #include "fortdl.h"
 
+#include "../fortutl.h"
+
 #define FORTDL_MAX_FILE_SIZE (4 * 1024 * 1024)
 
-static NTSTATUS fortdl_read_file(HANDLE fileHandle, PUCHAR *outData)
+static NTSTATUS fortdl_load_image(PUCHAR data, DWORD dataSize)
+{
+    NTSTATUS status;
+
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Load Image: %d\n", dataSize);
+
+    return STATUS_SUCCESS;
+}
+
+static NTSTATUS fortdl_read_file(HANDLE fileHandle, PUCHAR *outData, DWORD *outSize)
 {
     NTSTATUS status;
 
@@ -47,11 +58,12 @@ static NTSTATUS fortdl_read_file(HANDLE fileHandle, PUCHAR *outData)
     } while (dataSize < fileSize);
 
     *outData = data;
+    *outSize = dataSize;
 
     return status;
 }
 
-static NTSTATUS fortdl_load_file(PCWSTR driverPath, PUCHAR *outData)
+static NTSTATUS fortdl_load_file(PCWSTR driverPath, PUCHAR *outData, DWORD *outSize)
 {
     NTSTATUS status;
 
@@ -75,7 +87,8 @@ static NTSTATUS fortdl_load_file(PCWSTR driverPath, PUCHAR *outData)
             return status;
     }
 
-    status = fortdl_read_file(fileHandle, outData);
+    // Read File
+    status = fortdl_read_file(fileHandle, outData, outSize);
 
     ZwClose(fileHandle);
 
@@ -93,93 +106,27 @@ static void fortdl_init(PDRIVER_OBJECT driver, PVOID context, ULONG count)
 
     /* Load the driver file */
     PUCHAR data = NULL;
+    DWORD dataSize = 0;
     {
-        status = fortdl_load_file(context, &data);
+        status = fortdl_load_file(context, &data, &dataSize);
 
         /* Free the allocated driver path */
         ExFreePool(context);
+    }
+
+    // Prepare the driver image
+    PUCHAR image = NULL;
+    if (NT_SUCCESS(status)) {
+        status = fortdl_load_image(data, dataSize);
+
+        /* Free the allocated driver file data */
+        fortdl_free(data);
     }
 
     if (!NT_SUCCESS(status)) {
         DbgPrintEx(
                 DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Init: Error: %x\n", status);
     }
-}
-
-#if defined(FORT_WIN7_COMPAT)
-
-static NTSTATUS fortdl_reg_value(HANDLE regKey, PUNICODE_STRING valueName, PWSTR *out_path)
-{
-    NTSTATUS status;
-
-    ULONG keyInfoSize;
-    status = ZwQueryValueKey(regKey, valueName, KeyValueFullInformation, NULL, 0, &keyInfoSize);
-    if (status != STATUS_BUFFER_TOO_SMALL || status != STATUS_BUFFER_OVERFLOW)
-        return status;
-
-    PKEY_VALUE_FULL_INFORMATION keyInfo = fortdl_alloc(keyInfoSize);
-    if (keyInfo == NULL)
-        return STATUS_INSUFFICIENT_RESOURCES;
-
-    status = ZwQueryValueKey(
-            regKey, valueName, KeyValueFullInformation, keyInfo, keyInfoSize, &keyInfoSize);
-
-    if (NT_SUCCESS(status)) {
-        const PUCHAR src = ((const PUCHAR) keyInfo + keyInfo->DataOffset);
-        const ULONG len = keyInfo->DataLength;
-
-        PWSTR buf = ExAllocatePool(NonPagedPool, len);
-        if (buf == NULL) {
-            status = STATUS_INSUFFICIENT_RESOURCES;
-        } else {
-            RtlCopyMemory(buf, src, len);
-
-            *out_path = buf;
-        }
-    }
-
-    fortdl_free(keyInfo);
-
-    return status;
-}
-
-#endif
-
-static NTSTATUS fortdl_driver_path(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path, PWSTR *out_path)
-{
-    NTSTATUS status;
-
-#if defined(FORT_WIN7_COMPAT)
-    UNUSED(driver);
-
-    HANDLE regKey;
-    OBJECT_ATTRIBUTES objectAttr;
-
-    InitializeObjectAttributes(
-            &objectAttr, reg_path, OBJ_CASE_INSENSITIVE | OBJ_KERNEL_HANDLE, NULL, NULL);
-
-    status = ZwOpenKey(&regKey, KEY_QUERY_VALUE, &objectAttr);
-    if (!NT_SUCCESS(status))
-        return status;
-
-    UNICODE_STRING valueName;
-    RtlInitUnicodeString(&valueName, L"ImagePath");
-
-    status = fortdl_reg_value(regKey, &valueName, out_path);
-
-    ZwClose(regKey);
-#else
-    UNUSED(reg_path);
-
-    UNICODE_STRING path;
-    status = IoQueryFullDriverPath(driver, &path);
-
-    if (NT_SUCCESS(status)) {
-        *out_path = path.Buffer;
-    }
-#endif
-
-    return status;
 }
 
 NTSTATUS
@@ -193,7 +140,7 @@ DriverLoaderEntry
     NTSTATUS status;
 
     PWSTR driverPath = NULL;
-    status = fortdl_driver_path(driver, reg_path, &driverPath);
+    status = fort_driver_path(driver, reg_path, &driverPath);
 
     if (!NT_SUCCESS(status)) {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Entry: Error: %x\n",
