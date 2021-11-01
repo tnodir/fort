@@ -4,7 +4,7 @@ NTSTATUS IoQueryFullDriverPath(PDRIVER_OBJECT DriverObject, PUNICODE_STRING Full
 {
     UNUSED(DriverObject);
     UNUSED(FullPath);
-    return 0;
+    return STATUS_SUCCESS;
 }
 
 VOID IoRegisterDriverReinitialization(PDRIVER_OBJECT DriverObject,

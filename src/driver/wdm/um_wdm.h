@@ -187,6 +187,20 @@ typedef enum _KEY_VALUE_INFORMATION_CLASS {
     MaxKeyValueInfoClass // MaxKeyValueInfoClass should always be the last enum
 } KEY_VALUE_INFORMATION_CLASS;
 
+// Collision with winternl.h
+// typedef enum _FILE_INFORMATION_CLASS {
+#define FileBasicInformation    4
+#define FileStandardInformation 5
+
+typedef struct _FILE_STANDARD_INFORMATION
+{
+    LARGE_INTEGER AllocationSize;
+    LARGE_INTEGER EndOfFile;
+    ULONG NumberOfLinks;
+    BOOLEAN DeletePending;
+    BOOLEAN Directory;
+} FILE_STANDARD_INFORMATION, *PFILE_STANDARD_INFORMATION;
+
 #define DPFLTR_IHVNETWORK_ID 0
 #define DPFLTR_ERROR_LEVEL   0
 FORT_API ULONG DbgPrintEx(ULONG componentId, ULONG level, PCSTR format, ...);
@@ -275,6 +289,15 @@ FORT_API NTSTATUS ZwClose(HANDLE handle);
 FORT_API NTSTATUS ZwQueryValueKey(HANDLE keyHandle, PUNICODE_STRING valueName,
         KEY_VALUE_INFORMATION_CLASS keyValueInformationClass, PVOID keyValueInformation,
         ULONG length, PULONG resultLength);
+
+FORT_API NTSTATUS ZwOpenFile(PHANDLE fileHandle, ACCESS_MASK desiredAccess,
+        POBJECT_ATTRIBUTES objectAttributes, PIO_STATUS_BLOCK ioStatusBlock, ULONG shareAccess,
+        ULONG openOptions);
+FORT_API NTSTATUS ZwQueryInformationFile(HANDLE fileHandle, PIO_STATUS_BLOCK ioStatusBlock,
+        PVOID fileInformation, ULONG length, FILE_INFORMATION_CLASS fileInformationClass);
+FORT_API NTSTATUS ZwReadFile(HANDLE fileHandle, HANDLE event, PIO_APC_ROUTINE apcRoutine,
+        PVOID apcContext, PIO_STATUS_BLOCK ioStatusBlock, PVOID buffer, ULONG length,
+        PLARGE_INTEGER byteOffset, PULONG key);
 
 #ifdef __cplusplus
 } // extern "C"

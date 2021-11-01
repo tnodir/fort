@@ -259,3 +259,43 @@ void IoQueueWorkItemEx(
     UNUSED(queueType);
     UNUSED(context);
 }
+
+NTSTATUS ZwOpenFile(PHANDLE fileHandle, ACCESS_MASK desiredAccess,
+        POBJECT_ATTRIBUTES objectAttributes, PIO_STATUS_BLOCK ioStatusBlock, ULONG shareAccess,
+        ULONG openOptions)
+{
+    UNUSED(fileHandle);
+    UNUSED(desiredAccess);
+    UNUSED(objectAttributes);
+    UNUSED(ioStatusBlock);
+    UNUSED(shareAccess);
+    UNUSED(openOptions);
+    return STATUS_SUCCESS;
+}
+
+NTSTATUS ZwQueryInformationFile(HANDLE fileHandle, PIO_STATUS_BLOCK ioStatusBlock,
+        PVOID fileInformation, ULONG length, FILE_INFORMATION_CLASS fileInformationClass)
+{
+    UNUSED(fileHandle);
+    UNUSED(ioStatusBlock);
+    UNUSED(fileInformation);
+    UNUSED(length);
+    UNUSED(fileInformationClass);
+    return STATUS_SUCCESS;
+}
+
+NTSTATUS ZwReadFile(HANDLE fileHandle, HANDLE event, PIO_APC_ROUTINE apcRoutine, PVOID apcContext,
+        PIO_STATUS_BLOCK ioStatusBlock, PVOID buffer, ULONG length, PLARGE_INTEGER byteOffset,
+        PULONG key)
+{
+    UNUSED(fileHandle);
+    UNUSED(event);
+    UNUSED(apcRoutine);
+    UNUSED(apcContext);
+    UNUSED(ioStatusBlock);
+    UNUSED(buffer);
+    UNUSED(length);
+    UNUSED(byteOffset);
+    UNUSED(key);
+    return STATUS_SUCCESS;
+}

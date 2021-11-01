@@ -2,31 +2,111 @@
 
 #include "fortdl.h"
 
-static void fortdl_load(PCUNICODE_STRING driverPath)
+#define FORTDL_MAX_FILE_SIZE (4 * 1024 * 1024)
+
+static NTSTATUS fortdl_read_file(HANDLE fileHandle, PUCHAR *outData)
 {
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Load: %w\n", driverPath);
+    NTSTATUS status;
+
+    // Get File Size
+    DWORD fileSize = 0;
+    {
+        IO_STATUS_BLOCK statusBlock;
+        FILE_STANDARD_INFORMATION fileInfo;
+        status = ZwQueryInformationFile(
+                fileHandle, &statusBlock, &fileInfo, sizeof(fileInfo), FileStandardInformation);
+
+        if (!NT_SUCCESS(status))
+            return status;
+
+        if (fileInfo.EndOfFile.HighPart != 0 || fileInfo.EndOfFile.LowPart <= 0
+                || fileInfo.EndOfFile.LowPart > FORTDL_MAX_FILE_SIZE)
+            return STATUS_FILE_NOT_SUPPORTED;
+
+        fileSize = fileInfo.EndOfFile.LowPart;
+    }
+
+    // Allocate Buffer
+    PUCHAR data = fortdl_alloc(fileSize);
+    if (data == NULL)
+        return STATUS_INSUFFICIENT_RESOURCES;
+
+    // Read File
+    DWORD dataSize = 0;
+    do {
+        IO_STATUS_BLOCK statusBlock;
+        status = ZwReadFile(fileHandle, NULL, NULL, NULL, &statusBlock, data + dataSize,
+                fileSize - dataSize, NULL, NULL);
+
+        if (!NT_SUCCESS(status) || statusBlock.Information == 0) {
+            fortdl_free(data);
+            return NT_SUCCESS(status) ? STATUS_FILE_NOT_AVAILABLE : status;
+        }
+
+        dataSize += (DWORD) statusBlock.Information;
+    } while (dataSize < fileSize);
+
+    *outData = data;
+
+    return status;
+}
+
+static NTSTATUS fortdl_load_file(PCWSTR driverPath, PUCHAR *outData)
+{
+    NTSTATUS status;
+
+    DbgPrintEx(
+            DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Load File: %w\n", driverPath);
+
+    // Open File
+    HANDLE fileHandle;
+    {
+        UNICODE_STRING path;
+        RtlInitUnicodeString(&path, driverPath);
+
+        OBJECT_ATTRIBUTES fileAttr;
+        InitializeObjectAttributes(
+                &fileAttr, &path, OBJ_CASE_INSENSITIVE | OBJ_KERNEL_HANDLE, NULL, NULL);
+
+        IO_STATUS_BLOCK statusBlock;
+        status = ZwOpenFile(&fileHandle, GENERIC_READ | SYNCHRONIZE, &fileAttr, &statusBlock, 0,
+                FILE_SYNCHRONOUS_IO_NONALERT);
+        if (!NT_SUCCESS(status))
+            return status;
+    }
+
+    status = fortdl_read_file(fileHandle, outData);
+
+    ZwClose(fileHandle);
+
+    return status;
 }
 
 static void fortdl_init(PDRIVER_OBJECT driver, PVOID context, ULONG count)
 {
-    PWSTR driverPath = context;
+    NTSTATUS status;
 
     UNUSED(context);
     UNUSED(count);
 
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Init: %d\n", count);
 
-    /* Load the driver */
+    /* Load the driver file */
+    PUCHAR data = NULL;
     {
-        UNICODE_STRING path;
+        status = fortdl_load_file(context, &data);
 
-        RtlInitUnicodeString(&path, driverPath);
-        fortdl_load(&path);
+        /* Free the allocated driver path */
+        ExFreePool(context);
     }
 
-    /* Free the allocated driver path */
-    ExFreePool(context);
+    if (!NT_SUCCESS(status)) {
+        DbgPrintEx(
+                DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Init: Error: %x\n", status);
+    }
 }
+
+#if defined(FORT_WIN7_COMPAT)
 
 static NTSTATUS fortdl_reg_value(HANDLE regKey, PUNICODE_STRING valueName, PWSTR *out_path)
 {
@@ -62,6 +142,8 @@ static NTSTATUS fortdl_reg_value(HANDLE regKey, PUNICODE_STRING valueName, PWSTR
 
     return status;
 }
+
+#endif
 
 static NTSTATUS fortdl_driver_path(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path, PWSTR *out_path)
 {
