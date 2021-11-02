@@ -5,4 +5,5 @@
 
 #include "../fortutl.c"
 
+#include "fortimg.c"
 #include "fortdl.c"

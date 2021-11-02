@@ -4,14 +4,7 @@
 
 #include "../fortutl.h"
 
-static NTSTATUS fortdl_load_image(PUCHAR data, DWORD dataSize, PUCHAR *image)
-{
-    NTSTATUS status;
-
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Load Image: %d\n", dataSize);
-
-    return STATUS_SUCCESS;
-}
+#include "fortimg.h"
 
 static void fortdl_init(PDRIVER_OBJECT driver, PVOID context, ULONG count)
 {
@@ -48,10 +41,10 @@ static void fortdl_init(PDRIVER_OBJECT driver, PVOID context, ULONG count)
     // Prepare the driver image
     PUCHAR image = NULL;
     if (NT_SUCCESS(status)) {
-        status = fortdl_load_image(data, dataSize, &image);
+        status = fort_image_load(data, dataSize, &image);
 
-        /* Free the allocated driver file data */
-        fortdl_free(data);
+        /* Free the driver file's allocated data */
+        fort_mem_free(data, FORT_LOADER_POOL_TAG);
     }
 
     if (!NT_SUCCESS(status)) {
