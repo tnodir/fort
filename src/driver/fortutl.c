@@ -2,25 +2,20 @@
 
 #include "fortutl.h"
 
-#define FORT_UTIL_POOL_TAG 'UwfF'
-
 #define FORT_MAX_FILE_SIZE (4 * 1024 * 1024)
+
+#define FORT_KEY_INFO_PATH_SIZE                                                                    \
+    (2 + (MAX_PATH * sizeof(WCHAR)) / sizeof(KEY_VALUE_FULL_INFORMATION))
 
 static NTSTATUS fort_reg_value(HANDLE regKey, PUNICODE_STRING valueName, PWSTR *outData)
 {
     NTSTATUS status;
 
+    KEY_VALUE_FULL_INFORMATION keyInfo[FORT_KEY_INFO_PATH_SIZE];
     ULONG keyInfoSize;
-    status = ZwQueryValueKey(regKey, valueName, KeyValueFullInformation, NULL, 0, &keyInfoSize);
-    if (status != STATUS_BUFFER_TOO_SMALL || status != STATUS_BUFFER_OVERFLOW)
-        return status;
-
-    PKEY_VALUE_FULL_INFORMATION keyInfo = fort_mem_alloc(keyInfoSize, FORT_UTIL_POOL_TAG);
-    if (keyInfo == NULL)
-        return STATUS_INSUFFICIENT_RESOURCES;
 
     status = ZwQueryValueKey(
-            regKey, valueName, KeyValueFullInformation, keyInfo, keyInfoSize, &keyInfoSize);
+            regKey, valueName, KeyValueFullInformation, keyInfo, sizeof(keyInfo), &keyInfoSize);
 
     if (NT_SUCCESS(status)) {
         const PUCHAR src = ((const PUCHAR) keyInfo + keyInfo->DataOffset);
@@ -35,8 +30,6 @@ static NTSTATUS fort_reg_value(HANDLE regKey, PUNICODE_STRING valueName, PWSTR *
             *outData = buf;
         }
     }
-
-    fort_mem_free(keyInfo, FORT_UTIL_POOL_TAG);
 
     return status;
 }
