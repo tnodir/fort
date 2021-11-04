@@ -37,7 +37,7 @@ bool copyFile(const QString &filePath, const QString &newFilePath);
 bool linkFile(const QString &filePath, const QString &linkPath);
 
 QString readFile(const QString &filePath);
-QByteArray readFileData(const QString &filePath);
+QByteArray readFileData(const QString &filePath, qint64 maxSize = -1);
 
 bool writeFile(const QString &filePath, const QString &text);
 bool writeFileData(const QString &filePath, const QByteArray &data);

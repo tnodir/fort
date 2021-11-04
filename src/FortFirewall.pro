@@ -21,5 +21,6 @@ tests.file = tests/FortFirewallTests.pro
 driver_payload {
     SUBDIRS += driver_payload
 
+    driver_payload.depends = ui
     driver_payload.file = driver_payload/FortFirewallDriverPayload.pro
 }

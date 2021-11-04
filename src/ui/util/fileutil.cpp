@@ -160,13 +160,13 @@ QString readFile(const QString &filePath)
     return QString::fromUtf8(readFileData(filePath));
 }
 
-QByteArray readFileData(const QString &filePath)
+QByteArray readFileData(const QString &filePath, qint64 maxSize)
 {
     QFile file(filePath);
     if (!file.open(QFile::ReadOnly))
         return QByteArray();
 
-    return file.readAll();
+    return (maxSize <= 0) ? file.readAll() : file.read(maxSize);
 }
 
 bool writeFile(const QString &filePath, const QString &text)

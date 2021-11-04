@@ -10,6 +10,8 @@ public:
 
     void processArguments(const QStringList &args);
 
+    bool createOutputFile();
+
 private:
     QString m_inputFilePath;
     QString m_outputFilePath;
