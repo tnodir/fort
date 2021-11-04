@@ -10,7 +10,6 @@ static void fortdl_init(PDRIVER_OBJECT driver, PVOID context, ULONG count)
 {
     NTSTATUS status;
 
-    UNUSED(context);
     UNUSED(count);
 
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Init: %d\n", count);
@@ -23,7 +22,7 @@ static void fortdl_init(PDRIVER_OBJECT driver, PVOID context, ULONG count)
         status = fort_file_open(context, &fileHandle);
 
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                "FORT: Loader File Load: %w status=%d\n", (PCWSTR) context, status);
+                "FORT: Loader File Open: %w status=%d\n", (PCWSTR) context, status);
 
         if (NT_SUCCESS(status)) {
             status = fort_file_read(fileHandle, FORT_LOADER_POOL_TAG, &data, &dataSize);
@@ -38,10 +37,11 @@ static void fortdl_init(PDRIVER_OBJECT driver, PVOID context, ULONG count)
         ExFreePool(context);
     }
 
-    // Prepare the driver image
+    /* Prepare the driver image */
     PUCHAR image = NULL;
+    DWORD imageSize = 0;
     if (NT_SUCCESS(status)) {
-        status = fort_image_load(data, dataSize, &image);
+        status = fort_image_load(data, dataSize, &image, &imageSize);
 
         /* Free the driver file's allocated data */
         fort_mem_free(data, FORT_LOADER_POOL_TAG);

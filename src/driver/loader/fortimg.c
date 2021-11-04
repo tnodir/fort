@@ -2,7 +2,7 @@
 
 #include "fortimg.h"
 
-FORT_API NTSTATUS fort_image_load(const PUCHAR data, DWORD dataSize, PUCHAR *image)
+FORT_API NTSTATUS fort_image_load(const PUCHAR data, DWORD dataSize, PUCHAR *image, DWORD *outSize)
 {
     NTSTATUS status;
 
