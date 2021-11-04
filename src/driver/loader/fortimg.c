@@ -6,7 +6,7 @@ FORT_API NTSTATUS fort_image_load(const PUCHAR data, DWORD dataSize, PUCHAR *ima
 {
     NTSTATUS status;
 
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Load Image: %d\n", dataSize);
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Image Load: %d\n", dataSize);
 
     return STATUS_SUCCESS;
 }

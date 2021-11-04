@@ -6,7 +6,28 @@
 
 #include "fortimg.h"
 
-static void fortdl_init(PDRIVER_OBJECT driver, PVOID context, ULONG count)
+typedef struct fort_loader
+{
+    DWORD image_size;
+    PUCHAR image;
+
+    PDRIVER_UNLOAD driver_unload;
+} FORT_LOADER, *PFORT_LOADER;
+
+static FORT_LOADER g_fort_loader;
+
+static void fort_loader_unload(PDRIVER_OBJECT driver)
+{
+    /* Unload the driver image */
+    if (g_fort_loader.driver_unload) {
+        g_fort_loader.driver_unload(driver);
+    }
+
+    /* Free the allocated driver image */
+    fort_mem_free(g_fort_loader.image, FORT_LOADER_POOL_TAG);
+}
+
+static void fort_loader_init(PDRIVER_OBJECT driver, PVOID context, ULONG count)
 {
     NTSTATUS status;
 
@@ -47,6 +68,12 @@ static void fortdl_init(PDRIVER_OBJECT driver, PVOID context, ULONG count)
         fort_mem_free(data, FORT_LOADER_POOL_TAG);
     }
 
+    /* Run the driver entry */
+    if (NT_SUCCESS(status)) {
+        g_fort_loader.image_size = imageSize;
+        g_fort_loader.image = image;
+    }
+
     if (!NT_SUCCESS(status)) {
         DbgPrintEx(
                 DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Init: Error: %x\n", status);
@@ -73,7 +100,7 @@ DriverLoaderEntry
     }
 
     /* Delay the initialization until other drivers have finished loading */
-    IoRegisterDriverReinitialization(driver, fortdl_init, driverPath);
+    IoRegisterDriverReinitialization(driver, fort_loader_init, driverPath);
 
     return STATUS_SUCCESS;
 }
