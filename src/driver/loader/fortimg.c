@@ -6,6 +6,39 @@
 
 #include "../fortutl.h"
 
+static UCHAR g_publicKeyBlob[] = {
+#include "fort.rsa.pub"
+};
+
+static NTSTATUS fort_image_verify_signature(
+        const PUCHAR signature, DWORD signatureSize, const PUCHAR digest, DWORD digestSize)
+{
+    NTSTATUS status;
+
+    BCRYPT_ALG_HANDLE algHandle;
+    status = BCryptOpenAlgorithmProvider(&algHandle, BCRYPT_RSA_ALGORITHM, NULL, 0);
+
+    if (NT_SUCCESS(status)) {
+        BCRYPT_KEY_HANDLE keyHandle;
+        status = BCryptImportKeyPair(algHandle, NULL, BCRYPT_RSAPUBLIC_BLOB, &keyHandle,
+                g_publicKeyBlob, sizeof(g_publicKeyBlob), 0);
+
+        if (NT_SUCCESS(status)) {
+            BCRYPT_PKCS1_PADDING_INFO padInfo;
+            padInfo.pszAlgId = BCRYPT_SHA256_ALGORITHM;
+
+            status = BCryptVerifySignature(keyHandle, &padInfo, digest, digestSize, signature,
+                    signatureSize, BCRYPT_PAD_PKCS1);
+
+            BCryptDestroyKey(keyHandle);
+        }
+
+        BCryptCloseAlgorithmProvider(algHandle, 0);
+    }
+
+    return status;
+}
+
 static NTSTATUS fort_image_hash_create(BCRYPT_ALG_HANDLE algHandle, const PUCHAR data,
         DWORD dataSize, PUCHAR digest, DWORD *digestSize)
 {
@@ -57,6 +90,22 @@ static NTSTATUS fort_image_hash(const PUCHAR data, DWORD dataSize, PUCHAR digest
     return status;
 }
 
+static NTSTATUS fort_image_verify(
+        const PUCHAR data, DWORD dataSize, const PUCHAR signature, DWORD signatureSize)
+{
+    NTSTATUS status;
+
+    UCHAR digest[1024];
+    DWORD digestSize = sizeof(digest);
+    status = fort_image_hash(data, dataSize, digest, &digestSize);
+
+    if (NT_SUCCESS(status)) {
+        status = fort_image_verify_signature(signature, signatureSize, digest, digestSize);
+    }
+
+    return status;
+}
+
 FORT_API NTSTATUS fort_image_load(const PUCHAR data, DWORD dataSize, PUCHAR *image, DWORD *outSize)
 {
     NTSTATUS status;
@@ -74,9 +123,7 @@ FORT_API NTSTATUS fort_image_load(const PUCHAR data, DWORD dataSize, PUCHAR *ima
     if (signatureSize < 512 || payload - data < 1024)
         return STATUS_INVALID_IMAGE_FORMAT;
 
-    UCHAR digest[1024];
-    DWORD digestSize = sizeof(digest);
-    status = fort_image_hash(signature, signatureSize, digest, &digestSize);
+    status = fort_image_verify(payload, payloadSize, signature, signatureSize);
     if (!NT_SUCCESS(status))
         return status;
 

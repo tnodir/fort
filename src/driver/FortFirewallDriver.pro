@@ -50,6 +50,7 @@ HEADERS += \
     wdm/um_wdm.h
 
 OTHER_FILES += \
+    loader/fort.rsa.pub \
     scripts/*.bat
 
 # Windows
