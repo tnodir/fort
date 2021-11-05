@@ -361,6 +361,10 @@ bool DriverPayload::createOutputFile()
         writeUInt32(cp, 4, payloadData.size());
     }
 
+    qDebug() << "Signature Size:" << signatureSize
+             << "Aligned Signature Size:" << payloadSignature.size()
+             << "Payload Size:" << payloadData.size();
+
     // Update the Certificate entry
     {
         const int newCertTableSize = certTableSize + payloadHeader.size() + payloadData.size()
@@ -372,7 +376,7 @@ bool DriverPayload::createOutputFile()
 
     // Write the input & payload data into output file
     if (!writeFile(m_outputFilePath,
-                { inData, payloadHeader, payloadSignature, payloadData, payloadInfo }))
+                { inData, payloadHeader, payloadData, payloadSignature, payloadInfo }))
         return false;
 
     qDebug() << "Success:" << m_outputFilePath;
