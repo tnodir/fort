@@ -16,6 +16,7 @@ private:
     QString m_inputFilePath;
     QString m_outputFilePath;
     QString m_payloadFilePath;
+    QString m_secretFilePath;
 };
 
 #endif // DRIVERPAYLOAD_H
