@@ -12,16 +12,18 @@
 #    define POOL_NX_OPTIN 1 /* Enhanced protection of NX pool */
 
 #    include <ntddk.h>
+
 #    include <fwpmk.h>
 #    include <fwpsk.h>
-#    include <stddef.h>
 #    include <ntrxdef.h>
+#    include <stddef.h>
 #else
 #    define _WIN32_WINNT 0x0601
 #    define WIN32_LEAN_AND_MEAN
 #    include <windows.h>
-#    include <winioctl.h>
+
 #    include <fwpmu.h>
+#    include <winioctl.h>
 #endif
 
 #if !defined(FORT_API)
@@ -32,10 +34,14 @@
 #    endif
 #endif
 
+#if defined(_M_ARM) || defined(_M_ARM64)
+#    define FORT_BIG_ENDIAN 1
+#endif
+
 #define UNUSED(p) ((void) (p))
 
 #ifndef NT_SUCCESS
-#    define NT_SUCCESS(status) ((LONG)(status) >= 0)
+#    define NT_SUCCESS(status) ((LONG) (status) >= 0)
 #endif
 
 #define FORT_STATUS_USER_ERROR STATUS_INVALID_PARAMETER

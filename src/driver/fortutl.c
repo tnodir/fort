@@ -132,3 +132,21 @@ FORT_API NTSTATUS fort_file_open(PCWSTR filePath, HANDLE *outHandle)
     return ZwOpenFile(outHandle, GENERIC_READ | SYNCHRONIZE, &fileAttr, &statusBlock, 0,
             FILE_SYNCHRONOUS_IO_NONALERT);
 }
+
+USHORT fort_le_u16_read(const char *cp, int offset)
+{
+    USHORT v = *((USHORT *) (cp + offset));
+#ifdef FORT_BIG_ENDIAN
+    RtlUshortByteSwap(v);
+#endif
+    return v;
+}
+
+DWORD fort_le_u32_read(const char *cp, int offset)
+{
+    DWORD v = *((DWORD *) (cp + offset));
+#ifdef FORT_BIG_ENDIAN
+    RtlUlongByteSwap(v);
+#endif
+    return v;
+}
