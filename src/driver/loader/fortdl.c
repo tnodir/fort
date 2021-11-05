@@ -43,7 +43,7 @@ static void fort_loader_init(PDRIVER_OBJECT driver, PVOID context, ULONG count)
         status = fort_file_open(context, &fileHandle);
 
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                "FORT: Loader File Open: %w status=%d\n", (PCWSTR) context, status);
+                "FORT: Loader File Open: [%ws] status=%d\n", (PCWSTR) context, status);
 
         if (NT_SUCCESS(status)) {
             status = fort_file_read(fileHandle, FORT_LOADER_POOL_TAG, &data, &dataSize);
@@ -51,8 +51,7 @@ static void fort_loader_init(PDRIVER_OBJECT driver, PVOID context, ULONG count)
         }
 
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                "FORT: Loader File Read: %w status=%d size=%d\n", (PCWSTR) context, status,
-                dataSize);
+                "FORT: Loader File Read: status=%d size=%d\n", status, dataSize);
 
         /* Free the allocated driver path */
         ExFreePool(context);

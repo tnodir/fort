@@ -110,12 +110,15 @@ FORT_API NTSTATUS fort_image_load(const PUCHAR data, DWORD dataSize, PUCHAR *ima
 {
     NTSTATUS status;
 
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Image Load: %d\n", dataSize);
-
     const PUCHAR paylodInfo = data + dataSize - 8;
     const int signatureSize = fort_le_u16_read(paylodInfo, 0);
     const int alignedSignatureSize = fort_le_u16_read(paylodInfo, 2);
     const int payloadSize = fort_le_u32_read(paylodInfo, 4);
+
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+            "FORT: Loader Image Load: size=%d signatureSize=%d alignedSignatureSize=%d "
+            "payloadSize=%d\n",
+            dataSize, signatureSize, alignedSignatureSize, payloadSize);
 
     const PUCHAR signature = paylodInfo - alignedSignatureSize;
     const PUCHAR payload = signature - payloadSize;
