@@ -21,6 +21,12 @@ void ExFreePoolWithTag(PVOID p, ULONG tag)
     HeapFree(GetProcessHeap(), 0, p);
 }
 
+PVOID ExAllocatePool(PVOID flags, SIZE_T size)
+{
+    UNUSED(flags);
+    return HeapAlloc(GetProcessHeap(), 0, size);
+}
+
 void ExFreePool(PVOID p)
 {
     UNUSED(p);

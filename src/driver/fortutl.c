@@ -54,7 +54,7 @@ FORT_API NTSTATUS fort_driver_path(PDRIVER_OBJECT driver, PUNICODE_STRING regPat
     UNICODE_STRING valueName;
     RtlInitUnicodeString(&valueName, L"ImagePath");
 
-    status = fortdl_reg_value(regKey, &valueName, outPath);
+    status = fort_reg_value(regKey, &valueName, outPath);
 
     ZwClose(regKey);
 #else
