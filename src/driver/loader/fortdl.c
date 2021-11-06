@@ -27,34 +27,34 @@ static void fort_loader_unload(PDRIVER_OBJECT driver)
     fort_mem_free(g_fort_loader.image, FORT_LOADER_POOL_TAG);
 }
 
-static void fort_loader_init(PDRIVER_OBJECT driver, PVOID context, ULONG count)
+static NTSTATUS fort_loader_init(PDRIVER_OBJECT driver, PWSTR driverPath)
 {
     NTSTATUS status;
 
-    UNUSED(count);
-
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Init: %d\n", count);
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Init: %ws irql=%d\n",
+            driverPath, KeGetCurrentIrql());
 
     /* Load the driver file */
     PUCHAR data = NULL;
     DWORD dataSize = 0;
     {
         HANDLE fileHandle;
-        status = fort_file_open(context, &fileHandle);
-
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                "FORT: Loader File Open: [%ws] status=%d\n", (PCWSTR) context, status);
+        status = fort_file_open(driverPath, &fileHandle);
 
         if (NT_SUCCESS(status)) {
             status = fort_file_read(fileHandle, FORT_LOADER_POOL_TAG, &data, &dataSize);
             ZwClose(fileHandle);
         }
 
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                "FORT: Loader File Read: status=%d size=%d\n", status, dataSize);
-
         /* Free the allocated driver path */
-        ExFreePool(context);
+        ExFreePool(driverPath);
+
+        if (!NT_SUCCESS(status)) {
+            DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                    "FORT: Loader File Read error: [%ws] status=%d size=%d\n", driverPath, status,
+                    dataSize);
+            return status;
+        }
     }
 
     /* Prepare the driver image */
@@ -71,12 +71,16 @@ static void fort_loader_init(PDRIVER_OBJECT driver, PVOID context, ULONG count)
     if (NT_SUCCESS(status)) {
         g_fort_loader.image_size = imageSize;
         g_fort_loader.image = image;
+
+        status = STATUS_INVALID_IMAGE_PROTECT;
     }
 
     if (!NT_SUCCESS(status)) {
         DbgPrintEx(
                 DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Init: Error: %x\n", status);
     }
+
+    return status;
 }
 
 NTSTATUS
@@ -98,8 +102,5 @@ DriverLoaderEntry
         return status;
     }
 
-    /* Delay the initialization until other drivers have finished loading */
-    IoRegisterDriverReinitialization(driver, fort_loader_init, driverPath);
-
-    return STATUS_SUCCESS;
+    return fort_loader_init(driver, driverPath);
 }

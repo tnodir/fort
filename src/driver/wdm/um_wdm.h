@@ -263,6 +263,8 @@ FORT_API KIRQL ExAcquireSpinLockExclusive(PEX_SPIN_LOCK lock);
 FORT_API void ExReleaseSpinLockShared(PEX_SPIN_LOCK lock, KIRQL oldIrql);
 FORT_API void ExReleaseSpinLockExclusive(PEX_SPIN_LOCK lock, KIRQL oldIrql);
 
+FORT_API KIRQL KeGetCurrentIrql(VOID);
+
 #define IO_NO_INCREMENT 0
 FORT_API void IoCompleteRequest(PIRP irp, CCHAR priorityBoost);
 

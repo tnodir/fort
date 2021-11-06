@@ -201,6 +201,11 @@ void ExReleaseSpinLockExclusive(PEX_SPIN_LOCK lock, KIRQL oldIrql)
     UNUSED(oldIrql);
 }
 
+KIRQL KeGetCurrentIrql(VOID)
+{
+    return 0;
+}
+
 void IoCompleteRequest(PIRP irp, CCHAR priorityBoost)
 {
     UNUSED(irp);

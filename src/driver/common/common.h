@@ -34,7 +34,7 @@
 #    endif
 #endif
 
-#if defined(_M_ARM) || defined(_M_ARM64)
+#if defined(_ARM_) || defined(_ARM64_)
 #    define FORT_BIG_ENDIAN 1
 #endif
 
