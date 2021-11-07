@@ -43,16 +43,14 @@ static NTSTATUS fort_loader_init(PDRIVER_OBJECT driver, PWSTR driverPath)
 
         if (NT_SUCCESS(status)) {
             status = fort_file_read(fileHandle, FORT_LOADER_POOL_TAG, &data, &dataSize);
+
             ZwClose(fileHandle);
         }
 
-        /* Free the allocated driver path */
-        ExFreePool(driverPath);
-
         if (!NT_SUCCESS(status)) {
             DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                    "FORT: Loader File Read error: [%ws] status=%d size=%d\n", driverPath, status,
-                    dataSize);
+                    "FORT: Loader File Read: Error: %x size=%d [%ws]\n", status, dataSize,
+                    driverPath);
             return status;
         }
     }
@@ -60,25 +58,22 @@ static NTSTATUS fort_loader_init(PDRIVER_OBJECT driver, PWSTR driverPath)
     /* Prepare the driver image */
     PUCHAR image = NULL;
     DWORD imageSize = 0;
-    if (NT_SUCCESS(status)) {
-        status = fort_image_load(data, dataSize, &image, &imageSize);
+    status = fort_image_load(data, dataSize, &image, &imageSize);
 
-        /* Free the driver file's allocated data */
-        fort_mem_free(data, FORT_LOADER_POOL_TAG);
+    /* Free the driver file's allocated data */
+    fort_mem_free(data, FORT_LOADER_POOL_TAG);
+
+    if (!NT_SUCCESS(status)) {
+        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                "FORT: Loader Image Load: Error: %x size=%d\n", status, imageSize);
+        return status;
     }
 
     /* Run the driver entry */
-    if (NT_SUCCESS(status)) {
-        g_fort_loader.image_size = imageSize;
-        g_fort_loader.image = image;
+    g_fort_loader.image_size = imageSize;
+    g_fort_loader.image = image;
 
-        status = STATUS_INVALID_IMAGE_PROTECT;
-    }
-
-    if (!NT_SUCCESS(status)) {
-        DbgPrintEx(
-                DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Init: Error: %x\n", status);
-    }
+    status = STATUS_UNSUCCESSFUL;
 
     return status;
 }
@@ -97,10 +92,20 @@ DriverLoaderEntry
     status = fort_driver_path(driver, reg_path, &driverPath);
 
     if (!NT_SUCCESS(status)) {
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Entry: Error: %x\n",
+        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Entry: Path Error: %x\n",
                 status);
         return status;
     }
 
-    return fort_loader_init(driver, driverPath);
+    status = fort_loader_init(driver, driverPath);
+
+    /* Free the allocated driver path */
+    ExFreePool(driverPath);
+
+    if (!NT_SUCCESS(status)) {
+        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Entry: Error: %x\n",
+                status);
+    }
+
+    return status;
 }

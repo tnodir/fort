@@ -6,7 +6,7 @@
 
 #include "../fortutl.h"
 
-static UCHAR g_publicKeyBlob[] = {
+static const UCHAR g_publicKeyBlob[] = {
 #include "fort.rsa.pub"
 };
 
@@ -21,7 +21,7 @@ static NTSTATUS fort_image_verify_signature(
     if (NT_SUCCESS(status)) {
         BCRYPT_KEY_HANDLE keyHandle;
         status = BCryptImportKeyPair(algHandle, NULL, BCRYPT_RSAPUBLIC_BLOB, &keyHandle,
-                g_publicKeyBlob, sizeof(g_publicKeyBlob), 0);
+                (PUCHAR) g_publicKeyBlob, sizeof(g_publicKeyBlob), 0);
 
         if (NT_SUCCESS(status)) {
             BCRYPT_PKCS1_PADDING_INFO padInfo;
@@ -95,7 +95,7 @@ static NTSTATUS fort_image_verify(
 {
     NTSTATUS status;
 
-    UCHAR digest[1024];
+    UCHAR digest[256];
     DWORD digestSize = sizeof(digest);
     status = fort_image_hash(data, dataSize, digest, &digestSize);
 
@@ -106,7 +106,8 @@ static NTSTATUS fort_image_verify(
     return status;
 }
 
-FORT_API NTSTATUS fort_image_load(const PUCHAR data, DWORD dataSize, PUCHAR *image, DWORD *outSize)
+FORT_API NTSTATUS fort_image_load(
+        const PUCHAR data, DWORD dataSize, PUCHAR *outImage, DWORD *outSize)
 {
     NTSTATUS status;
 
@@ -129,6 +130,13 @@ FORT_API NTSTATUS fort_image_load(const PUCHAR data, DWORD dataSize, PUCHAR *ima
     status = fort_image_verify(payload, payloadSize, signature, signatureSize);
     if (!NT_SUCCESS(status))
         return status;
+
+    PUCHAR image = fort_mem_exec_alloc(payloadSize, FORT_LOADER_POOL_TAG);
+    if (image == NULL)
+        return STATUS_INSUFFICIENT_RESOURCES;
+
+    *outImage = image;
+    *outSize = payloadSize;
 
     return STATUS_SUCCESS;
 }

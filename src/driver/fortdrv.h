@@ -13,10 +13,13 @@
 #endif
 
 #if defined(FORT_WIN7_COMPAT)
-#    define fort_mem_alloc(size, tag) ExAllocatePoolWithTag(NonPagedPool, (size), (tag))
+#    define fort_mem_alloc(size, tag)      ExAllocatePoolWithTag(NonPagedPool, (size), (tag))
+#    define fort_mem_exec_alloc(size, tag) ExAllocatePoolWithTag(NonPagedPoolExecute, (size), (tag))
 #else
 #    define fort_mem_alloc(size, tag)                                                              \
         ExAllocatePool2(POOL_FLAG_UNINITIALIZED | POOL_FLAG_NON_PAGED, (size), (tag))
+#    define fort_mem_exec_alloc(size, tag)                                                         \
+        ExAllocatePool2(POOL_FLAG_UNINITIALIZED | POOL_FLAG_NON_PAGED_EXECUTE, (size), (tag))
 #endif
 #define fort_mem_free(p, tag) ExFreePoolWithTag((p), (tag))
 
