@@ -11,7 +11,10 @@
 
 #    define POOL_NX_OPTIN 1 /* Enhanced protection of NX pool */
 
+#    define _KRPCENV_ /* To include winerror.h */
+
 #    include <ntddk.h>
+#    include <winerror.h>
 
 #    include <fwpmk.h>
 #    include <fwpsk.h>

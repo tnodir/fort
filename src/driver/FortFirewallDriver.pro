@@ -21,6 +21,7 @@ SOURCES += \
     fortwrk.c \
     loader/fortdl.c \
     loader/fortimg.c \
+    loader/fortmm.c \
     wdm/um_fwpmk.c \
     wdm/um_fwpsk.c \
     wdm/um_ndis.c \
@@ -43,6 +44,7 @@ HEADERS += \
     fortwrk.h \
     loader/fortdl.h \
     loader/fortimg.h \
+    loader/fortmm.h \
     wdm/um_fwpmk.h \
     wdm/um_fwpsk.h \
     wdm/um_ndis.h \

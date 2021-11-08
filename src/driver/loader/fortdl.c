@@ -8,23 +8,20 @@
 
 typedef struct fort_loader
 {
-    DWORD image_size;
-    PUCHAR image;
+    LOADEDMODULE module;
 
     PDRIVER_UNLOAD driver_unload;
 } FORT_LOADER, *PFORT_LOADER;
 
-static FORT_LOADER g_fort_loader;
+static FORT_LOADER g_loader;
 
 static void fort_loader_unload(PDRIVER_OBJECT driver)
 {
-    /* Unload the driver image */
-    if (g_fort_loader.driver_unload) {
-        g_fort_loader.driver_unload(driver);
+    if (g_loader.driver_unload) {
+        g_loader.driver_unload(driver);
     }
 
-    /* Free the allocated driver image */
-    fort_mem_free(g_fort_loader.image, FORT_LOADER_POOL_TAG);
+    fort_image_unload(&g_loader.module);
 }
 
 static NTSTATUS fort_loader_init(PDRIVER_OBJECT driver, PWSTR driverPath)
@@ -56,22 +53,18 @@ static NTSTATUS fort_loader_init(PDRIVER_OBJECT driver, PWSTR driverPath)
     }
 
     /* Prepare the driver image */
-    PUCHAR image = NULL;
-    DWORD imageSize = 0;
-    status = fort_image_load(data, dataSize, &image, &imageSize);
+    status = fort_image_load(data, dataSize, &g_loader.module);
 
     /* Free the driver file's allocated data */
     fort_mem_free(data, FORT_LOADER_POOL_TAG);
 
     if (!NT_SUCCESS(status)) {
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                "FORT: Loader Image Load: Error: %x size=%d\n", status, imageSize);
+        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Image Load: Error: %x\n",
+                status);
         return status;
     }
 
     /* Run the driver entry */
-    g_fort_loader.image_size = imageSize;
-    g_fort_loader.image = image;
 
     status = STATUS_UNSUCCESSFUL;
 
