@@ -15,11 +15,11 @@
 #define ARCHITECTURE_TYPE_X86 0x00000000
 #define ARCHITECTURE_TYPE_X64 0x00000001
 
-// MIN/MAX of address aligned
+/* MIN/MAX of address aligned */
 #define MIN_ALIGNED(address, alignment) (LPVOID)((uintptr_t) (address) & ~((alignment) -1))
 #define MAX_ALIGNED(value, alignment)   (((value) + (alignment) -1) & ~((alignment) -1))
 
-// Section data from file header
+/* Section data from file header */
 typedef struct _SECTIONDATA
 {
     LPVOID pAddress;
@@ -29,7 +29,7 @@ typedef struct _SECTIONDATA
     BOOL fLast;
 } SECTIONDATA, *PSECTIONDATA;
 
-typedef BOOL(WINAPI *DllEntryProc)(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved);
+typedef NTSTATUS(WINAPI *DriverEntryProc)(PDRIVER_OBJECT driver, PUNICODE_STRING regPath);
 
 static NTSTATUS CopySectionTable(
         PUCHAR pData, size_t size, PIMAGE_NT_HEADERS pNtheaders, PLOADEDMODULE pLoadedModule)
@@ -47,8 +47,7 @@ static NTSTATUS CopySectionTable(
                 if (dest == NULL)
                     return STATUS_NO_MEMORY;
 
-                // Always use position from file to support alignments smaller
-                // than page size.
+                /* Always use position from file to support alignments smaller than page size. */
                 dest = codeBase + section->VirtualAddress;
                 section->Misc.PhysicalAddress = (DWORD) (uintptr_t) dest;
                 RtlZeroMemory(dest, sectionSize);
@@ -151,7 +150,7 @@ static NTSTATUS BuildImportTable(PLOADEDMODULE pLoadedModule)
             return STATUS_DLL_NOT_FOUND;
 
         HINSTANCE *const tmp = (HINSTANCE *) realloc(pLoadedModule->pModules,
-                ((SIZE_T) pLoadedModule->nModules + 1) * (sizeof(HINSTANCE)));
+                ((SIZE_T) pLoadedModule->nModules + 1) * sizeof(HINSTANCE));
         if (tmp == NULL)
             return STATUS_NO_MEMORY;
 
@@ -304,9 +303,9 @@ static BOOL ProtectSections(PLOADEDMODULE pModule)
             continue;
         }
 
-        if (!ProtectSection(pModule, &SectionData)) {
+        if (!ProtectSection(pModule, &SectionData))
             return FALSE;
-        }
+
         SectionData.pAddress = SectionAddress;
         SectionData.pAlignedAddress = AlignedAddress;
         SectionData.Size = SectionSize;
@@ -314,9 +313,8 @@ static BOOL ProtectSections(PLOADEDMODULE pModule)
     }
 
     SectionData.fLast = TRUE;
-    if (!ProtectSection(pModule, &SectionData)) {
+    if (!ProtectSection(pModule, &SectionData))
         return FALSE;
-    }
 
     return TRUE;
 }
@@ -411,34 +409,9 @@ static NTSTATUS InitializeModuleImage(__in PLOADEDMODULE pModule, __in_bcount(dw
     if (!NT_SUCCESS(status))
         return status;
 
-    /* Thread Local Storage (TLS) callbacks are executed BEFORE the main loading */
-    PIMAGE_DATA_DIRECTORY directory =
-            &(pModule->pHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_TLS]);
-    if (directory->VirtualAddress != 0) {
-        PIMAGE_TLS_DIRECTORY tls =
-                (PIMAGE_TLS_DIRECTORY) (pModule->pCodeBase + directory->VirtualAddress);
-        PIMAGE_TLS_CALLBACK *callback = (PIMAGE_TLS_CALLBACK *) tls->AddressOfCallBacks;
-
-        if (callback) {
-            while (*callback) {
-                (*callback)((PVOID) pModule->pCodeBase, DLL_PROCESS_ATTACH, NULL);
-                callback++;
-            }
-        }
-    }
-
-    /* Get entry point and call DLL_PROCESS_ATTACH */
-    if (pModule->pHeaders->OptionalHeader.AddressOfEntryPoint != 0) {
-        DllEntryProc DllEntry = (DllEntryProc) (PVOID) (pModule->pCodeBase
-                + pModule->pHeaders->OptionalHeader.AddressOfEntryPoint);
-
-        /* Notify library about attaching to process */
-        const BOOL successful = (*DllEntry)((HINSTANCE) pModule->pCodeBase, DLL_PROCESS_ATTACH, 0);
-        if (!successful)
-            return STATUS_DLL_INIT_FAILED;
-
-        pModule->fInitialized = TRUE;
-    }
+    /* Check entry point */
+    if (pModule->pHeaders->OptionalHeader.AddressOfEntryPoint == 0)
+        return STATUS_DRIVER_ENTRYPOINT_NOT_FOUND;
 
     return STATUS_SUCCESS;
 }
@@ -494,16 +467,18 @@ FORT_API NTSTATUS LoadModuleFromMemory(
     return status;
 }
 
+NTSTATUS CallModuleEntry(
+        __in PLOADEDMODULE pModule, __in PDRIVER_OBJECT driver, __in PUNICODE_STRING regPath)
+{
+    DriverEntryProc driverEntry = (DriverEntryProc) (PVOID) (pModule->pCodeBase
+            + pModule->pHeaders->OptionalHeader.AddressOfEntryPoint);
+
+    return driverEntry(driver, regPath);
+}
+
 /* Free all resources allocated for a loaded module */
 FORT_API void UnloadModule(__in PLOADEDMODULE pModule)
 {
-    if (pModule->fInitialized) {
-        /* Tell library to detach from process */
-        DllEntryProc DllEntry = (DllEntryProc) (PVOID) (pModule->pCodeBase
-                + pModule->pHeaders->OptionalHeader.AddressOfEntryPoint);
-        (*DllEntry)((HINSTANCE) pModule->pCodeBase, DLL_PROCESS_DETACH, 0);
-    }
-
     if (pModule->pCodeBase != NULL) {
         /* Release memory of module */
         VirtualFree(pModule->pCodeBase, 0, MEM_RELEASE);
@@ -511,180 +486,40 @@ FORT_API void UnloadModule(__in PLOADEDMODULE pModule)
 }
 
 /* Retrieve address of an exported function from our modules DLL. */
-FORT_API FARPROC ModuleGetProcAddress(__in PLOADEDMODULE pModule, __in_z_opt LPCSTR FuncName)
+FORT_API FARPROC ModuleGetProcAddress(__in PLOADEDMODULE pModule, __in_z_opt LPCSTR funcName)
 {
-    DWORD idx = 0;
-    PIMAGE_EXPORT_DIRECTORY exports;
-    PIMAGE_DATA_DIRECTORY directory;
-
-    directory = &(pModule->pHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT]);
+    const PIMAGE_DATA_DIRECTORY directory =
+            &(pModule->pHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT]);
     if (directory->Size == 0)
         return NULL; /* no export table found */
 
-    exports = (PIMAGE_EXPORT_DIRECTORY) (pModule->pCodeBase + directory->VirtualAddress);
+    const PIMAGE_EXPORT_DIRECTORY exports =
+            (PIMAGE_EXPORT_DIRECTORY) (pModule->pCodeBase + directory->VirtualAddress);
     if (exports->NumberOfNames == 0 || exports->NumberOfFunctions == 0)
         return NULL; /* Our modules must export 3 functions. */
 
-    if (HIWORD(FuncName) == 0) {
-        /* Load function by ordinal value */
-        if (LOWORD(FuncName) < exports->Base)
-            return NULL;
+    int idx = -1;
 
-        idx = LOWORD(FuncName) - exports->Base;
+    if (HIWORD(funcName) == 0) {
+        /* Load function by ordinal value */
+        idx = LOWORD(funcName) - exports->Base;
     } else {
         /* Search function name in list of exported names */
-        BOOL found = FALSE;
         DWORD *nameRef = (DWORD *) (pModule->pCodeBase + exports->AddressOfNames);
         WORD *ordinal = (WORD *) (pModule->pCodeBase + exports->AddressOfNameOrdinals);
 
         for (DWORD i = 0; i < exports->NumberOfNames; ++i, ++nameRef, ++ordinal) {
-            if (strcmp(FuncName, (const char *) (pModule->pCodeBase + (*nameRef))) == 0) {
+            if (strcmp(funcName, (const char *) (pModule->pCodeBase + *nameRef)) == 0) {
                 idx = *ordinal;
-                found = TRUE;
                 break;
             }
         }
-
-        if (!found)
-            return NULL; /* exported symbol not found */
     }
 
-    if (idx > exports->NumberOfFunctions)
-        return NULL; /* name <-> ordinal number don't match */
+    if (idx < 0 || idx > (int) exports->NumberOfFunctions)
+        return NULL; /* exported symbol not found or name <-> ordinal number don't match */
 
     /* AddressOfFunctions contains the RVAs to the "real" functions */
     return (FARPROC) (PVOID) (pModule->pCodeBase
-            + (*(DWORD *) (pModule->pCodeBase + exports->AddressOfFunctions + ((SIZE_T) idx * 4))));
-}
-
-static PIMAGE_RESOURCE_DIRECTORY_ENTRY SearchResourceEntry(
-        __in void *root, __in PIMAGE_RESOURCE_DIRECTORY resources, __in_opt LPCTSTR key)
-{
-    PIMAGE_RESOURCE_DIRECTORY_ENTRY entries = (PIMAGE_RESOURCE_DIRECTORY_ENTRY) (resources + 1);
-    PIMAGE_RESOURCE_DIRECTORY_ENTRY result = NULL;
-    DWORD start;
-    DWORD end;
-    DWORD middle;
-
-    /* Entries are stored as ordered list of named entries,
-     * followed by an ordered list of id entries - we can do
-     * a binary search to find faster...
-     */
-    if (IS_INTRESOURCE(key)) {
-        const WORD check = (WORD) (uintptr_t) key;
-        start = resources->NumberOfNamedEntries;
-        end = start + resources->NumberOfIdEntries;
-
-        while (end > start) {
-            middle = (start + end) >> 1;
-            const WORD entryName = (WORD) entries[middle].Name;
-            if (check < entryName) {
-                end = (end != middle ? middle : middle - 1);
-            } else if (check > entryName) {
-                start = (start != middle ? middle : middle + 1);
-            } else {
-                result = &entries[middle];
-                break;
-            }
-        }
-    } else {
-        const int searchKeyLen = (int) wcslen((wchar_t *) key);
-        LPCWSTR searchKey = (LPCWSTR) key;
-        start = 0;
-        end = resources->NumberOfNamedEntries;
-        while (end > start) {
-            PIMAGE_RESOURCE_DIR_STRING_U resourceString;
-            middle = (start + end) >> 1;
-            resourceString = (PIMAGE_RESOURCE_DIR_STRING_U) (((char *) root)
-                    + (entries[middle].Name & 0x7FFFFFFF));
-
-            int cmp = _wcsnicmp(searchKey, resourceString->NameString, resourceString->Length);
-            if (cmp == 0) {
-                // Handle partial match
-                cmp = searchKeyLen - (int) resourceString->Length;
-            }
-
-            if (cmp < 0) {
-                end = (middle != end ? middle : middle - 1);
-            } else if (cmp > 0) {
-                start = (middle != start ? middle : middle + 1);
-            } else {
-                result = &entries[middle];
-                break;
-            }
-        }
-    }
-
-    return result;
-}
-
-FORT_API PVOID ModuleFindResource(
-        __in_opt PLOADEDMODULE module, __in_z LPCTSTR name, __in_z_opt LPCTSTR type)
-{
-    const PUCHAR codeBase = ((PLOADEDMODULE) module)->pCodeBase;
-
-    PIMAGE_DATA_DIRECTORY directory =
-            &(module)->pHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_RESOURCE];
-
-    if (directory->Size == 0)
-        return NULL; /* no resource table found */
-
-    /* resources are stored as three-level tree
-     * - first node is the type
-     * - second node is the name
-     * - third node is the language
-     */
-    PIMAGE_RESOURCE_DIRECTORY rootResources =
-            (PIMAGE_RESOURCE_DIRECTORY) (codeBase + directory->VirtualAddress);
-    PIMAGE_RESOURCE_DIRECTORY_ENTRY foundType =
-            SearchResourceEntry(rootResources, rootResources, type);
-    if (foundType == NULL)
-        return NULL; /* no resource type found */
-
-    PIMAGE_RESOURCE_DIRECTORY typeResources = (PIMAGE_RESOURCE_DIRECTORY) (codeBase
-            + directory->VirtualAddress + (foundType->OffsetToData & 0x7fffffff));
-    PIMAGE_RESOURCE_DIRECTORY_ENTRY foundName =
-            SearchResourceEntry(rootResources, typeResources, name);
-    if (foundName == NULL)
-        return NULL; /* no resource name found */
-
-    const WORD language = DEFAULT_LANGUAGE;
-
-    PIMAGE_RESOURCE_DIRECTORY nameResources = (PIMAGE_RESOURCE_DIRECTORY) (codeBase
-            + directory->VirtualAddress + (foundName->OffsetToData & 0x7fffffff));
-    PIMAGE_RESOURCE_DIRECTORY_ENTRY foundLanguage =
-            SearchResourceEntry(rootResources, nameResources, (LPCTSTR) (uintptr_t) language);
-    if (foundLanguage == NULL) {
-        /* requested language not found, use first available */
-        if (nameResources->NumberOfIdEntries == 0)
-            return NULL; /* no resource language found */
-
-        foundLanguage = (PIMAGE_RESOURCE_DIRECTORY_ENTRY) (nameResources + 1);
-    }
-
-    return (codeBase + directory->VirtualAddress + (foundLanguage->OffsetToData & 0x7fffffff));
-}
-
-FORT_API DWORD ModuleSizeofResource(__in PLOADEDMODULE module, __in_opt PVOID resource)
-{
-    if (resource == NULL) {
-        return 0;
-    }
-
-    UNREFERENCED_PARAMETER(module);
-    const PIMAGE_RESOURCE_DATA_ENTRY entry = (PIMAGE_RESOURCE_DATA_ENTRY) resource;
-
-    return entry->Size;
-}
-
-FORT_API LPVOID ModuleLoadResource(__in PLOADEDMODULE module, __in PVOID resource)
-{
-    if (resource == NULL) {
-        return NULL;
-    }
-
-    const PUCHAR codeBase = ((PLOADEDMODULE) module)->pCodeBase;
-    const PIMAGE_RESOURCE_DATA_ENTRY entry = (PIMAGE_RESOURCE_DATA_ENTRY) resource;
-
-    return codeBase + entry->OffsetToData;
+            + *(DWORD *) (pModule->pCodeBase + exports->AddressOfFunctions + (SIZE_T) idx * 4));
 }

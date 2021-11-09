@@ -1,14 +1,14 @@
 #ifndef FORTIMG_H
 #define FORTIMG_H
 
-#include "fortmm.h"
+#include "fortdl.h"
 
 #if defined(__cplusplus)
 extern "C" {
 #endif
 
-FORT_API NTSTATUS fort_image_load(const PUCHAR data, DWORD dataSize, LOADEDMODULE *module);
-FORT_API VOID fort_image_unload(LOADEDMODULE *module);
+FORT_API NTSTATUS fort_image_payload(
+        const PUCHAR data, DWORD dataSize, PUCHAR *outPayload, DWORD *outPayloadSize);
 
 #ifdef __cplusplus
 } // extern "C"

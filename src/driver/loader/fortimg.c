@@ -6,8 +6,6 @@
 
 #include "../fortutl.h"
 
-#include "fortmm.h"
-
 static const UCHAR g_publicKeyBlob[] = {
 #include "fort.rsa.pub"
 };
@@ -108,7 +106,8 @@ static NTSTATUS fort_image_verify(
     return status;
 }
 
-FORT_API NTSTATUS fort_image_load(const PUCHAR data, DWORD dataSize, LOADEDMODULE *module)
+FORT_API NTSTATUS fort_image_payload(
+        const PUCHAR data, DWORD dataSize, PUCHAR *outPayload, DWORD *outPayloadSize)
 {
     NTSTATUS status;
 
@@ -132,18 +131,8 @@ FORT_API NTSTATUS fort_image_load(const PUCHAR data, DWORD dataSize, LOADEDMODUL
     if (!NT_SUCCESS(status))
         return status;
 
-    PUCHAR image = fort_mem_exec_alloc(payloadSize, FORT_LOADER_POOL_TAG);
-    if (image == NULL)
-        return STATUS_INSUFFICIENT_RESOURCES;
-
-    status = LoadModuleFromMemory(module, data, dataSize);
-    if (!NT_SUCCESS(status))
-        return status;
+    *outPayload = payload;
+    *outPayloadSize = payloadSize;
 
     return STATUS_SUCCESS;
-}
-
-void fort_image_unload(LOADEDMODULE *module)
-{
-    UnloadModule(module);
 }

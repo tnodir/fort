@@ -9,25 +9,23 @@ extern "C" {
 
 typedef struct _LOADEDMODULE
 {
-    PIMAGE_NT_HEADERS pHeaders;
-    PBYTE pCodeBase;
-    HINSTANCE *pModules;
-    INT nModules;
-    BOOL fInitialized;
     BOOL fRelocated;
     DWORD dwPageSize;
+    INT nModules;
+    PIMAGE_NT_HEADERS pHeaders;
+    HINSTANCE *pModules;
+    PBYTE pCodeBase;
 } LOADEDMODULE, *PLOADEDMODULE;
 
 FORT_API NTSTATUS LoadModuleFromMemory(
         __in PLOADEDMODULE pModule, __in_bcount(dwSize) PVOID lpData, __in DWORD dwSize);
+
+FORT_API NTSTATUS CallModuleEntry(
+        __in PLOADEDMODULE pModule, __in PDRIVER_OBJECT driver, __in PUNICODE_STRING regPath);
+
 FORT_API void UnloadModule(__in PLOADEDMODULE pModule);
 
-FORT_API FARPROC ModuleGetProcAddress(__in PLOADEDMODULE pModule, __in_z_opt LPCSTR FuncName);
-
-FORT_API PVOID ModuleFindResource(
-        __in PLOADEDMODULE module, __in_z LPCTSTR name, __in_z_opt LPCTSTR type);
-FORT_API DWORD ModuleSizeofResource(__in PLOADEDMODULE module, __in_opt PVOID resource);
-FORT_API LPVOID ModuleLoadResource(__in PLOADEDMODULE module, __in PVOID resource);
+FORT_API FARPROC ModuleGetProcAddress(__in PLOADEDMODULE pModule, __in_z_opt LPCSTR funcName);
 
 #ifdef __cplusplus
 } // extern "C"

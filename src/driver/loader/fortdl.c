@@ -5,6 +5,7 @@
 #include "../fortutl.h"
 
 #include "fortimg.h"
+#include "fortmm.h"
 
 typedef struct fort_loader
 {
@@ -21,10 +22,25 @@ static void fort_loader_unload(PDRIVER_OBJECT driver)
         g_loader.driver_unload(driver);
     }
 
-    fort_image_unload(&g_loader.module);
+    UnloadModule(&g_loader.module);
 }
 
-static NTSTATUS fort_loader_init(PDRIVER_OBJECT driver, PWSTR driverPath)
+static NTSTATUS fort_loader_entry(PDRIVER_OBJECT driver, PUNICODE_STRING regPath)
+{
+    NTSTATUS status;
+
+    status = CallModuleEntry(&g_loader.module, driver, regPath);
+    if (!NT_SUCCESS(status))
+        return status;
+
+    /* Chain the driver unloaders */
+    g_loader.driver_unload = driver->DriverUnload;
+    driver->DriverUnload = fort_loader_unload;
+
+    return status;
+}
+
+static NTSTATUS fort_loader_init(PWSTR driverPath)
 {
     NTSTATUS status;
 
@@ -53,20 +69,22 @@ static NTSTATUS fort_loader_init(PDRIVER_OBJECT driver, PWSTR driverPath)
     }
 
     /* Prepare the driver image */
-    status = fort_image_load(data, dataSize, &g_loader.module);
+    PUCHAR payload = NULL;
+    DWORD payloadSize = 0;
+    status = fort_image_payload(data, dataSize, &payload, &payloadSize);
 
     /* Free the driver file's allocated data */
     fort_mem_free(data, FORT_LOADER_POOL_TAG);
 
-    if (!NT_SUCCESS(status)) {
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Image Load: Error: %x\n",
-                status);
-        return status;
+    /* Load the module driver */
+    if (NT_SUCCESS(status)) {
+        status = LoadModuleFromMemory(&g_loader.module, payload, payloadSize);
     }
 
-    /* Run the driver entry */
-
-    status = STATUS_UNSUCCESSFUL;
+    if (!NT_SUCCESS(status)) {
+        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                "FORT: Loader Image Payload: Error: %x\n", status);
+    }
 
     return status;
 }
@@ -77,12 +95,12 @@ DriverEntry
 #else
 DriverLoaderEntry
 #endif
-        (PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
+        (PDRIVER_OBJECT driver, PUNICODE_STRING regPath)
 {
     NTSTATUS status;
 
     PWSTR driverPath = NULL;
-    status = fort_driver_path(driver, reg_path, &driverPath);
+    status = fort_driver_path(driver, regPath, &driverPath);
 
     if (!NT_SUCCESS(status)) {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Entry: Path Error: %x\n",
@@ -90,14 +108,22 @@ DriverLoaderEntry
         return status;
     }
 
-    status = fort_loader_init(driver, driverPath);
+    /* Initialize module driver */
+    status = fort_loader_init(driverPath);
 
     /* Free the allocated driver path */
     ExFreePool(driverPath);
 
+    /* Call the driver entry */
+    if (NT_SUCCESS(status)) {
+        status = fort_loader_entry(driver, regPath);
+    }
+
     if (!NT_SUCCESS(status)) {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Entry: Error: %x\n",
                 status);
+
+        fort_loader_unload(driver);
     }
 
     return status;
