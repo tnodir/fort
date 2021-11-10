@@ -28,7 +28,7 @@ static NTSTATUS GetModuleInfo(
 {
     PAUX_MODULE_EXTENDED_INFO module = modules;
     for (DWORD i = 0; i < modulesCount; ++i, ++module) {
-        if (strcmp(name, &module->FullPathName[module->FileNameOffset]) == 0) {
+        if (_stricmp(name, &module->FullPathName[module->FileNameOffset]) == 0) {
             pModule->codeBase = module->BasicInfo.ImageBase;
             return STATUS_SUCCESS;
         }

@@ -44,8 +44,7 @@ static NTSTATUS fort_loader_init(PWSTR driverPath)
 {
     NTSTATUS status;
 
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Init: %ws irql=%d\n",
-            driverPath, KeGetCurrentIrql());
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Init: %ws\n", driverPath);
 
     /* Load the driver file */
     PUCHAR data = NULL;
