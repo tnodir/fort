@@ -7,7 +7,7 @@
 #define FORT_KEY_INFO_PATH_SIZE                                                                    \
     (2 + (MAX_PATH * sizeof(WCHAR)) / sizeof(KEY_VALUE_FULL_INFORMATION))
 
-static NTSTATUS fort_reg_value(HANDLE regKey, PUNICODE_STRING valueName, PWSTR *outData)
+static NTSTATUS fort_reg_value(HANDLE regKey, PUNICODE_STRING valueName, PUNICODE_STRING outData)
 {
     NTSTATUS status;
 
@@ -19,22 +19,24 @@ static NTSTATUS fort_reg_value(HANDLE regKey, PUNICODE_STRING valueName, PWSTR *
 
     if (NT_SUCCESS(status)) {
         const PUCHAR src = ((const PUCHAR) keyInfo + keyInfo->DataOffset);
-        const ULONG len = keyInfo->DataLength;
+        const ULONG len = keyInfo->DataLength + sizeof(WCHAR); // with terminating '\0'
 
         PWSTR buf = ExAllocatePool(NonPagedPool, len);
         if (buf == NULL) {
             status = STATUS_INSUFFICIENT_RESOURCES;
         } else {
             RtlCopyMemory(buf, src, len);
+            buf[len / sizeof(WCHAR) - sizeof(WCHAR)] = L'\0';
 
-            *outData = buf;
+            RtlInitUnicodeString(outData, buf);
         }
     }
 
     return status;
 }
 
-FORT_API NTSTATUS fort_driver_path(PDRIVER_OBJECT driver, PUNICODE_STRING regPath, PWSTR *outPath)
+FORT_API NTSTATUS fort_driver_path(
+        PDRIVER_OBJECT driver, PUNICODE_STRING regPath, PUNICODE_STRING outPath)
 {
     NTSTATUS status;
 
@@ -60,12 +62,7 @@ FORT_API NTSTATUS fort_driver_path(PDRIVER_OBJECT driver, PUNICODE_STRING regPat
 #else
     UNUSED(regPath);
 
-    UNICODE_STRING path;
-    status = IoQueryFullDriverPath(driver, &path);
-
-    if (NT_SUCCESS(status)) {
-        *outPath = path.Buffer;
-    }
+    status = IoQueryFullDriverPath(driver, outPath);
 #endif
 
     return status;
@@ -119,14 +116,11 @@ FORT_API NTSTATUS fort_file_read(HANDLE fileHandle, ULONG poolTag, PUCHAR *outDa
     return status;
 }
 
-FORT_API NTSTATUS fort_file_open(PCWSTR filePath, HANDLE *outHandle)
+FORT_API NTSTATUS fort_file_open(PUNICODE_STRING filePath, HANDLE *outHandle)
 {
-    UNICODE_STRING path;
-    RtlInitUnicodeString(&path, filePath);
-
     OBJECT_ATTRIBUTES fileAttr;
     InitializeObjectAttributes(
-            &fileAttr, &path, OBJ_CASE_INSENSITIVE | OBJ_KERNEL_HANDLE, NULL, NULL);
+            &fileAttr, filePath, OBJ_CASE_INSENSITIVE | OBJ_KERNEL_HANDLE, NULL, NULL);
 
     IO_STATUS_BLOCK statusBlock;
     return ZwOpenFile(outHandle, GENERIC_READ | SYNCHRONIZE, &fileAttr, &statusBlock, 0,

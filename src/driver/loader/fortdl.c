@@ -40,7 +40,7 @@ static NTSTATUS fort_loader_entry(PDRIVER_OBJECT driver, PUNICODE_STRING regPath
     return status;
 }
 
-static NTSTATUS fort_loader_init(PWSTR driverPath)
+static NTSTATUS fort_loader_init(PUNICODE_STRING driverPath)
 {
     NTSTATUS status;
 
@@ -98,7 +98,7 @@ DriverLoaderEntry
 {
     NTSTATUS status;
 
-    PWSTR driverPath = NULL;
+    UNICODE_STRING driverPath;
     status = fort_driver_path(driver, regPath, &driverPath);
 
     if (!NT_SUCCESS(status)) {
@@ -108,10 +108,10 @@ DriverLoaderEntry
     }
 
     /* Initialize module driver */
-    status = fort_loader_init(driverPath);
+    status = fort_loader_init(&driverPath);
 
     /* Free the allocated driver path */
-    ExFreePool(driverPath);
+    ExFreePool(driverPath.Buffer);
 
     /* Call the driver entry */
     if (NT_SUCCESS(status)) {
