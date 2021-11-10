@@ -44,7 +44,7 @@ static NTSTATUS fort_loader_init(PUNICODE_STRING driverPath)
 {
     NTSTATUS status;
 
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Init: %ws\n", driverPath);
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Init: [%wZ]\n", driverPath);
 
     /* Load the driver file */
     PUCHAR data = NULL;
@@ -61,7 +61,7 @@ static NTSTATUS fort_loader_init(PUNICODE_STRING driverPath)
 
         if (!NT_SUCCESS(status)) {
             DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                    "FORT: Loader File Read: Error: %x size=%d [%ws]\n", status, dataSize,
+                    "FORT: Loader File Read: Error: %x size=%d [%wZ]\n", status, dataSize,
                     driverPath);
             return status;
         }

@@ -38,8 +38,7 @@ static void fort_driver_unload(PDRIVER_OBJECT driver)
     IoDeleteDevice(driver->DeviceObject);
 }
 
-NTSTATUS
-DriverEntry(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
+NTSTATUS DriverEntry(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 {
     UNICODE_STRING device_name;
     PDEVICE_OBJECT device_obj;
@@ -87,4 +86,12 @@ DriverEntry(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
     }
 
     return status;
+}
+
+NTSTATUS __declspec(dllexport) DriverCallbackEntry(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
+{
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Callback Entry: [%wZ] %x\n",
+            reg_path, *(PDWORD) (PVOID) &DriverEntry);
+
+    return STATUS_UNSUCCESSFUL;
 }
