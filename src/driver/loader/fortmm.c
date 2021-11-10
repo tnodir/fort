@@ -3,14 +3,13 @@
 #include "fortmm.h"
 
 #if defined(FORT_DRIVER)
-#    include "ntimage.h"
+#    include <aux_klib.h>
+#    include <ntimage.h>
 
 #    define IS_INTRESOURCE(_r) ((((ULONG_PTR) (_r)) >> 16) == 0)
 #else
 #    define PAGE_SIZE 0x1000
 #endif
-
-#define DEFAULT_LANGUAGE MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL)
 
 #define ARCHITECTURE_TYPE_X86 0x00000000
 #define ARCHITECTURE_TYPE_X64 0x00000001
@@ -19,36 +18,69 @@
 #define MIN_ALIGNED(address, alignment) (LPVOID)((uintptr_t) (address) & ~((alignment) -1))
 #define MAX_ALIGNED(value, alignment)   (((value) + (alignment) -1) & ~((alignment) -1))
 
-/* Section data from file header */
-typedef struct _SECTIONDATA
-{
-    LPVOID pAddress;
-    LPVOID pAlignedAddress;
-    uintptr_t Size;
-    DWORD dwCharacteristics;
-    BOOL fLast;
-} SECTIONDATA, *PSECTIONDATA;
+#define fort_nt_headers(pImage)                                                                    \
+    ((PIMAGE_NT_HEADERS) & ((PUCHAR) (pImage))[((PIMAGE_DOS_HEADER) pImage)->e_lfanew])
 
 typedef NTSTATUS(WINAPI *DriverEntryProc)(PDRIVER_OBJECT driver, PUNICODE_STRING regPath);
 
-static NTSTATUS CopySectionTable(
-        PUCHAR pData, size_t size, PIMAGE_NT_HEADERS pNtheaders, PLOADEDMODULE pLoadedModule)
+static NTSTATUS GetModuleInfo(
+        PLOADEDMODULE pModule, LPCSTR name, PAUX_MODULE_EXTENDED_INFO modules, DWORD modulesCount)
 {
-    const PUCHAR codeBase = pLoadedModule->pCodeBase;
-    PIMAGE_SECTION_HEADER section = IMAGE_FIRST_SECTION(pLoadedModule->pHeaders);
+    PAUX_MODULE_EXTENDED_INFO module = modules;
+    for (DWORD i = 0; i < modulesCount; ++i, ++module) {
+        if (strcmp(name, &module->FullPathName[module->FileNameOffset]) == 0) {
+            pModule->codeBase = module->BasicInfo.ImageBase;
+            return STATUS_SUCCESS;
+        }
+    }
+    return STATUS_DRIVER_ORDINAL_NOT_FOUND;
+}
 
-    for (int i = 0; i < pLoadedModule->pHeaders->FileHeader.NumberOfSections; ++i, ++section) {
+static NTSTATUS GetModuleInfoList(PAUX_MODULE_EXTENDED_INFO *outModules, DWORD *outModulesCount)
+{
+    NTSTATUS status;
+
+    status = AuxKlibInitialize();
+    if (!NT_SUCCESS(status))
+        return status;
+
+    ULONG size = 0;
+    status = AuxKlibQueryModuleInformation(&size, sizeof(AUX_MODULE_EXTENDED_INFO), NULL);
+    if (!NT_SUCCESS(status) || size == 0)
+        return NT_SUCCESS(status) ? STATUS_INVALID_BUFFER_SIZE : status;
+
+    PUCHAR data = fort_mem_alloc(size, FORT_LOADER_POOL_TAG);
+    if (data == NULL)
+        return STATUS_NO_MEMORY;
+
+    status = AuxKlibQueryModuleInformation(&size, sizeof(AUX_MODULE_EXTENDED_INFO), data);
+    if (!NT_SUCCESS(status)) {
+        fort_mem_free(data, FORT_LOADER_POOL_TAG);
+        return status;
+    }
+
+    *outModules = (PAUX_MODULE_EXTENDED_INFO) data;
+    *outModulesCount = size / sizeof(AUX_MODULE_EXTENDED_INFO);
+
+    return status;
+}
+
+static NTSTATUS CopySectionTable(
+        PUCHAR pData, SIZE_T size, PIMAGE_NT_HEADERS pNtHeaders, PLOADEDMODULE pModule)
+{
+    const PUCHAR codeBase = pModule->codeBase;
+    PIMAGE_NT_HEADERS pHeaders = fort_nt_headers(codeBase);
+    PIMAGE_SECTION_HEADER section = IMAGE_FIRST_SECTION(pHeaders);
+
+    const int numberOfSections = pNtHeaders->FileHeader.NumberOfSections;
+
+    for (int i = 0; i < numberOfSections; ++i, ++section) {
         if (section->SizeOfRawData == 0) {
             /* Section doesn't contain data in the dll itself, but may define uninitialized data. */
-            const INT sectionSize = pNtheaders->OptionalHeader.SectionAlignment;
+            const INT sectionSize = pNtHeaders->OptionalHeader.SectionAlignment;
             if (sectionSize > 0) {
-                PUCHAR dest = (unsigned char *) VirtualAlloc(codeBase + section->VirtualAddress,
-                        sectionSize, MEM_COMMIT, PAGE_READWRITE);
-                if (dest == NULL)
-                    return STATUS_NO_MEMORY;
-
                 /* Always use position from file to support alignments smaller than page size. */
-                dest = codeBase + section->VirtualAddress;
+                const PUCHAR dest = codeBase + section->VirtualAddress;
                 section->Misc.PhysicalAddress = (DWORD) (uintptr_t) dest;
                 RtlZeroMemory(dest, sectionSize);
             }
@@ -56,14 +88,8 @@ static NTSTATUS CopySectionTable(
             if (size < (SIZE_T) section->PointerToRawData + section->SizeOfRawData)
                 return STATUS_INVALID_IMAGE_FORMAT;
 
-            /* Commit memory block and copy data from dll */
-            PUCHAR dest = (unsigned char *) VirtualAlloc(codeBase + section->VirtualAddress,
-                    section->SizeOfRawData, MEM_COMMIT, PAGE_READWRITE);
-            if (dest == NULL)
-                return STATUS_NO_MEMORY;
-
             /* Always use position from file to support alignments smaller than page size. */
-            dest = codeBase + section->VirtualAddress;
+            const PUCHAR dest = codeBase + section->VirtualAddress;
             RtlCopyMemory(dest, pData + section->PointerToRawData, section->SizeOfRawData);
 
             /* NOTE: On 64bit systems we truncate to 32bit here but expand
@@ -78,23 +104,23 @@ static NTSTATUS CopySectionTable(
 
 /*
  * The DLL's preferred load address conflicts with memory that's already in use
- * so we need to 'rebases' the DLL by loading it at a different address that does
+ * so we need to 'rebase' the DLL by loading it at a different address that does
  * not overlap and then adjust all addresses.
  */
-static NTSTATUS PerformBaseRelocation(PLOADEDMODULE pLoadedModule, ptrdiff_t overlapDelta)
+static NTSTATUS PerformBaseRelocation(
+        PLOADEDMODULE pModule, PIMAGE_NT_HEADERS pHeaders, ptrdiff_t locationDelta)
 {
     PIMAGE_DATA_DIRECTORY directory =
-            &(pLoadedModule)
-                     ->pHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_BASERELOC];
+            &(pHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_BASERELOC]);
     if (directory->Size == 0) {
-        return (overlapDelta == 0) ? STATUS_SUCCESS : STATUS_UNSUCCESSFUL;
+        return (locationDelta == 0) ? STATUS_SUCCESS : STATUS_UNSUCCESSFUL;
     }
 
-    const PUCHAR codeBase = pLoadedModule->pCodeBase;
+    const PUCHAR codeBase = pModule->codeBase;
     PIMAGE_BASE_RELOCATION relocation =
             (PIMAGE_BASE_RELOCATION) (codeBase + directory->VirtualAddress);
 
-    for (; relocation->VirtualAddress > 0;) {
+    while (relocation->VirtualAddress > 0) {
         const PUCHAR dest = codeBase + relocation->VirtualAddress;
         PUSHORT relInfo = (PUSHORT) ((PUCHAR) relocation + sizeof(IMAGE_BASE_RELOCATION));
         const DWORD relInfoCount = (relocation->SizeOfBlock - sizeof(IMAGE_BASE_RELOCATION)) / 2;
@@ -110,13 +136,13 @@ static NTSTATUS PerformBaseRelocation(PLOADEDMODULE pLoadedModule, ptrdiff_t ove
             case IMAGE_REL_BASED_HIGHLOW:
                 /* change complete 32 bit address */
                 DWORD *patchAddrHL = (PDWORD) (dest + offset);
-                *patchAddrHL += (DWORD) overlapDelta;
+                *patchAddrHL += (DWORD) locationDelta;
                 break;
 
 #ifdef _WIN64
             case IMAGE_REL_BASED_DIR64:
                 ULONGLONG *patchAddr64 = (PULONGLONG) (dest + offset);
-                *patchAddr64 += (ULONGLONG) overlapDelta;
+                *patchAddr64 += (ULONGLONG) locationDelta;
                 break;
 #endif
 
@@ -126,36 +152,44 @@ static NTSTATUS PerformBaseRelocation(PLOADEDMODULE pLoadedModule, ptrdiff_t ove
         }
 
         /* Advance to next relocation block */
-        relocation = (PIMAGE_BASE_RELOCATION) (((PCHAR) relocation) + relocation->SizeOfBlock);
+        relocation = (PIMAGE_BASE_RELOCATION) ((PCHAR) relocation + relocation->SizeOfBlock);
     }
 
     return STATUS_SUCCESS;
 }
 
 /* Build the import address table. */
-static NTSTATUS BuildImportTable(PLOADEDMODULE pLoadedModule)
+static NTSTATUS BuildImportTable(PLOADEDMODULE pModule, PIMAGE_NT_HEADERS pHeaders)
 {
+    NTSTATUS status;
+
     PIMAGE_DATA_DIRECTORY directory =
-            &(pLoadedModule)->pHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT];
+            &(pHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT]);
     if (directory->Size == 0)
         return STATUS_SUCCESS;
 
-    const PUCHAR codeBase = pLoadedModule->pCodeBase;
+    PAUX_MODULE_EXTENDED_INFO modules;
+    DWORD modulesCount;
+    status = GetModuleInfoList(&modules, &modulesCount);
+    if (!NT_SUCCESS(status))
+        return status;
+
+    status = STATUS_SUCCESS;
+
+    const PUCHAR codeBase = pModule->codeBase;
     PIMAGE_IMPORT_DESCRIPTOR importDesc =
             (PIMAGE_IMPORT_DESCRIPTOR) (codeBase + directory->VirtualAddress);
 
     for (; importDesc != NULL && importDesc->Name != 0; ++importDesc) {
-        const HINSTANCE handle = LoadLibraryA((LPCSTR) (codeBase + importDesc->Name));
-        if (handle == NULL)
-            return STATUS_DLL_NOT_FOUND;
+        LPCSTR libName = (LPCSTR) (codeBase + importDesc->Name);
 
-        HINSTANCE *const tmp = (HINSTANCE *) realloc(pLoadedModule->pModules,
-                ((SIZE_T) pLoadedModule->nModules + 1) * sizeof(HINSTANCE));
-        if (tmp == NULL)
-            return STATUS_NO_MEMORY;
-
-        pLoadedModule->pModules = tmp;
-        pLoadedModule->pModules[pLoadedModule->nModules++] = handle;
+        LOADEDMODULE libModule;
+        if (!NT_SUCCESS(GetModuleInfo(&libModule, libName, modules, modulesCount))) {
+            DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                    "FORT: Loader Module: Error: Module Not Found: %s\n", libName);
+            status = STATUS_PROCEDURE_NOT_FOUND;
+            break;
+        }
 
         const DWORD originalFirstThunk = (importDesc->OriginalFirstThunk != 0)
                 ? importDesc->OriginalFirstThunk
@@ -164,159 +198,32 @@ static NTSTATUS BuildImportTable(PLOADEDMODULE pLoadedModule)
         FARPROC *funcRef = (FARPROC *) (codeBase + importDesc->FirstThunk);
 
         for (; *thunkRef; ++thunkRef, ++funcRef) {
+            LPCSTR funcName;
             if (IMAGE_SNAP_BY_ORDINAL(*thunkRef)) {
-                *funcRef = (FARPROC) GetProcAddress(handle, (LPCSTR) IMAGE_ORDINAL(*thunkRef));
+                funcName = (LPCSTR) IMAGE_ORDINAL(*thunkRef);
             } else {
-                PIMAGE_IMPORT_BY_NAME thunkData = (PIMAGE_IMPORT_BY_NAME) (codeBase + (*thunkRef));
-                *funcRef = (FARPROC) GetProcAddress(handle, (LPCSTR) &thunkData->Name);
+                const PIMAGE_IMPORT_BY_NAME thunkData =
+                        (PIMAGE_IMPORT_BY_NAME) (codeBase + (*thunkRef));
+                funcName = (LPCSTR) &thunkData->Name;
             }
 
+            *funcRef = ModuleGetProcAddress(&libModule, funcName);
             if (*funcRef == 0) {
-                FreeLibrary(handle);
-                return STATUS_PROCEDURE_NOT_FOUND;
-            }
-        }
-    }
-
-    return STATUS_SUCCESS;
-}
-
-/* Determine section size. */
-static DWORD GetRealSectionSize(PLOADEDMODULE pModule, PIMAGE_SECTION_HEADER section)
-{
-    if (section->SizeOfRawData != 0)
-        return section->SizeOfRawData;
-
-    if (section->Characteristics & IMAGE_SCN_CNT_INITIALIZED_DATA) {
-        return pModule->pHeaders->OptionalHeader.SizeOfInitializedData;
-    } else if (section->Characteristics & IMAGE_SCN_CNT_UNINITIALIZED_DATA) {
-        return pModule->pHeaders->OptionalHeader.SizeOfUninitializedData;
-    }
-    return 0;
-}
-
-/* VirtualProtect section based on Characteristics flags. */
-static BOOL ProtectSection(PLOADEDMODULE pModule, PSECTIONDATA SectionData)
-{
-    if (SectionData->Size == 0)
-        return TRUE;
-
-    /* See if section is not needed any more and can be safely freed */
-    if (SectionData->dwCharacteristics & IMAGE_SCN_MEM_DISCARDABLE) {
-        if (SectionData->pAddress == SectionData->pAlignedAddress
-                && (SectionData->fLast
-                        || pModule->pHeaders->OptionalHeader.SectionAlignment == pModule->dwPageSize
-                        || (SectionData->Size % pModule->dwPageSize) == 0)) {
-            /* Only allowed to decommit whole pages */
-#pragma warning(push)
-#pragma warning(disable : 6250)
-            VirtualFree(SectionData->pAddress, SectionData->Size, MEM_DECOMMIT);
-#pragma warning(pop)
-        }
-        return TRUE;
-    }
-
-    /* Determine protection flags based on Characteristics */
-    if (SectionData->dwCharacteristics & IMAGE_SCN_CNT_CODE) {
-        SectionData->dwCharacteristics |= IMAGE_SCN_MEM_EXECUTE | IMAGE_SCN_MEM_READ;
-    }
-
-    /* We rotate the upper 3 important bits down so the resulting value is in the range 0-7.
-     * Meaning of bits: 1: execute, 2: read, 4: write
-     */
-    DWORD protection;
-    switch ((DWORD) SectionData->dwCharacteristics >> (32 - 3)) {
-    case 1:
-        protection = PAGE_EXECUTE;
-        break;
-    case 0: /* case 0: what does it mean? */
-    case 2:
-        protection = PAGE_READONLY;
-        break;
-    case 3:
-        protection = PAGE_EXECUTE_READ;
-        break;
-    case 4:
-    case 6:
-        protection = PAGE_READWRITE;
-        break;
-    case 5:
-    default:
-        protection = PAGE_EXECUTE_READWRITE;
-        break;
-    }
-
-    if (SectionData->dwCharacteristics & IMAGE_SCN_MEM_NOT_CACHED) {
-        protection |= PAGE_NOCACHE;
-    }
-
-    /* Change memory access flags */
-    DWORD oldProtection;
-    if (VirtualProtect(SectionData->pAddress, SectionData->Size, protection, &oldProtection) == 0) {
-        return FALSE;
-    }
-
-    return TRUE;
-}
-
-/* Set protection of memory pages. */
-static BOOL ProtectSections(PLOADEDMODULE pModule)
-{
-    PIMAGE_SECTION_HEADER section = IMAGE_FIRST_SECTION(pModule->pHeaders);
-    const uintptr_t imageOffset =
-#ifdef _WIN64
-            (pModule->pHeaders->OptionalHeader.ImageBase & 0xffffffff00000000);
-#else
-            0;
-#endif
-
-    SECTIONDATA SectionData;
-    SectionData.pAddress = (PVOID) ((uintptr_t) section->Misc.PhysicalAddress | imageOffset);
-    SectionData.pAlignedAddress = MIN_ALIGNED(SectionData.pAddress, pModule->dwPageSize);
-    SectionData.Size = GetRealSectionSize(pModule, section);
-    SectionData.dwCharacteristics = section->Characteristics;
-    SectionData.fLast = FALSE;
-
-    ++section;
-
-    /* Loop through all sections and change access flags */
-    for (int i = 1; i < pModule->pHeaders->FileHeader.NumberOfSections; ++i, ++section) {
-        const PVOID SectionAddress =
-                (PVOID) ((uintptr_t) section->Misc.PhysicalAddress | imageOffset);
-        const PVOID AlignedAddress = MIN_ALIGNED(SectionAddress, pModule->dwPageSize);
-        const DWORD SectionSize = GetRealSectionSize(pModule, section);
-
-        if (SectionData.pAlignedAddress == AlignedAddress
-                || (uintptr_t) SectionData.pAddress + SectionData.Size
-                        > (uintptr_t) AlignedAddress) {
-            /* Section shares page with previous section */
-            if ((section->Characteristics & IMAGE_SCN_MEM_DISCARDABLE) == 0
-                    || (SectionData.dwCharacteristics & IMAGE_SCN_MEM_DISCARDABLE) == 0) {
-                SectionData.dwCharacteristics =
-                        (SectionData.dwCharacteristics | section->Characteristics)
-                        & ~IMAGE_SCN_MEM_DISCARDABLE;
+                DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                        "FORT: Loader Module: Error: Procedure Not Found: %s.%s\n", libName,
+                        funcName);
+                status = STATUS_PROCEDURE_NOT_FOUND;
             } else {
-                SectionData.dwCharacteristics |= section->Characteristics;
+                DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                        "FORT: Loader Module: Import: %s.%s\n", libName, funcName);
             }
-            SectionData.Size =
-                    (((uintptr_t) SectionAddress) + SectionSize) - (uintptr_t) SectionData.pAddress;
-            continue;
         }
-
-        if (!ProtectSection(pModule, &SectionData))
-            return FALSE;
-
-        SectionData.pAddress = SectionAddress;
-        SectionData.pAlignedAddress = AlignedAddress;
-        SectionData.Size = SectionSize;
-        SectionData.dwCharacteristics = section->Characteristics;
     }
 
-    SectionData.fLast = TRUE;
-    if (!ProtectSection(pModule, &SectionData))
-        return FALSE;
+    /* Free the modules allocated data */
+    fort_mem_free(modules, FORT_LOADER_POOL_TAG);
 
-    return TRUE;
+    return status;
 }
 
 static BOOL IsPEHeaderValid(__in PVOID lpData, __in DWORD dwSize)
@@ -363,27 +270,16 @@ static BOOL IsPEHeaderValid(__in PVOID lpData, __in DWORD dwSize)
 }
 
 static NTSTATUS InitializeModuleImage(__in PLOADEDMODULE pModule, __in_bcount(dwSize) PVOID lpData,
-        __in DWORD dwSize, __in PUCHAR pImage, __in PIMAGE_DOS_HEADER pDosHeader,
-        __in PIMAGE_NT_HEADERS pNtHeaders)
+        __in DWORD dwSize, __in PUCHAR pImage, __in PIMAGE_NT_HEADERS pNtHeaders)
 {
     NTSTATUS status;
 
-    pModule->pCodeBase = pImage;
-    pModule->dwPageSize = PAGE_SIZE;
-
-    /* Commit memory for headers */
-    PUCHAR pHeaders = (PUCHAR) VirtualAlloc(
-            pImage, pNtHeaders->OptionalHeader.SizeOfHeaders, MEM_COMMIT, PAGE_READWRITE);
-    if (pHeaders == NULL)
-        return STATUS_NO_MEMORY;
-
     /* Copy PE header to code */
-    RtlCopyMemory(pHeaders, pDosHeader, pNtHeaders->OptionalHeader.SizeOfHeaders);
-    pModule->pHeaders =
-            (PIMAGE_NT_HEADERS) & ((const unsigned char *) (pHeaders))[pDosHeader->e_lfanew];
+    RtlCopyMemory(pImage, lpData, pNtHeaders->OptionalHeader.SizeOfHeaders);
 
-    /* Update position in case we didn't get preferred base */
-    pModule->pHeaders->OptionalHeader.ImageBase = (uintptr_t) pImage;
+    /* Update position of the image base */
+    PIMAGE_NT_HEADERS pHeaders = fort_nt_headers(pImage);
+    pHeaders->OptionalHeader.ImageBase = (uintptr_t) pImage;
 
     /* Copy section table */
     status = CopySectionTable((PUCHAR) lpData, dwSize, pNtHeaders, pModule);
@@ -391,26 +287,19 @@ static NTSTATUS InitializeModuleImage(__in PLOADEDMODULE pModule, __in_bcount(dw
         return status;
 
     /* Adjust base address of imported data */
-    const ptrdiff_t locationDelta = (ptrdiff_t) pModule->pHeaders->OptionalHeader.ImageBase
-            - pNtHeaders->OptionalHeader.ImageBase;
+    const ptrdiff_t locationDelta =
+            (ptrdiff_t) pHeaders->OptionalHeader.ImageBase - pNtHeaders->OptionalHeader.ImageBase;
     if (locationDelta != 0) {
-        pModule->fRelocated = PerformBaseRelocation(pModule, locationDelta);
-    } else {
-        pModule->fRelocated = TRUE;
+        PerformBaseRelocation(pModule, pHeaders, locationDelta);
     }
 
     /* Adjust function table of imports */
-    status = BuildImportTable(pModule);
-    if (!NT_SUCCESS(status))
-        return status;
-
-    /* Mark memory pages depending on characteristics of the section headers */
-    status = ProtectSections(pModule);
+    status = BuildImportTable(pModule, pHeaders);
     if (!NT_SUCCESS(status))
         return status;
 
     /* Check entry point */
-    if (pModule->pHeaders->OptionalHeader.AddressOfEntryPoint == 0)
+    if (pHeaders->OptionalHeader.AddressOfEntryPoint == 0)
         return STATUS_DRIVER_ENTRYPOINT_NOT_FOUND;
 
     return STATUS_SUCCESS;
@@ -425,8 +314,7 @@ FORT_API NTSTATUS LoadModuleFromMemory(
         return STATUS_INVALID_IMAGE_FORMAT;
 
     /* Check header for valid signatures */
-    PIMAGE_DOS_HEADER pDosHeader = (PIMAGE_DOS_HEADER) lpData;
-    PIMAGE_NT_HEADERS pNtHeaders = (PIMAGE_NT_HEADERS) & ((PUCHAR) lpData)[pDosHeader->e_lfanew];
+    PIMAGE_NT_HEADERS pNtHeaders = fort_nt_headers(lpData);
 
     SIZE_T lastSectionEnd = 0;
     PIMAGE_SECTION_HEADER pSection = IMAGE_FIRST_SECTION(pNtHeaders);
@@ -449,29 +337,30 @@ FORT_API NTSTATUS LoadModuleFromMemory(
     if (imageSize != MAX_ALIGNED(lastSectionEnd, PAGE_SIZE))
         return STATUS_INVALID_IMAGE_FORMAT;
 
-    /* Reserve pages at specified image base. */
-    PUCHAR pImage = (PUCHAR) VirtualAlloc((PVOID) pNtHeaders->OptionalHeader.ImageBase, imageSize,
-            MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
-    if (pImage == NULL) {
-        /* Allow system to determine where to allocate the region */
-        pImage = (PUCHAR) VirtualAlloc(NULL, imageSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
-        if (pImage == NULL)
-            return STATUS_NO_MEMORY;
-    }
+    /* Allocate the region */
+    PUCHAR pImage = fort_mem_exec_alloc(imageSize, FORT_LOADER_POOL_TAG);
+    if (pImage == NULL)
+        return STATUS_NO_MEMORY;
 
-    status = InitializeModuleImage(pModule, lpData, dwSize, pImage, pDosHeader, pNtHeaders);
+    pModule->codeBase = pImage;
+
+    status = InitializeModuleImage(pModule, lpData, dwSize, pImage, pNtHeaders);
+
     if (!NT_SUCCESS(status)) {
-        VirtualFree(pImage, 0, MEM_RELEASE);
+        UnloadModule(pModule);
     }
 
     return status;
 }
 
-NTSTATUS CallModuleEntry(
+FORT_API NTSTATUS CallModuleEntry(
         __in PLOADEDMODULE pModule, __in PDRIVER_OBJECT driver, __in PUNICODE_STRING regPath)
 {
-    DriverEntryProc driverEntry = (DriverEntryProc) (PVOID) (pModule->pCodeBase
-            + pModule->pHeaders->OptionalHeader.AddressOfEntryPoint);
+    const PUCHAR codeBase = pModule->codeBase;
+    const PIMAGE_NT_HEADERS pHeaders = fort_nt_headers(codeBase);
+
+    DriverEntryProc driverEntry =
+            (DriverEntryProc) (PVOID) (codeBase + pHeaders->OptionalHeader.AddressOfEntryPoint);
 
     return driverEntry(driver, regPath);
 }
@@ -479,22 +368,26 @@ NTSTATUS CallModuleEntry(
 /* Free all resources allocated for a loaded module */
 FORT_API void UnloadModule(__in PLOADEDMODULE pModule)
 {
-    if (pModule->pCodeBase != NULL) {
-        /* Release memory of module */
-        VirtualFree(pModule->pCodeBase, 0, MEM_RELEASE);
+    if (pModule->codeBase != NULL) {
+        /* Free the module's allocated data */
+        fort_mem_free(pModule->codeBase, FORT_LOADER_POOL_TAG);
+        pModule->codeBase = NULL;
     }
 }
 
-/* Retrieve address of an exported function from our modules DLL. */
+/* Retrieve address of an exported function from the loaded module. */
 FORT_API FARPROC ModuleGetProcAddress(__in PLOADEDMODULE pModule, __in_z_opt LPCSTR funcName)
 {
+    const PUCHAR codeBase = pModule->codeBase;
+    const PIMAGE_NT_HEADERS pHeaders = fort_nt_headers(codeBase);
+
     const PIMAGE_DATA_DIRECTORY directory =
-            &(pModule->pHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT]);
+            &(pHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT]);
     if (directory->Size == 0)
         return NULL; /* no export table found */
 
     const PIMAGE_EXPORT_DIRECTORY exports =
-            (PIMAGE_EXPORT_DIRECTORY) (pModule->pCodeBase + directory->VirtualAddress);
+            (PIMAGE_EXPORT_DIRECTORY) (codeBase + directory->VirtualAddress);
     if (exports->NumberOfNames == 0 || exports->NumberOfFunctions == 0)
         return NULL; /* Our modules must export 3 functions. */
 
@@ -505,11 +398,11 @@ FORT_API FARPROC ModuleGetProcAddress(__in PLOADEDMODULE pModule, __in_z_opt LPC
         idx = LOWORD(funcName) - exports->Base;
     } else {
         /* Search function name in list of exported names */
-        DWORD *nameRef = (DWORD *) (pModule->pCodeBase + exports->AddressOfNames);
-        WORD *ordinal = (WORD *) (pModule->pCodeBase + exports->AddressOfNameOrdinals);
+        DWORD *nameRef = (DWORD *) (codeBase + exports->AddressOfNames);
+        WORD *ordinal = (WORD *) (codeBase + exports->AddressOfNameOrdinals);
 
         for (DWORD i = 0; i < exports->NumberOfNames; ++i, ++nameRef, ++ordinal) {
-            if (strcmp(funcName, (const char *) (pModule->pCodeBase + *nameRef)) == 0) {
+            if (strcmp(funcName, (const char *) (codeBase + *nameRef)) == 0) {
                 idx = *ordinal;
                 break;
             }
@@ -520,6 +413,6 @@ FORT_API FARPROC ModuleGetProcAddress(__in PLOADEDMODULE pModule, __in_z_opt LPC
         return NULL; /* exported symbol not found or name <-> ordinal number don't match */
 
     /* AddressOfFunctions contains the RVAs to the "real" functions */
-    return (FARPROC) (PVOID) (pModule->pCodeBase
-            + *(DWORD *) (pModule->pCodeBase + exports->AddressOfFunctions + (SIZE_T) idx * 4));
+    return (FARPROC) (PVOID) (codeBase
+            + *(DWORD *) (codeBase + exports->AddressOfFunctions + (SIZE_T) idx * 4));
 }

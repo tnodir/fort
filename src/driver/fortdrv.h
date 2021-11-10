@@ -5,6 +5,7 @@
 
 /* WDM for Development in User Mode */
 #if !defined(FORT_DRIVER)
+#    include "wdm/um_aux_klib.h"
 #    include "wdm/um_fwpmk.h"
 #    include "wdm/um_fwpsk.h"
 #    include "wdm/um_ndis.h"

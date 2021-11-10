@@ -9,12 +9,7 @@ extern "C" {
 
 typedef struct _LOADEDMODULE
 {
-    BOOL fRelocated;
-    DWORD dwPageSize;
-    INT nModules;
-    PIMAGE_NT_HEADERS pHeaders;
-    HINSTANCE *pModules;
-    PBYTE pCodeBase;
+    PUCHAR codeBase;
 } LOADEDMODULE, *PLOADEDMODULE;
 
 FORT_API NTSTATUS LoadModuleFromMemory(
