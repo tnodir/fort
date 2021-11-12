@@ -126,6 +126,9 @@ static NTSTATUS PerformBaseRelocation(
         return (locationDelta == 0) ? STATUS_SUCCESS : STATUS_UNSUCCESSFUL;
     }
 
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+            "FORT: Loader Module: Base Relocation: %d\n", locationDelta);
+
     PIMAGE_BASE_RELOCATION relocation =
             (PIMAGE_BASE_RELOCATION) (codeBase + directory->VirtualAddress);
 
@@ -308,7 +311,7 @@ static NTSTATUS InitializeModuleImage(
     NTSTATUS status;
 
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-            "FORT: Loader Module: Init Image: Headers size=%d Entry offset=%d\n",
+            "FORT: Loader Module: Init Image: Headers size=%d Entry point=%d\n",
             pNtHeaders->OptionalHeader.SizeOfHeaders,
             pNtHeaders->OptionalHeader.AddressOfEntryPoint);
 

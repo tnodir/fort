@@ -13,7 +13,7 @@
 @if "%CONFIG%"=="" PLAT=win10
 
 @set OutDir=..\..\..\build-driver-loader-%CONFIG%\%PLAT%
-@set IntDir=%OutDir%-%PLAT%
+@set IntDir=%OutDir%-obj
 
 MSBuild fortdl.vcxproj /p:OutDir=%OutDir%\;IntDir=%IntDir%\;Platform=%PLAT%;Config=%CONFIG%
 

@@ -6,6 +6,7 @@
 
 #include "fortimg.h"
 #include "fortmm.h"
+#include "fortpcb.h"
 
 typedef struct fort_loader
 {
@@ -28,6 +29,8 @@ static void fort_loader_unload(PDRIVER_OBJECT driver)
 static NTSTATUS fort_loader_entry(PDRIVER_OBJECT driver, PUNICODE_STRING regPath)
 {
     NTSTATUS status;
+
+    SetupProxyCallbacks();
 
     status = CallModuleEntry(&g_loader.module, driver, regPath);
     if (!NT_SUCCESS(status))

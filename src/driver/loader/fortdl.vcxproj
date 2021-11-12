@@ -66,11 +66,10 @@
     <FilesToPackage Include="$(TargetPath)" />
   </ItemGroup>
   <ItemGroup>
+    <MASM Include="fortpcb_$(Platform).asm" />
     <ClCompile Include="fortdl_amalg.c" />
-    <ResourceCompile Include="fortdl.rc" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="fortdl.h" />
+    <ResourceCompile Include="fortdl.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
