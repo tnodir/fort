@@ -1,6 +1,6 @@
 IFDEF RAX
 ELSE
-.model flat, c
+.model flat, stdcall
 ENDIF
 
 .DATA
