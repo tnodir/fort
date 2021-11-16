@@ -22,8 +22,8 @@ SOURCES += \
     loader/fortdl.c \
     loader/fortimg.c \
     loader/fortmm.c \
-    loader/fortpcb.c \
-    loader/fortpcb_def.c \
+    proxycb/fortpcb.c \
+    proxycb/fortpcb_def.c \
     wdm/um_aux_klib.c \
     wdm/um_fwpmk.c \
     wdm/um_fwpsk.c \
@@ -48,8 +48,8 @@ HEADERS += \
     loader/fortdl.h \
     loader/fortimg.h \
     loader/fortmm.h \
-    loader/fortpcb.h \
-    loader/fortpcb_def.h \
+    proxycb/fortpcb.h \
+    proxycb/fortpcb_def.h \
     wdm/um_aux_klib.h \
     wdm/um_fwpmk.h \
     wdm/um_fwpsk.h \

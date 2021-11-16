@@ -1,7 +1,7 @@
 #ifndef FORTPCB_DEF_H
 #define FORTPCB_DEF_H
 
-#include "fortdl.h"
+#include "../fortdrv.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -11,10 +11,7 @@ typedef void (*ProxyCallbackProc)(void);
 
 #define PROXY_CALLBACKS_COUNT 64
 
-extern ProxyCallbackProc g_proxiedCallbacks[PROXY_CALLBACKS_COUNT];
-
-#define ProxyCallbackFunction(i)                                                                   \
-    void proxyCallback##i(void) { g_proxiedCallbacks[i](); }
+extern ProxyCallbackProc g_proxyDstCallbacks[PROXY_CALLBACKS_COUNT];
 
 #define ProxyCallbackExtern(i) extern void proxyCallback##i(void)
 

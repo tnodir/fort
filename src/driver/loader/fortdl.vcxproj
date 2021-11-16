@@ -66,7 +66,9 @@
     <FilesToPackage Include="$(TargetPath)" />
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="fortpcb_$(Platform).asm" />
+    <MASM Include="..\proxycb\fortpcb_src_x86.asm">
+      <AdditionalOptions Condition="'$(Platform)'=='Win32'">/safeseh</AdditionalOptions>
+    </MASM>
     <ClCompile Include="fortdl_amalg.c" />
     <ClInclude Include="fortdl.h" />
     <ResourceCompile Include="fortdl.rc" />

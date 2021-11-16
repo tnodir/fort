@@ -4,9 +4,9 @@
 
 #include "../fortutl.h"
 
+#include "../proxycb/fortpcb.h"
 #include "fortimg.h"
 #include "fortmm.h"
-#include "fortpcb.h"
 
 typedef struct fort_loader
 {
@@ -30,7 +30,7 @@ static NTSTATUS fort_loader_entry(PDRIVER_OBJECT driver, PUNICODE_STRING regPath
 {
     NTSTATUS status;
 
-    SetupProxyCallbacks();
+    fort_proxycb_src_setup();
 
     status = CallModuleEntry(&g_loader.module, driver, regPath);
     if (!NT_SUCCESS(status))

@@ -1,10 +1,25 @@
+IFDEF RAX
+ELSE
+.model flat, stdcall
+ENDIF
+
 .DATA
-g_proxiedCallbacks QWORD 040H dup (?)
+IFDEF RAX
+	g_proxyDstProcs QWORD 040H dup (?)
+ELSE
+	g_proxyDstProcs DWORD 040H dup (?)
+ENDIF
 
 .CODE
 
 ProxyCallbackProc MACRO index:REQ
-	jmp QWORD PTR [g_proxiedCallbacks + index * 8]
+IFDEF RAX
+	push rax
+	mov rax, [g_proxyDstProcs + index * 8]
+	jmp rax
+ELSE
+	jmp DWORD PTR [g_proxyDstProcs + index * 4]
+ENDIF
 ENDM
 
 proxyCallback0 PROC

@@ -4,7 +4,7 @@
 
 #include "fortpcb_def.h"
 
-static ProxyCallbackProc g_proxyCallbacks[PROXY_CALLBACKS_COUNT] = {
+static ProxyCallbackProc g_proxySrcCallbacks[PROXY_CALLBACKS_COUNT] = {
     proxyCallback0,
     proxyCallback1,
     proxyCallback2,
@@ -12,8 +12,8 @@ static ProxyCallbackProc g_proxyCallbacks[PROXY_CALLBACKS_COUNT] = {
     proxyCallback4,
 };
 
-FORT_API void SetupProxyCallbacks(void)
+FORT_API void fort_proxycb_src_setup(void)
 {
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader SetupProxyCallbacks: %p\n",
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: ProxyCbSrc Setup: %p\n",
             &proxyCallback0);
 }
