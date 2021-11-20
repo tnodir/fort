@@ -4,7 +4,7 @@
 
 #include "../fortutl.h"
 
-#include "../proxycb/fortpcb.h"
+#include "../proxycb/fortpcb_src.h"
 #include "fortimg.h"
 #include "fortmm.h"
 

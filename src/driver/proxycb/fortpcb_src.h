@@ -1,7 +1,7 @@
-#ifndef FORTPCB_H
-#define FORTPCB_H
+#ifndef FORTPCB_SRC_H
+#define FORTPCB_SRC_H
 
-#include "../fortdrv.h"
+#include "fortpcb_def.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -13,4 +13,4 @@ FORT_API void fort_proxycb_src_setup(void);
 } // extern "C"
 #endif
 
-#endif // FORTPCB_H
+#endif // FORTPCB_SRC_H

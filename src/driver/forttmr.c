@@ -2,6 +2,8 @@
 
 #include "forttmr.h"
 
+#include "fortcb.h"
+
 static void fort_timer_callback(PKDPC dpc, PFORT_TIMER timer, PVOID arg1, PVOID arg2)
 {
     UNUSED(dpc);
@@ -20,7 +22,8 @@ FORT_API void fort_timer_open(
     timer->period = period;
     timer->callback = callback;
 
-    KeInitializeDpc(&timer->dpc, fort_timer_callback, timer);
+    KeInitializeDpc(&timer->dpc,
+            FORT_CALLBACK(FORT_TIMER_CALLBACK, PKDEFERRED_ROUTINE, fort_timer_callback), timer);
     KeInitializeTimer(&timer->id);
 }
 

@@ -2,6 +2,8 @@
 
 #include "fortwrk.h"
 
+#include "fortcb.h"
+
 static void fort_worker_callback(PVOID device, PVOID context, PIO_WORKITEM item)
 {
     PFORT_WORKER worker = (PFORT_WORKER) context;
@@ -24,7 +26,9 @@ FORT_API void fort_worker_queue(PFORT_WORKER worker, UCHAR work_id, FORT_WORKER_
     }
 
     if (id_bits == 0) {
-        IoQueueWorkItemEx(worker->item, fort_worker_callback, DelayedWorkQueue, worker);
+        IoQueueWorkItemEx(worker->item,
+                FORT_CALLBACK(FORT_WORKER_CALLBACK, PIO_WORKITEM_ROUTINE_EX, fort_worker_callback),
+                DelayedWorkQueue, worker);
     }
 }
 

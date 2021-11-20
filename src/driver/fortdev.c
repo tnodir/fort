@@ -1,13 +1,13 @@
 /* Fort Firewall Driver Device */
 
-#include "../version/fort_version.h"
-
 #include "fortdev.h"
+
+#include "../version/fort_version.h"
 
 #include "common/fortdef.h"
 #include "common/fortprov.h"
 
-#include "fortcb.h"
+#include "fortscb.h"
 #include "fortcout.h"
 
 static PFORT_DEVICE g_device = NULL;
@@ -343,12 +343,12 @@ FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device_obj)
 
     /* Register power state change callback */
     if (NT_SUCCESS(status)) {
-        status = fort_callback_power_register();
+        status = fort_syscb_power_register();
     }
 
     /* Register system time change callback */
     if (NT_SUCCESS(status)) {
-        status = fort_callback_systime_register();
+        status = fort_syscb_time_register();
     }
 
     return status;
@@ -369,8 +369,8 @@ FORT_API void fort_device_unload()
 
     fort_worker_unregister(&fort_device()->worker);
 
-    fort_callback_power_unregister();
-    fort_callback_systime_unregister();
+    fort_syscb_power_unregister();
+    fort_syscb_time_unregister();
 
     if (!fort_device_flag(&fort_device()->conf, FORT_DEVICE_PROV_BOOT)) {
         fort_prov_unregister(0);

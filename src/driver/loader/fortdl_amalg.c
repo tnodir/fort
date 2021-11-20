@@ -5,7 +5,8 @@
 
 #include "../fortutl.c"
 
-#include "../proxycb/fortpcb.c"
+#include "../proxycb/fortpcb_src.c"
+
 #include "fortmm.c"
 #include "fortimg.c"
 #include "fortdl.c"

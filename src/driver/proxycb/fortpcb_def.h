@@ -11,8 +11,6 @@ typedef void (*ProxyCallbackProc)(void);
 
 #define PROXY_CALLBACKS_COUNT 64
 
-extern ProxyCallbackProc g_proxyDstCallbacks[PROXY_CALLBACKS_COUNT];
-
 #define ProxyCallbackExtern(i) extern void proxyCallback##i(void)
 
 ProxyCallbackExtern(0);

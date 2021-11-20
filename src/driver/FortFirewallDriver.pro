@@ -13,6 +13,7 @@ SOURCES += \
     fortdev.c \
     fortdrv.c \
     fortpkt.c \
+    fortscb.c \
     fortstat.c \
     forttds.c \
     forttlsf.c \
@@ -22,8 +23,9 @@ SOURCES += \
     loader/fortdl.c \
     loader/fortimg.c \
     loader/fortmm.c \
-    proxycb/fortpcb.c \
     proxycb/fortpcb_def.c \
+    proxycb/fortpcb_dst.c \
+    proxycb/fortpcb_src.c \
     wdm/um_aux_klib.c \
     wdm/um_fwpmk.c \
     wdm/um_fwpsk.c \
@@ -39,6 +41,7 @@ HEADERS += \
     fortdev.h \
     fortdrv.h \
     fortpkt.h \
+    fortscb.h \
     fortstat.h \
     forttds.h \
     forttlsf.h \
@@ -48,8 +51,9 @@ HEADERS += \
     loader/fortdl.h \
     loader/fortimg.h \
     loader/fortmm.h \
-    proxycb/fortpcb.h \
     proxycb/fortpcb_def.h \
+    proxycb/fortpcb_dst.h \
+    proxycb/fortpcb_src.h \
     wdm/um_aux_klib.h \
     wdm/um_fwpmk.h \
     wdm/um_fwpsk.h \

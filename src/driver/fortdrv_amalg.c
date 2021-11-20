@@ -8,13 +8,16 @@
 #include "common/fortprov.c"
 #include "common/wildmatch.c"
 
+#include "proxycb/fortpcb_dst.c"
+
 #include "forttlsf.c"
 #include "forttds.c"
+#include "fortcb.c"
 #include "fortcnf.c"
 #include "fortbuf.c"
 #include "fortpkt.c"
 #include "fortstat.c"
-#include "fortcb.c"
+#include "fortscb.c"
 #include "forttmr.c"
 #include "fortwrk.c"
 #include "fortcout.c"

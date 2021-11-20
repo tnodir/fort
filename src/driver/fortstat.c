@@ -49,7 +49,7 @@ static void fort_stat_proc_dec(PFORT_STAT stat, UINT16 proc_index)
 {
     PFORT_STAT_PROC proc = tommy_arrayof_ref(&stat->procs, proc_index);
 
-    if (!--proc->refcount) {
+    if (--proc->refcount == 0) {
         fort_stat_proc_active_add(stat, proc);
     }
 }
