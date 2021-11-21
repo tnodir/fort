@@ -20,7 +20,7 @@ static FORT_LOADER g_loader;
 
 static void fort_loader_unload(PDRIVER_OBJECT driver)
 {
-    if (g_loader.DriverUnload) {
+    if (g_loader.DriverUnload != NULL) {
         g_loader.DriverUnload(driver);
         g_loader.DriverUnload = NULL;
     }
