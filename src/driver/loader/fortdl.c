@@ -3,8 +3,9 @@
 #include "fortdl.h"
 
 #include "../fortutl.h"
-
+#include "../proxycb/fortpcb_drv.h"
 #include "../proxycb/fortpcb_src.h"
+
 #include "fortimg.h"
 #include "fortmm.h"
 
@@ -12,15 +13,16 @@ typedef struct fort_loader
 {
     LOADEDMODULE module;
 
-    PDRIVER_UNLOAD driver_unload;
+    PDRIVER_UNLOAD DriverUnload;
 } FORT_LOADER, *PFORT_LOADER;
 
 static FORT_LOADER g_loader;
 
 static void fort_loader_unload(PDRIVER_OBJECT driver)
 {
-    if (g_loader.driver_unload) {
-        g_loader.driver_unload(driver);
+    if (g_loader.DriverUnload) {
+        g_loader.DriverUnload(driver);
+        g_loader.DriverUnload = NULL;
     }
 
     UnloadModule(&g_loader.module);
@@ -30,15 +32,19 @@ static NTSTATUS fort_loader_entry(PDRIVER_OBJECT driver, PUNICODE_STRING regPath
 {
     NTSTATUS status;
 
+    /* Setup the proxy callbacks */
     fort_proxycb_src_setup();
 
+    /* Run the module entry function */
     status = CallModuleEntry(&g_loader.module, driver, regPath);
     if (!NT_SUCCESS(status))
         return status;
 
-    /* Chain the driver unloaders */
-    g_loader.driver_unload = driver->DriverUnload;
+    /* Proxy the driver major functions */
+    g_loader.DriverUnload = driver->DriverUnload;
     driver->DriverUnload = fort_loader_unload;
+
+    fort_proxycb_drv_setup(driver->MajorFunction);
 
     return status;
 }

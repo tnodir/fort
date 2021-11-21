@@ -24,6 +24,7 @@ SOURCES += \
     loader/fortimg.c \
     loader/fortmm.c \
     proxycb/fortpcb_def.c \
+    proxycb/fortpcb_drv.c \
     proxycb/fortpcb_dst.c \
     proxycb/fortpcb_src.c \
     wdm/um_aux_klib.c \
@@ -52,6 +53,7 @@ HEADERS += \
     loader/fortimg.h \
     loader/fortmm.h \
     proxycb/fortpcb_def.h \
+    proxycb/fortpcb_drv.h \
     proxycb/fortpcb_dst.h \
     proxycb/fortpcb_src.h \
     wdm/um_aux_klib.h \
