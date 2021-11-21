@@ -23,10 +23,10 @@ SOURCES += \
     loader/fortdl.c \
     loader/fortimg.c \
     loader/fortmm.c \
-    proxycb/fortpcb_def.c \
     proxycb/fortpcb_drv.c \
     proxycb/fortpcb_dst.c \
     proxycb/fortpcb_src.c \
+    proxycb/fortpcb_src_dummy.c \
     wdm/um_aux_klib.c \
     wdm/um_fwpmk.c \
     wdm/um_fwpsk.c \

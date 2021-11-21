@@ -7,7 +7,10 @@
 extern "C" {
 #endif
 
-FORT_API void fort_proxycb_src_setup(void);
+extern ProxyCallbackProc *g_proxyDstCallbacksPtr;
+
+FORT_API void fort_proxycb_src_prepare(PFORT_PROXYCB_INFO cbInfo);
+FORT_API void fort_proxycb_src_setup(PFORT_PROXYCB_INFO cbInfo);
 
 #ifdef __cplusplus
 } // extern "C"

@@ -3,6 +3,8 @@
 
 #include "fortdl.h"
 
+#include "../proxycb/fortpcb_def.h"
+
 #if defined(__cplusplus)
 extern "C" {
 #endif
@@ -16,8 +18,8 @@ FORT_API NTSTATUS LoadModuleFromMemory(PLOADEDMODULE pModule, PUCHAR lpData, DWO
 
 FORT_API void UnloadModule(PLOADEDMODULE pModule);
 
-FORT_API NTSTATUS CallModuleEntry(
-        PLOADEDMODULE pModule, PDRIVER_OBJECT driver, PUNICODE_STRING regPath);
+FORT_API NTSTATUS CallModuleEntry(PLOADEDMODULE pModule, PDRIVER_OBJECT driver,
+        PUNICODE_STRING regPath, PFORT_PROXYCB_INFO cbInfo);
 
 FORT_API FARPROC ModuleGetProcAddress(PLOADEDMODULE pModule, LPCSTR funcName);
 

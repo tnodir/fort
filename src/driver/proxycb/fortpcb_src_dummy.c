@@ -1,6 +1,6 @@
-/* Fort Firewall Driver Loader: Proxy Callbacks: Dummy */
+/* Fort Firewall Driver Loader: Proxy Callbacks: Source Dummy */
 
-#include "fortpcb_def.h"
+#include "fortpcb_src.h"
 
 ProxyCallbackProc g_proxyDstProcs[PROXY_CALLBACKS_COUNT];
 

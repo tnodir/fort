@@ -3,6 +3,8 @@
 
 #include "fortdrv.h"
 
+#include "proxycb/fortpcb_def.h"
+
 enum {
     FORT_SYSCB_POWER = 0,
     FORT_SYSCB_TIME,
@@ -17,6 +19,8 @@ extern "C" {
 typedef void (*FortCallbackFunc)(void);
 
 FORT_API FortCallbackFunc fort_callback(int id, FortCallbackFunc func);
+
+FORT_API void fort_callback_setup(PFORT_PROXYCB_INFO cb_info);
 
 #ifdef __cplusplus
 } // extern "C"

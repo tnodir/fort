@@ -66,11 +66,12 @@
     <FilesToPackage Include="$(TargetPath)" />
   </ItemGroup>
   <ItemGroup>
+    <MASM Include="proxycb\fortpcb_dst_x86.asm">
+      <AdditionalOptions Condition="'$(Platform)'=='Win32'">/safeseh</AdditionalOptions>
+    </MASM>
     <ClCompile Include="fortdrv_amalg.c" />
-    <ResourceCompile Include="fortdrv.rc" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="fortdrv.h" />
+    <ResourceCompile Include="fortdrv.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -21,7 +21,8 @@
 #define fort_nt_headers(pImage)                                                                    \
     ((PIMAGE_NT_HEADERS) & ((PUCHAR) (pImage))[((PIMAGE_DOS_HEADER) pImage)->e_lfanew])
 
-typedef NTSTATUS(WINAPI *DriverCallbackEntryProc)(PDRIVER_OBJECT driver, PUNICODE_STRING regPath);
+typedef NTSTATUS(WINAPI *DriverCallbackEntryProc)(
+        PDRIVER_OBJECT driver, PUNICODE_STRING regPath, PFORT_PROXYCB_INFO cbInfo);
 
 static NTSTATUS GetModuleInfo(PLOADEDMODULE pModule, LPCSTR name,
         const PAUX_MODULE_EXTENDED_INFO modules, DWORD modulesCount)
@@ -391,18 +392,19 @@ FORT_API void UnloadModule(PLOADEDMODULE pModule)
     }
 }
 
-FORT_API NTSTATUS CallModuleEntry(
-        PLOADEDMODULE pModule, PDRIVER_OBJECT driver, PUNICODE_STRING regPath)
+FORT_API NTSTATUS CallModuleEntry(PLOADEDMODULE pModule, PDRIVER_OBJECT driver,
+        PUNICODE_STRING regPath, PFORT_PROXYCB_INFO cbInfo)
 {
     DriverCallbackEntryProc driverEntry =
             (DriverCallbackEntryProc) ModuleGetProcAddress(pModule, "DriverCallbackEntry");
     if (driverEntry == NULL)
         return STATUS_PROCEDURE_NOT_FOUND;
 
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Module: Entry Proc: %p %x\n",
-            driverEntry, *(PDWORD) (PVOID) &driverEntry);
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+            "FORT: Loader Module: Entry Proc: %p data=%x\n", driverEntry,
+            *(PDWORD) (PVOID) &driverEntry);
 
-    return driverEntry(driver, regPath);
+    return driverEntry(driver, regPath, cbInfo);
 }
 
 /* Retrieve address of an exported function from the loaded module. */

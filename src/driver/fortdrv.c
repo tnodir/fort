@@ -4,6 +4,7 @@
 
 #include "common/fortdef.h"
 
+#include "fortcb.h"
 #include "fortdev.h"
 
 static NTSTATUS fort_bfe_wait(void)
@@ -62,12 +63,6 @@ static NTSTATUS fort_driver_load(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path
     if (!NT_SUCCESS(status))
         return status;
 
-    driver->MajorFunction[IRP_MJ_CREATE] = fort_device_create;
-    driver->MajorFunction[IRP_MJ_CLOSE] = fort_device_close;
-    driver->MajorFunction[IRP_MJ_CLEANUP] = fort_device_cleanup;
-    driver->MajorFunction[IRP_MJ_DEVICE_CONTROL] = fort_device_control;
-    driver->DriverUnload = fort_driver_unload;
-
     UNICODE_STRING device_link;
 
     RtlInitUnicodeString(&device_link, FORT_DOS_DEVICE_NAME);
@@ -75,14 +70,23 @@ static NTSTATUS fort_driver_load(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path
     if (!NT_SUCCESS(status))
         return status;
 
+    driver->DriverUnload = fort_driver_unload;
+    driver->MajorFunction[IRP_MJ_CREATE] = fort_device_create;
+    driver->MajorFunction[IRP_MJ_CLOSE] = fort_device_close;
+    driver->MajorFunction[IRP_MJ_CLEANUP] = fort_device_cleanup;
+    driver->MajorFunction[IRP_MJ_DEVICE_CONTROL] = fort_device_control;
+
     device_obj->Flags |= DO_BUFFERED_IO;
 
     return fort_device_load(device_obj);
 }
 
-NTSTATUS __declspec(dllexport) DriverCallbackEntry(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
+NTSTATUS __declspec(dllexport) DriverCallbackEntry(
+        PDRIVER_OBJECT driver, PUNICODE_STRING reg_path, PFORT_PROXYCB_INFO cb_info)
 {
     NTSTATUS status;
+
+    fort_callback_setup(cb_info);
 
     status = fort_driver_load(driver, reg_path);
 
@@ -96,5 +100,5 @@ NTSTATUS __declspec(dllexport) DriverCallbackEntry(PDRIVER_OBJECT driver, PUNICO
 
 NTSTATUS DriverEntry(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 {
-    return DriverCallbackEntry(driver, reg_path);
+    return DriverCallbackEntry(driver, reg_path, NULL);
 }

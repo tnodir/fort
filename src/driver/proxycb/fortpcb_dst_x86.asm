@@ -3,21 +3,16 @@ ELSE
 .model flat, stdcall
 ENDIF
 
-.DATA
-IFDEF RAX
-	g_proxyDstCallbacks QWORD 040H dup (?)
-ELSE
-	g_proxyDstCallbacks DWORD 040H dup (?)
-ENDIF
+externdef g_proxyCallbacksPtr : far
 
 .CODE
 
 ProxyCallbackProc MACRO index:REQ
 IFDEF RAX
 	pop rax
-	jmp QWORD PTR [g_proxyDstCallbacks + index * 8]
+	jmp QWORD PTR [g_proxyCallbacksPtr + index * 8]
 ELSE
-	jmp DWORD PTR [g_proxyDstCallbacks + index * 4]
+	jmp DWORD PTR [g_proxyCallbacksPtr + index * 4]
 ENDIF
 ENDM
 
