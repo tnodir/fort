@@ -10,7 +10,7 @@ externdef g_proxyDstCallbacksPtr : far
 ProxyCallbackProc MACRO index:REQ
 IFDEF RAX
 	push rax
-	mov rax, [g_proxyDstCallbacksPtr + index * 8]
+	mov rax, QWORD PTR [g_proxyDstCallbacksPtr + index * 8]
 	jmp rax
 ELSE
 	jmp DWORD PTR [g_proxyDstCallbacksPtr + index * 4]

@@ -3,7 +3,7 @@ ELSE
 .model flat, stdcall
 ENDIF
 
-externdef g_proxyCallbacksPtr : far
+externdef g_proxyCallbacksPtr : near
 
 .CODE
 
