@@ -245,6 +245,15 @@ void IoFreeWorkItem(PIO_WORKITEM workItem)
     UNUSED(workItem);
 }
 
+void IoQueueWorkItemEx(
+        PIO_WORKITEM workItem, PIO_WORKITEM_ROUTINE_EX routine, int queueType, PVOID context)
+{
+    UNUSED(workItem);
+    UNUSED(routine);
+    UNUSED(queueType);
+    UNUSED(context);
+}
+
 void KeQuerySystemTime(PLARGE_INTEGER time)
 {
     UNUSED(time);
@@ -262,13 +271,32 @@ void RtlTimeToTimeFields(PLARGE_INTEGER time, PTIME_FIELDS timeFields)
     UNUSED(timeFields);
 }
 
-void IoQueueWorkItemEx(
-        PIO_WORKITEM workItem, PIO_WORKITEM_ROUTINE_EX routine, int queueType, PVOID context)
+NTSTATUS ZwOpenKey(
+        PHANDLE keyHandle, ACCESS_MASK desiredAccess, POBJECT_ATTRIBUTES objectAttributes)
 {
-    UNUSED(workItem);
-    UNUSED(routine);
-    UNUSED(queueType);
-    UNUSED(context);
+    UNUSED(keyHandle);
+    UNUSED(desiredAccess);
+    UNUSED(objectAttributes);
+    return STATUS_SUCCESS;
+}
+
+NTSTATUS ZwClose(HANDLE handle)
+{
+    UNUSED(handle);
+    return STATUS_SUCCESS;
+}
+
+NTSTATUS ZwQueryValueKey(HANDLE keyHandle, PUNICODE_STRING valueName,
+        KEY_VALUE_INFORMATION_CLASS keyValueInformationClass, PVOID keyValueInformation,
+        ULONG length, PULONG resultLength)
+{
+    UNUSED(keyHandle);
+    UNUSED(valueName);
+    UNUSED(keyValueInformationClass);
+    UNUSED(keyValueInformation);
+    UNUSED(length);
+    UNUSED(resultLength);
+    return STATUS_SUCCESS;
 }
 
 NTSTATUS ZwOpenFile(PHANDLE fileHandle, ACCESS_MASK desiredAccess,

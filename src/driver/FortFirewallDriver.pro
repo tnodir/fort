@@ -5,7 +5,6 @@ include(Driver.pri)
 QT = core
 
 SOURCES += \
-    dummy.c \
     fortbuf.c \
     fortcb.c \
     fortcnf.c \
@@ -26,7 +25,7 @@ SOURCES += \
     proxycb/fortpcb_drv.c \
     proxycb/fortpcb_dst.c \
     proxycb/fortpcb_src.c \
-    proxycb/fortpcb_src_dummy.c \
+    test/main.c \
     wdm/um_aux_klib.c \
     wdm/um_fwpmk.c \
     wdm/um_fwpsk.c \
@@ -63,6 +62,10 @@ HEADERS += \
     wdm/um_ntddk.h \
     wdm/um_wdm.h
 
+ASM_FILES += \
+    proxycb/fortpcb_dst_x86.asm \
+    proxycb/fortpcb_src_x86.asm
+
 OTHER_FILES += \
     loader/fort.rsa.pub \
     scripts/*.bat
@@ -70,10 +73,19 @@ OTHER_FILES += \
 # Windows
 LIBS *= -lntdll
 
-# Kernel Driver
-{
-    BUILDCMD = $$PWD/msvcbuild.bat
+# MASM
+!no_masm {
+    contains(QMAKE_TARGET.arch, x86_64): MASM_EXE = ml64
+    else: MASM_EXE = ml
 
-    #QMAKE_POST_LINK += $$BUILDCMD Win32
-    #QMAKE_POST_LINK += $$BUILDCMD x64
+    masm.input = ASM_FILES
+    masm.output = ${QMAKE_VAR_OBJECTS_DIR}${QMAKE_FILE_IN_BASE}$${first(QMAKE_EXT_OBJ)}
+    masm.variable_out = OBJECTS
+    masm.commands = $$MASM_EXE /c /nologo /Zi /Fo ${QMAKE_FILE_OUT} /W3 /Ta ${QMAKE_FILE_NAME}
+
+    QMAKE_EXTRA_COMPILERS += masm
+} else {
+    SOURCES += \
+        proxycb/fortpcb_dst_dummy.c \
+        proxycb/fortpcb_src_dummy.c
 }

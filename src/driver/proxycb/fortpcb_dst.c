@@ -142,20 +142,12 @@ static ProxyCallbackProc g_proxyDstCallbacks[PROXY_CALLBACKS_COUNT] = {
 
 static ProxyCallbackProc g_proxyCallbacks[PROXY_CALLBACKS_COUNT];
 
-ProxyCallbackProc *g_proxyCallbacksPtr;
-
-FORT_API void fort_proxycb_dst_prepare(PFORT_PROXYCB_INFO cbInfo)
-{
-    cbInfo->dst = g_proxyCallbacks;
-    cbInfo->callbacks = g_proxyCallbacks;
-}
-
 FORT_API void fort_proxycb_dst_setup(PFORT_PROXYCB_INFO cbInfo)
 {
 #ifdef _WIN64
     cbInfo->dst = g_proxyDstCallbacks;
-    g_proxyCallbacksPtr = g_proxyCallbacks;
+    cbInfo->callbacks = g_proxyCallbacksArray;
 #else
-    Q_UNUSED(cbInfo);
+    cbInfo->callbacks = cbInfo->dst;
 #endif
 }

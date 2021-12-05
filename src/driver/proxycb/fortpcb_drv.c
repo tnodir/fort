@@ -83,7 +83,7 @@ FORT_API void fort_proxycb_drv_setup(PDRIVER_DISPATCH *driver_major_funcs)
             driver_major_funcs[i] = g_proxyMajorProcs[i];
 
             DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                    "FORT: fort_proxycb_drv_setup: %d\n", i);
+                    "FORT: fort_proxycb_drv_setup: %d mf=%p\n", i, drv_func);
         }
     }
 }

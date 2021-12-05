@@ -16,7 +16,7 @@ enum {
 extern "C" {
 #endif
 
-typedef void (*FortCallbackFunc)(void);
+typedef void (WINAPI *FortCallbackFunc)(void);
 
 FORT_API FortCallbackFunc fort_callback(int id, FortCallbackFunc func);
 

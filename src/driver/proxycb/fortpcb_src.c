@@ -2,7 +2,7 @@
 
 #include "fortpcb_src.h"
 
-#define ProxyCallbackExtern(i) extern void proxyCallback##i(void)
+#define ProxyCallbackExtern(i) extern void WINAPI proxyDstCallback##i(void)
 
 ProxyCallbackExtern(0);
 ProxyCallbackExtern(1);
@@ -70,80 +70,83 @@ ProxyCallbackExtern(62);
 ProxyCallbackExtern(63);
 
 static ProxyCallbackProc g_proxySrcCallbacks[PROXY_CALLBACKS_COUNT] = {
-    proxyCallback0,
-    proxyCallback1,
-    proxyCallback2,
-    proxyCallback3,
-    proxyCallback4,
-    proxyCallback5,
-    proxyCallback6,
-    proxyCallback7,
-    proxyCallback8,
-    proxyCallback9,
-    proxyCallback10,
-    proxyCallback11,
-    proxyCallback12,
-    proxyCallback13,
-    proxyCallback14,
-    proxyCallback15,
-    proxyCallback16,
-    proxyCallback17,
-    proxyCallback18,
-    proxyCallback19,
-    proxyCallback20,
-    proxyCallback21,
-    proxyCallback22,
-    proxyCallback23,
-    proxyCallback24,
-    proxyCallback25,
-    proxyCallback26,
-    proxyCallback27,
-    proxyCallback28,
-    proxyCallback29,
-    proxyCallback30,
-    proxyCallback31,
-    proxyCallback32,
-    proxyCallback33,
-    proxyCallback34,
-    proxyCallback35,
-    proxyCallback36,
-    proxyCallback37,
-    proxyCallback38,
-    proxyCallback39,
-    proxyCallback40,
-    proxyCallback41,
-    proxyCallback42,
-    proxyCallback43,
-    proxyCallback44,
-    proxyCallback45,
-    proxyCallback46,
-    proxyCallback47,
-    proxyCallback48,
-    proxyCallback49,
-    proxyCallback50,
-    proxyCallback51,
-    proxyCallback52,
-    proxyCallback53,
-    proxyCallback54,
-    proxyCallback55,
-    proxyCallback56,
-    proxyCallback57,
-    proxyCallback58,
-    proxyCallback59,
-    proxyCallback60,
-    proxyCallback61,
-    proxyCallback62,
-    proxyCallback63,
+    proxyDstCallback0,
+    proxyDstCallback1,
+    proxyDstCallback2,
+    proxyDstCallback3,
+    proxyDstCallback4,
+    proxyDstCallback5,
+    proxyDstCallback6,
+    proxyDstCallback7,
+    proxyDstCallback8,
+    proxyDstCallback9,
+    proxyDstCallback10,
+    proxyDstCallback11,
+    proxyDstCallback12,
+    proxyDstCallback13,
+    proxyDstCallback14,
+    proxyDstCallback15,
+    proxyDstCallback16,
+    proxyDstCallback17,
+    proxyDstCallback18,
+    proxyDstCallback19,
+    proxyDstCallback20,
+    proxyDstCallback21,
+    proxyDstCallback22,
+    proxyDstCallback23,
+    proxyDstCallback24,
+    proxyDstCallback25,
+    proxyDstCallback26,
+    proxyDstCallback27,
+    proxyDstCallback28,
+    proxyDstCallback29,
+    proxyDstCallback30,
+    proxyDstCallback31,
+    proxyDstCallback32,
+    proxyDstCallback33,
+    proxyDstCallback34,
+    proxyDstCallback35,
+    proxyDstCallback36,
+    proxyDstCallback37,
+    proxyDstCallback38,
+    proxyDstCallback39,
+    proxyDstCallback40,
+    proxyDstCallback41,
+    proxyDstCallback42,
+    proxyDstCallback43,
+    proxyDstCallback44,
+    proxyDstCallback45,
+    proxyDstCallback46,
+    proxyDstCallback47,
+    proxyDstCallback48,
+    proxyDstCallback49,
+    proxyDstCallback50,
+    proxyDstCallback51,
+    proxyDstCallback52,
+    proxyDstCallback53,
+    proxyDstCallback54,
+    proxyDstCallback55,
+    proxyDstCallback56,
+    proxyDstCallback57,
+    proxyDstCallback58,
+    proxyDstCallback59,
+    proxyDstCallback60,
+    proxyDstCallback61,
+    proxyDstCallback62,
+    proxyDstCallback63,
 };
-
-ProxyCallbackProc *g_proxyDstCallbacksPtr;
 
 FORT_API void fort_proxycb_src_prepare(PFORT_PROXYCB_INFO cbInfo)
 {
     cbInfo->src = g_proxySrcCallbacks;
+    cbInfo->dst = g_proxyDstCallbacksArray;
 }
 
 FORT_API void fort_proxycb_src_setup(PFORT_PROXYCB_INFO cbInfo)
 {
-    g_proxyDstCallbacksPtr = cbInfo->dst;
+#ifdef _WIN64
+    memcpy(g_proxyDstCallbacksArray, cbInfo->dst, sizeof(g_proxyDstCallbacksArray));
+#else
+    UNUSED(cbInfo);
+#endif
 }
