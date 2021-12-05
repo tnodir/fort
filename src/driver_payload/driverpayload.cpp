@@ -284,7 +284,7 @@ bool createPayloadSignature(
 void DriverPayload::processArguments(const QStringList &args)
 {
     QCommandLineParser parser;
-    parser.setApplicationDescription("Append payload to the signed executable file."
+    parser.setApplicationDescription("Append payload to the signed executable file. "
                                      "The result is stored in the output file.");
 
     const QCommandLineOption inputOption(QStringList() << "i"
