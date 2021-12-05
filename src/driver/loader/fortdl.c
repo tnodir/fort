@@ -32,6 +32,9 @@ static NTSTATUS fort_loader_entry(PDRIVER_OBJECT driver, PUNICODE_STRING regPath
 {
     NTSTATUS status;
 
+    /* Prepare the major functions */
+    fort_proxycb_drv_prepare(driver->MajorFunction);
+
     /* Prepare the proxy callbacks */
     FORT_PROXYCB_INFO cbInfo;
     fort_proxycb_src_prepare(&cbInfo);
@@ -48,6 +51,7 @@ static NTSTATUS fort_loader_entry(PDRIVER_OBJECT driver, PUNICODE_STRING regPath
     g_loader.DriverUnload = driver->DriverUnload;
     driver->DriverUnload = fort_loader_unload;
 
+    /* Setup the major functions */
     fort_proxycb_drv_setup(driver->MajorFunction);
 
     return status;

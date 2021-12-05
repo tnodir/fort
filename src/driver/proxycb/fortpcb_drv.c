@@ -6,12 +6,12 @@
 
 static_assert(FORT_DRIVER_MAJOR_FUNC_MAX == 28, "Driver Major Functions Count Mismatch");
 
-static PDRIVER_DISPATCH g_proxyDrvCallbacks[FORT_DRIVER_MAJOR_FUNC_MAX];
+static PDRIVER_DISPATCH g_proxyDrvCallbacksArray[FORT_DRIVER_MAJOR_FUNC_MAX];
 
 #define ProxyMajorProc(i)                                                                          \
     static NTSTATUS proxyMajor##i(PDEVICE_OBJECT device, PIRP irp)                                 \
     {                                                                                              \
-        return g_proxyDrvCallbacks[(i)]((device), (irp));                                          \
+        return g_proxyDrvCallbacksArray[(i)]((device), (irp));                                     \
     }
 
 ProxyMajorProc(0);
@@ -43,7 +43,7 @@ ProxyMajorProc(25);
 ProxyMajorProc(26);
 ProxyMajorProc(27);
 
-static PDRIVER_DISPATCH g_proxyMajorProcs[FORT_DRIVER_MAJOR_FUNC_MAX] = {
+static PDRIVER_DISPATCH g_proxyMajorCallbacks[FORT_DRIVER_MAJOR_FUNC_MAX] = {
     proxyMajor0,
     proxyMajor1,
     proxyMajor2,
@@ -74,16 +74,21 @@ static PDRIVER_DISPATCH g_proxyMajorProcs[FORT_DRIVER_MAJOR_FUNC_MAX] = {
     proxyMajor27,
 };
 
+FORT_API void fort_proxycb_drv_prepare(PDRIVER_DISPATCH *driver_major_funcs)
+{
+    memcpy(g_proxyDrvCallbacksArray, driver_major_funcs, sizeof(g_proxyDrvCallbacksArray));
+}
+
 FORT_API void fort_proxycb_drv_setup(PDRIVER_DISPATCH *driver_major_funcs)
 {
     for (int i = 0; i < FORT_DRIVER_MAJOR_FUNC_MAX; ++i) {
-        PDRIVER_DISPATCH drv_func = driver_major_funcs[i];
-        if (drv_func != NULL) {
-            g_proxyDrvCallbacks[i] = drv_func;
-            driver_major_funcs[i] = g_proxyMajorProcs[i];
+        PDRIVER_DISPATCH major_func = driver_major_funcs[i];
+        if (major_func != g_proxyDrvCallbacksArray[i]) {
+            g_proxyDrvCallbacksArray[i] = major_func;
+            driver_major_funcs[i] = g_proxyMajorCallbacks[i];
 
             DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                    "FORT: fort_proxycb_drv_setup: %d mf=%p\n", i, drv_func);
+                    "FORT: fort_proxycb_drv_setup: %d mf=%p\n", i, major_func);
         }
     }
 }

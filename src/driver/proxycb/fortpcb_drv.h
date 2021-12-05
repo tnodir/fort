@@ -7,6 +7,7 @@
 extern "C" {
 #endif
 
+FORT_API void fort_proxycb_drv_prepare(PDRIVER_DISPATCH *driver_major_funcs);
 FORT_API void fort_proxycb_drv_setup(PDRIVER_DISPATCH *driver_major_funcs);
 
 #ifdef __cplusplus
