@@ -449,47 +449,17 @@ bool SqliteDb::importDb(
 
     beginTransaction();
 
-    const auto srcTableNames = tableNames(srcSchema);
+    const QStringList srcTableNames = tableNames(srcSchema);
 
-    for (const auto &tableName : srcTableNames) {
-        const auto dstColumns = columnNames(tableName, dstSchema);
-        if (dstColumns.isEmpty()) {
-            continue; // new schema doesn't contain old table
-        }
-
-        const auto srcColumns = columnNames(tableName, srcSchema);
-        if (srcColumns.isEmpty()) {
-            continue; // empty old table
-        }
-
-        // Intersect column names
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-        auto columnsSet = QSet<QString>(srcColumns.constBegin(), srcColumns.constEnd());
-        const auto dstColumnsSet = QSet<QString>(dstColumns.constBegin(), dstColumns.constEnd());
-#else
-        auto columnsSet = QSet<QString>::fromList(srcColumns);
-        const auto dstColumnsSet = QSet<QString>::fromList(dstColumns);
-#endif
-        columnsSet.intersect(dstColumnsSet);
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-        const QStringList columns(columnsSet.constBegin(), columnsSet.constEnd());
-#else
-        const QStringList columns(columnsSet.toList());
-#endif
-        const QString columnNames = columns.join(", ");
-
-        // Insert
-        const auto sql = QString("INSERT INTO %1 (%3) SELECT %3 FROM %2;")
-                                 .arg(entityName(dstSchema, tableName),
-                                         entityName(srcSchema, tableName), columnNames);
-
-        if (!execute(sql.toLatin1())) {
+    // Copy tables
+    for (const QString &tableName : srcTableNames) {
+        if (!copyTable(srcSchema, dstSchema, tableName)) {
             success = false;
             break;
         }
     }
 
+    // Migrate
     if (success && migrateFunc) {
         success = migrateFunc(this, userVersion(), false, migrateContext);
     }
@@ -499,6 +469,44 @@ bool SqliteDb::importDb(
     detach(srcSchema);
 
     return success;
+}
+
+bool SqliteDb::copyTable(
+        const QString &srcSchema, const QString &dstSchema, const QString &tableName)
+{
+    const QStringList dstColumns = this->columnNames(tableName, dstSchema);
+    if (dstColumns.isEmpty()) {
+        return true; // new schema doesn't contain old table
+    }
+
+    const QStringList srcColumns = this->columnNames(tableName, srcSchema);
+    if (srcColumns.isEmpty()) {
+        return true; // empty old table
+    }
+
+    // Intersect column names
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    auto columnsSet = QSet<QString>(srcColumns.constBegin(), srcColumns.constEnd());
+    const auto dstColumnsSet = QSet<QString>(dstColumns.constBegin(), dstColumns.constEnd());
+#else
+    auto columnsSet = QSet<QString>::fromList(srcColumns);
+    const auto dstColumnsSet = QSet<QString>::fromList(dstColumns);
+#endif
+    columnsSet.intersect(dstColumnsSet);
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    const QStringList columns(columnsSet.constBegin(), columnsSet.constEnd());
+#else
+    const QStringList columns(columnsSet.toList());
+#endif
+    const QString columnNames = columns.join(", ");
+
+    // Insert
+    const auto sql = QString("INSERT INTO %1 (%3) SELECT %3 FROM %2;")
+                             .arg(entityName(dstSchema, tableName),
+                                     entityName(srcSchema, tableName), columnNames);
+
+    return executeStr(sql);
 }
 
 SqliteStmt *SqliteDb::stmt(const char *sql)

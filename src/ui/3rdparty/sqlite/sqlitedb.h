@@ -107,6 +107,7 @@ private:
 
     bool importDb(
             const QString &sourceFilePath, SQLITEDB_MIGRATE_FUNC migrateFunc, void *migrateContext);
+    bool copyTable(const QString &srcSchema, const QString &dstSchema, const QString &tableName);
 
     void clearStmts();
 
