@@ -94,14 +94,19 @@ public:
             bool importOldData = false, SQLITEDB_MIGRATE_FUNC migrateFunc = nullptr,
             void *migrateContext = nullptr);
 
-    bool importDb(
-            const QString &sourceFilePath, SQLITEDB_MIGRATE_FUNC migrateFunc, void *migrateContext);
-
     SqliteStmt *stmt(const char *sql);
 
 private:
     bool migrateSqlScripts(const QString &sqlDir, int version, int userVersion, bool isNewDb,
-            SQLITEDB_MIGRATE_FUNC migrateFunc = nullptr, void *migrateContext = nullptr);
+            SQLITEDB_MIGRATE_FUNC migrateFunc, void *migrateContext);
+
+    bool clearWithBackup(const char *sqlPragmas);
+    bool importBackup(bool importOldData, SQLITEDB_MIGRATE_FUNC migrateFunc, void *migrateContext);
+
+    QString backupFilePath() const;
+
+    bool importDb(
+            const QString &sourceFilePath, SQLITEDB_MIGRATE_FUNC migrateFunc, void *migrateContext);
 
     void clearStmts();
 

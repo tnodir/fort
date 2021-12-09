@@ -91,8 +91,8 @@ void StatManager::setUp()
         return;
     }
 
-    if (!sqliteDb()->migrate(
-                ":/stat/migrations", nullptr, DATABASE_USER_VERSION, true, true, &migrateFunc)) {
+    if (!sqliteDb()->migrate(":/stat/migrations", nullptr, DATABASE_USER_VERSION, /*recreate=*/true,
+                /*importOldData=*/true, &migrateFunc)) {
         logCritical() << "Migration error" << sqliteDb()->filePath();
         return;
     }

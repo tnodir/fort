@@ -310,23 +310,14 @@ bool SqliteDb::migrate(const QString &sqlDir, const char *sqlPragmas, int versio
     }
 
     bool isNewDb = (userVersion == 0);
+    if (isNewDb) {
+        recreate = false;
+    }
 
     // Re-create the DB
-    QString tempFilePath;
-    if (recreate && !isNewDb) {
-        const QString oldEncoding = this->encoding();
-        close();
-
-        tempFilePath = m_filePath + ".temp";
-
-        if (!(renameDbFile(m_filePath, tempFilePath) && open())) {
-            dbWarning() << "Cannot re-create the DB" << m_filePath;
-            renameDbFile(tempFilePath, m_filePath);
+    if (recreate) {
+        if (!clearWithBackup(sqlPragmas))
             return false;
-        }
-
-        execute(sqlPragmas);
-        setEncoding(oldEncoding);
 
         userVersion = 0;
         isNewDb = true;
@@ -337,16 +328,8 @@ bool SqliteDb::migrate(const QString &sqlDir, const char *sqlPragmas, int versio
             migrateSqlScripts(sqlDir, version, userVersion, isNewDb, migrateFunc, migrateContext);
 
     // Re-create the DB: End
-    if (recreate && !tempFilePath.isEmpty()) {
-        // Re-import the DB
-        if (success && importOldData) {
-            success = importDb(tempFilePath, migrateFunc, migrateContext);
-        }
-
-        // Remove the old DB
-        if (success) {
-            removeDbFile(tempFilePath);
-        }
+    if (success && recreate) {
+        success = importBackup(importOldData, migrateFunc, migrateContext);
     }
 
     return success;
@@ -403,6 +386,51 @@ bool SqliteDb::migrateSqlScripts(const QString &sqlDir, int version, int userVer
     commitTransaction();
 
     return success;
+}
+
+bool SqliteDb::clearWithBackup(const char *sqlPragmas)
+{
+    const QString oldEncoding = this->encoding();
+
+    close();
+
+    const QString tempFilePath = backupFilePath();
+
+    if (!(renameDbFile(m_filePath, tempFilePath) && open())) {
+        dbWarning() << "Cannot re-create the DB" << m_filePath;
+        renameDbFile(tempFilePath, m_filePath);
+        return false;
+    }
+
+    execute(sqlPragmas);
+    setEncoding(oldEncoding);
+
+    return true;
+}
+
+bool SqliteDb::importBackup(
+        bool importOldData, SQLITEDB_MIGRATE_FUNC migrateFunc, void *migrateContext)
+{
+    bool success = true;
+
+    const QString tempFilePath = backupFilePath();
+
+    // Re-import the DB
+    if (importOldData) {
+        success = importDb(tempFilePath, migrateFunc, migrateContext);
+    }
+
+    // Remove the old DB
+    if (success) {
+        removeDbFile(tempFilePath);
+    }
+
+    return success;
+}
+
+QString SqliteDb::backupFilePath() const
+{
+    return m_filePath + ".temp";
 }
 
 bool SqliteDb::importDb(
