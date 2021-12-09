@@ -73,22 +73,24 @@ QString kernelPathToPath(const QString &kernelPath)
 QString pathToKernelPath(const QString &path, bool lower)
 {
     QString kernelPath = path;
+
     if (path.size() > 1) {
-        const auto char1 = path.at(0);
+        const QChar char1 = path.at(0);
         if (char1.isLetter()) {
             if (path.at(1) == ':') {
                 const QString drive = path.left(2);
-                kernelPath = driveToKernelName(drive)
-                        + path.mid(2).replace(QLatin1Char('/'), QLatin1Char('\\'));
-            } else {
-                if (isSystemApp(path))
-                    return systemApp();
+                kernelPath = driveToKernelName(drive) + path.mid(2);
+            } else if (isSystemApp(path)) {
+                return systemApp();
             }
         } else if ((char1 == '?' || char1 == '*') && path.at(1) == ':') {
             // Replace "?:\\" with "\\Device\\*\\"
             kernelPath = "\\Device\\*" + path.mid(2);
         }
     }
+
+    kernelPath = kernelPath.replace(QLatin1Char('/'), QLatin1Char('\\'));
+
     return lower ? kernelPath.toLower() : kernelPath;
 }
 
