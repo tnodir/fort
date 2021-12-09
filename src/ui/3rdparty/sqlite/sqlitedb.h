@@ -100,6 +100,9 @@ public:
     SqliteStmt *stmt(const char *sql);
 
 private:
+    bool migrateSqlScripts(const QString &sqlDir, int version, int userVersion, bool isNewDb,
+            SQLITEDB_MIGRATE_FUNC migrateFunc = nullptr, void *migrateContext = nullptr);
+
     void clearStmts();
 
 private:

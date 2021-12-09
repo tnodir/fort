@@ -333,6 +333,28 @@ bool SqliteDb::migrate(const QString &sqlDir, const char *sqlPragmas, int versio
     }
 
     // Run migration SQL scripts
+    bool success =
+            migrateSqlScripts(sqlDir, version, userVersion, isNewDb, migrateFunc, migrateContext);
+
+    // Re-create the DB: End
+    if (recreate && !tempFilePath.isEmpty()) {
+        // Re-import the DB
+        if (success && importOldData) {
+            success = importDb(tempFilePath, migrateFunc, migrateContext);
+        }
+
+        // Remove the old DB
+        if (success) {
+            removeDbFile(tempFilePath);
+        }
+    }
+
+    return success;
+}
+
+bool SqliteDb::migrateSqlScripts(const QString &sqlDir, int version, int userVersion, bool isNewDb,
+        SQLITEDB_MIGRATE_FUNC migrateFunc, void *migrateContext)
+{
     QDir dir(sqlDir);
     bool success = true;
 
@@ -379,19 +401,6 @@ bool SqliteDb::migrate(const QString &sqlDir, const char *sqlPragmas, int versio
     this->setUserVersion(userVersion);
 
     commitTransaction();
-
-    // Re-create the DB: End
-    if (recreate && !tempFilePath.isEmpty()) {
-        // Re-import the DB
-        if (success && importOldData) {
-            success = importDb(tempFilePath, migrateFunc, migrateContext);
-        }
-
-        // Remove the old DB
-        if (success) {
-            removeDbFile(tempFilePath);
-        }
-    }
 
     return success;
 }
