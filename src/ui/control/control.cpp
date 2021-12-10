@@ -84,61 +84,64 @@ const char *const rpcManagerString(RpcManager rpcManager)
 
 RpcManager managerByCommand(Command cmd)
 {
-    switch (cmd) {
-    case Rpc_AppInfoManager_lookupAppInfo:
-    case Rpc_AppInfoManager_checkLookupFinished:
-        return Rpc_AppInfoManager;
+    static const RpcManager g_commandManagers[] = {
+        Rpc_NoneManager, // CommandNone = 0,
 
-    case Rpc_ConfManager_save:
-    case Rpc_ConfManager_addApp:
-    case Rpc_ConfManager_deleteApp:
-    case Rpc_ConfManager_purgeApps:
-    case Rpc_ConfManager_updateApp:
-    case Rpc_ConfManager_updateAppBlocked:
-    case Rpc_ConfManager_updateAppName:
-    case Rpc_ConfManager_addZone:
-    case Rpc_ConfManager_deleteZone:
-    case Rpc_ConfManager_updateZone:
-    case Rpc_ConfManager_updateZoneName:
-    case Rpc_ConfManager_updateZoneEnabled:
-    case Rpc_ConfManager_checkPassword:
-    case Rpc_ConfManager_confChanged:
-    case Rpc_ConfManager_appAlerted:
-    case Rpc_ConfManager_appChanged:
-    case Rpc_ConfManager_appUpdated:
-    case Rpc_ConfManager_zoneAdded:
-    case Rpc_ConfManager_zoneRemoved:
-    case Rpc_ConfManager_zoneUpdated:
-        return Rpc_ConfManager;
+        Rpc_NoneManager, // Prog,
 
-    case Rpc_DriverManager_updateState:
-        return Rpc_DriverManager;
+        Rpc_NoneManager, // Rpc_Result_Ok,
+        Rpc_NoneManager, // Rpc_Result_Error,
 
-    case Rpc_QuotaManager_alert:
-        return Rpc_QuotaManager;
+        Rpc_NoneManager, // Rpc_RpcManager_initClient,
 
-    case Rpc_StatManager_deleteStatApp:
-    case Rpc_StatManager_deleteConn:
-    case Rpc_StatManager_deleteConnAll:
-    case Rpc_StatManager_resetAppTrafTotals:
-    case Rpc_StatManager_clearTraffic:
-    case Rpc_StatManager_trafficCleared:
-    case Rpc_StatManager_appStatRemoved:
-    case Rpc_StatManager_appCreated:
-    case Rpc_StatManager_trafficAdded:
-    case Rpc_StatManager_connChanged:
-    case Rpc_StatManager_appTrafTotalsResetted:
-        return Rpc_StatManager;
+        Rpc_AppInfoManager, // Rpc_AppInfoManager_lookupAppInfo,
+        Rpc_AppInfoManager, // Rpc_AppInfoManager_checkLookupFinished,
 
-    case Rpc_TaskManager_runTask:
-    case Rpc_TaskManager_abortTask:
-    case Rpc_TaskManager_taskStarted:
-    case Rpc_TaskManager_taskFinished:
-        return Rpc_TaskManager;
+        Rpc_ConfManager, // Rpc_ConfManager_save,
+        Rpc_ConfManager, // Rpc_ConfManager_addApp,
+        Rpc_ConfManager, // Rpc_ConfManager_deleteApp,
+        Rpc_ConfManager, // Rpc_ConfManager_purgeApps,
+        Rpc_ConfManager, // Rpc_ConfManager_updateApp,
+        Rpc_ConfManager, // Rpc_ConfManager_updateAppBlocked,
+        Rpc_ConfManager, // Rpc_ConfManager_updateAppName,
+        Rpc_ConfManager, // Rpc_ConfManager_addZone,
+        Rpc_ConfManager, // Rpc_ConfManager_deleteZone,
+        Rpc_ConfManager, // Rpc_ConfManager_updateZone,
+        Rpc_ConfManager, // Rpc_ConfManager_updateZoneName,
+        Rpc_ConfManager, // Rpc_ConfManager_updateZoneEnabled,
+        Rpc_ConfManager, // Rpc_ConfManager_checkPassword,
+        Rpc_ConfManager, // Rpc_ConfManager_confChanged,
+        Rpc_ConfManager, // Rpc_ConfManager_appEndTimesUpdated,
+        Rpc_ConfManager, // Rpc_ConfManager_appAlerted,
+        Rpc_ConfManager, // Rpc_ConfManager_appChanged,
+        Rpc_ConfManager, // Rpc_ConfManager_appUpdated,
+        Rpc_ConfManager, // Rpc_ConfManager_zoneAdded,
+        Rpc_ConfManager, // Rpc_ConfManager_zoneRemoved,
+        Rpc_ConfManager, // Rpc_ConfManager_zoneUpdated,
 
-    default:
-        return Rpc_NoneManager;
-    }
+        Rpc_DriverManager, // Rpc_DriverManager_updateState,
+
+        Rpc_QuotaManager, // Rpc_QuotaManager_alert,
+
+        Rpc_StatManager, // Rpc_StatManager_deleteStatApp,
+        Rpc_StatManager, // Rpc_StatManager_deleteConn,
+        Rpc_StatManager, // Rpc_StatManager_deleteConnAll,
+        Rpc_StatManager, // Rpc_StatManager_resetAppTrafTotals,
+        Rpc_StatManager, // Rpc_StatManager_clearTraffic,
+        Rpc_StatManager, // Rpc_StatManager_trafficCleared,
+        Rpc_StatManager, // Rpc_StatManager_appStatRemoved,
+        Rpc_StatManager, // Rpc_StatManager_appCreated,
+        Rpc_StatManager, // Rpc_StatManager_trafficAdded,
+        Rpc_StatManager, // Rpc_StatManager_connChanged,
+        Rpc_StatManager, // Rpc_StatManager_appTrafTotalsResetted,
+
+        Rpc_TaskManager, // Rpc_TaskManager_runTask,
+        Rpc_TaskManager, // Rpc_TaskManager_abortTask,
+        Rpc_TaskManager, // Rpc_TaskManager_taskStarted,
+        Rpc_TaskManager, // Rpc_TaskManager_taskFinished,
+    };
+
+    return g_commandManagers[cmd];
 }
 
 bool commandRequiresValidation(Command cmd)
