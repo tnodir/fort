@@ -146,38 +146,64 @@ RpcManager managerByCommand(Command cmd)
 
 bool commandRequiresValidation(Command cmd)
 {
-    switch (cmd) {
-    case Rpc_AppInfoManager_lookupAppInfo:
-        return true;
+    static const qint8 g_commandValidations[] = {
+        0, // CommandNone = 0,
 
-    case Rpc_ConfManager_save:
-    case Rpc_ConfManager_addApp:
-    case Rpc_ConfManager_deleteApp:
-    case Rpc_ConfManager_purgeApps:
-    case Rpc_ConfManager_updateApp:
-    case Rpc_ConfManager_updateAppBlocked:
-    case Rpc_ConfManager_updateAppName:
-    case Rpc_ConfManager_addZone:
-    case Rpc_ConfManager_deleteZone:
-    case Rpc_ConfManager_updateZone:
-    case Rpc_ConfManager_updateZoneName:
-    case Rpc_ConfManager_updateZoneEnabled:
-        return true;
+        0, // Prog,
 
-    case Rpc_StatManager_deleteStatApp:
-    case Rpc_StatManager_deleteConn:
-    case Rpc_StatManager_deleteConnAll:
-    case Rpc_StatManager_resetAppTrafTotals:
-    case Rpc_StatManager_clearTraffic:
-        return true;
+        0, // Rpc_Result_Ok,
+        0, // Rpc_Result_Error,
 
-    case Rpc_TaskManager_runTask:
-    case Rpc_TaskManager_abortTask:
-        return true;
+        0, // Rpc_RpcManager_initClient,
 
-    default:
-        return false;
-    }
+        true, // Rpc_AppInfoManager_lookupAppInfo,
+        0, // Rpc_AppInfoManager_checkLookupFinished,
+
+        true, // Rpc_ConfManager_save,
+        true, // Rpc_ConfManager_addApp,
+        true, // Rpc_ConfManager_deleteApp,
+        true, // Rpc_ConfManager_purgeApps,
+        true, // Rpc_ConfManager_updateApp,
+        true, // Rpc_ConfManager_updateAppBlocked,
+        true, // Rpc_ConfManager_updateAppName,
+        true, // Rpc_ConfManager_addZone,
+        true, // Rpc_ConfManager_deleteZone,
+        true, // Rpc_ConfManager_updateZone,
+        true, // Rpc_ConfManager_updateZoneName,
+        true, // Rpc_ConfManager_updateZoneEnabled,
+        0, // Rpc_ConfManager_checkPassword,
+        0, // Rpc_ConfManager_confChanged,
+        0, // Rpc_ConfManager_appEndTimesUpdated,
+        0, // Rpc_ConfManager_appAlerted,
+        0, // Rpc_ConfManager_appChanged,
+        0, // Rpc_ConfManager_appUpdated,
+        0, // Rpc_ConfManager_zoneAdded,
+        0, // Rpc_ConfManager_zoneRemoved,
+        0, // Rpc_ConfManager_zoneUpdated,
+
+        0, // Rpc_DriverManager_updateState,
+
+        0, // Rpc_QuotaManager_alert,
+
+        true, // Rpc_StatManager_deleteStatApp,
+        true, // Rpc_StatManager_deleteConn,
+        true, // Rpc_StatManager_deleteConnAll,
+        true, // Rpc_StatManager_resetAppTrafTotals,
+        true, // Rpc_StatManager_clearTraffic,
+        0, // Rpc_StatManager_trafficCleared,
+        0, // Rpc_StatManager_appStatRemoved,
+        0, // Rpc_StatManager_appCreated,
+        0, // Rpc_StatManager_trafficAdded,
+        0, // Rpc_StatManager_connChanged,
+        0, // Rpc_StatManager_appTrafTotalsResetted,
+
+        true, // Rpc_TaskManager_runTask,
+        true, // Rpc_TaskManager_abortTask,
+        0, // Rpc_TaskManager_taskStarted,
+        0, // Rpc_TaskManager_taskFinished,
+    };
+
+    return g_commandValidations[cmd];
 }
 
 QDebug operator<<(QDebug debug, Command cmd)
