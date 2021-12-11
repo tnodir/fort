@@ -65,9 +65,6 @@ protected:
     static qint32 getTrafCount(TrafType type, qint32 minTrafTime, qint32 maxTrafTime);
     static qint32 getMaxTrafTime(TrafType type);
 
-    static const char *getSqlMinTrafTime(TrafType type, qint64 appId);
-    static const char *getSqlSelectTraffic(TrafType type, qint64 appId);
-
 private:
     bool m_isEmpty = false;
 
