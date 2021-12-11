@@ -66,7 +66,7 @@ static NTSTATUS GetModuleInfoList(PAUX_MODULE_EXTENDED_INFO *outModules, DWORD *
     return status;
 }
 
-static VOID CopyZeroSectionTable(
+static VOID ZeroDataSectionTable(
         PUCHAR codeBase, const PIMAGE_NT_HEADERS pNtHeaders, const PIMAGE_SECTION_HEADER section)
 {
     /* Section doesn't contain data in the dll itself, but may define uninitialized data. */
@@ -89,6 +89,11 @@ static NTSTATUS CopyDataSectionTable(PUCHAR codeBase, const PIMAGE_NT_HEADERS pN
         const PUCHAR pData, SIZE_T size, const PIMAGE_SECTION_HEADER section)
 {
     const DWORD sectionSize = section->SizeOfRawData;
+    if (sectionSize == 0) {
+        ZeroDataSectionTable(codeBase, pNtHeaders, section);
+        return STATUS_SUCCESS;
+    }
+
     if ((SIZE_T) section->PointerToRawData + sectionSize > size)
         return STATUS_INVALID_IMAGE_FORMAT;
 
@@ -119,13 +124,9 @@ static NTSTATUS CopySectionTable(
     const int numberOfSections = pNtHeaders->FileHeader.NumberOfSections;
 
     for (int i = 0; i < numberOfSections; ++i, ++section) {
-        if (section->SizeOfRawData == 0) {
-            CopyZeroSectionTable(codeBase, pNtHeaders, section);
-        } else {
-            status = CopyDataSectionTable(codeBase, pNtHeaders, pData, size, section);
-            if (!NT_SUCCESS(status))
-                break;
-        }
+        status = CopyDataSectionTable(codeBase, pNtHeaders, pData, size, section);
+        if (!NT_SUCCESS(status))
+            break;
     }
 
     return status;
