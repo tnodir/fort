@@ -171,6 +171,42 @@ static NTSTATUS PerformBaseRelocation(
     return STATUS_SUCCESS;
 }
 
+/* Build the import address table: Library functions. */
+static NTSTATUS BuildImportTableLibrary(PUCHAR codeBase, const PIMAGE_IMPORT_DESCRIPTOR importDesc,
+        LPCSTR libName, LOADEDMODULE libModule)
+{
+    NTSTATUS status = STATUS_SUCCESS;
+
+    const DWORD originalFirstThunk = (importDesc->OriginalFirstThunk != 0)
+            ? importDesc->OriginalFirstThunk
+            : importDesc->FirstThunk;
+    uintptr_t *thunkRef = (uintptr_t *) (codeBase + originalFirstThunk);
+    FARPROC *funcRef = (FARPROC *) (codeBase + importDesc->FirstThunk);
+
+    for (; *thunkRef; ++thunkRef, ++funcRef) {
+        LPCSTR funcName;
+        if (IMAGE_SNAP_BY_ORDINAL(*thunkRef)) {
+            funcName = (LPCSTR) IMAGE_ORDINAL(*thunkRef);
+        } else {
+            const PIMAGE_IMPORT_BY_NAME thunkData =
+                    (PIMAGE_IMPORT_BY_NAME) (codeBase + (*thunkRef));
+            funcName = (LPCSTR) &thunkData->Name;
+        }
+
+        *funcRef = ModuleGetProcAddress(&libModule, funcName);
+        if (*funcRef == 0) {
+            DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                    "FORT: Loader Module: Error: Procedure Not Found: %s: %s\n", libName, funcName);
+            status = STATUS_PROCEDURE_NOT_FOUND;
+        } else {
+            DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                    "FORT: Loader Module: Import: %s: %s: %p\n", libName, funcName, *funcRef);
+        }
+    }
+
+    return status;
+}
+
 /* Build the import address table. */
 static NTSTATUS BuildImportTable(PUCHAR codeBase, PIMAGE_NT_HEADERS pHeaders)
 {
@@ -203,32 +239,11 @@ static NTSTATUS BuildImportTable(PUCHAR codeBase, PIMAGE_NT_HEADERS pHeaders)
             break;
         }
 
-        const DWORD originalFirstThunk = (importDesc->OriginalFirstThunk != 0)
-                ? importDesc->OriginalFirstThunk
-                : importDesc->FirstThunk;
-        uintptr_t *thunkRef = (uintptr_t *) (codeBase + originalFirstThunk);
-        FARPROC *funcRef = (FARPROC *) (codeBase + importDesc->FirstThunk);
-
-        for (; *thunkRef; ++thunkRef, ++funcRef) {
-            LPCSTR funcName;
-            if (IMAGE_SNAP_BY_ORDINAL(*thunkRef)) {
-                funcName = (LPCSTR) IMAGE_ORDINAL(*thunkRef);
-            } else {
-                const PIMAGE_IMPORT_BY_NAME thunkData =
-                        (PIMAGE_IMPORT_BY_NAME) (codeBase + (*thunkRef));
-                funcName = (LPCSTR) &thunkData->Name;
-            }
-
-            *funcRef = ModuleGetProcAddress(&libModule, funcName);
-            if (*funcRef == 0) {
-                DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                        "FORT: Loader Module: Error: Procedure Not Found: %s: %s\n", libName,
-                        funcName);
-                status = STATUS_PROCEDURE_NOT_FOUND;
-            } else {
-                DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                        "FORT: Loader Module: Import: %s: %s: %p\n", libName, funcName, *funcRef);
-            }
+        status = BuildImportTableLibrary(codeBase, importDesc, libName, libModule);
+        if (!NT_SUCCESS(status)) {
+            DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                    "FORT: Loader Module: Library Import Error: %s\n", libName);
+            break;
         }
     }
 
