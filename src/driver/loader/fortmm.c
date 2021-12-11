@@ -238,6 +238,35 @@ static NTSTATUS BuildImportTable(PUCHAR codeBase, PIMAGE_NT_HEADERS pHeaders)
     return status;
 }
 
+static BOOL CheckPEHeaderSections(const PIMAGE_NT_HEADERS pNtHeaders)
+{
+    SIZE_T lastSectionEnd = 0;
+    PIMAGE_SECTION_HEADER pSection = IMAGE_FIRST_SECTION(pNtHeaders);
+
+    const int numberOfSections = pNtHeaders->FileHeader.NumberOfSections;
+
+    for (int i = 0; i < numberOfSections; ++i, ++pSection) {
+        SIZE_T endOfSection;
+        if (pSection->SizeOfRawData == 0) {
+            /* Section without data in the DLL */
+            endOfSection =
+                    (SIZE_T) pSection->VirtualAddress + pNtHeaders->OptionalHeader.SectionAlignment;
+        } else {
+            endOfSection = (SIZE_T) pSection->VirtualAddress + pSection->SizeOfRawData;
+        }
+
+        if (endOfSection > lastSectionEnd) {
+            lastSectionEnd = endOfSection;
+        }
+    }
+
+    const SIZE_T imageSize = MAX_ALIGNED(pNtHeaders->OptionalHeader.SizeOfImage, PAGE_SIZE);
+    if (imageSize != MAX_ALIGNED(lastSectionEnd, PAGE_SIZE))
+        return STATUS_INVALID_IMAGE_FORMAT;
+
+    return TRUE;
+}
+
 static BOOL IsPEHeaderValid(PVOID lpData, DWORD dwSize)
 {
     const PIMAGE_DOS_HEADER pDosHeader = (PIMAGE_DOS_HEADER) lpData;
@@ -279,31 +308,7 @@ static BOOL IsPEHeaderValid(PVOID lpData, DWORD dwSize)
         return FALSE;
 
     /* Check sections */
-    SIZE_T lastSectionEnd = 0;
-    PIMAGE_SECTION_HEADER pSection = IMAGE_FIRST_SECTION(pNtHeaders);
-
-    const int numberOfSections = pNtHeaders->FileHeader.NumberOfSections;
-
-    for (int i = 0; i < numberOfSections; ++i, ++pSection) {
-        SIZE_T endOfSection;
-        if (pSection->SizeOfRawData == 0) {
-            /* Section without data in the DLL */
-            endOfSection =
-                    (SIZE_T) pSection->VirtualAddress + pNtHeaders->OptionalHeader.SectionAlignment;
-        } else {
-            endOfSection = (SIZE_T) pSection->VirtualAddress + pSection->SizeOfRawData;
-        }
-
-        if (endOfSection > lastSectionEnd) {
-            lastSectionEnd = endOfSection;
-        }
-    }
-
-    const SIZE_T imageSize = MAX_ALIGNED(pNtHeaders->OptionalHeader.SizeOfImage, PAGE_SIZE);
-    if (imageSize != MAX_ALIGNED(lastSectionEnd, PAGE_SIZE))
-        return STATUS_INVALID_IMAGE_FORMAT;
-
-    return TRUE;
+    return CheckPEHeaderSections(pNtHeaders);
 }
 
 static NTSTATUS InitializeModuleImage(
