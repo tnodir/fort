@@ -78,17 +78,18 @@ static NTSTATUS CopySectionTable(
         if (section->SizeOfRawData == 0) {
             /* Section doesn't contain data in the dll itself, but may define uninitialized data. */
             const DWORD sectionSize = pNtHeaders->OptionalHeader.SectionAlignment;
-            if (sectionSize > 0) {
-                /* Always use position from file to support alignments smaller than page size. */
-                const PUCHAR dest = codeBase + section->VirtualAddress;
-                RtlZeroMemory(dest, sectionSize);
+            if (sectionSize == 0)
+                continue; /* Ignore the empty section. */
 
-                section->Misc.PhysicalAddress = (DWORD) (uintptr_t) dest;
+            /* Always use position from file to support alignments smaller than page size. */
+            const PUCHAR dest = codeBase + section->VirtualAddress;
+            RtlZeroMemory(dest, sectionSize);
 
-                DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                        "FORT: Loader Module: Zero Section: offset=%d size=%d\n",
-                        section->VirtualAddress, sectionSize);
-            }
+            section->Misc.PhysicalAddress = (DWORD) (uintptr_t) dest;
+
+            DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                    "FORT: Loader Module: Zero Section: offset=%d size=%d\n",
+                    section->VirtualAddress, sectionSize);
         } else {
             const DWORD sectionSize = section->SizeOfRawData;
             if (size < (SIZE_T) section->PointerToRawData + sectionSize)
