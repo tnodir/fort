@@ -291,32 +291,31 @@ QStringList SqliteDb::columnNames(const QString &tableName, const QString &schem
     return list;
 }
 
-bool SqliteDb::migrate(const QString &sqlDir, const char *sqlPragmas, int version, bool recreate,
-        bool importOldData, SQLITEDB_MIGRATE_FUNC migrateFunc, void *migrateContext)
+bool SqliteDb::migrate(MigrateOptions &opt)
 {
-    if (!sqlPragmas) {
-        sqlPragmas = defaultSqlPragmas;
+    if (!opt.sqlPragmas) {
+        opt.sqlPragmas = defaultSqlPragmas;
     }
-    execute(sqlPragmas);
+    execute(opt.sqlPragmas);
 
     // Check version
     int userVersion = this->userVersion();
-    if (userVersion == version)
+    if (userVersion == opt.version)
         return true;
 
-    if (userVersion > version) {
-        dbWarning() << "Cannot open new DB" << userVersion << "from old application" << version;
+    if (userVersion > opt.version) {
+        dbWarning() << "Cannot open new DB" << userVersion << "from old application" << opt.version;
         return false;
     }
 
     bool isNewDb = (userVersion == 0);
     if (isNewDb) {
-        recreate = false;
+        opt.recreate = false;
     }
 
     // Re-create the DB
-    if (recreate) {
-        if (!clearWithBackup(sqlPragmas))
+    if (opt.recreate) {
+        if (!clearWithBackup(opt.sqlPragmas))
             return false;
 
         userVersion = 0;
@@ -324,26 +323,24 @@ bool SqliteDb::migrate(const QString &sqlDir, const char *sqlPragmas, int versio
     }
 
     // Run migration SQL scripts
-    bool success =
-            migrateSqlScripts(sqlDir, version, userVersion, isNewDb, migrateFunc, migrateContext);
+    bool success = migrateSqlScripts(opt, userVersion, isNewDb);
 
     // Re-create the DB: End
-    if (success && recreate) {
-        success = importBackup(importOldData, migrateFunc, migrateContext);
+    if (success && opt.recreate) {
+        success = importBackup(opt.importOldData, opt.migrateFunc, opt.migrateContext);
     }
 
     return success;
 }
 
-bool SqliteDb::migrateSqlScripts(const QString &sqlDir, int version, int userVersion, bool isNewDb,
-        SQLITEDB_MIGRATE_FUNC migrateFunc, void *migrateContext)
+bool SqliteDb::migrateSqlScripts(const MigrateOptions &opt, int userVersion, bool isNewDb)
 {
-    QDir dir(sqlDir);
+    const QDir dir(opt.sqlDir);
     bool success = true;
 
     beginTransaction();
 
-    while (userVersion < version) {
+    while (userVersion < opt.version) {
         ++userVersion;
 
         const QString filePath = dir.filePath(QString("%1.sql").arg(userVersion));
@@ -368,8 +365,8 @@ bool SqliteDb::migrateSqlScripts(const QString &sqlDir, int version, int userVer
             success = execute(data.constData());
         }
 
-        if (success && migrateFunc) {
-            success = migrateFunc(this, userVersion, isNewDb, migrateContext);
+        if (success && opt.migrateFunc) {
+            success = opt.migrateFunc(this, userVersion, isNewDb, opt.migrateContext);
         }
 
         if (success) {

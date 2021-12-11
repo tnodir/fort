@@ -78,8 +78,12 @@ void AppInfoManager::setUp()
         return;
     }
 
-    if (!sqliteDb()->migrate(
-                ":/appinfo/migrations", nullptr, DATABASE_USER_VERSION, /*recreate=*/true)) {
+    SqliteDb::MigrateOptions opt = { .sqlDir = ":/appinfo/migrations",
+        .version = DATABASE_USER_VERSION,
+        .recreate = true,
+        .importOldData = false };
+
+    if (!sqliteDb()->migrate(opt)) {
         logCritical() << "Migration error" << sqliteDb()->filePath();
         return;
     }

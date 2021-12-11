@@ -424,8 +424,12 @@ void ConfManager::setUp()
         return;
     }
 
-    if (!sqliteDb()->migrate(":/conf/migrations", nullptr, DATABASE_USER_VERSION, /*recreate=*/true,
-                /*importOldData=*/true, &migrateFunc)) {
+    SqliteDb::MigrateOptions opt = { .sqlDir = ":/conf/migrations",
+        .version = DATABASE_USER_VERSION,
+        .recreate = true,
+        .migrateFunc = &migrateFunc };
+
+    if (!sqliteDb()->migrate(opt)) {
         logCritical() << "Migration error" << sqliteDb()->filePath();
         return;
     }

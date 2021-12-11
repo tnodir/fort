@@ -1,7 +1,7 @@
 
 QT += gui network widgets
 
-CONFIG += c++17
+CONFIG += c++2a
 
 # Driver integration
 include($$PWD/../driver/Driver-include.pri)

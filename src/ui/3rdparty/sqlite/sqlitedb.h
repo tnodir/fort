@@ -32,6 +32,17 @@ public:
         OpenDefaultReadWrite = (OpenReadWrite | OpenCreate | OpenNoMutex)
     };
 
+    struct MigrateOptions
+    {
+        const QString sqlDir;
+        const char *sqlPragmas = nullptr;
+        int version = 0;
+        bool recreate = true;
+        bool importOldData = true;
+        SQLITEDB_MIGRATE_FUNC migrateFunc = nullptr;
+        void *migrateContext = nullptr;
+    };
+
     explicit SqliteDb(
             const QString &filePath = QString(), quint32 openFlags = OpenDefaultReadWrite);
     ~SqliteDb();
@@ -90,15 +101,12 @@ public:
     QStringList tableNames(const QString &schemaName = QString());
     QStringList columnNames(const QString &tableName, const QString &schemaName = QString());
 
-    bool migrate(const QString &sqlDir, const char *sqlPragmas, int version, bool recreate = false,
-            bool importOldData = false, SQLITEDB_MIGRATE_FUNC migrateFunc = nullptr,
-            void *migrateContext = nullptr);
+    bool migrate(SqliteDb::MigrateOptions &opt);
 
     SqliteStmt *stmt(const char *sql);
 
 private:
-    bool migrateSqlScripts(const QString &sqlDir, int version, int userVersion, bool isNewDb,
-            SQLITEDB_MIGRATE_FUNC migrateFunc, void *migrateContext);
+    bool migrateSqlScripts(const MigrateOptions &opt, int userVersion, bool isNewDb);
 
     bool clearWithBackup(const char *sqlPragmas);
     bool importBackup(bool importOldData, SQLITEDB_MIGRATE_FUNC migrateFunc, void *migrateContext);
