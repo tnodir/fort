@@ -85,51 +85,39 @@ static VOID ZeroDataSectionTable(
             sectionSize);
 }
 
-static NTSTATUS CopyDataSectionTable(PUCHAR codeBase, const PIMAGE_NT_HEADERS pNtHeaders,
-        const PUCHAR pData, SIZE_T size, const PIMAGE_SECTION_HEADER section)
-{
-    const DWORD sectionSize = section->SizeOfRawData;
-    if (sectionSize == 0) {
-        ZeroDataSectionTable(codeBase, pNtHeaders, section);
-        return STATUS_SUCCESS;
-    }
-
-    if ((SIZE_T) section->PointerToRawData + sectionSize > size)
-        return STATUS_INVALID_IMAGE_FORMAT;
-
-    /* Always use position from file to support alignments smaller than page size. */
-    const PUCHAR dest = codeBase + section->VirtualAddress;
-    RtlCopyMemory(dest, pData + section->PointerToRawData, sectionSize);
-
-    /* NOTE: On 64bit systems we truncate to 32bit here but expand
-     * again later when "PhysicalAddress" is used.
-     */
-    section->Misc.PhysicalAddress = (DWORD) (uintptr_t) dest;
-
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-            "FORT: Loader Module: Copy Section: src-offset=%d offset=%d size=%d data=%x\n",
-            section->PointerToRawData, section->VirtualAddress, sectionSize, *(PDWORD) dest);
-
-    return STATUS_SUCCESS;
-}
-
 static NTSTATUS CopySectionTable(
         PUCHAR codeBase, const PIMAGE_NT_HEADERS pNtHeaders, const PUCHAR pData, SIZE_T size)
 {
-    NTSTATUS status = STATUS_SUCCESS;
-
     PIMAGE_NT_HEADERS pHeaders = fort_nt_headers(codeBase);
     PIMAGE_SECTION_HEADER section = IMAGE_FIRST_SECTION(pHeaders);
 
     const int numberOfSections = pNtHeaders->FileHeader.NumberOfSections;
 
     for (int i = 0; i < numberOfSections; ++i, ++section) {
-        status = CopyDataSectionTable(codeBase, pNtHeaders, pData, size, section);
-        if (!NT_SUCCESS(status))
-            break;
+        const DWORD sectionSize = section->SizeOfRawData;
+        if (sectionSize == 0) {
+            ZeroDataSectionTable(codeBase, pNtHeaders, section);
+            continue;
+        }
+
+        if ((SIZE_T) section->PointerToRawData + sectionSize > size)
+            return STATUS_INVALID_IMAGE_FORMAT;
+
+        /* Always use position from file to support alignments smaller than page size. */
+        const PUCHAR dest = codeBase + section->VirtualAddress;
+        RtlCopyMemory(dest, pData + section->PointerToRawData, sectionSize);
+
+        /* NOTE: On 64bit systems we truncate to 32bit here but expand
+         * again later when "PhysicalAddress" is used.
+         */
+        section->Misc.PhysicalAddress = (DWORD) (uintptr_t) dest;
+
+        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                "FORT: Loader Module: Copy Section: src-offset=%d offset=%d size=%d data=%x\n",
+                section->PointerToRawData, section->VirtualAddress, sectionSize, *(PDWORD) dest);
     }
 
-    return status;
+    return STATUS_SUCCESS;
 }
 
 /*
