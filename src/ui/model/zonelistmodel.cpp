@@ -44,18 +44,7 @@ int ZoneListModel::columnCount(const QModelIndex &parent) const
 QVariant ZoneListModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && (role == Qt::DisplayRole || role == Qt::ToolTipRole)) {
-        switch (section) {
-        case 0:
-            return tr("Zone");
-        case 1:
-            return tr("Source");
-        case 2:
-            return tr("Addresses");
-        case 3:
-            return tr("Last Run");
-        case 4:
-            return tr("Last Success");
-        }
+        return headerDataDisplay(section);
     }
     return QVariant();
 }
@@ -76,6 +65,23 @@ QVariant ZoneListModel::data(const QModelIndex &index, int role) const
         return dataCheckState(index);
     }
 
+    return QVariant();
+}
+
+QVariant ZoneListModel::headerDataDisplay(int section) const
+{
+    switch (section) {
+    case 0:
+        return tr("Zone");
+    case 1:
+        return tr("Source");
+    case 2:
+        return tr("Addresses");
+    case 3:
+        return tr("Last Run");
+    case 4:
+        return tr("Last Success");
+    }
     return QVariant();
 }
 
