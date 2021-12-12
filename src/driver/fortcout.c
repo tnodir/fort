@@ -275,6 +275,43 @@ static void fort_callout_flow_classify_v4(const FWPS_INCOMING_METADATA_VALUES0 *
     fort_flow_classify(&fort_device()->stat, flowContext, headerSize + dataSize, is_tcp, inbound);
 }
 
+static BOOL fort_callout_stream_classify_v4_fragment(const FWPS_INCOMING_VALUES0 *inFixedValues,
+        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, FWPS_STREAM_CALLOUT_IO_PACKET0 *packet,
+        const FWPS_FILTER0 *filter, UINT64 flowContext)
+{
+    PFORT_FLOW flow = (PFORT_FLOW) flowContext;
+
+    const UCHAR flow_flags = fort_flow_flags(flow);
+
+    const UCHAR fragment_flags =
+            (flow_flags & (FORT_FLOW_FRAGMENT | FORT_FLOW_FRAGMENT_DEFER | FORT_FLOW_FRAGMENTED));
+
+    if (fragment_flags != 0 && !(fragment_flags & FORT_FLOW_FRAGMENTED)) {
+        const FWPS_STREAM_DATA0 *streamData = packet->streamData;
+        const UINT32 streamFlags = streamData->flags;
+        const UINT32 dataSize = (UINT32) streamData->dataLength;
+
+        const BOOL inbound = (streamFlags & FWPS_STREAM_FLAG_RECEIVE) != 0;
+        const UCHAR fragment_size = 3;
+
+        if (fragment_flags & FORT_FLOW_FRAGMENT_DEFER) {
+            const NTSTATUS status = fort_defer_stream_add(&fort_device()->defer, inFixedValues,
+                    inMetaValues, streamData, filter, inbound);
+
+            if (NT_SUCCESS(status))
+                return TRUE;
+
+            fort_flow_flags_set(flow, FORT_FLOW_FRAGMENTED, TRUE);
+        } else if (dataSize > fragment_size) {
+            packet->countBytesEnforced = fragment_size;
+
+            fort_flow_flags_set(flow, FORT_FLOW_FRAGMENT_DEFER, TRUE);
+        }
+    }
+
+    return FALSE;
+}
+
 static void NTAPI fort_callout_stream_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, FWPS_STREAM_CALLOUT_IO_PACKET0 *packet,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
@@ -313,32 +350,10 @@ static void NTAPI fort_callout_stream_classify_v4(const FWPS_INCOMING_VALUES0 *i
     if ((streamFlags
                 & (FWPS_STREAM_FLAG_SEND | FWPS_STREAM_FLAG_SEND_EXPEDITED
                         | FWPS_STREAM_FLAG_SEND_DISCONNECT))
-            == FWPS_STREAM_FLAG_SEND) {
-        PFORT_FLOW flow = (PFORT_FLOW) flowContext;
-
-        const UCHAR flow_flags = fort_flow_flags(flow);
-
-        const UCHAR fragment_flags = (flow_flags
-                & (FORT_FLOW_FRAGMENT | FORT_FLOW_FRAGMENT_DEFER | FORT_FLOW_FRAGMENTED));
-
-        if (fragment_flags != 0 && !(fragment_flags & FORT_FLOW_FRAGMENTED)) {
-            const UCHAR fragment_size = 3;
-
-            if (fragment_flags & FORT_FLOW_FRAGMENT_DEFER) {
-                const NTSTATUS status = fort_defer_stream_add(&fort_device()->defer, inFixedValues,
-                        inMetaValues, streamData, filter, inbound);
-
-                if (NT_SUCCESS(status))
-                    goto drop;
-
-                fort_flow_flags_set(flow, FORT_FLOW_FRAGMENTED, TRUE);
-            } else if (dataSize > fragment_size) {
-                packet->countBytesEnforced = fragment_size;
-
-                fort_flow_flags_set(flow, FORT_FLOW_FRAGMENT_DEFER, TRUE);
-            }
-        }
-    }
+                    == FWPS_STREAM_FLAG_SEND
+            && fort_callout_stream_classify_v4_fragment(
+                    inFixedValues, inMetaValues, packet, filter, flowContext))
+        goto drop;
 
     /* permit: */
     fort_callout_classify_permit(filter, classifyOut);
