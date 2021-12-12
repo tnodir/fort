@@ -279,6 +279,15 @@ static BOOL fort_callout_stream_classify_v4_fragment(const FWPS_INCOMING_VALUES0
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, FWPS_STREAM_CALLOUT_IO_PACKET0 *packet,
         const FWPS_FILTER0 *filter, UINT64 flowContext)
 {
+    const FWPS_STREAM_DATA0 *streamData = packet->streamData;
+    const UINT32 streamFlags = streamData->flags;
+
+    if ((streamFlags
+                & (FWPS_STREAM_FLAG_SEND | FWPS_STREAM_FLAG_SEND_EXPEDITED
+                        | FWPS_STREAM_FLAG_SEND_DISCONNECT))
+            != FWPS_STREAM_FLAG_SEND)
+        return FALSE;
+
     PFORT_FLOW flow = (PFORT_FLOW) flowContext;
 
     const UCHAR flow_flags = fort_flow_flags(flow);
@@ -287,10 +296,7 @@ static BOOL fort_callout_stream_classify_v4_fragment(const FWPS_INCOMING_VALUES0
             (flow_flags & (FORT_FLOW_FRAGMENT | FORT_FLOW_FRAGMENT_DEFER | FORT_FLOW_FRAGMENTED));
 
     if (fragment_flags != 0 && !(fragment_flags & FORT_FLOW_FRAGMENTED)) {
-        const FWPS_STREAM_DATA0 *streamData = packet->streamData;
-        const UINT32 streamFlags = streamData->flags;
         const UINT32 dataSize = (UINT32) streamData->dataLength;
-
         const BOOL inbound = (streamFlags & FWPS_STREAM_FLAG_RECEIVE) != 0;
         const UCHAR fragment_size = 3;
 
@@ -328,31 +334,26 @@ static void NTAPI fort_callout_stream_classify_v4(const FWPS_INCOMING_VALUES0 *i
 
 /* Flush flow's deferred TCP packets on FIN */
 #if 0
-  if (streamFlags & (FWPS_STREAM_FLAG_RECEIVE_DISCONNECT
-      | FWPS_STREAM_FLAG_SEND_DISCONNECT)) {
-    PFORT_FLOW flow = (PFORT_FLOW) flowContext;
+    if (streamFlags & (FWPS_STREAM_FLAG_RECEIVE_DISCONNECT | FWPS_STREAM_FLAG_SEND_DISCONNECT)) {
+        PFORT_FLOW flow = (PFORT_FLOW) flowContext;
 
-    const UCHAR flow_flags = fort_flow_flags(flow);
+        const UCHAR flow_flags = fort_flow_flags(flow);
 
-    if (flow_flags & FORT_FLOW_SPEED_LIMIT) {
-      fort_callout_defer_packet_flush(flow->flow_id, FORT_DEFER_FLUSH_ALL, FALSE);
+        if (flow_flags & FORT_FLOW_SPEED_LIMIT) {
+            fort_callout_defer_packet_flush(flow->flow_id, FORT_DEFER_FLUSH_ALL, FALSE);
+        }
+
+        if (flow_flags & FORT_FLOW_FRAGMENT) {
+            fort_callout_defer_stream_flush(flow->flow_id, FALSE);
+        }
+
+        goto permit;
     }
-
-    if (flow_flags & FORT_FLOW_FRAGMENT) {
-      fort_callout_defer_stream_flush(flow->flow_id, FALSE);
-    }
-
-    goto permit;
-  }
 #endif
 
     /* Fragment first TCP packet */
-    if ((streamFlags
-                & (FWPS_STREAM_FLAG_SEND | FWPS_STREAM_FLAG_SEND_EXPEDITED
-                        | FWPS_STREAM_FLAG_SEND_DISCONNECT))
-                    == FWPS_STREAM_FLAG_SEND
-            && fort_callout_stream_classify_v4_fragment(
-                    inFixedValues, inMetaValues, packet, filter, flowContext))
+    if (fort_callout_stream_classify_v4_fragment(
+                inFixedValues, inMetaValues, packet, filter, flowContext))
         goto drop;
 
     /* permit: */
