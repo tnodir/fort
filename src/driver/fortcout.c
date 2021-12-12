@@ -34,41 +34,14 @@ static void fort_callout_classify_continue(FWPS_CLASSIFY_OUT0 *classifyOut)
     classifyOut->actionType = FWP_ACTION_CONTINUE;
 }
 
-static BOOL fort_callout_classify_v4_blocked(const FWPS_INCOMING_VALUES0 *inFixedValues,
+static BOOL fort_callout_classify_v4_blocked_log(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const FWPS_FILTER0 *filter,
         FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField, int remoteIpField,
         int localPortField, int remotePortField, int ipProtoField, BOOL inbound,
         UINT32 classify_flags, UINT32 remote_ip, FORT_CONF_FLAGS conf_flags, UINT32 process_id,
-        UINT32 path_len, PVOID path, PFORT_CONF_REF conf_ref, INT8 *block_reason, PIRP *irp,
-        ULONG_PTR *info)
+        UINT32 path_len, PVOID path, PFORT_CONF_REF conf_ref, INT8 *block_reason, BOOL blocked,
+        PIRP *irp, ULONG_PTR *info)
 {
-    BOOL blocked = TRUE;
-
-    if (conf_flags.filter_enabled) {
-        if (conf_flags.stop_traffic)
-            return TRUE; /* block all */
-
-        if (!fort_conf_ip_is_inet(&conf_ref->conf,
-                    (fort_conf_zones_ip_included_func *) fort_conf_zones_ip_included,
-                    &fort_device()->conf, remote_ip))
-            return FALSE; /* allow LocalNetwork */
-
-        if (conf_flags.stop_inet_traffic)
-            return TRUE; /* block Internet */
-
-        if (!fort_conf_ip_inet_included(&conf_ref->conf,
-                    (fort_conf_zones_ip_included_func *) fort_conf_zones_ip_included,
-                    &fort_device()->conf, remote_ip)) {
-            *block_reason = FORT_BLOCK_REASON_IP_INET;
-            return TRUE; /* block address */
-        }
-    } else {
-        if (!(conf_flags.log_stat && conf_flags.log_stat_no_filter))
-            return FALSE; /* allow (Filter Disabled) */
-
-        blocked = FALSE;
-    }
-
     FORT_APP_FLAGS app_flags =
             fort_conf_app_find(&conf_ref->conf, path, path_len, fort_conf_exe_find);
 
@@ -120,6 +93,47 @@ static BOOL fort_callout_classify_v4_blocked(const FWPS_INCOMING_VALUES0 *inFixe
     }
 
     return blocked;
+}
+
+static BOOL fort_callout_classify_v4_blocked(const FWPS_INCOMING_VALUES0 *inFixedValues,
+        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const FWPS_FILTER0 *filter,
+        FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField, int remoteIpField,
+        int localPortField, int remotePortField, int ipProtoField, BOOL inbound,
+        UINT32 classify_flags, UINT32 remote_ip, FORT_CONF_FLAGS conf_flags, UINT32 process_id,
+        UINT32 path_len, PVOID path, PFORT_CONF_REF conf_ref, INT8 *block_reason, PIRP *irp,
+        ULONG_PTR *info)
+{
+    BOOL blocked = TRUE;
+
+    if (conf_flags.filter_enabled) {
+        if (conf_flags.stop_traffic)
+            return TRUE; /* block all */
+
+        if (!fort_conf_ip_is_inet(&conf_ref->conf,
+                    (fort_conf_zones_ip_included_func *) fort_conf_zones_ip_included,
+                    &fort_device()->conf, remote_ip))
+            return FALSE; /* allow LocalNetwork */
+
+        if (conf_flags.stop_inet_traffic)
+            return TRUE; /* block Internet */
+
+        if (!fort_conf_ip_inet_included(&conf_ref->conf,
+                    (fort_conf_zones_ip_included_func *) fort_conf_zones_ip_included,
+                    &fort_device()->conf, remote_ip)) {
+            *block_reason = FORT_BLOCK_REASON_IP_INET;
+            return TRUE; /* block address */
+        }
+    } else {
+        if (!(conf_flags.log_stat && conf_flags.log_stat_no_filter))
+            return FALSE; /* allow (Filter Disabled) */
+
+        blocked = FALSE;
+    }
+
+    return fort_callout_classify_v4_blocked_log(inFixedValues, inMetaValues, filter, classifyOut,
+            flagsField, localIpField, remoteIpField, localPortField, remotePortField, ipProtoField,
+            inbound, classify_flags, remote_ip, conf_flags, process_id, path_len, path, conf_ref,
+            block_reason, blocked, irp, info);
 }
 
 static void fort_callout_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
