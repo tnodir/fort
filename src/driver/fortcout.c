@@ -86,10 +86,9 @@ static BOOL fort_callout_classify_v4_blocked(const FWPS_INCOMING_VALUES0 *inFixe
             const BOOL is_reauth = (classify_flags & FWP_CONDITION_FLAG_IS_REAUTHORIZE);
 
             BOOL is_new_proc = FALSE;
-            NTSTATUS status;
 
-            status = fort_flow_associate(&fort_device()->stat, flow_id, process_id, group_index,
-                    is_tcp, is_reauth, &is_new_proc);
+            const NTSTATUS status = fort_flow_associate(&fort_device()->stat, flow_id, process_id,
+                    group_index, is_tcp, is_reauth, &is_new_proc);
 
             if (!NT_SUCCESS(status)) {
                 if (status == FORT_STATUS_FLOW_BLOCK) {
