@@ -14,3 +14,6 @@ SOURCES += \
 
 HEADERS += \
     driverpayload.h
+
+# Windows
+LIBS *= -limagehlp

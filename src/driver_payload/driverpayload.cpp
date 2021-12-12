@@ -8,10 +8,14 @@
 #include <qt_windows.h>
 
 #include <bcrypt.h>
+#include <imagehlp.h>
 
 #include <util/fileutil.h>
 
 namespace {
+
+constexpr int COFF_MAGIC_OFFSET = 20;
+constexpr int COFF_CHECKSUM_OFFSET = COFF_MAGIC_OFFSET + 64;
 
 constexpr quint16 readUInt16(const char *cp, int offset)
 {
@@ -46,10 +50,8 @@ QByteArray readFile(const QString &filePath, int maxSize, int minSize = 1024)
     return data;
 }
 
-bool writeFile(const QString &filePath, const QByteArrayList &dataList)
+bool writeFile(const QString &filePath, const QByteArray &data)
 {
-    const QByteArray data = dataList.join();
-
     if (!FileUtil::writeFileData(filePath, data)) {
         qCritical() << "File write error:" << filePath;
         return false;
@@ -98,19 +100,12 @@ bool getCoffHeaderOffset(const QByteArray &data, int &outCoffHeaderOffset)
     return true;
 }
 
-bool getCertTableSize(const QByteArray &data, int &outCertEntrySizeOffset, int &outCertTableOffset,
+bool getCertTableSize(const QByteArray &data, int coffHeaderOffset, int &outCertEntrySizeOffset,
         int &outCertTableSize)
 {
-    // Get a pointer to COFF Header
-    int coffHeaderOffset;
-    if (!getCoffHeaderOffset(data, coffHeaderOffset))
-        return false;
-
     const char *coffHeader = data.data() + coffHeaderOffset;
 
     // Get the COFF magic number
-    constexpr int COFF_MAGIC_OFFSET = 20;
-
     const quint16 magicNo = readUInt16(coffHeader, COFF_MAGIC_OFFSET);
 
     // Check the COFF magic number
@@ -138,14 +133,7 @@ bool getCertTableSize(const QByteArray &data, int &outCertEntrySizeOffset, int &
         return false;
     }
 
-    // Check Certificate table's size from its table
-    if (certTableSize != readUInt32(data.constData(), certTableOffset)) {
-        qCritical() << "Certificate table error: Size mismatch";
-        return false;
-    }
-
     outCertEntrySizeOffset = coffHeaderOffset + CERTIFICATE_ENTRY_SIZE_OFFSET;
-    outCertTableOffset = certTableOffset;
     outCertTableSize = certTableSize;
 
     return true;
@@ -279,6 +267,21 @@ bool createPayloadSignature(
     return ok;
 }
 
+DWORD calculateCheckSum(const QByteArray &data)
+{
+    DWORD headerSum;
+    DWORD checkSum;
+
+    if (CheckSumMappedFile((PVOID) data.data(), data.size(), &headerSum, &checkSum) == nullptr) {
+        qCritical() << "Calculate CheckSum error:" << GetLastError();
+        return 0;
+    }
+
+    qDebug() << "CheckSum:" << Qt::hex << checkSum;
+
+    return checkSum;
+}
+
 }
 
 void DriverPayload::processArguments(const QStringList &args)
@@ -326,20 +329,21 @@ void DriverPayload::processArguments(const QStringList &args)
 bool DriverPayload::createOutputFile()
 {
     // Read input & payload files
-    QByteArray inData = readFile(m_inputFilePath, 1 * 1024 * 1024);
+    const QByteArray inData = readFile(m_inputFilePath, 1 * 1024 * 1024);
     QByteArray payloadData = readFile(m_payloadFilePath, 3 * 1024 * 1024);
     if (inData.isEmpty() || payloadData.isEmpty())
         return false;
 
-    // Get the Certificate entry section's info
-    int certEntrySizeOffset;
-    int certTableOffset;
-    int certTableSize;
-    if (!getCertTableSize(inData, certEntrySizeOffset, certTableOffset, certTableSize))
+    // Get an offset of COFF Header
+    int coffHeaderOffset;
+    if (!getCoffHeaderOffset(inData, coffHeaderOffset))
         return false;
 
-    // Payload's empty certificate header
-    const QByteArray payloadHeader(8, '\0');
+    // Get the Certificate entry section's info
+    int certEntrySizeOffset;
+    int certTableSize;
+    if (!getCertTableSize(inData, coffHeaderOffset, certEntrySizeOffset, certTableSize))
+        return false;
 
     // Adjust padding of payload by required alignment
     adjustPayloadPadding(payloadData);
@@ -361,25 +365,40 @@ bool DriverPayload::createOutputFile()
         writeUInt32(cp, 4, payloadData.size());
     }
 
-    qDebug() << "Signature Size:" << signatureSize
-             << "Aligned Signature Size:" << payloadSignature.size()
-             << "Payload Size:" << payloadData.size();
+    constexpr int payloadHeaderSize = 8;
+    const int payloadTotalSize =
+            payloadHeaderSize + payloadData.size() + payloadSignature.size() + payloadInfo.size();
 
-    // Update the Certificate entry
+    // Payload's fake certificate header
+    QByteArray payloadHeader(payloadHeaderSize, '\0');
     {
-        const int newCertTableSize = certTableSize + payloadHeader.size() + payloadData.size()
-                + payloadSignature.size() + payloadInfo.size();
-        char *cp = inData.data();
-        writeUInt32(cp, certEntrySizeOffset, newCertTableSize);
-        writeUInt32(cp, certTableOffset, newCertTableSize);
+        char *cp = payloadHeader.data();
+        writeUInt32(cp, 0, payloadTotalSize);
+        writeUInt16(cp, 4, 0x0001); // Revision
+        writeUInt16(cp, 6, 0x0001); // CertificateType: WIN_CERT_TYPE_X509
     }
 
+    // Output data
+    QByteArray outData = inData + payloadHeader + payloadData + payloadSignature + payloadInfo;
+
+    // Update the original file
+    {
+        char *cp = outData.data();
+        // Certificate entry
+        writeUInt32(cp, certEntrySizeOffset, certTableSize + payloadTotalSize);
+        // CheckSum
+        writeUInt32(cp, coffHeaderOffset + COFF_CHECKSUM_OFFSET, calculateCheckSum(outData));
+    }
+
+    qDebug() << "Signature Size:" << signatureSize
+             << "Aligned Signature Size:" << payloadSignature.size()
+             << "Payload Size:" << payloadData.size() << "Appended Size:" << payloadTotalSize;
+
     // Write the input & payload data into output file
-    if (!writeFile(m_outputFilePath,
-                { inData, payloadHeader, payloadData, payloadSignature, payloadInfo }))
+    if (!writeFile(m_outputFilePath, outData))
         return false;
 
-    qDebug() << "Success:" << m_outputFilePath;
+    qDebug() << "Success!";
 
     return true;
 }
