@@ -294,40 +294,30 @@ static BOOL IsPEHeaderValid(PVOID lpData, DWORD dwSize)
 {
     const PIMAGE_DOS_HEADER pDosHeader = (PIMAGE_DOS_HEADER) lpData;
 
-    /* Check DOS header for valid signature */
-    if (pDosHeader->e_magic != IMAGE_DOS_SIGNATURE)
-        return FALSE;
-
-    /* Make sure size is at least size of PE header */
-    if (dwSize < (sizeof(IMAGE_DOS_HEADER) + sizeof(IMAGE_OPTIONAL_HEADER)))
+    if (pDosHeader->e_magic != IMAGE_DOS_SIGNATURE /* Check DOS header for valid signature */
+            /* Make sure size is at least size of headers */
+            || dwSize < (sizeof(IMAGE_DOS_HEADER) + sizeof(IMAGE_OPTIONAL_HEADER))
+            || dwSize < (pDosHeader->e_lfanew + sizeof(IMAGE_NT_HEADERS)))
         return FALSE;
 
     /* Check for optional headers */
     const PIMAGE_NT_HEADERS pNtHeaders =
             (PIMAGE_NT_HEADERS) & ((PUCHAR) lpData)[pDosHeader->e_lfanew];
 
-    /* Check NT header for valid signature */
-    if (pNtHeaders->Signature != IMAGE_NT_SIGNATURE)
-        return FALSE;
-
-    /* Check sizes */
-    if (dwSize < sizeof(IMAGE_DOS_HEADER) || dwSize < pNtHeaders->OptionalHeader.SizeOfHeaders
-            || dwSize < (pDosHeader->e_lfanew + sizeof(IMAGE_NT_HEADERS)))
-        return FALSE;
-
-    /* Check for the correct architecture */
-    if (pNtHeaders->FileHeader.Machine !=
+    if (pNtHeaders->Signature != IMAGE_NT_SIGNATURE /* Check NT header for valid signature */
+            /* Check size of optional headerss */
+            || dwSize < pNtHeaders->OptionalHeader.SizeOfHeaders
+            /* Check for the correct architecture */
+            || pNtHeaders->FileHeader.Machine !=
 #ifdef _WIN64
-            IMAGE_FILE_MACHINE_AMD64
+                    IMAGE_FILE_MACHINE_AMD64
 #else
-            IMAGE_FILE_MACHINE_I386
+                    IMAGE_FILE_MACHINE_I386
 #endif
-    )
-        return FALSE;
-
-    /* Check to see if the image is really an executable file */
-    if ((pNtHeaders->FileHeader.Characteristics & (IMAGE_FILE_EXECUTABLE_IMAGE | IMAGE_FILE_DLL))
-            == 0)
+            /* Check to see if the image is really an executable file */
+            || (pNtHeaders->FileHeader.Characteristics
+                       & (IMAGE_FILE_EXECUTABLE_IMAGE | IMAGE_FILE_DLL))
+                    == 0)
         return FALSE;
 
     /* Check sections */
