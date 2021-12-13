@@ -448,6 +448,27 @@ FORT_API NTSTATUS CallModuleEntry(
     return driverEntry(driver, regPath);
 }
 
+static int ModuleGetProcIndex(
+        const PUCHAR codeBase, const PIMAGE_EXPORT_DIRECTORY exports, LPCSTR funcName)
+{
+    if (HIWORD(funcName) == 0) {
+        /* Load function by ordinal value */
+        return LOWORD(funcName) - exports->Base;
+    }
+
+    /* Search function name in list of exported names */
+    DWORD *nameRef = (DWORD *) (codeBase + exports->AddressOfNames);
+    WORD *ordinal = (WORD *) (codeBase + exports->AddressOfNameOrdinals);
+
+    for (DWORD i = 0; i < exports->NumberOfNames; ++i, ++nameRef, ++ordinal) {
+        if (strcmp(funcName, (const char *) (codeBase + *nameRef)) == 0) {
+            return *ordinal;
+        }
+    }
+
+    return -1;
+}
+
 /* Retrieve address of an exported function from the loaded module. */
 FORT_API FARPROC ModuleGetProcAddress(PLOADEDMODULE pModule, LPCSTR funcName)
 {
@@ -464,23 +485,7 @@ FORT_API FARPROC ModuleGetProcAddress(PLOADEDMODULE pModule, LPCSTR funcName)
     if (exports->NumberOfNames == 0 || exports->NumberOfFunctions == 0)
         return NULL; /* Our modules must export 3 functions. */
 
-    int idx = -1;
-
-    if (HIWORD(funcName) == 0) {
-        /* Load function by ordinal value */
-        idx = LOWORD(funcName) - exports->Base;
-    } else {
-        /* Search function name in list of exported names */
-        DWORD *nameRef = (DWORD *) (codeBase + exports->AddressOfNames);
-        WORD *ordinal = (WORD *) (codeBase + exports->AddressOfNameOrdinals);
-
-        for (DWORD i = 0; i < exports->NumberOfNames; ++i, ++nameRef, ++ordinal) {
-            if (strcmp(funcName, (const char *) (codeBase + *nameRef)) == 0) {
-                idx = *ordinal;
-                break;
-            }
-        }
-    }
+    const int idx = ModuleGetProcIndex(codeBase, exports, funcName);
 
     if (idx < 0 || idx > (int) exports->NumberOfFunctions)
         return NULL; /* exported symbol not found or name <-> ordinal number don't match */
