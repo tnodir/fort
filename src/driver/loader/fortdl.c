@@ -39,19 +39,24 @@ static NTSTATUS fort_loader_entry(PDRIVER_OBJECT driver, PUNICODE_STRING regPath
     FORT_PROXYCB_INFO cbInfo;
     fort_proxycb_src_prepare(&cbInfo);
 
-    /* Run the module entry function */
-    status = CallModuleEntry(&g_loader.module, driver, regPath, &cbInfo);
+    /* Setup the module's callbacks */
+    status = SetupModuleCallbacks(&g_loader.module, &cbInfo);
     if (!NT_SUCCESS(status))
         return status;
 
     /* Setup the proxy callbacks */
     fort_proxycb_src_setup(&cbInfo);
 
-    /* Proxy the driver major functions */
+    /* Run the module's entry function */
+    status = CallModuleEntry(&g_loader.module, driver, regPath);
+    if (!NT_SUCCESS(status))
+        return status;
+
+    /* Proxy the driver's unload function */
     g_loader.DriverUnload = driver->DriverUnload;
     driver->DriverUnload = fort_loader_unload;
 
-    /* Setup the major functions */
+    /* Proxy the driver's major functions */
     fort_proxycb_drv_setup(driver->MajorFunction);
 
     return status;

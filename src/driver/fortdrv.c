@@ -63,6 +63,8 @@ static NTSTATUS fort_driver_load(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path
     if (!NT_SUCCESS(status))
         return status;
 
+    device_obj->Flags |= DO_BUFFERED_IO;
+
     UNICODE_STRING device_link;
 
     RtlInitUnicodeString(&device_link, FORT_DOS_DEVICE_NAME);
@@ -76,29 +78,27 @@ static NTSTATUS fort_driver_load(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path
     driver->MajorFunction[IRP_MJ_CLEANUP] = fort_device_cleanup;
     driver->MajorFunction[IRP_MJ_DEVICE_CONTROL] = fort_device_control;
 
-    device_obj->Flags |= DO_BUFFERED_IO;
-
     return fort_device_load(device_obj);
 }
 
-NTSTATUS __declspec(dllexport) DriverCallbackEntry(
-        PDRIVER_OBJECT driver, PUNICODE_STRING reg_path, PFORT_PROXYCB_INFO cb_info)
+NTSTATUS __declspec(dllexport) DriverCallbacksSetup(PFORT_PROXYCB_INFO cb_info)
+{
+    fort_callback_setup(cb_info);
+
+    return STATUS_SUCCESS;
+}
+
+NTSTATUS __declspec(dllexport) DriverEntry(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 {
     NTSTATUS status;
-
-    fort_callback_setup(cb_info);
 
     status = fort_driver_load(driver, reg_path);
 
     if (!NT_SUCCESS(status)) {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Entry: Error: %x\n", status);
+
         fort_driver_unload(driver);
     }
 
     return status;
-}
-
-NTSTATUS DriverEntry(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
-{
-    return DriverCallbackEntry(driver, reg_path, NULL);
 }

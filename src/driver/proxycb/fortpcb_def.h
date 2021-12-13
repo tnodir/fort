@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-typedef void (WINAPI *ProxyCallbackProc)(void);
+typedef void(WINAPI *ProxyCallbackProc)(void);
 
 typedef struct fort_proxycb_info
 {

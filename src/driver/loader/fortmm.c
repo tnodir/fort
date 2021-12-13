@@ -21,8 +21,9 @@
 #define fort_nt_headers(pImage)                                                                    \
     ((PIMAGE_NT_HEADERS) & ((PUCHAR) (pImage))[((PIMAGE_DOS_HEADER) pImage)->e_lfanew])
 
-typedef NTSTATUS(WINAPI *DriverCallbackEntryProc)(
-        PDRIVER_OBJECT driver, PUNICODE_STRING regPath, PFORT_PROXYCB_INFO cbInfo);
+typedef NTSTATUS(WINAPI *DriverCallbacksSetupProc)(PFORT_PROXYCB_INFO cbInfo);
+
+typedef NTSTATUS(WINAPI *DriverEntryProc)(PDRIVER_OBJECT driver, PUNICODE_STRING regPath);
 
 static NTSTATUS GetModuleInfo(PLOADEDMODULE pModule, LPCSTR name,
         const PAUX_MODULE_EXTENDED_INFO modules, DWORD modulesCount)
@@ -419,19 +420,32 @@ FORT_API void UnloadModule(PLOADEDMODULE pModule)
     }
 }
 
-FORT_API NTSTATUS CallModuleEntry(PLOADEDMODULE pModule, PDRIVER_OBJECT driver,
-        PUNICODE_STRING regPath, PFORT_PROXYCB_INFO cbInfo)
+NTSTATUS SetupModuleCallbacks(PLOADEDMODULE pModule, PFORT_PROXYCB_INFO cbInfo)
 {
-    DriverCallbackEntryProc driverEntry =
-            (DriverCallbackEntryProc) ModuleGetProcAddress(pModule, "DriverCallbackEntry");
+    DriverCallbacksSetupProc cbSetup =
+            (DriverCallbacksSetupProc) ModuleGetProcAddress(pModule, "DriverCallbacksSetup");
+    if (cbSetup == NULL)
+        return STATUS_PROCEDURE_NOT_FOUND;
+
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+            "FORT: Loader Module: Setup Callbacks: %p data=%x\n", cbSetup,
+            *(PDWORD) (PVOID) &cbSetup);
+
+    return cbSetup(cbInfo);
+}
+
+FORT_API NTSTATUS CallModuleEntry(
+        PLOADEDMODULE pModule, PDRIVER_OBJECT driver, PUNICODE_STRING regPath)
+{
+    DriverEntryProc driverEntry = (DriverEntryProc) ModuleGetProcAddress(pModule, "DriverEntry");
     if (driverEntry == NULL)
         return STATUS_PROCEDURE_NOT_FOUND;
 
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-            "FORT: Loader Module: Entry Proc: %p data=%x\n", driverEntry,
+            "FORT: Loader Module: Driver Entry: %p data=%x\n", driverEntry,
             *(PDWORD) (PVOID) &driverEntry);
 
-    return driverEntry(driver, regPath, cbInfo);
+    return driverEntry(driver, regPath);
 }
 
 /* Retrieve address of an exported function from the loaded module. */
