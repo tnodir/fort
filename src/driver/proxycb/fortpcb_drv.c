@@ -2,10 +2,6 @@
 
 #include "fortpcb_drv.h"
 
-#define FORT_DRIVER_MAJOR_FUNC_MAX (IRP_MJ_MAXIMUM_FUNCTION + 1)
-
-static_assert(FORT_DRIVER_MAJOR_FUNC_MAX == 28, "Driver Major Functions Count Mismatch");
-
 static PDRIVER_DISPATCH g_proxyDrvCallbacksArray[FORT_DRIVER_MAJOR_FUNC_MAX];
 
 #define ProxyMajorProc(i)                                                                          \
@@ -43,7 +39,7 @@ ProxyMajorProc(25);
 ProxyMajorProc(26);
 ProxyMajorProc(27);
 
-static PDRIVER_DISPATCH g_proxyMajorCallbacks[FORT_DRIVER_MAJOR_FUNC_MAX] = {
+static const PDRIVER_DISPATCH g_proxyMajorCallbacks[FORT_DRIVER_MAJOR_FUNC_MAX] = {
     proxyMajor0,
     proxyMajor1,
     proxyMajor2,

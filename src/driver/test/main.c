@@ -4,6 +4,7 @@
 #include <stdio.h>
 
 #include "../fortcb.h"
+#include "../proxycb/fortpcb_drv.h"
 #include "../proxycb/fortpcb_src.h"
 
 #define TEST_CALLBACK_ID 33
@@ -35,12 +36,37 @@ static void test_proxycb(void)
     assert(res == TEST_CALLBACK_ID);
 }
 
+static NTSTATUS test_major0(PDEVICE_OBJECT device, PIRP irp)
+{
+    printf("Major: %p %p\n", device, irp);
+    return STATUS_SUCCESS;
+}
+
+static void test_major(void)
+{
+    PDRIVER_DISPATCH major_funcs[FORT_DRIVER_MAJOR_FUNC_MAX];
+
+    fort_proxycb_drv_prepare(major_funcs);
+    major_funcs[0] = test_major0;
+    fort_proxycb_drv_setup(major_funcs);
+
+    PDRIVER_DISPATCH cb = major_funcs[0];
+
+    printf("test_major: src_cb=%p dst_cb=%p\n", cb, test_major0);
+
+    fflush(stdout);
+
+    const int res = cb(NULL, NULL);
+    assert(res == STATUS_SUCCESS);
+}
+
 int main(int argc, char *argv[])
 {
     (void) argc;
     (void) argv;
 
     test_proxycb();
+    test_major();
 
     return 0;
 }

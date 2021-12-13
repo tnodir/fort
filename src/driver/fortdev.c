@@ -7,8 +7,8 @@
 #include "common/fortdef.h"
 #include "common/fortprov.h"
 
-#include "fortscb.h"
 #include "fortcout.h"
+#include "fortscb.h"
 
 static PFORT_DEVICE g_device = NULL;
 

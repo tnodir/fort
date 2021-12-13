@@ -3,6 +3,9 @@
 
 #include "../fortdrv.h"
 
+#define FORT_DRIVER_MAJOR_FUNC_MAX (IRP_MJ_MAXIMUM_FUNCTION + 1)
+static_assert(FORT_DRIVER_MAJOR_FUNC_MAX == 28, "Driver Major Functions Count Mismatch");
+
 #if defined(__cplusplus)
 extern "C" {
 #endif
