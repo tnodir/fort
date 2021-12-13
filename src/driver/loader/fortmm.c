@@ -121,6 +121,40 @@ static NTSTATUS CopySectionTable(
     return STATUS_SUCCESS;
 }
 
+static void PatchAddressRelocations(
+        PUCHAR codeBase, PIMAGE_BASE_RELOCATION relocation, ptrdiff_t locationDelta)
+{
+    const PUCHAR dest = codeBase + relocation->VirtualAddress;
+    PUSHORT relInfo = (PUSHORT) ((PUCHAR) relocation + sizeof(IMAGE_BASE_RELOCATION));
+    const DWORD relInfoCount = (relocation->SizeOfBlock - sizeof(IMAGE_BASE_RELOCATION)) / 2;
+
+    for (DWORD i = 0; i < relInfoCount; ++i, ++relInfo) {
+        const INT type = *relInfo >> 12; /* the upper 4 bits define the type of relocation */
+        const INT offset = *relInfo & 0xfff; /* the lower 12 bits define the offset */
+
+        switch (type) {
+        case IMAGE_REL_BASED_ABSOLUTE:
+            break; /* skip relocation */
+
+        case IMAGE_REL_BASED_HIGHLOW:
+            /* change complete 32 bit address */
+            DWORD *patchAddrHL = (PDWORD) (dest + offset);
+            *patchAddrHL += (DWORD) locationDelta;
+            break;
+
+#ifdef _WIN64
+        case IMAGE_REL_BASED_DIR64:
+            ULONGLONG *patchAddr64 = (PULONGLONG) (dest + offset);
+            *patchAddr64 += (ULONGLONG) locationDelta;
+            break;
+#endif
+
+        default:
+            break;
+        }
+    }
+}
+
 /*
  * The DLL's preferred load address conflicts with memory that's already in use
  * so we need to 'rebase' the DLL by loading it at a different address that does
@@ -142,35 +176,7 @@ static NTSTATUS PerformBaseRelocation(
             (PIMAGE_BASE_RELOCATION) (codeBase + directory->VirtualAddress);
 
     while (relocation->VirtualAddress > 0) {
-        const PUCHAR dest = codeBase + relocation->VirtualAddress;
-        PUSHORT relInfo = (PUSHORT) ((PUCHAR) relocation + sizeof(IMAGE_BASE_RELOCATION));
-        const DWORD relInfoCount = (relocation->SizeOfBlock - sizeof(IMAGE_BASE_RELOCATION)) / 2;
-
-        for (DWORD i = 0; i < relInfoCount; ++i, ++relInfo) {
-            const INT type = *relInfo >> 12; /* the upper 4 bits define the type of relocation */
-            const INT offset = *relInfo & 0xfff; /* the lower 12 bits define the offset */
-
-            switch (type) {
-            case IMAGE_REL_BASED_ABSOLUTE:
-                break; /* skip relocation */
-
-            case IMAGE_REL_BASED_HIGHLOW:
-                /* change complete 32 bit address */
-                DWORD *patchAddrHL = (PDWORD) (dest + offset);
-                *patchAddrHL += (DWORD) locationDelta;
-                break;
-
-#ifdef _WIN64
-            case IMAGE_REL_BASED_DIR64:
-                ULONGLONG *patchAddr64 = (PULONGLONG) (dest + offset);
-                *patchAddr64 += (ULONGLONG) locationDelta;
-                break;
-#endif
-
-            default:
-                break;
-            }
-        }
+        PatchAddressRelocations(codeBase, relocation, locationDelta);
 
         /* Advance to next relocation block */
         relocation = (PIMAGE_BASE_RELOCATION) ((PCHAR) relocation + relocation->SizeOfBlock);
