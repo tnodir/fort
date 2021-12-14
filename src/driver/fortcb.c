@@ -11,8 +11,13 @@ FORT_API FortCallbackFunc fort_callback(int id, FortCallbackFunc func)
     if (g_callbackInfo.src == NULL)
         return func;
 
+    ProxyCallbackProc cb = g_callbackInfo.src[id];
+
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+            "FORT: Proxy Callback: i=%d func=%p cb=%p\n", id, func, cb);
+
     g_callbackInfo.callbacks[id] = func;
-    return g_callbackInfo.src[id];
+    return cb;
 }
 
 FORT_API void fort_callback_setup(PFORT_PROXYCB_INFO cb_info)
