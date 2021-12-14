@@ -100,11 +100,11 @@ void LogManager::addFreeBuffer(LogBuffer *logBuffer)
 
 void LogManager::processLogBuffer(LogBuffer *logBuffer, bool success, quint32 errorCode)
 {
-    if (m_active) {
-        readLogAsync();
-    }
-
     if (success) {
+        if (m_active) {
+            readLogAsync();
+        }
+
         readLogEntries(logBuffer);
     } else {
         const auto errorMessage = OsUtil::errorMessage(errorCode);
