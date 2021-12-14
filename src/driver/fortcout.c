@@ -724,7 +724,8 @@ FORT_API NTSTATUS fort_callout_force_reauth(
 
     /* Open provider */
     HANDLE engine;
-    if (!(status = fort_prov_open(&engine))) {
+    status = fort_prov_open(&engine);
+    if (NT_SUCCESS(status)) {
         fort_prov_trans_begin(engine);
 
         status = fort_callout_force_reauth_prov(old_conf_flags, conf_flags, engine);
