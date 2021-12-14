@@ -36,7 +36,7 @@ extern "C" {
 
 FORT_API PFORT_DEVICE fort_device();
 
-FORT_API void fort_app_period_timer(void);
+FORT_API void NTAPI fort_app_period_timer(void);
 
 FORT_API NTSTATUS fort_device_create(PDEVICE_OBJECT device, PIRP irp);
 

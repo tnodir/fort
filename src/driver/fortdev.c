@@ -35,7 +35,7 @@ static void fort_worker_reauth(void)
     }
 }
 
-FORT_API void fort_app_period_timer(void)
+FORT_API void NTAPI fort_app_period_timer(void)
 {
     if (fort_conf_ref_period_update(&g_device->conf, FALSE, NULL)) {
         fort_worker_queue(&g_device->worker, FORT_WORKER_REAUTH, &fort_worker_reauth);

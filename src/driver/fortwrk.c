@@ -4,7 +4,7 @@
 
 #include "fortcb.h"
 
-static void fort_worker_callback(PVOID device, PVOID context, PIO_WORKITEM item)
+static void NTAPI fort_worker_callback(PVOID device, PVOID context, PIO_WORKITEM item)
 {
     PFORT_WORKER worker = (PFORT_WORKER) context;
     const UCHAR id_bits = InterlockedAnd8(&worker->id_bits, 0);

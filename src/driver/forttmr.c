@@ -4,7 +4,7 @@
 
 #include "fortcb.h"
 
-static void fort_timer_callback(PKDPC dpc, PFORT_TIMER timer, PVOID arg1, PVOID arg2)
+static void NTAPI fort_timer_callback(PKDPC dpc, PFORT_TIMER timer, PVOID arg1, PVOID arg2)
 {
     UNUSED(dpc);
     UNUSED(arg1);

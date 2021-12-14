@@ -37,7 +37,7 @@ static void fort_syscb_unregister(PCALLBACK_OBJECT cb_obj, PVOID cb_reg)
     }
 }
 
-static void fort_syscb_power(PVOID context, PVOID event, PVOID specifics)
+static void NTAPI fort_syscb_power(PVOID context, PVOID event, PVOID specifics)
 {
     UNUSED(context);
 
@@ -65,7 +65,7 @@ FORT_API void fort_syscb_power_unregister(void)
     fort_syscb_unregister(fort_device()->power_cb_obj, fort_device()->power_cb_reg);
 }
 
-static void fort_syscb_time(PVOID context, PVOID event, PVOID specifics)
+static void NTAPI fort_syscb_time(PVOID context, PVOID event, PVOID specifics)
 {
     UNUSED(context);
     UNUSED(event);

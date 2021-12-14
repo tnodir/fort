@@ -745,7 +745,7 @@ FORT_API NTSTATUS fort_callout_force_reauth(
     return status;
 }
 
-FORT_API void fort_callout_timer(void)
+FORT_API void NTAPI fort_callout_timer(void)
 {
     PFORT_BUFFER buf = &fort_device()->buffer;
     PFORT_STAT stat = &fort_device()->stat;
