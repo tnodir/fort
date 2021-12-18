@@ -6,10 +6,10 @@ ENDIF
 .DATA
 IFDEF RAX
 PUBLIC g_proxyDstCallbacksArray
-g_proxyDstCallbacksArray QWORD 64
+g_proxyDstCallbacksArray QWORD 64 DUP(?)
 ELSE
 PUBLIC g_proxyDstCallbacksArray
-g_proxyDstCallbacksArray WORD 64
+g_proxyDstCallbacksArray WORD 64 DUP(?)
 ENDIF
 
 .CODE
