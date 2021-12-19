@@ -66,7 +66,9 @@ static NTSTATUS fort_loader_init(PUNICODE_STRING driverPath)
 {
     NTSTATUS status;
 
+#ifdef FORT_DEBUG
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Init: [%wZ]\n", driverPath);
+#endif
 
     /* Load the driver file */
     PUCHAR data = NULL;

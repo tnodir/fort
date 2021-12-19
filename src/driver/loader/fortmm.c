@@ -81,9 +81,11 @@ static VOID ZeroDataSectionTable(
 
     section->Misc.PhysicalAddress = (DWORD) (uintptr_t) dest;
 
+#ifdef FORT_DEBUG
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
             "FORT: Loader Module: Zero Section: offset=%d size=%d\n", section->VirtualAddress,
             sectionSize);
+#endif
 }
 
 static NTSTATUS CopySectionTable(PUCHAR pImage, PIMAGE_NT_HEADERS pNtHeaders, const PUCHAR lpData,
@@ -113,9 +115,11 @@ static NTSTATUS CopySectionTable(PUCHAR pImage, PIMAGE_NT_HEADERS pNtHeaders, co
          */
         section->Misc.PhysicalAddress = (DWORD) (uintptr_t) dest;
 
+#ifdef FORT_DEBUG
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                 "FORT: Loader Module: Copy Section: src-offset=%x offset=%x size=%x data=%x\n",
                 section->PointerToRawData, section->VirtualAddress, sectionSize, *(PDWORD) dest);
+#endif
     }
 
     return STATUS_SUCCESS;
@@ -128,8 +132,10 @@ static void PatchAddressRelocations(
     PUSHORT relInfo = (PUSHORT) ((PUCHAR) relocation + sizeof(IMAGE_BASE_RELOCATION));
     const DWORD relInfoCount = (relocation->SizeOfBlock - sizeof(IMAGE_BASE_RELOCATION)) / 2;
 
+#ifdef FORT_DEBUG
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
             "FORT: Loader Module: Relocation: dest=%p count=%d\n", dest, relInfoCount);
+#endif
 
     for (DWORD i = 0; i < relInfoCount; ++i, ++relInfo) {
         const INT type = *relInfo >> 12; /* the upper 4 bits define the type of relocation */
@@ -169,8 +175,10 @@ static NTSTATUS PerformBaseRelocation(
     PIMAGE_DATA_DIRECTORY directory =
             &(pHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_BASERELOC]);
 
+#ifdef FORT_DEBUG
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
             "FORT: Loader Module: Relocation: size=%d delta=%d\n", directory->Size, locationDelta);
+#endif
 
     if (directory->Size == 0) {
         return (locationDelta == 0) ? STATUS_SUCCESS : STATUS_UNSUCCESSFUL;
@@ -217,8 +225,10 @@ static NTSTATUS BuildImportTableLibrary(PUCHAR codeBase, const PIMAGE_IMPORT_DES
                     "FORT: Loader Module: Error: Procedure Not Found: %s: %s\n", libName, funcName);
             status = STATUS_PROCEDURE_NOT_FOUND;
         } else {
+#ifdef FORT_DEBUG
             DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                     "FORT: Loader Module: Import: %s: %s: %p\n", libName, funcName, *funcRef);
+#endif
         }
     }
 
@@ -339,10 +349,12 @@ static NTSTATUS InitializeModuleImage(PUCHAR pImage, const PIMAGE_NT_HEADERS lpN
 {
     NTSTATUS status;
 
+#ifdef FORT_DEBUG
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
             "FORT: Loader Module: Init Image: SizeOfHeaders=%d EntryPoint=%d ImageBase=%x\n",
             lpNtHeaders->OptionalHeader.SizeOfHeaders,
             lpNtHeaders->OptionalHeader.AddressOfEntryPoint, lpNtHeaders->OptionalHeader.ImageBase);
+#endif
 
     /* Copy PE header */
     RtlCopyMemory(pImage, lpData, lpNtHeaders->OptionalHeader.SizeOfHeaders);
@@ -386,15 +398,19 @@ FORT_API NTSTATUS LoadModuleFromMemory(PLOADEDMODULE pModule, const PUCHAR lpDat
     const PIMAGE_NT_HEADERS pNtHeaders = fort_nt_headers(lpData);
     const DWORD imageSize = MAX_ALIGNED(pNtHeaders->OptionalHeader.SizeOfImage, PAGE_SIZE);
 
+#ifdef FORT_DEBUG
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
             "FORT: Loader Module: data=%p size=%d imageSize=%d\n", lpData, dwSize, imageSize);
+#endif
 
     /* Allocate the region */
     PUCHAR pImage = fort_mem_exec_alloc(imageSize, FORT_LOADER_POOL_TAG);
     if (pImage == NULL)
         return STATUS_NO_MEMORY;
 
+#ifdef FORT_DEBUG
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Module: image=%p\n", pImage);
+#endif
 
     status = InitializeModuleImage(pImage, pNtHeaders, lpData, dwSize, imageSize);
 
@@ -425,9 +441,11 @@ NTSTATUS SetupModuleCallbacks(PLOADEDMODULE pModule, PFORT_PROXYCB_INFO cbInfo)
     if (cbSetup == NULL)
         return STATUS_PROCEDURE_NOT_FOUND;
 
+#ifdef FORT_DEBUG
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
             "FORT: Loader Module: Setup Callbacks: %p data=%x\n", cbSetup,
             *(PDWORD) (PVOID) &cbSetup);
+#endif
 
     return cbSetup(cbInfo);
 }
@@ -439,9 +457,11 @@ FORT_API NTSTATUS CallModuleEntry(
     if (driverEntry == NULL)
         return STATUS_PROCEDURE_NOT_FOUND;
 
+#ifdef FORT_DEBUG
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
             "FORT: Loader Module: Driver Entry: %p data=%x\n", driverEntry,
             *(PDWORD) (PVOID) &driverEntry);
+#endif
 
     return driverEntry(driver, regPath);
 }
