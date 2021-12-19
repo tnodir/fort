@@ -5,7 +5,7 @@
 
 #define FORT_WORKER_REAUTH 0x01
 
-typedef void (*FORT_WORKER_FUNC)(void);
+typedef void (NTAPI *FORT_WORKER_FUNC)(void);
 
 typedef struct fort_worker
 {

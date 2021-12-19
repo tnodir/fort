@@ -3,7 +3,7 @@
 
 #include "fortdrv.h"
 
-typedef void (*FORT_TIMER_FUNC)(void);
+typedef void (NTAPI *FORT_TIMER_FUNC)(void);
 
 typedef struct fort_timer
 {
