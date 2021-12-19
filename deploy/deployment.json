@@ -2,7 +2,7 @@
 	"files": {
 		"${TARGET}": {
 			"fort": [
-				"${BUILD}/ui_bin/FortFirewall.exe",
+				"${BUILD}-${CONFIG}/ui_bin/FortFirewall.exe",
 				"${ROOT}/src/ui/i18n			| *.qm			|"
 			]
 		},
