@@ -29,12 +29,26 @@ static NTSTATUS GetModuleInfo(PLOADEDMODULE pModule, LPCSTR name,
         const PAUX_MODULE_EXTENDED_INFO modules, DWORD modulesCount)
 {
     PAUX_MODULE_EXTENDED_INFO module = modules;
+
     for (DWORD i = 0; i < modulesCount; ++i, ++module) {
         if (_stricmp(name, &module->FullPathName[module->FileNameOffset]) == 0) {
             pModule->codeBase = module->BasicInfo.ImageBase;
             return STATUS_SUCCESS;
         }
     }
+
+#if defined(FORT_WIN7_COMPAT)
+    if (_stricmp(name, "ntoskrnl.exe") == 0) {
+        return GetModuleInfo(pModule, "ntkrnlpa.exe", modules, modulesCount);
+    }
+    if (_stricmp(name, "hal.dll") == 0) {
+        return GetModuleInfo(pModule, "halmacpi.dll", modules, modulesCount);
+    }
+    if (_stricmp(name, "halmacpi.dll") == 0) {
+        return GetModuleInfo(pModule, "halacpi.dll", modules, modulesCount);
+    }
+#endif
+
     return STATUS_DRIVER_ORDINAL_NOT_FOUND;
 }
 
