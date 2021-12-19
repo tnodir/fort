@@ -94,13 +94,13 @@ static NTSTATUS fort_loader_init(PUNICODE_STRING driverPath)
     DWORD payloadSize = 0;
     status = fort_image_payload(data, dataSize, &payload, &payloadSize);
 
-    /* Free the driver file's allocated data */
-    fort_mem_free(data, FORT_LOADER_POOL_TAG);
-
     /* Load the module driver */
     if (NT_SUCCESS(status)) {
         status = LoadModuleFromMemory(&g_loader.module, payload, payloadSize);
     }
+
+    /* Free the driver file's allocated data */
+    fort_mem_free(data, FORT_LOADER_POOL_TAG);
 
     if (!NT_SUCCESS(status)) {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
