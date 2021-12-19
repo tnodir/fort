@@ -22,7 +22,7 @@ static void fort_device_set(PFORT_DEVICE device)
     g_device = device;
 }
 
-static void fort_worker_reauth(void)
+static void NTAPI fort_worker_reauth(void)
 {
     const FORT_CONF_FLAGS conf_flags = g_device->conf.conf_flags;
     NTSTATUS status;
