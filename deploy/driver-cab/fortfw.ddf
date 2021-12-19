@@ -15,7 +15,7 @@
 .Set CabinetNameTemplate=fortfw-%CONFIG%-%PLAT%.cab
 .Set DiskDirectoryTemplate= ; Output .cab files into current directory
 
-.Define DRIVER_PATH=..\..\build-driver-%CONFIG%\%PLAT%
+.Define DRIVER_PATH=..\..\build-driver-loader-%CONFIG%\%PLAT%
 .Define INF_PATH=..\..\src\driver\fortfw.inf
 
 .Set DestinationDir=fortfw

@@ -4,7 +4,7 @@
 @set PLAT=%1
 @set CONFIG=%2
 
-@set DRV_PATH=%~dp0..\..\build-driver-%CONFIG%\%PLAT%\fortfw.sys
+@set DRV_PATH=%~dp0..\..\build-driver-loader-%CONFIG%\%PLAT%\fortfw.sys
 
 @call ../sign/clear-certs.bat %DRV_PATH%
 
