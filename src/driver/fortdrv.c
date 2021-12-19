@@ -81,14 +81,14 @@ static NTSTATUS fort_driver_load(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path
     return fort_device_load(device_obj);
 }
 
-NTSTATUS __declspec(dllexport) DriverCallbacksSetup(PFORT_PROXYCB_INFO cb_info)
+NTSTATUS DriverCallbacksSetup(PFORT_PROXYCB_INFO cb_info)
 {
     fort_callback_setup(cb_info);
 
     return STATUS_SUCCESS;
 }
 
-NTSTATUS __declspec(dllexport) DriverEntry(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
+NTSTATUS DriverEntry(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 {
     NTSTATUS status;
 

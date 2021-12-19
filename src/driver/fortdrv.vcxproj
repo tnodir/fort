@@ -57,6 +57,7 @@
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies);$(DDK_LIB_PATH)\fwpkclnt.lib;$(DDK_LIB_PATH)\ndis.lib;$(SDK_LIB_PATH)\uuid.lib</AdditionalDependencies>
       <GenerateDebugInformation>false</GenerateDebugInformation>
+      <ModuleDefinitionFile>fortdrv.def</ModuleDefinitionFile>
     </Link>
     <DriverSign>
       <FileDigestAlgorithm>sha256</FileDigestAlgorithm>
