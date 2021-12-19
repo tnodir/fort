@@ -68,7 +68,7 @@ static NTSTATUS GetModuleInfoList(PAUX_MODULE_EXTENDED_INFO *outModules, DWORD *
 }
 
 static VOID ZeroDataSectionTable(
-        PUCHAR codeBase, const PIMAGE_NT_HEADERS pNtHeaders, const PIMAGE_SECTION_HEADER section)
+        PUCHAR pImage, const PIMAGE_NT_HEADERS pNtHeaders, PIMAGE_SECTION_HEADER section)
 {
     /* Section doesn't contain data in the dll itself, but may define uninitialized data. */
     const DWORD sectionSize = pNtHeaders->OptionalHeader.SectionAlignment;
@@ -76,7 +76,7 @@ static VOID ZeroDataSectionTable(
         return; /* Ignore the empty section. */
 
     /* Always use position from file to support alignments smaller than page size. */
-    const PUCHAR dest = codeBase + section->VirtualAddress;
+    const PUCHAR dest = pImage + section->VirtualAddress;
     RtlZeroMemory(dest, sectionSize);
 
     section->Misc.PhysicalAddress = (DWORD) (uintptr_t) dest;
@@ -86,27 +86,27 @@ static VOID ZeroDataSectionTable(
             sectionSize);
 }
 
-static NTSTATUS CopySectionTable(
-        PUCHAR codeBase, const PIMAGE_NT_HEADERS pNtHeaders, const PUCHAR pData, SIZE_T size)
+static NTSTATUS CopySectionTable(PUCHAR pImage, PIMAGE_NT_HEADERS pNtHeaders, const PUCHAR lpData,
+        DWORD dwSize, DWORD imageSize)
 {
-    PIMAGE_NT_HEADERS pHeaders = fort_nt_headers(codeBase);
-    PIMAGE_SECTION_HEADER section = IMAGE_FIRST_SECTION(pHeaders);
+    PIMAGE_SECTION_HEADER section = IMAGE_FIRST_SECTION(pNtHeaders);
 
     const int numberOfSections = pNtHeaders->FileHeader.NumberOfSections;
 
     for (int i = 0; i < numberOfSections; ++i, ++section) {
         const DWORD sectionSize = section->SizeOfRawData;
         if (sectionSize == 0) {
-            ZeroDataSectionTable(codeBase, pNtHeaders, section);
+            ZeroDataSectionTable(pImage, pNtHeaders, section);
             continue;
         }
 
-        if ((SIZE_T) section->PointerToRawData + sectionSize > size)
+        if (section->VirtualAddress + sectionSize > imageSize
+                || section->PointerToRawData + sectionSize > dwSize)
             return STATUS_INVALID_IMAGE_FORMAT;
 
         /* Always use position from file to support alignments smaller than page size. */
-        const PUCHAR dest = codeBase + section->VirtualAddress;
-        RtlCopyMemory(dest, pData + section->PointerToRawData, sectionSize);
+        PUCHAR dest = pImage + section->VirtualAddress;
+        RtlCopyMemory(dest, lpData + section->PointerToRawData, sectionSize);
 
         /* NOTE: On 64bit systems we truncate to 32bit here but expand
          * again later when "PhysicalAddress" is used.
@@ -114,7 +114,7 @@ static NTSTATUS CopySectionTable(
         section->Misc.PhysicalAddress = (DWORD) (uintptr_t) dest;
 
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                "FORT: Loader Module: Copy Section: src-offset=%d offset=%d size=%d data=%x\n",
+                "FORT: Loader Module: Copy Section: src-offset=%x offset=%x size=%x data=%x\n",
                 section->PointerToRawData, section->VirtualAddress, sectionSize, *(PDWORD) dest);
     }
 
@@ -128,6 +128,9 @@ static void PatchAddressRelocations(
     PUSHORT relInfo = (PUSHORT) ((PUCHAR) relocation + sizeof(IMAGE_BASE_RELOCATION));
     const DWORD relInfoCount = (relocation->SizeOfBlock - sizeof(IMAGE_BASE_RELOCATION)) / 2;
 
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+            "FORT: Loader Module: Relocation: dest=%p count=%d\n", dest, relInfoCount);
+
     for (DWORD i = 0; i < relInfoCount; ++i, ++relInfo) {
         const INT type = *relInfo >> 12; /* the upper 4 bits define the type of relocation */
         const INT offset = *relInfo & 0xfff; /* the lower 12 bits define the offset */
@@ -136,17 +139,17 @@ static void PatchAddressRelocations(
         case IMAGE_REL_BASED_ABSOLUTE:
             break; /* skip relocation */
 
-        case IMAGE_REL_BASED_HIGHLOW:
+        case IMAGE_REL_BASED_HIGHLOW: {
             /* change complete 32 bit address */
-            DWORD *patchAddrHL = (PDWORD) (dest + offset);
-            *patchAddrHL += (DWORD) locationDelta;
-            break;
+            PUCHAR *patchAddrHL = (PUCHAR *) (dest + offset);
+            *patchAddrHL += locationDelta;
+        } break;
 
 #ifdef _WIN64
-        case IMAGE_REL_BASED_DIR64:
-            ULONGLONG *patchAddr64 = (PULONGLONG) (dest + offset);
-            *patchAddr64 += (ULONGLONG) locationDelta;
-            break;
+        case IMAGE_REL_BASED_DIR64: {
+            PUCHAR *patchAddr64 = (PUCHAR *) (dest + offset);
+            *patchAddr64 += locationDelta;
+        } break;
 #endif
 
         default:
@@ -165,12 +168,13 @@ static NTSTATUS PerformBaseRelocation(
 {
     PIMAGE_DATA_DIRECTORY directory =
             &(pHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_BASERELOC]);
+
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+            "FORT: Loader Module: Relocation: size=%d delta=%d\n", directory->Size, locationDelta);
+
     if (directory->Size == 0) {
         return (locationDelta == 0) ? STATUS_SUCCESS : STATUS_UNSUCCESSFUL;
     }
-
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-            "FORT: Loader Module: Base Relocation: %d\n", locationDelta);
 
     PIMAGE_BASE_RELOCATION relocation =
             (PIMAGE_BASE_RELOCATION) (codeBase + directory->VirtualAddress);
@@ -330,48 +334,48 @@ static BOOL IsPEHeaderValid(PVOID lpData, DWORD dwSize)
     return CheckPEHeaderSections(pNtHeaders);
 }
 
-static NTSTATUS InitializeModuleImage(
-        PUCHAR pImage, const PIMAGE_NT_HEADERS pNtHeaders, const PUCHAR lpData, DWORD dwSize)
+static NTSTATUS InitializeModuleImage(PUCHAR pImage, const PIMAGE_NT_HEADERS lpNtHeaders,
+        const PUCHAR lpData, DWORD dwSize, DWORD imageSize)
 {
     NTSTATUS status;
 
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-            "FORT: Loader Module: Init Image: Headers size=%d Entry point=%d\n",
-            pNtHeaders->OptionalHeader.SizeOfHeaders,
-            pNtHeaders->OptionalHeader.AddressOfEntryPoint);
+            "FORT: Loader Module: Init Image: SizeOfHeaders=%d EntryPoint=%d ImageBase=%x\n",
+            lpNtHeaders->OptionalHeader.SizeOfHeaders,
+            lpNtHeaders->OptionalHeader.AddressOfEntryPoint, lpNtHeaders->OptionalHeader.ImageBase);
 
-    /* Copy PE header to code */
-    RtlCopyMemory(pImage, lpData, pNtHeaders->OptionalHeader.SizeOfHeaders);
+    /* Copy PE header */
+    RtlCopyMemory(pImage, lpData, lpNtHeaders->OptionalHeader.SizeOfHeaders);
 
     /* Update position of the image base */
-    PIMAGE_NT_HEADERS pHeaders = fort_nt_headers(pImage);
-    pHeaders->OptionalHeader.ImageBase = (uintptr_t) pImage;
+    PIMAGE_NT_HEADERS pNtHeaders = fort_nt_headers(pImage);
+    pNtHeaders->OptionalHeader.ImageBase = (uintptr_t) pImage;
 
     /* Copy section table */
-    status = CopySectionTable(pImage, pNtHeaders, lpData, dwSize);
+    status = CopySectionTable(pImage, pNtHeaders, lpData, dwSize, imageSize);
     if (!NT_SUCCESS(status))
         return status;
 
     /* Adjust base address of imported data */
-    const ptrdiff_t locationDelta =
-            (ptrdiff_t) pHeaders->OptionalHeader.ImageBase - pNtHeaders->OptionalHeader.ImageBase;
+    const ptrdiff_t locationDelta = pImage - (PUCHAR) lpNtHeaders->OptionalHeader.ImageBase;
+
     if (locationDelta != 0) {
-        PerformBaseRelocation(pImage, pHeaders, locationDelta);
+        PerformBaseRelocation(pImage, pNtHeaders, locationDelta);
     }
 
     /* Adjust function table of imports */
-    status = BuildImportTable(pImage, pHeaders);
+    status = BuildImportTable(pImage, pNtHeaders);
     if (!NT_SUCCESS(status))
         return status;
 
     /* Check entry point */
-    if (pHeaders->OptionalHeader.AddressOfEntryPoint == 0)
+    if (pNtHeaders->OptionalHeader.AddressOfEntryPoint == 0)
         return STATUS_DRIVER_ENTRYPOINT_NOT_FOUND;
 
     return STATUS_SUCCESS;
 }
 
-FORT_API NTSTATUS LoadModuleFromMemory(PLOADEDMODULE pModule, PUCHAR lpData, DWORD dwSize)
+FORT_API NTSTATUS LoadModuleFromMemory(PLOADEDMODULE pModule, const PUCHAR lpData, DWORD dwSize)
 {
     NTSTATUS status;
 
@@ -379,22 +383,20 @@ FORT_API NTSTATUS LoadModuleFromMemory(PLOADEDMODULE pModule, PUCHAR lpData, DWO
     if (!IsPEHeaderValid(lpData, dwSize))
         return STATUS_INVALID_IMAGE_FORMAT;
 
-    PIMAGE_NT_HEADERS pNtHeaders = fort_nt_headers(lpData);
+    const PIMAGE_NT_HEADERS pNtHeaders = fort_nt_headers(lpData);
     const DWORD imageSize = MAX_ALIGNED(pNtHeaders->OptionalHeader.SizeOfImage, PAGE_SIZE);
 
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-            "FORT: Loader Module: Data size=%d Image size=%d Aligned Image size=%d\n", dwSize,
-            pNtHeaders->OptionalHeader.SizeOfImage, imageSize);
+            "FORT: Loader Module: data=%p size=%d imageSize=%d\n", lpData, dwSize, imageSize);
 
     /* Allocate the region */
     PUCHAR pImage = fort_mem_exec_alloc(imageSize, FORT_LOADER_POOL_TAG);
     if (pImage == NULL)
         return STATUS_NO_MEMORY;
 
-    status = InitializeModuleImage(pImage, pNtHeaders, lpData, dwSize);
+    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Module: image=%p\n", pImage);
 
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Module: Image Base: %p %x\n",
-            pImage, status);
+    status = InitializeModuleImage(pImage, pNtHeaders, lpData, dwSize, imageSize);
 
     if (!NT_SUCCESS(status)) {
         fort_mem_free(pImage, FORT_LOADER_POOL_TAG);

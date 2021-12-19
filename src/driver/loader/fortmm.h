@@ -14,7 +14,7 @@ typedef struct _LOADEDMODULE
     PUCHAR codeBase;
 } LOADEDMODULE, *PLOADEDMODULE;
 
-FORT_API NTSTATUS LoadModuleFromMemory(PLOADEDMODULE pModule, PUCHAR lpData, DWORD dwSize);
+FORT_API NTSTATUS LoadModuleFromMemory(PLOADEDMODULE pModule, const PUCHAR lpData, DWORD dwSize);
 
 FORT_API void UnloadModule(PLOADEDMODULE pModule);
 
