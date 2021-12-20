@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.4.3, 2021-12-20:
+- Driver: Use Loader to not depend on EV certificate in the future.
+- UI: Add Italian translation.
+- UI: Update SQLite to v3.37.0
+
 v3.4.2, 2021-10-07:
 - UI: Use QtNetwork for downloads, instead of `curl.exe`.
 - UI: Disable WOW64 FS Redirection for 32-bit build.
