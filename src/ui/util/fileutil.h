@@ -47,6 +47,7 @@ QDateTime fileModTime(const QString &filePath);
 QString expandPath(const QString &path);
 
 QString nativeAppFilePath();
+QString nativeAppBinLocation();
 QString appBinLocation();
 QString appConfigLocation();
 QString applicationsLocation();

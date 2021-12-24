@@ -209,6 +209,12 @@ QString nativeAppFilePath()
     return (n > 0 && n < maxPathSize) ? QString::fromUtf16((const char16_t *) buf) : QString();
 }
 
+QString nativeAppBinLocation()
+{
+    const QFileInfo fi(nativeAppFilePath());
+    return fi.path();
+}
+
 QString appBinLocation()
 {
     return QCoreApplication::applicationDirPath();

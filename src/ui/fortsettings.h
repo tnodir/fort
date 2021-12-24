@@ -65,6 +65,7 @@ public:
     bool wasMigrated() const;
     bool canMigrate(QString &viaVersion) const;
 
+    static bool isPortable();
     static QString defaultProfilePath(bool hasService);
 
 signals:

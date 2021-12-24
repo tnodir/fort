@@ -15,6 +15,8 @@
 
 namespace {
 
+bool g_isPortable = false;
+
 QString pathSlash(const QString &path)
 {
     return FileUtil::pathSlash(FileUtil::absolutePath(path));
@@ -95,6 +97,9 @@ void FortSettings::resetCheckedPassword(int unlockType)
 
 void FortSettings::setupGlobal()
 {
+    // Is portable?
+    g_isPortable = FileUtil::fileExists(FileUtil::nativeAppBinLocation() + "/README.portable");
+
     // Use global settings from program's binary directory
     const QSettings settings(FileUtil::nativeAppFilePath() + ".ini", QSettings::IniFormat);
 
@@ -275,22 +280,23 @@ void FortSettings::createPaths()
     }
 }
 
+bool FortSettings::isPortable()
+{
+    return g_isPortable;
+}
+
 QString FortSettings::defaultProfilePath(bool hasService)
 {
     // Is portable?
-    {
-        const QString appBinLocation = FileUtil::appBinLocation();
-        const bool isPortable = FileUtil::fileExists(appBinLocation + "/README.portable");
-        if (isPortable)
-            return appBinLocation + "/Data/";
+    if (isPortable()) {
+        return FileUtil::appBinLocation() + "/Data/";
     }
 
     // Is service?
-    {
+    if (hasService) {
         const QString servicePath =
                 FileUtil::expandPath(QLatin1String("%ProgramData%\\") + APP_NAME);
-        if (hasService || FileUtil::pathExists(servicePath))
-            return pathSlash(servicePath);
+        return pathSlash(servicePath);
     }
 
     return pathSlash(FileUtil::appConfigLocation());
