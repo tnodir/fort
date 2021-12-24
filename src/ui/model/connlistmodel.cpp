@@ -195,20 +195,20 @@ QString ConnListModel::connIconPath(const ConnRow &connRow)
     if (connRow.blocked) {
         switch (connRow.blockReason) {
         case LogEntryBlockedIp::ReasonIpInet:
-            return ":/icons/map-marker.png";
+            return ":/icons/ip.png";
         case LogEntryBlockedIp::ReasonReauth:
-            return ":/icons/sign-sync.png";
+            return ":/icons/arrow_refresh_small.png";
         case LogEntryBlockedIp::ReasonProgram:
-            return ":/icons/window.png";
+            return ":/icons/application.png";
         case LogEntryBlockedIp::ReasonAppGroupFound:
-            return ":/icons/window-list.png";
+            return ":/icons/application_double.png";
         case LogEntryBlockedIp::ReasonAppGroupDefault:
         default:
-            return ":/icons/sign-ban.png";
+            return ":/icons/deny.png";
         }
     }
 
-    return ":/icons/sign-check.png";
+    return ":/icons/accept.png";
 }
 
 void ConnListModel::deleteConn(qint64 rowIdTo, bool blocked)

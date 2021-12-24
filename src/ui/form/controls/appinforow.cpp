@@ -26,8 +26,8 @@ void AppInfoRow::setupUi()
     auto layout = new QHBoxLayout();
     layout->setContentsMargins(0, 0, 0, 0);
 
-    m_btAppCopyPath = ControlUtil::createLinkButton(":/icons/copy.png");
-    m_btAppOpenFolder = ControlUtil::createLinkButton(":/icons/folder-open.png");
+    m_btAppCopyPath = ControlUtil::createLinkButton(":/icons/page_copy.png");
+    m_btAppOpenFolder = ControlUtil::createLinkButton(":/icons/folder.png");
 
     m_lineAppPath = ControlUtil::createLineLabel();
 

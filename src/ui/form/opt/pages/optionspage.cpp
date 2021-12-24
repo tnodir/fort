@@ -431,7 +431,7 @@ void OptionsPage::setupEditPassword()
 
 void OptionsPage::setupPasswordLock()
 {
-    m_btPasswordLock = ControlUtil::createFlatButton(":/icons/lock-open.png", [&] {
+    m_btPasswordLock = ControlUtil::createFlatButton(":/icons/lock_open.png", [&] {
         settings()->resetCheckedPassword();
         m_btPasswordLock->hide();
     });
@@ -570,7 +570,7 @@ void OptionsPage::setupDriverIcon()
     m_iconDriver = ControlUtil::createLabel();
     m_iconDriver->setScaledContents(true);
     m_iconDriver->setMaximumSize(16, 16);
-    m_iconDriver->setPixmap(IconCache::file(":/icons/puzzle.png"));
+    m_iconDriver->setPixmap(IconCache::file(":/icons/server_components.png"));
 
     const auto refreshDriverInfo = [&] {
         m_iconDriver->setEnabled(driverManager()->isDeviceOpened());
@@ -599,7 +599,7 @@ void OptionsPage::setupNewVersionBox()
     colLayout->addWidget(m_labelNewVersion);
 
     // Button
-    m_btNewVersion = ControlUtil::createLinkButton(":/icons/download.png");
+    m_btNewVersion = ControlUtil::createLinkButton(":/icons/download_for_windows.png");
 
     connect(m_btNewVersion, &QAbstractButton::clicked, this, &OptionsPage::onLinkClicked);
 

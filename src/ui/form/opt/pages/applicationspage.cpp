@@ -186,7 +186,7 @@ QLayout *ApplicationsPage::setupHeader()
 
 void ApplicationsPage::setupAddGroup()
 {
-    m_btAddGroup = ControlUtil::createButton(":/icons/sign-add.png", [&] {
+    m_btAddGroup = ControlUtil::createButton(":/icons/add.png", [&] {
         const auto text = m_editGroupName->text();
         if (text.isEmpty()) {
             m_editGroupName->setFocus();
@@ -236,13 +236,13 @@ void ApplicationsPage::setupBlockAllowAll()
         conf()->setAppBlockAll(checked);
         ctrl()->setFlagsEdited();
     });
-    m_cbBlockAll->setIcon(IconCache::icon(":/icons/sign-ban.png"));
+    m_cbBlockAll->setIcon(IconCache::icon(":/icons/deny.png"));
 
     m_cbAllowAll = ControlUtil::createCheckBox(conf()->appAllowAll(), [&](bool checked) {
         conf()->setAppAllowAll(checked);
         ctrl()->setFlagsEdited();
     });
-    m_cbAllowAll->setIcon(IconCache::icon(":/icons/sign-check.png"));
+    m_cbAllowAll->setIcon(IconCache::icon(":/icons/accept.png"));
 
     const auto refreshBlockAllowAllEnabled = [&] {
         const bool blockAll = m_cbBlockAll->isChecked();
@@ -384,7 +384,7 @@ void ApplicationsPage::setupGroupOptions()
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
-    m_btGroupOptions = ControlUtil::createButton(":/icons/wrench.png");
+    m_btGroupOptions = ControlUtil::createButton(":/icons/gear_in.png");
     m_btGroupOptions->setMenu(menu);
 }
 
@@ -483,7 +483,7 @@ void ApplicationsPage::setupGroupOptionsEnabled()
 void ApplicationsPage::setupBlockApps()
 {
     m_blockApps = new AppsColumn();
-    m_blockApps->icon()->setPixmap(IconCache::file(":/icons/sign-ban.png"));
+    m_blockApps->icon()->setPixmap(IconCache::file(":/icons/deny.png"));
 
     connect(m_blockApps->editText(), &QPlainTextEdit::textChanged, this, [&] {
         const auto text = m_blockApps->editText()->toPlainText();
@@ -500,7 +500,7 @@ void ApplicationsPage::setupBlockApps()
 void ApplicationsPage::setupAllowApps()
 {
     m_allowApps = new AppsColumn();
-    m_allowApps->icon()->setPixmap(IconCache::file(":/icons/sign-check.png"));
+    m_allowApps->icon()->setPixmap(IconCache::file(":/icons/accept.png"));
 
     connect(m_allowApps->editText(), &QPlainTextEdit::textChanged, this, [&] {
         const auto text = m_allowApps->editText()->toPlainText();
@@ -532,7 +532,7 @@ void ApplicationsPage::setupSplitter()
 
 void ApplicationsPage::setupSplitterButtons()
 {
-    m_btSelectFile = ControlUtil::createSplitterButton(":/icons/folder-open.png", [&] {
+    m_btSelectFile = ControlUtil::createSplitterButton(":/icons/folder.png", [&] {
         const auto filePaths = DialogUtil::getOpenFileNames(
                 m_btSelectFile->text(), tr("Programs (*.exe);;All files (*.*)"));
 

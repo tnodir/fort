@@ -133,7 +133,7 @@ void TrayIcon::onTrayActivated(QSystemTrayIcon::ActivationReason reason)
 void TrayIcon::updateTrayIcon(bool alerted)
 {
     const auto icon = alerted
-            ? GuiUtil::overlayIcon(":/icons/sheild-96.png", ":/icons/sign-warning.png")
+            ? GuiUtil::overlayIcon(":/icons/sheild-96.png", ":/icons/error.png")
             : IconCache::icon(":/icons/sheild-96.png");
 
     this->setIcon(icon);
@@ -199,7 +199,7 @@ void TrayIcon::setupTrayMenu()
 {
     m_menu = new QMenu();
 
-    m_programsAction = addAction(m_menu, IconCache::icon(":/icons/window.png"), QString(),
+    m_programsAction = addAction(m_menu, IconCache::icon(":/icons/application.png"), QString(),
             windowManager(), SLOT(showProgramsWindow()));
     addHotKey(m_programsAction, iniUser()->hotKeyPrograms());
 
@@ -207,15 +207,15 @@ void TrayIcon::setupTrayMenu()
             windowManager(), SLOT(showOptionsWindow()));
     addHotKey(m_optionsAction, iniUser()->hotKeyOptions());
 
-    m_statisticsAction = addAction(m_menu, IconCache::icon(":/icons/chart-bar.png"), QString(),
+    m_statisticsAction = addAction(m_menu, IconCache::icon(":/icons/chart_bar.png"), QString(),
             windowManager(), SLOT(showStatisticsWindow()));
     addHotKey(m_statisticsAction, iniUser()->hotKeyStatistics());
 
-    m_graphAction = addAction(m_menu, IconCache::icon(":/icons/line-graph.png"), QString(),
+    m_graphAction = addAction(m_menu, IconCache::icon(":/icons/action_log.png"), QString(),
             windowManager(), SLOT(switchGraphWindow()), true, !!windowManager()->graphWindow());
     addHotKey(m_graphAction, iniUser()->hotKeyGraph());
 
-    m_zonesAction = addAction(m_menu, IconCache::icon(":/icons/map-map-marker.png"), QString(),
+    m_zonesAction = addAction(m_menu, IconCache::icon(":/icons/ip_class.png"), QString(),
             windowManager(), SLOT(showZonesWindow()));
     addHotKey(m_zonesAction, iniUser()->hotKeyZones());
 

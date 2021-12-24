@@ -167,7 +167,7 @@ void ZonesWindow::setupUi()
 
     // Icon
     this->setWindowIcon(
-            GuiUtil::overlayIcon(":/icons/sheild-96.png", ":/icons/map-map-marker.png"));
+            GuiUtil::overlayIcon(":/icons/sheild-96.png", ":/icons/ip_class.png"));
 
     // Size
     this->setMinimumSize(500, 400);
@@ -276,13 +276,13 @@ QLayout *ZonesWindow::setupHeader()
     // Edit Menu
     auto editMenu = new QMenu(this);
 
-    m_actAddZone = editMenu->addAction(IconCache::icon(":/icons/sign-add.png"), QString());
+    m_actAddZone = editMenu->addAction(IconCache::icon(":/icons/add.png"), QString());
     m_actAddZone->setShortcut(Qt::Key_Plus);
 
     m_actEditZone = editMenu->addAction(IconCache::icon(":/icons/pencil.png"), QString());
     m_actEditZone->setShortcut(Qt::Key_Enter);
 
-    m_actRemoveZone = editMenu->addAction(IconCache::icon(":/icons/sign-delete.png"), QString());
+    m_actRemoveZone = editMenu->addAction(IconCache::icon(":/icons/delete.png"), QString());
     m_actRemoveZone->setShortcut(Qt::Key_Delete);
 
     connect(m_actAddZone, &QAction::triggered, this, [&] { updateZoneEditForm(false); });
@@ -297,7 +297,7 @@ QLayout *ZonesWindow::setupHeader()
     m_btEdit->setMenu(editMenu);
 
     // Save As Text
-    m_btSaveAsText = ControlUtil::createButton(":/icons/floppy.png", [&] {
+    m_btSaveAsText = ControlUtil::createButton(":/icons/save_as.png", [&] {
         const auto filePath = DialogUtil::getSaveFileName(
                 m_btSaveAsText->text(), tr("Text files (*.txt);;All files (*.*)"));
 

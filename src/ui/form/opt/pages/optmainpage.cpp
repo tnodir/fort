@@ -74,16 +74,16 @@ void OptMainPage::setupTabBar()
 
     m_tabBar = new QTabWidget();
     m_tabBar->addTab(optionsPage, IconCache::icon(":/icons/cog.png"), QString());
-    m_tabBar->addTab(addressesPage, IconCache::icon(":/icons/map-marker.png"), QString());
-    m_tabBar->addTab(rulesPage, IconCache::icon(":/icons/task-list.png"), QString());
-    m_tabBar->addTab(applicationsPage, IconCache::icon(":/icons/window-list.png"), QString());
+    m_tabBar->addTab(addressesPage, IconCache::icon(":/icons/ip.png"), QString());
+    m_tabBar->addTab(rulesPage, IconCache::icon(":/icons/source_code.png"), QString());
+    m_tabBar->addTab(
+            applicationsPage, IconCache::icon(":/icons/application_double.png"), QString());
     m_tabBar->addTab(servicesPage, IconCache::icon(":/icons/windows-48.png"), QString());
-    m_tabBar->addTab(statisticsPage, IconCache::icon(":/icons/chart-bar.png"), QString());
+    m_tabBar->addTab(statisticsPage, IconCache::icon(":/icons/chart_bar.png"), QString());
     m_tabBar->addTab(schedulePage, IconCache::icon(":/icons/clock.png"), QString());
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     m_tabBar->setTabVisible(2, false); // TODO: Impl. Network Rules
-    m_tabBar->setTabVisible(4, false); // TODO: Impl. Services
 #endif
 }
 
@@ -91,10 +91,10 @@ QLayout *OptMainPage::setupDialogButtons()
 {
     auto buttonsLayout = new QHBoxLayout();
 
-    m_btLogs = ControlUtil::createLinkButton(":/icons/folder-open.png", settings()->logsPath());
+    m_btLogs = ControlUtil::createLinkButton(":/icons/folder.png", settings()->logsPath());
     m_btProfile =
-            ControlUtil::createLinkButton(":/icons/folder-open.png", settings()->profilePath());
-    m_btStat = ControlUtil::createLinkButton(":/icons/folder-open.png", settings()->statPath());
+            ControlUtil::createLinkButton(":/icons/folder.png", settings()->profilePath());
+    m_btStat = ControlUtil::createLinkButton(":/icons/folder.png", settings()->statPath());
     m_btReleases = ControlUtil::createLinkButton(":/icons/github.png", APP_UPDATES_URL);
 
     connect(m_btLogs, &QAbstractButton::clicked, this, &OptMainPage::onLinkClicked);

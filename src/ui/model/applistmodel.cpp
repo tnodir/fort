@@ -256,7 +256,7 @@ QColor AppListModel::appStateColor(const AppRow &appRow)
 
 QIcon AppListModel::appStateIcon(const AppRow &appRow)
 {
-    return IconCache::icon(appRow.blocked ? ":/icons/sign-ban.png" : ":/icons/sign-check.png");
+    return IconCache::icon(appRow.blocked ? ":/icons/deny.png" : ":/icons/accept.png");
 }
 
 QIcon AppListModel::appEndTimeIcon(const AppRow &appRow)

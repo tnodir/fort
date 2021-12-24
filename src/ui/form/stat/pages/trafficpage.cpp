@@ -135,8 +135,8 @@ QLayout *TrafficPage::setupHeader()
 {
     auto layout = new QHBoxLayout();
 
-    m_btRefresh =
-            ControlUtil::createButton(":/icons/sign-sync.png", [&] { trafListModel()->reset(); });
+    m_btRefresh = ControlUtil::createButton(
+            ":/icons/arrow_refresh_small.png", [&] { trafListModel()->reset(); });
 
     setupClearMenu();
     setupTrafUnits();
@@ -155,7 +155,7 @@ void TrafficPage::setupClearMenu()
 {
     auto menu = new QMenu(this);
 
-    m_actRemoveApp = menu->addAction(IconCache::icon(":/icons/sign-delete.png"), QString());
+    m_actRemoveApp = menu->addAction(IconCache::icon(":/icons/delete.png"), QString());
     m_actRemoveApp->setShortcut(Qt::Key_Delete);
 
     m_actResetTotal = menu->addAction(QString());
@@ -183,7 +183,7 @@ void TrafficPage::setupClearMenu()
         trafListModel()->clear();
     });
 
-    m_btClear = ControlUtil::createButton(":/icons/trashcan-full.png");
+    m_btClear = ControlUtil::createButton(":/icons/bin_closed.png");
     m_btClear->setMenu(menu);
 }
 

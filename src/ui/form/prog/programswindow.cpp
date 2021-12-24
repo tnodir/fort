@@ -164,7 +164,7 @@ void ProgramsWindow::setupUi()
     this->setFont(WindowManager::defaultFont());
 
     // Icon
-    this->setWindowIcon(GuiUtil::overlayIcon(":/icons/sheild-96.png", ":/icons/window.png"));
+    this->setWindowIcon(GuiUtil::overlayIcon(":/icons/sheild-96.png", ":/icons/application.png"));
 
     // Size
     this->setMinimumSize(500, 400);
@@ -177,26 +177,26 @@ QLayout *ProgramsWindow::setupHeader()
     // Edit Menu
     auto editMenu = new QMenu(this);
 
-    m_actAllowApp = editMenu->addAction(IconCache::icon(":/icons/sign-check.png"), QString());
+    m_actAllowApp = editMenu->addAction(IconCache::icon(":/icons/accept.png"), QString());
     m_actAllowApp->setShortcut(Qt::Key_A);
 
-    m_actBlockApp = editMenu->addAction(IconCache::icon(":/icons/sign-ban.png"), QString());
+    m_actBlockApp = editMenu->addAction(IconCache::icon(":/icons/deny.png"), QString());
     m_actBlockApp->setShortcut(Qt::Key_B);
 
     editMenu->addSeparator();
 
-    m_actAddApp = editMenu->addAction(IconCache::icon(":/icons/sign-add.png"), QString());
+    m_actAddApp = editMenu->addAction(IconCache::icon(":/icons/add.png"), QString());
     m_actAddApp->setShortcut(Qt::Key_Plus);
 
     m_actEditApp = editMenu->addAction(IconCache::icon(":/icons/pencil.png"), QString());
     m_actEditApp->setShortcut(Qt::Key_Enter);
 
-    m_actRemoveApp = editMenu->addAction(IconCache::icon(":/icons/sign-delete.png"), QString());
+    m_actRemoveApp = editMenu->addAction(IconCache::icon(":/icons/delete.png"), QString());
     m_actRemoveApp->setShortcut(Qt::Key_Delete);
 
     editMenu->addSeparator();
 
-    m_actPurgeApps = editMenu->addAction(IconCache::icon(":/icons/trashcan-full.png"), QString());
+    m_actPurgeApps = editMenu->addAction(IconCache::icon(":/icons/bin_closed.png"), QString());
 
     connect(m_actAllowApp, &QAction::triggered, this, [&] { updateSelectedApps(false); });
     connect(m_actBlockApp, &QAction::triggered, this, [&] { updateSelectedApps(true); });
@@ -218,9 +218,9 @@ QLayout *ProgramsWindow::setupHeader()
     m_btEdit->setMenu(editMenu);
 
     // Toolbar buttons
-    m_btAllowApp = ControlUtil::createLinkButton(":/icons/sign-check.png");
-    m_btBlockApp = ControlUtil::createLinkButton(":/icons/sign-ban.png");
-    m_btRemoveApp = ControlUtil::createLinkButton(":/icons/sign-delete.png");
+    m_btAllowApp = ControlUtil::createLinkButton(":/icons/accept.png");
+    m_btBlockApp = ControlUtil::createLinkButton(":/icons/deny.png");
+    m_btRemoveApp = ControlUtil::createLinkButton(":/icons/delete.png");
 
     connect(m_btAllowApp, &QAbstractButton::clicked, m_actAllowApp, &QAction::trigger);
     connect(m_btBlockApp, &QAbstractButton::clicked, m_actBlockApp, &QAction::trigger);
@@ -251,7 +251,7 @@ void ProgramsWindow::setupLogOptions()
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
-    m_btLogOptions = ControlUtil::createButton(":/icons/wrench.png");
+    m_btLogOptions = ControlUtil::createButton(":/icons/gear_in.png");
     m_btLogOptions->setMenu(menu);
 }
 

@@ -97,7 +97,7 @@ void ServicesPage::setupOptions()
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
-    m_btOptions = ControlUtil::createButton(":/icons/wrench.png");
+    m_btOptions = ControlUtil::createButton(":/icons/gear_in.png");
     m_btOptions->setMenu(menu);
 }
 

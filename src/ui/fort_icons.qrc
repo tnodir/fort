@@ -1,44 +1,44 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
+    <file>icons/accept.png</file>
+    <file>icons/action_log.png</file>
+    <file>icons/add.png</file>
+    <file>icons/application.png</file>
     <file>icons/application-window-96.png</file>
-    <file>icons/arrow-curve.png</file>
-    <file>icons/arrow-curve-180.png</file>
-    <file>icons/arrow-join.png</file>
-    <file>icons/arrow-join-180.png</file>
-    <file>icons/arrow-retweet.png</file>
-    <file>icons/chart-bar.png</file>
+    <file>icons/application_double.png</file>
+    <file>icons/arrow_refresh_small.png</file>
+    <file>icons/bin_closed.png</file>
+    <file>icons/cancel.png</file>
+    <file>icons/chart_bar.png</file>
     <file>icons/clock.png</file>
     <file>icons/cog.png</file>
     <file>icons/computer-96.png</file>
     <file>icons/connect.png</file>
-    <file>icons/copy.png</file>
-    <file>icons/download.png</file>
-    <file>icons/floppy.png</file>
-    <file>icons/folder-open.png</file>
-    <file>icons/funnel.png</file>
+    <file>icons/control_end.png</file>
+    <file>icons/control_fastforward.png</file>
+    <file>icons/control_repeat.png</file>
+    <file>icons/control_rewind.png</file>
+    <file>icons/control_start.png</file>
+    <file>icons/delete.png</file>
+    <file>icons/deny.png</file>
+    <file>icons/drive_network.png</file>
+    <file>icons/download_for_windows.png</file>
+    <file>icons/error.png</file>
+    <file>icons/filter.png</file>
+    <file>icons/folder.png</file>
+    <file>icons/gear_in.png</file>
     <file>icons/github.png</file>
-    <file>icons/globe.png</file>
-    <file>icons/home.png</file>
+    <file>icons/global_telecom.png</file>
+    <file>icons/ip.png</file>
+    <file>icons/ip_class.png</file>
     <file>icons/key.png</file>
-    <file>icons/line-graph.png</file>
-    <file>icons/lock-open.png</file>
-    <file>icons/map-map-marker.png</file>
-    <file>icons/map-marker.png</file>
+    <file>icons/lock_open.png</file>
+    <file>icons/page_copy.png</file>
     <file>icons/pencil.png</file>
-    <file>icons/puzzle.png</file>
     <file>icons/sheild-96.png</file>
-    <file>icons/sign-add.png</file>
-    <file>icons/sign-ban.png</file>
-    <file>icons/sign-check.png</file>
-    <file>icons/sign-delete.png</file>
-    <file>icons/sign-error.png</file>
-    <file>icons/sign-sync.png</file>
-    <file>icons/sign-warning.png</file>
-    <file>icons/task-list.png</file>
-    <file>icons/trashcan-full.png</file>
-    <file>icons/window.png</file>
-    <file>icons/window-list.png</file>
+    <file>icons/save_as.png</file>
+    <file>icons/server_components.png</file>
+    <file>icons/source_code.png</file>
     <file>icons/windows-48.png</file>
-    <file>icons/wrench.png</file>
 </qresource>
 </RCC>

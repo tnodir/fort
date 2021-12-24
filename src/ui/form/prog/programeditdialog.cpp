@@ -236,7 +236,7 @@ QLayout *ProgramEditDialog::setupAppPathLayout()
     m_editPath = new QLineEdit();
     m_editPath->setMaxLength(1024);
 
-    m_btSelectFile = ControlUtil::createFlatButton(":/icons/folder-open.png", [&] {
+    m_btSelectFile = ControlUtil::createFlatButton(":/icons/folder.png", [&] {
         const auto filePath = DialogUtil::getOpenFileName(
                 m_labelEditPath->text(), tr("Programs (*.exe);;All files (*.*)"));
 
@@ -267,7 +267,7 @@ QLayout *ProgramEditDialog::setupAppNameLayout()
         m_editName->setText(appName);
     };
 
-    m_btGetName = ControlUtil::createFlatButton(":/icons/sign-sync.png", updateAppName);
+    m_btGetName = ControlUtil::createFlatButton(":/icons/arrow_refresh_small.png", updateAppName);
 
     layout->addWidget(m_editName);
     layout->addWidget(m_btGetName);
@@ -299,11 +299,11 @@ QLayout *ProgramEditDialog::setupAllowLayout()
     allowLayout->setSpacing(20);
 
     m_rbAllowApp = new QRadioButton();
-    m_rbAllowApp->setIcon(IconCache::icon(":/icons/sign-check.png"));
+    m_rbAllowApp->setIcon(IconCache::icon(":/icons/accept.png"));
     m_rbAllowApp->setChecked(true);
 
     m_rbBlockApp = new QRadioButton();
-    m_rbBlockApp->setIcon(IconCache::icon(":/icons/sign-ban.png"));
+    m_rbBlockApp->setIcon(IconCache::icon(":/icons/deny.png"));
 
     allowLayout->addWidget(m_rbAllowApp, 1, Qt::AlignRight);
     allowLayout->addWidget(m_rbBlockApp, 1, Qt::AlignLeft);

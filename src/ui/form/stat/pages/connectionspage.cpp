@@ -105,16 +105,16 @@ QLayout *ConnectionsPage::setupHeader()
     // Edit Menu
     auto editMenu = new QMenu(this);
 
-    m_actCopy = editMenu->addAction(IconCache::icon(":/icons/copy.png"), QString());
+    m_actCopy = editMenu->addAction(IconCache::icon(":/icons/page_copy.png"), QString());
     m_actCopy->setShortcut(Qt::Key_Copy);
 
-    m_actAddProgram = editMenu->addAction(IconCache::icon(":/icons/window.png"), QString());
+    m_actAddProgram = editMenu->addAction(IconCache::icon(":/icons/application.png"), QString());
     m_actAddProgram->setShortcut(Qt::Key_Insert);
 
-    m_actRemoveConn = editMenu->addAction(IconCache::icon(":/icons/sign-delete.png"), QString());
+    m_actRemoveConn = editMenu->addAction(IconCache::icon(":/icons/delete.png"), QString());
     m_actRemoveConn->setShortcut(Qt::Key_Delete);
 
-    m_actClearAll = editMenu->addAction(IconCache::icon(":/icons/trashcan-full.png"), QString());
+    m_actClearAll = editMenu->addAction(IconCache::icon(":/icons/bin_closed.png"), QString());
 
     connect(m_actCopy, &QAction::triggered, this,
             [&] { GuiUtil::setClipboardData(m_connListView->selectedText()); });
@@ -160,7 +160,7 @@ void ConnectionsPage::setupOptions()
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
-    m_btOptions = ControlUtil::createButton(":/icons/wrench.png");
+    m_btOptions = ControlUtil::createButton(":/icons/gear_in.png");
     m_btOptions->setMenu(menu);
 }
 

@@ -99,8 +99,8 @@ void AddressesPage::setupUi()
     m_tabBar->setShape(QTabBar::TriangularNorth);
     layout->addWidget(m_tabBar);
 
-    m_tabBar->addTab(IconCache::icon(":/icons/globe.png"), QString());
-    m_tabBar->addTab(IconCache::icon(":/icons/funnel.png"), QString());
+    m_tabBar->addTab(IconCache::icon(":/icons/global_telecom.png"), QString());
+    m_tabBar->addTab(IconCache::icon(":/icons/filter.png"), QString());
 
     // Address Columns
     setupIncludeAddresses();
@@ -203,7 +203,7 @@ void AddressesPage::setupSplitter()
 
 void AddressesPage::setupSplitterButtons()
 {
-    m_btAddLocals = ControlUtil::createSplitterButton(":/icons/home.png", [&] {
+    m_btAddLocals = ControlUtil::createSplitterButton(":/icons/drive_network.png", [&] {
         auto area = m_splitter->handle()->currentTextArea();
         TextAreaUtil::appendText(area, localNetworks());
     });
