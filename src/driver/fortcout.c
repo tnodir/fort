@@ -477,19 +477,18 @@ static void NTAPI fort_callout_transport_classify_v4(const FWPS_INCOMING_VALUES0
         BOOL inbound)
 {
     PNET_BUFFER netBuf;
-    BOOL drop = FALSE;
 
     if (!FWPS_IS_METADATA_FIELD_PRESENT(inMetaValues, FWPS_METADATA_FIELD_ALE_CLASSIFY_REQUIRED)
             && netBufList != NULL && (netBuf = NET_BUFFER_LIST_FIRST_NB(netBufList)) != NULL) {
-        drop = fort_callout_transport_classify_v4_packet(inFixedValues, inMetaValues, netBufList,
-                filter, flowContext, classifyOut, netBuf, inbound);
+
+        if (fort_callout_transport_classify_v4_packet(inFixedValues, inMetaValues, netBufList,
+                    filter, flowContext, classifyOut, netBuf, inbound)) {
+            fort_callout_classify_drop(classifyOut); /* drop */
+            return;
+        }
     }
 
-    if (drop) {
-        fort_callout_classify_drop(classifyOut);
-    } else {
-        fort_callout_classify_permit(filter, classifyOut);
-    }
+    fort_callout_classify_permit(filter, classifyOut); /* permit */
 }
 
 static void NTAPI fort_callout_in_transport_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
