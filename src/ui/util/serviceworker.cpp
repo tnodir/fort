@@ -1,7 +1,7 @@
 #include "serviceworker.h"
 
 #include <QCoreApplication>
-#include <QDebug>
+#include <QLoggingCategory>
 
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
@@ -9,6 +9,8 @@
 #include "startuputil.h"
 
 namespace {
+
+const QLoggingCategory LC("util.serviceWorker");
 
 /* Service global structure */
 static struct
@@ -28,7 +30,7 @@ void WINAPI serviceCtrlHandler(DWORD code)
     switch (code) {
     case SERVICE_CONTROL_STOP:
     case SERVICE_CONTROL_SHUTDOWN:
-        qDebug() << "Quit due service control";
+        qCDebug(LC) << "Quit due service control";
 
         qApp->connect(qApp, &QObject::destroyed, [] { reportServiceStatus(SERVICE_STOPPED); });
         QCoreApplication::quit(); // it's threadsafe

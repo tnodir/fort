@@ -1,11 +1,13 @@
 #include "iconcache.h"
 
-#include <QDebug>
 #include <QIcon>
+#include <QLoggingCategory>
 #include <QPixmapCache>
 #include <QThread>
 
 namespace {
+
+const QLoggingCategory LC("util.iconCache");
 
 void checkThread()
 {
@@ -14,7 +16,8 @@ void checkThread()
 
     const Qt::HANDLE threadId = QThread::currentThreadId();
     if (g_mainThreadId != threadId) {
-        qWarning() << "QPixmap used by non-main thread:" << threadId << "; main:" << g_mainThreadId;
+        qCWarning(LC) << "QPixmap used by non-main thread:" << threadId
+                      << "; main:" << g_mainThreadId;
     }
 #endif
 }

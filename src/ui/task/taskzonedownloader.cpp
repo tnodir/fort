@@ -1,7 +1,7 @@
 #include "taskzonedownloader.h"
 
 #include <QCryptographicHash>
-#include <QDebug>
+#include <QLoggingCategory>
 #include <QRegularExpression>
 #include <QUrl>
 
@@ -10,6 +10,10 @@
 #include <util/net/ip4range.h>
 #include <util/net/netdownloader.h>
 #include <util/stringutil.h>
+
+namespace {
+const QLoggingCategory LC("task.taskZoneDownloader");
+}
 
 TaskZoneDownloader::TaskZoneDownloader(QObject *parent) :
     TaskDownloader(parent), m_zoneEnabled(false), m_sort(false)
@@ -97,7 +101,8 @@ bool TaskZoneDownloader::storeAddresses(const StringViewList &list)
 {
     Ip4Range ip4Range;
     if (!ip4Range.fromList(list, emptyNetMask(), sort())) {
-        qWarning() << "TaskZoneDownloader:" << zoneName() << ":" << ip4Range.errorLineAndMessage();
+        qCWarning(LC) << "TaskZoneDownloader:" << zoneName() << ":"
+                      << ip4Range.errorLineAndMessage();
         return false;
     }
 

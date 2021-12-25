@@ -1,8 +1,12 @@
 #include "ioccontainer.h"
 
-#include <QDebug>
+#include <QLoggingCategory>
 
 #include "iocservice.h"
+
+namespace {
+const QLoggingCategory LC("util.ioc.iocContainer");
+}
 
 int IocContainer::g_tlsIndex = -1;
 
@@ -18,7 +22,7 @@ void IocContainer::setObject(int typeId, IocObject *obj, quint8 flags)
     const int newSize = typeId + 1;
     if (newSize > m_size) {
         if (Q_UNLIKELY(newSize >= IOC_MAX_SIZE)) {
-            qCritical() << "IoC Container size error";
+            qCCritical(LC) << "IoC Container size error";
             Q_UNREACHABLE();
             abort();
         }
@@ -98,7 +102,7 @@ void IocContainer::createTlsIndex()
     if (g_tlsIndex == -1) {
         g_tlsIndex = TlsAlloc();
         if (g_tlsIndex == -1) {
-            qWarning() << "TlsAlloc error";
+            qCCritical(LC) << "TlsAlloc error";
         }
     }
 }

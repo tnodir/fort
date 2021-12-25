@@ -1,15 +1,19 @@
 #include "windowmanagerfake.h"
 
-#include <QDebug>
+#include <QLoggingCategory>
+
+namespace {
+const QLoggingCategory LC("rpc.windowManagerFake");
+}
 
 WindowManagerFake::WindowManagerFake(QObject *parent) : WindowManager(parent) { }
 
 void WindowManagerFake::showErrorBox(const QString &text, const QString &title)
 {
-    qWarning() << title << ":" << text;
+    qCWarning(LC) << title << ":" << text;
 }
 
 void WindowManagerFake::showInfoBox(const QString &text, const QString &title)
 {
-    qInfo() << title << ":" << text;
+    qCInfo(LC) << title << ":" << text;
 }

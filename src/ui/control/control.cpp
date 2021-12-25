@@ -208,16 +208,12 @@ bool commandRequiresValidation(Command cmd)
 
 QDebug operator<<(QDebug debug, Command cmd)
 {
-    QDebugStateSaver saver(debug);
-    debug.resetFormat().nospace();
     debug << commandString(cmd);
     return debug;
 }
 
 QDebug operator<<(QDebug debug, RpcManager rpcManager)
 {
-    QDebugStateSaver saver(debug);
-    debug.resetFormat().nospace();
     debug << rpcManagerString(rpcManager);
     return debug;
 }

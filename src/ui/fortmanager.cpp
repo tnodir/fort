@@ -1,7 +1,7 @@
 #include "fortmanager.h"
 
 #include <QApplication>
-#include <QDebug>
+#include <QLoggingCategory>
 #include <QMessageBox>
 #include <QProcess>
 #include <QThreadPool>
@@ -38,6 +38,10 @@
 #include <util/osutil.h>
 #include <util/startuputil.h>
 
+namespace {
+const QLoggingCategory LC("fortManager");
+}
+
 FortManager::FortManager(QObject *parent) : QObject(parent), m_initialized(false) { }
 
 FortManager::~FortManager()
@@ -60,7 +64,7 @@ bool FortManager::checkRunningInstance(bool isService)
         return true;
 
     if (isService) {
-        qWarning() << "Quit due Service is already running!";
+        qCWarning(LC) << "Quit due Service is already running!";
     } else {
         QMessageBox::warning(nullptr, QString(), tr("Application is already running!"));
     }
@@ -319,7 +323,7 @@ void FortManager::processRestartRequired()
 
     connect(qApp, &QObject::destroyed, [=] { QProcess::startDetached(appFilePath, args); });
 
-    qDebug() << "Quit due required restart";
+    qCDebug(LC) << "Quit due required restart";
 
     QCoreApplication::quit();
 }
@@ -338,10 +342,10 @@ void FortManager::loadConf()
 
     IoC<ConfManager>()->load();
 
-    qDebug() << "Started as"
-             << (settings->isService()                   ? "Service"
-                                : settings->hasService() ? "Service Client"
-                                                         : "Program");
+    qCDebug(LC) << "Started as"
+                << (settings->isService()                   ? "Service"
+                                   : settings->hasService() ? "Service Client"
+                                                            : "Program");
 }
 
 bool FortManager::updateDriverConf(bool onlyFlags)

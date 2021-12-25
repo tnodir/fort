@@ -1,6 +1,6 @@
 #include "logmanager.h"
 
-#include <QDebug>
+#include <QLoggingCategory>
 
 #include <conf/confmanager.h>
 #include <driver/drivercommon.h>
@@ -17,6 +17,10 @@
 #include "logentryprocnew.h"
 #include "logentrystattraf.h"
 #include "logentrytime.h"
+
+namespace {
+const QLoggingCategory LC("log.logManager");
+}
 
 LogManager::LogManager(QObject *parent) : QObject(parent) { }
 
@@ -149,10 +153,10 @@ void LogManager::readLogEntries(LogBuffer *logBuffer)
         } break;
         default:
             if (logBuffer->offset() < logBuffer->top()) {
-                qCritical() << "Unknown Log entry:" << logType << logBuffer->offset()
-                            << logBuffer->top()
-                            << QByteArray(logBuffer->array().constData() + logBuffer->offset(),
-                                       logBuffer->top() - logBuffer->offset());
+                qCCritical(LC) << "Unknown Log entry:" << logType << logBuffer->offset()
+                               << logBuffer->top()
+                               << QByteArray(logBuffer->array().constData() + logBuffer->offset(),
+                                          logBuffer->top() - logBuffer->offset());
             }
             return;
         }

@@ -1,7 +1,7 @@
 #include "windowmanager.h"
 
 #include <QApplication>
-#include <QDebug>
+#include <QLoggingCategory>
 #include <QMessageBox>
 #include <QMouseEvent>
 #include <QStyle>
@@ -24,6 +24,8 @@
 #include "nativeeventfilter.h"
 
 namespace {
+
+const QLoggingCategory LC("manager.windowManager");
 
 void setupAppStyle()
 {
@@ -366,7 +368,7 @@ void WindowManager::quitByCheckPassword()
 
     closeAll();
 
-    qDebug() << "Quit due user request";
+    qCDebug(LC) << "Quit due user request";
 
     QCoreApplication::quit();
 }

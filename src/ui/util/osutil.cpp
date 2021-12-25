@@ -1,9 +1,9 @@
 #include "osutil.h"
 
 #include <QCoreApplication>
-#include <QDebug>
 #include <QDesktopServices>
 #include <QDir>
+#include <QLoggingCategory>
 #include <QProcess>
 #include <QUrl>
 
@@ -16,9 +16,11 @@
 
 namespace {
 
+const QLoggingCategory LC("util.osUtil");
+
 BOOL WINAPI consoleCtrlHandler(DWORD /*ctrlType*/)
 {
-    qDebug() << "Quit due console control";
+    qCDebug(LC) << "Quit due console control";
 
     QCoreApplication::quit();
     Sleep(100); // Let the process exit gracefully

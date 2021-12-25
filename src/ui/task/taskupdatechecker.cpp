@@ -1,14 +1,18 @@
 #include "taskupdatechecker.h"
 
 #include <QDateTime>
-#include <QDebug>
+#include <QLoggingCategory>
 #include <QVariant>
 
 #include <fort_version.h>
 
+#include <util/json/jsonutil.h>
 #include <util/net/netdownloader.h>
 #include <util/net/netutil.h>
-#include <util/json/jsonutil.h>
+
+namespace {
+const QLoggingCategory LC("task.taskUpdateChecker");
+}
 
 TaskUpdateChecker::TaskUpdateChecker(QObject *parent) : TaskDownloader(parent) { }
 
@@ -31,7 +35,7 @@ bool TaskUpdateChecker::parseBuffer(const QByteArray &buffer)
     QString errorString;
     const auto map = JsonUtil::jsonToVariant(buffer, errorString).toMap();
     if (!errorString.isEmpty()) {
-        qWarning() << "Update Checker: JSON error:" << errorString;
+        qCWarning(LC) << "Update Checker: JSON error:" << errorString;
         return false;
     }
 

@@ -1,7 +1,7 @@
 #include "zonelistmodel.h"
 
-#include <QDebug>
 #include <QJsonDocument>
+#include <QLoggingCategory>
 
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
@@ -14,6 +14,10 @@
 
 #include "zonesourcewrapper.h"
 #include "zonetypewrapper.h"
+
+namespace {
+const QLoggingCategory LC("model.zoneListModel");
+}
 
 ZoneListModel::ZoneListModel(QObject *parent) : TableSqlModel(parent) { }
 
@@ -227,7 +231,7 @@ void ZoneListModel::setupZoneTypes()
     QString errorString;
     const auto zoneTypes = JsonUtil::jsonToVariant(data, errorString).toList();
     if (!errorString.isEmpty()) {
-        qWarning() << "Zone Types: JSON error:" << errorString;
+        qCWarning(LC) << "Zone Types: JSON error:" << errorString;
         return;
     }
 
@@ -249,7 +253,7 @@ void ZoneListModel::setupZoneSources()
     QString errorString;
     const auto zoneSources = JsonUtil::jsonToVariant(data, errorString).toList();
     if (!errorString.isEmpty()) {
-        qWarning() << "Zone Sources: JSON error:" << errorString;
+        qCWarning(LC) << "Zone Sources: JSON error:" << errorString;
         return;
     }
 

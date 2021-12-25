@@ -1,11 +1,15 @@
 #include "netdownloader.h"
 
-#include <QDebug>
+#include <QLoggingCategory>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 
 #define DOWNLOAD_TIMEOUT (30 * 1000) // 30 milliseconds timeout
 #define DOWNLOAD_MAXSIZE (8 * 1024 * 1024)
+
+namespace {
+const QLoggingCategory LC("util.net.netDownloader");
+}
 
 NetDownloader::NetDownloader(QObject *parent) :
     QObject(parent), m_started(false), m_aborted(false), m_manager(new QNetworkAccessManager(this))
@@ -13,7 +17,7 @@ NetDownloader::NetDownloader(QObject *parent) :
     m_downloadTimer.setInterval(DOWNLOAD_TIMEOUT);
 
     connect(&m_downloadTimer, &QTimer::timeout, this, [&] {
-        qDebug() << "NetDownloader: Error: Download timed out";
+        qCDebug(LC) << "NetDownloader: Error: Download timed out";
 
         finish();
     });
@@ -28,7 +32,7 @@ QByteArray NetDownloader::takeBuffer()
 
 void NetDownloader::start()
 {
-    qDebug() << "NetDownloader: Start:" << url() << data();
+    qCDebug(LC) << "NetDownloader: Start:" << url() << data();
 
     m_started = true;
     m_aborted = false;
@@ -55,7 +59,7 @@ void NetDownloader::start()
 
                 m_buffer.append(data);
                 if (m_buffer.size() >= DOWNLOAD_MAXSIZE) {
-                    qWarning() << "NetDownloader: Error: Too big file";
+                    qCWarning(LC) << "NetDownloader: Error: Too big file";
                     finish();
                 }
             });
@@ -68,7 +72,7 @@ void NetDownloader::start()
         if (m_aborted)
             return;
 
-        qWarning() << "NetDownloader: Error:" << error << m_reply->errorString();
+        qCWarning(LC) << "NetDownloader: Error:" << error << m_reply->errorString();
 
         finish();
     });
@@ -77,7 +81,7 @@ void NetDownloader::start()
             return;
 
         for (const QSslError &error : errors) {
-            qWarning() << "NetDownloader: SSL Error:" << error.errorString();
+            qCWarning(LC) << "NetDownloader: SSL Error:" << error.errorString();
         }
 
         finish();
