@@ -34,6 +34,42 @@ static void fort_callout_classify_continue(FWPS_CLASSIFY_OUT0 *classifyOut)
     classifyOut->actionType = FWP_ACTION_CONTINUE;
 }
 
+static BOOL fort_callout_classify_v4_blocked_log_stat(const FWPS_INCOMING_VALUES0 *inFixedValues,
+        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const FWPS_FILTER0 *filter,
+        FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField, int remoteIpField,
+        int localPortField, int remotePortField, int ipProtoField, BOOL inbound,
+        UINT32 classify_flags, UINT32 remote_ip, FORT_CONF_FLAGS conf_flags, UINT32 process_id,
+        UINT32 path_len, PVOID path, PFORT_CONF_REF conf_ref, INT8 *block_reason, BOOL blocked,
+        FORT_APP_FLAGS app_flags, PIRP *irp, ULONG_PTR *info)
+{
+    const UINT64 flow_id = inMetaValues->flowHandle;
+
+    const IPPROTO ip_proto = (IPPROTO) inFixedValues->incomingValue[ipProtoField].value.uint8;
+    const BOOL is_tcp = (ip_proto == IPPROTO_TCP);
+
+    const UCHAR group_index = app_flags.group_index;
+    const BOOL is_reauth = (classify_flags & FWP_CONDITION_FLAG_IS_REAUTHORIZE);
+
+    BOOL is_new_proc = FALSE;
+
+    const NTSTATUS status = fort_flow_associate(&fort_device()->stat, flow_id, process_id,
+            group_index, is_tcp, is_reauth, &is_new_proc);
+
+    if (!NT_SUCCESS(status)) {
+        if (status == FORT_STATUS_FLOW_BLOCK) {
+            *block_reason = FORT_BLOCK_REASON_REAUTH;
+            return TRUE; /* block (Reauth) */
+        }
+
+        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                "FORT: Classify v4: Flow assoc. error: %x\n", status);
+    } else if (is_new_proc) {
+        fort_buffer_proc_new_write(&fort_device()->buffer, process_id, path_len, path, irp, info);
+    }
+
+    return FALSE;
+}
+
 static BOOL fort_callout_classify_v4_blocked_log(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const FWPS_FILTER0 *filter,
         FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField, int remoteIpField,
@@ -48,34 +84,13 @@ static BOOL fort_callout_classify_v4_blocked_log(const FWPS_INCOMING_VALUES0 *in
     if (!blocked /* collect traffic, when Filter Disabled */
             || (app_flags.v == 0 && conf_flags.allow_all_new) /* collect new Blocked Programs */
             || !fort_conf_app_blocked(&conf_ref->conf, app_flags, block_reason)) {
-        if (conf_flags.log_stat) {
-            const UINT64 flow_id = inMetaValues->flowHandle;
-
-            const IPPROTO ip_proto =
-                    (IPPROTO) inFixedValues->incomingValue[ipProtoField].value.uint8;
-            const BOOL is_tcp = (ip_proto == IPPROTO_TCP);
-
-            const UCHAR group_index = app_flags.group_index;
-            const BOOL is_reauth = (classify_flags & FWP_CONDITION_FLAG_IS_REAUTHORIZE);
-
-            BOOL is_new_proc = FALSE;
-
-            const NTSTATUS status = fort_flow_associate(&fort_device()->stat, flow_id, process_id,
-                    group_index, is_tcp, is_reauth, &is_new_proc);
-
-            if (!NT_SUCCESS(status)) {
-                if (status == FORT_STATUS_FLOW_BLOCK) {
-                    *block_reason = FORT_BLOCK_REASON_REAUTH;
-                    return TRUE; /* block (Reauth) */
-                }
-
-                DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                        "FORT: Classify v4: Flow assoc. error: %x\n", status);
-            } else if (is_new_proc) {
-                fort_buffer_proc_new_write(
-                        &fort_device()->buffer, process_id, path_len, path, irp, info);
-            }
-        }
+        if (conf_flags.log_stat
+                && fort_callout_classify_v4_blocked_log_stat(inFixedValues, inMetaValues, filter,
+                        classifyOut, flagsField, localIpField, remoteIpField, localPortField,
+                        remotePortField, ipProtoField, inbound, classify_flags, remote_ip,
+                        conf_flags, process_id, path_len, path, conf_ref, block_reason, blocked,
+                        app_flags, irp, info))
+            return TRUE; /* blocked */
 
         blocked = FALSE; /* allow */
     }
