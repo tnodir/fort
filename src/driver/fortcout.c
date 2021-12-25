@@ -418,97 +418,78 @@ static void NTAPI fort_callout_flow_delete_v4(UINT16 layerId, UINT32 calloutId, 
     fort_flow_delete(&fort_device()->stat, flowContext);
 }
 
+static BOOL fort_callout_transport_classify_v4_packet(const FWPS_INCOMING_VALUES0 *inFixedValues,
+        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PNET_BUFFER_LIST netBufList,
+        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut,
+        PNET_BUFFER netBuf, BOOL inbound)
+{
+    PFORT_FLOW flow = (PFORT_FLOW) flowContext;
+
+    const UCHAR flow_flags = fort_flow_flags(flow);
+
+    const UCHAR defer_flag = inbound ? FORT_FLOW_DEFER_IN : FORT_FLOW_DEFER_OUT;
+    const UCHAR ack_speed_limit = inbound ? FORT_FLOW_SPEED_LIMIT_OUT : FORT_FLOW_SPEED_LIMIT_IN;
+
+    const UCHAR speed_defer_flags = ack_speed_limit | defer_flag;
+    const BOOL defer_flow = (flow_flags & speed_defer_flags) == speed_defer_flags
+            && !fort_device_flag(&fort_device()->conf, FORT_DEVICE_POWER_OFF);
+
+    /* Position in the packet data:
+     * FWPS_LAYER_INBOUND_TRANSPORT_V4: The beginning of the data.
+     * FWPS_LAYER_OUTBOUND_TRANSPORT_V4: The beginning of the transport header.
+     */
+    const UINT32 headerOffset = inbound ? 0 : sizeof(TCP_HEADER);
+
+    /* Defer TCP Pure (zero length) ACK-packets */
+    if (defer_flow && NET_BUFFER_DATA_LENGTH(netBuf) == headerOffset) {
+        const NTSTATUS status = fort_defer_packet_add(&fort_device()->defer, inFixedValues,
+                inMetaValues, netBufList, inbound, flow->opt.group_index);
+
+        if (NT_SUCCESS(status))
+            return TRUE;
+
+        if (status == STATUS_CANT_TERMINATE_SELF) {
+            /* Clear ACK deferring */
+            fort_flow_flags_set(flow, defer_flag, FALSE);
+        }
+
+        return FALSE;
+    }
+
+    /* Fragment first TCP packet */
+    const BOOL fragment_packet = !inbound
+            && (flow_flags & (FORT_FLOW_FRAGMENT_DEFER | FORT_FLOW_FRAGMENTED))
+                    == FORT_FLOW_FRAGMENT_DEFER;
+
+    if (fragment_packet) {
+        fort_defer_stream_flush(
+                &fort_device()->defer, fort_packet_inject_complete, flow->flow_id, FALSE);
+
+        fort_flow_flags_set(flow, FORT_FLOW_FRAGMENTED, TRUE);
+    }
+
+    return FALSE;
+}
+
 static void NTAPI fort_callout_transport_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PNET_BUFFER_LIST netBufList,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut,
         BOOL inbound)
 {
     PNET_BUFFER netBuf;
+    BOOL drop = FALSE;
 
     if (!FWPS_IS_METADATA_FIELD_PRESENT(inMetaValues, FWPS_METADATA_FIELD_ALE_CLASSIFY_REQUIRED)
             && netBufList != NULL && (netBuf = NET_BUFFER_LIST_FIRST_NB(netBufList)) != NULL) {
-        PFORT_FLOW flow = (PFORT_FLOW) flowContext;
-
-        const UCHAR flow_flags = fort_flow_flags(flow);
-
-        const UCHAR defer_flag = inbound ? FORT_FLOW_DEFER_IN : FORT_FLOW_DEFER_OUT;
-        const UCHAR ack_speed_limit =
-                inbound ? FORT_FLOW_SPEED_LIMIT_OUT : FORT_FLOW_SPEED_LIMIT_IN;
-
-        const UCHAR speed_defer_flags = ack_speed_limit | defer_flag;
-        const BOOL defer_flow = (flow_flags & speed_defer_flags) == speed_defer_flags
-                && !fort_device_flag(&fort_device()->conf, FORT_DEVICE_POWER_OFF);
-
-        const BOOL fragment_packet = !inbound
-                && (flow_flags & (FORT_FLOW_FRAGMENT_DEFER | FORT_FLOW_FRAGMENTED))
-                        == FORT_FLOW_FRAGMENT_DEFER;
-
-        /* Position in the packet data:
-         * FWPS_LAYER_INBOUND_TRANSPORT_V4: The beginning of the data.
-         * FWPS_LAYER_OUTBOUND_TRANSPORT_V4: The beginning of the transport header.
-         */
-        const UINT32 headerOffset = inbound ? 0 : sizeof(TCP_HEADER);
-
-#if 0
-        /* Ignore TCP RST-packets */
-        const BOOL ignore_tcp_rst = inbound && fort_device()->conf_flags.ignore_tcp_rst;
-
-        if (ignore_tcp_rst) {
-            TCP_HEADER buf;
-            PTCP_HEADER tcpHeader;
-            UINT32 tcpFlags;
-
-            if (headerOffset != 0) {
-                NdisRetreatNetBufferDataStart(netBuf, headerOffset, 0, NULL);
-            }
-
-            tcpHeader = NdisGetDataBuffer(netBuf, sizeof(TCP_HEADER), &buf, 1, 0);
-            tcpFlags = tcpHeader ? tcpHeader->flags : 0;
-
-            if (headerOffset != 0) {
-                NdisAdvanceNetBufferDataStart(netBuf, headerOffset, FALSE, NULL);
-            }
-
-            if (tcpHeader == NULL)
-                goto permit;
-
-            if (tcpFlags & TCP_FLAG_RST)
-                goto block;
-        }
-#endif
-
-        /* Defer TCP Pure (zero length) ACK-packets */
-        if (defer_flow && NET_BUFFER_DATA_LENGTH(netBuf) == headerOffset) {
-            const NTSTATUS status = fort_defer_packet_add(&fort_device()->defer, inFixedValues,
-                    inMetaValues, netBufList, inbound, flow->opt.group_index);
-
-            if (NT_SUCCESS(status))
-                goto drop;
-
-            if (status == STATUS_CANT_TERMINATE_SELF) {
-                /* Clear ACK deferring */
-                fort_flow_flags_set(flow, defer_flag, FALSE);
-            }
-
-            goto permit;
-        }
-
-        /* Fragment first TCP packet */
-        if (fragment_packet) {
-            fort_defer_stream_flush(
-                    &fort_device()->defer, fort_packet_inject_complete, flow->flow_id, FALSE);
-
-            fort_flow_flags_set(flow, FORT_FLOW_FRAGMENTED, TRUE);
-        }
+        drop = fort_callout_transport_classify_v4_packet(inFixedValues, inMetaValues, netBufList,
+                filter, flowContext, classifyOut, netBuf, inbound);
     }
 
-permit:
-    fort_callout_classify_permit(filter, classifyOut);
-    return;
-
-drop:
-    fort_callout_classify_drop(classifyOut);
-    return;
+    if (drop) {
+        fort_callout_classify_drop(classifyOut);
+    } else {
+        fort_callout_classify_permit(filter, classifyOut);
+    }
 }
 
 static void NTAPI fort_callout_in_transport_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
