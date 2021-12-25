@@ -5,9 +5,10 @@
 #include <QLineEdit>
 #include <QPushButton>
 
-#include "../../appinfo/appinfocache.h"
-#include "../../appinfo/appinfoutil.h"
-#include "../../util/guiutil.h"
+#include <appinfo/appinfocache.h>
+#include <appinfo/appinfoutil.h>
+#include <util/guiutil.h>
+
 #include "controlutil.h"
 
 AppInfoRow::AppInfoRow(QWidget *parent) : QWidget(parent)

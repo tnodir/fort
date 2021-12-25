@@ -2,8 +2,8 @@
 
 #include <fort_version.h>
 
-#include "../fortsettings.h"
-#include "../util/ioc/ioccontainer.h"
+#include <fortsettings.h>
+#include <util/ioc/ioccontainer.h>
 
 UserSettings::UserSettings(QObject *parent) : Settings(parent), m_iniUser(this) { }
 

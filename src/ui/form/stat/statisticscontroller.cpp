@@ -1,11 +1,11 @@
 #include "statisticscontroller.h"
 
-#include "../../conf/confmanager.h"
-#include "../../conf/firewallconf.h"
-#include "../../fortmanager.h"
-#include "../../manager/translationmanager.h"
-#include "../../manager/windowmanager.h"
-#include "../../util/ioc/ioccontainer.h"
+#include <conf/confmanager.h>
+#include <conf/firewallconf.h>
+#include <fortmanager.h>
+#include <manager/translationmanager.h>
+#include <manager/windowmanager.h>
+#include <util/ioc/ioccontainer.h>
 
 StatisticsController::StatisticsController(QObject *parent) : QObject(parent)
 {

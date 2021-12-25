@@ -1,10 +1,10 @@
 #include "servicelistmodel.h"
 
-#include "../conf/appgroup.h"
-#include "../conf/confmanager.h"
-#include "../conf/firewallconf.h"
-#include "../serviceinfo/serviceinfomanager.h"
-#include "../util/ioc/ioccontainer.h"
+#include <conf/appgroup.h>
+#include <conf/confmanager.h>
+#include <conf/firewallconf.h>
+#include <serviceinfo/serviceinfomanager.h>
+#include <util/ioc/ioccontainer.h>
 
 ServiceListModel::ServiceListModel(QObject *parent) : TableItemModel(parent) { }
 

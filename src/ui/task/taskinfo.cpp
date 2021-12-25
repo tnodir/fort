@@ -2,7 +2,8 @@
 
 #include <QMetaEnum>
 
-#include "../util/dateutil.h"
+#include <util/dateutil.h>
+
 #include "taskeditinfo.h"
 #include "taskmanager.h"
 #include "taskupdatechecker.h"

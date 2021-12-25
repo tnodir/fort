@@ -4,7 +4,8 @@
 #include <QLabel>
 #include <QPushButton>
 
-#include "../dialog/dialogutil.h"
+#include <form/dialog/dialogutil.h>
+
 #include "controlutil.h"
 
 LabelColor::LabelColor(QWidget *parent) : QWidget(parent)

@@ -3,9 +3,10 @@
 
 #include <QMutex>
 
-#include "../util/classhelpers.h"
-#include "../util/ioc/iocservice.h"
-#include "../util/worker/workermanager.h"
+#include <util/classhelpers.h>
+#include <util/ioc/iocservice.h>
+#include <util/worker/workermanager.h>
+
 #include "appinfo.h"
 
 class SqliteDb;

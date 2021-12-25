@@ -2,9 +2,9 @@
 
 #include <sqlite/sqlitedb.h>
 
-#include "../fortmanager.h"
-#include "../rpc/rpcmanager.h"
-#include "../util/ioc/ioccontainer.h"
+#include <fortmanager.h>
+#include <rpc/rpcmanager.h>
+#include <util/ioc/ioccontainer.h>
 
 StatManagerRpc::StatManagerRpc(const QString &filePath, QObject *parent) :
     StatManager(filePath, parent, SqliteDb::OpenDefaultReadOnly)

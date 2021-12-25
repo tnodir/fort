@@ -4,14 +4,15 @@
 #include <QScreen>
 #include <QVBoxLayout>
 
-#include "../../conf/confmanager.h"
-#include "../../conf/firewallconf.h"
-#include "../../fortcompat.h"
-#include "../../user/iniuser.h"
-#include "../../util/dateutil.h"
-#include "../../util/ioc/ioccontainer.h"
-#include "../../util/net/netutil.h"
-#include "../../util/window/widgetwindowstatewatcher.h"
+#include <conf/confmanager.h>
+#include <conf/firewallconf.h>
+#include <fortcompat.h>
+#include <user/iniuser.h>
+#include <util/dateutil.h>
+#include <util/ioc/ioccontainer.h>
+#include <util/net/netutil.h>
+#include <util/window/widgetwindowstatewatcher.h>
+
 #include "axistickerspeed.h"
 #include "graphplot.h"
 

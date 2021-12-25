@@ -6,9 +6,9 @@
 
 #include <fort_version.h>
 
-#include "../util/net/netdownloader.h"
-#include "../util/net/netutil.h"
-#include "../util/json/jsonutil.h"
+#include <util/net/netdownloader.h>
+#include <util/net/netutil.h>
+#include <util/json/jsonutil.h>
 
 TaskUpdateChecker::TaskUpdateChecker(QObject *parent) : TaskDownloader(parent) { }
 

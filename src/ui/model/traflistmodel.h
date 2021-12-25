@@ -1,7 +1,7 @@
 #ifndef TRAFLISTMODEL_H
 #define TRAFLISTMODEL_H
 
-#include "../util/model/tableitemmodel.h"
+#include <util/model/tableitemmodel.h>
 
 class StatManager;
 

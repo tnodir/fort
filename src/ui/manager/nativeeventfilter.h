@@ -5,8 +5,8 @@
 #include <QHash>
 #include <QObject>
 
-#include "../util/classhelpers.h"
-#include "../util/ioc/iocservice.h"
+#include <util/classhelpers.h>
+#include <util/ioc/iocservice.h>
 
 class NativeEventFilter : public QObject, public QAbstractNativeEventFilter, public IocService
 {

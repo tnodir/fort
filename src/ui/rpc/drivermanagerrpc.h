@@ -1,7 +1,7 @@
 #ifndef DRIVERMANAGERRPC_H
 #define DRIVERMANAGERRPC_H
 
-#include "../driver/drivermanager.h"
+#include <driver/drivermanager.h>
 
 class DriverManagerRpc : public DriverManager
 {

@@ -4,7 +4,8 @@
 #include <QHash>
 #include <QObject>
 
-#include "../util/ioc/iocservice.h"
+#include <util/ioc/iocservice.h>
+
 #include "serviceinfo.h"
 
 class ServiceInfoManager : public QObject, public IocService

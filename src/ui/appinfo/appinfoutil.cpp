@@ -9,8 +9,9 @@
 #include <objbase.h>
 #include <shellapi.h>
 
-#include "../util/fileutil.h"
-#include "../util/osutil.h"
+#include <util/fileutil.h>
+#include <util/osutil.h>
+
 #include "appinfo.h"
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)

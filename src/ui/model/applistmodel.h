@@ -3,7 +3,7 @@
 
 #include <QDateTime>
 
-#include "../util/model/tablesqlmodel.h"
+#include <util/model/tablesqlmodel.h>
 
 class AppGroup;
 class AppInfoCache;

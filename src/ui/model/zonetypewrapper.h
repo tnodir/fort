@@ -1,7 +1,7 @@
 #ifndef ZONEWRAPPER_H
 #define ZONEWRAPPER_H
 
-#include "../util/json/mapwrapper.h"
+#include <util/json/mapwrapper.h>
 
 class ZoneTypeWrapper : public MapWrapper
 {

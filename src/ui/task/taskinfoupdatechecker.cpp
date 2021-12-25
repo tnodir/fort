@@ -4,8 +4,9 @@
 
 #include <fort_version.h>
 
-#include "../manager/windowmanager.h"
-#include "../util/ioc/ioccontainer.h"
+#include <manager/windowmanager.h>
+#include <util/ioc/ioccontainer.h>
+
 #include "taskupdatechecker.h"
 
 #define TASK_INFO_VERSION 2

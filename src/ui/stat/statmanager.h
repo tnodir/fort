@@ -6,9 +6,9 @@
 #include <QStringList>
 #include <QVector>
 
-#include "../util/classhelpers.h"
-#include "../util/ioc/iocservice.h"
-#include "../util/triggertimer.h"
+#include <util/classhelpers.h>
+#include <util/ioc/iocservice.h>
+#include <util/triggertimer.h>
 
 class FirewallConf;
 class IniOptions;

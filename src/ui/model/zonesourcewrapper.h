@@ -1,7 +1,7 @@
 #ifndef ZONESOURCEWRAPPER_H
 #define ZONESOURCEWRAPPER_H
 
-#include "../util/json/mapwrapper.h"
+#include <util/json/mapwrapper.h>
 
 class ZoneSourceWrapper : public MapWrapper
 {

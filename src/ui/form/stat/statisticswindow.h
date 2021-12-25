@@ -1,7 +1,7 @@
 #ifndef STATISTICSWINDOW_H
 #define STATISTICSWINDOW_H
 
-#include "../../util/window/widgetwindow.h"
+#include <util/window/widgetwindow.h>
 
 class ConfManager;
 class IniUser;

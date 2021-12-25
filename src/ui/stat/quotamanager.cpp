@@ -1,8 +1,8 @@
 #include "quotamanager.h"
 
-#include "../conf/confmanager.h"
-#include "../conf/firewallconf.h"
-#include "../util/ioc/ioccontainer.h"
+#include <conf/confmanager.h>
+#include <conf/firewallconf.h>
+#include <util/ioc/ioccontainer.h>
 
 QuotaManager::QuotaManager(QObject *parent) : QObject(parent) { }
 

@@ -2,7 +2,7 @@
 
 #include <fort_version.h>
 
-#include "../fileutil.h"
+#include <util/fileutil.h>
 
 Settings::Settings(QObject *parent) : QObject(parent), m_iniExists(false) { }
 

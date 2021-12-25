@@ -5,11 +5,11 @@
 #include <QRegularExpression>
 #include <QUrl>
 
-#include "../util/conf/confutil.h"
-#include "../util/fileutil.h"
-#include "../util/net/ip4range.h"
-#include "../util/net/netdownloader.h"
-#include "../util/stringutil.h"
+#include <util/conf/confutil.h>
+#include <util/fileutil.h>
+#include <util/net/ip4range.h>
+#include <util/net/netdownloader.h>
+#include <util/stringutil.h>
 
 TaskZoneDownloader::TaskZoneDownloader(QObject *parent) :
     TaskDownloader(parent), m_zoneEnabled(false), m_sort(false)

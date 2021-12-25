@@ -5,7 +5,7 @@
 #include <QObject>
 #include <QVector>
 
-#include "../../fortcompat.h"
+#include <fortcompat.h>
 
 using Ip4Pair = struct
 {

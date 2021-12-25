@@ -1,7 +1,7 @@
 #ifndef LOGMANAGERRPC_H
 #define LOGMANAGERRPC_H
 
-#include "../log/logmanager.h"
+#include <log/logmanager.h>
 
 class LogManagerRpc : public LogManager
 {

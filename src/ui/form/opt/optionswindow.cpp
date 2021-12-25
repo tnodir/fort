@@ -3,12 +3,13 @@
 #include <QKeyEvent>
 #include <QVBoxLayout>
 
-#include "../../conf/confmanager.h"
-#include "../../conf/firewallconf.h"
-#include "../../manager/windowmanager.h"
-#include "../../user/iniuser.h"
-#include "../../util/guiutil.h"
-#include "../../util/window/widgetwindowstatewatcher.h"
+#include <conf/confmanager.h>
+#include <conf/firewallconf.h>
+#include <manager/windowmanager.h>
+#include <user/iniuser.h>
+#include <util/guiutil.h>
+#include <util/window/widgetwindowstatewatcher.h>
+
 #include "optionscontroller.h"
 #include "pages/optmainpage.h"
 

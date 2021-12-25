@@ -2,12 +2,12 @@
 
 #include <sqlite/sqlitedb.h>
 
-#include "../conf/firewallconf.h"
-#include "../fortsettings.h"
-#include "../manager/windowmanager.h"
-#include "../rpc/rpcmanager.h"
-#include "../task/taskmanager.h"
-#include "../util/ioc/ioccontainer.h"
+#include <conf/firewallconf.h>
+#include <fortsettings.h>
+#include <manager/windowmanager.h>
+#include <rpc/rpcmanager.h>
+#include <task/taskmanager.h>
+#include <util/ioc/ioccontainer.h>
 
 ConfManagerRpc::ConfManagerRpc(const QString &filePath, QObject *parent) :
     ConfManager(filePath, parent, SqliteDb::OpenDefaultReadOnly)

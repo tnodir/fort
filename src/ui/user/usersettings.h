@@ -1,8 +1,9 @@
 #ifndef USERSETTINGS_H
 #define USERSETTINGS_H
 
-#include "../util/ini/settings.h"
-#include "../util/ioc/iocservice.h"
+#include <util/ini/settings.h>
+#include <util/ioc/iocservice.h>
+
 #include "iniuser.h"
 
 class UserSettings : public Settings, public IocService

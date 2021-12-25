@@ -3,7 +3,8 @@
 #include <QHash>
 #include <QRegularExpression>
 
-#include "../stringutil.h"
+#include <util/stringutil.h>
+
 #include "netutil.h"
 
 Ip4Range::Ip4Range(QObject *parent) : QObject(parent) { }

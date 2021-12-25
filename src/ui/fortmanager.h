@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "util/classhelpers.h"
+#include <util/classhelpers.h>
 
 class FirewallConf;
 

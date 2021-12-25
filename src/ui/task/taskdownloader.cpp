@@ -1,6 +1,6 @@
 #include "taskdownloader.h"
 
-#include "../util/net/netdownloader.h"
+#include <util/net/netdownloader.h>
 
 TaskDownloader::TaskDownloader(QObject *parent) : TaskWorker(parent) { }
 

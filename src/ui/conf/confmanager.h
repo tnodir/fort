@@ -4,10 +4,10 @@
 #include <QObject>
 #include <QTimer>
 
-#include "../util/classhelpers.h"
-#include "../util/conf/confappswalker.h"
-#include "../util/ioc/iocservice.h"
-#include "../util/triggertimer.h"
+#include <util/classhelpers.h>
+#include <util/conf/confappswalker.h>
+#include <util/ioc/iocservice.h>
+#include <util/triggertimer.h>
 
 class FirewallConf;
 class IniOptions;

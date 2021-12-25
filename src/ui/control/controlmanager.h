@@ -4,8 +4,9 @@
 #include <QObject>
 #include <QVariant>
 
-#include "../util/classhelpers.h"
-#include "../util/ioc/iocservice.h"
+#include <util/classhelpers.h>
+#include <util/ioc/iocservice.h>
+
 #include "control.h"
 
 QT_FORWARD_DECLARE_CLASS(QLocalServer)

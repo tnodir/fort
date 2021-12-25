@@ -2,14 +2,15 @@
 
 #include <QDebug>
 
-#include "../conf/confmanager.h"
-#include "../driver/drivercommon.h"
-#include "../driver/drivermanager.h"
-#include "../driver/driverworker.h"
-#include "../stat/statmanager.h"
-#include "../util/dateutil.h"
-#include "../util/ioc/ioccontainer.h"
-#include "../util/osutil.h"
+#include <conf/confmanager.h>
+#include <driver/drivercommon.h>
+#include <driver/drivermanager.h>
+#include <driver/driverworker.h>
+#include <stat/statmanager.h>
+#include <util/dateutil.h>
+#include <util/ioc/ioccontainer.h>
+#include <util/osutil.h>
+
 #include "logbuffer.h"
 #include "logentryblocked.h"
 #include "logentryblockedip.h"

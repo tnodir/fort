@@ -1,7 +1,7 @@
 #ifndef STATMANAGERRPC_H
 #define STATMANAGERRPC_H
 
-#include "../stat/statmanager.h"
+#include <stat/statmanager.h>
 
 class StatManagerRpc : public StatManager
 {

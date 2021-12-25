@@ -3,8 +3,9 @@
 #include <QAction>
 #include <QKeySequence>
 
-#include "../util/ioc/ioccontainer.h"
-#include "../util/osutil.h"
+#include <util/ioc/ioccontainer.h>
+#include <util/osutil.h>
+
 #include "nativeeventfilter.h"
 
 HotKeyManager::HotKeyManager(QObject *parent) : QObject(parent) { }

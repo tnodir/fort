@@ -11,16 +11,17 @@
 #include <QRadioButton>
 #include <QSpinBox>
 
-#include "../../appinfo/appinfocache.h"
-#include "../../conf/confmanager.h"
-#include "../../conf/firewallconf.h"
-#include "../../fortmanager.h"
-#include "../../manager/windowmanager.h"
-#include "../../util/iconcache.h"
-#include "../../util/ioc/ioccontainer.h"
-#include "../controls/checkspincombo.h"
-#include "../controls/controlutil.h"
-#include "../dialog/dialogutil.h"
+#include <appinfo/appinfocache.h>
+#include <conf/confmanager.h>
+#include <conf/firewallconf.h>
+#include <form/controls/checkspincombo.h>
+#include <form/controls/controlutil.h>
+#include <form/dialog/dialogutil.h>
+#include <fortmanager.h>
+#include <manager/windowmanager.h>
+#include <util/iconcache.h>
+#include <util/ioc/ioccontainer.h>
+
 #include "programscontroller.h"
 
 namespace {

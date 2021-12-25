@@ -1,12 +1,12 @@
 #include "zonescontroller.h"
 
-#include "../../conf/confmanager.h"
-#include "../../conf/firewallconf.h"
-#include "../../manager/translationmanager.h"
-#include "../../manager/windowmanager.h"
-#include "../../model/zonelistmodel.h"
-#include "../../task/taskmanager.h"
-#include "../../util/ioc/ioccontainer.h"
+#include <conf/confmanager.h>
+#include <conf/firewallconf.h>
+#include <manager/translationmanager.h>
+#include <manager/windowmanager.h>
+#include <model/zonelistmodel.h>
+#include <task/taskmanager.h>
+#include <util/ioc/ioccontainer.h>
 
 ZonesController::ZonesController(QObject *parent) : QObject(parent)
 {

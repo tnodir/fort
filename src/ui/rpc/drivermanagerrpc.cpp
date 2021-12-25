@@ -1,8 +1,8 @@
 #include "drivermanagerrpc.h"
 
-#include "../control/controlworker.h"
-#include "../rpc/rpcmanager.h"
-#include "../util/ioc/ioccontainer.h"
+#include <control/controlworker.h>
+#include <rpc/rpcmanager.h>
+#include <util/ioc/ioccontainer.h>
 
 DriverManagerRpc::DriverManagerRpc(QObject *parent) :
     DriverManager(parent, false), m_isDeviceOpened(false)

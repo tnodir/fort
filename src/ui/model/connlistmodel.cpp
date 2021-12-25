@@ -6,14 +6,14 @@
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
-#include "../appinfo/appinfocache.h"
-#include "../fortmanager.h"
-#include "../hostinfo/hostinfocache.h"
-#include "../log/logentryblockedip.h"
-#include "../stat/statmanager.h"
-#include "../util/iconcache.h"
-#include "../util/ioc/ioccontainer.h"
-#include "../util/net/netutil.h"
+#include <appinfo/appinfocache.h>
+#include <fortmanager.h>
+#include <hostinfo/hostinfocache.h>
+#include <log/logentryblockedip.h>
+#include <stat/statmanager.h>
+#include <util/iconcache.h>
+#include <util/ioc/ioccontainer.h>
+#include <util/net/netutil.h>
 
 ConnListModel::ConnListModel(QObject *parent) :
     TableSqlModel(parent), m_connMode(ConnNone), m_resolveAddress(false)

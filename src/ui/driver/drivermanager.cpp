@@ -3,11 +3,12 @@
 #include <QProcess>
 #include <QThreadPool>
 
-#include "../conf/firewallconf.h"
-#include "../driver/drivercommon.h"
-#include "../util/device.h"
-#include "../util/fileutil.h"
-#include "../util/osutil.h"
+#include <conf/firewallconf.h>
+#include <driver/drivercommon.h>
+#include <util/device.h>
+#include <util/fileutil.h>
+#include <util/osutil.h>
+
 #include "driverworker.h"
 
 DriverManager::DriverManager(QObject *parent, bool useDevice) : QObject(parent)

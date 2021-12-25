@@ -1,7 +1,7 @@
 #ifndef PROGRAMSWINDOW_H
 #define PROGRAMSWINDOW_H
 
-#include "../../util/window/widgetwindow.h"
+#include <util/window/widgetwindow.h>
 
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QPushButton)

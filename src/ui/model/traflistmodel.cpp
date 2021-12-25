@@ -2,11 +2,11 @@
 
 #include <QLocale>
 
-#include "../stat/statmanager.h"
-#include "../stat/statsql.h"
-#include "../util/dateutil.h"
-#include "../util/ioc/ioccontainer.h"
-#include "../util/net/netutil.h"
+#include <stat/statmanager.h>
+#include <stat/statsql.h>
+#include <util/dateutil.h>
+#include <util/ioc/ioccontainer.h>
+#include <util/net/netutil.h>
 
 namespace {
 

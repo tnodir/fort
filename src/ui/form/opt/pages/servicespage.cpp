@@ -6,15 +6,15 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-#include "../../../conf/firewallconf.h"
-#include "../../../model/servicelistmodel.h"
-#include "../../../serviceinfo/serviceinfomanager.h"
-#include "../../../user/iniuser.h"
-#include "../../../util/iconcache.h"
-#include "../../../util/ioc/ioccontainer.h"
-#include "../../controls/controlutil.h"
-#include "../../controls/tableview.h"
-#include "../optionscontroller.h"
+#include <conf/firewallconf.h>
+#include <form/controls/controlutil.h>
+#include <form/controls/tableview.h>
+#include <form/opt/optionscontroller.h>
+#include <model/servicelistmodel.h>
+#include <serviceinfo/serviceinfomanager.h>
+#include <user/iniuser.h>
+#include <util/iconcache.h>
+#include <util/ioc/ioccontainer.h>
 
 ServicesPage::ServicesPage(OptionsController *ctrl, QWidget *parent) :
     OptBasePage(ctrl, parent), m_serviceListModel(new ServiceListModel(this))

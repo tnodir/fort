@@ -1,7 +1,7 @@
 #ifndef INIOPTIONS_H
 #define INIOPTIONS_H
 
-#include "../util/ini/mapsettings.h"
+#include <util/ini/mapsettings.h>
 
 #define DEFAULT_APP_GROUP_BITS         0xFFFF
 #define DEFAULT_MONTH_START            1

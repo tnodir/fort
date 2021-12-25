@@ -5,15 +5,16 @@
 #include <common/fortconf.h>
 #include <fort_version.h>
 
-#include "../../conf/addressgroup.h"
-#include "../../conf/appgroup.h"
-#include "../../conf/firewallconf.h"
-#include "../../driver/drivercommon.h"
-#include "../../manager/envmanager.h"
-#include "../dateutil.h"
-#include "../fileutil.h"
-#include "../net/ip4range.h"
-#include "../stringutil.h"
+#include <conf/addressgroup.h>
+#include <conf/appgroup.h>
+#include <conf/firewallconf.h>
+#include <driver/drivercommon.h>
+#include <manager/envmanager.h>
+#include <util/dateutil.h>
+#include <util/fileutil.h>
+#include <util/net/ip4range.h>
+#include <util/stringutil.h>
+
 #include "confappswalker.h"
 
 #define APP_GROUP_MAX      FORT_CONF_GROUP_MAX

@@ -1,7 +1,7 @@
 #include "appgroup.h"
 
-#include "../util/dateutil.h"
-#include "../util/net/netutil.h"
+#include <util/dateutil.h>
+#include <util/net/netutil.h>
 
 AppGroup::AppGroup(QObject *parent) :
     QObject(parent),

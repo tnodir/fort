@@ -4,17 +4,18 @@
 #include <QMenu>
 #include <QTimer>
 
-#include "../../conf/addressgroup.h"
-#include "../../conf/appgroup.h"
-#include "../../conf/confmanager.h"
-#include "../../conf/firewallconf.h"
-#include "../../fortsettings.h"
-#include "../../manager/hotkeymanager.h"
-#include "../../manager/windowmanager.h"
-#include "../../user/iniuser.h"
-#include "../../util/guiutil.h"
-#include "../../util/iconcache.h"
-#include "../controls/mainwindow.h"
+#include <conf/addressgroup.h>
+#include <conf/appgroup.h>
+#include <conf/confmanager.h>
+#include <conf/firewallconf.h>
+#include <form/controls/mainwindow.h>
+#include <fortsettings.h>
+#include <manager/hotkeymanager.h>
+#include <manager/windowmanager.h>
+#include <user/iniuser.h>
+#include <util/guiutil.h>
+#include <util/iconcache.h>
+
 #include "traycontroller.h"
 
 namespace {
@@ -132,9 +133,8 @@ void TrayIcon::onTrayActivated(QSystemTrayIcon::ActivationReason reason)
 
 void TrayIcon::updateTrayIcon(bool alerted)
 {
-    const auto icon = alerted
-            ? GuiUtil::overlayIcon(":/icons/sheild-96.png", ":/icons/error.png")
-            : IconCache::icon(":/icons/sheild-96.png");
+    const auto icon = alerted ? GuiUtil::overlayIcon(":/icons/sheild-96.png", ":/icons/error.png")
+                              : IconCache::icon(":/icons/sheild-96.png");
 
     this->setIcon(icon);
 }

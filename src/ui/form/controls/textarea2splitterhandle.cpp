@@ -6,8 +6,9 @@
 #include <QPushButton>
 #include <QStyleOption>
 
-#include "../../util/textareautil.h"
-#include "../controls/controlutil.h"
+#include <form/controls/controlutil.h>
+#include <util/textareautil.h>
+
 #include "textarea2splitter.h"
 
 TextArea2SplitterHandle::TextArea2SplitterHandle(Qt::Orientation o, QSplitter *parent) :

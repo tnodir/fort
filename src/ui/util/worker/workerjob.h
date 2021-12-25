@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "../classhelpers.h"
+#include <util/classhelpers.h>
 
 class WorkerJob
 {

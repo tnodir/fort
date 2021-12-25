@@ -2,10 +2,10 @@
 
 #include <QAbstractButton>
 
-#include "../../../conf/firewallconf.h"
-#include "../../../fortmanager.h"
-#include "../../../user/iniuser.h"
-#include "../statisticscontroller.h"
+#include <conf/firewallconf.h>
+#include <form/stat/statisticscontroller.h>
+#include <fortmanager.h>
+#include <user/iniuser.h>
 
 StatBasePage::StatBasePage(StatisticsController *ctrl, QWidget *parent) :
     QFrame(parent), m_ctrl(ctrl)

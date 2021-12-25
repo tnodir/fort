@@ -1,7 +1,7 @@
 #ifndef TASKMANAGERRPC_H
 #define TASKMANAGERRPC_H
 
-#include "../task/taskmanager.h"
+#include <task/taskmanager.h>
 
 class TaskManagerRpc : public TaskManager
 {

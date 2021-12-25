@@ -6,16 +6,16 @@
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
-#include "../appinfo/appinfocache.h"
-#include "../appinfo/appinfoutil.h"
-#include "../conf/appgroup.h"
-#include "../conf/confmanager.h"
-#include "../conf/firewallconf.h"
-#include "../util/fileutil.h"
-#include "../util/guiutil.h"
-#include "../util/iconcache.h"
-#include "../util/ioc/ioccontainer.h"
-#include "../util/net/netutil.h"
+#include <appinfo/appinfocache.h>
+#include <appinfo/appinfoutil.h>
+#include <conf/appgroup.h>
+#include <conf/confmanager.h>
+#include <conf/firewallconf.h>
+#include <util/fileutil.h>
+#include <util/guiutil.h>
+#include <util/iconcache.h>
+#include <util/ioc/ioccontainer.h>
+#include <util/net/netutil.h>
 
 namespace {
 

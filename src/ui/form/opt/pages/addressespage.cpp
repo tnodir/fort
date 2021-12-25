@@ -10,22 +10,23 @@
 #include <QTabBar>
 #include <QVBoxLayout>
 
-#include "../../../conf/addressgroup.h"
-#include "../../../conf/confmanager.h"
-#include "../../../conf/firewallconf.h"
-#include "../../../driver/drivercommon.h"
-#include "../../../fortmanager.h"
-#include "../../../fortsettings.h"
-#include "../../../model/zonelistmodel.h"
-#include "../../../user/iniuser.h"
-#include "../../../util/iconcache.h"
-#include "../../../util/net/netutil.h"
-#include "../../../util/textareautil.h"
-#include "../../controls/controlutil.h"
-#include "../../controls/plaintextedit.h"
-#include "../../controls/textarea2splitter.h"
-#include "../../controls/textarea2splitterhandle.h"
-#include "../optionscontroller.h"
+#include <conf/addressgroup.h>
+#include <conf/confmanager.h>
+#include <conf/firewallconf.h>
+#include <driver/drivercommon.h>
+#include <form/controls/controlutil.h>
+#include <form/controls/plaintextedit.h>
+#include <form/controls/textarea2splitter.h>
+#include <form/controls/textarea2splitterhandle.h>
+#include <form/opt/optionscontroller.h>
+#include <fortmanager.h>
+#include <fortsettings.h>
+#include <model/zonelistmodel.h>
+#include <user/iniuser.h>
+#include <util/iconcache.h>
+#include <util/net/netutil.h>
+#include <util/textareautil.h>
+
 #include "addresses/addressescolumn.h"
 
 AddressesPage::AddressesPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctrl, parent)

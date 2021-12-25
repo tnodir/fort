@@ -1,8 +1,8 @@
 #include "taskmanagerrpc.h"
 
-#include "../rpc/rpcmanager.h"
-#include "../task/taskinfo.h"
-#include "../util/ioc/ioccontainer.h"
+#include <rpc/rpcmanager.h>
+#include <task/taskinfo.h>
+#include <util/ioc/ioccontainer.h>
 
 TaskManagerRpc::TaskManagerRpc(QObject *parent) : TaskManager(parent) { }
 

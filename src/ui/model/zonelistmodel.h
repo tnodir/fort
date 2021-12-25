@@ -3,8 +3,8 @@
 
 #include <QDateTime>
 
-#include "../util/ioc/iocservice.h"
-#include "../util/model/tablesqlmodel.h"
+#include <util/ioc/iocservice.h>
+#include <util/model/tablesqlmodel.h>
 
 class ConfManager;
 class SqliteDb;

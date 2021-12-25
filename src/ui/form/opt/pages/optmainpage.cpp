@@ -9,10 +9,11 @@
 
 #include <fort_version.h>
 
-#include "../../../fortsettings.h"
-#include "../../../util/iconcache.h"
-#include "../../controls/controlutil.h"
-#include "../optionscontroller.h"
+#include <form/controls/controlutil.h>
+#include <form/opt/optionscontroller.h>
+#include <fortsettings.h>
+#include <util/iconcache.h>
+
 #include "addressespage.h"
 #include "applicationspage.h"
 #include "optionspage.h"
@@ -92,8 +93,7 @@ QLayout *OptMainPage::setupDialogButtons()
     auto buttonsLayout = new QHBoxLayout();
 
     m_btLogs = ControlUtil::createLinkButton(":/icons/folder.png", settings()->logsPath());
-    m_btProfile =
-            ControlUtil::createLinkButton(":/icons/folder.png", settings()->profilePath());
+    m_btProfile = ControlUtil::createLinkButton(":/icons/folder.png", settings()->profilePath());
     m_btStat = ControlUtil::createLinkButton(":/icons/folder.png", settings()->statPath());
     m_btReleases = ControlUtil::createLinkButton(":/icons/github.png", APP_UPDATES_URL);
 

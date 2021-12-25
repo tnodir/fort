@@ -4,8 +4,9 @@
 #include <QCache>
 #include <QObject>
 
-#include "../util/ioc/iocservice.h"
-#include "../util/triggertimer.h"
+#include <util/ioc/iocservice.h>
+#include <util/triggertimer.h>
+
 #include "appinfo.h"
 
 class AppInfoCache : public QObject, public IocService

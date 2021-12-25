@@ -2,13 +2,14 @@
 
 #include <QIcon>
 
-#include "../appinfo/appinfo.h"
-#include "../appinfo/appinfocache.h"
-#include "../fortmanager.h"
-#include "../stat/statmanager.h"
-#include "../util/fileutil.h"
-#include "../util/iconcache.h"
-#include "../util/ioc/ioccontainer.h"
+#include <appinfo/appinfo.h>
+#include <appinfo/appinfocache.h>
+#include <fortmanager.h>
+#include <stat/statmanager.h>
+#include <util/fileutil.h>
+#include <util/iconcache.h>
+#include <util/ioc/ioccontainer.h>
+
 #include "traflistmodel.h"
 
 AppStatModel::AppStatModel(QObject *parent) : StringListModel(parent) { }

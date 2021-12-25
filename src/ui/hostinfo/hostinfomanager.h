@@ -1,7 +1,7 @@
 #ifndef HOSTINFOMANAGER_H
 #define HOSTINFOMANAGER_H
 
-#include "../util/worker/workermanager.h"
+#include <util/worker/workermanager.h>
 
 class HostInfoManager : public WorkerManager
 {

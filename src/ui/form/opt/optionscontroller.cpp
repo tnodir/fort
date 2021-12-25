@@ -1,15 +1,15 @@
 #include "optionscontroller.h"
 
-#include "../../conf/confmanager.h"
-#include "../../conf/firewallconf.h"
-#include "../../driver/drivermanager.h"
-#include "../../fortmanager.h"
-#include "../../fortsettings.h"
-#include "../../manager/translationmanager.h"
-#include "../../manager/windowmanager.h"
-#include "../../model/zonelistmodel.h"
-#include "../../task/taskmanager.h"
-#include "../../util/ioc/ioccontainer.h"
+#include <conf/confmanager.h>
+#include <conf/firewallconf.h>
+#include <driver/drivermanager.h>
+#include <fortmanager.h>
+#include <fortsettings.h>
+#include <manager/translationmanager.h>
+#include <manager/windowmanager.h>
+#include <model/zonelistmodel.h>
+#include <task/taskmanager.h>
+#include <util/ioc/ioccontainer.h>
 
 OptionsController::OptionsController(QObject *parent) : QObject(parent)
 {

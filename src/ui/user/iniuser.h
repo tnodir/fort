@@ -1,7 +1,7 @@
 #ifndef INIUSER_H
 #define INIUSER_H
 
-#include "../util/ini/mapsettings.h"
+#include <util/ini/mapsettings.h>
 
 class IniUser : public MapSettings
 {

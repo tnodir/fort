@@ -5,10 +5,11 @@
 #include <QTabWidget>
 #include <QVBoxLayout>
 
-#include "../../../fortsettings.h"
-#include "../../../util/iconcache.h"
-#include "../../controls/controlutil.h"
-#include "../statisticscontroller.h"
+#include <form/controls/controlutil.h>
+#include <form/stat/statisticscontroller.h>
+#include <fortsettings.h>
+#include <util/iconcache.h>
+
 #include "connectionspage.h"
 #include "trafficpage.h"
 

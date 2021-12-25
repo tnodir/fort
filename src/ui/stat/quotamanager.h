@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "../util/ioc/iocservice.h"
+#include <util/ioc/iocservice.h>
 
 class QuotaManager : public QObject, public IocService
 {

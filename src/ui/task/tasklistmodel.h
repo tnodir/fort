@@ -3,7 +3,8 @@
 
 #include <QVector>
 
-#include "../util/model/tableitemmodel.h"
+#include <util/model/tableitemmodel.h>
+
 #include "taskeditinfo.h"
 
 class TaskInfo;

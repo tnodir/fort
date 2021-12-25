@@ -2,9 +2,9 @@
 
 #include <fort_version.h>
 
-#include "../util/dateutil.h"
-#include "../util/fileutil.h"
-#include "../util/osutil.h"
+#include <util/dateutil.h>
+#include <util/fileutil.h>
+#include <util/osutil.h>
 
 namespace {
 

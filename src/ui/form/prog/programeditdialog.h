@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-#include "../../model/applistmodel.h"
+#include <model/applistmodel.h>
 
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QComboBox)

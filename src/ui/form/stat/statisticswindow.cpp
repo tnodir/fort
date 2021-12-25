@@ -2,11 +2,12 @@
 
 #include <QVBoxLayout>
 
-#include "../../conf/confmanager.h"
-#include "../../manager/windowmanager.h"
-#include "../../user/iniuser.h"
-#include "../../util/guiutil.h"
-#include "../../util/window/widgetwindowstatewatcher.h"
+#include <conf/confmanager.h>
+#include <manager/windowmanager.h>
+#include <user/iniuser.h>
+#include <util/guiutil.h>
+#include <util/window/widgetwindowstatewatcher.h>
+
 #include "pages/statmainpage.h"
 #include "statisticscontroller.h"
 

@@ -1,9 +1,9 @@
 #include "driverworker.h"
 
-#include "../driver/drivercommon.h"
-#include "../log/logbuffer.h"
-#include "../util/device.h"
-#include "../util/osutil.h"
+#include <driver/drivercommon.h>
+#include <log/logbuffer.h>
+#include <util/device.h>
+#include <util/osutil.h>
 
 DriverWorker::DriverWorker(Device *device, QObject *parent) : QObject(parent), m_device(device) { }
 

@@ -12,22 +12,22 @@
 #include <QStandardItemModel>
 #include <QVBoxLayout>
 
-#include "../../../conf/confmanager.h"
-#include "../../../conf/firewallconf.h"
-#include "../../../driver/drivermanager.h"
-#include "../../../fortmanager.h"
-#include "../../../fortsettings.h"
-#include "../../../manager/translationmanager.h"
-#include "../../../manager/windowmanager.h"
-#include "../../../task/taskinfoupdatechecker.h"
-#include "../../../task/taskmanager.h"
-#include "../../../user/iniuser.h"
-#include "../../../util/iconcache.h"
-#include "../../../util/osutil.h"
-#include "../../../util/startuputil.h"
-#include "../../controls/controlutil.h"
-#include "../../dialog/passworddialog.h"
-#include "../optionscontroller.h"
+#include <conf/confmanager.h>
+#include <conf/firewallconf.h>
+#include <driver/drivermanager.h>
+#include <form/controls/controlutil.h>
+#include <form/dialog/passworddialog.h>
+#include <form/opt/optionscontroller.h>
+#include <fortmanager.h>
+#include <fortsettings.h>
+#include <manager/translationmanager.h>
+#include <manager/windowmanager.h>
+#include <task/taskinfoupdatechecker.h>
+#include <task/taskmanager.h>
+#include <user/iniuser.h>
+#include <util/iconcache.h>
+#include <util/osutil.h>
+#include <util/startuputil.h>
 
 namespace {
 

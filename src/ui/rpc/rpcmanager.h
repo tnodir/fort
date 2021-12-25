@@ -4,8 +4,8 @@
 #include <QObject>
 #include <QVariant>
 
-#include "../control/control.h"
-#include "../util/ioc/iocservice.h"
+#include <control/control.h>
+#include <util/ioc/iocservice.h>
 
 struct ProcessCommandArgs;
 class ControlWorker;

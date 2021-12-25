@@ -6,8 +6,8 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-#include "../../../controls/controlutil.h"
-#include "../../../controls/plaintextedit.h"
+#include <form/controls/controlutil.h>
+#include <form/controls/plaintextedit.h>
 
 AddressesColumn::AddressesColumn(QWidget *parent) : QWidget(parent)
 {

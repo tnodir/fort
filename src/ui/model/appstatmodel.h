@@ -1,7 +1,7 @@
 #ifndef APPSTATMODEL_H
 #define APPSTATMODEL_H
 
-#include "../util/model/stringlistmodel.h"
+#include <util/model/stringlistmodel.h>
 
 class AppInfoCache;
 class StatManager;

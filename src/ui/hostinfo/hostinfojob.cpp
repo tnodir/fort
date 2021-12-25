@@ -1,6 +1,6 @@
 #include "hostinfojob.h"
 
-#include "../util/net/netutil.h"
+#include <util/net/netutil.h>
 
 HostInfoJob::HostInfoJob(const QString &address) : WorkerJob(address) { }
 

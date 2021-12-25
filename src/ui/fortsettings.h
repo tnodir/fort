@@ -1,7 +1,7 @@
 #ifndef FORTSETTINGS_H
 #define FORTSETTINGS_H
 
-#include "util/ini/settings.h"
+#include <util/ini/settings.h>
 
 class EnvManager;
 class FirewallConf;

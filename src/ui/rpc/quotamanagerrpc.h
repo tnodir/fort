@@ -1,7 +1,7 @@
 #ifndef QUOTAMANAGERRPC_H
 #define QUOTAMANAGERRPC_H
 
-#include "../stat/quotamanager.h"
+#include <stat/quotamanager.h>
 
 class QuotaManagerRpc : public QuotaManager
 {

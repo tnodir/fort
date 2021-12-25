@@ -11,22 +11,23 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-#include "../../conf/confmanager.h"
-#include "../../conf/firewallconf.h"
-#include "../../manager/windowmanager.h"
-#include "../../model/zonelistmodel.h"
-#include "../../model/zonesourcewrapper.h"
-#include "../../task/taskinfozonedownloader.h"
-#include "../../task/taskmanager.h"
-#include "../../user/iniuser.h"
-#include "../../util/conf/confutil.h"
-#include "../../util/guiutil.h"
-#include "../../util/iconcache.h"
-#include "../../util/ioc/ioccontainer.h"
-#include "../../util/window/widgetwindowstatewatcher.h"
-#include "../controls/controlutil.h"
-#include "../controls/tableview.h"
-#include "../dialog/dialogutil.h"
+#include <conf/confmanager.h>
+#include <conf/firewallconf.h>
+#include <form/controls/controlutil.h>
+#include <form/controls/tableview.h>
+#include <form/dialog/dialogutil.h>
+#include <manager/windowmanager.h>
+#include <model/zonelistmodel.h>
+#include <model/zonesourcewrapper.h>
+#include <task/taskinfozonedownloader.h>
+#include <task/taskmanager.h>
+#include <user/iniuser.h>
+#include <util/conf/confutil.h>
+#include <util/guiutil.h>
+#include <util/iconcache.h>
+#include <util/ioc/ioccontainer.h>
+#include <util/window/widgetwindowstatewatcher.h>
+
 #include "zonescontroller.h"
 
 namespace {
@@ -166,8 +167,7 @@ void ZonesWindow::setupUi()
     this->setFont(WindowManager::defaultFont());
 
     // Icon
-    this->setWindowIcon(
-            GuiUtil::overlayIcon(":/icons/sheild-96.png", ":/icons/ip_class.png"));
+    this->setWindowIcon(GuiUtil::overlayIcon(":/icons/sheild-96.png", ":/icons/ip_class.png"));
 
     // Size
     this->setMinimumSize(500, 400);

@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "../util/ioc/iocservice.h"
+#include <util/ioc/iocservice.h>
 
 class LogBuffer;
 class LogEntry;

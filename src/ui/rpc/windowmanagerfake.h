@@ -1,7 +1,7 @@
 #ifndef WINDOWMANAGERFAKE_H
 #define WINDOWMANAGERFAKE_H
 
-#include "../manager/windowmanager.h"
+#include <manager/windowmanager.h>
 
 class WindowManagerFake : public WindowManager
 {

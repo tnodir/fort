@@ -1,6 +1,7 @@
 #include "logbuffer.h"
 
-#include "../driver/drivercommon.h"
+#include <driver/drivercommon.h>
+
 #include "logentryblocked.h"
 #include "logentryblockedip.h"
 #include "logentryprocnew.h"

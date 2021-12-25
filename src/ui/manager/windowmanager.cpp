@@ -7,20 +7,21 @@
 #include <QStyle>
 #include <QStyleFactory>
 
-#include "../conf/confmanager.h"
-#include "../form/controls/mainwindow.h"
-#include "../form/dialog/passworddialog.h"
-#include "../form/graph/graphwindow.h"
-#include "../form/opt/optionswindow.h"
-#include "../form/prog/programswindow.h"
-#include "../form/stat/statisticswindow.h"
-#include "../form/tray/trayicon.h"
-#include "../form/zone/zoneswindow.h"
-#include "../fortcompat.h"
-#include "../fortsettings.h"
-#include "../stat/statmanager.h"
+#include <conf/confmanager.h>
+#include <form/controls/mainwindow.h>
+#include <form/dialog/passworddialog.h>
+#include <form/graph/graphwindow.h>
+#include <form/opt/optionswindow.h>
+#include <form/prog/programswindow.h>
+#include <form/stat/statisticswindow.h>
+#include <form/tray/trayicon.h>
+#include <form/zone/zoneswindow.h>
+#include <fortcompat.h>
+#include <fortsettings.h>
+#include <stat/statmanager.h>
+#include <util/ioc/ioccontainer.h>
+
 #include "nativeeventfilter.h"
-#include "util/ioc/ioccontainer.h"
 
 namespace {
 

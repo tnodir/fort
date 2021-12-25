@@ -9,14 +9,14 @@
 #include <QTableView>
 #include <QVBoxLayout>
 
-#include "../../../conf/firewallconf.h"
-#include "../../../task/taskinfo.h"
-#include "../../../task/tasklistmodel.h"
-#include "../../../task/taskmanager.h"
-#include "../../controls/checkspincombo.h"
-#include "../../controls/controlutil.h"
-#include "../../controls/tableview.h"
-#include "../optionscontroller.h"
+#include <conf/firewallconf.h>
+#include <form/controls/checkspincombo.h>
+#include <form/controls/controlutil.h>
+#include <form/controls/tableview.h>
+#include <form/opt/optionscontroller.h>
+#include <task/taskinfo.h>
+#include <task/tasklistmodel.h>
+#include <task/taskmanager.h>
 
 namespace {
 

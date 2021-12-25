@@ -4,8 +4,8 @@
 #include <QDir>
 #include <QTranslator>
 
-#include "util/fileutil.h"
-#include "util/stringutil.h"
+#include <util/fileutil.h>
+#include <util/stringutil.h>
 
 #define TRANSLATION_FILE_PREFIX "i18n_"
 #define TRANSLATION_FILE_SUFFIX ".qm"

@@ -1,9 +1,10 @@
 #include "taskmanager.h"
 
-#include "../conf/confmanager.h"
-#include "../model/zonelistmodel.h"
-#include "../util/dateutil.h"
-#include "../util/ioc/ioccontainer.h"
+#include <conf/confmanager.h>
+#include <model/zonelistmodel.h>
+#include <util/dateutil.h>
+#include <util/ioc/ioccontainer.h>
+
 #include "taskinfoupdatechecker.h"
 #include "taskinfozonedownloader.h"
 

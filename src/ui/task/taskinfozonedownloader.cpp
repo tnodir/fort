@@ -2,14 +2,15 @@
 
 #include <QDir>
 
-#include "../conf/confmanager.h"
-#include "../fortsettings.h"
-#include "../manager/windowmanager.h"
-#include "../model/zonelistmodel.h"
-#include "../model/zonesourcewrapper.h"
-#include "../model/zonetypewrapper.h"
-#include "../util/fileutil.h"
-#include "../util/ioc/ioccontainer.h"
+#include <conf/confmanager.h>
+#include <fortsettings.h>
+#include <manager/windowmanager.h>
+#include <model/zonelistmodel.h>
+#include <model/zonesourcewrapper.h>
+#include <model/zonetypewrapper.h>
+#include <util/fileutil.h>
+#include <util/ioc/ioccontainer.h>
+
 #include "taskzonedownloader.h"
 
 TaskInfoZoneDownloader::TaskInfoZoneDownloader(TaskManager &taskManager) :

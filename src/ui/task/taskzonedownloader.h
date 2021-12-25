@@ -3,7 +3,8 @@
 
 #include <QDateTime>
 
-#include "../fortcompat.h"
+#include <fortcompat.h>
+
 #include "taskdownloader.h"
 
 class TaskZoneDownloader : public TaskDownloader

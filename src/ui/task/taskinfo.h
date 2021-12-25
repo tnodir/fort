@@ -4,7 +4,7 @@
 #include <QDateTime>
 #include <QObject>
 
-#include "../util/classhelpers.h"
+#include <util/classhelpers.h>
 
 class TaskManager;
 class TaskWorker;

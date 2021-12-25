@@ -11,7 +11,7 @@
 #include <QToolButton>
 #include <QWidgetAction>
 
-#include "../../util/iconcache.h"
+#include <util/iconcache.h>
 
 QCheckBox *ControlUtil::createCheckBox(
         bool checked, const std::function<void(bool checked)> &onToggled)

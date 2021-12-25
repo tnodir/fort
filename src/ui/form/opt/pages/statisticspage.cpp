@@ -8,15 +8,15 @@
 #include <QTimeEdit>
 #include <QVBoxLayout>
 
-#include "../../../conf/firewallconf.h"
-#include "../../../util/iconcache.h"
-#include "../../../util/net/netutil.h"
-#include "../../controls/checktimeperiod.h"
-#include "../../controls/controlutil.h"
-#include "../../controls/labelcolor.h"
-#include "../../controls/labelspin.h"
-#include "../../controls/labelspincombo.h"
-#include "../optionscontroller.h"
+#include <conf/firewallconf.h>
+#include <form/controls/checktimeperiod.h>
+#include <form/controls/controlutil.h>
+#include <form/controls/labelcolor.h>
+#include <form/controls/labelspin.h>
+#include <form/controls/labelspincombo.h>
+#include <form/opt/optionscontroller.h>
+#include <util/iconcache.h>
+#include <util/net/netutil.h>
 
 namespace {
 

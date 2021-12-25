@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QVariant>
 
-#include "../net/ip4range.h"
+#include <util/net/ip4range.h>
 
 class AddressRange
 {

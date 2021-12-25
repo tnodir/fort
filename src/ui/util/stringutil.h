@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "../fortcompat.h"
+#include <fortcompat.h>
 
 class StringUtil
 {

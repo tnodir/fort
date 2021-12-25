@@ -1,7 +1,8 @@
 #include "firewallconf.h"
 
-#include "../util/fileutil.h"
-#include "../util/net/netutil.h"
+#include <util/fileutil.h>
+#include <util/net/netutil.h>
+
 #include "addressgroup.h"
 #include "appgroup.h"
 

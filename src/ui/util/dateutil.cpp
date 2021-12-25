@@ -2,7 +2,7 @@
 
 #include <QLocale>
 
-#include "../fortcompat.h"
+#include <fortcompat.h>
 
 DateUtil::DateUtil(QObject *parent) : QObject(parent) { }
 

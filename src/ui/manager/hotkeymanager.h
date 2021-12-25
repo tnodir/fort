@@ -4,7 +4,7 @@
 #include <QAction>
 #include <QList>
 
-#include "../util/ioc/iocservice.h"
+#include <util/ioc/iocservice.h>
 
 class NativeEventFilter;
 

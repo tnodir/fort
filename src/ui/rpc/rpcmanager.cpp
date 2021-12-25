@@ -1,17 +1,17 @@
 #include "rpcmanager.h"
 
-#include "../conf/firewallconf.h"
-#include "../control/controlmanager.h"
-#include "../control/controlworker.h"
-#include "../fortsettings.h"
-#include "../manager/windowmanager.h"
-#include "../rpc/appinfomanagerrpc.h"
-#include "../rpc/confmanagerrpc.h"
-#include "../rpc/drivermanagerrpc.h"
-#include "../rpc/quotamanagerrpc.h"
-#include "../rpc/statmanagerrpc.h"
-#include "../rpc/taskmanagerrpc.h"
-#include "../util/ioc/ioccontainer.h"
+#include <conf/firewallconf.h>
+#include <control/controlmanager.h>
+#include <control/controlworker.h>
+#include <fortsettings.h>
+#include <manager/windowmanager.h>
+#include <rpc/appinfomanagerrpc.h>
+#include <rpc/confmanagerrpc.h>
+#include <rpc/drivermanagerrpc.h>
+#include <rpc/quotamanagerrpc.h>
+#include <rpc/statmanagerrpc.h>
+#include <rpc/taskmanagerrpc.h>
+#include <util/ioc/ioccontainer.h>
 
 namespace {
 

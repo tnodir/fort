@@ -7,15 +7,15 @@
 #include <breakpad/crashhandler.h>
 #include <fort_version.h>
 
-#include "control/controlmanager.h"
-#include "driver/drivercommon.h"
-#include "fortmanager.h"
-#include "fortsettings.h"
-#include "manager/envmanager.h"
-#include "util/fileutil.h"
-#include "util/ioc/ioccontainer.h"
-#include "util/serviceworker.h"
-#include "util/startuputil.h"
+#include <control/controlmanager.h>
+#include <driver/drivercommon.h>
+#include <fortmanager.h>
+#include <fortsettings.h>
+#include <manager/envmanager.h>
+#include <util/fileutil.h>
+#include <util/ioc/ioccontainer.h>
+#include <util/serviceworker.h>
+#include <util/startuputil.h>
 
 namespace {
 

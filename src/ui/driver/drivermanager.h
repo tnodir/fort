@@ -3,8 +3,8 @@
 
 #include <QObject>
 
-#include "../util/classhelpers.h"
-#include "../util/ioc/iocservice.h"
+#include <util/classhelpers.h>
+#include <util/ioc/iocservice.h>
 
 class Device;
 class DriverWorker;

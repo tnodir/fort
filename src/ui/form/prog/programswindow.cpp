@@ -6,19 +6,20 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-#include "../../appinfo/appinfocache.h"
-#include "../../conf/confmanager.h"
-#include "../../conf/firewallconf.h"
-#include "../../fortsettings.h"
-#include "../../manager/windowmanager.h"
-#include "../../model/applistmodel.h"
-#include "../../user/iniuser.h"
-#include "../../util/guiutil.h"
-#include "../../util/iconcache.h"
-#include "../../util/window/widgetwindowstatewatcher.h"
-#include "../controls/appinforow.h"
-#include "../controls/controlutil.h"
-#include "../controls/tableview.h"
+#include <appinfo/appinfocache.h>
+#include <conf/confmanager.h>
+#include <conf/firewallconf.h>
+#include <form/controls/appinforow.h>
+#include <form/controls/controlutil.h>
+#include <form/controls/tableview.h>
+#include <fortsettings.h>
+#include <manager/windowmanager.h>
+#include <model/applistmodel.h>
+#include <user/iniuser.h>
+#include <util/guiutil.h>
+#include <util/iconcache.h>
+#include <util/window/widgetwindowstatewatcher.h>
+
 #include "programeditdialog.h"
 #include "programscontroller.h"
 

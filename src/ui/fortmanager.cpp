@@ -8,35 +8,35 @@
 
 #include <fort_version.h>
 
-#include "appinfo/appinfocache.h"
-#include "conf/firewallconf.h"
-#include "control/controlmanager.h"
-#include "form/dialog/passworddialog.h"
-#include "fortsettings.h"
-#include "hostinfo/hostinfocache.h"
-#include "manager/envmanager.h"
-#include "manager/hotkeymanager.h"
-#include "manager/logger.h"
-#include "manager/nativeeventfilter.h"
-#include "manager/translationmanager.h"
-#include "model/zonelistmodel.h"
-#include "rpc/appinfomanagerrpc.h"
-#include "rpc/confmanagerrpc.h"
-#include "rpc/drivermanagerrpc.h"
-#include "rpc/logmanagerrpc.h"
-#include "rpc/quotamanagerrpc.h"
-#include "rpc/rpcmanager.h"
-#include "rpc/statmanagerrpc.h"
-#include "rpc/taskmanagerrpc.h"
-#include "rpc/windowmanagerfake.h"
-#include "serviceinfo/serviceinfomanager.h"
-#include "task/taskinfozonedownloader.h"
-#include "user/usersettings.h"
-#include "util/dateutil.h"
-#include "util/fileutil.h"
-#include "util/ioc/ioccontainer.h"
-#include "util/osutil.h"
-#include "util/startuputil.h"
+#include <appinfo/appinfocache.h>
+#include <conf/firewallconf.h>
+#include <control/controlmanager.h>
+#include <form/dialog/passworddialog.h>
+#include <fortsettings.h>
+#include <hostinfo/hostinfocache.h>
+#include <manager/envmanager.h>
+#include <manager/hotkeymanager.h>
+#include <manager/logger.h>
+#include <manager/nativeeventfilter.h>
+#include <manager/translationmanager.h>
+#include <model/zonelistmodel.h>
+#include <rpc/appinfomanagerrpc.h>
+#include <rpc/confmanagerrpc.h>
+#include <rpc/drivermanagerrpc.h>
+#include <rpc/logmanagerrpc.h>
+#include <rpc/quotamanagerrpc.h>
+#include <rpc/rpcmanager.h>
+#include <rpc/statmanagerrpc.h>
+#include <rpc/taskmanagerrpc.h>
+#include <rpc/windowmanagerfake.h>
+#include <serviceinfo/serviceinfomanager.h>
+#include <task/taskinfozonedownloader.h>
+#include <user/usersettings.h>
+#include <util/dateutil.h>
+#include <util/fileutil.h>
+#include <util/ioc/ioccontainer.h>
+#include <util/osutil.h>
+#include <util/startuputil.h>
 
 FortManager::FortManager(QObject *parent) : QObject(parent), m_initialized(false) { }
 

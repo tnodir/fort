@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QVariant>
 
-#include "../util/classhelpers.h"
+#include <util/classhelpers.h>
 
 class RegKey
 {

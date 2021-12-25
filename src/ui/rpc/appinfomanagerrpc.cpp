@@ -2,8 +2,8 @@
 
 #include <sqlite/sqlitedb.h>
 
-#include "../rpc/rpcmanager.h"
-#include "../util/ioc/ioccontainer.h"
+#include <rpc/rpcmanager.h>
+#include <util/ioc/ioccontainer.h>
 
 AppInfoManagerRpc::AppInfoManagerRpc(const QString &filePath, QObject *parent) :
     AppInfoManager(filePath, parent, SqliteDb::OpenDefaultReadOnly)

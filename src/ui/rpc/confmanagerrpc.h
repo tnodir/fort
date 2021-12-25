@@ -1,7 +1,7 @@
 #ifndef CONFMANAGERRPC_H
 #define CONFMANAGERRPC_H
 
-#include "../conf/confmanager.h"
+#include <conf/confmanager.h>
 
 class RpcManager;
 class TaskManager;

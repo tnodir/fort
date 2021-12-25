@@ -7,9 +7,9 @@
 #include <QLineEdit>
 #include <QPushButton>
 
-#include "../../manager/windowmanager.h"
-#include "../../util/guiutil.h"
-#include "../controls/controlutil.h"
+#include <form/controls/controlutil.h>
+#include <manager/windowmanager.h>
+#include <util/guiutil.h>
 
 PasswordDialog::PasswordDialog(QWidget *parent) : QDialog(parent)
 {

@@ -5,7 +5,7 @@
 #include <QTimer>
 #include <QVariant>
 
-#include "../util/ioc/iocservice.h"
+#include <util/ioc/iocservice.h>
 
 class TaskInfo;
 class TaskInfoUpdateChecker;

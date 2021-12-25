@@ -3,7 +3,7 @@
 
 #include <QRect>
 
-#include "../json/mapwrapper.h"
+#include <util/json/mapwrapper.h>
 
 class Settings;
 

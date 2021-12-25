@@ -8,7 +8,7 @@
 #include <QVariant>
 #include <QWaitCondition>
 
-#include "../classhelpers.h"
+#include <util/classhelpers.h>
 
 class WorkerJob;
 class WorkerObject;

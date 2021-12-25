@@ -11,22 +11,23 @@
 #include <QTimeEdit>
 #include <QVBoxLayout>
 
-#include "../../../conf/appgroup.h"
-#include "../../../conf/firewallconf.h"
-#include "../../../fortsettings.h"
-#include "../../../user/iniuser.h"
-#include "../../../util/iconcache.h"
-#include "../../../util/net/netutil.h"
-#include "../../../util/textareautil.h"
-#include "../../controls/checkspincombo.h"
-#include "../../controls/checktimeperiod.h"
-#include "../../controls/controlutil.h"
-#include "../../controls/plaintextedit.h"
-#include "../../controls/tabbar.h"
-#include "../../controls/textarea2splitter.h"
-#include "../../controls/textarea2splitterhandle.h"
-#include "../../dialog/dialogutil.h"
-#include "../optionscontroller.h"
+#include <conf/appgroup.h>
+#include <conf/firewallconf.h>
+#include <form/controls/checkspincombo.h>
+#include <form/controls/checktimeperiod.h>
+#include <form/controls/controlutil.h>
+#include <form/controls/plaintextedit.h>
+#include <form/controls/tabbar.h>
+#include <form/controls/textarea2splitter.h>
+#include <form/controls/textarea2splitterhandle.h>
+#include <form/dialog/dialogutil.h>
+#include <form/opt/optionscontroller.h>
+#include <fortsettings.h>
+#include <user/iniuser.h>
+#include <util/iconcache.h>
+#include <util/net/netutil.h>
+#include <util/textareautil.h>
+
 #include "apps/appscolumn.h"
 
 namespace {

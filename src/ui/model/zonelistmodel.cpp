@@ -6,11 +6,12 @@
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
-#include "../conf/confmanager.h"
-#include "../util/conf/confutil.h"
-#include "../util/fileutil.h"
-#include "../util/ioc/ioccontainer.h"
-#include "../util/json/jsonutil.h"
+#include <conf/confmanager.h>
+#include <util/conf/confutil.h>
+#include <util/fileutil.h>
+#include <util/ioc/ioccontainer.h>
+#include <util/json/jsonutil.h>
+
 #include "zonesourcewrapper.h"
 #include "zonetypewrapper.h"
 

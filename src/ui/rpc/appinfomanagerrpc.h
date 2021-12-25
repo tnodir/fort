@@ -1,7 +1,7 @@
 #ifndef APPINFOMANAGERRPC_H
 #define APPINFOMANAGERRPC_H
 
-#include "../appinfo/appinfomanager.h"
+#include <appinfo/appinfomanager.h>
 
 class AppInfoManagerRpc : public AppInfoManager
 {

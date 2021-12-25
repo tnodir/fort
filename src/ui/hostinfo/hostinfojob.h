@@ -1,7 +1,7 @@
 #ifndef HOSTINFOJOB_H
 #define HOSTINFOJOB_H
 
-#include "../util/worker/workerjob.h"
+#include <util/worker/workerjob.h>
 
 class HostInfoJob : public WorkerJob
 {
