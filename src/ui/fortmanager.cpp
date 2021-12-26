@@ -84,6 +84,7 @@ void FortManager::initialize()
     setupConfManager();
     setupQuotaManager();
     setupTaskManager();
+    setupServiceInfoManager();
 
     setupDriver();
     loadConf();
@@ -258,7 +259,6 @@ void FortManager::setupConfManager()
         const FirewallConf *conf = IoC<ConfManager>()->conf();
 
         updateLogger(conf);
-        updateServiceInfoManager(conf);
 
         if (!onlyFlags || conf->flagsEdited()) {
             updateDriverConf(onlyFlags);
@@ -287,12 +287,11 @@ void FortManager::setupTaskManager()
             IoC<ConfManager>(), &ConfManager::updateDriverZones);
 }
 
-void FortManager::updateServiceInfoManager(const FirewallConf *conf)
+void FortManager::setupServiceInfoManager()
 {
-    if (!conf->flagsEdited())
-        return;
+    auto serviceInfoManager = IoC<ServiceInfoManager>();
 
-    IoC<ServiceInfoManager>()->setEnabled(conf->filterServices());
+    serviceInfoManager->setMonitorEnabled(IoC<FortSettings>()->isMaster());
 }
 
 void FortManager::setupTranslationManager()

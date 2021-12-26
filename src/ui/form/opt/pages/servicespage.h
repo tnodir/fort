@@ -24,19 +24,16 @@ private:
     void setupUi();
     QLayout *setupHeader();
     void setupOptions();
-    void setupFilterServices();
     void setupTableServiceList();
     void setupTableServiceListHeader();
-
-    void updateFilterServices();
 
 private:
     ServiceListModel *m_serviceListModel;
 
+    QPushButton *m_btRefresh = nullptr;
     QPushButton *m_btEdit = nullptr;
     QAction *m_actEditService = nullptr;
     QPushButton *m_btOptions = nullptr;
-    QCheckBox *m_cbFilterServices = nullptr;
     TableView *m_serviceListView = nullptr;
 };
 

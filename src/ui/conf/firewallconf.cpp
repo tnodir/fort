@@ -22,7 +22,6 @@ FirewallConf::FirewallConf(Settings *settings, QObject *parent) :
     m_logBlockedIp(false),
     m_appBlockAll(true),
     m_appAllowAll(false),
-    m_filterServices(false),
     m_activePeriodEnabled(false),
     m_ini(settings)
 {
@@ -100,11 +99,6 @@ void FirewallConf::setAppBlockAll(bool appBlockAll)
 void FirewallConf::setAppAllowAll(bool appAllowAll)
 {
     m_appAllowAll = appAllowAll;
-}
-
-void FirewallConf::setFilterServices(bool filterServices)
-{
-    m_filterServices = filterServices;
 }
 
 void FirewallConf::setActivePeriodEnabled(bool activePeriodEnabled)
@@ -295,8 +289,6 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     m_appBlockAll = o.appBlockAll();
     m_appAllowAll = o.appAllowAll();
 
-    m_filterServices = o.filterServices();
-
     m_activePeriodEnabled = o.activePeriodEnabled();
     m_activePeriodFrom = o.activePeriodFrom();
     m_activePeriodTo = o.activePeriodTo();
@@ -345,8 +337,6 @@ QVariant FirewallConf::flagsToVariant() const
     map["appBlockAll"] = appBlockAll();
     map["appAllowAll"] = appAllowAll();
 
-    map["filterServices"] = filterServices();
-
     map["activePeriodEnabled"] = activePeriodEnabled();
     map["activePeriodFrom"] = activePeriodFrom();
     map["activePeriodTo"] = activePeriodTo();
@@ -376,8 +366,6 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
 
     m_appBlockAll = map["appBlockAll"].toBool();
     m_appAllowAll = map["appAllowAll"].toBool();
-
-    m_filterServices = map["filterServices"].toBool();
 
     m_activePeriodEnabled = map["activePeriodEnabled"].toBool();
     m_activePeriodFrom = map["activePeriodFrom"].toString();

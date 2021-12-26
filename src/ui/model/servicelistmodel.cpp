@@ -25,20 +25,21 @@ FirewallConf *ServiceListModel::conf() const
 
 void ServiceListModel::initialize()
 {
-    connect(serviceInfoManager(), &ServiceInfoManager::servicesChanged, this,
-            &ServiceListModel::reset);
+    m_services = serviceInfoManager()->loadServiceInfoList();
+
+    reset();
 }
 
 int ServiceListModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
 
-    return serviceInfoManager()->services().size();
+    return services().size();
 }
 
 int ServiceListModel::columnCount(const QModelIndex &parent) const
 {
-    return parent.isValid() ? 0 : 3;
+    return parent.isValid() ? 0 : 4;
 }
 
 QVariant ServiceListModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -50,6 +51,8 @@ QVariant ServiceListModel::headerData(int section, Qt::Orientation orientation, 
         case 1:
             return tr("Display Name");
         case 2:
+            return tr("Process ID");
+        case 3:
             return tr("Group");
         }
     }
@@ -76,7 +79,7 @@ QVariant ServiceListModel::dataDisplay(const QModelIndex &index) const
     const int row = index.row();
     const int column = index.column();
 
-    const auto info = serviceInfoManager()->serviceInfoAt(row);
+    const auto info = serviceInfoAt(row);
 
     switch (column) {
     case 0:
@@ -84,18 +87,36 @@ QVariant ServiceListModel::dataDisplay(const QModelIndex &index) const
     case 1:
         return info.displayName;
     case 2:
+        return dataDisplayProcessId(info);
+    case 3:
         return dataDisplayAppGroup(info);
     }
 
     return QVariant();
 }
 
+QVariant ServiceListModel::dataDisplayProcessId(const ServiceInfo &info) const
+{
+    return (info.processId == 0) ? QVariant() : QVariant(info.processId);
+}
+
 QVariant ServiceListModel::dataDisplayAppGroup(const ServiceInfo &info) const
 {
-    return (info.groupIndex < 0) ? QVariant() : conf()->appGroupAt(info.groupIndex)->name();
+    const int groupIndex = serviceInfoManager()->groupIndexByName(info.serviceName);
+
+    return (groupIndex < 0) ? QVariant() : conf()->appGroupAt(groupIndex)->name();
 }
 
 bool ServiceListModel::updateTableRow(int /*row*/) const
 {
     return true;
+}
+
+const ServiceInfo &ServiceListModel::serviceInfoAt(int index) const
+{
+    if (index < 0 || index >= services().size()) {
+        static const ServiceInfo g_nullServiceInfo;
+        return g_nullServiceInfo;
+    }
+    return services()[index];
 }

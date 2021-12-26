@@ -46,8 +46,7 @@ private:
     void setupConfManager();
     void setupQuotaManager();
     void setupTaskManager();
-
-    void updateServiceInfoManager(const FirewallConf *conf);
+    void setupServiceInfoManager();
 
     void setupTranslationManager();
 

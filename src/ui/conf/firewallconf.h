@@ -85,9 +85,6 @@ public:
     bool appAllowAll() const { return m_appAllowAll; }
     void setAppAllowAll(bool appAllowAll);
 
-    bool filterServices() const { return m_filterServices; }
-    void setFilterServices(bool filterServices);
-
     bool activePeriodEnabled() const { return m_activePeriodEnabled; }
     void setActivePeriodEnabled(bool activePeriodEnabled);
 
@@ -184,8 +181,6 @@ private:
 
     uint m_appBlockAll : 1;
     uint m_appAllowAll : 1;
-
-    uint m_filterServices : 1;
 
     uint m_activePeriodEnabled : 1;
 

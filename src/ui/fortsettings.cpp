@@ -347,7 +347,6 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
         setIniValue("logBlockedIp", conf.logBlockedIp());
         setIniValue("appBlockAll", conf.appBlockAll());
         setIniValue("appAllowAll", conf.appAllowAll());
-        setIniValue("filterServices", conf.filterServices());
         setIniValue("appGroupBits", conf.appGroupBits(), DEFAULT_APP_GROUP_BITS);
         ini()->endGroup();
 

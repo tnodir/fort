@@ -31,11 +31,11 @@ ServiceInfoManager *ServicesPage::serviceInfoManager() const
 
 void ServicesPage::onRetranslateUi()
 {
+    m_btRefresh->setText(tr("Refresh"));
     m_btEdit->setText(tr("Edit"));
     m_actEditService->setText(tr("Edit Service"));
 
     m_btOptions->setText(tr("Options"));
-    m_cbFilterServices->setText(tr("Filter Services"));
 
     serviceListModel()->refresh();
 }
@@ -61,6 +61,9 @@ QLayout *ServicesPage::setupHeader()
 {
     auto layout = new QHBoxLayout();
 
+    m_btRefresh = ControlUtil::createButton(
+            ":/icons/arrow_refresh_small.png", [&] { serviceListModel()->initialize(); });
+
     // Edit Menu
     auto editMenu = new QMenu(this);
 
@@ -80,6 +83,7 @@ QLayout *ServicesPage::setupHeader()
     // Options
     setupOptions();
 
+    layout->addWidget(m_btRefresh);
     layout->addWidget(m_btEdit);
     layout->addStretch();
     layout->addWidget(m_btOptions);
@@ -89,29 +93,14 @@ QLayout *ServicesPage::setupHeader()
 
 void ServicesPage::setupOptions()
 {
-    setupFilterServices();
-
     // Menu
-    const QList<QWidget *> menuWidgets = { m_cbFilterServices };
+    const QList<QWidget *> menuWidgets = {};
     auto layout = ControlUtil::createLayoutByWidgets(menuWidgets);
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
     m_btOptions = ControlUtil::createButton(":/icons/gear_in.png");
     m_btOptions->setMenu(menu);
-}
-
-void ServicesPage::setupFilterServices()
-{
-    m_cbFilterServices = ControlUtil::createCheckBox(conf()->filterServices(), [&](bool checked) {
-        if (conf()->filterServices() == checked)
-            return;
-
-        conf()->setFilterServices(checked);
-        ctrl()->setFlagsEdited();
-
-        updateFilterServices();
-    });
 }
 
 void ServicesPage::setupTableServiceList()
@@ -133,15 +122,10 @@ void ServicesPage::setupTableServiceListHeader()
     header->setSectionResizeMode(0, QHeaderView::Interactive);
     header->setSectionResizeMode(1, QHeaderView::Stretch);
     header->setSectionResizeMode(2, QHeaderView::Interactive);
+    header->setSectionResizeMode(3, QHeaderView::Interactive);
 
-    header->resizeSection(0, 250);
-    header->resizeSection(1, 350);
-    header->resizeSection(2, 90);
-}
-
-void ServicesPage::updateFilterServices()
-{
-    if (conf()->filterServices()) {
-        serviceInfoManager()->setEnabled(true);
-    }
+    header->resizeSection(0, 240);
+    header->resizeSection(1, 290);
+    header->resizeSection(2, 80);
+    header->resizeSection(3, 90);
 }

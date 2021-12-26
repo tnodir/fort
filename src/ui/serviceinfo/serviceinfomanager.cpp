@@ -1,9 +1,15 @@
 #include "serviceinfomanager.h"
 
+#include <QLoggingCategory>
+
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 
+#include "serviceinfomonitor.h"
+
 namespace {
+
+const QLoggingCategory LC("serviceInfo.serviceInfoManager");
 
 QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr)
 {
@@ -43,54 +49,94 @@ QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr)
 
 ServiceInfoManager::ServiceInfoManager(QObject *parent) : QObject(parent) { }
 
-void ServiceInfoManager::setEnabled(bool v)
+ServiceInfoManager::~ServiceInfoManager()
 {
-    if (m_enabled != v) {
-        m_enabled = v;
-        updateWorker();
-        updateServices();
+    clearServiceMonitors();
+}
+
+void ServiceInfoManager::setMonitorEnabled(bool v)
+{
+    if (m_monitorEnabled != v) {
+        m_monitorEnabled = v;
+
+        setupServiceMonitors();
     }
 }
 
-const ServiceInfo &ServiceInfoManager::serviceInfoAt(int index) const
+int ServiceInfoManager::groupIndexByName(const QString &name) const
 {
-    if (index < 0 || index >= services().size()) {
-        static const ServiceInfo g_nullServiceInfo;
-        return g_nullServiceInfo;
-    }
-    return services()[index];
+    return m_serviceGroups.value(name, -1);
 }
 
-void ServiceInfoManager::updateWorker()
+QVector<ServiceInfo> ServiceInfoManager::loadServiceInfoList()
 {
-    if (enabled()) {
-        startWorker();
-    } else {
-        stopWorker();
-    }
-}
-
-void ServiceInfoManager::startWorker() { }
-
-void ServiceInfoManager::stopWorker() { }
-
-void ServiceInfoManager::updateServices()
-{
-    services().clear();
-
-    if (enabled()) {
-        loadServices();
-    }
-
-    emit servicesChanged();
-}
-
-void ServiceInfoManager::loadServices()
-{
+    QVector<ServiceInfo> list;
     const SC_HANDLE mngr =
             OpenSCManagerW(nullptr, nullptr, SC_MANAGER_CONNECT | SC_MANAGER_ENUMERATE_SERVICE);
     if (mngr) {
-        m_services = getServiceInfoList(mngr);
+        list = getServiceInfoList(mngr);
         CloseServiceHandle(mngr);
+    }
+    return list;
+}
+
+void ServiceInfoManager::setupServiceMonitors()
+{
+    clearServiceMonitors();
+
+    if (!monitorEnabled())
+        return;
+
+    const SC_HANDLE mngr =
+            OpenSCManagerW(nullptr, nullptr, SC_MANAGER_CONNECT | SC_MANAGER_ENUMERATE_SERVICE);
+    if (!mngr) {
+        qCCritical(LC) << "Open manager error:" << GetLastError();
+        return;
+    }
+
+    const auto services = loadServiceInfoList();
+    for (const auto &info : services) {
+        const auto m = startServiceMonitor(info, mngr);
+
+        m_serviceMonitors.insert(info.serviceName, m);
+    }
+
+    CloseServiceHandle(mngr);
+}
+
+void ServiceInfoManager::clearServiceMonitors()
+{
+    const auto moniros = m_serviceMonitors.values();
+    for (ServiceInfoMonitor *m : moniros) {
+        stopServiceMonitor(m);
+    }
+    m_serviceMonitors.clear();
+}
+
+ServiceInfoMonitor *ServiceInfoManager::startServiceMonitor(
+        const ServiceInfo &info, void *managerHandle)
+{
+    const auto m = new ServiceInfoMonitor(info.processId, info.serviceName, managerHandle);
+
+    connect(m, &ServiceInfoMonitor::stateChanged, this, &ServiceInfoManager::onServiceStateChanged);
+
+    return m;
+}
+
+void ServiceInfoManager::stopServiceMonitor(ServiceInfoMonitor *m)
+{
+    m->terminate();
+    m->deleteLater();
+}
+
+void ServiceInfoManager::onServiceStateChanged(ServiceInfo::State state)
+{
+    const auto m = qobject_cast<ServiceInfoMonitor *>(sender());
+    Q_ASSERT(m);
+
+    if (state == ServiceInfo::StateDeleted) {
+        stopServiceMonitor(m);
+
+        m_serviceMonitors.remove(m->name());
     }
 }

@@ -6,11 +6,13 @@
 class ServiceInfo
 {
 public:
-    int groupIndex = -1;
+    enum State {
+        StateActive = 0x01,
+        StateInactive = 0x02,
+        StateDeleted = 0x04,
+    };
 
     quint32 processId = 0;
-    quint64 id = 0;
-
     QString serviceName;
     QString displayName;
 };
