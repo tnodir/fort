@@ -20,7 +20,8 @@ static QStringList parseServiceNames(LPWSTR pszServiceNames)
         if (name[0] == '\0')
             break;
         Q_ASSERT(name[0] == '/');
-        const QString nameStr = QString::fromWCharArray(++name);
+        ++name; // Skip the leading '/' for created services
+        const QString nameStr = QString::fromWCharArray(name);
         name += nameStr.length() + 1;
         list.append(nameStr);
     }
@@ -33,8 +34,11 @@ static void CALLBACK notifyCallback(PVOID parameter)
     PSERVICE_NOTIFYW notify = static_cast<PSERVICE_NOTIFYW>(parameter);
     ServiceListMonitor *m = static_cast<ServiceListMonitor *>(notify->pContext);
 
-    if (notify->dwNotificationStatus != ERROR_SUCCESS)
+    if (notify->dwNotificationStatus != ERROR_SUCCESS) {
+        qCDebug(LC) << "Callback error:" << notify->dwNotificationStatus;
+        m->requestReopenManager();
         return;
+    }
 
     const QStringList nameList =
             notify->pszServiceNames ? parseServiceNames(notify->pszServiceNames) : QStringList();
@@ -66,6 +70,7 @@ ServiceListMonitor::ServiceListMonitor(void *managerHandle, QObject *parent) :
     QObject(parent),
     m_terminated(false),
     m_isReopening(false),
+    m_reopenManagerRequested(false),
     m_startNotifierRequested(false),
     m_managerHandle(managerHandle),
     m_notifyBuffer(sizeof(SERVICE_NOTIFYW))
@@ -80,9 +85,22 @@ ServiceListMonitor::~ServiceListMonitor()
 
 void ServiceListMonitor::terminate()
 {
+    if (m_terminated)
+        return;
+
     m_terminated = true;
 
     closeManager();
+}
+
+void ServiceListMonitor::requestReopenManager()
+{
+    if (m_reopenManagerRequested)
+        return;
+
+    m_reopenManagerRequested = true;
+
+    QMetaObject::invokeMethod(this, &ServiceListMonitor::reopenManager, Qt::QueuedConnection);
 }
 
 void ServiceListMonitor::requestStartNotifier()
@@ -102,6 +120,7 @@ void ServiceListMonitor::openManager()
 
         if (!m_managerHandle) {
             qCCritical(LC) << "Open manager error:" << GetLastError();
+            emit errorOccurred();
             return;
         }
     }
@@ -121,10 +140,13 @@ void ServiceListMonitor::reopenManager()
 {
     if (m_isReopening) {
         qCCritical(LC) << "Reopen manager error";
+        emit errorOccurred();
         return;
     }
 
     m_isReopening = true;
+
+    m_reopenManagerRequested = false;
 
     closeManager();
     openManager();
@@ -146,11 +168,14 @@ void ServiceListMonitor::startNotifier()
     const DWORD res = NotifyServiceStatusChangeW(managerHandle(), mask, notify);
 
     if (res != ERROR_SUCCESS) {
-        if (res == ERROR_SERVICE_NOTIFY_CLIENT_LAGGING) {
+        switch (res) {
+        case ERROR_SERVICE_NOTIFY_CLIENT_LAGGING: {
             qCDebug(LC) << "Notifier is lagging";
             reopenManager();
-        } else {
+        } break;
+        default:
             qCCritical(LC) << "Start notifier error:" << res;
+            emit errorOccurred();
         }
     }
 }

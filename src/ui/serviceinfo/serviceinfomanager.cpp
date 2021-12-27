@@ -120,6 +120,9 @@ void ServiceInfoManager::startServiceMonitor(
 
     connect(m, &ServiceInfoMonitor::stateChanged, this, &ServiceInfoManager::onServiceStateChanged,
             Qt::QueuedConnection);
+    connect(
+            m, &ServiceInfoMonitor::errorOccurred, this, [=] { stopServiceMonitor(m); },
+            Qt::QueuedConnection);
 
     m_serviceMonitors.insert(name, m);
 }
@@ -138,6 +141,8 @@ void ServiceInfoManager::startServiceListMonitor(void *managerHandle)
 
     connect(m, &ServiceListMonitor::serviceCreated, this, &ServiceInfoManager::onServiceCreated,
             Qt::QueuedConnection);
+    connect(m, &ServiceListMonitor::errorOccurred, this,
+            &ServiceInfoManager::stopServiceListMonitor, Qt::QueuedConnection);
 
     m_serviceListMonitor = m;
 }

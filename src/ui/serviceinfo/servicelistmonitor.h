@@ -15,10 +15,12 @@ public:
 
 signals:
     void serviceCreated(const QStringList &nameList);
+    void errorOccurred();
 
 public slots:
     void terminate();
 
+    void requestReopenManager();
     void requestStartNotifier();
 
 private:
@@ -31,6 +33,7 @@ private:
 private:
     bool m_terminated : 1;
     bool m_isReopening : 1;
+    bool m_reopenManagerRequested : 1;
     bool m_startNotifierRequested : 1;
 
     void *m_managerHandle = nullptr;

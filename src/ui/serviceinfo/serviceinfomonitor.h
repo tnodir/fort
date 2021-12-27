@@ -14,6 +14,9 @@ public:
             void *managerHandle = nullptr, QObject *parent = nullptr);
     ~ServiceInfoMonitor() override;
 
+    bool running() const { return m_running; }
+    void setRunning(bool v) { m_running = v; }
+
     quint32 processId() const { return m_processId; }
     void setProcessId(quint32 v) { m_processId = v; }
 
@@ -23,10 +26,12 @@ public:
 
 signals:
     void stateChanged(ServiceInfo::State state);
+    void errorOccurred();
 
 public slots:
     void terminate();
 
+    void requestReopenService();
     void requestStartNotifier();
 
 private:
@@ -39,7 +44,9 @@ private:
 private:
     bool m_terminated : 1;
     bool m_isReopening : 1;
+    bool m_reopenServiceRequested : 1;
     bool m_startNotifierRequested : 1;
+    bool m_running : 1;
 
     quint32 m_processId = 0;
 
