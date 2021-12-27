@@ -6,12 +6,13 @@
 #include <qt_windows.h>
 
 #include "serviceinfomonitor.h"
+#include "servicelistmonitor.h"
 
 namespace {
 
 const QLoggingCategory LC("serviceInfo.serviceInfoManager");
 
-QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr)
+QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD state = SERVICE_STATE_ALL)
 {
     QVector<ServiceInfo> infoList;
 
@@ -21,9 +22,8 @@ QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr)
     DWORD serviceCount = 0;
     DWORD resumePoint = 0;
 
-    while (EnumServicesStatusExW(mngr, SC_ENUM_PROCESS_INFO, SERVICE_WIN32, SERVICE_STATE_ALL,
-                   (LPBYTE) buffer, sizeof(buffer), &bytesRemaining, &serviceCount, &resumePoint,
-                   nullptr)
+    while (EnumServicesStatusExW(mngr, SC_ENUM_PROCESS_INFO, SERVICE_WIN32, state, (LPBYTE) buffer,
+                   sizeof(buffer), &bytesRemaining, &serviceCount, &resumePoint, nullptr)
             || GetLastError() == ERROR_MORE_DATA) {
 
         int infoIndex = infoList.size();
@@ -52,6 +52,7 @@ ServiceInfoManager::ServiceInfoManager(QObject *parent) : QObject(parent) { }
 ServiceInfoManager::~ServiceInfoManager()
 {
     clearServiceMonitors();
+    stopServiceListMonitor();
 }
 
 void ServiceInfoManager::setMonitorEnabled(bool v)
@@ -94,37 +95,61 @@ void ServiceInfoManager::setupServiceMonitors()
         return;
     }
 
-    const auto services = loadServiceInfoList();
+    const auto services = getServiceInfoList(mngr);
     for (const auto &info : services) {
-        const auto m = startServiceMonitor(info, mngr);
-
-        m_serviceMonitors.insert(info.serviceName, m);
+        startServiceMonitor(info.serviceName, info.processId, mngr);
     }
 
-    CloseServiceHandle(mngr);
+    startServiceListMonitor(mngr);
 }
 
 void ServiceInfoManager::clearServiceMonitors()
 {
-    const auto moniros = m_serviceMonitors.values();
-    for (ServiceInfoMonitor *m : moniros) {
+    const auto monitors = m_serviceMonitors.values();
+    m_serviceMonitors.clear();
+
+    for (ServiceInfoMonitor *m : monitors) {
         stopServiceMonitor(m);
     }
-    m_serviceMonitors.clear();
 }
 
-ServiceInfoMonitor *ServiceInfoManager::startServiceMonitor(
-        const ServiceInfo &info, void *managerHandle)
+void ServiceInfoManager::startServiceMonitor(
+        const QString &name, quint32 processId, void *managerHandle)
 {
-    const auto m = new ServiceInfoMonitor(info.processId, info.serviceName, managerHandle);
+    auto m = new ServiceInfoMonitor(processId, name, managerHandle);
 
-    connect(m, &ServiceInfoMonitor::stateChanged, this, &ServiceInfoManager::onServiceStateChanged);
+    connect(m, &ServiceInfoMonitor::stateChanged, this, &ServiceInfoManager::onServiceStateChanged,
+            Qt::QueuedConnection);
 
-    return m;
+    m_serviceMonitors.insert(name, m);
 }
 
 void ServiceInfoManager::stopServiceMonitor(ServiceInfoMonitor *m)
 {
+    m_serviceMonitors.remove(m->name());
+
+    m->terminate();
+    m->deleteLater();
+}
+
+void ServiceInfoManager::startServiceListMonitor(void *managerHandle)
+{
+    auto m = new ServiceListMonitor(managerHandle);
+
+    connect(m, &ServiceListMonitor::serviceCreated, this, &ServiceInfoManager::onServiceCreated,
+            Qt::QueuedConnection);
+
+    m_serviceListMonitor = m;
+}
+
+void ServiceInfoManager::stopServiceListMonitor()
+{
+    auto m = m_serviceListMonitor;
+    if (!m)
+        return;
+
+    m_serviceListMonitor = nullptr;
+
     m->terminate();
     m->deleteLater();
 }
@@ -136,7 +161,12 @@ void ServiceInfoManager::onServiceStateChanged(ServiceInfo::State state)
 
     if (state == ServiceInfo::StateDeleted) {
         stopServiceMonitor(m);
+    }
+}
 
-        m_serviceMonitors.remove(m->name());
+void ServiceInfoManager::onServiceCreated(const QStringList &nameList)
+{
+    for (const auto &name : nameList) {
+        startServiceMonitor(name);
     }
 }

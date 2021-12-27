@@ -38,10 +38,7 @@ static void CALLBACK notifyCallback(PVOID parameter)
 
 PSERVICE_NOTIFYW getNotifyBuffer(ServiceInfoMonitor *m)
 {
-    QByteArray &buffer = m->notifyBuffer();
-    if (buffer.isNull()) {
-        buffer = QByteArray(sizeof(SERVICE_NOTIFYW), '\0');
-    }
+    auto &buffer = m->notifyBuffer();
 
     PSERVICE_NOTIFYW notify = reinterpret_cast<PSERVICE_NOTIFYW>(buffer.data());
 
@@ -61,14 +58,15 @@ ServiceInfoMonitor::ServiceInfoMonitor(
     m_isReopening(false),
     m_startNotifierRequested(false),
     m_processId(processId),
-    m_name(name)
+    m_name(name),
+    m_notifyBuffer(sizeof(SERVICE_NOTIFYW))
 {
     openService(managerHandle);
 }
 
 ServiceInfoMonitor::~ServiceInfoMonitor()
 {
-    closeService();
+    terminate();
 }
 
 void ServiceInfoMonitor::terminate()

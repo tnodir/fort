@@ -19,7 +19,7 @@ public:
 
     QString name() const { return m_name; }
 
-    QByteArray &notifyBuffer() { return m_notifyBuffer; }
+    QVector<char> &notifyBuffer() { return m_notifyBuffer; }
 
 signals:
     void stateChanged(ServiceInfo::State state);
@@ -43,10 +43,10 @@ private:
 
     quint32 m_processId = 0;
 
-    void *m_serviceHandle = nullptr;
-    QByteArray m_notifyBuffer;
-
     const QString m_name;
+
+    void *m_serviceHandle = nullptr;
+    QVector<char> m_notifyBuffer;
 };
 
 #endif // SERVICEINFOMONITOR_H
