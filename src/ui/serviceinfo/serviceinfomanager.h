@@ -27,7 +27,7 @@ public:
     static QVector<ServiceInfo> loadServiceInfoList();
 
 signals:
-    void servicesChanged();
+    void serviceChanged(quint32 processId, int groupIndex = -1);
 
 private:
     void setupServiceMonitors();
@@ -40,7 +40,7 @@ private:
     void startServiceListMonitor(void *managerHandle = nullptr);
     void stopServiceListMonitor();
 
-    void onServiceStateChanged(ServiceInfo::State state);
+    void onServiceStateChanged(ServiceInfo::State state, quint32 processId = 0);
     void onServiceCreated(const QStringList &nameList);
 
 private:

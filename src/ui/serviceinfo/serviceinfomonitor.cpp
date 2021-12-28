@@ -29,16 +29,16 @@ static void CALLBACK notifyCallback(PVOID parameter)
     }
 
     const bool running = (notify->ServiceStatus.dwCurrentState == SERVICE_RUNNING);
-
     m->setRunning(running);
-    if (running) {
-        m->setProcessId(notify->ServiceStatus.dwProcessId);
-    }
+
+    const quint32 processId = notify->ServiceStatus.dwProcessId;
+    const quint32 oldProcessId = m->processId();
+    m->setProcessId(processId);
 
     const ServiceInfo::State state =
             running ? ServiceInfo::StateActive : ServiceInfo::StateInactive;
 
-    emit m->stateChanged(state);
+    emit m->stateChanged(state, (running ? processId : oldProcessId));
 
     // NotifyServiceStatusChange() must not be called from the callback
     m->requestStartNotifier();
@@ -129,7 +129,7 @@ void ServiceInfoMonitor::openService(void *managerHandle)
         } break;
         default:
             qCCritical(LC) << "Open service error:" << name() << res;
-            emit errorOccurred();
+            errorOccurred();
         }
         return;
     }
@@ -149,7 +149,7 @@ void ServiceInfoMonitor::reopenService()
 {
     if (m_isReopening) {
         qCCritical(LC) << "Reopen service error:" << name();
-        emit errorOccurred();
+        errorOccurred();
         return;
     }
 
@@ -188,7 +188,12 @@ void ServiceInfoMonitor::startNotifier()
         } break;
         default:
             qCCritical(LC) << "Start notifier error:" << name() << res;
-            emit errorOccurred();
+            errorOccurred();
         }
     }
+}
+
+void ServiceInfoMonitor::errorOccurred()
+{
+    emit stateChanged(ServiceInfo::StateDeleted);
 }

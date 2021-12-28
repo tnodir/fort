@@ -25,8 +25,7 @@ public:
     QVector<char> &notifyBuffer() { return m_notifyBuffer; }
 
 signals:
-    void stateChanged(ServiceInfo::State state);
-    void errorOccurred();
+    void stateChanged(ServiceInfo::State state, quint32 processId = 0);
 
 public slots:
     void terminate();
@@ -40,6 +39,8 @@ private:
     void reopenService();
 
     void startNotifier();
+
+    void errorOccurred();
 
 private:
     bool m_terminated : 1;
