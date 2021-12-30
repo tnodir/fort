@@ -7,23 +7,6 @@
 #include "fortcb.h"
 #include "fortdev.h"
 
-static NTSTATUS fort_bfe_wait(void)
-{
-    LARGE_INTEGER delay;
-    delay.QuadPart = -5000000; /* sleep 500000us (500ms) */
-    int count = 600; /* wait for 5 minutes */
-
-    do {
-        const FWPM_SERVICE_STATE state = FwpmBfeStateGet0();
-        if (state == FWPM_SERVICE_RUNNING)
-            return STATUS_SUCCESS;
-
-        KeDelayExecutionThread(KernelMode, FALSE, &delay);
-    } while (--count >= 0);
-
-    return STATUS_FWP_TCPIP_NOT_READY;
-}
-
 static void fort_driver_unload(PDRIVER_OBJECT driver)
 {
     fort_device_unload();
@@ -48,11 +31,6 @@ static NTSTATUS fort_driver_load(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path
 
     // Use NX Non-Paged Pool
     ExInitializeDriverRuntime(DrvRtPoolNxOptIn);
-
-    /* Wait for BFE to start */
-    status = fort_bfe_wait();
-    if (!NT_SUCCESS(status))
-        return status;
 
     UNICODE_STRING device_name;
     RtlInitUnicodeString(&device_name, FORT_NT_DEVICE_NAME);
