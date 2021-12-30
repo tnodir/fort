@@ -151,6 +151,53 @@ static BOOL fort_callout_classify_v4_blocked(const FWPS_INCOMING_VALUES0 *inFixe
             block_reason, blocked, irp, info);
 }
 
+static void fort_callout_classify_v4_check(const FWPS_INCOMING_VALUES0 *inFixedValues,
+        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const FWPS_FILTER0 *filter,
+        FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField, int remoteIpField,
+        int localPortField, int remotePortField, int ipProtoField, BOOL inbound,
+        UINT32 classify_flags, UINT32 remote_ip, PFORT_CONF_REF conf_ref, PIRP *irp,
+        ULONG_PTR *info)
+{
+    const FORT_CONF_FLAGS conf_flags = conf_ref->conf.flags;
+
+    const UINT32 process_id = (UINT32) inMetaValues->processId;
+    const UINT32 path_len =
+            inMetaValues->processPath->size - sizeof(WCHAR); /* chop terminating zero */
+    const PVOID path = inMetaValues->processPath->data;
+
+    INT8 block_reason = FORT_BLOCK_REASON_UNKNOWN;
+    const BOOL blocked = fort_callout_classify_v4_blocked(inFixedValues, inMetaValues, filter,
+            classifyOut, flagsField, localIpField, remoteIpField, localPortField, remotePortField,
+            ipProtoField, inbound, classify_flags, remote_ip, conf_flags, process_id, path_len,
+            path, conf_ref, &block_reason, irp, info);
+
+    if (blocked) {
+        /* Log the blocked connection */
+        if (block_reason != FORT_BLOCK_REASON_UNKNOWN && conf_flags.log_blocked_ip) {
+            const UINT32 local_ip = inFixedValues->incomingValue[localIpField].value.uint32;
+            const UINT16 local_port = inFixedValues->incomingValue[localPortField].value.uint16;
+            const UINT16 remote_port = inFixedValues->incomingValue[remotePortField].value.uint16;
+            const IPPROTO ip_proto =
+                    (IPPROTO) inFixedValues->incomingValue[ipProtoField].value.uint8;
+
+            fort_buffer_blocked_ip_write(&fort_device()->buffer, inbound, block_reason, ip_proto,
+                    local_port, remote_port, local_ip, remote_ip, process_id, path_len, path, irp,
+                    info);
+        }
+
+        /* Block the connection */
+        fort_callout_classify_block(classifyOut);
+    } else {
+        if (block_reason == FORT_BLOCK_REASON_NONE) {
+            /* Continue the search */
+            fort_callout_classify_continue(classifyOut);
+        } else {
+            /* Allow the connection */
+            fort_callout_classify_permit(filter, classifyOut);
+        }
+    }
+}
+
 static void fort_callout_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const FWPS_FILTER0 *filter,
         FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField, int remoteIpField,
@@ -180,44 +227,9 @@ static void fort_callout_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
         return;
     }
 
-    const FORT_CONF_FLAGS conf_flags = conf_ref->conf.flags;
-
-    const UINT32 process_id = (UINT32) inMetaValues->processId;
-    const UINT32 path_len =
-            inMetaValues->processPath->size - sizeof(WCHAR); /* chop terminating zero */
-    const PVOID path = inMetaValues->processPath->data;
-
-    INT8 block_reason = FORT_BLOCK_REASON_UNKNOWN;
-    const BOOL blocked = fort_callout_classify_v4_blocked(inFixedValues, inMetaValues, filter,
-            classifyOut, flagsField, localIpField, remoteIpField, localPortField, remotePortField,
-            ipProtoField, inbound, classify_flags, remote_ip, conf_flags, process_id, path_len,
-            path, conf_ref, &block_reason, &irp, &info);
-
-    if (blocked) {
-        /* Log the blocked connection */
-        if (block_reason != FORT_BLOCK_REASON_UNKNOWN && conf_flags.log_blocked_ip) {
-            const UINT32 local_ip = inFixedValues->incomingValue[localIpField].value.uint32;
-            const UINT16 local_port = inFixedValues->incomingValue[localPortField].value.uint16;
-            const UINT16 remote_port = inFixedValues->incomingValue[remotePortField].value.uint16;
-            const IPPROTO ip_proto =
-                    (IPPROTO) inFixedValues->incomingValue[ipProtoField].value.uint8;
-
-            fort_buffer_blocked_ip_write(&fort_device()->buffer, inbound, block_reason, ip_proto,
-                    local_port, remote_port, local_ip, remote_ip, process_id, path_len, path, &irp,
-                    &info);
-        }
-
-        /* Block the connection */
-        fort_callout_classify_block(classifyOut);
-    } else {
-        if (block_reason == FORT_BLOCK_REASON_NONE) {
-            /* Continue the search */
-            fort_callout_classify_continue(classifyOut);
-        } else {
-            /* Allow the connection */
-            fort_callout_classify_permit(filter, classifyOut);
-        }
-    }
+    fort_callout_classify_v4_check(inFixedValues, inMetaValues, filter, classifyOut, flagsField,
+            localIpField, remoteIpField, localPortField, remotePortField, ipProtoField, inbound,
+            classify_flags, remote_ip, conf_ref, &irp, &info);
 
     fort_conf_ref_put(&fort_device()->conf, conf_ref);
 
