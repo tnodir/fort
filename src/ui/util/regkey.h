@@ -41,6 +41,7 @@ public:
     bool removeValue(const QString &name);
     bool setValue(const QString &name, const QVariant &value);
     bool setDefaultValue(const QVariant &value) { return setValue(QString(), value); }
+    QVariant value(const QString &name, bool *expand = nullptr) const;
     bool contains(const QString &name) const;
 
 private:

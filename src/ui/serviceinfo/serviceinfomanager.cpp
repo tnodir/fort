@@ -5,6 +5,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 
+#include <util/regkey.h>
+
 namespace {
 
 const QLoggingCategory LC("serviceInfo.serviceInfoManager");
@@ -12,6 +14,8 @@ const QLoggingCategory LC("serviceInfo.serviceInfoManager");
 QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD state = SERVICE_STATE_ALL)
 {
     QVector<ServiceInfo> infoList;
+
+    const RegKey servicesReg(RegKey::HKLM, R"(SYSTEM\CurrentControlSet\Services)");
 
     constexpr DWORD bufferMaxSize = 32 * 1024;
     ENUM_SERVICE_STATUS_PROCESSW buffer[bufferMaxSize / sizeof(ENUM_SERVICE_STATUS_PROCESSW)];
@@ -23,16 +27,26 @@ QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD state = SERVICE_ST
                    sizeof(buffer), &bytesRemaining, &serviceCount, &resumePoint, nullptr)
             || GetLastError() == ERROR_MORE_DATA) {
 
-        int infoIndex = infoList.size();
-        infoList.resize(infoIndex + serviceCount);
-
         const ENUM_SERVICE_STATUS_PROCESSW *service = &buffer[0];
 
-        for (; serviceCount > 0; --serviceCount, ++service, ++infoIndex) {
-            ServiceInfo &info = infoList[infoIndex];
+        for (int infoIndex = infoList.size(); serviceCount > 0;
+                --serviceCount, ++service, ++infoIndex) {
+            const auto serviceName = QString::fromUtf16((const char16_t *) service->lpServiceName);
+
+            const RegKey svcReg(servicesReg, serviceName);
+            if (!svcReg.contains("ServiceSidType"))
+                continue;
+
+            const auto imagePath = svcReg.value("ImagePath").toString();
+            if (!imagePath.contains(R"(\system32\svchost.exe)", Qt::CaseInsensitive))
+                continue;
+
+            ServiceInfo info;
             info.processId = service->ServiceStatusProcess.dwProcessId;
-            info.serviceName = QString::fromUtf16((const char16_t *) service->lpServiceName);
+            info.serviceName = serviceName;
             info.displayName = QString::fromUtf16((const char16_t *) service->lpDisplayName);
+
+            infoList.append(info);
         }
 
         if (bytesRemaining == 0)

@@ -95,6 +95,31 @@ bool RegKey::setValue(const QString &name, const QVariant &value)
     return !RegSetValueEx((HKEY) handle(), (LPCWSTR) name.utf16(), 0, type, data, size);
 }
 
+QVariant RegKey::value(const QString &name, bool *expand) const
+{
+    char data[16 * 1024];
+    DWORD len = sizeof(data);
+    DWORD type;
+
+    if (!RegQueryValueEx((HKEY) handle(), (LPCWSTR) name.utf16(), 0, &type, (LPBYTE) data, &len)) {
+        switch (type) {
+        case REG_EXPAND_SZ:
+            if (expand) {
+                *expand = true;
+            }
+            Q_FALLTHROUGH();
+        case REG_SZ:
+            return QString::fromWCharArray((LPCWSTR) data, len);
+        case REG_DWORD:
+            return *((qint32 *) data);
+        case REG_QWORD:
+            return *((qint64 *) data);
+        }
+    }
+
+    return QVariant();
+}
+
 bool RegKey::contains(const QString &name) const
 {
     return !RegQueryValueEx((HKEY) handle(), (LPCWSTR) name.utf16(), 0, nullptr, nullptr, nullptr);
