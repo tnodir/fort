@@ -46,7 +46,6 @@ private:
     void setupConfManager();
     void setupQuotaManager();
     void setupTaskManager();
-    void setupServiceInfoManager();
 
     void setupTranslationManager();
 

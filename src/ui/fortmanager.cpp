@@ -84,7 +84,6 @@ void FortManager::initialize()
     setupConfManager();
     setupQuotaManager();
     setupTaskManager();
-    setupServiceInfoManager();
 
     setupDriver();
     loadConf();
@@ -285,13 +284,6 @@ void FortManager::setupTaskManager()
     });
     connect(taskManager->taskInfoZoneDownloader(), &TaskInfoZoneDownloader::zonesUpdated,
             IoC<ConfManager>(), &ConfManager::updateDriverZones);
-}
-
-void FortManager::setupServiceInfoManager()
-{
-    auto serviceInfoManager = IoC<ServiceInfoManager>();
-
-    serviceInfoManager->setMonitorEnabled(IoC<FortSettings>()->isMaster());
 }
 
 void FortManager::setupTranslationManager()

@@ -111,8 +111,6 @@ SOURCES += \
     rpc/windowmanagerfake.cpp \
     serviceinfo/serviceinfo.cpp \
     serviceinfo/serviceinfomanager.cpp \
-    serviceinfo/serviceinfomonitor.cpp \
-    serviceinfo/servicelistmonitor.cpp \
     stat/quotamanager.cpp \
     stat/statmanager.cpp \
     stat/statsql.cpp \
@@ -266,8 +264,6 @@ HEADERS += \
     rpc/windowmanagerfake.h \
     serviceinfo/serviceinfo.h \
     serviceinfo/serviceinfomanager.h \
-    serviceinfo/serviceinfomonitor.h \
-    serviceinfo/servicelistmonitor.h \
     stat/quotamanager.h \
     stat/statmanager.h \
     stat/statsql.h \

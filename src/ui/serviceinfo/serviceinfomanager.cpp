@@ -5,9 +5,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 
-#include "serviceinfomonitor.h"
-#include "servicelistmonitor.h"
-
 namespace {
 
 const QLoggingCategory LC("serviceInfo.serviceInfoManager");
@@ -49,21 +46,6 @@ QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD state = SERVICE_ST
 
 ServiceInfoManager::ServiceInfoManager(QObject *parent) : QObject(parent) { }
 
-ServiceInfoManager::~ServiceInfoManager()
-{
-    clearServiceMonitors();
-    stopServiceListMonitor();
-}
-
-void ServiceInfoManager::setMonitorEnabled(bool v)
-{
-    if (m_monitorEnabled != v) {
-        m_monitorEnabled = v;
-
-        setupServiceMonitors();
-    }
-}
-
 int ServiceInfoManager::groupIndexByName(const QString &name) const
 {
     return m_serviceGroups.value(name, -1);
@@ -79,115 +61,4 @@ QVector<ServiceInfo> ServiceInfoManager::loadServiceInfoList()
         CloseServiceHandle(mngr);
     }
     return list;
-}
-
-void ServiceInfoManager::setupServiceMonitors()
-{
-    clearServiceMonitors();
-
-    if (!monitorEnabled())
-        return;
-
-    const SC_HANDLE mngr =
-            OpenSCManagerW(nullptr, nullptr, SC_MANAGER_CONNECT | SC_MANAGER_ENUMERATE_SERVICE);
-    if (!mngr) {
-        qCCritical(LC) << "Open manager error:" << GetLastError();
-        return;
-    }
-
-    if (!m_serviceGroups.isEmpty()) {
-        const auto services = getServiceInfoList(mngr);
-        for (const auto &info : services) {
-            startServiceMonitor(info.serviceName, info.processId, mngr);
-        }
-    }
-
-    startServiceListMonitor(mngr);
-}
-
-void ServiceInfoManager::clearServiceMonitors()
-{
-    const auto monitors = m_serviceMonitors.values();
-    m_serviceMonitors.clear();
-
-    for (ServiceInfoMonitor *m : monitors) {
-        stopServiceMonitor(m);
-    }
-}
-
-void ServiceInfoManager::startServiceMonitor(
-        const QString &name, quint32 processId, void *managerHandle)
-{
-    if (!m_serviceGroups.contains(name))
-        return;
-
-    auto m = new ServiceInfoMonitor(processId, name, managerHandle);
-
-    connect(m, &ServiceInfoMonitor::stateChanged, this, &ServiceInfoManager::onServiceStateChanged,
-            Qt::QueuedConnection);
-
-    m_serviceMonitors.insert(name, m);
-}
-
-void ServiceInfoManager::stopServiceMonitor(ServiceInfoMonitor *m)
-{
-    m_serviceMonitors.remove(m->name());
-
-    m->terminate();
-    m->deleteLater();
-}
-
-void ServiceInfoManager::startServiceListMonitor(void *managerHandle)
-{
-    auto m = new ServiceListMonitor(managerHandle);
-
-    connect(m, &ServiceListMonitor::serviceCreated, this, &ServiceInfoManager::onServiceCreated,
-            Qt::QueuedConnection);
-    connect(m, &ServiceListMonitor::errorOccurred, this,
-            &ServiceInfoManager::stopServiceListMonitor, Qt::QueuedConnection);
-
-    m_serviceListMonitor = m;
-}
-
-void ServiceInfoManager::stopServiceListMonitor()
-{
-    auto m = m_serviceListMonitor;
-    if (!m)
-        return;
-
-    m_serviceListMonitor = nullptr;
-
-    m->terminate();
-    m->deleteLater();
-}
-
-void ServiceInfoManager::onServiceStateChanged(ServiceInfo::State state, quint32 processId)
-{
-    const auto m = qobject_cast<ServiceInfoMonitor *>(sender());
-    Q_ASSERT(m);
-
-    if (state == ServiceInfo::StateDeleted) {
-        Q_ASSERT(processId == 0);
-        processId = m->processId();
-        if (processId != 0) {
-            state = ServiceInfo::StateInactive;
-        }
-
-        stopServiceMonitor(m);
-    }
-
-    const int groupIndex = groupIndexByName(m->name());
-    if (groupIndex == -1)
-        return;
-
-    Q_ASSERT(processId != 0);
-
-    emit serviceChanged(processId, (state == ServiceInfo::StateActive ? groupIndex : -1));
-}
-
-void ServiceInfoManager::onServiceCreated(const QStringList &nameList)
-{
-    for (const auto &name : nameList) {
-        startServiceMonitor(name);
-    }
 }
