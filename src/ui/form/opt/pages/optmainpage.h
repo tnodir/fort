@@ -32,6 +32,8 @@ private:
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btApply = nullptr;
     QPushButton *m_btCancel = nullptr;
+
+    QVector<OptBasePage *> m_pages;
 };
 
 #endif // OPTMAINPAGE_H

@@ -65,7 +65,7 @@ void OptMainPage::setupUi()
 
 void OptMainPage::setupTabBar()
 {
-    auto optionsPage = ControlUtil::wrapToScrollArea(new OptionsPage(ctrl()));
+    auto optionsPage = new OptionsPage(ctrl());
     auto addressesPage = new AddressesPage(ctrl());
     auto rulesPage = new RulesPage(ctrl());
     auto applicationsPage = new ApplicationsPage(ctrl());
@@ -73,8 +73,12 @@ void OptMainPage::setupTabBar()
     auto statisticsPage = new StatisticsPage(ctrl());
     auto schedulePage = new SchedulePage(ctrl());
 
+    m_pages = { optionsPage, addressesPage, rulesPage, applicationsPage, servicesPage,
+        statisticsPage, schedulePage };
+
     m_tabBar = new QTabWidget();
-    m_tabBar->addTab(optionsPage, IconCache::icon(":/icons/cog.png"), QString());
+    m_tabBar->addTab(ControlUtil::wrapToScrollArea(optionsPage), IconCache::icon(":/icons/cog.png"),
+            QString());
     m_tabBar->addTab(addressesPage, IconCache::icon(":/icons/ip.png"), QString());
     m_tabBar->addTab(rulesPage, IconCache::icon(":/icons/source_code.png"), QString());
     m_tabBar->addTab(
@@ -86,6 +90,9 @@ void OptMainPage::setupTabBar()
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     m_tabBar->setTabVisible(2, false); // TODO: Impl. Network Rules
 #endif
+
+    connect(m_tabBar, &QTabWidget::currentChanged, this,
+            [&](int tabIndex) { m_pages[tabIndex]->onPageActivated(); });
 }
 
 QLayout *OptMainPage::setupDialogButtons()

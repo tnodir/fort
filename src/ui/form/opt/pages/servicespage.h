@@ -17,6 +17,9 @@ public:
     ServiceListModel *serviceListModel() const { return m_serviceListModel; }
     ServiceInfoManager *serviceInfoManager() const;
 
+public slots:
+    void onPageActivated() override;
+
 protected slots:
     void onRetranslateUi() override;
 

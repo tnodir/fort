@@ -20,13 +20,16 @@ ServicesPage::ServicesPage(OptionsController *ctrl, QWidget *parent) :
     OptBasePage(ctrl, parent), m_serviceListModel(new ServiceListModel(this))
 {
     setupUi();
-
-    serviceListModel()->initialize();
 }
 
 ServiceInfoManager *ServicesPage::serviceInfoManager() const
 {
     return IoC<ServiceInfoManager>();
+}
+
+void ServicesPage::onPageActivated()
+{
+    serviceListModel()->initialize();
 }
 
 void ServicesPage::onRetranslateUi()

@@ -34,6 +34,9 @@ class OptBasePage : public QFrame
 public:
     explicit OptBasePage(OptionsController *ctrl, QWidget *parent = nullptr);
 
+public slots:
+    virtual void onPageActivated() { }
+
 protected:
     OptionsController *ctrl() const { return m_ctrl; }
     FortManager *fortManager() const;

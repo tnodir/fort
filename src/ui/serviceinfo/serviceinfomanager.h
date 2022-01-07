@@ -19,9 +19,6 @@ public:
 
     static QVector<ServiceInfo> loadServiceInfoList();
 
-signals:
-    void serviceChanged(quint32 processId, int groupIndex = -1);
-
 private:
     QHash<QString, int> m_serviceGroups;
 };
