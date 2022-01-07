@@ -10,13 +10,14 @@ enum {
     FORT_SYSCB_TIME,
     FORT_TIMER_CALLBACK,
     FORT_WORKER_CALLBACK,
+    FORT_PSTREE_NOTIFY,
 };
 
 #if defined(__cplusplus)
 extern "C" {
 #endif
 
-typedef void (WINAPI *FortCallbackFunc)(void);
+typedef void(WINAPI *FortCallbackFunc)(void);
 
 FORT_API FortCallbackFunc fort_callback(int id, FortCallbackFunc func);
 

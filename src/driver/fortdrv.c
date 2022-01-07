@@ -6,6 +6,7 @@
 
 #include "fortcb.h"
 #include "fortdev.h"
+#include "fortutl.h"
 
 static void fort_driver_unload(PDRIVER_OBJECT driver)
 {
@@ -27,10 +28,12 @@ static NTSTATUS fort_driver_load(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path
 {
     NTSTATUS status;
 
-    UNUSED(reg_path);
-
     // Use NX Non-Paged Pool
     ExInitializeDriverRuntime(DrvRtPoolNxOptIn);
+
+    status = fort_windows_path_init(driver, reg_path);
+    if (!NT_SUCCESS(status))
+        return status;
 
     UNICODE_STRING device_name;
     RtlInitUnicodeString(&device_name, FORT_NT_DEVICE_NAME);
@@ -68,9 +71,7 @@ NTSTATUS DriverCallbacksSetup(PFORT_PROXYCB_INFO cb_info)
 
 NTSTATUS DriverEntry(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 {
-    NTSTATUS status;
-
-    status = fort_driver_load(driver, reg_path);
+    const NTSTATUS status = fort_driver_load(driver, reg_path);
 
     if (!NT_SUCCESS(status)) {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Entry: Error: %x\n", status);

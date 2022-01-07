@@ -7,6 +7,23 @@
 #define FORT_KEY_INFO_PATH_SIZE                                                                    \
     (2 + (MAX_PATH * sizeof(WCHAR)) / sizeof(KEY_VALUE_FULL_INFORMATION))
 
+static wchar_t g_windowsPathBuffer[64];
+static UNICODE_STRING g_windowsPath;
+
+static NTSTATUS fort_string_new(ULONG len, PCWSTR src, PUNICODE_STRING outData)
+{
+    PWSTR buf = ExAllocatePool(NonPagedPool, len);
+    if (buf == NULL)
+        return STATUS_INSUFFICIENT_RESOURCES;
+
+    RtlCopyMemory(buf, src, len);
+    buf[len / sizeof(WCHAR) - sizeof(WCHAR)] = L'\0';
+
+    RtlInitUnicodeString(outData, buf);
+
+    return STATUS_SUCCESS;
+}
+
 static NTSTATUS fort_reg_value(HANDLE regKey, PUNICODE_STRING valueName, PUNICODE_STRING outData)
 {
     NTSTATUS status;
@@ -21,15 +38,7 @@ static NTSTATUS fort_reg_value(HANDLE regKey, PUNICODE_STRING valueName, PUNICOD
         const PUCHAR src = ((const PUCHAR) keyInfo + keyInfo->DataOffset);
         const ULONG len = keyInfo->DataLength + sizeof(WCHAR); // with terminating '\0'
 
-        PWSTR buf = ExAllocatePool(NonPagedPool, len);
-        if (buf == NULL) {
-            status = STATUS_INSUFFICIENT_RESOURCES;
-        } else {
-            RtlCopyMemory(buf, src, len);
-            buf[len / sizeof(WCHAR) - sizeof(WCHAR)] = L'\0';
-
-            RtlInitUnicodeString(outData, buf);
-        }
+        status = fort_string_new(len, (PCWSTR) src, outData);
     }
 
     return status;
@@ -66,6 +75,74 @@ FORT_API NTSTATUS fort_driver_path(
 #endif
 
     return status;
+}
+
+static NTSTATUS fort_windows_path_set(PCUNICODE_STRING path, USHORT charCount)
+{
+    if (charCount >= sizeof(g_windowsPathBuffer) / sizeof(WCHAR))
+        return STATUS_BUFFER_OVERFLOW;
+
+    const USHORT len = charCount * sizeof(WCHAR);
+
+    RtlCopyMemory(g_windowsPathBuffer, path->Buffer, len);
+    g_windowsPathBuffer[charCount] = L'\0';
+
+    g_windowsPath.Length = len;
+    g_windowsPath.MaximumLength = sizeof(g_windowsPathBuffer);
+    g_windowsPath.Buffer = g_windowsPathBuffer;
+
+    return STATUS_SUCCESS;
+}
+
+FORT_API NTSTATUS fort_windows_path_init(PDRIVER_OBJECT driver, PUNICODE_STRING regPath)
+{
+    NTSTATUS status;
+
+    UNICODE_STRING driverPath;
+    status = fort_driver_path(driver, regPath, &driverPath);
+    if (!NT_SUCCESS(status))
+        return status;
+
+    /* Overwrite last symbol to be sure about terminating zero */
+    driverPath.Buffer[driverPath.Length / sizeof(WCHAR) - sizeof(WCHAR)] = L'\0';
+
+    const wchar_t *sys32 = wcsstr(driverPath.Buffer, L"\\System32\\");
+    if (sys32 != NULL) {
+        const USHORT charCount = (USHORT) (sys32 - driverPath.Buffer);
+
+        status = fort_windows_path_set(&driverPath, charCount);
+    } else {
+        status = STATUS_OBJECT_PATH_INVALID;
+    }
+
+    /* Free the allocated driver path */
+    ExFreePool(driverPath.Buffer);
+
+    return status;
+}
+
+FORT_API PUNICODE_STRING fort_windows_path()
+{
+    return &g_windowsPath;
+}
+
+FORT_API NTSTATUS fort_resolve_link(PCWSTR linkPath, PUNICODE_STRING outPath)
+{
+    NTSTATUS status;
+
+    UNICODE_STRING objName;
+    RtlInitUnicodeString(&objName, linkPath);
+
+    OBJECT_ATTRIBUTES objAttr;
+    InitializeObjectAttributes(&objAttr, &objName, OBJ_CASE_INSENSITIVE, NULL, NULL);
+
+    HANDLE linkHandle;
+    status = ZwOpenSymbolicLinkObject(&linkHandle, GENERIC_READ, &objAttr);
+    if (!NT_SUCCESS(status))
+        return status;
+
+    ULONG len = outPath->MaximumLength;
+    return ZwQuerySymbolicLinkObject(linkHandle, outPath, &len);
 }
 
 FORT_API NTSTATUS fort_file_read(HANDLE fileHandle, ULONG poolTag, PUCHAR *outData, DWORD *outSize)

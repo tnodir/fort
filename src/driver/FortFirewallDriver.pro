@@ -12,6 +12,7 @@ SOURCES += \
     fortdev.c \
     fortdrv.c \
     fortpkt.c \
+    fortps.c \
     fortscb.c \
     fortstat.c \
     forttds.c \
@@ -41,6 +42,7 @@ HEADERS += \
     fortdev.h \
     fortdrv.h \
     fortpkt.h \
+    fortps.h \
     fortscb.h \
     fortstat.h \
     forttds.h \

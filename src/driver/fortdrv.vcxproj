@@ -56,6 +56,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies);$(DDK_LIB_PATH)\fwpkclnt.lib;$(DDK_LIB_PATH)\ndis.lib;$(SDK_LIB_PATH)\uuid.lib</AdditionalDependencies>
+      <AdditionalOptions>/integritycheck</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <ModuleDefinitionFile>fortdrv.def</ModuleDefinitionFile>
     </Link>

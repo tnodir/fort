@@ -338,3 +338,21 @@ NTSTATUS ZwReadFile(HANDLE fileHandle, HANDLE event, PIO_APC_ROUTINE apcRoutine,
     UNUSED(key);
     return STATUS_SUCCESS;
 }
+
+NTSTATUS ZwOpenSymbolicLinkObject(
+        PHANDLE linkHandle, ACCESS_MASK desiredAccess, POBJECT_ATTRIBUTES objectAttributes)
+{
+    UNUSED(linkHandle);
+    UNUSED(desiredAccess);
+    UNUSED(objectAttributes);
+    return STATUS_SUCCESS;
+}
+
+NTSTATUS ZwQuerySymbolicLinkObject(
+        HANDLE linkHandle, PUNICODE_STRING linkTarget, PULONG returnedLength)
+{
+    UNUSED(linkHandle);
+    UNUSED(linkTarget);
+    UNUSED(returnedLength);
+    return STATUS_SUCCESS;
+}

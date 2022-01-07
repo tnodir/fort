@@ -9,12 +9,12 @@
 static NTSTATUS fort_syscb_register(
         PCWSTR sourcePath, PCALLBACK_OBJECT *cb_obj, PVOID *cb_reg, PCALLBACK_FUNCTION cb_func)
 {
-    OBJECT_ATTRIBUTES obj_attr;
-    UNICODE_STRING obj_name;
     NTSTATUS status;
 
+    UNICODE_STRING obj_name;
     RtlInitUnicodeString(&obj_name, sourcePath);
 
+    OBJECT_ATTRIBUTES obj_attr;
     InitializeObjectAttributes(&obj_attr, &obj_name, OBJ_CASE_INSENSITIVE, NULL, NULL);
 
     status = ExCreateCallback(cb_obj, &obj_attr, FALSE, TRUE);

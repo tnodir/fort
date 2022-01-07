@@ -304,11 +304,11 @@ FORT_API NTSTATUS fort_device_control(PDEVICE_OBJECT device, PIRP irp)
     return status;
 }
 
-FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device_obj)
+FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device)
 {
     NTSTATUS status = STATUS_UNSUCCESSFUL;
 
-    fort_device_set(device_obj->DeviceExtension);
+    fort_device_set(device->DeviceExtension);
 
     RtlZeroMemory(fort_device(), sizeof(FORT_DEVICE));
 
@@ -318,6 +318,7 @@ FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device_obj)
     fort_defer_open(&fort_device()->defer);
     fort_timer_open(&fort_device()->log_timer, 500, FALSE, &fort_callout_timer);
     fort_timer_open(&fort_device()->app_timer, 60000, TRUE, &fort_app_period_timer);
+    fort_pstree_open(&fort_device()->ps_tree);
 
     /* Unregister old filters provider */
     {
@@ -327,11 +328,11 @@ FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device_obj)
     }
 
     /* Install callouts */
-    status = fort_callout_install(device_obj);
+    status = fort_callout_install(device);
 
     /* Register worker */
     if (NT_SUCCESS(status)) {
-        status = fort_worker_register(device_obj, &fort_device()->worker);
+        status = fort_worker_register(device, &fort_device()->worker);
     }
 
     /* Register filters provider */
@@ -361,6 +362,7 @@ FORT_API void fort_device_unload()
 
     fort_callout_defer_flush();
 
+    fort_pstree_close(&fort_device()->ps_tree);
     fort_timer_close(&fort_device()->app_timer);
     fort_timer_close(&fort_device()->log_timer);
     fort_defer_close(&fort_device()->defer);

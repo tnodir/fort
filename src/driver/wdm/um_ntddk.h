@@ -3,23 +3,39 @@
 
 #include "um_wdm.h"
 
+typedef struct _KPROCESS *PEPROCESS;
+
+typedef struct _PS_CREATE_NOTIFY_INFO
+{
+    SIZE_T Size;
+    union {
+        ULONG Flags;
+        struct
+        {
+            ULONG FileOpenNameAvailable : 1;
+            ULONG IsSubsystemProcess : 1;
+            ULONG Reserved : 30;
+        };
+    };
+    HANDLE ParentProcessId;
+    CLIENT_ID CreatingThreadId;
+    struct _FILE_OBJECT *FileObject;
+    PCUNICODE_STRING ImageFileName;
+    PCUNICODE_STRING CommandLine;
+    NTSTATUS CreationStatus;
+} PS_CREATE_NOTIFY_INFO, *PPS_CREATE_NOTIFY_INFO;
+
+typedef VOID (*PCREATE_PROCESS_NOTIFY_ROUTINE_EX)(
+        PEPROCESS process, HANDLE processId, PPS_CREATE_NOTIFY_INFO createInfo);
+
 #if defined(__cplusplus)
 extern "C" {
 #endif
 
-FORT_API NTSTATUS IoQueryFullDriverPath(
-        _In_ PDRIVER_OBJECT DriverObject, _Out_ PUNICODE_STRING FullPath);
+FORT_API NTSTATUS IoQueryFullDriverPath(PDRIVER_OBJECT driverObject, PUNICODE_STRING fullPath);
 
-//
-// Define driver reinitialization routine type.
-//
-
-typedef VOID DRIVER_REINITIALIZE(PDRIVER_OBJECT DriverObject, PVOID Context, ULONG Count);
-
-typedef DRIVER_REINITIALIZE *PDRIVER_REINITIALIZE;
-
-FORT_API VOID IoRegisterDriverReinitialization(_In_ PDRIVER_OBJECT DriverObject,
-        _In_ PDRIVER_REINITIALIZE DriverReinitializationRoutine, _In_opt_ PVOID Context);
+FORT_API NTSTATUS PsSetCreateProcessNotifyRoutineEx(
+        PCREATE_PROCESS_NOTIFY_ROUTINE_EX notifyRoutine, BOOLEAN remove);
 
 #ifdef __cplusplus
 } // extern "C"

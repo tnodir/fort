@@ -6,6 +6,7 @@
 #include "fortbuf.h"
 #include "fortcnf.h"
 #include "fortpkt.h"
+#include "fortps.h"
 #include "fortstat.h"
 #include "forttmr.h"
 #include "fortwrk.h"
@@ -25,6 +26,7 @@ typedef struct fort_device
     FORT_BUFFER buffer;
     FORT_STAT stat;
     FORT_DEFER defer;
+    FORT_PSTREE ps_tree;
     FORT_TIMER log_timer;
     FORT_TIMER app_timer;
     FORT_WORKER worker;

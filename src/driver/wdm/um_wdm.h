@@ -303,6 +303,11 @@ FORT_API NTSTATUS ZwReadFile(HANDLE fileHandle, HANDLE event, PIO_APC_ROUTINE ap
         PVOID apcContext, PIO_STATUS_BLOCK ioStatusBlock, PVOID buffer, ULONG length,
         PLARGE_INTEGER byteOffset, PULONG key);
 
+FORT_API NTSTATUS ZwOpenSymbolicLinkObject(
+        PHANDLE linkHandle, ACCESS_MASK desiredAccess, POBJECT_ATTRIBUTES objectAttributes);
+FORT_API NTSTATUS ZwQuerySymbolicLinkObject(
+        HANDLE linkHandle, PUNICODE_STRING linkTarget, PULONG returnedLength);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

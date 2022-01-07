@@ -1,16 +1,16 @@
 #include "um_ntddk.h"
 
-NTSTATUS IoQueryFullDriverPath(PDRIVER_OBJECT DriverObject, PUNICODE_STRING FullPath)
+NTSTATUS IoQueryFullDriverPath(PDRIVER_OBJECT driverObject, PUNICODE_STRING fullPath)
 {
-    UNUSED(DriverObject);
-    UNUSED(FullPath);
+    UNUSED(driverObject);
+    UNUSED(fullPath);
     return STATUS_SUCCESS;
 }
 
-VOID IoRegisterDriverReinitialization(PDRIVER_OBJECT DriverObject,
-        PDRIVER_REINITIALIZE DriverReinitializationRoutine, PVOID Context)
+NTSTATUS PsSetCreateProcessNotifyRoutineEx(
+        PCREATE_PROCESS_NOTIFY_ROUTINE_EX notifyRoutine, BOOLEAN remove)
 {
-    UNUSED(DriverObject);
-    UNUSED(DriverReinitializationRoutine);
-    UNUSED(Context);
+    UNUSED(notifyRoutine);
+    UNUSED(remove);
+    return STATUS_SUCCESS;
 }

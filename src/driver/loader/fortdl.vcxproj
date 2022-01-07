@@ -56,6 +56,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies);$(DDK_LIB_PATH)\aux_klib.lib;$(DDK_LIB_PATH)\ksecdd.lib</AdditionalDependencies>
+      <AdditionalOptions>/integritycheck</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
     <DriverSign>
