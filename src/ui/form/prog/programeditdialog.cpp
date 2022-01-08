@@ -52,11 +52,6 @@ FirewallConf *ProgramEditDialog::conf() const
     return ctrl()->conf();
 }
 
-AppInfoCache *ProgramEditDialog::appInfoCache() const
-{
-    return IoC<AppInfoCache>();
-}
-
 AppListModel *ProgramEditDialog::appListModel() const
 {
     return ctrl()->appListModel();
@@ -264,7 +259,7 @@ QLayout *ProgramEditDialog::setupAppNameLayout()
         if (appPath.isEmpty())
             return;
 
-        const QString appName = appInfoCache()->appName(appPath);
+        const QString appName = IoC<AppInfoCache>()->appName(appPath);
         m_editName->setText(appName);
     };
 

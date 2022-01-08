@@ -13,7 +13,6 @@ QT_FORWARD_DECLARE_CLASS(QLineEdit)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QRadioButton)
 
-class AppInfoCache;
 class CheckSpinCombo;
 class ConfManager;
 class FirewallConf;
@@ -31,7 +30,6 @@ public:
     FortManager *fortManager() const;
     ConfManager *confManager() const;
     FirewallConf *conf() const;
-    AppInfoCache *appInfoCache() const;
     AppListModel *appListModel() const;
 
     void initialize(const AppRow &appRow, const QVector<qint64> &appIdList);
