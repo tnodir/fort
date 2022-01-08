@@ -49,7 +49,7 @@ public:
 
     bool logBlockedIp(const LogEntryBlockedIp &entry, qint64 unixTime);
 
-    void getStatAppList(QStringList &list, QVector<qint64> &appIds);
+    void getStatAppList(QStringList &list, QVector<qint64> &appIds, QVector<quint8> &pathTypes);
 
     virtual bool deleteStatApp(qint64 appId);
 
@@ -169,7 +169,13 @@ private:
 
     SqliteDb *m_sqliteDb = nullptr;
 
-    QHash<quint32, QString> m_appPidPathMap; // pid -> appPath
+    struct AppPathInfo
+    {
+        quint8 pathType = 0;
+        QString path;
+    };
+
+    QHash<quint32, AppPathInfo> m_appPidPathMap; // pid -> appPath
     QHash<QString, qint64> m_appPathIdCache; // appPath -> appId
 
     TriggerTimer m_connChangedTimer;

@@ -24,7 +24,7 @@ Q_LOGGING_CATEGORY(CLOG_STAT_MANAGER, "stat")
 #define logWarning()  qCWarning(CLOG_STAT_MANAGER, )
 #define logCritical() qCCritical(CLOG_STAT_MANAGER, )
 
-#define DATABASE_USER_VERSION 4
+#define DATABASE_USER_VERSION 5
 
 #define ACTIVE_PERIOD_CHECK_SECS (60 * OS_TICKS_PER_SECOND)
 
@@ -36,7 +36,11 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 {
     Q_UNUSED(ctx);
 
-    if (version == 3 && !isNewDb) {
+    if (isNewDb)
+        return true;
+
+    switch (version) {
+    case 3: {
         // Move apps' total traffic to separate table
         const QString srcSchema = SqliteDb::migrationOldSchemaName();
         const QString dstSchema = SqliteDb::migrationNewSchemaName();
@@ -46,6 +50,11 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
                                          SqliteDb::entityName(srcSchema, "app"),
                                          "app_id, traf_time, in_bytes, out_bytes");
         db->executeStr(sql);
+    } break;
+    case 5: {
+        // COMPAT: app.flags
+        db->execute("UPDATE app SET path_type = 1 WHERE path = 'System';");
+    } break;
     }
 
     return true;
@@ -280,7 +289,7 @@ bool StatManager::logProcNew(const LogEntryProcNew &entry, qint64 unixTime)
     const QString &appPath = entry.path();
 
     Q_ASSERT(!m_appPidPathMap.contains(pid));
-    m_appPidPathMap.insert(pid, appPath);
+    m_appPidPathMap.insert(pid, { pathType, appPath });
 
     return getOrCreateAppId(appPath, pathType, unixTime) != INVALID_APP_ID;
 }
@@ -366,7 +375,7 @@ bool StatManager::logBlockedIp(const LogEntryBlockedIp &entry, qint64 unixTime)
     bool ok = false;
     sqliteDb()->beginTransaction();
 
-    const qint64 appId = getOrCreateAppId(entry.path(), unixTime);
+    const qint64 appId = getOrCreateAppId(entry.path(), entry.pathType(), unixTime);
     if (appId != INVALID_APP_ID) {
         ok = createConnBlock(entry, unixTime, appId);
     }
@@ -571,13 +580,15 @@ void StatManager::deleteOldTraffic(qint32 trafHour)
     doStmtList(deleteTrafStmts);
 }
 
-void StatManager::getStatAppList(QStringList &list, QVector<qint64> &appIds)
+void StatManager::getStatAppList(
+        QStringList &list, QVector<qint64> &appIds, QVector<quint8> &pathTypes)
 {
     SqliteStmt *stmt = sqliteDb()->stmt(StatSql::sqlSelectStatAppList);
 
     while (stmt->step() == SqliteStmt::StepRow) {
         appIds.append(stmt->columnInt64(0));
-        list.append(stmt->columnText(1));
+        pathTypes.append(stmt->columnInt(1));
+        list.append(stmt->columnText(2));
     }
     stmt->reset();
 }
@@ -589,7 +600,9 @@ void StatManager::logTrafBytes(const QStmtList &insertStmtList, const QStmtList 
     const bool inactive = (pidFlag & 1) != 0;
     const quint32 pid = pidFlag & ~quint32(1);
 
-    const QString appPath = m_appPidPathMap.value(pid);
+    const AppPathInfo appPathInfo = m_appPidPathMap.value(pid);
+    const quint8 pathType = appPathInfo.pathType;
+    const QString appPath = appPathInfo.path;
 
     if (Q_UNLIKELY(appPath.isEmpty())) {
         logCritical() << "UI & Driver's states mismatch! Expected processes:"
@@ -604,7 +617,7 @@ void StatManager::logTrafBytes(const QStmtList &insertStmtList, const QStmtList 
     if (inBytes == 0 && outBytes == 0)
         return;
 
-    const qint64 appId = getOrCreateAppId(appPath, unixTime);
+    const qint64 appId = getOrCreateAppId(appPath, pathType, unixTime);
     Q_ASSERT(appId != INVALID_APP_ID);
 
     if (m_isActivePeriod) {

@@ -42,6 +42,7 @@ private:
 
 private:
     QVector<qint64> m_appIds;
+    QVector<quint8> m_pathTypes;
 };
 
 #endif // APPSTATMODEL_H

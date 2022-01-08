@@ -83,7 +83,7 @@ void AppStatModel::updateList()
     m_appIds.clear();
     m_appIds.append(0); // All
 
-    statManager()->getStatAppList(list, m_appIds);
+    statManager()->getStatAppList(list, m_appIds, m_pathTypes);
 
     setList(list);
 }

@@ -5,6 +5,11 @@ LogEntryBlocked::LogEntryBlocked(quint32 pid, const QString &kernelPath) :
 {
 }
 
+FortLogType LogEntryBlocked::type() const
+{
+    return blocked() ? FORT_LOG_TYPE_BLOCKED : FORT_LOG_TYPE_ALLOWED;
+}
+
 void LogEntryBlocked::setBlocked(bool blocked)
 {
     m_blocked = blocked;
