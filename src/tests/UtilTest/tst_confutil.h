@@ -85,11 +85,11 @@ TEST_F(ConfUtilTest, confWriteRead)
     ASSERT_FALSE(DriverCommon::confIpInRange(data, NetUtil::textToIp4("193.0.0.0")));
     ASSERT_TRUE(DriverCommon::confIpInRange(data, NetUtil::textToIp4("239.255.255.250")));
 
-    qint8 blockReason = LogEntryBlockedIp::ReasonUnknown;
+    qint8 blockReason = FORT_BLOCK_REASON_UNKNOWN;
 
     ASSERT_TRUE(DriverCommon::confAppBlocked(
             data, DriverCommon::confAppFind(data, "System"), &blockReason));
-    ASSERT_EQ(blockReason, LogEntryBlockedIp::ReasonAppGroupDefault);
+    ASSERT_EQ(blockReason, FORT_BLOCK_REASON_APP_GROUP_DEFAULT);
 
     ASSERT_FALSE(DriverCommon::confAppBlocked(data,
             DriverCommon::confAppFind(
@@ -112,7 +112,7 @@ TEST_F(ConfUtilTest, confWriteRead)
             DriverCommon::confAppFind(
                     data, FileUtil::pathToKernelPath("C:\\Program Files\\Test.exe")),
             &blockReason));
-    ASSERT_EQ(blockReason, LogEntryBlockedIp::ReasonAppGroupDefault);
+    ASSERT_EQ(blockReason, FORT_BLOCK_REASON_APP_GROUP_DEFAULT);
 
     ASSERT_EQ(DriverCommon::confAppPeriodBits(data, 0, 0), 0x01);
     ASSERT_EQ(DriverCommon::confAppPeriodBits(data, 12, 0), 0);
@@ -120,7 +120,7 @@ TEST_F(ConfUtilTest, confWriteRead)
     const quint16 firefoxFlags = DriverCommon::confAppFind(
             data, FileUtil::pathToKernelPath("C:\\Utils\\Firefox\\Bin\\firefox.exe"));
     ASSERT_TRUE(DriverCommon::confAppBlocked(data, firefoxFlags, &blockReason));
-    ASSERT_EQ(blockReason, LogEntryBlockedIp::ReasonAppGroupFound);
+    ASSERT_EQ(blockReason, FORT_BLOCK_REASON_APP_GROUP_FOUND);
     ASSERT_EQ(int(DriverCommon::confAppGroupIndex(firefoxFlags)), 1);
 }
 

@@ -56,12 +56,4 @@
     ((369 * 365 + 89) * (INT64) SECSPERDAY) /* 1601 to 1970 is 369 years plus 89 leap days */
 #define fort_system_to_unix_time(system_time) ((system_time) / 10000000 - SECS_1601_TO_1970)
 
-#define FORT_BLOCK_REASON_NONE              -1
-#define FORT_BLOCK_REASON_UNKNOWN           0
-#define FORT_BLOCK_REASON_IP_INET           1
-#define FORT_BLOCK_REASON_REAUTH            2
-#define FORT_BLOCK_REASON_PROGRAM           3
-#define FORT_BLOCK_REASON_APP_GROUP_FOUND   4
-#define FORT_BLOCK_REASON_APP_GROUP_DEFAULT 5
-
 #endif // COMMON_H

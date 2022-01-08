@@ -7,16 +7,19 @@
 #define FORT_LOG_PATH_MAX 512
 #define FORT_LOG_ALIGN    4
 
-#define FORT_LOG_FLAG_BLOCKED       0x00100000
-#define FORT_LOG_FLAG_BLOCKED_IP    0x00200000
-#define FORT_LOG_FLAG_PROC_NEW      0x01000000
-#define FORT_LOG_FLAG_STAT_TRAF     0x02000000
-#define FORT_LOG_FLAG_TIME          0x04000000
-#define FORT_LOG_FLAG_BLOCKED_ALLOW 0x10000000
-#define FORT_LOG_FLAG_IP_INBOUND    0x10000000
 #define FORT_LOG_FLAG_TYPE_MASK     0x0FF00000
+#define FORT_LOG_FLAG_TYPE_MASK_OFF 20
+#define FORT_LOG_FLAG_IP_INBOUND    0x10000000
 #define FORT_LOG_FLAG_OPT_MASK      0xF0000000
+#define FORT_LOG_FLAG_OPT_MASK_OFF  28
 #define FORT_LOG_FLAG_EX_MASK       (FORT_LOG_FLAG_TYPE_MASK | FORT_LOG_FLAG_OPT_MASK)
+
+#define fort_log_flag_type(type) (((UINT32) (type)) << FORT_LOG_FLAG_TYPE_MASK_OFF)
+#define fort_log_flag_opt(opt)   (((UINT32) (opt)) << FORT_LOG_FLAG_OPT_MASK_OFF)
+
+#define fort_log_type(p)                                                                           \
+    ((*((UINT32 *) (p)) & FORT_LOG_FLAG_TYPE_MASK) >> FORT_LOG_FLAG_TYPE_MASK_OFF)
+#define fort_log_opt(p) ((*((UINT32 *) (p)) & FORT_LOG_FLAG_OPT_MASK) >> FORT_LOG_FLAG_OPT_MASK_OFF)
 
 #define FORT_LOG_BLOCKED_HEADER_SIZE (2 * sizeof(UINT32))
 
@@ -51,37 +54,38 @@
 
 #define FORT_LOG_SIZE_MAX FORT_LOG_BLOCKED_SIZE_MAX
 
-#define fort_log_type(p) (*((UINT32 *) (p)) & FORT_LOG_FLAG_TYPE_MASK)
-
 #if defined(__cplusplus)
 extern "C" {
 #endif
 
-FORT_API void fort_log_blocked_header_write(char *p, BOOL blocked, UINT32 pid, UINT32 path_len);
+FORT_API void fort_log_blocked_header_write(
+        char *p, BOOL blocked, UINT32 pid, UCHAR path_type, UINT32 path_len);
 
 FORT_API void fort_log_blocked_write(
-        char *p, BOOL blocked, UINT32 pid, UINT32 path_len, const char *path);
+        char *p, BOOL blocked, UINT32 pid, UCHAR path_type, UINT32 path_len, const char *path);
 
 FORT_API void fort_log_blocked_header_read(
-        const char *p, BOOL *blocked, UINT32 *pid, UINT32 *path_len);
+        const char *p, BOOL *blocked, UINT32 *pid, UCHAR *path_type, UINT32 *path_len);
 
 FORT_API void fort_log_blocked_ip_header_write(char *p, BOOL inbound, UCHAR block_reason,
         UCHAR ip_proto, UINT16 local_port, UINT16 remote_port, UINT32 local_ip, UINT32 remote_ip,
-        UINT32 pid, UINT32 path_len);
+        UINT32 pid, UCHAR path_type, UINT32 path_len);
 
 FORT_API void fort_log_blocked_ip_write(char *p, BOOL inbound, UCHAR block_reason, UCHAR ip_proto,
         UINT16 local_port, UINT16 remote_port, UINT32 local_ip, UINT32 remote_ip, UINT32 pid,
-        UINT32 path_len, const char *path);
+        UCHAR path_type, UINT32 path_len, const char *path);
 
 FORT_API void fort_log_blocked_ip_header_read(const char *p, BOOL *inbound, UCHAR *block_reason,
         UCHAR *ip_proto, UINT16 *local_port, UINT16 *remote_port, UINT32 *local_ip,
-        UINT32 *remote_ip, UINT32 *pid, UINT32 *path_len);
+        UINT32 *remote_ip, UINT32 *pid, UCHAR *path_type, UINT32 *path_len);
 
-FORT_API void fort_log_proc_new_header_write(char *p, UINT32 pid, UINT32 path_len);
+FORT_API void fort_log_proc_new_header_write(char *p, UINT32 pid, UCHAR path_type, UINT32 path_len);
 
-FORT_API void fort_log_proc_new_write(char *p, UINT32 pid, UINT32 path_len, const char *path);
+FORT_API void fort_log_proc_new_write(
+        char *p, UINT32 pid, UCHAR path_type, UINT32 path_len, const char *path);
 
-FORT_API void fort_log_proc_new_header_read(const char *p, UINT32 *pid, UINT32 *path_len);
+FORT_API void fort_log_proc_new_header_read(
+        const char *p, UINT32 *pid, UCHAR *path_type, UINT32 *path_len);
 
 FORT_API void fort_log_stat_traf_header_write(char *p, UINT16 proc_count);
 

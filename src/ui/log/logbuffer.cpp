@@ -39,16 +39,16 @@ void LogBuffer::prepareFor(int len)
     }
 }
 
-LogEntry::LogType LogBuffer::peekEntryType()
+FortLogType LogBuffer::peekEntryType()
 {
     if (m_offset >= m_top)
-        return LogEntry::TypeNone;
+        return FORT_LOG_TYPE_NONE;
 
     const char *input = this->input();
 
     const quint32 type = DriverCommon::logType(input);
 
-    return static_cast<LogEntry::LogType>(type);
+    return static_cast<FortLogType>(type);
 }
 
 void LogBuffer::writeEntryBlocked(const LogEntryBlocked *logEntry)
@@ -61,7 +61,8 @@ void LogBuffer::writeEntryBlocked(const LogEntryBlocked *logEntry)
 
     char *output = this->output();
 
-    DriverCommon::logBlockedHeaderWrite(output, logEntry->blocked(), logEntry->pid(), pathLen);
+    DriverCommon::logBlockedHeaderWrite(
+            output, logEntry->blocked(), logEntry->pid(), logEntry->pathType(), pathLen);
 
     if (pathLen) {
         output += DriverCommon::logBlockedHeaderSize();
@@ -77,9 +78,10 @@ void LogBuffer::readEntryBlocked(LogEntryBlocked *logEntry)
 
     const char *input = this->input();
 
+    quint8 pathType;
     int blocked;
     quint32 pid, pathLen;
-    DriverCommon::logBlockedHeaderRead(input, &blocked, &pid, &pathLen);
+    DriverCommon::logBlockedHeaderRead(input, &blocked, &pid, &pathType, &pathLen);
 
     QString path;
     if (pathLen) {
@@ -89,6 +91,7 @@ void LogBuffer::readEntryBlocked(LogEntryBlocked *logEntry)
 
     logEntry->setBlocked(blocked);
     logEntry->setPid(pid);
+    logEntry->setPathType(pathType);
     logEntry->setKernelPath(path);
 
     const int entrySize = int(DriverCommon::logBlockedSize(pathLen));
@@ -107,7 +110,7 @@ void LogBuffer::writeEntryBlockedIp(const LogEntryBlockedIp *logEntry)
 
     DriverCommon::logBlockedIpHeaderWrite(output, logEntry->inbound(), logEntry->blockReason(),
             logEntry->ipProto(), logEntry->localPort(), logEntry->remotePort(), logEntry->localIp(),
-            logEntry->remoteIp(), logEntry->pid(), pathLen);
+            logEntry->remoteIp(), logEntry->pid(), logEntry->pathType(), pathLen);
 
     if (pathLen) {
         output += DriverCommon::logBlockedIpHeaderSize();
@@ -124,6 +127,7 @@ void LogBuffer::readEntryBlockedIp(LogEntryBlockedIp *logEntry)
     const char *input = this->input();
 
     int inbound;
+    quint8 pathType;
     quint8 blockReason;
     quint8 proto;
     quint16 localPort;
@@ -131,7 +135,7 @@ void LogBuffer::readEntryBlockedIp(LogEntryBlockedIp *logEntry)
     quint32 localIp, remoteIp;
     quint32 pid, pathLen;
     DriverCommon::logBlockedIpHeaderRead(input, &inbound, &blockReason, &proto, &localPort,
-            &remotePort, &localIp, &remoteIp, &pid, &pathLen);
+            &remotePort, &localIp, &remoteIp, &pid, &pathType, &pathLen);
 
     QString path;
     if (pathLen) {
@@ -147,6 +151,7 @@ void LogBuffer::readEntryBlockedIp(LogEntryBlockedIp *logEntry)
     logEntry->setRemotePort(remotePort);
     logEntry->setIpProto(proto);
     logEntry->setPid(pid);
+    logEntry->setPathType(pathType);
     logEntry->setKernelPath(path);
 
     const int entrySize = int(DriverCommon::logBlockedIpSize(pathLen));
@@ -163,7 +168,7 @@ void LogBuffer::writeEntryProcNew(const LogEntryProcNew *logEntry)
 
     char *output = this->output();
 
-    DriverCommon::logProcNewHeaderWrite(output, logEntry->pid(), pathLen);
+    DriverCommon::logProcNewHeaderWrite(output, logEntry->pid(), logEntry->pathType(), pathLen);
 
     if (pathLen != 0) {
         output += DriverCommon::logProcNewHeaderSize();
@@ -179,15 +184,17 @@ void LogBuffer::readEntryProcNew(LogEntryProcNew *logEntry)
 
     const char *input = this->input();
 
+    quint8 pathType;
     quint32 pid, pathLen;
-    DriverCommon::logProcNewHeaderRead(input, &pid, &pathLen);
+    DriverCommon::logProcNewHeaderRead(input, &pid, &pathType, &pathLen);
 
     QString path;
-    if (pathLen) {
+    if (pathLen != 0) {
         input += DriverCommon::logProcNewHeaderSize();
-        path = QString::fromWCharArray((const wchar_t *) input, pathLen / int(sizeof(wchar_t)));
+        path = QString::fromWCharArray((const wchar_t *) input, pathLen / sizeof(wchar_t));
     }
 
+    logEntry->setPathType(pathType);
     logEntry->setPid(pid);
     logEntry->setKernelPath(path);
 

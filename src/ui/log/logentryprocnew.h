@@ -8,7 +8,10 @@ class LogEntryProcNew : public LogEntry
 public:
     explicit LogEntryProcNew(quint32 pid = 0, const QString &kernelPath = QString());
 
-    LogEntry::LogType type() const override { return ProcNew; }
+    FortLogType type() const override { return FORT_LOG_TYPE_PROC_NEW; }
+
+    quint8 pathType() const { return m_pathType; }
+    void setPathType(quint8 v);
 
     quint32 pid() const { return m_pid; }
     void setPid(quint32 pid);
@@ -19,6 +22,7 @@ public:
     QString path() const;
 
 private:
+    quint8 m_pathType = 0;
     quint32 m_pid = 0;
     QString m_kernelPath;
 };

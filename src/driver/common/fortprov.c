@@ -1,7 +1,8 @@
 /* Fort Firewall Driver Provider (Un)Registration */
 
 #include "fortprov.h"
-#include "fortdef.h"
+
+#include "fortioctl.h"
 
 FORT_API DWORD fort_prov_trans_close(HANDLE engine, DWORD status)
 {

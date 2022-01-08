@@ -175,15 +175,15 @@ QVariant ConnListModel::dataDecoration(const QModelIndex &index) const
 QString ConnListModel::blockReasonText(const ConnRow &connRow)
 {
     switch (connRow.blockReason) {
-    case LogEntryBlockedIp::ReasonIpInet:
+    case FORT_BLOCK_REASON_IP_INET:
         return tr("Blocked Internet address");
-    case LogEntryBlockedIp::ReasonReauth:
+    case FORT_BLOCK_REASON_REAUTH:
         return tr("Old connection closed on startup");
-    case LogEntryBlockedIp::ReasonProgram:
+    case FORT_BLOCK_REASON_PROGRAM:
         return tr("Programs logic");
-    case LogEntryBlockedIp::ReasonAppGroupFound:
+    case FORT_BLOCK_REASON_APP_GROUP_FOUND:
         return tr("App. Group logic");
-    case LogEntryBlockedIp::ReasonAppGroupDefault:
+    case FORT_BLOCK_REASON_APP_GROUP_DEFAULT:
         return tr("App. Group default logic");
     default:
         return tr("Unknown");
@@ -194,15 +194,15 @@ QString ConnListModel::connIconPath(const ConnRow &connRow)
 {
     if (connRow.blocked) {
         switch (connRow.blockReason) {
-        case LogEntryBlockedIp::ReasonIpInet:
+        case FORT_BLOCK_REASON_IP_INET:
             return ":/icons/ip.png";
-        case LogEntryBlockedIp::ReasonReauth:
+        case FORT_BLOCK_REASON_REAUTH:
             return ":/icons/arrow_refresh_small.png";
-        case LogEntryBlockedIp::ReasonProgram:
+        case FORT_BLOCK_REASON_PROGRAM:
             return ":/icons/application.png";
-        case LogEntryBlockedIp::ReasonAppGroupFound:
+        case FORT_BLOCK_REASON_APP_GROUP_FOUND:
             return ":/icons/application_double.png";
-        case LogEntryBlockedIp::ReasonAppGroupDefault:
+        case FORT_BLOCK_REASON_APP_GROUP_DEFAULT:
         default:
             return ":/icons/deny.png";
         }

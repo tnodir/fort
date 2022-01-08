@@ -1,6 +1,8 @@
 /* Fort Firewall Driver Configuration */
 
 #include "fortconf.h"
+
+#include "fortdef.h"
 #include "wildmatch.h"
 
 #ifndef FORT_DRIVER

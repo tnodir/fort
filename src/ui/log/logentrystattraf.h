@@ -8,7 +8,7 @@ class LogEntryStatTraf : public LogEntry
 public:
     explicit LogEntryStatTraf(quint16 procCount = 0, const quint32 *procTrafBytes = nullptr);
 
-    LogEntry::LogType type() const override { return StatTraf; }
+    FortLogType type() const override { return FORT_LOG_TYPE_STAT_TRAF; }
 
     quint16 procCount() const { return m_procCount; }
     void setProcCount(quint16 procCount);

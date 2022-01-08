@@ -24,7 +24,7 @@ public:
 
     QByteArray &array() { return m_array; }
 
-    LogEntry::LogType peekEntryType();
+    FortLogType peekEntryType();
 
     void writeEntryBlocked(const LogEntryBlocked *logEntry);
     void readEntryBlocked(LogEntryBlocked *logEntry);

@@ -5,6 +5,11 @@ LogEntryProcNew::LogEntryProcNew(quint32 pid, const QString &kernelPath) :
 {
 }
 
+void LogEntryProcNew::setPathType(quint8 v)
+{
+    m_pathType = v;
+}
+
 void LogEntryProcNew::setPid(quint32 pid)
 {
     m_pid = pid;

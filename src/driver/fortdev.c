@@ -4,7 +4,7 @@
 
 #include "../version/fort_version.h"
 
-#include "common/fortdef.h"
+#include "common/fortioctl.h"
 #include "common/fortprov.h"
 
 #include "fortcout.h"

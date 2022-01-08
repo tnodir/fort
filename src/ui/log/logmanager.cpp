@@ -126,27 +126,28 @@ void LogManager::readLogEntries(LogBuffer *logBuffer)
         const auto logType = logBuffer->peekEntryType();
 
         switch (logType) {
-        case LogEntry::AppBlocked: {
+        case FORT_LOG_TYPE_BLOCKED:
+        case FORT_LOG_TYPE_ALLOWED: {
             LogEntryBlocked blockedEntry;
             logBuffer->readEntryBlocked(&blockedEntry);
             IoC<ConfManager>()->logBlockedApp(blockedEntry);
         } break;
-        case LogEntry::AppBlockedIp: {
+        case FORT_LOG_TYPE_BLOCKED_IP: {
             LogEntryBlockedIp blockedIpEntry;
             logBuffer->readEntryBlockedIp(&blockedIpEntry);
             IoC<StatManager>()->logBlockedIp(blockedIpEntry, currentUnixTime());
         } break;
-        case LogEntry::ProcNew: {
+        case FORT_LOG_TYPE_PROC_NEW: {
             LogEntryProcNew procNewEntry;
             logBuffer->readEntryProcNew(&procNewEntry);
             IoC<StatManager>()->logProcNew(procNewEntry, currentUnixTime());
         } break;
-        case LogEntry::StatTraf: {
+        case FORT_LOG_TYPE_STAT_TRAF: {
             LogEntryStatTraf statTrafEntry;
             logBuffer->readEntryStatTraf(&statTrafEntry);
             IoC<StatManager>()->logStatTraf(statTrafEntry, currentUnixTime());
         } break;
-        case LogEntry::Time: {
+        case FORT_LOG_TYPE_TIME: {
             LogEntryTime timeEntry;
             logBuffer->readEntryTime(&timeEntry);
             setCurrentUnixTime(timeEntry.unixTime());

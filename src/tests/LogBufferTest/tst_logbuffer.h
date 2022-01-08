@@ -46,10 +46,10 @@ TEST_F(LogBufferTest, blockedWriteRead)
 
     // Read
     int readCount = 0;
-    while (buf.peekEntryType() == LogEntry::AppBlocked) {
+    while (buf.peekEntryType() == FORT_LOG_TYPE_BLOCKED) {
         buf.readEntryBlocked(&entry);
 
-        ASSERT_EQ(entry.type(), LogEntry::AppBlocked);
+        ASSERT_EQ(entry.type(), FORT_LOG_TYPE_BLOCKED);
         ASSERT_EQ(entry.pid(), pid);
         ASSERT_EQ(entry.kernelPath(), path);
 
@@ -91,11 +91,11 @@ TEST_F(LogBufferTest, blockedIpWriteRead)
 
     // Read
     int index = 0;
-    while (buf.peekEntryType() == LogEntry::AppBlockedIp) {
+    while (buf.peekEntryType() == FORT_LOG_TYPE_BLOCKED_IP) {
         buf.readEntryBlockedIp(&entry);
 
         int v = index++;
-        ASSERT_EQ(entry.type(), LogEntry::AppBlockedIp);
+        ASSERT_EQ(entry.type(), FORT_LOG_TYPE_BLOCKED_IP);
         ASSERT_EQ(entry.inbound(), (v & 1) != 0);
         ASSERT_EQ(entry.blockReason(), ++v);
         ASSERT_EQ(entry.ipProto(), ++v);
@@ -122,7 +122,7 @@ TEST_F(LogBufferTest, timeWriteRead)
     buf.writeEntryTime(&entry);
 
     // Read
-    ASSERT_EQ(buf.peekEntryType(), LogEntry::Time);
+    ASSERT_EQ(buf.peekEntryType(), FORT_LOG_TYPE_TIME);
     buf.readEntryTime(&entry);
     ASSERT_EQ(entry.unixTime(), unixTime);
 }

@@ -6,22 +6,11 @@
 class LogEntryBlockedIp : public LogEntryBlocked
 {
 public:
-    enum LogBlockReason : qint8 {
-        ReasonNone = -1,
-        // synchronize with FORT_BLOCK_REASON_*
-        ReasonUnknown = 0,
-        ReasonIpInet,
-        ReasonReauth,
-        ReasonProgram,
-        ReasonAppGroupFound,
-        ReasonAppGroupDefault
-    };
-
     explicit LogEntryBlockedIp(quint8 blockReason = 0, quint8 ipProto = 0, quint16 localPort = 0,
             quint16 remotePort = 0, quint32 localIp = 0, quint32 remoteIp = 0, quint32 pid = 0,
             const QString &kernelPath = QString());
 
-    LogEntry::LogType type() const override { return AppBlockedIp; }
+    FortLogType type() const override { return FORT_LOG_TYPE_BLOCKED_IP; }
 
     bool inbound() const { return m_inbound; }
     void setInbound(bool inbound);

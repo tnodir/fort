@@ -8,7 +8,7 @@ class LogEntryTime : public LogEntry
 public:
     explicit LogEntryTime(qint64 unixTime = 0);
 
-    LogEntry::LogType type() const override { return Time; }
+    FortLogType type() const override { return FORT_LOG_TYPE_TIME; }
 
     qint64 unixTime() const { return m_unixTime; }
     void setUnixTime(qint64 unixTime);

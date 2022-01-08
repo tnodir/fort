@@ -81,17 +81,17 @@ void setConf(Device &device)
 void printLogs(LogBuffer &buf)
 {
     for (;;) {
-        const LogEntry::LogType logType = buf.peekEntryType();
-        if (logType == LogEntry::TypeNone)
+        const FortLogType logType = buf.peekEntryType();
+        if (logType == FORT_LOG_TYPE_NONE)
             break;
 
-        if (logType == LogEntry::Time) {
+        if (logType == FORT_LOG_TYPE_TIME) {
             LogEntryTime entry;
             buf.readEntryTime(&entry);
             continue;
         }
 
-        ASSERT_EQ(logType, LogEntry::AppBlockedIp);
+        ASSERT_EQ(logType, FORT_LOG_TYPE_BLOCKED_IP);
 
         LogEntryBlockedIp entry;
         buf.readEntryBlockedIp(&entry);

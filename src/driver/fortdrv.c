@@ -2,7 +2,7 @@
 
 #include "fortdrv.h"
 
-#include "common/fortdef.h"
+#include "common/fortioctl.h"
 
 #include "fortcb.h"
 #include "fortdev.h"
