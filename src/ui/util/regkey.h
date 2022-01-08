@@ -39,7 +39,7 @@ public:
     bool clearTree(const QString &subKey = QString());
     bool removeRecursively(const QString &subKey);
     bool removeValue(const QString &name);
-    bool setValue(const QString &name, const QVariant &value);
+    bool setValue(const QString &name, const QVariant &value, bool expand = false);
     bool setDefaultValue(const QVariant &value) { return setValue(QString(), value); }
     QVariant value(const QString &name, bool *expand = nullptr) const;
     bool contains(const QString &name) const;

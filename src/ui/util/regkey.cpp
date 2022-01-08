@@ -56,7 +56,7 @@ bool RegKey::removeValue(const QString &name)
     return !RegDeleteValue((HKEY) handle(), (LPCWSTR) name.utf16());
 }
 
-bool RegKey::setValue(const QString &name, const QVariant &value)
+bool RegKey::setValue(const QString &name, const QVariant &value, bool expand)
 {
     QString text;
     union {
@@ -64,12 +64,15 @@ bool RegKey::setValue(const QString &name, const QVariant &value)
         qint32 i32;
     } num;
     const unsigned char *data = nullptr;
-    DWORD size = 0, type = REG_SZ;
+    DWORD size;
+    DWORD type;
 
     switch (value.userType()) {
     case QMetaType::UnknownType:
     case QMetaType::Void:
     case QMetaType::Nullptr:
+        size = 0;
+        type = REG_SZ;
         break;
     case QMetaType::Bool:
     case QMetaType::Int:
@@ -90,6 +93,7 @@ bool RegKey::setValue(const QString &name, const QVariant &value)
         text = value.toString();
         data = (const unsigned char *) text.utf16();
         size = DWORD(sizeof(wchar_t) * (text.size() + 1)); /* + terminating null character */
+        type = expand ? REG_EXPAND_SZ : REG_SZ;
     }
 
     return !RegSetValueEx((HKEY) handle(), (LPCWSTR) name.utf16(), 0, type, data, size);
@@ -98,10 +102,10 @@ bool RegKey::setValue(const QString &name, const QVariant &value)
 QVariant RegKey::value(const QString &name, bool *expand) const
 {
     char data[16 * 1024];
-    DWORD len = sizeof(data);
+    DWORD size = sizeof(data);
     DWORD type;
 
-    if (!RegQueryValueEx((HKEY) handle(), (LPCWSTR) name.utf16(), 0, &type, (LPBYTE) data, &len)) {
+    if (!RegQueryValueEx((HKEY) handle(), (LPCWSTR) name.utf16(), 0, &type, (LPBYTE) data, &size)) {
         switch (type) {
         case REG_EXPAND_SZ:
             if (expand) {
@@ -109,7 +113,7 @@ QVariant RegKey::value(const QString &name, bool *expand) const
             }
             Q_FALLTHROUGH();
         case REG_SZ:
-            return QString::fromWCharArray((LPCWSTR) data, len);
+            return QString::fromWCharArray((LPCWSTR) data, size);
         case REG_DWORD:
             return *((qint32 *) data);
         case REG_QWORD:
