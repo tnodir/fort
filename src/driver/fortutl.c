@@ -7,8 +7,8 @@
 #define FORT_KEY_INFO_PATH_SIZE                                                                    \
     (2 + (MAX_PATH * sizeof(WCHAR)) / sizeof(KEY_VALUE_FULL_INFORMATION))
 
-static wchar_t g_windowsPathBuffer[64];
-static UNICODE_STRING g_windowsPath;
+static WCHAR g_system32PathBuffer[64];
+static UNICODE_STRING g_system32Path;
 
 static NTSTATUS fort_string_new(ULONG len, PCWSTR src, PUNICODE_STRING outData)
 {
@@ -77,24 +77,24 @@ FORT_API NTSTATUS fort_driver_path(
     return status;
 }
 
-static NTSTATUS fort_windows_path_set(PCUNICODE_STRING path, USHORT charCount)
+static NTSTATUS fort_system32_path_set(PCUNICODE_STRING path, USHORT charCount)
 {
-    if (charCount >= sizeof(g_windowsPathBuffer) / sizeof(WCHAR))
+    if (charCount >= sizeof(g_system32PathBuffer) / sizeof(WCHAR))
         return STATUS_BUFFER_OVERFLOW;
 
     const USHORT len = charCount * sizeof(WCHAR);
 
-    RtlCopyMemory(g_windowsPathBuffer, path->Buffer, len);
-    g_windowsPathBuffer[charCount] = L'\0';
+    RtlCopyMemory(g_system32PathBuffer, path->Buffer, len);
+    g_system32PathBuffer[charCount] = L'\0';
 
-    g_windowsPath.Length = len;
-    g_windowsPath.MaximumLength = sizeof(g_windowsPathBuffer);
-    g_windowsPath.Buffer = g_windowsPathBuffer;
+    g_system32Path.Length = len;
+    g_system32Path.MaximumLength = sizeof(g_system32PathBuffer);
+    g_system32Path.Buffer = g_system32PathBuffer;
 
     return STATUS_SUCCESS;
 }
 
-FORT_API NTSTATUS fort_windows_path_init(PDRIVER_OBJECT driver, PUNICODE_STRING regPath)
+FORT_API NTSTATUS fort_system32_path_init(PDRIVER_OBJECT driver, PUNICODE_STRING regPath)
 {
     NTSTATUS status;
 
@@ -106,11 +106,20 @@ FORT_API NTSTATUS fort_windows_path_init(PDRIVER_OBJECT driver, PUNICODE_STRING 
     /* Overwrite last symbol to be sure about terminating zero */
     driverPath.Buffer[driverPath.Length / sizeof(WCHAR) - sizeof(WCHAR)] = L'\0';
 
-    const wchar_t *sys32 = wcsstr(driverPath.Buffer, L"\\System32\\");
-    if (sys32 != NULL) {
-        const USHORT charCount = (USHORT) (sys32 - driverPath.Buffer);
+    /* Find Drivers\ separator */
+    WCHAR *sp = wcsrchr(driverPath.Buffer, L'\\');
+    if (sp != NULL) {
+        *sp = L'\0';
 
-        status = fort_windows_path_set(&driverPath, charCount);
+        /* Find System32\ separator */
+        sp = wcsrchr(driverPath.Buffer, L'\\');
+    }
+
+    if (sp != NULL) {
+        const USHORT charCount = (USHORT) (sp + 1 /* include the separator */
+                - driverPath.Buffer);
+
+        status = fort_system32_path_set(&driverPath, charCount);
     } else {
         status = STATUS_OBJECT_PATH_INVALID;
     }
@@ -121,9 +130,9 @@ FORT_API NTSTATUS fort_windows_path_init(PDRIVER_OBJECT driver, PUNICODE_STRING 
     return status;
 }
 
-FORT_API PUNICODE_STRING fort_windows_path()
+FORT_API PUNICODE_STRING fort_system32_path()
 {
-    return &g_windowsPath;
+    return &g_system32Path;
 }
 
 FORT_API NTSTATUS fort_resolve_link(PCWSTR linkPath, PUNICODE_STRING outPath)

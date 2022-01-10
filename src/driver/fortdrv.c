@@ -31,7 +31,7 @@ static NTSTATUS fort_driver_load(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path
     // Use NX Non-Paged Pool
     ExInitializeDriverRuntime(DrvRtPoolNxOptIn);
 
-    status = fort_windows_path_init(driver, reg_path);
+    status = fort_system32_path_init(driver, reg_path);
     if (!NT_SUCCESS(status))
         return status;
 
