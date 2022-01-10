@@ -10,27 +10,24 @@ static void NTAPI fort_pstree_notify(
     UNUSED(process);
 
     if (createInfo == NULL) {
+#ifdef FORT_DEBUG
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: PsTree: pid=%d CLOSED\n",
                 (DWORD) (ptrdiff_t) processId);
+#endif
         return;
     }
 
+    if (createInfo->ImageFileName == NULL || createInfo->CommandLine == NULL)
+        return;
+
+#ifdef FORT_DEBUG
     DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-            "FORT: PsTree: pid=%d ppid=%d pupid=%d FileOpenNameAvailable=%d "
-            "IsSubsystemProcess=%d\n",
-            (DWORD) (ptrdiff_t) processId, (DWORD) (ptrdiff_t) createInfo->ParentProcessId,
-            (DWORD) (ptrdiff_t) createInfo->CreatingThreadId.UniqueProcess,
-            createInfo->FileOpenNameAvailable, createInfo->IsSubsystemProcess);
+            "FORT: PsTree: pid=%d ppid=%d IMG=[%wZ] CMD=[%wZ]\n", (DWORD) (ptrdiff_t) processId,
+            (DWORD) (ptrdiff_t) createInfo->ParentProcessId, createInfo->ImageFileName,
+            createInfo->CommandLine);
+#endif
 
-    if (createInfo->ImageFileName != NULL) {
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: PsTree: pid=%d IMG=[%wZ]\n",
-                (DWORD) (ptrdiff_t) processId, createInfo->ImageFileName);
-    }
-
-    if (createInfo->CommandLine != NULL) {
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: PsTree: pid=%d CMD=[%wZ]\n",
-                (DWORD) (ptrdiff_t) processId, createInfo->CommandLine);
-    }
+    /* TODO: createInfo->CreationStatus = STATUS_ACCESS_DENIED; */
 }
 
 FORT_API void fort_pstree_open(PFORT_PSTREE ps_tree)
