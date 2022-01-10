@@ -41,20 +41,18 @@ quint32 logTimeSize();
 
 quint32 logType(const char *input);
 
-void logBlockedHeaderWrite(
-        char *output, bool blocked, quint32 pid, quint8 pathType, quint32 pathLen);
-void logBlockedHeaderRead(
-        const char *input, int *blocked, quint32 *pid, quint8 *pathType, quint32 *pathLen);
+void logBlockedHeaderWrite(char *output, bool blocked, quint32 pid, quint32 pathLen);
+void logBlockedHeaderRead(const char *input, int *blocked, quint32 *pid, quint32 *pathLen);
 
 void logBlockedIpHeaderWrite(char *output, int inbound, quint8 blockReason, quint8 ipProto,
         quint16 localPort, quint16 remotePort, quint32 localIp, quint32 remoteIp, quint32 pid,
-        quint8 pathType, quint32 pathLen);
+        quint32 pathLen);
 void logBlockedIpHeaderRead(const char *input, int *inbound, quint8 *blockReason, quint8 *ipProto,
         quint16 *localPort, quint16 *remotePort, quint32 *localIp, quint32 *remoteIp, quint32 *pid,
-        quint8 *pathType, quint32 *pathLen);
+        quint32 *pathLen);
 
-void logProcNewHeaderWrite(char *output, quint32 pid, quint8 pathType, quint32 pathLen);
-void logProcNewHeaderRead(const char *input, quint32 *pid, quint8 *pathType, quint32 *pathLen);
+void logProcNewHeaderWrite(char *output, quint32 pid, quint32 pathLen);
+void logProcNewHeaderRead(const char *input, quint32 *pid, quint32 *pathLen);
 
 void logStatTrafHeaderRead(const char *input, quint16 *procCount);
 

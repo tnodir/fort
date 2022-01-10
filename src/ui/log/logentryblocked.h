@@ -13,9 +13,6 @@ public:
     bool blocked() const { return m_blocked; }
     void setBlocked(bool blocked);
 
-    quint8 pathType() const { return m_pathType; }
-    void setPathType(quint8 v);
-
     quint32 pid() const { return m_pid; }
     void setPid(quint32 pid);
 
@@ -26,7 +23,6 @@ public:
 
 private:
     bool m_blocked : 1;
-    quint8 m_pathType = 0;
     quint32 m_pid = 0;
     QString m_kernelPath;
 };

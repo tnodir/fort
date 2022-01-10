@@ -1,7 +1,9 @@
 #include "logentryblocked.h"
 
 LogEntryBlocked::LogEntryBlocked(quint32 pid, const QString &kernelPath) :
-    m_blocked(true), m_pid(pid), m_kernelPath(kernelPath)
+    m_blocked(true),
+    m_pid(pid),
+    m_kernelPath(kernelPath)
 {
 }
 
@@ -13,11 +15,6 @@ FortLogType LogEntryBlocked::type() const
 void LogEntryBlocked::setBlocked(bool blocked)
 {
     m_blocked = blocked;
-}
-
-void LogEntryBlocked::setPathType(quint8 v)
-{
-    m_pathType = v;
 }
 
 void LogEntryBlocked::setPid(quint32 pid)

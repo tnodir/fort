@@ -4,20 +4,18 @@
 
 #include "fortdef.h"
 
-FORT_API void fort_log_blocked_header_write(
-        char *p, BOOL blocked, UINT32 pid, UCHAR path_type, UINT32 path_len)
+FORT_API void fort_log_blocked_header_write(char *p, BOOL blocked, UINT32 pid, UINT32 path_len)
 {
     UINT32 *up = (UINT32 *) p;
 
-    *up++ = fort_log_flag_type(blocked ? FORT_LOG_TYPE_BLOCKED : FORT_LOG_TYPE_ALLOWED)
-            | fort_log_flag_opt(path_type) | path_len;
+    *up++ = fort_log_flag_type(blocked ? FORT_LOG_TYPE_BLOCKED : FORT_LOG_TYPE_ALLOWED) | path_len;
     *up = pid;
 }
 
 FORT_API void fort_log_blocked_write(
-        char *p, BOOL blocked, UINT32 pid, UCHAR path_type, UINT32 path_len, const char *path)
+        char *p, BOOL blocked, UINT32 pid, UINT32 path_len, const char *path)
 {
-    fort_log_blocked_header_write(p, blocked, pid, path_type, path_len);
+    fort_log_blocked_header_write(p, blocked, pid, path_len);
 
     if (path_len != 0) {
         RtlCopyMemory(p + FORT_LOG_BLOCKED_HEADER_SIZE, path, path_len);
@@ -25,25 +23,24 @@ FORT_API void fort_log_blocked_write(
 }
 
 FORT_API void fort_log_blocked_header_read(
-        const char *p, BOOL *blocked, UINT32 *pid, UCHAR *path_type, UINT32 *path_len)
+        const char *p, BOOL *blocked, UINT32 *pid, UINT32 *path_len)
 {
     const UINT32 *up = (const UINT32 *) p;
 
     *blocked = fort_log_type(up) == FORT_LOG_TYPE_BLOCKED;
-    *path_type = fort_log_opt(up);
     *path_len = (*up++ & ~FORT_LOG_FLAG_EX_MASK);
     *pid = *up;
 }
 
 void fort_log_blocked_ip_header_write(char *p, BOOL inbound, UCHAR block_reason, UCHAR ip_proto,
         UINT16 local_port, UINT16 remote_port, UINT32 local_ip, UINT32 remote_ip, UINT32 pid,
-        UCHAR path_type, UINT32 path_len)
+        UINT32 path_len)
 {
     UINT32 *up = (UINT32 *) p;
 
     *up++ = fort_log_flag_type(FORT_LOG_TYPE_BLOCKED_IP) | (inbound ? FORT_LOG_FLAG_IP_INBOUND : 0)
             | path_len;
-    *up++ = block_reason | ((UINT32) path_type << 8) | ((UINT32) ip_proto << 16);
+    *up++ = block_reason | ((UINT32) ip_proto << 16);
     *up++ = local_port | ((UINT32) remote_port << 16);
     *up++ = local_ip;
     *up++ = remote_ip;
@@ -52,10 +49,10 @@ void fort_log_blocked_ip_header_write(char *p, BOOL inbound, UCHAR block_reason,
 
 void fort_log_blocked_ip_write(char *p, BOOL inbound, UCHAR block_reason, UCHAR ip_proto,
         UINT16 local_port, UINT16 remote_port, UINT32 local_ip, UINT32 remote_ip, UINT32 pid,
-        UCHAR path_type, UINT32 path_len, const char *path)
+        UINT32 path_len, const char *path)
 {
     fort_log_blocked_ip_header_write(p, inbound, block_reason, ip_proto, local_port, remote_port,
-            local_ip, remote_ip, pid, path_type, path_len);
+            local_ip, remote_ip, pid, path_len);
 
     if (path_len != 0) {
         RtlCopyMemory(p + FORT_LOG_BLOCKED_IP_HEADER_SIZE, path, path_len);
@@ -64,14 +61,13 @@ void fort_log_blocked_ip_write(char *p, BOOL inbound, UCHAR block_reason, UCHAR 
 
 void fort_log_blocked_ip_header_read(const char *p, BOOL *inbound, UCHAR *block_reason,
         UCHAR *ip_proto, UINT16 *local_port, UINT16 *remote_port, UINT32 *local_ip,
-        UINT32 *remote_ip, UINT32 *pid, UCHAR *path_type, UINT32 *path_len)
+        UINT32 *remote_ip, UINT32 *pid, UINT32 *path_len)
 {
     const UINT32 *up = (const UINT32 *) p;
 
     *inbound = (*up & FORT_LOG_FLAG_IP_INBOUND) != 0;
     *path_len = (*up++ & ~FORT_LOG_FLAG_EX_MASK);
     *block_reason = *((const UCHAR *) up);
-    *path_type = (UCHAR) (*up >> 8);
     *ip_proto = (UCHAR) (*up++ >> 16);
     *local_port = *((const UINT16 *) up);
     *remote_port = (UINT16) (*up++ >> 16);
@@ -80,30 +76,27 @@ void fort_log_blocked_ip_header_read(const char *p, BOOL *inbound, UCHAR *block_
     *pid = *up;
 }
 
-FORT_API void fort_log_proc_new_header_write(char *p, UINT32 pid, UCHAR path_type, UINT32 path_len)
+FORT_API void fort_log_proc_new_header_write(char *p, UINT32 pid, UINT32 path_len)
 {
     UINT32 *up = (UINT32 *) p;
 
-    *up++ = fort_log_flag_type(FORT_LOG_TYPE_PROC_NEW) | fort_log_flag_opt(path_type) | path_len;
+    *up++ = fort_log_flag_type(FORT_LOG_TYPE_PROC_NEW) | path_len;
     *up = pid;
 }
 
-FORT_API void fort_log_proc_new_write(
-        char *p, UINT32 pid, UCHAR path_type, UINT32 path_len, const char *path)
+FORT_API void fort_log_proc_new_write(char *p, UINT32 pid, UINT32 path_len, const char *path)
 {
-    fort_log_proc_new_header_write(p, pid, path_type, path_len);
+    fort_log_proc_new_header_write(p, pid, path_len);
 
     if (path_len != 0) {
         RtlCopyMemory(p + FORT_LOG_PROC_NEW_HEADER_SIZE, path, path_len);
     }
 }
 
-FORT_API void fort_log_proc_new_header_read(
-        const char *p, UINT32 *pid, UCHAR *path_type, UINT32 *path_len)
+FORT_API void fort_log_proc_new_header_read(const char *p, UINT32 *pid, UINT32 *path_len)
 {
     const UINT32 *up = (const UINT32 *) p;
 
-    *path_type = fort_log_opt(up);
     *path_len = (*up++ & ~FORT_LOG_FLAG_EX_MASK);
     *pid = *up;
 }

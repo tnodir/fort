@@ -2,14 +2,13 @@
 
 const char *const StatSql::sqlSelectAppId = "SELECT app_id FROM app WHERE path = ?1;";
 
-const char *const StatSql::sqlInsertAppId = "INSERT INTO app(path, path_type, creat_time)"
-                                            "  VALUES(?1, ?2, ?3);";
+const char *const StatSql::sqlInsertAppId = "INSERT INTO app(path, creat_time) VALUES(?1, ?3);";
 
 const char *const StatSql::sqlDeleteAppId = "DELETE FROM app WHERE app_id = ?1;";
 
 const char *const StatSql::sqlSelectStatAppExists = "SELECT 1 FROM traffic_app WHERE app_id = ?1;";
 
-const char *const StatSql::sqlSelectStatAppList = "SELECT t.app_id, t.path_type, t.path FROM app t"
+const char *const StatSql::sqlSelectStatAppList = "SELECT t.app_id, t.path FROM app t"
                                                   "  JOIN traffic_app ta ON ta.app_id = t.app_id"
                                                   "  ORDER BY t.app_id;";
 

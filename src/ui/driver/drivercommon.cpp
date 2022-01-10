@@ -127,42 +127,40 @@ quint32 logType(const char *input)
     return fort_log_type(input);
 }
 
-void logBlockedHeaderWrite(
-        char *output, bool blocked, quint32 pid, quint8 pathType, quint32 pathLen)
+void logBlockedHeaderWrite(char *output, bool blocked, quint32 pid, quint32 pathLen)
 {
-    fort_log_blocked_header_write(output, blocked, pid, pathType, pathLen);
+    fort_log_blocked_header_write(output, blocked, pid, pathLen);
 }
 
-void logBlockedHeaderRead(
-        const char *input, int *blocked, quint32 *pid, quint8 *pathType, quint32 *pathLen)
+void logBlockedHeaderRead(const char *input, int *blocked, quint32 *pid, quint32 *pathLen)
 {
-    fort_log_blocked_header_read(input, blocked, pid, pathType, pathLen);
+    fort_log_blocked_header_read(input, blocked, pid, pathLen);
 }
 
 void logBlockedIpHeaderWrite(char *output, int inbound, quint8 blockReason, quint8 ipProto,
         quint16 localPort, quint16 remotePort, quint32 localIp, quint32 remoteIp, quint32 pid,
-        quint8 pathType, quint32 pathLen)
+        quint32 pathLen)
 {
     fort_log_blocked_ip_header_write(output, inbound, blockReason, ipProto, localPort, remotePort,
-            localIp, remoteIp, pid, pathType, pathLen);
+            localIp, remoteIp, pid, pathLen);
 }
 
 void logBlockedIpHeaderRead(const char *input, int *inbound, quint8 *blockReason, quint8 *ipProto,
         quint16 *localPort, quint16 *remotePort, quint32 *localIp, quint32 *remoteIp, quint32 *pid,
-        quint8 *pathType, quint32 *pathLen)
+        quint32 *pathLen)
 {
     fort_log_blocked_ip_header_read(input, inbound, blockReason, ipProto, localPort, remotePort,
-            localIp, remoteIp, pid, pathType, pathLen);
+            localIp, remoteIp, pid, pathLen);
 }
 
-void logProcNewHeaderWrite(char *output, quint32 pid, quint8 pathType, quint32 pathLen)
+void logProcNewHeaderWrite(char *output, quint32 pid, quint32 pathLen)
 {
-    fort_log_proc_new_header_write(output, pid, pathType, pathLen);
+    fort_log_proc_new_header_write(output, pid, pathLen);
 }
 
-void logProcNewHeaderRead(const char *input, quint32 *pid, quint8 *pathType, quint32 *pathLen)
+void logProcNewHeaderRead(const char *input, quint32 *pid, quint32 *pathLen)
 {
-    fort_log_proc_new_header_read(input, pid, pathType, pathLen);
+    fort_log_proc_new_header_read(input, pid, pathLen);
 }
 
 void logStatTrafHeaderRead(const char *input, quint16 *procCount)

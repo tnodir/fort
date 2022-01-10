@@ -21,10 +21,4 @@ enum FortBlockReason {
     FORT_BLOCK_REASON_APP_GROUP_DEFAULT,
 };
 
-enum FortPathType {
-    FORT_PATH_TYPE_EXE = 0,
-    FORT_PATH_TYPE_SYSTEM,
-    FORT_PATH_TYPE_SERVICE,
-};
-
 #endif // FORTDEF_H
