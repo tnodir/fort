@@ -23,6 +23,7 @@ public:
     bool hasService() const { return m_hasService; }
 
     bool isMaster() const { return !hasService() || isService(); }
+    bool hasMasterAdmin() const { return hasService() || isUserAdmin(); }
 
     bool isUserAdmin() const { return m_isUserAdmin; }
 
