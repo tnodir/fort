@@ -204,9 +204,11 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
     if (isNewDb)
         return true;
 
-    // COMPAT: Zones
-    if (version == 6) {
+    switch (version) {
+    case 6: {
+        // COMPAT: Zones
         db->execute("UPDATE task SET name = 'ZoneDownloader' WHERE name = 'Tasix';");
+    } break;
     }
 
     return true;
