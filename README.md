@@ -15,7 +15,7 @@ Fort is a simple firewall for Windows 7+.
   - Application group speed limits
   - Stores traffic statistics
   - Graphical display of bandwidth
-  - Based on Windows Filtering Platform (WFP)
+  - Has own kernel driver, based on Windows Filtering Platform (WFP)
 
 ## Supported OS versions
 
