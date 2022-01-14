@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v3.4.4, 2022-01-14:
+- UI: LogManager: Fix log reading (Regression introduced in v3.4.3)
+- UI: Show "Portable" in window title.
+- UI: Update icons.
+- UI: Update SQLite to v3.37.2
+
 v3.4.3, 2021-12-20:
 - Driver: Use Loader to not depend on EV certificate in the future.
 - UI: Add Italian translation.
