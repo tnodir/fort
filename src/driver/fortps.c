@@ -5,6 +5,22 @@
 #include "fortcb.h"
 #include "fortutl.h"
 
+#define FORT_PSTREE_NAME_LEN_MAX (64 * sizeof(WCHAR))
+
+typedef struct fort_psnode
+{
+    UINT16 next_index;
+    UINT16 prev_index;
+
+    UINT16 parent_index;
+    UINT16 child_index;
+
+    UINT16 name_index;
+    UINT16 flags;
+
+    UINT32 process_id;
+} FORT_PSNODE, *PFORT_PSNODE;
+
 static BOOL fort_pstree_svchost_check(
         PCUNICODE_STRING path, PCUNICODE_STRING commandLine, PUNICODE_STRING serviceName)
 {
@@ -32,8 +48,12 @@ static BOOL fort_pstree_svchost_check(
         endp = (PCWCHAR) ((PCHAR) commandLine->Buffer + commandLine->Length);
     }
 
-    serviceName->Length = (USHORT) ((PCHAR) endp - (PCHAR) argp);
-    serviceName->MaximumLength = serviceName->Length;
+    const USHORT nameLen = (USHORT) ((PCHAR) endp - (PCHAR) argp);
+    if (nameLen >= FORT_PSTREE_NAME_LEN_MAX)
+        return FALSE;
+
+    serviceName->Length = nameLen;
+    serviceName->MaximumLength = nameLen;
     serviceName->Buffer = argp;
 
     return TRUE;
