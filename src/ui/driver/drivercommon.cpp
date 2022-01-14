@@ -122,7 +122,7 @@ quint32 logTimeSize()
     return FORT_LOG_TIME_SIZE;
 }
 
-quint32 logType(const char *input)
+quint8 logType(const char *input)
 {
     return fort_log_type(input);
 }

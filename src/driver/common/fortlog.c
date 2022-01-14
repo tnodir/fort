@@ -27,7 +27,7 @@ FORT_API void fort_log_blocked_header_read(
 {
     const UINT32 *up = (const UINT32 *) p;
 
-    *blocked = fort_log_type(up) == FORT_LOG_TYPE_BLOCKED;
+    *blocked = (fort_log_type(up) == FORT_LOG_TYPE_BLOCKED);
     *path_len = (*up++ & ~FORT_LOG_FLAG_EX_MASK);
     *pid = *up;
 }

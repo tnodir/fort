@@ -46,7 +46,7 @@ FortLogType LogBuffer::peekEntryType()
 
     const char *input = this->input();
 
-    const quint32 type = DriverCommon::logType(input);
+    const auto type = DriverCommon::logType(input);
 
     return static_cast<FortLogType>(type);
 }

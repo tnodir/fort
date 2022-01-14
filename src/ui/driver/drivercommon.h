@@ -39,7 +39,7 @@ quint32 logStatSize(quint16 procCount);
 
 quint32 logTimeSize();
 
-quint32 logType(const char *input);
+quint8 logType(const char *input);
 
 void logBlockedHeaderWrite(char *output, bool blocked, quint32 pid, quint32 pathLen);
 void logBlockedHeaderRead(const char *input, int *blocked, quint32 *pid, quint32 *pathLen);

@@ -154,10 +154,12 @@ void LogManager::readLogEntries(LogBuffer *logBuffer)
         } break;
         default:
             if (logBuffer->offset() < logBuffer->top()) {
+                const auto data = QByteArray::fromRawData(
+                        logBuffer->array().constData() + logBuffer->offset(),
+                        logBuffer->top() - logBuffer->offset());
+
                 qCCritical(LC) << "Unknown Log entry:" << logType << logBuffer->offset()
-                               << logBuffer->top()
-                               << QByteArray(logBuffer->array().constData() + logBuffer->offset(),
-                                          logBuffer->top() - logBuffer->offset());
+                               << logBuffer->top() << data;
             }
             return;
         }
