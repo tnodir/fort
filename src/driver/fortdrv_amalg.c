@@ -16,6 +16,7 @@
 #include "fortcnf.c"
 #include "fortbuf.c"
 #include "fortpkt.c"
+#include "fortpool.c"
 #include "fortps.c"
 #include "fortstat.c"
 #include "fortscb.c"

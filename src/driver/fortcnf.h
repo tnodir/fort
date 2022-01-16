@@ -4,15 +4,14 @@
 #include "fortdrv.h"
 
 #include "common/fortconf.h"
+#include "fortpool.h"
 #include "forttds.h"
-#include "forttlsf.h"
 
 typedef struct fort_conf_ref
 {
     UINT32 volatile refcount;
 
-    tlsf_t tlsf;
-    tommy_list pools;
+    FORT_POOL_LIST pool_list;
     tommy_list free_nodes;
 
     tommy_arrayof exe_nodes;
