@@ -308,6 +308,9 @@ FORT_API NTSTATUS ZwOpenSymbolicLinkObject(
 FORT_API NTSTATUS ZwQuerySymbolicLinkObject(
         HANDLE linkHandle, PUNICODE_STRING linkTarget, PULONG returnedLength);
 
+FORT_API NTSTATUS ZwQuerySystemInformation(ULONG systemInformationClass, PVOID systemInformation,
+        ULONG systemInformationLength, PULONG returnLength);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

@@ -5,6 +5,8 @@
 #include "fortcb.h"
 #include "fortutl.h"
 
+#define FORT_PSTREE_POOL_TAG 'PwfF'
+
 #define FORT_PSTREE_NAME_LEN_MAX (64 * sizeof(WCHAR))
 
 typedef struct fort_psnode
@@ -20,6 +22,74 @@ typedef struct fort_psnode
 
     UINT32 process_id;
 } FORT_PSNODE, *PFORT_PSNODE;
+
+typedef struct _SYSTEM_PROCESSES
+{
+    ULONG NextEntryOffset;
+    ULONG NumberOfThreads;
+    ULONG Reserved1[6];
+    LARGE_INTEGER CreateTime;
+    LARGE_INTEGER UserTime;
+    LARGE_INTEGER KernelTime;
+    UNICODE_STRING ImageName;
+    KPRIORITY BasePriority;
+    SIZE_T ProcessId;
+    SIZE_T ParentProcessId;
+    ULONG HandleCount;
+    ULONG SessionId;
+} SYSTEM_PROCESSES, *PSYSTEM_PROCESSES;
+
+#if !defined(SystemProcessInformation)
+#    define SystemProcessInformation 5
+
+NTSTATUS NTAPI ZwQuerySystemInformation(ULONG systemInformationClass, PVOID systemInformation,
+        ULONG systemInformationLength, PULONG returnLength);
+#endif
+
+static NTSTATUS fort_pstree_enum_processes_loop(
+        PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry)
+{
+    NTSTATUS status = STATUS_SUCCESS;
+
+    for (;;) {
+        const DWORD pid = (DWORD) processEntry->ProcessId;
+        const DWORD ppid = (DWORD) processEntry->ParentProcessId;
+
+        // TODO
+
+        if (processEntry->NextEntryOffset == 0)
+            break;
+
+        processEntry = (PSYSTEM_PROCESSES) ((PUCHAR) processEntry + processEntry->NextEntryOffset);
+    }
+
+    return status;
+}
+
+static NTSTATUS fort_pstree_enum_processes(PFORT_PSTREE ps_tree)
+{
+    NTSTATUS status;
+
+    ULONG bufferSize;
+    status = ZwQuerySystemInformation(SystemProcessInformation, NULL, 0, &bufferSize);
+    if (status != STATUS_INFO_LENGTH_MISMATCH)
+        return status;
+
+    bufferSize *= 2; /* for possible new created processes/threads */
+
+    PVOID buffer = fort_mem_alloc(bufferSize, FORT_PSTREE_POOL_TAG);
+    if (buffer == NULL)
+        return STATUS_INSUFFICIENT_RESOURCES;
+
+    status = ZwQuerySystemInformation(SystemProcessInformation, buffer, bufferSize, &bufferSize);
+    if (NT_SUCCESS(status)) {
+        status = fort_pstree_enum_processes_loop(ps_tree, buffer);
+    }
+
+    fort_mem_free(buffer, FORT_PSTREE_POOL_TAG);
+
+    return status;
+}
 
 static BOOL fort_pstree_svchost_check(
         PCUNICODE_STRING path, PCUNICODE_STRING commandLine, PUNICODE_STRING serviceName)
@@ -100,10 +170,15 @@ FORT_API void fort_pstree_open(PFORT_PSTREE ps_tree)
             FORT_CALLBACK(
                     FORT_PSTREE_NOTIFY, PCREATE_PROCESS_NOTIFY_ROUTINE_EX, fort_pstree_notify),
             FALSE);
-
     if (!NT_SUCCESS(status)) {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                 "FORT: PsTree: PsSetCreateProcessNotifyRoutineEx Error: %x\n", status);
+    }
+
+    status = fort_pstree_enum_processes(ps_tree);
+    if (!NT_SUCCESS(status)) {
+        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
+                "FORT: PsTree: Enum Processes Error: %x\n", status);
     }
 }
 

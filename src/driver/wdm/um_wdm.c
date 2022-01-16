@@ -356,3 +356,13 @@ NTSTATUS ZwQuerySymbolicLinkObject(
     UNUSED(returnedLength);
     return STATUS_SUCCESS;
 }
+
+NTSTATUS ZwQuerySystemInformation(ULONG systemInformationClass, PVOID systemInformation,
+        ULONG systemInformationLength, PULONG returnLength)
+{
+    UNUSED(systemInformationClass);
+    UNUSED(systemInformation);
+    UNUSED(systemInformationLength);
+    UNUSED(returnLength);
+    return STATUS_SUCCESS;
+}
