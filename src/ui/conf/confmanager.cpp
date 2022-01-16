@@ -87,14 +87,6 @@ const char *const sqlUpdateAppGroup = "UPDATE app_group"
 const char *const sqlDeleteAppGroup = "DELETE FROM app_group"
                                       "  WHERE app_group_id = ?1;";
 
-const char *const sqlInsertService = "INSERT INTO service(name, app_group_id) VALUES(?1, ?2);";
-
-const char *const sqlDeleteServices = "DELETE FROM service;";
-
-const char *const sqlUpdateServiceResetGroup = "UPDATE service"
-                                               "  SET app_group_id = ?2"
-                                               "  WHERE app_group_id = ?1;";
-
 const char *const sqlSelectTaskByName = "SELECT task_id, enabled, interval_hours,"
                                         "    last_run, last_success, data"
                                         "  FROM task"
@@ -358,7 +350,6 @@ bool removeAppGroupsInDb(SqliteDb *db, const FirewallConf &conf)
         bool ok;
 
         db->executeEx(sqlUpdateAppResetGroup, { appGroupId, defaultAppGroupId }, 0);
-        db->executeEx(sqlUpdateServiceResetGroup, { appGroupId, defaultAppGroupId }, 0);
 
         db->executeEx(sqlDeleteAppGroup, { appGroupId }, 0, &ok);
         if (!ok)
@@ -367,28 +358,6 @@ bool removeAppGroupsInDb(SqliteDb *db, const FirewallConf &conf)
 
     conf.clearRemovedAppGroupIdList();
 
-    return true;
-}
-
-bool saveServices(SqliteDb *db, const FirewallConf &conf)
-{
-#if 0
-    bool ok;
-
-    // Delete services
-    db->executeEx(sqlDeleteServices, {}, 0, &ok);
-    if (!ok)
-        return false;
-
-    // Add services
-    SqliteStmt stmt;
-    if (!db->prepare(stmt, sqlInsertService))
-        return false;
-
-    for (const auto &v : conf.servicesMap()) {
-    }
-
-#endif
     return true;
 }
 
@@ -1230,8 +1199,7 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
 
     const bool ok = saveAddressGroups(sqliteDb(), conf) // Save Address Groups
             && saveAppGroups(sqliteDb(), conf) // Save App Groups
-            && removeAppGroupsInDb(sqliteDb(), conf) // Remove App Groups
-            && saveServices(sqliteDb(), conf); // Save Services
+            && removeAppGroupsInDb(sqliteDb(), conf); // Remove App Groups
 
     return checkResult(ok, true);
 }

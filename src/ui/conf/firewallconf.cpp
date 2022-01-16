@@ -251,11 +251,6 @@ void FirewallConf::setupAddressGroups()
     m_addressGroups.append(new AddressGroup(this));
 }
 
-void FirewallConf::setServicesMap(const QVariantMap &servicesMap)
-{
-    m_servicesMap = servicesMap;
-}
-
 void FirewallConf::prepareToSave()
 {
     if (flagsEdited()) {
@@ -295,8 +290,6 @@ void FirewallConf::copyFlags(const FirewallConf &o)
 
     m_appGroupBits = o.appGroupBits();
     applyAppGroupBits();
-
-    m_servicesMap = o.servicesMap();
 }
 
 void FirewallConf::copy(const FirewallConf &o)
@@ -444,8 +437,6 @@ QVariant FirewallConf::toVariant(bool onlyFlags) const
 
         map["appGroups"] = appGroupsToVariant();
         map["removedAppGroupIdList"] = removedAppGroupIdListToVariant();
-
-        map["servicesMap"] = servicesMap();
     }
 
     if ((flags & FlagsEdited) != 0) {
@@ -477,8 +468,6 @@ void FirewallConf::fromVariant(const QVariant &v, bool onlyFlags)
 
         appGroupsFromVariant(map["appGroups"]);
         removedAppGroupIdListFromVariant(map["removedAppGroupIdList"]);
-
-        m_servicesMap = map["servicesMap"].toMap();
     }
 
     if (flagsEdited()) {

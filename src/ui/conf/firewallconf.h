@@ -19,9 +19,8 @@ public:
         OptEdited = 0x01,
         FlagsEdited = 0x02,
         IniEdited = 0x04,
-        ServiceEdited = 0x08,
         TaskEdited = 0x10,
-        AllEdited = (OptEdited | FlagsEdited | IniEdited | ServiceEdited | TaskEdited)
+        AllEdited = (OptEdited | FlagsEdited | IniEdited | TaskEdited)
     };
 
     explicit FirewallConf(Settings *settings = nullptr, QObject *parent = nullptr);
@@ -36,9 +35,6 @@ public:
 
     bool iniEdited() const { return (m_editedFlags & IniEdited) != 0; }
     void setIniEdited() { m_editedFlags |= IniEdited; }
-
-    bool serviceEdited() const { return (m_editedFlags & ServiceEdited) != 0; }
-    void setServiceEdited() { m_editedFlags |= ServiceEdited; }
 
     bool taskEdited() const { return (m_editedFlags & TaskEdited) != 0; }
     void setTaskEdited() { m_editedFlags |= TaskEdited; }
@@ -112,9 +108,6 @@ public:
 
     const QVector<qint64> &removedAppGroupIdList() const { return m_removedAppGroupIdList; }
     void clearRemovedAppGroupIdList() const;
-
-    QVariantMap servicesMap() const { return m_servicesMap; }
-    void setServicesMap(const QVariantMap &servicesMap);
 
     IniOptions &ini() { return m_ini; }
     const IniOptions &ini() const { return m_ini; }
@@ -193,8 +186,6 @@ private:
 
     QList<AppGroup *> m_appGroups;
     mutable QVector<qint64> m_removedAppGroupIdList;
-
-    QVariantMap m_servicesMap;
 
     IniOptions m_ini;
 };
