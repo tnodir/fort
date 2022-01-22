@@ -117,24 +117,22 @@ static NTSTATUS fort_conf_ref_exe_add_path_locked(PFORT_CONF_REF conf_ref, const
             tommy_arrayof *exe_nodes = &conf_ref->exe_nodes;
             tommy_hashdyn *exe_map = &conf_ref->exe_map;
 
-            tommy_hashdyn_node *node = tommy_list_tail(&conf_ref->free_nodes);
+            tommy_hashdyn_node *exe_node = tommy_list_tail(&conf_ref->free_nodes);
 
-            if (node != NULL) {
-                tommy_list_remove_existing(&conf_ref->free_nodes, node);
+            if (exe_node != NULL) {
+                tommy_list_remove_existing(&conf_ref->free_nodes, exe_node);
             } else {
                 const UINT16 index = conf->exe_apps_n;
 
                 tommy_arrayof_grow(exe_nodes, index + 1);
 
-                node = tommy_arrayof_ref(exe_nodes, index);
+                exe_node = tommy_arrayof_ref(exe_nodes, index);
             }
 
-            tommy_hashdyn_insert(exe_map, node, entry, path_hash);
+            tommy_hashdyn_insert(exe_map, exe_node, entry, path_hash);
 
             ++conf->exe_apps_n;
         }
-
-        return TRUE;
     } else {
         if (flags.is_new)
             return FORT_STATUS_USER_ERROR;
@@ -142,12 +140,11 @@ static NTSTATUS fort_conf_ref_exe_add_path_locked(PFORT_CONF_REF conf_ref, const
         // Replace flags
         {
             PFORT_APP_ENTRY entry = node->app_entry;
-
             entry->flags = flags;
-
-            return STATUS_SUCCESS;
         }
     }
+
+    return STATUS_SUCCESS;
 }
 
 FORT_API NTSTATUS fort_conf_ref_exe_add_path(
