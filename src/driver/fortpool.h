@@ -30,9 +30,11 @@ extern "C" {
 FORT_API void fort_pool_list_init(PFORT_POOL_LIST pool_list);
 
 FORT_API void fort_pool_init(PFORT_POOL_LIST pool_list, UINT32 size);
+
 FORT_API void fort_pool_done(PFORT_POOL_LIST pool_list);
 
 FORT_API void *fort_pool_malloc(PFORT_POOL_LIST pool_list, UINT32 size);
+
 FORT_API void fort_pool_free(PFORT_POOL_LIST pool_list, void *p);
 
 #ifdef __cplusplus

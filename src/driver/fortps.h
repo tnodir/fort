@@ -3,10 +3,18 @@
 
 #include "fortdrv.h"
 
+#include "fortpool.h"
+#include "forttds.h"
+
 typedef struct fort_pstree
 {
-    INT16 head_index;
-    INT16 free_index;
+    FORT_POOL_LIST pool_list;
+    tommy_list free_nodes;
+
+    tommy_arrayof procs;
+    tommy_hashdyn procs_map;
+
+    KSPIN_LOCK lock;
 } FORT_PSTREE, *PFORT_PSTREE;
 
 #if defined(__cplusplus)

@@ -9,18 +9,30 @@
 
 #define FORT_PSTREE_NAME_LEN_MAX (64 * sizeof(WCHAR))
 
+typedef struct fort_psname
+{
+    USHORT size;
+    WCHAR data[1];
+} FORT_PSNAME, *PFORT_PSNAME;
+
+/* Synchronize with tommy_hashdyn_node! */
 typedef struct fort_psnode
 {
-    UINT16 next_index;
-    UINT16 prev_index;
+    struct fort_psnode *next;
+    struct fort_psnode *prev;
 
-    UINT16 parent_index;
-    UINT16 child_index;
-
-    UINT16 name_index;
-    UINT16 flags;
+    PFORT_PSNAME name;
 
     UINT32 process_id;
+
+    UINT16 flags;
+    UINT16 parent_index;
+
+    UINT16 next_sibling_index;
+    UINT16 prev_sibling_index;
+
+    UINT16 next_child_index;
+    UINT16 prev_child_index;
 } FORT_PSNODE, *PFORT_PSNODE;
 
 typedef struct _SYSTEM_PROCESSES
@@ -166,6 +178,14 @@ FORT_API void fort_pstree_open(PFORT_PSTREE ps_tree)
 {
     NTSTATUS status;
 
+    fort_pool_list_init(&ps_tree->pool_list);
+    tommy_list_init(&ps_tree->free_nodes);
+
+    tommy_arrayof_init(&ps_tree->procs, sizeof(FORT_PSNODE));
+    tommy_hashdyn_init(&ps_tree->procs_map);
+
+    KeInitializeSpinLock(&ps_tree->lock);
+
     status = PsSetCreateProcessNotifyRoutineEx(
             FORT_CALLBACK(
                     FORT_PSTREE_NOTIFY, PCREATE_PROCESS_NOTIFY_ROUTINE_EX, fort_pstree_notify),
@@ -173,12 +193,14 @@ FORT_API void fort_pstree_open(PFORT_PSTREE ps_tree)
     if (!NT_SUCCESS(status)) {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                 "FORT: PsTree: PsSetCreateProcessNotifyRoutineEx Error: %x\n", status);
+        return;
     }
 
     status = fort_pstree_enum_processes(ps_tree);
     if (!NT_SUCCESS(status)) {
         DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
                 "FORT: PsTree: Enum Processes Error: %x\n", status);
+        return;
     }
 }
 
@@ -188,4 +210,15 @@ FORT_API void fort_pstree_close(PFORT_PSTREE ps_tree)
             FORT_CALLBACK(
                     FORT_PSTREE_NOTIFY, PCREATE_PROCESS_NOTIFY_ROUTINE_EX, fort_pstree_notify),
             TRUE);
+
+    KLOCK_QUEUE_HANDLE lock_queue;
+
+    KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
+
+    fort_pool_done(&ps_tree->pool_list);
+
+    tommy_arrayof_done(&ps_tree->procs);
+    tommy_hashdyn_done(&ps_tree->procs_map);
+
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
