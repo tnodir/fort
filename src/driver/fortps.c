@@ -53,7 +53,9 @@ typedef struct _SYSTEM_PROCESSES
 
 #if !defined(SystemProcessInformation)
 #    define SystemProcessInformation 5
+#endif
 
+#if defined(FORT_DRIVER)
 NTSTATUS NTAPI ZwQuerySystemInformation(ULONG systemInformationClass, PVOID systemInformation,
         ULONG systemInformationLength, PULONG returnLength);
 #endif
