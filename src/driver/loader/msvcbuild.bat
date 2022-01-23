@@ -10,7 +10,7 @@
 
 @rem CONFIG: win7, win10
 @set CONFIG=%2
-@if "%CONFIG%"=="" PLAT=win10
+@if "%CONFIG%"=="" CONFIG=win10
 
 @set OutDir=..\..\..\build-driver-loader-%CONFIG%\%PLAT%
 @set IntDir=%OutDir%-obj
