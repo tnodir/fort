@@ -56,7 +56,8 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies);$(DDK_LIB_PATH)\fwpkclnt.lib;$(DDK_LIB_PATH)\ndis.lib;$(SDK_LIB_PATH)\uuid.lib</AdditionalDependencies>
-      <AdditionalOptions>/integritycheck</AdditionalOptions>
+      <AdditionalOptions>/INTEGRITYCHECK</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Platform)'=='Win32'">%(AdditionalOptions) /SAFESEH:NO</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <ModuleDefinitionFile>fortdrv.def</ModuleDefinitionFile>
     </Link>
@@ -68,9 +69,7 @@
     <FilesToPackage Include="$(TargetPath)" />
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="proxycb\fortpcb_dst_x86.asm">
-      <AdditionalOptions Condition="'$(Platform)'=='Win32'">/safeseh</AdditionalOptions>
-    </MASM>
+    <MASM Include="proxycb\fortpcb_dst_x86.asm" />
     <ClCompile Include="fortdrv_amalg.c" />
     <ClInclude Include="fortdrv.h" />
     <ResourceCompile Include="fortdrv.rc" />

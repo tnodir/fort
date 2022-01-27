@@ -122,6 +122,9 @@ DriverLoaderEntry
 {
     NTSTATUS status;
 
+    // Use NX Non-Paged Pool
+    ExInitializeDriverRuntime(DrvRtPoolNxOptIn);
+
     UNICODE_STRING driverPath;
     status = fort_driver_path(driver, regPath, &driverPath);
 

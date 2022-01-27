@@ -56,7 +56,8 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies);$(DDK_LIB_PATH)\aux_klib.lib;$(DDK_LIB_PATH)\ksecdd.lib</AdditionalDependencies>
-      <AdditionalOptions>/integritycheck</AdditionalOptions>
+      <AdditionalOptions>/INTEGRITYCHECK</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Platform)'=='Win32'">%(AdditionalOptions) /SAFESEH:NO</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
     <DriverSign>
@@ -67,9 +68,7 @@
     <FilesToPackage Include="$(TargetPath)" />
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="..\proxycb\fortpcb_src_x86.asm">
-      <AdditionalOptions Condition="'$(Platform)'=='Win32'">/safeseh</AdditionalOptions>
-    </MASM>
+    <MASM Include="..\proxycb\fortpcb_src_x86.asm" />
     <ClCompile Include="fortdl_amalg.c" />
     <ClInclude Include="fortdl.h" />
     <ResourceCompile Include="fortdl.rc" />

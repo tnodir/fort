@@ -7,9 +7,10 @@
 
 #    if defined(FORT_WIN7_COMPAT)
 #        define WIN9X_COMPAT_SPINLOCK /* XXX: Support Windows 7: KeInitializeSpinLock() */
+#        define POOL_NX_OPTIN         1 /* Enhanced protection of NX pool */
+#    else
+#        define POOL_NX_OPTIN_AUTO 1 /* Enhanced protection of NX pool */
 #    endif
-
-#    define POOL_NX_OPTIN 1 /* Enhanced protection of NX pool */
 
 #    define _KRPCENV_ /* To include winerror.h */
 
