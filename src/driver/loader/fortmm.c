@@ -208,7 +208,7 @@ static NTSTATUS PerformBaseRelocation(
 
 /* Build the import address table: Library functions. */
 static NTSTATUS BuildImportTableLibrary(PUCHAR codeBase, const PIMAGE_IMPORT_DESCRIPTOR importDesc,
-        LPCSTR libName, LOADEDMODULE libModule)
+        LPCSTR libName, PLOADEDMODULE libModule, PLOADEDMODULE forwardModule)
 {
     NTSTATUS status = STATUS_SUCCESS;
 
@@ -228,8 +228,18 @@ static NTSTATUS BuildImportTableLibrary(PUCHAR codeBase, const PIMAGE_IMPORT_DES
             funcName = (LPCSTR) &thunkData->Name;
         }
 
-        *funcRef = ModuleGetProcAddress(&libModule, funcName);
-        if (*funcRef == 0) {
+        if (forwardModule != NULL) {
+            *funcRef = ModuleGetProcAddress(forwardModule, funcName);
+            if (*funcRef != NULL) {
+#ifdef FORT_DEBUG
+                LOG("Loader Module: Import forwarded: %s: %s: %p\n", libName, funcName, *funcRef);
+#endif
+                continue;
+            }
+        }
+
+        *funcRef = ModuleGetProcAddress(libModule, funcName);
+        if (*funcRef == NULL) {
             LOG("Loader Module: Error: Procedure Not Found: %s: %s\n", libName, funcName);
             status = STATUS_PROCEDURE_NOT_FOUND;
         } else {
@@ -258,6 +268,21 @@ static NTSTATUS BuildImportTable(PUCHAR codeBase, PIMAGE_NT_HEADERS pHeaders)
     if (!NT_SUCCESS(status))
         return status;
 
+#if defined(FORT_WIN7_COMPAT)
+    LOADEDMODULE kernelModule = { NULL };
+    {
+        RTL_OSVERSIONINFOW osvi;
+        RtlZeroMemory(&osvi, sizeof(osvi));
+        osvi.dwOSVersionInfoSize = sizeof(osvi);
+        RtlGetVersion(&osvi);
+        const BOOL isWindows7 = (osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 1);
+
+        if (!isWindows7) {
+            GetModuleInfo(&kernelModule, "ntoskrnl.exe", modules, modulesCount);
+        }
+    }
+#endif
+
     status = STATUS_SUCCESS;
 
     PIMAGE_IMPORT_DESCRIPTOR importDesc =
@@ -273,7 +298,16 @@ static NTSTATUS BuildImportTable(PUCHAR codeBase, PIMAGE_NT_HEADERS pHeaders)
             break;
         }
 
-        status = BuildImportTableLibrary(codeBase, importDesc, libName, libModule);
+        PLOADEDMODULE forwardModule = NULL;
+#if defined(FORT_WIN7_COMPAT)
+        if (kernelModule.codeBase != NULL && _stricmp(libName, "hal.dll") == 0) {
+            /* Functions of HAL.dll are exported from kernel on Windows 8+ */
+            LOG("Loader Module: Forward to kernel: %s\n", libName);
+            forwardModule = &kernelModule;
+        }
+#endif
+
+        status = BuildImportTableLibrary(codeBase, importDesc, libName, &libModule, forwardModule);
         if (!NT_SUCCESS(status)) {
             LOG("Loader Module: Library Import Error: %s\n", libName);
             break;

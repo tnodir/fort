@@ -286,6 +286,8 @@ FORT_API void KeQuerySystemTime(PLARGE_INTEGER time);
 FORT_API void ExSystemTimeToLocalTime(PLARGE_INTEGER systemTime, PLARGE_INTEGER localTime);
 FORT_API void RtlTimeToTimeFields(PLARGE_INTEGER time, PTIME_FIELDS timeFields);
 
+FORT_API NTSTATUS RtlGetVersion(PRTL_OSVERSIONINFOW versionInformation);
+
 FORT_API NTSTATUS ZwOpenKey(
         PHANDLE keyHandle, ACCESS_MASK desiredAccess, POBJECT_ATTRIBUTES objectAttributes);
 FORT_API NTSTATUS ZwClose(HANDLE handle);

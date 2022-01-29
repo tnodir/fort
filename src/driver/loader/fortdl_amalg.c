@@ -2,6 +2,7 @@
 
 #define FORT_AMALG
 #define FORT_DRIVER
+#define FORT_DEBUG
 
 #include "../fortutl.c"
 

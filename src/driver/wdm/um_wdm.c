@@ -271,6 +271,12 @@ void RtlTimeToTimeFields(PLARGE_INTEGER time, PTIME_FIELDS timeFields)
     UNUSED(timeFields);
 }
 
+NTSTATUS RtlGetVersion(PRTL_OSVERSIONINFOW versionInformation)
+{
+    UNUSED(versionInformation);
+    return STATUS_SUCCESS;
+}
+
 NTSTATUS ZwOpenKey(
         PHANDLE keyHandle, ACCESS_MASK desiredAccess, POBJECT_ATTRIBUTES objectAttributes)
 {
