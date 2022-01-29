@@ -47,7 +47,7 @@
 #if defined(FORT_DRIVER)
 #    define LOG(...) DbgPrintEx(DPFLTR_SYSTEM_ID, DPFLTR_ERROR_LEVEL, "FORT: " __VA_ARGS__)
 #else
-#    define LOG(...) (__VA_ARGS__)
+#    define LOG(...)
 #endif
 
 #ifndef NT_SUCCESS

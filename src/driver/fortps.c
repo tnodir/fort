@@ -149,7 +149,6 @@ static void NTAPI fort_pstree_notify(
     UNUSED(process);
 
     const DWORD pid = (DWORD) (ptrdiff_t) processId;
-    const DWORD ppid = (DWORD) (ptrdiff_t) createInfo->ParentProcessId;
 
     if (createInfo == NULL) {
 #ifdef FORT_DEBUG
@@ -160,6 +159,8 @@ static void NTAPI fort_pstree_notify(
 
     if (createInfo->ImageFileName == NULL || createInfo->CommandLine == NULL)
         return;
+
+    const DWORD ppid = (DWORD) (ptrdiff_t) createInfo->ParentProcessId;
 
 #ifdef FORT_DEBUG
     LOG("PsTree: pid=%d ppid=%d IMG=[%wZ] CMD=[%wZ]\n", pid, ppid,
