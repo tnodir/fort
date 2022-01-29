@@ -30,8 +30,7 @@ static void NTAPI fort_worker_reauth(void)
     status = fort_callout_force_reauth(conf_flags, 0);
 
     if (!NT_SUCCESS(status)) {
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Worker Reauth: Error: %x\n",
-                status);
+        LOG("Worker Reauth: Error: %x\n", status);
     }
 }
 
@@ -293,8 +292,7 @@ FORT_API NTSTATUS fort_device_control(PDEVICE_OBJECT device, PIRP irp)
     const NTSTATUS status = fort_device_control_process(irp_stack, irp, &info);
 
     if (!NT_SUCCESS(status) && status != FORT_STATUS_USER_ERROR) {
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Device Control: Error: %x\n",
-                status);
+        LOG("Device Control: Error: %x\n", status);
     }
 
     if (status != STATUS_PENDING) {

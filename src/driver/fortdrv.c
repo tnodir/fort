@@ -74,7 +74,7 @@ NTSTATUS DriverEntry(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
     const NTSTATUS status = fort_driver_load(driver, reg_path);
 
     if (!NT_SUCCESS(status)) {
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Entry: Error: %x\n", status);
+        LOG("Entry: Error: %x\n", status);
 
         fort_driver_unload(driver);
     }

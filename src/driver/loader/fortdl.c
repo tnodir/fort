@@ -67,7 +67,7 @@ static NTSTATUS fort_loader_init(PUNICODE_STRING driverPath)
     NTSTATUS status;
 
 #ifdef FORT_DEBUG
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Init: [%wZ]\n", driverPath);
+    LOG("Loader Init: [%wZ]\n", driverPath);
 #endif
 
     /* Load the driver file */
@@ -84,9 +84,7 @@ static NTSTATUS fort_loader_init(PUNICODE_STRING driverPath)
         }
 
         if (!NT_SUCCESS(status)) {
-            DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                    "FORT: Loader File Read: Error: %x size=%d [%wZ]\n", status, dataSize,
-                    driverPath);
+            LOG("Loader File Read: Error: %x size=%d [%wZ]\n", status, dataSize, driverPath);
             return status;
         }
     }
@@ -105,8 +103,7 @@ static NTSTATUS fort_loader_init(PUNICODE_STRING driverPath)
     fort_mem_free(data, FORT_LOADER_POOL_TAG);
 
     if (!NT_SUCCESS(status)) {
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                "FORT: Loader Image Payload: Error: %x\n", status);
+        LOG("Loader Image Payload: Error: %x\n", status);
     }
 
     return status;
@@ -129,8 +126,7 @@ DriverLoaderEntry
     status = fort_driver_path(driver, regPath, &driverPath);
 
     if (!NT_SUCCESS(status)) {
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Entry: Path Error: %x\n",
-                status);
+        LOG("Loader Entry: Path Error: %x\n", status);
         return status;
     }
 
@@ -146,8 +142,7 @@ DriverLoaderEntry
     }
 
     if (!NT_SUCCESS(status)) {
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Loader Entry: Error: %x\n",
-                status);
+        LOG("Loader Entry: Error: %x\n", status);
 
         fort_loader_unload(driver);
     }

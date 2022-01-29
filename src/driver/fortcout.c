@@ -62,8 +62,7 @@ static BOOL fort_callout_classify_v4_blocked_log_stat(const FWPS_INCOMING_VALUES
             return TRUE; /* block (Reauth) */
         }
 
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                "FORT: Classify v4: Flow assoc. error: %x\n", status);
+        LOG("Classify v4: Flow assoc. error: %x\n", status);
     } else if (is_new_proc) {
         fort_buffer_proc_new_write(&fort_device()->buffer, process_id, path_len, path, irp, info);
     }
@@ -544,8 +543,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 
     status = FwpsCalloutRegister0(device, &c, &fort_device()->connect4_id);
     if (!NT_SUCCESS(status)) {
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                "FORT: Register Connect V4: Error: %x\n", status);
+        LOG("Register Connect V4: Error: %x\n", status);
         return status;
     }
 
@@ -555,8 +553,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 
     status = FwpsCalloutRegister0(device, &c, &fort_device()->accept4_id);
     if (!NT_SUCCESS(status)) {
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                "FORT: Register Accept V4: Error: %x\n", status);
+        LOG("Register Accept V4: Error: %x\n", status);
         return status;
     }
 
@@ -569,8 +566,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 
     status = FwpsCalloutRegister0(device, &c, &stat->stream4_id);
     if (!NT_SUCCESS(status)) {
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                "FORT: Register Stream V4: Error: %x\n", status);
+        LOG("Register Stream V4: Error: %x\n", status);
         return status;
     }
 
@@ -582,8 +578,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 
     status = FwpsCalloutRegister0(device, &c, &stat->datagram4_id);
     if (!NT_SUCCESS(status)) {
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                "FORT: Register Datagram V4: Error: %x\n", status);
+        LOG("Register Datagram V4: Error: %x\n", status);
         return status;
     }
 
@@ -596,8 +591,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 
     status = FwpsCalloutRegister0(device, &c, &stat->in_transport4_id);
     if (!NT_SUCCESS(status)) {
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                "FORT: Register Inbound Transport V4: Error: %x\n", status);
+        LOG("Register Inbound Transport V4: Error: %x\n", status);
         return status;
     }
 
@@ -609,8 +603,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 
     status = FwpsCalloutRegister0(device, &c, &stat->out_transport4_id);
     if (!NT_SUCCESS(status)) {
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                "FORT: Register Outbound Transport V4: Error: %x\n", status);
+        LOG("Register Outbound Transport V4: Error: %x\n", status);
         return status;
     }
 
@@ -746,8 +739,7 @@ FORT_API NTSTATUS fort_callout_force_reauth(
                 (conf_flags.allow_all_new || conf_flags.log_blocked || conf_flags.log_stat
                         || conf_flags.log_blocked_ip));
     } else {
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Callout Reauth: Error: %x\n",
-                status);
+        LOG("Callout Reauth: Error: %x\n", status);
     }
 
     return status;
@@ -798,8 +790,7 @@ FORT_API void NTAPI fort_callout_timer(void)
 
         status = fort_buffer_prepare(buf, len, &out, &irp, &info);
         if (!NT_SUCCESS(status)) {
-            DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Callout Timer: Error: %x\n",
-                    status);
+            LOG("Callout Timer: Error: %x\n", status);
             break;
         }
 

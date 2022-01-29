@@ -86,8 +86,7 @@ FORT_API void fort_proxycb_drv_setup(PDRIVER_DISPATCH *driver_major_funcs)
             driver_major_funcs[i] = cb;
 
 #ifdef FORT_DEBUG
-            DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                    "FORT: Proxy Major: i=%d func=%p cb=%p\n", i, major_func, cb);
+            LOG("Proxy Major: i=%d func=%p cb=%p\n", i, major_func, cb);
 #endif
         }
     }

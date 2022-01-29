@@ -136,8 +136,7 @@ FORT_API void fort_defer_open(PFORT_DEFER defer)
     if (!NT_SUCCESS(status)) {
         defer->transport_injection4_id = INVALID_HANDLE_VALUE;
 
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                "FORT: Defer: Transport injection init error: %x\n", status);
+        LOG("Defer: Transport injection init error: %x\n", status);
     }
 
     status = FwpsInjectionHandleCreate0(
@@ -146,8 +145,7 @@ FORT_API void fort_defer_open(PFORT_DEFER defer)
     if (!NT_SUCCESS(status)) {
         defer->stream_injection4_id = INVALID_HANDLE_VALUE;
 
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                "FORT: Defer: Stream injection init error: %x\n", status);
+        LOG("Defer: Stream injection init error: %x\n", status);
     }
 
     tommy_arrayof_init(&defer->packets, sizeof(FORT_PACKET));
@@ -388,8 +386,7 @@ FORT_API void fort_defer_packet_free(
         const NTSTATUS status = clonedNetBufList->Status;
 
         if (!NT_SUCCESS(status)) {
-            DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                    "FORT: Defer: Injection error: %x\n", status);
+            LOG("Defer: Injection error: %x\n", status);
         }
 
         FwpsFreeCloneNetBufferList0(clonedNetBufList, 0);
@@ -428,8 +425,7 @@ static void fort_defer_packet_inject(PFORT_DEFER defer, PFORT_PACKET pkt,
         status = inject_func(defer, pkt, &clonedNetBufList, complete_func);
 
         if (!NT_SUCCESS(status)) {
-            DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                    "FORT: Defer: Injection prepare error: %x\n", status);
+            LOG("Defer: Injection prepare error: %x\n", status);
 
             if (clonedNetBufList != NULL) {
                 clonedNetBufList->Status = STATUS_SUCCESS;

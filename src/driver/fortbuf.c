@@ -123,7 +123,7 @@ FORT_API NTSTATUS fort_buffer_prepare(
     } else {
         PFORT_BUFFER_DATA data = fort_buffer_data_alloc(buf, len);
         if (data == NULL) {
-            DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: Buffer OOM: len=%d\n", len);
+            LOG("Buffer OOM: len=%d\n", len);
             return STATUS_INSUFFICIENT_RESOURCES;
         }
 

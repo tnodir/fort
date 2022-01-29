@@ -117,9 +117,7 @@ FORT_API NTSTATUS fort_image_payload(
     const int payloadSize = fort_le_u32_read(paylodInfo, 4);
 
 #ifdef FORT_DEBUG
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-            "FORT: Loader Image Load: size=%d signatureSize=%d alignedSignatureSize=%d "
-            "payloadSize=%d\n",
+    LOG("Loader Image Load: size=%d signatureSize=%d alignedSignatureSize=%d payloadSize=%d\n",
             dataSize, signatureSize, alignedSignatureSize, payloadSize);
 #endif
 

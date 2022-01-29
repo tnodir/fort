@@ -153,7 +153,7 @@ static void NTAPI fort_pstree_notify(
 
     if (createInfo == NULL) {
 #ifdef FORT_DEBUG
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "FORT: PsTree: pid=%d CLOSED\n", pid);
+        LOG("PsTree: pid=%d CLOSED\n", pid);
 #endif
         return;
     }
@@ -162,8 +162,7 @@ static void NTAPI fort_pstree_notify(
         return;
 
 #ifdef FORT_DEBUG
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-            "FORT: PsTree: pid=%d ppid=%d IMG=[%wZ] CMD=[%wZ]\n", pid, ppid,
+    LOG("PsTree: pid=%d ppid=%d IMG=[%wZ] CMD=[%wZ]\n", pid, ppid,
             createInfo->ImageFileName, createInfo->CommandLine);
 #endif
 
@@ -193,15 +192,13 @@ FORT_API void fort_pstree_open(PFORT_PSTREE ps_tree)
                     FORT_PSTREE_NOTIFY, PCREATE_PROCESS_NOTIFY_ROUTINE_EX, fort_pstree_notify),
             FALSE);
     if (!NT_SUCCESS(status)) {
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                "FORT: PsTree: PsSetCreateProcessNotifyRoutineEx Error: %x\n", status);
+        LOG("PsTree: PsSetCreateProcessNotifyRoutineEx Error: %x\n", status);
         return;
     }
 
     status = fort_pstree_enum_processes(ps_tree);
     if (!NT_SUCCESS(status)) {
-        DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL,
-                "FORT: PsTree: Enum Processes Error: %x\n", status);
+        LOG("PsTree: Enum Processes Error: %x\n", status);
         return;
     }
 }
