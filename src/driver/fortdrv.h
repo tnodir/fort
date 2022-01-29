@@ -14,7 +14,7 @@
 #endif
 
 #if defined(FORT_WIN7_COMPAT)
-#    define fort_mem_alloc(size, tag)      ExAllocatePoolWithTag(NonPagedPool, (size), (tag))
+#    define fort_mem_alloc(size, tag)      ExAllocatePoolWithTag(NonPagedPoolNx, (size), (tag))
 #    define fort_mem_exec_alloc(size, tag) ExAllocatePoolWithTag(NonPagedPoolExecute, (size), (tag))
 #else
 #    define fort_mem_alloc(size, tag)                                                              \

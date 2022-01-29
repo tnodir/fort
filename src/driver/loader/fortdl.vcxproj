@@ -50,6 +50,8 @@
     <ClCompile>
       <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
+      <ControlFlowGuard>false</ControlFlowGuard>
+      <SDLCheck>false</SDLCheck>
       <TreatWarningAsError>true</TreatWarningAsError>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>$(DefineConstants);%(PreprocessorDefinitions)</PreprocessorDefinitions>
