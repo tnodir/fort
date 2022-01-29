@@ -44,7 +44,11 @@
 
 #define UNUSED(p) ((void) (p))
 
-#define LOG(...) DbgPrintEx(DPFLTR_SYSTEM_ID, DPFLTR_ERROR_LEVEL, "FORT: " __VA_ARGS__)
+#if defined(FORT_DRIVER)
+#    define LOG(...) DbgPrintEx(DPFLTR_SYSTEM_ID, DPFLTR_ERROR_LEVEL, "FORT: " __VA_ARGS__)
+#else
+#    define LOG(...) (__VA_ARGS__)
+#endif
 
 #ifndef NT_SUCCESS
 #    define NT_SUCCESS(status) ((LONG) (status) >= 0)
