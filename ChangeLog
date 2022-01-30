@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.4.5, 2022-01-30:
+- Driver: Fix 32-bit build for Windows 8+.
+
 v3.4.4, 2022-01-14:
 - UI: LogManager: Fix log reading (Regression introduced in v3.4.3)
 - UI: Show "Portable" in window title.
