@@ -230,7 +230,6 @@ FORT_API NTSTATUS fort_defer_packet_add(PFORT_DEFER defer,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PNET_BUFFER_LIST netBufList,
         BOOL inbound, UCHAR group_index)
 {
-    KLOCK_QUEUE_HANDLE lock_queue;
     NTSTATUS status;
 
     if (defer->transport_injection4_id == INVALID_HANDLE_VALUE)
@@ -258,6 +257,7 @@ FORT_API NTSTATUS fort_defer_packet_add(PFORT_DEFER defer,
 
     const UINT16 list_index = group_index * 2 + (inbound ? 0 : 1);
 
+    KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&defer->lock, &lock_queue);
 
     PFORT_DEFER_LIST defer_list = &defer->lists[list_index];
@@ -324,7 +324,6 @@ FORT_API NTSTATUS fort_defer_stream_add(PFORT_DEFER defer,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const FWPS_STREAM_DATA0 *streamData,
         const FWPS_FILTER0 *filter, BOOL inbound)
 {
-    KLOCK_QUEUE_HANDLE lock_queue;
     NTSTATUS status;
 
     if (defer->stream_injection4_id == INVALID_HANDLE_VALUE)
@@ -341,6 +340,7 @@ FORT_API NTSTATUS fort_defer_stream_add(PFORT_DEFER defer,
             return STATUS_FWP_CANNOT_PEND;
     }
 
+    KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&defer->lock, &lock_queue);
 
     PFORT_PACKET pkt = fort_defer_packet_get(defer);
@@ -380,8 +380,6 @@ end:
 FORT_API void fort_defer_packet_free(
         PFORT_DEFER defer, PFORT_PACKET pkt, PNET_BUFFER_LIST clonedNetBufList, BOOL dispatchLevel)
 {
-    KLOCK_QUEUE_HANDLE lock_queue;
-
     if (clonedNetBufList != NULL) {
         const NTSTATUS status = clonedNetBufList->Status;
 
@@ -395,6 +393,7 @@ FORT_API void fort_defer_packet_free(
     FwpsDereferenceNetBufferList0(pkt->netBufList, FALSE);
 
     /* Add to free chain */
+    KLOCK_QUEUE_HANDLE lock_queue;
     if (dispatchLevel) {
         KeAcquireInStackQueuedSpinLockAtDpcLevel(&defer->lock, &lock_queue);
     } else {
@@ -441,14 +440,13 @@ static void fort_defer_packet_inject(PFORT_DEFER defer, PFORT_PACKET pkt,
 FORT_API void fort_defer_packet_flush(PFORT_DEFER defer, FORT_INJECT_COMPLETE_FUNC complete_func,
         UINT32 list_bits, BOOL dispatchLevel)
 {
-    KLOCK_QUEUE_HANDLE lock_queue;
-
     list_bits &= defer->list_bits;
     if (list_bits == 0)
         return;
 
     PFORT_PACKET pkt_chain = NULL;
 
+    KLOCK_QUEUE_HANDLE lock_queue;
     if (dispatchLevel) {
         KeAcquireInStackQueuedSpinLockAtDpcLevel(&defer->lock, &lock_queue);
     } else {
@@ -483,7 +481,6 @@ FORT_API void fort_defer_stream_flush(PFORT_DEFER defer, FORT_INJECT_COMPLETE_FU
         UINT64 flow_id, BOOL dispatchLevel)
 {
     KLOCK_QUEUE_HANDLE lock_queue;
-
     if (dispatchLevel) {
         KeAcquireInStackQueuedSpinLockAtDpcLevel(&defer->lock, &lock_queue);
     } else {

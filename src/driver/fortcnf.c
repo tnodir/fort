@@ -273,7 +273,6 @@ static void fort_conf_ref_del(PFORT_CONF_REF conf_ref)
 FORT_API void fort_conf_ref_put(PFORT_DEVICE_CONF device_conf, PFORT_CONF_REF conf_ref)
 {
     KLOCK_QUEUE_HANDLE lock_queue;
-
     KeAcquireInStackQueuedSpinLock(&device_conf->ref_lock, &lock_queue);
     {
         const UINT32 refcount = --conf_ref->refcount;
@@ -288,8 +287,8 @@ FORT_API void fort_conf_ref_put(PFORT_DEVICE_CONF device_conf, PFORT_CONF_REF co
 FORT_API PFORT_CONF_REF fort_conf_ref_take(PFORT_DEVICE_CONF device_conf)
 {
     PFORT_CONF_REF conf_ref;
-    KLOCK_QUEUE_HANDLE lock_queue;
 
+    KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&device_conf->ref_lock, &lock_queue);
     {
         conf_ref = device_conf->ref;
@@ -305,7 +304,6 @@ FORT_API PFORT_CONF_REF fort_conf_ref_take(PFORT_DEVICE_CONF device_conf)
 FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_REF conf_ref)
 {
     FORT_CONF_FLAGS old_conf_flags;
-    KLOCK_QUEUE_HANDLE lock_queue;
 
     const PFORT_CONF_REF old_conf_ref = fort_conf_ref_take(device_conf);
 
@@ -316,6 +314,7 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_
         old_conf_flags.prov_boot = fort_device_flag(device_conf, FORT_DEVICE_PROV_BOOT) != 0;
     }
 
+    KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&device_conf->ref_lock, &lock_queue);
     {
         FORT_CONF_FLAGS conf_flags;
@@ -347,8 +346,8 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_flags_set(
         PFORT_DEVICE_CONF device_conf, const PFORT_CONF_FLAGS conf_flags)
 {
     FORT_CONF_FLAGS old_conf_flags;
-    KLOCK_QUEUE_HANDLE lock_queue;
 
+    KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&device_conf->ref_lock, &lock_queue);
     {
         PFORT_CONF_REF conf_ref = device_conf->ref;

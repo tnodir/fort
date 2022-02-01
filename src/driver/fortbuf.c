@@ -83,7 +83,6 @@ FORT_API void fort_buffer_close(PFORT_BUFFER buf)
 FORT_API void fort_buffer_clear(PFORT_BUFFER buf)
 {
     KLOCK_QUEUE_HANDLE lock_queue;
-
     KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
 
     fort_buffer_close(buf);
@@ -137,7 +136,6 @@ FORT_API NTSTATUS fort_buffer_prepare(
 FORT_API NTSTATUS fort_buffer_blocked_write(PFORT_BUFFER buf, BOOL blocked, UINT32 pid,
         UINT32 path_len, const PVOID path, PIRP *irp, ULONG_PTR *info)
 {
-    KLOCK_QUEUE_HANDLE lock_queue;
     NTSTATUS status;
 
     if (path_len > FORT_LOG_PATH_MAX) {
@@ -146,6 +144,7 @@ FORT_API NTSTATUS fort_buffer_blocked_write(PFORT_BUFFER buf, BOOL blocked, UINT
 
     const UINT32 len = FORT_LOG_BLOCKED_SIZE(path_len);
 
+    KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
     {
         PCHAR out;
@@ -164,7 +163,6 @@ NTSTATUS fort_buffer_blocked_ip_write(PFORT_BUFFER buf, BOOL inbound, UCHAR bloc
         UCHAR ip_proto, UINT16 local_port, UINT16 remote_port, UINT32 local_ip, UINT32 remote_ip,
         UINT32 pid, UINT32 path_len, const PVOID path, PIRP *irp, ULONG_PTR *info)
 {
-    KLOCK_QUEUE_HANDLE lock_queue;
     NTSTATUS status;
 
     if (path_len > FORT_LOG_PATH_MAX) {
@@ -173,6 +171,7 @@ NTSTATUS fort_buffer_blocked_ip_write(PFORT_BUFFER buf, BOOL inbound, UCHAR bloc
 
     const UINT32 len = FORT_LOG_BLOCKED_IP_SIZE(path_len);
 
+    KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
     {
         PCHAR out;
@@ -191,7 +190,6 @@ NTSTATUS fort_buffer_blocked_ip_write(PFORT_BUFFER buf, BOOL inbound, UCHAR bloc
 FORT_API NTSTATUS fort_buffer_proc_new_write(
         PFORT_BUFFER buf, UINT32 pid, UINT32 path_len, const PVOID path, PIRP *irp, ULONG_PTR *info)
 {
-    KLOCK_QUEUE_HANDLE lock_queue;
     NTSTATUS status;
 
     if (path_len > FORT_LOG_PATH_MAX) {
@@ -200,6 +198,7 @@ FORT_API NTSTATUS fort_buffer_proc_new_write(
 
     const UINT32 len = FORT_LOG_PROC_NEW_SIZE(path_len);
 
+    KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
     {
         PCHAR out;
@@ -217,9 +216,9 @@ FORT_API NTSTATUS fort_buffer_proc_new_write(
 FORT_API NTSTATUS fort_buffer_xmove(
         PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len, ULONG_PTR *info)
 {
-    KLOCK_QUEUE_HANDLE lock_queue;
     NTSTATUS status = STATUS_SUCCESS;
 
+    KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
 
     PFORT_BUFFER_DATA data = buf->data_head;
@@ -257,11 +256,11 @@ end:
 
 FORT_API NTSTATUS fort_buffer_cancel_pending(PFORT_BUFFER buf, PIRP irp, ULONG_PTR *info)
 {
-    KLOCK_QUEUE_HANDLE lock_queue;
     NTSTATUS status = STATUS_CANCELLED;
 
     *info = 0;
 
+    KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
     if (irp == buf->irp) {
         buf->irp = NULL;

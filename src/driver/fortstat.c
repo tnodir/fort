@@ -254,7 +254,6 @@ FORT_API void fort_stat_open(PFORT_STAT stat)
 FORT_API void fort_stat_close(PFORT_STAT stat)
 {
     KLOCK_QUEUE_HANDLE lock_queue;
-
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
     stat->closed = TRUE;
@@ -283,7 +282,6 @@ static void fort_stat_clear(PFORT_STAT stat)
 FORT_API void fort_stat_update(PFORT_STAT stat, BOOL log_stat)
 {
     KLOCK_QUEUE_HANDLE lock_queue;
-
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
     if (stat->log_stat && !log_stat) {
@@ -298,7 +296,6 @@ FORT_API void fort_stat_update(PFORT_STAT stat, BOOL log_stat)
 FORT_API void fort_stat_conf_update(PFORT_STAT stat, PFORT_CONF_IO conf_io)
 {
     KLOCK_QUEUE_HANDLE lock_queue;
-
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
     {
         stat->conf_group = conf_io->conf_group;
@@ -336,9 +333,9 @@ static NTSTATUS fort_flow_associate_proc(PFORT_STAT stat, UINT32 process_id, BOO
 FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, UINT64 flow_id, UINT32 process_id,
         UCHAR group_index, BOOL is_tcp, BOOL is_reauth, BOOL *is_new_proc)
 {
-    KLOCK_QUEUE_HANDLE lock_queue;
     NTSTATUS status;
 
+    KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
     PFORT_STAT_PROC proc = NULL;
@@ -364,12 +361,12 @@ FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, UINT64 flow_id, UINT32 pr
 
 FORT_API void fort_flow_delete(PFORT_STAT stat, UINT64 flowContext)
 {
-    KLOCK_QUEUE_HANDLE lock_queue;
     PFORT_FLOW flow = (PFORT_FLOW) flowContext;
 
     if (stat->closed)
         return; /* double check to avoid deadlock after remove-flow-context */
 
+    KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
     if (!stat->closed) {
         fort_flow_free(stat, flow);
@@ -411,9 +408,9 @@ static void fort_flow_speed_limit(PFORT_STAT stat, PFORT_FLOW flow, const FORT_F
 FORT_API void fort_flow_classify(
         PFORT_STAT stat, UINT64 flowContext, UINT32 data_len, BOOL is_tcp, BOOL inbound)
 {
-    KLOCK_QUEUE_HANDLE lock_queue;
     PFORT_FLOW flow = (PFORT_FLOW) flowContext;
 
+    KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
     if (stat->log_stat) {
