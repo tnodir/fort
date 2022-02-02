@@ -10,9 +10,9 @@ typedef struct fort_conf_exe_node
     struct fort_conf_exe_node *next;
     struct fort_conf_exe_node *prev;
 
-    PFORT_APP_ENTRY app_entry;
+    PFORT_APP_ENTRY app_entry; /* tommy_hashdyn_node::data */
 
-    tommy_key_t path_hash;
+    tommy_key_t path_hash; /* tommy_hashdyn_node::index */
 } FORT_CONF_EXE_NODE, *PFORT_CONF_EXE_NODE;
 
 static FORT_TIME fort_current_time(void)

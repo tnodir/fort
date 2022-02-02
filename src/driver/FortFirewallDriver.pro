@@ -33,6 +33,7 @@ SOURCES += \
     wdm/um_fwpsk.c \
     wdm/um_ndis.c \
     wdm/um_ntddk.c \
+    wdm/um_ntifs.c \
     wdm/um_wdm.c
 
 HEADERS += \
@@ -64,6 +65,7 @@ HEADERS += \
     wdm/um_fwpsk.h \
     wdm/um_ndis.h \
     wdm/um_ntddk.h \
+    wdm/um_ntifs.h \
     wdm/um_wdm.h
 
 ASM_FILES += \

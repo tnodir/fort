@@ -10,6 +10,7 @@
 #    include "wdm/um_fwpsk.h"
 #    include "wdm/um_ndis.h"
 #    include "wdm/um_ntddk.h"
+#    include "wdm/um_ntifs.h"
 #    include "wdm/um_wdm.h"
 #endif
 

@@ -3,17 +3,17 @@
 #include "fortps.h"
 
 #include "fortcb.h"
+#include "fortdev.h"
 #include "fortutl.h"
 
 #define FORT_PSTREE_POOL_TAG 'PwfF'
 
-#define FORT_PSTREE_NAME_LEN_MAX (64 * sizeof(WCHAR))
+#define FORT_SVCHOST_PREFIX L"\\svchost\\"
 
-typedef struct fort_psname
-{
-    USHORT size;
-    WCHAR data[1];
-} FORT_PSNAME, *PFORT_PSNAME;
+#define FORT_PSTREE_NAME_LEN_MAX    (120 * sizeof(WCHAR))
+#define FORT_PSTREE_NAMES_POOL_SIZE (4 * 1024)
+
+#define FORT_PSNAME_DATA_OFF offsetof(FORT_PSNAME, data)
 
 /* Synchronize with tommy_hashdyn_node! */
 typedef struct fort_psnode
@@ -21,18 +21,12 @@ typedef struct fort_psnode
     struct fort_psnode *next;
     struct fort_psnode *prev;
 
-    PFORT_PSNAME name;
+    PFORT_PSNAME ps_name; /* tommy_hashdyn_node::data */
+
+    tommy_key_t pid_hash; /* tommy_hashdyn_node::index */
 
     UINT32 process_id;
-
-    UINT16 flags;
-    UINT16 parent_index;
-
-    UINT16 next_sibling_index;
-    UINT16 prev_sibling_index;
-
-    UINT16 next_child_index;
-    UINT16 prev_child_index;
+    UINT32 parent_process_id;
 } FORT_PSNODE, *PFORT_PSNODE;
 
 typedef struct _SYSTEM_PROCESSES
@@ -60,6 +54,10 @@ NTSTATUS NTAPI ZwQuerySystemInformation(ULONG systemInformationClass, PVOID syst
         ULONG systemInformationLength, PULONG returnLength);
 #endif
 
+#define fort_pstree_get_proc(ps_tree, index)                                                       \
+    ((PFORT_PSNODE) tommy_arrayof_ref(&(ps_tree)->procs, (index)))
+
+#if 0
 static NTSTATUS fort_pstree_enum_processes_loop(
         PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry)
 {
@@ -89,7 +87,7 @@ static NTSTATUS fort_pstree_enum_processes(PFORT_PSTREE ps_tree)
     if (status != STATUS_INFO_LENGTH_MISMATCH)
         return status;
 
-    bufferSize *= 2; /* for possible new created processes/threads */
+    bufferSize *= 3; /* for possible new created processes/threads */
 
     PVOID buffer = fort_mem_alloc(bufferSize, FORT_PSTREE_POOL_TAG);
     if (buffer == NULL)
@@ -104,6 +102,7 @@ static NTSTATUS fort_pstree_enum_processes(PFORT_PSTREE ps_tree)
 
     return status;
 }
+#endif
 
 static BOOL fort_pstree_svchost_check(
         PCUNICODE_STRING path, PCUNICODE_STRING commandLine, PUNICODE_STRING serviceName)
@@ -143,37 +142,164 @@ static BOOL fort_pstree_svchost_check(
     return TRUE;
 }
 
-static void NTAPI fort_pstree_notify(
-        PEPROCESS process, HANDLE processId, PPS_CREATE_NOTIFY_INFO createInfo)
+static PFORT_PSNAME fort_pstree_add_name(
+        PFORT_PSTREE ps_tree, PCUNICODE_STRING path, PCUNICODE_STRING commandLine)
 {
+    UNICODE_STRING serviceName;
+    if (!fort_pstree_svchost_check(path, commandLine, &serviceName))
+        return NULL;
+
+    UNICODE_STRING svchostPrefix;
+    RtlInitUnicodeString(&svchostPrefix, FORT_SVCHOST_PREFIX);
+
+    const int size = FORT_PSNAME_DATA_OFF + svchostPrefix.Length + serviceName.Length;
+    PFORT_PSNAME ps_name = fort_pool_malloc(&ps_tree->pool_list, size);
+
+    if (ps_name != NULL) {
+        ps_name->refcount = 1;
+        ps_name->size = (UINT8) size;
+
+        PCHAR data = (PCHAR) &ps_name->data;
+        RtlCopyMemory(data, svchostPrefix.Buffer, svchostPrefix.Length);
+        data += svchostPrefix.Length;
+
+        UNICODE_STRING destString = { .Length = serviceName.Length,
+            .MaximumLength = serviceName.Length,
+            .Buffer = (PWSTR) data };
+        RtlDowncaseUnicodeString(&destString, &serviceName, FALSE);
+    }
+
+    return ps_name;
+}
+
+static void fort_pstree_del_name(PFORT_PSTREE ps_tree, PFORT_PSNAME ps_name)
+{
+    if (ps_name != NULL && --ps_name->refcount == 0) {
+        fort_pool_free(&ps_tree->pool_list, ps_name);
+    }
+}
+
+static PFORT_PSNODE fort_pstree_proc_new(
+        PFORT_PSTREE ps_tree, PFORT_PSNAME ps_name, tommy_key_t pid_hash)
+{
+    tommy_arrayof *procs = &ps_tree->procs;
+    tommy_hashdyn *procs_map = &ps_tree->procs_map;
+
+    tommy_hashdyn_node *proc_node = tommy_list_tail(&ps_tree->free_procs);
+
+    if (proc_node != NULL) {
+        tommy_list_remove_existing(&ps_tree->free_procs, proc_node);
+    } else {
+        const UINT16 index = ps_tree->procs_n;
+
+        tommy_arrayof_grow(procs, index + 1);
+
+        proc_node = tommy_arrayof_ref(procs, index);
+
+        ++ps_tree->procs_n;
+    }
+
+    tommy_hashdyn_insert(procs_map, proc_node, ps_name, pid_hash);
+
+    return (PFORT_PSNODE) proc_node;
+}
+
+static void fort_pstree_proc_del(PFORT_PSTREE ps_tree, PFORT_PSNODE proc)
+{
+    --ps_tree->procs_n;
+
+    // Delete from pool
+    fort_pstree_del_name(ps_tree, proc->ps_name);
+
+    // Delete from procs map
+    tommy_hashdyn_remove_existing(&ps_tree->procs_map, (tommy_hashdyn_node *) proc);
+
+    tommy_list_insert_tail_check(&ps_tree->free_procs, (tommy_node *) proc);
+}
+
+static PFORT_PSNODE fort_pstree_find_proc_hash(
+        PFORT_PSTREE ps_tree, DWORD processId, tommy_key_t pid_hash)
+{
+    PFORT_PSNODE node = (PFORT_PSNODE) tommy_hashdyn_bucket(&ps_tree->procs_map, pid_hash);
+
+    while (node != NULL) {
+        if (node->process_id == processId) {
+            return node;
+        }
+
+        node = node->next;
+    }
+
+    return NULL;
+}
+
+static PFORT_PSNODE fort_pstree_find_proc(PFORT_PSTREE ps_tree, DWORD processId)
+{
+    const tommy_key_t pid_hash = (tommy_key_t) tommy_hash_u32(0, &processId, sizeof(DWORD));
+
+    return fort_pstree_find_proc_hash(ps_tree, processId, pid_hash);
+}
+
+static void fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCUNICODE_STRING path,
+        PCUNICODE_STRING commandLine, tommy_key_t pid_hash, DWORD processId, DWORD parentProcessId)
+{
+    PFORT_PSNAME ps_name = fort_pstree_add_name(ps_tree, path, commandLine);
+    if (ps_name == NULL)
+        return;
+
+    PFORT_PSNODE proc = fort_pstree_proc_new(ps_tree, ps_name, pid_hash);
+    if (proc == NULL) {
+        fort_pstree_del_name(ps_tree, ps_name);
+        return;
+    }
+
+    proc->pid_hash = pid_hash;
+
+    proc->process_id = processId;
+    proc->parent_process_id = parentProcessId;
+}
+
+static void NTAPI fort_pstree_notify(
+        PEPROCESS process, HANDLE processHandle, PPS_CREATE_NOTIFY_INFO createInfo)
+{
+    PFORT_PSTREE ps_tree = &fort_device()->ps_tree;
+
     UNUSED(process);
 
-    const DWORD pid = (DWORD) (ptrdiff_t) processId;
+    const DWORD processId = (DWORD) (ptrdiff_t) processHandle;
+    const tommy_key_t pid_hash = (tommy_key_t) tommy_hash_u32(0, &processId, sizeof(DWORD));
+
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
+
+    PFORT_PSNODE proc = fort_pstree_find_proc_hash(ps_tree, processId, pid_hash);
 
     if (createInfo == NULL) {
+        /* Process Closed */
 #ifdef FORT_DEBUG
-        LOG("PsTree: pid=%d CLOSED\n", pid);
-#endif
-        return;
-    }
-
-    if (createInfo->ImageFileName == NULL || createInfo->CommandLine == NULL)
-        return;
-
-    const DWORD ppid = (DWORD) (ptrdiff_t) createInfo->ParentProcessId;
-
-#ifdef FORT_DEBUG
-    LOG("PsTree: pid=%d ppid=%d IMG=[%wZ] CMD=[%wZ]\n", pid, ppid,
-            createInfo->ImageFileName, createInfo->CommandLine);
+        LOG("PsTree: pid=%d CLOSED\n", processId);
 #endif
 
-    /* TODO: createInfo->CreationStatus = STATUS_ACCESS_DENIED; */
-
-    UNICODE_STRING serviceName;
-    if (fort_pstree_svchost_check(
-                createInfo->ImageFileName, createInfo->CommandLine, &serviceName)) {
-        // TODO
+        if (proc != NULL) {
+            fort_pstree_proc_del(ps_tree, proc);
+        }
     }
+    /* Process Created */
+    else if (createInfo->ImageFileName != NULL && createInfo->CommandLine != NULL) {
+        const DWORD parentProcessId = (DWORD) (ptrdiff_t) createInfo->ParentProcessId;
+
+#ifdef FORT_DEBUG
+        LOG("PsTree: pid=%d ppid=%d IMG=[%wZ] CMD=[%wZ]\n", processId, parentProcessId,
+                createInfo->ImageFileName, createInfo->CommandLine);
+#endif
+
+        if (proc == NULL) {
+            fort_pstree_handle_new_proc(ps_tree, createInfo->ImageFileName, createInfo->CommandLine,
+                    pid_hash, processId, parentProcessId);
+        }
+    }
+
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
 FORT_API void fort_pstree_open(PFORT_PSTREE ps_tree)
@@ -181,7 +307,9 @@ FORT_API void fort_pstree_open(PFORT_PSTREE ps_tree)
     NTSTATUS status;
 
     fort_pool_list_init(&ps_tree->pool_list);
-    tommy_list_init(&ps_tree->free_nodes);
+    fort_pool_init(&ps_tree->pool_list, FORT_PSTREE_NAMES_POOL_SIZE);
+
+    tommy_list_init(&ps_tree->free_procs);
 
     tommy_arrayof_init(&ps_tree->procs, sizeof(FORT_PSNODE));
     tommy_hashdyn_init(&ps_tree->procs_map);
@@ -196,12 +324,6 @@ FORT_API void fort_pstree_open(PFORT_PSTREE ps_tree)
         LOG("PsTree: PsSetCreateProcessNotifyRoutineEx Error: %x\n", status);
         return;
     }
-
-    status = fort_pstree_enum_processes(ps_tree);
-    if (!NT_SUCCESS(status)) {
-        LOG("PsTree: Enum Processes Error: %x\n", status);
-        return;
-    }
 }
 
 FORT_API void fort_pstree_close(PFORT_PSTREE ps_tree)
@@ -212,13 +334,40 @@ FORT_API void fort_pstree_close(PFORT_PSTREE ps_tree)
             TRUE);
 
     KLOCK_QUEUE_HANDLE lock_queue;
-
     KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
+    {
+        fort_pool_done(&ps_tree->pool_list);
 
-    fort_pool_done(&ps_tree->pool_list);
+        tommy_arrayof_done(&ps_tree->procs);
+        tommy_hashdyn_done(&ps_tree->procs_map);
+    }
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+}
 
-    tommy_arrayof_done(&ps_tree->procs);
-    tommy_hashdyn_done(&ps_tree->procs_map);
+FORT_API PFORT_PSNAME fort_pstree_acquire_proc_name(PFORT_PSTREE ps_tree, DWORD processId)
+{
+    PFORT_PSNAME ps_name = NULL;
 
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
+    {
+        PFORT_PSNODE proc = fort_pstree_find_proc(ps_tree, processId);
+        if (proc != NULL && proc->ps_name != NULL) {
+            ps_name = proc->ps_name;
+            ++ps_name->refcount;
+        }
+    }
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    return ps_name;
+}
+
+FORT_API void fort_pstree_release_proc_name(PFORT_PSTREE ps_tree, PFORT_PSNAME ps_name)
+{
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
+    {
+        fort_pstree_del_name(ps_tree, ps_name);
+    }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }

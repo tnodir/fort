@@ -25,10 +25,10 @@ typedef struct fort_stat_proc
 #else
         UINT32 process_id;
 #endif
-        void *data;
+        void *data; /* tommy_hashdyn_node::data */
     };
 
-    tommy_key_t proc_hash;
+    tommy_key_t proc_hash; /* tommy_hashdyn_node::index */
 
     UINT16 proc_index : 15; /* Synchronize with FORT_PROC_COUNT_MAX! */
     UINT16 active : 1;
@@ -73,10 +73,10 @@ typedef struct fort_flow
 #else
         FORT_FLOW_OPT opt;
 #endif
-        void *data;
+        void *data; /* tommy_hashdyn_node::data */
     };
 
-    tommy_key_t flow_hash;
+    tommy_key_t flow_hash; /* tommy_hashdyn_node::index */
 
 #if defined(_WIN64)
     FORT_FLOW_OPT opt;

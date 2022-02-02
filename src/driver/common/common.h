@@ -14,6 +14,7 @@
 
 #    define _KRPCENV_ /* To include winerror.h */
 
+#    include <ntifs.h>
 #    include <ntddk.h>
 #    include <winerror.h>
 
