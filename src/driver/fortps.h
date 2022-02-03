@@ -19,12 +19,8 @@ typedef struct fort_pstree
     KSPIN_LOCK lock;
 } FORT_PSTREE, *PFORT_PSTREE;
 
-typedef struct fort_psname
-{
-    UINT8 refcount;
-    UINT8 size;
-    WCHAR data[1];
-} FORT_PSNAME, *PFORT_PSNAME;
+struct fort_psname;
+typedef struct fort_psname FORT_PSNAME, *PFORT_PSNAME;
 
 #if defined(__cplusplus)
 extern "C" {
@@ -34,7 +30,8 @@ FORT_API void fort_pstree_open(PFORT_PSTREE ps_tree);
 
 FORT_API void fort_pstree_close(PFORT_PSTREE ps_tree);
 
-FORT_API PFORT_PSNAME fort_pstree_acquire_proc_name(PFORT_PSTREE ps_tree, DWORD processId);
+FORT_API PFORT_PSNAME fort_pstree_acquire_proc_name(
+        PFORT_PSTREE ps_tree, DWORD processId, PUNICODE_STRING path);
 
 FORT_API void fort_pstree_release_proc_name(PFORT_PSTREE ps_tree, PFORT_PSNAME ps_name);
 

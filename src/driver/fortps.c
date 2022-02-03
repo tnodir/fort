@@ -15,6 +15,13 @@
 
 #define FORT_PSNAME_DATA_OFF offsetof(FORT_PSNAME, data)
 
+struct fort_psname
+{
+    UINT8 refcount;
+    UINT8 size;
+    WCHAR data[1];
+};
+
 /* Synchronize with tommy_hashdyn_node! */
 typedef struct fort_psnode
 {
@@ -152,8 +159,9 @@ static PFORT_PSNAME fort_pstree_add_name(
     UNICODE_STRING svchostPrefix;
     RtlInitUnicodeString(&svchostPrefix, FORT_SVCHOST_PREFIX);
 
-    const int size = FORT_PSNAME_DATA_OFF + svchostPrefix.Length + serviceName.Length;
-    PFORT_PSNAME ps_name = fort_pool_malloc(&ps_tree->pool_list, size);
+    const UINT16 size = svchostPrefix.Length + serviceName.Length;
+    PFORT_PSNAME ps_name = fort_pool_malloc(&ps_tree->pool_list,
+            FORT_PSNAME_DATA_OFF + size + sizeof(WCHAR)); /* include terminating zero */
 
     if (ps_name != NULL) {
         ps_name->refcount = 1;
@@ -161,12 +169,14 @@ static PFORT_PSNAME fort_pstree_add_name(
 
         PCHAR data = (PCHAR) &ps_name->data;
         RtlCopyMemory(data, svchostPrefix.Buffer, svchostPrefix.Length);
-        data += svchostPrefix.Length;
 
-        UNICODE_STRING destString = { .Length = serviceName.Length,
-            .MaximumLength = serviceName.Length,
-            .Buffer = (PWSTR) data };
-        RtlDowncaseUnicodeString(&destString, &serviceName, FALSE);
+        UNICODE_STRING nameString;
+        nameString.Length = serviceName.Length;
+        nameString.MaximumLength = serviceName.Length;
+        nameString.Buffer = (PWSTR) (data + svchostPrefix.Length);
+        RtlDowncaseUnicodeString(&nameString, &serviceName, FALSE);
+
+        *(PWSTR) (data + size) = L'\0';
     }
 
     return ps_name;
@@ -344,7 +354,8 @@ FORT_API void fort_pstree_close(PFORT_PSTREE ps_tree)
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
-FORT_API PFORT_PSNAME fort_pstree_acquire_proc_name(PFORT_PSTREE ps_tree, DWORD processId)
+FORT_API PFORT_PSNAME fort_pstree_acquire_proc_name(
+        PFORT_PSTREE ps_tree, DWORD processId, PUNICODE_STRING path)
 {
     PFORT_PSNAME ps_name = NULL;
 
@@ -355,6 +366,10 @@ FORT_API PFORT_PSNAME fort_pstree_acquire_proc_name(PFORT_PSTREE ps_tree, DWORD 
         if (proc != NULL && proc->ps_name != NULL) {
             ps_name = proc->ps_name;
             ++ps_name->refcount;
+
+            path->Length = ps_name->size;
+            path->MaximumLength = ps_name->size;
+            path->Buffer = ps_name->data;
         }
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);

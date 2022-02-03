@@ -7,6 +7,7 @@
 #include "common/fortprov.h"
 
 #include "fortdev.h"
+#include "fortps.h"
 
 static void fort_callout_classify_block(FWPS_CLASSIFY_OUT0 *classifyOut)
 {
@@ -40,7 +41,7 @@ static BOOL fort_callout_classify_v4_blocked_log_stat(const FWPS_INCOMING_VALUES
         FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField, int remoteIpField,
         int localPortField, int remotePortField, int ipProtoField, BOOL inbound,
         UINT32 classify_flags, UINT32 remote_ip, FORT_CONF_FLAGS conf_flags, UINT32 process_id,
-        UINT32 path_len, PVOID path, PFORT_CONF_REF conf_ref, INT8 *block_reason, BOOL blocked,
+        PCUNICODE_STRING path, PFORT_CONF_REF conf_ref, INT8 *block_reason, BOOL blocked,
         FORT_APP_FLAGS app_flags, PIRP *irp, ULONG_PTR *info)
 {
     const UINT64 flow_id = inMetaValues->flowHandle;
@@ -64,7 +65,8 @@ static BOOL fort_callout_classify_v4_blocked_log_stat(const FWPS_INCOMING_VALUES
 
         LOG("Classify v4: Flow assoc. error: %x\n", status);
     } else if (is_new_proc) {
-        fort_buffer_proc_new_write(&fort_device()->buffer, process_id, path_len, path, irp, info);
+        fort_buffer_proc_new_write(
+                &fort_device()->buffer, process_id, path->Length, path->Buffer, irp, info);
     }
 
     return FALSE;
@@ -75,11 +77,11 @@ static BOOL fort_callout_classify_v4_blocked_log(const FWPS_INCOMING_VALUES0 *in
         FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField, int remoteIpField,
         int localPortField, int remotePortField, int ipProtoField, BOOL inbound,
         UINT32 classify_flags, UINT32 remote_ip, FORT_CONF_FLAGS conf_flags, UINT32 process_id,
-        UINT32 path_len, PVOID path, PFORT_CONF_REF conf_ref, INT8 *block_reason, BOOL blocked,
-        PIRP *irp, ULONG_PTR *info)
+        PCUNICODE_STRING path, PFORT_CONF_REF conf_ref, INT8 *block_reason, BOOL blocked, PIRP *irp,
+        ULONG_PTR *info)
 {
     FORT_APP_FLAGS app_flags =
-            fort_conf_app_find(&conf_ref->conf, path, path_len, fort_conf_exe_find);
+            fort_conf_app_find(&conf_ref->conf, path->Buffer, path->Length, fort_conf_exe_find);
 
     if (!blocked /* collect traffic, when Filter Disabled */
             || (app_flags.v == 0 && conf_flags.allow_all_new) /* collect new Blocked Programs */
@@ -88,8 +90,8 @@ static BOOL fort_callout_classify_v4_blocked_log(const FWPS_INCOMING_VALUES0 *in
                 && fort_callout_classify_v4_blocked_log_stat(inFixedValues, inMetaValues, filter,
                         classifyOut, flagsField, localIpField, remoteIpField, localPortField,
                         remotePortField, ipProtoField, inbound, classify_flags, remote_ip,
-                        conf_flags, process_id, path_len, path, conf_ref, block_reason, blocked,
-                        app_flags, irp, info))
+                        conf_flags, process_id, path, conf_ref, block_reason, blocked, app_flags,
+                        irp, info))
             return TRUE; /* blocked */
 
         blocked = FALSE; /* allow */
@@ -101,9 +103,10 @@ static BOOL fort_callout_classify_v4_blocked_log(const FWPS_INCOMING_VALUES0 *in
         app_flags.alerted = 1;
         app_flags.is_new = 1;
 
-        if (NT_SUCCESS(fort_conf_ref_exe_add_path(conf_ref, path, path_len, app_flags))) {
-            fort_buffer_blocked_write(
-                    &fort_device()->buffer, blocked, process_id, path_len, path, irp, info);
+        if (NT_SUCCESS(
+                    fort_conf_ref_exe_add_path(conf_ref, path->Buffer, path->Length, app_flags))) {
+            fort_buffer_blocked_write(&fort_device()->buffer, blocked, process_id, path->Length,
+                    path->Buffer, irp, info);
         }
     }
 
@@ -115,7 +118,7 @@ static BOOL fort_callout_classify_v4_blocked(const FWPS_INCOMING_VALUES0 *inFixe
         FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField, int remoteIpField,
         int localPortField, int remotePortField, int ipProtoField, BOOL inbound,
         UINT32 classify_flags, UINT32 remote_ip, FORT_CONF_FLAGS conf_flags, UINT32 process_id,
-        UINT32 path_len, PVOID path, PFORT_CONF_REF conf_ref, INT8 *block_reason, PIRP *irp,
+        PUNICODE_STRING path, PFORT_CONF_REF conf_ref, INT8 *block_reason, PIRP *irp,
         ULONG_PTR *info)
 {
     BOOL blocked = TRUE;
@@ -147,7 +150,7 @@ static BOOL fort_callout_classify_v4_blocked(const FWPS_INCOMING_VALUES0 *inFixe
 
     return fort_callout_classify_v4_blocked_log(inFixedValues, inMetaValues, filter, classifyOut,
             flagsField, localIpField, remoteIpField, localPortField, remotePortField, ipProtoField,
-            inbound, classify_flags, remote_ip, conf_flags, process_id, path_len, path, conf_ref,
+            inbound, classify_flags, remote_ip, conf_flags, process_id, path, conf_ref,
             block_reason, blocked, irp, info);
 }
 
@@ -161,15 +164,23 @@ static void fort_callout_classify_v4_check(const FWPS_INCOMING_VALUES0 *inFixedV
     const FORT_CONF_FLAGS conf_flags = conf_ref->conf.flags;
 
     const UINT32 process_id = (UINT32) inMetaValues->processId;
-    const UINT32 path_len =
-            inMetaValues->processPath->size - sizeof(WCHAR); /* chop terminating zero */
-    const PVOID path = inMetaValues->processPath->data;
+
+    UNICODE_STRING path;
+    PFORT_PSNAME ps_name =
+            fort_pstree_acquire_proc_name(&fort_device()->ps_tree, process_id, &path);
+    if (ps_name == NULL) {
+        const UINT16 path_len = (UINT16) (inMetaValues->processPath->size
+                - sizeof(WCHAR)); /* chop terminating zero */
+        path.Length = path_len;
+        path.MaximumLength = path_len;
+        path.Buffer = (PWSTR) inMetaValues->processPath->data;
+    }
 
     INT8 block_reason = FORT_BLOCK_REASON_UNKNOWN;
     const BOOL blocked = fort_callout_classify_v4_blocked(inFixedValues, inMetaValues, filter,
             classifyOut, flagsField, localIpField, remoteIpField, localPortField, remotePortField,
-            ipProtoField, inbound, classify_flags, remote_ip, conf_flags, process_id, path_len,
-            path, conf_ref, &block_reason, irp, info);
+            ipProtoField, inbound, classify_flags, remote_ip, conf_flags, process_id, &path,
+            conf_ref, &block_reason, irp, info);
 
     if (blocked) {
         /* Log the blocked connection */
@@ -181,8 +192,8 @@ static void fort_callout_classify_v4_check(const FWPS_INCOMING_VALUES0 *inFixedV
                     (IPPROTO) inFixedValues->incomingValue[ipProtoField].value.uint8;
 
             fort_buffer_blocked_ip_write(&fort_device()->buffer, inbound, block_reason, ip_proto,
-                    local_port, remote_port, local_ip, remote_ip, process_id, path_len, path, irp,
-                    info);
+                    local_port, remote_port, local_ip, remote_ip, process_id, path.Length,
+                    path.Buffer, irp, info);
         }
 
         /* Block the connection */
@@ -195,6 +206,10 @@ static void fort_callout_classify_v4_check(const FWPS_INCOMING_VALUES0 *inFixedV
             /* Allow the connection */
             fort_callout_classify_permit(filter, classifyOut);
         }
+    }
+
+    if (ps_name != NULL) {
+        fort_pstree_release_proc_name(&fort_device()->ps_tree, ps_name);
     }
 }
 

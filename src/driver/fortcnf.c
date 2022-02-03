@@ -53,7 +53,7 @@ FORT_API UCHAR fort_device_flag(PFORT_DEVICE_CONF device_conf, UCHAR flag)
 }
 
 static PFORT_CONF_EXE_NODE fort_conf_ref_exe_find_node(
-        PFORT_CONF_REF conf_ref, const char *path, UINT32 path_len, tommy_key_t path_hash)
+        PFORT_CONF_REF conf_ref, const PVOID path, UINT32 path_len, tommy_key_t path_hash)
 {
     PFORT_CONF_EXE_NODE node =
             (PFORT_CONF_EXE_NODE) tommy_hashdyn_bucket(&conf_ref->exe_map, path_hash);
@@ -70,7 +70,7 @@ static PFORT_CONF_EXE_NODE fort_conf_ref_exe_find_node(
     return NULL;
 }
 
-FORT_API FORT_APP_FLAGS fort_conf_exe_find(const PFORT_CONF conf, const char *path, UINT32 path_len)
+FORT_API FORT_APP_FLAGS fort_conf_exe_find(const PFORT_CONF conf, const PVOID path, UINT32 path_len)
 {
     PFORT_CONF_REF conf_ref = (PFORT_CONF_REF) ((char *) conf - offsetof(FORT_CONF_REF, conf));
     const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, path_len);
@@ -88,7 +88,7 @@ FORT_API FORT_APP_FLAGS fort_conf_exe_find(const PFORT_CONF conf, const char *pa
     return app_flags;
 }
 
-static NTSTATUS fort_conf_ref_exe_add_path_locked(PFORT_CONF_REF conf_ref, const char *path,
+static NTSTATUS fort_conf_ref_exe_add_path_locked(PFORT_CONF_REF conf_ref, const PVOID path,
         UINT32 path_len, tommy_key_t path_hash, FORT_APP_FLAGS flags)
 {
     const PFORT_CONF_EXE_NODE node =
@@ -148,7 +148,7 @@ static NTSTATUS fort_conf_ref_exe_add_path_locked(PFORT_CONF_REF conf_ref, const
 }
 
 FORT_API NTSTATUS fort_conf_ref_exe_add_path(
-        PFORT_CONF_REF conf_ref, const char *path, UINT32 path_len, FORT_APP_FLAGS flags)
+        PFORT_CONF_REF conf_ref, const PVOID path, UINT32 path_len, FORT_APP_FLAGS flags)
 {
     const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, path_len);
     NTSTATUS status;
@@ -163,7 +163,7 @@ FORT_API NTSTATUS fort_conf_ref_exe_add_path(
 FORT_API NTSTATUS fort_conf_ref_exe_add_entry(
         PFORT_CONF_REF conf_ref, const PFORT_APP_ENTRY entry, BOOL locked)
 {
-    const char *path = (const char *) (entry + 1);
+    const PVOID path = (const PVOID)(entry + 1);
     const UINT32 path_len = entry->path_len;
     const FORT_APP_FLAGS flags = entry->flags;
 
@@ -191,7 +191,7 @@ static void fort_conf_ref_exe_fill(PFORT_CONF_REF conf_ref, const PFORT_CONF con
     }
 }
 
-static void fort_conf_ref_exe_del_path(PFORT_CONF_REF conf_ref, const char *path, UINT32 path_len)
+static void fort_conf_ref_exe_del_path(PFORT_CONF_REF conf_ref, const PVOID path, UINT32 path_len)
 {
     const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, path_len);
 
@@ -223,7 +223,7 @@ static void fort_conf_ref_exe_del_path(PFORT_CONF_REF conf_ref, const char *path
 
 FORT_API void fort_conf_ref_exe_del_entry(PFORT_CONF_REF conf_ref, const PFORT_APP_ENTRY entry)
 {
-    const char *path = (const char *) (entry + 1);
+    const PVOID path = (const PVOID)(entry + 1);
     const UINT32 path_len = entry->path_len;
 
     fort_conf_ref_exe_del_path(conf_ref, path, path_len);

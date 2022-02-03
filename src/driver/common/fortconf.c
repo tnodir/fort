@@ -80,7 +80,7 @@ FORT_API PFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(const PFORT_CONF conf, i
     const UINT32 *addr_group_offsets = (const UINT32 *) (conf->data + conf->addr_groups_off);
     const char *addr_group_data = (const char *) addr_group_offsets;
 
-    return (PFORT_CONF_ADDR_GROUP)(addr_group_data + addr_group_offsets[addr_group_index]);
+    return (PFORT_CONF_ADDR_GROUP) (addr_group_data + addr_group_offsets[addr_group_index]);
 }
 
 static BOOL fort_conf_ip_included_check(const PFORT_CONF_ADDR_LIST addr_list,
@@ -122,7 +122,7 @@ FORT_API BOOL fort_conf_ip_included(const PFORT_CONF conf,
     return ip_included && !ip_excluded;
 }
 
-FORT_API BOOL fort_conf_app_exe_equal(PFORT_APP_ENTRY app_entry, const char *path, UINT32 path_len)
+FORT_API BOOL fort_conf_app_exe_equal(PFORT_APP_ENTRY app_entry, const PVOID path, UINT32 path_len)
 {
     const char *app_path = (const char *) (app_entry + 1);
     const UINT32 app_path_len = app_entry->path_len;
@@ -134,7 +134,7 @@ FORT_API BOOL fort_conf_app_exe_equal(PFORT_APP_ENTRY app_entry, const char *pat
 }
 
 FORT_API FORT_APP_FLAGS fort_conf_app_exe_find(
-        const PFORT_CONF conf, const char *path, UINT32 path_len)
+        const PFORT_CONF conf, const PVOID path, UINT32 path_len)
 {
     FORT_APP_FLAGS app_flags;
     UINT16 count = conf->exe_apps_n;
@@ -193,7 +193,7 @@ static FORT_APP_FLAGS fort_conf_app_prefix_find(
     do {
         const int mid = (low + high) / 2;
         const UINT32 app_off = app_offsets[mid];
-        const PFORT_APP_ENTRY app_entry = (PFORT_APP_ENTRY)(app_entries + app_off);
+        const PFORT_APP_ENTRY app_entry = (PFORT_APP_ENTRY) (app_entries + app_off);
         const int res = fort_conf_app_prefix_cmp(app_entry, path, path_len);
 
         if (res < 0)
@@ -238,7 +238,7 @@ static FORT_APP_FLAGS fort_conf_app_wild_find(const PFORT_CONF conf, const char 
     return app_flags;
 }
 
-FORT_API FORT_APP_FLAGS fort_conf_app_find(const PFORT_CONF conf, const char *path, UINT32 path_len,
+FORT_API FORT_APP_FLAGS fort_conf_app_find(const PFORT_CONF conf, const PVOID path, UINT32 path_len,
         fort_conf_app_exe_find_func *exe_find_func)
 {
     FORT_APP_FLAGS app_flags;
