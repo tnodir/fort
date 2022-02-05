@@ -34,7 +34,8 @@ QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD state = SERVICE_ST
             const auto serviceName = QString::fromUtf16((const char16_t *) service->lpServiceName);
 
             const RegKey svcReg(servicesReg, serviceName);
-            if (!svcReg.contains("ServiceSidType"))
+            if (!svcReg.contains("ServiceSidType")
+                    || svcReg.value("SvcHostSplitDisable").toInt() != 0)
                 continue;
 
             const auto imagePath = svcReg.value("ImagePath").toString();
@@ -65,13 +66,13 @@ int ServiceInfoManager::groupIndexByName(const QString &name) const
     return m_serviceGroups.value(name, -1);
 }
 
-QVector<ServiceInfo> ServiceInfoManager::loadServiceInfoList()
+QVector<ServiceInfo> ServiceInfoManager::loadServiceInfoList(ServiceInfo::State state)
 {
     QVector<ServiceInfo> list;
     const SC_HANDLE mngr =
             OpenSCManagerW(nullptr, nullptr, SC_MANAGER_CONNECT | SC_MANAGER_ENUMERATE_SERVICE);
     if (mngr) {
-        list = getServiceInfoList(mngr);
+        list = getServiceInfoList(mngr, state);
         CloseServiceHandle(mngr);
     }
     return list;

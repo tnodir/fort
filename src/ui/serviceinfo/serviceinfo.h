@@ -7,8 +7,9 @@ class ServiceInfo
 {
 public:
     enum State {
-        StateActive = 0x01,
-        StateInactive = 0x02,
+        StateActive = 0x01, // SERVICE_ACTIVE
+        StateInactive = 0x02, // SERVICE_INACTIVE
+        StateAlive = (StateActive | StateInactive), // SERVICE_STATE_ALL
         StateDeleted = 0x04,
     };
 

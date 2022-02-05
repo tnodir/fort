@@ -17,7 +17,8 @@ public:
 
     int groupIndexByName(const QString &name) const;
 
-    static QVector<ServiceInfo> loadServiceInfoList();
+    static QVector<ServiceInfo> loadServiceInfoList(
+            ServiceInfo::State state = ServiceInfo::StateAlive);
 
 private:
     QHash<QString, int> m_serviceGroups;
