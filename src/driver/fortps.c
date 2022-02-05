@@ -64,53 +64,6 @@ NTSTATUS NTAPI ZwQuerySystemInformation(ULONG systemInformationClass, PVOID syst
 #define fort_pstree_get_proc(ps_tree, index)                                                       \
     ((PFORT_PSNODE) tommy_arrayof_ref(&(ps_tree)->procs, (index)))
 
-#if 0
-static NTSTATUS fort_pstree_enum_processes_loop(
-        PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry)
-{
-    NTSTATUS status = STATUS_SUCCESS;
-
-    for (;;) {
-        const DWORD pid = (DWORD) processEntry->ProcessId;
-        const DWORD ppid = (DWORD) processEntry->ParentProcessId;
-
-        // TODO
-
-        if (processEntry->NextEntryOffset == 0)
-            break;
-
-        processEntry = (PSYSTEM_PROCESSES) ((PUCHAR) processEntry + processEntry->NextEntryOffset);
-    }
-
-    return status;
-}
-
-static NTSTATUS fort_pstree_enum_processes(PFORT_PSTREE ps_tree)
-{
-    NTSTATUS status;
-
-    ULONG bufferSize;
-    status = ZwQuerySystemInformation(SystemProcessInformation, NULL, 0, &bufferSize);
-    if (status != STATUS_INFO_LENGTH_MISMATCH)
-        return status;
-
-    bufferSize *= 3; /* for possible new created processes/threads */
-
-    PVOID buffer = fort_mem_alloc(bufferSize, FORT_PSTREE_POOL_TAG);
-    if (buffer == NULL)
-        return STATUS_INSUFFICIENT_RESOURCES;
-
-    status = ZwQuerySystemInformation(SystemProcessInformation, buffer, bufferSize, &bufferSize);
-    if (NT_SUCCESS(status)) {
-        status = fort_pstree_enum_processes_loop(ps_tree, buffer);
-    }
-
-    fort_mem_free(buffer, FORT_PSTREE_POOL_TAG);
-
-    return status;
-}
-#endif
-
 static BOOL fort_pstree_svchost_check(
         PCUNICODE_STRING path, PCUNICODE_STRING commandLine, PUNICODE_STRING serviceName)
 {
@@ -312,10 +265,25 @@ static void NTAPI fort_pstree_notify(
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
+static void fort_pstree_update(PFORT_PSTREE ps_tree, BOOL active)
+{
+    if (ps_tree->active == active)
+        return;
+
+    ps_tree->active = (UINT8) active;
+
+    const NTSTATUS status = PsSetCreateProcessNotifyRoutineEx(
+            FORT_CALLBACK(
+                    FORT_PSTREE_NOTIFY, PCREATE_PROCESS_NOTIFY_ROUTINE_EX, fort_pstree_notify),
+            /*remove=*/!active);
+
+    if (!NT_SUCCESS(status)) {
+        LOG("PsTree: Update Error: %x\n", status);
+    }
+}
+
 FORT_API void fort_pstree_open(PFORT_PSTREE ps_tree)
 {
-    NTSTATUS status;
-
     fort_pool_list_init(&ps_tree->pool_list);
     fort_pool_init(&ps_tree->pool_list, FORT_PSTREE_NAMES_POOL_SIZE);
 
@@ -326,22 +294,12 @@ FORT_API void fort_pstree_open(PFORT_PSTREE ps_tree)
 
     KeInitializeSpinLock(&ps_tree->lock);
 
-    status = PsSetCreateProcessNotifyRoutineEx(
-            FORT_CALLBACK(
-                    FORT_PSTREE_NOTIFY, PCREATE_PROCESS_NOTIFY_ROUTINE_EX, fort_pstree_notify),
-            FALSE);
-    if (!NT_SUCCESS(status)) {
-        LOG("PsTree: PsSetCreateProcessNotifyRoutineEx Error: %x\n", status);
-        return;
-    }
+    fort_pstree_update(ps_tree, TRUE); /* Start process monitor */
 }
 
 FORT_API void fort_pstree_close(PFORT_PSTREE ps_tree)
 {
-    PsSetCreateProcessNotifyRoutineEx(
-            FORT_CALLBACK(
-                    FORT_PSTREE_NOTIFY, PCREATE_PROCESS_NOTIFY_ROUTINE_EX, fort_pstree_notify),
-            TRUE);
+    fort_pstree_update(ps_tree, FALSE); /* Stop process monitor */
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);

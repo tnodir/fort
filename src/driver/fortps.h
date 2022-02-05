@@ -8,6 +8,8 @@
 
 typedef struct fort_pstree
 {
+    UINT8 active : 1;
+
     UINT16 procs_n;
 
     FORT_POOL_LIST pool_list;
