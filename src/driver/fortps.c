@@ -17,8 +17,7 @@
 
 struct fort_psname
 {
-    UINT8 refcount;
-    UINT8 size;
+    UINT16 size;
     WCHAR data[1];
 };
 
@@ -34,6 +33,9 @@ typedef struct fort_psnode
 
     UINT32 process_id;
     UINT32 parent_process_id;
+
+    UINT16 flags;
+    UINT16 conf_chn;
 } FORT_PSNODE, *PFORT_PSNODE;
 
 typedef struct _SYSTEM_PROCESSES
@@ -117,8 +119,7 @@ static PFORT_PSNAME fort_pstree_add_name(
             FORT_PSNAME_DATA_OFF + size + sizeof(WCHAR)); /* include terminating zero */
 
     if (ps_name != NULL) {
-        ps_name->refcount = 1;
-        ps_name->size = (UINT8) size;
+        ps_name->size = size;
 
         PCHAR data = (PCHAR) &ps_name->data;
         RtlCopyMemory(data, svchostPrefix.Buffer, svchostPrefix.Length);
@@ -137,7 +138,7 @@ static PFORT_PSNAME fort_pstree_add_name(
 
 static void fort_pstree_del_name(PFORT_PSTREE ps_tree, PFORT_PSNAME ps_name)
 {
-    if (ps_name != NULL && --ps_name->refcount == 0) {
+    if (ps_name != NULL) {
         fort_pool_free(&ps_tree->pool_list, ps_name);
     }
 }
@@ -207,8 +208,6 @@ static void fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCUNICODE_STRING p
         PCUNICODE_STRING commandLine, tommy_key_t pid_hash, DWORD processId, DWORD parentProcessId)
 {
     PFORT_PSNAME ps_name = fort_pstree_add_name(ps_tree, path, commandLine);
-    if (ps_name == NULL)
-        return;
 
     PFORT_PSNODE proc = fort_pstree_proc_new(ps_tree, ps_name, pid_hash);
     if (proc == NULL) {
@@ -220,6 +219,9 @@ static void fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCUNICODE_STRING p
 
     proc->process_id = processId;
     proc->parent_process_id = parentProcessId;
+
+    proc->flags = 0;
+    proc->conf_chn = 0;
 }
 
 static void NTAPI fort_pstree_notify(
@@ -312,7 +314,7 @@ FORT_API void fort_pstree_close(PFORT_PSTREE ps_tree)
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
-FORT_API PFORT_PSNAME fort_pstree_acquire_proc_name(
+FORT_API PFORT_PSNAME fort_pstree_get_proc_name(
         PFORT_PSTREE ps_tree, DWORD processId, PUNICODE_STRING path)
 {
     PFORT_PSNAME ps_name = NULL;
@@ -323,7 +325,6 @@ FORT_API PFORT_PSNAME fort_pstree_acquire_proc_name(
         PFORT_PSNODE proc = fort_pstree_find_proc(ps_tree, processId);
         if (proc != NULL && proc->ps_name != NULL) {
             ps_name = proc->ps_name;
-            ++ps_name->refcount;
 
             path->Length = ps_name->size;
             path->MaximumLength = ps_name->size;
@@ -333,14 +334,4 @@ FORT_API PFORT_PSNAME fort_pstree_acquire_proc_name(
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
     return ps_name;
-}
-
-FORT_API void fort_pstree_release_proc_name(PFORT_PSTREE ps_tree, PFORT_PSNAME ps_name)
-{
-    KLOCK_QUEUE_HANDLE lock_queue;
-    KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
-    {
-        fort_pstree_del_name(ps_tree, ps_name);
-    }
-    KeReleaseInStackQueuedSpinLock(&lock_queue);
 }

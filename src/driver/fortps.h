@@ -32,10 +32,8 @@ FORT_API void fort_pstree_open(PFORT_PSTREE ps_tree);
 
 FORT_API void fort_pstree_close(PFORT_PSTREE ps_tree);
 
-FORT_API PFORT_PSNAME fort_pstree_acquire_proc_name(
+FORT_API PFORT_PSNAME fort_pstree_get_proc_name(
         PFORT_PSTREE ps_tree, DWORD processId, PUNICODE_STRING path);
-
-FORT_API void fort_pstree_release_proc_name(PFORT_PSTREE ps_tree, PFORT_PSNAME ps_name);
 
 #ifdef __cplusplus
 } // extern "C"

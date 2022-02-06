@@ -166,8 +166,7 @@ static void fort_callout_classify_v4_check(const FWPS_INCOMING_VALUES0 *inFixedV
     const UINT32 process_id = (UINT32) inMetaValues->processId;
 
     UNICODE_STRING path;
-    PFORT_PSNAME ps_name =
-            fort_pstree_acquire_proc_name(&fort_device()->ps_tree, process_id, &path);
+    PFORT_PSNAME ps_name = fort_pstree_get_proc_name(&fort_device()->ps_tree, process_id, &path);
     if (ps_name == NULL) {
         const UINT16 path_len = (UINT16) (inMetaValues->processPath->size
                 - sizeof(WCHAR)); /* chop terminating zero */
@@ -206,10 +205,6 @@ static void fort_callout_classify_v4_check(const FWPS_INCOMING_VALUES0 *inFixedV
             /* Allow the connection */
             fort_callout_classify_permit(filter, classifyOut);
         }
-    }
-
-    if (ps_name != NULL) {
-        fort_pstree_release_proc_name(&fort_device()->ps_tree, ps_name);
     }
 }
 
