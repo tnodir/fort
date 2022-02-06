@@ -9,6 +9,7 @@
 #include <objbase.h>
 #include <shellapi.h>
 
+#include <serviceinfo/serviceinfomanager.h>
 #include <util/fileutil.h>
 #include <util/osutil.h>
 
@@ -167,20 +168,27 @@ bool getInfo(const QString &appPath, AppInfo &appInfo)
         return true;
     }
 
+    QString path = appPath;
+
+    QString serviceName;
+    if (FileUtil::isSvcHostService(appPath, serviceName)) {
+        path = ServiceInfoManager::getSvcHostServiceDll(serviceName);
+    }
+
     const auto wow64FsRedir = disableWow64FsRedirection();
 
-    const bool ok = extractVersionInfo(appPath, appInfo);
+    const bool ok = extractVersionInfo(path, appInfo);
 
     revertWow64FsRedirection(wow64FsRedir);
 
     // File description
     if (appInfo.fileDescription.isEmpty()) {
         appInfo.fileDescription =
-                !appInfo.productName.isEmpty() ? appInfo.productName : FileUtil::fileName(appPath);
+                !appInfo.productName.isEmpty() ? appInfo.productName : FileUtil::fileName(path);
     }
 
     // File modification time
-    appInfo.fileModTime = FileUtil::fileModTime(appPath);
+    appInfo.fileModTime = FileUtil::fileModTime(path);
 
     return ok;
 }
@@ -194,9 +202,16 @@ QImage getIcon(const QString &appPath)
         return QImage(":/icons/windows-48.png");
     }
 
+    QString path = appPath;
+
+    QString serviceName;
+    if (FileUtil::isSvcHostService(appPath, serviceName)) {
+        path = ServiceInfoManager::getSvcHostServiceDll(serviceName);
+    }
+
     const auto wow64FsRedir = disableWow64FsRedirection();
 
-    const QImage result = extractShellIcon(appPath);
+    const QImage result = extractShellIcon(path);
 
     revertWow64FsRedirection(wow64FsRedir);
 

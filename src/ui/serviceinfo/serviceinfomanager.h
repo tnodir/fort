@@ -20,6 +20,8 @@ public:
     static QVector<ServiceInfo> loadServiceInfoList(
             ServiceInfo::State state = ServiceInfo::StateAlive);
 
+    static QString getSvcHostServiceDll(const QString &serviceName);
+
 private:
     QHash<QString, int> m_serviceGroups;
 };

@@ -5,17 +5,20 @@
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 
+#include <util/fileutil.h>
 #include <util/regkey.h>
 
 namespace {
 
 const QLoggingCategory LC("serviceInfo.serviceInfoManager");
 
+const char *const servicesSubKey = R"(SYSTEM\CurrentControlSet\Services)";
+
 QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD state = SERVICE_STATE_ALL)
 {
     QVector<ServiceInfo> infoList;
 
-    const RegKey servicesReg(RegKey::HKLM, R"(SYSTEM\CurrentControlSet\Services)");
+    const RegKey servicesReg(RegKey::HKLM, servicesSubKey);
 
     constexpr DWORD bufferMaxSize = 32 * 1024;
     ENUM_SERVICE_STATUS_PROCESSW buffer[bufferMaxSize / sizeof(ENUM_SERVICE_STATUS_PROCESSW)];
@@ -76,4 +79,24 @@ QVector<ServiceInfo> ServiceInfoManager::loadServiceInfoList(ServiceInfo::State 
         CloseServiceHandle(mngr);
     }
     return list;
+}
+
+QString ServiceInfoManager::getSvcHostServiceDll(const QString &serviceName)
+{
+    const RegKey servicesReg(RegKey::HKLM, servicesSubKey);
+    const RegKey svcReg(servicesReg, serviceName);
+
+    bool expand = false;
+    QVariant dllPathVar = svcReg.value("ServiceDll", &expand);
+    if (dllPathVar.isNull()) {
+        const RegKey paramsReg(svcReg, "Parameters");
+        dllPathVar = paramsReg.value("ServiceDll", &expand);
+    }
+
+    QString path = dllPathVar.toString();
+    if (expand) {
+        path = FileUtil::expandPath(path);
+    }
+
+    return path;
 }

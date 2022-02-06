@@ -716,7 +716,7 @@ bool ConfManager::purgeApps()
         while (stmt.step() == SqliteStmt::StepRow) {
             const QString appPath = stmt.columnText(1);
 
-            if (!AppInfoUtil::fileExists(appPath) && !FileUtil::isSystemApp(appPath)) {
+            if (FileUtil::isDriveFilePath(appPath) && !AppInfoUtil::fileExists(appPath)) {
                 const qint64 appId = stmt.columnInt64(0);
                 appIdList.append(appId);
             }

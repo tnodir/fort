@@ -9,6 +9,11 @@ namespace FileUtil {
 QString systemApp();
 bool isSystemApp(const QString &path);
 
+QString svcHostPrefix();
+bool isSvcHostService(const QString &path, QString &serviceName);
+
+bool isDriveFilePath(const QString &path);
+
 // Convert DOS device name to drive letter (A: .. Z:)
 QString kernelNameToDrive(const QString &kernelName);
 

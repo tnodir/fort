@@ -14,12 +14,32 @@ Q_STATIC_ASSERT(sizeof(wchar_t) == sizeof(QChar));
 
 QString systemApp()
 {
-    return QLatin1String("System");
+    return QStringLiteral("System");
 }
 
 bool isSystemApp(const QString &path)
 {
     return QString::compare(path, systemApp(), Qt::CaseInsensitive) == 0;
+}
+
+QString svcHostPrefix()
+{
+    return QStringLiteral(R"(\svchost\)");
+}
+
+bool isSvcHostService(const QString &path, QString &serviceName)
+{
+    if (!path.startsWith(svcHostPrefix(), Qt::CaseInsensitive))
+        return false;
+
+    serviceName = path.mid(svcHostPrefix().size());
+
+    return true;
+}
+
+bool isDriveFilePath(const QString &path)
+{
+    return path.size() > 1 && path[0].isLetter() && path[1] == ':';
 }
 
 // Convert "\\Device\\HarddiskVolume1" to "C:"
