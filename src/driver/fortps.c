@@ -163,11 +163,11 @@ static PFORT_PSNODE fort_pstree_proc_new(
         tommy_arrayof_grow(procs, index + 1);
 
         proc_node = tommy_arrayof_ref(procs, index);
-
-        ++ps_tree->procs_n;
     }
 
     tommy_hashdyn_insert(procs_map, proc_node, ps_name, pid_hash);
+
+    ++ps_tree->procs_n;
 
     return (PFORT_PSNODE) proc_node;
 }
@@ -218,8 +218,6 @@ static void fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCUNICODE_STRING p
         fort_pstree_name_del(ps_tree, ps_name);
         return;
     }
-
-    proc->pid_hash = pid_hash;
 
     proc->process_id = processId;
     proc->parent_process_id = parentProcessId;
