@@ -66,6 +66,24 @@ NTSTATUS NTAPI ZwQuerySystemInformation(ULONG systemInformationClass, PVOID syst
 #define fort_pstree_get_proc(ps_tree, index)                                                       \
     ((PFORT_PSNODE) tommy_arrayof_ref(&(ps_tree)->procs, (index)))
 
+static PFORT_PSNAME fort_pstree_name_new(PFORT_PSTREE ps_tree, UINT16 name_size)
+{
+    PFORT_PSNAME ps_name = fort_pool_malloc(&ps_tree->pool_list,
+            FORT_PSNAME_DATA_OFF + name_size + sizeof(WCHAR)); /* include terminating zero */
+    if (ps_name != NULL) {
+        ps_name->size = name_size;
+        ps_name->data[name_size / sizeof(WCHAR)] = L'\0';
+    }
+    return ps_name;
+}
+
+static void fort_pstree_name_del(PFORT_PSTREE ps_tree, PFORT_PSNAME ps_name)
+{
+    if (ps_name != NULL) {
+        fort_pool_free(&ps_tree->pool_list, ps_name);
+    }
+}
+
 static BOOL fort_pstree_svchost_check(
         PCUNICODE_STRING path, PCUNICODE_STRING commandLine, PUNICODE_STRING serviceName)
 {
@@ -104,7 +122,7 @@ static BOOL fort_pstree_svchost_check(
     return TRUE;
 }
 
-static PFORT_PSNAME fort_pstree_add_name(
+static PFORT_PSNAME fort_pstree_add_service_name(
         PFORT_PSTREE ps_tree, PCUNICODE_STRING path, PCUNICODE_STRING commandLine)
 {
     UNICODE_STRING serviceName;
@@ -114,13 +132,8 @@ static PFORT_PSNAME fort_pstree_add_name(
     UNICODE_STRING svchostPrefix;
     RtlInitUnicodeString(&svchostPrefix, FORT_SVCHOST_PREFIX);
 
-    const UINT16 size = svchostPrefix.Length + serviceName.Length;
-    PFORT_PSNAME ps_name = fort_pool_malloc(&ps_tree->pool_list,
-            FORT_PSNAME_DATA_OFF + size + sizeof(WCHAR)); /* include terminating zero */
-
+    PFORT_PSNAME ps_name = fort_pstree_name_new(ps_tree, svchostPrefix.Length + serviceName.Length);
     if (ps_name != NULL) {
-        ps_name->size = size;
-
         PCHAR data = (PCHAR) &ps_name->data;
         RtlCopyMemory(data, svchostPrefix.Buffer, svchostPrefix.Length);
 
@@ -129,18 +142,9 @@ static PFORT_PSNAME fort_pstree_add_name(
         nameString.MaximumLength = serviceName.Length;
         nameString.Buffer = (PWSTR) (data + svchostPrefix.Length);
         RtlDowncaseUnicodeString(&nameString, &serviceName, FALSE);
-
-        *(PWSTR) (data + size) = L'\0';
     }
 
     return ps_name;
-}
-
-static void fort_pstree_del_name(PFORT_PSTREE ps_tree, PFORT_PSNAME ps_name)
-{
-    if (ps_name != NULL) {
-        fort_pool_free(&ps_tree->pool_list, ps_name);
-    }
 }
 
 static PFORT_PSNODE fort_pstree_proc_new(
@@ -173,7 +177,7 @@ static void fort_pstree_proc_del(PFORT_PSTREE ps_tree, PFORT_PSNODE proc)
     --ps_tree->procs_n;
 
     // Delete from pool
-    fort_pstree_del_name(ps_tree, proc->ps_name);
+    fort_pstree_name_del(ps_tree, proc->ps_name);
 
     // Delete from procs map
     tommy_hashdyn_remove_existing(&ps_tree->procs_map, (tommy_hashdyn_node *) proc);
@@ -207,11 +211,11 @@ static PFORT_PSNODE fort_pstree_find_proc(PFORT_PSTREE ps_tree, DWORD processId)
 static void fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCUNICODE_STRING path,
         PCUNICODE_STRING commandLine, tommy_key_t pid_hash, DWORD processId, DWORD parentProcessId)
 {
-    PFORT_PSNAME ps_name = fort_pstree_add_name(ps_tree, path, commandLine);
+    PFORT_PSNAME ps_name = fort_pstree_add_service_name(ps_tree, path, commandLine);
 
     PFORT_PSNODE proc = fort_pstree_proc_new(ps_tree, ps_name, pid_hash);
     if (proc == NULL) {
-        fort_pstree_del_name(ps_tree, ps_name);
+        fort_pstree_name_del(ps_tree, ps_name);
         return;
     }
 
