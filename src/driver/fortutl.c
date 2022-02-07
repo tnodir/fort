@@ -77,21 +77,33 @@ FORT_API NTSTATUS fort_driver_path(
     return status;
 }
 
-static NTSTATUS fort_system32_path_set(PCUNICODE_STRING path, USHORT charCount)
+static NTSTATUS fort_system32_path_set(PCUNICODE_STRING path)
 {
-    if (charCount >= sizeof(g_system32PathBuffer) / sizeof(WCHAR))
+    if (path->Length >= sizeof(g_system32PathBuffer) - sizeof(WCHAR))
         return STATUS_BUFFER_OVERFLOW;
 
-    const USHORT len = charCount * sizeof(WCHAR);
+    RtlCopyMemory(g_system32PathBuffer, path->Buffer, path->Length);
+    g_system32PathBuffer[path->Length / sizeof(WCHAR)] = L'\0';
 
-    RtlCopyMemory(g_system32PathBuffer, path->Buffer, len);
-    g_system32PathBuffer[charCount] = L'\0';
-
-    g_system32Path.Length = len;
+    g_system32Path.Length = path->Length;
     g_system32Path.MaximumLength = sizeof(g_system32PathBuffer);
     g_system32Path.Buffer = g_system32PathBuffer;
 
     return STATUS_SUCCESS;
+}
+
+FORT_API void fort_path_prefix_adjust(PUNICODE_STRING path)
+{
+    if (path->Length < 7)
+        return;
+
+    PCWCHAR p = path->Buffer;
+
+    if (p[0] == '\\' && p[1] == '?' && p[2] == '?' && p[3] == '\\' && p[5] == ':') {
+        path->Buffer += 4;
+        path->Length -= 4 * sizeof(WCHAR);
+        path->MaximumLength -= 4 * sizeof(WCHAR);
+    }
 }
 
 FORT_API NTSTATUS fort_system32_path_init(PDRIVER_OBJECT driver, PUNICODE_STRING regPath)
@@ -116,10 +128,13 @@ FORT_API NTSTATUS fort_system32_path_init(PDRIVER_OBJECT driver, PUNICODE_STRING
     }
 
     if (sp != NULL) {
-        const USHORT charCount = (USHORT) (sp + 1 /* include the separator */
-                - driverPath.Buffer);
+        UNICODE_STRING sys32Path = driverPath;
+        sys32Path.Length = (USHORT) ((PCHAR) (sp + 1) /* include the separator */
+                - (PCHAR) (driverPath.Buffer));
 
-        status = fort_system32_path_set(&driverPath, charCount);
+        fort_path_prefix_adjust(&sys32Path);
+
+        status = fort_system32_path_set(&sys32Path);
     } else {
         status = STATUS_OBJECT_PATH_INVALID;
     }

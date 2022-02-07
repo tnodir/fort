@@ -15,14 +15,23 @@ static void NTAPI fort_worker_callback(PVOID device, PVOID context, PIO_WORKITEM
     if (id_bits & FORT_WORKER_REAUTH) {
         worker->reauth_func();
     }
+
+    if (id_bits & FORT_WORKER_PSTREE) {
+        worker->pstree_func();
+    }
 }
 
 FORT_API void fort_worker_queue(PFORT_WORKER worker, UCHAR work_id, FORT_WORKER_FUNC worker_func)
 {
     const UCHAR id_bits = InterlockedOr8(&worker->id_bits, work_id);
 
-    if (work_id == FORT_WORKER_REAUTH) {
+    switch (work_id) {
+    case FORT_WORKER_REAUTH: {
         worker->reauth_func = worker_func;
+    } break;
+    case FORT_WORKER_PSTREE: {
+        worker->pstree_func = worker_func;
+    } break;
     }
 
     if (id_bits == 0) {

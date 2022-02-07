@@ -9,6 +9,7 @@
 #define FORT_PSTREE_POOL_TAG 'PwfF'
 
 #define FORT_SVCHOST_PREFIX L"\\svchost\\"
+#define FORT_SVCHOST_EXE    L"svchost.exe"
 
 #define FORT_PSTREE_NAME_LEN_MAX    (120 * sizeof(WCHAR))
 #define FORT_PSTREE_NAMES_POOL_SIZE (4 * 1024)
@@ -59,8 +60,53 @@ typedef struct _SYSTEM_PROCESSES
 #endif
 
 #if defined(FORT_DRIVER)
+
+typedef struct _PEB_LDR_DATA
+{
+    BYTE Reserved1[8];
+    PVOID Reserved2[3];
+    LIST_ENTRY InMemoryOrderModuleList;
+} PEB_LDR_DATA, *PPEB_LDR_DATA;
+
+typedef struct _RTL_USER_PROCESS_PARAMETERS
+{
+    BYTE Reserved1[16];
+    PVOID Reserved2[10];
+    UNICODE_STRING ImagePathName;
+    UNICODE_STRING CommandLine;
+} RTL_USER_PROCESS_PARAMETERS, *PRTL_USER_PROCESS_PARAMETERS;
+
+typedef VOID(NTAPI *PPS_POST_PROCESS_INIT_ROUTINE)(VOID);
+
+typedef struct _PEB
+{
+    BYTE Reserved1[2];
+    BYTE BeingDebugged;
+    BYTE Reserved2[1];
+    PVOID Reserved3[2];
+    PPEB_LDR_DATA Ldr;
+    PRTL_USER_PROCESS_PARAMETERS ProcessParameters;
+    PVOID Reserved4[3];
+    PVOID AtlThunkSListPtr;
+    PVOID Reserved5;
+    ULONG Reserved6;
+    PVOID Reserved7;
+    ULONG Reserved8;
+    ULONG AtlThunkSListPtr32;
+    PVOID Reserved9[45];
+    BYTE Reserved10[96];
+    PPS_POST_PROCESS_INIT_ROUTINE PostProcessInitRoutine;
+    BYTE Reserved11[128];
+    PVOID Reserved12[1];
+    ULONG SessionId;
+} PEB, *PPEB;
+
 NTSTATUS NTAPI ZwQuerySystemInformation(ULONG systemInformationClass, PVOID systemInformation,
         ULONG systemInformationLength, PULONG returnLength);
+
+NTSTATUS NTAPI ZwQueryInformationProcess(HANDLE processHandle, ULONG processInformationClass,
+        PVOID processInformation, ULONG processInformationLength, PULONG returnLength);
+
 #endif
 
 #define fort_pstree_get_proc(ps_tree, index)                                                       \
@@ -87,12 +133,12 @@ static void fort_pstree_name_del(PFORT_PSTREE ps_tree, PFORT_PSNAME ps_name)
 static BOOL fort_pstree_svchost_check(
         PCUNICODE_STRING path, PCUNICODE_STRING commandLine, PUNICODE_STRING serviceName)
 {
-    const USHORT svchostSize = sizeof(L"svchost.exe") - sizeof(WCHAR); /* skip terminating zero */
+    const USHORT svchostSize = sizeof(FORT_SVCHOST_EXE) - sizeof(WCHAR); /* skip terminating zero */
     const USHORT svchostCount = svchostSize / sizeof(WCHAR);
     const USHORT sys32Size = path->Length - svchostSize;
     const USHORT sys32Count = sys32Size / sizeof(WCHAR);
 
-    if (_wcsnicmp(path->Buffer + sys32Count, L"svchost.exe", svchostCount) != 0)
+    if (_wcsnicmp(path->Buffer + sys32Count, FORT_SVCHOST_EXE, svchostCount) != 0)
         return FALSE;
 
     PCUNICODE_STRING sys32Path = fort_system32_path();
@@ -261,8 +307,11 @@ static void NTAPI fort_pstree_notify(
 #endif
 
         if (proc == NULL) {
-            fort_pstree_handle_new_proc(ps_tree, createInfo->ImageFileName, createInfo->CommandLine,
-                    pid_hash, processId, parentProcessId);
+            UNICODE_STRING path = *createInfo->ImageFileName;
+            fort_path_prefix_adjust(&path);
+
+            fort_pstree_handle_new_proc(
+                    ps_tree, &path, createInfo->CommandLine, pid_hash, processId, parentProcessId);
         }
     }
 
@@ -336,4 +385,153 @@ FORT_API PFORT_PSNAME fort_pstree_get_proc_name(
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
     return ps_name;
+}
+
+static HANDLE OpenProcessById(DWORD processId)
+{
+    if (processId == 0 || processId == 4)
+        return NULL; // skip "System Idle Process" (0) and "System" (4) processes
+
+    NTSTATUS status;
+
+    PEPROCESS peProcess = NULL;
+    status = PsLookupProcessByProcessId((HANDLE) (ptrdiff_t) processId, &peProcess);
+    if (!NT_SUCCESS(status) || peProcess == NULL) {
+        LOG("PsTree: Lookup Process Error: %x\n", status);
+        return NULL;
+    }
+
+    HANDLE processHandle = NULL;
+    status = ObOpenObjectByPointer(peProcess, 0, NULL, 0, 0, KernelMode, &processHandle);
+
+    ObDereferenceObject(peProcess);
+
+    if (!NT_SUCCESS(status) || processHandle == NULL) {
+        LOG("PsTree: Open Process Object Error: %x\n", status);
+        return NULL;
+    }
+
+    return processHandle;
+}
+
+static PWCHAR GetUnicodeStringBuffer(PCUNICODE_STRING string, PRTL_USER_PROCESS_PARAMETERS params)
+{
+#ifdef _X86_
+    if ((PCHAR) string->Buffer < (PCHAR) processParams) {
+        return (PWCHAR) ((PCHAR) params + (DWORD) (ptrdiff_t) string->Buffer);
+    }
+#else
+    UNUSED(params);
+#endif
+
+    return string->Buffer;
+}
+
+static NTSTATUS GetCurrentProcessPathArgs(PUNICODE_STRING path, PUNICODE_STRING commandLine)
+{
+    NTSTATUS status;
+
+    PROCESS_BASIC_INFORMATION procBasicInfo;
+    status = ZwQueryInformationProcess(ZwCurrentProcess(), ProcessBasicInformation, &procBasicInfo,
+            sizeof(PROCESS_BASIC_INFORMATION), NULL);
+    if (!NT_SUCCESS(status)) {
+        LOG("PsTree: Query Process Error: %x\n", status);
+        return status;
+    }
+
+    if (procBasicInfo.PebBaseAddress == NULL) {
+        LOG("PsTree: Query Process Error: PebBaseAddress\n");
+        return STATUS_INVALID_ADDRESS;
+    }
+
+    PRTL_USER_PROCESS_PARAMETERS params = procBasicInfo.PebBaseAddress->ProcessParameters;
+
+    path->Length = params->ImagePathName.Length;
+    path->MaximumLength = params->ImagePathName.Length;
+    path->Buffer = GetUnicodeStringBuffer(&params->ImagePathName, params);
+
+    commandLine->Length = params->CommandLine.Length;
+    commandLine->MaximumLength = params->CommandLine.Length;
+    commandLine->Buffer = GetUnicodeStringBuffer(&params->CommandLine, params);
+
+    return STATUS_SUCCESS;
+}
+
+static void fort_pstree_attach_process(PSYSTEM_PROCESSES processEntry, HANDLE processHandle)
+{
+    NTSTATUS status;
+
+    PRKPROCESS process;
+    status = ObReferenceObjectByHandle(
+            processHandle, 0, *PsProcessType, KernelMode, (PVOID *) &process, NULL);
+    if (!NT_SUCCESS(status)) {
+        LOG("PsTree: Attach Process Error: %x\n", status);
+        return;
+    }
+
+    KAPC_STATE apcState;
+    KeStackAttachProcess(process, &apcState);
+    {
+        UNICODE_STRING path;
+        UNICODE_STRING commandLine;
+
+        status = GetCurrentProcessPathArgs(&path, &commandLine);
+        if (NT_SUCCESS(status)) {
+            const HANDLE processId = (HANDLE) (ptrdiff_t) processEntry->ProcessId;
+            const HANDLE parentProcessId = (HANDLE) (ptrdiff_t) processEntry->ParentProcessId;
+
+            PS_CREATE_NOTIFY_INFO createInfo = { .ParentProcessId = parentProcessId,
+                .ImageFileName = &path,
+                .CommandLine = &commandLine };
+
+            fort_pstree_notify(/*process=*/NULL, processId, &createInfo);
+        }
+    }
+    KeUnstackDetachProcess(&apcState);
+
+    ObDereferenceObject(process);
+}
+
+static void fort_pstree_enum_processes_loop(PSYSTEM_PROCESSES processEntry)
+{
+    for (;;) {
+        const DWORD processId = (DWORD) processEntry->ProcessId;
+
+        const HANDLE processHandle = OpenProcessById(processId);
+        if (processHandle != NULL) {
+            fort_pstree_attach_process(processEntry, processHandle);
+
+            ZwClose(processHandle);
+        }
+
+        if (processEntry->NextEntryOffset == 0)
+            break;
+
+        processEntry = (PSYSTEM_PROCESSES) ((PUCHAR) processEntry + processEntry->NextEntryOffset);
+    }
+}
+
+FORT_API void NTAPI fort_pstree_enum_processes(void)
+{
+    NTSTATUS status;
+
+    ULONG bufferSize;
+    status = ZwQuerySystemInformation(SystemProcessInformation, NULL, 0, &bufferSize);
+    if (status != STATUS_INFO_LENGTH_MISMATCH)
+        return;
+
+    bufferSize *= 3; /* for possibly new created processes/threads */
+
+    PVOID buffer = fort_mem_alloc(bufferSize, FORT_PSTREE_POOL_TAG);
+    if (buffer == NULL)
+        return;
+
+    status = ZwQuerySystemInformation(SystemProcessInformation, buffer, bufferSize, &bufferSize);
+    if (NT_SUCCESS(status)) {
+        fort_pstree_enum_processes_loop(buffer);
+    } else {
+        LOG("PsTree: Enum Processes Error: %x\n", status);
+    }
+
+    fort_mem_free(buffer, FORT_PSTREE_POOL_TAG);
 }

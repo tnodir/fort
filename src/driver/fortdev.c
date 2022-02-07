@@ -350,6 +350,11 @@ FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device)
         status = fort_syscb_time_register();
     }
 
+    /* Enumerate processes in background */
+    if (NT_SUCCESS(status)) {
+        fort_worker_queue(&fort_device()->worker, FORT_WORKER_PSTREE, &fort_pstree_enum_processes);
+    }
+
     return status;
 }
 

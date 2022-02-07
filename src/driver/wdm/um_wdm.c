@@ -372,3 +372,29 @@ NTSTATUS ZwQuerySystemInformation(ULONG systemInformationClass, PVOID systemInfo
     UNUSED(returnLength);
     return STATUS_SUCCESS;
 }
+
+NTSTATUS ZwQueryInformationProcess(HANDLE processHandle, ULONG processInformationClass,
+        PVOID processInformation, ULONG processInformationLength, PULONG returnLength)
+{
+    UNUSED(processHandle);
+    UNUSED(processInformationClass);
+    UNUSED(processInformation);
+    UNUSED(processInformationLength);
+    UNUSED(returnLength);
+    return STATUS_SUCCESS;
+}
+
+POBJECT_TYPE *PsProcessType = NULL;
+
+NTSTATUS ObReferenceObjectByHandle(HANDLE handle, ACCESS_MASK desiredAccess,
+        POBJECT_TYPE objectType, KPROCESSOR_MODE accessMode, PVOID *object,
+        POBJECT_HANDLE_INFORMATION handleInformation)
+{
+    UNUSED(handle);
+    UNUSED(desiredAccess);
+    UNUSED(objectType);
+    UNUSED(accessMode);
+    UNUSED(object);
+    UNUSED(handleInformation);
+    return STATUS_SUCCESS;
+}

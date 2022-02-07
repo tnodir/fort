@@ -101,6 +101,16 @@ typedef struct
     KIRQL CancelIrql;
 } IRP, *PIRP;
 
+typedef struct _ACCESS_STATE *PACCESS_STATE;
+typedef struct _KPROCESS *PKPROCESS, *PRKPROCESS, *PEPROCESS;
+typedef struct _OBJECT_TYPE *POBJECT_TYPE;
+
+typedef struct _OBJECT_HANDLE_INFORMATION
+{
+    ULONG HandleAttributes;
+    ACCESS_MASK GrantedAccess;
+} OBJECT_HANDLE_INFORMATION, *POBJECT_HANDLE_INFORMATION;
+
 struct _DRIVER_OBJECT;
 
 typedef struct _DEVICE_OBJECT
@@ -207,6 +217,9 @@ FORT_API ULONG DbgPrintEx(ULONG componentId, ULONG level, PCSTR format, ...);
 
 #define NT_ASSERT(cond) assert((cond))
 
+#define NtCurrentProcess() ((HANDLE) (LONG_PTR) -1)
+#define ZwCurrentProcess() NtCurrentProcess()
+
 #define NonPagedPool        0
 #define NonPagedPoolExecute NonPagedPool
 FORT_API PVOID ExAllocatePoolWithTag(PVOID type, SIZE_T size, ULONG tag);
@@ -312,6 +325,15 @@ FORT_API NTSTATUS ZwQuerySymbolicLinkObject(
 
 FORT_API NTSTATUS ZwQuerySystemInformation(ULONG systemInformationClass, PVOID systemInformation,
         ULONG systemInformationLength, PULONG returnLength);
+
+FORT_API NTSTATUS ZwQueryInformationProcess(HANDLE processHandle, ULONG processInformationClass,
+        PVOID processInformation, ULONG processInformationLength, PULONG returnLength);
+
+extern POBJECT_TYPE *PsProcessType;
+
+FORT_API NTSTATUS ObReferenceObjectByHandle(HANDLE handle, ACCESS_MASK desiredAccess,
+        POBJECT_TYPE objectType, KPROCESSOR_MODE accessMode, PVOID *object,
+        POBJECT_HANDLE_INFORMATION handleInformation);
 
 #ifdef __cplusplus
 } // extern "C"

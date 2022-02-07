@@ -4,6 +4,7 @@
 #include "fortdrv.h"
 
 #define FORT_WORKER_REAUTH 0x01
+#define FORT_WORKER_PSTREE 0x02
 
 typedef void (NTAPI *FORT_WORKER_FUNC)(void);
 
@@ -12,6 +13,7 @@ typedef struct fort_worker
     UCHAR volatile id_bits;
 
     FORT_WORKER_FUNC reauth_func;
+    FORT_WORKER_FUNC pstree_func;
 
     PIO_WORKITEM item;
 } FORT_WORKER, *PFORT_WORKER;
