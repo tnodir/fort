@@ -310,12 +310,12 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     conf.setFilterLocals(iniBool("filterLocals"));
     conf.setStopTraffic(iniBool("stopTraffic"));
     conf.setStopInetTraffic(iniBool("stopInetTraffic"));
-    conf.setAllowAllNew(iniBool("allowAllNew"));
+    conf.setAllowAllNew(iniBool("allowAllNew", true));
     conf.setLogBlocked(iniBool("logBlocked", true));
     conf.setLogStat(iniBool("logStat", true));
     conf.setLogStatNoFilter(iniBool("logStatNoFilter", true));
-    conf.setLogAllowedIp(iniBool("logAllowedIp", false));
-    conf.setLogBlockedIp(iniBool("logBlockedIp", false));
+    conf.setLogAllowedIp(iniBool("logAllowedIp", true));
+    conf.setLogBlockedIp(iniBool("logBlockedIp", true));
     conf.setAppBlockAll(iniBool("appBlockAll", true));
     conf.setAppAllowAll(iniBool("appAllowAll"));
     conf.setAppGroupBits(iniUInt("appGroupBits", DEFAULT_APP_GROUP_BITS));
