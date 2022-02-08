@@ -48,10 +48,13 @@ private:
     ServicesController *m_ctrl = nullptr;
     WidgetWindowStateWatcher *m_stateWatcher = nullptr;
 
-    QPushButton *m_btRefresh = nullptr;
-    QPushButton *m_btEdit = nullptr;
-    QAction *m_actEditService = nullptr;
+    QAction *m_actTrack = nullptr;
+    QAction *m_actRevert = nullptr;
     QAction *m_actAddProgram = nullptr;
+    QPushButton *m_btTrack = nullptr;
+    QPushButton *m_btRevert = nullptr;
+    QPushButton *m_btEdit = nullptr;
+    QPushButton *m_btRefresh = nullptr;
     TableView *m_serviceListView = nullptr;
 };
 
