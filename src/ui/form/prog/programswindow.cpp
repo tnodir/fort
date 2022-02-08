@@ -128,6 +128,8 @@ void ProgramsWindow::retranslateUi()
     m_btBlockApp->setText(tr("Block"));
     m_btRemoveApp->setText(tr("Remove"));
 
+    m_btServices->setText(tr("Services"));
+
     m_btLogOptions->setText(tr("Options"));
     m_cbLogBlocked->setText(tr("Collect New Blocked Programs"));
 
@@ -227,6 +229,12 @@ QLayout *ProgramsWindow::setupHeader()
     connect(m_btBlockApp, &QAbstractButton::clicked, m_actBlockApp, &QAction::trigger);
     connect(m_btRemoveApp, &QAbstractButton::clicked, m_actRemoveApp, &QAction::trigger);
 
+    // Services button
+    m_btServices = ControlUtil::createLinkButton(":/icons/windows-48.png");
+
+    connect(m_btServices, &QAbstractButton::clicked, windowManager(),
+            &WindowManager::showServicesWindow);
+
     // Log Options
     setupLogOptions();
 
@@ -237,6 +245,8 @@ QLayout *ProgramsWindow::setupHeader()
     layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
     layout->addWidget(m_btRemoveApp);
     layout->addStretch();
+    layout->addWidget(m_btServices);
+    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
     layout->addWidget(m_btLogOptions);
 
     return layout;

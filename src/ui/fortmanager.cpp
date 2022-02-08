@@ -29,7 +29,6 @@
 #include <rpc/statmanagerrpc.h>
 #include <rpc/taskmanagerrpc.h>
 #include <rpc/windowmanagerfake.h>
-#include <serviceinfo/serviceinfomanager.h>
 #include <task/taskinfozonedownloader.h>
 #include <user/usersettings.h>
 #include <util/dateutil.h>
@@ -175,7 +174,6 @@ void FortManager::createManagers()
     ioc->setService(new NativeEventFilter());
     ioc->setService(new AppInfoCache());
     ioc->setService(new HostInfoCache());
-    ioc->setService(new ServiceInfoManager());
     ioc->setService(new ZoneListModel());
 
     ioc->setUpAll();

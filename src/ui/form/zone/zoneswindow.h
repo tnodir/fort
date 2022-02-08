@@ -15,9 +15,9 @@ class IniUser;
 class TableView;
 class TaskManager;
 class WidgetWindowStateWatcher;
+class WindowManager;
 class ZoneListModel;
 class ZonesController;
-class WindowManager;
 
 class ZonesWindow : public WidgetWindow
 {

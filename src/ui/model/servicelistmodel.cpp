@@ -13,11 +13,6 @@ ConfManager *ServiceListModel::confManager() const
     return IoC<ConfManager>();
 }
 
-ServiceInfoManager *ServiceListModel::serviceInfoManager() const
-{
-    return IoC<ServiceInfoManager>();
-}
-
 FirewallConf *ServiceListModel::conf() const
 {
     return confManager()->conf();
@@ -25,7 +20,7 @@ FirewallConf *ServiceListModel::conf() const
 
 void ServiceListModel::initialize()
 {
-    m_services = serviceInfoManager()->loadServiceInfoList();
+    m_services = ServiceInfoManager::loadServiceInfoList();
 
     reset();
 }
@@ -39,7 +34,7 @@ int ServiceListModel::rowCount(const QModelIndex &parent) const
 
 int ServiceListModel::columnCount(const QModelIndex &parent) const
 {
-    return parent.isValid() ? 0 : 4;
+    return parent.isValid() ? 0 : 3;
 }
 
 QVariant ServiceListModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -52,8 +47,6 @@ QVariant ServiceListModel::headerData(int section, Qt::Orientation orientation, 
             return tr("Display Name");
         case 2:
             return tr("Process ID");
-        case 3:
-            return tr("Group");
         }
     }
     return QVariant();
@@ -88,8 +81,6 @@ QVariant ServiceListModel::dataDisplay(const QModelIndex &index) const
         return info.displayName;
     case 2:
         return dataDisplayProcessId(info);
-    case 3:
-        return dataDisplayAppGroup(info);
     }
 
     return QVariant();
@@ -98,13 +89,6 @@ QVariant ServiceListModel::dataDisplay(const QModelIndex &index) const
 QVariant ServiceListModel::dataDisplayProcessId(const ServiceInfo &info) const
 {
     return (info.processId == 0) ? QVariant() : QVariant(info.processId);
-}
-
-QVariant ServiceListModel::dataDisplayAppGroup(const ServiceInfo &info) const
-{
-    const int groupIndex = serviceInfoManager()->groupIndexByName(info.serviceName);
-
-    return (groupIndex < 0) ? QVariant() : conf()->appGroupAt(groupIndex)->name();
 }
 
 bool ServiceListModel::updateTableRow(int /*row*/) const

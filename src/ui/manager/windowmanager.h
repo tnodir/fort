@@ -9,6 +9,7 @@ class GraphWindow;
 class MainWindow;
 class OptionsWindow;
 class ProgramsWindow;
+class ServicesWindow;
 class StatisticsWindow;
 class TrayIcon;
 class ZonesWindow;
@@ -27,6 +28,7 @@ public:
     ProgramsWindow *progWindow() const { return m_progWindow; }
     OptionsWindow *optWindow() const { return m_optWindow; }
     StatisticsWindow *connWindow() const { return m_statWindow; }
+    ServicesWindow *serviceWindow() const { return m_serviceWindow; }
     ZonesWindow *zoneWindow() const { return m_zoneWindow; }
     GraphWindow *graphWindow() const { return m_graphWindow; }
 
@@ -59,6 +61,9 @@ public slots:
     void showStatisticsWindow();
     void closeStatisticsWindow();
 
+    void showServicesWindow();
+    void closeServicesWindow();
+
     void showZonesWindow();
     void closeZonesWindow();
 
@@ -86,6 +91,7 @@ private:
 
     void setupProgramsWindow();
     void setupOptionsWindow();
+    void setupServicesWindow();
     void setupZonesWindow();
     void setupGraphWindow();
     void setupStatisticsWindow();
@@ -104,6 +110,7 @@ private:
     ProgramsWindow *m_progWindow = nullptr;
     OptionsWindow *m_optWindow = nullptr;
     StatisticsWindow *m_statWindow = nullptr;
+    ServicesWindow *m_serviceWindow = nullptr;
     ZonesWindow *m_zoneWindow = nullptr;
     GraphWindow *m_graphWindow = nullptr;
 };

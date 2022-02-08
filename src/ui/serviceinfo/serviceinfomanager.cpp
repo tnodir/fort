@@ -14,6 +14,17 @@ const QLoggingCategory LC("serviceInfo.serviceInfoManager");
 
 const char *const servicesSubKey = R"(SYSTEM\CurrentControlSet\Services)";
 
+QString getServiceDll(const RegKey &svcReg, bool *expand = nullptr)
+{
+    QVariant dllPathVar = svcReg.value("ServiceDll", expand);
+    if (dllPathVar.isNull()) {
+        const RegKey paramsReg(svcReg, "Parameters");
+        dllPathVar = paramsReg.value("ServiceDll", expand);
+    }
+
+    return dllPathVar.toString();
+}
+
 QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD state = SERVICE_STATE_ALL)
 {
     QVector<ServiceInfo> infoList;
@@ -45,6 +56,10 @@ QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD state = SERVICE_ST
             if (!imagePath.contains(R"(\system32\svchost.exe)", Qt::CaseInsensitive))
                 continue;
 
+            const QString dllPath = getServiceDll(svcReg);
+            if (dllPath.isEmpty())
+                continue;
+
             ServiceInfo info;
             info.processId = service->ServiceStatusProcess.dwProcessId;
             info.serviceName = serviceName;
@@ -60,13 +75,6 @@ QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD state = SERVICE_ST
     return infoList;
 }
 
-}
-
-ServiceInfoManager::ServiceInfoManager(QObject *parent) : QObject(parent) { }
-
-int ServiceInfoManager::groupIndexByName(const QString &name) const
-{
-    return m_serviceGroups.value(name, -1);
 }
 
 QVector<ServiceInfo> ServiceInfoManager::loadServiceInfoList(ServiceInfo::State state)
@@ -87,16 +95,7 @@ QString ServiceInfoManager::getSvcHostServiceDll(const QString &serviceName)
     const RegKey svcReg(servicesReg, serviceName);
 
     bool expand = false;
-    QVariant dllPathVar = svcReg.value("ServiceDll", &expand);
-    if (dllPathVar.isNull()) {
-        const RegKey paramsReg(svcReg, "Parameters");
-        dllPathVar = paramsReg.value("ServiceDll", &expand);
-    }
+    const QString dllPath = getServiceDll(svcReg, &expand);
 
-    QString path = dllPathVar.toString();
-    if (expand) {
-        path = FileUtil::expandPath(path);
-    }
-
-    return path;
+    return expand ? FileUtil::expandPath(dllPath) : dllPath;
 }

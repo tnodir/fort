@@ -1,29 +1,15 @@
 #ifndef SERVICEINFOMANAGER_H
 #define SERVICEINFOMANAGER_H
 
-#include <QHash>
-#include <QObject>
-
-#include <util/ioc/iocservice.h>
-
 #include "serviceinfo.h"
 
-class ServiceInfoManager : public QObject, public IocService
+class ServiceInfoManager
 {
-    Q_OBJECT
-
 public:
-    explicit ServiceInfoManager(QObject *parent = nullptr);
-
-    int groupIndexByName(const QString &name) const;
-
     static QVector<ServiceInfo> loadServiceInfoList(
             ServiceInfo::State state = ServiceInfo::StateAlive);
 
     static QString getSvcHostServiceDll(const QString &serviceName);
-
-private:
-    QHash<QString, int> m_serviceGroups;
 };
 
 #endif // SERVICEINFOMANAGER_H

@@ -9,7 +9,6 @@
 class ConfManager;
 class FirewallConf;
 class ServiceInfo;
-class ServiceInfoManager;
 
 class ServiceListModel : public TableItemModel
 {
@@ -19,7 +18,6 @@ public:
     explicit ServiceListModel(QObject *parent = nullptr);
 
     ConfManager *confManager() const;
-    ServiceInfoManager *serviceInfoManager() const;
     FirewallConf *conf() const;
 
     void initialize();
@@ -31,6 +29,9 @@ public:
             int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
+    const QVector<ServiceInfo> &services() const { return m_services; }
+    const ServiceInfo &serviceInfoAt(int index) const;
+
 protected:
     bool updateTableRow(int row) const override;
     TableRow &tableRow() const override { return m_serviceRow; }
@@ -38,10 +39,6 @@ protected:
 private:
     QVariant dataDisplay(const QModelIndex &index) const;
     QVariant dataDisplayProcessId(const ServiceInfo &info) const;
-    QVariant dataDisplayAppGroup(const ServiceInfo &info) const;
-
-    const QVector<ServiceInfo> &services() const { return m_services; }
-    const ServiceInfo &serviceInfoAt(int index) const;
 
 private:
     QVector<ServiceInfo> m_services;

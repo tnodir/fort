@@ -14,6 +14,7 @@
 #include <form/opt/optionswindow.h>
 #include <form/prog/programswindow.h>
 #include <form/stat/statisticswindow.h>
+#include <form/svc/serviceswindow.h>
 #include <form/tray/trayicon.h>
 #include <form/zone/zoneswindow.h>
 #include <fortcompat.h>
@@ -138,6 +139,15 @@ void WindowManager::setupOptionsWindow()
     connect(m_optWindow, &OptionsWindow::aboutToClose, this, &WindowManager::closeOptionsWindow);
 }
 
+void WindowManager::setupServicesWindow()
+{
+    m_serviceWindow = new ServicesWindow();
+    m_serviceWindow->restoreWindowState();
+
+    connect(m_serviceWindow, &ServicesWindow::aboutToClose, this,
+            &WindowManager::closeServicesWindow);
+}
+
 void WindowManager::setupZonesWindow()
 {
     m_zoneWindow = new ZonesWindow();
@@ -173,6 +183,7 @@ void WindowManager::closeAll()
     closeGraphWindow(true);
     closeOptionsWindow();
     closeProgramsWindow();
+    closeServicesWindow();
     closeZonesWindow();
     closeStatisticsWindow();
     closeTrayIcon();
@@ -302,6 +313,30 @@ void WindowManager::closeStatisticsWindow()
 
     m_statWindow->deleteLater();
     m_statWindow = nullptr;
+}
+
+void WindowManager::showServicesWindow()
+{
+    if (!widgetVisibleByCheckPassword(m_serviceWindow))
+        return;
+
+    if (!m_serviceWindow) {
+        setupServicesWindow();
+    }
+
+    showWidget(m_serviceWindow);
+}
+
+void WindowManager::closeServicesWindow()
+{
+    if (!m_serviceWindow)
+        return;
+
+    m_serviceWindow->saveWindowState();
+    m_serviceWindow->hide();
+
+    m_serviceWindow->deleteLater();
+    m_serviceWindow = nullptr;
 }
 
 void WindowManager::showZonesWindow()

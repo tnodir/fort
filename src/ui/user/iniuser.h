@@ -62,6 +62,18 @@ public:
     QByteArray optWindowAppsSplit() const { return valueByteArray("optWindow/appsSplit"); }
     void setOptWindowAppsSplit(const QByteArray &v) { setValue("optWindow/appsSplit", v); }
 
+    QRect serviceWindowGeometry() const { return value("serviceWindow/geometry").toRect(); }
+    void setServiceWindowGeometry(const QRect &v) { setValue("serviceWindow/geometry", v); }
+
+    bool serviceWindowMaximized() const { return valueBool("serviceWindow/maximized"); }
+    void setServiceWindowMaximized(bool on) { setValue("serviceWindow/maximized", on); }
+
+    int servicesHeaderVersion() const { return valueInt("serviceWindow/servicesHeaderVersion"); }
+    void setServicesHeaderVersion(int v) { setValue("serviceWindow/servicesHeaderVersion", v); }
+
+    QByteArray servicesHeader() const { return valueByteArray("serviceWindow/servicesHeader"); }
+    void setServicesHeader(const QByteArray &v) { setValue("serviceWindow/servicesHeader", v); }
+
     QRect zoneWindowGeometry() const { return value("zoneWindow/geometry").toRect(); }
     void setZoneWindowGeometry(const QRect &v) { setValue("zoneWindow/geometry", v); }
 

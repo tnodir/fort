@@ -57,7 +57,6 @@ SOURCES += \
     form/opt/pages/optmainpage.cpp \
     form/opt/pages/rulespage.cpp \
     form/opt/pages/schedulepage.cpp \
-    form/opt/pages/servicespage.cpp \
     form/opt/pages/statisticspage.cpp \
     form/prog/programeditdialog.cpp \
     form/prog/programscontroller.cpp \
@@ -68,6 +67,8 @@ SOURCES += \
     form/stat/pages/trafficpage.cpp \
     form/stat/statisticscontroller.cpp \
     form/stat/statisticswindow.cpp \
+    form/svc/servicescontroller.cpp \
+    form/svc/serviceswindow.cpp \
     form/tray/traycontroller.cpp \
     form/tray/trayicon.cpp \
     form/zone/zonescontroller.cpp \
@@ -209,7 +210,6 @@ HEADERS += \
     form/opt/pages/optmainpage.h \
     form/opt/pages/rulespage.h \
     form/opt/pages/schedulepage.h \
-    form/opt/pages/servicespage.h \
     form/opt/pages/statisticspage.h \
     form/prog/programeditdialog.h \
     form/prog/programscontroller.h \
@@ -220,6 +220,8 @@ HEADERS += \
     form/stat/pages/trafficpage.h \
     form/stat/statisticscontroller.h \
     form/stat/statisticswindow.h \
+    form/svc/servicescontroller.h \
+    form/svc/serviceswindow.h \
     form/tray/traycontroller.h \
     form/tray/trayicon.h \
     form/zone/zonescontroller.h \
