@@ -8,6 +8,7 @@ class AppListModel;
 class ConfManager;
 class FirewallConf;
 class FortManager;
+class FortSettings;
 class IniOptions;
 class IniUser;
 class TranslationManager;
@@ -21,6 +22,7 @@ public:
     explicit ProgramsController(QObject *parent = nullptr);
 
     FortManager *fortManager() const;
+    FortSettings *settings() const;
     ConfManager *confManager() const;
     FirewallConf *conf() const;
     IniOptions *ini() const;

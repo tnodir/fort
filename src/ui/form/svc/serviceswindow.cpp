@@ -73,7 +73,7 @@ void ServicesWindow::saveWindowState()
 
 void ServicesWindow::restoreWindowState()
 {
-    m_stateWatcher->restore(this, QSize(1024, 768), iniUser()->serviceWindowGeometry(),
+    m_stateWatcher->restore(this, QSize(800, 600), iniUser()->serviceWindowGeometry(),
             iniUser()->serviceWindowMaximized());
 
     if (iniUser()->servicesHeaderVersion() == SERVICES_HEADER_VERSION) {
@@ -201,8 +201,8 @@ void ServicesWindow::setupTableServiceListHeader()
     header->setSectionResizeMode(1, QHeaderView::Stretch);
     header->setSectionResizeMode(2, QHeaderView::Interactive);
 
-    header->resizeSection(0, 250);
-    header->resizeSection(1, 350);
+    header->resizeSection(0, 180);
+    header->resizeSection(1, 520);
     header->resizeSection(2, 100);
 }
 

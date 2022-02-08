@@ -4,6 +4,7 @@
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <fortmanager.h>
+#include <fortsettings.h>
 #include <manager/translationmanager.h>
 #include <manager/windowmanager.h>
 #include <model/applistmodel.h>
@@ -19,6 +20,11 @@ ProgramsController::ProgramsController(QObject *parent) :
 FortManager *ProgramsController::fortManager() const
 {
     return IoC<FortManager>();
+}
+
+FortSettings *ProgramsController::settings() const
+{
+    return IoC<FortSettings>();
 }
 
 ConfManager *ProgramsController::confManager() const

@@ -40,6 +40,11 @@ ProgramsWindow::ProgramsWindow(QWidget *parent) :
     setupStateWatcher();
 }
 
+FortSettings *ProgramsWindow::settings() const
+{
+    return ctrl()->settings();
+}
+
 ConfManager *ProgramsWindow::confManager() const
 {
     return ctrl()->confManager();
@@ -231,6 +236,7 @@ QLayout *ProgramsWindow::setupHeader()
 
     // Services button
     m_btServices = ControlUtil::createLinkButton(":/icons/windows-48.png");
+    m_btServices->setEnabled(settings()->hasMasterAdmin());
 
     connect(m_btServices, &QAbstractButton::clicked, windowManager(),
             &WindowManager::showServicesWindow);

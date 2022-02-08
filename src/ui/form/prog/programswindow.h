@@ -12,6 +12,7 @@ class AppListModel;
 class AppListModel;
 class ConfManager;
 class FirewallConf;
+class FortSettings;
 class IniOptions;
 class IniUser;
 class ProgramEditDialog;
@@ -30,6 +31,7 @@ public:
     explicit ProgramsWindow(QWidget *parent = nullptr);
 
     ProgramsController *ctrl() const { return m_ctrl; }
+    FortSettings *settings() const;
     ConfManager *confManager() const;
     FirewallConf *conf() const;
     IniOptions *ini() const;
