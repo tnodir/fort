@@ -822,6 +822,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Are you sure to remove all non-existent programs?</source>
         <translation>Удалить все несуществующие программы?</translation>
     </message>
+    <message>
+        <source>Services</source>
+        <translation>Сервисы</translation>
+    </message>
 </context>
 <context>
     <name>QuotaManager</name>
@@ -890,6 +894,52 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source> hour(s)</source>
         <translation> час(ов)</translation>
+    </message>
+</context>
+<context>
+    <name>ServiceListModel</name>
+    <message>
+        <source>Service Name</source>
+        <translation>Имя сервиса</translation>
+    </message>
+    <message>
+        <source>Display Name</source>
+        <translation>Описание</translation>
+    </message>
+    <message>
+        <source>Process ID</source>
+        <translation>ИД процесса</translation>
+    </message>
+</context>
+<context>
+    <name>ServicesWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>Изменить</translation>
+    </message>
+    <message>
+        <source>Make Trackable</source>
+        <translation>Трассировать</translation>
+    </message>
+    <message>
+        <source>Revert Changes</source>
+        <translation>Отменить трассировку</translation>
+    </message>
+    <message>
+        <source>Add Program</source>
+        <translation>Добавить программу</translation>
+    </message>
+    <message>
+        <source>Refresh</source>
+        <translation>Обновить</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>Сервисы</translation>
+    </message>
+    <message>
+        <source>Please restart the computer to reload changed services!</source>
+        <translation>Перезагрузите компьютер, чтобы обновить изменённые сервисы!</translation>
     </message>
 </context>
 <context>
