@@ -4,6 +4,7 @@
 #define FORT_DRIVER
 #define FORT_DEBUG
 
+#include "../fortmod.c"
 #include "../fortutl.c"
 
 #include "../proxycb/fortpcb_drv.c"

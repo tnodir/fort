@@ -220,6 +220,8 @@ FORT_API ULONG DbgPrintEx(ULONG componentId, ULONG level, PCSTR format, ...);
 #define NtCurrentProcess() ((HANDLE) (LONG_PTR) -1)
 #define ZwCurrentProcess() NtCurrentProcess()
 
+FORT_API PEPROCESS IoGetCurrentProcess(VOID);
+
 #define NonPagedPool        0
 #define NonPagedPoolExecute NonPagedPool
 FORT_API PVOID ExAllocatePoolWithTag(PVOID type, SIZE_T size, ULONG tag);
@@ -328,6 +330,10 @@ FORT_API NTSTATUS ZwQuerySystemInformation(ULONG systemInformationClass, PVOID s
 
 FORT_API NTSTATUS ZwQueryInformationProcess(HANDLE processHandle, ULONG processInformationClass,
         PVOID processInformation, ULONG processInformationLength, PULONG returnLength);
+
+FORT_API NTSTATUS MmCopyVirtualMemory(PEPROCESS sourceProcess, PVOID sourceAddress,
+        PEPROCESS targetProcess, PVOID targetAddress, SIZE_T bufferSize,
+        KPROCESSOR_MODE previousMode, PSIZE_T returnSize);
 
 extern POBJECT_TYPE *PsProcessType;
 

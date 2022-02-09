@@ -3,16 +3,12 @@
 
 #include "fortdl.h"
 
+#include "../fortmod.h"
 #include "../proxycb/fortpcb_def.h"
 
 #if defined(__cplusplus)
 extern "C" {
 #endif
-
-typedef struct _LOADEDMODULE
-{
-    PUCHAR codeBase;
-} LOADEDMODULE, *PLOADEDMODULE;
 
 FORT_API NTSTATUS LoadModuleFromMemory(PLOADEDMODULE pModule, const PUCHAR lpData, DWORD dwSize);
 
@@ -22,8 +18,6 @@ FORT_API NTSTATUS SetupModuleCallbacks(PLOADEDMODULE pModule, PFORT_PROXYCB_INFO
 
 FORT_API NTSTATUS CallModuleEntry(
         PLOADEDMODULE pModule, PDRIVER_OBJECT driver, PUNICODE_STRING regPath);
-
-FORT_API FARPROC ModuleGetProcAddress(PLOADEDMODULE pModule, LPCSTR funcName);
 
 #ifdef __cplusplus
 } // extern "C"

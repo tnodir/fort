@@ -2,12 +2,7 @@
 
 #include "fortmm.h"
 
-#if defined(FORT_DRIVER)
-#    include <aux_klib.h>
-#    include <ntimage.h>
-
-#    define IS_INTRESOURCE(_r) ((((ULONG_PTR) (_r)) >> 16) == 0)
-#else
+#if !defined(FORT_DRIVER)
 #    define PAGE_SIZE 0x1000
 #endif
 
@@ -18,68 +13,9 @@
 #define MIN_ALIGNED(address, alignment) (LPVOID)((uintptr_t) (address) & ~((alignment) -1))
 #define MAX_ALIGNED(value, alignment)   (((value) + (alignment) -1) & ~((alignment) -1))
 
-#define fort_nt_headers(pImage)                                                                    \
-    ((PIMAGE_NT_HEADERS) & ((PUCHAR) (pImage))[((PIMAGE_DOS_HEADER) pImage)->e_lfanew])
-
 typedef NTSTATUS(WINAPI *DriverCallbacksSetupProc)(PFORT_PROXYCB_INFO cbInfo);
 
 typedef NTSTATUS(WINAPI *DriverEntryProc)(PDRIVER_OBJECT driver, PUNICODE_STRING regPath);
-
-static NTSTATUS GetModuleInfo(PLOADEDMODULE pModule, LPCSTR name,
-        const PAUX_MODULE_EXTENDED_INFO modules, DWORD modulesCount)
-{
-    PAUX_MODULE_EXTENDED_INFO module = modules;
-
-    for (DWORD i = 0; i < modulesCount; ++i, ++module) {
-        if (_stricmp(name, &module->FullPathName[module->FileNameOffset]) == 0) {
-            pModule->codeBase = module->BasicInfo.ImageBase;
-            return STATUS_SUCCESS;
-        }
-    }
-
-#if defined(FORT_WIN7_COMPAT)
-    if (_stricmp(name, "ntoskrnl.exe") == 0) {
-        return GetModuleInfo(pModule, "ntkrnlpa.exe", modules, modulesCount);
-    }
-    if (_stricmp(name, "hal.dll") == 0) {
-        return GetModuleInfo(pModule, "halmacpi.dll", modules, modulesCount);
-    }
-    if (_stricmp(name, "halmacpi.dll") == 0) {
-        return GetModuleInfo(pModule, "halacpi.dll", modules, modulesCount);
-    }
-#endif
-
-    return STATUS_DRIVER_ORDINAL_NOT_FOUND;
-}
-
-static NTSTATUS GetModuleInfoList(PAUX_MODULE_EXTENDED_INFO *outModules, DWORD *outModulesCount)
-{
-    NTSTATUS status;
-
-    status = AuxKlibInitialize();
-    if (!NT_SUCCESS(status))
-        return status;
-
-    ULONG size = 0;
-    status = AuxKlibQueryModuleInformation(&size, sizeof(AUX_MODULE_EXTENDED_INFO), NULL);
-    if (!NT_SUCCESS(status) || size == 0)
-        return NT_SUCCESS(status) ? STATUS_INVALID_BUFFER_SIZE : status;
-
-    PUCHAR data = fort_mem_alloc(size, FORT_LOADER_POOL_TAG);
-    if (data == NULL)
-        return STATUS_NO_MEMORY;
-
-    status = AuxKlibQueryModuleInformation(&size, sizeof(AUX_MODULE_EXTENDED_INFO), data);
-    if (!NT_SUCCESS(status)) {
-        fort_mem_free(data, FORT_LOADER_POOL_TAG);
-        return status;
-    }
-
-    *outModules = (PAUX_MODULE_EXTENDED_INFO) data;
-    *outModulesCount = size / sizeof(AUX_MODULE_EXTENDED_INFO);
-
-    return status;
-}
 
 static VOID ZeroDataSectionTable(
         PUCHAR pImage, const PIMAGE_NT_HEADERS pNtHeaders, PIMAGE_SECTION_HEADER section)
@@ -315,7 +251,7 @@ static NTSTATUS BuildImportTable(PUCHAR codeBase, PIMAGE_NT_HEADERS pHeaders)
     }
 
     /* Free the modules allocated data */
-    fort_mem_free(modules, FORT_LOADER_POOL_TAG);
+    FreeModuleInfoList(modules);
 
     return status;
 }
@@ -398,7 +334,7 @@ static NTSTATUS InitializeModuleImage(PUCHAR pImage, const PIMAGE_NT_HEADERS lpN
     RtlCopyMemory(pImage, lpData, lpNtHeaders->OptionalHeader.SizeOfHeaders);
 
     /* Update position of the image base */
-    PIMAGE_NT_HEADERS pNtHeaders = fort_nt_headers(pImage);
+    PIMAGE_NT_HEADERS pNtHeaders = GetModuleNtHeaders(pImage);
     pNtHeaders->OptionalHeader.ImageBase = (uintptr_t) pImage;
 
     /* Copy section table */
@@ -433,7 +369,7 @@ FORT_API NTSTATUS LoadModuleFromMemory(PLOADEDMODULE pModule, const PUCHAR lpDat
     if (!IsPEHeaderValid(lpData, dwSize))
         return STATUS_INVALID_IMAGE_FORMAT;
 
-    const PIMAGE_NT_HEADERS pNtHeaders = fort_nt_headers(lpData);
+    const PIMAGE_NT_HEADERS pNtHeaders = GetModuleNtHeaders(lpData);
     const DWORD imageSize = MAX_ALIGNED(pNtHeaders->OptionalHeader.SizeOfImage, PAGE_SIZE);
 
 #ifdef FORT_DEBUG
@@ -497,51 +433,4 @@ FORT_API NTSTATUS CallModuleEntry(
 #endif
 
     return driverEntry(driver, regPath);
-}
-
-static int ModuleGetProcIndex(
-        const PUCHAR codeBase, const PIMAGE_EXPORT_DIRECTORY exports, LPCSTR funcName)
-{
-    if (HIWORD(funcName) == 0) {
-        /* Load function by ordinal value */
-        return LOWORD(funcName) - exports->Base;
-    }
-
-    /* Search function name in list of exported names */
-    DWORD *nameRef = (DWORD *) (codeBase + exports->AddressOfNames);
-    WORD *ordinal = (WORD *) (codeBase + exports->AddressOfNameOrdinals);
-
-    for (DWORD i = 0; i < exports->NumberOfNames; ++i, ++nameRef, ++ordinal) {
-        if (strcmp(funcName, (const char *) (codeBase + *nameRef)) == 0) {
-            return *ordinal;
-        }
-    }
-
-    return -1;
-}
-
-/* Retrieve address of an exported function from the loaded module. */
-FORT_API FARPROC ModuleGetProcAddress(PLOADEDMODULE pModule, LPCSTR funcName)
-{
-    const PUCHAR codeBase = pModule->codeBase;
-    const PIMAGE_NT_HEADERS pHeaders = fort_nt_headers(codeBase);
-
-    const PIMAGE_DATA_DIRECTORY directory =
-            &(pHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT]);
-    if (directory->Size == 0)
-        return NULL; /* no export table found */
-
-    const PIMAGE_EXPORT_DIRECTORY exports =
-            (PIMAGE_EXPORT_DIRECTORY) (codeBase + directory->VirtualAddress);
-    if (exports->NumberOfNames == 0 || exports->NumberOfFunctions == 0)
-        return NULL; /* Our modules must export 3 functions. */
-
-    const int idx = ModuleGetProcIndex(codeBase, exports, funcName);
-
-    if (idx < 0 || idx > (int) exports->NumberOfFunctions)
-        return NULL; /* exported symbol not found or name <-> ordinal number don't match */
-
-    /* AddressOfFunctions contains the RVAs to the "real" functions */
-    return (FARPROC) (PVOID) (codeBase
-            + *(DWORD *) (codeBase + exports->AddressOfFunctions + (SIZE_T) idx * 4));
 }

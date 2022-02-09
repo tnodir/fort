@@ -58,7 +58,7 @@
       <PreprocessorDefinitions>$(DefineConstants);%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies);$(DDK_LIB_PATH)\fwpkclnt.lib;$(DDK_LIB_PATH)\ndis.lib;$(SDK_LIB_PATH)\uuid.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);$(DDK_LIB_PATH)\aux_klib.lib;$(DDK_LIB_PATH)\fwpkclnt.lib;$(DDK_LIB_PATH)\ndis.lib;$(SDK_LIB_PATH)\uuid.lib</AdditionalDependencies>
       <AdditionalOptions>/INTEGRITYCHECK</AdditionalOptions>
       <AdditionalOptions Condition="'$(Platform)'=='Win32'">%(AdditionalOptions) /SAFESEH:NO</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>

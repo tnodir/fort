@@ -8,6 +8,11 @@ ULONG DbgPrintEx(ULONG componentId, ULONG level, PCSTR format, ...)
     return 0;
 }
 
+PEPROCESS IoGetCurrentProcess()
+{
+    return NULL;
+}
+
 PVOID ExAllocatePoolWithTag(PVOID type, SIZE_T size, ULONG tag)
 {
     UNUSED(type);
@@ -381,6 +386,19 @@ NTSTATUS ZwQueryInformationProcess(HANDLE processHandle, ULONG processInformatio
     UNUSED(processInformation);
     UNUSED(processInformationLength);
     UNUSED(returnLength);
+    return STATUS_SUCCESS;
+}
+
+NTSTATUS MmCopyVirtualMemory(PEPROCESS sourceProcess, PVOID sourceAddress, PEPROCESS targetProcess,
+        PVOID targetAddress, SIZE_T bufferSize, KPROCESSOR_MODE previousMode, PSIZE_T returnSize)
+{
+    UNUSED(sourceProcess);
+    UNUSED(sourceAddress);
+    UNUSED(targetProcess);
+    UNUSED(targetAddress);
+    UNUSED(bufferSize);
+    UNUSED(previousMode);
+    UNUSED(returnSize);
     return STATUS_SUCCESS;
 }
 
