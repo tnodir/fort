@@ -434,17 +434,15 @@ static NTSTATUS GetCurrentProcessPathArgs(PUNICODE_STRING path, PUNICODE_STRING 
     PROCESS_BASIC_INFORMATION procBasicInfo;
     status = ZwQueryInformationProcess(ZwCurrentProcess(), ProcessBasicInformation, &procBasicInfo,
             sizeof(PROCESS_BASIC_INFORMATION), NULL);
-    if (!NT_SUCCESS(status)) {
-        LOG("PsTree: Query Process Error: %x\n", status);
+    if (!NT_SUCCESS(status))
         return status;
-    }
 
-    if (procBasicInfo.PebBaseAddress == NULL) {
-        LOG("PsTree: Query Process Error: PebBaseAddress\n");
+    if (procBasicInfo.PebBaseAddress == NULL)
         return STATUS_INVALID_ADDRESS;
-    }
 
     PRTL_USER_PROCESS_PARAMETERS params = procBasicInfo.PebBaseAddress->ProcessParameters;
+    if (params == NULL)
+        return STATUS_INVALID_ADDRESS;
 
     path->Length = params->ImagePathName.Length;
     path->MaximumLength = params->ImagePathName.Length;
@@ -485,6 +483,8 @@ static void fort_pstree_attach_process(PSYSTEM_PROCESSES processEntry, HANDLE pr
                 .CommandLine = &commandLine };
 
             fort_pstree_notify(/*process=*/NULL, processId, &createInfo);
+        } else {
+            LOG("PsTree: Query Process Error: pid=%d %x\n", processEntry->ProcessId, status);
         }
     }
     KeUnstackDetachProcess(&apcState);
