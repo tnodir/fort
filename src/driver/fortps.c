@@ -389,15 +389,12 @@ FORT_API PFORT_PSNAME fort_pstree_get_proc_name(
 
 static HANDLE OpenProcessById(DWORD processId)
 {
-    if (processId == 0 || processId == 4)
-        return NULL; // skip "System Idle Process" (0) and "System" (4) processes
-
     NTSTATUS status;
 
     PEPROCESS peProcess = NULL;
     status = PsLookupProcessByProcessId((HANDLE) (ptrdiff_t) processId, &peProcess);
     if (!NT_SUCCESS(status) || peProcess == NULL) {
-        LOG("PsTree: Lookup Process Error: %x\n", status);
+        LOG("PsTree: Lookup Process Error: pid=%d %x\n", processId, status);
         return NULL;
     }
 
@@ -407,7 +404,7 @@ static HANDLE OpenProcessById(DWORD processId)
     ObDereferenceObject(peProcess);
 
     if (!NT_SUCCESS(status) || processHandle == NULL) {
-        LOG("PsTree: Open Process Object Error: %x\n", status);
+        LOG("PsTree: Open Process Object Error: pid=%d %x\n", processId, status);
         return NULL;
     }
 
@@ -444,13 +441,21 @@ static NTSTATUS GetCurrentProcessPathArgs(PUNICODE_STRING path, PUNICODE_STRING 
     if (params == NULL)
         return STATUS_INVALID_ADDRESS;
 
-    path->Length = params->ImagePathName.Length;
-    path->MaximumLength = params->ImagePathName.Length;
-    path->Buffer = GetUnicodeStringBuffer(&params->ImagePathName, params);
+    const USHORT pathLength = params->ImagePathName.Length;
+    if (pathLength != 0 && pathLength <= path->MaximumLength - sizeof(WCHAR)) {
+        PCWCHAR userBuffer = GetUnicodeStringBuffer(&params->ImagePathName, params);
+        RtlCopyMemory(path->Buffer, userBuffer, pathLength);
+        path->Buffer[pathLength / sizeof(WCHAR)] = L'\0';
+        path->Length = pathLength;
+    }
 
-    commandLine->Length = params->CommandLine.Length;
-    commandLine->MaximumLength = params->CommandLine.Length;
-    commandLine->Buffer = GetUnicodeStringBuffer(&params->CommandLine, params);
+    const USHORT commandLineLength = params->CommandLine.Length;
+    if (commandLineLength != 0 && commandLineLength <= commandLine->MaximumLength - sizeof(WCHAR)) {
+        PCWCHAR userBuffer = GetUnicodeStringBuffer(&params->CommandLine, params);
+        RtlCopyMemory(commandLine->Buffer, userBuffer, commandLineLength);
+        commandLine->Buffer[commandLineLength / sizeof(WCHAR)] = L'\0';
+        commandLine->Length = commandLineLength;
+    }
 
     return STATUS_SUCCESS;
 }
@@ -467,41 +472,56 @@ static void fort_pstree_attach_process(PSYSTEM_PROCESSES processEntry, HANDLE pr
         return;
     }
 
+    WCHAR pathBuffer[256];
+    UNICODE_STRING path = {
+        .Length = 0, .MaximumLength = sizeof(pathBuffer), .Buffer = pathBuffer
+    };
+
+    WCHAR commandLineBuffer[512];
+    UNICODE_STRING commandLine = {
+        .Length = 0, .MaximumLength = sizeof(commandLineBuffer), .Buffer = commandLineBuffer
+    };
+
+    // Copy info from user-mode process to stack
     KAPC_STATE apcState;
     KeStackAttachProcess(process, &apcState);
     {
-        UNICODE_STRING path;
-        UNICODE_STRING commandLine;
-
         status = GetCurrentProcessPathArgs(&path, &commandLine);
-        if (NT_SUCCESS(status)) {
-            const HANDLE processId = (HANDLE) (ptrdiff_t) processEntry->ProcessId;
-            const HANDLE parentProcessId = (HANDLE) (ptrdiff_t) processEntry->ParentProcessId;
-
-            PS_CREATE_NOTIFY_INFO createInfo = { .ParentProcessId = parentProcessId,
-                .ImageFileName = &path,
-                .CommandLine = &commandLine };
-
-            fort_pstree_notify(/*process=*/NULL, processId, &createInfo);
-        } else {
-            LOG("PsTree: Query Process Error: pid=%d %x\n", processEntry->ProcessId, status);
-        }
     }
     KeUnstackDetachProcess(&apcState);
 
     ObDereferenceObject(process);
+
+    // Process the info
+    if (!NT_SUCCESS(status)) {
+        LOG("PsTree: Query Process Error: pid=%d %x\n", processEntry->ProcessId, status);
+    } else if (path.Length != 0 && commandLine.Length != 0) {
+        const HANDLE processId = (HANDLE) (ptrdiff_t) processEntry->ProcessId;
+        const HANDLE parentProcessId = (HANDLE) (ptrdiff_t) processEntry->ParentProcessId;
+
+        PS_CREATE_NOTIFY_INFO createInfo = {
+            .ParentProcessId = parentProcessId, .ImageFileName = &path, .CommandLine = &commandLine
+        };
+
+        fort_pstree_notify(/*process=*/NULL, processId, &createInfo);
+    }
 }
 
 static void fort_pstree_enum_processes_loop(PSYSTEM_PROCESSES processEntry)
 {
     for (;;) {
         const DWORD processId = (DWORD) processEntry->ProcessId;
+        const DWORD parentProcessId = (DWORD) processEntry->ParentProcessId;
 
-        const HANDLE processHandle = OpenProcessById(processId);
-        if (processHandle != NULL) {
-            fort_pstree_attach_process(processEntry, processHandle);
+        if (processId == 0 || processId == 4 || parentProcessId == 4) {
+            // skip System (sub)processes
+        } else {
+            const HANDLE processHandle = OpenProcessById(processId);
+            if (processHandle != NULL) {
+                fort_pstree_attach_process(processEntry, processHandle);
 
-            ZwClose(processHandle);
+                ZwClose(processHandle);
+            }
         }
 
         if (processEntry->NextEntryOffset == 0)
