@@ -165,6 +165,8 @@ QLayout *ServicesWindow::setupHeader()
 
         serviceInfoManager()->trackService(serviceInfo.serviceName);
         updateServiceListModel();
+
+        windowManager()->showInfoBox(tr("Please restart the computer to reload changed services!"));
     });
     connect(m_actRevert, &QAction::triggered, this, [&] {
         const auto serviceIndex = serviceListCurrentIndex();
