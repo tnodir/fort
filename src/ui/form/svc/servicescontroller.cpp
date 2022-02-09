@@ -4,6 +4,7 @@
 #include <manager/translationmanager.h>
 #include <manager/windowmanager.h>
 #include <model/servicelistmodel.h>
+#include <serviceinfo/serviceinfomanager.h>
 #include <util/ioc/ioccontainer.h>
 
 ServicesController::ServicesController(QObject *parent) :
@@ -31,6 +32,11 @@ TranslationManager *ServicesController::translationManager() const
 WindowManager *ServicesController::windowManager() const
 {
     return IoC<WindowManager>();
+}
+
+ServiceInfoManager *ServicesController::serviceInfoManager() const
+{
+    return IoC<ServiceInfoManager>();
 }
 
 void ServicesController::initialize()

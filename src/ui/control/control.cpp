@@ -57,6 +57,9 @@ const char *const commandString(Command cmd)
         CASE_STRING(Rpc_StatManager_connChanged)
         CASE_STRING(Rpc_StatManager_appTrafTotalsResetted)
 
+        CASE_STRING(Rpc_ServiceInfoManager_trackService)
+        CASE_STRING(Rpc_ServiceInfoManager_revertService)
+
         CASE_STRING(Rpc_TaskManager_runTask)
         CASE_STRING(Rpc_TaskManager_abortTask)
         CASE_STRING(Rpc_TaskManager_taskStarted)
@@ -76,6 +79,7 @@ const char *const rpcManagerString(RpcManager rpcManager)
         CASE_STRING(Rpc_DriverManager)
         CASE_STRING(Rpc_QuotaManager)
         CASE_STRING(Rpc_StatManager)
+        CASE_STRING(Rpc_ServiceInfoManager)
         CASE_STRING(Rpc_TaskManager)
     default:
         return nullptr;

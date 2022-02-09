@@ -1,9 +1,12 @@
 #include "servicelistmodel.h"
 
+#include <QIcon>
+
 #include <conf/appgroup.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <serviceinfo/serviceinfomanager.h>
+#include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
 
 ServiceListModel::ServiceListModel(QObject *parent) : TableItemModel(parent) { }
@@ -62,6 +65,10 @@ QVariant ServiceListModel::data(const QModelIndex &index, int role) const
     case Qt::DisplayRole:
     case Qt::ToolTipRole:
         return dataDisplay(index);
+
+    // Icon
+    case Qt::DecorationRole:
+        return dataDecoration(index);
     }
 
     return QVariant();
@@ -89,6 +96,22 @@ QVariant ServiceListModel::dataDisplay(const QModelIndex &index) const
 QVariant ServiceListModel::dataDisplayProcessId(const ServiceInfo &info) const
 {
     return (info.processId == 0) ? QVariant() : QVariant(info.processId);
+}
+
+QVariant ServiceListModel::dataDecoration(const QModelIndex &index) const
+{
+    const int column = index.column();
+
+    if (column == 0) {
+        const int row = index.row();
+
+        const auto info = serviceInfoAt(row);
+
+        if (info.isTracked())
+            return IconCache::icon(":/icons/gear_in.png");
+    }
+
+    return QVariant();
 }
 
 bool ServiceListModel::updateTableRow(int /*row*/) const

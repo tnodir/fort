@@ -26,6 +26,7 @@
 #include <rpc/logmanagerrpc.h>
 #include <rpc/quotamanagerrpc.h>
 #include <rpc/rpcmanager.h>
+#include <rpc/serviceinfomanagerrpc.h>
 #include <rpc/statmanagerrpc.h>
 #include <rpc/taskmanagerrpc.h>
 #include <rpc/windowmanagerfake.h>
@@ -130,6 +131,7 @@ void FortManager::createManagers()
     DriverManager *driverManager;
     AppInfoManager *appInfoManager;
     LogManager *logManager;
+    ServiceInfoManager *serviceInfoManager;
     TaskManager *taskManager;
     WindowManager *windowManager;
 
@@ -140,6 +142,7 @@ void FortManager::createManagers()
         driverManager = new DriverManager();
         appInfoManager = new AppInfoManager(settings->cacheFilePath());
         logManager = new LogManager();
+        serviceInfoManager = new ServiceInfoManager();
         taskManager = new TaskManager();
     } else {
         confManager = new ConfManagerRpc(settings->confFilePath());
@@ -148,6 +151,7 @@ void FortManager::createManagers()
         driverManager = new DriverManagerRpc();
         appInfoManager = new AppInfoManagerRpc(settings->cacheFilePath());
         logManager = new LogManagerRpc();
+        serviceInfoManager = new ServiceInfoManagerRpc();
         taskManager = new TaskManagerRpc();
     }
 
@@ -168,6 +172,7 @@ void FortManager::createManagers()
     ioc->setService(driverManager);
     ioc->setService(appInfoManager);
     ioc->setService(logManager);
+    ioc->setService(serviceInfoManager);
     ioc->setService(taskManager);
     ioc->setService(windowManager);
 

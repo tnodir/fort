@@ -39,6 +39,7 @@ protected:
 private:
     QVariant dataDisplay(const QModelIndex &index) const;
     QVariant dataDisplayProcessId(const ServiceInfo &info) const;
+    QVariant dataDecoration(const QModelIndex &index) const;
 
 private:
     QVector<ServiceInfo> m_services;

@@ -113,7 +113,7 @@ QVariant RegKey::value(const QString &name, bool *expand) const
             }
             Q_FALLTHROUGH();
         case REG_SZ:
-            return QString::fromWCharArray((LPCWSTR) data, size);
+            return QString::fromWCharArray((LPCWSTR) data);
         case REG_DWORD:
             return *((qint32 *) data);
         case REG_QWORD:

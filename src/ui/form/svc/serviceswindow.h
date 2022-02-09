@@ -7,6 +7,7 @@ QT_FORWARD_DECLARE_CLASS(QPushButton)
 
 class ConfManager;
 class IniUser;
+class ServiceInfoManager;
 class ServiceListModel;
 class ServicesController;
 class TableView;
@@ -24,6 +25,7 @@ public:
     ConfManager *confManager() const;
     IniUser *iniUser() const;
     WindowManager *windowManager() const;
+    ServiceInfoManager *serviceInfoManager() const;
     ServiceListModel *serviceListModel() const;
 
     void saveWindowState();
@@ -42,6 +44,7 @@ private:
     void setupTableServiceListHeader();
     void setupTableServicesChanged();
 
+    void updateServiceListModel();
     int serviceListCurrentIndex() const;
 
 private:

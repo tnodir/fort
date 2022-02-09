@@ -9,6 +9,7 @@
 #include <rpc/confmanagerrpc.h>
 #include <rpc/drivermanagerrpc.h>
 #include <rpc/quotamanagerrpc.h>
+#include <rpc/serviceinfomanagerrpc.h>
 #include <rpc/statmanagerrpc.h>
 #include <rpc/taskmanagerrpc.h>
 #include <util/ioc/ioccontainer.h>
@@ -197,6 +198,20 @@ inline bool processStatManagerRpcResult(StatManager *statManager, const ProcessC
     default:
         return false;
     }
+}
+
+inline bool serviceInfoManager_trackService(
+        ServiceInfoManager *serviceInfoManager, const QVariantList &args)
+{
+    serviceInfoManager->trackService(args.value(0).toString());
+    return true;
+}
+
+inline bool serviceInfoManager_revertService(
+        ServiceInfoManager *serviceInfoManager, const QVariantList &args)
+{
+    serviceInfoManager->revertService(args.value(0).toString());
+    return true;
 }
 
 inline bool processTaskManager_runTask(TaskManager *taskManager, const QVariantList &args)
@@ -473,6 +488,9 @@ bool RpcManager::processManagerRpc(const ProcessCommandArgs &p)
     case Control::Rpc_StatManager:
         return processStatManagerRpc(p);
 
+    case Control::Rpc_ServiceInfoManager:
+        return processServiceInfoManagerRpc(p);
+
     case Control::Rpc_TaskManager:
         return processTaskManagerRpc(p);
 
@@ -584,6 +602,20 @@ bool RpcManager::processStatManagerRpc(const ProcessCommandArgs &p)
         sendResult(p.worker, ok);
         return true;
     }
+    }
+}
+
+bool RpcManager::processServiceInfoManagerRpc(const ProcessCommandArgs &p)
+{
+    auto serviceInfoManager = IoC<ServiceInfoManager>();
+
+    switch (p.command) {
+    case Control::Rpc_ServiceInfoManager_trackService:
+        return serviceInfoManager_trackService(serviceInfoManager, p.args);
+    case Control::Rpc_ServiceInfoManager_revertService:
+        return serviceInfoManager_revertService(serviceInfoManager, p.args);
+    default:
+        return false;
     }
 }
 

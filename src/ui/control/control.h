@@ -57,6 +57,9 @@ enum Command : qint8 {
     Rpc_StatManager_connChanged,
     Rpc_StatManager_appTrafTotalsResetted,
 
+    Rpc_ServiceInfoManager_trackService,
+    Rpc_ServiceInfoManager_revertService,
+
     Rpc_TaskManager_runTask,
     Rpc_TaskManager_abortTask,
     Rpc_TaskManager_taskStarted,
@@ -70,6 +73,7 @@ enum RpcManager : qint8 {
     Rpc_DriverManager,
     Rpc_QuotaManager,
     Rpc_StatManager,
+    Rpc_ServiceInfoManager,
     Rpc_TaskManager,
 };
 

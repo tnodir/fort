@@ -54,6 +54,11 @@ WindowManager *ServicesWindow::windowManager() const
     return ctrl()->windowManager();
 }
 
+ServiceInfoManager *ServicesWindow::serviceInfoManager() const
+{
+    return ctrl()->serviceInfoManager();
+}
+
 ServiceListModel *ServicesWindow::serviceListModel() const
 {
     return ctrl()->serviceListModel();
@@ -94,8 +99,6 @@ void ServicesWindow::retranslateUi()
     m_btTrack->setText(tr("Make Trackable"));
     m_btRevert->setText(tr("Revert Changes"));
     m_btRefresh->setText(tr("Refresh"));
-
-    serviceListModel()->refresh();
 
     this->setWindowTitle(tr("Services"));
 }
@@ -157,12 +160,19 @@ QLayout *ServicesWindow::setupHeader()
     m_actAddProgram->setShortcut(Qt::Key_Insert);
 
     connect(m_actTrack, &QAction::triggered, this, [&] {
-        // const auto connIndex = serviceListCurrentIndex();
-        // const auto connRow = serviceListModel()->connRowAt(connIndex);
+        const auto serviceIndex = serviceListCurrentIndex();
+        const auto serviceInfo = serviceListModel()->serviceInfoAt(serviceIndex);
 
-        // showServiceEditForm(connRow.appPath);
+        serviceInfoManager()->trackService(serviceInfo.serviceName);
+        updateServiceListModel();
     });
-    connect(m_actRevert, &QAction::triggered, this, [&] {});
+    connect(m_actRevert, &QAction::triggered, this, [&] {
+        const auto serviceIndex = serviceListCurrentIndex();
+        const auto serviceInfo = serviceListModel()->serviceInfoAt(serviceIndex);
+
+        serviceInfoManager()->revertService(serviceInfo.serviceName);
+        updateServiceListModel();
+    });
     connect(m_actAddProgram, &QAction::triggered, this, [&] {
         const auto serviceIndex = serviceListCurrentIndex();
         const auto serviceInfo = serviceListModel()->serviceInfoAt(serviceIndex);
@@ -178,11 +188,11 @@ QLayout *ServicesWindow::setupHeader()
     // Toolbar buttons
     m_btTrack = ControlUtil::createLinkButton(":/icons/gear_in.png");
     m_btRevert = ControlUtil::createLinkButton(":/icons/bin_closed.png");
-    m_btRefresh = ControlUtil::createButton(
-            ":/icons/arrow_refresh_small.png", [&] { serviceListModel()->initialize(); });
+    m_btRefresh = ControlUtil::createButton(":/icons/arrow_refresh_small.png");
 
     connect(m_btTrack, &QAbstractButton::clicked, m_actTrack, &QAction::trigger);
     connect(m_btRevert, &QAbstractButton::clicked, m_actRevert, &QAction::trigger);
+    connect(m_btRefresh, &QAbstractButton::clicked, this, &ServicesWindow::updateServiceListModel);
 
     layout->addWidget(m_btEdit);
     layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
@@ -225,16 +235,22 @@ void ServicesWindow::setupTableServicesChanged()
     const auto refreshTableServicesChanged = [&] {
         const int serviceIndex = serviceListCurrentIndex();
         const bool serviceSelected = (serviceIndex >= 0);
-        m_actTrack->setEnabled(serviceSelected);
-        m_actRevert->setEnabled(serviceSelected);
+        const auto serviceInfo = serviceListModel()->serviceInfoAt(serviceIndex);
+        m_actTrack->setEnabled(serviceSelected && !serviceInfo.isTracked());
+        m_actRevert->setEnabled(serviceSelected && serviceInfo.isTracked());
         m_actAddProgram->setEnabled(serviceSelected);
-        m_btTrack->setEnabled(serviceSelected);
-        m_btRevert->setEnabled(serviceSelected);
+        m_btTrack->setEnabled(m_actTrack->isEnabled());
+        m_btRevert->setEnabled(m_actRevert->isEnabled());
     };
 
     refreshTableServicesChanged();
 
     connect(m_serviceListView, &TableView::currentIndexChanged, this, refreshTableServicesChanged);
+}
+
+void ServicesWindow::updateServiceListModel()
+{
+    serviceListModel()->initialize();
 }
 
 int ServicesWindow::serviceListCurrentIndex() const

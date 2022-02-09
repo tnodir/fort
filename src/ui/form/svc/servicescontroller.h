@@ -5,6 +5,7 @@
 
 class ConfManager;
 class IniUser;
+class ServiceInfoManager;
 class ServiceListModel;
 class TranslationManager;
 class WindowManager;
@@ -20,6 +21,7 @@ public:
     IniUser *iniUser() const;
     TranslationManager *translationManager() const;
     WindowManager *windowManager() const;
+    ServiceInfoManager *serviceInfoManager() const;
     ServiceListModel *serviceListModel() const { return m_serviceListModel; }
 
     void initialize();

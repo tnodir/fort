@@ -13,6 +13,11 @@ namespace {
 const QLoggingCategory LC("serviceInfo.serviceInfoManager");
 
 const char *const servicesSubKey = R"(SYSTEM\CurrentControlSet\Services)";
+const char *const serviceImagePathKey = "ImagePath";
+const char *const serviceImagePathOldKey = "_Fort_ImagePath";
+const char *const serviceTypeKey = "Type";
+const char *const serviceTypeOldKey = "_Fort_Type";
+const char *const serviceTrackFlagsKey = "_FortTrackFlags";
 
 QString getServiceDll(const RegKey &svcReg, bool *expand = nullptr)
 {
@@ -52,7 +57,7 @@ QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD state = SERVICE_ST
                     || svcReg.value("SvcHostSplitDisable").toInt() != 0)
                 continue;
 
-            const auto imagePath = svcReg.value("ImagePath").toString();
+            const auto imagePath = svcReg.value(serviceImagePathKey).toString();
             if (!imagePath.contains(R"(\system32\svchost.exe)", Qt::CaseInsensitive))
                 continue;
 
@@ -60,7 +65,10 @@ QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD state = SERVICE_ST
             if (dllPath.isEmpty())
                 continue;
 
+            const quint32 trackFlags = svcReg.value(serviceTrackFlagsKey).toUInt();
+
             ServiceInfo info;
+            info.trackFlags = trackFlags;
             info.processId = service->ServiceStatusProcess.dwProcessId;
             info.serviceName = serviceName;
             info.displayName = QString::fromUtf16((const char16_t *) service->lpDisplayName);
@@ -76,6 +84,8 @@ QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD state = SERVICE_ST
 }
 
 }
+
+ServiceInfoManager::ServiceInfoManager(QObject *parent) : QObject(parent) { }
 
 QVector<ServiceInfo> ServiceInfoManager::loadServiceInfoList(ServiceInfo::State state)
 {
@@ -98,4 +108,42 @@ QString ServiceInfoManager::getSvcHostServiceDll(const QString &serviceName)
     const QString dllPath = getServiceDll(svcReg, &expand);
 
     return expand ? FileUtil::expandPath(dllPath) : dllPath;
+}
+
+void ServiceInfoManager::trackService(const QString &serviceName)
+{
+    const RegKey servicesReg(RegKey::HKLM, servicesSubKey);
+    RegKey svcReg(servicesReg, serviceName, RegKey::DefaultReadWrite);
+
+    bool expand;
+    const QString imagePath = svcReg.value(serviceImagePathKey, &expand).toString();
+    svcReg.setValue(serviceImagePathOldKey, imagePath, expand);
+    svcReg.setValue(serviceImagePathKey, imagePath + " -s " + serviceName, expand);
+
+    const quint32 shareType = svcReg.value(serviceTypeKey).toUInt();
+    svcReg.setValue(serviceTypeOldKey, shareType);
+    svcReg.setValue(serviceTypeKey, 0x10); // Own process
+
+    svcReg.setValue(serviceTrackFlagsKey, ServiceInfo::RegImagePath | ServiceInfo::RegType);
+}
+
+void ServiceInfoManager::revertService(const QString &serviceName)
+{
+    const RegKey servicesReg(RegKey::HKLM, servicesSubKey);
+    RegKey svcReg(servicesReg, serviceName, RegKey::DefaultReadWrite);
+
+    bool expand;
+    const QString imagePath = svcReg.value(serviceImagePathOldKey, &expand).toString();
+    if (!imagePath.isEmpty()) {
+        svcReg.setValue(serviceImagePathKey, imagePath, expand);
+    }
+    svcReg.removeValue(serviceImagePathOldKey);
+
+    const quint32 shareType = svcReg.value(serviceTypeOldKey).toUInt();
+    if (shareType != 0) {
+        svcReg.setValue(serviceTypeKey, shareType);
+    }
+    svcReg.removeValue(serviceTypeOldKey);
+
+    svcReg.removeValue(serviceTrackFlagsKey);
 }
