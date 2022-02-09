@@ -417,7 +417,7 @@ static HANDLE OpenProcessById(DWORD processId)
 static PWCHAR GetUnicodeStringBuffer(PCUNICODE_STRING string, PRTL_USER_PROCESS_PARAMETERS params)
 {
 #ifdef _X86_
-    if ((PCHAR) string->Buffer < (PCHAR) processParams) {
+    if ((PCHAR) string->Buffer < (PCHAR) params) {
         return (PWCHAR) ((PCHAR) params + (DWORD) (ptrdiff_t) string->Buffer);
     }
 #else
