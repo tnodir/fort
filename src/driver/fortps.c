@@ -107,6 +107,10 @@ NTSTATUS NTAPI ZwQuerySystemInformation(ULONG systemInformationClass, PVOID syst
 NTSTATUS NTAPI ZwQueryInformationProcess(HANDLE processHandle, ULONG processInformationClass,
         PVOID processInformation, ULONG processInformationLength, PULONG returnLength);
 
+NTSTATUS NTAPI MmCopyVirtualMemory(PEPROCESS sourceProcess, PVOID sourceAddress,
+        PEPROCESS targetProcess, PVOID targetAddress, SIZE_T bufferSize,
+        KPROCESSOR_MODE previousMode, PSIZE_T returnSize);
+
 #endif
 
 #define fort_pstree_get_proc(ps_tree, index)                                                       \
@@ -424,7 +428,31 @@ static PWCHAR GetUnicodeStringBuffer(PCUNICODE_STRING string, PRTL_USER_PROCESS_
     return string->Buffer;
 }
 
-static NTSTATUS GetCurrentProcessPathArgs(PUNICODE_STRING path, PUNICODE_STRING commandLine)
+static NTSTATUS ReadProcessMemoryBuffer(
+        PEPROCESS process, PVOID processData, PVOID out, USHORT size)
+{
+    SIZE_T outLength = 0;
+    const NTSTATUS status = MmCopyVirtualMemory(
+            process, processData, IoGetCurrentProcess(), out, size, KernelMode, &outLength);
+    if (!NT_SUCCESS(status))
+        return status;
+
+    return (size == outLength) ? STATUS_SUCCESS : STATUS_INVALID_BUFFER_SIZE;
+}
+
+static NTSTATUS ReadProcessStringBuffer(
+        PEPROCESS process, PVOID processData, PUNICODE_STRING out, USHORT size)
+{
+    const NTSTATUS status = ReadProcessMemoryBuffer(process, processData, out->Buffer, size);
+    if (NT_SUCCESS(status)) {
+        out->Buffer[size / sizeof(WCHAR)] = L'\0';
+        out->Length = (USHORT) size;
+    }
+    return status;
+}
+
+static NTSTATUS GetProcessPathArgs(
+        PEPROCESS process, PUNICODE_STRING path, PUNICODE_STRING commandLine)
 {
     NTSTATUS status;
 
@@ -437,24 +465,25 @@ static NTSTATUS GetCurrentProcessPathArgs(PUNICODE_STRING path, PUNICODE_STRING 
     if (procBasicInfo.PebBaseAddress == NULL)
         return STATUS_INVALID_ADDRESS;
 
-    PRTL_USER_PROCESS_PARAMETERS params = procBasicInfo.PebBaseAddress->ProcessParameters;
+    PEB peb;
+    status = ReadProcessMemoryBuffer(process, procBasicInfo.PebBaseAddress, &peb, sizeof(PEB));
+    if (!NT_SUCCESS(status))
+        return status;
+
+    PRTL_USER_PROCESS_PARAMETERS params = peb.ProcessParameters;
     if (params == NULL)
         return STATUS_INVALID_ADDRESS;
 
     const USHORT pathLength = params->ImagePathName.Length;
     if (pathLength != 0 && pathLength <= path->MaximumLength - sizeof(WCHAR)) {
-        PCWCHAR userBuffer = GetUnicodeStringBuffer(&params->ImagePathName, params);
-        RtlCopyMemory(path->Buffer, userBuffer, pathLength);
-        path->Buffer[pathLength / sizeof(WCHAR)] = L'\0';
-        path->Length = pathLength;
+        PVOID userBuffer = (PVOID) GetUnicodeStringBuffer(&params->ImagePathName, params);
+        ReadProcessStringBuffer(process, userBuffer, path, pathLength);
     }
 
     const USHORT commandLineLength = params->CommandLine.Length;
     if (commandLineLength != 0 && commandLineLength <= commandLine->MaximumLength - sizeof(WCHAR)) {
-        PCWCHAR userBuffer = GetUnicodeStringBuffer(&params->CommandLine, params);
-        RtlCopyMemory(commandLine->Buffer, userBuffer, commandLineLength);
-        commandLine->Buffer[commandLineLength / sizeof(WCHAR)] = L'\0';
-        commandLine->Length = commandLineLength;
+        PVOID userBuffer = (PVOID) GetUnicodeStringBuffer(&params->CommandLine, params);
+        ReadProcessStringBuffer(process, userBuffer, commandLine, commandLineLength);
     }
 
     return STATUS_SUCCESS;
@@ -464,7 +493,7 @@ static void fort_pstree_attach_process(PSYSTEM_PROCESSES processEntry, HANDLE pr
 {
     NTSTATUS status;
 
-    PRKPROCESS process;
+    PEPROCESS process;
     status = ObReferenceObjectByHandle(
             processHandle, 0, *PsProcessType, KernelMode, (PVOID *) &process, NULL);
     if (!NT_SUCCESS(status)) {
@@ -486,7 +515,7 @@ static void fort_pstree_attach_process(PSYSTEM_PROCESSES processEntry, HANDLE pr
     KAPC_STATE apcState;
     KeStackAttachProcess(process, &apcState);
     {
-        status = GetCurrentProcessPathArgs(&path, &commandLine);
+        status = GetProcessPathArgs(process, &path, &commandLine);
     }
     KeUnstackDetachProcess(&apcState);
 
@@ -495,7 +524,10 @@ static void fort_pstree_attach_process(PSYSTEM_PROCESSES processEntry, HANDLE pr
     // Process the info
     if (!NT_SUCCESS(status)) {
         LOG("PsTree: Query Process Error: pid=%d %x\n", processEntry->ProcessId, status);
-    } else if (path.Length != 0 && commandLine.Length != 0) {
+        return;
+    }
+
+    if (path.Length != 0 && commandLine.Length != 0) {
         const HANDLE processId = (HANDLE) (ptrdiff_t) processEntry->ProcessId;
         const HANDLE parentProcessId = (HANDLE) (ptrdiff_t) processEntry->ParentProcessId;
 
