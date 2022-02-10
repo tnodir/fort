@@ -1,5 +1,6 @@
 CREATE TABLE app(
   path TEXT PRIMARY KEY,
+  alt_path TEXT,
   file_descr TEXT,
   company_name TEXT,
   product_name TEXT,

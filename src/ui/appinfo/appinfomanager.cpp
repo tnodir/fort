@@ -16,13 +16,13 @@ Q_LOGGING_CATEGORY(CLOG_APPINFO_MANAGER, "appInfo")
 #define logWarning()  qCWarning(CLOG_APPINFO_MANAGER, )
 #define logCritical() qCCritical(CLOG_APPINFO_MANAGER, )
 
-#define DATABASE_USER_VERSION 3
+#define DATABASE_USER_VERSION 4
 
 #define APP_CACHE_MAX_COUNT 2000
 
 namespace {
 
-const char *const sqlSelectAppInfo = "SELECT file_descr, company_name,"
+const char *const sqlSelectAppInfo = "SELECT alt_path, file_descr, company_name,"
                                      "    product_name, product_ver, file_mod_time, icon_id"
                                      "  FROM app WHERE path = ?1;";
 
@@ -41,10 +41,10 @@ const char *const sqlUpdateIconRefCount = "UPDATE icon"
                                           "  SET ref_count = ref_count + ?2"
                                           "  WHERE icon_id = ?1;";
 
-const char *const sqlInsertAppInfo = "INSERT INTO app(path, file_descr, company_name,"
+const char *const sqlInsertAppInfo = "INSERT INTO app(path, alt_path, file_descr, company_name,"
                                      "    product_name, product_ver, file_mod_time,"
                                      "    icon_id, access_time)"
-                                     "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, datetime('now'));";
+                                     "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, datetime('now'));";
 
 const char *const sqlSelectAppCount = "SELECT count(*) FROM app;";
 
@@ -123,9 +123,9 @@ bool AppInfoManager::loadInfoFromFs(const QString &appPath, AppInfo &appInfo)
     return AppInfoUtil::getInfo(appPath, appInfo);
 }
 
-QImage AppInfoManager::loadIconFromFs(const QString &appPath)
+QImage AppInfoManager::loadIconFromFs(const QString &appPath, const AppInfo &appInfo)
 {
-    return AppInfoUtil::getIcon(appPath);
+    return AppInfoUtil::getIcon(appInfo.getPath(appPath));
 }
 
 bool AppInfoManager::loadInfoFromDb(const QString &appPath, AppInfo &appInfo)
@@ -145,12 +145,13 @@ bool AppInfoManager::loadInfoFromDb(const QString &appPath, AppInfo &appInfo)
     if (stmt.step() != SqliteStmt::StepRow)
         return false;
 
-    appInfo.fileDescription = stmt.columnText(0);
-    appInfo.companyName = stmt.columnText(1);
-    appInfo.productName = stmt.columnText(2);
-    appInfo.productVersion = stmt.columnText(3);
-    appInfo.fileModTime = stmt.columnDateTime(4);
-    appInfo.iconId = stmt.columnInt64(5);
+    appInfo.altPath = stmt.columnText(0);
+    appInfo.fileDescription = stmt.columnText(1);
+    appInfo.companyName = stmt.columnText(2);
+    appInfo.productName = stmt.columnText(3);
+    appInfo.productVersion = stmt.columnText(4);
+    appInfo.fileModTime = stmt.columnDateTime(5);
+    appInfo.iconId = stmt.columnInt64(6);
 
     // Update last access time
     updateAppAccessTime(appPath);
@@ -202,8 +203,8 @@ bool AppInfoManager::saveToDb(const QString &appPath, AppInfo &appInfo, const QI
     // Save version info
     if (ok) {
         const QVariantList vars = QVariantList()
-                << appPath << appInfo.fileDescription << appInfo.companyName << appInfo.productName
-                << appInfo.productVersion << appInfo.fileModTime << iconId;
+                << appPath << appInfo.altPath << appInfo.fileDescription << appInfo.companyName
+                << appInfo.productName << appInfo.productVersion << appInfo.fileModTime << iconId;
 
         sqliteDb()->executeEx(sqlInsertAppInfo, vars, 0, &ok);
     }

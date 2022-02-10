@@ -26,7 +26,7 @@ public:
     void setUp() override;
 
     bool loadInfoFromFs(const QString &appPath, AppInfo &appInfo);
-    QImage loadIconFromFs(const QString &appPath);
+    QImage loadIconFromFs(const QString &appPath, const AppInfo &appInfo);
 
     bool loadInfoFromDb(const QString &appPath, AppInfo &appInfo);
     QImage loadIconFromDb(qint64 iconId);

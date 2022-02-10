@@ -173,6 +173,7 @@ bool getInfo(const QString &appPath, AppInfo &appInfo)
     QString serviceName;
     if (FileUtil::isSvcHostService(appPath, serviceName)) {
         path = ServiceInfoManager::getSvcHostServiceDll(serviceName);
+        appInfo.altPath = path;
     }
 
     const auto wow64FsRedir = disableWow64FsRedirection();
@@ -202,16 +203,9 @@ QImage getIcon(const QString &appPath)
         return QImage(":/icons/windows-48.png");
     }
 
-    QString path = appPath;
-
-    QString serviceName;
-    if (FileUtil::isSvcHostService(appPath, serviceName)) {
-        path = ServiceInfoManager::getSvcHostServiceDll(serviceName);
-    }
-
     const auto wow64FsRedir = disableWow64FsRedirection();
 
-    const QImage result = extractShellIcon(path);
+    const QImage result = extractShellIcon(appPath);
 
     revertWow64FsRedirection(wow64FsRedir);
 
@@ -241,6 +235,9 @@ bool fileExists(const QString &appPath)
 
 QDateTime fileModTime(const QString &appPath)
 {
+    if (appPath.isEmpty() || FileUtil::isSystemApp(appPath))
+        return {};
+
     const auto wow64FsRedir = disableWow64FsRedirection();
 
     const QDateTime res = FileUtil::fileModTime(appPath);

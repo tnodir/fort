@@ -7,6 +7,7 @@
 class AppInfo
 {
 public:
+    QString getPath(const QString &appPath) const;
     bool isFileModified(const QString &appPath) const;
 
     bool isValid() const { return iconId != 0; }
@@ -16,6 +17,7 @@ public:
 
     QDateTime fileModTime;
 
+    QString altPath;
     QString fileDescription;
     QString companyName;
     QString productName;

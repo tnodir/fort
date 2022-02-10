@@ -40,7 +40,7 @@ void AppInfoWorker::doJob(WorkerJob *workerJob)
 
     // Try to load from FS
     if (!loadedFromDb && manager()->loadInfoFromFs(appPath, appInfo)) {
-        const QImage appIcon = manager()->loadIconFromFs(appPath);
+        const QImage appIcon = manager()->loadIconFromFs(appPath, appInfo);
 
         manager()->saveToDb(appPath, appInfo, appIcon);
     }
