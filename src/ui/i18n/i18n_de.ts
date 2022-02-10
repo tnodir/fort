@@ -822,6 +822,10 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
         <source>Are you sure to remove all non-existent programs?</source>
         <translation>Sind Sie sicher, dass Sie alle nicht existierenden Programme entfernen möchten?</translation>
     </message>
+    <message>
+        <source>Services</source>
+        <translation>Dienste</translation>
+    </message>
 </context>
 <context>
     <name>QuotaManager</name>
@@ -890,6 +894,52 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     <message>
         <source> hour(s)</source>
         <translation> stunde(n)</translation>
+    </message>
+</context>
+<context>
+    <name>ServiceListModel</name>
+    <message>
+        <source>Service Name</source>
+        <translation>Dienstname</translation>
+    </message>
+    <message>
+        <source>Display Name</source>
+        <translation>Anzeigename</translation>
+    </message>
+    <message>
+        <source>Process ID</source>
+        <translation>Prozess-ID</translation>
+    </message>
+</context>
+<context>
+    <name>ServicesWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>Bearbeiten</translation>
+    </message>
+    <message>
+        <source>Make Trackable</source>
+        <translation>Verfolgbar machen</translation>
+    </message>
+    <message>
+        <source>Revert Changes</source>
+        <translation>Änderungen zurücksetzen</translation>
+    </message>
+    <message>
+        <source>Add Program</source>
+        <translation>Programm hinzufügen</translation>
+    </message>
+    <message>
+        <source>Refresh</source>
+        <translation>Aktualisieren</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>Dienste</translation>
+    </message>
+    <message>
+        <source>Please restart the computer to reload changed services!</source>
+        <translation>Bitte starten Sie den Computer neu, um geänderte Dienste neu zu laden!</translation>
     </message>
 </context>
 <context>
@@ -1250,7 +1300,7 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     <name>WindowManager</name>
     <message>
         <source>Please close already opened Edit Program window and try again.</source>
-        <translation>Bitte schließen Sie das bereits geöffnete Fenster Programm bearbeiten und versuchen Sie es erneut.</translation>
+        <translation>Bitte schließen Sie das bereits geöffnete Fenster zum Bearbeiten und versuchen Sie es erneut.</translation>
     </message>
 </context>
 <context>
