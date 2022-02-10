@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.4.6, 2022-02-10:
+- Add ability to filter `svchost.exe` by service name.
+- UI: Add Slovenian translation.
+
 v3.4.5, 2022-01-30:
 - Driver: Fix 32-bit build for Windows 8+.
 
