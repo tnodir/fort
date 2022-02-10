@@ -139,6 +139,9 @@ RpcManager managerByCommand(Command cmd)
         Rpc_StatManager, // Rpc_StatManager_connChanged,
         Rpc_StatManager, // Rpc_StatManager_appTrafTotalsResetted,
 
+        Rpc_ServiceInfoManager, // Rpc_ServiceInfoManager_trackService,
+        Rpc_ServiceInfoManager, // Rpc_ServiceInfoManager_revertService,
+
         Rpc_TaskManager, // Rpc_TaskManager_runTask,
         Rpc_TaskManager, // Rpc_TaskManager_abortTask,
         Rpc_TaskManager, // Rpc_TaskManager_taskStarted,
