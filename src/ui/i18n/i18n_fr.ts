@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="fr">
+<TS version="2.1" language="fr_FR">
 <context>
     <name>AddressesColumn</name>
     <message>
@@ -822,6 +822,10 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
         <source>Programs</source>
         <translation>Programmes</translation>
     </message>
+    <message>
+        <source>Services</source>
+        <translation>Services</translation>
+    </message>
 </context>
 <context>
     <name>QuotaManager</name>
@@ -890,6 +894,52 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     <message>
         <source> hour(s)</source>
         <translation> Heure(s)</translation>
+    </message>
+</context>
+<context>
+    <name>ServiceListModel</name>
+    <message>
+        <source>Service Name</source>
+        <translation>Nom du service</translation>
+    </message>
+    <message>
+        <source>Display Name</source>
+        <translation>Nom d&apos;affichage</translation>
+    </message>
+    <message>
+        <source>Process ID</source>
+        <translation>ID du processus</translation>
+    </message>
+</context>
+<context>
+    <name>ServicesWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>Éditer</translation>
+    </message>
+    <message>
+        <source>Make Trackable</source>
+        <translation>Rendre traçable</translation>
+    </message>
+    <message>
+        <source>Revert Changes</source>
+        <translation>Rétablir les changements</translation>
+    </message>
+    <message>
+        <source>Add Program</source>
+        <translation>Ajouter un programme</translation>
+    </message>
+    <message>
+        <source>Refresh</source>
+        <translation>Actualiser</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>Services</translation>
+    </message>
+    <message>
+        <source>Please restart the computer to reload changed services!</source>
+        <translation>Veuillez redémarrer l&apos;ordinateur pour recharger les services modifiés !</translation>
     </message>
 </context>
 <context>
