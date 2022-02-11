@@ -638,6 +638,62 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
         <source>Are you sure to reinstall the Driver?</source>
         <translation>Sind Sie sicher, den Treiber neu zu installieren?</translation>
     </message>
+    <message>
+        <source>Tray</source>
+        <translation>Tray</translation>
+    </message>
+    <message>
+        <source>Event:</source>
+        <translation>Ereignis:</translation>
+    </message>
+    <message>
+        <source>Action:</source>
+        <translation>Aktion:</translation>
+    </message>
+    <message>
+        <source>Single Click</source>
+        <translation>Einzelklick</translation>
+    </message>
+    <message>
+        <source>Double Click</source>
+        <translation>Doppelklick</translation>
+    </message>
+    <message>
+        <source>Middle Click</source>
+        <translation>Mittlerer Klick</translation>
+    </message>
+    <message>
+        <source>Show Programs</source>
+        <translation>Programme anzeigen</translation>
+    </message>
+    <message>
+        <source>Show Options</source>
+        <translation>Optionen anzeigen</translation>
+    </message>
+    <message>
+        <source>Show Statistics</source>
+        <translation>Statistiken anzeigen</translation>
+    </message>
+    <message>
+        <source>Show/Hide Traffic Graph</source>
+        <translation>Datenverkehr-Diagramm ein-/ausblenden</translation>
+    </message>
+    <message>
+        <source>Switch Filter Enabled</source>
+        <translation>Filter aktivieren</translation>
+    </message>
+    <message>
+        <source>Switch Stop Traffic</source>
+        <translation>Datenverkehr stoppen</translation>
+    </message>
+    <message>
+        <source>Switch Stop Internet Traffic</source>
+        <translation>Internetverkehr stoppen</translation>
+    </message>
+    <message>
+        <source>Switch Auto-Allow New Programs</source>
+        <translation>Neue Programme automatisch zulassen</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

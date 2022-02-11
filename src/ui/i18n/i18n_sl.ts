@@ -638,6 +638,62 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
         <source>Are you sure to reinstall the Driver?</source>
         <translation>Ali ste prepričani, da želite znova namestiti gonilnik?</translation>
     </message>
+    <message>
+        <source>Tray</source>
+        <translation>Programska vrstica</translation>
+    </message>
+    <message>
+        <source>Event:</source>
+        <translation>Dogodek:</translation>
+    </message>
+    <message>
+        <source>Action:</source>
+        <translation>Akcija:</translation>
+    </message>
+    <message>
+        <source>Single Click</source>
+        <translation>En klik</translation>
+    </message>
+    <message>
+        <source>Double Click</source>
+        <translation>Dvojni klik</translation>
+    </message>
+    <message>
+        <source>Middle Click</source>
+        <translation>Srednji klik</translation>
+    </message>
+    <message>
+        <source>Show Programs</source>
+        <translation>Prikaži programe</translation>
+    </message>
+    <message>
+        <source>Show Options</source>
+        <translation>Prikaži možnosti</translation>
+    </message>
+    <message>
+        <source>Show Statistics</source>
+        <translation>Prikaži statistiko</translation>
+    </message>
+    <message>
+        <source>Show/Hide Traffic Graph</source>
+        <translation>Prikaži/skrij graf prometa</translation>
+    </message>
+    <message>
+        <source>Switch Filter Enabled</source>
+        <translation>Preklop filtra omogočen</translation>
+    </message>
+    <message>
+        <source>Switch Stop Traffic</source>
+        <translation>Preklop ustavitve prometa</translation>
+    </message>
+    <message>
+        <source>Switch Stop Internet Traffic</source>
+        <translation>Preklop ustavitve internetnega prometa</translation>
+    </message>
+    <message>
+        <source>Switch Auto-Allow New Programs</source>
+        <translation>Preklop samodejnega dovoljenja novih programov</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

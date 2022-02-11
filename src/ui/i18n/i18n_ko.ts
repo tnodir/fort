@@ -638,6 +638,62 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Are you sure to reinstall the Driver?</source>
         <translation>드라이버를 다시 설치하시겠습니까?</translation>
     </message>
+    <message>
+        <source>Tray</source>
+        <translation>트레이</translation>
+    </message>
+    <message>
+        <source>Event:</source>
+        <translation>이벤트:</translation>
+    </message>
+    <message>
+        <source>Action:</source>
+        <translation>처리:</translation>
+    </message>
+    <message>
+        <source>Single Click</source>
+        <translation>한 번 클릭</translation>
+    </message>
+    <message>
+        <source>Double Click</source>
+        <translation>두 번 클릭</translation>
+    </message>
+    <message>
+        <source>Middle Click</source>
+        <translation>중간 버튼 클릭</translation>
+    </message>
+    <message>
+        <source>Show Programs</source>
+        <translation>프로그램 표시</translation>
+    </message>
+    <message>
+        <source>Show Options</source>
+        <translation>옵션 표시</translation>
+    </message>
+    <message>
+        <source>Show Statistics</source>
+        <translation>상태 표시</translation>
+    </message>
+    <message>
+        <source>Show/Hide Traffic Graph</source>
+        <translation>트래픽 도표 표시/숨김</translation>
+    </message>
+    <message>
+        <source>Switch Filter Enabled</source>
+        <translation>필터 전환 활성화됨</translation>
+    </message>
+    <message>
+        <source>Switch Stop Traffic</source>
+        <translation>트래픽 중지 전환</translation>
+    </message>
+    <message>
+        <source>Switch Stop Internet Traffic</source>
+        <translation>인터넷 트래픽 중지 전환</translation>
+    </message>
+    <message>
+        <source>Switch Auto-Allow New Programs</source>
+        <translation>새 프로그램 자동-허용 전환</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
