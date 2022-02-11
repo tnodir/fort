@@ -638,6 +638,62 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Are you sure to reinstall the Driver?</source>
         <translation>Переустановить драйвер?</translation>
     </message>
+    <message>
+        <source>Tray</source>
+        <translation>Трей</translation>
+    </message>
+    <message>
+        <source>Event:</source>
+        <translation>Событие:</translation>
+    </message>
+    <message>
+        <source>Action:</source>
+        <translation>Действие:</translation>
+    </message>
+    <message>
+        <source>Single Click</source>
+        <translation>Единичное нажатие</translation>
+    </message>
+    <message>
+        <source>Double Click</source>
+        <translation>Двойное нажатие</translation>
+    </message>
+    <message>
+        <source>Middle Click</source>
+        <translation>Нажатие средней кнопки</translation>
+    </message>
+    <message>
+        <source>Show Programs</source>
+        <translation>Показать Программы</translation>
+    </message>
+    <message>
+        <source>Show Options</source>
+        <translation>Показать Опции</translation>
+    </message>
+    <message>
+        <source>Show Statistics</source>
+        <translation>Показать Статистику</translation>
+    </message>
+    <message>
+        <source>Show/Hide Traffic Graph</source>
+        <translation>Показать/Скрыть График трафика</translation>
+    </message>
+    <message>
+        <source>Switch Filter Enabled</source>
+        <translation>Переключить "Фильтр включен"</translation>
+    </message>
+    <message>
+        <source>Switch Stop Traffic</source>
+        <translation>Переключить "Остановить трафик"</translation>
+    </message>
+    <message>
+        <source>Switch Stop Internet Traffic</source>
+        <translation>Переключить "Остановить Интернет трафик"</translation>
+    </message>
+    <message>
+        <source>Switch Auto-Allow New Programs</source>
+        <translation>Переключить "Авто-разрешение новых программ"</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
