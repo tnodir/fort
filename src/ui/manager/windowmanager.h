@@ -31,6 +31,7 @@ public:
     ServicesWindow *serviceWindow() const { return m_serviceWindow; }
     ZonesWindow *zoneWindow() const { return m_zoneWindow; }
     GraphWindow *graphWindow() const { return m_graphWindow; }
+    TrayIcon *trayIcon() const { return m_trayIcon; }
 
     void setUp() override;
     void tearDown() override;

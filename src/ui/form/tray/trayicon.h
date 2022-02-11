@@ -19,6 +19,19 @@ class TrayIcon : public QSystemTrayIcon
     Q_OBJECT
 
 public:
+    enum ClickType : qint8 { SingleClick = 0, DoubleClick, MiddleClick, ClickTypeCount };
+    enum ActionType : qint8 {
+        ActionNone = -1,
+        ActionShowPrograms = 0,
+        ActionShowOptions,
+        ActionShowStatistics,
+        ActionShowTrafficGraph,
+        ActionSwitchFilterEnabled,
+        ActionSwitchStopTraffic,
+        ActionSwitchStopInetTraffic,
+        ActionSwitchAutoAllowPrograms
+    };
+
     explicit TrayIcon(QObject *parent = nullptr);
     ~TrayIcon() override;
 
@@ -31,11 +44,8 @@ public:
     HotKeyManager *hotKeyManager() const;
     WindowManager *windowManager() const;
 
-signals:
-    void mouseClicked();
-    void mouseDoubleClicked();
-    void mouseMiddleClicked();
-    void mouseRightClicked(const QPoint &pos);
+    ActionType clickEventActionType(ClickType clickType) const;
+    void setClickEventActionType(ClickType clickType, ActionType actionType);
 
 public slots:
     void updateTrayIcon(bool alerted = false);
@@ -44,6 +54,7 @@ public slots:
     void updateTrayMenu(bool onlyFlags = false);
 
 protected slots:
+    void onMouseClicked(TrayIcon::ClickType clickType);
     void onTrayActivated(QSystemTrayIcon::ActivationReason reason);
 
     void saveTrayFlags();
@@ -63,6 +74,11 @@ private:
     void updateHotKeys();
     void removeHotKeys();
 
+    void updateClickActions();
+
+    QAction *clickActionFromIni(ClickType clickType) const;
+    QAction *clickActionByType(ActionType actionType) const;
+
 private:
     bool m_trayTriggered : 1;
 
@@ -77,9 +93,11 @@ private:
     QAction *m_filterEnabledAction = nullptr;
     QAction *m_stopTrafficAction = nullptr;
     QAction *m_stopInetTrafficAction = nullptr;
-    QAction *m_allowAllNewAction = nullptr;
+    QAction *m_autoAllowProgsAction = nullptr;
     QAction *m_quitAction = nullptr;
     QList<QAction *> m_appGroupActions;
+
+    QAction *m_clickActions[ClickTypeCount] = { nullptr };
 };
 
 #endif // TRAYICON_H

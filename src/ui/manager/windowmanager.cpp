@@ -107,10 +107,6 @@ void WindowManager::setupTrayIcon()
 {
     m_trayIcon = new TrayIcon(this);
 
-    connect(m_trayIcon, &TrayIcon::mouseClicked, this, &WindowManager::showProgramsWindow);
-    connect(m_trayIcon, &TrayIcon::mouseDoubleClicked, this, &WindowManager::showOptionsWindow);
-    connect(m_trayIcon, &TrayIcon::mouseMiddleClicked, this, &WindowManager::showStatisticsWindow);
-    connect(m_trayIcon, &TrayIcon::mouseRightClicked, m_trayIcon, &TrayIcon::showTrayMenu);
     connect(m_trayIcon, &QSystemTrayIcon::messageClicked, this,
             &WindowManager::onTrayMessageClicked);
 

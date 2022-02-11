@@ -25,6 +25,8 @@ private:
 
     void retranslateComboStartMode();
     void retranslateEditPassword();
+    void retranslateComboTrayEvent();
+    void retranslateComboTrayAction();
     void retranslateDriverMessage();
 
     void setupStartup();
@@ -40,6 +42,10 @@ private:
     void setupPasswordLock();
     QLayout *setupLangLayout();
     void setupComboLanguage();
+    void setupTrayBox();
+    void refreshComboTrayAction();
+    QLayout *setupTrayEventLayout();
+    QLayout *setupTrayActionLayout();
     void setupLogsBox();
     QLayout *setupColumn2();
     void setupDriverBox();
@@ -55,6 +61,7 @@ private:
     QGroupBox *m_gbStartup = nullptr;
     QGroupBox *m_gbTraffic = nullptr;
     QGroupBox *m_gbGlobal = nullptr;
+    QGroupBox *m_gbTray = nullptr;
     QGroupBox *m_gbLogs = nullptr;
     QGroupBox *m_gbDriver = nullptr;
     QGroupBox *m_gbNewVersion = nullptr;
@@ -74,6 +81,10 @@ private:
     QPushButton *m_btPasswordLock = nullptr;
     QLabel *m_labelLanguage = nullptr;
     QComboBox *m_comboLanguage = nullptr;
+    QLabel *m_labelTrayEvent = nullptr;
+    QComboBox *m_comboTrayEvent = nullptr;
+    QLabel *m_labelTrayAction = nullptr;
+    QComboBox *m_comboTrayAction = nullptr;
     QCheckBox *m_cbLogDebug = nullptr;
     QCheckBox *m_cbLogConsole = nullptr;
     QLabel *m_iconDriver = nullptr;

@@ -18,6 +18,7 @@
 #include <form/controls/controlutil.h>
 #include <form/dialog/passworddialog.h>
 #include <form/opt/optionscontroller.h>
+#include <form/tray/trayicon.h>
 #include <fortmanager.h>
 #include <fortsettings.h>
 #include <manager/translationmanager.h>
@@ -143,6 +144,7 @@ void OptionsPage::onRetranslateUi()
     m_gbStartup->setTitle(tr("Startup"));
     m_gbTraffic->setTitle(tr("Traffic"));
     m_gbGlobal->setTitle(tr("Global"));
+    m_gbTray->setTitle(tr("Tray"));
     m_gbLogs->setTitle(tr("Logs"));
     m_gbDriver->setTitle(tr("Driver"));
     m_gbNewVersion->setTitle(tr("New Version"));
@@ -172,6 +174,12 @@ void OptionsPage::onRetranslateUi()
 
     m_labelLanguage->setText(tr("Language:"));
 
+    m_labelTrayEvent->setText(tr("Event:"));
+    m_labelTrayAction->setText(tr("Action:"));
+    retranslateComboTrayEvent();
+    retranslateComboTrayAction();
+    refreshComboTrayAction();
+
     m_cbLogDebug->setText(tr("Log debug messages"));
     m_cbLogConsole->setText(tr("Show log messages in console"));
 
@@ -187,7 +195,7 @@ void OptionsPage::retranslateComboStartMode()
     const QStringList list = { tr("Disabled"), tr("For current user"), tr("For all users") };
 
     int currentIndex = m_comboAutoRun->currentIndex();
-    if (m_comboAutoRun->currentIndex() < 0) {
+    if (currentIndex < 0) {
         currentIndex = m_currentAutoRunMode;
     }
 
@@ -224,6 +232,32 @@ void OptionsPage::retranslateEditPassword()
 {
     m_editPassword->setPlaceholderText(
             settings()->hasPassword() ? tr("Installed") : tr("Not Installed"));
+}
+
+void OptionsPage::retranslateComboTrayEvent()
+{
+    const QStringList list = { tr("Single Click"), tr("Double Click"), tr("Middle Click") };
+
+    int currentIndex = m_comboTrayEvent->currentIndex();
+    if (currentIndex < 0) {
+        currentIndex = 0;
+    }
+
+    m_comboTrayEvent->clear();
+    m_comboTrayEvent->addItems(list);
+
+    m_comboTrayEvent->setCurrentIndex(currentIndex);
+}
+
+void OptionsPage::retranslateComboTrayAction()
+{
+    const QStringList list = { tr("Show Programs"), tr("Show Options"), tr("Show Statistics"),
+        tr("Show/Hide Traffic Graph"), tr("Switch Filter Enabled"), tr("Switch Stop Traffic"),
+        tr("Switch Stop Internet Traffic"), tr("Switch Auto-Allow New Programs") };
+
+    m_comboTrayAction->clear();
+    m_comboTrayAction->addItems(list);
+    m_comboTrayAction->setCurrentIndex(-1);
 }
 
 void OptionsPage::retranslateDriverMessage()
@@ -280,6 +314,10 @@ QLayout *OptionsPage::setupColumn1()
     // Global Group Box
     setupGlobalBox();
     layout->addWidget(m_gbGlobal);
+
+    // Tray Group Box
+    setupTrayBox();
+    layout->addWidget(m_gbTray);
 
     // Logs Group Box
     setupLogsBox();
@@ -473,6 +511,52 @@ void OptionsPage::setupComboLanguage()
     refreshComboLanguage();
 
     connect(translationManager(), &TranslationManager::languageChanged, this, refreshComboLanguage);
+}
+
+void OptionsPage::setupTrayBox()
+{
+    // Tray Event & Action Rows
+    auto eventLayout = setupTrayEventLayout();
+    auto actionLayout = setupTrayActionLayout();
+
+    auto layout = new QVBoxLayout();
+    layout->addLayout(eventLayout);
+    layout->addLayout(actionLayout);
+
+    m_gbTray = new QGroupBox(this);
+    m_gbTray->setLayout(layout);
+}
+
+void OptionsPage::refreshComboTrayAction()
+{
+    const TrayIcon::ActionType actionType = windowManager()->trayIcon()->clickEventActionType(
+            static_cast<TrayIcon::ClickType>(m_comboTrayEvent->currentIndex()));
+    m_comboTrayAction->setCurrentIndex(actionType);
+}
+
+QLayout *OptionsPage::setupTrayEventLayout()
+{
+    m_labelTrayEvent = ControlUtil::createLabel();
+
+    m_comboTrayEvent = ControlUtil::createComboBox(
+            QStringList(), [&](int /*index*/) { refreshComboTrayAction(); });
+    m_comboTrayEvent->setFixedWidth(200);
+
+    return ControlUtil::createRowLayout(m_labelTrayEvent, m_comboTrayEvent);
+}
+
+QLayout *OptionsPage::setupTrayActionLayout()
+{
+    m_labelTrayAction = ControlUtil::createLabel();
+
+    m_comboTrayAction = ControlUtil::createComboBox(QStringList(), [&](int index) {
+        windowManager()->trayIcon()->setClickEventActionType(
+                static_cast<TrayIcon::ClickType>(m_comboTrayEvent->currentIndex()),
+                static_cast<TrayIcon::ActionType>(index));
+    });
+    m_comboTrayAction->setFixedWidth(200);
+
+    return ControlUtil::createRowLayout(m_labelTrayAction, m_comboTrayAction);
 }
 
 void OptionsPage::setupLogsBox()

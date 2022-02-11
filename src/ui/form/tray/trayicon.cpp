@@ -20,6 +20,103 @@
 
 namespace {
 
+const char *const eventSingleClick = "singleClick";
+const char *const eventDoubleClick = "doubleClick";
+const char *const eventMiddleClick = "middleClick";
+
+const char *const actionShowPrograms = "Programs";
+const char *const actionShowOptions = "Options";
+const char *const actionShowStatistics = "Statistics";
+const char *const actionShowTrafficGraph = "TrafficGraph";
+const char *const actionSwitchFilterEnabled = "FilterEnabled";
+const char *const actionSwitchStopTraffic = "StopTraffic";
+const char *const actionSwitchStopInetTraffic = "StopInetTraffic";
+const char *const actionSwitchAutoAllowPrograms = "AutoAllowPrograms";
+
+QString clickNameByType(TrayIcon::ClickType clickType)
+{
+    switch (clickType) {
+    case TrayIcon::SingleClick:
+        return eventSingleClick;
+    case TrayIcon::DoubleClick:
+        return eventDoubleClick;
+    case TrayIcon::MiddleClick:
+        return eventMiddleClick;
+    default:
+        return QString();
+    }
+}
+
+QString actionNameByType(TrayIcon::ActionType actionType)
+{
+    switch (actionType) {
+    case TrayIcon::ActionShowPrograms:
+        return actionShowPrograms;
+    case TrayIcon::ActionShowOptions:
+        return actionShowOptions;
+    case TrayIcon::ActionShowStatistics:
+        return actionShowStatistics;
+    case TrayIcon::ActionShowTrafficGraph:
+        return actionShowTrafficGraph;
+    case TrayIcon::ActionSwitchFilterEnabled:
+        return actionSwitchFilterEnabled;
+    case TrayIcon::ActionSwitchStopTraffic:
+        return actionSwitchStopTraffic;
+    case TrayIcon::ActionSwitchStopInetTraffic:
+        return actionSwitchStopInetTraffic;
+    case TrayIcon::ActionSwitchAutoAllowPrograms:
+        return actionSwitchAutoAllowPrograms;
+    default:
+        return QString();
+    }
+}
+
+TrayIcon::ActionType actionTypeByName(const QString &name)
+{
+    if (name.isEmpty())
+        return TrayIcon::ActionNone;
+
+    if (name == actionShowPrograms)
+        return TrayIcon::ActionShowPrograms;
+
+    if (name == actionShowOptions)
+        return TrayIcon::ActionShowOptions;
+
+    if (name == actionShowStatistics)
+        return TrayIcon::ActionShowStatistics;
+
+    if (name == actionShowTrafficGraph)
+        return TrayIcon::ActionShowTrafficGraph;
+
+    if (name == actionSwitchFilterEnabled)
+        return TrayIcon::ActionSwitchFilterEnabled;
+
+    if (name == actionSwitchStopTraffic)
+        return TrayIcon::ActionSwitchStopTraffic;
+
+    if (name == actionSwitchStopInetTraffic)
+        return TrayIcon::ActionSwitchStopInetTraffic;
+
+    if (name == actionSwitchAutoAllowPrograms)
+        return TrayIcon::ActionSwitchAutoAllowPrograms;
+
+    return TrayIcon::ActionNone;
+}
+
+TrayIcon::ActionType defaultActionTypeByClick(TrayIcon::ClickType clickType)
+{
+    switch (clickType) {
+    case TrayIcon::SingleClick:
+        return TrayIcon::ActionShowPrograms;
+    case TrayIcon::DoubleClick:
+        return TrayIcon::ActionShowOptions;
+    case TrayIcon::MiddleClick:
+        return TrayIcon::ActionShowStatistics;
+    default:
+        return TrayIcon::ActionNone;
+    }
+}
+
 void setActionCheckable(QAction *action, bool checked = false, const QObject *receiver = nullptr,
         const char *member = nullptr)
 {
@@ -100,6 +197,14 @@ WindowManager *TrayIcon::windowManager() const
     return ctrl()->windowManager();
 }
 
+void TrayIcon::onMouseClicked(TrayIcon::ClickType clickType)
+{
+    QAction *action = m_clickActions[clickType];
+    if (action) {
+        action->trigger();
+    }
+}
+
 void TrayIcon::onTrayActivated(QSystemTrayIcon::ActivationReason reason)
 {
     switch (reason) {
@@ -108,23 +213,23 @@ void TrayIcon::onTrayActivated(QSystemTrayIcon::ActivationReason reason)
         QTimer::singleShot(QApplication::doubleClickInterval(), this, [&] {
             if (m_trayTriggered) {
                 m_trayTriggered = false;
-                emit mouseClicked();
+                onMouseClicked(SingleClick);
             }
         });
         break;
     case QSystemTrayIcon::DoubleClick:
         if (m_trayTriggered) {
             m_trayTriggered = false;
-            emit mouseDoubleClicked();
+            onMouseClicked(DoubleClick);
         }
         break;
     case QSystemTrayIcon::MiddleClick:
         m_trayTriggered = false;
-        emit mouseMiddleClicked();
+        onMouseClicked(MiddleClick);
         break;
     case QSystemTrayIcon::Context:
         m_trayTriggered = false;
-        emit mouseRightClicked(QCursor::pos());
+        showTrayMenu(QCursor::pos());
         break;
     default:
         break;
@@ -180,7 +285,7 @@ void TrayIcon::retranslateUi()
     m_filterEnabledAction->setText(tr("Filter Enabled"));
     m_stopTrafficAction->setText(tr("Stop Traffic"));
     m_stopInetTrafficAction->setText(tr("Stop Internet Traffic"));
-    m_allowAllNewAction->setText(tr("Auto-Allow New Programs"));
+    m_autoAllowProgsAction->setText(tr("Auto-Allow New Programs"));
 
     m_quitAction->setText(tr("Quit"));
 }
@@ -193,6 +298,8 @@ void TrayIcon::setupUi()
     updateTrayMenu();
 
     updateTrayIcon();
+
+    updateClickActions();
 }
 
 void TrayIcon::setupTrayMenu()
@@ -232,8 +339,9 @@ void TrayIcon::setupTrayMenu()
             addAction(m_menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
     addHotKey(m_stopInetTrafficAction, iniUser()->hotKeyStopInetTraffic());
 
-    m_allowAllNewAction = addAction(m_menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
-    addHotKey(m_allowAllNewAction, iniUser()->hotKeyAllowAllNew());
+    m_autoAllowProgsAction =
+            addAction(m_menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
+    addHotKey(m_autoAllowProgsAction, iniUser()->hotKeyAllowAllNew());
 
     m_menu->addSeparator();
 
@@ -263,12 +371,12 @@ void TrayIcon::updateTrayMenuFlags()
     m_filterEnabledAction->setEnabled(editEnabled);
     m_stopTrafficAction->setEnabled(editEnabled);
     m_stopInetTrafficAction->setEnabled(editEnabled);
-    m_allowAllNewAction->setEnabled(editEnabled);
+    m_autoAllowProgsAction->setEnabled(editEnabled);
 
     m_filterEnabledAction->setChecked(conf()->filterEnabled());
     m_stopTrafficAction->setChecked(conf()->stopTraffic());
     m_stopInetTrafficAction->setChecked(conf()->stopInetTraffic());
-    m_allowAllNewAction->setChecked(conf()->allowAllNew());
+    m_autoAllowProgsAction->setChecked(conf()->allowAllNew());
 
     int appGroupIndex = 0;
     for (QAction *action : qAsConst(m_appGroupActions)) {
@@ -308,7 +416,7 @@ void TrayIcon::saveTrayFlags()
     conf()->setFilterEnabled(m_filterEnabledAction->isChecked());
     conf()->setStopTraffic(m_stopTrafficAction->isChecked());
     conf()->setStopInetTraffic(m_stopInetTrafficAction->isChecked());
-    conf()->setAllowAllNew(m_allowAllNewAction->isChecked());
+    conf()->setAllowAllNew(m_autoAllowProgsAction->isChecked());
 
     int i = 0;
     for (AppGroup *appGroup : conf()->appGroups()) {
@@ -336,4 +444,61 @@ void TrayIcon::updateHotKeys()
 void TrayIcon::removeHotKeys()
 {
     hotKeyManager()->removeActions();
+}
+
+TrayIcon::ActionType TrayIcon::clickEventActionType(ClickType clickType) const
+{
+    const QString eventName = clickNameByType(clickType);
+    const QString actionName = iniUser()->trayAction(eventName);
+
+    const ActionType actionType = actionTypeByName(actionName);
+    return (actionType != ActionNone) ? actionType : defaultActionTypeByClick(clickType);
+}
+
+void TrayIcon::setClickEventActionType(ClickType clickType, ActionType actionType)
+{
+    const QString eventName = clickNameByType(clickType);
+    const QString actionName = actionNameByType(actionType);
+
+    iniUser()->setTrayAction(eventName, actionName);
+
+    updateClickActions();
+}
+
+void TrayIcon::updateClickActions()
+{
+    m_clickActions[SingleClick] = clickActionFromIni(SingleClick);
+    m_clickActions[DoubleClick] = clickActionFromIni(DoubleClick);
+    m_clickActions[MiddleClick] = clickActionFromIni(MiddleClick);
+}
+
+QAction *TrayIcon::clickActionFromIni(ClickType clickType) const
+{
+    const ActionType actionType = clickEventActionType(clickType);
+
+    return clickActionByType(actionType);
+}
+
+QAction *TrayIcon::clickActionByType(ActionType actionType) const
+{
+    switch (actionType) {
+    case TrayIcon::ActionShowPrograms:
+        return m_programsAction;
+    case TrayIcon::ActionShowOptions:
+        return m_optionsAction;
+    case TrayIcon::ActionShowStatistics:
+        return m_statisticsAction;
+    case TrayIcon::ActionShowTrafficGraph:
+        return m_graphAction;
+    case TrayIcon::ActionSwitchFilterEnabled:
+        return m_filterEnabledAction;
+    case TrayIcon::ActionSwitchStopTraffic:
+        return m_stopTrafficAction;
+    case TrayIcon::ActionSwitchStopInetTraffic:
+        return m_stopInetTrafficAction;
+    case TrayIcon::ActionSwitchAutoAllowPrograms:
+        return m_autoAllowProgsAction;
+    }
+
+    return nullptr;
 }

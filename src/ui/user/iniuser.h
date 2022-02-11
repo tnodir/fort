@@ -32,6 +32,9 @@ public:
     }
     QString hotKeyQuit() const { return valueText("hotKey/quit"); }
 
+    QString trayAction(const QString &event) const { return valueText("tray/" + event); }
+    void setTrayAction(const QString &event, const QString &v) { setValue("tray/" + event, v); }
+
     QRect progWindowGeometry() const { return value("progWindow/geometry").toRect(); }
     void setProgWindowGeometry(const QRect &v) { setValue("progWindow/geometry", v); }
 
