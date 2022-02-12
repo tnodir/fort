@@ -11,6 +11,7 @@ Fort is a simple firewall for Windows 7+.
 ## Features
 
   - Filter by network addresses, application groups
+  - Filter by `SvcHost.exe` service names
   - Support wildcards in program path names
   - Application group speed limits
   - Stores traffic statistics
@@ -48,8 +49,6 @@ For example here you can describe Internet addresses as:
 - to allow only some addresses:
     - "Exclude All" addresses,
     - but include wikipedia.com: "91.198.174.192".
-
-Filtered apps will be shown in the "Blocked" tab. 
 
 ### Do the App rules take precedence over the Allowed Internet rules?
 
