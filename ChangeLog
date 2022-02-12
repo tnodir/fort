@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.4.7, 2022-02-12:
+- UI: Options: Add ability to set tray icon click actions.
+- UI: Update translations.
+
 v3.4.6, 2022-02-10:
 - Add ability to filter `svchost.exe` by service name.
 - UI: Add Slovenian translation.
