@@ -62,6 +62,17 @@ For example here you can describe Internet addresses as:
 7) If **app path** is allowed, then _**PERMIT**_
 8) Log about blocked event and _**BLOCK**_
 
+### What does the "Make trackable" button do in Services?
+
+It modifies the selected Service's settings in the registry "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\\\<SERVICE-NAME\>":
+- changes the "Type" value to "16" (Own Process),
+- adds "-s \<SERVICE-NAME\>" argument to "ImagePath" value,
+- stores old "Type" & "ImagePath" values into "_Fort*" values.
+
+For the new values to take effect, you must restart the changed services or restart the computer.
+
+(Some services already run with "-s \<SERVICE-NAME\>" argument by `SvcHost.exe`.)
+
 ## Code Quality Monitor
 
 [![Code quality status](https://codescene.io/projects/5344/status.svg)](https://codescene.io/projects/5344/jobs/latest-successful/results)
