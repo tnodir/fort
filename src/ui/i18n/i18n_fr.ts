@@ -505,6 +505,62 @@
         <translation>Êtes-vous sûr de vouloir supprimer le pilote?</translation>
     </message>
     <message>
+        <source>Tray</source>
+        <translation>Barre de programme</translation>
+    </message>
+    <message>
+        <source>Event:</source>
+        <translation>Événement:</translation>
+    </message>
+    <message>
+        <source>Action:</source>
+        <translation>Action:</translation>
+    </message>
+    <message>
+        <source>Single Click</source>
+        <translation>Simple-Clic</translation>
+    </message>
+    <message>
+        <source>Double Click</source>
+        <translation>Double-clic</translation>
+    </message>
+    <message>
+        <source>Middle Click</source>
+        <translation>Clic du milieu</translation>
+    </message>
+    <message>
+        <source>Show Programs</source>
+        <translation>Afficher les programmes</translation>
+    </message>
+    <message>
+        <source>Show Options</source>
+        <translation>Afficher les options</translation>
+    </message>
+    <message>
+        <source>Show Statistics</source>
+        <translation>Afficher les statistiques</translation>
+    </message>
+    <message>
+        <source>Show/Hide Traffic Graph</source>
+        <translation>Afficher/Masquer graphique du trafic</translation>
+    </message>
+    <message>
+        <source>Switch Filter Enabled</source>
+        <translation>Commutateur Filtre activé</translation>
+    </message>
+    <message>
+        <source>Switch Stop Traffic</source>
+        <translation>Commutateur Stop Trafic</translation>
+    </message>
+    <message>
+        <source>Switch Stop Internet Traffic</source>
+        <translation>Commutateur d&apos;arrêt du trafic Internet</translation>
+    </message>
+    <message>
+        <source>Switch Auto-Allow New Programs</source>
+        <translation>Basculer autorisation auto de nouveaux programmes</translation>
+    </message>
+    <message>
         <source>Stop traffic when Fort Firewall is not running</source>
         <translation>Arrêtez le trafic lorsque Fort Firewall ne fonctionne pas</translation>
     </message>
