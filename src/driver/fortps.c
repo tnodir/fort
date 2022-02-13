@@ -451,7 +451,7 @@ static NTSTATUS ReadProcessStringBuffer(
     return status;
 }
 
-static NTSTATUS GetProcessPathArgs(
+static NTSTATUS GetCurrentProcessPathArgs(
         PEPROCESS process, PUNICODE_STRING path, PUNICODE_STRING commandLine)
 {
     NTSTATUS status;
@@ -489,17 +489,33 @@ static NTSTATUS GetProcessPathArgs(
     return STATUS_SUCCESS;
 }
 
-static void fort_pstree_attach_process(PSYSTEM_PROCESSES processEntry, HANDLE processHandle)
+static NTSTATUS GetProcessPathArgs(
+        HANDLE processHandle, PUNICODE_STRING path, PUNICODE_STRING commandLine)
 {
     NTSTATUS status;
 
     PEPROCESS process;
     status = ObReferenceObjectByHandle(
             processHandle, 0, *PsProcessType, KernelMode, (PVOID *) &process, NULL);
-    if (!NT_SUCCESS(status)) {
-        LOG("PsTree: Attach Process Error: %x\n", status);
-        return;
+    if (!NT_SUCCESS(status))
+        return status;
+
+    // Copy info from user-mode process
+    KAPC_STATE apcState;
+    KeStackAttachProcess(process, &apcState);
+    {
+        status = GetCurrentProcessPathArgs(process, path, commandLine);
     }
+    KeUnstackDetachProcess(&apcState);
+
+    ObDereferenceObject(process);
+
+    return status;
+}
+
+static void fort_pstree_enum_process(PSYSTEM_PROCESSES processEntry, HANDLE processHandle)
+{
+    NTSTATUS status;
 
     WCHAR pathBuffer[256];
     UNICODE_STRING path = {
@@ -511,19 +527,9 @@ static void fort_pstree_attach_process(PSYSTEM_PROCESSES processEntry, HANDLE pr
         .Length = 0, .MaximumLength = sizeof(commandLineBuffer), .Buffer = commandLineBuffer
     };
 
-    // Copy info from user-mode process to stack
-    KAPC_STATE apcState;
-    KeStackAttachProcess(process, &apcState);
-    {
-        status = GetProcessPathArgs(process, &path, &commandLine);
-    }
-    KeUnstackDetachProcess(&apcState);
-
-    ObDereferenceObject(process);
-
-    // Process the info
+    status = GetProcessPathArgs(processHandle, &path, &commandLine);
     if (!NT_SUCCESS(status)) {
-        LOG("PsTree: Query Process Error: pid=%d %x\n", processEntry->ProcessId, status);
+        LOG("PsTree: Enum Process Error: pid=%d %x\n", processEntry->ProcessId, status);
         return;
     }
 
@@ -550,7 +556,7 @@ static void fort_pstree_enum_processes_loop(PSYSTEM_PROCESSES processEntry)
         } else {
             const HANDLE processHandle = OpenProcessById(processId);
             if (processHandle != NULL) {
-                fort_pstree_attach_process(processEntry, processHandle);
+                fort_pstree_enum_process(processEntry, processHandle);
 
                 ZwClose(processHandle);
             }
