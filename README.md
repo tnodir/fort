@@ -14,6 +14,7 @@ Fort is a simple firewall for Windows 7+.
   - Filter by `SvcHost.exe` service names
   - Support wildcards in program path names
   - Application group speed limits
+  - Blocklists via "Zones"
   - Stores traffic statistics
   - Graphical display of bandwidth
   - Has own kernel driver, based on Windows Filtering Platform (WFP)
@@ -71,7 +72,7 @@ It modifies the selected Service's settings in the registry "HKEY_LOCAL_MACHINE\
 
 For the new values to take effect, you must restart the changed services or restart the computer.
 
-(Some services already run with "-s \<SERVICE-NAME\>" argument by `SvcHost.exe`.)
+(Some services already run with "-s \<SERVICE-NAME\>" argument by `SvcHost.exe`, so it's not necessary to explicitly make them trackable.)
 
 ## Code Quality Monitor
 
