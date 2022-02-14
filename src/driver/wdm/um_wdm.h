@@ -224,9 +224,10 @@ FORT_API PEPROCESS IoGetCurrentProcess(VOID);
 
 #define NonPagedPool        0
 #define NonPagedPoolExecute NonPagedPool
-FORT_API PVOID ExAllocatePoolWithTag(PVOID type, SIZE_T size, ULONG tag);
+#define NonPagedPoolNx      512
+FORT_API PVOID ExAllocatePoolWithTag(DWORD type, SIZE_T size, ULONG tag);
 FORT_API void ExFreePoolWithTag(PVOID p, ULONG tag);
-FORT_API PVOID ExAllocatePool(PVOID type, SIZE_T size);
+FORT_API PVOID ExAllocatePool(DWORD type, SIZE_T size);
 FORT_API void ExFreePool(PVOID p);
 
 typedef ULONG64 POOL_FLAGS;

@@ -25,6 +25,9 @@
 #endif
 #define fort_mem_free(p, tag) ExFreePoolWithTag((p), (tag))
 
+#define fort_mem_alloc_notag(size) ExAllocatePool(NonPagedPoolNx, (size))
+#define fort_mem_free_notag(p)     ExFreePool((p))
+
 #define fort_request_complete_info(irp, status, info)                                              \
     do {                                                                                           \
         (irp)->IoStatus.Status = (status);                                                         \

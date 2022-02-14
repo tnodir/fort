@@ -12,7 +12,7 @@ static UNICODE_STRING g_system32Path;
 
 static NTSTATUS fort_string_new(ULONG len, PCWSTR src, PUNICODE_STRING outData)
 {
-    PWSTR buf = ExAllocatePool(NonPagedPool, len);
+    PWSTR buf = fort_mem_alloc_notag(len);
     if (buf == NULL)
         return STATUS_INSUFFICIENT_RESOURCES;
 
@@ -140,7 +140,7 @@ FORT_API NTSTATUS fort_system32_path_init(PDRIVER_OBJECT driver, PUNICODE_STRING
     }
 
     /* Free the allocated driver path */
-    ExFreePool(driverPath.Buffer);
+    fort_mem_free_notag(driverPath.Buffer);
 
     return status;
 }

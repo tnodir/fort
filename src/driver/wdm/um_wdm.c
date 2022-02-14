@@ -13,7 +13,7 @@ PEPROCESS IoGetCurrentProcess()
     return NULL;
 }
 
-PVOID ExAllocatePoolWithTag(PVOID type, SIZE_T size, ULONG tag)
+PVOID ExAllocatePoolWithTag(DWORD type, SIZE_T size, ULONG tag)
 {
     UNUSED(type);
     UNUSED(tag);
@@ -26,7 +26,7 @@ void ExFreePoolWithTag(PVOID p, ULONG tag)
     HeapFree(GetProcessHeap(), 0, p);
 }
 
-PVOID ExAllocatePool(PVOID flags, SIZE_T size)
+PVOID ExAllocatePool(DWORD flags, SIZE_T size)
 {
     UNUSED(flags);
     return HeapAlloc(GetProcessHeap(), 0, size);
