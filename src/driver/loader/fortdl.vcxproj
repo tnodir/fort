@@ -17,6 +17,14 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|ARM64">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM64">
+      <Configuration>Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
@@ -24,6 +32,7 @@
     <Platform Condition="'$(Platform)'==''">Win32</Platform>
     <DefineConstants Condition="'$(Configuration)'=='Release'">$(DefineConstants);NDEBUG</DefineConstants>
     <DefineConstants Condition="'$(Config)'=='win7'">$(DefineConstants);FORT_WIN7_COMPAT</DefineConstants>
+    <WindowsSDKDesktopARM64Support>true</WindowsSDKDesktopARM64Support>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration-Common">
