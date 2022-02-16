@@ -2,6 +2,8 @@
 
 #include "fortpcb_dst.h"
 
+ProxyCallbackProc g_proxyCallbacksArray[PROXY_CALLBACKS_COUNT];
+
 #ifdef _WIN64
 
 #    define ProxyCallbackExtern(i) extern void proxyCallback##i(void)

@@ -3,14 +3,7 @@ ELSE
 .model flat, stdcall
 ENDIF
 
-.DATA
-IFDEF RAX
-PUBLIC g_proxyDstCallbacksArray
-g_proxyDstCallbacksArray QWORD 64 DUP(?)
-ELSE
-PUBLIC g_proxyDstCallbacksArray
-g_proxyDstCallbacksArray WORD 64 DUP(?)
-ENDIF
+EXTERNDEF g_proxyDstCallbacksArray:BYTE
 
 .CODE
 

@@ -2,8 +2,6 @@
 
 #include "fortpcb_dst.h"
 
-ProxyCallbackProc g_proxyCallbacksArray[PROXY_CALLBACKS_COUNT];
-
 #define ProxyCallbackFunction(i)                                                                   \
     void proxyCallback##i(void) { g_proxyCallbacksArray[i](); }
 

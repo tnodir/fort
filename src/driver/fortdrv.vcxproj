@@ -30,6 +30,7 @@
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <Configuration Condition="'$(Configuration)'==''">Release</Configuration>
     <Platform Condition="'$(Platform)'==''">Win32</Platform>
+    <Arch Condition="'$(Arch)'==''">x86</Arch>
     <DefineConstants Condition="'$(Configuration)'=='Release'">$(DefineConstants);NDEBUG</DefineConstants>
     <DefineConstants Condition="'$(Config)'=='win7'">$(DefineConstants);FORT_WIN7_COMPAT</DefineConstants>
     <WindowsSDKDesktopARM64Support>true</WindowsSDKDesktopARM64Support>
@@ -81,7 +82,7 @@
     <FilesToPackage Include="$(TargetPath)" />
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="proxycb\fortpcb_dst_x86.asm" />
+    <MASM Include="proxycb\fortpcb_dst_$(Arch).asm" />
     <ClCompile Include="fortdrv_amalg.c" />
     <ClInclude Include="fortdrv.h" />
     <ResourceCompile Include="fortdrv.rc" />
