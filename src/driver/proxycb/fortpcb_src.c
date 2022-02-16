@@ -146,7 +146,7 @@ FORT_API void fort_proxycb_src_prepare(PFORT_PROXYCB_INFO cbInfo)
 
 FORT_API void fort_proxycb_src_setup(PFORT_PROXYCB_INFO cbInfo)
 {
-#ifdef _WIN64
+#if defined(_WIN64) && !defined(_M_ARM64)
     memcpy(g_proxyDstCallbacksArray, cbInfo->dst, sizeof(g_proxyDstCallbacksArray));
 #else
     UNUSED(cbInfo);

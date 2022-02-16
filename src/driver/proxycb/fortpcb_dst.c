@@ -4,7 +4,7 @@
 
 ProxyCallbackProc g_proxyCallbacksArray[PROXY_CALLBACKS_COUNT];
 
-#ifdef _WIN64
+#if defined(_WIN64) && !defined(_M_ARM64)
 
 #    define ProxyCallbackExtern(i) extern void proxyCallback##i(void)
 
@@ -144,7 +144,7 @@ static ProxyCallbackProc g_proxyDstCallbacks[PROXY_CALLBACKS_COUNT] = {
 
 FORT_API void fort_proxycb_dst_setup(PFORT_PROXYCB_INFO cbInfo)
 {
-#ifdef _WIN64
+#if defined(_WIN64) && !defined(_M_ARM64)
     cbInfo->dst = g_proxyDstCallbacks;
     cbInfo->callbacks = g_proxyCallbacksArray;
 #else

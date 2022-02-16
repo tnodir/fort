@@ -6,9 +6,6 @@
 #    define PAGE_SIZE 0x1000
 #endif
 
-#define ARCHITECTURE_TYPE_X86 0x00000000
-#define ARCHITECTURE_TYPE_X64 0x00000001
-
 /* MIN/MAX of address aligned */
 #define MIN_ALIGNED(address, alignment) (LPVOID)((uintptr_t) (address) & ~((alignment) -1))
 #define MAX_ALIGNED(value, alignment)   (((value) + (alignment) -1) & ~((alignment) -1))
@@ -97,7 +94,7 @@ static void PatchAddressRelocations(
             *patchAddrHL += locationDelta;
         } break;
 
-#ifdef _WIN64
+#if defined(_WIN64)
         case IMAGE_REL_BASED_DIR64: {
             PUCHAR *patchAddr64 = (PUCHAR *) (dest + offset);
             *patchAddr64 += locationDelta;
@@ -304,7 +301,9 @@ static BOOL IsPEHeaderValid(PVOID lpData, DWORD dwSize)
             || dwSize < pNtHeaders->OptionalHeader.SizeOfHeaders
             /* Check for the correct architecture */
             || pNtHeaders->FileHeader.Machine !=
-#ifdef _WIN64
+#if defined(_M_ARM64)
+                    IMAGE_FILE_MACHINE_ARM64
+#elif defined(_WIN64)
                     IMAGE_FILE_MACHINE_AMD64
 #else
                     IMAGE_FILE_MACHINE_I386

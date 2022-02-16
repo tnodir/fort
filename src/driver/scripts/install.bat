@@ -1,7 +1,8 @@
 @rem Install driver
 
 @set ARCH=x86
-@if defined PROGRAMFILES(X86) @set ARCH=x86_64
+@if "%PROCESSOR_ARCHITECTURE%" == "AMD64" @set ARCH=x86_64
+@if "%PROCESSOR_ARCHITECTURE%" == "ARM64" @set ARCH=ARM64
 
 @set BASENAME=fortfw
 @set FILENAME=%BASENAME%.sys
