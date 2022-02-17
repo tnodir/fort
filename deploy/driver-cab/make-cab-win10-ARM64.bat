@@ -1,0 +1,1 @@
+@%~dp0make-cab.bat ARM64 win10
