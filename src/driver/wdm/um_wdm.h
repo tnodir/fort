@@ -321,6 +321,12 @@ FORT_API NTSTATUS ZwReadFile(HANDLE fileHandle, HANDLE event, PIO_APC_ROUTINE ap
         PVOID apcContext, PIO_STATUS_BLOCK ioStatusBlock, PVOID buffer, ULONG length,
         PLARGE_INTEGER byteOffset, PULONG key);
 
+#define DIRECTORY_QUERY     (0x0001)
+#define SYMBOLIC_LINK_QUERY (0x0001)
+
+FORT_API NTSTATUS ZwOpenDirectoryObject(
+        PHANDLE directoryHandle, ACCESS_MASK desiredAccess, POBJECT_ATTRIBUTES objectAttributes);
+
 FORT_API NTSTATUS ZwOpenSymbolicLinkObject(
         PHANDLE linkHandle, ACCESS_MASK desiredAccess, POBJECT_ATTRIBUTES objectAttributes);
 FORT_API NTSTATUS ZwQuerySymbolicLinkObject(

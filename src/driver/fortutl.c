@@ -10,6 +10,9 @@
 static WCHAR g_system32PathBuffer[64];
 static UNICODE_STRING g_system32Path;
 
+static WCHAR g_systemDrivePathBuffer[32];
+static UNICODE_STRING g_systemDrivePath;
+
 static NTSTATUS fort_string_new(ULONG len, PCWSTR src, PUNICODE_STRING outData)
 {
     PWSTR buf = fort_mem_alloc_notag(len);
@@ -77,17 +80,36 @@ FORT_API NTSTATUS fort_driver_path(
     return status;
 }
 
+static void fort_system_drive_init(PCUNICODE_STRING path)
+{
+    UNICODE_STRING drivePath = {
+        .Length = 2 * sizeof(WCHAR), .MaximumLength = 2 * sizeof(WCHAR), .Buffer = path->Buffer
+    };
+
+    g_systemDrivePath.Length = 0;
+    g_systemDrivePath.MaximumLength = sizeof(g_systemDrivePathBuffer);
+    g_systemDrivePath.Buffer = g_systemDrivePathBuffer;
+
+    fort_resolve_link(&drivePath, &g_systemDrivePath);
+
+    _wcslwr_s(g_systemDrivePathBuffer, g_systemDrivePath.Length / sizeof(WCHAR) + sizeof(WCHAR));
+}
+
 static NTSTATUS fort_system32_path_set(PCUNICODE_STRING path)
 {
-    if (path->Length >= sizeof(g_system32PathBuffer) - sizeof(WCHAR))
-        return STATUS_BUFFER_OVERFLOW;
-
-    RtlCopyMemory(g_system32PathBuffer, path->Buffer, path->Length);
-    g_system32PathBuffer[path->Length / sizeof(WCHAR)] = L'\0';
+    if (path->Length > sizeof(g_system32PathBuffer) - sizeof(WCHAR))
+        return STATUS_BUFFER_TOO_SMALL;
 
     g_system32Path.Length = path->Length;
     g_system32Path.MaximumLength = sizeof(g_system32PathBuffer);
     g_system32Path.Buffer = g_system32PathBuffer;
+
+    RtlDowncaseUnicodeString(&g_system32Path, path, FALSE);
+    g_system32PathBuffer[path->Length / sizeof(WCHAR)] = L'\0';
+
+    fort_system_drive_init(path);
+
+    LOG("PsTree: SYS: [%wZ] [%wZ]\n", fort_system_drive_path(), fort_system32_path());
 
     return STATUS_SUCCESS;
 }
@@ -130,7 +152,7 @@ FORT_API NTSTATUS fort_system32_path_init(PDRIVER_OBJECT driver, PUNICODE_STRING
     if (sp != NULL) {
         UNICODE_STRING sys32Path = driverPath;
         sys32Path.Length = (USHORT) ((PCHAR) (sp + 1) /* include the separator */
-                - (PCHAR) (driverPath.Buffer));
+                - (PCHAR) driverPath.Buffer);
 
         fort_path_prefix_adjust(&sys32Path);
 
@@ -150,23 +172,57 @@ FORT_API PUNICODE_STRING fort_system32_path()
     return &g_system32Path;
 }
 
-FORT_API NTSTATUS fort_resolve_link(PCWSTR linkPath, PUNICODE_STRING outPath)
+FORT_API PUNICODE_STRING fort_system_drive_path()
+{
+    return &g_systemDrivePath;
+}
+
+FORT_API NTSTATUS fort_resolve_link(PUNICODE_STRING linkPath, PUNICODE_STRING outPath)
 {
     NTSTATUS status;
 
-    UNICODE_STRING objName;
-    RtlInitUnicodeString(&objName, linkPath);
+    UNICODE_STRING dosRoot;
+    RtlInitUnicodeString(&dosRoot, L"\\??");
 
     OBJECT_ATTRIBUTES objAttr;
-    InitializeObjectAttributes(&objAttr, &objName, OBJ_CASE_INSENSITIVE, NULL, NULL);
+    InitializeObjectAttributes(&objAttr, &dosRoot, OBJ_CASE_INSENSITIVE, NULL, NULL);
 
-    HANDLE linkHandle;
-    status = ZwOpenSymbolicLinkObject(&linkHandle, GENERIC_READ, &objAttr);
+    HANDLE dirHandle;
+    status = ZwOpenDirectoryObject(&dirHandle, DIRECTORY_QUERY, &objAttr);
     if (!NT_SUCCESS(status))
         return status;
 
-    ULONG len = outPath->MaximumLength;
-    return ZwQuerySymbolicLinkObject(linkHandle, outPath, &len);
+    InitializeObjectAttributes(&objAttr, linkPath, OBJ_CASE_INSENSITIVE, dirHandle, NULL);
+
+    HANDLE linkHandle;
+    status = ZwOpenSymbolicLinkObject(&linkHandle, SYMBOLIC_LINK_QUERY, &objAttr);
+    if (NT_SUCCESS(status)) {
+        ULONG outLength = 0;
+        status = ZwQuerySymbolicLinkObject(linkHandle, outPath, &outLength);
+
+        if (outLength != 0 && (outLength < 7 || outLength >= outPath->MaximumLength)) {
+            status = STATUS_BUFFER_TOO_SMALL;
+        }
+
+        if (NT_SUCCESS(status)) {
+            if (outPath->Buffer[outLength / sizeof(WCHAR) - 1] == L'\0') {
+                outLength -= sizeof(WCHAR); /* exclude terminating zero */
+            }
+
+            if (outPath->Buffer[outLength / sizeof(WCHAR) - 1] == L'\\') {
+                outLength -= sizeof(WCHAR); /* exclude terminating backslash */
+            }
+
+            outPath->Length = (USHORT) outLength;
+            outPath->Buffer[outLength / sizeof(WCHAR)] = L'\0';
+        }
+
+        ZwClose(linkHandle);
+    }
+
+    ZwClose(dirHandle);
+
+    return status;
 }
 
 FORT_API NTSTATUS fort_file_read(HANDLE fileHandle, ULONG poolTag, PUCHAR *outData, DWORD *outSize)

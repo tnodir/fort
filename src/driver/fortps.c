@@ -18,9 +18,13 @@
 
 struct fort_psname
 {
+    UINT16 refcount;
     UINT16 size;
     WCHAR data[1];
 };
+
+#define FORT_PSNODE_PARENT_NAME_CHECKED 0x0001
+#define FORT_PSNODE_NAME_INHERITED      0x0002
 
 /* Synchronize with tommy_hashdyn_node! */
 typedef struct fort_psnode
@@ -35,7 +39,7 @@ typedef struct fort_psnode
     UINT32 process_id;
     UINT32 parent_process_id;
 
-    UINT16 flags;
+    UINT16 volatile flags;
     UINT16 conf_chn;
 } FORT_PSNODE, *PFORT_PSNODE;
 
@@ -121,6 +125,7 @@ static PFORT_PSNAME fort_pstree_name_new(PFORT_PSTREE ps_tree, UINT16 name_size)
     PFORT_PSNAME ps_name = fort_pool_malloc(&ps_tree->pool_list,
             FORT_PSNAME_DATA_OFF + name_size + sizeof(WCHAR)); /* include terminating zero */
     if (ps_name != NULL) {
+        ps_name->refcount = 1;
         ps_name->size = name_size;
         ps_name->data[name_size / sizeof(WCHAR)] = L'\0';
     }
@@ -129,9 +134,45 @@ static PFORT_PSNAME fort_pstree_name_new(PFORT_PSTREE ps_tree, UINT16 name_size)
 
 static void fort_pstree_name_del(PFORT_PSTREE ps_tree, PFORT_PSNAME ps_name)
 {
-    if (ps_name != NULL) {
+    if (ps_name != NULL && --ps_name->refcount == 0) {
         fort_pool_free(&ps_tree->pool_list, ps_name);
     }
+}
+
+static BOOL fort_pstree_svchost_path_check(PCUNICODE_STRING path)
+{
+    const USHORT svchostSize = sizeof(FORT_SVCHOST_EXE) - sizeof(WCHAR); /* skip terminating zero */
+
+    const USHORT pathLength = path->Length;
+    const PCHAR pathBuffer = (PCHAR) path->Buffer;
+
+    PCUNICODE_STRING sysDrivePath = fort_system_drive_path();
+    PCUNICODE_STRING sys32Path = fort_system32_path();
+
+    const USHORT sys32DrivePrefixSize = 2 * sizeof(WCHAR);
+    const USHORT sys32PathSize = sys32Path->Length - sys32DrivePrefixSize;
+
+    /* Check the total path length */
+    if (pathLength != sysDrivePath->Length + sys32PathSize + svchostSize)
+        return FALSE;
+
+    /* Check the file name */
+    if (RtlCompareMemory(pathBuffer + (pathLength - svchostSize), FORT_SVCHOST_EXE, svchostSize)
+            != svchostSize)
+        return FALSE;
+
+    /* Check the drive */
+    if (RtlCompareMemory(pathBuffer, sysDrivePath->Buffer, sysDrivePath->Length)
+            != sysDrivePath->Length)
+        return FALSE;
+
+    /* Check the path */
+    if (RtlCompareMemory(pathBuffer + sysDrivePath->Length,
+                (PCHAR) sys32Path->Buffer + sys32DrivePrefixSize, sys32PathSize)
+            != sys32PathSize)
+        return FALSE;
+
+    return TRUE;
 }
 
 static BOOL fort_pstree_svchost_check(
@@ -142,12 +183,14 @@ static BOOL fort_pstree_svchost_check(
     const USHORT sys32Size = path->Length - svchostSize;
     const USHORT sys32Count = sys32Size / sizeof(WCHAR);
 
+    PCUNICODE_STRING sys32Path = fort_system32_path();
+    if (sys32Size != sys32Path->Length)
+        return FALSE;
+
     if (_wcsnicmp(path->Buffer + sys32Count, FORT_SVCHOST_EXE, svchostCount) != 0)
         return FALSE;
 
-    PCUNICODE_STRING sys32Path = fort_system32_path();
-    if (sys32Size != sys32Path->Length
-            || _wcsnicmp(path->Buffer, sys32Path->Buffer, sys32Count) != 0)
+    if (_wcsnicmp(path->Buffer, sys32Path->Buffer, sys32Count) != 0)
         return FALSE;
 
     PWCHAR argp = wcsstr(commandLine->Buffer, L"-s ");
@@ -272,7 +315,8 @@ static void fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCUNICODE_STRING p
     proc->process_id = processId;
     proc->parent_process_id = parentProcessId;
 
-    proc->flags = 0;
+    /* Services can't inherit parent's name */
+    proc->flags = (ps_name != NULL) ? FORT_PSNODE_PARENT_NAME_CHECKED : 0;
     proc->conf_chn = 0;
 }
 
@@ -391,23 +435,49 @@ FORT_API PFORT_PSNAME fort_pstree_get_proc_name(
     return ps_name;
 }
 
+static NTSTATUS GetProcessImageName(HANDLE processHandle, PUNICODE_STRING path)
+{
+    NTSTATUS status;
+
+    struct
+    {
+        UNICODE_STRING path;
+        WCHAR data[2 * 1024];
+    } buffer;
+
+    ULONG outLength;
+    status = ZwQueryInformationProcess(
+            processHandle, ProcessImageFileName, &buffer, sizeof(buffer), &outLength);
+    if (!NT_SUCCESS(status))
+        return status;
+
+    if (path->MaximumLength < buffer.path.Length)
+        return STATUS_BUFFER_TOO_SMALL;
+
+    path->Length = buffer.path.Length;
+    RtlDowncaseUnicodeString(path, &buffer.path, FALSE);
+    path->Buffer[path->Length / sizeof(WCHAR)] = L'\0';
+
+    return STATUS_SUCCESS;
+}
+
 static HANDLE OpenProcessById(DWORD processId)
 {
     NTSTATUS status;
 
-    PEPROCESS peProcess = NULL;
+    PEPROCESS peProcess;
     status = PsLookupProcessByProcessId((HANDLE) (ptrdiff_t) processId, &peProcess);
-    if (!NT_SUCCESS(status) || peProcess == NULL) {
+    if (!NT_SUCCESS(status)) {
         LOG("PsTree: Lookup Process Error: pid=%d %x\n", processId, status);
         return NULL;
     }
 
-    HANDLE processHandle = NULL;
+    HANDLE processHandle;
     status = ObOpenObjectByPointer(peProcess, 0, NULL, 0, 0, KernelMode, &processHandle);
 
     ObDereferenceObject(peProcess);
 
-    if (!NT_SUCCESS(status) || processHandle == NULL) {
+    if (!NT_SUCCESS(status)) {
         LOG("PsTree: Open Process Object Error: pid=%d %x\n", processId, status);
         return NULL;
     }
@@ -527,22 +597,28 @@ static void fort_pstree_enum_process(PSYSTEM_PROCESSES processEntry, HANDLE proc
         .Length = 0, .MaximumLength = sizeof(commandLineBuffer), .Buffer = commandLineBuffer
     };
 
-    status = GetProcessPathArgs(processHandle, &path, &commandLine);
-    if (!NT_SUCCESS(status)) {
-        LOG("PsTree: Enum Process Error: pid=%d %x\n", processEntry->ProcessId, status);
+    status = GetProcessImageName(processHandle, &path);
+    if (!NT_SUCCESS(status))
         return;
+
+    if (fort_pstree_svchost_path_check(&path)) {
+        status = GetProcessPathArgs(processHandle, &path, &commandLine);
+        if (!NT_SUCCESS(status)) {
+            LOG("PsTree: Process Args Error: pid=%d %x\n", processEntry->ProcessId, status);
+            return;
+        }
+    } else {
+        path.Length = 0;
     }
 
-    if (path.Length != 0 && commandLine.Length != 0) {
-        const HANDLE processId = (HANDLE) (ptrdiff_t) processEntry->ProcessId;
-        const HANDLE parentProcessId = (HANDLE) (ptrdiff_t) processEntry->ParentProcessId;
+    const HANDLE processId = (HANDLE) (ptrdiff_t) processEntry->ProcessId;
+    const HANDLE parentProcessId = (HANDLE) (ptrdiff_t) processEntry->ParentProcessId;
 
-        PS_CREATE_NOTIFY_INFO createInfo = {
-            .ParentProcessId = parentProcessId, .ImageFileName = &path, .CommandLine = &commandLine
-        };
+    PS_CREATE_NOTIFY_INFO createInfo = {
+        .ParentProcessId = parentProcessId, .ImageFileName = &path, .CommandLine = &commandLine
+    };
 
-        fort_pstree_notify(/*process=*/NULL, processId, &createInfo);
-    }
+    fort_pstree_notify(/*process=*/NULL, processId, &createInfo);
 }
 
 static void fort_pstree_enum_processes_loop(PSYSTEM_PROCESSES processEntry)

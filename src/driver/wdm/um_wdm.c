@@ -350,6 +350,15 @@ NTSTATUS ZwReadFile(HANDLE fileHandle, HANDLE event, PIO_APC_ROUTINE apcRoutine,
     return STATUS_SUCCESS;
 }
 
+NTSTATUS ZwOpenDirectoryObject(
+        PHANDLE directoryHandle, ACCESS_MASK desiredAccess, POBJECT_ATTRIBUTES objectAttributes)
+{
+    UNUSED(directoryHandle);
+    UNUSED(desiredAccess);
+    UNUSED(objectAttributes);
+    return STATUS_SUCCESS;
+}
+
 NTSTATUS ZwOpenSymbolicLinkObject(
         PHANDLE linkHandle, ACCESS_MASK desiredAccess, POBJECT_ATTRIBUTES objectAttributes)
 {
