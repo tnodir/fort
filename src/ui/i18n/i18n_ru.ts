@@ -226,6 +226,10 @@
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Программы (*.exe);;Все файлы (*.*)</translation>
     </message>
+    <message>
+        <source>Apply same rules to child processes</source>
+        <translation>Применить те же правила к дочерним процессам</translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -680,19 +684,19 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Switch Filter Enabled</source>
-        <translation>Переключить "Фильтр включен"</translation>
+        <translation>Переключить &quot;Фильтр включен&quot;</translation>
     </message>
     <message>
         <source>Switch Stop Traffic</source>
-        <translation>Переключить "Остановить трафик"</translation>
+        <translation>Переключить &quot;Остановить трафик&quot;</translation>
     </message>
     <message>
         <source>Switch Stop Internet Traffic</source>
-        <translation>Переключить "Остановить Интернет трафик"</translation>
+        <translation>Переключить &quot;Остановить Интернет трафик&quot;</translation>
     </message>
     <message>
         <source>Switch Auto-Allow New Programs</source>
-        <translation>Переключить "Авто-разрешение новых программ"</translation>
+        <translation>Переключить &quot;Авто-разрешение новых программ&quot;</translation>
     </message>
 </context>
 <context>
@@ -830,6 +834,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Программы (*.exe);;Все файлы (*.*)</translation>
+    </message>
+    <message>
+        <source>Apply same rules to child processes</source>
+        <translation>Применить те же правила к дочерним процессам</translation>
     </message>
 </context>
 <context>
