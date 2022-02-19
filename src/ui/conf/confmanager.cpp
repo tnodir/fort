@@ -34,7 +34,7 @@ Q_LOGGING_CATEGORY(CLOG_CONF_MANAGER, "conf")
 #define logWarning()  qCWarning(CLOG_CONF_MANAGER, )
 #define logCritical() qCCritical(CLOG_CONF_MANAGER, )
 
-#define DATABASE_USER_VERSION 10
+#define DATABASE_USER_VERSION 11
 
 namespace {
 
@@ -44,7 +44,7 @@ const char *const sqlSelectAddressGroups = "SELECT addr_group_id, include_all, e
                                            "  FROM address_group"
                                            "  ORDER BY order_index;";
 
-const char *const sqlSelectAppGroups = "SELECT app_group_id, enabled, log_conn,"
+const char *const sqlSelectAppGroups = "SELECT app_group_id, enabled, apply_child, log_conn,"
                                        "    fragment_packet, period_enabled,"
                                        "    limit_in_enabled, limit_out_enabled,"
                                        "    speed_limit_in, speed_limit_out,"
@@ -67,21 +67,22 @@ const char *const sqlUpdateAddressGroup = "UPDATE address_group"
                                           "  WHERE addr_group_id = ?1;";
 
 const char *const sqlInsertAppGroup =
-        "INSERT INTO app_group(app_group_id, order_index, enabled, log_conn,"
+        "INSERT INTO app_group(app_group_id, order_index, enabled,"
+        "    apply_child, log_conn,"
         "    fragment_packet, period_enabled,"
         "    limit_in_enabled, limit_out_enabled,"
         "    speed_limit_in, speed_limit_out,"
         "    name, block_text, allow_text,"
         "    period_from, period_to)"
-        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15);";
+        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16);";
 
 const char *const sqlUpdateAppGroup = "UPDATE app_group"
-                                      "  SET order_index = ?2, enabled = ?3, log_conn = ?4,"
-                                      "    fragment_packet = ?5, period_enabled = ?6,"
-                                      "    limit_in_enabled = ?7, limit_out_enabled = ?8,"
-                                      "    speed_limit_in = ?9, speed_limit_out = ?10,"
-                                      "    name = ?11, block_text = ?12, allow_text = ?13,"
-                                      "    period_from = ?14, period_to = ?15"
+                                      "  SET order_index = ?2, enabled = ?3, apply_child = ?4,"
+                                      "    log_conn = ?5, fragment_packet = ?6,"
+                                      "    period_enabled = ?7, limit_in_enabled = ?8,"
+                                      "    limit_out_enabled = ?9, speed_limit_in = ?10,"
+                                      "    speed_limit_out = ?11, name = ?12, block_text = ?13,"
+                                      "    allow_text = ?14, period_from = ?15, period_to = ?16"
                                       "  WHERE app_group_id = ?1;";
 
 const char *const sqlDeleteAppGroup = "DELETE FROM app_group"
@@ -107,6 +108,7 @@ const char *const sqlSelectAppById = "SELECT"
                                      "    g.order_index as group_index,"
                                      "    t.path,"
                                      "    t.use_group_perm,"
+                                     "    t.apply_child,"
                                      "    t.blocked"
                                      "  FROM app t"
                                      "    JOIN app_group g ON g.app_group_id = t.app_group_id"
@@ -116,6 +118,7 @@ const char *const sqlSelectApps = "SELECT"
                                   "    g.order_index as group_index,"
                                   "    t.path,"
                                   "    t.use_group_perm,"
+                                  "    t.apply_child,"
                                   "    t.blocked,"
                                   "    (alert.app_id IS NOT NULL) as alerted"
                                   "  FROM app t"
@@ -127,21 +130,22 @@ const char *const sqlSelectEndAppsCount = "SELECT COUNT(*) FROM app"
                                           "    AND blocked = 0;";
 
 const char *const sqlSelectEndedApps = "SELECT t.app_id, g.order_index as group_index,"
-                                       "    t.path, t.name, t.use_group_perm"
+                                       "    t.path, t.name, t.use_group_perm, t.apply_child"
                                        "  FROM app t"
                                        "    JOIN app_group g ON g.app_group_id = t.app_group_id"
                                        "  WHERE end_time <= ?1 AND blocked = 0;";
 
 const char *const sqlSelectAppIdByPath = "SELECT app_id FROM app WHERE path = ?1;";
 
-const char *const sqlUpsertApp =
-        "INSERT INTO app(app_group_id, path, name, use_group_perm, blocked,"
-        "    creat_time, end_time)"
-        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7)"
-        "  ON CONFLICT(path) DO UPDATE"
-        "  SET app_group_id = ?1, name = ?3, use_group_perm = ?4, blocked = ?5,"
-        "    creat_time = ?6, end_time = ?7"
-        "  RETURNING app_id;";
+const char *const sqlUpsertApp = "INSERT INTO app(app_group_id, path, name,"
+                                 "    use_group_perm, apply_child, blocked,"
+                                 "    creat_time, end_time)"
+                                 "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)"
+                                 "  ON CONFLICT(path) DO UPDATE"
+                                 "  SET app_group_id = ?1, name = ?3,"
+                                 "    use_group_perm = ?4, apply_child = ?5, blocked = ?6,"
+                                 "    creat_time = ?7, end_time = ?8"
+                                 "  RETURNING app_id;";
 
 const char *const sqlInsertAppAlert = "INSERT INTO app_alert(app_id) VALUES(?1);";
 
@@ -151,7 +155,7 @@ const char *const sqlDeleteAppAlert = "DELETE FROM app_alert WHERE app_id = ?1;"
 
 const char *const sqlUpdateApp = "UPDATE app"
                                  "  SET app_group_id = ?2, name = ?3, use_group_perm = ?4,"
-                                 "    blocked = ?5, end_time = ?6"
+                                 "    apply_child = ?5, blocked = ?6, end_time = ?7"
                                  "  WHERE app_id = ?1;";
 
 const char *const sqlUpdateAppName = "UPDATE app SET name = ?2 WHERE app_id = ?1;";
@@ -283,18 +287,19 @@ bool loadAppGroups(SqliteDb *db, FirewallConf &conf)
 
         appGroup->setId(stmt.columnInt64(0));
         appGroup->setEnabled(stmt.columnBool(1));
-        appGroup->setLogConn(stmt.columnBool(2));
-        appGroup->setFragmentPacket(stmt.columnBool(3));
-        appGroup->setPeriodEnabled(stmt.columnBool(4));
-        appGroup->setLimitInEnabled(stmt.columnBool(5));
-        appGroup->setLimitOutEnabled(stmt.columnBool(6));
-        appGroup->setSpeedLimitIn(quint32(stmt.columnInt(7)));
-        appGroup->setSpeedLimitOut(quint32(stmt.columnInt(8)));
-        appGroup->setName(stmt.columnText(9));
-        appGroup->setBlockText(stmt.columnText(10));
-        appGroup->setAllowText(stmt.columnText(11));
-        appGroup->setPeriodFrom(stmt.columnText(12));
-        appGroup->setPeriodTo(stmt.columnText(13));
+        appGroup->setApplyChild(stmt.columnBool(2));
+        appGroup->setLogConn(stmt.columnBool(3));
+        appGroup->setFragmentPacket(stmt.columnBool(4));
+        appGroup->setPeriodEnabled(stmt.columnBool(5));
+        appGroup->setLimitInEnabled(stmt.columnBool(6));
+        appGroup->setLimitOutEnabled(stmt.columnBool(7));
+        appGroup->setSpeedLimitIn(quint32(stmt.columnInt(8)));
+        appGroup->setSpeedLimitOut(quint32(stmt.columnInt(9)));
+        appGroup->setName(stmt.columnText(10));
+        appGroup->setBlockText(stmt.columnText(11));
+        appGroup->setAllowText(stmt.columnText(12));
+        appGroup->setPeriodFrom(stmt.columnText(13));
+        appGroup->setPeriodTo(stmt.columnText(14));
         appGroup->setEdited(false);
 
         conf.addAppGroup(appGroup);
@@ -311,10 +316,11 @@ bool saveAppGroup(SqliteDb *db, AppGroup *appGroup, int orderIndex)
 
     const auto vars = QVariantList()
             << (rowExists ? appGroup->id() : QVariant()) << orderIndex << appGroup->enabled()
-            << appGroup->logConn() << appGroup->fragmentPacket() << appGroup->periodEnabled()
-            << appGroup->limitInEnabled() << appGroup->limitOutEnabled() << appGroup->speedLimitIn()
-            << appGroup->speedLimitOut() << appGroup->name() << appGroup->blockText()
-            << appGroup->allowText() << appGroup->periodFrom() << appGroup->periodTo();
+            << appGroup->applyChild() << appGroup->logConn() << appGroup->fragmentPacket()
+            << appGroup->periodEnabled() << appGroup->limitInEnabled()
+            << appGroup->limitOutEnabled() << appGroup->speedLimitIn() << appGroup->speedLimitOut()
+            << appGroup->name() << appGroup->blockText() << appGroup->allowText()
+            << appGroup->periodFrom() << appGroup->periodTo();
 
     const char *sql = rowExists ? sqlUpdateAppGroup : sqlInsertAppGroup;
 
@@ -658,8 +664,8 @@ void ConfManager::logBlockedApp(const LogEntryBlocked &logEntry)
     const QString appName = IoC<AppInfoCache>()->appName(appPath);
     constexpr int groupIndex = 0; // "Main" app. group
 
-    const bool ok = addOrUpdateApp(
-            appPath, appName, QDateTime(), groupIndex, false, logEntry.blocked(), true);
+    const bool ok = addOrUpdateApp(appPath, appName, QDateTime(), groupIndex,
+            /*useGroupPerm=*/false, /*applyChild=*/false, logEntry.blocked(), /*alerted=*/true);
     if (ok) {
         emitAppAlerted();
     }
@@ -671,12 +677,13 @@ qint64 ConfManager::appIdByPath(const QString &appPath)
 }
 
 bool ConfManager::addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
-        int groupIndex, bool useGroupPerm, bool blocked)
+        int groupIndex, bool useGroupPerm, bool applyChild, bool blocked)
 {
-    if (!updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, blocked))
+    if (!updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, applyChild, applyChild, blocked))
         return false;
 
-    return addOrUpdateApp(appPath, appName, endTime, groupIndex, useGroupPerm, blocked, false);
+    return addOrUpdateApp(
+            appPath, appName, endTime, groupIndex, useGroupPerm, applyChild, blocked, false);
 }
 
 bool ConfManager::deleteApp(qint64 appId)
@@ -732,21 +739,22 @@ bool ConfManager::purgeApps()
 }
 
 bool ConfManager::updateApp(qint64 appId, const QString &appPath, const QString &appName,
-        const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool blocked)
+        const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool applyChild, bool blocked)
 {
     const AppGroup *appGroup = conf()->appGroupAt(groupIndex);
     if (appGroup->isNull())
         return false;
 
-    if (!updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, blocked))
+    if (!updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, applyChild, blocked))
         return false;
 
     bool ok = false;
 
     sqliteDb()->beginTransaction();
 
-    const auto vars = QVariantList() << appId << appGroup->id() << appName << useGroupPerm
-                                     << blocked << (!endTime.isNull() ? endTime : QVariant());
+    const auto vars = QVariantList()
+            << appId << appGroup->id() << appName << useGroupPerm << applyChild << blocked
+            << (!endTime.isNull() ? endTime : QVariant());
 
     sqliteDb()->executeEx(sqlUpdateApp, vars, 0, &ok);
     if (ok) {
@@ -821,10 +829,11 @@ bool ConfManager::walkApps(const std::function<walkAppsCallback> &func)
         const int groupIndex = stmt.columnInt(0);
         const QString appPath = stmt.columnText(1);
         const bool useGroupPerm = stmt.columnBool(2);
-        const bool blocked = stmt.columnBool(3);
-        const bool alerted = stmt.columnBool(4);
+        const bool applyChild = stmt.columnBool(3);
+        const bool blocked = stmt.columnBool(4);
+        const bool alerted = stmt.columnBool(5);
 
-        if (!func(groupIndex, useGroupPerm, blocked, alerted, appPath))
+        if (!func(groupIndex, useGroupPerm, applyChild, blocked, alerted, appPath))
             return false;
     }
 
@@ -850,8 +859,10 @@ void ConfManager::updateAppEndTimes()
         const QString appPath = stmt.columnText(3);
         const QString appName = stmt.columnText(4);
         const bool useGroupPerm = stmt.columnBool(5);
+        const bool applyChild = stmt.columnBool(6);
 
-        updateApp(appId, appPath, appName, QDateTime(), groupIndex, useGroupPerm, true);
+        updateApp(appId, appPath, appName, QDateTime(), groupIndex, useGroupPerm, applyChild,
+                /*blocked=*/true);
     }
 }
 
@@ -1042,7 +1053,8 @@ bool ConfManager::updateDriverConf(bool onlyFlags)
 }
 
 bool ConfManager::addOrUpdateApp(const QString &appPath, const QString &appName,
-        const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool blocked, bool alerted)
+        const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool applyChild, bool blocked,
+        bool alerted)
 {
     const AppGroup *appGroup = conf()->appGroupAt(groupIndex);
     if (appGroup->isNull())
@@ -1053,7 +1065,7 @@ bool ConfManager::addOrUpdateApp(const QString &appPath, const QString &appName,
     sqliteDb()->beginTransaction();
 
     const auto vars = QVariantList()
-            << appGroup->id() << appPath << appName << useGroupPerm << blocked
+            << appGroup->id() << appPath << appName << useGroupPerm << applyChild << blocked
             << QDateTime::currentDateTime() << (!endTime.isNull() ? endTime : QVariant());
 
     const auto appIdVar = sqliteDb()->executeEx(sqlUpsertApp, vars, 1, &ok);
@@ -1090,10 +1102,11 @@ bool ConfManager::updateDriverAppBlocked(qint64 appId, bool blocked, bool &chang
     const int groupIndex = stmt.columnInt(0);
     const QString appPath = stmt.columnText(1);
     const bool useGroupPerm = stmt.columnBool(2);
-    const bool wasBlocked = stmt.columnBool(3);
+    const bool applyChild = stmt.columnBool(3);
+    const bool wasBlocked = stmt.columnBool(4);
 
     if (blocked != wasBlocked) {
-        if (!updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, blocked))
+        if (!updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, applyChild, blocked))
             return false;
 
         changed = true;
@@ -1104,17 +1117,18 @@ bool ConfManager::updateDriverAppBlocked(qint64 appId, bool blocked, bool &chang
 
 bool ConfManager::updateDriverDeleteApp(const QString &appPath)
 {
-    return updateDriverUpdateApp(appPath, 0, false, false, true);
+    return updateDriverUpdateApp(appPath, /*groupIndex=*/0, /*useGroupPerm=*/false,
+            /*applyChild=*/false, /*blocked=*/false, /*remove=*/true);
 }
 
-bool ConfManager::updateDriverUpdateApp(
-        const QString &appPath, int groupIndex, bool useGroupPerm, bool blocked, bool remove)
+bool ConfManager::updateDriverUpdateApp(const QString &appPath, int groupIndex, bool useGroupPerm,
+        bool applyChild, bool blocked, bool remove)
 {
     ConfUtil confUtil;
     QByteArray buf;
 
-    const int entrySize =
-            confUtil.writeAppEntry(groupIndex, useGroupPerm, blocked, false, false, appPath, buf);
+    const int entrySize = confUtil.writeAppEntry(
+            groupIndex, useGroupPerm, applyChild, blocked, false, false, appPath, buf);
 
     if (entrySize == 0) {
         showErrorMessage(confUtil.errorMessage());

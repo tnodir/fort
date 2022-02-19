@@ -51,7 +51,7 @@ inline bool processConfManager_addApp(ConfManager *confManager, const QVariantLi
 {
     return confManager->addApp(args.value(0).toString(), args.value(1).toString(),
             args.value(2).toDateTime(), args.value(3).toInt(), args.value(4).toBool(),
-            args.value(5).toBool());
+            args.value(5).toBool(), args.value(6).toBool());
 }
 
 inline bool processConfManager_deleteApp(ConfManager *confManager, const QVariantList &args)
@@ -63,7 +63,7 @@ inline bool processConfManager_updateApp(ConfManager *confManager, const QVarian
 {
     return confManager->updateApp(args.value(0).toLongLong(), args.value(1).toString(),
             args.value(2).toString(), args.value(3).toDateTime(), args.value(4).toInt(),
-            args.value(5).toBool(), args.value(6).toBool());
+            args.value(5).toBool(), args.value(6).toBool(), args.value(7).toBool());
 }
 
 inline bool processConfManager_updateAppBlocked(ConfManager *confManager, const QVariantList &args)

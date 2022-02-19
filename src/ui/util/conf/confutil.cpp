@@ -124,13 +124,13 @@ int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
     return flagsSize;
 }
 
-int ConfUtil::writeAppEntry(int groupIndex, bool useGroupPerm, bool blocked, bool alerted,
-        bool isNew, const QString &appPath, QByteArray &buf)
+int ConfUtil::writeAppEntry(int groupIndex, bool useGroupPerm, bool applyChild, bool blocked,
+        bool alerted, bool isNew, const QString &appPath, QByteArray &buf)
 {
     appentry_map_t exeAppsMap;
     quint32 exeAppsSize = 0;
 
-    if (!addApp(groupIndex, useGroupPerm, blocked, alerted, isNew, appPath, exeAppsMap,
+    if (!addApp(groupIndex, useGroupPerm, applyChild, blocked, alerted, isNew, appPath, exeAppsMap,
                 exeAppsSize))
         return 0;
 
@@ -340,11 +340,12 @@ bool ConfUtil::parseExeApps(
     if (Q_UNLIKELY(!confAppsWalker))
         return true;
 
-    return confAppsWalker->walkApps([&](int groupIndex, bool useGroupPerm, bool blocked,
-                                            bool alerted, const QString &appPath) -> bool {
-        return addApp(
-                groupIndex, useGroupPerm, blocked, alerted, true, appPath, exeAppsMap, exeAppsSize);
-    });
+    return confAppsWalker->walkApps(
+            [&](int groupIndex, bool useGroupPerm, bool applyChild, bool blocked, bool alerted,
+                    const QString &appPath) -> bool {
+                return addApp(groupIndex, useGroupPerm, applyChild, blocked, alerted,
+                        /*isNew=*/true, appPath, exeAppsMap, exeAppsSize);
+            });
 }
 
 bool ConfUtil::parseAppsText(int groupIndex, bool blocked, const QString &text,
@@ -380,11 +381,13 @@ bool ConfUtil::addParsedApp(int groupIndex, bool blocked, bool isWild, bool isPr
     appentry_map_t &appsMap = isWild ? wildAppsMap : (isPrefix ? prefixAppsMap : exeAppsMap);
     quint32 &appsSize = isWild ? wildAppsSize : (isPrefix ? prefixAppsSize : exeAppsSize);
 
-    return addApp(groupIndex, true, blocked, false, true, appPath, appsMap, appsSize, false);
+    return addApp(groupIndex, /*useGroupPerm=*/true, /*applyChild=*/false, blocked,
+            /*alerted=*/false, /*isNew=*/true, appPath, appsMap, appsSize, /*canOverwrite=*/false);
 }
 
-bool ConfUtil::addApp(int groupIndex, bool useGroupPerm, bool blocked, bool alerted, bool isNew,
-        const QString &appPath, appentry_map_t &appsMap, quint32 &appsSize, bool canOverwrite)
+bool ConfUtil::addApp(int groupIndex, bool useGroupPerm, bool applyChild, bool blocked,
+        bool alerted, bool isNew, const QString &appPath, appentry_map_t &appsMap,
+        quint32 &appsSize, bool canOverwrite)
 {
     const QString kernelPath = FileUtil::pathToKernelPath(appPath);
 
@@ -408,6 +411,7 @@ bool ConfUtil::addApp(int groupIndex, bool useGroupPerm, bool blocked, bool aler
     appEntry.path_len = appPathLen;
     appEntry.flags.group_index = quint8(groupIndex);
     appEntry.flags.use_group_perm = useGroupPerm;
+    appEntry.flags.apply_child = applyChild;
     appEntry.flags.blocked = blocked;
     appEntry.flags.alerted = alerted;
     appEntry.flags.is_new = isNew;
@@ -495,7 +499,8 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     writeApps(&data, exeAppsMap);
 #undef CONF_DATA_OFFSET
 
-    writeAppGroupFlags(&drvConfIo->conf_group.log_conn, &drvConfIo->conf_group.fragment_bits, conf);
+    writeAppGroupFlags(&drvConfIo->conf_group.apply_child, &drvConfIo->conf_group.log_conn,
+            &drvConfIo->conf_group.fragment_bits, conf);
 
     writeLimits(drvConfIo->conf_group.limits, &drvConfIo->conf_group.limit_bits,
             &drvConfIo->conf_group.limit_2bits, conf.appGroups());
@@ -519,13 +524,17 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     drvConf->exe_apps_off = exeAppsOff;
 }
 
-void ConfUtil::writeAppGroupFlags(
-        quint16 *logConnBits, quint16 *fragmentBits, const FirewallConf &conf)
+void ConfUtil::writeAppGroupFlags(quint16 *applyChildBits, quint16 *logConnBits,
+        quint16 *fragmentBits, const FirewallConf &conf)
 {
+    *applyChildBits = 0;
     *logConnBits = 0;
     *fragmentBits = 0;
     int i = 0;
     for (const AppGroup *appGroup : conf.appGroups()) {
+        if (appGroup->applyChild()) {
+            *applyChildBits |= (1 << i);
+        }
         if (appGroup->logConn()) {
             *logConnBits |= (1 << i);
         }

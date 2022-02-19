@@ -79,6 +79,8 @@ void ApplicationsPage::onRetranslateUi()
     m_cbAllowAll->setText(tr("Allow All"));
 
     m_btGroupOptions->setText(tr("Options"));
+    m_cbApplyChild->setText(tr("Apply same rules to child processes"));
+
     m_cscLimitIn->checkBox()->setText(tr("Download speed limit:"));
     m_cscLimitOut->checkBox()->setText(tr("Upload speed limit:"));
     retranslateGroupLimits();
@@ -373,20 +375,34 @@ void ApplicationsPage::setupGroupPeriodEnabled()
 
 void ApplicationsPage::setupGroupOptions()
 {
+    setupGroupApplyChild();
     setupGroupLimitIn();
     setupGroupLimitOut();
     setupGroupLogConn();
     setupGroupFragmentPacket();
 
     // Menu
-    const QList<QWidget *> menuWidgets = { m_cscLimitIn, m_cscLimitOut,
-        ControlUtil::createSeparator(), m_cbLogConn, m_cbFragmentPacket };
+    const QList<QWidget *> menuWidgets = { m_cbApplyChild, ControlUtil::createSeparator(),
+        m_cscLimitIn, m_cscLimitOut, ControlUtil::createSeparator(), m_cbLogConn,
+        m_cbFragmentPacket };
     auto layout = ControlUtil::createLayoutByWidgets(menuWidgets);
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
     m_btGroupOptions = ControlUtil::createButton(":/icons/gear_in.png");
     m_btGroupOptions->setMenu(menu);
+}
+
+void ApplicationsPage::setupGroupApplyChild()
+{
+    m_cbApplyChild = ControlUtil::createCheckBox(false, [&](bool checked) {
+        if (appGroup()->applyChild() == checked)
+            return;
+
+        appGroup()->setApplyChild(checked);
+
+        ctrl()->setOptEdited();
+    });
 }
 
 void ApplicationsPage::setupGroupLimitIn()
@@ -549,6 +565,8 @@ void ApplicationsPage::setupSplitterButtons()
 
 void ApplicationsPage::updateGroup()
 {
+    m_cbApplyChild->setChecked(appGroup()->applyChild());
+
     m_cscLimitIn->checkBox()->setChecked(appGroup()->limitInEnabled());
     m_cscLimitIn->spinBox()->setValue(int(appGroup()->speedLimitIn()));
 

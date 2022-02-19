@@ -277,10 +277,11 @@ bool AppListModel::updateAppRow(const QString &sql, const QVariantList &vars, Ap
     appRow.appPath = stmt.columnText(2);
     appRow.appName = stmt.columnText(3);
     appRow.useGroupPerm = stmt.columnBool(4);
-    appRow.blocked = stmt.columnBool(5);
-    appRow.alerted = stmt.columnBool(6);
-    appRow.endTime = stmt.columnDateTime(7);
-    appRow.creatTime = stmt.columnDateTime(8);
+    appRow.applyChild = stmt.columnBool(5);
+    appRow.blocked = stmt.columnBool(6);
+    appRow.alerted = stmt.columnBool(7);
+    appRow.endTime = stmt.columnDateTime(8);
+    appRow.creatTime = stmt.columnDateTime(9);
 
     return true;
 }
@@ -321,6 +322,7 @@ QString AppListModel::sqlBase() const
            "    t.path,"
            "    t.name,"
            "    t.use_group_perm,"
+           "    t.apply_child,"
            "    t.blocked,"
            "    (alert.app_id IS NOT NULL) as alerted,"
            "    t.end_time,"

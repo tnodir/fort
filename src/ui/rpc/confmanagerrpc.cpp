@@ -15,10 +15,10 @@ ConfManagerRpc::ConfManagerRpc(const QString &filePath, QObject *parent) :
 }
 
 bool ConfManagerRpc::addApp(const QString &appPath, const QString &appName,
-        const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool blocked)
+        const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool applyChild, bool blocked)
 {
     return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_addApp,
-            { appPath, appName, endTime, groupIndex, useGroupPerm, blocked });
+            { appPath, appName, endTime, groupIndex, useGroupPerm, applyChild, blocked });
 }
 
 bool ConfManagerRpc::deleteApp(qint64 appId)
@@ -32,10 +32,10 @@ bool ConfManagerRpc::purgeApps()
 }
 
 bool ConfManagerRpc::updateApp(qint64 appId, const QString &appPath, const QString &appName,
-        const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool blocked)
+        const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool applyChild, bool blocked)
 {
     return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_updateApp,
-            { appId, appPath, appName, endTime, groupIndex, useGroupPerm, blocked });
+            { appId, appPath, appName, endTime, groupIndex, useGroupPerm, applyChild, blocked });
 }
 
 bool ConfManagerRpc::updateAppBlocked(qint64 appId, bool blocked)

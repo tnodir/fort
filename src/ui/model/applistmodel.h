@@ -14,6 +14,7 @@ class SqliteDb;
 struct AppRow : TableRow
 {
     bool useGroupPerm = true;
+    bool applyChild = false;
     bool blocked = false;
     bool alerted = false;
 

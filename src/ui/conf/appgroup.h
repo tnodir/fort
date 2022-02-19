@@ -19,6 +19,9 @@ public:
     bool enabled() const { return m_enabled; }
     void setEnabled(bool enabled);
 
+    bool applyChild() const { return m_applyChild; }
+    void setApplyChild(bool on);
+
     bool logConn() const { return m_logConn; }
     void setLogConn(bool on);
 
@@ -74,6 +77,7 @@ private:
     bool m_edited : 1;
     bool m_enabled : 1;
 
+    bool m_applyChild : 1;
     bool m_logConn : 1;
     bool m_fragmentPacket : 1;
 

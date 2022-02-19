@@ -59,11 +59,12 @@ public:
 
     qint64 appIdByPath(const QString &appPath);
     virtual bool addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
-            int groupIndex, bool useGroupPerm, bool blocked);
+            int groupIndex, bool useGroupPerm, bool applyChild, bool blocked);
     virtual bool deleteApp(qint64 appId);
     virtual bool purgeApps();
     virtual bool updateApp(qint64 appId, const QString &appPath, const QString &appName,
-            const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool blocked);
+            const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool applyChild,
+            bool blocked);
     virtual bool updateAppBlocked(qint64 appId, bool blocked);
     virtual bool updateAppName(qint64 appId, const QString &appName);
 
@@ -120,12 +121,12 @@ private:
     void emitAppUpdated();
 
     bool addOrUpdateApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
-            int groupIndex, bool useGroupPerm, bool blocked, bool alerted);
+            int groupIndex, bool useGroupPerm, bool applyChild, bool blocked, bool alerted);
     bool updateDriverAppBlocked(qint64 appId, bool blocked, bool &changed);
 
     bool updateDriverDeleteApp(const QString &appPath);
     bool updateDriverUpdateApp(const QString &appPath, int groupIndex, bool useGroupPerm,
-            bool blocked, bool remove = false);
+            bool applyChild, bool blocked, bool remove = false);
     bool updateDriverZoneFlag(int zoneId, bool enabled);
 
     bool loadFromDb(FirewallConf &conf, bool &isNew);

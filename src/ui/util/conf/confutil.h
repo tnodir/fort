@@ -43,8 +43,8 @@ public slots:
     int write(const FirewallConf &conf, ConfAppsWalker *confAppsWalker, EnvManager &envManager,
             QByteArray &buf);
     int writeFlags(const FirewallConf &conf, QByteArray &buf);
-    int writeAppEntry(int groupIndex, bool useGroupPerm, bool blocked, bool alerted, bool isNew,
-            const QString &appPath, QByteArray &buf);
+    int writeAppEntry(int groupIndex, bool useGroupPerm, bool applyChild, bool blocked,
+            bool alerted, bool isNew, const QString &appPath, QByteArray &buf);
     int writeVersion(QByteArray &buf);
     int writeZone(const Ip4Range &ip4Range, QByteArray &buf);
     int writeZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
@@ -78,8 +78,8 @@ private:
             appentry_map_t &exeAppsMap, quint32 &wildAppsSize, quint32 &prefixAppsSize,
             quint32 &exeAppsSize);
 
-    bool addApp(int groupIndex, bool useGroupPerm, bool blocked, bool alerted, bool isNew,
-            const QString &appPath, appentry_map_t &appsMap, quint32 &appsSize,
+    bool addApp(int groupIndex, bool useGroupPerm, bool applyChild, bool blocked, bool alerted,
+            bool isNew, const QString &appPath, appentry_map_t &appsMap, quint32 &appsSize,
             bool canOverwrite = true);
 
     static QString parseAppPath(const StringView line, bool &isWild, bool &isPrefix);
@@ -93,8 +93,8 @@ private:
             const appentry_map_t &wildAppsMap, const appentry_map_t &prefixAppsMap,
             const appentry_map_t &exeAppsMap);
 
-    static void writeAppGroupFlags(
-            quint16 *logConnBits, quint16 *fragmentBits, const FirewallConf &conf);
+    static void writeAppGroupFlags(quint16 *applyChildBits, quint16 *logConnBits,
+            quint16 *fragmentBits, const FirewallConf &conf);
 
     static void writeLimits(struct fort_traf *limits, quint16 *limitBits, quint32 *limit2Bits,
             const QList<AppGroup *> &appGroups);

@@ -5,8 +5,8 @@
 
 #include <functional>
 
-using walkAppsCallback = bool(
-        int groupIndex, bool useGroupPerm, bool blocked, bool alerted, const QString &appPath);
+using walkAppsCallback = bool(int groupIndex, bool useGroupPerm, bool applyChild, bool blocked,
+        bool alerted, const QString &appPath);
 
 class ConfAppsWalker
 {

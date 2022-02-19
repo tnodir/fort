@@ -7,6 +7,7 @@ AppGroup::AppGroup(QObject *parent) :
     QObject(parent),
     m_edited(false),
     m_enabled(true),
+    m_applyChild(false),
     m_logConn(true),
     m_fragmentPacket(false),
     m_periodEnabled(false),
@@ -19,6 +20,14 @@ void AppGroup::setEnabled(bool enabled)
 {
     if (bool(m_enabled) != enabled) {
         m_enabled = enabled;
+        setEdited(true);
+    }
+}
+
+void AppGroup::setApplyChild(bool on)
+{
+    if (bool(m_applyChild) != on) {
+        m_applyChild = on;
         setEdited(true);
     }
 }
@@ -149,6 +158,7 @@ void AppGroup::copy(const AppGroup &o)
     m_edited = o.edited();
 
     m_enabled = o.enabled();
+    m_applyChild = o.applyChild();
     m_logConn = o.logConn();
     m_fragmentPacket = o.fragmentPacket();
 
@@ -175,6 +185,7 @@ QVariant AppGroup::toVariant() const
     map["edited"] = edited();
     map["enabled"] = enabled();
 
+    map["applyChild"] = applyChild();
     map["logConn"] = logConn();
     map["fragmentPacket"] = fragmentPacket();
 
@@ -203,6 +214,7 @@ void AppGroup::fromVariant(const QVariant &v)
     m_edited = map["edited"].toBool();
     m_enabled = map["enabled"].toBool();
 
+    m_applyChild = map["applyChild"].toBool();
     m_logConn = map["logConn"].toBool();
     m_fragmentPacket = map["fragmentPacket"].toBool();
 
