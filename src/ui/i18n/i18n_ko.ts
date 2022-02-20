@@ -226,6 +226,10 @@
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>프로그램 (*.exe);;모든 파일 (*.*)</translation>
     </message>
+    <message>
+        <source>Apply same rules to child processes</source>
+        <translation>하위 프로세스에 동일한 규칙 적용</translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -830,6 +834,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>프로그램 (*.exe);;모든 파일 (*.*)</translation>
+    </message>
+    <message>
+        <source>Apply same rules to child processes</source>
+        <translation>하위 프로세스에 동일한 규칙 적용</translation>
     </message>
 </context>
 <context>

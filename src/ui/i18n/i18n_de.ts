@@ -226,6 +226,10 @@
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Programme (*.exe);;Alle Dateien (*.*)</translation>
     </message>
+    <message>
+        <source>Apply same rules to child processes</source>
+        <translation>Gleiche Regeln auf untergeordnete Prozesse anwenden</translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -830,6 +834,10 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Programme (*.exe);;Alle Dateien (*.*)</translation>
+    </message>
+    <message>
+        <source>Apply same rules to child processes</source>
+        <translation>Gleiche Regeln auf untergeordnete Prozesse anwenden</translation>
     </message>
 </context>
 <context>
