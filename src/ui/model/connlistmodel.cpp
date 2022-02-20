@@ -147,7 +147,8 @@ QVariant ConnListModel::dataDisplayDirection(const ConnRow &connRow, int role) c
     if (role == Qt::ToolTipRole) {
         if (connRow.blocked) {
             // Show block reason in a tool-tip
-            return blockReasonText(connRow);
+            return blockReasonText(connRow)
+                    + (connRow.inherited ? " (" + tr("Inherited") + ")" : QString());
         }
     }
     return connRow.inbound ? tr("In") : tr("Out");
@@ -296,16 +297,17 @@ bool ConnListModel::updateTableRow(int row) const
     m_connRow.connTime = stmt.columnUnixTime(2);
     m_connRow.pid = stmt.columnInt(3);
     m_connRow.inbound = stmt.columnBool(4);
-    m_connRow.blocked = stmt.columnBool(5);
-    m_connRow.ipProto = stmt.columnInt(6);
-    m_connRow.localPort = stmt.columnInt(7);
-    m_connRow.remotePort = stmt.columnInt(8);
-    m_connRow.localIp = stmt.columnInt(9);
-    m_connRow.remoteIp = stmt.columnInt(10);
-    m_connRow.appPath = stmt.columnText(11);
+    m_connRow.inherited = stmt.columnBool(5);
+    m_connRow.blocked = stmt.columnBool(6);
+    m_connRow.ipProto = stmt.columnInt(7);
+    m_connRow.localPort = stmt.columnInt(8);
+    m_connRow.remotePort = stmt.columnInt(9);
+    m_connRow.localIp = stmt.columnInt(10);
+    m_connRow.remoteIp = stmt.columnInt(11);
+    m_connRow.appPath = stmt.columnText(12);
 
     if (isConnBlock()) {
-        m_connRow.blockReason = stmt.columnInt(12);
+        m_connRow.blockReason = stmt.columnInt(13);
     }
 
     return true;
@@ -324,6 +326,7 @@ QString ConnListModel::sqlBase() const
                                "    t.conn_time,"
                                "    t.process_id,"
                                "    t.inbound,"
+                               "    t.inherited,"
                                "    t.blocked,"
                                "    t.ip_proto,"
                                "    t.local_port,"

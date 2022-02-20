@@ -24,7 +24,7 @@ Q_LOGGING_CATEGORY(CLOG_STAT_MANAGER, "stat")
 #define logWarning()  qCWarning(CLOG_STAT_MANAGER, )
 #define logCritical() qCCritical(CLOG_STAT_MANAGER, )
 
-#define DATABASE_USER_VERSION 4
+#define DATABASE_USER_VERSION 5
 
 #define ACTIVE_PERIOD_CHECK_SECS (60 * OS_TICKS_PER_SECOND)
 
@@ -661,11 +661,12 @@ qint64 StatManager::insertConn(const LogEntryBlockedIp &entry, qint64 unixTime, 
     stmt->bindInt64(2, unixTime);
     stmt->bindInt(3, entry.pid());
     stmt->bindInt(4, entry.inbound());
-    stmt->bindInt(5, entry.ipProto());
-    stmt->bindInt(6, entry.localPort());
-    stmt->bindInt(7, entry.remotePort());
-    stmt->bindInt(8, entry.localIp());
-    stmt->bindInt(9, entry.remoteIp());
+    stmt->bindInt(5, entry.inherited());
+    stmt->bindInt(6, entry.ipProto());
+    stmt->bindInt(7, entry.localPort());
+    stmt->bindInt(8, entry.remotePort());
+    stmt->bindInt(9, entry.localIp());
+    stmt->bindInt(10, entry.remoteIp());
 
     if (sqliteDb()->done(stmt)) {
         return sqliteDb()->lastInsertRowid();

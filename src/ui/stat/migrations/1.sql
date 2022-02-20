@@ -61,6 +61,7 @@ CREATE TABLE conn(
   conn_time INTEGER NOT NULL,
   process_id INTEGER NOT NULL,
   inbound BOOLEAN NOT NULL,
+  inherited BOOLEAN NOT NULL DEFAULT 0,
   blocked BOOLEAN NOT NULL,
   ip_proto INTEGER NOT NULL,
   local_port INTEGER NOT NULL,

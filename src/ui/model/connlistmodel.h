@@ -14,6 +14,7 @@ class StatManager;
 struct ConnRow : TableRow
 {
     bool inbound = false;
+    bool inherited = false;
     bool blocked = false;
 
     quint8 blockReason = 0;
