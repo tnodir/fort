@@ -82,17 +82,23 @@ FORT_API NTSTATUS fort_driver_path(
 
 static void fort_system_drive_init(PCUNICODE_STRING path)
 {
-    UNICODE_STRING drivePath = {
+    UNICODE_STRING linkPath = {
         .Length = 2 * sizeof(WCHAR), .MaximumLength = 2 * sizeof(WCHAR), .Buffer = path->Buffer
     };
 
-    g_systemDrivePath.Length = 0;
+    WCHAR drivePathBuffer[sizeof(g_systemDrivePathBuffer) / sizeof(WCHAR)];
+    UNICODE_STRING drivePath = {
+        .Length = 0, .MaximumLength = sizeof(drivePathBuffer), .Buffer = drivePathBuffer
+    };
+
+    fort_resolve_link(&linkPath, &drivePath);
+
+    g_systemDrivePath.Length = drivePath.Length;
     g_systemDrivePath.MaximumLength = sizeof(g_systemDrivePathBuffer);
     g_systemDrivePath.Buffer = g_systemDrivePathBuffer;
 
-    fort_resolve_link(&drivePath, &g_systemDrivePath);
-
-    _wcslwr_s(g_systemDrivePathBuffer, g_systemDrivePath.Length / sizeof(WCHAR) + sizeof(WCHAR));
+    RtlDowncaseUnicodeString(&g_systemDrivePath, &drivePath, FALSE);
+    g_systemDrivePathBuffer[drivePath.Length / sizeof(WCHAR)] = L'\0';
 }
 
 static NTSTATUS fort_system32_path_set(PCUNICODE_STRING path)
@@ -204,15 +210,14 @@ FORT_API NTSTATUS fort_resolve_link(PUNICODE_STRING linkPath, PUNICODE_STRING ou
 
         if (NT_SUCCESS(status)) {
             if (outPath->Buffer[outLength / sizeof(WCHAR) - 1] == L'\0') {
-                outLength -= sizeof(WCHAR); /* exclude terminating zero */
+                outLength -= sizeof(WCHAR); /* chop terminating zero */
             }
 
             if (outPath->Buffer[outLength / sizeof(WCHAR) - 1] == L'\\') {
-                outLength -= sizeof(WCHAR); /* exclude terminating backslash */
+                outLength -= sizeof(WCHAR); /* chop terminating backslash */
             }
 
             outPath->Length = (USHORT) outLength;
-            outPath->Buffer[outLength / sizeof(WCHAR)] = L'\0';
         }
 
         ZwClose(linkHandle);
