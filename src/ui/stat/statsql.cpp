@@ -172,7 +172,7 @@ const char *const StatSql::sqlDeleteAllTraffic =
 const char *const StatSql::sqlInsertConn =
         "INSERT INTO conn(app_id, conn_time, process_id, inbound, inherited, blocked,"
         "    ip_proto, local_port, remote_port, local_ip, remote_ip)"
-        "  VALUES(?1, ?2, ?3, ?4, 1, ?5, ?6, ?7, ?8, ?9, ?10);";
+        "  VALUES(?1, ?2, ?3, ?4, ?5, 1, ?6, ?7, ?8, ?9, ?10);";
 
 const char *const StatSql::sqlInsertConnBlock = "INSERT INTO conn_block(conn_id, block_reason)"
                                                 "  VALUES(?1, ?2);";
