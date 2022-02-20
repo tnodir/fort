@@ -171,12 +171,12 @@ static void fort_callout_classify_v4_check(const FWPS_INCOMING_VALUES0 *inFixedV
     real_path.MaximumLength = real_path.Length;
     real_path.Buffer = (PWSTR) inMetaValues->processPath->data;
 
-    BOOL isPathInherited;
+    BOOL inherited = FALSE;
     UNICODE_STRING path;
     if (!fort_pstree_get_proc_name(
-                &fort_device()->ps_tree, conf_ref, process_id, &path, &isPathInherited)) {
+                &fort_device()->ps_tree, conf_ref, process_id, &path, &inherited)) {
         path = real_path;
-    } else if (!isPathInherited) {
+    } else if (!inherited) {
         real_path = path;
     }
 
@@ -195,9 +195,9 @@ static void fort_callout_classify_v4_check(const FWPS_INCOMING_VALUES0 *inFixedV
             const IPPROTO ip_proto =
                     (IPPROTO) inFixedValues->incomingValue[ipProtoField].value.uint8;
 
-            fort_buffer_blocked_ip_write(&fort_device()->buffer, inbound, isPathInherited,
-                    block_reason, ip_proto, local_port, remote_port, local_ip, remote_ip,
-                    process_id, real_path.Length, real_path.Buffer, irp, info);
+            fort_buffer_blocked_ip_write(&fort_device()->buffer, inbound, inherited, block_reason,
+                    ip_proto, local_port, remote_port, local_ip, remote_ip, process_id,
+                    real_path.Length, real_path.Buffer, irp, info);
         }
 
         /* Block the connection */

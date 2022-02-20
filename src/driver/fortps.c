@@ -418,26 +418,33 @@ static NTSTATUS GetProcessImageName(HANDLE processHandle, PUNICODE_STRING path)
 {
     NTSTATUS status;
 
-    struct
-    {
-        UNICODE_STRING path;
-        WCHAR data[FORT_CONF_APP_PATH_MAX];
-    } buffer;
+    const USHORT bufferSize = sizeof(UNICODE_STRING) + FORT_CONF_APP_PATH_MAX * sizeof(WCHAR);
+    PUNICODE_STRING bufferPath = fort_mem_alloc(bufferSize, FORT_PSTREE_POOL_TAG);
+    if (bufferPath == NULL)
+        return STATUS_BUFFER_TOO_SMALL;
 
     ULONG outLength;
     status = ZwQueryInformationProcess(
-            processHandle, ProcessImageFileName, &buffer, sizeof(buffer), &outLength);
-    if (!NT_SUCCESS(status))
-        return status;
+            processHandle, ProcessImageFileName, bufferPath, bufferSize, &outLength);
+    if (NT_SUCCESS(status)) {
+        const USHORT pathLength = bufferPath->Length;
 
-    if (path->MaximumLength < buffer.path.Length)
-        return STATUS_BUFFER_TOO_SMALL;
+        if (outLength == 0 || pathLength == 0) {
+            status = STATUS_OBJECT_NAME_NOT_FOUND;
+        } else if (path->MaximumLength < pathLength) {
+            status = STATUS_BUFFER_TOO_SMALL;
+        } else {
+            path->Length = pathLength;
+            RtlDowncaseUnicodeString(path, bufferPath, FALSE);
+            path->Buffer[pathLength / sizeof(WCHAR)] = L'\0';
 
-    path->Length = buffer.path.Length;
-    RtlDowncaseUnicodeString(path, &buffer.path, FALSE);
-    path->Buffer[path->Length / sizeof(WCHAR)] = L'\0';
+            status = STATUS_SUCCESS;
+        }
+    }
 
-    return STATUS_SUCCESS;
+    fort_mem_free(bufferPath, FORT_PSTREE_POOL_TAG);
+
+    return status;
 }
 
 static HANDLE OpenProcessById(DWORD processId)
@@ -649,32 +656,41 @@ FORT_API void NTAPI fort_pstree_enum_processes(void)
     fort_mem_free(buffer, FORT_PSTREE_POOL_TAG);
 }
 
-static void fort_pstree_check_proc_conf(
-        PFORT_PSTREE ps_tree, PFORT_CONF_REF conf_ref, PFORT_PSNODE proc, HANDLE processHandle)
+static void fort_pstree_check_proc_conf_exe(
+        PFORT_PSTREE ps_tree, PFORT_CONF_REF conf_ref, PFORT_PSNODE proc, PCUNICODE_STRING path)
 {
-    NTSTATUS status;
-
-    WCHAR pathBuffer[FORT_CONF_APP_PATH_MAX];
-    UNICODE_STRING path = {
-        .Length = 0, .MaximumLength = sizeof(pathBuffer), .Buffer = pathBuffer
-    };
-
-    status = GetProcessImageName(processHandle, &path);
-    if (!NT_SUCCESS(status))
-        return;
-
     const FORT_APP_FLAGS app_flags =
-            fort_conf_app_find(&conf_ref->conf, path.Buffer, path.Length, fort_conf_exe_find);
+            fort_conf_app_find(&conf_ref->conf, path->Buffer, path->Length, fort_conf_exe_find);
 
     if (app_flags.apply_child) {
-        PFORT_PSNAME ps_name = fort_pstree_name_new(ps_tree, path.Length);
+        PFORT_PSNAME ps_name = fort_pstree_name_new(ps_tree, path->Length);
         if (ps_name != NULL) {
-            RtlCopyMemory(ps_name->data, path.Buffer, path.Length);
+            RtlCopyMemory(ps_name->data, path->Buffer, path->Length);
 
             proc->ps_name = ps_name;
             proc->flags |= FORT_PSNODE_NAME_INHERIT;
         }
     }
+}
+
+static void fort_pstree_check_proc_conf(
+        PFORT_PSTREE ps_tree, PFORT_CONF_REF conf_ref, PFORT_PSNODE proc, HANDLE processHandle)
+{
+    NTSTATUS status;
+
+    const USHORT bufferSize = FORT_CONF_APP_PATH_MAX * sizeof(WCHAR);
+    PWSTR buffer = fort_mem_alloc(bufferSize, FORT_PSTREE_POOL_TAG);
+    if (buffer == NULL)
+        return;
+
+    UNICODE_STRING path = { .Length = 0, .MaximumLength = bufferSize, .Buffer = buffer };
+
+    status = GetProcessImageName(processHandle, &path);
+    if (NT_SUCCESS(status)) {
+        fort_pstree_check_proc_conf_exe(ps_tree, conf_ref, proc, &path);
+    }
+
+    fort_mem_free(buffer, FORT_PSTREE_POOL_TAG);
 }
 
 static void fort_pstree_check_proc_parent(
