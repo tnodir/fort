@@ -15,6 +15,9 @@ public:
     bool inbound() const { return m_inbound; }
     void setInbound(bool inbound);
 
+    bool inherited() const { return m_inherited; }
+    void setInherited(bool inherited);
+
     quint8 blockReason() const { return m_blockReason; }
     void setBlockReason(quint8 blockReason);
 
@@ -34,7 +37,8 @@ public:
     void setRemoteIp(quint32 ip);
 
 private:
-    bool m_inbound = false;
+    bool m_inbound : 1;
+    bool m_inherited : 1;
     quint8 m_blockReason = 0;
     quint8 m_ipProto = 0;
     quint16 m_localPort = 0;

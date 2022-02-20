@@ -149,7 +149,6 @@ typedef struct fort_app_entry
 
 typedef struct fort_conf_group
 {
-    UINT16 apply_child;
     UINT16 log_conn;
     UINT16 fragment_bits;
 

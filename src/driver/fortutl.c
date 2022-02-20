@@ -109,8 +109,6 @@ static NTSTATUS fort_system32_path_set(PCUNICODE_STRING path)
 
     fort_system_drive_init(path);
 
-    LOG("PsTree: SYS: [%wZ] [%wZ]\n", fort_system_drive_path(), fort_system32_path());
-
     return STATUS_SUCCESS;
 }
 

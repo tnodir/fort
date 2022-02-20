@@ -159,9 +159,9 @@ FORT_API NTSTATUS fort_buffer_blocked_write(PFORT_BUFFER buf, BOOL blocked, UINT
     return status;
 }
 
-NTSTATUS fort_buffer_blocked_ip_write(PFORT_BUFFER buf, BOOL inbound, UCHAR block_reason,
-        UCHAR ip_proto, UINT16 local_port, UINT16 remote_port, UINT32 local_ip, UINT32 remote_ip,
-        UINT32 pid, UINT32 path_len, const PVOID path, PIRP *irp, ULONG_PTR *info)
+NTSTATUS fort_buffer_blocked_ip_write(PFORT_BUFFER buf, BOOL inbound, BOOL inherited,
+        UCHAR block_reason, UCHAR ip_proto, UINT16 local_port, UINT16 remote_port, UINT32 local_ip,
+        UINT32 remote_ip, UINT32 pid, UINT32 path_len, const PVOID path, PIRP *irp, ULONG_PTR *info)
 {
     NTSTATUS status;
 
@@ -178,8 +178,8 @@ NTSTATUS fort_buffer_blocked_ip_write(PFORT_BUFFER buf, BOOL inbound, UCHAR bloc
         status = fort_buffer_prepare(buf, len, &out, irp, info);
 
         if (NT_SUCCESS(status)) {
-            fort_log_blocked_ip_write(out, inbound, block_reason, ip_proto, local_port, remote_port,
-                    local_ip, remote_ip, pid, path_len, path);
+            fort_log_blocked_ip_write(out, inbound, inherited, block_reason, ip_proto, local_port,
+                    remote_port, local_ip, remote_ip, pid, path_len, path);
         }
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);

@@ -105,9 +105,10 @@ void LogBuffer::writeEntryBlockedIp(const LogEntryBlockedIp *logEntry)
 
     char *output = this->output();
 
-    DriverCommon::logBlockedIpHeaderWrite(output, logEntry->inbound(), logEntry->blockReason(),
-            logEntry->ipProto(), logEntry->localPort(), logEntry->remotePort(), logEntry->localIp(),
-            logEntry->remoteIp(), logEntry->pid(), pathLen);
+    DriverCommon::logBlockedIpHeaderWrite(output, logEntry->inbound(), logEntry->inherited(),
+            logEntry->blockReason(), logEntry->ipProto(), logEntry->localPort(),
+            logEntry->remotePort(), logEntry->localIp(), logEntry->remoteIp(), logEntry->pid(),
+            pathLen);
 
     if (pathLen) {
         output += DriverCommon::logBlockedIpHeaderSize();
@@ -124,14 +125,15 @@ void LogBuffer::readEntryBlockedIp(LogEntryBlockedIp *logEntry)
     const char *input = this->input();
 
     int inbound;
+    int inherited;
     quint8 blockReason;
     quint8 proto;
     quint16 localPort;
     quint16 remotePort;
     quint32 localIp, remoteIp;
     quint32 pid, pathLen;
-    DriverCommon::logBlockedIpHeaderRead(input, &inbound, &blockReason, &proto, &localPort,
-            &remotePort, &localIp, &remoteIp, &pid, &pathLen);
+    DriverCommon::logBlockedIpHeaderRead(input, &inbound, &inherited, &blockReason, &proto,
+            &localPort, &remotePort, &localIp, &remoteIp, &pid, &pathLen);
 
     QString path;
     if (pathLen) {
@@ -140,6 +142,7 @@ void LogBuffer::readEntryBlockedIp(LogEntryBlockedIp *logEntry)
     }
 
     logEntry->setInbound(inbound != 0);
+    logEntry->setInherited(inherited != 0);
     logEntry->setBlockReason(blockReason);
     logEntry->setLocalIp(localIp);
     logEntry->setRemoteIp(remoteIp);

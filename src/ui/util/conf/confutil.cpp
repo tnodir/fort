@@ -318,13 +318,14 @@ bool ConfUtil::parseAppGroups(EnvManager &envManager, const QList<AppGroup *> &a
             return false;
         }
 
+        const bool applyChild = appGroup->applyChild();
         const auto blockText = envManager.expandString(appGroup->blockText());
         const auto allowText = envManager.expandString(appGroup->allowText());
 
-        if (!parseAppsText(i, true, blockText, wildAppsMap, prefixAppsMap, exeAppsMap, wildAppsSize,
-                    prefixAppsSize, exeAppsSize)
-                || !parseAppsText(i, false, allowText, wildAppsMap, prefixAppsMap, exeAppsMap,
-                        wildAppsSize, prefixAppsSize, exeAppsSize))
+        if (!parseAppsText(i, applyChild, /*blocked=*/true, blockText, wildAppsMap, prefixAppsMap,
+                    exeAppsMap, wildAppsSize, prefixAppsSize, exeAppsSize)
+                || !parseAppsText(i, applyChild, /*blocked=*/false, allowText, wildAppsMap,
+                        prefixAppsMap, exeAppsMap, wildAppsSize, prefixAppsSize, exeAppsSize))
             return false;
 
         // Enabled Period
@@ -348,7 +349,7 @@ bool ConfUtil::parseExeApps(
             });
 }
 
-bool ConfUtil::parseAppsText(int groupIndex, bool blocked, const QString &text,
+bool ConfUtil::parseAppsText(int groupIndex, bool applyChild, bool blocked, const QString &text,
         appentry_map_t &wildAppsMap, appentry_map_t &prefixAppsMap, appentry_map_t &exeAppsMap,
         quint32 &wildAppsSize, quint32 &prefixAppsSize, quint32 &exeAppsSize)
 {
@@ -365,7 +366,7 @@ bool ConfUtil::parseAppsText(int groupIndex, bool blocked, const QString &text,
         if (appPath.isEmpty())
             continue;
 
-        if (!addParsedApp(groupIndex, blocked, isWild, isPrefix, appPath, wildAppsMap,
+        if (!addParsedApp(groupIndex, applyChild, blocked, isWild, isPrefix, appPath, wildAppsMap,
                     prefixAppsMap, exeAppsMap, wildAppsSize, prefixAppsSize, exeAppsSize))
             return false;
     }
@@ -373,15 +374,15 @@ bool ConfUtil::parseAppsText(int groupIndex, bool blocked, const QString &text,
     return true;
 }
 
-bool ConfUtil::addParsedApp(int groupIndex, bool blocked, bool isWild, bool isPrefix,
-        const QString &appPath, appentry_map_t &wildAppsMap, appentry_map_t &prefixAppsMap,
-        appentry_map_t &exeAppsMap, quint32 &wildAppsSize, quint32 &prefixAppsSize,
-        quint32 &exeAppsSize)
+bool ConfUtil::addParsedApp(int groupIndex, bool applyChild, bool blocked, bool isWild,
+        bool isPrefix, const QString &appPath, appentry_map_t &wildAppsMap,
+        appentry_map_t &prefixAppsMap, appentry_map_t &exeAppsMap, quint32 &wildAppsSize,
+        quint32 &prefixAppsSize, quint32 &exeAppsSize)
 {
     appentry_map_t &appsMap = isWild ? wildAppsMap : (isPrefix ? prefixAppsMap : exeAppsMap);
     quint32 &appsSize = isWild ? wildAppsSize : (isPrefix ? prefixAppsSize : exeAppsSize);
 
-    return addApp(groupIndex, /*useGroupPerm=*/true, /*applyChild=*/false, blocked,
+    return addApp(groupIndex, /*useGroupPerm=*/true, applyChild, blocked,
             /*alerted=*/false, /*isNew=*/true, appPath, appsMap, appsSize, /*canOverwrite=*/false);
 }
 
@@ -499,8 +500,7 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     writeApps(&data, exeAppsMap);
 #undef CONF_DATA_OFFSET
 
-    writeAppGroupFlags(&drvConfIo->conf_group.apply_child, &drvConfIo->conf_group.log_conn,
-            &drvConfIo->conf_group.fragment_bits, conf);
+    writeAppGroupFlags(&drvConfIo->conf_group.log_conn, &drvConfIo->conf_group.fragment_bits, conf);
 
     writeLimits(drvConfIo->conf_group.limits, &drvConfIo->conf_group.limit_bits,
             &drvConfIo->conf_group.limit_2bits, conf.appGroups());
@@ -524,17 +524,13 @@ void ConfUtil::writeData(char *output, const FirewallConf &conf,
     drvConf->exe_apps_off = exeAppsOff;
 }
 
-void ConfUtil::writeAppGroupFlags(quint16 *applyChildBits, quint16 *logConnBits,
-        quint16 *fragmentBits, const FirewallConf &conf)
+void ConfUtil::writeAppGroupFlags(
+        quint16 *logConnBits, quint16 *fragmentBits, const FirewallConf &conf)
 {
-    *applyChildBits = 0;
     *logConnBits = 0;
     *fragmentBits = 0;
     int i = 0;
     for (const AppGroup *appGroup : conf.appGroups()) {
-        if (appGroup->applyChild()) {
-            *applyChildBits |= (1 << i);
-        }
         if (appGroup->logConn()) {
             *logConnBits |= (1 << i);
         }

@@ -4,6 +4,8 @@ LogEntryBlockedIp::LogEntryBlockedIp(quint8 blockReason, quint8 ipProto, quint16
         quint16 remotePort, quint32 localIp, quint32 remoteIp, quint32 pid,
         const QString &kernelPath) :
     LogEntryBlocked(pid, kernelPath),
+    m_inbound(false),
+    m_inherited(false),
     m_blockReason(blockReason),
     m_ipProto(ipProto),
     m_localPort(localPort),
@@ -16,6 +18,11 @@ LogEntryBlockedIp::LogEntryBlockedIp(quint8 blockReason, quint8 ipProto, quint16
 void LogEntryBlockedIp::setInbound(bool inbound)
 {
     m_inbound = inbound;
+}
+
+void LogEntryBlockedIp::setInherited(bool inherited)
+{
+    m_inherited = inherited;
 }
 
 void LogEntryBlockedIp::setBlockReason(quint8 blockReason)

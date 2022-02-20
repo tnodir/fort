@@ -66,17 +66,17 @@ FORT_API void fort_log_blocked_write(
 FORT_API void fort_log_blocked_header_read(
         const char *p, BOOL *blocked, UINT32 *pid, UINT32 *path_len);
 
-FORT_API void fort_log_blocked_ip_header_write(char *p, BOOL inbound, UCHAR block_reason,
+FORT_API void fort_log_blocked_ip_header_write(char *p, BOOL inbound, BOOL inherited,
+        UCHAR block_reason, UCHAR ip_proto, UINT16 local_port, UINT16 remote_port, UINT32 local_ip,
+        UINT32 remote_ip, UINT32 pid, UINT32 path_len);
+
+FORT_API void fort_log_blocked_ip_write(char *p, BOOL inbound, BOOL inherited, UCHAR block_reason,
         UCHAR ip_proto, UINT16 local_port, UINT16 remote_port, UINT32 local_ip, UINT32 remote_ip,
-        UINT32 pid, UINT32 path_len);
+        UINT32 pid, UINT32 path_len, const char *path);
 
-FORT_API void fort_log_blocked_ip_write(char *p, BOOL inbound, UCHAR block_reason, UCHAR ip_proto,
-        UINT16 local_port, UINT16 remote_port, UINT32 local_ip, UINT32 remote_ip, UINT32 pid,
-        UINT32 path_len, const char *path);
-
-FORT_API void fort_log_blocked_ip_header_read(const char *p, BOOL *inbound, UCHAR *block_reason,
-        UCHAR *ip_proto, UINT16 *local_port, UINT16 *remote_port, UINT32 *local_ip,
-        UINT32 *remote_ip, UINT32 *pid, UINT32 *path_len);
+FORT_API void fort_log_blocked_ip_header_read(const char *p, BOOL *inbound, BOOL *inherited,
+        UCHAR *block_reason, UCHAR *ip_proto, UINT16 *local_port, UINT16 *remote_port,
+        UINT32 *local_ip, UINT32 *remote_ip, UINT32 *pid, UINT32 *path_len);
 
 FORT_API void fort_log_proc_new_header_write(char *p, UINT32 pid, UINT32 path_len);
 

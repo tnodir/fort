@@ -16,15 +16,16 @@
 
 #define FORT_PSNAME_DATA_OFF offsetof(FORT_PSNAME, data)
 
-struct fort_psname
+typedef struct fort_psname
 {
     UINT16 refcount;
     UINT16 size;
     WCHAR data[1];
-};
+} FORT_PSNAME, *PFORT_PSNAME;
 
 #define FORT_PSNODE_PARENT_NAME_CHECKED 0x0001
-#define FORT_PSNODE_NAME_INHERITED      0x0002
+#define FORT_PSNODE_NAME_INHERIT        0x0002
+#define FORT_PSNODE_NAME_INHERITED      0x0004
 
 /* Synchronize with tommy_hashdyn_node! */
 typedef struct fort_psnode
@@ -413,28 +414,6 @@ FORT_API void fort_pstree_close(PFORT_PSTREE ps_tree)
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
-FORT_API PFORT_PSNAME fort_pstree_get_proc_name(
-        PFORT_PSTREE ps_tree, DWORD processId, PUNICODE_STRING path)
-{
-    PFORT_PSNAME ps_name = NULL;
-
-    KLOCK_QUEUE_HANDLE lock_queue;
-    KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
-    {
-        PFORT_PSNODE proc = fort_pstree_find_proc(ps_tree, processId);
-        if (proc != NULL && proc->ps_name != NULL) {
-            ps_name = proc->ps_name;
-
-            path->Length = ps_name->size;
-            path->MaximumLength = ps_name->size;
-            path->Buffer = ps_name->data;
-        }
-    }
-    KeReleaseInStackQueuedSpinLock(&lock_queue);
-
-    return ps_name;
-}
-
 static NTSTATUS GetProcessImageName(HANDLE processHandle, PUNICODE_STRING path)
 {
     NTSTATUS status;
@@ -442,7 +421,7 @@ static NTSTATUS GetProcessImageName(HANDLE processHandle, PUNICODE_STRING path)
     struct
     {
         UNICODE_STRING path;
-        WCHAR data[2 * 1024];
+        WCHAR data[FORT_CONF_APP_PATH_MAX];
     } buffer;
 
     ULONG outLength;
@@ -668,4 +647,94 @@ FORT_API void NTAPI fort_pstree_enum_processes(void)
     }
 
     fort_mem_free(buffer, FORT_PSTREE_POOL_TAG);
+}
+
+static void fort_pstree_check_proc_conf(
+        PFORT_PSTREE ps_tree, PFORT_CONF_REF conf_ref, PFORT_PSNODE proc, HANDLE processHandle)
+{
+    NTSTATUS status;
+
+    WCHAR pathBuffer[FORT_CONF_APP_PATH_MAX];
+    UNICODE_STRING path = {
+        .Length = 0, .MaximumLength = sizeof(pathBuffer), .Buffer = pathBuffer
+    };
+
+    status = GetProcessImageName(processHandle, &path);
+    if (!NT_SUCCESS(status))
+        return;
+
+    const FORT_APP_FLAGS app_flags =
+            fort_conf_app_find(&conf_ref->conf, path.Buffer, path.Length, fort_conf_exe_find);
+
+    if (app_flags.apply_child) {
+        PFORT_PSNAME ps_name = fort_pstree_name_new(ps_tree, path.Length);
+        if (ps_name != NULL) {
+            RtlCopyMemory(ps_name->data, path.Buffer, path.Length);
+
+            proc->ps_name = ps_name;
+            proc->flags |= FORT_PSNODE_NAME_INHERIT;
+        }
+    }
+}
+
+static void fort_pstree_check_proc_parent(
+        PFORT_PSTREE ps_tree, PFORT_CONF_REF conf_ref, PFORT_PSNODE proc)
+{
+    if ((proc->flags & FORT_PSNODE_PARENT_NAME_CHECKED) != 0)
+        return;
+
+    proc->flags |= FORT_PSNODE_PARENT_NAME_CHECKED;
+
+    PFORT_PSNODE parent = fort_pstree_find_proc(ps_tree, proc->parent_process_id);
+    if (parent != NULL) {
+        fort_pstree_check_proc_parent(ps_tree, conf_ref, parent);
+
+        if ((parent->flags & FORT_PSNODE_NAME_INHERIT) != 0) {
+            PFORT_PSNAME ps_name = parent->ps_name;
+            if (ps_name != NULL) {
+                ++ps_name->refcount;
+                proc->ps_name = ps_name;
+                proc->flags |= FORT_PSNODE_NAME_INHERITED;
+                return;
+            }
+        }
+    }
+
+    NT_ASSERT(proc->ps_name == NULL);
+
+    const HANDLE processHandle = OpenProcessById(proc->process_id);
+    if (processHandle != NULL) {
+        fort_pstree_check_proc_conf(ps_tree, conf_ref, proc, processHandle);
+
+        ZwClose(processHandle);
+    }
+}
+
+FORT_API BOOL fort_pstree_get_proc_name(PFORT_PSTREE ps_tree, PFORT_CONF_REF conf_ref,
+        DWORD processId, PUNICODE_STRING path, BOOL *inherited)
+{
+    BOOL res = FALSE;
+
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
+    {
+        PFORT_PSNODE proc = fort_pstree_find_proc(ps_tree, processId);
+        if (proc != NULL) {
+            fort_pstree_check_proc_parent(ps_tree, conf_ref, proc);
+
+            PFORT_PSNAME ps_name = proc->ps_name;
+            if (ps_name != NULL) {
+                path->Length = ps_name->size;
+                path->MaximumLength = ps_name->size;
+                path->Buffer = ps_name->data;
+
+                *inherited = (proc->flags & FORT_PSNODE_NAME_INHERITED) != 0;
+
+                res = TRUE;
+            }
+        }
+    }
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    return res;
 }

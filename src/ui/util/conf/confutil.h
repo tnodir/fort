@@ -69,11 +69,11 @@ private:
     bool parseExeApps(
             ConfAppsWalker *confAppsWalker, appentry_map_t &exeAppsMap, quint32 &exeAppsSize);
 
-    bool parseAppsText(int groupIndex, bool blocked, const QString &text,
+    bool parseAppsText(int groupIndex, bool applyChild, bool blocked, const QString &text,
             appentry_map_t &wildAppsMap, appentry_map_t &prefixAppsMap, appentry_map_t &exeAppsMap,
             quint32 &wildAppsSize, quint32 &prefixAppsSize, quint32 &exeAppsSize);
 
-    bool addParsedApp(int groupIndex, bool blocked, bool isWild, bool isPrefix,
+    bool addParsedApp(int groupIndex, bool applyChild, bool blocked, bool isWild, bool isPrefix,
             const QString &appPath, appentry_map_t &wildAppsMap, appentry_map_t &prefixAppsMap,
             appentry_map_t &exeAppsMap, quint32 &wildAppsSize, quint32 &prefixAppsSize,
             quint32 &exeAppsSize);
@@ -93,8 +93,8 @@ private:
             const appentry_map_t &wildAppsMap, const appentry_map_t &prefixAppsMap,
             const appentry_map_t &exeAppsMap);
 
-    static void writeAppGroupFlags(quint16 *applyChildBits, quint16 *logConnBits,
-            quint16 *fragmentBits, const FirewallConf &conf);
+    static void writeAppGroupFlags(
+            quint16 *logConnBits, quint16 *fragmentBits, const FirewallConf &conf);
 
     static void writeLimits(struct fort_traf *limits, quint16 *limitBits, quint32 *limit2Bits,
             const QList<AppGroup *> &appGroups);

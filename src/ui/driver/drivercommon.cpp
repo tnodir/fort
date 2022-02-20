@@ -137,20 +137,20 @@ void logBlockedHeaderRead(const char *input, int *blocked, quint32 *pid, quint32
     fort_log_blocked_header_read(input, blocked, pid, pathLen);
 }
 
-void logBlockedIpHeaderWrite(char *output, int inbound, quint8 blockReason, quint8 ipProto,
-        quint16 localPort, quint16 remotePort, quint32 localIp, quint32 remoteIp, quint32 pid,
-        quint32 pathLen)
+void logBlockedIpHeaderWrite(char *output, int inbound, int inherited, quint8 blockReason,
+        quint8 ipProto, quint16 localPort, quint16 remotePort, quint32 localIp, quint32 remoteIp,
+        quint32 pid, quint32 pathLen)
 {
-    fort_log_blocked_ip_header_write(output, inbound, blockReason, ipProto, localPort, remotePort,
-            localIp, remoteIp, pid, pathLen);
+    fort_log_blocked_ip_header_write(output, inbound, inherited, blockReason, ipProto, localPort,
+            remotePort, localIp, remoteIp, pid, pathLen);
 }
 
-void logBlockedIpHeaderRead(const char *input, int *inbound, quint8 *blockReason, quint8 *ipProto,
-        quint16 *localPort, quint16 *remotePort, quint32 *localIp, quint32 *remoteIp, quint32 *pid,
-        quint32 *pathLen)
+void logBlockedIpHeaderRead(const char *input, int *inbound, int *inherited, quint8 *blockReason,
+        quint8 *ipProto, quint16 *localPort, quint16 *remotePort, quint32 *localIp,
+        quint32 *remoteIp, quint32 *pid, quint32 *pathLen)
 {
-    fort_log_blocked_ip_header_read(input, inbound, blockReason, ipProto, localPort, remotePort,
-            localIp, remoteIp, pid, pathLen);
+    fort_log_blocked_ip_header_read(input, inbound, inherited, blockReason, ipProto, localPort,
+            remotePort, localIp, remoteIp, pid, pathLen);
 }
 
 void logProcNewHeaderWrite(char *output, quint32 pid, quint32 pathLen)
