@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.5.0, 2022-02-20:
+- Add "Apply same rules to child processes" flag to App Groups & Programs.
+- Driver: Support ARM64.
+
 v3.4.7, 2022-02-12:
 - UI: Options: Add ability to set tray icon click actions.
 - UI: Update translations.
