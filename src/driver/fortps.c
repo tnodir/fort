@@ -705,7 +705,7 @@ static void fort_pstree_check_proc_parent(
     if (parent != NULL) {
         fort_pstree_check_proc_parent(ps_tree, conf_ref, parent);
 
-        if ((parent->flags & FORT_PSNODE_NAME_INHERIT) != 0) {
+        if ((parent->flags & (FORT_PSNODE_NAME_INHERIT | FORT_PSNODE_NAME_INHERITED)) != 0) {
             PFORT_PSNAME ps_name = parent->ps_name;
             if (ps_name != NULL) {
                 ++ps_name->refcount;
