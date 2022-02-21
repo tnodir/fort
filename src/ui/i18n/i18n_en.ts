@@ -346,6 +346,10 @@
         <source>Unknown</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Inherited</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
