@@ -143,6 +143,10 @@
         <translation>Désactivé</translation>
     </message>
     <message>
+        <source>Apply same rules to child processes</source>
+        <translation>Appliquer les mêmes règles aux processus enfants</translation>
+    </message>
+    <message>
         <source>Download speed limit:</source>
         <translation>Vitesse de téléchargement limitée:</translation>
     </message>
@@ -822,6 +826,10 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     <message>
         <source>Month</source>
         <translation>Mois</translation>
+    </message>
+    <message>
+        <source>Apply same rules to child processes</source>
+        <translation>Appliquer les mêmes règles aux processus enfants</translation>
     </message>
     <message>
         <source> hour(s)</source>
