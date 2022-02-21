@@ -226,6 +226,10 @@
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Programi (*.exe);;Vse datoteke (*.*)</translation>
     </message>
+    <message>
+        <source>Apply same rules to child processes</source>
+        <translation>Uporabi ista pravila za podrejene procese</translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -830,6 +834,10 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Programi (*.exe);;Vse datoteke (*.*)</translation>
+    </message>
+    <message>
+        <source>Apply same rules to child processes</source>
+        <translation>Uporabi ista pravila za podrejene procese</translation>
     </message>
 </context>
 <context>
