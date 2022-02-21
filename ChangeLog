@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.5.1, 2022-02-21:
+- Fix "Apply same rules to child processes" flag for deep nested processes.
+
 v3.5.0, 2022-02-20:
 - Add "Apply same rules to child processes" flag to App Groups & Programs.
 - Driver: Support ARM64 (Experimental).
