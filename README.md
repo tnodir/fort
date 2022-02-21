@@ -24,9 +24,19 @@ Fort is a simple firewall for Windows 7+.
  Asset                  | OS      | Version           | Architectures | Description
 ------------------------|---------|-------------------|---------------|---------------------------------------
  \*-windows-x86.\*      | Windows | 7 SP1 and later   | x86, x64      | 32/64-bit Windows 7, 8, 8.1, 10, 11
+ \*-windows-x86.\*      | Windows | 10 and later      | ARM64         | ARM64 Windows 10, 11
  \*-windows10-x86_64.\* | Windows | 10 2004 and later | x64           | 64-bit Windows 10 2004-21H2, 11
 
 -----
+
+## Restrictions
+
+### "Apply same rules to child processes" option
+
+The "Apply same rules to child processes" option affects only new processes.
+
+Fort Firewall checks the whole tree of parent processes at first attempt of any (child) process to connect.
+So the parent process with the checked "Apply same rules to child processes" option should be alive, when (child) process connects to Internet.
 
 ## FAQ
 
