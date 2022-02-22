@@ -346,6 +346,10 @@
         <source>Unknown</source>
         <translation>알 수 없음</translation>
     </message>
+    <message>
+        <source>Inherited</source>
+        <translation>상속됨</translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
