@@ -26,6 +26,7 @@ typedef struct fort_psname
 #define FORT_PSNODE_PARENT_NAME_CHECKED 0x0001
 #define FORT_PSNODE_NAME_INHERIT        0x0002
 #define FORT_PSNODE_NAME_INHERITED      0x0004
+#define FORT_PSNODE_NAME_CUSTOM         0x0008
 
 /* Synchronize with tommy_hashdyn_node! */
 typedef struct fort_psnode
@@ -317,7 +318,7 @@ static void fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCUNICODE_STRING p
     proc->parent_process_id = parentProcessId;
 
     /* Services can't inherit parent's name */
-    proc->flags = (ps_name != NULL) ? FORT_PSNODE_PARENT_NAME_CHECKED : 0;
+    proc->flags = (ps_name != NULL) ? FORT_PSNODE_NAME_CUSTOM : 0;
     proc->conf_chn = 0;
 }
 
@@ -701,22 +702,22 @@ static void fort_pstree_check_proc_parent(
 
     proc->flags |= FORT_PSNODE_PARENT_NAME_CHECKED;
 
-    PFORT_PSNODE parent = fort_pstree_find_proc(ps_tree, proc->parent_process_id);
-    if (parent != NULL) {
-        fort_pstree_check_proc_parent(ps_tree, conf_ref, parent);
+    if (proc->ps_name == NULL) {
+        PFORT_PSNODE parent = fort_pstree_find_proc(ps_tree, proc->parent_process_id);
+        if (parent != NULL) {
+            fort_pstree_check_proc_parent(ps_tree, conf_ref, parent);
 
-        if ((parent->flags & (FORT_PSNODE_NAME_INHERIT | FORT_PSNODE_NAME_INHERITED)) != 0) {
-            PFORT_PSNAME ps_name = parent->ps_name;
-            if (ps_name != NULL) {
-                ++ps_name->refcount;
-                proc->ps_name = ps_name;
-                proc->flags |= FORT_PSNODE_NAME_INHERITED;
-                return;
+            if ((parent->flags & (FORT_PSNODE_NAME_INHERIT | FORT_PSNODE_NAME_INHERITED)) != 0) {
+                PFORT_PSNAME ps_name = parent->ps_name;
+                if (ps_name != NULL) {
+                    ++ps_name->refcount;
+                    proc->ps_name = ps_name;
+                    proc->flags |= FORT_PSNODE_NAME_INHERITED;
+                    return;
+                }
             }
         }
     }
-
-    NT_ASSERT(proc->ps_name == NULL);
 
     const HANDLE processHandle = OpenProcessById(proc->process_id);
     if (processHandle != NULL) {
@@ -726,29 +727,42 @@ static void fort_pstree_check_proc_parent(
     }
 }
 
+static BOOL fort_pstree_get_proc_name_locked(PFORT_PSTREE ps_tree, PFORT_CONF_REF conf_ref,
+        DWORD processId, PUNICODE_STRING path, BOOL *inherited)
+{
+    PFORT_PSNODE proc = fort_pstree_find_proc(ps_tree, processId);
+    if (proc == NULL)
+        return FALSE;
+
+    fort_pstree_check_proc_parent(ps_tree, conf_ref, proc);
+
+    PFORT_PSNAME ps_name = proc->ps_name;
+    if (ps_name == NULL)
+        return FALSE;
+
+    const UINT16 procFlags = proc->flags;
+    if ((procFlags & (FORT_PSNODE_NAME_INHERIT | FORT_PSNODE_NAME_CUSTOM))
+            == FORT_PSNODE_NAME_INHERIT)
+        return FALSE;
+
+    path->Length = ps_name->size;
+    path->MaximumLength = ps_name->size;
+    path->Buffer = ps_name->data;
+
+    *inherited = (procFlags & FORT_PSNODE_NAME_INHERITED) != 0;
+
+    return TRUE;
+}
+
 FORT_API BOOL fort_pstree_get_proc_name(PFORT_PSTREE ps_tree, PFORT_CONF_REF conf_ref,
         DWORD processId, PUNICODE_STRING path, BOOL *inherited)
 {
-    BOOL res = FALSE;
+    BOOL res;
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
     {
-        PFORT_PSNODE proc = fort_pstree_find_proc(ps_tree, processId);
-        if (proc != NULL) {
-            fort_pstree_check_proc_parent(ps_tree, conf_ref, proc);
-
-            PFORT_PSNAME ps_name = proc->ps_name;
-            if (ps_name != NULL) {
-                path->Length = ps_name->size;
-                path->MaximumLength = ps_name->size;
-                path->Buffer = ps_name->data;
-
-                *inherited = (proc->flags & FORT_PSNODE_NAME_INHERITED) != 0;
-
-                res = TRUE;
-            }
-        }
+        res = fort_pstree_get_proc_name_locked(ps_tree, conf_ref, processId, path, inherited);
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
