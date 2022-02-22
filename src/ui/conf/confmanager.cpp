@@ -679,11 +679,12 @@ qint64 ConfManager::appIdByPath(const QString &appPath)
 bool ConfManager::addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
         int groupIndex, bool useGroupPerm, bool applyChild, bool blocked)
 {
-    if (!updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, applyChild, applyChild, blocked))
+    if (!updateDriverUpdateApp(
+                appPath, groupIndex, useGroupPerm, applyChild, blocked, /*remove=*/false))
         return false;
 
-    return addOrUpdateApp(
-            appPath, appName, endTime, groupIndex, useGroupPerm, applyChild, blocked, false);
+    return addOrUpdateApp(appPath, appName, endTime, groupIndex, useGroupPerm, applyChild, blocked,
+            /*alerted=*/false);
 }
 
 bool ConfManager::deleteApp(qint64 appId)
