@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.5.2, 2022-02-22:
+- Fix "Apply same rules to child processes" flag for root processes & services.
+- UI: Update translations.
+
 v3.5.1, 2022-02-21:
 - Fix "Apply same rules to child processes" flag for deep nested processes.
 
