@@ -1,7 +1,7 @@
 Fort Firewall ChangeLog
 
 v3.5.3, 2022-02-22:
-- UI: Programs: Fix manually adding a new program (Regression from v3.5.1).
+- UI: Programs: Fix manually adding a new program (Regression from v3.5.0).
 
 v3.5.2, 2022-02-22:
 - Fix "Apply same rules to child processes" flag for root processes & services.
