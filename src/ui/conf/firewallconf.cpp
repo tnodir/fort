@@ -172,7 +172,8 @@ void FirewallConf::addAppGroup(AppGroup *appGroup, int to)
 
 AppGroup *FirewallConf::addAppGroupByName(const QString &name)
 {
-    auto appGroup = new AppGroup();
+    AppGroup *appGroup = new AppGroup();
+    appGroup->setEdited(true);
     appGroup->setId(m_removedAppGroupIdList.isEmpty() ? 0 : m_removedAppGroupIdList.takeLast());
     appGroup->setName(name);
     addAppGroup(appGroup);
@@ -184,7 +185,8 @@ void FirewallConf::moveAppGroup(int from, int to)
     const int lo = qMin(from, to);
     const int hi = qMax(from, to);
     for (int i = lo; i >= hi; --i) {
-        m_appGroups.at(i)->setEdited(true);
+        AppGroup *appGroup = m_appGroups.at(i);
+        appGroup->setEdited(true);
     }
 
     m_appGroups.move(from, to);

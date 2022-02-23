@@ -197,12 +197,14 @@ void ApplicationsPage::setupAddGroup()
         }
 
         conf()->addAppGroupByName(text);
-        resetGroupName();
 
         const int tabIndex = m_tabBar->addTab(text);
         m_tabBar->setCurrentIndex(tabIndex);
 
+        resetGroupName();
+
         ctrl()->setOptEdited();
+        ctrl()->setFlagsEdited(); // to adjust appGroupBits
     });
 
     const auto refreshAddGroup = [&] {
@@ -226,7 +228,9 @@ void ApplicationsPage::setupRenameGroup()
         const int tabIndex = m_tabBar->currentIndex();
         m_tabBar->setTabText(tabIndex, text);
 
-        appGroup()->setName(text);
+        AppGroup *appGroup = this->appGroup();
+        appGroup->setName(text);
+
         resetGroupName();
 
         ctrl()->setOptEdited();
@@ -315,10 +319,11 @@ QLayout *ApplicationsPage::setupGroupHeader()
 void ApplicationsPage::setupGroupEnabled()
 {
     m_cbGroupEnabled = ControlUtil::createCheckBox(false, [&](bool checked) {
-        if (appGroup()->enabled() == checked)
+        AppGroup *appGroup = this->appGroup();
+        if (appGroup->enabled() == checked)
             return;
 
-        appGroup()->setEnabled(checked);
+        appGroup->setEnabled(checked);
 
         ctrl()->setFlagsEdited();
     });
@@ -331,10 +336,11 @@ void ApplicationsPage::setupGroupPeriod()
     m_ctpGroupPeriod = new CheckTimePeriod();
 
     connect(m_ctpGroupPeriod->checkBox(), &QCheckBox::toggled, this, [&](bool checked) {
-        if (appGroup()->periodEnabled() == checked)
+        AppGroup *appGroup = this->appGroup();
+        if (appGroup->periodEnabled() == checked)
             return;
 
-        appGroup()->setPeriodEnabled(checked);
+        appGroup->setPeriodEnabled(checked);
 
         ctrl()->setOptEdited();
     });
@@ -342,10 +348,11 @@ void ApplicationsPage::setupGroupPeriod()
             [&](const QTime &time) {
                 const auto timeStr = CheckTimePeriod::fromTime(time);
 
-                if (appGroup()->periodFrom() == timeStr)
+                AppGroup *appGroup = this->appGroup();
+                if (appGroup->periodFrom() == timeStr)
                     return;
 
-                appGroup()->setPeriodFrom(timeStr);
+                appGroup->setPeriodFrom(timeStr);
 
                 ctrl()->setOptEdited();
             });
@@ -353,10 +360,11 @@ void ApplicationsPage::setupGroupPeriod()
             [&](const QTime &time) {
                 const auto timeStr = CheckTimePeriod::fromTime(time);
 
-                if (appGroup()->periodTo() == timeStr)
+                AppGroup *appGroup = this->appGroup();
+                if (appGroup->periodTo() == timeStr)
                     return;
 
-                appGroup()->setPeriodTo(timeStr);
+                appGroup->setPeriodTo(timeStr);
 
                 ctrl()->setOptEdited();
             });
@@ -396,10 +404,11 @@ void ApplicationsPage::setupGroupOptions()
 void ApplicationsPage::setupGroupApplyChild()
 {
     m_cbApplyChild = ControlUtil::createCheckBox(false, [&](bool checked) {
-        if (appGroup()->applyChild() == checked)
+        AppGroup *appGroup = this->appGroup();
+        if (appGroup->applyChild() == checked)
             return;
 
-        appGroup()->setApplyChild(checked);
+        appGroup->setApplyChild(checked);
 
         ctrl()->setOptEdited();
     });
@@ -410,10 +419,11 @@ void ApplicationsPage::setupGroupLimitIn()
     m_cscLimitIn = createGroupLimit();
 
     connect(m_cscLimitIn->checkBox(), &QCheckBox::toggled, this, [&](bool checked) {
-        if (appGroup()->limitInEnabled() == checked)
+        AppGroup *appGroup = this->appGroup();
+        if (appGroup->limitInEnabled() == checked)
             return;
 
-        appGroup()->setLimitInEnabled(checked);
+        appGroup->setLimitInEnabled(checked);
 
         ctrl()->setOptEdited();
     });
@@ -421,10 +431,11 @@ void ApplicationsPage::setupGroupLimitIn()
             [&](int value) {
                 const auto kbytes = quint32(value);
 
-                if (appGroup()->speedLimitIn() == kbytes)
+                AppGroup *appGroup = this->appGroup();
+                if (appGroup->speedLimitIn() == kbytes)
                     return;
 
-                appGroup()->setSpeedLimitIn(kbytes);
+                appGroup->setSpeedLimitIn(kbytes);
 
                 ctrl()->setOptEdited();
             });
@@ -435,10 +446,11 @@ void ApplicationsPage::setupGroupLimitOut()
     m_cscLimitOut = createGroupLimit();
 
     connect(m_cscLimitOut->checkBox(), &QCheckBox::toggled, this, [&](bool checked) {
-        if (appGroup()->limitOutEnabled() == checked)
+        AppGroup *appGroup = this->appGroup();
+        if (appGroup->limitOutEnabled() == checked)
             return;
 
-        appGroup()->setLimitOutEnabled(checked);
+        appGroup->setLimitOutEnabled(checked);
 
         ctrl()->setOptEdited();
     });
@@ -446,10 +458,11 @@ void ApplicationsPage::setupGroupLimitOut()
             [&](int value) {
                 const auto kbytes = quint32(value);
 
-                if (appGroup()->speedLimitOut() == kbytes)
+                AppGroup *appGroup = this->appGroup();
+                if (appGroup->speedLimitOut() == kbytes)
                     return;
 
-                appGroup()->setSpeedLimitOut(kbytes);
+                appGroup->setSpeedLimitOut(kbytes);
 
                 ctrl()->setOptEdited();
             });
@@ -458,10 +471,11 @@ void ApplicationsPage::setupGroupLimitOut()
 void ApplicationsPage::setupGroupLogConn()
 {
     m_cbLogConn = ControlUtil::createCheckBox(false, [&](bool checked) {
-        if (appGroup()->logConn() == checked)
+        AppGroup *appGroup = this->appGroup();
+        if (appGroup->logConn() == checked)
             return;
 
-        appGroup()->setLogConn(checked);
+        appGroup->setLogConn(checked);
 
         ctrl()->setOptEdited();
     });
@@ -472,10 +486,11 @@ void ApplicationsPage::setupGroupLogConn()
 void ApplicationsPage::setupGroupFragmentPacket()
 {
     m_cbFragmentPacket = ControlUtil::createCheckBox(false, [&](bool checked) {
-        if (appGroup()->fragmentPacket() == checked)
+        AppGroup *appGroup = this->appGroup();
+        if (appGroup->fragmentPacket() == checked)
             return;
 
-        appGroup()->setFragmentPacket(checked);
+        appGroup->setFragmentPacket(checked);
 
         ctrl()->setOptEdited();
     });
@@ -505,10 +520,11 @@ void ApplicationsPage::setupBlockApps()
     connect(m_blockApps->editText(), &QPlainTextEdit::textChanged, this, [&] {
         const auto text = m_blockApps->editText()->toPlainText();
 
-        if (appGroup()->blockText() == text)
+        AppGroup *appGroup = this->appGroup();
+        if (appGroup->blockText() == text)
             return;
 
-        appGroup()->setBlockText(text);
+        appGroup->setBlockText(text);
 
         ctrl()->setOptEdited();
     });
@@ -522,10 +538,11 @@ void ApplicationsPage::setupAllowApps()
     connect(m_allowApps->editText(), &QPlainTextEdit::textChanged, this, [&] {
         const auto text = m_allowApps->editText()->toPlainText();
 
-        if (appGroup()->allowText() == text)
+        AppGroup *appGroup = this->appGroup();
+        if (appGroup->allowText() == text)
             return;
 
-        appGroup()->setAllowText(text);
+        appGroup->setAllowText(text);
 
         ctrl()->setOptEdited();
     });
@@ -565,37 +582,36 @@ void ApplicationsPage::setupSplitterButtons()
 
 void ApplicationsPage::updateGroup()
 {
-    m_cbApplyChild->setChecked(appGroup()->applyChild());
+    AppGroup *appGroup = this->appGroup();
 
-    m_cscLimitIn->checkBox()->setChecked(appGroup()->limitInEnabled());
-    m_cscLimitIn->spinBox()->setValue(int(appGroup()->speedLimitIn()));
+    m_cbApplyChild->setChecked(appGroup->applyChild());
 
-    m_cscLimitOut->checkBox()->setChecked(appGroup()->limitOutEnabled());
-    m_cscLimitOut->spinBox()->setValue(int(appGroup()->speedLimitOut()));
+    m_cscLimitIn->checkBox()->setChecked(appGroup->limitInEnabled());
+    m_cscLimitIn->spinBox()->setValue(int(appGroup->speedLimitIn()));
 
-    m_cbLogConn->setChecked(appGroup()->logConn());
-    m_cbFragmentPacket->setChecked(appGroup()->fragmentPacket());
+    m_cscLimitOut->checkBox()->setChecked(appGroup->limitOutEnabled());
+    m_cscLimitOut->spinBox()->setValue(int(appGroup->speedLimitOut()));
 
-    m_cbGroupEnabled->setChecked(appGroup()->enabled());
+    m_cbLogConn->setChecked(appGroup->logConn());
+    m_cbFragmentPacket->setChecked(appGroup->fragmentPacket());
 
-    m_ctpGroupPeriod->checkBox()->setChecked(appGroup()->periodEnabled());
-    m_ctpGroupPeriod->timeEdit1()->setTime(CheckTimePeriod::toTime(appGroup()->periodFrom()));
-    m_ctpGroupPeriod->timeEdit2()->setTime(CheckTimePeriod::toTime(appGroup()->periodTo()));
+    m_cbGroupEnabled->setChecked(appGroup->enabled());
 
-    m_blockApps->editText()->setText(appGroup()->blockText());
-    m_allowApps->editText()->setText(appGroup()->allowText());
+    m_ctpGroupPeriod->checkBox()->setChecked(appGroup->periodEnabled());
+    m_ctpGroupPeriod->timeEdit1()->setTime(CheckTimePeriod::toTime(appGroup->periodFrom()));
+    m_ctpGroupPeriod->timeEdit2()->setTime(CheckTimePeriod::toTime(appGroup->periodTo()));
+
+    m_blockApps->editText()->setText(appGroup->blockText());
+    m_allowApps->editText()->setText(appGroup->allowText());
 }
 
 void ApplicationsPage::setupAppGroup()
 {
     connect(this, &ApplicationsPage::appGroupChanged, this, &ApplicationsPage::updateGroup);
 
-    const auto refreshAppGroup = [&] {
-        const int tabIndex = m_tabBar->currentIndex();
-        setAppGroupIndex(tabIndex);
-    };
+    const auto refreshAppGroup = [&](int tabIndex) { setAppGroupIndex(tabIndex); };
 
-    refreshAppGroup();
+    refreshAppGroup(m_tabBar->currentIndex());
 
     connect(m_tabBar, &QTabBar::currentChanged, this, refreshAppGroup);
 }
@@ -617,7 +633,7 @@ AppGroup *ApplicationsPage::appGroupByIndex(int index) const
 
 void ApplicationsPage::resetGroupName()
 {
-    m_editGroupName->setText(QString());
+    m_editGroupName->clear();
     m_editGroupName->setFocus();
 }
 
