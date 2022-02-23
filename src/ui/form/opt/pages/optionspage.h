@@ -46,6 +46,7 @@ private:
     void refreshComboTrayAction();
     QLayout *setupTrayEventLayout();
     QLayout *setupTrayActionLayout();
+    void setupConfirmationsBox();
     void setupLogsBox();
     QLayout *setupColumn2();
     void setupDriverBox();
@@ -62,6 +63,7 @@ private:
     QGroupBox *m_gbTraffic = nullptr;
     QGroupBox *m_gbGlobal = nullptr;
     QGroupBox *m_gbTray = nullptr;
+    QGroupBox *m_gbConfirmations = nullptr;
     QGroupBox *m_gbLogs = nullptr;
     QGroupBox *m_gbDriver = nullptr;
     QGroupBox *m_gbNewVersion = nullptr;
@@ -85,6 +87,8 @@ private:
     QComboBox *m_comboTrayEvent = nullptr;
     QLabel *m_labelTrayAction = nullptr;
     QComboBox *m_comboTrayAction = nullptr;
+    QCheckBox *m_cbConfirmTrayFlags = nullptr;
+    QCheckBox *m_cbConfirmQuit = nullptr;
     QCheckBox *m_cbLogDebug = nullptr;
     QCheckBox *m_cbLogConsole = nullptr;
     QLabel *m_iconDriver = nullptr;

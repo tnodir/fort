@@ -145,6 +145,7 @@ void OptionsPage::onRetranslateUi()
     m_gbTraffic->setTitle(tr("Traffic"));
     m_gbGlobal->setTitle(tr("Global"));
     m_gbTray->setTitle(tr("Tray"));
+    m_gbConfirmations->setTitle(tr("Confirmations"));
     m_gbLogs->setTitle(tr("Logs"));
     m_gbDriver->setTitle(tr("Driver"));
     m_gbNewVersion->setTitle(tr("New Version"));
@@ -179,6 +180,9 @@ void OptionsPage::onRetranslateUi()
     retranslateComboTrayEvent();
     retranslateComboTrayAction();
     refreshComboTrayAction();
+
+    m_cbConfirmTrayFlags->setText(tr("Tray Menu Flags"));
+    m_cbConfirmQuit->setText(tr("Quit"));
 
     m_cbLogDebug->setText(tr("Log debug messages"));
     m_cbLogConsole->setText(tr("Show log messages in console"));
@@ -318,6 +322,10 @@ QLayout *OptionsPage::setupColumn1()
     // Tray Group Box
     setupTrayBox();
     layout->addWidget(m_gbTray);
+
+    // Confirmations Group Box
+    setupConfirmationsBox();
+    layout->addWidget(m_gbConfirmations);
 
     // Logs Group Box
     setupLogsBox();
@@ -557,6 +565,21 @@ QLayout *OptionsPage::setupTrayActionLayout()
     m_comboTrayAction->setFixedWidth(200);
 
     return ControlUtil::createRowLayout(m_labelTrayAction, m_comboTrayAction);
+}
+
+void OptionsPage::setupConfirmationsBox()
+{
+    m_cbConfirmTrayFlags = ControlUtil::createCheckBox(iniUser()->confirmTrayFlags(),
+            [&](bool checked) { iniUser()->setConfirmTrayFlags(checked); });
+    m_cbConfirmQuit = ControlUtil::createCheckBox(
+            iniUser()->confirmQuit(), [&](bool checked) { iniUser()->setConfirmQuit(checked); });
+
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_cbConfirmTrayFlags);
+    layout->addWidget(m_cbConfirmQuit);
+
+    m_gbConfirmations = new QGroupBox(this);
+    m_gbConfirmations->setLayout(layout);
 }
 
 void OptionsPage::setupLogsBox()

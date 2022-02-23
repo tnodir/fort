@@ -58,6 +58,7 @@ protected slots:
     void onTrayActivated(QSystemTrayIcon::ActivationReason reason);
 
     void saveTrayFlags();
+    void quitProgram();
 
 private:
     void setupController();

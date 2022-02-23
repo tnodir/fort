@@ -359,8 +359,7 @@ void TrayIcon::setupTrayMenu()
     }
 
     m_menu->addSeparator();
-    m_quitAction =
-            addAction(m_menu, QIcon(), tr("Quit"), windowManager(), SLOT(quitByCheckPassword()));
+    m_quitAction = addAction(m_menu, QIcon(), tr("Quit"), this, SLOT(quitProgram()));
     addHotKey(m_quitAction, iniUser()->hotKeyQuit());
 }
 
@@ -413,6 +412,15 @@ void TrayIcon::updateAppGroupActions()
 
 void TrayIcon::saveTrayFlags()
 {
+    if (iniUser()->confirmTrayFlags()) {
+        const auto action = qobject_cast<QAction *>(sender());
+        Q_ASSERT(action);
+
+        if (!windowManager()->showQuestionBox(
+                    tr("Are you sure to switch \"%1\"?").arg(action->text())))
+            return;
+    }
+
     conf()->setFilterEnabled(m_filterEnabledAction->isChecked());
     conf()->setStopTraffic(m_stopTrafficAction->isChecked());
     conf()->setStopInetTraffic(m_stopInetTrafficAction->isChecked());
@@ -425,6 +433,16 @@ void TrayIcon::saveTrayFlags()
     }
 
     confManager()->saveFlags();
+}
+
+void TrayIcon::quitProgram()
+{
+    if (iniUser()->confirmQuit()) {
+        if (!windowManager()->showQuestionBox(tr("Are you sure to quit?")))
+            return;
+    }
+
+    windowManager()->quitByCheckPassword();
 }
 
 void TrayIcon::addHotKey(QAction *action, const QString &shortcutText)
