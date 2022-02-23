@@ -51,6 +51,8 @@ ControlWorker *ControlManager::newServiceClient(QObject *parent) const
     w->setupForAsync();
     w->setIsServiceClient(true);
 
+    connect(w, &ControlWorker::disconnected, this,
+            [&] { logWarning() << "Server disconnected" << w->errorString(); });
     connect(w, &ControlWorker::requestReady, this, &ControlManager::processRequest);
 
     if (!w->connectToServer(getServerName(true))) {
