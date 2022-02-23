@@ -9,6 +9,7 @@
 
 #include <fort_version.h>
 
+#include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
 #include <form/opt/optionscontroller.h>
 #include <fortsettings.h>
@@ -136,7 +137,7 @@ void OptMainPage::setupOkApplyButtons()
         m_btApply->setEnabled(anyEdited);
     };
 
-    refreshOkApplyButtons(false);
+    refreshOkApplyButtons(conf()->anyEdited());
 
     connect(ctrl(), &OptionsController::editedChanged, this, refreshOkApplyButtons);
 }
