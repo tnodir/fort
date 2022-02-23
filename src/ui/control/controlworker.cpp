@@ -2,6 +2,7 @@
 
 #include <QDataStream>
 #include <QLocalSocket>
+#include <QLoggingCategory>
 
 namespace {
 
@@ -223,12 +224,20 @@ bool ControlWorker::readRequest()
 
 bool ControlWorker::readRequestHeader()
 {
-    if (socket()->read((char *) &m_requestHeader, sizeof(RequestHeader)) != sizeof(RequestHeader))
+    const int headerSize = socket()->read((char *) &m_requestHeader, sizeof(RequestHeader));
+    if (headerSize != sizeof(RequestHeader)) {
+        qWarning() << "Bad request header:"
+                   << "size=" << headerSize;
         return false;
+    }
 
     if (m_requestHeader.command() == Control::CommandNone
-            || m_requestHeader.dataSize() > dataMaxSize)
+            || m_requestHeader.dataSize() > dataMaxSize) {
+        qWarning() << "Bad request:"
+                   << "command=" << m_requestHeader.command()
+                   << "size=" << m_requestHeader.dataSize();
         return false;
+    }
 
     return true;
 }
