@@ -438,7 +438,7 @@ void TrayIcon::saveTrayFlags()
 void TrayIcon::quitProgram()
 {
     if (iniUser()->confirmQuit()) {
-        if (!windowManager()->showQuestionBox(tr("Are you sure to quit?")))
+        if (!windowManager()->showQuestionBox(tr("Are you sure to Quit from the program?")))
             return;
     }
 

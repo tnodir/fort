@@ -702,6 +702,18 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Switch Auto-Allow New Programs</source>
         <translation>Переключить &quot;Авто-разрешение новых программ&quot;</translation>
     </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>Подтверждения</translation>
+    </message>
+    <message>
+        <source>Tray Menu Flags</source>
+        <translation>Флаги из меню трея</translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation>Выход из программы</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1362,6 +1374,14 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Statistics</source>
         <translation>Статистика</translation>
+    </message>
+    <message>
+        <source>Are you sure to switch &quot;%1&quot;?</source>
+        <translation>Переключить &quot;%1&quot;?</translation>
+    </message>
+    <message>
+        <source>Are you sure to Quit from the program?</source>
+        <translation>Выйти из программы?</translation>
     </message>
 </context>
 <context>
