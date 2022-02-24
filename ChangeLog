@@ -4,6 +4,7 @@ v3.5.4, 2022-02-24:
 - UI: Options: Add "Confirmations" box.
 - UI: Options: Fix initial OK & Apply buttons state on fresh install.
 - UI: Options: Fix empty App Group saving.
+- UI: Options: Fix new App Group saving in Service mode.
 - UI: Update SQLite to v3.38.0
 
 v3.5.3, 2022-02-22:
