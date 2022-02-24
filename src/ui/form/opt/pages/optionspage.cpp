@@ -145,7 +145,7 @@ void OptionsPage::onRetranslateUi()
     m_gbTraffic->setTitle(tr("Traffic"));
     m_gbGlobal->setTitle(tr("Global"));
     m_gbTray->setTitle(tr("Tray"));
-    m_gbConfirmations->setTitle(tr("Confirmations"));
+    m_gbConfirmations->setTitle(tr("Action Confirmations"));
     m_gbLogs->setTitle(tr("Logs"));
     m_gbDriver->setTitle(tr("Driver"));
     m_gbNewVersion->setTitle(tr("New Version"));

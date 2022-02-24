@@ -702,15 +702,15 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation></translation>
     </message>
     <message>
-        <source>Confirmations</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Tray Menu Flags</source>
         <translation></translation>
     </message>
     <message>
         <source>Quit</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Action Confirmations</source>
         <translation></translation>
     </message>
 </context>

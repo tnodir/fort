@@ -703,16 +703,16 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>Переключить &quot;Авто-разрешение новых программ&quot;</translation>
     </message>
     <message>
-        <source>Confirmations</source>
-        <translation>Подтверждения</translation>
-    </message>
-    <message>
         <source>Tray Menu Flags</source>
         <translation>Флаги из меню трея</translation>
     </message>
     <message>
         <source>Quit</source>
         <translation>Выход из программы</translation>
+    </message>
+    <message>
+        <source>Action Confirmations</source>
+        <translation>Подтверждения действий</translation>
     </message>
 </context>
 <context>
