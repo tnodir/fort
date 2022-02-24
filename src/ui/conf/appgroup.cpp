@@ -172,8 +172,8 @@ void AppGroup::copy(const AppGroup &o)
     m_speedLimitOut = o.speedLimitOut();
 
     m_id = o.id();
-
     m_name = o.name();
+
     m_blockText = o.blockText();
     m_allowText = o.allowText();
 }

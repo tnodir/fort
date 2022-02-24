@@ -394,7 +394,8 @@ void ConfManager::showErrorMessage(const QString &errorMessage)
 void ConfManager::setUp()
 {
     if (!sqliteDb()->open()) {
-        qCCritical(LC) << "File open error:" << sqliteDb()->filePath() << sqliteDb()->errorMessage();
+        qCCritical(LC) << "File open error:" << sqliteDb()->filePath()
+                       << sqliteDb()->errorMessage();
         return;
     }
 
