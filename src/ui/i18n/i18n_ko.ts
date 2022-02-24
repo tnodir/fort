@@ -688,7 +688,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Switch Filter Enabled</source>
-        <translation>필터 전환 활성화됨</translation>
+        <translation>필터 활성화 전환</translation>
     </message>
     <message>
         <source>Switch Stop Traffic</source>
@@ -701,6 +701,18 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Switch Auto-Allow New Programs</source>
         <translation>새 프로그램 자동-허용 전환</translation>
+    </message>
+    <message>
+        <source>Tray Menu Flags</source>
+        <translation>체크 가능한 트레이 메뉴</translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation>프로그램 종료</translation>
+    </message>
+    <message>
+        <source>Action Confirmations</source>
+        <translation>다음 작업 확인</translation>
     </message>
 </context>
 <context>
@@ -1357,11 +1369,19 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Quit</source>
-        <translation>종료</translation>
+        <translation>프로그램 종료</translation>
     </message>
     <message>
         <source>Statistics</source>
         <translation>통계</translation>
+    </message>
+    <message>
+        <source>Are you sure to switch the &quot;%1&quot;?</source>
+        <translation>&quot;%1&quot;을(를) 전환하시겠습니까?</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to quit the program?</source>
+        <translation>프로그램을 종료하시겠습니까?</translation>
     </message>
 </context>
 <context>
