@@ -1375,11 +1375,11 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation></translation>
     </message>
     <message>
-        <source>Are you sure to switch &quot;%1&quot;?</source>
+        <source>Are you sure to switch the &quot;%1&quot;?</source>
         <translation></translation>
     </message>
     <message>
-        <source>Are you sure to Quit from the program?</source>
+        <source>Are you sure you want to quit the program?</source>
         <translation></translation>
     </message>
 </context>

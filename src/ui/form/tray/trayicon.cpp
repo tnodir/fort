@@ -434,7 +434,7 @@ void TrayIcon::switchTrayFlag(bool checked)
         Q_ASSERT(action);
 
         if (!windowManager()->showQuestionBox(
-                    tr("Are you sure to switch \"%1\"?").arg(action->text()))) {
+                    tr("Are you sure to switch the \"%1\"?").arg(action->text()))) {
             action->setChecked(!checked);
             return;
         }
@@ -446,7 +446,7 @@ void TrayIcon::switchTrayFlag(bool checked)
 void TrayIcon::quitProgram()
 {
     if (iniUser()->confirmQuit()) {
-        if (!windowManager()->showQuestionBox(tr("Are you sure to Quit from the program?")))
+        if (!windowManager()->showQuestionBox(tr("Are you sure you want to quit the program?")))
             return;
     }
 
