@@ -58,6 +58,8 @@ protected slots:
     void onTrayActivated(QSystemTrayIcon::ActivationReason reason);
 
     void saveTrayFlags();
+
+    void switchTrayFlag(bool checked);
     void quitProgram();
 
 private:

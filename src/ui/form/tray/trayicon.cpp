@@ -329,24 +329,25 @@ void TrayIcon::setupTrayMenu()
     m_menu->addSeparator();
 
     m_filterEnabledAction =
-            addAction(m_menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
+            addAction(m_menu, QIcon(), QString(), this, SLOT(switchTrayFlag(bool)), true);
     addHotKey(m_filterEnabledAction, iniUser()->hotKeyFilter());
 
-    m_stopTrafficAction = addAction(m_menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
+    m_stopTrafficAction =
+            addAction(m_menu, QIcon(), QString(), this, SLOT(switchTrayFlag(bool)), true);
     addHotKey(m_stopTrafficAction, iniUser()->hotKeyStopTraffic());
 
     m_stopInetTrafficAction =
-            addAction(m_menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
+            addAction(m_menu, QIcon(), QString(), this, SLOT(switchTrayFlag(bool)), true);
     addHotKey(m_stopInetTrafficAction, iniUser()->hotKeyStopInetTraffic());
 
     m_autoAllowProgsAction =
-            addAction(m_menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
+            addAction(m_menu, QIcon(), QString(), this, SLOT(switchTrayFlag(bool)), true);
     addHotKey(m_autoAllowProgsAction, iniUser()->hotKeyAllowAllNew());
 
     m_menu->addSeparator();
 
     for (int i = 0; i < MAX_APP_GROUP_COUNT; ++i) {
-        QAction *a = addAction(m_menu, QIcon(), QString(), this, SLOT(saveTrayFlags()), true);
+        QAction *a = addAction(m_menu, QIcon(), QString(), this, SLOT(switchTrayFlag(bool)), true);
 
         if (i < 12) {
             const QString shortcutText =
@@ -412,15 +413,6 @@ void TrayIcon::updateAppGroupActions()
 
 void TrayIcon::saveTrayFlags()
 {
-    if (iniUser()->confirmTrayFlags()) {
-        const auto action = qobject_cast<QAction *>(sender());
-        Q_ASSERT(action);
-
-        if (!windowManager()->showQuestionBox(
-                    tr("Are you sure to switch \"%1\"?").arg(action->text())))
-            return;
-    }
-
     conf()->setFilterEnabled(m_filterEnabledAction->isChecked());
     conf()->setStopTraffic(m_stopTrafficAction->isChecked());
     conf()->setStopInetTraffic(m_stopInetTrafficAction->isChecked());
@@ -433,6 +425,22 @@ void TrayIcon::saveTrayFlags()
     }
 
     confManager()->saveFlags();
+}
+
+void TrayIcon::switchTrayFlag(bool checked)
+{
+    if (iniUser()->confirmTrayFlags()) {
+        const auto action = qobject_cast<QAction *>(sender());
+        Q_ASSERT(action);
+
+        if (!windowManager()->showQuestionBox(
+                    tr("Are you sure to switch \"%1\"?").arg(action->text()))) {
+            action->setChecked(!checked);
+            return;
+        }
+    }
+
+    saveTrayFlags();
 }
 
 void TrayIcon::quitProgram()
