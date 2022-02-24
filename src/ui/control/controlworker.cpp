@@ -174,13 +174,13 @@ bool ControlWorker::waitForRead(int msecs) const
 
 void ControlWorker::processRequest()
 {
-    do {
+    while (socket()->bytesAvailable() >= sizeof(RequestHeader)) {
         if (!readRequest()) {
             close();
             clearRequest();
             break;
         }
-    } while (socket()->bytesAvailable() > 0);
+    }
 }
 
 void ControlWorker::clearRequest()
