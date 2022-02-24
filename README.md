@@ -71,7 +71,7 @@ For example here you can describe Internet addresses as:
 5) If "Stop Internet Traffic" is turned on, then _**BLOCK**_
 6) If **address** is not from "Allowed Internet Addresses", then _**BLOCK**_
 7) If **app path** is allowed, then _**PERMIT**_
-8) Log about blocked event and _**BLOCK**_
+8) _**BLOCK**_ or _**PERMIT**_ due to default App Groups settings (Block/Allow All)
 
 ### What does the "Make trackable" button do in Services?
 
