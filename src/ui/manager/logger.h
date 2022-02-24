@@ -3,7 +3,6 @@
 
 #include <QDir>
 #include <QFile>
-#include <QLoggingCategory>
 
 class Logger : public QObject
 {

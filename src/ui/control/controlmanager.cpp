@@ -19,12 +19,11 @@
 
 #include "controlworker.h"
 
-Q_DECLARE_LOGGING_CATEGORY(CLOG_CONTROL_MANAGER)
-Q_LOGGING_CATEGORY(CLOG_CONTROL_MANAGER, "control")
+namespace {
 
-#define logDebug()    qCDebug(CLOG_CONTROL_MANAGER, )
-#define logWarning()  qCWarning(CLOG_CONTROL_MANAGER, )
-#define logCritical() qCCritical(CLOG_CONTROL_MANAGER, )
+const QLoggingCategory LC("control");
+
+}
 
 ControlManager::ControlManager(QObject *parent) : QObject(parent) { }
 
@@ -54,7 +53,7 @@ ControlWorker *ControlManager::newServiceClient(QObject *parent) const
     connect(w, &ControlWorker::requestReady, this, &ControlManager::processRequest);
 
     if (!w->connectToServer(getServerName(true))) {
-        logWarning() << "Server connect error:" << socket->state() << socket->errorString();
+        qCWarning(LC) << "Server connect error:" << socket->state() << socket->errorString();
     }
     return w;
 }
@@ -70,7 +69,7 @@ bool ControlManager::listen()
             settings->isService() ? QLocalServer::WorldAccessOption : QLocalServer::NoOptions);
 
     if (!m_server->listen(getServerName(settings->isService()))) {
-        logWarning() << "Server listen error:" << m_server->errorString();
+        qCWarning(LC) << "Server listen error:" << m_server->errorString();
         return false;
     }
 
@@ -87,7 +86,7 @@ bool ControlManager::postCommand()
     if (settings->controlCommand() == "prog") {
         command = Control::Prog;
     } else {
-        logWarning() << "Unknown control command:" << settings->controlCommand();
+        qCWarning(LC) << "Unknown control command:" << settings->controlCommand();
         return false;
     }
 
@@ -96,7 +95,7 @@ bool ControlManager::postCommand()
 
     // Connect to server
     if (!w.connectToServer(getServerName())) {
-        logWarning() << "Connect to server error:" << socket.errorString();
+        qCWarning(LC) << "Connect to server error:" << socket.errorString();
         return false;
     }
 
@@ -113,7 +112,7 @@ void ControlManager::onNewConnection()
     while (QLocalSocket *socket = m_server->nextPendingConnection()) {
         constexpr int maxClientsCount = 9;
         if (m_clients.size() > maxClientsCount) {
-            logDebug() << "Client dropped";
+            qCDebug(LC) << "Client dropped";
             delete socket;
             continue;
         }
@@ -126,7 +125,7 @@ void ControlManager::onNewConnection()
 
         m_clients.append(w);
 
-        logDebug() << "Client connected:" << w->id();
+        qCDebug(LC) << "Client connected:" << w->id();
     }
 }
 
@@ -139,7 +138,7 @@ void ControlManager::onDisconnected()
     w->deleteLater();
     m_clients.removeOne(w);
 
-    logDebug() << "Client disconnected:" << w->id();
+    qCDebug(LC) << "Client disconnected:" << w->id();
 }
 
 bool ControlManager::processRequest(Control::Command command, const QVariantList &args)
@@ -150,7 +149,7 @@ bool ControlManager::processRequest(Control::Command command, const QVariantList
 
     QString errorMessage;
     if (!processCommand({ w, command, args, errorMessage })) {
-        logWarning() << "Bad command" << errorMessage << ':' << command << args;
+        qCWarning(LC) << "Bad command" << errorMessage << ':' << command << args;
         return false;
     }
     return true;

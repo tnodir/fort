@@ -18,19 +18,15 @@
 #include "quotamanager.h"
 #include "statsql.h"
 
-Q_DECLARE_LOGGING_CATEGORY(CLOG_STAT_MANAGER)
-Q_LOGGING_CATEGORY(CLOG_STAT_MANAGER, "stat")
-
-#define logWarning()  qCWarning(CLOG_STAT_MANAGER, )
-#define logCritical() qCCritical(CLOG_STAT_MANAGER, )
-
-#define DATABASE_USER_VERSION 5
-
-#define ACTIVE_PERIOD_CHECK_SECS (60 * OS_TICKS_PER_SECOND)
-
-#define INVALID_APP_ID qint64(-1)
-
 namespace {
+
+const QLoggingCategory LC("stat");
+
+constexpr int DATABASE_USER_VERSION = 5;
+
+constexpr qint32 ACTIVE_PERIOD_CHECK_SECS = 60 * OS_TICKS_PER_SECOND;
+
+constexpr qint64 INVALID_APP_ID = Q_INT64_C(-1);
 
 bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 {
@@ -93,7 +89,8 @@ void StatManager::emitConnChanged()
 void StatManager::setUp()
 {
     if (!sqliteDb()->open()) {
-        logCritical() << "File open error:" << sqliteDb()->filePath() << sqliteDb()->errorMessage();
+        qCCritical(LC) << "File open error:" << sqliteDb()->filePath()
+                       << sqliteDb()->errorMessage();
         return;
     }
 
@@ -103,7 +100,7 @@ void StatManager::setUp()
         .migrateFunc = &migrateFunc };
 
     if (!sqliteDb()->migrate(opt)) {
-        logCritical() << "Migration error" << sqliteDb()->filePath();
+        qCCritical(LC) << "Migration error" << sqliteDb()->filePath();
         return;
     }
 
@@ -595,8 +592,8 @@ void StatManager::logTrafBytes(const QStmtList &insertStmtList, const QStmtList 
     const QString appPath = m_appPidPathMap.value(pid);
 
     if (Q_UNLIKELY(appPath.isEmpty())) {
-        logCritical() << "UI & Driver's states mismatch! Expected processes:"
-                      << m_appPidPathMap.keys() << "Got:" << pid << inactive;
+        qCCritical(LC) << "UI & Driver's states mismatch! Expected processes:"
+                       << m_appPidPathMap.keys() << "Got:" << pid << inactive;
         return;
     }
 
@@ -632,9 +629,9 @@ void StatManager::updateTrafficList(const QStmtList &insertStmtList,
         if (!updateTraffic(stmtUpdate, inBytes, outBytes, appId)) {
             SqliteStmt *stmtInsert = insertStmtList.at(i);
             if (!updateTraffic(stmtInsert, inBytes, outBytes, appId)) {
-                logCritical() << "Update traffic error:" << sqliteDb()->errorMessage()
-                              << "inBytes:" << inBytes << "outBytes:" << outBytes
-                              << "appId:" << appId << "index:" << i;
+                qCCritical(LC) << "Update traffic error:" << sqliteDb()->errorMessage()
+                               << "inBytes:" << inBytes << "outBytes:" << outBytes
+                               << "appId:" << appId << "index:" << i;
             }
         }
         ++i;

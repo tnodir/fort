@@ -1,5 +1,7 @@
 #include "rpcmanager.h"
 
+#include <QLoggingCategory>
+
 #include <conf/firewallconf.h>
 #include <control/controlmanager.h>
 #include <control/controlworker.h>
@@ -16,6 +18,8 @@
 
 namespace {
 
+const QLoggingCategory LC("appInfo");
+
 inline bool sendCommandDataToClients(
         const QByteArray &commandData, const QList<ControlWorker *> &clients)
 {
@@ -26,7 +30,7 @@ inline bool sendCommandDataToClients(
             continue;
 
         if (!w->sendCommandData(commandData)) {
-            qWarning() << "Send command error:" << w->id() << w->errorString();
+            qCWarning(LC) << "Send command error:" << w->id() << w->errorString();
             ok = false;
         }
     }
@@ -419,12 +423,12 @@ void RpcManager::invokeOnClients(Control::Command cmd, const QVariantList &args)
 
     const QByteArray buffer = ControlWorker::buildCommandData(cmd, args);
     if (buffer.isEmpty()) {
-        qWarning() << "Bad RPC command to invoke:" << cmd << args;
+        qCWarning(LC) << "Bad RPC command to invoke:" << cmd << args;
         return;
     }
 
     if (!sendCommandDataToClients(buffer, clients)) {
-        qWarning() << "Invoke on clients error:" << cmd << args;
+        qCWarning(LC) << "Invoke on clients error:" << cmd << args;
     }
 }
 

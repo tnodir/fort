@@ -6,6 +6,8 @@
 
 namespace {
 
+const QLoggingCategory LC("control");
+
 constexpr int commandMaxArgs = 16;
 constexpr int commandArgMaxSize = 4 * 1024;
 constexpr quint32 dataMaxSize = 1 * 1024 * 1024;
@@ -96,7 +98,7 @@ void ControlWorker::setupForAsync()
     connect(socket(), &QLocalSocket::disconnected, this, &ControlWorker::disconnected);
     connect(socket(), &QLocalSocket::errorOccurred, this,
             [&](QLocalSocket::LocalSocketError socketError) {
-                qWarning() << "Client error:" << id() << socketError << errorString();
+                qCWarning(LC) << "Client error:" << id() << socketError << errorString();
                 close();
             });
     connect(socket(), &QLocalSocket::readyRead, this, &ControlWorker::processRequest);
@@ -137,9 +139,9 @@ bool ControlWorker::sendCommandData(const QByteArray &commandData)
     const int bytesSent = socket()->write(commandData);
     if (bytesSent != commandData.size()) {
         if (bytesSent < 0) {
-            qWarning() << "Send error:" << id() << errorString();
+            qCWarning(LC) << "Send error:" << id() << errorString();
         } else {
-            qWarning() << "Sent partial:" << id() << bytesSent << commandData.size();
+            qCWarning(LC) << "Sent partial:" << id() << bytesSent << commandData.size();
         }
         return false;
     }
@@ -153,7 +155,7 @@ bool ControlWorker::sendCommand(Control::Command command, const QVariantList &ar
 {
     const QByteArray buffer = buildCommandData(command, args);
     if (buffer.isEmpty()) {
-        qWarning() << "Bad RPC command to send:" << command << args;
+        qCWarning(LC) << "Bad RPC command to send:" << command << args;
         return false;
     }
 
@@ -215,7 +217,7 @@ bool ControlWorker::readRequest()
 
     clearRequest();
 
-    // qDebug() << "requestReady>" << id() << command << args;
+    // qCDebug(LC) << "requestReady>" << id() << command << args;
 
     emit requestReady(command, args);
 
@@ -226,16 +228,16 @@ bool ControlWorker::readRequestHeader()
 {
     const int headerSize = socket()->read((char *) &m_requestHeader, sizeof(RequestHeader));
     if (headerSize != sizeof(RequestHeader)) {
-        qWarning() << "Bad request header:"
-                   << "size=" << headerSize;
+        qCWarning(LC) << "Bad request header:"
+                      << "size=" << headerSize;
         return false;
     }
 
     if (m_requestHeader.command() == Control::CommandNone
             || m_requestHeader.dataSize() > dataMaxSize) {
-        qWarning() << "Bad request:"
-                   << "command=" << m_requestHeader.command()
-                   << "size=" << m_requestHeader.dataSize();
+        qCWarning(LC) << "Bad request:"
+                      << "command=" << m_requestHeader.command()
+                      << "size=" << m_requestHeader.dataSize();
         return false;
     }
 

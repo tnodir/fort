@@ -28,15 +28,11 @@
 #include "appgroup.h"
 #include "firewallconf.h"
 
-Q_DECLARE_LOGGING_CATEGORY(CLOG_CONF_MANAGER)
-Q_LOGGING_CATEGORY(CLOG_CONF_MANAGER, "conf")
-
-#define logWarning()  qCWarning(CLOG_CONF_MANAGER, )
-#define logCritical() qCCritical(CLOG_CONF_MANAGER, )
-
-#define DATABASE_USER_VERSION 11
-
 namespace {
+
+const QLoggingCategory LC("conf");
+
+constexpr int DATABASE_USER_VERSION = 11;
 
 const char *const sqlSelectAddressGroups = "SELECT addr_group_id, include_all, exclude_all,"
                                            "    include_zones, exclude_zones,"
@@ -398,7 +394,7 @@ void ConfManager::showErrorMessage(const QString &errorMessage)
 void ConfManager::setUp()
 {
     if (!sqliteDb()->open()) {
-        logCritical() << "File open error:" << sqliteDb()->filePath() << sqliteDb()->errorMessage();
+        qCCritical(LC) << "File open error:" << sqliteDb()->filePath() << sqliteDb()->errorMessage();
         return;
     }
 
@@ -408,7 +404,7 @@ void ConfManager::setUp()
         .migrateFunc = &migrateFunc };
 
     if (!sqliteDb()->migrate(opt)) {
-        logCritical() << "Migration error" << sqliteDb()->filePath();
+        qCCritical(LC) << "Migration error" << sqliteDb()->filePath();
         return;
     }
 

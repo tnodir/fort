@@ -10,13 +10,9 @@
 
 #include "sqlitestmt.h"
 
-Q_DECLARE_LOGGING_CATEGORY(CLOG_SQLITEDB)
-Q_LOGGING_CATEGORY(CLOG_SQLITEDB, "db")
-
-#define dbWarning()  qCWarning(CLOG_SQLITEDB, )
-#define dbCritical() qCCritical(CLOG_SQLITEDB, )
-
 namespace {
+
+const QLoggingCategory LC("db");
 
 const char *const defaultSqlPragmas = "PRAGMA journal_mode = WAL;"
                                       "PRAGMA locking_mode = NORMAL;"
@@ -29,7 +25,7 @@ bool removeDbFile(const QString &filePath)
 {
     if (!filePath.startsWith(QLatin1Char(':')) && QFile::exists(filePath)
             && !QFile::remove(filePath)) {
-        dbCritical() << "Cannot remove file:" << filePath;
+        qCCritical(LC) << "Cannot remove file:" << filePath;
         return false;
     }
     return true;
@@ -40,7 +36,7 @@ bool renameDbFile(const QString &filePath, const QString &newFilePath)
     removeDbFile(newFilePath);
 
     if (!QFile::rename(filePath, newFilePath)) {
-        dbCritical() << "Cannot rename file" << filePath << "to" << newFilePath;
+        qCCritical(LC) << "Cannot rename file" << filePath << "to" << newFilePath;
         return false;
     }
     return true;
@@ -304,7 +300,8 @@ bool SqliteDb::migrate(MigrateOptions &opt)
         return true;
 
     if (userVersion > opt.version) {
-        dbWarning() << "Cannot open new DB" << userVersion << "from old application" << opt.version;
+        qCWarning(LC) << "Cannot open new DB" << userVersion << "from old application"
+                      << opt.version;
         return false;
     }
 
@@ -350,14 +347,14 @@ bool SqliteDb::migrateSqlScripts(const MigrateOptions &opt, int userVersion, boo
         QFile file(filePath);
         if (file.exists()) {
             if (!file.open(QFile::ReadOnly | QFile::Text)) {
-                dbWarning() << "Cannot open migration file" << filePath << file.errorString();
+                qCWarning(LC) << "Cannot open migration file" << filePath << file.errorString();
                 success = false;
                 break;
             }
 
             const QByteArray data = file.readAll();
             if (data.isEmpty()) {
-                dbWarning() << "Migration file is empty" << filePath;
+                qCWarning(LC) << "Migration file is empty" << filePath;
                 success = false;
                 break;
             }
@@ -372,7 +369,7 @@ bool SqliteDb::migrateSqlScripts(const MigrateOptions &opt, int userVersion, boo
         if (success) {
             releaseSavepoint();
         } else {
-            dbCritical() << "Migration error:" << filePath << errorMessage();
+            qCCritical(LC) << "Migration error:" << filePath << errorMessage();
             rollbackSavepoint();
             break;
         }
@@ -394,7 +391,7 @@ bool SqliteDb::clearWithBackup(const char *sqlPragmas)
     const QString tempFilePath = backupFilePath();
 
     if (!(renameDbFile(m_filePath, tempFilePath) && open())) {
-        dbWarning() << "Cannot re-create the DB" << m_filePath;
+        qCWarning(LC) << "Cannot re-create the DB" << m_filePath;
         renameDbFile(tempFilePath, m_filePath);
         return false;
     }
@@ -437,7 +434,7 @@ bool SqliteDb::importDb(
     const QString dstSchema = migrationNewSchemaName();
 
     if (!attach(srcSchema, sourceFilePath)) {
-        dbWarning() << "Cannot attach the DB" << sourceFilePath << "Error:" << errorMessage();
+        qCWarning(LC) << "Cannot attach the DB" << sourceFilePath << "Error:" << errorMessage();
         return false;
     }
 

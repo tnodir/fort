@@ -1,5 +1,7 @@
 #include "logger.h"
 
+#include <QLoggingCategory>
+
 #include <fort_version.h>
 
 #include <util/dateutil.h>
@@ -7,6 +9,8 @@
 #include <util/osutil.h>
 
 namespace {
+
+const QLoggingCategory LC("logger");
 
 constexpr int LOGGER_FILE_MAX_SIZE = 1024 * 1024;
 constexpr int LOGGER_KEEP_FILES = 7;
@@ -124,7 +128,7 @@ bool Logger::openLogFile()
     if (tryOpenLogFile(m_dir, fileName))
         return true;
 
-    qDebug() << "Cannot open log file:" << m_file.fileName() << m_file.errorString();
+    qCDebug(LC) << "Cannot open log file:" << m_file.fileName() << m_file.errorString();
     return false;
 }
 

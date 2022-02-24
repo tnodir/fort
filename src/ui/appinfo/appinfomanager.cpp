@@ -10,17 +10,13 @@
 #include "appinfoutil.h"
 #include "appinfoworker.h"
 
-Q_DECLARE_LOGGING_CATEGORY(CLOG_APPINFO_MANAGER)
-Q_LOGGING_CATEGORY(CLOG_APPINFO_MANAGER, "appInfo")
-
-#define logWarning()  qCWarning(CLOG_APPINFO_MANAGER, )
-#define logCritical() qCCritical(CLOG_APPINFO_MANAGER, )
-
-#define DATABASE_USER_VERSION 4
-
-#define APP_CACHE_MAX_COUNT 2000
-
 namespace {
+
+const QLoggingCategory LC("appInfo");
+
+constexpr int DATABASE_USER_VERSION = 4;
+
+constexpr int APP_CACHE_MAX_COUNT = 2000;
 
 const char *const sqlSelectAppInfo = "SELECT alt_path, file_descr, company_name,"
                                      "    product_name, product_ver, file_mod_time, icon_id"
@@ -74,7 +70,8 @@ AppInfoManager::~AppInfoManager()
 void AppInfoManager::setUp()
 {
     if (!sqliteDb()->open()) {
-        logCritical() << "File open error:" << sqliteDb()->filePath() << sqliteDb()->errorMessage();
+        qCCritical(LC) << "File open error:" << sqliteDb()->filePath()
+                       << sqliteDb()->errorMessage();
         return;
     }
 
@@ -84,7 +81,7 @@ void AppInfoManager::setUp()
         .importOldData = false };
 
     if (!sqliteDb()->migrate(opt)) {
-        logCritical() << "Migration error" << sqliteDb()->filePath();
+        qCCritical(LC) << "Migration error" << sqliteDb()->filePath();
         return;
     }
 }
