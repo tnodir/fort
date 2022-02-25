@@ -3,6 +3,7 @@
 
 #include <QHash>
 #include <QObject>
+#include <QVariant>
 
 class EnvManager : public QObject
 {
