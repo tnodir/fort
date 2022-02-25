@@ -102,7 +102,7 @@
     </message>
     <message>
         <source>Creation Time</source>
-        <translation>만든 시간</translation>
+        <translation>생성 시간</translation>
     </message>
     <message>
         <source>Alert</source>
@@ -1345,7 +1345,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Zones</source>
-        <translation>영역</translation>
+        <translation>영역 관리</translation>
     </message>
     <message>
         <source>Traffic Graph</source>

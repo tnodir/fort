@@ -702,6 +702,18 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
         <source>Switch Auto-Allow New Programs</source>
         <translation>Neue Programme automatisch zulassen</translation>
     </message>
+    <message>
+        <source>Tray Menu Flags</source>
+        <translation>Tray-Menü-Markierungen</translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation>Beenden</translation>
+    </message>
+    <message>
+        <source>Action Confirmations</source>
+        <translation>Aktionsbestätigungen</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1362,6 +1374,14 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     <message>
         <source>Statistics</source>
         <translation>Statistiken</translation>
+    </message>
+    <message>
+        <source>Are you sure to switch the &quot;%1&quot;?</source>
+        <translation>Möchten Sie wirklich die &quot;%1&quot; wechseln?</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to quit the program?</source>
+        <translation>Sind Sie sicher, dass Sie das Programm beenden möchten?</translation>
     </message>
 </context>
 <context>

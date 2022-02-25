@@ -702,6 +702,18 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
         <source>Switch Auto-Allow New Programs</source>
         <translation>Preklop samodejnega dovoljenja novih programov</translation>
     </message>
+    <message>
+        <source>Tray Menu Flags</source>
+        <translation>Zastavice menija programske vrstice</translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation>Končaj</translation>
+    </message>
+    <message>
+        <source>Action Confirmations</source>
+        <translation>Potrditve akcij</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1362,6 +1374,14 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     <message>
         <source>Statistics</source>
         <translation>Statistika</translation>
+    </message>
+    <message>
+        <source>Are you sure to switch the &quot;%1&quot;?</source>
+        <translation>Ali ste prepričani, da želite preklopiti &quot;%1&quot;?</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to quit the program?</source>
+        <translation>Ali ste prepričani, da želite končati program?</translation>
     </message>
 </context>
 <context>
