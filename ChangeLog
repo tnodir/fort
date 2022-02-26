@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.5.5, 2022-02-26:
+- UI: Programs: Fix app's auto-block time handling.
+
 v3.5.4, 2022-02-24:
 - UI: Options: Add "Confirmations" box.
 - UI: Options: Fix initial OK & Apply buttons state on fresh install.
