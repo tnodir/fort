@@ -346,6 +346,10 @@
         <source>Unknown</source>
         <translation>Inconnu</translation>
     </message>
+    <message>
+        <source>Inherited</source>
+        <translation>Hérité</translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -509,6 +513,10 @@
         <translation>Êtes-vous sûr de vouloir supprimer le pilote?</translation>
     </message>
     <message>
+        <source>Quit</source>
+        <translation>Quitter</translation>
+    </message>
+    <message>
         <source>Tray</source>
         <translation>Barre de programme</translation>
     </message>
@@ -601,6 +609,10 @@
         <translation>Télécharger</translation>
     </message>
     <message>
+        <source>Action Confirmations</source>
+        <translation>Confirmation des actions</translation>
+    </message>
+    <message>
         <source>Filter Local Addresses</source>
         <translation>Filtrer les adresses locales</translation>
     </message>
@@ -639,6 +651,10 @@
     <message>
         <source>Not Installed</source>
         <translation>Non installé</translation>
+    </message>
+    <message>
+        <source>Tray Menu Flags</source>
+        <translation>Drapeaux du menu de la barre d&apos;outils</translation>
     </message>
     <message>
         <source>Disabled</source>
@@ -1328,8 +1344,16 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
         <translation>Options</translation>
     </message>
     <message>
+        <source>Are you sure you want to quit the program?</source>
+        <translation>Voulez-vous vraiment quitter le programme ?</translation>
+    </message>
+    <message>
         <source>Zones</source>
         <translation>Zones</translation>
+    </message>
+    <message>
+        <source>Are you sure to switch the &quot;%1&quot;?</source>
+        <translation>Êtes-vous sûr de basculer le &quot;%1&quot;?</translation>
     </message>
     <message>
         <source>Traffic Graph</source>
