@@ -3,7 +3,7 @@
 #include <QLoggingCategory>
 
 namespace {
-const QLoggingCategory LC("rpc.windowManagerFake");
+const QLoggingCategory LC("rpc");
 }
 
 WindowManagerFake::WindowManagerFake(QObject *parent) : WindowManager(parent) { }
