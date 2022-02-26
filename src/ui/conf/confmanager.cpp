@@ -661,7 +661,7 @@ void ConfManager::logBlockedApp(const LogEntryBlocked &logEntry)
     const QString appName = IoC<AppInfoCache>()->appName(appPath);
     constexpr int groupIndex = 0; // "Main" app. group
 
-    const bool ok = addOrUpdateApp(appPath, appName, QDateTime(), groupIndex,
+    const bool ok = addOrUpdateApp(appPath, appName, /*endTime=*/ {}, groupIndex,
             /*useGroupPerm=*/false, /*applyChild=*/false, logEntry.blocked(), /*alerted=*/true);
     if (ok) {
         emitAppAlerted();
@@ -853,13 +853,13 @@ void ConfManager::updateAppEndTimes()
 
     while (stmt.step() == SqliteStmt::StepRow) {
         const qint64 appId = stmt.columnInt64(0);
-        const int groupIndex = stmt.columnInt(2);
-        const QString appPath = stmt.columnText(3);
-        const QString appName = stmt.columnText(4);
-        const bool useGroupPerm = stmt.columnBool(5);
-        const bool applyChild = stmt.columnBool(6);
+        const int groupIndex = stmt.columnInt(1);
+        const QString appPath = stmt.columnText(2);
+        const QString appName = stmt.columnText(3);
+        const bool useGroupPerm = stmt.columnBool(4);
+        const bool applyChild = stmt.columnBool(5);
 
-        updateApp(appId, appPath, appName, QDateTime(), groupIndex, useGroupPerm, applyChild,
+        updateApp(appId, appPath, appName, /*endTime=*/ {}, groupIndex, useGroupPerm, applyChild,
                 /*blocked=*/true);
     }
 }
