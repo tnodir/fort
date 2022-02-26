@@ -70,9 +70,7 @@ public:
 
     bool walkApps(const std::function<walkAppsCallback> &func) override;
 
-    int appEndsCount();
     void updateAppEndTimes();
-    void checkAppEndTimes();
 
     virtual bool addZone(const QString &zoneName, const QString &sourceCode, const QString &url,
             const QString &formData, bool enabled, bool customUrl, int &zoneId);
@@ -107,6 +105,7 @@ signals:
 
 protected:
     virtual void setupAppEndTimer();
+    void updateAppEndTimer();
 
     void setConf(FirewallConf *newConf);
     FirewallConf *createConf();

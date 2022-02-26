@@ -11,6 +11,7 @@
 #include <driver/drivermanager.h>
 #include <fortsettings.h>
 #include <log/logentryblocked.h>
+#include <log/logmanager.h>
 #include <manager/envmanager.h>
 #include <manager/windowmanager.h>
 #include <task/taskinfo.h>
@@ -33,6 +34,9 @@ namespace {
 const QLoggingCategory LC("conf");
 
 constexpr int DATABASE_USER_VERSION = 11;
+
+constexpr int APP_END_TIMER_INTERVAL_MIN = 100;
+constexpr int APP_END_TIMER_INTERVAL_MAX = 24 * 60 * 60 * 1000; // 1 day
 
 const char *const sqlSelectAddressGroups = "SELECT addr_group_id, include_all, exclude_all,"
                                            "    include_zones, exclude_zones,"
@@ -121,9 +125,8 @@ const char *const sqlSelectApps = "SELECT"
                                   "    JOIN app_group g ON g.app_group_id = t.app_group_id"
                                   "    LEFT JOIN app_alert alert ON alert.app_id = t.app_id;";
 
-const char *const sqlSelectEndAppsCount = "SELECT COUNT(*) FROM app"
-                                          "  WHERE end_time IS NOT NULL AND end_time != 0"
-                                          "    AND blocked = 0;";
+const char *const sqlSelectMinEndApp = "SELECT MIN(end_time) FROM app"
+                                       "  WHERE end_time != 0 AND blocked = 0;";
 
 const char *const sqlSelectEndedApps = "SELECT t.app_id, g.order_index as group_index,"
                                        "    t.path, t.name, t.use_group_perm, t.apply_child"
@@ -372,8 +375,8 @@ ConfManager::ConfManager(const QString &filePath, QObject *parent, quint32 openF
     connect(&m_appChangedTimer, &QTimer::timeout, this, &ConfManager::appChanged);
     connect(&m_appUpdatedTimer, &QTimer::timeout, this, &ConfManager::appUpdated);
 
-    m_appEndTimer.setInterval(5 * 60 * 1000); // 5 minutes
-    connect(&m_appEndTimer, &QTimer::timeout, this, &ConfManager::checkAppEndTimes);
+    m_appEndTimer.setSingleShot(true);
+    connect(&m_appEndTimer, &QTimer::timeout, this, &ConfManager::updateAppEndTimes);
 }
 
 ConfManager::~ConfManager()
@@ -414,7 +417,28 @@ void ConfManager::setUp()
 
 void ConfManager::setupAppEndTimer()
 {
-    m_appEndTimer.start();
+    auto logManager = IoC<LogManager>();
+
+    connect(logManager, &LogManager::systemTimeChanged, this, &ConfManager::updateAppEndTimer);
+
+    updateAppEndTimer();
+}
+
+void ConfManager::updateAppEndTimer()
+{
+    const qint64 endTimeMsecs = sqliteDb()->executeEx(sqlSelectMinEndApp).toLongLong();
+
+    if (endTimeMsecs != 0) {
+        const qint64 currentMsecs = QDateTime::currentMSecsSinceEpoch();
+        const qint64 deltaMsecs = endTimeMsecs - currentMsecs;
+        const int interval =
+                qMax((deltaMsecs > 0 ? qMin(deltaMsecs, APP_END_TIMER_INTERVAL_MAX) : 0),
+                        APP_END_TIMER_INTERVAL_MIN);
+
+        m_appEndTimer.start(interval);
+    } else {
+        m_appEndTimer.stop();
+    }
 }
 
 void ConfManager::initConfToEdit()
@@ -763,7 +787,7 @@ bool ConfManager::updateApp(qint64 appId, const QString &appPath, const QString 
 
     if (ok) {
         if (!endTime.isNull()) {
-            m_appEndTimer.start();
+            updateAppEndTimer();
         }
 
         emitAppUpdated();
@@ -838,11 +862,6 @@ bool ConfManager::walkApps(const std::function<walkAppsCallback> &func)
     return true;
 }
 
-int ConfManager::appEndsCount()
-{
-    return sqliteDb()->executeEx(sqlSelectEndAppsCount).toInt();
-}
-
 void ConfManager::updateAppEndTimes()
 {
     SqliteStmt stmt;
@@ -862,15 +881,8 @@ void ConfManager::updateAppEndTimes()
         updateApp(appId, appPath, appName, /*endTime=*/ {}, groupIndex, useGroupPerm, applyChild,
                 /*blocked=*/true);
     }
-}
 
-void ConfManager::checkAppEndTimes()
-{
-    if (appEndsCount() == 0) {
-        m_appEndTimer.stop();
-    } else {
-        updateAppEndTimes();
-    }
+    updateAppEndTimer();
 }
 
 bool ConfManager::addZone(const QString &zoneName, const QString &sourceCode, const QString &url,
@@ -1078,7 +1090,7 @@ bool ConfManager::addOrUpdateApp(const QString &appPath, const QString &appName,
 
     if (ok) {
         if (!endTime.isNull()) {
-            m_appEndTimer.start();
+            updateAppEndTimer();
         }
 
         emitAppChanged();
