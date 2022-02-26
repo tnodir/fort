@@ -85,11 +85,13 @@ typedef struct fort_flow
 #endif
 } FORT_FLOW, *PFORT_FLOW;
 
+#define FORT_STAT_CLOSED       0x01
+#define FORT_STAT_LOG          0x02
+#define FORT_STAT_TIME_CHANGED 0x04
+
 typedef struct fort_stat
 {
-    UCHAR volatile closed;
-
-    UCHAR log_stat : 1;
+    UCHAR volatile flags;
 
     UINT16 proc_active_count;
 
@@ -123,6 +125,10 @@ typedef struct fort_stat
 #if defined(__cplusplus)
 extern "C" {
 #endif
+
+FORT_API UCHAR fort_stat_flags_set(PFORT_STAT stat, UCHAR flags, BOOL on);
+
+FORT_API UCHAR fort_stat_flags(PFORT_STAT stat);
 
 FORT_API UCHAR fort_flow_flags_set(PFORT_FLOW flow, UCHAR flags, BOOL on);
 

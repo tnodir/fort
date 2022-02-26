@@ -168,14 +168,14 @@ void logStatTrafHeaderRead(const char *input, quint16 *procCount)
     fort_log_stat_traf_header_read(input, procCount);
 }
 
-void logTimeWrite(char *output, qint64 unixTime)
+void logTimeWrite(char *output, int timeChanged, qint64 unixTime)
 {
-    fort_log_time_write(output, unixTime);
+    fort_log_time_write(output, timeChanged, unixTime);
 }
 
-void logTimeRead(const char *input, qint64 *unixTime)
+void logTimeRead(const char *input, int *timeChanged, qint64 *unixTime)
 {
-    fort_log_time_read(input, unixTime);
+    fort_log_time_read(input, timeChanged, unixTime);
 }
 
 void confAppPermsMaskInit(void *drvConf)

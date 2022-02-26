@@ -25,6 +25,7 @@ public:
 signals:
     void activeChanged();
     void errorMessageChanged();
+    void systemTimeChanged();
 
 private slots:
     void processLogBuffer(LogBuffer *logBuffer, bool success, quint32 errorCode);

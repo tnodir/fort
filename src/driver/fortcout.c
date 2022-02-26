@@ -788,9 +788,13 @@ FORT_API void NTAPI fort_callout_timer(void)
                 && NT_SUCCESS(fort_buffer_prepare(buf, FORT_LOG_TIME_SIZE, &out, &irp, &info))) {
             const INT64 unix_time = fort_system_to_unix_time(system_time.QuadPart);
 
+            const BOOL time_changed = ((fort_stat_flags_set(stat, FORT_STAT_TIME_CHANGED, FALSE)
+                                               & FORT_STAT_TIME_CHANGED)
+                    != 0);
+
             stat->system_time = system_time;
 
-            fort_log_time_write(out, unix_time);
+            fort_log_time_write(out, time_changed, unix_time);
         }
     }
 

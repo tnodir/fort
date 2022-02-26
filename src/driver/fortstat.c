@@ -109,6 +109,16 @@ static PFORT_STAT_PROC fort_stat_proc_add(PFORT_STAT stat, UINT32 process_id)
     return proc;
 }
 
+FORT_API UCHAR fort_stat_flags_set(PFORT_STAT stat, UCHAR flags, BOOL on)
+{
+    return on ? InterlockedOr8(&stat->flags, flags) : InterlockedAnd8(&stat->flags, ~flags);
+}
+
+FORT_API UCHAR fort_stat_flags(PFORT_STAT stat)
+{
+    return fort_stat_flags_set(stat, 0, TRUE);
+}
+
 FORT_API UCHAR fort_flow_flags_set(PFORT_FLOW flow, UCHAR flags, BOOL on)
 {
     return on ? InterlockedOr8(&flow->opt.flags, flags) : InterlockedAnd8(&flow->opt.flags, ~flags);
@@ -256,7 +266,7 @@ FORT_API void fort_stat_close(PFORT_STAT stat)
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
-    stat->closed = TRUE;
+    fort_stat_flags_set(stat, FORT_STAT_CLOSED, TRUE);
 
     tommy_hashdyn_foreach_node_arg(&stat->flows_map, fort_flow_context_remove, stat);
 
@@ -284,11 +294,11 @@ FORT_API void fort_stat_update(PFORT_STAT stat, BOOL log_stat)
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
-    if (stat->log_stat && !log_stat) {
+    if ((fort_stat_flags(stat) & FORT_STAT_LOG) != 0 && !log_stat) {
         fort_stat_clear(stat);
     }
 
-    stat->log_stat = (UCHAR) log_stat;
+    fort_stat_flags_set(stat, FORT_STAT_LOG, log_stat);
 
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
@@ -306,7 +316,7 @@ FORT_API void fort_stat_conf_update(PFORT_STAT stat, PFORT_CONF_IO conf_io)
 static NTSTATUS fort_flow_associate_proc(PFORT_STAT stat, UINT32 process_id, BOOL is_reauth,
         BOOL *is_new_proc, PFORT_STAT_PROC *proc)
 {
-    if (!stat->log_stat)
+    if ((fort_stat_flags(stat) & FORT_STAT_LOG) == 0)
         return STATUS_DEVICE_DATA_ERROR;
 
     const tommy_key_t proc_hash = fort_stat_proc_hash(process_id);
@@ -363,12 +373,12 @@ FORT_API void fort_flow_delete(PFORT_STAT stat, UINT64 flowContext)
 {
     PFORT_FLOW flow = (PFORT_FLOW) flowContext;
 
-    if (stat->closed)
+    if ((fort_stat_flags(stat) & FORT_STAT_CLOSED) != 0)
         return; /* double check to avoid deadlock after remove-flow-context */
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
-    if (!stat->closed) {
+    if ((fort_stat_flags(stat) & FORT_STAT_CLOSED) == 0) {
         fort_flow_free(stat, flow);
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
@@ -413,7 +423,7 @@ FORT_API void fort_flow_classify(
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
-    if (stat->log_stat) {
+    if ((fort_stat_flags(stat) & FORT_STAT_LOG) != 0) {
         const FORT_FLOW_OPT opt = flow->opt;
 
         if (opt.proc_index != FORT_PROC_BAD_INDEX) {

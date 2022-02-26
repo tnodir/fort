@@ -88,9 +88,9 @@ FORT_API void fort_log_stat_traf_header_write(char *p, UINT16 proc_count);
 
 FORT_API void fort_log_stat_traf_header_read(const char *p, UINT16 *proc_count);
 
-FORT_API void fort_log_time_write(char *p, INT64 unix_time);
+FORT_API void fort_log_time_write(char *p, BOOL time_changed, INT64 unix_time);
 
-FORT_API void fort_log_time_read(const char *p, INT64 *unix_time);
+FORT_API void fort_log_time_read(const char *p, BOOL *time_changed, INT64 *unix_time);
 
 #ifdef __cplusplus
 } // extern "C"

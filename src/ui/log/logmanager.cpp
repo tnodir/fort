@@ -151,6 +151,9 @@ void LogManager::readLogEntries(LogBuffer *logBuffer)
             LogEntryTime timeEntry;
             logBuffer->readEntryTime(&timeEntry);
             setCurrentUnixTime(timeEntry.unixTime());
+            if (timeEntry.timeChanged()) {
+                emit systemTimeChanged();
+            }
         } break;
         default:
             if (logBuffer->offset() < logBuffer->top()) {

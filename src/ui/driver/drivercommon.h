@@ -56,8 +56,8 @@ void logProcNewHeaderRead(const char *input, quint32 *pid, quint32 *pathLen);
 
 void logStatTrafHeaderRead(const char *input, quint16 *procCount);
 
-void logTimeWrite(char *output, qint64 unixTime);
-void logTimeRead(const char *input, qint64 *unixTime);
+void logTimeWrite(char *output, int timeChanged, qint64 unixTime);
+void logTimeRead(const char *input, int *timeChanged, qint64 *unixTime);
 
 void confAppPermsMaskInit(void *drvConf);
 bool confIpInRange(const void *drvConf, quint32 ip, bool included = false, int addrGroupIndex = 0);
