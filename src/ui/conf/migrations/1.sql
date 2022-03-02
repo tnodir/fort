@@ -7,6 +7,7 @@ CREATE TABLE zone(
   url TEXT,
   form_data TEXT,
   address_count INTEGER,
+  text_inline TEXT,
   text_checksum TEXT,
   bin_checksum TEXT,
   source_modtime INTEGER,
@@ -42,9 +43,17 @@ CREATE TABLE rule(
 
 CREATE TABLE policy(
   policy_id INTEGER PRIMARY KEY,
+  is_preset BOOLEAN NOT NULL,
   enabled BOOLEAN NOT NULL,
   block BOOLEAN NOT NULL,
   name TEXT NOT NULL
+);
+
+CREATE TABLE policy_rule(
+  policy_rule_id INTEGER PRIMARY KEY,
+  policy_id INTEGER NOT NULL,
+  rule_id INTEGER NOT NULL,
+  order_index INTEGER NOT NULL
 );
 
 CREATE TABLE policy_set(
@@ -54,10 +63,10 @@ CREATE TABLE policy_set(
   order_index INTEGER NOT NULL
 );
 
-CREATE TABLE policy_rule(
-  policy_rule_id INTEGER PRIMARY KEY,
+CREATE TABLE policy_list(
+  policy_list_id INTEGER PRIMARY KEY,
+  type INTEGER NOT NULL,  -- preset_lib, preset_app, global_before_app, global_after_app
   policy_id INTEGER NOT NULL,
-  rule_id INTEGER NOT NULL,
   order_index INTEGER NOT NULL
 );
 
@@ -71,13 +80,6 @@ CREATE TABLE policy_menu_set(
   policy_menu_set_id INTEGER PRIMARY KEY,
   policy_menu_id INTEGER NOT NULL,
   policy_id INTEGER NOT NULL
-);
-
-CREATE TABLE global_policy(
-  global_policy_id INTEGER PRIMARY KEY,
-  type INTEGER NOT NULL,
-  policy_id INTEGER NOT NULL,
-  order_index INTEGER NOT NULL
 );
 
 CREATE TABLE app_group(
