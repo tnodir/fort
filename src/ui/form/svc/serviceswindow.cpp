@@ -211,7 +211,7 @@ void ServicesWindow::setupTableServiceList()
 {
     m_serviceListView = new TableView();
     m_serviceListView->setAlternatingRowColors(true);
-    m_serviceListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    m_serviceListView->setSelectionMode(QAbstractItemView::SingleSelection);
     m_serviceListView->setSelectionBehavior(QAbstractItemView::SelectItems);
 
     m_serviceListView->setModel(serviceListModel());
