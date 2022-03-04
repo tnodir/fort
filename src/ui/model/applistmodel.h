@@ -64,7 +64,7 @@ private:
     QVariant headerDataDisplay(int section, int role = Qt::DisplayRole) const;
 
     QVariant dataDisplay(const QModelIndex &index, int role) const;
-    QVariant dataDisplayEndTime(const AppRow &appRow, int role) const;
+    QVariant dataDisplayState(const AppRow &appRow, int role) const;
     QVariant dataDecoration(const QModelIndex &index) const;
     QVariant dataFont(const QModelIndex &index) const;
     QVariant dataForeground(const QModelIndex &index) const;
@@ -76,7 +76,6 @@ private:
     static QColor appStateColor(const AppRow &appRow);
 
     static QIcon appStateIcon(const AppRow &appRow);
-    static QIcon appEndTimeIcon(const AppRow &appRow);
 
     bool updateAppRow(const QString &sql, const QVariantList &vars, AppRow &appRow) const;
 

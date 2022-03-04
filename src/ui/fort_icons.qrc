@@ -39,6 +39,7 @@
     <file>icons/sheild-96.png</file>
     <file>icons/save_as.png</file>
     <file>icons/server_components.png</file>
+    <file>icons/time.png</file>
     <file>icons/update.png</file>
     <file>icons/windows-48.png</file>
 </qresource>
