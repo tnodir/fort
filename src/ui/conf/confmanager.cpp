@@ -159,7 +159,8 @@ const char *const sqlUpdateApp = "UPDATE app"
 
 const char *const sqlUpdateAppName = "UPDATE app SET name = ?2 WHERE app_id = ?1;";
 
-const char *const sqlUpdateAppBlocked = "UPDATE app SET blocked = ?2 WHERE app_id = ?1;";
+const char *const sqlUpdateAppBlocked = "UPDATE app SET blocked = ?2, end_time = NULL"
+                                        "  WHERE app_id = ?1;";
 
 const char *const sqlUpdateAppResetGroup = "UPDATE app"
                                            "  SET app_group_id = ?2"
