@@ -337,9 +337,6 @@ QString AppListModel::sqlOrderColumn() const
     case 2: // State
         columnsStr = "6 " + sqlOrderAsc() + ", 7";
         break;
-    case 3: // End Time
-        columnsStr = "8";
-        break;
     default: // Creation Time
         columnsStr = "1"; // App ID
         break;
