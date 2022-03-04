@@ -127,7 +127,7 @@ void SchedulePage::setupTaskDetails()
 
     setupTaskInterval();
 
-    m_btTaskRun = ControlUtil::createButton(":/icons/arrow_refresh_small.png",
+    m_btTaskRun = ControlUtil::createButton(":/icons/update.png",
             [&] { taskManager()->runTask(currentTaskInfo()->type()); });
     m_btTaskAbort = ControlUtil::createButton(
             ":/icons/cancel.png", [&] { taskManager()->abortTask(currentTaskInfo()->type()); });

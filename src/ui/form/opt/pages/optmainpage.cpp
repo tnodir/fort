@@ -78,7 +78,7 @@ void OptMainPage::setupTabBar()
     m_tabBar->addTab(ControlUtil::wrapToScrollArea(optionsPage), IconCache::icon(":/icons/cog.png"),
             QString());
     m_tabBar->addTab(addressesPage, IconCache::icon(":/icons/ip.png"), QString());
-    m_tabBar->addTab(rulesPage, IconCache::icon(":/icons/source_code.png"), QString());
+    m_tabBar->addTab(rulesPage, IconCache::icon(":/icons/node-tree.png"), QString());
     m_tabBar->addTab(
             applicationsPage, IconCache::icon(":/icons/application_double.png"), QString());
     m_tabBar->addTab(statisticsPage, IconCache::icon(":/icons/chart_bar.png"), QString());
