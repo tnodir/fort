@@ -93,14 +93,6 @@
         <translation>상태</translation>
     </message>
     <message>
-        <source>Bl.</source>
-        <translation>Bl.</translation>
-    </message>
-    <message>
-        <source>Block scheduled</source>
-        <translation>차단 예약됨</translation>
-    </message>
-    <message>
         <source>Creation Time</source>
         <translation>생성 시간</translation>
     </message>

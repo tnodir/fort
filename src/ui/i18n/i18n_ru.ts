@@ -93,14 +93,6 @@
         <translation>Состояние</translation>
     </message>
     <message>
-        <source>Bl.</source>
-        <translation>Бл.</translation>
-    </message>
-    <message>
-        <source>Block scheduled</source>
-        <translation>Блокирование запланировано</translation>
-    </message>
-    <message>
         <source>Creation Time</source>
         <translation>Время создания</translation>
     </message>

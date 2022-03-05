@@ -93,14 +93,6 @@
         <translation>Estado</translation>
     </message>
     <message>
-        <source>Bl.</source>
-        <translation>Bl.</translation>
-    </message>
-    <message>
-        <source>Block scheduled</source>
-        <translation>Bloco agendado</translation>
-    </message>
-    <message>
         <source>Creation Time</source>
         <translation>Data de Criação</translation>
     </message>

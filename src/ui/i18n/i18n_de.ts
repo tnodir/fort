@@ -93,14 +93,6 @@
         <translation>Status</translation>
     </message>
     <message>
-        <source>Bl.</source>
-        <translation>Bl.</translation>
-    </message>
-    <message>
-        <source>Block scheduled</source>
-        <translation>Block geplant</translation>
-    </message>
-    <message>
         <source>Creation Time</source>
         <translation>Zeitpunkt der Erstellung</translation>
     </message>

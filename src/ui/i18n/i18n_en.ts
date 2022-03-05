@@ -93,14 +93,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Bl.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Block scheduled</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Creation Time</source>
         <translation></translation>
     </message>

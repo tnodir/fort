@@ -93,14 +93,6 @@
         <translation>Stanje</translation>
     </message>
     <message>
-        <source>Bl.</source>
-        <translation>Bl.</translation>
-    </message>
-    <message>
-        <source>Block scheduled</source>
-        <translation>Blokiranje je načrtovano</translation>
-    </message>
-    <message>
         <source>Creation Time</source>
         <translation>Čas nastanka</translation>
     </message>

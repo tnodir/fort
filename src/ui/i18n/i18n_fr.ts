@@ -81,10 +81,6 @@
 <context>
     <name>AppListModel</name>
     <message>
-        <source>Bl.</source>
-        <translation>Bl.</translation>
-    </message>
-    <message>
         <source>Alert</source>
         <translation>Alerte</translation>
     </message>
@@ -111,10 +107,6 @@
     <message>
         <source>Program</source>
         <translation>Programme</translation>
-    </message>
-    <message>
-        <source>Block scheduled</source>
-        <translation>Blocage programmé</translation>
     </message>
 </context>
 <context>
