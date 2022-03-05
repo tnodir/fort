@@ -120,3 +120,8 @@ quint8 DateUtil::parseTimeMinute(const QString &period)
 {
     return quint8(toStringView(period).right(2).toUInt());
 }
+
+QString DateUtil::localeDateTime(const QDateTime &dateTime, const QLocale::FormatType &format)
+{
+    return QLocale().toString(dateTime, format);
+}

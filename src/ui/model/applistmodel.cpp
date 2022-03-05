@@ -11,6 +11,7 @@
 #include <conf/appgroup.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
+#include <util/dateutil.h>>
 #include <util/fileutil.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
@@ -72,12 +73,12 @@ int AppListModel::columnCount(const QModelIndex &parent) const
 QVariant AppListModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && (role == Qt::DisplayRole || role == Qt::ToolTipRole)) {
-        return headerDataDisplay(section, role);
+        return headerDataDisplay(section);
     }
     return QVariant();
 }
 
-QVariant AppListModel::headerDataDisplay(int section, int role) const
+QVariant AppListModel::headerDataDisplay(int section) const
 {
     switch (section) {
     case 0:
@@ -150,11 +151,12 @@ QVariant AppListModel::dataDisplay(const QModelIndex &index, int role) const
 
 QVariant AppListModel::dataDisplayState(const AppRow &appRow, int role) const
 {
-    return appStateText(appRow);
-    if (role == Qt::ToolTipRole && !appRow.endTime.isNull()) {
-        return appRow.endTime.toString();
+    QString text = appStateText(appRow);
+    if (!appRow.endTime.isNull()) {
+        text += QStringLiteral(" (%1)").arg(
+                DateUtil::localeDateTime(appRow.endTime, QLocale::ShortFormat));
     }
-    return QVariant();
+    return text;
 }
 
 QVariant AppListModel::dataDecoration(const QModelIndex &index) const
@@ -335,7 +337,7 @@ QString AppListModel::sqlOrderColumn() const
         columnsStr = "2";
         break;
     case 2: // State
-        columnsStr = "6 " + sqlOrderAsc() + ", 7";
+        columnsStr = "7 " + sqlOrderAsc() + ", 8, 9";
         break;
     default: // Creation Time
         columnsStr = "1"; // App ID

@@ -61,7 +61,7 @@ protected:
     QString sqlOrderColumn() const override;
 
 private:
-    QVariant headerDataDisplay(int section, int role = Qt::DisplayRole) const;
+    QVariant headerDataDisplay(int section) const;
 
     QVariant dataDisplay(const QModelIndex &index, int role) const;
     QVariant dataDisplayState(const AppRow &appRow, int role) const;
