@@ -45,7 +45,6 @@ CREATE TABLE policy(
   policy_id INTEGER PRIMARY KEY,
   is_preset BOOLEAN NOT NULL,
   enabled BOOLEAN NOT NULL,
-  block BOOLEAN NOT NULL,
   name TEXT NOT NULL
 );
 
@@ -56,6 +55,8 @@ CREATE TABLE policy_rule(
   order_index INTEGER NOT NULL
 );
 
+CREATE INDEX policy_rule_policy_id_idx ON policy_rule(policy_id);
+
 CREATE TABLE policy_set(
   policy_set_id INTEGER PRIMARY KEY,
   policy_id INTEGER NOT NULL,
@@ -63,12 +64,17 @@ CREATE TABLE policy_set(
   order_index INTEGER NOT NULL
 );
 
+CREATE INDEX policy_set_policy_id_idx ON policy_set(policy_id);
+
 CREATE TABLE policy_list(
   policy_list_id INTEGER PRIMARY KEY,
   type INTEGER NOT NULL,  -- preset_lib, preset_app, global_before_app, global_after_app
   policy_id INTEGER NOT NULL,
   order_index INTEGER NOT NULL
 );
+
+CREATE INDEX policy_list_type_idx ON policy_list(type);
+CREATE INDEX policy_list_policy_id_idx ON policy_list(policy_id);
 
 CREATE TABLE policy_menu(
   policy_menu_id INTEGER PRIMARY KEY,
@@ -81,6 +87,8 @@ CREATE TABLE policy_menu_set(
   policy_menu_id INTEGER NOT NULL,
   policy_id INTEGER NOT NULL
 );
+
+CREATE INDEX policy_menu_set_policy_id_idx ON policy_menu_set(policy_id);
 
 CREATE TABLE app_group(
   app_group_id INTEGER PRIMARY KEY,
