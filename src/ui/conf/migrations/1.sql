@@ -30,8 +30,10 @@ CREATE TABLE rule(
   rule_id INTEGER PRIMARY KEY,
   enabled BOOLEAN NOT NULL,
   block BOOLEAN NOT NULL,
+  report BOOLEAN NOT NULL,
+  log BOOLEAN NOT NULL,
   name TEXT NOT NULL,
-  rule_flags INTEGER NOT NULL,  -- inbound/outbound, etc
+  rule_flags INTEGER NOT NULL,  -- inbound/outbound, local port is equal to remote port, etc
   ip_proto INTEGER NOT NULL,
   local_port TEXT NOT NULL,
   remote_port TEXT NOT NULL,
