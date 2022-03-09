@@ -71,6 +71,27 @@ public:
     QByteArray optWindowAppsSplit() const { return valueByteArray("optWindow/appsSplit"); }
     void setOptWindowAppsSplit(const QByteArray &v) { setValue("optWindow/appsSplit", v); }
 
+    QByteArray optWindowRulesPresetSplit() const
+    {
+        return valueByteArray("optWindow/rulesPresetSplit");
+    }
+    void setOptWindowRulesPresetSplit(const QByteArray &v)
+    {
+        setValue("optWindow/rulesPresetSplit", v);
+    }
+
+    QByteArray optWindowRulesGlobalSplit() const
+    {
+        return valueByteArray("optWindow/rulesGlobalSplit");
+    }
+    void setOptWindowRulesGlobalSplit(const QByteArray &v)
+    {
+        setValue("optWindow/rulesGlobalSplit", v);
+    }
+
+    QByteArray optWindowRulesSplit() const { return valueByteArray("optWindow/rulesSplit"); }
+    void setOptWindowRulesSplit(const QByteArray &v) { setValue("optWindow/rulesSplit", v); }
+
     QRect serviceWindowGeometry() const { return value("serviceWindow/geometry").toRect(); }
     void setServiceWindowGeometry(const QRect &v) { setValue("serviceWindow/geometry", v); }
 
