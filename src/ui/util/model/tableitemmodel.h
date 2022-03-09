@@ -33,6 +33,8 @@ public slots:
     void refresh();
 
 protected:
+    virtual Qt::ItemFlags flagIsUserCheckable(const QModelIndex &index) const;
+
     virtual void invalidateRowCache();
     void updateRowCache(int row) const;
 

@@ -29,6 +29,7 @@ CREATE TABLE address_group(
 CREATE TABLE rule(
   rule_id INTEGER PRIMARY KEY,
   enabled BOOLEAN NOT NULL,
+  deleted BOOLEAN,  -- to reuse the rule_id
   block BOOLEAN NOT NULL,
   report BOOLEAN NOT NULL,
   log BOOLEAN NOT NULL,
@@ -43,12 +44,17 @@ CREATE TABLE rule(
   extra TEXT  -- TCP flags, ICMP types, etc
 );
 
+CREATE INDEX rule_deleted_idx ON rule(deleted);
+
 CREATE TABLE policy(
   policy_id INTEGER PRIMARY KEY,
   is_preset BOOLEAN NOT NULL,
   enabled BOOLEAN NOT NULL,
+  deleted BOOLEAN,  -- to reuse the policy_id
   name TEXT NOT NULL
 );
+
+CREATE INDEX policy_deleted_idx ON policy(deleted);
 
 CREATE TABLE policy_rule(
   policy_rule_id INTEGER PRIMARY KEY,
@@ -69,14 +75,12 @@ CREATE TABLE policy_set(
 CREATE INDEX policy_set_policy_id_idx ON policy_set(policy_id);
 
 CREATE TABLE policy_list(
-  policy_list_id INTEGER PRIMARY KEY,
+  policy_id INTEGER PRIMARY KEY,
   type INTEGER NOT NULL,  -- preset_lib, preset_app, global_before_app, global_after_app
-  policy_id INTEGER NOT NULL,
   order_index INTEGER NOT NULL
-);
+) WITHOUT ROWID;
 
-CREATE INDEX policy_list_type_idx ON policy_list(type);
-CREATE INDEX policy_list_policy_id_idx ON policy_list(policy_id);
+CREATE INDEX policy_list_type_order_idx ON policy_list(type, order_index);
 
 CREATE TABLE policy_menu(
   policy_menu_id INTEGER PRIMARY KEY,

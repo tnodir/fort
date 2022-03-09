@@ -141,15 +141,9 @@ bool ZoneListModel::setData(const QModelIndex &index, const QVariant &value, int
     return false;
 }
 
-Qt::ItemFlags ZoneListModel::flags(const QModelIndex &index) const
+Qt::ItemFlags ZoneListModel::flagIsUserCheckable(const QModelIndex &index) const
 {
-    if (!index.isValid())
-        return Qt::NoItemFlags;
-
-    const int column = index.column();
-
-    return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemNeverHasChildren
-            | (column == 0 ? Qt::ItemIsUserCheckable : Qt::NoItemFlags);
+    return index.column() == 0 ? Qt::ItemIsUserCheckable : Qt::NoItemFlags;
 }
 
 const ZoneRow &ZoneListModel::zoneRowAt(int row) const

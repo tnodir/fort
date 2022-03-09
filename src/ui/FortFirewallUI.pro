@@ -96,6 +96,7 @@ SOURCES += \
     model/applistmodel.cpp \
     model/appstatmodel.cpp \
     model/connlistmodel.cpp \
+    model/policylistmodel.cpp \
     model/servicelistmodel.cpp \
     model/traflistmodel.cpp \
     model/zonelistmodel.cpp \
@@ -251,6 +252,7 @@ HEADERS += \
     model/applistmodel.h \
     model/appstatmodel.h \
     model/connlistmodel.h \
+    model/policylistmodel.h \
     model/servicelistmodel.h \
     model/traflistmodel.h \
     model/zonelistmodel.h \
