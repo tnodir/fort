@@ -10,6 +10,7 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QStandardItemModel>
+#include <QToolButton>
 #include <QVBoxLayout>
 
 #include <conf/confmanager.h>
@@ -87,6 +88,13 @@ void OptionsPage::onAboutToSave()
     }
 }
 
+void OptionsPage::onEditResetted()
+{
+    // Password
+    setPasswordEdited(false);
+    retranslateEditPassword();
+}
+
 void OptionsPage::saveAutoRunMode(int mode)
 {
     if (m_currentAutoRunMode == mode)
@@ -131,12 +139,6 @@ void OptionsPage::saveService(bool isService)
 
     QMetaObject::invokeMethod(
             fortManager(), &FortManager::processRestartRequired, Qt::QueuedConnection);
-}
-
-void OptionsPage::onEditResetted()
-{
-    setPasswordEdited(false);
-    retranslateEditPassword();
 }
 
 void OptionsPage::onRetranslateUi()
@@ -477,7 +479,7 @@ void OptionsPage::setupEditPassword()
 
 void OptionsPage::setupPasswordLock()
 {
-    m_btPasswordLock = ControlUtil::createFlatButton(":/icons/lock_open.png", [&] {
+    m_btPasswordLock = ControlUtil::createToolButton(":/icons/lock_open.png", [&] {
         settings()->resetCheckedPassword();
         m_btPasswordLock->hide();
     });

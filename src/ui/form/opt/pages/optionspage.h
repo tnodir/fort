@@ -80,7 +80,7 @@ private:
     QCheckBox *m_cbHotKeys = nullptr;
     QCheckBox *m_cbPassword = nullptr;
     QLineEdit *m_editPassword = nullptr;
-    QPushButton *m_btPasswordLock = nullptr;
+    QToolButton *m_btPasswordLock = nullptr;
     QLabel *m_labelLanguage = nullptr;
     QComboBox *m_comboLanguage = nullptr;
     QLabel *m_labelTrayEvent = nullptr;
