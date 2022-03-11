@@ -28,6 +28,8 @@ public:
             const QString &iconPath, const std::function<void()> &onClicked);
     static QToolButton *createToolButton(
             const QString &iconPath, const std::function<void()> &onClicked);
+    static QToolButton *createFlatToolButton(
+            const QString &iconPath, const std::function<void()> &onClicked);
     static QPushButton *createLinkButton(const QString &iconPath,
             const QString &linkPath = QString(), const QString &toolTip = QString());
     static QPushButton *createFlatButton(

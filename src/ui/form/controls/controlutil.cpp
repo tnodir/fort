@@ -56,10 +56,21 @@ QToolButton *ControlUtil::createToolButton(
         const QString &iconPath, const std::function<void()> &onClicked)
 {
     auto c = new QToolButton();
+    c->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     c->setIcon(IconCache::icon(iconPath));
 
     c->connect(c, &QToolButton::clicked, onClicked);
 
+    return c;
+}
+
+QToolButton *ControlUtil::createFlatToolButton(
+        const QString &iconPath, const std::function<void()> &onClicked)
+{
+    auto c = createToolButton(iconPath, onClicked);
+    c->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    c->setAutoRaise(true);
+    c->setFocusPolicy(Qt::NoFocus);
     return c;
 }
 

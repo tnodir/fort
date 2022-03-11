@@ -20,6 +20,7 @@ SOURCES += \
     conf/confmanager.cpp \
     conf/firewallconf.cpp \
     conf/inioptions.cpp \
+    conf/policy.cpp \
     control/control.cpp \
     control/controlmanager.cpp \
     control/controlworker.cpp \
@@ -55,6 +56,7 @@ SOURCES += \
     form/opt/pages/optbasepage.cpp \
     form/opt/pages/optionspage.cpp \
     form/opt/pages/optmainpage.cpp \
+    form/opt/pages/rules/policylistbox.cpp \
     form/opt/pages/rulespage.cpp \
     form/opt/pages/schedulepage.cpp \
     form/opt/pages/statisticspage.cpp \
@@ -175,6 +177,8 @@ HEADERS += \
     conf/confmanager.h \
     conf/firewallconf.h \
     conf/inioptions.h \
+    conf/policy.h \
+    conf/policylist.h \
     control/control.h \
     control/controlmanager.h \
     control/controlworker.h \
@@ -210,6 +214,7 @@ HEADERS += \
     form/opt/pages/optbasepage.h \
     form/opt/pages/optionspage.h \
     form/opt/pages/optmainpage.h \
+    form/opt/pages/rules/policylistbox.h \
     form/opt/pages/rulespage.h \
     form/opt/pages/schedulepage.h \
     form/opt/pages/statisticspage.h \

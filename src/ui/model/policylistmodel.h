@@ -4,19 +4,15 @@
 #include <QObject>
 #include <QVector>
 
+#include <conf/policy.h>
+#include <conf/policylist.h>
 #include <util/model/tablesqlmodel.h>
 
 class ConfManager;
 class SqliteDb;
 
-struct PolicyRow : TableRow
+struct PolicyRow : TableRow, public Policy
 {
-    bool isPreset = false;
-    bool enabled = true;
-
-    int policyId = 0;
-
-    QString name;
 };
 
 class PolicyListModel : public TableSqlModel
@@ -24,16 +20,6 @@ class PolicyListModel : public TableSqlModel
     Q_OBJECT
 
 public:
-    enum PolicyListType {
-        PolicyListInvalid = -1,
-        PolicyListNone = 0,
-        PolicyListPresetLibrary,
-        PolicyListPresetApp,
-        PolicyListGlobalBeforeApp,
-        PolicyListGlobalAfterApp,
-        PolicyListCount
-    };
-
     explicit PolicyListModel(PolicyListType type, QObject *parent = nullptr);
 
     PolicyListType type() const { return m_type; }

@@ -1,8 +1,8 @@
 #include "rulespage.h"
 
-#include <QGroupBox>
 #include <QHBoxLayout>
 #include <QHeaderView>
+#include <QLabel>
 #include <QSplitter>
 #include <QVBoxLayout>
 
@@ -10,19 +10,11 @@
 #include <model/policylistmodel.h>
 #include <user/iniuser.h>
 
-RulesPage::RulesPage(OptionsController *ctrl, QWidget *parent) :
-    OptBasePage(ctrl, parent),
-    m_presetLibListModel(new PolicyListModel(PolicyListModel::PolicyListPresetLibrary, this)),
-    m_presetAppListModel(new PolicyListModel(PolicyListModel::PolicyListPresetApp, this)),
-    m_globalPreListModel(new PolicyListModel(PolicyListModel::PolicyListGlobalBeforeApp, this)),
-    m_globalPostListModel(new PolicyListModel(PolicyListModel::PolicyListGlobalAfterApp, this))
+#include "rules/policylistbox.h"
+
+RulesPage::RulesPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctrl, parent)
 {
     setupUi();
-
-    presetAppListModel()->initialize();
-    presetLibListModel()->initialize();
-    globalPreListModel()->initialize();
-    globalPostListModel()->initialize();
 }
 
 void RulesPage::onSaveWindowState(IniUser *ini)
@@ -41,10 +33,15 @@ void RulesPage::onRestoreWindowState(IniUser *ini)
 
 void RulesPage::onRetranslateUi()
 {
-    m_gbPresetLib->setTitle(tr("Library of preset rules:"));
-    m_gbPresetApp->setTitle(tr("Preset rules for applications:"));
-    m_gbGlobalPre->setTitle(tr("Global rules, applied before application rules:"));
-    m_gbGlobalPost->setTitle(tr("Global rules, applied after application rules:"));
+    m_presetLibBox->label()->setText(tr("Library of preset rules:"));
+    m_presetAppBox->label()->setText(tr("Preset rules for applications:"));
+    m_globalPreBox->label()->setText(tr("Global rules, applied before application rules:"));
+    m_globalPostBox->label()->setText(tr("Global rules, applied after application rules:"));
+
+    m_presetLibBox->onRetranslateUi();
+    m_presetAppBox->onRetranslateUi();
+    m_globalPreBox->onRetranslateUi();
+    m_globalPostBox->onRetranslateUi();
 }
 
 void RulesPage::setupUi()
@@ -80,60 +77,18 @@ void RulesPage::setupPresetSplitter()
     m_presetSplitter = new QSplitter();
     m_presetSplitter->setHandleWidth(10);
     m_presetSplitter->setOrientation(Qt::Vertical);
-    m_presetSplitter->addWidget(m_gbPresetLib);
-    m_presetSplitter->addWidget(m_gbPresetApp);
+    m_presetSplitter->addWidget(m_presetLibBox);
+    m_presetSplitter->addWidget(m_presetAppBox);
 }
 
 void RulesPage::setupPresetLibBox()
 {
-    setupPresetLibView();
-
-    auto layout = new QVBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->addWidget(m_presetLibListView);
-
-    m_gbPresetLib = new QGroupBox(this);
-    m_gbPresetLib->setFlat(true);
-    m_gbPresetLib->setLayout(layout);
-}
-
-void RulesPage::setupPresetLibView()
-{
-    m_presetLibListView = new TableView();
-    m_presetLibListView->setAlternatingRowColors(true);
-    m_presetLibListView->setSelectionMode(QAbstractItemView::SingleSelection);
-    m_presetLibListView->setSelectionBehavior(QAbstractItemView::SelectItems);
-
-    m_presetLibListView->horizontalHeader()->setVisible(false);
-
-    m_presetLibListView->setModel(presetLibListModel());
-
-    // m_presetLibListView->setMenu(m_btEdit->menu());
+    m_presetLibBox = new PolicyListBox(PolicyListPresetLibrary);
 }
 
 void RulesPage::setupPresetAppBox()
 {
-    setupPresetAppView();
-
-    auto layout = new QVBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->addWidget(m_presetAppListView);
-
-    m_gbPresetApp = new QGroupBox(this);
-    m_gbPresetApp->setFlat(true);
-    m_gbPresetApp->setLayout(layout);
-}
-
-void RulesPage::setupPresetAppView()
-{
-    m_presetAppListView = new TableView();
-    m_presetAppListView->setAlternatingRowColors(true);
-    m_presetAppListView->setSelectionMode(QAbstractItemView::SingleSelection);
-    m_presetAppListView->setSelectionBehavior(QAbstractItemView::SelectItems);
-
-    m_presetAppListView->horizontalHeader()->setVisible(false);
-
-    m_presetAppListView->setModel(presetAppListModel());
+    m_presetAppBox = new PolicyListBox(PolicyListPresetApp);
 }
 
 void RulesPage::setupGlobalSplitter()
@@ -148,56 +103,16 @@ void RulesPage::setupGlobalSplitter()
     m_globalSplitter = new QSplitter();
     m_globalSplitter->setHandleWidth(10);
     m_globalSplitter->setOrientation(Qt::Vertical);
-    m_globalSplitter->addWidget(m_gbGlobalPre);
-    m_globalSplitter->addWidget(m_gbGlobalPost);
+    m_globalSplitter->addWidget(m_globalPreBox);
+    m_globalSplitter->addWidget(m_globalPostBox);
 }
 
 void RulesPage::setupGlobalPreBox()
 {
-    setupGlobalPreView();
-
-    auto layout = new QVBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->addWidget(m_globalPreListView);
-
-    m_gbGlobalPre = new QGroupBox(this);
-    m_gbGlobalPre->setFlat(true);
-    m_gbGlobalPre->setLayout(layout);
-}
-
-void RulesPage::setupGlobalPreView()
-{
-    m_globalPreListView = new TableView();
-    m_globalPreListView->setAlternatingRowColors(true);
-    m_globalPreListView->setSelectionMode(QAbstractItemView::SingleSelection);
-    m_globalPreListView->setSelectionBehavior(QAbstractItemView::SelectItems);
-
-    m_globalPreListView->horizontalHeader()->setVisible(false);
-
-    m_globalPreListView->setModel(globalPreListModel());
+    m_globalPreBox = new PolicyListBox(PolicyListGlobalBeforeApp);
 }
 
 void RulesPage::setupGlobalPostBox()
 {
-    setupGlobalPostView();
-
-    auto layout = new QVBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->addWidget(m_globalPostListView);
-
-    m_gbGlobalPost = new QGroupBox(this);
-    m_gbGlobalPost->setFlat(true);
-    m_gbGlobalPost->setLayout(layout);
-}
-
-void RulesPage::setupGlobalPostView()
-{
-    m_globalPostListView = new TableView();
-    m_globalPostListView->setAlternatingRowColors(true);
-    m_globalPostListView->setSelectionMode(QAbstractItemView::SingleSelection);
-    m_globalPostListView->setSelectionBehavior(QAbstractItemView::SelectItems);
-
-    m_globalPostListView->horizontalHeader()->setVisible(false);
-
-    m_globalPostListView->setModel(globalPostListModel());
+    m_globalPostBox = new PolicyListBox(PolicyListGlobalAfterApp);
 }
