@@ -63,8 +63,8 @@ protected:
 private:
     QVariant headerDataDisplay(int section) const;
 
-    QVariant dataDisplay(const QModelIndex &index, int role) const;
-    QVariant dataDisplayState(const AppRow &appRow, int role) const;
+    QVariant dataDisplay(const QModelIndex &index) const;
+    QVariant dataDisplayState(const AppRow &appRow) const;
     QVariant dataDecoration(const QModelIndex &index) const;
     QVariant dataFont(const QModelIndex &index) const;
     QVariant dataForeground(const QModelIndex &index) const;

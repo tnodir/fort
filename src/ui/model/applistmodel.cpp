@@ -11,7 +11,7 @@
 #include <conf/appgroup.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
-#include <util/dateutil.h>>
+#include <util/dateutil.h>
 #include <util/fileutil.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
@@ -104,7 +104,7 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
     // Label
     case Qt::DisplayRole:
     case Qt::ToolTipRole:
-        return dataDisplay(index, role);
+        return dataDisplay(index);
 
     // Icon
     case Qt::DecorationRole:
@@ -126,7 +126,7 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QVariant AppListModel::dataDisplay(const QModelIndex &index, int role) const
+QVariant AppListModel::dataDisplay(const QModelIndex &index) const
 {
     const int row = index.row();
     const int column = index.column();
@@ -141,7 +141,7 @@ QVariant AppListModel::dataDisplay(const QModelIndex &index, int role) const
     case 1:
         return conf()->appGroupAt(appRow.groupIndex)->name();
     case 2:
-        return dataDisplayState(appRow, role);
+        return dataDisplayState(appRow);
     case 3:
         return appRow.creatTime;
     }
@@ -149,7 +149,7 @@ QVariant AppListModel::dataDisplay(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QVariant AppListModel::dataDisplayState(const AppRow &appRow, int role) const
+QVariant AppListModel::dataDisplayState(const AppRow &appRow) const
 {
     QString text = appStateText(appRow);
     if (!appRow.endTime.isNull()) {
