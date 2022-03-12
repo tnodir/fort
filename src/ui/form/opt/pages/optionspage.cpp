@@ -83,6 +83,10 @@ void OptionsPage::onAboutToSave()
         if (!settings()->hasPassword() && ini()->hasPassword() && ini()->password().isEmpty()) {
             m_cbPassword->setChecked(false);
         }
+
+        if (!ini()->hasPassword()) {
+            settings()->resetCheckedPassword();
+        }
     } else if (conf()->iniEdited()) {
         ini()->setHasPassword(settings()->hasPassword());
     }

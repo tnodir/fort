@@ -60,10 +60,6 @@ QString FortSettings::cacheFilePath() const
 void FortSettings::setPassword(const QString &password)
 {
     setPasswordHash(StringUtil::cryptoHash(password));
-
-    if (!hasPassword()) {
-        resetCheckedPassword();
-    }
 }
 
 bool FortSettings::checkPassword(const QString &password) const
