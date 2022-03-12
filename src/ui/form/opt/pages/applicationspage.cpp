@@ -284,7 +284,12 @@ void ApplicationsPage::setupTabBar()
             return;
 
         conf()->removeAppGroup(index, index);
+
+        const int tabIndex = m_tabBar->currentIndex();
         m_tabBar->removeTab(index);
+        if (tabIndex == m_tabBar->currentIndex()) {
+            emit appGroupChanged();
+        }
 
         ctrl()->setOptEdited();
     });
