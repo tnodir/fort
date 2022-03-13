@@ -44,6 +44,10 @@ So the parent process with the checked "Apply same rules to child processes" opt
 
 See "[SHA-2 Code Signing Support for Windows 7](https://docs.microsoft.com/en-us/security-updates/SecurityAdvisories/2015/3033929)".
 
+### Fort Firewall's 32-bit version fails to install due a missing "api-ms-\*.dll"
+
+Install the [latest Visual C++ x86 (32-bit!) redistributable](https://aka.ms/vs/17/release/vc_redist.x86.exe).
+
 ### What the difference is between "Internet Addresses" and "Allowed Internet Addresses" on the IPV4 Addresses tab?
 
 1. All FW rules act on "Internet Addresses" only.
