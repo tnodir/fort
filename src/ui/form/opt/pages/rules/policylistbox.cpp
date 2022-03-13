@@ -18,6 +18,11 @@ PolicyListBox::PolicyListBox(PolicyListType type, QWidget *parent) :
     listModel()->initialize();
 }
 
+PolicyListType PolicyListBox::listType() const
+{
+    return listModel()->type();
+}
+
 void PolicyListBox::onRetranslateUi()
 {
     m_btAddPolicy->setToolTip(tr("Add Policy"));
@@ -46,11 +51,12 @@ QLayout *PolicyListBox::setupHeader()
     m_label = ControlUtil::createLabel();
     m_label->setFont(ControlUtil::fontDemiBold());
 
-    m_btAddPolicy = ControlUtil::createFlatToolButton(":/icons/add.png", [&] { emit addPolicy(); });
-    m_btRemovePolicy =
-            ControlUtil::createFlatToolButton(":/icons/delete.png", [&] { emit removePolicy(); });
-    m_btEditPolicy =
-            ControlUtil::createFlatToolButton(":/icons/pencil.png", [&] { emit editPolicy(); });
+    m_btAddPolicy = ControlUtil::createFlatToolButton(
+            ":/icons/add.png", [&] { emit addPolicy(listType()); });
+    m_btRemovePolicy = ControlUtil::createFlatToolButton(
+            ":/icons/delete.png", [&] { emit removePolicy(listType()); });
+    m_btEditPolicy = ControlUtil::createFlatToolButton(
+            ":/icons/pencil.png", [&] { emit editPolicy(listType()); });
 
     auto layout = new QHBoxLayout();
     layout->setSpacing(2);

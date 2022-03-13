@@ -20,7 +20,7 @@ SOURCES += \
     conf/confmanager.cpp \
     conf/firewallconf.cpp \
     conf/inioptions.cpp \
-    conf/policy.cpp \
+    conf/rules/policy.cpp \
     control/control.cpp \
     control/controlmanager.cpp \
     control/controlworker.cpp \
@@ -177,8 +177,8 @@ HEADERS += \
     conf/confmanager.h \
     conf/firewallconf.h \
     conf/inioptions.h \
-    conf/policy.h \
-    conf/policylist.h \
+    conf/rules/policy.h \
+    conf/rules/policylist.h \
     control/control.h \
     control/controlmanager.h \
     control/controlworker.h \

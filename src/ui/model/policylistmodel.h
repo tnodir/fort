@@ -4,8 +4,8 @@
 #include <QObject>
 #include <QVector>
 
-#include <conf/policy.h>
-#include <conf/policylist.h>
+#include <conf/rules/policy.h>
+#include <conf/rules/policylist.h>
 #include <util/model/tablesqlmodel.h>
 
 class ConfManager;
