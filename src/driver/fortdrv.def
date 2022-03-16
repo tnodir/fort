@@ -1,3 +1,4 @@
 EXPORTS
+DriverImportsSetup
 DriverCallbacksSetup
 DriverEntry

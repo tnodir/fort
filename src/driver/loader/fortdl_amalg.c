@@ -11,5 +11,6 @@
 #include "../proxycb/fortpcb_src.c"
 
 #include "fortmm.c"
+#include "fortmm_imp.c"
 #include "fortimg.c"
 #include "fortdl.c"

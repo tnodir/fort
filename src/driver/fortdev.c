@@ -2,8 +2,6 @@
 
 #include "fortdev.h"
 
-#include "../version/fort_version.h"
-
 #include "common/fortioctl.h"
 #include "common/fortprov.h"
 

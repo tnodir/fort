@@ -26,19 +26,7 @@ FORT_API NTSTATUS GetModuleInfo(PLOADEDMODULE pModule, LPCSTR name,
         }
     }
 
-#if defined(FORT_WIN7_COMPAT)
-    if (_stricmp(name, "ntoskrnl.exe") == 0) {
-        return GetModuleInfo(pModule, "ntkrnlpa.exe", modules, modulesCount);
-    }
-    if (_stricmp(name, "hal.dll") == 0) {
-        return GetModuleInfo(pModule, "halmacpi.dll", modules, modulesCount);
-    }
-    if (_stricmp(name, "halmacpi.dll") == 0) {
-        return GetModuleInfo(pModule, "halacpi.dll", modules, modulesCount);
-    }
-#endif
-
-    return STATUS_DRIVER_ORDINAL_NOT_FOUND;
+    return STATUS_PROCEDURE_NOT_FOUND;
 }
 
 FORT_API NTSTATUS GetModuleInfoList(PAUX_MODULE_EXTENDED_INFO *outModules, DWORD *outModulesCount)

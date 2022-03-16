@@ -25,6 +25,7 @@ SOURCES += \
     loader/fortdl.c \
     loader/fortimg.c \
     loader/fortmm.c \
+    loader/fortmm_imp.c \
     proxycb/fortpcb_drv.c \
     proxycb/fortpcb_dst.c \
     proxycb/fortpcb_src.c \
@@ -58,6 +59,7 @@ HEADERS += \
     loader/fortdl.h \
     loader/fortimg.h \
     loader/fortmm.h \
+    loader/fortmm_imp.h \
     proxycb/fortpcb_def.h \
     proxycb/fortpcb_drv.h \
     proxycb/fortpcb_dst.h \

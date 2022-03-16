@@ -1,6 +1,8 @@
 #ifndef FORTDRV_H
 #define FORTDRV_H
 
+#include "../version/fort_version.h"
+
 #include "common/common.h"
 
 /* WDM for Development in User Mode */

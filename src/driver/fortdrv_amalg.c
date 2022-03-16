@@ -8,6 +8,7 @@
 #include "common/fortprov.c"
 #include "common/wildmatch.c"
 
+#include "loader/fortmm_imp.c"
 #include "proxycb/fortpcb_dst.c"
 
 #include "forttlsf.c"

@@ -2,6 +2,8 @@
 
 #include "fortmm.h"
 
+#include "fortmm_imp.h"
+
 #if !defined(FORT_DRIVER)
 #    define PAGE_SIZE 0x1000
 #endif
@@ -9,6 +11,8 @@
 /* MIN/MAX of address aligned */
 #define MIN_ALIGNED(address, alignment) (LPVOID)((uintptr_t) (address) & ~((alignment) -1))
 #define MAX_ALIGNED(value, alignment)   (((value) + (alignment) -1) & ~((alignment) -1))
+
+typedef NTSTATUS(WINAPI *DriverImportsSetupProc)(PFORT_MODULE_IMP moduleImp);
 
 typedef NTSTATUS(WINAPI *DriverCallbacksSetupProc)(PFORT_PROXYCB_INFO cbInfo);
 
@@ -140,10 +144,13 @@ static NTSTATUS PerformBaseRelocation(
 }
 
 /* Build the import address table: Library functions. */
-static NTSTATUS BuildImportTableLibrary(PUCHAR codeBase, const PIMAGE_IMPORT_DESCRIPTOR importDesc,
-        LPCSTR libName, PLOADEDMODULE libModule, PLOADEDMODULE forwardModule)
+static NTSTATUS BuildImportTableLibrary(PFORT_MODULE_IMP moduleImp, PUCHAR codeBase,
+        const PIMAGE_IMPORT_DESCRIPTOR importDesc, LPCSTR libName, PLOADEDMODULE libModule)
 {
     NTSTATUS status = STATUS_SUCCESS;
+
+    ModuleGetProcAddressFallbackProc moduleGetProcAddressFallback =
+            moduleImp->moduleGetProcAddressFallback;
 
     const DWORD originalFirstThunk = (importDesc->OriginalFirstThunk != 0)
             ? importDesc->OriginalFirstThunk
@@ -161,17 +168,7 @@ static NTSTATUS BuildImportTableLibrary(PUCHAR codeBase, const PIMAGE_IMPORT_DES
             funcName = (LPCSTR) &thunkData->Name;
         }
 
-        if (forwardModule != NULL) {
-            *funcRef = ModuleGetProcAddress(forwardModule, funcName);
-            if (*funcRef != NULL) {
-#ifdef FORT_DEBUG
-                LOG("Loader Module: Import forwarded: %s: %s: %p\n", libName, funcName, *funcRef);
-#endif
-                continue;
-            }
-        }
-
-        *funcRef = ModuleGetProcAddress(libModule, funcName);
+        *funcRef = moduleGetProcAddressFallback(moduleImp, libModule, funcName);
         if (*funcRef == NULL) {
             LOG("Loader Module: Error: Procedure Not Found: %s: %s\n", libName, funcName);
             status = STATUS_PROCEDURE_NOT_FOUND;
@@ -185,38 +182,14 @@ static NTSTATUS BuildImportTableLibrary(PUCHAR codeBase, const PIMAGE_IMPORT_DES
     return status;
 }
 
-/* Build the import address table. */
-static NTSTATUS BuildImportTable(PUCHAR codeBase, PIMAGE_NT_HEADERS pHeaders)
+static NTSTATUS BuildImportTableEntries(
+        PFORT_MODULE_IMP moduleImp, PUCHAR codeBase, PIMAGE_DATA_DIRECTORY directory)
 {
     NTSTATUS status;
 
-    PIMAGE_DATA_DIRECTORY directory =
-            &(pHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT]);
-    if (directory->Size == 0)
-        return STATUS_SUCCESS;
-
-    PAUX_MODULE_EXTENDED_INFO modules;
-    DWORD modulesCount;
-    status = GetModuleInfoList(&modules, &modulesCount);
-    if (!NT_SUCCESS(status))
-        return status;
-
-#if defined(FORT_WIN7_COMPAT)
-    LOADEDMODULE kernelModule = { NULL };
-    {
-        RTL_OSVERSIONINFOW osvi;
-        RtlZeroMemory(&osvi, sizeof(osvi));
-        osvi.dwOSVersionInfoSize = sizeof(osvi);
-        RtlGetVersion(&osvi);
-        const BOOL isWindows7 = (osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 1);
-
-        if (!isWindows7) {
-            GetModuleInfo(&kernelModule, "ntoskrnl.exe", modules, modulesCount);
-        }
-    }
-#endif
-
-    status = STATUS_SUCCESS;
+    GetModuleInfoFallbackProc getModuleInfoFallback = moduleImp->getModuleInfoFallback;
+    BuildImportTableLibraryBeginProc buildImportTableLibraryBegin =
+            moduleImp->buildImportTableLibraryBegin;
 
     PIMAGE_IMPORT_DESCRIPTOR importDesc =
             (PIMAGE_IMPORT_DESCRIPTOR) (codeBase + directory->VirtualAddress);
@@ -225,27 +198,61 @@ static NTSTATUS BuildImportTable(PUCHAR codeBase, PIMAGE_NT_HEADERS pHeaders)
         LPCSTR libName = (LPCSTR) (codeBase + importDesc->Name);
 
         LOADEDMODULE libModule;
-        if (!NT_SUCCESS(GetModuleInfo(&libModule, libName, modules, modulesCount))) {
+        status = getModuleInfoFallback(moduleImp, &libModule, libName);
+        if (!NT_SUCCESS(status)) {
             LOG("Loader Module: Error: Module Not Found: %s\n", libName);
-            status = STATUS_PROCEDURE_NOT_FOUND;
             break;
         }
 
-        PLOADEDMODULE forwardModule = NULL;
-#if defined(FORT_WIN7_COMPAT)
-        if (kernelModule.codeBase != NULL && _stricmp(libName, "hal.dll") == 0) {
-            /* Functions of HAL.dll are exported from kernel on Windows 8+ */
-            LOG("Loader Module: Forward to kernel: %s\n", libName);
-            forwardModule = &kernelModule;
-        }
-#endif
+        buildImportTableLibraryBegin(moduleImp, libName);
 
-        status = BuildImportTableLibrary(codeBase, importDesc, libName, &libModule, forwardModule);
+        status = BuildImportTableLibrary(moduleImp, codeBase, importDesc, libName, &libModule);
         if (!NT_SUCCESS(status)) {
             LOG("Loader Module: Library Import Error: %s\n", libName);
             break;
         }
     }
+
+    return status;
+}
+
+/* Build the import address table. */
+static NTSTATUS BuildImportTable(PLOADEDMODULE pModule, PIMAGE_NT_HEADERS pHeaders)
+{
+    NTSTATUS status;
+
+    PIMAGE_DATA_DIRECTORY directory =
+            &(pHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT]);
+    if (directory->Size == 0)
+        return STATUS_SUCCESS;
+
+    DriverImportsSetupProc driverImportsSetup =
+            (DriverImportsSetupProc) ModuleGetProcAddress(pModule, "DriverImportsSetup");
+    if (driverImportsSetup == NULL)
+        return STATUS_DRIVER_ORDINAL_NOT_FOUND;
+
+    PAUX_MODULE_EXTENDED_INFO modules;
+    DWORD modulesCount;
+    status = GetModuleInfoList(&modules, &modulesCount);
+    if (!NT_SUCCESS(status))
+        return status;
+
+    FORT_MODULE_IMP moduleImp;
+    InitModuleImporter(&moduleImp, modules, modulesCount);
+
+    driverImportsSetup(&moduleImp);
+
+    status = moduleImp.buildImportTableEntriesBegin(&moduleImp, pModule, pHeaders);
+    if (!NT_SUCCESS(status))
+        return status;
+
+    if (status == STATUS_ALREADY_COMPLETE) {
+        status = STATUS_SUCCESS;
+    } else {
+        status = BuildImportTableEntries(&moduleImp, pModule->codeBase, directory);
+    }
+
+    moduleImp.buildImportTableEntriesEnd(&moduleImp, status);
 
     /* Free the modules allocated data */
     FreeModuleInfoList(modules);
@@ -278,6 +285,10 @@ static BOOL CheckPEHeaderSections(const PIMAGE_NT_HEADERS pNtHeaders)
     const SIZE_T imageSize = MAX_ALIGNED(pNtHeaders->OptionalHeader.SizeOfImage, PAGE_SIZE);
     if (imageSize != MAX_ALIGNED(lastSectionEnd, PAGE_SIZE))
         return STATUS_INVALID_IMAGE_FORMAT;
+
+    /* Check entry point */
+    if (pNtHeaders->OptionalHeader.AddressOfEntryPoint == 0)
+        return STATUS_DRIVER_ENTRYPOINT_NOT_FOUND;
 
     return TRUE;
 }
@@ -318,7 +329,7 @@ static BOOL IsPEHeaderValid(PVOID lpData, DWORD dwSize)
     return CheckPEHeaderSections(pNtHeaders);
 }
 
-static NTSTATUS InitializeModuleImage(PUCHAR pImage, const PIMAGE_NT_HEADERS lpNtHeaders,
+static NTSTATUS InitializeModuleImage(PLOADEDMODULE pModule, const PIMAGE_NT_HEADERS lpNtHeaders,
         const PUCHAR lpData, DWORD dwSize, DWORD imageSize)
 {
     NTSTATUS status;
@@ -328,6 +339,8 @@ static NTSTATUS InitializeModuleImage(PUCHAR pImage, const PIMAGE_NT_HEADERS lpN
             lpNtHeaders->OptionalHeader.SizeOfHeaders,
             lpNtHeaders->OptionalHeader.AddressOfEntryPoint, lpNtHeaders->OptionalHeader.ImageBase);
 #endif
+
+    PUCHAR pImage = pModule->codeBase;
 
     /* Copy PE header */
     RtlCopyMemory(pImage, lpData, lpNtHeaders->OptionalHeader.SizeOfHeaders);
@@ -349,13 +362,9 @@ static NTSTATUS InitializeModuleImage(PUCHAR pImage, const PIMAGE_NT_HEADERS lpN
     }
 
     /* Adjust function table of imports */
-    status = BuildImportTable(pImage, pNtHeaders);
+    status = BuildImportTable(pModule, pNtHeaders);
     if (!NT_SUCCESS(status))
         return status;
-
-    /* Check entry point */
-    if (pNtHeaders->OptionalHeader.AddressOfEntryPoint == 0)
-        return STATUS_DRIVER_ENTRYPOINT_NOT_FOUND;
 
     return STATUS_SUCCESS;
 }
@@ -384,14 +393,15 @@ FORT_API NTSTATUS LoadModuleFromMemory(PLOADEDMODULE pModule, const PUCHAR lpDat
     LOG("Loader Module: image=%p\n", pImage);
 #endif
 
-    status = InitializeModuleImage(pImage, pNtHeaders, lpData, dwSize, imageSize);
+    pModule->codeBase = pImage;
+
+    status = InitializeModuleImage(pModule, pNtHeaders, lpData, dwSize, imageSize);
 
     if (!NT_SUCCESS(status)) {
+        pModule->codeBase = NULL;
         fort_mem_free(pImage, FORT_LOADER_POOL_TAG);
         return status;
     }
-
-    pModule->codeBase = pImage;
 
     return STATUS_SUCCESS;
 }
