@@ -110,7 +110,7 @@ void LogManager::processLogBuffer(LogBuffer *logBuffer, bool success, quint32 er
     }
 
     if (success) {
-        readLogEntries(logBuffer);
+        processLogEntries(logBuffer);
     } else if (errorCode != 0) {
         const auto errorMessage = OsUtil::errorMessage(errorCode);
         setErrorMessage(errorMessage);
@@ -120,51 +120,63 @@ void LogManager::processLogBuffer(LogBuffer *logBuffer, bool success, quint32 er
     addFreeBuffer(logBuffer);
 }
 
-void LogManager::readLogEntries(LogBuffer *logBuffer)
+void LogManager::processLogEntries(LogBuffer *logBuffer)
 {
+    OsUtil::setThreadIsBusy(true);
+
     for (;;) {
-        const auto logType = logBuffer->peekEntryType();
+        const FortLogType logType = logBuffer->peekEntryType();
 
-        switch (logType) {
-        case FORT_LOG_TYPE_BLOCKED:
-        case FORT_LOG_TYPE_ALLOWED: {
-            LogEntryBlocked blockedEntry;
-            logBuffer->readEntryBlocked(&blockedEntry);
-            IoC<ConfManager>()->logBlockedApp(blockedEntry);
-        } break;
-        case FORT_LOG_TYPE_BLOCKED_IP: {
-            LogEntryBlockedIp blockedIpEntry;
-            logBuffer->readEntryBlockedIp(&blockedIpEntry);
-            IoC<StatManager>()->logBlockedIp(blockedIpEntry, currentUnixTime());
-        } break;
-        case FORT_LOG_TYPE_PROC_NEW: {
-            LogEntryProcNew procNewEntry;
-            logBuffer->readEntryProcNew(&procNewEntry);
-            IoC<StatManager>()->logProcNew(procNewEntry, currentUnixTime());
-        } break;
-        case FORT_LOG_TYPE_STAT_TRAF: {
-            LogEntryStatTraf statTrafEntry;
-            logBuffer->readEntryStatTraf(&statTrafEntry);
-            IoC<StatManager>()->logStatTraf(statTrafEntry, currentUnixTime());
-        } break;
-        case FORT_LOG_TYPE_TIME: {
-            LogEntryTime timeEntry;
-            logBuffer->readEntryTime(&timeEntry);
-            setCurrentUnixTime(timeEntry.unixTime());
-            if (timeEntry.timeChanged()) {
-                emit systemTimeChanged();
-            }
-        } break;
-        default:
-            if (logBuffer->offset() < logBuffer->top()) {
-                const auto data = QByteArray::fromRawData(
-                        logBuffer->array().constData() + logBuffer->offset(),
-                        logBuffer->top() - logBuffer->offset());
-
-                qCCritical(LC) << "Unknown Log entry:" << logType << logBuffer->offset()
-                               << logBuffer->top() << data;
-            }
-            return;
-        }
+        if (!processLogEntry(logBuffer, logType))
+            break;
     }
+
+    OsUtil::setThreadIsBusy(false);
+}
+
+bool LogManager::processLogEntry(LogBuffer *logBuffer, FortLogType logType)
+{
+    switch (logType) {
+    case FORT_LOG_TYPE_BLOCKED:
+    case FORT_LOG_TYPE_ALLOWED: {
+        LogEntryBlocked blockedEntry;
+        logBuffer->readEntryBlocked(&blockedEntry);
+        IoC<ConfManager>()->logBlockedApp(blockedEntry);
+    } break;
+    case FORT_LOG_TYPE_BLOCKED_IP: {
+        LogEntryBlockedIp blockedIpEntry;
+        logBuffer->readEntryBlockedIp(&blockedIpEntry);
+        IoC<StatManager>()->logBlockedIp(blockedIpEntry, currentUnixTime());
+    } break;
+    case FORT_LOG_TYPE_PROC_NEW: {
+        LogEntryProcNew procNewEntry;
+        logBuffer->readEntryProcNew(&procNewEntry);
+        IoC<StatManager>()->logProcNew(procNewEntry, currentUnixTime());
+    } break;
+    case FORT_LOG_TYPE_STAT_TRAF: {
+        LogEntryStatTraf statTrafEntry;
+        logBuffer->readEntryStatTraf(&statTrafEntry);
+        IoC<StatManager>()->logStatTraf(statTrafEntry, currentUnixTime());
+    } break;
+    case FORT_LOG_TYPE_TIME: {
+        LogEntryTime timeEntry;
+        logBuffer->readEntryTime(&timeEntry);
+        setCurrentUnixTime(timeEntry.unixTime());
+        if (timeEntry.timeChanged()) {
+            emit systemTimeChanged();
+        }
+    } break;
+    default:
+        if (logBuffer->offset() < logBuffer->top()) {
+            const auto data =
+                    QByteArray::fromRawData(logBuffer->array().constData() + logBuffer->offset(),
+                            logBuffer->top() - logBuffer->offset());
+
+            qCCritical(LC) << "Unknown Log entry:" << logType << logBuffer->offset()
+                           << logBuffer->top() << data;
+        }
+        return false;
+    }
+
+    return true;
 }

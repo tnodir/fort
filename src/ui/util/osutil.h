@@ -36,6 +36,8 @@ public:
 
     static void showConsole(bool visible);
     static void writeToConsole(const char *category, const QString &message);
+
+    static void setThreadIsBusy(bool on);
 };
 
 #endif // OSUTIL_H

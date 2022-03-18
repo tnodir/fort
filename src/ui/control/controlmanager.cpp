@@ -147,12 +147,17 @@ bool ControlManager::processRequest(Control::Command command, const QVariantList
     if (Q_UNLIKELY(!w))
         return false;
 
+    OsUtil::setThreadIsBusy(true);
+
     QString errorMessage;
-    if (!processCommand({ w, command, args, errorMessage })) {
+    const bool success = processCommand({ w, command, args, errorMessage });
+    if (!success) {
         qCWarning(LC) << "Bad command" << errorMessage << ':' << command << args;
-        return false;
     }
-    return true;
+
+    OsUtil::setThreadIsBusy(false);
+
+    return success;
 }
 
 bool ControlManager::processCommand(const ProcessCommandArgs &p)

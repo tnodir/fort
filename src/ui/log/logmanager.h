@@ -3,6 +3,7 @@
 
 #include <QObject>
 
+#include <common/fortdef.h>
 #include <util/ioc/iocservice.h>
 
 class LogBuffer;
@@ -42,7 +43,8 @@ private:
     LogBuffer *getFreeBuffer();
     void addFreeBuffer(LogBuffer *logBuffer);
 
-    void readLogEntries(LogBuffer *logBuffer);
+    void processLogEntries(LogBuffer *logBuffer);
+    bool processLogEntry(LogBuffer *logBuffer, FortLogType logType);
 
 private:
     bool m_active = false;

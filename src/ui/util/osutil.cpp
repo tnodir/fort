@@ -159,3 +159,8 @@ void OsUtil::writeToConsole(const char *category, const QString &message)
     DWORD nw;
     WriteFile(stdoutHandle, data.constData(), DWORD(data.size()), &nw, nullptr);
 }
+
+void OsUtil::setThreadIsBusy(bool on)
+{
+    SetThreadExecutionState(ES_CONTINUOUS | (on ? ES_SYSTEM_REQUIRED : 0));
+}
