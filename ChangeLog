@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v3.5.6, 2022-03-18:
+- UI: Programs: Show time icon for auto-block apps (Remove "Bl." column).
+- UI: Options: Update app's group after removing.
+- UI: Use SetThreadExecutionState() to prevent OS sleep during events processing.
+- UI: Update SQLite to v3.38.1
+
 v3.5.5, 2022-02-26:
 - UI: Programs: Fix app's auto-block time handling.
 
