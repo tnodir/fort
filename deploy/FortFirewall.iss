@@ -42,11 +42,13 @@ SolidCompression=yes
 
 [Languages]
 Name: en; MessagesFile: "compiler:Default.isl"
-Name: ru; MessagesFile: "compiler:Languages\Russian.isl"
-Name: fr; MessagesFile: "compiler:Languages\French.isl"
 Name: de; MessagesFile: "compiler:Languages\German.isl"
+Name: fr; MessagesFile: "compiler:Languages\French.isl"
+Name: it; MessagesFile: "compiler:Languages\Italian.isl"
 Name: ko; MessagesFile: "compiler:Languages\Korean.isl"
 Name: pt; MessagesFile: "compiler:Languages\Portuguese.isl"
+Name: ru; MessagesFile: "compiler:Languages\Russian.isl"
+Name: sl; MessagesFile: "compiler:Languages\Slovenian.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"
@@ -90,12 +92,12 @@ Filename: "{app}\driver\scripts\uninstall.bat"; RunOnceId: "DelDriver"
 [InstallDelete]
 Type: filesandordirs; Name: "{app}\driver"
 Type: filesandordirs; Name: "{app}\i18n"
+Type: files; Name: "{app}\README*.*"
 ; TODO: COMPAT: Remove the following 4 lines after v4.1.0
 Type: filesandordirs; Name: "{app}\plugins"
 Type: files; Name: "{app}\curl*.*"
 Type: files; Name: "{app}\qt*.*"
 Type: files; Name: "{app}\ChangeLog"
-Type: files; Name: "{app}\README*.*"
 
 [Code]
 function PrepareToInstall(var NeedsRestart: Boolean): String;
