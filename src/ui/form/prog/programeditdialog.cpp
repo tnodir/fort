@@ -10,6 +10,7 @@
 #include <QPushButton>
 #include <QRadioButton>
 #include <QSpinBox>
+#include <QToolButton>
 
 #include <appinfo/appinfocache.h>
 #include <conf/confmanager.h>
@@ -239,7 +240,7 @@ QLayout *ProgramEditDialog::setupAppPathLayout()
     m_editPath = new QLineEdit();
     m_editPath->setMaxLength(1024);
 
-    m_btSelectFile = ControlUtil::createFlatButton(":/icons/folder.png", [&] {
+    m_btSelectFile = ControlUtil::createFlatToolButton(":/icons/folder.png", [&] {
         const auto filePath = DialogUtil::getOpenFileName(
                 m_labelEditPath->text(), tr("Programs (*.exe);;All files (*.*)"));
 
@@ -270,7 +271,8 @@ QLayout *ProgramEditDialog::setupAppNameLayout()
         m_editName->setText(appName);
     };
 
-    m_btGetName = ControlUtil::createFlatButton(":/icons/arrow_refresh_small.png", updateAppName);
+    m_btGetName =
+            ControlUtil::createFlatToolButton(":/icons/arrow_refresh_small.png", updateAppName);
 
     layout->addWidget(m_editName);
     layout->addWidget(m_btGetName);

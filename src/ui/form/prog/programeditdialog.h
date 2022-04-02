@@ -62,10 +62,10 @@ private:
 
     QLabel *m_labelEditPath = nullptr;
     QLineEdit *m_editPath = nullptr;
-    QPushButton *m_btSelectFile = nullptr;
+    QToolButton *m_btSelectFile = nullptr;
     QLabel *m_labelEditName = nullptr;
     QLineEdit *m_editName = nullptr;
-    QPushButton *m_btGetName = nullptr;
+    QToolButton *m_btGetName = nullptr;
     QLabel *m_labelAppGroup = nullptr;
     QComboBox *m_comboAppGroup = nullptr;
     QCheckBox *m_cbUseGroupPerm = nullptr;

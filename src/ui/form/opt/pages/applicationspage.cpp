@@ -9,6 +9,7 @@
 #include <QPushButton>
 #include <QSpinBox>
 #include <QTimeEdit>
+#include <QToolButton>
 #include <QVBoxLayout>
 
 #include <conf/appgroup.h>

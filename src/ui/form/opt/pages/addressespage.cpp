@@ -8,6 +8,7 @@
 #include <QPlainTextEdit>
 #include <QPushButton>
 #include <QTabBar>
+#include <QToolButton>
 #include <QVBoxLayout>
 
 #include <conf/addressgroup.h>

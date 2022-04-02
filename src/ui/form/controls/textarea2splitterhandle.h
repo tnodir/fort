@@ -5,7 +5,7 @@
 
 QT_FORWARD_DECLARE_CLASS(QBoxLayout)
 QT_FORWARD_DECLARE_CLASS(QPlainTextEdit)
-QT_FORWARD_DECLARE_CLASS(QPushButton)
+QT_FORWARD_DECLARE_CLASS(QToolButton)
 
 class TextArea2Splitter;
 
@@ -24,11 +24,11 @@ public:
 
     QPlainTextEdit *currentTextArea() const;
 
-    QPushButton *btMoveAllFrom1To2() const { return m_btMoveAllFrom1To2; }
-    QPushButton *btMoveSelectedFrom1To2() const { return m_btMoveSelectedFrom1To2; }
-    QPushButton *btInterchangeAll() const { return m_btInterchangeAll; }
-    QPushButton *btMoveSelectedFrom2To1() const { return m_btMoveSelectedFrom2To1; }
-    QPushButton *btMoveAllFrom2To1() const { return m_btMoveAllFrom2To1; }
+    QToolButton *btMoveAllFrom1To2() const { return m_btMoveAllFrom1To2; }
+    QToolButton *btMoveSelectedFrom1To2() const { return m_btMoveSelectedFrom1To2; }
+    QToolButton *btInterchangeAll() const { return m_btInterchangeAll; }
+    QToolButton *btMoveSelectedFrom2To1() const { return m_btMoveSelectedFrom2To1; }
+    QToolButton *btMoveAllFrom2To1() const { return m_btMoveAllFrom2To1; }
 
     TextArea2Splitter *splitter() const;
 
@@ -45,11 +45,11 @@ private:
     QPlainTextEdit *m_textArea2 = nullptr;
 
     QBoxLayout *m_buttonsLayout = nullptr;
-    QPushButton *m_btMoveAllFrom1To2 = nullptr;
-    QPushButton *m_btMoveSelectedFrom1To2 = nullptr;
-    QPushButton *m_btInterchangeAll = nullptr;
-    QPushButton *m_btMoveSelectedFrom2To1 = nullptr;
-    QPushButton *m_btMoveAllFrom2To1 = nullptr;
+    QToolButton *m_btMoveAllFrom1To2 = nullptr;
+    QToolButton *m_btMoveSelectedFrom1To2 = nullptr;
+    QToolButton *m_btInterchangeAll = nullptr;
+    QToolButton *m_btMoveSelectedFrom2To1 = nullptr;
+    QToolButton *m_btMoveAllFrom2To1 = nullptr;
 };
 
 #endif // TEXTAREA2SPLITTERHANDLE_H

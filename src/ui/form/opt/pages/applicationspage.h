@@ -89,7 +89,7 @@ private:
     AppsColumn *m_blockApps = nullptr;
     AppsColumn *m_allowApps = nullptr;
     TextArea2Splitter *m_splitter = nullptr;
-    QPushButton *m_btSelectFile = nullptr;
+    QToolButton *m_btSelectFile = nullptr;
 };
 
 #endif // APPLICATIONSPAGE_H

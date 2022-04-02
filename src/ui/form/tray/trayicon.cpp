@@ -360,6 +360,7 @@ void TrayIcon::setupTrayMenu()
     }
 
     m_menu->addSeparator();
+
     m_quitAction = addAction(m_menu, QIcon(), tr("Quit"), this, SLOT(quitProgram()));
     addHotKey(m_quitAction, iniUser()->hotKeyQuit());
 }

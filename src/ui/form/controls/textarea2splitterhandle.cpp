@@ -3,8 +3,8 @@
 #include <QBoxLayout>
 #include <QPainter>
 #include <QPlainTextEdit>
-#include <QPushButton>
 #include <QStyleOption>
+#include <QToolButton>
 
 #include <form/controls/controlutil.h>
 #include <util/textareautil.h>

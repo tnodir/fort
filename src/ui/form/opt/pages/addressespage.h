@@ -63,7 +63,7 @@ private:
     AddressesColumn *m_includeAddresses = nullptr;
     AddressesColumn *m_excludeAddresses = nullptr;
     TextArea2Splitter *m_splitter = nullptr;
-    QPushButton *m_btAddLocals = nullptr;
+    QToolButton *m_btAddLocals = nullptr;
     QMenu *m_menuZones = nullptr;
 };
 

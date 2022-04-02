@@ -32,9 +32,7 @@ public:
             const QString &iconPath, const std::function<void()> &onClicked);
     static QPushButton *createLinkButton(const QString &iconPath,
             const QString &linkPath = QString(), const QString &toolTip = QString());
-    static QPushButton *createFlatButton(
-            const QString &iconPath, const std::function<void()> &onClicked);
-    static QPushButton *createSplitterButton(
+    static QToolButton *createSplitterButton(
             const QString &iconPath, const std::function<void()> &onClicked);
     static QLabel *createLabel(const QString &text = QString());
     static QLineEdit *createLineLabel();
