@@ -29,64 +29,13 @@ Fort is a simple firewall for Windows 7+.
 
 -----
 
-## Restrictions
+## Requirements
 
-### "Apply same rules to child processes" option
-
-The "Apply same rules to child processes" option affects only new processes.
-
-Fort Firewall checks the whole tree of parent processes at first attempt of any (child) process to connect.
-So the parent process with the checked "Apply same rules to child processes" option should be alive, when (child) process connects to Internet.
-
-## FAQ
-
-### Windows 7 SP1 64-bit fails to install not digitally signed drivers
-
-See "[SHA-2 Code Signing Support for Windows 7](https://docs.microsoft.com/en-us/security-updates/SecurityAdvisories/2015/3033929)".
-
-### Fort Firewall's 32-bit version fails to install due a missing "msvcp\*.dll" or "api-ms-\*.dll"
+### Visual C++ redistributable
 
 Install the [latest Visual C++ x86 (32-bit!) redistributable](https://aka.ms/vs/17/release/vc_redist.x86.exe).
 
-### What the difference is between "Internet Addresses" and "Allowed Internet Addresses" on the IPV4 Addresses tab?
-
-1. All FW rules act on "Internet Addresses" only.
-LAN addresses are immediately allowed by FW and not checked by app groups or speed limiter.
-
-For example here you can describe Internet addresses as:
-- "Include All" addresses,
-- but exclude 127.0.0.0/8, 192.168.0.0/16.
-
-2. "Allowed Internet Addresses" may be used for example:
-- to block only some addresses:
-    - "Include All" addresses,
-    - but exclude facebook.com: "31.13.72.36".
-- to allow only some addresses:
-    - "Exclude All" addresses,
-    - but include wikipedia.com: "91.198.174.192".
-
-### Do the App rules take precedence over the Allowed Internet rules?
-
-#### Filtering steps:
-1) If **address** is 127.* or 255.255.255.255 and "Filter Local Addresses" is turned off, then _**PERMIT**_
-2) If "Filter Enabled" is turned off, then _**PERMIT**_
-3) If "Stop Traffic" is turned on, then _**BLOCK**_
-4) If **address** is not from "Internet Addresses", then _**PERMIT**_
-5) If "Stop Internet Traffic" is turned on, then _**BLOCK**_
-6) If **address** is not from "Allowed Internet Addresses", then _**BLOCK**_
-7) If **app path** is allowed, then _**PERMIT**_
-8) _**BLOCK**_ or _**PERMIT**_ due to default App Groups settings (Block/Allow All)
-
-### What does the "Make trackable" button do in Services?
-
-It modifies the selected Service's settings in the registry "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\\\<SERVICE-NAME\>":
-- changes the "Type" value to "16" (Own Process),
-- adds "-s \<SERVICE-NAME\>" argument to "ImagePath" value,
-- stores old "Type" & "ImagePath" values into "_Fort*" values.
-
-For the new values to take effect, you must restart the changed services or restart the computer.
-
-(Some services already run with "-s \<SERVICE-NAME\>" argument by `SvcHost.exe`, so it's not necessary to explicitly make them trackable.)
+## [Frequently Asked Questions (FAQ)](https://github.com/tnodir/fort/wiki/FAQ)
 
 ## Code Quality Monitor
 
