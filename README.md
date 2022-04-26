@@ -31,11 +31,12 @@ Fort is a simple firewall for Windows 7+.
 
 ## Requirements
 
-### Visual C++ redistributable
+  - [Visual C++ x86 (32-bit!) redistributable](https://aka.ms/vs/17/release/vc_redist.x86.exe)
 
-Install the [latest Visual C++ x86 (32-bit!) redistributable](https://aka.ms/vs/17/release/vc_redist.x86.exe).
+## Wiki
 
-## [Frequently Asked Questions (FAQ)](https://github.com/tnodir/fort/wiki/FAQ)
+  - [Frequently Asked Questions (FAQ)](https://github.com/tnodir/fort/wiki/FAQ)
+  - [Building](https://github.com/tnodir/fort/wiki/Building)
 
 ## Code Quality Monitor
 
