@@ -47,6 +47,7 @@ Name: fr; MessagesFile: "compiler:Languages\French.isl"
 Name: it; MessagesFile: "compiler:Languages\Italian.isl"
 Name: ko; MessagesFile: "compiler:Languages\Korean.isl"
 Name: pt; MessagesFile: "compiler:Languages\Portuguese.isl"
+Name: pt_BR; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
 Name: ru; MessagesFile: "compiler:Languages\Russian.isl"
 Name: sl; MessagesFile: "compiler:Languages\Slovenian.isl"
 
