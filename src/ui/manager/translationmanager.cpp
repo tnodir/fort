@@ -45,21 +45,23 @@ void TranslationManager::setupTranslation()
     m_translators.fill(nullptr);
 }
 
-QStringList TranslationManager::naturalLabels() const
+QStringList TranslationManager::displayLabels() const
 {
     QStringList list;
     list.reserve(m_locales.size());
 
     int localeBit = 1;
     for (const QLocale &locale : m_locales) {
-        QString label = StringUtil::capitalize(locale.nativeLanguageName());
+        QString label = QLocale::languageToString(locale.language());
+        QString nativeLabel = StringUtil::capitalize(locale.nativeLanguageName());
 
         if ((m_localesWithCountry & localeBit) != 0) {
-            label += " (" + StringUtil::capitalize(locale.nativeCountryName()) + ")";
+            label += " (" + QLocale::countryToString(locale.country()) + ")";
+            nativeLabel += " (" + StringUtil::capitalize(locale.nativeCountryName()) + ")";
         }
         localeBit <<= 1;
 
-        list.append(label);
+        list.append(label + ", " + nativeLabel);
     }
     return list;
 }

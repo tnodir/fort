@@ -510,7 +510,7 @@ QLayout *OptionsPage::setupLangLayout()
 void OptionsPage::setupComboLanguage()
 {
     m_comboLanguage =
-            ControlUtil::createComboBox(translationManager()->naturalLabels(), [&](int index) {
+            ControlUtil::createComboBox(translationManager()->displayLabels(), [&](int index) {
                 if (translationManager()->switchLanguage(index)) {
                     iniUser()->setLanguage(translationManager()->localeName());
                     confManager()->saveIniUser();

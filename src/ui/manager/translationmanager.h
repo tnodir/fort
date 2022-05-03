@@ -15,7 +15,6 @@ class TranslationManager : public QObject, public IocService
 {
     Q_OBJECT
     Q_PROPERTY(int language READ language WRITE switchLanguage NOTIFY languageChanged)
-    Q_PROPERTY(QStringList naturalLabels READ naturalLabels CONSTANT)
 
 public:
     explicit TranslationManager(QObject *parent = nullptr);
@@ -25,7 +24,7 @@ public:
     int language() const { return m_language; }
     QString localeName() const { return m_locale.name(); }
 
-    QStringList naturalLabels() const;
+    QStringList displayLabels() const;
 
     int getLanguageByName(const QString &langName) const;
 
