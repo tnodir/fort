@@ -2,41 +2,50 @@
 
 #include "fortwrk.h"
 
+#include <assert.h>
+
 #include "fortcb.h"
 
-static void NTAPI fort_worker_callback(PVOID device, PVOID context, PIO_WORKITEM item)
+static void NTAPI fort_worker_callback(PDEVICE_OBJECT device, PVOID context)
 {
     PFORT_WORKER worker = (PFORT_WORKER) context;
     const UCHAR id_bits = InterlockedAnd8(&worker->id_bits, 0);
 
     UNUSED(device);
-    UNUSED(item);
 
-    if (id_bits & FORT_WORKER_REAUTH) {
-        worker->reauth_func();
+    if (id_bits & (1 << FORT_WORKER_REAUTH)) {
+        worker->funcs[FORT_WORKER_REAUTH]();
     }
 
-    if (id_bits & FORT_WORKER_PSTREE) {
-        worker->pstree_func();
+    if (id_bits & (1 << FORT_WORKER_PSTREE)) {
+        worker->funcs[FORT_WORKER_PSTREE]();
     }
 }
 
-FORT_API void fort_worker_queue(PFORT_WORKER worker, UCHAR work_id, FORT_WORKER_FUNC worker_func)
+static void fort_worker_cancel(PFORT_WORKER worker)
 {
-    const UCHAR id_bits = InterlockedOr8(&worker->id_bits, work_id);
+    const UCHAR id_bits = InterlockedAnd8(&worker->id_bits, 0);
 
-    switch (work_id) {
-    case FORT_WORKER_REAUTH: {
-        worker->reauth_func = worker_func;
-    } break;
-    case FORT_WORKER_PSTREE: {
-        worker->pstree_func = worker_func;
-    } break;
-    }
+    LARGE_INTEGER timeout;
+    timeout.QuadPart = (id_bits != 0) ? -300 * 1000 * 10 : -100 * 1000 * 10; /* msecs */
+
+    KeDelayExecutionThread(KernelMode, FALSE, &timeout);
+}
+
+FORT_API void fort_worker_func_set(PFORT_WORKER worker, UCHAR work_id, FORT_WORKER_FUNC worker_func)
+{
+    NT_ASSERT(work_id >= 0 && work_id < FORT_WORKER_FUNC_COUNT);
+
+    worker->funcs[work_id] = worker_func;
+}
+
+FORT_API void fort_worker_queue(PFORT_WORKER worker, UCHAR work_id)
+{
+    const UCHAR id_bits = InterlockedOr8(&worker->id_bits, (1 << work_id));
 
     if (id_bits == 0) {
-        IoQueueWorkItemEx(worker->item,
-                FORT_CALLBACK(FORT_WORKER_CALLBACK, PIO_WORKITEM_ROUTINE_EX, fort_worker_callback),
+        IoQueueWorkItem(worker->item,
+                FORT_CALLBACK(FORT_WORKER_CALLBACK, PIO_WORKITEM_ROUTINE, fort_worker_callback),
                 DelayedWorkQueue, worker);
     }
 }
@@ -56,6 +65,9 @@ FORT_API NTSTATUS fort_worker_register(PDEVICE_OBJECT device, PFORT_WORKER worke
 FORT_API void fort_worker_unregister(PFORT_WORKER worker)
 {
     if (worker->item != NULL) {
+        fort_worker_cancel(worker);
+
         IoFreeWorkItem(worker->item);
+        worker->item = NULL;
     }
 }

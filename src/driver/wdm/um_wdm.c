@@ -239,6 +239,37 @@ BOOLEAN KeSetCoalescableTimer(
     return FALSE;
 }
 
+void KeInitializeEvent(PRKEVENT event, EVENT_TYPE type, BOOLEAN state)
+{
+    UNUSED(event);
+    UNUSED(type);
+    UNUSED(state);
+}
+
+void KeClearEvent(PRKEVENT event)
+{
+    UNUSED(event);
+}
+
+LONG KeSetEvent(PRKEVENT event, KPRIORITY increment, BOOLEAN wait)
+{
+    UNUSED(event);
+    UNUSED(increment);
+    UNUSED(wait);
+    return 0;
+}
+
+NTSTATUS KeWaitForSingleObject(PVOID object, KWAIT_REASON waitReason, KPROCESSOR_MODE waitMode,
+        BOOLEAN alertable, PLARGE_INTEGER timeout)
+{
+    UNUSED(object);
+    UNUSED(waitReason);
+    UNUSED(waitMode);
+    UNUSED(alertable);
+    UNUSED(timeout);
+    return STATUS_SUCCESS;
+}
+
 PIO_WORKITEM IoAllocateWorkItem(PDEVICE_OBJECT device)
 {
     UNUSED(device);
@@ -248,6 +279,15 @@ PIO_WORKITEM IoAllocateWorkItem(PDEVICE_OBJECT device)
 void IoFreeWorkItem(PIO_WORKITEM workItem)
 {
     UNUSED(workItem);
+}
+
+void IoQueueWorkItem(
+        PIO_WORKITEM workItem, PIO_WORKITEM_ROUTINE routine, int queueType, PVOID context)
+{
+    UNUSED(workItem);
+    UNUSED(routine);
+    UNUSED(queueType);
+    UNUSED(context);
 }
 
 void IoQueueWorkItemEx(

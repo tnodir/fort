@@ -158,9 +158,22 @@ typedef CALLBACK_FUNCTION *PCALLBACK_FUNCTION;
 typedef LONG KLOCK_QUEUE_HANDLE, *PKLOCK_QUEUE_HANDLE;
 typedef volatile LONG EX_SPIN_LOCK, *PEX_SPIN_LOCK;
 
+typedef LONG KEVENT, *PKEVENT, *PRKEVENT;
+
+typedef enum _EVENT_TYPE {
+    NotificationEvent,
+    SynchronizationEvent,
+} EVENT_TYPE;
+
+typedef enum _KWAIT_REASON {
+    Executive,
+} KWAIT_REASON;
+
 typedef LONG KTIMER, *PKTIMER;
 
 typedef LONG *PIO_WORKITEM;
+typedef VOID IO_WORKITEM_ROUTINE(PDEVICE_OBJECT DeviceObject, PVOID Context);
+typedef IO_WORKITEM_ROUTINE *PIO_WORKITEM_ROUTINE;
 typedef VOID IO_WORKITEM_ROUTINE_EX(PVOID IoObject, PVOID Context, PIO_WORKITEM IoWorkItem);
 typedef IO_WORKITEM_ROUTINE_EX *PIO_WORKITEM_ROUTINE_EX;
 
@@ -291,10 +304,19 @@ FORT_API BOOLEAN KeCancelTimer(PKTIMER timer);
 FORT_API BOOLEAN KeSetCoalescableTimer(
         PKTIMER timer, LARGE_INTEGER dueTime, ULONG period, ULONG tolerableDelay, PKDPC dpc);
 
+FORT_API void KeInitializeEvent(PRKEVENT event, EVENT_TYPE type, BOOLEAN state);
+FORT_API void KeClearEvent(PRKEVENT event);
+FORT_API LONG KeSetEvent(PRKEVENT event, KPRIORITY increment, BOOLEAN wait);
+
+FORT_API NTSTATUS KeWaitForSingleObject(PVOID object, KWAIT_REASON waitReason,
+        KPROCESSOR_MODE waitMode, BOOLEAN alertable, PLARGE_INTEGER timeout);
+
 FORT_API PIO_WORKITEM IoAllocateWorkItem(PDEVICE_OBJECT device);
 FORT_API void IoFreeWorkItem(PIO_WORKITEM workItem);
 
 #define DelayedWorkQueue 0
+FORT_API void IoQueueWorkItem(
+        PIO_WORKITEM workItem, PIO_WORKITEM_ROUTINE routine, int queueType, PVOID context);
 FORT_API void IoQueueWorkItemEx(
         PIO_WORKITEM workItem, PIO_WORKITEM_ROUTINE_EX routine, int queueType, PVOID context);
 

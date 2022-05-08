@@ -34,8 +34,8 @@ static void NTAPI fort_worker_reauth(void)
 
 FORT_API void NTAPI fort_app_period_timer(void)
 {
-    if (fort_conf_ref_period_update(&g_device->conf, FALSE, NULL)) {
-        fort_worker_queue(&g_device->worker, FORT_WORKER_REAUTH, &fort_worker_reauth);
+    if (fort_conf_ref_period_update(&g_device->conf, /*force=*/FALSE, /*periods_n=*/NULL)) {
+        fort_worker_queue(&g_device->worker, FORT_WORKER_REAUTH);
     }
 }
 
@@ -308,6 +308,9 @@ FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device)
 
     RtlZeroMemory(fort_device(), sizeof(FORT_DEVICE));
 
+    fort_worker_func_set(&fort_device()->worker, FORT_WORKER_REAUTH, &fort_worker_reauth);
+    fort_worker_func_set(&fort_device()->worker, FORT_WORKER_PSTREE, &fort_pstree_enum_processes);
+
     fort_device_conf_open(&fort_device()->conf);
     fort_buffer_open(&fort_device()->buffer);
     fort_stat_open(&fort_device()->stat);
@@ -320,7 +323,7 @@ FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device)
     {
         fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_PROV_BOOT, fort_prov_is_boot());
 
-        fort_prov_unregister(0);
+        fort_prov_unregister(NULL);
     }
 
     /* Install callouts */
@@ -350,7 +353,7 @@ FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device)
 
     /* Enumerate processes in background */
     if (NT_SUCCESS(status)) {
-        fort_worker_queue(&fort_device()->worker, FORT_WORKER_PSTREE, &fort_pstree_enum_processes);
+        fort_worker_queue(&fort_device()->worker, FORT_WORKER_PSTREE);
     }
 
     return status;
@@ -376,7 +379,7 @@ FORT_API void fort_device_unload()
     fort_syscb_time_unregister();
 
     if (!fort_device_flag(&fort_device()->conf, FORT_DEVICE_PROV_BOOT)) {
-        fort_prov_unregister(0);
+        fort_prov_unregister(NULL);
     }
 
     fort_callout_remove();
