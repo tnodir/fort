@@ -14,6 +14,7 @@ typedef void(NTAPI *FORT_WORKER_FUNC)(void);
 typedef struct fort_worker
 {
     UCHAR volatile id_bits;
+    SHORT volatile queue_size;
 
     PIO_WORKITEM item;
 

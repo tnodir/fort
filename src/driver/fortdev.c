@@ -364,20 +364,29 @@ FORT_API void fort_device_unload()
     if (fort_device() == NULL)
         return;
 
-    fort_callout_defer_flush();
-
-    fort_pstree_close(&fort_device()->ps_tree);
-    fort_timer_close(&fort_device()->app_timer);
-    fort_timer_close(&fort_device()->log_timer);
-    fort_defer_close(&fort_device()->defer);
-    fort_stat_close(&fort_device()->stat);
-    fort_buffer_close(&fort_device()->buffer);
-
-    fort_worker_unregister(&fort_device()->worker);
-
+    /* Stop system notifiers */
     fort_syscb_power_unregister();
     fort_syscb_time_unregister();
 
+    /* Stop timers */
+    fort_timer_close(&fort_device()->app_timer);
+    fort_timer_close(&fort_device()->log_timer);
+
+    /* Stop worker threads */
+    fort_worker_unregister(&fort_device()->worker);
+
+    /* Stop process monitor */
+    fort_pstree_close(&fort_device()->ps_tree);
+
+    /* Stop callout defers */
+    fort_callout_defer_flush();
+    fort_defer_close(&fort_device()->defer);
+
+    /* Stop stat & buffer controllers */
+    fort_stat_close(&fort_device()->stat);
+    fort_buffer_close(&fort_device()->buffer);
+
+    /* Stop provider & callouts */
     if (!fort_device_flag(&fort_device()->conf, FORT_DEVICE_PROV_BOOT)) {
         fort_prov_unregister(NULL);
     }
