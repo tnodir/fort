@@ -36,12 +36,12 @@ public:
     QString statPath() const { return m_statPath; }
     QString statFilePath() const;
 
-    QString logsPath() const { return m_logsPath; }
-
     QString cachePath() const { return m_cachePath; }
     QString cacheFilePath() const;
 
     QString userPath() const { return m_userPath; }
+
+    QString logsPath() const { return m_logsPath; }
 
     QString controlCommand() const { return m_controlCommand; }
 
@@ -67,7 +67,7 @@ public:
     bool canMigrate(QString &viaVersion) const;
 
     static bool isPortable();
-    static QString defaultProfilePath(bool hasService);
+    static QString defaultProfilePath(bool isService);
 
 signals:
     void passwordCheckedChanged();
@@ -99,9 +99,9 @@ private:
     QString m_defaultLanguage;
     QString m_profilePath;
     QString m_statPath;
-    QString m_logsPath;
     QString m_cachePath;
     QString m_userPath;
+    QString m_logsPath;
     QString m_controlCommand;
     QStringList m_args;
 

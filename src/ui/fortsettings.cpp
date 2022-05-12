@@ -113,9 +113,9 @@ void FortSettings::setupGlobal()
 
     m_profilePath = settings.value("global/profileDir").toString();
     m_statPath = settings.value("global/statDir").toString();
-    m_logsPath = settings.value("global/logsDir").toString();
     m_cachePath = settings.value("global/cacheDir").toString();
     m_userPath = settings.value("global/userDir").toString();
+    m_logsPath = settings.value("global/logsDir").toString();
 }
 
 void FortSettings::initialize(const QStringList &args, EnvManager *envManager)
@@ -140,11 +140,11 @@ void FortSettings::processArguments(const QStringList &args)
     const QCommandLineOption statOption("stat", "Directory to store statistics.", "stat");
     parser.addOption(statOption);
 
-    const QCommandLineOption logsOption("logs", "Directory to store logs.", "logs");
-    parser.addOption(logsOption);
-
     const QCommandLineOption cacheOption("cache", "Directory to store cache.", "cache");
     parser.addOption(cacheOption);
+
+    const QCommandLineOption logsOption("logs", "Directory to store logs.", "logs");
+    parser.addOption(logsOption);
 
     const QCommandLineOption uninstallOption("u", "Uninstall booted provider and startup entries.");
     parser.addOption(uninstallOption);
@@ -196,14 +196,14 @@ void FortSettings::processArguments(const QStringList &args)
         m_statPath = parser.value(statOption);
     }
 
-    // Logs Path
-    if (parser.isSet(logsOption)) {
-        m_logsPath = parser.value(logsOption);
-    }
-
     // Cache Path
     if (parser.isSet(cacheOption)) {
         m_cachePath = parser.value(cacheOption);
+    }
+
+    // Logs Path
+    if (parser.isSet(logsOption)) {
+        m_logsPath = parser.value(logsOption);
     }
 
     // Control command
@@ -232,13 +232,6 @@ void FortSettings::setupPaths(EnvManager *envManager)
         m_statPath = expandPath(m_statPath, envManager);
     }
 
-    // Logs Path
-    if (m_logsPath.isEmpty()) {
-        m_logsPath = m_profilePath + "logs/";
-    } else {
-        m_logsPath = expandPath(m_logsPath, envManager);
-    }
-
     // Cache Path
     if (m_cachePath.isEmpty()) {
         m_cachePath = m_profilePath + "cache/";
@@ -248,9 +241,16 @@ void FortSettings::setupPaths(EnvManager *envManager)
 
     // User Settings Path
     if (m_userPath.isEmpty()) {
-        m_userPath = defaultProfilePath(false);
+        m_userPath = defaultProfilePath(isService());
     } else {
         m_userPath = expandPath(m_userPath, envManager);
+    }
+
+    // Logs Path
+    if (m_logsPath.isEmpty()) {
+        m_logsPath = m_userPath + "logs/";
+    } else {
+        m_logsPath = expandPath(m_logsPath, envManager);
     }
 }
 
@@ -281,7 +281,7 @@ bool FortSettings::isPortable()
     return g_isPortable;
 }
 
-QString FortSettings::defaultProfilePath(bool hasService)
+QString FortSettings::defaultProfilePath(bool isService)
 {
     // Is portable?
     if (isPortable()) {
@@ -289,7 +289,7 @@ QString FortSettings::defaultProfilePath(bool hasService)
     }
 
     // Is service?
-    if (hasService) {
+    if (isService) {
         const QString servicePath =
                 FileUtil::expandPath(QLatin1String("%ProgramData%\\") + APP_NAME);
         return pathSlash(servicePath);
