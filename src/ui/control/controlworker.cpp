@@ -18,8 +18,10 @@ bool buildArgsData(QByteArray &buffer, const QVariantList &args, bool &compresse
     if (argsCount == 0)
         return true;
 
-    if (argsCount > commandMaxArgs)
+    if (argsCount > commandMaxArgs) {
+        qCWarning(LC) << "Bad build args count:" << argsCount;
         return false;
+    }
 
     QByteArray data;
     {
@@ -56,8 +58,10 @@ bool parseArgsData(const QByteArray &buffer, QVariantList &args, bool compressed
     qint8 argsCount;
     stream >> argsCount;
 
-    if (argsCount > commandMaxArgs)
+    if (argsCount > commandMaxArgs) {
+        qCWarning(LC) << "Bad parse args count:" << argsCount;
         return false;
+    }
 
     while (--argsCount >= 0) {
         QVariant arg;
@@ -200,8 +204,10 @@ bool ControlWorker::readRequest()
             return true; // need more data
 
         const QByteArray data = socket()->read(bytesNeeded);
-        if (data.isEmpty())
+        if (data.isEmpty()) {
+            qCWarning(LC) << "Bad request: empty";
             return false;
+        }
 
         m_requestBuffer += data;
 
