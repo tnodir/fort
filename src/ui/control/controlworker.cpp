@@ -12,6 +12,12 @@ constexpr int commandMaxArgs = 16;
 constexpr int commandArgMaxSize = 4 * 1024;
 constexpr quint32 dataMaxSize = 1 * 1024 * 1024;
 
+quint32 nextWorkerId()
+{
+    static quint32 g_workerId = 0;
+    return ++g_workerId;
+}
+
 bool buildArgsData(QByteArray &buffer, const QVariantList &args, bool &compressed)
 {
     const int argsCount = args.count();
@@ -80,13 +86,9 @@ ControlWorker::ControlWorker(QLocalSocket *socket, QObject *parent) :
     m_isServiceClient(false),
     m_isClientValidated(false),
     m_isTryReconnect(false),
+    m_id(nextWorkerId()),
     m_socket(socket)
 {
-}
-
-int ControlWorker::id() const
-{
-    return int(socket()->socketDescriptor());
 }
 
 bool ControlWorker::isConnected() const

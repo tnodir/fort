@@ -24,9 +24,10 @@ public:
     bool isTryReconnect() const { return m_isTryReconnect; }
     void setIsTryReconnect(bool v) { m_isTryReconnect = v; }
 
+    quint32 id() const { return m_id; }
+
     QLocalSocket *socket() const { return m_socket; }
 
-    int id() const;
     bool isConnected() const;
     QString errorString() const;
 
@@ -92,6 +93,8 @@ private:
     bool m_isServiceClient : 1;
     bool m_isClientValidated : 1;
     bool m_isTryReconnect : 1;
+
+    const quint32 m_id = 0;
 
     RequestHeader m_requestHeader;
     QByteArray m_requestBuffer;
