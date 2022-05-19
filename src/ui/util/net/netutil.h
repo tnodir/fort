@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QString>
 
+#include <common/common_types.h>
+
 class NetUtil
 {
 public:
@@ -12,6 +14,12 @@ public:
 
     // Convert IPv4 address from number to text
     static QString ip4ToText(quint32 ip);
+
+    // Convert IPv6 address from text to number
+    static ip6_addr_t textToIp6(const QString &text, bool *ok = nullptr);
+
+    // Convert IPv6 address from number to text
+    static QString ip6ToText(ip6_addr_t ip);
 
     // Get IPv4 address mask
     static int ip4Mask(quint32 ip);

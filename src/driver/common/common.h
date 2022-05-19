@@ -1,6 +1,8 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include "common_types.h"
+
 #if defined(FORT_DRIVER)
 #    define NDIS_WDM 1
 #    define NDIS630  1
@@ -14,8 +16,8 @@
 
 #    define _KRPCENV_ /* To include winerror.h */
 
-#    include <ntifs.h>
 #    include <ntddk.h>
+#    include <ntifs.h>
 #    include <winerror.h>
 
 #    include <fwpmk.h>
@@ -23,6 +25,7 @@
 #    include <ntrxdef.h>
 #    include <stddef.h>
 #else
+#    undef _WIN32_WINNT
 #    define _WIN32_WINNT 0x0601
 #    define WIN32_LEAN_AND_MEAN
 #    include <windows.h>
@@ -42,8 +45,6 @@
 #if 0
 #    define FORT_BIG_ENDIAN 1
 #endif
-
-#define UNUSED(p) ((void) (p))
 
 #if defined(FORT_DRIVER)
 #    define LOG(...) DbgPrintEx(DPFLTR_SYSTEM_ID, DPFLTR_ERROR_LEVEL, "FORT: " __VA_ARGS__)

@@ -29,6 +29,13 @@ TEST_F(NetUtilTest, ip4Text)
     ASSERT_EQ(NetUtil::ip4ToText(NetUtil::textToIp4(ip4Str)), ip4Str);
 }
 
+TEST_F(NetUtilTest, ip6Text)
+{
+    const QString ip6Str("::1");
+
+    ASSERT_EQ(NetUtil::ip6ToText(NetUtil::textToIp6(ip6Str)), ip6Str);
+}
+
 TEST_F(NetUtilTest, ip4Ranges)
 {
     Ip4Range ip4Range;

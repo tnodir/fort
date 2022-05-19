@@ -14,32 +14,58 @@ struct sock_addr
     int addrlen;
 };
 
-#define MAX_IPV4_LEN  20
+#define MAX_IPV4_LEN  16
+#define MAX_IPV6_LEN  40
 #define SOCK_ADDR_LEN offsetof(struct sock_addr, addrlen)
 
 #define sock_addr_get_inp(sap) ((void *) &(sap)->u.in.sin_addr)
 
 quint32 NetUtil::textToIp4(const QString &text, bool *ok)
 {
-    quint32 ip4 = 0;
-    void *p = &ip4;
+    quint32 ip4;
 
-    const bool res = InetPtonW(AF_INET, (PCWSTR) text.utf16(), p) == 1;
+    const bool res = InetPtonW(AF_INET, (PCWSTR) text.utf16(), &ip4) == 1;
 
     if (ok) {
         *ok = res;
+    } else if (!res) {
+        ip4 = 0;
     }
 
-    return ntohl(*((unsigned long *) p));
+    return ntohl(*((unsigned long *) &ip4));
 }
 
 QString NetUtil::ip4ToText(quint32 ip)
 {
     quint32 ip4 = htonl((unsigned long) ip);
-    const void *p = &ip4;
     wchar_t buf[MAX_IPV4_LEN];
 
-    if (!InetNtopW(AF_INET, (PVOID) p, buf, MAX_IPV4_LEN))
+    if (!InetNtopW(AF_INET, (PVOID) &ip4, buf, MAX_IPV4_LEN))
+        return QString();
+
+    return QString::fromWCharArray(buf);
+}
+
+ip6_addr_t NetUtil::textToIp6(const QString &text, bool *ok)
+{
+    ip6_addr_t ip6;
+
+    const bool res = InetPtonW(AF_INET6, (PCWSTR) text.utf16(), &ip6) == 1;
+
+    if (ok) {
+        *ok = res;
+    } else if (!res) {
+        memset(&ip6, 0, sizeof(ip6));
+    }
+
+    return ip6;
+}
+
+QString NetUtil::ip6ToText(ip6_addr_t ip)
+{
+    wchar_t buf[MAX_IPV6_LEN];
+
+    if (!InetNtopW(AF_INET6, (PVOID) &ip, buf, MAX_IPV6_LEN))
         return QString();
 
     return QString::fromWCharArray(buf);

@@ -8,6 +8,7 @@ SOURCES += \
 
 HEADERS += \
     $$PWD/common/common.h \
+    $$PWD/common/common_types.h \
     $$PWD/common/fortconf.h \
     $$PWD/common/fortdef.h \
     $$PWD/common/fortioctl.h \
