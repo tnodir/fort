@@ -127,7 +127,7 @@ QString NetUtil::getHostName(const QString &address)
     return QString::fromWCharArray(hostName);
 }
 
-QStringList NetUtil::localIpv4Networks()
+QStringList NetUtil::localIpNetworks()
 {
     static QStringList list = QStringList()
             << "0.0.0.0/32" // non-routable meta-address
@@ -139,6 +139,20 @@ QStringList NetUtil::localIpv4Networks()
             << "192.168.0.0/16"
             << "239.255.255.250/32" // IP Multicast for DLNA/UPNP
             << "255.255.255.255/32" // IP Broadcast
+            << "::/0" // non-routable meta-address
+            << "::/128"
+            << "::1/128" // Localhost
+            << "::ffff:0:0/96"
+            << "::ffff:0:0:0/96"
+            << "64:ff9b::/96"
+            << "100::/64"
+            << "2001::/32" // Global Unique Addresses (GUA) - Routable IPv6 addresses
+            << "2001:20::/28"
+            << "2001:db8::/32" // Documentation prefix used for examples
+            << "2002::/16"
+            << "fc00::/7" // Unique Local Addresses (ULA) - also known as “Private” IPv6 addresses
+            << "fe80::/10" // Link Local addresses, only valid inside a single broadcast domain
+            << "ff00::/8" // Multicast addresses
             ;
 
     return list;

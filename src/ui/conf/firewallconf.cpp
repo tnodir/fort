@@ -244,7 +244,7 @@ void FirewallConf::applyAppGroupBits()
 void FirewallConf::setupDefaultAddressGroups()
 {
     AddressGroup *inetGroup = inetAddressGroup();
-    inetGroup->setExcludeText(NetUtil::localIpv4Networks().join('\n'));
+    inetGroup->setExcludeText(NetUtil::localIpNetworks().join('\n'));
 }
 
 void FirewallConf::setupAddressGroups()
