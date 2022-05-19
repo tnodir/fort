@@ -259,6 +259,11 @@ void RpcManager::setUp()
     }
 }
 
+void RpcManager::tearDown()
+{
+    closeClient();
+}
+
 void RpcManager::setupServerSignals()
 {
     setupAppInfoManagerSignals();
@@ -363,7 +368,18 @@ void RpcManager::setupClient()
     auto controlManager = IoC()->setUpDependency<ControlManager>();
 
     m_client = controlManager->newServiceClient(this);
+    client()->setIsTryReconnect(true);
+
     invokeOnServer(Control::Rpc_RpcManager_initClient);
+}
+
+void RpcManager::closeClient()
+{
+    if (!client())
+        return;
+
+    client()->setIsTryReconnect(false);
+    client()->close();
 }
 
 bool RpcManager::waitResult()
@@ -385,16 +401,16 @@ void RpcManager::sendResult(ControlWorker *w, bool ok, const QVariantList &args)
 
 bool RpcManager::invokeOnServer(Control::Command cmd, const QVariantList &args)
 {
-    return client()->sendCommand(cmd, args);
-}
-
-bool RpcManager::doOnServer(Control::Command cmd, const QVariantList &args, QVariantList *resArgs)
-{
     if (!client()->isConnected()) {
         IoC<WindowManager>()->showErrorBox(tr("Service isn't available."));
         return false;
     }
 
+    return client()->sendCommand(cmd, args);
+}
+
+bool RpcManager::doOnServer(Control::Command cmd, const QVariantList &args, QVariantList *resArgs)
+{
     if (!invokeOnServer(cmd, args))
         return false;
 

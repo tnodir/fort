@@ -23,6 +23,7 @@ public:
     ControlWorker *client() const { return m_client; }
 
     void setUp() override;
+    void tearDown() override;
 
     bool waitResult();
     void sendResult(ControlWorker *w, bool ok, const QVariantList &args = {});
@@ -43,6 +44,7 @@ private:
     void setupTaskManagerSignals();
 
     void setupClient();
+    void closeClient();
 
     void invokeOnClients(Control::Command cmd, const QVariantList &args = {});
 

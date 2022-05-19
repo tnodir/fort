@@ -30,8 +30,6 @@ bool DriverManagerRpc::openDevice()
 
 bool DriverManagerRpc::closeDevice()
 {
-    IoC<RpcManager>()->client()->close();
-
     updateState(0, false);
 
     return false;

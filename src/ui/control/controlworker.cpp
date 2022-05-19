@@ -76,7 +76,11 @@ bool parseArgsData(const QByteArray &buffer, QVariantList &args, bool compressed
 }
 
 ControlWorker::ControlWorker(QLocalSocket *socket, QObject *parent) :
-    QObject(parent), m_isServiceClient(false), m_isClientValidated(false), m_socket(socket)
+    QObject(parent),
+    m_isServiceClient(false),
+    m_isClientValidated(false),
+    m_isTryReconnect(false),
+    m_socket(socket)
 {
 }
 
@@ -99,25 +103,49 @@ void ControlWorker::setupForAsync()
 {
     socket()->setParent(this);
 
-    connect(socket(), &QLocalSocket::disconnected, this, &ControlWorker::disconnected);
     connect(socket(), &QLocalSocket::errorOccurred, this,
             [&](QLocalSocket::LocalSocketError socketError) {
                 qCWarning(LC) << "Client error:" << id() << socketError << errorString();
                 close();
             });
+    connect(socket(), &QLocalSocket::disconnected, this, &ControlWorker::onDisconnected);
     connect(socket(), &QLocalSocket::readyRead, this, &ControlWorker::processRequest);
 }
 
-bool ControlWorker::connectToServer(const QString &name)
+void ControlWorker::setServerName(const QString &name)
 {
-    socket()->connectToServer(name);
-    return socket()->waitForConnected(100) && socket()->state() == QLocalSocket::ConnectedState;
+    socket()->setServerName(name);
+}
+
+bool ControlWorker::connectToServer()
+{
+    socket()->connectToServer();
+
+    if (!socket()->waitForConnected(150)) {
+        qCWarning(LC) << "Connection error:" << socket()->state() << socket()->errorString();
+        return false;
+    }
+
+    if (socket()->state() != QLocalSocket::ConnectedState) {
+        qCWarning(LC) << "Connection state error:" << socket()->state();
+        return false;
+    }
+
+    return true;
 }
 
 void ControlWorker::close()
 {
     socket()->abort();
     socket()->close();
+}
+
+void ControlWorker::onDisconnected()
+{
+    if (isTryReconnect() && connectToServer())
+        return;
+
+    emit disconnected();
 }
 
 QByteArray ControlWorker::buildCommandData(Control::Command command, const QVariantList &args)

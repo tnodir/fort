@@ -21,6 +21,9 @@ public:
     bool isClientValidated() const { return m_isClientValidated; }
     void setIsClientValidated(bool v) { m_isClientValidated = v; }
 
+    bool isTryReconnect() const { return m_isTryReconnect; }
+    void setIsTryReconnect(bool v) { m_isTryReconnect = v; }
+
     QLocalSocket *socket() const { return m_socket; }
 
     int id() const;
@@ -29,7 +32,8 @@ public:
 
     void setupForAsync();
 
-    bool connectToServer(const QString &name);
+    void setServerName(const QString &name);
+    bool connectToServer();
 
     static QByteArray buildCommandData(Control::Command command, const QVariantList &args = {});
     bool sendCommandData(const QByteArray &commandData);
@@ -49,6 +53,7 @@ public slots:
     void close();
 
 private slots:
+    void onDisconnected();
     void processRequest();
 
 private:
@@ -86,6 +91,7 @@ protected:
 private:
     bool m_isServiceClient : 1;
     bool m_isClientValidated : 1;
+    bool m_isTryReconnect : 1;
 
     RequestHeader m_requestHeader;
     QByteArray m_requestBuffer;

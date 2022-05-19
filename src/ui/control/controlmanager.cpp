@@ -21,6 +21,8 @@
 
 namespace {
 
+constexpr int maxClientsCount = 9;
+
 const QLoggingCategory LC("control");
 
 }
@@ -52,9 +54,9 @@ ControlWorker *ControlManager::newServiceClient(QObject *parent) const
 
     connect(w, &ControlWorker::requestReady, this, &ControlManager::processRequest);
 
-    if (!w->connectToServer(getServerName(true))) {
-        qCWarning(LC) << "Server connect error:" << socket->state() << socket->errorString();
-    }
+    w->setServerName(getServerName(/*isService=*/true));
+    w->connectToServer();
+
     return w;
 }
 
@@ -64,7 +66,7 @@ bool ControlManager::listen()
 
     Q_ASSERT(!m_server);
     m_server = new QLocalServer(this);
-    m_server->setMaxPendingConnections(3);
+    m_server->setMaxPendingConnections(maxClientsCount);
     m_server->setSocketOptions(
             settings->isService() ? QLocalServer::WorldAccessOption : QLocalServer::NoOptions);
 
@@ -94,10 +96,9 @@ bool ControlManager::postCommand()
     ControlWorker w(&socket);
 
     // Connect to server
-    if (!w.connectToServer(getServerName())) {
-        qCWarning(LC) << "Connect to server error:" << socket.errorString();
+    w.setServerName(getServerName(/*isService=*/false));
+    if (!w.connectToServer())
         return false;
-    }
 
     // Send data
     const QVariantList args = ControlWorker::buildArgs(settings->args());
@@ -110,9 +111,8 @@ bool ControlManager::postCommand()
 void ControlManager::onNewConnection()
 {
     while (QLocalSocket *socket = m_server->nextPendingConnection()) {
-        constexpr int maxClientsCount = 9;
         if (m_clients.size() > maxClientsCount) {
-            qCDebug(LC) << "Client dropped";
+            qCDebug(LC) << "Client dropped: Count limit";
             delete socket;
             continue;
         }
