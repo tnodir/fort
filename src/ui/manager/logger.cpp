@@ -13,7 +13,7 @@ namespace {
 const QLoggingCategory LC("logger");
 
 constexpr int LOGGER_FILE_MAX_SIZE = 1024 * 1024;
-constexpr int LOGGER_KEEP_FILES = 7;
+constexpr int LOGGER_KEEP_FILES = 9;
 
 QtMessageHandler g_oldMessageHandler = nullptr;
 
