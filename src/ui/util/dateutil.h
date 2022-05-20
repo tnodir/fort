@@ -2,6 +2,7 @@
 #define DATEUTIL_H
 
 #include <QDateTime>
+#include <QLocale>
 #include <QObject>
 #include <QString>
 

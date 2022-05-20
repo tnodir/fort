@@ -432,9 +432,9 @@ void ConfManager::updateAppEndTimer()
     if (endTimeMsecs != 0) {
         const qint64 currentMsecs = QDateTime::currentMSecsSinceEpoch();
         const qint64 deltaMsecs = endTimeMsecs - currentMsecs;
-        const int interval =
-                qMax((deltaMsecs > 0 ? qMin(deltaMsecs, APP_END_TIMER_INTERVAL_MAX) : 0),
-                        APP_END_TIMER_INTERVAL_MIN);
+        const int interval = qMax(
+                (deltaMsecs > 0 ? int(qMin(deltaMsecs, qint64(APP_END_TIMER_INTERVAL_MAX))) : 0),
+                APP_END_TIMER_INTERVAL_MIN);
 
         m_appEndTimer.start(interval);
     } else {
