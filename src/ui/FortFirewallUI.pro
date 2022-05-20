@@ -146,7 +146,7 @@ SOURCES += \
     util/model/stringlistmodel.cpp \
     util/model/tableitemmodel.cpp \
     util/model/tablesqlmodel.cpp \
-    util/net/ip4range.cpp \
+    util/net/iprange.cpp \
     util/net/netdownloader.cpp \
     util/net/netutil.cpp \
     util/osutil.cpp \
@@ -308,7 +308,7 @@ HEADERS += \
     util/model/stringlistmodel.h \
     util/model/tableitemmodel.h \
     util/model/tablesqlmodel.h \
-    util/net/ip4range.h \
+    util/net/iprange.h \
     util/net/netdownloader.h \
     util/net/netutil.h \
     util/osutil.h \

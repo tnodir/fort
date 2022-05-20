@@ -38,6 +38,8 @@ void EnvManager::onEnvironmentChanged()
 
 QString EnvManager::expandStringRecursive(const QString &text, quint16 callLevel)
 {
+    static const QRegularExpression re("%([^%]+)%");
+
     if (!text.contains(QLatin1Char('%')))
         return text;
 
@@ -47,7 +49,6 @@ QString EnvManager::expandStringRecursive(const QString &text, quint16 callLevel
 
     QString res = text;
 
-    QRegularExpression re("%([^%]+)%");
     auto i = re.globalMatch(text);
 
     while (i.hasNext()) {

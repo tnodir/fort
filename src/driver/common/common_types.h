@@ -3,7 +3,7 @@
 
 typedef struct ip6_addr_t
 {
-    unsigned short word[8];
+    char data[16];
 } ip6_addr_t;
 
 #define UNUSED(p) ((void) (p))

@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QVariant>
 
-#include <util/net/ip4range.h>
+#include <util/net/iprange.h>
 
 class AddressRange
 {
@@ -26,11 +26,11 @@ public:
     quint32 excludeZones() const { return m_excludeZones; }
     void setExcludeZones(quint32 v) { m_excludeZones = v; }
 
-    Ip4Range &includeRange() { return m_includeRange; }
-    Ip4Range &excludeRange() { return m_excludeRange; }
+    IpRange &includeRange() { return m_includeRange; }
+    IpRange &excludeRange() { return m_excludeRange; }
 
-    const Ip4Range &includeRange() const { return m_includeRange; }
-    const Ip4Range &excludeRange() const { return m_excludeRange; }
+    const IpRange &includeRange() const { return m_includeRange; }
+    const IpRange &excludeRange() const { return m_excludeRange; }
 
 private:
     bool m_includeAll : 1;
@@ -39,8 +39,8 @@ private:
     quint32 m_includeZones = 0;
     quint32 m_excludeZones = 0;
 
-    Ip4Range m_includeRange;
-    Ip4Range m_excludeRange;
+    IpRange m_includeRange;
+    IpRange m_excludeRange;
 };
 
 #endif // ADDRESSRANGE_H

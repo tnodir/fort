@@ -12,7 +12,7 @@
 #include <manager/envmanager.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
-#include <util/net/ip4range.h>
+#include <util/net/iprange.h>
 #include <util/stringutil.h>
 
 #include "confappswalker.h"
@@ -158,9 +158,9 @@ int ConfUtil::writeVersion(QByteArray &buf)
     return verSize;
 }
 
-int ConfUtil::writeZone(const Ip4Range &ip4Range, QByteArray &buf)
+int ConfUtil::writeZone(const IpRange &ip4Range, QByteArray &buf)
 {
-    const int addrSize = FORT_CONF_ADDR_LIST_SIZE(ip4Range.ipSize(), ip4Range.pairSize());
+    const int addrSize = FORT_CONF_ADDR_LIST_SIZE(ip4Range.ip4Size(), ip4Range.pair4Size());
 
     buf.reserve(addrSize);
 
@@ -220,7 +220,7 @@ int ConfUtil::writeZoneFlag(int zoneId, bool enabled, QByteArray &buf)
     return flagSize;
 }
 
-bool ConfUtil::loadZone(const QByteArray &buf, Ip4Range &ip4Range)
+bool ConfUtil::loadZone(const QByteArray &buf, IpRange &ip4Range)
 {
     const uint bufSize = buf.size();
     if (bufSize < FORT_CONF_ADDR_LIST_OFF)
@@ -232,13 +232,13 @@ bool ConfUtil::loadZone(const QByteArray &buf, Ip4Range &ip4Range)
     if (bufSize < FORT_CONF_ADDR_LIST_SIZE(addr_list->ip_n, addr_list->pair_n))
         return false;
 
-    ip4Range.ipArray().resize(addr_list->ip_n);
-    ip4Range.pairFromArray().resize(addr_list->pair_n);
-    ip4Range.pairToArray().resize(addr_list->pair_n);
+    ip4Range.ip4Array().resize(addr_list->ip_n);
+    ip4Range.pair4FromArray().resize(addr_list->pair_n);
+    ip4Range.pair4ToArray().resize(addr_list->pair_n);
 
-    loadLongs(&data, ip4Range.ipArray());
-    loadLongs(&data, ip4Range.pairFromArray());
-    loadLongs(&data, ip4Range.pairToArray());
+    loadLongs(&data, ip4Range.ip4Array());
+    loadLongs(&data, ip4Range.pair4FromArray());
+    loadLongs(&data, ip4Range.pair4ToArray());
 
     return true;
 }
@@ -272,11 +272,11 @@ bool ConfUtil::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
             return false;
         }
 
-        const int incIpSize = addressRange.includeRange().ipSize();
-        const int incPairSize = addressRange.includeRange().pairSize();
+        const int incIpSize = addressRange.includeRange().ip4Size();
+        const int incPairSize = addressRange.includeRange().pair4Size();
 
-        const int excIpSize = addressRange.excludeRange().ipSize();
-        const int excPairSize = addressRange.excludeRange().pairSize();
+        const int excIpSize = addressRange.excludeRange().ip4Size();
+        const int excPairSize = addressRange.excludeRange().pair4Size();
 
         if ((incIpSize + incPairSize) > FORT_CONF_IP_MAX
                 || (excIpSize + excPairSize) > FORT_CONF_IP_MAX) {
@@ -605,18 +605,18 @@ void ConfUtil::writeAddressRange(char **data, const AddressRange &addressRange)
     writeAddressList(data, addressRange.excludeRange());
 }
 
-void ConfUtil::writeAddressList(char **data, const Ip4Range &ip4Range)
+void ConfUtil::writeAddressList(char **data, const IpRange &ip4Range)
 {
     PFORT_CONF_ADDR_LIST addrList = PFORT_CONF_ADDR_LIST(*data);
 
-    addrList->ip_n = quint32(ip4Range.ipSize());
-    addrList->pair_n = quint32(ip4Range.pairSize());
+    addrList->ip_n = quint32(ip4Range.ip4Size());
+    addrList->pair_n = quint32(ip4Range.pair4Size());
 
     *data += FORT_CONF_ADDR_LIST_OFF;
 
-    writeLongs(data, ip4Range.ipArray());
-    writeLongs(data, ip4Range.pairFromArray());
-    writeLongs(data, ip4Range.pairToArray());
+    writeLongs(data, ip4Range.ip4Array());
+    writeLongs(data, ip4Range.pair4FromArray());
+    writeLongs(data, ip4Range.pair4ToArray());
 }
 
 void ConfUtil::writeApps(char **data, const appentry_map_t &apps, bool useHeader)

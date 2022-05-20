@@ -7,7 +7,7 @@
 
 #include <util/conf/confutil.h>
 #include <util/fileutil.h>
-#include <util/net/ip4range.h>
+#include <util/net/iprange.h>
 #include <util/net/netdownloader.h>
 #include <util/stringutil.h>
 
@@ -99,7 +99,7 @@ StringViewList TaskZoneDownloader::parseAddresses(const QString &text, QString &
 
 bool TaskZoneDownloader::storeAddresses(const StringViewList &list)
 {
-    Ip4Range ip4Range;
+    IpRange ip4Range;
     if (!ip4Range.fromList(list, emptyNetMask(), sort())) {
         qCWarning(LC) << "TaskZoneDownloader:" << zoneName() << ":"
                       << ip4Range.errorLineAndMessage();
@@ -149,7 +149,7 @@ bool TaskZoneDownloader::saveAddressesAsText(const QString &filePath)
 
     if (loadAddresses() && !zoneData().isEmpty()) {
         ConfUtil confUtil;
-        Ip4Range ip4Range;
+        IpRange ip4Range;
         if (!confUtil.loadZone(zoneData(), ip4Range))
             return false;
 
