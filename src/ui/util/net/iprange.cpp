@@ -7,6 +7,43 @@
 
 #include "netutil.h"
 
+namespace {
+
+int compareIp6(const ip6_addr_t &l, const ip6_addr_t &r)
+{
+    return memcmp(&l, &r, sizeof(ip6_addr_t));
+}
+
+void sortIp6Array(ip6_arr_t &array)
+{
+    std::sort(array.begin(), array.end(), compareIp6);
+}
+
+void sortIp6PairArray(ip6_arr_t &fromArray, ip6_arr_t &toArray)
+{
+    Q_ASSERT(fromArray.size() == toArray.size());
+
+    const int arraySize = fromArray.size();
+
+    ip6_pair_arr_t pairArray;
+    pairArray.reserve(arraySize);
+
+    for (int i = 0; i < arraySize; ++i) {
+        pairArray.append(Ip6Pair { fromArray[i], toArray[i] });
+    }
+
+    std::sort(pairArray.begin(), pairArray.end(),
+            [](const Ip6Pair &l, const Ip6Pair &r) { return compareIp6(l.from, r.from); });
+
+    for (int i = 0; i < arraySize; ++i) {
+        const Ip6Pair &pair = pairArray[i];
+        fromArray[i] = pair.from;
+        toArray[i] = pair.to;
+    }
+}
+
+}
+
 IpRange::IpRange(QObject *parent) : QObject(parent) { }
 
 void IpRange::clear()
@@ -88,8 +125,6 @@ bool IpRange::fromText(const QString &text)
 
 bool IpRange::fromList(const StringViewList &list, int emptyNetMask, bool sort)
 {
-    Q_UNUSED(sort); // TODO: Sort parsed IP addresses
-
     clear();
 
     ip4range_map_t ip4RangeMap;
@@ -110,6 +145,11 @@ bool IpRange::fromList(const StringViewList &list, int emptyNetMask, bool sort)
     }
 
     fillIp4Range(ip4RangeMap, pair4Size);
+
+    if (sort) {
+        sortIp6Array(m_ip6Array);
+        sortIp6PairArray(m_pair6FromArray, m_pair6ToArray);
+    }
 
     setErrorLineNo(0);
 

@@ -21,6 +21,7 @@ using Ip6Pair = struct
 using ip4range_map_t = QMap<quint32, quint32>;
 using ip4_arr_t = QVector<quint32>;
 
+using ip6_pair_arr_t = QVector<Ip6Pair>;
 using ip6_arr_t = QVector<ip6_addr_t>;
 
 class IpRange : public QObject
