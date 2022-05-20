@@ -46,12 +46,12 @@ public slots:
     int writeAppEntry(int groupIndex, bool useGroupPerm, bool applyChild, bool blocked,
             bool alerted, bool isNew, const QString &appPath, QByteArray &buf);
     int writeVersion(QByteArray &buf);
-    int writeZone(const IpRange &ip4Range, QByteArray &buf);
+    int writeZone(const IpRange &ipRange, QByteArray &buf);
     int writeZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
             const QList<QByteArray> &zonesData, QByteArray &buf);
     int writeZoneFlag(int zoneId, bool enabled, QByteArray &buf);
 
-    bool loadZone(const QByteArray &buf, IpRange &ip4Range);
+    bool loadZone(const QByteArray &buf, IpRange &ipRange);
 
 private:
     void setErrorMessage(const QString &errorMessage);
@@ -101,7 +101,7 @@ private:
 
     static void writeAddressRanges(char **data, const addrranges_arr_t &addressRanges);
     static void writeAddressRange(char **data, const AddressRange &addressRange);
-    static void writeAddressList(char **data, const IpRange &ip4Range);
+    static void writeAddressList(char **data, const IpRange &ipRange);
 
     static void writeApps(char **data, const appentry_map_t &apps, bool useHeader = false);
 
@@ -110,6 +110,7 @@ private:
     static void writeData(char **data, void const *src, int elemCount, uint elemSize);
     static void writeChars(char **data, const chars_arr_t &array);
     static void writeArray(char **data, const QByteArray &array);
+    static void writeIp6Array(char **data, const ip6_arr_t &array);
 
     static void loadLongs(char **data, longs_arr_t &array);
     static void loadData(char **data, void *dst, int elemCount, uint elemSize);

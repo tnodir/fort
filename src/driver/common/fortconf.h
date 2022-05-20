@@ -6,6 +6,8 @@
 #define FORT_CONF_IP_MAX             (2 * 1024 * 1024)
 #define FORT_CONF_IP_ARR_SIZE(n)     ((n) * sizeof(UINT32))
 #define FORT_CONF_IP_RANGE_SIZE(n)   (FORT_CONF_IP_ARR_SIZE(n) * 2)
+#define FORT_CONF_IP6_ARR_SIZE(n)    ((n) * sizeof(ip6_addr_t))
+#define FORT_CONF_IP6_RANGE_SIZE(n)  (FORT_CONF_IP6_ARR_SIZE(n) * 2)
 #define FORT_CONF_ZONE_MAX           32
 #define FORT_CONF_GROUP_MAX          16
 #define FORT_CONF_APPS_LEN_MAX       (64 * 1024 * 1024)
@@ -40,8 +42,11 @@ static_assert(sizeof(FORT_CONF_FLAGS) == sizeof(UINT32), "FORT_CONF_FLAGS is not
 
 typedef struct fort_conf_addr_list
 {
-    UINT32 ip_n;
-    UINT32 pair_n;
+    UINT32 ip4_n;
+    UINT32 pair4_n;
+
+    UINT32 ip6_n;
+    UINT32 pair6_n;
 
     UINT32 ip[1];
 } FORT_CONF_ADDR_LIST, *PFORT_CONF_ADDR_LIST;
@@ -200,8 +205,9 @@ typedef struct fort_conf_io
 #define FORT_CONF_ADDR_GROUP_OFF offsetof(FORT_CONF_ADDR_GROUP, data)
 #define FORT_CONF_ZONES_DATA_OFF offsetof(FORT_CONF_ZONES, data)
 
-#define FORT_CONF_ADDR_LIST_SIZE(ip_n, pair_n)                                                     \
-    (FORT_CONF_ADDR_LIST_OFF + FORT_CONF_IP_ARR_SIZE(ip_n) + FORT_CONF_IP_RANGE_SIZE(pair_n))
+#define FORT_CONF_ADDR_LIST_SIZE(ip4_n, pair4_n, ip6_n, pair6_n)                                   \
+    (FORT_CONF_ADDR_LIST_OFF + FORT_CONF_IP_ARR_SIZE(ip4_n) + FORT_CONF_IP_RANGE_SIZE(pair4_n)     \
+            + FORT_CONF_IP6_ARR_SIZE(ip6_n) + FORT_CONF_IP6_RANGE_SIZE(pair6_n))
 
 typedef FORT_APP_FLAGS fort_conf_app_exe_find_func(
         const PFORT_CONF conf, const PVOID path, UINT32 path_len);

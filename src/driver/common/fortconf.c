@@ -67,12 +67,12 @@ static BOOL fort_conf_ip_inrange(UINT32 ip, UINT32 count, const UINT32 *iprange)
 }
 
 #define fort_conf_addr_list_ip_ref(addr_list)   (addr_list)->ip
-#define fort_conf_addr_list_pair_ref(addr_list) &(addr_list)->ip[(addr_list)->ip_n]
+#define fort_conf_addr_list_pair_ref(addr_list) &(addr_list)->ip[(addr_list)->ip4_n]
 
 FORT_API BOOL fort_conf_ip_inlist(UINT32 ip, const PFORT_CONF_ADDR_LIST addr_list)
 {
-    return fort_conf_ip_inarr(ip, addr_list->ip_n, fort_conf_addr_list_ip_ref(addr_list))
-            || fort_conf_ip_inrange(ip, addr_list->pair_n, fort_conf_addr_list_pair_ref(addr_list));
+    return fort_conf_ip_inarr(ip, addr_list->ip4_n, fort_conf_addr_list_ip_ref(addr_list))
+            || fort_conf_ip_inrange(ip, addr_list->pair4_n, fort_conf_addr_list_pair_ref(addr_list));
 }
 
 FORT_API PFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(const PFORT_CONF conf, int addr_group_index)
