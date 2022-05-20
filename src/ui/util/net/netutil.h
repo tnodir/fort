@@ -24,6 +24,9 @@ public:
     // Get IPv4 address mask
     static int ip4Mask(quint32 ip);
 
+    static quint32 applyIp4Mask(quint32 ip, int nbits);
+    static ip6_addr_t applyIp6Mask(ip6_addr_t ip, int nbits);
+
     static QString formatDataSize(qint64 bytes, int precision = 2);
     static QString formatDataSize1(qint64 bytes);
     static QString formatSpeed(quint32 bytes);

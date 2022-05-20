@@ -103,35 +103,9 @@ bool IpRange::fromList(const StringViewList &list, int emptyNetMask, bool sort)
         if (lineTrimmed.isEmpty() || lineTrimmed.startsWith('#')) // commented line
             continue;
 
-        const bool isIPv4 = lineTrimmed.contains('.');
-        if (isIPv4) {
-            quint32 fromIp4 = 0, toIp4 = 0;
-
-            if (parseIp4AddressMask(lineTrimmed, fromIp4, toIp4, emptyNetMask) != ErrorOk) {
-                setErrorLineNo(lineNo);
-                return false;
-            }
-
-            ip4RangeMap.insert(fromIp4, toIp4);
-
-            if (fromIp4 != toIp4) {
-                ++pair4Size;
-            }
-        } else {
-            bool hasIp6Mask = false;
-            ip6_addr_t fromIp6, toIp6;
-
-            if (parseIp6AddressMask(lineTrimmed, fromIp6, toIp6, hasIp6Mask) != ErrorOk) {
-                setErrorLineNo(lineNo);
-                return false;
-            }
-
-            if (hasIp6Mask) {
-                m_pair6FromArray.append(fromIp6);
-                m_pair6ToArray.append(toIp6);
-            } else {
-                m_ip6Array.append(fromIp6);
-            }
+        if (parseIpLine(line, ip4RangeMap, pair4Size, emptyNetMask) != ErrorOk) {
+            setErrorLineNo(lineNo);
+            return false;
         }
     }
 
@@ -142,11 +116,14 @@ bool IpRange::fromList(const StringViewList &list, int emptyNetMask, bool sort)
     return true;
 }
 
-// Parse "127.0.0.0-127.255.255.255" or "127.0.0.0/24" or "127.0.0.0"
-IpRange::ParseError IpRange::parseIp4AddressMask(
-        const StringView line, quint32 &from, quint32 &to, int emptyNetMask)
+IpRange::ParseError IpRange::parseIpLine(
+        const StringView line, ip4range_map_t &ip4RangeMap, int &pair4Size, int emptyNetMask)
 {
-    static const QRegularExpression re(R"(^([\d.]+)\s*([\/-]?)\s*(\S*))");
+    static const QRegularExpression ip4Re(R"(^([\d.]+)\s*([\/-]?)\s*(\S*))");
+    static const QRegularExpression ip6Re(R"(^([A-Fa-f\d:]+)\s*([\/-]?)\s*(\S*))");
+
+    const bool isIPv4 = line.contains('.');
+    const QRegularExpression &re = isIPv4 ? ip4Re : ip6Re;
 
     const auto match = re.match(line);
     if (!match.hasMatch()) {
@@ -156,111 +133,166 @@ IpRange::ParseError IpRange::parseIp4AddressMask(
 
     const auto ip = match.captured(1);
     const auto sepStr = match.capturedView(2);
-    const auto sep = sepStr.isEmpty() ? QChar('/') : sepStr.at(0);
     const auto mask = match.captured(3);
 
     if (sepStr.isEmpty() != mask.isEmpty()) {
-        setErrorMessage(tr("Bad IPv4 mask"));
+        setErrorMessage(tr("Bad mask"));
         return ErrorBadMaskFormat;
     }
 
-    bool ok;
+    const char maskSep = sepStr.isEmpty() ? '\0' : sepStr.at(0).toLatin1();
 
+    return isIPv4 ? parseIp4Address(ip, mask, ip4RangeMap, pair4Size, emptyNetMask, maskSep)
+                  : parseIp6Address(ip, mask, maskSep);
+}
+
+IpRange::ParseError IpRange::parseIp4Address(const QString &ip, const QString &mask,
+        ip4range_map_t &ip4RangeMap, int &pair4Size, int emptyNetMask, char maskSep)
+{
+    quint32 from, to = 0;
+
+    bool ok;
     from = NetUtil::textToIp4(ip, &ok);
     if (!ok) {
         setErrorMessage(tr("Bad IPv4 address"));
         return ErrorBadAddress;
     }
 
-    if (sep == QLatin1Char('-')) { // e.g. "127.0.0.0-127.255.255.255"
-        to = NetUtil::textToIp4(mask, &ok);
-        if (!ok) {
-            setErrorMessage(tr("Bad second IPv4 address"));
-            return ErrorBadAddress2;
-        }
-        if (from > to) {
-            setErrorMessage(tr("Bad IPv4 range"));
-            return ErrorBadRange;
-        }
-    } else if (sep == QLatin1Char('/')) { // e.g. "127.0.0.0/24", "127.0.0.0"
-        bool ok = true;
-        const int nbits = mask.isEmpty() ? emptyNetMask : mask.toInt(&ok);
+    const ParseError err = parseIp4AddressMask(mask, from, to, emptyNetMask, maskSep);
+    if (err != ErrorOk)
+        return err;
 
-        if (!ok || nbits < 0 || nbits > 32) {
-            setErrorMessage(tr("Bad IPv4 mask value"));
-            return ErrorBadMask;
-        }
+    ip4RangeMap.insert(from, to);
 
-        to = nbits == 0 ? quint32(-1) : (from | (nbits == 32 ? 0 : ((1 << (32 - nbits)) - 1)));
+    if (from != to) {
+        ++pair4Size;
     }
 
     return ErrorOk;
 }
 
-IpRange::ParseError IpRange::parseIp6AddressMask(
-        const StringView line, ip6_addr_t &from, ip6_addr_t &to, bool &hasIp6Mask)
+IpRange::ParseError IpRange::parseIp4AddressMask(
+        const QString &mask, quint32 &from, quint32 &to, int emptyNetMask, char maskSep)
 {
-    static const QRegularExpression re(R"(^([A-Fa-f\d:]+)\s*([\/-]?)\s*(\S*))");
+    switch (maskSep) {
+    case '-': // e.g. "127.0.0.0-127.255.255.255"
+        return parseIp4AddressMaskFull(mask, from, to);
+    case '/':
+    case '\0': // e.g. "127.0.0.0/24", "127.0.0.0"
+        return parseIp4AddressMaskPrefix(mask, from, to, emptyNetMask);
+    default:
+        return ErrorOk;
+    }
+}
 
-    const auto match = re.match(line);
-    if (!match.hasMatch()) {
-        setErrorMessage(tr("Bad format"));
-        return ErrorBadFormat;
+IpRange::ParseError IpRange::parseIp4AddressMaskFull(
+        const QString &mask, quint32 &from, quint32 &to)
+{
+    bool ok;
+    to = NetUtil::textToIp4(mask, &ok);
+    if (!ok) {
+        setErrorMessage(tr("Bad second IPv4 address"));
+        return ErrorBadAddress2;
     }
 
-    const auto ip = match.captured(1);
-    const auto sepStr = match.capturedView(2);
-    const auto sep = sepStr.isEmpty() ? QChar('\0') : sepStr.at(0);
-    const auto mask = match.captured(3);
-
-    if (sepStr.isEmpty() != mask.isEmpty()) {
-        setErrorMessage(tr("Bad IPv6 mask"));
-        return ErrorBadMaskFormat;
+    if (from > to) {
+        setErrorMessage(tr("Bad IPv4 range"));
+        return ErrorBadRange;
     }
+
+    return ErrorOk;
+}
+
+IpRange::ParseError IpRange::parseIp4AddressMaskPrefix(
+        const QString &mask, quint32 &from, quint32 &to, int emptyNetMask)
+{
+    bool ok = true;
+    const int nbits = mask.isEmpty() ? emptyNetMask : mask.toInt(&ok);
+
+    if (!ok || nbits < 0 || nbits > 32) {
+        setErrorMessage(tr("Bad IPv4 mask value"));
+        return ErrorBadMask;
+    }
+
+    to = NetUtil::applyIp4Mask(from, nbits);
+
+    return ErrorOk;
+}
+
+IpRange::ParseError IpRange::parseIp6Address(const QString &ip, const QString &mask, char maskSep)
+{
+    bool hasMask = false;
+    ip6_addr_t from, to;
 
     bool ok;
-
     from = NetUtil::textToIp6(ip, &ok);
     if (!ok) {
         setErrorMessage(tr("Bad IPv6 address"));
         return ErrorBadAddress;
     }
 
-    hasIp6Mask = true;
+    const ParseError err = parseIp6AddressMask(mask, from, to, hasMask, maskSep);
+    if (err != ErrorOk)
+        return err;
 
-    if (sep == QLatin1Char('-')) { // e.g. "::1 - ::2"
-        to = NetUtil::textToIp6(mask, &ok);
-        if (!ok) {
-            setErrorMessage(tr("Bad second IP IPv6 address"));
-            return ErrorBadAddress2;
-        }
-    } else if (sep == QLatin1Char('/')) { // e.g. "::1/24", "::1"
-        bool ok = true;
-        const int nbits = mask.toInt(&ok);
-
-        if (!ok || nbits < 0 || nbits > 128) {
-            setErrorMessage(tr("Bad IPv6 mask value"));
-            return ErrorBadMask;
-        }
-
-        if (nbits == 128) {
-            hasIp6Mask = false;
-            return ErrorOk;
-        }
-
-        const int maskBits = 128 - nbits;
-        const int maskBytes = maskBits / 8;
-        const int remBits = maskBits % 8;
-        const int off = sizeof(ip6_addr_t) - maskBytes;
-
-        memcpy(&to.data[0], &from.data[0], off);
-        memset(&to.data[off], -1, maskBytes);
-        if (remBits != 0) {
-            to.data[off - 1] |= (1 << remBits) - 1;
-        }
+    if (hasMask) {
+        m_pair6FromArray.append(from);
+        m_pair6ToArray.append(to);
     } else {
-        hasIp6Mask = false;
+        m_ip6Array.append(from);
     }
+
+    return ErrorOk;
+}
+
+IpRange::ParseError IpRange::parseIp6AddressMask(
+        const QString &mask, ip6_addr_t &from, ip6_addr_t &to, bool &hasMask, char maskSep)
+{
+    hasMask = false;
+
+    switch (maskSep) {
+    case '-': // e.g. "::1 - ::2"
+        return parseIp6AddressMaskFull(mask, to, hasMask);
+    case '/': // e.g. "::1/24", "::1"
+        return parseIp6AddressMaskPrefix(mask, from, to, hasMask);
+    default:
+        return ErrorOk;
+    }
+}
+
+IpRange::ParseError IpRange::parseIp6AddressMaskFull(
+        const QString &mask, ip6_addr_t &to, bool &hasMask)
+{
+    bool ok;
+    to = NetUtil::textToIp6(mask, &ok);
+
+    if (!ok) {
+        setErrorMessage(tr("Bad second IP IPv6 address"));
+        return ErrorBadAddress2;
+    }
+
+    hasMask = true;
+
+    return ErrorOk;
+}
+
+IpRange::ParseError IpRange::parseIp6AddressMaskPrefix(
+        const QString &mask, ip6_addr_t &from, ip6_addr_t &to, bool &hasMask)
+{
+    bool ok;
+    const int nbits = mask.toInt(&ok);
+
+    if (!ok || nbits < 0 || nbits > 128) {
+        setErrorMessage(tr("Bad IPv6 mask value"));
+        return ErrorBadMask;
+    }
+
+    if (nbits == 128)
+        return ErrorOk;
+
+    to = NetUtil::applyIp6Mask(from, nbits);
+
+    hasMask = true;
 
     return ErrorOk;
 }

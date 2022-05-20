@@ -76,6 +76,30 @@ int NetUtil::ip4Mask(quint32 ip)
     return 32 - first0Bit(ip);
 }
 
+quint32 NetUtil::applyIp4Mask(quint32 ip, int nbits)
+{
+    return nbits == 0 ? quint32(-1) : (ip | (nbits == 32 ? 0 : ((1 << (32 - nbits)) - 1)));
+}
+
+ip6_addr_t NetUtil::applyIp6Mask(ip6_addr_t ip, int nbits)
+{
+    const int maskBits = 128 - nbits;
+    const int maskBytes = maskBits / 8;
+    const int remBits = maskBits % 8;
+    const int off = sizeof(ip6_addr_t) - maskBytes;
+
+    ip6_addr_t masked;
+
+    memcpy(&masked.data[0], &ip.data[0], off);
+    memset(&masked.data[off], -1, maskBytes);
+
+    if (remBits != 0) {
+        masked.data[off - 1] |= (1 << remBits) - 1;
+    }
+
+    return masked;
+}
+
 int NetUtil::first0Bit(quint32 u)
 {
     const qint32 i = ~u;

@@ -100,11 +100,25 @@ private:
     void setErrorLineNo(int lineNo);
     void setErrorMessage(const QString &errorMessage);
 
+    IpRange::ParseError parseIpLine(
+            const StringView line, ip4range_map_t &ip4RangeMap, int &pair4Size, int emptyNetMask);
+
+    IpRange::ParseError parseIp4Address(const QString &ip, const QString &mask,
+            ip4range_map_t &ip4RangeMap, int &pair4Size, int emptyNetMask, char maskSep);
+
     IpRange::ParseError parseIp4AddressMask(
-            const StringView line, quint32 &from, quint32 &to, int emptyNetMask = 32);
+            const QString &mask, quint32 &from, quint32 &to, int emptyNetMask, char maskSep);
+    IpRange::ParseError parseIp4AddressMaskFull(const QString &mask, quint32 &from, quint32 &to);
+    IpRange::ParseError parseIp4AddressMaskPrefix(
+            const QString &mask, quint32 &from, quint32 &to, int emptyNetMask);
+
+    IpRange::ParseError parseIp6Address(const QString &ip, const QString &mask, char maskSep);
 
     IpRange::ParseError parseIp6AddressMask(
-            const StringView line, ip6_addr_t &from, ip6_addr_t &to, bool &hasIp6Mask);
+            const QString &mask, ip6_addr_t &from, ip6_addr_t &to, bool &hasMask, char maskSep);
+    IpRange::ParseError parseIp6AddressMaskFull(const QString &mask, ip6_addr_t &to, bool &hasMask);
+    IpRange::ParseError parseIp6AddressMaskPrefix(
+            const QString &mask, ip6_addr_t &from, ip6_addr_t &to, bool &hasMask);
 
     void fillIp4Range(const ip4range_map_t &ipRangeMap, int pairSize);
 
