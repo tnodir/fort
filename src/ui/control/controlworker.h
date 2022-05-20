@@ -26,6 +26,9 @@ public:
 
     quint32 id() const { return m_id; }
 
+    QString serverName() const { return m_serverName; }
+    void setServerName(const QString &v);
+
     QLocalSocket *socket() const { return m_socket; }
 
     bool isConnected() const;
@@ -33,8 +36,8 @@ public:
 
     void setupForAsync();
 
-    void setServerName(const QString &name);
     bool connectToServer();
+    bool reconnectToServer();
 
     static QByteArray buildCommandData(Control::Command command, const QVariantList &args = {});
     bool sendCommandData(const QByteArray &commandData);
@@ -99,6 +102,7 @@ private:
     RequestHeader m_requestHeader;
     QByteArray m_requestBuffer;
 
+    QString m_serverName;
     QLocalSocket *m_socket = nullptr;
 };
 

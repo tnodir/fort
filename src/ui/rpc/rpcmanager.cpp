@@ -401,7 +401,7 @@ void RpcManager::sendResult(ControlWorker *w, bool ok, const QVariantList &args)
 
 bool RpcManager::invokeOnServer(Control::Command cmd, const QVariantList &args)
 {
-    if (!client()->isConnected()) {
+    if (!client()->isConnected() && !client()->reconnectToServer()) {
         IoC<WindowManager>()->showErrorBox(tr("Service isn't available."));
         return false;
     }

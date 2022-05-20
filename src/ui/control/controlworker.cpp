@@ -114,26 +114,37 @@ void ControlWorker::setupForAsync()
     connect(socket(), &QLocalSocket::readyRead, this, &ControlWorker::processRequest);
 }
 
-void ControlWorker::setServerName(const QString &name)
+void ControlWorker::setServerName(const QString &v)
 {
-    socket()->setServerName(name);
+    m_serverName = v;
 }
 
 bool ControlWorker::connectToServer()
 {
-    socket()->connectToServer();
+    socket()->connectToServer(serverName());
 
-    if (!socket()->waitForConnected(150)) {
+    if (!socket()->waitForConnected(100)) {
         qCWarning(LC) << "Connection error:" << socket()->state() << socket()->errorString();
         return false;
     }
 
-    if (socket()->state() != QLocalSocket::ConnectedState) {
-        qCWarning(LC) << "Connection state error:" << socket()->state();
-        return false;
-    }
-
     return true;
+}
+
+bool ControlWorker::reconnectToServer()
+{
+    close();
+
+    if (isTryReconnect() && isConnected())
+        return true;
+
+    int reconnectCount = 2;
+    do {
+        if (connectToServer())
+            return true;
+    } while (--reconnectCount > 0);
+
+    return false;
 }
 
 void ControlWorker::close()
@@ -144,7 +155,7 @@ void ControlWorker::close()
 
 void ControlWorker::onDisconnected()
 {
-    if (isTryReconnect() && connectToServer())
+    if (isTryReconnect() && reconnectToServer())
         return;
 
     emit disconnected();
