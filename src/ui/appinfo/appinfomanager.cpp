@@ -122,7 +122,7 @@ bool AppInfoManager::loadInfoFromFs(const QString &appPath, AppInfo &appInfo)
 
 QImage AppInfoManager::loadIconFromFs(const QString &appPath, const AppInfo &appInfo)
 {
-    return AppInfoUtil::getIcon(appInfo.getPath(appPath));
+    return AppInfoUtil::getIcon(appInfo.filePath(appPath));
 }
 
 bool AppInfoManager::loadInfoFromDb(const QString &appPath, AppInfo &appInfo)

@@ -24,6 +24,8 @@ private:
     void setupUi();
 
 private:
+    QString m_filePath;
+
     QPushButton *m_btAppCopyPath = nullptr;
     QPushButton *m_btAppOpenFolder = nullptr;
     QLineEdit *m_lineAppPath = nullptr;
