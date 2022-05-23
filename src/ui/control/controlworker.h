@@ -50,6 +50,7 @@ public:
     static QVariantList buildArgs(const QStringList &list);
 
 signals:
+    void connected();
     void disconnected();
     void requestReady(Control::Command command, const QVariantList &args);
 

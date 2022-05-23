@@ -55,7 +55,6 @@ ControlWorker *ControlManager::newServiceClient(QObject *parent) const
     connect(w, &ControlWorker::requestReady, this, &ControlManager::processRequest);
 
     w->setServerName(getServerName(/*isService=*/true));
-    w->connectToServer();
 
     return w;
 }

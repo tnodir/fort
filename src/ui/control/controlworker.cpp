@@ -110,6 +110,7 @@ void ControlWorker::setupForAsync()
                 qCWarning(LC) << "Client error:" << id() << socketError << errorString();
                 close();
             });
+    connect(socket(), &QLocalSocket::connected, this, &ControlWorker::connected);
     connect(socket(), &QLocalSocket::disconnected, this, &ControlWorker::onDisconnected);
     connect(socket(), &QLocalSocket::readyRead, this, &ControlWorker::processRequest);
 }

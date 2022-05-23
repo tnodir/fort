@@ -368,9 +368,12 @@ void RpcManager::setupClient()
     auto controlManager = IoC()->setUpDependency<ControlManager>();
 
     m_client = controlManager->newServiceClient(this);
-    client()->setIsTryReconnect(true);
 
-    invokeOnServer(Control::Rpc_RpcManager_initClient);
+    connect(client(), &ControlWorker::connected, this,
+            [&] { invokeOnServer(Control::Rpc_RpcManager_initClient); });
+
+    client()->setIsTryReconnect(true);
+    client()->connectToServer();
 }
 
 void RpcManager::closeClient()
@@ -489,6 +492,7 @@ bool RpcManager::processManagerRpc(const ProcessCommandArgs &p)
 {
     if (commandRequiresValidation(p.command) && !checkClientValidated(p.worker)) {
         p.errorMessage = "Client is not validated";
+        sendResult(p.worker, false);
         return false;
     }
 
