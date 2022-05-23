@@ -87,7 +87,7 @@ QString NetUtil::ip6ToText(const ip6_addr_t &ip)
 
 QString NetUtil::ipToText(const ip_addr_t &ip, bool isIPv6)
 {
-    return isIPv6 ? ip4ToText(ip.v4) : ip6ToText(ip.v6);
+    return isIPv6 ? ip6ToText(ip.v6) : ip4ToText(ip.v4);
 }
 
 int NetUtil::ip4Mask(quint32 ip)

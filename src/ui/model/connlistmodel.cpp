@@ -296,21 +296,22 @@ bool ConnListModel::updateTableRow(int row) const
     m_connRow.appId = stmt.columnInt64(1);
     m_connRow.connTime = stmt.columnUnixTime(2);
     m_connRow.pid = stmt.columnInt(3);
-    const bool isIPv6 = stmt.columnIsNull(10);
-    m_connRow.isIPv6 = isIPv6;
     m_connRow.inbound = stmt.columnBool(4);
     m_connRow.inherited = stmt.columnBool(5);
     m_connRow.blocked = stmt.columnBool(6);
     m_connRow.ipProto = stmt.columnInt(7);
     m_connRow.localPort = stmt.columnInt(8);
     m_connRow.remotePort = stmt.columnInt(9);
-    if (isIPv6) {
+
+    m_connRow.isIPv6 = stmt.columnIsNull(10);
+    if (m_connRow.isIPv6) {
         m_connRow.localIp.v6 = NetUtil::rawArrayToIp6(stmt.columnBlob(11, /*isRaw=*/true));
         m_connRow.remoteIp.v6 = NetUtil::rawArrayToIp6(stmt.columnBlob(13, /*isRaw=*/true));
     } else {
         m_connRow.localIp.v4 = stmt.columnInt(10);
         m_connRow.remoteIp.v4 = stmt.columnInt(12);
     }
+
     m_connRow.appPath = stmt.columnText(14);
 
     if (isConnBlock()) {
