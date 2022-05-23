@@ -9,14 +9,15 @@
 
 namespace {
 
-bool compareIp6(const ip6_addr_t &l, const ip6_addr_t &r)
+bool compareLessIp6(const ip6_addr_t &l, const ip6_addr_t &r)
 {
-    return memcmp(&l, &r, sizeof(ip6_addr_t)) < 0;
+    const qint64 res = qint64(l.hi64) - qint64(r.hi64);
+    return res < 0 || (res == 0 && qint64(l.lo64) < qint64(r.lo64));
 }
 
 void sortIp6Array(ip6_arr_t &array)
 {
-    std::sort(array.begin(), array.end(), compareIp6);
+    std::sort(array.begin(), array.end(), compareLessIp6);
 }
 
 void sortIp6PairArray(ip6_arr_t &fromArray, ip6_arr_t &toArray)
@@ -33,7 +34,7 @@ void sortIp6PairArray(ip6_arr_t &fromArray, ip6_arr_t &toArray)
     }
 
     std::sort(pairArray.begin(), pairArray.end(),
-            [](const Ip6Pair &l, const Ip6Pair &r) { return compareIp6(l.from, r.from); });
+            [](const Ip6Pair &l, const Ip6Pair &r) { return compareLessIp6(l.from, r.from); });
 
     for (int i = 0; i < arraySize; ++i) {
         const Ip6Pair &pair = pairArray[i];

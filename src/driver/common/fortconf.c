@@ -30,6 +30,16 @@ FORT_API BOOL is_time_in_period(FORT_TIME time, FORT_PERIOD period)
     return (from <= to ? (x >= from && x < (to - 1)) : (x >= from || x < (to - 1)));
 }
 
+FORT_API int fort_ip6_cmp(const ip6_addr_t *l, const ip6_addr_t *r)
+{
+    INT64 res = (INT64) l->hi64 - (INT64) r->hi64;
+    if (res == 0) {
+        res = (INT64) l->lo64 - (INT64) r->lo64;
+    }
+
+    return res == 0 ? 0 : (res > 0 ? 1 : -1);
+}
+
 static BOOL fort_conf_ip4_find(const UINT32 *iparr, UINT32 ip, UINT32 count, BOOL is_range)
 {
     if (count == 0)
@@ -69,7 +79,7 @@ static BOOL fort_conf_ip6_find(
         const int mid = (low + high) / 2;
         const ip6_addr_t *mid_ip = &iparr[mid];
 
-        const int res = fort_memcmp(ip, mid_ip, sizeof(ip6_addr_t));
+        const int res = fort_ip6_cmp(ip, mid_ip);
         if (res < 0)
             high = mid - 1;
         else if (res > 0)
@@ -81,8 +91,8 @@ static BOOL fort_conf_ip6_find(
     if (!is_range)
         return FALSE;
 
-    return high >= 0 && fort_memcmp(ip, &iparr[high], sizeof(ip6_addr_t)) >= 0
-            && fort_memcmp(ip, &iparr[count + high], sizeof(ip6_addr_t)) <= 0;
+    return high >= 0 && fort_ip6_cmp(ip, &iparr[high]) >= 0
+            && fort_ip6_cmp(ip, &iparr[count + high]) <= 0;
 }
 
 #define fort_conf_ip4_inarr(iparr, ip, count)                                                      \

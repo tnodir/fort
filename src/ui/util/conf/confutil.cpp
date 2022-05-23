@@ -650,7 +650,7 @@ bool ConfUtil::loadAddress4List(const char **data, IpRange &ipRange, uint &bufSi
     if (bufSize < FORT_CONF_ADDR4_LIST_OFF)
         return false;
 
-    PFORT_CONF_ADDR4_LIST addr_list = (PFORT_CONF_ADDR4_LIST) data;
+    PFORT_CONF_ADDR4_LIST addr_list = (PFORT_CONF_ADDR4_LIST) *data;
     *data = (const char *) addr_list->ip;
 
     bufSize -= FORT_CONF_ADDR4_LIST_SIZE(addr_list->ip_n, addr_list->pair_n);
@@ -673,7 +673,7 @@ bool ConfUtil::loadAddress6List(const char **data, IpRange &ipRange, uint &bufSi
     if (bufSize < FORT_CONF_ADDR6_LIST_OFF)
         return false;
 
-    PFORT_CONF_ADDR6_LIST addr_list = (PFORT_CONF_ADDR6_LIST) data;
+    PFORT_CONF_ADDR6_LIST addr_list = (PFORT_CONF_ADDR6_LIST) *data;
     *data = (const char *) addr_list->ip;
 
     bufSize -= FORT_CONF_ADDR6_LIST_SIZE(addr_list->ip_n, addr_list->pair_n);

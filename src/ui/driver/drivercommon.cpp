@@ -209,7 +209,7 @@ bool confIp4InRange(const void *drvConf, quint32 ip, bool included, int addrGrou
 
 bool confIp6InRange(const void *drvConf, const ip6_addr_t &ip, bool included, int addrGroupIndex)
 {
-    return confIpInRange(drvConf, &ip.part1, /*isIPv6=*/true, included, addrGroupIndex);
+    return confIpInRange(drvConf, &ip.addr32[0], /*isIPv6=*/true, included, addrGroupIndex);
 }
 
 quint16 confAppFind(const void *drvConf, const QString &kernelPath)

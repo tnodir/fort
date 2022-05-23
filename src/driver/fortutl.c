@@ -307,5 +307,10 @@ DWORD fort_le_u32_read(const char *cp, int offset)
 
 BOOL fort_addr_is_local_broadcast(const UINT32 *ip, BOOL isIPv6)
 {
-    return isIPv6 ? *((const PUINT16) ip) == 0x02FF : *ip == 0xFFFFFFFF;
+    if (isIPv6) {
+        const ip6_addr_t *ip6 = (const ip6_addr_t *) ip;
+        return ip6->addr16[7] == 0xFF02;
+    }
+
+    return *ip == 0xFFFFFFFF;
 }

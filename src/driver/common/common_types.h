@@ -5,17 +5,12 @@ typedef struct ip6_addr_t
 {
     union {
         char data[16];
+        unsigned short addr16[8];
+        unsigned int addr32[4];
         struct
         {
-            unsigned int part1;
-            unsigned int part2;
-            unsigned int part3;
-            unsigned int part4;
-        };
-        struct
-        {
-            unsigned long long lo;
-            unsigned long long hi;
+            unsigned long long lo64;
+            unsigned long long hi64;
         };
     };
 } ip6_addr_t;

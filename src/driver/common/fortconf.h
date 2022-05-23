@@ -234,6 +234,8 @@ FORT_API int bit_scan_forward(unsigned long mask);
 
 FORT_API BOOL is_time_in_period(FORT_TIME time, FORT_PERIOD period);
 
+FORT_API int fort_ip6_cmp(const ip6_addr_t *l, const ip6_addr_t *r);
+
 FORT_API BOOL fort_conf_ip_inlist(
         const UINT32 *ip, const PFORT_CONF_ADDR4_LIST addr_list, BOOL isIPv6);
 
