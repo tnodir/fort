@@ -99,10 +99,10 @@ StringViewList TaskZoneDownloader::parseAddresses(const QString &text, QString &
 
 bool TaskZoneDownloader::storeAddresses(const StringViewList &list)
 {
-    IpRange ip4Range;
-    if (!ip4Range.fromList(list, emptyNetMask(), sort())) {
+    IpRange ipRange;
+    if (!ipRange.fromList(list, emptyNetMask(), sort())) {
         qCWarning(LC) << "TaskZoneDownloader:" << zoneName() << ":"
-                      << ip4Range.errorLineAndMessage();
+                      << ipRange.errorLineAndMessage();
         return false;
     }
 
@@ -110,7 +110,7 @@ bool TaskZoneDownloader::storeAddresses(const StringViewList &list)
 
     // Store binary file
     ConfUtil confUtil;
-    const int bufSize = confUtil.writeZone(ip4Range, m_zoneData);
+    const int bufSize = confUtil.writeZone(ipRange, m_zoneData);
     if (bufSize == 0)
         return false;
 

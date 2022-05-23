@@ -228,9 +228,12 @@ static PFORT_PACKET fort_defer_list_flow_get(
 FORT_API NTSTATUS fort_defer_packet_add(PFORT_DEFER defer,
         const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PNET_BUFFER_LIST netBufList,
-        BOOL inbound, UCHAR group_index)
+        BOOL isIPv6, BOOL inbound, UCHAR group_index)
 {
     NTSTATUS status;
+
+    if (isIPv6) /* TODO: Support IPv6 */
+        return STATUS_FWP_CONTEXT_INCOMPATIBLE_WITH_CALLOUT;
 
     if (defer->transport_injection4_id == INVALID_HANDLE_VALUE)
         return STATUS_FWP_TCPIP_NOT_READY;
@@ -322,9 +325,12 @@ end:
 FORT_API NTSTATUS fort_defer_stream_add(PFORT_DEFER defer,
         const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const FWPS_STREAM_DATA0 *streamData,
-        const FWPS_FILTER0 *filter, BOOL inbound)
+        const FWPS_FILTER0 *filter, BOOL isIPv6, BOOL inbound)
 {
     NTSTATUS status;
+
+    if (isIPv6) /* TODO: Support IPv6 */
+        return STATUS_FWP_CONTEXT_INCOMPATIBLE_WITH_CALLOUT;
 
     if (defer->stream_injection4_id == INVALID_HANDLE_VALUE)
         return STATUS_FWP_TCPIP_NOT_READY;

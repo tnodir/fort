@@ -82,8 +82,8 @@ TEST_F(LogBufferTest, blockedIpWriteRead)
         entry.setIpProto(++v);
         entry.setLocalPort(++v);
         entry.setRemotePort(++v);
-        entry.setLocalIp(++v);
-        entry.setRemoteIp(++v);
+        entry.setLocalIp4(++v);
+        entry.setRemoteIp4(++v);
         entry.setPid(++v);
 
         buf.writeEntryBlockedIp(&entry);
@@ -96,13 +96,14 @@ TEST_F(LogBufferTest, blockedIpWriteRead)
 
         int v = index++;
         ASSERT_EQ(entry.type(), FORT_LOG_TYPE_BLOCKED_IP);
+        ASSERT_FALSE(entry.isIPv6());
         ASSERT_EQ(entry.inbound(), (v & 1) != 0);
         ASSERT_EQ(entry.blockReason(), ++v);
         ASSERT_EQ(entry.ipProto(), ++v);
         ASSERT_EQ(entry.localPort(), ++v);
         ASSERT_EQ(entry.remotePort(), ++v);
-        ASSERT_EQ(entry.localIp(), ++v);
-        ASSERT_EQ(entry.remoteIp(), ++v);
+        ASSERT_EQ(entry.localIp4(), ++v);
+        ASSERT_EQ(entry.remoteIp4(), ++v);
         ASSERT_EQ(entry.pid(), ++v);
         ASSERT_EQ(entry.kernelPath(), path);
     }

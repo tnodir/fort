@@ -38,48 +38,48 @@ TEST_F(NetUtilTest, ip6Text)
 
 TEST_F(NetUtilTest, ip4Ranges)
 {
-    IpRange ip4Range;
+    IpRange ipRange;
 
-    ASSERT_FALSE(ip4Range.fromText("172.16.0.0/33"));
-    ASSERT_FALSE(ip4Range.fromText("172.16.0.255/-16"));
-    ASSERT_FALSE(ip4Range.fromText("10.0.0.32 - 10.0.0.24"));
-    ASSERT_EQ(ip4Range.errorLineNo(), 1);
+    ASSERT_FALSE(ipRange.fromText("172.16.0.0/33"));
+    ASSERT_FALSE(ipRange.fromText("172.16.0.255/-16"));
+    ASSERT_FALSE(ipRange.fromText("10.0.0.32 - 10.0.0.24"));
+    ASSERT_EQ(ipRange.errorLineNo(), 1);
 
-    ASSERT_TRUE(ip4Range.fromText("172.16.0.1/32"));
-    ASSERT_EQ(ip4Range.toText(), QString("172.16.0.1\n"));
+    ASSERT_TRUE(ipRange.fromText("172.16.0.1/32"));
+    ASSERT_EQ(ipRange.toText(), QString("172.16.0.1\n"));
 
-    ASSERT_TRUE(ip4Range.fromText("172.16.0.1/0"));
-    ASSERT_EQ(ip4Range.toText(), QString("172.16.0.1-255.255.255.255\n"));
+    ASSERT_TRUE(ipRange.fromText("172.16.0.1/0"));
+    ASSERT_EQ(ipRange.toText(), QString("172.16.0.1-255.255.255.255\n"));
 
     // Simple range
     {
-        ASSERT_TRUE(ip4Range.fromText("127.0.0.1\n"
-                                      "172.16.0.0/20\n"
-                                      "192.168.0.0 - 192.168.255.255\n"));
-        ASSERT_EQ(ip4Range.errorLineNo(), 0);
-        ASSERT_EQ(ip4Range.pair4Size(), 2);
-        ASSERT_EQ(ip4Range.ip4Size(), 1);
+        ASSERT_TRUE(ipRange.fromText("127.0.0.1\n"
+                                     "172.16.0.0/20\n"
+                                     "192.168.0.0 - 192.168.255.255\n"));
+        ASSERT_EQ(ipRange.errorLineNo(), 0);
+        ASSERT_EQ(ipRange.pair4Size(), 2);
+        ASSERT_EQ(ipRange.ip4Size(), 1);
 
-        const Ip4Pair &ipPair1 = ip4Range.pair4At(0);
+        const Ip4Pair &ipPair1 = ipRange.pair4At(0);
         ASSERT_EQ(ipPair1.from, NetUtil::textToIp4("172.16.0.0"));
         ASSERT_EQ(ipPair1.to, NetUtil::textToIp4("172.16.15.255"));
 
-        const Ip4Pair &ipPair2 = ip4Range.pair4At(1);
+        const Ip4Pair &ipPair2 = ipRange.pair4At(1);
         ASSERT_EQ(ipPair2.from, NetUtil::textToIp4("192.168.0.0"));
         ASSERT_EQ(ipPair2.to, NetUtil::textToIp4("192.168.255.255"));
 
-        ASSERT_EQ(ip4Range.ip4At(0), NetUtil::textToIp4("127.0.0.1"));
+        ASSERT_EQ(ipRange.ip4At(0), NetUtil::textToIp4("127.0.0.1"));
     }
 
     // Merge ranges
     {
-        ASSERT_TRUE(ip4Range.fromText("10.0.0.0 - 10.0.0.255\n"
-                                      "10.0.0.64 - 10.0.0.128\n"
-                                      "10.0.0.128 - 10.0.2.0\n"));
-        ASSERT_EQ(ip4Range.ip4Size(), 0);
-        ASSERT_EQ(ip4Range.pair4Size(), 1);
+        ASSERT_TRUE(ipRange.fromText("10.0.0.0 - 10.0.0.255\n"
+                                     "10.0.0.64 - 10.0.0.128\n"
+                                     "10.0.0.128 - 10.0.2.0\n"));
+        ASSERT_EQ(ipRange.ip4Size(), 0);
+        ASSERT_EQ(ipRange.pair4Size(), 1);
 
-        const Ip4Pair &ipPair1 = ip4Range.pair4At(0);
+        const Ip4Pair &ipPair1 = ipRange.pair4At(0);
         ASSERT_EQ(ipPair1.from, NetUtil::textToIp4("10.0.0.0"));
         ASSERT_EQ(ipPair1.to, NetUtil::textToIp4("10.0.2.0"));
     }
@@ -87,21 +87,21 @@ TEST_F(NetUtilTest, ip4Ranges)
 
 TEST_F(NetUtilTest, ip6Ranges)
 {
-    IpRange ip6Range;
+    IpRange ipRange;
 
-    ASSERT_FALSE(ip6Range.fromText("::1/129"));
-    ASSERT_FALSE(ip6Range.fromText("::1/-16"));
-    ASSERT_EQ(ip6Range.errorLineNo(), 1);
+    ASSERT_FALSE(ipRange.fromText("::1/129"));
+    ASSERT_FALSE(ipRange.fromText("::1/-16"));
+    ASSERT_EQ(ipRange.errorLineNo(), 1);
 
-    ASSERT_TRUE(ip6Range.fromText("::1/128"));
-    ASSERT_EQ(ip6Range.toText(), QString("::1\n"));
+    ASSERT_TRUE(ipRange.fromText("::1/128"));
+    ASSERT_EQ(ipRange.toText(), QString("::1\n"));
 
-    ASSERT_TRUE(ip6Range.fromText("2002::/16"));
-    ASSERT_EQ(ip6Range.toText(), QString("2002::-2002:ffff:ffff:ffff:ffff:ffff:ffff:ffff\n"));
+    ASSERT_TRUE(ipRange.fromText("2002::/16"));
+    ASSERT_EQ(ipRange.toText(), QString("2002::-2002:ffff:ffff:ffff:ffff:ffff:ffff:ffff\n"));
 
-    ASSERT_TRUE(ip6Range.fromText("::2/126\n"
-                                  "::1/126\n"));
-    ASSERT_EQ(ip6Range.toText(),
+    ASSERT_TRUE(ipRange.fromText("::2/126\n"
+                                 "::1/126\n"));
+    ASSERT_EQ(ipRange.toText(),
             QString("::1-::3\n"
                     "::2-::3\n"));
 }

@@ -97,7 +97,7 @@ void printLogs(LogBuffer &buf)
         buf.readEntryBlockedIp(&entry);
 
         qDebug() << entry.pid() << entry.kernelPath() << entry.path()
-                 << NetUtil::ip4ToText(entry.remoteIp()) << entry.remotePort();
+                 << NetUtil::ipToText(entry.remoteIp()) << entry.remotePort();
     }
 }
 

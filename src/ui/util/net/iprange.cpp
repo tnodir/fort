@@ -9,9 +9,9 @@
 
 namespace {
 
-int compareIp6(const ip6_addr_t &l, const ip6_addr_t &r)
+bool compareIp6(const ip6_addr_t &l, const ip6_addr_t &r)
 {
-    return memcmp(&l, &r, sizeof(ip6_addr_t));
+    return memcmp(&l, &r, sizeof(ip6_addr_t)) < 0;
 }
 
 void sortIp6Array(ip6_arr_t &array)
@@ -162,8 +162,8 @@ IpRange::ParseError IpRange::parseIpLine(
     static const QRegularExpression ip4Re(R"(^([\d.]+)\s*([\/-]?)\s*(\S*))");
     static const QRegularExpression ip6Re(R"(^([A-Fa-f\d:]+)\s*([\/-]?)\s*(\S*))");
 
-    const bool isIPv4 = line.contains('.');
-    const QRegularExpression &re = isIPv4 ? ip4Re : ip6Re;
+    const bool isIPv6 = !line.contains('.');
+    const QRegularExpression &re = isIPv6 ? ip6Re : ip4Re;
 
     const auto match = re.match(line);
     if (!match.hasMatch()) {
@@ -182,8 +182,8 @@ IpRange::ParseError IpRange::parseIpLine(
 
     const char maskSep = sepStr.isEmpty() ? '\0' : sepStr.at(0).toLatin1();
 
-    return isIPv4 ? parseIp4Address(ip, mask, ip4RangeMap, pair4Size, emptyNetMask, maskSep)
-                  : parseIp6Address(ip, mask, maskSep);
+    return isIPv6 ? parseIp6Address(ip, mask, maskSep)
+                  : parseIp4Address(ip, mask, ip4RangeMap, pair4Size, emptyNetMask, maskSep);
 }
 
 IpRange::ParseError IpRange::parseIp4Address(const QString &ip, const QString &mask,

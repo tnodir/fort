@@ -53,6 +53,7 @@ typedef struct fort_stat_proc
 #define FORT_FLOW_FRAGMENT_DEFER  0x20
 #define FORT_FLOW_FRAGMENTED      0x40
 #define FORT_FLOW_XFLAGS          (FORT_FLOW_FRAGMENT_DEFER | FORT_FLOW_FRAGMENTED)
+#define FORT_FLOW_IP6             0x80
 
 typedef struct fort_flow_opt
 {
@@ -98,9 +99,13 @@ typedef struct fort_stat
     UINT32 group_flush_bits;
 
     UINT32 stream4_id;
+    UINT32 stream6_id;
     UINT32 datagram4_id;
+    UINT32 datagram6_id;
     UINT32 in_transport4_id;
+    UINT32 in_transport6_id;
     UINT32 out_transport4_id;
+    UINT32 out_transport6_id;
 
     PFORT_STAT_PROC proc_free;
     PFORT_STAT_PROC proc_active;
@@ -143,12 +148,12 @@ FORT_API void fort_stat_update(PFORT_STAT stat, BOOL log_stat);
 FORT_API void fort_stat_conf_update(PFORT_STAT stat, PFORT_CONF_IO conf_io);
 
 FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, UINT64 flow_id, UINT32 process_id,
-        UCHAR group_index, BOOL is_tcp, BOOL is_reauth, BOOL *is_new_proc);
+        UCHAR group_index, BOOL isIPv6, BOOL is_tcp, BOOL is_reauth, BOOL *is_new_proc);
 
 FORT_API void fort_flow_delete(PFORT_STAT stat, UINT64 flowContext);
 
-FORT_API void fort_flow_classify(
-        PFORT_STAT stat, UINT64 flowContext, UINT32 data_len, BOOL is_tcp, BOOL inbound);
+FORT_API void fort_flow_classify(PFORT_STAT stat, UINT64 flowContext, UINT32 data_len, BOOL isIPv6,
+        BOOL is_tcp, BOOL inbound);
 
 FORT_API void fort_stat_dpc_begin(PFORT_STAT stat, PKLOCK_QUEUE_HANDLE lock_queue);
 

@@ -1,16 +1,19 @@
 #ifndef LOGENTRYBLOCKEDIP_H
 #define LOGENTRYBLOCKEDIP_H
 
+#include <common/common_types.h>
+
 #include "logentryblocked.h"
 
 class LogEntryBlockedIp : public LogEntryBlocked
 {
 public:
-    explicit LogEntryBlockedIp(quint8 blockReason = 0, quint8 ipProto = 0, quint16 localPort = 0,
-            quint16 remotePort = 0, quint32 localIp = 0, quint32 remoteIp = 0, quint32 pid = 0,
-            const QString &kernelPath = QString());
+    explicit LogEntryBlockedIp();
 
     FortLogType type() const override { return FORT_LOG_TYPE_BLOCKED_IP; }
+
+    bool isIPv6() const { return m_isIPv6; }
+    void setIsIPv6(bool isIPv6);
 
     bool inbound() const { return m_inbound; }
     void setInbound(bool inbound);
@@ -30,21 +33,36 @@ public:
     quint16 remotePort() const { return m_remotePort; }
     void setRemotePort(quint16 port);
 
-    quint32 localIp() const { return m_localIp; }
-    void setLocalIp(quint32 ip);
+    const ip_addr_t &localIp() const { return m_localIp; }
+    ip_addr_t &localIp() { return m_localIp; }
+    void setLocalIp(ip_addr_t &ip);
 
-    quint32 remoteIp() const { return m_remoteIp; }
-    void setRemoteIp(quint32 ip);
+    quint32 localIp4() const { return m_localIp.v4; }
+    void setLocalIp4(quint32 ip);
+
+    QByteArray localIp6() const;
+    void setLocalIp6(const QByteArray &ip);
+
+    const ip_addr_t &remoteIp() const { return m_remoteIp; }
+    ip_addr_t &remoteIp() { return m_remoteIp; }
+    void setRemoteIp(ip_addr_t &ip);
+
+    quint32 remoteIp4() const { return m_remoteIp.v4; }
+    void setRemoteIp4(quint32 ip);
+
+    QByteArray remoteIp6() const;
+    void setRemoteIp6(const QByteArray &ip);
 
 private:
+    bool m_isIPv6 : 1;
     bool m_inbound : 1;
     bool m_inherited : 1;
     quint8 m_blockReason = 0;
     quint8 m_ipProto = 0;
     quint16 m_localPort = 0;
     quint16 m_remotePort = 0;
-    quint32 m_localIp = 0;
-    quint32 m_remoteIp = 0;
+    ip_addr_t m_localIp;
+    ip_addr_t m_remoteIp;
 };
 
 #endif // LOGENTRYBLOCKEDIP_H

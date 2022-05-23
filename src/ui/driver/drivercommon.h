@@ -3,6 +3,8 @@
 
 #include <QString>
 
+#include <common/common_types.h>
+
 namespace DriverCommon {
 
 QString deviceName();
@@ -27,8 +29,8 @@ quint32 confIoConfOff();
 quint32 logBlockedHeaderSize();
 quint32 logBlockedSize(quint32 pathLen);
 
-quint32 logBlockedIpHeaderSize();
-quint32 logBlockedIpSize(quint32 pathLen);
+quint32 logBlockedIpHeaderSize(bool isIPv6 = false);
+quint32 logBlockedIpSize(quint32 pathLen, bool isIPv6 = false);
 
 quint32 logProcNewHeaderSize();
 quint32 logProcNewSize(quint32 pathLen);
@@ -44,12 +46,12 @@ quint8 logType(const char *input);
 void logBlockedHeaderWrite(char *output, bool blocked, quint32 pid, quint32 pathLen);
 void logBlockedHeaderRead(const char *input, int *blocked, quint32 *pid, quint32 *pathLen);
 
-void logBlockedIpHeaderWrite(char *output, int inbound, int inherited, quint8 blockReason,
-        quint8 ipProto, quint16 localPort, quint16 remotePort, quint32 localIp, quint32 remoteIp,
-        quint32 pid, quint32 pathLen);
-void logBlockedIpHeaderRead(const char *input, int *inbound, int *inherited, quint8 *blockReason,
-        quint8 *ipProto, quint16 *localPort, quint16 *remotePort, quint32 *localIp,
-        quint32 *remoteIp, quint32 *pid, quint32 *pathLen);
+void logBlockedIpHeaderWrite(char *output, int isIPv6, int inbound, int inherited,
+        quint8 blockReason, quint8 ipProto, quint16 localPort, quint16 remotePort,
+        const ip_addr_t *localIp, const ip_addr_t *remoteIp, quint32 pid, quint32 pathLen);
+void logBlockedIpHeaderRead(const char *input, int *isIPv6, int *inbound, int *inherited,
+        quint8 *blockReason, quint8 *ipProto, quint16 *localPort, quint16 *remotePort,
+        ip_addr_t *localIp, ip_addr_t *remoteIp, quint32 *pid, quint32 *pathLen);
 
 void logProcNewHeaderWrite(char *output, quint32 pid, quint32 pathLen);
 void logProcNewHeaderRead(const char *input, quint32 *pid, quint32 *pathLen);
@@ -60,7 +62,13 @@ void logTimeWrite(char *output, int timeChanged, qint64 unixTime);
 void logTimeRead(const char *input, int *timeChanged, qint64 *unixTime);
 
 void confAppPermsMaskInit(void *drvConf);
-bool confIpInRange(const void *drvConf, quint32 ip, bool included = false, int addrGroupIndex = 0);
+
+bool confIpInRange(const void *drvConf, const quint32 *ip, bool isIPv6 = false,
+        bool included = false, int addrGroupIndex = 0);
+bool confIp4InRange(const void *drvConf, quint32 ip, bool included = false, int addrGroupIndex = 0);
+bool confIp6InRange(
+        const void *drvConf, const ip6_addr_t &ip, bool included = false, int addrGroupIndex = 0);
+
 quint16 confAppFind(const void *drvConf, const QString &kernelPath);
 quint8 confAppGroupIndex(quint16 appFlags);
 bool confAppBlocked(const void *drvConf, quint16 appFlags, qint8 *blockReason);

@@ -8,10 +8,10 @@
 #ifndef FORT_DRIVER
 #    define fort_memcmp memcmp
 #else
-static int fort_memcmp(const char *p1, const char *p2, size_t len)
+static int fort_memcmp(const void *p1, const void *p2, size_t len)
 {
     const size_t n = RtlCompareMemory(p1, p2, len);
-    return (n == len) ? 0 : (p1[n] - p2[n]);
+    return (n == len) ? 0 : (((const char *) p1)[n] - ((const char *) p2)[n]);
 }
 #endif
 
@@ -30,7 +30,7 @@ FORT_API BOOL is_time_in_period(FORT_TIME time, FORT_PERIOD period)
     return (from <= to ? (x >= from && x < (to - 1)) : (x >= from || x < (to - 1)));
 }
 
-static BOOL fort_conf_ip_find(UINT32 ip, UINT32 count, const UINT32 *iparr, BOOL is_range)
+static BOOL fort_conf_ip4_find(const UINT32 *iparr, UINT32 ip, UINT32 count, BOOL is_range)
 {
     if (count == 0)
         return FALSE;
@@ -56,23 +56,72 @@ static BOOL fort_conf_ip_find(UINT32 ip, UINT32 count, const UINT32 *iparr, BOOL
     return high >= 0 && ip >= iparr[high] && ip <= iparr[count + high];
 }
 
-static BOOL fort_conf_ip_inarr(UINT32 ip, UINT32 count, const UINT32 *iparr)
+static BOOL fort_conf_ip6_find(
+        const ip6_addr_t *iparr, const ip6_addr_t *ip, UINT32 count, BOOL is_range)
 {
-    return fort_conf_ip_find(ip, count, iparr, FALSE);
+    if (count == 0)
+        return FALSE;
+
+    int low = 0;
+    int high = count - 1;
+
+    do {
+        const int mid = (low + high) / 2;
+        const ip6_addr_t *mid_ip = &iparr[mid];
+
+        const int res = fort_memcmp(ip, mid_ip, sizeof(ip6_addr_t));
+        if (res < 0)
+            high = mid - 1;
+        else if (res > 0)
+            low = mid + 1;
+        else
+            return TRUE;
+    } while (low <= high);
+
+    if (!is_range)
+        return FALSE;
+
+    return high >= 0 && fort_memcmp(ip, &iparr[high], sizeof(ip6_addr_t)) >= 0
+            && fort_memcmp(ip, &iparr[count + high], sizeof(ip6_addr_t)) <= 0;
 }
 
-static BOOL fort_conf_ip_inrange(UINT32 ip, UINT32 count, const UINT32 *iprange)
-{
-    return fort_conf_ip_find(ip, count, iprange, TRUE);
-}
+#define fort_conf_ip4_inarr(iparr, ip, count)                                                      \
+    fort_conf_ip4_find(iparr, ip, count, /*is_range=*/FALSE)
 
-#define fort_conf_addr_list_ip_ref(addr_list)   (addr_list)->ip
-#define fort_conf_addr_list_pair_ref(addr_list) &(addr_list)->ip[(addr_list)->ip4_n]
+#define fort_conf_ip4_inrange(iprange, ip, count)                                                  \
+    fort_conf_ip4_find(iprange, ip, count, /*is_range=*/TRUE)
 
-FORT_API BOOL fort_conf_ip_inlist(UINT32 ip, const PFORT_CONF_ADDR_LIST addr_list)
+#define fort_conf_addr_list_ip4_ref(addr_list) (addr_list)->ip
+
+#define fort_conf_addr_list_pair4_ref(addr_list) &(addr_list)->ip[(addr_list)->ip_n]
+
+#define fort_conf_ip6_inarr(iparr, ip, count)                                                      \
+    fort_conf_ip6_find(iparr, ip, count, /*is_range=*/FALSE)
+
+#define fort_conf_ip6_inrange(iprange, ip, count)                                                  \
+    fort_conf_ip6_find(iprange, ip, count, /*is_range=*/TRUE)
+
+#define fort_conf_addr_list_ip6_ref(addr6_list) (addr6_list)->ip
+
+#define fort_conf_addr_list_pair6_ref(addr6_list) &(addr6_list)->ip[(addr6_list)->ip_n]
+
+FORT_API BOOL fort_conf_ip_inlist(
+        const UINT32 *ip, const PFORT_CONF_ADDR4_LIST addr_list, BOOL isIPv6)
 {
-    return fort_conf_ip_inarr(ip, addr_list->ip4_n, fort_conf_addr_list_ip_ref(addr_list))
-            || fort_conf_ip_inrange(ip, addr_list->pair4_n, fort_conf_addr_list_pair_ref(addr_list));
+    if (isIPv6) {
+        const ip6_addr_t *ip6 = (const ip6_addr_t *) ip;
+        const PFORT_CONF_ADDR6_LIST addr6_list =
+                (const PFORT_CONF_ADDR6_LIST)((const PCHAR) addr_list
+                        + FORT_CONF_ADDR4_LIST_SIZE(addr_list->ip_n, addr_list->pair_n));
+
+        return fort_conf_ip6_inarr(fort_conf_addr_list_ip6_ref(addr6_list), ip6, addr6_list->ip_n)
+                || fort_conf_ip6_inrange(
+                        fort_conf_addr_list_pair6_ref(addr6_list), ip6, addr6_list->pair_n);
+    } else {
+        return fort_conf_ip4_inarr(fort_conf_addr_list_ip4_ref(addr_list), *ip, addr_list->ip_n)
+                || fort_conf_ip4_inrange(
+                        fort_conf_addr_list_pair4_ref(addr_list), *ip, addr_list->pair_n);
+    }
 }
 
 FORT_API PFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(const PFORT_CONF conf, int addr_group_index)
@@ -83,16 +132,16 @@ FORT_API PFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(const PFORT_CONF conf, i
     return (PFORT_CONF_ADDR_GROUP) (addr_group_data + addr_group_offsets[addr_group_index]);
 }
 
-static BOOL fort_conf_ip_included_check(const PFORT_CONF_ADDR_LIST addr_list,
-        fort_conf_zones_ip_included_func zone_func, void *ctx, UINT32 remote_ip, UINT32 zones_mask,
-        BOOL list_is_empty)
+static BOOL fort_conf_ip_included_check(const PFORT_CONF_ADDR4_LIST addr_list,
+        fort_conf_zones_ip_included_func zone_func, void *ctx, const UINT32 *remote_ip,
+        UINT32 zones_mask, BOOL list_is_empty, BOOL isIPv6)
 {
-    return (!list_is_empty && fort_conf_ip_inlist(remote_ip, addr_list))
-            || (zone_func != NULL && zone_func(ctx, zones_mask, remote_ip));
+    return (!list_is_empty && fort_conf_ip_inlist(remote_ip, addr_list, isIPv6))
+            || (zone_func != NULL && zone_func(ctx, zones_mask, remote_ip, isIPv6));
 }
 
 FORT_API BOOL fort_conf_ip_included(const PFORT_CONF conf,
-        fort_conf_zones_ip_included_func zone_func, void *ctx, UINT32 remote_ip,
+        fort_conf_zones_ip_included_func zone_func, void *ctx, const UINT32 *remote_ip, BOOL isIPv6,
         int addr_group_index)
 {
     const PFORT_CONF_ADDR_GROUP addr_group = fort_conf_addr_group_ref(conf, addr_group_index);
@@ -105,7 +154,7 @@ FORT_API BOOL fort_conf_ip_included(const PFORT_CONF conf,
             ? TRUE
             : fort_conf_ip_included_check(fort_conf_addr_group_exclude_list_ref(addr_group),
                     zone_func, ctx, remote_ip, addr_group->exclude_zones,
-                    addr_group->exclude_is_empty);
+                    addr_group->exclude_is_empty, isIPv6);
     if (include_all)
         return !ip_excluded;
 
@@ -114,7 +163,7 @@ FORT_API BOOL fort_conf_ip_included(const PFORT_CONF conf,
             ? TRUE
             : fort_conf_ip_included_check(fort_conf_addr_group_include_list_ref(addr_group),
                     zone_func, ctx, remote_ip, addr_group->include_zones,
-                    addr_group->include_is_empty);
+                    addr_group->include_is_empty, isIPv6);
     if (exclude_all)
         return ip_included;
 

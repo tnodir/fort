@@ -24,6 +24,8 @@ FORT_API NTSTATUS fort_file_open(PUNICODE_STRING filePath, HANDLE *outHandle);
 FORT_API USHORT fort_le_u16_read(const char *cp, int offset);
 FORT_API DWORD fort_le_u32_read(const char *cp, int offset);
 
+FORT_API BOOL fort_addr_is_local_broadcast(const UINT32 *ip, BOOL isIPv6);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

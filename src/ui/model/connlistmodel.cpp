@@ -130,9 +130,9 @@ QVariant ConnListModel::dataDisplay(const QModelIndex &index, int role) const
     case 2:
         return NetUtil::protocolName(connRow.ipProto);
     case 3:
-        return formatIpPort(connRow.localIp, connRow.localPort);
+        return formatIpPort(connRow.localIp, connRow.localPort, connRow.isIPv6);
     case 4:
-        return formatIpPort(connRow.remoteIp, connRow.remotePort);
+        return formatIpPort(connRow.remoteIp, connRow.remotePort, connRow.isIPv6);
     case 5:
         return dataDisplayDirection(connRow, role);
     case 6:
@@ -296,18 +296,25 @@ bool ConnListModel::updateTableRow(int row) const
     m_connRow.appId = stmt.columnInt64(1);
     m_connRow.connTime = stmt.columnUnixTime(2);
     m_connRow.pid = stmt.columnInt(3);
+    const bool isIPv6 = stmt.columnIsNull(10);
+    m_connRow.isIPv6 = isIPv6;
     m_connRow.inbound = stmt.columnBool(4);
     m_connRow.inherited = stmt.columnBool(5);
     m_connRow.blocked = stmt.columnBool(6);
     m_connRow.ipProto = stmt.columnInt(7);
     m_connRow.localPort = stmt.columnInt(8);
     m_connRow.remotePort = stmt.columnInt(9);
-    m_connRow.localIp = stmt.columnInt(10);
-    m_connRow.remoteIp = stmt.columnInt(11);
-    m_connRow.appPath = stmt.columnText(12);
+    if (isIPv6) {
+        m_connRow.localIp.v6 = NetUtil::rawArrayToIp6(stmt.columnBlob(11, /*isRaw=*/true));
+        m_connRow.remoteIp.v6 = NetUtil::rawArrayToIp6(stmt.columnBlob(13, /*isRaw=*/true));
+    } else {
+        m_connRow.localIp.v4 = stmt.columnInt(10);
+        m_connRow.remoteIp.v4 = stmt.columnInt(12);
+    }
+    m_connRow.appPath = stmt.columnText(14);
 
     if (isConnBlock()) {
-        m_connRow.blockReason = stmt.columnInt(13);
+        m_connRow.blockReason = stmt.columnInt(15);
     }
 
     return true;
@@ -331,8 +338,10 @@ QString ConnListModel::sqlBase() const
                                "    t.ip_proto,"
                                "    t.local_port,"
                                "    t.remote_port,"
-                               "    t.local_ip,"
-                               "    t.remote_ip,"
+                               "    t.local_ip4,"
+                               "    t.local_ip6,"
+                               "    t.remote_ip4,"
+                               "    t.remote_ip6,"
                                "    a.path,"
                                "    %2"
                                "  FROM conn t"
@@ -352,9 +361,9 @@ QString ConnListModel::sqlLimitOffset() const
     return QString();
 }
 
-QString ConnListModel::formatIpPort(quint32 ip, quint16 port) const
+QString ConnListModel::formatIpPort(const ip_addr_t &ip, quint16 port, bool isIPv6) const
 {
-    QString address = NetUtil::ip4ToText(ip);
+    QString address = NetUtil::ipToText(ip, isIPv6);
     if (resolveAddress()) {
         const QString hostName = hostInfoCache()->hostName(address);
         if (!hostName.isEmpty()) {

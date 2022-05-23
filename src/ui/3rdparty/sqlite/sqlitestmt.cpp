@@ -239,7 +239,7 @@ QDateTime SqliteStmt::columnUnixTime(int column)
     return (secs == 0) ? QDateTime() : QDateTime::fromSecsSinceEpoch(secs);
 }
 
-QByteArray SqliteStmt::columnBlob(int column)
+QByteArray SqliteStmt::columnBlob(int column, bool isRaw)
 {
     const char *p = static_cast<const char *>(sqlite3_column_blob(m_stmt, column));
     if (!p)
@@ -249,7 +249,7 @@ QByteArray SqliteStmt::columnBlob(int column)
     if (bytesCount == 0)
         return QByteArray();
 
-    return QByteArray(p, bytesCount);
+    return isRaw ? QByteArray::fromRawData(p, bytesCount) : QByteArray(p, bytesCount);
 }
 
 QVariant SqliteStmt::columnVar(int column)
@@ -294,4 +294,9 @@ QVariant SqliteStmt::columnVar(int column)
     }
 
     return QVariant();
+}
+
+bool SqliteStmt::columnIsNull(int column)
+{
+    return sqlite3_column_type(m_stmt, column) == SQLITE_NULL;
 }

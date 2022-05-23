@@ -9,7 +9,7 @@
 #define FORT_DEFER_FLUSH_ALL 0xFFFFFFFF
 #define FORT_DEFER_LIST_MAX  (FORT_CONF_GROUP_MAX * 2)
 
-#define FORT_DEFER_STREAM_ALL ((UINT64)((INT64) -1))
+#define FORT_DEFER_STREAM_ALL ((UINT64) ((INT64) -1))
 
 #define TCP_FLAG_FIN 0x0001
 #define TCP_FLAG_SYN 0x0002
@@ -110,7 +110,7 @@ typedef struct fort_defer
     KSPIN_LOCK lock;
 } FORT_DEFER, *PFORT_DEFER;
 
-typedef void (NTAPI *FORT_INJECT_COMPLETE_FUNC)(PFORT_PACKET, PNET_BUFFER_LIST, BOOLEAN);
+typedef void(NTAPI *FORT_INJECT_COMPLETE_FUNC)(PFORT_PACKET, PNET_BUFFER_LIST, BOOLEAN);
 typedef NTSTATUS (*FORT_INJECT_FUNC)(
         PFORT_DEFER, PFORT_PACKET, PNET_BUFFER_LIST *, FORT_INJECT_COMPLETE_FUNC);
 
@@ -125,12 +125,12 @@ FORT_API void fort_defer_close(PFORT_DEFER defer);
 FORT_API NTSTATUS fort_defer_packet_add(PFORT_DEFER defer,
         const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PNET_BUFFER_LIST netBufList,
-        BOOL inbound, UCHAR group_index);
+        BOOL isIPv6, BOOL inbound, UCHAR group_index);
 
 FORT_API NTSTATUS fort_defer_stream_add(PFORT_DEFER defer,
         const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const FWPS_STREAM_DATA0 *streamData,
-        const FWPS_FILTER0 *filter, BOOL inbound);
+        const FWPS_FILTER0 *filter, BOOL isIPv6, BOOL inbound);
 
 FORT_API void fort_defer_packet_free(
         PFORT_DEFER defer, PFORT_PACKET pkt, PNET_BUFFER_LIST clonedNetBufList, BOOL dispatchLevel);

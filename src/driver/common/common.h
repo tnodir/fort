@@ -16,8 +16,9 @@
 
 #    define _KRPCENV_ /* To include winerror.h */
 
+#    include <ntifs.h> /* Before ntddk.h */
+
 #    include <ntddk.h>
-#    include <ntifs.h>
 #    include <winerror.h>
 
 #    include <fwpmk.h>
@@ -31,6 +32,7 @@
 #    include <windows.h>
 
 #    include <fwpmu.h>
+#    include <stddef.h>
 #    include <winioctl.h>
 #endif
 

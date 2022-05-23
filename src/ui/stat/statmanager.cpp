@@ -22,7 +22,7 @@ namespace {
 
 const QLoggingCategory LC("stat");
 
-constexpr int DATABASE_USER_VERSION = 5;
+constexpr int DATABASE_USER_VERSION = 6;
 
 constexpr qint32 ACTIVE_PERIOD_CHECK_SECS = 60 * OS_TICKS_PER_SECOND;
 
@@ -662,8 +662,18 @@ qint64 StatManager::insertConn(const LogEntryBlockedIp &entry, qint64 unixTime, 
     stmt->bindInt(6, entry.ipProto());
     stmt->bindInt(7, entry.localPort());
     stmt->bindInt(8, entry.remotePort());
-    stmt->bindInt(9, entry.localIp());
-    stmt->bindInt(10, entry.remoteIp());
+
+    if (entry.isIPv6()) {
+        stmt->bindNull(9);
+        stmt->bindBlob(10, entry.localIp6());
+        stmt->bindNull(11);
+        stmt->bindBlob(12, entry.remoteIp6());
+    } else {
+        stmt->bindInt(9, entry.localIp4());
+        stmt->bindNull(10);
+        stmt->bindInt(11, entry.remoteIp4());
+        stmt->bindNull(12);
+    }
 
     if (sqliteDb()->done(stmt)) {
         return sqliteDb()->lastInsertRowid();

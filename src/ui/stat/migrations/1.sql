@@ -66,8 +66,10 @@ CREATE TABLE conn(
   ip_proto INTEGER NOT NULL,
   local_port INTEGER NOT NULL,
   remote_port INTEGER NOT NULL,
-  local_ip INTEGER NOT NULL,
-  remote_ip INTEGER NOT NULL
+  local_ip4 INTEGER,
+  local_ip6 BLOB,
+  remote_ip4 INTEGER,
+  remote_ip6 BLOB
 );
 
 CREATE INDEX conn_app_id_idx ON conn(app_id);

@@ -49,6 +49,7 @@ public slots:
     int writeZone(const IpRange &ipRange, QByteArray &buf);
     int writeZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
             const QList<QByteArray> &zonesData, QByteArray &buf);
+    void migrateZoneData(char **data, const QByteArray &zoneData);
     int writeZoneFlag(int zoneId, bool enabled, QByteArray &buf);
 
     bool loadZone(const QByteArray &buf, IpRange &ipRange);
@@ -87,7 +88,7 @@ private:
     static void parseAppPeriod(
             const AppGroup *appGroup, chars_arr_t &appPeriods, quint8 &appPeriodsCount);
 
-    static void writeData(char *output, const FirewallConf &conf,
+    static void writeConf(char *output, const FirewallConf &conf,
             const addrranges_arr_t &addressRanges, const longs_arr_t &addressGroupOffsets,
             const chars_arr_t &appPeriods, quint8 appPeriodsCount,
             const appentry_map_t &wildAppsMap, const appentry_map_t &prefixAppsMap,
@@ -101,19 +102,27 @@ private:
 
     static void writeAddressRanges(char **data, const addrranges_arr_t &addressRanges);
     static void writeAddressRange(char **data, const AddressRange &addressRange);
+
     static void writeAddressList(char **data, const IpRange &ipRange);
+    static void writeAddress4List(char **data, const IpRange &ipRange);
+    static void writeAddress6List(char **data, const IpRange &ipRange);
+
+    static bool loadAddressList(const char **data, IpRange &ipRange, uint &bufSize);
+    static bool loadAddress4List(const char **data, IpRange &ipRange, uint &bufSize);
+    static bool loadAddress6List(const char **data, IpRange &ipRange, uint &bufSize);
 
     static void writeApps(char **data, const appentry_map_t &apps, bool useHeader = false);
 
     static void writeShorts(char **data, const shorts_arr_t &array);
     static void writeLongs(char **data, const longs_arr_t &array);
+    static void writeIp6Array(char **data, const ip6_arr_t &array);
     static void writeData(char **data, void const *src, int elemCount, uint elemSize);
     static void writeChars(char **data, const chars_arr_t &array);
     static void writeArray(char **data, const QByteArray &array);
-    static void writeIp6Array(char **data, const ip6_arr_t &array);
 
-    static void loadLongs(char **data, longs_arr_t &array);
-    static void loadData(char **data, void *dst, int elemCount, uint elemSize);
+    static void loadLongs(const char **data, longs_arr_t &array);
+    static void loadIp6Array(const char **data, ip6_arr_t &array);
+    static void loadData(const char **data, void *dst, int elemCount, uint elemSize);
 
 private:
     QString m_errorMessage;

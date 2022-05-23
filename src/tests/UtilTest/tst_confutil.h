@@ -76,14 +76,16 @@ TEST_F(ConfUtilTest, confWriteRead)
     // Check the buffer
     const char *data = buf.constData() + DriverCommon::confIoConfOff();
 
-    ASSERT_FALSE(DriverCommon::confIpInRange(data, 0, true));
-    ASSERT_FALSE(DriverCommon::confIpInRange(data, NetUtil::textToIp4("9.255.255.255")));
-    ASSERT_FALSE(DriverCommon::confIpInRange(data, NetUtil::textToIp4("11.0.0.0")));
-    ASSERT_TRUE(DriverCommon::confIpInRange(data, NetUtil::textToIp4("10.0.0.0")));
-    ASSERT_TRUE(DriverCommon::confIpInRange(data, NetUtil::textToIp4("169.254.100.100")));
-    ASSERT_TRUE(DriverCommon::confIpInRange(data, NetUtil::textToIp4("192.168.255.255")));
-    ASSERT_FALSE(DriverCommon::confIpInRange(data, NetUtil::textToIp4("193.0.0.0")));
-    ASSERT_TRUE(DriverCommon::confIpInRange(data, NetUtil::textToIp4("239.255.255.250")));
+    ASSERT_FALSE(DriverCommon::confIp4InRange(data, 0, true));
+    ASSERT_FALSE(DriverCommon::confIp4InRange(data, NetUtil::textToIp4("9.255.255.255")));
+    ASSERT_FALSE(DriverCommon::confIp4InRange(data, NetUtil::textToIp4("11.0.0.0")));
+    ASSERT_TRUE(DriverCommon::confIp4InRange(data, NetUtil::textToIp4("10.0.0.0")));
+    ASSERT_TRUE(DriverCommon::confIp4InRange(data, NetUtil::textToIp4("169.254.100.100")));
+    ASSERT_TRUE(DriverCommon::confIp4InRange(data, NetUtil::textToIp4("192.168.255.255")));
+    ASSERT_FALSE(DriverCommon::confIp4InRange(data, NetUtil::textToIp4("193.0.0.0")));
+    ASSERT_TRUE(DriverCommon::confIp4InRange(data, NetUtil::textToIp4("239.255.255.250")));
+    ASSERT_FALSE(DriverCommon::confIp6InRange(data, NetUtil::textToIp6("::2")));
+    ASSERT_TRUE(DriverCommon::confIp6InRange(data, NetUtil::textToIp6("::ffff:0:2")));
 
     qint8 blockReason = FORT_BLOCK_REASON_UNKNOWN;
 

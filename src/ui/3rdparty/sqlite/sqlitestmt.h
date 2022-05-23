@@ -60,8 +60,9 @@ public:
     QString columnText(int column = 0);
     QDateTime columnDateTime(int column = 0);
     QDateTime columnUnixTime(int column = 0);
-    QByteArray columnBlob(int column = 0);
+    QByteArray columnBlob(int column = 0, bool isRaw = false);
     QVariant columnVar(int column = 0);
+    bool columnIsNull(int column = 0);
 
 private:
     sqlite3_stmt *m_stmt = nullptr;

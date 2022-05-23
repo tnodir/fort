@@ -1,18 +1,12 @@
 #include "logentryblockedip.h"
 
-LogEntryBlockedIp::LogEntryBlockedIp(quint8 blockReason, quint8 ipProto, quint16 localPort,
-        quint16 remotePort, quint32 localIp, quint32 remoteIp, quint32 pid,
-        const QString &kernelPath) :
-    LogEntryBlocked(pid, kernelPath),
-    m_inbound(false),
-    m_inherited(false),
-    m_blockReason(blockReason),
-    m_ipProto(ipProto),
-    m_localPort(localPort),
-    m_remotePort(remotePort),
-    m_localIp(localIp),
-    m_remoteIp(remoteIp)
+#include <util/net/netutil.h>
+
+LogEntryBlockedIp::LogEntryBlockedIp() : m_isIPv6(false), m_inbound(false), m_inherited(false) { }
+
+void LogEntryBlockedIp::setIsIPv6(bool isIPv6)
 {
+    m_isIPv6 = isIPv6;
 }
 
 void LogEntryBlockedIp::setInbound(bool inbound)
@@ -45,12 +39,42 @@ void LogEntryBlockedIp::setRemotePort(quint16 port)
     m_remotePort = port;
 }
 
-void LogEntryBlockedIp::setLocalIp(quint32 ip)
+void LogEntryBlockedIp::setLocalIp(ip_addr_t &ip)
 {
     m_localIp = ip;
 }
 
-void LogEntryBlockedIp::setRemoteIp(quint32 ip)
+void LogEntryBlockedIp::setLocalIp4(quint32 ip)
+{
+    m_localIp.v4 = ip;
+}
+
+QByteArray LogEntryBlockedIp::localIp6() const
+{
+    return NetUtil::ip6ToRawArray(m_localIp);
+}
+
+void LogEntryBlockedIp::setLocalIp6(const QByteArray &ip)
+{
+    m_localIp.v6 = NetUtil::rawArrayToIp6(ip);
+}
+
+void LogEntryBlockedIp::setRemoteIp(ip_addr_t &ip)
 {
     m_remoteIp = ip;
+}
+
+void LogEntryBlockedIp::setRemoteIp4(quint32 ip)
+{
+    m_remoteIp.v4 = ip;
+}
+
+QByteArray LogEntryBlockedIp::remoteIp6() const
+{
+    return NetUtil::ip6ToRawArray(m_remoteIp);
+}
+
+void LogEntryBlockedIp::setRemoteIp6(const QByteArray &ip)
+{
+    m_remoteIp.v6 = NetUtil::rawArrayToIp6(ip);
 }

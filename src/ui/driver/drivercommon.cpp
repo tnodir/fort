@@ -82,14 +82,14 @@ quint32 logBlockedSize(quint32 pathLen)
     return FORT_LOG_BLOCKED_SIZE(pathLen);
 }
 
-quint32 logBlockedIpHeaderSize()
+quint32 logBlockedIpHeaderSize(bool isIPv6)
 {
-    return FORT_LOG_BLOCKED_IP_HEADER_SIZE;
+    return FORT_LOG_BLOCKED_IP_HEADER_SIZE(isIPv6);
 }
 
-quint32 logBlockedIpSize(quint32 pathLen)
+quint32 logBlockedIpSize(quint32 pathLen, bool isIPv6)
 {
-    return FORT_LOG_BLOCKED_IP_SIZE(pathLen);
+    return FORT_LOG_BLOCKED_IP_SIZE(pathLen, isIPv6);
 }
 
 quint32 logProcNewHeaderSize()
@@ -137,20 +137,20 @@ void logBlockedHeaderRead(const char *input, int *blocked, quint32 *pid, quint32
     fort_log_blocked_header_read(input, blocked, pid, pathLen);
 }
 
-void logBlockedIpHeaderWrite(char *output, int inbound, int inherited, quint8 blockReason,
-        quint8 ipProto, quint16 localPort, quint16 remotePort, quint32 localIp, quint32 remoteIp,
-        quint32 pid, quint32 pathLen)
+void logBlockedIpHeaderWrite(char *output, int isIPv6, int inbound, int inherited,
+        quint8 blockReason, quint8 ipProto, quint16 localPort, quint16 remotePort,
+        const ip_addr_t *localIp, const ip_addr_t *remoteIp, quint32 pid, quint32 pathLen)
 {
-    fort_log_blocked_ip_header_write(output, inbound, inherited, blockReason, ipProto, localPort,
-            remotePort, localIp, remoteIp, pid, pathLen);
+    fort_log_blocked_ip_header_write(output, isIPv6, inbound, inherited, blockReason, ipProto,
+            localPort, remotePort, &localIp->v4, &remoteIp->v4, pid, pathLen);
 }
 
-void logBlockedIpHeaderRead(const char *input, int *inbound, int *inherited, quint8 *blockReason,
-        quint8 *ipProto, quint16 *localPort, quint16 *remotePort, quint32 *localIp,
-        quint32 *remoteIp, quint32 *pid, quint32 *pathLen)
+void logBlockedIpHeaderRead(const char *input, int *isIPv6, int *inbound, int *inherited,
+        quint8 *blockReason, quint8 *ipProto, quint16 *localPort, quint16 *remotePort,
+        ip_addr_t *localIp, ip_addr_t *remoteIp, quint32 *pid, quint32 *pathLen)
 {
-    fort_log_blocked_ip_header_read(input, inbound, inherited, blockReason, ipProto, localPort,
-            remotePort, localIp, remoteIp, pid, pathLen);
+    fort_log_blocked_ip_header_read(input, isIPv6, inbound, inherited, blockReason, ipProto,
+            localPort, remotePort, &localIp->v4, &remoteIp->v4, pid, pathLen);
 }
 
 void logProcNewHeaderWrite(char *output, quint32 pid, quint32 pathLen)
@@ -185,7 +185,8 @@ void confAppPermsMaskInit(void *drvConf)
     fort_conf_app_perms_mask_init(conf, conf->flags.group_bits);
 }
 
-bool confIpInRange(const void *drvConf, quint32 ip, bool included, int addrGroupIndex)
+bool confIpInRange(
+        const void *drvConf, const quint32 *ip, bool isIPv6, bool included, int addrGroupIndex)
 {
     const PFORT_CONF conf = (const PFORT_CONF) drvConf;
     const PFORT_CONF_ADDR_GROUP addr_group = fort_conf_addr_group_ref(conf, addrGroupIndex);
@@ -194,11 +195,21 @@ bool confIpInRange(const void *drvConf, quint32 ip, bool included, int addrGroup
     if (is_empty)
         return false;
 
-    const PFORT_CONF_ADDR_LIST addr_list = included
+    const PFORT_CONF_ADDR4_LIST addr_list = included
             ? fort_conf_addr_group_include_list_ref(addr_group)
             : fort_conf_addr_group_exclude_list_ref(addr_group);
 
-    return fort_conf_ip_inlist(ip, addr_list);
+    return fort_conf_ip_inlist(ip, addr_list, isIPv6);
+}
+
+bool confIp4InRange(const void *drvConf, quint32 ip, bool included, int addrGroupIndex)
+{
+    return confIpInRange(drvConf, &ip, /*isIPv6=*/false, included, addrGroupIndex);
+}
+
+bool confIp6InRange(const void *drvConf, const ip6_addr_t &ip, bool included, int addrGroupIndex)
+{
+    return confIpInRange(drvConf, &ip.part1, /*isIPv6=*/true, included, addrGroupIndex);
 }
 
 quint16 confAppFind(const void *drvConf, const QString &kernelPath)

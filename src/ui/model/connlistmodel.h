@@ -3,6 +3,7 @@
 
 #include <QDateTime>
 
+#include <common/common_types.h>
 #include <util/model/tablesqlmodel.h>
 
 class AppInfoCache;
@@ -13,6 +14,7 @@ class StatManager;
 
 struct ConnRow : TableRow
 {
+    bool isIPv6 = false;
     bool inbound = false;
     bool inherited = false;
     bool blocked = false;
@@ -22,8 +24,8 @@ struct ConnRow : TableRow
     quint8 ipProto = 0;
     quint16 localPort = 0;
     quint16 remotePort = 0;
-    quint32 localIp = 0;
-    quint32 remoteIp = 0;
+    ip_addr_t localIp;
+    ip_addr_t remoteIp;
 
     quint32 pid = 0;
 
@@ -100,7 +102,7 @@ private:
 
     void getRowIdRange(qint64 &rowIdMin, qint64 &rowIdMax) const;
 
-    QString formatIpPort(quint32 ip, quint16 port) const;
+    QString formatIpPort(const ip_addr_t &ip, quint16 port, bool isIPv6) const;
 
 private:
     uint m_connMode : 2;
