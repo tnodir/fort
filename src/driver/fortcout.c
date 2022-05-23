@@ -159,7 +159,7 @@ static void fort_callout_classify_check(const FWPS_INCOMING_VALUES0 *inFixedValu
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const FWPS_FILTER0 *filter,
         FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField, int remoteIpField,
         int localPortField, int remotePortField, int ipProtoField, BOOL isIPv6, BOOL inbound,
-        UINT32 classify_flags, const PUINT32 remote_ip, PFORT_CONF_REF conf_ref, PIRP *irp,
+        UINT32 classify_flags, const UINT32 *remote_ip, PFORT_CONF_REF conf_ref, PIRP *irp,
         ULONG_PTR *info)
 {
     const FORT_CONF_FLAGS conf_flags = conf_ref->conf.flags;
@@ -190,7 +190,10 @@ static void fort_callout_classify_check(const FWPS_INCOMING_VALUES0 *inFixedValu
     if (blocked) {
         /* Log the blocked connection */
         if (block_reason != FORT_BLOCK_REASON_UNKNOWN && conf_flags.log_blocked_ip) {
-            const UINT32 *local_ip = &inFixedValues->incomingValue[localIpField].value.uint32;
+            const UINT32 *local_ip = isIPv6
+                    ? (const UINT32 *) inFixedValues->incomingValue[localIpField].value.byteArray16
+                    : &inFixedValues->incomingValue[localIpField].value.uint32;
+
             const UINT16 local_port = inFixedValues->incomingValue[localPortField].value.uint16;
             const UINT16 remote_port = inFixedValues->incomingValue[remotePortField].value.uint16;
             const IPPROTO ip_proto =
@@ -223,7 +226,10 @@ static void fort_callout_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
     ULONG_PTR info;
 
     const UINT32 classify_flags = inFixedValues->incomingValue[flagsField].value.uint32;
-    const PUINT32 remote_ip = &inFixedValues->incomingValue[remoteIpField].value.uint32;
+
+    const UINT32 *remote_ip = isIPv6
+            ? (const UINT32 *) inFixedValues->incomingValue[remoteIpField].value.byteArray16
+            : &inFixedValues->incomingValue[remoteIpField].value.uint32;
 
     PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
 
