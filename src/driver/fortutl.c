@@ -290,7 +290,7 @@ FORT_API NTSTATUS fort_file_open(PUNICODE_STRING filePath, HANDLE *outHandle)
 USHORT fort_le_u16_read(const char *cp, int offset)
 {
     USHORT v = *((USHORT *) (cp + offset));
-#ifdef FORT_BIG_ENDIAN
+#if FORT_BIG_ENDIAN
     RtlUshortByteSwap(v);
 #endif
     return v;
@@ -299,7 +299,7 @@ USHORT fort_le_u16_read(const char *cp, int offset)
 DWORD fort_le_u32_read(const char *cp, int offset)
 {
     DWORD v = *((DWORD *) (cp + offset));
-#ifdef FORT_BIG_ENDIAN
+#if FORT_BIG_ENDIAN
     RtlUlongByteSwap(v);
 #endif
     return v;
@@ -309,7 +309,7 @@ BOOL fort_addr_is_local_broadcast(const UINT32 *ip, BOOL isIPv6)
 {
     if (isIPv6) {
         const ip6_addr_t *ip6 = (const ip6_addr_t *) ip;
-        return ip6->addr16[7] == 0xFF02;
+        return ip6->addr16[0] == 0x2FF;
     }
 
     return *ip == 0xFFFFFFFF;

@@ -11,8 +11,7 @@ namespace {
 
 bool compareLessIp6(const ip6_addr_t &l, const ip6_addr_t &r)
 {
-    const qint64 res = qint64(l.hi64) - qint64(r.hi64);
-    return res < 0 || (res == 0 && qint64(l.lo64) < qint64(r.lo64));
+    return memcmp(&l, &r, sizeof(ip6_addr_t)) < 0;
 }
 
 void sortIp6Array(ip6_arr_t &array)

@@ -20,18 +20,6 @@ struct sock_addr
 
 #define sock_addr_get_inp(sap) ((void *) &(sap)->u.in.sin_addr)
 
-namespace {
-
-ip6_addr_t swapIp6(const ip6_addr_t &ip)
-{
-    ip6_addr_t ip6;
-    ip6.lo64 = ntohll(ip.hi64);
-    ip6.hi64 = ntohll(ip.lo64);
-    return ip6;
-}
-
-}
-
 quint32 NetUtil::textToIp4(const QString &text, bool *ok)
 {
     quint32 ip4;
@@ -70,16 +58,14 @@ ip6_addr_t NetUtil::textToIp6(const QString &text, bool *ok)
         memset(&ip6, 0, sizeof(ip6));
     }
 
-    return swapIp6(ip6);
+    return ip6;
 }
 
 QString NetUtil::ip6ToText(const ip6_addr_t &ip)
 {
     wchar_t buf[MAX_IPV6_LEN];
 
-    const ip6_addr_t ip6 = swapIp6(ip);
-
-    if (!InetNtopW(AF_INET6, (PVOID) &ip6, buf, MAX_IPV6_LEN))
+    if (!InetNtopW(AF_INET6, (PVOID) &ip, buf, MAX_IPV6_LEN))
         return QString();
 
     return QString::fromWCharArray(buf);
@@ -103,16 +89,19 @@ quint32 NetUtil::applyIp4Mask(quint32 ip, int nbits)
 ip6_addr_t NetUtil::applyIp6Mask(const ip6_addr_t &ip, int nbits)
 {
     ip6_addr_t ip6 = ip;
-    quint64 *masked = &ip6.lo64;
+    quint64 *masked = &ip6.hi64;
 
     if (nbits <= 64) {
-        ip6.lo64 = quint64(-1LL);
-        masked = &ip6.hi64;
+        *masked = quint64(-1LL);
+        masked = &ip6.lo64;
     } else {
         nbits -= 64;
     }
 
-    *masked |= nbits == 0 ? quint64(-1LL) : (nbits == 64 ? 0 : ((1LL << (64 - nbits)) - 1));
+    quint64 maskedHost = ntohll(*masked);
+    maskedHost |= nbits == 0 ? quint64(-1LL) : (nbits == 64 ? 0 : ((1ULL << (64 - nbits)) - 1));
+    *masked = htonll(maskedHost);
+
     return ip6;
 }
 

@@ -84,8 +84,9 @@ TEST_F(ConfUtilTest, confWriteRead)
     ASSERT_TRUE(DriverCommon::confIp4InRange(data, NetUtil::textToIp4("192.168.255.255")));
     ASSERT_FALSE(DriverCommon::confIp4InRange(data, NetUtil::textToIp4("193.0.0.0")));
     ASSERT_TRUE(DriverCommon::confIp4InRange(data, NetUtil::textToIp4("239.255.255.250")));
-    ASSERT_FALSE(DriverCommon::confIp6InRange(data, NetUtil::textToIp6("::2")));
+    ASSERT_TRUE(DriverCommon::confIp6InRange(data, NetUtil::textToIp6("::2")));
     ASSERT_TRUE(DriverCommon::confIp6InRange(data, NetUtil::textToIp6("::ffff:0:2")));
+    ASSERT_FALSE(DriverCommon::confIp6InRange(data, NetUtil::textToIp6("65::")));
 
     qint8 blockReason = FORT_BLOCK_REASON_UNKNOWN;
 

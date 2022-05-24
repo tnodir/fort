@@ -36,6 +36,36 @@ TEST_F(NetUtilTest, ip6Text)
     ASSERT_EQ(NetUtil::ip6ToText(NetUtil::textToIp6(ip6Str)), ip6Str);
 }
 
+TEST_F(NetUtilTest, ip6Bytes01)
+{
+    const ip6_addr_t ip = NetUtil::textToIp6("ff02::1:3");
+
+    ASSERT_EQ(ip.addr32[0], 0x2ff);
+    ASSERT_EQ(ip.addr32[1], 0);
+    ASSERT_EQ(ip.addr32[2], 0);
+    ASSERT_EQ(ip.addr32[3], 0x3000100);
+}
+
+TEST_F(NetUtilTest, ip6Bytes02)
+{
+    const ip6_addr_t ip = NetUtil::textToIp6("fe80::e58c:84f8:a156:2a23");
+
+    ASSERT_EQ(ip.addr32[0], 0x80fe);
+    ASSERT_EQ(ip.addr32[1], 0);
+    ASSERT_EQ(ip.addr32[2], 0xf8848ce5);
+    ASSERT_EQ(ip.addr32[3], 0x232a56a1);
+}
+
+TEST_F(NetUtilTest, ip6Mask01)
+{
+    const ip6_addr_t ip = NetUtil::applyIp6Mask(NetUtil::textToIp6("::2"), 126);
+
+    ASSERT_EQ(ip.addr32[0], 0);
+    ASSERT_EQ(ip.addr32[1], 0);
+    ASSERT_EQ(ip.addr32[2], 0);
+    ASSERT_EQ(ip.addr32[3], 0x03000000);
+}
+
 TEST_F(NetUtilTest, ip4Ranges)
 {
     IpRange ipRange;

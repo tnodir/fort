@@ -44,9 +44,7 @@
 #    endif
 #endif
 
-#if 0
-#    define FORT_BIG_ENDIAN 1
-#endif
+#define FORT_BIG_ENDIAN 0
 
 #if defined(FORT_DRIVER)
 #    define LOG(...) DbgPrintEx(DPFLTR_SYSTEM_ID, DPFLTR_ERROR_LEVEL, "FORT: " __VA_ARGS__)
