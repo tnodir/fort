@@ -84,6 +84,8 @@ void OptMainPage::setupTabBar()
     m_tabBar->addTab(statisticsPage, IconCache::icon(":/icons/chart_bar.png"), QString());
     m_tabBar->addTab(schedulePage, IconCache::icon(":/icons/clock.png"), QString());
 
+    m_tabBar->setTabEnabled(2, false); // TODO: Implement Network Rules
+
     connect(m_tabBar, &QTabWidget::currentChanged, this,
             [&](int tabIndex) { m_pages[tabIndex]->onPageActivated(); });
 }
