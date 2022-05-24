@@ -1,5 +1,12 @@
 Fort Firewall ChangeLog
 
+v3.5.7, 2022-05-24:
+- Support IPv6.
+- UI: Default User specific Logs path is "%LocalAppData%/Fort Firewall/logs".
+- UI: RpcManager: Try to reconnect to service on error.
+- UI: Update SQLite to v3.38.5
+- Driver: Reliably wait for worker thread on unload.
+
 v3.5.6, 2022-03-18:
 - UI: Programs: Show time icon for auto-block apps (Remove "Bl." column).
 - UI: Options: Update app's group after removing.
