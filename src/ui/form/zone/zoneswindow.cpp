@@ -32,7 +32,7 @@
 
 namespace {
 
-#define ZONES_HEADER_VERSION 2
+#define ZONES_HEADER_VERSION 3
 
 }
 

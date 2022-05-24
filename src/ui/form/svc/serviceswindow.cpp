@@ -25,7 +25,7 @@
 
 namespace {
 
-#define SERVICES_HEADER_VERSION 1
+#define SERVICES_HEADER_VERSION 2
 
 }
 

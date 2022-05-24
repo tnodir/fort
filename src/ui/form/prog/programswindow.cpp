@@ -25,7 +25,7 @@
 
 namespace {
 
-#define APPS_HEADER_VERSION 4
+#define APPS_HEADER_VERSION 5
 
 }
 

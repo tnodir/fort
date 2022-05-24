@@ -22,7 +22,7 @@
 
 namespace {
 
-#define CONN_LIST_HEADER_VERSION 1
+#define CONN_LIST_HEADER_VERSION 2
 
 }
 
