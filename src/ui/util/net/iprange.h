@@ -76,7 +76,7 @@ public:
 
     QString toText() const;
 
-    // Parse IPv4 ranges
+    // Parse IP ranges
     bool fromText(const QString &text);
     bool fromList(const StringViewList &list, int emptyNetMask = 32, bool sort = true);
 

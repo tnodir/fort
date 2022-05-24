@@ -30,7 +30,7 @@ OptMainPage::OptMainPage(OptionsController *ctrl, QWidget *parent) : OptBasePage
 void OptMainPage::onRetranslateUi()
 {
     m_tabBar->setTabText(0, tr("Options"));
-    m_tabBar->setTabText(1, tr("IPv4 Addresses"));
+    m_tabBar->setTabText(1, tr("IP Addresses"));
     m_tabBar->setTabText(2, tr("Network Rules"));
     m_tabBar->setTabText(3, tr("Application Groups"));
     m_tabBar->setTabText(4, tr("Statistics"));

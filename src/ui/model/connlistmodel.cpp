@@ -371,5 +371,8 @@ QString ConnListModel::formatIpPort(const ip_addr_t &ip, quint16 port, bool isIP
             address = hostName;
         }
     }
+    if (isIPv6) {
+        address = '[' + address + ']';
+    }
     return address + ':' + QString::number(port);
 }
