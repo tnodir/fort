@@ -194,7 +194,7 @@ IpRange::ParseError IpRange::parseIp4Address(const QString &ip, const QString &m
     bool ok;
     from = NetUtil::textToIp4(ip, &ok);
     if (!ok) {
-        setErrorMessage(tr("Bad IPv4 address"));
+        setErrorMessage(tr("Bad IP address"));
         return ErrorBadAddress;
     }
 
@@ -231,12 +231,12 @@ IpRange::ParseError IpRange::parseIp4AddressMaskFull(
     bool ok;
     to = NetUtil::textToIp4(mask, &ok);
     if (!ok) {
-        setErrorMessage(tr("Bad second IPv4 address"));
+        setErrorMessage(tr("Bad second IP address"));
         return ErrorBadAddress2;
     }
 
     if (from > to) {
-        setErrorMessage(tr("Bad IPv4 range"));
+        setErrorMessage(tr("Bad range"));
         return ErrorBadRange;
     }
 
@@ -250,7 +250,7 @@ IpRange::ParseError IpRange::parseIp4AddressMaskPrefix(
     const int nbits = mask.isEmpty() ? emptyNetMask : mask.toInt(&ok);
 
     if (!ok || nbits < 0 || nbits > 32) {
-        setErrorMessage(tr("Bad IPv4 mask value"));
+        setErrorMessage(tr("Bad mask"));
         return ErrorBadMask;
     }
 
@@ -267,7 +267,7 @@ IpRange::ParseError IpRange::parseIp6Address(const QString &ip, const QString &m
     bool ok;
     from = NetUtil::textToIp6(ip, &ok);
     if (!ok) {
-        setErrorMessage(tr("Bad IPv6 address"));
+        setErrorMessage(tr("Bad IP address"));
         return ErrorBadAddress;
     }
 
@@ -307,7 +307,7 @@ IpRange::ParseError IpRange::parseIp6AddressMaskFull(
     to = NetUtil::textToIp6(mask, &ok);
 
     if (!ok) {
-        setErrorMessage(tr("Bad second IP IPv6 address"));
+        setErrorMessage(tr("Bad second IP address"));
         return ErrorBadAddress2;
     }
 
@@ -323,7 +323,7 @@ IpRange::ParseError IpRange::parseIp6AddressMaskPrefix(
     const int nbits = mask.toInt(&ok);
 
     if (!ok || nbits < 0 || nbits > 128) {
-        setErrorMessage(tr("Bad IPv6 mask value"));
+        setErrorMessage(tr("Bad mask"));
         return ErrorBadMask;
     }
 

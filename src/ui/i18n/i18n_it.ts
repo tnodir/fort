@@ -218,6 +218,10 @@
         <source>Upload speed limit:</source>
         <translation>Limite di velocità di caricamento:</translation>
     </message>
+    <message>
+        <source>Apply same rules to child processes</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -334,6 +338,10 @@
         <source>Unknown</source>
         <translation>Sconosciuto</translation>
     </message>
+    <message>
+        <source>Inherited</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -406,7 +414,7 @@
     </message>
 </context>
 <context>
-    <name>Ip4Range</name>
+    <name>IpRange</name>
     <message>
         <source>Bad IP address</source>
         <translation>Indirizzo IP errato</translation>
@@ -482,8 +490,8 @@
         <translation>Statistiche</translation>
     </message>
     <message>
-        <source>IPv4 Addresses</source>
-        <translation>Indirizzi IPv4</translation>
+        <source>IP Addresses</source>
+        <translation>Indirizzi IP</translation>
     </message>
     <message>
         <source>Releases</source>
@@ -630,6 +638,74 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
         <source>Not Installed</source>
         <translation>Non installato</translation>
     </message>
+    <message>
+        <source>Tray</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Action Confirmations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Event:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Action:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tray Menu Flags</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation type="unfinished">Esci</translation>
+    </message>
+    <message>
+        <source>Single Click</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Double Click</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Middle Click</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Programs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Statistics</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show/Hide Traffic Graph</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Filter Enabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Stop Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Stop Internet Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Auto-Allow New Programs</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -767,6 +843,10 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
         <source> hour(s)</source>
         <translation> ora/e</translation>
     </message>
+    <message>
+        <source>Apply same rules to child processes</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsWindow</name>
@@ -813,6 +893,10 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     <message>
         <source>Programs</source>
         <translation>Programmi</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -882,6 +966,52 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     <message>
         <source> hour(s)</source>
         <translation> ora/e</translation>
+    </message>
+</context>
+<context>
+    <name>ServiceListModel</name>
+    <message>
+        <source>Service Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process ID</source>
+        <translation type="unfinished">ID processo</translation>
+    </message>
+</context>
+<context>
+    <name>ServicesWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation type="unfinished">Modifica</translation>
+    </message>
+    <message>
+        <source>Make Trackable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Revert Changes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Program</source>
+        <translation type="unfinished">Aggiungi programma</translation>
+    </message>
+    <message>
+        <source>Refresh</source>
+        <translation type="unfinished">Aggiorna</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please restart the computer to reload changed services!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1236,6 +1366,14 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     <message>
         <source>Auto-Allow New Programs</source>
         <translation>Autorizza nuovi programmi</translation>
+    </message>
+    <message>
+        <source>Are you sure to switch the &quot;%1&quot;?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to quit the program?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

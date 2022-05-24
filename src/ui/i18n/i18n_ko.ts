@@ -414,7 +414,7 @@
     </message>
 </context>
 <context>
-    <name>Ip4Range</name>
+    <name>IpRange</name>
     <message>
         <source>Error at line %1: %2</source>
         <translation>%1 라인 오류: %2</translation>
@@ -454,8 +454,8 @@
         <translation>옵션</translation>
     </message>
     <message>
-        <source>IPv4 Addresses</source>
-        <translation>IPv4 주소</translation>
+        <source>IP Addresses</source>
+        <translation>IP 주소</translation>
     </message>
     <message>
         <source>Network Rules</source>

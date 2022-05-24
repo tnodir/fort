@@ -414,7 +414,7 @@
     </message>
 </context>
 <context>
-    <name>Ip4Range</name>
+    <name>IpRange</name>
     <message>
         <source>Error at line %1: %2</source>
         <translation></translation>
@@ -454,7 +454,7 @@
         <translation></translation>
     </message>
     <message>
-        <source>IPv4 Addresses</source>
+        <source>IP Addresses</source>
         <translation></translation>
     </message>
     <message>

@@ -414,7 +414,7 @@
     </message>
 </context>
 <context>
-    <name>Ip4Range</name>
+    <name>IpRange</name>
     <message>
         <source>Bad IP address</source>
         <translation>Mauvaise adresse IP</translation>
@@ -454,8 +454,8 @@
         <translation>Options</translation>
     </message>
     <message>
-        <source>IPv4 Addresses</source>
-        <translation>Adresses IPv4</translation>
+        <source>IP Addresses</source>
+        <translation>Adresses IP</translation>
     </message>
     <message>
         <source>Network Rules</source>

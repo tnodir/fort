@@ -414,7 +414,7 @@
     </message>
 </context>
 <context>
-    <name>Ip4Range</name>
+    <name>IpRange</name>
     <message>
         <source>Error at line %1: %2</source>
         <translation>Napaka v vrstici %1: %2</translation>
@@ -454,8 +454,8 @@
         <translation>Možnosti</translation>
     </message>
     <message>
-        <source>IPv4 Addresses</source>
-        <translation>Naslovi IPv4</translation>
+        <source>IP Addresses</source>
+        <translation>Naslovi IP</translation>
     </message>
     <message>
         <source>Network Rules</source>

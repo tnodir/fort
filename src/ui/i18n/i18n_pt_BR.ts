@@ -218,6 +218,10 @@
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Programas (*.exe);;Todos os arquivos (*.*)</translation>
     </message>
+    <message>
+        <source>Apply same rules to child processes</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -334,6 +338,10 @@
         <source>Unknown</source>
         <translation>Desconhecido</translation>
     </message>
+    <message>
+        <source>Inherited</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -406,7 +414,7 @@
     </message>
 </context>
 <context>
-    <name>Ip4Range</name>
+    <name>IpRange</name>
     <message>
         <source>Error at line %1: %2</source>
         <translation>Erro na linha %1: %2</translation>
@@ -446,8 +454,8 @@
         <translation>Opções</translation>
     </message>
     <message>
-        <source>IPv4 Addresses</source>
-        <translation>Endereços IPv4</translation>
+        <source>IP Addresses</source>
+        <translation>Endereços IP</translation>
     </message>
     <message>
         <source>Network Rules</source>
@@ -629,6 +637,74 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Are you sure to reinstall the Driver?</source>
         <translation>Tem certeza que deseja reinstalar o Driver?</translation>
     </message>
+    <message>
+        <source>Tray</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Action Confirmations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Event:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Action:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tray Menu Flags</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation type="unfinished">Sair</translation>
+    </message>
+    <message>
+        <source>Single Click</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Double Click</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Middle Click</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Programs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Statistics</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show/Hide Traffic Graph</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Filter Enabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Stop Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Stop Internet Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Auto-Allow New Programs</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -766,6 +842,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Programas (*.exe);;Todos os arquivos (*.*)</translation>
     </message>
+    <message>
+        <source>Apply same rules to child processes</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsWindow</name>
@@ -812,6 +892,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Are you sure to remove all non-existent programs?</source>
         <translation>Tem certeza de que deseja remover todos os programas inexistentes?</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -881,6 +965,52 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source> hour(s)</source>
         <translation> hora(s)</translation>
+    </message>
+</context>
+<context>
+    <name>ServiceListModel</name>
+    <message>
+        <source>Service Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process ID</source>
+        <translation type="unfinished">ID do Processo</translation>
+    </message>
+</context>
+<context>
+    <name>ServicesWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation type="unfinished">Editar</translation>
+    </message>
+    <message>
+        <source>Make Trackable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Revert Changes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Program</source>
+        <translation type="unfinished">Adicionar Programa</translation>
+    </message>
+    <message>
+        <source>Refresh</source>
+        <translation type="unfinished">Atualizar</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please restart the computer to reload changed services!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1235,6 +1365,14 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Statistics</source>
         <translation>Estatísticas</translation>
+    </message>
+    <message>
+        <source>Are you sure to switch the &quot;%1&quot;?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to quit the program?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

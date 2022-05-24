@@ -414,7 +414,7 @@
     </message>
 </context>
 <context>
-    <name>Ip4Range</name>
+    <name>IpRange</name>
     <message>
         <source>Error at line %1: %2</source>
         <translation>分析 %1 出错：%2</translation>
@@ -454,8 +454,8 @@
         <translation>选项</translation>
     </message>
     <message>
-        <source>IPv4 Addresses</source>
-        <translation>IPv4地址</translation>
+        <source>IP Addresses</source>
+        <translation>IP地址</translation>
     </message>
     <message>
         <source>Network Rules</source>
