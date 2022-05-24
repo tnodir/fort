@@ -66,9 +66,9 @@ CREATE TABLE conn(
   ip_proto INTEGER NOT NULL,
   local_port INTEGER NOT NULL,
   remote_port INTEGER NOT NULL,
-  local_ip4 INTEGER,
+  local_ip INTEGER,
   local_ip6 BLOB,
-  remote_ip4 INTEGER,
+  remote_ip INTEGER,
   remote_ip6 BLOB
 );
 
