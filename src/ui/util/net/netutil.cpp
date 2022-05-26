@@ -98,9 +98,7 @@ ip6_addr_t NetUtil::applyIp6Mask(const ip6_addr_t &ip, int nbits)
         nbits -= 64;
     }
 
-    quint64 maskedHost = ntohll(*masked);
-    maskedHost |= nbits == 0 ? quint64(-1LL) : (nbits == 64 ? 0 : ((1ULL << (64 - nbits)) - 1));
-    *masked = htonll(maskedHost);
+    *masked |= nbits == 0 ? quint64(-1LL) : (nbits == 64 ? 0 : htonll((1ULL << (64 - nbits)) - 1));
 
     return ip6;
 }
