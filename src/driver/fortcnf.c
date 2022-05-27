@@ -270,16 +270,21 @@ static void fort_conf_ref_del(PFORT_CONF_REF conf_ref)
     tommy_free(conf_ref);
 }
 
+static void fort_conf_ref_put_locked(PFORT_DEVICE_CONF device_conf, PFORT_CONF_REF conf_ref)
+{
+    const UINT32 refcount = --conf_ref->refcount;
+
+    if (refcount == 0 && conf_ref != device_conf->ref) {
+        fort_conf_ref_del(conf_ref);
+    }
+}
+
 FORT_API void fort_conf_ref_put(PFORT_DEVICE_CONF device_conf, PFORT_CONF_REF conf_ref)
 {
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&device_conf->ref_lock, &lock_queue);
     {
-        const UINT32 refcount = --conf_ref->refcount;
-
-        if (refcount == 0 && conf_ref != device_conf->ref) {
-            fort_conf_ref_del(conf_ref);
-        }
+        fort_conf_ref_put_locked(device_conf, conf_ref);
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
@@ -332,12 +337,12 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_
         }
 
         device_conf->conf_flags = conf_flags;
+
+        if (old_conf_ref != NULL) {
+            fort_conf_ref_put_locked(device_conf, old_conf_ref);
+        }
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
-
-    if (old_conf_ref != NULL) {
-        fort_conf_ref_put(device_conf, old_conf_ref);
-    }
 
     return old_conf_flags;
 }
