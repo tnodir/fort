@@ -23,6 +23,7 @@
 #include "fortstat.c"
 #include "fortscb.c"
 #include "forttmr.c"
+#include "forttrace.c"
 #include "fortutl.c"
 #include "fortwrk.c"
 #include "fortcout.c"

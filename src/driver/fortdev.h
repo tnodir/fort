@@ -18,6 +18,8 @@ typedef struct fort_device
     UINT32 accept4_id;
     UINT32 accept6_id;
 
+    PDEVICE_OBJECT object;
+
     PCALLBACK_OBJECT power_cb_obj;
     PVOID power_cb_reg;
 

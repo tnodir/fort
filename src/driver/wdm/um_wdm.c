@@ -465,3 +465,21 @@ NTSTATUS ObReferenceObjectByHandle(HANDLE handle, ACCESS_MASK desiredAccess,
     UNUSED(handleInformation);
     return STATUS_SUCCESS;
 }
+
+ULONG DbgPrint(PCSTR format, ...)
+{
+    UNUSED(format);
+    return 0;
+}
+
+PVOID IoAllocateErrorLogEntry(PVOID ioObject, UCHAR entrySize)
+{
+    UNUSED(ioObject);
+    UNUSED(entrySize);
+    return NULL;
+}
+
+void IoWriteErrorLogEntry(PVOID elEntry)
+{
+    UNUSED(elEntry);
+}

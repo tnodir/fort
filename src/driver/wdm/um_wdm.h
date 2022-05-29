@@ -370,6 +370,30 @@ FORT_API NTSTATUS ObReferenceObjectByHandle(HANDLE handle, ACCESS_MASK desiredAc
         POBJECT_TYPE objectType, KPROCESSOR_MODE accessMode, PVOID *object,
         POBJECT_HANDLE_INFORMATION handleInformation);
 
+FORT_API ULONG DbgPrint(PCSTR format, ...);
+
+#define ERROR_LOG_MAXIMUM_SIZE 240
+
+typedef struct _IO_ERROR_LOG_PACKET
+{
+    UCHAR MajorFunctionCode;
+    UCHAR RetryCount;
+    USHORT DumpDataSize;
+    USHORT NumberOfStrings;
+    USHORT StringOffset;
+    USHORT EventCategory;
+    NTSTATUS ErrorCode;
+    ULONG UniqueErrorValue;
+    NTSTATUS FinalStatus;
+    ULONG SequenceNumber;
+    ULONG IoControlCode;
+    LARGE_INTEGER DeviceOffset;
+    ULONG DumpData[1];
+} IO_ERROR_LOG_PACKET, *PIO_ERROR_LOG_PACKET;
+
+FORT_API PVOID IoAllocateErrorLogEntry(PVOID ioObject, UCHAR entrySize);
+FORT_API void IoWriteErrorLogEntry(PVOID elEntry);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

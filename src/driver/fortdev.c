@@ -7,6 +7,7 @@
 
 #include "fortcout.h"
 #include "fortscb.h"
+#include "forttrace.h"
 
 static PFORT_DEVICE g_device = NULL;
 
@@ -20,6 +21,15 @@ static void fort_device_set(PFORT_DEVICE device)
     g_device = device;
 }
 
+static void fort_device_init(PDEVICE_OBJECT device)
+{
+    fort_device_set(device->DeviceExtension);
+
+    RtlZeroMemory(g_device, sizeof(FORT_DEVICE));
+
+    g_device->object = device;
+}
+
 static void NTAPI fort_worker_reauth(void)
 {
     const FORT_CONF_FLAGS conf_flags = g_device->conf.conf_flags;
@@ -29,6 +39,7 @@ static void NTAPI fort_worker_reauth(void)
 
     if (!NT_SUCCESS(status)) {
         LOG("Worker Reauth: Error: %x\n", status);
+        TRACE(FORT_DEVICE_WORKER_REAUTH_ERROR, status, 0, 0);
     }
 }
 
@@ -175,8 +186,6 @@ static NTSTATUS fort_device_control_getlog(PVOID out, ULONG out_len, PIRP irp, U
             IoAcquireCancelSpinLock(&cirq);
             IoSetCancelRoutine(irp, fort_device_cancel_pending);
             IoReleaseCancelSpinLock(cirq);
-
-            return STATUS_PENDING;
         }
         return status;
     }
@@ -291,6 +300,7 @@ FORT_API NTSTATUS fort_device_control(PDEVICE_OBJECT device, PIRP irp)
 
     if (!NT_SUCCESS(status) && status != FORT_STATUS_USER_ERROR) {
         LOG("Device Control: Error: %x\n", status);
+        TRACE(FORT_DEVICE_DEVICE_CONTROL_ERROR, status, 0, 0);
     }
 
     if (status != STATUS_PENDING) {
@@ -304,9 +314,7 @@ FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device)
 {
     NTSTATUS status = STATUS_UNSUCCESSFUL;
 
-    fort_device_set(device->DeviceExtension);
-
-    RtlZeroMemory(fort_device(), sizeof(FORT_DEVICE));
+    fort_device_init(device);
 
     fort_worker_func_set(&fort_device()->worker, FORT_WORKER_REAUTH, &fort_worker_reauth);
     fort_worker_func_set(&fort_device()->worker, FORT_WORKER_PSTREE, &fort_pstree_enum_processes);

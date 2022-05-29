@@ -2,6 +2,8 @@
 
 #include "fortpkt.h"
 
+#include "forttrace.h"
+
 #define HTONL(l) _byteswap_ulong(l)
 #define NTOHL(l) HTONL(l)
 #define HTONS(s) _byteswap_ushort(s)
@@ -137,6 +139,7 @@ FORT_API void fort_defer_open(PFORT_DEFER defer)
         defer->transport_injection4_id = INVALID_HANDLE_VALUE;
 
         LOG("Defer: Transport injection init error: %x\n", status);
+        TRACE(FORT_PACKET_DEFER_TRANSPORT_INIT_ERROR, status, 0, 0);
     }
 
     status = FwpsInjectionHandleCreate0(
@@ -146,6 +149,7 @@ FORT_API void fort_defer_open(PFORT_DEFER defer)
         defer->stream_injection4_id = INVALID_HANDLE_VALUE;
 
         LOG("Defer: Stream injection init error: %x\n", status);
+        TRACE(FORT_PACKET_DEFER_STREAM_INIT_ERROR, status, 0, 0);
     }
 
     tommy_arrayof_init(&defer->packets, sizeof(FORT_PACKET));
@@ -391,6 +395,7 @@ FORT_API void fort_defer_packet_free(
 
         if (!NT_SUCCESS(status)) {
             LOG("Defer: Injection error: %x\n", status);
+            TRACE(FORT_PACKET_DEFER_INJECTION_ERROR, status, 0, 0);
         }
 
         FwpsFreeCloneNetBufferList0(clonedNetBufList, 0);
@@ -431,6 +436,7 @@ static void fort_defer_packet_inject(PFORT_DEFER defer, PFORT_PACKET pkt,
 
         if (!NT_SUCCESS(status)) {
             LOG("Defer: Injection prepare error: %x\n", status);
+            TRACE(FORT_PACKET_DEFER_INJECTION_PREPARE_ERROR, status, 0, 0);
 
             if (clonedNetBufList != NULL) {
                 clonedNetBufList->Status = STATUS_SUCCESS;

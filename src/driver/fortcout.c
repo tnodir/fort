@@ -8,6 +8,7 @@
 
 #include "fortdev.h"
 #include "fortps.h"
+#include "forttrace.h"
 #include "fortutl.h"
 
 static void fort_callout_classify_block(FWPS_CLASSIFY_OUT0 *classifyOut)
@@ -65,6 +66,7 @@ static BOOL fort_callout_classify_blocked_log_stat(const FWPS_INCOMING_VALUES0 *
         }
 
         LOG("Classify v4: Flow assoc. error: %x\n", status);
+        TRACE(FORT_CALLOUT_FLOW_ASSOC_ERROR, status, 0, 0);
     } else if (is_new_proc) {
         fort_buffer_proc_new_write(&fort_device()->buffer, process_id, real_path->Length,
                 real_path->Buffer, irp, info);
@@ -654,6 +656,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
     status = FwpsCalloutRegister0(device, &c, &fort_device()->connect4_id);
     if (!NT_SUCCESS(status)) {
         LOG("Register Connect V4: Error: %x\n", status);
+        TRACE(FORT_CALLOUT_REGISTER_CONNECT_V4_ERROR, status, 0, 0);
         return status;
     }
 
@@ -664,6 +667,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
     status = FwpsCalloutRegister0(device, &c, &fort_device()->connect6_id);
     if (!NT_SUCCESS(status)) {
         LOG("Register Connect V6: Error: %x\n", status);
+        TRACE(FORT_CALLOUT_REGISTER_CONNECT_V6_ERROR, status, 0, 0);
         return status;
     }
 
@@ -674,6 +678,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
     status = FwpsCalloutRegister0(device, &c, &fort_device()->accept4_id);
     if (!NT_SUCCESS(status)) {
         LOG("Register Accept V4: Error: %x\n", status);
+        TRACE(FORT_CALLOUT_REGISTER_ACCEPT_V4_ERROR, status, 0, 0);
         return status;
     }
 
@@ -684,6 +689,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
     status = FwpsCalloutRegister0(device, &c, &fort_device()->accept6_id);
     if (!NT_SUCCESS(status)) {
         LOG("Register Accept V6: Error: %x\n", status);
+        TRACE(FORT_CALLOUT_REGISTER_ACCEPT_V6_ERROR, status, 0, 0);
         return status;
     }
 
@@ -697,6 +703,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
     status = FwpsCalloutRegister0(device, &c, &stat->stream4_id);
     if (!NT_SUCCESS(status)) {
         LOG("Register Stream V4: Error: %x\n", status);
+        TRACE(FORT_CALLOUT_REGISTER_STREAM_V4_ERROR, status, 0, 0);
         return status;
     }
 
@@ -710,6 +717,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
     status = FwpsCalloutRegister0(device, &c, &stat->stream6_id);
     if (!NT_SUCCESS(status)) {
         LOG("Register Stream V6: Error: %x\n", status);
+        TRACE(FORT_CALLOUT_REGISTER_STREAM_V6_ERROR, status, 0, 0);
         return status;
     }
 
@@ -722,6 +730,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
     status = FwpsCalloutRegister0(device, &c, &stat->datagram4_id);
     if (!NT_SUCCESS(status)) {
         LOG("Register Datagram V4: Error: %x\n", status);
+        TRACE(FORT_CALLOUT_REGISTER_DATAGRAM_V4_ERROR, status, 0, 0);
         return status;
     }
 
@@ -734,6 +743,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
     status = FwpsCalloutRegister0(device, &c, &stat->datagram6_id);
     if (!NT_SUCCESS(status)) {
         LOG("Register Datagram V6: Error: %x\n", status);
+        TRACE(FORT_CALLOUT_REGISTER_DATAGRAM_V6_ERROR, status, 0, 0);
         return status;
     }
 
@@ -747,6 +757,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
     status = FwpsCalloutRegister0(device, &c, &stat->in_transport4_id);
     if (!NT_SUCCESS(status)) {
         LOG("Register Inbound Transport V4: Error: %x\n", status);
+        TRACE(FORT_CALLOUT_REGISTER_INBOUND_TRANSPORT_V4_ERROR, status, 0, 0);
         return status;
     }
 
@@ -759,6 +770,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
     status = FwpsCalloutRegister0(device, &c, &stat->in_transport6_id);
     if (!NT_SUCCESS(status)) {
         LOG("Register Inbound Transport V6: Error: %x\n", status);
+        TRACE(FORT_CALLOUT_REGISTER_INBOUND_TRANSPORT_V6_ERROR, status, 0, 0);
         return status;
     }
 
@@ -771,6 +783,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
     status = FwpsCalloutRegister0(device, &c, &stat->out_transport4_id);
     if (!NT_SUCCESS(status)) {
         LOG("Register Outbound Transport V4: Error: %x\n", status);
+        TRACE(FORT_CALLOUT_REGISTER_OUTBOUND_TRANSPORT_V4_ERROR, status, 0, 0);
         return status;
     }
 
@@ -783,6 +796,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
     status = FwpsCalloutRegister0(device, &c, &stat->out_transport6_id);
     if (!NT_SUCCESS(status)) {
         LOG("Register Outbound Transport V6: Error: %x\n", status);
+        TRACE(FORT_CALLOUT_REGISTER_OUTBOUND_TRANSPORT_V6_ERROR, status, 0, 0);
         return status;
     }
 
@@ -949,6 +963,7 @@ FORT_API NTSTATUS fort_callout_force_reauth(
                         || conf_flags.log_blocked_ip));
     } else {
         LOG("Callout Reauth: Error: %x\n", status);
+        TRACE(FORT_CALLOUT_CALLOUT_REAUTH_ERROR, status, 0, 0);
     }
 
     return status;
@@ -1004,6 +1019,7 @@ FORT_API void NTAPI fort_callout_timer(void)
         status = fort_buffer_prepare(buf, len, &out, &irp, &info);
         if (!NT_SUCCESS(status)) {
             LOG("Callout Timer: Error: %x\n", status);
+            TRACE(FORT_CALLOUT_CALLOUT_TIMER_ERROR, status, 0, 0);
             break;
         }
 

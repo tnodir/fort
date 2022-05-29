@@ -4,6 +4,7 @@
 
 #include "fortcb.h"
 #include "fortdev.h"
+#include "forttrace.h"
 #include "fortutl.h"
 
 #define FORT_PSTREE_POOL_TAG 'PwfF'
@@ -382,6 +383,7 @@ static void fort_pstree_update(PFORT_PSTREE ps_tree, BOOL active)
 
     if (!NT_SUCCESS(status)) {
         LOG("PsTree: Update Error: %x\n", status);
+        TRACE(FORT_PSTREE_UPDATE_ERROR, status, 0, 0);
     }
 }
 
@@ -652,6 +654,7 @@ FORT_API void NTAPI fort_pstree_enum_processes(void)
         fort_pstree_enum_processes_loop(buffer);
     } else {
         LOG("PsTree: Enum Processes Error: %x\n", status);
+        TRACE(FORT_PSTREE_ENUM_PROCESSES_ERROR, status, 0, 0);
     }
 
     fort_mem_free(buffer, FORT_PSTREE_POOL_TAG);

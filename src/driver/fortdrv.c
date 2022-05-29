@@ -6,6 +6,7 @@
 
 #include "fortcb.h"
 #include "fortdev.h"
+#include "forttrace.h"
 #include "fortutl.h"
 
 static void fort_driver_unload(PDRIVER_OBJECT driver)
@@ -75,6 +76,7 @@ NTSTATUS DriverEntry(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 
     if (!NT_SUCCESS(status)) {
         LOG("Entry: Error: %x\n", status);
+        TRACE(FORT_DRIVER_ENTRY_ERROR, status, 0, 0);
 
         fort_driver_unload(driver);
     }

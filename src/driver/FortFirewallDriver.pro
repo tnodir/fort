@@ -20,6 +20,7 @@ SOURCES += \
     forttds.c \
     forttlsf.c \
     forttmr.c \
+    forttrace.c \
     fortutl.c \
     fortwrk.c \
     loader/fortdl.c \
@@ -39,6 +40,7 @@ SOURCES += \
     wdm/um_wdm.c
 
 HEADERS += \
+    evt/fortevt.h \
     fortbuf.h \
     fortcb.h \
     fortcnf.h \
@@ -54,6 +56,7 @@ HEADERS += \
     forttds.h \
     forttlsf.h \
     forttmr.h \
+    forttrace.h \
     fortutl.h \
     fortwrk.h \
     loader/fortdl.h \
@@ -77,6 +80,7 @@ ASM_FILES += \
     proxycb/fortpcb_src_x86.asm
 
 OTHER_FILES += \
+    evt/fortevt.mc \
     loader/fort.rsa.pub \
     scripts/*.bat
 

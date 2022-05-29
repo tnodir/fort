@@ -2,6 +2,8 @@
 
 #include "fortbuf.h"
 
+#include "forttrace.h"
+
 #define FORT_BUFFER_POOL_TAG 'BwfF'
 
 static PFORT_BUFFER_DATA fort_buffer_data_new(PFORT_BUFFER buf)
@@ -123,6 +125,7 @@ FORT_API NTSTATUS fort_buffer_prepare(
         PFORT_BUFFER_DATA data = fort_buffer_data_alloc(buf, len);
         if (data == NULL) {
             LOG("Buffer OOM: len=%d\n", len);
+            TRACE(FORT_BUFFER_OOM, STATUS_INSUFFICIENT_RESOURCES, len, 0);
             return STATUS_INSUFFICIENT_RESOURCES;
         }
 
