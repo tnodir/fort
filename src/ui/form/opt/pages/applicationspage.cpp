@@ -76,9 +76,6 @@ void ApplicationsPage::onRetranslateUi()
     m_btAddGroup->setText(tr("Add Group"));
     m_btRenameGroup->setText(tr("Rename Group"));
 
-    m_cbBlockAll->setText(tr("Block All"));
-    m_cbAllowAll->setText(tr("Allow All"));
-
     m_btGroupOptions->setText(tr("Options"));
     m_cbApplyChild->setText(tr("Apply same rules to child processes"));
 
@@ -177,14 +174,10 @@ QLayout *ApplicationsPage::setupHeader()
     setupAddGroup();
     setupRenameGroup();
 
-    setupBlockAllowAll();
-
     layout->addWidget(m_editGroupName);
     layout->addWidget(m_btAddGroup);
     layout->addWidget(m_btRenameGroup);
     layout->addStretch();
-    layout->addWidget(m_cbBlockAll);
-    layout->addWidget(m_cbAllowAll);
 
     return layout;
 }
@@ -237,34 +230,6 @@ void ApplicationsPage::setupRenameGroup()
 
         ctrl()->setOptEdited();
     });
-}
-
-void ApplicationsPage::setupBlockAllowAll()
-{
-    m_cbBlockAll = ControlUtil::createCheckBox(conf()->appBlockAll(), [&](bool checked) {
-        conf()->setAppBlockAll(checked);
-        ctrl()->setFlagsEdited();
-    });
-    m_cbBlockAll->setIcon(IconCache::icon(":/icons/deny.png"));
-
-    m_cbAllowAll = ControlUtil::createCheckBox(conf()->appAllowAll(), [&](bool checked) {
-        conf()->setAppAllowAll(checked);
-        ctrl()->setFlagsEdited();
-    });
-    m_cbAllowAll->setIcon(IconCache::icon(":/icons/accept.png"));
-
-    const auto refreshBlockAllowAllEnabled = [&] {
-        const bool blockAll = m_cbBlockAll->isChecked();
-        const bool allowAll = m_cbAllowAll->isChecked();
-
-        m_cbBlockAll->setEnabled(blockAll || !allowAll);
-        m_cbAllowAll->setEnabled(!blockAll || allowAll);
-    };
-
-    refreshBlockAllowAllEnabled();
-
-    connect(m_cbBlockAll, &QCheckBox::toggled, this, refreshBlockAllowAllEnabled);
-    connect(m_cbAllowAll, &QCheckBox::toggled, this, refreshBlockAllowAllEnabled);
 }
 
 void ApplicationsPage::setupTabBar()

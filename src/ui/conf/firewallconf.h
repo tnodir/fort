@@ -81,6 +81,12 @@ public:
     bool appAllowAll() const { return m_appAllowAll; }
     void setAppAllowAll(bool appAllowAll);
 
+    int filterModeIndex() const;
+    void setFilterModeIndex(int index);
+
+    static QStringList filterModeNames();
+    static QStringList filterModeIconPaths();
+
     bool activePeriodEnabled() const { return m_activePeriodEnabled; }
     void setActivePeriodEnabled(bool activePeriodEnabled);
 

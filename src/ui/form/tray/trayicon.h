@@ -4,6 +4,7 @@
 #include <QSystemTrayIcon>
 
 QT_FORWARD_DECLARE_CLASS(QAction)
+QT_FORWARD_DECLARE_CLASS(QActionGroup)
 
 class ConfManager;
 class FirewallConf;
@@ -60,15 +61,18 @@ protected slots:
     void saveTrayFlags();
 
     void switchTrayFlag(bool checked);
+    void switchFilterMode(QAction *action);
     void quitProgram();
 
 private:
     void setupController();
 
     void retranslateUi();
+    void retranslateFilterModeActions();
 
     void setupUi();
     void setupTrayMenu();
+    void setupTrayMenuFilterMode();
 
     void updateTrayMenuFlags();
     void updateAppGroupActions();
@@ -97,6 +101,8 @@ private:
     QAction *m_stopTrafficAction = nullptr;
     QAction *m_stopInetTrafficAction = nullptr;
     QAction *m_autoAllowProgsAction = nullptr;
+    QMenu *m_filterModeMenu = nullptr;
+    QActionGroup *m_filterModeActions = nullptr;
     QAction *m_quitAction = nullptr;
     QList<QAction *> m_appGroupActions;
 

@@ -170,6 +170,9 @@ void OptionsPage::onRetranslateUi()
     m_cbStopInetTraffic->setText(tr("Stop Internet Traffic"));
     m_cbAllowAllNew->setText(tr("Auto-Allow New Programs"));
 
+    m_labelFilterMode->setText(tr("Filter Mode:"));
+    retranslateComboFilterMode();
+
     m_cbExplorerMenu->setText(tr("Windows Explorer integration"));
     m_cbHotKeys->setText(tr("Hot Keys"));
 
@@ -236,6 +239,22 @@ void OptionsPage::retranslateComboStartMode()
             item->setEnabled(false);
         }
     }
+}
+
+void OptionsPage::retranslateComboFilterMode()
+{
+    int index = 0;
+    const QStringList iconPaths = FirewallConf::filterModeIconPaths();
+    for (const QString &name : FirewallConf::filterModeNames()) {
+        const QString iconPath = iconPaths.at(index);
+
+        m_comboFilterMode->setItemText(index, name);
+        m_comboFilterMode->setItemIcon(index, IconCache::icon(iconPath));
+
+        ++index;
+    }
+
+    m_comboFilterMode->setCurrentIndex(conf()->filterModeIndex());
 }
 
 void OptionsPage::retranslateEditPassword()
@@ -400,15 +419,34 @@ void OptionsPage::setupTrafficBox()
         ctrl()->setFlagsEdited();
     });
 
+    auto filterModeLayout = setupFilterModeLayout();
+
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbFilterEnabled);
     layout->addWidget(m_cbFilterLocals);
     layout->addWidget(m_cbStopTraffic);
     layout->addWidget(m_cbStopInetTraffic);
     layout->addWidget(m_cbAllowAllNew);
+    layout->addLayout(filterModeLayout);
 
     m_gbTraffic = new QGroupBox(this);
     m_gbTraffic->setLayout(layout);
+}
+
+QLayout *OptionsPage::setupFilterModeLayout()
+{
+    m_labelFilterMode = ControlUtil::createLabel();
+
+    m_comboFilterMode =
+            ControlUtil::createComboBox(FirewallConf::filterModeNames(), [&](int index) {
+                if (conf()->filterModeIndex() != index) {
+                    conf()->setFilterModeIndex(index);
+                    ctrl()->emitEdited();
+                }
+            });
+    m_comboFilterMode->setFixedWidth(200);
+
+    return ControlUtil::createRowLayout(m_labelFilterMode, m_comboFilterMode);
 }
 
 void OptionsPage::setupGlobalBox()

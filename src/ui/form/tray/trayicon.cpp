@@ -1,5 +1,6 @@
 #include "trayicon.h"
 
+#include <QActionGroup>
 #include <QApplication>
 #include <QMenu>
 #include <QTimer>
@@ -287,7 +288,19 @@ void TrayIcon::retranslateUi()
     m_stopInetTrafficAction->setText(tr("Stop Internet Traffic"));
     m_autoAllowProgsAction->setText(tr("Auto-Allow New Programs"));
 
+    m_filterModeMenu->setTitle(tr("Filter Mode"));
+    retranslateFilterModeActions();
+
     m_quitAction->setText(tr("Quit"));
+}
+
+void TrayIcon::retranslateFilterModeActions()
+{
+    int index = 0;
+    for (const QString &name : FirewallConf::filterModeNames()) {
+        QAction *a = m_filterModeActions->actions().at(index++);
+        a->setText(name);
+    }
 }
 
 void TrayIcon::setupUi()
@@ -344,10 +357,14 @@ void TrayIcon::setupTrayMenu()
             addAction(m_menu, QIcon(), QString(), this, SLOT(switchTrayFlag(bool)), true);
     addHotKey(m_autoAllowProgsAction, iniUser()->hotKeyAllowAllNew());
 
+    setupTrayMenuFilterMode();
+    m_menu->addMenu(m_filterModeMenu);
+
     m_menu->addSeparator();
 
     for (int i = 0; i < MAX_APP_GROUP_COUNT; ++i) {
-        QAction *a = addAction(m_menu, QIcon(), QString(), this, SLOT(switchTrayFlag(bool)), true);
+        QAction *a = addAction(
+                m_menu, QIcon(), QString(), this, SLOT(switchTrayFlag(bool)), /*checkable=*/true);
 
         if (i < 12) {
             const QString shortcutText =
@@ -365,19 +382,46 @@ void TrayIcon::setupTrayMenu()
     addHotKey(m_quitAction, iniUser()->hotKeyQuit());
 }
 
+void TrayIcon::setupTrayMenuFilterMode()
+{
+    m_filterModeMenu = new QMenu(m_menu);
+
+    m_filterModeActions = new QActionGroup(m_filterModeMenu);
+
+    int index = 0;
+    const QStringList iconPaths = FirewallConf::filterModeIconPaths();
+    for (const QString &name : FirewallConf::filterModeNames()) {
+        const QString iconPath = iconPaths.at(index);
+
+        QAction *a = addAction(m_filterModeMenu, IconCache::icon(iconPath), name,
+                /*receiver=*/nullptr,
+                /*member=*/nullptr, /*checkable=*/true);
+
+        m_filterModeActions->addAction(a);
+        ++index;
+    }
+
+    connect(m_filterModeActions, &QActionGroup::triggered, this, &TrayIcon::switchFilterMode);
+}
+
 void TrayIcon::updateTrayMenuFlags()
 {
     const bool editEnabled = (!settings()->isPasswordRequired() && !windowManager()->optWindow());
 
     m_filterEnabledAction->setEnabled(editEnabled);
-    m_stopTrafficAction->setEnabled(editEnabled);
-    m_stopInetTrafficAction->setEnabled(editEnabled);
-    m_autoAllowProgsAction->setEnabled(editEnabled);
-
     m_filterEnabledAction->setChecked(conf()->filterEnabled());
+
+    m_stopTrafficAction->setEnabled(editEnabled);
     m_stopTrafficAction->setChecked(conf()->stopTraffic());
+
+    m_stopInetTrafficAction->setEnabled(editEnabled);
     m_stopInetTrafficAction->setChecked(conf()->stopInetTraffic());
+
+    m_autoAllowProgsAction->setEnabled(editEnabled);
     m_autoAllowProgsAction->setChecked(conf()->allowAllNew());
+
+    m_filterModeMenu->setEnabled(editEnabled);
+    m_filterModeActions->actions().at(conf()->filterModeIndex())->setChecked(true);
 
     int appGroupIndex = 0;
     for (QAction *action : qAsConst(m_appGroupActions)) {
@@ -418,6 +462,8 @@ void TrayIcon::saveTrayFlags()
     conf()->setStopTraffic(m_stopTrafficAction->isChecked());
     conf()->setStopInetTraffic(m_stopInetTrafficAction->isChecked());
     conf()->setAllowAllNew(m_autoAllowProgsAction->isChecked());
+    conf()->setFilterModeIndex(
+            m_filterModeActions->actions().indexOf(m_filterModeActions->checkedAction()));
 
     int i = 0;
     for (AppGroup *appGroup : conf()->appGroups()) {
@@ -439,6 +485,23 @@ void TrayIcon::switchTrayFlag(bool checked)
             action->setChecked(!checked);
             return;
         }
+    }
+
+    saveTrayFlags();
+}
+
+void TrayIcon::switchFilterMode(QAction *action)
+{
+    const int index = m_filterModeActions->actions().indexOf(action);
+    if (index < 0 || index == conf()->filterModeIndex())
+        return;
+
+    if (iniUser()->confirmTrayFlags()
+            && !windowManager()->showQuestionBox(
+                    tr("Are you sure to select the \"%1\"?").arg(action->text()))) {
+        action = m_filterModeActions->actions().at(conf()->filterModeIndex());
+        action->setChecked(true);
+        return;
     }
 
     saveTrayFlags();

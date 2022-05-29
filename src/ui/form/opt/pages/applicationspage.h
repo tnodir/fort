@@ -39,7 +39,6 @@ private:
     QLayout *setupHeader();
     void setupAddGroup();
     void setupRenameGroup();
-    void setupBlockAllowAll();
     void setupTabBar();
     int addTab(const QString &text);
     QLayout *setupGroupHeader();
@@ -75,8 +74,6 @@ private:
     QLineEdit *m_editGroupName = nullptr;
     QPushButton *m_btAddGroup = nullptr;
     QPushButton *m_btRenameGroup = nullptr;
-    QCheckBox *m_cbBlockAll = nullptr;
-    QCheckBox *m_cbAllowAll = nullptr;
     TabBar *m_tabBar = nullptr;
     QCheckBox *m_cbGroupEnabled = nullptr;
     CheckTimePeriod *m_ctpGroupPeriod = nullptr;

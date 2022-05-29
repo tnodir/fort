@@ -101,6 +101,37 @@ void FirewallConf::setAppAllowAll(bool appAllowAll)
     m_appAllowAll = appAllowAll;
 }
 
+int FirewallConf::filterModeIndex() const
+{
+    return m_appBlockAll ? 0 : (m_appAllowAll ? 1 : 2);
+}
+
+void FirewallConf::setFilterModeIndex(int index)
+{
+    m_appBlockAll = false;
+    m_appAllowAll = false;
+
+    switch (index) {
+    case 0: {
+        m_appBlockAll = true;
+    } break;
+    case 1: {
+        m_appAllowAll = true;
+    } break;
+    }
+}
+
+QStringList FirewallConf::filterModeNames()
+{
+    return { tr("Block, if not allowed"), tr("Allow, if not blocked"),
+        tr("Ignore, if not blocked or allowed") };
+}
+
+QStringList FirewallConf::filterModeIconPaths()
+{
+    return { ":/icons/deny.png", ":/icons/accept.png", ":/icons/error.png" };
+}
+
 void FirewallConf::setActivePeriodEnabled(bool activePeriodEnabled)
 {
     m_activePeriodEnabled = activePeriodEnabled;
