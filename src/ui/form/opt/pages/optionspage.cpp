@@ -441,7 +441,7 @@ QLayout *OptionsPage::setupFilterModeLayout()
             ControlUtil::createComboBox(FirewallConf::filterModeNames(), [&](int index) {
                 if (conf()->filterModeIndex() != index) {
                     conf()->setFilterModeIndex(index);
-                    ctrl()->emitEdited();
+                    ctrl()->setFlagsEdited();
                 }
             });
     m_comboFilterMode->setFixedWidth(200);

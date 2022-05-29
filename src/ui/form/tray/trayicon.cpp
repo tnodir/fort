@@ -421,7 +421,13 @@ void TrayIcon::updateTrayMenuFlags()
     m_autoAllowProgsAction->setChecked(conf()->allowAllNew());
 
     m_filterModeMenu->setEnabled(editEnabled);
-    m_filterModeActions->actions().at(conf()->filterModeIndex())->setChecked(true);
+    {
+        QAction *action = m_filterModeActions->actions().at(conf()->filterModeIndex());
+        if (!action->isChecked()) {
+            action->setChecked(true);
+            m_filterModeMenu->setIcon(action->icon());
+        }
+    }
 
     int appGroupIndex = 0;
     for (QAction *action : qAsConst(m_appGroupActions)) {
@@ -462,9 +468,18 @@ void TrayIcon::saveTrayFlags()
     conf()->setStopTraffic(m_stopTrafficAction->isChecked());
     conf()->setStopInetTraffic(m_stopInetTrafficAction->isChecked());
     conf()->setAllowAllNew(m_autoAllowProgsAction->isChecked());
-    conf()->setFilterModeIndex(
-            m_filterModeActions->actions().indexOf(m_filterModeActions->checkedAction()));
 
+    // Set Filter Mode
+    {
+        QAction *action = m_filterModeActions->checkedAction();
+        const int index = m_filterModeActions->actions().indexOf(action);
+        if (conf()->filterModeIndex() != index) {
+            conf()->setFilterModeIndex(index);
+            m_filterModeMenu->setIcon(action->icon());
+        }
+    }
+
+    // Set App. Groups' enabled states
     int i = 0;
     for (AppGroup *appGroup : conf()->appGroups()) {
         const QAction *action = m_appGroupActions.at(i++);
