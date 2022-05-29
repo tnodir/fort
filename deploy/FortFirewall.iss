@@ -100,6 +100,13 @@ Type: files; Name: "{app}\curl*.*"
 Type: files; Name: "{app}\qt*.*"
 Type: files; Name: "{app}\ChangeLog"
 
+[Registry]
+Root: HKLM; Subkey: "System\CurrentControlSet\Services\EventLog\System\fortfw"; Flags: uninsdeletekey
+Root: HKLM; Subkey: "System\CurrentControlSet\Services\EventLog\System\fortfw"; \
+  ValueType: string; ValueName: "EventMessageFile"; ValueData: "{#APP_EXE}"
+Root: HKLM; Subkey: "System\CurrentControlSet\Services\EventLog\System\fortfw"; \
+  ValueType: dword; ValueName: "TypesSupported"; ValueData: "7"
+
 [Code]
 function PrepareToInstall(var NeedsRestart: Boolean): String;
 var
