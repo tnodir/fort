@@ -7,7 +7,7 @@
 FORT_API void fort_trace_event(
         NTSTATUS event_code, NTSTATUS status, ULONG error_value, ULONG sequence)
 {
-    if (KeGetCurrentIrql() > DISPATCH_LEVEL)
+    if (KeGetCurrentIrql() > DISPATCH_LEVEL || fort_device() == NULL)
         return;
 
     PIO_ERROR_LOG_PACKET packet =
