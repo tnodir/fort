@@ -131,14 +131,6 @@
         <translation>Gruppe umbenennen</translation>
     </message>
     <message>
-        <source>Block All</source>
-        <translation>Alle blockieren</translation>
-    </message>
-    <message>
-        <source>Allow All</source>
-        <translation>Alle zulassen</translation>
-    </message>
-    <message>
         <source>Options</source>
         <translation>Optionen</translation>
     </message>
@@ -384,6 +376,21 @@
     <message>
         <source>Are you sure to remove all connections?</source>
         <translation>Sind Sie sicher, alle Verbindungen zu entfernen?</translation>
+    </message>
+</context>
+<context>
+    <name>FirewallConf</name>
+    <message>
+        <source>Block, if not allowed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow, if not blocked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ignore, if not blocked or allowed</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -706,6 +713,10 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
         <source>Action Confirmations</source>
         <translation>Aktionsbestätigungen</translation>
     </message>
+    <message>
+        <source>Filter Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -747,6 +758,21 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     <message>
         <source>Program exit</source>
         <translation>Programm beenden</translation>
+    </message>
+</context>
+<context>
+    <name>PolicyListBox</name>
+    <message>
+        <source>Add Policy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove Policy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit Policy</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -923,6 +949,25 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     <message>
         <source>Service error.</source>
         <translation>Dienstfehler.</translation>
+    </message>
+</context>
+<context>
+    <name>RulesPage</name>
+    <message>
+        <source>Library of preset rules:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preset rules for applications:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Global rules, applied before application rules:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Global rules, applied after application rules:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1374,6 +1419,14 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     <message>
         <source>Are you sure you want to quit the program?</source>
         <translation>Sind Sie sicher, dass Sie das Programm beenden möchten?</translation>
+    </message>
+    <message>
+        <source>Filter Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to select the &quot;%1&quot;?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

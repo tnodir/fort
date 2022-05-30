@@ -131,14 +131,6 @@
         <translation>重命名分组</translation>
     </message>
     <message>
-        <source>Block All</source>
-        <translation>全部拦截</translation>
-    </message>
-    <message>
-        <source>Allow All</source>
-        <translation>全部允许</translation>
-    </message>
-    <message>
         <source>Options</source>
         <translation>选项</translation>
     </message>
@@ -384,6 +376,21 @@
     <message>
         <source>Are you sure to remove all connections?</source>
         <translation>您确定要移除所有连接吗？</translation>
+    </message>
+</context>
+<context>
+    <name>FirewallConf</name>
+    <message>
+        <source>Block, if not allowed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow, if not blocked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ignore, if not blocked or allowed</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -706,6 +713,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Action Confirmations</source>
         <translation>操作确认</translation>
     </message>
+    <message>
+        <source>Filter Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -747,6 +758,21 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Program exit</source>
         <translation>程序退出</translation>
+    </message>
+</context>
+<context>
+    <name>PolicyListBox</name>
+    <message>
+        <source>Add Policy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove Policy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit Policy</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -923,6 +949,25 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Service error.</source>
         <translation>服务错误。</translation>
+    </message>
+</context>
+<context>
+    <name>RulesPage</name>
+    <message>
+        <source>Library of preset rules:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preset rules for applications:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Global rules, applied before application rules:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Global rules, applied after application rules:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1374,6 +1419,14 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Are you sure you want to quit the program?</source>
         <translation>您确定要退出程序吗？</translation>
+    </message>
+    <message>
+        <source>Filter Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to select the &quot;%1&quot;?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

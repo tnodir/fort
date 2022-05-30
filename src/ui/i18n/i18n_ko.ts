@@ -131,14 +131,6 @@
         <translation>그룹 이름 변경</translation>
     </message>
     <message>
-        <source>Block All</source>
-        <translation>모두 차단</translation>
-    </message>
-    <message>
-        <source>Allow All</source>
-        <translation>모두 허용</translation>
-    </message>
-    <message>
         <source>Options</source>
         <translation>옵션</translation>
     </message>
@@ -384,6 +376,21 @@
     <message>
         <source>Are you sure to remove all connections?</source>
         <translation>모든 연결을 제거하시겠습니까?</translation>
+    </message>
+</context>
+<context>
+    <name>FirewallConf</name>
+    <message>
+        <source>Block, if not allowed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow, if not blocked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ignore, if not blocked or allowed</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -706,6 +713,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Action Confirmations</source>
         <translation>다음 작업 확인</translation>
     </message>
+    <message>
+        <source>Filter Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -747,6 +758,21 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Program exit</source>
         <translation>프로그램 종료</translation>
+    </message>
+</context>
+<context>
+    <name>PolicyListBox</name>
+    <message>
+        <source>Add Policy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove Policy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit Policy</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -923,6 +949,25 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Service error.</source>
         <translation>서비스 오류.</translation>
+    </message>
+</context>
+<context>
+    <name>RulesPage</name>
+    <message>
+        <source>Library of preset rules:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preset rules for applications:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Global rules, applied before application rules:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Global rules, applied after application rules:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1374,6 +1419,14 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Are you sure you want to quit the program?</source>
         <translation>프로그램을 종료하시겠습니까?</translation>
+    </message>
+    <message>
+        <source>Filter Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to select the &quot;%1&quot;?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

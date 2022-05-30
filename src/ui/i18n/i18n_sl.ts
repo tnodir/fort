@@ -131,14 +131,6 @@
         <translation>Preimenuj skupino</translation>
     </message>
     <message>
-        <source>Block All</source>
-        <translation>Blokiraj vse</translation>
-    </message>
-    <message>
-        <source>Allow All</source>
-        <translation>Dovoli vse</translation>
-    </message>
-    <message>
         <source>Options</source>
         <translation>Možnosti</translation>
     </message>
@@ -384,6 +376,21 @@
     <message>
         <source>Are you sure to remove all connections?</source>
         <translation>Ali ste prepričani, da želite odstraniti vse povezave?</translation>
+    </message>
+</context>
+<context>
+    <name>FirewallConf</name>
+    <message>
+        <source>Block, if not allowed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow, if not blocked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ignore, if not blocked or allowed</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -706,6 +713,10 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
         <source>Action Confirmations</source>
         <translation>Potrditve akcij</translation>
     </message>
+    <message>
+        <source>Filter Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -747,6 +758,21 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     <message>
         <source>Program exit</source>
         <translation>Izhod iz programa</translation>
+    </message>
+</context>
+<context>
+    <name>PolicyListBox</name>
+    <message>
+        <source>Add Policy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove Policy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit Policy</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -923,6 +949,25 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     <message>
         <source>Service error.</source>
         <translation>Napaka storitve.</translation>
+    </message>
+</context>
+<context>
+    <name>RulesPage</name>
+    <message>
+        <source>Library of preset rules:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preset rules for applications:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Global rules, applied before application rules:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Global rules, applied after application rules:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1374,6 +1419,14 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     <message>
         <source>Are you sure you want to quit the program?</source>
         <translation>Ali ste prepričani, da želite končati program?</translation>
+    </message>
+    <message>
+        <source>Filter Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to select the &quot;%1&quot;?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

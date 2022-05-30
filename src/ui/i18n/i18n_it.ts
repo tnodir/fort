@@ -163,16 +163,8 @@
         <translation>Rinomina gruppo</translation>
     </message>
     <message>
-        <source>Allow All</source>
-        <translation>Consenti tutto</translation>
-    </message>
-    <message>
         <source>Custom</source>
         <translation>Personalizza</translation>
-    </message>
-    <message>
-        <source>Block All</source>
-        <translation>Blocca tutto</translation>
     </message>
     <message>
         <source>Fragment first TCP packet</source>
@@ -384,6 +376,21 @@
     <message>
         <source>Are you sure to remove all connections?</source>
         <translation>Sei sicuro di rimuovere tutte le connessioni?</translation>
+    </message>
+</context>
+<context>
+    <name>FirewallConf</name>
+    <message>
+        <source>Block, if not allowed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow, if not blocked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ignore, if not blocked or allowed</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -706,6 +713,10 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
         <source>Switch Auto-Allow New Programs</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Filter Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -747,6 +758,21 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     <message>
         <source>Password input</source>
         <translation>Inserimento password</translation>
+    </message>
+</context>
+<context>
+    <name>PolicyListBox</name>
+    <message>
+        <source>Add Policy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove Policy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit Policy</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -923,6 +949,25 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     <message>
         <source>Service isn&apos;t available.</source>
         <translation>Il servizio non è disponibile.</translation>
+    </message>
+</context>
+<context>
+    <name>RulesPage</name>
+    <message>
+        <source>Library of preset rules:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preset rules for applications:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Global rules, applied before application rules:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Global rules, applied after application rules:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1373,6 +1418,14 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     </message>
     <message>
         <source>Are you sure you want to quit the program?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to select the &quot;%1&quot;?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

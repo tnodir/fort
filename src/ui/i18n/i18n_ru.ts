@@ -131,14 +131,6 @@
         <translation>Переименовать</translation>
     </message>
     <message>
-        <source>Block All</source>
-        <translation>Блокировать все</translation>
-    </message>
-    <message>
-        <source>Allow All</source>
-        <translation>Разрешить все</translation>
-    </message>
-    <message>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
@@ -384,6 +376,21 @@
     <message>
         <source>Are you sure to remove all connections?</source>
         <translation>Удалить все соединения?</translation>
+    </message>
+</context>
+<context>
+    <name>FirewallConf</name>
+    <message>
+        <source>Block, if not allowed</source>
+        <translation>Блокировать, если не разрешено</translation>
+    </message>
+    <message>
+        <source>Allow, if not blocked</source>
+        <translation>Разрешить, если не блокировано</translation>
+    </message>
+    <message>
+        <source>Ignore, if not blocked or allowed</source>
+        <translation>Игнорировать, если не блокировано или не разрешено</translation>
     </message>
 </context>
 <context>
@@ -706,6 +713,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Action Confirmations</source>
         <translation>Подтверждения действий</translation>
     </message>
+    <message>
+        <source>Filter Mode:</source>
+        <translation>Режим фильтра:</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -747,6 +758,21 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Program exit</source>
         <translation>Выход из приложения</translation>
+    </message>
+</context>
+<context>
+    <name>PolicyListBox</name>
+    <message>
+        <source>Add Policy</source>
+        <translation>Добавить политику</translation>
+    </message>
+    <message>
+        <source>Remove Policy</source>
+        <translation>Удалить политику</translation>
+    </message>
+    <message>
+        <source>Edit Policy</source>
+        <translation>Редактировать политику</translation>
     </message>
 </context>
 <context>
@@ -923,6 +949,25 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Service error.</source>
         <translation>Ошибка сервиса.</translation>
+    </message>
+</context>
+<context>
+    <name>RulesPage</name>
+    <message>
+        <source>Library of preset rules:</source>
+        <translation>Библиотека заданных правил:</translation>
+    </message>
+    <message>
+        <source>Preset rules for applications:</source>
+        <translation>Заданные правила для программ:</translation>
+    </message>
+    <message>
+        <source>Global rules, applied before application rules:</source>
+        <translation>Глобальные правила, применяемые до правил программ</translation>
+    </message>
+    <message>
+        <source>Global rules, applied after application rules:</source>
+        <translation>Глобальные правила, применяемые после правил программ</translation>
     </message>
 </context>
 <context>
@@ -1374,6 +1419,14 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Are you sure you want to quit the program?</source>
         <translation>Выйти из программы?</translation>
+    </message>
+    <message>
+        <source>Filter Mode</source>
+        <translation>Режим фильтра</translation>
+    </message>
+    <message>
+        <source>Are you sure to select the &quot;%1&quot;?</source>
+        <translation>Установить &quot;%1&quot;?</translation>
     </message>
 </context>
 <context>
