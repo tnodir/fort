@@ -382,15 +382,15 @@
     <name>FirewallConf</name>
     <message>
         <source>Block, if not allowed</source>
-        <translation type="unfinished"></translation>
+        <translation>차단, 허용하지 않을 경우</translation>
     </message>
     <message>
         <source>Allow, if not blocked</source>
-        <translation type="unfinished"></translation>
+        <translation>허용, 차단하지 않을 경우</translation>
     </message>
     <message>
         <source>Ignore, if not blocked or allowed</source>
-        <translation type="unfinished"></translation>
+        <translation>무시, 차단 또는 허용하지 않을 경우</translation>
     </message>
 </context>
 <context>
@@ -715,7 +715,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Filter Mode:</source>
-        <translation type="unfinished"></translation>
+        <translation>필터 모드:</translation>
     </message>
 </context>
 <context>
@@ -764,15 +764,15 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <name>PolicyListBox</name>
     <message>
         <source>Add Policy</source>
-        <translation type="unfinished"></translation>
+        <translation>정책 추가</translation>
     </message>
     <message>
         <source>Remove Policy</source>
-        <translation type="unfinished"></translation>
+        <translation>정책 제거</translation>
     </message>
     <message>
         <source>Edit Policy</source>
-        <translation type="unfinished"></translation>
+        <translation>정책 편집</translation>
     </message>
 </context>
 <context>
@@ -955,19 +955,19 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <name>RulesPage</name>
     <message>
         <source>Library of preset rules:</source>
-        <translation type="unfinished"></translation>
+        <translation>사전 설정 규칙 라이브러리</translation>
     </message>
     <message>
         <source>Preset rules for applications:</source>
-        <translation type="unfinished"></translation>
+        <translation>응용 프로그램의 사전 설정 규칙</translation>
     </message>
     <message>
         <source>Global rules, applied before application rules:</source>
-        <translation type="unfinished"></translation>
+        <translation>전역 규칙, 적용 규칙 이전에 적용됨:</translation>
     </message>
     <message>
         <source>Global rules, applied after application rules:</source>
-        <translation type="unfinished"></translation>
+        <translation>전역 규칙, 적용 규칙 이후에 적용됨:</translation>
     </message>
 </context>
 <context>
@@ -1422,11 +1422,11 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Filter Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>필터 모드</translation>
     </message>
     <message>
         <source>Are you sure to select the &quot;%1&quot;?</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;%1&quot;을(를) 선택하시겠습니까?</translation>
     </message>
 </context>
 <context>
