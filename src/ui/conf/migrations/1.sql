@@ -59,7 +59,7 @@ CREATE TABLE policy(
   description TEXT
 );
 
-CREATE INDEX policy_type_idx ON policy(type);
+CREATE INDEX policy_policy_type_idx ON policy(policy_type);
 CREATE INDEX policy_deleted_idx ON policy(deleted);
 
 CREATE TABLE policy_set(
