@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#include <conf/rules/policylist.h>
+#include <conf/rules/policy.h>
 
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
@@ -16,18 +16,18 @@ class PolicyListBox : public QWidget
     Q_OBJECT
 
 public:
-    explicit PolicyListBox(PolicyListType type, QWidget *parent = nullptr);
+    explicit PolicyListBox(Policy::PolicyType policyType, QWidget *parent = nullptr);
 
     PolicyListModel *listModel() const { return m_listModel; }
-    PolicyListType listType() const;
+    Policy::PolicyType policyType() const;
 
     QLabel *label() const { return m_label; }
     TableView *tableView() const { return m_tableView; }
 
 signals:
-    void addPolicy(PolicyListType listType);
-    void removePolicy(PolicyListType listType);
-    void editPolicy(PolicyListType listType);
+    void addPolicy(Policy::PolicyType type);
+    void removePolicy(Policy::PolicyType type);
+    void editPolicy(Policy::PolicyType type);
 
 public slots:
     void onRetranslateUi();

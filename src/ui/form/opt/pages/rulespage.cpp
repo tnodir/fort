@@ -83,12 +83,12 @@ void RulesPage::setupPresetSplitter()
 
 void RulesPage::setupPresetLibBox()
 {
-    m_presetLibBox = new PolicyListBox(PolicyListPresetLibrary);
+    m_presetLibBox = new PolicyListBox(Policy::TypePresetLibrary);
 }
 
 void RulesPage::setupPresetAppBox()
 {
-    m_presetAppBox = new PolicyListBox(PolicyListPresetApp);
+    m_presetAppBox = new PolicyListBox(Policy::TypePresetApp);
 }
 
 void RulesPage::setupGlobalSplitter()
@@ -109,10 +109,10 @@ void RulesPage::setupGlobalSplitter()
 
 void RulesPage::setupGlobalPreBox()
 {
-    m_globalPreBox = new PolicyListBox(PolicyListGlobalBeforeApp);
+    m_globalPreBox = new PolicyListBox(Policy::TypeGlobalBeforeApp);
 }
 
 void RulesPage::setupGlobalPostBox()
 {
-    m_globalPostBox = new PolicyListBox(PolicyListGlobalAfterApp);
+    m_globalPostBox = new PolicyListBox(Policy::TypeGlobalAfterApp);
 }

@@ -40,7 +40,8 @@ CREATE TABLE rule(
   remote_port TEXT NOT NULL,
   local_ip TEXT NOT NULL,
   remote_ip TEXT NOT NULL,
-  remote_zone_id INTEGER,
+  local_zones INTEGER NOT NULL DEFAULT 0,  -- zone indexes bit mask
+  remote_zones INTEGER NOT NULL DEFAULT 0,  -- zone indexes bit mask
   mod_time INTEGER NOT NULL,
   extra TEXT,  -- TCP flags, ICMP types, etc
   description TEXT
@@ -50,40 +51,26 @@ CREATE INDEX rule_deleted_idx ON rule(deleted);
 
 CREATE TABLE policy(
   policy_id INTEGER PRIMARY KEY,
-  is_preset BOOLEAN NOT NULL,
+  policy_type INTEGER NOT NULL,  -- preset_lib, preset_app, global_before_app, global_after_app, sub_policy
   enabled BOOLEAN NOT NULL,
   deleted BOOLEAN,  -- to reuse the policy_id
   mod_time INTEGER NOT NULL,
+  name TEXT,
   description TEXT
 );
 
+CREATE INDEX policy_type_idx ON policy(type);
 CREATE INDEX policy_deleted_idx ON policy(deleted);
-
-CREATE TABLE policy_rule(
-  policy_rule_id INTEGER PRIMARY KEY,
-  policy_id INTEGER NOT NULL,
-  rule_id INTEGER NOT NULL,
-  order_index INTEGER NOT NULL
-);
-
-CREATE INDEX policy_rule_policy_id_idx ON policy_rule(policy_id);
 
 CREATE TABLE policy_set(
   policy_set_id INTEGER PRIMARY KEY,
   policy_id INTEGER NOT NULL,
-  sub_policy_id INTEGER NOT NULL,
+  sub_policy_id INTEGER,
+  rule_id INTEGER,
   order_index INTEGER NOT NULL
 );
 
-CREATE INDEX policy_set_policy_id_idx ON policy_set(policy_id);
-
-CREATE TABLE policy_list(
-  policy_id INTEGER PRIMARY KEY,
-  type INTEGER NOT NULL,  -- preset_lib, preset_app, global_before_app, global_after_app
-  name TEXT NOT NULL
-) WITHOUT ROWID;
-
-CREATE UNIQUE INDEX policy_list_type_name_idx ON policy_list(type, name);
+CREATE INDEX policy_set_policy_id_order_index_idx ON policy_set(policy_id, order_index);
 
 CREATE TABLE policy_menu(
   policy_menu_id INTEGER PRIMARY KEY,

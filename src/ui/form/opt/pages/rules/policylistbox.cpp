@@ -10,17 +10,17 @@
 #include <form/controls/tableview.h>
 #include <model/policylistmodel.h>
 
-PolicyListBox::PolicyListBox(PolicyListType type, QWidget *parent) :
-    QWidget(parent), m_listModel(new PolicyListModel(type, this))
+PolicyListBox::PolicyListBox(Policy::PolicyType policyType, QWidget *parent) :
+    QWidget(parent), m_listModel(new PolicyListModel(policyType, this))
 {
     setupUi();
 
     listModel()->initialize();
 }
 
-PolicyListType PolicyListBox::listType() const
+Policy::PolicyType PolicyListBox::policyType() const
 {
-    return listModel()->type();
+    return listModel()->policyType();
 }
 
 void PolicyListBox::onRetranslateUi()
@@ -52,11 +52,11 @@ QLayout *PolicyListBox::setupHeader()
     m_label->setFont(ControlUtil::fontDemiBold());
 
     m_btAddPolicy = ControlUtil::createFlatToolButton(
-            ":/icons/add.png", [&] { emit addPolicy(listType()); });
+            ":/icons/add.png", [&] { emit addPolicy(policyType()); });
     m_btRemovePolicy = ControlUtil::createFlatToolButton(
-            ":/icons/delete.png", [&] { emit removePolicy(listType()); });
+            ":/icons/delete.png", [&] { emit removePolicy(policyType()); });
     m_btEditPolicy = ControlUtil::createFlatToolButton(
-            ":/icons/pencil.png", [&] { emit editPolicy(listType()); });
+            ":/icons/pencil.png", [&] { emit editPolicy(policyType()); });
 
     auto layout = new QHBoxLayout();
     layout->setSpacing(2);

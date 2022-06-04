@@ -6,7 +6,17 @@
 class Policy
 {
 public:
-    bool isPreset = false;
+    enum PolicyType {
+        TypeInvalid = -1,
+        TypeNone = 0,
+        TypePresetLibrary,
+        TypePresetApp,
+        TypeGlobalBeforeApp,
+        TypeGlobalAfterApp,
+        TypeSubPolicy,
+    };
+
+    PolicyType policyType = TypeNone;
     bool enabled = true;
 
     int policyId = 0;

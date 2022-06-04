@@ -5,7 +5,6 @@
 #include <QVector>
 
 #include <conf/rules/policy.h>
-#include <conf/rules/policylist.h>
 #include <util/model/tablesqlmodel.h>
 
 class ConfManager;
@@ -20,9 +19,9 @@ class PolicyListModel : public TableSqlModel
     Q_OBJECT
 
 public:
-    explicit PolicyListModel(PolicyListType type, QObject *parent = nullptr);
+    explicit PolicyListModel(Policy::PolicyType policyType, QObject *parent = nullptr);
 
-    PolicyListType type() const { return m_type; }
+    Policy::PolicyType policyType() const { return m_policyType; }
 
     ConfManager *confManager() const;
     SqliteDb *sqliteDb() const override;
@@ -53,7 +52,7 @@ private:
     bool updatePolicyRow(const QString &sql, const QVariantList &vars, PolicyRow &policyRow) const;
 
 private:
-    PolicyListType m_type = PolicyListNone;
+    Policy::PolicyType m_policyType = Policy::TypeNone;
 
     mutable PolicyRow m_policyRow;
 };

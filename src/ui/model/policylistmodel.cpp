@@ -6,8 +6,8 @@
 #include <conf/confmanager.h>
 #include <util/ioc/ioccontainer.h>
 
-PolicyListModel::PolicyListModel(PolicyListType type, QObject *parent) :
-    TableSqlModel(parent), m_type(type)
+PolicyListModel::PolicyListModel(Policy::PolicyType policyType, QObject *parent) :
+    TableSqlModel(parent), m_policyType(policyType)
 {
 }
 
@@ -112,7 +112,7 @@ bool PolicyListModel::updatePolicyRow(
     }
 
     policyRow.policyId = stmt.columnInt(0);
-    policyRow.isPreset = stmt.columnBool(1);
+    policyRow.policyType = Policy::PolicyType(stmt.columnInt(1));
     policyRow.enabled = stmt.columnBool(2);
     policyRow.name = stmt.columnText(3);
 
@@ -122,20 +122,19 @@ bool PolicyListModel::updatePolicyRow(
 QString PolicyListModel::sqlBase() const
 {
     return "SELECT"
-           "    t.policy_id,"
-           "    p.is_preset,"
-           "    p.enabled,"
-           "    p.name"
-           "  FROM policy_list t"
-           "    JOIN policy p ON p.policy_id = t.policy_id";
+           "    policy_id,"
+           "    policy_type,"
+           "    enabled,"
+           "    name"
+           "  FROM policy t";
 }
 
 QString PolicyListModel::sqlOrder() const
 {
-    return " t.order_index";
+    return " t.name";
 }
 
 QString PolicyListModel::sqlWhere() const
 {
-    return QString::fromLatin1(" WHERE t.type = %1").arg(type());
+    return QString::fromLatin1(" WHERE t.type = %1").arg(policyType());
 }
