@@ -6,7 +6,7 @@
 class ServiceInfo
 {
 public:
-    enum RegFlag { RegImagePath = 0x01, RegType = 0x02 };
+    enum RegTrackFlag { RegImagePath = 0x01, RegType = 0x02 };
 
     enum State {
         StateActive = 0x01, // SERVICE_ACTIVE
