@@ -459,7 +459,7 @@ QVariant FirewallConf::toVariant(bool onlyFlags) const
 {
     QVariantMap map;
 
-    const uint flags = onlyFlags ? editedFlags() : AllEdited;
+    const EditedFlags flags = onlyFlags ? editedFlags() : AllEdited;
 
     if (onlyFlags) {
         map = editedFlagsToVariant(flags).toMap();

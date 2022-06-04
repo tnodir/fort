@@ -16,16 +16,17 @@ class FirewallConf : public QObject
 public:
     enum EditedFlag {
         NoneEdited = 0,
-        OptEdited = 0x01,
-        FlagsEdited = 0x02,
-        IniEdited = 0x04,
-        TaskEdited = 0x10,
+        OptEdited = (1 << 0),
+        FlagsEdited = (1 << 1),
+        IniEdited = (1 << 2),
+        TaskEdited = (1 << 3),
         AllEdited = (OptEdited | FlagsEdited | IniEdited | TaskEdited)
     };
+    Q_DECLARE_FLAGS(EditedFlags, EditedFlag)
 
     explicit FirewallConf(Settings *settings = nullptr, QObject *parent = nullptr);
 
-    uint editedFlags() const { return m_editedFlags; }
+    EditedFlags editedFlags() const { return EditedFlags(m_editedFlags); }
 
     bool optEdited() const { return (m_editedFlags & OptEdited) != 0; }
     void setOptEdited() { m_editedFlags |= OptEdited; }
@@ -195,5 +196,7 @@ private:
 
     IniOptions m_ini;
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(FirewallConf::EditedFlags)
 
 #endif // FIREWALLCONF_H
