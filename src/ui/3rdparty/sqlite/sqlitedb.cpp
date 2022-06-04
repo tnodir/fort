@@ -305,6 +305,11 @@ bool SqliteDb::migrate(MigrateOptions &opt)
         return false;
     }
 
+    if ((openFlags() & OpenReadOnly) != 0) {
+        qCWarning(LC) << "Cannot migrate a read-only DB";
+        return false;
+    }
+
     bool isNewDb = (userVersion == 0);
     if (isNewDb) {
         opt.recreate = false;
