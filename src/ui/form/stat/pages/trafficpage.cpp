@@ -179,8 +179,8 @@ void TrafficPage::setupClearMenu()
             return;
 
         m_appListView->clearSelection();
-        appStatModel()->clear();
         trafListModel()->clear();
+        appStatModel()->clear();
     });
 
     m_btClear = ControlUtil::createButton(":/icons/bin_closed.png");
