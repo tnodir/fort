@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.5.8, 2022-06-06:
+- UI: Add "Filter Mode", instead of "Block/Allow All".
+- UI: Statistics: Traffic: Fix "Clear All" to not duplicate active programs.
+- Driver: Add errors tracing to system event log.
+
 v3.5.7, 2022-05-24:
 - Support IPv6.
 - UI: Default User specific Logs path is "%LocalAppData%/Fort Firewall/logs".
