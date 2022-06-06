@@ -15,44 +15,16 @@
 <context>
     <name>AddressesPage</name>
     <message>
-        <source>Include</source>
-        <translation>Inclure</translation>
-    </message>
-    <message>
-        <source>Interchange All Lines</source>
-        <translation>Interchanger toutes les lignes</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Exclude&apos;</source>
-        <translation>Déplacer toutes les lignes vers &apos;Exclure&apos;</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Include&apos;</source>
-        <translation>Déplacer les lignes sélectionnées vers &apos;Inclure&apos;</translation>
-    </message>
-    <message>
-        <source># Examples:</source>
-        <translation># Exemples:</translation>
+        <source>Internet Addresses</source>
+        <translation>Adresses Internet</translation>
     </message>
     <message>
         <source>Allowed Internet Addresses</source>
         <translation>Adresses Internet autorisées</translation>
     </message>
     <message>
-        <source>Move Selected Lines to &apos;Exclude&apos;</source>
-        <translation>Déplacer les lignes sélectionnées vers &apos;Exclure&apos;</translation>
-    </message>
-    <message>
-        <source>Internet Addresses</source>
-        <translation>Adresses Internet</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Include&apos;</source>
-        <translation>Déplacer toutes les lignes vers &apos;Inclure&apos;</translation>
-    </message>
-    <message>
-        <source>Exclude All</source>
-        <translation>Tout exclure</translation>
+        <source>Include</source>
+        <translation>Inclure</translation>
     </message>
     <message>
         <source>Include All</source>
@@ -63,34 +35,54 @@
         <translation>Exclure</translation>
     </message>
     <message>
+        <source>Exclude All</source>
+        <translation>Tout exclure</translation>
+    </message>
+    <message>
+        <source>Move All Lines to &apos;Exclude&apos;</source>
+        <translation>Déplacer toutes les lignes vers &apos;Exclure&apos;</translation>
+    </message>
+    <message>
+        <source>Move All Lines to &apos;Include&apos;</source>
+        <translation>Déplacer toutes les lignes vers &apos;Inclure&apos;</translation>
+    </message>
+    <message>
+        <source>Interchange All Lines</source>
+        <translation>Interchanger toutes les lignes</translation>
+    </message>
+    <message>
+        <source>Move Selected Lines to &apos;Exclude&apos;</source>
+        <translation>Déplacer les lignes sélectionnées vers &apos;Exclure&apos;</translation>
+    </message>
+    <message>
+        <source>Move Selected Lines to &apos;Include&apos;</source>
+        <translation>Déplacer les lignes sélectionnées vers &apos;Inclure&apos;</translation>
+    </message>
+    <message>
         <source>Add Local Networks</source>
         <translation>Ajouter des réseaux locaux</translation>
+    </message>
+    <message>
+        <source># Examples:</source>
+        <translation># Exemples:</translation>
     </message>
 </context>
 <context>
     <name>AppInfoRow</name>
     <message>
-        <source>Open Folder</source>
-        <translation>Ouvrir dossier</translation>
-    </message>
-    <message>
         <source>Copy Path</source>
         <translation>Copier chemin</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Ouvrir dossier</translation>
     </message>
 </context>
 <context>
     <name>AppListModel</name>
     <message>
-        <source>Alert</source>
-        <translation>Alerte</translation>
-    </message>
-    <message>
-        <source>Allow</source>
-        <translation>Autoriser</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Bloquer</translation>
+        <source>Program</source>
+        <translation>Programme</translation>
     </message>
     <message>
         <source>Group</source>
@@ -105,8 +97,16 @@
         <translation>Heure de création</translation>
     </message>
     <message>
-        <source>Program</source>
-        <translation>Programme</translation>
+        <source>Alert</source>
+        <translation>Alerte</translation>
+    </message>
+    <message>
+        <source>Block</source>
+        <translation>Bloquer</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>Autoriser</translation>
     </message>
 </context>
 <context>
@@ -119,68 +119,84 @@
 <context>
     <name>ApplicationsPage</name>
     <message>
-        <source>Allow</source>
-        <translation>Autoriser</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Bloquer</translation>
-    </message>
-    <message>
-        <source>Interchange All Lines</source>
-        <translation>Permuter toutes les lignes</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Désactivé</translation>
-    </message>
-    <message>
-        <source>Apply same rules to child processes</source>
-        <translation>Appliquer les mêmes règles aux processus enfants</translation>
-    </message>
-    <message>
-        <source>Download speed limit:</source>
-        <translation>Vitesse de téléchargement limitée:</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Allow&apos;</source>
-        <translation>Déplacer les lignes sélectionnées vers &apos;Autoriser&apos;</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Block&apos;</source>
-        <translation>Déplacer toutes les lignes vers &apos;Bloquer&apos;</translation>
-    </message>
-    <message>
-        <source>time period:</source>
-        <translation>période de temps:</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Allow&apos;</source>
-        <translation>Déplacer toutes les lignes vers &apos;Autoriser&apos;</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Block&apos;</source>
-        <translation>Déplacer les lignes sélectionnées vers &apos;Bloquer&apos;</translation>
-    </message>
-    <message>
-        <source>Rename Group</source>
-        <translation>Renommer le groupe</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>Personnalisée</translation>
-    </message>
-    <message>
-        <source>Fragment first TCP packet</source>
-        <translation>Fragmenter le premier paquet TCP</translation>
+        <source>Group Name</source>
+        <translation>Nom du groupe</translation>
     </message>
     <message>
         <source>Add Group</source>
         <translation>Ajouter un groupe</translation>
     </message>
     <message>
+        <source>Rename Group</source>
+        <translation>Renommer le groupe</translation>
+    </message>
+    <message>
         <source>Options</source>
         <translation>Options</translation>
+    </message>
+    <message>
+        <source>Download speed limit:</source>
+        <translation>Vitesse de téléchargement limitée:</translation>
+    </message>
+    <message>
+        <source>Upload speed limit:</source>
+        <translation>Limiter la vitesse de chargement:</translation>
+    </message>
+    <message>
+        <source>Collect connection statistics</source>
+        <translation>Collecter statistiques de connexion</translation>
+    </message>
+    <message>
+        <source>Fragment first TCP packet</source>
+        <translation>Fragmenter le premier paquet TCP</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Activé</translation>
+    </message>
+    <message>
+        <source>time period:</source>
+        <translation>période de temps:</translation>
+    </message>
+    <message>
+        <source>Block</source>
+        <translation>Bloquer</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>Autoriser</translation>
+    </message>
+    <message>
+        <source>Move All Lines to &apos;Allow&apos;</source>
+        <translation>Déplacer toutes les lignes vers &apos;Autoriser&apos;</translation>
+    </message>
+    <message>
+        <source>Move All Lines to &apos;Block&apos;</source>
+        <translation>Déplacer toutes les lignes vers &apos;Bloquer&apos;</translation>
+    </message>
+    <message>
+        <source>Interchange All Lines</source>
+        <translation>Permuter toutes les lignes</translation>
+    </message>
+    <message>
+        <source>Move Selected Lines to &apos;Allow&apos;</source>
+        <translation>Déplacer les lignes sélectionnées vers &apos;Autoriser&apos;</translation>
+    </message>
+    <message>
+        <source>Move Selected Lines to &apos;Block&apos;</source>
+        <translation>Déplacer les lignes sélectionnées vers &apos;Bloquer&apos;</translation>
+    </message>
+    <message>
+        <source>Select File</source>
+        <translation>Sélectionner Fichier</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Personnalisée</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Désactivé</translation>
     </message>
     <message>
         <source># Examples:</source>
@@ -191,28 +207,12 @@
         <translation># Tous les programmes dans le sous-chemin:</translation>
     </message>
     <message>
-        <source>Select File</source>
-        <translation>Sélectionner Fichier</translation>
-    </message>
-    <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Programmes (*.exe);;Tous les fichiers (*.*)</translation>
     </message>
     <message>
-        <source>Group Name</source>
-        <translation>Nom du groupe</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation>Activé</translation>
-    </message>
-    <message>
-        <source>Collect connection statistics</source>
-        <translation>Collecter statistiques de connexion</translation>
-    </message>
-    <message>
-        <source>Upload speed limit:</source>
-        <translation>Limiter la vitesse de chargement:</translation>
+        <source>Apply same rules to child processes</source>
+        <translation>Appliquer les mêmes règles aux processus enfants</translation>
     </message>
 </context>
 <context>
@@ -232,16 +232,8 @@
 <context>
     <name>ConfUtil</name>
     <message>
-        <source>Length of Application&apos;s Path must be &lt; %1</source>
-        <translation>Longueur du chemin d&apos;application doit être &lt; %1</translation>
-    </message>
-    <message>
         <source>Too many application paths</source>
         <translation>Trop de chemins d&apos;application</translation>
-    </message>
-    <message>
-        <source>Number of Application Groups must be between 1 and %1</source>
-        <translation>Nombre de groupes d&apos;application doit être comprise entre 1 et %1</translation>
     </message>
     <message>
         <source>Bad Include IP address: %1</source>
@@ -252,16 +244,60 @@
         <translation>Adresse IP non valide à exclure: %1</translation>
     </message>
     <message>
+        <source>Too many IP addresses</source>
+        <translation>Trop d&apos;adresses IP</translation>
+    </message>
+    <message>
+        <source>Number of Application Groups must be between 1 and %1</source>
+        <translation>Nombre de groupes d&apos;application doit être comprise entre 1 et %1</translation>
+    </message>
+    <message>
         <source>Length of Application Group&apos;s Name must be &lt; %1</source>
         <translation>Longueur du nom de l&apos;application de groupe doit être &lt; %1</translation>
     </message>
     <message>
-        <source>Too many IP addresses</source>
-        <translation>Trop d&apos;adresses IP</translation>
+        <source>Length of Application&apos;s Path must be &lt; %1</source>
+        <translation>Longueur du chemin d&apos;application doit être &lt; %1</translation>
     </message>
 </context>
 <context>
     <name>ConnListModel</name>
+    <message>
+        <source>Program</source>
+        <translation>Programme</translation>
+    </message>
+    <message>
+        <source>Proc. ID</source>
+        <translation>ID Processeur</translation>
+    </message>
+    <message>
+        <source>Process ID</source>
+        <translation>ID du processus</translation>
+    </message>
+    <message>
+        <source>Protocol</source>
+        <translation>Protocole</translation>
+    </message>
+    <message>
+        <source>Local IP and Port</source>
+        <translation>IP et Port Locaux</translation>
+    </message>
+    <message>
+        <source>Remote IP and Port</source>
+        <translation>IP et port distants</translation>
+    </message>
+    <message>
+        <source>Dir.</source>
+        <translation>Dir.</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Direction</translation>
+    </message>
+    <message>
+        <source>Time</source>
+        <translation>Heure</translation>
+    </message>
     <message>
         <source>In</source>
         <translation>Dans</translation>
@@ -269,42 +305,6 @@
     <message>
         <source>Out</source>
         <translation>Sortie</translation>
-    </message>
-    <message>
-        <source>Dir.</source>
-        <translation>Dir.</translation>
-    </message>
-    <message>
-        <source>Time</source>
-        <translation>Heure</translation>
-    </message>
-    <message>
-        <source>Remote IP and Port</source>
-        <translation>IP et port distants</translation>
-    </message>
-    <message>
-        <source>Program</source>
-        <translation>Programme</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Direction</translation>
-    </message>
-    <message>
-        <source>Proc. ID</source>
-        <translation>Proc. ID</translation>
-    </message>
-    <message>
-        <source>Protocol</source>
-        <translation>Protocole</translation>
-    </message>
-    <message>
-        <source>Process ID</source>
-        <translation>ID du processus</translation>
-    </message>
-    <message>
-        <source>Local IP and Port</source>
-        <translation>IP et Port Locaux</translation>
     </message>
     <message>
         <source>Blocked Internet address</source>
@@ -382,26 +382,26 @@
     <name>FirewallConf</name>
     <message>
         <source>Block, if not allowed</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquer, si non autorisé</translation>
     </message>
     <message>
         <source>Allow, if not blocked</source>
-        <translation type="unfinished"></translation>
+        <translation>Autoriser, si non bloqué</translation>
     </message>
     <message>
         <source>Ignore, if not blocked or allowed</source>
-        <translation type="unfinished"></translation>
+        <translation>Ignorer si non bloqué ou autorisé</translation>
     </message>
 </context>
 <context>
     <name>FortManager</name>
     <message>
-        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation>Veuillez d&apos;abord installer Fort Firewall v%1 et enregistrer les options depuis celui-ci.</translation>
-    </message>
-    <message>
         <source>Application is already running!</source>
         <translation>L&apos;application est déjà en cours d&apos;exécution!</translation>
+    </message>
+    <message>
+        <source>Quota Alert</source>
+        <translation>Alerte de quota</translation>
     </message>
     <message>
         <source>Restart Required</source>
@@ -416,27 +416,15 @@
         <translation>Plus tard</translation>
     </message>
     <message>
-        <source>Quota Alert</source>
-        <translation>Alerte de quota</translation>
+        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
+        <translation>Veuillez d&apos;abord installer Fort Firewall v%1 et enregistrer les options depuis celui-ci.</translation>
     </message>
 </context>
 <context>
     <name>IpRange</name>
     <message>
-        <source>Bad IP address</source>
-        <translation>Mauvaise adresse IP</translation>
-    </message>
-    <message>
         <source>Error at line %1: %2</source>
         <translation>Erreur à la ligne %1: %2</translation>
-    </message>
-    <message>
-        <source>Bad second IP address</source>
-        <translation>Mauvaise deuxième adresse IP</translation>
-    </message>
-    <message>
-        <source>Bad range</source>
-        <translation>Mauvaise portée</translation>
     </message>
     <message>
         <source>Bad format</source>
@@ -445,6 +433,18 @@
     <message>
         <source>Bad mask</source>
         <translation>Mauvais masque</translation>
+    </message>
+    <message>
+        <source>Bad IP address</source>
+        <translation>Mauvaise adresse IP</translation>
+    </message>
+    <message>
+        <source>Bad second IP address</source>
+        <translation>Mauvaise deuxième adresse IP</translation>
+    </message>
+    <message>
+        <source>Bad range</source>
+        <translation>Mauvaise portée</translation>
     </message>
 </context>
 <context>
@@ -508,12 +508,142 @@
 <context>
     <name>OptionsPage</name>
     <message>
+        <source>Startup</source>
+        <translation>Démarrage</translation>
+    </message>
+    <message>
+        <source>Traffic</source>
+        <translation>Trafic</translation>
+    </message>
+    <message>
+        <source>Global</source>
+        <translation>Global</translation>
+    </message>
+    <message>
+        <source>Driver</source>
+        <translation>Pilote</translation>
+    </message>
+    <message>
+        <source>New Version</source>
+        <translation>Nouvelle Version</translation>
+    </message>
+    <message>
+        <source>Stop traffic when Fort Firewall is not running</source>
+        <translation>Arrêtez le trafic lorsque Fort Firewall ne fonctionne pas</translation>
+    </message>
+    <message>
+        <source>Filter Enabled</source>
+        <translation>Filtre activé</translation>
+    </message>
+    <message>
+        <source>Filter Local Addresses</source>
+        <translation>Filtrer les adresses locales</translation>
+    </message>
+    <message>
+        <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
+        <translation>Filtrer les adresses de bouclage local (127.0.0.0/8) et de diffusion (255.255.255.255)</translation>
+    </message>
+    <message>
+        <source>Stop Traffic</source>
+        <translation>Arrêter le trafic</translation>
+    </message>
+    <message>
+        <source>Stop Internet Traffic</source>
+        <translation>Arrêter le trafic Internet</translation>
+    </message>
+    <message>
+        <source>Auto-Allow New Programs</source>
+        <translation>Autorisation auto de nouveaux programmes</translation>
+    </message>
+    <message>
+        <source>Hot Keys</source>
+        <translation>Raccourcis clavier</translation>
+    </message>
+    <message>
+        <source>Password:</source>
+        <translation>Mot de Passe:</translation>
+    </message>
+    <message>
+        <source>Lock the password (unlocked till &quot;%1&quot;)</source>
+        <translation>Verrouiller mot de passe (déverrouillé jusqu&apos;à &quot;%1&quot;)</translation>
+    </message>
+    <message>
+        <source>Language:</source>
+        <translation>Langage:</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Retirer</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Télécharger</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Désactivé</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>Pour l&apos;utilisateur actuel</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>Pour tout utilisateurs</translation>
+    </message>
+    <message>
+        <source>Installed</source>
+        <translation>Installée</translation>
+    </message>
+    <message>
+        <source>Not Installed</source>
+        <translation>Non installé</translation>
+    </message>
+    <message>
         <source>Are you sure to remove the Driver?</source>
         <translation>Êtes-vous sûr de vouloir supprimer le pilote?</translation>
     </message>
     <message>
-        <source>Quit</source>
-        <translation>Quitter</translation>
+        <source>Logs</source>
+        <translation>Journaux</translation>
+    </message>
+    <message>
+        <source>Log debug messages</source>
+        <translation>Journaliser les messages de débogage</translation>
+    </message>
+    <message>
+        <source>Show log messages in console</source>
+        <translation>Afficher les messages du journal dans la console</translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>Intégration de l&apos;Explorateur Windows</translation>
+    </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>Exécution automatique:</translation>
+    </message>
+    <message>
+        <source>Run Fort Firewall as a Service in background</source>
+        <translation>Exécutez Fort Firewall en tant que service en arrière-plan</translation>
+    </message>
+    <message>
+        <source>Move Profile</source>
+        <translation>Déplacer le profil</translation>
+    </message>
+    <message>
+        <source>New profile path is &quot;%1&quot;.
+Would you like to move profile from &quot;%2&quot; to new location?</source>
+        <translation>Nouveau chemin du profil est &quot;%1&quot;.
+Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</translation>
+    </message>
+    <message>
+        <source>Reinstall</source>
+        <translation>Réinstaller</translation>
+    </message>
+    <message>
+        <source>Are you sure to reinstall the Driver?</source>
+        <translation>Êtes-vous sûr de réinstaller le pilote?</translation>
     </message>
     <message>
         <source>Tray</source>
@@ -525,7 +655,7 @@
     </message>
     <message>
         <source>Action:</source>
-        <translation>Action:</translation>
+        <translation>Action :</translation>
     </message>
     <message>
         <source>Single Click</source>
@@ -572,150 +702,20 @@
         <translation>Basculer autorisation auto de nouveaux programmes</translation>
     </message>
     <message>
-        <source>Stop traffic when Fort Firewall is not running</source>
-        <translation>Arrêtez le trafic lorsque Fort Firewall ne fonctionne pas</translation>
+        <source>Tray Menu Flags</source>
+        <translation>Drapeaux du menu de la barre d&apos;outils</translation>
     </message>
     <message>
-        <source>Stop Internet Traffic</source>
-        <translation>Arrêter le trafic Internet</translation>
-    </message>
-    <message>
-        <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
-        <translation>Filtrer les adresses de bouclage local (127.0.0.0/8) et de diffusion (255.255.255.255)</translation>
-    </message>
-    <message>
-        <source>Driver</source>
-        <translation>Pilote</translation>
-    </message>
-    <message>
-        <source>Global</source>
-        <translation>Global</translation>
-    </message>
-    <message>
-        <source>Language:</source>
-        <translation>Langage:</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Retirer</translation>
-    </message>
-    <message>
-        <source>Hot Keys</source>
-        <translation>Raccourcis clavier</translation>
-    </message>
-    <message>
-        <source>Download</source>
-        <translation>Télécharger</translation>
+        <source>Quit</source>
+        <translation>Quitter</translation>
     </message>
     <message>
         <source>Action Confirmations</source>
         <translation>Confirmation des actions</translation>
     </message>
     <message>
-        <source>Filter Local Addresses</source>
-        <translation>Filtrer les adresses locales</translation>
-    </message>
-    <message>
-        <source>Installed</source>
-        <translation>Installée</translation>
-    </message>
-    <message>
-        <source>Startup</source>
-        <translation>Démarrage</translation>
-    </message>
-    <message>
-        <source>Password:</source>
-        <translation>Mot de Passe:</translation>
-    </message>
-    <message>
-        <source>Traffic</source>
-        <translation>Trafic</translation>
-    </message>
-    <message>
-        <source>Filter Enabled</source>
-        <translation>Filtre activé</translation>
-    </message>
-    <message>
-        <source>New Version</source>
-        <translation>Nouvelle Version</translation>
-    </message>
-    <message>
-        <source>Stop Traffic</source>
-        <translation>Arrêter le trafic</translation>
-    </message>
-    <message>
-        <source>Auto-Allow New Programs</source>
-        <translation>Autorisation auto de nouveaux programmes</translation>
-    </message>
-    <message>
-        <source>Not Installed</source>
-        <translation>Non installé</translation>
-    </message>
-    <message>
-        <source>Tray Menu Flags</source>
-        <translation>Drapeaux du menu de la barre d&apos;outils</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Désactivé</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>Pour l&apos;utilisateur actuel</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>Pour tout utilisateurs</translation>
-    </message>
-    <message>
-        <source>Lock the password (unlocked till &quot;%1&quot;)</source>
-        <translation>Verrouiller mot de passe (déverrouillé jusqu&apos;à &quot;%1&quot;)</translation>
-    </message>
-    <message>
-        <source>Logs</source>
-        <translation>Journaux</translation>
-    </message>
-    <message>
-        <source>Log debug messages</source>
-        <translation>Journaliser les messages de débogage</translation>
-    </message>
-    <message>
-        <source>Show log messages in console</source>
-        <translation>Afficher les messages du journal dans la console</translation>
-    </message>
-    <message>
-        <source>Windows Explorer integration</source>
-        <translation>Intégration de l&apos;Explorateur Windows</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>Exécution automatique:</translation>
-    </message>
-    <message>
-        <source>Run Fort Firewall as a Service in background</source>
-        <translation>Exécutez Fort Firewall en tant que service en arrière-plan</translation>
-    </message>
-    <message>
-        <source>Move Profile</source>
-        <translation>Déplacer le profil</translation>
-    </message>
-    <message>
-        <source>New profile path is &quot;%1&quot;.
-Would you like to move profile from &quot;%2&quot; to new location?</source>
-        <translation>Nouveau chemin du profil est &quot;%1&quot;.
-Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</translation>
-    </message>
-    <message>
-        <source>Reinstall</source>
-        <translation>Réinstaller</translation>
-    </message>
-    <message>
-        <source>Are you sure to reinstall the Driver?</source>
-        <translation>Êtes-vous sûr de réinstaller le pilote?</translation>
-    </message>
-    <message>
         <source>Filter Mode:</source>
-        <translation type="unfinished"></translation>
+        <translation>Mode de filtrage&#xa0;:</translation>
     </message>
 </context>
 <context>
@@ -764,15 +764,15 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     <name>PolicyListBox</name>
     <message>
         <source>Add Policy</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajouter une politique</translation>
     </message>
     <message>
         <source>Remove Policy</source>
-        <translation type="unfinished"></translation>
+        <translation>Retirer Politique</translation>
     </message>
     <message>
         <source>Edit Policy</source>
-        <translation type="unfinished"></translation>
+        <translation>Éditer la politique</translation>
     </message>
 </context>
 <context>
@@ -862,10 +862,6 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
         <translation>Mois</translation>
     </message>
     <message>
-        <source>Apply same rules to child processes</source>
-        <translation>Appliquer les mêmes règles aux processus enfants</translation>
-    </message>
-    <message>
         <source> hour(s)</source>
         <translation> heure(s)</translation>
     </message>
@@ -873,13 +869,13 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Programmes (*.exe);;Tous les fichiers (*.*)</translation>
     </message>
+    <message>
+        <source>Apply same rules to child processes</source>
+        <translation>Appliquer les mêmes règles aux processus enfants</translation>
+    </message>
 </context>
 <context>
     <name>ProgramsWindow</name>
-    <message>
-        <source>Add</source>
-        <translation>Ajouter</translation>
-    </message>
     <message>
         <source>Edit</source>
         <translation>Éditer</translation>
@@ -893,32 +889,36 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
         <translation>Bloquer</translation>
     </message>
     <message>
-        <source>Collect New Blocked Programs</source>
-        <translation>Collecte de nouveaux programmes bloqués</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove all non-existent programs?</source>
-        <translation>Êtes-vous sûr de supprimer tous les programmes inexistants?</translation>
+        <source>Add</source>
+        <translation>Ajouter</translation>
     </message>
     <message>
         <source>Remove</source>
         <translation>Retirer</translation>
     </message>
     <message>
-        <source>Are you sure to remove selected program(s)?</source>
-        <translation>Êtes-vous sûr de supprimer le(s) programme(s) sélectionné(s)?</translation>
+        <source>Purge All</source>
+        <translation>Purger tout</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>Options</translation>
     </message>
     <message>
-        <source>Purge All</source>
-        <translation>Purger tout</translation>
+        <source>Collect New Blocked Programs</source>
+        <translation>Collecte de nouveaux programmes bloqués</translation>
     </message>
     <message>
         <source>Programs</source>
         <translation>Programmes</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected program(s)?</source>
+        <translation>Êtes-vous sûr de supprimer le(s) programme(s) sélectionné(s)?</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove all non-existent programs?</source>
+        <translation>Êtes-vous sûr de supprimer tous les programmes inexistants?</translation>
     </message>
     <message>
         <source>Services</source>
@@ -955,19 +955,19 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     <name>RulesPage</name>
     <message>
         <source>Library of preset rules:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bibliothèque des règles prédéfinies :</translation>
     </message>
     <message>
         <source>Preset rules for applications:</source>
-        <translation type="unfinished"></translation>
+        <translation>Règles prédéfinies pour les applications :</translation>
     </message>
     <message>
         <source>Global rules, applied before application rules:</source>
-        <translation type="unfinished"></translation>
+        <translation>Règles globales, appliquées avant les règles d&apos;application :</translation>
     </message>
     <message>
         <source>Global rules, applied after application rules:</source>
-        <translation type="unfinished"></translation>
+        <translation>Règles globales, appliquées après les règles d&apos;application :</translation>
     </message>
 </context>
 <context>
@@ -981,14 +981,6 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
         <translation>Abandonner</translation>
     </message>
     <message>
-        <source>Daily</source>
-        <translation>Quotidien</translation>
-    </message>
-    <message>
-        <source>Monthly</source>
-        <translation>Mensuel</translation>
-    </message>
-    <message>
         <source>Custom</source>
         <translation>Personnaliser</translation>
     </message>
@@ -997,16 +989,24 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
         <translation>Chaque heure</translation>
     </message>
     <message>
-        <source>Weekly</source>
-        <translation>Toutes les semaines</translation>
-    </message>
-    <message>
         <source>Each 6 hours</source>
         <translation>Toutes les 6 heures</translation>
     </message>
     <message>
         <source>Each 12 hours</source>
         <translation>Toutes les 12 heures</translation>
+    </message>
+    <message>
+        <source>Daily</source>
+        <translation>Quotidien</translation>
+    </message>
+    <message>
+        <source>Weekly</source>
+        <translation>Toutes les semaines</translation>
+    </message>
+    <message>
+        <source>Monthly</source>
+        <translation>Mensuel</translation>
     </message>
     <message>
         <source> hour(s)</source>
@@ -1073,152 +1073,152 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
 <context>
     <name>StatisticsPage</name>
     <message>
-        <source>Axis:</source>
-        <translation>Axe:</translation>
-    </message>
-    <message>
-        <source>Graph</source>
-        <translation>Graphique</translation>
-    </message>
-    <message>
-        <source>Grid:</source>
-        <translation>Grille:</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Désactivé</translation>
-    </message>
-    <message>
-        <source>Hover opacity:</source>
-        <translation>Opacité de survol:</translation>
-    </message>
-    <message>
-        <source>Click through</source>
-        <translation>Cliquer à travers</translation>
-    </message>
-    <message>
-        <source>Day&apos;s Quota:</source>
-        <translation>Quota du jour:</translation>
-    </message>
-    <message>
-        <source>10 years</source>
-        <translation>10 années</translation>
-    </message>
-    <message>
-        <source>Month starts on:</source>
-        <translation>Le mois commence par:</translation>
-    </message>
-    <message>
-        <source>1 year</source>
-        <translation>1 année</translation>
-    </message>
-    <message>
-        <source>Month&apos;s Quota:</source>
-        <translation>Quota du mois:</translation>
-    </message>
-    <message>
-        <source>Keep count for &apos;Blocked connections&apos;:</source>
-        <translation>Tenir compte des &apos;connexions bloquées&apos;:</translation>
-    </message>
-    <message>
-        <source>Keep count for &apos;Allowed connections&apos;:</source>
-        <translation>Tenir compte des &apos;connexions autorisées&apos;:</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>Personnalisé</translation>
-    </message>
-    <message>
-        <source>Label:</source>
-        <translation>Étiquette:</translation>
-    </message>
-    <message>
-        <source>3 years</source>
-        <translation>3 années</translation>
-    </message>
-    <message>
-        <source> month(s)</source>
-        <translation> mois</translation>
-    </message>
-    <message>
-        <source>Opacity:</source>
-        <translation>Opacité:</translation>
-    </message>
-    <message>
-        <source> day(s)</source>
-        <translation> jour(s)</translation>
-    </message>
-    <message>
-        <source>Active time period:</source>
-        <translation>Période active:</translation>
-    </message>
-    <message>
-        <source>6 months</source>
-        <translation>6 мois</translation>
-    </message>
-    <message>
-        <source>3 months</source>
-        <translation>3 мois</translation>
-    </message>
-    <message>
-        <source>Tick label:</source>
-        <translation>Cocher l&apos;étiquette:</translation>
-    </message>
-    <message>
-        <source>5 years</source>
-        <translation>5 années</translation>
-    </message>
-    <message>
         <source>Collect Traffic Statistics</source>
         <translation>Collecter des statistiques du trafic</translation>
-    </message>
-    <message>
-        <source>Frameless</source>
-        <translation>Sans cadre</translation>
-    </message>
-    <message>
-        <source>Upload:</source>
-        <translation>Charger:</translation>
-    </message>
-    <message>
-        <source>Keep data for &apos;Monthly&apos;:</source>
-        <translation>Conserver les données pour &apos;Mensuel&apos;:</translation>
-    </message>
-    <message>
-        <source>Keep data for &apos;Hourly&apos;:</source>
-        <translation>Conserver les données pour &apos;Toutes les heures&apos;:</translation>
-    </message>
-    <message>
-        <source>Forever</source>
-        <translation>Pour toujours</translation>
     </message>
     <message>
         <source>Collect Traffic, when Filter Disabled</source>
         <translation>Collecter le trafic, lorsque le filtre est désactivé</translation>
     </message>
     <message>
-        <source>Download:</source>
-        <translation>Télécharger:</translation>
+        <source>Active time period:</source>
+        <translation>Période active:</translation>
     </message>
     <message>
-        <source>Hide on hover</source>
-        <translation>Cacher en survol</translation>
+        <source>Month starts on:</source>
+        <translation>Le mois commence par:</translation>
     </message>
     <message>
-        <source>Max seconds:</source>
-        <translation>Max secondes:</translation>
+        <source>Keep data for &apos;Hourly&apos;:</source>
+        <translation>Conserver les données pour &apos;Toutes les heures&apos;:</translation>
+    </message>
+    <message>
+        <source> day(s)</source>
+        <translation> jour(s)</translation>
     </message>
     <message>
         <source>Keep data for &apos;Daily&apos;:</source>
         <translation>Conserver les données pour &apos;Quotidien&apos;:</translation>
     </message>
     <message>
-        <source>Background:</source>
-        <translation>Arrière-plan:</translation>
+        <source>Keep data for &apos;Monthly&apos;:</source>
+        <translation>Conserver les données pour &apos;Mensuel&apos;:</translation>
+    </message>
+    <message>
+        <source> month(s)</source>
+        <translation> mois</translation>
+    </message>
+    <message>
+        <source>Day&apos;s Quota:</source>
+        <translation>Quota du jour:</translation>
+    </message>
+    <message>
+        <source>Month&apos;s Quota:</source>
+        <translation>Quota du mois:</translation>
+    </message>
+    <message>
+        <source>Keep count for &apos;Allowed connections&apos;:</source>
+        <translation>Tenir compte des &apos;connexions autorisées&apos;:</translation>
+    </message>
+    <message>
+        <source>Keep count for &apos;Blocked connections&apos;:</source>
+        <translation>Tenir compte des &apos;connexions bloquées&apos;:</translation>
+    </message>
+    <message>
+        <source>Graph</source>
+        <translation>Graphique</translation>
     </message>
     <message>
         <source>Always on top</source>
         <translation>Toujours au-dessus</translation>
+    </message>
+    <message>
+        <source>Frameless</source>
+        <translation>Sans cadre</translation>
+    </message>
+    <message>
+        <source>Click through</source>
+        <translation>Cliquer à travers</translation>
+    </message>
+    <message>
+        <source>Hide on hover</source>
+        <translation>Cacher en survol</translation>
+    </message>
+    <message>
+        <source>Opacity:</source>
+        <translation>Opacité:</translation>
+    </message>
+    <message>
+        <source>Hover opacity:</source>
+        <translation>Opacité de survol:</translation>
+    </message>
+    <message>
+        <source>Max seconds:</source>
+        <translation>Max secondes:</translation>
+    </message>
+    <message>
+        <source>Background:</source>
+        <translation>Arrière-plan:</translation>
+    </message>
+    <message>
+        <source>Download:</source>
+        <translation>Télécharger:</translation>
+    </message>
+    <message>
+        <source>Upload:</source>
+        <translation>Charger:</translation>
+    </message>
+    <message>
+        <source>Axis:</source>
+        <translation>Axe:</translation>
+    </message>
+    <message>
+        <source>Tick label:</source>
+        <translation>Cocher l&apos;étiquette:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation>Étiquette:</translation>
+    </message>
+    <message>
+        <source>Grid:</source>
+        <translation>Grille:</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Personnalisé</translation>
+    </message>
+    <message>
+        <source>Forever</source>
+        <translation>Pour toujours</translation>
+    </message>
+    <message>
+        <source>3 months</source>
+        <translation>3 мois</translation>
+    </message>
+    <message>
+        <source>6 months</source>
+        <translation>6 мois</translation>
+    </message>
+    <message>
+        <source>1 year</source>
+        <translation>1 année</translation>
+    </message>
+    <message>
+        <source>3 years</source>
+        <translation>3 années</translation>
+    </message>
+    <message>
+        <source>5 years</source>
+        <translation>5 années</translation>
+    </message>
+    <message>
+        <source>10 years</source>
+        <translation>10 années</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Désactivé</translation>
     </message>
     <message>
         <source>Traffic</source>
@@ -1247,12 +1247,12 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
 <context>
     <name>TaskInfo</name>
     <message>
-        <source>Zones Downloader</source>
-        <translation>Téléchargeur de zones</translation>
-    </message>
-    <message>
         <source>Update Checker</source>
         <translation>Vérificateur de mise à jour</translation>
+    </message>
+    <message>
+        <source>Zones Downloader</source>
+        <translation>Téléchargeur de zones</translation>
     </message>
 </context>
 <context>
@@ -1291,20 +1291,20 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
 <context>
     <name>TrafListModel</name>
     <message>
-        <source>Sum</source>
-        <translation>Somme</translation>
-    </message>
-    <message>
         <source>Date</source>
         <translation>Date</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Télécharger</translation>
     </message>
     <message>
         <source>Upload</source>
         <translation>Chargement</translation>
     </message>
     <message>
-        <source>Download</source>
-        <translation>Télécharger</translation>
+        <source>Sum</source>
+        <translation>Somme</translation>
     </message>
 </context>
 <context>
@@ -1381,16 +1381,8 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
         <translation>Options</translation>
     </message>
     <message>
-        <source>Are you sure you want to quit the program?</source>
-        <translation>Voulez-vous vraiment quitter le programme ?</translation>
-    </message>
-    <message>
         <source>Zones</source>
         <translation>Zones</translation>
-    </message>
-    <message>
-        <source>Are you sure to switch the &quot;%1&quot;?</source>
-        <translation>Êtes-vous sûr de basculer le &quot;%1&quot;?</translation>
     </message>
     <message>
         <source>Traffic Graph</source>
@@ -1421,12 +1413,20 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
         <translation>Statistiques</translation>
     </message>
     <message>
+        <source>Are you sure to switch the &quot;%1&quot;?</source>
+        <translation>Êtes-vous sûr de basculer le &quot;%1&quot;?</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to quit the program?</source>
+        <translation>Voulez-vous vraiment quitter le programme ?</translation>
+    </message>
+    <message>
         <source>Filter Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Mode de filtrage</translation>
     </message>
     <message>
         <source>Are you sure to select the &quot;%1&quot;?</source>
-        <translation type="unfinished"></translation>
+        <translation>Êtes-vous sûr de sélectionner le &quot;%1&quot;?</translation>
     </message>
 </context>
 <context>
@@ -1462,72 +1462,72 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
 <context>
     <name>ZonesWindow</name>
     <message>
-        <source>OK</source>
-        <translation>OK</translation>
+        <source>Edit</source>
+        <translation>Éditer</translation>
     </message>
     <message>
         <source>Add</source>
         <translation>Ajouter</translation>
     </message>
     <message>
-        <source>Edit</source>
-        <translation>Éditer</translation>
-    </message>
-    <message>
-        <source>URL:</source>
-        <translation>URL:</translation>
-    </message>
-    <message>
-        <source>Zones</source>
-        <translation>Zones</translation>
-    </message>
-    <message>
-        <source>Edit Zone</source>
-        <translation>Éditer Zones</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annuler</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>Retirer</translation>
-    </message>
-    <message>
-        <source>Zone Name:</source>
-        <translation>Nom de la Zone:</translation>
-    </message>
-    <message>
-        <source>Cannot save Zone addresses as text file</source>
-        <translation>Impossible d&apos;enregistrer les adresses de zone sous forme de fichier texte</translation>
-    </message>
-    <message>
-        <source>Text files (*.txt);;All files (*.*)</source>
-        <translation>Fichiers texte (*.txt);;Tous les fichiers (*.*)</translation>
-    </message>
-    <message>
-        <source>Source:</source>
-        <translation>Source:</translation>
-    </message>
-    <message>
-        <source>Custom URL</source>
-        <translation>URL personnalisée</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation>Activé</translation>
     </message>
     <message>
         <source>Save As Text</source>
         <translation>Enregistrer comme texte</translation>
     </message>
     <message>
-        <source>Are you sure to remove selected zone?</source>
-        <translation>Êtes-vous sûr de supprimer la zone sélectionnée?</translation>
+        <source>Edit Zone</source>
+        <translation>Éditer Zones</translation>
+    </message>
+    <message>
+        <source>Zone Name:</source>
+        <translation>Nom de la Zone:</translation>
+    </message>
+    <message>
+        <source>Source:</source>
+        <translation>Source :</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Activé</translation>
+    </message>
+    <message>
+        <source>Custom URL</source>
+        <translation>URL personnalisée</translation>
+    </message>
+    <message>
+        <source>URL:</source>
+        <translation>URL :</translation>
     </message>
     <message>
         <source>Form Data:</source>
         <translation>Données du formulaire:</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuler</translation>
+    </message>
+    <message>
+        <source>Zones</source>
+        <translation>Zones</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected zone?</source>
+        <translation>Êtes-vous sûr de supprimer la zone sélectionnée?</translation>
+    </message>
+    <message>
+        <source>Text files (*.txt);;All files (*.*)</source>
+        <translation>Fichiers texte (*.txt);;Tous les fichiers (*.*)</translation>
+    </message>
+    <message>
+        <source>Cannot save Zone addresses as text file</source>
+        <translation>Impossible d&apos;enregistrer les adresses de zone sous forme de fichier texte</translation>
     </message>
 </context>
 </TS>
