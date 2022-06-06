@@ -215,7 +215,7 @@ void FirewallConf::moveAppGroup(int from, int to)
 {
     const int lo = qMin(from, to);
     const int hi = qMax(from, to);
-    for (int i = lo; i >= hi; --i) {
+    for (int i = lo; i <= hi; ++i) {
         AppGroup *appGroup = m_appGroups.at(i);
         appGroup->setEdited(true);
     }
