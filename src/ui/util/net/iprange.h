@@ -34,7 +34,8 @@ public:
     int errorLineNo() const { return m_errorLineNo; }
 
     QString errorMessage() const { return m_errorMessage; }
-    QString errorLineAndMessage() const;
+    QString errorDetails() const { return m_errorDetails; }
+    QString errorLineAndMessageDetails() const;
 
     const ip4_arr_t &ip4Array() const { return m_ip4Array; }
     ip4_arr_t &ip4Array() { return m_ip4Array; }
@@ -80,10 +81,6 @@ public:
     bool fromText(const QString &text);
     bool fromList(const StringViewList &list, int emptyNetMask = 32, bool sort = true);
 
-signals:
-    void errorLineNoChanged();
-    void errorMessageChanged();
-
 public slots:
     void clear();
 
@@ -100,6 +97,7 @@ private:
 
     void setErrorLineNo(int lineNo);
     void setErrorMessage(const QString &errorMessage);
+    void setErrorDetails(const QString &errorDetails);
 
     IpRange::ParseError parseIpLine(
             const StringView line, ip4range_map_t &ip4RangeMap, int &pair4Size, int emptyNetMask);
@@ -126,6 +124,7 @@ private:
 private:
     int m_errorLineNo = 0;
     QString m_errorMessage;
+    QString m_errorDetails;
 
     ip4_arr_t m_ip4Array;
     ip4_arr_t m_pair4FromArray;

@@ -102,7 +102,7 @@ bool TaskZoneDownloader::storeAddresses(const StringViewList &list)
     IpRange ipRange;
     if (!ipRange.fromList(list, emptyNetMask(), sort())) {
         qCWarning(LC) << "TaskZoneDownloader:" << zoneName() << ":"
-                      << ipRange.errorLineAndMessage();
+                      << ipRange.errorLineAndMessageDetails();
         return false;
     }
 

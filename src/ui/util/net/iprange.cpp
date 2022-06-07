@@ -50,6 +50,7 @@ void IpRange::clear()
 {
     m_errorLineNo = 0;
     m_errorMessage.clear();
+    m_errorDetails.clear();
 
     m_ip4Array.clear();
     m_pair4FromArray.clear();
@@ -62,23 +63,23 @@ void IpRange::clear()
 
 void IpRange::setErrorLineNo(int lineNo)
 {
-    if (m_errorLineNo != lineNo) {
-        m_errorLineNo = lineNo;
-        emit errorLineNoChanged();
-    }
+    m_errorLineNo = lineNo;
 }
 
 void IpRange::setErrorMessage(const QString &errorMessage)
 {
-    if (m_errorMessage != errorMessage) {
-        m_errorMessage = errorMessage;
-        emit errorMessageChanged();
-    }
+    m_errorMessage = errorMessage;
 }
 
-QString IpRange::errorLineAndMessage() const
+void IpRange::setErrorDetails(const QString &errorDetails)
 {
-    return tr("Error at line %1: %2").arg(QString::number(m_errorLineNo), m_errorMessage);
+    m_errorDetails = errorDetails;
+}
+
+QString IpRange::errorLineAndMessageDetails() const
+{
+    return tr("Error at line %1: %2. Details: [%3]")
+            .arg(QString::number(errorLineNo()), errorMessage(), errorDetails());
 }
 
 bool IpRange::isEmpty() const
@@ -139,6 +140,8 @@ bool IpRange::fromList(const StringViewList &list, int emptyNetMask, bool sort)
             continue;
 
         if (parseIpLine(line, ip4RangeMap, pair4Size, emptyNetMask) != ErrorOk) {
+            setErrorDetails(errorDetails() + (errorDetails().isEmpty() ? QString() : QString(' '))
+                    + QString("line='%1'").arg(line));
             setErrorLineNo(lineNo);
             return false;
         }
@@ -177,6 +180,7 @@ IpRange::ParseError IpRange::parseIpLine(
 
     if (sepStr.isEmpty() != mask.isEmpty()) {
         setErrorMessage(tr("Bad mask"));
+        setErrorDetails(QString("ip='%1' sep='%2' mask='%3'").arg(ip, sepStr, mask));
         return ErrorBadMaskFormat;
     }
 
@@ -195,6 +199,7 @@ IpRange::ParseError IpRange::parseIp4Address(const QString &ip, const QString &m
     from = NetUtil::textToIp4(ip, &ok);
     if (!ok) {
         setErrorMessage(tr("Bad IP address"));
+        setErrorDetails(QString("IPv4 ip='%1'").arg(ip));
         return ErrorBadAddress;
     }
 
@@ -232,11 +237,13 @@ IpRange::ParseError IpRange::parseIp4AddressMaskFull(
     to = NetUtil::textToIp4(mask, &ok);
     if (!ok) {
         setErrorMessage(tr("Bad second IP address"));
+        setErrorDetails(QString("IPv4 ip='%1'").arg(mask));
         return ErrorBadAddress2;
     }
 
     if (from > to) {
         setErrorMessage(tr("Bad range"));
+        setErrorDetails(QString("IPv4 from='%1' to='%2'").arg(from, to));
         return ErrorBadRange;
     }
 
@@ -251,6 +258,7 @@ IpRange::ParseError IpRange::parseIp4AddressMaskPrefix(
 
     if (!ok || nbits < 0 || nbits > 32) {
         setErrorMessage(tr("Bad mask"));
+        setErrorDetails(QString("IPv4 mask='%1' nbits='%2'").arg(mask, QString::number(nbits)));
         return ErrorBadMask;
     }
 
@@ -268,6 +276,7 @@ IpRange::ParseError IpRange::parseIp6Address(const QString &ip, const QString &m
     from = NetUtil::textToIp6(ip, &ok);
     if (!ok) {
         setErrorMessage(tr("Bad IP address"));
+        setErrorDetails(QString("IPv6 ip='%1'").arg(ip));
         return ErrorBadAddress;
     }
 
@@ -305,9 +314,9 @@ IpRange::ParseError IpRange::parseIp6AddressMaskFull(
 {
     bool ok;
     to = NetUtil::textToIp6(mask, &ok);
-
     if (!ok) {
         setErrorMessage(tr("Bad second IP address"));
+        setErrorDetails(QString("IPv6 ip='%1'").arg(mask));
         return ErrorBadAddress2;
     }
 
@@ -324,6 +333,7 @@ IpRange::ParseError IpRange::parseIp6AddressMaskPrefix(
 
     if (!ok || nbits < 0 || nbits > 128) {
         setErrorMessage(tr("Bad mask"));
+        setErrorDetails(QString("IPv6 mask='%1' nbits='%2'").arg(mask, QString::number(nbits)));
         return ErrorBadMask;
     }
 
