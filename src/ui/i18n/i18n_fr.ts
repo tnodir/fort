@@ -236,12 +236,12 @@
         <translation>Trop de chemins d&apos;application</translation>
     </message>
     <message>
-        <source>Bad Include IP address: %1</source>
-        <translation>Adresse IP incorrecte pour inclure: %1</translation>
+        <source>Bad Include IP address: #%1 %2</source>
+        <translation>Adresse IP incorrecte pour inclure: #%1 %2</translation>
     </message>
     <message>
-        <source>Bad Exclude IP address: %1</source>
-        <translation>Adresse IP non valide à exclure: %1</translation>
+        <source>Bad Exclude IP address: #%1 %2</source>
+        <translation>Adresse IP non valide à exclure: #%1 %2</translation>
     </message>
     <message>
         <source>Too many IP addresses</source>
@@ -423,8 +423,8 @@
 <context>
     <name>IpRange</name>
     <message>
-        <source>Error at line %1: %2</source>
-        <translation>Erreur à la ligne %1: %2</translation>
+        <source>Error at line %1: %2 (%3)</source>
+        <translation>Erreur à la ligne %1: %2 (%3)</translation>
     </message>
     <message>
         <source>Bad format</source>

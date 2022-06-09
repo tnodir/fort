@@ -236,12 +236,12 @@
         <translation>应用程序路径过多</translation>
     </message>
     <message>
-        <source>Bad Include IP address: %1</source>
-        <translation>错误的 IP 地址： %1</translation>
+        <source>Bad Include IP address: #%1 %2</source>
+        <translation>错误的 IP 地址： #%1 %2</translation>
     </message>
     <message>
-        <source>Bad Exclude IP address: %1</source>
-        <translation>错误排除IP地址： %1</translation>
+        <source>Bad Exclude IP address: #%1 %2</source>
+        <translation>错误排除IP地址： #%1 %2</translation>
     </message>
     <message>
         <source>Too many IP addresses</source>
@@ -423,8 +423,8 @@
 <context>
     <name>IpRange</name>
     <message>
-        <source>Error at line %1: %2</source>
-        <translation>分析 %1 出错：%2</translation>
+        <source>Error at line %1: %2 (%3)</source>
+        <translation>分析 %1 出错：%2 (%3)</translation>
     </message>
     <message>
         <source>Bad format</source>

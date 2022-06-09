@@ -236,11 +236,11 @@
         <translation></translation>
     </message>
     <message>
-        <source>Bad Include IP address: %1</source>
+        <source>Bad Include IP address: #%1 %2</source>
         <translation></translation>
     </message>
     <message>
-        <source>Bad Exclude IP address: %1</source>
+        <source>Bad Exclude IP address: #%1 %2</source>
         <translation></translation>
     </message>
     <message>
@@ -423,7 +423,7 @@
 <context>
     <name>IpRange</name>
     <message>
-        <source>Error at line %1: %2</source>
+        <source>Error at line %1: %2 (%3)</source>
         <translation></translation>
     </message>
     <message>

@@ -232,12 +232,12 @@
 <context>
     <name>ConfUtil</name>
     <message>
-        <source>Bad Include IP address: %1</source>
-        <translation>Некорректный IP адрес для включения: %1</translation>
+        <source>Bad Include IP address: #%1 %2</source>
+        <translation>Некорректный IP адрес для включения: #%1 %2</translation>
     </message>
     <message>
-        <source>Bad Exclude IP address: %1</source>
-        <translation>Некорректный IP адрес для исключения: %1</translation>
+        <source>Bad Exclude IP address: #%1 %2</source>
+        <translation>Некорректный IP адрес для исключения: #%1 %2</translation>
     </message>
     <message>
         <source>Too many IP addresses</source>
@@ -423,8 +423,8 @@
 <context>
     <name>IpRange</name>
     <message>
-        <source>Error at line %1: %2</source>
-        <translation>Ошибка в строке %1: %2</translation>
+        <source>Error at line %1: %2 (%3)</source>
+        <translation>Ошибка в строке %1: %2 (%3)</translation>
     </message>
     <message>
         <source>Bad format</source>

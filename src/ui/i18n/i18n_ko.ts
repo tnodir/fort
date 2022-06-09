@@ -236,12 +236,12 @@
         <translation>응용 프로그램의 경로가 너무 많습니다.</translation>
     </message>
     <message>
-        <source>Bad Include IP address: %1</source>
-        <translation>잘못된 포함 IP 주소: %1</translation>
+        <source>Bad Include IP address: #%1 %2</source>
+        <translation>잘못된 포함 IP 주소: #%1 %2</translation>
     </message>
     <message>
-        <source>Bad Exclude IP address: %1</source>
-        <translation>잘못된 제외 IP 주소: %1</translation>
+        <source>Bad Exclude IP address: #%1 %2</source>
+        <translation>잘못된 제외 IP 주소: #%1 %2</translation>
     </message>
     <message>
         <source>Too many IP addresses</source>
@@ -423,8 +423,8 @@
 <context>
     <name>IpRange</name>
     <message>
-        <source>Error at line %1: %2</source>
-        <translation>%1 라인 오류: %2</translation>
+        <source>Error at line %1: %2 (%3)</source>
+        <translation>%1 라인 오류: %2 (%3)</translation>
     </message>
     <message>
         <source>Bad format</source>

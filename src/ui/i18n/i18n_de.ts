@@ -236,12 +236,12 @@
         <translation>Zu viele Anwendungspfade</translation>
     </message>
     <message>
-        <source>Bad Include IP address: %1</source>
-        <translation>Fehlerhaft eingebundene IP-Adresse: %1</translation>
+        <source>Bad Include IP address: #%1 %2</source>
+        <translation>Fehlerhaft eingebundene IP-Adresse: #%1 %2</translation>
     </message>
     <message>
-        <source>Bad Exclude IP address: %1</source>
-        <translation>Fehlerhaft ausgeschlossene IP-Adresse: %1</translation>
+        <source>Bad Exclude IP address: #%1 %2</source>
+        <translation>Fehlerhaft ausgeschlossene IP-Adresse: #%1 %2</translation>
     </message>
     <message>
         <source>Too many IP addresses</source>
@@ -423,8 +423,8 @@
 <context>
     <name>IpRange</name>
     <message>
-        <source>Error at line %1: %2</source>
-        <translation>Fehler in Zeile %1: %2</translation>
+        <source>Error at line %1: %2 (%3)</source>
+        <translation>Fehler in Zeile %1: %2 (%3)</translation>
     </message>
     <message>
         <source>Bad format</source>

@@ -78,7 +78,7 @@ void IpRange::setErrorDetails(const QString &errorDetails)
 
 QString IpRange::errorLineAndMessageDetails() const
 {
-    return tr("Error at line %1: %2. Details: [%3]")
+    return tr("Error at line %1: %2 (%3)")
             .arg(QString::number(errorLineNo()), errorMessage(), errorDetails());
 }
 

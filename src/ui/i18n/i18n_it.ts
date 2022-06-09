@@ -244,12 +244,12 @@
         <translation>Il numero di gruppi di applicazioni deve essere compreso tra 1 e %1</translation>
     </message>
     <message>
-        <source>Bad Include IP address: %1</source>
-        <translation>Indirizzo IP di inclusione errato: %1</translation>
+        <source>Bad Include IP address: #%1 %2</source>
+        <translation>Indirizzo IP di inclusione errato: #%1 %2</translation>
     </message>
     <message>
-        <source>Bad Exclude IP address: %1</source>
-        <translation>Indirizzo IP di esclusione errato: %1</translation>
+        <source>Bad Exclude IP address: #%1 %2</source>
+        <translation>Indirizzo IP di esclusione errato: #%1 %2</translation>
     </message>
     <message>
         <source>Length of Application Group&apos;s Name must be &lt; %1</source>
@@ -427,8 +427,8 @@
         <translation>Indirizzo IP errato</translation>
     </message>
     <message>
-        <source>Error at line %1: %2</source>
-        <translation>Errore alla riga %1: %2</translation>
+        <source>Error at line %1: %2 (%3)</source>
+        <translation>Errore alla riga %1: %2 (%3)</translation>
     </message>
     <message>
         <source>Bad second IP address</source>

@@ -257,14 +257,18 @@ bool ConfUtil::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
         addressRange.setExcludeZones(addressGroup->excludeZones());
 
         if (!addressRange.includeRange().fromText(addressGroup->includeText())) {
-            setErrorMessage(tr("Bad Include IP address: %1")
-                                    .arg(addressRange.includeRange().errorLineAndMessageDetails()));
+            setErrorMessage(
+                    tr("Bad Include IP address: #%1 %2")
+                            .arg(QString::number(i),
+                                    addressRange.includeRange().errorLineAndMessageDetails()));
             return false;
         }
 
         if (!addressRange.excludeRange().fromText(addressGroup->excludeText())) {
-            setErrorMessage(tr("Bad Exclude IP address: %1")
-                                    .arg(addressRange.excludeRange().errorLineAndMessageDetails()));
+            setErrorMessage(
+                    tr("Bad Exclude IP address: #%1 %2")
+                            .arg(QString::number(i),
+                                    addressRange.excludeRange().errorLineAndMessageDetails()));
             return false;
         }
 
