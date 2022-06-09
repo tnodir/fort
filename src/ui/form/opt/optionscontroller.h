@@ -59,8 +59,8 @@ public slots:
     void emitEdited(bool edited = true);
     void resetEdited();
 
-    void saveChanges() { save(true); }
-    void applyChanges() { save(false); }
+    void saveChanges() { save(/*closeOnSuccess=*/true); }
+    void applyChanges() { save(/*closeOnSuccess=*/false); }
 
     void closeWindow();
 

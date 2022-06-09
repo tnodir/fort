@@ -1226,7 +1226,7 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
             && saveAppGroups(sqliteDb(), conf) // Save App Groups
             && removeAppGroupsInDb(sqliteDb(), conf); // Remove App Groups
 
-    return checkResult(ok, true);
+    return checkResult(ok, /*commit=*/true);
 }
 
 void ConfManager::loadExtFlags(IniOptions &ini)
