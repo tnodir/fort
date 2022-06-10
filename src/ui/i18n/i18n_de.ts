@@ -382,15 +382,15 @@
     <name>FirewallConf</name>
     <message>
         <source>Block, if not allowed</source>
-        <translation type="unfinished"></translation>
+        <translation>Blockieren, falls nicht erlaubt</translation>
     </message>
     <message>
         <source>Allow, if not blocked</source>
-        <translation type="unfinished"></translation>
+        <translation>Zulassen, falls nicht blockiert</translation>
     </message>
     <message>
         <source>Ignore, if not blocked or allowed</source>
-        <translation type="unfinished"></translation>
+        <translation>Ignorieren, wenn nicht blockiert oder zugelassen</translation>
     </message>
 </context>
 <context>
@@ -715,7 +715,7 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     </message>
     <message>
         <source>Filter Mode:</source>
-        <translation type="unfinished"></translation>
+        <translation>Filter-Modus:</translation>
     </message>
 </context>
 <context>
@@ -764,15 +764,15 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     <name>PolicyListBox</name>
     <message>
         <source>Add Policy</source>
-        <translation type="unfinished"></translation>
+        <translation>Richtlinie hinzufügen</translation>
     </message>
     <message>
         <source>Remove Policy</source>
-        <translation type="unfinished"></translation>
+        <translation>Richtlinie entfernen</translation>
     </message>
     <message>
         <source>Edit Policy</source>
-        <translation type="unfinished"></translation>
+        <translation>Richtlinie bearbeiten</translation>
     </message>
 </context>
 <context>
@@ -955,19 +955,19 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     <name>RulesPage</name>
     <message>
         <source>Library of preset rules:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bibliothek der voreingestellten Regeln:</translation>
     </message>
     <message>
         <source>Preset rules for applications:</source>
-        <translation type="unfinished"></translation>
+        <translation>Voreingestellte Regeln für Anwendungen:</translation>
     </message>
     <message>
         <source>Global rules, applied before application rules:</source>
-        <translation type="unfinished"></translation>
+        <translation>Globale Regeln, angewendet vor Anwendungsregeln:</translation>
     </message>
     <message>
         <source>Global rules, applied after application rules:</source>
-        <translation type="unfinished"></translation>
+        <translation>Globale Regeln, angewendet nach Anwendungsregeln:</translation>
     </message>
 </context>
 <context>
@@ -1422,11 +1422,11 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     </message>
     <message>
         <source>Filter Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Filter-Modus</translation>
     </message>
     <message>
         <source>Are you sure to select the &quot;%1&quot;?</source>
-        <translation type="unfinished"></translation>
+        <translation>Möchten Sie &quot;%1&quot; wirklich auswählen?</translation>
     </message>
 </context>
 <context>
