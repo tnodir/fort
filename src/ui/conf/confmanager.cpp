@@ -582,7 +582,7 @@ void ConfManager::applySavedConf(FirewallConf *newConf)
 
 bool ConfManager::save(FirewallConf *newConf)
 {
-    if (!saveConf(*newConf))
+    if (!(validateConf(*newConf) && saveConf(*newConf)))
         return false;
 
     applySavedConf(newConf);
@@ -1029,6 +1029,23 @@ bool ConfManager::updateZoneResult(int zoneId, int addressCount, const QString &
 bool ConfManager::checkPassword(const QString &password)
 {
     return IoC<FortSettings>()->checkPassword(password);
+}
+
+bool ConfManager::validateConf(const FirewallConf &newConf)
+{
+    if (!newConf.optEdited())
+        return true;
+
+    ConfUtil confUtil;
+    QByteArray buf;
+
+    const int confSize = confUtil.write(newConf, this, *IoC<EnvManager>(), buf);
+    if (confSize == 0) {
+        showErrorMessage(confUtil.errorMessage());
+        return false;
+    }
+
+    return true;
 }
 
 bool ConfManager::validateDriver()

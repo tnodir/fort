@@ -123,6 +123,8 @@ private:
             int groupIndex, bool useGroupPerm, bool applyChild, bool blocked, bool alerted);
     bool updateDriverAppBlocked(qint64 appId, bool blocked, bool &changed);
 
+    bool validateConf(const FirewallConf &newConf);
+
     bool updateDriverDeleteApp(const QString &appPath);
     bool updateDriverUpdateApp(const QString &appPath, int groupIndex, bool useGroupPerm,
             bool applyChild, bool blocked, bool remove = false);
