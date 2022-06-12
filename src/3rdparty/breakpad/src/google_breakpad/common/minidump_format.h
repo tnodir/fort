@@ -239,6 +239,15 @@ typedef struct {
   MDRVA     rva;
 } MDLocationDescriptor;  /* MINIDUMP_LOCATION_DESCRIPTOR */
 
+/* An MDRVA64 is an 64-bit offset into the minidump file.  The beginning of the
+ * MDRawHeader is at offset 0. */
+typedef uint64_t MDRVA64; /* RVA64 */
+
+typedef struct {
+  uint64_t data_size;
+  MDRVA64 rva;
+} MDLocationDescriptor64; /* MINIDUMP_LOCATION_DESCRIPTOR64 */
+
 
 typedef struct {
   /* The base address of the memory range on the host that produced the
@@ -332,6 +341,7 @@ typedef enum {
   MD_JAVASCRIPT_DATA_STREAM      = 20,
   MD_SYSTEM_MEMORY_INFO_STREAM   = 21,
   MD_PROCESS_VM_COUNTERS_STREAM  = 22,
+  MD_THREAD_NAME_LIST_STREAM     = 24, /* MDRawThreadNameList */
   MD_LAST_RESERVED_STREAM        = 0x0000ffff,
 
   /* Breakpad extension types.  0x4767 = "Gg" */
@@ -382,6 +392,20 @@ typedef struct {
 static const size_t MDRawThreadList_minsize = offsetof(MDRawThreadList,
                                                        threads[0]);
 
+#pragma pack(push, 4)
+typedef struct {
+  uint32_t thread_id;
+  MDRVA64 thread_name_rva; /* MDString */
+} MDRawThreadName;         /* MINIDUMP_THREAD_NAME */
+
+typedef struct {
+  uint32_t number_of_thread_names;
+  MDRawThreadName thread_names[1];
+} MDRawThreadNameList; /* MINIDUMP_THREAD_NAME_LIST */
+#pragma pack(pop)
+
+static const size_t MDRawThreadNameList_minsize =
+    offsetof(MDRawThreadNameList, thread_names[0]);
 
 typedef struct {
   uint64_t             base_of_image;

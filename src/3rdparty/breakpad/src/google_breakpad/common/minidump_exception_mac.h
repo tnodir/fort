@@ -67,8 +67,10 @@ typedef enum {
       /* EXC_MACH_SYSCALL */
   MD_EXCEPTION_MAC_RPC_ALERT       = 9,
       /* EXC_RPC_ALERT */
-  MD_EXCEPTION_MAC_SIMULATED       = 0x43507378
+  MD_EXCEPTION_MAC_SIMULATED       = 0x43507378,
       /* Fake exception code used by Crashpad's SimulateCrash ('CPsx'). */
+  MD_NS_EXCEPTION_SIMULATED       = 0x43506E78
+      /* Fake exception code used by Crashpad's uncaught exceptions ('CPnx'). */
 } MDExceptionMac;
 
 /* For (MDException).exception_flags.  Breakpad minidump extension for Mac OS X
