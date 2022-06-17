@@ -49,7 +49,6 @@ void PolicyListBox::setupUi()
 QLayout *PolicyListBox::setupHeader()
 {
     m_label = ControlUtil::createLabel();
-    m_label->setFont(ControlUtil::fontDemiBold());
 
     m_btAddPolicy = ControlUtil::createFlatToolButton(
             ":/icons/add.png", [&] { emit addPolicy(policyType()); });

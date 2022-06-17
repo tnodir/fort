@@ -13,7 +13,6 @@ public:
         TypePresetApp,
         TypeGlobalBeforeApp,
         TypeGlobalAfterApp,
-        TypeSubPolicy,
     };
 
     PolicyType policyType = TypeNone;

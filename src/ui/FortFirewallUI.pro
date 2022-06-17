@@ -21,6 +21,7 @@ SOURCES += \
     conf/firewallconf.cpp \
     conf/inioptions.cpp \
     conf/rules/policy.cpp \
+    conf/rules/policyset.cpp \
     conf/rules/rule.cpp \
     control/control.cpp \
     control/controlmanager.cpp \
@@ -57,6 +58,7 @@ SOURCES += \
     form/opt/pages/optbasepage.cpp \
     form/opt/pages/optionspage.cpp \
     form/opt/pages/optmainpage.cpp \
+    form/opt/pages/rules/policyeditdialog.cpp \
     form/opt/pages/rules/policylistbox.cpp \
     form/opt/pages/rulespage.cpp \
     form/opt/pages/schedulepage.cpp \
@@ -179,6 +181,7 @@ HEADERS += \
     conf/firewallconf.h \
     conf/inioptions.h \
     conf/rules/policy.h \
+    conf/rules/policyset.h \
     conf/rules/rule.h \
     control/control.h \
     control/controlmanager.h \
@@ -215,6 +218,7 @@ HEADERS += \
     form/opt/pages/optbasepage.h \
     form/opt/pages/optionspage.h \
     form/opt/pages/optmainpage.h \
+    form/opt/pages/rules/policyeditdialog.h \
     form/opt/pages/rules/policylistbox.h \
     form/opt/pages/rulespage.h \
     form/opt/pages/schedulepage.h \
