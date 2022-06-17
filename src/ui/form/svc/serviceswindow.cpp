@@ -25,7 +25,7 @@
 
 namespace {
 
-#define SERVICES_HEADER_VERSION 2
+constexpr int SERVICES_HEADER_VERSION = 2;
 
 }
 

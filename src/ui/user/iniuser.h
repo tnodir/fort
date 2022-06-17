@@ -92,6 +92,9 @@ public:
     QByteArray optWindowRulesSplit() const { return valueByteArray("optWindow/rulesSplit"); }
     void setOptWindowRulesSplit(const QByteArray &v) { setValue("optWindow/rulesSplit", v); }
 
+    int optWindowRulesSplitVersion() const { return valueInt("optWindow/rulesSplitVersion"); }
+    void setOptWindowRulesSplitVersion(int v) { setValue("optWindow/rulesSplitVersion", v); }
+
     QRect serviceWindowGeometry() const { return value("serviceWindow/geometry").toRect(); }
     void setServiceWindowGeometry(const QRect &v) { setValue("serviceWindow/geometry", v); }
 

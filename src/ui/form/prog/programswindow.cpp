@@ -25,7 +25,7 @@
 
 namespace {
 
-#define APPS_HEADER_VERSION 5
+constexpr int APPS_HEADER_VERSION = 5;
 
 }
 

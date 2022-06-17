@@ -22,7 +22,7 @@
 
 namespace {
 
-#define CONN_LIST_HEADER_VERSION 2
+constexpr int CONN_LIST_HEADER_VERSION = 2;
 
 }
 

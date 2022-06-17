@@ -32,7 +32,7 @@
 
 namespace {
 
-#define ZONES_HEADER_VERSION 3
+constexpr int ZONES_HEADER_VERSION = 3;
 
 }
 

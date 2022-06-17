@@ -12,6 +12,12 @@
 
 #include "rules/policylistbox.h"
 
+namespace {
+
+constexpr int RULES_SPLIT_VERSION = 1;
+
+}
+
 RulesPage::RulesPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctrl, parent)
 {
     setupUi();
@@ -22,13 +28,16 @@ void RulesPage::onSaveWindowState(IniUser *ini)
     ini->setOptWindowRulesSplit(m_splitter->saveState());
     ini->setOptWindowRulesPresetSplit(m_presetSplitter->saveState());
     ini->setOptWindowRulesGlobalSplit(m_globalSplitter->saveState());
+    ini->setOptWindowRulesSplitVersion(RULES_SPLIT_VERSION);
 }
 
 void RulesPage::onRestoreWindowState(IniUser *ini)
 {
-    m_splitter->restoreState(ini->optWindowRulesSplit());
-    m_presetSplitter->restoreState(ini->optWindowRulesPresetSplit());
-    m_globalSplitter->restoreState(ini->optWindowRulesGlobalSplit());
+    if (ini->optWindowRulesSplitVersion() == RULES_SPLIT_VERSION) {
+        m_splitter->restoreState(ini->optWindowRulesSplit());
+        m_presetSplitter->restoreState(ini->optWindowRulesPresetSplit());
+        m_globalSplitter->restoreState(ini->optWindowRulesGlobalSplit());
+    }
 }
 
 void RulesPage::onRetranslateUi()
@@ -54,7 +63,7 @@ void RulesPage::setupUi()
 
     // Splitter
     m_splitter = new QSplitter();
-    m_splitter->setHandleWidth(20);
+    m_splitter->setHandleWidth(12);
     m_splitter->addWidget(m_presetSplitter);
     m_splitter->addWidget(m_globalSplitter);
 
