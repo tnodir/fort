@@ -173,7 +173,8 @@ FORT_API BOOL fort_conf_ip_included(const PFORT_CONF conf,
     return ip_included && !ip_excluded;
 }
 
-FORT_API BOOL fort_conf_app_exe_equal(PFORT_APP_ENTRY app_entry, const PVOID path, UINT32 path_len)
+FORT_API BOOL fort_conf_app_exe_equal(
+        const PFORT_APP_ENTRY app_entry, const PVOID path, UINT32 path_len)
 {
     const char *app_path = (const char *) (app_entry + 1);
     const UINT32 app_path_len = app_entry->path_len;
@@ -184,35 +185,59 @@ FORT_API BOOL fort_conf_app_exe_equal(PFORT_APP_ENTRY app_entry, const PVOID pat
     return fort_memcmp(path, app_path, path_len) == 0;
 }
 
-FORT_API FORT_APP_FLAGS fort_conf_app_exe_find(
-        const PFORT_CONF conf, const PVOID path, UINT32 path_len)
+static BOOL fort_conf_app_wild_equal(
+        const PFORT_APP_ENTRY app_entry, const PVOID path, UINT32 path_len)
+{
+    const WCHAR *app_path = (const WCHAR *) (app_entry + 1);
+
+    UNUSED(path_len);
+
+    return wildmatch(app_path, (const WCHAR *) path) == WM_MATCH;
+}
+
+typedef BOOL fort_conf_app_equal_func(
+        const PFORT_APP_ENTRY app_entry, const PVOID path, UINT32 path_len);
+
+static FORT_APP_FLAGS fort_conf_app_find_loop(const PFORT_CONF conf, const PVOID path,
+        UINT32 path_len, UINT32 apps_off, UINT16 apps_n, fort_conf_app_equal_func *app_equal_func)
 {
     FORT_APP_FLAGS app_flags;
-    UINT16 count = conf->exe_apps_n;
-
     app_flags.v = 0;
 
-    if (count == 0)
+    if (apps_n == 0)
         return app_flags;
 
-    const char *data = conf->data;
-    const char *app_entries = (const char *) (data + conf->exe_apps_off);
+    const char *app_entries = (const char *) (conf->data + apps_off);
 
     do {
         const PFORT_APP_ENTRY app_entry = (const PFORT_APP_ENTRY) app_entries;
 
-        if (fort_conf_app_exe_equal(app_entry, path, path_len)) {
+        if (app_equal_func(app_entry, path, path_len)) {
             app_flags = app_entry->flags;
             break;
         }
 
         app_entries += FORT_CONF_APP_ENTRY_SIZE(app_entry->path_len);
-    } while (--count != 0);
+    } while (--apps_n != 0);
 
     return app_flags;
 }
 
-static int fort_conf_app_prefix_cmp(PFORT_APP_ENTRY app_entry, const char *path, UINT32 path_len)
+FORT_API FORT_APP_FLAGS fort_conf_app_exe_find(
+        const PFORT_CONF conf, const PVOID path, UINT32 path_len)
+{
+    return fort_conf_app_find_loop(
+            conf, path, path_len, conf->exe_apps_off, conf->exe_apps_n, fort_conf_app_exe_equal);
+}
+
+static FORT_APP_FLAGS fort_conf_app_wild_find(
+        const PFORT_CONF conf, const PVOID path, UINT32 path_len)
+{
+    return fort_conf_app_find_loop(
+            conf, path, path_len, conf->wild_apps_off, conf->wild_apps_n, fort_conf_app_wild_equal);
+}
+
+static int fort_conf_app_prefix_cmp(PFORT_APP_ENTRY app_entry, const PVOID path, UINT32 path_len)
 {
     const char *app_path = (const char *) (app_entry + 1);
     const UINT32 app_path_len = app_entry->path_len;
@@ -224,13 +249,12 @@ static int fort_conf_app_prefix_cmp(PFORT_APP_ENTRY app_entry, const char *path,
 }
 
 static FORT_APP_FLAGS fort_conf_app_prefix_find(
-        const PFORT_CONF conf, const char *path, UINT32 path_len)
+        const PFORT_CONF conf, const PVOID path, UINT32 path_len)
 {
     FORT_APP_FLAGS app_flags;
-    const UINT16 count = conf->prefix_apps_n;
-
     app_flags.v = 0;
 
+    const UINT16 count = conf->prefix_apps_n;
     if (count == 0)
         return app_flags;
 
@@ -245,6 +269,7 @@ static FORT_APP_FLAGS fort_conf_app_prefix_find(
         const int mid = (low + high) / 2;
         const UINT32 app_off = app_offsets[mid];
         const PFORT_APP_ENTRY app_entry = (PFORT_APP_ENTRY) (app_entries + app_off);
+
         const int res = fort_conf_app_prefix_cmp(app_entry, path, path_len);
 
         if (res < 0)
@@ -256,35 +281,6 @@ static FORT_APP_FLAGS fort_conf_app_prefix_find(
             break;
         }
     } while (low <= high);
-
-    return app_flags;
-}
-
-static FORT_APP_FLAGS fort_conf_app_wild_find(const PFORT_CONF conf, const char *path)
-{
-    FORT_APP_FLAGS app_flags;
-    UINT16 count = conf->wild_apps_n;
-
-    app_flags.v = 0;
-
-    if (count == 0)
-        return app_flags;
-
-    const char *data = conf->data;
-    const char *app_entries = (const char *) (data + conf->wild_apps_off);
-
-    do {
-        const PFORT_APP_ENTRY app_entry = (const PFORT_APP_ENTRY) app_entries;
-        const WCHAR *app_path = (const WCHAR *) (app_entry + 1);
-        const int res = wildmatch(app_path, (const WCHAR *) path);
-
-        if (res == WM_MATCH) {
-            app_flags = app_entry->flags;
-            break;
-        }
-
-        app_entries += FORT_CONF_APP_ENTRY_SIZE(app_entry->path_len);
-    } while (--count != 0);
 
     return app_flags;
 }
@@ -302,7 +298,7 @@ FORT_API FORT_APP_FLAGS fort_conf_app_find(const PFORT_CONF conf, const PVOID pa
     if (app_flags.v != 0)
         return app_flags;
 
-    return fort_conf_app_wild_find(conf, path);
+    return fort_conf_app_wild_find(conf, path, path_len);
 }
 
 static BOOL fort_conf_app_blocked_check(const PFORT_CONF conf, INT8 *block_reason, BOOL app_found,

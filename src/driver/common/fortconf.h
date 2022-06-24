@@ -256,7 +256,8 @@ FORT_API BOOL fort_conf_ip_included(const PFORT_CONF conf,
 #define fort_conf_ip_inet_included(conf, zone_func, ctx, remote_ip, isIPv6)                        \
     fort_conf_ip_included((conf), (zone_func), (ctx), (remote_ip), isIPv6, /*addr_group_index=*/1)
 
-FORT_API BOOL fort_conf_app_exe_equal(PFORT_APP_ENTRY app_entry, const PVOID path, UINT32 path_len);
+FORT_API BOOL fort_conf_app_exe_equal(
+        const PFORT_APP_ENTRY app_entry, const PVOID path, UINT32 path_len);
 
 FORT_API FORT_APP_FLAGS fort_conf_app_exe_find(
         const PFORT_CONF conf, const PVOID path, UINT32 path_len);
