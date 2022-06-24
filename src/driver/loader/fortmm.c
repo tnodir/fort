@@ -385,7 +385,7 @@ FORT_API NTSTATUS LoadModuleFromMemory(PLOADEDMODULE pModule, const PUCHAR lpDat
 #endif
 
     /* Allocate the region */
-    PUCHAR pImage = fort_mem_exec_alloc(imageSize, FORT_LOADER_POOL_TAG);
+    PUCHAR pImage = fort_mem_alloc_exec(imageSize, FORT_LOADER_POOL_TAG);
     if (pImage == NULL)
         return STATUS_NO_MEMORY;
 
