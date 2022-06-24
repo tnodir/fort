@@ -25,10 +25,9 @@
 #    define fort_mem_exec_alloc(size, tag)                                                         \
         ExAllocatePool2(POOL_FLAG_UNINITIALIZED | POOL_FLAG_NON_PAGED_EXECUTE, (size), (tag))
 #endif
-#define fort_mem_free(p, tag) ExFreePoolWithTag((p), (tag))
 
-#define fort_mem_alloc_notag(size) ExAllocatePool(NonPagedPoolNx, (size))
-#define fort_mem_free_notag(p)     ExFreePool((p))
+#define fort_mem_free(p, tag)  ExFreePoolWithTag((p), (tag))
+#define fort_mem_free_notag(p) ExFreePool((p))
 
 #define fort_request_complete_info(irp, status, info)                                              \
     do {                                                                                           \

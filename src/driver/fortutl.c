@@ -2,6 +2,8 @@
 
 #include "fortutl.h"
 
+#define FORT_UTL_POOL_TAG 'UwfF'
+
 #define FORT_MAX_FILE_SIZE (4 * 1024 * 1024)
 
 #define FORT_KEY_INFO_PATH_SIZE                                                                    \
@@ -15,7 +17,7 @@ static UNICODE_STRING g_systemDrivePath;
 
 static NTSTATUS fort_string_new(ULONG len, PCWSTR src, PUNICODE_STRING outData)
 {
-    PWSTR buf = fort_mem_alloc_notag(len);
+    PWSTR buf = fort_mem_alloc(len, FORT_UTL_POOL_TAG);
     if (buf == NULL)
         return STATUS_INSUFFICIENT_RESOURCES;
 
