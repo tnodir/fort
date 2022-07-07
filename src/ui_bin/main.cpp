@@ -33,6 +33,7 @@ void uninstall()
 void install(const char *arg)
 {
     if (arg[0] == 'p') { // "portable"
+        FortManager::setupPortableResource();
         StartupUtil::setPortable(true);
     } else if (arg[0] == 's') { // "service"
         StartupUtil::setAutoRunMode(StartupUtil::StartupAllUsers);

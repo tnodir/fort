@@ -247,7 +247,7 @@ void StartupUtil::setExplorerIntegrated(bool integrate)
 
 void StartupUtil::setPortable(bool portable)
 {
-    const QString readmePortablePath = FileUtil::appBinLocation() + "/README.portable";
+    const QString readmePortablePath = FileUtil::nativeAppBinLocation() + "/README.portable";
 
     if (portable) {
         FileUtil::copyFile(":/README.portable", readmePortablePath);

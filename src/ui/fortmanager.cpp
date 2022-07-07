@@ -368,6 +368,11 @@ void FortManager::updateStatManager(FirewallConf *conf)
     IoC<StatManager>()->setConf(conf);
 }
 
+void FortManager::setupPortableResource()
+{
+    Q_INIT_RESOURCE(fort_readme);
+}
+
 void FortManager::setupResources()
 {
     Q_INIT_RESOURCE(appinfo_migrations);

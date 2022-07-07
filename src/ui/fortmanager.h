@@ -28,6 +28,7 @@ public slots:
 
     void processRestartRequired();
 
+    static void setupPortableResource();
     static void setupResources();
 
 private:
