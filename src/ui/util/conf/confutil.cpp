@@ -95,18 +95,18 @@ int ConfUtil::write(const FirewallConf &conf, ConfAppsWalker *confAppsWalker,
     }
 
     // Fill the buffer
-    const size_t confIoSize = FORT_CONF_IO_CONF_OFF + FORT_CONF_DATA_OFF + addressGroupsSize
+    const int confIoSize = int(FORT_CONF_IO_CONF_OFF + FORT_CONF_DATA_OFF + addressGroupsSize
             + FORT_CONF_STR_DATA_SIZE(conf.appGroups().size() * sizeof(FORT_PERIOD)) // appPeriods
             + FORT_CONF_STR_DATA_SIZE(wildAppsSize)
             + FORT_CONF_STR_HEADER_SIZE(prefixAppsMap.size())
-            + FORT_CONF_STR_DATA_SIZE(prefixAppsSize) + FORT_CONF_STR_DATA_SIZE(exeAppsSize);
+            + FORT_CONF_STR_DATA_SIZE(prefixAppsSize) + FORT_CONF_STR_DATA_SIZE(exeAppsSize));
 
     buf.reserve(confIoSize);
 
     writeConf(buf.data(), conf, addressRanges, addressGroupOffsets, appPeriods, appPeriodsCount,
             wildAppsMap, prefixAppsMap, exeAppsMap);
 
-    return int(confIoSize);
+    return confIoSize;
 }
 
 int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
