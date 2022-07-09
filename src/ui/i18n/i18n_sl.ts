@@ -382,15 +382,15 @@
     <name>FirewallConf</name>
     <message>
         <source>Block, if not allowed</source>
-        <translation type="unfinished"></translation>
+        <translation>Blokiraj, če ni dovoljeno</translation>
     </message>
     <message>
         <source>Allow, if not blocked</source>
-        <translation type="unfinished"></translation>
+        <translation>Dovoli, če ni blokirano</translation>
     </message>
     <message>
         <source>Ignore, if not blocked or allowed</source>
-        <translation type="unfinished"></translation>
+        <translation>Prezri, če ni blokirano ali dovoljeno</translation>
     </message>
 </context>
 <context>
@@ -715,7 +715,7 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     </message>
     <message>
         <source>Filter Mode:</source>
-        <translation type="unfinished"></translation>
+        <translation>Način filtra:</translation>
     </message>
 </context>
 <context>
@@ -764,15 +764,15 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     <name>PolicyListBox</name>
     <message>
         <source>Add Policy</source>
-        <translation type="unfinished"></translation>
+        <translation>Dodaj politiko</translation>
     </message>
     <message>
         <source>Remove Policy</source>
-        <translation type="unfinished"></translation>
+        <translation>Odstrani politiko</translation>
     </message>
     <message>
         <source>Edit Policy</source>
-        <translation type="unfinished"></translation>
+        <translation>Uredi politiko</translation>
     </message>
 </context>
 <context>
@@ -955,19 +955,19 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     <name>RulesPage</name>
     <message>
         <source>Library of preset rules:</source>
-        <translation type="unfinished"></translation>
+        <translation>Knjižnica prednastavljenih pravil:</translation>
     </message>
     <message>
         <source>Preset rules for applications:</source>
-        <translation type="unfinished"></translation>
+        <translation>Prednastavljena pravila za aplikacije:</translation>
     </message>
     <message>
         <source>Global rules, applied before application rules:</source>
-        <translation type="unfinished"></translation>
+        <translation>Globalna pravila, uporabljena pred pravili uporabe:</translation>
     </message>
     <message>
         <source>Global rules, applied after application rules:</source>
-        <translation type="unfinished"></translation>
+        <translation>Globalna pravila, uporabljena po pravilih uporabe:</translation>
     </message>
 </context>
 <context>
@@ -1422,11 +1422,11 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     </message>
     <message>
         <source>Filter Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Način filtra</translation>
     </message>
     <message>
         <source>Are you sure to select the &quot;%1&quot;?</source>
-        <translation type="unfinished"></translation>
+        <translation>Ali ste prepričani, da želite izbrati &quot;%1&quot;?</translation>
     </message>
 </context>
 <context>
