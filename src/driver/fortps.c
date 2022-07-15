@@ -663,8 +663,10 @@ FORT_API void NTAPI fort_pstree_enum_processes(void)
 static void fort_pstree_check_proc_conf_exe(
         PFORT_PSTREE ps_tree, PFORT_CONF_REF conf_ref, PFORT_PSNODE proc, PCUNICODE_STRING path)
 {
-    const FORT_APP_FLAGS app_flags =
-            fort_conf_app_find(&conf_ref->conf, path->Buffer, path->Length, fort_conf_exe_find);
+    const PFORT_CONF conf = &conf_ref->conf;
+    const FORT_APP_FLAGS app_flags = conf->flags.group_apply_child
+            ? fort_conf_app_find(conf, path->Buffer, path->Length, fort_conf_exe_find)
+            : fort_conf_exe_find(conf, path->Buffer, path->Length);
 
     if (app_flags.apply_child) {
         PFORT_PSNAME ps_name = fort_pstree_name_new(ps_tree, path->Length);

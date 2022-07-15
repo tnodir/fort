@@ -147,14 +147,18 @@ void FirewallConf::setActivePeriodTo(const QString &activePeriodTo)
     m_activePeriodTo = activePeriodTo;
 }
 
-quint32 FirewallConf::appGroupBits() const
-{
-    return m_appGroupBits;
-}
-
 void FirewallConf::setAppGroupBits(quint32 groupBits)
 {
     m_appGroupBits = groupBits;
+}
+
+bool FirewallConf::appGroupApplyChild() const
+{
+    for (const AppGroup *appGroup : appGroups()) {
+        if (appGroup->enabled() && appGroup->applyChild())
+            return true;
+    }
+    return false;
 }
 
 bool FirewallConf::appGroupEnabled(int groupIndex) const
@@ -397,7 +401,7 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
     m_activePeriodFrom = map["activePeriodFrom"].toString();
     m_activePeriodTo = map["activePeriodTo"].toString();
 
-    setAppGroupBits(map["appGroupBits"].toUInt());
+    m_appGroupBits = map["appGroupBits"].toUInt();
 }
 
 QVariant FirewallConf::addressesToVariant() const

@@ -97,8 +97,10 @@ public:
     QString activePeriodTo() const { return m_activePeriodTo; }
     void setActivePeriodTo(const QString &activePeriodTo);
 
-    quint32 appGroupBits() const;
+    quint32 appGroupBits() const { return m_appGroupBits; }
     void setAppGroupBits(quint32 groupBits);
+
+    bool appGroupApplyChild() const;
 
     bool appGroupEnabled(int groupIndex) const;
 
