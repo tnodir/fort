@@ -8,4 +8,4 @@
 
 @call sign-env-sectigo.bat
 
-signtool.exe sign /ac "%CRT_PATH%" /n "%CRT_NAME%" /fd sha256 /tr http://time.certum.pl/ %DRV_PATH%
+signtool.exe sign /ac "%CRT_PATH%" /n "%CRT_NAME%" /fd sha256 /tr %TS_URL% %DRV_PATH%

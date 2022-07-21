@@ -5,4 +5,4 @@
 
 @call sign-env-certum.bat
 
-signtool.exe sign /n "%CRT_NAME%" /fd sha256 /tr http://time.certum.pl/ %APP_PATH%
+signtool.exe sign /n "%CRT_NAME%" /fd sha256 /tr %TS_URL% %APP_PATH%
