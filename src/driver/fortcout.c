@@ -176,8 +176,7 @@ static void fort_callout_classify_check(const FWPS_INCOMING_VALUES0 *inFixedValu
 
     BOOL inherited = FALSE;
     UNICODE_STRING path;
-    if (!fort_pstree_get_proc_name(
-                &fort_device()->ps_tree, conf_ref, process_id, &path, &inherited)) {
+    if (!fort_pstree_get_proc_name(&fort_device()->ps_tree, process_id, &path, &inherited)) {
         path = real_path;
     } else if (!inherited) {
         real_path = path;

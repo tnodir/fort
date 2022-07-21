@@ -291,6 +291,9 @@ FORT_API void fort_conf_ref_put(PFORT_DEVICE_CONF device_conf, PFORT_CONF_REF co
 
 FORT_API PFORT_CONF_REF fort_conf_ref_take(PFORT_DEVICE_CONF device_conf)
 {
+    if (device_conf->ref == NULL)
+        return NULL;
+
     PFORT_CONF_REF conf_ref;
 
     KLOCK_QUEUE_HANDLE lock_queue;
