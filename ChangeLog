@@ -1,5 +1,13 @@
 Fort Firewall ChangeLog
 
+v3.5.9, 2022-07-22:
+- UI: IpRange: Improve IP address parsing error messages.
+- UI: AppGroups: Fix tab moving in Service mode.
+- UI: Options: Validate IP address before saving.
+- UI: Update SQLite to v3.39.1
+- Driver: Fix BSOD on Win2016Svr RDP conn. (Refactor process inheritance checking.)
+- Installer: Fix creating README.portable.
+
 v3.5.8, 2022-06-06:
 - UI: Add "Filter Mode", instead of "Block/Allow All".
 - UI: Statistics: Traffic: Fix "Clear All" to not duplicate active programs.
