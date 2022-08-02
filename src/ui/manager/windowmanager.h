@@ -45,6 +45,8 @@ signals:
     void graphWindowChanged(bool visible);
 
 public slots:
+    void setupAppPalette();
+
     void showTrayIcon();
     void closeTrayIcon();
     void showTrayMessage(

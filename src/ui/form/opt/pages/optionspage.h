@@ -82,6 +82,7 @@ private:
     QComboBox *m_comboFilterMode = nullptr;
     QCheckBox *m_cbExplorerMenu = nullptr;
     QCheckBox *m_cbHotKeys = nullptr;
+    QCheckBox *m_cbDarkMode = nullptr;
     QCheckBox *m_cbPassword = nullptr;
     QLineEdit *m_editPassword = nullptr;
     QToolButton *m_btPasswordLock = nullptr;

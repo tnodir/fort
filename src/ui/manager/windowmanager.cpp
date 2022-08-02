@@ -20,6 +20,7 @@
 #include <fortcompat.h>
 #include <fortsettings.h>
 #include <stat/statmanager.h>
+#include <user/usersettings.h>
 #include <util/ioc/ioccontainer.h>
 
 #include "nativeeventfilter.h"
@@ -32,7 +33,6 @@ void setupAppStyle()
 {
     QStyle *style = QStyleFactory::create("Fusion");
     QApplication::setStyle(style);
-    QApplication::setPalette(style->standardPalette());
 }
 
 }
@@ -41,7 +41,11 @@ WindowManager::WindowManager(QObject *parent) : QObject(parent) { }
 
 void WindowManager::setUp()
 {
-    setupAppStyle(); // Style & Palette
+    IoC()->setUpDependency<UserSettings>();
+    IoC()->setUpDependency<NativeEventFilter>();
+
+    setupAppStyle();
+    setupAppPalette();
 
     setupMainWindow();
 
@@ -74,6 +78,13 @@ QFont WindowManager::defaultFont()
             9);
 
     return g_font;
+}
+
+void WindowManager::setupAppPalette()
+{
+    QApplication::setPalette(IoC<UserSettings>()->iniUser().isDarkMode()
+                    ? QPalette(QColor(0x30, 0x30, 0x30))
+                    : QApplication::style()->standardPalette());
 }
 
 void WindowManager::setupMainWindow()
