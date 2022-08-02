@@ -717,6 +717,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Filter Mode:</source>
         <translation>Режим фильтра:</translation>
     </message>
+    <message>
+        <source>Dark Mode</source>
+        <translation>Тёмный режим</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
