@@ -5,7 +5,7 @@
 [![Screenshots](https://img.shields.io/static/v1.svg?label=screenshots&message=11&color=yellow&logo=imgur)](https://imgur.com/a/fZbAbfy)
 [![License](https://img.shields.io/static/v1.svg?label=license&message=GPL-v3&color=orange&logo=gnu)](https://www.gnu.org/licenses/gpl-3.0)
 [![Crowdin](https://badges.crowdin.net/fort-firewall/localized.svg)](https://crowdin.com/project/fort-firewall)
-[![Canny](https://img.shields.io/static/v1.svg?label=canny&message=Vote%20for%20feature%20requests&color=blue&logo=canny)](https://fort-firewall.canny.io/feature-requests)
+[![Canny](https://img.shields.io/static/v1.svg?label=canny&message=Vote%20for%20features!&color=blue&logo=canny)](https://fort-firewall.canny.io/feature-requests)
 
 Fort is a simple firewall for Windows 7+.
 
