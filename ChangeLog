@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.6.0, 2022-08-12:
+- UI: Options: Add "Dark Mode" flag (Experimental).
+- Driver: Defer all TCP packets for speed limiting.
+- UI: Update SQLite to v3.39.2
+
 v3.5.9, 2022-07-22:
 - UI: IpRange: Improve IP address parsing error messages.
 - UI: AppGroups: Fix tab moving in Service mode.
