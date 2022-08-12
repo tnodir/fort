@@ -425,11 +425,10 @@ static void fort_flow_speed_limit(PFORT_STAT stat, PFORT_FLOW flow, const FORT_F
     /* Add traffic to app. group */
     *group_bytes += data_len;
 
-    const BOOL defer_flow = (*group_bytes >= limit_bytes);
-
     /* Defer ACK */
     {
         const UCHAR defer_flag = inbound ? FORT_FLOW_DEFER_OUT : FORT_FLOW_DEFER_IN;
+        const BOOL defer_flow = (*group_bytes >= limit_bytes);
 
         fort_flow_flags_set(flow, defer_flag, defer_flow);
     }
@@ -560,12 +559,12 @@ FORT_API UINT32 fort_stat_dpc_group_flush(PFORT_STAT stat)
         traf = group->traf;
 
         // Inbound
-        fort_stat_group_flush_limit_bytes(
-                &defer_flush_bits, &flush_bit, &traf.in_bytes, group_limit->in_bytes, i, 1, 1);
+        fort_stat_group_flush_limit_bytes(&defer_flush_bits, &flush_bit, &traf.in_bytes,
+                group_limit->in_bytes, /*group_index=*/i, /*flush_index=*/1, /*defer_offset=*/1);
 
         // Outbound
-        fort_stat_group_flush_limit_bytes(
-                &defer_flush_bits, &flush_bit, &traf.out_bytes, group_limit->out_bytes, i, 2, 0);
+        fort_stat_group_flush_limit_bytes(&defer_flush_bits, &flush_bit, &traf.out_bytes,
+                group_limit->out_bytes, /*group_index=*/i, /*flush_index=*/2, /*defer_offset=*/0);
 
         // Adjust flushed bytes
         group->traf = traf;

@@ -431,8 +431,8 @@ static void fort_callout_stream_classify(const FWPS_INCOMING_VALUES0 *inFixedVal
     fort_callout_flow_classify(inMetaValues, flowContext, classifyOut, dataSize, isIPv6,
             /*is_tcp=*/TRUE, inbound);
 
-/* Flush flow's deferred TCP packets on FIN */
 #if 0
+    /* Flush flow's deferred TCP packets on FIN */
     if (streamFlags & (FWPS_STREAM_FLAG_RECEIVE_DISCONNECT | FWPS_STREAM_FLAG_SEND_DISCONNECT)) {
         PFORT_FLOW flow = (PFORT_FLOW) flowContext;
 
