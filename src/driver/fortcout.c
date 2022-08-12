@@ -541,14 +541,17 @@ static BOOL fort_callout_transport_classify_packet(const FWPS_INCOMING_VALUES0 *
     if (isIPv6) /* TODO: Support IPv6 for speed limits */
         return FALSE;
 
+#if 0
     /* Position in the packet data:
      * FWPS_LAYER_INBOUND_TRANSPORT_V4: The beginning of the data.
      * FWPS_LAYER_OUTBOUND_TRANSPORT_V4: The beginning of the transport header.
      */
     const UINT32 headerOffset = inbound ? 0 : sizeof(TCP_HEADER);
+    const BOOL isPureACK = (NET_BUFFER_DATA_LENGTH(netBuf) == headerOffset);
+#endif
 
-    /* Defer TCP Pure (zero length) ACK-packets */
-    if (defer_flow && NET_BUFFER_DATA_LENGTH(netBuf) == headerOffset) {
+    /* Defer TCP packets */
+    if (defer_flow) {
         const NTSTATUS status = fort_defer_packet_add(&fort_device()->defer, inFixedValues,
                 inMetaValues, netBufList, isIPv6, inbound, flow->opt.group_index);
 
