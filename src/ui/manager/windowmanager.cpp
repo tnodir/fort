@@ -83,8 +83,8 @@ QFont WindowManager::defaultFont()
 void WindowManager::setupAppPalette()
 {
     QApplication::setPalette(IoC<UserSettings>()->iniUser().isDarkMode()
-                    ? QPalette(QColor(0x30, 0x30, 0x30))
-                    : QApplication::style()->standardPalette());
+                    ? QApplication::style()->standardPalette()
+                    : QPalette());
 }
 
 void WindowManager::setupMainWindow()
