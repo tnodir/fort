@@ -349,9 +349,8 @@ static void fort_callout_defer_packet_flush(UINT32 list_bits, BOOL dispatchLevel
 
 static void fort_callout_defer_stream_flush(UINT64 flow_id, BOOL dispatchLevel)
 {
-    UNUSED(dispatchLevel);
-
-    fort_defer_stream_flush(&fort_device()->defer, fort_packet_inject_complete, flow_id, FALSE);
+    fort_defer_stream_flush(
+            &fort_device()->defer, fort_packet_inject_complete, flow_id, dispatchLevel);
 }
 
 FORT_API void fort_callout_defer_flush(void)
@@ -527,19 +526,19 @@ static BOOL fort_callout_transport_classify_packet(const FWPS_INCOMING_VALUES0 *
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut,
         PNET_BUFFER netBuf, BOOL isIPv6, BOOL inbound)
 {
+    if (isIPv6) /* TODO: Support IPv6 for speed limits */
+        return FALSE;
+
     PFORT_FLOW flow = (PFORT_FLOW) flowContext;
 
     const UCHAR flow_flags = fort_flow_flags(flow);
 
+    const UCHAR speed_limit = inbound ? FORT_FLOW_SPEED_LIMIT_OUT : FORT_FLOW_SPEED_LIMIT_IN;
     const UCHAR defer_flag = inbound ? FORT_FLOW_DEFER_IN : FORT_FLOW_DEFER_OUT;
-    const UCHAR ack_speed_limit = inbound ? FORT_FLOW_SPEED_LIMIT_OUT : FORT_FLOW_SPEED_LIMIT_IN;
 
-    const UCHAR speed_defer_flags = ack_speed_limit | defer_flag;
+    const UCHAR speed_defer_flags = speed_limit | defer_flag;
     const BOOL defer_flow = (flow_flags & speed_defer_flags) == speed_defer_flags
             && !fort_device_flag(&fort_device()->conf, FORT_DEVICE_POWER_OFF);
-
-    if (isIPv6) /* TODO: Support IPv6 for speed limits */
-        return FALSE;
 
 #if 0
     /* Position in the packet data:

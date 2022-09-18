@@ -160,10 +160,14 @@ static NTSTATUS fort_device_control_setconf(const PFORT_CONF_IO conf_io, ULONG l
 static NTSTATUS fort_device_control_setflags(const PFORT_CONF_FLAGS conf_flags, ULONG len)
 {
     if (len == sizeof(FORT_CONF_FLAGS)) {
+        PFORT_STAT stat = &g_device->stat;
+
         const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_flags_set(&g_device->conf, conf_flags);
 
         const UINT32 defer_flush_bits =
                 (old_conf_flags.group_bits != conf_flags->group_bits ? FORT_DEFER_FLUSH_ALL : 0);
+
+        fort_stat_conf_flags_update(stat, conf_flags);
 
         return fort_callout_force_reauth(old_conf_flags, defer_flush_bits);
     }
@@ -285,7 +289,7 @@ static NTSTATUS fort_device_control_process(
     case FORT_IOCTL_SETZONEFLAG:
         return fort_device_control_setzoneflag(buffer, in_len);
     default:
-        return STATUS_UNSUCCESSFUL;
+        return STATUS_INVALID_DEVICE_REQUEST;
     }
 }
 

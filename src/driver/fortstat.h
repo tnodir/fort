@@ -147,6 +147,8 @@ FORT_API void fort_stat_update(PFORT_STAT stat, BOOL log_stat);
 
 FORT_API void fort_stat_conf_update(PFORT_STAT stat, PFORT_CONF_IO conf_io);
 
+FORT_API void fort_stat_conf_flags_update(PFORT_STAT stat, PFORT_CONF_FLAGS conf_flags);
+
 FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, UINT64 flow_id, UINT32 process_id,
         UCHAR group_index, BOOL isIPv6, BOOL is_tcp, BOOL is_reauth, BOOL *is_new_proc);
 

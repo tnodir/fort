@@ -13,10 +13,13 @@
 #define fort_flow_hash(flow_id)         tommy_inthash_u32((UINT32) (flow_id))
 
 #define fort_stat_group_fragment(stat, group_index)                                                \
-    ((((stat)->conf_group.fragment_bits >> (group_index)) & 1) != 0 ? FORT_FLOW_FRAGMENT : 0)
+    (((((stat)->conf_group.group_bits & (stat)->conf_group.fragment_bits) >> (group_index)) & 1)   \
+                            != 0                                                                   \
+                    ? FORT_FLOW_FRAGMENT                                                           \
+                    : 0)
 
 #define fort_stat_group_speed_limit(stat, group_index)                                             \
-    (((stat)->conf_group.limit_bits >> (group_index)) & 1)
+    ((((stat)->conf_group.group_bits & (stat)->conf_group.limit_bits) >> (group_index)) & 1)
 
 static void fort_stat_proc_active_add(PFORT_STAT stat, PFORT_STAT_PROC proc)
 {
@@ -335,6 +338,16 @@ FORT_API void fort_stat_conf_update(PFORT_STAT stat, PFORT_CONF_IO conf_io)
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
+FORT_API void fort_stat_conf_flags_update(PFORT_STAT stat, PFORT_CONF_FLAGS conf_flags)
+{
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
+    {
+        stat->conf_group.group_bits = (UINT16) conf_flags->group_bits;
+    }
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+}
+
 static NTSTATUS fort_flow_associate_proc(PFORT_STAT stat, UINT32 process_id, BOOL is_reauth,
         BOOL *is_new_proc, PFORT_STAT_PROC *proc)
 {
@@ -544,30 +557,23 @@ FORT_API UINT32 fort_stat_dpc_group_flush(PFORT_STAT stat)
 
     /* Handle process group's bytes */
     for (int i = 0; flush_bits != 0; ++i) {
-        PFORT_STAT_GROUP group;
-        PFORT_TRAF group_limit;
-        FORT_TRAF traf;
         UINT32 flush_bit = (flush_bits & 3);
-
         flush_bits >>= 2;
+
         if (flush_bit == 0)
             continue;
 
-        group = &stat->groups[i];
-        group_limit = &stat->conf_group.limits[i];
-
-        traf = group->traf;
+        PFORT_STAT_GROUP group = &stat->groups[i];
+        PFORT_TRAF traf = &group->traf;
+        const PFORT_TRAF group_limit = &stat->conf_group.limits[i];
 
         // Inbound
-        fort_stat_group_flush_limit_bytes(&defer_flush_bits, &flush_bit, &traf.in_bytes,
+        fort_stat_group_flush_limit_bytes(&defer_flush_bits, &flush_bit, &traf->in_bytes,
                 group_limit->in_bytes, /*group_index=*/i, /*flush_index=*/1, /*defer_offset=*/1);
 
         // Outbound
-        fort_stat_group_flush_limit_bytes(&defer_flush_bits, &flush_bit, &traf.out_bytes,
+        fort_stat_group_flush_limit_bytes(&defer_flush_bits, &flush_bit, &traf->out_bytes,
                 group_limit->out_bytes, /*group_index=*/i, /*flush_index=*/2, /*defer_offset=*/0);
-
-        // Adjust flushed bytes
-        group->traf = traf;
 
         stat->group_flush_bits &= ~(flush_bit << (i * 2));
     }

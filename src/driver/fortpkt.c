@@ -393,7 +393,7 @@ FORT_API void fort_defer_packet_free(
     if (clonedNetBufList != NULL) {
         const NTSTATUS status = clonedNetBufList->Status;
 
-        if (!NT_SUCCESS(status)) {
+        if (!NT_SUCCESS(status) && status != STATUS_NOT_FOUND) {
             LOG("Defer: Injection error: %x\n", status);
             TRACE(FORT_PACKET_DEFER_INJECTION_ERROR, status, 0, 0);
         }
@@ -467,8 +467,8 @@ FORT_API void fort_defer_packet_flush(PFORT_DEFER defer, FORT_INJECT_COMPLETE_FU
 
     for (int i = 0; list_bits != 0; ++i) {
         const UINT32 list_bit = (list_bits & 1);
-
         list_bits >>= 1;
+
         if (list_bit == 0)
             continue;
 
