@@ -216,12 +216,10 @@ QString AppListModel::appStateText(const AppRow &appRow)
     return tr("Allow");
 }
 
-QVariant AppListModel::appGroupColor(const AppRow &appRow) const
+QVariant AppListModel::appGroupColor(const AppRow &appRow)
 {
     if (!appRow.useGroupPerm)
         return inactiveColor;
-    if (!conf()->appGroupAt(appRow.groupIndex)->enabled())
-        return blockColor;
     return {};
 }
 
