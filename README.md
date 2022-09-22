@@ -26,7 +26,7 @@ Fort is a simple firewall for Windows 7+.
 ------------------------|---------|-------------------|---------------|---------------------------------------
  \*-windows-x86.\*      | Windows | 7 SP1 and later   | x86, x64      | 32/64-bit Windows 7, 8, 8.1, 10, 11
  \*-windows-x86.\*      | Windows | 10 and later      | ARM64         | ARM64 Windows 10, 11
- \*-windows10-x86_64.\* | Windows | 10 2004 and later | x64           | 64-bit Windows 10 2004-21H2, 11
+ \*-windows10-x86_64.\* | Windows | 10 2004 and later | x64           | 64-bit Windows 10 2004-22H2, 11
 
 -----
 
