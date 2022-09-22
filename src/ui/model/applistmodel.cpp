@@ -216,7 +216,7 @@ QString AppListModel::appStateText(const AppRow &appRow)
     return tr("Allow");
 }
 
-QColor AppListModel::appGroupColor(const AppRow &appRow) const
+QVariant AppListModel::appGroupColor(const AppRow &appRow) const
 {
     if (!appRow.useGroupPerm)
         return inactiveColor;

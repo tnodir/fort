@@ -71,7 +71,7 @@ private:
 
     static QString appStateText(const AppRow &appRow);
 
-    QColor appGroupColor(const AppRow &appRow) const;
+    QVariant appGroupColor(const AppRow &appRow) const;
     static QColor appStateColor(const AppRow &appRow);
 
     static QIcon appStateIcon(const AppRow &appRow);
