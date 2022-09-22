@@ -66,7 +66,6 @@ private:
     QVariant dataDisplay(const QModelIndex &index) const;
     QVariant dataDisplayState(const AppRow &appRow) const;
     QVariant dataDecoration(const QModelIndex &index) const;
-    QVariant dataFont(const QModelIndex &index) const;
     QVariant dataForeground(const QModelIndex &index) const;
     QVariant dataTextAlignment(const QModelIndex &index) const;
 

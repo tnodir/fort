@@ -110,10 +110,6 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
     case Qt::DecorationRole:
         return dataDecoration(index);
 
-    // Font
-    case Qt::FontRole:
-        return dataFont(index);
-
     // Foreground
     case Qt::ForegroundRole:
         return dataForeground(index);
@@ -176,19 +172,6 @@ QVariant AppListModel::dataDecoration(const QModelIndex &index) const
         case 2:
             return appStateIcon(appRow);
         }
-    }
-
-    return QVariant();
-}
-
-QVariant AppListModel::dataFont(const QModelIndex &index) const
-{
-    const int column = index.column();
-
-    if (column == 2) {
-        QFont font;
-        font.setWeight(QFont::DemiBold);
-        return font;
     }
 
     return QVariant();
