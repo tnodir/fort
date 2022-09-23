@@ -108,15 +108,6 @@ Root: HKLM; Subkey: "System\CurrentControlSet\Services\EventLog\System\fortfw"; 
   ValueType: dword; ValueName: "TypesSupported"; ValueData: "7"
 
 [Code]
-function PrepareToInstall(var NeedsRestart: Boolean): String;
-var
-  ResultCode: Integer;
-begin
-  if Exec('sc.exe', ExpandConstant('stop {#APP_SVC_NAME}'), '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
-    if ResultCode = 0 then Sleep(100); // Let the service to stop
-  Result := '';
-end;
-
 function LanguageName(Param: String): String;
 begin
   Result := ActiveLanguage;
@@ -125,4 +116,36 @@ end;
 function VCRedist86Exists(): Boolean;
 begin
   Result := FileExists(ExpandConstant('{syswow64}\vcruntime140.dll'));
+end;
+
+function HVCIEnabled(): Boolean;
+var
+  EnabledValue: Cardinal;
+begin
+  Result := RegQueryDWordValue(HKEY_LOCAL_MACHINE,
+      'SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity',
+      'Enabled', EnabledValue)
+    and (EnabledValue = 1);
+end;
+
+function InitializeSetup: Boolean;
+begin
+  if HVCIEnabled() then
+  begin
+    MsgBox('This program is not compatible with HVCI (Core Isolation).', mbCriticalError, MB_OK);
+
+    Result := False;
+    Exit;
+  end;
+
+  Result := True;
+end;
+
+function PrepareToInstall(var NeedsRestart: Boolean): String;
+var
+  ResultCode: Integer;
+begin
+  if Exec('sc.exe', ExpandConstant('stop {#APP_SVC_NAME}'), '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+    if ResultCode = 0 then Sleep(100); // Let the service to stop
+  Result := '';
 end;
