@@ -32,6 +32,7 @@ Fort is a simple firewall for Windows 7+.
 
 ## Requirements
 
+  - Disabled [HVCI (Core Isolation)](https://github.com/tnodir/fort/discussions/40)
   - [Visual C++ x86 (32-bit!) redistributable](https://aka.ms/vs/17/release/vc_redist.x86.exe)
 
 ## Wiki
