@@ -24,6 +24,7 @@ namespace {
 const char *const eventSingleClick = "singleClick";
 const char *const eventDoubleClick = "doubleClick";
 const char *const eventMiddleClick = "middleClick";
+const char *const eventRightClick = "rightClick";
 
 const char *const actionShowPrograms = "Programs";
 const char *const actionShowOptions = "Options";
@@ -33,6 +34,7 @@ const char *const actionSwitchFilterEnabled = "FilterEnabled";
 const char *const actionSwitchStopTraffic = "StopTraffic";
 const char *const actionSwitchStopInetTraffic = "StopInetTraffic";
 const char *const actionSwitchAutoAllowPrograms = "AutoAllowPrograms";
+const char *const actionShowTrayMenu = "TrayMenu";
 
 QString clickNameByType(TrayIcon::ClickType clickType)
 {
@@ -43,6 +45,8 @@ QString clickNameByType(TrayIcon::ClickType clickType)
         return eventDoubleClick;
     case TrayIcon::MiddleClick:
         return eventMiddleClick;
+    case TrayIcon::RightClick:
+        return eventRightClick;
     default:
         return QString();
     }
@@ -67,6 +71,8 @@ QString actionNameByType(TrayIcon::ActionType actionType)
         return actionSwitchStopInetTraffic;
     case TrayIcon::ActionSwitchAutoAllowPrograms:
         return actionSwitchAutoAllowPrograms;
+    case TrayIcon::ActionShowTrayMenu:
+        return actionShowTrayMenu;
     default:
         return QString();
     }
@@ -101,6 +107,9 @@ TrayIcon::ActionType actionTypeByName(const QString &name)
     if (name == actionSwitchAutoAllowPrograms)
         return TrayIcon::ActionSwitchAutoAllowPrograms;
 
+    if (name == actionShowTrayMenu)
+        return TrayIcon::ActionShowTrayMenu;
+
     return TrayIcon::ActionNone;
 }
 
@@ -113,6 +122,8 @@ TrayIcon::ActionType defaultActionTypeByClick(TrayIcon::ClickType clickType)
         return TrayIcon::ActionShowOptions;
     case TrayIcon::MiddleClick:
         return TrayIcon::ActionShowStatistics;
+    case TrayIcon::RightClick:
+        return TrayIcon::ActionShowTrayMenu;
     default:
         return TrayIcon::ActionNone;
     }
@@ -230,7 +241,7 @@ void TrayIcon::onTrayActivated(QSystemTrayIcon::ActivationReason reason)
         break;
     case QSystemTrayIcon::Context:
         m_trayTriggered = false;
-        showTrayMenu(QCursor::pos());
+        onMouseClicked(RightClick);
         break;
     default:
         break;
@@ -258,6 +269,11 @@ void TrayIcon::updateTrayMenu(bool onlyFlags)
 
     updateTrayMenuFlags();
     updateHotKeys();
+}
+
+void TrayIcon::switchTrayMenu(bool /*checked*/)
+{
+    showTrayMenu(QCursor::pos());
 }
 
 void TrayIcon::setupController()
@@ -356,6 +372,9 @@ void TrayIcon::setupTrayMenu()
     m_autoAllowProgsAction =
             addAction(m_menu, QIcon(), QString(), this, SLOT(switchTrayFlag(bool)), true);
     addHotKey(m_autoAllowProgsAction, iniUser()->hotKeyAllowAllNew());
+
+    m_trayMenuAction = addAction(m_menu, QIcon(), QString(), this, SLOT(switchTrayMenu(bool)));
+    m_trayMenuAction->setVisible(false);
 
     setupTrayMenuFilterMode();
     m_menu->addMenu(m_filterModeMenu);
@@ -575,6 +594,7 @@ void TrayIcon::updateClickActions()
     m_clickActions[SingleClick] = clickActionFromIni(SingleClick);
     m_clickActions[DoubleClick] = clickActionFromIni(DoubleClick);
     m_clickActions[MiddleClick] = clickActionFromIni(MiddleClick);
+    m_clickActions[RightClick] = clickActionFromIni(RightClick);
 }
 
 QAction *TrayIcon::clickActionFromIni(ClickType clickType) const
@@ -603,6 +623,8 @@ QAction *TrayIcon::clickActionByType(ActionType actionType) const
         return m_stopInetTrafficAction;
     case TrayIcon::ActionSwitchAutoAllowPrograms:
         return m_autoAllowProgsAction;
+    case TrayIcon::ActionShowTrayMenu:
+        return m_trayMenuAction;
     }
 
     return nullptr;

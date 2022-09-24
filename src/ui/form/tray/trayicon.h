@@ -20,7 +20,13 @@ class TrayIcon : public QSystemTrayIcon
     Q_OBJECT
 
 public:
-    enum ClickType : qint8 { SingleClick = 0, DoubleClick, MiddleClick, ClickTypeCount };
+    enum ClickType : qint8 {
+        SingleClick = 0,
+        DoubleClick,
+        MiddleClick,
+        RightClick,
+        ClickTypeCount
+    };
     enum ActionType : qint8 {
         ActionNone = -1,
         ActionShowPrograms = 0,
@@ -30,7 +36,8 @@ public:
         ActionSwitchFilterEnabled,
         ActionSwitchStopTraffic,
         ActionSwitchStopInetTraffic,
-        ActionSwitchAutoAllowPrograms
+        ActionSwitchAutoAllowPrograms,
+        ActionShowTrayMenu,
     };
 
     explicit TrayIcon(QObject *parent = nullptr);
@@ -55,6 +62,8 @@ public slots:
     void updateTrayMenu(bool onlyFlags = false);
 
 protected slots:
+    void switchTrayMenu(bool checked);
+
     void onMouseClicked(TrayIcon::ClickType clickType);
     void onTrayActivated(QSystemTrayIcon::ActivationReason reason);
 
@@ -101,6 +110,7 @@ private:
     QAction *m_stopTrafficAction = nullptr;
     QAction *m_stopInetTrafficAction = nullptr;
     QAction *m_autoAllowProgsAction = nullptr;
+    QAction *m_trayMenuAction = nullptr;
     QMenu *m_filterModeMenu = nullptr;
     QActionGroup *m_filterModeActions = nullptr;
     QAction *m_quitAction = nullptr;

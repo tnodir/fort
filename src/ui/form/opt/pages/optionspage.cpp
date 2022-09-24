@@ -266,7 +266,8 @@ void OptionsPage::retranslateEditPassword()
 
 void OptionsPage::retranslateComboTrayEvent()
 {
-    const QStringList list = { tr("Single Click"), tr("Double Click"), tr("Middle Click") };
+    const QStringList list = { tr("Single Click"), tr("Double Click"), tr("Middle Click"),
+        tr("Right Click") };
 
     int currentIndex = m_comboTrayEvent->currentIndex();
     if (currentIndex < 0) {
@@ -283,7 +284,8 @@ void OptionsPage::retranslateComboTrayAction()
 {
     const QStringList list = { tr("Show Programs"), tr("Show Options"), tr("Show Statistics"),
         tr("Show/Hide Traffic Graph"), tr("Switch Filter Enabled"), tr("Switch Stop Traffic"),
-        tr("Switch Stop Internet Traffic"), tr("Switch Auto-Allow New Programs") };
+        tr("Switch Stop Internet Traffic"), tr("Switch Auto-Allow New Programs"),
+        tr("Show Tray Menu") };
 
     m_comboTrayAction->clear();
     m_comboTrayAction->addItems(list);
