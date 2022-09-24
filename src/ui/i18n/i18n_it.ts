@@ -721,6 +721,18 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
         <source>Dark Mode</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Right Click</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Tray Menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

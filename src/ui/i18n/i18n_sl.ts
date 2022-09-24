@@ -721,6 +721,18 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
         <source>Dark Mode</source>
         <translation>Temni način</translation>
     </message>
+    <message>
+        <source>Right Click</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Tray Menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
