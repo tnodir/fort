@@ -723,15 +723,15 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     </message>
     <message>
         <source>Right Click</source>
-        <translation type="unfinished"></translation>
+        <translation>Desni klik</translation>
     </message>
     <message>
         <source>Show Tray Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Prikaži meni programske vrstice</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"></translation>
+        <translation>Prezri</translation>
     </message>
 </context>
 <context>
