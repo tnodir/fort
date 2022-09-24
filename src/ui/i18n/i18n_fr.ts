@@ -723,15 +723,15 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     </message>
     <message>
         <source>Right Click</source>
-        <translation type="unfinished"></translation>
+        <translation>Clic Droit</translation>
     </message>
     <message>
         <source>Show Tray Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Afficher le menu de la barre d&apos;état</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"></translation>
+        <translation>Ignorer</translation>
     </message>
 </context>
 <context>
