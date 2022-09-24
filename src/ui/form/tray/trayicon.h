@@ -38,6 +38,7 @@ public:
         ActionSwitchStopInetTraffic,
         ActionSwitchAutoAllowPrograms,
         ActionShowTrayMenu,
+        ActionIgnore
     };
 
     explicit TrayIcon(QObject *parent = nullptr);
@@ -92,6 +93,7 @@ private:
 
     void updateClickActions();
 
+    QAction *clickAction(ClickType clickType) const;
     QAction *clickActionFromIni(ClickType clickType) const;
     QAction *clickActionByType(ActionType actionType) const;
 

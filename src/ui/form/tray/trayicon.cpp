@@ -35,6 +35,7 @@ const char *const actionSwitchStopTraffic = "StopTraffic";
 const char *const actionSwitchStopInetTraffic = "StopInetTraffic";
 const char *const actionSwitchAutoAllowPrograms = "AutoAllowPrograms";
 const char *const actionShowTrayMenu = "TrayMenu";
+const char *const actionIgnore = "Ignore";
 
 QString clickNameByType(TrayIcon::ClickType clickType)
 {
@@ -73,8 +74,10 @@ QString actionNameByType(TrayIcon::ActionType actionType)
         return actionSwitchAutoAllowPrograms;
     case TrayIcon::ActionShowTrayMenu:
         return actionShowTrayMenu;
+    case TrayIcon::ActionIgnore:
+        return actionIgnore;
     default:
-        return QString();
+        return {};
     }
 }
 
@@ -109,6 +112,9 @@ TrayIcon::ActionType actionTypeByName(const QString &name)
 
     if (name == actionShowTrayMenu)
         return TrayIcon::ActionShowTrayMenu;
+
+    if (name == actionIgnore)
+        return TrayIcon::ActionIgnore;
 
     return TrayIcon::ActionNone;
 }
@@ -211,7 +217,7 @@ WindowManager *TrayIcon::windowManager() const
 
 void TrayIcon::onMouseClicked(TrayIcon::ClickType clickType)
 {
-    QAction *action = m_clickActions[clickType];
+    QAction *action = clickAction(clickType);
     if (action) {
         action->trigger();
     }
@@ -220,29 +226,34 @@ void TrayIcon::onMouseClicked(TrayIcon::ClickType clickType)
 void TrayIcon::onTrayActivated(QSystemTrayIcon::ActivationReason reason)
 {
     switch (reason) {
-    case QSystemTrayIcon::Trigger:
-        m_trayTriggered = true;
-        QTimer::singleShot(QApplication::doubleClickInterval(), this, [&] {
-            if (m_trayTriggered) {
-                m_trayTriggered = false;
-                onMouseClicked(SingleClick);
-            }
-        });
-        break;
-    case QSystemTrayIcon::DoubleClick:
+    case QSystemTrayIcon::Trigger: {
+        if (clickAction(DoubleClick)) {
+            m_trayTriggered = true;
+            QTimer::singleShot(QApplication::doubleClickInterval(), this, [&] {
+                if (m_trayTriggered) {
+                    m_trayTriggered = false;
+                    onMouseClicked(SingleClick);
+                }
+            });
+        } else {
+            m_trayTriggered = false;
+            onMouseClicked(SingleClick);
+        }
+    } break;
+    case QSystemTrayIcon::DoubleClick: {
         if (m_trayTriggered) {
             m_trayTriggered = false;
             onMouseClicked(DoubleClick);
         }
-        break;
-    case QSystemTrayIcon::MiddleClick:
+    } break;
+    case QSystemTrayIcon::MiddleClick: {
         m_trayTriggered = false;
         onMouseClicked(MiddleClick);
-        break;
-    case QSystemTrayIcon::Context:
+    } break;
+    case QSystemTrayIcon::Context: {
         m_trayTriggered = false;
         onMouseClicked(RightClick);
-        break;
+    } break;
     default:
         break;
     }
@@ -597,6 +608,11 @@ void TrayIcon::updateClickActions()
     m_clickActions[RightClick] = clickActionFromIni(RightClick);
 }
 
+QAction *TrayIcon::clickAction(ClickType clickType) const
+{
+    return m_clickActions[clickType];
+}
+
 QAction *TrayIcon::clickActionFromIni(ClickType clickType) const
 {
     const ActionType actionType = clickEventActionType(clickType);
@@ -625,7 +641,7 @@ QAction *TrayIcon::clickActionByType(ActionType actionType) const
         return m_autoAllowProgsAction;
     case TrayIcon::ActionShowTrayMenu:
         return m_trayMenuAction;
+    default:
+        return nullptr;
     }
-
-    return nullptr;
 }
