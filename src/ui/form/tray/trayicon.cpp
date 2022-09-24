@@ -21,21 +21,21 @@
 
 namespace {
 
-const char *const eventSingleClick = "singleClick";
-const char *const eventDoubleClick = "doubleClick";
-const char *const eventMiddleClick = "middleClick";
-const char *const eventRightClick = "rightClick";
+const QString eventSingleClick = QStringLiteral("singleClick");
+const QString eventDoubleClick = QStringLiteral("doubleClick");
+const QString eventMiddleClick = QStringLiteral("middleClick");
+const QString eventRightClick = QStringLiteral("rightClick");
 
-const char *const actionShowPrograms = "Programs";
-const char *const actionShowOptions = "Options";
-const char *const actionShowStatistics = "Statistics";
-const char *const actionShowTrafficGraph = "TrafficGraph";
-const char *const actionSwitchFilterEnabled = "FilterEnabled";
-const char *const actionSwitchStopTraffic = "StopTraffic";
-const char *const actionSwitchStopInetTraffic = "StopInetTraffic";
-const char *const actionSwitchAutoAllowPrograms = "AutoAllowPrograms";
-const char *const actionShowTrayMenu = "TrayMenu";
-const char *const actionIgnore = "Ignore";
+const QString actionShowPrograms = QStringLiteral("Programs");
+const QString actionShowOptions = QStringLiteral("Options");
+const QString actionShowStatistics = QStringLiteral("Statistics");
+const QString actionShowTrafficGraph = QStringLiteral("TrafficGraph");
+const QString actionSwitchFilterEnabled = QStringLiteral("FilterEnabled");
+const QString actionSwitchStopTraffic = QStringLiteral("StopTraffic");
+const QString actionSwitchStopInetTraffic = QStringLiteral("StopInetTraffic");
+const QString actionSwitchAutoAllowPrograms = QStringLiteral("AutoAllowPrograms");
+const QString actionShowTrayMenu = QStringLiteral("TrayMenu");
+const QString actionIgnore = QStringLiteral("Ignore");
 
 QString clickNameByType(TrayIcon::ClickType clickType)
 {
@@ -83,40 +83,21 @@ QString actionNameByType(TrayIcon::ActionType actionType)
 
 TrayIcon::ActionType actionTypeByName(const QString &name)
 {
-    if (name.isEmpty())
-        return TrayIcon::ActionNone;
+    static const QHash<QString, TrayIcon::ActionType> actionTypeNamesMap = {
+        { actionShowPrograms, TrayIcon::ActionShowPrograms },
+        { actionShowOptions, TrayIcon::ActionShowOptions },
+        { actionShowStatistics, TrayIcon::ActionShowStatistics },
+        { actionShowTrafficGraph, TrayIcon::ActionShowTrafficGraph },
+        { actionSwitchFilterEnabled, TrayIcon::ActionSwitchFilterEnabled },
+        { actionSwitchStopTraffic, TrayIcon::ActionSwitchStopTraffic },
+        { actionSwitchStopInetTraffic, TrayIcon::ActionSwitchStopInetTraffic },
+        { actionSwitchAutoAllowPrograms, TrayIcon::ActionSwitchAutoAllowPrograms },
+        { actionShowTrayMenu, TrayIcon::ActionShowTrayMenu },
+        { actionIgnore, TrayIcon::ActionIgnore }
+    };
 
-    if (name == actionShowPrograms)
-        return TrayIcon::ActionShowPrograms;
-
-    if (name == actionShowOptions)
-        return TrayIcon::ActionShowOptions;
-
-    if (name == actionShowStatistics)
-        return TrayIcon::ActionShowStatistics;
-
-    if (name == actionShowTrafficGraph)
-        return TrayIcon::ActionShowTrafficGraph;
-
-    if (name == actionSwitchFilterEnabled)
-        return TrayIcon::ActionSwitchFilterEnabled;
-
-    if (name == actionSwitchStopTraffic)
-        return TrayIcon::ActionSwitchStopTraffic;
-
-    if (name == actionSwitchStopInetTraffic)
-        return TrayIcon::ActionSwitchStopInetTraffic;
-
-    if (name == actionSwitchAutoAllowPrograms)
-        return TrayIcon::ActionSwitchAutoAllowPrograms;
-
-    if (name == actionShowTrayMenu)
-        return TrayIcon::ActionShowTrayMenu;
-
-    if (name == actionIgnore)
-        return TrayIcon::ActionIgnore;
-
-    return TrayIcon::ActionNone;
+    return name.isEmpty() ? TrayIcon::ActionNone
+                          : actionTypeNamesMap.value(name, TrayIcon::ActionNone);
 }
 
 TrayIcon::ActionType defaultActionTypeByClick(TrayIcon::ClickType clickType)
