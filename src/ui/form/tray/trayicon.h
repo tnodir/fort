@@ -65,7 +65,6 @@ public slots:
 protected slots:
     void switchTrayMenu(bool checked);
 
-    void onMouseClicked(TrayIcon::ClickType clickType);
     void onTrayActivated(QSystemTrayIcon::ActivationReason reason);
 
     void saveTrayFlags();
@@ -96,6 +95,12 @@ private:
     QAction *clickAction(ClickType clickType) const;
     QAction *clickActionFromIni(ClickType clickType) const;
     QAction *clickActionByType(ActionType actionType) const;
+
+    void onMouseClicked(TrayIcon::ClickType clickType);
+    void onTrayActivatedByTrigger();
+    void onTrayActivatedByDoubleClick();
+    void onTrayActivatedByMiddleClick();
+    void onTrayActivatedByContext();
 
 private:
     bool m_trayTriggered : 1;

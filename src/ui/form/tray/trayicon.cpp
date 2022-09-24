@@ -196,44 +196,20 @@ WindowManager *TrayIcon::windowManager() const
     return ctrl()->windowManager();
 }
 
-void TrayIcon::onMouseClicked(TrayIcon::ClickType clickType)
-{
-    QAction *action = clickAction(clickType);
-    if (action) {
-        action->trigger();
-    }
-}
-
 void TrayIcon::onTrayActivated(QSystemTrayIcon::ActivationReason reason)
 {
     switch (reason) {
     case QSystemTrayIcon::Trigger: {
-        if (clickAction(DoubleClick)) {
-            m_trayTriggered = true;
-            QTimer::singleShot(QApplication::doubleClickInterval(), this, [&] {
-                if (m_trayTriggered) {
-                    m_trayTriggered = false;
-                    onMouseClicked(SingleClick);
-                }
-            });
-        } else {
-            m_trayTriggered = false;
-            onMouseClicked(SingleClick);
-        }
+        onTrayActivatedByTrigger();
     } break;
     case QSystemTrayIcon::DoubleClick: {
-        if (m_trayTriggered) {
-            m_trayTriggered = false;
-            onMouseClicked(DoubleClick);
-        }
+        onTrayActivatedByDoubleClick();
     } break;
     case QSystemTrayIcon::MiddleClick: {
-        m_trayTriggered = false;
-        onMouseClicked(MiddleClick);
+        onTrayActivatedByMiddleClick();
     } break;
     case QSystemTrayIcon::Context: {
-        m_trayTriggered = false;
-        onMouseClicked(RightClick);
+        onTrayActivatedByContext();
     } break;
     default:
         break;
@@ -625,4 +601,48 @@ QAction *TrayIcon::clickActionByType(ActionType actionType) const
     default:
         return nullptr;
     }
+}
+
+void TrayIcon::onMouseClicked(TrayIcon::ClickType clickType)
+{
+    QAction *action = clickAction(clickType);
+    if (action) {
+        action->trigger();
+    }
+}
+
+void TrayIcon::onTrayActivatedByTrigger()
+{
+    if (clickAction(DoubleClick)) {
+        m_trayTriggered = true;
+        QTimer::singleShot(QApplication::doubleClickInterval(), this, [&] {
+            if (m_trayTriggered) {
+                m_trayTriggered = false;
+                onMouseClicked(SingleClick);
+            }
+        });
+    } else {
+        m_trayTriggered = false;
+        onMouseClicked(SingleClick);
+    }
+}
+
+void TrayIcon::onTrayActivatedByDoubleClick()
+{
+    if (m_trayTriggered) {
+        m_trayTriggered = false;
+        onMouseClicked(DoubleClick);
+    }
+}
+
+void TrayIcon::onTrayActivatedByMiddleClick()
+{
+    m_trayTriggered = false;
+    onMouseClicked(MiddleClick);
+}
+
+void TrayIcon::onTrayActivatedByContext()
+{
+    m_trayTriggered = false;
+    onMouseClicked(RightClick);
 }
