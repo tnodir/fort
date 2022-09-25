@@ -723,15 +723,15 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Right Click</source>
-        <translation type="unfinished"></translation>
+        <translation>오른쪽 클릭</translation>
     </message>
     <message>
         <source>Show Tray Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>트레이 메뉴 표시</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"></translation>
+        <translation>무시</translation>
     </message>
 </context>
 <context>
