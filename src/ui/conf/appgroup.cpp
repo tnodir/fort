@@ -9,7 +9,6 @@ AppGroup::AppGroup(QObject *parent) :
     m_enabled(true),
     m_applyChild(false),
     m_logConn(true),
-    m_fragmentPacket(false),
     m_periodEnabled(false),
     m_limitInEnabled(false),
     m_limitOutEnabled(false)
@@ -36,14 +35,6 @@ void AppGroup::setLogConn(bool on)
 {
     if (bool(m_logConn) != on) {
         m_logConn = on;
-        setEdited(true);
-    }
-}
-
-void AppGroup::setFragmentPacket(bool on)
-{
-    if (bool(m_fragmentPacket) != on) {
-        m_fragmentPacket = on;
         setEdited(true);
     }
 }
@@ -132,10 +123,6 @@ QString AppGroup::menuLabel() const
 {
     QString text = name();
 
-    if (fragmentPacket()) {
-        text += QLatin1Char(' ') + QChar(0x00F7); // ÷
-    }
-
     if (enabledSpeedLimitIn() != 0) {
         text += QLatin1Char(' ') + QChar(0x2193) // ↓
                 + NetUtil::formatSpeed(speedLimitIn() * 1024);
@@ -160,7 +147,6 @@ void AppGroup::copy(const AppGroup &o)
     m_enabled = o.enabled();
     m_applyChild = o.applyChild();
     m_logConn = o.logConn();
-    m_fragmentPacket = o.fragmentPacket();
 
     m_periodEnabled = o.periodEnabled();
     m_periodFrom = o.periodFrom();
@@ -187,7 +173,6 @@ QVariant AppGroup::toVariant() const
 
     map["applyChild"] = applyChild();
     map["logConn"] = logConn();
-    map["fragmentPacket"] = fragmentPacket();
 
     map["periodEnabled"] = periodEnabled();
     map["periodFrom"] = periodFrom();
@@ -216,7 +201,6 @@ void AppGroup::fromVariant(const QVariant &v)
 
     m_applyChild = map["applyChild"].toBool();
     m_logConn = map["logConn"].toBool();
-    m_fragmentPacket = map["fragmentPacket"].toBool();
 
     m_periodEnabled = map["periodEnabled"].toBool();
     m_periodFrom = DateUtil::reformatTime(map["periodFrom"].toString());

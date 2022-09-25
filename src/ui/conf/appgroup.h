@@ -25,9 +25,6 @@ public:
     bool logConn() const { return m_logConn; }
     void setLogConn(bool on);
 
-    bool fragmentPacket() const { return m_fragmentPacket; }
-    void setFragmentPacket(bool on);
-
     bool periodEnabled() const { return m_periodEnabled; }
     void setPeriodEnabled(bool enabled);
 
@@ -79,7 +76,6 @@ private:
 
     bool m_applyChild : 1;
     bool m_logConn : 1;
-    bool m_fragmentPacket : 1;
 
     bool m_periodEnabled : 1;
 

@@ -84,7 +84,6 @@ void ApplicationsPage::onRetranslateUi()
     retranslateGroupLimits();
 
     m_cbLogConn->setText(tr("Collect connection statistics"));
-    m_cbFragmentPacket->setText(tr("Fragment first TCP packet"));
 
     m_cbGroupEnabled->setText(tr("Enabled"));
     m_ctpGroupPeriod->checkBox()->setText(tr("time period:"));
@@ -359,12 +358,10 @@ void ApplicationsPage::setupGroupOptions()
     setupGroupLimitIn();
     setupGroupLimitOut();
     setupGroupLogConn();
-    setupGroupFragmentPacket();
 
     // Menu
     const QList<QWidget *> menuWidgets = { m_cbApplyChild, ControlUtil::createSeparator(),
-        m_cscLimitIn, m_cscLimitOut, ControlUtil::createSeparator(), m_cbLogConn,
-        m_cbFragmentPacket };
+        m_cscLimitIn, m_cscLimitOut, ControlUtil::createSeparator(), m_cbLogConn };
     auto layout = ControlUtil::createLayoutByWidgets(menuWidgets);
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
@@ -455,19 +452,6 @@ void ApplicationsPage::setupGroupLogConn()
     m_cbLogConn->setVisible(false); // TODO: Collect allowed connections
 }
 
-void ApplicationsPage::setupGroupFragmentPacket()
-{
-    m_cbFragmentPacket = ControlUtil::createCheckBox(false, [&](bool checked) {
-        AppGroup *appGroup = this->appGroup();
-        if (appGroup->fragmentPacket() == checked)
-            return;
-
-        appGroup->setFragmentPacket(checked);
-
-        ctrl()->setOptEdited();
-    });
-}
-
 void ApplicationsPage::setupGroupOptionsEnabled()
 {
     const auto refreshOptionsEnabled = [&] {
@@ -476,7 +460,6 @@ void ApplicationsPage::setupGroupOptionsEnabled()
         m_cscLimitIn->setEnabled(logStat);
         m_cscLimitOut->setEnabled(logStat);
         m_cbLogConn->setEnabled(logStat);
-        m_cbFragmentPacket->setEnabled(logStat);
     };
 
     refreshOptionsEnabled();
@@ -565,7 +548,6 @@ void ApplicationsPage::updateGroup()
     m_cscLimitOut->spinBox()->setValue(int(appGroup->speedLimitOut()));
 
     m_cbLogConn->setChecked(appGroup->logConn());
-    m_cbFragmentPacket->setChecked(appGroup->fragmentPacket());
 
     m_cbGroupEnabled->setChecked(appGroup->enabled());
 

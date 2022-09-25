@@ -94,7 +94,7 @@ private:
             const appentry_map_t &wildAppsMap, const appentry_map_t &prefixAppsMap,
             const appentry_map_t &exeAppsMap);
 
-    static void writeAppGroupFlags(quint16 *groupBits, quint16 *logConnBits, quint16 *fragmentBits,
+    static void writeAppGroupFlags(quint16 *groupBits, quint16 *logConnBits,
             const FirewallConf &conf);
 
     static void writeLimits(struct fort_traf *limits, quint16 *limitBits, quint32 *limit2Bits,

@@ -100,7 +100,6 @@ CREATE TABLE app_group(
   enabled BOOLEAN NOT NULL,
   apply_child BOOLEAN NOT NULL DEFAULT 0,
   log_conn BOOLEAN NOT NULL DEFAULT 1,
-  fragment_packet BOOLEAN NOT NULL,
   period_enabled BOOLEAN NOT NULL,
   limit_in_enabled BOOLEAN NOT NULL,
   limit_out_enabled BOOLEAN NOT NULL,

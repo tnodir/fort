@@ -509,8 +509,7 @@ void ConfUtil::writeConf(char *output, const FirewallConf &conf,
     writeApps(&data, exeAppsMap);
 #undef CONF_DATA_OFFSET
 
-    writeAppGroupFlags(&drvConfIo->conf_group.group_bits, &drvConfIo->conf_group.log_conn,
-            &drvConfIo->conf_group.fragment_bits, conf);
+    writeAppGroupFlags(&drvConfIo->conf_group.group_bits, &drvConfIo->conf_group.log_conn, conf);
 
     writeLimits(drvConfIo->conf_group.limits, &drvConfIo->conf_group.limit_bits,
             &drvConfIo->conf_group.limit_2bits, conf.appGroups());
@@ -535,11 +534,10 @@ void ConfUtil::writeConf(char *output, const FirewallConf &conf,
 }
 
 void ConfUtil::writeAppGroupFlags(
-        quint16 *groupBits, quint16 *logConnBits, quint16 *fragmentBits, const FirewallConf &conf)
+        quint16 *groupBits, quint16 *logConnBits, const FirewallConf &conf)
 {
     *groupBits = 0;
     *logConnBits = 0;
-    *fragmentBits = 0;
     int i = 0;
     for (const AppGroup *appGroup : conf.appGroups()) {
         if (appGroup->enabled()) {
@@ -547,9 +545,6 @@ void ConfUtil::writeAppGroupFlags(
         }
         if (appGroup->logConn()) {
             *logConnBits |= (1 << i);
-        }
-        if (appGroup->fragmentPacket()) {
-            *fragmentBits |= (1 << i);
         }
         ++i;
     }

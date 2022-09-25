@@ -371,49 +371,6 @@ static void fort_callout_flow_classify(const FWPS_INCOMING_METADATA_VALUES0 *inM
             &fort_device()->stat, flowContext, headerSize + dataSize, isIPv6, is_tcp, inbound);
 }
 
-static BOOL fort_callout_stream_classify_fragment(const FWPS_INCOMING_VALUES0 *inFixedValues,
-        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, FWPS_STREAM_CALLOUT_IO_PACKET0 *packet,
-        const FWPS_FILTER0 *filter, UINT64 flowContext, BOOL isIPv6)
-{
-    const FWPS_STREAM_DATA0 *streamData = packet->streamData;
-    const UINT32 streamFlags = streamData->flags;
-
-    if ((streamFlags
-                & (FWPS_STREAM_FLAG_SEND | FWPS_STREAM_FLAG_SEND_EXPEDITED
-                        | FWPS_STREAM_FLAG_SEND_DISCONNECT))
-            != FWPS_STREAM_FLAG_SEND)
-        return FALSE;
-
-    PFORT_FLOW flow = (PFORT_FLOW) flowContext;
-
-    const UCHAR flow_flags = fort_flow_flags(flow);
-
-    const UCHAR fragment_flags =
-            (flow_flags & (FORT_FLOW_FRAGMENT | FORT_FLOW_FRAGMENT_DEFER | FORT_FLOW_FRAGMENTED));
-
-    if (fragment_flags != 0 && !(fragment_flags & FORT_FLOW_FRAGMENTED)) {
-        const UINT32 dataSize = (UINT32) streamData->dataLength;
-        const BOOL inbound = (streamFlags & FWPS_STREAM_FLAG_RECEIVE) != 0;
-        const UCHAR fragment_size = 3;
-
-        if (fragment_flags & FORT_FLOW_FRAGMENT_DEFER) {
-            const NTSTATUS status = fort_defer_stream_add(&fort_device()->defer, inFixedValues,
-                    inMetaValues, streamData, filter, isIPv6, inbound);
-
-            if (NT_SUCCESS(status))
-                return TRUE;
-
-            fort_flow_flags_set(flow, FORT_FLOW_FRAGMENTED, TRUE);
-        } else if (dataSize > fragment_size) {
-            packet->countBytesEnforced = fragment_size;
-
-            fort_flow_flags_set(flow, FORT_FLOW_FRAGMENT_DEFER, TRUE);
-        }
-    }
-
-    return FALSE;
-}
-
 static void fort_callout_stream_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, FWPS_STREAM_CALLOUT_IO_PACKET0 *packet,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut,
@@ -430,36 +387,7 @@ static void fort_callout_stream_classify(const FWPS_INCOMING_VALUES0 *inFixedVal
     fort_callout_flow_classify(inMetaValues, flowContext, classifyOut, dataSize, isIPv6,
             /*is_tcp=*/TRUE, inbound);
 
-#if 0
-    /* Flush flow's deferred TCP packets on FIN */
-    if (streamFlags & (FWPS_STREAM_FLAG_RECEIVE_DISCONNECT | FWPS_STREAM_FLAG_SEND_DISCONNECT)) {
-        PFORT_FLOW flow = (PFORT_FLOW) flowContext;
-
-        const UCHAR flow_flags = fort_flow_flags(flow);
-
-        if (flow_flags & FORT_FLOW_SPEED_LIMIT) {
-            fort_callout_defer_packet_flush(flow->flow_id, FORT_DEFER_FLUSH_ALL, FALSE);
-        }
-
-        if (flow_flags & FORT_FLOW_FRAGMENT) {
-            fort_callout_defer_stream_flush(flow->flow_id, FALSE);
-        }
-
-        goto permit;
-    }
-#endif
-
-    /* Fragment first TCP packet */
-    if (fort_callout_stream_classify_fragment(
-                inFixedValues, inMetaValues, packet, filter, flowContext, isIPv6))
-        goto drop;
-
-    /* permit: */
     fort_callout_classify_permit(filter, classifyOut);
-    return;
-
-drop:
-    fort_callout_classify_drop(classifyOut);
     return;
 }
 
@@ -563,18 +491,6 @@ static BOOL fort_callout_transport_classify_packet(const FWPS_INCOMING_VALUES0 *
         }
 
         return FALSE;
-    }
-
-    /* Fragment first TCP packet */
-    const BOOL fragment_packet = !inbound
-            && (flow_flags & (FORT_FLOW_FRAGMENT_DEFER | FORT_FLOW_FRAGMENTED))
-                    == FORT_FLOW_FRAGMENT_DEFER;
-
-    if (fragment_packet) {
-        fort_defer_stream_flush(
-                &fort_device()->defer, fort_packet_inject_complete, flow->flow_id, FALSE);
-
-        fort_flow_flags_set(flow, FORT_FLOW_FRAGMENTED, TRUE);
     }
 
     return FALSE;
@@ -890,7 +806,7 @@ static NTSTATUS fort_callout_force_reauth_prov(
         PFORT_STAT stat = &fort_device()->stat;
 
         const PFORT_CONF_GROUP conf_group = &stat->conf_group;
-        const UINT16 filter_bits = (conf_group->fragment_bits | conf_group->limit_bits);
+        const UINT16 filter_bits = conf_group->limit_bits;
 
         const BOOL old_filter_transport =
                 fort_device_flag(&fort_device()->conf, FORT_DEVICE_FILTER_TRANSPORT) != 0;

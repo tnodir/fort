@@ -12,12 +12,6 @@
 #define fort_stat_proc_hash(process_id) tommy_inthash_u32((UINT32) (process_id))
 #define fort_flow_hash(flow_id)         tommy_inthash_u32((UINT32) (flow_id))
 
-#define fort_stat_group_fragment(stat, group_index)                                                \
-    (((((stat)->conf_group.group_bits & (stat)->conf_group.fragment_bits) >> (group_index)) & 1)   \
-                            != 0                                                                   \
-                    ? FORT_FLOW_FRAGMENT                                                           \
-                    : 0)
-
 #define fort_stat_group_speed_limit(stat, group_index)                                             \
     ((((stat)->conf_group.group_bits & (stat)->conf_group.limit_bits) >> (group_index)) & 1)
 
@@ -241,7 +235,7 @@ static PFORT_FLOW fort_flow_new(
 }
 
 static NTSTATUS fort_flow_add(PFORT_STAT stat, UINT64 flow_id, UCHAR group_index, UINT16 proc_index,
-        UCHAR fragment, UCHAR speed_limit, BOOL isIPv6, BOOL is_tcp, BOOL is_reauth)
+        UCHAR speed_limit, BOOL isIPv6, BOOL is_tcp, BOOL is_reauth)
 {
     const tommy_key_t flow_hash = fort_flow_hash(flow_id);
     PFORT_FLOW flow = fort_flow_get(stat, flow_id, flow_hash);
@@ -266,7 +260,7 @@ static NTSTATUS fort_flow_add(PFORT_STAT stat, UINT64 flow_id, UCHAR group_index
         fort_stat_proc_inc(stat, proc_index);
     }
 
-    flow->opt.flags = fragment | speed_limit
+    flow->opt.flags = speed_limit
             | (is_new_flow ? 0 : (flow->opt.flags & FORT_FLOW_XFLAGS))
             | (isIPv6 ? FORT_FLOW_IP6 : 0);
     flow->opt.group_index = group_index;
@@ -388,10 +382,9 @@ FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, UINT64 flow_id, UINT32 pr
 
     /* Add flow */
     if (NT_SUCCESS(status)) {
-        const UCHAR fragment = fort_stat_group_fragment(stat, group_index);
         const UCHAR speed_limit = fort_stat_group_speed_limit(stat, group_index);
 
-        status = fort_flow_add(stat, flow_id, group_index, proc->proc_index, fragment, speed_limit,
+        status = fort_flow_add(stat, flow_id, group_index, proc->proc_index, speed_limit,
                 isIPv6, is_tcp, is_reauth);
 
         if (!NT_SUCCESS(status) && *is_new_proc) {
