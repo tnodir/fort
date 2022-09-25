@@ -106,7 +106,7 @@ TrayIcon::ActionType defaultActionTypeByClick(TrayIcon::ClickType clickType)
     case TrayIcon::SingleClick:
         return TrayIcon::ActionShowPrograms;
     case TrayIcon::DoubleClick:
-        return TrayIcon::ActionShowOptions;
+        return TrayIcon::ActionIgnore;
     case TrayIcon::MiddleClick:
         return TrayIcon::ActionShowStatistics;
     case TrayIcon::RightClick:
