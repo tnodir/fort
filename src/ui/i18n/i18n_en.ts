@@ -147,10 +147,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Fragment first TCP packet</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Enabled</source>
         <translation></translation>
     </message>
@@ -920,10 +916,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation></translation>
     </message>
     <message>
-        <source>Collect New Blocked Programs</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Programs</source>
         <translation></translation>
     </message>
@@ -1249,6 +1241,14 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Collect blocked connections</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Programs</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Collect New Blocked Programs</source>
         <translation></translation>
     </message>
 </context>

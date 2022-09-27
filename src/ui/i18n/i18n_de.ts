@@ -147,10 +147,6 @@
         <translation>Verbindungsstatistiken sammeln</translation>
     </message>
     <message>
-        <source>Fragment first TCP packet</source>
-        <translation>Erstes TCP-Paket Fragment</translation>
-    </message>
-    <message>
         <source>Enabled</source>
         <translation>Aktiviert</translation>
     </message>
@@ -921,10 +917,6 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
         <translation>Optionen</translation>
     </message>
     <message>
-        <source>Collect New Blocked Programs</source>
-        <translation>Sammeln Sie neue blockierte Programme</translation>
-    </message>
-    <message>
         <source>Programs</source>
         <translation>Programme</translation>
     </message>
@@ -1251,6 +1243,14 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     <message>
         <source>Collect blocked connections</source>
         <translation>Sammle blockierte Verbindungen</translation>
+    </message>
+    <message>
+        <source>Programs</source>
+        <translation>Programme</translation>
+    </message>
+    <message>
+        <source>Collect New Blocked Programs</source>
+        <translation>Sammeln Sie neue blockierte Programme</translation>
     </message>
 </context>
 <context>

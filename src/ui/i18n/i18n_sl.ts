@@ -147,10 +147,6 @@
         <translation>Zberi statistiko povezave</translation>
     </message>
     <message>
-        <source>Fragment first TCP packet</source>
-        <translation>Fragmentiraj prvi paket TCP</translation>
-    </message>
-    <message>
         <source>Enabled</source>
         <translation>Omogočeno</translation>
     </message>
@@ -921,10 +917,6 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
         <translation>Možnosti</translation>
     </message>
     <message>
-        <source>Collect New Blocked Programs</source>
-        <translation>Zberi nove blokirane programe</translation>
-    </message>
-    <message>
         <source>Programs</source>
         <translation>Programi</translation>
     </message>
@@ -1251,6 +1243,14 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     <message>
         <source>Collect blocked connections</source>
         <translation>Zberi blokirane povezave</translation>
+    </message>
+    <message>
+        <source>Programs</source>
+        <translation>Programi</translation>
+    </message>
+    <message>
+        <source>Collect New Blocked Programs</source>
+        <translation>Zberi nove blokirane programe</translation>
     </message>
 </context>
 <context>

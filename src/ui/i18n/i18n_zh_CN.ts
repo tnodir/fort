@@ -147,10 +147,6 @@
         <translation>统计数据集合</translation>
     </message>
     <message>
-        <source>Fragment first TCP packet</source>
-        <translation>片段第一个TCP数据包</translation>
-    </message>
-    <message>
         <source>Enabled</source>
         <translation>已启用</translation>
     </message>
@@ -921,10 +917,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>选项</translation>
     </message>
     <message>
-        <source>Collect New Blocked Programs</source>
-        <translation>收集新的屏蔽程序</translation>
-    </message>
-    <message>
         <source>Programs</source>
         <translation>程序</translation>
     </message>
@@ -1251,6 +1243,14 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Collect blocked connections</source>
         <translation>收集已屏蔽的连接</translation>
+    </message>
+    <message>
+        <source>Programs</source>
+        <translation>程序</translation>
+    </message>
+    <message>
+        <source>Collect New Blocked Programs</source>
+        <translation>收集新的屏蔽程序</translation>
     </message>
 </context>
 <context>

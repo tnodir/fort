@@ -147,10 +147,6 @@
         <translation>Coletar estatísticas de conexão</translation>
     </message>
     <message>
-        <source>Fragment first TCP packet</source>
-        <translation>Fragmento do primeiro pacote TCP</translation>
-    </message>
-    <message>
         <source>Enabled</source>
         <translation>Ativado</translation>
     </message>
@@ -920,10 +916,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>Opções</translation>
     </message>
     <message>
-        <source>Collect New Blocked Programs</source>
-        <translation>Colete Novos Programas Bloqueados</translation>
-    </message>
-    <message>
         <source>Programs</source>
         <translation>Programas</translation>
     </message>
@@ -1250,6 +1242,14 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Collect blocked connections</source>
         <translation>Coletar conexões bloqueadas</translation>
+    </message>
+    <message>
+        <source>Programs</source>
+        <translation>Programas</translation>
+    </message>
+    <message>
+        <source>Collect New Blocked Programs</source>
+        <translation>Colete Novos Programas Bloqueados</translation>
     </message>
 </context>
 <context>

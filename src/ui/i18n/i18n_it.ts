@@ -167,10 +167,6 @@
         <translation>Personalizza</translation>
     </message>
     <message>
-        <source>Fragment first TCP packet</source>
-        <translation>Frammenta il primo pacchetto TCP</translation>
-    </message>
-    <message>
         <source>Add Group</source>
         <translation>Aggiungi gruppo</translation>
     </message>
@@ -909,10 +905,6 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
         <translation>Blocca</translation>
     </message>
     <message>
-        <source>Collect New Blocked Programs</source>
-        <translation>Raccogli nuovi programmi bloccati</translation>
-    </message>
-    <message>
         <source>Are you sure to remove all non-existent programs?</source>
         <translation>Sei sicuro di rimuovere tutti i programmi inesistenti?</translation>
     </message>
@@ -1251,6 +1243,14 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     <message>
         <source>Always on top</source>
         <translation>Sempre in primo piano</translation>
+    </message>
+    <message>
+        <source>Programs</source>
+        <translation>Programmi</translation>
+    </message>
+    <message>
+        <source>Collect New Blocked Programs</source>
+        <translation>Raccogli nuovi programmi bloccati</translation>
     </message>
 </context>
 <context>

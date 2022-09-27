@@ -147,10 +147,6 @@
         <translation>연결 통계 집계</translation>
     </message>
     <message>
-        <source>Fragment first TCP packet</source>
-        <translation>첫 번째 TCP 패킷 조각화</translation>
-    </message>
-    <message>
         <source>Enabled</source>
         <translation>활성화</translation>
     </message>
@@ -921,10 +917,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>옵션</translation>
     </message>
     <message>
-        <source>Collect New Blocked Programs</source>
-        <translation>새로 차단된 프로그램 집계</translation>
-    </message>
-    <message>
         <source>Programs</source>
         <translation>프로그램</translation>
     </message>
@@ -1251,6 +1243,14 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Collect blocked connections</source>
         <translation>차단된 연결 집계</translation>
+    </message>
+    <message>
+        <source>Programs</source>
+        <translation>프로그램</translation>
+    </message>
+    <message>
+        <source>Collect New Blocked Programs</source>
+        <translation>새로 차단된 프로그램 집계</translation>
     </message>
 </context>
 <context>

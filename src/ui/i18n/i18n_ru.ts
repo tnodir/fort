@@ -147,10 +147,6 @@
         <translation>Собирать статистику соединений</translation>
     </message>
     <message>
-        <source>Fragment first TCP packet</source>
-        <translation>Фрагментировать первый TCP пакет</translation>
-    </message>
-    <message>
         <source>Enabled</source>
         <translation>Включено</translation>
     </message>
@@ -917,10 +913,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>Опции</translation>
     </message>
     <message>
-        <source>Collect New Blocked Programs</source>
-        <translation>Собирать новые блокированные программы</translation>
-    </message>
-    <message>
         <source>Are you sure to remove selected program(s)?</source>
         <translation>Удалить выбранные программы?</translation>
     </message>
@@ -1251,6 +1243,14 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Collect blocked connections</source>
         <translation>Собирать заблокированные соединения</translation>
+    </message>
+    <message>
+        <source>Programs</source>
+        <translation>Программы</translation>
+    </message>
+    <message>
+        <source>Collect New Blocked Programs</source>
+        <translation>Собирать новые блокированные программы</translation>
     </message>
 </context>
 <context>
