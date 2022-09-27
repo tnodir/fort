@@ -83,6 +83,7 @@ void StatisticsPage::onRetranslateUi()
 {
     m_gbTraffic->setTitle(tr("Traffic"));
     m_gbConn->setTitle(tr("Connections"));
+    m_gbProg->setTitle(tr("Programs"));
     m_gbGraph->setTitle(tr("Graph"));
 
     m_cbLogStat->setText(tr("Collect Traffic Statistics"));
@@ -104,6 +105,7 @@ void StatisticsPage::onRetranslateUi()
     m_lscAllowedIpKeepCount->label()->setText(tr("Keep count for 'Allowed connections':"));
     m_cbLogBlockedIp->setText(tr("Collect blocked connections"));
     m_lscBlockedIpKeepCount->label()->setText(tr("Keep count for 'Blocked connections':"));
+    m_cbLogBlocked->setText(tr("Collect New Blocked Programs"));
 
     retranslateTrafKeepDayNames();
     retranslateTrafKeepMonthNames();
@@ -200,6 +202,10 @@ QLayout *StatisticsPage::setupColumn1()
     // Connections Group Box
     setupConnBox();
     layout->addWidget(m_gbConn);
+
+    // Programs Group Box
+    setupProgBox();
+    layout->addWidget(m_gbProg);
 
     layout->addStretch();
 
@@ -409,6 +415,29 @@ void StatisticsPage::setupLogBlockedIp()
                     ctrl()->setIniEdited();
                 }
             });
+}
+
+void StatisticsPage::setupProgBox()
+{
+    setupLogBlocked();
+
+    // Layout
+    auto layout = ControlUtil::createLayoutByWidgets({ m_cbLogBlocked });
+
+    m_gbProg = new QGroupBox(this);
+    m_gbProg->setLayout(layout);
+}
+
+void StatisticsPage::setupLogBlocked()
+{
+    m_cbLogBlocked = ControlUtil::createCheckBox(conf()->logBlocked(), [&](bool checked) {
+        if (conf()->logBlocked() != checked) {
+            conf()->setLogBlocked(checked);
+            ctrl()->setFlagsEdited();
+        }
+    });
+
+    m_cbLogBlocked->setFont(ControlUtil::fontDemiBold());
 }
 
 QLayout *StatisticsPage::setupColumn2()

@@ -39,6 +39,8 @@ private:
     void setupConnBox();
     void setupLogAllowedIp();
     void setupLogBlockedIp();
+    void setupProgBox();
+    void setupLogBlocked();
     QLayout *setupColumn2();
     void setupGraphBox();
     void setupGraphCheckboxes();
@@ -48,6 +50,7 @@ private:
 private:
     QGroupBox *m_gbTraffic = nullptr;
     QGroupBox *m_gbConn = nullptr;
+    QGroupBox *m_gbProg = nullptr;
     QGroupBox *m_gbGraph = nullptr;
     QCheckBox *m_cbLogStat = nullptr;
     QCheckBox *m_cbLogStatNoFilter = nullptr;
@@ -62,6 +65,7 @@ private:
     LabelSpinCombo *m_lscAllowedIpKeepCount = nullptr;
     QCheckBox *m_cbLogBlockedIp = nullptr;
     LabelSpinCombo *m_lscBlockedIpKeepCount = nullptr;
+    QCheckBox *m_cbLogBlocked = nullptr;
     QCheckBox *m_cbGraphAlwaysOnTop = nullptr;
     QCheckBox *m_cbGraphFrameless = nullptr;
     QCheckBox *m_cbGraphClickThrough = nullptr;

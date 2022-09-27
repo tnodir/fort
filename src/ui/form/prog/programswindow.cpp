@@ -134,9 +134,7 @@ void ProgramsWindow::retranslateUi()
     m_btRemoveApp->setText(tr("Remove"));
 
     m_btServices->setText(tr("Services"));
-
-    m_btLogOptions->setText(tr("Options"));
-    m_cbLogBlocked->setText(tr("Collect New Blocked Programs"));
+    m_btOptions->setText(tr("Options"));
 
     appListModel()->refresh();
 
@@ -241,8 +239,11 @@ QLayout *ProgramsWindow::setupHeader()
     connect(m_btServices, &QAbstractButton::clicked, windowManager(),
             &WindowManager::showServicesWindow);
 
-    // Log Options
-    setupLogOptions();
+    // Options button
+    m_btOptions = ControlUtil::createLinkButton(":/icons/cog.png");
+
+    connect(m_btOptions, &QAbstractButton::clicked, windowManager(),
+            &WindowManager::showOptionsWindow);
 
     layout->addWidget(m_btEdit);
     layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
@@ -253,35 +254,9 @@ QLayout *ProgramsWindow::setupHeader()
     layout->addStretch();
     layout->addWidget(m_btServices);
     layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
-    layout->addWidget(m_btLogOptions);
+    layout->addWidget(m_btOptions);
 
     return layout;
-}
-
-void ProgramsWindow::setupLogOptions()
-{
-    setupLogBlocked();
-
-    // Menu
-    const QList<QWidget *> menuWidgets = { m_cbLogBlocked };
-    auto layout = ControlUtil::createLayoutByWidgets(menuWidgets);
-
-    auto menu = ControlUtil::createMenuByLayout(layout, this);
-
-    m_btLogOptions = ControlUtil::createButton(":/icons/gear_in.png");
-    m_btLogOptions->setMenu(menu);
-}
-
-void ProgramsWindow::setupLogBlocked()
-{
-    m_cbLogBlocked = ControlUtil::createCheckBox(conf()->logBlocked(), [&](bool checked) {
-        if (conf()->logBlocked() != checked) {
-            conf()->setLogBlocked(checked);
-            confManager()->saveFlags();
-        }
-    });
-
-    m_cbLogBlocked->setFont(ControlUtil::fontDemiBold());
 }
 
 void ProgramsWindow::setupTableApps()

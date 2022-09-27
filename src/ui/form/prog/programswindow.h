@@ -53,8 +53,6 @@ private:
 
     void setupUi();
     QLayout *setupHeader();
-    void setupLogOptions();
-    void setupLogBlocked();
     void setupTableApps();
     void setupTableAppsHeader();
     void setupAppInfoRow();
@@ -92,8 +90,7 @@ private:
     QPushButton *m_btRemoveApp = nullptr;
     QPushButton *m_btEdit = nullptr;
     QPushButton *m_btServices = nullptr;
-    QPushButton *m_btLogOptions = nullptr;
-    QCheckBox *m_cbLogBlocked = nullptr;
+    QPushButton *m_btOptions = nullptr;
     ProgramEditDialog *m_formAppEdit = nullptr;
     TableView *m_appListView = nullptr;
     AppInfoRow *m_appInfoRow = nullptr;
