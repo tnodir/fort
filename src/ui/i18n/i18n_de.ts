@@ -1250,7 +1250,7 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     </message>
     <message>
         <source>Collect New Blocked Programs</source>
-        <translation>Sammeln Sie neue blockierte Programme</translation>
+        <translation>Neue blockierte Programme sammeln</translation>
     </message>
 </context>
 <context>
