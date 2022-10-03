@@ -49,7 +49,7 @@ typedef struct fort_stat_proc
 #define FORT_FLOW_SPEED_LIMIT     (FORT_FLOW_SPEED_LIMIT_IN | FORT_FLOW_SPEED_LIMIT_OUT)
 #define FORT_FLOW_DEFER_IN        0x04
 #define FORT_FLOW_DEFER_OUT       0x08
-#define FORT_FLOW_XFLAGS          0
+#define FORT_FLOW_TCP             0x40
 #define FORT_FLOW_IP6             0x80
 
 typedef struct fort_flow_opt
