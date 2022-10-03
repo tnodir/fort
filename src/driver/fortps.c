@@ -658,12 +658,12 @@ FORT_API void fort_pstree_open(PFORT_PSTREE ps_tree)
 
     KeInitializeSpinLock(&ps_tree->lock);
 
-    fort_pstree_update(ps_tree, TRUE); /* Start process monitor */
+    fort_pstree_update(ps_tree, /*active=*/TRUE); /* Start process monitor */
 }
 
 FORT_API void fort_pstree_close(PFORT_PSTREE ps_tree)
 {
-    fort_pstree_update(ps_tree, FALSE); /* Stop process monitor */
+    fort_pstree_update(ps_tree, /*active=*/FALSE); /* Stop process monitor */
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);

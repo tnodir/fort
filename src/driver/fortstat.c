@@ -162,13 +162,15 @@ static void fort_flow_context_remove(PFORT_STAT stat, PFORT_FLOW flow)
     const BOOL isIPv6 = (flow->opt.flags & FORT_FLOW_IP6);
 
     if (isIPv6) {
-        FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_STREAM_V6, stat->stream6_id);
-        FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_DATAGRAM_DATA_V6, stat->datagram6_id);
+        if (!NT_SUCCESS(FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_STREAM_V6, stat->stream6_id))) {
+            FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_DATAGRAM_DATA_V6, stat->datagram6_id);
+        }
         FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V6, stat->in_transport6_id);
         FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V6, stat->out_transport6_id);
     } else {
-        FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_STREAM_V4, stat->stream4_id);
-        FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_DATAGRAM_DATA_V4, stat->datagram4_id);
+        if (!NT_SUCCESS(FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_STREAM_V4, stat->stream4_id))) {
+            FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_DATAGRAM_DATA_V4, stat->datagram4_id);
+        }
         FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V4, stat->in_transport4_id);
         FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V4, stat->out_transport4_id);
     }
@@ -260,8 +262,7 @@ static NTSTATUS fort_flow_add(PFORT_STAT stat, UINT64 flow_id, UCHAR group_index
         fort_stat_proc_inc(stat, proc_index);
     }
 
-    flow->opt.flags = speed_limit
-            | (is_new_flow ? 0 : (flow->opt.flags & FORT_FLOW_XFLAGS))
+    flow->opt.flags = speed_limit | (is_new_flow ? 0 : (flow->opt.flags & FORT_FLOW_XFLAGS))
             | (isIPv6 ? FORT_FLOW_IP6 : 0);
     flow->opt.group_index = group_index;
     flow->opt.proc_index = proc_index;
@@ -384,8 +385,8 @@ FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, UINT64 flow_id, UINT32 pr
     if (NT_SUCCESS(status)) {
         const UCHAR speed_limit = fort_stat_group_speed_limit(stat, group_index);
 
-        status = fort_flow_add(stat, flow_id, group_index, proc->proc_index, speed_limit,
-                isIPv6, is_tcp, is_reauth);
+        status = fort_flow_add(stat, flow_id, group_index, proc->proc_index, speed_limit, isIPv6,
+                is_tcp, is_reauth);
 
         if (!NT_SUCCESS(status) && *is_new_proc) {
             fort_stat_proc_free(stat, proc);

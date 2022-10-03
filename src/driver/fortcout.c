@@ -446,6 +446,9 @@ static void NTAPI fort_callout_flow_delete(UINT16 layerId, UINT32 calloutId, UIN
     UNUSED(layerId);
     UNUSED(calloutId);
 
+    if (fort_device() == NULL)
+        return; /* Flow is asynchronously deleting, but the Device was already removed */
+
     fort_flow_delete(&fort_device()->stat, flowContext);
 }
 
@@ -835,13 +838,13 @@ FORT_API NTSTATUS fort_callout_force_reauth(
 {
     NTSTATUS status;
 
-    fort_timer_update(&fort_device()->log_timer, FALSE);
+    fort_timer_update(&fort_device()->log_timer, /*run=*/FALSE);
 
     /* Check app group periods & update group_bits */
     {
         int periods_n = 0;
 
-        fort_conf_ref_period_update(&fort_device()->conf, TRUE, &periods_n);
+        fort_conf_ref_period_update(&fort_device()->conf, /*force=*/TRUE, &periods_n);
 
         fort_timer_update(&fort_device()->app_timer, (periods_n != 0));
     }
@@ -860,7 +863,7 @@ FORT_API NTSTATUS fort_callout_force_reauth(
     }
 
     if (defer_flush_bits != 0) {
-        fort_callout_defer_packet_flush(defer_flush_bits, FALSE);
+        fort_callout_defer_packet_flush(defer_flush_bits, /*dispatchLevel=*/FALSE);
     }
 
     /* Open provider */
@@ -875,9 +878,10 @@ FORT_API NTSTATUS fort_callout_force_reauth(
     }
 
     if (NT_SUCCESS(status)) {
-        fort_timer_update(&fort_device()->log_timer,
-                (conf_flags.allow_all_new || conf_flags.log_blocked || conf_flags.log_stat
-                        || conf_flags.log_blocked_ip));
+        const BOOL log_enabled = (conf_flags.allow_all_new || conf_flags.log_blocked
+                || conf_flags.log_stat || conf_flags.log_blocked_ip);
+
+        fort_timer_update(&fort_device()->log_timer, log_enabled);
     } else {
         LOG("Callout Reauth: Error: %x\n", status);
         TRACE(FORT_CALLOUT_CALLOUT_REAUTH_ERROR, status, 0, 0);

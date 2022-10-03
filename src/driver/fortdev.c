@@ -398,12 +398,13 @@ FORT_API void fort_device_unload()
     fort_stat_close(&fort_device()->stat);
     fort_buffer_close(&fort_device()->buffer);
 
-    /* Stop provider & callouts */
+    /* Uninstall callouts */
+    fort_callout_remove();
+
+    /* Unregister filters provider */
     if (!fort_device_flag(&fort_device()->conf, FORT_DEVICE_PROV_BOOT)) {
         fort_prov_unregister(NULL);
     }
-
-    fort_callout_remove();
 
     fort_device_set(NULL);
 }
