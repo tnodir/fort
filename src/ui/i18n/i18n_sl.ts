@@ -791,7 +791,7 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     <name>ProgramEditDialog</name>
     <message>
         <source>Program Path:</source>
-        <translation>Programska pot:</translation>
+        <translation>Pot programa:</translation>
     </message>
     <message>
         <source>Select File</source>
@@ -811,7 +811,7 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     </message>
     <message>
         <source>Use Application Group&apos;s Enabled State</source>
-        <translation>Uporabite Omogočen stanje skupine aplikacij</translation>
+        <translation>Uporabi omogočeno stanje skupine aplikacij</translation>
     </message>
     <message>
         <source>Allow</source>
