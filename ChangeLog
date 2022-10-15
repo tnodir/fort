@@ -1,5 +1,17 @@
 Fort Firewall ChangeLog
 
+v3.6.1, 2022-10-15:
+- UI: The enabled "Dark Mode" is active, when System's theme is Dark too.
+- UI: Programs: Refactor "Options" button.
+- UI: Options: Add "Right Click" tray event and "Ignore" action.
+- UI: Tray: "Double Click"-s default action is "Ignore" now. (To immediately do "Single Click"-s action.)
+- UI: Options: App Groups: Remove "Fragment first TCP packet".
+- UI: Update SQLite to v3.39.4
+- Driver: Check the device on asynchronous flow deletion. (Fix BSOD on shutdown/reboot.)
+- Installer: Check compatibility with HVCI (Core Isolation).
+
+Attention: Edit the Options: Tray: "Double Click" event's action to restore an old action to "Show Options".
+
 v3.6.0, 2022-08-12:
 - UI: Options: Add "Dark Mode" flag (Experimental).
 - Driver: Defer all TCP packets for speed limiting.
