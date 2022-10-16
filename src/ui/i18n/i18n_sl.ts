@@ -593,7 +593,7 @@
     </message>
     <message>
         <source>Not Installed</source>
-        <translation>Ni nameščen</translation>
+        <translation>Ni nameščeno</translation>
     </message>
     <message>
         <source>Are you sure to remove the Driver?</source>
