@@ -44,5 +44,9 @@ Fort is a simple firewall for Windows 7+.
 
 [![Code quality status](https://codescene.io/projects/5344/status.svg)](https://codescene.io/projects/5344/jobs/latest-successful/results)
 
+## SAST Tools
+
+[PVS-Studio](https://pvs-studio.com/en/pvs-studio/?utm_source=github&utm_medium=organic&utm_campaign=open_source) - static analyzer for C, C++, C#, and Java code.
+
 --
 Nodir Temirkhodjaev, <nodir.temir@gmail.com>
