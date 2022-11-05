@@ -42,7 +42,6 @@ public:
     };
 
     explicit TrayIcon(QObject *parent = nullptr);
-    ~TrayIcon() override;
 
     TrayController *ctrl() const { return m_ctrl; }
     FortSettings *settings() const;

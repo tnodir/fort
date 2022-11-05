@@ -103,7 +103,7 @@ QLayout *ConnectionsPage::setupHeader()
     auto layout = new QHBoxLayout();
 
     // Edit Menu
-    auto editMenu = new QMenu(this);
+    auto editMenu = ControlUtil::createMenu(this);
 
     m_actCopy = editMenu->addAction(IconCache::icon(":/icons/page_copy.png"), QString());
     m_actCopy->setShortcut(Qt::Key_Copy);

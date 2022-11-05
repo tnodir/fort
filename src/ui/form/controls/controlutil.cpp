@@ -123,9 +123,18 @@ QLineEdit *ControlUtil::createLineEdit(
     return c;
 }
 
-QMenu *ControlUtil::createMenuByLayout(QBoxLayout *layout, QWidget *parent)
+QMenu *ControlUtil::createMenu(QWidget *parent)
 {
     auto menu = new QMenu(parent);
+
+    menu->setAttribute(Qt::WA_WindowPropagation); // to inherit default font
+
+    return menu;
+}
+
+QMenu *ControlUtil::createMenuByLayout(QBoxLayout *layout, QWidget *parent)
+{
+    auto menu = createMenu(parent);
 
     auto menuWidget = new QWidget();
     menuWidget->setLayout(layout);

@@ -181,7 +181,7 @@ QLayout *ProgramsWindow::setupHeader()
     auto layout = new QHBoxLayout();
 
     // Edit Menu
-    auto editMenu = new QMenu(this);
+    auto editMenu = ControlUtil::createMenu(this);
 
     m_actAllowApp = editMenu->addAction(IconCache::icon(":/icons/accept.png"), QString());
     m_actAllowApp->setShortcut(Qt::Key_A);

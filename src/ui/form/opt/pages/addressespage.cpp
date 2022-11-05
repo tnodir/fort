@@ -333,7 +333,7 @@ void AddressesPage::updateZonesTextAll()
 
 void AddressesPage::setupZones()
 {
-    m_menuZones = new QMenu(this);
+    m_menuZones = ControlUtil::createMenu(this);
 
     const auto refreshZonesMenu = [&] {
         const bool include = (sender() == m_includeAddresses->btSelectZones());

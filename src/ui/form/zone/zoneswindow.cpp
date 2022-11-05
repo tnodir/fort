@@ -274,7 +274,7 @@ QLayout *ZonesWindow::setupHeader()
     auto layout = new QHBoxLayout();
 
     // Edit Menu
-    auto editMenu = new QMenu(this);
+    auto editMenu = ControlUtil::createMenu(this);
 
     m_actAddZone = editMenu->addAction(IconCache::icon(":/icons/add.png"), QString());
     m_actAddZone->setShortcut(Qt::Key_Plus);

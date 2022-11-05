@@ -153,7 +153,7 @@ QLayout *TrafficPage::setupHeader()
 
 void TrafficPage::setupClearMenu()
 {
-    auto menu = new QMenu(this);
+    auto menu = ControlUtil::createMenu(this);
 
     m_actRemoveApp = menu->addAction(IconCache::icon(":/icons/delete.png"), QString());
     m_actRemoveApp->setShortcut(Qt::Key_Delete);

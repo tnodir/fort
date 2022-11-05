@@ -91,6 +91,10 @@ void WindowManager::setupMainWindow()
 {
     m_mainWindow = new MainWindow();
 
+    // Font
+    m_mainWindow->setFont(defaultFont());
+
+    // Register Native events
     auto nativeEventFilter = IoC<NativeEventFilter>();
 
     nativeEventFilter->registerSessionNotification(mainWindow()->winId());
@@ -105,11 +109,13 @@ void WindowManager::closeMainWindow()
     if (!mainWindow())
         return;
 
+    // Unregister Native events
     auto nativeEventFilter = IoC<NativeEventFilter>();
 
     nativeEventFilter->unregisterHotKeys();
     nativeEventFilter->unregisterSessionNotification(mainWindow()->winId());
 
+    // Delete later
     m_mainWindow->deleteLater();
     m_mainWindow = nullptr;
 }

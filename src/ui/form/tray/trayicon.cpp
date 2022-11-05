@@ -9,6 +9,7 @@
 #include <conf/appgroup.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
+#include <form/controls/controlutil.h>
 #include <form/controls/mainwindow.h>
 #include <fortsettings.h>
 #include <manager/hotkeymanager.h>
@@ -156,11 +157,6 @@ TrayIcon::TrayIcon(QObject *parent) :
     connect(this, &QSystemTrayIcon::activated, this, &TrayIcon::onTrayActivated);
 }
 
-TrayIcon::~TrayIcon()
-{
-    delete m_menu;
-}
-
 FortSettings *TrayIcon::settings() const
 {
     return ctrl()->settings();
@@ -301,7 +297,7 @@ void TrayIcon::setupUi()
 
 void TrayIcon::setupTrayMenu()
 {
-    m_menu = new QMenu();
+    m_menu = ControlUtil::createMenu(windowManager()->mainWindow());
 
     m_programsAction = addAction(m_menu, IconCache::icon(":/icons/application.png"), QString(),
             windowManager(), SLOT(showProgramsWindow()));
@@ -371,7 +367,7 @@ void TrayIcon::setupTrayMenu()
 
 void TrayIcon::setupTrayMenuFilterMode()
 {
-    m_filterModeMenu = new QMenu(m_menu);
+    m_filterModeMenu = ControlUtil::createMenu(m_menu);
 
     m_filterModeActions = new QActionGroup(m_filterModeMenu);
 

@@ -151,7 +151,7 @@ QLayout *ServicesWindow::setupHeader()
     auto layout = new QHBoxLayout();
 
     // Edit Menu
-    auto editMenu = new QMenu(this);
+    auto editMenu = ControlUtil::createMenu(this);
 
     m_actTrack = editMenu->addAction(IconCache::icon(":/icons/gear_in.png"), QString());
     m_actRevert = editMenu->addAction(IconCache::icon(":/icons/bin_closed.png"), QString());
