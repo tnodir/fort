@@ -16,8 +16,8 @@ SOURCES += \
     $$PWD/sqlitestmt.cpp
 
 HEADERS += \
-    $$SQLITE_DIR/config.h \
     $$SQLITE_DIR/sqlite.h \
     $$SQLITE_DIR/sqlite3.h \
+    $$SQLITE_DIR/sqlite_cfg.h \
     $$PWD/sqlitedb.h \
     $$PWD/sqlitestmt.h
