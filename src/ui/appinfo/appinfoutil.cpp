@@ -164,7 +164,7 @@ bool getInfo(const QString &appPath, AppInfo &appInfo)
         return false;
 
     if (FileUtil::isSystemApp(appPath)) {
-        appInfo.fileDescription = FileUtil::systemApp();
+        appInfo.fileDescription = FileUtil::systemAppDescription();
         return true;
     }
 

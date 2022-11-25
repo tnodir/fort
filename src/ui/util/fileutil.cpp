@@ -12,6 +12,11 @@ namespace FileUtil {
 
 Q_STATIC_ASSERT(sizeof(wchar_t) == sizeof(QChar));
 
+QString systemAppDescription()
+{
+    return QStringLiteral("NT Kernel & System");
+}
+
 QString systemApp()
 {
     return QStringLiteral("System");

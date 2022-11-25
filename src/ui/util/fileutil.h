@@ -6,6 +6,7 @@
 
 namespace FileUtil {
 
+QString systemAppDescription();
 QString systemApp();
 bool isSystemApp(const QString &path);
 
