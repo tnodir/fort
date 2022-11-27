@@ -230,7 +230,7 @@ void StatisticsPage::setupTrafficBox()
             m_lscTrafHourKeepDays, m_lscTrafDayKeepDays, m_lscTrafMonthKeepMonths,
             ControlUtil::createSeparator(), m_lscQuotaDayMb, m_lscQuotaMonthMb });
 
-    m_gbTraffic = new QGroupBox(this);
+    m_gbTraffic = new QGroupBox();
     m_gbTraffic->setLayout(layout);
 }
 
@@ -371,7 +371,7 @@ void StatisticsPage::setupConnBox()
             // m_cbLogAllowedIp, m_lscAllowedIpKeepCount, ControlUtil::createSeparator(),
             m_cbLogBlockedIp, m_lscBlockedIpKeepCount });
 
-    m_gbConn = new QGroupBox(this);
+    m_gbConn = new QGroupBox();
     m_gbConn->setLayout(layout);
 }
 
@@ -424,7 +424,7 @@ void StatisticsPage::setupProgBox()
     // Layout
     auto layout = ControlUtil::createLayoutByWidgets({ m_cbLogBlocked });
 
-    m_gbProg = new QGroupBox(this);
+    m_gbProg = new QGroupBox();
     m_gbProg->setLayout(layout);
 }
 
@@ -474,7 +474,7 @@ void StatisticsPage::setupGraphBox()
     layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
     layout->addLayout(colLayout2);
 
-    m_gbGraph = new QGroupBox(this);
+    m_gbGraph = new QGroupBox();
     m_gbGraph->setLayout(layout);
 }
 

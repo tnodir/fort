@@ -383,7 +383,7 @@ void OptionsPage::setupStartupBox()
     layout->addWidget(m_cbService);
     layout->addWidget(m_cbProvBoot);
 
-    m_gbStartup = new QGroupBox(this);
+    m_gbStartup = new QGroupBox();
     m_gbStartup->setLayout(layout);
 }
 
@@ -434,7 +434,7 @@ void OptionsPage::setupTrafficBox()
     layout->addWidget(m_cbAllowAllNew);
     layout->addLayout(filterModeLayout);
 
-    m_gbTraffic = new QGroupBox(this);
+    m_gbTraffic = new QGroupBox();
     m_gbTraffic->setLayout(layout);
 }
 
@@ -489,7 +489,7 @@ void OptionsPage::setupGlobalBox()
     layout->addWidget(m_btPasswordLock, 0, Qt::AlignCenter);
     layout->addLayout(langLayout);
 
-    m_gbGlobal = new QGroupBox(this);
+    m_gbGlobal = new QGroupBox();
     m_gbGlobal->setLayout(layout);
 }
 
@@ -588,7 +588,7 @@ void OptionsPage::setupTrayBox()
     layout->addLayout(eventLayout);
     layout->addLayout(actionLayout);
 
-    m_gbTray = new QGroupBox(this);
+    m_gbTray = new QGroupBox();
     m_gbTray->setLayout(layout);
 }
 
@@ -635,7 +635,7 @@ void OptionsPage::setupConfirmationsBox()
     layout->addWidget(m_cbConfirmTrayFlags);
     layout->addWidget(m_cbConfirmQuit);
 
-    m_gbConfirmations = new QGroupBox(this);
+    m_gbConfirmations = new QGroupBox();
     m_gbConfirmations->setLayout(layout);
 }
 
@@ -654,7 +654,7 @@ void OptionsPage::setupLogsBox()
     layout->addWidget(m_cbLogDebug);
     layout->addWidget(m_cbLogConsole);
 
-    m_gbLogs = new QGroupBox(this);
+    m_gbLogs = new QGroupBox();
     m_gbLogs->setLayout(layout);
 }
 
@@ -725,7 +725,7 @@ void OptionsPage::setupDriverBox()
     buttonsLayout->addWidget(m_btRemoveDriver);
     buttonsLayout->addStretch();
 
-    m_gbDriver = new QGroupBox(this);
+    m_gbDriver = new QGroupBox();
     m_gbDriver->setLayout(colLayout);
 }
 
@@ -769,7 +769,7 @@ void OptionsPage::setupNewVersionBox()
 
     colLayout->addWidget(m_btNewVersion, 0, Qt::AlignHCenter);
 
-    m_gbNewVersion = new QGroupBox(this);
+    m_gbNewVersion = new QGroupBox();
     m_gbNewVersion->setMinimumWidth(380);
     m_gbNewVersion->setLayout(colLayout);
 }

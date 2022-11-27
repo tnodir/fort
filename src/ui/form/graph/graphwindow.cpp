@@ -70,7 +70,7 @@ void GraphWindow::setupStateWatcher()
 
 void GraphWindow::setupUi()
 {
-    m_plot = new GraphPlot(this);
+    m_plot = new GraphPlot();
     m_plot->setContentsMargins(0, 0, 0, 0);
 
     // Interactions
@@ -118,7 +118,7 @@ void GraphWindow::setupUi()
     group->append(m_graphOut);
 
     // Widget Layout
-    auto mainLayout = new QVBoxLayout(this);
+    auto mainLayout = new QVBoxLayout();
     mainLayout->setContentsMargins(0, 0, 0, 0);
     mainLayout->addWidget(m_plot);
     setLayout(mainLayout);
