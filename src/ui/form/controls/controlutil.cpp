@@ -197,11 +197,12 @@ QWidget *ControlUtil::wrapToScrollArea(QWidget *content, bool isBgTransparent)
 {
     auto c = new QScrollArea();
     c->setContentsMargins(0, 0, 0, 0);
+    c->setFrameShape(QFrame::NoFrame);
     c->setWidgetResizable(true);
     c->setWidget(content);
 
     if (isBgTransparent) {
-        c->setStyleSheet("QScrollArea { background: transparent; }");
+        c->viewport()->setAutoFillBackground(false);
         content->setAutoFillBackground(false);
     }
 
