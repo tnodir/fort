@@ -20,7 +20,7 @@ cd %TARGET_PATH%
 	-skip qt3d -skip qt5compat -skip qtactiveqt -skip qtandroidextras ^
 	-skip qtcanvas3d -skip qtcharts -skip qtconnectivity -skip qtdatavis3d ^
 	-skip qtdeclarative -skip qtdoc -skip qtfeedback ^
-	-skip qtgamepad -skip qtgraphicaleffects -skip qtimageformats ^
+	-skip qtgamepad -skip qtgraphicaleffects -skip qtgrpc -skip qtimageformats ^
 	-skip qtlocation -skip qtlottie -skip qtmacextras ^
 	-skip qtmultimedia -skip qtnetworkauth -skip qtpim -skip qtpurchasing ^
 	-skip qtqa -skip qtquick3d -skip qtquickcontrols -skip qtquickcontrols2 ^
@@ -54,8 +54,12 @@ cd %TARGET_PATH%
 	-no-feature-networkproxy -no-feature-socks5 -no-feature-networkdiskcache ^
 	-no-feature-dnslookup -no-feature-sspi -no-feature-networklistmanager ^
 	^
+	-no-feature-directfb ^
+	^
 	-no-feature-gif -no-feature-jpeg ^
-	-no-feature-dbus -no-feature-vulkan -no-feature-vkgen
+	^
+	-no-feature-androiddeployqt -no-feature-dbus -no-feature-macdeployqt ^
+	-no-feature-vkgen -no-feature-vulkan -no-feature-windeployqt
 
 cmake --build . --parallel
 cmake --install .
