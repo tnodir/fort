@@ -5,7 +5,7 @@
 [![Screenshots](https://img.shields.io/static/v1.svg?label=screenshots&message=11&color=yellow&logo=imgur)](https://imgur.com/a/fZbAbfy)
 [![License](https://img.shields.io/static/v1.svg?label=license&message=GPL-v3&color=orange&logo=gnu)](https://www.gnu.org/licenses/gpl-3.0)
 [![Crowdin](https://badges.crowdin.net/fort-firewall/localized.svg)](https://crowdin.com/project/fort-firewall)
-[![Canny](https://img.shields.io/static/v1.svg?label=canny&message=Vote%20for%20features!&color=blue&logo=canny)](https://fort-firewall.canny.io/feature-requests)
+[![CodeScene Code Health](https://codescene.io/projects/5344/status-badges/code-health)](https://codescene.io/projects/5344)
 
 Fort is a simple firewall for Windows 7+.
 
@@ -39,10 +39,6 @@ Fort is a simple firewall for Windows 7+.
 
   - [Frequently Asked Questions (FAQ)](https://github.com/tnodir/fort/wiki/FAQ)
   - [Building](https://github.com/tnodir/fort/wiki/Building)
-
-## Code Quality Monitor
-
-[![Code quality status](https://codescene.io/projects/5344/status.svg)](https://codescene.io/projects/5344/jobs/latest-successful/results)
 
 ## SAST Tools
 
