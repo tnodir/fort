@@ -658,9 +658,11 @@ bool ConfUtil::loadAddress4List(const char **data, IpRange &ipRange, uint &bufSi
     PFORT_CONF_ADDR4_LIST addr_list = (PFORT_CONF_ADDR4_LIST) *data;
     *data = (const char *) addr_list->ip;
 
-    bufSize -= FORT_CONF_ADDR4_LIST_SIZE(addr_list->ip_n, addr_list->pair_n);
-    if (bufSize < 0)
+    const uint addrListSize = FORT_CONF_ADDR4_LIST_SIZE(addr_list->ip_n, addr_list->pair_n);
+    if (bufSize < addrListSize)
         return false;
+
+    bufSize -= addrListSize;
 
     ipRange.ip4Array().resize(addr_list->ip_n);
     ipRange.pair4FromArray().resize(addr_list->pair_n);
@@ -681,9 +683,11 @@ bool ConfUtil::loadAddress6List(const char **data, IpRange &ipRange, uint &bufSi
     PFORT_CONF_ADDR6_LIST addr_list = (PFORT_CONF_ADDR6_LIST) *data;
     *data = (const char *) addr_list->ip;
 
-    bufSize -= FORT_CONF_ADDR6_LIST_SIZE(addr_list->ip_n, addr_list->pair_n);
-    if (bufSize < 0)
+    const uint addrListSize = FORT_CONF_ADDR6_LIST_SIZE(addr_list->ip_n, addr_list->pair_n);
+    if (bufSize < addrListSize)
         return false;
+
+    bufSize -= addrListSize;
 
     ipRange.ip6Array().resize(addr_list->ip_n);
     ipRange.pair6FromArray().resize(addr_list->pair_n);
