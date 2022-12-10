@@ -714,10 +714,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>필터 모드:</translation>
     </message>
     <message>
-        <source>Dark Mode</source>
-        <translation>어두운 테마</translation>
-    </message>
-    <message>
         <source>Right Click</source>
         <translation>오른쪽 클릭</translation>
     </message>

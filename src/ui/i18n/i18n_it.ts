@@ -714,10 +714,6 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Dark Mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Right Click</source>
         <translation type="unfinished"></translation>
     </message>

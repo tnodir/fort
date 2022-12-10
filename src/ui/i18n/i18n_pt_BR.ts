@@ -713,10 +713,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Dark Mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Right Click</source>
         <translation type="unfinished"></translation>
     </message>

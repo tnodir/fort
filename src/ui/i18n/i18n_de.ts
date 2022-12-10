@@ -714,10 +714,6 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
         <translation>Filter-Modus:</translation>
     </message>
     <message>
-        <source>Dark Mode</source>
-        <translation>Dunkler Modus</translation>
-    </message>
-    <message>
         <source>Right Click</source>
         <translation>Rechtsklick</translation>
     </message>

@@ -714,10 +714,6 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
         <translation>Način filtra:</translation>
     </message>
     <message>
-        <source>Dark Mode</source>
-        <translation>Temni način</translation>
-    </message>
-    <message>
         <source>Right Click</source>
         <translation>Desni klik</translation>
     </message>
