@@ -14,9 +14,6 @@ public:
     QString language() const { return valueText("base/language", defaultLanguage()); }
     void setLanguage(const QString &v) { setValue("base/language", v); }
 
-    bool isDarkMode() const { return valueBool("base/isDarkMode"); }
-    void setIsDarkMode(bool v) { setValue("base/isDarkMode", v); }
-
     bool hotKeyEnabled() const { return valueBool("hotKey/enabled"); }
     void setHotKeyEnabled(bool v) { setValue("hotKey/enabled", v); }
 

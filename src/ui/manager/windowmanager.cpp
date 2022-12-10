@@ -6,6 +6,7 @@
 #include <QMouseEvent>
 #include <QStyle>
 #include <QStyleFactory>
+#include <QStyleHints>
 
 #include <conf/confmanager.h>
 #include <form/controls/mainwindow.h>
@@ -49,6 +50,9 @@ void WindowManager::setUp()
 
     setupMainWindow();
 
+    connect(QApplication::styleHints(), &QStyleHints::appearanceChanged, this,
+            &WindowManager::setupAppPalette);
+
     connect(qApp, &QCoreApplication::aboutToQuit, this, &WindowManager::closeAll);
 }
 
@@ -82,9 +86,7 @@ QFont WindowManager::defaultFont()
 
 void WindowManager::setupAppPalette()
 {
-    QApplication::setPalette(IoC<UserSettings>()->iniUser().isDarkMode()
-                    ? QApplication::style()->standardPalette()
-                    : QPalette());
+    QApplication::setPalette(QApplication::style()->standardPalette());
 }
 
 void WindowManager::setupMainWindow()

@@ -78,4 +78,9 @@ void UserSettings::migrateIniOnWrite()
         ini()->setValue("statWindow/showHostNames", cacheValue("statWindow/showHostNames"));
         ini()->setValue("statWindow/maximized", cacheValue("statWindow/maximized"));
     }
+
+    // COMPAT: v3.6.2: Remove "Dark Mode"
+    if (version < 0x030602) {
+        removeIniKey("base/isDarkMode");
+    }
 }

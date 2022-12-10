@@ -175,7 +175,6 @@ void OptionsPage::onRetranslateUi()
 
     m_cbExplorerMenu->setText(tr("Windows Explorer integration"));
     m_cbHotKeys->setText(tr("Hot Keys"));
-    m_cbDarkMode->setText(tr("Dark Mode"));
 
     m_cbPassword->setText(tr("Password:"));
     retranslateEditPassword();
@@ -467,13 +466,6 @@ void OptionsPage::setupGlobalBox()
         confManager()->saveIniUser(true);
     });
 
-    m_cbDarkMode = ControlUtil::createCheckBox(iniUser()->isDarkMode(), [&](bool checked) {
-        iniUser()->setIsDarkMode(checked);
-        confManager()->saveIniUser(true);
-
-        windowManager()->setupAppPalette();
-    });
-
     // Password Row
     auto passwordLayout = setupPasswordLayout();
     setupPasswordLock();
@@ -484,7 +476,6 @@ void OptionsPage::setupGlobalBox()
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbExplorerMenu);
     layout->addWidget(m_cbHotKeys);
-    layout->addWidget(m_cbDarkMode);
     layout->addLayout(passwordLayout);
     layout->addWidget(m_btPasswordLock, 0, Qt::AlignCenter);
     layout->addLayout(langLayout);
