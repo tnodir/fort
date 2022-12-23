@@ -161,27 +161,46 @@ static void fort_flow_context_remove(PFORT_STAT stat, PFORT_FLOW flow)
     const UINT64 flow_id = flow->flow_id;
     const BOOL is_tcp = (flow->opt.flags & FORT_FLOW_TCP);
     const BOOL isIPv6 = (flow->opt.flags & FORT_FLOW_IP6);
+    BOOL is_pending;
 
     if (is_tcp) {
         if (isIPv6) {
-            FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_STREAM_V6, stat->stream6_id);
-            FwpsFlowRemoveContext0(
+            const NTSTATUS stream6_status =
+                    FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_STREAM_V6, stat->stream6_id);
+            const NTSTATUS in_transport6_status = FwpsFlowRemoveContext0(
                     flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V6, stat->in_transport6_id);
-            FwpsFlowRemoveContext0(
+            const NTSTATUS out_transport6_status = FwpsFlowRemoveContext0(
                     flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V6, stat->out_transport6_id);
+
+            is_pending = (stream6_status == STATUS_PENDING || in_transport6_status == STATUS_PENDING
+                    || out_transport6_status == STATUS_PENDING);
         } else {
-            FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_STREAM_V4, stat->stream4_id);
-            FwpsFlowRemoveContext0(
+            const NTSTATUS stream4_status =
+                    FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_STREAM_V4, stat->stream4_id);
+            const NTSTATUS in_transport4_status = FwpsFlowRemoveContext0(
                     flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V4, stat->in_transport4_id);
-            FwpsFlowRemoveContext0(
+            const NTSTATUS out_transport4_status = FwpsFlowRemoveContext0(
                     flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V4, stat->out_transport4_id);
+
+            is_pending = (stream4_status == STATUS_PENDING || in_transport4_status == STATUS_PENDING
+                    || out_transport4_status == STATUS_PENDING);
         }
     } else {
         if (isIPv6) {
-            FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_DATAGRAM_DATA_V6, stat->datagram6_id);
+            const NTSTATUS datagram6_status = FwpsFlowRemoveContext0(
+                    flow_id, FWPS_LAYER_DATAGRAM_DATA_V6, stat->datagram6_id);
+
+            is_pending = (datagram6_status == STATUS_PENDING);
         } else {
-            FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_DATAGRAM_DATA_V4, stat->datagram4_id);
+            const NTSTATUS datagram4_status = FwpsFlowRemoveContext0(
+                    flow_id, FWPS_LAYER_DATAGRAM_DATA_V4, stat->datagram4_id);
+
+            is_pending = (datagram4_status == STATUS_PENDING);
         }
+    }
+
+    if (is_pending) {
+        fort_stat_flags_set(stat, FORT_STAT_FLOW_PENDING, TRUE);
     }
 }
 
@@ -289,14 +308,36 @@ FORT_API void fort_stat_open(PFORT_STAT stat)
     KeInitializeSpinLock(&stat->lock);
 }
 
-FORT_API void fort_stat_close(PFORT_STAT stat)
+static BOOL fort_stat_close_flows(PFORT_STAT stat)
 {
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
-    fort_stat_flags_set(stat, FORT_STAT_CLOSED, TRUE);
+    fort_stat_flags_set(stat, FORT_STAT_FLOW_PENDING, FALSE);
 
     tommy_hashdyn_foreach_node_arg(&stat->flows_map, fort_flow_context_remove, stat);
+
+    const BOOL not_pending = (fort_stat_flags(stat) & FORT_STAT_FLOW_PENDING) == 0;
+
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    return not_pending;
+}
+
+FORT_API void fort_stat_close(PFORT_STAT stat)
+{
+    fort_stat_flags_set(stat, FORT_STAT_CLOSED, TRUE);
+
+    while (!fort_stat_close_flows(stat)) {
+        /* Wait for asynchronously deleting flows */
+        LARGE_INTEGER delay;
+        delay.QuadPart = -5000000; /* sleep 500000us (500ms) */
+
+        KeDelayExecutionThread(KernelMode, FALSE, &delay);
+    }
+
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
     tommy_arrayof_done(&stat->procs);
     tommy_hashdyn_done(&stat->procs_map);

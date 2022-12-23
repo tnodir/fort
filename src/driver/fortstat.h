@@ -86,6 +86,7 @@ typedef struct fort_flow
 #define FORT_STAT_CLOSED       0x01
 #define FORT_STAT_LOG          0x02
 #define FORT_STAT_TIME_CHANGED 0x04
+#define FORT_STAT_FLOW_PENDING 0x08
 
 typedef struct fort_stat
 {

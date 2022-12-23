@@ -446,9 +446,6 @@ static void NTAPI fort_callout_flow_delete(UINT16 layerId, UINT32 calloutId, UIN
     UNUSED(layerId);
     UNUSED(calloutId);
 
-    if (fort_device() == NULL)
-        return; /* Flow is asynchronously deleting, but the Device was already removed */
-
     fort_flow_delete(&fort_device()->stat, flowContext);
 }
 
