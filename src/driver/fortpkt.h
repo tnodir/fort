@@ -4,142 +4,98 @@
 #include "fortdrv.h"
 
 #include "common/fortconf.h"
-#include "forttds.h"
+#include "fortstat.h"
+#include "forttmr.h"
 
-#define FORT_DEFER_FLUSH_ALL 0xFFFFFFFF
-#define FORT_DEFER_LIST_MAX  (FORT_CONF_GROUP_MAX * 2)
+#define FORT_PACKET_FLUSH_ALL 0xFFFFFFFF
 
-#define FORT_DEFER_STREAM_ALL ((UINT64) ((INT64) -1))
+#define FORT_PACKET_QUEUE_BAD_INDEX ((UINT16) -1)
 
-#define TCP_FLAG_FIN 0x0001
-#define TCP_FLAG_SYN 0x0002
-#define TCP_FLAG_RST 0x0004
-#define TCP_FLAG_PSH 0x0008
-#define TCP_FLAG_ACK 0x0010
-#define TCP_FLAG_URG 0x0020
-#define TCP_FLAG_ECE 0x0040
-#define TCP_FLAG_CWR 0x0080
+#define FORT_PACKET_INBOUND 0x01
+#define FORT_PACKET_IP4     0x02
+#define FORT_PACKET_IP6     0x04
 
-typedef struct tcp_header
-{
-    UINT16 source; /* Source Port */
-    UINT16 dest; /* Destination Port */
-
-    UINT32 seq; /* Sequence number */
-    UINT32 ack_seq; /* Acknowledgement number */
-
-    UCHAR res1 : 4; /* Unused */
-    UCHAR doff : 4; /* Data offset */
-
-    UCHAR flags; /* Flags */
-
-    UINT16 window; /* Window size */
-    UINT16 csum; /* Checksum */
-    UINT16 urg_ptr; /* Urgent Pointer */
-} TCP_HEADER, *PTCP_HEADER;
-
-typedef struct fort_packet_in
-{
-    COMPARTMENT_ID compartmentId;
-
-    IF_INDEX interfaceIndex;
-    IF_INDEX subInterfaceIndex;
-
-    UINT16 ipHeaderSize;
-    UINT16 transportHeaderSize;
-} FORT_PACKET_IN, *PFORT_PACKET_IN;
-
-typedef struct fort_packet_out
-{
-    COMPARTMENT_ID compartmentId;
-
-    UINT32 remoteAddr4;
-    SCOPE_ID remoteScopeId;
-
-    UINT64 endpointHandle;
-} FORT_PACKET_OUT, *PFORT_PACKET_OUT;
-
-typedef struct fort_packet_stream
-{
-    UINT16 layerId;
-
-    UINT32 streamFlags;
-    UINT32 calloutId;
-
-    UINT64 flow_id;
-} FORT_PACKET_STREAM, *PFORT_PACKET_STREAM;
+#define FORT_MAC_FRAME_PACKET_COUNT_MAX 0xFF
 
 typedef struct fort_packet
 {
-    UINT32 inbound : 1;
-    UINT32 is_stream : 1;
-    UINT32 dataOffset : 12;
-    UINT32 dataSize : 18;
-
-    PNET_BUFFER_LIST netBufList;
-
     struct fort_packet *next;
 
-    union {
-        FORT_PACKET_IN in;
-        FORT_PACKET_OUT out;
-        FORT_PACKET_STREAM stream;
-    };
+    LARGE_INTEGER latency_start; /* Time it was placed in the latency queue */
+    UINT32 data_length; /* Size of the packet (in bytes) */
+
+    UCHAR flags;
+
+    /* Data for re-injection */
+    UINT16 layerId;
+    IF_INDEX interfaceIndex;
+    NDIS_PORT_NUMBER ndisPortNumber;
+    PNET_BUFFER_LIST netBufList;
 } FORT_PACKET, *PFORT_PACKET;
 
-typedef struct fort_defer_list
+typedef struct fort_packet_list
 {
     PFORT_PACKET packet_head;
     PFORT_PACKET packet_tail;
-} FORT_DEFER_LIST, *PFORT_DEFER_LIST;
+} FORT_PACKET_LIST, *PFORT_PACKET_LIST;
 
-typedef struct fort_defer
+typedef struct fort_packet_queue
 {
-    UINT32 list_bits;
+    /* All packets are first buffered into the bandwidth queue and released
+     * at the appropriate rate for the configured bandwidth into the latency queue.
+     * When they are added to the latency queue they are timestamped when they
+     * entered and they are released when the appropriate latency has expired.
+     * Only the bandwidth queue is affected by the queue buffer size.
+     * The latency queue has no limit.
+     */
+    FORT_PACKET_LIST bandwidth_list;
+    FORT_PACKET_LIST latency_list;
 
-    HANDLE transport_injection4_id;
-    HANDLE stream_injection4_id;
+    FORT_SPEED_LIMIT limit;
 
-    PFORT_PACKET packet_free;
-
-    tommy_arrayof packets;
-
-    FORT_DEFER_LIST stream_list;
-    FORT_DEFER_LIST lists[FORT_DEFER_LIST_MAX]; /* in/out-bounds */
+    UINT64 queued_bytes; /* accumulated size of queued packets */
+    UINT64 available_bytes; /* accumulated bytes available for sending */
+    LARGE_INTEGER last_tick; /* last time the queue was checked */
 
     KSPIN_LOCK lock;
-} FORT_DEFER, *PFORT_DEFER;
+} FORT_PACKET_QUEUE, *PFORT_PACKET_QUEUE;
 
-typedef void(NTAPI *FORT_INJECT_COMPLETE_FUNC)(PFORT_PACKET, PNET_BUFFER_LIST, BOOLEAN);
-typedef NTSTATUS (*FORT_INJECT_FUNC)(
-        PFORT_DEFER, PFORT_PACKET, PNET_BUFFER_LIST *, FORT_INJECT_COMPLETE_FUNC);
+typedef struct fort_shaper
+{
+    UINT32 group_io_bits;
+    UINT32 limit_io_bits;
+
+    ULONG volatile active_io_bits;
+
+    HANDLE injection_ip4;
+    HANDLE injection_ip6;
+    HANDLE injection_unspec;
+
+    FORT_TIMER timer;
+
+    PFORT_PACKET_QUEUE queues[FORT_CONF_GROUP_MAX * 2]; /* in/out-bound pairs */
+
+    KSPIN_LOCK lock;
+} FORT_SHAPER, *PFORT_SHAPER;
 
 #if defined(__cplusplus)
 extern "C" {
 #endif
 
-FORT_API void fort_defer_open(PFORT_DEFER defer);
+FORT_API void fort_shaper_open(PFORT_SHAPER shaper);
 
-FORT_API void fort_defer_close(PFORT_DEFER defer);
+FORT_API void fort_shaper_close(PFORT_SHAPER shaper);
 
-FORT_API NTSTATUS fort_defer_packet_add(PFORT_DEFER defer,
+FORT_API void fort_shaper_conf_update(PFORT_SHAPER shaper, const PFORT_CONF_IO conf_io);
+
+FORT_API void fort_shaper_conf_flags_update(PFORT_SHAPER shaper, const PFORT_CONF_FLAGS conf_flags);
+
+FORT_API BOOL fort_shaper_packet_process(PFORT_SHAPER shaper,
         const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PNET_BUFFER_LIST netBufList,
-        BOOL isIPv6, BOOL inbound, UCHAR group_index);
+        BOOL inbound, UCHAR group_index);
 
-FORT_API NTSTATUS fort_defer_stream_add(PFORT_DEFER defer,
-        const FWPS_INCOMING_VALUES0 *inFixedValues,
-        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const FWPS_STREAM_DATA0 *streamData,
-        const FWPS_FILTER0 *filter, BOOL isIPv6, BOOL inbound);
-
-FORT_API void fort_defer_packet_free(
-        PFORT_DEFER defer, PFORT_PACKET pkt, PNET_BUFFER_LIST clonedNetBufList, BOOL dispatchLevel);
-
-FORT_API void fort_defer_packet_flush(PFORT_DEFER defer, FORT_INJECT_COMPLETE_FUNC complete_func,
-        UINT32 list_bits, BOOL dispatchLevel);
-
-FORT_API void fort_defer_stream_flush(PFORT_DEFER defer, FORT_INJECT_COMPLETE_FUNC complete_func,
-        UINT64 flow_id, BOOL dispatchLevel);
+FORT_API void fort_shaper_flush(PFORT_SHAPER shaper, UINT32 group_io_bits, BOOL drop);
 
 #ifdef __cplusplus
 } // extern "C"

@@ -3,8 +3,8 @@
 #include "fortscb.h"
 
 #include "fortcb.h"
-#include "fortcout.h"
 #include "fortdev.h"
+#include "fortpkt.h"
 
 static NTSTATUS fort_syscb_register(
         PCWSTR sourcePath, PCALLBACK_OBJECT *cb_obj, PVOID *cb_reg, PCALLBACK_FUNCTION cb_func)
@@ -49,7 +49,7 @@ static void NTAPI fort_syscb_power(PVOID context, PVOID event, PVOID specifics)
     fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_POWER_OFF, power_off);
 
     if (power_off) {
-        fort_callout_defer_flush();
+        fort_shaper_flush(&fort_device()->shaper, FORT_PACKET_FLUSH_ALL, /*drop=*/TRUE);
     }
 }
 

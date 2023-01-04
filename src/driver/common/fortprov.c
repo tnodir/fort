@@ -27,10 +27,8 @@ static void fort_prov_unregister_callouts(HANDLE engine)
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_STREAM_V6);
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_DATAGRAM_V4);
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_DATAGRAM_V6);
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_TRANSPORT_V4);
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_TRANSPORT_V6);
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_OUT_TRANSPORT_V4);
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_OUT_TRANSPORT_V6);
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_MAC_FRAME);
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_OUT_MAC_FRAME);
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH_IN_V4);
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH_IN_V6);
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH_OUT_V4);
@@ -44,10 +42,8 @@ static void fort_prov_unregister_callouts(HANDLE engine)
     FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_STREAM_V6);
     FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_DATAGRAM_V4);
     FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_DATAGRAM_V6);
-    FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_IN_TRANSPORT_V4);
-    FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_IN_TRANSPORT_V6);
-    FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_OUT_TRANSPORT_V4);
-    FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_OUT_TRANSPORT_V6);
+    FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_IN_MAC_FRAME);
+    FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_OUT_MAC_FRAME);
     FwpmProviderDeleteByKey0(engine, (GUID *) &FORT_GUID_PROVIDER);
 }
 
@@ -76,10 +72,8 @@ static void fort_prov_flow_unregister_callouts(HANDLE engine)
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_STREAM_V6);
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_DATAGRAM_V4);
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_DATAGRAM_V6);
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_TRANSPORT_V4);
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_TRANSPORT_V6);
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_OUT_TRANSPORT_V4);
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_OUT_TRANSPORT_V6);
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_MAC_FRAME);
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_OUT_MAC_FRAME);
 }
 
 FORT_API void fort_prov_flow_unregister(HANDLE transEngine)
@@ -186,37 +180,21 @@ static DWORD fort_prov_register_io_callouts(HANDLE engine)
     dcallout6.providerKey = (GUID *) &FORT_GUID_PROVIDER;
     dcallout6.applicableLayer = FWPM_LAYER_DATAGRAM_DATA_V6;
 
-    FWPM_CALLOUT0 itcallout4;
-    RtlZeroMemory(&itcallout4, sizeof(FWPM_CALLOUT0));
-    itcallout4.calloutKey = FORT_GUID_CALLOUT_IN_TRANSPORT_V4;
-    itcallout4.displayData.name = (PWCHAR) L"FortCalloutInTransport4";
-    itcallout4.displayData.description = (PWCHAR) L"Fort Firewall Callout Inbound Transport V4";
-    itcallout4.providerKey = (GUID *) &FORT_GUID_PROVIDER;
-    itcallout4.applicableLayer = FWPM_LAYER_INBOUND_TRANSPORT_V4;
+    FWPM_CALLOUT0 imcallout;
+    RtlZeroMemory(&imcallout, sizeof(FWPM_CALLOUT0));
+    imcallout.calloutKey = FORT_GUID_CALLOUT_IN_MAC_FRAME;
+    imcallout.displayData.name = (PWCHAR) L"FortCalloutInMacFrame";
+    imcallout.displayData.description = (PWCHAR) L"Fort Firewall Callout Inbound MAC Frame";
+    imcallout.providerKey = (GUID *) &FORT_GUID_PROVIDER;
+    imcallout.applicableLayer = FWPM_LAYER_INBOUND_MAC_FRAME_ETHERNET;
 
-    FWPM_CALLOUT0 itcallout6;
-    RtlZeroMemory(&itcallout6, sizeof(FWPM_CALLOUT0));
-    itcallout6.calloutKey = FORT_GUID_CALLOUT_IN_TRANSPORT_V6;
-    itcallout6.displayData.name = (PWCHAR) L"FortCalloutInTransport6";
-    itcallout6.displayData.description = (PWCHAR) L"Fort Firewall Callout Inbound Transport V6";
-    itcallout6.providerKey = (GUID *) &FORT_GUID_PROVIDER;
-    itcallout6.applicableLayer = FWPM_LAYER_INBOUND_TRANSPORT_V6;
-
-    FWPM_CALLOUT0 otcallout4;
-    RtlZeroMemory(&otcallout4, sizeof(FWPM_CALLOUT0));
-    otcallout4.calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V4;
-    otcallout4.displayData.name = (PWCHAR) L"FortCalloutOutTransport4";
-    otcallout4.displayData.description = (PWCHAR) L"Fort Firewall Callout Outbound Transport V4";
-    otcallout4.providerKey = (GUID *) &FORT_GUID_PROVIDER;
-    otcallout4.applicableLayer = FWPM_LAYER_OUTBOUND_TRANSPORT_V4;
-
-    FWPM_CALLOUT0 otcallout6;
-    RtlZeroMemory(&otcallout6, sizeof(FWPM_CALLOUT0));
-    otcallout6.calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V6;
-    otcallout6.displayData.name = (PWCHAR) L"FortCalloutOutTransport6";
-    otcallout6.displayData.description = (PWCHAR) L"Fort Firewall Callout Outbound Transport V6";
-    otcallout6.providerKey = (GUID *) &FORT_GUID_PROVIDER;
-    otcallout6.applicableLayer = FWPM_LAYER_OUTBOUND_TRANSPORT_V6;
+    FWPM_CALLOUT0 omcallout;
+    RtlZeroMemory(&omcallout, sizeof(FWPM_CALLOUT0));
+    omcallout.calloutKey = FORT_GUID_CALLOUT_OUT_MAC_FRAME;
+    omcallout.displayData.name = (PWCHAR) L"FortCalloutOutMacFrame";
+    omcallout.displayData.description = (PWCHAR) L"Fort Firewall Callout Outbound MAC Frame";
+    omcallout.providerKey = (GUID *) &FORT_GUID_PROVIDER;
+    omcallout.applicableLayer = FWPM_LAYER_OUTBOUND_MAC_FRAME_ETHERNET;
 
     DWORD status;
     if ((status = FwpmCalloutAdd0(engine, &ocallout4, NULL, NULL))
@@ -226,13 +204,13 @@ static DWORD fort_prov_register_io_callouts(HANDLE engine)
             || (status = FwpmCalloutAdd0(engine, &scallout4, NULL, NULL))
             || (status = FwpmCalloutAdd0(engine, &scallout6, NULL, NULL))
             || (status = FwpmCalloutAdd0(engine, &dcallout4, NULL, NULL))
-            || (status = FwpmCalloutAdd0(engine, &dcallout6, NULL, NULL))
-            || (status = FwpmCalloutAdd0(engine, &itcallout4, NULL, NULL))
-            || (status = FwpmCalloutAdd0(engine, &itcallout6, NULL, NULL))
-            || (status = FwpmCalloutAdd0(engine, &otcallout4, NULL, NULL))
-            || (status = FwpmCalloutAdd0(engine, &otcallout6, NULL, NULL))) {
+            || (status = FwpmCalloutAdd0(engine, &dcallout6, NULL, NULL))) {
         return status;
     }
+
+    /* TODO: Available on Windows 8+ */
+    FwpmCalloutAdd0(engine, &imcallout, NULL, NULL);
+    FwpmCalloutAdd0(engine, &omcallout, NULL, NULL);
 
     return 0;
 }
@@ -335,7 +313,7 @@ FORT_API DWORD fort_prov_register(HANDLE transEngine, BOOL is_boot)
     return status;
 }
 
-static DWORD fort_prov_flow_register_callouts(HANDLE engine, BOOL filter_transport)
+static DWORD fort_prov_flow_register_callouts(HANDLE engine, BOOL filter_packets)
 {
     const UINT32 filter_flags = FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED
             | FWP_CALLOUT_FLAG_ALLOW_MID_STREAM_INSPECTION;
@@ -384,67 +362,43 @@ static DWORD fort_prov_flow_register_callouts(HANDLE engine, BOOL filter_transpo
     dfilter6.action.type = FWP_ACTION_CALLOUT_TERMINATING;
     dfilter6.action.calloutKey = FORT_GUID_CALLOUT_DATAGRAM_V6;
 
-    FWPM_FILTER0 itfilter4;
-    RtlZeroMemory(&itfilter4, sizeof(FWPM_FILTER0));
-    itfilter4.flags = filter_flags;
-    itfilter4.filterKey = FORT_GUID_FILTER_IN_TRANSPORT_V4;
-    itfilter4.layerKey = FWPM_LAYER_INBOUND_TRANSPORT_V4;
-    itfilter4.subLayerKey = FORT_GUID_SUBLAYER;
-    itfilter4.displayData.name = (PWCHAR) L"FortFilterInTransport4";
-    itfilter4.displayData.description = (PWCHAR) L"Fort Firewall Filter Inbound Transport V4";
-    itfilter4.action.type = FWP_ACTION_CALLOUT_TERMINATING;
-    itfilter4.action.calloutKey = FORT_GUID_CALLOUT_IN_TRANSPORT_V4;
+    FWPM_FILTER0 imfilter;
+    RtlZeroMemory(&imfilter, sizeof(FWPM_FILTER0));
+    imfilter.flags = filter_flags;
+    imfilter.filterKey = FORT_GUID_FILTER_IN_MAC_FRAME;
+    imfilter.layerKey = FWPM_LAYER_INBOUND_MAC_FRAME_ETHERNET;
+    imfilter.subLayerKey = FORT_GUID_SUBLAYER;
+    imfilter.displayData.name = (PWCHAR) L"FortFilterInMacFrame";
+    imfilter.displayData.description = (PWCHAR) L"Fort Firewall Filter Inbound MAC Frame";
+    imfilter.action.type = FWP_ACTION_CALLOUT_TERMINATING;
+    imfilter.action.calloutKey = FORT_GUID_CALLOUT_IN_MAC_FRAME;
 
-    FWPM_FILTER0 itfilter6;
-    RtlZeroMemory(&itfilter6, sizeof(FWPM_FILTER0));
-    itfilter6.flags = filter_flags;
-    itfilter6.filterKey = FORT_GUID_FILTER_IN_TRANSPORT_V6;
-    itfilter6.layerKey = FWPM_LAYER_INBOUND_TRANSPORT_V6;
-    itfilter6.subLayerKey = FORT_GUID_SUBLAYER;
-    itfilter6.displayData.name = (PWCHAR) L"FortFilterInTransport6";
-    itfilter6.displayData.description = (PWCHAR) L"Fort Firewall Filter Inbound Transport V6";
-    itfilter6.action.type = FWP_ACTION_CALLOUT_TERMINATING;
-    itfilter6.action.calloutKey = FORT_GUID_CALLOUT_IN_TRANSPORT_V6;
-
-    FWPM_FILTER0 otfilter4;
-    RtlZeroMemory(&otfilter4, sizeof(FWPM_FILTER0));
-    otfilter4.flags = filter_flags;
-    otfilter4.filterKey = FORT_GUID_FILTER_OUT_TRANSPORT_V4;
-    otfilter4.layerKey = FWPM_LAYER_OUTBOUND_TRANSPORT_V4;
-    otfilter4.subLayerKey = FORT_GUID_SUBLAYER;
-    otfilter4.displayData.name = (PWCHAR) L"FortFilterOutTransport4";
-    otfilter4.displayData.description = (PWCHAR) L"Fort Firewall Filter Outbound Transport V4";
-    otfilter4.action.type = FWP_ACTION_CALLOUT_TERMINATING;
-    otfilter4.action.calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V4;
-
-    FWPM_FILTER0 otfilter6;
-    RtlZeroMemory(&otfilter6, sizeof(FWPM_FILTER0));
-    otfilter6.flags = filter_flags;
-    otfilter6.filterKey = FORT_GUID_FILTER_OUT_TRANSPORT_V6;
-    otfilter6.layerKey = FWPM_LAYER_OUTBOUND_TRANSPORT_V6;
-    otfilter6.subLayerKey = FORT_GUID_SUBLAYER;
-    otfilter6.displayData.name = (PWCHAR) L"FortFilterOutTransport6";
-    otfilter6.displayData.description = (PWCHAR) L"Fort Firewall Filter Outbound Transport V6";
-    otfilter6.action.type = FWP_ACTION_CALLOUT_TERMINATING;
-    otfilter6.action.calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V6;
+    FWPM_FILTER0 omfilter;
+    RtlZeroMemory(&omfilter, sizeof(FWPM_FILTER0));
+    omfilter.flags = filter_flags;
+    omfilter.filterKey = FORT_GUID_FILTER_OUT_MAC_FRAME;
+    omfilter.layerKey = FWPM_LAYER_OUTBOUND_MAC_FRAME_ETHERNET;
+    omfilter.subLayerKey = FORT_GUID_SUBLAYER;
+    omfilter.displayData.name = (PWCHAR) L"FortFilterOutMacFrame";
+    omfilter.displayData.description = (PWCHAR) L"Fort Firewall Filter Outbound MAC Frame";
+    omfilter.action.type = FWP_ACTION_CALLOUT_TERMINATING;
+    omfilter.action.calloutKey = FORT_GUID_CALLOUT_OUT_MAC_FRAME;
 
     DWORD status;
     if ((status = FwpmFilterAdd0(engine, &sfilter4, NULL, NULL))
             || (status = FwpmFilterAdd0(engine, &sfilter6, NULL, NULL))
             || (status = FwpmFilterAdd0(engine, &dfilter4, NULL, NULL))
             || (status = FwpmFilterAdd0(engine, &dfilter6, NULL, NULL))
-            || (filter_transport
-                    && ((status = FwpmFilterAdd0(engine, &itfilter4, NULL, NULL))
-                            || (status = FwpmFilterAdd0(engine, &itfilter6, NULL, NULL))
-                            || (status = FwpmFilterAdd0(engine, &otfilter4, NULL, NULL))
-                            || (status = FwpmFilterAdd0(engine, &otfilter6, NULL, NULL))))) {
+            || (filter_packets
+                    && ((status = FwpmFilterAdd0(engine, &imfilter, NULL, NULL))
+                            || (status = FwpmFilterAdd0(engine, &omfilter, NULL, NULL))))) {
         return status;
     }
 
     return 0;
 }
 
-FORT_API DWORD fort_prov_flow_register(HANDLE transEngine, BOOL filter_transport)
+FORT_API DWORD fort_prov_flow_register(HANDLE transEngine, BOOL filter_packets)
 {
     HANDLE engine = transEngine;
     DWORD status;
@@ -456,7 +410,7 @@ FORT_API DWORD fort_prov_flow_register(HANDLE transEngine, BOOL filter_transport
         fort_prov_trans_begin(engine);
     }
 
-    status = fort_prov_flow_register_callouts(engine, filter_transport);
+    status = fort_prov_flow_register_callouts(engine, filter_packets);
 
     if (!transEngine) {
         status = fort_prov_trans_close(engine, status);

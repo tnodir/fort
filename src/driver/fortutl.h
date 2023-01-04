@@ -26,6 +26,8 @@ FORT_API DWORD fort_le_u32_read(const char *cp, int offset);
 
 FORT_API BOOL fort_addr_is_local_broadcast(const UINT32 *ip, BOOL isIPv6);
 
+FORT_API UINT32 fort_bits_duplicate16(UINT16 num);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

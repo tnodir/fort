@@ -299,6 +299,13 @@ void IoQueueWorkItemEx(
     UNUSED(context);
 }
 
+LARGE_INTEGER KeQueryPerformanceCounter(PLARGE_INTEGER performanceFrequency)
+{
+    UNUSED(performanceFrequency);
+    const LARGE_INTEGER res = { 0 };
+    return res;
+}
+
 void KeQuerySystemTime(PLARGE_INTEGER time)
 {
     UNUSED(time);

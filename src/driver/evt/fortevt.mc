@@ -19,17 +19,19 @@ FacilityNames = (
     Callout = 2:FACILITY_CALLOUT
     Device = 3:FACILITY_DEVICE
     Driver = 4:FACILITY_DRIVER
-    Packet = 5:FACILITY_PACKET
+    Shaper = 5:FACILITY_SHAPER
     ProcessTree = 6:FACILITY_PROCESS_TREE
 )
 
 
+;/* Buffer */
 MessageId=1 Facility=Buffer Severity=Error SymbolicName=FORT_BUFFER_OOM
 Language=English
 Buffer OOM.
 .
 
 
+;/* Callout */
 MessageId=1 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_FLOW_ASSOC_ERROR
 Language=English
 Classify v4: Flow assoc. error.
@@ -75,37 +77,28 @@ Language=English
 Register Datagram V6: Error.
 .
 
-MessageId=10 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_INBOUND_TRANSPORT_V4_ERROR
+MessageId=10 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_INBOUND_MAC_FRAME_ERROR
 Language=English
-Register Inbound Transport V4: Error.
+Register Inbound MAC Frame: Error.
 .
 
-MessageId=11 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_INBOUND_TRANSPORT_V6_ERROR
+MessageId=11 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_OUTBOUND_MAC_FRAME_ERROR
 Language=English
-Register Inbound Transport V6: Error.
+Register Outbound MAC Frame: Error.
 .
 
-MessageId=12 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_OUTBOUND_TRANSPORT_V4_ERROR
-Language=English
-Register Outbound Transport V4: Error.
-.
-
-MessageId=13 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_OUTBOUND_TRANSPORT_V6_ERROR
-Language=English
-Register Outbound Transport V6: Error.
-.
-
-MessageId=14 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_CALLOUT_REAUTH_ERROR
+MessageId=12 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_CALLOUT_REAUTH_ERROR
 Language=English
 Callout Reauth: Error.
 .
 
-MessageId=15 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_CALLOUT_TIMER_ERROR
+MessageId=13 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_CALLOUT_TIMER_ERROR
 Language=English
 Callout Timer: Error.
 .
 
 
+;/* Device */
 MessageId=1 Facility=Device Severity=Error SymbolicName=FORT_DEVICE_WORKER_REAUTH_ERROR
 Language=English
 Worker Reauth: Error.
@@ -117,33 +110,26 @@ Device Control: Error.
 .
 
 
+;/* Driver */
 MessageId=1 Facility=Driver Severity=Error SymbolicName=FORT_DRIVER_ENTRY_ERROR
 Language=English
 Entry: Error.
 .
 
 
-MessageId=1 Facility=Packet Severity=Error SymbolicName=FORT_PACKET_DEFER_TRANSPORT_INIT_ERROR
+;/* Shaper */
+MessageId=1 Facility=Shaper Severity=Error SymbolicName=FORT_SHAPER_PACKET_INJECTION_ERROR
 Language=English
-Defer: Transport injection init error.
+Shaper: Packet injection error.
 .
 
-MessageId=2 Facility=Packet Severity=Error SymbolicName=FORT_PACKET_DEFER_STREAM_INIT_ERROR
+MessageId=2 Facility=Shaper Severity=Error SymbolicName=FORT_SHAPER_PACKET_INJECTION_PREPARE_ERROR
 Language=English
-Defer: Stream injection init error.
-.
-
-MessageId=3 Facility=Packet Severity=Error SymbolicName=FORT_PACKET_DEFER_INJECTION_ERROR
-Language=English
-Defer: Injection error.
-.
-
-MessageId=4 Facility=Packet Severity=Error SymbolicName=FORT_PACKET_DEFER_INJECTION_PREPARE_ERROR
-Language=English
-Defer: Injection prepare error.
+Shaper: Packet injection prepare error.
 .
 
 
+;/* ProcessTree */
 MessageId=1 Facility=ProcessTree Severity=Error SymbolicName=FORT_PSTREE_UPDATE_ERROR
 Language=English
 PsTree: Update Error.

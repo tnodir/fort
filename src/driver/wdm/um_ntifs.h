@@ -44,6 +44,8 @@ FORT_API VOID KeStackAttachProcess(PRKPROCESS process, PRKAPC_STATE apcState);
 
 FORT_API VOID KeUnstackDetachProcess(PRKAPC_STATE apcState);
 
+FORT_API ULONG RtlRandomEx(PULONG seed);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

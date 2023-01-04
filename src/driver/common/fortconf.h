@@ -158,6 +158,14 @@ typedef struct fort_app_entry
     };
 } FORT_APP_ENTRY, *PFORT_APP_ENTRY;
 
+typedef struct fort_speed_limit
+{
+    UINT16 plr; /* packet loss rate in 1/100% (0-10000, i.e. 10% packet loss = 1000) */
+    UINT32 latency_ms; /* latency in milliseconds */
+    UINT64 bps; /* bandwidth in bits per second */
+    UINT64 buffer_bytes; /* size of packet buffer in bytes (150,000 is the dummynet's default) */
+} FORT_SPEED_LIMIT, *PFORT_SPEED_LIMIT;
+
 typedef struct fort_conf_group
 {
     UINT16 group_bits;
@@ -165,9 +173,9 @@ typedef struct fort_conf_group
     UINT16 log_conn;
 
     UINT16 limit_bits;
-    UINT32 limit_2bits;
+    UINT32 limit_io_bits;
 
-    FORT_TRAF limits[FORT_CONF_GROUP_MAX]; /* Bytes per 0.5 sec. */
+    FORT_SPEED_LIMIT limits[FORT_CONF_GROUP_MAX * 2]; /* in/out-bound pairs */
 } FORT_CONF_GROUP, *PFORT_CONF_GROUP;
 
 typedef struct fort_conf

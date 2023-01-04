@@ -8,11 +8,6 @@
 
 #define FORT_STATUS_FLOW_BLOCK STATUS_NOT_SAME_DEVICE
 
-typedef struct fort_stat_group
-{
-    FORT_TRAF traf;
-} FORT_STAT_GROUP, *PFORT_STAT_GROUP;
-
 /* Synchronize with tommy_hashdyn_node! */
 typedef struct fort_stat_proc
 {
@@ -44,19 +39,26 @@ typedef struct fort_stat_proc
     struct fort_stat_proc *next_active;
 } FORT_STAT_PROC, *PFORT_STAT_PROC;
 
-#define FORT_FLOW_SPEED_LIMIT_IN  0x01
-#define FORT_FLOW_SPEED_LIMIT_OUT 0x02
-#define FORT_FLOW_SPEED_LIMIT     (FORT_FLOW_SPEED_LIMIT_IN | FORT_FLOW_SPEED_LIMIT_OUT)
-#define FORT_FLOW_DEFER_IN        0x04
-#define FORT_FLOW_DEFER_OUT       0x08
-#define FORT_FLOW_TCP             0x40
-#define FORT_FLOW_IP6             0x80
+#define FORT_FLOW_SPEED_LIMIT_IN    0x01
+#define FORT_FLOW_SPEED_LIMIT_OUT   0x02
+#define FORT_FLOW_SPEED_LIMIT_PROC  0x04
+#define FORT_FLOW_SPEED_LIMIT_FLAGS 0x07
+#define FORT_FLOW_TCP               0x20
+#define FORT_FLOW_IP6               0x40
+#define FORT_FLOW_INBOUND           0x80
 
 typedef struct fort_flow_opt
 {
-    UCHAR volatile flags;
-    UCHAR group_index;
-    UINT16 proc_index;
+    union {
+        struct
+        {
+            UCHAR volatile flags;
+            UCHAR group_index;
+            UINT16 proc_index;
+        };
+
+        UINT32 v;
+    };
 } FORT_FLOW_OPT, *PFORT_FLOW_OPT;
 
 /* Synchronize with tommy_hashdyn_node! */
@@ -86,7 +88,7 @@ typedef struct fort_flow
 #define FORT_STAT_CLOSED       0x01
 #define FORT_STAT_LOG          0x02
 #define FORT_STAT_TIME_CHANGED 0x04
-#define FORT_STAT_FLOW_PENDING 0x08
+#define FORT_STAT_FLOW_PENDING 0x08 /* used only on driver unloading */
 
 typedef struct fort_stat
 {
@@ -94,16 +96,12 @@ typedef struct fort_stat
 
     UINT16 proc_active_count;
 
-    UINT32 group_flush_bits;
-
     UINT32 stream4_id;
     UINT32 stream6_id;
     UINT32 datagram4_id;
     UINT32 datagram6_id;
-    UINT32 in_transport4_id;
-    UINT32 in_transport6_id;
-    UINT32 out_transport4_id;
-    UINT32 out_transport6_id;
+    UINT32 in_mac_frame_id;
+    UINT32 out_mac_frame_id;
 
     PFORT_STAT_PROC proc_free;
     PFORT_STAT_PROC proc_active;
@@ -117,8 +115,6 @@ typedef struct fort_stat
     tommy_hashdyn flows_map;
 
     FORT_CONF_GROUP conf_group;
-
-    FORT_STAT_GROUP groups[FORT_CONF_GROUP_MAX];
 
     LARGE_INTEGER system_time;
 
@@ -141,27 +137,26 @@ FORT_API void fort_stat_open(PFORT_STAT stat);
 
 FORT_API void fort_stat_close(PFORT_STAT stat);
 
-FORT_API void fort_stat_update(PFORT_STAT stat, BOOL log_stat);
+FORT_API void fort_stat_log_update(PFORT_STAT stat, BOOL log_stat);
 
-FORT_API void fort_stat_conf_update(PFORT_STAT stat, PFORT_CONF_IO conf_io);
+FORT_API void fort_stat_conf_update(PFORT_STAT stat, const PFORT_CONF_IO conf_io);
 
-FORT_API void fort_stat_conf_flags_update(PFORT_STAT stat, PFORT_CONF_FLAGS conf_flags);
+FORT_API void fort_stat_conf_flags_update(PFORT_STAT stat, const PFORT_CONF_FLAGS conf_flags);
 
 FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, UINT64 flow_id, UINT32 process_id,
-        UCHAR group_index, BOOL isIPv6, BOOL is_tcp, BOOL is_reauth, BOOL *is_new_proc);
+        UCHAR group_index, BOOL isIPv6, BOOL is_tcp, BOOL inbound, BOOL is_reauth,
+        BOOL *is_new_proc);
 
 FORT_API void fort_flow_delete(PFORT_STAT stat, UINT64 flowContext);
 
-FORT_API void fort_flow_classify(PFORT_STAT stat, UINT64 flowContext, UINT32 data_len, BOOL isIPv6,
-        BOOL is_tcp, BOOL inbound);
+FORT_API void fort_flow_classify(
+        PFORT_STAT stat, UINT64 flowContext, UINT32 data_len, BOOL inbound);
 
 FORT_API void fort_stat_dpc_begin(PFORT_STAT stat, PKLOCK_QUEUE_HANDLE lock_queue);
 
 FORT_API void fort_stat_dpc_end(PKLOCK_QUEUE_HANDLE lock_queue);
 
 FORT_API void fort_stat_dpc_traf_flush(PFORT_STAT stat, UINT16 proc_count, PCHAR out);
-
-FORT_API UINT32 fort_stat_dpc_group_flush(PFORT_STAT stat);
 
 #ifdef __cplusplus
 } // extern "C"

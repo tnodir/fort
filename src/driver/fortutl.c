@@ -289,7 +289,7 @@ FORT_API NTSTATUS fort_file_open(PUNICODE_STRING filePath, HANDLE *outHandle)
             FILE_SYNCHRONOUS_IO_NONALERT);
 }
 
-USHORT fort_le_u16_read(const char *cp, int offset)
+FORT_API USHORT fort_le_u16_read(const char *cp, int offset)
 {
     USHORT v = *((USHORT *) (cp + offset));
 #if FORT_BIG_ENDIAN
@@ -298,7 +298,7 @@ USHORT fort_le_u16_read(const char *cp, int offset)
     return v;
 }
 
-DWORD fort_le_u32_read(const char *cp, int offset)
+FORT_API DWORD fort_le_u32_read(const char *cp, int offset)
 {
     DWORD v = *((DWORD *) (cp + offset));
 #if FORT_BIG_ENDIAN
@@ -307,7 +307,7 @@ DWORD fort_le_u32_read(const char *cp, int offset)
     return v;
 }
 
-BOOL fort_addr_is_local_broadcast(const UINT32 *ip, BOOL isIPv6)
+FORT_API BOOL fort_addr_is_local_broadcast(const UINT32 *ip, BOOL isIPv6)
 {
     if (isIPv6) {
         const ip6_addr_t *ip6 = (const ip6_addr_t *) ip;
@@ -315,4 +315,22 @@ BOOL fort_addr_is_local_broadcast(const UINT32 *ip, BOOL isIPv6)
     }
 
     return *ip == 0xFFFFFFFF;
+}
+
+inline static UINT32 fort_bits_duplicate8(UINT32 v)
+{
+    return ((v & 1) | ((v & 1) << 1)) // 1-st bit
+            | (((v & (1 << 1)) | ((v & (1 << 1)) << 1)) << 1) // 2-nd bit
+            | (((v & (1 << 2)) | ((v & (1 << 2)) << 1)) << 2) // 3-rd bit
+            | (((v & (1 << 3)) | ((v & (1 << 3)) << 1)) << 3) // 4 bit
+            | (((v & (1 << 4)) | ((v & (1 << 4)) << 1)) << 4) // 5 bit
+            | (((v & (1 << 5)) | ((v & (1 << 5)) << 1)) << 5) // 6 bit
+            | (((v & (1 << 6)) | ((v & (1 << 6)) << 1)) << 6) // 7 bit
+            | (((v & (1 << 7)) | ((v & (1 << 7)) << 1)) << 7) // 8 bit
+            ;
+}
+
+FORT_API UINT32 fort_bits_duplicate16(UINT16 num)
+{
+    return fort_bits_duplicate8(num & 0xFF) | (fort_bits_duplicate8(num >> 8) << 16);
 }

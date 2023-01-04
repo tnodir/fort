@@ -320,6 +320,8 @@ FORT_API void IoQueueWorkItem(
 FORT_API void IoQueueWorkItemEx(
         PIO_WORKITEM workItem, PIO_WORKITEM_ROUTINE_EX routine, int queueType, PVOID context);
 
+FORT_API LARGE_INTEGER KeQueryPerformanceCounter(PLARGE_INTEGER performanceFrequency);
+
 FORT_API void KeQuerySystemTime(PLARGE_INTEGER time);
 FORT_API void ExSystemTimeToLocalTime(PLARGE_INTEGER systemTime, PLARGE_INTEGER localTime);
 FORT_API void RtlTimeToTimeFields(PLARGE_INTEGER time, PTIME_FIELDS timeFields);

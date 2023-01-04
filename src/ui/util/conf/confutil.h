@@ -94,11 +94,12 @@ private:
             const appentry_map_t &wildAppsMap, const appentry_map_t &prefixAppsMap,
             const appentry_map_t &exeAppsMap);
 
-    static void writeAppGroupFlags(quint16 *groupBits, quint16 *logConnBits,
-            const FirewallConf &conf);
+    static void writeAppGroupFlags(
+            quint16 *groupBits, quint16 *logConnBits, const FirewallConf &conf);
 
-    static void writeLimits(struct fort_traf *limits, quint16 *limitBits, quint32 *limit2Bits,
-            const QList<AppGroup *> &appGroups);
+    static void writeLimits(struct fort_speed_limit *limits, quint16 *limitBits,
+            quint32 *limitIoBits, const QList<AppGroup *> &appGroups);
+    static void writeLimit(struct fort_speed_limit *limit, quint32 kiBytes);
 
     static void writeAddressRanges(char **data, const addrranges_arr_t &addressRanges);
     static void writeAddressRange(char **data, const AddressRange &addressRange);

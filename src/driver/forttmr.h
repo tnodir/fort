@@ -3,13 +3,14 @@
 
 #include "fortdrv.h"
 
-typedef void (NTAPI *FORT_TIMER_FUNC)(void);
+typedef void(NTAPI *FORT_TIMER_FUNC)(void);
 
 typedef struct fort_timer
 {
     UINT32 running : 1;
+    UINT32 oneshot : 1;
     UINT32 coalescable : 1;
-    UINT32 period : 30; /* milliseconds */
+    UINT32 period : 29; /* milliseconds */
 
     FORT_TIMER_FUNC callback;
 
@@ -22,7 +23,7 @@ extern "C" {
 #endif
 
 FORT_API void fort_timer_open(
-        PFORT_TIMER timer, int period, BOOL coalescable, FORT_TIMER_FUNC callback);
+        PFORT_TIMER timer, int period, BOOL oneshot, BOOL coalescable, FORT_TIMER_FUNC callback);
 
 FORT_API void fort_timer_close(PFORT_TIMER timer);
 

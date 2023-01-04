@@ -2,8 +2,6 @@
 
 #include "fortstat.h"
 
-#include "forttds.h"
-
 #define FORT_STAT_POOL_TAG 'SwfF'
 
 #define FORT_PROC_BAD_INDEX ((UINT16) -1)
@@ -134,16 +132,8 @@ static void fort_flow_context_set(PFORT_STAT stat, PFORT_FLOW flow, BOOL isIPv6,
     if (is_tcp) {
         if (isIPv6) {
             FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_STREAM_V6, stat->stream6_id, flowContext);
-            FwpsFlowAssociateContext0(
-                    flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V4, stat->in_transport6_id, flowContext);
-            FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V4,
-                    stat->out_transport6_id, flowContext);
         } else {
             FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_STREAM_V4, stat->stream4_id, flowContext);
-            FwpsFlowAssociateContext0(
-                    flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V4, stat->in_transport4_id, flowContext);
-            FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V4,
-                    stat->out_transport4_id, flowContext);
         }
     } else {
         if (isIPv6) {
@@ -154,6 +144,11 @@ static void fort_flow_context_set(PFORT_STAT stat, PFORT_FLOW flow, BOOL isIPv6,
                     flow_id, FWPS_LAYER_DATAGRAM_DATA_V4, stat->datagram4_id, flowContext);
         }
     }
+
+    FwpsFlowAssociateContext0(
+            flow_id, FWPS_LAYER_INBOUND_MAC_FRAME_ETHERNET, stat->in_mac_frame_id, flowContext);
+    FwpsFlowAssociateContext0(
+            flow_id, FWPS_LAYER_OUTBOUND_MAC_FRAME_ETHERNET, stat->out_mac_frame_id, flowContext);
 }
 
 static void fort_flow_context_remove(PFORT_STAT stat, PFORT_FLOW flow)
@@ -161,45 +156,31 @@ static void fort_flow_context_remove(PFORT_STAT stat, PFORT_FLOW flow)
     const UINT64 flow_id = flow->flow_id;
     const BOOL is_tcp = (flow->opt.flags & FORT_FLOW_TCP);
     const BOOL isIPv6 = (flow->opt.flags & FORT_FLOW_IP6);
-    BOOL is_pending;
+    NTSTATUS status;
 
     if (is_tcp) {
         if (isIPv6) {
-            const NTSTATUS stream6_status =
-                    FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_STREAM_V6, stat->stream6_id);
-            const NTSTATUS in_transport6_status = FwpsFlowRemoveContext0(
-                    flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V6, stat->in_transport6_id);
-            const NTSTATUS out_transport6_status = FwpsFlowRemoveContext0(
-                    flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V6, stat->out_transport6_id);
-
-            is_pending = (stream6_status == STATUS_PENDING || in_transport6_status == STATUS_PENDING
-                    || out_transport6_status == STATUS_PENDING);
+            status = FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_STREAM_V6, stat->stream6_id);
         } else {
-            const NTSTATUS stream4_status =
-                    FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_STREAM_V4, stat->stream4_id);
-            const NTSTATUS in_transport4_status = FwpsFlowRemoveContext0(
-                    flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V4, stat->in_transport4_id);
-            const NTSTATUS out_transport4_status = FwpsFlowRemoveContext0(
-                    flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V4, stat->out_transport4_id);
-
-            is_pending = (stream4_status == STATUS_PENDING || in_transport4_status == STATUS_PENDING
-                    || out_transport4_status == STATUS_PENDING);
+            status = FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_STREAM_V4, stat->stream4_id);
         }
     } else {
         if (isIPv6) {
-            const NTSTATUS datagram6_status = FwpsFlowRemoveContext0(
+            status = FwpsFlowRemoveContext0(
                     flow_id, FWPS_LAYER_DATAGRAM_DATA_V6, stat->datagram6_id);
-
-            is_pending = (datagram6_status == STATUS_PENDING);
         } else {
-            const NTSTATUS datagram4_status = FwpsFlowRemoveContext0(
+            status = FwpsFlowRemoveContext0(
                     flow_id, FWPS_LAYER_DATAGRAM_DATA_V4, stat->datagram4_id);
-
-            is_pending = (datagram4_status == STATUS_PENDING);
         }
     }
 
-    if (is_pending) {
+    const NTSTATUS in_mac_frame_status = FwpsFlowRemoveContext0(
+            flow_id, FWPS_LAYER_INBOUND_MAC_FRAME_ETHERNET, stat->in_mac_frame_id);
+    const NTSTATUS out_mac_frame_status = FwpsFlowRemoveContext0(
+            flow_id, FWPS_LAYER_OUTBOUND_MAC_FRAME_ETHERNET, stat->out_mac_frame_id);
+
+    if (status == STATUS_PENDING || in_mac_frame_status == STATUS_PENDING
+            || out_mac_frame_status == STATUS_PENDING) {
         fort_stat_flags_set(stat, FORT_STAT_FLOW_PENDING, TRUE);
     }
 }
@@ -265,7 +246,7 @@ static PFORT_FLOW fort_flow_new(
 }
 
 static NTSTATUS fort_flow_add(PFORT_STAT stat, UINT64 flow_id, UCHAR group_index, UINT16 proc_index,
-        UCHAR speed_limit, BOOL isIPv6, BOOL is_tcp, BOOL is_reauth)
+        UCHAR speed_limit, BOOL isIPv6, BOOL is_tcp, BOOL inbound, BOOL is_reauth)
 {
     const tommy_key_t flow_hash = fort_flow_hash(flow_id);
     PFORT_FLOW flow = fort_flow_get(stat, flow_id, flow_hash);
@@ -290,7 +271,8 @@ static NTSTATUS fort_flow_add(PFORT_STAT stat, UINT64 flow_id, UCHAR group_index
         fort_stat_proc_inc(stat, proc_index);
     }
 
-    flow->opt.flags = speed_limit | (is_tcp ? FORT_FLOW_TCP : 0) | (isIPv6 ? FORT_FLOW_IP6 : 0);
+    flow->opt.flags = speed_limit | (is_tcp ? FORT_FLOW_TCP : 0) | (isIPv6 ? FORT_FLOW_IP6 : 0)
+            | (inbound ? FORT_FLOW_INBOUND : 0);
     flow->opt.group_index = group_index;
     flow->opt.proc_index = proc_index;
 
@@ -315,7 +297,7 @@ static BOOL fort_stat_close_flows(PFORT_STAT stat)
 
     fort_stat_flags_set(stat, FORT_STAT_FLOW_PENDING, FALSE);
 
-    tommy_hashdyn_foreach_node_arg(&stat->flows_map, fort_flow_context_remove, stat);
+    tommy_hashdyn_foreach_node_arg(&stat->flows_map, &fort_flow_context_remove, stat);
 
     const BOOL not_pending = (fort_stat_flags(stat) & FORT_STAT_FLOW_PENDING) == 0;
 
@@ -350,29 +332,27 @@ FORT_API void fort_stat_close(PFORT_STAT stat)
 
 static void fort_stat_clear(PFORT_STAT stat)
 {
-    fort_stat_proc_active_clear(stat);
-
-    tommy_hashdyn_foreach_node_arg(&stat->procs_map, fort_stat_proc_free, stat);
-    tommy_hashdyn_foreach_node(&stat->flows_map, fort_flow_close);
-
-    RtlZeroMemory(stat->groups, sizeof(stat->groups));
-}
-
-FORT_API void fort_stat_update(PFORT_STAT stat, BOOL log_stat)
-{
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
-    if ((fort_stat_flags(stat) & FORT_STAT_LOG) != 0 && !log_stat) {
-        fort_stat_clear(stat);
-    }
+    fort_stat_proc_active_clear(stat);
 
-    fort_stat_flags_set(stat, FORT_STAT_LOG, log_stat);
+    tommy_hashdyn_foreach_node_arg(&stat->procs_map, &fort_stat_proc_free, stat);
+    tommy_hashdyn_foreach_node(&stat->flows_map, &fort_flow_close);
 
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
-FORT_API void fort_stat_conf_update(PFORT_STAT stat, PFORT_CONF_IO conf_io)
+FORT_API void fort_stat_log_update(PFORT_STAT stat, BOOL log_stat)
+{
+    const UCHAR old_stat_flags = fort_stat_flags_set(stat, FORT_STAT_LOG, log_stat);
+
+    if (!log_stat && (old_stat_flags & FORT_STAT_LOG) != 0) {
+        fort_stat_clear(stat);
+    }
+}
+
+FORT_API void fort_stat_conf_update(PFORT_STAT stat, const PFORT_CONF_IO conf_io)
 {
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
@@ -382,7 +362,7 @@ FORT_API void fort_stat_conf_update(PFORT_STAT stat, PFORT_CONF_IO conf_io)
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
-FORT_API void fort_stat_conf_flags_update(PFORT_STAT stat, PFORT_CONF_FLAGS conf_flags)
+FORT_API void fort_stat_conf_flags_update(PFORT_STAT stat, const PFORT_CONF_FLAGS conf_flags)
 {
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
@@ -420,7 +400,8 @@ static NTSTATUS fort_flow_associate_proc(PFORT_STAT stat, UINT32 process_id, BOO
 }
 
 FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, UINT64 flow_id, UINT32 process_id,
-        UCHAR group_index, BOOL isIPv6, BOOL is_tcp, BOOL is_reauth, BOOL *is_new_proc)
+        UCHAR group_index, BOOL isIPv6, BOOL is_tcp, BOOL inbound, BOOL is_reauth,
+        BOOL *is_new_proc)
 {
     NTSTATUS status;
 
@@ -435,7 +416,7 @@ FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, UINT64 flow_id, UINT32 pr
         const UCHAR speed_limit = fort_stat_group_speed_limit(stat, group_index);
 
         status = fort_flow_add(stat, flow_id, group_index, proc->proc_index, speed_limit, isIPv6,
-                is_tcp, is_reauth);
+                is_tcp, inbound, is_reauth);
 
         if (!NT_SUCCESS(status) && *is_new_proc) {
             fort_stat_proc_free(stat, proc);
@@ -462,38 +443,7 @@ FORT_API void fort_flow_delete(PFORT_STAT stat, UINT64 flowContext)
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
-static void fort_flow_speed_limit(PFORT_STAT stat, PFORT_FLOW flow, const FORT_FLOW_OPT opt,
-        UINT32 data_len, BOOL isIPv6, BOOL is_tcp, BOOL inbound)
-{
-    if (isIPv6 || !is_tcp)
-        return; /* TODO: Support IPv6; Shape UDP traffic */
-
-    const UCHAR group_index = opt.group_index;
-
-    PFORT_STAT_GROUP group = &stat->groups[group_index];
-    UINT32 *group_bytes = inbound ? &group->traf.in_bytes : &group->traf.out_bytes;
-
-    const PFORT_TRAF group_limit = &stat->conf_group.limits[group_index];
-    const UINT32 limit_bytes = inbound ? group_limit->in_bytes : group_limit->out_bytes;
-
-    const UINT16 list_index = group_index * 2 + (inbound ? 0 : 1);
-
-    /* Add traffic to app. group */
-    *group_bytes += data_len;
-
-    /* Defer ACK */
-    {
-        const UCHAR defer_flag = inbound ? FORT_FLOW_DEFER_OUT : FORT_FLOW_DEFER_IN;
-        const BOOL defer_flow = (*group_bytes >= limit_bytes);
-
-        fort_flow_flags_set(flow, defer_flag, defer_flow);
-    }
-
-    stat->group_flush_bits |= (1 << list_index);
-}
-
-FORT_API void fort_flow_classify(PFORT_STAT stat, UINT64 flowContext, UINT32 data_len, BOOL isIPv6,
-        BOOL is_tcp, BOOL inbound)
+FORT_API void fort_flow_classify(PFORT_STAT stat, UINT64 flowContext, UINT32 data_len, BOOL inbound)
 {
     PFORT_FLOW flow = (PFORT_FLOW) flowContext;
 
@@ -509,13 +459,6 @@ FORT_API void fort_flow_classify(PFORT_STAT stat, UINT64 flowContext, UINT32 dat
 
             /* Add traffic to process */
             *proc_bytes += data_len;
-
-            const UCHAR flow_speed_limit =
-                    inbound ? FORT_FLOW_SPEED_LIMIT_IN : FORT_FLOW_SPEED_LIMIT_OUT;
-
-            if ((fort_flow_flags(flow) & flow_speed_limit) != 0) {
-                fort_flow_speed_limit(stat, flow, opt, data_len, isIPv6, is_tcp, inbound);
-            }
 
             fort_stat_proc_active_add(stat, proc);
         }
@@ -569,57 +512,4 @@ FORT_API void fort_stat_dpc_traf_flush(PFORT_STAT stat, UINT16 proc_count, PCHAR
     }
 
     stat->proc_active = proc;
-}
-
-static void fort_stat_group_flush_limit_bytes(UINT32 *defer_flush_bits, UINT32 *flush_bit,
-        UINT32 *traf_bytes, UINT32 limit_bytes, int group_index, int flush_index, int defer_offset)
-{
-    if ((*flush_bit & flush_index) == 0) {
-        *traf_bytes = 0;
-        return;
-    }
-
-    if (limit_bytes == 0 || *traf_bytes <= limit_bytes) {
-        *traf_bytes = 0;
-    } else {
-        *traf_bytes -= limit_bytes;
-    }
-
-    if (*traf_bytes < limit_bytes) {
-        /* Flush counterpart ACK-s (i.e. flush outbound ACK-s for inbound and vice versa) */
-        *defer_flush_bits |= (1 << (group_index * 2 + defer_offset));
-    } else {
-        *flush_bit ^= flush_index;
-    }
-}
-
-FORT_API UINT32 fort_stat_dpc_group_flush(PFORT_STAT stat)
-{
-    UINT32 defer_flush_bits = 0;
-    UINT32 flush_bits = stat->group_flush_bits;
-
-    /* Handle process group's bytes */
-    for (int i = 0; flush_bits != 0; ++i) {
-        UINT32 flush_bit = (flush_bits & 3);
-        flush_bits >>= 2;
-
-        if (flush_bit == 0)
-            continue;
-
-        PFORT_STAT_GROUP group = &stat->groups[i];
-        PFORT_TRAF traf = &group->traf;
-        const PFORT_TRAF group_limit = &stat->conf_group.limits[i];
-
-        // Inbound
-        fort_stat_group_flush_limit_bytes(&defer_flush_bits, &flush_bit, &traf->in_bytes,
-                group_limit->in_bytes, /*group_index=*/i, /*flush_index=*/1, /*defer_offset=*/1);
-
-        // Outbound
-        fort_stat_group_flush_limit_bytes(&defer_flush_bits, &flush_bit, &traf->out_bytes,
-                group_limit->out_bytes, /*group_index=*/i, /*flush_index=*/2, /*defer_offset=*/0);
-
-        stat->group_flush_bits &= ~(flush_bit << (i * 2));
-    }
-
-    return defer_flush_bits;
 }

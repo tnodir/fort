@@ -57,7 +57,7 @@ static BOOL fort_callout_classify_blocked_log_stat(const FWPS_INCOMING_VALUES0 *
     BOOL is_new_proc = FALSE;
 
     const NTSTATUS status = fort_flow_associate(&fort_device()->stat, flow_id, process_id,
-            group_index, isIPv6, is_tcp, is_reauth, &is_new_proc);
+            group_index, isIPv6, is_tcp, inbound, is_reauth, &is_new_proc);
 
     if (!NT_SUCCESS(status)) {
         if (status == FORT_STATUS_FLOW_BLOCK) {
@@ -244,7 +244,7 @@ static void fort_callout_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
     PFORT_CONF_REF conf_ref = fort_conf_ref_take(device_conf);
 
     if (conf_ref == NULL) {
-        if (fort_device_flag(device_conf, FORT_DEVICE_PROV_BOOT)) {
+        if (fort_device_flag(device_conf, FORT_DEVICE_PROV_BOOT) != 0) {
             fort_callout_classify_block(classifyOut);
         } else {
             fort_callout_classify_continue(classifyOut);
@@ -335,46 +335,19 @@ static NTSTATUS NTAPI fort_callout_notify(
     return STATUS_SUCCESS;
 }
 
-static void NTAPI fort_packet_inject_complete(
-        PFORT_PACKET pkt, PNET_BUFFER_LIST clonedNetBufList, BOOLEAN dispatchLevel)
-{
-    fort_defer_packet_free(&fort_device()->defer, pkt, clonedNetBufList, dispatchLevel);
-}
-
-static void fort_callout_defer_packet_flush(UINT32 list_bits, BOOL dispatchLevel)
-{
-    fort_defer_packet_flush(
-            &fort_device()->defer, fort_packet_inject_complete, list_bits, dispatchLevel);
-}
-
-static void fort_callout_defer_stream_flush(UINT64 flow_id, BOOL dispatchLevel)
-{
-    fort_defer_stream_flush(
-            &fort_device()->defer, fort_packet_inject_complete, flow_id, dispatchLevel);
-}
-
-FORT_API void fort_callout_defer_flush(void)
-{
-    fort_callout_defer_packet_flush(FORT_DEFER_FLUSH_ALL, FALSE);
-    fort_callout_defer_stream_flush(FORT_DEFER_STREAM_ALL, FALSE);
-}
-
 static void fort_callout_flow_classify(const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
-        UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut, UINT32 dataSize, BOOL isIPv6,
-        BOOL is_tcp, BOOL inbound)
+        UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut, UINT32 dataSize, BOOL inbound)
 {
     const UINT32 headerSize = inbound ? inMetaValues->transportHeaderSize : 0;
 
     UNUSED(classifyOut);
 
-    fort_flow_classify(
-            &fort_device()->stat, flowContext, headerSize + dataSize, isIPv6, is_tcp, inbound);
+    fort_flow_classify(&fort_device()->stat, flowContext, headerSize + dataSize, inbound);
 }
 
-static void fort_callout_stream_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
+static void NTAPI fort_callout_stream_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, FWPS_STREAM_CALLOUT_IO_PACKET0 *packet,
-        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut,
-        BOOL isIPv6)
+        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
     const FWPS_STREAM_DATA0 *streamData = packet->streamData;
     const UINT32 streamFlags = streamData->flags;
@@ -384,33 +357,16 @@ static void fort_callout_stream_classify(const FWPS_INCOMING_VALUES0 *inFixedVal
 
     UNUSED(inFixedValues);
 
-    fort_callout_flow_classify(inMetaValues, flowContext, classifyOut, dataSize, isIPv6,
-            /*is_tcp=*/TRUE, inbound);
+    fort_callout_flow_classify(inMetaValues, flowContext, classifyOut, dataSize, inbound);
 
     fort_callout_classify_permit(filter, classifyOut);
     return;
 }
 
-static void NTAPI fort_callout_stream_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
-        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, FWPS_STREAM_CALLOUT_IO_PACKET0 *packet,
-        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
-{
-    fort_callout_stream_classify(inFixedValues, inMetaValues, packet, filter, flowContext,
-            classifyOut, /*isIPv6=*/FALSE);
-}
-
-static void NTAPI fort_callout_stream_classify_v6(const FWPS_INCOMING_VALUES0 *inFixedValues,
-        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, FWPS_STREAM_CALLOUT_IO_PACKET0 *packet,
-        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
-{
-    fort_callout_stream_classify(
-            inFixedValues, inMetaValues, packet, filter, flowContext, classifyOut, /*isIPv6=*/TRUE);
-}
-
 static void fort_callout_datagram_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const PNET_BUFFER_LIST netBufList,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut,
-        int directionField, BOOL isIPv6)
+        int directionField)
 {
     const PNET_BUFFER netBuf = NET_BUFFER_LIST_FIRST_NB(netBufList);
     const UINT32 dataSize = NET_BUFFER_DATA_LENGTH(netBuf);
@@ -419,8 +375,7 @@ static void fort_callout_datagram_classify(const FWPS_INCOMING_VALUES0 *inFixedV
             (FWP_DIRECTION) inFixedValues->incomingValue[directionField].value.uint8;
     const BOOL inbound = (direction == FWP_DIRECTION_INBOUND);
 
-    fort_callout_flow_classify(inMetaValues, flowContext, classifyOut, dataSize, isIPv6,
-            /*is_tcp=*/FALSE, inbound);
+    fort_callout_flow_classify(inMetaValues, flowContext, classifyOut, dataSize, inbound);
 
     fort_callout_classify_permit(filter, classifyOut);
 }
@@ -430,7 +385,7 @@ static void NTAPI fort_callout_datagram_classify_v4(const FWPS_INCOMING_VALUES0 
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
     fort_callout_datagram_classify(inFixedValues, inMetaValues, netBufList, filter, flowContext,
-            classifyOut, FWPS_FIELD_DATAGRAM_DATA_V4_DIRECTION, /*isIPv6=*/FALSE);
+            classifyOut, FWPS_FIELD_DATAGRAM_DATA_V4_DIRECTION);
 }
 
 static void NTAPI fort_callout_datagram_classify_v6(const FWPS_INCOMING_VALUES0 *inFixedValues,
@@ -438,7 +393,7 @@ static void NTAPI fort_callout_datagram_classify_v6(const FWPS_INCOMING_VALUES0 
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
     fort_callout_datagram_classify(inFixedValues, inMetaValues, netBufList, filter, flowContext,
-            classifyOut, FWPS_FIELD_DATAGRAM_DATA_V6_DIRECTION, /*isIPv6=*/TRUE);
+            classifyOut, FWPS_FIELD_DATAGRAM_DATA_V6_DIRECTION);
 }
 
 static void NTAPI fort_callout_flow_delete(UINT16 layerId, UINT32 calloutId, UINT64 flowContext)
@@ -449,65 +404,37 @@ static void NTAPI fort_callout_flow_delete(UINT16 layerId, UINT32 calloutId, UIN
     fort_flow_delete(&fort_device()->stat, flowContext);
 }
 
-static BOOL fort_callout_transport_classify_packet(const FWPS_INCOMING_VALUES0 *inFixedValues,
+static BOOL fort_callout_mac_frame_classify_packet(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PNET_BUFFER_LIST netBufList,
-        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut,
-        PNET_BUFFER netBuf, BOOL isIPv6, BOOL inbound)
+        UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-    if (isIPv6) /* TODO: Support IPv6 for speed limits */
-        return FALSE;
-
     PFORT_FLOW flow = (PFORT_FLOW) flowContext;
 
     const UCHAR flow_flags = fort_flow_flags(flow);
 
-    const UCHAR speed_limit = inbound ? FORT_FLOW_SPEED_LIMIT_OUT : FORT_FLOW_SPEED_LIMIT_IN;
-    const UCHAR defer_flag = inbound ? FORT_FLOW_DEFER_IN : FORT_FLOW_DEFER_OUT;
+    const BOOL inbound = (flow_flags & FORT_FLOW_INBOUND) != 0;
+    const UCHAR speed_limit = inbound ? FORT_FLOW_SPEED_LIMIT_IN : FORT_FLOW_SPEED_LIMIT_OUT;
 
-    const UCHAR speed_defer_flags = speed_limit | defer_flag;
-    const BOOL defer_flow = (flow_flags & speed_defer_flags) == speed_defer_flags
-            && !fort_device_flag(&fort_device()->conf, FORT_DEVICE_POWER_OFF);
-
-#if 0
-    /* Position in the packet data:
-     * FWPS_LAYER_INBOUND_TRANSPORT_V4: The beginning of the data.
-     * FWPS_LAYER_OUTBOUND_TRANSPORT_V4: The beginning of the transport header.
-     */
-    const UINT32 headerOffset = inbound ? 0 : sizeof(TCP_HEADER);
-    const BOOL isPureACK = (NET_BUFFER_DATA_LENGTH(netBuf) == headerOffset);
-#endif
-
-    /* Defer TCP packets */
-    if (defer_flow) {
-        const NTSTATUS status = fort_defer_packet_add(&fort_device()->defer, inFixedValues,
-                inMetaValues, netBufList, isIPv6, inbound, flow->opt.group_index);
-
-        if (NT_SUCCESS(status))
-            return TRUE;
-
-        if (status == STATUS_CANT_TERMINATE_SELF) {
-            /* Clear ACK deferring */
-            fort_flow_flags_set(flow, defer_flag, FALSE);
-        }
-
+    if ((flow_flags & speed_limit) == 0
+            || fort_device_flag(&fort_device()->conf, FORT_DEVICE_POWER_OFF) != 0)
         return FALSE;
-    }
 
-    return FALSE;
+    return fort_shaper_packet_process(&fort_device()->shaper, inFixedValues, inMetaValues,
+            netBufList, inbound, flow->opt.group_index);
 }
 
-static void fort_callout_transport_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
+static void NTAPI fort_callout_mac_frame_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PNET_BUFFER_LIST netBufList,
-        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut,
-        BOOL isIPv6, BOOL inbound)
+        const void *classifyContext, const FWPS_FILTER0 *filter, UINT64 flowContext,
+        FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-    PNET_BUFFER netBuf;
+    if ((classifyOut->rights & FWPS_RIGHT_ACTION_WRITE) == 0)
+        return; /* Can't act on the packet */
 
     if (!FWPS_IS_METADATA_FIELD_PRESENT(inMetaValues, FWPS_METADATA_FIELD_ALE_CLASSIFY_REQUIRED)
-            && netBufList != NULL && (netBuf = NET_BUFFER_LIST_FIRST_NB(netBufList)) != NULL) {
-
-        if (fort_callout_transport_classify_packet(inFixedValues, inMetaValues, netBufList, filter,
-                    flowContext, classifyOut, netBuf, isIPv6, inbound)) {
+            && netBufList != NULL) {
+        if (fort_callout_mac_frame_classify_packet(
+                    inFixedValues, inMetaValues, netBufList, flowContext, classifyOut)) {
             fort_callout_classify_drop(classifyOut); /* drop */
             return;
         }
@@ -516,38 +443,7 @@ static void fort_callout_transport_classify(const FWPS_INCOMING_VALUES0 *inFixed
     fort_callout_classify_permit(filter, classifyOut); /* permit */
 }
 
-static void NTAPI fort_callout_in_transport_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
-        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const PNET_BUFFER_LIST netBufList,
-        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
-{
-    fort_callout_transport_classify(inFixedValues, inMetaValues, netBufList, filter, flowContext,
-            classifyOut, /*isIPv6=*/FALSE, /*inbound=*/TRUE);
-}
-static void NTAPI fort_callout_in_transport_classify_v6(const FWPS_INCOMING_VALUES0 *inFixedValues,
-        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const PNET_BUFFER_LIST netBufList,
-        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
-{
-    fort_callout_transport_classify(inFixedValues, inMetaValues, netBufList, filter, flowContext,
-            classifyOut, /*isIPv6=*/TRUE, /*inbound=*/TRUE);
-}
-
-static void NTAPI fort_callout_out_transport_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
-        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const PNET_BUFFER_LIST netBufList,
-        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
-{
-    fort_callout_transport_classify(inFixedValues, inMetaValues, netBufList, filter, flowContext,
-            classifyOut, /*isIPv6=*/FALSE, /*inbound=*/FALSE);
-}
-
-static void NTAPI fort_callout_out_transport_classify_v6(const FWPS_INCOMING_VALUES0 *inFixedValues,
-        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const PNET_BUFFER_LIST netBufList,
-        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
-{
-    fort_callout_transport_classify(inFixedValues, inMetaValues, netBufList, filter, flowContext,
-            classifyOut, /*isIPv6=*/TRUE, /*inbound=*/FALSE);
-}
-
-static void NTAPI fort_callout_transport_delete(
+static void NTAPI fort_callout_mac_frame_delete(
         UINT16 layerId, UINT32 calloutId, UINT64 flowContext)
 {
     UNUSED(layerId);
@@ -612,7 +508,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 
     /* IPv4 stream callout */
     c.calloutKey = FORT_GUID_CALLOUT_STREAM_V4;
-    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_stream_classify_v4;
+    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_stream_classify;
 
     c.flowDeleteFn = fort_callout_flow_delete;
     c.flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW;
@@ -626,10 +522,9 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 
     /* IPv6 stream callout */
     c.calloutKey = FORT_GUID_CALLOUT_STREAM_V6;
-    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_stream_classify_v6;
+    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_stream_classify;
 
-    c.flowDeleteFn = fort_callout_flow_delete;
-    c.flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW;
+    /* reuse c.flowDeleteFn & c.flags */
 
     status = FwpsCalloutRegister0(device, &c, &stat->stream6_id);
     if (!NT_SUCCESS(status)) {
@@ -664,56 +559,30 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
         return status;
     }
 
-    /* IPv4 inbound transport callout */
-    c.calloutKey = FORT_GUID_CALLOUT_IN_TRANSPORT_V4;
-    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_in_transport_classify_v4;
+    /* Inbound MAC Frame callout */
+    c.calloutKey = FORT_GUID_CALLOUT_IN_MAC_FRAME;
+    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_mac_frame_classify;
 
-    c.flowDeleteFn = fort_callout_transport_delete;
+    c.flowDeleteFn = fort_callout_mac_frame_delete;
     /* reuse c.flags */
 
-    status = FwpsCalloutRegister0(device, &c, &stat->in_transport4_id);
+    status = FwpsCalloutRegister0(device, &c, &stat->in_mac_frame_id);
     if (!NT_SUCCESS(status)) {
-        LOG("Register Inbound Transport V4: Error: %x\n", status);
-        TRACE(FORT_CALLOUT_REGISTER_INBOUND_TRANSPORT_V4_ERROR, status, 0, 0);
+        LOG("Register Inbound MAC Frame: Error: %x\n", status);
+        TRACE(FORT_CALLOUT_REGISTER_INBOUND_MAC_FRAME_ERROR, status, 0, 0);
         return status;
     }
 
-    /* IPv6 inbound transport callout */
-    c.calloutKey = FORT_GUID_CALLOUT_IN_TRANSPORT_V6;
-    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_in_transport_classify_v6;
+    /* Outbound MAC Frame callout */
+    c.calloutKey = FORT_GUID_CALLOUT_OUT_MAC_FRAME;
+    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_mac_frame_classify;
 
     /* reuse c.flowDeleteFn & c.flags */
 
-    status = FwpsCalloutRegister0(device, &c, &stat->in_transport6_id);
+    status = FwpsCalloutRegister0(device, &c, &stat->out_mac_frame_id);
     if (!NT_SUCCESS(status)) {
-        LOG("Register Inbound Transport V6: Error: %x\n", status);
-        TRACE(FORT_CALLOUT_REGISTER_INBOUND_TRANSPORT_V6_ERROR, status, 0, 0);
-        return status;
-    }
-
-    /* IPv4 outbound transport callout */
-    c.calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V4;
-    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_out_transport_classify_v4;
-
-    /* reuse c.flowDeleteFn & c.flags */
-
-    status = FwpsCalloutRegister0(device, &c, &stat->out_transport4_id);
-    if (!NT_SUCCESS(status)) {
-        LOG("Register Outbound Transport V4: Error: %x\n", status);
-        TRACE(FORT_CALLOUT_REGISTER_OUTBOUND_TRANSPORT_V4_ERROR, status, 0, 0);
-        return status;
-    }
-
-    /* IPv6 outbound transport callout */
-    c.calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V6;
-    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_out_transport_classify_v6;
-
-    /* reuse c.flowDeleteFn & c.flags */
-
-    status = FwpsCalloutRegister0(device, &c, &stat->out_transport6_id);
-    if (!NT_SUCCESS(status)) {
-        LOG("Register Outbound Transport V6: Error: %x\n", status);
-        TRACE(FORT_CALLOUT_REGISTER_OUTBOUND_TRANSPORT_V6_ERROR, status, 0, 0);
+        LOG("Register Outbound MAC Frame: Error: %x\n", status);
+        TRACE(FORT_CALLOUT_REGISTER_OUTBOUND_MAC_FRAME_ERROR, status, 0, 0);
         return status;
     }
 
@@ -764,24 +633,14 @@ FORT_API void fort_callout_remove(void)
         stat->datagram6_id = 0;
     }
 
-    if (stat->in_transport4_id) {
-        FwpsCalloutUnregisterById0(stat->in_transport4_id);
-        stat->in_transport4_id = 0;
+    if (stat->in_mac_frame_id) {
+        FwpsCalloutUnregisterById0(stat->in_mac_frame_id);
+        stat->in_mac_frame_id = 0;
     }
 
-    if (stat->in_transport6_id) {
-        FwpsCalloutUnregisterById0(stat->in_transport6_id);
-        stat->in_transport6_id = 0;
-    }
-
-    if (stat->out_transport4_id) {
-        FwpsCalloutUnregisterById0(stat->out_transport4_id);
-        stat->out_transport4_id = 0;
-    }
-
-    if (stat->out_transport6_id) {
-        FwpsCalloutUnregisterById0(stat->out_transport6_id);
-        stat->out_transport6_id = 0;
+    if (stat->out_mac_frame_id) {
+        FwpsCalloutUnregisterById0(stat->out_mac_frame_id);
+        stat->out_mac_frame_id = 0;
     }
 }
 
@@ -803,24 +662,21 @@ static NTSTATUS fort_callout_force_reauth_prov(
 
     /* Check flow filter */
     {
-        PFORT_STAT stat = &fort_device()->stat;
-
-        const PFORT_CONF_GROUP conf_group = &stat->conf_group;
+        const PFORT_CONF_GROUP conf_group = &fort_device()->stat.conf_group;
         const UINT16 filter_bits = conf_group->limit_bits;
 
-        const BOOL old_filter_transport =
-                fort_device_flag(&fort_device()->conf, FORT_DEVICE_FILTER_TRANSPORT) != 0;
-        const BOOL filter_transport = (conf_flags.group_bits & filter_bits) != 0;
+        const BOOL old_filter_packets =
+                fort_device_flag(&fort_device()->conf, FORT_DEVICE_FILTER_PACKETS) != 0;
+        const BOOL filter_packets = (conf_flags.group_bits & filter_bits) != 0;
 
         if (prov_recreated || old_conf_flags.log_stat != conf_flags.log_stat
-                || old_filter_transport != filter_transport) {
-            fort_device_flag_set(
-                    &fort_device()->conf, FORT_DEVICE_FILTER_TRANSPORT, filter_transport);
+                || old_filter_packets != filter_packets) {
+            fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_FILTER_PACKETS, filter_packets);
 
             fort_prov_flow_unregister(engine);
 
             if (conf_flags.log_stat) {
-                if ((status = fort_prov_flow_register(engine, filter_transport)))
+                if ((status = fort_prov_flow_register(engine, filter_packets)))
                     return status;
             }
         }
@@ -830,8 +686,7 @@ static NTSTATUS fort_callout_force_reauth_prov(
     return fort_prov_reauth(engine);
 }
 
-FORT_API NTSTATUS fort_callout_force_reauth(
-        const FORT_CONF_FLAGS old_conf_flags, UINT32 defer_flush_bits)
+FORT_API NTSTATUS fort_callout_force_reauth(const FORT_CONF_FLAGS old_conf_flags)
 {
     NTSTATUS status;
 
@@ -843,25 +698,13 @@ FORT_API NTSTATUS fort_callout_force_reauth(
 
         fort_conf_ref_period_update(&fort_device()->conf, /*force=*/TRUE, &periods_n);
 
-        fort_timer_update(&fort_device()->app_timer, (periods_n != 0));
+        fort_timer_update(&fort_device()->app_timer, /*run=*/(periods_n != 0));
     }
 
     const FORT_CONF_FLAGS conf_flags = fort_device()->conf.conf_flags;
 
     /* Handle log_stat */
-    if (old_conf_flags.log_stat != conf_flags.log_stat) {
-        PFORT_STAT stat = &fort_device()->stat;
-
-        fort_stat_update(stat, conf_flags.log_stat);
-
-        if (!conf_flags.log_stat) {
-            defer_flush_bits = FORT_DEFER_FLUSH_ALL;
-        }
-    }
-
-    if (defer_flush_bits != 0) {
-        fort_callout_defer_packet_flush(defer_flush_bits, /*dispatchLevel=*/FALSE);
-    }
+    fort_stat_log_update(&fort_device()->stat, conf_flags.log_stat);
 
     /* Open provider */
     HANDLE engine;
@@ -878,7 +721,7 @@ FORT_API NTSTATUS fort_callout_force_reauth(
         const BOOL log_enabled = (conf_flags.allow_all_new || conf_flags.log_blocked
                 || conf_flags.log_stat || conf_flags.log_blocked_ip);
 
-        fort_timer_update(&fort_device()->log_timer, log_enabled);
+        fort_timer_update(&fort_device()->log_timer, /*run=*/log_enabled);
     } else {
         LOG("Callout Reauth: Error: %x\n", status);
         TRACE(FORT_CALLOUT_CALLOUT_REAUTH_ERROR, status, 0, 0);
@@ -915,9 +758,8 @@ FORT_API void NTAPI fort_callout_timer(void)
                 && NT_SUCCESS(fort_buffer_prepare(buf, FORT_LOG_TIME_SIZE, &out, &irp, &info))) {
             const INT64 unix_time = fort_system_to_unix_time(system_time.QuadPart);
 
-            const BOOL time_changed = ((fort_stat_flags_set(stat, FORT_STAT_TIME_CHANGED, FALSE)
-                                               & FORT_STAT_TIME_CHANGED)
-                    != 0);
+            const UCHAR old_stat_flags = fort_stat_flags_set(stat, FORT_STAT_TIME_CHANGED, FALSE);
+            const BOOL time_changed = ((old_stat_flags & FORT_STAT_TIME_CHANGED) != 0);
 
             stat->system_time = system_time;
 
@@ -947,9 +789,6 @@ FORT_API void NTAPI fort_callout_timer(void)
         fort_stat_dpc_traf_flush(stat, proc_count, out);
     }
 
-    /* Flush process group statistics */
-    const UINT32 defer_flush_bits = fort_stat_dpc_group_flush(stat);
-
     /* Unlock stat */
     fort_stat_dpc_end(&stat_lock_queue);
 
@@ -964,7 +803,4 @@ FORT_API void NTAPI fort_callout_timer(void)
     if (irp != NULL) {
         fort_request_complete_info(irp, STATUS_SUCCESS, info);
     }
-
-    /* Flush deferred packets */
-    fort_callout_defer_packet_flush(defer_flush_bits, TRUE);
 }

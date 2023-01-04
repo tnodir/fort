@@ -512,7 +512,7 @@ void ConfUtil::writeConf(char *output, const FirewallConf &conf,
     writeAppGroupFlags(&drvConfIo->conf_group.group_bits, &drvConfIo->conf_group.log_conn, conf);
 
     writeLimits(drvConfIo->conf_group.limits, &drvConfIo->conf_group.limit_bits,
-            &drvConfIo->conf_group.limit_2bits, conf.appGroups());
+            &drvConfIo->conf_group.limit_io_bits, conf.appGroups());
 
     writeConfFlags(conf, &drvConf->flags);
 
@@ -550,35 +550,46 @@ void ConfUtil::writeAppGroupFlags(
     }
 }
 
-void ConfUtil::writeLimits(struct fort_traf *limits, quint16 *limitBits, quint32 *limit2Bits,
-        const QList<AppGroup *> &appGroups)
+void ConfUtil::writeLimits(struct fort_speed_limit *limits, quint16 *limitBits,
+        quint32 *limitIoBits, const QList<AppGroup *> &appGroups)
 {
-    PFORT_TRAF limit = &limits[0];
-
     *limitBits = 0;
-    *limit2Bits = 0;
+    *limitIoBits = 0;
 
     const int groupsCount = appGroups.size();
-    for (int i = 0; i < groupsCount; ++i, ++limit) {
+    for (int i = 0; i < groupsCount; ++i, ++limits) {
         const AppGroup *appGroup = appGroups.at(i);
 
-        limit->in_bytes = appGroup->enabledSpeedLimitIn() * 1024 / 2;
-        limit->out_bytes = appGroup->enabledSpeedLimitOut() * 1024 / 2;
+        const quint32 limitIn = appGroup->enabledSpeedLimitIn();
+        const quint32 limitOut = appGroup->enabledSpeedLimitOut();
 
-        const bool isLimitIn = (limit->in_bytes != 0);
-        const bool isLimitOut = (limit->out_bytes != 0);
+        const bool isLimitIn = (limitIn != 0);
+        const bool isLimitOut = (limitOut != 0);
 
         if (isLimitIn || isLimitOut) {
             *limitBits |= (1 << i);
 
             if (isLimitIn) {
-                *limit2Bits |= (1 << (i * 2 + 0));
+                *limitIoBits |= (1 << (i * 2 + 0));
+
+                writeLimit(&limits[0], limitIn);
             }
+
             if (isLimitOut) {
-                *limit2Bits |= (1 << (i * 2 + 1));
+                *limitIoBits |= (1 << (i * 2 + 1));
+
+                writeLimit(&limits[1], limitOut);
             }
         }
     }
+}
+
+void ConfUtil::writeLimit(fort_speed_limit *limit, quint32 kiBytes)
+{
+    limit->plr = 0;
+    limit->latency_ms = 0;
+    limit->bps = kiBytes * 1024 * 8;
+    limit->buffer_bytes = 150000LL;
 }
 
 void ConfUtil::writeAddressRanges(char **data, const addrranges_arr_t &addressRanges)

@@ -94,6 +94,40 @@ NTSTATUS NTAPI FwpsInjectTransportReceiveAsync0(HANDLE injectionHandle, HANDLE i
     return STATUS_SUCCESS;
 }
 
+NTSTATUS NTAPI FwpsInjectMacReceiveAsync0(HANDLE injectionHandle, HANDLE injectionContext,
+        UINT32 flags, UINT16 layerId, IF_INDEX interfaceIndex, NDIS_PORT_NUMBER NdisPortNumber,
+        NET_BUFFER_LIST *netBufferLists, FWPS_INJECT_COMPLETE completionFn,
+        HANDLE completionContext)
+{
+    UNUSED(injectionHandle);
+    UNUSED(injectionContext);
+    UNUSED(flags);
+    UNUSED(layerId);
+    UNUSED(interfaceIndex);
+    UNUSED(NdisPortNumber);
+    UNUSED(netBufferLists);
+    UNUSED(completionFn);
+    UNUSED(completionContext);
+    return STATUS_SUCCESS;
+}
+
+NTSTATUS NTAPI FwpsInjectMacSendAsync0(HANDLE injectionHandle, HANDLE injectionContext,
+        UINT32 flags, UINT16 layerId, IF_INDEX interfaceIndex, NDIS_PORT_NUMBER NdisPortNumber,
+        NET_BUFFER_LIST *netBufferLists, FWPS_INJECT_COMPLETE completionFn,
+        HANDLE completionContext)
+{
+    UNUSED(injectionHandle);
+    UNUSED(injectionContext);
+    UNUSED(flags);
+    UNUSED(layerId);
+    UNUSED(interfaceIndex);
+    UNUSED(NdisPortNumber);
+    UNUSED(netBufferLists);
+    UNUSED(completionFn);
+    UNUSED(completionContext);
+    return STATUS_SUCCESS;
+}
+
 void NTAPI FwpsReferenceNetBufferList0(NET_BUFFER_LIST *netBufferList, BOOLEAN intendToModify)
 {
     UNUSED(netBufferList);

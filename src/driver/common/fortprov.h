@@ -23,7 +23,7 @@ FORT_API BOOL fort_prov_is_boot(void);
 
 FORT_API DWORD fort_prov_register(HANDLE transEngine, BOOL is_boot);
 
-FORT_API DWORD fort_prov_flow_register(HANDLE transEngine, BOOL filter_transport);
+FORT_API DWORD fort_prov_flow_register(HANDLE transEngine, BOOL filter_packets);
 
 FORT_API DWORD fort_prov_reauth(HANDLE transEngine);
 

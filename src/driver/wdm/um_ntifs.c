@@ -40,3 +40,9 @@ void KeUnstackDetachProcess(PRKAPC_STATE apcState)
 {
     UNUSED(apcState);
 }
+
+ULONG RtlRandomEx(PULONG seed)
+{
+    UNUSED(seed);
+    return 0;
+}

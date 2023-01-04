@@ -35,7 +35,7 @@ static void NTAPI fort_worker_reauth(void)
     const FORT_CONF_FLAGS conf_flags = g_device->conf.conf_flags;
     NTSTATUS status;
 
-    status = fort_callout_force_reauth(conf_flags, 0);
+    status = fort_callout_force_reauth(conf_flags);
 
     if (!NT_SUCCESS(status)) {
         LOG("Worker Reauth: Error: %x\n", status);
@@ -92,10 +92,13 @@ FORT_API NTSTATUS fort_device_cleanup(PDEVICE_OBJECT device, PIRP irp)
     /* Clear conf */
     {
         const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(&g_device->conf, NULL);
+        FORT_CONF_FLAGS conf_flags = g_device->conf.conf_flags;
 
         fort_conf_zones_set(&g_device->conf, NULL);
 
-        fort_callout_force_reauth(old_conf_flags, FORT_DEFER_FLUSH_ALL);
+        fort_stat_conf_flags_update(&g_device->stat, &conf_flags);
+
+        fort_callout_force_reauth(old_conf_flags);
     }
 
     /* Clear buffer */
@@ -141,16 +144,12 @@ static NTSTATUS fort_device_control_setconf(const PFORT_CONF_IO conf_io, ULONG l
         if (conf_ref == NULL) {
             return STATUS_INSUFFICIENT_RESOURCES;
         } else {
-            PFORT_STAT stat = &g_device->stat;
-
             const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(&g_device->conf, conf_ref);
 
-            const UINT32 defer_flush_bits =
-                    (stat->conf_group.limit_2bits ^ conf_io->conf_group.limit_2bits);
+            fort_shaper_conf_update(&g_device->shaper, conf_io);
+            fort_stat_conf_update(&g_device->stat, conf_io);
 
-            fort_stat_conf_update(stat, conf_io);
-
-            return fort_callout_force_reauth(old_conf_flags, defer_flush_bits);
+            return fort_callout_force_reauth(old_conf_flags);
         }
     }
 
@@ -160,16 +159,12 @@ static NTSTATUS fort_device_control_setconf(const PFORT_CONF_IO conf_io, ULONG l
 static NTSTATUS fort_device_control_setflags(const PFORT_CONF_FLAGS conf_flags, ULONG len)
 {
     if (len == sizeof(FORT_CONF_FLAGS)) {
-        PFORT_STAT stat = &g_device->stat;
-
         const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_flags_set(&g_device->conf, conf_flags);
 
-        const UINT32 defer_flush_bits =
-                (old_conf_flags.group_bits != conf_flags->group_bits ? FORT_DEFER_FLUSH_ALL : 0);
+        fort_shaper_conf_flags_update(&g_device->shaper, conf_flags);
+        fort_stat_conf_flags_update(&g_device->stat, conf_flags);
 
-        fort_stat_conf_flags_update(stat, conf_flags);
-
-        return fort_callout_force_reauth(old_conf_flags, defer_flush_bits);
+        return fort_callout_force_reauth(old_conf_flags);
     }
 
     return STATUS_UNSUCCESSFUL;
@@ -265,7 +260,7 @@ static NTSTATUS fort_device_control_process(
     const int control_code = irp_stack->Parameters.DeviceIoControl.IoControlCode;
 
     if (control_code != FORT_IOCTL_VALIDATE
-            && !fort_device_flag(&g_device->conf, FORT_DEVICE_IS_VALIDATED))
+            && fort_device_flag(&g_device->conf, FORT_DEVICE_IS_VALIDATED) == 0)
         return STATUS_INVALID_PARAMETER;
 
     PVOID buffer = irp->AssociatedIrp.SystemBuffer;
@@ -326,9 +321,11 @@ FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device)
     fort_device_conf_open(&fort_device()->conf);
     fort_buffer_open(&fort_device()->buffer);
     fort_stat_open(&fort_device()->stat);
-    fort_defer_open(&fort_device()->defer);
-    fort_timer_open(&fort_device()->log_timer, 500, FALSE, &fort_callout_timer);
-    fort_timer_open(&fort_device()->app_timer, 60000, TRUE, &fort_app_period_timer);
+    fort_shaper_open(&fort_device()->shaper);
+    fort_timer_open(&fort_device()->log_timer, 500, /*oneshot=*/FALSE, /*coalescable=*/FALSE,
+            &fort_callout_timer);
+    fort_timer_open(&fort_device()->app_timer, 60000, /*oneshot=*/FALSE, /*coalescable=*/TRUE,
+            &fort_app_period_timer);
     fort_pstree_open(&fort_device()->ps_tree);
 
     /* Unregister old filters provider */
@@ -348,7 +345,7 @@ FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device)
 
     /* Register filters provider */
     if (NT_SUCCESS(status)) {
-        const BOOL prov_boot = fort_device_flag(&fort_device()->conf, FORT_DEVICE_PROV_BOOT);
+        const BOOL prov_boot = fort_device_flag(&fort_device()->conf, FORT_DEVICE_PROV_BOOT) != 0;
 
         status = fort_prov_register(0, prov_boot);
     }
@@ -390,9 +387,8 @@ FORT_API void fort_device_unload()
     /* Stop process monitor */
     fort_pstree_close(&fort_device()->ps_tree);
 
-    /* Stop callout defers */
-    fort_callout_defer_flush();
-    fort_defer_close(&fort_device()->defer);
+    /* Stop packets shaper */
+    fort_shaper_close(&fort_device()->shaper);
 
     /* Stop stat & buffer controllers */
     fort_stat_close(&fort_device()->stat);
@@ -402,7 +398,7 @@ FORT_API void fort_device_unload()
     fort_callout_remove();
 
     /* Unregister filters provider */
-    if (!fort_device_flag(&fort_device()->conf, FORT_DEVICE_PROV_BOOT)) {
+    if (fort_device_flag(&fort_device()->conf, FORT_DEVICE_PROV_BOOT) == 0) {
         fort_prov_unregister(NULL);
     }
 

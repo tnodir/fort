@@ -1,9 +1,14 @@
 /* Fort Firewall Driver: Test */
 
+#ifdef NDEBUG
+#    undef NDEBUG
+#endif
+
 #include <assert.h>
 #include <stdio.h>
 
 #include "../fortcb.h"
+#include "../fortutl.h"
 #include "../proxycb/fortpcb_drv.h"
 #include "../proxycb/fortpcb_src.h"
 
@@ -60,6 +65,13 @@ static void test_major(void)
     assert(res == STATUS_SUCCESS);
 }
 
+static void test_utl(void)
+{
+    const UINT32 v = fort_bits_duplicate16(0x5555);
+    printf("test_utl: v=%x\n", v);
+    assert(v == 0x33333333);
+}
+
 int main(int argc, char *argv[])
 {
     (void) argc;
@@ -67,6 +79,7 @@ int main(int argc, char *argv[])
 
     test_proxycb();
     test_major();
+    test_utl();
 
     return 0;
 }

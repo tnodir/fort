@@ -10,14 +10,19 @@ static void NTAPI fort_timer_callback(PKDPC dpc, PFORT_TIMER timer, PVOID arg1, 
     UNUSED(arg1);
     UNUSED(arg2);
 
+    if (timer->oneshot) {
+        timer->running = FALSE;
+    }
+
     if (timer->callback != NULL) {
         timer->callback();
     }
 }
 
 FORT_API void fort_timer_open(
-        PFORT_TIMER timer, int period, BOOL coalescable, FORT_TIMER_FUNC callback)
+        PFORT_TIMER timer, int period, BOOL oneshot, BOOL coalescable, FORT_TIMER_FUNC callback)
 {
+    timer->oneshot = oneshot;
     timer->coalescable = coalescable;
     timer->period = period;
     timer->callback = callback;
@@ -47,12 +52,13 @@ FORT_API void fort_timer_update(PFORT_TIMER timer, BOOL run)
 
     if (run) {
         const ULONG period = timer->period;
+        const ULONG interval = timer->oneshot ? 0 : period;
         const ULONG delay = timer->coalescable ? 500 : 0;
 
         LARGE_INTEGER due;
         due.QuadPart = period * -10000; /* ms -> us */
 
-        KeSetCoalescableTimer(&timer->id, due, period, delay, &timer->dpc);
+        KeSetCoalescableTimer(&timer->id, due, interval, delay, &timer->dpc);
     } else {
         KeCancelTimer(&timer->id);
     }

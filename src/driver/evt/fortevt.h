@@ -3,6 +3,7 @@
 #ifndef FORTEVT_H
 #define FORTEVT_H
 
+/* Buffer */
 //
 //  Values are 32 bit values laid out as follows:
 //
@@ -36,7 +37,7 @@
 #define FACILITY_CALLOUT                 0x2
 #define FACILITY_DEVICE                  0x3
 #define FACILITY_DRIVER                  0x4
-#define FACILITY_PACKET                  0x5
+#define FACILITY_SHAPER                  0x5
 #define FACILITY_PROCESS_TREE            0x6
 
 
@@ -58,6 +59,7 @@
 //
 #define FORT_BUFFER_OOM                  ((NTSTATUS)0xC0010001L)
 
+/* Callout */
 //
 // MessageId: FORT_CALLOUT_FLOW_ASSOC_ERROR
 //
@@ -140,40 +142,22 @@
 #define FORT_CALLOUT_REGISTER_DATAGRAM_V6_ERROR ((NTSTATUS)0xC0020009L)
 
 //
-// MessageId: FORT_CALLOUT_REGISTER_INBOUND_TRANSPORT_V4_ERROR
+// MessageId: FORT_CALLOUT_REGISTER_INBOUND_MAC_FRAME_ERROR
 //
 // MessageText:
 //
-// Register Inbound Transport V4: Error.
+// Register Inbound MAC Frame: Error.
 //
-#define FORT_CALLOUT_REGISTER_INBOUND_TRANSPORT_V4_ERROR ((NTSTATUS)0xC002000AL)
+#define FORT_CALLOUT_REGISTER_INBOUND_MAC_FRAME_ERROR ((NTSTATUS)0xC002000AL)
 
 //
-// MessageId: FORT_CALLOUT_REGISTER_INBOUND_TRANSPORT_V6_ERROR
+// MessageId: FORT_CALLOUT_REGISTER_OUTBOUND_MAC_FRAME_ERROR
 //
 // MessageText:
 //
-// Register Inbound Transport V6: Error.
+// Register Outbound MAC Frame: Error.
 //
-#define FORT_CALLOUT_REGISTER_INBOUND_TRANSPORT_V6_ERROR ((NTSTATUS)0xC002000BL)
-
-//
-// MessageId: FORT_CALLOUT_REGISTER_OUTBOUND_TRANSPORT_V4_ERROR
-//
-// MessageText:
-//
-// Register Outbound Transport V4: Error.
-//
-#define FORT_CALLOUT_REGISTER_OUTBOUND_TRANSPORT_V4_ERROR ((NTSTATUS)0xC002000CL)
-
-//
-// MessageId: FORT_CALLOUT_REGISTER_OUTBOUND_TRANSPORT_V6_ERROR
-//
-// MessageText:
-//
-// Register Outbound Transport V6: Error.
-//
-#define FORT_CALLOUT_REGISTER_OUTBOUND_TRANSPORT_V6_ERROR ((NTSTATUS)0xC002000DL)
+#define FORT_CALLOUT_REGISTER_OUTBOUND_MAC_FRAME_ERROR ((NTSTATUS)0xC002000BL)
 
 //
 // MessageId: FORT_CALLOUT_CALLOUT_REAUTH_ERROR
@@ -182,7 +166,7 @@
 //
 // Callout Reauth: Error.
 //
-#define FORT_CALLOUT_CALLOUT_REAUTH_ERROR ((NTSTATUS)0xC002000EL)
+#define FORT_CALLOUT_CALLOUT_REAUTH_ERROR ((NTSTATUS)0xC002000CL)
 
 //
 // MessageId: FORT_CALLOUT_CALLOUT_TIMER_ERROR
@@ -191,8 +175,9 @@
 //
 // Callout Timer: Error.
 //
-#define FORT_CALLOUT_CALLOUT_TIMER_ERROR ((NTSTATUS)0xC002000FL)
+#define FORT_CALLOUT_CALLOUT_TIMER_ERROR ((NTSTATUS)0xC002000DL)
 
+/* Device */
 //
 // MessageId: FORT_DEVICE_WORKER_REAUTH_ERROR
 //
@@ -211,6 +196,7 @@
 //
 #define FORT_DEVICE_DEVICE_CONTROL_ERROR ((NTSTATUS)0xC0030002L)
 
+/* Driver */
 //
 // MessageId: FORT_DRIVER_ENTRY_ERROR
 //
@@ -220,42 +206,26 @@
 //
 #define FORT_DRIVER_ENTRY_ERROR          ((NTSTATUS)0xC0040001L)
 
+/* Shaper */
 //
-// MessageId: FORT_PACKET_DEFER_TRANSPORT_INIT_ERROR
-//
-// MessageText:
-//
-// Defer: Transport injection init error.
-//
-#define FORT_PACKET_DEFER_TRANSPORT_INIT_ERROR ((NTSTATUS)0xC0050001L)
-
-//
-// MessageId: FORT_PACKET_DEFER_STREAM_INIT_ERROR
+// MessageId: FORT_SHAPER_PACKET_INJECTION_ERROR
 //
 // MessageText:
 //
-// Defer: Stream injection init error.
+// Shaper: Packet injection error.
 //
-#define FORT_PACKET_DEFER_STREAM_INIT_ERROR ((NTSTATUS)0xC0050002L)
+#define FORT_SHAPER_PACKET_INJECTION_ERROR ((NTSTATUS)0xC0050001L)
 
 //
-// MessageId: FORT_PACKET_DEFER_INJECTION_ERROR
+// MessageId: FORT_SHAPER_PACKET_INJECTION_PREPARE_ERROR
 //
 // MessageText:
 //
-// Defer: Injection error.
+// Shaper: Packet injection prepare error.
 //
-#define FORT_PACKET_DEFER_INJECTION_ERROR ((NTSTATUS)0xC0050003L)
+#define FORT_SHAPER_PACKET_INJECTION_PREPARE_ERROR ((NTSTATUS)0xC0050002L)
 
-//
-// MessageId: FORT_PACKET_DEFER_INJECTION_PREPARE_ERROR
-//
-// MessageText:
-//
-// Defer: Injection prepare error.
-//
-#define FORT_PACKET_DEFER_INJECTION_PREPARE_ERROR ((NTSTATUS)0xC0050004L)
-
+/* ProcessTree */
 //
 // MessageId: FORT_PSTREE_UPDATE_ERROR
 //
