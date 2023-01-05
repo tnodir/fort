@@ -210,8 +210,10 @@ static DWORD fort_prov_register_io_callouts(HANDLE engine)
     }
 
     /* TODO: Available on Windows 8+ */
-    FwpmCalloutAdd0(engine, &imcallout, NULL, NULL);
-    FwpmCalloutAdd0(engine, &omcallout, NULL, NULL);
+    if ((status = FwpmCalloutAdd0(engine, &imcallout, NULL, NULL))
+            || (status = FwpmCalloutAdd0(engine, &omcallout, NULL, NULL))) {
+        return status;
+    }
 
     return 0;
 }
