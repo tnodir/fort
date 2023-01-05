@@ -281,6 +281,19 @@ static PFORT_PACKET fort_shaper_queue_process_latency(
     return NULL;
 }
 
+static PFORT_PACKET fort_shaper_queue_get_packets(PFORT_PACKET_QUEUE queue, PFORT_PACKET pkt)
+{
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&queue->lock, &lock_queue);
+
+    pkt = fort_shaper_packet_list_get(&queue->latency_list, pkt);
+    pkt = fort_shaper_packet_list_get(&queue->bandwidth_list, pkt);
+
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    return pkt;
+}
+
 inline static BOOL fort_shaper_queue_is_empty(PFORT_PACKET_QUEUE queue)
 {
     return fort_shaper_packet_list_is_empty(&queue->bandwidth_list)
@@ -453,8 +466,10 @@ FORT_API void fort_shaper_conf_update(PFORT_SHAPER shaper, const PFORT_CONF_IO c
 
         shaper->group_io_bits = shaper->limit_io_bits = limit_io_bits;
 
-        fort_shaper_create_queues(shaper, conf_io->conf_group.limits, limit_io_bits);
-        fort_shaper_init_queues(shaper, (flush_io_bits & limit_io_bits));
+        const UINT32 new_limit_io_bits = (flush_io_bits & limit_io_bits);
+
+        fort_shaper_create_queues(shaper, conf_io->conf_group.limits, new_limit_io_bits);
+        fort_shaper_init_queues(shaper, new_limit_io_bits);
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
@@ -473,7 +488,9 @@ void fort_shaper_conf_flags_update(PFORT_SHAPER shaper, const PFORT_CONF_FLAGS c
 
         shaper->group_io_bits = (shaper->limit_io_bits & group_io_bits);
 
-        fort_shaper_init_queues(shaper, (flush_io_bits & group_io_bits));
+        const UINT32 new_group_io_bits = (flush_io_bits & group_io_bits);
+
+        fort_shaper_init_queues(shaper, new_group_io_bits);
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
@@ -588,15 +605,10 @@ FORT_API void fort_shaper_flush(PFORT_SHAPER shaper, UINT32 group_io_bits, BOOL 
     if (group_io_bits == 0)
         return;
 
+    /* Collect packets from Queues */
     PFORT_PACKET pkt_chain = NULL;
 
-    /* Collect packets from Queues */
-    KLOCK_QUEUE_HANDLE lock_queue;
-    KeAcquireInStackQueuedSpinLock(&shaper->lock, &lock_queue);
-
-    if (group_io_bits == FORT_PACKET_FLUSH_ALL) {
-        group_io_bits &= shaper->group_io_bits;
-    }
+    group_io_bits &= fort_shaper_queue_active_set(shaper, group_io_bits, FALSE);
 
     for (int i = 0; group_io_bits != 0; ++i) {
         const BOOL queue_exists = (group_io_bits & 1) != 0;
@@ -609,11 +621,8 @@ FORT_API void fort_shaper_flush(PFORT_SHAPER shaper, UINT32 group_io_bits, BOOL 
         if (queue == NULL)
             continue;
 
-        pkt_chain = fort_shaper_packet_list_get(&queue->latency_list, pkt_chain);
-        pkt_chain = fort_shaper_packet_list_get(&queue->bandwidth_list, pkt_chain);
+        pkt_chain = fort_shaper_queue_get_packets(queue, pkt_chain);
     }
-
-    KeReleaseInStackQueuedSpinLock(&lock_queue);
 
     /* Process the packets */
     if (pkt_chain != NULL) {
