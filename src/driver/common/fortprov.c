@@ -26,16 +26,12 @@ static void fort_prov_unregister_callouts(HANDLE engine)
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_CONNECT_V6);
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_ACCEPT_V4);
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_ACCEPT_V6);
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_STREAM_V4);
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_STREAM_V6);
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_DATAGRAM_V4);
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_DATAGRAM_V6);
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_MAC_FRAME);
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_OUT_MAC_FRAME);
+
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH_IN_V4);
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH_IN_V6);
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH_OUT_V4);
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH_OUT_V6);
+
     FwpmSubLayerDeleteByKey0(engine, (GUID *) &FORT_GUID_SUBLAYER);
     FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_CONNECT_V4);
     FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_CONNECT_V6);
@@ -47,7 +43,18 @@ static void fort_prov_unregister_callouts(HANDLE engine)
     FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_DATAGRAM_V6);
     FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_IN_MAC_FRAME);
     FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_OUT_MAC_FRAME);
+
     FwpmProviderDeleteByKey0(engine, (GUID *) &FORT_GUID_PROVIDER);
+}
+
+static void fort_prov_flow_unregister_callouts(HANDLE engine)
+{
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_STREAM_V4);
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_STREAM_V6);
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_DATAGRAM_V4);
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_DATAGRAM_V6);
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_MAC_FRAME);
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_OUT_MAC_FRAME);
 }
 
 FORT_API void fort_prov_unregister(HANDLE transEngine)
@@ -62,21 +69,12 @@ FORT_API void fort_prov_unregister(HANDLE transEngine)
     }
 
     fort_prov_unregister_callouts(engine);
+    fort_prov_flow_unregister_callouts(engine);
 
     if (!transEngine) {
         fort_prov_trans_commit(engine);
         fort_prov_close(engine);
     }
-}
-
-static void fort_prov_flow_unregister_callouts(HANDLE engine)
-{
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_STREAM_V4);
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_STREAM_V6);
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_DATAGRAM_V4);
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_DATAGRAM_V6);
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_MAC_FRAME);
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_OUT_MAC_FRAME);
 }
 
 FORT_API void fort_prov_flow_unregister(HANDLE transEngine)
