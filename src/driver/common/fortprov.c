@@ -4,6 +4,9 @@
 
 #include "fortioctl.h"
 
+#define FORT_FLOW_FILTER_FLAGS                                                                     \
+    (FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED | FWP_CALLOUT_FLAG_ALLOW_MID_STREAM_INSPECTION)
+
 FORT_API DWORD fort_prov_trans_close(HANDLE engine, DWORD status)
 {
     if (NT_SUCCESS(status)) {
@@ -313,14 +316,11 @@ FORT_API DWORD fort_prov_register(HANDLE transEngine, BOOL is_boot)
     return status;
 }
 
-static DWORD fort_prov_flow_register_callouts(HANDLE engine, BOOL filter_packets)
+static DWORD fort_prov_flow_register_callouts(HANDLE engine)
 {
-    const UINT32 filter_flags = FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED
-            | FWP_CALLOUT_FLAG_ALLOW_MID_STREAM_INSPECTION;
-
     FWPM_FILTER0 sfilter4;
     RtlZeroMemory(&sfilter4, sizeof(FWPM_FILTER0));
-    sfilter4.flags = filter_flags;
+    sfilter4.flags = FORT_FLOW_FILTER_FLAGS;
     sfilter4.filterKey = FORT_GUID_FILTER_STREAM_V4;
     sfilter4.layerKey = FWPM_LAYER_STREAM_V4;
     sfilter4.subLayerKey = FORT_GUID_SUBLAYER;
@@ -331,7 +331,7 @@ static DWORD fort_prov_flow_register_callouts(HANDLE engine, BOOL filter_packets
 
     FWPM_FILTER0 sfilter6;
     RtlZeroMemory(&sfilter6, sizeof(FWPM_FILTER0));
-    sfilter6.flags = filter_flags;
+    sfilter6.flags = FORT_FLOW_FILTER_FLAGS;
     sfilter6.filterKey = FORT_GUID_FILTER_STREAM_V6;
     sfilter6.layerKey = FWPM_LAYER_STREAM_V6;
     sfilter6.subLayerKey = FORT_GUID_SUBLAYER;
@@ -342,7 +342,7 @@ static DWORD fort_prov_flow_register_callouts(HANDLE engine, BOOL filter_packets
 
     FWPM_FILTER0 dfilter4;
     RtlZeroMemory(&dfilter4, sizeof(FWPM_FILTER0));
-    dfilter4.flags = filter_flags;
+    dfilter4.flags = FORT_FLOW_FILTER_FLAGS;
     dfilter4.filterKey = FORT_GUID_FILTER_DATAGRAM_V4;
     dfilter4.layerKey = FWPM_LAYER_DATAGRAM_DATA_V4;
     dfilter4.subLayerKey = FORT_GUID_SUBLAYER;
@@ -353,7 +353,7 @@ static DWORD fort_prov_flow_register_callouts(HANDLE engine, BOOL filter_packets
 
     FWPM_FILTER0 dfilter6;
     RtlZeroMemory(&dfilter6, sizeof(FWPM_FILTER0));
-    dfilter6.flags = filter_flags;
+    dfilter6.flags = FORT_FLOW_FILTER_FLAGS;
     dfilter6.filterKey = FORT_GUID_FILTER_DATAGRAM_V6;
     dfilter6.layerKey = FWPM_LAYER_DATAGRAM_DATA_V6;
     dfilter6.subLayerKey = FORT_GUID_SUBLAYER;
@@ -362,9 +362,22 @@ static DWORD fort_prov_flow_register_callouts(HANDLE engine, BOOL filter_packets
     dfilter6.action.type = FWP_ACTION_CALLOUT_TERMINATING;
     dfilter6.action.calloutKey = FORT_GUID_CALLOUT_DATAGRAM_V6;
 
+    DWORD status;
+    if ((status = FwpmFilterAdd0(engine, &sfilter4, NULL, NULL))
+            || (status = FwpmFilterAdd0(engine, &sfilter6, NULL, NULL))
+            || (status = FwpmFilterAdd0(engine, &dfilter4, NULL, NULL))
+            || (status = FwpmFilterAdd0(engine, &dfilter6, NULL, NULL))) {
+        return status;
+    }
+
+    return 0;
+}
+
+static DWORD fort_prov_flow_packet_register_callouts(HANDLE engine)
+{
     FWPM_FILTER0 imfilter;
     RtlZeroMemory(&imfilter, sizeof(FWPM_FILTER0));
-    imfilter.flags = filter_flags;
+    imfilter.flags = FORT_FLOW_FILTER_FLAGS;
     imfilter.filterKey = FORT_GUID_FILTER_IN_MAC_FRAME;
     imfilter.layerKey = FWPM_LAYER_INBOUND_MAC_FRAME_ETHERNET;
     imfilter.subLayerKey = FORT_GUID_SUBLAYER;
@@ -375,7 +388,7 @@ static DWORD fort_prov_flow_register_callouts(HANDLE engine, BOOL filter_packets
 
     FWPM_FILTER0 omfilter;
     RtlZeroMemory(&omfilter, sizeof(FWPM_FILTER0));
-    omfilter.flags = filter_flags;
+    omfilter.flags = FORT_FLOW_FILTER_FLAGS;
     omfilter.filterKey = FORT_GUID_FILTER_OUT_MAC_FRAME;
     omfilter.layerKey = FWPM_LAYER_OUTBOUND_MAC_FRAME_ETHERNET;
     omfilter.subLayerKey = FORT_GUID_SUBLAYER;
@@ -385,13 +398,8 @@ static DWORD fort_prov_flow_register_callouts(HANDLE engine, BOOL filter_packets
     omfilter.action.calloutKey = FORT_GUID_CALLOUT_OUT_MAC_FRAME;
 
     DWORD status;
-    if ((status = FwpmFilterAdd0(engine, &sfilter4, NULL, NULL))
-            || (status = FwpmFilterAdd0(engine, &sfilter6, NULL, NULL))
-            || (status = FwpmFilterAdd0(engine, &dfilter4, NULL, NULL))
-            || (status = FwpmFilterAdd0(engine, &dfilter6, NULL, NULL))
-            || (filter_packets
-                    && ((status = FwpmFilterAdd0(engine, &imfilter, NULL, NULL))
-                            || (status = FwpmFilterAdd0(engine, &omfilter, NULL, NULL))))) {
+    if ((status = FwpmFilterAdd0(engine, &imfilter, NULL, NULL))
+            || (status = FwpmFilterAdd0(engine, &omfilter, NULL, NULL))) {
         return status;
     }
 
@@ -410,7 +418,11 @@ FORT_API DWORD fort_prov_flow_register(HANDLE transEngine, BOOL filter_packets)
         fort_prov_trans_begin(engine);
     }
 
-    status = fort_prov_flow_register_callouts(engine, filter_packets);
+    status = fort_prov_flow_register_callouts(engine);
+
+    if (status == 0 && filter_packets) {
+        status = fort_prov_flow_packet_register_callouts(engine);
+    }
 
     if (!transEngine) {
         status = fort_prov_trans_close(engine, status);
