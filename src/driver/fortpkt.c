@@ -20,15 +20,19 @@ static LARGE_INTEGER g_QpcFrequency;
 static UINT64 g_QpcFrequencyHalfMs;
 static ULONG g_RandomSeed;
 
-static ULONG fort_shaper_queue_active_set(PFORT_SHAPER shaper, ULONG v, BOOL on)
+static LONG fort_shaper_io_bits_exchange(volatile LONG *io_bits, LONG v)
 {
-    return on ? InterlockedOr(&shaper->active_io_bits, v)
-              : InterlockedAnd(&shaper->active_io_bits, ~v);
+    return InterlockedExchange(io_bits, v);
 }
 
-static ULONG fort_shaper_queue_active(PFORT_SHAPER shaper)
+static LONG fort_shaper_io_bits_set(volatile LONG *io_bits, LONG v, BOOL on)
 {
-    return fort_shaper_queue_active_set(shaper, 0, TRUE);
+    return on ? InterlockedOr(io_bits, v) : InterlockedAnd(io_bits, ~v);
+}
+
+static LONG fort_shaper_io_bits(volatile LONG *io_bits)
+{
+    return fort_shaper_io_bits_set(io_bits, 0, TRUE);
 }
 
 static BOOL fort_packet_injected_by_self(HANDLE injection_handle, PNET_BUFFER_LIST netBufList)
@@ -58,6 +62,8 @@ static NTSTATUS fort_shaper_packet_clone(PFORT_SHAPER shaper,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PNET_BUFFER_LIST netBufList,
         PFORT_PACKET pkt)
 {
+    UNUSED(shaper);
+
     pkt->layerId = inFixedValues->layerId;
 
     const BOOL inbound = (pkt->flags & FORT_PACKET_INBOUND) != 0;
@@ -389,7 +395,7 @@ static void fort_shaper_free_queues(PFORT_SHAPER shaper)
 
 static void fort_shaper_timer_start(PFORT_SHAPER shaper)
 {
-    const ULONG active_io_bits = fort_shaper_queue_active(shaper);
+    const ULONG active_io_bits = fort_shaper_io_bits(&shaper->active_io_bits);
 
     if (active_io_bits == 0)
         return;
@@ -401,7 +407,8 @@ static void NTAPI fort_shaper_timer_process(void)
 {
     PFORT_SHAPER shaper = &fort_device()->shaper;
 
-    ULONG active_io_bits = fort_shaper_queue_active_set(shaper, FORT_PACKET_FLUSH_ALL, FALSE);
+    ULONG active_io_bits =
+            fort_shaper_io_bits_set(&shaper->active_io_bits, FORT_PACKET_FLUSH_ALL, FALSE);
     ULONG new_active_io_bits = 0;
 
     for (int i = 0; active_io_bits != 0; ++i) {
@@ -421,7 +428,7 @@ static void NTAPI fort_shaper_timer_process(void)
     }
 
     if (new_active_io_bits != 0) {
-        fort_shaper_queue_active_set(shaper, new_active_io_bits, TRUE);
+        fort_shaper_io_bits_set(&shaper->active_io_bits, new_active_io_bits, TRUE);
 
         fort_shaper_timer_start(shaper);
     }
@@ -457,6 +464,8 @@ FORT_API void fort_shaper_close(PFORT_SHAPER shaper)
 FORT_API void fort_shaper_conf_update(PFORT_SHAPER shaper, const PFORT_CONF_IO conf_io)
 {
     const UINT32 limit_io_bits = conf_io->conf_group.limit_io_bits;
+    const UINT32 group_io_bits =
+            (limit_io_bits & fort_bits_duplicate16(conf_io->conf_group.group_bits));
     UINT32 flush_io_bits;
 
     KLOCK_QUEUE_HANDLE lock_queue;
@@ -464,12 +473,14 @@ FORT_API void fort_shaper_conf_update(PFORT_SHAPER shaper, const PFORT_CONF_IO c
     {
         flush_io_bits = (limit_io_bits ^ shaper->group_io_bits);
 
-        shaper->group_io_bits = shaper->limit_io_bits = limit_io_bits;
-
         const UINT32 new_limit_io_bits = (flush_io_bits & limit_io_bits);
 
         fort_shaper_create_queues(shaper, conf_io->conf_group.limits, new_limit_io_bits);
         fort_shaper_init_queues(shaper, new_limit_io_bits);
+
+        shaper->limit_io_bits = limit_io_bits;
+
+        fort_shaper_io_bits_exchange(&shaper->group_io_bits, group_io_bits);
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
@@ -486,11 +497,12 @@ void fort_shaper_conf_flags_update(PFORT_SHAPER shaper, const PFORT_CONF_FLAGS c
     {
         flush_io_bits = (group_io_bits ^ shaper->group_io_bits);
 
-        shaper->group_io_bits = (shaper->limit_io_bits & group_io_bits);
-
         const UINT32 new_group_io_bits = (flush_io_bits & group_io_bits);
 
         fort_shaper_init_queues(shaper, new_group_io_bits);
+
+        fort_shaper_io_bits_exchange(
+                &shaper->group_io_bits, (shaper->limit_io_bits & group_io_bits));
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
@@ -519,8 +531,10 @@ static NTSTATUS fort_shaper_packet_queue(PFORT_SHAPER shaper,
 
     const UINT16 queue_index = group_index * 2 + (inbound ? 0 : 1);
 
+    const UINT32 group_io_bits = fort_shaper_io_bits(&shaper->group_io_bits);
+
     const UINT32 queue_bit = (1 << queue_index);
-    if ((shaper->group_io_bits & queue_bit) == 0)
+    if ((group_io_bits & queue_bit) == 0)
         return STATUS_NO_SUCH_GROUP;
 
     PFORT_PACKET_QUEUE queue = shaper->queues[queue_index];
@@ -564,7 +578,7 @@ static NTSTATUS fort_shaper_packet_queue(PFORT_SHAPER shaper,
 
     /* Process the Packet Queue */
     if (fort_shaper_queue_process(shaper, queue)) {
-        fort_shaper_queue_active_set(shaper, queue_bit, TRUE);
+        fort_shaper_io_bits_set(&shaper->active_io_bits, queue_bit, TRUE);
 
         fort_shaper_timer_start(shaper);
     }
@@ -589,13 +603,8 @@ FORT_API BOOL fort_shaper_packet_process(PFORT_SHAPER shaper,
     if (fort_packet_injected_by_self(injection_handle, netBufList))
         return FALSE;
 
-    KLOCK_QUEUE_HANDLE lock_queue;
-    KeAcquireInStackQueuedSpinLock(&shaper->lock, &lock_queue);
-
     const NTSTATUS status = fort_shaper_packet_queue(&fort_device()->shaper, inFixedValues,
             inMetaValues, netBufList, inbound, isIPv4, isIPv6, group_index);
-
-    KeReleaseInStackQueuedSpinLock(&lock_queue);
 
     return NT_SUCCESS(status);
 }
@@ -608,7 +617,7 @@ FORT_API void fort_shaper_flush(PFORT_SHAPER shaper, UINT32 group_io_bits, BOOL 
     /* Collect packets from Queues */
     PFORT_PACKET pkt_chain = NULL;
 
-    group_io_bits &= fort_shaper_queue_active_set(shaper, group_io_bits, FALSE);
+    group_io_bits &= fort_shaper_io_bits_set(&shaper->active_io_bits, group_io_bits, FALSE);
 
     for (int i = 0; group_io_bits != 0; ++i) {
         const BOOL queue_exists = (group_io_bits & 1) != 0;

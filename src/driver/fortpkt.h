@@ -62,10 +62,10 @@ typedef struct fort_packet_queue
 
 typedef struct fort_shaper
 {
-    UINT32 group_io_bits;
     UINT32 limit_io_bits;
 
-    ULONG volatile active_io_bits;
+    LONG volatile group_io_bits;
+    LONG volatile active_io_bits;
 
     HANDLE injection_ip4;
     HANDLE injection_ip6;
