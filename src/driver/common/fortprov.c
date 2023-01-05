@@ -4,9 +4,6 @@
 
 #include "fortioctl.h"
 
-#define FORT_FLOW_FILTER_FLAGS                                                                     \
-    (FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED | FWP_CALLOUT_FLAG_ALLOW_MID_STREAM_INSPECTION)
-
 FORT_API DWORD fort_prov_trans_close(HANDLE engine, DWORD status)
 {
     if (NT_SUCCESS(status)) {
@@ -72,8 +69,7 @@ FORT_API void fort_prov_unregister(HANDLE transEngine)
     fort_prov_flow_unregister_callouts(engine);
 
     if (!transEngine) {
-        fort_prov_trans_commit(engine);
-        fort_prov_close(engine);
+        fort_prov_trans_close(engine, 0);
     }
 }
 
@@ -318,9 +314,12 @@ FORT_API DWORD fort_prov_register(HANDLE transEngine, BOOL is_boot)
 
 static DWORD fort_prov_flow_register_callouts(HANDLE engine)
 {
+    const UINT32 filter_flags = (FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED
+            | FWP_CALLOUT_FLAG_ALLOW_MID_STREAM_INSPECTION);
+
     FWPM_FILTER0 sfilter4;
     RtlZeroMemory(&sfilter4, sizeof(FWPM_FILTER0));
-    sfilter4.flags = FORT_FLOW_FILTER_FLAGS;
+    sfilter4.flags = filter_flags;
     sfilter4.filterKey = FORT_GUID_FILTER_STREAM_V4;
     sfilter4.layerKey = FWPM_LAYER_STREAM_V4;
     sfilter4.subLayerKey = FORT_GUID_SUBLAYER;
@@ -331,7 +330,7 @@ static DWORD fort_prov_flow_register_callouts(HANDLE engine)
 
     FWPM_FILTER0 sfilter6;
     RtlZeroMemory(&sfilter6, sizeof(FWPM_FILTER0));
-    sfilter6.flags = FORT_FLOW_FILTER_FLAGS;
+    sfilter6.flags = filter_flags;
     sfilter6.filterKey = FORT_GUID_FILTER_STREAM_V6;
     sfilter6.layerKey = FWPM_LAYER_STREAM_V6;
     sfilter6.subLayerKey = FORT_GUID_SUBLAYER;
@@ -342,7 +341,7 @@ static DWORD fort_prov_flow_register_callouts(HANDLE engine)
 
     FWPM_FILTER0 dfilter4;
     RtlZeroMemory(&dfilter4, sizeof(FWPM_FILTER0));
-    dfilter4.flags = FORT_FLOW_FILTER_FLAGS;
+    dfilter4.flags = filter_flags;
     dfilter4.filterKey = FORT_GUID_FILTER_DATAGRAM_V4;
     dfilter4.layerKey = FWPM_LAYER_DATAGRAM_DATA_V4;
     dfilter4.subLayerKey = FORT_GUID_SUBLAYER;
@@ -353,7 +352,7 @@ static DWORD fort_prov_flow_register_callouts(HANDLE engine)
 
     FWPM_FILTER0 dfilter6;
     RtlZeroMemory(&dfilter6, sizeof(FWPM_FILTER0));
-    dfilter6.flags = FORT_FLOW_FILTER_FLAGS;
+    dfilter6.flags = filter_flags;
     dfilter6.filterKey = FORT_GUID_FILTER_DATAGRAM_V6;
     dfilter6.layerKey = FWPM_LAYER_DATAGRAM_DATA_V6;
     dfilter6.subLayerKey = FORT_GUID_SUBLAYER;
@@ -375,9 +374,11 @@ static DWORD fort_prov_flow_register_callouts(HANDLE engine)
 
 static DWORD fort_prov_flow_packet_register_callouts(HANDLE engine)
 {
+    const UINT32 filter_flags = FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED;
+
     FWPM_FILTER0 imfilter;
     RtlZeroMemory(&imfilter, sizeof(FWPM_FILTER0));
-    imfilter.flags = FORT_FLOW_FILTER_FLAGS;
+    imfilter.flags = filter_flags;
     imfilter.filterKey = FORT_GUID_FILTER_IN_MAC_FRAME;
     imfilter.layerKey = FWPM_LAYER_INBOUND_MAC_FRAME_ETHERNET;
     imfilter.subLayerKey = FORT_GUID_SUBLAYER;
@@ -388,7 +389,7 @@ static DWORD fort_prov_flow_packet_register_callouts(HANDLE engine)
 
     FWPM_FILTER0 omfilter;
     RtlZeroMemory(&omfilter, sizeof(FWPM_FILTER0));
-    omfilter.flags = FORT_FLOW_FILTER_FLAGS;
+    omfilter.flags = filter_flags;
     omfilter.filterKey = FORT_GUID_FILTER_OUT_MAC_FRAME;
     omfilter.layerKey = FWPM_LAYER_OUTBOUND_MAC_FRAME_ETHERNET;
     omfilter.subLayerKey = FORT_GUID_SUBLAYER;
