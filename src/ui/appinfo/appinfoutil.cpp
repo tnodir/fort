@@ -151,6 +151,12 @@ bool extractVersionInfo(const QString &appPath, AppInfo &appInfo)
     appInfo.productName = extractInfoText(infoData, langInfo, L"ProductName");
     appInfo.fileDescription = extractInfoText(infoData, langInfo, L"FileDescription");
 
+    // File description
+    if (appInfo.fileDescription.isEmpty()) {
+        appInfo.fileDescription =
+                !appInfo.productName.isEmpty() ? appInfo.productName : FileUtil::fileName(appPath);
+    }
+
     return true;
 }
 
@@ -170,6 +176,7 @@ bool getInfo(const QString &appPath, AppInfo &appInfo)
 
     QString path = appPath;
 
+    // Service Name: Set real path
     QString serviceName;
     if (FileUtil::isSvcHostService(appPath, serviceName)) {
         path = ServiceInfoManager::getSvcHostServiceDll(serviceName);
@@ -178,18 +185,12 @@ bool getInfo(const QString &appPath, AppInfo &appInfo)
 
     const auto wow64FsRedir = disableWow64FsRedirection();
 
+    // File modification time
+    appInfo.fileModTime = FileUtil::fileModTime(path);
+
     const bool ok = extractVersionInfo(path, appInfo);
 
     revertWow64FsRedirection(wow64FsRedir);
-
-    // File description
-    if (appInfo.fileDescription.isEmpty()) {
-        appInfo.fileDescription =
-                !appInfo.productName.isEmpty() ? appInfo.productName : FileUtil::fileName(path);
-    }
-
-    // File modification time
-    appInfo.fileModTime = FileUtil::fileModTime(path);
 
     return ok;
 }

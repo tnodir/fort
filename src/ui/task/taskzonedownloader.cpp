@@ -57,10 +57,12 @@ void TaskZoneDownloader::loadLocalFile()
 {
     bool success = false;
 
-    if (sourceModTime() != FileUtil::fileModTime(url())
-            || !FileUtil::fileExists(cacheFileBinPath())) {
+    const auto fileModTime = FileUtil::fileModTime(url());
+
+    if (sourceModTime() != fileModTime || !FileUtil::fileExists(cacheFileBinPath())) {
         const auto buffer = FileUtil::readFileData(url());
         downloader()->setBuffer(buffer);
+        setSourceModTime(fileModTime);
         success = true;
     }
 
