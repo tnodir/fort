@@ -8,7 +8,9 @@
 
 #define FORT_PACKET_POOL_TAG 'KwfF'
 
-#define INITIAL_TOKEN_COUNT 1500
+#define FORT_PACKET_FLUSH_ALL 0xFFFFFFFF
+
+#define FORT_QUEUE_INITIAL_TOKEN_COUNT 1500
 
 #define HTONL(l) _byteswap_ulong(l)
 
@@ -259,8 +261,8 @@ static void fort_shaper_queue_process_bandwidth(
     queue->available_bytes += accumulated;
 
     if (fort_shaper_packet_list_is_empty(&queue->bandwidth_list)
-            && queue->available_bytes > INITIAL_TOKEN_COUNT) {
-        queue->available_bytes = INITIAL_TOKEN_COUNT;
+            && queue->available_bytes > FORT_QUEUE_INITIAL_TOKEN_COUNT) {
+        queue->available_bytes = FORT_QUEUE_INITIAL_TOKEN_COUNT;
     }
 
     queue->last_tick = now;
@@ -416,7 +418,7 @@ static void fort_shaper_init_queues(PFORT_SHAPER shaper, UINT32 group_io_bits)
             continue;
 
         queue->queued_bytes = 0;
-        queue->available_bytes = INITIAL_TOKEN_COUNT;
+        queue->available_bytes = FORT_QUEUE_INITIAL_TOKEN_COUNT;
         queue->last_tick = now;
     }
 }
@@ -473,6 +475,37 @@ static void NTAPI fort_shaper_timer_process(void)
     }
 }
 
+static void fort_shaper_flush(PFORT_SHAPER shaper, UINT32 group_io_bits, BOOL drop)
+{
+    if (group_io_bits == 0)
+        return;
+
+    /* Collect packets from Queues */
+    PFORT_PACKET pkt_chain = NULL;
+
+    group_io_bits &= fort_shaper_io_bits_set(&shaper->active_io_bits, group_io_bits, FALSE);
+
+    for (int i = 0; group_io_bits != 0; ++i) {
+        const BOOL queue_exists = (group_io_bits & 1) != 0;
+        group_io_bits >>= 1;
+
+        if (!queue_exists)
+            continue;
+
+        PFORT_PACKET_QUEUE queue = shaper->queues[i];
+        if (queue == NULL)
+            continue;
+
+        pkt_chain = fort_shaper_queue_get_packets(queue, pkt_chain);
+    }
+
+    /* Process the packets */
+    if (pkt_chain != NULL) {
+        fort_shaper_packet_foreach(
+                shaper, pkt_chain, (drop ? &fort_shaper_packet_free : &fort_shaper_packet_inject));
+    }
+}
+
 FORT_API void fort_shaper_open(PFORT_SHAPER shaper)
 {
     const LARGE_INTEGER now = KeQueryPerformanceCounter(&g_QpcFrequency);
@@ -492,6 +525,7 @@ FORT_API void fort_shaper_close(PFORT_SHAPER shaper)
 {
     fort_timer_close(&shaper->timer);
 
+    fort_shaper_drop_packets(shaper);
     fort_shaper_free_queues(shaper);
 
     FwpsInjectionHandleDestroy0(shaper->injection_transport4_id);
@@ -653,33 +687,7 @@ FORT_API BOOL fort_shaper_packet_process(PFORT_SHAPER shaper,
     return NT_SUCCESS(status);
 }
 
-FORT_API void fort_shaper_flush(PFORT_SHAPER shaper, UINT32 group_io_bits, BOOL drop)
+FORT_API void fort_shaper_drop_packets(PFORT_SHAPER shaper)
 {
-    if (group_io_bits == 0)
-        return;
-
-    /* Collect packets from Queues */
-    PFORT_PACKET pkt_chain = NULL;
-
-    group_io_bits &= fort_shaper_io_bits_set(&shaper->active_io_bits, group_io_bits, FALSE);
-
-    for (int i = 0; group_io_bits != 0; ++i) {
-        const BOOL queue_exists = (group_io_bits & 1) != 0;
-        group_io_bits >>= 1;
-
-        if (!queue_exists)
-            continue;
-
-        PFORT_PACKET_QUEUE queue = shaper->queues[i];
-        if (queue == NULL)
-            continue;
-
-        pkt_chain = fort_shaper_queue_get_packets(queue, pkt_chain);
-    }
-
-    /* Process the packets */
-    if (pkt_chain != NULL) {
-        fort_shaper_packet_foreach(
-                shaper, pkt_chain, (drop ? &fort_shaper_packet_free : &fort_shaper_packet_inject));
-    }
+    fort_shaper_flush(shaper, FORT_PACKET_FLUSH_ALL, /*drop=*/TRUE);
 }

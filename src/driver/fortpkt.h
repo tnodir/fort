@@ -6,8 +6,6 @@
 #include "common/fortconf.h"
 #include "forttmr.h"
 
-#define FORT_PACKET_FLUSH_ALL 0xFFFFFFFF
-
 #define FORT_PACKET_QUEUE_BAD_INDEX ((UINT16) -1)
 
 #define FORT_PACKET_INBOUND 0x01
@@ -106,7 +104,7 @@ FORT_API BOOL fort_shaper_packet_process(PFORT_SHAPER shaper,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PNET_BUFFER_LIST netBufList,
         UINT64 flowContext);
 
-FORT_API void fort_shaper_flush(PFORT_SHAPER shaper, UINT32 group_io_bits, BOOL drop);
+FORT_API void fort_shaper_drop_packets(PFORT_SHAPER shaper);
 
 #ifdef __cplusplus
 } // extern "C"

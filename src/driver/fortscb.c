@@ -49,7 +49,7 @@ static void NTAPI fort_syscb_power(PVOID context, PVOID event, PVOID specifics)
     fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_POWER_OFF, power_off);
 
     if (power_off) {
-        fort_shaper_flush(&fort_device()->shaper, FORT_PACKET_FLUSH_ALL, /*drop=*/TRUE);
+        fort_shaper_drop_packets(&fort_device()->shaper);
     }
 }
 
