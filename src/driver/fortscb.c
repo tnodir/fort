@@ -57,7 +57,7 @@ FORT_API NTSTATUS fort_syscb_power_register(void)
 {
     return fort_syscb_register(L"\\Callback\\PowerState", &fort_device()->power_cb_obj,
             &fort_device()->power_cb_reg,
-            FORT_CALLBACK(FORT_SYSCB_POWER, PCALLBACK_FUNCTION, fort_syscb_power));
+            FORT_CALLBACK(FORT_SYSCB_POWER, PCALLBACK_FUNCTION, &fort_syscb_power));
 }
 
 FORT_API void fort_syscb_power_unregister(void)
@@ -73,7 +73,7 @@ static void NTAPI fort_syscb_time(PVOID context, PVOID event, PVOID specifics)
 
     fort_stat_flags_set(&fort_device()->stat, FORT_STAT_TIME_CHANGED, TRUE);
 
-    if (fort_device()->app_timer.running) {
+    if (fort_timer_is_running(&fort_device()->app_timer)) {
         fort_app_period_timer();
     }
 }
@@ -82,7 +82,7 @@ FORT_API NTSTATUS fort_syscb_time_register(void)
 {
     return fort_syscb_register(L"\\Callback\\SetSystemTime", &fort_device()->systime_cb_obj,
             &fort_device()->systime_cb_reg,
-            FORT_CALLBACK(FORT_SYSCB_TIME, PCALLBACK_FUNCTION, fort_syscb_time));
+            FORT_CALLBACK(FORT_SYSCB_TIME, PCALLBACK_FUNCTION, &fort_syscb_time));
 }
 
 FORT_API void fort_syscb_time_unregister(void)

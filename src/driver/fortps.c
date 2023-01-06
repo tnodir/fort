@@ -637,7 +637,7 @@ static void fort_pstree_update(PFORT_PSTREE ps_tree, BOOL active)
 
     const NTSTATUS status = PsSetCreateProcessNotifyRoutineEx(
             FORT_CALLBACK(
-                    FORT_PSTREE_NOTIFY, PCREATE_PROCESS_NOTIFY_ROUTINE_EX, fort_pstree_notify),
+                    FORT_PSTREE_NOTIFY, PCREATE_PROCESS_NOTIFY_ROUTINE_EX, &fort_pstree_notify),
             /*remove=*/!active);
 
     if (!NT_SUCCESS(status)) {

@@ -322,10 +322,9 @@ FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device)
     fort_buffer_open(&fort_device()->buffer);
     fort_stat_open(&fort_device()->stat);
     fort_shaper_open(&fort_device()->shaper);
-    fort_timer_open(&fort_device()->log_timer, 500, /*oneshot=*/FALSE, /*coalescable=*/FALSE,
-            &fort_callout_timer);
-    fort_timer_open(&fort_device()->app_timer, 60000, /*oneshot=*/FALSE, /*coalescable=*/TRUE,
-            &fort_app_period_timer);
+    fort_timer_open(&fort_device()->log_timer, 500, /*flags=*/0, &fort_callout_timer);
+    fort_timer_open(
+            &fort_device()->app_timer, 60000, FORT_TIMER_COALESCABLE, &fort_app_period_timer);
     fort_pstree_open(&fort_device()->ps_tree);
 
     /* Unregister old filters provider */

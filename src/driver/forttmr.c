@@ -4,14 +4,30 @@
 
 #include "fortcb.h"
 
+static UCHAR fort_timer_flags_exchange(PFORT_TIMER timer, UCHAR flags)
+{
+    return InterlockedExchange8(&timer->flags, flags);
+}
+
+static UCHAR fort_timer_flags_set(PFORT_TIMER timer, UCHAR flags, BOOL on)
+{
+    return on ? InterlockedOr8(&timer->flags, flags) : InterlockedAnd8(&timer->flags, ~flags);
+}
+
+static UCHAR fort_timer_flags(PFORT_TIMER timer)
+{
+    return fort_timer_flags_set(timer, 0, TRUE);
+}
+
 static void NTAPI fort_timer_callback(PKDPC dpc, PFORT_TIMER timer, PVOID arg1, PVOID arg2)
 {
     UNUSED(dpc);
     UNUSED(arg1);
     UNUSED(arg2);
 
-    if (timer->oneshot) {
-        timer->running = FALSE;
+    const UCHAR flags = fort_timer_flags(timer);
+    if ((flags & FORT_TIMER_ONESHOT) != 0) {
+        fort_timer_flags_set(timer, FORT_TIMER_RUNNING, FALSE);
     }
 
     if (timer->callback != NULL) {
@@ -20,40 +36,45 @@ static void NTAPI fort_timer_callback(PKDPC dpc, PFORT_TIMER timer, PVOID arg1, 
 }
 
 FORT_API void fort_timer_open(
-        PFORT_TIMER timer, int period, BOOL oneshot, BOOL coalescable, FORT_TIMER_FUNC callback)
+        PFORT_TIMER timer, ULONG period, UCHAR flags, FORT_TIMER_FUNC callback)
 {
-    timer->oneshot = oneshot;
-    timer->coalescable = coalescable;
     timer->period = period;
     timer->callback = callback;
 
     KeInitializeDpc(&timer->dpc,
-            FORT_CALLBACK(FORT_TIMER_CALLBACK, PKDEFERRED_ROUTINE, fort_timer_callback), timer);
+            FORT_CALLBACK(FORT_TIMER_CALLBACK, PKDEFERRED_ROUTINE, &fort_timer_callback), timer);
     KeInitializeTimer(&timer->id);
+
+    if ((flags & FORT_TIMER_RUNNING) == 0) {
+        timer->flags = flags;
+    } else {
+        timer->flags = 0;
+        fort_timer_update(timer, flags);
+    }
 }
 
 FORT_API void fort_timer_close(PFORT_TIMER timer)
 {
-    if (!timer->running)
+    const UCHAR old_flags = fort_timer_flags_set(timer, FORT_TIMER_RUNNING, FALSE);
+    if ((old_flags & FORT_TIMER_RUNNING) == 0)
         return;
-
-    timer->running = FALSE;
 
     KeCancelTimer(&timer->id);
     KeFlushQueuedDpcs();
 }
 
-FORT_API void fort_timer_update(PFORT_TIMER timer, BOOL run)
+FORT_API void fort_timer_update(PFORT_TIMER timer, UCHAR flags)
 {
-    if ((BOOL) timer->running == run)
+    const UCHAR old_flags = fort_timer_flags_exchange(timer, flags);
+
+    const UCHAR run = (flags & FORT_TIMER_RUNNING);
+    if ((old_flags & FORT_TIMER_RUNNING) == run)
         return;
 
-    timer->running = run;
-
-    if (run) {
+    if (run != 0) {
         const ULONG period = timer->period;
-        const ULONG interval = timer->oneshot ? 0 : period;
-        const ULONG delay = timer->coalescable ? 500 : 0;
+        const ULONG interval = (flags & FORT_TIMER_ONESHOT) != 0 ? 0 : period;
+        const ULONG delay = (flags & FORT_TIMER_COALESCABLE) != 0 ? 500 : 0;
 
         LARGE_INTEGER due;
         due.QuadPart = period * -10000; /* ms -> us */
@@ -62,4 +83,10 @@ FORT_API void fort_timer_update(PFORT_TIMER timer, BOOL run)
     } else {
         KeCancelTimer(&timer->id);
     }
+}
+
+FORT_API BOOL fort_timer_is_running(PFORT_TIMER timer)
+{
+    const UCHAR flags = fort_timer_flags(timer);
+    return (flags & FORT_TIMER_RUNNING) != 0;
 }

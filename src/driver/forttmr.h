@@ -5,12 +5,15 @@
 
 typedef void(NTAPI *FORT_TIMER_FUNC)(void);
 
+#define FORT_TIMER_RUNNING     0x01
+#define FORT_TIMER_ONESHOT     0x02
+#define FORT_TIMER_COALESCABLE 0x04
+
 typedef struct fort_timer
 {
-    UINT32 running : 1;
-    UINT32 oneshot : 1;
-    UINT32 coalescable : 1;
-    UINT32 period : 29; /* milliseconds */
+    UCHAR volatile flags;
+
+    ULONG period; /* milliseconds */
 
     FORT_TIMER_FUNC callback;
 
@@ -23,11 +26,18 @@ extern "C" {
 #endif
 
 FORT_API void fort_timer_open(
-        PFORT_TIMER timer, int period, BOOL oneshot, BOOL coalescable, FORT_TIMER_FUNC callback);
+        PFORT_TIMER timer, ULONG period, UCHAR flags, FORT_TIMER_FUNC callback);
 
 FORT_API void fort_timer_close(PFORT_TIMER timer);
 
-FORT_API void fort_timer_update(PFORT_TIMER timer, BOOL run);
+FORT_API void fort_timer_update(PFORT_TIMER timer, UCHAR flags);
+
+FORT_API BOOL fort_timer_is_running(PFORT_TIMER timer);
+
+inline static void fort_timer_set_running(PFORT_TIMER timer, BOOL run)
+{
+    fort_timer_update(timer, (run ? FORT_TIMER_RUNNING : 0));
+}
 
 #ifdef __cplusplus
 } // extern "C"

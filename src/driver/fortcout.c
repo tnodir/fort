@@ -709,7 +709,7 @@ FORT_API NTSTATUS fort_callout_force_reauth(const FORT_CONF_FLAGS old_conf_flags
 {
     NTSTATUS status;
 
-    fort_timer_update(&fort_device()->log_timer, /*run=*/FALSE);
+    fort_timer_set_running(&fort_device()->log_timer, /*run=*/FALSE);
 
     /* Check app group periods & update group_bits */
     {
@@ -717,7 +717,7 @@ FORT_API NTSTATUS fort_callout_force_reauth(const FORT_CONF_FLAGS old_conf_flags
 
         fort_conf_ref_period_update(&fort_device()->conf, /*force=*/TRUE, &periods_n);
 
-        fort_timer_update(&fort_device()->app_timer, /*run=*/(periods_n != 0));
+        fort_timer_set_running(&fort_device()->app_timer, /*run=*/(periods_n != 0));
     }
 
     const FORT_CONF_FLAGS conf_flags = fort_device()->conf.conf_flags;
@@ -740,7 +740,7 @@ FORT_API NTSTATUS fort_callout_force_reauth(const FORT_CONF_FLAGS old_conf_flags
         const BOOL log_enabled = (conf_flags.allow_all_new || conf_flags.log_blocked
                 || conf_flags.log_stat || conf_flags.log_blocked_ip);
 
-        fort_timer_update(&fort_device()->log_timer, /*run=*/log_enabled);
+        fort_timer_set_running(&fort_device()->log_timer, /*run=*/log_enabled);
     } else {
         LOG("Callout Reauth: Error: %x\n", status);
         TRACE(FORT_CALLOUT_CALLOUT_REAUTH_ERROR, status, 0, 0);

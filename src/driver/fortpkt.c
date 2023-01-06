@@ -439,7 +439,7 @@ static void fort_shaper_timer_start(PFORT_SHAPER shaper)
     if (active_io_bits == 0)
         return;
 
-    fort_timer_update(&shaper->timer, /*run=*/TRUE);
+    fort_timer_set_running(&shaper->timer, /*run=*/TRUE);
 }
 
 static void NTAPI fort_shaper_timer_process(void)
@@ -482,8 +482,8 @@ FORT_API void fort_shaper_open(PFORT_SHAPER shaper)
     FwpsInjectionHandleCreate0(AF_INET, FWPS_INJECTION_TYPE_L2, &shaper->injection_transport4_id);
     FwpsInjectionHandleCreate0(AF_INET6, FWPS_INJECTION_TYPE_L2, &shaper->injection_transport6_id);
 
-    fort_timer_open(&shaper->timer, /*period(ms)=*/1, /*oneshot=*/TRUE, /*coalescable=*/FALSE,
-            &fort_shaper_timer_process);
+    fort_timer_open(
+            &shaper->timer, /*period(ms)=*/1, FORT_TIMER_ONESHOT, &fort_shaper_timer_process);
 
     KeInitializeSpinLock(&shaper->lock);
 }

@@ -54,7 +54,7 @@ FORT_API void fort_worker_queue(PFORT_WORKER worker, UCHAR work_id)
         InterlockedIncrement16(&worker->queue_size);
 
         IoQueueWorkItem(worker->item,
-                FORT_CALLBACK(FORT_WORKER_CALLBACK, PIO_WORKITEM_ROUTINE, fort_worker_callback),
+                FORT_CALLBACK(FORT_WORKER_CALLBACK, PIO_WORKITEM_ROUTINE, &fort_worker_callback),
                 DelayedWorkQueue, worker);
     }
 }
