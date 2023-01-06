@@ -8,10 +8,10 @@
 
 static void NTAPI fort_worker_callback(PDEVICE_OBJECT device, PVOID context)
 {
+    UNUSED(device);
+
     PFORT_WORKER worker = (PFORT_WORKER) context;
     const UCHAR id_bits = InterlockedAnd8(&worker->id_bits, 0);
-
-    UNUSED(device);
 
     if (id_bits & (1 << FORT_WORKER_REAUTH)) {
         worker->funcs[FORT_WORKER_REAUTH]();

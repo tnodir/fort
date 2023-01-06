@@ -52,9 +52,9 @@ FORT_API void NTAPI fort_app_period_timer(void)
 
 FORT_API NTSTATUS fort_device_create(PDEVICE_OBJECT device, PIRP irp)
 {
-    NTSTATUS status = STATUS_SUCCESS;
-
     UNUSED(device);
+
+    NTSTATUS status = STATUS_SUCCESS;
 
     /* Device opened */
     if (fort_device_flag_set(&g_device->conf, FORT_DEVICE_IS_OPENED, TRUE)
@@ -111,12 +111,11 @@ FORT_API NTSTATUS fort_device_cleanup(PDEVICE_OBJECT device, PIRP irp)
 
 static void fort_device_cancel_pending(PDEVICE_OBJECT device, PIRP irp)
 {
-    ULONG_PTR info;
-    NTSTATUS status;
-
     UNUSED(device);
 
-    status = fort_buffer_cancel_pending(&g_device->buffer, irp, &info);
+    ULONG_PTR info;
+
+    const NTSTATUS status = fort_buffer_cancel_pending(&g_device->buffer, irp, &info);
 
     IoReleaseCancelSpinLock(irp->CancelIrql); /* before IoCompleteRequest()! */
 
@@ -290,9 +289,9 @@ static NTSTATUS fort_device_control_process(
 
 FORT_API NTSTATUS fort_device_control(PDEVICE_OBJECT device, PIRP irp)
 {
-    ULONG_PTR info = 0;
-
     UNUSED(device);
+
+    ULONG_PTR info = 0;
 
     const PIO_STACK_LOCATION irp_stack = IoGetCurrentIrpStackLocation(irp);
     const NTSTATUS status = fort_device_control_process(irp_stack, irp, &info);

@@ -61,45 +61,37 @@ typedef struct fort_flow_opt
     };
 } FORT_FLOW_OPT, *PFORT_FLOW_OPT;
 
-/* Synchronize with tommy_hashdyn_node! */
 typedef struct fort_flow
 {
-    struct fort_flow *next;
-    struct fort_flow *prev;
+    FORT_FLOW_OPT opt;
 
     union {
-#if defined(_WIN64)
         UINT64 flow_id;
-#else
-        FORT_FLOW_OPT opt;
-#endif
-        void *data; /* tommy_hashdyn_node::data */
+        struct fort_flow *next;
     };
-
-    tommy_key_t flow_hash; /* tommy_hashdyn_node::index */
-
-#if defined(_WIN64)
-    FORT_FLOW_OPT opt;
-#else
-    UINT64 flow_id;
-#endif
 } FORT_FLOW, *PFORT_FLOW;
 
 #define FORT_STAT_CLOSED       0x01
 #define FORT_STAT_LOG          0x02
 #define FORT_STAT_TIME_CHANGED 0x04
-#define FORT_STAT_FLOW_PENDING 0x08 /* used only on driver unloading */
 
 typedef struct fort_stat
 {
     UCHAR volatile flags;
 
     UINT16 proc_active_count;
+    UINT32 flow_count;
+
+    UINT32 connect4_id;
+    UINT32 connect6_id;
+    UINT32 accept4_id;
+    UINT32 accept6_id;
 
     UINT32 stream4_id;
     UINT32 stream6_id;
     UINT32 datagram4_id;
     UINT32 datagram6_id;
+
     UINT32 in_transport4_id;
     UINT32 in_transport6_id;
     UINT32 out_transport4_id;
@@ -114,7 +106,6 @@ typedef struct fort_stat
     tommy_hashdyn procs_map;
 
     tommy_arrayof flows;
-    tommy_hashdyn flows_map;
 
     FORT_CONF_GROUP conf_group;
 
@@ -145,9 +136,9 @@ FORT_API void fort_stat_conf_update(PFORT_STAT stat, const PFORT_CONF_IO conf_io
 
 FORT_API void fort_stat_conf_flags_update(PFORT_STAT stat, const PFORT_CONF_FLAGS conf_flags);
 
-FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, UINT64 flow_id, UINT32 process_id,
-        UCHAR group_index, BOOL isIPv6, BOOL is_tcp, BOOL inbound, BOOL is_reauth,
-        BOOL *is_new_proc);
+FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, PFORT_FLOW flow, UINT64 flow_id,
+        UINT32 process_id, UCHAR group_index, BOOL isIPv6, BOOL is_tcp, BOOL inbound,
+        BOOL is_reauth, BOOL *is_new_proc);
 
 FORT_API void fort_flow_delete(PFORT_STAT stat, UINT64 flowContext);
 

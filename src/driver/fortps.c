@@ -585,9 +585,9 @@ static void fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCUNICODE_STRING p
 static void NTAPI fort_pstree_notify(
         PEPROCESS process, HANDLE processHandle, PPS_CREATE_NOTIFY_INFO createInfo)
 {
-    PFORT_PSTREE ps_tree = &fort_device()->ps_tree;
-
     UNUSED(process);
+
+    PFORT_PSTREE ps_tree = &fort_device()->ps_tree;
 
     const DWORD processId = (DWORD) (ptrdiff_t) processHandle;
     const tommy_key_t pid_hash = (tommy_key_t) tommy_hash_u32(0, &processId, sizeof(DWORD));

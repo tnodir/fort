@@ -40,12 +40,13 @@ static void fort_callout_classify_continue(FWPS_CLASSIFY_OUT0 *classifyOut)
 
 static BOOL fort_callout_classify_blocked_log_stat(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const FWPS_FILTER0 *filter,
-        FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField, int remoteIpField,
-        int localPortField, int remotePortField, int ipProtoField, BOOL isIPv6, BOOL inbound,
-        UINT32 classify_flags, const UINT32 *remote_ip, FORT_CONF_FLAGS conf_flags,
+        UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField,
+        int remoteIpField, int localPortField, int remotePortField, int ipProtoField, BOOL isIPv6,
+        BOOL inbound, UINT32 classify_flags, const UINT32 *remote_ip, FORT_CONF_FLAGS conf_flags,
         UINT32 process_id, PCUNICODE_STRING real_path, PFORT_CONF_REF conf_ref, INT8 *block_reason,
         BOOL blocked, FORT_APP_FLAGS app_flags, PIRP *irp, ULONG_PTR *info)
 {
+    PFORT_FLOW flow = (PFORT_FLOW) flowContext;
     const UINT64 flow_id = inMetaValues->flowHandle;
 
     const IPPROTO ip_proto = (IPPROTO) inFixedValues->incomingValue[ipProtoField].value.uint8;
@@ -56,7 +57,7 @@ static BOOL fort_callout_classify_blocked_log_stat(const FWPS_INCOMING_VALUES0 *
 
     BOOL is_new_proc = FALSE;
 
-    const NTSTATUS status = fort_flow_associate(&fort_device()->stat, flow_id, process_id,
+    const NTSTATUS status = fort_flow_associate(&fort_device()->stat, flow, flow_id, process_id,
             group_index, isIPv6, is_tcp, inbound, is_reauth, &is_new_proc);
 
     if (!NT_SUCCESS(status)) {
@@ -77,9 +78,9 @@ static BOOL fort_callout_classify_blocked_log_stat(const FWPS_INCOMING_VALUES0 *
 
 static BOOL fort_callout_classify_blocked_log(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const FWPS_FILTER0 *filter,
-        FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField, int remoteIpField,
-        int localPortField, int remotePortField, int ipProtoField, BOOL isIPv6, BOOL inbound,
-        UINT32 classify_flags, const UINT32 *remote_ip, FORT_CONF_FLAGS conf_flags,
+        UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField,
+        int remoteIpField, int localPortField, int remotePortField, int ipProtoField, BOOL isIPv6,
+        BOOL inbound, UINT32 classify_flags, const UINT32 *remote_ip, FORT_CONF_FLAGS conf_flags,
         UINT32 process_id, PCUNICODE_STRING path, PCUNICODE_STRING real_path,
         PFORT_CONF_REF conf_ref, INT8 *block_reason, BOOL blocked, PIRP *irp, ULONG_PTR *info)
 {
@@ -91,10 +92,10 @@ static BOOL fort_callout_classify_blocked_log(const FWPS_INCOMING_VALUES0 *inFix
             || !fort_conf_app_blocked(&conf_ref->conf, app_flags, block_reason)) {
         if (conf_flags.log_stat
                 && fort_callout_classify_blocked_log_stat(inFixedValues, inMetaValues, filter,
-                        classifyOut, flagsField, localIpField, remoteIpField, localPortField,
-                        remotePortField, ipProtoField, isIPv6, inbound, classify_flags, remote_ip,
-                        conf_flags, process_id, real_path, conf_ref, block_reason, blocked,
-                        app_flags, irp, info))
+                        flowContext, classifyOut, flagsField, localIpField, remoteIpField,
+                        localPortField, remotePortField, ipProtoField, isIPv6, inbound,
+                        classify_flags, remote_ip, conf_flags, process_id, real_path, conf_ref,
+                        block_reason, blocked, app_flags, irp, info))
             return TRUE; /* blocked */
 
         blocked = FALSE; /* allow */
@@ -118,9 +119,9 @@ static BOOL fort_callout_classify_blocked_log(const FWPS_INCOMING_VALUES0 *inFix
 
 static BOOL fort_callout_classify_blocked(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const FWPS_FILTER0 *filter,
-        FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField, int remoteIpField,
-        int localPortField, int remotePortField, int ipProtoField, BOOL isIPv6, BOOL inbound,
-        UINT32 classify_flags, const UINT32 *remote_ip, FORT_CONF_FLAGS conf_flags,
+        UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField,
+        int remoteIpField, int localPortField, int remotePortField, int ipProtoField, BOOL isIPv6,
+        BOOL inbound, UINT32 classify_flags, const UINT32 *remote_ip, FORT_CONF_FLAGS conf_flags,
         UINT32 process_id, PUNICODE_STRING path, PUNICODE_STRING real_path, PFORT_CONF_REF conf_ref,
         INT8 *block_reason, PIRP *irp, ULONG_PTR *info)
 {
@@ -151,18 +152,18 @@ static BOOL fort_callout_classify_blocked(const FWPS_INCOMING_VALUES0 *inFixedVa
         blocked = FALSE;
     }
 
-    return fort_callout_classify_blocked_log(inFixedValues, inMetaValues, filter, classifyOut,
-            flagsField, localIpField, remoteIpField, localPortField, remotePortField, ipProtoField,
-            isIPv6, inbound, classify_flags, remote_ip, conf_flags, process_id, path, real_path,
-            conf_ref, block_reason, blocked, irp, info);
+    return fort_callout_classify_blocked_log(inFixedValues, inMetaValues, filter, flowContext,
+            classifyOut, flagsField, localIpField, remoteIpField, localPortField, remotePortField,
+            ipProtoField, isIPv6, inbound, classify_flags, remote_ip, conf_flags, process_id, path,
+            real_path, conf_ref, block_reason, blocked, irp, info);
 }
 
 static void fort_callout_classify_check(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const FWPS_FILTER0 *filter,
-        FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField, int remoteIpField,
-        int localPortField, int remotePortField, int ipProtoField, BOOL isIPv6, BOOL inbound,
-        UINT32 classify_flags, const UINT32 *remote_ip, PFORT_CONF_REF conf_ref, PIRP *irp,
-        ULONG_PTR *info)
+        UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField,
+        int remoteIpField, int localPortField, int remotePortField, int ipProtoField, BOOL isIPv6,
+        BOOL inbound, UINT32 classify_flags, const UINT32 *remote_ip, PFORT_CONF_REF conf_ref,
+        PIRP *irp, ULONG_PTR *info)
 {
     const FORT_CONF_FLAGS conf_flags = conf_ref->conf.flags;
 
@@ -184,9 +185,9 @@ static void fort_callout_classify_check(const FWPS_INCOMING_VALUES0 *inFixedValu
 
     INT8 block_reason = FORT_BLOCK_REASON_UNKNOWN;
     const BOOL blocked = fort_callout_classify_blocked(inFixedValues, inMetaValues, filter,
-            classifyOut, flagsField, localIpField, remoteIpField, localPortField, remotePortField,
-            ipProtoField, isIPv6, inbound, classify_flags, remote_ip, conf_flags, process_id, &path,
-            &real_path, conf_ref, &block_reason, irp, info);
+            flowContext, classifyOut, flagsField, localIpField, remoteIpField, localPortField,
+            remotePortField, ipProtoField, isIPv6, inbound, classify_flags, remote_ip, conf_flags,
+            process_id, &path, &real_path, conf_ref, &block_reason, irp, info);
 
     if (blocked) {
         /* Log the blocked connection */
@@ -220,8 +221,9 @@ static void fort_callout_classify_check(const FWPS_INCOMING_VALUES0 *inFixedValu
 
 static void fort_callout_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const FWPS_FILTER0 *filter,
-        FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField, int remoteIpField,
-        int localPortField, int remotePortField, int ipProtoField, BOOL isIPv6, BOOL inbound)
+        UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField,
+        int remoteIpField, int localPortField, int remotePortField, int ipProtoField, BOOL isIPv6,
+        BOOL inbound)
 {
     PIRP irp = NULL;
     ULONG_PTR info;
@@ -252,9 +254,9 @@ static void fort_callout_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
         return;
     }
 
-    fort_callout_classify_check(inFixedValues, inMetaValues, filter, classifyOut, flagsField,
-            localIpField, remoteIpField, localPortField, remotePortField, ipProtoField, isIPv6,
-            inbound, classify_flags, remote_ip, conf_ref, &irp, &info);
+    fort_callout_classify_check(inFixedValues, inMetaValues, filter, flowContext, classifyOut,
+            flagsField, localIpField, remoteIpField, localPortField, remotePortField, ipProtoField,
+            isIPv6, inbound, classify_flags, remote_ip, conf_ref, &irp, &info);
 
     fort_conf_ref_put(device_conf, conf_ref);
 
@@ -265,12 +267,11 @@ static void fort_callout_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
 
 static void NTAPI fort_callout_connect_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, void *layerData,
-        const FWPS_FILTER0 *filter, const UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
+        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
     UNUSED(layerData);
-    UNUSED(flowContext);
 
-    fort_callout_classify(inFixedValues, inMetaValues, filter, classifyOut,
+    fort_callout_classify(inFixedValues, inMetaValues, filter, flowContext, classifyOut,
             FWPS_FIELD_ALE_AUTH_CONNECT_V4_FLAGS, FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_LOCAL_ADDRESS,
             FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_REMOTE_ADDRESS,
             FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_LOCAL_PORT,
@@ -280,12 +281,11 @@ static void NTAPI fort_callout_connect_v4(const FWPS_INCOMING_VALUES0 *inFixedVa
 
 static void NTAPI fort_callout_connect_v6(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, void *layerData,
-        const FWPS_FILTER0 *filter, const UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
+        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
     UNUSED(layerData);
-    UNUSED(flowContext);
 
-    fort_callout_classify(inFixedValues, inMetaValues, filter, classifyOut,
+    fort_callout_classify(inFixedValues, inMetaValues, filter, flowContext, classifyOut,
             FWPS_FIELD_ALE_AUTH_CONNECT_V6_FLAGS, FWPS_FIELD_ALE_AUTH_CONNECT_V6_IP_LOCAL_ADDRESS,
             FWPS_FIELD_ALE_AUTH_CONNECT_V6_IP_REMOTE_ADDRESS,
             FWPS_FIELD_ALE_AUTH_CONNECT_V6_IP_LOCAL_PORT,
@@ -295,12 +295,11 @@ static void NTAPI fort_callout_connect_v6(const FWPS_INCOMING_VALUES0 *inFixedVa
 
 static void NTAPI fort_callout_accept_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, void *layerData,
-        const FWPS_FILTER0 *filter, const UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
+        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
     UNUSED(layerData);
-    UNUSED(flowContext);
 
-    fort_callout_classify(inFixedValues, inMetaValues, filter, classifyOut,
+    fort_callout_classify(inFixedValues, inMetaValues, filter, flowContext, classifyOut,
             FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_FLAGS,
             FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_LOCAL_ADDRESS,
             FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_REMOTE_ADDRESS,
@@ -311,12 +310,11 @@ static void NTAPI fort_callout_accept_v4(const FWPS_INCOMING_VALUES0 *inFixedVal
 
 static void NTAPI fort_callout_accept_v6(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, void *layerData,
-        const FWPS_FILTER0 *filter, const UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
+        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
     UNUSED(layerData);
-    UNUSED(flowContext);
 
-    fort_callout_classify(inFixedValues, inMetaValues, filter, classifyOut,
+    fort_callout_classify(inFixedValues, inMetaValues, filter, flowContext, classifyOut,
             FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V6_FLAGS,
             FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V6_IP_LOCAL_ADDRESS,
             FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V6_IP_REMOTE_ADDRESS,
@@ -338,9 +336,9 @@ static NTSTATUS NTAPI fort_callout_notify(
 static void fort_callout_flow_classify(const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
         UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut, UINT32 dataSize, BOOL inbound)
 {
-    const UINT32 headerSize = inbound ? inMetaValues->transportHeaderSize : 0;
-
     UNUSED(classifyOut);
+
+    const UINT32 headerSize = inbound ? inMetaValues->transportHeaderSize : 0;
 
     fort_flow_classify(&fort_device()->stat, flowContext, headerSize + dataSize, inbound);
 }
@@ -349,18 +347,17 @@ static void NTAPI fort_callout_stream_classify(const FWPS_INCOMING_VALUES0 *inFi
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, FWPS_STREAM_CALLOUT_IO_PACKET0 *packet,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
+    UNUSED(inFixedValues);
+
     const FWPS_STREAM_DATA0 *streamData = packet->streamData;
     const UINT32 streamFlags = streamData->flags;
     const UINT32 dataSize = (UINT32) streamData->dataLength;
 
     const BOOL inbound = (streamFlags & FWPS_STREAM_FLAG_RECEIVE) != 0;
 
-    UNUSED(inFixedValues);
-
     fort_callout_flow_classify(inMetaValues, flowContext, classifyOut, dataSize, inbound);
 
     fort_callout_classify_permit(filter, classifyOut);
-    return;
 }
 
 static void fort_callout_datagram_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
@@ -449,7 +446,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
     c.calloutKey = FORT_GUID_CALLOUT_CONNECT_V4;
     c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_connect_v4;
 
-    status = FwpsCalloutRegister0(device, &c, &fort_device()->connect4_id);
+    status = FwpsCalloutRegister0(device, &c, &stat->connect4_id);
     if (!NT_SUCCESS(status)) {
         LOG("Register Connect V4: Error: %x\n", status);
         TRACE(FORT_CALLOUT_REGISTER_CONNECT_V4_ERROR, status, 0, 0);
@@ -460,7 +457,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
     c.calloutKey = FORT_GUID_CALLOUT_CONNECT_V6;
     c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_connect_v6;
 
-    status = FwpsCalloutRegister0(device, &c, &fort_device()->connect6_id);
+    status = FwpsCalloutRegister0(device, &c, &stat->connect6_id);
     if (!NT_SUCCESS(status)) {
         LOG("Register Connect V6: Error: %x\n", status);
         TRACE(FORT_CALLOUT_REGISTER_CONNECT_V6_ERROR, status, 0, 0);
@@ -471,7 +468,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
     c.calloutKey = FORT_GUID_CALLOUT_ACCEPT_V4;
     c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_accept_v4;
 
-    status = FwpsCalloutRegister0(device, &c, &fort_device()->accept4_id);
+    status = FwpsCalloutRegister0(device, &c, &stat->accept4_id);
     if (!NT_SUCCESS(status)) {
         LOG("Register Accept V4: Error: %x\n", status);
         TRACE(FORT_CALLOUT_REGISTER_ACCEPT_V4_ERROR, status, 0, 0);
@@ -482,7 +479,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
     c.calloutKey = FORT_GUID_CALLOUT_ACCEPT_V6;
     c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_accept_v6;
 
-    status = FwpsCalloutRegister0(device, &c, &fort_device()->accept6_id);
+    status = FwpsCalloutRegister0(device, &c, &stat->accept6_id);
     if (!NT_SUCCESS(status)) {
         LOG("Register Accept V6: Error: %x\n", status);
         TRACE(FORT_CALLOUT_REGISTER_ACCEPT_V6_ERROR, status, 0, 0);
@@ -602,62 +599,62 @@ FORT_API void fort_callout_remove(void)
 {
     PFORT_STAT stat = &fort_device()->stat;
 
-    if (fort_device()->connect4_id) {
-        FwpsCalloutUnregisterById0(fort_device()->connect4_id);
-        fort_device()->connect4_id = 0;
+    if (stat->connect4_id != 0) {
+        FwpsCalloutUnregisterById0(stat->connect4_id);
+        stat->connect4_id = 0;
     }
 
-    if (fort_device()->connect6_id) {
-        FwpsCalloutUnregisterById0(fort_device()->connect6_id);
-        fort_device()->connect6_id = 0;
+    if (stat->connect6_id != 0) {
+        FwpsCalloutUnregisterById0(stat->connect6_id);
+        stat->connect6_id = 0;
     }
 
-    if (fort_device()->accept4_id) {
-        FwpsCalloutUnregisterById0(fort_device()->accept4_id);
-        fort_device()->accept4_id = 0;
+    if (stat->accept4_id != 0) {
+        FwpsCalloutUnregisterById0(stat->accept4_id);
+        stat->accept4_id = 0;
     }
 
-    if (fort_device()->accept6_id) {
-        FwpsCalloutUnregisterById0(fort_device()->accept6_id);
-        fort_device()->accept6_id = 0;
+    if (stat->accept6_id != 0) {
+        FwpsCalloutUnregisterById0(stat->accept6_id);
+        stat->accept6_id = 0;
     }
 
-    if (stat->stream4_id) {
+    if (stat->stream4_id != 0) {
         FwpsCalloutUnregisterById0(stat->stream4_id);
         stat->stream4_id = 0;
     }
 
-    if (stat->stream6_id) {
+    if (stat->stream6_id != 0) {
         FwpsCalloutUnregisterById0(stat->stream6_id);
         stat->stream6_id = 0;
     }
 
-    if (stat->datagram4_id) {
+    if (stat->datagram4_id != 0) {
         FwpsCalloutUnregisterById0(stat->datagram4_id);
         stat->datagram4_id = 0;
     }
 
-    if (stat->datagram6_id) {
+    if (stat->datagram6_id != 0) {
         FwpsCalloutUnregisterById0(stat->datagram6_id);
         stat->datagram6_id = 0;
     }
 
-    if (stat->in_transport4_id) {
+    if (stat->in_transport4_id != 0) {
         FwpsCalloutUnregisterById0(stat->in_transport4_id);
         stat->in_transport4_id = 0;
     }
 
-    if (stat->in_transport6_id) {
+    if (stat->in_transport6_id != 0) {
         FwpsCalloutUnregisterById0(stat->in_transport6_id);
         stat->in_transport6_id = 0;
     }
 
-    if (stat->out_transport4_id) {
+    if (stat->out_transport4_id != 0) {
         FwpsCalloutUnregisterById0(stat->out_transport4_id);
         stat->out_transport4_id = 0;
     }
 
-    if (stat->out_transport6_id) {
+    if (stat->out_transport6_id != 0) {
         FwpsCalloutUnregisterById0(stat->out_transport6_id);
         stat->out_transport6_id = 0;
     }

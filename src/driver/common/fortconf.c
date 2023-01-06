@@ -188,9 +188,9 @@ FORT_API BOOL fort_conf_app_exe_equal(
 static BOOL fort_conf_app_wild_equal(
         const PFORT_APP_ENTRY app_entry, const PVOID path, UINT32 path_len)
 {
-    const WCHAR *app_path = (const WCHAR *) (app_entry + 1);
-
     UNUSED(path_len);
+
+    const WCHAR *app_path = (const WCHAR *) (app_entry + 1);
 
     return wildmatch(app_path, (const WCHAR *) path) == WM_MATCH;
 }
