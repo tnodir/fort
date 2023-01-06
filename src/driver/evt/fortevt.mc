@@ -77,22 +77,32 @@ Language=English
 Register Datagram V6: Error.
 .
 
-MessageId=10 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_INBOUND_MAC_FRAME_ERROR
+MessageId=10 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_INBOUND_TRANSPORT_V4_ERROR
 Language=English
-Register Inbound MAC Frame: Error.
+Register Inbound Transport V4: Error.
 .
 
-MessageId=11 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_OUTBOUND_MAC_FRAME_ERROR
+MessageId=11 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_INBOUND_TRANSPORT_V6_ERROR
 Language=English
-Register Outbound MAC Frame: Error.
+Register Inbound Transport V6: Error.
 .
 
-MessageId=12 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_CALLOUT_REAUTH_ERROR
+MessageId=12 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_OUTBOUND_TRANSPORT_V4_ERROR
+Language=English
+Register Outbound Transport V4: Error.
+.
+
+MessageId=13 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_OUTBOUND_TRANSPORT_V6_ERROR
+Language=English
+Register Outbound Transport V6: Error.
+.
+
+MessageId=14 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_CALLOUT_REAUTH_ERROR
 Language=English
 Callout Reauth: Error.
 .
 
-MessageId=13 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_CALLOUT_TIMER_ERROR
+MessageId=15 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_CALLOUT_TIMER_ERROR
 Language=English
 Callout Timer: Error.
 .
@@ -123,9 +133,9 @@ Language=English
 Shaper: Packet injection error.
 .
 
-MessageId=2 Facility=Shaper Severity=Error SymbolicName=FORT_SHAPER_PACKET_INJECTION_PREPARE_ERROR
+MessageId=2 Facility=Shaper Severity=Error SymbolicName=FORT_SHAPER_PACKET_INJECTION_CALL_ERROR
 Language=English
-Shaper: Packet injection prepare error.
+Shaper: Packet injection call error.
 .
 
 

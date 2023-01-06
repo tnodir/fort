@@ -124,63 +124,118 @@ FORT_API UCHAR fort_flow_flags(PFORT_FLOW flow)
     return fort_flow_flags_set(flow, 0, TRUE);
 }
 
-static void fort_flow_context_set(PFORT_STAT stat, PFORT_FLOW flow, BOOL isIPv6, BOOL is_tcp)
+static void fort_flow_context_stream_init(
+        PFORT_STAT stat, BOOL isIPv6, BOOL is_tcp, UINT16 *layerId, UINT32 *calloutId)
+{
+    if (is_tcp) {
+        if (isIPv6) {
+            *layerId = FWPS_LAYER_STREAM_V6;
+            *calloutId = stat->stream6_id;
+        } else {
+            *layerId = FWPS_LAYER_STREAM_V4;
+            *calloutId = stat->stream4_id;
+        }
+    } else {
+        if (isIPv6) {
+            *layerId = FWPS_LAYER_DATAGRAM_DATA_V6;
+            *calloutId = stat->datagram6_id;
+        } else {
+            *layerId = FWPS_LAYER_DATAGRAM_DATA_V4;
+            *calloutId = stat->datagram4_id;
+        }
+    }
+}
+
+static void fort_flow_context_transport_init(
+        PFORT_STAT stat, BOOL isIPv6, BOOL inbound, UINT16 *layerId, UINT32 *calloutId)
+{
+    if (inbound) {
+        if (isIPv6) {
+            *layerId = FWPS_LAYER_INBOUND_TRANSPORT_V6;
+            *calloutId = stat->in_transport6_id;
+        } else {
+            *layerId = FWPS_LAYER_INBOUND_TRANSPORT_V4;
+            *calloutId = stat->in_transport4_id;
+        }
+    } else {
+        if (isIPv6) {
+            *layerId = FWPS_LAYER_OUTBOUND_TRANSPORT_V6;
+            *calloutId = stat->out_transport6_id;
+        } else {
+            *layerId = FWPS_LAYER_OUTBOUND_TRANSPORT_V4;
+            *calloutId = stat->out_transport4_id;
+        }
+    }
+}
+
+inline static NTSTATUS fort_flow_context_stream_set(
+        PFORT_STAT stat, UINT64 flow_id, UINT64 flowContext, BOOL isIPv6, BOOL is_tcp)
+{
+    UINT16 layerId;
+    UINT32 calloutId;
+
+    fort_flow_context_stream_init(stat, isIPv6, is_tcp, &layerId, &calloutId);
+
+    return FwpsFlowAssociateContext0(flow_id, layerId, calloutId, flowContext);
+}
+
+inline static NTSTATUS fort_flow_context_transport_set(
+        PFORT_STAT stat, UINT64 flow_id, UINT64 flowContext, BOOL isIPv6, BOOL inbound)
+{
+    UINT16 layerId;
+    UINT32 calloutId;
+
+    fort_flow_context_transport_init(stat, isIPv6, inbound, &layerId, &calloutId);
+
+    return FwpsFlowAssociateContext0(flow_id, layerId, calloutId, flowContext);
+}
+
+static void fort_flow_context_set(
+        PFORT_STAT stat, PFORT_FLOW flow, BOOL isIPv6, BOOL is_tcp, BOOL inbound)
 {
     const UINT64 flow_id = flow->flow_id;
     const UINT64 flowContext = (UINT64) flow;
 
-    if (is_tcp) {
-        if (isIPv6) {
-            FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_STREAM_V6, stat->stream6_id, flowContext);
-        } else {
-            FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_STREAM_V4, stat->stream4_id, flowContext);
-        }
-    } else {
-        if (isIPv6) {
-            FwpsFlowAssociateContext0(
-                    flow_id, FWPS_LAYER_DATAGRAM_DATA_V6, stat->datagram6_id, flowContext);
-        } else {
-            FwpsFlowAssociateContext0(
-                    flow_id, FWPS_LAYER_DATAGRAM_DATA_V4, stat->datagram4_id, flowContext);
-        }
-    }
+    fort_flow_context_stream_set(stat, flow_id, flowContext, isIPv6, is_tcp);
+    fort_flow_context_transport_set(stat, flow_id, flowContext, isIPv6, inbound);
+}
 
-    FwpsFlowAssociateContext0(
-            flow_id, FWPS_LAYER_INBOUND_MAC_FRAME_ETHERNET, stat->in_mac_frame_id, flowContext);
-    FwpsFlowAssociateContext0(
-            flow_id, FWPS_LAYER_OUTBOUND_MAC_FRAME_ETHERNET, stat->out_mac_frame_id, flowContext);
+inline static NTSTATUS fort_flow_context_stream_remove(
+        PFORT_STAT stat, UINT64 flow_id, BOOL isIPv6, BOOL is_tcp)
+{
+    UINT16 layerId;
+    UINT32 calloutId;
+
+    fort_flow_context_stream_init(stat, isIPv6, is_tcp, &layerId, &calloutId);
+
+    return FwpsFlowRemoveContext0(flow_id, layerId, calloutId);
+}
+
+inline static NTSTATUS fort_flow_context_transport_remove(
+        PFORT_STAT stat, UINT64 flow_id, BOOL isIPv6, BOOL inbound)
+{
+    UINT16 layerId;
+    UINT32 calloutId;
+
+    fort_flow_context_transport_init(stat, isIPv6, inbound, &layerId, &calloutId);
+
+    return FwpsFlowRemoveContext0(flow_id, layerId, calloutId);
 }
 
 static void fort_flow_context_remove(PFORT_STAT stat, PFORT_FLOW flow)
 {
     const UINT64 flow_id = flow->flow_id;
-    const BOOL is_tcp = (flow->opt.flags & FORT_FLOW_TCP);
-    const BOOL isIPv6 = (flow->opt.flags & FORT_FLOW_IP6);
-    NTSTATUS status;
 
-    if (is_tcp) {
-        if (isIPv6) {
-            status = FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_STREAM_V6, stat->stream6_id);
-        } else {
-            status = FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_STREAM_V4, stat->stream4_id);
-        }
-    } else {
-        if (isIPv6) {
-            status = FwpsFlowRemoveContext0(
-                    flow_id, FWPS_LAYER_DATAGRAM_DATA_V6, stat->datagram6_id);
-        } else {
-            status = FwpsFlowRemoveContext0(
-                    flow_id, FWPS_LAYER_DATAGRAM_DATA_V4, stat->datagram4_id);
-        }
-    }
+    const UCHAR flow_flags = fort_flow_flags(flow);
+    const BOOL inbound = (flow_flags & FORT_FLOW_INBOUND);
+    const BOOL is_tcp = (flow_flags & FORT_FLOW_TCP);
+    const BOOL isIPv6 = (flow_flags & FORT_FLOW_IP6);
 
-    const NTSTATUS in_mac_frame_status = FwpsFlowRemoveContext0(
-            flow_id, FWPS_LAYER_INBOUND_MAC_FRAME_ETHERNET, stat->in_mac_frame_id);
-    const NTSTATUS out_mac_frame_status = FwpsFlowRemoveContext0(
-            flow_id, FWPS_LAYER_OUTBOUND_MAC_FRAME_ETHERNET, stat->out_mac_frame_id);
+    const NTSTATUS stream_status = fort_flow_context_stream_remove(stat, flow_id, isIPv6, is_tcp);
+    const NTSTATUS transport_status =
+            fort_flow_context_transport_remove(stat, flow_id, isIPv6, inbound);
 
-    if (status == STATUS_PENDING || in_mac_frame_status == STATUS_PENDING
-            || out_mac_frame_status == STATUS_PENDING) {
+    if (stream_status == STATUS_PENDING || transport_status == STATUS_PENDING) {
         fort_stat_flags_set(stat, FORT_STAT_FLOW_PENDING, TRUE);
     }
 }
@@ -218,8 +273,8 @@ static void fort_flow_free(PFORT_STAT stat, PFORT_FLOW flow)
     stat->flow_free = flow;
 }
 
-static PFORT_FLOW fort_flow_new(
-        PFORT_STAT stat, UINT64 flow_id, const tommy_key_t flow_hash, BOOL isIPv6, BOOL is_tcp)
+static PFORT_FLOW fort_flow_new(PFORT_STAT stat, UINT64 flow_id, const tommy_key_t flow_hash,
+        BOOL isIPv6, BOOL is_tcp, BOOL inbound)
 {
     PFORT_FLOW flow;
 
@@ -240,7 +295,7 @@ static PFORT_FLOW fort_flow_new(
 
     flow->flow_id = flow_id;
 
-    fort_flow_context_set(stat, flow, isIPv6, is_tcp);
+    fort_flow_context_set(stat, flow, isIPv6, is_tcp, inbound);
 
     return flow;
 }
@@ -258,7 +313,7 @@ static NTSTATUS fort_flow_add(PFORT_STAT stat, UINT64 flow_id, UCHAR group_index
             return FORT_STATUS_FLOW_BLOCK;
         }
 
-        flow = fort_flow_new(stat, flow_id, flow_hash, isIPv6, is_tcp);
+        flow = fort_flow_new(stat, flow_id, flow_hash, isIPv6, is_tcp, inbound);
         if (flow == NULL)
             return STATUS_INSUFFICIENT_RESOURCES;
 

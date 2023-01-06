@@ -100,8 +100,10 @@ typedef struct fort_stat
     UINT32 stream6_id;
     UINT32 datagram4_id;
     UINT32 datagram6_id;
-    UINT32 in_mac_frame_id;
-    UINT32 out_mac_frame_id;
+    UINT32 in_transport4_id;
+    UINT32 in_transport6_id;
+    UINT32 out_transport4_id;
+    UINT32 out_transport6_id;
 
     PFORT_STAT_PROC proc_free;
     PFORT_STAT_PROC proc_active;

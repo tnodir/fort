@@ -4,7 +4,6 @@
 #include "fortdrv.h"
 
 #include "common/fortconf.h"
-#include "fortstat.h"
 #include "forttmr.h"
 
 #define FORT_PACKET_FLUSH_ALL 0xFFFFFFFF
@@ -12,10 +11,23 @@
 #define FORT_PACKET_QUEUE_BAD_INDEX ((UINT16) -1)
 
 #define FORT_PACKET_INBOUND 0x01
-#define FORT_PACKET_IP4     0x02
-#define FORT_PACKET_IP6     0x04
+#define FORT_PACKET_IP6     0x02
 
 #define FORT_MAC_FRAME_PACKET_COUNT_MAX 0xFF
+
+typedef struct fort_packet_in
+{
+    IF_INDEX interfaceIndex;
+    IF_INDEX subInterfaceIndex;
+} FORT_PACKET_IN, *PFORT_PACKET_IN;
+
+typedef struct fort_packet_out
+{
+    SCOPE_ID remoteScopeId;
+    UINT64 endpointHandle;
+
+    ip_addr_t remoteAddr;
+} FORT_PACKET_OUT, *PFORT_PACKET_OUT;
 
 typedef struct fort_packet
 {
@@ -27,10 +39,12 @@ typedef struct fort_packet
     UCHAR flags;
 
     /* Data for re-injection */
-    UINT16 layerId;
-    IF_INDEX interfaceIndex;
-    NDIS_PORT_NUMBER ndisPortNumber;
+    UCHAR compartmentId;
     PNET_BUFFER_LIST netBufList;
+    union {
+        FORT_PACKET_IN in;
+        FORT_PACKET_OUT out;
+    };
 } FORT_PACKET, *PFORT_PACKET;
 
 typedef struct fort_packet_list
@@ -67,9 +81,8 @@ typedef struct fort_shaper
     LONG volatile group_io_bits;
     LONG volatile active_io_bits;
 
-    HANDLE injection_ip4;
-    HANDLE injection_ip6;
-    HANDLE injection_unspec;
+    HANDLE injection_transport4_id;
+    HANDLE injection_transport6_id;
 
     FORT_TIMER timer;
 
@@ -93,7 +106,7 @@ FORT_API void fort_shaper_conf_flags_update(PFORT_SHAPER shaper, const PFORT_CON
 FORT_API BOOL fort_shaper_packet_process(PFORT_SHAPER shaper,
         const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PNET_BUFFER_LIST netBufList,
-        BOOL inbound, UCHAR group_index);
+        UINT64 flowContext);
 
 FORT_API void fort_shaper_flush(PFORT_SHAPER shaper, UINT32 group_io_bits, BOOL drop);
 

@@ -404,46 +404,29 @@ static void NTAPI fort_callout_flow_delete(UINT16 layerId, UINT32 calloutId, UIN
     fort_flow_delete(&fort_device()->stat, flowContext);
 }
 
-static BOOL fort_callout_mac_frame_classify_packet(const FWPS_INCOMING_VALUES0 *inFixedValues,
-        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PNET_BUFFER_LIST netBufList,
-        UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
-{
-    PFORT_FLOW flow = (PFORT_FLOW) flowContext;
-
-    const UCHAR flow_flags = fort_flow_flags(flow);
-
-    const BOOL inbound = (flow_flags & FORT_FLOW_INBOUND) != 0;
-    const UCHAR speed_limit = inbound ? FORT_FLOW_SPEED_LIMIT_IN : FORT_FLOW_SPEED_LIMIT_OUT;
-
-    if ((flow_flags & speed_limit) == 0
-            || fort_device_flag(&fort_device()->conf, FORT_DEVICE_POWER_OFF) != 0)
-        return FALSE;
-
-    return fort_shaper_packet_process(&fort_device()->shaper, inFixedValues, inMetaValues,
-            netBufList, inbound, flow->opt.group_index);
-}
-
-static void NTAPI fort_callout_mac_frame_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
+static void NTAPI fort_callout_transport_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PNET_BUFFER_LIST netBufList,
         const void *classifyContext, const FWPS_FILTER0 *filter, UINT64 flowContext,
         FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-    if ((classifyOut->rights & FWPS_RIGHT_ACTION_WRITE) == 0)
+    if ((classifyOut->rights & FWPS_RIGHT_ACTION_WRITE) == 0
+            || classifyOut->actionType == FWP_ACTION_BLOCK)
         return; /* Can't act on the packet */
 
     if (!FWPS_IS_METADATA_FIELD_PRESENT(inMetaValues, FWPS_METADATA_FIELD_ALE_CLASSIFY_REQUIRED)
-            && netBufList != NULL) {
-        if (fort_callout_mac_frame_classify_packet(
-                    inFixedValues, inMetaValues, netBufList, flowContext, classifyOut)) {
-            fort_callout_classify_drop(classifyOut); /* drop */
-            return;
-        }
+            && netBufList != NULL
+            /* Process the Packet by Shaper */
+            && fort_shaper_packet_process(
+                    &fort_device()->shaper, inFixedValues, inMetaValues, netBufList, flowContext)) {
+
+        fort_callout_classify_drop(classifyOut); /* drop */
+        return;
     }
 
     fort_callout_classify_permit(filter, classifyOut); /* permit */
 }
 
-static void NTAPI fort_callout_mac_frame_delete(
+static void NTAPI fort_callout_transport_delete(
         UINT16 layerId, UINT32 calloutId, UINT64 flowContext)
 {
     UNUSED(layerId);
@@ -559,30 +542,56 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
         return status;
     }
 
-    /* Inbound MAC Frame callout */
-    c.calloutKey = FORT_GUID_CALLOUT_IN_MAC_FRAME;
-    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_mac_frame_classify;
+    /* IPv4 inbound transport callout */
+    c.calloutKey = FORT_GUID_CALLOUT_IN_TRANSPORT_V4;
+    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_transport_classify;
 
-    c.flowDeleteFn = fort_callout_mac_frame_delete;
+    c.flowDeleteFn = fort_callout_transport_delete;
     /* reuse c.flags */
 
-    status = FwpsCalloutRegister0(device, &c, &stat->in_mac_frame_id);
+    status = FwpsCalloutRegister0(device, &c, &stat->in_transport4_id);
     if (!NT_SUCCESS(status)) {
-        LOG("Register Inbound MAC Frame: Error: %x\n", status);
-        TRACE(FORT_CALLOUT_REGISTER_INBOUND_MAC_FRAME_ERROR, status, 0, 0);
+        LOG("Register Inbound Transport V4: Error: %x\n", status);
+        TRACE(FORT_CALLOUT_REGISTER_INBOUND_TRANSPORT_V4_ERROR, status, 0, 0);
         return status;
     }
 
-    /* Outbound MAC Frame callout */
-    c.calloutKey = FORT_GUID_CALLOUT_OUT_MAC_FRAME;
-    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_mac_frame_classify;
+    /* IPv6 inbound transport callout */
+    c.calloutKey = FORT_GUID_CALLOUT_IN_TRANSPORT_V6;
+    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_transport_classify;
 
     /* reuse c.flowDeleteFn & c.flags */
 
-    status = FwpsCalloutRegister0(device, &c, &stat->out_mac_frame_id);
+    status = FwpsCalloutRegister0(device, &c, &stat->in_transport6_id);
     if (!NT_SUCCESS(status)) {
-        LOG("Register Outbound MAC Frame: Error: %x\n", status);
-        TRACE(FORT_CALLOUT_REGISTER_OUTBOUND_MAC_FRAME_ERROR, status, 0, 0);
+        LOG("Register Inbound Transport V6: Error: %x\n", status);
+        TRACE(FORT_CALLOUT_REGISTER_INBOUND_TRANSPORT_V6_ERROR, status, 0, 0);
+        return status;
+    }
+
+    /* IPv4 outbound transport callout */
+    c.calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V4;
+    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_transport_classify;
+
+    /* reuse c.flowDeleteFn & c.flags */
+
+    status = FwpsCalloutRegister0(device, &c, &stat->out_transport4_id);
+    if (!NT_SUCCESS(status)) {
+        LOG("Register Outbound Transport V4: Error: %x\n", status);
+        TRACE(FORT_CALLOUT_REGISTER_OUTBOUND_TRANSPORT_V4_ERROR, status, 0, 0);
+        return status;
+    }
+
+    /* IPv6 outbound transport callout */
+    c.calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V6;
+    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_transport_classify;
+
+    /* reuse c.flowDeleteFn & c.flags */
+
+    status = FwpsCalloutRegister0(device, &c, &stat->out_transport6_id);
+    if (!NT_SUCCESS(status)) {
+        LOG("Register Outbound Transport V6: Error: %x\n", status);
+        TRACE(FORT_CALLOUT_REGISTER_OUTBOUND_TRANSPORT_V6_ERROR, status, 0, 0);
         return status;
     }
 
@@ -633,14 +642,24 @@ FORT_API void fort_callout_remove(void)
         stat->datagram6_id = 0;
     }
 
-    if (stat->in_mac_frame_id) {
-        FwpsCalloutUnregisterById0(stat->in_mac_frame_id);
-        stat->in_mac_frame_id = 0;
+    if (stat->in_transport4_id) {
+        FwpsCalloutUnregisterById0(stat->in_transport4_id);
+        stat->in_transport4_id = 0;
     }
 
-    if (stat->out_mac_frame_id) {
-        FwpsCalloutUnregisterById0(stat->out_mac_frame_id);
-        stat->out_mac_frame_id = 0;
+    if (stat->in_transport6_id) {
+        FwpsCalloutUnregisterById0(stat->in_transport6_id);
+        stat->in_transport6_id = 0;
+    }
+
+    if (stat->out_transport4_id) {
+        FwpsCalloutUnregisterById0(stat->out_transport4_id);
+        stat->out_transport4_id = 0;
+    }
+
+    if (stat->out_transport6_id) {
+        FwpsCalloutUnregisterById0(stat->out_transport6_id);
+        stat->out_transport6_id = 0;
     }
 }
 
