@@ -13,8 +13,6 @@
 #define FORT_PACKET_INBOUND 0x01
 #define FORT_PACKET_IP6     0x02
 
-#define FORT_MAC_FRAME_PACKET_COUNT_MAX 0xFF
-
 typedef struct fort_packet_in
 {
     IF_INDEX interfaceIndex;
@@ -39,7 +37,7 @@ typedef struct fort_packet
     UCHAR flags;
 
     /* Data for re-injection */
-    UCHAR compartmentId;
+    COMPARTMENT_ID compartmentId;
     PNET_BUFFER_LIST netBufList;
     union {
         FORT_PACKET_IN in;
