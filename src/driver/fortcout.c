@@ -402,9 +402,8 @@ static void NTAPI fort_callout_flow_delete(UINT16 layerId, UINT32 calloutId, UIN
 }
 
 static void NTAPI fort_callout_transport_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
-        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PNET_BUFFER_LIST netBufList,
-        const void *classifyContext, const FWPS_FILTER0 *filter, UINT64 flowContext,
-        FWPS_CLASSIFY_OUT0 *classifyOut)
+        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const PNET_BUFFER_LIST netBufList,
+        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
     if ((classifyOut->rights & FWPS_RIGHT_ACTION_WRITE) == 0
             || classifyOut->actionType == FWP_ACTION_BLOCK)
