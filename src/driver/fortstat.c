@@ -270,21 +270,15 @@ inline static NTSTATUS fort_flow_context_transport_remove(
 static BOOL fort_flow_context_remove_id(
         PFORT_STAT stat, UINT64 flow_id, BOOL isIPv6, BOOL is_tcp, BOOL inbound)
 {
-    NTSTATUS status;
+    const NTSTATUS flow_status = fort_flow_context_flow_remove(stat, flow_id, isIPv6, inbound);
 
-    status = fort_flow_context_flow_remove(stat, flow_id, isIPv6, inbound);
-    if (status == STATUS_PENDING)
-        return FALSE;
+    const NTSTATUS stream_status = fort_flow_context_stream_remove(stat, flow_id, isIPv6, is_tcp);
 
-    status = fort_flow_context_stream_remove(stat, flow_id, isIPv6, is_tcp);
-    if (status == STATUS_PENDING)
-        return FALSE;
+    const NTSTATUS transport_status =
+            fort_flow_context_transport_remove(stat, flow_id, isIPv6, inbound);
 
-    status = fort_flow_context_transport_remove(stat, flow_id, isIPv6, inbound);
-    if (status == STATUS_PENDING)
-        return FALSE;
-
-    return TRUE;
+    return flow_status != STATUS_PENDING && stream_status != STATUS_PENDING
+            && transport_status != STATUS_PENDING;
 }
 
 static BOOL fort_flow_context_remove(PFORT_STAT stat, PFORT_FLOW flow)
@@ -393,7 +387,7 @@ FORT_API void fort_stat_open(PFORT_STAT stat)
     KeInitializeSpinLock(&stat->lock);
 }
 
-static BOOL fort_stat_close_flows(PFORT_STAT stat, UINT32 *flow_index)
+static BOOL fort_stat_close_flows(PFORT_STAT stat)
 {
     BOOL is_pending = FALSE;
 
@@ -403,25 +397,23 @@ static BOOL fort_stat_close_flows(PFORT_STAT stat, UINT32 *flow_index)
         assert((fort_stat_flags(stat) & FORT_STAT_CLOSED) != 0);
 
         tommy_arrayof *flows = &stat->flows;
+        UINT32 flow_count = stat->flow_count;
 
-        UINT32 i = *flow_index;
-
-        for (; stat->flow_count != 0; ++i) {
+        for (UINT32 i = 0; flow_count != 0; ++i) {
             PFORT_FLOW flow = tommy_arrayof_ref(flows, i);
             if (fort_flow_is_closed(flow))
                 continue;
 
             if (!fort_flow_context_remove(stat, flow)) {
                 is_pending = TRUE;
-                break;
+            } else {
+                fort_flow_close(flow);
+
+                stat->flow_count--;
             }
 
-            fort_flow_close(flow);
-
-            stat->flow_count--;
+            --flow_count;
         }
-
-        *flow_index = i;
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
@@ -432,8 +424,7 @@ FORT_API void fort_stat_close(PFORT_STAT stat)
 {
     fort_stat_flags_set(stat, FORT_STAT_CLOSED, TRUE);
 
-    UINT32 flow_index = 0;
-    while (!fort_stat_close_flows(stat, &flow_index)) {
+    while (!fort_stat_close_flows(stat)) {
         /* Wait for asynchronously deleting flows */
         LARGE_INTEGER delay;
         delay.QuadPart = -3000000; /* sleep 300000us (300ms) */
