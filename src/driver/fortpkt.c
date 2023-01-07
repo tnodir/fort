@@ -512,8 +512,10 @@ FORT_API void fort_shaper_open(PFORT_SHAPER shaper)
     g_QpcFrequencyHalfMs = g_QpcFrequency.QuadPart / 2000LL;
     g_RandomSeed = now.LowPart;
 
-    FwpsInjectionHandleCreate0(AF_INET, FWPS_INJECTION_TYPE_L2, &shaper->injection_transport4_id);
-    FwpsInjectionHandleCreate0(AF_INET6, FWPS_INJECTION_TYPE_L2, &shaper->injection_transport6_id);
+    FwpsInjectionHandleCreate0(
+            AF_INET, FWPS_INJECTION_TYPE_TRANSPORT, &shaper->injection_transport4_id);
+    FwpsInjectionHandleCreate0(
+            AF_INET6, FWPS_INJECTION_TYPE_TRANSPORT, &shaper->injection_transport6_id);
 
     fort_timer_open(
             &shaper->timer, /*period(ms)=*/1, FORT_TIMER_ONESHOT, &fort_shaper_timer_process);
