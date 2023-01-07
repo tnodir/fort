@@ -230,6 +230,10 @@ static void fort_callout_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
 
     const UINT32 classify_flags = inFixedValues->incomingValue[flagsField].value.uint32;
 
+    if ((classify_flags & FWP_CONDITION_FLAG_IS_REAUTHORIZE) != 0) {
+        inbound = (inMetaValues->packetDirection == FWP_DIRECTION_INBOUND);
+    }
+
     const UINT32 *remote_ip = isIPv6
             ? (const UINT32 *) inFixedValues->incomingValue[remoteIpField].value.byteArray16
             : &inFixedValues->incomingValue[remoteIpField].value.uint32;
