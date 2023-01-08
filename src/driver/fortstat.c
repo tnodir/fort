@@ -121,25 +121,37 @@ FORT_API UCHAR fort_flow_flags(PFORT_FLOW flow)
     return fort_flow_flags_set(flow, 0, TRUE);
 }
 
+inline static void fort_flow_context_stream_init_stream(
+        PFORT_STAT stat, BOOL isIPv6, UINT16 *layerId, UINT32 *calloutId)
+{
+    if (isIPv6) {
+        *layerId = FWPS_LAYER_STREAM_V6;
+        *calloutId = stat->stream6_id;
+    } else {
+        *layerId = FWPS_LAYER_STREAM_V4;
+        *calloutId = stat->stream4_id;
+    }
+}
+
+inline static void fort_flow_context_stream_init_datagram(
+        PFORT_STAT stat, BOOL isIPv6, UINT16 *layerId, UINT32 *calloutId)
+{
+    if (isIPv6) {
+        *layerId = FWPS_LAYER_DATAGRAM_DATA_V6;
+        *calloutId = stat->datagram6_id;
+    } else {
+        *layerId = FWPS_LAYER_DATAGRAM_DATA_V4;
+        *calloutId = stat->datagram4_id;
+    }
+}
+
 static void fort_flow_context_stream_init(
         PFORT_STAT stat, BOOL isIPv6, BOOL is_tcp, UINT16 *layerId, UINT32 *calloutId)
 {
     if (is_tcp) {
-        if (isIPv6) {
-            *layerId = FWPS_LAYER_STREAM_V6;
-            *calloutId = stat->stream6_id;
-        } else {
-            *layerId = FWPS_LAYER_STREAM_V4;
-            *calloutId = stat->stream4_id;
-        }
+        fort_flow_context_stream_init_stream(stat, isIPv6, layerId, calloutId);
     } else {
-        if (isIPv6) {
-            *layerId = FWPS_LAYER_DATAGRAM_DATA_V6;
-            *calloutId = stat->datagram6_id;
-        } else {
-            *layerId = FWPS_LAYER_DATAGRAM_DATA_V4;
-            *calloutId = stat->datagram4_id;
-        }
+        fort_flow_context_stream_init_datagram(stat, isIPv6, layerId, calloutId);
     }
 }
 
