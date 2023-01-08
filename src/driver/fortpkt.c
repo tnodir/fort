@@ -14,9 +14,6 @@
 
 #define HTONL(l) _byteswap_ulong(l)
 
-#define fort_shaper_injection_id(shaper, isIPv6)                                                   \
-    ((isIPv6) ? (shaper)->injection_transport6_id : (shaper)->injection_transport4_id)
-
 typedef void(NTAPI *FORT_PACKET_FOREACH_FUNC)(PFORT_SHAPER, PFORT_PACKET);
 
 static LARGE_INTEGER g_QpcFrequency;
@@ -52,7 +49,7 @@ static ULONG fort_packet_data_length(const PNET_BUFFER_LIST netBufList)
     ULONG data_length = 0;
 
     PNET_BUFFER netBuf = NET_BUFFER_LIST_FIRST_NB(netBufList);
-    while (netBuf) {
+    while (netBuf != NULL) {
         data_length += NET_BUFFER_DATA_LENGTH(netBuf);
         netBuf = NET_BUFFER_NEXT_NB(netBuf);
     }
@@ -173,11 +170,18 @@ static NTSTATUS fort_shaper_packet_inject_out(PFORT_SHAPER shaper, const PFORT_P
             (FWPS_INJECT_COMPLETE0) &fort_packet_inject_complete, pkt);
 }
 
+inline static HANDLE fort_shaper_injection_id(PFORT_SHAPER shaper, BOOL isIPv6, BOOL inbound)
+{
+    return inbound
+            ? (isIPv6 ? shaper->injection_in_transport6_id : shaper->injection_in_transport4_id)
+            : (isIPv6 ? shaper->injection_out_transport6_id : shaper->injection_out_transport4_id);
+}
+
 static void fort_shaper_packet_inject(PFORT_SHAPER shaper, PFORT_PACKET pkt)
 {
     const BOOL inbound = (pkt->flags & FORT_PACKET_INBOUND) != 0;
     const BOOL isIPv6 = (pkt->flags & FORT_PACKET_IP6) != 0;
-    const HANDLE injection_id = fort_shaper_injection_id(shaper, isIPv6);
+    const HANDLE injection_id = fort_shaper_injection_id(shaper, isIPv6, inbound);
     const ADDRESS_FAMILY addressFamily = (isIPv6 ? AF_INET6 : AF_INET);
 
     const NTSTATUS status = inbound
@@ -344,7 +348,7 @@ static PFORT_PACKET fort_shaper_queue_get_packets(PFORT_PACKET_QUEUE queue, PFOR
 inline static BOOL fort_shaper_queue_is_empty(PFORT_PACKET_QUEUE queue)
 {
     return fort_shaper_packet_list_is_empty(&queue->bandwidth_list)
-            || fort_shaper_packet_list_is_empty(&queue->latency_list);
+            && fort_shaper_packet_list_is_empty(&queue->latency_list);
 }
 
 static BOOL fort_shaper_queue_process(PFORT_SHAPER shaper, PFORT_PACKET_QUEUE queue)
@@ -391,6 +395,8 @@ static void fort_shaper_create_queues(
                 break;
 
             RtlZeroMemory(queue, sizeof(FORT_PACKET_QUEUE));
+
+            KeInitializeSpinLock(&queue->lock);
 
             shaper->queues[i] = queue;
         }
@@ -513,9 +519,13 @@ FORT_API void fort_shaper_open(PFORT_SHAPER shaper)
     g_RandomSeed = now.LowPart;
 
     FwpsInjectionHandleCreate0(
-            AF_INET, FWPS_INJECTION_TYPE_TRANSPORT, &shaper->injection_transport4_id);
+            AF_INET, FWPS_INJECTION_TYPE_TRANSPORT, &shaper->injection_in_transport4_id);
     FwpsInjectionHandleCreate0(
-            AF_INET6, FWPS_INJECTION_TYPE_TRANSPORT, &shaper->injection_transport6_id);
+            AF_INET6, FWPS_INJECTION_TYPE_TRANSPORT, &shaper->injection_in_transport6_id);
+    FwpsInjectionHandleCreate0(
+            AF_INET, FWPS_INJECTION_TYPE_TRANSPORT, &shaper->injection_out_transport4_id);
+    FwpsInjectionHandleCreate0(
+            AF_INET6, FWPS_INJECTION_TYPE_TRANSPORT, &shaper->injection_out_transport6_id);
 
     fort_timer_open(
             &shaper->timer, /*period(ms)=*/1, FORT_TIMER_ONESHOT, &fort_shaper_timer_process);
@@ -530,8 +540,10 @@ FORT_API void fort_shaper_close(PFORT_SHAPER shaper)
     fort_shaper_drop_packets(shaper);
     fort_shaper_free_queues(shaper);
 
-    FwpsInjectionHandleDestroy0(shaper->injection_transport4_id);
-    FwpsInjectionHandleDestroy0(shaper->injection_transport6_id);
+    FwpsInjectionHandleDestroy0(shaper->injection_in_transport4_id);
+    FwpsInjectionHandleDestroy0(shaper->injection_in_transport6_id);
+    FwpsInjectionHandleDestroy0(shaper->injection_out_transport4_id);
+    FwpsInjectionHandleDestroy0(shaper->injection_out_transport6_id);
 }
 
 FORT_API void fort_shaper_conf_update(PFORT_SHAPER shaper, const PFORT_CONF_IO conf_io)
@@ -582,8 +594,7 @@ void fort_shaper_conf_flags_update(PFORT_SHAPER shaper, const PFORT_CONF_FLAGS c
     fort_shaper_flush(shaper, flush_io_bits, /*drop=*/FALSE);
 }
 
-static void fort_shaper_packet_queue_add(
-        PFORT_SHAPER shaper, PFORT_PACKET_QUEUE queue, PFORT_PACKET pkt)
+static void fort_shaper_packet_queue_add_packet(PFORT_PACKET_QUEUE queue, PFORT_PACKET pkt)
 {
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&queue->lock, &lock_queue);
@@ -593,6 +604,40 @@ static void fort_shaper_packet_queue_add(
         fort_shaper_packet_list_add(&queue->bandwidth_list, pkt);
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
+}
+
+inline static BOOL fort_shaper_packet_queue_check_plr(PFORT_PACKET_QUEUE queue)
+{
+    const UINT16 plr = queue->limit.plr;
+    if (plr > 0) {
+        const ULONG random = RtlRandomEx(&g_RandomSeed) % 10000; /* PLR range is 0-10000 */
+        if (random < plr)
+            return FALSE;
+    }
+    return TRUE;
+}
+
+inline static BOOL fort_shaper_packet_queue_check_buffer(
+        PFORT_PACKET_QUEUE queue, ULONG data_length)
+{
+    const UINT64 buffer_bytes = queue->limit.buffer_bytes;
+
+    return buffer_bytes == 0 || buffer_bytes >= (queue->queued_bytes + data_length);
+}
+
+static BOOL fort_shaper_packet_queue_check_packet(PFORT_PACKET_QUEUE queue, ULONG data_length)
+{
+    BOOL res;
+
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&queue->lock, &lock_queue);
+    {
+        res = fort_shaper_packet_queue_check_plr(queue)
+                && fort_shaper_packet_queue_check_buffer(queue, data_length);
+    }
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    return res;
 }
 
 static NTSTATUS fort_shaper_packet_queue(PFORT_SHAPER shaper,
@@ -614,20 +659,11 @@ static NTSTATUS fort_shaper_packet_queue(PFORT_SHAPER shaper,
     if (queue == NULL)
         return STATUS_NO_SUCH_GROUP;
 
-    /* Check the Queue's PLR */
-    const UINT16 plr = queue->limit.plr;
-    if (plr > 0) {
-        const ULONG random = RtlRandomEx(&g_RandomSeed) % 10000; /* PLR range is 0-10000 */
-        if (random < plr)
-            return STATUS_SUCCESS; /* drop the packet */
-    }
-
     /* Calculate the Packets' Data Length */
     const ULONG data_length = fort_packet_data_length(netBufList);
 
-    /* Check the Queue's Buffer Capacity */
-    const UINT64 buffer_bytes = queue->limit.buffer_bytes;
-    if (buffer_bytes > 0 && queue->queued_bytes + data_length > buffer_bytes)
+    /* Check the Queue for new Packet */
+    if (!fort_shaper_packet_queue_check_packet(queue, data_length))
         return STATUS_SUCCESS; /* drop the packet */
 
     /* Clone the Packet */
@@ -639,7 +675,11 @@ static NTSTATUS fort_shaper_packet_queue(PFORT_SHAPER shaper,
 
     status = fort_shaper_packet_clone(
             shaper, inFixedValues, inMetaValues, netBufList, pkt, isIPv6, inbound);
+
     if (!NT_SUCCESS(status)) {
+        LOG("Shaper: Packet clone error: %x\n", status);
+        TRACE(FORT_SHAPER_PACKET_CLONE_ERROR, status, 0, 0);
+
         fort_shaper_packet_free(/*shaper=*/NULL, pkt);
         return status;
     }
@@ -648,7 +688,7 @@ static NTSTATUS fort_shaper_packet_queue(PFORT_SHAPER shaper,
     pkt->flags = (inbound ? FORT_PACKET_INBOUND : 0) | (isIPv6 ? FORT_PACKET_IP6 : 0);
 
     /* Add the Cloned Packet to Queue */
-    fort_shaper_packet_queue_add(shaper, queue, pkt);
+    fort_shaper_packet_queue_add_packet(queue, pkt);
 
     /* Process the Packet Queue */
     if (fort_shaper_queue_process(shaper, queue)) {
@@ -663,13 +703,11 @@ static NTSTATUS fort_shaper_packet_queue(PFORT_SHAPER shaper,
 FORT_API BOOL fort_shaper_packet_process(PFORT_SHAPER shaper,
         const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PNET_BUFFER_LIST netBufList,
-        UINT64 flowContext)
+        UINT64 flowContext, BOOL inbound)
 {
     PFORT_FLOW flow = (PFORT_FLOW) flowContext;
 
     const UCHAR flow_flags = fort_flow_flags(flow);
-
-    const BOOL inbound = (flow_flags & FORT_FLOW_INBOUND) != 0;
     const UCHAR speed_limit = inbound ? FORT_FLOW_SPEED_LIMIT_IN : FORT_FLOW_SPEED_LIMIT_OUT;
 
     if ((flow_flags & speed_limit) == 0
@@ -677,7 +715,7 @@ FORT_API BOOL fort_shaper_packet_process(PFORT_SHAPER shaper,
         return FALSE;
 
     const BOOL isIPv6 = (flow_flags & FORT_FLOW_IP6) != 0;
-    const HANDLE injection_id = fort_shaper_injection_id(shaper, isIPv6);
+    const HANDLE injection_id = fort_shaper_injection_id(shaper, isIPv6, inbound);
 
     /* Skip self injected packet */
     if (fort_packet_injected_by_self(injection_id, netBufList))

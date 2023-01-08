@@ -77,8 +77,10 @@ typedef struct fort_shaper
     LONG volatile group_io_bits;
     LONG volatile active_io_bits;
 
-    HANDLE injection_transport4_id;
-    HANDLE injection_transport6_id;
+    HANDLE injection_in_transport4_id;
+    HANDLE injection_in_transport6_id;
+    HANDLE injection_out_transport4_id;
+    HANDLE injection_out_transport6_id;
 
     FORT_TIMER timer;
 
@@ -102,7 +104,7 @@ FORT_API void fort_shaper_conf_flags_update(PFORT_SHAPER shaper, const PFORT_CON
 FORT_API BOOL fort_shaper_packet_process(PFORT_SHAPER shaper,
         const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PNET_BUFFER_LIST netBufList,
-        UINT64 flowContext);
+        UINT64 flowContext, BOOL inbound);
 
 FORT_API void fort_shaper_drop_packets(PFORT_SHAPER shaper);
 

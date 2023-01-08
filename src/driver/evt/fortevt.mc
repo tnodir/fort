@@ -138,6 +138,11 @@ Language=English
 Shaper: Packet injection call error.
 .
 
+MessageId=3 Facility=Shaper Severity=Error SymbolicName=FORT_SHAPER_PACKET_CLONE_ERROR
+Language=English
+Shaper: Packet clone error.
+.
+
 
 ;/* ProcessTree */
 MessageId=1 Facility=ProcessTree Severity=Error SymbolicName=FORT_PSTREE_UPDATE_ERROR

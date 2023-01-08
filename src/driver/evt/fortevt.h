@@ -243,6 +243,15 @@
 //
 #define FORT_SHAPER_PACKET_INJECTION_CALL_ERROR ((NTSTATUS)0xC0050002L)
 
+//
+// MessageId: FORT_SHAPER_PACKET_CLONE_ERROR
+//
+// MessageText:
+//
+// Shaper: Packet clone error.
+//
+#define FORT_SHAPER_PACKET_CLONE_ERROR   ((NTSTATUS)0xC0050003L)
+
 /* ProcessTree */
 //
 // MessageId: FORT_PSTREE_UPDATE_ERROR

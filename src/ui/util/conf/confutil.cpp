@@ -557,7 +557,7 @@ void ConfUtil::writeLimits(struct fort_speed_limit *limits, quint16 *limitBits,
     *limitIoBits = 0;
 
     const int groupsCount = appGroups.size();
-    for (int i = 0; i < groupsCount; ++i, ++limits) {
+    for (int i = 0; i < groupsCount; ++i, limits += 2) {
         const AppGroup *appGroup = appGroups.at(i);
 
         const quint32 limitIn = appGroup->enabledSpeedLimitIn();
