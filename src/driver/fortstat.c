@@ -317,6 +317,22 @@ inline static UCHAR fort_stat_group_speed_limit(PFORT_CONF_GROUP conf_group, UCH
     return (((conf_group->limit_io_bits) >> (group_index * 2)) & 3);
 }
 
+inline static NTSTATUS fort_flow_add_new(PFORT_STAT stat, PFORT_FLOW *flow, UINT64 flow_id,
+        tommy_key_t flow_hash, BOOL isIPv6, BOOL is_tcp, BOOL inbound, BOOL is_reauth)
+{
+    if (is_reauth) {
+        /* Remove existing flow context after reauth. to be able to associate a flow-context */
+        if (!fort_flow_context_remove_id(stat, flow_id, isIPv6, is_tcp))
+            return FORT_STATUS_FLOW_BLOCK;
+    }
+
+    *flow = fort_flow_new(stat, flow_id, flow_hash, isIPv6, is_tcp, inbound);
+    if (*flow == NULL)
+        return STATUS_INSUFFICIENT_RESOURCES;
+
+    return STATUS_SUCCESS;
+}
+
 static NTSTATUS fort_flow_add(PFORT_STAT stat, UINT64 flow_id, UCHAR group_index, UINT16 proc_index,
         BOOL isIPv6, BOOL is_tcp, BOOL inbound, BOOL is_reauth)
 {
@@ -325,15 +341,11 @@ static NTSTATUS fort_flow_add(PFORT_STAT stat, UINT64 flow_id, UCHAR group_index
     BOOL is_new_flow = FALSE;
 
     if (flow == NULL) {
-        if (is_reauth) {
-            /* Remove existing flow context after reauth. to be able to associate a flow-context */
-            if (!fort_flow_context_remove_id(stat, flow_id, isIPv6, is_tcp))
-                return FORT_STATUS_FLOW_BLOCK;
-        }
+        const NTSTATUS status = fort_flow_add_new(
+                stat, &flow, flow_id, flow_hash, isIPv6, is_tcp, inbound, is_reauth);
 
-        flow = fort_flow_new(stat, flow_id, flow_hash, isIPv6, is_tcp, inbound);
-        if (flow == NULL)
-            return STATUS_INSUFFICIENT_RESOURCES;
+        if (!NT_SUCCESS(status))
+            return status;
 
         is_new_flow = TRUE;
     } else {
