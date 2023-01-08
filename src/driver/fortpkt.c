@@ -57,16 +57,12 @@ static ULONG fort_packet_data_length(const PNET_BUFFER_LIST netBufList)
     return data_length;
 }
 
-static NTSTATUS fort_shaper_packet_clone(PFORT_SHAPER shaper,
-        const FWPS_INCOMING_VALUES0 *inFixedValues,
+static void fort_shaper_packet_fill(PFORT_SHAPER shaper, const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PNET_BUFFER_LIST netBufList,
         PFORT_PACKET pkt, BOOL isIPv6, BOOL inbound)
 {
-    NTSTATUS status;
-
     pkt->compartmentId = inMetaValues->compartmentId;
 
-    ULONG bytesRetreated = 0;
     if (inbound) {
         PFORT_PACKET_IN pkt_in = &pkt->in;
 
@@ -76,7 +72,7 @@ static NTSTATUS fort_shaper_packet_clone(PFORT_SHAPER shaper,
         pkt_in->interfaceIndex = inFixedValues->incomingValue[interfaceField].value.uint32;
         pkt_in->subInterfaceIndex = inFixedValues->incomingValue[subInterfaceField].value.uint32;
 
-        bytesRetreated = inMetaValues->transportHeaderSize + inMetaValues->ipHeaderSize;
+        pkt_in->bytesRetreated = inMetaValues->transportHeaderSize + inMetaValues->ipHeaderSize;
     } else {
         PFORT_PACKET_OUT pkt_out = &pkt->out;
 
@@ -97,65 +93,55 @@ static NTSTATUS fort_shaper_packet_clone(PFORT_SHAPER shaper,
         pkt_out->endpointHandle = inMetaValues->transportEndpointHandle;
     }
 
-    /* Clone the Buffer */
-    if (bytesRetreated != 0) {
-        status = NdisRetreatNetBufferDataStart(
-                NET_BUFFER_LIST_FIRST_NB(netBufList), bytesRetreated, 0, 0);
-        if (!NT_SUCCESS(status))
-            return status;
-    }
-
-    status = FwpsAllocateCloneNetBufferList0(netBufList, NULL, NULL, 0, &pkt->netBufList);
-    if (!NT_SUCCESS(status))
-        return status;
-
-    if (bytesRetreated != 0) {
-        NdisAdvanceNetBufferDataStart(
-                NET_BUFFER_LIST_FIRST_NB(netBufList), bytesRetreated, FALSE, 0);
-    }
-
-    return STATUS_SUCCESS;
+    FwpsReferenceNetBufferList0(pkt->netBufList, TRUE);
 }
 
-static void fort_shaper_packet_free(PFORT_SHAPER shaper, PFORT_PACKET pkt)
+static void fort_shaper_packet_free(
+        PFORT_SHAPER shaper, PFORT_PACKET pkt, PNET_BUFFER_LIST clonedNetBufList)
 {
     UNUSED(shaper);
 
-    if (pkt->netBufList != NULL) {
-        const NTSTATUS status = pkt->netBufList->Status;
+    if (clonedNetBufList != NULL) {
+        const NTSTATUS status = clonedNetBufList->Status;
 
         if (!NT_SUCCESS(status) && status != STATUS_NOT_FOUND) {
             LOG("Shaper: Packet injection error: %x\n", status);
             TRACE(FORT_SHAPER_PACKET_INJECTION_ERROR, status, 0, 0);
         }
 
-        FwpsFreeCloneNetBufferList0(pkt->netBufList, 0);
+        FwpsFreeCloneNetBufferList0(clonedNetBufList, 0);
     }
 
+    FwpsDereferenceNetBufferList0(pkt->netBufList, FALSE);
+
     fort_mem_free(pkt, FORT_PACKET_POOL_TAG);
+}
+
+static void fort_shaper_packet_drop(PFORT_SHAPER shaper, PFORT_PACKET pkt)
+{
+    fort_shaper_packet_free(shaper, pkt, /*clonedNetBufList=*/NULL);
 }
 
 static void NTAPI fort_packet_inject_complete(
         PFORT_PACKET pkt, PNET_BUFFER_LIST clonedNetBufList, BOOLEAN dispatchLevel)
 {
-    UNUSED(clonedNetBufList);
     UNUSED(dispatchLevel);
 
-    fort_shaper_packet_free(/*shaper=*/NULL, pkt);
+    fort_shaper_packet_free(/*shaper=*/NULL, pkt, clonedNetBufList);
 }
 
 static NTSTATUS fort_shaper_packet_inject_in(PFORT_SHAPER shaper, const PFORT_PACKET pkt,
-        HANDLE injection_id, ADDRESS_FAMILY addressFamily)
+        PNET_BUFFER_LIST clonedNetBufList, HANDLE injection_id, ADDRESS_FAMILY addressFamily)
 {
     const PFORT_PACKET_IN pkt_in = &pkt->in;
 
     return FwpsInjectTransportReceiveAsync0(injection_id, NULL, NULL, 0, addressFamily,
-            pkt->compartmentId, pkt_in->interfaceIndex, pkt_in->subInterfaceIndex, pkt->netBufList,
+            pkt->compartmentId, pkt_in->interfaceIndex, pkt_in->subInterfaceIndex, clonedNetBufList,
             (FWPS_INJECT_COMPLETE0) &fort_packet_inject_complete, pkt);
 }
 
 static NTSTATUS fort_shaper_packet_inject_out(PFORT_SHAPER shaper, const PFORT_PACKET pkt,
-        HANDLE injection_id, ADDRESS_FAMILY addressFamily)
+        PNET_BUFFER_LIST clonedNetBufList, HANDLE injection_id, ADDRESS_FAMILY addressFamily)
 {
     PFORT_PACKET_OUT pkt_out = &pkt->out;
 
@@ -166,7 +152,7 @@ static NTSTATUS fort_shaper_packet_inject_out(PFORT_SHAPER shaper, const PFORT_P
     sendArgs.remoteScopeId = pkt_out->remoteScopeId;
 
     return FwpsInjectTransportSendAsync0(injection_id, NULL, pkt_out->endpointHandle, 0, &sendArgs,
-            addressFamily, pkt->compartmentId, pkt->netBufList,
+            addressFamily, pkt->compartmentId, clonedNetBufList,
             (FWPS_INJECT_COMPLETE0) &fort_packet_inject_complete, pkt);
 }
 
@@ -177,24 +163,61 @@ inline static HANDLE fort_shaper_injection_id(PFORT_SHAPER shaper, BOOL isIPv6, 
             : (isIPv6 ? shaper->injection_out_transport6_id : shaper->injection_out_transport4_id);
 }
 
+inline static NTSTATUS fort_shaper_packet_inject_clone(
+        PFORT_SHAPER shaper, PFORT_PACKET pkt, PNET_BUFFER_LIST *clonedNetBufList, BOOL inbound)
+{
+    NTSTATUS status;
+
+    const ULONG bytesRetreated = inbound ? pkt->in.bytesRetreated : 0;
+
+    if (bytesRetreated != 0) {
+        status = NdisRetreatNetBufferDataStart(
+                NET_BUFFER_LIST_FIRST_NB(pkt->netBufList), bytesRetreated, 0, 0);
+        if (!NT_SUCCESS(status))
+            return status;
+    }
+
+    status = FwpsAllocateCloneNetBufferList0(pkt->netBufList, NULL, NULL, 0, clonedNetBufList);
+
+    if (bytesRetreated != 0) {
+        NdisAdvanceNetBufferDataStart(
+                NET_BUFFER_LIST_FIRST_NB(pkt->netBufList), bytesRetreated, FALSE, 0);
+    }
+
+    return status;
+}
+
 static void fort_shaper_packet_inject(PFORT_SHAPER shaper, PFORT_PACKET pkt)
 {
+    NTSTATUS status;
+
     const BOOL inbound = (pkt->flags & FORT_PACKET_INBOUND) != 0;
     const BOOL isIPv6 = (pkt->flags & FORT_PACKET_IP6) != 0;
     const HANDLE injection_id = fort_shaper_injection_id(shaper, isIPv6, inbound);
     const ADDRESS_FAMILY addressFamily = (isIPv6 ? AF_INET6 : AF_INET);
 
-    const NTSTATUS status = inbound
-            ? fort_shaper_packet_inject_in(shaper, pkt, injection_id, addressFamily)
-            : fort_shaper_packet_inject_out(shaper, pkt, injection_id, addressFamily);
+    PNET_BUFFER_LIST clonedNetBufList = NULL;
+    status = fort_shaper_packet_inject_clone(shaper, pkt, &clonedNetBufList, inbound);
+    if (!NT_SUCCESS(status)) {
+        LOG("Shaper: Packet clone error: %x\n", status);
+        TRACE(FORT_SHAPER_PACKET_CLONE_ERROR, status, 0, 0);
+    }
+
+    if (NT_SUCCESS(status)) {
+        status = inbound ? fort_shaper_packet_inject_in(
+                         shaper, pkt, clonedNetBufList, injection_id, addressFamily)
+                         : fort_shaper_packet_inject_out(
+                                 shaper, pkt, clonedNetBufList, injection_id, addressFamily);
+        if (!NT_SUCCESS(status)) {
+            LOG("Shaper: Packet injection call error: %x\n", status);
+            TRACE(FORT_SHAPER_PACKET_INJECTION_CALL_ERROR, status, 0, 0);
+
+            clonedNetBufList->Status = STATUS_SUCCESS;
+        }
+    }
 
     if (!NT_SUCCESS(status)) {
-        LOG("Shaper: Packet injection call error: %x\n", status);
-        TRACE(FORT_SHAPER_PACKET_INJECTION_CALL_ERROR, status, 0, 0);
-
-        pkt->netBufList->Status = STATUS_SUCCESS;
-
-        fort_shaper_packet_free(/*shaper=*/NULL, pkt);
+        fort_shaper_packet_free(/*shaper=*/NULL, pkt, clonedNetBufList);
     }
 }
 
@@ -508,7 +531,7 @@ static void fort_shaper_flush(PFORT_SHAPER shaper, UINT32 group_io_bits, BOOL dr
     /* Process the packets */
     if (pkt_chain != NULL) {
         fort_shaper_packet_foreach(
-                shaper, pkt_chain, (drop ? &fort_shaper_packet_free : &fort_shaper_packet_inject));
+                shaper, pkt_chain, (drop ? &fort_shaper_packet_drop : &fort_shaper_packet_inject));
     }
 }
 
@@ -678,16 +701,7 @@ static NTSTATUS fort_shaper_packet_queue(PFORT_SHAPER shaper,
 
     RtlZeroMemory(pkt, sizeof(FORT_PACKET));
 
-    status = fort_shaper_packet_clone(
-            shaper, inFixedValues, inMetaValues, netBufList, pkt, isIPv6, inbound);
-
-    if (!NT_SUCCESS(status)) {
-        LOG("Shaper: Packet clone error: %x\n", status);
-        TRACE(FORT_SHAPER_PACKET_CLONE_ERROR, status, 0, 0);
-
-        fort_shaper_packet_free(/*shaper=*/NULL, pkt);
-        return status;
-    }
+    fort_shaper_packet_fill(shaper, inFixedValues, inMetaValues, netBufList, pkt, isIPv6, inbound);
 
     pkt->data_length = data_length;
     pkt->flags = (inbound ? FORT_PACKET_INBOUND : 0) | (isIPv6 ? FORT_PACKET_IP6 : 0);

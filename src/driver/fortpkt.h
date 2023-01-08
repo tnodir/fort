@@ -15,6 +15,8 @@ typedef struct fort_packet_in
 {
     IF_INDEX interfaceIndex;
     IF_INDEX subInterfaceIndex;
+
+    ULONG bytesRetreated;
 } FORT_PACKET_IN, *PFORT_PACKET_IN;
 
 typedef struct fort_packet_out
