@@ -548,9 +548,13 @@ FORT_API void fort_shaper_close(PFORT_SHAPER shaper)
 
 FORT_API void fort_shaper_conf_update(PFORT_SHAPER shaper, const PFORT_CONF_IO conf_io)
 {
-    const UINT32 limit_io_bits = conf_io->conf_group.limit_io_bits;
-    const UINT32 group_io_bits =
-            (limit_io_bits & fort_bits_duplicate16(conf_io->conf_group.group_bits));
+    const PFORT_CONF_GROUP conf_group = &conf_io->conf_group;
+    const PFORT_CONF_FLAGS conf_flags = &conf_io->conf.flags;
+
+    const UINT32 limit_io_bits = conf_group->limit_io_bits;
+    const UINT32 group_io_bits = conf_flags->filter_enabled
+            ? (limit_io_bits & fort_bits_duplicate16(conf_group->group_bits))
+            : 0;
     UINT32 flush_io_bits;
 
     KLOCK_QUEUE_HANDLE lock_queue;
@@ -560,7 +564,7 @@ FORT_API void fort_shaper_conf_update(PFORT_SHAPER shaper, const PFORT_CONF_IO c
 
         const UINT32 new_limit_io_bits = (flush_io_bits & limit_io_bits);
 
-        fort_shaper_create_queues(shaper, conf_io->conf_group.limits, new_limit_io_bits);
+        fort_shaper_create_queues(shaper, conf_group->limits, new_limit_io_bits);
         fort_shaper_init_queues(shaper, new_limit_io_bits);
 
         shaper->limit_io_bits = limit_io_bits;
@@ -574,7 +578,8 @@ FORT_API void fort_shaper_conf_update(PFORT_SHAPER shaper, const PFORT_CONF_IO c
 
 void fort_shaper_conf_flags_update(PFORT_SHAPER shaper, const PFORT_CONF_FLAGS conf_flags)
 {
-    const UINT32 group_io_bits = fort_bits_duplicate16((UINT16) conf_flags->group_bits);
+    const UINT32 group_io_bits =
+            conf_flags->filter_enabled ? fort_bits_duplicate16((UINT16) conf_flags->group_bits) : 0;
     UINT32 flush_io_bits;
 
     KLOCK_QUEUE_HANDLE lock_queue;
