@@ -408,6 +408,26 @@ static void NTAPI fort_callout_flow_delete(UINT16 layerId, UINT32 calloutId, UIN
     fort_flow_delete(&fort_device()->stat, flowContext);
 }
 
+static BOOL fort_callout_transport_is_ipsec_detunneled(
+        const PNET_BUFFER_LIST netBufList, BOOL inbound)
+{
+    /* To be compatible with Vista's IpSec implementation, we must not
+     * intercept not-yet-detunneled IpSec traffic. */
+
+    if (!inbound)
+        return TRUE;
+
+    FWPS_PACKET_LIST_INFORMATION0 packet_info;
+    RtlZeroMemory(&packet_info, sizeof(FWPS_PACKET_LIST_INFORMATION0));
+
+    FwpsGetPacketListSecurityInformation0(netBufList,
+            FWPS_PACKET_LIST_INFORMATION_QUERY_IPSEC | FWPS_PACKET_LIST_INFORMATION_QUERY_INBOUND,
+            &packet_info);
+
+    return !packet_info.ipsecInformation.inbound.isTunnelMode
+            || packet_info.ipsecInformation.inbound.isDeTunneled;
+}
+
 static void fort_callout_transport_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const PNET_BUFFER_LIST netBufList,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut,
@@ -419,6 +439,7 @@ static void fort_callout_transport_classify(const FWPS_INCOMING_VALUES0 *inFixed
 
     if (!FWPS_IS_METADATA_FIELD_PRESENT(inMetaValues, FWPS_METADATA_FIELD_ALE_CLASSIFY_REQUIRED)
             && netBufList != NULL
+            && fort_callout_transport_is_ipsec_detunneled(netBufList, inbound)
             /* Process the Packet by Shaper */
             && fort_shaper_packet_process(&fort_device()->shaper, inFixedValues, inMetaValues,
                     netBufList, flowContext, inbound)) {
