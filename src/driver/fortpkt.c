@@ -66,8 +66,10 @@ static void fort_shaper_packet_fill(PFORT_SHAPER shaper, const FWPS_INCOMING_VAL
     if (inbound) {
         PFORT_PACKET_IN pkt_in = &pkt->in;
 
-        const int interfaceField = FWPS_FIELD_INBOUND_TRANSPORT_V4_INTERFACE_INDEX;
-        const int subInterfaceField = FWPS_FIELD_INBOUND_TRANSPORT_V4_SUB_INTERFACE_INDEX;
+        const int interfaceField = isIPv6 ? FWPS_FIELD_INBOUND_TRANSPORT_V6_INTERFACE_INDEX
+                                          : FWPS_FIELD_INBOUND_TRANSPORT_V4_INTERFACE_INDEX;
+        const int subInterfaceField = isIPv6 ? FWPS_FIELD_INBOUND_TRANSPORT_V6_SUB_INTERFACE_INDEX
+                                             : FWPS_FIELD_INBOUND_TRANSPORT_V4_SUB_INTERFACE_INDEX;
 
         pkt_in->interfaceIndex = inFixedValues->incomingValue[interfaceField].value.uint32;
         pkt_in->subInterfaceIndex = inFixedValues->incomingValue[subInterfaceField].value.uint32;
@@ -76,7 +78,8 @@ static void fort_shaper_packet_fill(PFORT_SHAPER shaper, const FWPS_INCOMING_VAL
     } else {
         PFORT_PACKET_OUT pkt_out = &pkt->out;
 
-        const int remoteIpField = FWPS_FIELD_OUTBOUND_TRANSPORT_V4_IP_REMOTE_ADDRESS;
+        const int remoteIpField = isIPv6 ? FWPS_FIELD_OUTBOUND_TRANSPORT_V6_IP_REMOTE_ADDRESS
+                                         : FWPS_FIELD_OUTBOUND_TRANSPORT_V4_IP_REMOTE_ADDRESS;
 
         const UINT32 *remoteIp = isIPv6
                 ? (const UINT32 *) inFixedValues->incomingValue[remoteIpField].value.byteArray16
@@ -165,7 +168,7 @@ inline static HANDLE fort_shaper_injection_id(PFORT_SHAPER shaper, BOOL isIPv6, 
             : (isIPv6 ? shaper->injection_out_transport6_id : shaper->injection_out_transport4_id);
 }
 
-inline static NTSTATUS fort_shaper_packet_inject_clone(
+inline static NTSTATUS fort_shaper_packet_clone(
         PFORT_SHAPER shaper, PFORT_PACKET pkt, PNET_BUFFER_LIST *clonedNetBufList, BOOL inbound)
 {
     NTSTATUS status;
@@ -199,7 +202,7 @@ static void fort_shaper_packet_inject(PFORT_SHAPER shaper, PFORT_PACKET pkt)
     const ADDRESS_FAMILY addressFamily = (isIPv6 ? AF_INET6 : AF_INET);
 
     PNET_BUFFER_LIST clonedNetBufList = NULL;
-    status = fort_shaper_packet_inject_clone(shaper, pkt, &clonedNetBufList, inbound);
+    status = fort_shaper_packet_clone(shaper, pkt, &clonedNetBufList, inbound);
     if (!NT_SUCCESS(status)) {
         LOG("Shaper: Packet clone error: %x\n", status);
         TRACE(FORT_SHAPER_PACKET_CLONE_ERROR, status, 0, 0);
@@ -465,14 +468,18 @@ static void fort_shaper_free_queues(PFORT_SHAPER shaper)
     }
 }
 
-static void fort_shaper_timer_start(PFORT_SHAPER shaper)
+static void fort_shaper_timer_start(PFORT_SHAPER shaper, BOOL force)
 {
     const ULONG active_io_bits = fort_shaper_io_bits(&shaper->active_io_bits);
 
     if (active_io_bits == 0)
         return;
 
-    fort_timer_set_running(&shaper->timer, /*run=*/TRUE);
+    PFORT_TIMER timer = &shaper->timer;
+
+    timer->period = force ? 0 : 1; /* milliseconds */
+
+    fort_timer_set_running(timer, /*run=*/TRUE);
 }
 
 static void NTAPI fort_shaper_timer_process(void)
@@ -502,7 +509,7 @@ static void NTAPI fort_shaper_timer_process(void)
     if (new_active_io_bits != 0) {
         fort_shaper_io_bits_set(&shaper->active_io_bits, new_active_io_bits, TRUE);
 
-        fort_shaper_timer_start(shaper);
+        fort_shaper_timer_start(shaper, /*force=*/FALSE);
     }
 }
 
@@ -675,8 +682,6 @@ static NTSTATUS fort_shaper_packet_queue(PFORT_SHAPER shaper,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PNET_BUFFER_LIST netBufList,
         BOOL isIPv6, BOOL inbound, UCHAR group_index)
 {
-    NTSTATUS status;
-
     const UINT16 queue_index = group_index * 2 + (inbound ? 0 : 1);
 
     const UINT32 group_io_bits = fort_shaper_io_bits(&shaper->group_io_bits);
@@ -711,12 +716,10 @@ static NTSTATUS fort_shaper_packet_queue(PFORT_SHAPER shaper,
     /* Add the Cloned Packet to Queue */
     fort_shaper_packet_queue_add_packet(queue, pkt);
 
-    /* Process the Packet Queue */
-    if (fort_shaper_queue_process(shaper, queue)) {
-        fort_shaper_io_bits_set(&shaper->active_io_bits, queue_bit, TRUE);
+    fort_shaper_io_bits_set(&shaper->active_io_bits, queue_bit, TRUE);
 
-        fort_shaper_timer_start(shaper);
-    }
+    /* Start the Timer */
+    fort_shaper_timer_start(shaper, /*force=*/TRUE);
 
     return STATUS_SUCCESS;
 }
