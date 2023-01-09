@@ -514,12 +514,9 @@ FORT_API void fort_flow_delete(PFORT_STAT stat, UINT64 flowContext)
 {
     PFORT_FLOW flow = (PFORT_FLOW) flowContext;
 
-    if ((fort_stat_flags(stat) & FORT_STAT_CLOSED) != 0)
-        return; /* double check to avoid deadlock after remove-flow-context */
-
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
-    if ((fort_stat_flags(stat) & FORT_STAT_CLOSED) == 0) {
+    {
         fort_flow_free(stat, flow);
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);

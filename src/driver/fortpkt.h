@@ -31,6 +31,8 @@ typedef struct fort_packet
 {
     struct fort_packet *next;
 
+    PVOID flow; /* to drop on flow deletion */
+
     LARGE_INTEGER latency_start; /* Time it was placed in the latency queue */
     UINT32 data_length; /* Size of the packet (in bytes) */
 
@@ -107,6 +109,8 @@ FORT_API BOOL fort_shaper_packet_process(PFORT_SHAPER shaper,
         const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PNET_BUFFER_LIST netBufList,
         UINT64 flowContext, BOOL inbound);
+
+FORT_API void fort_shaper_drop_flow_packets(PFORT_SHAPER shaper, UINT64 flowContext);
 
 FORT_API void fort_shaper_drop_packets(PFORT_SHAPER shaper);
 

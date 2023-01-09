@@ -405,7 +405,14 @@ static void NTAPI fort_callout_flow_delete(UINT16 layerId, UINT32 calloutId, UIN
     UNUSED(layerId);
     UNUSED(calloutId);
 
-    fort_flow_delete(&fort_device()->stat, flowContext);
+    PFORT_STAT stat = &fort_device()->stat;
+
+    if ((fort_stat_flags(stat) & FORT_STAT_CLOSED) != 0)
+        return;
+
+    fort_shaper_drop_flow_packets(&fort_device()->shaper, flowContext);
+
+    fort_flow_delete(stat, flowContext);
 }
 
 static BOOL fort_callout_transport_is_ipsec_detunneled(
