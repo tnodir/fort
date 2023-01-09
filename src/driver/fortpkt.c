@@ -592,7 +592,7 @@ FORT_API void fort_shaper_conf_update(PFORT_SHAPER shaper, const PFORT_CONF_IO c
 
         const UINT32 new_limit_io_bits = (flush_io_bits & limit_io_bits);
 
-        fort_shaper_create_queues(shaper, conf_group->limits, new_limit_io_bits);
+        fort_shaper_create_queues(shaper, conf_group->limits, limit_io_bits);
         fort_shaper_init_queues(shaper, new_limit_io_bits);
 
         shaper->limit_io_bits = limit_io_bits;
