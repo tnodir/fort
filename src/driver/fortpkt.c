@@ -93,7 +93,9 @@ static void fort_shaper_packet_fill(PFORT_SHAPER shaper, const FWPS_INCOMING_VAL
         pkt_out->endpointHandle = inMetaValues->transportEndpointHandle;
     }
 
-    FwpsReferenceNetBufferList0(pkt->netBufList, TRUE);
+    pkt->netBufList = netBufList;
+
+    FwpsReferenceNetBufferList0(netBufList, TRUE);
 }
 
 static void fort_shaper_packet_free(
