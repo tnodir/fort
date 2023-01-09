@@ -30,14 +30,9 @@ FORT_API void fort_timer_open(
 
 FORT_API void fort_timer_close(PFORT_TIMER timer);
 
-FORT_API void fort_timer_update(PFORT_TIMER timer, UCHAR flags);
-
 FORT_API BOOL fort_timer_is_running(PFORT_TIMER timer);
 
-inline static void fort_timer_set_running(PFORT_TIMER timer, BOOL run)
-{
-    fort_timer_update(timer, (run ? FORT_TIMER_RUNNING : 0));
-}
+FORT_API void fort_timer_set_running(PFORT_TIMER timer, BOOL run);
 
 #ifdef __cplusplus
 } // extern "C"

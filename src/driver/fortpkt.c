@@ -468,18 +468,14 @@ static void fort_shaper_free_queues(PFORT_SHAPER shaper)
     }
 }
 
-static void fort_shaper_timer_start(PFORT_SHAPER shaper, BOOL force)
+static void fort_shaper_timer_start(PFORT_SHAPER shaper)
 {
     const ULONG active_io_bits = fort_shaper_io_bits(&shaper->active_io_bits);
 
     if (active_io_bits == 0)
         return;
 
-    PFORT_TIMER timer = &shaper->timer;
-
-    timer->period = force ? 0 : 1; /* milliseconds */
-
-    fort_timer_set_running(timer, /*run=*/TRUE);
+    fort_timer_set_running(&shaper->timer, /*run=*/TRUE);
 }
 
 static void NTAPI fort_shaper_timer_process(void)
@@ -509,7 +505,7 @@ static void NTAPI fort_shaper_timer_process(void)
     if (new_active_io_bits != 0) {
         fort_shaper_io_bits_set(&shaper->active_io_bits, new_active_io_bits, TRUE);
 
-        fort_shaper_timer_start(shaper, /*force=*/FALSE);
+        fort_shaper_timer_start(shaper);
     }
 }
 
@@ -719,7 +715,7 @@ static NTSTATUS fort_shaper_packet_queue(PFORT_SHAPER shaper,
     fort_shaper_io_bits_set(&shaper->active_io_bits, queue_bit, TRUE);
 
     /* Start the Timer */
-    fort_shaper_timer_start(shaper, /*force=*/TRUE);
+    fort_shaper_timer_start(shaper);
 
     return STATUS_SUCCESS;
 }
