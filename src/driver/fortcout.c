@@ -727,7 +727,8 @@ static NTSTATUS fort_callout_force_reauth_prov(
 
         const BOOL old_filter_packets =
                 fort_device_flag(&fort_device()->conf, FORT_DEVICE_FILTER_PACKETS) != 0;
-        const BOOL filter_packets = (conf_flags.group_bits & limit_bits) != 0;
+        const BOOL filter_packets =
+                conf_flags.filter_enabled && (conf_flags.group_bits & limit_bits) != 0;
 
         if (prov_recreated || old_conf_flags.log_stat != conf_flags.log_stat
                 || old_filter_packets != filter_packets) {
