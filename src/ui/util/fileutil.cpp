@@ -215,7 +215,11 @@ bool writeFileData(const QString &filePath, const QByteArray &data)
 QDateTime fileModTime(const QString &filePath)
 {
     QFileInfo fi(filePath);
-    return fi.lastModified(QTimeZone::UTC);
+    return fi.lastModified(
+#if QT_VERSION > QT_VERSION_CHECK(6, 4, 0)
+            QTimeZone::UTC
+#endif
+    );
 }
 
 QString expandPath(const QString &path)

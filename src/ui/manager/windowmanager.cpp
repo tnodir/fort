@@ -50,8 +50,10 @@ void WindowManager::setUp()
 
     setupMainWindow();
 
+#if QT_VERSION > QT_VERSION_CHECK(6, 4, 0)
     connect(QApplication::styleHints(), &QStyleHints::appearanceChanged, this,
             &WindowManager::setupAppPalette);
+#endif
 
     connect(qApp, &QCoreApplication::aboutToQuit, this, &WindowManager::closeAll);
 }
