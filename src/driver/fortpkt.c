@@ -105,7 +105,8 @@ static void fort_shaper_packet_put(PFORT_SHAPER shaper, PFORT_PACKET pkt)
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
-static void fort_shaper_packet_fill(PFORT_SHAPER shaper, const FWPS_INCOMING_VALUES0 *inFixedValues,
+static NTSTATUS fort_shaper_packet_fill(PFORT_SHAPER shaper,
+        const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PNET_BUFFER_LIST netBufList,
         PFORT_PACKET pkt, BOOL isIPv6, BOOL inbound)
 {
@@ -126,6 +127,21 @@ static void fort_shaper_packet_fill(PFORT_SHAPER shaper, const FWPS_INCOMING_VAL
     } else {
         PFORT_PACKET_OUT pkt_out = &pkt->out;
 
+        const ULONG controlDataLength = inMetaValues->controlDataLength;
+        if (FWPS_IS_METADATA_FIELD_PRESENT(inMetaValues, FWPS_METADATA_FIELD_TRANSPORT_CONTROL_DATA)
+                && controlDataLength > 0) {
+            pkt_out->controlData = fort_mem_alloc(controlDataLength, FORT_PACKET_POOL_TAG);
+            if (pkt_out->controlData == NULL)
+                return STATUS_INSUFFICIENT_RESOURCES;
+
+            RtlCopyMemory(pkt_out->controlData, inMetaValues->controlData, controlDataLength);
+
+            pkt_out->controlDataLength = controlDataLength;
+        }
+
+        pkt_out->remoteScopeId = inMetaValues->remoteScopeId;
+        pkt_out->endpointHandle = inMetaValues->transportEndpointHandle;
+
         const int remoteIpField = isIPv6 ? FWPS_FIELD_OUTBOUND_TRANSPORT_V6_IP_REMOTE_ADDRESS
                                          : FWPS_FIELD_OUTBOUND_TRANSPORT_V4_IP_REMOTE_ADDRESS;
 
@@ -139,14 +155,13 @@ static void fort_shaper_packet_fill(PFORT_SHAPER shaper, const FWPS_INCOMING_VAL
             /* host-order -> network-order conversion */
             pkt_out->remoteAddr.v4 = HTONL(*remoteIp);
         }
-
-        pkt_out->remoteScopeId = inMetaValues->remoteScopeId;
-        pkt_out->endpointHandle = inMetaValues->transportEndpointHandle;
     }
 
     pkt->netBufList = netBufList;
 
     FwpsReferenceNetBufferList0(netBufList, TRUE);
+
+    return STATUS_SUCCESS;
 }
 
 static void fort_shaper_packet_free(
@@ -164,6 +179,12 @@ static void fort_shaper_packet_free(
     }
 
     FwpsDereferenceNetBufferList0(pkt->netBufList, FALSE);
+
+    if ((pkt->flags & FORT_PACKET_INBOUND) == 0) {
+        if (pkt->out.controlData != NULL) {
+            fort_mem_free(pkt->out.controlData, FORT_PACKET_POOL_TAG);
+        }
+    }
 
     fort_shaper_packet_put(shaper, pkt);
 }

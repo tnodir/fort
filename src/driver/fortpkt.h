@@ -22,6 +22,9 @@ typedef struct fort_packet_in
 
 typedef struct fort_packet_out
 {
+    WSACMSGHDR *controlData;
+    ULONG controlDataLength;
+
     SCOPE_ID remoteScopeId;
     UINT64 endpointHandle;
 
