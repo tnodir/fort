@@ -145,15 +145,12 @@ static NTSTATUS fort_shaper_packet_fill(PFORT_SHAPER shaper,
         const int remoteIpField = isIPv6 ? FWPS_FIELD_OUTBOUND_TRANSPORT_V6_IP_REMOTE_ADDRESS
                                          : FWPS_FIELD_OUTBOUND_TRANSPORT_V4_IP_REMOTE_ADDRESS;
 
-        const UINT32 *remoteIp = isIPv6
-                ? (const UINT32 *) inFixedValues->incomingValue[remoteIpField].value.byteArray16
-                : &inFixedValues->incomingValue[remoteIpField].value.uint32;
-
+        const FWP_VALUE0 *remoteIpValue = &inFixedValues->incomingValue[remoteIpField].value;
         if (isIPv6) {
-            pkt_out->remoteAddr.v6 = *((ip6_addr_t *) remoteIp);
+            pkt_out->remoteAddr.v6 = *((ip6_addr_t *) remoteIpValue->byteArray16);
         } else {
             /* host-order -> network-order conversion */
-            pkt_out->remoteAddr.v4 = HTONL(*remoteIp);
+            pkt_out->remoteAddr.v4 = HTONL(remoteIpValue->uint32);
         }
     }
 
