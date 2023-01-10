@@ -57,6 +57,54 @@ static ULONG fort_packet_data_length(const PNET_BUFFER_LIST netBufList)
     return data_length;
 }
 
+static PFORT_PACKET fort_shaper_packet_get_locked(PFORT_SHAPER shaper)
+{
+    PFORT_PACKET pkt = NULL;
+
+    if (shaper->packet_free != NULL) {
+        pkt = shaper->packet_free;
+        shaper->packet_free = pkt->next;
+    } else {
+        const tommy_size_t size = tommy_arrayof_size(&shaper->packets);
+
+        /* TODO: tommy_arrayof_grow(): check calloc()'s result for NULL */
+        if (tommy_arrayof_grow(&shaper->packets, size + 1), 0)
+            return NULL;
+
+        pkt = tommy_arrayof_ref(&shaper->packets, size);
+    }
+
+    return pkt;
+}
+
+static PFORT_PACKET fort_shaper_packet_get(PFORT_SHAPER shaper)
+{
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&shaper->lock, &lock_queue);
+
+    PFORT_PACKET pkt = fort_shaper_packet_get_locked(shaper);
+
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    return pkt;
+}
+
+static void fort_shaper_packet_put_locked(PFORT_SHAPER shaper, PFORT_PACKET pkt)
+{
+    pkt->next = shaper->packet_free;
+    shaper->packet_free = pkt;
+}
+
+static void fort_shaper_packet_put(PFORT_SHAPER shaper, PFORT_PACKET pkt)
+{
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&shaper->lock, &lock_queue);
+
+    fort_shaper_packet_put_locked(shaper, pkt);
+
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+}
+
 static void fort_shaper_packet_fill(PFORT_SHAPER shaper, const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PNET_BUFFER_LIST netBufList,
         PFORT_PACKET pkt, BOOL isIPv6, BOOL inbound)
@@ -104,8 +152,6 @@ static void fort_shaper_packet_fill(PFORT_SHAPER shaper, const FWPS_INCOMING_VAL
 static void fort_shaper_packet_free(
         PFORT_SHAPER shaper, PFORT_PACKET pkt, PNET_BUFFER_LIST clonedNetBufList)
 {
-    UNUSED(shaper);
-
     if (clonedNetBufList != NULL) {
         const NTSTATUS status = clonedNetBufList->Status;
 
@@ -119,7 +165,7 @@ static void fort_shaper_packet_free(
 
     FwpsDereferenceNetBufferList0(pkt->netBufList, FALSE);
 
-    fort_mem_free(pkt, FORT_PACKET_POOL_TAG);
+    fort_shaper_packet_put(shaper, pkt);
 }
 
 static void fort_shaper_packet_drop(PFORT_SHAPER shaper, PFORT_PACKET pkt)
@@ -132,7 +178,7 @@ static void NTAPI fort_packet_inject_complete(
 {
     UNUSED(dispatchLevel);
 
-    fort_shaper_packet_free(/*shaper=*/NULL, pkt, clonedNetBufList);
+    fort_shaper_packet_free(&fort_device()->shaper, pkt, clonedNetBufList);
 }
 
 static NTSTATUS fort_shaper_packet_inject_in(PFORT_SHAPER shaper, const PFORT_PACKET pkt,
@@ -222,7 +268,7 @@ static void fort_shaper_packet_inject(PFORT_SHAPER shaper, PFORT_PACKET pkt)
     }
 
     if (!NT_SUCCESS(status)) {
-        fort_shaper_packet_free(/*shaper=*/NULL, pkt, clonedNetBufList);
+        fort_shaper_packet_free(shaper, pkt, clonedNetBufList);
     }
 }
 
@@ -607,10 +653,12 @@ FORT_API void fort_shaper_open(PFORT_SHAPER shaper)
     FwpsInjectionHandleCreate0(
             AF_INET6, FWPS_INJECTION_TYPE_TRANSPORT, &shaper->injection_out_transport6_id);
 
-    fort_timer_open(
-            &shaper->timer, /*period(ms)=*/1, FORT_TIMER_ONESHOT, &fort_shaper_timer_process);
+    tommy_arrayof_init(&shaper->packets, sizeof(FORT_PACKET));
 
     KeInitializeSpinLock(&shaper->lock);
+
+    fort_timer_open(
+            &shaper->timer, /*period(ms)=*/1, FORT_TIMER_ONESHOT, &fort_shaper_timer_process);
 }
 
 FORT_API void fort_shaper_close(PFORT_SHAPER shaper)
@@ -619,6 +667,8 @@ FORT_API void fort_shaper_close(PFORT_SHAPER shaper)
 
     fort_shaper_drop_packets(shaper);
     fort_shaper_free_queues(shaper);
+
+    tommy_arrayof_done(&shaper->packets);
 
     FwpsInjectionHandleDestroy0(shaper->injection_in_transport4_id);
     FwpsInjectionHandleDestroy0(shaper->injection_in_transport6_id);
@@ -749,8 +799,8 @@ static NTSTATUS fort_shaper_packet_queue(PFORT_SHAPER shaper,
     if (!fort_shaper_packet_queue_check_packet(queue, data_length))
         return STATUS_SUCCESS; /* drop the packet */
 
-    /* Clone the Packet */
-    PFORT_PACKET pkt = fort_mem_alloc(sizeof(FORT_PACKET), FORT_PACKET_POOL_TAG);
+    /* Create the Packet */
+    PFORT_PACKET pkt = fort_shaper_packet_get(shaper);
     if (pkt == NULL)
         return STATUS_INSUFFICIENT_RESOURCES;
 
@@ -765,6 +815,7 @@ static NTSTATUS fort_shaper_packet_queue(PFORT_SHAPER shaper,
     /* Add the Cloned Packet to Queue */
     fort_shaper_packet_queue_add_packet(queue, pkt);
 
+    /* Packets in transport layer must be re-injected in DCP due to locking */
     fort_shaper_io_bits_set(&shaper->active_io_bits, queue_bit, TRUE);
 
     /* Start the Timer */

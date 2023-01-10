@@ -4,6 +4,7 @@
 #include "fortdrv.h"
 
 #include "common/fortconf.h"
+#include "forttds.h"
 #include "forttmr.h"
 
 #define FORT_PACKET_QUEUE_BAD_INDEX ((UINT16) -1)
@@ -87,6 +88,9 @@ typedef struct fort_shaper
     HANDLE injection_out_transport6_id;
 
     FORT_TIMER timer;
+
+    PFORT_PACKET packet_free;
+    tommy_arrayof packets;
 
     PFORT_PACKET_QUEUE queues[FORT_CONF_GROUP_MAX * 2]; /* in/out-bound pairs */
 
