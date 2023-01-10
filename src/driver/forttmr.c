@@ -6,7 +6,7 @@
 
 static UCHAR fort_timer_flags_exchange(PFORT_TIMER timer, UCHAR flags)
 {
-    return InterlockedExchange8(&timer->flags, flags);
+    return _InterlockedExchange8(&timer->flags, flags);
 }
 
 static UCHAR fort_timer_flags_set(PFORT_TIMER timer, UCHAR flags, BOOL on)
