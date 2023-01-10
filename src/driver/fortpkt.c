@@ -14,7 +14,7 @@
 
 #define HTONL(l) _byteswap_ulong(l)
 
-typedef void(NTAPI *FORT_PACKET_FOREACH_FUNC)(PFORT_SHAPER, PFORT_PACKET);
+typedef void FORT_PACKET_FOREACH_FUNC(PFORT_SHAPER, PFORT_PACKET);
 
 static LARGE_INTEGER g_QpcFrequency;
 static UINT64 g_QpcFrequencyHalfMs;
@@ -291,7 +291,7 @@ static void fort_shaper_packet_inject(PFORT_SHAPER shaper, PFORT_PACKET pkt)
 }
 
 static void fort_shaper_packet_foreach(
-        PFORT_SHAPER shaper, PFORT_PACKET pkt, const FORT_PACKET_FOREACH_FUNC func)
+        PFORT_SHAPER shaper, PFORT_PACKET pkt, FORT_PACKET_FOREACH_FUNC func)
 {
     while (pkt != NULL) {
         PFORT_PACKET pkt_next = pkt->next;
