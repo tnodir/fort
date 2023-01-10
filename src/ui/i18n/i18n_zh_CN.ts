@@ -210,6 +210,22 @@
         <source>Apply same rules to child processes</source>
         <translation>将相同的规则应用于子进程</translation>
     </message>
+    <message>
+        <source>Latency:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Packet Loss:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Download Buffer Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Upload Buffer Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>

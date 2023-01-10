@@ -210,6 +210,22 @@
         <source>Apply same rules to child processes</source>
         <translation>Применить те же правила к дочерним процессам</translation>
     </message>
+    <message>
+        <source>Latency:</source>
+        <translation>Задержка:</translation>
+    </message>
+    <message>
+        <source>Packet Loss:</source>
+        <translation>Потеря пакетов:</translation>
+    </message>
+    <message>
+        <source>Download Buffer Size:</source>
+        <translation>Размер буфера загрузки:</translation>
+    </message>
+    <message>
+        <source>Upload Buffer Size:</source>
+        <translation>Размер буфера выгрузки:</translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>

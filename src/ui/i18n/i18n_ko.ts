@@ -210,6 +210,22 @@
         <source>Apply same rules to child processes</source>
         <translation>하위 프로세스에 동일한 규칙 적용</translation>
     </message>
+    <message>
+        <source>Latency:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Packet Loss:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Download Buffer Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Upload Buffer Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
