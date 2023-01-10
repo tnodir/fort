@@ -34,6 +34,7 @@ SOURCES += \
     form/controls/checktimeperiod.cpp \
     form/controls/controlutil.cpp \
     form/controls/labelcolor.cpp \
+    form/controls/labeldoublespin.cpp \
     form/controls/labelspin.cpp \
     form/controls/labelspincombo.cpp \
     form/controls/listview.cpp \
@@ -194,6 +195,7 @@ HEADERS += \
     form/controls/checktimeperiod.h \
     form/controls/controlutil.h \
     form/controls/labelcolor.h \
+    form/controls/labeldoublespin.h \
     form/controls/labelspin.h \
     form/controls/labelspincombo.h \
     form/controls/listview.h \

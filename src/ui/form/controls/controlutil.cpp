@@ -8,10 +8,16 @@
 #include <QMenu>
 #include <QPushButton>
 #include <QScrollArea>
+#include <QSpinBox>
 #include <QToolButton>
 #include <QWidgetAction>
 
 #include <util/iconcache.h>
+
+#include "labelcolor.h"
+#include "labeldoublespin.h"
+#include "labelspin.h"
+#include "labelspincombo.h"
 
 QCheckBox *ControlUtil::createCheckBox(
         bool checked, const std::function<void(bool checked)> &onToggled)
@@ -214,4 +220,55 @@ QFont ControlUtil::fontDemiBold()
     QFont font;
     font.setWeight(QFont::DemiBold);
     return font;
+}
+
+LabelSpinCombo *ControlUtil::createSpinCombo(int v, int min, int max, const QVector<int> &values,
+        const QString &suffix, const std::function<void(int)> &onValueChanged)
+{
+    auto c = new LabelSpinCombo();
+    c->spinBox()->setValue(v);
+    c->spinBox()->setRange(min, max);
+    c->spinBox()->setSuffix(suffix);
+    c->setValues(values);
+
+    c->connect(c->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), onValueChanged);
+
+    return c;
+}
+
+LabelSpin *ControlUtil::createSpin(int v, int min, int max, const QString &suffix,
+        const std::function<void(int)> &onValueChanged)
+{
+    auto c = new LabelSpin();
+    c->spinBox()->setValue(v);
+    c->spinBox()->setRange(min, max);
+    c->spinBox()->setSuffix(suffix);
+
+    c->connect(c->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), onValueChanged);
+
+    return c;
+}
+
+LabelDoubleSpin *ControlUtil::createDoubleSpin(double v, double min, double max,
+        const QString &suffix, const std::function<void(double)> &onValueChanged)
+{
+    auto c = new LabelDoubleSpin();
+    c->spinBox()->setValue(v);
+    c->spinBox()->setRange(min, max);
+    c->spinBox()->setSuffix(suffix);
+
+    c->connect(c->spinBox(), QOverload<double>::of(&QDoubleSpinBox::valueChanged), onValueChanged);
+
+    return c;
+}
+
+LabelColor *ControlUtil::createLabelColor(
+        const QColor &v, const std::function<void(const QColor &)> &onColorChanged)
+{
+    auto c = new LabelColor();
+    c->setColor(v);
+
+    c->connect(c, &LabelColor::colorChanged, onColorChanged);
+
+    return c;
 }

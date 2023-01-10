@@ -572,24 +572,27 @@ void ConfUtil::writeLimits(struct fort_speed_limit *limits, quint16 *limitBits,
             if (isLimitIn) {
                 *limitIoBits |= (1 << (i * 2 + 0));
 
-                writeLimit(&limits[0], limitIn);
+                writeLimit(&limits[0], limitIn, appGroup->limitBufferSizeIn(),
+                        appGroup->limitLatency(), appGroup->limitPacketLoss());
             }
 
             if (isLimitOut) {
                 *limitIoBits |= (1 << (i * 2 + 1));
 
-                writeLimit(&limits[1], limitOut);
+                writeLimit(&limits[1], limitOut, appGroup->limitBufferSizeOut(),
+                        appGroup->limitLatency(), appGroup->limitPacketLoss());
             }
         }
     }
 }
 
-void ConfUtil::writeLimit(fort_speed_limit *limit, quint32 kiBytes)
+void ConfUtil::writeLimit(fort_speed_limit *limit, quint32 kiBytes, quint32 bufferSize,
+        quint32 latencyMsec, quint16 packetLoss)
 {
-    limit->plr = 0;
-    limit->latency_ms = 0;
+    limit->plr = packetLoss;
+    limit->latency_ms = latencyMsec;
+    limit->buffer_bytes = bufferSize;
     limit->bps = kiBytes * 1024 * 8;
-    limit->buffer_bytes = 150000LL;
 }
 
 void ConfUtil::writeAddressRanges(char **data, const addrranges_arr_t &addressRanges)

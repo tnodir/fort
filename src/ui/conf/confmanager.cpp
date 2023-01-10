@@ -33,7 +33,7 @@ namespace {
 
 const QLoggingCategory LC("conf");
 
-constexpr int DATABASE_USER_VERSION = 15;
+constexpr int DATABASE_USER_VERSION = 16;
 
 constexpr int APP_END_TIMER_INTERVAL_MIN = 100;
 constexpr int APP_END_TIMER_INTERVAL_MAX = 24 * 60 * 60 * 1000; // 1 day
@@ -48,6 +48,8 @@ const char *const sqlSelectAppGroups = "SELECT app_group_id, enabled, apply_chil
                                        "    log_conn, period_enabled,"
                                        "    limit_in_enabled, limit_out_enabled,"
                                        "    speed_limit_in, speed_limit_out,"
+                                       "    limit_packet_loss, limit_latency,"
+                                       "    limit_bufsize_in, limit_bufsize_out,"
                                        "    name, block_text, allow_text,"
                                        "    period_from, period_to"
                                        "  FROM app_group"
@@ -66,22 +68,26 @@ const char *const sqlUpdateAddressGroup = "UPDATE address_group"
                                           "    include_text = ?7, exclude_text = ?8"
                                           "  WHERE addr_group_id = ?1;";
 
-const char *const sqlInsertAppGroup =
-        "INSERT INTO app_group(app_group_id, order_index, enabled,"
-        "    apply_child, log_conn, period_enabled,"
-        "    limit_in_enabled, limit_out_enabled,"
-        "    speed_limit_in, speed_limit_out,"
-        "    name, block_text, allow_text,"
-        "    period_from, period_to)"
-        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15);";
+const char *const sqlInsertAppGroup = "INSERT INTO app_group(app_group_id, order_index, enabled,"
+                                      "    apply_child, log_conn, period_enabled,"
+                                      "    limit_in_enabled, limit_out_enabled,"
+                                      "    speed_limit_in, speed_limit_out,"
+                                      "    limit_packet_loss, limit_latency,"
+                                      "    limit_bufsize_in, limit_bufsize_out,"
+                                      "    name, block_text, allow_text,"
+                                      "    period_from, period_to)"
+                                      "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12,"
+                                      "    ?13, ?14, ?15, ?16, ?17, ?18, ?19);";
 
 const char *const sqlUpdateAppGroup = "UPDATE app_group"
                                       "  SET order_index = ?2, enabled = ?3,"
-                                      "    apply_child = ?4, log_conn = ?5,"
-                                      "    period_enabled = ?6, limit_in_enabled = ?7,"
-                                      "    limit_out_enabled = ?8, speed_limit_in = ?9,"
-                                      "    speed_limit_out = ?10, name = ?11, block_text = ?12,"
-                                      "    allow_text = ?13, period_from = ?14, period_to = ?15"
+                                      "    apply_child = ?4, log_conn = ?5, period_enabled = ?6,"
+                                      "    limit_in_enabled = ?7, limit_out_enabled = ?8,"
+                                      "    speed_limit_in = ?9, speed_limit_out = ?10,"
+                                      "    limit_packet_loss = ?11, limit_latency = ?12,"
+                                      "    limit_bufsize_in = ?13, limit_bufsize_out = ?14,"
+                                      "    name = ?15, block_text = ?16, allow_text = ?17,"
+                                      "    period_from = ?18, period_to = ?19"
                                       "  WHERE app_group_id = ?1;";
 
 const char *const sqlDeleteAppGroup = "DELETE FROM app_group"
@@ -293,11 +299,15 @@ bool loadAppGroups(SqliteDb *db, FirewallConf &conf)
         appGroup->setLimitOutEnabled(stmt.columnBool(6));
         appGroup->setSpeedLimitIn(quint32(stmt.columnInt(7)));
         appGroup->setSpeedLimitOut(quint32(stmt.columnInt(8)));
-        appGroup->setName(stmt.columnText(9));
-        appGroup->setBlockText(stmt.columnText(10));
-        appGroup->setAllowText(stmt.columnText(11));
-        appGroup->setPeriodFrom(stmt.columnText(12));
-        appGroup->setPeriodTo(stmt.columnText(13));
+        appGroup->setLimitPacketLoss(quint16(stmt.columnInt(9)));
+        appGroup->setLimitLatency(quint32(stmt.columnInt(10)));
+        appGroup->setLimitBufferSizeIn(quint32(stmt.columnInt(11)));
+        appGroup->setLimitBufferSizeOut(quint32(stmt.columnInt(12)));
+        appGroup->setName(stmt.columnText(13));
+        appGroup->setBlockText(stmt.columnText(14));
+        appGroup->setAllowText(stmt.columnText(15));
+        appGroup->setPeriodFrom(stmt.columnText(16));
+        appGroup->setPeriodTo(stmt.columnText(17));
         appGroup->setEdited(false);
 
         conf.addAppGroup(appGroup);
@@ -316,8 +326,10 @@ bool saveAppGroup(SqliteDb *db, AppGroup *appGroup, int orderIndex)
             << (rowExists ? appGroup->id() : QVariant()) << orderIndex << appGroup->enabled()
             << appGroup->applyChild() << appGroup->logConn() << appGroup->periodEnabled()
             << appGroup->limitInEnabled() << appGroup->limitOutEnabled() << appGroup->speedLimitIn()
-            << appGroup->speedLimitOut() << appGroup->name() << appGroup->blockText()
-            << appGroup->allowText() << appGroup->periodFrom() << appGroup->periodTo();
+            << appGroup->speedLimitOut() << appGroup->limitPacketLoss() << appGroup->limitLatency()
+            << appGroup->limitBufferSizeIn() << appGroup->limitBufferSizeOut() << appGroup->name()
+            << appGroup->blockText() << appGroup->allowText() << appGroup->periodFrom()
+            << appGroup->periodTo();
 
     const char *sql = rowExists ? sqlUpdateAppGroup : sqlInsertAppGroup;
 

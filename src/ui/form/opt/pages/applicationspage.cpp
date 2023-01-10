@@ -17,6 +17,8 @@
 #include <form/controls/checkspincombo.h>
 #include <form/controls/checktimeperiod.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/labeldoublespin.h>
+#include <form/controls/labelspin.h>
 #include <form/controls/plaintextedit.h>
 #include <form/controls/tabbar.h>
 #include <form/controls/textarea2splitter.h>
@@ -36,6 +38,20 @@ namespace {
 const std::array speedLimitValues = { 10, 0, 20, 30, 50, 75, 100, 150, 200, 300, 500, 900, 1024,
     qRound(1.5 * 1024), 2 * 1024, 3 * 1024, 5 * 1024, qRound(7.5 * 1024), 10 * 1024, 15 * 1024,
     20 * 1024, 30 * 1024, 50 * 1024 };
+
+CheckSpinCombo *createGroupLimit()
+{
+    auto c = new CheckSpinCombo();
+    c->spinBox()->setRange(0, 99999);
+    c->spinBox()->setSuffix(" KiB/s");
+    c->setValues(speedLimitValues);
+    return c;
+}
+
+QString formatSpeed(int kbytes)
+{
+    return NetUtil::formatSpeed(quint32(kbytes * 1024));
+}
 
 }
 
@@ -82,6 +98,11 @@ void ApplicationsPage::onRetranslateUi()
     m_cscLimitIn->checkBox()->setText(tr("Download speed limit:"));
     m_cscLimitOut->checkBox()->setText(tr("Upload speed limit:"));
     retranslateGroupLimits();
+
+    m_limitLatency->label()->setText(tr("Latency:"));
+    m_limitPacketLoss->label()->setText(tr("Packet Loss:"));
+    m_limitBufferSizeIn->label()->setText(tr("Download Buffer Size:"));
+    m_limitBufferSizeOut->label()->setText(tr("Upload Buffer Size:"));
 
     m_cbLogConn->setText(tr("Collect connection statistics"));
 
@@ -357,11 +378,15 @@ void ApplicationsPage::setupGroupOptions()
     setupGroupApplyChild();
     setupGroupLimitIn();
     setupGroupLimitOut();
+    setupGroupLimitLatency();
+    setupGroupLimitPacketLoss();
+    setupGroupLimitBufferSize();
     setupGroupLogConn();
 
     // Menu
     const QList<QWidget *> menuWidgets = { m_cbApplyChild, ControlUtil::createSeparator(),
-        m_cscLimitIn, m_cscLimitOut, ControlUtil::createSeparator(), m_cbLogConn };
+        m_cscLimitIn, m_cscLimitOut, m_limitLatency, m_limitPacketLoss, m_limitBufferSizeIn,
+        m_limitBufferSizeOut, ControlUtil::createSeparator(), m_cbLogConn };
     auto layout = ControlUtil::createLayoutByWidgets(menuWidgets);
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
@@ -435,6 +460,66 @@ void ApplicationsPage::setupGroupLimitOut()
 
                 ctrl()->setOptEdited();
             });
+}
+
+void ApplicationsPage::setupGroupLimitLatency()
+{
+    m_limitLatency = ControlUtil::createSpin(0, 0, 30000, " ms", [&](int value) {
+        const auto limitLatency = quint32(value);
+
+        AppGroup *appGroup = this->appGroup();
+        if (appGroup->limitLatency() == limitLatency)
+            return;
+
+        appGroup->setLimitLatency(limitLatency);
+
+        ctrl()->setOptEdited();
+    });
+}
+
+void ApplicationsPage::setupGroupLimitPacketLoss()
+{
+    m_limitPacketLoss = ControlUtil::createDoubleSpin(0, 0, 100.0, " %", [&](double value) {
+        const auto limitPacketLoss = quint16(qFloor(value * 100.0));
+
+        AppGroup *appGroup = this->appGroup();
+        if (appGroup->limitPacketLoss() == limitPacketLoss)
+            return;
+
+        appGroup->setLimitPacketLoss(limitPacketLoss);
+
+        ctrl()->setOptEdited();
+    });
+}
+
+void ApplicationsPage::setupGroupLimitBufferSize()
+{
+    constexpr int maxBufferSize = 2 * 1024 * 1024;
+    const QLatin1String suffix(" bytes");
+
+    m_limitBufferSizeIn = ControlUtil::createSpin(0, 0, maxBufferSize, suffix, [&](int value) {
+        const auto bufferSize = quint32(value);
+
+        AppGroup *appGroup = this->appGroup();
+        if (appGroup->limitBufferSizeIn() == bufferSize)
+            return;
+
+        appGroup->setLimitBufferSizeIn(bufferSize);
+
+        ctrl()->setOptEdited();
+    });
+
+    m_limitBufferSizeOut = ControlUtil::createSpin(0, 0, maxBufferSize, suffix, [&](int value) {
+        const auto bufferSize = quint32(value);
+
+        AppGroup *appGroup = this->appGroup();
+        if (appGroup->limitBufferSizeOut() == bufferSize)
+            return;
+
+        appGroup->setLimitBufferSizeOut(bufferSize);
+
+        ctrl()->setOptEdited();
+    });
 }
 
 void ApplicationsPage::setupGroupLogConn()
@@ -547,6 +632,11 @@ void ApplicationsPage::updateGroup()
     m_cscLimitOut->checkBox()->setChecked(appGroup->limitOutEnabled());
     m_cscLimitOut->spinBox()->setValue(int(appGroup->speedLimitOut()));
 
+    m_limitLatency->spinBox()->setValue(int(appGroup->limitLatency()));
+    m_limitPacketLoss->spinBox()->setValue(double(appGroup->limitPacketLoss()) / 100.0);
+    m_limitBufferSizeIn->spinBox()->setValue(int(appGroup->limitBufferSizeIn()));
+    m_limitBufferSizeOut->spinBox()->setValue(int(appGroup->limitBufferSizeOut()));
+
     m_cbLogConn->setChecked(appGroup->logConn());
 
     m_cbGroupEnabled->setChecked(appGroup->enabled());
@@ -589,18 +679,4 @@ void ApplicationsPage::resetGroupName()
 {
     m_editGroupName->clear();
     m_editGroupName->setFocus();
-}
-
-CheckSpinCombo *ApplicationsPage::createGroupLimit()
-{
-    auto c = new CheckSpinCombo();
-    c->spinBox()->setRange(0, 99999);
-    c->spinBox()->setSuffix(" KiB/s");
-    c->setValues(speedLimitValues);
-    return c;
-}
-
-QString ApplicationsPage::formatSpeed(int kbytes)
-{
-    return NetUtil::formatSpeed(quint32(kbytes * 1024));
 }

@@ -7,6 +7,8 @@ class AppGroup;
 class AppsColumn;
 class CheckSpinCombo;
 class CheckTimePeriod;
+class LabelDoubleSpin;
+class LabelSpin;
 class TabBar;
 class TextArea2Splitter;
 
@@ -49,6 +51,9 @@ private:
     void setupGroupApplyChild();
     void setupGroupLimitIn();
     void setupGroupLimitOut();
+    void setupGroupLimitLatency();
+    void setupGroupLimitPacketLoss();
+    void setupGroupLimitBufferSize();
     void setupGroupLogConn();
     void setupGroupOptionsEnabled();
     void setupBlockApps();
@@ -63,10 +68,6 @@ private:
     AppGroup *appGroupByIndex(int index) const;
     void resetGroupName();
 
-    static CheckSpinCombo *createGroupLimit();
-
-    static QString formatSpeed(int kbytes);
-
 private:
     int m_appGroupIndex = -1;
 
@@ -80,6 +81,10 @@ private:
     QCheckBox *m_cbApplyChild = nullptr;
     CheckSpinCombo *m_cscLimitIn = nullptr;
     CheckSpinCombo *m_cscLimitOut = nullptr;
+    LabelSpin *m_limitLatency = nullptr;
+    LabelDoubleSpin *m_limitPacketLoss = nullptr;
+    LabelSpin *m_limitBufferSizeIn = nullptr;
+    LabelSpin *m_limitBufferSizeOut = nullptr;
     QCheckBox *m_cbLogConn = nullptr;
     AppsColumn *m_blockApps = nullptr;
     AppsColumn *m_allowApps = nullptr;

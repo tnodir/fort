@@ -773,9 +773,9 @@ inline static BOOL fort_shaper_packet_queue_check_plr(PFORT_PACKET_QUEUE queue)
 inline static BOOL fort_shaper_packet_queue_check_buffer(
         PFORT_PACKET_QUEUE queue, ULONG data_length)
 {
-    const UINT64 buffer_bytes = queue->limit.buffer_bytes;
+    const UINT32 buffer_bytes = queue->limit.buffer_bytes;
 
-    return buffer_bytes == 0 || buffer_bytes >= (queue->queued_bytes + data_length);
+    return buffer_bytes == 0 || (UINT64) buffer_bytes >= (queue->queued_bytes + data_length);
 }
 
 static BOOL fort_shaper_packet_queue_check_packet(PFORT_PACKET_QUEUE queue, ULONG data_length)

@@ -4,7 +4,8 @@
 #include <QObject>
 #include <QVariant>
 
-#define MAX_APP_GROUP_COUNT 16
+#define MAX_APP_GROUP_COUNT       16
+#define DEFAULT_LIMIT_BUFFER_SIZE 150000
 
 class AppGroup : public QObject
 {
@@ -34,11 +35,23 @@ public:
     bool limitOutEnabled() const { return m_limitOutEnabled; }
     void setLimitOutEnabled(bool enabled);
 
+    quint16 limitPacketLoss() const { return m_limitPacketLoss; }
+    void setLimitPacketLoss(quint16 v);
+
+    quint32 limitLatency() const { return m_limitLatency; }
+    void setLimitLatency(quint32 v);
+
     quint32 speedLimitIn() const { return m_speedLimitIn; }
     void setSpeedLimitIn(quint32 limit);
 
     quint32 speedLimitOut() const { return m_speedLimitOut; }
     void setSpeedLimitOut(quint32 limit);
+
+    quint32 limitBufferSizeIn() const { return m_limitBufferSizeIn; }
+    void setLimitBufferSizeIn(quint32 v);
+
+    quint32 limitBufferSizeOut() const { return m_limitBufferSizeOut; }
+    void setLimitBufferSizeOut(quint32 v);
 
     quint32 enabledSpeedLimitIn() const { return limitInEnabled() ? speedLimitIn() : 0; }
     quint32 enabledSpeedLimitOut() const { return limitOutEnabled() ? speedLimitOut() : 0; }
@@ -82,9 +95,15 @@ private:
     bool m_limitInEnabled : 1;
     bool m_limitOutEnabled : 1;
 
+    quint16 m_limitPacketLoss = 0; // Percent
+    quint32 m_limitLatency = 0; // Milliseconds
+
     // KiBytes per sec.
     quint32 m_speedLimitIn = 0;
     quint32 m_speedLimitOut = 0;
+
+    quint32 m_limitBufferSizeIn = DEFAULT_LIMIT_BUFFER_SIZE;
+    quint32 m_limitBufferSizeOut = DEFAULT_LIMIT_BUFFER_SIZE;
 
     qint64 m_id = 0;
 

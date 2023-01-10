@@ -63,6 +63,14 @@ void AppGroup::setLimitOutEnabled(bool enabled)
     }
 }
 
+void AppGroup::setLimitPacketLoss(quint16 v)
+{
+    if (m_limitPacketLoss != v) {
+        m_limitPacketLoss = v;
+        setEdited(true);
+    }
+}
+
 void AppGroup::setSpeedLimitIn(quint32 limit)
 {
     if (m_speedLimitIn != limit) {
@@ -75,6 +83,30 @@ void AppGroup::setSpeedLimitOut(quint32 limit)
 {
     if (m_speedLimitOut != limit) {
         m_speedLimitOut = limit;
+        setEdited(true);
+    }
+}
+
+void AppGroup::setLimitLatency(quint32 v)
+{
+    if (m_limitLatency != v) {
+        m_limitLatency = v;
+        setEdited(true);
+    }
+}
+
+void AppGroup::setLimitBufferSizeIn(quint32 v)
+{
+    if (m_limitBufferSizeIn != v) {
+        m_limitBufferSizeIn = v;
+        setEdited(true);
+    }
+}
+
+void AppGroup::setLimitBufferSizeOut(quint32 v)
+{
+    if (m_limitBufferSizeOut != v) {
+        m_limitBufferSizeOut = v;
         setEdited(true);
     }
 }
@@ -157,6 +189,11 @@ void AppGroup::copy(const AppGroup &o)
     m_speedLimitIn = o.speedLimitIn();
     m_speedLimitOut = o.speedLimitOut();
 
+    m_limitPacketLoss = o.limitPacketLoss();
+    m_limitLatency = o.limitLatency();
+    m_limitBufferSizeIn = o.limitBufferSizeIn();
+    m_limitBufferSizeOut = o.limitBufferSizeOut();
+
     m_id = o.id();
     m_name = o.name();
 
@@ -182,6 +219,11 @@ QVariant AppGroup::toVariant() const
     map["limitOutEnabled"] = limitOutEnabled();
     map["speedLimitIn"] = speedLimitIn();
     map["speedLimitOut"] = speedLimitOut();
+
+    map["limitPacketLoss"] = limitPacketLoss();
+    map["limitLatency"] = limitLatency();
+    map["limitBufferSizeIn"] = limitBufferSizeIn();
+    map["limitBufferSizeOut"] = limitBufferSizeOut();
 
     map["id"] = id();
     map["name"] = name();
@@ -210,6 +252,11 @@ void AppGroup::fromVariant(const QVariant &v)
     m_limitOutEnabled = map["limitOutEnabled"].toBool();
     m_speedLimitIn = map["speedLimitIn"].toUInt();
     m_speedLimitOut = map["speedLimitOut"].toUInt();
+
+    m_limitPacketLoss = map["limitPacketLoss"].toUInt();
+    m_limitLatency = map["limitLatency"].toUInt();
+    m_limitBufferSizeIn = map["limitBufferSizeIn"].toUInt();
+    m_limitBufferSizeOut = map["limitBufferSizeOut"].toUInt();
 
     m_id = map["id"].toLongLong();
     m_name = map["name"].toString();

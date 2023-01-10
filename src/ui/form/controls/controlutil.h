@@ -2,6 +2,7 @@
 #define CONTROLUTIL_H
 
 #include <QObject>
+#include <QVector>
 
 #include <functional>
 
@@ -15,6 +16,11 @@ QT_FORWARD_DECLARE_CLASS(QLineEdit)
 QT_FORWARD_DECLARE_CLASS(QMenu)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
+
+class LabelColor;
+class LabelDoubleSpin;
+class LabelSpin;
+class LabelSpinCombo;
 
 class ControlUtil
 {
@@ -50,6 +56,15 @@ public:
     static QWidget *wrapToScrollArea(QWidget *content, bool isBgTransparent = true);
 
     static QFont fontDemiBold();
+
+    static LabelSpinCombo *createSpinCombo(int v, int min, int max, const QVector<int> &values,
+            const QString &suffix, const std::function<void(int value)> &onValueChanged);
+    static LabelSpin *createSpin(int v, int min, int max, const QString &suffix,
+            const std::function<void(int value)> &onValueChanged);
+    static LabelDoubleSpin *createDoubleSpin(double v, double min, double max,
+            const QString &suffix, const std::function<void(double value)> &onValueChanged);
+    static LabelColor *createLabelColor(
+            const QColor &v, const std::function<void(const QColor &color)> &onColorChanged);
 };
 
 #endif // CONTROLUTIL_H

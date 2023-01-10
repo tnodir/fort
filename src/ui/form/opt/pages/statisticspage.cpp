@@ -29,44 +29,6 @@ const std::array logIpKeepCountValues = { 3000, 1000, 5000, 10000, 50000, 100000
 const std::array quotaValues = { 10, 0, 100, 500, 1024, 8 * 1024, 10 * 1024, 30 * 1024, 50 * 1024,
     100 * 1024 };
 
-LabelSpinCombo *createSpinCombo(int v, int min, int max, const ValuesList &values,
-        const QString &suffix, const std::function<void(int value)> &onValueChanged)
-{
-    auto c = new LabelSpinCombo();
-    c->spinBox()->setValue(v);
-    c->spinBox()->setRange(min, max);
-    c->spinBox()->setSuffix(suffix);
-    c->setValues(values);
-
-    c->connect(c->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), onValueChanged);
-
-    return c;
-}
-
-LabelSpin *createSpin(int v, int min, int max, const QString &suffix,
-        const std::function<void(int value)> &onValueChanged)
-{
-    auto c = new LabelSpin();
-    c->spinBox()->setValue(v);
-    c->spinBox()->setRange(min, max);
-    c->spinBox()->setSuffix(suffix);
-
-    c->connect(c->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), onValueChanged);
-
-    return c;
-}
-
-LabelColor *createLabelColor(
-        const QColor &v, const std::function<void(const QColor &color)> &onColorChanged)
-{
-    auto c = new LabelColor();
-    c->setColor(v);
-
-    c->connect(c, &LabelColor::colorChanged, onColorChanged);
-
-    return c;
-}
-
 QString formatQuota(int mbytes)
 {
     return NetUtil::formatDataSize1(qint64(mbytes) * 1024 * 1024);
@@ -292,19 +254,20 @@ void StatisticsPage::setupActivePeriod()
 void StatisticsPage::setupMonthStart()
 {
     const auto dayList = SpinCombo::makeValuesList(dayValues);
-    m_lscMonthStart = createSpinCombo(ini()->monthStart(), 1, 31, dayList, {}, [&](int value) {
-        if (ini()->monthStart() != value) {
-            ini()->setMonthStart(value);
-            ctrl()->setIniEdited();
-        }
-    });
+    m_lscMonthStart =
+            ControlUtil::createSpinCombo(ini()->monthStart(), 1, 31, dayList, {}, [&](int value) {
+                if (ini()->monthStart() != value) {
+                    ini()->setMonthStart(value);
+                    ctrl()->setIniEdited();
+                }
+            });
     m_lscMonthStart->setNamesByValues();
 }
 
 void StatisticsPage::setupTrafHourKeepDays()
 {
     const auto trafKeepDayList = SpinCombo::makeValuesList(trafKeepDayValues);
-    m_lscTrafHourKeepDays = createSpinCombo(
+    m_lscTrafHourKeepDays = ControlUtil::createSpinCombo(
             ini()->trafHourKeepDays(), -1, 9999, trafKeepDayList, {}, [&](int value) {
                 if (ini()->trafHourKeepDays() != value) {
                     ini()->setTrafHourKeepDays(value);
@@ -316,7 +279,7 @@ void StatisticsPage::setupTrafHourKeepDays()
 void StatisticsPage::setupTrafDayKeepDays()
 {
     const auto trafKeepDayList = SpinCombo::makeValuesList(trafKeepDayValues);
-    m_lscTrafDayKeepDays = createSpinCombo(
+    m_lscTrafDayKeepDays = ControlUtil::createSpinCombo(
             ini()->trafDayKeepDays(), -1, 9999, trafKeepDayList, {}, [&](int value) {
                 if (ini()->trafDayKeepDays() != value) {
                     ini()->setTrafDayKeepDays(value);
@@ -328,7 +291,7 @@ void StatisticsPage::setupTrafDayKeepDays()
 void StatisticsPage::setupTrafMonthKeepMonths()
 {
     const auto trafKeepMonthList = SpinCombo::makeValuesList(trafKeepMonthValues);
-    m_lscTrafMonthKeepMonths = createSpinCombo(
+    m_lscTrafMonthKeepMonths = ControlUtil::createSpinCombo(
             ini()->trafMonthKeepMonths(), -1, 9999, trafKeepMonthList, {}, [&](int value) {
                 if (ini()->trafMonthKeepMonths() != value) {
                     ini()->setTrafMonthKeepMonths(value);
@@ -340,7 +303,7 @@ void StatisticsPage::setupTrafMonthKeepMonths()
 void StatisticsPage::setupQuotaDayMb()
 {
     const auto quotaList = SpinCombo::makeValuesList(quotaValues);
-    m_lscQuotaDayMb = createSpinCombo(
+    m_lscQuotaDayMb = ControlUtil::createSpinCombo(
             int(ini()->quotaDayMb()), 0, 1024 * 1024, quotaList, " MiB", [&](int value) {
                 if (ini()->quotaDayMb() != value) {
                     ini()->setQuotaDayMb(value);
@@ -352,7 +315,7 @@ void StatisticsPage::setupQuotaDayMb()
 void StatisticsPage::setupQuotaMonthMb()
 {
     const auto quotaList = m_lscQuotaDayMb->values();
-    m_lscQuotaMonthMb = createSpinCombo(
+    m_lscQuotaMonthMb = ControlUtil::createSpinCombo(
             int(ini()->quotaMonthMb()), 0, 1024 * 1024, quotaList, " MiB", [&](int value) {
                 if (ini()->quotaMonthMb() != value) {
                     ini()->setQuotaMonthMb(value);
@@ -387,7 +350,7 @@ void StatisticsPage::setupLogAllowedIp()
     m_cbLogAllowedIp->setFont(ControlUtil::fontDemiBold());
 
     const auto logIpKeepCountList = SpinCombo::makeValuesList(logIpKeepCountValues);
-    m_lscAllowedIpKeepCount = createSpinCombo(
+    m_lscAllowedIpKeepCount = ControlUtil::createSpinCombo(
             ini()->allowedIpKeepCount(), 0, 999999999, logIpKeepCountList, {}, [&](int value) {
                 if (ini()->allowedIpKeepCount() != value) {
                     ini()->setAllowedIpKeepCount(value);
@@ -408,7 +371,7 @@ void StatisticsPage::setupLogBlockedIp()
     m_cbLogBlockedIp->setFont(ControlUtil::fontDemiBold());
 
     const auto logIpKeepCountList = m_lscAllowedIpKeepCount->values();
-    m_lscBlockedIpKeepCount = createSpinCombo(
+    m_lscBlockedIpKeepCount = ControlUtil::createSpinCombo(
             ini()->blockedIpKeepCount(), 0, 999999999, logIpKeepCountList, {}, [&](int value) {
                 if (ini()->blockedIpKeepCount() != value) {
                     ini()->setBlockedIpKeepCount(value);
@@ -512,71 +475,78 @@ void StatisticsPage::setupGraphCheckboxes()
 
 void StatisticsPage::setupGraphOptions()
 {
-    m_graphOpacity = createSpin(ini()->graphWindowOpacity(), 0, 100, " %", [&](int v) {
+    m_graphOpacity = ControlUtil::createSpin(ini()->graphWindowOpacity(), 0, 100, " %", [&](int v) {
         if (ini()->graphWindowOpacity() != v) {
             ini()->setGraphWindowOpacity(v);
             ctrl()->setIniEdited();
         }
     });
 
-    m_graphHoverOpacity = createSpin(ini()->graphWindowHoverOpacity(), 0, 100, " %", [&](int v) {
-        if (ini()->graphWindowHoverOpacity() != v) {
-            ini()->setGraphWindowHoverOpacity(v);
-            ctrl()->setIniEdited();
-        }
-    });
+    m_graphHoverOpacity =
+            ControlUtil::createSpin(ini()->graphWindowHoverOpacity(), 0, 100, " %", [&](int v) {
+                if (ini()->graphWindowHoverOpacity() != v) {
+                    ini()->setGraphWindowHoverOpacity(v);
+                    ctrl()->setIniEdited();
+                }
+            });
 
-    m_graphMaxSeconds = createSpin(ini()->graphWindowMaxSeconds(), 0, 9999, {}, [&](int v) {
-        if (ini()->graphWindowMaxSeconds() != v) {
-            ini()->setGraphWindowMaxSeconds(v);
-            ctrl()->setIniEdited();
-        }
-    });
+    m_graphMaxSeconds =
+            ControlUtil::createSpin(ini()->graphWindowMaxSeconds(), 0, 9999, {}, [&](int v) {
+                if (ini()->graphWindowMaxSeconds() != v) {
+                    ini()->setGraphWindowMaxSeconds(v);
+                    ctrl()->setIniEdited();
+                }
+            });
 }
 
 void StatisticsPage::setupGraphColors()
 {
-    m_graphColor = createLabelColor(ini()->graphWindowColor(), [&](const QColor &v) {
+    m_graphColor = ControlUtil::createLabelColor(ini()->graphWindowColor(), [&](const QColor &v) {
         if (ini()->graphWindowColor() != v) {
             ini()->setGraphWindowColor(v);
             ctrl()->setIniEdited();
         }
     });
-    m_graphColorIn = createLabelColor(ini()->graphWindowColorIn(), [&](const QColor &v) {
-        if (ini()->graphWindowColorIn() != v) {
-            ini()->setGraphWindowColorIn(v);
-            ctrl()->setIniEdited();
-        }
-    });
-    m_graphColorOut = createLabelColor(ini()->graphWindowColorOut(), [&](const QColor &v) {
-        if (ini()->graphWindowColorOut() != v) {
-            ini()->setGraphWindowColorOut(v);
-            ctrl()->setIniEdited();
-        }
-    });
-    m_graphAxisColor = createLabelColor(ini()->graphWindowAxisColor(), [&](const QColor &v) {
-        if (ini()->graphWindowAxisColor() != v) {
-            ini()->setGraphWindowAxisColor(v);
-            ctrl()->setIniEdited();
-        }
-    });
+    m_graphColorIn =
+            ControlUtil::createLabelColor(ini()->graphWindowColorIn(), [&](const QColor &v) {
+                if (ini()->graphWindowColorIn() != v) {
+                    ini()->setGraphWindowColorIn(v);
+                    ctrl()->setIniEdited();
+                }
+            });
+    m_graphColorOut =
+            ControlUtil::createLabelColor(ini()->graphWindowColorOut(), [&](const QColor &v) {
+                if (ini()->graphWindowColorOut() != v) {
+                    ini()->setGraphWindowColorOut(v);
+                    ctrl()->setIniEdited();
+                }
+            });
+    m_graphAxisColor =
+            ControlUtil::createLabelColor(ini()->graphWindowAxisColor(), [&](const QColor &v) {
+                if (ini()->graphWindowAxisColor() != v) {
+                    ini()->setGraphWindowAxisColor(v);
+                    ctrl()->setIniEdited();
+                }
+            });
     m_graphTickLabelColor =
-            createLabelColor(ini()->graphWindowTickLabelColor(), [&](const QColor &v) {
+            ControlUtil::createLabelColor(ini()->graphWindowTickLabelColor(), [&](const QColor &v) {
                 if (ini()->graphWindowTickLabelColor() != v) {
                     ini()->setGraphWindowTickLabelColor(v);
                     ctrl()->setIniEdited();
                 }
             });
-    m_graphLabelColor = createLabelColor(ini()->graphWindowLabelColor(), [&](const QColor &v) {
-        if (ini()->graphWindowLabelColor() != v) {
-            ini()->setGraphWindowLabelColor(v);
-            ctrl()->setIniEdited();
-        }
-    });
-    m_graphGridColor = createLabelColor(ini()->graphWindowGridColor(), [&](const QColor &v) {
-        if (ini()->graphWindowGridColor() != v) {
-            ini()->setGraphWindowGridColor(v);
-            ctrl()->setIniEdited();
-        }
-    });
+    m_graphLabelColor =
+            ControlUtil::createLabelColor(ini()->graphWindowLabelColor(), [&](const QColor &v) {
+                if (ini()->graphWindowLabelColor() != v) {
+                    ini()->setGraphWindowLabelColor(v);
+                    ctrl()->setIniEdited();
+                }
+            });
+    m_graphGridColor =
+            ControlUtil::createLabelColor(ini()->graphWindowGridColor(), [&](const QColor &v) {
+                if (ini()->graphWindowGridColor() != v) {
+                    ini()->setGraphWindowGridColor(v);
+                    ctrl()->setIniEdited();
+                }
+            });
 }
