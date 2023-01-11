@@ -212,19 +212,19 @@
     </message>
     <message>
         <source>Latency:</source>
-        <translation type="unfinished"></translation>
+        <translation>지연:</translation>
     </message>
     <message>
         <source>Packet Loss:</source>
-        <translation type="unfinished"></translation>
+        <translation>패킷 손실:</translation>
     </message>
     <message>
         <source>Download Buffer Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>다운로드 버퍼 크기:</translation>
     </message>
     <message>
         <source>Upload Buffer Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>업로드 버퍼 크기:</translation>
     </message>
 </context>
 <context>

@@ -212,19 +212,19 @@
     </message>
     <message>
         <source>Latency:</source>
-        <translation type="unfinished"></translation>
+        <translation>Latence&#xa0;:</translation>
     </message>
     <message>
         <source>Packet Loss:</source>
-        <translation type="unfinished"></translation>
+        <translation>Perte de paquets :</translation>
     </message>
     <message>
         <source>Download Buffer Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Taille du tampon de téléchargement :</translation>
     </message>
     <message>
         <source>Upload Buffer Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Taille du tampon de chargement :</translation>
     </message>
 </context>
 <context>
