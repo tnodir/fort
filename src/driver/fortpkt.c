@@ -291,7 +291,7 @@ static void fort_shaper_packet_inject(PFORT_SHAPER shaper, PFORT_PACKET pkt)
 }
 
 static void fort_shaper_packet_foreach(
-        PFORT_SHAPER shaper, PFORT_PACKET pkt, FORT_PACKET_FOREACH_FUNC func)
+        PFORT_SHAPER shaper, PFORT_PACKET pkt, FORT_PACKET_FOREACH_FUNC *func)
 {
     while (pkt != NULL) {
         PFORT_PACKET pkt_next = pkt->next;
