@@ -151,12 +151,6 @@ bool extractVersionInfo(const QString &appPath, AppInfo &appInfo)
     appInfo.productName = extractInfoText(infoData, langInfo, L"ProductName");
     appInfo.fileDescription = extractInfoText(infoData, langInfo, L"FileDescription");
 
-    // File description
-    if (appInfo.fileDescription.isEmpty()) {
-        appInfo.fileDescription =
-                !appInfo.productName.isEmpty() ? appInfo.productName : FileUtil::fileName(appPath);
-    }
-
     return true;
 }
 
@@ -191,6 +185,12 @@ bool getInfo(const QString &appPath, AppInfo &appInfo)
     const bool ok = extractVersionInfo(path, appInfo);
 
     revertWow64FsRedirection(wow64FsRedir);
+
+    // File description
+    if (appInfo.fileDescription.isEmpty()) {
+        appInfo.fileDescription =
+                !appInfo.productName.isEmpty() ? appInfo.productName : FileUtil::fileName(appPath);
+    }
 
     return ok;
 }
