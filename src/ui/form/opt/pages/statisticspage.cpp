@@ -180,11 +180,8 @@ void StatisticsPage::setupTrafficBox()
     setupLogStatNoFilter();
     setupActivePeriod();
     setupMonthStart();
-    setupTrafHourKeepDays();
-    setupTrafDayKeepDays();
-    setupTrafMonthKeepMonths();
-    setupQuotaDayMb();
-    setupQuotaMonthMb();
+    setupTrafKeep();
+    setupQuota();
 
     // Layout
     auto layout = ControlUtil::createLayoutByWidgets({ m_cbLogStat, m_cbLogStatNoFilter,
@@ -264,7 +261,7 @@ void StatisticsPage::setupMonthStart()
     m_lscMonthStart->setNamesByValues();
 }
 
-void StatisticsPage::setupTrafHourKeepDays()
+void StatisticsPage::setupTrafKeep()
 {
     const auto trafKeepDayList = SpinCombo::makeValuesList(trafKeepDayValues);
     m_lscTrafHourKeepDays = ControlUtil::createSpinCombo(
@@ -274,11 +271,7 @@ void StatisticsPage::setupTrafHourKeepDays()
                     ctrl()->setIniEdited();
                 }
             });
-}
 
-void StatisticsPage::setupTrafDayKeepDays()
-{
-    const auto trafKeepDayList = SpinCombo::makeValuesList(trafKeepDayValues);
     m_lscTrafDayKeepDays = ControlUtil::createSpinCombo(
             ini()->trafDayKeepDays(), -1, 9999, trafKeepDayList, {}, [&](int value) {
                 if (ini()->trafDayKeepDays() != value) {
@@ -286,10 +279,7 @@ void StatisticsPage::setupTrafDayKeepDays()
                     ctrl()->setIniEdited();
                 }
             });
-}
 
-void StatisticsPage::setupTrafMonthKeepMonths()
-{
     const auto trafKeepMonthList = SpinCombo::makeValuesList(trafKeepMonthValues);
     m_lscTrafMonthKeepMonths = ControlUtil::createSpinCombo(
             ini()->trafMonthKeepMonths(), -1, 9999, trafKeepMonthList, {}, [&](int value) {
@@ -300,23 +290,19 @@ void StatisticsPage::setupTrafMonthKeepMonths()
             });
 }
 
-void StatisticsPage::setupQuotaDayMb()
+void StatisticsPage::setupQuota()
 {
     const auto quotaList = SpinCombo::makeValuesList(quotaValues);
     m_lscQuotaDayMb = ControlUtil::createSpinCombo(
-            int(ini()->quotaDayMb()), 0, 1024 * 1024, quotaList, " MiB", [&](int value) {
+            ini()->quotaDayMb(), 0, 1024 * 1024, quotaList, " MiB", [&](int value) {
                 if (ini()->quotaDayMb() != value) {
                     ini()->setQuotaDayMb(value);
                     ctrl()->setIniEdited();
                 }
             });
-}
 
-void StatisticsPage::setupQuotaMonthMb()
-{
-    const auto quotaList = m_lscQuotaDayMb->values();
     m_lscQuotaMonthMb = ControlUtil::createSpinCombo(
-            int(ini()->quotaMonthMb()), 0, 1024 * 1024, quotaList, " MiB", [&](int value) {
+            ini()->quotaMonthMb(), 0, 1024 * 1024, quotaList, " MiB", [&](int value) {
                 if (ini()->quotaMonthMb() != value) {
                     ini()->setQuotaMonthMb(value);
                     ctrl()->setIniEdited();

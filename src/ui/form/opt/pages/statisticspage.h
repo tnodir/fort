@@ -31,11 +31,8 @@ private:
     void setupLogStatNoFilter();
     void setupActivePeriod();
     void setupMonthStart();
-    void setupTrafHourKeepDays();
-    void setupTrafDayKeepDays();
-    void setupTrafMonthKeepMonths();
-    void setupQuotaDayMb();
-    void setupQuotaMonthMb();
+    void setupTrafKeep();
+    void setupQuota();
     void setupConnBox();
     void setupLogAllowedIp();
     void setupLogBlockedIp();
