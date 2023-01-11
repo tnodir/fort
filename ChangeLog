@@ -1,6 +1,6 @@
 Fort Firewall ChangeLog
 
-v3.6.2, 2022-01-10:
+v3.6.2, 2022-01-11:
 - UI: Options: Remove "Dark mode" flag (auto-follows system mode now).
 - UI: App Groups: Improve speed limiting options.
 - UI: Update SQLite to v3.40.1
