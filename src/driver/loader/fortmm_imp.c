@@ -81,7 +81,6 @@ static NTSTATUS BuildImportTableEntriesBegin(
     UNUSED(pModule);
     UNUSED(pHeaders);
 
-#if defined(FORT_WIN7_COMPAT)
     PLOADEDMODULE kernelModule = &moduleImp->kernelModule;
     {
         const BOOL isWindows7 = (moduleImp->osMajorVersion == 6 && moduleImp->osMinorVersion == 1);
@@ -90,9 +89,6 @@ static NTSTATUS BuildImportTableEntriesBegin(
             moduleImp->getModuleInfoFallback(moduleImp, kernelModule, "ntoskrnl.exe");
         }
     }
-#else
-    UNUSED(moduleImp);
-#endif
 
     return STATUS_SUCCESS;
 }
@@ -107,16 +103,12 @@ static void BuildImportTableLibraryBegin(PFORT_MODULE_IMP moduleImp, LPCSTR libN
 {
     moduleImp->forwardModule = NULL;
 
-#if defined(FORT_WIN7_COMPAT)
     PLOADEDMODULE kernelModule = &moduleImp->kernelModule;
     if (kernelModule->codeBase != NULL && moduleImp->strICmp(libName, "hal.dll") == 0) {
         /* Functions of HAL.dll are exported from kernel on Windows 8+ */
         IMP_LOG("Loader Module: Forward to kernel: %s\n", libName);
         moduleImp->forwardModule = kernelModule;
     }
-#else
-    UNUSED(libName);
-#endif
 }
 
 FORT_API void InitModuleImporter(
@@ -158,6 +150,11 @@ NTSTATUS DriverImportsSetup(PFORT_MODULE_IMP moduleImp)
 {
     moduleImp->getModuleInfoFallback = GetModuleInfoFallback;
     moduleImp->moduleGetProcAddressFallback = ModuleGetProcAddressFallback;
+
+    moduleImp->buildImportTableEntriesBegin = BuildImportTableEntriesBegin;
+    moduleImp->buildImportTableEntriesEnd = BuildImportTableEntriesEnd;
+
+    moduleImp->buildImportTableLibraryBegin = BuildImportTableLibraryBegin;
 
     return STATUS_SUCCESS;
 }
