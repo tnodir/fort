@@ -17,6 +17,30 @@ FORT_API DWORD fort_prov_trans_close(HANDLE engine, DWORD status)
     return status;
 }
 
+static DWORD fort_prov_trans_open_engine(HANDLE transEngine, HANDLE *engine)
+{
+    DWORD status = 0;
+
+    if (!transEngine) {
+        status = fort_prov_open(engine);
+
+        if (status == 0) {
+            status = fort_prov_trans_begin(*engine);
+        }
+    }
+
+    return status;
+}
+
+static DWORD fort_prov_trans_close_engine(HANDLE transEngine, HANDLE engine, DWORD status)
+{
+    if (!transEngine) {
+        status = fort_prov_trans_close(engine, status);
+    }
+
+    return status;
+}
+
 static void fort_prov_unregister_filters(HANDLE engine)
 {
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_CONNECT_V4);
@@ -84,37 +108,25 @@ FORT_API void fort_prov_unregister(HANDLE transEngine)
 {
     HANDLE engine = transEngine;
 
-    if (!transEngine) {
-        if (fort_prov_open(&engine))
-            return;
-
-        fort_prov_trans_begin(engine);
-    }
+    if (fort_prov_trans_open_engine(transEngine, &engine))
+        return;
 
     fort_prov_unregister_provider(engine);
     fort_prov_unregister_flow_filters(engine);
 
-    if (!transEngine) {
-        fort_prov_trans_close(engine, 0);
-    }
+    fort_prov_trans_close_engine(transEngine, engine, /*status=*/0);
 }
 
 FORT_API void fort_prov_flow_unregister(HANDLE transEngine)
 {
     HANDLE engine = transEngine;
 
-    if (!transEngine) {
-        if (fort_prov_open(&engine))
-            return;
-
-        fort_prov_trans_begin(engine);
-    }
+    if (fort_prov_trans_open_engine(transEngine, &engine))
+        return;
 
     fort_prov_unregister_flow_filters(engine);
 
-    if (!transEngine) {
-        fort_prov_trans_close(engine, 0);
-    }
+    fort_prov_trans_close_engine(transEngine, engine, /*status=*/0);
 }
 
 FORT_API BOOL fort_prov_is_boot(void)
@@ -344,18 +356,13 @@ FORT_API DWORD fort_prov_register(HANDLE transEngine, BOOL is_boot)
     HANDLE engine = transEngine;
     DWORD status;
 
-    if (!transEngine) {
-        if ((status = fort_prov_open(&engine)))
-            return status;
-
-        fort_prov_trans_begin(engine);
-    }
+    status = fort_prov_trans_open_engine(transEngine, &engine);
+    if (status)
+        return status;
 
     status = fort_prov_register_provider(engine, is_boot);
 
-    if (!transEngine) {
-        status = fort_prov_trans_close(engine, status);
-    }
+    status = fort_prov_trans_close_engine(transEngine, engine, status);
 
     return status;
 }
@@ -491,12 +498,9 @@ FORT_API DWORD fort_prov_flow_register(HANDLE transEngine, BOOL filter_packets)
     HANDLE engine = transEngine;
     DWORD status;
 
-    if (!transEngine) {
-        if ((status = fort_prov_open(&engine)))
-            return status;
-
-        fort_prov_trans_begin(engine);
-    }
+    status = fort_prov_trans_open_engine(transEngine, &engine);
+    if (status)
+        return status;
 
     status = fort_prov_flow_register_filters(engine);
 
@@ -504,9 +508,7 @@ FORT_API DWORD fort_prov_flow_register(HANDLE transEngine, BOOL filter_packets)
         status = fort_prov_flow_register_packet_filters(engine);
     }
 
-    if (!transEngine) {
-        status = fort_prov_trans_close(engine, status);
-    }
+    status = fort_prov_trans_close_engine(transEngine, engine, status);
 
     return status;
 }
@@ -568,21 +570,16 @@ FORT_API DWORD fort_prov_reauth(HANDLE transEngine)
     HANDLE engine = transEngine;
     DWORD status;
 
-    if (!transEngine) {
-        if ((status = fort_prov_open(&engine)))
-            return status;
-
-        fort_prov_trans_begin(engine);
-    }
+    status = fort_prov_trans_open_engine(transEngine, &engine);
+    if (status)
+        return status;
 
     status = fort_prov_unregister_reauth_filters(engine);
     if (status) {
         status = fort_prov_register_reauth_filters(engine);
     }
 
-    if (!transEngine) {
-        status = fort_prov_trans_close(engine, status);
-    }
+    status = fort_prov_trans_close_engine(transEngine, engine, status);
 
     return status;
 }
