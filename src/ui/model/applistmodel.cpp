@@ -230,12 +230,11 @@ QColor AppListModel::appStateColor(const AppRow &appRow)
 
 QIcon AppListModel::appStateIcon(const AppRow &appRow)
 {
-    const QString iconPath = appRow.blocked
-            ? ":/icons/deny.png"
-            : (appRow.endTime.isNull() ? ":/icons/accept.png" : ":/icons/time.png");
-
-    return appRow.alerted ? GuiUtil::overlayIcon(iconPath, ":/icons/error.png")
-                          : IconCache::icon(iconPath);
+    return IconCache::icon(appRow.alerted
+                    ? ":/icons/error.png"
+                    : (appRow.blocked ? ":/icons/deny.png"
+                                      : (appRow.endTime.isNull() ? ":/icons/accept.png"
+                                                                 : ":/icons/time.png")));
 }
 
 bool AppListModel::updateAppRow(const QString &sql, const QVariantList &vars, AppRow &appRow) const
