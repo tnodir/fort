@@ -5,6 +5,7 @@
 
 QT_FORWARD_DECLARE_CLASS(QAction)
 QT_FORWARD_DECLARE_CLASS(QActionGroup)
+QT_FORWARD_DECLARE_CLASS(QTimer)
 
 class ConfManager;
 class FirewallConf;
@@ -85,6 +86,9 @@ private:
     void updateTrayMenuFlags();
     void updateAppGroupActions();
 
+    void updateAlertTimer(bool alerted);
+    void updateAnimatedTrayIcon(bool alerted, bool animated = false);
+
     void addHotKey(QAction *action, const QString &shortcutText);
     void updateHotKeys();
     void removeHotKeys();
@@ -103,6 +107,7 @@ private:
 
 private:
     bool m_trayTriggered : 1;
+    bool m_animatedAlert : 1;
 
     TrayController *m_ctrl = nullptr;
 
@@ -123,6 +128,8 @@ private:
     QList<QAction *> m_appGroupActions;
 
     QAction *m_clickActions[ClickTypeCount] = { nullptr };
+
+    QTimer *m_alertTimer = nullptr;
 };
 
 #endif // TRAYICON_H

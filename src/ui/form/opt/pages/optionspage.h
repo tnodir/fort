@@ -87,6 +87,7 @@ private:
     QToolButton *m_btPasswordLock = nullptr;
     QLabel *m_labelLanguage = nullptr;
     QComboBox *m_comboLanguage = nullptr;
+    QCheckBox *m_cbTrayAnimateAlert = nullptr;
     QLabel *m_labelTrayEvent = nullptr;
     QComboBox *m_comboTrayEvent = nullptr;
     QLabel *m_labelTrayAction = nullptr;

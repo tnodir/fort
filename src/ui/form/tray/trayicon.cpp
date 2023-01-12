@@ -149,7 +149,10 @@ QAction *addAction(QWidget *widget, const QIcon &icon, const QString &text,
 }
 
 TrayIcon::TrayIcon(QObject *parent) :
-    QSystemTrayIcon(parent), m_trayTriggered(false), m_ctrl(new TrayController(this))
+    QSystemTrayIcon(parent),
+    m_trayTriggered(false),
+    m_animatedAlert(false),
+    m_ctrl(new TrayController(this))
 {
     setupUi();
     setupController();
@@ -214,10 +217,9 @@ void TrayIcon::onTrayActivated(QSystemTrayIcon::ActivationReason reason)
 
 void TrayIcon::updateTrayIcon(bool alerted)
 {
-    const auto icon = alerted ? GuiUtil::overlayIcon(":/icons/sheild-96.png", ":/icons/error.png")
-                              : IconCache::icon(":/icons/sheild-96.png");
+    updateAnimatedTrayIcon(alerted);
 
-    this->setIcon(icon);
+    updateAlertTimer(alerted);
 }
 
 void TrayIcon::showTrayMenu(const QPoint &pos)
@@ -443,6 +445,40 @@ void TrayIcon::updateAppGroupActions()
         action->setVisible(visible);
         action->setEnabled(visible);
     }
+}
+
+void TrayIcon::updateAlertTimer(bool alerted)
+{
+    if (!iniUser()->trayAnimateAlert())
+        return;
+
+    if (!m_alertTimer) {
+        m_alertTimer = new QTimer(this);
+        m_alertTimer->setInterval(1000);
+
+        connect(m_alertTimer, &QTimer::timeout, this, [&] {
+            m_animatedAlert = !m_animatedAlert;
+            updateAnimatedTrayIcon(/*alerted=*/true, m_animatedAlert);
+        });
+    }
+
+    m_animatedAlert = alerted;
+
+    if (alerted) {
+        m_alertTimer->start();
+    } else {
+        m_alertTimer->stop();
+    }
+}
+
+void TrayIcon::updateAnimatedTrayIcon(bool alerted, bool animated)
+{
+    const auto icon = alerted
+            ? (animated ? IconCache::icon(":/icons/error.png")
+                        : GuiUtil::overlayIcon(":/icons/sheild-96.png", ":/icons/error.png"))
+            : IconCache::icon(":/icons/sheild-96.png");
+
+    this->setIcon(icon);
 }
 
 void TrayIcon::saveTrayFlags()

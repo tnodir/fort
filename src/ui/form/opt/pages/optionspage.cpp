@@ -184,6 +184,7 @@ void OptionsPage::onRetranslateUi()
 
     m_labelLanguage->setText(tr("Language:"));
 
+    m_cbTrayAnimateAlert->setText(tr("Animate Alert Icon"));
     m_labelTrayEvent->setText(tr("Event:"));
     m_labelTrayAction->setText(tr("Action:"));
     retranslateComboTrayEvent();
@@ -571,11 +572,19 @@ void OptionsPage::setupComboLanguage()
 
 void OptionsPage::setupTrayBox()
 {
+    m_cbTrayAnimateAlert =
+            ControlUtil::createCheckBox(iniUser()->trayAnimateAlert(), [&](bool checked) {
+                iniUser()->setTrayAnimateAlert(checked);
+                confManager()->saveIniUser(true);
+            });
+
     // Tray Event & Action Rows
     auto eventLayout = setupTrayEventLayout();
     auto actionLayout = setupTrayActionLayout();
 
     auto layout = new QVBoxLayout();
+    layout->addWidget(m_cbTrayAnimateAlert);
+    layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(eventLayout);
     layout->addLayout(actionLayout);
 

@@ -32,6 +32,9 @@ public:
     }
     QString hotKeyQuit() const { return valueText("hotKey/quit"); }
 
+    bool trayAnimateAlert() const { return valueBool("tray/animateAlert"); }
+    void setTrayAnimateAlert(bool v) { setValue("tray/animateAlert", v); }
+
     QString trayAction(const QString &event) const { return valueText("tray/" + event); }
     void setTrayAction(const QString &event, const QString &v) { setValue("tray/" + event, v); }
 
