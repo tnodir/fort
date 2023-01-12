@@ -41,6 +41,28 @@ static DWORD fort_prov_trans_close_engine(HANDLE transEngine, HANDLE engine, DWO
     return status;
 }
 
+static DWORD fort_prov_add_callouts(HANDLE engine, const FWPM_CALLOUT0 *callouts, int count)
+{
+    for (int i = 0; i < count; ++i) {
+        const DWORD status = FwpmCalloutAdd0(engine, &callouts[i], NULL, NULL);
+        if (status)
+            return status;
+    }
+
+    return 0;
+}
+
+static DWORD fort_prov_add_filters(HANDLE engine, const FWPM_FILTER0 *filters, int count)
+{
+    for (int i = 0; i < count; ++i) {
+        const DWORD status = FwpmFilterAdd0(engine, &filters[i], NULL, NULL);
+        if (status)
+            return status;
+    }
+
+    return 0;
+}
+
 static void fort_prov_unregister_filters(HANDLE engine)
 {
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_CONNECT_V4);
@@ -250,15 +272,8 @@ static DWORD fort_prov_register_callouts(HANDLE engine)
         },
     };
 
-    for (int i = 0; i < sizeof(callouts) / sizeof(callouts[0]); ++i) {
-        const FWPM_CALLOUT0 *callout = &callouts[i];
-
-        const DWORD status = FwpmCalloutAdd0(engine, callout, NULL, NULL);
-        if (status)
-            return status;
-    }
-
-    return 0;
+    return fort_prov_add_callouts(
+            engine, callouts, /*count=*/sizeof(callouts) / sizeof(callouts[0]));
 }
 
 static DWORD fort_prov_register_filters(HANDLE engine, BOOL is_boot)
@@ -312,15 +327,7 @@ static DWORD fort_prov_register_filters(HANDLE engine, BOOL is_boot)
         },
     };
 
-    for (int i = 0; i < sizeof(filters) / sizeof(filters[0]); ++i) {
-        const FWPM_FILTER0 *filter = &filters[i];
-
-        const DWORD status = FwpmFilterAdd0(engine, filter, NULL, NULL);
-        if (status)
-            return status;
-    }
-
-    return 0;
+    return fort_prov_add_filters(engine, filters, /*count=*/sizeof(filters) / sizeof(filters[0]));
 }
 
 static DWORD fort_prov_register_provider(HANDLE engine, BOOL is_boot)
@@ -419,15 +426,7 @@ static DWORD fort_prov_flow_register_filters(HANDLE engine)
         },
     };
 
-    for (int i = 0; i < sizeof(filters) / sizeof(filters[0]); ++i) {
-        const FWPM_FILTER0 *filter = &filters[i];
-
-        const DWORD status = FwpmFilterAdd0(engine, filter, NULL, NULL);
-        if (status)
-            return status;
-    }
-
-    return 0;
+    return fort_prov_add_filters(engine, filters, /*count=*/sizeof(filters) / sizeof(filters[0]));
 }
 
 static DWORD fort_prov_flow_register_packet_filters(HANDLE engine)
@@ -482,15 +481,7 @@ static DWORD fort_prov_flow_register_packet_filters(HANDLE engine)
         },
     };
 
-    for (int i = 0; i < sizeof(filters) / sizeof(filters[0]); ++i) {
-        const FWPM_FILTER0 *filter = &filters[i];
-
-        const DWORD status = FwpmFilterAdd0(engine, filter, NULL, NULL);
-        if (status)
-            return status;
-    }
-
-    return 0;
+    return fort_prov_add_filters(engine, filters, /*count=*/sizeof(filters) / sizeof(filters[0]));
 }
 
 FORT_API DWORD fort_prov_flow_register(HANDLE transEngine, BOOL filter_packets)
@@ -554,15 +545,7 @@ static DWORD fort_prov_register_reauth_filters(HANDLE engine)
         },
     };
 
-    for (int i = 0; i < sizeof(filters) / sizeof(filters[0]); ++i) {
-        const FWPM_FILTER0 *filter = &filters[i];
-
-        const DWORD status = FwpmFilterAdd0(engine, filter, NULL, NULL);
-        if (status)
-            return status;
-    }
-
-    return 0;
+    return fort_prov_add_filters(engine, filters, /*count=*/sizeof(filters) / sizeof(filters[0]));
 }
 
 FORT_API DWORD fort_prov_reauth(HANDLE transEngine)
