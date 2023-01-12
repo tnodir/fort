@@ -212,19 +212,19 @@
     </message>
     <message>
         <source>Latency:</source>
-        <translation type="unfinished"></translation>
+        <translation>Zakasnitev:</translation>
     </message>
     <message>
         <source>Packet Loss:</source>
-        <translation type="unfinished"></translation>
+        <translation>Izguba paketa:</translation>
     </message>
     <message>
         <source>Download Buffer Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Velikost medpomnilnika za prenos:</translation>
     </message>
     <message>
         <source>Upload Buffer Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Velikost medpomnilnika za nalaganje:</translation>
     </message>
 </context>
 <context>
