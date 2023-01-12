@@ -81,10 +81,6 @@
 <context>
     <name>AppListModel</name>
     <message>
-        <source>Program</source>
-        <translation>Программа</translation>
-    </message>
-    <message>
         <source>Group</source>
         <translation>Группа</translation>
     </message>
@@ -97,16 +93,20 @@
         <translation>Время создания</translation>
     </message>
     <message>
-        <source>Alert</source>
-        <translation>Оповещение</translation>
-    </message>
-    <message>
         <source>Block</source>
         <translation>Блокировать</translation>
     </message>
     <message>
         <source>Allow</source>
         <translation>Разрешить</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Наименование</translation>
+    </message>
+    <message>
+        <source>File Path</source>
+        <translation>Путь файла</translation>
     </message>
 </context>
 <context>
@@ -740,6 +740,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Ignore</source>
         <translation>Игнорировать</translation>
+    </message>
+    <message>
+        <source>Animate Alert Icon</source>
+        <translation>Анимировать иконку оповещения</translation>
     </message>
 </context>
 <context>

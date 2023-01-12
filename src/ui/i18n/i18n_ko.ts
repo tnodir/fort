@@ -81,10 +81,6 @@
 <context>
     <name>AppListModel</name>
     <message>
-        <source>Program</source>
-        <translation>프로그램</translation>
-    </message>
-    <message>
         <source>Group</source>
         <translation>그룹</translation>
     </message>
@@ -97,16 +93,20 @@
         <translation>생성 시간</translation>
     </message>
     <message>
-        <source>Alert</source>
-        <translation>경보</translation>
-    </message>
-    <message>
         <source>Block</source>
         <translation>차단</translation>
     </message>
     <message>
         <source>Allow</source>
         <translation>허용</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation type="unfinished">이름</translation>
+    </message>
+    <message>
+        <source>File Path</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -740,6 +740,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Ignore</source>
         <translation>무시</translation>
+    </message>
+    <message>
+        <source>Animate Alert Icon</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

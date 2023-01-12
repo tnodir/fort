@@ -81,10 +81,6 @@
 <context>
     <name>AppListModel</name>
     <message>
-        <source>Program</source>
-        <translation>程序</translation>
-    </message>
-    <message>
         <source>Group</source>
         <translation>群组</translation>
     </message>
@@ -97,16 +93,20 @@
         <translation>创建时间</translation>
     </message>
     <message>
-        <source>Alert</source>
-        <translation>警告</translation>
-    </message>
-    <message>
         <source>Block</source>
         <translation>阻止</translation>
     </message>
     <message>
         <source>Allow</source>
         <translation>允许</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation type="unfinished">名称</translation>
+    </message>
+    <message>
+        <source>File Path</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -739,6 +739,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Ignore</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Animate Alert Icon</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

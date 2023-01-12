@@ -81,10 +81,6 @@
 <context>
     <name>AppListModel</name>
     <message>
-        <source>Program</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Group</source>
         <translation></translation>
     </message>
@@ -97,15 +93,19 @@
         <translation></translation>
     </message>
     <message>
-        <source>Alert</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Block</source>
         <translation></translation>
     </message>
     <message>
         <source>Allow</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>File Path</source>
         <translation></translation>
     </message>
 </context>
@@ -738,6 +738,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Ignore</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Animate Alert Icon</source>
         <translation></translation>
     </message>
 </context>

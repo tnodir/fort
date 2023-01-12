@@ -81,10 +81,6 @@
 <context>
     <name>AppListModel</name>
     <message>
-        <source>Program</source>
-        <translation>Program</translation>
-    </message>
-    <message>
         <source>Group</source>
         <translation>Skupina</translation>
     </message>
@@ -97,16 +93,20 @@
         <translation>Čas nastanka</translation>
     </message>
     <message>
-        <source>Alert</source>
-        <translation>Opozorilo</translation>
-    </message>
-    <message>
         <source>Block</source>
         <translation>Blokiraj</translation>
     </message>
     <message>
         <source>Allow</source>
         <translation>Dovoli</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation type="unfinished">Ime</translation>
+    </message>
+    <message>
+        <source>File Path</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -740,6 +740,10 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     <message>
         <source>Ignore</source>
         <translation>Prezri</translation>
+    </message>
+    <message>
+        <source>Animate Alert Icon</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

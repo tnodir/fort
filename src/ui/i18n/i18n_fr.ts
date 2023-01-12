@@ -81,10 +81,6 @@
 <context>
     <name>AppListModel</name>
     <message>
-        <source>Program</source>
-        <translation>Programme</translation>
-    </message>
-    <message>
         <source>Group</source>
         <translation>Groupe</translation>
     </message>
@@ -97,16 +93,20 @@
         <translation>Heure de création</translation>
     </message>
     <message>
-        <source>Alert</source>
-        <translation>Alerte</translation>
-    </message>
-    <message>
         <source>Block</source>
         <translation>Bloquer</translation>
     </message>
     <message>
         <source>Allow</source>
         <translation>Autoriser</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation type="unfinished">Nom</translation>
+    </message>
+    <message>
+        <source>File Path</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -740,6 +740,10 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     <message>
         <source>Ignore</source>
         <translation>Ignorer</translation>
+    </message>
+    <message>
+        <source>Animate Alert Icon</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

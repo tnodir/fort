@@ -81,10 +81,6 @@
 <context>
     <name>AppListModel</name>
     <message>
-        <source>Alert</source>
-        <translation>Avviso</translation>
-    </message>
-    <message>
         <source>Allow</source>
         <translation>Consenti</translation>
     </message>
@@ -105,8 +101,12 @@
         <translation>Data creazione</translation>
     </message>
     <message>
-        <source>Program</source>
-        <translation>Programma</translation>
+        <source>Name</source>
+        <translation type="unfinished">Nome</translation>
+    </message>
+    <message>
+        <source>File Path</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -739,6 +739,10 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     </message>
     <message>
         <source>Ignore</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Animate Alert Icon</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
