@@ -25,7 +25,7 @@
 
 namespace {
 
-constexpr int APPS_HEADER_VERSION = 5;
+constexpr int APPS_HEADER_VERSION = 6;
 
 }
 
@@ -265,6 +265,8 @@ void ProgramsWindow::setupTableApps()
     m_appListView->setAlternatingRowColors(true);
     m_appListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_appListView->setSelectionBehavior(QAbstractItemView::SelectItems);
+    m_appListView->setWordWrap(false);
+    m_appListView->setTextElideMode(Qt::ElideMiddle);
 
     m_appListView->setSortingEnabled(true);
     m_appListView->setModel(appListModel());
@@ -281,15 +283,17 @@ void ProgramsWindow::setupTableAppsHeader()
     header->setSectionResizeMode(0, QHeaderView::Interactive);
     header->setSectionResizeMode(1, QHeaderView::Interactive);
     header->setSectionResizeMode(2, QHeaderView::Interactive);
-    header->setSectionResizeMode(3, QHeaderView::Stretch);
+    header->setSectionResizeMode(3, QHeaderView::Interactive);
+    header->setSectionResizeMode(4, QHeaderView::Stretch);
 
-    header->resizeSection(0, 620);
-    header->resizeSection(1, 130);
-    header->resizeSection(2, 100);
+    header->resizeSection(0, 320);
+    header->resizeSection(1, 300);
+    header->resizeSection(2, 130);
+    header->resizeSection(3, 100);
 
     header->setSectionsClickable(true);
     header->setSortIndicatorShown(true);
-    header->setSortIndicator(3, Qt::DescendingOrder);
+    header->setSortIndicator(4, Qt::DescendingOrder);
 }
 
 void ProgramsWindow::setupAppInfoRow()

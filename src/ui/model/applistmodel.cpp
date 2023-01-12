@@ -51,7 +51,7 @@ SqliteDb *AppListModel::sqliteDb() const
 
 void AppListModel::initialize()
 {
-    setSortColumn(4);
+    setSortColumn(5);
     setSortOrder(Qt::DescendingOrder);
 
     connect(confManager(), &ConfManager::confChanged, this, [&](bool onlyFlags = false) {
@@ -67,7 +67,7 @@ void AppListModel::initialize()
 
 int AppListModel::columnCount(const QModelIndex &parent) const
 {
-    return parent.isValid() ? 0 : 4;
+    return parent.isValid() ? 0 : 5;
 }
 
 QVariant AppListModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -82,12 +82,14 @@ QVariant AppListModel::headerDataDisplay(int section) const
 {
     switch (section) {
     case 0:
-        return tr("Program");
+        return tr("Name");
     case 1:
-        return tr("Group");
+        return tr("File Path");
     case 2:
-        return tr("State");
+        return tr("Group");
     case 3:
+        return tr("State");
+    case 4:
         return tr("Creation Time");
     default:
         Q_UNREACHABLE();
@@ -135,10 +137,12 @@ QVariant AppListModel::dataDisplay(const QModelIndex &index) const
     case 0:
         return appRow.appName;
     case 1:
-        return conf()->appGroupAt(appRow.groupIndex)->name();
+        return appRow.appPath;
     case 2:
-        return dataDisplayState(appRow);
+        return conf()->appGroupAt(appRow.groupIndex)->name();
     case 3:
+        return dataDisplayState(appRow);
+    case 4:
         return appRow.creatTime;
     }
 
@@ -159,7 +163,7 @@ QVariant AppListModel::dataDecoration(const QModelIndex &index) const
 {
     const int column = index.column();
 
-    if (column == 0 || column == 2) {
+    if (column == 0 || column == 3) {
         const int row = index.row();
 
         const auto appRow = appRowAt(row);
@@ -169,7 +173,7 @@ QVariant AppListModel::dataDecoration(const QModelIndex &index) const
         switch (column) {
         case 0:
             return appInfoCache()->appIcon(appRow.appPath);
-        case 2:
+        case 3:
             return appStateIcon(appRow);
         }
     }
@@ -181,14 +185,14 @@ QVariant AppListModel::dataForeground(const QModelIndex &index) const
 {
     const int column = index.column();
 
-    if (column == 1 || column == 2) {
+    if (column == 2 || column == 3) {
         const int row = index.row();
         const auto appRow = appRowAt(row);
 
         switch (column) {
-        case 1:
-            return appGroupColor(appRow);
         case 2:
+            return appGroupColor(appRow);
+        case 3:
             return appStateColor(appRow);
         }
     }
@@ -200,7 +204,7 @@ QVariant AppListModel::dataTextAlignment(const QModelIndex &index) const
 {
     const int column = index.column();
 
-    if (column == 1) {
+    if (column == 2) {
         return int(Qt::AlignHCenter | Qt::AlignVCenter);
     }
 
@@ -309,13 +313,16 @@ QString AppListModel::sqlOrderColumn() const
 {
     QString columnsStr;
     switch (sortColumn()) {
-    case 0: // Program
+    case 0: // Name
         columnsStr = "4 " + sqlOrderAsc() + ", 3";
         break;
-    case 1: // Group
+    case 1: // File Path
+        columnsStr = "3";
+        break;
+    case 2: // Group
         columnsStr = "2";
         break;
-    case 2: // State
+    case 3: // State
         columnsStr = "7 " + sqlOrderAsc() + ", 8, 9";
         break;
     default: // Creation Time
