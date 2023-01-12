@@ -209,8 +209,6 @@ QVariant AppListModel::dataTextAlignment(const QModelIndex &index) const
 
 QString AppListModel::appStateText(const AppRow &appRow)
 {
-    if (appRow.alerted)
-        return tr("Alert");
     if (appRow.blocked)
         return tr("Block");
     return tr("Allow");
@@ -225,8 +223,6 @@ QVariant AppListModel::appGroupColor(const AppRow &appRow)
 
 QColor AppListModel::appStateColor(const AppRow &appRow)
 {
-    if (appRow.alerted)
-        return alertColor;
     if (appRow.blocked)
         return blockColor;
     return allowColor;
@@ -234,9 +230,12 @@ QColor AppListModel::appStateColor(const AppRow &appRow)
 
 QIcon AppListModel::appStateIcon(const AppRow &appRow)
 {
-    return IconCache::icon(appRow.blocked
-                    ? ":/icons/deny.png"
-                    : (appRow.endTime.isNull() ? ":/icons/accept.png" : ":/icons/time.png"));
+    const QString iconPath = appRow.blocked
+            ? ":/icons/deny.png"
+            : (appRow.endTime.isNull() ? ":/icons/accept.png" : ":/icons/time.png");
+
+    return appRow.alerted ? GuiUtil::overlayIcon(iconPath, ":/icons/error.png")
+                          : IconCache::icon(iconPath);
 }
 
 bool AppListModel::updateAppRow(const QString &sql, const QVariantList &vars, AppRow &appRow) const
