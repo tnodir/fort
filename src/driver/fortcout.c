@@ -717,6 +717,52 @@ FORT_API NTSTATUS fort_callout_force_reauth(const FORT_CONF_FLAGS old_conf_flags
     return status;
 }
 
+inline static void fort_callout_timer_update_system_time(
+        PFORT_STAT stat, PFORT_BUFFER buf, PIRP *irp, ULONG_PTR *info)
+{
+    LARGE_INTEGER system_time;
+    PCHAR out;
+
+    KeQuerySystemTime(&system_time);
+
+    if (stat->system_time.QuadPart != system_time.QuadPart
+            && NT_SUCCESS(fort_buffer_prepare(buf, FORT_LOG_TIME_SIZE, &out, irp, info))) {
+        const INT64 unix_time = fort_system_to_unix_time(system_time.QuadPart);
+
+        const UCHAR old_stat_flags = fort_stat_flags_set(stat, FORT_STAT_TIME_CHANGED, FALSE);
+        const BOOL time_changed = ((old_stat_flags & FORT_STAT_TIME_CHANGED) != 0);
+
+        stat->system_time = system_time;
+
+        fort_log_time_write(out, time_changed, unix_time);
+    }
+}
+
+inline static void fort_callout_timer_flush_stat_traf(
+        PFORT_STAT stat, PFORT_BUFFER buf, PIRP *irp, ULONG_PTR *info)
+{
+    while (stat->proc_active_count != 0) {
+        const UINT16 proc_count = (stat->proc_active_count < FORT_LOG_STAT_BUFFER_PROC_COUNT)
+                ? stat->proc_active_count
+                : FORT_LOG_STAT_BUFFER_PROC_COUNT;
+        const UINT32 len = FORT_LOG_STAT_SIZE(proc_count);
+        PCHAR out;
+        NTSTATUS status;
+
+        status = fort_buffer_prepare(buf, len, &out, irp, info);
+        if (!NT_SUCCESS(status)) {
+            LOG("Callout Timer: Error: %x\n", status);
+            TRACE(FORT_CALLOUT_CALLOUT_TIMER_ERROR, status, 0, 0);
+            break;
+        }
+
+        fort_log_stat_traf_header_write(out, proc_count);
+        out += FORT_LOG_STAT_HEADER_SIZE;
+
+        fort_stat_dpc_traf_flush(stat, proc_count, out);
+    }
+}
+
 FORT_API void NTAPI fort_callout_timer(void)
 {
     PFORT_BUFFER buf = &fort_device()->buffer;
@@ -735,46 +781,10 @@ FORT_API void NTAPI fort_callout_timer(void)
     fort_stat_dpc_begin(stat, &stat_lock_queue);
 
     /* Get current Unix time */
-    {
-        LARGE_INTEGER system_time;
-        PCHAR out;
-
-        KeQuerySystemTime(&system_time);
-
-        if (stat->system_time.QuadPart != system_time.QuadPart
-                && NT_SUCCESS(fort_buffer_prepare(buf, FORT_LOG_TIME_SIZE, &out, &irp, &info))) {
-            const INT64 unix_time = fort_system_to_unix_time(system_time.QuadPart);
-
-            const UCHAR old_stat_flags = fort_stat_flags_set(stat, FORT_STAT_TIME_CHANGED, FALSE);
-            const BOOL time_changed = ((old_stat_flags & FORT_STAT_TIME_CHANGED) != 0);
-
-            stat->system_time = system_time;
-
-            fort_log_time_write(out, time_changed, unix_time);
-        }
-    }
+    fort_callout_timer_update_system_time(stat, buf, &irp, &info);
 
     /* Flush traffic statistics */
-    while (stat->proc_active_count != 0) {
-        const UINT16 proc_count = (stat->proc_active_count < FORT_LOG_STAT_BUFFER_PROC_COUNT)
-                ? stat->proc_active_count
-                : FORT_LOG_STAT_BUFFER_PROC_COUNT;
-        const UINT32 len = FORT_LOG_STAT_SIZE(proc_count);
-        PCHAR out;
-        NTSTATUS status;
-
-        status = fort_buffer_prepare(buf, len, &out, &irp, &info);
-        if (!NT_SUCCESS(status)) {
-            LOG("Callout Timer: Error: %x\n", status);
-            TRACE(FORT_CALLOUT_CALLOUT_TIMER_ERROR, status, 0, 0);
-            break;
-        }
-
-        fort_log_stat_traf_header_write(out, proc_count);
-        out += FORT_LOG_STAT_HEADER_SIZE;
-
-        fort_stat_dpc_traf_flush(stat, proc_count, out);
-    }
+    fort_callout_timer_flush_stat_traf(stat, buf, &irp, &info);
 
     /* Unlock stat */
     fort_stat_dpc_end(&stat_lock_queue);
