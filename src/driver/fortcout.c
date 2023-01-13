@@ -608,64 +608,25 @@ FORT_API void fort_callout_remove(void)
 {
     PFORT_STAT stat = &fort_device()->stat;
 
-    if (stat->connect4_id != 0) {
-        FwpsCalloutUnregisterById0(stat->connect4_id);
-        stat->connect4_id = 0;
-    }
+    UINT32 *const calloutIds[] = {
+        &stat->connect4_id,
+        &stat->connect6_id,
+        &stat->accept4_id,
+        &stat->accept6_id,
+        &stat->stream4_id,
+        &stat->stream6_id,
+        &stat->datagram4_id,
+        &stat->datagram6_id,
+        &stat->in_transport4_id,
+        &stat->in_transport6_id,
+        &stat->out_transport4_id,
+        &stat->out_transport6_id,
+    };
 
-    if (stat->connect6_id != 0) {
-        FwpsCalloutUnregisterById0(stat->connect6_id);
-        stat->connect6_id = 0;
-    }
-
-    if (stat->accept4_id != 0) {
-        FwpsCalloutUnregisterById0(stat->accept4_id);
-        stat->accept4_id = 0;
-    }
-
-    if (stat->accept6_id != 0) {
-        FwpsCalloutUnregisterById0(stat->accept6_id);
-        stat->accept6_id = 0;
-    }
-
-    if (stat->stream4_id != 0) {
-        FwpsCalloutUnregisterById0(stat->stream4_id);
-        stat->stream4_id = 0;
-    }
-
-    if (stat->stream6_id != 0) {
-        FwpsCalloutUnregisterById0(stat->stream6_id);
-        stat->stream6_id = 0;
-    }
-
-    if (stat->datagram4_id != 0) {
-        FwpsCalloutUnregisterById0(stat->datagram4_id);
-        stat->datagram4_id = 0;
-    }
-
-    if (stat->datagram6_id != 0) {
-        FwpsCalloutUnregisterById0(stat->datagram6_id);
-        stat->datagram6_id = 0;
-    }
-
-    if (stat->in_transport4_id != 0) {
-        FwpsCalloutUnregisterById0(stat->in_transport4_id);
-        stat->in_transport4_id = 0;
-    }
-
-    if (stat->in_transport6_id != 0) {
-        FwpsCalloutUnregisterById0(stat->in_transport6_id);
-        stat->in_transport6_id = 0;
-    }
-
-    if (stat->out_transport4_id != 0) {
-        FwpsCalloutUnregisterById0(stat->out_transport4_id);
-        stat->out_transport4_id = 0;
-    }
-
-    if (stat->out_transport6_id != 0) {
-        FwpsCalloutUnregisterById0(stat->out_transport6_id);
-        stat->out_transport6_id = 0;
+    for (int i = 0; i < sizeof(calloutIds) / sizeof(calloutIds[0]); ++i) {
+        UINT32 *calloutId = calloutIds[i];
+        FwpsCalloutUnregisterById0(*calloutId);
+        *calloutId = 0;
     }
 }
 
