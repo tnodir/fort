@@ -165,7 +165,7 @@ static BOOL fort_callout_classify_blocked(const FWPS_INCOMING_VALUES0 *inFixedVa
             conf_ref, block_reason, blocked, irp, info);
 }
 
-static void fort_callout_classify_check(const FWPS_INCOMING_VALUES0 *inFixedValues,
+static void fort_callout_classify_check_conf(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const FWPS_FILTER0 *filter,
         FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField, int remoteIpField,
         int localPortField, int remotePortField, int ipProtoField, BOOL isIPv6, BOOL inbound,
@@ -226,14 +226,42 @@ static void fort_callout_classify_check(const FWPS_INCOMING_VALUES0 *inFixedValu
     }
 }
 
+static void fort_callout_classify_by_conf(const FWPS_INCOMING_VALUES0 *inFixedValues,
+        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const FWPS_FILTER0 *filter,
+        FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField, int remoteIpField,
+        int localPortField, int remotePortField, int ipProtoField, BOOL isIPv6, BOOL inbound,
+        UINT32 classify_flags, const UINT32 *remote_ip, PFORT_DEVICE_CONF device_conf)
+{
+    PFORT_CONF_REF conf_ref = fort_conf_ref_take(device_conf);
+
+    if (conf_ref == NULL) {
+        if (fort_device_flag(device_conf, FORT_DEVICE_PROV_BOOT) != 0) {
+            fort_callout_classify_block(classifyOut);
+        } else {
+            fort_callout_classify_continue(classifyOut);
+        }
+        return;
+    }
+
+    PIRP irp = NULL;
+    ULONG_PTR info;
+
+    fort_callout_classify_check_conf(inFixedValues, inMetaValues, filter, classifyOut, flagsField,
+            localIpField, remoteIpField, localPortField, remotePortField, ipProtoField, isIPv6,
+            inbound, classify_flags, remote_ip, conf_ref, &irp, &info);
+
+    fort_conf_ref_put(device_conf, conf_ref);
+
+    if (irp != NULL) {
+        fort_request_complete_info(irp, STATUS_SUCCESS, info);
+    }
+}
+
 static void fort_callout_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const FWPS_FILTER0 *filter,
         FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField, int remoteIpField,
         int localPortField, int remotePortField, int ipProtoField, BOOL isIPv6, BOOL inbound)
 {
-    PIRP irp = NULL;
-    ULONG_PTR info;
-
     const UINT32 classify_flags = inFixedValues->incomingValue[flagsField].value.uint32;
 
     const BOOL is_reauth = (classify_flags & FWP_CONDITION_FLAG_IS_REAUTHORIZE) != 0;
@@ -254,26 +282,9 @@ static void fort_callout_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
         return;
     }
 
-    PFORT_CONF_REF conf_ref = fort_conf_ref_take(device_conf);
-
-    if (conf_ref == NULL) {
-        if (fort_device_flag(device_conf, FORT_DEVICE_PROV_BOOT) != 0) {
-            fort_callout_classify_block(classifyOut);
-        } else {
-            fort_callout_classify_continue(classifyOut);
-        }
-        return;
-    }
-
-    fort_callout_classify_check(inFixedValues, inMetaValues, filter, classifyOut, flagsField,
+    fort_callout_classify_by_conf(inFixedValues, inMetaValues, filter, classifyOut, flagsField,
             localIpField, remoteIpField, localPortField, remotePortField, ipProtoField, isIPv6,
-            inbound, classify_flags, remote_ip, conf_ref, &irp, &info);
-
-    fort_conf_ref_put(device_conf, conf_ref);
-
-    if (irp != NULL) {
-        fort_request_complete_info(irp, STATUS_SUCCESS, info);
-    }
+            inbound, classify_flags, remote_ip, device_conf);
 }
 
 static void NTAPI fort_callout_connect_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
