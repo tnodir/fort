@@ -75,6 +75,24 @@ static BOOL fort_callout_classify_blocked_log_stat(const FWPS_INCOMING_VALUES0 *
     return FALSE;
 }
 
+inline static void fort_callout_classify_blocked_log_path(FORT_CONF_FLAGS conf_flags,
+        UINT32 process_id, PCUNICODE_STRING path, PCUNICODE_STRING real_path,
+        PFORT_CONF_REF conf_ref, BOOL blocked, FORT_APP_FLAGS app_flags, PIRP *irp, ULONG_PTR *info)
+{
+    if (app_flags.v == 0 && (conf_flags.allow_all_new || conf_flags.log_blocked)
+            && conf_flags.filter_enabled) {
+        app_flags.blocked = (UCHAR) blocked;
+        app_flags.alerted = 1;
+        app_flags.is_new = 1;
+
+        if (NT_SUCCESS(
+                    fort_conf_ref_exe_add_path(conf_ref, path->Buffer, path->Length, app_flags))) {
+            fort_buffer_blocked_write(&fort_device()->buffer, blocked, process_id,
+                    real_path->Length, real_path->Buffer, irp, info);
+        }
+    }
+}
+
 static BOOL fort_callout_classify_blocked_log(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const FWPS_FILTER0 *filter,
         FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField, int remoteIpField,
@@ -100,18 +118,8 @@ static BOOL fort_callout_classify_blocked_log(const FWPS_INCOMING_VALUES0 *inFix
         blocked = FALSE; /* allow */
     }
 
-    if (app_flags.v == 0 && (conf_flags.allow_all_new || conf_flags.log_blocked)
-            && conf_flags.filter_enabled) {
-        app_flags.blocked = (UCHAR) blocked;
-        app_flags.alerted = 1;
-        app_flags.is_new = 1;
-
-        if (NT_SUCCESS(
-                    fort_conf_ref_exe_add_path(conf_ref, path->Buffer, path->Length, app_flags))) {
-            fort_buffer_blocked_write(&fort_device()->buffer, blocked, process_id,
-                    real_path->Length, real_path->Buffer, irp, info);
-        }
-    }
+    fort_callout_classify_blocked_log_path(
+            conf_flags, process_id, path, real_path, conf_ref, blocked, app_flags, irp, info);
 
     return blocked;
 }
