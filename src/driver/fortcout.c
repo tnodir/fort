@@ -630,6 +630,34 @@ FORT_API void fort_callout_remove(void)
     }
 }
 
+inline static NTSTATUS fort_callout_force_reauth_prov_check_flow_filter(
+        const FORT_CONF_FLAGS old_conf_flags, const FORT_CONF_FLAGS conf_flags, HANDLE engine,
+        BOOL force)
+{
+    NTSTATUS status = STATUS_SUCCESS;
+
+    const PFORT_CONF_GROUP conf_group = &fort_device()->stat.conf_group;
+    const UINT16 limit_bits = conf_group->limit_bits;
+
+    const BOOL old_filter_packets =
+            fort_device_flag(&fort_device()->conf, FORT_DEVICE_FILTER_PACKETS) != 0;
+    const BOOL filter_packets =
+            conf_flags.filter_enabled && (conf_flags.group_bits & limit_bits) != 0;
+
+    if (force || old_conf_flags.log_stat != conf_flags.log_stat
+            || old_filter_packets != filter_packets) {
+        fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_FILTER_PACKETS, filter_packets);
+
+        fort_prov_flow_unregister(engine);
+
+        if (conf_flags.log_stat) {
+            status = fort_prov_flow_register(engine, filter_packets);
+        }
+    }
+
+    return status;
+}
+
 static NTSTATUS fort_callout_force_reauth_prov(
         const FORT_CONF_FLAGS old_conf_flags, const FORT_CONF_FLAGS conf_flags, HANDLE engine)
 {
@@ -647,27 +675,10 @@ static NTSTATUS fort_callout_force_reauth_prov(
     }
 
     /* Check flow filter */
-    {
-        const PFORT_CONF_GROUP conf_group = &fort_device()->stat.conf_group;
-        const UINT16 limit_bits = conf_group->limit_bits;
-
-        const BOOL old_filter_packets =
-                fort_device_flag(&fort_device()->conf, FORT_DEVICE_FILTER_PACKETS) != 0;
-        const BOOL filter_packets =
-                conf_flags.filter_enabled && (conf_flags.group_bits & limit_bits) != 0;
-
-        if (prov_recreated || old_conf_flags.log_stat != conf_flags.log_stat
-                || old_filter_packets != filter_packets) {
-            fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_FILTER_PACKETS, filter_packets);
-
-            fort_prov_flow_unregister(engine);
-
-            if (conf_flags.log_stat) {
-                if ((status = fort_prov_flow_register(engine, filter_packets)))
-                    return status;
-            }
-        }
-    }
+    status = fort_callout_force_reauth_prov_check_flow_filter(old_conf_flags, conf_flags, engine,
+            /*force=*/prov_recreated);
+    if (status)
+        return status;
 
     /* Force reauth filter */
     return fort_prov_reauth(engine);
