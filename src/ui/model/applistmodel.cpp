@@ -323,7 +323,7 @@ QString AppListModel::sqlOrderColumn() const
         columnsStr = "2";
         break;
     case 3: // State
-        columnsStr = "7 " + sqlOrderAsc() + ", 8, 9";
+        columnsStr = "8 DESC, 7 " + sqlOrderAsc() + ", 1";
         break;
     default: // Creation Time
         columnsStr = "1"; // App ID
