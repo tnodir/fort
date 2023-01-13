@@ -605,28 +605,23 @@ QAction *TrayIcon::clickActionFromIni(ClickType clickType) const
 
 QAction *TrayIcon::clickActionByType(ActionType actionType) const
 {
-    switch (actionType) {
-    case TrayIcon::ActionShowPrograms:
-        return m_programsAction;
-    case TrayIcon::ActionShowOptions:
-        return m_optionsAction;
-    case TrayIcon::ActionShowStatistics:
-        return m_statisticsAction;
-    case TrayIcon::ActionShowTrafficGraph:
-        return m_graphAction;
-    case TrayIcon::ActionSwitchFilterEnabled:
-        return m_filterEnabledAction;
-    case TrayIcon::ActionSwitchStopTraffic:
-        return m_stopTrafficAction;
-    case TrayIcon::ActionSwitchStopInetTraffic:
-        return m_stopInetTrafficAction;
-    case TrayIcon::ActionSwitchAutoAllowPrograms:
-        return m_autoAllowProgsAction;
-    case TrayIcon::ActionShowTrayMenu:
-        return m_trayMenuAction;
-    default:
-        return nullptr;
+    QAction *actions[] = {
+        m_programsAction,
+        m_optionsAction,
+        m_statisticsAction,
+        m_graphAction,
+        m_filterEnabledAction,
+        m_stopTrafficAction,
+        m_stopInetTrafficAction,
+        m_autoAllowProgsAction,
+        m_trayMenuAction,
+    };
+
+    if (actionType > TrayIcon::ActionNone && actionType < TrayIcon::ActionIgnore) {
+        return actions[actionType];
     }
+
+    return nullptr;
 }
 
 void TrayIcon::onMouseClicked(TrayIcon::ClickType clickType)
