@@ -806,16 +806,8 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
 <context>
     <name>ProgramEditDialog</name>
     <message>
-        <source>Program Path:</source>
-        <translation>程序路径：</translation>
-    </message>
-    <message>
         <source>Select File</source>
         <translation>选择文件</translation>
-    </message>
-    <message>
-        <source>Program Name:</source>
-        <translation>程序名:</translation>
     </message>
     <message>
         <source>Get Program Name</source>
@@ -900,6 +892,14 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Apply same rules to child processes</source>
         <translation>将相同的规则应用于子进程</translation>
+    </message>
+    <message>
+        <source>File Path:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Name:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

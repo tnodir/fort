@@ -866,14 +866,6 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
         <translation>6 ore</translation>
     </message>
     <message>
-        <source>Program Path:</source>
-        <translation>Percorso del programma:</translation>
-    </message>
-    <message>
-        <source>Program Name:</source>
-        <translation>Nome del programma:</translation>
-    </message>
-    <message>
         <source>Application Group:</source>
         <translation>Gruppo applicazione:</translation>
     </message>
@@ -899,6 +891,14 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     </message>
     <message>
         <source>Apply same rules to child processes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>File Path:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Name:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

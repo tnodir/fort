@@ -805,16 +805,8 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
 <context>
     <name>ProgramEditDialog</name>
     <message>
-        <source>Program Path:</source>
-        <translation>Caminho do Programa:</translation>
-    </message>
-    <message>
         <source>Select File</source>
         <translation>Selecionar Arquivo</translation>
-    </message>
-    <message>
-        <source>Program Name:</source>
-        <translation>Nome do Programa:</translation>
     </message>
     <message>
         <source>Get Program Name</source>
@@ -898,6 +890,14 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Apply same rules to child processes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>File Path:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Name:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

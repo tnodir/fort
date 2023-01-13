@@ -806,16 +806,8 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
 <context>
     <name>ProgramEditDialog</name>
     <message>
-        <source>Program Path:</source>
-        <translation>Programmpfad:</translation>
-    </message>
-    <message>
         <source>Select File</source>
         <translation>Datei auswählen</translation>
-    </message>
-    <message>
-        <source>Program Name:</source>
-        <translation>Programmname:</translation>
     </message>
     <message>
         <source>Get Program Name</source>
@@ -900,6 +892,14 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     <message>
         <source>Apply same rules to child processes</source>
         <translation>Gleiche Regeln auf untergeordnete Prozesse anwenden</translation>
+    </message>
+    <message>
+        <source>File Path:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Name:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

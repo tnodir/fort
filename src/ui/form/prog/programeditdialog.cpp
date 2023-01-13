@@ -111,9 +111,9 @@ void ProgramEditDialog::retranslateUi()
 {
     this->unsetLocale();
 
-    m_labelEditPath->setText(tr("Program Path:"));
+    m_labelEditPath->setText(tr("File Path:"));
     m_btSelectFile->setToolTip(tr("Select File"));
-    m_labelEditName->setText(tr("Program Name:"));
+    m_labelEditName->setText(tr("Name:"));
     m_btGetName->setToolTip(tr("Get Program Name"));
 
     m_labelAppGroup->setText(tr("Application Group:"));

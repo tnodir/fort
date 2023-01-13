@@ -102,11 +102,11 @@
     </message>
     <message>
         <source>Name</source>
-        <translation type="unfinished">이름</translation>
+        <translation>이름</translation>
     </message>
     <message>
         <source>File Path</source>
-        <translation type="unfinished"></translation>
+        <translation>파일 경로</translation>
     </message>
 </context>
 <context>
@@ -743,7 +743,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Animate Alert Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>애니메이션 알림 아이콘</translation>
     </message>
 </context>
 <context>
@@ -806,16 +806,8 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
 <context>
     <name>ProgramEditDialog</name>
     <message>
-        <source>Program Path:</source>
-        <translation>프로그램 경로:</translation>
-    </message>
-    <message>
         <source>Select File</source>
         <translation>파일 선택</translation>
-    </message>
-    <message>
-        <source>Program Name:</source>
-        <translation>프로그램 이름:</translation>
     </message>
     <message>
         <source>Get Program Name</source>
@@ -900,6 +892,14 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Apply same rules to child processes</source>
         <translation>하위 프로세스에 동일한 규칙 적용</translation>
+    </message>
+    <message>
+        <source>File Path:</source>
+        <translation>파일 경로</translation>
+    </message>
+    <message>
+        <source>Name:</source>
+        <translation>이름</translation>
     </message>
 </context>
 <context>

@@ -102,11 +102,11 @@
     </message>
     <message>
         <source>Name</source>
-        <translation type="unfinished">Nom</translation>
+        <translation>Nom</translation>
     </message>
     <message>
         <source>File Path</source>
-        <translation type="unfinished"></translation>
+        <translation>Chemin du fichier</translation>
     </message>
 </context>
 <context>
@@ -743,7 +743,7 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     </message>
     <message>
         <source>Animate Alert Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Icône d&apos;alerte animée</translation>
     </message>
 </context>
 <context>
@@ -806,16 +806,8 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
 <context>
     <name>ProgramEditDialog</name>
     <message>
-        <source>Program Path:</source>
-        <translation>Chemin du programme:</translation>
-    </message>
-    <message>
         <source>Select File</source>
         <translation>Sélectionner fichier</translation>
-    </message>
-    <message>
-        <source>Program Name:</source>
-        <translation>Nom du programme:</translation>
     </message>
     <message>
         <source>Get Program Name</source>
@@ -900,6 +892,14 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     <message>
         <source>Apply same rules to child processes</source>
         <translation>Appliquer les mêmes règles aux processus enfants</translation>
+    </message>
+    <message>
+        <source>File Path:</source>
+        <translation>Chemin du fichier:</translation>
+    </message>
+    <message>
+        <source>Name:</source>
+        <translation>Nom:</translation>
     </message>
 </context>
 <context>

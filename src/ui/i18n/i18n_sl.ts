@@ -806,16 +806,8 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
 <context>
     <name>ProgramEditDialog</name>
     <message>
-        <source>Program Path:</source>
-        <translation>Pot programa:</translation>
-    </message>
-    <message>
         <source>Select File</source>
         <translation>Izberi datoteko</translation>
-    </message>
-    <message>
-        <source>Program Name:</source>
-        <translation>Ime programa:</translation>
     </message>
     <message>
         <source>Get Program Name</source>
@@ -900,6 +892,14 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     <message>
         <source>Apply same rules to child processes</source>
         <translation>Uporabi ista pravila za podrejene procese</translation>
+    </message>
+    <message>
+        <source>File Path:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Name:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
