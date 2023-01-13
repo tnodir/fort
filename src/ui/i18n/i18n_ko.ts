@@ -895,11 +895,11 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>File Path:</source>
-        <translation>파일 경로</translation>
+        <translation>파일 경로:</translation>
     </message>
     <message>
         <source>Name:</source>
-        <translation>이름</translation>
+        <translation>이름:</translation>
     </message>
 </context>
 <context>
