@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.6.3, 2022-01-13:
+- UI: Options: Add "Animate Alert Icon" flag.
+- UI: Programs: Rework State column for alerts.
+- UI: Programs: Add "File Path" column.
+
 v3.6.2, 2022-01-11:
 - UI: Options: Remove "Dark mode" flag (auto-follows system mode now).
 - UI: App Groups: Improve speed limiting options.
