@@ -70,112 +70,13 @@
 #define FORT_CALLOUT_FLOW_ASSOC_ERROR    ((NTSTATUS)0xC0020001L)
 
 //
-// MessageId: FORT_CALLOUT_REGISTER_CONNECT_V4_ERROR
+// MessageId: FORT_CALLOUT_REGISTER_ERROR
 //
 // MessageText:
 //
-// Register Connect V4: Error.
+// Callout Register: Error.
 //
-#define FORT_CALLOUT_REGISTER_CONNECT_V4_ERROR ((NTSTATUS)0xC0020002L)
-
-//
-// MessageId: FORT_CALLOUT_REGISTER_CONNECT_V6_ERROR
-//
-// MessageText:
-//
-// Register Connect V6: Error.
-//
-#define FORT_CALLOUT_REGISTER_CONNECT_V6_ERROR ((NTSTATUS)0xC0020003L)
-
-//
-// MessageId: FORT_CALLOUT_REGISTER_ACCEPT_V4_ERROR
-//
-// MessageText:
-//
-// Register Accept V4: Error.
-//
-#define FORT_CALLOUT_REGISTER_ACCEPT_V4_ERROR ((NTSTATUS)0xC0020004L)
-
-//
-// MessageId: FORT_CALLOUT_REGISTER_ACCEPT_V6_ERROR
-//
-// MessageText:
-//
-// Register Accept V6: Error.
-//
-#define FORT_CALLOUT_REGISTER_ACCEPT_V6_ERROR ((NTSTATUS)0xC0020005L)
-
-//
-// MessageId: FORT_CALLOUT_REGISTER_STREAM_V4_ERROR
-//
-// MessageText:
-//
-// Register Stream V4: Error.
-//
-#define FORT_CALLOUT_REGISTER_STREAM_V4_ERROR ((NTSTATUS)0xC0020006L)
-
-//
-// MessageId: FORT_CALLOUT_REGISTER_STREAM_V6_ERROR
-//
-// MessageText:
-//
-// Register Stream V6: Error.
-//
-#define FORT_CALLOUT_REGISTER_STREAM_V6_ERROR ((NTSTATUS)0xC0020007L)
-
-//
-// MessageId: FORT_CALLOUT_REGISTER_DATAGRAM_V4_ERROR
-//
-// MessageText:
-//
-// Register Datagram V4: Error.
-//
-#define FORT_CALLOUT_REGISTER_DATAGRAM_V4_ERROR ((NTSTATUS)0xC0020008L)
-
-//
-// MessageId: FORT_CALLOUT_REGISTER_DATAGRAM_V6_ERROR
-//
-// MessageText:
-//
-// Register Datagram V6: Error.
-//
-#define FORT_CALLOUT_REGISTER_DATAGRAM_V6_ERROR ((NTSTATUS)0xC0020009L)
-
-//
-// MessageId: FORT_CALLOUT_REGISTER_INBOUND_TRANSPORT_V4_ERROR
-//
-// MessageText:
-//
-// Register Inbound Transport V4: Error.
-//
-#define FORT_CALLOUT_REGISTER_INBOUND_TRANSPORT_V4_ERROR ((NTSTATUS)0xC002000AL)
-
-//
-// MessageId: FORT_CALLOUT_REGISTER_INBOUND_TRANSPORT_V6_ERROR
-//
-// MessageText:
-//
-// Register Inbound Transport V6: Error.
-//
-#define FORT_CALLOUT_REGISTER_INBOUND_TRANSPORT_V6_ERROR ((NTSTATUS)0xC002000BL)
-
-//
-// MessageId: FORT_CALLOUT_REGISTER_OUTBOUND_TRANSPORT_V4_ERROR
-//
-// MessageText:
-//
-// Register Outbound Transport V4: Error.
-//
-#define FORT_CALLOUT_REGISTER_OUTBOUND_TRANSPORT_V4_ERROR ((NTSTATUS)0xC002000CL)
-
-//
-// MessageId: FORT_CALLOUT_REGISTER_OUTBOUND_TRANSPORT_V6_ERROR
-//
-// MessageText:
-//
-// Register Outbound Transport V6: Error.
-//
-#define FORT_CALLOUT_REGISTER_OUTBOUND_TRANSPORT_V6_ERROR ((NTSTATUS)0xC002000DL)
+#define FORT_CALLOUT_REGISTER_ERROR      ((NTSTATUS)0xC0020002L)
 
 //
 // MessageId: FORT_CALLOUT_CALLOUT_REAUTH_ERROR

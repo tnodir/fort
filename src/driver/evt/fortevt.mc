@@ -37,64 +37,9 @@ Language=English
 Classify v4: Flow assoc. error.
 .
 
-MessageId=2 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_CONNECT_V4_ERROR
+MessageId=2 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_ERROR
 Language=English
-Register Connect V4: Error.
-.
-
-MessageId=3 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_CONNECT_V6_ERROR
-Language=English
-Register Connect V6: Error.
-.
-
-MessageId=4 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_ACCEPT_V4_ERROR
-Language=English
-Register Accept V4: Error.
-.
-
-MessageId=5 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_ACCEPT_V6_ERROR
-Language=English
-Register Accept V6: Error.
-.
-
-MessageId=6 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_STREAM_V4_ERROR
-Language=English
-Register Stream V4: Error.
-.
-
-MessageId=7 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_STREAM_V6_ERROR
-Language=English
-Register Stream V6: Error.
-.
-
-MessageId=8 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_DATAGRAM_V4_ERROR
-Language=English
-Register Datagram V4: Error.
-.
-
-MessageId=9 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_DATAGRAM_V6_ERROR
-Language=English
-Register Datagram V6: Error.
-.
-
-MessageId=10 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_INBOUND_TRANSPORT_V4_ERROR
-Language=English
-Register Inbound Transport V4: Error.
-.
-
-MessageId=11 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_INBOUND_TRANSPORT_V6_ERROR
-Language=English
-Register Inbound Transport V6: Error.
-.
-
-MessageId=12 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_OUTBOUND_TRANSPORT_V4_ERROR
-Language=English
-Register Outbound Transport V4: Error.
-.
-
-MessageId=13 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_OUTBOUND_TRANSPORT_V6_ERROR
-Language=English
-Register Outbound Transport V6: Error.
+Callout Register: Error.
 .
 
 MessageId=14 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_CALLOUT_REAUTH_ERROR

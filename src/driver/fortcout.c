@@ -486,161 +486,119 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 {
     PFORT_STAT stat = &fort_device()->stat;
 
-    FWPS_CALLOUT0 c;
-    NTSTATUS status;
+    UINT32 *const calloutIds[] = {
+        &stat->connect4_id,
+        &stat->connect6_id,
+        &stat->accept4_id,
+        &stat->accept6_id,
+        &stat->stream4_id,
+        &stat->stream6_id,
+        &stat->datagram4_id,
+        &stat->datagram6_id,
+        &stat->in_transport4_id,
+        &stat->in_transport6_id,
+        &stat->out_transport4_id,
+        &stat->out_transport6_id,
+    };
 
-    RtlZeroMemory(&c, sizeof(FWPS_CALLOUT0));
+    const FWPS_CALLOUT0 callouts[] = {
+        /* IPv4 connect callout */
+        {
+                .calloutKey = FORT_GUID_CALLOUT_CONNECT_V4,
+                .classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) &fort_callout_connect_v4,
+                .notifyFn = (FWPS_CALLOUT_NOTIFY_FN0) &fort_callout_notify,
+        },
+        /* IPv6 connect callout */
+        {
+                .calloutKey = FORT_GUID_CALLOUT_CONNECT_V6,
+                .classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) &fort_callout_connect_v6,
+                .notifyFn = (FWPS_CALLOUT_NOTIFY_FN0) &fort_callout_notify,
+        },
+        /* IPv4 accept callout */
+        {
+                .calloutKey = FORT_GUID_CALLOUT_ACCEPT_V4,
+                .classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) &fort_callout_accept_v4,
+                .notifyFn = (FWPS_CALLOUT_NOTIFY_FN0) &fort_callout_notify,
+        },
+        /* IPv6 accept callout */
+        {
+                .calloutKey = FORT_GUID_CALLOUT_ACCEPT_V6,
+                .classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) &fort_callout_accept_v6,
+                .notifyFn = (FWPS_CALLOUT_NOTIFY_FN0) &fort_callout_notify,
+        },
+        /* IPv4 stream callout */
+        {
+                .calloutKey = FORT_GUID_CALLOUT_STREAM_V4,
+                .classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) &fort_callout_stream_classify,
+                .notifyFn = (FWPS_CALLOUT_NOTIFY_FN0) &fort_callout_notify,
+                .flowDeleteFn = &fort_callout_flow_delete,
+                .flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW,
+        },
+        /* IPv6 stream callout */
+        {
+                .calloutKey = FORT_GUID_CALLOUT_STREAM_V6,
+                .classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) &fort_callout_stream_classify,
+                .notifyFn = (FWPS_CALLOUT_NOTIFY_FN0) &fort_callout_notify,
+                .flowDeleteFn = &fort_callout_flow_delete,
+                .flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW,
+        },
+        /* IPv4 datagram callout */
+        {
+                .calloutKey = FORT_GUID_CALLOUT_DATAGRAM_V4,
+                .classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) &fort_callout_datagram_classify_v4,
+                .notifyFn = (FWPS_CALLOUT_NOTIFY_FN0) &fort_callout_notify,
+                .flowDeleteFn = &fort_callout_flow_delete,
+                .flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW,
+        },
+        /* IPv6 datagram callout */
+        {
+                .calloutKey = FORT_GUID_CALLOUT_DATAGRAM_V6,
+                .classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) &fort_callout_datagram_classify_v6,
+                .notifyFn = (FWPS_CALLOUT_NOTIFY_FN0) &fort_callout_notify,
+                .flowDeleteFn = &fort_callout_flow_delete,
+                .flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW,
+        },
+        /* IPv4 inbound transport callout */
+        {
+                .calloutKey = FORT_GUID_CALLOUT_IN_TRANSPORT_V4,
+                .classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) &fort_callout_transport_classify_in,
+                .notifyFn = (FWPS_CALLOUT_NOTIFY_FN0) &fort_callout_notify,
+                .flowDeleteFn = &fort_callout_transport_delete,
+                .flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW,
+        },
+        /* IPv6 inbound transport callout */
+        {
+                .calloutKey = FORT_GUID_CALLOUT_IN_TRANSPORT_V6,
+                .classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) &fort_callout_transport_classify_in,
+                .notifyFn = (FWPS_CALLOUT_NOTIFY_FN0) &fort_callout_notify,
+                .flowDeleteFn = &fort_callout_transport_delete,
+                .flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW,
+        },
+        /* IPv4 outbound transport callout */
+        {
+                .calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V4,
+                .classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) &fort_callout_transport_classify_out,
+                .notifyFn = (FWPS_CALLOUT_NOTIFY_FN0) &fort_callout_notify,
+                .flowDeleteFn = &fort_callout_transport_delete,
+                .flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW,
+        },
+        /* IPv6 outbound transport callout */
+        {
+                .calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V6,
+                .classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) &fort_callout_transport_classify_out,
+                .notifyFn = (FWPS_CALLOUT_NOTIFY_FN0) &fort_callout_notify,
+                .flowDeleteFn = &fort_callout_transport_delete,
+                .flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW,
+        },
+    };
 
-    c.notifyFn = (FWPS_CALLOUT_NOTIFY_FN0) fort_callout_notify;
-
-    /* IPv4 connect callout */
-    c.calloutKey = FORT_GUID_CALLOUT_CONNECT_V4;
-    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_connect_v4;
-
-    status = FwpsCalloutRegister0(device, &c, &stat->connect4_id);
-    if (!NT_SUCCESS(status)) {
-        LOG("Register Connect V4: Error: %x\n", status);
-        TRACE(FORT_CALLOUT_REGISTER_CONNECT_V4_ERROR, status, 0, 0);
-        return status;
-    }
-
-    /* IPv6 connect callout */
-    c.calloutKey = FORT_GUID_CALLOUT_CONNECT_V6;
-    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_connect_v6;
-
-    status = FwpsCalloutRegister0(device, &c, &stat->connect6_id);
-    if (!NT_SUCCESS(status)) {
-        LOG("Register Connect V6: Error: %x\n", status);
-        TRACE(FORT_CALLOUT_REGISTER_CONNECT_V6_ERROR, status, 0, 0);
-        return status;
-    }
-
-    /* IPv4 accept callout */
-    c.calloutKey = FORT_GUID_CALLOUT_ACCEPT_V4;
-    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_accept_v4;
-
-    status = FwpsCalloutRegister0(device, &c, &stat->accept4_id);
-    if (!NT_SUCCESS(status)) {
-        LOG("Register Accept V4: Error: %x\n", status);
-        TRACE(FORT_CALLOUT_REGISTER_ACCEPT_V4_ERROR, status, 0, 0);
-        return status;
-    }
-
-    /* IPv6 accept callout */
-    c.calloutKey = FORT_GUID_CALLOUT_ACCEPT_V6;
-    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_accept_v6;
-
-    status = FwpsCalloutRegister0(device, &c, &stat->accept6_id);
-    if (!NT_SUCCESS(status)) {
-        LOG("Register Accept V6: Error: %x\n", status);
-        TRACE(FORT_CALLOUT_REGISTER_ACCEPT_V6_ERROR, status, 0, 0);
-        return status;
-    }
-
-    /* IPv4 stream callout */
-    c.calloutKey = FORT_GUID_CALLOUT_STREAM_V4;
-    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_stream_classify;
-
-    c.flowDeleteFn = fort_callout_flow_delete;
-    c.flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW;
-
-    status = FwpsCalloutRegister0(device, &c, &stat->stream4_id);
-    if (!NT_SUCCESS(status)) {
-        LOG("Register Stream V4: Error: %x\n", status);
-        TRACE(FORT_CALLOUT_REGISTER_STREAM_V4_ERROR, status, 0, 0);
-        return status;
-    }
-
-    /* IPv6 stream callout */
-    c.calloutKey = FORT_GUID_CALLOUT_STREAM_V6;
-    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_stream_classify;
-
-    /* reuse c.flowDeleteFn & c.flags */
-
-    status = FwpsCalloutRegister0(device, &c, &stat->stream6_id);
-    if (!NT_SUCCESS(status)) {
-        LOG("Register Stream V6: Error: %x\n", status);
-        TRACE(FORT_CALLOUT_REGISTER_STREAM_V6_ERROR, status, 0, 0);
-        return status;
-    }
-
-    /* IPv4 datagram callout */
-    c.calloutKey = FORT_GUID_CALLOUT_DATAGRAM_V4;
-    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_datagram_classify_v4;
-
-    /* reuse c.flowDeleteFn & c.flags */
-
-    status = FwpsCalloutRegister0(device, &c, &stat->datagram4_id);
-    if (!NT_SUCCESS(status)) {
-        LOG("Register Datagram V4: Error: %x\n", status);
-        TRACE(FORT_CALLOUT_REGISTER_DATAGRAM_V4_ERROR, status, 0, 0);
-        return status;
-    }
-
-    /* IPv6 datagram callout */
-    c.calloutKey = FORT_GUID_CALLOUT_DATAGRAM_V6;
-    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_datagram_classify_v6;
-
-    /* reuse c.flowDeleteFn & c.flags */
-
-    status = FwpsCalloutRegister0(device, &c, &stat->datagram6_id);
-    if (!NT_SUCCESS(status)) {
-        LOG("Register Datagram V6: Error: %x\n", status);
-        TRACE(FORT_CALLOUT_REGISTER_DATAGRAM_V6_ERROR, status, 0, 0);
-        return status;
-    }
-
-    /* IPv4 inbound transport callout */
-    c.calloutKey = FORT_GUID_CALLOUT_IN_TRANSPORT_V4;
-    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_transport_classify_in;
-
-    c.flowDeleteFn = fort_callout_transport_delete;
-    /* reuse c.flags */
-
-    status = FwpsCalloutRegister0(device, &c, &stat->in_transport4_id);
-    if (!NT_SUCCESS(status)) {
-        LOG("Register Inbound Transport V4: Error: %x\n", status);
-        TRACE(FORT_CALLOUT_REGISTER_INBOUND_TRANSPORT_V4_ERROR, status, 0, 0);
-        return status;
-    }
-
-    /* IPv6 inbound transport callout */
-    c.calloutKey = FORT_GUID_CALLOUT_IN_TRANSPORT_V6;
-    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_transport_classify_in;
-
-    /* reuse c.flowDeleteFn & c.flags */
-
-    status = FwpsCalloutRegister0(device, &c, &stat->in_transport6_id);
-    if (!NT_SUCCESS(status)) {
-        LOG("Register Inbound Transport V6: Error: %x\n", status);
-        TRACE(FORT_CALLOUT_REGISTER_INBOUND_TRANSPORT_V6_ERROR, status, 0, 0);
-        return status;
-    }
-
-    /* IPv4 outbound transport callout */
-    c.calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V4;
-    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_transport_classify_out;
-
-    /* reuse c.flowDeleteFn & c.flags */
-
-    status = FwpsCalloutRegister0(device, &c, &stat->out_transport4_id);
-    if (!NT_SUCCESS(status)) {
-        LOG("Register Outbound Transport V4: Error: %x\n", status);
-        TRACE(FORT_CALLOUT_REGISTER_OUTBOUND_TRANSPORT_V4_ERROR, status, 0, 0);
-        return status;
-    }
-
-    /* IPv6 outbound transport callout */
-    c.calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V6;
-    c.classifyFn = (FWPS_CALLOUT_CLASSIFY_FN0) fort_callout_transport_classify_out;
-
-    /* reuse c.flowDeleteFn & c.flags */
-
-    status = FwpsCalloutRegister0(device, &c, &stat->out_transport6_id);
-    if (!NT_SUCCESS(status)) {
-        LOG("Register Outbound Transport V6: Error: %x\n", status);
-        TRACE(FORT_CALLOUT_REGISTER_OUTBOUND_TRANSPORT_V6_ERROR, status, 0, 0);
-        return status;
+    for (int i = 0; i < sizeof(callouts) / sizeof(callouts[0]); ++i) {
+        const NTSTATUS status = FwpsCalloutRegister0(device, &callouts[i], calloutIds[i]);
+        if (!NT_SUCCESS(status)) {
+            LOG("Callout Register: Error: %x\n", status);
+            TRACE(FORT_CALLOUT_REGISTER_ERROR, status, i, 0);
+            return status;
+        }
     }
 
     return STATUS_SUCCESS;
