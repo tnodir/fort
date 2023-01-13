@@ -39,7 +39,8 @@ public:
         ActionSwitchStopInetTraffic,
         ActionSwitchAutoAllowPrograms,
         ActionShowTrayMenu,
-        ActionIgnore
+        ActionIgnore,
+        ActionTypeCount
     };
 
     explicit TrayIcon(QObject *parent = nullptr);

@@ -56,30 +56,24 @@ QString clickNameByType(TrayIcon::ClickType clickType)
 
 QString actionNameByType(TrayIcon::ActionType actionType)
 {
-    switch (actionType) {
-    case TrayIcon::ActionShowPrograms:
-        return actionShowPrograms;
-    case TrayIcon::ActionShowOptions:
-        return actionShowOptions;
-    case TrayIcon::ActionShowStatistics:
-        return actionShowStatistics;
-    case TrayIcon::ActionShowTrafficGraph:
-        return actionShowTrafficGraph;
-    case TrayIcon::ActionSwitchFilterEnabled:
-        return actionSwitchFilterEnabled;
-    case TrayIcon::ActionSwitchStopTraffic:
-        return actionSwitchStopTraffic;
-    case TrayIcon::ActionSwitchStopInetTraffic:
-        return actionSwitchStopInetTraffic;
-    case TrayIcon::ActionSwitchAutoAllowPrograms:
-        return actionSwitchAutoAllowPrograms;
-    case TrayIcon::ActionShowTrayMenu:
-        return actionShowTrayMenu;
-    case TrayIcon::ActionIgnore:
-        return actionIgnore;
-    default:
-        return {};
+    static const QString actionNames[] = {
+        actionShowPrograms,
+        actionShowOptions,
+        actionShowStatistics,
+        actionShowTrafficGraph,
+        actionSwitchFilterEnabled,
+        actionSwitchStopTraffic,
+        actionSwitchStopInetTraffic,
+        actionSwitchAutoAllowPrograms,
+        actionShowTrayMenu,
+        actionIgnore,
+    };
+
+    if (actionType > TrayIcon::ActionNone && actionType < TrayIcon::ActionTypeCount) {
+        return actionNames[actionType];
     }
+
+    return {};
 }
 
 TrayIcon::ActionType actionTypeByName(const QString &name)
