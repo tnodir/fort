@@ -45,6 +45,7 @@ HEADERS += \
     fortcb.h \
     fortcnf.h \
     fortcout.h \
+    fortcoutarg.h \
     fortdev.h \
     fortdrv.h \
     fortmod.h \

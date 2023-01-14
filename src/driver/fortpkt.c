@@ -105,48 +105,49 @@ static void fort_shaper_packet_put(PFORT_SHAPER shaper, PFORT_PACKET pkt)
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
-static NTSTATUS fort_shaper_packet_fill(PFORT_SHAPER shaper,
-        const FWPS_INCOMING_VALUES0 *inFixedValues,
-        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PNET_BUFFER_LIST netBufList,
-        PFORT_PACKET pkt, BOOL isIPv6, BOOL inbound)
+inline static NTSTATUS fort_shaper_packet_fill(
+        PFORT_SHAPER shaper, FORT_CALLOUT_ARG ca, PFORT_PACKET pkt)
 {
-    pkt->compartmentId = inMetaValues->compartmentId;
+    pkt->compartmentId = ca.inMetaValues->compartmentId;
 
-    if (inbound) {
+    if (ca.inbound) {
         PFORT_PACKET_IN pkt_in = &pkt->in;
 
-        const int interfaceField = isIPv6 ? FWPS_FIELD_INBOUND_TRANSPORT_V6_INTERFACE_INDEX
-                                          : FWPS_FIELD_INBOUND_TRANSPORT_V4_INTERFACE_INDEX;
-        const int subInterfaceField = isIPv6 ? FWPS_FIELD_INBOUND_TRANSPORT_V6_SUB_INTERFACE_INDEX
-                                             : FWPS_FIELD_INBOUND_TRANSPORT_V4_SUB_INTERFACE_INDEX;
+        const int interfaceField = ca.isIPv6 ? FWPS_FIELD_INBOUND_TRANSPORT_V6_INTERFACE_INDEX
+                                             : FWPS_FIELD_INBOUND_TRANSPORT_V4_INTERFACE_INDEX;
+        const int subInterfaceField = ca.isIPv6
+                ? FWPS_FIELD_INBOUND_TRANSPORT_V6_SUB_INTERFACE_INDEX
+                : FWPS_FIELD_INBOUND_TRANSPORT_V4_SUB_INTERFACE_INDEX;
 
-        pkt_in->interfaceIndex = inFixedValues->incomingValue[interfaceField].value.uint32;
-        pkt_in->subInterfaceIndex = inFixedValues->incomingValue[subInterfaceField].value.uint32;
+        pkt_in->interfaceIndex = ca.inFixedValues->incomingValue[interfaceField].value.uint32;
+        pkt_in->subInterfaceIndex = ca.inFixedValues->incomingValue[subInterfaceField].value.uint32;
 
-        pkt_in->bytesRetreated = inMetaValues->transportHeaderSize + inMetaValues->ipHeaderSize;
+        pkt_in->bytesRetreated =
+                ca.inMetaValues->transportHeaderSize + ca.inMetaValues->ipHeaderSize;
     } else {
         PFORT_PACKET_OUT pkt_out = &pkt->out;
 
-        const ULONG controlDataLength = inMetaValues->controlDataLength;
-        if (FWPS_IS_METADATA_FIELD_PRESENT(inMetaValues, FWPS_METADATA_FIELD_TRANSPORT_CONTROL_DATA)
+        const ULONG controlDataLength = ca.inMetaValues->controlDataLength;
+        if (FWPS_IS_METADATA_FIELD_PRESENT(
+                    ca.inMetaValues, FWPS_METADATA_FIELD_TRANSPORT_CONTROL_DATA)
                 && controlDataLength > 0) {
             pkt_out->controlData = fort_mem_alloc(controlDataLength, FORT_PACKET_POOL_TAG);
             if (pkt_out->controlData == NULL)
                 return STATUS_INSUFFICIENT_RESOURCES;
 
-            RtlCopyMemory(pkt_out->controlData, inMetaValues->controlData, controlDataLength);
+            RtlCopyMemory(pkt_out->controlData, ca.inMetaValues->controlData, controlDataLength);
 
             pkt_out->controlDataLength = controlDataLength;
         }
 
-        pkt_out->remoteScopeId = inMetaValues->remoteScopeId;
-        pkt_out->endpointHandle = inMetaValues->transportEndpointHandle;
+        pkt_out->remoteScopeId = ca.inMetaValues->remoteScopeId;
+        pkt_out->endpointHandle = ca.inMetaValues->transportEndpointHandle;
 
-        const int remoteIpField = isIPv6 ? FWPS_FIELD_OUTBOUND_TRANSPORT_V6_IP_REMOTE_ADDRESS
-                                         : FWPS_FIELD_OUTBOUND_TRANSPORT_V4_IP_REMOTE_ADDRESS;
+        const int remoteIpField = ca.isIPv6 ? FWPS_FIELD_OUTBOUND_TRANSPORT_V6_IP_REMOTE_ADDRESS
+                                            : FWPS_FIELD_OUTBOUND_TRANSPORT_V4_IP_REMOTE_ADDRESS;
 
-        const FWP_VALUE0 *remoteIpValue = &inFixedValues->incomingValue[remoteIpField].value;
-        if (isIPv6) {
+        const FWP_VALUE0 *remoteIpValue = &ca.inFixedValues->incomingValue[remoteIpField].value;
+        if (ca.isIPv6) {
             pkt_out->remoteAddr.v6 = *((ip6_addr_t *) remoteIpValue->byteArray16);
         } else {
             /* host-order -> network-order conversion */
@@ -154,9 +155,9 @@ static NTSTATUS fort_shaper_packet_fill(PFORT_SHAPER shaper,
         }
     }
 
-    pkt->netBufList = netBufList;
+    pkt->netBufList = ca.netBufList;
 
-    FwpsReferenceNetBufferList0(netBufList, TRUE);
+    FwpsReferenceNetBufferList0(ca.netBufList, TRUE);
 
     return STATUS_SUCCESS;
 }
@@ -793,12 +794,10 @@ static BOOL fort_shaper_packet_queue_check_packet(PFORT_PACKET_QUEUE queue, ULON
     return res;
 }
 
-static NTSTATUS fort_shaper_packet_queue(PFORT_SHAPER shaper,
-        const FWPS_INCOMING_VALUES0 *inFixedValues,
-        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PNET_BUFFER_LIST netBufList,
-        PFORT_FLOW flow, BOOL isIPv6, BOOL inbound)
+inline static NTSTATUS fort_shaper_packet_queue(
+        PFORT_SHAPER shaper, FORT_CALLOUT_ARG ca, PFORT_FLOW flow)
 {
-    const UINT16 queue_index = flow->opt.group_index * 2 + (inbound ? 0 : 1);
+    const UINT16 queue_index = flow->opt.group_index * 2 + (ca.inbound ? 0 : 1);
 
     const UINT32 group_io_bits = fort_shaper_io_bits(&shaper->group_io_bits);
 
@@ -811,7 +810,7 @@ static NTSTATUS fort_shaper_packet_queue(PFORT_SHAPER shaper,
         return STATUS_NO_SUCH_GROUP;
 
     /* Calculate the Packets' Data Length */
-    const ULONG data_length = fort_packet_data_length(netBufList);
+    const ULONG data_length = fort_packet_data_length(ca.netBufList);
 
     /* Check the Queue for new Packet */
     if (!fort_shaper_packet_queue_check_packet(queue, data_length))
@@ -824,11 +823,11 @@ static NTSTATUS fort_shaper_packet_queue(PFORT_SHAPER shaper,
 
     RtlZeroMemory(pkt, sizeof(FORT_PACKET));
 
-    fort_shaper_packet_fill(shaper, inFixedValues, inMetaValues, netBufList, pkt, isIPv6, inbound);
+    fort_shaper_packet_fill(shaper, ca, pkt);
 
     pkt->flow = flow;
     pkt->data_length = data_length;
-    pkt->flags = (inbound ? FORT_PACKET_INBOUND : 0) | (isIPv6 ? FORT_PACKET_IP6 : 0);
+    pkt->flags = (ca.inbound ? FORT_PACKET_INBOUND : 0) | (ca.isIPv6 ? FORT_PACKET_IP6 : 0);
 
     /* Add the Cloned Packet to Queue */
     fort_shaper_packet_queue_add_packet(queue, pkt);
@@ -842,29 +841,25 @@ static NTSTATUS fort_shaper_packet_queue(PFORT_SHAPER shaper,
     return STATUS_SUCCESS;
 }
 
-FORT_API BOOL fort_shaper_packet_process(PFORT_SHAPER shaper,
-        const FWPS_INCOMING_VALUES0 *inFixedValues,
-        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PNET_BUFFER_LIST netBufList,
-        UINT64 flowContext, BOOL inbound)
+FORT_API BOOL fort_shaper_packet_process(PFORT_SHAPER shaper, FORT_CALLOUT_ARG ca)
 {
-    PFORT_FLOW flow = (PFORT_FLOW) flowContext;
+    PFORT_FLOW flow = (PFORT_FLOW) ca.flowContext;
 
     const UCHAR flow_flags = fort_flow_flags(flow);
-    const UCHAR speed_limit = inbound ? FORT_FLOW_SPEED_LIMIT_IN : FORT_FLOW_SPEED_LIMIT_OUT;
+    const UCHAR speed_limit = ca.inbound ? FORT_FLOW_SPEED_LIMIT_IN : FORT_FLOW_SPEED_LIMIT_OUT;
 
     if ((flow_flags & speed_limit) == 0
             || fort_device_flag(&fort_device()->conf, FORT_DEVICE_POWER_OFF) != 0)
         return FALSE;
 
-    const BOOL isIPv6 = (flow_flags & FORT_FLOW_IP6) != 0;
-    const HANDLE injection_id = fort_shaper_injection_id(shaper, isIPv6, inbound);
+    ca.isIPv6 = (flow_flags & FORT_FLOW_IP6) != 0;
+    const HANDLE injection_id = fort_shaper_injection_id(shaper, ca.isIPv6, ca.inbound);
 
     /* Skip self injected packet */
-    if (fort_packet_injected_by_self(injection_id, netBufList))
+    if (fort_packet_injected_by_self(injection_id, ca.netBufList))
         return FALSE;
 
-    const NTSTATUS status = fort_shaper_packet_queue(
-            &fort_device()->shaper, inFixedValues, inMetaValues, netBufList, flow, isIPv6, inbound);
+    const NTSTATUS status = fort_shaper_packet_queue(&fort_device()->shaper, ca, flow);
 
     return NT_SUCCESS(status);
 }

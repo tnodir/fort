@@ -4,6 +4,7 @@
 #include "fortdrv.h"
 
 #include "common/fortconf.h"
+#include "fortcoutarg.h"
 #include "forttds.h"
 #include "forttmr.h"
 
@@ -112,10 +113,7 @@ FORT_API void fort_shaper_conf_update(PFORT_SHAPER shaper, const PFORT_CONF_IO c
 
 FORT_API void fort_shaper_conf_flags_update(PFORT_SHAPER shaper, const PFORT_CONF_FLAGS conf_flags);
 
-FORT_API BOOL fort_shaper_packet_process(PFORT_SHAPER shaper,
-        const FWPS_INCOMING_VALUES0 *inFixedValues,
-        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PNET_BUFFER_LIST netBufList,
-        UINT64 flowContext, BOOL inbound);
+FORT_API BOOL fort_shaper_packet_process(PFORT_SHAPER shaper, FORT_CALLOUT_ARG ca);
 
 FORT_API void fort_shaper_drop_flow_packets(PFORT_SHAPER shaper, UINT64 flowContext);
 
