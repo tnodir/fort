@@ -93,76 +93,94 @@ inline static void fort_callout_classify_blocked_log_path(FORT_CONF_FLAGS conf_f
     }
 }
 
-static BOOL fort_callout_classify_blocked_log(const FWPS_INCOMING_VALUES0 *inFixedValues,
+static void fort_callout_classify_blocked_log_ip(const FWPS_INCOMING_VALUES0 *inFixedValues,
+        FWPS_CLASSIFY_OUT0 *classifyOut, int localIpField, int remoteIpField, int localPortField,
+        int remotePortField, int ipProtoField, BOOL isIPv6, BOOL inbound, BOOL inherited,
+        const UINT32 *remote_ip, FORT_CONF_FLAGS conf_flags, UINT32 process_id,
+        PCUNICODE_STRING real_path, INT8 block_reason, PIRP *irp, ULONG_PTR *info)
+{
+    if (block_reason != FORT_BLOCK_REASON_UNKNOWN && conf_flags.log_blocked_ip) {
+        const UINT32 *local_ip = isIPv6
+                ? (const UINT32 *) inFixedValues->incomingValue[localIpField].value.byteArray16
+                : &inFixedValues->incomingValue[localIpField].value.uint32;
+
+        const UINT16 local_port = inFixedValues->incomingValue[localPortField].value.uint16;
+        const UINT16 remote_port = inFixedValues->incomingValue[remotePortField].value.uint16;
+        const IPPROTO ip_proto = (IPPROTO) inFixedValues->incomingValue[ipProtoField].value.uint8;
+
+        fort_buffer_blocked_ip_write(&fort_device()->buffer, isIPv6, inbound, inherited,
+                block_reason, ip_proto, local_port, remote_port, local_ip, remote_ip, process_id,
+                real_path->Length, real_path->Buffer, irp, info);
+    }
+}
+
+static void fort_callout_classify_blocked_log(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const FWPS_FILTER0 *filter,
         FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField, int remoteIpField,
         int localPortField, int remotePortField, int ipProtoField, BOOL isIPv6, BOOL inbound,
         UINT32 classify_flags, const UINT32 *remote_ip, FORT_CONF_FLAGS conf_flags,
         UINT32 process_id, PCUNICODE_STRING path, PCUNICODE_STRING real_path,
-        PFORT_CONF_REF conf_ref, INT8 *block_reason, BOOL blocked, PIRP *irp, ULONG_PTR *info)
+        PFORT_CONF_REF conf_ref, INT8 *block_reason, BOOL *blocked, PIRP *irp, ULONG_PTR *info)
 {
     FORT_APP_FLAGS app_flags =
             fort_conf_app_find(&conf_ref->conf, path->Buffer, path->Length, fort_conf_exe_find);
 
-    if (!blocked /* collect traffic, when Filter Disabled */
+    if (!*blocked /* collect traffic, when Filter Disabled */
             || (app_flags.v == 0 && conf_flags.allow_all_new) /* collect new Blocked Programs */
             || !fort_conf_app_blocked(&conf_ref->conf, app_flags, block_reason)) {
         if (conf_flags.log_stat
                 && fort_callout_classify_blocked_log_stat(inFixedValues, inMetaValues, filter,
                         classifyOut, flagsField, localIpField, remoteIpField, localPortField,
                         remotePortField, ipProtoField, isIPv6, inbound, classify_flags, remote_ip,
-                        conf_flags, process_id, real_path, conf_ref, block_reason, blocked,
-                        app_flags, irp, info))
-            return TRUE; /* blocked */
+                        conf_flags, process_id, real_path, conf_ref, block_reason, *blocked,
+                        app_flags, irp, info)) {
+            *blocked = TRUE; /* blocked */
+            return;
+        }
 
-        blocked = FALSE; /* allow */
+        *blocked = FALSE; /* allow */
     }
 
     fort_callout_classify_blocked_log_path(
-            conf_flags, process_id, path, real_path, conf_ref, blocked, app_flags, irp, info);
-
-    return blocked;
+            conf_flags, process_id, path, real_path, conf_ref, *blocked, app_flags, irp, info);
 }
 
-static BOOL fort_callout_classify_blocked(const FWPS_INCOMING_VALUES0 *inFixedValues,
-        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, const FWPS_FILTER0 *filter,
-        FWPS_CLASSIFY_OUT0 *classifyOut, int flagsField, int localIpField, int remoteIpField,
-        int localPortField, int remotePortField, int ipProtoField, BOOL isIPv6, BOOL inbound,
-        UINT32 classify_flags, const UINT32 *remote_ip, FORT_CONF_FLAGS conf_flags,
-        UINT32 process_id, PUNICODE_STRING path, PUNICODE_STRING real_path, PFORT_CONF_REF conf_ref,
-        INT8 *block_reason, PIRP *irp, ULONG_PTR *info)
+inline static BOOL fort_callout_classify_blocked_flags(const UINT32 *remote_ip, BOOL isIPv6,
+        FORT_CONF_FLAGS conf_flags, PFORT_CONF_REF conf_ref, INT8 *block_reason, BOOL *blocked)
 {
-    BOOL blocked = TRUE;
-
     if (conf_flags.filter_enabled) {
-        if (conf_flags.stop_traffic)
-            return TRUE; /* block all */
+        if (conf_flags.stop_traffic) {
+            *blocked = TRUE; /* block all */
+            return TRUE;
+        }
 
         if (!fort_conf_ip_is_inet(&conf_ref->conf,
                     (fort_conf_zones_ip_included_func *) fort_conf_zones_ip_included,
-                    &fort_device()->conf, remote_ip, isIPv6))
-            return FALSE; /* allow LocalNetwork */
+                    &fort_device()->conf, remote_ip, isIPv6)) {
+            *blocked = FALSE; /* allow LocalNetwork */
+            return TRUE;
+        }
 
-        if (conf_flags.stop_inet_traffic)
-            return TRUE; /* block Internet */
+        if (conf_flags.stop_inet_traffic) {
+            *blocked = TRUE; /* block Internet */
+            return TRUE;
+        }
 
         if (!fort_conf_ip_inet_included(&conf_ref->conf,
                     (fort_conf_zones_ip_included_func *) fort_conf_zones_ip_included,
                     &fort_device()->conf, remote_ip, isIPv6)) {
             *block_reason = FORT_BLOCK_REASON_IP_INET;
-            return TRUE; /* block address */
+            *blocked = TRUE; /* block address */
+            return TRUE;
         }
     } else {
-        if (!(conf_flags.log_stat && conf_flags.log_stat_no_filter))
-            return FALSE; /* allow (Filter Disabled) */
+        *blocked = FALSE;
 
-        blocked = FALSE;
+        if (!(conf_flags.log_stat && conf_flags.log_stat_no_filter))
+            return TRUE; /* allow (Filter Disabled) */
     }
 
-    return fort_callout_classify_blocked_log(inFixedValues, inMetaValues, filter, classifyOut,
-            flagsField, localIpField, remoteIpField, localPortField, remotePortField, ipProtoField,
-            isIPv6, inbound, classify_flags, remote_ip, conf_flags, process_id, path, real_path,
-            conf_ref, block_reason, blocked, irp, info);
+    return FALSE;
 }
 
 static void fort_callout_classify_check_conf(const FWPS_INCOMING_VALUES0 *inFixedValues,
@@ -191,27 +209,22 @@ static void fort_callout_classify_check_conf(const FWPS_INCOMING_VALUES0 *inFixe
     }
 
     INT8 block_reason = FORT_BLOCK_REASON_UNKNOWN;
-    const BOOL blocked = fort_callout_classify_blocked(inFixedValues, inMetaValues, filter,
-            classifyOut, flagsField, localIpField, remoteIpField, localPortField, remotePortField,
-            ipProtoField, isIPv6, inbound, classify_flags, remote_ip, conf_flags, process_id, &path,
-            &real_path, conf_ref, &block_reason, irp, info);
+    BOOL blocked = TRUE;
+
+    if (!fort_callout_classify_blocked_flags(
+                remote_ip, isIPv6, conf_flags, conf_ref, &block_reason, &blocked)) {
+
+        fort_callout_classify_blocked_log(inFixedValues, inMetaValues, filter, classifyOut,
+                flagsField, localIpField, remoteIpField, localPortField, remotePortField,
+                ipProtoField, isIPv6, inbound, classify_flags, remote_ip, conf_flags, process_id,
+                &path, &real_path, conf_ref, &block_reason, &blocked, irp, info);
+    }
 
     if (blocked) {
         /* Log the blocked connection */
-        if (block_reason != FORT_BLOCK_REASON_UNKNOWN && conf_flags.log_blocked_ip) {
-            const UINT32 *local_ip = isIPv6
-                    ? (const UINT32 *) inFixedValues->incomingValue[localIpField].value.byteArray16
-                    : &inFixedValues->incomingValue[localIpField].value.uint32;
-
-            const UINT16 local_port = inFixedValues->incomingValue[localPortField].value.uint16;
-            const UINT16 remote_port = inFixedValues->incomingValue[remotePortField].value.uint16;
-            const IPPROTO ip_proto =
-                    (IPPROTO) inFixedValues->incomingValue[ipProtoField].value.uint8;
-
-            fort_buffer_blocked_ip_write(&fort_device()->buffer, isIPv6, inbound, inherited,
-                    block_reason, ip_proto, local_port, remote_port, local_ip, remote_ip,
-                    process_id, real_path.Length, real_path.Buffer, irp, info);
-        }
+        fort_callout_classify_blocked_log_ip(inFixedValues, classifyOut, localIpField,
+                remoteIpField, localPortField, remotePortField, ipProtoField, isIPv6, inbound,
+                inherited, remote_ip, conf_flags, process_id, &real_path, block_reason, irp, info);
 
         /* Block the connection */
         fort_callout_classify_block(classifyOut);
