@@ -145,40 +145,49 @@ static void fort_callout_classify_blocked_log(const FWPS_INCOMING_VALUES0 *inFix
             conf_flags, process_id, path, real_path, conf_ref, *blocked, app_flags, irp, info);
 }
 
+inline static BOOL fort_callout_classify_blocked_filter_flags(const UINT32 *remote_ip, BOOL isIPv6,
+        FORT_CONF_FLAGS conf_flags, PFORT_CONF_REF conf_ref, INT8 *block_reason, BOOL *blocked)
+{
+    if (conf_flags.stop_traffic) {
+        *blocked = TRUE; /* block all */
+        return TRUE;
+    }
+
+    if (!fort_conf_ip_is_inet(&conf_ref->conf,
+                (fort_conf_zones_ip_included_func *) fort_conf_zones_ip_included,
+                &fort_device()->conf, remote_ip, isIPv6)) {
+        *blocked = FALSE; /* allow LocalNetwork */
+        return TRUE;
+    }
+
+    if (conf_flags.stop_inet_traffic) {
+        *blocked = TRUE; /* block Internet */
+        return TRUE;
+    }
+
+    if (!fort_conf_ip_inet_included(&conf_ref->conf,
+                (fort_conf_zones_ip_included_func *) fort_conf_zones_ip_included,
+                &fort_device()->conf, remote_ip, isIPv6)) {
+        *block_reason = FORT_BLOCK_REASON_IP_INET;
+        *blocked = TRUE; /* block address */
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
 inline static BOOL fort_callout_classify_blocked_flags(const UINT32 *remote_ip, BOOL isIPv6,
         FORT_CONF_FLAGS conf_flags, PFORT_CONF_REF conf_ref, INT8 *block_reason, BOOL *blocked)
 {
     if (conf_flags.filter_enabled) {
-        if (conf_flags.stop_traffic) {
-            *blocked = TRUE; /* block all */
-            return TRUE;
-        }
-
-        if (!fort_conf_ip_is_inet(&conf_ref->conf,
-                    (fort_conf_zones_ip_included_func *) fort_conf_zones_ip_included,
-                    &fort_device()->conf, remote_ip, isIPv6)) {
-            *blocked = FALSE; /* allow LocalNetwork */
-            return TRUE;
-        }
-
-        if (conf_flags.stop_inet_traffic) {
-            *blocked = TRUE; /* block Internet */
-            return TRUE;
-        }
-
-        if (!fort_conf_ip_inet_included(&conf_ref->conf,
-                    (fort_conf_zones_ip_included_func *) fort_conf_zones_ip_included,
-                    &fort_device()->conf, remote_ip, isIPv6)) {
-            *block_reason = FORT_BLOCK_REASON_IP_INET;
-            *blocked = TRUE; /* block address */
-            return TRUE;
-        }
-    } else {
-        *blocked = FALSE;
-
-        if (!(conf_flags.log_stat && conf_flags.log_stat_no_filter))
-            return TRUE; /* allow (Filter Disabled) */
+        return fort_callout_classify_blocked_filter_flags(
+                remote_ip, isIPv6, conf_flags, conf_ref, block_reason, blocked);
     }
+
+    *blocked = FALSE;
+
+    if (!(conf_flags.log_stat && conf_flags.log_stat_no_filter))
+        return TRUE; /* allow (Filter Disabled) */
 
     return FALSE;
 }
