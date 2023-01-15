@@ -29,6 +29,24 @@ typedef struct fort_callout_ale_index
     UCHAR ipProto;
 } FORT_CALLOUT_ALE_INDEX, *PFORT_CALLOUT_ALE_INDEX;
 
+typedef struct fort_callout_ale_extra
+{
+    BOOL inherited : 1;
+    BOOL blocked : 1;
+    INT8 block_reason;
+
+    UINT32 process_id;
+
+    UINT32 classify_flags;
+    const UINT32 *remote_ip;
+
+    PCUNICODE_STRING path;
+    PCUNICODE_STRING real_path;
+
+    PIRP irp;
+    ULONG_PTR info;
+} FORT_CALLOUT_ALE_EXTRA, *PFORT_CALLOUT_ALE_EXTRA;
+
 typedef struct fort_callout_datagram_index
 {
     UCHAR direction;
