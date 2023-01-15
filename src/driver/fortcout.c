@@ -589,7 +589,8 @@ static void NTAPI fort_callout_transport_delete(
     UNUSED(flowContext);
 }
 
-FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
+inline static NTSTATUS fort_callout_register(
+        PDEVICE_OBJECT device, const FWPS_CALLOUT0 *callouts, int count)
 {
     PFORT_STAT stat = &fort_device()->stat;
 
@@ -608,6 +609,20 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
         &stat->out_transport6_id,
     };
 
+    for (int i = 0; i < count; ++i) {
+        const NTSTATUS status = FwpsCalloutRegister0(device, &callouts[i], calloutIds[i]);
+        if (!NT_SUCCESS(status)) {
+            LOG("Callout Register: Error: %x\n", status);
+            TRACE(FORT_CALLOUT_REGISTER_ERROR, status, i, 0);
+            return status;
+        }
+    }
+
+    return STATUS_SUCCESS;
+}
+
+FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
+{
     const FWPS_CALLOUT0 callouts[] = {
         /* IPv4 connect callout */
         {
@@ -699,16 +714,8 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
         },
     };
 
-    for (int i = 0; i < sizeof(callouts) / sizeof(callouts[0]); ++i) {
-        const NTSTATUS status = FwpsCalloutRegister0(device, &callouts[i], calloutIds[i]);
-        if (!NT_SUCCESS(status)) {
-            LOG("Callout Register: Error: %x\n", status);
-            TRACE(FORT_CALLOUT_REGISTER_ERROR, status, i, 0);
-            return status;
-        }
-    }
-
-    return STATUS_SUCCESS;
+    return fort_callout_register(
+            device, callouts, /*count=*/sizeof(callouts) / sizeof(callouts[0]));
 }
 
 FORT_API void fort_callout_remove(void)
