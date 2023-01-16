@@ -4,6 +4,7 @@
 #include <QObject>
 
 class ConfManager;
+class DriverManager;
 class FirewallConf;
 class FortManager;
 class FortSettings;
@@ -27,6 +28,7 @@ public:
     IniOptions *ini() const;
     IniUser *iniUser() const;
     HotKeyManager *hotKeyManager() const;
+    DriverManager *driverManager() const;
     TranslationManager *translationManager() const;
     WindowManager *windowManager() const;
 

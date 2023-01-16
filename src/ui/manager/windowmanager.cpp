@@ -132,10 +132,8 @@ void WindowManager::setupTrayIcon()
             &WindowManager::onTrayMessageClicked);
 
     auto confManager = IoC<ConfManager>();
-    connect(confManager, &ConfManager::confChanged, m_trayIcon, &TrayIcon::updateTrayMenu);
-    connect(confManager, &ConfManager::iniUserChanged, m_trayIcon, &TrayIcon::updateTrayMenu);
     connect(confManager, &ConfManager::appAlerted, m_trayIcon,
-            [&] { m_trayIcon->updateTrayIcon(true); });
+            [&] { m_trayIcon->updateTrayIcon(/*alerted=*/true); });
 }
 
 void WindowManager::setupProgramsWindow()
@@ -145,7 +143,7 @@ void WindowManager::setupProgramsWindow()
 
     connect(m_progWindow, &ProgramsWindow::aboutToClose, this, &WindowManager::closeProgramsWindow);
     connect(m_progWindow, &ProgramsWindow::activationChanged, m_trayIcon,
-            [&] { m_trayIcon->updateTrayIcon(false); });
+            [&] { m_trayIcon->updateTrayIcon(/*alerted=*/false); });
 }
 
 void WindowManager::setupOptionsWindow()

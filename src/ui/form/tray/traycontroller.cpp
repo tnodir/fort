@@ -2,6 +2,7 @@
 
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
+#include <driver/drivermanager.h>
 #include <fortmanager.h>
 #include <fortsettings.h>
 #include <manager/hotkeymanager.h>
@@ -48,6 +49,11 @@ IniUser *TrayController::iniUser() const
 HotKeyManager *TrayController::hotKeyManager() const
 {
     return IoC<HotKeyManager>();
+}
+
+DriverManager *TrayController::driverManager() const
+{
+    return IoC<DriverManager>();
 }
 
 TranslationManager *TrayController::translationManager() const

@@ -73,9 +73,9 @@ bool DriverManager::openDevice()
 {
     const bool res = device()->open(DriverCommon::deviceName());
 
-    emit isDeviceOpenedChanged();
-
     updateErrorCode(res);
+
+    emit isDeviceOpenedChanged();
 
     return res;
 }
@@ -84,9 +84,9 @@ bool DriverManager::closeDevice()
 {
     const bool res = device()->close();
 
-    emit isDeviceOpenedChanged();
-
     updateErrorCode(true);
+
+    emit isDeviceOpenedChanged();
 
     return res;
 }

@@ -9,6 +9,7 @@
 #include <conf/appgroup.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
+#include <driver/drivermanager.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/mainwindow.h>
 #include <fortsettings.h>
@@ -145,6 +146,7 @@ QAction *addAction(QWidget *widget, const QIcon &icon, const QString &text,
 TrayIcon::TrayIcon(QObject *parent) :
     QSystemTrayIcon(parent),
     m_trayTriggered(false),
+    m_alerted(false),
     m_animatedAlert(false),
     m_ctrl(new TrayController(this))
 {
@@ -152,6 +154,11 @@ TrayIcon::TrayIcon(QObject *parent) :
     setupController();
 
     connect(this, &QSystemTrayIcon::activated, this, &TrayIcon::onTrayActivated);
+
+    connect(confManager(), &ConfManager::confChanged, this, &TrayIcon::updateTrayMenu);
+    connect(confManager(), &ConfManager::iniUserChanged, this, &TrayIcon::updateTrayMenu);
+    connect(driverManager(), &DriverManager::isDeviceOpenedChanged, this,
+            &TrayIcon::updateTrayIconShape);
 }
 
 FortSettings *TrayIcon::settings() const
@@ -184,6 +191,11 @@ HotKeyManager *TrayIcon::hotKeyManager() const
     return ctrl()->hotKeyManager();
 }
 
+DriverManager *TrayIcon::driverManager() const
+{
+    return ctrl()->driverManager();
+}
+
 WindowManager *TrayIcon::windowManager() const
 {
     return ctrl()->windowManager();
@@ -211,9 +223,12 @@ void TrayIcon::onTrayActivated(QSystemTrayIcon::ActivationReason reason)
 
 void TrayIcon::updateTrayIcon(bool alerted)
 {
-    updateAnimatedTrayIcon(alerted);
+    m_alerted = alerted;
+    m_animatedAlert = false;
 
-    updateAlertTimer(alerted);
+    updateAlertTimer();
+
+    updateTrayIconShape();
 }
 
 void TrayIcon::showTrayMenu(const QPoint &pos)
@@ -227,6 +242,7 @@ void TrayIcon::updateTrayMenu(bool onlyFlags)
         updateAppGroupActions();
     }
 
+    updateTrayIconShape();
     updateTrayMenuFlags();
     updateHotKeys();
 }
@@ -285,8 +301,6 @@ void TrayIcon::setupUi()
 
     setupTrayMenu();
     updateTrayMenu();
-
-    updateTrayIcon();
 
     updateClickActions();
 }
@@ -441,7 +455,7 @@ void TrayIcon::updateAppGroupActions()
     }
 }
 
-void TrayIcon::updateAlertTimer(bool alerted)
+void TrayIcon::updateAlertTimer()
 {
     if (!iniUser()->trayAnimateAlert())
         return;
@@ -452,25 +466,35 @@ void TrayIcon::updateAlertTimer(bool alerted)
 
         connect(m_alertTimer, &QTimer::timeout, this, [&] {
             m_animatedAlert = !m_animatedAlert;
-            updateAnimatedTrayIcon(/*alerted=*/true, m_animatedAlert);
+            updateTrayIconShape();
         });
     }
 
-    m_animatedAlert = alerted;
+    m_animatedAlert = m_alerted;
 
-    if (alerted) {
+    if (m_alerted) {
         m_alertTimer->start();
     } else {
         m_alertTimer->stop();
     }
 }
 
-void TrayIcon::updateAnimatedTrayIcon(bool alerted, bool animated)
+void TrayIcon::updateTrayIconShape()
 {
-    const auto icon = alerted
-            ? (animated ? IconCache::icon(":/icons/error.png")
-                        : GuiUtil::overlayIcon(":/icons/sheild-96.png", ":/icons/error.png"))
-            : IconCache::icon(":/icons/sheild-96.png");
+    QString mainIconPath;
+
+    if (!conf()->filterEnabled() || !driverManager()->isDeviceOpened()) {
+        mainIconPath = ":/icons/sheild-96_gray.png";
+    } else if (conf()->stopTraffic() || conf()->stopInetTraffic()) {
+        mainIconPath = ":/icons/sheild-96_red.png";
+    } else {
+        mainIconPath = ":/icons/sheild-96.png";
+    }
+
+    const auto icon = m_alerted
+            ? (m_animatedAlert ? IconCache::icon(":/icons/error.png")
+                               : GuiUtil::overlayIcon(mainIconPath, ":/icons/error.png"))
+            : IconCache::icon(mainIconPath);
 
     this->setIcon(icon);
 }

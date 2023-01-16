@@ -8,6 +8,7 @@ QT_FORWARD_DECLARE_CLASS(QActionGroup)
 QT_FORWARD_DECLARE_CLASS(QTimer)
 
 class ConfManager;
+class DriverManager;
 class FirewallConf;
 class FortSettings;
 class HotKeyManager;
@@ -52,6 +53,7 @@ public:
     IniOptions *ini() const;
     IniUser *iniUser() const;
     HotKeyManager *hotKeyManager() const;
+    DriverManager *driverManager() const;
     WindowManager *windowManager() const;
 
     ActionType clickEventActionType(ClickType clickType) const;
@@ -87,8 +89,8 @@ private:
     void updateTrayMenuFlags();
     void updateAppGroupActions();
 
-    void updateAlertTimer(bool alerted);
-    void updateAnimatedTrayIcon(bool alerted, bool animated = false);
+    void updateAlertTimer();
+    void updateTrayIconShape();
 
     void addHotKey(QAction *action, const QString &shortcutText);
     void updateHotKeys();
@@ -108,6 +110,7 @@ private:
 
 private:
     bool m_trayTriggered : 1;
+    bool m_alerted : 1;
     bool m_animatedAlert : 1;
 
     TrayController *m_ctrl = nullptr;
