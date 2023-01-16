@@ -391,7 +391,7 @@ void ApplicationsPage::setupGroupOptions()
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
-    m_btGroupOptions = ControlUtil::createButton(":/icons/gear_in.png");
+    m_btGroupOptions = ControlUtil::createButton(":/icons/wrench.png");
     m_btGroupOptions->setMenu(menu);
 }
 
