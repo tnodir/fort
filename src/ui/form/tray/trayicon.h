@@ -56,8 +56,9 @@ public:
     DriverManager *driverManager() const;
     WindowManager *windowManager() const;
 
-    ActionType clickEventActionType(ClickType clickType) const;
-    void setClickEventActionType(ClickType clickType, ActionType actionType);
+    static ActionType clickEventActionType(IniUser *iniUser, ClickType clickType);
+    static void setClickEventActionType(
+            IniUser *iniUser, ClickType clickType, ActionType actionType);
 
 public slots:
     void updateTrayIcon(bool alerted = false);

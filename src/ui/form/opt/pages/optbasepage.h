@@ -57,8 +57,6 @@ protected slots:
     virtual void onAboutToSave() { }
     virtual void onEditResetted() { }
 
-    virtual void onCancelChanges(IniOptions * /*oldIni*/) { }
-
     virtual void onSaveWindowState(IniUser * /*ini*/) { }
     virtual void onRestoreWindowState(IniUser * /*ini*/) { }
 

@@ -476,6 +476,28 @@ void ConfManager::setConfToEdit(FirewallConf *conf)
     m_confToEdit = conf;
 }
 
+void ConfManager::initIniUserToEdit()
+{
+    if (iniUserToEdit())
+        return;
+
+    auto newIniUser = new IniUser(iniUser()->settings());
+
+    setIniUserToEdit(newIniUser);
+}
+
+void ConfManager::setIniUserToEdit(IniUser *iniUser)
+{
+    if (iniUserToEdit() == iniUser)
+        return;
+
+    if (iniUserToEdit() && iniUserToEdit() != this->iniUser()) {
+        delete m_iniUserToEdit;
+    }
+
+    m_iniUserToEdit = iniUser;
+}
+
 void ConfManager::setConf(FirewallConf *newConf)
 {
     conf()->deleteLater();
@@ -591,6 +613,9 @@ void ConfManager::applySavedConf(FirewallConf *newConf)
 
 bool ConfManager::save(FirewallConf *newConf)
 {
+    if (!newConf->anyEdited())
+        return true;
+
     if (!(validateConf(*newConf) && saveConf(*newConf)))
         return false;
 
@@ -620,7 +645,7 @@ void ConfManager::saveIniUser(bool flagsChanged)
     iniUser()->clear();
 
     if (flagsChanged) {
-        emit iniUserChanged(true);
+        emit iniUserChanged(/*onlyFlags=*/true);
     }
 }
 

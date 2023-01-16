@@ -242,9 +242,10 @@ void TrayIcon::updateTrayMenu(bool onlyFlags)
         updateAppGroupActions();
     }
 
-    updateTrayIconShape();
     updateTrayMenuFlags();
+    updateTrayIconShape();
     updateHotKeys();
+    updateClickActions();
 }
 
 void TrayIcon::switchTrayMenu(bool /*checked*/)
@@ -301,8 +302,6 @@ void TrayIcon::setupUi()
 
     setupTrayMenu();
     updateTrayMenu();
-
-    updateClickActions();
 }
 
 void TrayIcon::setupTrayMenu()
@@ -588,23 +587,21 @@ void TrayIcon::removeHotKeys()
     hotKeyManager()->removeActions();
 }
 
-TrayIcon::ActionType TrayIcon::clickEventActionType(ClickType clickType) const
+TrayIcon::ActionType TrayIcon::clickEventActionType(IniUser *iniUser, ClickType clickType)
 {
     const QString eventName = clickNameByType(clickType);
-    const QString actionName = iniUser()->trayAction(eventName);
+    const QString actionName = iniUser->trayAction(eventName);
 
     const ActionType actionType = actionTypeByName(actionName);
     return (actionType != ActionNone) ? actionType : defaultActionTypeByClick(clickType);
 }
 
-void TrayIcon::setClickEventActionType(ClickType clickType, ActionType actionType)
+void TrayIcon::setClickEventActionType(IniUser *iniUser, ClickType clickType, ActionType actionType)
 {
     const QString eventName = clickNameByType(clickType);
     const QString actionName = actionNameByType(actionType);
 
-    iniUser()->setTrayAction(eventName, actionName);
-
-    updateClickActions();
+    iniUser->setTrayAction(eventName, actionName);
 }
 
 void TrayIcon::updateClickActions()
@@ -622,7 +619,7 @@ QAction *TrayIcon::clickAction(ClickType clickType) const
 
 QAction *TrayIcon::clickActionFromIni(ClickType clickType) const
 {
-    const ActionType actionType = clickEventActionType(clickType);
+    const ActionType actionType = clickEventActionType(iniUser(), clickType);
 
     return clickActionByType(actionType);
 }

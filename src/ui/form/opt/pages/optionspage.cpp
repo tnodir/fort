@@ -61,15 +61,11 @@ void moveProfile(const QString &profilePath, const QString &newProfilePath)
 
 }
 
-OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctrl, parent)
+OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) :
+    OptBasePage(ctrl, parent), m_passwordEdited(false), m_languageEdited(false)
 {
     setupStartup();
     setupUi();
-}
-
-void OptionsPage::setPasswordEdited(bool v)
-{
-    m_passwordEdited = v;
 }
 
 void OptionsPage::onAboutToSave()
@@ -97,6 +93,12 @@ void OptionsPage::onEditResetted()
     // Password
     setPasswordEdited(false);
     retranslateEditPassword();
+
+    // Language
+    if (languageEdited()) {
+        setLanguageEdited(false);
+        translationManager()->switchLanguageByName(confManager()->iniUser()->language());
+    }
 }
 
 void OptionsPage::saveAutoRunMode(int mode)
@@ -464,7 +466,7 @@ void OptionsPage::setupGlobalBox()
 
     m_cbHotKeys = ControlUtil::createCheckBox(iniUser()->hotKeyEnabled(), [&](bool checked) {
         iniUser()->setHotKeyEnabled(checked);
-        confManager()->saveIniUser(true);
+        ctrl()->setIniUserEdited(/*flagsChanged=*/true);
     });
 
     // Password Row
@@ -555,8 +557,9 @@ void OptionsPage::setupComboLanguage()
     m_comboLanguage =
             ControlUtil::createComboBox(translationManager()->displayLabels(), [&](int index) {
                 if (translationManager()->switchLanguage(index)) {
+                    setLanguageEdited(true);
                     iniUser()->setLanguage(translationManager()->localeName());
-                    confManager()->saveIniUser();
+                    ctrl()->setIniUserEdited();
                 }
             });
     m_comboLanguage->setFixedWidth(200);
@@ -575,7 +578,7 @@ void OptionsPage::setupTrayBox()
     m_cbTrayAnimateAlert =
             ControlUtil::createCheckBox(iniUser()->trayAnimateAlert(), [&](bool checked) {
                 iniUser()->setTrayAnimateAlert(checked);
-                confManager()->saveIniUser(true);
+                ctrl()->setIniUserEdited();
             });
 
     // Tray Event & Action Rows
@@ -594,8 +597,11 @@ void OptionsPage::setupTrayBox()
 
 void OptionsPage::refreshComboTrayAction()
 {
-    const TrayIcon::ActionType actionType = windowManager()->trayIcon()->clickEventActionType(
-            static_cast<TrayIcon::ClickType>(m_comboTrayEvent->currentIndex()));
+    const TrayIcon::ClickType clickType =
+            static_cast<TrayIcon::ClickType>(m_comboTrayEvent->currentIndex());
+
+    const TrayIcon::ActionType actionType = TrayIcon::clickEventActionType(iniUser(), clickType);
+
     m_comboTrayAction->setCurrentIndex(actionType);
 }
 
@@ -615,9 +621,12 @@ QLayout *OptionsPage::setupTrayActionLayout()
     m_labelTrayAction = ControlUtil::createLabel();
 
     m_comboTrayAction = ControlUtil::createComboBox(QStringList(), [&](int index) {
-        windowManager()->trayIcon()->setClickEventActionType(
-                static_cast<TrayIcon::ClickType>(m_comboTrayEvent->currentIndex()),
-                static_cast<TrayIcon::ActionType>(index));
+        const TrayIcon::ClickType clickType =
+                static_cast<TrayIcon::ClickType>(m_comboTrayEvent->currentIndex());
+        const TrayIcon::ActionType actionType = static_cast<TrayIcon::ActionType>(index);
+
+        TrayIcon::setClickEventActionType(iniUser(), clickType, actionType);
+        ctrl()->setIniUserEdited(/*flagsChanged=*/true);
     });
     m_comboTrayAction->setFixedWidth(200);
 
@@ -626,10 +635,15 @@ QLayout *OptionsPage::setupTrayActionLayout()
 
 void OptionsPage::setupConfirmationsBox()
 {
-    m_cbConfirmTrayFlags = ControlUtil::createCheckBox(iniUser()->confirmTrayFlags(),
-            [&](bool checked) { iniUser()->setConfirmTrayFlags(checked); });
-    m_cbConfirmQuit = ControlUtil::createCheckBox(
-            iniUser()->confirmQuit(), [&](bool checked) { iniUser()->setConfirmQuit(checked); });
+    m_cbConfirmTrayFlags =
+            ControlUtil::createCheckBox(iniUser()->confirmTrayFlags(), [&](bool checked) {
+                iniUser()->setConfirmTrayFlags(checked);
+                ctrl()->setIniUserEdited();
+            });
+    m_cbConfirmQuit = ControlUtil::createCheckBox(iniUser()->confirmQuit(), [&](bool checked) {
+        iniUser()->setConfirmQuit(checked);
+        ctrl()->setIniUserEdited();
+    });
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbConfirmTrayFlags);

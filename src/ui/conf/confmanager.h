@@ -32,11 +32,15 @@ public:
     FirewallConf *confToEdit() const { return m_confToEdit; }
 
     IniUser *iniUser() const;
+    IniUser *iniUserToEdit() const { return m_iniUserToEdit; }
 
     void setUp() override;
 
     void initConfToEdit();
     void setConfToEdit(FirewallConf *conf);
+
+    void initIniUserToEdit();
+    void setIniUserToEdit(IniUser *iniUser);
 
     bool loadConf(FirewallConf &conf);
     bool load();
@@ -148,6 +152,8 @@ private:
 
     FirewallConf *m_conf = nullptr;
     FirewallConf *m_confToEdit = nullptr;
+
+    IniUser *m_iniUserToEdit = nullptr;
 
     TriggerTimer m_appAlertedTimer;
     TriggerTimer m_appChangedTimer;

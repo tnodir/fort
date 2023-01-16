@@ -11,7 +11,10 @@ public:
     explicit OptionsPage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
     bool passwordEdited() const { return m_passwordEdited; }
-    void setPasswordEdited(bool v);
+    void setPasswordEdited(bool v) { m_passwordEdited = v; }
+
+    bool languageEdited() const { return m_languageEdited; }
+    void setLanguageEdited(bool v) { m_languageEdited = v; }
 
 protected slots:
     void onAboutToSave() override;
@@ -57,7 +60,8 @@ private:
     void setupNewVersionUpdate();
 
 private:
-    bool m_passwordEdited = false;
+    bool m_passwordEdited : 1;
+    bool m_languageEdited : 1;
 
     qint8 m_currentAutoRunMode = 0;
 

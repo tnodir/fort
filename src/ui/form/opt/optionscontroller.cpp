@@ -9,11 +9,13 @@
 #include <manager/windowmanager.h>
 #include <model/zonelistmodel.h>
 #include <task/taskmanager.h>
+#include <user/iniuser.h>
 #include <util/ioc/ioccontainer.h>
 
-OptionsController::OptionsController(QObject *parent) : QObject(parent)
+OptionsController::OptionsController(QObject *parent) :
+    QObject(parent), m_iniUserEdited(false), m_iniUserFlagsChanged(false)
 {
-    confManager()->initConfToEdit();
+    initConfManagerToEdit();
 
     connect(translationManager(), &TranslationManager::languageChanged, this,
             &OptionsController::retranslateUi);
@@ -22,6 +24,7 @@ OptionsController::OptionsController(QObject *parent) : QObject(parent)
 OptionsController::~OptionsController()
 {
     confManager()->setConfToEdit(nullptr);
+    confManager()->setIniUserToEdit(nullptr);
 }
 
 FortManager *OptionsController::fortManager() const
@@ -51,7 +54,7 @@ IniOptions *OptionsController::ini() const
 
 IniUser *OptionsController::iniUser() const
 {
-    return confManager()->iniUser();
+    return confManager()->iniUserToEdit();
 }
 
 TaskManager *OptionsController::taskManager() const
@@ -77,6 +80,11 @@ WindowManager *OptionsController::windowManager() const
 ZoneListModel *OptionsController::zoneListModel() const
 {
     return IoC<ZoneListModel>();
+}
+
+bool OptionsController::anyEdited() const
+{
+    return m_iniUserEdited || conf()->anyEdited();
 }
 
 void OptionsController::setOptEdited()
@@ -111,6 +119,16 @@ void OptionsController::setTaskEdited()
     }
 }
 
+void OptionsController::setIniUserEdited(bool flagsChanged)
+{
+    m_iniUserFlagsChanged |= flagsChanged;
+
+    if (!m_iniUserEdited) {
+        m_iniUserEdited = true;
+        emitEdited(true);
+    }
+}
+
 void OptionsController::emitEdited(bool edited)
 {
     emit editedChanged(edited);
@@ -118,6 +136,8 @@ void OptionsController::emitEdited(bool edited)
 
 void OptionsController::resetEdited()
 {
+    m_iniUserEdited = m_iniUserFlagsChanged = false;
+
     emitEdited(false);
     emit editResetted();
 }
@@ -134,19 +154,35 @@ void OptionsController::save(bool closeOnSuccess)
 {
     emit aboutToSave();
 
-    const bool isAnyEdited = conf()->anyEdited();
-    if (!isAnyEdited) {
-        emitEdited(false);
-    } else if (!confManager()->save(conf())) {
+    const bool isAnyEdited = this->anyEdited();
+
+    if (!confManager()->save(conf()))
         return;
+
+    if (m_iniUserEdited) {
+        saveIniUser();
     }
 
     if (closeOnSuccess) {
         closeWindow();
     } else if (isAnyEdited) {
-        confManager()->initConfToEdit();
+        initConfManagerToEdit();
         resetEdited();
     }
+}
+
+void OptionsController::saveIniUser()
+{
+    iniUser()->save();
+    iniUser()->clear();
+
+    confManager()->saveIniUser(m_iniUserFlagsChanged);
+}
+
+void OptionsController::initConfManagerToEdit()
+{
+    confManager()->initConfToEdit();
+    confManager()->initIniUserToEdit();
 }
 
 void OptionsController::closeWindow()

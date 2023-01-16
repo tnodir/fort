@@ -10,6 +10,7 @@ public:
     explicit MapWrapper() = default;
     explicit MapWrapper(const QVariant &var);
     explicit MapWrapper(const MapWrapper &o);
+    virtual ~MapWrapper() = default;
 
     const QVariantMap &map() const { return m_map; }
     void setMap(const QVariantMap &map) { m_map = map; }

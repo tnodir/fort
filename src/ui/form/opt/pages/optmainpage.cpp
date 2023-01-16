@@ -135,7 +135,7 @@ void OptMainPage::setupOkApplyButtons()
         m_btApply->setEnabled(anyEdited);
     };
 
-    refreshOkApplyButtons(conf()->anyEdited());
+    refreshOkApplyButtons(ctrl()->anyEdited());
 
     connect(ctrl(), &OptionsController::editedChanged, this, refreshOkApplyButtons);
 }

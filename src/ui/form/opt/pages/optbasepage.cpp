@@ -75,8 +75,6 @@ void OptBasePage::setupController()
     connect(ctrl(), &OptionsController::aboutToSave, this, &OptBasePage::onAboutToSave);
     connect(ctrl(), &OptionsController::editResetted, this, &OptBasePage::onEditResetted);
 
-    connect(ctrl(), &OptionsController::cancelChanges, this, &OptBasePage::onCancelChanges);
-
     connect(ctrl(), &OptionsController::afterSaveWindowState, this,
             &OptBasePage::onSaveWindowState);
     connect(ctrl(), &OptionsController::afterRestoreWindowState, this,

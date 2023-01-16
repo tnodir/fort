@@ -35,6 +35,8 @@ public:
     WindowManager *windowManager() const;
     ZoneListModel *zoneListModel() const;
 
+    bool anyEdited() const;
+
     void initialize();
 
 signals:
@@ -56,6 +58,8 @@ public slots:
     void setIniEdited();
     void setTaskEdited();
 
+    void setIniUserEdited(bool flagsChanged = false);
+
     void emitEdited(bool edited = true);
     void resetEdited();
 
@@ -66,6 +70,13 @@ public slots:
 
 private:
     void save(bool closeOnSuccess);
+    void saveIniUser();
+
+    void initConfManagerToEdit();
+
+private:
+    bool m_iniUserEdited : 1;
+    bool m_iniUserFlagsChanged : 1;
 };
 
 #endif // OPTIONSCONTROLLER_H

@@ -45,8 +45,8 @@ IniUser *OptionsWindow::iniUser() const
 
 void OptionsWindow::cancelChanges()
 {
-    if (ctrl()->conf() && ctrl()->conf()->anyEdited()) {
-        emit ctrl()->cancelChanges(ini());
+    if (ctrl()->anyEdited()) {
+        ctrl()->resetEdited();
     }
 }
 
