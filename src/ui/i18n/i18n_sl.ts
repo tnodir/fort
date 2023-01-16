@@ -102,11 +102,11 @@
     </message>
     <message>
         <source>Name</source>
-        <translation type="unfinished">Ime</translation>
+        <translation>Ime</translation>
     </message>
     <message>
         <source>File Path</source>
-        <translation type="unfinished"></translation>
+        <translation>Pot do datoteke</translation>
     </message>
 </context>
 <context>
@@ -743,7 +743,7 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     </message>
     <message>
         <source>Animate Alert Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Ikona animirane ure</translation>
     </message>
 </context>
 <context>
@@ -895,11 +895,11 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     </message>
     <message>
         <source>File Path:</source>
-        <translation type="unfinished"></translation>
+        <translation>Pot do datoteke:</translation>
     </message>
     <message>
         <source>Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ime:</translation>
     </message>
 </context>
 <context>

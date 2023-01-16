@@ -102,11 +102,11 @@
     </message>
     <message>
         <source>Name</source>
-        <translation type="unfinished">Name</translation>
+        <translation>Name</translation>
     </message>
     <message>
         <source>File Path</source>
-        <translation type="unfinished"></translation>
+        <translation>Dateipfad</translation>
     </message>
 </context>
 <context>
@@ -743,7 +743,7 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     </message>
     <message>
         <source>Animate Alert Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Alarm-Symbol animieren</translation>
     </message>
 </context>
 <context>
@@ -895,11 +895,11 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     </message>
     <message>
         <source>File Path:</source>
-        <translation type="unfinished"></translation>
+        <translation>Dateipfad:</translation>
     </message>
     <message>
         <source>Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Name:</translation>
     </message>
 </context>
 <context>
