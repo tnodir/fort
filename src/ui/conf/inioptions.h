@@ -48,7 +48,7 @@ public:
     void setQuotaDayMb(int v) { setValue("quota/quotaDayMb", v); }
 
     int quotaMonthMb() const { return valueInt("quota/quotaMonthMb"); }
-    void setQuotaMonthMb(int v) { setValue("quota/quotaMonthMMb", v); }
+    void setQuotaMonthMb(int v) { setValue("quota/quotaMonthMb", v); }
 
     bool quotaStopInetTraffic() const { return valueBool("quota/stopInetTraffic"); }
     void setQuotaStopInternet(bool v) { setValue("quota/stopInetTraffic", v); }
