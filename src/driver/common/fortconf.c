@@ -329,9 +329,16 @@ FORT_API BOOL fort_conf_app_blocked(
 {
     const BOOL app_found = (app_flags.v != 0);
 
-    if (app_found && !app_flags.use_group_perm) {
-        *block_reason = FORT_BLOCK_REASON_PROGRAM;
-        return app_flags.blocked;
+    if (app_found) {
+        if (app_flags.lan_only) {
+            *block_reason = FORT_BLOCK_REASON_LAN_ONLY;
+            return TRUE;
+        }
+
+        if (!app_flags.use_group_perm) {
+            *block_reason = FORT_BLOCK_REASON_PROGRAM;
+            return app_flags.blocked;
+        }
     }
 
     const UINT32 app_perm_val = app_flags.blocked ? 2 : 1;
