@@ -62,6 +62,7 @@ void StatisticsPage::onRetranslateUi()
 
     m_lscQuotaDayMb->label()->setText(tr("Day's Quota:"));
     m_lscQuotaMonthMb->label()->setText(tr("Month's Quota:"));
+    m_cbQuotaStopInternet->setText(tr("Stop Internet traffic when quota exceeds"));
 
     m_cbLogAllowedIp->setText(tr("Collect allowed connections"));
     m_lscAllowedIpKeepCount->label()->setText(tr("Keep count for 'Allowed connections':"));
@@ -184,10 +185,11 @@ void StatisticsPage::setupTrafficBox()
     setupQuota();
 
     // Layout
-    auto layout = ControlUtil::createLayoutByWidgets({ m_cbLogStat, m_cbLogStatNoFilter,
-            m_ctpActivePeriod, m_lscMonthStart, ControlUtil::createSeparator(),
-            m_lscTrafHourKeepDays, m_lscTrafDayKeepDays, m_lscTrafMonthKeepMonths,
-            ControlUtil::createSeparator(), m_lscQuotaDayMb, m_lscQuotaMonthMb });
+    auto layout = ControlUtil::createLayoutByWidgets(
+            { m_cbLogStat, m_cbLogStatNoFilter, m_ctpActivePeriod, m_lscMonthStart,
+                    ControlUtil::createSeparator(), m_lscTrafHourKeepDays, m_lscTrafDayKeepDays,
+                    m_lscTrafMonthKeepMonths, ControlUtil::createSeparator(), m_lscQuotaDayMb,
+                    m_lscQuotaMonthMb, m_cbQuotaStopInternet });
 
     m_gbTraffic = new QGroupBox();
     m_gbTraffic->setLayout(layout);
@@ -305,6 +307,14 @@ void StatisticsPage::setupQuota()
             ini()->quotaMonthMb(), 0, 1024 * 1024, quotaList, " MiB", [&](int value) {
                 if (ini()->quotaMonthMb() != value) {
                     ini()->setQuotaMonthMb(value);
+                    ctrl()->setIniEdited();
+                }
+            });
+
+    m_cbQuotaStopInternet =
+            ControlUtil::createCheckBox(ini()->quotaStopInetTraffic(), [&](bool checked) {
+                if (ini()->quotaStopInetTraffic() != checked) {
+                    ini()->setQuotaStopInternet(checked);
                     ctrl()->setIniEdited();
                 }
             });

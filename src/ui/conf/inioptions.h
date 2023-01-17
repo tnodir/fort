@@ -50,6 +50,9 @@ public:
     int quotaMonthMb() const { return valueInt("quota/quotaMonthMb"); }
     void setQuotaMonthMb(int v) { setValue("quota/quotaMonthMMb", v); }
 
+    bool quotaStopInetTraffic() const { return valueBool("quota/stopInetTraffic"); }
+    void setQuotaStopInternet(bool v) { setValue("quota/stopInetTraffic", v); }
+
     int monthStart() const { return valueInt("stat/monthStart", DEFAULT_MONTH_START); }
     void setMonthStart(int v) { setValue("stat/monthStart", v); }
 
