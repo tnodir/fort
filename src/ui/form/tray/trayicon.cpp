@@ -271,9 +271,10 @@ void TrayIcon::setupController()
 void TrayIcon::retranslateUi()
 {
     m_programsAction->setText(tr("Programs"));
+    m_optionsMenu->setTitle(tr("Options"));
     m_optionsAction->setText(tr("Options"));
-    m_statisticsAction->setText(tr("Statistics"));
     m_zonesAction->setText(tr("Zones"));
+    m_statisticsAction->setText(tr("Statistics"));
     m_graphAction->setText(tr("Traffic Graph"));
 
     m_filterEnabledAction->setText(tr("Filter Enabled"));
@@ -312,9 +313,8 @@ void TrayIcon::setupTrayMenu()
             windowManager(), SLOT(showProgramsWindow()));
     addHotKey(m_programsAction, iniUser()->hotKeyPrograms());
 
-    m_optionsAction = addAction(m_menu, IconCache::icon(":/icons/cog.png"), QString(),
-            windowManager(), SLOT(showOptionsWindow()));
-    addHotKey(m_optionsAction, iniUser()->hotKeyOptions());
+    setupTrayMenuOptions();
+    m_menu->addMenu(m_optionsMenu);
 
     m_statisticsAction = addAction(m_menu, IconCache::icon(":/icons/chart_bar.png"), QString(),
             windowManager(), SLOT(showStatisticsWindow()));
@@ -323,10 +323,6 @@ void TrayIcon::setupTrayMenu()
     m_graphAction = addAction(m_menu, IconCache::icon(":/icons/action_log.png"), QString(),
             windowManager(), SLOT(switchGraphWindow()), true, !!windowManager()->graphWindow());
     addHotKey(m_graphAction, iniUser()->hotKeyGraph());
-
-    m_zonesAction = addAction(m_menu, IconCache::icon(":/icons/ip_class.png"), QString(),
-            windowManager(), SLOT(showZonesWindow()));
-    addHotKey(m_zonesAction, iniUser()->hotKeyZones());
 
     m_menu->addSeparator();
 
@@ -372,6 +368,20 @@ void TrayIcon::setupTrayMenu()
 
     m_quitAction = addAction(m_menu, QIcon(), tr("Quit"), this, SLOT(quitProgram()));
     addHotKey(m_quitAction, iniUser()->hotKeyQuit());
+}
+
+void TrayIcon::setupTrayMenuOptions()
+{
+    m_optionsMenu = ControlUtil::createMenu(m_menu);
+    m_optionsMenu->setIcon(IconCache::icon(":/icons/cog.png"));
+
+    m_optionsAction = addAction(m_optionsMenu, IconCache::icon(":/icons/cog.png"), QString(),
+            windowManager(), SLOT(showOptionsWindow()));
+    addHotKey(m_optionsAction, iniUser()->hotKeyOptions());
+
+    m_zonesAction = addAction(m_optionsMenu, IconCache::icon(":/icons/ip_class.png"), QString(),
+            windowManager(), SLOT(showZonesWindow()));
+    addHotKey(m_zonesAction, iniUser()->hotKeyZones());
 }
 
 void TrayIcon::setupTrayMenuFilterMode()

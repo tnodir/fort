@@ -85,6 +85,7 @@ private:
 
     void setupUi();
     void setupTrayMenu();
+    void setupTrayMenuOptions();
     void setupTrayMenuFilterMode();
 
     void updateTrayMenuFlags();
@@ -118,6 +119,7 @@ private:
 
     QMenu *m_menu = nullptr;
     QAction *m_programsAction = nullptr;
+    QMenu *m_optionsMenu = nullptr;
     QAction *m_optionsAction = nullptr;
     QAction *m_statisticsAction = nullptr;
     QAction *m_graphAction = nullptr;
