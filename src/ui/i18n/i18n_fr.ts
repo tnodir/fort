@@ -228,7 +228,7 @@
     </message>
     <message>
         <source>Restrict access to LAN only</source>
-        <translation type="unfinished"></translation>
+        <translation>Restreindre l&apos;accès au LAN uniquement</translation>
     </message>
 </context>
 <context>
@@ -348,11 +348,11 @@
     </message>
     <message>
         <source>Filter Mode logic</source>
-        <translation type="unfinished"></translation>
+        <translation>Mode filtre logique</translation>
     </message>
     <message>
         <source>Restrict access to LAN only</source>
-        <translation type="unfinished"></translation>
+        <translation>Restreindre l&apos;accès au LAN uniquement</translation>
     </message>
 </context>
 <context>
@@ -911,7 +911,7 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     </message>
     <message>
         <source>Restrict access to LAN only</source>
-        <translation type="unfinished"></translation>
+        <translation>Restreindre l&apos;accès au LAN uniquement</translation>
     </message>
 </context>
 <context>
@@ -1282,7 +1282,7 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     </message>
     <message>
         <source>Stop Internet traffic when quota exceeds</source>
-        <translation type="unfinished"></translation>
+        <translation>Arrêter le trafic Internet quand le quota excède</translation>
     </message>
 </context>
 <context>
