@@ -271,13 +271,6 @@ void FortManager::setupConfManager()
 void FortManager::setupQuotaManager()
 {
     connect(IoC<QuotaManager>(), &QuotaManager::alert, this, [&](qint8 alertType) {
-        auto confManager = IoC<ConfManager>();
-        auto conf = confManager->conf();
-        if (conf->ini().quotaStopInetTraffic() && !conf->stopInetTraffic()) {
-            conf->setStopInetTraffic(true);
-            confManager->saveFlags();
-        }
-
         IoC<WindowManager>()->showInfoBox(
                 QuotaManager::alertTypeText(alertType), tr("Quota Alert"));
     });

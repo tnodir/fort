@@ -39,6 +39,9 @@ protected:
     virtual void setQuotaMonthAlerted(qint32 v);
 
 private:
+    void processQuotaExceed(AlertType alertType);
+
+private:
     int m_quotaDayAlerted = 0;
     int m_quotaMonthAlerted = 0;
 

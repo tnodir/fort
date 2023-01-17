@@ -74,7 +74,7 @@ void QuotaManager::checkQuotaDay(qint32 trafDay)
     if (m_trafDayBytes > m_quotaDayBytes) {
         setQuotaDayAlerted(trafDay);
 
-        emit alert(AlertDay);
+        processQuotaExceed(AlertDay);
     }
 }
 
@@ -93,7 +93,7 @@ void QuotaManager::checkQuotaMonth(qint32 trafMonth)
     if (m_trafMonthBytes > m_quotaMonthBytes) {
         setQuotaMonthAlerted(trafMonth);
 
-        emit alert(AlertMonth);
+        processQuotaExceed(AlertMonth);
     }
 }
 
@@ -150,4 +150,17 @@ void QuotaManager::setQuotaMonthAlerted(int v)
         ini.setQuotaMonthAlerted(v);
         confManager->saveIni();
     }
+}
+
+void QuotaManager::processQuotaExceed(AlertType alertType)
+{
+    auto confManager = IoC<ConfManager>();
+    FirewallConf *conf = confManager->conf();
+
+    if (conf->ini().quotaStopInetTraffic() && !conf->stopInetTraffic()) {
+        conf->setStopInetTraffic(true);
+        confManager->saveFlags();
+    }
+
+    emit alert(alertType);
 }
