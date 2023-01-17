@@ -50,7 +50,7 @@ void WindowManager::setUp()
 
     setupMainWindow();
 
-#if QT_VERSION > QT_VERSION_CHECK(6, 4, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
     connect(QApplication::styleHints(), &QStyleHints::appearanceChanged, this,
             &WindowManager::setupAppPalette);
 #endif
