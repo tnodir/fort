@@ -1268,6 +1268,10 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
         <source>Collect New Blocked Programs</source>
         <translation>Raccogli nuovi programmi bloccati</translation>
     </message>
+    <message>
+        <source>Stop Internet traffic when quota exceeds</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>StatisticsWindow</name>

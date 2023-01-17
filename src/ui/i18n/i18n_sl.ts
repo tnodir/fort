@@ -1268,6 +1268,10 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
         <source>Collect New Blocked Programs</source>
         <translation>Zberi nove blokirane programe</translation>
     </message>
+    <message>
+        <source>Stop Internet traffic when quota exceeds</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>StatisticsWindow</name>

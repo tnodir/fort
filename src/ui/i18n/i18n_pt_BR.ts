@@ -1267,6 +1267,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Collect New Blocked Programs</source>
         <translation>Colete Novos Programas Bloqueados</translation>
     </message>
+    <message>
+        <source>Stop Internet traffic when quota exceeds</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>StatisticsWindow</name>
