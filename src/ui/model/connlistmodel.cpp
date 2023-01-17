@@ -178,8 +178,6 @@ QString ConnListModel::blockReasonText(const ConnRow &connRow)
     switch (connRow.blockReason) {
     case FORT_BLOCK_REASON_IP_INET:
         return tr("Blocked Internet address");
-    case FORT_BLOCK_REASON_LAN_ONLY:
-        return tr("Restrict access to LAN only");
     case FORT_BLOCK_REASON_REAUTH:
         return tr("Old connection closed on startup");
     case FORT_BLOCK_REASON_PROGRAM:
@@ -188,6 +186,8 @@ QString ConnListModel::blockReasonText(const ConnRow &connRow)
         return tr("App. Group logic");
     case FORT_BLOCK_REASON_FILTER_MODE:
         return tr("Filter Mode logic");
+    case FORT_BLOCK_REASON_LAN_ONLY:
+        return tr("Restrict access to LAN only");
     default:
         return tr("Unknown");
     }
@@ -197,12 +197,8 @@ QString ConnListModel::connIconPath(const ConnRow &connRow)
 {
     if (connRow.blocked) {
         switch (connRow.blockReason) {
-        case FORT_BLOCK_REASON_NONE:
-            return ":/icons/error.png";
         case FORT_BLOCK_REASON_IP_INET:
             return ":/icons/ip.png";
-        case FORT_BLOCK_REASON_LAN_ONLY:
-            return ":/icons/hostname.png";
         case FORT_BLOCK_REASON_REAUTH:
             return ":/icons/arrow_refresh_small.png";
         case FORT_BLOCK_REASON_PROGRAM:
@@ -211,6 +207,10 @@ QString ConnListModel::connIconPath(const ConnRow &connRow)
             return ":/icons/application_double.png";
         case FORT_BLOCK_REASON_FILTER_MODE:
             return ":/icons/deny.png";
+        case FORT_BLOCK_REASON_LAN_ONLY:
+            return ":/icons/hostname.png";
+        default:
+            return ":/icons/error.png";
         }
     }
 
