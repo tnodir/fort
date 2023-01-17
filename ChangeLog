@@ -1,5 +1,13 @@
 Fort Firewall ChangeLog
 
+v3.6.4, 2022-01-17:
+- UI: Programs: Improve sorting by "State" column (Alerted programs are always on top).
+- UI: Tray: Change icon color on some states.
+- UI: Options: Save user.ini changes on OK/Apply only.
+- UI: Tray Menu: Move Options & Zones to Options sub-menu.
+- UI: Options: Add ability to Stop Internet when Quota exceeds.
+- UI: Programs: Add "Restrict access to LAN only" flag.
+
 v3.6.3, 2022-01-13:
 - UI: Options: Add "Animate Alert Icon" flag.
 - UI: Programs: Rework State column for alerts.
