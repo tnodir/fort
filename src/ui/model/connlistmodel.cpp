@@ -184,8 +184,8 @@ QString ConnListModel::blockReasonText(const ConnRow &connRow)
         return tr("Programs logic");
     case FORT_BLOCK_REASON_APP_GROUP_FOUND:
         return tr("App. Group logic");
-    case FORT_BLOCK_REASON_APP_GROUP_DEFAULT:
-        return tr("App. Group default logic");
+    case FORT_BLOCK_REASON_FILTER_MODE:
+        return tr("Filter Mode logic");
     default:
         return tr("Unknown");
     }
@@ -203,7 +203,7 @@ QString ConnListModel::connIconPath(const ConnRow &connRow)
             return ":/icons/application.png";
         case FORT_BLOCK_REASON_APP_GROUP_FOUND:
             return ":/icons/application_double.png";
-        case FORT_BLOCK_REASON_APP_GROUP_DEFAULT:
+        case FORT_BLOCK_REASON_FILTER_MODE:
         default:
             return ":/icons/deny.png";
         }

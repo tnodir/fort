@@ -92,7 +92,7 @@ TEST_F(ConfUtilTest, confWriteRead)
 
     ASSERT_TRUE(DriverCommon::confAppBlocked(
             data, DriverCommon::confAppFind(data, "System"), &blockReason));
-    ASSERT_EQ(blockReason, FORT_BLOCK_REASON_APP_GROUP_DEFAULT);
+    ASSERT_EQ(blockReason, FORT_BLOCK_REASON_FILTER_MODE);
 
     ASSERT_FALSE(DriverCommon::confAppBlocked(data,
             DriverCommon::confAppFind(
@@ -115,7 +115,7 @@ TEST_F(ConfUtilTest, confWriteRead)
             DriverCommon::confAppFind(
                     data, FileUtil::pathToKernelPath("C:\\Program Files\\Test.exe")),
             &blockReason));
-    ASSERT_EQ(blockReason, FORT_BLOCK_REASON_APP_GROUP_DEFAULT);
+    ASSERT_EQ(blockReason, FORT_BLOCK_REASON_FILTER_MODE);
 
     ASSERT_EQ(DriverCommon::confAppPeriodBits(data, 0, 0), 0x01);
     ASSERT_EQ(DriverCommon::confAppPeriodBits(data, 12, 0), 0);

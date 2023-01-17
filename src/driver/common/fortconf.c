@@ -304,8 +304,7 @@ FORT_API FORT_APP_FLAGS fort_conf_app_find(const PFORT_CONF conf, const PVOID pa
 static BOOL fort_conf_app_blocked_check(const PFORT_CONF conf, INT8 *block_reason, BOOL app_found,
         BOOL app_allowed, BOOL app_blocked)
 {
-    *block_reason =
-            app_found ? FORT_BLOCK_REASON_APP_GROUP_FOUND : FORT_BLOCK_REASON_APP_GROUP_DEFAULT;
+    *block_reason = app_found ? FORT_BLOCK_REASON_APP_GROUP_FOUND : FORT_BLOCK_REASON_FILTER_MODE;
 
     /* Block All */
     if (conf->flags.app_block_all)
