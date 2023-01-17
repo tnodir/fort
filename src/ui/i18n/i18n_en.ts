@@ -335,15 +335,15 @@
         <translation></translation>
     </message>
     <message>
-        <source>App. Group default logic</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation></translation>
     </message>
     <message>
         <source>Inherited</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Filter Mode logic</source>
         <translation></translation>
     </message>
 </context>

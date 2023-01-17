@@ -335,16 +335,16 @@
         <translation>App. Gruppenlogik</translation>
     </message>
     <message>
-        <source>App. Group default logic</source>
-        <translation>App. Standardlogik gruppieren</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Unbekannt</translation>
     </message>
     <message>
         <source>Inherited</source>
         <translation>Vererbt</translation>
+    </message>
+    <message>
+        <source>Filter Mode logic</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

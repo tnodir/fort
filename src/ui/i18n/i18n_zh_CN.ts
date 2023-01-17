@@ -335,16 +335,16 @@
         <translation>应用组逻辑：</translation>
     </message>
     <message>
-        <source>App. Group default logic</source>
-        <translation>应用组默认逻辑：</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>未知</translation>
     </message>
     <message>
         <source>Inherited</source>
         <translation>继承</translation>
+    </message>
+    <message>
+        <source>Filter Mode logic</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -335,16 +335,16 @@
         <translation>Логика Группы Приложения</translation>
     </message>
     <message>
-        <source>App. Group default logic</source>
-        <translation>Логика Группы Приложений по-умолчанию</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Неизвестно</translation>
     </message>
     <message>
         <source>Inherited</source>
         <translation>Унаследовано</translation>
+    </message>
+    <message>
+        <source>Filter Mode logic</source>
+        <translation>Логика Режима фильтра</translation>
     </message>
 </context>
 <context>

@@ -335,16 +335,16 @@
         <translation>App. Logique de groupe</translation>
     </message>
     <message>
-        <source>App. Group default logic</source>
-        <translation>App. Logique par défaut du groupe</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Inconnu</translation>
     </message>
     <message>
         <source>Inherited</source>
         <translation>Hérité</translation>
+    </message>
+    <message>
+        <source>Filter Mode logic</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

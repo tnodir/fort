@@ -335,16 +335,16 @@
         <translation>Logika skupin apikacij</translation>
     </message>
     <message>
-        <source>App. Group default logic</source>
-        <translation>Privzeta logika skupin aplikacij</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Neznano</translation>
     </message>
     <message>
         <source>Inherited</source>
         <translation>Podedovano</translation>
+    </message>
+    <message>
+        <source>Filter Mode logic</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

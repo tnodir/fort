@@ -335,16 +335,16 @@
         <translation>앱 그룹 로직</translation>
     </message>
     <message>
-        <source>App. Group default logic</source>
-        <translation>앱 그룹 기본 로직</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>알 수 없음</translation>
     </message>
     <message>
         <source>Inherited</source>
         <translation>상속됨</translation>
+    </message>
+    <message>
+        <source>Filter Mode logic</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

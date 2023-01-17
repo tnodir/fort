@@ -303,10 +303,6 @@
         <translation>IP e porta remoti</translation>
     </message>
     <message>
-        <source>App. Group default logic</source>
-        <translation>App. logica predefinita di gruppo</translation>
-    </message>
-    <message>
         <source>Old connection closed on startup</source>
         <translation>Vecchia connessione chiusa all&apos;avvio</translation>
     </message>
@@ -344,6 +340,10 @@
     </message>
     <message>
         <source>Inherited</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter Mode logic</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

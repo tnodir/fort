@@ -335,15 +335,15 @@
         <translation>App. Lógica de programa</translation>
     </message>
     <message>
-        <source>App. Group default logic</source>
-        <translation>App. Lógica de programa padrão</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Desconhecido</translation>
     </message>
     <message>
         <source>Inherited</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter Mode logic</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
