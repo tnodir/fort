@@ -237,8 +237,10 @@ QIcon AppListModel::appStateIcon(const AppRow &appRow)
     return IconCache::icon(appRow.alerted
                     ? ":/icons/error.png"
                     : (appRow.blocked ? ":/icons/deny.png"
-                                      : (appRow.endTime.isNull() ? ":/icons/accept.png"
-                                                                 : ":/icons/time.png")));
+                                      : (appRow.endTime.isNull()
+                                                      ? (appRow.lanOnly ? ":/icons/hostname.png"
+                                                                        : ":/icons/accept.png")
+                                                      : ":/icons/time.png")));
 }
 
 bool AppListModel::updateAppRow(const QString &sql, const QVariantList &vars, AppRow &appRow) const
