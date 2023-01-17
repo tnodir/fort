@@ -226,6 +226,10 @@
         <source>Upload Buffer Size:</source>
         <translation>업로드 버퍼 크기:</translation>
     </message>
+    <message>
+        <source>Restrict access to LAN only</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -344,6 +348,10 @@
     </message>
     <message>
         <source>Filter Mode logic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restrict access to LAN only</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -900,6 +908,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Name:</source>
         <translation>이름:</translation>
+    </message>
+    <message>
+        <source>Restrict access to LAN only</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

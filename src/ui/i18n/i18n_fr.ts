@@ -226,6 +226,10 @@
         <source>Upload Buffer Size:</source>
         <translation>Taille du tampon de chargement :</translation>
     </message>
+    <message>
+        <source>Restrict access to LAN only</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -344,6 +348,10 @@
     </message>
     <message>
         <source>Filter Mode logic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restrict access to LAN only</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -900,6 +908,10 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     <message>
         <source>Name:</source>
         <translation>Nom:</translation>
+    </message>
+    <message>
+        <source>Restrict access to LAN only</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

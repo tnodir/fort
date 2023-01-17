@@ -226,6 +226,10 @@
         <source>Upload Buffer Size:</source>
         <translation>Размер буфера выгрузки:</translation>
     </message>
+    <message>
+        <source>Restrict access to LAN only</source>
+        <translation>Ограничить доступ только к локальной сети</translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -345,6 +349,10 @@
     <message>
         <source>Filter Mode logic</source>
         <translation>Логика Режима фильтра</translation>
+    </message>
+    <message>
+        <source>Restrict access to LAN only</source>
+        <translation>Ограничить доступ только к локальной сети</translation>
     </message>
 </context>
 <context>
@@ -900,6 +908,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Name:</source>
         <translation>Наименование:</translation>
+    </message>
+    <message>
+        <source>Restrict access to LAN only</source>
+        <translation>Ограничить доступ только к локальной сети</translation>
     </message>
 </context>
 <context>

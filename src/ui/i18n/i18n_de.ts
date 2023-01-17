@@ -226,6 +226,10 @@
         <source>Upload Buffer Size:</source>
         <translation>Upload-Puffergröße:</translation>
     </message>
+    <message>
+        <source>Restrict access to LAN only</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -344,6 +348,10 @@
     </message>
     <message>
         <source>Filter Mode logic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restrict access to LAN only</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -900,6 +908,10 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     <message>
         <source>Name:</source>
         <translation>Name:</translation>
+    </message>
+    <message>
+        <source>Restrict access to LAN only</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

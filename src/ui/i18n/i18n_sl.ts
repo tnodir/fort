@@ -226,6 +226,10 @@
         <source>Upload Buffer Size:</source>
         <translation>Velikost medpomnilnika za nalaganje:</translation>
     </message>
+    <message>
+        <source>Restrict access to LAN only</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -344,6 +348,10 @@
     </message>
     <message>
         <source>Filter Mode logic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restrict access to LAN only</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -900,6 +908,10 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     <message>
         <source>Name:</source>
         <translation>Ime:</translation>
+    </message>
+    <message>
+        <source>Restrict access to LAN only</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
