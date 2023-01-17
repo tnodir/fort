@@ -43,8 +43,8 @@ public slots:
     int write(const FirewallConf &conf, ConfAppsWalker *confAppsWalker, EnvManager &envManager,
             QByteArray &buf);
     int writeFlags(const FirewallConf &conf, QByteArray &buf);
-    int writeAppEntry(int groupIndex, bool useGroupPerm, bool applyChild, bool blocked,
-            bool alerted, bool isNew, const QString &appPath, QByteArray &buf);
+    int writeAppEntry(int groupIndex, bool useGroupPerm, bool applyChild, bool lanOnly,
+            bool blocked, bool alerted, bool isNew, const QString &appPath, QByteArray &buf);
     int writeVersion(QByteArray &buf);
     int writeZone(const IpRange &ipRange, QByteArray &buf);
     int writeZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
@@ -70,18 +70,19 @@ private:
     bool parseExeApps(
             ConfAppsWalker *confAppsWalker, appentry_map_t &exeAppsMap, quint32 &exeAppsSize);
 
-    bool parseAppsText(int groupIndex, bool applyChild, bool blocked, const QString &text,
-            appentry_map_t &wildAppsMap, appentry_map_t &prefixAppsMap, appentry_map_t &exeAppsMap,
-            quint32 &wildAppsSize, quint32 &prefixAppsSize, quint32 &exeAppsSize);
-
-    bool addParsedApp(int groupIndex, bool applyChild, bool blocked, bool isWild, bool isPrefix,
-            const QString &appPath, appentry_map_t &wildAppsMap, appentry_map_t &prefixAppsMap,
+    bool parseAppsText(int groupIndex, bool applyChild, bool lanOnly, bool blocked,
+            const QString &text, appentry_map_t &wildAppsMap, appentry_map_t &prefixAppsMap,
             appentry_map_t &exeAppsMap, quint32 &wildAppsSize, quint32 &prefixAppsSize,
             quint32 &exeAppsSize);
 
-    bool addApp(int groupIndex, bool useGroupPerm, bool applyChild, bool blocked, bool alerted,
-            bool isNew, const QString &appPath, appentry_map_t &appsMap, quint32 &appsSize,
-            bool canOverwrite = true);
+    bool addParsedApp(int groupIndex, bool applyChild, bool lanOnly, bool blocked, bool isWild,
+            bool isPrefix, const QString &appPath, appentry_map_t &wildAppsMap,
+            appentry_map_t &prefixAppsMap, appentry_map_t &exeAppsMap, quint32 &wildAppsSize,
+            quint32 &prefixAppsSize, quint32 &exeAppsSize);
+
+    bool addApp(int groupIndex, bool useGroupPerm, bool applyChild, bool lanOnly, bool blocked,
+            bool alerted, bool isNew, const QString &appPath, appentry_map_t &appsMap,
+            quint32 &appsSize, bool canOverwrite = true);
 
     static QString parseAppPath(const StringView line, bool &isWild, bool &isPrefix);
 

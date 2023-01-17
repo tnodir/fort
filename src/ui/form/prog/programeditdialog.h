@@ -54,9 +54,9 @@ private:
 
     bool save();
     bool saveApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
-            int groupIndex, bool useGroupPerm, bool applyChild, bool blocked);
+            int groupIndex, bool useGroupPerm, bool applyChild, bool lanOnly, bool blocked);
     bool saveMulti(const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool applyChild,
-            bool blocked);
+            bool lanOnly, bool blocked);
 
 private:
     ProgramsController *m_ctrl = nullptr;
@@ -71,6 +71,7 @@ private:
     QComboBox *m_comboAppGroup = nullptr;
     QCheckBox *m_cbUseGroupPerm = nullptr;
     QCheckBox *m_cbApplyChild = nullptr;
+    QCheckBox *m_cbLanOnly = nullptr;
     QRadioButton *m_rbAllowApp = nullptr;
     QRadioButton *m_rbBlockApp = nullptr;
     CheckSpinCombo *m_cscBlockAppIn = nullptr;

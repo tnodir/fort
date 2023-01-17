@@ -78,6 +78,7 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     m_comboAppGroup->setCurrentIndex(appRow.groupIndex);
     m_cbUseGroupPerm->setChecked(appRow.useGroupPerm);
     m_cbApplyChild->setChecked(appRow.applyChild);
+    m_cbLanOnly->setChecked(appRow.lanOnly);
     m_rbAllowApp->setChecked(!appRow.blocked);
     m_rbBlockApp->setChecked(appRow.blocked);
     m_cscBlockAppIn->checkBox()->setChecked(false);
@@ -119,6 +120,7 @@ void ProgramEditDialog::retranslateUi()
     m_labelAppGroup->setText(tr("Application Group:"));
     m_cbUseGroupPerm->setText(tr("Use Application Group's Enabled State"));
     m_cbApplyChild->setText(tr("Apply same rules to child processes"));
+    m_cbLanOnly->setText(tr("Restrict access to LAN only"));
     m_rbAllowApp->setText(tr("Allow"));
     m_rbBlockApp->setText(tr("Block"));
 
@@ -229,6 +231,11 @@ QLayout *ProgramEditDialog::setupAppLayout()
     m_cbApplyChild = new QCheckBox();
 
     layout->addRow(QString(), m_cbApplyChild);
+
+    // LAN Only
+    m_cbLanOnly = new QCheckBox();
+
+    layout->addRow(QString(), m_cbLanOnly);
 
     return layout;
 }
@@ -371,6 +378,7 @@ bool ProgramEditDialog::save()
     const int groupIndex = m_comboAppGroup->currentIndex();
     const bool useGroupPerm = m_cbUseGroupPerm->isChecked();
     const bool applyChild = m_cbApplyChild->isChecked();
+    const bool lanOnly = m_cbLanOnly->isChecked();
     const bool blocked = m_rbBlockApp->isChecked();
 
     QDateTime endTime;
@@ -387,28 +395,31 @@ bool ProgramEditDialog::save()
     // Add new app or edit non-selected app
     if (appIdsCount == 0) {
         return confManager()->addApp(
-                appPath, appName, endTime, groupIndex, useGroupPerm, applyChild, blocked);
+                appPath, appName, endTime, groupIndex, useGroupPerm, applyChild, lanOnly, blocked);
     }
 
     // Edit selected app
     if (isSingleSelection) {
-        return saveApp(appPath, appName, endTime, groupIndex, useGroupPerm, applyChild, blocked);
+        return saveApp(
+                appPath, appName, endTime, groupIndex, useGroupPerm, applyChild, lanOnly, blocked);
     }
 
     // Edit selected apps
-    return saveMulti(endTime, groupIndex, useGroupPerm, applyChild, blocked);
+    return saveMulti(endTime, groupIndex, useGroupPerm, applyChild, lanOnly, blocked);
 }
 
 bool ProgramEditDialog::saveApp(const QString &appPath, const QString &appName,
-        const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool applyChild, bool blocked)
+        const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool applyChild, bool lanOnly,
+        bool blocked)
 {
     const bool appEdited = (appPath != m_appRow.appPath || groupIndex != m_appRow.groupIndex
             || useGroupPerm != m_appRow.useGroupPerm || applyChild != m_appRow.applyChild
-            || blocked != m_appRow.blocked || endTime != m_appRow.endTime);
+            || lanOnly != m_appRow.lanOnly || blocked != m_appRow.blocked
+            || endTime != m_appRow.endTime);
 
     if (appEdited) {
         return confManager()->updateApp(m_appRow.appId, appPath, appName, endTime, groupIndex,
-                useGroupPerm, applyChild, blocked);
+                useGroupPerm, applyChild, lanOnly, blocked);
     }
 
     if (appName == m_appRow.appName)
@@ -417,14 +428,14 @@ bool ProgramEditDialog::saveApp(const QString &appPath, const QString &appName,
     return confManager()->updateAppName(m_appRow.appId, appName);
 }
 
-bool ProgramEditDialog::saveMulti(
-        const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool applyChild, bool blocked)
+bool ProgramEditDialog::saveMulti(const QDateTime &endTime, int groupIndex, bool useGroupPerm,
+        bool applyChild, bool lanOnly, bool blocked)
 {
     for (qint64 appId : m_appIdList) {
         const auto appRow = appListModel()->appRowById(appId);
 
         if (!confManager()->updateApp(appId, appRow.appPath, appRow.appName, endTime, groupIndex,
-                    useGroupPerm, applyChild, blocked))
+                    useGroupPerm, applyChild, lanOnly, blocked))
             return false;
     }
 

@@ -94,6 +94,7 @@ void ApplicationsPage::onRetranslateUi()
 
     m_btGroupOptions->setText(tr("Options"));
     m_cbApplyChild->setText(tr("Apply same rules to child processes"));
+    m_cbLanOnly->setText(tr("Restrict access to LAN only"));
 
     m_cscLimitIn->checkBox()->setText(tr("Download speed limit:"));
     m_cscLimitOut->checkBox()->setText(tr("Upload speed limit:"));
@@ -375,7 +376,7 @@ void ApplicationsPage::setupGroupPeriodEnabled()
 
 void ApplicationsPage::setupGroupOptions()
 {
-    setupGroupApplyChild();
+    setupGroupOptionFlags();
     setupGroupLimitIn();
     setupGroupLimitOut();
     setupGroupLimitLatency();
@@ -384,9 +385,10 @@ void ApplicationsPage::setupGroupOptions()
     setupGroupLogConn();
 
     // Menu
-    const QList<QWidget *> menuWidgets = { m_cbApplyChild, ControlUtil::createSeparator(),
-        m_cscLimitIn, m_cscLimitOut, m_limitLatency, m_limitPacketLoss, m_limitBufferSizeIn,
-        m_limitBufferSizeOut, ControlUtil::createSeparator(), m_cbLogConn };
+    const QList<QWidget *> menuWidgets = { m_cbApplyChild, m_cbLanOnly,
+        ControlUtil::createSeparator(), m_cscLimitIn, m_cscLimitOut, m_limitLatency,
+        m_limitPacketLoss, m_limitBufferSizeIn, m_limitBufferSizeOut,
+        ControlUtil::createSeparator(), m_cbLogConn };
     auto layout = ControlUtil::createLayoutByWidgets(menuWidgets);
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
@@ -395,7 +397,7 @@ void ApplicationsPage::setupGroupOptions()
     m_btGroupOptions->setMenu(menu);
 }
 
-void ApplicationsPage::setupGroupApplyChild()
+void ApplicationsPage::setupGroupOptionFlags()
 {
     m_cbApplyChild = ControlUtil::createCheckBox(false, [&](bool checked) {
         AppGroup *appGroup = this->appGroup();
@@ -403,6 +405,16 @@ void ApplicationsPage::setupGroupApplyChild()
             return;
 
         appGroup->setApplyChild(checked);
+
+        ctrl()->setOptEdited();
+    });
+
+    m_cbLanOnly = ControlUtil::createCheckBox(false, [&](bool checked) {
+        AppGroup *appGroup = this->appGroup();
+        if (appGroup->lanOnly() == checked)
+            return;
+
+        appGroup->setLanOnly(checked);
 
         ctrl()->setOptEdited();
     });
@@ -625,6 +637,7 @@ void ApplicationsPage::updateGroup()
     AppGroup *appGroup = this->appGroup();
 
     m_cbApplyChild->setChecked(appGroup->applyChild());
+    m_cbLanOnly->setChecked(appGroup->lanOnly());
 
     m_cscLimitIn->checkBox()->setChecked(appGroup->limitInEnabled());
     m_cscLimitIn->spinBox()->setValue(int(appGroup->speedLimitIn()));

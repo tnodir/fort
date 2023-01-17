@@ -15,6 +15,7 @@ struct AppRow : TableRow
 {
     bool useGroupPerm = true;
     bool applyChild = false;
+    bool lanOnly = false;
     bool blocked = false;
     bool alerted = false;
 

@@ -8,6 +8,7 @@ AppGroup::AppGroup(QObject *parent) :
     m_edited(false),
     m_enabled(true),
     m_applyChild(false),
+    m_lanOnly(false),
     m_logConn(true),
     m_periodEnabled(false),
     m_limitInEnabled(false),
@@ -27,6 +28,14 @@ void AppGroup::setApplyChild(bool on)
 {
     if (bool(m_applyChild) != on) {
         m_applyChild = on;
+        setEdited(true);
+    }
+}
+
+void AppGroup::setLanOnly(bool on)
+{
+    if (bool(m_lanOnly) != on) {
+        m_lanOnly = on;
         setEdited(true);
     }
 }
@@ -178,6 +187,7 @@ void AppGroup::copy(const AppGroup &o)
 
     m_enabled = o.enabled();
     m_applyChild = o.applyChild();
+    m_lanOnly = o.lanOnly();
     m_logConn = o.logConn();
 
     m_periodEnabled = o.periodEnabled();
@@ -209,6 +219,7 @@ QVariant AppGroup::toVariant() const
     map["enabled"] = enabled();
 
     map["applyChild"] = applyChild();
+    map["lanOnly"] = lanOnly();
     map["logConn"] = logConn();
 
     map["periodEnabled"] = periodEnabled();
@@ -242,6 +253,7 @@ void AppGroup::fromVariant(const QVariant &v)
     m_enabled = map["enabled"].toBool();
 
     m_applyChild = map["applyChild"].toBool();
+    m_lanOnly = map["lanOnly"].toBool();
     m_logConn = map["logConn"].toBool();
 
     m_periodEnabled = map["periodEnabled"].toBool();

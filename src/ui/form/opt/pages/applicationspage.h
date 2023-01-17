@@ -48,7 +48,7 @@ private:
     void setupGroupPeriod();
     void setupGroupPeriodEnabled();
     void setupGroupOptions();
-    void setupGroupApplyChild();
+    void setupGroupOptionFlags();
     void setupGroupLimitIn();
     void setupGroupLimitOut();
     void setupGroupLimitLatency();
@@ -79,6 +79,7 @@ private:
     CheckTimePeriod *m_ctpGroupPeriod = nullptr;
     QPushButton *m_btGroupOptions = nullptr;
     QCheckBox *m_cbApplyChild = nullptr;
+    QCheckBox *m_cbLanOnly = nullptr;
     CheckSpinCombo *m_cscLimitIn = nullptr;
     CheckSpinCombo *m_cscLimitOut = nullptr;
     LabelSpin *m_limitLatency = nullptr;

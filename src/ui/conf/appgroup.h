@@ -23,6 +23,9 @@ public:
     bool applyChild() const { return m_applyChild; }
     void setApplyChild(bool on);
 
+    bool lanOnly() const { return m_lanOnly; }
+    void setLanOnly(bool on);
+
     bool logConn() const { return m_logConn; }
     void setLogConn(bool on);
 
@@ -88,6 +91,7 @@ private:
     bool m_enabled : 1;
 
     bool m_applyChild : 1;
+    bool m_lanOnly : 1;
     bool m_logConn : 1;
 
     bool m_periodEnabled : 1;

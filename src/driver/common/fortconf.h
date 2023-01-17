@@ -137,6 +137,7 @@ typedef struct fort_app_flags
             UCHAR group_index;
             UCHAR use_group_perm : 1;
             UCHAR apply_child : 1;
+            UCHAR lan_only : 1;
             UCHAR blocked : 1;
             UCHAR alerted : 1;
             UCHAR is_new : 1;
