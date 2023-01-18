@@ -21,12 +21,13 @@ cd %TARGET_PATH%
 	-skip qtcanvas3d -skip qtcharts -skip qtconnectivity -skip qtdatavis3d ^
 	-skip qtdeclarative -skip qtdoc -skip qtfeedback ^
 	-skip qtgamepad -skip qtgraphicaleffects -skip qtgrpc -skip qtimageformats ^
-	-skip qtlocation -skip qtlottie -skip qtmacextras ^
+	-skip qtlanguageserver -skip qtlocation -skip qtlottie -skip qtmacextras ^
 	-skip qtmultimedia -skip qtnetworkauth -skip qtpim -skip qtpurchasing ^
 	-skip qtqa -skip qtquick3d -skip qtquickcontrols -skip qtquickcontrols2 ^
-	-skip qtquicktimeline -skip qtremoteobjects -skip qtrepotools -skip qtscxml ^
-	-skip qtsensors -skip qtserialbus -skip qtserialport -skip qtshadertools ^
-	-skip qtspeech -skip qtsvg -skip qtsystems -skip qttools -skip qttranslations ^
+	-skip qtquicktimeline -skip qtpositioning -skip qtremoteobjects ^
+	-skip qtrepotools -skip qtscxml -skip qtsensors -skip qtserialbus ^
+	-skip qtserialport -skip qtshadertools -skip qtspeech -skip qtsvg ^
+	-skip qtsystems -skip qttools -skip qttranslations ^
 	-skip qtvirtualkeyboard -skip qtwayland -skip qtwebchannel -skip qtwebengine ^
 	-skip qtwebglplugin -skip qtwebsockets -skip qtwebview ^
 	-skip qtwinextras -skip qtx11extras -skip qtxmlpatterns ^
