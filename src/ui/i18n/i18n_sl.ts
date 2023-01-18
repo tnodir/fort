@@ -228,7 +228,7 @@
     </message>
     <message>
         <source>Restrict access to LAN only</source>
-        <translation type="unfinished"></translation>
+        <translation>Omeji dostop samo do LAN</translation>
     </message>
 </context>
 <context>
@@ -348,11 +348,11 @@
     </message>
     <message>
         <source>Filter Mode logic</source>
-        <translation type="unfinished"></translation>
+        <translation>Logika načina filtra</translation>
     </message>
     <message>
         <source>Restrict access to LAN only</source>
-        <translation type="unfinished"></translation>
+        <translation>Omeji dostop samo do LAN</translation>
     </message>
 </context>
 <context>
@@ -911,7 +911,7 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     </message>
     <message>
         <source>Restrict access to LAN only</source>
-        <translation type="unfinished"></translation>
+        <translation>Omeji dostop samo do LAN</translation>
     </message>
 </context>
 <context>
@@ -1282,7 +1282,7 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     </message>
     <message>
         <source>Stop Internet traffic when quota exceeds</source>
-        <translation type="unfinished"></translation>
+        <translation>Ustavi internetni promet, ko je kvota presežena</translation>
     </message>
 </context>
 <context>

@@ -228,7 +228,7 @@
     </message>
     <message>
         <source>Restrict access to LAN only</source>
-        <translation type="unfinished"></translation>
+        <translation>LAN으로만 액세스 제한</translation>
     </message>
 </context>
 <context>
@@ -348,11 +348,11 @@
     </message>
     <message>
         <source>Filter Mode logic</source>
-        <translation type="unfinished"></translation>
+        <translation>필터링 모드 로직</translation>
     </message>
     <message>
         <source>Restrict access to LAN only</source>
-        <translation type="unfinished"></translation>
+        <translation>LAN으로만 액세스 제한</translation>
     </message>
 </context>
 <context>
@@ -911,7 +911,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Restrict access to LAN only</source>
-        <translation type="unfinished"></translation>
+        <translation>LAN으로만 액세스 제한</translation>
     </message>
 </context>
 <context>
@@ -1282,7 +1282,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Stop Internet traffic when quota exceeds</source>
-        <translation type="unfinished"></translation>
+        <translation>할당량 초과 시 인터넷 트래픽 중지</translation>
     </message>
 </context>
 <context>
