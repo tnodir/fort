@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.6.5, 2022-01-18:
+- Driver: Double check the closed state on flow deletion.
+
 v3.6.4, 2022-01-17:
 - UI: Programs: Improve sorting by "State" column (Alerted programs are always on top).
 - UI: Tray: Change icon color on some states.
