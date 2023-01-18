@@ -203,8 +203,7 @@ inline static BOOL fort_flow_context_stream_remove(
     return FwpsFlowRemoveContext0(flow_id, layerId, calloutId) != STATUS_PENDING;
 }
 
-inline static NTSTATUS fort_flow_context_transport_remove(
-        PFORT_STAT stat, UINT64 flow_id, BOOL isIPv6)
+inline static BOOL fort_flow_context_transport_remove(PFORT_STAT stat, UINT64 flow_id, BOOL isIPv6)
 {
     NTSTATUS in_status;
     NTSTATUS out_status;
