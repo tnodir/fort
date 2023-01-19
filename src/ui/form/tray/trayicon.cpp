@@ -10,6 +10,7 @@
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <driver/drivermanager.h>
+#include <form/controls/clickablemenu.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/mainwindow.h>
 #include <fortsettings.h>
@@ -372,12 +373,14 @@ void TrayIcon::setupTrayMenu()
 
 void TrayIcon::setupTrayMenuOptions()
 {
-    m_optionsMenu = ControlUtil::createMenu(m_menu);
+    m_optionsMenu = new ClickableMenu(m_menu);
     m_optionsMenu->setIcon(IconCache::icon(":/icons/cog.png"));
 
     m_optionsAction = addAction(m_optionsMenu, IconCache::icon(":/icons/cog.png"), QString(),
             windowManager(), SLOT(showOptionsWindow()));
     addHotKey(m_optionsAction, iniUser()->hotKeyOptions());
+
+    connect(m_optionsMenu, &ClickableMenu::clicked, m_optionsAction, &QAction::trigger);
 
     m_zonesAction = addAction(m_optionsMenu, IconCache::icon(":/icons/ip_class.png"), QString(),
             windowManager(), SLOT(showZonesWindow()));

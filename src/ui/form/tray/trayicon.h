@@ -7,6 +7,7 @@ QT_FORWARD_DECLARE_CLASS(QAction)
 QT_FORWARD_DECLARE_CLASS(QActionGroup)
 QT_FORWARD_DECLARE_CLASS(QTimer)
 
+class ClickableMenu;
 class ConfManager;
 class DriverManager;
 class FirewallConf;
@@ -119,7 +120,7 @@ private:
 
     QMenu *m_menu = nullptr;
     QAction *m_programsAction = nullptr;
-    QMenu *m_optionsMenu = nullptr;
+    ClickableMenu *m_optionsMenu = nullptr;
     QAction *m_optionsAction = nullptr;
     QAction *m_statisticsAction = nullptr;
     QAction *m_graphAction = nullptr;

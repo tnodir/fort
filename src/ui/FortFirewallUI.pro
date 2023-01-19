@@ -32,6 +32,7 @@ SOURCES += \
     form/controls/appinforow.cpp \
     form/controls/checkspincombo.cpp \
     form/controls/checktimeperiod.cpp \
+    form/controls/clickablemenu.cpp \
     form/controls/controlutil.cpp \
     form/controls/labelcolor.cpp \
     form/controls/labeldoublespin.cpp \
@@ -193,6 +194,7 @@ HEADERS += \
     form/controls/appinforow.h \
     form/controls/checkspincombo.h \
     form/controls/checktimeperiod.h \
+    form/controls/clickablemenu.h \
     form/controls/controlutil.h \
     form/controls/labelcolor.h \
     form/controls/labeldoublespin.h \
