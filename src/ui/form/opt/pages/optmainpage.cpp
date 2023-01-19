@@ -130,12 +130,7 @@ QLayout *OptMainPage::setupDialogButtons()
 
 void OptMainPage::setupOkApplyButtons()
 {
-    const auto refreshOkApplyButtons = [&](bool anyEdited) {
-        m_btOk->setEnabled(anyEdited);
-        m_btApply->setEnabled(anyEdited);
-    };
+    m_btApply->setEnabled(ctrl()->anyEdited());
 
-    refreshOkApplyButtons(ctrl()->anyEdited());
-
-    connect(ctrl(), &OptionsController::editedChanged, this, refreshOkApplyButtons);
+    connect(ctrl(), &OptionsController::editedChanged, m_btApply, &QPushButton::setEnabled);
 }
