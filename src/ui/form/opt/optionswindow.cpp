@@ -52,20 +52,24 @@ void OptionsWindow::cancelChanges()
 
 void OptionsWindow::saveWindowState()
 {
-    iniUser()->setOptWindowGeometry(m_stateWatcher->geometry());
-    iniUser()->setOptWindowMaximized(m_stateWatcher->maximized());
+    IniUser *iniUser = confManager()->iniUser();
 
-    emit ctrl()->afterSaveWindowState(iniUser());
+    iniUser->setOptWindowGeometry(m_stateWatcher->geometry());
+    iniUser->setOptWindowMaximized(m_stateWatcher->maximized());
+
+    emit ctrl()->afterSaveWindowState(iniUser);
 
     confManager()->saveIniUser();
 }
 
 void OptionsWindow::restoreWindowState()
 {
-    m_stateWatcher->restore(this, QSize(1024, 768), iniUser()->optWindowGeometry(),
-            iniUser()->optWindowMaximized());
+    IniUser *iniUser = confManager()->iniUser();
 
-    emit ctrl()->afterRestoreWindowState(iniUser());
+    m_stateWatcher->restore(
+            this, QSize(1024, 768), iniUser->optWindowGeometry(), iniUser->optWindowMaximized());
+
+    emit ctrl()->afterRestoreWindowState(iniUser);
 }
 
 void OptionsWindow::setupController()
