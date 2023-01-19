@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.6.6, 2022-01-19:
+- UI: Options: Fix window's position/size saving.
+- UI: Options: OK button is always enabled.
+- UI: Tray: Make Options menu clickable.
+
 v3.6.5, 2022-01-18:
 - Driver: Double check the closed state on flow deletion.
 
