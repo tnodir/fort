@@ -773,7 +773,8 @@ static NTSTATUS fort_callout_force_reauth_prov(
     if (old_conf_flags.prov_boot != conf_flags.prov_boot) {
         fort_prov_unregister(engine);
 
-        if ((status = fort_prov_register(engine, conf_flags.prov_boot)))
+        status = fort_prov_register(engine, conf_flags.prov_boot);
+        if (status)
             return status;
 
         prov_recreated = TRUE;

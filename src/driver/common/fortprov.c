@@ -133,8 +133,8 @@ FORT_API void fort_prov_unregister(HANDLE transEngine)
     if (fort_prov_trans_open_engine(transEngine, &engine))
         return;
 
-    fort_prov_unregister_provider(engine);
     fort_prov_unregister_flow_filters(engine);
+    fort_prov_unregister_provider(engine);
 
     fort_prov_trans_close_engine(transEngine, engine, /*status=*/0);
 }
