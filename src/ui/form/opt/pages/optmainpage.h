@@ -19,7 +19,7 @@ private:
     void setupUi();
     void setupTabBar();
     QLayout *setupDialogButtons();
-    void setupOkApplyButtons();
+    void setupApplyCancelButtons();
 
 private:
     QTabWidget *m_tabBar = nullptr;

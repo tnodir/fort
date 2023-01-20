@@ -119,7 +119,7 @@ QLayout *OptMainPage::setupDialogButtons()
     connect(m_btApply, &QAbstractButton::clicked, ctrl(), &OptionsController::applyChanges);
     connect(m_btCancel, &QAbstractButton::clicked, ctrl(), &OptionsController::closeWindow);
 
-    setupOkApplyButtons();
+    setupApplyCancelButtons();
 
     buttonsLayout->addWidget(m_btOk);
     buttonsLayout->addWidget(m_btApply);
@@ -128,9 +128,14 @@ QLayout *OptMainPage::setupDialogButtons()
     return buttonsLayout;
 }
 
-void OptMainPage::setupOkApplyButtons()
+void OptMainPage::setupApplyCancelButtons()
 {
-    m_btApply->setEnabled(ctrl()->anyEdited());
+    const auto refreshButtons = [&](bool anyEdited) {
+        m_btApply->setEnabled(anyEdited);
+        m_btCancel->setEnabled(anyEdited);
+    };
 
-    connect(ctrl(), &OptionsController::editedChanged, m_btApply, &QPushButton::setEnabled);
+    refreshButtons(ctrl()->anyEdited());
+
+    connect(ctrl(), &OptionsController::editedChanged, this, refreshButtons);
 }
