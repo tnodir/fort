@@ -596,7 +596,7 @@ void ConfUtil::writeLimit(fort_speed_limit *limit, quint32 kiBytes, quint32 buff
     limit->plr = packetLoss;
     limit->latency_ms = latencyMsec;
     limit->buffer_bytes = bufferSize;
-    limit->bps = kiBytes * 1024 * 8;
+    limit->bps = kiBytes * 1024;
 }
 
 void ConfUtil::writeAddressRanges(char **data, const addrranges_arr_t &addressRanges)

@@ -392,7 +392,7 @@ static void fort_shaper_queue_process_bandwidth(
 
     /* Advance the available bytes */
     const UINT64 accumulated =
-            ((now.QuadPart - queue->last_tick.QuadPart) * bps) / (8 * g_QpcFrequency.QuadPart);
+            ((now.QuadPart - queue->last_tick.QuadPart) * bps) / g_QpcFrequency.QuadPart;
     queue->available_bytes += accumulated;
 
     if (fort_shaper_packet_list_is_empty(&queue->bandwidth_list)
@@ -496,7 +496,8 @@ inline static BOOL fort_shaper_queue_is_empty(PFORT_PACKET_QUEUE queue)
             && fort_shaper_packet_list_is_empty(&queue->latency_list);
 }
 
-static BOOL fort_shaper_queue_process(PFORT_SHAPER shaper, PFORT_PACKET_QUEUE queue)
+static BOOL fort_shaper_queue_process(
+        PFORT_SHAPER shaper, PFORT_PACKET_QUEUE queue, const LARGE_INTEGER now)
 {
     PFORT_PACKET pkt_chain = NULL;
     BOOL is_active = FALSE;
@@ -505,8 +506,6 @@ static BOOL fort_shaper_queue_process(PFORT_SHAPER shaper, PFORT_PACKET_QUEUE qu
     KeAcquireInStackQueuedSpinLock(&queue->lock, &lock_queue);
 
     if (!fort_shaper_queue_is_empty(queue)) {
-        const LARGE_INTEGER now = KeQueryPerformanceCounter(NULL);
-
         fort_shaper_queue_process_bandwidth(shaper, queue, now);
 
         pkt_chain = fort_shaper_queue_process_latency(shaper, queue, now);
@@ -601,7 +600,13 @@ static void NTAPI fort_shaper_timer_process(void)
 
     ULONG active_io_bits =
             fort_shaper_io_bits_set(&shaper->active_io_bits, FORT_PACKET_FLUSH_ALL, FALSE);
+
+    if (active_io_bits == 0)
+        return;
+
     ULONG new_active_io_bits = 0;
+
+    const LARGE_INTEGER now = KeQueryPerformanceCounter(NULL);
 
     for (int i = 0; active_io_bits != 0; ++i) {
         const BOOL queue_exists = (active_io_bits & 1) != 0;
@@ -614,7 +619,7 @@ static void NTAPI fort_shaper_timer_process(void)
         if (queue == NULL)
             continue;
 
-        if (fort_shaper_queue_process(shaper, queue)) {
+        if (fort_shaper_queue_process(shaper, queue, now)) {
             new_active_io_bits |= (1 << i);
         }
     }

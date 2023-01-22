@@ -164,7 +164,7 @@ typedef struct fort_speed_limit
     UINT16 plr; /* packet loss rate in 1/100% (0-10000, i.e. 10% packet loss = 1000) */
     UINT32 latency_ms; /* latency in milliseconds */
     UINT32 buffer_bytes; /* size of packet buffer in bytes (150,000 is the dummynet's default) */
-    UINT64 bps; /* bandwidth in bits per second */
+    UINT64 bps; /* bandwidth in bytes per second */
 } FORT_SPEED_LIMIT, *PFORT_SPEED_LIMIT;
 
 typedef struct fort_conf_group
