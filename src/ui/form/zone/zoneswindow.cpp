@@ -403,26 +403,27 @@ void ZonesWindow::updateZoneEditForm(bool editCurrentZone)
 bool ZonesWindow::saveZoneEditForm()
 {
     const auto zoneSource = ZoneSourceWrapper(m_comboSources->currentData());
-    const auto sourceCode = zoneSource.code();
 
     if (zoneSource.url().isEmpty()) {
         m_cbCustomUrl->setChecked(true);
     }
 
-    const auto zoneName = m_editZoneName->text();
-    const bool enabled = m_cbEnabled->isChecked();
-    const bool customUrl = m_cbCustomUrl->isChecked();
-    const auto url = m_editUrl->text();
-    const auto formData = m_editFormData->text();
+    Zone zone;
+    zone.zoneName = m_editZoneName->text();
+    zone.sourceCode = zoneSource.code();
+    zone.enabled = m_cbEnabled->isChecked();
+    zone.customUrl = m_cbCustomUrl->isChecked();
+    zone.url = m_editUrl->text();
+    zone.formData = m_editFormData->text();
 
     // Check zone name
-    if (zoneName.isEmpty()) {
+    if (zone.zoneName.isEmpty()) {
         m_editZoneName->setFocus();
         return false;
     }
 
     // Check custom url
-    if (customUrl && url.isEmpty()) {
+    if (zone.customUrl && zone.url.isEmpty()) {
         m_editUrl->setText(zoneSource.url());
         m_editUrl->selectAll();
         m_editUrl->setFocus();
@@ -432,10 +433,8 @@ bool ZonesWindow::saveZoneEditForm()
 
     // Add new zone
     if (m_formZoneIsNew) {
-        int zoneId;
-        if (confManager()->addZone(
-                    zoneName, sourceCode, url, formData, enabled, customUrl, zoneId)) {
-            m_zoneListView->selectCell(zoneId - 1);
+        if (confManager()->addZone(zone)) {
+            m_zoneListView->selectCell(zone.zoneId - 1);
             return true;
         }
         return false;
@@ -445,28 +444,31 @@ bool ZonesWindow::saveZoneEditForm()
     const int zoneIndex = zoneListCurrentIndex();
     const auto zoneRow = zoneListModel()->zoneRowAt(zoneIndex);
 
-    const bool zoneNameEdited = (zoneName != zoneRow.zoneName);
-    const bool zoneEdited = (sourceCode != zoneRow.sourceCode || enabled != zoneRow.enabled
-            || customUrl != zoneRow.customUrl || url != zoneRow.url
-            || formData != zoneRow.formData);
+    const bool zoneNameEdited = (zone.zoneName != zoneRow.zoneName);
+    const bool zoneEdited = (zone.enabled != zoneRow.enabled || zone.customUrl != zoneRow.customUrl
+            || zone.sourceCode != zoneRow.sourceCode || zone.url != zoneRow.url
+            || zone.formData != zoneRow.formData);
 
     if (!zoneEdited) {
         if (zoneNameEdited) {
-            return confManager()->updateZoneName(zoneRow.zoneId, zoneName);
+            return confManager()->updateZoneName(zoneRow.zoneId, zone.zoneName);
         }
         return true;
     }
 
-    return confManager()->updateZone(
-            zoneRow.zoneId, zoneName, sourceCode, url, formData, enabled, customUrl);
+    zone.zoneId = zoneRow.zoneId;
+
+    return confManager()->updateZone(zone);
 }
 
 void ZonesWindow::updateZone(int row, bool enabled)
 {
     const auto zoneRow = zoneListModel()->zoneRowAt(row);
 
-    confManager()->updateZone(zoneRow.zoneId, zoneRow.zoneName, zoneRow.sourceCode, zoneRow.url,
-            zoneRow.formData, enabled, zoneRow.customUrl);
+    Zone zone = zoneRow;
+    zone.enabled = enabled;
+
+    confManager()->updateZone(zone);
 }
 
 void ZonesWindow::deleteZone(int row)

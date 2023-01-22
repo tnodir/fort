@@ -8,6 +8,7 @@
 #include <appinfo/appinfocache.h>
 #include <appinfo/appinfoutil.h>
 #include <conf/app.h>
+#include <conf/zone.h>
 #include <driver/drivercommon.h>
 #include <driver/drivermanager.h>
 #include <fortsettings.h>
@@ -933,15 +934,15 @@ void ConfManager::updateAppEndTimes()
     updateAppEndTimer();
 }
 
-bool ConfManager::addZone(const QString &zoneName, const QString &sourceCode, const QString &url,
-        const QString &formData, bool enabled, bool customUrl, int &zoneId)
+bool ConfManager::addZone(Zone &zone)
 {
     bool ok = false;
 
-    zoneId = getFreeZoneId();
+    zone.zoneId = getFreeZoneId();
 
     const auto vars = QVariantList()
-            << zoneId << zoneName << enabled << customUrl << sourceCode << url << formData;
+            << zone.zoneId << zone.zoneName << zone.enabled << zone.customUrl << zone.sourceCode
+            << zone.url << zone.formData;
 
     sqliteDb()->executeEx(sqlInsertZone, vars, 0, &ok);
 
@@ -994,16 +995,16 @@ bool ConfManager::deleteZone(int zoneId)
     return ok;
 }
 
-bool ConfManager::updateZone(int zoneId, const QString &zoneName, const QString &sourceCode,
-        const QString &url, const QString &formData, bool enabled, bool customUrl)
+bool ConfManager::updateZone(const Zone &zone)
 {
-    if (!updateDriverZoneFlag(zoneId, enabled))
+    if (!updateDriverZoneFlag(zone.zoneId, zone.enabled))
         return false;
 
     bool ok = false;
 
     const auto vars = QVariantList()
-            << zoneId << zoneName << enabled << customUrl << sourceCode << url << formData;
+            << zone.zoneId << zone.zoneName << zone.enabled << zone.customUrl << zone.sourceCode
+            << zone.url << zone.formData;
 
     sqliteDb()->executeEx(sqlUpdateZone, vars, 0, &ok);
 
@@ -1053,14 +1054,13 @@ bool ConfManager::updateZoneEnabled(int zoneId, bool enabled)
     return ok;
 }
 
-bool ConfManager::updateZoneResult(int zoneId, int addressCount, const QString &textChecksum,
-        const QString &binChecksum, const QDateTime &sourceModTime, const QDateTime &lastRun,
-        const QDateTime &lastSuccess)
+bool ConfManager::updateZoneResult(const Zone &zone)
 {
     bool ok = false;
 
-    const auto vars = QVariantList() << zoneId << addressCount << textChecksum << binChecksum
-                                     << sourceModTime << lastRun << lastSuccess;
+    const auto vars = QVariantList()
+            << zone.zoneId << zone.addressCount << zone.textChecksum << zone.binChecksum
+            << zone.sourceModTime << zone.lastRun << zone.lastSuccess;
 
     sqliteDb()->executeEx(sqlUpdateZoneResult, vars, 0, &ok);
 

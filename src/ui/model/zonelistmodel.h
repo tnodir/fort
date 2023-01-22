@@ -3,6 +3,7 @@
 
 #include <QDateTime>
 
+#include <conf/zone.h>
 #include <util/ioc/iocservice.h>
 #include <util/model/tablesqlmodel.h>
 
@@ -10,27 +11,8 @@ class ConfManager;
 class SqliteDb;
 class ZoneSourceWrapper;
 
-struct ZoneRow : TableRow
+struct ZoneRow : TableRow, public Zone
 {
-    bool enabled = true;
-    bool customUrl = false;
-
-    int zoneId = 0;
-
-    int addressCount = 0;
-
-    QString zoneName;
-    QString sourceCode;
-
-    QString url;
-    QString formData;
-
-    QString textChecksum;
-    QString binChecksum;
-
-    QDateTime sourceModTime;
-    QDateTime lastRun;
-    QDateTime lastSuccess;
 };
 
 class ZoneListModel : public TableSqlModel, public IocService

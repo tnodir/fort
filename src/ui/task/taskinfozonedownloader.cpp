@@ -143,17 +143,17 @@ void TaskInfoZoneDownloader::processSubResult(bool success)
 
     auto worker = zoneDownloader();
 
-    const auto zoneId = worker->zoneId();
-    const auto addressCount = worker->addressCount();
-    const auto textChecksum = worker->textChecksum();
-    const auto binChecksum = worker->binChecksum();
+    Zone zone;
+    zone.zoneId = worker->zoneId();
+    zone.addressCount = worker->addressCount();
+    zone.textChecksum = worker->textChecksum();
+    zone.binChecksum = worker->binChecksum();
 
-    const auto sourceModTime = worker->sourceModTime();
-    const auto now = QDateTime::currentDateTime();
-    const auto lastSuccess = success ? now : worker->lastSuccess();
+    zone.sourceModTime = worker->sourceModTime();
+    zone.lastRun = QDateTime::currentDateTime();
+    zone.lastSuccess = success ? zone.lastRun : worker->lastSuccess();
 
-    IoC<ConfManager>()->updateZoneResult(
-            zoneId, addressCount, textChecksum, binChecksum, sourceModTime, now, lastSuccess);
+    IoC<ConfManager>()->updateZoneResult(zone);
 
     addSubResult(worker, success);
 }

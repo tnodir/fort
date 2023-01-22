@@ -3,6 +3,7 @@
 #include <sqlite/sqlitedb.h>
 
 #include <conf/firewallconf.h>
+#include <conf/zone.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
 #include <rpc/rpcmanager.h>
@@ -50,16 +51,17 @@ bool ConfManagerRpc::updateAppName(qint64 appId, const QString &appName)
             Control::Rpc_ConfManager_updateAppName, { appId, appName });
 }
 
-bool ConfManagerRpc::addZone(const QString &zoneName, const QString &sourceCode, const QString &url,
-        const QString &formData, bool enabled, bool customUrl, int &zoneId)
+bool ConfManagerRpc::addZone(Zone &zone)
 {
     QVariantList resArgs;
 
     if (!IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_addZone,
-                { zoneName, sourceCode, url, formData, enabled, customUrl }, &resArgs))
+                { zone.enabled, zone.customUrl, zone.zoneName, zone.sourceCode, zone.url,
+                        zone.formData },
+                &resArgs))
         return false;
 
-    zoneId = resArgs.value(0).toInt();
+    zone.zoneId = resArgs.value(0).toInt();
 
     return true;
 }
@@ -69,11 +71,11 @@ bool ConfManagerRpc::deleteZone(int zoneId)
     return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_deleteZone, { zoneId });
 }
 
-bool ConfManagerRpc::updateZone(int zoneId, const QString &zoneName, const QString &sourceCode,
-        const QString &url, const QString &formData, bool enabled, bool customUrl)
+bool ConfManagerRpc::updateZone(const Zone &zone)
 {
     return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_updateZone,
-            { zoneId, zoneName, sourceCode, url, formData, enabled, customUrl });
+            { zone.enabled, zone.customUrl, zone.zoneId, zone.zoneName, zone.sourceCode, zone.url,
+                    zone.formData });
 }
 
 bool ConfManagerRpc::updateZoneName(int zoneId, const QString &zoneName)

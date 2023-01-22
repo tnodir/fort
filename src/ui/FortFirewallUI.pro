@@ -24,6 +24,7 @@ SOURCES += \
     conf/rules/policy.cpp \
     conf/rules/policyset.cpp \
     conf/rules/rule.cpp \
+    conf/zone.cpp \
     control/control.cpp \
     control/controlmanager.cpp \
     control/controlworker.cpp \
@@ -187,6 +188,7 @@ HEADERS += \
     conf/rules/policy.h \
     conf/rules/policyset.h \
     conf/rules/rule.h \
+    conf/zone.h \
     control/control.h \
     control/controlmanager.h \
     control/controlworker.h \

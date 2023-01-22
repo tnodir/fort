@@ -17,6 +17,7 @@ class LogEntryBlocked;
 class SqliteDb;
 class SqliteStmt;
 class TaskInfo;
+class Zone;
 
 class ConfManager : public QObject, public ConfAppsWalker, public IocService
 {
@@ -74,17 +75,13 @@ public:
 
     void updateAppEndTimes();
 
-    virtual bool addZone(const QString &zoneName, const QString &sourceCode, const QString &url,
-            const QString &formData, bool enabled, bool customUrl, int &zoneId);
+    virtual bool addZone(Zone &zone);
     int getFreeZoneId();
     virtual bool deleteZone(int zoneId);
-    virtual bool updateZone(int zoneId, const QString &zoneName, const QString &sourceCode,
-            const QString &url, const QString &formData, bool enabled, bool customUrl);
+    virtual bool updateZone(const Zone &zone);
     virtual bool updateZoneName(int zoneId, const QString &zoneName);
     virtual bool updateZoneEnabled(int zoneId, bool enabled);
-    bool updateZoneResult(int zoneId, int addressCount, const QString &textChecksum,
-            const QString &binChecksum, const QDateTime &sourceModTime, const QDateTime &lastRun,
-            const QDateTime &lastSuccess);
+    bool updateZoneResult(const Zone &zone);
 
     virtual bool checkPassword(const QString &password);
 

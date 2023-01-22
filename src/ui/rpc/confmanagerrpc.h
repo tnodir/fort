@@ -20,11 +20,9 @@ public:
     bool updateAppBlocked(qint64 appId, bool blocked) override;
     bool updateAppName(qint64 appId, const QString &appName) override;
 
-    bool addZone(const QString &zoneName, const QString &sourceCode, const QString &url,
-            const QString &formData, bool enabled, bool customUrl, int &zoneId) override;
+    bool addZone(Zone &zone) override;
     bool deleteZone(int zoneId) override;
-    bool updateZone(int zoneId, const QString &zoneName, const QString &sourceCode,
-            const QString &url, const QString &formData, bool enabled, bool customUrl) override;
+    bool updateZone(const Zone &zone) override;
     bool updateZoneName(int zoneId, const QString &zoneName) override;
     bool updateZoneEnabled(int zoneId, bool enabled) override;
 

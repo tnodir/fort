@@ -3,6 +3,7 @@
 #include <QLoggingCategory>
 
 #include <conf/firewallconf.h>
+#include <conf/zone.h>
 #include <control/controlmanager.h>
 #include <control/controlworker.h>
 #include <fortsettings.h>
@@ -100,11 +101,16 @@ inline bool processConfManager_updateAppName(ConfManager *confManager, const QVa
 inline bool processConfManager_addZone(
         ConfManager *confManager, const QVariantList &args, QVariantList &resArgs)
 {
-    int zoneId = 0;
-    const bool ok = confManager->addZone(args.value(0).toString(), args.value(1).toString(),
-            args.value(2).toString(), args.value(3).toString(), args.value(4).toBool(),
-            args.value(5).toBool(), zoneId);
-    resArgs = { zoneId };
+    Zone zone;
+    zone.enabled = args.value(0).toBool();
+    zone.customUrl = args.value(1).toBool();
+    zone.zoneName = args.value(2).toString();
+    zone.sourceCode = args.value(3).toString();
+    zone.url = args.value(4).toString();
+    zone.formData = args.value(5).toString();
+
+    const bool ok = confManager->addZone(zone);
+    resArgs = { zone.zoneId };
     return ok;
 }
 
@@ -115,9 +121,16 @@ inline bool processConfManager_deleteZone(ConfManager *confManager, const QVaria
 
 inline bool processConfManager_updateZone(ConfManager *confManager, const QVariantList &args)
 {
-    return confManager->updateZone(args.value(0).toLongLong(), args.value(1).toString(),
-            args.value(2).toString(), args.value(3).toString(), args.value(4).toString(),
-            args.value(5).toBool(), args.value(6).toBool());
+    Zone zone;
+    zone.enabled = args.value(0).toBool();
+    zone.customUrl = args.value(1).toBool();
+    zone.zoneId = args.value(2).toInt();
+    zone.zoneName = args.value(3).toString();
+    zone.sourceCode = args.value(4).toString();
+    zone.url = args.value(5).toString();
+    zone.formData = args.value(6).toString();
+
+    return confManager->updateZone(zone);
 }
 
 inline bool processConfManager_updateZoneName(ConfManager *confManager, const QVariantList &args)
