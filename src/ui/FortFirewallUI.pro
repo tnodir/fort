@@ -16,6 +16,7 @@ SOURCES += \
     appinfo/appinfoutil.cpp \
     appinfo/appinfoworker.cpp \
     conf/addressgroup.cpp \
+    conf/app.cpp \
     conf/appgroup.cpp \
     conf/confmanager.cpp \
     conf/firewallconf.cpp \
@@ -178,6 +179,7 @@ HEADERS += \
     appinfo/appinfoutil.h \
     appinfo/appinfoworker.h \
     conf/addressgroup.h \
+    conf/app.h \
     conf/appgroup.h \
     conf/confmanager.h \
     conf/firewallconf.h \

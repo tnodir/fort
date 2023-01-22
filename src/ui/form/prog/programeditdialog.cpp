@@ -375,67 +375,66 @@ bool ProgramEditDialog::save()
         return false;
     }
 
-    const int groupIndex = m_comboAppGroup->currentIndex();
-    const bool useGroupPerm = m_cbUseGroupPerm->isChecked();
-    const bool applyChild = m_cbApplyChild->isChecked();
-    const bool lanOnly = m_cbLanOnly->isChecked();
-    const bool blocked = m_rbBlockApp->isChecked();
+    App app;
+    app.useGroupPerm = m_cbUseGroupPerm->isChecked();
+    app.applyChild = m_cbApplyChild->isChecked();
+    app.lanOnly = m_cbLanOnly->isChecked();
+    app.blocked = m_rbBlockApp->isChecked();
+    app.groupIndex = m_comboAppGroup->currentIndex();
 
-    QDateTime endTime;
-    if (!blocked) {
+    if (!app.blocked) {
         if (m_cscBlockAppIn->checkBox()->isChecked()) {
             const int hours = m_cscBlockAppIn->spinBox()->value();
 
-            endTime = QDateTime::currentDateTime().addSecs(hours * 60 * 60);
+            app.endTime = QDateTime::currentDateTime().addSecs(hours * 60 * 60);
         } else if (m_cbBlockAppAt->isChecked()) {
-            endTime = m_dteBlockAppAt->dateTime();
+            app.endTime = m_dteBlockAppAt->dateTime();
         }
     }
 
     // Add new app or edit non-selected app
     if (appIdsCount == 0) {
-        return confManager()->addApp(
-                appPath, appName, endTime, groupIndex, useGroupPerm, applyChild, lanOnly, blocked);
+        return confManager()->addApp(app);
     }
 
     // Edit selected app
     if (isSingleSelection) {
-        return saveApp(
-                appPath, appName, endTime, groupIndex, useGroupPerm, applyChild, lanOnly, blocked);
+        return saveApp(app);
     }
 
     // Edit selected apps
-    return saveMulti(endTime, groupIndex, useGroupPerm, applyChild, lanOnly, blocked);
+    return saveMulti(app);
 }
 
-bool ProgramEditDialog::saveApp(const QString &appPath, const QString &appName,
-        const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool applyChild, bool lanOnly,
-        bool blocked)
+bool ProgramEditDialog::saveApp(App &app)
 {
-    const bool appEdited = (appPath != m_appRow.appPath || groupIndex != m_appRow.groupIndex
-            || useGroupPerm != m_appRow.useGroupPerm || applyChild != m_appRow.applyChild
-            || lanOnly != m_appRow.lanOnly || blocked != m_appRow.blocked
-            || endTime != m_appRow.endTime);
+    const bool appEdited = (app.useGroupPerm != m_appRow.useGroupPerm
+            || app.applyChild != m_appRow.applyChild || app.lanOnly != m_appRow.lanOnly
+            || app.blocked != m_appRow.blocked || app.groupIndex != m_appRow.groupIndex
+            || app.appPath != m_appRow.appPath || app.endTime != m_appRow.endTime);
 
     if (appEdited) {
-        return confManager()->updateApp(m_appRow.appId, appPath, appName, endTime, groupIndex,
-                useGroupPerm, applyChild, lanOnly, blocked);
+        app.appId = m_appRow.appId;
+
+        return confManager()->updateApp(app);
     }
 
-    if (appName == m_appRow.appName)
+    if (app.appName == m_appRow.appName)
         return true;
 
-    return confManager()->updateAppName(m_appRow.appId, appName);
+    return confManager()->updateAppName(m_appRow.appId, app.appName);
 }
 
-bool ProgramEditDialog::saveMulti(const QDateTime &endTime, int groupIndex, bool useGroupPerm,
-        bool applyChild, bool lanOnly, bool blocked)
+bool ProgramEditDialog::saveMulti(App &app)
 {
     for (qint64 appId : m_appIdList) {
         const auto appRow = appListModel()->appRowById(appId);
 
-        if (!confManager()->updateApp(appId, appRow.appPath, appRow.appName, endTime, groupIndex,
-                    useGroupPerm, applyChild, lanOnly, blocked))
+        app.appId = m_appRow.appId;
+        app.appPath = appRow.appPath;
+        app.appName = appRow.appName;
+
+        if (!confManager()->updateApp(app))
             return false;
     }
 

@@ -13,14 +13,10 @@ class ConfManagerRpc : public ConfManager
 public:
     explicit ConfManagerRpc(const QString &filePath, QObject *parent = nullptr);
 
-    bool addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
-            int groupIndex, bool useGroupPerm, bool applyChild, bool lanOnly,
-            bool blocked) override;
+    bool addApp(const App &app) override;
     bool deleteApp(qint64 appId) override;
     bool purgeApps() override;
-    bool updateApp(qint64 appId, const QString &appPath, const QString &appName,
-            const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool applyChild,
-            bool lanOnly, bool blocked) override;
+    bool updateApp(const App &app) override;
     bool updateAppBlocked(qint64 appId, bool blocked) override;
     bool updateAppName(qint64 appId, const QString &appName) override;
 

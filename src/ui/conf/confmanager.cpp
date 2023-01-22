@@ -7,6 +7,7 @@
 
 #include <appinfo/appinfocache.h>
 #include <appinfo/appinfoutil.h>
+#include <conf/app.h>
 #include <driver/drivercommon.h>
 #include <driver/drivermanager.h>
 #include <fortsettings.h>
@@ -725,11 +726,15 @@ void ConfManager::logBlockedApp(const LogEntryBlocked &logEntry)
         return; // already added by user
 
     const QString appName = IoC<AppInfoCache>()->appName(appPath);
-    constexpr int groupIndex = 0; // "Main" app. group
 
-    const bool ok = addOrUpdateApp(appPath, appName, /*endTime=*/ {}, groupIndex,
-            /*useGroupPerm=*/false, /*applyChild=*/false, /*lanOnly=*/false, logEntry.blocked(),
-            /*alerted=*/true);
+    App app;
+    app.blocked = logEntry.blocked();
+    app.alerted = true;
+    app.groupIndex = 0; // "Main" app. group
+    app.appPath = appPath;
+    app.appName = appName;
+
+    const bool ok = addOrUpdateApp(app);
     if (ok) {
         emitAppAlerted();
     }
@@ -740,15 +745,12 @@ qint64 ConfManager::appIdByPath(const QString &appPath)
     return sqliteDb()->executeEx(sqlSelectAppIdByPath, { appPath }).toLongLong();
 }
 
-bool ConfManager::addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
-        int groupIndex, bool useGroupPerm, bool applyChild, bool lanOnly, bool blocked)
+bool ConfManager::addApp(const App &app)
 {
-    if (!updateDriverUpdateApp(
-                appPath, groupIndex, useGroupPerm, applyChild, lanOnly, blocked, /*remove=*/false))
+    if (!updateDriverUpdateApp(app, /*remove=*/false))
         return false;
 
-    return addOrUpdateApp(appPath, appName, endTime, groupIndex, useGroupPerm, applyChild, lanOnly,
-            blocked, /*alerted=*/false);
+    return addOrUpdateApp(app);
 }
 
 bool ConfManager::deleteApp(qint64 appId)
@@ -803,15 +805,13 @@ bool ConfManager::purgeApps()
     return true;
 }
 
-bool ConfManager::updateApp(qint64 appId, const QString &appPath, const QString &appName,
-        const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool applyChild, bool lanOnly,
-        bool blocked)
+bool ConfManager::updateApp(const App &app)
 {
-    const AppGroup *appGroup = conf()->appGroupAt(groupIndex);
+    const AppGroup *appGroup = conf()->appGroupAt(app.groupIndex);
     if (appGroup->isNull())
         return false;
 
-    if (!updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, applyChild, lanOnly, blocked))
+    if (!updateDriverUpdateApp(app))
         return false;
 
     bool ok = false;
@@ -819,18 +819,18 @@ bool ConfManager::updateApp(qint64 appId, const QString &appPath, const QString 
     sqliteDb()->beginTransaction();
 
     const auto vars = QVariantList()
-            << appId << appGroup->id() << appName << useGroupPerm << applyChild << lanOnly
-            << blocked << (!endTime.isNull() ? endTime : QVariant());
+            << app.appId << appGroup->id() << app.appName << app.useGroupPerm << app.applyChild
+            << app.lanOnly << app.blocked << (!app.endTime.isNull() ? app.endTime : QVariant());
 
     sqliteDb()->executeEx(sqlUpdateApp, vars, 0, &ok);
     if (ok) {
-        sqliteDb()->executeEx(sqlDeleteAppAlert, { appId }, 0, &ok);
+        sqliteDb()->executeEx(sqlDeleteAppAlert, { app.appId }, 0, &ok);
     }
 
     checkResult(ok, true);
 
     if (ok) {
-        if (!endTime.isNull()) {
+        if (!app.endTime.isNull()) {
             updateAppEndTimer();
         }
 
@@ -892,15 +892,16 @@ bool ConfManager::walkApps(const std::function<walkAppsCallback> &func)
         return false;
 
     while (stmt.step() == SqliteStmt::StepRow) {
-        const int groupIndex = stmt.columnInt(0);
-        const QString appPath = stmt.columnText(1);
-        const bool useGroupPerm = stmt.columnBool(2);
-        const bool applyChild = stmt.columnBool(3);
-        const bool lanOnly = stmt.columnBool(4);
-        const bool blocked = stmt.columnBool(5);
-        const bool alerted = stmt.columnBool(6);
+        App app;
+        app.groupIndex = stmt.columnInt(0);
+        app.appPath = stmt.columnText(1);
+        app.useGroupPerm = stmt.columnBool(2);
+        app.applyChild = stmt.columnBool(3);
+        app.lanOnly = stmt.columnBool(4);
+        app.blocked = stmt.columnBool(5);
+        app.alerted = stmt.columnBool(6);
 
-        if (!func(groupIndex, useGroupPerm, applyChild, lanOnly, blocked, alerted, appPath))
+        if (!func(app))
             return false;
     }
 
@@ -916,16 +917,17 @@ void ConfManager::updateAppEndTimes()
     stmt.bindDateTime(1, QDateTime::currentDateTime());
 
     while (stmt.step() == SqliteStmt::StepRow) {
-        const qint64 appId = stmt.columnInt64(0);
-        const int groupIndex = stmt.columnInt(1);
-        const QString appPath = stmt.columnText(2);
-        const QString appName = stmt.columnText(3);
-        const bool useGroupPerm = stmt.columnBool(4);
-        const bool applyChild = stmt.columnBool(5);
-        const bool lanOnly = stmt.columnBool(6);
+        App app;
+        app.appId = stmt.columnInt64(0);
+        app.groupIndex = stmt.columnInt(1);
+        app.appPath = stmt.columnText(2);
+        app.appName = stmt.columnText(3);
+        app.useGroupPerm = stmt.columnBool(4);
+        app.applyChild = stmt.columnBool(5);
+        app.lanOnly = stmt.columnBool(6);
+        app.blocked = true;
 
-        updateApp(appId, appPath, appName, /*endTime=*/ {}, groupIndex, useGroupPerm, applyChild,
-                lanOnly, /*blocked=*/true);
+        updateApp(app);
     }
 
     updateAppEndTimer();
@@ -1125,11 +1127,9 @@ bool ConfManager::updateDriverConf(bool onlyFlags)
     return true;
 }
 
-bool ConfManager::addOrUpdateApp(const QString &appPath, const QString &appName,
-        const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool applyChild, bool lanOnly,
-        bool blocked, bool alerted)
+bool ConfManager::addOrUpdateApp(const App &app)
 {
-    const AppGroup *appGroup = conf()->appGroupAt(groupIndex);
+    const AppGroup *appGroup = conf()->appGroupAt(app.groupIndex);
     if (appGroup->isNull())
         return false;
 
@@ -1138,22 +1138,22 @@ bool ConfManager::addOrUpdateApp(const QString &appPath, const QString &appName,
     sqliteDb()->beginTransaction();
 
     const auto vars = QVariantList()
-            << appGroup->id() << appPath << appName << useGroupPerm << applyChild << lanOnly
-            << blocked << QDateTime::currentDateTime()
-            << (!endTime.isNull() ? endTime : QVariant());
+            << appGroup->id() << app.appPath << app.appName << app.useGroupPerm << app.applyChild
+            << app.lanOnly << app.blocked << QDateTime::currentDateTime()
+            << (!app.endTime.isNull() ? app.endTime : QVariant());
 
     const auto appIdVar = sqliteDb()->executeEx(sqlUpsertApp, vars, 1, &ok);
 
     if (ok) {
         // Alert
         const qint64 appId = appIdVar.toLongLong();
-        sqliteDb()->executeEx(alerted ? sqlInsertAppAlert : sqlDeleteAppAlert, { appId });
+        sqliteDb()->executeEx(app.alerted ? sqlInsertAppAlert : sqlDeleteAppAlert, { appId });
     }
 
     checkResult(ok, true);
 
     if (ok) {
-        if (!endTime.isNull()) {
+        if (!app.endTime.isNull()) {
             updateAppEndTimer();
         }
 
@@ -1173,15 +1173,18 @@ bool ConfManager::updateDriverAppBlocked(qint64 appId, bool blocked, bool &chang
     if (stmt.step() != SqliteStmt::StepRow)
         return false;
 
-    const int groupIndex = stmt.columnInt(0);
-    const QString appPath = stmt.columnText(1);
-    const bool useGroupPerm = stmt.columnBool(2);
-    const bool applyChild = stmt.columnBool(3);
-    const bool lanOnly = stmt.columnBool(4);
-    const bool wasBlocked = stmt.columnBool(5);
+    App app;
+    app.groupIndex = stmt.columnInt(0);
+    app.appPath = stmt.columnText(1);
+    app.useGroupPerm = stmt.columnBool(2);
+    app.applyChild = stmt.columnBool(3);
+    app.lanOnly = stmt.columnBool(4);
+    app.blocked = stmt.columnBool(5);
 
-    if (blocked != wasBlocked) {
-        if (!updateDriverUpdateApp(appPath, groupIndex, useGroupPerm, applyChild, lanOnly, blocked))
+    if (blocked != app.blocked) {
+        app.blocked = blocked;
+
+        if (!updateDriverUpdateApp(app))
             return false;
 
         changed = true;
@@ -1192,18 +1195,18 @@ bool ConfManager::updateDriverAppBlocked(qint64 appId, bool blocked, bool &chang
 
 bool ConfManager::updateDriverDeleteApp(const QString &appPath)
 {
-    return updateDriverUpdateApp(appPath, /*groupIndex=*/0, /*useGroupPerm=*/false,
-            /*applyChild=*/false, /*lanOnly=*/false, /*blocked=*/false, /*remove=*/true);
+    App app;
+    app.appPath = appPath;
+
+    return updateDriverUpdateApp(app, /*remove=*/true);
 }
 
-bool ConfManager::updateDriverUpdateApp(const QString &appPath, int groupIndex, bool useGroupPerm,
-        bool applyChild, bool lanOnly, bool blocked, bool remove)
+bool ConfManager::updateDriverUpdateApp(const App &app, bool remove)
 {
     ConfUtil confUtil;
     QByteArray buf;
 
-    const int entrySize = confUtil.writeAppEntry(groupIndex, useGroupPerm, applyChild, lanOnly,
-            blocked, /*alerted=*/false, /*isNew=*/false, appPath, buf);
+    const int entrySize = confUtil.writeAppEntry(app, /*isNew=*/false, buf);
 
     if (entrySize == 0) {
         showErrorMessage(confUtil.errorMessage());

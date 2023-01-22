@@ -6,6 +6,7 @@
 #include <fort_version.h>
 
 #include <conf/addressgroup.h>
+#include <conf/app.h>
 #include <conf/appgroup.h>
 #include <conf/firewallconf.h>
 #include <driver/drivercommon.h>
@@ -124,14 +125,12 @@ int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
     return flagsSize;
 }
 
-int ConfUtil::writeAppEntry(int groupIndex, bool useGroupPerm, bool applyChild, bool lanOnly,
-        bool blocked, bool alerted, bool isNew, const QString &appPath, QByteArray &buf)
+int ConfUtil::writeAppEntry(const App &app, bool isNew, QByteArray &buf)
 {
     appentry_map_t exeAppsMap;
     quint32 exeAppsSize = 0;
 
-    if (!addApp(groupIndex, useGroupPerm, applyChild, lanOnly, blocked, alerted, isNew, appPath,
-                exeAppsMap, exeAppsSize))
+    if (!addApp(app, isNew, exeAppsMap, exeAppsSize))
         return 0;
 
     buf.reserve(exeAppsSize);
@@ -327,15 +326,22 @@ bool ConfUtil::parseAppGroups(EnvManager &envManager, const QList<AppGroup *> &a
             return false;
         }
 
-        const bool applyChild = appGroup->applyChild();
-        const bool lanOnly = appGroup->lanOnly();
+        App app;
+        app.applyChild = appGroup->applyChild();
+        app.lanOnly = appGroup->lanOnly();
+        app.groupIndex = i;
+
         const auto blockText = envManager.expandString(appGroup->blockText());
         const auto allowText = envManager.expandString(appGroup->allowText());
 
-        if (!parseAppsText(i, applyChild, lanOnly, /*blocked=*/true, blockText, wildAppsMap,
-                    prefixAppsMap, exeAppsMap, wildAppsSize, prefixAppsSize, exeAppsSize)
-                || !parseAppsText(i, applyChild, lanOnly, /*blocked=*/false, allowText, wildAppsMap,
-                        prefixAppsMap, exeAppsMap, wildAppsSize, prefixAppsSize, exeAppsSize))
+        app.blocked = true;
+        if (!parseAppsText(app, blockText, wildAppsMap, prefixAppsMap, exeAppsMap, wildAppsSize,
+                    prefixAppsSize, exeAppsSize))
+            return false;
+
+        app.blocked = false;
+        if (!parseAppsText(app, allowText, wildAppsMap, prefixAppsMap, exeAppsMap, wildAppsSize,
+                    prefixAppsSize, exeAppsSize))
             return false;
 
         // Enabled Period
@@ -351,18 +357,14 @@ bool ConfUtil::parseExeApps(
     if (Q_UNLIKELY(!confAppsWalker))
         return true;
 
-    return confAppsWalker->walkApps(
-            [&](int groupIndex, bool useGroupPerm, bool applyChild, bool lanOnly, bool blocked,
-                    bool alerted, const QString &appPath) -> bool {
-                return addApp(groupIndex, useGroupPerm, applyChild, lanOnly, blocked, alerted,
-                        /*isNew=*/true, appPath, exeAppsMap, exeAppsSize);
-            });
+    return confAppsWalker->walkApps([&](const App &app) -> bool {
+        return addApp(app, /*isNew=*/true, exeAppsMap, exeAppsSize);
+    });
 }
 
-bool ConfUtil::parseAppsText(int groupIndex, bool applyChild, bool lanOnly, bool blocked,
-        const QString &text, appentry_map_t &wildAppsMap, appentry_map_t &prefixAppsMap,
-        appentry_map_t &exeAppsMap, quint32 &wildAppsSize, quint32 &prefixAppsSize,
-        quint32 &exeAppsSize)
+bool ConfUtil::parseAppsText(App &app, const QString &text, appentry_map_t &wildAppsMap,
+        appentry_map_t &prefixAppsMap, appentry_map_t &exeAppsMap, quint32 &wildAppsSize,
+        quint32 &prefixAppsSize, quint32 &exeAppsSize)
 {
     const auto lines = StringUtil::tokenizeView(text, QLatin1Char('\n'));
 
@@ -377,32 +379,33 @@ bool ConfUtil::parseAppsText(int groupIndex, bool applyChild, bool lanOnly, bool
         if (appPath.isEmpty())
             continue;
 
-        if (!addParsedApp(groupIndex, applyChild, lanOnly, blocked, isWild, isPrefix, appPath,
-                    wildAppsMap, prefixAppsMap, exeAppsMap, wildAppsSize, prefixAppsSize,
-                    exeAppsSize))
+        app.appPath = appPath;
+
+        if (!addParsedApp(app, isWild, isPrefix, wildAppsMap, prefixAppsMap, exeAppsMap,
+                    wildAppsSize, prefixAppsSize, exeAppsSize))
             return false;
     }
 
     return true;
 }
 
-bool ConfUtil::addParsedApp(int groupIndex, bool applyChild, bool lanOnly, bool blocked,
-        bool isWild, bool isPrefix, const QString &appPath, appentry_map_t &wildAppsMap,
+bool ConfUtil::addParsedApp(App &app, bool isWild, bool isPrefix, appentry_map_t &wildAppsMap,
         appentry_map_t &prefixAppsMap, appentry_map_t &exeAppsMap, quint32 &wildAppsSize,
         quint32 &prefixAppsSize, quint32 &exeAppsSize)
 {
     appentry_map_t &appsMap = isWild ? wildAppsMap : (isPrefix ? prefixAppsMap : exeAppsMap);
     quint32 &appsSize = isWild ? wildAppsSize : (isPrefix ? prefixAppsSize : exeAppsSize);
 
-    return addApp(groupIndex, /*useGroupPerm=*/true, applyChild, lanOnly, blocked,
-            /*alerted=*/false, /*isNew=*/true, appPath, appsMap, appsSize, /*canOverwrite=*/false);
+    app.useGroupPerm = true;
+    app.alerted = false;
+
+    return addApp(app, /*isNew=*/true, appsMap, appsSize, /*canOverwrite=*/false);
 }
 
-bool ConfUtil::addApp(int groupIndex, bool useGroupPerm, bool applyChild, bool lanOnly,
-        bool blocked, bool alerted, bool isNew, const QString &appPath, appentry_map_t &appsMap,
-        quint32 &appsSize, bool canOverwrite)
+bool ConfUtil::addApp(
+        const App &app, bool isNew, appentry_map_t &appsMap, quint32 &appsSize, bool canOverwrite)
 {
-    const QString kernelPath = FileUtil::pathToKernelPath(appPath);
+    const QString kernelPath = FileUtil::pathToKernelPath(app.appPath);
 
     if (appsMap.contains(kernelPath)) {
         if (!canOverwrite)
@@ -422,12 +425,12 @@ bool ConfUtil::addApp(int groupIndex, bool useGroupPerm, bool applyChild, bool l
     FORT_APP_ENTRY appEntry;
     appEntry.v = 0;
     appEntry.path_len = appPathLen;
-    appEntry.flags.group_index = quint8(groupIndex);
-    appEntry.flags.use_group_perm = useGroupPerm;
-    appEntry.flags.apply_child = applyChild;
-    appEntry.flags.lan_only = lanOnly;
-    appEntry.flags.blocked = blocked;
-    appEntry.flags.alerted = alerted;
+    appEntry.flags.group_index = quint8(app.groupIndex);
+    appEntry.flags.use_group_perm = app.useGroupPerm;
+    appEntry.flags.apply_child = app.applyChild;
+    appEntry.flags.lan_only = app.lanOnly;
+    appEntry.flags.blocked = app.blocked;
+    appEntry.flags.alerted = app.alerted;
     appEntry.flags.is_new = isNew;
     appEntry.flags.found = 1;
 

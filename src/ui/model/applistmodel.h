@@ -3,6 +3,7 @@
 
 #include <QDateTime>
 
+#include <conf/app.h>
 #include <util/model/tablesqlmodel.h>
 
 class AppGroup;
@@ -11,23 +12,8 @@ class ConfManager;
 class FirewallConf;
 class SqliteDb;
 
-struct AppRow : TableRow
+struct AppRow : TableRow, public App
 {
-    bool useGroupPerm = true;
-    bool applyChild = false;
-    bool lanOnly = false;
-    bool blocked = false;
-    bool alerted = false;
-
-    int groupIndex = 0;
-
-    qint64 appId = 0;
-
-    QString appPath;
-    QString appName;
-
-    QDateTime endTime;
-    QDateTime creatTime;
 };
 
 class AppListModel : public TableSqlModel

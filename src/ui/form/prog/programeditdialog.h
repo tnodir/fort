@@ -53,10 +53,8 @@ private:
     void setupAllowEclusiveGroup();
 
     bool save();
-    bool saveApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
-            int groupIndex, bool useGroupPerm, bool applyChild, bool lanOnly, bool blocked);
-    bool saveMulti(const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool applyChild,
-            bool lanOnly, bool blocked);
+    bool saveApp(App &app);
+    bool saveMulti(App &app);
 
 private:
     ProgramsController *m_ctrl = nullptr;

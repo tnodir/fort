@@ -53,9 +53,17 @@ inline bool processConfManager_saveVariant(ConfManager *confManager, const QVari
 
 inline bool processConfManager_addApp(ConfManager *confManager, const QVariantList &args)
 {
-    return confManager->addApp(args.value(0).toString(), args.value(1).toString(),
-            args.value(2).toDateTime(), args.value(3).toInt(), args.value(4).toBool(),
-            args.value(5).toBool(), args.value(6).toBool(), args.value(7).toBool());
+    App app;
+    app.useGroupPerm = args.value(0).toBool();
+    app.applyChild = args.value(1).toBool();
+    app.lanOnly = args.value(2).toBool();
+    app.blocked = args.value(3).toBool();
+    app.groupIndex = args.value(4).toInt();
+    app.appPath = args.value(5).toString();
+    app.appName = args.value(6).toString();
+    app.endTime = args.value(7).toDateTime();
+
+    return confManager->addApp(app);
 }
 
 inline bool processConfManager_deleteApp(ConfManager *confManager, const QVariantList &args)
@@ -65,10 +73,18 @@ inline bool processConfManager_deleteApp(ConfManager *confManager, const QVarian
 
 inline bool processConfManager_updateApp(ConfManager *confManager, const QVariantList &args)
 {
-    return confManager->updateApp(args.value(0).toLongLong(), args.value(1).toString(),
-            args.value(2).toString(), args.value(3).toDateTime(), args.value(4).toInt(),
-            args.value(5).toBool(), args.value(6).toBool(), args.value(7).toBool(),
-            args.value(8).toBool());
+    App app;
+    app.useGroupPerm = args.value(0).toBool();
+    app.applyChild = args.value(1).toBool();
+    app.lanOnly = args.value(2).toBool();
+    app.blocked = args.value(3).toBool();
+    app.groupIndex = args.value(4).toInt();
+    app.appId = args.value(5).toLongLong();
+    app.appPath = args.value(6).toString();
+    app.appName = args.value(7).toString();
+    app.endTime = args.value(8).toDateTime();
+
+    return confManager->updateApp(app);
 }
 
 inline bool processConfManager_updateAppBlocked(ConfManager *confManager, const QVariantList &args)

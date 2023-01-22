@@ -9,6 +9,7 @@
 #include <util/ioc/iocservice.h>
 #include <util/triggertimer.h>
 
+class App;
 class FirewallConf;
 class IniOptions;
 class IniUser;
@@ -62,13 +63,10 @@ public:
     void logBlockedApp(const LogEntryBlocked &logEntry);
 
     qint64 appIdByPath(const QString &appPath);
-    virtual bool addApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
-            int groupIndex, bool useGroupPerm, bool applyChild, bool lanOnly, bool blocked);
+    virtual bool addApp(const App &app);
     virtual bool deleteApp(qint64 appId);
     virtual bool purgeApps();
-    virtual bool updateApp(qint64 appId, const QString &appPath, const QString &appName,
-            const QDateTime &endTime, int groupIndex, bool useGroupPerm, bool applyChild,
-            bool lanOnly, bool blocked);
+    virtual bool updateApp(const App &app);
     virtual bool updateAppBlocked(qint64 appId, bool blocked);
     virtual bool updateAppName(qint64 appId, const QString &appName);
 
@@ -123,16 +121,13 @@ private:
     void emitAppChanged();
     void emitAppUpdated();
 
-    bool addOrUpdateApp(const QString &appPath, const QString &appName, const QDateTime &endTime,
-            int groupIndex, bool useGroupPerm, bool applyChild, bool lanOnly, bool blocked,
-            bool alerted);
+    bool addOrUpdateApp(const App &app);
     bool updateDriverAppBlocked(qint64 appId, bool blocked, bool &changed);
 
     bool validateConf(const FirewallConf &newConf);
 
     bool updateDriverDeleteApp(const QString &appPath);
-    bool updateDriverUpdateApp(const QString &appPath, int groupIndex, bool useGroupPerm,
-            bool applyChild, bool lanOnly, bool blocked, bool remove = false);
+    bool updateDriverUpdateApp(const App &app, bool remove = false);
     bool updateDriverZoneFlag(int zoneId, bool enabled);
 
     bool loadFromDb(FirewallConf &conf, bool &isNew);
