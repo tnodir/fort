@@ -7,9 +7,11 @@ ClickableMenu::ClickableMenu(QWidget *parent) : QMenu(parent)
     setAttribute(Qt::WA_WindowPropagation); // to inherit default font
 }
 
-void ClickableMenu::mousePressEvent(QMouseEvent *event)
+void ClickableMenu::mouseReleaseEvent(QMouseEvent *event)
 {
-    QMenu::mousePressEvent(event);
+    QMenu::mouseReleaseEvent(event);
 
-    emit clicked();
+    if (isVisible()) {
+        emit clicked();
+    }
 }

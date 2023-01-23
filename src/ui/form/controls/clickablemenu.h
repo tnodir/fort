@@ -14,7 +14,7 @@ signals:
     void clicked();
 
 protected:
-    void mousePressEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
 };
 
 #endif // CLICKABLEMENU_H
