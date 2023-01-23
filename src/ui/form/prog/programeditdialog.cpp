@@ -381,6 +381,8 @@ bool ProgramEditDialog::save()
     app.lanOnly = m_cbLanOnly->isChecked();
     app.blocked = m_rbBlockApp->isChecked();
     app.groupIndex = m_comboAppGroup->currentIndex();
+    app.appPath = appPath;
+    app.appName = appName;
 
     if (!app.blocked) {
         if (m_cscBlockAppIn->checkBox()->isChecked()) {
@@ -430,7 +432,7 @@ bool ProgramEditDialog::saveMulti(App &app)
     for (qint64 appId : m_appIdList) {
         const auto appRow = appListModel()->appRowById(appId);
 
-        app.appId = m_appRow.appId;
+        app.appId = appId;
         app.appPath = appRow.appPath;
         app.appName = appRow.appName;
 
