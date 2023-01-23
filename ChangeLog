@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.6.7, 2022-01-23:
+- UI: Tray: Fix Zones opening.
+- UI: Options: Cancel button is enabled on change only.
+- Driver: fortprov: Fix callouts unregistering order.
+
 v3.6.6, 2022-01-19:
 - UI: Options: Fix window's position/size saving.
 - UI: Options: OK button is always enabled.
