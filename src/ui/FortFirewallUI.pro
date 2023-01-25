@@ -68,6 +68,8 @@ SOURCES += \
     form/opt/pages/rulespage.cpp \
     form/opt/pages/schedulepage.cpp \
     form/opt/pages/statisticspage.cpp \
+    form/policy/policiescontroller.cpp \
+    form/policy/policieswindow.cpp \
     form/prog/programeditdialog.cpp \
     form/prog/programscontroller.cpp \
     form/prog/programswindow.cpp \
@@ -233,6 +235,8 @@ HEADERS += \
     form/opt/pages/rulespage.h \
     form/opt/pages/schedulepage.h \
     form/opt/pages/statisticspage.h \
+    form/policy/policiescontroller.h \
+    form/policy/policieswindow.h \
     form/prog/programeditdialog.h \
     form/prog/programscontroller.h \
     form/prog/programswindow.h \

@@ -25,18 +25,18 @@ RulesPage::RulesPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctr
 
 void RulesPage::onSaveWindowState(IniUser *ini)
 {
-    ini->setOptWindowRulesSplit(m_splitter->saveState());
-    ini->setOptWindowRulesPresetSplit(m_presetSplitter->saveState());
-    ini->setOptWindowRulesGlobalSplit(m_globalSplitter->saveState());
-    ini->setOptWindowRulesSplitVersion(RULES_SPLIT_VERSION);
+    ini->setPolicyWindowRulesSplit(m_splitter->saveState());
+    ini->setPolicyWindowRulesPresetSplit(m_presetSplitter->saveState());
+    ini->setPolicyWindowRulesGlobalSplit(m_globalSplitter->saveState());
+    ini->setPolicyWindowRulesSplitVersion(RULES_SPLIT_VERSION);
 }
 
 void RulesPage::onRestoreWindowState(IniUser *ini)
 {
-    if (ini->optWindowRulesSplitVersion() == RULES_SPLIT_VERSION) {
-        m_splitter->restoreState(ini->optWindowRulesSplit());
-        m_presetSplitter->restoreState(ini->optWindowRulesPresetSplit());
-        m_globalSplitter->restoreState(ini->optWindowRulesGlobalSplit());
+    if (ini->policyWindowRulesSplitVersion() == RULES_SPLIT_VERSION) {
+        m_splitter->restoreState(ini->policyWindowRulesSplit());
+        m_presetSplitter->restoreState(ini->policyWindowRulesPresetSplit());
+        m_globalSplitter->restoreState(ini->policyWindowRulesGlobalSplit());
     }
 }
 

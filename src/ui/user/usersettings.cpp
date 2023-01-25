@@ -83,4 +83,12 @@ void UserSettings::migrateIniOnWrite()
     if (version < 0x030602) {
         removeIniKey("base/isDarkMode");
     }
+
+    // COMPAT: v3.6.8: Rules tab ~> Policies window
+    if (version < 0x030608) {
+        removeIniKey("optWindow/rulesPresetSplit");
+        removeIniKey("optWindow/rulesGlobalSplit");
+        removeIniKey("optWindow/rulesSplit");
+        removeIniKey("optWindow/rulesSplitVersion");
+    }
 }

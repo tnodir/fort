@@ -74,29 +74,35 @@ public:
     QByteArray optWindowAppsSplit() const { return valueByteArray("optWindow/appsSplit"); }
     void setOptWindowAppsSplit(const QByteArray &v) { setValue("optWindow/appsSplit", v); }
 
-    QByteArray optWindowRulesPresetSplit() const
+    QRect policyWindowGeometry() const { return value("policyWindow/geometry").toRect(); }
+    void setPolicyWindowGeometry(const QRect &v) { setValue("policyWindow/geometry", v); }
+
+    bool policyWindowMaximized() const { return valueBool("policyWindow/maximized"); }
+    void setPolicyWindowMaximized(bool on) { setValue("policyWindow/maximized", on); }
+
+    QByteArray policyWindowRulesPresetSplit() const
     {
-        return valueByteArray("optWindow/rulesPresetSplit");
+        return valueByteArray("policyWindow/rulesPresetSplit");
     }
-    void setOptWindowRulesPresetSplit(const QByteArray &v)
+    void setPolicyWindowRulesPresetSplit(const QByteArray &v)
     {
-        setValue("optWindow/rulesPresetSplit", v);
+        setValue("policyWindow/rulesPresetSplit", v);
     }
 
-    QByteArray optWindowRulesGlobalSplit() const
+    QByteArray policyWindowRulesGlobalSplit() const
     {
-        return valueByteArray("optWindow/rulesGlobalSplit");
+        return valueByteArray("policyWindow/rulesGlobalSplit");
     }
-    void setOptWindowRulesGlobalSplit(const QByteArray &v)
+    void setPolicyWindowRulesGlobalSplit(const QByteArray &v)
     {
-        setValue("optWindow/rulesGlobalSplit", v);
+        setValue("policyWindow/rulesGlobalSplit", v);
     }
 
-    QByteArray optWindowRulesSplit() const { return valueByteArray("optWindow/rulesSplit"); }
-    void setOptWindowRulesSplit(const QByteArray &v) { setValue("optWindow/rulesSplit", v); }
+    QByteArray policyWindowRulesSplit() const { return valueByteArray("policyWindow/rulesSplit"); }
+    void setPolicyWindowRulesSplit(const QByteArray &v) { setValue("policyWindow/rulesSplit", v); }
 
-    int optWindowRulesSplitVersion() const { return valueInt("optWindow/rulesSplitVersion"); }
-    void setOptWindowRulesSplitVersion(int v) { setValue("optWindow/rulesSplitVersion", v); }
+    int policyWindowRulesSplitVersion() const { return valueInt("policyWindow/rulesSplitVersion"); }
+    void setPolicyWindowRulesSplitVersion(int v) { setValue("policyWindow/rulesSplitVersion", v); }
 
     QRect serviceWindowGeometry() const { return value("serviceWindow/geometry").toRect(); }
     void setServiceWindowGeometry(const QRect &v) { setValue("serviceWindow/geometry", v); }
