@@ -25,7 +25,7 @@
 
 namespace {
 
-constexpr int APPS_HEADER_VERSION = 6;
+constexpr int APPS_HEADER_VERSION = 7;
 
 }
 
@@ -287,9 +287,9 @@ void ProgramsWindow::setupTableAppsHeader()
     header->setSectionResizeMode(4, QHeaderView::Stretch);
 
     header->resizeSection(0, 320);
-    header->resizeSection(1, 300);
+    header->resizeSection(1, 100);
     header->resizeSection(2, 130);
-    header->resizeSection(3, 100);
+    header->resizeSection(3, 300);
 
     header->setSectionsClickable(true);
     header->setSortIndicatorShown(true);

@@ -84,11 +84,11 @@ QVariant AppListModel::headerDataDisplay(int section) const
     case 0:
         return tr("Name");
     case 1:
-        return tr("File Path");
+        return tr("State");
     case 2:
         return tr("Group");
     case 3:
-        return tr("State");
+        return tr("File Path");
     case 4:
         return tr("Creation Time");
     default:
@@ -137,11 +137,11 @@ QVariant AppListModel::dataDisplay(const QModelIndex &index) const
     case 0:
         return appRow.appName;
     case 1:
-        return appRow.appPath;
+        return dataDisplayState(appRow);
     case 2:
         return conf()->appGroupAt(appRow.groupIndex)->name();
     case 3:
-        return dataDisplayState(appRow);
+        return appRow.appPath;
     case 4:
         return appRow.creatTime;
     }
@@ -163,7 +163,7 @@ QVariant AppListModel::dataDecoration(const QModelIndex &index) const
 {
     const int column = index.column();
 
-    if (column == 0 || column == 3) {
+    if (column == 0 || column == 1) {
         const int row = index.row();
 
         const auto appRow = appRowAt(row);
@@ -173,7 +173,7 @@ QVariant AppListModel::dataDecoration(const QModelIndex &index) const
         switch (column) {
         case 0:
             return appInfoCache()->appIcon(appRow.appPath);
-        case 3:
+        case 1:
             return appStateIcon(appRow);
         }
     }
@@ -185,15 +185,15 @@ QVariant AppListModel::dataForeground(const QModelIndex &index) const
 {
     const int column = index.column();
 
-    if (column == 2 || column == 3) {
+    if (column == 1 || column == 2) {
         const int row = index.row();
         const auto appRow = appRowAt(row);
 
         switch (column) {
+        case 1:
+            return appStateColor(appRow);
         case 2:
             return appGroupColor(appRow);
-        case 3:
-            return appStateColor(appRow);
         }
     }
 
@@ -215,6 +215,7 @@ QString AppListModel::appStateText(const AppRow &appRow)
 {
     if (appRow.blocked)
         return tr("Block");
+
     return tr("Allow");
 }
 
@@ -222,6 +223,7 @@ QVariant AppListModel::appGroupColor(const AppRow &appRow)
 {
     if (!appRow.useGroupPerm)
         return inactiveColor;
+
     return {};
 }
 
@@ -229,6 +231,7 @@ QColor AppListModel::appStateColor(const AppRow &appRow)
 {
     if (appRow.blocked)
         return blockColor;
+
     return allowColor;
 }
 
@@ -320,14 +323,14 @@ QString AppListModel::sqlOrderColumn() const
     case 0: // Name
         columnsStr = "4 " + sqlOrderAsc() + ", 3";
         break;
-    case 1: // File Path
-        columnsStr = "3";
+    case 1: // State
+        columnsStr = "9 DESC, 8 " + sqlOrderAsc() + ", 1";
         break;
     case 2: // Group
         columnsStr = "2";
         break;
-    case 3: // State
-        columnsStr = "8 DESC, 7 " + sqlOrderAsc() + ", 1";
+    case 3: // File Path
+        columnsStr = "3";
         break;
     default: // Creation Time
         columnsStr = "1"; // App ID
