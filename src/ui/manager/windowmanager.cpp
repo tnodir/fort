@@ -13,6 +13,7 @@
 #include <form/dialog/passworddialog.h>
 #include <form/graph/graphwindow.h>
 #include <form/opt/optionswindow.h>
+#include <form/policy/policieswindow.h>>
 #include <form/prog/programswindow.h>
 #include <form/stat/statisticswindow.h>
 #include <form/svc/serviceswindow.h>
@@ -154,6 +155,15 @@ void WindowManager::setupOptionsWindow()
     connect(m_optWindow, &OptionsWindow::aboutToClose, this, &WindowManager::closeOptionsWindow);
 }
 
+void WindowManager::setupPoliciesWindow()
+{
+    m_policiesWindow = new PoliciesWindow();
+    m_policiesWindow->restoreWindowState();
+
+    connect(m_policiesWindow, &PoliciesWindow::aboutToClose, this,
+            &WindowManager::closePoliciesWindow);
+}
+
 void WindowManager::setupServicesWindow()
 {
     m_serviceWindow = new ServicesWindow();
@@ -196,8 +206,9 @@ void WindowManager::setupStatisticsWindow()
 void WindowManager::closeAll()
 {
     closeGraphWindow(true);
-    closeOptionsWindow();
     closeProgramsWindow();
+    closeOptionsWindow();
+    closePoliciesWindow();
     closeServicesWindow();
     closeZonesWindow();
     closeStatisticsWindow();
@@ -304,6 +315,30 @@ void WindowManager::reloadOptionsWindow(const QString &reason)
     showOptionsWindow();
 
     showTrayMessage(reason);
+}
+
+void WindowManager::showPoliciesWindow()
+{
+    if (!widgetVisibleByCheckPassword(m_policiesWindow))
+        return;
+
+    if (!m_policiesWindow) {
+        setupPoliciesWindow();
+    }
+
+    showWidget(m_policiesWindow);
+}
+
+void WindowManager::closePoliciesWindow()
+{
+    if (!m_policiesWindow)
+        return;
+
+    m_policiesWindow->saveWindowState();
+    m_policiesWindow->hide();
+
+    m_policiesWindow->deleteLater();
+    m_policiesWindow = nullptr;
 }
 
 void WindowManager::showStatisticsWindow()

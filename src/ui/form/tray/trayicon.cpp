@@ -274,6 +274,7 @@ void TrayIcon::retranslateUi()
     m_programsAction->setText(tr("Programs"));
     m_optionsMenu->setTitle(tr("Options"));
     m_optionsAction->setText(tr("Options"));
+    m_policiesAction->setText(tr("Policies"));
     m_zonesAction->setText(tr("Zones"));
     m_statisticsAction->setText(tr("Statistics"));
     m_graphAction->setText(tr("Traffic Graph"));
@@ -381,6 +382,12 @@ void TrayIcon::setupTrayMenuOptions()
     addHotKey(m_optionsAction, iniUser()->hotKeyOptions());
 
     connect(m_optionsMenu, &ClickableMenu::clicked, m_optionsAction, &QAction::trigger);
+
+    m_policiesAction = addAction(m_optionsMenu, IconCache::icon(":/icons/node-tree.png"), QString(),
+            windowManager(), SLOT(showPoliciesWindow()));
+    addHotKey(m_policiesAction, iniUser()->hotKeyPolicies());
+
+    m_policiesAction->setVisible(false); // TODO: Implement Network Rules
 
     m_zonesAction = addAction(m_optionsMenu, IconCache::icon(":/icons/ip_class.png"), QString(),
             windowManager(), SLOT(showZonesWindow()));

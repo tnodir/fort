@@ -18,7 +18,6 @@
 #include "addressespage.h"
 #include "applicationspage.h"
 #include "optionspage.h"
-#include "rulespage.h"
 #include "schedulepage.h"
 #include "statisticspage.h"
 
@@ -31,10 +30,9 @@ void OptMainPage::onRetranslateUi()
 {
     m_tabBar->setTabText(0, tr("Options"));
     m_tabBar->setTabText(1, tr("IP Addresses"));
-    m_tabBar->setTabText(2, tr("Network Rules"));
-    m_tabBar->setTabText(3, tr("Application Groups"));
-    m_tabBar->setTabText(4, tr("Statistics"));
-    m_tabBar->setTabText(5, tr("Schedule"));
+    m_tabBar->setTabText(2, tr("Application Groups"));
+    m_tabBar->setTabText(3, tr("Statistics"));
+    m_tabBar->setTabText(4, tr("Schedule"));
 
     m_btLogs->setText(tr("Logs"));
     m_btProfile->setText(tr("Profile"));
@@ -66,25 +64,20 @@ void OptMainPage::setupTabBar()
 {
     auto optionsPage = new OptionsPage(ctrl());
     auto addressesPage = new AddressesPage(ctrl());
-    auto rulesPage = new RulesPage(ctrl());
     auto applicationsPage = new ApplicationsPage(ctrl());
     auto statisticsPage = new StatisticsPage(ctrl());
     auto schedulePage = new SchedulePage(ctrl());
 
-    m_pages = { optionsPage, addressesPage, rulesPage, applicationsPage, statisticsPage,
-        schedulePage };
+    m_pages = { optionsPage, addressesPage, applicationsPage, statisticsPage, schedulePage };
 
     m_tabBar = new QTabWidget();
     m_tabBar->addTab(ControlUtil::wrapToScrollArea(optionsPage), IconCache::icon(":/icons/cog.png"),
             QString());
     m_tabBar->addTab(addressesPage, IconCache::icon(":/icons/ip.png"), QString());
-    m_tabBar->addTab(rulesPage, IconCache::icon(":/icons/node-tree.png"), QString());
     m_tabBar->addTab(
             applicationsPage, IconCache::icon(":/icons/application_double.png"), QString());
     m_tabBar->addTab(statisticsPage, IconCache::icon(":/icons/chart_bar.png"), QString());
     m_tabBar->addTab(schedulePage, IconCache::icon(":/icons/clock.png"), QString());
-
-    m_tabBar->setTabEnabled(2, false); // TODO: Implement Network Rules
 
     connect(m_tabBar, &QTabWidget::currentChanged, this,
             [&](int tabIndex) { m_pages[tabIndex]->onPageActivated(); });

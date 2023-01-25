@@ -8,6 +8,7 @@
 class GraphWindow;
 class MainWindow;
 class OptionsWindow;
+class PoliciesWindow;
 class ProgramsWindow;
 class ServicesWindow;
 class StatisticsWindow;
@@ -26,6 +27,7 @@ public:
 
     MainWindow *mainWindow() const { return m_mainWindow; }
     ProgramsWindow *progWindow() const { return m_progWindow; }
+    PoliciesWindow *policiesWindow() const { return m_policiesWindow; }
     OptionsWindow *optWindow() const { return m_optWindow; }
     StatisticsWindow *connWindow() const { return m_statWindow; }
     ServicesWindow *serviceWindow() const { return m_serviceWindow; }
@@ -61,6 +63,9 @@ public slots:
     void closeOptionsWindow();
     void reloadOptionsWindow(const QString &reason);
 
+    void showPoliciesWindow();
+    void closePoliciesWindow();
+
     void showStatisticsWindow();
     void closeStatisticsWindow();
 
@@ -94,6 +99,7 @@ private:
 
     void setupProgramsWindow();
     void setupOptionsWindow();
+    void setupPoliciesWindow();
     void setupServicesWindow();
     void setupZonesWindow();
     void setupGraphWindow();
@@ -112,6 +118,7 @@ private:
     MainWindow *m_mainWindow = nullptr;
     ProgramsWindow *m_progWindow = nullptr;
     OptionsWindow *m_optWindow = nullptr;
+    PoliciesWindow *m_policiesWindow = nullptr;
     StatisticsWindow *m_statWindow = nullptr;
     ServicesWindow *m_serviceWindow = nullptr;
     ZonesWindow *m_zoneWindow = nullptr;

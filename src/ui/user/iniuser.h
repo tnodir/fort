@@ -19,6 +19,7 @@ public:
 
     QString hotKeyPrograms() const { return valueText("hotKey/programs"); }
     QString hotKeyOptions() const { return valueText("hotKey/options"); }
+    QString hotKeyPolicies() const { return valueText("hotKey/policies"); }
     QString hotKeyStatistics() const { return valueText("hotKey/statistics"); }
     QString hotKeyGraph() const { return valueText("hotKey/graph"); }
     QString hotKeyZones() const { return valueText("hotKey/zones"); }
@@ -80,29 +81,29 @@ public:
     bool policyWindowMaximized() const { return valueBool("policyWindow/maximized"); }
     void setPolicyWindowMaximized(bool on) { setValue("policyWindow/maximized", on); }
 
-    QByteArray policyWindowRulesPresetSplit() const
+    QByteArray policyWindowPresetSplit() const
     {
-        return valueByteArray("policyWindow/rulesPresetSplit");
+        return valueByteArray("policyWindow/presetSplit");
     }
-    void setPolicyWindowRulesPresetSplit(const QByteArray &v)
+    void setPolicyWindowPresetSplit(const QByteArray &v)
     {
-        setValue("policyWindow/rulesPresetSplit", v);
-    }
-
-    QByteArray policyWindowRulesGlobalSplit() const
-    {
-        return valueByteArray("policyWindow/rulesGlobalSplit");
-    }
-    void setPolicyWindowRulesGlobalSplit(const QByteArray &v)
-    {
-        setValue("policyWindow/rulesGlobalSplit", v);
+        setValue("policyWindow/presetSplit", v);
     }
 
-    QByteArray policyWindowRulesSplit() const { return valueByteArray("policyWindow/rulesSplit"); }
-    void setPolicyWindowRulesSplit(const QByteArray &v) { setValue("policyWindow/rulesSplit", v); }
+    QByteArray policyWindowGlobalSplit() const
+    {
+        return valueByteArray("policyWindow/globalSplit");
+    }
+    void setPolicyWindowGlobalSplit(const QByteArray &v)
+    {
+        setValue("policyWindow/globalSplit", v);
+    }
 
-    int policyWindowRulesSplitVersion() const { return valueInt("policyWindow/rulesSplitVersion"); }
-    void setPolicyWindowRulesSplitVersion(int v) { setValue("policyWindow/rulesSplitVersion", v); }
+    QByteArray policyWindowSplit() const { return valueByteArray("policyWindow/split"); }
+    void setPolicyWindowSplit(const QByteArray &v) { setValue("policyWindow/split", v); }
+
+    int policyWindowSplitVersion() const { return valueInt("policyWindow/splitVersion"); }
+    void setPolicyWindowSplitVersion(int v) { setValue("policyWindow/splitVersion", v); }
 
     QRect serviceWindowGeometry() const { return value("serviceWindow/geometry").toRect(); }
     void setServiceWindowGeometry(const QRect &v) { setValue("serviceWindow/geometry", v); }
