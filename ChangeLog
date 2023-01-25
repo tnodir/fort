@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.6.8, 2022-01-25:
+- UI: Programs: Optimize app info loading.
+- UI: Programs: Swap "State" & "File Path" columns.
+
 v3.6.7, 2022-01-23:
 - UI: Tray: Fix Zones opening.
 - UI: Options: Cancel button is enabled on change only.
