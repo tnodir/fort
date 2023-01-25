@@ -19,14 +19,18 @@ public:
 
     quint16 ruleFlags = 0;
     quint16 ipProto = 0;
-    quint16 localPort = 0;
-    quint16 remotePort = 0;
 
     int ruleId = 0;
 
     QString name;
+    QString description;
+
+    QString localPortText;
+    QString remotePortText;
     QString localIpText;
     QString remoteIpText;
+
+    QString extra;
 };
 
 #endif // RULE_H

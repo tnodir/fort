@@ -21,6 +21,7 @@ public:
     int policyId = 0;
 
     QString name;
+    QString description;
 };
 
 #endif // POLICY_H
