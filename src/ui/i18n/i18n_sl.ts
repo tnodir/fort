@@ -485,10 +485,6 @@
         <translation>Naslovi IP</translation>
     </message>
     <message>
-        <source>Network Rules</source>
-        <translation>Omrežna pravila</translation>
-    </message>
-    <message>
         <source>Application Groups</source>
         <translation>Skupine programov</translation>
     </message>
@@ -797,6 +793,29 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     </message>
 </context>
 <context>
+    <name>PoliciesWindow</name>
+    <message>
+        <source>Library of preset rules:</source>
+        <translation>Knjižnica prednastavljenih pravil:</translation>
+    </message>
+    <message>
+        <source>Preset rules for applications:</source>
+        <translation>Prednastavljena pravila za aplikacije:</translation>
+    </message>
+    <message>
+        <source>Global rules, applied before application rules:</source>
+        <translation>Globalna pravila, uporabljena pred pravili uporabe:</translation>
+    </message>
+    <message>
+        <source>Global rules, applied after application rules:</source>
+        <translation>Globalna pravila, uporabljena po pravilih uporabe:</translation>
+    </message>
+    <message>
+        <source>Policies</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>PolicyListBox</name>
     <message>
         <source>Add Policy</source>
@@ -985,25 +1004,6 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     <message>
         <source>Service error.</source>
         <translation>Napaka storitve.</translation>
-    </message>
-</context>
-<context>
-    <name>RulesPage</name>
-    <message>
-        <source>Library of preset rules:</source>
-        <translation>Knjižnica prednastavljenih pravil:</translation>
-    </message>
-    <message>
-        <source>Preset rules for applications:</source>
-        <translation>Prednastavljena pravila za aplikacije:</translation>
-    </message>
-    <message>
-        <source>Global rules, applied before application rules:</source>
-        <translation>Globalna pravila, uporabljena pred pravili uporabe:</translation>
-    </message>
-    <message>
-        <source>Global rules, applied after application rules:</source>
-        <translation>Globalna pravila, uporabljena po pravilih uporabe:</translation>
     </message>
 </context>
 <context>
@@ -1475,6 +1475,10 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     <message>
         <source>Are you sure to select the &quot;%1&quot;?</source>
         <translation>Ali ste prepričani, da želite izbrati &quot;%1&quot;?</translation>
+    </message>
+    <message>
+        <source>Policies</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

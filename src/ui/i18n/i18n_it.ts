@@ -501,10 +501,6 @@
         <translation>Profilo</translation>
     </message>
     <message>
-        <source>Network Rules</source>
-        <translation>Regole di rete</translation>
-    </message>
-    <message>
         <source>Application Groups</source>
         <translation>Gruppi di applicazioni</translation>
     </message>
@@ -797,6 +793,29 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     </message>
 </context>
 <context>
+    <name>PoliciesWindow</name>
+    <message>
+        <source>Library of preset rules:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preset rules for applications:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Global rules, applied before application rules:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Global rules, applied after application rules:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Policies</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>PolicyListBox</name>
     <message>
         <source>Add Policy</source>
@@ -985,25 +1004,6 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     <message>
         <source>Service isn&apos;t available.</source>
         <translation>Il servizio non è disponibile.</translation>
-    </message>
-</context>
-<context>
-    <name>RulesPage</name>
-    <message>
-        <source>Library of preset rules:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Preset rules for applications:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Global rules, applied before application rules:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Global rules, applied after application rules:</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1474,6 +1474,10 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     </message>
     <message>
         <source>Are you sure to select the &quot;%1&quot;?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Policies</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -485,10 +485,6 @@
         <translation>Adresses IP</translation>
     </message>
     <message>
-        <source>Network Rules</source>
-        <translation>Règles réseau</translation>
-    </message>
-    <message>
         <source>Application Groups</source>
         <translation>Groupes d&apos;applications</translation>
     </message>
@@ -797,6 +793,29 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     </message>
 </context>
 <context>
+    <name>PoliciesWindow</name>
+    <message>
+        <source>Library of preset rules:</source>
+        <translation>Bibliothèque des règles prédéfinies :</translation>
+    </message>
+    <message>
+        <source>Preset rules for applications:</source>
+        <translation>Règles prédéfinies pour les applications :</translation>
+    </message>
+    <message>
+        <source>Global rules, applied before application rules:</source>
+        <translation>Règles globales, appliquées avant les règles d&apos;application :</translation>
+    </message>
+    <message>
+        <source>Global rules, applied after application rules:</source>
+        <translation>Règles globales, appliquées après les règles d&apos;application :</translation>
+    </message>
+    <message>
+        <source>Policies</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>PolicyListBox</name>
     <message>
         <source>Add Policy</source>
@@ -985,25 +1004,6 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     <message>
         <source>Service error.</source>
         <translation>Erreur de service.</translation>
-    </message>
-</context>
-<context>
-    <name>RulesPage</name>
-    <message>
-        <source>Library of preset rules:</source>
-        <translation>Bibliothèque des règles prédéfinies :</translation>
-    </message>
-    <message>
-        <source>Preset rules for applications:</source>
-        <translation>Règles prédéfinies pour les applications :</translation>
-    </message>
-    <message>
-        <source>Global rules, applied before application rules:</source>
-        <translation>Règles globales, appliquées avant les règles d&apos;application :</translation>
-    </message>
-    <message>
-        <source>Global rules, applied after application rules:</source>
-        <translation>Règles globales, appliquées après les règles d&apos;application :</translation>
     </message>
 </context>
 <context>
@@ -1475,6 +1475,10 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     <message>
         <source>Are you sure to select the &quot;%1&quot;?</source>
         <translation>Êtes-vous sûr de sélectionner le &quot;%1&quot;?</translation>
+    </message>
+    <message>
+        <source>Policies</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

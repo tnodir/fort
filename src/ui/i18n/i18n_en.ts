@@ -485,10 +485,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Network Rules</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Application Groups</source>
         <translation></translation>
     </message>
@@ -796,6 +792,29 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
 </context>
 <context>
+    <name>PoliciesWindow</name>
+    <message>
+        <source>Library of preset rules:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Preset rules for applications:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Global rules, applied before application rules:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Global rules, applied after application rules:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Policies</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>PolicyListBox</name>
     <message>
         <source>Add Policy</source>
@@ -983,25 +1002,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Service error.</source>
-        <translation></translation>
-    </message>
-</context>
-<context>
-    <name>RulesPage</name>
-    <message>
-        <source>Library of preset rules:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Preset rules for applications:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Global rules, applied before application rules:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Global rules, applied after application rules:</source>
         <translation></translation>
     </message>
 </context>
@@ -1473,6 +1473,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Are you sure to select the &quot;%1&quot;?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Policies</source>
         <translation></translation>
     </message>
 </context>

@@ -485,10 +485,6 @@
         <translation>IP地址</translation>
     </message>
     <message>
-        <source>Network Rules</source>
-        <translation>网络规则</translation>
-    </message>
-    <message>
         <source>Application Groups</source>
         <translation>应用程序组</translation>
     </message>
@@ -797,6 +793,29 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
 </context>
 <context>
+    <name>PoliciesWindow</name>
+    <message>
+        <source>Library of preset rules:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preset rules for applications:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Global rules, applied before application rules:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Global rules, applied after application rules:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Policies</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>PolicyListBox</name>
     <message>
         <source>Add Policy</source>
@@ -985,25 +1004,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Service error.</source>
         <translation>服务错误。</translation>
-    </message>
-</context>
-<context>
-    <name>RulesPage</name>
-    <message>
-        <source>Library of preset rules:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Preset rules for applications:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Global rules, applied before application rules:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Global rules, applied after application rules:</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1474,6 +1474,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Are you sure to select the &quot;%1&quot;?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Policies</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

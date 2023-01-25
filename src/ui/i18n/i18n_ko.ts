@@ -485,10 +485,6 @@
         <translation>IP 주소</translation>
     </message>
     <message>
-        <source>Network Rules</source>
-        <translation>네트워크 규칙</translation>
-    </message>
-    <message>
         <source>Application Groups</source>
         <translation>응용 프로그램 그룹</translation>
     </message>
@@ -797,6 +793,29 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
 </context>
 <context>
+    <name>PoliciesWindow</name>
+    <message>
+        <source>Library of preset rules:</source>
+        <translation>사전 설정 규칙 라이브러리</translation>
+    </message>
+    <message>
+        <source>Preset rules for applications:</source>
+        <translation>응용 프로그램의 사전 설정 규칙</translation>
+    </message>
+    <message>
+        <source>Global rules, applied before application rules:</source>
+        <translation>전역 규칙, 적용 규칙 이전에 적용됨:</translation>
+    </message>
+    <message>
+        <source>Global rules, applied after application rules:</source>
+        <translation>전역 규칙, 적용 규칙 이후에 적용됨:</translation>
+    </message>
+    <message>
+        <source>Policies</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>PolicyListBox</name>
     <message>
         <source>Add Policy</source>
@@ -985,25 +1004,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Service error.</source>
         <translation>서비스 오류.</translation>
-    </message>
-</context>
-<context>
-    <name>RulesPage</name>
-    <message>
-        <source>Library of preset rules:</source>
-        <translation>사전 설정 규칙 라이브러리</translation>
-    </message>
-    <message>
-        <source>Preset rules for applications:</source>
-        <translation>응용 프로그램의 사전 설정 규칙</translation>
-    </message>
-    <message>
-        <source>Global rules, applied before application rules:</source>
-        <translation>전역 규칙, 적용 규칙 이전에 적용됨:</translation>
-    </message>
-    <message>
-        <source>Global rules, applied after application rules:</source>
-        <translation>전역 규칙, 적용 규칙 이후에 적용됨:</translation>
     </message>
 </context>
 <context>
@@ -1475,6 +1475,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Are you sure to select the &quot;%1&quot;?</source>
         <translation>&quot;%1&quot;을(를) 선택하시겠습니까?</translation>
+    </message>
+    <message>
+        <source>Policies</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

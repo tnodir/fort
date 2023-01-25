@@ -485,10 +485,6 @@
         <translation>IP Адреса</translation>
     </message>
     <message>
-        <source>Network Rules</source>
-        <translation>Сетевые Правила</translation>
-    </message>
-    <message>
         <source>Application Groups</source>
         <translation>Группы приложений</translation>
     </message>
@@ -797,6 +793,29 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
 </context>
 <context>
+    <name>PoliciesWindow</name>
+    <message>
+        <source>Library of preset rules:</source>
+        <translation>Библиотека заданных правил:</translation>
+    </message>
+    <message>
+        <source>Preset rules for applications:</source>
+        <translation>Заданные правила для программ:</translation>
+    </message>
+    <message>
+        <source>Global rules, applied before application rules:</source>
+        <translation>Глобальные правила, применяемые до правил программ</translation>
+    </message>
+    <message>
+        <source>Global rules, applied after application rules:</source>
+        <translation>Глобальные правила, применяемые после правил программ</translation>
+    </message>
+    <message>
+        <source>Policies</source>
+        <translation>Политики</translation>
+    </message>
+</context>
+<context>
     <name>PolicyListBox</name>
     <message>
         <source>Add Policy</source>
@@ -985,25 +1004,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Service error.</source>
         <translation>Ошибка сервиса.</translation>
-    </message>
-</context>
-<context>
-    <name>RulesPage</name>
-    <message>
-        <source>Library of preset rules:</source>
-        <translation>Библиотека заданных правил:</translation>
-    </message>
-    <message>
-        <source>Preset rules for applications:</source>
-        <translation>Заданные правила для программ:</translation>
-    </message>
-    <message>
-        <source>Global rules, applied before application rules:</source>
-        <translation>Глобальные правила, применяемые до правил программ</translation>
-    </message>
-    <message>
-        <source>Global rules, applied after application rules:</source>
-        <translation>Глобальные правила, применяемые после правил программ</translation>
     </message>
 </context>
 <context>
@@ -1475,6 +1475,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Are you sure to select the &quot;%1&quot;?</source>
         <translation>Установить &quot;%1&quot;?</translation>
+    </message>
+    <message>
+        <source>Policies</source>
+        <translation>Политики</translation>
     </message>
 </context>
 <context>
