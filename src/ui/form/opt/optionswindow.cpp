@@ -33,11 +33,6 @@ FirewallConf *OptionsWindow::conf() const
     return confManager()->conf();
 }
 
-IniOptions *OptionsWindow::ini() const
-{
-    return &conf()->ini();
-}
-
 IniUser *OptionsWindow::iniUser() const
 {
     return ctrl()->iniUser();
@@ -45,31 +40,27 @@ IniUser *OptionsWindow::iniUser() const
 
 void OptionsWindow::cancelChanges()
 {
-    if (ctrl()->conf() && ctrl()->anyEdited()) {
+    if (ctrl()->confToEdit() && ctrl()->anyEdited()) {
         ctrl()->resetEdited();
     }
 }
 
 void OptionsWindow::saveWindowState()
 {
-    IniUser *iniUser = confManager()->iniUser();
+    iniUser()->setOptWindowGeometry(m_stateWatcher->geometry());
+    iniUser()->setOptWindowMaximized(m_stateWatcher->maximized());
 
-    iniUser->setOptWindowGeometry(m_stateWatcher->geometry());
-    iniUser->setOptWindowMaximized(m_stateWatcher->maximized());
-
-    emit ctrl()->afterSaveWindowState(iniUser);
+    emit ctrl()->afterSaveWindowState(iniUser());
 
     confManager()->saveIniUser();
 }
 
 void OptionsWindow::restoreWindowState()
 {
-    IniUser *iniUser = confManager()->iniUser();
+    m_stateWatcher->restore(this, QSize(1024, 768), iniUser()->optWindowGeometry(),
+            iniUser()->optWindowMaximized());
 
-    m_stateWatcher->restore(
-            this, QSize(1024, 768), iniUser->optWindowGeometry(), iniUser->optWindowMaximized());
-
-    emit ctrl()->afterRestoreWindowState(iniUser);
+    emit ctrl()->afterRestoreWindowState(iniUser());
 }
 
 void OptionsWindow::setupController()

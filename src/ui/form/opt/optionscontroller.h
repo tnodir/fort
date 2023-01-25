@@ -1,21 +1,11 @@
 #ifndef OPTIONSCONTROLLER_H
 #define OPTIONSCONTROLLER_H
 
-#include <QObject>
+#include <form/basecontroller.h>
 
-class ConfManager;
-class DriverManager;
-class FirewallConf;
-class FortManager;
-class FortSettings;
-class IniOptions;
-class IniUser;
-class TaskManager;
-class TranslationManager;
-class WindowManager;
 class ZoneListModel;
 
-class OptionsController : public QObject
+class OptionsController : public BaseController
 {
     Q_OBJECT
 
@@ -23,16 +13,8 @@ public:
     explicit OptionsController(QObject *parent = nullptr);
     ~OptionsController() override;
 
-    FortManager *fortManager() const;
-    FortSettings *settings() const;
-    ConfManager *confManager() const;
-    FirewallConf *conf() const;
-    IniOptions *ini() const;
-    IniUser *iniUser() const;
-    TaskManager *taskManager() const;
-    DriverManager *driverManager() const;
-    TranslationManager *translationManager() const;
-    WindowManager *windowManager() const;
+    FirewallConf *confToEdit() const;
+    IniUser *iniUserToEdit() const;
     ZoneListModel *zoneListModel() const;
 
     bool anyEdited() const;
@@ -49,8 +31,6 @@ signals:
 
     void afterSaveWindowState(IniUser *ini);
     void afterRestoreWindowState(IniUser *ini);
-
-    void retranslateUi();
 
 public slots:
     void setOptEdited();

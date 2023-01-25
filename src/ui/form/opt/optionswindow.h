@@ -6,7 +6,6 @@
 class ConfManager;
 class FirewallConf;
 class FortManager;
-class IniOptions;
 class IniUser;
 class OptMainPage;
 class OptionsController;
@@ -22,7 +21,6 @@ public:
     OptionsController *ctrl() const { return m_ctrl; }
     ConfManager *confManager() const;
     FirewallConf *conf() const;
-    IniOptions *ini() const;
     IniUser *iniUser() const;
 
     void cancelChanges();

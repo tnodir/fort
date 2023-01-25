@@ -31,6 +31,7 @@ SOURCES += \
     driver/drivercommon.cpp \
     driver/drivermanager.cpp \
     driver/driverworker.cpp \
+    form/basecontroller.cpp \
     form/controls/appinforow.cpp \
     form/controls/checkspincombo.cpp \
     form/controls/checktimeperiod.cpp \
@@ -195,6 +196,7 @@ HEADERS += \
     driver/drivercommon.h \
     driver/drivermanager.h \
     driver/driverworker.h \
+    form/basecontroller.h \
     form/controls/appinforow.h \
     form/controls/checkspincombo.h \
     form/controls/checktimeperiod.h \

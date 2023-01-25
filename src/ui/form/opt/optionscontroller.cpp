@@ -2,23 +2,16 @@
 
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
-#include <driver/drivermanager.h>
-#include <fortmanager.h>
 #include <fortsettings.h>
-#include <manager/translationmanager.h>
 #include <manager/windowmanager.h>
 #include <model/zonelistmodel.h>
-#include <task/taskmanager.h>
 #include <user/iniuser.h>
 #include <util/ioc/ioccontainer.h>
 
 OptionsController::OptionsController(QObject *parent) :
-    QObject(parent), m_iniUserEdited(false), m_iniUserFlagsChanged(false)
+    BaseController(parent), m_iniUserEdited(false), m_iniUserFlagsChanged(false)
 {
     initConfManagerToEdit();
-
-    connect(translationManager(), &TranslationManager::languageChanged, this,
-            &OptionsController::retranslateUi);
 }
 
 OptionsController::~OptionsController()
@@ -27,54 +20,14 @@ OptionsController::~OptionsController()
     confManager()->setIniUserToEdit(nullptr);
 }
 
-FortManager *OptionsController::fortManager() const
-{
-    return IoC<FortManager>();
-}
-
-FortSettings *OptionsController::settings() const
-{
-    return IoC<FortSettings>();
-}
-
-ConfManager *OptionsController::confManager() const
-{
-    return IoC<ConfManager>();
-}
-
-FirewallConf *OptionsController::conf() const
+FirewallConf *OptionsController::confToEdit() const
 {
     return confManager()->confToEdit();
 }
 
-IniOptions *OptionsController::ini() const
-{
-    return &conf()->ini();
-}
-
-IniUser *OptionsController::iniUser() const
+IniUser *OptionsController::iniUserToEdit() const
 {
     return confManager()->iniUserToEdit();
-}
-
-TaskManager *OptionsController::taskManager() const
-{
-    return IoC<TaskManager>();
-}
-
-DriverManager *OptionsController::driverManager() const
-{
-    return IoC<DriverManager>();
-}
-
-TranslationManager *OptionsController::translationManager() const
-{
-    return IoC<TranslationManager>();
-}
-
-WindowManager *OptionsController::windowManager() const
-{
-    return IoC<WindowManager>();
 }
 
 ZoneListModel *OptionsController::zoneListModel() const

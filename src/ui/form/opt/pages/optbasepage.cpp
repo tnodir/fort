@@ -30,7 +30,7 @@ ConfManager *OptBasePage::confManager() const
 
 FirewallConf *OptBasePage::conf() const
 {
-    return ctrl()->conf();
+    return ctrl()->confToEdit();
 }
 
 IniOptions *OptBasePage::ini() const
@@ -40,7 +40,7 @@ IniOptions *OptBasePage::ini() const
 
 IniUser *OptBasePage::iniUser() const
 {
-    return ctrl()->iniUser();
+    return ctrl()->iniUserToEdit();
 }
 
 DriverManager *OptBasePage::driverManager() const

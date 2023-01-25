@@ -1,33 +1,22 @@
 #ifndef SERVICESCONTROLLER_H
 #define SERVICESCONTROLLER_H
 
-#include <QObject>
+#include <form/basecontroller.h>
 
-class ConfManager;
-class IniUser;
 class ServiceInfoManager;
 class ServiceListModel;
-class TranslationManager;
-class WindowManager;
 
-class ServicesController : public QObject
+class ServicesController : public BaseController
 {
     Q_OBJECT
 
 public:
     explicit ServicesController(QObject *parent = nullptr);
 
-    ConfManager *confManager() const;
-    IniUser *iniUser() const;
-    TranslationManager *translationManager() const;
-    WindowManager *windowManager() const;
     ServiceInfoManager *serviceInfoManager() const;
     ServiceListModel *serviceListModel() const { return m_serviceListModel; }
 
     void initialize();
-
-signals:
-    void retranslateUi();
 
 private:
     ServiceListModel *m_serviceListModel = nullptr;
