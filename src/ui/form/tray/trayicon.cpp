@@ -383,8 +383,8 @@ void TrayIcon::setupTrayMenuOptions()
 
     connect(m_optionsMenu, &ClickableMenu::clicked, m_optionsAction, &QAction::trigger);
 
-    m_policiesAction = addAction(m_optionsMenu, IconCache::icon(":/icons/node-tree.png"), QString(),
-            windowManager(), SLOT(showPoliciesWindow()));
+    m_policiesAction = addAction(m_optionsMenu, IconCache::icon(":/icons/traffic_lights.png"),
+            QString(), windowManager(), SLOT(showPoliciesWindow()));
     addHotKey(m_policiesAction, iniUser()->hotKeyPolicies());
 
     m_policiesAction->setVisible(false); // TODO: Implement Network Rules

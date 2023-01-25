@@ -141,7 +141,8 @@ void PoliciesWindow::setupUi()
     this->setFont(WindowManager::defaultFont());
 
     // Icon
-    this->setWindowIcon(GuiUtil::overlayIcon(":/icons/sheild-96.png", ":/icons/node-tree.png"));
+    this->setWindowIcon(
+            GuiUtil::overlayIcon(":/icons/sheild-96.png", ":/icons/traffic_lights.png"));
 
     // Size
     this->setMinimumSize(500, 400);
