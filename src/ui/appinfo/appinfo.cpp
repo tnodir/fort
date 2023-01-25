@@ -9,5 +9,7 @@ QString AppInfo::filePath(const QString &appPath) const
 
 bool AppInfo::isFileModified(const QString &appPath) const
 {
-    return fileModTime != AppInfoUtil::fileModTime(filePath(appPath));
+    const auto appFileModTime = AppInfoUtil::fileModTime(filePath(appPath));
+
+    return appFileModTime.isValid() && appFileModTime != fileModTime;
 }

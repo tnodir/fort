@@ -182,7 +182,10 @@ bool getInfo(const QString &appPath, AppInfo &appInfo)
     // File modification time
     appInfo.fileModTime = FileUtil::fileModTime(path);
 
-    const bool ok = extractVersionInfo(path, appInfo);
+    const bool ok = appInfo.fileModTime.isValid();
+    if (ok) {
+        extractVersionInfo(path, appInfo);
+    }
 
     revertWow64FsRedirection(wow64FsRedir);
 

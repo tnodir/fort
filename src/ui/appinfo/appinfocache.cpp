@@ -66,17 +66,22 @@ AppInfo AppInfoCache::appInfo(const QString &appPath)
     AppInfo *appInfo = m_cache.object(appPath);
     bool lookupRequired = false;
 
+    auto appInfoManager = IoC<AppInfoManager>();
+
     if (!appInfo) {
         appInfo = new AppInfo();
 
         m_cache.insert(appPath, appInfo, 1);
-        lookupRequired = true;
-    } else {
+
+        lookupRequired = !appInfoManager->loadInfoFromDb(appPath, *appInfo);
+    }
+
+    if (!lookupRequired) {
         lookupRequired = appInfo->isFileModified(appPath);
     }
 
     if (lookupRequired) {
-        IoC<AppInfoManager>()->lookupAppInfo(appPath);
+        appInfoManager->lookupAppInfo(appPath);
     }
 
     return *appInfo;

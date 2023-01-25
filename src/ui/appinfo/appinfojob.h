@@ -10,7 +10,7 @@ class AppInfoJob : public WorkerJob
 public:
     explicit AppInfoJob(const QString &appPath);
 
-    QString appPath() const { return text; }
+    const QString &appPath() const { return text; }
 
 public:
     AppInfo appInfo;
