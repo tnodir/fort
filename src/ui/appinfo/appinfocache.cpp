@@ -77,7 +77,7 @@ AppInfo AppInfoCache::appInfo(const QString &appPath)
     }
 
     if (!lookupRequired) {
-        lookupRequired = appInfo->fileModTime.isValid() && appInfo->isFileModified(appPath);
+        lookupRequired = appInfo->isValid() && appInfo->isFileModified(appPath);
     }
 
     if (lookupRequired) {
