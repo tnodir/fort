@@ -9,6 +9,8 @@ TARGET = FortFirewallUILib
 TEMPLATE = lib
 
 SOURCES += \
+    appinfo/appbasejob.cpp \
+    appinfo/appiconjob.cpp \
     appinfo/appinfo.cpp \
     appinfo/appinfocache.cpp \
     appinfo/appinfojob.cpp \
@@ -175,6 +177,8 @@ SOURCES += \
     util/worker/workerobject.cpp
 
 HEADERS += \
+    appinfo/appbasejob.h \
+    appinfo/appiconjob.h \
     appinfo/appinfo.h \
     appinfo/appinfocache.h \
     appinfo/appinfojob.h \

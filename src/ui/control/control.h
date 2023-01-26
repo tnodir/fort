@@ -17,7 +17,7 @@ enum Command : qint8 {
     Rpc_RpcManager_initClient,
 
     Rpc_AppInfoManager_lookupAppInfo,
-    Rpc_AppInfoManager_checkLookupFinished,
+    Rpc_AppInfoManager_checkLookupInfoFinished,
 
     Rpc_ConfManager_save,
     Rpc_ConfManager_addApp,

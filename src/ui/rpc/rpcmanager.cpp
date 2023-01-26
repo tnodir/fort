@@ -308,9 +308,9 @@ void RpcManager::setupAppInfoManagerSignals()
 {
     auto appInfoManager = IoC<AppInfoManager>();
 
-    connect(appInfoManager, &AppInfoManager::lookupFinished, this,
+    connect(appInfoManager, &AppInfoManager::lookupInfoFinished, this,
             [&](const QString &appPath, const AppInfo & /*appInfo*/) {
-                invokeOnClients(Control::Rpc_AppInfoManager_checkLookupFinished, { appPath });
+                invokeOnClients(Control::Rpc_AppInfoManager_checkLookupInfoFinished, { appPath });
             });
 }
 
@@ -562,8 +562,8 @@ bool RpcManager::processAppInfoManagerRpc(const ProcessCommandArgs &p)
     case Control::Rpc_AppInfoManager_lookupAppInfo:
         appInfoManager->lookupAppInfo(p.args.value(0).toString());
         return true;
-    case Control::Rpc_AppInfoManager_checkLookupFinished:
-        appInfoManager->checkLookupFinished(p.args.value(0).toString());
+    case Control::Rpc_AppInfoManager_checkLookupInfoFinished:
+        appInfoManager->checkLookupInfoFinished(p.args.value(0).toString());
         return true;
     default:
         return false;

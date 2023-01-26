@@ -1,3 +1,3 @@
 #include "appinfojob.h"
 
-AppInfoJob::AppInfoJob(const QString &appPath) : WorkerJob(appPath) { }
+AppInfoJob::AppInfoJob(const QString &appPath) : AppBaseJob(appPath) { }

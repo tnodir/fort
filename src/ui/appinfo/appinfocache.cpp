@@ -15,18 +15,15 @@ AppInfoCache::AppInfoCache(QObject *parent) : QObject(parent), m_cache(1000)
 
 void AppInfoCache::setUp()
 {
-    connect(IoC<AppInfoManager>(), &AppInfoManager::lookupFinished, this,
-            &AppInfoCache::handleFinishedLookup);
+    connect(IoC<AppInfoManager>(), &AppInfoManager::lookupInfoFinished, this,
+            &AppInfoCache::handleFinishedInfoLookup);
+    connect(IoC<AppInfoManager>(), &AppInfoManager::lookupIconFinished, this,
+            &AppInfoCache::handleFinishedIconLookup);
 }
 
 void AppInfoCache::tearDown()
 {
     disconnect(IoC<AppInfoManager>());
-}
-
-QImage AppInfoCache::appImage(const AppInfo &info) const
-{
-    return IoC<AppInfoManager>()->loadIconFromDb(info.iconId);
 }
 
 QString AppInfoCache::appName(const QString &appPath)
@@ -45,12 +42,11 @@ QIcon AppInfoCache::appIcon(const QString &appPath, const QString &nullIconPath)
         return pixmap;
 
     const auto info = appInfo(appPath);
-    const auto image = appImage(info);
-    if (!image.isNull()) {
-        pixmap = QPixmap::fromImage(image);
-    } else {
-        pixmap = IconCache::file(nullIconPath.isEmpty() ? ":/icons/application.png" : nullIconPath);
+    if (info.isValid()) {
+        IoC<AppInfoManager>()->lookupAppIcon(appPath, info.iconId);
     }
+
+    pixmap = IconCache::file(!nullIconPath.isEmpty() ? nullIconPath : ":/icons/application.png");
 
     IconCache::insert(appPath, pixmap);
 
@@ -86,7 +82,7 @@ AppInfo AppInfoCache::appInfo(const QString &appPath)
     return *appInfo;
 }
 
-void AppInfoCache::handleFinishedLookup(const QString &appPath, const AppInfo &info)
+void AppInfoCache::handleFinishedInfoLookup(const QString &appPath, const AppInfo &info)
 {
     AppInfo *appInfo = m_cache.object(appPath);
     if (!appInfo)
@@ -95,6 +91,16 @@ void AppInfoCache::handleFinishedLookup(const QString &appPath, const AppInfo &i
     *appInfo = info;
 
     IconCache::remove(appPath); // invalidate cached icon
+
+    emitCacheChanged();
+}
+
+void AppInfoCache::handleFinishedIconLookup(const QString &appPath, const QImage &image)
+{
+    if (image.isNull())
+        return;
+
+    IconCache::insert(appPath, QPixmap::fromImage(image)); // update cached icon
 
     emitCacheChanged();
 }

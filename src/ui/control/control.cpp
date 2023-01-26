@@ -18,7 +18,7 @@ const char *const commandString(Command cmd)
         CASE_STRING(Rpc_RpcManager_initClient)
 
         CASE_STRING(Rpc_AppInfoManager_lookupAppInfo)
-        CASE_STRING(Rpc_AppInfoManager_checkLookupFinished)
+        CASE_STRING(Rpc_AppInfoManager_checkLookupInfoFinished)
 
         CASE_STRING(Rpc_ConfManager_save)
         CASE_STRING(Rpc_ConfManager_addApp)

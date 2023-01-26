@@ -1,16 +1,15 @@
 #ifndef APPINFOJOB_H
 #define APPINFOJOB_H
 
-#include <util/worker/workerjob.h>
-
+#include "appbasejob.h"
 #include "appinfo.h"
 
-class AppInfoJob : public WorkerJob
+class AppInfoJob : public AppBaseJob
 {
 public:
     explicit AppInfoJob(const QString &appPath);
 
-    const QString &appPath() const { return text; }
+    virtual AppJobType jobType() const { return JobTypeInfo; }
 
 public:
     AppInfo appInfo;

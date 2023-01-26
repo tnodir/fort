@@ -6,6 +6,7 @@
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
+#include "appiconjob.h"
 #include "appinfojob.h"
 #include "appinfoutil.h"
 #include "appinfoworker.h"
@@ -96,22 +97,37 @@ void AppInfoManager::lookupAppInfo(const QString &appPath)
     enqueueJob(new AppInfoJob(appPath));
 }
 
+void AppInfoManager::lookupAppIcon(const QString &appPath, qint64 iconId)
+{
+    enqueueJob(new AppIconJob(appPath, iconId));
+}
+
 void AppInfoManager::handleWorkerResult(WorkerJob *workerJob)
 {
     if (!aborted()) {
-        const auto job = static_cast<AppInfoJob *>(workerJob);
+        auto appJob = static_cast<AppBaseJob *>(workerJob);
+        const QString &appPath = appJob->appPath();
 
-        emit lookupFinished(job->appPath(), job->appInfo);
+        switch (appJob->jobType()) {
+        case AppBaseJob::JobTypeInfo: {
+            auto job = static_cast<AppInfoJob *>(appJob);
+            emit lookupInfoFinished(appPath, job->appInfo);
+        } break;
+        case AppBaseJob::JobTypeIcon: {
+            auto job = static_cast<AppIconJob *>(appJob);
+            emit lookupIconFinished(appPath, job->image);
+        } break;
+        }
     }
 
     delete workerJob;
 }
 
-void AppInfoManager::checkLookupFinished(const QString &appPath)
+void AppInfoManager::checkLookupInfoFinished(const QString &appPath)
 {
     AppInfo appInfo;
     if (loadInfoFromDb(appPath, appInfo)) {
-        emit lookupFinished(appPath, appInfo);
+        emit lookupInfoFinished(appPath, appInfo);
     }
 }
 

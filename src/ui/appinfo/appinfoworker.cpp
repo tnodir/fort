@@ -2,9 +2,10 @@
 
 #include <QImage>
 
+#include "appiconjob.h"
 #include "appinfo.h"
-#include "appinfomanager.h"
 #include "appinfojob.h"
+#include "appinfomanager.h"
 #include "appinfoutil.h"
 
 AppInfoWorker::AppInfoWorker(AppInfoManager *manager) : WorkerObject(manager) { }
@@ -25,9 +26,25 @@ void AppInfoWorker::run()
 
 void AppInfoWorker::doJob(WorkerJob *workerJob)
 {
-    auto job = static_cast<AppInfoJob *>(workerJob);
-    const QString &appPath = job->appPath();
+    auto appJob = static_cast<AppBaseJob *>(workerJob);
+    const QString &appPath = appJob->appPath();
 
+    switch (appJob->jobType()) {
+    case AppBaseJob::JobTypeInfo: {
+        auto job = static_cast<AppInfoJob *>(appJob);
+        loadAppInfo(job, appPath);
+    } break;
+    case AppBaseJob::JobTypeIcon: {
+        auto job = static_cast<AppIconJob *>(appJob);
+        loadAppIcon(job, appPath);
+    } break;
+    }
+
+    WorkerObject::doJob(workerJob);
+}
+
+void AppInfoWorker::loadAppInfo(AppInfoJob *job, const QString &appPath)
+{
     // Try to load from DB
     AppInfo &appInfo = job->appInfo;
     bool loadedFromDb = manager()->loadInfoFromDb(appPath, appInfo);
@@ -44,6 +61,10 @@ void AppInfoWorker::doJob(WorkerJob *workerJob)
 
         manager()->saveToDb(appPath, appInfo, appIcon);
     }
+}
 
-    WorkerObject::doJob(workerJob);
+void AppInfoWorker::loadAppIcon(AppIconJob *job, const QString &appPath)
+{
+    // Try to load from DB
+    job->image = manager()->loadIconFromDb(job->iconId());
 }

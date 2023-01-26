@@ -19,7 +19,6 @@ public:
     void setUp() override;
     void tearDown() override;
 
-    QImage appImage(const AppInfo &info) const;
     QString appName(const QString &appPath);
     QIcon appIcon(const QString &appPath, const QString &nullIconPath = QString());
 
@@ -29,7 +28,8 @@ signals:
     void cacheChanged();
 
 private slots:
-    void handleFinishedLookup(const QString &appPath, const AppInfo &info);
+    void handleFinishedInfoLookup(const QString &appPath, const AppInfo &info);
+    void handleFinishedIconLookup(const QString &appPath, const QImage &image);
 
 private:
     void emitCacheChanged();

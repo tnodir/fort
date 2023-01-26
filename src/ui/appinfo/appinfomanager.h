@@ -37,14 +37,16 @@ public:
     void deleteOldApps(int limitCount = 0);
 
 signals:
-    void lookupFinished(const QString &appPath, const AppInfo &appInfo);
+    void lookupInfoFinished(const QString &appPath, const AppInfo &appInfo);
+    void lookupIconFinished(const QString &appPath, const QImage &image);
 
 public slots:
     virtual void lookupAppInfo(const QString &appPath);
+    void lookupAppIcon(const QString &appPath, qint64 iconId);
 
     void handleWorkerResult(WorkerJob *workerJob) override;
 
-    void checkLookupFinished(const QString &appPath);
+    void checkLookupInfoFinished(const QString &appPath);
 
 protected:
     WorkerObject *createWorker() override;
