@@ -7,7 +7,6 @@
 #include <sqlite/sqlitestmt.h>
 
 #include <appinfo/appinfocache.h>
-#include <appinfo/appinfoutil.h>
 #include <conf/appgroup.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>

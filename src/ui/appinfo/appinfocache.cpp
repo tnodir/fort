@@ -49,8 +49,7 @@ QIcon AppInfoCache::appIcon(const QString &appPath, const QString &nullIconPath)
     if (!image.isNull()) {
         pixmap = QPixmap::fromImage(image);
     } else {
-        pixmap = IconCache::file(
-                nullIconPath.isEmpty() ? ":/icons/application-window-96.png" : nullIconPath);
+        pixmap = IconCache::file(nullIconPath.isEmpty() ? ":/icons/application.png" : nullIconPath);
     }
 
     IconCache::insert(appPath, pixmap);
