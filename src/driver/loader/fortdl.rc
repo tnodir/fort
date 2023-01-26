@@ -9,7 +9,7 @@
 #define VER_COMPANYNAME_STR         "Nodir Temirkhodjaev"
 #define VER_FILEDESCRIPTION_STR     "Fort Firewall Driver Loader"
 #define VER_INTERNALNAME_STR        "fortfw"
-#define VER_LEGALCOPYRIGHT_STR      "Copyright (C) 2021 Nodir Temirkhodjaev. All Rights Reserved."
+#define VER_LEGALCOPYRIGHT_STR      "Copyright (C) Nodir Temirkhodjaev. All Rights Reserved."
 #define VER_LEGALTRADEMARKS1_STR    ""
 #define VER_LEGALTRADEMARKS2_STR    ""
 #define VER_ORIGINALFILENAME_STR    "fortfw.sys"
