@@ -4,7 +4,6 @@
 #include <util/window/widgetwindow.h>
 
 class ConfManager;
-class FirewallConf;
 class FortManager;
 class IniUser;
 class OptMainPage;
@@ -20,7 +19,6 @@ public:
 
     OptionsController *ctrl() const { return m_ctrl; }
     ConfManager *confManager() const;
-    FirewallConf *conf() const;
     IniUser *iniUser() const;
 
     void cancelChanges();

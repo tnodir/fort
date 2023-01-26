@@ -28,11 +28,6 @@ ConfManager *OptionsWindow::confManager() const
     return ctrl()->confManager();
 }
 
-FirewallConf *OptionsWindow::conf() const
-{
-    return confManager()->conf();
-}
-
 IniUser *OptionsWindow::iniUser() const
 {
     return ctrl()->iniUser();

@@ -37,37 +37,37 @@ ZoneListModel *OptionsController::zoneListModel() const
 
 bool OptionsController::anyEdited() const
 {
-    return m_iniUserEdited || conf()->anyEdited();
+    return m_iniUserEdited || confToEdit()->anyEdited();
 }
 
 void OptionsController::setOptEdited()
 {
-    if (!conf()->optEdited()) {
-        conf()->setOptEdited();
+    if (!confToEdit()->optEdited()) {
+        confToEdit()->setOptEdited();
         emitEdited(true);
     }
 }
 
 void OptionsController::setFlagsEdited()
 {
-    if (!conf()->flagsEdited()) {
-        conf()->setFlagsEdited();
+    if (!confToEdit()->flagsEdited()) {
+        confToEdit()->setFlagsEdited();
         emitEdited(true);
     }
 }
 
 void OptionsController::setIniEdited()
 {
-    if (!conf()->iniEdited()) {
-        conf()->setIniEdited();
+    if (!confToEdit()->iniEdited()) {
+        confToEdit()->setIniEdited();
         emitEdited(true);
     }
 }
 
 void OptionsController::setTaskEdited()
 {
-    if (!conf()->taskEdited()) {
-        conf()->setTaskEdited();
+    if (!confToEdit()->taskEdited()) {
+        confToEdit()->setTaskEdited();
         emitEdited(true);
     }
 }
@@ -109,7 +109,7 @@ void OptionsController::save(bool closeOnSuccess)
 
     const bool isAnyEdited = this->anyEdited();
 
-    if (!confManager()->save(conf()))
+    if (!confManager()->save(confToEdit()))
         return;
 
     if (m_iniUserEdited) {
@@ -126,8 +126,8 @@ void OptionsController::save(bool closeOnSuccess)
 
 void OptionsController::saveIniUser()
 {
-    iniUser()->save();
-    iniUser()->clear();
+    iniUserToEdit()->save();
+    iniUserToEdit()->clear();
 
     confManager()->saveIniUser(m_iniUserFlagsChanged);
 }
