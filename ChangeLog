@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.6.9, 2022-01-26:
+- UI: Options: Fix saving regression.
+
 v3.6.8, 2022-01-25:
 - UI: Programs: Optimize app info loading.
 - UI: Programs: Swap "State" & "File Path" columns.
