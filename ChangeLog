@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.7.0, 2022-01-27:
+- UI: Programs: Load app icons in separate thread.
+
 v3.6.9, 2022-01-26:
 - UI: Options: Fix saving regression.
 
