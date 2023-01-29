@@ -812,7 +812,7 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     </message>
     <message>
         <source>Policies</source>
-        <translation type="unfinished"></translation>
+        <translation>Politiques</translation>
     </message>
 </context>
 <context>
@@ -1478,7 +1478,7 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     </message>
     <message>
         <source>Policies</source>
-        <translation type="unfinished"></translation>
+        <translation>Politiques</translation>
     </message>
 </context>
 <context>

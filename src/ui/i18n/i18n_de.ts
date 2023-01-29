@@ -812,7 +812,7 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     </message>
     <message>
         <source>Policies</source>
-        <translation type="unfinished"></translation>
+        <translation>Richtlinien</translation>
     </message>
 </context>
 <context>
@@ -1478,7 +1478,7 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     </message>
     <message>
         <source>Policies</source>
-        <translation type="unfinished"></translation>
+        <translation>Richtlinien</translation>
     </message>
 </context>
 <context>

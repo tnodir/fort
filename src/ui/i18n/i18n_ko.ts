@@ -804,15 +804,15 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Global rules, applied before application rules:</source>
-        <translation>전역 규칙, 적용 규칙 이전에 적용됨:</translation>
+        <translation>전역 규칙, 응용 프로그램 규칙 전에 적용됨:</translation>
     </message>
     <message>
         <source>Global rules, applied after application rules:</source>
-        <translation>전역 규칙, 적용 규칙 이후에 적용됨:</translation>
+        <translation>전역 규칙, 응용 프로그램 규칙 이후 적용됨:</translation>
     </message>
     <message>
         <source>Policies</source>
-        <translation type="unfinished"></translation>
+        <translation>정책</translation>
     </message>
 </context>
 <context>
@@ -1478,7 +1478,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Policies</source>
-        <translation type="unfinished"></translation>
+        <translation>정책</translation>
     </message>
 </context>
 <context>
