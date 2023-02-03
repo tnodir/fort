@@ -32,6 +32,7 @@ private:
 private:
     QLabel *m_labelTitle = nullptr;
     QCheckBox *m_cbUseAll = nullptr;
+    QToolButton *m_btOpenZones = nullptr;
     QPushButton *m_btSelectZones = nullptr;
     QLabel *m_labelZones = nullptr;
     PlainTextEdit *m_editIpText = nullptr;

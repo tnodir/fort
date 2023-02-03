@@ -4,10 +4,13 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <QToolButton>
 #include <QVBoxLayout>
 
 #include <form/controls/controlutil.h>
 #include <form/controls/plaintextedit.h>
+#include <manager/windowmanager.h>
+#include <util/ioc/ioccontainer.h>
 
 AddressesColumn::AddressesColumn(QWidget *parent) : QWidget(parent)
 {
@@ -16,6 +19,8 @@ AddressesColumn::AddressesColumn(QWidget *parent) : QWidget(parent)
 
 void AddressesColumn::retranslateUi()
 {
+    m_btOpenZones->setToolTip(tr("Show Zones"));
+
     m_btSelectZones->setText(tr("Zones"));
     m_btSelectZones->setToolTip(tr("Select Zones"));
 }
@@ -55,6 +60,12 @@ QLayout *AddressesColumn::setupZonesRow()
     auto layout = new QHBoxLayout();
     layout->setContentsMargins(0, 0, 0, 0);
 
+    // Open Zones
+    m_btOpenZones = ControlUtil::createFlatToolButton(
+            ":/icons/application_go.png", [&] { IoC<WindowManager>()->showZonesWindow(); });
+    layout->addWidget(m_btOpenZones);
+
+    // Select Zones
     m_btSelectZones = ControlUtil::createButton(":/icons/ip_class.png");
     layout->addWidget(m_btSelectZones);
 
@@ -62,7 +73,6 @@ QLayout *AddressesColumn::setupZonesRow()
     m_labelZones->setWordWrap(true);
 
     auto font = ControlUtil::fontDemiBold();
-    font.setItalic(true);
     m_labelZones->setFont(font);
 
     layout->addWidget(m_labelZones, 1);
