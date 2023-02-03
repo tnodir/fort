@@ -17,12 +17,27 @@ AddressesColumn::AddressesColumn(QWidget *parent) : QWidget(parent)
     setupUi();
 }
 
+void AddressesColumn::setZonesCount(qint8 v)
+{
+    if (m_zonesCount == v)
+        return;
+
+    m_zonesCount = v;
+
+    retranslateZonesText();
+}
+
 void AddressesColumn::retranslateUi()
 {
     m_btOpenZones->setToolTip(tr("Show Zones"));
 
-    m_btSelectZones->setText(tr("Zones"));
+    retranslateZonesText();
     m_btSelectZones->setToolTip(tr("Select Zones"));
+}
+
+void AddressesColumn::retranslateZonesText()
+{
+    m_btSelectZones->setText(tr("Zones") + QString(" (%1)").arg(zonesCount()));
 }
 
 void AddressesColumn::setupUi()
@@ -63,19 +78,13 @@ QLayout *AddressesColumn::setupZonesRow()
     // Open Zones
     m_btOpenZones = ControlUtil::createFlatToolButton(
             ":/icons/application_go.png", [&] { IoC<WindowManager>()->showZonesWindow(); });
-    layout->addWidget(m_btOpenZones);
 
     // Select Zones
     m_btSelectZones = ControlUtil::createButton(":/icons/ip_class.png");
+
+    layout->addWidget(m_btOpenZones);
     layout->addWidget(m_btSelectZones);
-
-    m_labelZones = ControlUtil::createLabel();
-    m_labelZones->setWordWrap(true);
-
-    auto font = ControlUtil::fontDemiBold();
-    m_labelZones->setFont(font);
-
-    layout->addWidget(m_labelZones, 1);
+    layout->addStretch();
 
     return layout;
 }

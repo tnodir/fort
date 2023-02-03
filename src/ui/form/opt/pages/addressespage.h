@@ -52,7 +52,7 @@ private:
 
     quint32 addressGroupZones(bool include) const;
 
-    QString zonesText(bool include) const;
+    qint8 zonesCount(bool include) const;
 
     static QString localNetworks();
 

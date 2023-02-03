@@ -318,17 +318,15 @@ void AddressesPage::updateZonesMenuEnabled()
 
 void AddressesPage::updateZonesText(bool include)
 {
-    if (include) {
-        m_includeAddresses->labelZones()->setText(zonesText(true));
-    } else {
-        m_excludeAddresses->labelZones()->setText(zonesText(false));
-    }
+    AddressesColumn *addressesColumn = include ? m_includeAddresses : m_excludeAddresses;
+
+    addressesColumn->setZonesCount(zonesCount(include));
 }
 
 void AddressesPage::updateZonesTextAll()
 {
-    updateZonesText(true);
-    updateZonesText(false);
+    updateZonesText(/*include=*/true);
+    updateZonesText(/*include=*/false);
 }
 
 void AddressesPage::setupZones()
@@ -376,22 +374,11 @@ quint32 AddressesPage::addressGroupZones(bool include) const
     return include ? addressGroup()->includeZones() : addressGroup()->excludeZones();
 }
 
-QString AddressesPage::zonesText(bool include) const
+qint8 AddressesPage::zonesCount(bool include) const
 {
-    QStringList list;
+    const quint32 zonesMask = addressGroupZones(include);
 
-    quint32 zonesMask = addressGroupZones(include);
-    while (zonesMask != 0) {
-        const int zoneIndex = DriverCommon::bitScanForward(zonesMask);
-        const int zoneId = zoneIndex + 1;
-        const auto zoneName = zoneListModel()->zoneNameById(zoneId);
-
-        list.append(zoneName);
-
-        zonesMask ^= (quint32(1) << zoneIndex);
-    }
-
-    return list.join(", ");
+    return __popcnt(zonesMask);
 }
 
 QString AddressesPage::localNetworks()

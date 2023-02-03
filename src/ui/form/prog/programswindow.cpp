@@ -265,8 +265,6 @@ void ProgramsWindow::setupTableApps()
     m_appListView->setAlternatingRowColors(true);
     m_appListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_appListView->setSelectionBehavior(QAbstractItemView::SelectItems);
-    m_appListView->setWordWrap(false);
-    m_appListView->setTextElideMode(Qt::ElideMiddle);
 
     m_appListView->setSortingEnabled(true);
     m_appListView->setModel(appListModel());

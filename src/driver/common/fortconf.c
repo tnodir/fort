@@ -15,7 +15,7 @@ static int fort_memcmp(const void *p1, const void *p2, size_t len)
 }
 #endif
 
-FORT_API int bit_scan_forward(unsigned long mask)
+FORT_API int bit_scan_forward(ULONG mask)
 {
     unsigned long index;
     return _BitScanForward(&index, mask) ? index : -1;

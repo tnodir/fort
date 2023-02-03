@@ -7,6 +7,9 @@ TableView::TableView(QWidget *parent) : QTableView(parent) { }
 
 void TableView::setModel(QAbstractItemModel *model)
 {
+    setWordWrap(false);
+    setTextElideMode(Qt::ElideMiddle);
+
     QTableView::setModel(model);
 
     connect(model, &QAbstractItemModel::modelReset, this,

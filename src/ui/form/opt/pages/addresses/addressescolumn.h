@@ -16,25 +16,30 @@ class AddressesColumn : public QWidget
 public:
     explicit AddressesColumn(QWidget *parent = nullptr);
 
+    qint8 zonesCount() const { return m_zonesCount; }
+    void setZonesCount(qint8 v);
+
     QLabel *labelTitle() const { return m_labelTitle; }
     QCheckBox *cbUseAll() const { return m_cbUseAll; }
     QPushButton *btSelectZones() const { return m_btSelectZones; }
-    QLabel *labelZones() const { return m_labelZones; }
     PlainTextEdit *editIpText() const { return m_editIpText; }
 
 public slots:
     void retranslateUi();
 
 private:
+    void retranslateZonesText();
+
     void setupUi();
     QLayout *setupZonesRow();
 
 private:
+    qint8 m_zonesCount = 0;
+
     QLabel *m_labelTitle = nullptr;
     QCheckBox *m_cbUseAll = nullptr;
     QToolButton *m_btOpenZones = nullptr;
     QPushButton *m_btSelectZones = nullptr;
-    QLabel *m_labelZones = nullptr;
     PlainTextEdit *m_editIpText = nullptr;
 };
 
