@@ -11,6 +11,10 @@
         <source>Select Zones</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Show Zones</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>AddressesPage</name>

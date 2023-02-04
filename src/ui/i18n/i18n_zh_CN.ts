@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="zh_CN" sourcelanguage="en">
+<TS version="2.1" language="zh_CN" sourcelanguage="en_US">
 <context>
     <name>AddressesColumn</name>
     <message>
@@ -10,6 +10,10 @@
     <message>
         <source>Select Zones</source>
         <translation>选择区域</translation>
+    </message>
+    <message>
+        <source>Show Zones</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
