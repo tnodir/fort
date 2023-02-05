@@ -109,7 +109,9 @@ void ControlWorker::setupForAsync()
 
     connect(socket(), &QLocalSocket::errorOccurred, this,
             [&](QLocalSocket::LocalSocketError socketError) {
-                qCWarning(LC) << "Client error:" << id() << socketError << errorString();
+                if (!m_isReconnecting) {
+                    qCWarning(LC) << "Client error:" << id() << socketError << errorString();
+                }
                 close();
             });
     connect(socket(), &QLocalSocket::connected, this, &ControlWorker::onConnected);
@@ -127,7 +129,9 @@ bool ControlWorker::connectToServer()
     socket()->connectToServer(serverName());
 
     if (!socket()->waitForConnected(100)) {
-        qCWarning(LC) << "Connection error:" << socket()->state() << socket()->errorString();
+        if (!m_isReconnecting) {
+            qCWarning(LC) << "Connection error:" << socket()->state() << socket()->errorString();
+        }
         return false;
     }
 
