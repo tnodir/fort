@@ -7,6 +7,7 @@
 #include "control.h"
 
 QT_FORWARD_DECLARE_CLASS(QLocalSocket)
+QT_FORWARD_DECLARE_CLASS(QTimer)
 
 class ControlWorker : public QObject
 {
@@ -58,7 +59,12 @@ public slots:
     void close();
 
 private slots:
+    void onConnected();
     void onDisconnected();
+
+    void startReconnectTimer();
+    void stopReconnectTimer();
+
     void processRequest();
 
 private:
@@ -97,6 +103,7 @@ private:
     bool m_isServiceClient : 1;
     bool m_isClientValidated : 1;
     bool m_isTryReconnect : 1;
+    bool m_isReconnecting : 1;
 
     const quint32 m_id = 0;
 
@@ -105,6 +112,7 @@ private:
 
     QString m_serverName;
     QLocalSocket *m_socket = nullptr;
+    QTimer *m_reconnectTimer = nullptr;
 };
 
 #endif // CONTROLWORKER_H

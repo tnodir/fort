@@ -3,6 +3,7 @@
 #include <QDataStream>
 #include <QLocalSocket>
 #include <QLoggingCategory>
+#include <QTimer>
 
 namespace {
 
@@ -86,6 +87,7 @@ ControlWorker::ControlWorker(QLocalSocket *socket, QObject *parent) :
     m_isServiceClient(false),
     m_isClientValidated(false),
     m_isTryReconnect(false),
+    m_isReconnecting(false),
     m_id(nextWorkerId()),
     m_socket(socket)
 {
@@ -110,7 +112,7 @@ void ControlWorker::setupForAsync()
                 qCWarning(LC) << "Client error:" << id() << socketError << errorString();
                 close();
             });
-    connect(socket(), &QLocalSocket::connected, this, &ControlWorker::connected);
+    connect(socket(), &QLocalSocket::connected, this, &ControlWorker::onConnected);
     connect(socket(), &QLocalSocket::disconnected, this, &ControlWorker::onDisconnected);
     connect(socket(), &QLocalSocket::readyRead, this, &ControlWorker::processRequest);
 }
@@ -134,18 +136,23 @@ bool ControlWorker::connectToServer()
 
 bool ControlWorker::reconnectToServer()
 {
+    if (m_isReconnecting)
+        return false;
+
+    m_isReconnecting = true;
+
     close();
 
-    if (isTryReconnect() && isConnected())
-        return true;
+    bool connectedToServer;
 
     int reconnectCount = 2;
     do {
-        if (connectToServer())
-            return true;
-    } while (--reconnectCount > 0);
+        connectedToServer = connectToServer();
+    } while (!connectedToServer && --reconnectCount > 0);
 
-    return false;
+    m_isReconnecting = false;
+
+    return connectedToServer;
 }
 
 void ControlWorker::close()
@@ -154,12 +161,43 @@ void ControlWorker::close()
     socket()->close();
 }
 
+void ControlWorker::onConnected()
+{
+    stopReconnectTimer();
+
+    emit connected();
+}
+
 void ControlWorker::onDisconnected()
 {
     if (isTryReconnect() && reconnectToServer())
         return;
 
     emit disconnected();
+
+    startReconnectTimer();
+}
+
+void ControlWorker::startReconnectTimer()
+{
+    if (!isTryReconnect())
+        return;
+
+    if (!m_reconnectTimer) {
+        m_reconnectTimer = new QTimer(this);
+        m_reconnectTimer->setInterval(1000);
+
+        connect(m_reconnectTimer, &QTimer::timeout, this, &ControlWorker::reconnectToServer);
+    }
+
+    m_reconnectTimer->start();
+}
+
+void ControlWorker::stopReconnectTimer()
+{
+    if (m_reconnectTimer) {
+        m_reconnectTimer->stop();
+    }
 }
 
 QByteArray ControlWorker::buildCommandData(Control::Command command, const QVariantList &args)
