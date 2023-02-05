@@ -40,6 +40,10 @@ Fort is a simple firewall for Windows 7+.
   - [Frequently Asked Questions (FAQ)](https://github.com/tnodir/fort/wiki/FAQ)
   - [Building](https://github.com/tnodir/fort/wiki/Building)
 
+## Donation
+
+[Become a Patron!](https://www.patreon.com/bePatron?u=9349286)
+
 ## SAST Tools
 
 [PVS-Studio](https://pvs-studio.com/en/pvs-studio/?utm_source=github&utm_medium=organic&utm_campaign=open_source) - static analyzer for C, C++, C#, and Java code.
