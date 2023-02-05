@@ -5,15 +5,15 @@
     <name>AddressesColumn</name>
     <message>
         <source>Zones</source>
-        <translation>영역</translation>
+        <translation>대역</translation>
     </message>
     <message>
         <source>Select Zones</source>
-        <translation>영역 선택</translation>
+        <translation>대역 선택</translation>
     </message>
     <message>
         <source>Show Zones</source>
-        <translation type="unfinished"></translation>
+        <translation>IP 대역 표시</translation>
     </message>
 </context>
 <context>
@@ -1304,7 +1304,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Zones Downloader</source>
-        <translation>영역 다운로더</translation>
+        <translation>대역 다운로더</translation>
     </message>
 </context>
 <context>
@@ -1318,7 +1318,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <name>TaskInfoZoneDownloader</name>
     <message>
         <source>Zone Addresses Updated: %1.</source>
-        <translation>업데이트된 영역 주소: %1.</translation>
+        <translation>업데이트된 대역 주소: %1.</translation>
     </message>
 </context>
 <context>
@@ -1434,7 +1434,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Zones</source>
-        <translation>영역 관리</translation>
+        <translation>대역 관리</translation>
     </message>
     <message>
         <source>Traffic Graph</source>
@@ -1496,7 +1496,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <name>ZoneListModel</name>
     <message>
         <source>Zone</source>
-        <translation>영역</translation>
+        <translation>대역</translation>
     </message>
     <message>
         <source>Source</source>
@@ -1535,11 +1535,11 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Edit Zone</source>
-        <translation>영역 편집</translation>
+        <translation>대역 편집</translation>
     </message>
     <message>
         <source>Zone Name:</source>
-        <translation>영역 이름:</translation>
+        <translation>대역 이름:</translation>
     </message>
     <message>
         <source>Source:</source>
@@ -1571,11 +1571,11 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Zones</source>
-        <translation>영역</translation>
+        <translation>대역</translation>
     </message>
     <message>
         <source>Are you sure to remove selected zone?</source>
-        <translation>선택한 영역을 제거하시겠습니까?</translation>
+        <translation>선택한 대역을 제거하시겠습니까?</translation>
     </message>
     <message>
         <source>Text files (*.txt);;All files (*.*)</source>
@@ -1583,7 +1583,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Cannot save Zone addresses as text file</source>
-        <translation>영역 주소를 텍스트 파일로 저장할 수 없습니다.</translation>
+        <translation>대역 주소를 텍스트 파일로 저장할 수 없습니다.</translation>
     </message>
 </context>
 </TS>

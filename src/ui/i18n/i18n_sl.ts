@@ -13,7 +13,7 @@
     </message>
     <message>
         <source>Show Zones</source>
-        <translation type="unfinished"></translation>
+        <translation>Prikaži območja</translation>
     </message>
 </context>
 <context>
