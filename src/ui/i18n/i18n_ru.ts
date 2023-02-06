@@ -144,7 +144,7 @@
     </message>
     <message>
         <source>Upload speed limit:</source>
-        <translation>Ограничение скорости выгрузки</translation>
+        <translation>Ограничение скорости отдачи</translation>
     </message>
     <message>
         <source>Collect connection statistics</source>
@@ -228,7 +228,7 @@
     </message>
     <message>
         <source>Upload Buffer Size:</source>
-        <translation>Размер буфера выгрузки:</translation>
+        <translation>Размер буфера отдачи:</translation>
     </message>
     <message>
         <source>Restrict access to LAN only</source>
@@ -1198,7 +1198,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Upload:</source>
-        <translation>Выгрузка:</translation>
+        <translation>Отдача:</translation>
     </message>
     <message>
         <source>Axis:</source>
@@ -1352,7 +1352,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Upload</source>
-        <translation>Выгрузка</translation>
+        <translation>Отдача</translation>
     </message>
     <message>
         <source>Sum</source>
