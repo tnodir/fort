@@ -77,6 +77,7 @@ quint16 confAppPeriodBits(const void *drvConf, quint8 hour, quint8 minute);
 bool isTimeInPeriod(quint8 hour, quint8 minute, quint8 fromHour, quint8 fromMinute, quint8 toHour,
         quint8 toMinute);
 
+int bitCount(quint32 mask);
 int bitScanForward(quint32 mask);
 
 void provUnregister();

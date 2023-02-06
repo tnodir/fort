@@ -266,6 +266,26 @@ bool isTimeInPeriod(quint8 hour, quint8 minute, quint8 fromHour, quint8 fromMinu
     return is_time_in_period(time, period);
 }
 
+int bitCount(quint32 mask)
+{
+#if defined(_M_IX86) || defined(_M_X64)
+    return __popcnt(mask);
+#elif defined(_M_ARM64)
+    __n64 num;
+    num.n64_u64[0] = mask;
+
+    num = neon_cnt(num);
+    return num.n64_u32[0];
+#else
+    int n = 0;
+    while (mask != 0) {
+        n += (mask & 1) != 0 ? 1 : 0;
+        mask >>= 1;
+    }
+    return n;
+#endif
+}
+
 int bitScanForward(quint32 mask)
 {
     return bit_scan_forward(mask);

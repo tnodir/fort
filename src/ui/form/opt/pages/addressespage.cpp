@@ -378,7 +378,7 @@ qint8 AddressesPage::zonesCount(bool include) const
 {
     const quint32 zonesMask = addressGroupZones(include);
 
-    return __popcnt(zonesMask);
+    return DriverCommon::bitCount(zonesMask);
 }
 
 QString AddressesPage::localNetworks()
