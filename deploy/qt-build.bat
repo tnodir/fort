@@ -14,7 +14,7 @@ cd %TARGET_PATH%
 %QT_PATH%/configure -release -force-debug-info -optimize-size ^
 	-static -prefix "%TARGET_PATH%\static" ^
 	-opensource -confirm-license -mp -no-opengl ^
-	^
+	%* ^
 	-nomake examples -nomake tests -nomake tools ^
 	^
 	-skip qt3d -skip qt5compat -skip qtactiveqt -skip qtandroidextras ^
