@@ -6,8 +6,9 @@
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
+QT_FORWARD_DECLARE_CLASS(QToolButton)
 
-QT_FORWARD_DECLARE_CLASS(PlainTextEdit)
+class PlainTextEdit;
 
 class AddressesColumn : public QWidget
 {
