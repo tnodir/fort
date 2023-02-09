@@ -167,7 +167,8 @@ static HANDLE OpenProcessById(DWORD processId)
     }
 
     HANDLE processHandle;
-    status = ObOpenObjectByPointer(peProcess, 0, NULL, 0, 0, KernelMode, &processHandle);
+    status = ObOpenObjectByPointer(
+            peProcess, OBJ_KERNEL_HANDLE, NULL, 0, 0, KernelMode, &processHandle);
 
     ObDereferenceObject(peProcess);
 
