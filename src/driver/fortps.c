@@ -732,10 +732,11 @@ static void fort_pstree_enum_processes_loop(PSYSTEM_PROCESSES processEntry)
             }
         }
 
-        if (processEntry->NextEntryOffset == 0)
+        const ULONG nextEntryOffset = processEntry->NextEntryOffset;
+        if (nextEntryOffset == 0)
             break;
 
-        processEntry = (PSYSTEM_PROCESSES) ((PUCHAR) processEntry + processEntry->NextEntryOffset);
+        processEntry = (PSYSTEM_PROCESSES) ((PUCHAR) processEntry + nextEntryOffset);
     }
 }
 

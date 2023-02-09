@@ -401,7 +401,7 @@ FORT_API void fort_stat_close(PFORT_STAT stat)
     while (!fort_stat_close_flows(stat)) {
         /* Wait for asynchronously deleting flows */
         LARGE_INTEGER delay;
-        delay.QuadPart = -3000000; /* sleep 300000us (300ms) */
+        delay.QuadPart = -300 * 1000 * 10; /* sleep 300000us (300ms) */
 
         KeDelayExecutionThread(KernelMode, FALSE, &delay);
     }
