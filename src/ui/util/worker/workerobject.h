@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QRunnable>
+#include <QThread>
 
 class WorkerJob;
 class WorkerManager;
@@ -13,6 +14,8 @@ public:
     explicit WorkerObject(WorkerManager *manager);
 
     WorkerManager *manager() const { return m_manager; }
+
+    virtual QThread::Priority priority() const { return QThread::NormalPriority; }
 
     void run() override;
 

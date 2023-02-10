@@ -7,6 +7,8 @@ WorkerObject::WorkerObject(WorkerManager *manager) : m_manager(manager) { }
 
 void WorkerObject::run()
 {
+    QThread::currentThread()->setPriority(priority());
+
     for (;;) {
         WorkerJob *job = manager()->dequeueJob();
         if (!job)

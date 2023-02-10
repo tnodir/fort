@@ -15,6 +15,8 @@ public:
 
     AppInfoManager *manager() const;
 
+    QThread::Priority priority() const override { return QThread::LowPriority; }
+
     void run() override;
 
 protected:
