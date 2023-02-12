@@ -65,10 +65,34 @@ static void test_major(void)
     assert(res == STATUS_SUCCESS);
 }
 
-static void test_utl(void)
+static void test_utl_ascii(void)
+{
+#define TEST_DATA     L"TEsT Йц"
+#define TEST_DATA_LEN sizeof(TEST_DATA)
+
+    UNICODE_STRING src;
+    src.Length = TEST_DATA_LEN;
+    src.MaximumLength = TEST_DATA_LEN;
+    src.Buffer = TEST_DATA;
+
+    WCHAR buffer[TEST_DATA_LEN / sizeof(WCHAR)];
+
+    UNICODE_STRING dst;
+    dst.Length = sizeof(buffer);
+    dst.MaximumLength = sizeof(buffer);
+    dst.Buffer = buffer;
+
+    fort_ascii_downcase(&dst, &src);
+
+    assert(RtlCompareMemory(dst.Buffer, L"test Йц", TEST_DATA_LEN) == TEST_DATA_LEN);
+
+#undef TEST_DATA
+}
+
+static void test_utl_bits(void)
 {
     const UINT32 v = fort_bits_duplicate16(0x5555);
-    printf("test_utl: v=%x\n", v);
+    printf("test_utl_bits: v=%x\n", v);
     assert(v == 0x33333333);
 }
 
@@ -79,7 +103,8 @@ int main(int argc, char *argv[])
 
     test_proxycb();
     test_major();
-    test_utl();
+    test_utl_ascii();
+    test_utl_bits();
 
     return 0;
 }

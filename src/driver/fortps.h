@@ -7,9 +7,13 @@
 #include "fortpool.h"
 #include "forttds.h"
 
+#define FORT_PSTREE_ACTIVE       0x0001
+#define FORT_PSTREE_ENUM_STARTED 0x0002
+#define FORT_PSTREE_ENUM_DONE    0x0004
+
 typedef struct fort_pstree
 {
-    UINT8 active : 1;
+    UCHAR volatile flags;
 
     UINT16 procs_n;
 

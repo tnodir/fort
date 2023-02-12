@@ -307,6 +307,24 @@ FORT_API DWORD fort_le_u32_read(const char *cp, int offset)
     return v;
 }
 
+FORT_API void fort_ascii_downcase(PUNICODE_STRING dst, PCUNICODE_STRING src)
+{
+    PWCHAR dp = dst->Buffer;
+    PCWCH cp = src->Buffer;
+
+    USHORT len =
+            ((dst->MaximumLength < src->Length) ? dst->MaximumLength : src->Length) / sizeof(WCHAR);
+
+    while (len-- > 0) {
+        const WCHAR c = *cp++;
+
+        const BOOL isUpperAscii = (c >= 'A' && c <= 'Z');
+        const WCHAR d = c | (isUpperAscii ? 32 : 0);
+
+        *dp++ = d;
+    }
+}
+
 FORT_API BOOL fort_addr_is_local_broadcast(const UINT32 *ip, BOOL isIPv6)
 {
     if (isIPv6) {
