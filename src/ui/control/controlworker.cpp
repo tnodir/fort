@@ -149,7 +149,7 @@ bool ControlWorker::reconnectToServer()
 
     bool connectedToServer;
 
-    int reconnectCount = 2;
+    int reconnectCount = 3;
     do {
         connectedToServer = connectToServer();
     } while (!connectedToServer && --reconnectCount > 0);

@@ -419,7 +419,7 @@ bool RpcManager::waitResult()
 {
     m_resultCommand = Control::CommandNone;
 
-    int waitCount = 2;
+    int waitCount = 3;
     do {
         if (!client()->waitForRead() && --waitCount <= 0)
             return false;
