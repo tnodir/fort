@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v3.7.1, 2022-02-12:
+- UI: Options: IP Addresses: Add "Show Zones" button.
+- UI: Try to reconnect to killed service by timer.
+- Driver: Refactor for IRQ level to avoid Driver Verifier errors.
+- Installer: Use "C:\Program Files\" by default on 64-bit OS.
+
 v3.7.0, 2022-01-27:
 - UI: Programs: Load app icons in separate thread.
 
