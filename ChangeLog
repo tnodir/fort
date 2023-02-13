@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.7.2, 2022-02-13:
+- UI: __popcnt is not supported by old CPU.
+
 v3.7.1, 2022-02-12:
 - UI: Options: IP Addresses: Add "Show Zones" button.
 - UI: Try to reconnect to killed service by timer.
