@@ -610,21 +610,16 @@ static PFORT_PSNODE fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCUNICODE_
 
 inline static BOOL fort_pstree_wait_enum_processes(PFORT_PSTREE ps_tree)
 {
-    for (;;) {
-        const UCHAR flags =
-                (fort_pstree_flags(ps_tree) & (FORT_PSTREE_ENUM_STARTED | FORT_PSTREE_ENUM_DONE));
-        if (flags == 0)
-            return FALSE;
+    const UCHAR flags =
+            (fort_pstree_flags(ps_tree) & (FORT_PSTREE_ENUM_STARTED | FORT_PSTREE_ENUM_DONE));
+    if (flags == 0)
+        return FALSE;
 
-        if (flags == (FORT_PSTREE_ENUM_STARTED | FORT_PSTREE_ENUM_DONE))
-            return TRUE;
-
-        /* Wait for processes enumeration */
-        LARGE_INTEGER delay;
-        delay.QuadPart = -30 * 1000 * 10; /* sleep 30000us (30ms) */
-
-        KeDelayExecutionThread(KernelMode, FALSE, &delay);
+    if (flags == FORT_PSTREE_ENUM_STARTED) {
+        KeWaitForSingleObject(&ps_tree->enum_event, Executive, KernelMode, FALSE, NULL);
     }
+
+    return TRUE;
 }
 
 inline static PFORT_PSNODE fort_pstree_notify_process(PFORT_PSTREE ps_tree, PEPROCESS process,
@@ -724,6 +719,8 @@ FORT_API void fort_pstree_open(PFORT_PSTREE ps_tree)
 
     tommy_arrayof_init(&ps_tree->procs, sizeof(FORT_PSNODE));
     tommy_hashdyn_init(&ps_tree->procs_map);
+
+    KeInitializeEvent(&ps_tree->enum_event, NotificationEvent, FALSE);
 
     KeInitializeSpinLock(&ps_tree->lock);
 
@@ -840,6 +837,8 @@ FORT_API void NTAPI fort_pstree_enum_processes(void)
     }
 
     fort_pstree_flags_set(ps_tree, FORT_PSTREE_ENUM_DONE, TRUE);
+
+    KeSetEvent(&ps_tree->enum_event, 0, FALSE);
 
     fort_mem_free(buffer, FORT_PSTREE_POOL_TAG);
 }

@@ -23,6 +23,8 @@ typedef struct fort_pstree
     tommy_arrayof procs;
     tommy_hashdyn procs_map;
 
+    KEVENT enum_event;
+
     KSPIN_LOCK lock;
 } FORT_PSTREE, *PFORT_PSTREE;
 
