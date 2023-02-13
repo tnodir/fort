@@ -117,6 +117,7 @@ static void fort_device_cancel_pending(PDEVICE_OBJECT device, PIRP irp)
 
     const NTSTATUS status = fort_buffer_cancel_pending(&g_device->buffer, irp, &info);
 
+    IoSetCancelRoutine(irp, NULL);
     IoReleaseCancelSpinLock(irp->CancelIrql); /* before IoCompleteRequest()! */
 
     fort_request_complete_info(irp, status, info);
@@ -177,12 +178,13 @@ static NTSTATUS fort_device_control_getlog(PVOID out, ULONG out_len, PIRP irp, U
         const NTSTATUS status = fort_buffer_xmove(&g_device->buffer, irp, out, out_len, info);
 
         if (status == STATUS_PENDING) {
-            KIRQL cirq;
-
             IoMarkIrpPending(irp);
 
+            KIRQL cirq;
             IoAcquireCancelSpinLock(&cirq);
-            IoSetCancelRoutine(irp, fort_device_cancel_pending);
+            {
+                IoSetCancelRoutine(irp, fort_device_cancel_pending);
+            }
             IoReleaseCancelSpinLock(cirq);
         }
         return status;

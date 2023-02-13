@@ -264,8 +264,10 @@ FORT_API NTSTATUS fort_buffer_cancel_pending(PFORT_BUFFER buf, PIRP irp, ULONG_P
 
     *info = 0;
 
+    /* Cancel routines are called at IRQL = DISPATCH_LEVEL */
+
     KLOCK_QUEUE_HANDLE lock_queue;
-    KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
+    KeAcquireInStackQueuedSpinLockAtDpcLevel(&buf->lock, &lock_queue);
     if (irp == buf->irp) {
         buf->irp = NULL;
         buf->out_len = 0;
@@ -277,7 +279,7 @@ FORT_API NTSTATUS fort_buffer_cancel_pending(PFORT_BUFFER buf, PIRP irp, ULONG_P
             status = STATUS_SUCCESS;
         }
     }
-    KeReleaseInStackQueuedSpinLock(&lock_queue);
+    KeReleaseInStackQueuedSpinLockFromDpcLevel(&lock_queue);
 
     return status;
 }
