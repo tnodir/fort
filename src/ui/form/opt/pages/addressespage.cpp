@@ -351,6 +351,7 @@ void AddressesPage::setupZones()
             addrGroup->removeIncludeZone(zoneId);
             addrGroup->removeExcludeZone(zoneId);
         }
+        updateZonesTextAll();
     });
     connect(zoneListModel(), &ZoneListModel::modelChanged, this, [&] {
         clearZonesMenu();
