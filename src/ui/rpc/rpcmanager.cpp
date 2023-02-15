@@ -436,7 +436,7 @@ void RpcManager::sendResult(ControlWorker *w, bool ok, const QVariantList &args)
 bool RpcManager::invokeOnServer(Control::Command cmd, const QVariantList &args)
 {
     if (!client()->isConnected() && !client()->reconnectToServer()) {
-        IoC<WindowManager>()->showErrorBox(tr("Service isn't available."));
+        showErrorBox(tr("Service isn't available."));
         return false;
     }
 
@@ -449,12 +449,12 @@ bool RpcManager::doOnServer(Control::Command cmd, const QVariantList &args, QVar
         return false;
 
     if (!waitResult()) {
-        IoC<WindowManager>()->showErrorBox(tr("Service isn't responding."));
+        showErrorBox(tr("Service isn't responding."));
         return false;
     }
 
     if (resultCommand() != Control::Rpc_Result_Ok) {
-        IoC<WindowManager>()->showErrorBox(tr("Service error."));
+        showErrorBox(tr("Service error."));
         return false;
     }
 
@@ -690,4 +690,12 @@ bool RpcManager::processTaskManagerRpc(const ProcessCommandArgs &p)
     default:
         return false;
     }
+}
+
+void RpcManager::showErrorBox(const QString &text) const
+{
+    auto windowManager = IoC<WindowManager>();
+
+    QMetaObject::invokeMethod(
+            windowManager, [=] { windowManager->showErrorBox(text); }, Qt::QueuedConnection);
 }
