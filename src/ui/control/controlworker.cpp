@@ -156,6 +156,10 @@ bool ControlWorker::reconnectToServer()
 
     m_isReconnecting = false;
 
+    if (!connectedToServer) {
+        startReconnectTimer();
+    }
+
     return connectedToServer;
 }
 

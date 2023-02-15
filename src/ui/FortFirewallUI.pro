@@ -104,6 +104,7 @@ SOURCES += \
     manager/hotkeymanager.cpp \
     manager/logger.cpp \
     manager/nativeeventfilter.cpp \
+    manager/servicemanager.cpp \
     manager/translationmanager.cpp \
     manager/windowmanager.cpp \
     model/applistmodel.cpp \
@@ -163,7 +164,8 @@ SOURCES += \
     util/osutil.cpp \
     util/processinfo.cpp \
     util/regkey.cpp \
-    util/serviceworker.cpp \
+    util/service/servicemanageriface.cpp \
+    util/service/serviceworker.cpp \
     util/startuputil.cpp \
     util/stringutil.cpp \
     util/textareautil.cpp \
@@ -273,6 +275,7 @@ HEADERS += \
     manager/hotkeymanager.h \
     manager/logger.h \
     manager/nativeeventfilter.h \
+    manager/servicemanager.h \
     manager/translationmanager.h \
     manager/windowmanager.h \
     model/applistmodel.h \
@@ -335,7 +338,8 @@ HEADERS += \
     util/osutil.h \
     util/processinfo.h \
     util/regkey.h \
-    util/serviceworker.h \
+    util/service/servicemanageriface.h \
+    util/service/serviceworker.h \
     util/startuputil.h \
     util/stringutil.h \
     util/textareautil.h \

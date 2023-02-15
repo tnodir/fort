@@ -10,7 +10,6 @@
 #include "control.h"
 
 QT_FORWARD_DECLARE_CLASS(QLocalServer)
-QT_FORWARD_DECLARE_CLASS(QLocalSocket)
 
 class ControlWorker;
 
@@ -40,6 +39,10 @@ public:
     ControlWorker *newServiceClient(QObject *parent = nullptr) const;
 
     bool listen();
+    void close();
+
+    void closeAllClients();
+
     bool postCommand();
 
 private slots:
@@ -51,8 +54,6 @@ private slots:
 private:
     bool processCommand(const ProcessCommandArgs &p);
     bool processCommandProg(const ProcessCommandArgs &p);
-
-    void close();
 
     static QString getServerName(bool isService = false);
 

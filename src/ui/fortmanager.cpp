@@ -18,6 +18,7 @@
 #include <manager/hotkeymanager.h>
 #include <manager/logger.h>
 #include <manager/nativeeventfilter.h>
+#include <manager/servicemanager.h>
 #include <manager/translationmanager.h>
 #include <model/zonelistmodel.h>
 #include <rpc/appinfomanagerrpc.h>
@@ -157,6 +158,9 @@ void FortManager::createManagers()
 
     if (settings->isService()) {
         windowManager = new WindowManagerFake();
+
+        // For Service only
+        ioc->setService(new ServiceManager());
     } else {
         windowManager = new WindowManager();
 

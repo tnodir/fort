@@ -3,10 +3,12 @@
 
 #include <QObject>
 
+class ServiceManagerIface;
+
 class ServiceWorker
 {
 public:
-    static void run();
+    static void run(ServiceManagerIface *manager);
 };
 
 #endif // SERVICEWORKER_H

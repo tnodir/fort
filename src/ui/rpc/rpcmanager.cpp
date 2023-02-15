@@ -403,7 +403,7 @@ void RpcManager::setupClient()
             [&] { invokeOnServer(Control::Rpc_RpcManager_initClient); });
 
     client()->setIsTryReconnect(true);
-    client()->connectToServer();
+    client()->reconnectToServer();
 }
 
 void RpcManager::closeClient()

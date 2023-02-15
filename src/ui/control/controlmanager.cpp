@@ -63,7 +63,10 @@ bool ControlManager::listen()
 {
     const auto settings = IoC<FortSettings>();
 
-    Q_ASSERT(!m_server);
+    if (m_server) {
+        return m_server->isListening();
+    }
+
     m_server = new QLocalServer(this);
     m_server->setMaxPendingConnections(maxClientsCount);
     m_server->setSocketOptions(
@@ -77,6 +80,21 @@ bool ControlManager::listen()
     connect(m_server, &QLocalServer::newConnection, this, &ControlManager::onNewConnection);
 
     return true;
+}
+
+void ControlManager::close()
+{
+    if (m_server) {
+        m_server->close();
+        m_server = nullptr;
+    }
+}
+
+void ControlManager::closeAllClients()
+{
+    for (ControlWorker *w : m_clients) {
+        w->close();
+    }
 }
 
 bool ControlManager::postCommand()
@@ -124,7 +142,7 @@ void ControlManager::onNewConnection()
 
         m_clients.append(w);
 
-        qCDebug(LC) << "Client connected:" << w->id();
+        qCDebug(LC) << "Client connected: id:" << w->id() << "count:" << m_clients.size();
     }
 }
 
@@ -137,7 +155,7 @@ void ControlManager::onDisconnected()
     w->deleteLater();
     m_clients.removeOne(w);
 
-    qCDebug(LC) << "Client disconnected:" << w->id();
+    qCDebug(LC) << "Client disconnected: id:" << w->id();
 }
 
 bool ControlManager::processRequest(Control::Command command, const QVariantList &args)
@@ -202,13 +220,6 @@ bool ControlManager::processCommandProg(const ProcessCommandArgs &p)
     }
 
     return false;
-}
-
-void ControlManager::close()
-{
-    if (m_server) {
-        m_server->close();
-    }
 }
 
 QString ControlManager::getServerName(bool isService)
