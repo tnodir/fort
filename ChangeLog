@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.7.3, 2022-02-15:
+- UI: Service: Add ability to pause/continue client connections.
+- Driver: Use event to wait processes enumeration.
+
 v3.7.2, 2022-02-13:
 - UI: __popcnt is not supported by old CPU.
 
