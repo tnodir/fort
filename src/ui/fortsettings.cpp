@@ -362,7 +362,8 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
         ini.save();
 
         // Password
-        if (ini.hasPassword() != hasPassword() || !ini.password().isEmpty()) {
+        if ((ini.hasPasswordSet() && ini.hasPassword() != hasPassword())
+                || !ini.password().isEmpty()) {
             setPassword(ini.password());
         }
 

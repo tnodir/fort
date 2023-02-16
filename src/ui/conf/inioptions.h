@@ -21,6 +21,7 @@ public:
     bool logConsole() const { return valueBool("base/console"); }
     void setLogConsole(bool v) { setValue("base/console", v); }
 
+    bool hasPasswordSet() const { return contains("base/hasPassword_"); }
     bool hasPassword() const { return valueBool("base/hasPassword_"); }
     void setHasPassword(bool v) { setValue("base/hasPassword_", v); }
 
