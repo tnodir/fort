@@ -1,8 +1,10 @@
 Fort Firewall ChangeLog
 
-v3.7.3, 2022-02-15:
+v3.7.3, 2022-02-18:
+- UI: Don't reset password on Quota alert.
 - UI: Service: Add ability to pause/continue client connections.
 - Driver: Use event to wait processes enumeration.
+- Driver: Abort bad flows on unload.
 
 v3.7.2, 2022-02-13:
 - UI: __popcnt is not supported by old CPU.
