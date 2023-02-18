@@ -185,3 +185,9 @@ NTSTATUS NTAPI FwpsFlowRemoveContext0(UINT64 flowId, UINT16 layerId, UINT32 call
     UNUSED(calloutId);
     return STATUS_SUCCESS;
 }
+
+NTSTATUS NTAPI FwpsFlowAbort0(UINT64 flowId)
+{
+    UNUSED(flowId);
+    return STATUS_SUCCESS;
+}

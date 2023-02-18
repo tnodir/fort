@@ -192,44 +192,52 @@ static void fort_flow_context_set(
     fort_flow_context_transport_set(stat, flow_id, flowContext, isIPv6, inbound);
 }
 
-inline static BOOL fort_flow_context_stream_remove(
-        PFORT_STAT stat, UINT64 flow_id, BOOL isIPv6, BOOL is_tcp)
+inline static void fort_flow_context_stream_remove(
+        PFORT_STAT stat, UINT64 flow_id, BOOL isIPv6, BOOL is_tcp, NTSTATUS *status)
 {
     UINT16 layerId;
     UINT32 calloutId;
 
     fort_flow_context_stream_init(stat, isIPv6, is_tcp, &layerId, &calloutId);
 
-    return FwpsFlowRemoveContext0(flow_id, layerId, calloutId) != STATUS_PENDING;
+    *status = FwpsFlowRemoveContext0(flow_id, layerId, calloutId);
 }
 
-inline static BOOL fort_flow_context_transport_remove(PFORT_STAT stat, UINT64 flow_id, BOOL isIPv6)
+inline static void fort_flow_context_transport_remove(
+        PFORT_STAT stat, UINT64 flow_id, BOOL isIPv6, NTSTATUS *in_status, NTSTATUS *out_status)
 {
-    NTSTATUS in_status;
-    NTSTATUS out_status;
-
     if (isIPv6) {
-        in_status = FwpsFlowRemoveContext0(
+        *in_status = FwpsFlowRemoveContext0(
                 flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V6, stat->in_transport6_id);
-        out_status = FwpsFlowRemoveContext0(
+        *out_status = FwpsFlowRemoveContext0(
                 flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V6, stat->out_transport6_id);
     } else {
-        in_status = FwpsFlowRemoveContext0(
+        *in_status = FwpsFlowRemoveContext0(
                 flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V4, stat->in_transport4_id);
-        out_status = FwpsFlowRemoveContext0(
+        *out_status = FwpsFlowRemoveContext0(
                 flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V4, stat->out_transport4_id);
     }
-
-    return in_status != STATUS_PENDING && out_status != STATUS_PENDING;
 }
 
-static BOOL fort_flow_context_remove_id(PFORT_STAT stat, UINT64 flow_id, BOOL isIPv6, BOOL is_tcp)
+static BOOL fort_flow_context_remove_id(
+        PFORT_STAT stat, UINT64 flow_id, BOOL isIPv6, BOOL is_tcp, BOOL *pending)
 {
-    const BOOL stream_res = fort_flow_context_stream_remove(stat, flow_id, isIPv6, is_tcp);
+    NTSTATUS stream_status;
+    fort_flow_context_stream_remove(stat, flow_id, isIPv6, is_tcp, &stream_status);
 
-    const BOOL transport_res = fort_flow_context_transport_remove(stat, flow_id, isIPv6);
+    NTSTATUS transport_in_status;
+    NTSTATUS transport_out_status;
+    fort_flow_context_transport_remove(
+            stat, flow_id, isIPv6, &transport_in_status, &transport_out_status);
 
-    return stream_res && transport_res;
+    if (stream_status == STATUS_PENDING || transport_in_status == STATUS_PENDING
+            || transport_out_status == STATUS_PENDING) {
+        *pending = TRUE;
+        return FALSE;
+    }
+
+    return NT_SUCCESS(stream_status) && NT_SUCCESS(transport_in_status)
+            && NT_SUCCESS(transport_out_status);
 }
 
 static void fort_flow_context_remove(PFORT_STAT stat, PFORT_FLOW flow)
@@ -240,8 +248,18 @@ static void fort_flow_context_remove(PFORT_STAT stat, PFORT_FLOW flow)
     const BOOL is_tcp = (flow_flags & FORT_FLOW_TCP);
     const BOOL isIPv6 = (flow_flags & FORT_FLOW_IP6);
 
-    if (!fort_flow_context_remove_id(stat, flow_id, isIPv6, is_tcp)) {
-        fort_stat_flags_set(stat, FORT_STAT_FLOW_PENDING, TRUE);
+    BOOL pending = FALSE;
+
+    if (!fort_flow_context_remove_id(stat, flow_id, isIPv6, is_tcp, &pending)) {
+        if (pending) {
+            fort_stat_flags_set(stat, FORT_STAT_FLOW_PENDING, TRUE);
+        } else {
+            /* The flow has associated context, but FwpsFlowRemoveContext0()
+             * returns that there is no context as STATUS_UNSUCCESSFUL. */
+#if !defined(FORT_WIN7_COMPAT)
+            FwpsFlowAbort0(flow_id);
+#endif
+        }
     }
 }
 
@@ -320,8 +338,10 @@ inline static NTSTATUS fort_flow_add_new(PFORT_STAT stat, PFORT_FLOW *flow, UINT
         tommy_key_t flow_hash, BOOL isIPv6, BOOL is_tcp, BOOL inbound, BOOL is_reauth)
 {
     if (is_reauth) {
+        BOOL pending = FALSE;
+
         /* Remove existing flow context after reauth. to be able to associate a flow-context */
-        if (!fort_flow_context_remove_id(stat, flow_id, isIPv6, is_tcp))
+        if (!fort_flow_context_remove_id(stat, flow_id, isIPv6, is_tcp, &pending))
             return FORT_STATUS_FLOW_BLOCK;
     }
 
@@ -515,9 +535,11 @@ FORT_API void fort_flow_delete(PFORT_STAT stat, UINT64 flowContext)
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
+
     if ((fort_stat_flags(stat) & FORT_STAT_CLOSED) == 0) {
         fort_flow_free(stat, flow);
     }
+
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
