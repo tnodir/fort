@@ -129,7 +129,7 @@ void ControlManager::onNewConnection()
 {
     while (QLocalSocket *socket = m_server->nextPendingConnection()) {
         if (m_clients.size() > maxClientsCount) {
-            qCDebug(LC) << "Client dropped: Count limit";
+            qCWarning(LC) << "Client dropped: Count limit";
             delete socket;
             continue;
         }
