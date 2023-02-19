@@ -20,6 +20,8 @@ public:
     void setTrafDayBytes(qint64 bytes);
     void setTrafMonthBytes(qint64 bytes);
 
+    void setUp() override;
+
     void clear(bool clearDay = true, bool clearMonth = true);
     void addTraf(qint64 bytes);
 
@@ -32,6 +34,8 @@ signals:
     void alert(qint8 alertType);
 
 protected:
+    virtual void setupConfManager();
+
     virtual int quotaDayAlerted() const;
     virtual void setQuotaDayAlerted(qint32 v);
 
@@ -40,6 +44,8 @@ protected:
 
 private:
     void processQuotaExceed(AlertType alertType);
+
+    void setupByConf();
 
 private:
     int m_quotaDayAlerted = 0;

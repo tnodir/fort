@@ -9,6 +9,9 @@ class QuotaManagerRpc : public QuotaManager
 
 public:
     explicit QuotaManagerRpc(QObject *parent = nullptr);
+
+protected:
+    void setupConfManager() override { }
 };
 
 #endif // QUOTAMANAGERRPC_H

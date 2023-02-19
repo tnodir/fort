@@ -95,7 +95,6 @@ private:
     void setupActivePeriod();
     void updateActivePeriod();
 
-    void setupQuota();
     void clearQuotas(bool isNewDay, bool isNewMonth);
     void checkQuotas(quint32 inBytes);
 

@@ -10,12 +10,12 @@
 #include <log/logentryblockedip.h>
 #include <log/logentryprocnew.h>
 #include <log/logentrystattraf.h>
+#include <stat/quotamanager.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/osutil.h>
 
-#include "quotamanager.h"
 #include "statsql.h"
 
 namespace {
@@ -134,7 +134,6 @@ void StatManager::setupByConf()
 
     if (conf()) {
         setupActivePeriod();
-        setupQuota();
     }
 }
 
@@ -163,26 +162,6 @@ void StatManager::updateActivePeriod()
                     m_activePeriodToHour, m_activePeriodToMinute);
         }
     }
-}
-
-void StatManager::setupQuota()
-{
-    auto quotaManager = IoC<QuotaManager>();
-
-    quotaManager->setQuotaDayBytes(qint64(ini()->quotaDayMb()) * 1024 * 1024);
-    quotaManager->setQuotaMonthBytes(qint64(ini()->quotaMonthMb()) * 1024 * 1024);
-
-    const qint64 unixTime = DateUtil::getUnixTime();
-    const qint32 trafDay = DateUtil::getUnixDay(unixTime);
-    const qint32 trafMonth = DateUtil::getUnixMonth(unixTime, ini()->monthStart());
-
-    qint64 inBytes, outBytes;
-
-    getTraffic(StatSql::sqlSelectTrafDay, trafDay, inBytes, outBytes);
-    quotaManager->setTrafDayBytes(inBytes);
-
-    getTraffic(StatSql::sqlSelectTrafMonth, trafMonth, inBytes, outBytes);
-    quotaManager->setTrafMonthBytes(inBytes);
 }
 
 void StatManager::clearQuotas(bool isNewDay, bool isNewMonth)

@@ -2,7 +2,11 @@
 
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
+#include <stat/statmanager.h>
+#include <util/dateutil.h>
 #include <util/ioc/ioccontainer.h>
+
+#include "statsql.h"
 
 QuotaManager::QuotaManager(QObject *parent) : QObject(parent) { }
 
@@ -36,6 +40,11 @@ void QuotaManager::setTrafDayBytes(qint64 bytes)
 void QuotaManager::setTrafMonthBytes(qint64 bytes)
 {
     m_trafMonthBytes = bytes;
+}
+
+void QuotaManager::setUp()
+{
+    setupConfManager();
 }
 
 void QuotaManager::clear(bool clearDay, bool clearMonth)
@@ -110,6 +119,13 @@ QString QuotaManager::alertTypeText(qint8 alertType)
     };
 }
 
+void QuotaManager::setupConfManager()
+{
+    auto confManager = IoC()->setUpDependency<ConfManager>();
+
+    connect(confManager, &ConfManager::confChanged, this, &QuotaManager::setupByConf);
+}
+
 int QuotaManager::quotaDayAlerted() const
 {
     auto confManager = IoC<ConfManager>();
@@ -163,4 +179,31 @@ void QuotaManager::processQuotaExceed(AlertType alertType)
     }
 
     emit alert(alertType);
+}
+
+void QuotaManager::setupByConf()
+{
+    auto confManager = IoC<ConfManager>();
+    FirewallConf *conf = confManager->conf();
+
+    if (!conf->iniEdited())
+        return;
+
+    const IniOptions &ini = conf->ini();
+
+    setQuotaDayBytes(qint64(ini.quotaDayMb()) * 1024 * 1024);
+    setQuotaMonthBytes(qint64(ini.quotaMonthMb()) * 1024 * 1024);
+
+    const qint64 unixTime = DateUtil::getUnixTime();
+    const qint32 trafDay = DateUtil::getUnixDay(unixTime);
+    const qint32 trafMonth = DateUtil::getUnixMonth(unixTime, ini.monthStart());
+
+    auto statManager = IoC<StatManager>();
+    qint64 inBytes, outBytes;
+
+    statManager->getTraffic(StatSql::sqlSelectTrafDay, trafDay, inBytes, outBytes);
+    setTrafDayBytes(inBytes);
+
+    statManager->getTraffic(StatSql::sqlSelectTrafMonth, trafMonth, inBytes, outBytes);
+    setTrafMonthBytes(inBytes);
 }
