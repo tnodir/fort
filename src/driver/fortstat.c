@@ -251,15 +251,15 @@ static void fort_flow_context_remove(PFORT_STAT stat, PFORT_FLOW flow)
     BOOL pending = FALSE;
 
     if (!fort_flow_context_remove_id(stat, flow_id, isIPv6, is_tcp, &pending)) {
-        if (pending) {
-            fort_stat_flags_set(stat, FORT_STAT_FLOW_PENDING, TRUE);
-        } else {
+        fort_stat_flags_set(stat, pending ? FORT_STAT_FLOW_PENDING : FORT_STAT_FLOW_FAILED, TRUE);
+
+#if !defined(FORT_WIN7_COMPAT)
+        if (!pending) {
             /* The flow has associated context, but FwpsFlowRemoveContext0()
              * returns that there is no context as STATUS_UNSUCCESSFUL. */
-#if !defined(FORT_WIN7_COMPAT)
             FwpsFlowAbort0(flow_id);
-#endif
         }
+#endif
     }
 }
 
@@ -396,35 +396,45 @@ FORT_API void fort_stat_open(PFORT_STAT stat)
     KeInitializeSpinLock(&stat->lock);
 }
 
-static BOOL fort_stat_close_flows(PFORT_STAT stat)
+static BOOL fort_stat_close_flows(PFORT_STAT stat, BOOL *pending)
 {
-    BOOL is_pending = FALSE;
+    fort_stat_flags_set(stat, (FORT_STAT_FLOW_PENDING | FORT_STAT_FLOW_FAILED), FALSE);
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
     {
-        fort_stat_flags_set(stat, FORT_STAT_FLOW_PENDING, FALSE);
-
         tommy_hashdyn_foreach_node_arg(&stat->flows_map, &fort_flow_context_remove, stat);
-
-        is_pending = (fort_stat_flags(stat) & FORT_STAT_FLOW_PENDING) != 0;
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
-    return !is_pending;
+    const UCHAR flags = (fort_stat_flags(stat) & (FORT_STAT_FLOW_PENDING | FORT_STAT_FLOW_FAILED));
+
+    *pending = (flags & FORT_STAT_FLOW_PENDING) != 0;
+
+    return (flags == 0);
+}
+
+static void fort_stat_wait_flows(PFORT_STAT stat)
+{
+    fort_stat_flags_set(stat, FORT_STAT_CLOSED, TRUE);
+
+    BOOL pending = FALSE;
+
+    while (!fort_stat_close_flows(stat, &pending)) {
+        /* Wait for asynchronously deleting flows */
+        LARGE_INTEGER delay;
+        delay.QuadPart = -200 * 1000 * 10; /* sleep 200000us (200ms) */
+
+        KeDelayExecutionThread(KernelMode, FALSE, &delay);
+
+        if (!pending)
+            break;
+    }
 }
 
 FORT_API void fort_stat_close(PFORT_STAT stat)
 {
-    fort_stat_flags_set(stat, FORT_STAT_CLOSED, TRUE);
-
-    while (!fort_stat_close_flows(stat)) {
-        /* Wait for asynchronously deleting flows */
-        LARGE_INTEGER delay;
-        delay.QuadPart = -300 * 1000 * 10; /* sleep 300000us (300ms) */
-
-        KeDelayExecutionThread(KernelMode, FALSE, &delay);
-    }
+    fort_stat_wait_flows(stat);
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
