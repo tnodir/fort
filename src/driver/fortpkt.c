@@ -162,27 +162,38 @@ inline static NTSTATUS fort_shaper_packet_fill(
     return STATUS_SUCCESS;
 }
 
+inline static void fort_shaper_packet_free_cloned(PNET_BUFFER_LIST clonedNetBufList)
+{
+    if (clonedNetBufList == NULL)
+        return;
+
+    const NTSTATUS status = clonedNetBufList->Status;
+
+    if (!NT_SUCCESS(status) && status != STATUS_NOT_FOUND) {
+        LOG("Shaper: Packet injection error: %x\n", status);
+        TRACE(FORT_SHAPER_PACKET_INJECTION_ERROR, status, 0, 0);
+    }
+
+    FwpsFreeCloneNetBufferList0(clonedNetBufList, 0);
+}
+
+inline static void fort_shaper_packet_free_control(PFORT_PACKET pkt)
+{
+    if ((pkt->flags & FORT_PACKET_INBOUND) != 0)
+        return;
+
+    if (pkt->out.controlData != NULL) {
+        fort_mem_free(pkt->out.controlData, FORT_PACKET_POOL_TAG);
+    }
+}
+
 static void fort_shaper_packet_free(
         PFORT_SHAPER shaper, PFORT_PACKET pkt, PNET_BUFFER_LIST clonedNetBufList)
 {
-    if (clonedNetBufList != NULL) {
-        const NTSTATUS status = clonedNetBufList->Status;
-
-        if (!NT_SUCCESS(status) && status != STATUS_NOT_FOUND) {
-            LOG("Shaper: Packet injection error: %x\n", status);
-            TRACE(FORT_SHAPER_PACKET_INJECTION_ERROR, status, 0, 0);
-        }
-
-        FwpsFreeCloneNetBufferList0(clonedNetBufList, 0);
-    }
+    fort_shaper_packet_free_cloned(clonedNetBufList);
+    fort_shaper_packet_free_control(pkt);
 
     FwpsDereferenceNetBufferList0(pkt->netBufList, FALSE);
-
-    if ((pkt->flags & FORT_PACKET_INBOUND) == 0) {
-        if (pkt->out.controlData != NULL) {
-            fort_mem_free(pkt->out.controlData, FORT_PACKET_POOL_TAG);
-        }
-    }
 
     fort_shaper_packet_put(shaper, pkt);
 }
@@ -522,6 +533,25 @@ static BOOL fort_shaper_queue_process(
     return is_active;
 }
 
+inline static PFORT_PACKET_QUEUE fort_shaper_create_queue(PFORT_SHAPER shaper, UINT16 queue_index)
+{
+    PFORT_PACKET_QUEUE queue = shaper->queues[queue_index];
+    if (queue != NULL)
+        return queue;
+
+    queue = fort_mem_alloc(sizeof(FORT_PACKET_QUEUE), FORT_PACKET_POOL_TAG);
+    if (queue == NULL)
+        return NULL;
+
+    RtlZeroMemory(queue, sizeof(FORT_PACKET_QUEUE));
+
+    KeInitializeSpinLock(&queue->lock);
+
+    shaper->queues[queue_index] = queue;
+
+    return queue;
+}
+
 static void fort_shaper_create_queues(
         PFORT_SHAPER shaper, PFORT_SPEED_LIMIT limits, UINT32 limit_io_bits)
 {
@@ -532,18 +562,9 @@ static void fort_shaper_create_queues(
         if (!queue_exists)
             continue;
 
-        PFORT_PACKET_QUEUE queue = shaper->queues[i];
-        if (queue == NULL) {
-            queue = fort_mem_alloc(sizeof(FORT_PACKET_QUEUE), FORT_PACKET_POOL_TAG);
-            if (queue == NULL)
-                break;
-
-            RtlZeroMemory(queue, sizeof(FORT_PACKET_QUEUE));
-
-            KeInitializeSpinLock(&queue->lock);
-
-            shaper->queues[i] = queue;
-        }
+        PFORT_PACKET_QUEUE queue = fort_shaper_create_queue(shaper, i);
+        if (queue == NULL)
+            continue;
 
         queue->limit = limits[i];
     }
