@@ -541,7 +541,7 @@ static BOOL fort_shaper_queue_process(
     return is_active;
 }
 
-inline static PFORT_PACKET_QUEUE fort_shaper_create_queue(PFORT_SHAPER shaper, UINT16 queue_index)
+inline static PFORT_PACKET_QUEUE fort_shaper_create_queue(PFORT_SHAPER shaper, int queue_index)
 {
     PFORT_PACKET_QUEUE queue = shaper->queues[queue_index];
     if (queue != NULL)
