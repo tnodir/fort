@@ -613,7 +613,7 @@ inline static NTSTATUS fort_callout_register(
     return STATUS_SUCCESS;
 }
 
-FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
+static NTSTATUS fort_callout_install_ale(PDEVICE_OBJECT device)
 {
     const FWPS_CALLOUT0 callouts[] = {
         /* IPv4 connect callout */
@@ -640,6 +640,15 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
                 .classifyFn = &fort_callout_accept_v6,
                 .notifyFn = &fort_callout_notify,
         },
+    };
+
+    return fort_callout_register(
+            device, callouts, /*count=*/sizeof(callouts) / sizeof(callouts[0]));
+}
+
+static NTSTATUS fort_callout_install_stream(PDEVICE_OBJECT device)
+{
+    const FWPS_CALLOUT0 callouts[] = {
         /* IPv4 stream callout */
         {
                 .calloutKey = FORT_GUID_CALLOUT_STREAM_V4,
@@ -672,6 +681,15 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
                 .flowDeleteFn = &fort_callout_flow_delete,
                 .flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW,
         },
+    };
+
+    return fort_callout_register(
+            device, callouts, /*count=*/sizeof(callouts) / sizeof(callouts[0]));
+}
+
+static NTSTATUS fort_callout_install_transport(PDEVICE_OBJECT device)
+{
+    const FWPS_CALLOUT0 callouts[] = {
         /* IPv4 inbound transport callout */
         {
                 .calloutKey = FORT_GUID_CALLOUT_IN_TRANSPORT_V4,
@@ -708,6 +726,18 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 
     return fort_callout_register(
             device, callouts, /*count=*/sizeof(callouts) / sizeof(callouts[0]));
+}
+
+FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
+{
+    NTSTATUS status;
+    if (!NT_SUCCESS(status = fort_callout_install_ale(device))
+            || !NT_SUCCESS(status = fort_callout_install_stream(device))
+            || !NT_SUCCESS(status = fort_callout_install_transport(device))) {
+        return status;
+    }
+
+    return STATUS_SUCCESS;
 }
 
 FORT_API void fort_callout_remove(void)
