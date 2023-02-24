@@ -217,42 +217,49 @@ FORT_API NTSTATUS fort_buffer_proc_new_write(
     return status;
 }
 
-FORT_API NTSTATUS fort_buffer_xmove(
+inline static NTSTATUS fort_buffer_xmove_locked_empty(
+        PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len)
+{
+    if (buf->out_len != 0)
+        return STATUS_UNSUCCESSFUL; /* collision */
+
+    buf->irp = irp;
+    buf->out = out;
+    buf->out_len = out_len;
+    buf->out_top = 0;
+
+    return STATUS_PENDING;
+}
+
+static NTSTATUS fort_buffer_xmove_locked(
         PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len, ULONG_PTR *info)
 {
-    NTSTATUS status = STATUS_SUCCESS;
-
-    KLOCK_QUEUE_HANDLE lock_queue;
-    KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
-
     PFORT_BUFFER_DATA data = buf->data_head;
     const UINT32 buf_top = (data ? data->top : 0);
 
     *info = buf_top;
 
-    if (buf_top == 0) {
-        if (buf->out_len != 0) {
-            status = STATUS_UNSUCCESSFUL; /* collision */
-        } else {
-            buf->irp = irp;
-            buf->out = out;
-            buf->out_len = out_len;
-            buf->out_top = 0;
-            status = STATUS_PENDING;
-        }
-        goto end;
-    }
+    if (buf_top == 0)
+        return fort_buffer_xmove_locked_empty(buf, irp, out, out_len);
 
-    if (out_len < buf_top) {
-        status = STATUS_BUFFER_TOO_SMALL;
-        goto end;
-    }
+    if (out_len < buf_top)
+        return STATUS_BUFFER_TOO_SMALL;
 
     RtlCopyMemory(out, data->p, buf_top);
 
     fort_buffer_data_shift(buf);
 
-end:
+    return STATUS_SUCCESS;
+}
+
+FORT_API NTSTATUS fort_buffer_xmove(
+        PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len, ULONG_PTR *info)
+{
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
+
+    const NTSTATUS status = fort_buffer_xmove_locked(buf, irp, out, out_len, info);
+
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
     return status;
