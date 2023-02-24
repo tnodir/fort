@@ -59,7 +59,8 @@ StatManager::StatManager(const QString &filePath, QObject *parent, quint32 openF
     m_isConnIdRangeUpdated(false),
     m_isActivePeriodSet(false),
     m_isActivePeriod(false),
-    m_sqliteDb(new SqliteDb(filePath, openFlags))
+    m_sqliteDb(new SqliteDb(filePath, openFlags)),
+    m_connChangedTimer(500)
 {
     connect(&m_connChangedTimer, &QTimer::timeout, this, &StatManager::connChanged);
 }
@@ -685,10 +686,9 @@ bool StatManager::createConnBlock(const LogEntryBlockedIp &entry, qint64 unixTim
     if (connBlockId <= 0)
         return false;
 
-    if (m_connBlockIdMax > 0) {
-        m_connBlockIdMax++;
-    } else {
-        m_connBlockIdMin = m_connBlockIdMax = 1;
+    m_connBlockIdMax = connBlockId;
+    if (m_connBlockIdMin <= 0) {
+        m_connBlockIdMin = m_connBlockIdMax;
     }
 
     return true;

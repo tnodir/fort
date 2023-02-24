@@ -1,9 +1,9 @@
 #include "triggertimer.h"
 
-TriggerTimer::TriggerTimer(QObject *parent) : QTimer(parent)
+TriggerTimer::TriggerTimer(int interval, QObject *parent) : QTimer(parent)
 {
     setSingleShot(true);
-    setInterval(200);
+    setInterval(interval);
 }
 
 void TriggerTimer::startTrigger()
