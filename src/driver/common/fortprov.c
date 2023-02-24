@@ -238,6 +238,15 @@ static DWORD fort_prov_register_callouts(HANDLE engine)
                 .providerKey = (GUID *) &FORT_GUID_PROVIDER,
                 .applicableLayer = FWPM_LAYER_DATAGRAM_DATA_V6,
         },
+    };
+
+    return fort_prov_add_callouts(
+            engine, callouts, /*count=*/sizeof(callouts) / sizeof(callouts[0]));
+}
+
+static DWORD fort_prov_register_packet_callouts(HANDLE engine)
+{
+    const FWPM_CALLOUT0 callouts[] = {
         /* itcallout4 */
         {
                 .calloutKey = FORT_GUID_CALLOUT_IN_TRANSPORT_V4,
@@ -351,6 +360,7 @@ static DWORD fort_prov_register_provider(HANDLE engine, BOOL is_boot)
     if ((status = FwpmProviderAdd0(engine, &provider, NULL))
             || (status = FwpmSubLayerAdd0(engine, &sublayer, NULL))
             || (status = fort_prov_register_callouts(engine))
+            || (status = fort_prov_register_packet_callouts(engine))
             || (status = fort_prov_register_filters(engine, is_boot))) {
         return status;
     }
