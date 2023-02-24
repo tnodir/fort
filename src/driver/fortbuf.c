@@ -96,44 +96,59 @@ FORT_API void fort_buffer_clear(PFORT_BUFFER buf)
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
+inline static NTSTATUS fort_buffer_prepare_pending(
+        PFORT_BUFFER buf, UINT32 len, PCHAR *out, PIRP *irp, ULONG_PTR *info)
+{
+    const UINT32 out_top = buf->out_top;
+    UINT32 new_top = out_top + len;
+
+    /* Is it time to flush logs? */
+    if (buf->out_len - new_top < FORT_LOG_SIZE_MAX) {
+        if (irp != NULL) {
+            *irp = buf->irp;
+            buf->irp = NULL;
+
+            *info = new_top;
+            new_top = 0;
+        }
+
+        buf->out_len = new_top;
+    }
+
+    *out = buf->out + out_top;
+    buf->out_top = new_top;
+
+    return STATUS_SUCCESS;
+}
+
+inline static NTSTATUS fort_buffer_prepare_new(PFORT_BUFFER buf, UINT32 len, PCHAR *out)
+{
+    PFORT_BUFFER_DATA data = fort_buffer_data_alloc(buf, len);
+    if (data == NULL) {
+        LOG("Buffer OOM: len=%d\n", len);
+        TRACE(FORT_BUFFER_OOM, STATUS_INSUFFICIENT_RESOURCES, len, 0);
+        return STATUS_INSUFFICIENT_RESOURCES;
+    }
+
+    *out = data->p + data->top;
+    data->top += len;
+
+    return STATUS_SUCCESS;
+}
+
 FORT_API NTSTATUS fort_buffer_prepare(
         PFORT_BUFFER buf, UINT32 len, PCHAR *out, PIRP *irp, ULONG_PTR *info)
 {
-    const ULONG out_len = buf->out_len;
+    /* Check a pending buffer */
+    if (buf->data_head == NULL) {
+        const ULONG out_len = buf->out_len;
 
-    /* Check pending buffer */
-    if (buf->data_head == NULL && out_len != 0 && buf->out_top < out_len) {
-        const UINT32 out_top = buf->out_top;
-        UINT32 new_top = out_top + len;
-
-        /* Is it time to flush logs? */
-        if (out_len - new_top < FORT_LOG_SIZE_MAX) {
-            if (irp != NULL) {
-                *irp = buf->irp;
-                buf->irp = NULL;
-
-                *info = new_top;
-                new_top = 0;
-            }
-
-            buf->out_len = new_top;
+        if (out_len != 0 && buf->out_top < out_len) {
+            return fort_buffer_prepare_pending(buf, len, out, irp, info);
         }
-
-        *out = buf->out + out_top;
-        buf->out_top = new_top;
-    } else {
-        PFORT_BUFFER_DATA data = fort_buffer_data_alloc(buf, len);
-        if (data == NULL) {
-            LOG("Buffer OOM: len=%d\n", len);
-            TRACE(FORT_BUFFER_OOM, STATUS_INSUFFICIENT_RESOURCES, len, 0);
-            return STATUS_INSUFFICIENT_RESOURCES;
-        }
-
-        *out = data->p + data->top;
-        data->top += len;
     }
 
-    return STATUS_SUCCESS;
+    return fort_buffer_prepare_new(buf, len, out);
 }
 
 FORT_API NTSTATUS fort_buffer_blocked_write(PFORT_BUFFER buf, BOOL blocked, UINT32 pid,
