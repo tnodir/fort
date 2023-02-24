@@ -623,16 +623,8 @@ static void fort_shaper_timer_start(PFORT_SHAPER shaper)
     fort_timer_set_running(&shaper->timer, /*run=*/TRUE);
 }
 
-static void NTAPI fort_shaper_timer_process(void)
+inline static ULONG fort_shaper_timer_process_queues(PFORT_SHAPER shaper, ULONG active_io_bits)
 {
-    PFORT_SHAPER shaper = &fort_device()->shaper;
-
-    ULONG active_io_bits =
-            fort_shaper_io_bits_set(&shaper->active_io_bits, FORT_PACKET_FLUSH_ALL, FALSE);
-
-    if (active_io_bits == 0)
-        return;
-
     ULONG new_active_io_bits = 0;
 
     const LARGE_INTEGER now = KeQueryPerformanceCounter(NULL);
@@ -653,8 +645,23 @@ static void NTAPI fort_shaper_timer_process(void)
         }
     }
 
-    if (new_active_io_bits != 0) {
-        fort_shaper_io_bits_set(&shaper->active_io_bits, new_active_io_bits, TRUE);
+    return new_active_io_bits;
+}
+
+static void NTAPI fort_shaper_timer_process(void)
+{
+    PFORT_SHAPER shaper = &fort_device()->shaper;
+
+    ULONG active_io_bits =
+            fort_shaper_io_bits_set(&shaper->active_io_bits, FORT_PACKET_FLUSH_ALL, FALSE);
+
+    if (active_io_bits == 0)
+        return;
+
+    active_io_bits = fort_shaper_timer_process_queues(shaper, active_io_bits);
+
+    if (active_io_bits != 0) {
+        fort_shaper_io_bits_set(&shaper->active_io_bits, active_io_bits, TRUE);
 
         fort_shaper_timer_start(shaper);
     }
