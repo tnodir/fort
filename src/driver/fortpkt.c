@@ -667,15 +667,9 @@ static void NTAPI fort_shaper_timer_process(void)
     }
 }
 
-static void fort_shaper_flush(PFORT_SHAPER shaper, UINT32 group_io_bits, BOOL drop)
+inline static PFORT_PACKET fort_shaper_flush_queues(PFORT_SHAPER shaper, UINT32 group_io_bits)
 {
-    if (group_io_bits == 0)
-        return;
-
-    /* Collect packets from Queues */
     PFORT_PACKET pkt_chain = NULL;
-
-    group_io_bits &= fort_shaper_io_bits_set(&shaper->active_io_bits, group_io_bits, FALSE);
 
     for (int i = 0; group_io_bits != 0; ++i) {
         const BOOL queue_exists = (group_io_bits & 1) != 0;
@@ -690,6 +684,19 @@ static void fort_shaper_flush(PFORT_SHAPER shaper, UINT32 group_io_bits, BOOL dr
 
         pkt_chain = fort_shaper_queue_get_packets(queue, pkt_chain);
     }
+
+    return pkt_chain;
+}
+
+static void fort_shaper_flush(PFORT_SHAPER shaper, UINT32 group_io_bits, BOOL drop)
+{
+    if (group_io_bits == 0)
+        return;
+
+    group_io_bits &= fort_shaper_io_bits_set(&shaper->active_io_bits, group_io_bits, FALSE);
+
+    /* Collect packets from Queues */
+    PFORT_PACKET pkt_chain = fort_shaper_flush_queues(shaper, group_io_bits);
 
     /* Process the packets */
     if (pkt_chain != NULL) {
