@@ -582,25 +582,8 @@ static void NTAPI fort_callout_transport_delete(
 }
 
 inline static NTSTATUS fort_callout_register(
-        PDEVICE_OBJECT device, const FWPS_CALLOUT0 *callouts, int count)
+        PDEVICE_OBJECT device, const FWPS_CALLOUT0 *callouts, const PUINT32 *calloutIds, int count)
 {
-    PFORT_STAT stat = &fort_device()->stat;
-
-    UINT32 *const calloutIds[] = {
-        &stat->connect4_id,
-        &stat->connect6_id,
-        &stat->accept4_id,
-        &stat->accept6_id,
-        &stat->stream4_id,
-        &stat->stream6_id,
-        &stat->datagram4_id,
-        &stat->datagram6_id,
-        &stat->in_transport4_id,
-        &stat->in_transport6_id,
-        &stat->out_transport4_id,
-        &stat->out_transport6_id,
-    };
-
     for (int i = 0; i < count; ++i) {
         const NTSTATUS status = FwpsCalloutRegister0(device, &callouts[i], calloutIds[i]);
         if (!NT_SUCCESS(status)) {
@@ -613,7 +596,7 @@ inline static NTSTATUS fort_callout_register(
     return STATUS_SUCCESS;
 }
 
-static NTSTATUS fort_callout_install_ale(PDEVICE_OBJECT device)
+static NTSTATUS fort_callout_install_ale(PDEVICE_OBJECT device, PFORT_STAT stat)
 {
     const FWPS_CALLOUT0 callouts[] = {
         /* IPv4 connect callout */
@@ -642,11 +625,18 @@ static NTSTATUS fort_callout_install_ale(PDEVICE_OBJECT device)
         },
     };
 
+    const PUINT32 calloutIds[] = {
+        &stat->connect4_id,
+        &stat->connect6_id,
+        &stat->accept4_id,
+        &stat->accept6_id,
+    };
+
     return fort_callout_register(
-            device, callouts, /*count=*/sizeof(callouts) / sizeof(callouts[0]));
+            device, callouts, calloutIds, /*count=*/sizeof(callouts) / sizeof(callouts[0]));
 }
 
-static NTSTATUS fort_callout_install_stream(PDEVICE_OBJECT device)
+static NTSTATUS fort_callout_install_stream(PDEVICE_OBJECT device, PFORT_STAT stat)
 {
     const FWPS_CALLOUT0 callouts[] = {
         /* IPv4 stream callout */
@@ -683,11 +673,18 @@ static NTSTATUS fort_callout_install_stream(PDEVICE_OBJECT device)
         },
     };
 
+    const PUINT32 calloutIds[] = {
+        &stat->stream4_id,
+        &stat->stream6_id,
+        &stat->datagram4_id,
+        &stat->datagram6_id,
+    };
+
     return fort_callout_register(
-            device, callouts, /*count=*/sizeof(callouts) / sizeof(callouts[0]));
+            device, callouts, calloutIds, /*count=*/sizeof(callouts) / sizeof(callouts[0]));
 }
 
-static NTSTATUS fort_callout_install_transport(PDEVICE_OBJECT device)
+static NTSTATUS fort_callout_install_transport(PDEVICE_OBJECT device, PFORT_STAT stat)
 {
     const FWPS_CALLOUT0 callouts[] = {
         /* IPv4 inbound transport callout */
@@ -724,16 +721,25 @@ static NTSTATUS fort_callout_install_transport(PDEVICE_OBJECT device)
         },
     };
 
+    const PUINT32 calloutIds[] = {
+        &stat->in_transport4_id,
+        &stat->in_transport6_id,
+        &stat->out_transport4_id,
+        &stat->out_transport6_id,
+    };
+
     return fort_callout_register(
-            device, callouts, /*count=*/sizeof(callouts) / sizeof(callouts[0]));
+            device, callouts, calloutIds, /*count=*/sizeof(callouts) / sizeof(callouts[0]));
 }
 
 FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 {
+    PFORT_STAT stat = &fort_device()->stat;
+
     NTSTATUS status;
-    if (!NT_SUCCESS(status = fort_callout_install_ale(device))
-            || !NT_SUCCESS(status = fort_callout_install_stream(device))
-            || !NT_SUCCESS(status = fort_callout_install_transport(device))) {
+    if (!NT_SUCCESS(status = fort_callout_install_ale(device, stat))
+            || !NT_SUCCESS(status = fort_callout_install_stream(device, stat))
+            || !NT_SUCCESS(status = fort_callout_install_transport(device, stat))) {
         return status;
     }
 
