@@ -81,6 +81,37 @@ bool SqliteStmt::bindBlob(int index, const QByteArray &data)
             == SQLITE_OK;
 }
 
+bool SqliteStmt::bindVarBlob(int index, const QVariant &v)
+{
+    const qint16 vType = v.userType();
+
+    QByteArray data;
+
+    // Write type
+    QDataStream stream(&data, QIODevice::WriteOnly);
+    stream << vType;
+
+    // Write content
+    switch (vType) {
+    case QMetaType::QImage: {
+        QByteArray bufData;
+
+        QBuffer buf(&bufData);
+        buf.open(QIODevice::WriteOnly);
+
+        const QImage image = v.value<QImage>();
+        image.save(&buf, "PNG");
+
+        buf.close();
+        stream << bufData;
+    } break;
+    default:
+        Q_UNREACHABLE();
+    }
+
+    return bindBlob(index, data);
+}
+
 bool SqliteStmt::bindVar(int index, const QVariant &v)
 {
     const qint16 vType = v.userType();
@@ -99,42 +130,14 @@ bool SqliteStmt::bindVar(int index, const QVariant &v)
         return bindInt64(index, v.toLongLong());
     case QMetaType::Double:
         return bindDouble(index, v.toDouble());
-    case QMetaType::QString: {
+    case QMetaType::QString:
         return bindText(index, v.toString());
-    }
-    case QMetaType::QDateTime: {
+    case QMetaType::QDateTime:
         return bindDateTime(index, v.toDateTime());
-    }
-    case QMetaType::QByteArray: {
+    case QMetaType::QByteArray:
         return bindBlob(index, v.toByteArray());
-    }
-    default: {
-        QByteArray data;
-
-        // Write type
-        QDataStream stream(&data, QIODevice::WriteOnly);
-        stream << vType;
-
-        // Write content
-        switch (vType) {
-        case QMetaType::QImage: {
-            QByteArray bufData;
-
-            QBuffer buf(&bufData);
-            buf.open(QIODevice::WriteOnly);
-
-            const QImage image = v.value<QImage>();
-            image.save(&buf, "PNG");
-
-            buf.close();
-            stream << bufData;
-        } break;
-        default:
-            Q_UNREACHABLE();
-        }
-
-        return bindBlob(index, data);
-    }
+    default:
+        return bindVarBlob(index, v);
     }
 }
 
@@ -252,6 +255,35 @@ QByteArray SqliteStmt::columnBlob(int column, bool isRaw)
     return isRaw ? QByteArray::fromRawData(p, bytesCount) : QByteArray(p, bytesCount);
 }
 
+QVariant SqliteStmt::columnVarBlob(int column)
+{
+    const QByteArray data = columnBlob(column);
+    QDataStream stream(data);
+
+    // Load type
+    qint16 vType;
+    stream >> vType;
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    vType -= 0x1000 - 64;
+#endif
+
+    // Load content
+    switch (vType) {
+    case QMetaType::QImage: {
+        QByteArray bufData;
+        stream >> bufData;
+
+        QImage image;
+        image.loadFromData(bufData, "PNG");
+        return image;
+    }
+    default:
+        Q_UNREACHABLE();
+        return {};
+    }
+}
+
 QVariant SqliteStmt::columnVar(int column)
 {
     switch (sqlite3_column_type(m_stmt, column)) {
@@ -261,32 +293,8 @@ QVariant SqliteStmt::columnVar(int column)
         return columnDouble(column);
     case SQLITE_TEXT:
         return columnText(column);
-    case SQLITE_BLOB: {
-        const QByteArray data = columnBlob(column);
-        QDataStream stream(data);
-
-        // Load type
-        qint16 vType;
-        stream >> vType;
-
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        vType -= 0x1000 - 64;
-#endif
-
-        // Load content
-        switch (vType) {
-        case QMetaType::QImage: {
-            QByteArray bufData;
-            stream >> bufData;
-
-            QImage image;
-            image.loadFromData(bufData, "PNG");
-            return image;
-        }
-        default:
-            Q_UNREACHABLE();
-        }
-    } break;
+    case SQLITE_BLOB:
+        return columnVarBlob(column);
     case SQLITE_NULL:
         break;
     default:

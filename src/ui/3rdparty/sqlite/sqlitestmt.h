@@ -39,6 +39,7 @@ public:
     bool bindText(int index, const QString &text);
     bool bindDateTime(int index, const QDateTime &dateTime);
     bool bindBlob(int index, const QByteArray &data);
+    bool bindVarBlob(int index, const QVariant &v);
     bool bindVar(int index, const QVariant &v);
     bool bindVars(const QVariantList &vars, int index = 1);
 
@@ -61,6 +62,7 @@ public:
     QDateTime columnDateTime(int column = 0);
     QDateTime columnUnixTime(int column = 0);
     QByteArray columnBlob(int column = 0, bool isRaw = false);
+    QVariant columnVarBlob(int column = 0);
     QVariant columnVar(int column = 0);
     bool columnIsNull(int column = 0);
 
