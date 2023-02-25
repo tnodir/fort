@@ -5,6 +5,8 @@
 
 #include <util/classhelpers.h>
 
+class WorkerObject;
+
 class WorkerJob
 {
 public:
@@ -12,7 +14,8 @@ public:
     virtual ~WorkerJob() = default;
     CLASS_DEFAULT_COPY_MOVE(WorkerJob)
 
-    virtual void doJob() { }
+    virtual void doJob(WorkerObject *worker) { }
+    virtual void reportResult(WorkerObject *worker) { }
 
 public:
     QString text;

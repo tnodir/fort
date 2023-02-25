@@ -44,8 +44,6 @@ public slots:
     virtual void lookupAppInfo(const QString &appPath);
     void lookupAppIcon(const QString &appPath, qint64 iconId);
 
-    void handleWorkerResult(WorkerJob *workerJob) override;
-
     void checkLookupInfoFinished(const QString &appPath);
 
 protected:

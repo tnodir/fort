@@ -27,8 +27,6 @@ public:
     int maxWorkersCount() const { return m_maxWorkersCount; }
     void setMaxWorkersCount(int v) { m_maxWorkersCount = v; }
 
-signals:
-
 public slots:
     void clear();
     void abortWorkers();
@@ -37,8 +35,6 @@ public slots:
     WorkerJob *dequeueJob();
 
     void workerFinished(WorkerObject *worker);
-
-    virtual void handleWorkerResult(WorkerJob *job) = 0;
 
 protected:
     virtual WorkerObject *createWorker();

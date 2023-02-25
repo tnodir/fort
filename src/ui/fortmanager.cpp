@@ -92,7 +92,7 @@ void FortManager::initialize()
 
 void FortManager::setupThreadPool()
 {
-    QThreadPool::globalInstance()->setMaxThreadCount(qMax(8, QThread::idealThreadCount() * 2));
+    QThreadPool::globalInstance()->setMaxThreadCount(16);
 }
 
 void FortManager::setupLogger()

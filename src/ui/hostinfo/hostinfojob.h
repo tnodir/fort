@@ -3,6 +3,8 @@
 
 #include <util/worker/workerjob.h>
 
+class HostInfoManager;
+
 class HostInfoJob : public WorkerJob
 {
 public:
@@ -10,7 +12,11 @@ public:
 
     QString address() const { return text; }
 
-    void doJob() override;
+    void doJob(WorkerObject *worker) override;
+    void reportResult(WorkerObject *worker) override;
+
+private:
+    void emitFinished(HostInfoManager *manager);
 
 public:
     QString hostName;

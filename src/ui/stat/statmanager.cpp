@@ -17,6 +17,7 @@
 #include <util/osutil.h>
 
 #include "statsql.h"
+#include "statworker.h"
 
 namespace {
 
@@ -55,13 +56,15 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 }
 
 StatManager::StatManager(const QString &filePath, QObject *parent, quint32 openFlags) :
-    QObject(parent),
+    WorkerManager(parent),
     m_isConnIdRangeUpdated(false),
     m_isActivePeriodSet(false),
     m_isActivePeriod(false),
     m_sqliteDb(new SqliteDb(filePath, openFlags)),
     m_connChangedTimer(500)
 {
+    setMaxWorkersCount(1);
+
     connect(&m_connChangedTimer, &QTimer::timeout, this, &StatManager::connChanged);
 }
 
@@ -792,4 +795,9 @@ SqliteStmt *StatManager::getIdStmt(const char *sql, qint64 id)
     stmt->bindInt64(1, id);
 
     return stmt;
+}
+
+WorkerObject *StatManager::createWorker()
+{
+    return new StatWorker(this);
 }

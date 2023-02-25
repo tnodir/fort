@@ -49,6 +49,8 @@ void WorkerManager::clear()
 {
     QMutexLocker locker(&m_mutex);
 
+    qDeleteAll(m_jobQueue);
+
     m_jobQueue.clear();
 }
 

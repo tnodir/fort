@@ -4,15 +4,24 @@
 #include "appbasejob.h"
 #include "appinfo.h"
 
+class AppInfoManager;
+
 class AppInfoJob : public AppBaseJob
 {
 public:
     explicit AppInfoJob(const QString &appPath);
 
-    virtual AppJobType jobType() const { return JobTypeInfo; }
+    virtual AppJobType jobType() const override { return JobTypeInfo; }
 
-public:
-    AppInfo appInfo;
+    void doJob(WorkerObject *worker) override;
+    void reportResult(WorkerObject *worker) override;
+
+private:
+    void loadAppInfo(AppInfoManager *manager);
+    void emitFinished(AppInfoManager *manager);
+
+private:
+    AppInfo m_appInfo;
 };
 
 #endif // APPINFOJOB_H

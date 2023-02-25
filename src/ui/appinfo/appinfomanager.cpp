@@ -102,27 +102,6 @@ void AppInfoManager::lookupAppIcon(const QString &appPath, qint64 iconId)
     enqueueJob(new AppIconJob(appPath, iconId));
 }
 
-void AppInfoManager::handleWorkerResult(WorkerJob *workerJob)
-{
-    if (!aborted()) {
-        auto appJob = static_cast<AppBaseJob *>(workerJob);
-        const QString &appPath = appJob->appPath();
-
-        switch (appJob->jobType()) {
-        case AppBaseJob::JobTypeInfo: {
-            auto job = static_cast<AppInfoJob *>(appJob);
-            emit lookupInfoFinished(appPath, job->appInfo);
-        } break;
-        case AppBaseJob::JobTypeIcon: {
-            auto job = static_cast<AppIconJob *>(appJob);
-            emit lookupIconFinished(appPath, job->image);
-        } break;
-        }
-    }
-
-    delete workerJob;
-}
-
 void AppInfoManager::checkLookupInfoFinished(const QString &appPath)
 {
     AppInfo appInfo;

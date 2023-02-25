@@ -15,8 +15,6 @@ signals:
 
 public slots:
     void lookupHost(const QString &address);
-
-    void handleWorkerResult(WorkerJob *workerJob) override;
 };
 
 #endif // HOSTINFOMANAGER_H

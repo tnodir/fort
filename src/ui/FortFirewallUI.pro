@@ -131,6 +131,7 @@ SOURCES += \
     stat/quotamanager.cpp \
     stat/statmanager.cpp \
     stat/statsql.cpp \
+    stat/statworker.cpp \
     task/taskdownloader.cpp \
     task/taskeditinfo.cpp \
     task/taskinfo.cpp \
@@ -302,6 +303,7 @@ HEADERS += \
     stat/quotamanager.h \
     stat/statmanager.h \
     stat/statsql.h \
+    stat/statworker.h \
     task/taskdownloader.h \
     task/taskeditinfo.h \
     task/taskinfo.h \

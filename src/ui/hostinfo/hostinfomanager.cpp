@@ -13,14 +13,3 @@ void HostInfoManager::lookupHost(const QString &address)
 {
     enqueueJob(new HostInfoJob(address));
 }
-
-void HostInfoManager::handleWorkerResult(WorkerJob *workerJob)
-{
-    if (!aborted()) {
-        auto job = static_cast<HostInfoJob *>(workerJob);
-
-        emit lookupFinished(job->address(), job->hostName);
-    }
-
-    delete workerJob;
-}

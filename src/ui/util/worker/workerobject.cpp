@@ -15,6 +15,8 @@ void WorkerObject::run()
             break;
 
         doJob(job);
+
+        delete job;
     }
 
     manager()->workerFinished(this);
@@ -22,7 +24,9 @@ void WorkerObject::run()
 
 void WorkerObject::doJob(WorkerJob *job)
 {
-    job->doJob();
+    job->doJob(this);
 
-    manager()->handleWorkerResult(job);
+    if (!manager()->aborted()) {
+        job->reportResult(this);
+    }
 }

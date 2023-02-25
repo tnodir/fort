@@ -9,6 +9,7 @@
 #include <util/classhelpers.h>
 #include <util/ioc/iocservice.h>
 #include <util/triggertimer.h>
+#include <util/worker/workermanager.h>
 
 class FirewallConf;
 class IniOptions;
@@ -18,7 +19,7 @@ class LogEntryStatTraf;
 class SqliteDb;
 class SqliteStmt;
 
-class StatManager : public QObject, public IocService
+class StatManager : public WorkerManager, public IocService
 {
     Q_OBJECT
 
@@ -139,6 +140,9 @@ private:
     SqliteStmt *getStmt(const char *sql);
     SqliteStmt *getTrafficStmt(const char *sql, qint32 trafTime);
     SqliteStmt *getIdStmt(const char *sql, qint64 id);
+
+protected:
+    WorkerObject *createWorker() override;
 
 private:
     bool m_isConnIdRangeUpdated : 1;
