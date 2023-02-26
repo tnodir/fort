@@ -10,15 +10,16 @@ class WorkerObject;
 class WorkerJob
 {
 public:
-    explicit WorkerJob(const QString &_text);
+    explicit WorkerJob(const QString &text = {});
     virtual ~WorkerJob() = default;
-    CLASS_DEFAULT_COPY_MOVE(WorkerJob)
 
-    virtual void doJob(WorkerObject *worker) { }
-    virtual void reportResult(WorkerObject *worker) { }
+    const QString &text() const { return m_text; }
+
+    virtual void doJob(WorkerObject *worker) { Q_UNUSED(worker); }
+    virtual void reportResult(WorkerObject *worker) { Q_UNUSED(worker); }
 
 public:
-    QString text;
+    const QString m_text;
 };
 
 #endif // WORKERJOB_H

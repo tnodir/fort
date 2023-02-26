@@ -10,7 +10,7 @@ class HostInfoJob : public WorkerJob
 public:
     explicit HostInfoJob(const QString &address);
 
-    QString address() const { return text; }
+    QString address() const { return text(); }
 
     void doJob(WorkerObject *worker) override;
     void reportResult(WorkerObject *worker) override;
@@ -18,8 +18,8 @@ public:
 private:
     void emitFinished(HostInfoManager *manager);
 
-public:
-    QString hostName;
+private:
+    QString m_hostName;
 };
 
 #endif // HOSTINFOJOB_H

@@ -1,3 +1,3 @@
 #include "workerjob.h"
 
-WorkerJob::WorkerJob(const QString &_text) : text(_text) { }
+WorkerJob::WorkerJob(const QString &text) : m_text(text) { }

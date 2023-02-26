@@ -11,8 +11,6 @@ class AppInfoJob : public AppBaseJob
 public:
     explicit AppInfoJob(const QString &appPath);
 
-    virtual AppJobType jobType() const override { return JobTypeInfo; }
-
     void doJob(WorkerObject *worker) override;
     void reportResult(WorkerObject *worker) override;
 

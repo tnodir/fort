@@ -9,7 +9,7 @@ HostInfoJob::HostInfoJob(const QString &address) : WorkerJob(address) { }
 
 void HostInfoJob::doJob(WorkerObject * /*worker*/)
 {
-    hostName = NetUtil::getHostName(address());
+    m_hostName = NetUtil::getHostName(address());
 }
 
 void HostInfoJob::reportResult(WorkerObject *worker)
@@ -19,5 +19,5 @@ void HostInfoJob::reportResult(WorkerObject *worker)
 
 void HostInfoJob::emitFinished(HostInfoManager *manager)
 {
-    emit manager->lookupFinished(address(), hostName);
+    emit manager->lookupFinished(address(), m_hostName);
 }

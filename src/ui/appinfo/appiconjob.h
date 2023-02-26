@@ -12,8 +12,6 @@ class AppIconJob : public AppBaseJob
 public:
     explicit AppIconJob(const QString &appPath, qint64 iconId);
 
-    virtual AppJobType jobType() const override { return JobTypeIcon; }
-
     qint64 iconId() const { return m_iconId; }
 
     void doJob(WorkerObject *worker) override;
