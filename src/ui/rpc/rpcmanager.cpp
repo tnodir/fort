@@ -40,10 +40,10 @@ inline bool sendCommandDataToClients(
     return ok;
 }
 
-inline bool processConfManager_confChanged(ConfManager *confManager, const QVariantList &args)
+inline bool processConfManager_confChanged(ConfManager *confManager, const ProcessCommandArgs &p)
 {
     if (auto cm = qobject_cast<ConfManagerRpc *>(confManager)) {
-        cm->onConfChanged(args.value(0));
+        cm->onConfChanged(p.args.value(0));
     }
     return true;
 }
@@ -204,23 +204,54 @@ inline bool processConfManagerRpcResult(
     return false;
 }
 
-inline bool processStatManager_appStatRemoved(StatManager *statManager, const QVariantList &args)
+bool processStatManager_trafficCleared(StatManager *statManager, const ProcessCommandArgs & /*p*/)
 {
-    emit statManager->appStatRemoved(args.value(0).toLongLong());
+    emit statManager->trafficCleared();
     return true;
 }
 
-inline bool processStatManager_appCreated(StatManager *statManager, const QVariantList &args)
+bool processStatManager_appStatRemoved(StatManager *statManager, const ProcessCommandArgs &p)
 {
-    emit statManager->appCreated(args.value(0).toLongLong(), args.value(1).toString());
+    emit statManager->appStatRemoved(p.args.value(0).toLongLong());
     return true;
 }
 
-inline bool processStatManager_trafficAdded(StatManager *statManager, const QVariantList &args)
+bool processStatManager_appCreated(StatManager *statManager, const ProcessCommandArgs &p)
+{
+    emit statManager->appCreated(p.args.value(0).toLongLong(), p.args.value(1).toString());
+    return true;
+}
+
+bool processStatManager_trafficAdded(StatManager *statManager, const ProcessCommandArgs &p)
 {
     emit statManager->trafficAdded(
-            args.value(0).toLongLong(), args.value(1).toUInt(), args.value(2).toUInt());
+            p.args.value(0).toLongLong(), p.args.value(1).toUInt(), p.args.value(2).toUInt());
     return true;
+}
+
+bool processStatManager_appTrafTotalsResetted(
+        StatManager *statManager, const ProcessCommandArgs & /*p*/)
+{
+    emit statManager->appTrafTotalsResetted();
+    return true;
+}
+
+using processStatManagerSignal_func = bool (*)(
+        StatManager *statManager, const ProcessCommandArgs &p);
+
+static processStatManagerSignal_func processStatManagerSignal_funcList[] = {
+    &processStatManager_trafficCleared, // Rpc_StatManager_trafficCleared,
+    &processStatManager_appStatRemoved, // Rpc_StatManager_appStatRemoved,
+    &processStatManager_appCreated, // Rpc_StatManager_appCreated,
+    &processStatManager_trafficAdded, // Rpc_StatManager_trafficAdded,
+    &processStatManager_appTrafTotalsResetted, // Rpc_StatManager_appTrafTotalsResetted,
+};
+
+inline bool processStatManagerRpcSignal(StatManager *statManager, const ProcessCommandArgs &p)
+{
+    const processStatManagerSignal_func func = processStatManagerSignal_funcList[p.command];
+
+    return func(statManager, p);
 }
 
 inline bool processStatManagerRpcResult(StatManager *statManager, const ProcessCommandArgs &p)
@@ -259,43 +290,43 @@ inline bool processStatBlockManagerRpcResult(
 }
 
 inline bool serviceInfoManager_trackService(
-        ServiceInfoManager *serviceInfoManager, const QVariantList &args)
+        ServiceInfoManager *serviceInfoManager, const ProcessCommandArgs &p)
 {
-    serviceInfoManager->trackService(args.value(0).toString());
+    serviceInfoManager->trackService(p.args.value(0).toString());
     return true;
 }
 
 inline bool serviceInfoManager_revertService(
-        ServiceInfoManager *serviceInfoManager, const QVariantList &args)
+        ServiceInfoManager *serviceInfoManager, const ProcessCommandArgs &p)
 {
-    serviceInfoManager->revertService(args.value(0).toString());
+    serviceInfoManager->revertService(p.args.value(0).toString());
     return true;
 }
 
-inline bool processTaskManager_runTask(TaskManager *taskManager, const QVariantList &args)
+inline bool processTaskManager_runTask(TaskManager *taskManager, const ProcessCommandArgs &p)
 {
-    taskManager->runTask(args.value(0).toInt());
+    taskManager->runTask(p.args.value(0).toInt());
     return true;
 }
 
-inline bool processTaskManager_abortTask(TaskManager *taskManager, const QVariantList &args)
+inline bool processTaskManager_abortTask(TaskManager *taskManager, const ProcessCommandArgs &p)
 {
-    taskManager->abortTask(args.value(0).toInt());
+    taskManager->abortTask(p.args.value(0).toInt());
     return true;
 }
 
-inline bool processTaskManager_taskStarted(TaskManager *taskManager, const QVariantList &args)
+inline bool processTaskManager_taskStarted(TaskManager *taskManager, const ProcessCommandArgs &p)
 {
     if (auto tm = qobject_cast<TaskManagerRpc *>(taskManager)) {
-        tm->onTaskStarted(args.value(0).toInt());
+        tm->onTaskStarted(p.args.value(0).toInt());
     }
     return true;
 }
 
-inline bool processTaskManager_taskFinished(TaskManager *taskManager, const QVariantList &args)
+inline bool processTaskManager_taskFinished(TaskManager *taskManager, const ProcessCommandArgs &p)
 {
     if (auto tm = qobject_cast<TaskManagerRpc *>(taskManager)) {
-        tm->onTaskFinished(args.value(0).toInt());
+        tm->onTaskFinished(p.args.value(0).toInt());
     }
     return true;
 }
@@ -610,7 +641,7 @@ bool RpcManager::processConfManagerRpc(const ProcessCommandArgs &p)
 
     switch (p.command) {
     case Control::Rpc_ConfManager_confChanged:
-        return processConfManager_confChanged(confManager, p.args);
+        return processConfManager_confChanged(confManager, p);
     case Control::Rpc_ConfManager_appAlerted:
         emit confManager->appAlerted();
         return true;
@@ -672,17 +703,12 @@ bool RpcManager::processStatManagerRpc(const ProcessCommandArgs &p)
 
     switch (p.command) {
     case Control::Rpc_StatManager_trafficCleared:
-        emit statManager->trafficCleared();
-        return true;
     case Control::Rpc_StatManager_appStatRemoved:
-        return processStatManager_appStatRemoved(statManager, p.args);
     case Control::Rpc_StatManager_appCreated:
-        return processStatManager_appCreated(statManager, p.args);
     case Control::Rpc_StatManager_trafficAdded:
-        return processStatManager_trafficAdded(statManager, p.args);
     case Control::Rpc_StatManager_appTrafTotalsResetted:
-        emit statManager->appTrafTotalsResetted();
-        return true;
+        return processStatManagerRpcSignal(statManager, p);
+
     default: {
         const bool ok = processStatManagerRpcResult(statManager, p);
         sendResult(p.worker, ok);
@@ -712,9 +738,9 @@ bool RpcManager::processServiceInfoManagerRpc(const ProcessCommandArgs &p)
 
     switch (p.command) {
     case Control::Rpc_ServiceInfoManager_trackService:
-        return serviceInfoManager_trackService(serviceInfoManager, p.args);
+        return serviceInfoManager_trackService(serviceInfoManager, p);
     case Control::Rpc_ServiceInfoManager_revertService:
-        return serviceInfoManager_revertService(serviceInfoManager, p.args);
+        return serviceInfoManager_revertService(serviceInfoManager, p);
     default:
         return false;
     }
@@ -726,13 +752,13 @@ bool RpcManager::processTaskManagerRpc(const ProcessCommandArgs &p)
 
     switch (p.command) {
     case Control::Rpc_TaskManager_runTask:
-        return processTaskManager_runTask(taskManager, p.args);
+        return processTaskManager_runTask(taskManager, p);
     case Control::Rpc_TaskManager_abortTask:
-        return processTaskManager_abortTask(taskManager, p.args);
+        return processTaskManager_abortTask(taskManager, p);
     case Control::Rpc_TaskManager_taskStarted:
-        return processTaskManager_taskStarted(taskManager, p.args);
+        return processTaskManager_taskStarted(taskManager, p);
     case Control::Rpc_TaskManager_taskFinished:
-        return processTaskManager_taskFinished(taskManager, p.args);
+        return processTaskManager_taskFinished(taskManager, p);
     default:
         return false;
     }
