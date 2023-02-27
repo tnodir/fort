@@ -41,6 +41,7 @@ private:
     void setupDriverManagerSignals();
     void setupQuotaManagerSignals();
     void setupStatManagerSignals();
+    void setupStatBlockManagerSignals();
     void setupTaskManagerSignals();
 
     void setupClient();
@@ -60,6 +61,7 @@ private:
     bool processDriverManagerRpc(const ProcessCommandArgs &p);
     bool processQuotaManagerRpc(const ProcessCommandArgs &p);
     bool processStatManagerRpc(const ProcessCommandArgs &p);
+    bool processStatBlockManagerRpc(const ProcessCommandArgs &p);
     bool processServiceInfoManagerRpc(const ProcessCommandArgs &p);
     bool processTaskManagerRpc(const ProcessCommandArgs &p);
 

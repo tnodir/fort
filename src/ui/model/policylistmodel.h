@@ -4,11 +4,12 @@
 #include <QObject>
 #include <QVector>
 
+#include <sqlite/sqlitetypes.h>
+
 #include <conf/rules/policy.h>
 #include <util/model/tablesqlmodel.h>
 
 class ConfManager;
-class SqliteDb;
 
 struct PolicyRow : TableRow, public Policy
 {

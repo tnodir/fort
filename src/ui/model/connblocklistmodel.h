@@ -1,5 +1,5 @@
-#ifndef CONNLISTMODEL_H
-#define CONNLISTMODEL_H
+#ifndef CONNBLOCKLISTMODEL_H
+#define CONNBLOCKLISTMODEL_H
 
 #include <QDateTime>
 
@@ -10,14 +10,13 @@ class AppInfoCache;
 class FortManager;
 class HostInfoCache;
 class LogEntryBlockedIp;
-class StatManager;
+class StatBlockManager;
 
 struct ConnRow : TableRow
 {
     bool isIPv6 = false;
     bool inbound = false;
     bool inherited = false;
-    bool blocked = false;
 
     quint8 blockReason = 0;
 
@@ -38,25 +37,18 @@ struct ConnRow : TableRow
     QDateTime connTime;
 };
 
-class ConnListModel : public TableSqlModel
+class ConnBlockListModel : public TableSqlModel
 {
     Q_OBJECT
 
 public:
-    enum ConnMode : qint8 { ConnNone = 0, ConnBlock, ConnTraf };
-
-    explicit ConnListModel(QObject *parent = nullptr);
-
-    uint connMode() const { return m_connMode; }
-    void setConnMode(uint v);
-
-    bool isConnBlock() const { return connMode() == ConnBlock; }
+    explicit ConnBlockListModel(QObject *parent = nullptr);
 
     bool resolveAddress() const { return m_resolveAddress; }
     void setResolveAddress(bool v);
 
     FortManager *fortManager() const;
-    StatManager *statManager() const;
+    StatBlockManager *statBlockManager() const;
     SqliteDb *sqliteDb() const override;
     AppInfoCache *appInfoCache() const;
     HostInfoCache *hostInfoCache() const;
@@ -69,7 +61,7 @@ public:
             int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-    void deleteConn(qint64 rowIdTo, bool blocked);
+    void deleteConn(qint64 rowIdTo);
 
     const ConnRow &connRowAt(int row) const;
 
@@ -77,7 +69,6 @@ public slots:
     void clear();
 
 protected slots:
-    void resetRowIdRange();
     void updateRowIdRange();
 
 protected:
@@ -105,7 +96,6 @@ private:
     QString formatIpPort(const ip_addr_t &ip, quint16 port, bool isIPv6) const;
 
 private:
-    uint m_connMode : 2;
     uint m_resolveAddress : 1;
 
     qint64 m_rowIdMin = 0;
@@ -114,4 +104,4 @@ private:
     mutable ConnRow m_connRow;
 };
 
-#endif // CONNLISTMODEL_H
+#endif // CONNBLOCKLISTMODEL_H

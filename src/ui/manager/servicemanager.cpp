@@ -12,7 +12,7 @@
 
 namespace {
 
-const QLoggingCategory LC("manager.serviceManager");
+const QLoggingCategory LC("manager.service");
 
 }
 

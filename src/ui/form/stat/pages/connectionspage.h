@@ -9,7 +9,7 @@ QT_FORWARD_DECLARE_CLASS(QPushButton)
 class AppInfoCache;
 class AppInfoRow;
 class ConfManager;
-class ConnListModel;
+class ConnBlockListModel;
 class FirewallConf;
 class FortManager;
 class FortSettings;
@@ -25,7 +25,7 @@ class ConnectionsPage : public StatBasePage
 public:
     explicit ConnectionsPage(StatisticsController *ctrl = nullptr, QWidget *parent = nullptr);
 
-    ConnListModel *connListModel() const { return m_connListModel; }
+    ConnBlockListModel *connBlockListModel() const { return m_connBlockListModel; }
     AppInfoCache *appInfoCache() const;
 
 protected slots:
@@ -54,7 +54,7 @@ private:
     QString connListCurrentPath() const;
 
 private:
-    ConnListModel *m_connListModel = nullptr;
+    ConnBlockListModel *m_connBlockListModel = nullptr;
 
     QPushButton *m_btEdit = nullptr;
     QAction *m_actCopy = nullptr;

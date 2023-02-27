@@ -2,6 +2,7 @@
 #define SQLITEDB_H
 
 #include <QHash>
+#include <QObject>
 #include <QString>
 #include <QVariant>
 
@@ -14,8 +15,10 @@ class SqliteStmt;
 
 using SQLITEDB_MIGRATE_FUNC = bool (*)(SqliteDb *db, int version, bool isNewDb, void *context);
 
-class SqliteDb
+class SqliteDb : public QObject
 {
+    Q_OBJECT
+
 public:
     enum OpenFlag {
         OpenReadOnly = 0x00000001, // SQLITE_OPEN_READONLY
@@ -43,10 +46,9 @@ public:
         void *migrateContext = nullptr;
     };
 
-    explicit SqliteDb(
-            const QString &filePath = QString(), quint32 openFlags = OpenDefaultReadWrite);
-    ~SqliteDb();
-    CLASS_DEFAULT_COPY_MOVE(SqliteDb)
+    explicit SqliteDb(const QString &filePath = QString(), quint32 openFlags = OpenDefaultReadWrite,
+            QObject *parent = nullptr);
+    ~SqliteDb() override;
 
     struct sqlite3 *db() const { return m_db; }
 
@@ -78,6 +80,7 @@ public:
     int changes() const;
 
     bool beginTransaction();
+    bool beginWriteTransaction();
     bool endTransaction(bool ok = true);
     bool commitTransaction();
     bool rollbackTransaction();

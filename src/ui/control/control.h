@@ -46,16 +46,17 @@ enum Command : qint8 {
     Rpc_QuotaManager_alert,
 
     Rpc_StatManager_deleteStatApp,
-    Rpc_StatManager_deleteConn,
-    Rpc_StatManager_deleteConnAll,
     Rpc_StatManager_resetAppTrafTotals,
     Rpc_StatManager_clearTraffic,
     Rpc_StatManager_trafficCleared,
     Rpc_StatManager_appStatRemoved,
     Rpc_StatManager_appCreated,
     Rpc_StatManager_trafficAdded,
-    Rpc_StatManager_connChanged,
     Rpc_StatManager_appTrafTotalsResetted,
+
+    Rpc_StatBlockManager_deleteConn,
+    Rpc_StatBlockManager_deleteConnAll,
+    Rpc_StatBlockManager_connChanged,
 
     Rpc_ServiceInfoManager_trackService,
     Rpc_ServiceInfoManager_revertService,
@@ -73,6 +74,7 @@ enum RpcManager : qint8 {
     Rpc_DriverManager,
     Rpc_QuotaManager,
     Rpc_StatManager,
+    Rpc_StatBlockManager,
     Rpc_ServiceInfoManager,
     Rpc_TaskManager,
 };

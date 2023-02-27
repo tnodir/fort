@@ -1,9 +1,9 @@
 #ifndef TABLESQLMODEL_H
 #define TABLESQLMODEL_H
 
-#include "tableitemmodel.h"
+#include <sqlite/sqlitetypes.h>
 
-class SqliteDb;
+#include "tableitemmodel.h"
 
 class TableSqlModel : public TableItemModel
 {

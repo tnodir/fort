@@ -3,12 +3,13 @@
 
 #include <QDateTime>
 
+#include <sqlite/sqlitetypes.h>
+
 #include <conf/zone.h>
 #include <util/ioc/iocservice.h>
 #include <util/model/tablesqlmodel.h>
 
 class ConfManager;
-class SqliteDb;
 class ZoneSourceWrapper;
 
 struct ZoneRow : TableRow, public Zone

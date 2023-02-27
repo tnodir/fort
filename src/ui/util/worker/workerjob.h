@@ -18,7 +18,7 @@ public:
     virtual void doJob(WorkerObject *worker) { Q_UNUSED(worker); }
     virtual void reportResult(WorkerObject *worker) { Q_UNUSED(worker); }
 
-public:
+private:
     const QString m_text;
 };
 

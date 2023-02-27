@@ -3,6 +3,8 @@
 
 #include <QDateTime>
 
+#include <sqlite/sqlitetypes.h>
+
 #include <conf/app.h>
 #include <util/model/tablesqlmodel.h>
 
@@ -10,7 +12,6 @@ class AppGroup;
 class AppInfoCache;
 class ConfManager;
 class FirewallConf;
-class SqliteDb;
 
 struct AppRow : TableRow, public App
 {

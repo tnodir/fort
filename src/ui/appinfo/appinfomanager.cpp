@@ -58,14 +58,9 @@ const char *const sqlDeleteApp = "DELETE FROM app WHERE path = ?1;";
 }
 
 AppInfoManager::AppInfoManager(const QString &filePath, QObject *parent, quint32 openFlags) :
-    WorkerManager(parent), m_sqliteDb(new SqliteDb(filePath, openFlags))
+    WorkerManager(parent), m_sqliteDb(new SqliteDb(filePath, openFlags, this))
 {
     setMaxWorkersCount(1);
-}
-
-AppInfoManager::~AppInfoManager()
-{
-    delete m_sqliteDb;
 }
 
 void AppInfoManager::setUp()

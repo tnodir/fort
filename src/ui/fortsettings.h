@@ -35,6 +35,7 @@ public:
 
     QString statPath() const { return m_statPath; }
     QString statFilePath() const;
+    QString statBlockFilePath() const;
 
     QString cachePath() const { return m_cachePath; }
     QString cacheFilePath() const;

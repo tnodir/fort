@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QTimer>
 
+#include <sqlite/sqlitetypes.h>
+
 #include <util/classhelpers.h>
 #include <util/conf/confappswalker.h>
 #include <util/ioc/iocservice.h>
@@ -14,8 +16,6 @@ class FirewallConf;
 class IniOptions;
 class IniUser;
 class LogEntryBlocked;
-class SqliteDb;
-class SqliteStmt;
 class TaskInfo;
 class Zone;
 
@@ -25,7 +25,6 @@ class ConfManager : public QObject, public ConfAppsWalker, public IocService
 
 public:
     explicit ConfManager(const QString &filePath, QObject *parent = nullptr, quint32 openFlags = 0);
-    ~ConfManager() override;
     CLASS_DELETE_COPY_MOVE(ConfManager)
 
     SqliteDb *sqliteDb() const { return m_sqliteDb; }

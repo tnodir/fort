@@ -13,13 +13,14 @@
 #include <rpc/drivermanagerrpc.h>
 #include <rpc/quotamanagerrpc.h>
 #include <rpc/serviceinfomanagerrpc.h>
+#include <rpc/statblockmanagerrpc.h>
 #include <rpc/statmanagerrpc.h>
 #include <rpc/taskmanagerrpc.h>
 #include <util/ioc/ioccontainer.h>
 
 namespace {
 
-const QLoggingCategory LC("appInfo");
+const QLoggingCategory LC("rpc");
 
 inline bool sendCommandDataToClients(
         const QByteArray &commandData, const QList<ControlWorker *> &clients)
@@ -208,27 +209,36 @@ inline bool processStatManager_trafficAdded(StatManager *statManager, const QVar
     return true;
 }
 
-inline bool processStatManager_connChanged(StatManager *statManager)
-{
-    if (auto sm = qobject_cast<StatManagerRpc *>(statManager)) {
-        sm->onConnChanged();
-    }
-    return true;
-}
-
 inline bool processStatManagerRpcResult(StatManager *statManager, const ProcessCommandArgs &p)
 {
     switch (p.command) {
     case Control::Rpc_StatManager_deleteStatApp:
         return statManager->deleteStatApp(p.args.value(0).toLongLong());
-    case Control::Rpc_StatManager_deleteConn:
-        return statManager->deleteConn(p.args.value(0).toLongLong(), p.args.value(1).toBool());
-    case Control::Rpc_StatManager_deleteConnAll:
-        return statManager->deleteConnAll();
     case Control::Rpc_StatManager_resetAppTrafTotals:
         return statManager->resetAppTrafTotals();
     case Control::Rpc_StatManager_clearTraffic:
         return statManager->clearTraffic();
+    default:
+        return false;
+    }
+}
+
+inline bool processStatBlockManager_connChanged(StatBlockManager *statBlockManager)
+{
+    if (auto sm = qobject_cast<StatBlockManagerRpc *>(statBlockManager)) {
+        sm->onConnChanged();
+    }
+    return true;
+}
+
+inline bool processStatBlockManagerRpcResult(
+        StatBlockManager *statBlockManager, const ProcessCommandArgs &p)
+{
+    switch (p.command) {
+    case Control::Rpc_StatBlockManager_deleteConn:
+        return statBlockManager->deleteConn(p.args.value(0).toLongLong());
+    case Control::Rpc_StatBlockManager_deleteConnAll:
+        return statBlockManager->deleteConnAll();
     default:
         return false;
     }
@@ -375,10 +385,16 @@ void RpcManager::setupStatManagerSignals()
                 invokeOnClients(
                         Control::Rpc_StatManager_trafficAdded, { unixTime, inBytes, outBytes });
             });
-    connect(statManager, &StatManager::connChanged, this,
-            [&] { invokeOnClients(Control::Rpc_StatManager_connChanged); });
     connect(statManager, &StatManager::appTrafTotalsResetted, this,
             [&] { invokeOnClients(Control::Rpc_StatManager_appTrafTotalsResetted); });
+}
+
+void RpcManager::setupStatBlockManagerSignals()
+{
+    auto statBlockManager = IoC<StatBlockManager>();
+
+    connect(statBlockManager, &StatBlockManager::connChanged, this,
+            [&] { invokeOnClients(Control::Rpc_StatBlockManager_connChanged); });
 }
 
 void RpcManager::setupTaskManagerSignals()
@@ -543,6 +559,9 @@ bool RpcManager::processManagerRpc(const ProcessCommandArgs &p)
     case Control::Rpc_StatManager:
         return processStatManagerRpc(p);
 
+    case Control::Rpc_StatBlockManager:
+        return processStatBlockManagerRpc(p);
+
     case Control::Rpc_ServiceInfoManager:
         return processServiceInfoManagerRpc(p);
 
@@ -647,13 +666,26 @@ bool RpcManager::processStatManagerRpc(const ProcessCommandArgs &p)
         return processStatManager_appCreated(statManager, p.args);
     case Control::Rpc_StatManager_trafficAdded:
         return processStatManager_trafficAdded(statManager, p.args);
-    case Control::Rpc_StatManager_connChanged:
-        return processStatManager_connChanged(statManager);
     case Control::Rpc_StatManager_appTrafTotalsResetted:
         emit statManager->appTrafTotalsResetted();
         return true;
     default: {
         const bool ok = processStatManagerRpcResult(statManager, p);
+        sendResult(p.worker, ok);
+        return true;
+    }
+    }
+}
+
+bool RpcManager::processStatBlockManagerRpc(const ProcessCommandArgs &p)
+{
+    auto statBlockManager = IoC<StatBlockManager>();
+
+    switch (p.command) {
+    case Control::Rpc_StatBlockManager_connChanged:
+        return processStatBlockManager_connChanged(statBlockManager);
+    default: {
+        const bool ok = processStatBlockManagerRpcResult(statBlockManager, p);
         sendResult(p.worker, ok);
         return true;
     }

@@ -7,7 +7,6 @@
 
 #include <conf/firewallconf.h>
 #include <driver/drivercommon.h>
-#include <log/logentryblockedip.h>
 #include <log/logentryprocnew.h>
 #include <log/logentrystattraf.h>
 #include <stat/quotamanager.h>
@@ -17,7 +16,6 @@
 #include <util/osutil.h>
 
 #include "statsql.h"
-#include "statworker.h"
 
 namespace {
 
@@ -56,21 +54,11 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 }
 
 StatManager::StatManager(const QString &filePath, QObject *parent, quint32 openFlags) :
-    WorkerManager(parent),
-    m_isConnIdRangeUpdated(false),
+    QObject(parent),
     m_isActivePeriodSet(false),
     m_isActivePeriod(false),
-    m_sqliteDb(new SqliteDb(filePath, openFlags)),
-    m_connChangedTimer(500)
+    m_sqliteDb(new SqliteDb(filePath, openFlags, this))
 {
-    setMaxWorkersCount(1);
-
-    connect(&m_connChangedTimer, &QTimer::timeout, this, &StatManager::connChanged);
-}
-
-StatManager::~StatManager()
-{
-    delete m_sqliteDb;
 }
 
 void StatManager::setConf(const FirewallConf *conf)
@@ -85,11 +73,6 @@ const IniOptions *StatManager::ini() const
     return &conf()->ini();
 }
 
-void StatManager::emitConnChanged()
-{
-    m_connChangedTimer.startTrigger();
-}
-
 void StatManager::setUp()
 {
     if (!sqliteDb()->open()) {
@@ -98,7 +81,7 @@ void StatManager::setUp()
         return;
     }
 
-    SqliteDb::MigrateOptions opt = { .sqlDir = ":/stat/migrations",
+    SqliteDb::MigrateOptions opt = { .sqlDir = ":/stat/migrations/traf",
         .version = DATABASE_USER_VERSION,
         .recreate = true,
         .migrateFunc = &migrateFunc };
@@ -107,20 +90,6 @@ void StatManager::setUp()
         qCCritical(LC) << "Migration error" << sqliteDb()->filePath();
         return;
     }
-
-    updateConnBlockId();
-}
-
-void StatManager::updateConnBlockId()
-{
-    if (isConnIdRangeUpdated())
-        return;
-
-    setIsConnIdRangeUpdated(true);
-
-    const auto vars = sqliteDb()->executeEx(StatSql::sqlSelectMinMaxConnBlockId, {}, 2).toList();
-    m_connBlockIdMin = vars.value(0).toLongLong();
-    m_connBlockIdMax = vars.value(1).toLongLong();
 }
 
 void StatManager::setupTrafDate()
@@ -294,13 +263,13 @@ bool StatManager::logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
     {
         const quint32 *procTrafBytes = entry.procTrafBytes();
 
-        const QStmtList insertTrafAppStmts = QStmtList()
+        const SqliteStmtList insertTrafAppStmts = SqliteStmtList()
                 << getTrafficStmt(StatSql::sqlInsertTrafAppHour, m_trafHour)
                 << getTrafficStmt(StatSql::sqlInsertTrafAppDay, m_trafDay)
                 << getTrafficStmt(StatSql::sqlInsertTrafAppMonth, m_trafMonth)
                 << getTrafficStmt(StatSql::sqlInsertTrafAppTotal, m_trafHour);
 
-        const QStmtList updateTrafAppStmts = QStmtList()
+        const SqliteStmtList updateTrafAppStmts = SqliteStmtList()
                 << getTrafficStmt(StatSql::sqlUpdateTrafAppHour, m_trafHour)
                 << getTrafficStmt(StatSql::sqlUpdateTrafAppDay, m_trafDay)
                 << getTrafficStmt(StatSql::sqlUpdateTrafAppMonth, m_trafMonth)
@@ -317,12 +286,12 @@ bool StatManager::logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
     }
 
     if (m_isActivePeriod) {
-        const QStmtList insertTrafStmts = QStmtList()
+        const SqliteStmtList insertTrafStmts = SqliteStmtList()
                 << getTrafficStmt(StatSql::sqlInsertTrafHour, m_trafHour)
                 << getTrafficStmt(StatSql::sqlInsertTrafDay, m_trafDay)
                 << getTrafficStmt(StatSql::sqlInsertTrafMonth, m_trafMonth);
 
-        const QStmtList updateTrafStmts = QStmtList()
+        const SqliteStmtList updateTrafStmts = SqliteStmtList()
                 << getTrafficStmt(StatSql::sqlUpdateTrafHour, m_trafHour)
                 << getTrafficStmt(StatSql::sqlUpdateTrafDay, m_trafDay)
                 << getTrafficStmt(StatSql::sqlUpdateTrafMonth, m_trafMonth);
@@ -342,34 +311,6 @@ bool StatManager::logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
     return true;
 }
 
-bool StatManager::logBlockedIp(const LogEntryBlockedIp &entry, qint64 unixTime)
-{
-    if (!conf() || !conf()->logBlockedIp())
-        return false;
-
-    bool ok = false;
-    sqliteDb()->beginTransaction();
-
-    const qint64 appId = getOrCreateAppId(entry.path(), unixTime);
-    if (appId != INVALID_APP_ID) {
-        ok = createConnBlock(entry, unixTime, appId);
-    }
-
-    sqliteDb()->endTransaction();
-
-    if (ok) {
-        emitConnChanged();
-
-        constexpr int connBlockIncMax = 100;
-        if (++m_connBlockInc >= connBlockIncMax) {
-            m_connBlockInc = 0;
-            deleteOldConnBlock();
-        }
-    }
-
-    return ok;
-}
-
 bool StatManager::deleteStatApp(qint64 appId)
 {
     sqliteDb()->beginTransaction();
@@ -383,57 +324,6 @@ bool StatManager::deleteStatApp(qint64 appId)
     sqliteDb()->commitTransaction();
 
     emit appStatRemoved(appId);
-
-    return true;
-}
-
-bool StatManager::deleteOldConnBlock()
-{
-    const int keepCount = ini()->blockedIpKeepCount();
-    const int totalCount = m_connBlockIdMax - m_connBlockIdMin + 1;
-    const int oldCount = totalCount - keepCount;
-    if (oldCount <= 0)
-        return false;
-
-    deleteConnBlock(m_connBlockIdMin + oldCount - 1);
-
-    emitConnChanged();
-
-    return true;
-}
-
-bool StatManager::deleteConn(qint64 rowIdTo, bool blocked)
-{
-    sqliteDb()->beginTransaction();
-
-    if (blocked) {
-        deleteConnBlock(rowIdTo);
-    } else {
-        // TODO: deleteRangeConnTraf(rowIdTo);
-    }
-
-    sqliteDb()->commitTransaction();
-
-    emitConnChanged();
-
-    return true;
-}
-
-bool StatManager::deleteConnAll()
-{
-    sqliteDb()->beginTransaction();
-
-    deleteAppStmtList({ sqliteDb()->stmt(StatSql::sqlDeleteAllConn),
-                              sqliteDb()->stmt(StatSql::sqlDeleteAllConnBlock) },
-            sqliteDb()->stmt(StatSql::sqlSelectDeletedAllConnAppList));
-
-    sqliteDb()->vacuum();
-
-    sqliteDb()->commitTransaction();
-
-    m_connBlockIdMin = m_connBlockIdMax = 0;
-
-    emitConnChanged();
 
     return true;
 }
@@ -522,7 +412,7 @@ bool StatManager::deleteAppId(qint64 appId)
 
 void StatManager::deleteOldTraffic(qint32 trafHour)
 {
-    QStmtList deleteTrafStmts;
+    SqliteStmtList deleteTrafStmts;
 
     // Traffic Hour
     const int trafHourKeepDays = ini()->trafHourKeepDays();
@@ -551,7 +441,7 @@ void StatManager::deleteOldTraffic(qint32 trafHour)
                         << getTrafficStmt(StatSql::sqlDeleteTrafMonth, oldTrafMonth);
     }
 
-    doStmtList(deleteTrafStmts);
+    SqliteStmt::doList(deleteTrafStmts);
 }
 
 void StatManager::getStatAppList(QStringList &list, QVector<qint64> &appIds)
@@ -565,9 +455,9 @@ void StatManager::getStatAppList(QStringList &list, QVector<qint64> &appIds)
     stmt->reset();
 }
 
-void StatManager::logTrafBytes(const QStmtList &insertStmtList, const QStmtList &updateStmtList,
-        quint32 &sumInBytes, quint32 &sumOutBytes, quint32 pidFlag, quint32 inBytes,
-        quint32 outBytes, qint64 unixTime)
+void StatManager::logTrafBytes(const SqliteStmtList &insertStmtList,
+        const SqliteStmtList &updateStmtList, quint32 &sumInBytes, quint32 &sumOutBytes,
+        quint32 pidFlag, quint32 inBytes, quint32 outBytes, qint64 unixTime)
 {
     const bool inactive = (pidFlag & 1) != 0;
     const quint32 pid = pidFlag & ~quint32(1);
@@ -604,8 +494,8 @@ void StatManager::logTrafBytes(const QStmtList &insertStmtList, const QStmtList 
     sumOutBytes += outBytes;
 }
 
-void StatManager::updateTrafficList(const QStmtList &insertStmtList,
-        const QStmtList &updateStmtList, quint32 inBytes, quint32 outBytes, qint64 appId)
+void StatManager::updateTrafficList(const SqliteStmtList &insertStmtList,
+        const SqliteStmtList &updateStmtList, quint32 inBytes, quint32 outBytes, qint64 appId)
 {
     int i = 0;
     for (SqliteStmt *stmtUpdate : updateStmtList) {
@@ -633,86 +523,10 @@ bool StatManager::updateTraffic(SqliteStmt *stmt, quint32 inBytes, quint32 outBy
     return sqliteDb()->done(stmt);
 }
 
-qint64 StatManager::insertConn(const LogEntryBlockedIp &entry, qint64 unixTime, qint64 appId)
-{
-    SqliteStmt *stmt = sqliteDb()->stmt(StatSql::sqlInsertConn);
-
-    stmt->bindInt64(1, appId);
-    stmt->bindInt64(2, unixTime);
-    stmt->bindInt(3, entry.pid());
-    stmt->bindInt(4, entry.inbound());
-    stmt->bindInt(5, entry.inherited());
-    stmt->bindInt(6, entry.ipProto());
-    stmt->bindInt(7, entry.localPort());
-    stmt->bindInt(8, entry.remotePort());
-
-    if (entry.isIPv6()) {
-        stmt->bindNull(9);
-        stmt->bindBlob(10, entry.localIp6());
-        stmt->bindNull(11);
-        stmt->bindBlob(12, entry.remoteIp6());
-    } else {
-        stmt->bindInt(9, entry.localIp4());
-        stmt->bindNull(10);
-        stmt->bindInt(11, entry.remoteIp4());
-        stmt->bindNull(12);
-    }
-
-    if (sqliteDb()->done(stmt)) {
-        return sqliteDb()->lastInsertRowid();
-    }
-
-    return 0;
-}
-
-qint64 StatManager::insertConnBlock(qint64 connId, quint8 blockReason)
-{
-    SqliteStmt *stmt = sqliteDb()->stmt(StatSql::sqlInsertConnBlock);
-
-    stmt->bindInt64(1, connId);
-    stmt->bindInt(2, blockReason);
-
-    if (sqliteDb()->done(stmt)) {
-        return sqliteDb()->lastInsertRowid();
-    }
-
-    return 0;
-}
-
-bool StatManager::createConnBlock(const LogEntryBlockedIp &entry, qint64 unixTime, qint64 appId)
-{
-    const qint64 connId = insertConn(entry, unixTime, appId);
-    if (connId <= 0)
-        return false;
-
-    const qint64 connBlockId = insertConnBlock(connId, entry.blockReason());
-    if (connBlockId <= 0)
-        return false;
-
-    m_connBlockIdMax = connBlockId;
-    if (m_connBlockIdMin <= 0) {
-        m_connBlockIdMin = m_connBlockIdMax;
-    }
-
-    return true;
-}
-
-void StatManager::deleteConnBlock(qint64 rowIdTo)
-{
-    deleteAppStmtList({ getIdStmt(StatSql::sqlDeleteConnForBlock, rowIdTo),
-                              getIdStmt(StatSql::sqlDeleteConnBlock, rowIdTo) },
-            getStmt(StatSql::sqlSelectDeletedConnBlockAppList));
-
-    m_connBlockIdMin = rowIdTo + 1;
-    if (m_connBlockIdMin >= m_connBlockIdMax) {
-        m_connBlockIdMin = m_connBlockIdMax = 0;
-    }
-}
-
-void StatManager::deleteAppStmtList(const StatManager::QStmtList &stmtList, SqliteStmt *stmtAppList)
+void StatManager::deleteAppStmtList(const SqliteStmtList &stmtList, SqliteStmt *stmtAppList)
 {
     // Delete Statements
-    doStmtList(stmtList);
+    SqliteStmt::doList(stmtList);
 
     // Delete Cached AppIds
     {
@@ -724,14 +538,6 @@ void StatManager::deleteAppStmtList(const StatManager::QStmtList &stmtList, Sqli
             clearCachedAppId(appPath);
         }
         stmtAppList->reset();
-    }
-}
-
-void StatManager::doStmtList(const QStmtList &stmtList)
-{
-    for (SqliteStmt *stmt : stmtList) {
-        stmt->step();
-        stmt->reset();
     }
 }
 
@@ -795,9 +601,4 @@ SqliteStmt *StatManager::getIdStmt(const char *sql, qint64 id)
     stmt->bindInt64(1, id);
 
     return stmt;
-}
-
-WorkerObject *StatManager::createWorker()
-{
-    return new StatWorker(this);
 }

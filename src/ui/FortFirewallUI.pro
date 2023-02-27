@@ -109,7 +109,7 @@ SOURCES += \
     manager/windowmanager.cpp \
     model/applistmodel.cpp \
     model/appstatmodel.cpp \
-    model/connlistmodel.cpp \
+    model/connblocklistmodel.cpp \
     model/policylistmodel.cpp \
     model/servicelistmodel.cpp \
     model/traflistmodel.cpp \
@@ -123,15 +123,18 @@ SOURCES += \
     rpc/quotamanagerrpc.cpp \
     rpc/rpcmanager.cpp \
     rpc/serviceinfomanagerrpc.cpp \
+    rpc/statblockmanagerrpc.cpp \
     rpc/statmanagerrpc.cpp \
     rpc/taskmanagerrpc.cpp \
     rpc/windowmanagerfake.cpp \
     serviceinfo/serviceinfo.cpp \
     serviceinfo/serviceinfomanager.cpp \
+    stat/logblockedipjob.cpp \
     stat/quotamanager.cpp \
+    stat/statblockmanager.cpp \
+    stat/statblockworker.cpp \
     stat/statmanager.cpp \
     stat/statsql.cpp \
-    stat/statworker.cpp \
     task/taskdownloader.cpp \
     task/taskeditinfo.cpp \
     task/taskinfo.cpp \
@@ -281,7 +284,7 @@ HEADERS += \
     manager/windowmanager.h \
     model/applistmodel.h \
     model/appstatmodel.h \
-    model/connlistmodel.h \
+    model/connblocklistmodel.h \
     model/policylistmodel.h \
     model/servicelistmodel.h \
     model/traflistmodel.h \
@@ -295,15 +298,18 @@ HEADERS += \
     rpc/quotamanagerrpc.h \
     rpc/rpcmanager.h \
     rpc/serviceinfomanagerrpc.h \
+    rpc/statblockmanagerrpc.h \
     rpc/statmanagerrpc.h \
     rpc/taskmanagerrpc.h \
     rpc/windowmanagerfake.h \
     serviceinfo/serviceinfo.h \
     serviceinfo/serviceinfomanager.h \
+    stat/logblockedipjob.h \
     stat/quotamanager.h \
+    stat/statblockmanager.h \
+    stat/statblockworker.h \
     stat/statmanager.h \
     stat/statsql.h \
-    stat/statworker.h \
     task/taskdownloader.h \
     task/taskeditinfo.h \
     task/taskinfo.h \
@@ -363,7 +369,9 @@ RESOURCES += \
 OTHER_FILES += \
     appinfo/migrations/*.sql \
     conf/migrations/*.sql \
-    stat/migrations/*.sql
+    stat/migrations/block/*.sql \
+    stat/migrations/conn/*.sql \
+    stat/migrations/traf/*.sql
 
 RESOURCES += \
     appinfo/appinfo_migrations.qrc \

@@ -44,8 +44,10 @@ bool renameDbFile(const QString &filePath, const QString &newFilePath)
 
 }
 
-SqliteDb::SqliteDb(const QString &filePath, quint32 openFlags) :
-    m_openFlags(openFlags != 0 ? openFlags : OpenDefaultReadWrite), m_filePath(filePath)
+SqliteDb::SqliteDb(const QString &filePath, quint32 openFlags, QObject *parent) :
+    QObject(parent),
+    m_openFlags(openFlags != 0 ? openFlags : OpenDefaultReadWrite),
+    m_filePath(filePath)
 {
     if (g_sqliteInitCount++ == 0) {
         sqlite3_initialize();
@@ -169,6 +171,11 @@ int SqliteDb::changes() const
 bool SqliteDb::beginTransaction()
 {
     return execute("BEGIN;");
+}
+
+bool SqliteDb::beginWriteTransaction()
+{
+    return execute("BEGIN IMMEDIATE;");
 }
 
 bool SqliteDb::endTransaction(bool ok)

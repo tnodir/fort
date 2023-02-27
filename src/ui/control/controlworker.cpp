@@ -7,7 +7,7 @@
 
 namespace {
 
-const QLoggingCategory LC("control");
+const QLoggingCategory LC("controlWorker");
 
 constexpr int commandMaxArgs = 16;
 constexpr int commandArgMaxSize = 4 * 1024;

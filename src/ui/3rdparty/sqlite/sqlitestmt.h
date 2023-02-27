@@ -7,6 +7,8 @@
 
 #include <util/classhelpers.h>
 
+#include "sqlitetypes.h"
+
 struct sqlite3_stmt;
 
 class SqliteStmt
@@ -65,6 +67,8 @@ public:
     QVariant columnVarBlob(int column = 0);
     QVariant columnVar(int column = 0);
     bool columnIsNull(int column = 0);
+
+    static void doList(const SqliteStmtList &stmtList);
 
 private:
     sqlite3_stmt *m_stmt = nullptr;

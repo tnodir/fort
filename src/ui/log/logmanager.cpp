@@ -6,6 +6,7 @@
 #include <driver/drivercommon.h>
 #include <driver/drivermanager.h>
 #include <driver/driverworker.h>
+#include <stat/statblockmanager.h>
 #include <stat/statmanager.h>
 #include <util/dateutil.h>
 #include <util/ioc/ioccontainer.h>
@@ -19,7 +20,7 @@
 #include "logentrytime.h"
 
 namespace {
-const QLoggingCategory LC("log.logManager");
+const QLoggingCategory LC("log");
 }
 
 LogManager::LogManager(QObject *parent) : QObject(parent) { }
@@ -146,7 +147,7 @@ bool LogManager::processLogEntry(LogBuffer *logBuffer, FortLogType logType)
     case FORT_LOG_TYPE_BLOCKED_IP: {
         LogEntryBlockedIp blockedIpEntry;
         logBuffer->readEntryBlockedIp(&blockedIpEntry);
-        IoC<StatManager>()->logBlockedIp(blockedIpEntry, currentUnixTime());
+        IoC<StatBlockManager>()->logBlockedIp(blockedIpEntry, currentUnixTime());
     } break;
     case FORT_LOG_TYPE_PROC_NEW: {
         LogEntryProcNew procNewEntry;

@@ -29,7 +29,7 @@
 
 namespace {
 
-const QLoggingCategory LC("manager.windowManager");
+const QLoggingCategory LC("manager.window");
 
 void setupAppStyle()
 {

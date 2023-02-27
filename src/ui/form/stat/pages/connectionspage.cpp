@@ -15,7 +15,7 @@
 #include <form/stat/statisticscontroller.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
-#include <model/connlistmodel.h>
+#include <model/connblocklistmodel.h>
 #include <user/iniuser.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
@@ -27,19 +27,19 @@ constexpr int CONN_LIST_HEADER_VERSION = 2;
 }
 
 ConnectionsPage::ConnectionsPage(StatisticsController *ctrl, QWidget *parent) :
-    StatBasePage(ctrl, parent), m_connListModel(new ConnListModel(this))
+    StatBasePage(ctrl, parent), m_connBlockListModel(new ConnBlockListModel(this))
 {
     setupUi();
 
     updateAutoScroll();
     updateShowHostNames();
 
-    connListModel()->initialize();
+    connBlockListModel()->initialize();
 }
 
 AppInfoCache *ConnectionsPage::appInfoCache() const
 {
-    return connListModel()->appInfoCache();
+    return connBlockListModel()->appInfoCache();
 }
 
 void ConnectionsPage::onSaveWindowState(IniUser *ini)
@@ -69,7 +69,7 @@ void ConnectionsPage::onRetranslateUi()
     m_cbAutoScroll->setText(tr("Auto scroll"));
     m_cbShowHostNames->setText(tr("Show host names"));
 
-    connListModel()->refresh();
+    connBlockListModel()->refresh();
 
     m_appInfoRow->retranslateUi();
 }
@@ -120,7 +120,7 @@ QLayout *ConnectionsPage::setupHeader()
             [&] { GuiUtil::setClipboardData(m_connListView->selectedText()); });
     connect(m_actAddProgram, &QAction::triggered, this, [&] {
         const auto connIndex = connListCurrentIndex();
-        const auto connRow = connListModel()->connRowAt(connIndex);
+        const auto connRow = connBlockListModel()->connRowAt(connIndex);
 
         windowManager()->showProgramEditForm(connRow.appPath);
     });
@@ -132,7 +132,7 @@ QLayout *ConnectionsPage::setupHeader()
     });
     connect(m_actClearAll, &QAction::triggered, this, [&] {
         if (windowManager()->showQuestionBox(tr("Are you sure to remove all connections?"))) {
-            connListModel()->clear();
+            connBlockListModel()->clear();
         }
     });
 
@@ -198,10 +198,7 @@ void ConnectionsPage::setupTableConnList()
     m_connListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_connListView->setSelectionBehavior(QAbstractItemView::SelectItems);
 
-    // TODO: Select the allowed/blocked mode from UI
-    connListModel()->setConnMode(ConnListModel::ConnBlock);
-
-    m_connListView->setModel(connListModel());
+    m_connListView->setModel(connBlockListModel());
 
     m_connListView->setMenu(m_btEdit->menu());
 }
@@ -263,24 +260,24 @@ void ConnectionsPage::setupTableConnsChanged()
 void ConnectionsPage::updateAutoScroll()
 {
     if (iniUser()->statAutoScroll()) {
-        connect(connListModel(), &QAbstractItemModel::rowsInserted, m_connListView,
+        connect(connBlockListModel(), &QAbstractItemModel::rowsInserted, m_connListView,
                 &QAbstractItemView::scrollToBottom);
 
         m_connListView->scrollToBottom();
     } else {
-        connListModel()->disconnect(m_connListView);
+        connBlockListModel()->disconnect(m_connListView);
     }
 }
 
 void ConnectionsPage::updateShowHostNames()
 {
-    connListModel()->setResolveAddress(iniUser()->statShowHostNames());
+    connBlockListModel()->setResolveAddress(iniUser()->statShowHostNames());
 }
 
 void ConnectionsPage::deleteConn(int row)
 {
-    const auto connRow = connListModel()->connRowAt(row);
-    connListModel()->deleteConn(connRow.rowId, connRow.blocked);
+    const auto connRow = connBlockListModel()->connRowAt(row);
+    connBlockListModel()->deleteConn(connRow.rowId);
 }
 
 int ConnectionsPage::connListCurrentIndex() const
@@ -290,6 +287,6 @@ int ConnectionsPage::connListCurrentIndex() const
 
 QString ConnectionsPage::connListCurrentPath() const
 {
-    const auto connRow = connListModel()->connRowAt(connListCurrentIndex());
+    const auto connRow = connBlockListModel()->connRowAt(connListCurrentIndex());
     return connRow.isNull() ? QString() : connRow.appPath;
 }

@@ -3,13 +3,13 @@
 
 #include <QMutex>
 
+#include <sqlite/sqlitetypes.h>
+
 #include <util/classhelpers.h>
 #include <util/ioc/iocservice.h>
 #include <util/worker/workermanager.h>
 
 #include "appinfo.h"
-
-class SqliteDb;
 
 class AppInfoManager : public WorkerManager, public IocService
 {
@@ -18,7 +18,6 @@ class AppInfoManager : public WorkerManager, public IocService
 public:
     explicit AppInfoManager(
             const QString &filePath, QObject *parent = nullptr, quint32 openFlags = 0);
-    ~AppInfoManager() override;
     CLASS_DELETE_COPY_MOVE(AppInfoManager)
 
     SqliteDb *sqliteDb() const { return m_sqliteDb; }

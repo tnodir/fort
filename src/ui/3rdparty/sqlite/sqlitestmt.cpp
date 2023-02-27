@@ -308,3 +308,11 @@ bool SqliteStmt::columnIsNull(int column)
 {
     return sqlite3_column_type(m_stmt, column) == SQLITE_NULL;
 }
+
+void SqliteStmt::doList(const SqliteStmtList &stmtList)
+{
+    for (SqliteStmt *stmt : stmtList) {
+        stmt->step();
+        stmt->reset();
+    }
+}

@@ -52,6 +52,11 @@ QString FortSettings::statFilePath() const
     return statPath() + APP_BASE + ".stat";
 }
 
+QString FortSettings::statBlockFilePath() const
+{
+    return statFilePath() + "-block";
+}
+
 QString FortSettings::cacheFilePath() const
 {
     return noCache() ? ":memory:" : cachePath() + "appinfo.db";

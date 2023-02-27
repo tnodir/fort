@@ -20,4 +20,5 @@ HEADERS += \
     $$SQLITE_DIR/sqlite3.h \
     $$SQLITE_DIR/sqlite_cfg.h \
     $$PWD/sqlitedb.h \
-    $$PWD/sqlitestmt.h
+    $$PWD/sqlitestmt.h \
+    $$PWD/sqlitetypes.h

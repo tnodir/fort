@@ -46,16 +46,17 @@ const char *const commandString(Command cmd)
         CASE_STRING(Rpc_QuotaManager_alert)
 
         CASE_STRING(Rpc_StatManager_deleteStatApp)
-        CASE_STRING(Rpc_StatManager_deleteConn)
-        CASE_STRING(Rpc_StatManager_deleteConnAll)
         CASE_STRING(Rpc_StatManager_resetAppTrafTotals)
         CASE_STRING(Rpc_StatManager_clearTraffic)
         CASE_STRING(Rpc_StatManager_trafficCleared)
         CASE_STRING(Rpc_StatManager_appStatRemoved)
         CASE_STRING(Rpc_StatManager_appCreated)
         CASE_STRING(Rpc_StatManager_trafficAdded)
-        CASE_STRING(Rpc_StatManager_connChanged)
         CASE_STRING(Rpc_StatManager_appTrafTotalsResetted)
+
+        CASE_STRING(Rpc_StatBlockManager_deleteConn)
+        CASE_STRING(Rpc_StatBlockManager_deleteConnAll)
+        CASE_STRING(Rpc_StatBlockManager_connChanged)
 
         CASE_STRING(Rpc_ServiceInfoManager_trackService)
         CASE_STRING(Rpc_ServiceInfoManager_revertService)
@@ -79,6 +80,7 @@ const char *const rpcManagerString(RpcManager rpcManager)
         CASE_STRING(Rpc_DriverManager)
         CASE_STRING(Rpc_QuotaManager)
         CASE_STRING(Rpc_StatManager)
+        CASE_STRING(Rpc_StatBlockManager)
         CASE_STRING(Rpc_ServiceInfoManager)
         CASE_STRING(Rpc_TaskManager)
     default:
@@ -128,16 +130,17 @@ RpcManager managerByCommand(Command cmd)
         Rpc_QuotaManager, // Rpc_QuotaManager_alert,
 
         Rpc_StatManager, // Rpc_StatManager_deleteStatApp,
-        Rpc_StatManager, // Rpc_StatManager_deleteConn,
-        Rpc_StatManager, // Rpc_StatManager_deleteConnAll,
         Rpc_StatManager, // Rpc_StatManager_resetAppTrafTotals,
         Rpc_StatManager, // Rpc_StatManager_clearTraffic,
         Rpc_StatManager, // Rpc_StatManager_trafficCleared,
         Rpc_StatManager, // Rpc_StatManager_appStatRemoved,
         Rpc_StatManager, // Rpc_StatManager_appCreated,
         Rpc_StatManager, // Rpc_StatManager_trafficAdded,
-        Rpc_StatManager, // Rpc_StatManager_connChanged,
         Rpc_StatManager, // Rpc_StatManager_appTrafTotalsResetted,
+
+        Rpc_StatBlockManager, // Rpc_StatBlockManager_deleteConn,
+        Rpc_StatBlockManager, // Rpc_StatBlockManager_deleteConnAll,
+        Rpc_StatBlockManager, // Rpc_StatBlockManager_connChanged,
 
         Rpc_ServiceInfoManager, // Rpc_ServiceInfoManager_trackService,
         Rpc_ServiceInfoManager, // Rpc_ServiceInfoManager_revertService,
@@ -193,16 +196,17 @@ bool commandRequiresValidation(Command cmd)
         0, // Rpc_QuotaManager_alert,
 
         true, // Rpc_StatManager_deleteStatApp,
-        true, // Rpc_StatManager_deleteConn,
-        true, // Rpc_StatManager_deleteConnAll,
         true, // Rpc_StatManager_resetAppTrafTotals,
         true, // Rpc_StatManager_clearTraffic,
         0, // Rpc_StatManager_trafficCleared,
         0, // Rpc_StatManager_appStatRemoved,
         0, // Rpc_StatManager_appCreated,
         0, // Rpc_StatManager_trafficAdded,
-        0, // Rpc_StatManager_connChanged,
         0, // Rpc_StatManager_appTrafTotalsResetted,
+
+        true, // Rpc_StatBlockManager_deleteConn,
+        true, // Rpc_StatBlockManager_deleteConnAll,
+        0, // Rpc_StatBlockManager_connChanged,
 
         true, // Rpc_TaskManager_runTask,
         true, // Rpc_TaskManager_abortTask,

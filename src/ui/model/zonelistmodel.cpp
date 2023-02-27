@@ -16,7 +16,7 @@
 #include "zonetypewrapper.h"
 
 namespace {
-const QLoggingCategory LC("model.zoneListModel");
+const QLoggingCategory LC("model.zoneList");
 }
 
 ZoneListModel::ZoneListModel(QObject *parent) : TableSqlModel(parent) { }
