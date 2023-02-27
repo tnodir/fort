@@ -110,7 +110,7 @@ bool ConfManagerRpc::saveConf(FirewallConf &newConf)
     const QVariant confVar = newConf.toVariant(true);
 
     setSaving(true);
-    const bool ok = IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_save, { confVar });
+    const bool ok = IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_saveVariant, { confVar });
     setSaving(false);
 
     if (!ok)

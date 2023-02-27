@@ -19,7 +19,7 @@ enum Command : qint8 {
     Rpc_AppInfoManager_lookupAppInfo,
     Rpc_AppInfoManager_checkLookupInfoFinished,
 
-    Rpc_ConfManager_save,
+    Rpc_ConfManager_saveVariant,
     Rpc_ConfManager_addApp,
     Rpc_ConfManager_deleteApp,
     Rpc_ConfManager_purgeApps,

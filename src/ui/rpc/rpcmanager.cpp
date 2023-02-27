@@ -48,103 +48,119 @@ inline bool processConfManager_confChanged(ConfManager *confManager, const QVari
     return true;
 }
 
-inline bool processConfManager_saveVariant(ConfManager *confManager, const QVariantList &args)
+bool processConfManager_saveVariant(
+        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
-    return confManager->saveVariant(args.value(0));
+    return confManager->saveVariant(p.args.value(0));
 }
 
-inline bool processConfManager_addApp(ConfManager *confManager, const QVariantList &args)
+bool processConfManager_addApp(
+        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
     App app;
-    app.useGroupPerm = args.value(0).toBool();
-    app.applyChild = args.value(1).toBool();
-    app.lanOnly = args.value(2).toBool();
-    app.blocked = args.value(3).toBool();
-    app.groupIndex = args.value(4).toInt();
-    app.appPath = args.value(5).toString();
-    app.appName = args.value(6).toString();
-    app.endTime = args.value(7).toDateTime();
+    app.useGroupPerm = p.args.value(0).toBool();
+    app.applyChild = p.args.value(1).toBool();
+    app.lanOnly = p.args.value(2).toBool();
+    app.blocked = p.args.value(3).toBool();
+    app.groupIndex = p.args.value(4).toInt();
+    app.appPath = p.args.value(5).toString();
+    app.appName = p.args.value(6).toString();
+    app.endTime = p.args.value(7).toDateTime();
 
     return confManager->addApp(app);
 }
 
-inline bool processConfManager_deleteApp(ConfManager *confManager, const QVariantList &args)
+bool processConfManager_deleteApp(
+        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
-    return confManager->deleteApp(args.value(0).toLongLong());
+    return confManager->deleteApp(p.args.value(0).toLongLong());
 }
 
-inline bool processConfManager_updateApp(ConfManager *confManager, const QVariantList &args)
+bool processConfManager_purgeApps(
+        ConfManager *confManager, const ProcessCommandArgs & /*p*/, QVariantList & /*resArgs*/)
+{
+    return confManager->purgeApps();
+}
+
+bool processConfManager_updateApp(
+        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
     App app;
-    app.useGroupPerm = args.value(0).toBool();
-    app.applyChild = args.value(1).toBool();
-    app.lanOnly = args.value(2).toBool();
-    app.blocked = args.value(3).toBool();
-    app.groupIndex = args.value(4).toInt();
-    app.appId = args.value(5).toLongLong();
-    app.appPath = args.value(6).toString();
-    app.appName = args.value(7).toString();
-    app.endTime = args.value(8).toDateTime();
+    app.useGroupPerm = p.args.value(0).toBool();
+    app.applyChild = p.args.value(1).toBool();
+    app.lanOnly = p.args.value(2).toBool();
+    app.blocked = p.args.value(3).toBool();
+    app.groupIndex = p.args.value(4).toInt();
+    app.appId = p.args.value(5).toLongLong();
+    app.appPath = p.args.value(6).toString();
+    app.appName = p.args.value(7).toString();
+    app.endTime = p.args.value(8).toDateTime();
 
     return confManager->updateApp(app);
 }
 
-inline bool processConfManager_updateAppBlocked(ConfManager *confManager, const QVariantList &args)
+bool processConfManager_updateAppBlocked(
+        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
-    return confManager->updateAppBlocked(args.value(0).toLongLong(), args.value(1).toBool());
+    return confManager->updateAppBlocked(p.args.value(0).toLongLong(), p.args.value(1).toBool());
 }
 
-inline bool processConfManager_updateAppName(ConfManager *confManager, const QVariantList &args)
+bool processConfManager_updateAppName(
+        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
-    return confManager->updateAppName(args.value(0).toLongLong(), args.value(1).toString());
+    return confManager->updateAppName(p.args.value(0).toLongLong(), p.args.value(1).toString());
 }
 
-inline bool processConfManager_addZone(
-        ConfManager *confManager, const QVariantList &args, QVariantList &resArgs)
+bool processConfManager_addZone(
+        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList &resArgs)
 {
     Zone zone;
-    zone.enabled = args.value(0).toBool();
-    zone.customUrl = args.value(1).toBool();
-    zone.zoneName = args.value(2).toString();
-    zone.sourceCode = args.value(3).toString();
-    zone.url = args.value(4).toString();
-    zone.formData = args.value(5).toString();
+    zone.enabled = p.args.value(0).toBool();
+    zone.customUrl = p.args.value(1).toBool();
+    zone.zoneName = p.args.value(2).toString();
+    zone.sourceCode = p.args.value(3).toString();
+    zone.url = p.args.value(4).toString();
+    zone.formData = p.args.value(5).toString();
 
     const bool ok = confManager->addZone(zone);
     resArgs = { zone.zoneId };
     return ok;
 }
 
-inline bool processConfManager_deleteZone(ConfManager *confManager, const QVariantList &args)
+bool processConfManager_deleteZone(
+        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
-    return confManager->deleteZone(args.value(0).toLongLong());
+    return confManager->deleteZone(p.args.value(0).toLongLong());
 }
 
-inline bool processConfManager_updateZone(ConfManager *confManager, const QVariantList &args)
+bool processConfManager_updateZone(
+        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
     Zone zone;
-    zone.enabled = args.value(0).toBool();
-    zone.customUrl = args.value(1).toBool();
-    zone.zoneId = args.value(2).toInt();
-    zone.zoneName = args.value(3).toString();
-    zone.sourceCode = args.value(4).toString();
-    zone.url = args.value(5).toString();
-    zone.formData = args.value(6).toString();
+    zone.enabled = p.args.value(0).toBool();
+    zone.customUrl = p.args.value(1).toBool();
+    zone.zoneId = p.args.value(2).toInt();
+    zone.zoneName = p.args.value(3).toString();
+    zone.sourceCode = p.args.value(4).toString();
+    zone.url = p.args.value(5).toString();
+    zone.formData = p.args.value(6).toString();
 
     return confManager->updateZone(zone);
 }
 
-inline bool processConfManager_updateZoneName(ConfManager *confManager, const QVariantList &args)
+bool processConfManager_updateZoneName(
+        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
-    return confManager->updateZoneName(args.value(0).toLongLong(), args.value(1).toString());
+    return confManager->updateZoneName(p.args.value(0).toLongLong(), p.args.value(1).toString());
 }
 
-inline bool processConfManager_updateZoneEnabled(ConfManager *confManager, const QVariantList &args)
+bool processConfManager_updateZoneEnabled(
+        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
-    return confManager->updateZoneEnabled(args.value(0).toLongLong(), args.value(1).toBool());
+    return confManager->updateZoneEnabled(p.args.value(0).toLongLong(), p.args.value(1).toBool());
 }
 
-inline bool processConfManager_checkPassword(
+bool processConfManager_checkPassword(
         ConfManager *confManager, const ProcessCommandArgs &p, QVariantList &resArgs)
 {
     const bool ok = confManager->checkPassword(p.args.value(0).toString());
@@ -155,39 +171,37 @@ inline bool processConfManager_checkPassword(
     return true;
 }
 
+using processConfManager_func = bool (*)(
+        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList &resArgs);
+
+static processConfManager_func processConfManager_funcList[] = {
+    &processConfManager_saveVariant, // Rpc_ConfManager_saveVariant,
+    &processConfManager_addApp, // Rpc_ConfManager_addApp,
+    &processConfManager_deleteApp, // Rpc_ConfManager_deleteApp,
+    &processConfManager_purgeApps, // Rpc_ConfManager_purgeApps,
+    &processConfManager_updateApp, // Rpc_ConfManager_updateApp,
+    &processConfManager_updateAppBlocked, // Rpc_ConfManager_updateAppBlocked,
+    &processConfManager_updateAppName, // Rpc_ConfManager_updateAppName,
+    &processConfManager_addZone, // Rpc_ConfManager_addZone,
+    &processConfManager_deleteZone, // Rpc_ConfManager_deleteZone,
+    &processConfManager_updateZone, // Rpc_ConfManager_updateZone,
+    &processConfManager_updateZoneName, // Rpc_ConfManager_updateZoneName,
+    &processConfManager_updateZoneEnabled, // Rpc_ConfManager_updateZoneEnabled,
+    &processConfManager_checkPassword, // Rpc_ConfManager_checkPassword,
+};
+
 inline bool processConfManagerRpcResult(
         ConfManager *confManager, const ProcessCommandArgs &p, QVariantList &resArgs)
 {
-    switch (p.command) {
-    case Control::Rpc_ConfManager_save:
-        return processConfManager_saveVariant(confManager, p.args);
-    case Control::Rpc_ConfManager_addApp:
-        return processConfManager_addApp(confManager, p.args);
-    case Control::Rpc_ConfManager_deleteApp:
-        return processConfManager_deleteApp(confManager, p.args);
-    case Control::Rpc_ConfManager_purgeApps:
-        return confManager->purgeApps();
-    case Control::Rpc_ConfManager_updateApp:
-        return processConfManager_updateApp(confManager, p.args);
-    case Control::Rpc_ConfManager_updateAppBlocked:
-        return processConfManager_updateAppBlocked(confManager, p.args);
-    case Control::Rpc_ConfManager_updateAppName:
-        return processConfManager_updateAppName(confManager, p.args);
-    case Control::Rpc_ConfManager_addZone:
-        return processConfManager_addZone(confManager, p.args, resArgs);
-    case Control::Rpc_ConfManager_deleteZone:
-        return processConfManager_deleteZone(confManager, p.args);
-    case Control::Rpc_ConfManager_updateZone:
-        return processConfManager_updateZone(confManager, p.args);
-    case Control::Rpc_ConfManager_updateZoneName:
-        return processConfManager_updateZoneName(confManager, p.args);
-    case Control::Rpc_ConfManager_updateZoneEnabled:
-        return processConfManager_updateZoneEnabled(confManager, p.args);
-    case Control::Rpc_ConfManager_checkPassword:
-        return processConfManager_checkPassword(confManager, p, resArgs);
-    default:
-        return false;
+    if (p.command >= Control::Rpc_ConfManager_saveVariant
+            && p.command <= Control::Rpc_ConfManager_checkPassword) {
+
+        const processConfManager_func func = processConfManager_funcList[p.command];
+
+        return func(confManager, p, resArgs);
     }
+
+    return false;
 }
 
 inline bool processStatManager_appStatRemoved(StatManager *statManager, const QVariantList &args)
