@@ -21,19 +21,6 @@ constexpr int DATABASE_USER_VERSION = 7;
 
 constexpr qint64 INVALID_APP_ID = Q_INT64_C(-1);
 
-bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
-{
-    Q_UNUSED(ctx);
-
-    if (isNewDb)
-        return true;
-
-    switch (version) {
-    }
-
-    return true;
-}
-
 }
 
 StatBlockManager::StatBlockManager(const QString &filePath, QObject *parent, quint32 openFlags) :
@@ -60,10 +47,9 @@ void StatBlockManager::setUp()
         return;
     }
 
-    SqliteDb::MigrateOptions opt = { .sqlDir = ":/stat/migrations/block",
-        .version = DATABASE_USER_VERSION,
-        .recreate = true,
-        .migrateFunc = &migrateFunc };
+    SqliteDb::MigrateOptions opt = {
+        .sqlDir = ":/stat/migrations/block", .version = DATABASE_USER_VERSION, .recreate = true
+    };
 
     if (!sqliteDb()->migrate(opt)) {
         qCCritical(LC) << "Migration error" << sqliteDb()->filePath();

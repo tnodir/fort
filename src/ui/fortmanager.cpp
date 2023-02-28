@@ -139,6 +139,9 @@ void FortManager::createManagers()
     WindowManager *windowManager;
 
     if (settings->isMaster()) {
+        // TODO: COMPAT: Remove after v4.1.0 (via v4.0.0)
+        FileUtil::copyFile(settings->statFilePath(), settings->statBlockFilePath());
+
         confManager = new ConfManager(settings->confFilePath());
         quotaManager = new QuotaManager();
         statManager = new StatManager(settings->statFilePath());

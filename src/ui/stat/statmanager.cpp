@@ -21,7 +21,7 @@ namespace {
 
 const QLoggingCategory LC("stat");
 
-constexpr int DATABASE_USER_VERSION = 6;
+constexpr int DATABASE_USER_VERSION = 7;
 
 constexpr qint32 ACTIVE_PERIOD_CHECK_SECS = 60 * OS_TICKS_PER_SECOND;
 
