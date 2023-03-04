@@ -12,6 +12,13 @@ SqliteDb *StatBlockBaseJob::sqliteDb() const
     return manager()->sqliteDb();
 }
 
+bool StatBlockBaseJob::mergeJob(const WorkerJob &job)
+{
+    const auto &statJob = static_cast<const StatBlockBaseJob &>(job);
+
+    return jobType() == statJob.jobType() && processMerge(statJob);
+}
+
 void StatBlockBaseJob::doJob(WorkerObject *worker)
 {
     m_manager = static_cast<StatBlockManager *>(worker->manager());

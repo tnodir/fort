@@ -35,7 +35,7 @@ public:
 
     void updateConnBlockId();
 
-    bool logBlockedIp(const LogEntryBlockedIp &entry, qint64 unixTime);
+    void logBlockedIp(const LogEntryBlockedIp &entry);
 
     virtual void deleteConn(qint64 connIdTo = 0);
 
@@ -57,6 +57,7 @@ private:
 
 protected:
     WorkerObject *createWorker() override;
+    bool canMergeJobs() const override { return true; }
 
     virtual void setupWorker();
     virtual void setupConfManager();

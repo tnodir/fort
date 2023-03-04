@@ -9,7 +9,6 @@
 class AppInfoCache;
 class FortManager;
 class HostInfoCache;
-class LogEntryBlockedIp;
 class StatBlockManager;
 
 struct ConnRow : TableRow

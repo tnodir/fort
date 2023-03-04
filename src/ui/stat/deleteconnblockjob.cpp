@@ -10,6 +10,17 @@
 
 DeleteConnBlockJob::DeleteConnBlockJob(qint64 connIdTo) : m_connIdTo(connIdTo) { }
 
+bool DeleteConnBlockJob::processMerge(const StatBlockBaseJob &statJob)
+{
+    const auto &job = static_cast<const DeleteConnBlockJob &>(statJob);
+
+    if (connIdTo() > 0 && (job.connIdTo() <= 0 || connIdTo() < job.connIdTo())) {
+        m_connIdTo = job.connIdTo();
+    }
+
+    return true;
+}
+
 void DeleteConnBlockJob::processJob()
 {
     sqliteDb()->beginTransaction();

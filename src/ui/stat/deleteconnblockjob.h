@@ -12,7 +12,10 @@ public:
 
     qint64 connIdTo() const { return m_connIdTo; }
 
+    StatBlockJobType jobType() const override { return JobTypeDeleteConn; }
+
 protected:
+    bool processMerge(const StatBlockBaseJob &statJob) override;
     void processJob() override;
     void emitFinished() override;
 
@@ -20,7 +23,7 @@ protected:
     void deleteConnAll();
 
 private:
-    const qint64 m_connIdTo;
+    qint64 m_connIdTo = 0;
 };
 
 #endif // DELETECONNBLOCKJOB_H

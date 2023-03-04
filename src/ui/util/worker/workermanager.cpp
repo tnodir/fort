@@ -2,6 +2,7 @@
 
 #include <QThreadPool>
 
+#include "workerjob.h"
 #include "workerobject.h"
 
 namespace {
@@ -73,9 +74,13 @@ void WorkerManager::enqueueJob(WorkerJob *job)
 
     setupWorker();
 
-    m_jobQueue.enqueue(job);
+    if (canMergeJobs() && !m_jobQueue.isEmpty() && m_jobQueue.head()->mergeJob(*job)) {
+        delete job;
+    } else {
+        m_jobQueue.enqueue(job);
 
-    m_waitCondition.wakeOne();
+        m_waitCondition.wakeOne();
+    }
 }
 
 WorkerJob *WorkerManager::dequeueJob()

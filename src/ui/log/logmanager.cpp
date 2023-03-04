@@ -147,7 +147,8 @@ bool LogManager::processLogEntry(LogBuffer *logBuffer, FortLogType logType)
     case FORT_LOG_TYPE_BLOCKED_IP: {
         LogEntryBlockedIp blockedIpEntry;
         logBuffer->readEntryBlockedIp(&blockedIpEntry);
-        IoC<StatBlockManager>()->logBlockedIp(blockedIpEntry, currentUnixTime());
+        blockedIpEntry.setConnTime(currentUnixTime());
+        IoC<StatBlockManager>()->logBlockedIp(blockedIpEntry);
     } break;
     case FORT_LOG_TYPE_PROC_NEW: {
         LogEntryProcNew procNewEntry;

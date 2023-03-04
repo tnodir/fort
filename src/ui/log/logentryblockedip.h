@@ -33,6 +33,9 @@ public:
     quint16 remotePort() const { return m_remotePort; }
     void setRemotePort(quint16 port);
 
+    qint64 connTime() const { return m_connTime; }
+    void setConnTime(qint64 connTime);
+
     const ip_addr_t &localIp() const { return m_localIp; }
     ip_addr_t &localIp() { return m_localIp; }
     void setLocalIp(ip_addr_t &ip);
@@ -61,6 +64,7 @@ private:
     quint8 m_ipProto = 0;
     quint16 m_localPort = 0;
     quint16 m_remotePort = 0;
+    qint64 m_connTime = 0;
     ip_addr_t m_localIp;
     ip_addr_t m_remoteIp;
 };

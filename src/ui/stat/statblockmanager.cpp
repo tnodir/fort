@@ -74,14 +74,9 @@ void StatBlockManager::updateConnBlockId()
     m_connBlockIdMax = vars.value(1).toLongLong();
 }
 
-bool StatBlockManager::logBlockedIp(const LogEntryBlockedIp &entry, qint64 unixTime)
+void StatBlockManager::logBlockedIp(const LogEntryBlockedIp &entry)
 {
-    auto job = new LogBlockedIpJob(unixTime);
-    job->entry() = entry;
-
-    enqueueJob(job);
-
-    return true;
+    enqueueJob(new LogBlockedIpJob(entry));
 }
 
 void StatBlockManager::deleteConn(qint64 connIdTo)

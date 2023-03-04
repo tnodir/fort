@@ -15,6 +15,12 @@ public:
 
     const QString &text() const { return m_text; }
 
+    virtual bool mergeJob(const WorkerJob &job)
+    {
+        Q_UNUSED(job);
+        return false;
+    }
+
     virtual void doJob(WorkerObject *worker) { Q_UNUSED(worker); }
     virtual void reportResult(WorkerObject *worker) { Q_UNUSED(worker); }
 

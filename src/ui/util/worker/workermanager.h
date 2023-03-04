@@ -38,6 +38,7 @@ public slots:
 
 protected:
     virtual WorkerObject *createWorker();
+    virtual bool canMergeJobs() const { return false; }
 
 private:
     void setupWorker();

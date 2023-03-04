@@ -39,6 +39,11 @@ void LogEntryBlockedIp::setRemotePort(quint16 port)
     m_remotePort = port;
 }
 
+void LogEntryBlockedIp::setConnTime(qint64 connTime)
+{
+    m_connTime = connTime;
+}
+
 void LogEntryBlockedIp::setLocalIp(ip_addr_t &ip)
 {
     m_localIp = ip;

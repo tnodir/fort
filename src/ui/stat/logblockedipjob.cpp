@@ -3,7 +3,6 @@
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
-#include <util/dateutil.h>
 #include <util/worker/workerobject.h>
 
 #include "statblockmanager.h"
@@ -15,7 +14,19 @@ constexpr qint64 INVALID_APP_ID = Q_INT64_C(-1);
 
 }
 
-LogBlockedIpJob::LogBlockedIpJob(qint64 unixTime) : m_unixTime(unixTime) { }
+LogBlockedIpJob::LogBlockedIpJob(const LogEntryBlockedIp &entry)
+{
+    m_entries.append(entry);
+}
+
+bool LogBlockedIpJob::processMerge(const StatBlockBaseJob &statJob)
+{
+    const auto &job = static_cast<const LogBlockedIpJob &>(statJob);
+
+    m_entries.append(job.entries());
+
+    return true;
+}
 
 void LogBlockedIpJob::processJob()
 {
@@ -23,15 +34,8 @@ void LogBlockedIpJob::processJob()
 
     sqliteDb()->beginTransaction();
 
-    const qint64 appId = getOrCreateAppId(entry().path(), unixTime());
-    if (appId != INVALID_APP_ID) {
-        const qint64 connId = insertConn(entry(), unixTime(), appId);
-
-        if (connId > 0) {
-            if (m_connId < connId) {
-                m_connId = connId;
-            }
-
+    for (const LogEntryBlockedIp &entry : entries()) {
+        if (processEntry(entry)) {
             ++resultCount;
         }
     }
@@ -44,6 +48,23 @@ void LogBlockedIpJob::processJob()
 void LogBlockedIpJob::emitFinished()
 {
     emit manager()->logBlockedIpFinished(resultCount(), m_connId);
+}
+
+bool LogBlockedIpJob::processEntry(const LogEntryBlockedIp &entry)
+{
+    const qint64 appId = getOrCreateAppId(entry.path(), entry.connTime());
+    if (appId == INVALID_APP_ID)
+        return false;
+
+    const qint64 connId = insertConn(entry, appId);
+    if (connId <= 0)
+        return false;
+
+    if (m_connId < connId) {
+        m_connId = connId;
+    }
+
+    return true;
 }
 
 qint64 LogBlockedIpJob::getAppId(const QString &appPath)
@@ -79,9 +100,6 @@ qint64 LogBlockedIpJob::getOrCreateAppId(const QString &appPath, qint64 unixTime
 {
     qint64 appId = getAppId(appPath);
     if (appId == INVALID_APP_ID) {
-        if (unixTime == 0) {
-            unixTime = DateUtil::getUnixTime();
-        }
         appId = createAppId(appPath, unixTime);
     }
 
@@ -90,12 +108,12 @@ qint64 LogBlockedIpJob::getOrCreateAppId(const QString &appPath, qint64 unixTime
     return appId;
 }
 
-qint64 LogBlockedIpJob::insertConn(const LogEntryBlockedIp &entry, qint64 unixTime, qint64 appId)
+qint64 LogBlockedIpJob::insertConn(const LogEntryBlockedIp &entry, qint64 appId)
 {
     SqliteStmt *stmt = getStmt(StatSql::sqlInsertConnBlock);
 
     stmt->bindInt64(1, appId);
-    stmt->bindInt64(2, unixTime);
+    stmt->bindInt64(2, entry.connTime());
     stmt->bindInt(3, entry.pid());
     stmt->bindInt(4, entry.inbound());
     stmt->bindInt(5, entry.inherited());
