@@ -5,6 +5,8 @@
 
 #include <util/ioc/iocservice.h>
 
+class IniOptions;
+
 class QuotaManager : public QObject, public IocService
 {
     Q_OBJECT
@@ -45,7 +47,7 @@ protected:
 private:
     void processQuotaExceed(AlertType alertType);
 
-    void setupByConf();
+    void setupByConf(const IniOptions &ini);
 
 private:
     int m_quotaDayAlerted = 0;

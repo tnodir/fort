@@ -129,8 +129,10 @@ SOURCES += \
     rpc/windowmanagerfake.cpp \
     serviceinfo/serviceinfo.cpp \
     serviceinfo/serviceinfomanager.cpp \
+    stat/deleteconnblockjob.cpp \
     stat/logblockedipjob.cpp \
     stat/quotamanager.cpp \
+    stat/statblockbasejob.cpp \
     stat/statblockmanager.cpp \
     stat/statblockworker.cpp \
     stat/statmanager.cpp \
@@ -304,8 +306,10 @@ HEADERS += \
     rpc/windowmanagerfake.h \
     serviceinfo/serviceinfo.h \
     serviceinfo/serviceinfomanager.h \
+    stat/deleteconnblockjob.h \
     stat/logblockedipjob.h \
     stat/quotamanager.h \
+    stat/statblockbasejob.h \
     stat/statblockmanager.h \
     stat/statblockworker.h \
     stat/statmanager.h \

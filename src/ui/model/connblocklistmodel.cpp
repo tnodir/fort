@@ -40,7 +40,7 @@ StatBlockManager *ConnBlockListModel::statBlockManager() const
 
 SqliteDb *ConnBlockListModel::sqliteDb() const
 {
-    return statBlockManager()->sqliteDb();
+    return statBlockManager()->roSqliteDb();
 }
 
 AppInfoCache *ConnBlockListModel::appInfoCache() const
@@ -204,9 +204,9 @@ QString ConnBlockListModel::connIconPath(const ConnRow &connRow)
     }
 }
 
-void ConnBlockListModel::deleteConn(qint64 rowIdTo)
+void ConnBlockListModel::deleteConn(qint64 connIdTo)
 {
-    statBlockManager()->deleteConn(rowIdTo);
+    statBlockManager()->deleteConn(connIdTo);
 }
 
 const ConnRow &ConnBlockListModel::connRowAt(int row) const
@@ -218,7 +218,7 @@ const ConnRow &ConnBlockListModel::connRowAt(int row) const
 
 void ConnBlockListModel::clear()
 {
-    statBlockManager()->deleteConnAll();
+    statBlockManager()->deleteConn();
 
     hostInfoCache()->clear();
 }

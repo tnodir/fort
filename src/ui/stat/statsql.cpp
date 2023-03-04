@@ -4,7 +4,7 @@ const char *const StatSql::sqlSelectAppId = "SELECT app_id FROM app WHERE path =
 
 const char *const StatSql::sqlInsertAppId = "INSERT INTO app(path, creat_time) VALUES(?1, ?2);";
 
-const char *const StatSql::sqlDeleteAppId = "DELETE FROM app WHERE app_id = ?1;";
+const char *const StatSql::sqlDeleteAppId = "DELETE FROM app WHERE app_id = ?1 RETURNING path;";
 
 const char *const StatSql::sqlSelectStatAppExists = "SELECT 1 FROM traffic_app WHERE app_id = ?1;";
 
@@ -150,53 +150,36 @@ const char *const StatSql::sqlDeleteAppTrafMonth = "DELETE FROM traffic_app_mont
 const char *const StatSql::sqlDeleteAppTrafTotal = "DELETE FROM traffic_app"
                                                    "  WHERE app_id = ?1;";
 
-const char *const StatSql::sqlSelectDeletedStatAppList =
-        "SELECT app_id, path FROM app WHERE app_id = ?1"
-        "  AND (SELECT 1 FROM conn WHERE app_id = ?1 LIMIT 1) IS NULL;";
-
 const char *const StatSql::sqlResetAppTrafTotals =
         "UPDATE traffic_app"
         "  SET traf_time = ?1, in_bytes = 0, out_bytes = 0;";
 
-const char *const StatSql::sqlDeleteAllTraffic =
-        "DELETE FROM traffic_app;"
-        "DELETE FROM traffic_app_hour;"
-        "DELETE FROM traffic_app_day;"
-        "DELETE FROM traffic_app_month;"
-        "DELETE FROM traffic_hour;"
-        "DELETE FROM traffic_day;"
-        "DELETE FROM traffic_month;"
-        "DELETE FROM app WHERE ("
-        "  SELECT 1 FROM conn c WHERE c.app_id = app.app_id LIMIT 1) IS NULL;";
+const char *const StatSql::sqlDeleteAllTraffic = "DELETE FROM traffic_app;"
+                                                 "DELETE FROM traffic_app_hour;"
+                                                 "DELETE FROM traffic_app_day;"
+                                                 "DELETE FROM traffic_app_month;"
+                                                 "DELETE FROM traffic_hour;"
+                                                 "DELETE FROM traffic_day;"
+                                                 "DELETE FROM traffic_month;"
+                                                 "DELETE FROM app;";
 
-const char *const StatSql::sqlInsertConn =
-        "INSERT INTO conn(app_id, conn_time, process_id, inbound, inherited, blocked,"
-        "    ip_proto, local_port, remote_port, local_ip, local_ip6, remote_ip, remote_ip6)"
-        "  VALUES(?1, ?2, ?3, ?4, ?5, 1, ?6, ?7, ?8, ?9, ?10, ?11, ?12);";
+const char *const StatSql::sqlInsertConnBlock =
+        "INSERT INTO conn_block(app_id, conn_time, process_id, inbound, inherited,"
+        "    ip_proto, local_port, remote_port, local_ip, remote_ip,"
+        "    local_ip6, remote_ip6, block_reason)"
+        "  VALUES(?1, ?2, ?3, ?4, ?5, 1, ?6, ?7, ?8, ?9, ?10, ?11, ?12, &13);";
 
-const char *const StatSql::sqlInsertConnBlock = "INSERT INTO conn_block(conn_id, block_reason)"
-                                                "  VALUES(?1, ?2);";
+const char *const StatSql::sqlSelectMinMaxConnBlockId =
+        "SELECT MIN(conn_id), MAX(conn_id) FROM conn_block;";
 
-const char *const StatSql::sqlSelectMinMaxConnBlockId = "SELECT MIN(id), MAX(id) FROM conn_block;";
+const char *const StatSql::sqlDeleteConnBlock = "DELETE FROM conn_block WHERE conn_id <= ?1;";
 
-const char *const StatSql::sqlDeleteConnForBlock = "DELETE FROM conn WHERE conn_id IN ("
-                                                   "  SELECT conn_id FROM conn_block WHERE id <= ?1"
-                                                   ");";
-
-const char *const StatSql::sqlDeleteConnBlock = "DELETE FROM conn_block WHERE id <= ?1;";
-
-const char *const StatSql::sqlSelectDeletedConnBlockAppList =
-        "SELECT t.app_id, t.path FROM app t"
-        "  LEFT JOIN traffic_app ta ON ta.app_id = t.app_id"
-        "  WHERE ta.app_id IS NULL AND ("
-        "    SELECT 1 FROM conn c WHERE c.app_id = t.app_id LIMIT 1"
+const char *const StatSql::sqlDeleteConnBlockApps =
+        "DELETE FROM app t"
+        "  WHERE ("
+        "    SELECT 1 FROM conn_block c WHERE c.app_id = t.app_id LIMIT 1"
         "  ) IS NULL;";
-
-const char *const StatSql::sqlDeleteAllConn = "DELETE FROM conn;";
 
 const char *const StatSql::sqlDeleteAllConnBlock = "DELETE FROM conn_block;";
 
-const char *const StatSql::sqlSelectDeletedAllConnAppList =
-        "SELECT t.app_id, t.path FROM app t"
-        "  LEFT JOIN traffic_app ta ON ta.app_id = t.app_id"
-        "  WHERE ta.app_id IS NULL;";
+const char *const StatSql::sqlDeleteAllApps = "DELETE FROM app;";

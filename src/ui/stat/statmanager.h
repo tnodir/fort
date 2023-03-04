@@ -100,8 +100,6 @@ private:
 
     bool updateTraffic(SqliteStmt *stmt, quint32 inBytes, quint32 outBytes, qint64 appId = 0);
 
-    void deleteAppStmtList(const SqliteStmtList &stmtList, SqliteStmt *stmtAppList);
-
     SqliteStmt *getStmt(const char *sql);
     SqliteStmt *getTrafficStmt(const char *sql, qint32 trafTime);
     SqliteStmt *getIdStmt(const char *sql, qint64 id);

@@ -612,6 +612,10 @@ void ConfManager::applySavedConf(FirewallConf *newConf)
 
     emit confChanged(onlyFlags);
 
+    if (conf()->iniEdited()) {
+        emit iniChanged(conf()->ini());
+    }
+
     conf()->resetEdited();
 }
 

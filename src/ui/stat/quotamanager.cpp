@@ -123,7 +123,7 @@ void QuotaManager::setupConfManager()
 {
     auto confManager = IoC()->setUpDependency<ConfManager>();
 
-    connect(confManager, &ConfManager::confChanged, this, &QuotaManager::setupByConf);
+    connect(confManager, &ConfManager::iniChanged, this, &QuotaManager::setupByConf);
 }
 
 int QuotaManager::quotaDayAlerted() const
@@ -181,16 +181,8 @@ void QuotaManager::processQuotaExceed(AlertType alertType)
     emit alert(alertType);
 }
 
-void QuotaManager::setupByConf()
+void QuotaManager::setupByConf(const IniOptions &ini)
 {
-    auto confManager = IoC<ConfManager>();
-    FirewallConf *conf = confManager->conf();
-
-    if (!conf->iniEdited())
-        return;
-
-    const IniOptions &ini = conf->ini();
-
     setQuotaDayBytes(qint64(ini.quotaDayMb()) * 1024 * 1024);
     setQuotaMonthBytes(qint64(ini.quotaMonthMb()) * 1024 * 1024);
 

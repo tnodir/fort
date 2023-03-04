@@ -315,11 +315,12 @@ bool StatManager::deleteStatApp(qint64 appId)
 {
     sqliteDb()->beginTransaction();
 
-    deleteAppStmtList({ getIdStmt(StatSql::sqlDeleteAppTrafHour, appId),
-                              getIdStmt(StatSql::sqlDeleteAppTrafDay, appId),
-                              getIdStmt(StatSql::sqlDeleteAppTrafMonth, appId),
-                              getIdStmt(StatSql::sqlDeleteAppTrafTotal, appId) },
-            getIdStmt(StatSql::sqlSelectDeletedStatAppList, appId));
+    SqliteStmt::doList({ getIdStmt(StatSql::sqlDeleteAppTrafHour, appId),
+            getIdStmt(StatSql::sqlDeleteAppTrafDay, appId),
+            getIdStmt(StatSql::sqlDeleteAppTrafMonth, appId),
+            getIdStmt(StatSql::sqlDeleteAppTrafTotal, appId) });
+
+    deleteAppId(appId);
 
     sqliteDb()->commitTransaction();
 
@@ -330,7 +331,7 @@ bool StatManager::deleteStatApp(qint64 appId)
 
 bool StatManager::resetAppTrafTotals()
 {
-    SqliteStmt *stmt = sqliteDb()->stmt(StatSql::sqlResetAppTrafTotals);
+    SqliteStmt *stmt = getStmt(StatSql::sqlResetAppTrafTotals);
     const qint64 unixTime = DateUtil::getUnixTime();
 
     stmt->bindInt(1, DateUtil::getUnixHour(unixTime));
@@ -346,7 +347,7 @@ bool StatManager::resetAppTrafTotals()
 
 bool StatManager::hasAppTraf(qint64 appId)
 {
-    SqliteStmt *stmt = sqliteDb()->stmt(StatSql::sqlSelectStatAppExists);
+    SqliteStmt *stmt = getStmt(StatSql::sqlSelectStatAppExists);
 
     stmt->bindInt64(1, appId);
     const bool res = (stmt->step() == SqliteStmt::StepRow);
@@ -359,7 +360,7 @@ qint64 StatManager::getAppId(const QString &appPath)
 {
     qint64 appId = INVALID_APP_ID;
 
-    SqliteStmt *stmt = sqliteDb()->stmt(StatSql::sqlSelectAppId);
+    SqliteStmt *stmt = getStmt(StatSql::sqlSelectAppId);
 
     stmt->bindText(1, appPath);
     if (stmt->step() == SqliteStmt::StepRow) {
@@ -372,7 +373,7 @@ qint64 StatManager::getAppId(const QString &appPath)
 
 qint64 StatManager::createAppId(const QString &appPath, qint64 unixTime)
 {
-    SqliteStmt *stmt = sqliteDb()->stmt(StatSql::sqlInsertAppId);
+    SqliteStmt *stmt = getStmt(StatSql::sqlInsertAppId);
 
     stmt->bindText(1, appPath);
     stmt->bindInt64(2, unixTime);
@@ -407,7 +408,13 @@ bool StatManager::deleteAppId(qint64 appId)
 {
     SqliteStmt *stmt = getIdStmt(StatSql::sqlDeleteAppId, appId);
 
-    return sqliteDb()->done(stmt);
+    const bool ok = (stmt->step() == SqliteStmt::StepDone && sqliteDb()->changes() != 0);
+    if (ok) {
+        const QString appPath = stmt->columnText(0);
+        clearCachedAppId(appPath);
+    }
+    stmt->reset();
+    return ok;
 }
 
 void StatManager::deleteOldTraffic(qint32 trafHour)
@@ -446,7 +453,7 @@ void StatManager::deleteOldTraffic(qint32 trafHour)
 
 void StatManager::getStatAppList(QStringList &list, QVector<qint64> &appIds)
 {
-    SqliteStmt *stmt = sqliteDb()->stmt(StatSql::sqlSelectStatAppList);
+    SqliteStmt *stmt = getStmt(StatSql::sqlSelectStatAppList);
 
     while (stmt->step() == SqliteStmt::StepRow) {
         appIds.append(stmt->columnInt64(0));
@@ -523,29 +530,11 @@ bool StatManager::updateTraffic(SqliteStmt *stmt, quint32 inBytes, quint32 outBy
     return sqliteDb()->done(stmt);
 }
 
-void StatManager::deleteAppStmtList(const SqliteStmtList &stmtList, SqliteStmt *stmtAppList)
-{
-    // Delete Statements
-    SqliteStmt::doList(stmtList);
-
-    // Delete Cached AppIds
-    {
-        while (stmtAppList->step() == SqliteStmt::StepRow) {
-            const qint64 appId = stmtAppList->columnInt64(0);
-            const QString appPath = stmtAppList->columnText(1);
-
-            deleteAppId(appId);
-            clearCachedAppId(appPath);
-        }
-        stmtAppList->reset();
-    }
-}
-
 qint32 StatManager::getTrafficTime(const char *sql, qint64 appId)
 {
     qint32 trafTime = 0;
 
-    SqliteStmt *stmt = sqliteDb()->stmt(sql);
+    SqliteStmt *stmt = getStmt(sql);
 
     if (appId != 0) {
         stmt->bindInt64(1, appId);
@@ -562,7 +551,7 @@ qint32 StatManager::getTrafficTime(const char *sql, qint64 appId)
 void StatManager::getTraffic(
         const char *sql, qint32 trafTime, qint64 &inBytes, qint64 &outBytes, qint64 appId)
 {
-    SqliteStmt *stmt = sqliteDb()->stmt(sql);
+    SqliteStmt *stmt = getStmt(sql);
 
     stmt->bindInt(1, trafTime);
 

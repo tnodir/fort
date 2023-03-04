@@ -63,23 +63,18 @@ public:
     static const char *const sqlDeleteAppTrafMonth;
     static const char *const sqlDeleteAppTrafTotal;
 
-    static const char *const sqlSelectDeletedStatAppList;
-
     static const char *const sqlResetAppTrafTotals;
     static const char *const sqlDeleteAllTraffic;
 
-    static const char *const sqlInsertConn;
     static const char *const sqlInsertConnBlock;
 
     static const char *const sqlSelectMinMaxConnBlockId;
 
-    static const char *const sqlDeleteConnForBlock;
     static const char *const sqlDeleteConnBlock;
-    static const char *const sqlSelectDeletedConnBlockAppList;
+    static const char *const sqlDeleteConnBlockApps;
 
-    static const char *const sqlDeleteAllConn;
     static const char *const sqlDeleteAllConnBlock;
-    static const char *const sqlSelectDeletedAllConnAppList;
+    static const char *const sqlDeleteAllApps;
 };
 
 #endif // STATSQL_H

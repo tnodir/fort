@@ -55,7 +55,6 @@ enum Command : qint8 {
     Rpc_StatManager_appTrafTotalsResetted,
 
     Rpc_StatBlockManager_deleteConn,
-    Rpc_StatBlockManager_deleteConnAll,
     Rpc_StatBlockManager_connChanged,
 
     Rpc_ServiceInfoManager_trackService,

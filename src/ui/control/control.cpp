@@ -55,7 +55,6 @@ const char *const commandString(Command cmd)
         CASE_STRING(Rpc_StatManager_appTrafTotalsResetted)
 
         CASE_STRING(Rpc_StatBlockManager_deleteConn)
-        CASE_STRING(Rpc_StatBlockManager_deleteConnAll)
         CASE_STRING(Rpc_StatBlockManager_connChanged)
 
         CASE_STRING(Rpc_ServiceInfoManager_trackService)
@@ -139,7 +138,6 @@ RpcManager managerByCommand(Command cmd)
         Rpc_StatManager, // Rpc_StatManager_appTrafTotalsResetted,
 
         Rpc_StatBlockManager, // Rpc_StatBlockManager_deleteConn,
-        Rpc_StatBlockManager, // Rpc_StatBlockManager_deleteConnAll,
         Rpc_StatBlockManager, // Rpc_StatBlockManager_connChanged,
 
         Rpc_ServiceInfoManager, // Rpc_ServiceInfoManager_trackService,
@@ -205,7 +203,6 @@ bool commandRequiresValidation(Command cmd)
         0, // Rpc_StatManager_appTrafTotalsResetted,
 
         true, // Rpc_StatBlockManager_deleteConn,
-        true, // Rpc_StatBlockManager_deleteConnAll,
         0, // Rpc_StatBlockManager_connChanged,
 
         true, // Rpc_TaskManager_runTask,

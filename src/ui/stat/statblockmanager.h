@@ -13,6 +13,7 @@
 #include <util/triggertimer.h>
 #include <util/worker/workermanager.h>
 
+class IniOptions;
 class LogEntryBlockedIp;
 
 class StatBlockManager : public WorkerManager, public IocService
@@ -28,6 +29,7 @@ public:
     qint64 connBlockIdMax() const { return m_connBlockIdMax; }
 
     SqliteDb *sqliteDb() const { return m_sqliteDb; }
+    SqliteDb *roSqliteDb() const { return m_roSqliteDb; }
 
     void setUp() override;
 
@@ -35,54 +37,45 @@ public:
 
     bool logBlockedIp(const LogEntryBlockedIp &entry, qint64 unixTime);
 
-    virtual bool deleteConn(qint64 rowIdTo);
-    virtual bool deleteConnAll();
+    virtual void deleteConn(qint64 connIdTo = 0);
 
 signals:
     void connChanged();
+
+    void logBlockedIpFinished(int count, qint64 newConnId);
+    void deleteConnBlockFinished(qint64 connIdTo);
 
 protected:
     bool isConnIdRangeUpdated() const { return m_isConnIdRangeUpdated; }
     void setIsConnIdRangeUpdated(bool v) { m_isConnIdRangeUpdated = v; }
 
 private:
+    void onLogBlockedIpFinished(int count, qint64 newConnId);
+    void onDeleteConnBlockFinished(qint64 connIdTo);
+
     void emitConnChanged();
-
-private:
-    bool deleteOldConnBlock();
-
-    qint64 getAppId(const QString &appPath);
-    qint64 createAppId(const QString &appPath, qint64 unixTime);
-    qint64 getOrCreateAppId(const QString &appPath, qint64 unixTime = 0);
-    bool deleteAppId(qint64 appId);
-
-    qint64 insertConn(const LogEntryBlockedIp &entry, qint64 unixTime, qint64 appId);
-    qint64 insertConnBlock(qint64 connId, quint8 blockReason);
-
-    bool createConnBlock(const LogEntryBlockedIp &entry, qint64 unixTime, qint64 appId);
-    void deleteConnBlock(qint64 rowIdTo);
-
-    void deleteAppStmtList(const SqliteStmtList &stmtList, SqliteStmt *stmtAppList);
-
-    SqliteStmt *getStmt(const char *sql);
-    SqliteStmt *getTrafficStmt(const char *sql, qint32 trafTime);
-    SqliteStmt *getIdStmt(const char *sql, qint64 id);
 
 protected:
     WorkerObject *createWorker() override;
+
+    virtual void setupWorker();
+    virtual void setupConfManager();
+
+private:
+    void setupByConf(const IniOptions &ini);
 
 private:
     bool m_isConnIdRangeUpdated : 1;
 
     int m_connBlockInc = 999999999; // to trigger on first check
 
+    int m_blockedIpKeepCount = 0;
+
     qint64 m_connBlockIdMin = 0;
     qint64 m_connBlockIdMax = 0;
 
     SqliteDb *m_sqliteDb = nullptr;
-
-    QHash<quint32, QString> m_appPidPathMap; // pid -> appPath
-    QHash<QString, qint64> m_appPathIdCache; // appPath -> appId
+    SqliteDb *m_roSqliteDb = nullptr;
 
     TriggerTimer m_connChangedTimer;
 };
