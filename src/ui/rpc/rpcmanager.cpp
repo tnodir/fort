@@ -357,6 +357,7 @@ void RpcManager::setupServerSignals()
     setupDriverManagerSignals();
     setupQuotaManagerSignals();
     setupStatManagerSignals();
+    setupStatBlockManagerSignals();
     setupTaskManagerSignals();
 }
 
