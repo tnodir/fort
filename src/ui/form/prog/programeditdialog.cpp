@@ -79,6 +79,8 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     m_cbUseGroupPerm->setChecked(appRow.useGroupPerm);
     m_cbApplyChild->setChecked(appRow.applyChild);
     m_cbLanOnly->setChecked(appRow.lanOnly);
+    m_cbLogBlocked->setChecked(appRow.logBlocked);
+    m_cbLogConn->setChecked(appRow.logConn);
     m_rbAllowApp->setChecked(!appRow.blocked);
     m_rbBlockApp->setChecked(appRow.blocked);
     m_cscBlockAppIn->checkBox()->setChecked(false);
@@ -121,6 +123,10 @@ void ProgramEditDialog::retranslateUi()
     m_cbUseGroupPerm->setText(tr("Use Application Group's Enabled State"));
     m_cbApplyChild->setText(tr("Apply same rules to child processes"));
     m_cbLanOnly->setText(tr("Restrict access to LAN only"));
+
+    m_cbLogBlocked->setText(tr("Collect blocked connections"));
+    m_cbLogConn->setText(tr("Collect connection statistics"));
+
     m_rbAllowApp->setText(tr("Allow"));
     m_rbBlockApp->setText(tr("Block"));
 
@@ -150,6 +156,9 @@ void ProgramEditDialog::setupUi()
     // Form Layout
     auto formLayout = setupAppLayout();
 
+    // Log
+    auto logLayout = setupLogLayout();
+
     // Allow/Block
     auto allowLayout = setupAllowLayout();
 
@@ -178,6 +187,8 @@ void ProgramEditDialog::setupUi()
     // Form
     auto layout = new QVBoxLayout();
     layout->addLayout(formLayout);
+    layout->addWidget(ControlUtil::createSeparator());
+    layout->addLayout(logLayout);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(allowLayout);
     layout->addWidget(m_cscBlockAppIn);
@@ -305,6 +316,25 @@ void ProgramEditDialog::setupComboAppGroups()
     connect(confManager(), &ConfManager::confChanged, this, refreshComboAppGroups);
 }
 
+QLayout *ProgramEditDialog::setupLogLayout()
+{
+    auto layout = new QFormLayout();
+
+    // Log Blocked
+    m_cbLogBlocked = new QCheckBox();
+
+    layout->addRow(QString(), m_cbLogBlocked);
+
+    // Log Conn
+    m_cbLogConn = new QCheckBox();
+
+    m_cbLogConn->setVisible(false); // TODO: Collect allowed connections
+
+    layout->addRow(QString(), m_cbLogConn);
+
+    return layout;
+}
+
 QLayout *ProgramEditDialog::setupAllowLayout()
 {
     auto allowLayout = new QHBoxLayout();
@@ -379,6 +409,8 @@ bool ProgramEditDialog::save()
     app.useGroupPerm = m_cbUseGroupPerm->isChecked();
     app.applyChild = m_cbApplyChild->isChecked();
     app.lanOnly = m_cbLanOnly->isChecked();
+    app.logBlocked = m_cbLogBlocked->isChecked();
+    app.logConn = m_cbLogConn->isChecked();
     app.blocked = m_rbBlockApp->isChecked();
     app.groupIndex = m_comboAppGroup->currentIndex();
     app.appPath = appPath;
@@ -412,6 +444,7 @@ bool ProgramEditDialog::saveApp(App &app)
 {
     const bool appEdited = (app.useGroupPerm != m_appRow.useGroupPerm
             || app.applyChild != m_appRow.applyChild || app.lanOnly != m_appRow.lanOnly
+            || app.logBlocked != m_appRow.logBlocked || app.logConn != m_appRow.logConn
             || app.blocked != m_appRow.blocked || app.groupIndex != m_appRow.groupIndex
             || app.appPath != m_appRow.appPath || app.endTime != m_appRow.endTime);
 

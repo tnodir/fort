@@ -260,10 +260,12 @@ bool AppListModel::updateAppRow(const QString &sql, const QVariantList &vars, Ap
     appRow.useGroupPerm = stmt.columnBool(4);
     appRow.applyChild = stmt.columnBool(5);
     appRow.lanOnly = stmt.columnBool(6);
-    appRow.blocked = stmt.columnBool(7);
-    appRow.alerted = stmt.columnBool(8);
-    appRow.endTime = stmt.columnDateTime(9);
-    appRow.creatTime = stmt.columnDateTime(10);
+    appRow.logBlocked = stmt.columnBool(7);
+    appRow.logConn = stmt.columnBool(8);
+    appRow.blocked = stmt.columnBool(9);
+    appRow.alerted = stmt.columnBool(10);
+    appRow.endTime = stmt.columnDateTime(11);
+    appRow.creatTime = stmt.columnDateTime(12);
 
     return true;
 }
@@ -306,6 +308,8 @@ QString AppListModel::sqlBase() const
            "    t.use_group_perm,"
            "    t.apply_child,"
            "    t.lan_only,"
+           "    t.log_blocked,"
+           "    t.log_conn,"
            "    t.blocked,"
            "    (alert.app_id IS NOT NULL) as alerted,"
            "    t.end_time,"
@@ -323,7 +327,7 @@ QString AppListModel::sqlOrderColumn() const
         columnsStr = "4 " + sqlOrderAsc() + ", 3";
         break;
     case 1: // State
-        columnsStr = "9 DESC, 8 " + sqlOrderAsc() + ", 1";
+        columnsStr = "11 DESC, 10 " + sqlOrderAsc() + ", 1";
         break;
     case 2: // Group
         columnsStr = "2";

@@ -3,6 +3,8 @@
 
 #include "fortdrv.h"
 
+#include "common/fortconf.h"
+
 typedef struct fort_callout_arg
 {
     const FWPS_INCOMING_VALUES0 *inFixedValues;
@@ -31,9 +33,12 @@ typedef struct fort_callout_ale_index
 
 typedef struct fort_callout_ale_extra
 {
-    BOOL inherited : 1;
-    BOOL blocked : 1;
+    UCHAR app_flags_found : 1;
+    UCHAR inherited : 1;
+    UCHAR blocked : 1;
     INT8 block_reason;
+
+    FORT_APP_FLAGS app_flags;
 
     UINT32 process_id;
 

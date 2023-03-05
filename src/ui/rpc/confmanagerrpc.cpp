@@ -18,8 +18,8 @@ ConfManagerRpc::ConfManagerRpc(const QString &filePath, QObject *parent) :
 bool ConfManagerRpc::addApp(const App &app)
 {
     return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_addApp,
-            { app.useGroupPerm, app.applyChild, app.lanOnly, app.blocked, app.groupIndex,
-                    app.appPath, app.appName, app.endTime });
+            { app.useGroupPerm, app.applyChild, app.lanOnly, app.logBlocked, app.logConn,
+                    app.blocked, app.groupIndex, app.appPath, app.appName, app.endTime });
 }
 
 bool ConfManagerRpc::deleteApp(qint64 appId)
@@ -35,8 +35,9 @@ bool ConfManagerRpc::purgeApps()
 bool ConfManagerRpc::updateApp(const App &app)
 {
     return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_updateApp,
-            { app.useGroupPerm, app.applyChild, app.lanOnly, app.blocked, app.groupIndex, app.appId,
-                    app.appPath, app.appName, app.endTime });
+            { app.useGroupPerm, app.applyChild, app.lanOnly, app.logBlocked, app.logConn,
+                    app.blocked, app.groupIndex, app.appId, app.appPath, app.appName,
+                    app.endTime });
 }
 
 bool ConfManagerRpc::updateAppBlocked(qint64 appId, bool blocked)
@@ -110,7 +111,8 @@ bool ConfManagerRpc::saveConf(FirewallConf &newConf)
     const QVariant confVar = newConf.toVariant(true);
 
     setSaving(true);
-    const bool ok = IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_saveVariant, { confVar });
+    const bool ok =
+            IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_saveVariant, { confVar });
     setSaving(false);
 
     if (!ok)

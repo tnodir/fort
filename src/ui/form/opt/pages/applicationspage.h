@@ -49,12 +49,12 @@ private:
     void setupGroupPeriodEnabled();
     void setupGroupOptions();
     void setupGroupOptionFlags();
+    void setupGroupLog();
     void setupGroupLimitIn();
     void setupGroupLimitOut();
     void setupGroupLimitLatency();
     void setupGroupLimitPacketLoss();
     void setupGroupLimitBufferSize();
-    void setupGroupLogConn();
     void setupGroupOptionsEnabled();
     void setupBlockApps();
     void setupAllowApps();
@@ -86,6 +86,7 @@ private:
     LabelDoubleSpin *m_limitPacketLoss = nullptr;
     LabelSpin *m_limitBufferSizeIn = nullptr;
     LabelSpin *m_limitBufferSizeOut = nullptr;
+    QCheckBox *m_cbLogBlocked = nullptr;
     QCheckBox *m_cbLogConn = nullptr;
     AppsColumn *m_blockApps = nullptr;
     AppsColumn *m_allowApps = nullptr;

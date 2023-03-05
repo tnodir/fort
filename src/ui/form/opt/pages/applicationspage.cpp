@@ -96,6 +96,9 @@ void ApplicationsPage::onRetranslateUi()
     m_cbApplyChild->setText(tr("Apply same rules to child processes"));
     m_cbLanOnly->setText(tr("Restrict access to LAN only"));
 
+    m_cbLogBlocked->setText(tr("Collect blocked connections"));
+    m_cbLogConn->setText(tr("Collect connection statistics"));
+
     m_cscLimitIn->checkBox()->setText(tr("Download speed limit:"));
     m_cscLimitOut->checkBox()->setText(tr("Upload speed limit:"));
     retranslateGroupLimits();
@@ -104,8 +107,6 @@ void ApplicationsPage::onRetranslateUi()
     m_limitPacketLoss->label()->setText(tr("Packet Loss:"));
     m_limitBufferSizeIn->label()->setText(tr("Download Buffer Size:"));
     m_limitBufferSizeOut->label()->setText(tr("Upload Buffer Size:"));
-
-    m_cbLogConn->setText(tr("Collect connection statistics"));
 
     m_cbGroupEnabled->setText(tr("Enabled"));
     m_ctpGroupPeriod->checkBox()->setText(tr("time period:"));
@@ -377,18 +378,18 @@ void ApplicationsPage::setupGroupPeriodEnabled()
 void ApplicationsPage::setupGroupOptions()
 {
     setupGroupOptionFlags();
+    setupGroupLog();
     setupGroupLimitIn();
     setupGroupLimitOut();
     setupGroupLimitLatency();
     setupGroupLimitPacketLoss();
     setupGroupLimitBufferSize();
-    setupGroupLogConn();
 
     // Menu
     const QList<QWidget *> menuWidgets = { m_cbApplyChild, m_cbLanOnly,
-        ControlUtil::createSeparator(), m_cscLimitIn, m_cscLimitOut, m_limitLatency,
-        m_limitPacketLoss, m_limitBufferSizeIn, m_limitBufferSizeOut,
-        ControlUtil::createSeparator(), m_cbLogConn };
+        ControlUtil::createSeparator(), m_cbLogBlocked, m_cbLogConn, ControlUtil::createSeparator(),
+        m_cscLimitIn, m_cscLimitOut, m_limitLatency, m_limitPacketLoss, m_limitBufferSizeIn,
+        m_limitBufferSizeOut };
     auto layout = ControlUtil::createLayoutByWidgets(menuWidgets);
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
@@ -418,6 +419,31 @@ void ApplicationsPage::setupGroupOptionFlags()
 
         ctrl()->setOptEdited();
     });
+}
+
+void ApplicationsPage::setupGroupLog()
+{
+    m_cbLogBlocked = ControlUtil::createCheckBox(false, [&](bool checked) {
+        AppGroup *appGroup = this->appGroup();
+        if (appGroup->logBlocked() == checked)
+            return;
+
+        appGroup->setLogBlocked(checked);
+
+        ctrl()->setOptEdited();
+    });
+
+    m_cbLogConn = ControlUtil::createCheckBox(false, [&](bool checked) {
+        AppGroup *appGroup = this->appGroup();
+        if (appGroup->logConn() == checked)
+            return;
+
+        appGroup->setLogConn(checked);
+
+        ctrl()->setOptEdited();
+    });
+
+    m_cbLogConn->setVisible(false); // TODO: Collect allowed connections
 }
 
 void ApplicationsPage::setupGroupLimitIn()
@@ -534,29 +560,16 @@ void ApplicationsPage::setupGroupLimitBufferSize()
     });
 }
 
-void ApplicationsPage::setupGroupLogConn()
-{
-    m_cbLogConn = ControlUtil::createCheckBox(false, [&](bool checked) {
-        AppGroup *appGroup = this->appGroup();
-        if (appGroup->logConn() == checked)
-            return;
-
-        appGroup->setLogConn(checked);
-
-        ctrl()->setOptEdited();
-    });
-
-    m_cbLogConn->setVisible(false); // TODO: Collect allowed connections
-}
-
 void ApplicationsPage::setupGroupOptionsEnabled()
 {
     const auto refreshOptionsEnabled = [&] {
         const bool logStat = conf()->logStat();
 
+        m_cbLogBlocked->setEnabled(logStat);
+        m_cbLogConn->setEnabled(logStat);
+
         m_cscLimitIn->setEnabled(logStat);
         m_cscLimitOut->setEnabled(logStat);
-        m_cbLogConn->setEnabled(logStat);
     };
 
     refreshOptionsEnabled();
@@ -639,6 +652,9 @@ void ApplicationsPage::updateGroup()
     m_cbApplyChild->setChecked(appGroup->applyChild());
     m_cbLanOnly->setChecked(appGroup->lanOnly());
 
+    m_cbLogBlocked->setChecked(appGroup->logBlocked());
+    m_cbLogConn->setChecked(appGroup->logConn());
+
     m_cscLimitIn->checkBox()->setChecked(appGroup->limitInEnabled());
     m_cscLimitIn->spinBox()->setValue(int(appGroup->speedLimitIn()));
 
@@ -649,8 +665,6 @@ void ApplicationsPage::updateGroup()
     m_limitPacketLoss->spinBox()->setValue(double(appGroup->limitPacketLoss()) / 100.0);
     m_limitBufferSizeIn->spinBox()->setValue(int(appGroup->limitBufferSizeIn()));
     m_limitBufferSizeOut->spinBox()->setValue(int(appGroup->limitBufferSizeOut()));
-
-    m_cbLogConn->setChecked(appGroup->logConn());
 
     m_cbGroupEnabled->setChecked(appGroup->enabled());
 

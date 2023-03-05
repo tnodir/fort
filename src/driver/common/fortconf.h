@@ -134,14 +134,17 @@ typedef struct fort_app_flags
 
         struct
         {
-            UCHAR group_index;
-            UCHAR use_group_perm : 1;
-            UCHAR apply_child : 1;
-            UCHAR lan_only : 1;
-            UCHAR blocked : 1;
-            UCHAR alerted : 1;
-            UCHAR is_new : 1;
-            UCHAR found : 1;
+            UINT16 group_index : 5;
+            /* UINT16 reserved : 2; */
+            UINT16 use_group_perm : 1;
+            UINT16 apply_child : 1;
+            UINT16 lan_only : 1;
+            UINT16 log_blocked : 1;
+            UINT16 log_conn : 1;
+            UINT16 blocked : 1;
+            UINT16 alerted : 1;
+            UINT16 is_new : 1;
+            UINT16 found : 1;
         };
     };
 } FORT_APP_FLAGS, *PFORT_APP_FLAGS;
@@ -171,6 +174,7 @@ typedef struct fort_conf_group
 {
     UINT16 group_bits;
 
+    UINT16 log_blocked;
     UINT16 log_conn;
 
     UINT16 limit_bits;

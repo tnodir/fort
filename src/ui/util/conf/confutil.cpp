@@ -329,6 +329,8 @@ bool ConfUtil::parseAppGroups(EnvManager &envManager, const QList<AppGroup *> &a
         App app;
         app.applyChild = appGroup->applyChild();
         app.lanOnly = appGroup->lanOnly();
+        app.logBlocked = appGroup->logBlocked();
+        app.logConn = appGroup->logConn();
         app.groupIndex = i;
 
         const auto blockText = envManager.expandString(appGroup->blockText());
@@ -429,6 +431,8 @@ bool ConfUtil::addApp(
     appEntry.flags.use_group_perm = app.useGroupPerm;
     appEntry.flags.apply_child = app.applyChild;
     appEntry.flags.lan_only = app.lanOnly;
+    appEntry.flags.log_blocked = app.logBlocked;
+    appEntry.flags.log_conn = app.logConn;
     appEntry.flags.blocked = app.blocked;
     appEntry.flags.alerted = app.alerted;
     appEntry.flags.is_new = isNew;
@@ -516,7 +520,8 @@ void ConfUtil::writeConf(char *output, const FirewallConf &conf,
     writeApps(&data, exeAppsMap);
 #undef CONF_DATA_OFFSET
 
-    writeAppGroupFlags(&drvConfIo->conf_group.group_bits, &drvConfIo->conf_group.log_conn, conf);
+    writeAppGroupFlags(&drvConfIo->conf_group.group_bits, &drvConfIo->conf_group.log_blocked,
+            &drvConfIo->conf_group.log_conn, conf);
 
     writeLimits(drvConfIo->conf_group.limits, &drvConfIo->conf_group.limit_bits,
             &drvConfIo->conf_group.limit_io_bits, conf.appGroups());
@@ -541,14 +546,19 @@ void ConfUtil::writeConf(char *output, const FirewallConf &conf,
 }
 
 void ConfUtil::writeAppGroupFlags(
-        quint16 *groupBits, quint16 *logConnBits, const FirewallConf &conf)
+        quint16 *groupBits, quint16 *logBlockedBits, quint16 *logConnBits, const FirewallConf &conf)
 {
     *groupBits = 0;
+    *logBlockedBits = 0;
     *logConnBits = 0;
+
     int i = 0;
     for (const AppGroup *appGroup : conf.appGroups()) {
         if (appGroup->enabled()) {
             *groupBits |= (1 << i);
+        }
+        if (appGroup->logBlocked()) {
+            *logBlockedBits |= (1 << i);
         }
         if (appGroup->logConn()) {
             *logConnBits |= (1 << i);

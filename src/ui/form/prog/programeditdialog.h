@@ -48,6 +48,7 @@ private:
     QLayout *setupAppPathLayout();
     QLayout *setupAppNameLayout();
     void setupComboAppGroups();
+    QLayout *setupLogLayout();
     QLayout *setupAllowLayout();
     QLayout *setupCheckDateTimeEdit();
     void setupAllowEclusiveGroup();
@@ -70,6 +71,8 @@ private:
     QCheckBox *m_cbUseGroupPerm = nullptr;
     QCheckBox *m_cbApplyChild = nullptr;
     QCheckBox *m_cbLanOnly = nullptr;
+    QCheckBox *m_cbLogBlocked = nullptr;
+    QCheckBox *m_cbLogConn = nullptr;
     QRadioButton *m_rbAllowApp = nullptr;
     QRadioButton *m_rbBlockApp = nullptr;
     CheckSpinCombo *m_cscBlockAppIn = nullptr;

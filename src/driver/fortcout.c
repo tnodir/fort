@@ -39,6 +39,21 @@ static void fort_callout_classify_continue(FWPS_CLASSIFY_OUT0 *classifyOut)
     classifyOut->actionType = FWP_ACTION_CONTINUE;
 }
 
+static FORT_APP_FLAGS fort_callout_conf_app_flags(
+        PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref)
+{
+    if (cx->app_flags_found)
+        return cx->app_flags;
+
+    const FORT_APP_FLAGS app_flags = fort_conf_app_find(
+            &conf_ref->conf, cx->path->Buffer, cx->path->Length, fort_conf_exe_find);
+
+    cx->app_flags_found = TRUE;
+    cx->app_flags = app_flags;
+
+    return app_flags;
+}
+
 inline static BOOL fort_callout_classify_blocked_log_stat(FORT_CALLOUT_ARG ca,
         FORT_CALLOUT_ALE_INDEX ci, PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref,
         FORT_APP_FLAGS app_flags)
@@ -48,7 +63,7 @@ inline static BOOL fort_callout_classify_blocked_log_stat(FORT_CALLOUT_ARG ca,
     const IPPROTO ip_proto = (IPPROTO) ca.inFixedValues->incomingValue[ci.ipProto].value.uint8;
     const BOOL is_tcp = (ip_proto == IPPROTO_TCP);
 
-    const UCHAR group_index = app_flags.group_index;
+    const UCHAR group_index = (UCHAR) app_flags.group_index;
     const BOOL is_reauth = (cx->classify_flags & FWP_CONDITION_FLAG_IS_REAUTHORIZE) != 0;
 
     BOOL is_new_proc = FALSE;
@@ -90,9 +105,14 @@ inline static void fort_callout_classify_blocked_log_path(PFORT_CALLOUT_ALE_EXTR
 }
 
 inline static void fort_callout_classify_blocked_log_ip(FORT_CALLOUT_ARG ca,
-        FORT_CALLOUT_ALE_INDEX ci, PFORT_CALLOUT_ALE_EXTRA cx, FORT_CONF_FLAGS conf_flags)
+        FORT_CALLOUT_ALE_INDEX ci, PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref,
+        FORT_CONF_FLAGS conf_flags)
 {
     if (cx->block_reason != FORT_BLOCK_REASON_UNKNOWN && conf_flags.log_blocked_ip) {
+        const FORT_APP_FLAGS app_flags = fort_callout_conf_app_flags(cx, conf_ref);
+        if (app_flags.v != 0 && !app_flags.log_blocked)
+            return;
+
         const UINT32 *local_ip = ca.isIPv6
                 ? (const UINT32 *) ca.inFixedValues->incomingValue[ci.localIp].value.byteArray16
                 : &ca.inFixedValues->incomingValue[ci.localIp].value.uint32;
@@ -110,8 +130,7 @@ inline static void fort_callout_classify_blocked_log_ip(FORT_CALLOUT_ARG ca,
 inline static void fort_callout_classify_blocked_log(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci,
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
 {
-    FORT_APP_FLAGS app_flags = fort_conf_app_find(
-            &conf_ref->conf, cx->path->Buffer, cx->path->Length, fort_conf_exe_find);
+    const FORT_APP_FLAGS app_flags = fort_callout_conf_app_flags(cx, conf_ref);
 
     if (!cx->blocked /* collect traffic, when Filter Disabled */
             || (app_flags.v == 0 && conf_flags.allow_all_new) /* collect new Blocked Programs */
@@ -198,7 +217,7 @@ inline static void fort_callout_classify_check_conf(FORT_CALLOUT_ARG ca, FORT_CA
     cx->process_id = process_id;
     cx->path = &path;
     cx->real_path = &real_path;
-    cx->inherited = inherited;
+    cx->inherited = (UCHAR) inherited;
 
     cx->blocked = TRUE;
     cx->block_reason = FORT_BLOCK_REASON_UNKNOWN;
@@ -209,7 +228,7 @@ inline static void fort_callout_classify_check_conf(FORT_CALLOUT_ARG ca, FORT_CA
 
     if (cx->blocked) {
         /* Log the blocked connection */
-        fort_callout_classify_blocked_log_ip(ca, ci, cx, conf_flags);
+        fort_callout_classify_blocked_log_ip(ca, ci, cx, conf_ref, conf_flags);
 
         /* Block the connection */
         fort_callout_classify_block(ca.classifyOut);

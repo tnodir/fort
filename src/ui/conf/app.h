@@ -7,9 +7,11 @@
 class App
 {
 public:
-    bool useGroupPerm = false;
+    bool useGroupPerm = true;
     bool applyChild = false;
     bool lanOnly = false;
+    bool logBlocked = true;
+    bool logConn = true;
     bool blocked = false;
     bool alerted = false;
 

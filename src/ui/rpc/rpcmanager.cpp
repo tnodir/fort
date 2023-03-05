@@ -61,11 +61,13 @@ bool processConfManager_addApp(
     app.useGroupPerm = p.args.value(0).toBool();
     app.applyChild = p.args.value(1).toBool();
     app.lanOnly = p.args.value(2).toBool();
-    app.blocked = p.args.value(3).toBool();
-    app.groupIndex = p.args.value(4).toInt();
-    app.appPath = p.args.value(5).toString();
-    app.appName = p.args.value(6).toString();
-    app.endTime = p.args.value(7).toDateTime();
+    app.logBlocked = p.args.value(3).toBool();
+    app.logConn = p.args.value(4).toBool();
+    app.blocked = p.args.value(5).toBool();
+    app.groupIndex = p.args.value(6).toInt();
+    app.appPath = p.args.value(7).toString();
+    app.appName = p.args.value(8).toString();
+    app.endTime = p.args.value(9).toDateTime();
 
     return confManager->addApp(app);
 }
@@ -89,12 +91,14 @@ bool processConfManager_updateApp(
     app.useGroupPerm = p.args.value(0).toBool();
     app.applyChild = p.args.value(1).toBool();
     app.lanOnly = p.args.value(2).toBool();
-    app.blocked = p.args.value(3).toBool();
-    app.groupIndex = p.args.value(4).toInt();
-    app.appId = p.args.value(5).toLongLong();
-    app.appPath = p.args.value(6).toString();
-    app.appName = p.args.value(7).toString();
-    app.endTime = p.args.value(8).toDateTime();
+    app.logBlocked = p.args.value(3).toBool();
+    app.logConn = p.args.value(4).toBool();
+    app.blocked = p.args.value(5).toBool();
+    app.groupIndex = p.args.value(6).toInt();
+    app.appId = p.args.value(7).toLongLong();
+    app.appPath = p.args.value(8).toString();
+    app.appName = p.args.value(9).toString();
+    app.endTime = p.args.value(10).toDateTime();
 
     return confManager->updateApp(app);
 }

@@ -26,6 +26,9 @@ public:
     bool lanOnly() const { return m_lanOnly; }
     void setLanOnly(bool on);
 
+    bool logBlocked() const { return m_logBlocked; }
+    void setLogBlocked(bool on);
+
     bool logConn() const { return m_logConn; }
     void setLogConn(bool on);
 
@@ -92,6 +95,7 @@ private:
 
     bool m_applyChild : 1;
     bool m_lanOnly : 1;
+    bool m_logBlocked : 1;
     bool m_logConn : 1;
 
     bool m_periodEnabled : 1;
