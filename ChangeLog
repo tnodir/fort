@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.7.4, 2022-03-05:
+- UI: Programs: Add ability to not collect blocked connections.
+- UI: Blocked Connections: Process storing in separate thread.
+- UI: Update SQLite to v3.41.0
+
 v3.7.3, 2022-02-19:
 - UI: Don't reset password on Quota alert.
 - UI: Options: Statistics: Fix Quota changes applying.
