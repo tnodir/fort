@@ -1,5 +1,7 @@
 #include "logblockedipjob.h"
 
+#include <QLoggingCategory>
+
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 

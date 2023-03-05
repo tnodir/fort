@@ -58,7 +58,9 @@ void ConnBlockListModel::initialize()
     connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &ConnBlockListModel::refresh);
     connect(hostInfoCache(), &HostInfoCache::cacheChanged, this, &ConnBlockListModel::refresh);
     connect(statBlockManager(), &StatBlockManager::connChanged, this,
-            &ConnBlockListModel::updateRowIdRange);
+            &ConnBlockListModel::updateConnIdRange);
+
+    updateConnIdRange();
 }
 
 int ConnBlockListModel::columnCount(const QModelIndex &parent) const
@@ -223,19 +225,19 @@ void ConnBlockListModel::clear()
     hostInfoCache()->clear();
 }
 
-void ConnBlockListModel::updateRowIdRange()
+void ConnBlockListModel::updateConnIdRange()
 {
-    const qint64 oldIdMin = rowIdMin();
-    const qint64 oldIdMax = rowIdMax();
+    const qint64 oldIdMin = connIdMin();
+    const qint64 oldIdMax = connIdMax();
 
     qint64 idMin, idMax;
-    getRowIdRange(idMin, idMax);
+    getConnIdRange(idMin, idMax);
 
     if (idMin == oldIdMin && idMax == oldIdMax)
         return;
 
     if (idMin < oldIdMin || idMax < oldIdMax || oldIdMax == 0) {
-        m_rowIdMin = idMin, m_rowIdMax = idMax;
+        m_connIdMin = idMin, m_connIdMax = idMax;
         reset();
         return;
     }
@@ -243,7 +245,7 @@ void ConnBlockListModel::updateRowIdRange()
     if (idMin > oldIdMin) {
         const int removedCount = idMin - oldIdMin;
         beginRemoveRows({}, 0, removedCount - 1);
-        m_rowIdMin = idMin;
+        m_connIdMin = idMin;
         invalidateRowCache();
         endRemoveRows();
     }
@@ -252,29 +254,28 @@ void ConnBlockListModel::updateRowIdRange()
         const int addedCount = idMax - oldIdMax;
         const int endRow = oldIdMax - idMin + 1;
         beginInsertRows({}, endRow, endRow + addedCount - 1);
-        m_rowIdMax = idMax;
+        m_connIdMax = idMax;
         invalidateRowCache();
         endInsertRows();
     }
 }
 
-void ConnBlockListModel::getRowIdRange(qint64 &rowIdMin, qint64 &rowIdMax) const
+void ConnBlockListModel::getConnIdRange(qint64 &connIdMin, qint64 &connIdMax) const
 {
-    statBlockManager()->updateConnBlockId();
+    statBlockManager()->updateConnIdRange();
 
-    rowIdMin = statBlockManager()->connBlockIdMin();
-    rowIdMax = statBlockManager()->connBlockIdMax();
+    connIdMin = statBlockManager()->connIdMin();
+    connIdMax = statBlockManager()->connIdMax();
 }
 
 bool ConnBlockListModel::updateTableRow(int row) const
 {
-    const qint64 rowId = rowIdMin() + row;
+    const qint64 connId = connIdMin() + row;
 
     SqliteStmt stmt;
-    if (!(sqliteDb()->prepare(stmt, sql(), { rowId }) && stmt.step() == SqliteStmt::StepRow))
+    if (!(sqliteDb()->prepare(stmt, sql(), { connId }) && stmt.step() == SqliteStmt::StepRow))
         return false;
 
-    m_connRow.rowId = rowId;
     m_connRow.connId = stmt.columnInt64(0);
     m_connRow.appId = stmt.columnInt64(1);
     m_connRow.connTime = stmt.columnUnixTime(2);
@@ -303,7 +304,7 @@ bool ConnBlockListModel::updateTableRow(int row) const
 
 int ConnBlockListModel::doSqlCount() const
 {
-    return rowIdMax() <= 0 ? 0 : int(rowIdMax() - rowIdMin()) + 1;
+    return connIdMax() <= 0 ? 0 : int(connIdMax() - connIdMin()) + 1;
 }
 
 QString ConnBlockListModel::sqlBase() const
@@ -330,7 +331,7 @@ QString ConnBlockListModel::sqlBase() const
 
 QString ConnBlockListModel::sqlWhere() const
 {
-    return " WHERE c.id = ?1";
+    return " WHERE t.conn_id = ?1";
 }
 
 QString ConnBlockListModel::sqlLimitOffset() const

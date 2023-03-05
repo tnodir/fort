@@ -277,7 +277,7 @@ void ConnectionsPage::updateShowHostNames()
 void ConnectionsPage::deleteConn(int row)
 {
     const auto connRow = connBlockListModel()->connRowAt(row);
-    connBlockListModel()->deleteConn(connRow.rowId);
+    connBlockListModel()->deleteConn(connRow.connId);
 }
 
 int ConnectionsPage::connListCurrentIndex() const

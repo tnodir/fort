@@ -25,15 +25,15 @@ public:
             const QString &filePath, QObject *parent = nullptr, quint32 openFlags = 0);
     CLASS_DELETE_COPY_MOVE(StatBlockManager)
 
-    qint64 connBlockIdMin() const { return m_connBlockIdMin; }
-    qint64 connBlockIdMax() const { return m_connBlockIdMax; }
+    qint64 connIdMin() const { return m_connIdMin; }
+    qint64 connIdMax() const { return m_connIdMax; }
 
     SqliteDb *sqliteDb() const { return m_sqliteDb; }
     SqliteDb *roSqliteDb() const { return m_roSqliteDb; }
 
     void setUp() override;
 
-    void updateConnBlockId();
+    void updateConnIdRange();
 
     void logBlockedIp(const LogEntryBlockedIp &entry);
 
@@ -68,12 +68,12 @@ private:
 private:
     bool m_isConnIdRangeUpdated : 1;
 
-    int m_connBlockInc = 999999999; // to trigger on first check
+    int m_connInc = 999999999; // to trigger on first check
 
-    int m_blockedIpKeepCount = 0;
+    int m_keepCount = 0;
 
-    qint64 m_connBlockIdMin = 0;
-    qint64 m_connBlockIdMax = 0;
+    qint64 m_connIdMin = 0;
+    qint64 m_connIdMax = 0;
 
     SqliteDb *m_sqliteDb = nullptr;
     SqliteDb *m_roSqliteDb = nullptr;

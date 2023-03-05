@@ -27,7 +27,6 @@ struct ConnRow : TableRow
 
     quint32 pid = 0;
 
-    qint64 rowId = 0;
     qint64 connId = 0;
     qint64 appId = 0;
 
@@ -68,7 +67,7 @@ public slots:
     void clear();
 
 protected slots:
-    void updateRowIdRange();
+    void updateConnIdRange();
 
 protected:
     bool updateTableRow(int row) const override;
@@ -87,18 +86,18 @@ private:
     static QString blockReasonText(const ConnRow &connRow);
     static QString connIconPath(const ConnRow &connRow);
 
-    qint64 rowIdMin() const { return m_rowIdMin; }
-    qint64 rowIdMax() const { return m_rowIdMax; }
+    qint64 connIdMin() const { return m_connIdMin; }
+    qint64 connIdMax() const { return m_connIdMax; }
 
-    void getRowIdRange(qint64 &rowIdMin, qint64 &rowIdMax) const;
+    void getConnIdRange(qint64 &rowIdMin, qint64 &rowIdMax) const;
 
     QString formatIpPort(const ip_addr_t &ip, quint16 port, bool isIPv6) const;
 
 private:
     uint m_resolveAddress : 1;
 
-    qint64 m_rowIdMin = 0;
-    qint64 m_rowIdMax = 0;
+    qint64 m_connIdMin = 0;
+    qint64 m_connIdMax = 0;
 
     mutable ConnRow m_connRow;
 };

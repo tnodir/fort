@@ -167,7 +167,7 @@ const char *const StatSql::sqlInsertConnBlock =
         "INSERT INTO conn_block(app_id, conn_time, process_id, inbound, inherited,"
         "    ip_proto, local_port, remote_port, local_ip, remote_ip,"
         "    local_ip6, remote_ip6, block_reason)"
-        "  VALUES(?1, ?2, ?3, ?4, ?5, 1, ?6, ?7, ?8, ?9, ?10, ?11, ?12, &13);";
+        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13);";
 
 const char *const StatSql::sqlSelectMinMaxConnBlockId =
         "SELECT MIN(conn_id), MAX(conn_id) FROM conn_block;";

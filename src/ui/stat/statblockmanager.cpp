@@ -96,19 +96,25 @@ void StatBlockManager::setUp()
         return;
     }
 
-    updateConnBlockId();
+    if (roSqliteDb() != sqliteDb() && !roSqliteDb()->open()) {
+        qCCritical(LC) << "File open error:" << roSqliteDb()->filePath()
+                       << roSqliteDb()->errorMessage();
+        return;
+    }
+
+    updateConnIdRange();
 }
 
-void StatBlockManager::updateConnBlockId()
+void StatBlockManager::updateConnIdRange()
 {
     if (isConnIdRangeUpdated())
         return;
 
     setIsConnIdRangeUpdated(true);
 
-    const auto vars = sqliteDb()->executeEx(StatSql::sqlSelectMinMaxConnBlockId, {}, 2).toList();
-    m_connBlockIdMin = vars.value(0).toLongLong();
-    m_connBlockIdMax = vars.value(1).toLongLong();
+    const auto vars = roSqliteDb()->executeEx(StatSql::sqlSelectMinMaxConnBlockId, {}, 2).toList();
+    m_connIdMin = vars.value(0).toLongLong();
+    m_connIdMax = vars.value(1).toLongLong();
 }
 
 void StatBlockManager::logBlockedIp(const LogEntryBlockedIp &entry)
@@ -125,25 +131,25 @@ void StatBlockManager::onLogBlockedIpFinished(int count, qint64 newConnId)
 {
     emitConnChanged();
 
-    m_connBlockIdMax = newConnId;
-    if (m_connBlockIdMin <= 0) {
-        m_connBlockIdMin = m_connBlockIdMax;
+    m_connIdMax = newConnId;
+    if (m_connIdMin <= 0) {
+        m_connIdMin = m_connIdMax;
     }
 
     constexpr int connBlockIncMax = 99;
 
-    m_connBlockInc += count;
-    if (m_connBlockInc < connBlockIncMax)
+    m_connInc += count;
+    if (m_connInc < connBlockIncMax)
         return;
 
-    m_connBlockInc = 0;
+    m_connInc = 0;
 
-    const int totalCount = m_connBlockIdMax - m_connBlockIdMin;
-    const int oldCount = totalCount - m_blockedIpKeepCount;
+    const int totalCount = m_connIdMax - m_connIdMin;
+    const int oldCount = totalCount - m_keepCount;
     if (oldCount <= 0)
         return;
 
-    deleteConn(m_connBlockIdMin + oldCount);
+    deleteConn(m_connIdMin + oldCount);
 }
 
 void StatBlockManager::onDeleteConnBlockFinished(qint64 connIdTo)
@@ -151,13 +157,13 @@ void StatBlockManager::onDeleteConnBlockFinished(qint64 connIdTo)
     emitConnChanged();
 
     if (connIdTo > 0) {
-        m_connBlockIdMin = connIdTo + 1;
+        m_connIdMin = connIdTo + 1;
     } else {
-        m_connBlockIdMin = m_connBlockIdMax;
+        m_connIdMin = m_connIdMax;
     }
 
-    if (m_connBlockIdMin >= m_connBlockIdMax) {
-        m_connBlockIdMin = m_connBlockIdMax = 0;
+    if (m_connIdMin >= m_connIdMax) {
+        m_connIdMin = m_connIdMax = 0;
     }
 }
 
@@ -185,5 +191,5 @@ void StatBlockManager::setupConfManager()
 
 void StatBlockManager::setupByConf(const IniOptions &ini)
 {
-    m_blockedIpKeepCount = ini.blockedIpKeepCount();
+    m_keepCount = ini.blockedIpKeepCount();
 }
