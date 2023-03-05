@@ -42,6 +42,7 @@ public:
         int version = 0;
         bool recreate = true;
         bool importOldData = true;
+        bool autoCopyTables = true;
         SQLITEDB_MIGRATE_FUNC migrateFunc = nullptr;
         void *migrateContext = nullptr;
     };
@@ -112,12 +113,12 @@ private:
     bool migrateSqlScripts(const MigrateOptions &opt, int userVersion, bool isNewDb);
 
     bool clearWithBackup(const char *sqlPragmas);
-    bool importBackup(bool importOldData, SQLITEDB_MIGRATE_FUNC migrateFunc, void *migrateContext);
+    bool importBackup(const MigrateOptions &opt);
 
     QString backupFilePath() const;
 
-    bool importDb(
-            const QString &sourceFilePath, SQLITEDB_MIGRATE_FUNC migrateFunc, void *migrateContext);
+    bool importDb(const MigrateOptions &opt, const QString &sourceFilePath);
+    bool copyTables(const QString &srcSchema, const QString &dstSchema);
     bool copyTable(const QString &srcSchema, const QString &dstSchema, const QString &tableName);
 
     void clearStmts();

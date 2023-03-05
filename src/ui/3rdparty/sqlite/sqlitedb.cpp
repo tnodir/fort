@@ -336,7 +336,7 @@ bool SqliteDb::migrate(MigrateOptions &opt)
 
     // Re-create the DB: End
     if (success && opt.recreate) {
-        success = importBackup(opt.importOldData, opt.migrateFunc, opt.migrateContext);
+        success = importBackup(opt);
     }
 
     return success;
@@ -414,16 +414,15 @@ bool SqliteDb::clearWithBackup(const char *sqlPragmas)
     return true;
 }
 
-bool SqliteDb::importBackup(
-        bool importOldData, SQLITEDB_MIGRATE_FUNC migrateFunc, void *migrateContext)
+bool SqliteDb::importBackup(const MigrateOptions &opt)
 {
     bool success = true;
 
     const QString tempFilePath = backupFilePath();
 
     // Re-import the DB
-    if (importOldData) {
-        success = importDb(tempFilePath, migrateFunc, migrateContext);
+    if (opt.importOldData) {
+        success = importDb(opt, tempFilePath);
     }
 
     // Remove the old DB
@@ -439,8 +438,7 @@ QString SqliteDb::backupFilePath() const
     return m_filePath + ".temp";
 }
 
-bool SqliteDb::importDb(
-        const QString &sourceFilePath, SQLITEDB_MIGRATE_FUNC migrateFunc, void *migrateContext)
+bool SqliteDb::importDb(const MigrateOptions &opt, const QString &sourceFilePath)
 {
     const QString srcSchema = migrationOldSchemaName();
     const QString dstSchema = migrationNewSchemaName();
@@ -455,19 +453,14 @@ bool SqliteDb::importDb(
 
     beginTransaction();
 
-    const QStringList srcTableNames = tableNames(srcSchema);
-
     // Copy tables
-    for (const QString &tableName : srcTableNames) {
-        if (!copyTable(srcSchema, dstSchema, tableName)) {
-            success = false;
-            break;
-        }
+    if (opt.autoCopyTables) {
+        success = copyTables(srcSchema, dstSchema);
     }
 
     // Migrate
-    if (success && migrateFunc) {
-        success = migrateFunc(this, userVersion(), false, migrateContext);
+    if (success && opt.migrateFunc) {
+        success = opt.migrateFunc(this, userVersion(), false, opt.migrateContext);
     }
 
     endTransaction(success);
@@ -475,6 +468,18 @@ bool SqliteDb::importDb(
     detach(srcSchema);
 
     return success;
+}
+
+bool SqliteDb::copyTables(const QString &srcSchema, const QString &dstSchema)
+{
+    const QStringList srcTableNames = tableNames(srcSchema);
+
+    for (const QString &tableName : srcTableNames) {
+        if (!copyTable(srcSchema, dstSchema, tableName))
+            return false;
+    }
+
+    return true;
 }
 
 bool SqliteDb::copyTable(

@@ -20,6 +20,38 @@ const QLoggingCategory LC("statBlock");
 
 constexpr int DATABASE_USER_VERSION = 7;
 
+bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
+{
+    Q_UNUSED(ctx);
+
+    if (isNewDb)
+        return true;
+
+    switch (version) {
+    case 7: {
+        const QString srcSchema = SqliteDb::migrationOldSchemaName();
+        const QString dstSchema = SqliteDb::migrationNewSchemaName();
+
+        db->executeStr(QString("INSERT INTO %1 (%3) SELECT %3 FROM %2;")
+                               .arg(SqliteDb::entityName(dstSchema, "app"),
+                                       SqliteDb::entityName(srcSchema, "app"),
+                                       "app_id, path, creat_time"));
+
+        // Union the "conn" & "conn_block" tables
+        db->executeStr(QString("INSERT INTO %1 (%4) SELECT %4 FROM %2 JOIN %3 USING(conn_id);")
+                               .arg(SqliteDb::entityName(dstSchema, "conn_block"),
+                                       SqliteDb::entityName(srcSchema, "conn"),
+                                       SqliteDb::entityName(srcSchema, "conn_block"),
+                                       "conn_id, app_id, conn_time, process_id, inbound,"
+                                       " inherited, ip_proto, local_port, remote_port,"
+                                       " local_ip, remote_ip, local_ip6, remote_ip6,"
+                                       " block_reason"));
+    } break;
+    }
+
+    return true;
+}
+
 }
 
 StatBlockManager::StatBlockManager(const QString &filePath, QObject *parent, quint32 openFlags) :
@@ -51,7 +83,12 @@ void StatBlockManager::setUp()
     }
 
     SqliteDb::MigrateOptions opt = {
-        .sqlDir = ":/stat/migrations/block", .version = DATABASE_USER_VERSION, .recreate = true
+        .sqlDir = ":/stat/migrations/block",
+        .version = DATABASE_USER_VERSION,
+        .recreate = true,
+        // COMPAT: Union the "conn" & "conn_block" tables
+        .autoCopyTables = (DATABASE_USER_VERSION != 7),
+        .migrateFunc = &migrateFunc,
     };
 
     if (!sqliteDb()->migrate(opt)) {
