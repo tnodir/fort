@@ -196,7 +196,8 @@ inline bool processConfManagerRpcResult(
     if (p.command >= Control::Rpc_ConfManager_saveVariant
             && p.command <= Control::Rpc_ConfManager_checkPassword) {
 
-        const processConfManager_func func = processConfManager_funcList[p.command];
+        const int funcIndex = p.command - Control::Rpc_ConfManager_saveVariant;
+        const processConfManager_func func = processConfManager_funcList[funcIndex];
 
         return func(confManager, p, resArgs);
     }
@@ -249,7 +250,8 @@ static processStatManagerSignal_func processStatManagerSignal_funcList[] = {
 
 inline bool processStatManagerRpcSignal(StatManager *statManager, const ProcessCommandArgs &p)
 {
-    const processStatManagerSignal_func func = processStatManagerSignal_funcList[p.command];
+    const int funcIndex = p.command - Control::Rpc_StatManager_trafficCleared;
+    const processStatManagerSignal_func func = processStatManagerSignal_funcList[funcIndex];
 
     return func(statManager, p);
 }
