@@ -106,7 +106,7 @@
     </message>
     <message>
         <source>Name</source>
-        <translation type="unfinished">Nome</translation>
+        <translation>Nome</translation>
     </message>
     <message>
         <source>File Path</source>
@@ -234,6 +234,10 @@
         <source>Restrict access to LAN only</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>Coletar conexões bloqueadas</translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -281,7 +285,7 @@
     </message>
 </context>
 <context>
-    <name>ConnListModel</name>
+    <name>ConnBlockListModel</name>
     <message>
         <source>Program</source>
         <translation>Programa</translation>
@@ -319,6 +323,10 @@
         <translation>Horário</translation>
     </message>
     <message>
+        <source>Inherited</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>In</source>
         <translation>Entrada</translation>
     </message>
@@ -343,20 +351,16 @@
         <translation>App. Lógica de programa</translation>
     </message>
     <message>
-        <source>Unknown</source>
-        <translation>Desconhecido</translation>
-    </message>
-    <message>
-        <source>Inherited</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Filter Mode logic</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Restrict access to LAN only</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Desconhecido</translation>
     </message>
 </context>
 <context>
@@ -686,7 +690,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Quit</source>
-        <translation type="unfinished">Sair</translation>
+        <translation>Sair</translation>
     </message>
     <message>
         <source>Single Click</source>
@@ -935,6 +939,14 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Restrict access to LAN only</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>Coletar conexões bloqueadas</translation>
+    </message>
+    <message>
+        <source>Collect connection statistics</source>
+        <translation>Coletar estatísticas de conexão</translation>
+    </message>
 </context>
 <context>
     <name>ProgramsWindow</name>
@@ -1064,14 +1076,14 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Process ID</source>
-        <translation type="unfinished">ID do Processo</translation>
+        <translation>ID do Processo</translation>
     </message>
 </context>
 <context>
     <name>ServicesWindow</name>
     <message>
         <source>Edit</source>
-        <translation type="unfinished">Editar</translation>
+        <translation>Editar</translation>
     </message>
     <message>
         <source>Make Trackable</source>
@@ -1083,11 +1095,11 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Add Program</source>
-        <translation type="unfinished">Adicionar Programa</translation>
+        <translation>Adicionar Programa</translation>
     </message>
     <message>
         <source>Refresh</source>
-        <translation type="unfinished">Atualizar</translation>
+        <translation>Atualizar</translation>
     </message>
     <message>
         <source>Services</source>

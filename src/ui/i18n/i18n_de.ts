@@ -234,6 +234,10 @@
         <source>Restrict access to LAN only</source>
         <translation>Zugriff auf LAN beschränken</translation>
     </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>Sammle blockierte Verbindungen</translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -281,7 +285,7 @@
     </message>
 </context>
 <context>
-    <name>ConnListModel</name>
+    <name>ConnBlockListModel</name>
     <message>
         <source>Program</source>
         <translation>Programm</translation>
@@ -292,7 +296,7 @@
     </message>
     <message>
         <source>Process ID</source>
-        <translation>Prozess ID</translation>
+        <translation></translation>
     </message>
     <message>
         <source>Protocol</source>
@@ -319,6 +323,10 @@
         <translation>Zeit</translation>
     </message>
     <message>
+        <source>Inherited</source>
+        <translation>Vererbt</translation>
+    </message>
+    <message>
         <source>In</source>
         <translation>Eingehend</translation>
     </message>
@@ -343,20 +351,16 @@
         <translation>App. Gruppenlogik</translation>
     </message>
     <message>
-        <source>Unknown</source>
-        <translation>Unbekannt</translation>
-    </message>
-    <message>
-        <source>Inherited</source>
-        <translation>Vererbt</translation>
-    </message>
-    <message>
         <source>Filter Mode logic</source>
         <translation>Filtermodus-Logik</translation>
     </message>
     <message>
         <source>Restrict access to LAN only</source>
         <translation>Zugriff auf LAN beschränken</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Unbekannt</translation>
     </message>
 </context>
 <context>
@@ -935,6 +939,14 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     <message>
         <source>Restrict access to LAN only</source>
         <translation>Zugriff auf LAN beschränken</translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>Sammle blockierte Verbindungen</translation>
+    </message>
+    <message>
+        <source>Collect connection statistics</source>
+        <translation>Verbindungsstatistiken sammeln</translation>
     </message>
 </context>
 <context>

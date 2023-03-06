@@ -234,6 +234,10 @@
         <source>Restrict access to LAN only</source>
         <translation>LAN으로만 액세스 제한</translation>
     </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>차단된 연결 집계</translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -281,7 +285,7 @@
     </message>
 </context>
 <context>
-    <name>ConnListModel</name>
+    <name>ConnBlockListModel</name>
     <message>
         <source>Program</source>
         <translation>프로그램</translation>
@@ -319,6 +323,10 @@
         <translation>시간</translation>
     </message>
     <message>
+        <source>Inherited</source>
+        <translation>상속됨</translation>
+    </message>
+    <message>
         <source>In</source>
         <translation>인</translation>
     </message>
@@ -343,20 +351,16 @@
         <translation>앱 그룹 로직</translation>
     </message>
     <message>
-        <source>Unknown</source>
-        <translation>알 수 없음</translation>
-    </message>
-    <message>
-        <source>Inherited</source>
-        <translation>상속됨</translation>
-    </message>
-    <message>
         <source>Filter Mode logic</source>
         <translation>필터링 모드 로직</translation>
     </message>
     <message>
         <source>Restrict access to LAN only</source>
         <translation>LAN으로만 액세스 제한</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>알 수 없음</translation>
     </message>
 </context>
 <context>
@@ -935,6 +939,14 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Restrict access to LAN only</source>
         <translation>LAN으로만 액세스 제한</translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>차단된 연결 집계</translation>
+    </message>
+    <message>
+        <source>Collect connection statistics</source>
+        <translation>연결 통계 집계</translation>
     </message>
 </context>
 <context>

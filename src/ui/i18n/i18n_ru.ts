@@ -204,7 +204,7 @@
     </message>
     <message>
         <source># All programs in the sub-path:</source>
-        <translation># Все программы по под-пути:</translation>
+        <translation># Все программы по пути:</translation>
     </message>
     <message>
         <source>Programs (*.exe);;All files (*.*)</source>
@@ -233,6 +233,10 @@
     <message>
         <source>Restrict access to LAN only</source>
         <translation>Ограничить доступ только к локальной сети</translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>Собирать заблокированные соединения</translation>
     </message>
 </context>
 <context>
@@ -281,7 +285,7 @@
     </message>
 </context>
 <context>
-    <name>ConnListModel</name>
+    <name>ConnBlockListModel</name>
     <message>
         <source>Program</source>
         <translation>Программа</translation>
@@ -319,6 +323,10 @@
         <translation>Время</translation>
     </message>
     <message>
+        <source>Inherited</source>
+        <translation>Унаследовано</translation>
+    </message>
+    <message>
         <source>In</source>
         <translation>Вх.</translation>
     </message>
@@ -343,20 +351,16 @@
         <translation>Логика Группы Приложения</translation>
     </message>
     <message>
-        <source>Unknown</source>
-        <translation>Неизвестно</translation>
-    </message>
-    <message>
-        <source>Inherited</source>
-        <translation>Унаследовано</translation>
-    </message>
-    <message>
         <source>Filter Mode logic</source>
         <translation>Логика Режима фильтра</translation>
     </message>
     <message>
         <source>Restrict access to LAN only</source>
         <translation>Ограничить доступ только к локальной сети</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Неизвестно</translation>
     </message>
 </context>
 <context>
@@ -935,6 +939,14 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Restrict access to LAN only</source>
         <translation>Ограничить доступ только к локальной сети</translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>Собирать заблокированные соединения</translation>
+    </message>
+    <message>
+        <source>Collect connection statistics</source>
+        <translation>Собирать статистику соединений</translation>
     </message>
 </context>
 <context>

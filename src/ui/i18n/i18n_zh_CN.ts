@@ -106,7 +106,7 @@
     </message>
     <message>
         <source>Name</source>
-        <translation type="unfinished">名称</translation>
+        <translation>名称</translation>
     </message>
     <message>
         <source>File Path</source>
@@ -234,6 +234,10 @@
         <source>Restrict access to LAN only</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>收集已屏蔽的连接</translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -281,7 +285,7 @@
     </message>
 </context>
 <context>
-    <name>ConnListModel</name>
+    <name>ConnBlockListModel</name>
     <message>
         <source>Program</source>
         <translation>程序</translation>
@@ -319,6 +323,10 @@
         <translation>时间</translation>
     </message>
     <message>
+        <source>Inherited</source>
+        <translation>继承</translation>
+    </message>
+    <message>
         <source>In</source>
         <translation>输入</translation>
     </message>
@@ -343,20 +351,16 @@
         <translation>应用组逻辑：</translation>
     </message>
     <message>
-        <source>Unknown</source>
-        <translation>未知</translation>
-    </message>
-    <message>
-        <source>Inherited</source>
-        <translation>继承</translation>
-    </message>
-    <message>
         <source>Filter Mode logic</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Restrict access to LAN only</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>未知</translation>
     </message>
 </context>
 <context>
@@ -935,6 +939,14 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Restrict access to LAN only</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>收集已屏蔽的连接</translation>
+    </message>
+    <message>
+        <source>Collect connection statistics</source>
+        <translation>统计数据集合</translation>
     </message>
 </context>
 <context>

@@ -234,6 +234,10 @@
         <source>Restrict access to LAN only</source>
         <translation>Omeji dostop samo do LAN</translation>
     </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>Zberi blokirane povezave</translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -281,7 +285,7 @@
     </message>
 </context>
 <context>
-    <name>ConnListModel</name>
+    <name>ConnBlockListModel</name>
     <message>
         <source>Program</source>
         <translation>Program</translation>
@@ -319,6 +323,10 @@
         <translation>Čas</translation>
     </message>
     <message>
+        <source>Inherited</source>
+        <translation>Podedovano</translation>
+    </message>
+    <message>
         <source>In</source>
         <translation>V</translation>
     </message>
@@ -343,20 +351,16 @@
         <translation>Logika skupin apikacij</translation>
     </message>
     <message>
-        <source>Unknown</source>
-        <translation>Neznano</translation>
-    </message>
-    <message>
-        <source>Inherited</source>
-        <translation>Podedovano</translation>
-    </message>
-    <message>
         <source>Filter Mode logic</source>
         <translation>Logika načina filtra</translation>
     </message>
     <message>
         <source>Restrict access to LAN only</source>
         <translation>Omeji dostop samo do LAN</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Neznano</translation>
     </message>
 </context>
 <context>
@@ -935,6 +939,14 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     <message>
         <source>Restrict access to LAN only</source>
         <translation>Omeji dostop samo do LAN</translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>Zberi blokirane povezave</translation>
+    </message>
+    <message>
+        <source>Collect connection statistics</source>
+        <translation>Zberi statistiko povezave</translation>
     </message>
 </context>
 <context>

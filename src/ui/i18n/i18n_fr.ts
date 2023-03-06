@@ -234,6 +234,10 @@
         <source>Restrict access to LAN only</source>
         <translation>Restreindre l&apos;accès au LAN uniquement</translation>
     </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>Collecter les connexions bloquées</translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -281,7 +285,7 @@
     </message>
 </context>
 <context>
-    <name>ConnListModel</name>
+    <name>ConnBlockListModel</name>
     <message>
         <source>Program</source>
         <translation>Programme</translation>
@@ -319,6 +323,10 @@
         <translation>Heure</translation>
     </message>
     <message>
+        <source>Inherited</source>
+        <translation>Hérité</translation>
+    </message>
+    <message>
         <source>In</source>
         <translation>Dans</translation>
     </message>
@@ -343,20 +351,16 @@
         <translation>App. Logique de groupe</translation>
     </message>
     <message>
-        <source>Unknown</source>
-        <translation>Inconnu</translation>
-    </message>
-    <message>
-        <source>Inherited</source>
-        <translation>Hérité</translation>
-    </message>
-    <message>
         <source>Filter Mode logic</source>
         <translation>Mode filtre logique</translation>
     </message>
     <message>
         <source>Restrict access to LAN only</source>
         <translation>Restreindre l&apos;accès au LAN uniquement</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Inconnu</translation>
     </message>
 </context>
 <context>
@@ -935,6 +939,14 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     <message>
         <source>Restrict access to LAN only</source>
         <translation>Restreindre l&apos;accès au LAN uniquement</translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>Collecter les connexions bloquées</translation>
+    </message>
+    <message>
+        <source>Collect connection statistics</source>
+        <translation>Collecter statistiques de connexion</translation>
     </message>
 </context>
 <context>

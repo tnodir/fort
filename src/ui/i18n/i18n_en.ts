@@ -234,6 +234,10 @@
         <source>Restrict access to LAN only</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -281,7 +285,7 @@
     </message>
 </context>
 <context>
-    <name>ConnListModel</name>
+    <name>ConnBlockListModel</name>
     <message>
         <source>Program</source>
         <translation></translation>
@@ -319,6 +323,10 @@
         <translation></translation>
     </message>
     <message>
+        <source>Inherited</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>In</source>
         <translation></translation>
     </message>
@@ -343,19 +351,15 @@
         <translation></translation>
     </message>
     <message>
-        <source>Unknown</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Inherited</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Filter Mode logic</source>
         <translation></translation>
     </message>
     <message>
         <source>Restrict access to LAN only</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Unknown</source>
         <translation></translation>
     </message>
 </context>
@@ -933,6 +937,14 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Restrict access to LAN only</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Collect connection statistics</source>
         <translation></translation>
     </message>
 </context>

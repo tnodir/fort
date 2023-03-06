@@ -106,7 +106,7 @@
     </message>
     <message>
         <source>Name</source>
-        <translation type="unfinished">Nome</translation>
+        <translation>Nome</translation>
     </message>
     <message>
         <source>File Path</source>
@@ -234,6 +234,10 @@
         <source>Restrict access to LAN only</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>Raccogli le connessioni bloccate</translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -281,7 +285,47 @@
     </message>
 </context>
 <context>
-    <name>ConnListModel</name>
+    <name>ConnBlockListModel</name>
+    <message>
+        <source>Program</source>
+        <translation>Programma</translation>
+    </message>
+    <message>
+        <source>Proc. ID</source>
+        <translation>ID proc.</translation>
+    </message>
+    <message>
+        <source>Process ID</source>
+        <translation>ID processo</translation>
+    </message>
+    <message>
+        <source>Protocol</source>
+        <translation>Protocollo</translation>
+    </message>
+    <message>
+        <source>Local IP and Port</source>
+        <translation>IP e porta locali</translation>
+    </message>
+    <message>
+        <source>Remote IP and Port</source>
+        <translation>IP e porta remoti</translation>
+    </message>
+    <message>
+        <source>Dir.</source>
+        <translation>Dir.</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Direzione</translation>
+    </message>
+    <message>
+        <source>Time</source>
+        <translation>Ora</translation>
+    </message>
+    <message>
+        <source>Inherited</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <source>In</source>
         <translation>Ing</translation>
@@ -291,64 +335,20 @@
         <translation>Usc</translation>
     </message>
     <message>
-        <source>Dir.</source>
-        <translation>Dir.</translation>
-    </message>
-    <message>
-        <source>Time</source>
-        <translation>Ora</translation>
-    </message>
-    <message>
-        <source>App. Group logic</source>
-        <translation>App. logica di gruppo</translation>
-    </message>
-    <message>
         <source>Blocked Internet address</source>
         <translation>Indirizzo Internet bloccato</translation>
-    </message>
-    <message>
-        <source>Remote IP and Port</source>
-        <translation>IP e porta remoti</translation>
     </message>
     <message>
         <source>Old connection closed on startup</source>
         <translation>Vecchia connessione chiusa all&apos;avvio</translation>
     </message>
     <message>
-        <source>Program</source>
-        <translation>Programma</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Direzione</translation>
-    </message>
-    <message>
-        <source>Proc. ID</source>
-        <translation>ID proc.</translation>
-    </message>
-    <message>
-        <source>Protocol</source>
-        <translation>Protocollo</translation>
-    </message>
-    <message>
-        <source>Process ID</source>
-        <translation>ID processo</translation>
-    </message>
-    <message>
-        <source>Local IP and Port</source>
-        <translation>IP e porta locali</translation>
-    </message>
-    <message>
         <source>Programs logic</source>
         <translation>Logica dei programmi</translation>
     </message>
     <message>
-        <source>Unknown</source>
-        <translation>Sconosciuto</translation>
-    </message>
-    <message>
-        <source>Inherited</source>
-        <translation type="unfinished"></translation>
+        <source>App. Group logic</source>
+        <translation>App. logica di gruppo</translation>
     </message>
     <message>
         <source>Filter Mode logic</source>
@@ -357,6 +357,10 @@
     <message>
         <source>Restrict access to LAN only</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Sconosciuto</translation>
     </message>
 </context>
 <context>
@@ -936,6 +940,14 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
         <source>Restrict access to LAN only</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation type="unfinished">Raccogli le connessioni bloccate</translation>
+    </message>
+    <message>
+        <source>Collect connection statistics</source>
+        <translation type="unfinished">Raccogli statistiche di connessione</translation>
+    </message>
 </context>
 <context>
     <name>ProgramsWindow</name>
@@ -1065,14 +1077,14 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     </message>
     <message>
         <source>Process ID</source>
-        <translation type="unfinished">ID processo</translation>
+        <translation>ID processo</translation>
     </message>
 </context>
 <context>
     <name>ServicesWindow</name>
     <message>
         <source>Edit</source>
-        <translation type="unfinished">Modifica</translation>
+        <translation>Modifica</translation>
     </message>
     <message>
         <source>Make Trackable</source>
@@ -1084,11 +1096,11 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     </message>
     <message>
         <source>Add Program</source>
-        <translation type="unfinished">Aggiungi programma</translation>
+        <translation>Aggiungi programma</translation>
     </message>
     <message>
         <source>Refresh</source>
-        <translation type="unfinished">Aggiorna</translation>
+        <translation>Aggiorna</translation>
     </message>
     <message>
         <source>Services</source>
