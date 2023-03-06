@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.7.5, 2022-03-06:
+- Fix the distribution: A test signed driver was included in v3.7.4
+
 v3.7.4, 2022-03-05:
 - UI: Programs: Add ability to not collect blocked connections.
 - UI: Blocked Connections: Process storing in separate thread.
