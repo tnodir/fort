@@ -90,7 +90,7 @@ void ZonesWindow::saveWindowState()
 
 void ZonesWindow::restoreWindowState()
 {
-    m_stateWatcher->restore(this, QSize(1024, 768), iniUser()->zoneWindowGeometry(),
+    m_stateWatcher->restore(this, QSize(900, 400), iniUser()->zoneWindowGeometry(),
             iniUser()->zoneWindowMaximized());
 
     if (iniUser()->zonesHeaderVersion() == ZONES_HEADER_VERSION) {
@@ -341,8 +341,8 @@ void ZonesWindow::setupTableZonesHeader()
     header->setSectionResizeMode(3, QHeaderView::Stretch);
     header->setSectionResizeMode(4, QHeaderView::Stretch);
 
-    header->resizeSection(0, 300);
-    header->resizeSection(1, 300);
+    header->resizeSection(0, 250);
+    header->resizeSection(1, 350);
     header->resizeSection(2, 90);
 }
 
