@@ -296,7 +296,7 @@
     </message>
     <message>
         <source>Process ID</source>
-        <translation></translation>
+        <translation>Prozess-ID</translation>
     </message>
     <message>
         <source>Protocol</source>
