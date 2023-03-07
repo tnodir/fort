@@ -9,11 +9,11 @@
     </message>
     <message>
         <source>Select Zones</source>
-        <translation>Izberite področja</translation>
+        <translation>Izberi področja</translation>
     </message>
     <message>
         <source>Show Zones</source>
-        <translation>Prikaži območja</translation>
+        <translation>Prikaži področja</translation>
     </message>
 </context>
 <context>
