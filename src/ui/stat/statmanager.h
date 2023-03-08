@@ -29,7 +29,7 @@ public:
 
     const IniOptions *ini() const;
 
-    SqliteDb *sqliteDb() const { return m_sqliteDb; }
+    SqliteDb *sqliteDb() const { return m_sqliteDb.data(); }
 
     void setUp() override;
 
@@ -120,7 +120,7 @@ private:
 
     const FirewallConf *m_conf = nullptr;
 
-    SqliteDb *m_sqliteDb = nullptr;
+    SqliteDbPtr m_sqliteDb;
 
     QHash<quint32, QString> m_appPidPathMap; // pid -> appPath
     QHash<QString, qint64> m_appPathIdCache; // appPath -> appId

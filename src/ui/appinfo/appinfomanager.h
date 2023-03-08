@@ -20,7 +20,7 @@ public:
             const QString &filePath, QObject *parent = nullptr, quint32 openFlags = 0);
     CLASS_DELETE_COPY_MOVE(AppInfoManager)
 
-    SqliteDb *sqliteDb() const { return m_sqliteDb; }
+    SqliteDb *sqliteDb() const { return m_sqliteDb.data(); }
 
     void setUp() override;
 
@@ -54,7 +54,7 @@ private:
     bool deleteAppsAndIcons(const QStringList &appPaths, const QHash<qint64, int> &iconIds);
 
 private:
-    SqliteDb *m_sqliteDb = nullptr;
+    SqliteDbPtr m_sqliteDb;
     QMutex m_mutex;
 };
 

@@ -15,10 +15,8 @@ class SqliteStmt;
 
 using SQLITEDB_MIGRATE_FUNC = bool (*)(SqliteDb *db, int version, bool isNewDb, void *context);
 
-class SqliteDb : public QObject
+class SqliteDb
 {
-    Q_OBJECT
-
 public:
     enum OpenFlag {
         OpenReadOnly = 0x00000001, // SQLITE_OPEN_READONLY
@@ -47,9 +45,9 @@ public:
         void *migrateContext = nullptr;
     };
 
-    explicit SqliteDb(const QString &filePath = QString(), quint32 openFlags = OpenDefaultReadWrite,
-            QObject *parent = nullptr);
-    ~SqliteDb() override;
+    explicit SqliteDb(
+            const QString &filePath = QString(), quint32 openFlags = OpenDefaultReadWrite);
+    virtual ~SqliteDb();
 
     struct sqlite3 *db() const { return m_db; }
 

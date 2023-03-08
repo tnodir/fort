@@ -396,7 +396,7 @@ bool removeAppGroupsInDb(SqliteDb *db, const FirewallConf &conf)
 }
 
 ConfManager::ConfManager(const QString &filePath, QObject *parent, quint32 openFlags) :
-    QObject(parent), m_sqliteDb(new SqliteDb(filePath, openFlags, this)), m_conf(createConf())
+    QObject(parent), m_sqliteDb(new SqliteDb(filePath, openFlags)), m_conf(createConf())
 {
     connect(&m_appAlertedTimer, &QTimer::timeout, this, &ConfManager::appAlerted);
     connect(&m_appChangedTimer, &QTimer::timeout, this, &ConfManager::appChanged);

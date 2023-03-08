@@ -56,9 +56,9 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 
 StatBlockManager::StatBlockManager(const QString &filePath, QObject *parent, quint32 openFlags) :
     WorkerManager(parent),
-    m_sqliteDb(new SqliteDb(filePath, openFlags, this)),
+    m_sqliteDb(new SqliteDb(filePath, openFlags)),
     m_roSqliteDb((openFlags == 0 || (openFlags & SqliteDb::OpenReadWrite) != 0)
-                    ? new SqliteDb(filePath, SqliteDb::OpenDefaultReadOnly, this)
+                    ? SqliteDbPtr::create(filePath, SqliteDb::OpenDefaultReadOnly)
                     : m_sqliteDb),
     m_connChangedTimer(500)
 {

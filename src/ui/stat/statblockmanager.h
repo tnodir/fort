@@ -25,8 +25,8 @@ public:
             const QString &filePath, QObject *parent = nullptr, quint32 openFlags = 0);
     CLASS_DELETE_COPY_MOVE(StatBlockManager)
 
-    SqliteDb *sqliteDb() const { return m_sqliteDb; }
-    SqliteDb *roSqliteDb() const { return m_roSqliteDb; }
+    SqliteDb *sqliteDb() const { return m_sqliteDb.data(); }
+    SqliteDb *roSqliteDb() const { return m_roSqliteDb.data(); }
 
     void setUp() override;
 
@@ -63,8 +63,8 @@ private:
 
     int m_keepCount = 0;
 
-    SqliteDb *m_sqliteDb = nullptr;
-    SqliteDb *m_roSqliteDb = nullptr;
+    SqliteDbPtr m_sqliteDb;
+    SqliteDbPtr m_roSqliteDb;
 
     TriggerTimer m_connChangedTimer;
 };

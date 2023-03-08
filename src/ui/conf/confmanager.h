@@ -27,7 +27,7 @@ public:
     explicit ConfManager(const QString &filePath, QObject *parent = nullptr, quint32 openFlags = 0);
     CLASS_DELETE_COPY_MOVE(ConfManager)
 
-    SqliteDb *sqliteDb() const { return m_sqliteDb; }
+    SqliteDb *sqliteDb() const { return m_sqliteDb.data(); }
 
     FirewallConf *conf() const { return m_conf; }
     FirewallConf *confToEdit() const { return m_confToEdit; }
@@ -141,7 +141,7 @@ private:
     bool checkResult(bool ok, bool commit = false);
 
 private:
-    SqliteDb *m_sqliteDb = nullptr;
+    SqliteDbPtr m_sqliteDb;
 
     FirewallConf *m_conf = nullptr;
     FirewallConf *m_confToEdit = nullptr;

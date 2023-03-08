@@ -57,7 +57,7 @@ StatManager::StatManager(const QString &filePath, QObject *parent, quint32 openF
     QObject(parent),
     m_isActivePeriodSet(false),
     m_isActivePeriod(false),
-    m_sqliteDb(new SqliteDb(filePath, openFlags, this))
+    m_sqliteDb(new SqliteDb(filePath, openFlags))
 {
 }
 
