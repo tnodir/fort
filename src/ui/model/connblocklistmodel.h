@@ -89,8 +89,6 @@ private:
     qint64 connIdMin() const { return m_connIdMin; }
     qint64 connIdMax() const { return m_connIdMax; }
 
-    void getConnIdRange(qint64 &rowIdMin, qint64 &rowIdMax) const;
-
     QString formatIpPort(const ip_addr_t &ip, quint16 port, bool isIPv6) const;
 
 private:

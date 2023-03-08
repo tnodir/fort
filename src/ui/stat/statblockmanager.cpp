@@ -56,7 +56,6 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 
 StatBlockManager::StatBlockManager(const QString &filePath, QObject *parent, quint32 openFlags) :
     WorkerManager(parent),
-    m_isConnIdRangeUpdated(false),
     m_sqliteDb(new SqliteDb(filePath, openFlags, this)),
     m_roSqliteDb((openFlags & SqliteDb::OpenReadWrite) != 0
                     ? new SqliteDb(filePath, SqliteDb::OpenDefaultReadOnly, this)
@@ -101,20 +100,6 @@ void StatBlockManager::setUp()
                        << roSqliteDb()->errorMessage();
         return;
     }
-
-    updateConnIdRange();
-}
-
-void StatBlockManager::updateConnIdRange()
-{
-    if (isConnIdRangeUpdated())
-        return;
-
-    setIsConnIdRangeUpdated(true);
-
-    const auto vars = roSqliteDb()->executeEx(StatSql::sqlSelectMinMaxConnBlockId, {}, 2).toList();
-    m_connIdMin = vars.value(0).toLongLong();
-    m_connIdMax = vars.value(1).toLongLong();
 }
 
 void StatBlockManager::logBlockedIp(const LogEntryBlockedIp &entry)
@@ -122,19 +107,22 @@ void StatBlockManager::logBlockedIp(const LogEntryBlockedIp &entry)
     enqueueJob(new LogBlockedIpJob(entry));
 }
 
-void StatBlockManager::deleteConn(qint64 connIdTo)
+void StatBlockManager::deleteConn(qint64 connIdTo, int keepCount)
 {
-    enqueueJob(new DeleteConnBlockJob(connIdTo));
+    enqueueJob(new DeleteConnBlockJob(connIdTo, keepCount));
+}
+
+void StatBlockManager::getConnIdRange(SqliteDb *sqliteDb, qint64 &connIdMin, qint64 &connIdMax)
+{
+    const auto vars = sqliteDb->executeEx(StatSql::sqlSelectMinMaxConnBlockId, {}, 2).toList();
+
+    connIdMin = vars.value(0).toLongLong();
+    connIdMax = vars.value(1).toLongLong();
 }
 
 void StatBlockManager::onLogBlockedIpFinished(int count, qint64 newConnId)
 {
     emitConnChanged();
-
-    m_connIdMax = newConnId;
-    if (m_connIdMin <= 0) {
-        m_connIdMin = m_connIdMax;
-    }
 
     constexpr int connBlockIncMax = 99;
 
@@ -144,27 +132,12 @@ void StatBlockManager::onLogBlockedIpFinished(int count, qint64 newConnId)
 
     m_connInc = 0;
 
-    const int totalCount = m_connIdMax - m_connIdMin;
-    const int oldCount = totalCount - m_keepCount;
-    if (oldCount <= 0)
-        return;
-
-    deleteConn(m_connIdMin + oldCount);
+    deleteConn(/*connIdTo=*/0, m_keepCount);
 }
 
-void StatBlockManager::onDeleteConnBlockFinished(qint64 connIdTo)
+void StatBlockManager::onDeleteConnBlockFinished(qint64 /*connIdTo*/)
 {
     emitConnChanged();
-
-    if (connIdTo > 0) {
-        m_connIdMin = connIdTo + 1;
-    } else {
-        m_connIdMin = m_connIdMax;
-    }
-
-    if (m_connIdMin >= m_connIdMax) {
-        m_connIdMin = m_connIdMax = 0;
-    }
 }
 
 WorkerObject *StatBlockManager::createWorker()

@@ -10,14 +10,8 @@ StatBlockManagerRpc::StatBlockManagerRpc(const QString &filePath, QObject *paren
 {
 }
 
-void StatBlockManagerRpc::deleteConn(qint64 connIdTo)
+void StatBlockManagerRpc::deleteConn(qint64 connIdTo, int keepCount)
 {
-    IoC<RpcManager>()->doOnServer(Control::Rpc_StatBlockManager_deleteConn, { connIdTo });
-}
-
-void StatBlockManagerRpc::onConnChanged()
-{
-    setIsConnIdRangeUpdated(false);
-
-    emit connChanged();
+    IoC<RpcManager>()->doOnServer(
+            Control::Rpc_StatBlockManager_deleteConn, { connIdTo, keepCount });
 }

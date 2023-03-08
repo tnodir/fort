@@ -274,20 +274,12 @@ inline bool processStatManagerRpcResult(StatManager *statManager, const ProcessC
     }
 }
 
-inline bool processStatBlockManager_connChanged(StatBlockManager *statBlockManager)
-{
-    if (auto sm = qobject_cast<StatBlockManagerRpc *>(statBlockManager)) {
-        sm->onConnChanged();
-    }
-    return true;
-}
-
 inline bool processStatBlockManagerRpcResult(
         StatBlockManager *statBlockManager, const ProcessCommandArgs &p)
 {
     switch (p.command) {
     case Control::Rpc_StatBlockManager_deleteConn:
-        statBlockManager->deleteConn(p.args.value(0).toLongLong());
+        statBlockManager->deleteConn(p.args.value(0).toLongLong(), p.args.value(1).toInt());
         return true;
     default:
         return false;
@@ -729,7 +721,8 @@ bool RpcManager::processStatBlockManagerRpc(const ProcessCommandArgs &p)
 
     switch (p.command) {
     case Control::Rpc_StatBlockManager_connChanged:
-        return processStatBlockManager_connChanged(statBlockManager);
+        emit statBlockManager->connChanged();
+        return true;
     default: {
         const bool ok = processStatBlockManagerRpcResult(statBlockManager, p);
         sendResult(p.worker, ok);

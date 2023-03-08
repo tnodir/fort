@@ -231,12 +231,12 @@ void ConnBlockListModel::updateConnIdRange()
     const qint64 oldIdMax = connIdMax();
 
     qint64 idMin, idMax;
-    getConnIdRange(idMin, idMax);
+    statBlockManager()->getConnIdRange(sqliteDb(), idMin, idMax);
 
     if (idMin == oldIdMin && idMax == oldIdMax)
         return;
 
-    if (idMin < oldIdMin || idMax < oldIdMax || oldIdMax == 0) {
+    if (idMin < oldIdMin || idMin >= oldIdMax || idMax < oldIdMax || oldIdMax == 0) {
         m_connIdMin = idMin, m_connIdMax = idMax;
         reset();
         return;
@@ -258,14 +258,6 @@ void ConnBlockListModel::updateConnIdRange()
         invalidateRowCache();
         endInsertRows();
     }
-}
-
-void ConnBlockListModel::getConnIdRange(qint64 &connIdMin, qint64 &connIdMax) const
-{
-    statBlockManager()->updateConnIdRange();
-
-    connIdMin = statBlockManager()->connIdMin();
-    connIdMax = statBlockManager()->connIdMax();
 }
 
 bool ConnBlockListModel::updateTableRow(int row) const

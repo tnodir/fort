@@ -74,7 +74,7 @@ void WorkerManager::enqueueJob(WorkerJob *job)
 
     setupWorker();
 
-    if (canMergeJobs() && !m_jobQueue.isEmpty() && m_jobQueue.head()->mergeJob(*job)) {
+    if (canMergeJobs() && !m_jobQueue.isEmpty() && m_jobQueue.last()->mergeJob(*job)) {
         delete job;
     } else {
         m_jobQueue.enqueue(job);

@@ -10,10 +10,7 @@ class StatBlockManagerRpc : public StatBlockManager
 public:
     explicit StatBlockManagerRpc(const QString &filePath, QObject *parent = nullptr);
 
-    void deleteConn(qint64 connIdTo = 0) override;
-
-public slots:
-    void onConnChanged();
+    void deleteConn(qint64 connIdTo = 0, int keepCount = 0) override;
 
 protected:
     void setupWorker() override { }
