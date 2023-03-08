@@ -279,7 +279,7 @@ inline bool processStatBlockManagerRpcResult(
 {
     switch (p.command) {
     case Control::Rpc_StatBlockManager_deleteConn:
-        statBlockManager->deleteConn(p.args.value(0).toLongLong(), p.args.value(1).toInt());
+        statBlockManager->deleteConn(p.args.value(0).toLongLong());
         return true;
     default:
         return false;

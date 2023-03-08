@@ -57,7 +57,7 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 StatBlockManager::StatBlockManager(const QString &filePath, QObject *parent, quint32 openFlags) :
     WorkerManager(parent),
     m_sqliteDb(new SqliteDb(filePath, openFlags, this)),
-    m_roSqliteDb((openFlags & SqliteDb::OpenReadWrite) != 0
+    m_roSqliteDb((openFlags == 0 || (openFlags & SqliteDb::OpenReadWrite) != 0)
                     ? new SqliteDb(filePath, SqliteDb::OpenDefaultReadOnly, this)
                     : m_sqliteDb),
     m_connChangedTimer(500)
@@ -107,9 +107,9 @@ void StatBlockManager::logBlockedIp(const LogEntryBlockedIp &entry)
     enqueueJob(new LogBlockedIpJob(entry));
 }
 
-void StatBlockManager::deleteConn(qint64 connIdTo, int keepCount)
+void StatBlockManager::deleteConn(qint64 connIdTo)
 {
-    enqueueJob(new DeleteConnBlockJob(connIdTo, keepCount));
+    enqueueJob(new DeleteConnBlockJob(connIdTo));
 }
 
 void StatBlockManager::getConnIdRange(SqliteDb *sqliteDb, qint64 &connIdMin, qint64 &connIdMax)
@@ -120,9 +120,12 @@ void StatBlockManager::getConnIdRange(SqliteDb *sqliteDb, qint64 &connIdMin, qin
     connIdMax = vars.value(1).toLongLong();
 }
 
-void StatBlockManager::onLogBlockedIpFinished(int count, qint64 newConnId)
+void StatBlockManager::onLogBlockedIpFinished(int count, qint64 /*newConnId*/)
 {
     emitConnChanged();
+
+    if (m_keepCount <= 0)
+        return;
 
     constexpr int connBlockIncMax = 99;
 
@@ -132,7 +135,13 @@ void StatBlockManager::onLogBlockedIpFinished(int count, qint64 newConnId)
 
     m_connInc = 0;
 
-    deleteConn(/*connIdTo=*/0, m_keepCount);
+    qint64 idMin, idMax;
+    getConnIdRange(roSqliteDb(), idMin, idMax);
+
+    const qint64 idMinKeep = idMax - m_keepCount;
+    if (idMinKeep > 0 && idMinKeep > idMin) {
+        deleteConn(idMinKeep);
+    }
 }
 
 void StatBlockManager::onDeleteConnBlockFinished(qint64 /*connIdTo*/)

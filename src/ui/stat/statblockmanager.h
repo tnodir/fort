@@ -32,7 +32,7 @@ public:
 
     void logBlockedIp(const LogEntryBlockedIp &entry);
 
-    virtual void deleteConn(qint64 connIdTo = 0, int keepCount = 0);
+    virtual void deleteConn(qint64 connIdTo = 0);
 
     static void getConnIdRange(SqliteDb *sqliteDb, qint64 &rowIdMin, qint64 &rowIdMax);
 
