@@ -446,11 +446,8 @@ void WindowManager::switchGraphWindow()
         closeGraphWindow();
 }
 
-void WindowManager::quitByCheckPassword()
+void WindowManager::quit()
 {
-    if (!checkPassword())
-        return;
-
     closeAll();
 
     qCDebug(LC) << "Quit due user request";

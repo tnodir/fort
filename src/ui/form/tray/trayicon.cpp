@@ -585,7 +585,7 @@ void TrayIcon::quitProgram()
             return;
     }
 
-    windowManager()->quitByCheckPassword();
+    windowManager()->quit();
 }
 
 void TrayIcon::addHotKey(QAction *action, const QString &shortcutText)

@@ -80,8 +80,8 @@ public slots:
     void switchGraphWindow();
 
     void closeAll();
+    void quit();
 
-    void quitByCheckPassword();
     bool widgetVisibleByCheckPassword(QWidget *w);
     bool checkPassword();
 
