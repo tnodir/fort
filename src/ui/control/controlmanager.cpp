@@ -7,7 +7,6 @@
 
 #include <fort_version.h>
 
-#include <conf/appgroup.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <fortsettings.h>
@@ -127,6 +126,8 @@ bool ControlManager::postCommand()
 
 void ControlManager::onNewConnection()
 {
+    const bool hasPassword = IoC<FortSettings>()->hasPassword();
+
     while (QLocalSocket *socket = m_server->nextPendingConnection()) {
         if (m_clients.size() > maxClientsCount) {
             qCWarning(LC) << "Client dropped: Count limit";
@@ -136,6 +137,8 @@ void ControlManager::onNewConnection()
 
         auto w = new ControlWorker(socket, this);
         w->setupForAsync();
+
+        w->setIsClientValidated(!hasPassword);
 
         connect(w, &ControlWorker::disconnected, this, &ControlManager::onDisconnected);
         connect(w, &ControlWorker::requestReady, this, &ControlManager::processRequest);
