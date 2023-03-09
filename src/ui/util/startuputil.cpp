@@ -89,6 +89,28 @@ void removeAutorunForAllUsers()
     removeAutorunForUser(regAllUsersRoot, regAllUsersRun);
 }
 
+static void setupServiceRestartConfig(SC_HANDLE svc)
+{
+    constexpr int actionsCount = 3;
+
+    SC_ACTION actions[actionsCount];
+    actions[0].Type = SC_ACTION_RESTART;
+    actions[0].Delay = 300;
+    actions[1].Type = SC_ACTION_NONE;
+    actions[1].Delay = 0;
+    actions[2].Type = SC_ACTION_NONE;
+    actions[2].Delay = 0;
+
+    SERVICE_FAILURE_ACTIONS sfa;
+    sfa.dwResetPeriod = 0;
+    sfa.lpCommand = NULL;
+    sfa.lpRebootMsg = NULL;
+    sfa.cActions = actionsCount;
+    sfa.lpsaActions = actions;
+
+    ChangeServiceConfig2(svc, SERVICE_CONFIG_FAILURE_ACTIONS, &sfa);
+}
+
 bool installService(const wchar_t *serviceName, const wchar_t *serviceDisplay,
         const wchar_t *serviceDescription, const wchar_t *dependencies, const QString &command)
 {
@@ -101,6 +123,8 @@ bool installService(const wchar_t *serviceName, const wchar_t *serviceDisplay,
         if (svc) {
             SERVICE_DESCRIPTION sd = { (LPWSTR) serviceDescription };
             ChangeServiceConfig2(svc, SERVICE_CONFIG_DESCRIPTION, &sd);
+
+            setupServiceRestartConfig(svc);
 
             res = true;
             CloseServiceHandle(svc);
