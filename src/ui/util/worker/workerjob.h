@@ -5,7 +5,7 @@
 
 #include <util/classhelpers.h>
 
-class WorkerObject;
+#include "workertypes.h"
 
 class WorkerJob
 {
@@ -21,8 +21,8 @@ public:
         return false;
     }
 
-    virtual void doJob(WorkerObject *worker) { Q_UNUSED(worker); }
-    virtual void reportResult(WorkerObject *worker) { Q_UNUSED(worker); }
+    virtual void doJob(WorkerObject &worker) { Q_UNUSED(worker); }
+    virtual void reportResult(WorkerObject &worker) { Q_UNUSED(worker); }
 
 private:
     const QString m_text;

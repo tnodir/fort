@@ -12,8 +12,8 @@ public:
 
     QString address() const { return text(); }
 
-    void doJob(WorkerObject *worker) override;
-    void reportResult(WorkerObject *worker) override;
+    void doJob(WorkerObject &worker) override;
+    void reportResult(WorkerObject &worker) override;
 
 private:
     void emitFinished(HostInfoManager *manager);

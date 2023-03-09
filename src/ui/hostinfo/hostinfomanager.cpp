@@ -11,5 +11,5 @@ HostInfoManager::HostInfoManager(QObject *parent) : WorkerManager(parent)
 
 void HostInfoManager::lookupHost(const QString &address)
 {
-    enqueueJob(new HostInfoJob(address));
+    enqueueJob(WorkerJobPtr(new HostInfoJob(address)));
 }

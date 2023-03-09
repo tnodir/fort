@@ -104,12 +104,12 @@ void StatBlockManager::setUp()
 
 void StatBlockManager::logBlockedIp(const LogEntryBlockedIp &entry)
 {
-    enqueueJob(new LogBlockedIpJob(entry));
+    enqueueJob(WorkerJobPtr(new LogBlockedIpJob(entry)));
 }
 
 void StatBlockManager::deleteConn(qint64 connIdTo)
 {
-    enqueueJob(new DeleteConnBlockJob(connIdTo));
+    enqueueJob(WorkerJobPtr(new DeleteConnBlockJob(connIdTo)));
 }
 
 void StatBlockManager::getConnIdRange(SqliteDb *sqliteDb, qint64 &connIdMin, qint64 &connIdMax)

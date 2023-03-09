@@ -14,8 +14,8 @@ public:
 
     qint64 iconId() const { return m_iconId; }
 
-    void doJob(WorkerObject *worker) override;
-    void reportResult(WorkerObject *worker) override;
+    void doJob(WorkerObject &worker) override;
+    void reportResult(WorkerObject &worker) override;
 
 private:
     void loadAppIcon(AppInfoManager *manager);

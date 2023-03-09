@@ -50,8 +50,6 @@ void WorkerManager::clear()
 {
     QMutexLocker locker(&m_mutex);
 
-    qDeleteAll(m_jobQueue);
-
     m_jobQueue.clear();
 }
 
@@ -68,22 +66,21 @@ void WorkerManager::abortWorkers()
     }
 }
 
-void WorkerManager::enqueueJob(WorkerJob *job)
+void WorkerManager::enqueueJob(WorkerJobPtr job)
 {
     QMutexLocker locker(&m_mutex);
 
     setupWorker();
 
-    if (canMergeJobs() && !m_jobQueue.isEmpty() && m_jobQueue.last()->mergeJob(*job)) {
-        delete job;
-    } else {
-        m_jobQueue.enqueue(job);
+    if (canMergeJobs() && !m_jobQueue.isEmpty() && m_jobQueue.last()->mergeJob(*job))
+        return;
 
-        m_waitCondition.wakeOne();
-    }
+    m_jobQueue.enqueue(job);
+
+    m_waitCondition.wakeOne();
 }
 
-WorkerJob *WorkerManager::dequeueJob()
+WorkerJobPtr WorkerManager::dequeueJob()
 {
     QMutexLocker locker(&m_mutex);
 

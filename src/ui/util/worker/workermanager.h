@@ -10,8 +10,7 @@
 
 #include <util/classhelpers.h>
 
-class WorkerJob;
-class WorkerObject;
+#include "workertypes.h"
 
 class WorkerManager : public QObject
 {
@@ -31,8 +30,8 @@ public slots:
     void clear();
     void abortWorkers();
 
-    void enqueueJob(WorkerJob *job);
-    WorkerJob *dequeueJob();
+    void enqueueJob(WorkerJobPtr job);
+    WorkerJobPtr dequeueJob();
 
     void workerFinished(WorkerObject *worker);
 
@@ -50,7 +49,7 @@ private:
 
     QList<WorkerObject *> m_workers;
 
-    QQueue<WorkerJob *> m_jobQueue;
+    QQueue<WorkerJobPtr> m_jobQueue;
 
     QMutex m_mutex;
     QWaitCondition m_waitCondition;

@@ -5,8 +5,7 @@
 #include <QRunnable>
 #include <QThread>
 
-class WorkerJob;
-class WorkerManager;
+#include "workertypes.h"
 
 class WorkerObject : public QRunnable
 {
@@ -20,7 +19,7 @@ public:
     void run() override;
 
 protected:
-    virtual void doJob(WorkerJob *job);
+    virtual void doJob(WorkerJob &job);
 
 private:
     WorkerManager *m_manager = nullptr;

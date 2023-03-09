@@ -19,14 +19,14 @@ bool StatBlockBaseJob::mergeJob(const WorkerJob &job)
     return jobType() == statJob.jobType() && processMerge(statJob);
 }
 
-void StatBlockBaseJob::doJob(WorkerObject *worker)
+void StatBlockBaseJob::doJob(WorkerObject &worker)
 {
-    m_manager = static_cast<StatBlockManager *>(worker->manager());
+    m_manager = static_cast<StatBlockManager *>(worker.manager());
 
     processJob();
 }
 
-void StatBlockBaseJob::reportResult(WorkerObject * /*worker*/)
+void StatBlockBaseJob::reportResult(WorkerObject & /*worker*/)
 {
     if (resultCount() > 0) {
         emitFinished();

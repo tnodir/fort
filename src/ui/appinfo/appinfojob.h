@@ -11,8 +11,8 @@ class AppInfoJob : public AppBaseJob
 public:
     explicit AppInfoJob(const QString &appPath);
 
-    void doJob(WorkerObject *worker) override;
-    void reportResult(WorkerObject *worker) override;
+    void doJob(WorkerObject &worker) override;
+    void reportResult(WorkerObject &worker) override;
 
 private:
     void loadAppInfo(AppInfoManager *manager);

@@ -9,14 +9,14 @@ AppIconJob::AppIconJob(const QString &appPath, qint64 iconId) :
 {
 }
 
-void AppIconJob::doJob(WorkerObject *worker)
+void AppIconJob::doJob(WorkerObject &worker)
 {
-    loadAppIcon(static_cast<AppInfoManager *>(worker->manager()));
+    loadAppIcon(static_cast<AppInfoManager *>(worker.manager()));
 }
 
-void AppIconJob::reportResult(WorkerObject *worker)
+void AppIconJob::reportResult(WorkerObject &worker)
 {
-    emitFinished(static_cast<AppInfoManager *>(worker->manager()));
+    emitFinished(static_cast<AppInfoManager *>(worker.manager()));
 }
 
 void AppIconJob::loadAppIcon(AppInfoManager *manager)

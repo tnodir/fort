@@ -10,23 +10,21 @@ void WorkerObject::run()
     QThread::currentThread()->setPriority(priority());
 
     for (;;) {
-        WorkerJob *job = manager()->dequeueJob();
+        WorkerJobPtr job = manager()->dequeueJob();
         if (!job)
             break;
 
-        doJob(job);
-
-        delete job;
+        doJob(*job);
     }
 
     manager()->workerFinished(this);
 }
 
-void WorkerObject::doJob(WorkerJob *job)
+void WorkerObject::doJob(WorkerJob &job)
 {
-    job->doJob(this);
+    job.doJob(*this);
 
     if (!manager()->aborted()) {
-        job->reportResult(this);
+        job.reportResult(*this);
     }
 }

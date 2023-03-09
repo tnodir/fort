@@ -7,14 +7,14 @@
 
 HostInfoJob::HostInfoJob(const QString &address) : WorkerJob(address) { }
 
-void HostInfoJob::doJob(WorkerObject * /*worker*/)
+void HostInfoJob::doJob(WorkerObject & /*worker*/)
 {
     m_hostName = NetUtil::getHostName(address());
 }
 
-void HostInfoJob::reportResult(WorkerObject *worker)
+void HostInfoJob::reportResult(WorkerObject &worker)
 {
-    emitFinished(static_cast<HostInfoManager *>(worker->manager()));
+    emitFinished(static_cast<HostInfoManager *>(worker.manager()));
 }
 
 void HostInfoJob::emitFinished(HostInfoManager *manager)

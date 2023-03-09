@@ -89,12 +89,12 @@ WorkerObject *AppInfoManager::createWorker()
 
 void AppInfoManager::lookupAppInfo(const QString &appPath)
 {
-    enqueueJob(new AppInfoJob(appPath));
+    enqueueJob(WorkerJobPtr(new AppInfoJob(appPath)));
 }
 
 void AppInfoManager::lookupAppIcon(const QString &appPath, qint64 iconId)
 {
-    enqueueJob(new AppIconJob(appPath, iconId));
+    enqueueJob(WorkerJobPtr(new AppIconJob(appPath, iconId)));
 }
 
 void AppInfoManager::checkLookupInfoFinished(const QString &appPath)
