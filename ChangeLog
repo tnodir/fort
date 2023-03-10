@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.7.7, 2022-03-10:
+- UI: Auto-restart service on termination.
+- UI: Options: Add "Disable Service controls" flag.
+- UI: Options: Add "Check password on Uninstall" flag.
+
 v3.7.6, 2022-03-08:
 - UI: Blocked Connections: Fix list updating.
 - UI: Don't check password on Quit.
