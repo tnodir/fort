@@ -128,17 +128,94 @@ begin
     and (EnabledValue = 1);
 end;
 
-function InitializeSetup: Boolean;
+function AskPassword(): String;
+var
+  Form: TSetupForm;
+  OKButton, CancelButton: TButton;
+  PwdEdit: TPasswordEdit;
 begin
-  if HVCIEnabled() then
+  Form := CreateCustomForm();
+  try
+    Form.ClientWidth := ScaleX(256);
+    Form.ClientHeight := ScaleY(100);
+    Form.Caption := 'Uninstall Password';
+    Form.BorderIcons := [biSystemMenu];
+    Form.BorderStyle := bsDialog;
+    Form.Center;
+
+    OKButton := TButton.Create(Form);
+    OKButton.Parent := Form;
+    OKButton.Width := ScaleX(75);
+    OKButton.Height := ScaleY(23);
+    OKButton.Left := Form.ClientWidth - ScaleX(75 + 6 + 75 + 50);
+    OKButton.Top := Form.ClientHeight - ScaleY(23 + 10);
+    OKButton.Caption := 'OK';
+    OKButton.ModalResult := mrOk;
+    OKButton.Default := true;
+
+    CancelButton := TButton.Create(Form);
+    CancelButton.Parent := Form;
+    CancelButton.Width := ScaleX(75);
+    CancelButton.Height := ScaleY(23);
+    CancelButton.Left := Form.ClientWidth - ScaleX(75 + 50);
+    CancelButton.Top := Form.ClientHeight - ScaleY(23 + 10);
+    CancelButton.Caption := 'Cancel';
+    CancelButton.ModalResult := mrCancel;
+    CancelButton.Cancel := True;
+
+    PwdEdit := TPasswordEdit.Create(Form);
+    PwdEdit.Parent := Form;
+    PwdEdit.Width := ScaleX(210);
+    PwdEdit.Height := ScaleY(23);
+    PwdEdit.Left := ScaleX(23);
+    PwdEdit.Top := ScaleY(23);
+
+    Form.ActiveControl := PwdEdit;
+
+    if Form.ShowModal() = mrOk then
+    begin
+      Result := GetSHA1OfString(PwdEdit.Text);
+    end;
+  finally
+    Form.Free();
+  end;
+end;
+
+function CheckPasswordHash(): Boolean;
+var
+  passwordHash: String;
+begin
+  RegQueryStringValue(HKEY_LOCAL_MACHINE, ExpandConstant('SOFTWARE\{#APP_NAME}'),
+      'passwordHash', passwordHash);
+
+  if passwordHash = '' then
   begin
-    MsgBox('This program is not compatible with HVCI (Core Isolation).', mbCriticalError, MB_OK);
+    Result := True;
+    Exit;
+  end;
+
+  if AskPassword() <> passwordHash then
+  begin
+    SuppressibleMsgBox('Wrong password', mbError, MB_OK, IDOK);
 
     Result := False;
     Exit;
   end;
 
   Result := True;
+end;
+
+function InitializeSetup: Boolean;
+begin
+  if HVCIEnabled() then
+  begin
+    SuppressibleMsgBox('This program is not compatible with HVCI (Core Isolation).', mbCriticalError, MB_OK, IDOK);
+
+    Result := False;
+    Exit;
+  end;
+
+  Result := CheckPasswordHash();
 end;
 
 function PrepareToInstall(var NeedsRestart: Boolean): String;
@@ -148,4 +225,9 @@ begin
   if Exec('sc.exe', ExpandConstant('stop {#APP_SVC_NAME}'), '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
     if ResultCode = 0 then Sleep(100); // Let the service to stop
   Result := '';
+end;
+
+function InitializeUninstall(): Boolean;
+begin
+  Result := CheckPasswordHash();
 end;
