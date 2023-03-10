@@ -269,6 +269,22 @@ void StartupUtil::setExplorerIntegrated(bool integrate)
     }
 }
 
+void StartupUtil::setRegistryPasswordHash(const QString &passwordHash)
+{
+    const bool isAdding = !passwordHash.isEmpty();
+
+    RegKey regApp(RegKey::HKLM, R"(SOFTWARE)",
+            isAdding ? RegKey::DefaultCreate : RegKey::DefaultReadWrite);
+
+    RegKey reg(regApp, APP_NAME, RegKey::DefaultCreate);
+
+    if (isAdding) {
+        reg.setValue("passwordHash", passwordHash);
+    } else {
+        reg.removeValue("passwordHash");
+    }
+}
+
 void StartupUtil::setPortable(bool portable)
 {
     const QString readmePortablePath = FileUtil::nativeAppBinLocation() + "/README.portable";

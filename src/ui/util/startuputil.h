@@ -21,6 +21,8 @@ public:
     static bool isExplorerIntegrated();
     static void setExplorerIntegrated(bool integrate);
 
+    static void setRegistryPasswordHash(const QString &passwordHash);
+
     static void setPortable(bool portable);
 };
 

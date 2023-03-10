@@ -1321,6 +1321,12 @@ void ConfManager::saveExtFlags(const IniOptions &ini)
     if (ini.explorerIntegratedSet()) {
         StartupUtil::setExplorerIntegrated(ini.explorerIntegrated());
     }
+
+    // Check password on Uninstall
+    if (ini.checkPasswordOnUninstallSet() || ini.hasPasswordSet()) {
+        StartupUtil::setRegistryPasswordHash(
+                ini.checkPasswordOnUninstall() ? IoC<FortSettings>()->passwordHash() : QString());
+    }
 }
 
 void ConfManager::saveTasksByIni(const IniOptions &ini)

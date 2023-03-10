@@ -22,6 +22,7 @@ public:
     void setLogConsole(bool v) { setValue("base/console", v); }
 
     bool hasPasswordSet() const { return contains("base/hasPassword_"); }
+
     bool hasPassword() const { return valueBool("base/hasPassword_"); }
     void setHasPassword(bool v) { setValue("base/hasPassword_", v); }
 
@@ -41,6 +42,11 @@ public:
 
     bool noServiceControl() const { return valueBool("protect/noServiceControl"); }
     void setNoServiceControl(bool v) { setValue("protect/noServiceControl", v); }
+
+    bool checkPasswordOnUninstallSet() const
+    {
+        return contains("protect/checkPasswordOnUninstall");
+    }
 
     bool checkPasswordOnUninstall() const { return valueBool("protect/checkPasswordOnUninstall"); }
     void setCheckPasswordOnUninstall(bool v) { setValue("protect/checkPasswordOnUninstall", v); }
