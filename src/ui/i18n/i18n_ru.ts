@@ -757,6 +757,18 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Animate Alert Icon</source>
         <translation>Анимировать иконку оповещения</translation>
     </message>
+    <message>
+        <source>Self Protection</source>
+        <translation>Самозащита</translation>
+    </message>
+    <message>
+        <source>Disable Service controls</source>
+        <translation>Отключить управление Сервисом</translation>
+    </message>
+    <message>
+        <source>Check password on Uninstall</source>
+        <translation>Проверить пароль при деинсталляции</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

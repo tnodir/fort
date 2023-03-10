@@ -7,6 +7,8 @@
 #include <util/ioc/iocservice.h>
 #include <util/service/servicemanageriface.h>
 
+class IniOptions;
+
 class ServiceManager : public QObject, public ServiceManagerIface, public IocService
 {
     Q_OBJECT
@@ -18,6 +20,9 @@ public:
 
     void setUp() override;
 
+    bool controlEnabled() const { return m_controlEnabled; }
+    void setControlEnabled(bool v);
+
     const wchar_t *serviceName() const override;
 
     void processControl(quint32 code) override;
@@ -25,6 +30,19 @@ public:
 signals:
     void pauseRequested();
     void continueRequested();
+
+protected:
+    void setupControlManager();
+    void setupConfManager();
+
+    bool acceptStop() const override { return controlEnabled(); }
+    bool acceptPauseContinue() const override { return controlEnabled(); }
+
+private:
+    void setupByConf(const IniOptions &ini);
+
+private:
+    bool m_controlEnabled = false;
 };
 
 #endif // SERVICEMANAGER_H

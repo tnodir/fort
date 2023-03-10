@@ -757,6 +757,18 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
         <source>Animate Alert Icon</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Self Protection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disable Service controls</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check password on Uninstall</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

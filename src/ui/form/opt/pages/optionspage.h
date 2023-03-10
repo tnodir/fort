@@ -42,11 +42,12 @@ private:
     void setupTrafficBox();
     QLayout *setupFilterModeLayout();
     void setupGlobalBox();
+    QLayout *setupLangLayout();
+    void setupComboLanguage();
+    void setupProtectionBox();
     QLayout *setupPasswordLayout();
     void setupEditPassword();
     void setupPasswordLock();
-    QLayout *setupLangLayout();
-    void setupComboLanguage();
     void setupTrayBox();
     void refreshComboTrayAction();
     QLayout *setupTrayEventLayout();
@@ -68,6 +69,7 @@ private:
     QGroupBox *m_gbStartup = nullptr;
     QGroupBox *m_gbTraffic = nullptr;
     QGroupBox *m_gbGlobal = nullptr;
+    QGroupBox *m_gbProtection = nullptr;
     QGroupBox *m_gbTray = nullptr;
     QGroupBox *m_gbConfirmations = nullptr;
     QGroupBox *m_gbLogs = nullptr;
@@ -76,7 +78,6 @@ private:
     QLabel *m_labelStartMode = nullptr;
     QComboBox *m_comboAutoRun = nullptr;
     QCheckBox *m_cbService = nullptr;
-    QCheckBox *m_cbProvBoot = nullptr;
     QCheckBox *m_cbFilterEnabled = nullptr;
     QCheckBox *m_cbFilterLocals = nullptr;
     QCheckBox *m_cbStopTraffic = nullptr;
@@ -86,11 +87,14 @@ private:
     QComboBox *m_comboFilterMode = nullptr;
     QCheckBox *m_cbExplorerMenu = nullptr;
     QCheckBox *m_cbHotKeys = nullptr;
+    QLabel *m_labelLanguage = nullptr;
+    QComboBox *m_comboLanguage = nullptr;
+    QCheckBox *m_cbProvBoot = nullptr;
+    QCheckBox *m_cbNoServiceControl = nullptr;
+    QCheckBox *m_cbCheckPasswordOnUninstall = nullptr;
     QCheckBox *m_cbPassword = nullptr;
     QLineEdit *m_editPassword = nullptr;
     QToolButton *m_btPasswordLock = nullptr;
-    QLabel *m_labelLanguage = nullptr;
-    QComboBox *m_comboLanguage = nullptr;
     QCheckBox *m_cbTrayAnimateAlert = nullptr;
     QLabel *m_labelTrayEvent = nullptr;
     QComboBox *m_comboTrayEvent = nullptr;

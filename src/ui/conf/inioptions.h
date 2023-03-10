@@ -39,6 +39,12 @@ public:
     QVariant taskInfoList() const { return value("task/infoList_"); }
     void setTaskInfoList(const QVariant &v) { setValue("task/infoList_", v); }
 
+    bool noServiceControl() const { return valueBool("protect/noServiceControl"); }
+    void setNoServiceControl(bool v) { setValue("protect/noServiceControl", v); }
+
+    bool checkPasswordOnUninstall() const { return valueBool("protect/checkPasswordOnUninstall"); }
+    void setCheckPasswordOnUninstall(bool v) { setValue("protect/checkPasswordOnUninstall", v); }
+
     int quotaDayAlerted() const { return valueInt("quota/dayAlerted"); }
     void setQuotaDayAlerted(int v) { setValue("quota/dayAlerted", v); }
 

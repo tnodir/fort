@@ -16,7 +16,12 @@ public:
     virtual void processControl(quint32 code) = 0;
 
 protected:
-    static void reportStatus(quint32 code);
+    virtual bool acceptStop() const { return true; }
+    virtual bool acceptPauseContinue() const { return true; }
+
+    void setupAcceptedControls();
+
+    static void reportStatus(quint32 code = 0);
 };
 
 #endif // SERVICEMANAGERIFACE_H

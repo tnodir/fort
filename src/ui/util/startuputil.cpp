@@ -95,7 +95,7 @@ static void setupServiceRestartConfig(SC_HANDLE svc)
 
     SC_ACTION actions[actionsCount];
     actions[0].Type = SC_ACTION_RESTART;
-    actions[0].Delay = 300;
+    actions[0].Delay = 150;
     actions[1].Type = SC_ACTION_NONE;
     actions[1].Delay = 0;
     actions[2].Type = SC_ACTION_NONE;

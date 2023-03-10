@@ -15,19 +15,30 @@ void ServiceManagerIface::initialize(qintptr hstatus)
     g_service.hstatus = SERVICE_STATUS_HANDLE(hstatus);
 
     g_service.status.dwServiceType = SERVICE_WIN32_OWN_PROCESS;
-    g_service.status.dwControlsAccepted =
-            SERVICE_ACCEPT_STOP | SERVICE_ACCEPT_PAUSE_CONTINUE | SERVICE_ACCEPT_SHUTDOWN;
     g_service.status.dwWin32ExitCode = NO_ERROR;
     g_service.status.dwServiceSpecificExitCode = 0;
     g_service.status.dwCheckPoint = 0;
-    g_service.status.dwWaitHint = 3000;
+    g_service.status.dwWaitHint = 1000;
+
+    setupAcceptedControls();
 
     reportStatus(SERVICE_RUNNING);
 }
 
+void ServiceManagerIface::setupAcceptedControls()
+{
+    g_service.status.dwControlsAccepted = SERVICE_ACCEPT_SHUTDOWN
+            | (acceptStop() ? SERVICE_ACCEPT_STOP : 0)
+            | (acceptPauseContinue() ? SERVICE_ACCEPT_PAUSE_CONTINUE : 0);
+}
+
 void ServiceManagerIface::reportStatus(quint32 code)
 {
-    g_service.status.dwCurrentState = code;
+    if (code != 0) {
+        g_service.status.dwCurrentState = code;
+    }
 
-    SetServiceStatus(g_service.hstatus, &g_service.status);
+    if (g_service.hstatus != nullptr) {
+        SetServiceStatus(g_service.hstatus, &g_service.status);
+    }
 }

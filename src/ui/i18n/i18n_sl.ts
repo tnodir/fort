@@ -757,6 +757,18 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
         <source>Animate Alert Icon</source>
         <translation>Ikona animirane ure</translation>
     </message>
+    <message>
+        <source>Self Protection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disable Service controls</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check password on Uninstall</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

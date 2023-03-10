@@ -152,6 +152,7 @@ void OptionsPage::onRetranslateUi()
     m_gbStartup->setTitle(tr("Startup"));
     m_gbTraffic->setTitle(tr("Traffic"));
     m_gbGlobal->setTitle(tr("Global"));
+    m_gbProtection->setTitle(tr("Self Protection"));
     m_gbTray->setTitle(tr("Tray"));
     m_gbConfirmations->setTitle(tr("Action Confirmations"));
     m_gbLogs->setTitle(tr("Logs"));
@@ -162,7 +163,6 @@ void OptionsPage::onRetranslateUi()
     retranslateComboStartMode();
 
     m_cbService->setText(tr("Run Fort Firewall as a Service in background"));
-    m_cbProvBoot->setText(tr("Stop traffic when Fort Firewall is not running"));
 
     m_cbFilterEnabled->setText(tr("Filter Enabled"));
     m_cbFilterLocals->setText(tr("Filter Local Addresses"));
@@ -178,13 +178,17 @@ void OptionsPage::onRetranslateUi()
     m_cbExplorerMenu->setText(tr("Windows Explorer integration"));
     m_cbHotKeys->setText(tr("Hot Keys"));
 
+    m_labelLanguage->setText(tr("Language:"));
+
+    m_cbProvBoot->setText(tr("Stop traffic when Fort Firewall is not running"));
+    m_cbNoServiceControl->setText(tr("Disable Service controls"));
+    m_cbCheckPasswordOnUninstall->setText(tr("Check password on Uninstall"));
+
     m_cbPassword->setText(tr("Password:"));
     retranslateEditPassword();
     m_btPasswordLock->setText(
             tr("Lock the password (unlocked till \"%1\")")
                     .arg(PasswordDialog::unlockTypeStrings().at(settings()->passwordUnlockType())));
-
-    m_labelLanguage->setText(tr("Language:"));
 
     m_cbTrayAnimateAlert->setText(tr("Animate Alert Icon"));
     m_labelTrayEvent->setText(tr("Event:"));
@@ -351,6 +355,10 @@ QLayout *OptionsPage::setupColumn1()
     setupGlobalBox();
     layout->addWidget(m_gbGlobal);
 
+    // Protection Group Box
+    setupProtectionBox();
+    layout->addWidget(m_gbProtection);
+
     // Tray Group Box
     setupTrayBox();
     layout->addWidget(m_gbTray);
@@ -375,15 +383,9 @@ void OptionsPage::setupStartupBox()
     m_cbService = ControlUtil::createCheckBox(
             g_startup.isService, [&](bool /*checked*/) { ctrl()->emitEdited(); });
 
-    m_cbProvBoot = ControlUtil::createCheckBox(conf()->provBoot(), [&](bool checked) {
-        conf()->setProvBoot(checked);
-        ctrl()->setFlagsEdited();
-    });
-
     auto layout = new QVBoxLayout();
     layout->addLayout(startModeLayout);
     layout->addWidget(m_cbService);
-    layout->addWidget(m_cbProvBoot);
 
     m_gbStartup = new QGroupBox();
     m_gbStartup->setLayout(layout);
@@ -469,22 +471,82 @@ void OptionsPage::setupGlobalBox()
         ctrl()->setIniUserEdited(/*flagsChanged=*/true);
     });
 
-    // Password Row
-    auto passwordLayout = setupPasswordLayout();
-    setupPasswordLock();
-
     // Language Row
     auto langLayout = setupLangLayout();
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbExplorerMenu);
     layout->addWidget(m_cbHotKeys);
-    layout->addLayout(passwordLayout);
-    layout->addWidget(m_btPasswordLock, 0, Qt::AlignCenter);
     layout->addLayout(langLayout);
 
     m_gbGlobal = new QGroupBox();
     m_gbGlobal->setLayout(layout);
+}
+
+QLayout *OptionsPage::setupLangLayout()
+{
+    m_labelLanguage = ControlUtil::createLabel();
+
+    setupComboLanguage();
+
+    return ControlUtil::createRowLayout(m_labelLanguage, m_comboLanguage);
+}
+
+void OptionsPage::setupComboLanguage()
+{
+    m_comboLanguage =
+            ControlUtil::createComboBox(translationManager()->displayLabels(), [&](int index) {
+                if (translationManager()->switchLanguage(index)) {
+                    setLanguageEdited(true);
+                    iniUser()->setLanguage(translationManager()->localeName());
+                    ctrl()->setIniUserEdited();
+                }
+            });
+    m_comboLanguage->setFixedWidth(200);
+
+    const auto refreshComboLanguage = [&] {
+        m_comboLanguage->setCurrentIndex(translationManager()->language());
+    };
+
+    refreshComboLanguage();
+
+    connect(translationManager(), &TranslationManager::languageChanged, this, refreshComboLanguage);
+}
+
+void OptionsPage::setupProtectionBox()
+{
+    m_cbProvBoot = ControlUtil::createCheckBox(conf()->provBoot(), [&](bool checked) {
+        conf()->setProvBoot(checked);
+        ctrl()->setFlagsEdited();
+    });
+
+    m_cbNoServiceControl =
+            ControlUtil::createCheckBox(ini()->noServiceControl(), [&](bool checked) {
+                ini()->setNoServiceControl(checked);
+                ctrl()->setIniEdited();
+            });
+
+    m_cbCheckPasswordOnUninstall =
+            ControlUtil::createCheckBox(ini()->checkPasswordOnUninstall(), [&](bool checked) {
+                ini()->setCheckPasswordOnUninstall(checked);
+                ctrl()->setIniEdited();
+            });
+
+    m_cbCheckPasswordOnUninstall->setEnabled(settings()->hasMasterAdmin());
+
+    // Password Row
+    auto passwordLayout = setupPasswordLayout();
+    setupPasswordLock();
+
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_cbProvBoot);
+    layout->addWidget(m_cbNoServiceControl);
+    layout->addWidget(m_cbCheckPasswordOnUninstall);
+    layout->addLayout(passwordLayout);
+    layout->addWidget(m_btPasswordLock, 0, Qt::AlignCenter);
+
+    m_gbProtection = new QGroupBox();
+    m_gbProtection->setLayout(layout);
 }
 
 QLayout *OptionsPage::setupPasswordLayout()
@@ -541,36 +603,6 @@ void OptionsPage::setupPasswordLock()
     refreshPasswordLock();
 
     connect(settings(), &FortSettings::passwordCheckedChanged, this, refreshPasswordLock);
-}
-
-QLayout *OptionsPage::setupLangLayout()
-{
-    m_labelLanguage = ControlUtil::createLabel();
-
-    setupComboLanguage();
-
-    return ControlUtil::createRowLayout(m_labelLanguage, m_comboLanguage);
-}
-
-void OptionsPage::setupComboLanguage()
-{
-    m_comboLanguage =
-            ControlUtil::createComboBox(translationManager()->displayLabels(), [&](int index) {
-                if (translationManager()->switchLanguage(index)) {
-                    setLanguageEdited(true);
-                    iniUser()->setLanguage(translationManager()->localeName());
-                    ctrl()->setIniUserEdited();
-                }
-            });
-    m_comboLanguage->setFixedWidth(200);
-
-    const auto refreshComboLanguage = [&] {
-        m_comboLanguage->setCurrentIndex(translationManager()->language());
-    };
-
-    refreshComboLanguage();
-
-    connect(translationManager(), &TranslationManager::languageChanged, this, refreshComboLanguage);
 }
 
 void OptionsPage::setupTrayBox()
