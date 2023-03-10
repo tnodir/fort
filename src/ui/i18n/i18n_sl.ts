@@ -759,15 +759,15 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     </message>
     <message>
         <source>Self Protection</source>
-        <translation type="unfinished"></translation>
+        <translation>Samozaščita</translation>
     </message>
     <message>
         <source>Disable Service controls</source>
-        <translation type="unfinished"></translation>
+        <translation>Onemogoči nadzor storitve</translation>
     </message>
     <message>
         <source>Check password on Uninstall</source>
-        <translation type="unfinished"></translation>
+        <translation>Preveri geslo ob odstranitvi</translation>
     </message>
 </context>
 <context>
