@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.7.8, 2022-03-11:
+- UI: Fix service stopping on uninstall with "Disable Service controls" option.
+
 v3.7.7, 2022-03-10:
 - UI: Auto-restart service on termination.
 - UI: Options: Add "Disable Service controls" flag.
