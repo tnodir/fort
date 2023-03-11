@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#define FORT_SERVICE_CONTROL_UNINSTALL 128
+
 class ServiceManagerIface
 {
 public:

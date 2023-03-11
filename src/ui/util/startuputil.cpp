@@ -11,6 +11,7 @@
 
 #include "fileutil.h"
 #include "regkey.h"
+#include "service/servicemanageriface.h"
 
 namespace {
 
@@ -134,6 +135,24 @@ bool installService(const wchar_t *serviceName, const wchar_t *serviceDisplay,
     return res;
 }
 
+void stopService(SC_HANDLE svc)
+{
+    int n = 3; /* count of attempts to stop the service */
+    do {
+        SERVICE_STATUS status;
+        if (QueryServiceStatus(svc, &status) && status.dwCurrentState == SERVICE_STOPPED)
+            break;
+
+        const DWORD controlCode = (status.dwControlsAccepted & SERVICE_ACCEPT_STOP) != 0
+                ? SERVICE_CONTROL_STOP
+                : FORT_SERVICE_CONTROL_UNINSTALL;
+
+        ControlService(svc, controlCode, &status);
+
+        QThread::msleep(n * 100);
+    } while (--n > 0);
+}
+
 bool uninstallService(const wchar_t *serviceName)
 {
     bool res = false;
@@ -141,14 +160,8 @@ bool uninstallService(const wchar_t *serviceName)
     if (mngr) {
         const SC_HANDLE svc = OpenServiceW(mngr, serviceName, SERVICE_ALL_ACCESS | DELETE);
         if (svc) {
-            int n = 3; /* count of attempts to stop the service */
-            do {
-                SERVICE_STATUS status;
-                if (QueryServiceStatus(svc, &status) && status.dwCurrentState == SERVICE_STOPPED)
-                    break;
-                ControlService(svc, SERVICE_CONTROL_STOP, &status);
-                QThread::msleep(n * 100);
-            } while (--n > 0);
+            stopService(svc);
+
             res = DeleteService(svc);
             CloseServiceHandle(svc);
         }

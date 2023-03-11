@@ -97,6 +97,7 @@ void ServiceManager::processControl(quint32 code)
             break;
 
         Q_FALLTHROUGH();
+    case FORT_SERVICE_CONTROL_UNINSTALL:
     case SERVICE_CONTROL_SHUTDOWN: {
         qCDebug(LC) << "Quit due service control";
 

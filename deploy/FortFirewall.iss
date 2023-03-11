@@ -174,7 +174,7 @@ begin
 
     if Form.ShowModal() = mrOk then
     begin
-      Result := GetSHA1OfString(PwdEdit.Text);
+      Result := PwdEdit.Text;
     end;
   finally
     Form.Free();
@@ -194,7 +194,7 @@ begin
     Exit;
   end;
 
-  if AskPassword() <> passwordHash then
+  if GetSHA1OfString(AskPassword()) <> passwordHash then
   begin
     SuppressibleMsgBox('Wrong password', mbError, MB_OK, IDOK);
 
@@ -218,16 +218,17 @@ begin
   Result := CheckPasswordHash();
 end;
 
+function InitializeUninstall(): Boolean;
+begin
+  Result := CheckPasswordHash();
+end;
+
 function PrepareToInstall(var NeedsRestart: Boolean): String;
 var
   ResultCode: Integer;
 begin
   if Exec('sc.exe', ExpandConstant('stop {#APP_SVC_NAME}'), '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
     if ResultCode = 0 then Sleep(100); // Let the service to stop
-  Result := '';
-end;
 
-function InitializeUninstall(): Boolean;
-begin
-  Result := CheckPasswordHash();
+  Result := '';
 end;
