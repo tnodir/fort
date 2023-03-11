@@ -759,15 +759,15 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     </message>
     <message>
         <source>Self Protection</source>
-        <translation type="unfinished"></translation>
+        <translation>Selbstschutz</translation>
     </message>
     <message>
         <source>Disable Service controls</source>
-        <translation type="unfinished"></translation>
+        <translation>Dienstesteuerung deaktivieren</translation>
     </message>
     <message>
         <source>Check password on Uninstall</source>
-        <translation type="unfinished"></translation>
+        <translation>Passwort bei Deinstallation prüfen</translation>
     </message>
 </context>
 <context>
