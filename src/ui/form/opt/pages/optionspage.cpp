@@ -464,7 +464,7 @@ void OptionsPage::setupGlobalBox()
         ini()->setExplorerIntegrated(checked);
         ctrl()->setIniEdited();
     });
-    m_cbExplorerMenu->setEnabled(settings()->hasService() || settings()->isUserAdmin());
+    m_cbExplorerMenu->setEnabled(settings()->hasMasterAdmin());
 
     m_cbHotKeys = ControlUtil::createCheckBox(iniUser()->hotKeyEnabled(), [&](bool checked) {
         iniUser()->setHotKeyEnabled(checked);
