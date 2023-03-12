@@ -25,6 +25,8 @@
 namespace {
 
 const QString eventSingleClick = QStringLiteral("singleClick");
+const QString eventCtrlSingleClick = QStringLiteral("ctrlSingleClick");
+const QString eventAltSingleClick = QStringLiteral("altSingleClick");
 const QString eventDoubleClick = QStringLiteral("doubleClick");
 const QString eventMiddleClick = QStringLiteral("middleClick");
 const QString eventRightClick = QStringLiteral("rightClick");
@@ -45,6 +47,10 @@ QString clickNameByType(TrayIcon::ClickType clickType)
     switch (clickType) {
     case TrayIcon::SingleClick:
         return eventSingleClick;
+    case TrayIcon::CtrlSingleClick:
+        return eventCtrlSingleClick;
+    case TrayIcon::AltSingleClick:
+        return eventAltSingleClick;
     case TrayIcon::DoubleClick:
         return eventDoubleClick;
     case TrayIcon::MiddleClick:
@@ -102,6 +108,10 @@ TrayIcon::ActionType defaultActionTypeByClick(TrayIcon::ClickType clickType)
     switch (clickType) {
     case TrayIcon::SingleClick:
         return TrayIcon::ActionShowPrograms;
+    case TrayIcon::CtrlSingleClick:
+        return TrayIcon::ActionShowOptions;
+    case TrayIcon::AltSingleClick:
+        return TrayIcon::ActionIgnore;
     case TrayIcon::DoubleClick:
         return TrayIcon::ActionIgnore;
     case TrayIcon::MiddleClick:
@@ -209,13 +219,13 @@ void TrayIcon::onTrayActivated(QSystemTrayIcon::ActivationReason reason)
         onTrayActivatedByTrigger();
     } break;
     case QSystemTrayIcon::DoubleClick: {
-        onTrayActivatedByDoubleClick();
+        onTrayActivatedByClick(DoubleClick, /*checkTriggered=*/true);
     } break;
     case QSystemTrayIcon::MiddleClick: {
-        onTrayActivatedByMiddleClick();
+        onTrayActivatedByClick(MiddleClick);
     } break;
     case QSystemTrayIcon::Context: {
-        onTrayActivatedByContext();
+        onTrayActivatedByClick(RightClick);
     } break;
     default:
         break;
@@ -627,24 +637,26 @@ void TrayIcon::setClickEventActionType(IniUser *iniUser, ClickType clickType, Ac
 void TrayIcon::updateClickActions()
 {
     m_clickActions[SingleClick] = clickActionFromIni(SingleClick);
+    m_clickActions[CtrlSingleClick] = clickActionFromIni(CtrlSingleClick);
+    m_clickActions[AltSingleClick] = clickActionFromIni(AltSingleClick);
     m_clickActions[DoubleClick] = clickActionFromIni(DoubleClick);
     m_clickActions[MiddleClick] = clickActionFromIni(MiddleClick);
     m_clickActions[RightClick] = clickActionFromIni(RightClick);
 }
 
-QAction *TrayIcon::clickAction(ClickType clickType) const
+QAction *TrayIcon::clickAction(TrayIcon::ClickType clickType) const
 {
     return m_clickActions[clickType];
 }
 
-QAction *TrayIcon::clickActionFromIni(ClickType clickType) const
+QAction *TrayIcon::clickActionFromIni(TrayIcon::ClickType clickType) const
 {
     const ActionType actionType = clickEventActionType(iniUser(), clickType);
 
     return clickActionByType(actionType);
 }
 
-QAction *TrayIcon::clickActionByType(ActionType actionType) const
+QAction *TrayIcon::clickActionByType(TrayIcon::ActionType actionType) const
 {
     QAction *actions[] = {
         m_programsAction,
@@ -675,36 +687,25 @@ void TrayIcon::onMouseClicked(TrayIcon::ClickType clickType)
 
 void TrayIcon::onTrayActivatedByTrigger()
 {
+    const Qt::KeyboardModifiers kbMods = qApp->queryKeyboardModifiers();
+    const ClickType clickType = (kbMods & Qt::ControlModifier) != 0
+            ? CtrlSingleClick
+            : ((kbMods & Qt::AltModifier) != 0 ? AltSingleClick : SingleClick);
+
     if (clickAction(DoubleClick)) {
         m_trayTriggered = true;
-        QTimer::singleShot(QApplication::doubleClickInterval(), this, [&] {
-            if (m_trayTriggered) {
-                m_trayTriggered = false;
-                onMouseClicked(SingleClick);
-            }
-        });
+        QTimer::singleShot(QApplication::doubleClickInterval(), this,
+                [&] { onTrayActivatedByClick(clickType, /*checkTriggered=*/true); });
     } else {
-        m_trayTriggered = false;
-        onMouseClicked(SingleClick);
+        onTrayActivatedByClick(clickType);
     }
 }
 
-void TrayIcon::onTrayActivatedByDoubleClick()
+void TrayIcon::onTrayActivatedByClick(TrayIcon::ClickType clickType, bool checkTriggered)
 {
-    if (m_trayTriggered) {
-        m_trayTriggered = false;
-        onMouseClicked(DoubleClick);
-    }
-}
+    if (checkTriggered && !m_trayTriggered)
+        return;
 
-void TrayIcon::onTrayActivatedByMiddleClick()
-{
     m_trayTriggered = false;
-    onMouseClicked(MiddleClick);
-}
-
-void TrayIcon::onTrayActivatedByContext()
-{
-    m_trayTriggered = false;
-    onMouseClicked(RightClick);
+    onMouseClicked(clickType);
 }

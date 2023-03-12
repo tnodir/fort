@@ -273,8 +273,8 @@ void OptionsPage::retranslateEditPassword()
 void OptionsPage::retranslateComboTrayEvent()
 {
     // Sync with TrayIcon::ClickType
-    const QStringList list = { tr("Single Click"), tr("Double Click"), tr("Middle Click"),
-        tr("Right Click") };
+    const QStringList list = { tr("Single Click"), tr("Ctrl + Single Click"),
+        tr("Alt + Single Click"), tr("Double Click"), tr("Middle Click"), tr("Right Click") };
 
     int currentIndex = m_comboTrayEvent->currentIndex();
     if (currentIndex < 0) {

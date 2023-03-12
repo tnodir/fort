@@ -25,6 +25,8 @@ class TrayIcon : public QSystemTrayIcon
 public:
     enum ClickType : qint8 {
         SingleClick = 0,
+        CtrlSingleClick,
+        AltSingleClick,
         DoubleClick,
         MiddleClick,
         RightClick,
@@ -101,15 +103,13 @@ private:
 
     void updateClickActions();
 
-    QAction *clickAction(ClickType clickType) const;
-    QAction *clickActionFromIni(ClickType clickType) const;
-    QAction *clickActionByType(ActionType actionType) const;
+    QAction *clickAction(TrayIcon::ClickType clickType) const;
+    QAction *clickActionFromIni(TrayIcon::ClickType clickType) const;
+    QAction *clickActionByType(TrayIcon::ActionType actionType) const;
 
     void onMouseClicked(TrayIcon::ClickType clickType);
     void onTrayActivatedByTrigger();
-    void onTrayActivatedByDoubleClick();
-    void onTrayActivatedByMiddleClick();
-    void onTrayActivatedByContext();
+    void onTrayActivatedByClick(TrayIcon::ClickType clickType, bool checkTriggered = false);
 
 private:
     bool m_trayTriggered : 1;
