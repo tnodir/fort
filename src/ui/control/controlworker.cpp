@@ -32,13 +32,7 @@ bool buildArgsData(QByteArray &buffer, const QVariantList &args, bool &compresse
 
     QByteArray data;
     {
-        QDataStream stream(&data,
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-                QIODevice::WriteOnly
-#else
-                QDataStream::WriteOnly
-#endif
-        );
+        QDataStream stream(&data, QDataStream::WriteOnly);
 
         stream << qint8(argsCount);
 

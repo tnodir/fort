@@ -264,10 +264,6 @@ QVariant SqliteStmt::columnVarBlob(int column)
     qint16 vType;
     stream >> vType;
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    vType -= 0x1000 - 64;
-#endif
-
     // Load content
     switch (vType) {
     case QMetaType::QImage: {

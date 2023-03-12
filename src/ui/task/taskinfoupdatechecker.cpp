@@ -24,13 +24,7 @@ bool TaskInfoUpdateChecker::isNewVersion() const
 QByteArray TaskInfoUpdateChecker::data() const
 {
     QByteArray data;
-    QDataStream stream(&data,
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-            QIODevice::WriteOnly
-#else
-            QDataStream::WriteOnly
-#endif
-    );
+    QDataStream stream(&data, QDataStream::WriteOnly);
 
     // Store data
     const quint16 infoVersion = TASK_INFO_VERSION;

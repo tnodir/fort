@@ -15,12 +15,6 @@
 
 #include "appinfo.h"
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#    include <QPixmap>
-// Defined in qpixmap_win.cpp
-Q_GUI_EXPORT QPixmap qt_pixmapFromWinHICON(HICON icon);
-#endif
-
 namespace {
 
 struct Wow64FsRedirection
@@ -58,11 +52,7 @@ QImage imageFromImageList(int iImageList, const SHFILEINFO &info)
 
     if (SUCCEEDED(SHGetImageList(iImageList, IID_IImageList, reinterpret_cast<void **>(&imageList)))
             && SUCCEEDED(imageList->GetIcon(info.iIcon, ILD_TRANSPARENT, &hIcon))) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        result = qt_pixmapFromWinHICON(hIcon).toImage();
-#else
         result = QImage::fromHICON(hIcon);
-#endif
         DestroyIcon(hIcon);
     }
 

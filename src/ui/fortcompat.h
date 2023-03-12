@@ -4,22 +4,11 @@
 #include <QObject>
 #include <QString>
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-using StringView = QStringRef;
-using StringViewList = QVector<QStringRef>;
-using TokenizeViewResult = StringViewList;
-#    define toStringView(str) (QStringRef(&str))
-#else
 using StringView = QStringView;
 using StringViewList = QList<QStringView>;
 using TokenizeViewResult = QStringTokenizer<QStringView, QChar>;
-#    define toStringView(str) (QStringView(str))
-#endif
+#define toStringView(str) (QStringView(str))
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#    define mouseEventGlobalPos(event) (event)->globalPos()
-#else
-#    define mouseEventGlobalPos(event) (event)->globalPosition().toPoint()
-#endif
+#define mouseEventGlobalPos(event) (event)->globalPosition().toPoint()
 
 #endif // FORTCOMPAT_H

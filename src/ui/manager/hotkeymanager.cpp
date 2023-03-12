@@ -81,11 +81,7 @@ void HotKeyManager::registerHotKey(QAction *action) const
     const int hotKeyId = action->data().toInt();
 
     const auto keyCombination = shortcut[0];
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    const int key = keyCombination;
-#else
     const int key = keyCombination.toCombined();
-#endif
 
     IoC<NativeEventFilter>()->registerHotKey(hotKeyId, key);
 }

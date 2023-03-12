@@ -130,11 +130,7 @@ const ip6_addr_t &NetUtil::rawArrayToIp6(const QByteArray &buf)
 
 QString NetUtil::formatDataSize(qint64 bytes, int precision)
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 10, 0)
-    return QString::number(double(bytes), 'f', precision);
-#else
     return QLocale::c().formattedDataSize(bytes, precision);
-#endif
 }
 
 QString NetUtil::formatDataSize1(qint64 bytes)

@@ -494,20 +494,11 @@ bool SqliteDb::copyTable(
     }
 
     // Intersect column names
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     auto columnsSet = QSet<QString>(srcColumns.constBegin(), srcColumns.constEnd());
     const auto dstColumnsSet = QSet<QString>(dstColumns.constBegin(), dstColumns.constEnd());
-#else
-    auto columnsSet = QSet<QString>::fromList(srcColumns);
-    const auto dstColumnsSet = QSet<QString>::fromList(dstColumns);
-#endif
     columnsSet.intersect(dstColumnsSet);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     const QStringList columns(columnsSet.constBegin(), columnsSet.constEnd());
-#else
-    const QStringList columns(columnsSet.toList());
-#endif
     const QString columnNames = columns.join(", ");
 
     // Insert

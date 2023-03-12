@@ -246,13 +246,7 @@ void GraphWindow::cancelMousePressAndDragging()
     m_plot->cancelMousePressAndDragging();
 }
 
-void GraphWindow::enterEvent(
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        QEvent *event
-#else
-        QEnterEvent *event
-#endif
-)
+void GraphWindow::enterEvent(QEnterEvent *event)
 {
     Q_UNUSED(event);
 

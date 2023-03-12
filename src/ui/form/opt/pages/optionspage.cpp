@@ -801,9 +801,7 @@ void OptionsPage::setupNewVersionBox()
 
     // Label
     m_labelNewVersion = ControlUtil::createLabel();
-#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
     m_labelNewVersion->setTextFormat(Qt::MarkdownText);
-#endif
     m_labelNewVersion->setWordWrap(true);
     m_labelNewVersion->setOpenExternalLinks(true);
     colLayout->addWidget(m_labelNewVersion);

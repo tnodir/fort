@@ -34,22 +34,13 @@ int StringUtil::lineEnd(const QString &text, int pos, int badPos)
 
 StringViewList StringUtil::splitView(const QString &text, QLatin1Char sep, bool skipEmptyParts)
 {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    const auto behavior = skipEmptyParts ? QString::SkipEmptyParts : QString::KeepEmptyParts;
-    return text.splitRef(sep, behavior);
-#else
     const auto behavior = skipEmptyParts ? Qt::SkipEmptyParts : Qt::KeepEmptyParts;
-    return QStringView(text).split(sep, behavior);
-#endif
+    return toStringView(text).split(sep, behavior);
 }
 
 TokenizeViewResult StringUtil::tokenizeView(
         const QString &text, QLatin1Char sep, bool skipEmptyParts)
 {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    return splitView(text, sep, skipEmptyParts);
-#else
     const auto behavior = skipEmptyParts ? Qt::SkipEmptyParts : Qt::KeepEmptyParts;
-    return QStringView(text).tokenize(sep, behavior);
-#endif
+    return toStringView(text).tokenize(sep, behavior);
 }
