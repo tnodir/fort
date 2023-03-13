@@ -20,6 +20,8 @@ const QLoggingCategory LC("statBlock");
 
 constexpr int DATABASE_USER_VERSION = 7;
 
+constexpr int DATABASE_BUSY_TIMEOUT = 3000; // 3 seconds
+
 bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 {
     Q_UNUSED(ctx);
@@ -95,11 +97,17 @@ void StatBlockManager::setUp()
         return;
     }
 
-    if (roSqliteDb() != sqliteDb() && !roSqliteDb()->open()) {
-        qCCritical(LC) << "File open error:" << roSqliteDb()->filePath()
-                       << roSqliteDb()->errorMessage();
-        return;
+    if (roSqliteDb() != sqliteDb()) {
+        if (!roSqliteDb()->open()) {
+            qCCritical(LC) << "File open error:" << roSqliteDb()->filePath()
+                           << roSqliteDb()->errorMessage();
+            return;
+        }
+
+        roSqliteDb()->setBusyTimeoutMs(DATABASE_BUSY_TIMEOUT);
     }
+
+    sqliteDb()->setBusyTimeoutMs(DATABASE_BUSY_TIMEOUT);
 }
 
 void StatBlockManager::logBlockedIp(const LogEntryBlockedIp &entry)

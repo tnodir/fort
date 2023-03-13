@@ -240,6 +240,11 @@ bool SqliteDb::setEncoding(const QString &v)
     return executeStr(sql);
 }
 
+bool SqliteDb::setBusyTimeoutMs(int v)
+{
+    return sqlite3_busy_timeout(m_db, v) == SQLITE_OK;
+}
+
 QString SqliteDb::migrationOldSchemaName()
 {
     return QLatin1String("old");

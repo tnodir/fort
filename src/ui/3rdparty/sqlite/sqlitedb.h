@@ -97,6 +97,8 @@ public:
     QString encoding();
     bool setEncoding(const QString &v);
 
+    bool setBusyTimeoutMs(int v);
+
     static QString migrationOldSchemaName();
     static QString migrationNewSchemaName();
     static QString entityName(const QString &schemaName, const QString &objectName);
