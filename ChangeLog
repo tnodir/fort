@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.8.0, 2022-03-13:
+- UI: Add "Auto-Learn" mode, remove "Auto-Allow New Programs" flag.
+- UI: Update SQLite to v3.41.1
+
 v3.7.9, 2022-03-13:
 - UI: Vacuum the DB outside of transaction.
 - UI: Options: Add "Ctrl/Alt + Single Click" tray icon events.
