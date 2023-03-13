@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.7.9, 2022-03-13:
+- UI: Vacuum the DB outside of transaction.
+- UI: Options: Add "Ctrl/Alt + Single Click" tray icon events.
+- UI: Drop Qt 5 support. Only Qt 6 is supported for building the sources!
+
 v3.7.8, 2022-03-11:
 - UI: Fix service stopping on uninstall with "Disable Service controls" option.
 
