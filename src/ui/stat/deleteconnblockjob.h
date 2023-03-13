@@ -19,9 +19,6 @@ protected:
     void processJob() override;
     void emitFinished() override;
 
-    void deleteConn(qint64 connIdTo);
-    void deleteConnAll();
-
 private:
     qint64 m_connIdTo = 0;
 };

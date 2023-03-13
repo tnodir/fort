@@ -183,8 +183,9 @@ bool StatManager::clearTraffic()
 {
     sqliteDb()->beginTransaction();
     sqliteDb()->execute(StatSql::sqlDeleteAllTraffic);
-    sqliteDb()->vacuum();
     sqliteDb()->commitTransaction();
+
+    sqliteDb()->vacuum(); // Vacuum outside of transaction
 
     clearAppIdCache();
 

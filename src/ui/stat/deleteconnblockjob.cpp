@@ -23,15 +23,25 @@ bool DeleteConnBlockJob::processMerge(const StatBlockBaseJob &statJob)
 
 void DeleteConnBlockJob::processJob()
 {
-    sqliteDb()->beginTransaction();
+    const bool isDeleteAll = (connIdTo() <= 0);
 
-    if (connIdTo() > 0) {
-        deleteConn(connIdTo());
+    sqliteDb()->beginWriteTransaction();
+
+    SqliteStmtList stmtList;
+    if (isDeleteAll) {
+        stmtList = { getStmt(StatSql::sqlDeleteAllConnBlock), getStmt(StatSql::sqlDeleteAllApps) };
     } else {
-        deleteConnAll();
+        stmtList = { getIdStmt(StatSql::sqlDeleteConnBlock, connIdTo()),
+            getStmt(StatSql::sqlDeleteConnBlockApps) };
     }
 
+    SqliteStmt::doList(stmtList);
+
     sqliteDb()->commitTransaction();
+
+    if (isDeleteAll) {
+        sqliteDb()->vacuum(); // Vacuum outside of transaction
+    }
 
     setResultCount(1);
 }
@@ -39,18 +49,4 @@ void DeleteConnBlockJob::processJob()
 void DeleteConnBlockJob::emitFinished()
 {
     emit manager()->deleteConnBlockFinished(connIdTo());
-}
-
-void DeleteConnBlockJob::deleteConn(qint64 connIdTo)
-{
-    SqliteStmt::doList({ getIdStmt(StatSql::sqlDeleteConnBlock, connIdTo),
-            getStmt(StatSql::sqlDeleteConnBlockApps) });
-}
-
-void DeleteConnBlockJob::deleteConnAll()
-{
-    SqliteStmt::doList(
-            { getStmt(StatSql::sqlDeleteAllConnBlock), getStmt(StatSql::sqlDeleteAllApps) });
-
-    sqliteDb()->vacuum();
 }

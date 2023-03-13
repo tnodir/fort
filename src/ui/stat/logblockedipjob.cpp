@@ -34,7 +34,7 @@ void LogBlockedIpJob::processJob()
 {
     int resultCount = 0;
 
-    sqliteDb()->beginTransaction();
+    sqliteDb()->beginWriteTransaction();
 
     for (const LogEntryBlockedIp &entry : entries()) {
         if (processEntry(entry)) {
