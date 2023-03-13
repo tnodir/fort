@@ -420,6 +420,10 @@
         <source>Ignore, if not blocked or allowed</source>
         <translation>Prezri, če ni blokirano ali dovoljeno</translation>
     </message>
+    <message>
+        <source>Auto-Learn</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FortManager</name>
@@ -574,10 +578,6 @@
     <message>
         <source>Stop Internet Traffic</source>
         <translation>Ustavi internetni promet</translation>
-    </message>
-    <message>
-        <source>Auto-Allow New Programs</source>
-        <translation>Samodejno dovoli nove programe</translation>
     </message>
     <message>
         <source>Hot Keys</source>
@@ -768,6 +768,14 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     <message>
         <source>Check password on Uninstall</source>
         <translation>Preveri geslo ob odstranitvi</translation>
+    </message>
+    <message>
+        <source>Ctrl + Single Click</source>
+        <translation>Ctrl + En klik</translation>
+    </message>
+    <message>
+        <source>Alt + Single Click</source>
+        <translation>Alt + En klik</translation>
     </message>
 </context>
 <context>
@@ -1475,10 +1483,6 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     <message>
         <source>Stop Internet Traffic</source>
         <translation>Ustavi internetni promet</translation>
-    </message>
-    <message>
-        <source>Auto-Allow New Programs</source>
-        <translation>Samodejno dovoli nove programe</translation>
     </message>
     <message>
         <source>Quit</source>

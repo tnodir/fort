@@ -420,6 +420,10 @@
         <source>Ignore, if not blocked or allowed</source>
         <translation>Ignorieren, wenn nicht blockiert oder zugelassen</translation>
     </message>
+    <message>
+        <source>Auto-Learn</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FortManager</name>
@@ -574,10 +578,6 @@
     <message>
         <source>Stop Internet Traffic</source>
         <translation>Internetdatenverkehr stoppen</translation>
-    </message>
-    <message>
-        <source>Auto-Allow New Programs</source>
-        <translation>Alle neuen Programme automatisch zulassen</translation>
     </message>
     <message>
         <source>Hot Keys</source>
@@ -768,6 +768,14 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     <message>
         <source>Check password on Uninstall</source>
         <translation>Passwort bei Deinstallation prüfen</translation>
+    </message>
+    <message>
+        <source>Ctrl + Single Click</source>
+        <translation>Ctrl + Einzelklick</translation>
+    </message>
+    <message>
+        <source>Alt + Single Click</source>
+        <translation>Alt + Einzelklick</translation>
     </message>
 </context>
 <context>
@@ -1475,10 +1483,6 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     <message>
         <source>Stop Internet Traffic</source>
         <translation>Internetdatenverkehr stoppen</translation>
-    </message>
-    <message>
-        <source>Auto-Allow New Programs</source>
-        <translation>Alle neuen Programme automatisch zulassen</translation>
     </message>
     <message>
         <source>Quit</source>

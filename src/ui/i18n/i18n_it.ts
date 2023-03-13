@@ -420,6 +420,10 @@
         <source>Ignore, if not blocked or allowed</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Auto-Learn</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FortManager</name>
@@ -662,10 +666,6 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
         <translation>Integrazione con Windows Explorer</translation>
     </message>
     <message>
-        <source>Auto-Allow New Programs</source>
-        <translation>Autorizza nuovi programmi</translation>
-    </message>
-    <message>
         <source>Not Installed</source>
         <translation>Non installato</translation>
     </message>
@@ -767,6 +767,14 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     </message>
     <message>
         <source>Check password on Uninstall</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl + Single Click</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alt + Single Click</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1483,10 +1491,6 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     <message>
         <source>Traffic Graph</source>
         <translation>Grafico del traffico</translation>
-    </message>
-    <message>
-        <source>Auto-Allow New Programs</source>
-        <translation>Autorizza nuovi programmi</translation>
     </message>
     <message>
         <source>Are you sure to switch the &quot;%1&quot;?</source>

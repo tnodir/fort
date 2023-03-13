@@ -420,6 +420,10 @@
         <source>Ignore, if not blocked or allowed</source>
         <translation>Ignorer si non bloqué ou autorisé</translation>
     </message>
+    <message>
+        <source>Auto-Learn</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FortManager</name>
@@ -574,10 +578,6 @@
     <message>
         <source>Stop Internet Traffic</source>
         <translation>Arrêter le trafic Internet</translation>
-    </message>
-    <message>
-        <source>Auto-Allow New Programs</source>
-        <translation>Autorisation auto de nouveaux programmes</translation>
     </message>
     <message>
         <source>Hot Keys</source>
@@ -759,15 +759,23 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     </message>
     <message>
         <source>Self Protection</source>
-        <translation type="unfinished"></translation>
+        <translation>Auto-protection</translation>
     </message>
     <message>
         <source>Disable Service controls</source>
-        <translation type="unfinished"></translation>
+        <translation>Désactiver les contrôles du service</translation>
     </message>
     <message>
         <source>Check password on Uninstall</source>
-        <translation type="unfinished"></translation>
+        <translation>Vérifier le mot de passe lors de la désinstallation</translation>
+    </message>
+    <message>
+        <source>Ctrl + Single Click</source>
+        <translation>Ctrl + Simple-Clic</translation>
+    </message>
+    <message>
+        <source>Alt + Single Click</source>
+        <translation>Alt + Simple-Clic</translation>
     </message>
 </context>
 <context>
@@ -1475,10 +1483,6 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     <message>
         <source>Stop Internet Traffic</source>
         <translation>Arrêter le trafic Internet</translation>
-    </message>
-    <message>
-        <source>Auto-Allow New Programs</source>
-        <translation>Autorisation auto des nouveaux programmes</translation>
     </message>
     <message>
         <source>Quit</source>
