@@ -422,7 +422,7 @@
     </message>
     <message>
         <source>Auto-Learn</source>
-        <translation type="unfinished"></translation>
+        <translation>자동 학습</translation>
     </message>
 </context>
 <context>
@@ -771,11 +771,11 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Ctrl + Single Click</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl + 한 번 클릭</translation>
     </message>
     <message>
         <source>Alt + Single Click</source>
-        <translation type="unfinished"></translation>
+        <translation>Alt + 한 번 클릭</translation>
     </message>
 </context>
 <context>
