@@ -2,8 +2,17 @@
 
 #include "fortconf.h"
 
+#include <assert.h>
+
 #include "fortdef.h"
 #include "wildmatch.h"
+
+static_assert(sizeof(FORT_CONF_FLAGS) == sizeof(UINT32), "FORT_CONF_FLAGS size mismatch");
+static_assert(sizeof(FORT_TRAF) == sizeof(UINT64), "FORT_TRAF size mismatch");
+static_assert(sizeof(FORT_TIME) == sizeof(UINT16), "FORT_TIME size mismatch");
+static_assert(sizeof(FORT_PERIOD) == sizeof(UINT32), "FORT_PERIOD size mismatch");
+static_assert(sizeof(FORT_APP_FLAGS) == sizeof(UINT16), "FORT_APP_FLAGS size mismatch");
+static_assert(sizeof(FORT_APP_ENTRY) == sizeof(UINT32), "FORT_APP_ENTRY size mismatch");
 
 #ifndef FORT_DRIVER
 #    define fort_memcmp memcmp

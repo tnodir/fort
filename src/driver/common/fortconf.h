@@ -39,8 +39,6 @@ typedef struct fort_conf_flags
     UINT32 group_bits : 16;
 } FORT_CONF_FLAGS, *PFORT_CONF_FLAGS;
 
-static_assert(sizeof(FORT_CONF_FLAGS) == sizeof(UINT32), "FORT_CONF_FLAGS is not 32 bits");
-
 typedef struct fort_conf_addr4_list
 {
     UINT32 ip_n;
