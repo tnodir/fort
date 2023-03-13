@@ -38,7 +38,6 @@ const QString actionShowTrafficGraph = QStringLiteral("TrafficGraph");
 const QString actionSwitchFilterEnabled = QStringLiteral("FilterEnabled");
 const QString actionSwitchStopTraffic = QStringLiteral("StopTraffic");
 const QString actionSwitchStopInetTraffic = QStringLiteral("StopInetTraffic");
-const QString actionSwitchAutoAllowPrograms = QStringLiteral("AutoAllowPrograms");
 const QString actionShowTrayMenu = QStringLiteral("TrayMenu");
 const QString actionIgnore = QStringLiteral("Ignore");
 
@@ -72,7 +71,6 @@ QString actionNameByType(TrayIcon::ActionType actionType)
         actionSwitchFilterEnabled,
         actionSwitchStopTraffic,
         actionSwitchStopInetTraffic,
-        actionSwitchAutoAllowPrograms,
         actionShowTrayMenu,
         actionIgnore,
     };
@@ -94,7 +92,6 @@ TrayIcon::ActionType actionTypeByName(const QString &name)
         { actionSwitchFilterEnabled, TrayIcon::ActionSwitchFilterEnabled },
         { actionSwitchStopTraffic, TrayIcon::ActionSwitchStopTraffic },
         { actionSwitchStopInetTraffic, TrayIcon::ActionSwitchStopInetTraffic },
-        { actionSwitchAutoAllowPrograms, TrayIcon::ActionSwitchAutoAllowPrograms },
         { actionShowTrayMenu, TrayIcon::ActionShowTrayMenu },
         { actionIgnore, TrayIcon::ActionIgnore }
     };
@@ -292,7 +289,6 @@ void TrayIcon::retranslateUi()
     m_filterEnabledAction->setText(tr("Filter Enabled"));
     m_stopTrafficAction->setText(tr("Stop Traffic"));
     m_stopInetTrafficAction->setText(tr("Stop Internet Traffic"));
-    m_autoAllowProgsAction->setText(tr("Auto-Allow New Programs"));
 
     m_filterModeMenu->setTitle(tr("Filter Mode"));
     retranslateFilterModeActions();
@@ -349,10 +345,6 @@ void TrayIcon::setupTrayMenu()
     m_stopInetTrafficAction =
             addAction(m_menu, QIcon(), QString(), this, SLOT(switchTrayFlag(bool)), true);
     addHotKey(m_stopInetTrafficAction, iniUser()->hotKeyStopInetTraffic());
-
-    m_autoAllowProgsAction =
-            addAction(m_menu, QIcon(), QString(), this, SLOT(switchTrayFlag(bool)), true);
-    addHotKey(m_autoAllowProgsAction, iniUser()->hotKeyAllowAllNew());
 
     m_trayMenuAction = addAction(m_menu, QIcon(), QString(), this, SLOT(switchTrayMenu(bool)));
     m_trayMenuAction->setVisible(false);
@@ -438,9 +430,6 @@ void TrayIcon::updateTrayMenuFlags()
 
     m_stopInetTrafficAction->setEnabled(editEnabled);
     m_stopInetTrafficAction->setChecked(conf()->stopInetTraffic());
-
-    m_autoAllowProgsAction->setEnabled(editEnabled);
-    m_autoAllowProgsAction->setChecked(conf()->allowAllNew());
 
     m_filterModeMenu->setEnabled(editEnabled);
     {
@@ -533,7 +522,6 @@ void TrayIcon::saveTrayFlags()
     conf()->setFilterEnabled(m_filterEnabledAction->isChecked());
     conf()->setStopTraffic(m_stopTrafficAction->isChecked());
     conf()->setStopInetTraffic(m_stopInetTrafficAction->isChecked());
-    conf()->setAllowAllNew(m_autoAllowProgsAction->isChecked());
 
     // Set Filter Mode
     {
@@ -666,7 +654,6 @@ QAction *TrayIcon::clickActionByType(TrayIcon::ActionType actionType) const
         m_filterEnabledAction,
         m_stopTrafficAction,
         m_stopInetTrafficAction,
-        m_autoAllowProgsAction,
         m_trayMenuAction,
     };
 

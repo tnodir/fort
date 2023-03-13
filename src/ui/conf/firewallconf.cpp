@@ -103,19 +103,24 @@ void FirewallConf::setAppAllowAll(bool appAllowAll)
 
 int FirewallConf::filterModeIndex() const
 {
-    return m_appBlockAll ? 0 : (m_appAllowAll ? 1 : 2);
+    return m_appBlockAll ? (m_allowAllNew ? 0 : 1) : (m_appAllowAll ? 2 : 3);
 }
 
 void FirewallConf::setFilterModeIndex(int index)
 {
+    m_allowAllNew = false;
     m_appBlockAll = false;
     m_appAllowAll = false;
 
     switch (index) {
     case 0: {
+        m_allowAllNew = true;
+        Q_FALLTHROUGH();
+    }
+    case 1: {
         m_appBlockAll = true;
     } break;
-    case 1: {
+    case 2: {
         m_appAllowAll = true;
     } break;
     }
@@ -123,13 +128,13 @@ void FirewallConf::setFilterModeIndex(int index)
 
 QStringList FirewallConf::filterModeNames()
 {
-    return { tr("Block, if not allowed"), tr("Allow, if not blocked"),
+    return { tr("Auto-Learn"), tr("Block, if not allowed"), tr("Allow, if not blocked"),
         tr("Ignore, if not blocked or allowed") };
 }
 
 QStringList FirewallConf::filterModeIconPaths()
 {
-    return { ":/icons/deny.png", ":/icons/accept.png", QString() };
+    return { ":/icons/error.png", ":/icons/deny.png", ":/icons/accept.png", QString() };
 }
 
 void FirewallConf::setActivePeriodEnabled(bool activePeriodEnabled)

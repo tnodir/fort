@@ -41,7 +41,6 @@ public:
         ActionSwitchFilterEnabled,
         ActionSwitchStopTraffic,
         ActionSwitchStopInetTraffic,
-        ActionSwitchAutoAllowPrograms,
         ActionShowTrayMenu,
         ActionIgnore,
         ActionTypeCount

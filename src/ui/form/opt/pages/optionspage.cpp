@@ -170,7 +170,6 @@ void OptionsPage::onRetranslateUi()
             tr("Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses"));
     m_cbStopTraffic->setText(tr("Stop Traffic"));
     m_cbStopInetTraffic->setText(tr("Stop Internet Traffic"));
-    m_cbAllowAllNew->setText(tr("Auto-Allow New Programs"));
 
     m_labelFilterMode->setText(tr("Filter Mode:"));
     retranslateComboFilterMode();
@@ -423,10 +422,6 @@ void OptionsPage::setupTrafficBox()
         conf()->setStopInetTraffic(checked);
         ctrl()->setFlagsEdited();
     });
-    m_cbAllowAllNew = ControlUtil::createCheckBox(conf()->allowAllNew(), [&](bool checked) {
-        conf()->setAllowAllNew(checked);
-        ctrl()->setFlagsEdited();
-    });
 
     auto filterModeLayout = setupFilterModeLayout();
 
@@ -435,7 +430,6 @@ void OptionsPage::setupTrafficBox()
     layout->addWidget(m_cbFilterLocals);
     layout->addWidget(m_cbStopTraffic);
     layout->addWidget(m_cbStopInetTraffic);
-    layout->addWidget(m_cbAllowAllNew);
     layout->addLayout(filterModeLayout);
 
     m_gbTraffic = new QGroupBox();
