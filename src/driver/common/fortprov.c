@@ -171,105 +171,57 @@ FORT_API BOOL fort_prov_is_boot(void)
     return is_boot;
 }
 
+inline static FWPM_CALLOUT0 fort_prov_init_callout(GUID key, PCWCH name, PCWCH descr, GUID layer)
+{
+    const FWPM_CALLOUT0 cout = {
+        .calloutKey = key,
+        .displayData.name = (PWCHAR) name,
+        .displayData.description = (PWCHAR) descr,
+        .providerKey = (GUID *) &FORT_GUID_PROVIDER,
+        .applicableLayer = layer,
+    };
+    return cout;
+}
+
 static DWORD fort_prov_register_callouts(HANDLE engine)
 {
     const FWPM_CALLOUT0 callouts[] = {
         /* ocallout4 */
-        {
-                .calloutKey = FORT_GUID_CALLOUT_CONNECT_V4,
-                .displayData.name = (PWCHAR) L"FortCalloutConnect4",
-                .displayData.description = (PWCHAR) L"Fort Firewall Callout Connect V4",
-                .providerKey = (GUID *) &FORT_GUID_PROVIDER,
-                .applicableLayer = FWPM_LAYER_ALE_AUTH_CONNECT_V4,
-        },
+        fort_prov_init_callout(FORT_GUID_CALLOUT_CONNECT_V4, L"FortCalloutConnect4",
+                L"Fort Firewall Callout Connect V4", FWPM_LAYER_ALE_AUTH_CONNECT_V4),
         /* ocallout6 */
-        {
-                .calloutKey = FORT_GUID_CALLOUT_CONNECT_V6,
-                .displayData.name = (PWCHAR) L"FortCalloutConnect6",
-                .displayData.description = (PWCHAR) L"Fort Firewall Callout Connect V6",
-                .providerKey = (GUID *) &FORT_GUID_PROVIDER,
-                .applicableLayer = FWPM_LAYER_ALE_AUTH_CONNECT_V6,
-        },
+        fort_prov_init_callout(FORT_GUID_CALLOUT_CONNECT_V6, L"FortCalloutConnect6",
+                L"Fort Firewall Callout Connect V6", FWPM_LAYER_ALE_AUTH_CONNECT_V6),
         /* icallout4 */
-        {
-                .calloutKey = FORT_GUID_CALLOUT_ACCEPT_V4,
-                .displayData.name = (PWCHAR) L"FortCalloutAccept4",
-                .displayData.description = (PWCHAR) L"Fort Firewall Callout Accept V4",
-                .providerKey = (GUID *) &FORT_GUID_PROVIDER,
-                .applicableLayer = FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4,
-        },
+        fort_prov_init_callout(FORT_GUID_CALLOUT_ACCEPT_V4, L"FortCalloutAccept4",
+                L"Fort Firewall Callout Accept V4", FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4),
         /* icallout6 */
-        {
-                .calloutKey = FORT_GUID_CALLOUT_ACCEPT_V6,
-                .displayData.name = (PWCHAR) L"FortCalloutAccept6",
-                .displayData.description = (PWCHAR) L"Fort Firewall Callout Accept V6",
-                .providerKey = (GUID *) &FORT_GUID_PROVIDER,
-                .applicableLayer = FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V6,
-        },
+        fort_prov_init_callout(FORT_GUID_CALLOUT_ACCEPT_V6, L"FortCalloutAccept6",
+                L"Fort Firewall Callout Accept V6", FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V6),
         /* scallout4 */
-        {
-                .calloutKey = FORT_GUID_CALLOUT_STREAM_V4,
-                .displayData.name = (PWCHAR) L"FortCalloutStream4",
-                .displayData.description = (PWCHAR) L"Fort Firewall Callout Stream V4",
-                .providerKey = (GUID *) &FORT_GUID_PROVIDER,
-                .applicableLayer = FWPM_LAYER_STREAM_V4,
-        },
+        fort_prov_init_callout(FORT_GUID_CALLOUT_STREAM_V4, L"FortCalloutStream4",
+                L"Fort Firewall Callout Stream V4", FWPM_LAYER_STREAM_V4),
         /* scallout6 */
-        {
-                .calloutKey = FORT_GUID_CALLOUT_STREAM_V6,
-                .displayData.name = (PWCHAR) L"FortCalloutStream6",
-                .displayData.description = (PWCHAR) L"Fort Firewall Callout Stream V6",
-                .providerKey = (GUID *) &FORT_GUID_PROVIDER,
-                .applicableLayer = FWPM_LAYER_STREAM_V6,
-        },
+        fort_prov_init_callout(FORT_GUID_CALLOUT_STREAM_V6, L"FortCalloutStream6",
+                L"Fort Firewall Callout Stream V6", FWPM_LAYER_STREAM_V6),
         /* dcallout4 */
-        {
-                .calloutKey = FORT_GUID_CALLOUT_DATAGRAM_V4,
-                .displayData.name = (PWCHAR) L"FortCalloutDatagram4",
-                .displayData.description = (PWCHAR) L"Fort Firewall Callout Datagram V4",
-                .providerKey = (GUID *) &FORT_GUID_PROVIDER,
-                .applicableLayer = FWPM_LAYER_DATAGRAM_DATA_V4,
-        },
+        fort_prov_init_callout(FORT_GUID_CALLOUT_DATAGRAM_V4, L"FortCalloutDatagram4",
+                L"Fort Firewall Callout Datagram V4", FWPM_LAYER_DATAGRAM_DATA_V4),
         /* dcallout6 */
-        {
-                .calloutKey = FORT_GUID_CALLOUT_DATAGRAM_V6,
-                .displayData.name = (PWCHAR) L"FortCalloutDatagram6",
-                .displayData.description = (PWCHAR) L"Fort Firewall Callout Datagram V6",
-                .providerKey = (GUID *) &FORT_GUID_PROVIDER,
-                .applicableLayer = FWPM_LAYER_DATAGRAM_DATA_V6,
-        },
+        fort_prov_init_callout(FORT_GUID_CALLOUT_DATAGRAM_V6, L"FortCalloutDatagram6",
+                L"Fort Firewall Callout Datagram V6", FWPM_LAYER_DATAGRAM_DATA_V6),
         /* itcallout4 */
-        {
-                .calloutKey = FORT_GUID_CALLOUT_IN_TRANSPORT_V4,
-                .displayData.name = (PWCHAR) L"FortCalloutInTransport4",
-                .displayData.description = (PWCHAR) L"Fort Firewall Callout Inbound Transport V4",
-                .providerKey = (GUID *) &FORT_GUID_PROVIDER,
-                .applicableLayer = FWPM_LAYER_INBOUND_TRANSPORT_V4,
-        },
+        fort_prov_init_callout(FORT_GUID_CALLOUT_IN_TRANSPORT_V4, L"FortCalloutInTransport4",
+                L"Fort Firewall Callout Inbound Transport V4", FWPM_LAYER_INBOUND_TRANSPORT_V4),
         /* itcallout6 */
-        {
-                .calloutKey = FORT_GUID_CALLOUT_IN_TRANSPORT_V6,
-                .displayData.name = (PWCHAR) L"FortCalloutInTransport6",
-                .displayData.description = (PWCHAR) L"Fort Firewall Callout Inbound Transport V6",
-                .providerKey = (GUID *) &FORT_GUID_PROVIDER,
-                .applicableLayer = FWPM_LAYER_INBOUND_TRANSPORT_V6,
-        },
+        fort_prov_init_callout(FORT_GUID_CALLOUT_IN_TRANSPORT_V6, L"FortCalloutInTransport6",
+                L"Fort Firewall Callout Inbound Transport V6", FWPM_LAYER_INBOUND_TRANSPORT_V6),
         /* otcallout4 */
-        {
-                .calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V4,
-                .displayData.name = (PWCHAR) L"FortCalloutOutTransport4",
-                .displayData.description = (PWCHAR) L"Fort Firewall Callout Outbound Transport V4",
-                .providerKey = (GUID *) &FORT_GUID_PROVIDER,
-                .applicableLayer = FWPM_LAYER_OUTBOUND_TRANSPORT_V4,
-        },
+        fort_prov_init_callout(FORT_GUID_CALLOUT_OUT_TRANSPORT_V4, L"FortCalloutOutTransport4",
+                L"Fort Firewall Callout Outbound Transport V4", FWPM_LAYER_OUTBOUND_TRANSPORT_V4),
         /* otcallout6 */
-        {
-                .calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V6,
-                .displayData.name = (PWCHAR) L"FortCalloutOutTransport6",
-                .displayData.description = (PWCHAR) L"Fort Firewall Callout Outbound Transport V6",
-                .providerKey = (GUID *) &FORT_GUID_PROVIDER,
-                .applicableLayer = FWPM_LAYER_OUTBOUND_TRANSPORT_V6,
-        },
+        fort_prov_init_callout(FORT_GUID_CALLOUT_OUT_TRANSPORT_V6, L"FortCalloutOutTransport6",
+                L"Fort Firewall Callout Outbound Transport V6", FWPM_LAYER_OUTBOUND_TRANSPORT_V6),
     };
 
     return fort_prov_add_callouts(
