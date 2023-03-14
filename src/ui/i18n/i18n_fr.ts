@@ -409,20 +409,24 @@
 <context>
     <name>FirewallConf</name>
     <message>
-        <source>Block, if not allowed</source>
-        <translation>Bloquer, si non autorisé</translation>
-    </message>
-    <message>
-        <source>Allow, if not blocked</source>
-        <translation>Autoriser, si non bloqué</translation>
-    </message>
-    <message>
-        <source>Ignore, if not blocked or allowed</source>
-        <translation>Ignorer si non bloqué ou autorisé</translation>
-    </message>
-    <message>
         <source>Auto-Learn</source>
         <translation>Auto-apprentissage</translation>
+    </message>
+    <message>
+        <source>Block</source>
+        <translation>Bloquer</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>Autoriser</translation>
+    </message>
+    <message>
+        <source>Prompt</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation>Ignorer</translation>
     </message>
 </context>
 <context>

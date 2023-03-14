@@ -409,20 +409,24 @@
 <context>
     <name>FirewallConf</name>
     <message>
-        <source>Block, if not allowed</source>
-        <translation>차단, 허용하지 않을 경우</translation>
-    </message>
-    <message>
-        <source>Allow, if not blocked</source>
-        <translation>허용, 차단하지 않을 경우</translation>
-    </message>
-    <message>
-        <source>Ignore, if not blocked or allowed</source>
-        <translation>무시, 차단 또는 허용하지 않을 경우</translation>
-    </message>
-    <message>
         <source>Auto-Learn</source>
         <translation>자동 학습</translation>
+    </message>
+    <message>
+        <source>Block</source>
+        <translation>차단</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>허용</translation>
+    </message>
+    <message>
+        <source>Prompt</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation>무시</translation>
     </message>
 </context>
 <context>
