@@ -39,7 +39,7 @@ static void fort_callout_classify_continue(FWPS_CLASSIFY_OUT0 *classifyOut)
     classifyOut->actionType = FWP_ACTION_CONTINUE;
 }
 
-static FORT_APP_FLAGS fort_callout_conf_app_flags(
+static FORT_APP_FLAGS fort_callout_ale_conf_app_flags(
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref)
 {
     if (cx->app_flags_found)
@@ -54,9 +54,8 @@ static FORT_APP_FLAGS fort_callout_conf_app_flags(
     return app_flags;
 }
 
-inline static BOOL fort_callout_classify_blocked_log_stat(FORT_CALLOUT_ARG ca,
-        FORT_CALLOUT_ALE_INDEX ci, PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref,
-        FORT_APP_FLAGS app_flags)
+inline static BOOL fort_callout_ale_associate_flow(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci,
+        PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_APP_FLAGS app_flags)
 {
     const UINT64 flow_id = ca.inMetaValues->flowHandle;
 
@@ -87,29 +86,30 @@ inline static BOOL fort_callout_classify_blocked_log_stat(FORT_CALLOUT_ARG ca,
     return FALSE;
 }
 
-inline static void fort_callout_classify_blocked_log_path(PFORT_CALLOUT_ALE_EXTRA cx,
+inline static void fort_callout_ale_log_app_path(PFORT_CALLOUT_ALE_EXTRA cx,
         PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags, FORT_APP_FLAGS app_flags)
 {
-    if (app_flags.v == 0 && (conf_flags.allow_all_new || conf_flags.log_blocked)
-            && conf_flags.filter_enabled) {
-        app_flags.blocked = (UCHAR) cx->blocked;
-        app_flags.alerted = 1;
-        app_flags.is_new = 1;
+    if (app_flags.v != 0 || !conf_flags.filter_enabled
+            || !(conf_flags.allow_all_new || conf_flags.log_blocked))
+        return;
 
-        if (NT_SUCCESS(fort_conf_ref_exe_add_path(
-                    conf_ref, cx->path->Buffer, cx->path->Length, app_flags))) {
-            fort_buffer_blocked_write(&fort_device()->buffer, cx->blocked, cx->process_id,
-                    cx->real_path->Length, cx->real_path->Buffer, &cx->irp, &cx->info);
-        }
-    }
+    app_flags.blocked = (UCHAR) cx->blocked;
+    app_flags.alerted = 1;
+    app_flags.is_new = 1;
+
+    if (!NT_SUCCESS(fort_conf_ref_exe_add_path(
+                conf_ref, cx->path->Buffer, cx->path->Length, app_flags)))
+        return;
+
+    fort_buffer_blocked_write(&fort_device()->buffer, cx->blocked, cx->process_id,
+            cx->real_path->Length, cx->real_path->Buffer, &cx->irp, &cx->info);
 }
 
-inline static void fort_callout_classify_blocked_log_ip(FORT_CALLOUT_ARG ca,
-        FORT_CALLOUT_ALE_INDEX ci, PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref,
-        FORT_CONF_FLAGS conf_flags)
+inline static void fort_callout_ale_log_blocked_ip(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci,
+        PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
 {
     if (cx->block_reason != FORT_BLOCK_REASON_UNKNOWN && conf_flags.log_blocked_ip) {
-        const FORT_APP_FLAGS app_flags = fort_callout_conf_app_flags(cx, conf_ref);
+        const FORT_APP_FLAGS app_flags = fort_callout_ale_conf_app_flags(cx, conf_ref);
         if (app_flags.v != 0 && !app_flags.log_blocked)
             return;
 
@@ -127,16 +127,16 @@ inline static void fort_callout_classify_blocked_log_ip(FORT_CALLOUT_ARG ca,
     }
 }
 
-inline static void fort_callout_classify_blocked_log(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci,
+inline static void fort_callout_ale_log(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci,
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
 {
-    const FORT_APP_FLAGS app_flags = fort_callout_conf_app_flags(cx, conf_ref);
+    const FORT_APP_FLAGS app_flags = fort_callout_ale_conf_app_flags(cx, conf_ref);
 
     if (!cx->blocked /* collect traffic, when Filter Disabled */
             || (app_flags.v == 0 && conf_flags.allow_all_new) /* collect new Blocked Programs */
             || !fort_conf_app_blocked(&conf_ref->conf, app_flags, &cx->block_reason)) {
         if (conf_flags.log_stat
-                && fort_callout_classify_blocked_log_stat(ca, ci, cx, conf_ref, app_flags)) {
+                && fort_callout_ale_associate_flow(ca, ci, cx, conf_ref, app_flags)) {
             cx->blocked = TRUE; /* blocked */
             return;
         }
@@ -144,10 +144,10 @@ inline static void fort_callout_classify_blocked_log(FORT_CALLOUT_ARG ca, FORT_C
         cx->blocked = FALSE; /* allow */
     }
 
-    fort_callout_classify_blocked_log_path(cx, conf_ref, conf_flags, app_flags);
+    fort_callout_ale_log_app_path(cx, conf_ref, conf_flags, app_flags);
 }
 
-inline static BOOL fort_callout_classify_blocked_filter_flags(FORT_CALLOUT_ARG ca,
+inline static BOOL fort_callout_ale_check_filter_flags(FORT_CALLOUT_ARG ca,
         PFORT_CALLOUT_ALE_EXTRA cx, FORT_CONF_FLAGS conf_flags, PFORT_CONF_REF conf_ref)
 {
     if (conf_flags.stop_traffic) {
@@ -178,11 +178,11 @@ inline static BOOL fort_callout_classify_blocked_filter_flags(FORT_CALLOUT_ARG c
     return FALSE;
 }
 
-inline static BOOL fort_callout_classify_blocked_flags(FORT_CALLOUT_ARG ca,
-        PFORT_CALLOUT_ALE_EXTRA cx, FORT_CONF_FLAGS conf_flags, PFORT_CONF_REF conf_ref)
+inline static BOOL fort_callout_ale_check_flags(FORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
+        FORT_CONF_FLAGS conf_flags, PFORT_CONF_REF conf_ref)
 {
     if (conf_flags.filter_enabled) {
-        return fort_callout_classify_blocked_filter_flags(ca, cx, conf_flags, conf_ref);
+        return fort_callout_ale_check_filter_flags(ca, cx, conf_flags, conf_ref);
     }
 
     cx->blocked = FALSE;
@@ -193,7 +193,7 @@ inline static BOOL fort_callout_classify_blocked_flags(FORT_CALLOUT_ARG ca,
     return FALSE;
 }
 
-inline static void fort_callout_classify_check_conf(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci,
+inline static void fort_callout_ale_check_conf(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci,
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref)
 {
     const FORT_CONF_FLAGS conf_flags = conf_ref->conf.flags;
@@ -222,13 +222,13 @@ inline static void fort_callout_classify_check_conf(FORT_CALLOUT_ARG ca, FORT_CA
     cx->blocked = TRUE;
     cx->block_reason = FORT_BLOCK_REASON_UNKNOWN;
 
-    if (!fort_callout_classify_blocked_flags(ca, cx, conf_flags, conf_ref)) {
-        fort_callout_classify_blocked_log(ca, ci, cx, conf_ref, conf_flags);
+    if (!fort_callout_ale_check_flags(ca, cx, conf_flags, conf_ref)) {
+        fort_callout_ale_log(ca, ci, cx, conf_ref, conf_flags);
     }
 
     if (cx->blocked) {
         /* Log the blocked connection */
-        fort_callout_classify_blocked_log_ip(ca, ci, cx, conf_ref, conf_flags);
+        fort_callout_ale_log_blocked_ip(ca, ci, cx, conf_ref, conf_flags);
 
         /* Block the connection */
         fort_callout_classify_block(ca.classifyOut);
@@ -243,7 +243,7 @@ inline static void fort_callout_classify_check_conf(FORT_CALLOUT_ARG ca, FORT_CA
     }
 }
 
-inline static void fort_callout_classify_by_conf(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci,
+inline static void fort_callout_ale_by_conf(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci,
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_DEVICE_CONF device_conf)
 {
     PFORT_CONF_REF conf_ref = fort_conf_ref_take(device_conf);
@@ -259,7 +259,7 @@ inline static void fort_callout_classify_by_conf(FORT_CALLOUT_ARG ca, FORT_CALLO
 
     cx->irp = NULL;
 
-    fort_callout_classify_check_conf(ca, ci, cx, conf_ref);
+    fort_callout_ale_check_conf(ca, ci, cx, conf_ref);
 
     fort_conf_ref_put(device_conf, conf_ref);
 
@@ -268,7 +268,7 @@ inline static void fort_callout_classify_by_conf(FORT_CALLOUT_ARG ca, FORT_CALLO
     }
 }
 
-static void fort_callout_classify(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci)
+static void fort_callout_ale_classify(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci)
 {
     const UINT32 classify_flags = ca.inFixedValues->incomingValue[ci.flags].value.uint32;
 
@@ -284,7 +284,7 @@ static void fort_callout_classify(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci
     PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
 
     if (!device_conf->conf_flags.filter_locals
-            && ((classify_flags & FWP_CONDITION_FLAG_IS_LOOPBACK)
+            && ((classify_flags & FWP_CONDITION_FLAG_IS_LOOPBACK) != 0
                     || fort_addr_is_local_broadcast(remote_ip, ca.isIPv6))) {
         fort_callout_classify_permit(ca.filter, ca.classifyOut);
         return;
@@ -295,7 +295,7 @@ static void fort_callout_classify(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci
         .remote_ip = remote_ip,
     };
 
-    fort_callout_classify_by_conf(ca, ci, &cx, device_conf);
+    fort_callout_ale_by_conf(ca, ci, &cx, device_conf);
 }
 
 static void NTAPI fort_callout_connect_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
@@ -322,7 +322,7 @@ static void NTAPI fort_callout_connect_v4(const FWPS_INCOMING_VALUES0 *inFixedVa
         .ipProto = FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_PROTOCOL,
     };
 
-    fort_callout_classify(ca, ci);
+    fort_callout_ale_classify(ca, ci);
 }
 
 static void NTAPI fort_callout_connect_v6(const FWPS_INCOMING_VALUES0 *inFixedValues,
@@ -349,7 +349,7 @@ static void NTAPI fort_callout_connect_v6(const FWPS_INCOMING_VALUES0 *inFixedVa
         .ipProto = FWPS_FIELD_ALE_AUTH_CONNECT_V6_IP_PROTOCOL,
     };
 
-    fort_callout_classify(ca, ci);
+    fort_callout_ale_classify(ca, ci);
 }
 
 static void NTAPI fort_callout_accept_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
@@ -376,7 +376,7 @@ static void NTAPI fort_callout_accept_v4(const FWPS_INCOMING_VALUES0 *inFixedVal
         .ipProto = FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_PROTOCOL,
     };
 
-    fort_callout_classify(ca, ci);
+    fort_callout_ale_classify(ca, ci);
 }
 
 static void NTAPI fort_callout_accept_v6(const FWPS_INCOMING_VALUES0 *inFixedValues,
@@ -403,7 +403,7 @@ static void NTAPI fort_callout_accept_v6(const FWPS_INCOMING_VALUES0 *inFixedVal
         .ipProto = FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V6_IP_PROTOCOL,
     };
 
-    fort_callout_classify(ca, ci);
+    fort_callout_ale_classify(ca, ci);
 }
 
 static NTSTATUS NTAPI fort_callout_notify(

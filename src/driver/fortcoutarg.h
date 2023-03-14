@@ -17,8 +17,8 @@ typedef struct fort_callout_arg
     UINT64 flowContext;
     FWPS_CLASSIFY_OUT0 *classifyOut;
 
-    BOOL inbound : 1;
-    BOOL isIPv6 : 1;
+    UCHAR inbound : 1;
+    UCHAR isIPv6 : 1;
 } FORT_CALLOUT_ARG, *PFORT_CALLOUT_ARG;
 
 typedef struct fort_callout_ale_index
