@@ -422,7 +422,7 @@
     </message>
     <message>
         <source>Prompt</source>
-        <translation type="unfinished"></translation>
+        <translation>Poziv</translation>
     </message>
     <message>
         <source>Ignore</source>
