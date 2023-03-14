@@ -422,7 +422,7 @@
     </message>
     <message>
         <source>Prompt</source>
-        <translation type="unfinished"></translation>
+        <translation>알림</translation>
     </message>
     <message>
         <source>Ignore</source>
