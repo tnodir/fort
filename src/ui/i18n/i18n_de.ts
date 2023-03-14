@@ -422,7 +422,7 @@
     </message>
     <message>
         <source>Auto-Learn</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatisches lernen</translation>
     </message>
 </context>
 <context>

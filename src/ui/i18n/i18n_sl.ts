@@ -422,7 +422,7 @@
     </message>
     <message>
         <source>Auto-Learn</source>
-        <translation type="unfinished"></translation>
+        <translation>Samodejno učenje</translation>
     </message>
 </context>
 <context>
