@@ -40,11 +40,12 @@ void fort_log_blocked_ip_header_write(char *p, BOOL isIPv6, BOOL inbound, BOOL i
 
     *up++ = fort_log_flag_type(FORT_LOG_TYPE_BLOCKED_IP) | (isIPv6 ? FORT_LOG_FLAG_IP6 : 0)
             | (inbound ? FORT_LOG_FLAG_IP_INBOUND : 0) | path_len;
-    *up++ = inherited | ((UINT32) block_reason << 8) | ((UINT32) ip_proto << 16);
+    *up++ = (inherited ? FORT_LOG_BLOCKED_IP_INHERITED : 0) | ((UINT32) block_reason << 8)
+            | ((UINT32) ip_proto << 16);
     *up++ = local_port | ((UINT32) remote_port << 16);
     *up++ = pid;
 
-    const int ip_size = FORT_IP_SIZE(isIPv6);
+    const int ip_size = FORT_IP_ADDR_SIZE(isIPv6);
     RtlCopyMemory(up, local_ip, ip_size);
 
     up = (UINT32 *) ((PCHAR) up + ip_size);
@@ -73,14 +74,16 @@ void fort_log_blocked_ip_header_read(const char *p, BOOL *isIPv6, BOOL *inbound,
     *isIPv6 = (*up & FORT_LOG_FLAG_IP6) != 0;
     *inbound = (*up & FORT_LOG_FLAG_IP_INBOUND) != 0;
     *path_len = (*up++ & ~FORT_LOG_FLAG_EX_MASK);
-    *inherited = (UCHAR) *up;
+
+    const UCHAR flags = (UCHAR) *up;
+    *inherited = (flags & FORT_LOG_BLOCKED_IP_INHERITED) != 0;
     *block_reason = (UCHAR) (*up >> 8);
     *ip_proto = (UCHAR) (*up++ >> 16);
     *local_port = *((const UINT16 *) up);
     *remote_port = (UINT16) (*up++ >> 16);
     *pid = *up++;
 
-    const int ip_size = FORT_IP_SIZE(*isIPv6);
+    const int ip_size = FORT_IP_ADDR_SIZE(*isIPv6);
     RtlCopyMemory(local_ip, up, ip_size);
 
     up = (const UINT32 *) ((const PCHAR) up + ip_size);

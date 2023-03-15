@@ -29,9 +29,9 @@
 
 #define FORT_LOG_BLOCKED_SIZE_MAX FORT_LOG_BLOCKED_SIZE(FORT_LOG_PATH_MAX)
 
-#define FORT_IP_SIZE(isIPv6) ((isIPv6) ? sizeof(ip6_addr_t) : sizeof(UINT32))
+#define FORT_IP_ADDR_SIZE(isIPv6) ((isIPv6) ? sizeof(ip6_addr_t) : sizeof(UINT32))
 
-#define FORT_LOG_BLOCKED_IP_HEADER_SIZE(isIPv6) (4 * sizeof(UINT32) + 2 * FORT_IP_SIZE(isIPv6))
+#define FORT_LOG_BLOCKED_IP_HEADER_SIZE(isIPv6) (4 * sizeof(UINT32) + 2 * FORT_IP_ADDR_SIZE(isIPv6))
 
 #define FORT_LOG_BLOCKED_IP_SIZE(path_len, isIPv6)                                                 \
     ((FORT_LOG_BLOCKED_IP_HEADER_SIZE(isIPv6) + (path_len) + (FORT_LOG_ALIGN - 1))                 \

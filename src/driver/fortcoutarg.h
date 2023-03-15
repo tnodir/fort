@@ -33,6 +33,7 @@ typedef struct fort_callout_ale_index
 
 typedef struct fort_callout_ale_extra
 {
+    UCHAR is_reauth : 1;
     UCHAR app_flags_found : 1;
     UCHAR inherited : 1;
     UCHAR blocked : 1;
@@ -42,7 +43,6 @@ typedef struct fort_callout_ale_extra
 
     UINT32 process_id;
 
-    UINT32 classify_flags;
     const UINT32 *remote_ip;
 
     PCUNICODE_STRING path;
