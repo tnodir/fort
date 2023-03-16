@@ -128,6 +128,25 @@ inline static void fort_callout_ale_log_blocked_ip(FORT_CALLOUT_ARG ca, FORT_CAL
             cx->process_id, cx->real_path->Length, cx->real_path->Buffer, &cx->irp, &cx->info);
 }
 
+inline static BOOL fort_callout_ale_check_log(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci,
+        PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags,
+        FORT_APP_FLAGS app_flags)
+{
+    if (app_flags.v == 0 && conf_flags.prompt) {
+        cx->block_reason =
+                cx->is_reauth ? FORT_BLOCK_REASON_PROMPT_TIMEOUT : FORT_BLOCK_REASON_PROMPT;
+        cx->blocked = TRUE; /* blocked (prompt) */
+        return TRUE;
+    }
+
+    if (conf_flags.log_stat && fort_callout_ale_associate_flow(ca, ci, cx, conf_ref, app_flags)) {
+        cx->blocked = TRUE; /* blocked (error) */
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
 inline static void fort_callout_ale_log(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci,
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
 {
@@ -139,18 +158,8 @@ inline static void fort_callout_ale_log(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_IN
             /* check the conf for a blocked app */
             || !fort_conf_app_blocked(&conf_ref->conf, app_flags, &cx->block_reason)) {
 
-        if (app_flags.v == 0 && conf_flags.prompt) {
-            cx->block_reason =
-                    cx->is_reauth ? FORT_BLOCK_REASON_PROMPT_TIMEOUT : FORT_BLOCK_REASON_PROMPT;
-            cx->blocked = TRUE; /* blocked (prompt) */
+        if (fort_callout_ale_check_log(ca, ci, cx, conf_ref, conf_flags, app_flags))
             return;
-        }
-
-        if (conf_flags.log_stat
-                && fort_callout_ale_associate_flow(ca, ci, cx, conf_ref, app_flags)) {
-            cx->blocked = TRUE; /* blocked (error) */
-            return;
-        }
 
         cx->blocked = FALSE; /* allow */
     }
