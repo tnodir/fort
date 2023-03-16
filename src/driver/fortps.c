@@ -265,7 +265,7 @@ static NTSTATUS GetProcessPathArgs(
     if (!NT_SUCCESS(status))
         return status;
 
-    // Copy info from user-mode process
+    /* Copy info from user-mode process */
     KAPC_STATE apcState;
     KeStackAttachProcess(process, &apcState);
     {
@@ -438,13 +438,13 @@ static void fort_pstree_proc_del(PFORT_PSTREE ps_tree, PFORT_PSNODE proc)
 {
     --ps_tree->procs_n;
 
-    // Delete from pool
+    /* Delete from pool */
     fort_pstree_name_del(ps_tree, proc->ps_name);
 
     proc->ps_name = NULL;
     proc->process_id = 0;
 
-    // Delete from procs map
+    /* Delete from procs map */
     tommy_hashdyn_remove_existing(&ps_tree->procs_map, (tommy_hashdyn_node *) proc);
 
     tommy_list_insert_tail_check(&ps_tree->free_procs, (tommy_node *) proc);
@@ -791,7 +791,7 @@ static void fort_pstree_enum_processes_loop(PFORT_PSTREE ps_tree, PSYSTEM_PROCES
         const DWORD parentProcessId = (DWORD) processEntry->ParentProcessId;
 
         if (processId == 0 || processId == 4 || parentProcessId == 4) {
-            // skip System (sub)processes
+            /* skip System (sub)processes */
         } else {
             const HANDLE processHandle = OpenProcessById(processId);
             if (processHandle != NULL) {

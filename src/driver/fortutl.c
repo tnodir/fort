@@ -41,7 +41,7 @@ static NTSTATUS fort_reg_value(HANDLE regKey, PUNICODE_STRING valueName, PUNICOD
 
     if (NT_SUCCESS(status)) {
         const PUCHAR src = ((const PUCHAR) keyInfo + keyInfo->DataOffset);
-        const ULONG len = keyInfo->DataLength + sizeof(WCHAR); // with terminating '\0'
+        const ULONG len = keyInfo->DataLength + sizeof(WCHAR); /* with terminating '\0' */
 
         status = fort_string_new(len, (PCWSTR) src, outData);
     }
@@ -234,7 +234,7 @@ FORT_API NTSTATUS fort_file_read(HANDLE fileHandle, ULONG poolTag, PUCHAR *outDa
 {
     NTSTATUS status;
 
-    // Get File Size
+    /* Get File Size */
     DWORD fileSize = 0;
     {
         IO_STATUS_BLOCK statusBlock;
@@ -252,12 +252,12 @@ FORT_API NTSTATUS fort_file_read(HANDLE fileHandle, ULONG poolTag, PUCHAR *outDa
         fileSize = fileInfo.EndOfFile.LowPart;
     }
 
-    // Allocate Buffer
+    /* Allocate Buffer */
     PUCHAR data = fort_mem_alloc(fileSize, poolTag);
     if (data == NULL)
         return STATUS_INSUFFICIENT_RESOURCES;
 
-    // Read File
+    /* Read File */
     DWORD dataSize = 0;
     do {
         IO_STATUS_BLOCK statusBlock;
@@ -337,14 +337,14 @@ FORT_API BOOL fort_addr_is_local_broadcast(const UINT32 *ip, BOOL isIPv6)
 
 inline static UINT32 fort_bits_duplicate8(UINT32 v)
 {
-    return ((v & 1) | ((v & 1) << 1)) // 1-st bit
-            | (((v & (1 << 1)) | ((v & (1 << 1)) << 1)) << 1) // 2-nd bit
-            | (((v & (1 << 2)) | ((v & (1 << 2)) << 1)) << 2) // 3-rd bit
-            | (((v & (1 << 3)) | ((v & (1 << 3)) << 1)) << 3) // 4 bit
-            | (((v & (1 << 4)) | ((v & (1 << 4)) << 1)) << 4) // 5 bit
-            | (((v & (1 << 5)) | ((v & (1 << 5)) << 1)) << 5) // 6 bit
-            | (((v & (1 << 6)) | ((v & (1 << 6)) << 1)) << 6) // 7 bit
-            | (((v & (1 << 7)) | ((v & (1 << 7)) << 1)) << 7) // 8 bit
+    return ((v & 1) | ((v & 1) << 1)) /* 1-st bit */
+            | (((v & (1 << 1)) | ((v & (1 << 1)) << 1)) << 1) /* 2-nd bit */
+            | (((v & (1 << 2)) | ((v & (1 << 2)) << 1)) << 2) /* 3-rd bit */
+            | (((v & (1 << 3)) | ((v & (1 << 3)) << 1)) << 3) /* 4 bit */
+            | (((v & (1 << 4)) | ((v & (1 << 4)) << 1)) << 4) /* 5 bit */
+            | (((v & (1 << 5)) | ((v & (1 << 5)) << 1)) << 5) /* 6 bit */
+            | (((v & (1 << 6)) | ((v & (1 << 6)) << 1)) << 6) /* 7 bit */
+            | (((v & (1 << 7)) | ((v & (1 << 7)) << 1)) << 7) /* 8 bit */
             ;
 }
 

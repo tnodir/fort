@@ -104,13 +104,13 @@ static NTSTATUS fort_conf_ref_exe_add_path_locked(PFORT_CONF_REF conf_ref, const
         entry->flags = flags;
         entry->path_len = (UINT16) path_len;
 
-        // Copy path
+        /* Copy path */
         {
             char *new_path = (char *) (entry + 1);
             RtlCopyMemory(new_path, path, path_len);
         }
 
-        // Add exe node
+        /* Add exe node */
         {
             PFORT_CONF conf = &conf_ref->conf;
 
@@ -137,7 +137,7 @@ static NTSTATUS fort_conf_ref_exe_add_path_locked(PFORT_CONF_REF conf_ref, const
         if (flags.is_new)
             return FORT_STATUS_USER_ERROR;
 
-        // Replace flags
+        /* Replace flags */
         {
             PFORT_APP_ENTRY entry = node->app_entry;
             entry->flags = flags;
@@ -200,19 +200,19 @@ static void fort_conf_ref_exe_del_path(PFORT_CONF_REF conf_ref, const PVOID path
         PFORT_CONF_EXE_NODE node = fort_conf_ref_exe_find_node(conf_ref, path, path_len, path_hash);
 
         if (node != NULL) {
-            // Delete from conf
+            /* Delete from conf */
             {
                 PFORT_CONF conf = &conf_ref->conf;
                 --conf->exe_apps_n;
             }
 
-            // Delete from pool
+            /* Delete from pool */
             {
                 PFORT_APP_ENTRY entry = node->app_entry;
                 fort_pool_free(&conf_ref->pool_list, entry);
             }
 
-            // Delete from exe map
+            /* Delete from exe map */
             tommy_hashdyn_remove_existing(&conf_ref->exe_map, (tommy_hashdyn_node *) node);
 
             tommy_list_insert_tail_check(&conf_ref->free_nodes, (tommy_node *) node);
