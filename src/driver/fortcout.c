@@ -213,6 +213,33 @@ inline static BOOL fort_callout_ale_check_flags(FORT_CALLOUT_ARG ca, PFORT_CALLO
     return FALSE;
 }
 
+inline static void fort_callout_ale_classify_blocked(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci,
+        PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
+{
+    /* Log the blocked connection */
+    fort_callout_ale_log_blocked_ip(ca, ci, cx, conf_ref, conf_flags);
+
+    if (cx->block_reason == FORT_BLOCK_REASON_PROMPT) {
+        /* Drop the connection */
+        fort_callout_classify_drop(ca.classifyOut);
+    } else {
+        /* Block the connection */
+        fort_callout_classify_block(ca.classifyOut);
+    }
+}
+
+inline static void fort_callout_ale_classify_allowed(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci,
+        PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
+{
+    if (cx->block_reason == FORT_BLOCK_REASON_NONE) {
+        /* Continue the search */
+        fort_callout_classify_continue(ca.classifyOut);
+    } else {
+        /* Allow the connection */
+        fort_callout_classify_permit(ca.filter, ca.classifyOut);
+    }
+}
+
 inline static void fort_callout_ale_check_conf(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci,
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref)
 {
@@ -247,24 +274,9 @@ inline static void fort_callout_ale_check_conf(FORT_CALLOUT_ARG ca, FORT_CALLOUT
     }
 
     if (cx->blocked) {
-        /* Log the blocked connection */
-        fort_callout_ale_log_blocked_ip(ca, ci, cx, conf_ref, conf_flags);
-
-        if (cx->block_reason == FORT_BLOCK_REASON_PROMPT) {
-            /* Drop the connection */
-            fort_callout_classify_drop(ca.classifyOut);
-        } else {
-            /* Block the connection */
-            fort_callout_classify_block(ca.classifyOut);
-        }
+        fort_callout_ale_classify_blocked(ca, ci, cx, conf_ref, conf_flags);
     } else {
-        if (cx->block_reason == FORT_BLOCK_REASON_NONE) {
-            /* Continue the search */
-            fort_callout_classify_continue(ca.classifyOut);
-        } else {
-            /* Allow the connection */
-            fort_callout_classify_permit(ca.filter, ca.classifyOut);
-        }
+        fort_callout_ale_classify_allowed(ca, ci, cx, conf_ref, conf_flags);
     }
 }
 
