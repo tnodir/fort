@@ -687,41 +687,46 @@ static NTSTATUS fort_callout_install_ale(PDEVICE_OBJECT device, PFORT_STAT stat)
             device, callouts, calloutIds, /*count=*/sizeof(callouts) / sizeof(callouts[0]));
 }
 
-static NTSTATUS fort_callout_install_stream(PDEVICE_OBJECT device, PFORT_STAT stat)
+inline static FWPS_CALLOUT0 fort_callout_init_callout(GUID key,
+        FWPS_CALLOUT_CLASSIFY_FN0 classifyFn, FWPS_CALLOUT_FLOW_DELETE_NOTIFY_FN0 flowDeleteFn)
+{
+    const FWPS_CALLOUT0 cout = {
+        .calloutKey = key,
+        .flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW,
+        .classifyFn = classifyFn,
+        .notifyFn = &fort_callout_notify,
+        .flowDeleteFn = flowDeleteFn,
+    };
+    return cout;
+}
+
+static NTSTATUS fort_callout_install_packet(PDEVICE_OBJECT device, PFORT_STAT stat)
 {
     const FWPS_CALLOUT0 callouts[] = {
         /* IPv4 stream callout */
-        {
-                .calloutKey = FORT_GUID_CALLOUT_STREAM_V4,
-                .classifyFn = &fort_callout_stream_classify,
-                .notifyFn = &fort_callout_notify,
-                .flowDeleteFn = &fort_callout_flow_delete,
-                .flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW,
-        },
+        fort_callout_init_callout(FORT_GUID_CALLOUT_STREAM_V4, &fort_callout_stream_classify,
+                &fort_callout_flow_delete),
         /* IPv6 stream callout */
-        {
-                .calloutKey = FORT_GUID_CALLOUT_STREAM_V6,
-                .classifyFn = &fort_callout_stream_classify,
-                .notifyFn = &fort_callout_notify,
-                .flowDeleteFn = &fort_callout_flow_delete,
-                .flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW,
-        },
+        fort_callout_init_callout(FORT_GUID_CALLOUT_STREAM_V6, &fort_callout_stream_classify,
+                &fort_callout_flow_delete),
         /* IPv4 datagram callout */
-        {
-                .calloutKey = FORT_GUID_CALLOUT_DATAGRAM_V4,
-                .classifyFn = &fort_callout_datagram_classify_v4,
-                .notifyFn = &fort_callout_notify,
-                .flowDeleteFn = &fort_callout_flow_delete,
-                .flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW,
-        },
+        fort_callout_init_callout(FORT_GUID_CALLOUT_DATAGRAM_V4, &fort_callout_datagram_classify_v4,
+                &fort_callout_flow_delete),
         /* IPv6 datagram callout */
-        {
-                .calloutKey = FORT_GUID_CALLOUT_DATAGRAM_V6,
-                .classifyFn = &fort_callout_datagram_classify_v6,
-                .notifyFn = &fort_callout_notify,
-                .flowDeleteFn = &fort_callout_flow_delete,
-                .flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW,
-        },
+        fort_callout_init_callout(FORT_GUID_CALLOUT_DATAGRAM_V6, &fort_callout_datagram_classify_v6,
+                &fort_callout_flow_delete),
+        /* IPv4 inbound transport callout */
+        fort_callout_init_callout(FORT_GUID_CALLOUT_IN_TRANSPORT_V4,
+                &fort_callout_transport_classify_in, &fort_callout_transport_delete),
+        /* IPv6 inbound transport callout */
+        fort_callout_init_callout(FORT_GUID_CALLOUT_IN_TRANSPORT_V6,
+                &fort_callout_transport_classify_in, &fort_callout_transport_delete),
+        /* IPv4 outbound transport callout */
+        fort_callout_init_callout(FORT_GUID_CALLOUT_OUT_TRANSPORT_V4,
+                &fort_callout_transport_classify_out, &fort_callout_transport_delete),
+        /* IPv6 outbound transport callout */
+        fort_callout_init_callout(FORT_GUID_CALLOUT_OUT_TRANSPORT_V6,
+                &fort_callout_transport_classify_out, &fort_callout_transport_delete),
     };
 
     const PUINT32 calloutIds[] = {
@@ -729,50 +734,6 @@ static NTSTATUS fort_callout_install_stream(PDEVICE_OBJECT device, PFORT_STAT st
         &stat->stream6_id,
         &stat->datagram4_id,
         &stat->datagram6_id,
-    };
-
-    return fort_callout_register(
-            device, callouts, calloutIds, /*count=*/sizeof(callouts) / sizeof(callouts[0]));
-}
-
-static NTSTATUS fort_callout_install_transport(PDEVICE_OBJECT device, PFORT_STAT stat)
-{
-    const FWPS_CALLOUT0 callouts[] = {
-        /* IPv4 inbound transport callout */
-        {
-                .calloutKey = FORT_GUID_CALLOUT_IN_TRANSPORT_V4,
-                .classifyFn = &fort_callout_transport_classify_in,
-                .notifyFn = &fort_callout_notify,
-                .flowDeleteFn = &fort_callout_transport_delete,
-                .flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW,
-        },
-        /* IPv6 inbound transport callout */
-        {
-                .calloutKey = FORT_GUID_CALLOUT_IN_TRANSPORT_V6,
-                .classifyFn = &fort_callout_transport_classify_in,
-                .notifyFn = &fort_callout_notify,
-                .flowDeleteFn = &fort_callout_transport_delete,
-                .flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW,
-        },
-        /* IPv4 outbound transport callout */
-        {
-                .calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V4,
-                .classifyFn = &fort_callout_transport_classify_out,
-                .notifyFn = &fort_callout_notify,
-                .flowDeleteFn = &fort_callout_transport_delete,
-                .flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW,
-        },
-        /* IPv6 outbound transport callout */
-        {
-                .calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V6,
-                .classifyFn = &fort_callout_transport_classify_out,
-                .notifyFn = &fort_callout_notify,
-                .flowDeleteFn = &fort_callout_transport_delete,
-                .flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW,
-        },
-    };
-
-    const PUINT32 calloutIds[] = {
         &stat->in_transport4_id,
         &stat->in_transport6_id,
         &stat->out_transport4_id,
@@ -789,8 +750,7 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 
     NTSTATUS status;
     if (!NT_SUCCESS(status = fort_callout_install_ale(device, stat))
-            || !NT_SUCCESS(status = fort_callout_install_stream(device, stat))
-            || !NT_SUCCESS(status = fort_callout_install_transport(device, stat))) {
+            || !NT_SUCCESS(status = fort_callout_install_packet(device, stat))) {
         return status;
     }
 
