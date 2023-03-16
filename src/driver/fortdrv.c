@@ -39,9 +39,10 @@ static NTSTATUS fort_driver_load(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path
     UNICODE_STRING device_name;
     RtlInitUnicodeString(&device_name, FORT_NT_DEVICE_NAME);
 
+    /* TODO: Use IoCreateDeviceSecure() with custom SDDL for Service SID */
     PDEVICE_OBJECT device_obj;
-    status = IoCreateDevice(
-            driver, sizeof(FORT_DEVICE), &device_name, FORT_DEVICE_TYPE, 0, FALSE, &device_obj);
+    status = IoCreateDevice(driver, sizeof(FORT_DEVICE), &device_name, FORT_DEVICE_TYPE, 0,
+            /*exclusive=*/TRUE, &device_obj);
     if (!NT_SUCCESS(status))
         return status;
 
