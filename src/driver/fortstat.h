@@ -85,18 +85,17 @@ typedef struct fort_flow
 #endif
 } FORT_FLOW, *PFORT_FLOW;
 
-#define FORT_STAT_CLOSED       0x01
-#define FORT_STAT_LOG          0x02
-#define FORT_STAT_TIME_CHANGED 0x04
-/* Used only on driver unloading: */
-#define FORT_STAT_FLOW_PENDING 0x08
-#define FORT_STAT_FLOW_FAILED  0x10
+#define FORT_STAT_LOG          0x01
+#define FORT_STAT_TIME_CHANGED 0x02
+#define FORT_STAT_CLOSED       0x80 /* used on driver unloading */
 
 typedef struct fort_stat
 {
     UCHAR volatile flags;
 
     UINT16 proc_active_count;
+
+    LONG volatile flow_closing_count;
 
     UINT32 connect4_id;
     UINT32 connect6_id;
