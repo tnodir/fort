@@ -26,7 +26,7 @@ enum FortBlockReason {
     FORT_BLOCK_REASON_FILTER_MODE,
     FORT_BLOCK_REASON_LAN_ONLY,
     FORT_BLOCK_REASON_PROMPT_TIMEOUT,
-    FORT_BLOCK_REASON_PROMPT /* must be last! */
+    FORT_BLOCK_REASON_PROMPT = 15 /* must be last! */
 };
 
 #endif // FORTDEF_H
