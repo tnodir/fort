@@ -138,7 +138,7 @@ QVariant AppListModel::dataDisplay(const QModelIndex &index) const
     case 1:
         return dataDisplayState(appRow);
     case 2:
-        return conf()->appGroupAt(appRow.groupIndex)->name();
+        return appGroupName(appRow);
     case 3:
         return appRow.appPath;
     case 4:
@@ -210,20 +210,31 @@ QVariant AppListModel::dataTextAlignment(const QModelIndex &index) const
     return QVariant();
 }
 
+QVariant AppListModel::appGroupName(const AppRow &appRow) const
+{
+    const AppGroup *appGroup = conf()->appGroupAt(appRow.groupIndex);
+
+    return appGroup->name();
+}
+
+QVariant AppListModel::appGroupColor(const AppRow &appRow) const
+{
+    if (!appRow.useGroupPerm)
+        return inactiveColor;
+
+    const AppGroup *appGroup = conf()->appGroupAt(appRow.groupIndex);
+    if (!appGroup->enabled())
+        return blockColor;
+
+    return {};
+}
+
 QString AppListModel::appStateText(const AppRow &appRow)
 {
     if (appRow.blocked)
         return tr("Block");
 
     return tr("Allow");
-}
-
-QVariant AppListModel::appGroupColor(const AppRow &appRow)
-{
-    if (!appRow.useGroupPerm)
-        return inactiveColor;
-
-    return {};
 }
 
 QColor AppListModel::appStateColor(const AppRow &appRow)
