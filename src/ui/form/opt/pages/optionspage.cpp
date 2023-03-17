@@ -292,8 +292,8 @@ void OptionsPage::retranslateComboTrayAction()
     // Sync with TrayIcon::ActionType
     const QStringList list = { tr("Show Programs"), tr("Show Options"), tr("Show Statistics"),
         tr("Show/Hide Traffic Graph"), tr("Switch Filter Enabled"), tr("Switch Stop Traffic"),
-        tr("Switch Stop Internet Traffic"), tr("Switch Auto-Allow New Programs"),
-        tr("Show Tray Menu"), tr("Ignore") };
+        tr("Switch Stop Internet Traffic"), tr("Switch Ask to Connect"), tr("Show Tray Menu"),
+        tr("Ignore") };
 
     m_comboTrayAction->clear();
     m_comboTrayAction->addItems(list);
