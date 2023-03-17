@@ -108,7 +108,7 @@ inline static void fort_callout_ale_log_blocked_ip(FORT_CALLOUT_ARG ca, FORT_CAL
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
 {
     if (cx->block_reason == FORT_BLOCK_REASON_UNKNOWN
-            || !(conf_flags.prompt || conf_flags.log_blocked_ip))
+            || !(conf_flags.ask_to_connect || conf_flags.log_blocked_ip))
         return;
 
     const FORT_APP_FLAGS app_flags = fort_callout_ale_conf_app_flags(cx, conf_ref);
@@ -132,7 +132,7 @@ inline static BOOL fort_callout_ale_check_log(FORT_CALLOUT_ARG ca, FORT_CALLOUT_
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags,
         FORT_APP_FLAGS app_flags)
 {
-    if (app_flags.v == 0 && conf_flags.prompt) {
+    if (app_flags.v == 0 && conf_flags.ask_to_connect) {
         cx->block_reason =
                 cx->is_reauth ? FORT_BLOCK_REASON_PROMPT_TIMEOUT : FORT_BLOCK_REASON_PROMPT;
         cx->blocked = TRUE; /* blocked (prompt) */
@@ -154,7 +154,7 @@ inline static void fort_callout_ale_log(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_IN
 
     if (!cx->blocked /* collect traffic, when Filter Disabled */
             /* collect new Blocked Programs or Prompt */
-            || (app_flags.v == 0 && (conf_flags.allow_all_new || conf_flags.prompt))
+            || (app_flags.v == 0 && (conf_flags.allow_all_new || conf_flags.ask_to_connect))
             /* check the conf for a blocked app */
             || !fort_conf_app_blocked(&conf_ref->conf, app_flags, &cx->block_reason)) {
 
@@ -869,7 +869,7 @@ FORT_API NTSTATUS fort_callout_force_reauth(const FORT_CONF_FLAGS old_conf_flags
     }
 
     if (NT_SUCCESS(status)) {
-        const BOOL log_enabled = (conf_flags.allow_all_new || conf_flags.prompt
+        const BOOL log_enabled = (conf_flags.allow_all_new || conf_flags.ask_to_connect
                 || conf_flags.log_blocked || conf_flags.log_stat || conf_flags.log_blocked_ip);
 
         fort_timer_set_running(&fort_device()->log_timer, /*run=*/log_enabled);

@@ -41,6 +41,7 @@ public:
         ActionSwitchFilterEnabled,
         ActionSwitchStopTraffic,
         ActionSwitchStopInetTraffic,
+        ActionSwitchAskToConnect,
         ActionShowTrayMenu,
         ActionIgnore,
         ActionTypeCount
@@ -128,7 +129,7 @@ private:
     QAction *m_filterEnabledAction = nullptr;
     QAction *m_stopTrafficAction = nullptr;
     QAction *m_stopInetTrafficAction = nullptr;
-    QAction *m_autoAllowProgsAction = nullptr;
+    QAction *m_askToConnectAction = nullptr;
     QAction *m_trayMenuAction = nullptr;
     QMenu *m_filterModeMenu = nullptr;
     QActionGroup *m_filterModeActions = nullptr;

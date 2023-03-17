@@ -14,8 +14,8 @@ FirewallConf::FirewallConf(Settings *settings, QObject *parent) :
     m_filterLocals(false),
     m_stopTraffic(false),
     m_stopInetTraffic(false),
+    m_askToConnect(false),
     m_allowAllNew(false),
-    m_prompt(false),
     m_logBlocked(false),
     m_logStat(false),
     m_logStatNoFilter(false),
@@ -59,14 +59,14 @@ void FirewallConf::setStopInetTraffic(bool stopInetTraffic)
     m_stopInetTraffic = stopInetTraffic;
 }
 
+void FirewallConf::setAskToConnect(bool askToConnect)
+{
+    m_askToConnect = askToConnect;
+}
+
 void FirewallConf::setAllowAllNew(bool allowAllNew)
 {
     m_allowAllNew = allowAllNew;
-}
-
-void FirewallConf::setPrompt(bool prompt)
-{
-    m_prompt = prompt;
 }
 
 void FirewallConf::setLogBlocked(bool logBlocked)
@@ -109,13 +109,12 @@ void FirewallConf::setAppAllowAll(bool appAllowAll)
 
 int FirewallConf::filterModeIndex() const
 {
-    return m_appBlockAll ? (m_allowAllNew ? 0 : 1) : (m_appAllowAll ? 2 : (m_prompt ? 3 : 4));
+    return m_appBlockAll ? (m_allowAllNew ? 0 : 1) : (m_appAllowAll ? 2 : 3);
 }
 
 void FirewallConf::setFilterModeIndex(int index)
 {
     m_allowAllNew = false;
-    m_prompt = false;
     m_appBlockAll = false;
     m_appAllowAll = false;
 
@@ -130,21 +129,17 @@ void FirewallConf::setFilterModeIndex(int index)
     case 2: {
         m_appAllowAll = true;
     } break;
-    case 3: {
-        m_prompt = true;
-    } break;
     }
 }
 
 QStringList FirewallConf::filterModeNames()
 {
-    return { tr("Auto-Learn"), tr("Block"), tr("Allow"), tr("Prompt"), tr("Ignore") };
+    return { tr("Auto-Learn"), tr("Block"), tr("Allow"), tr("Ignore") };
 }
 
 QStringList FirewallConf::filterModeIconPaths()
 {
-    return { ":/icons/error.png", ":/icons/deny.png", ":/icons/accept.png", ":/icons/help.png",
-        QString() };
+    return { ":/icons/error.png", ":/icons/deny.png", ":/icons/accept.png", QString() };
 }
 
 void FirewallConf::setActivePeriodEnabled(bool activePeriodEnabled)
@@ -324,8 +319,8 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     m_filterLocals = o.filterLocals();
     m_stopTraffic = o.stopTraffic();
     m_stopInetTraffic = o.stopInetTraffic();
+    m_askToConnect = o.askToConnect();
     m_allowAllNew = o.allowAllNew();
-    m_prompt = o.prompt();
 
     m_logBlocked = o.logBlocked();
     m_logStat = o.logStat();
@@ -371,8 +366,8 @@ QVariant FirewallConf::flagsToVariant() const
     map["filterLocals"] = filterLocals();
     map["stopTraffic"] = stopTraffic();
     map["stopInetTraffic"] = stopInetTraffic();
+    map["askToConnect"] = askToConnect();
     map["allowAllNew"] = allowAllNew();
-    map["prompt"] = prompt();
 
     map["logBlocked"] = logBlocked();
     map["logStat"] = logStat();
@@ -402,8 +397,8 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
     m_filterLocals = map["filterLocals"].toBool();
     m_stopTraffic = map["stopTraffic"].toBool();
     m_stopInetTraffic = map["stopInetTraffic"].toBool();
+    m_askToConnect = map["askToConnect"].toBool();
     m_allowAllNew = map["allowAllNew"].toBool();
-    m_prompt = map["prompt"].toBool();
 
     m_logBlocked = map["logBlocked"].toBool();
     m_logStat = map["logStat"].toBool();

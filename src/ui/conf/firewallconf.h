@@ -58,11 +58,11 @@ public:
     bool stopInetTraffic() const { return m_stopInetTraffic; }
     void setStopInetTraffic(bool stopInetTraffic);
 
+    bool askToConnect() const { return m_askToConnect; }
+    void setAskToConnect(bool askToConnect);
+
     bool allowAllNew() const { return m_allowAllNew; }
     void setAllowAllNew(bool allowAllNew);
-
-    bool prompt() const { return m_prompt; }
-    void setPrompt(bool prompt);
 
     bool logBlocked() const { return m_logBlocked; }
     void setLogBlocked(bool logBlocked);
@@ -175,8 +175,8 @@ private:
     uint m_filterLocals : 1;
     uint m_stopTraffic : 1;
     uint m_stopInetTraffic : 1;
+    uint m_askToConnect : 1;
     uint m_allowAllNew : 1;
-    uint m_prompt : 1;
 
     uint m_logBlocked : 1;
     uint m_logStat : 1;

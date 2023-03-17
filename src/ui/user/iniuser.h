@@ -26,6 +26,7 @@ public:
     QString hotKeyFilter() const { return valueText("hotKey/filter", "Ctrl+Alt+Shift+F"); }
     QString hotKeyStopTraffic() const { return valueText("hotKey/stopTraffic"); }
     QString hotKeyStopInetTraffic() const { return valueText("hotKey/stopInetTraffic"); }
+    QString hotKeyAskToConnect() const { return valueText("hotKey/askToConnect"); }
     QString hotKeyAppGroupModifiers() const
     {
         return valueText("hotKey/appGroupModifiers", "Ctrl+Alt+Shift");
