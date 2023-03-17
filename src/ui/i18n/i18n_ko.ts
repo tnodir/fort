@@ -413,20 +413,16 @@
         <translation>자동 학습</translation>
     </message>
     <message>
-        <source>Block</source>
-        <translation>차단</translation>
+        <source>Block, if not allowed</source>
+        <translation>차단, 허용하지 않을 경우</translation>
     </message>
     <message>
-        <source>Allow</source>
-        <translation>허용</translation>
+        <source>Allow, if not blocked</source>
+        <translation>허용, 차단하지 않을 경우</translation>
     </message>
     <message>
-        <source>Prompt</source>
-        <translation>알림</translation>
-    </message>
-    <message>
-        <source>Ignore</source>
-        <translation>무시</translation>
+        <source>Ignore, if not blocked or allowed</source>
+        <translation>무시, 차단 또는 허용하지 않을 경우</translation>
     </message>
 </context>
 <context>
@@ -726,10 +722,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>인터넷 트래픽 중지 전환</translation>
     </message>
     <message>
-        <source>Switch Auto-Allow New Programs</source>
-        <translation>새 프로그램 자동-허용 전환</translation>
-    </message>
-    <message>
         <source>Tray Menu Flags</source>
         <translation>체크 가능한 트레이 메뉴</translation>
     </message>
@@ -780,6 +772,14 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Alt + Single Click</source>
         <translation>Alt + 한 번 클릭</translation>
+    </message>
+    <message>
+        <source>Ask to Connect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Ask to Connect</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1515,6 +1515,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Policies</source>
         <translation>정책</translation>
+    </message>
+    <message>
+        <source>Ask to Connect</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

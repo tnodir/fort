@@ -413,20 +413,16 @@
         <translation>Samodejno učenje</translation>
     </message>
     <message>
-        <source>Block</source>
-        <translation>Blokiraj</translation>
+        <source>Block, if not allowed</source>
+        <translation>Blokiraj, če ni dovoljeno</translation>
     </message>
     <message>
-        <source>Allow</source>
-        <translation>Dovoli</translation>
+        <source>Allow, if not blocked</source>
+        <translation>Dovoli, če ni blokirano</translation>
     </message>
     <message>
-        <source>Prompt</source>
-        <translation>Poziv</translation>
-    </message>
-    <message>
-        <source>Ignore</source>
-        <translation>Prezri</translation>
+        <source>Ignore, if not blocked or allowed</source>
+        <translation>Prezri, če ni blokirano ali dovoljeno</translation>
     </message>
 </context>
 <context>
@@ -726,10 +722,6 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
         <translation>Preklop ustavitve internetnega prometa</translation>
     </message>
     <message>
-        <source>Switch Auto-Allow New Programs</source>
-        <translation>Preklop samodejnega dovoljenja novih programov</translation>
-    </message>
-    <message>
         <source>Tray Menu Flags</source>
         <translation>Zastavice menija programske vrstice</translation>
     </message>
@@ -780,6 +772,14 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     <message>
         <source>Alt + Single Click</source>
         <translation>Alt + En klik</translation>
+    </message>
+    <message>
+        <source>Ask to Connect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Ask to Connect</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1515,6 +1515,10 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     <message>
         <source>Policies</source>
         <translation>Politike</translation>
+    </message>
+    <message>
+        <source>Ask to Connect</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

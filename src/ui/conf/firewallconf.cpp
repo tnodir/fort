@@ -134,7 +134,8 @@ void FirewallConf::setFilterModeIndex(int index)
 
 QStringList FirewallConf::filterModeNames()
 {
-    return { tr("Auto-Learn"), tr("Block"), tr("Allow"), tr("Ignore") };
+    return { tr("Auto-Learn"), tr("Block, if not allowed"), tr("Allow, if not blocked"),
+        tr("Ignore, if not blocked or allowed") };
 }
 
 QStringList FirewallConf::filterModeIconPaths()

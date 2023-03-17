@@ -413,20 +413,16 @@
         <translation>Automatisches lernen</translation>
     </message>
     <message>
-        <source>Block</source>
-        <translation>Blockieren</translation>
+        <source>Block, if not allowed</source>
+        <translation>Blockieren, falls nicht erlaubt</translation>
     </message>
     <message>
-        <source>Allow</source>
-        <translation>Zulassen</translation>
+        <source>Allow, if not blocked</source>
+        <translation>Zulassen, falls nicht blockiert</translation>
     </message>
     <message>
-        <source>Prompt</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Ignore</source>
-        <translation>Ignorieren</translation>
+        <source>Ignore, if not blocked or allowed</source>
+        <translation>Ignorieren, wenn nicht blockiert oder zugelassen</translation>
     </message>
 </context>
 <context>
@@ -726,10 +722,6 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
         <translation>Internetverkehr stoppen</translation>
     </message>
     <message>
-        <source>Switch Auto-Allow New Programs</source>
-        <translation>Neue Programme automatisch zulassen</translation>
-    </message>
-    <message>
         <source>Tray Menu Flags</source>
         <translation>Tray-Menü-Markierungen</translation>
     </message>
@@ -780,6 +772,14 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     <message>
         <source>Alt + Single Click</source>
         <translation>Alt + Einzelklick</translation>
+    </message>
+    <message>
+        <source>Ask to Connect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Ask to Connect</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1515,6 +1515,10 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     <message>
         <source>Policies</source>
         <translation>Richtlinien</translation>
+    </message>
+    <message>
+        <source>Ask to Connect</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

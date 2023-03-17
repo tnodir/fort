@@ -413,20 +413,16 @@
         <translation>Auto-apprentissage</translation>
     </message>
     <message>
-        <source>Block</source>
-        <translation>Bloquer</translation>
+        <source>Block, if not allowed</source>
+        <translation>Bloquer, si non autorisé</translation>
     </message>
     <message>
-        <source>Allow</source>
-        <translation>Autoriser</translation>
+        <source>Allow, if not blocked</source>
+        <translation>Autoriser, si non bloqué</translation>
     </message>
     <message>
-        <source>Prompt</source>
-        <translation>Immédiat</translation>
-    </message>
-    <message>
-        <source>Ignore</source>
-        <translation>Ignorer</translation>
+        <source>Ignore, if not blocked or allowed</source>
+        <translation>Ignorer si non bloqué ou autorisé</translation>
     </message>
 </context>
 <context>
@@ -726,10 +722,6 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
         <translation>Commutateur d&apos;arrêt du trafic Internet</translation>
     </message>
     <message>
-        <source>Switch Auto-Allow New Programs</source>
-        <translation>Basculer autorisation auto de nouveaux programmes</translation>
-    </message>
-    <message>
         <source>Tray Menu Flags</source>
         <translation>Drapeaux du menu de la barre d&apos;outils</translation>
     </message>
@@ -780,6 +772,14 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     <message>
         <source>Alt + Single Click</source>
         <translation>Alt + Simple-Clic</translation>
+    </message>
+    <message>
+        <source>Ask to Connect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Ask to Connect</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1515,6 +1515,10 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     <message>
         <source>Policies</source>
         <translation>Politiques</translation>
+    </message>
+    <message>
+        <source>Ask to Connect</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

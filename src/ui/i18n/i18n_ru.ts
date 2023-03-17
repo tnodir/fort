@@ -413,20 +413,16 @@
         <translation>Авто-обучение</translation>
     </message>
     <message>
-        <source>Block</source>
-        <translation>Блокировать</translation>
+        <source>Block, if not allowed</source>
+        <translation>Блокировать, если не разрешено</translation>
     </message>
     <message>
-        <source>Allow</source>
-        <translation>Разрешить</translation>
+        <source>Allow, if not blocked</source>
+        <translation>Разрешить, если не блокировано</translation>
     </message>
     <message>
-        <source>Prompt</source>
-        <translation>Запрашивать</translation>
-    </message>
-    <message>
-        <source>Ignore</source>
-        <translation>Игнорировать</translation>
+        <source>Ignore, if not blocked or allowed</source>
+        <translation>Игнорировать, если не блокировано или не разрешено</translation>
     </message>
 </context>
 <context>
@@ -726,10 +722,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>Переключить &quot;Остановить Интернет трафик&quot;</translation>
     </message>
     <message>
-        <source>Switch Auto-Allow New Programs</source>
-        <translation>Переключить &quot;Авто-разрешение новых программ&quot;</translation>
-    </message>
-    <message>
         <source>Tray Menu Flags</source>
         <translation>Флаги из меню трея</translation>
     </message>
@@ -780,6 +772,14 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Alt + Single Click</source>
         <translation>Alt + Единичное нажатие</translation>
+    </message>
+    <message>
+        <source>Ask to Connect</source>
+        <translation>Спрашивать для соединения</translation>
+    </message>
+    <message>
+        <source>Switch Ask to Connect</source>
+        <translation>Переключить &quot;Спрашивать для соединения&quot;</translation>
     </message>
 </context>
 <context>
@@ -1515,6 +1515,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Policies</source>
         <translation>Политики</translation>
+    </message>
+    <message>
+        <source>Ask to Connect</source>
+        <translation>Спрашивать для соединения</translation>
     </message>
 </context>
 <context>

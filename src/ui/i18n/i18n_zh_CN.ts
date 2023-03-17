@@ -413,19 +413,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Block</source>
-        <translation>阻止</translation>
-    </message>
-    <message>
-        <source>Allow</source>
-        <translation>允许</translation>
-    </message>
-    <message>
-        <source>Prompt</source>
+        <source>Block, if not allowed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Ignore</source>
+        <source>Allow, if not blocked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ignore, if not blocked or allowed</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -726,10 +722,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>切换停止互联网流量</translation>
     </message>
     <message>
-        <source>Switch Auto-Allow New Programs</source>
-        <translation>切换自动允许新程序</translation>
-    </message>
-    <message>
         <source>Tray Menu Flags</source>
         <translation>托盘菜单标记</translation>
     </message>
@@ -779,6 +771,14 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Alt + Single Click</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ask to Connect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Ask to Connect</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1514,6 +1514,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Policies</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ask to Connect</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

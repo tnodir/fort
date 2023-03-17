@@ -413,19 +413,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Block</source>
-        <translation>Blocca</translation>
-    </message>
-    <message>
-        <source>Allow</source>
-        <translation>Consenti</translation>
-    </message>
-    <message>
-        <source>Prompt</source>
+        <source>Block, if not allowed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Ignore</source>
+        <source>Allow, if not blocked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ignore, if not blocked or allowed</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -738,10 +734,6 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Switch Auto-Allow New Programs</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Filter Mode:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -779,6 +771,14 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     </message>
     <message>
         <source>Alt + Single Click</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ask to Connect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Ask to Connect</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1514,6 +1514,10 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     </message>
     <message>
         <source>Policies</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ask to Connect</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
