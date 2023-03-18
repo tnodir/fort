@@ -165,9 +165,6 @@ void OptionsPage::onRetranslateUi()
     m_cbService->setText(tr("Run Fort Firewall as a Service in background"));
 
     m_cbFilterEnabled->setText(tr("Filter Enabled"));
-    m_cbFilterLocals->setText(tr("Filter Local Addresses"));
-    m_cbFilterLocals->setToolTip(
-            tr("Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses"));
     m_cbStopTraffic->setText(tr("Stop Traffic"));
     m_cbStopInetTraffic->setText(tr("Stop Internet Traffic"));
     m_cbAskToConnect->setText(tr("Ask to Connect"));
@@ -181,6 +178,9 @@ void OptionsPage::onRetranslateUi()
     m_labelLanguage->setText(tr("Language:"));
 
     m_cbBootFilter->setText(tr("Stop traffic when Fort Firewall is not running"));
+    m_cbFilterLocals->setText(tr("Filter Local Addresses"));
+    m_cbFilterLocals->setToolTip(
+            tr("Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses"));
     m_cbNoServiceControl->setText(tr("Disable Service controls"));
     m_cbCheckPasswordOnUninstall->setText(tr("Check password on Uninstall"));
 
@@ -411,10 +411,6 @@ void OptionsPage::setupTrafficBox()
         conf()->setFilterEnabled(checked);
         ctrl()->setFlagsEdited();
     });
-    m_cbFilterLocals = ControlUtil::createCheckBox(conf()->filterLocals(), [&](bool checked) {
-        conf()->setFilterLocals(checked);
-        ctrl()->setFlagsEdited();
-    });
     m_cbStopTraffic = ControlUtil::createCheckBox(conf()->stopTraffic(), [&](bool checked) {
         conf()->setStopTraffic(checked);
         ctrl()->setFlagsEdited();
@@ -433,7 +429,6 @@ void OptionsPage::setupTrafficBox()
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbFilterEnabled);
-    layout->addWidget(m_cbFilterLocals);
     layout->addWidget(m_cbStopTraffic);
     layout->addWidget(m_cbStopInetTraffic);
     layout->addWidget(ControlUtil::createSeparator());
@@ -522,6 +517,11 @@ void OptionsPage::setupProtectionBox()
         ctrl()->setFlagsEdited();
     });
 
+    m_cbFilterLocals = ControlUtil::createCheckBox(conf()->filterLocals(), [&](bool checked) {
+        conf()->setFilterLocals(checked);
+        ctrl()->setFlagsEdited();
+    });
+
     m_cbNoServiceControl =
             ControlUtil::createCheckBox(ini()->noServiceControl(), [&](bool checked) {
                 ini()->setNoServiceControl(checked);
@@ -542,6 +542,7 @@ void OptionsPage::setupProtectionBox()
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbBootFilter);
+    layout->addWidget(m_cbFilterLocals);
     layout->addWidget(m_cbNoServiceControl);
     layout->addWidget(m_cbCheckPasswordOnUninstall);
     layout->addLayout(passwordLayout);

@@ -79,7 +79,6 @@ private:
     QComboBox *m_comboAutoRun = nullptr;
     QCheckBox *m_cbService = nullptr;
     QCheckBox *m_cbFilterEnabled = nullptr;
-    QCheckBox *m_cbFilterLocals = nullptr;
     QCheckBox *m_cbStopTraffic = nullptr;
     QCheckBox *m_cbStopInetTraffic = nullptr;
     QCheckBox *m_cbAskToConnect = nullptr;
@@ -90,6 +89,7 @@ private:
     QLabel *m_labelLanguage = nullptr;
     QComboBox *m_comboLanguage = nullptr;
     QCheckBox *m_cbBootFilter = nullptr;
+    QCheckBox *m_cbFilterLocals = nullptr;
     QCheckBox *m_cbNoServiceControl = nullptr;
     QCheckBox *m_cbCheckPasswordOnUninstall = nullptr;
     QCheckBox *m_cbPassword = nullptr;
