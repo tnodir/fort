@@ -43,8 +43,8 @@ public:
     bool anyEdited() const { return m_editedFlags != NoneEdited; }
     void resetEdited(bool v = false);
 
-    bool provBoot() const { return m_provBoot; }
-    void setProvBoot(bool provBoot);
+    bool bootFilter() const { return m_bootFilter; }
+    void setBootFilter(bool bootFilter);
 
     bool filterEnabled() const { return m_filterEnabled; }
     void setFilterEnabled(bool filterEnabled);
@@ -170,7 +170,7 @@ private:
 private:
     uint m_editedFlags : 8;
 
-    uint m_provBoot : 1;
+    uint m_bootFilter : 1;
     uint m_filterEnabled : 1;
     uint m_filterLocals : 1;
     uint m_stopTraffic : 1;

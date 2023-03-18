@@ -9,7 +9,7 @@
 FirewallConf::FirewallConf(Settings *settings, QObject *parent) :
     QObject(parent),
     m_editedFlags(AllEdited), // update all on load()!
-    m_provBoot(false),
+    m_bootFilter(false),
     m_filterEnabled(true),
     m_filterLocals(false),
     m_stopTraffic(false),
@@ -34,9 +34,9 @@ void FirewallConf::resetEdited(bool v)
     m_editedFlags = v ? AllEdited : NoneEdited;
 }
 
-void FirewallConf::setProvBoot(bool provBoot)
+void FirewallConf::setBootFilter(bool bootFilter)
 {
-    m_provBoot = provBoot;
+    m_bootFilter = bootFilter;
 }
 
 void FirewallConf::setFilterEnabled(bool filterEnabled)
@@ -315,7 +315,7 @@ void FirewallConf::copyFlags(const FirewallConf &o)
 {
     m_editedFlags = o.editedFlags();
 
-    m_provBoot = o.provBoot();
+    m_bootFilter = o.bootFilter();
     m_filterEnabled = o.filterEnabled();
     m_filterLocals = o.filterLocals();
     m_stopTraffic = o.stopTraffic();
@@ -362,7 +362,7 @@ QVariant FirewallConf::flagsToVariant() const
 {
     QVariantMap map;
 
-    map["provBoot"] = provBoot();
+    map["bootFilter"] = bootFilter();
     map["filterEnabled"] = filterEnabled();
     map["filterLocals"] = filterLocals();
     map["stopTraffic"] = stopTraffic();
@@ -393,7 +393,7 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
 {
     const QVariantMap map = v.toMap();
 
-    m_provBoot = map["provBoot"].toBool();
+    m_bootFilter = map["bootFilter"].toBool();
     m_filterEnabled = map["filterEnabled"].toBool();
     m_filterLocals = map["filterLocals"].toBool();
     m_stopTraffic = map["stopTraffic"].toBool();

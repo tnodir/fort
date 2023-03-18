@@ -330,7 +330,11 @@ FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device)
 
     /* Unregister old filters provider */
     {
-        fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_PROV_BOOT, fort_prov_is_boot());
+        const FORT_PROV_BOOT_CONF boot_conf = fort_prov_boot_conf();
+
+        fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_BOOT_FILTER, boot_conf.boot_filter);
+        fort_device_flag_set(
+                &fort_device()->conf, FORT_DEVICE_BOOT_FILTER_LOCALS, boot_conf.filter_locals);
 
         fort_prov_unregister(NULL);
     }
@@ -345,9 +349,14 @@ FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device)
 
     /* Register filters provider */
     if (NT_SUCCESS(status)) {
-        const BOOL prov_boot = fort_device_flag(&fort_device()->conf, FORT_DEVICE_PROV_BOOT) != 0;
+        const UCHAR flags = fort_device_flag(&fort_device()->conf, FORT_DEVICE_BOOT_MASK);
 
-        status = fort_prov_register(0, prov_boot);
+        const FORT_PROV_BOOT_CONF boot_conf = {
+            .boot_filter = (flags & FORT_DEVICE_BOOT_FILTER) != 0,
+            .filter_locals = (flags & FORT_DEVICE_BOOT_FILTER_LOCALS) != 0,
+        };
+
+        status = fort_prov_register(0, boot_conf);
     }
 
     /* Register power state change callback */
@@ -398,7 +407,7 @@ FORT_API void fort_device_unload()
     fort_callout_remove();
 
     /* Unregister filters provider */
-    if (fort_device_flag(&fort_device()->conf, FORT_DEVICE_PROV_BOOT) == 0) {
+    if (fort_device_flag(&fort_device()->conf, FORT_DEVICE_BOOT_FILTER) == 0) {
         fort_prov_unregister(NULL);
     }
 

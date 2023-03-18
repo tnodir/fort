@@ -113,6 +113,8 @@ FORT_API void fort_shaper_conf_update(PFORT_SHAPER shaper, const PFORT_CONF_IO c
 
 FORT_API void fort_shaper_conf_flags_update(PFORT_SHAPER shaper, const PFORT_CONF_FLAGS conf_flags);
 
+FORT_API BOOL fort_shaper_injected_by_self(PFORT_SHAPER shaper, const FORT_CALLOUT_ARG ca);
+
 FORT_API BOOL fort_shaper_packet_process(PFORT_SHAPER shaper, FORT_CALLOUT_ARG ca);
 
 FORT_API void fort_shaper_drop_flow_packets(PFORT_SHAPER shaper, UINT64 flowContext);

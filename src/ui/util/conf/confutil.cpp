@@ -25,7 +25,7 @@ namespace {
 
 void writeConfFlags(const FirewallConf &conf, PFORT_CONF_FLAGS confFlags)
 {
-    confFlags->prov_boot = conf.provBoot();
+    confFlags->boot_filter = conf.bootFilter();
     confFlags->filter_enabled = conf.filterEnabled();
     confFlags->filter_locals = conf.filterLocals();
     confFlags->stop_traffic = conf.stopTraffic();

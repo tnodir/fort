@@ -306,12 +306,12 @@ QString FortSettings::defaultProfilePath(bool isService)
 void FortSettings::readConfIni(FirewallConf &conf) const
 {
     ini()->beginGroup("confFlags");
-    conf.setProvBoot(iniBool("provBoot"));
+    conf.setBootFilter(iniBool("bootFilter"));
     conf.setFilterEnabled(iniBool("filterEnabled", true));
     conf.setFilterLocals(iniBool("filterLocals"));
     conf.setStopTraffic(iniBool("stopTraffic"));
     conf.setStopInetTraffic(iniBool("stopInetTraffic"));
-    conf.setAskToConnect(iniBool("askToConnect"));
+    conf.setAskToConnect(iniBool("askToConnect", true));
     conf.setAllowAllNew(iniBool("allowAllNew", true));
     conf.setLogBlocked(iniBool("logBlocked", true));
     conf.setLogStat(iniBool("logStat", true));
@@ -336,7 +336,7 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
 
     if (conf.flagsEdited()) {
         ini()->beginGroup("confFlags");
-        setIniValue("provBoot", conf.provBoot());
+        setIniValue("bootFilter", conf.bootFilter());
         setIniValue("filterEnabled", conf.filterEnabled());
         setIniValue("filterLocals", conf.filterLocals());
         setIniValue("stopTraffic", conf.stopTraffic());
@@ -396,6 +396,11 @@ void FortSettings::migrateIniOnStartup()
             StartupUtil::setExplorerIntegrated(true);
         }
     }
+
+    // COMPAT: v3.8.1
+    if (version < 0x030801) {
+        setCacheValue("confFlags/bootFilter", ini()->value("confFlags/provBoot"));
+    }
 }
 
 void FortSettings::migrateIniOnWrite()
@@ -418,6 +423,11 @@ void FortSettings::migrateIniOnWrite()
         removeIniKey("progWindow");
         removeIniKey("zoneWindow");
         removeIniKey("connWindow");
+    }
+
+    // COMPAT: v3.8.1
+    if (version < 0x030801) {
+        ini()->setValue("confFlags/bootFilter", cacheValue("confFlags/bootFilter"));
     }
 }
 

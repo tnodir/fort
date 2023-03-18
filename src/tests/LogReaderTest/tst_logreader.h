@@ -52,7 +52,7 @@ void setConf(Device &device)
     EnvManager envManager;
     FirewallConf conf;
 
-    conf.setProvBoot(true);
+    conf.setBootFilter(true);
     conf.setLogBlockedIp(true);
 
     // Address Groups

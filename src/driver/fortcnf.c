@@ -318,8 +318,11 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_
     if (old_conf_ref != NULL) {
         old_conf_flags = old_conf_ref->conf.flags;
     } else {
+        const UCHAR flags = fort_device_flag(device_conf, FORT_DEVICE_BOOT_MASK);
+
         RtlZeroMemory(&old_conf_flags, sizeof(FORT_CONF_FLAGS));
-        old_conf_flags.prov_boot = fort_device_flag(device_conf, FORT_DEVICE_PROV_BOOT) != 0;
+        old_conf_flags.boot_filter = (flags & FORT_DEVICE_BOOT_FILTER) != 0;
+        old_conf_flags.filter_locals = (flags & FORT_DEVICE_BOOT_FILTER_LOCALS) != 0;
     }
 
     KLOCK_QUEUE_HANDLE lock_queue;
@@ -333,10 +336,13 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_
             PFORT_CONF conf = &conf_ref->conf;
 
             conf_flags = conf->flags;
-            fort_device_flag_set(device_conf, FORT_DEVICE_PROV_BOOT, conf_flags.prov_boot);
+            fort_device_flag_set(device_conf, FORT_DEVICE_BOOT_FILTER, conf_flags.boot_filter);
+            fort_device_flag_set(
+                    device_conf, FORT_DEVICE_BOOT_FILTER_LOCALS, conf_flags.filter_locals);
         } else {
             RtlZeroMemory((void *) &conf_flags, sizeof(FORT_CONF_FLAGS));
-            conf_flags.prov_boot = fort_device_flag(device_conf, FORT_DEVICE_PROV_BOOT) != 0;
+            conf_flags.boot_filter = old_conf_flags.boot_filter;
+            conf_flags.filter_locals = old_conf_flags.filter_locals;
         }
 
         device_conf->conf_flags = conf_flags;
@@ -368,12 +374,17 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_flags_set(
 
             fort_conf_app_perms_mask_init(conf, conf_flags->group_bits);
 
-            fort_device_flag_set(device_conf, FORT_DEVICE_PROV_BOOT, conf_flags->prov_boot);
+            fort_device_flag_set(device_conf, FORT_DEVICE_BOOT_FILTER, conf_flags->boot_filter);
+            fort_device_flag_set(
+                    device_conf, FORT_DEVICE_BOOT_FILTER_LOCALS, conf_flags->filter_locals);
 
             device_conf->conf_flags = *conf_flags;
         } else {
+            const UCHAR flags = fort_device_flag(device_conf, FORT_DEVICE_BOOT_MASK);
+
             RtlZeroMemory(&old_conf_flags, sizeof(FORT_CONF_FLAGS));
-            old_conf_flags.prov_boot = fort_device_flag(device_conf, FORT_DEVICE_PROV_BOOT) != 0;
+            old_conf_flags.boot_filter = (flags & FORT_DEVICE_BOOT_FILTER) != 0;
+            old_conf_flags.filter_locals = (flags & FORT_DEVICE_BOOT_FILTER_LOCALS) != 0;
 
             device_conf->conf_flags = old_conf_flags;
         }

@@ -180,7 +180,7 @@ void OptionsPage::onRetranslateUi()
 
     m_labelLanguage->setText(tr("Language:"));
 
-    m_cbProvBoot->setText(tr("Stop traffic when Fort Firewall is not running"));
+    m_cbBootFilter->setText(tr("Stop traffic when Fort Firewall is not running"));
     m_cbNoServiceControl->setText(tr("Disable Service controls"));
     m_cbCheckPasswordOnUninstall->setText(tr("Check password on Uninstall"));
 
@@ -517,8 +517,8 @@ void OptionsPage::setupComboLanguage()
 
 void OptionsPage::setupProtectionBox()
 {
-    m_cbProvBoot = ControlUtil::createCheckBox(conf()->provBoot(), [&](bool checked) {
-        conf()->setProvBoot(checked);
+    m_cbBootFilter = ControlUtil::createCheckBox(conf()->bootFilter(), [&](bool checked) {
+        conf()->setBootFilter(checked);
         ctrl()->setFlagsEdited();
     });
 
@@ -541,7 +541,7 @@ void OptionsPage::setupProtectionBox()
     setupPasswordLock();
 
     auto layout = new QVBoxLayout();
-    layout->addWidget(m_cbProvBoot);
+    layout->addWidget(m_cbBootFilter);
     layout->addWidget(m_cbNoServiceControl);
     layout->addWidget(m_cbCheckPasswordOnUninstall);
     layout->addLayout(passwordLayout);

@@ -89,7 +89,7 @@ private:
     QCheckBox *m_cbHotKeys = nullptr;
     QLabel *m_labelLanguage = nullptr;
     QComboBox *m_comboLanguage = nullptr;
-    QCheckBox *m_cbProvBoot = nullptr;
+    QCheckBox *m_cbBootFilter = nullptr;
     QCheckBox *m_cbNoServiceControl = nullptr;
     QCheckBox *m_cbCheckPasswordOnUninstall = nullptr;
     QCheckBox *m_cbPassword = nullptr;

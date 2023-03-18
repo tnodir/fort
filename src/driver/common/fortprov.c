@@ -151,16 +151,18 @@ FORT_API void fort_prov_flow_unregister(HANDLE transEngine)
     fort_prov_trans_close_engine(transEngine, engine, /*status=*/0);
 }
 
-FORT_API BOOL fort_prov_is_boot(void)
+FORT_API FORT_PROV_BOOT_CONF fort_prov_boot_conf(void)
 {
     HANDLE engine;
-    BOOL is_boot = FALSE;
+    FORT_PROV_BOOT_CONF boot_conf = { .v = 0 };
 
     if (!fort_prov_open(&engine)) {
         FWPM_PROVIDER0 *provider;
 
         if (!FwpmProviderGetByKey0(engine, (GUID *) &FORT_GUID_PROVIDER, &provider)) {
-            is_boot = (provider->flags & FWPM_PROVIDER_FLAG_PERSISTENT);
+            if (provider->providerData.size == sizeof(FORT_PROV_BOOT_CONF)) {
+                RtlCopyMemory(&boot_conf, provider->providerData.data, sizeof(FORT_PROV_BOOT_CONF));
+            }
 
             FwpmFreeMemory0((void **) &provider);
         }
@@ -168,7 +170,7 @@ FORT_API BOOL fort_prov_is_boot(void)
         fort_prov_close(engine);
     }
 
-    return is_boot;
+    return boot_conf;
 }
 
 inline static FWPM_CALLOUT0 fort_prov_init_callout(GUID key, PCWCH name, PCWCH descr, GUID layer)
@@ -228,9 +230,10 @@ static DWORD fort_prov_register_callouts(HANDLE engine)
             engine, callouts, /*count=*/sizeof(callouts) / sizeof(callouts[0]));
 }
 
-static DWORD fort_prov_register_filters(HANDLE engine, BOOL is_boot)
+static DWORD fort_prov_register_filters(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
 {
-    const UINT32 filter_flags = is_boot ? 0 : FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED;
+    const UINT32 filter_flags =
+            boot_conf.boot_filter ? 0 : FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED;
 
     const FWPM_FILTER0 filters[] = {
         /* ofilter4 */
@@ -282,14 +285,16 @@ static DWORD fort_prov_register_filters(HANDLE engine, BOOL is_boot)
     return fort_prov_add_filters(engine, filters, /*count=*/sizeof(filters) / sizeof(filters[0]));
 }
 
-static DWORD fort_prov_register_provider(HANDLE engine, BOOL is_boot)
+static DWORD fort_prov_register_provider(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
 {
     FWPM_PROVIDER0 provider;
     RtlZeroMemory(&provider, sizeof(FWPM_PROVIDER0));
-    provider.flags = is_boot ? FWPM_PROVIDER_FLAG_PERSISTENT : 0;
+    provider.flags = boot_conf.boot_filter ? FWPM_PROVIDER_FLAG_PERSISTENT : 0;
     provider.providerKey = FORT_GUID_PROVIDER;
     provider.displayData.name = (PWCHAR) L"FortProvider";
     provider.displayData.description = (PWCHAR) L"Fort Firewall Provider";
+    provider.providerData.size = sizeof(FORT_PROV_BOOT_CONF);
+    provider.providerData.data = (PUINT8) &boot_conf;
     provider.serviceName = (PWCHAR) L"fortfw";
 
     FWPM_SUBLAYER0 sublayer;
@@ -303,14 +308,14 @@ static DWORD fort_prov_register_provider(HANDLE engine, BOOL is_boot)
     if ((status = FwpmProviderAdd0(engine, &provider, NULL))
             || (status = FwpmSubLayerAdd0(engine, &sublayer, NULL))
             || (status = fort_prov_register_callouts(engine))
-            || (status = fort_prov_register_filters(engine, is_boot))) {
+            || (status = fort_prov_register_filters(engine, boot_conf))) {
         return status;
     }
 
     return 0;
 }
 
-FORT_API DWORD fort_prov_register(HANDLE transEngine, BOOL is_boot)
+FORT_API DWORD fort_prov_register(HANDLE transEngine, const FORT_PROV_BOOT_CONF boot_conf)
 {
     HANDLE engine = transEngine;
     DWORD status;
@@ -319,7 +324,7 @@ FORT_API DWORD fort_prov_register(HANDLE transEngine, BOOL is_boot)
     if (status)
         return status;
 
-    status = fort_prov_register_provider(engine, is_boot);
+    status = fort_prov_register_provider(engine, boot_conf);
 
     status = fort_prov_trans_close_engine(transEngine, engine, status);
 

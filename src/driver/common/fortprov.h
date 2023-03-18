@@ -3,6 +3,19 @@
 
 #include "common.h"
 
+typedef struct fort_prov_boot_conf
+{
+    union {
+        UINT32 v;
+
+        struct
+        {
+            UINT32 boot_filter : 1;
+            UINT32 filter_locals : 1;
+        };
+    };
+} FORT_PROV_BOOT_CONF, *PFORT_PROV_BOOT_CONF;
+
 #define fort_prov_open(engine)         FwpmEngineOpen0(NULL, RPC_C_AUTHN_WINNT, NULL, NULL, (engine))
 #define fort_prov_close(engine)        FwpmEngineClose0(engine)
 #define fort_prov_trans_begin(engine)  FwpmTransactionBegin0((engine), 0)
@@ -19,9 +32,9 @@ FORT_API void fort_prov_unregister(HANDLE transEngine);
 
 FORT_API void fort_prov_flow_unregister(HANDLE transEngine);
 
-FORT_API BOOL fort_prov_is_boot(void);
+FORT_API FORT_PROV_BOOT_CONF fort_prov_boot_conf(void);
 
-FORT_API DWORD fort_prov_register(HANDLE transEngine, BOOL is_boot);
+FORT_API DWORD fort_prov_register(HANDLE transEngine, const FORT_PROV_BOOT_CONF boot_conf);
 
 FORT_API DWORD fort_prov_flow_register(HANDLE transEngine, BOOL filter_packets);
 

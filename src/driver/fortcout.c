@@ -72,8 +72,9 @@ inline static BOOL fort_callout_ale_associate_flow(const FORT_CALLOUT_ARG ca,
 
     if (!NT_SUCCESS(status)) {
         if (status == FORT_STATUS_FLOW_BLOCK) {
+            cx->blocked = TRUE; /* block (Reauth) */
             cx->block_reason = FORT_BLOCK_REASON_REAUTH;
-            return TRUE; /* block (Reauth) */
+            return TRUE;
         }
 
         LOG("Classify v4: Flow assoc. error: %x\n", status);
@@ -130,23 +131,27 @@ inline static void fort_callout_ale_log_blocked_ip(const FORT_CALLOUT_ARG ca,
             cx->process_id, cx->real_path->Length, cx->real_path->Buffer, &cx->irp, &cx->info);
 }
 
-inline static BOOL fort_callout_ale_check_log(const FORT_CALLOUT_ARG ca,
+inline static BOOL fort_callout_ale_check_blocked(const FORT_CALLOUT_ARG ca,
         const FORT_CALLOUT_ALE_INDEX ci, PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref,
         FORT_CONF_FLAGS conf_flags, FORT_APP_FLAGS app_flags)
 {
     if (app_flags.v == 0 && conf_flags.ask_to_connect) {
-        cx->block_reason =
-                cx->is_reauth ? FORT_BLOCK_REASON_PROMPT_TIMEOUT : FORT_BLOCK_REASON_PROMPT;
-        cx->blocked = TRUE; /* blocked (prompt) */
+#if 0
+        /* Skip self injected packet */
+        if (fort_shaper_injected_by_self(&fort_device()->shaper, ca))
+            return;
+#endif
+
+        cx->drop_blocked = TRUE;
+        cx->blocked = TRUE; /* block (pending) */
+        cx->block_reason = FORT_BLOCK_REASON_PENDING;
         return TRUE;
     }
 
-    if (conf_flags.log_stat && fort_callout_ale_associate_flow(ca, ci, cx, conf_ref, app_flags)) {
-        cx->blocked = TRUE; /* blocked (error) */
-        return TRUE;
-    }
+    if (!conf_flags.log_stat)
+        return FALSE;
 
-    return FALSE;
+    return fort_callout_ale_associate_flow(ca, ci, cx, conf_ref, app_flags);
 }
 
 inline static void fort_callout_ale_log(const FORT_CALLOUT_ARG ca, const FORT_CALLOUT_ALE_INDEX ci,
@@ -155,12 +160,12 @@ inline static void fort_callout_ale_log(const FORT_CALLOUT_ARG ca, const FORT_CA
     const FORT_APP_FLAGS app_flags = fort_callout_ale_conf_app_flags(cx, conf_ref);
 
     if (!cx->blocked /* collect traffic, when Filter Disabled */
-            /* collect new Blocked Programs or Prompt */
+            /* collect new Blocked Programs or Ask to Connect */
             || (app_flags.v == 0 && (conf_flags.allow_all_new || conf_flags.ask_to_connect))
             /* check the conf for a blocked app */
             || !fort_conf_app_blocked(&conf_ref->conf, app_flags, &cx->block_reason)) {
 
-        if (fort_callout_ale_check_log(ca, ci, cx, conf_ref, conf_flags, app_flags))
+        if (fort_callout_ale_check_blocked(ca, ci, cx, conf_ref, conf_flags, app_flags))
             return;
 
         cx->blocked = FALSE; /* allow */
@@ -192,8 +197,8 @@ inline static BOOL fort_callout_ale_check_filter_flags(const FORT_CALLOUT_ARG ca
     if (!fort_conf_ip_inet_included(&conf_ref->conf,
                 (fort_conf_zones_ip_included_func *) fort_conf_zones_ip_included,
                 &fort_device()->conf, cx->remote_ip, ca.isIPv6)) {
-        cx->block_reason = FORT_BLOCK_REASON_IP_INET;
         cx->blocked = TRUE; /* block address */
+        cx->block_reason = FORT_BLOCK_REASON_IP_INET;
         return TRUE;
     }
 
@@ -222,7 +227,7 @@ inline static void fort_callout_ale_classify_blocked(const FORT_CALLOUT_ARG ca,
     /* Log the blocked connection */
     fort_callout_ale_log_blocked_ip(ca, ci, cx, conf_ref, conf_flags);
 
-    if (cx->block_reason == FORT_BLOCK_REASON_PROMPT) {
+    if (cx->drop_blocked) {
         /* Drop the connection */
         fort_callout_classify_drop(ca.classifyOut);
     } else {
@@ -290,7 +295,7 @@ inline static void fort_callout_ale_by_conf(const FORT_CALLOUT_ARG ca,
     PFORT_CONF_REF conf_ref = fort_conf_ref_take(device_conf);
 
     if (conf_ref == NULL) {
-        if (fort_device_flag(device_conf, FORT_DEVICE_PROV_BOOT) != 0) {
+        if (fort_device_flag(device_conf, FORT_DEVICE_BOOT_FILTER) != 0) {
             fort_callout_classify_block(ca.classifyOut);
         } else {
             fort_callout_classify_continue(ca.classifyOut);
@@ -324,7 +329,7 @@ static void fort_callout_ale_classify(FORT_CALLOUT_ARG ca, const FORT_CALLOUT_AL
 
     PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
 
-    if (!device_conf->conf_flags.filter_locals
+    if (fort_device_flag(device_conf, FORT_DEVICE_BOOT_FILTER_LOCALS) == 0
             && ((classify_flags & FWP_CONDITION_FLAG_IS_LOOPBACK) != 0
                     || fort_addr_is_local_broadcast(remote_ip, ca.isIPv6))) {
         fort_callout_classify_permit(ca.filter, ca.classifyOut);
@@ -821,10 +826,17 @@ static NTSTATUS fort_callout_force_reauth_prov(
 
     /* Check provider filters */
     BOOL prov_recreated = FALSE;
-    if (old_conf_flags.prov_boot != conf_flags.prov_boot) {
+    if (old_conf_flags.boot_filter != conf_flags.boot_filter
+            || old_conf_flags.filter_locals != conf_flags.filter_locals) {
+
+        const FORT_PROV_BOOT_CONF boot_conf = {
+            .boot_filter = conf_flags.boot_filter,
+            .filter_locals = conf_flags.filter_locals,
+        };
+
         fort_prov_unregister(engine);
 
-        status = fort_prov_register(engine, conf_flags.prov_boot);
+        status = fort_prov_register(engine, boot_conf);
         if (status)
             return status;
 

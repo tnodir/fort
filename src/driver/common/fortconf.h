@@ -21,7 +21,7 @@
 
 typedef struct fort_conf_flags
 {
-    UINT32 prov_boot : 1;
+    UINT32 boot_filter : 1;
     UINT32 filter_enabled : 1;
     UINT32 filter_locals : 1;
     UINT32 stop_traffic : 1;

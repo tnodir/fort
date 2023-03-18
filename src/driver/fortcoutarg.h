@@ -36,6 +36,7 @@ typedef struct fort_callout_ale_extra
     UCHAR is_reauth : 1;
     UCHAR app_flags_found : 1;
     UCHAR inherited : 1;
+    UCHAR drop_blocked : 1;
     UCHAR blocked : 1;
     INT8 block_reason;
 
