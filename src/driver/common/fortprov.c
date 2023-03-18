@@ -160,6 +160,8 @@ FORT_API FORT_PROV_BOOT_CONF fort_prov_boot_conf(void)
         FWPM_PROVIDER0 *provider;
 
         if (!FwpmProviderGetByKey0(engine, (GUID *) &FORT_GUID_PROVIDER, &provider)) {
+            boot_conf.boot_filter = (provider->flags & FWPM_PROVIDER_FLAG_PERSISTENT);
+
             if (provider->providerData.size == sizeof(FORT_PROV_BOOT_CONF)) {
                 RtlCopyMemory(&boot_conf, provider->providerData.data, sizeof(FORT_PROV_BOOT_CONF));
             }
