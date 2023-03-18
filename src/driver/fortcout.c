@@ -54,8 +54,9 @@ static FORT_APP_FLAGS fort_callout_ale_conf_app_flags(
     return app_flags;
 }
 
-inline static BOOL fort_callout_ale_associate_flow(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci,
-        PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_APP_FLAGS app_flags)
+inline static BOOL fort_callout_ale_associate_flow(const FORT_CALLOUT_ARG ca,
+        const FORT_CALLOUT_ALE_INDEX ci, PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref,
+        FORT_APP_FLAGS app_flags)
 {
     const UINT64 flow_id = ca.inMetaValues->flowHandle;
 
@@ -104,8 +105,9 @@ inline static void fort_callout_ale_log_app_path(PFORT_CALLOUT_ALE_EXTRA cx,
             cx->real_path->Length, cx->real_path->Buffer, &cx->irp, &cx->info);
 }
 
-inline static void fort_callout_ale_log_blocked_ip(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci,
-        PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
+inline static void fort_callout_ale_log_blocked_ip(const FORT_CALLOUT_ARG ca,
+        const FORT_CALLOUT_ALE_INDEX ci, PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref,
+        FORT_CONF_FLAGS conf_flags)
 {
     if (cx->block_reason == FORT_BLOCK_REASON_UNKNOWN
             || !(conf_flags.ask_to_connect || conf_flags.log_blocked_ip))
@@ -128,9 +130,9 @@ inline static void fort_callout_ale_log_blocked_ip(FORT_CALLOUT_ARG ca, FORT_CAL
             cx->process_id, cx->real_path->Length, cx->real_path->Buffer, &cx->irp, &cx->info);
 }
 
-inline static BOOL fort_callout_ale_check_log(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci,
-        PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags,
-        FORT_APP_FLAGS app_flags)
+inline static BOOL fort_callout_ale_check_log(const FORT_CALLOUT_ARG ca,
+        const FORT_CALLOUT_ALE_INDEX ci, PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref,
+        FORT_CONF_FLAGS conf_flags, FORT_APP_FLAGS app_flags)
 {
     if (app_flags.v == 0 && conf_flags.ask_to_connect) {
         cx->block_reason =
@@ -147,7 +149,7 @@ inline static BOOL fort_callout_ale_check_log(FORT_CALLOUT_ARG ca, FORT_CALLOUT_
     return FALSE;
 }
 
-inline static void fort_callout_ale_log(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci,
+inline static void fort_callout_ale_log(const FORT_CALLOUT_ARG ca, const FORT_CALLOUT_ALE_INDEX ci,
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
 {
     const FORT_APP_FLAGS app_flags = fort_callout_ale_conf_app_flags(cx, conf_ref);
@@ -167,8 +169,8 @@ inline static void fort_callout_ale_log(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_IN
     fort_callout_ale_log_app_path(cx, conf_ref, conf_flags, app_flags);
 }
 
-inline static BOOL fort_callout_ale_check_filter_flags(FORT_CALLOUT_ARG ca,
-        PFORT_CALLOUT_ALE_EXTRA cx, FORT_CONF_FLAGS conf_flags, PFORT_CONF_REF conf_ref)
+inline static BOOL fort_callout_ale_check_filter_flags(const FORT_CALLOUT_ARG ca,
+        PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
 {
     if (conf_flags.stop_traffic) {
         cx->blocked = TRUE; /* block all */
@@ -198,11 +200,11 @@ inline static BOOL fort_callout_ale_check_filter_flags(FORT_CALLOUT_ARG ca,
     return FALSE;
 }
 
-inline static BOOL fort_callout_ale_check_flags(FORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
-        FORT_CONF_FLAGS conf_flags, PFORT_CONF_REF conf_ref)
+inline static BOOL fort_callout_ale_check_flags(const FORT_CALLOUT_ARG ca,
+        const PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
 {
     if (conf_flags.filter_enabled) {
-        return fort_callout_ale_check_filter_flags(ca, cx, conf_flags, conf_ref);
+        return fort_callout_ale_check_filter_flags(ca, cx, conf_ref, conf_flags);
     }
 
     cx->blocked = FALSE;
@@ -213,8 +215,9 @@ inline static BOOL fort_callout_ale_check_flags(FORT_CALLOUT_ARG ca, PFORT_CALLO
     return FALSE;
 }
 
-inline static void fort_callout_ale_classify_blocked(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci,
-        PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
+inline static void fort_callout_ale_classify_blocked(const FORT_CALLOUT_ARG ca,
+        const FORT_CALLOUT_ALE_INDEX ci, PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref,
+        FORT_CONF_FLAGS conf_flags)
 {
     /* Log the blocked connection */
     fort_callout_ale_log_blocked_ip(ca, ci, cx, conf_ref, conf_flags);
@@ -228,8 +231,9 @@ inline static void fort_callout_ale_classify_blocked(FORT_CALLOUT_ARG ca, FORT_C
     }
 }
 
-inline static void fort_callout_ale_classify_allowed(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci,
-        PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
+inline static void fort_callout_ale_classify_allowed(const FORT_CALLOUT_ARG ca,
+        const FORT_CALLOUT_ALE_INDEX ci, PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref,
+        FORT_CONF_FLAGS conf_flags)
 {
     if (cx->block_reason == FORT_BLOCK_REASON_NONE) {
         /* Continue the search */
@@ -240,8 +244,8 @@ inline static void fort_callout_ale_classify_allowed(FORT_CALLOUT_ARG ca, FORT_C
     }
 }
 
-inline static void fort_callout_ale_check_conf(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci,
-        PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref)
+inline static void fort_callout_ale_check_conf(const FORT_CALLOUT_ARG ca,
+        const FORT_CALLOUT_ALE_INDEX ci, PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref)
 {
     const FORT_CONF_FLAGS conf_flags = conf_ref->conf.flags;
 
@@ -269,7 +273,7 @@ inline static void fort_callout_ale_check_conf(FORT_CALLOUT_ARG ca, FORT_CALLOUT
     cx->blocked = TRUE;
     cx->block_reason = FORT_BLOCK_REASON_UNKNOWN;
 
-    if (!fort_callout_ale_check_flags(ca, cx, conf_flags, conf_ref)) {
+    if (!fort_callout_ale_check_flags(ca, cx, conf_ref, conf_flags)) {
         fort_callout_ale_log(ca, ci, cx, conf_ref, conf_flags);
     }
 
@@ -280,8 +284,8 @@ inline static void fort_callout_ale_check_conf(FORT_CALLOUT_ARG ca, FORT_CALLOUT
     }
 }
 
-inline static void fort_callout_ale_by_conf(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci,
-        PFORT_CALLOUT_ALE_EXTRA cx, PFORT_DEVICE_CONF device_conf)
+inline static void fort_callout_ale_by_conf(const FORT_CALLOUT_ARG ca,
+        const FORT_CALLOUT_ALE_INDEX ci, PFORT_CALLOUT_ALE_EXTRA cx, PFORT_DEVICE_CONF device_conf)
 {
     PFORT_CONF_REF conf_ref = fort_conf_ref_take(device_conf);
 
@@ -305,7 +309,7 @@ inline static void fort_callout_ale_by_conf(FORT_CALLOUT_ARG ca, FORT_CALLOUT_AL
     }
 }
 
-static void fort_callout_ale_classify(FORT_CALLOUT_ARG ca, FORT_CALLOUT_ALE_INDEX ci)
+static void fort_callout_ale_classify(FORT_CALLOUT_ARG ca, const FORT_CALLOUT_ALE_INDEX ci)
 {
     const UINT32 classify_flags = ca.inFixedValues->incomingValue[ci.flags].value.uint32;
 

@@ -106,7 +106,7 @@ static void fort_shaper_packet_put(PFORT_SHAPER shaper, PFORT_PACKET pkt)
 }
 
 inline static NTSTATUS fort_shaper_packet_fill_in(
-        PFORT_SHAPER shaper, FORT_CALLOUT_ARG ca, PFORT_PACKET_IN pkt_in)
+        PFORT_SHAPER shaper, const FORT_CALLOUT_ARG ca, PFORT_PACKET_IN pkt_in)
 {
     const int interfaceField = ca.isIPv6 ? FWPS_FIELD_INBOUND_TRANSPORT_V6_INTERFACE_INDEX
                                          : FWPS_FIELD_INBOUND_TRANSPORT_V4_INTERFACE_INDEX;
@@ -122,7 +122,7 @@ inline static NTSTATUS fort_shaper_packet_fill_in(
 }
 
 inline static NTSTATUS fort_shaper_packet_fill_out(
-        PFORT_SHAPER shaper, FORT_CALLOUT_ARG ca, PFORT_PACKET_OUT pkt_out)
+        PFORT_SHAPER shaper, const FORT_CALLOUT_ARG ca, PFORT_PACKET_OUT pkt_out)
 {
     const ULONG controlDataLength = ca.inMetaValues->controlDataLength;
     if (FWPS_IS_METADATA_FIELD_PRESENT(ca.inMetaValues, FWPS_METADATA_FIELD_TRANSPORT_CONTROL_DATA)
@@ -154,7 +154,7 @@ inline static NTSTATUS fort_shaper_packet_fill_out(
 }
 
 inline static NTSTATUS fort_shaper_packet_fill(
-        PFORT_SHAPER shaper, FORT_CALLOUT_ARG ca, PFORT_PACKET pkt)
+        PFORT_SHAPER shaper, const FORT_CALLOUT_ARG ca, PFORT_PACKET pkt)
 {
     const NTSTATUS status = ca.inbound ? fort_shaper_packet_fill_in(shaper, ca, &pkt->in)
                                        : fort_shaper_packet_fill_out(shaper, ca, &pkt->out);
@@ -843,7 +843,7 @@ static BOOL fort_shaper_packet_queue_check_packet(PFORT_PACKET_QUEUE queue, ULON
 }
 
 inline static NTSTATUS fort_shaper_packet_queue(
-        PFORT_SHAPER shaper, FORT_CALLOUT_ARG ca, PFORT_FLOW flow)
+        PFORT_SHAPER shaper, const FORT_CALLOUT_ARG ca, PFORT_FLOW flow)
 {
     const UINT16 queue_index = flow->opt.group_index * 2 + (ca.inbound ? 0 : 1);
 
