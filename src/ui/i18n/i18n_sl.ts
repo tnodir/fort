@@ -775,11 +775,11 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     </message>
     <message>
         <source>Ask to Connect</source>
-        <translation type="unfinished"></translation>
+        <translation>Vprašaj za povezavo</translation>
     </message>
     <message>
         <source>Switch Ask to Connect</source>
-        <translation type="unfinished"></translation>
+        <translation>Preklopi Vprašaj za povezavo</translation>
     </message>
 </context>
 <context>
@@ -1518,7 +1518,7 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     </message>
     <message>
         <source>Ask to Connect</source>
-        <translation type="unfinished"></translation>
+        <translation>Vprašaj za povezavo</translation>
     </message>
 </context>
 <context>
