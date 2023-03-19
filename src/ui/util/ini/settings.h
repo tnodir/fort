@@ -19,8 +19,12 @@ public:
     void clearCache();
 
 protected:
+    bool iniVersionSet() const { return ini()->contains("base/version"); }
+
     int iniVersion() const { return iniInt("base/version", appVersion()); }
     void setIniVersion(int v) { setIniValue("base/version", v); }
+
+    bool checkIniVersion(int &oldVersion) const;
 
     bool iniExists() const { return m_iniExists; }
 

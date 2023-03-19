@@ -18,8 +18,8 @@ void UserSettings::setUp()
 
 void UserSettings::migrateIniOnStartup()
 {
-    const int version = iniVersion();
-    if (version == appVersion())
+    int version;
+    if (checkIniVersion(version))
         return;
 
     // COMPAT: v3.4.0: .ini ~> .user.ini
@@ -38,8 +38,8 @@ void UserSettings::migrateIniOnStartup()
 
 void UserSettings::migrateIniOnWrite()
 {
-    const int version = iniVersion();
-    if (version == appVersion())
+    int version;
+    if (checkIniVersion(version))
         return;
 
     Settings::migrateIniOnWrite();

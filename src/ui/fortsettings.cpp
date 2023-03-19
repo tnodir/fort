@@ -384,8 +384,8 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
 
 void FortSettings::migrateIniOnStartup()
 {
-    const int version = iniVersion();
-    if (version == appVersion())
+    int version;
+    if (checkIniVersion(version))
         return;
 
     // COMPAT: v3.4.0
@@ -405,8 +405,8 @@ void FortSettings::migrateIniOnStartup()
 
 void FortSettings::migrateIniOnWrite()
 {
-    const int version = iniVersion();
-    if (version == appVersion())
+    int version;
+    if (checkIniVersion(version))
         return;
 
     Settings::migrateIniOnWrite();
@@ -433,8 +433,8 @@ void FortSettings::migrateIniOnWrite()
 
 bool FortSettings::wasMigrated() const
 {
-    const int version = iniVersion();
-    if (version == appVersion())
+    int version;
+    if (checkIniVersion(version))
         return false;
 
 #if 0
@@ -448,8 +448,8 @@ bool FortSettings::wasMigrated() const
 
 bool FortSettings::canMigrate(QString &viaVersion) const
 {
-    const int version = iniVersion();
-    if (version == appVersion())
+    int version;
+    if (checkIniVersion(version))
         return true;
 
     // COMPAT: v3.0.0

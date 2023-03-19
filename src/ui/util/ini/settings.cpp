@@ -6,6 +6,17 @@
 
 Settings::Settings(QObject *parent) : QObject(parent), m_iniExists(false) { }
 
+bool Settings::checkIniVersion(int &oldVersion) const
+{
+    if (!iniExists() || !iniVersionSet()) {
+        oldVersion = 0;
+        return false;
+    }
+
+    oldVersion = iniVersion();
+    return oldVersion == appVersion();
+}
+
 void Settings::setupIni(const QString &filePath)
 {
     const QString iniPath(filePath);
