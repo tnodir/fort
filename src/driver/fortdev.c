@@ -329,8 +329,9 @@ FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device)
     fort_pstree_open(&fort_device()->ps_tree);
 
     /* Unregister old filters provider */
+    FORT_PROV_BOOT_CONF boot_conf;
     {
-        const FORT_PROV_BOOT_CONF boot_conf = fort_prov_boot_conf();
+        boot_conf = fort_prov_boot_conf();
 
         fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_BOOT_FILTER, boot_conf.boot_filter);
         fort_device_flag_set(
@@ -349,13 +350,6 @@ FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device)
 
     /* Register filters provider */
     if (NT_SUCCESS(status)) {
-        const UCHAR flags = fort_device_flag(&fort_device()->conf, FORT_DEVICE_BOOT_MASK);
-
-        const FORT_PROV_BOOT_CONF boot_conf = {
-            .boot_filter = (flags & FORT_DEVICE_BOOT_FILTER) != 0,
-            .filter_locals = (flags & FORT_DEVICE_BOOT_FILTER_LOCALS) != 0,
-        };
-
         status = fort_prov_register(0, boot_conf);
     }
 
