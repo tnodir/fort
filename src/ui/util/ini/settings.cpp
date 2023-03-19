@@ -95,10 +95,9 @@ QVariant Settings::iniValue(const QString &key, const QVariant &defaultValue) co
     if (key.isEmpty())
         return QVariant();
 
-    // Try to load from cache
-    const QString group = m_ini->group();
-    const QString cachedKey = group.isEmpty() ? key : group + '/' + key;
+    const QString cachedKey = cacheKey(key);
 
+    // Try to load from cache
     const QVariant cachedValue = cacheValue(cachedKey);
     if (!cachedValue.isNull())
         return cachedValue;
@@ -122,7 +121,13 @@ void Settings::setIniValue(const QString &key, const QVariant &value, const QVar
     m_ini->setValue(key, value);
 
     // Save to cache
-    setCacheValue(key, value);
+    setCacheValue(cacheKey(key), value);
+}
+
+QString Settings::cacheKey(const QString &key) const
+{
+    const QString group = m_ini->group();
+    return group.isEmpty() ? key : group + '/' + key;
 }
 
 QVariant Settings::cacheValue(const QString &key) const

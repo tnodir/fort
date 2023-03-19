@@ -48,6 +48,7 @@ protected:
     void setIniValue(
             const QString &key, const QVariant &value, const QVariant &defaultValue = QVariant());
 
+    QString cacheKey(const QString &key) const;
     QVariant cacheValue(const QString &key) const;
     void setCacheValue(const QString &key, const QVariant &value) const;
 
