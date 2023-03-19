@@ -21,7 +21,9 @@ static DWORD fort_prov_trans_open_engine(HANDLE transEngine, HANDLE *engine)
 {
     DWORD status = 0;
 
-    if (!transEngine) {
+    if (transEngine) {
+        *engine = transEngine;
+    } else {
         status = fort_prov_open(engine);
 
         if (status == 0) {
@@ -65,6 +67,16 @@ static DWORD fort_prov_add_filters(HANDLE engine, const FWPM_FILTER0 *filters, i
 
 static void fort_prov_unregister_filters(HANDLE engine)
 {
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_BOOT_FILTER_CONNECT_V4);
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_BOOT_FILTER_CONNECT_V6);
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_BOOT_FILTER_ACCEPT_V4);
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_BOOT_FILTER_ACCEPT_V6);
+
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_PERSIST_FILTER_CONNECT_V4);
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_PERSIST_FILTER_CONNECT_V6);
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_PERSIST_FILTER_ACCEPT_V4);
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_PERSIST_FILTER_ACCEPT_V6);
+
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_CONNECT_V4);
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_CONNECT_V6);
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_ACCEPT_V4);
@@ -113,7 +125,7 @@ static void fort_prov_unregister_provider(HANDLE engine)
     FwpmProviderDeleteByKey0(engine, (GUID *) &FORT_GUID_PROVIDER);
 }
 
-static void fort_prov_unregister_flow_filters(HANDLE engine)
+FORT_API void fort_prov_flow_unregister(HANDLE engine)
 {
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_STREAM_V4);
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_STREAM_V6);
@@ -128,51 +140,14 @@ static void fort_prov_unregister_flow_filters(HANDLE engine)
 
 FORT_API void fort_prov_unregister(HANDLE transEngine)
 {
-    HANDLE engine = transEngine;
-
+    HANDLE engine;
     if (fort_prov_trans_open_engine(transEngine, &engine))
         return;
 
-    fort_prov_unregister_flow_filters(engine);
+    fort_prov_flow_unregister(engine);
     fort_prov_unregister_provider(engine);
 
     fort_prov_trans_close_engine(transEngine, engine, /*status=*/0);
-}
-
-FORT_API void fort_prov_flow_unregister(HANDLE transEngine)
-{
-    HANDLE engine = transEngine;
-
-    if (fort_prov_trans_open_engine(transEngine, &engine))
-        return;
-
-    fort_prov_unregister_flow_filters(engine);
-
-    fort_prov_trans_close_engine(transEngine, engine, /*status=*/0);
-}
-
-FORT_API FORT_PROV_BOOT_CONF fort_prov_boot_conf(void)
-{
-    HANDLE engine;
-    FORT_PROV_BOOT_CONF boot_conf = { .v = 0 };
-
-    if (!fort_prov_open(&engine)) {
-        FWPM_PROVIDER0 *provider;
-
-        if (!FwpmProviderGetByKey0(engine, (GUID *) &FORT_GUID_PROVIDER, &provider)) {
-            boot_conf.boot_filter = (provider->flags & FWPM_PROVIDER_FLAG_PERSISTENT);
-
-            if (provider->providerData.size == sizeof(FORT_PROV_BOOT_CONF)) {
-                RtlCopyMemory(&boot_conf, provider->providerData.data, sizeof(FORT_PROV_BOOT_CONF));
-            }
-
-            FwpmFreeMemory0((void **) &provider);
-        }
-
-        fort_prov_close(engine);
-    }
-
-    return boot_conf;
 }
 
 inline static FWPM_CALLOUT0 fort_prov_init_callout(GUID key, PCWCH name, PCWCH descr, GUID layer)
@@ -232,10 +207,110 @@ static DWORD fort_prov_register_callouts(HANDLE engine)
             engine, callouts, /*count=*/sizeof(callouts) / sizeof(callouts[0]));
 }
 
-static DWORD fort_prov_register_filters(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
+static DWORD fort_prov_register_boot_filters(HANDLE engine)
+{
+    const UINT32 filter_flags = FWPM_FILTER_FLAG_BOOTTIME | FWPM_FILTER_FLAG_CLEAR_ACTION_RIGHT;
+
+    const FWPM_FILTER0 filters[] = {
+        /* ofilter4 */
+        {
+                .flags = filter_flags,
+                .filterKey = FORT_GUID_BOOT_FILTER_CONNECT_V4,
+                .layerKey = FWPM_LAYER_ALE_AUTH_CONNECT_V4,
+                .displayData.name = (PWCHAR) L"FortBootFilterOut4",
+                .action.type = FWP_ACTION_BLOCK,
+        },
+        /* ofilter6 */
+        {
+                .flags = filter_flags,
+                .filterKey = FORT_GUID_BOOT_FILTER_CONNECT_V6,
+                .layerKey = FWPM_LAYER_ALE_AUTH_CONNECT_V6,
+                .displayData.name = (PWCHAR) L"FortBootFilterOut6",
+                .action.type = FWP_ACTION_BLOCK,
+        },
+        /* ifilter4 */
+        {
+                .flags = filter_flags,
+                .filterKey = FORT_GUID_BOOT_FILTER_ACCEPT_V4,
+                .layerKey = FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4,
+                .displayData.name = (PWCHAR) L"FortBootFilterIn4",
+                .action.type = FWP_ACTION_BLOCK,
+        },
+        /* ifilter6 */
+        {
+                .flags = filter_flags,
+                .filterKey = FORT_GUID_BOOT_FILTER_ACCEPT_V6,
+                .layerKey = FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V6,
+                .displayData.name = (PWCHAR) L"FortBootFilterIn6",
+                .action.type = FWP_ACTION_BLOCK,
+        },
+    };
+
+    return fort_prov_add_filters(engine, filters, /*count=*/sizeof(filters) / sizeof(filters[0]));
+}
+
+static DWORD fort_prov_register_persist_filters(HANDLE engine)
+{
+    const UINT32 filter_flags = FWPM_FILTER_FLAG_PERSISTENT | FWPM_FILTER_FLAG_CLEAR_ACTION_RIGHT;
+
+    FWP_VALUE0 weight;
+    weight.type = FWP_UINT8;
+    weight.uint8 = 0; /* low weight */
+
+    const FWPM_FILTER0 filters[] = {
+        /* ofilter4 */
+        {
+                .flags = filter_flags,
+                .filterKey = FORT_GUID_PERSIST_FILTER_CONNECT_V4,
+                .layerKey = FWPM_LAYER_ALE_AUTH_CONNECT_V4,
+                .subLayerKey = FORT_GUID_SUBLAYER,
+                .weight = weight,
+                .displayData.name = (PWCHAR) L"FortFilterPersistConnect4",
+                .action.type = FWP_ACTION_BLOCK,
+        },
+        /* ofilter6 */
+        {
+                .flags = filter_flags,
+                .filterKey = FORT_GUID_PERSIST_FILTER_CONNECT_V6,
+                .layerKey = FWPM_LAYER_ALE_AUTH_CONNECT_V6,
+                .subLayerKey = FORT_GUID_SUBLAYER,
+                .weight = weight,
+                .displayData.name = (PWCHAR) L"FortFilterPersistConnect6",
+                .action.type = FWP_ACTION_BLOCK,
+        },
+        /* ifilter4 */
+        {
+                .flags = filter_flags,
+                .filterKey = FORT_GUID_PERSIST_FILTER_ACCEPT_V4,
+                .layerKey = FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4,
+                .subLayerKey = FORT_GUID_SUBLAYER,
+                .weight = weight,
+                .displayData.name = (PWCHAR) L"FortFilterPersistAccept4",
+                .action.type = FWP_ACTION_BLOCK,
+        },
+        /* ifilter6 */
+        {
+                .flags = filter_flags,
+                .filterKey = FORT_GUID_PERSIST_FILTER_ACCEPT_V6,
+                .layerKey = FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V6,
+                .subLayerKey = FORT_GUID_SUBLAYER,
+                .weight = weight,
+                .displayData.name = (PWCHAR) L"FortFilterPersistAccept6",
+                .action.type = FWP_ACTION_BLOCK,
+        },
+    };
+
+    return fort_prov_add_filters(engine, filters, /*count=*/sizeof(filters) / sizeof(filters[0]));
+}
+
+static DWORD fort_prov_register_callout_filters(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
 {
     const UINT32 filter_flags =
             boot_conf.boot_filter ? 0 : FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED;
+
+    FWP_VALUE0 weight;
+    weight.type = FWP_UINT8;
+    weight.uint8 = 9; /* high weight */
 
     const FWPM_FILTER0 filters[] = {
         /* ofilter4 */
@@ -244,6 +319,7 @@ static DWORD fort_prov_register_filters(HANDLE engine, const FORT_PROV_BOOT_CONF
                 .filterKey = FORT_GUID_FILTER_CONNECT_V4,
                 .layerKey = FWPM_LAYER_ALE_AUTH_CONNECT_V4,
                 .subLayerKey = FORT_GUID_SUBLAYER,
+                .weight = weight,
                 .displayData.name = (PWCHAR) L"FortFilterConnect4",
                 .displayData.description = (PWCHAR) L"Fort Firewall Filter Connect V4",
                 .action.type = FWP_ACTION_CALLOUT_UNKNOWN,
@@ -255,6 +331,7 @@ static DWORD fort_prov_register_filters(HANDLE engine, const FORT_PROV_BOOT_CONF
                 .filterKey = FORT_GUID_FILTER_CONNECT_V6,
                 .layerKey = FWPM_LAYER_ALE_AUTH_CONNECT_V6,
                 .subLayerKey = FORT_GUID_SUBLAYER,
+                .weight = weight,
                 .displayData.name = (PWCHAR) L"FortFilterConnect6",
                 .displayData.description = (PWCHAR) L"Fort Firewall Filter Connect V6",
                 .action.type = FWP_ACTION_CALLOUT_UNKNOWN,
@@ -266,6 +343,7 @@ static DWORD fort_prov_register_filters(HANDLE engine, const FORT_PROV_BOOT_CONF
                 .filterKey = FORT_GUID_FILTER_ACCEPT_V4,
                 .layerKey = FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4,
                 .subLayerKey = FORT_GUID_SUBLAYER,
+                .weight = weight,
                 .displayData.name = (PWCHAR) L"FortFilterAccept4",
                 .displayData.description = (PWCHAR) L"Fort Firewall Filter Accept V4",
                 .action.type = FWP_ACTION_CALLOUT_UNKNOWN,
@@ -277,6 +355,7 @@ static DWORD fort_prov_register_filters(HANDLE engine, const FORT_PROV_BOOT_CONF
                 .filterKey = FORT_GUID_FILTER_ACCEPT_V6,
                 .layerKey = FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V6,
                 .subLayerKey = FORT_GUID_SUBLAYER,
+                .weight = weight,
                 .displayData.name = (PWCHAR) L"FortFilterAccept6",
                 .displayData.description = (PWCHAR) L"Fort Firewall Filter Accept V6",
                 .action.type = FWP_ACTION_CALLOUT_UNKNOWN,
@@ -287,7 +366,7 @@ static DWORD fort_prov_register_filters(HANDLE engine, const FORT_PROV_BOOT_CONF
     return fort_prov_add_filters(engine, filters, /*count=*/sizeof(filters) / sizeof(filters[0]));
 }
 
-static DWORD fort_prov_register_provider(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
+FORT_API DWORD fort_prov_register(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
 {
     FWPM_PROVIDER0 provider;
     RtlZeroMemory(&provider, sizeof(FWPM_PROVIDER0));
@@ -301,6 +380,7 @@ static DWORD fort_prov_register_provider(HANDLE engine, const FORT_PROV_BOOT_CON
 
     FWPM_SUBLAYER0 sublayer;
     RtlZeroMemory(&sublayer, sizeof(FWPM_SUBLAYER0));
+    sublayer.flags = boot_conf.boot_filter ? FWPM_SUBLAYER_FLAG_PERSISTENT : 0;
     sublayer.subLayerKey = FORT_GUID_SUBLAYER;
     sublayer.displayData.name = (PWCHAR) L"FortSublayer";
     sublayer.displayData.description = (PWCHAR) L"Fort Firewall Sublayer";
@@ -310,27 +390,33 @@ static DWORD fort_prov_register_provider(HANDLE engine, const FORT_PROV_BOOT_CON
     if ((status = FwpmProviderAdd0(engine, &provider, NULL))
             || (status = FwpmSubLayerAdd0(engine, &sublayer, NULL))
             || (status = fort_prov_register_callouts(engine))
-            || (status = fort_prov_register_filters(engine, boot_conf))) {
+            || (boot_conf.boot_filter
+                    && ((status = fort_prov_register_boot_filters(engine))
+                            || (status = fort_prov_register_persist_filters(engine))))
+            || (status = fort_prov_register_callout_filters(engine, boot_conf))) {
         return status;
     }
 
     return 0;
 }
 
-FORT_API DWORD fort_prov_register(HANDLE transEngine, const FORT_PROV_BOOT_CONF boot_conf)
+FORT_API FORT_PROV_BOOT_CONF fort_prov_get_boot_conf(HANDLE engine)
 {
-    HANDLE engine = transEngine;
-    DWORD status;
+    FORT_PROV_BOOT_CONF boot_conf = { .v = 0 };
 
-    status = fort_prov_trans_open_engine(transEngine, &engine);
-    if (status)
-        return status;
+    FWPM_PROVIDER0 *provider;
 
-    status = fort_prov_register_provider(engine, boot_conf);
+    if (!FwpmProviderGetByKey0(engine, (GUID *) &FORT_GUID_PROVIDER, &provider)) {
+        boot_conf.boot_filter = (provider->flags & FWPM_PROVIDER_FLAG_PERSISTENT);
 
-    status = fort_prov_trans_close_engine(transEngine, engine, status);
+        if (provider->providerData.size == sizeof(FORT_PROV_BOOT_CONF)) {
+            RtlCopyMemory(&boot_conf, provider->providerData.data, sizeof(FORT_PROV_BOOT_CONF));
+        }
 
-    return status;
+        FwpmFreeMemory0((void **) &provider);
+    }
+
+    return boot_conf;
 }
 
 static DWORD fort_prov_flow_register_filters(HANDLE engine)
@@ -443,22 +529,15 @@ static DWORD fort_prov_flow_register_packet_filters(HANDLE engine)
     return fort_prov_add_filters(engine, filters, /*count=*/sizeof(filters) / sizeof(filters[0]));
 }
 
-FORT_API DWORD fort_prov_flow_register(HANDLE transEngine, BOOL filter_packets)
+FORT_API DWORD fort_prov_flow_register(HANDLE engine, BOOL filter_packets)
 {
-    HANDLE engine = transEngine;
     DWORD status;
-
-    status = fort_prov_trans_open_engine(transEngine, &engine);
-    if (status)
-        return status;
 
     status = fort_prov_flow_register_filters(engine);
 
     if (status == 0 && filter_packets) {
         status = fort_prov_flow_register_packet_filters(engine);
     }
-
-    status = fort_prov_trans_close_engine(transEngine, engine, status);
 
     return status;
 }
@@ -507,21 +586,14 @@ static DWORD fort_prov_register_reauth_filters(HANDLE engine)
     return fort_prov_add_filters(engine, filters, /*count=*/sizeof(filters) / sizeof(filters[0]));
 }
 
-FORT_API DWORD fort_prov_reauth(HANDLE transEngine)
+FORT_API DWORD fort_prov_reauth(HANDLE engine)
 {
-    HANDLE engine = transEngine;
     DWORD status;
-
-    status = fort_prov_trans_open_engine(transEngine, &engine);
-    if (status)
-        return status;
 
     status = fort_prov_unregister_reauth_filters(engine, /*force=*/FALSE);
     if (status) {
         status = fort_prov_register_reauth_filters(engine);
     }
-
-    status = fort_prov_trans_close_engine(transEngine, engine, status);
 
     return status;
 }

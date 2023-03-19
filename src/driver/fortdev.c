@@ -310,9 +310,33 @@ FORT_API NTSTATUS fort_device_control(PDEVICE_OBJECT device, PIRP irp)
     return status;
 }
 
+static NTSTATUS fort_device_register_provider(void)
+{
+    NTSTATUS status;
+
+    HANDLE engine;
+    status = fort_prov_open(&engine);
+    if (!NT_SUCCESS(status))
+        return status;
+
+    fort_prov_trans_begin(engine);
+
+    const FORT_PROV_BOOT_CONF boot_conf = fort_prov_get_boot_conf(engine);
+
+    fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_BOOT_FILTER, boot_conf.boot_filter);
+    fort_device_flag_set(
+            &fort_device()->conf, FORT_DEVICE_BOOT_FILTER_LOCALS, boot_conf.filter_locals);
+
+    fort_prov_unregister(engine);
+
+    status = fort_prov_register(engine, boot_conf);
+
+    return fort_prov_trans_close(engine, status);
+}
+
 FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device)
 {
-    NTSTATUS status = STATUS_UNSUCCESSFUL;
+    NTSTATUS status;
 
     fort_device_init(device);
 
@@ -328,47 +352,35 @@ FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device)
             &fort_device()->app_timer, 60000, FORT_TIMER_COALESCABLE, &fort_app_period_timer);
     fort_pstree_open(&fort_device()->ps_tree);
 
-    /* Unregister old filters provider */
-    FORT_PROV_BOOT_CONF boot_conf;
-    {
-        boot_conf = fort_prov_boot_conf();
-
-        fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_BOOT_FILTER, boot_conf.boot_filter);
-        fort_device_flag_set(
-                &fort_device()->conf, FORT_DEVICE_BOOT_FILTER_LOCALS, boot_conf.filter_locals);
-
-        fort_prov_unregister(NULL);
-    }
+    /* Register filters provider */
+    status = fort_device_register_provider();
+    if (!NT_SUCCESS(status))
+        return status;
 
     /* Install callouts */
     status = fort_callout_install(device);
+    if (!NT_SUCCESS(status))
+        return status;
 
     /* Register worker */
-    if (NT_SUCCESS(status)) {
-        status = fort_worker_register(device, &fort_device()->worker);
-    }
-
-    /* Register filters provider */
-    if (NT_SUCCESS(status)) {
-        status = fort_prov_register(0, boot_conf);
-    }
+    status = fort_worker_register(device, &fort_device()->worker);
+    if (!NT_SUCCESS(status))
+        return status;
 
     /* Register power state change callback */
-    if (NT_SUCCESS(status)) {
-        status = fort_syscb_power_register();
-    }
+    status = fort_syscb_power_register();
+    if (!NT_SUCCESS(status))
+        return status;
 
     /* Register system time change callback */
-    if (NT_SUCCESS(status)) {
-        status = fort_syscb_time_register();
-    }
+    status = fort_syscb_time_register();
+    if (!NT_SUCCESS(status))
+        return status;
 
     /* Enumerate processes in background */
-    if (NT_SUCCESS(status)) {
-        fort_worker_queue(&fort_device()->worker, FORT_WORKER_PSTREE);
-    }
+    fort_worker_queue(&fort_device()->worker, FORT_WORKER_PSTREE);
 
-    return status;
+    return STATUS_SUCCESS;
 }
 
 FORT_API void fort_device_unload()
