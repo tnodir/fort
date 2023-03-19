@@ -427,6 +427,7 @@ void FortSettings::migrateIniOnWrite()
 
     // COMPAT: v3.8.1
     if (version < 0x030801) {
+        removeIniKey("confFlags/provBoot");
         ini()->setValue("confFlags/bootFilter", cacheValue("confFlags/bootFilter"));
     }
 }
