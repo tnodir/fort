@@ -775,11 +775,11 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Ask to Connect</source>
-        <translation type="unfinished"></translation>
+        <translation>연결 요청</translation>
     </message>
     <message>
         <source>Switch Ask to Connect</source>
-        <translation type="unfinished"></translation>
+        <translation>연결 요청 전환</translation>
     </message>
 </context>
 <context>
@@ -1518,7 +1518,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Ask to Connect</source>
-        <translation type="unfinished"></translation>
+        <translation>연결 요청</translation>
     </message>
 </context>
 <context>
