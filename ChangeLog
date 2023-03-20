@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v3.8.1, 2022-03-20:
+- UI: Programs: Group's name reflects its enabled flag.
+- UI: Options: Move "Filter Local Addresses" flag into "Self Protection" group.
+- Driver: Filter local addresses when Fort is not running.
+- Driver: Rework flows closing on driver unload.
+
 v3.8.0, 2022-03-13:
 - UI: Add "Auto-Learn" mode, remove "Auto-Allow New Programs" flag.
 - UI: Update SQLite to v3.41.1
