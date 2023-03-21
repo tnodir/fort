@@ -405,11 +405,11 @@ void FortSettings::migrateIniOnStartup()
 
 void FortSettings::migrateIniOnWrite()
 {
-    Settings::migrateIniOnWrite();
-
     int version;
-    if (checkIniVersion(version))
+    if (checkIniVersionOnWrite(version))
         return;
+
+    Settings::migrateIniOnWrite();
 
     // COMPAT: v3.4.0: .ini ~> .user.ini
     if (version < 0x030400) {

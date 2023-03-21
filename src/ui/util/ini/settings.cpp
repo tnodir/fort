@@ -21,6 +21,16 @@ bool Settings::checkIniVersion(int &oldVersion) const
     return oldVersion == appVersion();
 }
 
+bool Settings::checkIniVersionOnWrite(int &oldVersion) const
+{
+    if (!iniExists()) {
+        oldVersion = appVersion();
+        return false;
+    }
+
+    return checkIniVersion(oldVersion);
+}
+
 void Settings::setupIni(const QString &filePath)
 {
     const QString iniPath(filePath);

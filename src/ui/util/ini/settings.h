@@ -25,6 +25,7 @@ protected:
     void setIniVersion(int v) { setIniValue("base/version", v); }
 
     bool checkIniVersion(int &oldVersion) const;
+    bool checkIniVersionOnWrite(int &oldVersion) const;
 
     bool iniExists() const { return m_iniExists; }
 
