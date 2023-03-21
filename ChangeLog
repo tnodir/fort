@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.8.2, 2022-03-21:
+- UI: Fix default options on clean install (v3.8.1 regression).
+
 v3.8.1, 2022-03-20:
 - UI: Programs: Group's name reflects its enabled flag.
 - UI: Options: Move "Filter Local Addresses" flag into "Self Protection" group.
