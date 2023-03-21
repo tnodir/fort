@@ -10,9 +10,6 @@
 
 #define FORT_PACKET_QUEUE_BAD_INDEX ((UINT16) -1)
 
-#define FORT_PACKET_INBOUND 0x01
-#define FORT_PACKET_IP6     0x02
-
 typedef struct fort_packet_in
 {
     IF_INDEX interfaceIndex;
@@ -32,15 +29,11 @@ typedef struct fort_packet_out
     ip_addr_t remoteAddr;
 } FORT_PACKET_OUT, *PFORT_PACKET_OUT;
 
-typedef struct fort_packet
+#define FORT_PACKET_INBOUND 0x01
+#define FORT_PACKET_IP6     0x02
+
+typedef struct fort_packet_io
 {
-    struct fort_packet *next;
-
-    PVOID flow; /* to drop on flow deletion */
-
-    LARGE_INTEGER latency_start; /* Time it was placed in the latency queue */
-    UINT32 data_length; /* Size of the packet (in bytes) */
-
     UCHAR flags;
 
     /* Data for re-injection */
@@ -50,12 +43,24 @@ typedef struct fort_packet
         FORT_PACKET_IN in;
         FORT_PACKET_OUT out;
     };
-} FORT_PACKET, *PFORT_PACKET;
+} FORT_PACKET_IO, *PFORT_PACKET_IO;
+
+typedef struct fort_flow_packet
+{
+    struct fort_flow_packet *next;
+
+    PVOID flow; /* to drop on flow deletion */
+
+    LARGE_INTEGER latency_start; /* Time it was placed in the latency queue */
+    UINT32 data_length; /* Size of the packet (in bytes) */
+
+    FORT_PACKET_IO io;
+} FORT_FLOW_PACKET, *PFORT_FLOW_PACKET;
 
 typedef struct fort_packet_list
 {
-    PFORT_PACKET packet_head;
-    PFORT_PACKET packet_tail;
+    PFORT_FLOW_PACKET packet_head;
+    PFORT_FLOW_PACKET packet_tail;
 } FORT_PACKET_LIST, *PFORT_PACKET_LIST;
 
 typedef struct fort_packet_queue
@@ -93,7 +98,7 @@ typedef struct fort_shaper
 
     FORT_TIMER timer;
 
-    PFORT_PACKET packet_free;
+    PFORT_FLOW_PACKET packet_free;
     tommy_arrayof packets;
 
     PFORT_PACKET_QUEUE queues[FORT_CONF_GROUP_MAX * 2]; /* in/out-bound pairs */
