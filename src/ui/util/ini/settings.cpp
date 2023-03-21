@@ -8,6 +8,9 @@ Settings::Settings(QObject *parent) : QObject(parent), m_iniExists(false) { }
 
 bool Settings::checkIniVersion(int &oldVersion) const
 {
+    if (!iniExists())
+        return true;
+
     if (!iniVersionSet()) {
         // TODO: COMPAT: Change after v4.1.0 (via v4.0.0) to be 0
         oldVersion = 0x030800;

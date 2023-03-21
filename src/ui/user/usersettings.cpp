@@ -38,11 +38,11 @@ void UserSettings::migrateIniOnStartup()
 
 void UserSettings::migrateIniOnWrite()
 {
+    Settings::migrateIniOnWrite();
+
     int version;
     if (checkIniVersion(version))
         return;
-
-    Settings::migrateIniOnWrite();
 
     // COMPAT: v3.4.0: .ini ~> .user.ini
     if (version < 0x030400) {
