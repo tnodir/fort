@@ -131,15 +131,30 @@ inline static void fort_callout_ale_log_blocked_ip(const FORT_CALLOUT_ARG ca,
             cx->process_id, cx->real_path->Length, cx->real_path->Buffer, &cx->irp, &cx->info);
 }
 
+inline static BOOL fort_callout_ale_add_pending(
+        const FORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, FORT_CONF_FLAGS conf_flags)
+{
+    if (!fort_packet_add_pending(ca)) {
+        if (conf_flags.allow_all_new || conf_flags.app_allow_all)
+            return FALSE;
+
+        cx->blocked = TRUE; /* block (error) */
+        cx->block_reason = FORT_BLOCK_REASON_FILTER_MODE;
+        return TRUE;
+    }
+
+    cx->drop_blocked = TRUE; /* drop (pending) */
+    cx->blocked = TRUE;
+    cx->block_reason = FORT_BLOCK_REASON_ASK_PENDING;
+    return TRUE;
+}
+
 inline static BOOL fort_callout_ale_check_blocked(const FORT_CALLOUT_ARG ca,
         const FORT_CALLOUT_ALE_INDEX ci, PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref,
         FORT_CONF_FLAGS conf_flags, FORT_APP_FLAGS app_flags)
 {
-    if (app_flags.v == 0 && conf_flags.ask_to_connect && fort_packet_add_pending(ca)) {
-        cx->drop_blocked = TRUE; /* drop (pending) */
-        cx->blocked = TRUE;
-        cx->block_reason = FORT_BLOCK_REASON_ASK_PENDING;
-        return TRUE;
+    if (app_flags.v == 0 && conf_flags.ask_to_connect) {
+        return fort_callout_ale_add_pending(ca, cx, conf_flags);
     }
 
     if (!conf_flags.log_stat)
