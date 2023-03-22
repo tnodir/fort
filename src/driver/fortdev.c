@@ -57,8 +57,8 @@ FORT_API NTSTATUS fort_device_create(PDEVICE_OBJECT device, PIRP irp)
     NTSTATUS status = STATUS_SUCCESS;
 
     /* Device opened */
-    if (fort_device_flag_set(&g_device->conf, FORT_DEVICE_IS_OPENED, TRUE)
-            & FORT_DEVICE_IS_OPENED) {
+    if ((fort_device_flag_set(&g_device->conf, FORT_DEVICE_IS_OPENED, TRUE) & FORT_DEVICE_IS_OPENED)
+            != 0) {
         status = STATUS_SHARING_VIOLATION; /* Only one client may connect */
     }
 
@@ -308,6 +308,19 @@ FORT_API NTSTATUS fort_device_control(PDEVICE_OBJECT device, PIRP irp)
     }
 
     return status;
+}
+
+FORT_API NTSTATUS fort_device_shutdown(PDEVICE_OBJECT device, PIRP irp)
+{
+    UNUSED(device);
+
+    if (fort_device() != NULL) {
+        fort_stat_close_flows(&fort_device()->stat);
+    }
+
+    fort_request_complete(irp, STATUS_SUCCESS);
+
+    return STATUS_SUCCESS;
 }
 
 static NTSTATUS fort_device_register_provider(void)

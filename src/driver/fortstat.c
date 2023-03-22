@@ -394,7 +394,7 @@ FORT_API void fort_stat_open(PFORT_STAT stat)
     KeInitializeSpinLock(&stat->lock);
 }
 
-static void fort_stat_close_flows(PFORT_STAT stat)
+FORT_API void fort_stat_close_flows(PFORT_STAT stat)
 {
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);

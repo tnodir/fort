@@ -441,8 +441,10 @@ static void fort_conf_zones_free(PFORT_CONF_ZONES zones)
 FORT_API void fort_conf_zones_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_ZONES zones)
 {
     KIRQL oldIrql = ExAcquireSpinLockExclusive(&device_conf->zones_lock);
-    fort_conf_zones_free(device_conf->zones);
-    device_conf->zones = zones;
+    {
+        fort_conf_zones_free(device_conf->zones);
+        device_conf->zones = zones;
+    }
     ExReleaseSpinLockExclusive(&device_conf->zones_lock, oldIrql);
 }
 

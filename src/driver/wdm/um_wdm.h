@@ -58,6 +58,14 @@ typedef LONG KDPC, *PKDPC, *PRKDPC;
 #define IRP_MJ_MAXIMUM_FUNCTION         0x1b
 
 //
+// POWER minor function codes
+//
+#define IRP_MN_WAIT_WAKE      0x00
+#define IRP_MN_POWER_SEQUENCE 0x01
+#define IRP_MN_SET_POWER      0x02
+#define IRP_MN_QUERY_POWER    0x03
+
+//
 // Define Device Object (DO) flags
 //
 #define DO_VERIFY_VOLUME         0x00000002
@@ -76,8 +84,50 @@ typedef LONG KDPC, *PKDPC, *PRKDPC;
 typedef CCHAR KPROCESSOR_MODE;
 typedef enum { KernelMode, UserMode, MaximumMode } MODE;
 
+#if defined(_WIN64)
+#    define POINTER_ALIGNMENT DECLSPEC_ALIGN(8)
+#else
+#    define POINTER_ALIGNMENT
+#endif
+
+typedef union _POWER_STATE {
+    SYSTEM_POWER_STATE SystemState;
+    DEVICE_POWER_STATE DeviceState;
+} POWER_STATE, *PPOWER_STATE;
+
+typedef enum _POWER_STATE_TYPE {
+    SystemPowerState = 0,
+    DevicePowerState
+} POWER_STATE_TYPE,
+        *PPOWER_STATE_TYPE;
+
+typedef struct _SYSTEM_POWER_STATE_CONTEXT
+{
+    union {
+        struct
+        {
+            ULONG Reserved1 : 8;
+            ULONG TargetSystemState : 4;
+            ULONG EffectiveSystemState : 4;
+            ULONG CurrentSystemState : 4;
+            ULONG IgnoreHibernationPath : 1;
+            ULONG PseudoTransition : 1;
+            ULONG KernelSoftReboot : 1;
+            ULONG DirectedDripsTransition : 1;
+            ULONG Reserved2 : 8;
+        } DUMMYSTRUCTNAME;
+
+        ULONG ContextAsUlong;
+    } DUMMYUNIONNAME;
+} SYSTEM_POWER_STATE_CONTEXT, *PSYSTEM_POWER_STATE_CONTEXT;
+
 typedef struct
 {
+    UCHAR MajorFunction;
+    UCHAR MinorFunction;
+    UCHAR Flags;
+    UCHAR Control;
+
     union {
         struct
         {
@@ -85,6 +135,17 @@ typedef struct
             ULONG InputBufferLength;
             ULONG IoControlCode;
         } DeviceIoControl;
+
+        struct
+        {
+            union {
+                ULONG SystemContext;
+                SYSTEM_POWER_STATE_CONTEXT SystemPowerStateContext;
+            };
+            POWER_STATE_TYPE POINTER_ALIGNMENT Type;
+            POWER_STATE POINTER_ALIGNMENT State;
+            POWER_ACTION POINTER_ALIGNMENT ShutdownType;
+        } Power;
     } Parameters;
 } IO_STACK_LOCATION, *PIO_STACK_LOCATION;
 
@@ -395,6 +456,9 @@ typedef struct _IO_ERROR_LOG_PACKET
 
 FORT_API PVOID IoAllocateErrorLogEntry(PVOID ioObject, UCHAR entrySize);
 FORT_API void IoWriteErrorLogEntry(PVOID elEntry);
+
+FORT_API NTSTATUS IoRegisterShutdownNotification(PDEVICE_OBJECT deviceObject);
+FORT_API void IoUnregisterShutdownNotification(PDEVICE_OBJECT deviceObject);
 
 #ifdef __cplusplus
 } // extern "C"

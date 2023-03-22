@@ -13,10 +13,14 @@ static void fort_driver_unload(PDRIVER_OBJECT driver)
 {
     fort_device_unload();
 
-    /* Delete Device Link */
     if (driver->DeviceObject != NULL) {
-        UNICODE_STRING device_link;
+        /* Unregister Device Callbacks */
+        if (driver->MajorFunction[IRP_MJ_SHUTDOWN] != NULL) {
+            IoUnregisterShutdownNotification(driver->DeviceObject);
+        }
 
+        /* Delete Device Link */
+        UNICODE_STRING device_link;
         RtlInitUnicodeString(&device_link, FORT_DOS_DEVICE_NAME);
         IoDeleteSymbolicLink(&device_link);
 
@@ -60,6 +64,10 @@ static NTSTATUS fort_driver_load(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path
     driver->MajorFunction[IRP_MJ_CLOSE] = fort_device_close;
     driver->MajorFunction[IRP_MJ_CLEANUP] = fort_device_cleanup;
     driver->MajorFunction[IRP_MJ_DEVICE_CONTROL] = fort_device_control;
+
+    if (NT_SUCCESS(IoRegisterShutdownNotification(device_obj))) {
+        driver->MajorFunction[IRP_MJ_SHUTDOWN] = fort_device_shutdown;
+    }
 
     return fort_device_load(device_obj);
 }

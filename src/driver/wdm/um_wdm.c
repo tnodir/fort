@@ -490,3 +490,14 @@ void IoWriteErrorLogEntry(PVOID elEntry)
 {
     UNUSED(elEntry);
 }
+
+NTSTATUS IoRegisterShutdownNotification(PDEVICE_OBJECT deviceObject)
+{
+    UNUSED(deviceObject);
+    return STATUS_SUCCESS;
+}
+
+void IoUnregisterShutdownNotification(PDEVICE_OBJECT deviceObject)
+{
+    UNUSED(deviceObject);
+}
