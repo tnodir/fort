@@ -906,7 +906,7 @@ inline static NTSTATUS fort_shaper_packet_queue(
     return STATUS_SUCCESS;
 }
 
-FORT_API BOOL fort_shaper_injected_by_self(PFORT_SHAPER shaper, const FORT_CALLOUT_ARG ca)
+static BOOL fort_shaper_injected_by_self(PFORT_SHAPER shaper, const FORT_CALLOUT_ARG ca)
 {
     const HANDLE injection_id = fort_shaper_injection_id(shaper, ca.isIPv6, ca.inbound);
 
@@ -974,4 +974,14 @@ FORT_API void fort_shaper_drop_flow_packets(PFORT_SHAPER shaper, UINT64 flowCont
 FORT_API void fort_shaper_drop_packets(PFORT_SHAPER shaper)
 {
     fort_shaper_flush(shaper, FORT_PACKET_FLUSH_ALL, /*drop=*/TRUE);
+}
+
+FORT_API BOOL fort_packet_add_pending(const FORT_CALLOUT_ARG ca)
+{
+    PFORT_SHAPER shaper = &fort_device()->shaper;
+
+    if (ca.netBufList != NULL && fort_shaper_injected_by_self(shaper, ca))
+        return FALSE;
+
+    return FALSE;
 }

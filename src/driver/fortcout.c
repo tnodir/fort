@@ -135,16 +135,10 @@ inline static BOOL fort_callout_ale_check_blocked(const FORT_CALLOUT_ARG ca,
         const FORT_CALLOUT_ALE_INDEX ci, PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref,
         FORT_CONF_FLAGS conf_flags, FORT_APP_FLAGS app_flags)
 {
-    if (app_flags.v == 0 && conf_flags.ask_to_connect) {
-#if 0
-        /* Skip self injected packet */
-        if (fort_shaper_injected_by_self(&fort_device()->shaper, ca))
-            return;
-#endif
-
-        cx->drop_blocked = TRUE;
-        cx->blocked = TRUE; /* block (pending) */
-        cx->block_reason = FORT_BLOCK_REASON_PENDING;
+    if (app_flags.v == 0 && conf_flags.ask_to_connect && fort_packet_add_pending(ca)) {
+        cx->drop_blocked = TRUE; /* drop (pending) */
+        cx->blocked = TRUE;
+        cx->block_reason = FORT_BLOCK_REASON_ASK_PENDING;
         return TRUE;
     }
 

@@ -25,7 +25,7 @@ enum FortBlockReason {
     FORT_BLOCK_REASON_APP_GROUP_FOUND,
     FORT_BLOCK_REASON_FILTER_MODE,
     FORT_BLOCK_REASON_LAN_ONLY,
-    FORT_BLOCK_REASON_PENDING = 15 /* must be last! */
+    FORT_BLOCK_REASON_ASK_PENDING = 15 /* must be last! */
 };
 
 #endif // FORTDEF_H
