@@ -401,6 +401,7 @@ static void fort_stat_close_flows(PFORT_STAT stat)
     {
         InterlockedAdd(&stat->flow_closing_count, (LONG) stat->flows_map.count);
 
+        fort_stat_flags_set(stat, FORT_STAT_LOG, FALSE);
         fort_stat_flags_set(stat, FORT_STAT_CLOSED, TRUE);
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
