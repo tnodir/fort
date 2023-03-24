@@ -63,9 +63,12 @@ Source: "{#APP_EXE_NAME}.example.ini"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
 ; Start menu shortcut
-Name: "{group}\{#APP_NAME}"; Filename: "{#APP_EXE}"; WorkingDir: "{app}"; Parameters: "--lang {code:LanguageName}"
+Name: "{group}\{#APP_NAME}"; Filename: "{#APP_EXE}"; WorkingDir: "{app}"; \
+  Parameters: "--lang {code:LanguageName}"
+
 ; Uninstaller shortcut
 Name: "{group}\{cm:UninstallProgram,{#APP_NAME}}"; Filename: "{uninstallexe}"
+
 ; Desktop shortcut
 Name: "{commondesktop}\{#APP_NAME}"; Filename: "{#APP_EXE}"; WorkingDir: "{app}"; \
   Parameters: "--lang {code:LanguageName}"; Tasks: desktopicon
@@ -234,4 +237,18 @@ begin
     if ResultCode = 0 then Sleep(100); // Let the service to stop
 
   Result := '';
+end;
+
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+begin
+  case CurUninstallStep of
+    usPostUninstall:
+      begin
+        if MsgBox(ExpandConstant('Delete config & data files?'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES then
+          begin
+            DelTree(ExpandConstant('{%ProgramData}\{#APP_NAME}'), True, True, True);
+            DelTree(ExpandConstant('{localappdata}\{#APP_NAME}'), True, True, True);
+          end;
+      end;
+  end;
 end;
