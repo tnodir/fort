@@ -544,6 +544,7 @@ void OptionsPage::setupProtectionBox()
     layout->addWidget(m_cbBootFilter);
     layout->addWidget(m_cbFilterLocals);
     layout->addWidget(m_cbNoServiceControl);
+    layout->addWidget(ControlUtil::createSeparator());
     layout->addWidget(m_cbCheckPasswordOnUninstall);
     layout->addLayout(passwordLayout);
     layout->addWidget(m_btPasswordLock, 0, Qt::AlignCenter);
