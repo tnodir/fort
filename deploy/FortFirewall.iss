@@ -88,7 +88,7 @@ Filename: "https://support.microsoft.com/en-us/help/2977003/the-latest-supported
 
 [UninstallRun]
 Filename: "{#APP_EXE}"; Parameters: "-u"; RunOnceId: "Uninstall"
-Filename: "{app}\driver\scripts\uninstall.bat"; RunOnceId: "DelDriver"
+Filename: "{app}\driver\scripts\uninstall.bat"; RunOnceId: "UninsDriver"
 
 [InstallDelete]
 Type: filesandordirs; Name: "{app}\driver"
@@ -106,6 +106,9 @@ Root: HKLM; Subkey: "System\CurrentControlSet\Services\EventLog\System\fortfw"; 
   ValueType: string; ValueName: "EventMessageFile"; ValueData: "{#APP_EXE}"
 Root: HKLM; Subkey: "System\CurrentControlSet\Services\EventLog\System\fortfw"; \
   ValueType: dword; ValueName: "TypesSupported"; ValueData: "7"
+
+Root: HKLM; Subkey: "SOFTWARE\{#APP_NAME}"; Flags: dontcreatekey uninsdeletekeyifempty
+Root: HKLM; Subkey: "SOFTWARE\{#APP_NAME}"; ValueName: "passwordHash"; Flags: dontcreatekey uninsdeletevalue
 
 [Code]
 function LanguageName(Param: String): String;

@@ -53,6 +53,7 @@ protected:
     QVariant cacheValue(const QString &key) const;
     void setCacheValue(const QString &key, const QVariant &value) const;
 
+    void saveIniValue(const QString &key, const QVariant &value);
     void removeIniKey(const QString &key);
 
     QStringList iniChildKeys(const QString &prefix) const;

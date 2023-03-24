@@ -131,10 +131,7 @@ void Settings::setIniValue(const QString &key, const QVariant &value, const QVar
         return;
 
     // Save to .ini
-    m_ini->setValue(key, value);
-
-    // Save to cache
-    setCacheValue(cacheKey(key), value);
+    saveIniValue(key, value);
 }
 
 QString Settings::cacheKey(const QString &key) const
@@ -157,6 +154,14 @@ void Settings::clearCache()
 {
     m_cache.clear();
     iniSync();
+}
+
+void Settings::saveIniValue(const QString &key, const QVariant &value)
+{
+    m_ini->setValue(key, value);
+
+    // Save to cache
+    setCacheValue(cacheKey(key), value);
 }
 
 void Settings::removeIniKey(const QString &key)

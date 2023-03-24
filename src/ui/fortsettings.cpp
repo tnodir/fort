@@ -333,12 +333,9 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     {
         const IniOptions &ini = conf.ini();
 
-        // Password
+        // Check Password on Uninstall
         if (ini.checkPasswordOnUninstall()) {
-            const QString regPasswordHash = StartupUtil::registryPasswordHash();
-            if (!regPasswordHash.isEmpty()) {
-                setCacheValue(passwordHashKey(), regPasswordHash);
-            }
+            setCacheValue(passwordHashKey(), StartupUtil::registryPasswordHash());
         }
     }
 }
@@ -386,6 +383,14 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
         if ((ini.hasPasswordSet() && ini.hasPassword() != hasPassword())
                 || !ini.password().isEmpty()) {
             setPassword(ini.password());
+        }
+
+        // Check Password on Uninstall
+        if (ini.checkPasswordOnUninstallSet() || ini.hasPasswordSet()) {
+            StartupUtil::setRegistryPasswordHash(
+                    ini.checkPasswordOnUninstall() ? passwordHash() : QString());
+
+            saveIniValue(passwordHashKey(), passwordHash());
         }
 
         changed = true;
