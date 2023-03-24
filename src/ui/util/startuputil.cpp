@@ -282,11 +282,20 @@ void StartupUtil::setExplorerIntegrated(bool integrate)
     }
 }
 
+QString StartupUtil::registryPasswordHash()
+{
+    const RegKey regApp(RegKey::HKLM, R"(SOFTWARE)");
+
+    const RegKey reg(regApp, APP_NAME);
+
+    return reg.value("passwordHash").toString();
+}
+
 void StartupUtil::setRegistryPasswordHash(const QString &passwordHash)
 {
     const bool isAdding = !passwordHash.isEmpty();
 
-    RegKey regApp(RegKey::HKLM, R"(SOFTWARE)",
+    const RegKey regApp(RegKey::HKLM, R"(SOFTWARE)",
             isAdding ? RegKey::DefaultCreate : RegKey::DefaultReadWrite);
 
     RegKey reg(regApp, APP_NAME, RegKey::DefaultCreate);

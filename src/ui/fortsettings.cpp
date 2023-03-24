@@ -328,6 +328,19 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     conf.setActivePeriodFrom(DateUtil::reformatTime(iniText("activePeriodFrom")));
     conf.setActivePeriodTo(DateUtil::reformatTime(iniText("activePeriodTo")));
     ini()->endGroup();
+
+    // Ini Options
+    {
+        const IniOptions &ini = conf.ini();
+
+        // Password
+        if (ini.checkPasswordOnUninstall()) {
+            const QString regPasswordHash = StartupUtil::registryPasswordHash();
+            if (!regPasswordHash.isEmpty()) {
+                setCacheValue(passwordHashKey(), regPasswordHash);
+            }
+        }
+    }
 }
 
 void FortSettings::writeConfIni(const FirewallConf &conf)
@@ -362,6 +375,7 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
         changed = true;
     }
 
+    // Ini Options
     if (conf.iniEdited()) {
         const IniOptions &ini = conf.ini();
 

@@ -13,8 +13,10 @@ class FortSettings : public Settings
 public:
     explicit FortSettings(QObject *parent = nullptr);
 
-    QString passwordHash() const { return iniText("base/passwordHash"); }
-    void setPasswordHash(const QString &v) { setIniValue("base/passwordHash", v); }
+    static QString passwordHashKey() { return "base/passwordHash"; }
+
+    QString passwordHash() const { return iniText(passwordHashKey()); }
+    void setPasswordHash(const QString &v) { setIniValue(passwordHashKey(), v); }
 
     bool isDefaultProfilePath() const { return m_isDefaultProfilePath; }
     bool noCache() const { return m_noCache; }
