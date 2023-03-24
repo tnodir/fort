@@ -1,5 +1,12 @@
 Fort Firewall ChangeLog
 
+v3.8.3, 2022-03-24:
+- UI: Load password from registry when "Check Password on Uninstalll" enabled.
+- Installer: Remove password from registry on uninstall.
+- Installer: Optionally remove config & data folders on uninstall.
+- Driver: Improve shutdown/reset handling.
+- UI: Update SQLite to v3.41.2
+
 v3.8.2, 2022-03-21:
 - UI: Fix default options on clean install (v3.8.1 regression).
 
