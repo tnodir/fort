@@ -356,8 +356,6 @@ void TrayIcon::setupTrayMenu()
             addAction(m_menu, QIcon(), QString(), this, SLOT(switchTrayFlag(bool)), true);
     addHotKey(m_askToConnectAction, iniUser()->hotKeyAskToConnect());
 
-    m_askToConnectAction->setVisible(false);
-
     m_trayMenuAction = addAction(m_menu, QIcon(), QString(), this, SLOT(switchTrayMenu(bool)));
     m_trayMenuAction->setVisible(false);
 

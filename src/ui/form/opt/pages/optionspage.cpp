@@ -425,8 +425,6 @@ void OptionsPage::setupTrafficBox()
         ctrl()->setFlagsEdited();
     });
 
-    m_cbAskToConnect->setVisible(false);
-
     auto filterModeLayout = setupFilterModeLayout();
 
     auto layout = new QVBoxLayout();
