@@ -5,6 +5,7 @@
 
 class EnvManager;
 class FirewallConf;
+class IniOptions;
 
 class FortSettings : public Settings
 {
@@ -77,7 +78,10 @@ signals:
 
 public slots:
     void readConfIni(FirewallConf &conf) const;
+    void readConfIniOptions(const IniOptions &ini) const;
+
     void writeConfIni(const FirewallConf &conf);
+    void writeConfIniOptions(const IniOptions &ini);
 
 protected:
     void migrateIniOnStartup() override;

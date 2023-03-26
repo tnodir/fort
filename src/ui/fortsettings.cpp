@@ -330,13 +330,14 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     ini()->endGroup();
 
     // Ini Options
-    {
-        const IniOptions &ini = conf.ini();
+    readConfIniOptions(conf.ini());
+}
 
-        // Check Password on Uninstall
-        if (ini.checkPasswordOnUninstall()) {
-            setCacheValue(passwordHashKey(), StartupUtil::registryPasswordHash());
-        }
+void FortSettings::readConfIniOptions(const IniOptions &ini) const
+{
+    // Check Password on Uninstall
+    if (ini.checkPasswordOnUninstall()) {
+        setCacheValue(passwordHashKey(), StartupUtil::registryPasswordHash());
     }
 }
 
@@ -374,30 +375,32 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
 
     // Ini Options
     if (conf.iniEdited()) {
-        const IniOptions &ini = conf.ini();
-
-        // Save changed keys
-        ini.save();
-
-        // Password
-        if ((ini.hasPasswordSet() && ini.hasPassword() != hasPassword())
-                || !ini.password().isEmpty()) {
-            setPassword(ini.password());
-        }
-
-        // Check Password on Uninstall
-        if (ini.checkPasswordOnUninstallSet() || ini.hasPasswordSet()) {
-            StartupUtil::setRegistryPasswordHash(
-                    ini.checkPasswordOnUninstall() ? passwordHash() : QString());
-
-            saveIniValue(passwordHashKey(), passwordHash());
-        }
+        writeConfIniOptions(conf.ini());
 
         changed = true;
     }
 
     if (changed) {
         iniFlush();
+    }
+}
+
+void FortSettings::writeConfIniOptions(const IniOptions &ini)
+{
+    // Save changed keys
+    ini.save();
+
+    // Password
+    if ((ini.hasPasswordSet() && ini.hasPassword() != hasPassword()) || !ini.password().isEmpty()) {
+        setPassword(ini.password());
+    }
+
+    // Check Password on Uninstall
+    if (ini.checkPasswordOnUninstallSet() || ini.hasPasswordSet()) {
+        StartupUtil::setRegistryPasswordHash(
+                ini.checkPasswordOnUninstall() ? passwordHash() : QString());
+
+        saveIniValue(passwordHashKey(), passwordHash());
     }
 }
 
