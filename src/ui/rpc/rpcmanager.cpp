@@ -328,6 +328,159 @@ inline bool processTaskManager_taskFinished(TaskManager *taskManager, const Proc
     return true;
 }
 
+bool processAppInfoManagerRpc(const ProcessCommandArgs &p, QVariantList & /*resArgs*/,
+        bool & /*ok*/, bool & /*isSendResult*/)
+{
+    auto appInfoManager = IoC<AppInfoManager>();
+
+    switch (p.command) {
+    case Control::Rpc_AppInfoManager_lookupAppInfo:
+        appInfoManager->lookupAppInfo(p.args.value(0).toString());
+        return true;
+    case Control::Rpc_AppInfoManager_checkLookupInfoFinished:
+        appInfoManager->checkLookupInfoFinished(p.args.value(0).toString());
+        return true;
+    default:
+        return false;
+    }
+}
+
+bool processConfManagerRpc(
+        const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult)
+{
+    auto confManager = IoC<ConfManager>();
+
+    switch (p.command) {
+    case Control::Rpc_ConfManager_confChanged:
+        return processConfManager_confChanged(confManager, p);
+    case Control::Rpc_ConfManager_appAlerted:
+        emit confManager->appAlerted();
+        return true;
+    case Control::Rpc_ConfManager_appChanged:
+        emit confManager->appChanged();
+        return true;
+    case Control::Rpc_ConfManager_appUpdated:
+        emit confManager->appUpdated();
+        return true;
+    case Control::Rpc_ConfManager_zoneAdded:
+        emit confManager->zoneAdded();
+        return true;
+    case Control::Rpc_ConfManager_zoneRemoved:
+        emit confManager->zoneRemoved(p.args.value(0).toInt());
+        return true;
+    case Control::Rpc_ConfManager_zoneUpdated:
+        emit confManager->zoneUpdated();
+        return true;
+    default: {
+        ok = processConfManagerRpcResult(confManager, p, resArgs);
+        isSendResult = true;
+        return true;
+    }
+    }
+}
+
+bool processDriverManagerRpc(const ProcessCommandArgs &p, QVariantList & /*resArgs*/, bool & /*ok*/,
+        bool & /*isSendResult*/)
+{
+    auto driverManager = IoC<DriverManager>();
+
+    switch (p.command) {
+    case Control::Rpc_DriverManager_updateState:
+        if (auto dm = qobject_cast<DriverManagerRpc *>(driverManager)) {
+            dm->updateState(p.args.value(0).toUInt(), p.args.value(1).toBool());
+        }
+        return true;
+    default:
+        return false;
+    }
+}
+
+bool processQuotaManagerRpc(const ProcessCommandArgs &p, QVariantList & /*resArgs*/, bool & /*ok*/,
+        bool & /*isSendResult*/)
+{
+    auto quotaManager = IoC<QuotaManager>();
+
+    switch (p.command) {
+    case Control::Rpc_QuotaManager_alert:
+        emit quotaManager->alert(p.args.value(0).toInt());
+        return true;
+    default:
+        return false;
+    }
+}
+
+bool processStatManagerRpc(
+        const ProcessCommandArgs &p, QVariantList & /*resArgs*/, bool &ok, bool &isSendResult)
+{
+    auto statManager = IoC<StatManager>();
+
+    switch (p.command) {
+    case Control::Rpc_StatManager_trafficCleared:
+    case Control::Rpc_StatManager_appStatRemoved:
+    case Control::Rpc_StatManager_appCreated:
+    case Control::Rpc_StatManager_trafficAdded:
+    case Control::Rpc_StatManager_appTrafTotalsResetted:
+        return processStatManagerRpcSignal(statManager, p);
+
+    default: {
+        ok = processStatManagerRpcResult(statManager, p);
+        isSendResult = true;
+        return true;
+    }
+    }
+}
+
+bool processStatBlockManagerRpc(
+        const ProcessCommandArgs &p, QVariantList & /*resArgs*/, bool &ok, bool &isSendResult)
+{
+    auto statBlockManager = IoC<StatBlockManager>();
+
+    switch (p.command) {
+    case Control::Rpc_StatBlockManager_connChanged:
+        emit statBlockManager->connChanged();
+        return true;
+    default: {
+        ok = processStatBlockManagerRpcResult(statBlockManager, p);
+        isSendResult = true;
+        return true;
+    }
+    }
+}
+
+bool processServiceInfoManagerRpc(const ProcessCommandArgs &p, QVariantList & /*resArgs*/,
+        bool & /*ok*/, bool & /*isSendResult*/)
+{
+    auto serviceInfoManager = IoC<ServiceInfoManager>();
+
+    switch (p.command) {
+    case Control::Rpc_ServiceInfoManager_trackService:
+        return serviceInfoManager_trackService(serviceInfoManager, p);
+    case Control::Rpc_ServiceInfoManager_revertService:
+        return serviceInfoManager_revertService(serviceInfoManager, p);
+    default:
+        return false;
+    }
+}
+
+bool processTaskManagerRpc(const ProcessCommandArgs &p, QVariantList & /*resArgs*/, bool & /*ok*/,
+        bool & /*isSendResult*/)
+{
+    auto taskManager = IoC<TaskManager>();
+
+    switch (p.command) {
+    case Control::Rpc_TaskManager_runTask:
+        return processTaskManager_runTask(taskManager, p);
+    case Control::Rpc_TaskManager_abortTask:
+        return processTaskManager_abortTask(taskManager, p);
+    case Control::Rpc_TaskManager_taskStarted:
+        return processTaskManager_taskStarted(taskManager, p);
+    case Control::Rpc_TaskManager_taskFinished:
+        return processTaskManager_taskFinished(taskManager, p);
+    default:
+        return false;
+    }
+}
+
 }
 
 RpcManager::RpcManager(QObject *parent) : QObject(parent) { }
@@ -578,6 +731,20 @@ bool RpcManager::processCommandRpc(const ProcessCommandArgs &p)
     }
 }
 
+using processManager_func = bool (*)(
+        const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult);
+
+static processManager_func processManager_funcList[] = {
+    &processAppInfoManagerRpc, // Control::Rpc_AppInfoManager,
+    &processConfManagerRpc, // Control::Rpc_ConfManager,
+    &processDriverManagerRpc, // Control::Rpc_DriverManager,
+    &processQuotaManagerRpc, // Control::Rpc_QuotaManager,
+    &processStatManagerRpc, // Control::Rpc_StatManager,
+    &processStatBlockManagerRpc, // Control::Rpc_StatBlockManager,
+    &processServiceInfoManagerRpc, // Control::Rpc_ServiceInfoManager,
+    &processTaskManagerRpc, // Control::Rpc_TaskManager,
+};
+
 bool RpcManager::processManagerRpc(const ProcessCommandArgs &p)
 {
     if (commandRequiresValidation(p.command) && !checkClientValidated(p.worker)) {
@@ -586,181 +753,28 @@ bool RpcManager::processManagerRpc(const ProcessCommandArgs &p)
         return false;
     }
 
-    switch (Control::managerByCommand(p.command)) {
-    case Control::Rpc_AppInfoManager:
-        return processAppInfoManagerRpc(p);
+    const Control::RpcManager rpcManager = Control::managerByCommand(p.command);
 
-    case Control::Rpc_ConfManager:
-        return processConfManagerRpc(p);
-
-    case Control::Rpc_DriverManager:
-        return processDriverManagerRpc(p);
-
-    case Control::Rpc_QuotaManager:
-        return processQuotaManagerRpc(p);
-
-    case Control::Rpc_StatManager:
-        return processStatManagerRpc(p);
-
-    case Control::Rpc_StatBlockManager:
-        return processStatBlockManagerRpc(p);
-
-    case Control::Rpc_ServiceInfoManager:
-        return processServiceInfoManagerRpc(p);
-
-    case Control::Rpc_TaskManager:
-        return processTaskManagerRpc(p);
-
-    default:
+    if (rpcManager < Control::Rpc_AppInfoManager || rpcManager > Control::Rpc_TaskManager) {
         p.errorMessage = "Unknown command";
         return false;
     }
-}
 
-bool RpcManager::processAppInfoManagerRpc(const ProcessCommandArgs &p)
-{
-    auto appInfoManager = IoC<AppInfoManager>();
+    const int funcIndex = rpcManager - Control::Rpc_AppInfoManager;
+    const processManager_func func = processManager_funcList[funcIndex];
 
-    switch (p.command) {
-    case Control::Rpc_AppInfoManager_lookupAppInfo:
-        appInfoManager->lookupAppInfo(p.args.value(0).toString());
-        return true;
-    case Control::Rpc_AppInfoManager_checkLookupInfoFinished:
-        appInfoManager->checkLookupInfoFinished(p.args.value(0).toString());
-        return true;
-    default:
+    QVariantList resArgs;
+    bool ok;
+    bool isSendResult = false;
+
+    if (!func(p, resArgs, ok, isSendResult))
         return false;
-    }
-}
 
-bool RpcManager::processConfManagerRpc(const ProcessCommandArgs &p)
-{
-    auto confManager = IoC<ConfManager>();
-
-    switch (p.command) {
-    case Control::Rpc_ConfManager_confChanged:
-        return processConfManager_confChanged(confManager, p);
-    case Control::Rpc_ConfManager_appAlerted:
-        emit confManager->appAlerted();
-        return true;
-    case Control::Rpc_ConfManager_appChanged:
-        emit confManager->appChanged();
-        return true;
-    case Control::Rpc_ConfManager_appUpdated:
-        emit confManager->appUpdated();
-        return true;
-    case Control::Rpc_ConfManager_zoneAdded:
-        emit confManager->zoneAdded();
-        return true;
-    case Control::Rpc_ConfManager_zoneRemoved:
-        emit confManager->zoneRemoved(p.args.value(0).toInt());
-        return true;
-    case Control::Rpc_ConfManager_zoneUpdated:
-        emit confManager->zoneUpdated();
-        return true;
-    default: {
-        QVariantList resArgs;
-        const bool ok = processConfManagerRpcResult(confManager, p, resArgs);
+    if (isSendResult) {
         sendResult(p.worker, ok, resArgs);
-        return true;
     }
-    }
-}
 
-bool RpcManager::processDriverManagerRpc(const ProcessCommandArgs &p)
-{
-    auto driverManager = IoC<DriverManager>();
-
-    switch (p.command) {
-    case Control::Rpc_DriverManager_updateState:
-        if (auto dm = qobject_cast<DriverManagerRpc *>(driverManager)) {
-            dm->updateState(p.args.value(0).toUInt(), p.args.value(1).toBool());
-        }
-        return true;
-    default:
-        return false;
-    }
-}
-
-bool RpcManager::processQuotaManagerRpc(const ProcessCommandArgs &p)
-{
-    auto quotaManager = IoC<QuotaManager>();
-
-    switch (p.command) {
-    case Control::Rpc_QuotaManager_alert:
-        emit quotaManager->alert(p.args.value(0).toInt());
-        return true;
-    default:
-        return false;
-    }
-}
-
-bool RpcManager::processStatManagerRpc(const ProcessCommandArgs &p)
-{
-    auto statManager = IoC<StatManager>();
-
-    switch (p.command) {
-    case Control::Rpc_StatManager_trafficCleared:
-    case Control::Rpc_StatManager_appStatRemoved:
-    case Control::Rpc_StatManager_appCreated:
-    case Control::Rpc_StatManager_trafficAdded:
-    case Control::Rpc_StatManager_appTrafTotalsResetted:
-        return processStatManagerRpcSignal(statManager, p);
-
-    default: {
-        const bool ok = processStatManagerRpcResult(statManager, p);
-        sendResult(p.worker, ok);
-        return true;
-    }
-    }
-}
-
-bool RpcManager::processStatBlockManagerRpc(const ProcessCommandArgs &p)
-{
-    auto statBlockManager = IoC<StatBlockManager>();
-
-    switch (p.command) {
-    case Control::Rpc_StatBlockManager_connChanged:
-        emit statBlockManager->connChanged();
-        return true;
-    default: {
-        const bool ok = processStatBlockManagerRpcResult(statBlockManager, p);
-        sendResult(p.worker, ok);
-        return true;
-    }
-    }
-}
-
-bool RpcManager::processServiceInfoManagerRpc(const ProcessCommandArgs &p)
-{
-    auto serviceInfoManager = IoC<ServiceInfoManager>();
-
-    switch (p.command) {
-    case Control::Rpc_ServiceInfoManager_trackService:
-        return serviceInfoManager_trackService(serviceInfoManager, p);
-    case Control::Rpc_ServiceInfoManager_revertService:
-        return serviceInfoManager_revertService(serviceInfoManager, p);
-    default:
-        return false;
-    }
-}
-
-bool RpcManager::processTaskManagerRpc(const ProcessCommandArgs &p)
-{
-    auto taskManager = IoC<TaskManager>();
-
-    switch (p.command) {
-    case Control::Rpc_TaskManager_runTask:
-        return processTaskManager_runTask(taskManager, p);
-    case Control::Rpc_TaskManager_abortTask:
-        return processTaskManager_abortTask(taskManager, p);
-    case Control::Rpc_TaskManager_taskStarted:
-        return processTaskManager_taskStarted(taskManager, p);
-    case Control::Rpc_TaskManager_taskFinished:
-        return processTaskManager_taskFinished(taskManager, p);
-    default:
-        return false;
-    }
+    return true;
 }
 
 void RpcManager::showErrorBox(const QString &text) const

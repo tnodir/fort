@@ -56,15 +56,6 @@ private:
 
     bool processManagerRpc(const ProcessCommandArgs &p);
 
-    bool processAppInfoManagerRpc(const ProcessCommandArgs &p);
-    bool processConfManagerRpc(const ProcessCommandArgs &p);
-    bool processDriverManagerRpc(const ProcessCommandArgs &p);
-    bool processQuotaManagerRpc(const ProcessCommandArgs &p);
-    bool processStatManagerRpc(const ProcessCommandArgs &p);
-    bool processStatBlockManagerRpc(const ProcessCommandArgs &p);
-    bool processServiceInfoManagerRpc(const ProcessCommandArgs &p);
-    bool processTaskManagerRpc(const ProcessCommandArgs &p);
-
     void showErrorBox(const QString &text) const;
 
 private:
