@@ -26,12 +26,19 @@ public:
     QString hotKeyFilter() const { return valueText("hotKey/filter", "Ctrl+Alt+Shift+F"); }
     QString hotKeyStopTraffic() const { return valueText("hotKey/stopTraffic"); }
     QString hotKeyStopInetTraffic() const { return valueText("hotKey/stopInetTraffic"); }
-    QString hotKeyAskToConnect() const { return valueText("hotKey/askToConnect"); }
     QString hotKeyAppGroupModifiers() const
     {
         return valueText("hotKey/appGroupModifiers", "Ctrl+Alt+Shift");
     }
     QString hotKeyQuit() const { return valueText("hotKey/quit"); }
+
+    QString hotKeyValue(const QString &key) const { return valueText("hotKey/" + key); }
+
+    static QStringList filterModeHotKeys()
+    {
+        return { "filterModeAutoLearn", "filterModeAskToConnect", "filterModeBlock",
+            "filterModeAllow", "filterModeIgnore" };
+    }
 
     bool trayAnimateAlert() const { return valueBool("tray/animateAlert"); }
     void setTrayAnimateAlert(bool v) { setValue("tray/animateAlert", v); }

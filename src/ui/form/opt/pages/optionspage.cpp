@@ -167,7 +167,6 @@ void OptionsPage::onRetranslateUi()
     m_cbFilterEnabled->setText(tr("Filter Enabled"));
     m_cbStopTraffic->setText(tr("Stop Traffic"));
     m_cbStopInetTraffic->setText(tr("Stop Internet Traffic"));
-    m_cbAskToConnect->setText(tr("Ask to Connect"));
 
     m_labelFilterMode->setText(tr("Filter Mode:"));
     retranslateComboFilterMode();
@@ -292,8 +291,8 @@ void OptionsPage::retranslateComboTrayAction()
     // Sync with TrayIcon::ActionType
     const QStringList list = { tr("Show Programs"), tr("Show Options"), tr("Show Statistics"),
         tr("Show/Hide Traffic Graph"), tr("Switch Filter Enabled"), tr("Switch Stop Traffic"),
-        tr("Switch Stop Internet Traffic"), tr("Switch Ask to Connect"), tr("Show Tray Menu"),
-        tr("Ignore") };
+        tr("Switch Stop Internet Traffic"), tr("Show Filter Mode Menu"),
+        tr("Show Tray Menu"), tr("Ignore") };
 
     m_comboTrayAction->clear();
     m_comboTrayAction->addItems(list);
@@ -420,19 +419,12 @@ void OptionsPage::setupTrafficBox()
         ctrl()->setFlagsEdited();
     });
 
-    m_cbAskToConnect = ControlUtil::createCheckBox(conf()->askToConnect(), [&](bool checked) {
-        conf()->setAskToConnect(checked);
-        ctrl()->setFlagsEdited();
-    });
-
     auto filterModeLayout = setupFilterModeLayout();
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbFilterEnabled);
     layout->addWidget(m_cbStopTraffic);
     layout->addWidget(m_cbStopInetTraffic);
-    layout->addWidget(ControlUtil::createSeparator());
-    layout->addWidget(m_cbAskToConnect);
     layout->addLayout(filterModeLayout);
 
     m_gbTraffic = new QGroupBox();

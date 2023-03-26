@@ -81,7 +81,6 @@ private:
     QCheckBox *m_cbFilterEnabled = nullptr;
     QCheckBox *m_cbStopTraffic = nullptr;
     QCheckBox *m_cbStopInetTraffic = nullptr;
-    QCheckBox *m_cbAskToConnect = nullptr;
     QLabel *m_labelFilterMode = nullptr;
     QComboBox *m_comboFilterMode = nullptr;
     QCheckBox *m_cbExplorerMenu = nullptr;

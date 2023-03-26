@@ -38,7 +38,7 @@ const QString actionShowTrafficGraph = QStringLiteral("TrafficGraph");
 const QString actionSwitchFilterEnabled = QStringLiteral("FilterEnabled");
 const QString actionSwitchStopTraffic = QStringLiteral("StopTraffic");
 const QString actionSwitchStopInetTraffic = QStringLiteral("StopInetTraffic");
-const QString actionSwitchAskToConnect = QStringLiteral("AskToConnect");
+const QString actionShowFilterModeMenu = QStringLiteral("FilterModeMenu");
 const QString actionShowTrayMenu = QStringLiteral("TrayMenu");
 const QString actionIgnore = QStringLiteral("Ignore");
 
@@ -72,7 +72,7 @@ QString actionNameByType(TrayIcon::ActionType actionType)
         actionSwitchFilterEnabled,
         actionSwitchStopTraffic,
         actionSwitchStopInetTraffic,
-        actionSwitchAskToConnect,
+        actionShowFilterModeMenu,
         actionShowTrayMenu,
         actionIgnore,
     };
@@ -94,7 +94,7 @@ TrayIcon::ActionType actionTypeByName(const QString &name)
         { actionSwitchFilterEnabled, TrayIcon::ActionSwitchFilterEnabled },
         { actionSwitchStopTraffic, TrayIcon::ActionSwitchStopTraffic },
         { actionSwitchStopInetTraffic, TrayIcon::ActionSwitchStopInetTraffic },
-        { actionSwitchAskToConnect, TrayIcon::ActionSwitchAskToConnect },
+        { actionShowFilterModeMenu, TrayIcon::ActionShowFilterModeMenu },
         { actionShowTrayMenu, TrayIcon::ActionShowTrayMenu },
         { actionIgnore, TrayIcon::ActionIgnore }
     };
@@ -264,6 +264,11 @@ void TrayIcon::switchTrayMenu(bool /*checked*/)
     showTrayMenu(QCursor::pos());
 }
 
+void TrayIcon::switchFilterModeMenu(bool /*checked*/)
+{
+    m_filterModeMenu->popup(QCursor::pos());
+}
+
 void TrayIcon::setupController()
 {
     connect(windowManager(), &WindowManager::optWindowChanged, this,
@@ -292,7 +297,6 @@ void TrayIcon::retranslateUi()
     m_filterEnabledAction->setText(tr("Filter Enabled"));
     m_stopTrafficAction->setText(tr("Stop Traffic"));
     m_stopInetTrafficAction->setText(tr("Stop Internet Traffic"));
-    m_askToConnectAction->setText(tr("Ask to Connect"));
 
     m_filterModeMenu->setTitle(tr("Filter Mode"));
     retranslateFilterModeActions();
@@ -350,14 +354,9 @@ void TrayIcon::setupTrayMenu()
             addAction(m_menu, QIcon(), QString(), this, SLOT(switchTrayFlag(bool)), true);
     addHotKey(m_stopInetTrafficAction, iniUser()->hotKeyStopInetTraffic());
 
-    m_menu->addSeparator();
-
-    m_askToConnectAction =
-            addAction(m_menu, QIcon(), QString(), this, SLOT(switchTrayFlag(bool)), true);
-    addHotKey(m_askToConnectAction, iniUser()->hotKeyAskToConnect());
-
-    m_trayMenuAction = addAction(m_menu, QIcon(), QString(), this, SLOT(switchTrayMenu(bool)));
-    m_trayMenuAction->setVisible(false);
+    m_filterModeMenuAction =
+            addAction(m_menu, QIcon(), QString(), this, SLOT(switchFilterModeMenu(bool)));
+    m_filterModeMenuAction->setVisible(false);
 
     setupTrayMenuFilterMode();
     m_menu->addMenu(m_filterModeMenu);
@@ -382,6 +381,9 @@ void TrayIcon::setupTrayMenu()
 
     m_quitAction = addAction(m_menu, QIcon(), tr("Quit"), this, SLOT(quitProgram()));
     addHotKey(m_quitAction, iniUser()->hotKeyQuit());
+
+    m_trayMenuAction = addAction(m_menu, QIcon(), QString(), this, SLOT(switchTrayMenu(bool)));
+    m_trayMenuAction->setVisible(false);
 }
 
 void TrayIcon::setupTrayMenuOptions()
@@ -412,12 +414,15 @@ void TrayIcon::setupTrayMenuFilterMode()
 
     int index = 0;
     const QStringList iconPaths = FirewallConf::filterModeIconPaths();
+    const QStringList hotKeys = IniUser::filterModeHotKeys();
     for (const QString &name : FirewallConf::filterModeNames()) {
         const QString iconPath = iconPaths.at(index);
+        const QString hotKey = hotKeys.at(index);
 
         QAction *a = addAction(m_filterModeMenu, IconCache::icon(iconPath), name,
                 /*receiver=*/nullptr,
                 /*member=*/nullptr, /*checkable=*/true);
+        addHotKey(a, iniUser()->hotKeyValue(hotKey));
 
         m_filterModeActions->addAction(a);
         ++index;
@@ -438,9 +443,6 @@ void TrayIcon::updateTrayMenuFlags()
 
     m_stopInetTrafficAction->setEnabled(editEnabled);
     m_stopInetTrafficAction->setChecked(conf()->stopInetTraffic());
-
-    m_askToConnectAction->setEnabled(editEnabled);
-    m_askToConnectAction->setChecked(conf()->askToConnect());
 
     m_filterModeMenu->setEnabled(editEnabled);
     {
@@ -533,7 +535,6 @@ void TrayIcon::saveTrayFlags()
     conf()->setFilterEnabled(m_filterEnabledAction->isChecked());
     conf()->setStopTraffic(m_stopTrafficAction->isChecked());
     conf()->setStopInetTraffic(m_stopInetTrafficAction->isChecked());
-    conf()->setAskToConnect(m_askToConnectAction->isChecked());
 
     // Set Filter Mode
     {
@@ -636,12 +637,9 @@ void TrayIcon::setClickEventActionType(IniUser *iniUser, ClickType clickType, Ac
 
 void TrayIcon::updateClickActions()
 {
-    m_clickActions[SingleClick] = clickActionFromIni(SingleClick);
-    m_clickActions[CtrlSingleClick] = clickActionFromIni(CtrlSingleClick);
-    m_clickActions[AltSingleClick] = clickActionFromIni(AltSingleClick);
-    m_clickActions[DoubleClick] = clickActionFromIni(DoubleClick);
-    m_clickActions[MiddleClick] = clickActionFromIni(MiddleClick);
-    m_clickActions[RightClick] = clickActionFromIni(RightClick);
+    for (int i = 0; i < ClickTypeCount; ++i) {
+        m_clickActions[i] = clickActionFromIni(ClickType(i));
+    }
 }
 
 QAction *TrayIcon::clickAction(TrayIcon::ClickType clickType) const
@@ -666,7 +664,7 @@ QAction *TrayIcon::clickActionByType(TrayIcon::ActionType actionType) const
         m_filterEnabledAction,
         m_stopTrafficAction,
         m_stopInetTrafficAction,
-        m_askToConnectAction,
+        m_filterModeMenuAction,
         m_trayMenuAction,
     };
 

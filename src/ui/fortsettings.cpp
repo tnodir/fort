@@ -311,7 +311,7 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     conf.setFilterLocals(iniBool("filterLocals"));
     conf.setStopTraffic(iniBool("stopTraffic"));
     conf.setStopInetTraffic(iniBool("stopInetTraffic"));
-    conf.setAskToConnect(iniBool("askToConnect", true));
+    conf.setAskToConnect(iniBool("askToConnect", false));
     conf.setAllowAllNew(iniBool("allowAllNew", true));
     conf.setLogBlocked(iniBool("logBlocked", true));
     conf.setLogStat(iniBool("logStat", true));
@@ -419,6 +419,11 @@ void FortSettings::migrateIniOnStartup()
     // COMPAT: v3.8.1
     if (version < 0x030801) {
         setCacheValue("confFlags/bootFilter", ini()->value("confFlags/provBoot"));
+    }
+
+    // COMPAT: v3.8.4
+    if (version < 0x030804) {
+        setCacheValue("confFlags/askToConnect", false);
     }
 }
 

@@ -41,7 +41,7 @@ public:
         ActionSwitchFilterEnabled,
         ActionSwitchStopTraffic,
         ActionSwitchStopInetTraffic,
-        ActionSwitchAskToConnect,
+        ActionShowFilterModeMenu,
         ActionShowTrayMenu,
         ActionIgnore,
         ActionTypeCount
@@ -71,6 +71,7 @@ public slots:
 
 protected slots:
     void switchTrayMenu(bool checked);
+    void switchFilterModeMenu(bool checked);
 
     void onTrayActivated(QSystemTrayIcon::ActivationReason reason);
 
@@ -129,11 +130,11 @@ private:
     QAction *m_filterEnabledAction = nullptr;
     QAction *m_stopTrafficAction = nullptr;
     QAction *m_stopInetTrafficAction = nullptr;
-    QAction *m_askToConnectAction = nullptr;
-    QAction *m_trayMenuAction = nullptr;
+    QAction *m_filterModeMenuAction = nullptr;
     QMenu *m_filterModeMenu = nullptr;
     QActionGroup *m_filterModeActions = nullptr;
     QAction *m_quitAction = nullptr;
+    QAction *m_trayMenuAction = nullptr;
     QList<QAction *> m_appGroupActions;
 
     QAction *m_clickActions[ClickTypeCount] = { nullptr };
