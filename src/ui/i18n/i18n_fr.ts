@@ -779,7 +779,7 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     </message>
     <message>
         <source>Show Filter Mode Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Afficher le menu Mode Filtre</translation>
     </message>
 </context>
 <context>
