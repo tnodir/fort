@@ -779,7 +779,7 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     </message>
     <message>
         <source>Show Filter Mode Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Prikaži meni Način filtra</translation>
     </message>
 </context>
 <context>
