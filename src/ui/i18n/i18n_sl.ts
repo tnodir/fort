@@ -424,6 +424,10 @@
         <source>Ignore, if not blocked or allowed</source>
         <translation>Prezri, če ni blokirano ali dovoljeno</translation>
     </message>
+    <message>
+        <source>Ask to Connect</source>
+        <translation>Vprašaj za povezavo</translation>
+    </message>
 </context>
 <context>
     <name>FortManager</name>
@@ -774,12 +778,8 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
         <translation>Alt + En klik</translation>
     </message>
     <message>
-        <source>Ask to Connect</source>
-        <translation>Vprašaj za povezavo</translation>
-    </message>
-    <message>
-        <source>Switch Ask to Connect</source>
-        <translation>Preklopi Vprašaj za povezavo</translation>
+        <source>Show Filter Mode Menu</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1515,10 +1515,6 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     <message>
         <source>Policies</source>
         <translation>Politike</translation>
-    </message>
-    <message>
-        <source>Ask to Connect</source>
-        <translation>Vprašaj za povezavo</translation>
     </message>
 </context>
 <context>

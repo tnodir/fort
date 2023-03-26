@@ -424,6 +424,10 @@
         <source>Ignore, if not blocked or allowed</source>
         <translation>무시, 차단 또는 허용하지 않을 경우</translation>
     </message>
+    <message>
+        <source>Ask to Connect</source>
+        <translation>연결 요청</translation>
+    </message>
 </context>
 <context>
     <name>FortManager</name>
@@ -774,12 +778,8 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>Alt + 한 번 클릭</translation>
     </message>
     <message>
-        <source>Ask to Connect</source>
-        <translation>연결 요청</translation>
-    </message>
-    <message>
-        <source>Switch Ask to Connect</source>
-        <translation>연결 요청 전환</translation>
+        <source>Show Filter Mode Menu</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1515,10 +1515,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Policies</source>
         <translation>정책</translation>
-    </message>
-    <message>
-        <source>Ask to Connect</source>
-        <translation>연결 요청</translation>
     </message>
 </context>
 <context>

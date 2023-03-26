@@ -424,6 +424,10 @@
         <source>Ignore, if not blocked or allowed</source>
         <translation>Ignorieren, wenn nicht blockiert oder zugelassen</translation>
     </message>
+    <message>
+        <source>Ask to Connect</source>
+        <translation>Nach Verbindung fragen</translation>
+    </message>
 </context>
 <context>
     <name>FortManager</name>
@@ -774,12 +778,8 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
         <translation>Alt + Einzelklick</translation>
     </message>
     <message>
-        <source>Ask to Connect</source>
-        <translation>Nach Verbindung fragen</translation>
-    </message>
-    <message>
-        <source>Switch Ask to Connect</source>
-        <translation>Zu Nach Verbindung fragen wechseln</translation>
+        <source>Show Filter Mode Menu</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1515,10 +1515,6 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     <message>
         <source>Policies</source>
         <translation>Richtlinien</translation>
-    </message>
-    <message>
-        <source>Ask to Connect</source>
-        <translation>Nach Verbindung fragen</translation>
     </message>
 </context>
 <context>

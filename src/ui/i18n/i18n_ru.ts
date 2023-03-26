@@ -424,6 +424,10 @@
         <source>Ignore, if not blocked or allowed</source>
         <translation>Игнорировать, если не блокировано или не разрешено</translation>
     </message>
+    <message>
+        <source>Ask to Connect</source>
+        <translation>Спрашивать для соединения</translation>
+    </message>
 </context>
 <context>
     <name>FortManager</name>
@@ -774,12 +778,8 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>Alt + Единичное нажатие</translation>
     </message>
     <message>
-        <source>Ask to Connect</source>
-        <translation>Спрашивать для соединения</translation>
-    </message>
-    <message>
-        <source>Switch Ask to Connect</source>
-        <translation>Переключить &quot;Спрашивать для соединения&quot;</translation>
+        <source>Show Filter Mode Menu</source>
+        <translation>Показать меню Режима фильтра</translation>
     </message>
 </context>
 <context>
@@ -1515,10 +1515,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Policies</source>
         <translation>Политики</translation>
-    </message>
-    <message>
-        <source>Ask to Connect</source>
-        <translation>Спрашивать для соединения</translation>
     </message>
 </context>
 <context>

@@ -424,6 +424,10 @@
         <source>Ignore, if not blocked or allowed</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Ask to Connect</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FortManager</name>
@@ -774,11 +778,7 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Ask to Connect</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Switch Ask to Connect</source>
+        <source>Show Filter Mode Menu</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -966,11 +966,11 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     </message>
     <message>
         <source>Collect blocked connections</source>
-        <translation type="unfinished">Raccogli le connessioni bloccate</translation>
+        <translation>Raccogli le connessioni bloccate</translation>
     </message>
     <message>
         <source>Collect connection statistics</source>
-        <translation type="unfinished">Raccogli statistiche di connessione</translation>
+        <translation>Raccogli statistiche di connessione</translation>
     </message>
 </context>
 <context>
@@ -1514,10 +1514,6 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     </message>
     <message>
         <source>Policies</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Ask to Connect</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
