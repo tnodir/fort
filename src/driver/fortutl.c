@@ -183,6 +183,32 @@ FORT_API PUNICODE_STRING fort_system_drive_path()
     return &g_systemDrivePath;
 }
 
+inline static NTSTATUS fort_resolve_link_handle(HANDLE linkHandle, PUNICODE_STRING outPath)
+{
+    NTSTATUS status;
+
+    ULONG outLength = 0;
+    status = ZwQuerySymbolicLinkObject(linkHandle, outPath, &outLength);
+
+    if (outLength != 0 && (outLength < 7 || outLength >= outPath->MaximumLength)) {
+        status = STATUS_BUFFER_TOO_SMALL;
+    }
+
+    if (NT_SUCCESS(status)) {
+        if (outPath->Buffer[outLength / sizeof(WCHAR) - 1] == L'\0') {
+            outLength -= sizeof(WCHAR); /* chop terminating zero */
+        }
+
+        if (outPath->Buffer[outLength / sizeof(WCHAR) - 1] == L'\\') {
+            outLength -= sizeof(WCHAR); /* chop terminating backslash */
+        }
+
+        outPath->Length = (USHORT) outLength;
+    }
+
+    return status;
+}
+
 FORT_API NTSTATUS fort_resolve_link(PUNICODE_STRING linkPath, PUNICODE_STRING outPath)
 {
     NTSTATUS status;
@@ -203,24 +229,7 @@ FORT_API NTSTATUS fort_resolve_link(PUNICODE_STRING linkPath, PUNICODE_STRING ou
     HANDLE linkHandle;
     status = ZwOpenSymbolicLinkObject(&linkHandle, SYMBOLIC_LINK_QUERY, &objAttr);
     if (NT_SUCCESS(status)) {
-        ULONG outLength = 0;
-        status = ZwQuerySymbolicLinkObject(linkHandle, outPath, &outLength);
-
-        if (outLength != 0 && (outLength < 7 || outLength >= outPath->MaximumLength)) {
-            status = STATUS_BUFFER_TOO_SMALL;
-        }
-
-        if (NT_SUCCESS(status)) {
-            if (outPath->Buffer[outLength / sizeof(WCHAR) - 1] == L'\0') {
-                outLength -= sizeof(WCHAR); /* chop terminating zero */
-            }
-
-            if (outPath->Buffer[outLength / sizeof(WCHAR) - 1] == L'\\') {
-                outLength -= sizeof(WCHAR); /* chop terminating backslash */
-            }
-
-            outPath->Length = (USHORT) outLength;
-        }
+        status = fort_resolve_link_handle(linkHandle, outPath);
 
         ZwClose(linkHandle);
     }
