@@ -239,27 +239,63 @@ FORT_API NTSTATUS fort_resolve_link(PUNICODE_STRING linkPath, PUNICODE_STRING ou
     return status;
 }
 
+inline static NTSTATUS fort_file_size(HANDLE fileHandle, DWORD *fileSize)
+{
+    NTSTATUS status;
+
+    IO_STATUS_BLOCK statusBlock;
+    FILE_STANDARD_INFORMATION fileInfo;
+    status = ZwQueryInformationFile(
+            fileHandle, &statusBlock, &fileInfo, sizeof(fileInfo), FileStandardInformation);
+
+    if (!NT_SUCCESS(status))
+        return status;
+
+    if (fileInfo.EndOfFile.HighPart != 0 || fileInfo.EndOfFile.LowPart <= 0
+            || fileInfo.EndOfFile.LowPart > FORT_MAX_FILE_SIZE)
+        return STATUS_FILE_NOT_SUPPORTED;
+
+    *fileSize = fileInfo.EndOfFile.LowPart;
+
+    return STATUS_SUCCESS;
+}
+
+inline static NTSTATUS fort_file_read_data(
+        HANDLE fileHandle, DWORD fileSize, PUCHAR data, DWORD *outSize)
+{
+    NTSTATUS status = STATUS_SUCCESS;
+
+    DWORD dataSize = 0;
+    do {
+        IO_STATUS_BLOCK statusBlock;
+        status = ZwReadFile(fileHandle, NULL, NULL, NULL, &statusBlock, data + dataSize,
+                fileSize - dataSize, NULL, NULL);
+
+        if (!NT_SUCCESS(status))
+            break;
+
+        if (statusBlock.Information == 0) {
+            status = STATUS_FILE_NOT_AVAILABLE;
+            break;
+        }
+
+        dataSize += (DWORD) statusBlock.Information;
+    } while (dataSize < fileSize);
+
+    *outSize = dataSize;
+
+    return status;
+}
+
 FORT_API NTSTATUS fort_file_read(HANDLE fileHandle, ULONG poolTag, PUCHAR *outData, DWORD *outSize)
 {
     NTSTATUS status;
 
     /* Get File Size */
     DWORD fileSize = 0;
-    {
-        IO_STATUS_BLOCK statusBlock;
-        FILE_STANDARD_INFORMATION fileInfo;
-        status = ZwQueryInformationFile(
-                fileHandle, &statusBlock, &fileInfo, sizeof(fileInfo), FileStandardInformation);
-
-        if (!NT_SUCCESS(status))
-            return status;
-
-        if (fileInfo.EndOfFile.HighPart != 0 || fileInfo.EndOfFile.LowPart <= 0
-                || fileInfo.EndOfFile.LowPart > FORT_MAX_FILE_SIZE)
-            return STATUS_FILE_NOT_SUPPORTED;
-
-        fileSize = fileInfo.EndOfFile.LowPart;
-    }
+    status = fort_file_size(fileHandle, &fileSize);
+    if (!NT_SUCCESS(status))
+        return status;
 
     /* Allocate Buffer */
     PUCHAR data = fort_mem_alloc(fileSize, poolTag);
@@ -267,22 +303,13 @@ FORT_API NTSTATUS fort_file_read(HANDLE fileHandle, ULONG poolTag, PUCHAR *outDa
         return STATUS_INSUFFICIENT_RESOURCES;
 
     /* Read File */
-    DWORD dataSize = 0;
-    do {
-        IO_STATUS_BLOCK statusBlock;
-        status = ZwReadFile(fileHandle, NULL, NULL, NULL, &statusBlock, data + dataSize,
-                fileSize - dataSize, NULL, NULL);
-
-        if (!NT_SUCCESS(status) || statusBlock.Information == 0) {
-            fort_mem_free(data, poolTag);
-            return NT_SUCCESS(status) ? STATUS_FILE_NOT_AVAILABLE : status;
-        }
-
-        dataSize += (DWORD) statusBlock.Information;
-    } while (dataSize < fileSize);
+    status = fort_file_read_data(fileHandle, fileSize, data, outSize);
+    if (!NT_SUCCESS(status)) {
+        fort_mem_free(data, poolTag);
+        return status;
+    }
 
     *outData = data;
-    *outSize = dataSize;
 
     return status;
 }
