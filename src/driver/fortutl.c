@@ -120,17 +120,24 @@ static NTSTATUS fort_system32_path_set(PCUNICODE_STRING path)
     return STATUS_SUCCESS;
 }
 
+#define FORT_PATH_PREFIX_DEVICE_ALIAS_LEN 4
+
+inline static BOOL fort_path_prefix_is_device_alias(PUNICODE_STRING path)
+{
+    PCWCHAR p = path->Buffer;
+
+    return (p[0] == '\\' && p[1] == '?' && p[2] == '?' && p[3] == '\\' && p[5] == ':');
+}
+
 FORT_API void fort_path_prefix_adjust(PUNICODE_STRING path)
 {
     if (path->Length < 7)
         return;
 
-    PCWCHAR p = path->Buffer;
-
-    if (p[0] == '\\' && p[1] == '?' && p[2] == '?' && p[3] == '\\' && p[5] == ':') {
-        path->Buffer += 4;
-        path->Length -= 4 * sizeof(WCHAR);
-        path->MaximumLength -= 4 * sizeof(WCHAR);
+    if (fort_path_prefix_is_device_alias(path)) {
+        path->Buffer += FORT_PATH_PREFIX_DEVICE_ALIAS_LEN;
+        path->Length -= FORT_PATH_PREFIX_DEVICE_ALIAS_LEN * sizeof(WCHAR);
+        path->MaximumLength -= FORT_PATH_PREFIX_DEVICE_ALIAS_LEN * sizeof(WCHAR);
     }
 }
 
