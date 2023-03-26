@@ -775,11 +775,11 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     </message>
     <message>
         <source>Ask to Connect</source>
-        <translation type="unfinished"></translation>
+        <translation>Nach Verbindung fragen</translation>
     </message>
     <message>
         <source>Switch Ask to Connect</source>
-        <translation type="unfinished"></translation>
+        <translation>Zu Nach Verbindung fragen wechseln</translation>
     </message>
 </context>
 <context>
@@ -1518,7 +1518,7 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     </message>
     <message>
         <source>Ask to Connect</source>
-        <translation type="unfinished"></translation>
+        <translation>Nach Verbindung fragen</translation>
     </message>
 </context>
 <context>
