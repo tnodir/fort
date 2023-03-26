@@ -366,6 +366,18 @@ static DWORD fort_prov_register_callout_filters(HANDLE engine, const FORT_PROV_B
     return fort_prov_add_filters(engine, filters, /*count=*/sizeof(filters) / sizeof(filters[0]));
 }
 
+inline static DWORD fort_prov_register_filters(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
+{
+    if (boot_conf.boot_filter) {
+        DWORD status;
+        if ((status = fort_prov_register_boot_filters(engine))
+                || (status = fort_prov_register_persist_filters(engine)))
+            return status;
+    }
+
+    return fort_prov_register_callout_filters(engine, boot_conf);
+}
+
 FORT_API DWORD fort_prov_register(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
 {
     FWPM_PROVIDER0 provider;
@@ -390,10 +402,7 @@ FORT_API DWORD fort_prov_register(HANDLE engine, const FORT_PROV_BOOT_CONF boot_
     if ((status = FwpmProviderAdd0(engine, &provider, NULL))
             || (status = FwpmSubLayerAdd0(engine, &sublayer, NULL))
             || (status = fort_prov_register_callouts(engine))
-            || (boot_conf.boot_filter
-                    && ((status = fort_prov_register_boot_filters(engine))
-                            || (status = fort_prov_register_persist_filters(engine))))
-            || (status = fort_prov_register_callout_filters(engine, boot_conf))) {
+            || (status = fort_prov_register_filters(engine, boot_conf))) {
         return status;
     }
 
