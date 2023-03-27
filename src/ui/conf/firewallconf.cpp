@@ -373,8 +373,8 @@ QVariant FirewallConf::flagsToVariant() const
     map["filterLocals"] = filterLocals();
     map["stopTraffic"] = stopTraffic();
     map["stopInetTraffic"] = stopInetTraffic();
-    map["askToConnect"] = askToConnect();
     map["allowAllNew"] = allowAllNew();
+    map["askToConnect"] = askToConnect();
 
     map["logBlocked"] = logBlocked();
     map["logStat"] = logStat();

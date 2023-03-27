@@ -30,8 +30,8 @@ void writeConfFlags(const FirewallConf &conf, PFORT_CONF_FLAGS confFlags)
     confFlags->filter_locals = conf.filterLocals();
     confFlags->stop_traffic = conf.stopTraffic();
     confFlags->stop_inet_traffic = conf.stopInetTraffic();
-    confFlags->ask_to_connect = conf.askToConnect();
     confFlags->allow_all_new = conf.allowAllNew();
+    confFlags->ask_to_connect = conf.askToConnect();
 
     confFlags->app_block_all = conf.appBlockAll();
     confFlags->app_allow_all = conf.appAllowAll();
