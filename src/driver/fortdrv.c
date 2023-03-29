@@ -15,7 +15,7 @@ static void fort_driver_unload(PDRIVER_OBJECT driver)
 
     if (driver->DeviceObject != NULL) {
         /* Unregister Device Callbacks */
-        if (driver->MajorFunction[IRP_MJ_SHUTDOWN] != NULL) {
+        if (driver->MajorFunction[IRP_MJ_SHUTDOWN] == &fort_device_shutdown) {
             IoUnregisterShutdownNotification(driver->DeviceObject);
         }
 
@@ -59,14 +59,14 @@ static NTSTATUS fort_driver_load(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path
     if (!NT_SUCCESS(status))
         return status;
 
-    driver->DriverUnload = fort_driver_unload;
-    driver->MajorFunction[IRP_MJ_CREATE] = fort_device_create;
-    driver->MajorFunction[IRP_MJ_CLOSE] = fort_device_close;
-    driver->MajorFunction[IRP_MJ_CLEANUP] = fort_device_cleanup;
-    driver->MajorFunction[IRP_MJ_DEVICE_CONTROL] = fort_device_control;
+    driver->DriverUnload = &fort_driver_unload;
+    driver->MajorFunction[IRP_MJ_CREATE] = &fort_device_create;
+    driver->MajorFunction[IRP_MJ_CLOSE] = &fort_device_close;
+    driver->MajorFunction[IRP_MJ_CLEANUP] = &fort_device_cleanup;
+    driver->MajorFunction[IRP_MJ_DEVICE_CONTROL] = &fort_device_control;
 
     if (NT_SUCCESS(IoRegisterShutdownNotification(device_obj))) {
-        driver->MajorFunction[IRP_MJ_SHUTDOWN] = fort_device_shutdown;
+        driver->MajorFunction[IRP_MJ_SHUTDOWN] = &fort_device_shutdown;
     }
 
     return fort_device_load(device_obj);
