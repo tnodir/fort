@@ -11,7 +11,7 @@
 
 static PFORT_DEVICE g_device = NULL;
 
-FORT_API PFORT_DEVICE fort_device()
+FORT_API PFORT_DEVICE fort_device(void)
 {
     return g_device;
 }
@@ -396,7 +396,7 @@ FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device)
     return STATUS_SUCCESS;
 }
 
-FORT_API void fort_device_unload()
+FORT_API void fort_device_unload(void)
 {
     if (fort_device() == NULL)
         return;

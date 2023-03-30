@@ -38,4 +38,12 @@
 
 #define fort_request_complete(irp, status) fort_request_complete_info((irp), (status), 0)
 
+#if defined(FORT_DEBUG_STACK)
+#    define FORT_CHECK_STACK() fort_check_stack_usage(__func__)
+#else
+#    define FORT_CHECK_STACK()
+#endif
+
+FORT_API void fort_check_stack_usage(const char *func_name);
+
 #endif // FORTDRV_H

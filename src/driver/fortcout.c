@@ -58,6 +58,8 @@ inline static BOOL fort_callout_ale_associate_flow(PCFORT_CALLOUT_ARG ca,
         PCFORT_CALLOUT_ALE_INDEX ci, PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref,
         FORT_APP_FLAGS app_flags)
 {
+    FORT_CHECK_STACK();
+
     const UINT64 flow_id = ca->inMetaValues->flowHandle;
 
     const IPPROTO ip_proto = (IPPROTO) ca->inFixedValues->incomingValue[ci->ipProto].value.uint8;
@@ -90,6 +92,8 @@ inline static BOOL fort_callout_ale_associate_flow(PCFORT_CALLOUT_ARG ca,
 inline static void fort_callout_ale_log_app_path(PFORT_CALLOUT_ALE_EXTRA cx,
         PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags, FORT_APP_FLAGS app_flags)
 {
+    FORT_CHECK_STACK();
+
     if (app_flags.v != 0 || !conf_flags.filter_enabled
             || !(conf_flags.allow_all_new || conf_flags.log_blocked))
         return;
@@ -110,6 +114,8 @@ inline static void fort_callout_ale_log_blocked_ip(PCFORT_CALLOUT_ARG ca,
         PCFORT_CALLOUT_ALE_INDEX ci, PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref,
         FORT_CONF_FLAGS conf_flags)
 {
+    FORT_CHECK_STACK();
+
     if (cx->block_reason == FORT_BLOCK_REASON_UNKNOWN
             || !(conf_flags.ask_to_connect || conf_flags.log_blocked_ip))
         return;
@@ -186,6 +192,8 @@ inline static void fort_callout_ale_log(PCFORT_CALLOUT_ARG ca, PCFORT_CALLOUT_AL
 inline static BOOL fort_callout_ale_check_filter_flags(PCFORT_CALLOUT_ARG ca,
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
 {
+    FORT_CHECK_STACK();
+
     if (conf_flags.stop_traffic) {
         cx->blocked = TRUE; /* block all */
         return TRUE;
@@ -261,6 +269,8 @@ inline static void fort_callout_ale_classify_allowed(PCFORT_CALLOUT_ARG ca,
 inline static void fort_callout_ale_check_conf(PCFORT_CALLOUT_ARG ca, PCFORT_CALLOUT_ALE_INDEX ci,
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref)
 {
+    FORT_CHECK_STACK();
+
     const FORT_CONF_FLAGS conf_flags = conf_ref->conf.flags;
 
     const UINT32 process_id = (UINT32) ca->inMetaValues->processId;
@@ -325,6 +335,8 @@ inline static void fort_callout_ale_by_conf(PCFORT_CALLOUT_ARG ca, PCFORT_CALLOU
 
 static void fort_callout_ale_classify(PFORT_CALLOUT_ARG ca, PCFORT_CALLOUT_ALE_INDEX ci)
 {
+    FORT_CHECK_STACK();
+
     const UINT32 classify_flags = ca->inFixedValues->incomingValue[ci->flags].value.uint32;
 
     const BOOL is_reauth = (classify_flags & FWP_CONDITION_FLAG_IS_REAUTHORIZE) != 0;
@@ -473,6 +485,8 @@ static NTSTATUS NTAPI fort_callout_notify(
 
 inline static void fort_callout_flow_classify(PCFORT_CALLOUT_ARG ca, UINT32 dataSize)
 {
+    FORT_CHECK_STACK();
+
     const UINT32 headerSize = ca->inbound ? ca->inMetaValues->transportHeaderSize : 0;
 
     fort_flow_classify(&fort_device()->stat, ca->flowContext, headerSize + dataSize, ca->inbound);
@@ -507,6 +521,8 @@ static void NTAPI fort_callout_stream_classify(const FWPS_INCOMING_VALUES0 *inFi
 
 static void fort_callout_datagram_classify(PFORT_CALLOUT_ARG ca, PCFORT_CALLOUT_DATAGRAM_INDEX ci)
 {
+    FORT_CHECK_STACK();
+
     const PNET_BUFFER netBuf = NET_BUFFER_LIST_FIRST_NB(ca->netBufList);
     const UINT32 dataSize = NET_BUFFER_DATA_LENGTH(netBuf);
 
@@ -591,6 +607,8 @@ static BOOL fort_callout_transport_is_ipsec_detunneled(
 
 static void fort_callout_transport_classify(PFORT_CALLOUT_ARG ca)
 {
+    FORT_CHECK_STACK();
+
     if ((ca->classifyOut->rights & FWPS_RIGHT_ACTION_WRITE) == 0
             || ca->classifyOut->actionType == FWP_ACTION_BLOCK)
         return; /* Can't act on the packet */
@@ -653,6 +671,8 @@ static void NTAPI fort_callout_transport_delete(
 inline static NTSTATUS fort_callout_register(
         PDEVICE_OBJECT device, const FWPS_CALLOUT0 *callouts, const PUINT32 *calloutIds, int count)
 {
+    FORT_CHECK_STACK();
+
     for (int i = 0; i < count; ++i) {
         const NTSTATUS status = FwpsCalloutRegister0(device, &callouts[i], calloutIds[i]);
         if (!NT_SUCCESS(status)) {

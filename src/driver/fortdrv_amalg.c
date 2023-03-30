@@ -3,6 +3,11 @@
 #define FORT_AMALG
 #define FORT_DRIVER
 
+/*
+#define FORT_DEBUG
+#define FORT_DEBUG_STACK
+*/
+
 #include "common/fortconf.c"
 #include "common/fortlog.c"
 #include "common/fortprov.c"

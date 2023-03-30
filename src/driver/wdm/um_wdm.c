@@ -8,7 +8,7 @@ ULONG DbgPrintEx(ULONG componentId, ULONG level, PCSTR format, ...)
     return 0;
 }
 
-PEPROCESS IoGetCurrentProcess()
+PEPROCESS IoGetCurrentProcess(void)
 {
     return NULL;
 }
@@ -206,7 +206,7 @@ void ExReleaseSpinLockExclusive(PEX_SPIN_LOCK lock, KIRQL oldIrql)
     UNUSED(oldIrql);
 }
 
-KIRQL KeGetCurrentIrql(VOID)
+KIRQL KeGetCurrentIrql(void)
 {
     return 0;
 }
@@ -500,4 +500,20 @@ NTSTATUS IoRegisterShutdownNotification(PDEVICE_OBJECT deviceObject)
 void IoUnregisterShutdownNotification(PDEVICE_OBJECT deviceObject)
 {
     UNUSED(deviceObject);
+}
+
+PVOID IoGetInitialStack(void)
+{
+    return NULL;
+}
+
+void IoGetStackLimits(PULONG_PTR lowLimit, PULONG_PTR highLimit)
+{
+    UNUSED(lowLimit);
+    UNUSED(highLimit);
+}
+
+ULONG_PTR IoGetRemainingStackSize(void)
+{
+    return 0;
 }

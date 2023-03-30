@@ -35,7 +35,7 @@ typedef struct fort_device
 extern "C" {
 #endif
 
-FORT_API PFORT_DEVICE fort_device();
+FORT_API PFORT_DEVICE fort_device(void);
 
 FORT_API void NTAPI fort_app_period_timer(void);
 
@@ -51,7 +51,7 @@ FORT_API NTSTATUS fort_device_shutdown(PDEVICE_OBJECT device, PIRP irp);
 
 FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device);
 
-FORT_API void fort_device_unload();
+FORT_API void fort_device_unload(void);
 
 #ifdef __cplusplus
 } // extern "C"

@@ -290,6 +290,8 @@ UCHAR fort_pstree_flags(PFORT_PSTREE ps_tree)
 
 static PFORT_PSNAME fort_pstree_name_new(PFORT_PSTREE ps_tree, UINT16 name_size)
 {
+    FORT_CHECK_STACK();
+
     PFORT_PSNAME ps_name = fort_pool_malloc(&ps_tree->pool_list,
             FORT_PSNAME_DATA_OFF + name_size + sizeof(WCHAR)); /* include terminating zero */
     if (ps_name != NULL) {
@@ -786,6 +788,8 @@ static void fort_pstree_enum_process(
 
 static void fort_pstree_enum_processes_loop(PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry)
 {
+    FORT_CHECK_STACK();
+
     for (;;) {
         const DWORD processId = (DWORD) processEntry->ProcessId;
         const DWORD parentProcessId = (DWORD) processEntry->ParentProcessId;

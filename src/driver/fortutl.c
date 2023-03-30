@@ -180,12 +180,12 @@ FORT_API NTSTATUS fort_system32_path_init(PDRIVER_OBJECT driver, PUNICODE_STRING
     return status;
 }
 
-FORT_API PUNICODE_STRING fort_system32_path()
+FORT_API PUNICODE_STRING fort_system32_path(void)
 {
     return &g_system32Path;
 }
 
-FORT_API PUNICODE_STRING fort_system_drive_path()
+FORT_API PUNICODE_STRING fort_system_drive_path(void)
 {
     return &g_systemDrivePath;
 }

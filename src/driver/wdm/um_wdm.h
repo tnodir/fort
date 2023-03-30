@@ -294,7 +294,7 @@ FORT_API ULONG DbgPrintEx(ULONG componentId, ULONG level, PCSTR format, ...);
 #define NtCurrentProcess() ((HANDLE) (LONG_PTR) -1)
 #define ZwCurrentProcess() NtCurrentProcess()
 
-FORT_API PEPROCESS IoGetCurrentProcess(VOID);
+FORT_API PEPROCESS IoGetCurrentProcess(void);
 
 #define NonPagedPool        0
 #define NonPagedPoolExecute NonPagedPool
@@ -355,7 +355,7 @@ FORT_API KIRQL ExAcquireSpinLockExclusive(PEX_SPIN_LOCK lock);
 FORT_API void ExReleaseSpinLockShared(PEX_SPIN_LOCK lock, KIRQL oldIrql);
 FORT_API void ExReleaseSpinLockExclusive(PEX_SPIN_LOCK lock, KIRQL oldIrql);
 
-FORT_API KIRQL KeGetCurrentIrql(VOID);
+FORT_API KIRQL KeGetCurrentIrql(void);
 
 #define IO_NO_INCREMENT 0
 FORT_API void IoCompleteRequest(PIRP irp, CCHAR priorityBoost);
@@ -459,6 +459,10 @@ FORT_API void IoWriteErrorLogEntry(PVOID elEntry);
 
 FORT_API NTSTATUS IoRegisterShutdownNotification(PDEVICE_OBJECT deviceObject);
 FORT_API void IoUnregisterShutdownNotification(PDEVICE_OBJECT deviceObject);
+
+FORT_API PVOID IoGetInitialStack(void);
+FORT_API void IoGetStackLimits(PULONG_PTR lowLimit, PULONG_PTR highLimit);
+FORT_API ULONG_PTR IoGetRemainingStackSize(void);
 
 #ifdef __cplusplus
 } // extern "C"
