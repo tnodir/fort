@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.8.4, 2022-03-30:
+- Driver: Decrease kernel stack usage to avoid BSOD.
+
 v3.8.3, 2022-03-24:
 - UI: Load password from registry when "Check Password on Uninstalll" enabled.
 - Installer: Remove password from registry on uninstall.
