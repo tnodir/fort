@@ -424,6 +424,9 @@ void TrayIcon::setupTrayMenuFilterMode()
                 /*member=*/nullptr, /*checkable=*/true);
         addHotKey(a, iniUser()->hotKeyValue(hotKey));
 
+        // TODO: Implement Ask to Connect
+        a->setEnabled(index != 1);
+
         m_filterModeActions->addAction(a);
         ++index;
     }

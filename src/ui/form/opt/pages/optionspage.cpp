@@ -291,8 +291,8 @@ void OptionsPage::retranslateComboTrayAction()
     // Sync with TrayIcon::ActionType
     const QStringList list = { tr("Show Programs"), tr("Show Options"), tr("Show Statistics"),
         tr("Show/Hide Traffic Graph"), tr("Switch Filter Enabled"), tr("Switch Stop Traffic"),
-        tr("Switch Stop Internet Traffic"), tr("Show Filter Mode Menu"),
-        tr("Show Tray Menu"), tr("Ignore") };
+        tr("Switch Stop Internet Traffic"), tr("Show Filter Mode Menu"), tr("Show Tray Menu"),
+        tr("Ignore") };
 
     m_comboTrayAction->clear();
     m_comboTrayAction->addItems(list);
@@ -443,6 +443,11 @@ QLayout *OptionsPage::setupFilterModeLayout()
                 }
             });
     m_comboFilterMode->setFixedWidth(200);
+
+    // TODO: Implement Ask to Connect
+    QStandardItemModel *model = qobject_cast<QStandardItemModel *>(m_comboFilterMode->model());
+    QStandardItem *item = model->item(1);
+    item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
 
     return ControlUtil::createRowLayout(m_labelFilterMode, m_comboFilterMode);
 }
