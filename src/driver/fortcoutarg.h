@@ -21,6 +21,8 @@ typedef struct fort_callout_arg
     UCHAR isIPv6 : 1;
 } FORT_CALLOUT_ARG, *PFORT_CALLOUT_ARG;
 
+typedef const FORT_CALLOUT_ARG *PCFORT_CALLOUT_ARG;
+
 typedef struct fort_callout_ale_index
 {
     UCHAR flags;
@@ -30,6 +32,8 @@ typedef struct fort_callout_ale_index
     UCHAR remotePort;
     UCHAR ipProto;
 } FORT_CALLOUT_ALE_INDEX, *PFORT_CALLOUT_ALE_INDEX;
+
+typedef const FORT_CALLOUT_ALE_INDEX *PCFORT_CALLOUT_ALE_INDEX;
 
 typedef struct fort_callout_ale_extra
 {
@@ -53,9 +57,13 @@ typedef struct fort_callout_ale_extra
     ULONG_PTR info;
 } FORT_CALLOUT_ALE_EXTRA, *PFORT_CALLOUT_ALE_EXTRA;
 
+typedef const FORT_CALLOUT_ALE_EXTRA *PCFORT_CALLOUT_ALE_EXTRA;
+
 typedef struct fort_callout_datagram_index
 {
     UCHAR direction;
 } FORT_CALLOUT_DATAGRAM_INDEX, *PFORT_CALLOUT_DATAGRAM_INDEX;
+
+typedef const FORT_CALLOUT_DATAGRAM_INDEX *PCFORT_CALLOUT_DATAGRAM_INDEX;
 
 #endif // FORTCOUTARG_H
