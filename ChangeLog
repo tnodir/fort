@@ -1,93 +1,93 @@
 Fort Firewall ChangeLog
 
-v3.8.4, 2022-03-30:
+v3.8.4, 2023-03-30:
 - Driver: Decrease kernel stack usage to avoid BSOD.
 
-v3.8.3, 2022-03-24:
+v3.8.3, 2023-03-24:
 - UI: Load password from registry when "Check Password on Uninstalll" enabled.
 - Installer: Remove password from registry on uninstall.
 - Installer: Optionally remove config & data folders on uninstall.
 - Driver: Improve shutdown/reset handling.
 - UI: Update SQLite to v3.41.2
 
-v3.8.2, 2022-03-21:
+v3.8.2, 2023-03-21:
 - UI: Fix default options on clean install (v3.8.1 regression).
 
-v3.8.1, 2022-03-20:
+v3.8.1, 2023-03-20:
 - UI: Programs: Group's name reflects its enabled flag.
 - UI: Options: Move "Filter Local Addresses" flag into "Self Protection" group.
 - Driver: Filter local addresses when Fort is not running.
 - Driver: Rework flows closing on driver unload.
 
-v3.8.0, 2022-03-13:
+v3.8.0, 2023-03-13:
 - UI: Add "Auto-Learn" mode, remove "Auto-Allow New Programs" flag.
 - UI: Update SQLite to v3.41.1
 
-v3.7.9, 2022-03-13:
+v3.7.9, 2023-03-13:
 - UI: Vacuum the DB outside of transaction.
 - UI: Options: Add "Ctrl/Alt + Single Click" tray icon events.
 - UI: Drop Qt 5 support. Only Qt 6 is supported for building the sources!
 
-v3.7.8, 2022-03-11:
+v3.7.8, 2023-03-11:
 - UI: Fix service stopping on uninstall with "Disable Service controls" option.
 
-v3.7.7, 2022-03-10:
+v3.7.7, 2023-03-10:
 - UI: Auto-restart service on termination.
 - UI: Options: Add "Disable Service controls" flag.
 - UI: Options: Add "Check password on Uninstall" flag.
 
-v3.7.6, 2022-03-08:
+v3.7.6, 2023-03-08:
 - UI: Blocked Connections: Fix list updating.
 - UI: Don't check password on Quit.
 
-v3.7.5, 2022-03-06:
+v3.7.5, 2023-03-06:
 - Fix the distribution: A test signed driver was included in v3.7.4
 
-v3.7.4, 2022-03-05:
+v3.7.4, 2023-03-05:
 - UI: Programs: Add ability to not collect blocked connections.
 - UI: Blocked Connections: Process storing in separate thread.
 - UI: Update SQLite to v3.41.0
 
-v3.7.3, 2022-02-19:
+v3.7.3, 2023-02-19:
 - UI: Don't reset password on Quota alert.
 - UI: Options: Statistics: Fix Quota changes applying.
 - UI: Service: Add ability to pause/continue client connections.
 - Driver: Use event to wait processes enumeration.
 - Driver: Abort bad flows on unload.
 
-v3.7.2, 2022-02-13:
+v3.7.2, 2023-02-13:
 - UI: __popcnt is not supported by old CPU.
 
-v3.7.1, 2022-02-12:
+v3.7.1, 2023-02-12:
 - UI: Options: IP Addresses: Add "Show Zones" button.
 - UI: Try to reconnect to killed service by timer.
 - Driver: Refactor for IRQ level to avoid Driver Verifier errors.
 - Installer: Use "C:\Program Files\" by default on 64-bit OS.
 
-v3.7.0, 2022-01-27:
+v3.7.0, 2023-01-27:
 - UI: Programs: Load app icons in separate thread.
 
-v3.6.9, 2022-01-26:
+v3.6.9, 2023-01-26:
 - UI: Options: Fix saving regression.
 
-v3.6.8, 2022-01-25:
+v3.6.8, 2023-01-25:
 - UI: Programs: Optimize app info loading.
 - UI: Programs: Swap "State" & "File Path" columns.
 
-v3.6.7, 2022-01-23:
+v3.6.7, 2023-01-23:
 - UI: Tray: Fix Zones opening.
 - UI: Options: Cancel button is enabled on change only.
 - Driver: fortprov: Fix callouts unregistering order.
 
-v3.6.6, 2022-01-19:
+v3.6.6, 2023-01-19:
 - UI: Options: Fix window's position/size saving.
 - UI: Options: OK button is always enabled.
 - UI: Tray: Make Options menu clickable.
 
-v3.6.5, 2022-01-18:
+v3.6.5, 2023-01-18:
 - Driver: Double check the closed state on flow deletion.
 
-v3.6.4, 2022-01-17:
+v3.6.4, 2023-01-17:
 - UI: Programs: Improve sorting by "State" column (Alerted programs are always on top).
 - UI: Tray: Change icon color on some states.
 - UI: Options: Save user.ini changes on OK/Apply only.
@@ -95,12 +95,12 @@ v3.6.4, 2022-01-17:
 - UI: Options: Add ability to Stop Internet when Quota exceeds.
 - UI: Programs: Add "Restrict access to LAN only" flag.
 
-v3.6.3, 2022-01-13:
+v3.6.3, 2023-01-13:
 - UI: Options: Add "Animate Alert Icon" flag.
 - UI: Programs: Rework State column for alerts.
 - UI: Programs: Add "File Path" column.
 
-v3.6.2, 2022-01-11:
+v3.6.2, 2023-01-11:
 - UI: Options: Remove "Dark mode" flag (auto-follows system mode now).
 - UI: App Groups: Improve speed limiting options.
 - UI: Update SQLite to v3.40.1
