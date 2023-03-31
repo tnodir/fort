@@ -63,15 +63,17 @@
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <ControlFlowGuard>false</ControlFlowGuard>
       <SDLCheck>false</SDLCheck>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
       <TreatWarningAsError>true</TreatWarningAsError>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>$(DefineConstants);%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <AdditionalDependencies>%(AdditionalDependencies);$(DDK_LIB_PATH)\aux_klib.lib;$(DDK_LIB_PATH)\fwpkclnt.lib;$(DDK_LIB_PATH)\ndis.lib;$(SDK_LIB_PATH)\uuid.lib</AdditionalDependencies>
       <AdditionalOptions>/INTEGRITYCHECK</AdditionalOptions>
       <AdditionalOptions Condition="'$(Platform)'=='Win32'">%(AdditionalOptions) /SAFESEH:NO</AdditionalOptions>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
       <ModuleDefinitionFile>fortdrv.def</ModuleDefinitionFile>
     </Link>
     <DriverSign>
