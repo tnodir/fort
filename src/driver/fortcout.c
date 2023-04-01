@@ -930,18 +930,19 @@ inline static void fort_callout_timer_update_system_time(
         PFORT_STAT stat, PFORT_BUFFER buf, PIRP *irp, ULONG_PTR *info)
 {
     LARGE_INTEGER system_time;
-    PCHAR out;
-
     KeQuerySystemTime(&system_time);
 
-    if (stat->system_time.QuadPart != system_time.QuadPart
-            && NT_SUCCESS(fort_buffer_prepare(buf, FORT_LOG_TIME_SIZE, &out, irp, info))) {
+    if (stat->system_time.QuadPart == system_time.QuadPart)
+        return;
+
+    stat->system_time = system_time;
+
+    PCHAR out;
+    if (NT_SUCCESS(fort_buffer_prepare(buf, FORT_LOG_TIME_SIZE, &out, irp, info))) {
         const INT64 unix_time = fort_system_to_unix_time(system_time.QuadPart);
 
         const UCHAR old_stat_flags = fort_stat_flags_set(stat, FORT_STAT_TIME_CHANGED, FALSE);
-        const BOOL time_changed = ((old_stat_flags & FORT_STAT_TIME_CHANGED) != 0);
-
-        stat->system_time = system_time;
+        const BOOL time_changed = (old_stat_flags & FORT_STAT_TIME_CHANGED) != 0;
 
         fort_log_time_write(out, time_changed, unix_time);
     }
