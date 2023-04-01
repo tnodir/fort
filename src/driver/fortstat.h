@@ -85,9 +85,9 @@ typedef struct fort_flow
 #endif
 } FORT_FLOW, *PFORT_FLOW;
 
-#define FORT_STAT_LOG          0x01
-#define FORT_STAT_TIME_CHANGED 0x02
-#define FORT_STAT_CLOSED       0x80 /* used on driver unloading */
+#define FORT_STAT_LOG                 0x01
+#define FORT_STAT_SYSTEM_TIME_CHANGED 0x02
+#define FORT_STAT_CLOSED              0x80 /* used on driver unloading */
 
 typedef struct fort_stat
 {

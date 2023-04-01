@@ -2,9 +2,9 @@
 
 LogEntryTime::LogEntryTime(qint64 unixTime) : m_unixTime(unixTime) { }
 
-void LogEntryTime::setTimeChanged(bool timeChanged)
+void LogEntryTime::setSystemTimeChanged(bool systemTimeChanged)
 {
-    m_timeChanged = timeChanged;
+    m_systemTimeChanged = systemTimeChanged;
 }
 
 void LogEntryTime::setUnixTime(qint64 unixTime)

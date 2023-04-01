@@ -164,7 +164,8 @@ bool LogManager::processLogEntry(LogBuffer *logBuffer, FortLogType logType)
         LogEntryTime timeEntry;
         logBuffer->readEntryTime(&timeEntry);
         setCurrentUnixTime(timeEntry.unixTime());
-        if (timeEntry.timeChanged()) {
+
+        if (timeEntry.systemTimeChanged()) {
             emit systemTimeChanged();
         }
     } break;

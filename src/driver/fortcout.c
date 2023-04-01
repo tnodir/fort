@@ -941,10 +941,11 @@ inline static void fort_callout_timer_update_system_time(
     if (NT_SUCCESS(fort_buffer_prepare(buf, FORT_LOG_TIME_SIZE, &out, irp, info))) {
         const INT64 unix_time = fort_system_to_unix_time(system_time.QuadPart);
 
-        const UCHAR old_stat_flags = fort_stat_flags_set(stat, FORT_STAT_TIME_CHANGED, FALSE);
-        const BOOL time_changed = (old_stat_flags & FORT_STAT_TIME_CHANGED) != 0;
+        const UCHAR old_stat_flags =
+                fort_stat_flags_set(stat, FORT_STAT_SYSTEM_TIME_CHANGED, FALSE);
+        const BOOL system_time_changed = (old_stat_flags & FORT_STAT_SYSTEM_TIME_CHANGED) != 0;
 
-        fort_log_time_write(out, time_changed, unix_time);
+        fort_log_time_write(out, system_time_changed, unix_time);
     }
 }
 
