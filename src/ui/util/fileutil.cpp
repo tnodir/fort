@@ -4,6 +4,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QStandardPaths>
+#include <QTimeZone>
 
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
@@ -216,7 +217,7 @@ QDateTime fileModTime(const QString &filePath)
 {
     const QFileInfo fi(filePath);
     return fi.lastModified(
-#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+#if QT_VERSION > QT_VERSION_CHECK(6, 5, 0)
             QTimeZone::UTC
 #endif
     );
