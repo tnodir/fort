@@ -401,6 +401,9 @@ void TrayIcon::setupTrayMenuOptions()
             QString(), windowManager(), SLOT(showPoliciesWindow()));
     addHotKey(m_policiesAction, iniUser()->hotKeyPolicies());
 
+    // TODO: Implement Policies
+    m_policiesAction->setEnabled(false);
+
     m_zonesAction = addAction(m_optionsMenu, IconCache::icon(":/icons/ip_class.png"), QString(),
             windowManager(), SLOT(showZonesWindow()));
     addHotKey(m_zonesAction, iniUser()->hotKeyZones());
