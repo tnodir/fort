@@ -71,22 +71,7 @@ int ConnBlockListModel::columnCount(const QModelIndex &parent) const
 QVariant ConnBlockListModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && (role == Qt::DisplayRole || role == Qt::ToolTipRole)) {
-        switch (section) {
-        case 0:
-            return tr("Program");
-        case 1:
-            return (role == Qt::DisplayRole) ? tr("Proc. ID") : tr("Process ID");
-        case 2:
-            return tr("Protocol");
-        case 3:
-            return tr("Local IP and Port");
-        case 4:
-            return tr("Remote IP and Port");
-        case 5:
-            return (role == Qt::DisplayRole) ? tr("Dir.") : tr("Direction");
-        case 6:
-            return tr("Time");
-        }
+        return headerDataDisplay(section, role);
     }
     return QVariant();
 }
@@ -105,6 +90,28 @@ QVariant ConnBlockListModel::data(const QModelIndex &index, int role) const
     // Icon
     case Qt::DecorationRole:
         return dataDecoration(index);
+    }
+
+    return QVariant();
+}
+
+QVariant ConnBlockListModel::headerDataDisplay(int section, int role) const
+{
+    switch (section) {
+    case 0:
+        return tr("Program");
+    case 1:
+        return (role == Qt::DisplayRole) ? tr("Proc. ID") : tr("Process ID");
+    case 2:
+        return tr("Protocol");
+    case 3:
+        return tr("Local IP and Port");
+    case 4:
+        return tr("Remote IP and Port");
+    case 5:
+        return (role == Qt::DisplayRole) ? tr("Dir.") : tr("Direction");
+    case 6:
+        return tr("Time");
     }
 
     return QVariant();

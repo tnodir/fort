@@ -79,6 +79,8 @@ protected:
     QString sqlLimitOffset() const override;
 
 private:
+    QVariant headerDataDisplay(int section, int role) const;
+
     QVariant dataDisplay(const QModelIndex &index, int role) const;
     QVariant dataDisplayDirection(const ConnRow &connRow, int role) const;
     QVariant dataDecoration(const QModelIndex &index) const;
