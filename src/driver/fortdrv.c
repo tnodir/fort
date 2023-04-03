@@ -73,6 +73,7 @@ static NTSTATUS fort_driver_load(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path
     driver->MajorFunction[IRP_MJ_CLOSE] = &fort_device_close;
     driver->MajorFunction[IRP_MJ_CLEANUP] = &fort_device_cleanup;
     driver->MajorFunction[IRP_MJ_DEVICE_CONTROL] = &fort_device_control;
+    driver->MajorFunction[IRP_MJ_SHUTDOWN] = &fort_device_shutdown;
 
     return fort_device_load(device_obj);
 }
