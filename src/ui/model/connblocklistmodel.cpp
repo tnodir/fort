@@ -97,21 +97,29 @@ QVariant ConnBlockListModel::data(const QModelIndex &index, int role) const
 
 QVariant ConnBlockListModel::headerDataDisplay(int section, int role) const
 {
-    switch (section) {
-    case 0:
-        return tr("Program");
-    case 1:
-        return (role == Qt::DisplayRole) ? tr("Proc. ID") : tr("Process ID");
-    case 2:
-        return tr("Protocol");
-    case 3:
-        return tr("Local IP and Port");
-    case 4:
-        return tr("Remote IP and Port");
-    case 5:
-        return (role == Qt::DisplayRole) ? tr("Dir.") : tr("Direction");
-    case 6:
-        return tr("Time");
+    static const char *const headerTexts[] = {
+        QT_TR_NOOP("Program"),
+        QT_TR_NOOP("Proc. ID"),
+        QT_TR_NOOP("Protocol"),
+        QT_TR_NOOP("Local IP and Port"),
+        QT_TR_NOOP("Remote IP and Port"),
+        QT_TR_NOOP("Dir."),
+        QT_TR_NOOP("Time"),
+    };
+
+    static const char *const headerTooltips[] = {
+        QT_TR_NOOP("Program"),
+        QT_TR_NOOP("Process ID"),
+        QT_TR_NOOP("Protocol"),
+        QT_TR_NOOP("Local IP and Port"),
+        QT_TR_NOOP("Remote IP and Port"),
+        QT_TR_NOOP("Direction"),
+        QT_TR_NOOP("Time"),
+    };
+
+    if (section >= 0 && section <= 6) {
+        const char *const *arr = (role == Qt::ToolTipRole) ? headerTooltips : headerTexts;
+        return tr(arr[section]);
     }
 
     return QVariant();
@@ -151,6 +159,7 @@ QVariant ConnBlockListModel::dataDisplayDirection(const ConnRow &connRow, int ro
         return blockReasonText(connRow)
                 + (connRow.inherited ? " (" + tr("Inherited") + ")" : QString());
     }
+
     return connRow.inbound ? tr("In") : tr("Out");
 }
 
@@ -175,46 +184,44 @@ QVariant ConnBlockListModel::dataDecoration(const QModelIndex &index) const
 
 QString ConnBlockListModel::blockReasonText(const ConnRow &connRow)
 {
-    switch (connRow.blockReason) {
-    case FORT_BLOCK_REASON_IP_INET:
-        return tr("Blocked Internet address");
-    case FORT_BLOCK_REASON_REAUTH:
-        return tr("Old connection closed on startup");
-    case FORT_BLOCK_REASON_PROGRAM:
-        return tr("Programs logic");
-    case FORT_BLOCK_REASON_APP_GROUP_FOUND:
-        return tr("App. Group logic");
-    case FORT_BLOCK_REASON_FILTER_MODE:
-        return tr("Filter Mode logic");
-    case FORT_BLOCK_REASON_LAN_ONLY:
-        return tr("Restrict access to LAN only");
-    case FORT_BLOCK_REASON_ASK_LIMIT:
-        return tr("Limit of Ask to Connect");
-    default:
-        return tr("Unknown");
+    static const char *const blockReasonTexts[] = {
+        QT_TR_NOOP("Blocked Internet address"),
+        QT_TR_NOOP("Old connection closed on startup"),
+        QT_TR_NOOP("Programs logic"),
+        QT_TR_NOOP("App. Group logic"),
+        QT_TR_NOOP("Filter Mode logic"),
+        QT_TR_NOOP("Restrict access to LAN only"),
+        QT_TR_NOOP("Limit of Ask to Connect"),
+    };
+
+    if (connRow.blockReason >= FORT_BLOCK_REASON_IP_INET
+            && connRow.blockReason <= FORT_BLOCK_REASON_ASK_LIMIT) {
+        const int index = connRow.blockReason - FORT_BLOCK_REASON_IP_INET;
+        return tr(blockReasonTexts[index]);
     }
+
+    return tr("Unknown");
 }
 
 QString ConnBlockListModel::connIconPath(const ConnRow &connRow)
 {
-    switch (connRow.blockReason) {
-    case FORT_BLOCK_REASON_IP_INET:
-        return ":/icons/ip.png";
-    case FORT_BLOCK_REASON_REAUTH:
-        return ":/icons/arrow_refresh_small.png";
-    case FORT_BLOCK_REASON_PROGRAM:
-        return ":/icons/application.png";
-    case FORT_BLOCK_REASON_APP_GROUP_FOUND:
-        return ":/icons/application_double.png";
-    case FORT_BLOCK_REASON_FILTER_MODE:
-        return ":/icons/deny.png";
-    case FORT_BLOCK_REASON_LAN_ONLY:
-        return ":/icons/hostname.png";
-    case FORT_BLOCK_REASON_ASK_LIMIT:
-        return ":/icons/help.png";
-    default:
-        return ":/icons/error.png";
+    static const char *const blockReasonIcons[] = {
+        ":/icons/ip.png",
+        ":/icons/arrow_refresh_small.png",
+        ":/icons/application.png",
+        ":/icons/application_double.png",
+        ":/icons/deny.png",
+        ":/icons/hostname.png",
+        ":/icons/help.png",
+    };
+
+    if (connRow.blockReason >= FORT_BLOCK_REASON_IP_INET
+            && connRow.blockReason <= FORT_BLOCK_REASON_ASK_LIMIT) {
+        const int index = connRow.blockReason - FORT_BLOCK_REASON_IP_INET;
+        return blockReasonIcons[index];
     }
+
+    return ":/icons/error.png";
 }
 
 void ConnBlockListModel::deleteConn(qint64 connIdTo)
