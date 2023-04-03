@@ -191,3 +191,16 @@ NTSTATUS NTAPI FwpsFlowAbort0(UINT64 flowId)
     UNUSED(flowId);
     return STATUS_SUCCESS;
 }
+
+NTSTATUS FwpsPendOperation0(HANDLE completionHandle, HANDLE *completionContext)
+{
+    UNUSED(completionHandle);
+    UNUSED(completionContext);
+    return STATUS_SUCCESS;
+}
+
+void FwpsCompleteOperation0(HANDLE completionContext, PNET_BUFFER_LIST netBufferList)
+{
+    UNUSED(completionContext);
+    UNUSED(netBufferList);
+}

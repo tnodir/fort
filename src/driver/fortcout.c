@@ -140,12 +140,9 @@ inline static void fort_callout_ale_log_blocked_ip(PCFORT_CALLOUT_ARG ca,
 inline static BOOL fort_callout_ale_add_pending(
         PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, FORT_CONF_FLAGS conf_flags)
 {
-    if (!fort_packet_add_pending(ca)) {
-        if (conf_flags.allow_all_new || conf_flags.app_allow_all)
-            return FALSE;
-
+    if (!fort_packet_add_pending(ca, cx)) {
         cx->blocked = TRUE; /* block (error) */
-        cx->block_reason = FORT_BLOCK_REASON_FILTER_MODE;
+        cx->block_reason = FORT_BLOCK_REASON_ASK_LIMIT;
         return TRUE;
     }
 
@@ -585,26 +582,6 @@ static void NTAPI fort_callout_flow_delete(UINT16 layerId, UINT32 calloutId, UIN
     fort_flow_delete(&fort_device()->stat, flowContext);
 }
 
-static BOOL fort_callout_transport_is_ipsec_detunneled(
-        const PNET_BUFFER_LIST netBufList, BOOL inbound)
-{
-    /* To be compatible with Vista's IpSec implementation, we must not
-     * intercept not-yet-detunneled IpSec traffic. */
-
-    if (!inbound)
-        return TRUE;
-
-    FWPS_PACKET_LIST_INFORMATION0 packet_info;
-    RtlZeroMemory(&packet_info, sizeof(FWPS_PACKET_LIST_INFORMATION0));
-
-    FwpsGetPacketListSecurityInformation0(netBufList,
-            FWPS_PACKET_LIST_INFORMATION_QUERY_IPSEC | FWPS_PACKET_LIST_INFORMATION_QUERY_INBOUND,
-            &packet_info);
-
-    return !packet_info.ipsecInformation.inbound.isTunnelMode
-            || packet_info.ipsecInformation.inbound.isDeTunneled;
-}
-
 static void fort_callout_transport_classify(PFORT_CALLOUT_ARG ca)
 {
     FORT_CHECK_STACK();
@@ -615,7 +592,6 @@ static void fort_callout_transport_classify(PFORT_CALLOUT_ARG ca)
 
     if (!FWPS_IS_METADATA_FIELD_PRESENT(ca->inMetaValues, FWPS_METADATA_FIELD_ALE_CLASSIFY_REQUIRED)
             && ca->netBufList != NULL
-            && fort_callout_transport_is_ipsec_detunneled(ca->netBufList, ca->inbound)
             /* Process the Packet by Shaper */
             && fort_shaper_packet_process(&fort_device()->shaper, ca)) {
 

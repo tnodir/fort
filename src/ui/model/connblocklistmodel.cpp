@@ -181,6 +181,8 @@ QString ConnBlockListModel::blockReasonText(const ConnRow &connRow)
         return tr("Filter Mode logic");
     case FORT_BLOCK_REASON_LAN_ONLY:
         return tr("Restrict access to LAN only");
+    case FORT_BLOCK_REASON_ASK_LIMIT:
+        return tr("Limit of Ask to Connect");
     default:
         return tr("Unknown");
     }
@@ -201,6 +203,8 @@ QString ConnBlockListModel::connIconPath(const ConnRow &connRow)
         return ":/icons/deny.png";
     case FORT_BLOCK_REASON_LAN_ONLY:
         return ":/icons/hostname.png";
+    case FORT_BLOCK_REASON_ASK_LIMIT:
+        return ":/icons/help.png";
     default:
         return ":/icons/error.png";
     }

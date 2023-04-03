@@ -29,8 +29,9 @@ typedef struct fort_packet_out
     ip_addr_t remoteAddr;
 } FORT_PACKET_OUT, *PFORT_PACKET_OUT;
 
-#define FORT_PACKET_INBOUND 0x01
-#define FORT_PACKET_IP6     0x02
+#define FORT_PACKET_INBOUND         0x01
+#define FORT_PACKET_IP6             0x02
+#define FORT_PACKET_IPSEC_PROTECTED 0x04
 
 typedef struct fort_packet_io
 {
@@ -84,6 +85,41 @@ typedef struct fort_packet_queue
     KSPIN_LOCK lock;
 } FORT_PACKET_QUEUE, *PFORT_PACKET_QUEUE;
 
+typedef struct fort_pending_packet
+{
+    struct fort_pending_packet *next;
+
+    HANDLE completion_context;
+
+    FORT_PACKET_IO io;
+} FORT_PENDING_PACKET, *PFORT_PENDING_PACKET;
+
+#define FORT_PENDING_PROC_PACKET_COUNT_MAX 8
+
+typedef struct fort_pending_proc
+{
+    struct fort_pending_proc *next;
+
+    PFORT_PENDING_PACKET packets_head;
+
+    UINT16 packet_count;
+
+    UINT32 process_id;
+} FORT_PENDING_PROC, *PFORT_PENDING_PROC;
+
+typedef struct fort_pending
+{
+    PFORT_PENDING_PROC proc_free;
+    tommy_arrayof procs;
+
+    PFORT_PENDING_PROC procs_head;
+
+    PFORT_PENDING_PACKET packet_free;
+    tommy_arrayof packets;
+
+    KSPIN_LOCK lock;
+} FORT_PENDING, *PFORT_PENDING;
+
 typedef struct fort_shaper
 {
     UINT32 limit_io_bits;
@@ -96,14 +132,16 @@ typedef struct fort_shaper
     HANDLE injection_out_transport4_id;
     HANDLE injection_out_transport6_id;
 
+    FORT_PENDING pending;
+
     FORT_TIMER timer;
 
     PFORT_FLOW_PACKET packet_free;
     tommy_arrayof packets;
 
-    PFORT_PACKET_QUEUE queues[FORT_CONF_GROUP_MAX * 2]; /* in/out-bound pairs */
-
     KSPIN_LOCK lock;
+
+    PFORT_PACKET_QUEUE queues[FORT_CONF_GROUP_MAX * 2]; /* in/out-bound pairs */
 } FORT_SHAPER, *PFORT_SHAPER;
 
 #if defined(__cplusplus)
@@ -124,7 +162,7 @@ FORT_API void fort_shaper_drop_flow_packets(PFORT_SHAPER shaper, UINT64 flowCont
 
 FORT_API void fort_shaper_drop_packets(PFORT_SHAPER shaper);
 
-FORT_API BOOL fort_packet_add_pending(PCFORT_CALLOUT_ARG ca);
+FORT_API BOOL fort_packet_add_pending(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx);
 
 #ifdef __cplusplus
 } // extern "C"
