@@ -779,7 +779,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Show Filter Mode Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>필터 모드 메뉴 표시</translation>
     </message>
 </context>
 <context>
