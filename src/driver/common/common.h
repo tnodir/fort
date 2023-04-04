@@ -65,4 +65,6 @@
     ((369 * 365 + 89) * (INT64) SECSPERDAY) /* 1601 to 1970 is 369 years plus 89 leap days */
 #define fort_system_to_unix_time(system_time) ((system_time) / 10000000 - SECS_1601_TO_1970)
 
+#define FORT_ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
+
 #endif // COMMON_H

@@ -203,8 +203,7 @@ static DWORD fort_prov_register_callouts(HANDLE engine)
                 L"Fort Firewall Callout Outbound Transport V6", FWPM_LAYER_OUTBOUND_TRANSPORT_V6),
     };
 
-    return fort_prov_add_callouts(
-            engine, callouts, /*count=*/sizeof(callouts) / sizeof(callouts[0]));
+    return fort_prov_add_callouts(engine, callouts, /*count=*/FORT_ARRAY_SIZE(callouts));
 }
 
 static DWORD fort_prov_register_boot_filters(HANDLE engine)
@@ -246,7 +245,7 @@ static DWORD fort_prov_register_boot_filters(HANDLE engine)
         },
     };
 
-    return fort_prov_add_filters(engine, filters, /*count=*/sizeof(filters) / sizeof(filters[0]));
+    return fort_prov_add_filters(engine, filters, /*count=*/FORT_ARRAY_SIZE(filters));
 }
 
 static DWORD fort_prov_register_persist_filters(HANDLE engine)
@@ -300,7 +299,7 @@ static DWORD fort_prov_register_persist_filters(HANDLE engine)
         },
     };
 
-    return fort_prov_add_filters(engine, filters, /*count=*/sizeof(filters) / sizeof(filters[0]));
+    return fort_prov_add_filters(engine, filters, /*count=*/FORT_ARRAY_SIZE(filters));
 }
 
 static DWORD fort_prov_register_callout_filters(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
@@ -363,7 +362,7 @@ static DWORD fort_prov_register_callout_filters(HANDLE engine, const FORT_PROV_B
         },
     };
 
-    return fort_prov_add_filters(engine, filters, /*count=*/sizeof(filters) / sizeof(filters[0]));
+    return fort_prov_add_filters(engine, filters, /*count=*/FORT_ARRAY_SIZE(filters));
 }
 
 inline static DWORD fort_prov_register_filters(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
@@ -480,7 +479,7 @@ static DWORD fort_prov_flow_register_filters(HANDLE engine)
         },
     };
 
-    return fort_prov_add_filters(engine, filters, /*count=*/sizeof(filters) / sizeof(filters[0]));
+    return fort_prov_add_filters(engine, filters, /*count=*/FORT_ARRAY_SIZE(filters));
 }
 
 static DWORD fort_prov_flow_register_packet_filters(HANDLE engine)
@@ -535,7 +534,7 @@ static DWORD fort_prov_flow_register_packet_filters(HANDLE engine)
         },
     };
 
-    return fort_prov_add_filters(engine, filters, /*count=*/sizeof(filters) / sizeof(filters[0]));
+    return fort_prov_add_filters(engine, filters, /*count=*/FORT_ARRAY_SIZE(filters));
 }
 
 FORT_API DWORD fort_prov_flow_register(HANDLE engine, BOOL filter_packets)
@@ -592,7 +591,7 @@ static DWORD fort_prov_register_reauth_filters(HANDLE engine)
         },
     };
 
-    return fort_prov_add_filters(engine, filters, /*count=*/sizeof(filters) / sizeof(filters[0]));
+    return fort_prov_add_filters(engine, filters, /*count=*/FORT_ARRAY_SIZE(filters));
 }
 
 FORT_API DWORD fort_prov_reauth(HANDLE engine)

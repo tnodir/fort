@@ -697,8 +697,7 @@ static NTSTATUS fort_callout_install_ale(PDEVICE_OBJECT device, PFORT_STAT stat)
         &stat->accept6_id,
     };
 
-    return fort_callout_register(
-            device, callouts, calloutIds, /*count=*/sizeof(callouts) / sizeof(callouts[0]));
+    return fort_callout_register(device, callouts, calloutIds, /*count=*/FORT_ARRAY_SIZE(callouts));
 }
 
 inline static FWPS_CALLOUT0 fort_callout_init_callout(GUID key,
@@ -754,8 +753,7 @@ static NTSTATUS fort_callout_install_packet(PDEVICE_OBJECT device, PFORT_STAT st
         &stat->out_transport6_id,
     };
 
-    return fort_callout_register(
-            device, callouts, calloutIds, /*count=*/sizeof(callouts) / sizeof(callouts[0]));
+    return fort_callout_register(device, callouts, calloutIds, /*count=*/FORT_ARRAY_SIZE(callouts));
 }
 
 FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
@@ -790,7 +788,7 @@ FORT_API void fort_callout_remove(void)
         &stat->out_transport6_id,
     };
 
-    for (int i = 0; i < sizeof(calloutIds) / sizeof(calloutIds[0]); ++i) {
+    for (int i = 0; i < FORT_ARRAY_SIZE(calloutIds); ++i) {
         UINT32 *calloutId = calloutIds[i];
         FwpsCalloutUnregisterById0(*calloutId);
         *calloutId = 0;
