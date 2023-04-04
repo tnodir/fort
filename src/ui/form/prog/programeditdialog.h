@@ -57,6 +57,9 @@ private:
     bool saveApp(App &app);
     bool saveMulti(App &app);
 
+    bool validateFields() const;
+    void fillApp(App &app) const;
+
 private:
     ProgramsController *m_ctrl = nullptr;
 

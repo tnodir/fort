@@ -7,6 +7,9 @@
 class App
 {
 public:
+    bool isEqual(const App &o) const;
+
+public:
     bool useGroupPerm = true;
     bool applyChild = false;
     bool lanOnly = false;

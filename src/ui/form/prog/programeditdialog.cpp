@@ -393,38 +393,11 @@ bool ProgramEditDialog::save()
     const int appIdsCount = m_appIdList.size();
     const bool isSingleSelection = (appIdsCount <= 1);
 
-    const QString appPath = m_editPath->text();
-    if (isSingleSelection && appPath.isEmpty()) {
-        m_editPath->setFocus();
+    if (isSingleSelection && !validateFields())
         return false;
-    }
-
-    const QString appName = m_editName->text();
-    if (isSingleSelection && appName.isEmpty()) {
-        m_editName->setFocus();
-        return false;
-    }
 
     App app;
-    app.useGroupPerm = m_cbUseGroupPerm->isChecked();
-    app.applyChild = m_cbApplyChild->isChecked();
-    app.lanOnly = m_cbLanOnly->isChecked();
-    app.logBlocked = m_cbLogBlocked->isChecked();
-    app.logConn = m_cbLogConn->isChecked();
-    app.blocked = m_rbBlockApp->isChecked();
-    app.groupIndex = m_comboAppGroup->currentIndex();
-    app.appPath = appPath;
-    app.appName = appName;
-
-    if (!app.blocked) {
-        if (m_cscBlockAppIn->checkBox()->isChecked()) {
-            const int hours = m_cscBlockAppIn->spinBox()->value();
-
-            app.endTime = QDateTime::currentDateTime().addSecs(hours * 60 * 60);
-        } else if (m_cbBlockAppAt->isChecked()) {
-            app.endTime = m_dteBlockAppAt->dateTime();
-        }
-    }
+    fillApp(app);
 
     // Add new app or edit non-selected app
     if (appIdsCount == 0) {
@@ -442,22 +415,17 @@ bool ProgramEditDialog::save()
 
 bool ProgramEditDialog::saveApp(App &app)
 {
-    const bool appEdited = (app.useGroupPerm != m_appRow.useGroupPerm
-            || app.applyChild != m_appRow.applyChild || app.lanOnly != m_appRow.lanOnly
-            || app.logBlocked != m_appRow.logBlocked || app.logConn != m_appRow.logConn
-            || app.blocked != m_appRow.blocked || app.groupIndex != m_appRow.groupIndex
-            || app.appPath != m_appRow.appPath || app.endTime != m_appRow.endTime);
-
-    if (appEdited) {
+    if (!app.isEqual(m_appRow)) {
         app.appId = m_appRow.appId;
 
         return confManager()->updateApp(app);
     }
 
-    if (app.appName == m_appRow.appName)
-        return true;
+    if (app.appName != m_appRow.appName) {
+        return confManager()->updateAppName(m_appRow.appId, app.appName);
+    }
 
-    return confManager()->updateAppName(m_appRow.appId, app.appName);
+    return true;
 }
 
 bool ProgramEditDialog::saveMulti(App &app)
@@ -474,4 +442,42 @@ bool ProgramEditDialog::saveMulti(App &app)
     }
 
     return true;
+}
+
+bool ProgramEditDialog::validateFields() const
+{
+    if (m_editPath->text().isEmpty()) {
+        m_editPath->setFocus();
+        return false;
+    }
+
+    if (m_editName->text().isEmpty()) {
+        m_editName->setFocus();
+        return false;
+    }
+
+    return true;
+}
+
+void ProgramEditDialog::fillApp(App &app) const
+{
+    app.useGroupPerm = m_cbUseGroupPerm->isChecked();
+    app.applyChild = m_cbApplyChild->isChecked();
+    app.lanOnly = m_cbLanOnly->isChecked();
+    app.logBlocked = m_cbLogBlocked->isChecked();
+    app.logConn = m_cbLogConn->isChecked();
+    app.blocked = m_rbBlockApp->isChecked();
+    app.groupIndex = m_comboAppGroup->currentIndex();
+    app.appPath = m_editPath->text();
+    app.appName = m_editName->text();
+
+    if (!app.blocked) {
+        if (m_cscBlockAppIn->checkBox()->isChecked()) {
+            const int hours = m_cscBlockAppIn->spinBox()->value();
+
+            app.endTime = QDateTime::currentDateTime().addSecs(hours * 60 * 60);
+        } else if (m_cbBlockAppAt->isChecked()) {
+            app.endTime = m_dteBlockAppAt->dateTime();
+        }
+    }
 }
