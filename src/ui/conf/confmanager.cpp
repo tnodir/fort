@@ -229,6 +229,11 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
     return true;
 }
 
+void showErrorMessage(const QString &errorMessage)
+{
+    IoC<WindowManager>()->showErrorBox(errorMessage, ConfManager::tr("Configuration Error"));
+}
+
 bool loadAddressGroups(SqliteDb *db, const QList<AddressGroup *> &addressGroups, int &index)
 {
     SqliteStmt stmt;
@@ -393,6 +398,22 @@ bool removeAppGroupsInDb(SqliteDb *db, const FirewallConf &conf)
     return true;
 }
 
+bool driverWriteZones(ConfUtil &confUtil, QByteArray &buf, int entrySize, bool onlyFlags = false)
+{
+    if (entrySize == 0) {
+        showErrorMessage(confUtil.errorMessage());
+        return false;
+    }
+
+    auto driverManager = IoC<DriverManager>();
+    if (!driverManager->writeZones(buf, entrySize)) {
+        showErrorMessage(driverManager->errorMessage());
+        return false;
+    }
+
+    return true;
+}
+
 }
 
 ConfManager::ConfManager(const QString &filePath, QObject *parent, quint32 openFlags) :
@@ -409,11 +430,6 @@ ConfManager::ConfManager(const QString &filePath, QObject *parent, quint32 openF
 IniUser *ConfManager::iniUser() const
 {
     return &IoC<UserSettings>()->iniUser();
-}
-
-void ConfManager::showErrorMessage(const QString &errorMessage)
-{
-    IoC<WindowManager>()->showErrorBox(errorMessage, tr("Configuration Error"));
 }
 
 void ConfManager::setUp()
@@ -1244,16 +1260,7 @@ void ConfManager::updateDriverZones(quint32 zonesMask, quint32 enabledMask, quin
 
     const int entrySize = confUtil.writeZones(zonesMask, enabledMask, dataSize, zonesData, buf);
 
-    if (entrySize == 0) {
-        showErrorMessage(confUtil.errorMessage());
-        return;
-    }
-
-    auto driverManager = IoC<DriverManager>();
-    if (!driverManager->writeZones(buf, entrySize)) {
-        showErrorMessage(driverManager->errorMessage());
-        return;
-    }
+    driverWriteZones(confUtil, buf, entrySize);
 }
 
 bool ConfManager::updateDriverZoneFlag(int zoneId, bool enabled)
@@ -1263,18 +1270,7 @@ bool ConfManager::updateDriverZoneFlag(int zoneId, bool enabled)
 
     const int entrySize = confUtil.writeZoneFlag(zoneId, enabled, buf);
 
-    if (entrySize == 0) {
-        showErrorMessage(confUtil.errorMessage());
-        return false;
-    }
-
-    auto driverManager = IoC<DriverManager>();
-    if (!driverManager->writeZones(buf, entrySize, true)) {
-        showErrorMessage(driverManager->errorMessage());
-        return false;
-    }
-
-    return true;
+    return driverWriteZones(confUtil, buf, entrySize, /*onlyFlags=*/true);
 }
 
 bool ConfManager::loadFromDb(FirewallConf &conf, bool &isNew)

@@ -109,8 +109,6 @@ protected:
     void setConf(FirewallConf *newConf);
     FirewallConf *createConf();
 
-    void showErrorMessage(const QString &errorMessage);
-
 private:
     void setupDefault(FirewallConf &conf) const;
 
