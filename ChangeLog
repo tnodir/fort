@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.8.5, 2023-04-04:
+- Driver: Fix BSOD on shutdown/reboot (v3.8.4 regression).
+
 v3.8.4, 2023-03-30:
 - Driver: Decrease kernel stack usage to avoid BSOD.
 
@@ -7,7 +10,7 @@ v3.8.3, 2023-03-24:
 - UI: Load password from registry when "Check Password on Uninstalll" enabled.
 - Installer: Remove password from registry on uninstall.
 - Installer: Optionally remove config & data folders on uninstall.
-- Driver: Improve shutdown/reset handling.
+- Driver: Improve shutdown/reboot handling.
 - UI: Update SQLite to v3.41.2
 
 v3.8.2, 2023-03-21:
