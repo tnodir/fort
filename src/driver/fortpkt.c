@@ -44,41 +44,34 @@ static BOOL fort_packet_injected_by_self(HANDLE injection_id, PNET_BUFFER_LIST n
             || state == FWPS_PACKET_PREVIOUSLY_INJECTED_BY_SELF);
 }
 
-static BOOL fort_packet_get_ipsec_info(
-        PCFORT_CALLOUT_ARG ca, FWPS_PACKET_LIST_INFORMATION0 *packet_info)
+static FWPS_PACKET_LIST_INBOUND_IPSEC_INFORMATION0 fort_packet_get_ipsec_inbound_info(
+        PCFORT_CALLOUT_ARG ca)
 {
-    if (!ca->inbound || ca->netBufList == NULL)
-        return FALSE;
+    if (!ca->inbound || ca->netBufList == NULL) {
+        const FWPS_PACKET_LIST_INBOUND_IPSEC_INFORMATION0 info = { 0 };
+        return info;
+    }
 
-    RtlZeroMemory(packet_info, sizeof(FWPS_PACKET_LIST_INFORMATION0));
+    FWPS_PACKET_LIST_INFORMATION0 packet_info;
+    RtlZeroMemory(&packet_info, sizeof(FWPS_PACKET_LIST_INFORMATION0));
 
-    const NTSTATUS status = FwpsGetPacketListSecurityInformation0(ca->netBufList,
+    FwpsGetPacketListSecurityInformation0(ca->netBufList,
             FWPS_PACKET_LIST_INFORMATION_QUERY_IPSEC | FWPS_PACKET_LIST_INFORMATION_QUERY_INBOUND,
-            packet_info);
+            &packet_info);
 
-    return NT_SUCCESS(status);
+    return packet_info.ipsecInformation.inbound;
 }
 
 inline static BOOL fort_packet_is_ipsec_protected(PCFORT_CALLOUT_ARG ca)
 {
-    FWPS_PACKET_LIST_INFORMATION0 packet_info;
-    if (fort_packet_get_ipsec_info(ca, &packet_info))
-        return FALSE;
-
-    return (BOOL) packet_info.ipsecInformation.inbound.isSecure;
+    const FWPS_PACKET_LIST_INBOUND_IPSEC_INFORMATION0 info = fort_packet_get_ipsec_inbound_info(ca);
+    return info.isSecure;
 }
 
 inline static BOOL fort_packet_is_ipsec_tunneled(PCFORT_CALLOUT_ARG ca)
 {
-    /* To be compatible with Vista's IpSec implementation, we must not
-     * intercept not-yet-detunneled IpSec traffic. */
-
-    FWPS_PACKET_LIST_INFORMATION0 packet_info;
-    if (fort_packet_get_ipsec_info(ca, &packet_info))
-        return FALSE;
-
-    return packet_info.ipsecInformation.inbound.isTunnelMode
-            && !packet_info.ipsecInformation.inbound.isDeTunneled;
+    const FWPS_PACKET_LIST_INBOUND_IPSEC_INFORMATION0 info = fort_packet_get_ipsec_inbound_info(ca);
+    return info.isTunnelMode && !info.isDeTunneled;
 }
 
 static ULONG fort_packet_data_length(const PNET_BUFFER_LIST netBufList)
@@ -254,8 +247,7 @@ inline static NTSTATUS fort_packet_fill(PCFORT_CALLOUT_ARG ca, PFORT_PACKET_IO p
     if (!NT_SUCCESS(status))
         return status;
 
-    pkt->flags = (ca->inbound ? FORT_PACKET_INBOUND : 0) | (ca->isIPv6 ? FORT_PACKET_IP6 : 0)
-            | (fort_packet_is_ipsec_protected(ca) ? FORT_PACKET_IPSEC_PROTECTED : 0);
+    pkt->flags = (ca->inbound ? FORT_PACKET_INBOUND : 0) | (ca->isIPv6 ? FORT_PACKET_IP6 : 0);
 
     pkt->compartmentId = ca->inMetaValues->compartmentId;
     pkt->netBufList = ca->netBufList;
@@ -1016,8 +1008,11 @@ inline static BOOL fort_shaper_injected_by_self(PFORT_SHAPER shaper, PCFORT_CALL
 
 FORT_API BOOL fort_shaper_packet_process(PFORT_SHAPER shaper, PFORT_CALLOUT_ARG ca)
 {
-    if (fort_packet_is_ipsec_tunneled(ca))
+    if (fort_packet_is_ipsec_tunneled(ca)) {
+        /* To be compatible with Vista's IpSec implementation, we must not
+         * intercept not-yet-detunneled IpSec traffic. */
         return FALSE;
+    }
 
     PFORT_FLOW flow = (PFORT_FLOW) ca->flowContext;
 
@@ -1262,6 +1257,10 @@ FORT_API BOOL fort_packet_add_pending(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_E
 
     status = fort_packet_fill(ca, &pkt->io);
     if (NT_SUCCESS(status)) {
+        if (fort_packet_is_ipsec_protected(ca)) {
+            pkt->io.flags |= FORT_PACKET_IPSEC_PROTECTED;
+        }
+
         /* Add the Packet to Pending Process */
         status = fort_pending_proc_add_packet(pending, ca, cx, pkt);
     }
