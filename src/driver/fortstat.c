@@ -399,10 +399,13 @@ FORT_API void fort_stat_close_flows(PFORT_STAT stat)
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
     {
-        InterlockedAdd(&stat->flow_closing_count, (LONG) stat->flows_map.count);
+        const UCHAR old_stat_flags = fort_stat_flags_set(stat, FORT_STAT_LOG, FALSE);
 
-        fort_stat_flags_set(stat, FORT_STAT_LOG, FALSE);
-        fort_stat_flags_set(stat, FORT_STAT_CLOSED, TRUE);
+        if ((old_stat_flags & FORT_STAT_CLOSED) == 0) {
+            fort_stat_flags_set(stat, FORT_STAT_CLOSED, TRUE);
+
+            InterlockedAdd(&stat->flow_closing_count, (LONG) stat->flows_map.count);
+        }
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
@@ -415,7 +418,7 @@ FORT_API void fort_stat_close_flows(PFORT_STAT stat)
 
         /* Wait for asynchronously deleting flows */
         LARGE_INTEGER delay;
-        delay.QuadPart = -150 * 1000 * 10; /* sleep 150000us (150ms) */
+        delay.QuadPart = -50 * 1000 * 10; /* sleep 50000us (50ms) */
 
         KeDelayExecutionThread(KernelMode, FALSE, &delay);
     }
