@@ -11,7 +11,32 @@
 #include <util/net/netutil.h>
 
 namespace {
+
 const QLoggingCategory LC("task.taskUpdateChecker");
+
+const QString downloadUrlSuffix =
+#if defined(Q_PROCESSOR_ARM)
+        "-arm64.exe"
+#elif defined(Q_PROCESSOR_X86_64)
+        "-x86_64.exe"
+#else
+        "-x86.exe"
+#endif
+        ;
+
+QVariantMap findDownloadableAsset(const QVariantList &assets)
+{
+    for (const QVariant &asset : assets) {
+        const QVariantMap assetMap = asset.toMap();
+
+        const QString downloadUrl = assetMap["browser_download_url"].toString();
+        if (downloadUrl.endsWith(downloadUrlSuffix))
+            return assetMap;
+    }
+
+    return assets.first().toMap();
+}
+
 }
 
 TaskUpdateChecker::TaskUpdateChecker(QObject *parent) : TaskDownloader(parent) { }
@@ -68,7 +93,7 @@ bool TaskUpdateChecker::parseBuffer(const QByteArray &buffer)
     m_releaseNotes = m_releaseNotes.toHtmlEscaped();
 
     // Assets
-    const QVariantMap assetMap = assets.first().toMap();
+    const QVariantMap assetMap = findDownloadableAsset(assets);
 
     // eg. "https://github.com/tnodir/fort/releases/download/v1.4.0/FortFirewall-1.4.0.exe"
     m_downloadUrl = assetMap["browser_download_url"].toString();
