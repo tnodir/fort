@@ -362,6 +362,10 @@
         <source>Unknown</source>
         <translation>Neznano</translation>
     </message>
+    <message>
+        <source>Limit of Ask to Connect</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -444,16 +448,12 @@
         <translation>Potreben je ponovni zagon</translation>
     </message>
     <message>
-        <source>Restart Now</source>
-        <translation>Znova zaženi zdaj</translation>
-    </message>
-    <message>
-        <source>Later</source>
-        <translation>Kasneje</translation>
-    </message>
-    <message>
         <source>Please first install Fort Firewall v%1 and save Options from it.</source>
         <translation>Najprej namestite &apos;Fort Firewall&apos; v%1 in iz njega shranite možnosti.</translation>
+    </message>
+    <message>
+        <source>Restart Now?</source>
+        <translation>Znova zaženi zdaj?</translation>
     </message>
 </context>
 <context>

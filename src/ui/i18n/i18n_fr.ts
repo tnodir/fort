@@ -362,6 +362,10 @@
         <source>Unknown</source>
         <translation>Inconnu</translation>
     </message>
+    <message>
+        <source>Limit of Ask to Connect</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -444,16 +448,12 @@
         <translation>Redémarrage requis</translation>
     </message>
     <message>
-        <source>Restart Now</source>
-        <translation>Redémarrer maintenant</translation>
-    </message>
-    <message>
-        <source>Later</source>
-        <translation>Plus tard</translation>
-    </message>
-    <message>
         <source>Please first install Fort Firewall v%1 and save Options from it.</source>
         <translation>Veuillez d&apos;abord installer Fort Firewall v%1 et enregistrer les options depuis celui-ci.</translation>
+    </message>
+    <message>
+        <source>Restart Now?</source>
+        <translation>Redémarrer maintenant?</translation>
     </message>
 </context>
 <context>

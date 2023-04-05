@@ -362,6 +362,10 @@
         <source>Unknown</source>
         <translation>未知</translation>
     </message>
+    <message>
+        <source>Limit of Ask to Connect</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -444,16 +448,12 @@
         <translation>需要重启</translation>
     </message>
     <message>
-        <source>Restart Now</source>
-        <translation>立即重启</translation>
-    </message>
-    <message>
-        <source>Later</source>
-        <translation>稍后</translation>
-    </message>
-    <message>
         <source>Please first install Fort Firewall v%1 and save Options from it.</source>
         <translation>请先安装防火墙 v%1 并保存选项。</translation>
+    </message>
+    <message>
+        <source>Restart Now?</source>
+        <translation>立即重启?</translation>
     </message>
 </context>
 <context>

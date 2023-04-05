@@ -362,6 +362,10 @@
         <source>Unknown</source>
         <translation>Unbekannt</translation>
     </message>
+    <message>
+        <source>Limit of Ask to Connect</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -444,16 +448,12 @@
         <translation>Neustart erforderlich</translation>
     </message>
     <message>
-        <source>Restart Now</source>
-        <translation>Jetzt neustarten</translation>
-    </message>
-    <message>
-        <source>Later</source>
-        <translation>Später</translation>
-    </message>
-    <message>
         <source>Please first install Fort Firewall v%1 and save Options from it.</source>
         <translation>Bitte installieren Sie zuerst Fort Firewall v%1 und speichern Sie die Optionen darin.</translation>
+    </message>
+    <message>
+        <source>Restart Now?</source>
+        <translation>Jetzt neustarten?</translation>
     </message>
 </context>
 <context>

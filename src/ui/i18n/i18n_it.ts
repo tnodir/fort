@@ -362,6 +362,10 @@
         <source>Unknown</source>
         <translation>Sconosciuto</translation>
     </message>
+    <message>
+        <source>Limit of Ask to Connect</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -432,10 +436,6 @@
 <context>
     <name>FortManager</name>
     <message>
-        <source>Later</source>
-        <translation>Più tardi</translation>
-    </message>
-    <message>
         <source>Application is already running!</source>
         <translation>L&apos;applicazione è già in esecuzione!</translation>
     </message>
@@ -448,12 +448,12 @@
         <translation>Riavvio richiesto</translation>
     </message>
     <message>
-        <source>Restart Now</source>
-        <translation>Riavvia ora</translation>
-    </message>
-    <message>
         <source>Please first install Fort Firewall v%1 and save Options from it.</source>
         <translation>Per prima cosa installa Fort Firewall v%1 e salva le Opzioni da esso.</translation>
+    </message>
+    <message>
+        <source>Restart Now?</source>
+        <translation>Riavvia ora?</translation>
     </message>
 </context>
 <context>

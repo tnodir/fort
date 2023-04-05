@@ -362,6 +362,10 @@
         <source>Unknown</source>
         <translation>알 수 없음</translation>
     </message>
+    <message>
+        <source>Limit of Ask to Connect</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -444,16 +448,12 @@
         <translation>재시작 필요</translation>
     </message>
     <message>
-        <source>Restart Now</source>
-        <translation>지금 재시작</translation>
-    </message>
-    <message>
-        <source>Later</source>
-        <translation>나중에</translation>
-    </message>
-    <message>
         <source>Please first install Fort Firewall v%1 and save Options from it.</source>
         <translation>먼저 Fort Firewall %1 버전을 설치한 다음 옵션을 저장해 주세요.</translation>
+    </message>
+    <message>
+        <source>Restart Now?</source>
+        <translation>지금 재시작?</translation>
     </message>
 </context>
 <context>

@@ -362,6 +362,10 @@
         <source>Unknown</source>
         <translation>Неизвестно</translation>
     </message>
+    <message>
+        <source>Limit of Ask to Connect</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -444,16 +448,12 @@
         <translation>Требуется перезапуск</translation>
     </message>
     <message>
-        <source>Restart Now</source>
-        <translation>Перезапустить сейчас</translation>
-    </message>
-    <message>
-        <source>Later</source>
-        <translation>Отложить</translation>
-    </message>
-    <message>
         <source>Quota Alert</source>
         <translation>Предупреждение о квоте трафика</translation>
+    </message>
+    <message>
+        <source>Restart Now?</source>
+        <translation>Перезапустить сейчас?</translation>
     </message>
 </context>
 <context>
