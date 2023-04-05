@@ -81,14 +81,16 @@ public slots:
 
     void closeAll();
     void quit();
+    void restart();
 
     bool widgetVisibleByCheckPassword(QWidget *w);
     bool checkPassword();
 
     virtual void showErrorBox(const QString &text, const QString &title = QString());
     virtual void showInfoBox(const QString &text, const QString &title = QString());
-    bool showQuestionBox(const QString &text, const QString &title = QString());
-    bool showYesNoBox(const QString &text, const QString &yesText, const QString &noText,
+    void showConfirmBox(const std::function<void()> &onConfirmed, const QString &text,
+            const QString &title = QString());
+    void showQuestionBox(const std::function<void(bool confirmed)> &onFinished, const QString &text,
             const QString &title = QString());
 
 private:

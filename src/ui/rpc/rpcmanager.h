@@ -56,8 +56,6 @@ private:
 
     bool processManagerRpc(const ProcessCommandArgs &p);
 
-    void showErrorBox(const QString &text) const;
-
 private:
     Control::Command m_resultCommand = Control::CommandNone;
     QVariantList m_resultArgs;

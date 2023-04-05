@@ -209,15 +209,12 @@ QLayout *ProgramsWindow::setupHeader()
     connect(m_actAddApp, &QAction::triggered, this, &ProgramsWindow::addNewProgram);
     connect(m_actEditApp, &QAction::triggered, this, &ProgramsWindow::editSelectedPrograms);
     connect(m_actRemoveApp, &QAction::triggered, this, [&] {
-        if (windowManager()->showQuestionBox(tr("Are you sure to remove selected program(s)?"))) {
-            deleteSelectedApps();
-        }
+        windowManager()->showConfirmBox(
+                [&] { deleteSelectedApps(); }, tr("Are you sure to remove selected program(s)?"));
     });
     connect(m_actPurgeApps, &QAction::triggered, this, [&] {
-        if (windowManager()->showQuestionBox(
-                    tr("Are you sure to remove all non-existent programs?"))) {
-            confManager()->purgeApps();
-        }
+        windowManager()->showConfirmBox([&] { confManager()->purgeApps(); },
+                tr("Are you sure to remove all non-existent programs?"));
     });
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");

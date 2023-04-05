@@ -125,15 +125,12 @@ QLayout *ConnectionsPage::setupHeader()
         windowManager()->showProgramEditForm(connRow.appPath);
     });
     connect(m_actRemoveConn, &QAction::triggered, this, [&] {
-        if (windowManager()->showQuestionBox(
-                    tr("Are you sure to remove connections till this row?"))) {
-            deleteConn(m_connListView->currentRow());
-        }
+        windowManager()->showConfirmBox([&] { deleteConn(m_connListView->currentRow()); },
+                tr("Are you sure to remove connections till this row?"));
     });
     connect(m_actClearAll, &QAction::triggered, this, [&] {
-        if (windowManager()->showQuestionBox(tr("Are you sure to remove all connections?"))) {
-            connBlockListModel()->clear();
-        }
+        windowManager()->showConfirmBox([&] { connBlockListModel()->clear(); },
+                tr("Are you sure to remove all connections?"));
     });
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");

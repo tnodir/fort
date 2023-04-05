@@ -162,25 +162,21 @@ void TrafficPage::setupClearMenu()
     m_actClearAll = menu->addAction(QString());
 
     connect(m_actRemoveApp, &QAction::triggered, this, [&] {
-        if (!windowManager()->showQuestionBox(
-                    tr("Are you sure to remove statistics for selected application?")))
-            return;
-
-        appStatModel()->remove(appListCurrentIndex());
+        windowManager()->showConfirmBox([&] { appStatModel()->remove(appListCurrentIndex()); },
+                tr("Are you sure to remove statistics for selected application?"));
     });
     connect(m_actResetTotal, &QAction::triggered, this, [&] {
-        if (!windowManager()->showQuestionBox(tr("Are you sure to reset total statistics?")))
-            return;
-
-        trafListModel()->resetAppTotals();
+        windowManager()->showConfirmBox([&] { trafListModel()->resetAppTotals(); },
+                tr("Are you sure to reset total statistics?"));
     });
     connect(m_actClearAll, &QAction::triggered, this, [&] {
-        if (!windowManager()->showQuestionBox(tr("Are you sure to clear all statistics?")))
-            return;
-
-        m_appListView->clearSelection();
-        trafListModel()->clear();
-        appStatModel()->clear();
+        windowManager()->showConfirmBox(
+                [&] {
+                    m_appListView->clearSelection();
+                    trafListModel()->clear();
+                    appStatModel()->clear();
+                },
+                tr("Are you sure to clear all statistics?"));
     });
 
     m_btClear = ControlUtil::createButton(":/icons/bin_closed.png");

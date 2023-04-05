@@ -4,6 +4,7 @@
 #include <QLoggingCategory>
 #include <QMessageBox>
 #include <QMouseEvent>
+#include <QProcess>
 #include <QStyle>
 #include <QStyleFactory>
 #include <QStyleHints>
@@ -13,7 +14,7 @@
 #include <form/dialog/passworddialog.h>
 #include <form/graph/graphwindow.h>
 #include <form/opt/optionswindow.h>
-#include <form/policy/policieswindow.h>>
+#include <form/policy/policieswindow.h>
 #include <form/prog/programswindow.h>
 #include <form/stat/statisticswindow.h>
 #include <form/svc/serviceswindow.h>
@@ -35,6 +36,18 @@ void setupAppStyle()
 {
     QStyle *style = QStyleFactory::create("Fusion");
     QApplication::setStyle(style);
+}
+
+QMessageBox *createMessageBox(QMessageBox::Icon icon, const QString &text, const QString &title,
+        QMessageBox::StandardButtons buttons, QWidget *parent, QWidget *mainWindow)
+{
+    auto box = new QMessageBox(icon, title, text, buttons, parent);
+    box->setAttribute(Qt::WA_DeleteOnClose);
+
+    box->setWindowModality(parent == mainWindow ? Qt::ApplicationModal : Qt::WindowModal);
+    box->setModal(true);
+
+    return box;
 }
 
 }
@@ -440,10 +453,11 @@ void WindowManager::closeGraphWindow(bool wasVisible)
 
 void WindowManager::switchGraphWindow()
 {
-    if (!m_graphWindow)
+    if (!m_graphWindow) {
         showGraphWindow();
-    else
+    } else {
         closeGraphWindow();
+    }
 }
 
 void WindowManager::quit()
@@ -451,6 +465,18 @@ void WindowManager::quit()
     closeAll();
 
     qCDebug(LC) << "Quit due user request";
+
+    QCoreApplication::quit();
+}
+
+void WindowManager::restart()
+{
+    const QString appFilePath = QCoreApplication::applicationFilePath();
+    const QStringList args = IoC<FortSettings>()->appArguments();
+
+    connect(qApp, &QObject::destroyed, [=] { QProcess::startDetached(appFilePath, args); });
+
+    qCDebug(LC) << "Quit due required restart";
 
     QCoreApplication::quit();
 }
@@ -491,27 +517,42 @@ bool WindowManager::checkPassword()
 
 void WindowManager::showErrorBox(const QString &text, const QString &title)
 {
-    QMessageBox::warning(focusWidget(), title, text);
+    auto box = createMessageBox(
+            QMessageBox::Warning, text, title, QMessageBox::Ok, focusWidget(), mainWindow());
+    box->show();
 }
 
 void WindowManager::showInfoBox(const QString &text, const QString &title)
 {
-    QMessageBox::information(focusWidget(), title, text);
+    auto box = createMessageBox(
+            QMessageBox::Information, text, title, QMessageBox::Ok, focusWidget(), mainWindow());
+    box->show();
 }
 
-bool WindowManager::showQuestionBox(const QString &text, const QString &title)
+void WindowManager::showConfirmBox(
+        const std::function<void()> &onConfirmed, const QString &text, const QString &title)
 {
-    return QMessageBox::question(focusWidget(), title, text) == QMessageBox::Yes;
+    showQuestionBox(
+            [=](bool confirmed) {
+                if (confirmed) {
+                    onConfirmed();
+                }
+            },
+            text, title);
 }
 
-bool WindowManager::showYesNoBox(
-        const QString &text, const QString &yesText, const QString &noText, const QString &title)
+void WindowManager::showQuestionBox(const std::function<void(bool confirmed)> &onFinished,
+        const QString &text, const QString &title)
 {
-    QMessageBox box(QMessageBox::Information, title, text, QMessageBox::NoButton, focusWidget());
-    box.addButton(noText, QMessageBox::NoRole);
-    box.addButton(yesText, QMessageBox::YesRole);
+    auto box = createMessageBox(QMessageBox::Question, text, title,
+            QMessageBox::Yes | QMessageBox::Cancel, focusWidget(), mainWindow());
 
-    return box.exec() == 1;
+    connect(box, &QMessageBox::finished, [=](int result) {
+        const bool confirmed = (result == QMessageBox::Yes);
+        onFinished(confirmed);
+    });
+
+    box->show();
 }
 
 void WindowManager::onTrayMessageClicked()
@@ -533,7 +574,7 @@ QWidget *WindowManager::focusWidget() const
 
 void WindowManager::activateModalWidget()
 {
-    auto w = qApp->activeModalWidget();
+    auto w = QApplication::activeModalWidget();
     if (w) {
         w->activateWindow();
     }

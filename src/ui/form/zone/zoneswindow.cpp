@@ -288,9 +288,8 @@ QLayout *ZonesWindow::setupHeader()
     connect(m_actAddZone, &QAction::triggered, this, [&] { updateZoneEditForm(false); });
     connect(m_actEditZone, &QAction::triggered, this, [&] { updateZoneEditForm(true); });
     connect(m_actRemoveZone, &QAction::triggered, this, [&] {
-        if (windowManager()->showQuestionBox(tr("Are you sure to remove selected zone?"))) {
-            deleteSelectedZone();
-        }
+        windowManager()->showConfirmBox(
+                [&] { deleteSelectedZone(); }, tr("Are you sure to remove selected zone?"));
     });
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");

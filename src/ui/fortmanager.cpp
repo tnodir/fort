@@ -3,7 +3,6 @@
 #include <QApplication>
 #include <QLoggingCategory>
 #include <QMessageBox>
-#include <QProcess>
 #include <QThreadPool>
 
 #include <fort_version.h>
@@ -321,17 +320,10 @@ void FortManager::show()
 
 void FortManager::processRestartRequired()
 {
-    if (!IoC<WindowManager>()->showYesNoBox(tr("Restart Required"), tr("Restart Now"), tr("Later")))
-        return;
+    auto windowManager = IoC<WindowManager>();
 
-    const QString appFilePath = QCoreApplication::applicationFilePath();
-    const QStringList args = IoC<FortSettings>()->appArguments();
-
-    connect(qApp, &QObject::destroyed, [=] { QProcess::startDetached(appFilePath, args); });
-
-    qCDebug(LC) << "Quit due required restart";
-
-    QCoreApplication::quit();
+    windowManager->showConfirmBox(
+            [=] { windowManager->restart(); }, tr("Restart Now?"), tr("Restart Required"));
 }
 
 void FortManager::loadConf()
@@ -340,7 +332,7 @@ void FortManager::loadConf()
 
     QString viaVersion;
     if (!settings->canMigrate(viaVersion)) {
-        IoC<WindowManager>()->showErrorBox(
+        QMessageBox::warning(nullptr, QString(),
                 tr("Please first install Fort Firewall v%1 and save Options from it.")
                         .arg(viaVersion));
         abort(); // Abort the program

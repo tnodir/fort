@@ -22,6 +22,14 @@ namespace {
 
 const QLoggingCategory LC("rpc");
 
+void showErrorBox(const QString &text)
+{
+    auto windowManager = IoC<WindowManager>();
+
+    QMetaObject::invokeMethod(
+            windowManager, [=] { windowManager->showErrorBox(text); }, Qt::QueuedConnection);
+}
+
 inline bool sendCommandDataToClients(
         const QByteArray &commandData, const QList<ControlWorker *> &clients)
 {
@@ -775,12 +783,4 @@ bool RpcManager::processManagerRpc(const ProcessCommandArgs &p)
     }
 
     return true;
-}
-
-void RpcManager::showErrorBox(const QString &text) const
-{
-    auto windowManager = IoC<WindowManager>();
-
-    QMetaObject::invokeMethod(
-            windowManager, [=] { windowManager->showErrorBox(text); }, Qt::QueuedConnection);
 }

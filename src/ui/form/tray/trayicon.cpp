@@ -568,14 +568,18 @@ void TrayIcon::switchTrayFlag(bool checked)
         const auto action = qobject_cast<QAction *>(sender());
         Q_ASSERT(action);
 
-        if (!windowManager()->showQuestionBox(
-                    tr("Are you sure to switch the \"%1\"?").arg(action->text()))) {
-            action->setChecked(!checked);
-            return;
-        }
+        windowManager()->showQuestionBox(
+                [=](bool confirmed) {
+                    if (confirmed) {
+                        saveTrayFlags();
+                    } else {
+                        action->setChecked(!checked);
+                    }
+                },
+                tr("Are you sure to switch the \"%1\"?").arg(action->text()));
+    } else {
+        saveTrayFlags();
     }
-
-    saveTrayFlags();
 }
 
 void TrayIcon::switchFilterMode(QAction *action)
@@ -584,25 +588,30 @@ void TrayIcon::switchFilterMode(QAction *action)
     if (index < 0 || index == conf()->filterModeIndex())
         return;
 
-    if (iniUser()->confirmTrayFlags()
-            && !windowManager()->showQuestionBox(
-                    tr("Are you sure to select the \"%1\"?").arg(action->text()))) {
-        action = m_filterModeActions->actions().at(conf()->filterModeIndex());
-        action->setChecked(true);
-        return;
+    if (iniUser()->confirmTrayFlags()) {
+        windowManager()->showQuestionBox(
+                [=](bool confirmed) {
+                    if (confirmed) {
+                        saveTrayFlags();
+                    } else {
+                        QAction *a = m_filterModeActions->actions().at(conf()->filterModeIndex());
+                        a->setChecked(true);
+                    }
+                },
+                tr("Are you sure to select the \"%1\"?").arg(action->text()));
+    } else {
+        saveTrayFlags();
     }
-
-    saveTrayFlags();
 }
 
 void TrayIcon::quitProgram()
 {
     if (iniUser()->confirmQuit()) {
-        if (!windowManager()->showQuestionBox(tr("Are you sure you want to quit the program?")))
-            return;
+        windowManager()->showConfirmBox(
+                [&] { windowManager()->quit(); }, tr("Are you sure you want to quit the program?"));
+    } else {
+        windowManager()->quit();
     }
-
-    windowManager()->quit();
 }
 
 void TrayIcon::addHotKey(QAction *action, const QString &shortcutText)
