@@ -38,10 +38,17 @@ void setupAppStyle()
     QApplication::setStyle(style);
 }
 
-QMessageBox *createMessageBox(QMessageBox::Icon icon, const QString &text, const QString &title,
-        QMessageBox::StandardButtons buttons, QWidget *parent)
+struct MessageBoxArg
 {
-    auto box = new QMessageBox(icon, title, text, buttons, parent);
+    QMessageBox::Icon icon;
+    QMessageBox::StandardButtons buttons;
+    const QString text;
+    const QString title;
+};
+
+QMessageBox *createMessageBox(const MessageBoxArg &ba, QWidget *parent)
+{
+    auto box = new QMessageBox(ba.icon, ba.title, ba.text, ba.buttons, parent);
     box->setAttribute(Qt::WA_DeleteOnClose);
 
     box->setWindowModality(parent ? Qt::WindowModal : Qt::ApplicationModal);
@@ -517,13 +524,27 @@ bool WindowManager::checkPassword()
 
 void WindowManager::showErrorBox(const QString &text, const QString &title, QWidget *parent)
 {
-    auto box = createMessageBox(QMessageBox::Warning, text, title, QMessageBox::Ok, parent);
+    auto box = createMessageBox(
+            {
+                    .icon = QMessageBox::Warning,
+                    .buttons = QMessageBox::Ok,
+                    .text = text,
+                    .title = title,
+            },
+            parent);
     box->show();
 }
 
 void WindowManager::showInfoBox(const QString &text, const QString &title, QWidget *parent)
 {
-    auto box = createMessageBox(QMessageBox::Information, text, title, QMessageBox::Ok, parent);
+    auto box = createMessageBox(
+            {
+                    .icon = QMessageBox::Information,
+                    .buttons = QMessageBox::Ok,
+                    .text = text,
+                    .title = title,
+            },
+            parent);
     box->show();
 }
 
@@ -543,7 +564,13 @@ void WindowManager::showQuestionBox(const std::function<void(bool confirmed)> &o
         const QString &text, const QString &title, QWidget *parent)
 {
     auto box = createMessageBox(
-            QMessageBox::Question, text, title, QMessageBox::Yes | QMessageBox::Cancel, parent);
+            {
+                    .icon = QMessageBox::Question,
+                    .buttons = QMessageBox::Yes | QMessageBox::Cancel,
+                    .text = text,
+                    .title = title,
+            },
+            parent);
 
     connect(box, &QMessageBox::finished, [=](int result) {
         const bool confirmed = (result == QMessageBox::Yes);
