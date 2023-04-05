@@ -214,6 +214,9 @@ WindowManager *TrayIcon::windowManager() const
 
 void TrayIcon::onTrayActivated(QSystemTrayIcon::ActivationReason reason)
 {
+    if (WindowManager::activateModalWidget())
+        return;
+
     switch (reason) {
     case QSystemTrayIcon::Trigger: {
         onTrayActivatedByTrigger();

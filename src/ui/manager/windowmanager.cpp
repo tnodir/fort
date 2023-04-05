@@ -39,12 +39,12 @@ void setupAppStyle()
 }
 
 QMessageBox *createMessageBox(QMessageBox::Icon icon, const QString &text, const QString &title,
-        QMessageBox::StandardButtons buttons, QWidget *parent, QWidget *mainWindow)
+        QMessageBox::StandardButtons buttons, QWidget *parent)
 {
     auto box = new QMessageBox(icon, title, text, buttons, parent);
     box->setAttribute(Qt::WA_DeleteOnClose);
 
-    box->setWindowModality(parent == mainWindow ? Qt::ApplicationModal : Qt::WindowModal);
+    box->setWindowModality(parent ? Qt::WindowModal : Qt::ApplicationModal);
     box->setModal(true);
 
     return box;
@@ -515,22 +515,20 @@ bool WindowManager::checkPassword()
     return checked;
 }
 
-void WindowManager::showErrorBox(const QString &text, const QString &title)
+void WindowManager::showErrorBox(const QString &text, const QString &title, QWidget *parent)
 {
-    auto box = createMessageBox(
-            QMessageBox::Warning, text, title, QMessageBox::Ok, focusWidget(), mainWindow());
+    auto box = createMessageBox(QMessageBox::Warning, text, title, QMessageBox::Ok, parent);
     box->show();
 }
 
-void WindowManager::showInfoBox(const QString &text, const QString &title)
+void WindowManager::showInfoBox(const QString &text, const QString &title, QWidget *parent)
 {
-    auto box = createMessageBox(
-            QMessageBox::Information, text, title, QMessageBox::Ok, focusWidget(), mainWindow());
+    auto box = createMessageBox(QMessageBox::Information, text, title, QMessageBox::Ok, parent);
     box->show();
 }
 
-void WindowManager::showConfirmBox(
-        const std::function<void()> &onConfirmed, const QString &text, const QString &title)
+void WindowManager::showConfirmBox(const std::function<void()> &onConfirmed, const QString &text,
+        const QString &title, QWidget *parent)
 {
     showQuestionBox(
             [=](bool confirmed) {
@@ -538,14 +536,14 @@ void WindowManager::showConfirmBox(
                     onConfirmed();
                 }
             },
-            text, title);
+            text, title, parent);
 }
 
 void WindowManager::showQuestionBox(const std::function<void(bool confirmed)> &onFinished,
-        const QString &text, const QString &title)
+        const QString &text, const QString &title, QWidget *parent)
 {
-    auto box = createMessageBox(QMessageBox::Question, text, title,
-            QMessageBox::Yes | QMessageBox::Cancel, focusWidget(), mainWindow());
+    auto box = createMessageBox(
+            QMessageBox::Question, text, title, QMessageBox::Yes | QMessageBox::Cancel, parent);
 
     connect(box, &QMessageBox::finished, [=](int result) {
         const bool confirmed = (result == QMessageBox::Yes);
@@ -566,16 +564,12 @@ void WindowManager::onTrayMessageClicked()
     }
 }
 
-QWidget *WindowManager::focusWidget() const
-{
-    auto w = QApplication::focusWidget();
-    return w ? w : mainWindow();
-}
-
-void WindowManager::activateModalWidget()
+bool WindowManager::activateModalWidget()
 {
     auto w = QApplication::activeModalWidget();
     if (w) {
         w->activateWindow();
+        return true;
     }
+    return false;
 }

@@ -3,6 +3,7 @@
 #include <QAction>
 #include <QKeySequence>
 
+#include <manager/windowmanager.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/osutil.h>
 
@@ -65,6 +66,9 @@ void HotKeyManager::updateActions()
 
 void HotKeyManager::onHotKeyPressed(int hotKeyId)
 {
+    if (WindowManager::activateModalWidget())
+        return;
+
     if (hotKeyId >= m_actions.size())
         return;
 

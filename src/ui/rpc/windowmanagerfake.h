@@ -14,8 +14,10 @@ public:
     void tearDown() override { }
 
 public slots:
-    void showErrorBox(const QString &text, const QString &title = QString()) override;
-    void showInfoBox(const QString &text, const QString &title = QString()) override;
+    void showErrorBox(const QString &text, const QString &title = QString(),
+            QWidget *parent = nullptr) override;
+    void showInfoBox(const QString &text, const QString &title = QString(),
+            QWidget *parent = nullptr) override;
 };
 
 #endif // WINDOWMANAGERFAKE_H

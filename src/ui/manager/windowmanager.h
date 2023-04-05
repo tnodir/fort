@@ -86,12 +86,16 @@ public slots:
     bool widgetVisibleByCheckPassword(QWidget *w);
     bool checkPassword();
 
-    virtual void showErrorBox(const QString &text, const QString &title = QString());
-    virtual void showInfoBox(const QString &text, const QString &title = QString());
+    virtual void showErrorBox(
+            const QString &text, const QString &title = QString(), QWidget *parent = nullptr);
+    virtual void showInfoBox(
+            const QString &text, const QString &title = QString(), QWidget *parent = nullptr);
     void showConfirmBox(const std::function<void()> &onConfirmed, const QString &text,
-            const QString &title = QString());
+            const QString &title = QString(), QWidget *parent = nullptr);
     void showQuestionBox(const std::function<void(bool confirmed)> &onFinished, const QString &text,
-            const QString &title = QString());
+            const QString &title = QString(), QWidget *parent = nullptr);
+
+    static bool activateModalWidget();
 
 private:
     void setupMainWindow();
@@ -108,9 +112,6 @@ private:
     void setupStatisticsWindow();
 
     void onTrayMessageClicked();
-
-    QWidget *focusWidget() const;
-    static void activateModalWidget();
 
 private:
     TrayMessageType m_lastMessageType = MessageOptions;
