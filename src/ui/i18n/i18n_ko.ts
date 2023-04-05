@@ -364,7 +364,7 @@
     </message>
     <message>
         <source>Limit of Ask to Connect</source>
-        <translation type="unfinished"></translation>
+        <translation>연결 요청 횟수 제한</translation>
     </message>
 </context>
 <context>
