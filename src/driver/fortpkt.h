@@ -31,7 +31,7 @@ typedef struct fort_packet_out
 
 #define FORT_PACKET_INBOUND         0x01
 #define FORT_PACKET_IP6             0x02
-#define FORT_PACKET_IPSEC_PROTECTED 0x04
+#define FORT_PACKET_IPSEC_PROTECTED 0x08
 
 typedef struct fort_packet_io
 {
@@ -127,10 +127,8 @@ typedef struct fort_shaper
     LONG volatile group_io_bits;
     LONG volatile active_io_bits;
 
-    HANDLE injection_in_transport4_id;
-    HANDLE injection_in_transport6_id;
-    HANDLE injection_out_transport4_id;
-    HANDLE injection_out_transport6_id;
+    HANDLE injection_transport4_id;
+    HANDLE injection_transport6_id;
 
     FORT_PENDING pending;
 

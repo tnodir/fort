@@ -335,11 +335,9 @@ static NTSTATUS fort_packet_inject_out(const PFORT_PACKET_IO pkt, PNET_BUFFER_LI
             (FWPS_INJECT_COMPLETE0) &fort_packet_inject_complete, pkt);
 }
 
-inline static HANDLE fort_shaper_injection_id(PFORT_SHAPER shaper, BOOL isIPv6, BOOL inbound)
+inline static HANDLE fort_shaper_injection_id(PFORT_SHAPER shaper, BOOL isIPv6)
 {
-    return inbound
-            ? (isIPv6 ? shaper->injection_in_transport6_id : shaper->injection_in_transport4_id)
-            : (isIPv6 ? shaper->injection_out_transport6_id : shaper->injection_out_transport4_id);
+    return isIPv6 ? shaper->injection_transport6_id : shaper->injection_transport4_id;
 }
 
 inline static NTSTATUS fort_packet_clone(
@@ -372,26 +370,25 @@ static NTSTATUS fort_shaper_packet_base_inject(
     NTSTATUS status;
 
     const BOOL inbound = (pkt->flags & FORT_PACKET_INBOUND) != 0;
-    const BOOL isIPv6 = (pkt->flags & FORT_PACKET_IP6) != 0;
-    const HANDLE injection_id = fort_shaper_injection_id(shaper, isIPv6, inbound);
-    const ADDRESS_FAMILY addressFamily = (isIPv6 ? AF_INET6 : AF_INET);
 
     status = fort_packet_clone(pkt, clonedNetBufList, inbound);
     if (!NT_SUCCESS(status)) {
         LOG("Shaper: Packet clone error: %x\n", status);
         TRACE(FORT_SHAPER_PACKET_CLONE_ERROR, status, 0, 0);
+        return status;
     }
 
-    if (NT_SUCCESS(status)) {
-        status = inbound
-                ? fort_packet_inject_in(pkt, *clonedNetBufList, injection_id, addressFamily)
-                : fort_packet_inject_out(pkt, *clonedNetBufList, injection_id, addressFamily);
-        if (!NT_SUCCESS(status)) {
-            LOG("Shaper: Packet injection call error: %x\n", status);
-            TRACE(FORT_SHAPER_PACKET_INJECTION_CALL_ERROR, status, 0, 0);
+    const BOOL isIPv6 = (pkt->flags & FORT_PACKET_IP6) != 0;
+    const ADDRESS_FAMILY addressFamily = (isIPv6 ? AF_INET6 : AF_INET);
+    const HANDLE injection_id = fort_shaper_injection_id(shaper, isIPv6);
 
-            (*clonedNetBufList)->Status = STATUS_SUCCESS;
-        }
+    status = inbound ? fort_packet_inject_in(pkt, *clonedNetBufList, injection_id, addressFamily)
+                     : fort_packet_inject_out(pkt, *clonedNetBufList, injection_id, addressFamily);
+    if (!NT_SUCCESS(status)) {
+        LOG("Shaper: Packet injection call error: %x\n", status);
+        TRACE(FORT_SHAPER_PACKET_INJECTION_CALL_ERROR, status, 0, 0);
+
+        (*clonedNetBufList)->Status = STATUS_SUCCESS;
     }
 
     return status;
@@ -814,13 +811,9 @@ FORT_API void fort_shaper_open(PFORT_SHAPER shaper)
     g_RandomSeed = now.LowPart;
 
     FwpsInjectionHandleCreate0(
-            AF_INET, FWPS_INJECTION_TYPE_TRANSPORT, &shaper->injection_in_transport4_id);
+            AF_INET, FWPS_INJECTION_TYPE_TRANSPORT, &shaper->injection_transport4_id);
     FwpsInjectionHandleCreate0(
-            AF_INET6, FWPS_INJECTION_TYPE_TRANSPORT, &shaper->injection_in_transport6_id);
-    FwpsInjectionHandleCreate0(
-            AF_INET, FWPS_INJECTION_TYPE_TRANSPORT, &shaper->injection_out_transport4_id);
-    FwpsInjectionHandleCreate0(
-            AF_INET6, FWPS_INJECTION_TYPE_TRANSPORT, &shaper->injection_out_transport6_id);
+            AF_INET6, FWPS_INJECTION_TYPE_TRANSPORT, &shaper->injection_transport6_id);
 
     tommy_arrayof_init(&shaper->pending.procs, sizeof(FORT_PENDING_PROC));
     tommy_arrayof_init(&shaper->pending.packets, sizeof(FORT_PENDING_PACKET));
@@ -844,10 +837,8 @@ FORT_API void fort_shaper_close(PFORT_SHAPER shaper)
 
     tommy_arrayof_done(&shaper->packets);
 
-    FwpsInjectionHandleDestroy0(shaper->injection_in_transport4_id);
-    FwpsInjectionHandleDestroy0(shaper->injection_in_transport6_id);
-    FwpsInjectionHandleDestroy0(shaper->injection_out_transport4_id);
-    FwpsInjectionHandleDestroy0(shaper->injection_out_transport6_id);
+    FwpsInjectionHandleDestroy0(shaper->injection_transport4_id);
+    FwpsInjectionHandleDestroy0(shaper->injection_transport6_id);
 }
 
 FORT_API void fort_shaper_conf_update(PFORT_SHAPER shaper, const PFORT_CONF_IO conf_io)
@@ -1001,7 +992,7 @@ inline static NTSTATUS fort_shaper_packet_queue(
 
 inline static BOOL fort_shaper_injected_by_self(PFORT_SHAPER shaper, PCFORT_CALLOUT_ARG ca)
 {
-    const HANDLE injection_id = fort_shaper_injection_id(shaper, ca->isIPv6, ca->inbound);
+    const HANDLE injection_id = fort_shaper_injection_id(shaper, ca->isIPv6);
 
     return fort_packet_injected_by_self(injection_id, ca->netBufList);
 }
