@@ -35,10 +35,22 @@ static LONG fort_shaper_io_bits(volatile LONG *io_bits)
     return fort_shaper_io_bits_set(io_bits, 0, TRUE);
 }
 
-static BOOL fort_packet_injected_by_self(HANDLE injection_id, PNET_BUFFER_LIST netBufList)
+inline static HANDLE fort_packet_injection_id(BOOL isIPv6)
 {
+    PFORT_PENDING pending = &fort_device()->pending;
+
+    return isIPv6 ? pending->injection_transport6_id : pending->injection_transport4_id;
+}
+
+static BOOL fort_packet_injected_by_self(PCFORT_CALLOUT_ARG ca)
+{
+    if (ca->netBufList == NULL)
+        return FALSE;
+
+    const HANDLE injection_id = fort_packet_injection_id(ca->isIPv6);
+
     const FWPS_PACKET_INJECTION_STATE state =
-            FwpsQueryPacketInjectionState0(injection_id, netBufList, NULL);
+            FwpsQueryPacketInjectionState0(injection_id, ca->netBufList, NULL);
 
     return (state == FWPS_PACKET_INJECTED_BY_SELF
             || state == FWPS_PACKET_PREVIOUSLY_INJECTED_BY_SELF);
@@ -335,11 +347,6 @@ static NTSTATUS fort_packet_inject_out(const PFORT_PACKET_IO pkt, PNET_BUFFER_LI
             (FWPS_INJECT_COMPLETE0) &fort_packet_inject_complete, pkt);
 }
 
-inline static HANDLE fort_shaper_injection_id(PFORT_SHAPER shaper, BOOL isIPv6)
-{
-    return isIPv6 ? shaper->injection_transport6_id : shaper->injection_transport4_id;
-}
-
 inline static NTSTATUS fort_packet_clone(
         PFORT_PACKET_IO pkt, PNET_BUFFER_LIST *clonedNetBufList, BOOL inbound)
 {
@@ -364,8 +371,7 @@ inline static NTSTATUS fort_packet_clone(
     return status;
 }
 
-static NTSTATUS fort_shaper_packet_base_inject(
-        PFORT_SHAPER shaper, PFORT_PACKET_IO pkt, PNET_BUFFER_LIST *clonedNetBufList)
+static NTSTATUS fort_packet_inject(PFORT_PACKET_IO pkt, PNET_BUFFER_LIST *clonedNetBufList)
 {
     NTSTATUS status;
 
@@ -380,7 +386,7 @@ static NTSTATUS fort_shaper_packet_base_inject(
 
     const BOOL isIPv6 = (pkt->flags & FORT_PACKET_IP6) != 0;
     const ADDRESS_FAMILY addressFamily = (isIPv6 ? AF_INET6 : AF_INET);
-    const HANDLE injection_id = fort_shaper_injection_id(shaper, isIPv6);
+    const HANDLE injection_id = fort_packet_injection_id(isIPv6);
 
     status = inbound ? fort_packet_inject_in(pkt, *clonedNetBufList, injection_id, addressFamily)
                      : fort_packet_inject_out(pkt, *clonedNetBufList, injection_id, addressFamily);
@@ -400,7 +406,7 @@ static void fort_shaper_packet_inject(PFORT_SHAPER shaper, PFORT_FLOW_PACKET pkt
 
     PNET_BUFFER_LIST clonedNetBufList = NULL;
 
-    status = fort_shaper_packet_base_inject(shaper, &pkt->io, &clonedNetBufList);
+    status = fort_packet_inject(&pkt->io, &clonedNetBufList);
 
     if (!NT_SUCCESS(status)) {
         fort_shaper_packet_free(shaper, pkt, clonedNetBufList);
@@ -810,16 +816,6 @@ FORT_API void fort_shaper_open(PFORT_SHAPER shaper)
     g_QpcFrequencyHalfMs = g_QpcFrequency.QuadPart / 2000LL;
     g_RandomSeed = now.LowPart;
 
-    FwpsInjectionHandleCreate0(
-            AF_INET, FWPS_INJECTION_TYPE_TRANSPORT, &shaper->injection_transport4_id);
-    FwpsInjectionHandleCreate0(
-            AF_INET6, FWPS_INJECTION_TYPE_TRANSPORT, &shaper->injection_transport6_id);
-
-    tommy_arrayof_init(&shaper->pending.procs, sizeof(FORT_PENDING_PROC));
-    tommy_arrayof_init(&shaper->pending.packets, sizeof(FORT_PENDING_PACKET));
-
-    KeInitializeSpinLock(&shaper->pending.lock);
-
     tommy_arrayof_init(&shaper->packets, sizeof(FORT_FLOW_PACKET));
 
     KeInitializeSpinLock(&shaper->lock);
@@ -836,9 +832,6 @@ FORT_API void fort_shaper_close(PFORT_SHAPER shaper)
     fort_shaper_free_queues(shaper);
 
     tommy_arrayof_done(&shaper->packets);
-
-    FwpsInjectionHandleDestroy0(shaper->injection_transport4_id);
-    FwpsInjectionHandleDestroy0(shaper->injection_transport6_id);
 }
 
 FORT_API void fort_shaper_conf_update(PFORT_SHAPER shaper, const PFORT_CONF_IO conf_io)
@@ -990,13 +983,6 @@ inline static NTSTATUS fort_shaper_packet_queue(
     return STATUS_SUCCESS;
 }
 
-inline static BOOL fort_shaper_injected_by_self(PFORT_SHAPER shaper, PCFORT_CALLOUT_ARG ca)
-{
-    const HANDLE injection_id = fort_shaper_injection_id(shaper, ca->isIPv6);
-
-    return fort_packet_injected_by_self(injection_id, ca->netBufList);
-}
-
 FORT_API BOOL fort_shaper_packet_process(PFORT_SHAPER shaper, PFORT_CALLOUT_ARG ca)
 {
     if (fort_packet_is_ipsec_tunneled(ca)) {
@@ -1017,7 +1003,7 @@ FORT_API BOOL fort_shaper_packet_process(PFORT_SHAPER shaper, PFORT_CALLOUT_ARG 
     ca->isIPv6 = (flow_flags & FORT_FLOW_IP6) != 0;
 
     /* Skip self injected packet */
-    if (fort_shaper_injected_by_self(shaper, ca))
+    if (fort_packet_injected_by_self(ca))
         return FALSE;
 
     const NTSTATUS status = fort_shaper_packet_queue(&fort_device()->shaper, ca, flow);
@@ -1223,17 +1209,36 @@ static NTSTATUS fort_pending_proc_add_packet(PFORT_PENDING pending, PCFORT_CALLO
     return status;
 }
 
-FORT_API BOOL fort_packet_add_pending(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx)
+FORT_API void fort_pending_open(PFORT_PENDING pending)
+{
+    FwpsInjectionHandleCreate0(
+            AF_INET, FWPS_INJECTION_TYPE_TRANSPORT, &pending->injection_transport4_id);
+    FwpsInjectionHandleCreate0(
+            AF_INET6, FWPS_INJECTION_TYPE_TRANSPORT, &pending->injection_transport6_id);
+
+    tommy_arrayof_init(&pending->procs, sizeof(FORT_PENDING_PROC));
+    tommy_arrayof_init(&pending->packets, sizeof(FORT_PENDING_PACKET));
+
+    KeInitializeSpinLock(&pending->lock);
+}
+
+FORT_API void fort_pending_close(PFORT_PENDING pending)
+{
+    tommy_arrayof_done(&pending->procs);
+    tommy_arrayof_done(&pending->packets);
+
+    FwpsInjectionHandleDestroy0(pending->injection_transport4_id);
+    FwpsInjectionHandleDestroy0(pending->injection_transport6_id);
+}
+
+FORT_API BOOL fort_pending_add_packet(
+        PFORT_PENDING pending, PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx)
 {
     NTSTATUS status;
 
-    PFORT_SHAPER shaper = &fort_device()->shaper;
-
     /* Skip self injected packet */
-    if (ca->netBufList != NULL && fort_shaper_injected_by_self(shaper, ca))
+    if (fort_packet_injected_by_self(ca))
         return FALSE;
-
-    PFORT_PENDING pending = &shaper->pending;
 
     /* Check the Process's Packet Count */
     if (!fort_pending_proc_check_packet_count(pending, cx->process_id))

@@ -24,6 +24,7 @@ typedef struct fort_device
     FORT_DEVICE_CONF conf;
     FORT_BUFFER buffer;
     FORT_STAT stat;
+    FORT_PENDING pending;
     FORT_SHAPER shaper;
     FORT_PSTREE ps_tree;
     FORT_TIMER log_timer;

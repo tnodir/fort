@@ -109,6 +109,9 @@ typedef struct fort_pending_proc
 
 typedef struct fort_pending
 {
+    HANDLE injection_transport4_id;
+    HANDLE injection_transport6_id;
+
     PFORT_PENDING_PROC proc_free;
     tommy_arrayof procs;
 
@@ -126,11 +129,6 @@ typedef struct fort_shaper
 
     LONG volatile group_io_bits;
     LONG volatile active_io_bits;
-
-    HANDLE injection_transport4_id;
-    HANDLE injection_transport6_id;
-
-    FORT_PENDING pending;
 
     FORT_TIMER timer;
 
@@ -160,7 +158,12 @@ FORT_API void fort_shaper_drop_flow_packets(PFORT_SHAPER shaper, UINT64 flowCont
 
 FORT_API void fort_shaper_drop_packets(PFORT_SHAPER shaper);
 
-FORT_API BOOL fort_packet_add_pending(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx);
+FORT_API void fort_pending_open(PFORT_PENDING pending);
+
+FORT_API void fort_pending_close(PFORT_PENDING pending);
+
+FORT_API BOOL fort_pending_add_packet(
+        PFORT_PENDING pending, PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx);
 
 #ifdef __cplusplus
 } // extern "C"

@@ -140,7 +140,7 @@ inline static void fort_callout_ale_log_blocked_ip(PCFORT_CALLOUT_ARG ca,
 inline static BOOL fort_callout_ale_add_pending(
         PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, FORT_CONF_FLAGS conf_flags)
 {
-    if (!fort_packet_add_pending(ca, cx)) {
+    if (!fort_pending_add_packet(&fort_device()->pending, ca, cx)) {
         cx->blocked = TRUE; /* block (error) */
         cx->block_reason = FORT_BLOCK_REASON_ASK_LIMIT;
         return TRUE;
