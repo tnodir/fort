@@ -364,7 +364,7 @@
     </message>
     <message>
         <source>Limit of Ask to Connect</source>
-        <translation type="unfinished"></translation>
+        <translation>Omejitev &apos;Vprašaj za povezavo&apos;</translation>
     </message>
 </context>
 <context>
@@ -453,7 +453,7 @@
     </message>
     <message>
         <source>Restart Now?</source>
-        <translation>Znova zaženi zdaj?</translation>
+        <translation>Želite zdaj znova zagnati?</translation>
     </message>
 </context>
 <context>
