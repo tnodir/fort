@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.8.6, 2023-04-11:
+- UI: Options: New Version: Fix download URL.
+- Driver: Reduce kernel stack usage to avoid BSOD on startup.
+
 v3.8.5, 2023-04-04:
 - Driver: Fix BSOD on shutdown/reboot (v3.8.4 regression).
 
