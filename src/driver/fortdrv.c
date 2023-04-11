@@ -40,8 +40,10 @@ static NTSTATUS fort_driver_load(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path
     ExInitializeDriverRuntime(DrvRtPoolNxOptIn);
 
     status = fort_system32_path_init(driver, reg_path);
-    if (!NT_SUCCESS(status))
+    if (!NT_SUCCESS(status)) {
+        LOG("Driver Path Init: Error: %x\n", status);
         return status;
+    }
 
     UNICODE_STRING device_name;
     RtlInitUnicodeString(&device_name, FORT_NT_DEVICE_NAME);
@@ -50,13 +52,16 @@ static NTSTATUS fort_driver_load(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path
     PDEVICE_OBJECT device_obj;
     status = IoCreateDevice(driver, sizeof(FORT_DEVICE), &device_name, FORT_DEVICE_TYPE, 0,
             /*exclusive=*/TRUE, &device_obj);
-    if (!NT_SUCCESS(status))
+    if (!NT_SUCCESS(status)) {
+        LOG("Create Device: Error: %x\n", status);
         return status;
+    }
 
     device_obj->Flags |= DO_BUFFERED_IO;
 
     status = IoRegisterShutdownNotification(device_obj);
     if (!NT_SUCCESS(status)) {
+        LOG("Register Shutdown: Error: %x\n", status);
         fort_driver_delete_device(driver);
         return status;
     }
@@ -65,8 +70,10 @@ static NTSTATUS fort_driver_load(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path
 
     RtlInitUnicodeString(&device_link, FORT_DOS_DEVICE_NAME);
     status = IoCreateSymbolicLink(&device_link, &device_name);
-    if (!NT_SUCCESS(status))
+    if (!NT_SUCCESS(status)) {
+        LOG("Create Link: Error: %x\n", status);
         return status;
+    }
 
     driver->DriverUnload = &fort_driver_unload;
     driver->MajorFunction[IRP_MJ_CREATE] = &fort_device_create;

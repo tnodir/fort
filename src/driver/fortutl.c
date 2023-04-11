@@ -7,7 +7,7 @@
 #define FORT_MAX_FILE_SIZE (4 * 1024 * 1024)
 
 #define FORT_KEY_INFO_PATH_SIZE                                                                    \
-    (2 + (MAX_PATH * sizeof(WCHAR)) / sizeof(KEY_VALUE_FULL_INFORMATION))
+    (2 * sizeof(KEY_VALUE_FULL_INFORMATION) + (MAX_PATH * sizeof(WCHAR)))
 
 static WCHAR g_system32PathBuffer[64];
 static UNICODE_STRING g_system32Path;
@@ -33,11 +33,15 @@ static NTSTATUS fort_reg_value(HANDLE regKey, PUNICODE_STRING valueName, PUNICOD
 {
     NTSTATUS status;
 
-    KEY_VALUE_FULL_INFORMATION keyInfo[FORT_KEY_INFO_PATH_SIZE];
-    ULONG keyInfoSize;
+    PKEY_VALUE_FULL_INFORMATION keyInfo =
+            fort_mem_alloc(FORT_KEY_INFO_PATH_SIZE, FORT_UTL_POOL_TAG);
+    if (keyInfo == NULL)
+        return STATUS_INSUFFICIENT_RESOURCES;
 
-    status = ZwQueryValueKey(
-            regKey, valueName, KeyValueFullInformation, keyInfo, sizeof(keyInfo), &keyInfoSize);
+    ULONG keyInfoSize = 0;
+
+    status = ZwQueryValueKey(regKey, valueName, KeyValueFullInformation, keyInfo,
+            FORT_KEY_INFO_PATH_SIZE, &keyInfoSize);
 
     if (NT_SUCCESS(status)) {
         const PUCHAR src = ((const PUCHAR) keyInfo + keyInfo->DataOffset);
@@ -45,6 +49,8 @@ static NTSTATUS fort_reg_value(HANDLE regKey, PUNICODE_STRING valueName, PUNICOD
 
         status = fort_string_new(len, (PCWSTR) src, outData);
     }
+
+    fort_mem_free(keyInfo, FORT_UTL_POOL_TAG);
 
     return status;
 }
