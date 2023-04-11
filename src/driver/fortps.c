@@ -45,6 +45,18 @@ typedef struct fort_psnode
     UINT16 volatile flags;
 } FORT_PSNODE, *PFORT_PSNODE;
 
+#define FORT_COMMAND_PATH_LEN  256
+#define FORT_COMMAND_PATH_SIZE (FORT_COMMAND_PATH_LEN * sizeof(WCHAR))
+
+#define FORT_COMMAND_LINE_LEN  512
+#define FORT_COMMAND_LINE_SIZE (FORT_COMMAND_LINE_LEN * sizeof(WCHAR))
+
+typedef struct fort_pscommand
+{
+    WCHAR path[FORT_COMMAND_PATH_LEN];
+    WCHAR commandLine[FORT_COMMAND_LINE_LEN];
+} FORT_PSCOMMAND, *PFORT_PSCOMMAND;
+
 typedef struct _SYSTEM_PROCESSES
 {
     ULONG NextEntryOffset;
@@ -593,6 +605,8 @@ inline static void fort_pstree_check_proc_inheritance(PFORT_PSTREE ps_tree, PFOR
 static PFORT_PSNODE fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCUNICODE_STRING path,
         PCUNICODE_STRING commandLine, tommy_key_t pid_hash, DWORD processId, DWORD parentProcessId)
 {
+    FORT_CHECK_STACK();
+
     PFORT_PSNAME ps_name = fort_pstree_add_service_name(ps_tree, path, commandLine);
 
     PFORT_PSNODE proc = fort_pstree_proc_new(ps_tree, ps_name, pid_hash);
@@ -744,33 +758,23 @@ FORT_API void fort_pstree_close(PFORT_PSTREE ps_tree)
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
-static void fort_pstree_enum_process(
-        PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry, HANDLE processHandle)
+static NTSTATUS fort_pstree_enum_process(PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry,
+        HANDLE processHandle, PUNICODE_STRING path, PUNICODE_STRING commandLine)
 {
     NTSTATUS status;
 
-    WCHAR pathBuffer[256];
-    UNICODE_STRING path = {
-        .Length = 0, .MaximumLength = sizeof(pathBuffer), .Buffer = pathBuffer
-    };
-
-    WCHAR commandLineBuffer[512];
-    UNICODE_STRING commandLine = {
-        .Length = 0, .MaximumLength = sizeof(commandLineBuffer), .Buffer = commandLineBuffer
-    };
-
-    status = GetProcessImageName(processHandle, &path);
+    status = GetProcessImageName(processHandle, path);
     if (!NT_SUCCESS(status))
-        return;
+        return status;
 
-    if (fort_pstree_svchost_path_check(&path)) {
-        status = GetProcessPathArgs(processHandle, &path, &commandLine);
+    if (fort_pstree_svchost_path_check(path)) {
+        status = GetProcessPathArgs(processHandle, path, commandLine);
         if (!NT_SUCCESS(status)) {
             LOG("PsTree: Process Args Error: pid=%d %x\n", processEntry->ProcessId, status);
-            return;
+            return status;
         }
     } else {
-        path.Length = 0;
+        path->Length = 0;
     }
 
     const DWORD processId = (DWORD) (ptrdiff_t) processEntry->ProcessId;
@@ -781,14 +785,22 @@ static void fort_pstree_enum_process(
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
 
-    fort_pstree_handle_new_proc(ps_tree, &path, &commandLine, pid_hash, processId, parentProcessId);
+    fort_pstree_handle_new_proc(ps_tree, path, commandLine, pid_hash, processId, parentProcessId);
 
     KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    return STATUS_SUCCESS;
 }
 
-static void fort_pstree_enum_processes_loop(PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry)
+static void fort_pstree_enum_processes_loop(
+        PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry, PFORT_PSCOMMAND pathBuffer)
 {
-    FORT_CHECK_STACK();
+    UNICODE_STRING path = {
+        .Length = 0, .MaximumLength = FORT_COMMAND_PATH_SIZE, .Buffer = pathBuffer->path
+    };
+    UNICODE_STRING commandLine = {
+        .Length = 0, .MaximumLength = FORT_COMMAND_LINE_SIZE, .Buffer = pathBuffer->commandLine
+    };
 
     for (;;) {
         const DWORD processId = (DWORD) processEntry->ProcessId;
@@ -799,7 +811,7 @@ static void fort_pstree_enum_processes_loop(PFORT_PSTREE ps_tree, PSYSTEM_PROCES
         } else {
             const HANDLE processHandle = OpenProcessById(processId);
             if (processHandle != NULL) {
-                fort_pstree_enum_process(ps_tree, processEntry, processHandle);
+                fort_pstree_enum_process(ps_tree, processEntry, processHandle, &path, &commandLine);
 
                 ZwClose(processHandle);
             }
@@ -824,9 +836,11 @@ FORT_API void NTAPI fort_pstree_enum_processes(void)
 
     bufferSize *= 3; /* for possibly new created processes/threads */
 
-    PVOID buffer = fort_mem_alloc(bufferSize, FORT_PSTREE_POOL_TAG);
+    PVOID buffer = fort_mem_alloc(bufferSize + sizeof(FORT_PSCOMMAND), FORT_PSTREE_POOL_TAG);
     if (buffer == NULL)
         return;
+
+    PFORT_PSCOMMAND pathBuffer = (PFORT_PSCOMMAND) ((PCHAR) buffer + bufferSize);
 
     PFORT_PSTREE ps_tree = &fort_device()->ps_tree;
 
@@ -834,7 +848,7 @@ FORT_API void NTAPI fort_pstree_enum_processes(void)
 
     status = ZwQuerySystemInformation(SystemProcessInformation, buffer, bufferSize, &bufferSize);
     if (NT_SUCCESS(status)) {
-        fort_pstree_enum_processes_loop(ps_tree, buffer);
+        fort_pstree_enum_processes_loop(ps_tree, buffer, pathBuffer);
     } else {
         LOG("PsTree: Enum Processes Error: %x\n", status);
         TRACE(FORT_PSTREE_ENUM_PROCESSES_ERROR, status, 0, 0);
