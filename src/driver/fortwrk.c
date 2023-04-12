@@ -11,6 +11,9 @@ static void NTAPI fort_worker_callback(PDEVICE_OBJECT device, PVOID context)
     UNUSED(device);
 
     PFORT_WORKER worker = (PFORT_WORKER) context;
+
+    InterlockedDecrement16(&worker->queue_size);
+
     const UCHAR id_bits = InterlockedAnd8(&worker->id_bits, 0);
 
     if (id_bits & (1 << FORT_WORKER_REAUTH)) {
@@ -20,12 +23,12 @@ static void NTAPI fort_worker_callback(PDEVICE_OBJECT device, PVOID context)
     if (id_bits & (1 << FORT_WORKER_PSTREE)) {
         worker->funcs[FORT_WORKER_PSTREE]();
     }
-
-    InterlockedDecrement16(&worker->queue_size);
 }
 
 static void fort_worker_wait(PFORT_WORKER worker)
 {
+    InterlockedAnd8(&worker->id_bits, 0);
+
     for (;;) {
         const SHORT queue_size = InterlockedOr16(&worker->queue_size, 0);
 
