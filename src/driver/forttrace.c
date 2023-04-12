@@ -11,7 +11,7 @@ FORT_API void fort_trace_event(
         return;
 
     PIO_ERROR_LOG_PACKET packet =
-            IoAllocateErrorLogEntry(fort_device()->object, sizeof(IO_ERROR_LOG_PACKET));
+            IoAllocateErrorLogEntry(fort_device()->device, sizeof(IO_ERROR_LOG_PACKET));
     if (packet == NULL)
         return;
 

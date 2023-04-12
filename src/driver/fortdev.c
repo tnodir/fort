@@ -9,6 +9,12 @@
 #include "fortscb.h"
 #include "forttrace.h"
 
+typedef struct fort_device_load_arg
+{
+    PDEVICE_OBJECT device;
+    NTSTATUS status;
+} FORT_DEVICE_LOAD_ARG, *PFORT_DEVICE_LOAD_ARG;
+
 static PFORT_DEVICE g_device = NULL;
 
 FORT_API PFORT_DEVICE fort_device(void)
@@ -27,11 +33,13 @@ static void fort_device_init(PDEVICE_OBJECT device)
 
     RtlZeroMemory(fort_device(), sizeof(FORT_DEVICE));
 
-    fort_device()->object = device;
+    fort_device()->device = device;
 }
 
-static void NTAPI fort_worker_reauth(void)
+static void NTAPI fort_worker_reauth(PVOID worker)
 {
+    UNUSED(worker);
+
     const FORT_CONF_FLAGS conf_flags = fort_device()->conf.conf_flags;
     NTSTATUS status;
 
@@ -223,7 +231,7 @@ static NTSTATUS fort_device_control_app(const PFORT_APP_ENTRY app_entry, ULONG l
             fort_conf_ref_put(&fort_device()->conf, conf_ref);
 
             if (NT_SUCCESS(status)) {
-                fort_worker_reauth();
+                fort_worker_reauth(NULL);
             }
 
             return status;
@@ -243,7 +251,7 @@ static NTSTATUS fort_device_control_setzones(const PFORT_CONF_ZONES zones, ULONG
         } else {
             fort_conf_zones_set(&fort_device()->conf, conf_zones);
 
-            fort_worker_reauth();
+            fort_worker_reauth(NULL);
 
             return STATUS_SUCCESS;
         }
@@ -257,7 +265,7 @@ static NTSTATUS fort_device_control_setzoneflag(const PFORT_CONF_ZONE_FLAG zone_
     if (len == sizeof(FORT_CONF_ZONE_FLAG)) {
         fort_conf_zone_flag_set(&fort_device()->conf, zone_flag);
 
-        fort_worker_reauth();
+        fort_worker_reauth(NULL);
 
         return STATUS_SUCCESS;
     }
@@ -357,7 +365,7 @@ static NTSTATUS fort_device_register_provider(void)
     return fort_prov_trans_close(engine, status);
 }
 
-FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device)
+static NTSTATUS fort_device_load_expanded(PDEVICE_OBJECT device)
 {
     NTSTATUS status;
 
@@ -405,6 +413,23 @@ FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device)
     fort_worker_queue(&fort_device()->worker, FORT_WORKER_PSTREE);
 
     return STATUS_SUCCESS;
+}
+
+static void NTAPI fort_device_load_expand(PVOID parameter)
+{
+    PFORT_DEVICE_LOAD_ARG arg = (PFORT_DEVICE_LOAD_ARG) parameter;
+
+    arg->status = fort_device_load_expanded(arg->device);
+}
+
+FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device)
+{
+    FORT_DEVICE_LOAD_ARG arg = { .device = device };
+
+    const NTSTATUS status =
+            KeExpandKernelStackAndCallout(&fort_device_load_expand, &arg, KERNEL_STACK_SIZE);
+
+    return NT_SUCCESS(status) ? arg.status : status;
 }
 
 FORT_API void fort_device_unload(void)

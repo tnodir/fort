@@ -14,3 +14,11 @@ NTSTATUS PsSetCreateProcessNotifyRoutineEx(
     UNUSED(remove);
     return STATUS_SUCCESS;
 }
+
+NTSTATUS KeExpandKernelStackAndCallout(PEXPAND_STACK_CALLOUT callout, PVOID parameter, SIZE_T size)
+{
+    UNUSED(callout);
+    UNUSED(parameter);
+    UNUSED(size);
+    return STATUS_SUCCESS;
+}

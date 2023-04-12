@@ -11,39 +11,24 @@
 
 static void fort_driver_delete_device(PDRIVER_OBJECT driver)
 {
+    if (driver->DeviceObject == NULL)
+        return;
+
+    /* Unregister Device Callbacks */
+    IoUnregisterShutdownNotification(driver->DeviceObject);
+
+    /* Delete Device Link */
+    UNICODE_STRING device_link;
+    RtlInitUnicodeString(&device_link, FORT_DOS_DEVICE_NAME);
+    IoDeleteSymbolicLink(&device_link);
+
     IoDeleteDevice(driver->DeviceObject);
     driver->DeviceObject = NULL;
 }
 
-static void fort_driver_unload(PDRIVER_OBJECT driver)
-{
-    fort_device_unload();
-
-    if (driver->DeviceObject != NULL) {
-        /* Unregister Device Callbacks */
-        IoUnregisterShutdownNotification(driver->DeviceObject);
-
-        /* Delete Device Link */
-        UNICODE_STRING device_link;
-        RtlInitUnicodeString(&device_link, FORT_DOS_DEVICE_NAME);
-        IoDeleteSymbolicLink(&device_link);
-
-        fort_driver_delete_device(driver);
-    }
-}
-
-static NTSTATUS fort_driver_load(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
+static NTSTATUS fort_driver_create_device(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 {
     NTSTATUS status;
-
-    /* Use NX Non-Paged Pool */
-    ExInitializeDriverRuntime(DrvRtPoolNxOptIn);
-
-    status = fort_system32_path_init(driver, reg_path);
-    if (!NT_SUCCESS(status)) {
-        LOG("Driver Path Init: Error: %x\n", status);
-        return status;
-    }
 
     UNICODE_STRING device_name;
     RtlInitUnicodeString(&device_name, FORT_NT_DEVICE_NAME);
@@ -62,7 +47,6 @@ static NTSTATUS fort_driver_load(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path
     status = IoRegisterShutdownNotification(device_obj);
     if (!NT_SUCCESS(status)) {
         LOG("Register Shutdown: Error: %x\n", status);
-        fort_driver_delete_device(driver);
         return status;
     }
 
@@ -75,6 +59,33 @@ static NTSTATUS fort_driver_load(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path
         return status;
     }
 
+    return STATUS_SUCCESS;
+}
+
+static void fort_driver_unload(PDRIVER_OBJECT driver)
+{
+    fort_device_unload();
+
+    fort_driver_delete_device(driver);
+}
+
+static NTSTATUS fort_driver_load(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
+{
+    NTSTATUS status;
+
+    /* Use NX Non-Paged Pool */
+    ExInitializeDriverRuntime(DrvRtPoolNxOptIn);
+
+    status = fort_system32_path_init(driver, reg_path);
+    if (!NT_SUCCESS(status)) {
+        LOG("Driver Path Init: Error: %x\n", status);
+        return status;
+    }
+
+    status = fort_driver_create_device(driver, reg_path);
+    if (!NT_SUCCESS(status))
+        return status;
+
     driver->DriverUnload = &fort_driver_unload;
     driver->MajorFunction[IRP_MJ_CREATE] = &fort_device_create;
     driver->MajorFunction[IRP_MJ_CLOSE] = &fort_device_close;
@@ -82,7 +93,7 @@ static NTSTATUS fort_driver_load(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path
     driver->MajorFunction[IRP_MJ_DEVICE_CONTROL] = &fort_device_control;
     driver->MajorFunction[IRP_MJ_SHUTDOWN] = &fort_device_shutdown;
 
-    return fort_device_load(device_obj);
+    return fort_device_load(driver->DeviceObject);
 }
 
 NTSTATUS DriverCallbacksSetup(PFORT_PROXYCB_INFO cb_info)

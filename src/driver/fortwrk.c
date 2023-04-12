@@ -6,6 +6,21 @@
 
 #include "fortcb.h"
 
+static void NTAPI fort_worker_callback_expand(PVOID context)
+{
+    PFORT_WORKER worker = (PFORT_WORKER) context;
+
+    const UCHAR id_bits = InterlockedAnd8(&worker->id_bits, 0);
+
+    if (id_bits & (1 << FORT_WORKER_REAUTH)) {
+        worker->funcs[FORT_WORKER_REAUTH](worker);
+    }
+
+    if (id_bits & (1 << FORT_WORKER_PSTREE)) {
+        worker->funcs[FORT_WORKER_PSTREE](worker);
+    }
+}
+
 static void NTAPI fort_worker_callback(PDEVICE_OBJECT device, PVOID context)
 {
     UNUSED(device);
@@ -14,15 +29,7 @@ static void NTAPI fort_worker_callback(PDEVICE_OBJECT device, PVOID context)
 
     InterlockedDecrement16(&worker->queue_size);
 
-    const UCHAR id_bits = InterlockedAnd8(&worker->id_bits, 0);
-
-    if (id_bits & (1 << FORT_WORKER_REAUTH)) {
-        worker->funcs[FORT_WORKER_REAUTH]();
-    }
-
-    if (id_bits & (1 << FORT_WORKER_PSTREE)) {
-        worker->funcs[FORT_WORKER_PSTREE]();
-    }
+    KeExpandKernelStackAndCallout(&fort_worker_callback_expand, worker, KERNEL_STACK_SIZE);
 }
 
 static void fort_worker_wait(PFORT_WORKER worker)

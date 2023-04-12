@@ -13,7 +13,7 @@
 
 typedef struct fort_device
 {
-    PDEVICE_OBJECT object;
+    PDEVICE_OBJECT device;
 
     PCALLBACK_OBJECT power_cb_obj;
     PVOID power_cb_reg;

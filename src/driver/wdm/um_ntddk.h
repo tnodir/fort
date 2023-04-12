@@ -3,6 +3,8 @@
 
 #include "um_wdm.h"
 
+#define KERNEL_STACK_SIZE 12288
+
 typedef struct _KPROCESS *PEPROCESS;
 
 typedef struct _PS_CREATE_NOTIFY_INFO
@@ -36,6 +38,12 @@ FORT_API NTSTATUS IoQueryFullDriverPath(PDRIVER_OBJECT driverObject, PUNICODE_ST
 
 FORT_API NTSTATUS PsSetCreateProcessNotifyRoutineEx(
         PCREATE_PROCESS_NOTIFY_ROUTINE_EX notifyRoutine, BOOLEAN remove);
+
+typedef void(NTAPI EXPAND_STACK_CALLOUT)(PVOID parameter);
+typedef EXPAND_STACK_CALLOUT *PEXPAND_STACK_CALLOUT;
+
+FORT_API NTSTATUS KeExpandKernelStackAndCallout(
+        PEXPAND_STACK_CALLOUT callout, PVOID parameter, SIZE_T size);
 
 #ifdef __cplusplus
 } // extern "C"
