@@ -6,19 +6,22 @@
 
 #include "fortcb.h"
 
+static void fort_worker_callback_run(
+        PFORT_WORKER worker, enum FORT_WORKER_TYPE worker_type, UCHAR id_bits)
+{
+    if ((id_bits & (1 << worker_type)) != 0) {
+        worker->funcs[worker_type](worker);
+    }
+}
+
 static void NTAPI fort_worker_callback_expand(PVOID context)
 {
     PFORT_WORKER worker = (PFORT_WORKER) context;
 
     const UCHAR id_bits = InterlockedAnd8(&worker->id_bits, 0);
 
-    if (id_bits & (1 << FORT_WORKER_REAUTH)) {
-        worker->funcs[FORT_WORKER_REAUTH](worker);
-    }
-
-    if (id_bits & (1 << FORT_WORKER_PSTREE)) {
-        worker->funcs[FORT_WORKER_PSTREE](worker);
-    }
+    fort_worker_callback_run(worker, FORT_WORKER_REAUTH, id_bits);
+    fort_worker_callback_run(worker, FORT_WORKER_PSTREE, id_bits);
 }
 
 static void NTAPI fort_worker_callback(PDEVICE_OBJECT device, PVOID context)

@@ -3,7 +3,7 @@
 
 #include "fortdrv.h"
 
-enum {
+enum FORT_WORKER_TYPE {
     FORT_WORKER_REAUTH = 0,
     FORT_WORKER_PSTREE,
     FORT_WORKER_FUNC_COUNT,
