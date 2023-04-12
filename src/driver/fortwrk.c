@@ -5,6 +5,7 @@
 #include <assert.h>
 
 #include "fortcb.h"
+#include "forttrace.h"
 
 static void fort_worker_callback_run(
         PFORT_WORKER worker, enum FORT_WORKER_TYPE worker_type, UCHAR id_bits)
@@ -32,7 +33,13 @@ static void NTAPI fort_worker_callback(PDEVICE_OBJECT device, PVOID context)
 
     InterlockedDecrement16(&worker->queue_size);
 
-    KeExpandKernelStackAndCallout(&fort_worker_callback_expand, worker, KERNEL_STACK_SIZE);
+    const NTSTATUS status =
+            KeExpandKernelStackAndCallout(&fort_worker_callback_expand, worker, KERNEL_STACK_SIZE);
+
+    if (!NT_SUCCESS(status)) {
+        LOG("Worker Callback: Error: %x\n", status);
+        TRACE(FORT_WORKER_CALLBACK_ERROR, status, 0, 0);
+    }
 }
 
 static void fort_worker_wait(PFORT_WORKER worker)
