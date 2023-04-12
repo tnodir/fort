@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.8.7, 2023-04-12:
+- Driver: Expand kernel stack size on startup.
+
 v3.8.6, 2023-04-11:
 - UI: Options: New Version: Fix download URL.
 - Driver: Reduce kernel stack usage to avoid BSOD on startup.
