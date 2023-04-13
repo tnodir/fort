@@ -11,18 +11,21 @@
 
 static void fort_driver_delete_device(PDRIVER_OBJECT driver)
 {
-    if (driver->DeviceObject == NULL)
+    PDEVICE_OBJECT device_obj = driver->DeviceObject;
+    if (device_obj == NULL)
         return;
 
     /* Unregister Device Callbacks */
-    IoUnregisterShutdownNotification(driver->DeviceObject);
+    if ((device_obj->Flags & DO_BUFFERED_IO) != 0) {
+        IoUnregisterShutdownNotification(driver->DeviceObject);
+    }
 
     /* Delete Device Link */
     UNICODE_STRING device_link;
     RtlInitUnicodeString(&device_link, FORT_DOS_DEVICE_NAME);
     IoDeleteSymbolicLink(&device_link);
 
-    IoDeleteDevice(driver->DeviceObject);
+    IoDeleteDevice(device_obj);
     driver->DeviceObject = NULL;
 }
 
@@ -42,13 +45,13 @@ static NTSTATUS fort_driver_create_device(PDRIVER_OBJECT driver, PUNICODE_STRING
         return status;
     }
 
-    device_obj->Flags |= DO_BUFFERED_IO;
-
     status = IoRegisterShutdownNotification(device_obj);
     if (!NT_SUCCESS(status)) {
         LOG("Register Shutdown: Error: %x\n", status);
         return status;
     }
+
+    device_obj->Flags |= DO_BUFFERED_IO; /* after IoRegisterShutdownNotification()! */
 
     UNICODE_STRING device_link;
 
