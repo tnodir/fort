@@ -12,11 +12,9 @@
 static void fort_driver_delete_device(PDRIVER_OBJECT driver)
 {
     PDEVICE_OBJECT device_obj = driver->DeviceObject;
-    if (device_obj == NULL)
-        return;
 
-    /* Unregister Device Callbacks */
-    if ((device_obj->Flags & DO_BUFFERED_IO) != 0) {
+    /* Unregister Shutdown Callback */
+    if (fort_device_flag(&fort_device()->conf, FORT_DEVICE_SHUTDOWN_REGISTERED) != 0) {
         IoUnregisterShutdownNotification(driver->DeviceObject);
     }
 
@@ -26,7 +24,6 @@ static void fort_driver_delete_device(PDRIVER_OBJECT driver)
     IoDeleteSymbolicLink(&device_link);
 
     IoDeleteDevice(device_obj);
-    driver->DeviceObject = NULL;
 }
 
 static NTSTATUS fort_driver_create_device(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
@@ -45,17 +42,25 @@ static NTSTATUS fort_driver_create_device(PDRIVER_OBJECT driver, PUNICODE_STRING
         return status;
     }
 
+    device_obj->Flags |= DO_BUFFERED_IO;
+
+    /* Initialize Device Extension */
+    fort_device_set(device_obj->DeviceExtension);
+    fort_device()->device = device_obj;
+
+    /* Register Shutdown Callback */
     status = IoRegisterShutdownNotification(device_obj);
     if (!NT_SUCCESS(status)) {
         LOG("Register Shutdown: Error: %x\n", status);
         return status;
     }
 
-    device_obj->Flags |= DO_BUFFERED_IO; /* after IoRegisterShutdownNotification()! */
+    fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_SHUTDOWN_REGISTERED, TRUE);
 
+    /* Create Device Link */
     UNICODE_STRING device_link;
-
     RtlInitUnicodeString(&device_link, FORT_DOS_DEVICE_NAME);
+
     status = IoCreateSymbolicLink(&device_link, &device_name);
     if (!NT_SUCCESS(status)) {
         LOG("Create Link: Error: %x\n", status);
@@ -67,9 +72,14 @@ static NTSTATUS fort_driver_create_device(PDRIVER_OBJECT driver, PUNICODE_STRING
 
 static void fort_driver_unload(PDRIVER_OBJECT driver)
 {
+    if (fort_device() == NULL)
+        return;
+
     fort_device_unload();
 
     fort_driver_delete_device(driver);
+
+    fort_device_set(NULL);
 }
 
 static NTSTATUS fort_driver_load(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
@@ -96,7 +106,7 @@ static NTSTATUS fort_driver_load(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path
     driver->MajorFunction[IRP_MJ_DEVICE_CONTROL] = &fort_device_control;
     driver->MajorFunction[IRP_MJ_SHUTDOWN] = &fort_device_shutdown;
 
-    return fort_device_load(driver->DeviceObject);
+    return fort_device_load();
 }
 
 NTSTATUS DriverCallbacksSetup(PFORT_PROXYCB_INFO cb_info)
@@ -105,6 +115,8 @@ NTSTATUS DriverCallbacksSetup(PFORT_PROXYCB_INFO cb_info)
 
     return STATUS_SUCCESS;
 }
+
+DRIVER_INITIALIZE DriverEntry;
 
 NTSTATUS DriverEntry(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 {

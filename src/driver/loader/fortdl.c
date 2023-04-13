@@ -109,6 +109,10 @@ static NTSTATUS fort_loader_init(PUNICODE_STRING driverPath)
     return status;
 }
 
+#if defined(FORT_DRIVER)
+DRIVER_INITIALIZE DriverEntry;
+#endif
+
 NTSTATUS
 #if defined(FORT_DRIVER)
 DriverEntry

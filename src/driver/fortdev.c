@@ -9,12 +9,6 @@
 #include "fortscb.h"
 #include "forttrace.h"
 
-typedef struct fort_device_load_arg
-{
-    PDEVICE_OBJECT device;
-    NTSTATUS status;
-} FORT_DEVICE_LOAD_ARG, *PFORT_DEVICE_LOAD_ARG;
-
 static PFORT_DEVICE g_device = NULL;
 
 FORT_API PFORT_DEVICE fort_device(void)
@@ -22,18 +16,9 @@ FORT_API PFORT_DEVICE fort_device(void)
     return g_device;
 }
 
-static void fort_device_set(PFORT_DEVICE device)
+FORT_API void fort_device_set(PFORT_DEVICE device)
 {
     g_device = device;
-}
-
-static void fort_device_init(PDEVICE_OBJECT device)
-{
-    fort_device_set(device->DeviceExtension);
-
-    RtlZeroMemory(fort_device(), sizeof(FORT_DEVICE));
-
-    fort_device()->device = device;
 }
 
 static void NTAPI fort_worker_reauth(PVOID worker)
@@ -72,9 +57,8 @@ FORT_API NTSTATUS fort_device_create(PDEVICE_OBJECT device, PIRP irp)
     NTSTATUS status = STATUS_SUCCESS;
 
     /* Device opened */
-    if ((fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_IS_OPENED, TRUE)
-                & FORT_DEVICE_IS_OPENED)
-            != 0) {
+    const UCHAR flags = fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_IS_OPENED, TRUE);
+    if ((flags & FORT_DEVICE_IS_OPENED) != 0) {
         status = STATUS_SHARING_VIOLATION; /* Only one client may connect */
     }
 
@@ -365,11 +349,11 @@ static NTSTATUS fort_device_register_provider(void)
     return fort_prov_trans_close(engine, status);
 }
 
-static NTSTATUS fort_device_load_expanded(PDEVICE_OBJECT device)
+static NTSTATUS fort_device_load_expanded(void)
 {
     NTSTATUS status;
 
-    fort_device_init(device);
+    PDEVICE_OBJECT device = fort_device()->device;
 
     fort_worker_func_set(&fort_device()->worker, FORT_WORKER_REAUTH, &fort_worker_reauth);
     fort_worker_func_set(&fort_device()->worker, FORT_WORKER_PSTREE, &fort_pstree_enum_processes);
@@ -417,26 +401,23 @@ static NTSTATUS fort_device_load_expanded(PDEVICE_OBJECT device)
 
 static void NTAPI fort_device_load_expand(PVOID parameter)
 {
-    PFORT_DEVICE_LOAD_ARG arg = (PFORT_DEVICE_LOAD_ARG) parameter;
+    NTSTATUS *status = (NTSTATUS *) parameter;
 
-    arg->status = fort_device_load_expanded(arg->device);
+    *status = fort_device_load_expanded();
 }
 
-FORT_API NTSTATUS fort_device_load(PDEVICE_OBJECT device)
+FORT_API NTSTATUS fort_device_load(void)
 {
-    FORT_DEVICE_LOAD_ARG arg = { .device = device };
+    NTSTATUS status_expand;
 
-    const NTSTATUS status =
-            KeExpandKernelStackAndCallout(&fort_device_load_expand, &arg, KERNEL_STACK_SIZE);
+    const NTSTATUS status = KeExpandKernelStackAndCallout(
+            &fort_device_load_expand, &status_expand, KERNEL_STACK_SIZE);
 
-    return NT_SUCCESS(status) ? arg.status : status;
+    return NT_SUCCESS(status) ? status_expand : status;
 }
 
 FORT_API void fort_device_unload(void)
 {
-    if (fort_device() == NULL)
-        return;
-
     /* Stop system notifiers */
     fort_syscb_power_unregister();
     fort_syscb_time_unregister();
@@ -466,6 +447,4 @@ FORT_API void fort_device_unload(void)
     if (fort_device_flag(&fort_device()->conf, FORT_DEVICE_BOOT_FILTER) == 0) {
         fort_prov_unregister(NULL);
     }
-
-    fort_device_set(NULL);
 }
