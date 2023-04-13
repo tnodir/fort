@@ -409,7 +409,7 @@ FORT_API void fort_stat_close_flows(PFORT_STAT stat)
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
-    while (stat->flow_closing_count != 0) {
+    while (stat->flow_closing_count > 0) {
         KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
         {
             tommy_hashdyn_foreach_node_arg(&stat->flows_map, &fort_flow_context_remove, stat);
