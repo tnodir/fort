@@ -408,7 +408,7 @@ static void NTAPI fort_device_load_expand(PVOID parameter)
 
 FORT_API NTSTATUS fort_device_load(void)
 {
-    NTSTATUS status_expand;
+    NTSTATUS status_expand = STATUS_SUCCESS;
 
     const NTSTATUS status = KeExpandKernelStackAndCallout(
             &fort_device_load_expand, &status_expand, KERNEL_STACK_SIZE);

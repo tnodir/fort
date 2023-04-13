@@ -577,8 +577,9 @@ static void fort_pstree_check_proc_parent_inheritance_conf(PFORT_PSTREE ps_tree,
         const HANDLE parentHandle = OpenProcessById(parent_process_id);
         if (parentHandle != NULL) {
             fort_pstree_check_proc_conf(ps_tree, conf_ref, parent, parentHandle, parent_process_id);
+
+            ZwClose(parentHandle);
         }
-        ZwClose(parentHandle);
     }
 
     /* Set process inheritance by parent */
@@ -772,15 +773,15 @@ static NTSTATUS fort_pstree_enum_process(PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES
     if (fort_pstree_svchost_path_check(path)) {
         status = GetProcessPathArgs(processHandle, path, commandLine);
         if (!NT_SUCCESS(status)) {
-            LOG("PsTree: Process Args Error: pid=%d %x\n", processEntry->ProcessId, status);
+            LOG("PsTree: Process Args Error: pid=%d %x\n", (DWORD) processEntry->ProcessId, status);
             return status;
         }
     } else {
         path->Length = 0;
     }
 
-    const DWORD processId = (DWORD) (ptrdiff_t) processEntry->ProcessId;
-    const DWORD parentProcessId = (DWORD) (ptrdiff_t) processEntry->ParentProcessId;
+    const DWORD processId = (DWORD) processEntry->ProcessId;
+    const DWORD parentProcessId = (DWORD) processEntry->ParentProcessId;
 
     const tommy_key_t pid_hash = fort_pstree_proc_hash(processId);
 
