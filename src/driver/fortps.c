@@ -428,14 +428,12 @@ static PFORT_PSNAME fort_pstree_add_service_name(
 static PFORT_PSNODE fort_pstree_proc_new(
         PFORT_PSTREE ps_tree, PFORT_PSNAME ps_name, tommy_key_t pid_hash)
 {
-    tommy_arrayof *procs = &ps_tree->procs;
-    tommy_hashdyn *procs_map = &ps_tree->procs_map;
-
     tommy_hashdyn_node *proc_node = tommy_list_tail(&ps_tree->free_procs);
 
     if (proc_node != NULL) {
         tommy_list_remove_existing(&ps_tree->free_procs, proc_node);
     } else {
+        tommy_arrayof *procs = &ps_tree->procs;
         const UINT16 index = ps_tree->procs_n;
 
         tommy_arrayof_grow(procs, index + 1);
@@ -443,7 +441,7 @@ static PFORT_PSNODE fort_pstree_proc_new(
         proc_node = tommy_arrayof_ref(procs, index);
     }
 
-    tommy_hashdyn_insert(procs_map, proc_node, ps_name, pid_hash);
+    tommy_hashdyn_insert(&ps_tree->procs_map, proc_node, ps_name, pid_hash);
 
     ++ps_tree->procs_n;
 
