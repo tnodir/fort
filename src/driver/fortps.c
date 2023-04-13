@@ -131,6 +131,8 @@ NTSTATUS NTAPI MmCopyVirtualMemory(PEPROCESS sourceProcess, PVOID sourceAddress,
 
 #endif
 
+#define fort_pstree_proc_hash(process_id) tommy_inthash_u32((UINT32) (process_id))
+
 #define fort_pstree_get_proc(ps_tree, index)                                                       \
     ((PFORT_PSNODE) tommy_arrayof_ref(&(ps_tree)->procs, (index)))
 
@@ -485,7 +487,7 @@ static PFORT_PSNODE fort_pstree_find_proc(PFORT_PSTREE ps_tree, DWORD processId)
     if (processId == 0)
         return NULL;
 
-    const tommy_key_t pid_hash = (tommy_key_t) tommy_hash_u32(0, &processId, sizeof(DWORD));
+    const tommy_key_t pid_hash = fort_pstree_proc_hash(processId);
 
     return fort_pstree_find_proc_hash(ps_tree, processId, pid_hash);
 }
@@ -643,7 +645,7 @@ inline static PFORT_PSNODE fort_pstree_notify_process(PFORT_PSTREE ps_tree, PEPR
 {
     const DWORD processId = (DWORD) (ptrdiff_t) processHandle;
 
-    const tommy_key_t pid_hash = (tommy_key_t) tommy_hash_u32(0, &processId, sizeof(DWORD));
+    const tommy_key_t pid_hash = fort_pstree_proc_hash(processId);
 
 #ifdef FORT_DEBUG
     if (createInfo == NULL) {
@@ -780,7 +782,7 @@ static NTSTATUS fort_pstree_enum_process(PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES
     const DWORD processId = (DWORD) (ptrdiff_t) processEntry->ProcessId;
     const DWORD parentProcessId = (DWORD) (ptrdiff_t) processEntry->ParentProcessId;
 
-    const tommy_key_t pid_hash = (tommy_key_t) tommy_hash_u32(0, &processId, sizeof(DWORD));
+    const tommy_key_t pid_hash = fort_pstree_proc_hash(processId);
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
