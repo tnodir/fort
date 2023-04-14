@@ -59,10 +59,8 @@ static PFORT_CONF_EXE_NODE fort_conf_ref_exe_find_node(
             (PFORT_CONF_EXE_NODE) tommy_hashdyn_bucket(&conf_ref->exe_map, path_hash);
 
     while (node != NULL) {
-        if (node->path_hash == path_hash
-                && fort_conf_app_exe_equal(node->app_entry, path, path_len)) {
+        if (fort_conf_app_exe_equal(node->app_entry, path, path_len))
             return node;
-        }
 
         node = node->next;
     }

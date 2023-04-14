@@ -470,9 +470,8 @@ static PFORT_PSNODE fort_pstree_find_proc_hash(
     PFORT_PSNODE node = (PFORT_PSNODE) tommy_hashdyn_bucket(&ps_tree->procs_map, pid_hash);
 
     while (node != NULL) {
-        if (node->process_id == processId) {
+        if (node->process_id == processId)
             return node;
-        }
 
         node = node->next;
     }

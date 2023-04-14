@@ -953,16 +953,15 @@ FORT_API void NTAPI fort_callout_timer(void)
     PFORT_BUFFER buf = &fort_device()->buffer;
     PFORT_STAT stat = &fort_device()->stat;
 
-    KLOCK_QUEUE_HANDLE buf_lock_queue;
-    KLOCK_QUEUE_HANDLE stat_lock_queue;
-
     PIRP irp = NULL;
     ULONG_PTR info;
 
     /* Lock buffer */
+    KLOCK_QUEUE_HANDLE buf_lock_queue;
     fort_buffer_dpc_begin(buf, &buf_lock_queue);
 
     /* Lock stat */
+    KLOCK_QUEUE_HANDLE stat_lock_queue;
     fort_stat_dpc_begin(stat, &stat_lock_queue);
 
     /* Get current Unix time */

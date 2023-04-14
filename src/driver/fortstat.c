@@ -51,7 +51,7 @@ static PFORT_STAT_PROC fort_stat_proc_get(PFORT_STAT stat, UINT32 process_id, to
     PFORT_STAT_PROC proc = (PFORT_STAT_PROC) tommy_hashdyn_bucket(&stat->procs_map, proc_hash);
 
     while (proc != NULL) {
-        if (proc->proc_hash == proc_hash && proc->process_id == process_id)
+        if (proc->process_id == process_id)
             return proc;
 
         proc = proc->next;
@@ -276,7 +276,7 @@ static PFORT_FLOW fort_flow_get(PFORT_STAT stat, UINT64 flow_id, tommy_key_t flo
     PFORT_FLOW flow = (PFORT_FLOW) tommy_hashdyn_bucket(&stat->flows_map, flow_hash);
 
     while (flow != NULL) {
-        if (flow->flow_hash == flow_hash && flow->flow_id == flow_id)
+        if (flow->flow_id == flow_id)
             return flow;
 
         flow = flow->next;
@@ -404,7 +404,7 @@ FORT_API void fort_stat_close_flows(PFORT_STAT stat)
         if ((old_stat_flags & FORT_STAT_CLOSED) == 0) {
             fort_stat_flags_set(stat, FORT_STAT_CLOSED, TRUE);
 
-            InterlockedAdd(&stat->flow_closing_count, (LONG) stat->flows_map.count);
+            InterlockedAdd(&stat->flow_closing_count, (LONG) tommy_hashdyn_count(&stat->flows_map));
         }
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
