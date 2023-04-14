@@ -61,11 +61,16 @@ static PFORT_STAT_PROC fort_stat_proc_get(PFORT_STAT stat, UINT32 process_id, to
 
 static void fort_stat_proc_free(PFORT_STAT stat, PFORT_STAT_PROC proc)
 {
-    tommy_hashdyn_remove_existing(&stat->procs_map, (tommy_hashdyn_node *) proc);
-
     /* Add to free chain */
     proc->next = stat->proc_free;
     stat->proc_free = proc;
+}
+
+static void fort_stat_proc_del(PFORT_STAT stat, PFORT_STAT_PROC proc)
+{
+    tommy_hashdyn_remove_existing(&stat->procs_map, (tommy_hashdyn_node *) proc);
+
+    fort_stat_proc_free(stat, proc);
 }
 
 static PFORT_STAT_PROC fort_stat_proc_add(PFORT_STAT stat, UINT32 process_id)
@@ -445,9 +450,17 @@ static void fort_stat_clear(PFORT_STAT stat)
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
+    /* Clear processes active list */
     fort_stat_proc_active_clear(stat);
 
-    tommy_hashdyn_foreach_node_arg(&stat->procs_map, &fort_stat_proc_free, stat);
+    /* Clear processes map */
+    if (tommy_hashdyn_count(&stat->procs_map) > 0) {
+        tommy_hashdyn_foreach_node_arg(&stat->procs_map, &fort_stat_proc_free, stat);
+        tommy_hashdyn_done(&stat->procs_map);
+        tommy_hashdyn_init(&stat->procs_map);
+    }
+
+    /* Close flows */
     tommy_hashdyn_foreach_node(&stat->flows_map, &fort_flow_close);
 
     KeReleaseInStackQueuedSpinLock(&lock_queue);
@@ -609,7 +622,7 @@ FORT_API void fort_stat_dpc_traf_flush(PFORT_STAT stat, UINT16 proc_count, PCHAR
             /* The process is inactive */
             *out_proc |= 1;
 
-            fort_stat_proc_free(stat, proc);
+            fort_stat_proc_del(stat, proc);
         } else {
             proc->active = FALSE;
 

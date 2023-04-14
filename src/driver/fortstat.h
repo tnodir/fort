@@ -25,16 +25,16 @@ typedef struct fort_stat_proc
 
     tommy_key_t proc_hash; /* tommy_hashdyn_node::index */
 
-    UINT16 proc_index : 15; /* Synchronize with FORT_PROC_COUNT_MAX! */
-    UINT16 active : 1;
-
-    UINT16 refcount;
-
 #if defined(_WIN64)
     UINT32 process_id;
 #else
     FORT_TRAF traf;
 #endif
+
+    UINT16 proc_index : 15; /* Synchronize with FORT_PROC_COUNT_MAX! */
+    UINT16 active : 1;
+
+    UINT16 refcount;
 
     struct fort_stat_proc *next_active;
 } FORT_STAT_PROC, *PFORT_STAT_PROC;
