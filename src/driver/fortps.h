@@ -8,8 +8,6 @@
 #include "forttds.h"
 
 #define FORT_PSTREE_ACTIVE       0x0001
-#define FORT_PSTREE_ENUM_STARTED 0x0002
-#define FORT_PSTREE_ENUM_DONE    0x0004
 
 typedef struct fort_pstree
 {
@@ -22,8 +20,6 @@ typedef struct fort_pstree
 
     tommy_arrayof procs;
     tommy_hashdyn procs_map;
-
-    KEVENT enum_event;
 
     KSPIN_LOCK lock;
 } FORT_PSTREE, *PFORT_PSTREE;
