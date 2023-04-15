@@ -24,9 +24,8 @@ FORT_API void fort_device_set(PFORT_DEVICE device)
 static void NTAPI fort_worker_reauth(void)
 {
     const FORT_CONF_FLAGS conf_flags = fort_device()->conf.conf_flags;
-    NTSTATUS status;
 
-    status = fort_callout_force_reauth(conf_flags);
+    const NTSTATUS status = fort_callout_force_reauth(conf_flags);
 
     if (!NT_SUCCESS(status)) {
         LOG("Worker Reauth: Error: %x\n", status);
@@ -347,7 +346,7 @@ static NTSTATUS fort_device_register_provider(void)
     return fort_prov_trans_close(engine, status);
 }
 
-static NTSTATUS fort_device_load_expanded(void)
+FORT_API NTSTATUS fort_device_load(void)
 {
     NTSTATUS status;
 
@@ -395,23 +394,6 @@ static NTSTATUS fort_device_load_expanded(void)
     fort_worker_queue(&fort_device()->worker, FORT_WORKER_PSTREE);
 
     return STATUS_SUCCESS;
-}
-
-static void NTAPI fort_device_load_expand(PVOID parameter)
-{
-    NTSTATUS *status = (NTSTATUS *) parameter;
-
-    *status = fort_device_load_expanded();
-}
-
-FORT_API NTSTATUS fort_device_load(void)
-{
-    NTSTATUS status_expand = STATUS_SUCCESS;
-
-    const NTSTATUS status = KeExpandKernelStackAndCallout(
-            &fort_device_load_expand, &status_expand, KERNEL_STACK_SIZE);
-
-    return NT_SUCCESS(status) ? status_expand : status;
 }
 
 FORT_API void fort_device_unload(void)
