@@ -11,18 +11,8 @@ static void fort_worker_callback_run(
         PFORT_WORKER worker, enum FORT_WORKER_TYPE worker_type, UCHAR id_bits)
 {
     if ((id_bits & (1 << worker_type)) != 0) {
-        worker->funcs[worker_type](worker);
+        worker->funcs[worker_type]();
     }
-}
-
-static void NTAPI fort_worker_callback_expand(PVOID context)
-{
-    PFORT_WORKER worker = (PFORT_WORKER) context;
-
-    const UCHAR id_bits = InterlockedAnd8(&worker->id_bits, 0);
-
-    fort_worker_callback_run(worker, FORT_WORKER_REAUTH, id_bits);
-    fort_worker_callback_run(worker, FORT_WORKER_PSTREE, id_bits);
 }
 
 static void NTAPI fort_worker_callback(PDEVICE_OBJECT device, PVOID context)
@@ -33,13 +23,10 @@ static void NTAPI fort_worker_callback(PDEVICE_OBJECT device, PVOID context)
 
     InterlockedDecrement16(&worker->queue_size);
 
-    const NTSTATUS status =
-            KeExpandKernelStackAndCallout(&fort_worker_callback_expand, worker, KERNEL_STACK_SIZE);
+    const UCHAR id_bits = InterlockedAnd8(&worker->id_bits, 0);
 
-    if (!NT_SUCCESS(status)) {
-        LOG("Worker Callback: Error: %x\n", status);
-        TRACE(FORT_WORKER_CALLBACK_ERROR, status, 0, 0);
-    }
+    fort_worker_callback_run(worker, FORT_WORKER_REAUTH, id_bits);
+    fort_worker_callback_run(worker, FORT_WORKER_PSTREE, id_bits);
 }
 
 static void fort_worker_wait(PFORT_WORKER worker)

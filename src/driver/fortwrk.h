@@ -9,7 +9,7 @@ enum FORT_WORKER_TYPE {
     FORT_WORKER_FUNC_COUNT,
 };
 
-typedef void(NTAPI *FORT_WORKER_FUNC)(PVOID worker);
+typedef void(NTAPI *FORT_WORKER_FUNC)(void);
 
 typedef struct fort_worker
 {

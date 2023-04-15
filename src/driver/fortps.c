@@ -825,10 +825,8 @@ static void fort_pstree_enum_processes_loop(
     }
 }
 
-FORT_API void NTAPI fort_pstree_enum_processes(PVOID worker)
+FORT_API void NTAPI fort_pstree_enum_processes(void)
 {
-    UNUSED(worker);
-
     NTSTATUS status;
 
     ULONG bufferSize;
