@@ -16,10 +16,6 @@
 
 typedef void FORT_SHAPER_PACKET_FOREACH_FUNC(PFORT_SHAPER, PFORT_FLOW_PACKET);
 
-static LARGE_INTEGER g_QpcFrequency;
-static UINT64 g_QpcFrequencyHalfMs;
-static ULONG g_RandomSeed;
-
 static LONG fort_shaper_io_bits_exchange(volatile LONG *io_bits, LONG v)
 {
     return InterlockedExchange(io_bits, v);
@@ -515,7 +511,7 @@ static void fort_shaper_queue_process_bandwidth(
 
     /* Advance the available bytes */
     const UINT64 accumulated =
-            ((now.QuadPart - queue->last_tick.QuadPart) * bps) / g_QpcFrequency.QuadPart;
+            ((now.QuadPart - queue->last_tick.QuadPart) * bps) / shaper->qpcFrequency.QuadPart;
     queue->available_bytes += accumulated;
 
     if (fort_shaper_packet_list_is_empty(&queue->bandwidth_list)
@@ -561,14 +557,17 @@ static PFORT_FLOW_PACKET fort_shaper_queue_process_latency(
 
     const UINT32 latency_ms = queue->limit.latency_ms;
 
+    const UINT64 qpcFrequency = shaper->qpcFrequency.QuadPart;
+    const UINT64 qpcFrequencyHalfMs = qpcFrequency / 2000LL;
+
     PFORT_FLOW_PACKET pkt_tail = NULL;
     PFORT_FLOW_PACKET pkt = pkt_chain;
     do {
         /* Round to the closest ms instead of truncating
          * by adding 1/2 of a ms to the elapsed ticks */
         const ULONG elapsed_ms = (ULONG) (((now.QuadPart - pkt->latency_start.QuadPart) * 1000LL
-                                                  + g_QpcFrequencyHalfMs)
-                / g_QpcFrequency.QuadPart);
+                                                  + qpcFrequencyHalfMs)
+                / qpcFrequency);
 
         if (elapsed_ms < latency_ms)
             break;
@@ -812,9 +811,8 @@ static void fort_shaper_flush(PFORT_SHAPER shaper, UINT32 group_io_bits, BOOL dr
 
 FORT_API void fort_shaper_open(PFORT_SHAPER shaper)
 {
-    const LARGE_INTEGER now = KeQueryPerformanceCounter(&g_QpcFrequency);
-    g_QpcFrequencyHalfMs = g_QpcFrequency.QuadPart / 2000LL;
-    g_RandomSeed = now.LowPart;
+    const LARGE_INTEGER now = KeQueryPerformanceCounter(&shaper->qpcFrequency);
+    shaper->randomSeed = now.LowPart;
 
     tommy_arrayof_init(&shaper->packets, sizeof(FORT_FLOW_PACKET));
 
@@ -903,7 +901,9 @@ inline static BOOL fort_shaper_packet_queue_check_plr(PFORT_PACKET_QUEUE queue)
 {
     const UINT16 plr = queue->limit.plr;
     if (plr > 0) {
-        const ULONG random = RtlRandomEx(&g_RandomSeed) % 10000; /* PLR range is 0-10000 */
+        PFORT_SHAPER shaper = &fort_device()->shaper;
+
+        const ULONG random = RtlRandomEx(&shaper->randomSeed) % 10000; /* PLR range is 0-10000 */
         if (random < plr)
             return FALSE;
     }

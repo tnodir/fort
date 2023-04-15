@@ -130,6 +130,9 @@ typedef struct fort_shaper
     LONG volatile group_io_bits;
     LONG volatile active_io_bits;
 
+    ULONG randomSeed;
+    LARGE_INTEGER qpcFrequency;
+
     FORT_TIMER timer;
 
     PFORT_FLOW_PACKET packet_free;
