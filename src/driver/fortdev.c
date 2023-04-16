@@ -331,6 +331,8 @@ static NTSTATUS fort_device_register_provider(void)
     if (!NT_SUCCESS(status))
         return status;
 
+    fort_prov_init();
+
     fort_prov_trans_begin(engine);
 
     const FORT_PROV_BOOT_CONF boot_conf = fort_prov_get_boot_conf(engine);

@@ -26,6 +26,8 @@ typedef struct fort_prov_boot_conf
 extern "C" {
 #endif
 
+FORT_API void fort_prov_init(void);
+
 FORT_API DWORD fort_prov_trans_close(HANDLE transEngine, DWORD status);
 
 FORT_API void fort_prov_flow_unregister(HANDLE engine);

@@ -4,6 +4,349 @@
 
 #include "fortioctl.h"
 
+#define FORT_PROV_CALLOUTS_COUNT        12
+#define FORT_PROV_BOOT_FILTERS_COUNT    4
+#define FORT_PROV_PERSIST_FILTERS_COUNT 4
+#define FORT_PROV_CALLOUT_FILTERS_COUNT 4
+#define FORT_PROV_FLOW_FILTERS_COUNT    4
+#define FORT_PROV_PACKET_FILTERS_COUNT  4
+#define FORT_PROV_REAUTH_FILTERS_COUNT  4
+
+static struct
+{
+    FORT_PROV_BOOT_CONF boot_conf;
+
+    FWPM_PROVIDER0 provider;
+    FWPM_PROVIDER0 boot_provider;
+
+    FWPM_SUBLAYER0 sublayer;
+    FWPM_SUBLAYER0 boot_sublayer;
+
+    FWPM_CALLOUT0 callouts[FORT_PROV_CALLOUTS_COUNT];
+
+    FWPM_FILTER0 boot_filters[FORT_PROV_BOOT_FILTERS_COUNT];
+    FWPM_FILTER0 persist_filters[FORT_PROV_PERSIST_FILTERS_COUNT];
+
+    FWPM_FILTER0 callout_filters[FORT_PROV_CALLOUT_FILTERS_COUNT];
+    FWPM_FILTER0 callout_boot_filters[FORT_PROV_CALLOUT_FILTERS_COUNT];
+
+    FWPM_FILTER0 flow_filters[FORT_PROV_FLOW_FILTERS_COUNT];
+    FWPM_FILTER0 packet_filters[FORT_PROV_PACKET_FILTERS_COUNT];
+
+    FWPM_FILTER0 reauth_filters[FORT_PROV_REAUTH_FILTERS_COUNT];
+} g_provGlobal;
+
+static void fort_prov_init_callout(
+        FWPM_CALLOUT0 *cout, GUID key, PCWCH name, PCWCH descr, GUID layer)
+{
+    cout->calloutKey = key;
+    cout->displayData.name = (PWCHAR) name;
+    cout->displayData.description = (PWCHAR) descr;
+    cout->providerKey = (GUID *) &FORT_GUID_PROVIDER;
+    cout->applicableLayer = layer;
+}
+
+static void fort_prov_init_callouts(void)
+{
+    FWPM_CALLOUT0 *cout = g_provGlobal.callouts;
+
+    /* ocallout4 */
+    fort_prov_init_callout(cout++, FORT_GUID_CALLOUT_CONNECT_V4, L"FortCalloutConnect4",
+            L"Fort Firewall Callout Connect V4", FWPM_LAYER_ALE_AUTH_CONNECT_V4);
+    /* ocallout6 */
+    fort_prov_init_callout(cout++, FORT_GUID_CALLOUT_CONNECT_V6, L"FortCalloutConnect6",
+            L"Fort Firewall Callout Connect V6", FWPM_LAYER_ALE_AUTH_CONNECT_V6);
+    /* icallout4 */
+    fort_prov_init_callout(cout++, FORT_GUID_CALLOUT_ACCEPT_V4, L"FortCalloutAccept4",
+            L"Fort Firewall Callout Accept V4", FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4);
+    /* icallout6 */
+    fort_prov_init_callout(cout++, FORT_GUID_CALLOUT_ACCEPT_V6, L"FortCalloutAccept6",
+            L"Fort Firewall Callout Accept V6", FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V6);
+    /* scallout4 */
+    fort_prov_init_callout(cout++, FORT_GUID_CALLOUT_STREAM_V4, L"FortCalloutStream4",
+            L"Fort Firewall Callout Stream V4", FWPM_LAYER_STREAM_V4);
+    /* scallout6 */
+    fort_prov_init_callout(cout++, FORT_GUID_CALLOUT_STREAM_V6, L"FortCalloutStream6",
+            L"Fort Firewall Callout Stream V6", FWPM_LAYER_STREAM_V6);
+    /* dcallout4 */
+    fort_prov_init_callout(cout++, FORT_GUID_CALLOUT_DATAGRAM_V4, L"FortCalloutDatagram4",
+            L"Fort Firewall Callout Datagram V4", FWPM_LAYER_DATAGRAM_DATA_V4);
+    /* dcallout6 */
+    fort_prov_init_callout(cout++, FORT_GUID_CALLOUT_DATAGRAM_V6, L"FortCalloutDatagram6",
+            L"Fort Firewall Callout Datagram V6", FWPM_LAYER_DATAGRAM_DATA_V6);
+    /* itcallout4 */
+    fort_prov_init_callout(cout++, FORT_GUID_CALLOUT_IN_TRANSPORT_V4, L"FortCalloutInTransport4",
+            L"Fort Firewall Callout Inbound Transport V4", FWPM_LAYER_INBOUND_TRANSPORT_V4);
+    /* itcallout6 */
+    fort_prov_init_callout(cout++, FORT_GUID_CALLOUT_IN_TRANSPORT_V6, L"FortCalloutInTransport6",
+            L"Fort Firewall Callout Inbound Transport V6", FWPM_LAYER_INBOUND_TRANSPORT_V6);
+    /* otcallout4 */
+    fort_prov_init_callout(cout++, FORT_GUID_CALLOUT_OUT_TRANSPORT_V4, L"FortCalloutOutTransport4",
+            L"Fort Firewall Callout Outbound Transport V4", FWPM_LAYER_OUTBOUND_TRANSPORT_V4);
+    /* otcallout6 */
+    fort_prov_init_callout(cout++, FORT_GUID_CALLOUT_OUT_TRANSPORT_V6, L"FortCalloutOutTransport6",
+            L"Fort Firewall Callout Outbound Transport V6", FWPM_LAYER_OUTBOUND_TRANSPORT_V6);
+}
+
+static void fort_prov_init_filter(FWPM_FILTER0 *filter, GUID filterKey, GUID layerKey,
+        GUID subLayerKey, PCWCH name, PCWCH descr, FWP_VALUE0 weight, UINT32 flags,
+        FWP_ACTION_TYPE actionType)
+{
+    filter->flags = flags;
+    filter->filterKey = filterKey;
+    filter->layerKey = layerKey;
+    filter->subLayerKey = subLayerKey;
+    filter->weight = weight;
+    filter->displayData.name = (PWCHAR) name;
+    filter->displayData.description = (PWCHAR) descr;
+    filter->action.type = actionType;
+}
+
+static void fort_prov_init_boot_filter(
+        FWPM_FILTER0 *filter, GUID filterKey, GUID layerKey, PCWCH name)
+{
+    const FWP_VALUE0 weight = { 0 };
+
+    const UINT32 flags = FWPM_FILTER_FLAG_BOOTTIME | FWPM_FILTER_FLAG_CLEAR_ACTION_RIGHT;
+
+    fort_prov_init_filter(filter, filterKey, layerKey, FORT_GUID_EMPTY, name, NULL, weight, flags,
+            FWP_ACTION_BLOCK);
+}
+
+static void fort_prov_init_boot_filters(void)
+{
+    FWPM_FILTER0 *filter = g_provGlobal.boot_filters;
+
+    /* ofilter4 */
+    fort_prov_init_boot_filter(filter++, FORT_GUID_BOOT_FILTER_CONNECT_V4,
+            FWPM_LAYER_ALE_AUTH_CONNECT_V4, L"FortBootFilterOut4");
+    /* ofilter6 */
+    fort_prov_init_boot_filter(filter++, FORT_GUID_BOOT_FILTER_CONNECT_V6,
+            FWPM_LAYER_ALE_AUTH_CONNECT_V6, L"FortBootFilterOut6");
+    /* ifilter4 */
+    fort_prov_init_boot_filter(filter++, FORT_GUID_BOOT_FILTER_ACCEPT_V4,
+            FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4, L"FortBootFilterIn4");
+    /* ifilter6 */
+    fort_prov_init_boot_filter(filter++, FORT_GUID_BOOT_FILTER_ACCEPT_V6,
+            FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V6, L"FortBootFilterIn6");
+}
+
+static void fort_prov_init_persist_filter(
+        FWPM_FILTER0 *filter, GUID filterKey, GUID layerKey, PCWCH name)
+{
+    FWP_VALUE0 weight;
+    weight.type = FWP_UINT8;
+    weight.uint8 = 0; /* low weight */
+
+    const UINT32 flags = FWPM_FILTER_FLAG_PERSISTENT | FWPM_FILTER_FLAG_CLEAR_ACTION_RIGHT;
+
+    fort_prov_init_filter(filter, filterKey, layerKey, FORT_GUID_SUBLAYER, name, NULL, weight,
+            flags, FWP_ACTION_BLOCK);
+}
+
+static void fort_prov_init_persist_filters(void)
+{
+    FWPM_FILTER0 *filter = g_provGlobal.persist_filters;
+
+    /* ofilter4 */
+    fort_prov_init_persist_filter(filter++, FORT_GUID_PERSIST_FILTER_CONNECT_V4,
+            FWPM_LAYER_ALE_AUTH_CONNECT_V4, L"FortPersistFilterConnect4");
+    /* ofilter6 */
+    fort_prov_init_persist_filter(filter++, FORT_GUID_PERSIST_FILTER_CONNECT_V6,
+            FWPM_LAYER_ALE_AUTH_CONNECT_V6, L"FortPersistFilterConnect6");
+    /* ifilter4 */
+    fort_prov_init_persist_filter(filter++, FORT_GUID_PERSIST_FILTER_ACCEPT_V4,
+            FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4, L"FortPersistFilterAccept4");
+    /* ifilter6 */
+    fort_prov_init_persist_filter(filter++, FORT_GUID_PERSIST_FILTER_ACCEPT_V6,
+            FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V6, L"FortPersistFilterAccept6");
+}
+
+static void fort_prov_init_callout_filter(FWPM_FILTER0 *filter, GUID filterKey, GUID layerKey,
+        GUID calloutKey, PCWCH name, PCWCH descr)
+{
+    FWP_VALUE0 weight;
+    weight.type = FWP_UINT8;
+    weight.uint8 = 9; /* high weight */
+
+    const UINT32 flags = FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED;
+
+    fort_prov_init_filter(filter, filterKey, layerKey, FORT_GUID_SUBLAYER, name, descr, weight,
+            flags, FWP_ACTION_CALLOUT_UNKNOWN);
+
+    filter->action.calloutKey = calloutKey;
+}
+
+static void fort_prov_init_callout_filters(void)
+{
+    FWPM_FILTER0 *filter = g_provGlobal.callout_filters;
+
+    /* ofilter4 */
+    fort_prov_init_callout_filter(filter++, FORT_GUID_FILTER_CONNECT_V4,
+            FWPM_LAYER_ALE_AUTH_CONNECT_V4, FORT_GUID_CALLOUT_CONNECT_V4, L"FortFilterConnect4",
+            L"Fort Firewall Filter Connect V4");
+    /* ofilter6 */
+    fort_prov_init_callout_filter(filter++, FORT_GUID_FILTER_CONNECT_V6,
+            FWPM_LAYER_ALE_AUTH_CONNECT_V6, FORT_GUID_CALLOUT_CONNECT_V6, L"FortFilterConnect6",
+            L"Fort Firewall Filter Connect V6");
+    /* ifilter4 */
+    fort_prov_init_callout_filter(filter++, FORT_GUID_FILTER_ACCEPT_V4,
+            FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4, FORT_GUID_CALLOUT_ACCEPT_V4, L"FortFilterAccept4",
+            L"Fort Firewall Filter Accept V4");
+    /* ifilter6 */
+    fort_prov_init_callout_filter(filter++, FORT_GUID_FILTER_ACCEPT_V6,
+            FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V6, FORT_GUID_CALLOUT_ACCEPT_V6, L"FortFilterAccept6",
+            L"Fort Firewall Filter Accept V6");
+}
+
+static void fort_prov_init_callout_boot_filters(void)
+{
+    FWPM_FILTER0 *filter = g_provGlobal.callout_filters;
+    FWPM_FILTER0 *boot_filter = g_provGlobal.callout_boot_filters;
+
+    for (int i = 0; i < FORT_PROV_CALLOUT_FILTERS_COUNT; ++i) {
+        *boot_filter = *filter;
+        boot_filter->flags = 0;
+
+        ++filter;
+        ++boot_filter;
+    }
+}
+
+static void fort_prov_init_flow_filter(FWPM_FILTER0 *filter, GUID filterKey, GUID layerKey,
+        GUID calloutKey, PCWCH name, PCWCH descr)
+{
+    const FWP_VALUE0 weight = { 0 };
+
+    const UINT32 flags = (FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED
+            | FWP_CALLOUT_FLAG_ALLOW_MID_STREAM_INSPECTION);
+
+    fort_prov_init_filter(filter, filterKey, layerKey, FORT_GUID_SUBLAYER, name, descr, weight,
+            flags, FWP_ACTION_CALLOUT_TERMINATING);
+
+    filter->action.calloutKey = calloutKey;
+}
+
+static void fort_prov_init_flow_filters(void)
+{
+    FWPM_FILTER0 *filter = g_provGlobal.flow_filters;
+
+    /* sfilter4 */
+    fort_prov_init_flow_filter(filter++, FORT_GUID_FILTER_STREAM_V4, FWPM_LAYER_STREAM_V4,
+            FORT_GUID_CALLOUT_STREAM_V4, L"FortFilterStream4", L"Fort Firewall Filter Stream V4");
+    /* sfilter6 */
+    fort_prov_init_flow_filter(filter++, FORT_GUID_FILTER_STREAM_V6, FWPM_LAYER_STREAM_V6,
+            FORT_GUID_CALLOUT_STREAM_V6, L"FortFilterStream6", L"Fort Firewall Filter Stream V6");
+    /* dfilter4 */
+    fort_prov_init_flow_filter(filter++, FORT_GUID_FILTER_DATAGRAM_V4, FWPM_LAYER_DATAGRAM_DATA_V4,
+            FORT_GUID_CALLOUT_DATAGRAM_V4, L"FortFilterDatagram4",
+            L"Fort Firewall Filter Datagram V4");
+    /* dfilter6 */
+    fort_prov_init_flow_filter(filter++, FORT_GUID_FILTER_DATAGRAM_V6, FWPM_LAYER_DATAGRAM_DATA_V6,
+            FORT_GUID_CALLOUT_DATAGRAM_V6, L"FortFilterDatagram6",
+            L"Fort Firewall Filter Datagram V6");
+}
+
+static void fort_prov_init_packet_filters(void)
+{
+    FWPM_FILTER0 *filter = g_provGlobal.packet_filters;
+
+    /* itfilter4 */
+    fort_prov_init_flow_filter(filter++, FORT_GUID_FILTER_IN_TRANSPORT_V4,
+            FWPM_LAYER_INBOUND_TRANSPORT_V4, FORT_GUID_CALLOUT_IN_TRANSPORT_V4,
+            L"FortFilterInTransport4", L"Fort Firewall Filter Inbound Transport V4");
+    /* itfilter6 */
+    fort_prov_init_flow_filter(filter++, FORT_GUID_FILTER_IN_TRANSPORT_V6,
+            FWPM_LAYER_INBOUND_TRANSPORT_V6, FORT_GUID_CALLOUT_IN_TRANSPORT_V6,
+            L"FortFilterInTransport6", L"Fort Firewall Filter Inbound Transport V6");
+    /* otfilter4 */
+    fort_prov_init_flow_filter(filter++, FORT_GUID_FILTER_OUT_TRANSPORT_V4,
+            FWPM_LAYER_OUTBOUND_TRANSPORT_V4, FORT_GUID_CALLOUT_OUT_TRANSPORT_V4,
+            L"FortFilterOutTransport4", L"Fort Firewall Filter Outbound Transport V4");
+    /* otfilter6 */
+    fort_prov_init_flow_filter(filter++, FORT_GUID_FILTER_OUT_TRANSPORT_V6,
+            FWPM_LAYER_OUTBOUND_TRANSPORT_V6, FORT_GUID_CALLOUT_OUT_TRANSPORT_V6,
+            L"FortFilterOutTransport6", L"Fort Firewall Filter Outbound Transport V6");
+}
+
+static void fort_prov_init_reauth_filter(
+        FWPM_FILTER0 *filter, GUID filterKey, GUID layerKey, PCWCH name)
+{
+    const FWP_VALUE0 weight = { 0 };
+
+    fort_prov_init_filter(filter, filterKey, layerKey, FORT_GUID_SUBLAYER, name, NULL, weight, 0,
+            FWP_ACTION_CONTINUE);
+}
+
+static void fort_prov_init_reauth_filters(void)
+{
+    FWPM_FILTER0 *filter = g_provGlobal.reauth_filters;
+
+    /* ifilter4 */
+    fort_prov_init_reauth_filter(filter++, FORT_GUID_FILTER_REAUTH_IN_V4,
+            FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4, L"FortFilterReauthIn4");
+    /* ifilter6 */
+    fort_prov_init_reauth_filter(filter++, FORT_GUID_FILTER_REAUTH_IN_V6,
+            FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V6, L"FortFilterReauthIn6");
+    /* ofilter4 */
+    fort_prov_init_reauth_filter(filter++, FORT_GUID_FILTER_REAUTH_OUT_V4,
+            FWPM_LAYER_ALE_AUTH_CONNECT_V4, L"FortFilterReauthOut4");
+    /* ofilter6 */
+    fort_prov_init_reauth_filter(filter++, FORT_GUID_FILTER_REAUTH_OUT_V6,
+            FWPM_LAYER_ALE_AUTH_CONNECT_V6, L"FortFilterReauthOut6");
+}
+
+static void fort_prov_init_provider(void)
+{
+    FWPM_PROVIDER0 *provider = &g_provGlobal.provider;
+    provider->flags = 0;
+    provider->providerKey = FORT_GUID_PROVIDER;
+    provider->displayData.name = (PWCHAR) L"FortProvider";
+    provider->displayData.description = (PWCHAR) L"Fort Firewall Provider";
+    provider->providerData.size = sizeof(FORT_PROV_BOOT_CONF);
+    provider->providerData.data = (PUINT8) &g_provGlobal.boot_conf;
+    provider->serviceName = (PWCHAR) L"fortfw";
+
+    FWPM_PROVIDER0 *boot_provider = &g_provGlobal.boot_provider;
+    *boot_provider = *provider;
+    boot_provider->flags = FWPM_PROVIDER_FLAG_PERSISTENT;
+}
+
+static void fort_prov_init_sublayer(void)
+{
+    FWPM_SUBLAYER0 *sublayer = &g_provGlobal.sublayer;
+    sublayer->flags = 0;
+    sublayer->subLayerKey = FORT_GUID_SUBLAYER;
+    sublayer->displayData.name = (PWCHAR) L"FortSublayer";
+    sublayer->displayData.description = (PWCHAR) L"Fort Firewall Sublayer";
+    sublayer->providerKey = (GUID *) &FORT_GUID_PROVIDER;
+
+    FWPM_SUBLAYER0 *boot_sublayer = &g_provGlobal.boot_sublayer;
+    *boot_sublayer = *sublayer;
+    boot_sublayer->flags = FWPM_SUBLAYER_FLAG_PERSISTENT;
+}
+
+FORT_API void fort_prov_init()
+{
+    RtlZeroMemory(&g_provGlobal, sizeof(g_provGlobal));
+
+    fort_prov_init_provider();
+    fort_prov_init_sublayer();
+
+    fort_prov_init_callouts();
+
+    fort_prov_init_boot_filters();
+    fort_prov_init_persist_filters();
+
+    fort_prov_init_callout_filters();
+    fort_prov_init_callout_boot_filters();
+
+    fort_prov_init_flow_filters();
+    fort_prov_init_packet_filters();
+
+    fort_prov_init_reauth_filters();
+}
+
 FORT_API DWORD fort_prov_trans_close(HANDLE engine, DWORD status)
 {
     if (NT_SUCCESS(status)) {
@@ -150,257 +493,38 @@ FORT_API void fort_prov_unregister(HANDLE transEngine)
     fort_prov_trans_close_engine(transEngine, engine, /*status=*/0);
 }
 
-inline static FWPM_CALLOUT0 fort_prov_init_callout(GUID key, PCWCH name, PCWCH descr, GUID layer)
-{
-    const FWPM_CALLOUT0 cout = {
-        .calloutKey = key,
-        .displayData.name = (PWCHAR) name,
-        .displayData.description = (PWCHAR) descr,
-        .providerKey = (GUID *) &FORT_GUID_PROVIDER,
-        .applicableLayer = layer,
-    };
-    return cout;
-}
-
-static DWORD fort_prov_register_callouts(HANDLE engine)
-{
-    const FWPM_CALLOUT0 callouts[] = {
-        /* ocallout4 */
-        fort_prov_init_callout(FORT_GUID_CALLOUT_CONNECT_V4, L"FortCalloutConnect4",
-                L"Fort Firewall Callout Connect V4", FWPM_LAYER_ALE_AUTH_CONNECT_V4),
-        /* ocallout6 */
-        fort_prov_init_callout(FORT_GUID_CALLOUT_CONNECT_V6, L"FortCalloutConnect6",
-                L"Fort Firewall Callout Connect V6", FWPM_LAYER_ALE_AUTH_CONNECT_V6),
-        /* icallout4 */
-        fort_prov_init_callout(FORT_GUID_CALLOUT_ACCEPT_V4, L"FortCalloutAccept4",
-                L"Fort Firewall Callout Accept V4", FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4),
-        /* icallout6 */
-        fort_prov_init_callout(FORT_GUID_CALLOUT_ACCEPT_V6, L"FortCalloutAccept6",
-                L"Fort Firewall Callout Accept V6", FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V6),
-        /* scallout4 */
-        fort_prov_init_callout(FORT_GUID_CALLOUT_STREAM_V4, L"FortCalloutStream4",
-                L"Fort Firewall Callout Stream V4", FWPM_LAYER_STREAM_V4),
-        /* scallout6 */
-        fort_prov_init_callout(FORT_GUID_CALLOUT_STREAM_V6, L"FortCalloutStream6",
-                L"Fort Firewall Callout Stream V6", FWPM_LAYER_STREAM_V6),
-        /* dcallout4 */
-        fort_prov_init_callout(FORT_GUID_CALLOUT_DATAGRAM_V4, L"FortCalloutDatagram4",
-                L"Fort Firewall Callout Datagram V4", FWPM_LAYER_DATAGRAM_DATA_V4),
-        /* dcallout6 */
-        fort_prov_init_callout(FORT_GUID_CALLOUT_DATAGRAM_V6, L"FortCalloutDatagram6",
-                L"Fort Firewall Callout Datagram V6", FWPM_LAYER_DATAGRAM_DATA_V6),
-        /* itcallout4 */
-        fort_prov_init_callout(FORT_GUID_CALLOUT_IN_TRANSPORT_V4, L"FortCalloutInTransport4",
-                L"Fort Firewall Callout Inbound Transport V4", FWPM_LAYER_INBOUND_TRANSPORT_V4),
-        /* itcallout6 */
-        fort_prov_init_callout(FORT_GUID_CALLOUT_IN_TRANSPORT_V6, L"FortCalloutInTransport6",
-                L"Fort Firewall Callout Inbound Transport V6", FWPM_LAYER_INBOUND_TRANSPORT_V6),
-        /* otcallout4 */
-        fort_prov_init_callout(FORT_GUID_CALLOUT_OUT_TRANSPORT_V4, L"FortCalloutOutTransport4",
-                L"Fort Firewall Callout Outbound Transport V4", FWPM_LAYER_OUTBOUND_TRANSPORT_V4),
-        /* otcallout6 */
-        fort_prov_init_callout(FORT_GUID_CALLOUT_OUT_TRANSPORT_V6, L"FortCalloutOutTransport6",
-                L"Fort Firewall Callout Outbound Transport V6", FWPM_LAYER_OUTBOUND_TRANSPORT_V6),
-    };
-
-    return fort_prov_add_callouts(engine, callouts, /*count=*/FORT_ARRAY_SIZE(callouts));
-}
-
-static DWORD fort_prov_register_boot_filters(HANDLE engine)
-{
-    const UINT32 filter_flags = FWPM_FILTER_FLAG_BOOTTIME | FWPM_FILTER_FLAG_CLEAR_ACTION_RIGHT;
-
-    const FWPM_FILTER0 filters[] = {
-        /* ofilter4 */
-        {
-                .flags = filter_flags,
-                .filterKey = FORT_GUID_BOOT_FILTER_CONNECT_V4,
-                .layerKey = FWPM_LAYER_ALE_AUTH_CONNECT_V4,
-                .displayData.name = (PWCHAR) L"FortBootFilterOut4",
-                .action.type = FWP_ACTION_BLOCK,
-        },
-        /* ofilter6 */
-        {
-                .flags = filter_flags,
-                .filterKey = FORT_GUID_BOOT_FILTER_CONNECT_V6,
-                .layerKey = FWPM_LAYER_ALE_AUTH_CONNECT_V6,
-                .displayData.name = (PWCHAR) L"FortBootFilterOut6",
-                .action.type = FWP_ACTION_BLOCK,
-        },
-        /* ifilter4 */
-        {
-                .flags = filter_flags,
-                .filterKey = FORT_GUID_BOOT_FILTER_ACCEPT_V4,
-                .layerKey = FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4,
-                .displayData.name = (PWCHAR) L"FortBootFilterIn4",
-                .action.type = FWP_ACTION_BLOCK,
-        },
-        /* ifilter6 */
-        {
-                .flags = filter_flags,
-                .filterKey = FORT_GUID_BOOT_FILTER_ACCEPT_V6,
-                .layerKey = FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V6,
-                .displayData.name = (PWCHAR) L"FortBootFilterIn6",
-                .action.type = FWP_ACTION_BLOCK,
-        },
-    };
-
-    return fort_prov_add_filters(engine, filters, /*count=*/FORT_ARRAY_SIZE(filters));
-}
-
-static DWORD fort_prov_register_persist_filters(HANDLE engine)
-{
-    const UINT32 filter_flags = FWPM_FILTER_FLAG_PERSISTENT | FWPM_FILTER_FLAG_CLEAR_ACTION_RIGHT;
-
-    FWP_VALUE0 weight;
-    weight.type = FWP_UINT8;
-    weight.uint8 = 0; /* low weight */
-
-    const FWPM_FILTER0 filters[] = {
-        /* ofilter4 */
-        {
-                .flags = filter_flags,
-                .filterKey = FORT_GUID_PERSIST_FILTER_CONNECT_V4,
-                .layerKey = FWPM_LAYER_ALE_AUTH_CONNECT_V4,
-                .subLayerKey = FORT_GUID_SUBLAYER,
-                .weight = weight,
-                .displayData.name = (PWCHAR) L"FortFilterPersistConnect4",
-                .action.type = FWP_ACTION_BLOCK,
-        },
-        /* ofilter6 */
-        {
-                .flags = filter_flags,
-                .filterKey = FORT_GUID_PERSIST_FILTER_CONNECT_V6,
-                .layerKey = FWPM_LAYER_ALE_AUTH_CONNECT_V6,
-                .subLayerKey = FORT_GUID_SUBLAYER,
-                .weight = weight,
-                .displayData.name = (PWCHAR) L"FortFilterPersistConnect6",
-                .action.type = FWP_ACTION_BLOCK,
-        },
-        /* ifilter4 */
-        {
-                .flags = filter_flags,
-                .filterKey = FORT_GUID_PERSIST_FILTER_ACCEPT_V4,
-                .layerKey = FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4,
-                .subLayerKey = FORT_GUID_SUBLAYER,
-                .weight = weight,
-                .displayData.name = (PWCHAR) L"FortFilterPersistAccept4",
-                .action.type = FWP_ACTION_BLOCK,
-        },
-        /* ifilter6 */
-        {
-                .flags = filter_flags,
-                .filterKey = FORT_GUID_PERSIST_FILTER_ACCEPT_V6,
-                .layerKey = FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V6,
-                .subLayerKey = FORT_GUID_SUBLAYER,
-                .weight = weight,
-                .displayData.name = (PWCHAR) L"FortFilterPersistAccept6",
-                .action.type = FWP_ACTION_BLOCK,
-        },
-    };
-
-    return fort_prov_add_filters(engine, filters, /*count=*/FORT_ARRAY_SIZE(filters));
-}
-
-static DWORD fort_prov_register_callout_filters(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
-{
-    const UINT32 filter_flags =
-            boot_conf.boot_filter ? 0 : FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED;
-
-    FWP_VALUE0 weight;
-    weight.type = FWP_UINT8;
-    weight.uint8 = 9; /* high weight */
-
-    const FWPM_FILTER0 filters[] = {
-        /* ofilter4 */
-        {
-                .flags = filter_flags,
-                .filterKey = FORT_GUID_FILTER_CONNECT_V4,
-                .layerKey = FWPM_LAYER_ALE_AUTH_CONNECT_V4,
-                .subLayerKey = FORT_GUID_SUBLAYER,
-                .weight = weight,
-                .displayData.name = (PWCHAR) L"FortFilterConnect4",
-                .displayData.description = (PWCHAR) L"Fort Firewall Filter Connect V4",
-                .action.type = FWP_ACTION_CALLOUT_UNKNOWN,
-                .action.calloutKey = FORT_GUID_CALLOUT_CONNECT_V4,
-        },
-        /* ofilter6 */
-        {
-                .flags = filter_flags,
-                .filterKey = FORT_GUID_FILTER_CONNECT_V6,
-                .layerKey = FWPM_LAYER_ALE_AUTH_CONNECT_V6,
-                .subLayerKey = FORT_GUID_SUBLAYER,
-                .weight = weight,
-                .displayData.name = (PWCHAR) L"FortFilterConnect6",
-                .displayData.description = (PWCHAR) L"Fort Firewall Filter Connect V6",
-                .action.type = FWP_ACTION_CALLOUT_UNKNOWN,
-                .action.calloutKey = FORT_GUID_CALLOUT_CONNECT_V6,
-        },
-        /* ifilter4 */
-        {
-                .flags = filter_flags,
-                .filterKey = FORT_GUID_FILTER_ACCEPT_V4,
-                .layerKey = FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4,
-                .subLayerKey = FORT_GUID_SUBLAYER,
-                .weight = weight,
-                .displayData.name = (PWCHAR) L"FortFilterAccept4",
-                .displayData.description = (PWCHAR) L"Fort Firewall Filter Accept V4",
-                .action.type = FWP_ACTION_CALLOUT_UNKNOWN,
-                .action.calloutKey = FORT_GUID_CALLOUT_ACCEPT_V4,
-        },
-        /* ifilter6 */
-        {
-                .flags = filter_flags,
-                .filterKey = FORT_GUID_FILTER_ACCEPT_V6,
-                .layerKey = FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V6,
-                .subLayerKey = FORT_GUID_SUBLAYER,
-                .weight = weight,
-                .displayData.name = (PWCHAR) L"FortFilterAccept6",
-                .displayData.description = (PWCHAR) L"Fort Firewall Filter Accept V6",
-                .action.type = FWP_ACTION_CALLOUT_UNKNOWN,
-                .action.calloutKey = FORT_GUID_CALLOUT_ACCEPT_V6,
-        },
-    };
-
-    return fort_prov_add_filters(engine, filters, /*count=*/FORT_ARRAY_SIZE(filters));
-}
-
 inline static DWORD fort_prov_register_filters(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
 {
     if (boot_conf.boot_filter) {
         DWORD status;
-        if ((status = fort_prov_register_boot_filters(engine))
-                || (status = fort_prov_register_persist_filters(engine)))
+        if ((status = fort_prov_add_filters(
+                     engine, g_provGlobal.boot_filters, FORT_PROV_BOOT_FILTERS_COUNT))
+                || (status = fort_prov_add_filters(
+                            engine, g_provGlobal.persist_filters, FORT_PROV_PERSIST_FILTERS_COUNT)))
             return status;
     }
 
-    return fort_prov_register_callout_filters(engine, boot_conf);
+    return fort_prov_add_filters(engine,
+            (boot_conf.boot_filter ? g_provGlobal.callout_boot_filters
+                                   : g_provGlobal.callout_filters),
+            FORT_PROV_CALLOUT_FILTERS_COUNT);
 }
 
 FORT_API DWORD fort_prov_register(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
 {
-    FWPM_PROVIDER0 provider;
-    RtlZeroMemory(&provider, sizeof(FWPM_PROVIDER0));
-    provider.flags = boot_conf.boot_filter ? FWPM_PROVIDER_FLAG_PERSISTENT : 0;
-    provider.providerKey = FORT_GUID_PROVIDER;
-    provider.displayData.name = (PWCHAR) L"FortProvider";
-    provider.displayData.description = (PWCHAR) L"Fort Firewall Provider";
-    provider.providerData.size = sizeof(FORT_PROV_BOOT_CONF);
-    provider.providerData.data = (PUINT8) &boot_conf;
-    provider.serviceName = (PWCHAR) L"fortfw";
+    g_provGlobal.boot_conf = boot_conf;
 
-    FWPM_SUBLAYER0 sublayer;
-    RtlZeroMemory(&sublayer, sizeof(FWPM_SUBLAYER0));
-    sublayer.flags = boot_conf.boot_filter ? FWPM_SUBLAYER_FLAG_PERSISTENT : 0;
-    sublayer.subLayerKey = FORT_GUID_SUBLAYER;
-    sublayer.displayData.name = (PWCHAR) L"FortSublayer";
-    sublayer.displayData.description = (PWCHAR) L"Fort Firewall Sublayer";
-    sublayer.providerKey = (GUID *) &FORT_GUID_PROVIDER;
+    FWPM_PROVIDER0 *provider =
+            boot_conf.boot_filter ? &g_provGlobal.boot_provider : &g_provGlobal.provider;
+
+    FWPM_SUBLAYER0 *sublayer =
+            boot_conf.boot_filter ? &g_provGlobal.boot_sublayer : &g_provGlobal.sublayer;
 
     DWORD status;
-    if ((status = FwpmProviderAdd0(engine, &provider, NULL))
-            || (status = FwpmSubLayerAdd0(engine, &sublayer, NULL))
-            || (status = fort_prov_register_callouts(engine))
+    if ((status = FwpmProviderAdd0(engine, provider, NULL))
+            || (status = FwpmSubLayerAdd0(engine, sublayer, NULL))
+            || (status = fort_prov_add_callouts(
+                        engine, g_provGlobal.callouts, FORT_PROV_CALLOUTS_COUNT))
             || (status = fort_prov_register_filters(engine, boot_conf))) {
         return status;
     }
@@ -427,171 +551,18 @@ FORT_API FORT_PROV_BOOT_CONF fort_prov_get_boot_conf(HANDLE engine)
     return boot_conf;
 }
 
-static DWORD fort_prov_flow_register_filters(HANDLE engine)
-{
-    const UINT32 filter_flags = (FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED
-            | FWP_CALLOUT_FLAG_ALLOW_MID_STREAM_INSPECTION);
-
-    const FWPM_FILTER0 filters[] = {
-        /* sfilter4 */
-        {
-                .flags = filter_flags,
-                .filterKey = FORT_GUID_FILTER_STREAM_V4,
-                .layerKey = FWPM_LAYER_STREAM_V4,
-                .subLayerKey = FORT_GUID_SUBLAYER,
-                .displayData.name = (PWCHAR) L"FortFilterStream4",
-                .displayData.description = (PWCHAR) L"Fort Firewall Filter Stream V4",
-                .action.type = FWP_ACTION_CALLOUT_TERMINATING,
-                .action.calloutKey = FORT_GUID_CALLOUT_STREAM_V4,
-        },
-        /* sfilter6 */
-        {
-                .flags = filter_flags,
-                .filterKey = FORT_GUID_FILTER_STREAM_V6,
-                .layerKey = FWPM_LAYER_STREAM_V6,
-                .subLayerKey = FORT_GUID_SUBLAYER,
-                .displayData.name = (PWCHAR) L"FortFilterStream6",
-                .displayData.description = (PWCHAR) L"Fort Firewall Filter Stream V6",
-                .action.type = FWP_ACTION_CALLOUT_TERMINATING,
-                .action.calloutKey = FORT_GUID_CALLOUT_STREAM_V6,
-        },
-        /* dfilter4 */
-        {
-                .flags = filter_flags,
-                .filterKey = FORT_GUID_FILTER_DATAGRAM_V4,
-                .layerKey = FWPM_LAYER_DATAGRAM_DATA_V4,
-                .subLayerKey = FORT_GUID_SUBLAYER,
-                .displayData.name = (PWCHAR) L"FortFilterDatagram4",
-                .displayData.description = (PWCHAR) L"Fort Firewall Filter Datagram V4",
-                .action.type = FWP_ACTION_CALLOUT_TERMINATING,
-                .action.calloutKey = FORT_GUID_CALLOUT_DATAGRAM_V4,
-        },
-        /* dfilter6 */
-        {
-                .flags = filter_flags,
-                .filterKey = FORT_GUID_FILTER_DATAGRAM_V6,
-                .layerKey = FWPM_LAYER_DATAGRAM_DATA_V6,
-                .subLayerKey = FORT_GUID_SUBLAYER,
-                .displayData.name = (PWCHAR) L"FortFilterDatagram6",
-                .displayData.description = (PWCHAR) L"Fort Firewall Filter Datagram V6",
-                .action.type = FWP_ACTION_CALLOUT_TERMINATING,
-                .action.calloutKey = FORT_GUID_CALLOUT_DATAGRAM_V6,
-        },
-    };
-
-    return fort_prov_add_filters(engine, filters, /*count=*/FORT_ARRAY_SIZE(filters));
-}
-
-static DWORD fort_prov_flow_register_packet_filters(HANDLE engine)
-{
-    const UINT32 filter_flags = (FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED
-            | FWP_CALLOUT_FLAG_ALLOW_MID_STREAM_INSPECTION);
-
-    const FWPM_FILTER0 filters[] = {
-        /* itfilter4 */
-        {
-                .flags = filter_flags,
-                .filterKey = FORT_GUID_FILTER_IN_TRANSPORT_V4,
-                .layerKey = FWPM_LAYER_INBOUND_TRANSPORT_V4,
-                .subLayerKey = FORT_GUID_SUBLAYER,
-                .displayData.name = (PWCHAR) L"FortFilterInTransport4",
-                .displayData.description = (PWCHAR) L"Fort Firewall Filter Inbound Transport V4",
-                .action.type = FWP_ACTION_CALLOUT_TERMINATING,
-                .action.calloutKey = FORT_GUID_CALLOUT_IN_TRANSPORT_V4,
-        },
-        /* itfilter6 */
-        {
-                .flags = filter_flags,
-                .filterKey = FORT_GUID_FILTER_IN_TRANSPORT_V6,
-                .layerKey = FWPM_LAYER_INBOUND_TRANSPORT_V6,
-                .subLayerKey = FORT_GUID_SUBLAYER,
-                .displayData.name = (PWCHAR) L"FortFilterInTransport6",
-                .displayData.description = (PWCHAR) L"Fort Firewall Filter Inbound Transport V6",
-                .action.type = FWP_ACTION_CALLOUT_TERMINATING,
-                .action.calloutKey = FORT_GUID_CALLOUT_IN_TRANSPORT_V6,
-        },
-        /* otfilter4 */
-        {
-                .flags = filter_flags,
-                .filterKey = FORT_GUID_FILTER_OUT_TRANSPORT_V4,
-                .layerKey = FWPM_LAYER_OUTBOUND_TRANSPORT_V4,
-                .subLayerKey = FORT_GUID_SUBLAYER,
-                .displayData.name = (PWCHAR) L"FortFilterOutTransport4",
-                .displayData.description = (PWCHAR) L"Fort Firewall Filter Outbound Transport V4",
-                .action.type = FWP_ACTION_CALLOUT_TERMINATING,
-                .action.calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V4,
-        },
-        /* otfilter6 */
-        {
-                .flags = filter_flags,
-                .filterKey = FORT_GUID_FILTER_OUT_TRANSPORT_V6,
-                .layerKey = FWPM_LAYER_OUTBOUND_TRANSPORT_V6,
-                .subLayerKey = FORT_GUID_SUBLAYER,
-                .displayData.name = (PWCHAR) L"FortFilterOutTransport6",
-                .displayData.description = (PWCHAR) L"Fort Firewall Filter Outbound Transport V6",
-                .action.type = FWP_ACTION_CALLOUT_TERMINATING,
-                .action.calloutKey = FORT_GUID_CALLOUT_OUT_TRANSPORT_V6,
-        },
-    };
-
-    return fort_prov_add_filters(engine, filters, /*count=*/FORT_ARRAY_SIZE(filters));
-}
-
 FORT_API DWORD fort_prov_flow_register(HANDLE engine, BOOL filter_packets)
 {
     DWORD status;
 
-    status = fort_prov_flow_register_filters(engine);
+    status = fort_prov_add_filters(engine, g_provGlobal.flow_filters, FORT_PROV_FLOW_FILTERS_COUNT);
 
     if (status == 0 && filter_packets) {
-        status = fort_prov_flow_register_packet_filters(engine);
+        status = fort_prov_add_filters(
+                engine, g_provGlobal.packet_filters, FORT_PROV_PACKET_FILTERS_COUNT);
     }
 
     return status;
-}
-
-static DWORD fort_prov_register_reauth_filters(HANDLE engine)
-{
-    const FWPM_FILTER0 filters[] = {
-        /* ifilter4 */
-        {
-                .filterKey = FORT_GUID_FILTER_REAUTH_IN_V4,
-                .layerKey = FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4,
-                .subLayerKey = FORT_GUID_SUBLAYER,
-                .displayData.name = (PWCHAR) L"FortFilterReauthIn4",
-                .displayData.description = (PWCHAR) L"Fort Firewall Filter Reauth Inbound V4",
-                .action.type = FWP_ACTION_CONTINUE,
-        },
-        /* ifilter6 */
-        {
-                .filterKey = FORT_GUID_FILTER_REAUTH_IN_V6,
-                .layerKey = FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V6,
-                .subLayerKey = FORT_GUID_SUBLAYER,
-                .displayData.name = (PWCHAR) L"FortFilterReauthIn6",
-                .displayData.description = (PWCHAR) L"Fort Firewall Filter Reauth Inbound V6",
-                .action.type = FWP_ACTION_CONTINUE,
-        },
-        /* ofilter4 */
-        {
-                .filterKey = FORT_GUID_FILTER_REAUTH_OUT_V4,
-                .layerKey = FWPM_LAYER_ALE_AUTH_CONNECT_V4,
-                .subLayerKey = FORT_GUID_SUBLAYER,
-                .displayData.name = (PWCHAR) L"FortFilterReauthOut4",
-                .displayData.description = (PWCHAR) L"Fort Firewall Filter Reauth Outbound V4",
-                .action.type = FWP_ACTION_CONTINUE,
-        },
-        /* ofilter6 */
-        {
-                .filterKey = FORT_GUID_FILTER_REAUTH_OUT_V6,
-                .layerKey = FWPM_LAYER_ALE_AUTH_CONNECT_V6,
-                .subLayerKey = FORT_GUID_SUBLAYER,
-                .displayData.name = (PWCHAR) L"FortFilterReauthOut6",
-                .displayData.description = (PWCHAR) L"Fort Firewall Filter Reauth Outbound V6",
-                .action.type = FWP_ACTION_CONTINUE,
-        },
-    };
-
-    return fort_prov_add_filters(engine, filters, /*count=*/FORT_ARRAY_SIZE(filters));
 }
 
 FORT_API DWORD fort_prov_reauth(HANDLE engine)
@@ -600,7 +571,8 @@ FORT_API DWORD fort_prov_reauth(HANDLE engine)
 
     status = fort_prov_unregister_reauth_filters(engine, /*force=*/FALSE);
     if (status) {
-        status = fort_prov_register_reauth_filters(engine);
+        status = fort_prov_add_filters(
+                engine, g_provGlobal.reauth_filters, FORT_PROV_REAUTH_FILTERS_COUNT);
     }
 
     return status;
