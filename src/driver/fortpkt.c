@@ -1133,13 +1133,7 @@ static BOOL fort_pending_proc_check_packet_count(PFORT_PENDING pending, UINT32 p
 
 static PFORT_PENDING_PROC fort_pending_proc_get_locked(PFORT_PENDING pending, UINT32 process_id)
 {
-    PFORT_PENDING_PROC proc = fort_pending_proc_find_locked(pending, process_id);
-    if (proc != NULL) {
-        if (proc->packet_count >= FORT_PENDING_PROC_PACKET_COUNT_MAX)
-            return NULL;
-
-        return proc;
-    }
+    PFORT_PENDING_PROC proc;
 
     if (pending->proc_free != NULL) {
         proc = pending->proc_free;
@@ -1164,6 +1158,20 @@ static PFORT_PENDING_PROC fort_pending_proc_get_locked(PFORT_PENDING pending, UI
     return proc;
 }
 
+static PFORT_PENDING_PROC fort_pending_proc_get_check(PFORT_PENDING pending, UINT32 process_id)
+{
+    PFORT_PENDING_PROC proc = fort_pending_proc_find_locked(pending, process_id);
+
+    if (proc == NULL) {
+        return fort_pending_proc_get_locked(pending, process_id);
+    }
+
+    if (proc->packet_count >= FORT_PENDING_PROC_PACKET_COUNT_MAX)
+        return NULL;
+
+    return proc;
+}
+
 static void fort_pending_proc_put_locked(PFORT_PENDING pending, PFORT_PENDING_PROC proc)
 {
     proc->next = pending->proc_free;
@@ -1174,7 +1182,7 @@ static NTSTATUS fort_pending_proc_add_packet_locked(PFORT_PENDING pending, PCFOR
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_PENDING_PACKET pkt)
 {
     /* Create the Pending Process */
-    PFORT_PENDING_PROC proc = fort_pending_proc_get_locked(pending, cx->process_id);
+    PFORT_PENDING_PROC proc = fort_pending_proc_get_check(pending, cx->process_id);
     if (proc == NULL)
         return STATUS_INSUFFICIENT_RESOURCES;
 
