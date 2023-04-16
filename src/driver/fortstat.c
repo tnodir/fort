@@ -59,21 +59,13 @@ static PFORT_STAT_PROC fort_stat_proc_get(PFORT_STAT stat, UINT32 process_id, to
     return NULL;
 }
 
-static void fort_stat_proc_free(PVOID stat_arg, PVOID proc_node)
+static void fort_stat_proc_free(PFORT_STAT stat, PFORT_STAT_PROC proc)
 {
-    PFORT_STAT stat = stat_arg;
-    PFORT_STAT_PROC proc = proc_node;
+    tommy_hashdyn_remove_existing(&stat->procs_map, (tommy_hashdyn_node *) proc);
 
     /* Add to free chain */
     proc->next = stat->proc_free;
     stat->proc_free = proc;
-}
-
-static void fort_stat_proc_del(PFORT_STAT stat, PFORT_STAT_PROC proc)
-{
-    tommy_hashdyn_remove_existing(&stat->procs_map, (tommy_hashdyn_node *) proc);
-
-    fort_stat_proc_free(stat, proc);
 }
 
 static PFORT_STAT_PROC fort_stat_proc_add(PFORT_STAT stat, UINT32 process_id)
@@ -278,16 +270,16 @@ static void fort_flow_context_remove(PVOID stat_arg, PVOID flow_node)
     }
 }
 
-static BOOL fort_flow_is_closed(PFORT_FLOW flow)
+static BOOL fort_flow_is_active(PFORT_FLOW flow)
 {
-    return (flow->opt.proc_index == FORT_PROC_BAD_INDEX);
+    return (fort_flow_flags(flow) & FORT_FLOW_ACTIVE) != 0;
 }
 
-static void fort_flow_close(PVOID flow_node)
+static void fort_flow_deactivate(PVOID flow_node)
 {
     PFORT_FLOW flow = flow_node;
 
-    flow->opt.proc_index = FORT_PROC_BAD_INDEX;
+    fort_flow_flags_set(flow, FORT_FLOW_ACTIVE, FALSE);
 }
 
 static PFORT_FLOW fort_flow_get(PFORT_STAT stat, UINT64 flow_id, tommy_key_t flow_hash)
@@ -305,9 +297,7 @@ static PFORT_FLOW fort_flow_get(PFORT_STAT stat, UINT64 flow_id, tommy_key_t flo
 
 static void fort_flow_free(PFORT_STAT stat, PFORT_FLOW flow)
 {
-    if (!fort_flow_is_closed(flow)) {
-        fort_stat_proc_dec(stat, flow->opt.proc_index);
-    }
+    fort_stat_proc_dec(stat, flow->opt.proc_index);
 
     tommy_hashdyn_remove_existing(&stat->flows_map, (tommy_hashdyn_node *) flow);
 
@@ -355,11 +345,8 @@ inline static NTSTATUS fort_flow_add_new(PFORT_STAT stat, PFORT_FLOW *flow, UINT
         tommy_key_t flow_hash, BOOL isIPv6, BOOL is_tcp, BOOL inbound, BOOL is_reauth)
 {
     if (is_reauth) {
-        BOOL pending = FALSE;
-
-        /* Remove existing flow context after reauth. to be able to associate a flow-context */
-        if (!fort_flow_context_remove_id(stat, flow_id, isIPv6, is_tcp, &pending))
-            return FORT_STATUS_FLOW_BLOCK;
+        /* Can't remove existing context, because of possible deadlock */
+        return FORT_STATUS_FLOW_BLOCK;
     }
 
     *flow = fort_flow_new(stat, flow_id, flow_hash, isIPv6, is_tcp, inbound);
@@ -374,7 +361,6 @@ static NTSTATUS fort_flow_add(PFORT_STAT stat, UINT64 flow_id, UCHAR group_index
 {
     const tommy_key_t flow_hash = fort_flow_hash(flow_id);
     PFORT_FLOW flow = fort_flow_get(stat, flow_id, flow_hash);
-    BOOL is_new_flow = FALSE;
 
     if (flow == NULL) {
         const NTSTATUS status = fort_flow_add_new(
@@ -383,19 +369,13 @@ static NTSTATUS fort_flow_add(PFORT_STAT stat, UINT64 flow_id, UCHAR group_index
         if (!NT_SUCCESS(status))
             return status;
 
-        is_new_flow = TRUE;
-    } else {
-        is_new_flow = fort_flow_is_closed(flow);
-    }
-
-    if (is_new_flow) {
         fort_stat_proc_inc(stat, proc_index);
     }
 
     const UCHAR speed_limit = fort_stat_group_speed_limit(&stat->conf_group, group_index);
 
     flow->opt.flags = speed_limit | (is_tcp ? FORT_FLOW_TCP : 0) | (isIPv6 ? FORT_FLOW_IP6 : 0)
-            | (inbound ? FORT_FLOW_INBOUND : 0);
+            | (inbound ? FORT_FLOW_INBOUND : 0) | FORT_FLOW_ACTIVE;
     flow->opt.group_index = group_index;
     flow->opt.proc_index = proc_index;
 
@@ -467,15 +447,8 @@ static void fort_stat_clear(PFORT_STAT stat)
     /* Clear processes active list */
     fort_stat_proc_active_clear(stat);
 
-    /* Clear processes map */
-    if (tommy_hashdyn_count(&stat->procs_map) > 0) {
-        tommy_hashdyn_foreach_node_arg(&stat->procs_map, &fort_stat_proc_free, stat);
-        tommy_hashdyn_done(&stat->procs_map);
-        tommy_hashdyn_init(&stat->procs_map);
-    }
-
     /* Close flows */
-    tommy_hashdyn_foreach_node(&stat->flows_map, &fort_flow_close);
+    tommy_hashdyn_foreach_node(&stat->flows_map, &fort_flow_deactivate);
 
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
@@ -592,7 +565,7 @@ FORT_API void fort_flow_classify(PFORT_STAT stat, UINT64 flowContext, UINT32 dat
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
-    if ((fort_stat_flags(stat) & FORT_STAT_LOG) != 0 && !fort_flow_is_closed(flow)) {
+    if ((fort_stat_flags(stat) & FORT_STAT_LOG) != 0 && fort_flow_is_active(flow)) {
         PFORT_STAT_PROC proc = tommy_arrayof_ref(&stat->procs, flow->opt.proc_index);
         UINT32 *proc_bytes = inbound ? &proc->traf.in_bytes : &proc->traf.out_bytes;
 
@@ -636,7 +609,7 @@ FORT_API void fort_stat_dpc_traf_flush(PFORT_STAT stat, UINT16 proc_count, PCHAR
             /* The process is inactive */
             *out_proc |= 1;
 
-            fort_stat_proc_del(stat, proc);
+            fort_stat_proc_free(stat, proc);
         } else {
             proc->active = FALSE;
 
