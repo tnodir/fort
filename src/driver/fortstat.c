@@ -59,10 +59,10 @@ static PFORT_STAT_PROC fort_stat_proc_get(PFORT_STAT stat, UINT32 process_id, to
     return NULL;
 }
 
-static void fort_stat_proc_free(PVOID arg, PVOID node)
+static void fort_stat_proc_free(PVOID stat_arg, PVOID proc_node)
 {
-    PFORT_STAT stat = arg;
-    PFORT_STAT_PROC proc = node;
+    PFORT_STAT stat = stat_arg;
+    PFORT_STAT_PROC proc = proc_node;
 
     /* Add to free chain */
     proc->next = stat->proc_free;
@@ -254,10 +254,10 @@ static BOOL fort_flow_context_remove_id(
             && NT_SUCCESS(transport_out_status);
 }
 
-static void fort_flow_context_remove(PVOID arg, PVOID node)
+static void fort_flow_context_remove(PVOID stat_arg, PVOID flow_node)
 {
-    PFORT_STAT stat = arg;
-    PFORT_FLOW flow = node;
+    PFORT_STAT stat = stat_arg;
+    PFORT_FLOW flow = flow_node;
 
     const UINT64 flow_id = flow->flow_id;
 
@@ -283,9 +283,9 @@ static BOOL fort_flow_is_closed(PFORT_FLOW flow)
     return (flow->opt.proc_index == FORT_PROC_BAD_INDEX);
 }
 
-static void fort_flow_close(PVOID node)
+static void fort_flow_close(PVOID flow_node)
 {
-    PFORT_FLOW flow = node;
+    PFORT_FLOW flow = flow_node;
 
     flow->opt.proc_index = FORT_PROC_BAD_INDEX;
 }
