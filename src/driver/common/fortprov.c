@@ -493,7 +493,7 @@ FORT_API void fort_prov_unregister(HANDLE transEngine)
     fort_prov_trans_close_engine(transEngine, engine, /*status=*/0);
 }
 
-inline static DWORD fort_prov_register_filters(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
+static DWORD fort_prov_register_filters(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
 {
     if (boot_conf.boot_filter) {
         DWORD status;
@@ -510,19 +510,29 @@ inline static DWORD fort_prov_register_filters(HANDLE engine, const FORT_PROV_BO
             FORT_PROV_CALLOUT_FILTERS_COUNT);
 }
 
-FORT_API DWORD fort_prov_register(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
+static DWORD fort_prov_register_provider(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
 {
     g_provGlobal.boot_conf = boot_conf;
 
     FWPM_PROVIDER0 *provider =
             boot_conf.boot_filter ? &g_provGlobal.boot_provider : &g_provGlobal.provider;
 
+    return FwpmProviderAdd0(engine, provider, NULL);
+}
+
+static DWORD fort_prov_register_sublayer(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
+{
     FWPM_SUBLAYER0 *sublayer =
             boot_conf.boot_filter ? &g_provGlobal.boot_sublayer : &g_provGlobal.sublayer;
 
+    return FwpmSubLayerAdd0(engine, sublayer, NULL);
+}
+
+FORT_API DWORD fort_prov_register(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
+{
     DWORD status;
-    if ((status = FwpmProviderAdd0(engine, provider, NULL))
-            || (status = FwpmSubLayerAdd0(engine, sublayer, NULL))
+    if ((status = fort_prov_register_provider(engine, boot_conf))
+            || (status = fort_prov_register_sublayer(engine, boot_conf))
             || (status = fort_prov_add_callouts(
                         engine, g_provGlobal.callouts, FORT_PROV_CALLOUTS_COUNT))
             || (status = fort_prov_register_filters(engine, boot_conf))) {
